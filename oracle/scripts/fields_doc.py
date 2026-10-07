@@ -222,6 +222,23 @@ F = [
  ('nebius.prepay', 'Nebius 預付款與合約參數草稿（公司說法，只作對照或新欄位）；格式同上', '物件', M),
  ('nebius.other', 'Nebius 非核心事業與持股（Avride、TripleTen、ClickHouse、Toloka）草稿；格式同上', '物件', M),
  ('nebius.perMw', 'Nebius 每 MW 年收入三情境（Tokenomics 正向推導）、每 MW 資本支出、GPU 壽命、PUE 草稿；格式同上', '物件', M),
+  ('oracle._readme', 'Oracle 資料草稿區段的說明（v0.1a 產出；引擎尚未讀取，v0.1b 依 mapTo 搬入既有欄位或新增）', '文字', M),
+ ('oracle.files', 'Oracle 事實總帳、每 MW 推導、共識資料檔的路徑', '物件（路徑）', M),
+ ('oracle.calendar', 'Oracle 財年（5 月結束）與最新已申報季草稿；每欄 value＋unit＋ref（data/oracle_facts_20261007.json 的 id）＋mapTo（應搬到的欄位）', '物件', M),
+ ('oracle.ytdActual', 'Oracle FY27Q1 年初至今實際數草稿（10-Q）；格式同上', '物件', M),
+ ('oracle.latestQuarter', 'Oracle 最新季（FY27Q1）營收分線、資產負債、RPO、股數草稿；格式同上', '物件', M),
+ ('oracle.debt', 'Oracle 債務草稿（逐檔票券、定期貸款、商業本票、到期梯、循環額度、強制轉換特別股、信評）；格式同上', '物件', M),
+ ('oracle.equity', 'Oracle ATM、FY27 融資計畫、股利、買回授權、股價草稿；格式同上', '物件', M),
+ ('oracle.leases', 'Oracle 租賃付款到期、尚未起租承諾、折現率、出租人借款保證草稿；格式同上', '物件', M),
+ ('oracle.prepay', 'Oracle 客戶出資覆蓋比、預付累計、預付＋自帶硬體合約額草稿；格式同上', '物件', M),
+ ('oracle.mw', 'Oracle 已交付 MW、站點、合約容量、利用率、續約溢價草稿（口徑逐欄註明）；格式同上', '物件', M),
+ ('oracle.legacy', 'Oracle 傳統事業四線（SaaS、軟體、硬體、服務）近四季營收、成長率、分部利潤率草稿；格式同上', '物件', M),
+ ('oracle.guidance', 'Oracle 公司指引草稿（Q2 FY27、FY27、OCI 路徑與 FY30 目標只作對照）；格式同上', '物件', M),
+ ('oracle.valuation', 'Oracle 評價輸入草稿（beta、無風險利率、ERP、債務成本、稅率、同業倍數、淨負債、持股）；格式同上', '物件', M),
+ ('oracle.perMw', 'Oracle 每 MW 年收入三情境（沿用 Nebius 的 Tokenomics 推導）、EBITDA 率、伺服器壽命草稿；格式同上', '物件', M),
+ ('oracle.openai', 'Oracle–OpenAI 合約年額、隱含每 MW、OpenAI 計畫算力支出（只作對照）；格式同上', '物件', M),
+ ('oracle.consensus', 'Oracle 市場共識檔路徑與摘要；格式同上', '物件', M),
+ ('oracle.events', 'Oracle 評價日後事件（Project Jupiter 不可抗力通知）；格式同上', '物件', M),
 ]
 LQ = {
  'filed': ('申報日', '日期'), 'periodEnd': ('季末日', '日期'), 'revenue': ('當季營收', 'US$bn'), 'yoy': ('當季營收年增率', '比例'),
@@ -307,7 +324,7 @@ SECT = [('meta', '基本資料'), ('calendar', '期間與日期（v4.5）'), ('a
         ('rpo', '已簽約未認列營收（RPO）'), ('leases', '租約'), ('debt', '既有債務'), ('latestQuarter', '最新一季財報數字（10-Q）'),
         ('callFacts', '法說會與期後事項'), ('scenarios', '三個擴張情境'), ('legacy', '舊版對照值'),
         ('defaults', '預設假設（畫面上可調的輸入）'), ('valuation', '評價參數'), ('methodology', '評價方法與評等門檻'), ('peers', '同業比較（Comps）'),
-        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('nebius', 'Nebius 資料草稿（v0.1a；引擎尚未讀取）')]
+        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('nebius', 'Nebius 資料草稿（v0.1a；引擎尚未讀取）'), ('oracle', 'Oracle 資料草稿（v0.1a；引擎尚未讀取）')]
 out, shown = ['**填表慣例**',
                '- 金額單位是**十億美元（US$bn）**，例如 4.653 代表 46.53 億美元；另有標示的例外：每股（US$）、每 MW 建置成本（百萬美元／MW，US$m/MW）、股數（十億股，bn）。',
                '- 「比例」寫成小數（0.25＝25%）；標示「%」的欄位寫成百分點（25＝25%）。兩種寫法沿用既有程式，不可混用。',

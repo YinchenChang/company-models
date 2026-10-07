@@ -602,6 +602,28 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `nebius.other` | Nebius 非核心事業與持股（Avride、TripleTen、ClickHouse、Toloka）草稿；格式同上 | 物件 | 物件（nonCoreEbitdaAnnual、clickhouseValuation、clickhouseStakeLo、clickhouseStakeHi、clickhouseBook、tolokaBook、avrideSafeLiab） | 必改 |
 | `nebius.perMw` | Nebius 每 MW 年收入三情境（Tokenomics 正向推導）、每 MW 資本支出、GPU 壽命、PUE 草稿；格式同上 | 物件 | 物件（revPerMWit、revPerMWfac、capexPerMWit、gpuLifeYears、pue、companyAcvCompare） | 必改 |
 
+### `oracle`：Oracle 資料草稿（v0.1a；引擎尚未讀取）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `oracle._readme` | Oracle 資料草稿區段的說明（v0.1a 產出；引擎尚未讀取，v0.1b 依 mapTo 搬入既有欄位或新增） | 文字 | Oracle 資料草稿（v0.1a 產出；引擎尚未讀… | 必改 |
+| `oracle.files` | Oracle 事實總帳、每 MW 推導、共識資料檔的路徑 | 物件（路徑） | 物件（facts、perMw、consensus） | 必改 |
+| `oracle.calendar` | Oracle 財年（5 月結束）與最新已申報季草稿；每欄 value＋unit＋ref（data/oracle_facts_20261007.json 的 id）＋mapTo（應搬到的欄位） | 物件 | 物件（fiscalYearEndMonth、latestQuarterFiled） | 必改 |
+| `oracle.ytdActual` | Oracle FY27Q1 年初至今實際數草稿（10-Q）；格式同上 | 物件 | 物件（cashOpen、revenue、capex、interest、cfo、prepay、da、sbc、opInc、opIncNonGaap、ni、epsGaapNonGaap、equity、debtRepaid、borrow、dividends、leasePaid） | 必改 |
+| `oracle.latestQuarter` | Oracle 最新季（FY27Q1）營收分線、資產負債、RPO、股數草稿；格式同上 | 物件 | 物件（periodEnd、revenueLines、cash、marketable、restricted、debtCarrying、opLeaseLiab、finLeaseLiab、offBalanceLease、ppe、cip、deferredTotal、rpo、rpoSplit、sharesOut、dilutedWaso、custConcentration） | 必改 |
+| `oracle.debt` | Oracle 債務草稿（逐檔票券、定期貸款、商業本票、到期梯、循環額度、強制轉換特別股、信評）；格式同上 | 物件 | 物件（notes、termLoan、cp、maturityLadderFY26、avgCoupon、revolver、mcps、ratings） | 必改 |
+| `oracle.equity` | Oracle ATM、FY27 融資計畫、股利、買回授權、股價草稿；格式同上 | 物件 | 物件（atmDone、fundingPlanFY27、dividendPerShareQ、buybackAuth、eqPx） | 必改 |
+| `oracle.leases` | Oracle 租賃付款到期、尚未起租承諾、折現率、出租人借款保證草稿；格式同上 | 物件 | 物件（opPayments、finPayments、notCommenced、discountRate、lessorGuarantee） | 必改 |
+| `oracle.prepay` | Oracle 客戶出資覆蓋比、預付累計、預付＋自帶硬體合約額草稿；格式同上 | 物件 | 物件（capexCover、cashCum、prepayAndByohContract、q1NewContracts） | 必改 |
+| `oracle.mw` | Oracle 已交付 MW、站點、合約容量、利用率、續約溢價草稿（口徑逐欄註明）；格式同上 | 物件 | 物件（deliveredFY26、deliveredFY27Q1、deliveredCumSinceFY26、abileneDelivered、openaiContract、oracleStargateSitesEpoch、gpusQ1、utilization、renewalPremium、pue） | 必改 |
+| `oracle.legacy` | Oracle 傳統事業四線（SaaS、軟體、硬體、服務）近四季營收、成長率、分部利潤率草稿；格式同上 | 物件 | 物件（revenueLTM、growthLTM、segMarginFY26、consolidatedNonGaapOpMarginFY26） | 必改 |
+| `oracle.guidance` | Oracle 公司指引草稿（Q2 FY27、FY27、OCI 路徑與 FY30 目標只作對照）；格式同上 | 物件 | 物件（q2Revenue、q2Cloud、q2EpsNonGaap、fy27Revenue、fy27EpsNonGaap、fy27Capex、fy27NetCashCapexMax、ociPathFY26PR、fy30Targets） | 必改 |
+| `oracle.valuation` | Oracle 評價輸入草稿（beta、無風險利率、ERP、債務成本、稅率、同業倍數、淨負債、持股）；格式同上 | 物件 | 物件（beta、rf、erp、costOfDebtPretax、taxRate、softwarePeerNtmEvEbitda、ociEvEbitda、netDebtExLeases、tiktokStake） | 必改 |
+| `oracle.perMw` | Oracle 每 MW 年收入三情境（沿用 Nebius 的 Tokenomics 推導）、EBITDA 率、伺服器壽命草稿；格式同上 | 物件 | 物件（revPerMWit、ebitdaSteady、ebitdaStartCompanyClaim、serverLife） | 必改 |
+| `oracle.openai` | Oracle–OpenAI 合約年額、隱含每 MW、OpenAI 計畫算力支出（只作對照）；格式同上 | 物件 | 物件（contractAnnual、contractPerMw、computePlan2026to2030） | 必改 |
+| `oracle.consensus` | Oracle 市場共識檔路徑與摘要；格式同上 | 物件 | 物件（file、priceTargetMean） | 必改 |
+| `oracle.events` | Oracle 評價日後事件（Project Jupiter 不可抗力通知）；格式同上 | 物件 | 物件（jupiterForceMajeure） | 必改 |
+
 ## v4.0 架構：公司資料單一來源
 - **company.json**：所有公司原始輸入（HTML 引擎與 Excel 共用）。換公司時先改這個檔；衍生值（情境 Billable 比率、Q3 新增 RPO 權重、債務合計與平均利率）留在 segA 開頭由程式推導。
 - HTML：`build_html_portable.py` 把 company.json 注入為 `COMPANY_DATA`，segA 開頭讀取。Excel：`build_xlsx.py` 開頭讀同一檔（75 項輸入，百分點欄位以 `PCT_()` 轉成比例）。
