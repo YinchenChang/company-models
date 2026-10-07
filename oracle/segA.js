@@ -895,10 +895,12 @@ function sensitivities(e, v) {
     e.mw31 = 1000
   }, e => {
     e.mw31 = 0
-  }), r(`表外現金租金`, `+30%`, `−30%`, e => {
-    e.a.newLease = e.a.newLease.map(e => e * 1.3)
+  }), r(`未起租租期`, `${UL.termSens[0]} 年`, `${UL.termSens[1]} 年`, e => { // v0.1b（Oracle）：租期越短年租越高（租金含在 EBITDA 率內，現金中性）
+    e.a.newLease = ulPath(UL.termSens[0])
   }, e => {
-    e.a.newLease = e.a.newLease.map(e => e * .7)
+    e.a.newLease = ulPath(UL.termSens[1])
+  }), r(`預付重大財務組成`, hA((e.prepay.financingRate ?? 0) * 100, 2), `0%`, null, e => {
+    e.prepay = { ...e.prepay, financingRate: 0 }
   }), r(`新債利率`, `+300bps`, `−300bps`, e => {
     e.m.rate = e.m.rate.map(e => e + 3)
   }, e => {
@@ -935,10 +937,10 @@ function sensitivities(e, v) {
     e.eqCapPct = .1
   }, e => {
     e.eqCapPct = 99
-  }), r(`WACC`, `12.5%`, `9.5%`, null, null, e => {
-    e.wacc = .125
+  }), r(`WACC（CAPM β ${COMPANY_DATA.valuation.capm.betaSens[1]}／${COMPANY_DATA.valuation.capm.betaSens[0]}）`, hA(CAPM_Q(v, COMPANY_DATA.valuation.capm.betaSens[1]).wacc * 100, 1), hA(CAPM_Q(v, COMPANY_DATA.valuation.capm.betaSens[0]).wacc * 100, 1), null, null, e => { // v0.1b（Oracle）：β 敏感度
+    e.wacc = CAPM_Q(e, COMPANY_DATA.valuation.capm.betaSens[1]).wacc
   }, e => {
-    e.wacc = .095
+    e.wacc = CAPM_Q(e, COMPANY_DATA.valuation.capm.betaSens[0]).wacc
   }), r(`EV/EBITDA 倍數`, `5x`, `7x`, null, null, e => {
     e.evEbitda = 5
   }, e => {
