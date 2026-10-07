@@ -26,7 +26,7 @@ var PERIODS = COMPANY_DATA.periods,
     let T = COMPANY_DATA.scenarios.capexTemplate, F = COMPANY_DATA.scenarios.leaseRampFloorMw;
     return {
       costMW: [...T.costMW],
-      customerFund: [...T.customerFund],
+      customerFund: PERIOD_YEARS.map(() => COMPANY_DATA.defaults.prepay.shareOfDeals * COMPANY_DATA.defaults.prepay.capexCover), // v0.1b：預付比率＝有預付的合約比例 × 預付占相關資本支出比
       newLease: SC_LEASE_HI.map((t, n) => t * Math.max(0, SC_ACC[e][n] - F) / (SC_ACC.high[n] - F)),
       div: [...T.div]
     }
@@ -247,7 +247,8 @@ function runFunding(e) {
       fr: e.useFacility ? e.facility : 0,
       B: e.rpoOpen + e.rpoPendingAdd,
       pnr: 0,
-      sh: 0
+      sh: 0,
+      cl: e.prepay.openBalance // v0.1b：合約負債（客戶預付餘額）期初
     },
     o = PERIODS.map((n, r) => {
       let L = PERIOD_YEARS[r],
@@ -273,14 +274,17 @@ function runFunding(e) {
         nC = nR * (1 - (t.defaultP[r] / 100) * p) * cm,
         svcCash = svc * cm,
         _ = CX[r],
-        v = _ * e.a.customerFund[r],
+        v = CXG[r] * e.a.customerFund[r], // v0.1b：客戶預付流入＝成長型 CapEx × 預付比率（汰換 CapEx 不計）
         y = _ - v,
+        clB = WF.cl,
+        pr = Math.min(clB, clB / e.prepay.recogYears * L), // v0.1b：預付認列（非現金營收）＝期初合約負債 ÷ 認列年數 × 期間長度
+        clE = clB + v - pr,
         C = t.accepted[r] * 8760 * t.pue[r] * t.power[r] / 1e9 * L,
         w = t.accepted[r] * t.maint[r] / 1e3 * L,
         T = e.overlay ? C + w : 0,
         O = e.includeDebt ? DEBT_AMORT[r] : 0,
         k = r === 0 && e.includeAtm ? e.atm : 0,
-        A = g + nC + svcCash + v,
+        A = g + nC + svcCash + v - pr, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
         j0 = _ + S + IX[r] + e.jvCommit[r] + e.a.div[r] + T + O,
         wRL = uA(e, r) / 100 * L,
         wRJ = (e.junkRate + (e.cdsLink ? Math.max(0, e.cds - e.cdsBaseBp) / 1e4 * e.cdsPassThrough : 0)) * L,
@@ -307,7 +311,11 @@ function runFunding(e) {
         wFr0 = WF.fr,
         wDn0 = WF.Dn,
         wPc = WF.pc + A + k - j0;
-      return a += N, WF.fr -= Math.min(WF.fr, wD), WF.Dn += wD, WF.Jn += wJ, WF.pc = wPc, WF.B = wB, WF.pnr = nR / L, WF.sh += wSh, {
+      return a += N, WF.fr -= Math.min(WF.fr, wD), WF.Dn += wD, WF.Jn += wJ, WF.pc = wPc, WF.B = wB, WF.pnr = nR / L, WF.sh += wSh, WF.cl = clE, {
+        prepayIn: v,
+        prepayRecog: pr,
+        clBeg: clB,
+        clEnd: clE,
         junk: wJ,
         junkEnd: WF.Jn,
         eqCap: wCapEq,
@@ -449,7 +457,7 @@ function runFunding(e) {
     ok: !0,
     severity: `watch`,
     title: `客戶預付：合約負債 $${Y(LATEST_Q.deferredTotal, 2)}bn，年初至今淨增 $${Y(LATEST_Q.deferredIn, 2)}bn`,
-    detail: `季報：遞延營收（合約負債）${Y(LATEST_Q.deferredTotal, 3)}bn，年初至今增加 ${Y(LATEST_Q.deferredIn, 3)}，推估預付現金 ${Y(ACTUAL_1H.prepay, 3)}（[Derived]）。股東信：約 70% 合約含預付、覆蓋相關資本支出 50–60%、2026 年預期預付 >$9B（[Interested-party]）。模型首期預付流入 ${Y(o[0].external, 2)}bn。`
+    detail: `季報：遞延營收（合約負債）${Y(LATEST_Q.deferredTotal, 3)}bn，年初至今增加 ${Y(LATEST_Q.deferredIn, 3)}，推估預付現金 ${Y(ACTUAL_1H.prepay, 3)}（[Derived]）。股東信：約 70% 合約含預付、覆蓋相關資本支出 50–60%、2026 年預期預付 >$9B（[Interested-party]）。模型首期預付流入 ${Y(o[0].external, 2)}bn（${PERIOD_FY[0]} 全年 ${Y(ACTUAL_1H.prepay + o[0].external, 2)}，公司 >$9B）、認列 ${Y(o[0].prepayRecog, 2)}。期初合約負債以季報 ${Y(e.prepay.openBalance, 3)} 為準（上年底 1.578＋年初至今預付 ${Y(ACTUAL_1H.prepay, 3)} − 認列 0.154＝5.975，與公司說法推得值一致）。`
   }), _({
     id: `call-mw`,
     ok: !0,

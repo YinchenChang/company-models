@@ -54,7 +54,7 @@ function forwardPL(e, t) {
       y = e.years[c].cashCapex,
       b = t.wcPctOfRevGrowth * Math.max(0, d - r),
       tb2 = Math.max(0, p - Math.min(N2, p * NOL_USE)),
-      x = p - tb2 * t.tax + v - y - b,
+      x = p - tb2 * t.tax + v - y - b - (e.years[c].prepayRecog || 0), // v0.1b：預付認列為非現金營收，自 UFCF 扣除（預付流入已在現金 CapEx 抵減）
       S = e.years[c].revenue,
       w = e.years[c].newRev,
       T = e.years[c].capacity > 0 ? e.years[c].unsold / e.years[c].capacity : 0,

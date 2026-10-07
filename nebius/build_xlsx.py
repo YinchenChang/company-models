@@ -364,7 +364,13 @@ PPE0 = gi(r, "6/30 毛 PP&E", "US$bn", D['ppeOpen'], f"季報毛額（含尚未�
 CAPSC = gi(r, "每 MW 建置成本倍數（整體）", "%", D['capexScale'], "同時影響 CapEx、汰換與車隊折舊；反向 DCF 用；預設 100%", PCT); r += 1
 r = phdr(r)
 r = prow(r, "每 MW 建置成本", "US$m/MW", CO['scenarios']['capexTemplate']['costMW'], NUM1, "Tokenomics IF_CapexTotal（IT＋機房）：GB300 50.12、VR200 50.26 [Derived]")
-r = prow(r, "客戶預付占毛 CapEx", "%", CO['scenarios']['capexTemplate']['customerFund'], PCT, "有預付的合約比例 70% × 預付占資本支出比 55%（公司說法）[Interested-party]")
+PPD = D['prepay']  # v0.1b：預付款區塊輸入
+PP_SH = gi(r, "有預付的合約比例", "%", PPD['shareOfDeals'], "股東信：約 70% 合約含客戶預付 [Interested-party]", PCT); r += 1
+PP_CV = gi(r, "預付占相關資本支出比", "%", PPD['capexCover'], "股東信：預付覆蓋相關資本支出 50–60%，取中點 [Interested-party]", PCT); r += 1
+PP_N = gi(r, "預付認列年數", "年", PPD['recogYears'], "季報：遞延營收預計 1–5 年內認列，取中點 3 年；自下一期起依期初合約負債直線認列 [Interested-party]", NUM1); r += 1
+PP_CL0 = gi(r, "«VMD» 合約負債（客戶預付餘額）", "US$bn", PPD['openBalance'], f"季報遞延營收 {CO['latestQuarter']['deferredTotal']}（流動 0.979＋非流動 4.996）[Interested-party]"); r += 1
+r = phdr(r)
+r = prow(r, "客戶預付占毛 CapEx", "%", [f"={PP_SH}*{PP_CV}"] * 5, PCT, "＝有預付的合約比例 × 預付占相關資本支出比；乘成長型 CapEx 得預付流入", BLACK)
 r = prow(r, "在帳現金租金（季報到期表）", "US$bn", CO['leases']['onBalanceCash'], NUM, f"營業＋融資租賃未折現付款；«LASTYR» 後尚有 {CO['leases']['afterFY30']} [Verified]")
 r = prow(r, "表外現金租金（未起租）", "US$bn", [0] * 5, NUM, "＝積極路徑 × MW 比例（A 區）[Derived]", BLACK)
 for i in range(5):
@@ -729,8 +735,19 @@ frow("① 毛 CapEx（認列，備忘）", "US$bn",
      f"«P0»＝«YTD» 實際認列 {CO['ytdActual']['capex']}＋«STUB» 模型；對照公司全年指引 {CO['callFacts']['capexLo']}–{CO['callFacts']['capexHi']}。備忘列：用途合計採現金口徑，不用這一列")
 frow("　客戶預付率", "%", lambda i: f"={inref('客戶預付占毛 CapEx', i)}", PCT, GREEN)
 frow("　客戶預付金額（抵減，«STUB» 起）", "US$bn",
-     lambda i: f"={inref('毛 CapEx', i)}*{COLS[i]}{FR['　客戶預付率']}", NUM, BLACK,
-     "«YTD» 的預付已含在實際 CFO 內，不重複計入")
+     lambda i: f"={inref('成長型 CapEx（模型期）', i)}*{COLS[i]}{FR['　客戶預付率']}", NUM, BLACK,
+     "＝成長型 CapEx × 預付比率（汰換 CapEx 不計）；«YTD» 的預付已含在實際 CFO 內，不重複計入")
+frow("　合約負債期初（客戶預付餘額）", "US$bn", lambda i: (f"={PP_CL0}" if i == 0 else "=0"), NUM, BLACK, "«P0» 期初＝«VMD» 季報遞延營收")
+cl_beg = FR["　合約負債期初（客戶預付餘額）"]
+frow("　預付認列（非現金營收）", "US$bn",
+     lambda i: f"=MIN({COLS[i]}{cl_beg},{COLS[i]}{cl_beg}/{PP_N}*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']})", NUM, BLACK,
+     "＝期初合約負債 ÷ 認列年數 × 期間長度；這部分營收已在預付時收現，自營運來源扣除")
+pr_row = FR["　預付認列（非現金營收）"]
+frow("　合約負債期末", "US$bn", lambda i: f"={COLS[i]}{cl_beg}+{COLS[i]}{FR['　客戶預付金額（抵減，«STUB» 起）']}-{COLS[i]}{pr_row}", NUM, BLACK,
+     "＝期初＋預付流入−認列")
+cl_end = FR["　合約負債期末"]
+for i in range(1, 5):
+    ws.cell(row=cl_beg, column=3 + i, value=f"={COLS[i-1]}{cl_end}")
 frow("① CapEx（用途用：«YTD» 現金／«STUB» 毛額）", "US$bn",
      lambda i: (f"={H_CCAPEX}+{inref('毛 CapEx', i)}" if i == 0 else f"={inref('毛 CapEx', i)}"), NUM, BLACK,
      f"«YTD» 採現金流量表的現金購置 {CO['ytdActual']['cashCapex']}；«STUB» 起採毛額，客戶預付在來源端抵回（避免重複計入）")
@@ -799,9 +816,12 @@ frow("Ⓑ 新簽約現金", "US$bn", lambda i: f"='運營_產能與收入'!{COLS
 frow("Ⓒ 非算力服務現金", "US$bn", lambda i: f"={inref('非算力服務現金', i)}", NUM, GREEN)
 frow("Ⓓ 客戶預付（«STUB» 起）", "US$bn",
      lambda i: f"={COLS[i]}{FR['　客戶預付金額（抵減，«STUB» 起）']}", NUM, BLACK)
+frow("Ⓓ2 減：預付認列（非現金營收）", "US$bn", lambda i: f"=-{COLS[i]}{pr_row}", NUM, BLACK,
+     "營收中由合約負債轉入的部分已在預付時收現，不重複計入服務現金（v0.1b）")
 frow("營運來源合計", "US$bn",
      lambda i: (f"={COLS[i]}{FR['Ⓐ0 «YTDL» 實際營運現金流（CFO）']}+{COLS[i]}{FR['Ⓐ RPO 現金（«STUB» 起）']}+"
-                f"{COLS[i]}{FR['Ⓑ 新簽約現金']}+{COLS[i]}{FR['Ⓒ 非算力服務現金']}+{COLS[i]}{FR['Ⓓ 客戶預付（«STUB» 起）']}"),
+                f"{COLS[i]}{FR['Ⓑ 新簽約現金']}+{COLS[i]}{FR['Ⓒ 非算力服務現金']}+{COLS[i]}{FR['Ⓓ 客戶預付（«STUB» 起）']}+"
+                f"{COLS[i]}{FR['Ⓓ2 減：預付認列（非現金營收）']}"),
      NUM, BLACK, bold=True)
 srcop_row = FR["營運來源合計"]
 frow("Ⓔ 股權／可轉債（融資）", "US$bn",
@@ -1444,6 +1464,9 @@ vrow("比較基期營收", "US$bn",
      lambda i: (f"={_n(PREV_FY_REV)}" if i == 0 else (f"={_n(YA['revenue'])}+{PL}{COLS[0]}{rev_v}" if i == 1 else f"={PL}{COLS[i-1]}{rev_v}")),
      NUM, BLACK, f"{PREV_FY} 實際 {_n(PREV_FY_REV)}；«P1» 基期＝«YTD» 實際 {CO['ytdActual']['revenue']}＋«P0» 模型期營收")
 base_v = VR["比較基期營收"]
+vrow("預付認列（非現金營收，扣除）", "US$bn", lambda i: f"='各期收支'!{COLS[i]}{pr_row}", NUM, GREEN,
+     "營收中由合約負債轉入的部分已在預付時收現（預付流入已自現金 CapEx 抵減），UFCF 扣除以免重複（v0.1b）")
+prr_v = VR["預付認列（非現金營收，扣除）"]
 vrow("營運資金變動", "US$bn",
      lambda i: f"={WCP}*MAX(0,{PL}{COLS[i]}{rev_v}-{COLS[i]}{base_v})", NUM, BLACK, f"營收增量的 {_n(V['wcPctOfRevGrowth'] * 100)}%")
 wc_v = VR["營運資金變動"]
@@ -1463,8 +1486,8 @@ vrow("無槓桿所得稅（DCF 用）", "US$bn",
      "與損益表的所得稅不同：此處不扣利息，數字較高，這是 DCF 的正確口徑")
 utax_v = VR["無槓桿所得稅（DCF 用）"]
 vrow("UFCF", "US$bn",
-     lambda i: f"={PL}{COLS[i]}{ebit_v}-{COLS[i]}{utax_v}+{PL}{COLS[i]}{da_v}-{COLS[i]}{capex_v}-{COLS[i]}{wc_v}",
-     NUM, BLACK, "＝EBIT−無槓桿稅＋D&A−現金 CapEx−營運資金。建置期全為負是正常的", bold=True)
+     lambda i: f"={PL}{COLS[i]}{ebit_v}-{COLS[i]}{utax_v}+{PL}{COLS[i]}{da_v}-{COLS[i]}{capex_v}-{COLS[i]}{wc_v}-{COLS[i]}{prr_v}",
+     NUM, BLACK, "＝EBIT−無槓桿稅＋D&A−現金 CapEx（已扣客戶預付）−營運資金−預付認列。建置期全為負是正常的", bold=True)
 ufcf_v = VR["UFCF"]
 vrow("折現期數", "年", lambda i: f"='輸入與假設'!${COLS[i]}${CAL_R['tEnd']}", '0.0', BLACK,
      f"自 «VD» 起算；«P0» 模型期（«STUBW»）的現金流平均落在 {CAL['tEnd'][0]} 年")

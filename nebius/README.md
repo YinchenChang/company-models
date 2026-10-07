@@ -164,7 +164,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd） | 必改 |
+| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance） | 必改 |
 
 ### `ytdActual`：年初至今實際數（10-Q；v4.5 前為 actual1H）
 
@@ -395,7 +395,6 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.mw31.base` | 基準情境：同上 | MW | 580 | 檢查 |
 | `scenarios.mw31.high` | 積極情境：同上 | MW | 833.333 | 檢查 |
 | `scenarios.capexTemplate.costMW` | 每 MW 建置成本（GPU＋網路＋機房內裝），各期 | US$m/MW 清單 | 50.12、50.26、50.26、50.26、50.26 | 檢查 |
-| `scenarios.capexTemplate.customerFund` | 客戶預付占資本支出的比例，各期 | 比例清單 | 0.385、0.385、0.385、0.385、0.385 | 檢查 |
 | `scenarios.capexTemplate.div` | JV 後續增資與策略投資，各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
 
 ### `legacy`：舊版對照值
@@ -439,6 +438,11 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.includeDebt` | 是否依到期表攤還既有債務（true＝是；false＝假設全數再融資） | 是／否 | 是 | 可沿用 |
 | `defaults.includeAtm` | 是否計入期後股權／可轉債募資 | 是／否 | 是 | 可沿用 |
 | `defaults.atm` | 期後股權／可轉債募資淨額（記在第一期） | US$bn | 5.68 | 必改 |
+| `defaults.prepay.shareOfDeals` | 有預付的合約比例（股東信約 70%；預付流入＝成長型 CapEx × 此比例 × 下一欄；v0.1b） | 比例 | 0.7 | 檢查 |
+| `defaults.prepay.capexCover` | 有預付的合約，預付占相關資本支出的比例（股東信 50–60%，取中點） | 比例 | 0.55 | 檢查 |
+| `defaults.prepay.recogYears` | 預付在合約期內的認列年數：自下一期起依期初合約負債直線認列為營收（非現金） | 年 | 3 | 檢查 |
+| `defaults.prepay.openBalance` | 期初合約負債（季報遞延營收；列入滾動檢查） | US$bn | 5.9752 | 必改 |
+| `defaults.prepay.note` | 預付款區塊的說明（來源與口徑） | 文字 | 預付款（v0.1b）：預付流入＝成長型 CapEx … | 必改 |
 | `defaults.overlay` | 電力／維護成本另計（預設關；EBITDA 率已含電費，開啟會重複扣除） | 是／否 | 否 | 可沿用 |
 | `defaults.cdsLink` | CDS 利差是否傳入新債利率（預設關） | 是／否 | 否 | 可沿用 |
 | `defaults.cdsBaseBp` | CDS 傳入新債利率的門檻：超過此值的部分才傳入（5a） | bps | 450 | 檢查 |

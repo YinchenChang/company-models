@@ -152,6 +152,7 @@ ROLL_FIELDS = [
     ('期初餘額', 'defaults.mwYearEnd', '各年底主動電力（首期期初＝前一財年末；GPU 汰換批次）'),
     ('期初餘額', 'defaults.rpoOpen', '期初 RPO'),
     ('期初餘額', 'defaults.rpoPendingAdd', '尚未入 RPO 的新增承諾'),
+    ('期初餘額', 'defaults.prepay.openBalance', '期初合約負債（客戶預付餘額；v0.1b）'),
 ]
 
 

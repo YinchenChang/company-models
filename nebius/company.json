@@ -39,7 +39,8 @@
   "defaults.rpoOpen": "FY26Q2",
   "defaults.rpoPendingAdd": "FY26Q2",
   "defaults.eqCapShares": "FY26Q2",
-  "defaults.mwYearEnd": "FY26Q2"
+  "defaults.mwYearEnd": "FY26Q2",
+  "defaults.prepay.openBalance": "FY26Q2"
  },
  "ytdActual": {
   "throughQuarter": "FY26Q2",
@@ -485,13 +486,6 @@
     50.26,
     50.26
    ],
-   "customerFund": [
-    0.385,
-    0.385,
-    0.385,
-    0.385,
-    0.385
-   ],
    "div": [
     0.0,
     0.0,
@@ -562,6 +556,13 @@
   "includeDebt": true,
   "includeAtm": true,
   "atm": 5.68,
+  "prepay": {
+   "shareOfDeals": 0.7,
+   "capexCover": 0.55,
+   "recogYears": 3,
+   "openBalance": 5.9752,
+   "note": "預付款（v0.1b）：預付流入＝成長型 CapEx × 有預付的合約比例 × 預付占相關資本支出比（股東信：約 70% 合約含預付、覆蓋 50–60% 相關資本支出，取中點 55% [Interested-party]）；合約負債期初＝季報遞延營收 5,975.2（2026-06-30 [Interested-party]）；預付自下一期起依認列年數直線認列為營收（公司：1–5 年內認列，取中點 3 年）；認列部分為非現金營收，自營運現金扣除。"
+  },
   "overlay": false,
   "cdsLink": false,
   "cdsBaseBp": 450,

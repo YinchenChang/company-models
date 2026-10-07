@@ -59,6 +59,7 @@ cmp('總債務', F+'期末總債務（既有＋可轉債＋新債＋高息債）
 cmp('租金合計', F+'　租金合計', H('lease'));
 cmp('排程還本(FY26含1H)', F+'⑤ 排程還本（季報到期表）', y.map((e,i)=>i===0?e.fyDebtPay:e.debtPay));
 cmp('客戶預付', F+T('Ⓓ 客戶預付（«STUB» 起）'), H('external'));
+cmp('預付認列', F+'　預付認列（非現金營收）', H('prepayRecog')); cmp('合約負債期末', F+'　合約負債期末', H('clEnd')); cmp('合約負債期初', F+'　合約負債期初（客戶預付餘額）', H('clBeg')); // v0.1b
 cmp('營運來源合計', F+'營運來源合計', y.map((e,i)=>i===0?e.fySourcesOp:e.sourcesOp));
 cmp('營運缺口', F+'營運缺口（不含融資、不含還本）', y.map((e,i)=>i===0?e.fyOperatingGap:e.operatingGap));
 cmp('期末累積現金', F+'期末累積現金', H('cum'));

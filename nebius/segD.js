@@ -816,6 +816,8 @@ function zM() {
                     [`Ⓑ 新簽約現金`, d.years.map(e => e.newCash)],
                     [`Ⓒ 非算力服務現金`, d.years.map(e => e.legacy)],
                     [`Ⓓ 客戶預付（下半年起）`, d.years.map(e => e.external), void 0, void 0, void 0, `年初至今的遞延營收淨增 ${Y(LATEST_Q.deferredIn, 3)} 已含在 CFO 內，不重複計入。`],
+                    [`Ⓓ2 減：預付認列（非現金營收）`, d.years.map(e => -e.prepayRecog), void 0, void 0, void 0, `＝期初合約負債 ÷ 認列年數 ${e.prepay.recogYears} × 期間長度；這部分營收已在預付時收現，不重複計入。`],
+                    [`　合約負債期末（客戶預付餘額）`, d.years.map(e => e.clEnd), void 0, void 0, void 0, `期初 ${Y(e.prepay.openBalance, 3)}（季報遞延營收）＋預付流入 − 認列。`],
                     [`營運來源合計`, d.years.map((e, t) => t === 0 ? e.fySourcesOp : e.sourcesOp), void 0, void 0, `tot`],
                     [`Ⓔ 股權／可轉債（融資）`, d.years.map((e, t) => t === 0 ? e.fyEquity : e.atm), void 0, void 0, void 0, `${PERIODS[0]}＝年初至今股權 ${Y(ACTUAL_1H.equity, 3)}（ATM 淨額＋NVIDIA 預付認股權證）＋期後可轉債淨現金 ${Y(e.atm, 2)}。`],
                     [`Ⓕ 年初至今實際借款（融資）`, d.years.map((e, t) => t === 0 ? e.fyBorrow : 0), void 0, void 0, void 0, `季報：年初至今借款 ${Y(ACTUAL_1H.borrow, 3)}（2026-03 可轉債）。`],
