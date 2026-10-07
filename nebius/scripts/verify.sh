@@ -6,6 +6,7 @@
 #              新增列、常數改為引用輸入格、文字改為活公式會另列清單，不計為差異（規則見 xl_diff.py 開頭）。
 # 版本號與更新日：預設取 vlog.py 最後一列與 dist/ 成品檔名的日期；可用環境變數 VER、DATE 覆寫。
 # EXPECT＝預期差異清單（v4.5）：傳給 xl_diff.py --expect（升版時對舊版成品做 --vs-dist，列出預期變動的格子，其餘須 0 差異）。
+# CRAWL_EXPECT＝預期畫面文字差異清單（v0.2）：「頁面 X」整頁允許不同、「行 正規式」符合的增刪行允許不同，其餘須 0 差異。
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT="$ROOT/out"
@@ -114,18 +115,33 @@ if (( VS_DIST )); then
   step "9. 與 dist/ 成品比對"
   python3 crawl.py "$DIST_HTML" "$OUT/crawl_dist.json"
   python3 crawl.py "$HTML" "$OUT/crawl_new.json"
-  if python3 - "$OUT/crawl_dist.json" "$OUT/crawl_new.json" <<'EOF'
-import sys, json, difflib
+  if python3 - "$OUT/crawl_dist.json" "$OUT/crawl_new.json" "${CRAWL_EXPECT:-}" <<'EOF'
+import sys, json, difflib, re
 a, b = (json.load(open(p)) for p in sys.argv[1:3])
 pa, pb = a['pages'], b['pages']
 n = sum(len(v) for v in pa.values())
-diff = [k for k in sorted(set(pa) | set(pb)) if pa.get(k) != pb.get(k)]
-print(f'畫面：dist {len(pa)} 個、新版 {len(pb)} 個頁面／分頁，約 {n:,} 字；差異 {len(diff)} 個；頁面錯誤 dist {len(a["errors"])}、新版 {len(b["errors"])}')
-for k in diff[:5]:
-    print('  ', k); print('\n'.join(list(difflib.unified_diff((pa.get(k) or '').splitlines(), (pb.get(k) or '').splitlines(), lineterm='', n=0))[:12]))
+# v0.2：CRAWL_EXPECT＝預期畫面差異清單（「頁面 X」整頁允許不同；「行 正規式」符合的增刪行允許不同），其餘須 0 差異
+pages, rules = set(), []
+if len(sys.argv) > 3 and sys.argv[3]:
+    for ln in open(sys.argv[3], encoding='utf-8'):
+        ln = ln.rstrip('\n')
+        if ln.startswith('頁面 '): pages.add(ln[3:].strip())
+        elif ln.startswith('行 '): rules.append(re.compile(ln[2:]))
+diff, exp, hit = [], [], {}
+for k in sorted(set(pa) | set(pb)):
+    if pa.get(k) == pb.get(k): continue
+    if k in pages: exp.append(k); continue
+    d = [l for l in difflib.unified_diff((pa.get(k) or '').splitlines(), (pb.get(k) or '').splitlines(), lineterm='', n=0) if l[:1] in '+-' and l[:3] not in ('+++', '---')]
+    left = [l for l in d if not any(r.search(l[1:]) for r in rules)]
+    for l in d:
+        if l not in left: hit[l[:60]] = hit.get(l[:60], 0) + 1
+    (diff if left else exp).append(k)
+    if left: print('  ', k); print('\n'.join(left[:12]))
+print(f'畫面：dist {len(pa)} 個、新版 {len(pb)} 個頁面／分頁，約 {n:,} 字；差異 {len(diff)} 個；預期差異 {len(exp)} 個（清單 {sys.argv[3] if len(sys.argv) > 3 and sys.argv[3] else "無"}）；頁面錯誤 dist {len(a["errors"])}、新版 {len(b["errors"])}')
+if exp: print('  整頁預期不同：' + '、'.join(sorted(pages & set(exp))) + f'；其餘 {len(set(exp) - pages)} 個頁面只有清單內的行不同（{len(hit)} 種行，合計 {sum(hit.values())} 處）')
 sys.exit(1 if diff or b['errors'] or not pa else 0)
 EOF
-  then ok "crawl 畫面文字 0 差異"; else bad "crawl 畫面文字"; fi
+  then ok "crawl 畫面文字 0 差異${CRAWL_EXPECT:+（預期差異清單除外）}"; else bad "crawl 畫面文字"; fi
   # v4.2：--by-label——列數或 A 欄不同的工作表以「區段＋列名稱」配對（新增列另列清單；列名稱重複即報錯），其餘逐格
   r=$(python3 xl_diff.py "$DIST_XLSX" "$XLSX" --values --by-label ${EXPECT:+--expect=$EXPECT} || true); echo "$r"
   if [[ "$(head -1 <<<"$r")" == "0 differences" ]]; then ok "xl_diff --values --by-label 0 差異"; else bad "xl_diff --values --by-label"; fi

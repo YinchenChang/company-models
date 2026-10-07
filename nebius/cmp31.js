@@ -104,7 +104,7 @@ cmp('BS 總股數', NB+'總股數（期末）', f.map(e=>e.shares));
 cmp('BS 債務/EBITDA', NB+'總債務 ÷ EBITDA（年化）', y.map((e,t)=>e.totalDebtEnd/Math.max(e.ebitdaPL/PERIOD_YEARS[t],.01)));
 cmp('DCF 0截斷', V+'DCF 每股：0 截斷', [p.d.zeroPerShare]);
 cmp('DCF 選擇權', V+'DCF 每股：選擇權（Merton）', [p.d.optPerShare]);
-cmp('DCF 失效', V+'DCF 失效？（WACC ≤ g 或常態化 FCF ≤ 0）', [p.d.invalid?1:0]);
+cmp('DCF 失效', V+'DCF 失效？（WACC ≤ g）', [p.d.invalid?1:0]);
 cmp('錨定年EBITDA', V+'錨定年度 EBITDA', [f[p.evK].ebitda]);
 cmp('錨定年末淨負債', V+'錨定年度末淨負債（總債務 − 現金）', [p.ndA]);
 cmp('錨定年末股數', V+'錨定年度末股數（含瀑布新股）', [p.shA]);
