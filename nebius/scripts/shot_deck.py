@@ -29,6 +29,10 @@ JS_CHECK = r"""
       if (own && fs < 18) out.push(`字級 ${fs}px < 18：「${el.innerText.trim().slice(0, 20)}」`);
     }
   }
+  const body = sl.children[2];  // 內容區（標題與頁尾之間）：內容不得壓到頁尾
+  if (body) { const B = body.getBoundingClientRect();
+    for (const el of body.querySelectorAll('*')) { const r = el.getBoundingClientRect();
+      if (r.width && r.height && r.bottom > B.bottom + 1) out.push(`壓到頁尾：${el.tagName} 超出 ${Math.round(r.bottom - B.bottom)}px「${(el.innerText || '').trim().slice(0, 30)}」`); } }
   const txt = sl.innerText;
   for (const w of ['NaN', 'undefined', 'Infinity']) if (txt.includes(w)) out.push(`出現 ${w}`);
   return { issues: [...new Set(out)].slice(0, 12), title: (sl.querySelector('h2') || {}).innerText || '', kicker: (sl.firstElementChild || {}).innerText || '' };

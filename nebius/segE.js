@@ -738,7 +738,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
     [`結論`, s => s.call]
   ];
   S(`三情境`, `三個情境只改擴張力道，結論皆為${scen.every(s => s.call === scen[0].call) ? `「${scen[0].call}」` : `不同：${scen.map(s => s.call).join('／')}`}${scen[0].tgt > scen[1].tgt && scen[1].tgt > scen[2].tgt ? `；蓋得愈多，目標價愈低` : ``}`, [
-    elQ(`table`, { key: `t`, style: { width: `100%`, borderCollapse: `collapse`, fontSize: 17, fontVariantNumeric: `tabular-nums` } }, [
+    elQ(`table`, { key: `t`, style: { width: `100%`, borderCollapse: `collapse`, fontSize: 16.5, lineHeight: 1.35, fontVariantNumeric: `tabular-nums` } }, [
       elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [elQ(`th`, { key: `x`, style: { textAlign: `left`, padding: `6px 12px`, borderBottom: `2px solid var(--color-ink)` } }, ``),
         ...scen.map(s => elQ(`th`, { key: s.sc, style: { textAlign: `right`, padding: `6px 12px`, borderBottom: `2px solid var(--color-ink)`, color: s.sc === e.scenario ? `var(--color-accent)` : `var(--color-fg)` } }, s.label))])),
       elQ(`tbody`, { key: `b` }, rowsQ.map(([lab, fn], i) => elQ(`tr`, { key: lab, style: { background: i >= 7 ? `var(--color-surface)` : `transparent`, fontWeight: i === 7 ? 700 : 400 } }, [
@@ -833,7 +833,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
         elQ(`ul`, { key: `u`, style: { fontSize: 18, paddingLeft: 24, margin: 0, listStyle: `disc` } }, [
           li(`DCF 股權價值${f.d.perShareRaw < 0 ? `為負（未截斷每股 −$${Y(-f.d.perShareRaw, 1)}），以 0 截斷` : `為正`}；截斷時，只影響 DCF 的變數（如股權折價與上限）不反映在目標價`, 1),
           li(`終值現值 ${mA(f.d.pvTv, 1)}bn、五期 FCF 現值 ${mA(f.d.pvFcf, 1)}bn：企業價值幾乎全來自終值，DCF 對 WACC、永續成長極敏感`, 2),
-          li(`租金尚未改為 MW 驅動；以具名站點基準計，五期可能低估約 $${Y(rentGap, 1)}bn`, 3),
+          li(`租金尚未改為 MW 驅動；以具名站點基準計，五期可能${rentGap >= 0 ? `低估` : `高估`}約 $${Y(Math.abs(rentGap), 1)}bn`, 3),
           li(`EV/EBITDA 腿錨定 ${PERIOD_LABELS[o.evYear ?? 1]}；錨定年度與倍數的選擇會大幅改變目標價（見評價方法頁）`, 4)
         ])
       ])
