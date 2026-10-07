@@ -189,6 +189,12 @@ F = [
  ('quarterly.actuals', '季度實際數（公司公布後填入；預設空白＝待公布），{季別: {各指標, source, date, tag}}；Excel 對應「輸入與假設」J 區藍字格', '物件', M),
  ('varianceReasons._note', '差異原因的說明文字（不進程式）', '文字', K),
  ('varianceReasons.list', '差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗', '清單', C),
+ ('tokenomics._note', 'Tokenomics 取數層的說明（不進程式；W1）', '文字', K),
+ ('tokenomics.snapshotFile', 'Tokenomics 快照檔路徑（tools/tokenomics/import_tokenomics.py 產生；Excel「Tokenomics_取數」分頁讀此檔；W1）', '路徑', K),
+ ('tokenomics.version', '快照的 Tokenomics 版本（model/CURRENT 的版本號）', '文字', K),
+ ('tokenomics.commit', '快照的 Tokenomics commit SHA', '文字', K),
+ ('tokenomics.names', '引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt）', '清單', C),
+ ('tokenomics.optional', '其中 Tokenomics 尚未提供時記為 missing 的名稱（v5.25 預計新增）', '清單', C),
 ]
 LQ = {
  'filed': ('申報日', '日期'), 'periodEnd': ('季末日', '日期'), 'revenue': ('當季營收', 'US$bn'), 'yoy': ('當季營收年增率', '比例'),
@@ -274,7 +280,8 @@ SECT = [('meta', '基本資料'), ('calendar', '期間與日期（v4.5）'), ('a
         ('rpo', '已簽約未認列營收（RPO）'), ('leases', '租約'), ('debt', '既有債務'), ('latestQuarter', '最新一季財報數字（10-Q）'),
         ('callFacts', '法說會與期後事項'), ('scenarios', '三個擴張情境'), ('legacy', '舊版對照值'),
         ('defaults', '預設假設（畫面上可調的輸入）'), ('valuation', '評價參數'), ('methodology', '評價方法與評等門檻'), ('peers', '同業比較（Comps）'),
-        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）')]
+        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'),
+        ('tokenomics', 'Tokenomics 取數層（W1；快照檔、版本與引用名稱）')]
 out, shown = ['**填表慣例**',
                '- 金額單位是**十億美元（US$bn）**，例如 4.653 代表 46.53 億美元；另有標示的例外：每股（US$）、每 MW 建置成本（百萬美元／MW，US$m/MW）、股數（十億股，bn）。',
                '- 「比例」寫成小數（0.25＝25%）；標示「%」的欄位寫成百分點（25＝25%）。兩種寫法沿用既有程式，不可混用。',

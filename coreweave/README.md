@@ -559,6 +559,17 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.cashTaxNote` | 年初至今現金稅的說明（損益與評價頁；v4.5） | 文字 | H1 現金稅約 0.1bn | 必改 |
 | `texts.mwYearEndNotes` | 各年底主動電力的來源說明，以年份為鍵（Excel「輸入與假設」說明欄；5a） | 物件（文字） | 物件（2023、2024、2025） | 必改 |
 
+### `tokenomics`：Tokenomics 取數層（W1；快照檔、版本與引用名稱）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `tokenomics._note` | Tokenomics 取數層的說明（不進程式；W1） | 文字 | 算力相關的產業與物理層資料改引用 Tokenomic… | 可沿用 |
+| `tokenomics.snapshotFile` | Tokenomics 快照檔路徑（tools/tokenomics/import_tokenomics.py 產生；Excel「Tokenomics_取數」分頁讀此檔；W1） | 路徑 | data/tokenomics_snapshot_v… | 可沿用 |
+| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v5.24 | 可沿用 |
+| `tokenomics.commit` | 快照的 Tokenomics commit SHA | 文字 | 098873a3c6855d1ef5e3414d5a… | 可沿用 |
+| `tokenomics.names` | 引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW | 檢查 |
+| `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（v5.25 預計新增） | 清單 | IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW | 檢查 |
+
 ## v4.0 架構：公司資料單一來源
 - **company.json**：所有公司原始輸入（HTML 引擎與 Excel 共用）。換公司時先改這個檔；衍生值（情境 Billable 比率、Q3 新增 RPO 權重、債務合計與平均利率）留在 segA 開頭由程式推導。
 - HTML：`build_html_portable.py` 把 company.json 注入為 `COMPANY_DATA`，segA 開頭讀取。Excel：`build_xlsx.py` 開頭讀同一檔（75 項輸入，百分點欄位以 `PCT_()` 轉成比例）。
