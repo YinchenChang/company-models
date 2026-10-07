@@ -19,7 +19,7 @@
 
 ## 4. 模型狀態（v0.6-P1，`13c16f0`）
 - SRC_OAI 106 列；Inputs 233 列（Assumed 182、Decision 35、Analogy 16；編號 1–245 無空洞）；v0.5 葉節點 849 全有去處；Checks C1–C27（C27 WARN：listPriceFYAvg 2026 區間待 P2）。
-- TK_Link：v5.14 快照（OK 37、MISSING 11）→ S1 更新至 v5.24。
+- TK_Link：v5.14 快照（OK 37、MISSING 11）→ S1 更新至 v5.24（master `bdb0de7`，62 名）→ S4 改取 **v5.25**（master `97e7b20`，`20261007_Tokenomics_v5.25.xlsx`，SHA-256 `43341b8d…c59127`；Interface／L1 數值與 v5.24 相同）。v5.26（PR #27）合併前不引用其新名稱。
 - v5.23 X10 已知影響（Tokenomics 串通知）：`IF_TrainCost_Luna／Sol／Astra` +14.34%／+10.82%／+9.21%、`IF_ProgGWyr_*` 同比例、`IF_AllocQ1` 0.609→0.636、`IF_AllocQ2` 0.637→0.664、`IF_AllocRDGW` +12.4%、`L1_Ans3` +12.4%；`IF_FullCost_*` VR200 +0.20%／+0.55%／+2.87%；`IF_RevGW_*`、`IF_TrainGenDefault` 不變。v5.24：訓練輸出上修（Tokenomics 交接第 0.1 節）。
 
 ## 5. 已定決定摘要（詳見 r6 第 2 節）

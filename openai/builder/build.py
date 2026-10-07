@@ -23,8 +23,9 @@ from common import F_BOLD, F_CALC, F_IN, F_NOTE, WRAP, header, lo_recalc, put, t
 from tk_link import PENDING_NOTE, read_snapshot  # noqa: E402
 from v05_map import REGISTRY_PATH, SEP, build_map, coverage_report  # noqa: E402
 import p2  # noqa: E402
+import p3  # noqa: E402
 
-VERSION = "v0.6-P2"
+VERSION = "v0.6-P3"
 KIND_LABEL = {"SRC": "SRC_OAI", "INP": "Inputs", "FORMULA": "公式（後續工作包）", "DUP": "重複併入", "SKIP": "不遷入", "TK": "不遷入；改取 TK_Link"}
 SRC_COLS = ["SRC_ID", "指標", "數值", "低", "高", "單位", "口徑", "適用對象", "日期", "出處（v0.5 原文）", "來源等級", "立場", "立場說明",
             "一手／二手", "狀態", "取代者", "v0.5 標記", "查核狀態（v0.5 chk）", "v0.5 路徑", "模型使用位置", "備註",
@@ -252,7 +253,7 @@ def sheet_derived(wb, R):
     ws.column_dimensions["G"].width = 70
 
 
-def sheet_checks(wb, R, n_src, n_inp, n_pending, P2):
+def sheet_checks(wb, R, n_src, n_inp, n_pending, P2, P3):
     ws = wb.create_sheet("Checks")
     title(ws, "Checks — P1 檢查（公式；結果 ERR 的格數＝CHK_Errors）",
           "OK／ERR：比對期望值；INFO：只列示。編號（C##）由 builder/id_registry.json 固定：新檢查取下一個號碼，退役號碼不重用（F1）。期望值為 builder 寫入的常數（黑字）。")
@@ -305,6 +306,7 @@ def sheet_checks(wb, R, n_src, n_inp, n_pending, P2):
         ("E8f：Oracle 合約年額＝v0.5 值（$B/年）", "=V9_OracleAnnual", R.get("spending/contracts/oracle/annual"), "tol", "總額÷年數"),
     ]
     rows += p2_checks(R, P2, S, rowof)
+    rows += p3_checks(R, P3, S, rowof)
     # F1：Checks 編號納入穩定 ID registry（label → C##）
     reg = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
     known = reg.setdefault("CHK", {})
@@ -383,13 +385,58 @@ def p2_checks(R, P2, S, rowof):
     ]
 
 
+def p3_checks(R, P3, S, rowof):
+    """v0.6-P3 新增的檢查（編號取 registry 下一號）。"""
+    C, V = P3["C"], P3["V"]
+    cr, vr = C.rows, V.rows
+    yr = lambda key: f"Compute!$D${cr[key]}:$I${cr[key]}"  # noqa: E731
+    yr26 = lambda key: f"Compute!$E${cr[key]}:$I${cr[key]}"  # noqa: E731
+    shares = "+".join(f"SUMPRODUCT(--({yr('s_' + g)}<0))" for g in p3.GEN_KEYS)
+    g3r = rowof(inp_id(R, "GB300 占 Blackwell 比例", "2025")), rowof(inp_id(R, "GB300 占 Blackwell 比例", "2026 起"))
+    g3 = "+".join(f"(Inputs!$E${r}<0)+(Inputs!$E${r}>1)" for r in g3r)
+    labels = "+".join(f"(COUNTIF(TK_HdrGen,Compute!${c}${cr['g_lab']})=0)" for c in "DEFGH")
+    sup_sum = ",".join(f"Compute!$D${cr['sup_' + k]}:$I${cr['sup_' + k]}" for k in P3["contracts"])
+    return [
+        ("P3：世代占比合計≠1 的年數＋任一世代占比 <0 的格數", f"=SUMPRODUCT(--(ABS({yr('s_sum')}-1)>0.000000001))+{shares}", 0, "eq",
+         "六世代（Hopper、GB200、GB300、VR200、Rubin Ultra、自研／其他）；自研＝1−其餘，不得為負"),
+        ("P3：GB300 占 Blackwell 比例 ∉ [0,1] 的列數", "=" + g3, 0, "eq", "Inputs（r6 P3-2）"),
+        ("P3：Compute 世代名稱在 TK_HdrGen 找不到的數", "=" + labels, 0, "eq", "SUMIFS 取 TK_IF_TokGW_* 的鍵；Tokenomics 改名時轉 ERR"),
+        ("P3：η（2025）≤0 或非數值（違反數）", "=IF(ISNUMBER(CMP_Eta2025),IF(CMP_Eta2025>0,0,1),1)", 0, "eq", "V2"),
+        ("P3：V2 恆等式 η × 支出換算 GW − token 換算 GW（2025，GW）", f"=CMP_Eta2025*CMP_SpendGW2025-Compute!$D${cr['gw_tok']}", 0, "tol", "計算鏈可逐列追出"),
+        ("P3：2025 有效推論 GW − 支出換算 GW（GW）", f"=Compute!$D${cr['eff']}-CMP_SpendGW2025", 0, "tol", "η 定義使 2025 兩者相等"),
+        ("P3：推論（截頂後）＋研發＋閒置 − 供給（2026–2030 各年差的最大絕對值，GW）", f"=MAX(MAX({yr26('ident')}),-MIN({yr26('ident')}))", 0, "tol", "v0.5 算力MW 第 36 列（以 MAX／MIN 取最大絕對值：pycel 的 SUMPRODUCT(ABS()) 在全為 0 時回傳整數型別，ISNUMBER 判定與 Excel 不同）"),
+        ("P3：容量上限係數 ∉ (0,1] 的年數", f"=SUMPRODUCT(--({yr('cap')}<=0))+SUMPRODUCT(--({yr('cap')}>1.000000001))", 0, "eq", "V1a"),
+        ("P3：截頂後總額 > 未截頂總額 的年數", f"=SUMPRODUCT(--(Revenue!$D${vr['gross_c']}:$I${vr['gross_c']}>Revenue!$D${vr['gross']}:$I${vr['gross']}+0.000000001))", 0, "eq", ""),
+        ("P3：研發 GW < 0 的年數", f"=SUMPRODUCT(--({yr('rd')}<0))", 0, "eq", "供給 ×（1−閒置）不足以容納截頂後推論時轉 ERR"),
+        ("P3：逐合約加總 − 合約供給合計（絕對值合計，GW）", f"=ABS(SUM({sup_sum})-SUM({yr('sup')}))", 0, "tol", "揭露／未揭露小計與合計一致"),
+        ("P3：截頂後 Microsoft 分成累計超出上限的部分（$B）", f"=MAX(0,MAX(REV_MSCumCapped)-{S('Microsoft 分成總額上限')})", 0, "tol", "上限 $38B（SRC_OAI）"),
+        ("P3 預覽：η（2025）", "=CMP_Eta2025", None, "info", "工作單參考值 0.196 為 Tokenomics v5.14 Block 6 需求口徑；本模型需求口徑不同（P2），以實算為準"),
+        ("P3 並列：本模型 2025 推論 GW（token 換算）", f"=Compute!$D${cr['gw_tok']}", None, "info", "V11：本模型組合 × TK 世代產能"),
+        ("P3 並列：TK IF_AllocServeGW（2025 服務 GW；Tokenomics Alloc 口徑）", "=TK_IF_AllocServeGW", None, "info", "V11：Alloc 對應值只在檢查頁並列"),
+        ("P3 並列：TK Alloc 隱含每 GW 年產能＝IF_AllocDemand ÷ IF_AllocServeGW（M tok/GW/年）", "=TK_IF_AllocDemand/TK_IF_AllocServeGW", None, "info",
+         "對照本模型 2025 付費＋免費加權產能（下一列）"),
+        ("P3 並列：本模型 2025 每 GW 年產能（付費＋免費加權＝token 合計 ÷ token GW）", f"=(Compute!$D${cr['tok_paid']}+Compute!$D${cr['tok_free']})/Compute!$D${cr['gw_tok']}", None, "info", ""),
+        ("P3 並列：本模型 2025 研發 GW（訓練支出 ÷ 合約價）", f"=Compute!$D${cr['rd']}", None, "info", "r6 P3-4"),
+        ("P3 並列：TK IF_AllocRDGW（研發 GW·年，物理下限）", "=TK_IF_AllocRDGW", None, "info", "只並列（r6 P3-4）"),
+        ("P3 並列：TK IF_AllocImpliedNk（隱含 N × k）", "=TK_IF_AllocImpliedNk", None, "info", "只並列（r6 P3-4）"),
+        ("P3 三角對照：2025 隱含每 GW 年算力支出 − 合約價（$B/GW/年）", f"=Compute!$D${cr['t_gap']}", None, "info", "r6 P3-3：約 16.3 − 12；只列差距"),
+        ("P3 對照：2025 總需求 GW − 年均算力 GW（0.6／1.9 平均）", "=CMP_DemGapAvg2025", None, "info", "r6 P3-5；只列差距"),
+        ("P3 預覽：容量截頂年數（2026–2030）", "=SUM(CMP_CapFlag)", None, "info", "V1a 旗標"),
+        ("P3 對照：計畫算力 2026–30 累計 ÷ 合約價（GW·年）", f"={S('計畫算力支出：2026–2030 累計')}/{inp_id(R, '每 GW 年合約價')}", None, "info",
+         "SRC_OAI 856（600–856）；只作檢查（r6 P3-4）"),
+        ("P3 對照：本模型 2026–30 合約供給 GW·年合計", f"=SUM(Compute!$E${cr['sup']}:$I${cr['sup']})", None, "info", ""),
+        ("P3 對照：本模型 2026–30 總需求 GW·年合計", f"=SUM(Compute!$E${cr['dem']}:$I${cr['dem']})", None, "info", ""),
+        ("P3 預覽：2030 有效推論 GW", f"=Compute!$I${cr['eff']}", None, "info", "η 依 Inputs 路徑開關（基準沿用）"),
+    ]
+
+
 def sheet_readme(wb, snap, date, summary):
     ws = wb.active
     ws.title = "README"
     title(ws, f"OpenAI 收支模型 {VERSION}（{date}）",
           "命題（Andy 2026-09-30）：OpenAI 每 VR 等值 GW 的營收能否覆蓋每 GW 全成本；若不能，缺口由誰、以什麼條件融資。FY2025–FY2030，曆年制。")
     lines = [
-        ("本版範圍", "P1：repo 骨架、SRC_OAI（公司財務原始數據）、TK_Link（Tokenomics 快照）、Inputs（v0.5 Assumed 項目遷入）。P2：Demand（需求與 token 量）、Revenue（營收、Microsoft 分成、淨額）。算力、成本、融資於 P3–P5。"),
+        ("本版範圍", "P1：repo 骨架、SRC_OAI（公司財務原始數據）、TK_Link（Tokenomics 快照）、Inputs（v0.5 Assumed 項目遷入）。P2：Demand（需求與 token 量）、Revenue（營收、Microsoft 分成、淨額）。P3：Compute（算力需求與供給、η、容量上限、VR 等值）、Revenue 第八節（截頂後營收）。成本、融資於 P4–P5。"),
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構，重建時保留 Excel 內已改過的藍字。"),
         ("SRC_OAI", f"{summary['src']} 列；v0.5『已取得的原始訊息』逐筆遷入（Interested-party／Verified）。"),
         ("TK_Link", f"Tokenomics {snap['version']}（{snap['file']}），master 提交 {snap['sha'][:7]}，讀取日 {date}；{summary['tk_ok']} 個名稱有值、{summary['tk_pending']} 個待 Tokenomics 提供。"),
@@ -397,7 +444,8 @@ def sheet_readme(wb, snap, date, summary):
         ("Map_v05", f"v0.5 JSON {summary['leaves']} 個葉節點的去處。"),
         ("Demand", "P2 需求：訂閱各方案人數、每日任務數 × 每任務 token、API 任務數與計費 token；token 量（層級 × 付費／免費，具名範圍 DEM_Tok_*，供 P3）。"),
         ("Revenue", "P2 營收：API 單價路徑（2026 依價格事件時點天數加權）、訂閱、API、廣告、其他、總額、Microsoft 分成、淨額（具名範圍 REV_*）。"),
-        ("Checks", "P1、P2 檢查；CHK_Errors 必須為 0。"),
+        ("Compute", "P3 算力：V1 世代組合（Blackwell 拆 GB200／GB300；自研＝VR200 × 係數）、付費／免費每 GW 年產能（TK IF_TokGW × IF_Util）、推論 GW（token 換算）、V2 η（2025 推論支出 ÷ 合約價校準）、有效推論 GW、三角對照、研發 GW、總需求 GW、供給 GW（逐合約）、容量上限（V1a）、VR 等值換算、敏感度（具名範圍 CMP_*）。"),
+        ("Checks", "P1、P2、P3 檢查；CHK_Errors 必須為 0。"),
         ("一手／二手圖例", "『二手（含一手公告轉載）』＝媒體轉載公司公開公告；『二手（含一手轉載）』＝F2，媒體轉載外流財報或內部文件；兩者不合併。（同文見 SRC_OAI 頁首說明）"),
         ("標記", "Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律附區間）。"),
         ("分層", "公司財務原始數據→SRC_OAI；AI 技術與算力→TK_Link（取自 Tokenomics 名稱）；假設→Inputs。"),
@@ -449,7 +497,8 @@ def main():
     sheet_inputs(wb, R, final)
     sheet_derived(wb, R)
     P2 = p2.build_p2(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), lambda iid: inp_row(R, iid))
-    sheet_checks(wb, R, len(R.src_rows), len(R.inp_rows), summary["tk_pending"], P2)
+    P3 = p3.build_p3(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), lambda iid: inp_row(R, iid), P2, snap)
+    sheet_checks(wb, R, len(R.src_rows), len(R.inp_rows), summary["tk_pending"], P2, P3)
     sheet_map(wb, R)
     preserve.write_defaults(wb, final)
     raw = Path(tempfile.mkdtemp()) / a.out.name

@@ -102,3 +102,11 @@ def test_v12_pro_constraints_in_src(R):
     pro = [r for r in R.src_rows if r["metric"].startswith("Pro ")]
     assert len(pro) == 2
     assert {r["unit"] for r in pro} == {"倍", "比例"}
+
+
+def test_e6_no_constants_in_p3_formulas():
+    """E6（P3）：Compute 頁的公式不得內含常數；恆等式只容許 1−比例、年數 +1、1＋成長率；定義常數（T→M、等差級數除數）在 Inputs。
+    世代名稱與成本情境為文字格（SUMIFS 的鍵），不在公式內。"""
+    import openpyxl
+    wb = openpyxl.load_workbook(current_model_path())
+    assert _e6_scan(wb["Compute"]) >= 600
