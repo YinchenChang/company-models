@@ -12,7 +12,7 @@
 - 察覺額度或時間快用完：停止新工作，先 commit、寫清楚進度檔，push 後結束。
 
 ## 2. 分支、PR、合併
-- 每張工作單一個分支、一個 PR（base `main`），分支名寫在工作單。開工第一步：從最新 `main` 開分支、push、開 draft PR（`gh api repos/YinchenChang/company-models/pulls -f title=... -f head=... -f base=main -F draft=true -f body=...`；GraphQL 不可用）。
+- 每張工作單一個分支、一個 PR，分支名寫在工作單。合併需 Andy 核可，可能晚於下一張開工，所以採**疊加分支**：前一張已合併 → 從最新 `main` 開分支、PR base `main`；前一張未合併 → 從前一張的分支最新 commit 開分支、PR base 設為前一張的分支（前一張合併後由 chat 端把 base 改回 `main`）。開工第一步：開分支、push、開 draft PR（`gh api repos/YinchenChang/company-models/pulls -f title=... -f head=... -f base=main -F draft=true -f body=...`；GraphQL 不可用）。
 - **代理不得合併、不得 force push、不得改 `main`、不得刪除分支或歷史。** 合併由 chat 端審查後執行。
 - 推送前 `git fetch origin main`；遇 HTTP 413 先 fetch 再推。
 - 只改 `coreweave/` 與本工作單指定的根目錄路徑（`tools/tokenomics/`）；不得動 `nebius/`。
