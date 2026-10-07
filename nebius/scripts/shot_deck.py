@@ -17,6 +17,18 @@ JS_CHECK = r"""
     if (el.children.length === 0 && t && (el.scrollWidth > el.clientWidth + 2) && cs.overflow !== 'visible')
       out.push(`文字被截斷：${el.tagName}「${t}」`);
   }
+  // 正式簡報頁（非「附錄｜」）：說明文字字級 ≥ 18px（頁尾除外）、標題 ≥ 36px
+  const kick = (sl.firstElementChild || {}).innerText || '';
+  if (!kick.startsWith('附錄')) {
+    const foot = sl.lastElementChild, h2 = sl.querySelector('h2');
+    if (h2 && parseFloat(getComputedStyle(h2).fontSize) < 36) out.push(`標題字級 ${getComputedStyle(h2).fontSize} < 36px`);
+    for (const el of sl.querySelectorAll('*')) {
+      if (foot && foot.contains(el)) continue;
+      const own = [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim());
+      const fs = parseFloat(getComputedStyle(el).fontSize);
+      if (own && fs < 18) out.push(`字級 ${fs}px < 18：「${el.innerText.trim().slice(0, 20)}」`);
+    }
+  }
   const txt = sl.innerText;
   for (const w of ['NaN', 'undefined', 'Infinity']) if (txt.includes(w)) out.push(`出現 ${w}`);
   return { issues: [...new Set(out)].slice(0, 12), title: (sl.querySelector('h2') || {}).innerText || '', kicker: (sl.firstElementChild || {}).innerText || '' };
@@ -33,6 +45,10 @@ def main(html, out):
         errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
         pg.goto('file://' + os.path.abspath(html)); pg.wait_for_timeout(3000)
         pg.screenshot(path=os.path.join(out, '00_頁首.png'))
+        # 簡報模式：第 1 頁進場動畫播完後截一張（確認動畫結束時內容完整可見）
+        pg.get_by_role('button', name='簡報模式（全螢幕）').click(); pg.wait_for_timeout(1800)
+        pg.screenshot(path=os.path.join(out, '00_簡報模式.png'))
+        pg.keyboard.press('Escape'); pg.wait_for_timeout(300)
         pg.emulate_media(media='print'); pg.wait_for_timeout(800)
         slides = pg.locator('.sumQ-slide')
         n = slides.count()

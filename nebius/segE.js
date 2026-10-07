@@ -355,6 +355,18 @@ var SUMCSSQ = `
   .sumQ-slide { border: 0 !important; border-radius: 0 !important; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+/* v0.2：簡報模式換頁時的進場動畫（只在 .sumQ-pres 內；一般檢視、列印與 PDF 不播放，數字不會閃爍或遺漏） */
+@keyframes sumQin { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes sumQgx { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes sumQgy { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+.sumQ-pres .sumQ-a { animation: sumQin .5s ease-out both; }
+.sumQ-pres .sumQ-a2 { animation-delay: .12s; }
+.sumQ-pres .sumQ-a3 { animation-delay: .24s; }
+.sumQ-pres .sumQ-a4 { animation-delay: .4s; }
+.sumQ-pres .sumQ-g { animation: sumQgx .8s cubic-bezier(.2,.7,.2,1) .25s both; transform-origin: left center; }
+.sumQ-pres .sumQ-gy { animation: sumQgy .8s cubic-bezier(.2,.7,.2,1) .25s both; transform-origin: center bottom; }
+@media (prefers-reduced-motion: reduce) { .sumQ-pres * { animation: none !important; } }
+@media print { .sumQ-a, .sumQ-g, .sumQ-gy { animation: none !important; opacity: 1 !important; transform: none !important; } }
 .sumQ-btn { height: 40px; padding: 0 16px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--color-border); background: var(--color-card); color: var(--color-fg); }
 .sumQ-btn:hover { background: var(--color-surface); }
 .sumQ-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
@@ -563,7 +575,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
           elQ(`div`, { key: `v`, style: { fontSize: 24, fontWeight: 800, color: COLQ.cons } }, `$${Y(K.acv[0], 0)}–${Y(K.acv[1], 0)}m`),
           elQ(`div`, { key: `l`, style: { fontSize: 18, color: `var(--color-muted)` } }, `公司新約 ACV（自述）`)]) : null,
         elQ(`div`, { key: `ax`, style: { position: `absolute`, left: 0, right: 0, top: 141, height: 4, background: `var(--color-border)` } }),
-        ...ticks.map(t => elQ(`div`, { key: `t${t}`, style: { position: `absolute`, left: X(t), top: 150, transform: `translateX(-50%)`, fontSize: 15, color: `var(--color-subtle)` } }, `${t}`)),
+        ...ticks.map(t => elQ(`div`, { key: `t${t}`, style: { position: `absolute`, left: X(t), top: 150, transform: `translateX(-50%)`, fontSize: 18, color: `var(--color-subtle)` } }, `${t}`)),
         K ? mark(`real`, K.realized, `實現（最新一季）`, `$${Y(K.realized, 1)}m`, COLQ.real, !0, `c`, !0) : null,
         ...der.map(([lab, x, sc], i) => mark(sc, x, `推導・${lab}`, `$${Y(x, 1)}m`, sc === curSc ? COLQ.model : `${COLQ.model}99`, !1, `c`, sc === curSc)),
         Number.isFinite(need) ? mark(`need`, need, `現價所需`, `$${Y(need, 1)}m`, COLQ.need, !0, `d`, !0) : null
