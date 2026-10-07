@@ -1,0 +1,39 @@
+# Parity 情境檔（CLAUDE.md 第 3 節）。每個情境：改寫輸入 → LibreOffice 重算（基準）→ 與 engine 比對全部公式格。
+# 輸入一律以具名範圍設定（SRC_OAI_nnn、INP_nnn、TK_*）。v0.6-P1 只有檢查頁有公式，情境用來證明輸入確實連動檢查。
+workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
+  sheets: [README, SRC_OAI, TK_Link, Inputs, Derived_V9, Checks, Map_v05, _Defaults]
+  formula_cells: 652
+  defined_names: 426              # S1（v5.24 快照）：401＋25 個新 TK_ 名稱
+  src_rows: 106                   # SRC_OAI 筆數（與報告一致）
+  src_named: 104                  # 有數值的列才有 SRC_OAI_nnn 名稱（Business 每席只有低／高；退役 ID 不重用）
+  inp_rows: 233
+  tk_values: 62                   # TK_Link 有值的名稱（TK_IF_／TK_SRC_／TK_L1_ 具名範圍；S1 v5.24 快照：37＋25）
+  tk_pending: 0                   # 待 Tokenomics 提供（S1：v5.24 已全部提供）
+  v05_leaves: 849
+  v05_tagged_objects: 121         # chat 端計數；本包以 JSON 實數核對
+
+scenarios:
+  - id: base
+    description: 基準（不改任何輸入）
+    inputs: {}
+  - id: a_equity_sum_broken
+    description: 融資輪 Amazon 首筆 15→20，使無條件部分 90、90＋35≠122（C12、C25 應轉 ERR）
+    inputs: {"SRC_OAI_109": 20}
+  - id: b_input_out_of_range
+    description: 快取命中率 0.55→0.9，超出高端 0.75（Inputs 區間異常應為 1）
+    inputs: {"INP_029": 0.9}
+  - id: c_util_out_of_range
+    description: Tokenomics 基準利用率快照 0.6→1.2（C10 應轉 ERR）
+    inputs: {"TK_IF_Util": 1.2}
+  - id: d_oracle_term
+    description: Oracle 合約迄年 2031→2026，使期間起>迄（C13 應轉 ERR；預覽價隨之改變）
+    inputs: {"SRC_OAI_060": 2026}
+  - id: e_pro_ratio_high
+    description: Pro 占付費總數比例 0.8%→2%，超出 SRC 上限 1%（C22 應轉 ERR；pro 人數與營收隨之改變）
+    inputs: {"INP_236": 0.02}
+  - id: f_pro_ratio_2030
+    description: Pro 2030 占比 0.8%→2.0%（區間上緣）：2030 pro 人數、占比與月營收改變，無檢查轉 ERR（2027+ 無約束）
+    inputs: {"INP_243": 0.02}
+  - id: g_api_rate_high
+    description: API FY2025 每分鐘 token 5→6.1（區間上緣）：V22 與 V9_ApiTok 改變
+    inputs: {"INP_237": 6.1}

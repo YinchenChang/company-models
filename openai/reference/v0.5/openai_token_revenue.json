@@ -1,0 +1,1413 @@
+{
+ "_readme": "v0.5（2026-09-30）：核心改為算力 MW（Vera Rubin 等值，VR-eq）。token 需求→推論 MW；合約與自建→供給 MW；成本＝MW×每 MW 成本；營收以可用 MW 為上限（V1a）；供應商資金僅列或有（V2a）。VR 規格預設沿用 Tokenomics v4，要改一起改。每個輸入附 chk 查核狀態。",
+ "tokenRevenue": {
+  "meta": {
+   "company": "OpenAI",
+   "fiscalYearEndMonth": 12,
+   "years": [
+    2025,
+    2026,
+    2027,
+    2028,
+    2029,
+    2030
+   ],
+   "baseYear": 2025,
+   "calibrationYears": [
+    2025,
+    2026
+   ],
+   "elasticityFromYear": 2027,
+   "units": {
+    "revenue": "$B",
+    "tokens": "T (1e12)",
+    "price": "$/M tokens",
+    "subs": "M",
+    "arpu": "$/month"
+   },
+   "decisions": "D1c D2b D3b D4→正反兩模式 D5b D6 D7c D8a D10→FY2030 D11 D12a；N1b N2a N3a；S1c S2 S3 S4b S5a S6c S7；R1 R2 R3（Andy 2026-09-29）",
+   "version": "0.4"
+  },
+  "actuals": {
+   "revenue2024": {
+    "v": 3.7,
+    "tag": "Interested-party",
+    "src": "OpenAI 揭露經媒體報導；workbook OpenAI_Sim B5"
+   },
+   "revenue2025": {
+    "v": 13.07,
+    "tag": "Interested-party",
+    "src": "Fortune/FT 2026-06 報導之 FY2025 認列營收（經查核數字外流）"
+   },
+   "cogs2025": {
+    "v": 7.5,
+    "tag": "Interested-party",
+    "src": "同上；cost of revenue 含推論"
+   },
+   "revenueQ1_2026": {
+    "v": 5.7,
+    "tag": "Interested-party",
+    "src": "The Information 2026-06-16（股東文件）"
+   },
+   "revenueQ2_2026": {
+    "v": 6.7,
+    "tag": "Interested-party",
+    "src": "WSJ 2026-08-18（告知投資人）"
+   },
+   "arrAug2026": {
+    "v": 40,
+    "tag": "Interested-party",
+    "src": "Bloomberg 2026-08-13；CNBC 2026-08-14 證實"
+   },
+   "consumerShareStart2026": {
+    "v": 0.6,
+    "tag": "Interested-party",
+    "src": "CFO Friar 2026-08-14 投資人會議：年初 60/40，8 月企業已超過消費端（CNBC）"
+   },
+   "apiTokensPerMinOct2025": {
+    "v": 6.0,
+    "unit": "B tok/min",
+    "tag": "Interested-party",
+    "src": "Altman DevDay 2025-10；2026 年更新揭露檢索未得"
+   },
+   "apiTokensFY2025": {
+    "v": 2628,
+    "lo": 2000,
+    "hi": 3200,
+    "unit": "T processed",
+    "tag": "Derived",
+    "src": "FY 平均約 5B/min（workbook 列 242 估計）× 525,600 分",
+    "chk": "待查核-workbook"
+   }
+  },
+  "msShare": {
+   "rate": {
+    "v": 0.2,
+    "tag": "Interested-party",
+    "src": "CNBC 2026-04-27 引述知情人士；VentureBeat 同"
+   },
+   "capTotal": {
+    "v": 38,
+    "tag": "Interested-party",
+    "src": "The Information 2026-05（經 AI Magazine、GuruFocus 轉述）"
+   },
+   "capThroughYear": {
+    "v": 2030,
+    "tag": "Verified",
+    "src": "OpenAI／Microsoft 2026-04-27 公告：付款持續至 2030，受總額上限"
+   },
+   "capCountFromYear": {
+    "v": 2026,
+    "tag": "Assumed",
+    "src": "起算點未揭露；Andy 2026-09-29 決定 N2a"
+   },
+   "azureInflowAfterApr2026": {
+    "v": 0,
+    "tag": "Verified",
+    "src": "2026-04-27 公告：Microsoft 不再支付 OpenAI 分潤"
+   }
+  },
+  "api": {
+   "tiers": [
+    "top",
+    "mid",
+    "low"
+   ],
+   "tierMapSep2026": {
+    "top": "gpt-6-astra",
+    "mid": "gpt-6-sol",
+    "low": "gpt-6-luna"
+   },
+   "listPriceSnapshot": {
+    "date": "2026-09-25",
+    "tag": "Verified",
+    "src": "developers.openai.com/api/docs/pricing（短上下文 Standard）",
+    "top": {
+     "in": 10.0,
+     "cached": 1.0,
+     "out": 50.0
+    },
+    "mid": {
+     "in": 2.0,
+     "cached": 0.2,
+     "out": 10.0
+    },
+    "low": {
+     "in": 0.1,
+     "cached": 0.01,
+     "out": 0.5
+    }
+   },
+   "priceEvents2026": {
+    "tag": "Verified",
+    "src": "openai.com 2026-07-30 GPT-5.6 降價公告；GPT-6 Sol/Luna 2026-09-22 發布（Techzine、MarkTechPost）；GPT-6 Astra 2026-09-03",
+    "list": [
+     "07-09 GPT-5.6 Sol 5/30、Terra 2.5/15、Luna 1/6",
+     "07-30 Terra 2/12（-20%）、Luna 0.2/1.2（-80%）",
+     "08-22 Sol 促銷 4/20",
+     "09-03 GPT-6 Astra 10/50（新旗艦，層級價格上升）",
+     "09-22 GPT-6 Sol 2/10、Luna 0.1/0.5"
+    ]
+   },
+   "listPriceFYAvg": {
+    "_note": "依層級角色（top/mid/low）的 FY 平均牌價；2025 為 Analogy，2026 由上列事件按月加權 [Derived]",
+    "in": {
+     "top": {
+      "v": [
+       2.5,
+       6.6
+      ],
+      "lo": [
+       1.5,
+       5.0
+      ],
+      "hi": [
+       4.0,
+       7.5
+      ],
+      "tag": "Analogy/Derived"
+     },
+     "mid": {
+      "v": [
+       1.5,
+       2.29
+      ],
+      "lo": [
+       1.0,
+       2.0
+      ],
+      "hi": [
+       2.5,
+       2.5
+      ],
+      "tag": "Analogy/Derived"
+     },
+     "low": {
+      "v": [
+       0.2,
+       0.64
+      ],
+      "lo": [
+       0.1,
+       0.4
+      ],
+      "hi": [
+       0.4,
+       0.8
+      ],
+      "tag": "Analogy/Derived"
+     }
+    },
+    "out": {
+     "top": {
+      "v": [
+       14.0,
+       35.8
+      ],
+      "lo": [
+       8.0,
+       28.0
+      ],
+      "hi": [
+       20.0,
+       40.0
+      ],
+      "tag": "Analogy/Derived"
+     },
+     "mid": {
+      "v": [
+       8.0,
+       13.25
+      ],
+      "lo": [
+       5.0,
+       11.0
+      ],
+      "hi": [
+       10.0,
+       15.0
+      ],
+      "tag": "Analogy/Derived"
+     },
+     "low": {
+      "v": [
+       1.0,
+       3.83
+      ],
+      "lo": [
+       0.5,
+       2.5
+      ],
+      "hi": [
+       2.0,
+       5.0
+      ],
+      "tag": "Analogy/Derived"
+     }
+    }
+   },
+   "listPriceAnnualChange": {
+    "_note": "2027 起每年牌價變動率（同層級角色）；情境軸之一",
+    "top": {
+     "v": -0.3,
+     "lo": -0.45,
+     "hi": -0.15,
+     "tag": "Assumed"
+    },
+    "mid": {
+     "v": -0.4,
+     "lo": -0.6,
+     "hi": -0.2,
+     "tag": "Assumed"
+    },
+    "low": {
+     "v": -0.4,
+     "lo": -0.6,
+     "hi": -0.2,
+     "tag": "Assumed"
+    }
+   },
+   "cachedInputRatio": {
+    "v": 0.1,
+    "tag": "Verified",
+    "src": "定價頁：cached input = 輸入價 10%"
+   },
+   "tokenMix": {
+    "top": {
+     "v": [
+      0.4,
+      0.15
+     ],
+     "lo": [
+      0.25,
+      0.08
+     ],
+     "hi": [
+      0.5,
+      0.25
+     ],
+     "tag": "Assumed"
+    },
+    "mid": {
+     "v": [
+      0.4,
+      0.45
+     ],
+     "lo": [
+      0.3,
+      0.35
+     ],
+     "hi": [
+      0.5,
+      0.55
+     ],
+     "tag": "Assumed"
+    },
+    "low": {
+     "v": [
+      0.2,
+      0.4
+     ],
+     "lo": [
+      0.1,
+      0.25
+     ],
+     "hi": [
+      0.35,
+      0.55
+     ],
+     "tag": "Assumed",
+     "src": "low = 1 - top - mid，由 Excel 計算，不另輸入"
+    }
+   },
+   "outputShare": {
+    "v": 0.2,
+    "lo": 0.1,
+    "hi": 0.35,
+    "tag": "Analogy",
+    "src": "workbook API I:O 約 4:1；代理式工作負載使輸出占比上升"
+   },
+   "cacheHitRate": {
+    "v": 0.55,
+    "lo": 0.3,
+    "hi": 0.75,
+    "tag": "Assumed"
+   },
+   "discountRate": {
+    "v": 0.2,
+    "lo": 0.1,
+    "hi": 0.3,
+    "tag": "Assumed",
+    "src": "Batch/Flex 半價 [Verified]；企業折扣 [Analogy]；兩者合併為加權折扣"
+   },
+   "tokensPerTaskBase": {
+    "v": 10,
+    "lo": 5,
+    "hi": 30,
+    "unit": "K tok/task",
+    "tag": "Assumed",
+    "src": "層級正規化：只影響 N 與 k 的水準拆分，不影響營收"
+   },
+   "demandGrowthExPrice": {
+    "_note": "未計價格反應的成長率；2026 為校準年：v0.4 將 2026 任務數成長由 53% 調為 134%，使 FY2025 API 反推值下修（3.63）後，FY2026 總額仍對上獨立推估 32.9",
+    "tasks": {
+     "v": [
+      0,
+      1.34,
+      0.45,
+      0.35,
+      0.25,
+      0.2
+     ],
+     "tag": "Assumed",
+     "lo_mult": 0.5,
+     "hi_mult": 1.5
+    },
+    "tokensPerTask": {
+     "v": [
+      0,
+      0.2,
+      0.15,
+      0.12,
+      0.1,
+      0.08
+     ],
+     "tag": "Assumed",
+     "lo_mult": 0.5,
+     "hi_mult": 1.5
+    }
+   },
+   "elasticity": {
+    "tasks": {
+     "v": -0.7,
+     "lo": -1.05,
+     "hi": -0.35,
+     "tag": "Assumed",
+     "src": "無法由公開資料分離（價格與能力同時變動）"
+    },
+    "tokensPerTask": {
+     "v": -0.3,
+     "lo": -0.45,
+     "hi": -0.15,
+     "tag": "Assumed"
+    }
+   },
+   "calibration": "2025 API 計費 token = (revenue2025 - 訂閱模型值 - other2025) / 有效單價2025；與 apiTokensFY2025 比得計費比例（檢查項）",
+   "priceBasis": {
+    "v": "tierRole",
+    "tag": "Decision",
+    "src": "N3a：新旗艦上市視為該層價格上升，不另立層級"
+   }
+  },
+  "subscription": {
+   "tiers": [
+    "free",
+    "go",
+    "plus",
+    "pro",
+    "seats"
+   ],
+   "line": {
+    "free": "consumer",
+    "go": "consumer",
+    "plus": "consumer",
+    "pro": "consumer",
+    "seats": "enterprise"
+   },
+   "listPriceSep2026": {
+    "go": 8,
+    "plus": 20,
+    "pro": [
+     100,
+     200
+    ],
+    "businessSeat": [
+     20,
+     25
+    ],
+    "tag": "Verified",
+    "src": "ChatGPT 定價頁（多家 2026-09 核對）；Enterprise 為議價"
+   },
+   "subsFYAvg": {
+    "_note": "FY 平均人數（M）；free 僅用於成本與 token",
+    "free": {
+     "v": [
+      600,
+      950,
+      1250,
+      1500,
+      1700,
+      1850
+     ],
+     "tag": "Analogy",
+     "src": "WAU 900M（2026-02，OpenAI）；2027+ Assumed",
+     "lo_mult": 0.8,
+     "hi_mult": 1.2,
+     "chk": "待查核-報導"
+    },
+    "go": {
+     "v": [
+      2,
+      10,
+      22,
+      35,
+      45,
+      55
+     ],
+     "tag": "Assumed",
+     "lo_mult": 0.6,
+     "hi_mult": 1.5,
+     "src": "2025 年 3M（年底，The Information）；2026+ 為無遷移基準 [Assumed]",
+     "chk": "待查核-報導"
+    },
+    "plus": {
+     "v": [
+      30,
+      46,
+      52,
+      57,
+      61,
+      64
+     ],
+     "lo_mult": 0.85,
+     "hi_mult": 1.15,
+     "tag": "Interested-party",
+     "src": "2025：7 月 Plus+Pro 約 35M（Reuters/The Information 2025-11）、OpenAI 內部文件 2025 年 44M（The Information 2026-04-28）→ FY 平均 28–33M；2026+ 為「無遷移」基準 [Assumed]",
+     "chk": "待查核-報導"
+    },
+    "pro": {
+     "v": [
+      0.5,
+      1.0,
+      1.5,
+      2.0,
+      2.5,
+      3.0
+     ],
+     "lo_mult": 0.6,
+     "hi_mult": 1.2,
+     "tag": "Interested-party",
+     "src": "內部預測：2026 倍增但 <1% 付費總數（The Information 2026-04-28）；2027+ Assumed",
+     "chk": "待查核-報導"
+    },
+    "seats": {
+     "v": [
+      3,
+      14,
+      26,
+      38,
+      48,
+      56
+     ],
+     "tag": "Assumed",
+     "src": "逾 9M 付費企業用戶（OpenAI 2026-02）；FY2025 平均 Assumed",
+     "lo_mult": 0.7,
+     "hi_mult": 1.3,
+     "chk": "待查核-報導"
+    }
+   },
+   "arpu": {
+    "_note": "實收 $/月（含區域定價、年繳折扣、額度加購）",
+    "go": {
+     "v": [
+      6
+     ],
+     "lo": [
+      4
+     ],
+     "hi": [
+      8
+     ],
+     "tag": "Assumed",
+     "chk": "假設"
+    },
+    "plus": {
+     "v": [
+      19.5,
+      19
+     ],
+     "lo": [
+      18,
+      17
+     ],
+     "hi": [
+      20,
+      20
+     ],
+     "tag": "Assumed",
+     "chk": "假設",
+     "src": "$20 美國、僅月繳（2026-09 定價頁）；區間反映含稅地區與促銷"
+    },
+    "pro": {
+     "v": [
+      200,
+      150
+     ],
+     "lo": [
+      200,
+      120
+     ],
+     "hi": [
+      200,
+      190
+     ],
+     "tag": "Assumed",
+     "src": "2026 起兩檔 $100/$200 加權",
+     "chk": "假設"
+    },
+    "seats": {
+     "v": [
+      30
+     ],
+     "lo": [
+      22
+     ],
+     "hi": [
+      45
+     ],
+     "tag": "Assumed",
+     "src": "Business $20-25 [Verified]；Enterprise 議價 $60+ [Analogy]",
+     "chk": "假設"
+    }
+   },
+   "tasksPerDay": {
+    "_note": "全日平均（已含非活躍日）；2027 起年增 tasksPerDayGrowth",
+    "free": {
+     "v": [
+      1.7,
+      1.7
+     ]
+    },
+    "go": {
+     "v": [
+      5.3,
+      5.7
+     ]
+    },
+    "plus": {
+     "v": [
+      13.4,
+      17.9
+     ]
+    },
+    "pro": {
+     "v": [
+      41,
+      51.4
+     ]
+    },
+    "seats": {
+     "v": [
+      10.7,
+      14.3
+     ]
+    },
+    "tag": "Assumed",
+    "src": "Tokenomics workbook 8B-ii 註記（未經查核）；總量對照：2025-07 每日 2.5B 則訊息（OpenAI）",
+    "chk": "待查核-workbook"
+   },
+   "tokensPerTask": {
+    "_note": "K tok/task；2027 起年增 tokensPerTaskGrowth（情境軸）",
+    "free": {
+     "v": [
+      2.0,
+      2.94
+     ]
+    },
+    "go": {
+     "v": [
+      3.0,
+      4.39
+     ]
+    },
+    "plus": {
+     "v": [
+      4.0,
+      6.15
+     ]
+    },
+    "pro": {
+     "v": [
+      10.0,
+      15.6
+     ]
+    },
+    "seats": {
+     "v": [
+      4.0,
+      5.94
+     ]
+    },
+    "tag": "Assumed",
+    "src": "Tokenomics workbook（未經查核）；於「推論成本」頁以 FY2025 成本分拆反推校正倍數 k",
+    "chk": "待查核-workbook"
+   },
+   "tasksPerDayGrowth": {
+    "v": 0.1,
+    "lo": 0.05,
+    "hi": 0.2,
+    "tag": "Assumed"
+   },
+   "tokensPerTaskGrowth": {
+    "v": 0.15,
+    "lo": 0.1,
+    "hi": 0.25,
+    "tag": "Assumed"
+   },
+   "apiEquivalentTier": {
+    "free": "low",
+    "go": "low",
+    "plus": "mid",
+    "pro": "top",
+    "seats": "mid",
+    "tag": "Assumed",
+    "src": "2026-09 各方案預設模型（定價頁說明）"
+   },
+   "migration": {
+    "_note": "T4：Plus→Go 遷移與 Go 額外新增，以公司 2026 計畫（Go 112M、Plus 9M）的幅度比例表示",
+    "planGo2026": {
+     "v": 112,
+     "tag": "Interested-party",
+     "src": "The Information 2026-04-28（年初內部預測）",
+     "chk": "待查核-報導"
+    },
+    "planPlus2026": {
+     "v": 9,
+     "tag": "Interested-party",
+     "src": "同上",
+     "chk": "待查核-報導"
+    },
+    "planFraction": {
+     "low": 0.0,
+     "base": 0.3,
+     "high": 0.8,
+     "tag": "Decision",
+     "src": "T4（Andy 2026-09-29 採預設）"
+    }
+   }
+  },
+  "other": {
+   "ads": {
+    "_note": "N1b 廣告為獨立列，不進核心（訂閱＋API）之敏感度、歸因與反向單一營收線分析",
+    "adTiers": [
+     "free",
+     "go"
+    ],
+    "exposureShare": {
+     "v": [
+      0,
+      0.25,
+      0.35,
+      0.4,
+      0.45,
+      0.5
+     ],
+     "lo": [
+      0,
+      0.15,
+      0.25,
+      0.3,
+      0.3,
+      0.35
+     ],
+     "hi": [
+      0,
+      0.35,
+      0.5,
+      0.6,
+      0.65,
+      0.7
+     ],
+     "tag": "Assumed",
+     "src": "Andy 2026-09-29：商業模式未成熟，2027→2030 不宜 8 倍；核心分析排除廣告"
+    },
+    "arpuPerExposedUserYear": {
+     "v": [
+      0,
+      3,
+      4,
+      4.5,
+      5,
+      5.5
+     ],
+     "lo": [
+      0,
+      1.5,
+      2,
+      2.5,
+      3,
+      3.5
+     ],
+     "hi": [
+      0,
+      5,
+      6,
+      7.5,
+      9,
+      11
+     ],
+     "unit": "$/user/yr",
+     "tag": "Analogy",
+     "src": "上限參照 Meta FY2025 全球 ARPP $57.03（10-K）；base 2027→2030 約 2.9 倍"
+    },
+    "comparisonInternalTarget": {
+     "2026": 2.5,
+     "2027": 11,
+     "2028": 25,
+     "2029": 53,
+     "2030": 100,
+     "tag": "Interested-party",
+     "src": "Axios 2026-04-09（投資人簡報；假設 2030 年 2.75B 週用戶），僅對照"
+    }
+   },
+   "residual": {
+    "v": 0,
+    "tag": "Assumed",
+    "src": "授權、一次性交易等；維持 0"
+   }
+  },
+  "costInterface": {
+   "hwCostPerM": {
+    "v": [
+     0.1544,
+     0.1018,
+     0.073,
+     0.0543,
+     0.0482,
+     0.0449
+    ],
+    "tag": "Derived",
+    "src": "Tokenomics v4 OpenAI_Sim 列 200/289/390/463/533/604（艦隊組合 Assumed）；2031+ 持平",
+    "chk": "待查核-workbook"
+   },
+   "overheadMultiplier": "v0.4 廢止：改由推論成本頁校準係數 κ 與 workbook token 校正倍數 k 取代",
+   "capacityTokensT": {
+    "v": null,
+    "tag": "N/A",
+    "src": "D8a：容量模組建成前顯示「不適用」"
+   }
+  },
+  "comparison": {
+   "_note": "D4c：僅作對照欄，不驅動任何計算",
+   "deckJul2026": {
+    "2026": 36,
+    "2030": 350,
+    "sum2026_2030": 840,
+    "tag": "Interested-party",
+    "src": "FT 2026-09-18（7 月投資人簡報）；2027-29 未揭露"
+   },
+   "fy2026Independent": {
+    "v": 32.9,
+    "lo": 31,
+    "hi": 36,
+    "tag": "Derived",
+    "src": "Q1 5.7 + Q2 6.7（WSJ）+ 下半年以 8 月 ARR $40B 外推；上限放寬至簡報 36（7 月 ARR 月增 20%）"
+   },
+   "weeklyUsers2030Plan": {
+    "v": 2750,
+    "unit": "M",
+    "tag": "Interested-party",
+    "src": "Axios 2026-04-09 廣告預測之用戶假設"
+   }
+  },
+  "scenarios": {
+   "_note": "D11 情境軸（核心）：API 彈性、牌價年變動、訂閱每任務 token 成長",
+   "low": {
+    "elasticity.tasks": -0.35,
+    "elasticity.tokensPerTask": -0.15,
+    "listPriceAnnualChange": {
+     "top": -0.45,
+     "mid": -0.6,
+     "low": -0.6
+    },
+    "tokensPerTaskGrowth": 0.25
+   },
+   "base": {
+    "elasticity.tasks": -0.7,
+    "elasticity.tokensPerTask": -0.3,
+    "listPriceAnnualChange": {
+     "top": -0.3,
+     "mid": -0.4,
+     "low": -0.4
+    },
+    "tokensPerTaskGrowth": 0.15
+   },
+   "high": {
+    "elasticity.tasks": -1.05,
+    "elasticity.tokensPerTask": -0.45,
+    "listPriceAnnualChange": {
+     "top": -0.3,
+     "mid": -0.4,
+     "low": -0.4
+    },
+    "tokensPerTaskGrowth": 0.1
+   }
+  },
+  "inferenceCost": {
+   "_note": "每 token 生產成本＝Tokenomics v4 Vera Rubin NVL72 之 roofline（prefill 計算受限、decode 記憶體頻寬受限）× 艦隊硬體成本指數 × 校準係數 κ",
+   "rack": {
+    "hbmBW_TBs": {
+     "v": 1580
+    },
+    "fp4PFLOPS": {
+     "v": 3600
+    },
+    "hbmTB": {
+     "v": 20.7
+    },
+    "mfu": {
+     "v": 0.35
+    },
+    "annualOpexPerRack_M": {
+     "v": 1.7667,
+     "src": "DC_Cost_Model：年營運費用 $9,298M ÷ 5,263 架（含折舊）"
+    },
+    "specAccepted": {
+     "v": 2.94,
+     "src": "Config B59：推測解碼每步接受 token"
+    },
+    "utilization": {
+     "v": 0.6,
+     "lo": 0.4,
+     "hi": 0.8,
+     "tag": "Assumed"
+    },
+    "tag": "Derived",
+    "src": "Tokenomics v4（Config F 欄 VR NVL72 預設；要改一起改）",
+    "chk": "待查核-workbook",
+    "cellRefs": {
+     "hbmBW_TBs": "Config!F18",
+     "fp4PFLOPS": "Config!F19",
+     "hbmTB": "Config!F17",
+     "mfu": "Config!B46",
+     "annualOpexPerRack_M": "DC_Cost_Model!D88 ÷ D9",
+     "specAccepted": "Config!B59"
+    }
+   },
+   "classes": {
+    "_note": "OpenAI 模型架構未揭露；以 Tokenomics 預設架構作類比",
+    "luna": {
+     "totalB": 284,
+     "activeB": 13,
+     "kvBytesPerTok": 2795,
+     "bytesPerParam": 0.51,
+     "analog": "DeepSeek V4-Flash"
+    },
+    "sol": {
+     "totalB": 1600,
+     "activeB": 49,
+     "kvBytesPerTok": 3965,
+     "bytesPerParam": 0.507,
+     "analog": "DeepSeek V4-Pro"
+    },
+    "astra": {
+     "totalB": 4000,
+     "activeB": 180,
+     "kvBytesPerTok": 204800,
+     "bytesPerParam": 0.53,
+     "analog": "Closed-frontier proxy"
+    },
+    "tag": "Analogy",
+    "chk": "待查核-workbook"
+   },
+   "serving": {
+    "batchCap": {
+     "v": 256,
+     "lo": 64,
+     "hi": 1024,
+     "tag": "Assumed"
+    },
+    "avgContextK": {
+     "v": 8,
+     "lo": 4,
+     "hi": 32,
+     "tag": "Assumed"
+    },
+    "prefillAttnOverhead": {
+     "v": 1.1,
+     "tag": "Assumed"
+    },
+    "cachedVsPrefill": {
+     "v": 0.1,
+     "lo": 0.05,
+     "hi": 0.2,
+     "tag": "Analogy",
+     "src": "牌價快取讀取比 0.05–0.1 代理"
+    }
+   },
+   "usage": {
+    "_note": "各方案模型組合 luna/sol/astra、輸出占比（含思考）、快取命中；T6 與分層成本假設",
+    "free": [
+     0.9,
+     0.1,
+     0.0,
+     0.25,
+     0.4
+    ],
+    "go": [
+     0.85,
+     0.15,
+     0.0,
+     0.25,
+     0.4
+    ],
+    "plus": [
+     0.35,
+     0.6,
+     0.05,
+     0.4,
+     0.5
+    ],
+    "pro": [
+     0.1,
+     0.5,
+     0.4,
+     0.5,
+     0.6
+    ],
+    "seats": [
+     0.3,
+     0.65,
+     0.05,
+     0.35,
+     0.55
+    ],
+    "tag": "Assumed",
+    "chk": "假設"
+   },
+   "calibration2025": {
+    "inferenceTotal": {
+     "v": 8.4,
+     "tag": "Interested-party",
+     "src": "The Information 2026-02（投資人說明）；T1(a)",
+     "chk": "待查核-報導"
+    },
+    "freeUsers": {
+     "v": 3.9,
+     "tag": "Interested-party",
+     "src": "同上：非付費用戶約 $3.9B",
+     "chk": "待查核-報導"
+    },
+    "paidUsers": {
+     "v": 4.5,
+     "tag": "Interested-party",
+     "src": "同上：付費用戶 $4.5B",
+     "chk": "待查核-報導"
+    },
+    "apiMargin": {
+     "v": 0.5,
+     "lo": 0.3,
+     "hi": 0.65,
+     "tag": "Assumed",
+     "src": "T5",
+     "chk": "假設"
+    },
+    "cogsReported": {
+     "v": 7.5,
+     "tag": "Interested-party",
+     "src": "外流經查核財報（FT/Fortune 2026-06）",
+     "chk": "待查核-報導"
+    }
+   },
+   "checks2026": {
+    "inference": {
+     "v": 14.1,
+     "paidShare": 0.66,
+     "tag": "Interested-party",
+     "src": "The Information 2026-02：OpenAI 2026 預測"
+    },
+    "inference2030": {
+     "v": 85,
+     "paidShare": 0.94,
+     "gmTarget": 0.67,
+     "tag": "Interested-party",
+     "src": "同上"
+    }
+   },
+   "nonText": {
+    "_note": "T2(b)：免費層成本扣除文字推論後之殘差（圖像、影片）；2026+ 依 Free 人數 × 艦隊硬體成本指數",
+    "tag": "Derived"
+   },
+   "hwCostIndexSrc": "沿用 costInterface.hwCostPerM 相對路徑（Tokenomics v4 OpenAI_Sim 艦隊組合）"
+  }
+ },
+ "reverse": {
+  "_note": "R1–R3：假設管理層目標達成，反解充分條件；目標只驅動反向模式，不進正向模式",
+  "targetVintage": "Jul-2026",
+  "targetRevenue": {
+   "v": [
+    13.07,
+    36,
+    75.1,
+    141.5,
+    237.4,
+    350
+   ],
+   "tag": "Interested-party/Derived",
+   "src": "2026、2030、Σ840：FT 2026-09-18（7 月簡報）；2027–29 為依 Σ840 擬合之路徑（Tokenomics v4 FT_Sep2026 列 24）[Derived]"
+  },
+  "targetFCFcum2026_2030": {
+   "v": -278,
+   "tag": "Interested-party",
+   "src": "FT 2026-09-18"
+  },
+  "targetComputeCum2026_2030": {
+   "v": 856,
+   "tag": "Interested-party",
+   "src": "FT 2026-09-18"
+  },
+  "priorVintages": {
+   "Feb-2026": {
+    "2030": 280
+   },
+   "tag": "Interested-party",
+   "src": "The Information 2026-02；只對照"
+  },
+  "sufficientSets": [
+   "apiOnly",
+   "subOnly",
+   "proportional"
+  ],
+  "adsInReverse": "forward",
+  "comparisonSetAdsPlan": {
+   "v": [
+    0,
+    2.5,
+    11,
+    25,
+    53,
+    100
+   ],
+   "tag": "Interested-party",
+   "src": "Axios 2026-04-09"
+  }
+ },
+ "spending": {
+  "_note": "S1c 逐一交易對手合約；S2 已揭露者依揭露時程，未揭露者於合約期間平均攤；未揭露時程者依 N4(b) 於合約期間內線性爬升；金額 $B，名目、未折現",
+  "unscheduledProfile": {
+   "v": "ramp",
+   "options": [
+    "even",
+    "ramp"
+   ],
+   "tag": "Decision",
+   "src": "N4(b)：期間內線性爬升（Andy 2026-09-29）；2026 算力現金 $53B 符合證詞 $50B"
+  },
+  "contracts": {
+   "microsoftAzure": {
+    "total": 250,
+    "start": 2025,
+    "end": 2030,
+    "annual": null,
+    "tag": "Verified/Analogy",
+    "src": "總額：OpenAI／Microsoft 2025-10 公告增購 $250B Azure [Verified]；期間 2025–2030 為估計 [Analogy]"
+   },
+   "oracle": {
+    "total": 300,
+    "start": 2027,
+    "end": 2031,
+    "annual": 60,
+    "tag": "Interested-party",
+    "src": "WSJ 2025-09；Oracle 公告 5 年、2027 起、約 4.5GW",
+    "gw": 4.5
+   },
+   "awsNvidia": {
+    "total": 38,
+    "start": 2025,
+    "end": 2031,
+    "annual": null,
+    "tag": "Verified",
+    "src": "AWS/OpenAI 2025-11-03，7 年"
+   },
+   "awsTrainium": {
+    "total": 100,
+    "start": 2026,
+    "end": 2033,
+    "annual": null,
+    "tag": "Verified",
+    "src": "2026-02 融資公告：AWS 追加 $100B／8 年、2GW Trainium",
+    "gw": 2.0,
+    "gwNote": "揭露口徑衝突：2026-02 公告 2GW Trainium；WSJ 2026-07 另載 3GW 推論＋2GW 訓練（VR）。取 2GW，區間 2–5"
+   },
+   "coreweave": {
+    "total": 22.4,
+    "start": 2025,
+    "end": 2029,
+    "annual": null,
+    "tag": "Verified",
+    "src": "CoreWeave 揭露：$11.9B＋$4B＋$6.5B；日後可改接 CRWV 模型之 OpenAI 時程"
+   },
+   "cerebras": {
+    "total": 20,
+    "lo": 20,
+    "hi": 25,
+    "start": 2026,
+    "end": 2031,
+    "annual": null,
+    "tag": "Verified/Analogy",
+    "src": "Cerebras 10-Q／8-K：750MW、2026–28 分批部署、每批 3–4 年、總值逾 $20B；期間終點為推估",
+    "gw": 0.75
+   }
+  },
+  "excludedOrComparison": {
+   "nvidia10GW": "Nvidia 10GW／$100B 意向（未定案）與 2026-03 融資中 Nvidia $30B 之算力配置：不另列付款，避免與股權重複 [S4b]",
+   "broadcomAmdChips": "Broadcom 10GW、AMD 6GW：透過合作方或自有資本支出採購，併入 ownedCapex，不另列",
+   "stargateSoftBank": "合資建設由合作方出資部分不進 OpenAI 現金流（S3 槓桿）"
+  },
+  "ownedCapex": {
+   "v": [
+    0,
+    20,
+    30,
+    45,
+    60,
+    70
+   ],
+   "lo_mult": 0.6,
+   "hi_mult": 1.5,
+   "tag": "Assumed",
+   "src": "自有園區與晶片（例：Project Camellia $20B，TechCrunch 2026-07-22）"
+  },
+  "partnerFinancedShare": {
+   "v": 0.0,
+   "lo": 0.0,
+   "hi": 0.3,
+   "tag": "Assumed",
+   "src": "S3，沿用 v4 槓桿，情境軸"
+  },
+  "leases": {
+   "v": null,
+   "tag": "N/A",
+   "src": "OpenAI 未揭露承租合約；雲端服務合約內含之租賃不另列；顯示「不適用」"
+  },
+  "opexExComputePctRevenue": {
+   "v": [
+    1.216,
+    0.33,
+    0.265,
+    0.22,
+    0.18,
+    0.14
+   ],
+   "lo_mult": 0.8,
+   "hi_mult": 1.3,
+   "tag": "Assumed",
+   "src": "S5a；2025 為實際（研發不含付 Microsoft 約 $10.6B、銷售、管理）÷ 營收 [Interested-party]；2026+ 沿 Tokenomics v4 研發×(1−算力占比 60%)＋銷售＋管理路徑；不含股票薪酬"
+  },
+  "anchors": {
+   "computeCum2026_2030_WSJ": {
+    "v": 750,
+    "tag": "Interested-party",
+    "src": "WSJ 2026-07-22"
+   },
+   "computeCum2026_2030_FT": {
+    "v": 856,
+    "tag": "Interested-party",
+    "src": "FT 2026-09-18"
+   },
+   "offBalanceCommitmentsStock": {
+    "v": 665,
+    "tag": "Interested-party",
+    "src": "S-1 草案轉述（Tokenomics v1_3 Sources #19）"
+   },
+   "compute2026Testimony": {
+    "v": 50,
+    "tag": "Interested-party",
+    "src": "Brockman 證詞（commitments tracker 2026-05 轉述）"
+   }
+  }
+ },
+ "funding": {
+  "_note": "S7 沿用 CRWV：最低現金、來源順序、缺口旗標；S4b 供應商融資只列或有負債",
+  "cashEnd2025": {
+   "v": 40,
+   "lo": 35,
+   "hi": 45,
+   "tag": "Interested-party",
+   "src": "2025-12 約 $40B；2026 Q1 末 $73B（The Information 經 TNW 轉述）"
+  },
+  "equityRound2026Mar": {
+   "total": 122,
+   "unconditional2026": {
+    "v": 87,
+    "tag": "Interested-party",
+    "src": "Amazon 首筆 $15B＋SoftBank $30B（三期）＋Nvidia $30B＋其他約 $12B；Nvidia 以現金計 [Assumed，另有報導稱多為算力]"
+   },
+   "conditional": {
+    "v": 35,
+    "tag": "Verified",
+    "src": "Amazon 其餘 $35B 以 IPO 或 AGI 里程碑為條件（多家報導）；base 不計入，列情境"
+   }
+  },
+  "minCash": {
+   "v": 10,
+   "lo": 5,
+   "hi": 20,
+   "tag": "Assumed"
+  },
+  "contingentLiabilities": {
+   "nvidiaGuarantees": {
+    "v": 250,
+    "tag": "Interested-party",
+    "src": "WSJ（Tokenomics v1_3 Sources #21）"
+   },
+   "nvidiaChipFinancingTalks": {
+    "v": 350,
+    "tag": "Interested-party",
+    "src": "WSJ，洽談中"
+   },
+   "treatment": "只列示，不作資金來源（S4b）"
+  },
+  "externalNeed": "年底現金低於 minCash 之差額累計＝外部資金需求（新一輪股權、債務或延後承諾）"
+ },
+ "training": {
+  "_note": "v0.5：訓練＝訓練 GW×每 VR-eq GW 成本；計畫算力 856／600 與計畫推論降為檢查項",
+  "actual2024": {
+   "v": 3.0,
+   "tag": "Interested-party",
+   "src": "Epoch（引 The Information/NYT）：2024 訓練算力 $3B、推論 $1.8B",
+   "chk": "待查核-報導"
+  },
+  "actual2025": {
+   "v": 12.0,
+   "lo": 10.6,
+   "hi": 13.5,
+   "tag": "Derived",
+   "src": "2025 R&D 付予 Microsoft $10.59B（外流財報）＋其他雲端估計",
+   "chk": "待查核-報導"
+  },
+  "rd2025": {
+   "v": 19.18,
+   "tag": "Interested-party",
+   "src": "外流財報 R&D 總額（含人事）"
+  },
+  "planCompute2026_2030": {
+   "v": 856,
+   "lo": 600,
+   "hi": 856,
+   "tag": "Interested-party",
+   "src": "FT 2026-09-18（7 月簡報）$856B，與 R1 反向錨點同一版本；Reuters 2026-02 約 $600B 為下限",
+   "chk": "待查核-報導"
+  },
+  "planInference": {
+   "2026": 14.1,
+   "2030": 85,
+   "tag": "Interested-party",
+   "src": "The Information 2026-02；2027–29 幾何內插 [Derived]"
+  },
+  "allocation": "計畫訓練總額（計畫算力−計畫推論）依本模型各年『算力現金−推論成本』占比分配（推論優先使用算力）[Derived]",
+  "tokenAllocation": "每層級訓練分攤＝當年訓練 × 該層級推論成本占比（工程決定，僅供全成本參考）"
+ },
+ "computeMW": {
+  "_note": "單位：GW（IT 電力）。VR-eq＝以 Vera Rubin NVL72 每 MW 輸出 token 為 1 的等值容量",
+  "tokenomicsRef": {
+   "racksPerGW_VR": {
+    "v": 5263,
+    "cell": "Config!F8"
+   },
+   "racksPerGW_GB200": {
+    "v": 7194,
+    "cell": "Config!G8"
+   },
+   "tokPerSecPerRack_VR": {
+    "v": 105423,
+    "cell": "TL_Param!C37"
+   },
+   "tokPerSecPerRack_GB200": {
+    "v": 40668,
+    "cell": "TL_Param!D37"
+   },
+   "capexPerGW": {
+    "v": 43.2,
+    "cell": "DC_Cost_Model!D60"
+   },
+   "tag": "Derived",
+   "chk": "待查核-workbook"
+  },
+  "genFactor": {
+   "hopper": {
+    "v": 0.15,
+    "lo": 0.1,
+    "hi": 0.25,
+    "tag": "Analogy"
+   },
+   "custom": {
+    "v": 0.6,
+    "lo": 0.4,
+    "hi": 1.0,
+    "tag": "Assumed",
+    "src": "Cerebras、Broadcom、AMD、Trainium"
+   },
+   "nextGen": {
+    "v": 1.8,
+    "lo": 1.3,
+    "hi": 2.5,
+    "tag": "Assumed",
+    "src": "Rubin Ultra 以後"
+   }
+  },
+  "fleetMix": {
+   "_note": "實體 GW 世代占比；自研／其他＝1−其餘",
+   "hopper": [
+    0.6,
+    0.35,
+    0.15,
+    0.05,
+    0,
+    0
+   ],
+   "blackwell": [
+    0.4,
+    0.55,
+    0.45,
+    0.3,
+    0.2,
+    0.1
+   ],
+   "veraRubin": [
+    0,
+    0.05,
+    0.3,
+    0.45,
+    0.5,
+    0.45
+   ],
+   "nextGen": [
+    0,
+    0,
+    0,
+    0.05,
+    0.1,
+    0.2
+   ],
+   "tag": "Assumed",
+   "chk": "假設"
+  },
+  "actuals": {
+   "gwEnd2023": 0.2,
+   "gwEnd2024": 0.6,
+   "gwEnd2025": 1.9,
+   "arrEnd2025": 20,
+   "tag": "Interested-party",
+   "src": "CFO Friar 部落格 2026-01-18：0.2／0.6／約 1.9 GW；ARR $2B／$6B／$20B+",
+   "chk": "待查核-報導"
+  },
+  "leasePricePerGWyr": {
+   "v": 12,
+   "lo": 8,
+   "hi": 16,
+   "tag": "Analogy",
+   "src": "Oracle $300B÷5 年÷4.5GW＝$13.3B；2025 合約現金÷平均 GW≈$11.8B"
+  },
+  "idleReserve": {
+   "v": 0.1,
+   "tag": "Assumed"
+  },
+  "minTrainingShare": {
+   "v": 0.3,
+   "tag": "Assumed",
+   "src": "V1a 容量上限：推論可用＝VR-eq 供給×(1−閒置)×(1−訓練最低占比)"
+  },
+  "decisions": "V1a 營收以可用 MW 為上限；V2a 供應商資金只列或有（Andy 2026-09-30）"
+ }
+}

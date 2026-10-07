@@ -1,0 +1,14 @@
+﻿多年期項目,處理,結果去處,掃描後未拆
+subscription.subsFYAvg.free,2026-02 WAU 900M（OpenAI 公告）為觀測；2026 元素 950→公式（WAU×Inputs 換算係數）；2025（Analogy）與 2027+（Assumed）→Inputs,SRC_OAI 1 列＋公式 1 格＋Inputs 4 格,否（已拆）
+subscription.subsFYAvg.plus,2025 報導值（Plus＋Pro 約 35M、內部文件 44M）為觀測；2025 元素 30（28–33）→公式（35M×Inputs 換算係數）；2026+（Assumed）→Inputs,SRC_OAI 2 列＋公式 1 格＋Inputs 5 格,否（已拆）
+subscription.subsFYAvg.pro,V12／V15：SRC 只登兩個約束（2026 為 2025 的 2 倍；2026 占付費總數 <1%）；Inputs：2026 占比 0.8%（0.5–1.0%）、2027–2030 逐年占比 0.8%（0.5–2.0%）；2025–2030 全為公式（2025＝2026÷倍數；其餘＝比例/(1−比例)×(go＋plus＋seats)）,SRC_OAI 2 列＋公式 6 格＋占比 Inputs 5 列,否（已拆）
+subscription.subsFYAvg.go,2025 年底 3M（The Information）為年底人數，與 FY 平均口徑不同；v0.5 標 Assumed、換算規則未定：只新增 SRC_OAI 錨點列，6 個元素維持 Inputs,SRC_OAI 1 列（錨點）＋Inputs 6 格,是
+subscription.subsFYAvg.seats,逾 9M 付費企業用戶（2026-02）為觀測，與 FY 平均口徑不同；v0.5 標 Assumed、換算規則未定：只新增 SRC_OAI 錨點列，6 個元素維持 Inputs,SRC_OAI 1 列（錨點）＋Inputs 6 格,是
+spending.opexExComputePctRevenue,2025 元素 1.216 由財報數據推得→公式；2026–2030（Assumed）→Inputs 並標『P4 將取代』,公式 1 格＋Inputs 5 格＋倍數 2 格,否（已拆）
+spending.ownedCapex,出處『Project Camellia $20B（TechCrunch 2026-07-22）』為單一專案例，非整年觀測；新增 SRC_OAI 錨點列，6 個元素維持 Inputs（Assumed）,SRC_OAI 1 列（錨點）＋Inputs 6 格,是
+subscription.tasksPerDay／tokensPerTask,出處（Tokenomics workbook，未經查核）；僅『2025-07 每日 2.5B 則訊息』為可引用觀測，與任務口徑不同；新增 SRC_OAI 錨點列，元素維持 Inputs,SRC_OAI 1 列（錨點）＋Inputs 20 格,是
+api.listPriceFYAvg,V7 已依元素拆分：2025（Analogy）→Inputs；2026（由事件價推得）→公式,Inputs 與公式（見分類規則 2）,否（已拆）
+reverse.targetRevenue,V7 已依元素拆分：2026、2030→SRC_OAI；2025 併入實際營收；2027–29→公式,SRC_OAI 2 列＋重複併入 1＋公式 3,否（已拆）
+other.ads.arpuPerExposedUserYear,出處『Meta FY2025 全球 ARPP $57.03（10-K）』是第三方上限參照，非 OpenAI 觀測；元素全屬 Analogy→Inputs，不拆,Inputs 6 格,是
+other.ads.exposureShare、demandGrowthExPrice、fleetMix、arpu、tokenMix、listPriceAnnualChange,出處皆無年度觀測值（Assumed／Analogy 全期）→不拆,Inputs,是
+api.demandGrowthExPrice.tasks（2026）,2026 為校準年（v0.4 把 53%→134% 使 FY2026 對上獨立推估 32.9）：值由校準得出，屬 Assumed、無觀測元素→不拆；校準目標 32.9 為 Derived（公式）,Inputs,是
