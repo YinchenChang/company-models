@@ -23,6 +23,7 @@ F = [
  ('texts.fy0EquityNote', '首期股權／可轉債的組成說明（含年初至今與首期模型的金額；v4.5；可用期間佔位符 «P0»、«YTD»、«STUB»）', '文字', M),
  ('texts.sourceLine', '頁首的資料來源一行（例如最新 10-Q、法說、期後 8-K；v4.5）', '文字', M),
  ('texts.cashTaxNote', '年初至今現金稅的說明（損益與評價頁；v4.5）', '文字', M),
+ ('texts.thesis', '模型命題一句話（HTML 標題列與檔案說明；v0.1b）', '文字', M),
  ('texts.mwYearEndNotes', '各年底主動電力的來源說明，以年份為鍵（Excel「輸入與假設」說明欄；5a）', '物件（文字）', M),
  ('meta.sourceOrderNote', '資料來源的先後與衝突時的取捨原則（畫面說明文字）', '文字', M),
  ('calendar.fiscalYearEndMonth', '財年結束月份（v4.5；CoreWeave 12、Oracle 5）', '月', M),
@@ -136,6 +137,7 @@ F = [
  ('defaults.terminal.residualLeaseYears', '模型期後租約剩餘年數', '年', C),
  ('defaults.sites', '具名資料中心站點，一站一列。欄位：id 代碼、name 名稱、operator 房東／合作方、planned 契約 MW、energized 已通電 MW、accepted 已驗收 MW、billable 可計費 MW、contract 合約總值（US$bn，可無）、years 合約年期（可無）、status 狀態說明、next 下一里程碑、date 預計時間、confidence 信心（高／中／低）', '清單', M),
  ('valuation.price', '現價', 'US$', M), ('valuation.shares', '評價股數（含期後股權發行上限）', 'bn 股', M),
+ ('valuation.atmSharesInValuation', '評價股數中「期後股權發行上限」的股數：期後股權／可轉債開關關閉時由評價股數扣回（v0.1b；CRWV 0.035、無此項的公司填 0）', 'bn 股', M),
  ('valuation.netDebt', '淨負債（最新季末本金 − 現金）', 'US$bn', M), ('valuation.tax', '稅率', '比例', C),
  ('valuation.nol', '期初可扣抵虧損（NOL）', 'US$bn', M), ('valuation.wacc', '加權平均資金成本 WACC', '比例', C),
  ('valuation.nolUsePct', 'NOL 每年可抵用上限占應稅所得的比例（美國 80%；依公司稅籍調整；5a）', '比例', C),
@@ -190,11 +192,8 @@ F = [
  ('varianceReasons._note', '差異原因的說明文字（不進程式）', '文字', K),
  ('varianceReasons.list', '差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗', '清單', C),
  # Nebius v0.1a：公司專屬資料草稿（引擎尚未讀取；v0.1b 依各欄 mapTo 搬到既有欄位）
- ('nebius._readme', 'Nebius 資料草稿區段的說明（v0.1a；引擎不讀）', '文字', M),
+ ('nebius._readme', 'Nebius 資料草稿區段的說明（v0.1a 產出；v0.1b 步驟 1 已搬移可對應既有欄位者，本區只留後續步驟會用的欄位）', '文字', M),
  ('nebius.files', 'Nebius 事實總帳、每 MW 推導、共識資料檔的路徑', '物件（路徑）', M),
- ('nebius.meta', 'Nebius 基本資料草稿；每欄 value／unit／ref（事實總帳 id）／mapTo（v0.1b 目標欄位）', '物件', M),
- ('nebius.latestQuarter', 'Nebius 最新一季（Q2 2026，6-K）數字草稿；格式同上', '物件', M),
- ('nebius.ytdActual', 'Nebius 2026 上半年實際數草稿；格式同上', '物件', M),
  ('nebius.debt', 'Nebius 可轉債（八檔）、資產擔保融資、其他債務草稿；格式同上', '物件', M),
  ('nebius.equity', 'Nebius ATM、NVIDIA 預付認股權證、以股換債、選擇權與 RSU 草稿；格式同上', '物件', M),
  ('nebius.guidance', 'Nebius 2026 年指引草稿（營收、ARR、資本支出、EBITDA 率、預付款）；格式同上', '物件', M),
@@ -250,7 +249,7 @@ CF = {
  'availability': ('未動用信用額度', 'US$bn'), 'price0918': ('9/18 收盤價', 'US$'), 'priceLast': ('最新收盤價', 'US$'),
  'priceDate': ('最新收盤價日期', '日期'), 'postQShortDated': ('期後公告摘要', '文字'), 'ttmRev': ('近十二個月營收', 'US$bn'),
  'ttmOpInc': ('近十二個月 GAAP 營業損益', 'US$bn'), 'ttmDa': ('近十二個月折舊攤銷', 'US$bn'),
- 'ttmOpLease': ('近十二個月營業租賃成本', 'US$bn'), 'mktCapLast': ('CRWV 市值（Comps 用；與同業同一收盤日 peers.priceDate，v4.3 起不隨現價更新）', 'US$bn'), 'nextEarn': ('下次財報時間', '文字'),
+ 'ttmOpLease': ('近十二個月營業租賃成本', 'US$bn'), 'mktCapLast': ('本公司市值（Comps 用；與同業同一收盤日 peers.priceDate，v4.3 起不隨現價更新）', 'US$bn'), 'nextEarn': ('下次財報時間', '文字'),
 }
 
 

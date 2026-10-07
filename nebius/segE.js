@@ -318,7 +318,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
   let y = d.years, T = d.totals, b = rpoBridge(d), P = o.price, tgt = f.call.blended, up = f.call.upside;
   let scLabel = e.scenario === `custom` ? `自訂情境` : SCENARIOS[e.scenario]?.label;
   let ver = VLOG[VLOG.length - 1][0];
-  let foot = `CoreWeave 收支模型 ${ver}（${UPDATE_DATE}）· ${scLabel} · 現價 $${Y(P, 2)}（${COMPANY_DATA.meta.priceDate} 收盤）· 研究框架，不是投資建議`;
+  let foot = `${COMPANY_DATA.meta.company} 收支模型 ${ver}（${UPDATE_DATE}）· ${scLabel} · 現價 $${Y(P, 2)}（${COMPANY_DATA.meta.priceDate} 收盤）· 研究框架，不是投資建議`;
   let callTone = f.call.call === `買進` ? `var(--color-ok)` : f.call.call === `賣出` ? `var(--color-bad)` : `var(--color-watch)`;
 
   // 單位經濟（與頁首摘要同一公式）
@@ -341,7 +341,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
   // 1｜結論
   S(`結論`, `${TR.head}，較現價 $${Y(P, 2)} ${up >= 0 ? `高` : `低`} ${hA(Math.abs(up) * 100, 0)}：${f.call.call}`, [
     elQ(`p`, { key: `p`, style: { fontSize: 21, lineHeight: 1.6, color: `var(--color-muted)`, margin: 0, maxWidth: 1080 } },
-      `Backlog 不是現金：RPO 必須先蓋出產能才能認列，而每 MW 賺的錢付不起 GPU 的資本成本——蓋得愈多，愈要靠外部資金。`),
+      `${COMPANY_DATA.texts.thesis}：營收由已連網 MW × 每 MW 年收入驅動，客戶預付在建置前先收現；問題是預付能覆蓋多少資本支出、剩下的缺口要靠多少可轉債與新股。`),
     elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 18, marginTop: 26 } }, scen.map(s => elQ(`div`, {
       key: s.sc, style: { padding: `18px 22px`, borderRadius: 10, background: s.sc === e.scenario ? `var(--color-ink)` : `var(--color-surface)`, color: s.sc === e.scenario ? `var(--color-accent-fg)` : `var(--color-fg)` }
     }, [
@@ -363,8 +363,8 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
 
   // 2｜Backlog 不是現金
   let mx2 = Math.max(b.scheduled, T.gross, T.newRev);
-  S(`Backlog 不是現金`, `排程 RPO $${Y(b.scheduled, 0)}bn 五期可實現 $${Y(b.collected, 0)}bn，但同期要先投入 CapEx $${Y(T.gross, 0)}bn`, [
-    elQ(BarQ, { key: 1, label: `排程 RPO（五期應認列）`, sub: `6/30 RPO＋Q3 新增，依 10-Q 桶分攤`, val: b.scheduled, max: mx2, color: `var(--color-accent)` }),
+  S(`RPO 對照與資本支出`, `排程 RPO $${Y(b.scheduled, 0)}bn 五期可實現 $${Y(b.collected, 0)}bn，但同期要先投入 CapEx $${Y(T.gross, 0)}bn`, [
+    elQ(BarQ, { key: 1, label: `排程 RPO（五期應認列）`, sub: `評價日 RPO＋期後新增，依季報桶分攤（只作對照）`, val: b.scheduled, max: mx2, color: `var(--color-accent)` }),
     elQ(BarQ, { key: 2, label: `扣：產能瓶頸`, sub: `排程 > 容量的部分收不到、不遞延`, val: b.bottleneck, max: mx2, color: `var(--color-bad)`, neg: !0 }),
     elQ(BarQ, { key: 3, label: `扣：信用損失`, val: b.credit, max: mx2, color: `var(--color-bad)`, neg: !0 }),
     elQ(BarQ, { key: 4, label: `可實現 RPO 收入`, val: b.collected, max: mx2, color: `var(--color-accent)` }),
@@ -385,7 +385,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
       elQ(StatQ, { key: 3, label: `或打平所需每 MW 建置成本`, value: `$${Y(beCost, 1)}m`, note: `目前 $${Y(cost30, 0)}m（${beCost >= cost30 ? `+` : `−`}${hA(Math.abs(beCost / cost30 - 1) * 100, 0)}）` })
     ]),
     elQ(`p`, { key: `n`, style: { fontSize: 15.5, color: `var(--color-muted)`, marginTop: `auto`, lineHeight: 1.55 } },
-      `EBITDA 率由 Q2 實際 ${hA(e.ebStart * 100, 0)} 線性爬升至 FY30 ${hA(e.ebSteady * 100, 0)}；由下而上（每 MW 現金成本約 $3.2–3.6m）估計上緣約 67–71%。`)
+      `EBITDA 率由季報 AI cloud 分部 ${hA(e.ebStart * 100, 0)} 線性變動至 FY30 ${hA(e.ebSteady * 100, 0)}；取可觀察 neocloud 區間（IREN 約 35%、CRWV 約 59%），不取自每 MW 推導的加成。`)
   ]);
 
   // 4｜融資
@@ -449,7 +449,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
       elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 20 } }, [
         elQ(StatQ, { key: 1, label: `每 MW 年收入（FY30）`, value: Number.isFinite(rv.R) ? `$${Y(rv.rev30 * rv.R, 1)}m` : `無解`, note: `目前 $${Y(rv.rev30, 1)}m；其他條件不變` }),
         elQ(StatQ, { key: 2, label: `或每 MW 建置成本`, value: Number.isFinite(rv.C) ? `$${Y(rv.cost30 * rv.C, 1)}m` : `無解`, note: `目前 $${Y(rv.cost30, 0)}m；其他條件不變` }),
-        elQ(StatQ, { key: 3, label: `或穩態 EBITDA 率`, value: Number.isFinite(rv.Eb) ? hA(rv.Eb * 100, 0) : `無解`, tone: Number.isFinite(rv.Eb) && rv.Eb > .71 ? `var(--color-bad)` : void 0, note: `目前 ${hA(rv.eb30 * 100, 0)}；由下而上上緣約 67–71%` })
+        elQ(StatQ, { key: 3, label: `或穩態 EBITDA 率`, value: Number.isFinite(rv.Eb) ? hA(rv.Eb * 100, 0) : `無解`, tone: Number.isFinite(rv.Eb) && rv.Eb > .59 ? `var(--color-bad)` : void 0, note: `目前 ${hA(rv.eb30 * 100, 0)}；可觀察 neocloud 上緣約 59%（CRWV）` })
       ]),
       elQ(`div`, { key: `m`, style: { display: `grid`, gridTemplateColumns: `1fr 1fr`, gap: 36, marginTop: 22, alignItems: `start` } }, [
         elQ(`table`, { key: `t`, style: { borderCollapse: `collapse`, fontSize: 16, fontVariantNumeric: `tabular-nums`, width: `100%` } }, [
@@ -465,7 +465,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
         `解法：固定其他輸入，只調一個變數，使 DCF 每股＝現價。${Number.isFinite(rv.Rt) ? `若改以加權目標價＝現價反解，每 MW 年收入需 ${rv.Rt >= 1 ? `+` : `−`}${hA(Math.abs(rv.Rt - 1) * 100, 0)}。` : ``}左表為 DCF＝現價所需的 FY30 每 MW 年收入（綠底＝不高於目前 $${Y(rv.rev30, 1)}m）。`)
       ]),
       elQ(`p`, { key: `n`, style: { fontSize: 15, color: `var(--color-muted)`, marginTop: `auto`, lineHeight: 1.55 } },
-        Number.isFinite(rv.Eb) && rv.Eb > .71 ? `解讀：現價隱含單位經濟大幅改善（更高租價或更低 GPU 成本）；單靠營運效率，EBITDA 率須超出由下而上估計的上緣。` : `解讀：現價所需條件落在由下而上估計範圍內，需逐項檢驗。`)
+        Number.isFinite(rv.Eb) && rv.Eb > .59 ? `解讀：現價隱含單位經濟大幅改善（更高租價或更低 GPU 成本）；單靠營運效率，EBITDA 率須超出可觀察 neocloud 上緣。` : `解讀：現價所需條件落在可觀察 neocloud 範圍內，需逐項檢驗。`)
     ] : elQ(`p`, {}, `計算中…`));
 
   // 7｜評價方法：錨定年度 × 倍數（v3.5）
@@ -507,7 +507,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
 
   // 8｜驗證點與限制
   let li = (a, k) => elQ(`li`, { key: k, style: { margin: `0 0 10px`, lineHeight: 1.55 } }, a);
-  S(`驗證點與限制`, `下一個驗證點是 Q3 財報（預計 11/9）與 10-Q（11/16 前）`, [
+  S(`驗證點與限制`, `下一個驗證點是 ${CALL_FACTS.nextEarn || `下一季財報`}`, [
     elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `1fr 1fr`, gap: 40 } }, [
       elQ(`div`, { key: `a` }, [
         elQ(`div`, { key: `h`, style: { fontSize: 20, fontWeight: 700, marginBottom: 10 } }, `會改變結論的觀察值`),

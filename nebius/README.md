@@ -136,18 +136,18 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY26 下半年、FY27、FY28、FY29、FY30，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 CoreWeave v4.5 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 Nebius v4.5 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `meta.company` | 公司名稱 | 文字 | CoreWeave | 必改 |
-| `meta.ticker` | 股票代號 | 文字 | CRWV | 必改 |
-| `meta.updateDate` | 資料更新日 | 日期 | 2026-09-25 | 必改 |
-| `meta.priceDate` | 股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格） | 日期 | 2026-09-24 | 必改 |
-| `meta.consensusFile` | 市場共識資料檔路徑（v4.3；只讀，由使用者查證後提供；建置時併入 HTML、Excel 讀同一檔） | 路徑 | data/consensus_crwv_202609… | 必改 |
-| `meta.sourceOrderNote` | 資料來源的先後與衝突時的取捨原則（畫面說明文字） | 文字 | 時序先法說（8/11）、後 10-Q（8/12）、再… | 必改 |
+| `meta.company` | 公司名稱 | 文字 | Nebius | 必改 |
+| `meta.ticker` | 股票代號 | 文字 | NBIS | 必改 |
+| `meta.updateDate` | 資料更新日 | 日期 | 2026-10-07 | 必改 |
+| `meta.priceDate` | 股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格） | 日期 | 2026-10-06 | 必改 |
+| `meta.consensusFile` | 市場共識資料檔路徑（v4.3；只讀，由使用者查證後提供；建置時併入 HTML、Excel 讀同一檔） | 路徑 | data/consensus_nbis_202610… | 必改 |
+| `meta.sourceOrderNote` | 資料來源的先後與衝突時的取捨原則（畫面說明文字） | 文字 | 時序先 Q2 6-K 財報與股東信（8/12），再期… | 必改 |
 
 ### `calendar`：期間與日期（v4.5）
 
@@ -172,29 +172,29 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `ytdActual.throughQuarter` | 年初至今實際數的截止財季，須等於 calendar.latestQuarterFiled（v4.5，原 actual1H） | 文字 | FY26Q2 | 必改 |
 | `ytdActual.months` | 年初至今的月數，須等於日曆推算值（v4.5） | 月 | 6 | 必改 |
-| `ytdActual.label` | 「年初至今實際數」的標題 | 文字 | 1H26 實際（10-Q） | 必改 |
+| `ytdActual.label` | 「年初至今實際數」的標題 | 文字 | 1H26 實際（6-K） | 必改 |
 | `ytdActual.jvSplit` | JV 出資與策略投資的拆分（v4.5；說明文字與「JV 已付」讀此） | 物件（US$bn） | 物件（jv、strategic） | 必改 |
 | `ytdActual.notes` | 各欄位的逐列說明（來源、口徑、拆分；Excel「輸入與假設」G 區；v4.5 起隨資料一起更新） | 物件（文字） | 物件（cash1231、cfo、cashCapex、capex、jv、borrow、debtRepaid、cappedCall、equity、interest、leasePaid、revenue、opInc、ni、prepay、da、sbc、eps、ngEps） | 必改 |
-| `ytdActual.cash1231` | 上一年底現金 | US$bn | 3.127 | 必改 |
-| `ytdActual.revenue` | 上半年營收 | US$bn | 4.653 | 必改 |
-| `ytdActual.capex` | 上半年資本支出（認列口徑，含設備商融資） | US$bn | 16.139 | 必改 |
-| `ytdActual.cashCapex` | 上半年現金購置固定資產 | US$bn | 14.117 | 必改 |
-| `ytdActual.interest` | 上半年利息費用 | US$bn | 1.176 | 必改 |
-| `ytdActual.leasePaid` | 上半年租賃現金支付 | US$bn | 0.748 | 必改 |
-| `ytdActual.debtRepaid` | 上半年還款 | US$bn | 5.219 | 必改 |
-| `ytdActual.borrow` | 上半年借款 | US$bn | 16.747 | 必改 |
-| `ytdActual.equity` | 上半年股權募資 | US$bn | 2.982 | 必改 |
-| `ytdActual.cappedCall` | 上半年 capped call（可轉債配套避險）支出 | US$bn | 0.492 | 必改 |
-| `ytdActual.jv` | 上半年合資（JV）與策略投資出資 | US$bn | 0.688 | 必改 |
-| `ytdActual.cfo` | 上半年營運現金流 | US$bn | 3.663 | 必改 |
-| `ytdActual.prepay` | 上半年客戶預付（遞延收入淨流入） | US$bn | 1.365 | 必改 |
-| `ytdActual.da` | 上半年折舊攤銷 | US$bn | 2.54 | 必改 |
-| `ytdActual.sbc` | 上半年股份基礎薪酬 | US$bn | 0.318 | 必改 |
-| `ytdActual.opInc` | 上半年 GAAP 營業損益 | US$bn | -0.193 | 必改 |
-| `ytdActual.ni` | 上半年淨損益 | US$bn | -1.366 | 必改 |
-| `ytdActual.eps` | 上半年 GAAP 每股盈餘 | US$ | -2.53 | 必改 |
-| `ytdActual.ngEps` | 上半年每股盈餘（加回股份基礎薪酬） | US$ | -1.94 | 必改 |
-| `ytdActual.adjEbitda` | 上半年調整後 EBITDA（v4.3；只用於與市場共識比較 FY26，不進模型損益與評價） | US$bn | 2.667 | 必改 |
+| `ytdActual.cash1231` | 上一年底現金 | US$bn | 3.6781 | 必改 |
+| `ytdActual.revenue` | 上半年營收 | US$bn | 0.9813 | 必改 |
+| `ytdActual.capex` | 上半年資本支出（認列口徑，含設備商融資） | US$bn | 8.1303 | 必改 |
+| `ytdActual.cashCapex` | 上半年現金購置固定資產 | US$bn | 8.1303 | 必改 |
+| `ytdActual.interest` | 上半年利息費用 | US$bn | 0.1828 | 必改 |
+| `ytdActual.leasePaid` | 上半年租賃現金支付 | US$bn | 0 | 必改 |
+| `ytdActual.debtRepaid` | 上半年還款 | US$bn | 0 | 必改 |
+| `ytdActual.borrow` | 上半年借款 | US$bn | 4.3375 | 必改 |
+| `ytdActual.equity` | 上半年股權募資 | US$bn | 4.8111 | 必改 |
+| `ytdActual.cappedCall` | 上半年 capped call（可轉債配套避險）支出 | US$bn | 0 | 必改 |
+| `ytdActual.jv` | 上半年合資（JV）與策略投資出資 | US$bn | 0.2516 | 必改 |
+| `ytdActual.cfo` | 上半年營運現金流 | US$bn | 4.5041 | 必改 |
+| `ytdActual.prepay` | 上半年客戶預付（遞延收入淨流入） | US$bn | 4.552 | 必改 |
+| `ytdActual.da` | 上半年折舊攤銷 | US$bn | 0.4717 | 必改 |
+| `ytdActual.sbc` | 上半年股份基礎薪酬 | US$bn | 0.1378 | 必改 |
+| `ytdActual.opInc` | 上半年 GAAP 營業損益 | US$bn | -0.3039 | 必改 |
+| `ytdActual.ni` | 上半年淨損益 | US$bn | 0.4308 | 必改 |
+| `ytdActual.eps` | 上半年 GAAP 每股盈餘 | US$ | 1.6 | 必改 |
+| `ytdActual.ngEps` | 上半年每股盈餘（加回股份基礎薪酬） | US$ | 2.11 | 必改 |
+| `ytdActual.adjEbitda` | 上半年調整後 EBITDA（v4.3；只用於與市場共識比較 FY26，不進模型損益與評價） | US$bn | 0.3657 | 必改 |
 | `ytdActual.adjEbitdaMeta` | 上述數字的 Q1／Q2 拆分、來源、標記與備註（建置時檢查 Q1＋Q2＝合計） | 物件 | 物件（q1、q2、tag、sources、crossCheck、note、usage） | 必改 |
 
 ### `historicalPL`：歷年損益
@@ -207,31 +207,31 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `rpo.scheduledShare` | 剩餘履約義務（RPO，已簽約未認列的營收）預計在模型期內認列的比例 | 比例 | 0.84 | 必改 |
-| `rpo.bucketWeights` | RPO 在五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期認列的比例，合計等於上一欄 | 比例清單 | 0.1025、0.205、0.2、0.195、0.1375 | 必改 |
+| `rpo.scheduledShare` | 剩餘履約義務（RPO，已簽約未認列的營收）預計在模型期內認列的比例 | 比例 | 0.82 | 必改 |
+| `rpo.bucketWeights` | RPO 在五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期認列的比例，合計等於上一欄 | 比例清單 | 0.09、0.18、0.19、0.2、0.16 | 必改 |
 
 ### `leases`：租約
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `leases.onBalanceCash` | 已入帳租約在五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期的現金租金 | US$bn 清單 | 1.04、2.339、2.306、2.373、2.289 | 必改 |
-| `leases.afterFY30` | 已入帳租約在模型期之後還要付的租金合計 | US$bn | 19.023 | 必改 |
-| `leases.facts.onBal` | 已入帳租約未折現付款合計 | US$bn | 29.37 | 必改 |
-| `leases.facts.notCommenced` | 已簽約但尚未起租的租約（表外） | US$bn | 35.5 | 必改 |
-| `leases.facts.singleCap` | 單一大型站點的租金上限（10-Q 揭露） | US$bn | 14.7 | 必改 |
-| `leases.facts.share` | 第三方租賃占機房取得的比例（用於租金基準檢驗） | 比例 | 0.85 | 檢查 |
-| `leases.operatingPayments` | 營業租賃到期表：五期各期，最後一格為之後合計（Excel 租賃頁） | US$bn 清單 | 1.028、2.116、2.306、2.373、2.289、19.023 | 必改 |
-| `leases.financePayments` | 融資租賃到期表：同上格式 | US$bn 清單 | 0.012、0.223、0、0、0、0 | 必改 |
+| `leases.onBalanceCash` | 已入帳租約在五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期的現金租金 | US$bn 清單 | 0.0916、0.2352、0.2342、0.2414、0.2427 | 必改 |
+| `leases.afterFY30` | 已入帳租約在模型期之後還要付的租金合計 | US$bn | 1.13 | 必改 |
+| `leases.facts.onBal` | 已入帳租約未折現付款合計 | US$bn | 2.1751 | 必改 |
+| `leases.facts.notCommenced` | 已簽約但尚未起租的租約（表外） | US$bn | 12.0541 | 必改 |
+| `leases.facts.singleCap` | 單一大型站點的租金上限（10-Q 揭露） | US$bn | 0 | 必改 |
+| `leases.facts.share` | 第三方租賃占機房取得的比例（用於租金基準檢驗） | 比例 | 0.25 | 檢查 |
+| `leases.operatingPayments` | 營業租賃到期表：五期各期，最後一格為之後合計（Excel 租賃頁） | US$bn 清單 | 0.0916、0.2352、0.2342、0.2414、0.2427、1.13 | 必改 |
+| `leases.financePayments` | 融資租賃到期表：同上格式 | US$bn 清單 | 0、0、0、0、0、0 | 必改 |
 
 ### `debt`：既有債務
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `debt.amortization` | 既有債務在五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期的排程還本 | US$bn 清單 | 4.413、6.184、4.416、2.421、3.221 | 必改 |
-| `debt.amortAfterFY30` | 模型期之後的還本合計 | US$bn | 14.896 | 必改 |
-| `debt.instruments` | 既有債務逐筆明細，一筆一列：[名稱, 追索／非追索, 到期, 有效利率（比例）, 本金（US$bn）, 備註]。加總本金須等於 10-Q 本金合計 | 清單 | 16 筆 | 必改 |
-| `debt.convertible.principal` | 期後新發行可轉債本金（不在五期還本表內，只計利息） | US$bn | 3.7 | 必改 |
-| `debt.convertible.coupon` | 該可轉債票面利率 | 比例 | 0.02875 | 必改 |
+| `debt.amortization` | 既有債務在五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期的排程還本 | US$bn 清單 | 0.0467、0、0、0.585、1.81844 | 必改 |
+| `debt.amortAfterFY30` | 模型期之後的還本合計 | US$bn | 7.63281 | 必改 |
+| `debt.instruments` | 既有債務逐筆明細，一筆一列：[名稱, 追索／非追索, 到期, 有效利率（比例）, 本金（US$bn）, 備註]。加總本金須等於 10-Q 本金合計 | 清單 | 7 筆 | 必改 |
+| `debt.convertible.principal` | 期後新發行可轉債本金（不在五期還本表內，只計利息） | US$bn | 5.75 | 必改 |
+| `debt.convertible.coupon` | 該可轉債票面利率 | 比例 | 0.021 | 必改 |
 
 ### `latestQuarter`：最新一季財報數字（10-Q）
 
@@ -241,70 +241,70 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `filed` | 申報日 | 日期 | 2026-08-12 | 否 |
 | `periodEnd` | 季末日 | 日期 | 2026-06-30 | 否 |
-| `revenue` | 當季營收 | US$bn | 2.575 | 是 |
-| `yoy` | 當季營收年增率 | 比例 | 1.12 | 是 |
-| `h1Revenue` | 上半年營收 | US$bn | 4.653 | 是 |
-| `costRev` | 當季營收成本 | US$bn | 0.879 | 否 |
-| `techInfra` | 當季技術與基礎設施費用 | US$bn | 1.507 | 否 |
-| `opInc` | 當季 GAAP 營業損益 | US$bn | -0.049 | 否 |
-| `interest` | 當季利息費用 | US$bn | 0.64 | 否 |
-| `h1Interest` | 上半年利息費用 | US$bn | 1.176 | 否 |
-| `ni` | 當季淨損益 | US$bn | -0.626 | 否 |
-| `h1Ni` | 上半年淨損益 | US$bn | -1.366 | 否 |
-| `epsDiluted` | 當季稀釋每股盈餘 | US$ | -1.14 | 否 |
-| `sbc` | 當季股份基礎薪酬 | US$bn | 0.165 | 否 |
-| `da` | 當季折舊攤銷 | US$bn | 1.393 | 否 |
-| `adjEbitda` | 當季調整後 EBITDA | US$bn | 1.51 | 否 |
-| `adjOpInc` | 當季調整後營業利益 | US$bn | 0.128 | 否 |
-| `rpo` | 季末 RPO | US$bn | 103.7 | 是 |
-| `backlog` | 季末 backlog（含其他） | US$bn | 104.2 | 否 |
-| `rpo24m` | RPO 於 24 個月內認列比例 | 比例 | 0.41 | 否 |
-| `rpo25to48` | RPO 於 25–48 個月認列比例 | 比例 | 0.39 | 否 |
-| `rpo49to78` | RPO 於 49–78 個月認列比例 | 比例 | 0.2 | 否 |
-| `cash` | 季末現金 | US$bn | 5.524 | 是 |
-| `restricted` | 受限現金 | US$bn | 1.38 | 否 |
-| `marketable` | 有價證券 | US$bn | 0.015 | 是 |
-| `availability` | 未動用信用額度 | US$bn | 10.014 | 是 |
-| `debtPrincipal` | 債務本金合計 | US$bn | 35.551 | 是 |
-| `recourseNet` | 追索債務淨額 | US$bn | 31.405 | 否 |
-| `nonRecourseNet` | 非追索債務淨額 | US$bn | 3.663 | 否 |
-| `ddtlOut` | DDTL 未償餘額 | US$bn | 13.6 | 否 |
-| `notesOut` | 票據與可轉債未償餘額 | US$bn | 16.6 | 否 |
-| `sharesA` | A 股流通股數 | bn 股 | 0.458872 | 否 |
-| `sharesB` | B 股流通股數 | bn 股 | 0.0926649 | 否 |
-| `sharesOut` | 流通股數合計 | bn 股 | 0.551537 | 是 |
-| `basicWaso` | 加權平均流通股數 | bn 股 | 0.551 | 否 |
-| `capexQ2` | 當季資本支出 | US$bn | 9.352 | 是 |
-| `capexH1` | 上半年資本支出 | US$bn | 16.139 | 是 |
-| `cashCapexH1` | 上半年現金購置固定資產 | US$bn | 14.117 | 否 |
-| `cfoH1` | 上半年營運現金流 | US$bn | 3.663 | 否 |
-| `cashInterestH1` | 上半年現金利息 | US$bn | 0.806 | 否 |
-| `capInterestH1` | 上半年資本化利息 | US$bn | 0.176 | 否 |
-| `deferredTotal` | 遞延收入合計 | US$bn | 9.692 | 是 |
-| `deferredIn` | 上半年遞延收入淨流入 | US$bn | 1.365 | 是 |
-| `ppe` | 固定資產毛額 | US$bn | 46.736 | 否 |
-| `cip` | 在建工程 | US$bn | 11.9 | 否 |
-| `rouOp` | 營業租賃使用權資產 | US$bn | 16.595 | 否 |
-| `opLeaseLiab` | 營業租賃負債 | US$bn | 16.319 | 是 |
-| `finLeaseLiab` | 融資租賃負債 | US$bn | 0.221 | 否 |
-| `onBalanceUndiscounted` | 已入帳租約未折現付款 | US$bn | 29.37 | 是 |
-| `offBalanceLease` | 未起租租約（表外） | US$bn | 35.5 | 是 |
-| `singleSiteCap` | 單一站點租金上限 | US$bn | 14.7 | 是 |
-| `singleSiteMw` | 該站點未交付 MW | MW | 393 | 否 |
-| `constructionCostMw` | 按造價計租的未交付 MW | MW | 355 | 否 |
-| `equipCommitLo` | 設備採購承諾下緣 | US$bn | 0.5 | 否 |
-| `equipCommitHi` | 設備採購承諾上緣 | US$bn | 1.2 | 否 |
-| `jvCommit` | JV 承諾出資上限 | US$bn | 1.7 | 否 |
-| `jvPaidH1` | 上半年已付 JV 出資 | US$bn | 0.55 | 否 |
-| `vieExposure` | 可變利益實體（VIE）最大曝險 | US$bn | 0.108 | 否 |
-| `rouObtainedH1` | 上半年新取得使用權資產 | US$bn | 8.359 | 否 |
-| `leaseCashH1` | 上半年租賃現金支付 | US$bn | 0.748 | 否 |
-| `custA` | 最大客戶營收占比 | 比例 | 0.36 | 否 |
-| `custB` | 第二大客戶營收占比 | 比例 | 0.26 | 否 |
-| `custC` | 第三大客戶營收占比 | 比例 | 0.1 | 否 |
-| `debtIssuedH1` | 上半年借款 | US$bn | 16.747 | 否 |
-| `debtRepaidH1` | 上半年還款 | US$bn | 5.219 | 否 |
-| `equityH1` | 上半年股權募資 | US$bn | 2.982 | 否 |
+| `revenue` | 當季營收 | US$bn | 0.5823 | 是 |
+| `yoy` | 當季營收年增率 | 比例 | 4.54 | 是 |
+| `h1Revenue` | 上半年營收 | US$bn | 0.9813 | 是 |
+| `costRev` | 當季營收成本 | US$bn | 0.1336 | 否 |
+| `techInfra` | 當季技術與基礎設施費用 | US$bn | None | 否 |
+| `opInc` | 當季 GAAP 營業損益 | US$bn | -0.1759 | 否 |
+| `interest` | 當季利息費用 | US$bn | 0.1191 | 是 |
+| `h1Interest` | 上半年利息費用 | US$bn | 0.1828 | 否 |
+| `ni` | 當季淨損益 | US$bn | -0.1904 | 否 |
+| `h1Ni` | 上半年淨損益 | US$bn | 0.4308 | 否 |
+| `epsDiluted` | 當季稀釋每股盈餘 | US$ | None | 否 |
+| `sbc` | 當季股份基礎薪酬 | US$bn | 0.1025 | 否 |
+| `da` | 當季折舊攤銷 | US$bn | 0.2597 | 是 |
+| `adjEbitda` | 當季調整後 EBITDA | US$bn | 0.2362 | 否 |
+| `adjOpInc` | 當季調整後營業利益 | US$bn | None | 否 |
+| `rpo` | 季末 RPO | US$bn | 37.4906 | 是 |
+| `backlog` | 季末 backlog（含其他） | US$bn | None | 否 |
+| `rpo24m` | RPO 於 24 個月內認列比例 | 比例 | 0.36 | 是 |
+| `rpo25to48` | RPO 於 25–48 個月認列比例 | 比例 | 0.4 | 是 |
+| `rpo49to78` | RPO 於 49–78 個月認列比例 | 比例 | 0.24 | 是 |
+| `cash` | 季末現金 | US$bn | 8.0421 | 是 |
+| `restricted` | 受限現金 | US$bn | 1.056 | 是 |
+| `marketable` | 有價證券 | US$bn | 0 | 是 |
+| `availability` | 未動用信用額度 | US$bn | 0 | 否 |
+| `debtPrincipal` | 債務本金合計 | US$bn | 10.0885 | 是 |
+| `recourseNet` | 追索債務淨額 | US$bn | None | 否 |
+| `nonRecourseNet` | 非追索債務淨額 | US$bn | None | 否 |
+| `ddtlOut` | DDTL 未償餘額 | US$bn | 0 | 否 |
+| `notesOut` | 票據與可轉債未償餘額 | US$bn | 10.0418 | 是 |
+| `sharesA` | A 股流通股數 | bn 股 | 0.2384 | 否 |
+| `sharesB` | B 股流通股數 | bn 股 | 0.033455 | 否 |
+| `sharesOut` | 流通股數合計 | bn 股 | 0.271855 | 是 |
+| `basicWaso` | 加權平均流通股數 | bn 股 | 0.280382 | 否 |
+| `capexQ2` | 當季資本支出 | US$bn | 5.6574 | 是 |
+| `capexH1` | 上半年資本支出 | US$bn | 8.1303 | 是 |
+| `cashCapexH1` | 上半年現金購置固定資產 | US$bn | 8.1303 | 否 |
+| `cfoH1` | 上半年營運現金流 | US$bn | 4.5041 | 否 |
+| `cashInterestH1` | 上半年現金利息 | US$bn | None | 否 |
+| `capInterestH1` | 上半年資本化利息 | US$bn | None | 否 |
+| `deferredTotal` | 遞延收入合計 | US$bn | 5.9752 | 是 |
+| `deferredIn` | 上半年遞延收入淨流入 | US$bn | 4.395 | 是 |
+| `ppe` | 固定資產毛額 | US$bn | 14.1495 | 是 |
+| `cip` | 在建工程 | US$bn | 7.8364 | 是 |
+| `rouOp` | 營業租賃使用權資產 | US$bn | None | 否 |
+| `opLeaseLiab` | 營業租賃負債 | US$bn | 1.6253 | 是 |
+| `finLeaseLiab` | 融資租賃負債 | US$bn | 0 | 否 |
+| `onBalanceUndiscounted` | 已入帳租約未折現付款 | US$bn | 2.1751 | 是 |
+| `offBalanceLease` | 未起租租約（表外） | US$bn | 12.0541 | 是 |
+| `singleSiteCap` | 單一站點租金上限 | US$bn | 0 | 是 |
+| `singleSiteMw` | 該站點未交付 MW | MW | None | 否 |
+| `constructionCostMw` | 按造價計租的未交付 MW | MW | None | 否 |
+| `equipCommitLo` | 設備採購承諾下緣 | US$bn | None | 否 |
+| `equipCommitHi` | 設備採購承諾上緣 | US$bn | None | 否 |
+| `jvCommit` | JV 承諾出資上限 | US$bn | 0 | 否 |
+| `jvPaidH1` | 上半年已付 JV 出資 | US$bn | 0 | 否 |
+| `vieExposure` | 可變利益實體（VIE）最大曝險 | US$bn | None | 否 |
+| `rouObtainedH1` | 上半年新取得使用權資產 | US$bn | None | 否 |
+| `leaseCashH1` | 上半年租賃現金支付 | US$bn | None | 否 |
+| `custA` | 最大客戶營收占比 | 比例 | 0.24 | 是 |
+| `custB` | 第二大客戶營收占比 | 比例 | 0.21 | 是 |
+| `custC` | 第三大客戶營收占比 | 比例 | 0.14 | 是 |
+| `debtIssuedH1` | 上半年借款 | US$bn | 4.3375 | 否 |
+| `debtRepaidH1` | 上半年還款 | US$bn | 0 | 否 |
+| `equityH1` | 上半年股權募資 | US$bn | 4.8111 | 否 |
 
 ### `callFacts`：法說會與期後事項
 
@@ -312,91 +312,91 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 程式使用 |
 |---|---|---|---|---|
-| `activeGw` | 主動電力 | GW | 1.5 | 否 |
-| `activeAddQ2` | 當季新增主動電力 | MW | 500 | 是 |
-| `juneAddMw` | 季末月單月新增 | MW | 300 | 否 |
-| `contractedGw` | 簽約電力（法說日） | GW | 4.2 | 是 |
-| `contractedGwQ2` | 簽約電力（季末） | GW | 3.7 | 否 |
-| `poweredLandGw` | 已取得電力的土地／選擇權／意向書 | GW | 1.5 | 否 |
-| `yeActiveGw` | 年底主動電力指引 | GW | 1.85 | 是 |
-| `gw2030` | 2030 年電力目標 | GW | 8 | 否 |
-| `dataCenters` | 資料中心數 | 座 | 51 | 否 |
-| `capexLo` | 全年資本支出指引下緣 | US$bn | 35 | 是 |
-| `capexHi` | 全年資本支出指引上緣 | US$bn | 39 | 是 |
-| `nextQCapexLo` | 下一季資本支出指引下緣 | US$bn | 11.5 | 否 |
-| `nextQCapexHi` | 下一季資本支出指引上緣 | US$bn | 13.5 | 否 |
-| `nextQIntLo` | 下一季利息指引下緣 | US$bn | 0.86 | 否 |
-| `nextQIntHi` | 下一季利息指引上緣 | US$bn | 0.94 | 否 |
-| `revLo` | 全年營收指引下緣 | US$bn | 12.4 | 否 |
-| `revHi` | 全年營收指引上緣 | US$bn | 13.2 | 否 |
-| `nextQRevLo` | 下一季營收指引下緣 | US$bn | 3.45 | 是 |
-| `nextQRevHi` | 下一季營收指引上緣 | US$bn | 3.6 | 是 |
-| `adjOpLo` | 全年調整後營業利益指引下緣 | US$bn | 0.96 | 否 |
-| `adjOpHi` | 全年調整後營業利益指引上緣 | US$bn | 1.15 | 否 |
-| `nextQAdjOpLo` | 下一季調整後營業利益指引下緣 | US$bn | 0.2 | 否 |
-| `nextQAdjOpHi` | 下一季調整後營業利益指引上緣 | US$bn | 0.26 | 否 |
-| `arrLo` | 期末年化經常性收入（ARR）指引下緣 | US$bn | 18.5 | 否 |
-| `arrHi` | 期末 ARR 指引上緣 | US$bn | 19.5 | 否 |
-| `postQNewCommit` | 季末後新增承諾 | US$bn | 25 | 否 |
-| `priceUp` | 新約漲價幅度 | 比例 | 0.25 | 否 |
-| `marginStep` | 新約貢獻率提升 | 文字 | 5–10 pt | 否 |
-| `backlogStarted` | backlog 中已開始交付的比例（法說「>50%」） | 比例 | 0.5 | 否 |
-| `inferenceArr` | 推論服務 ARR（年底） | US$bn | 0.25 | 否 |
-| `otherArr` | 其他服務 ARR | US$bn | 0.4 | 否 |
-| `convert` | 期後可轉債發行額 | US$bn | 3.7 | 否 |
-| `convertNet` | 期後可轉債淨額 | US$bn | 3.6 | 否 |
-| `convertCoupon` | 期後可轉債票面利率 | 比例 | 0.02875 | 否 |
-| `convertPx` | 轉換價 | US$ | 97.85 | 否 |
-| `atmShares` | 股權分銷（ATM）上限 | m 股 | 35 | 否 |
-| `price0917` | 9/17 收盤價 | US$ | 79.88 | 是 |
-| `tier34Active` | 主動電力位於 Tier 3/4 市場比例 | 比例 | 0.25 | 否 |
-| `tier34Contracted` | 簽約電力位於 Tier 3/4 市場比例 | 比例 | 0.74 | 否 |
-| `cdsMid` | CDS 中價 | bps | 720 | 否 |
-| `cdsBidAsk` | CDS 買／賣價 | 文字 | 690 / 750 | 否 |
-| `cdsRange` | CDS 近期區間 | 文字 | 680–855 | 否 |
-| `cdsPeak` | CDS 峰值 | bps | 855 | 否 |
-| `cdsPeakDate` | CDS 峰值日期 | 日期 | 2026-07-28 | 否 |
-| `cdsLow` | CDS 低點 | bps | 452 | 否 |
-| `cdsLowDate` | CDS 低點日期 | 日期 | 2026-06 | 否 |
-| `availability` | 未動用信用額度 | US$bn | 10.014 | 否 |
-| `price0918` | 9/18 收盤價 | US$ | 80.2 | 否 |
-| `priceLast` | 最新收盤價 | US$ | 90.13 | 是 |
-| `priceDate` | 最新收盤價日期 | 日期 | 2026-09-24 | 是 |
-| `postQShortDated` | 期後公告摘要 | 文字 | 2026-09-16 公告：6/30 後持續以更高價… | 否 |
-| `ttmRev` | 近十二個月營收 | US$bn | 7.59 | 是 |
-| `ttmOpInc` | 近十二個月 GAAP 營業損益 | US$bn | -0.231 | 是 |
-| `ttmDa` | 近十二個月折舊攤銷 | US$bn | 3.991 | 是 |
-| `ttmOpLease` | 近十二個月營業租賃成本 | US$bn | 1.377 | 否 |
-| `mktCapLast` | CRWV 市值（Comps 用；與同業同一收盤日 peers.priceDate，v4.3 起不隨現價更新） | US$bn | 47.12 | 是 |
-| `nextEarn` | 下次財報時間 | 文字 | 2026-11 (10-Q 期限 11/16) | 否 |
+| `activeGw` | 主動電力 | GW | None | 否 |
+| `activeAddQ2` | 當季新增主動電力 | MW | None | 否 |
+| `juneAddMw` | 季末月單月新增 | MW | None | 否 |
+| `contractedGw` | 簽約電力（法說日） | GW | 3.5 | 是 |
+| `contractedGwQ2` | 簽約電力（季末） | GW | None | 否 |
+| `poweredLandGw` | 已取得電力的土地／選擇權／意向書 | GW | None | 否 |
+| `yeActiveGw` | 年底主動電力指引 | GW | 0.9 | 是 |
+| `gw2030` | 2030 年電力目標 | GW | None | 否 |
+| `dataCenters` | 資料中心數 | 座 | 16 | 否 |
+| `capexLo` | 全年資本支出指引下緣 | US$bn | 20 | 是 |
+| `capexHi` | 全年資本支出指引上緣 | US$bn | 25 | 是 |
+| `nextQCapexLo` | 下一季資本支出指引下緣 | US$bn | None | 否 |
+| `nextQCapexHi` | 下一季資本支出指引上緣 | US$bn | None | 否 |
+| `nextQIntLo` | 下一季利息指引下緣 | US$bn | None | 否 |
+| `nextQIntHi` | 下一季利息指引上緣 | US$bn | None | 否 |
+| `revLo` | 全年營收指引下緣 | US$bn | 3 | 是 |
+| `revHi` | 全年營收指引上緣 | US$bn | 3.4 | 是 |
+| `nextQRevLo` | 下一季營收指引下緣 | US$bn | None | 是 |
+| `nextQRevHi` | 下一季營收指引上緣 | US$bn | None | 是 |
+| `adjOpLo` | 全年調整後營業利益指引下緣 | US$bn | None | 否 |
+| `adjOpHi` | 全年調整後營業利益指引上緣 | US$bn | None | 否 |
+| `nextQAdjOpLo` | 下一季調整後營業利益指引下緣 | US$bn | None | 否 |
+| `nextQAdjOpHi` | 下一季調整後營業利益指引上緣 | US$bn | None | 否 |
+| `arrLo` | 期末年化經常性收入（ARR）指引下緣 | US$bn | 7 | 是 |
+| `arrHi` | 期末 ARR 指引上緣 | US$bn | 9 | 是 |
+| `postQNewCommit` | 季末後新增承諾 | US$bn | None | 否 |
+| `priceUp` | 新約漲價幅度 | 比例 | None | 否 |
+| `marginStep` | 新約貢獻率提升 | 文字 | None | 否 |
+| `backlogStarted` | backlog 中已開始交付的比例（法說「>50%」） | 比例 | None | 否 |
+| `inferenceArr` | 推論服務 ARR（年底） | US$bn | None | 否 |
+| `otherArr` | 其他服務 ARR | US$bn | None | 否 |
+| `convert` | 期後可轉債發行額 | US$bn | 5.75 | 否 |
+| `convertNet` | 期後可轉債淨額 | US$bn | 5.68 | 否 |
+| `convertCoupon` | 期後可轉債票面利率 | 比例 | 0.021 | 否 |
+| `convertPx` | 轉換價 | US$ | 313.46 | 否 |
+| `atmShares` | 股權分銷（ATM）上限 | m 股 | 25 | 否 |
+| `price0917` | 9/17 收盤價 | US$ | None | 否 |
+| `tier34Active` | 主動電力位於 Tier 3/4 市場比例 | 比例 | None | 否 |
+| `tier34Contracted` | 簽約電力位於 Tier 3/4 市場比例 | 比例 | None | 否 |
+| `cdsMid` | CDS 中價 | bps | None | 否 |
+| `cdsBidAsk` | CDS 買／賣價 | 文字 | None | 否 |
+| `cdsRange` | CDS 近期區間 | 文字 | None | 否 |
+| `cdsPeak` | CDS 峰值 | bps | None | 否 |
+| `cdsPeakDate` | CDS 峰值日期 | 日期 | None | 否 |
+| `cdsLow` | CDS 低點 | bps | None | 否 |
+| `cdsLowDate` | CDS 低點日期 | 日期 | None | 否 |
+| `availability` | 未動用信用額度 | US$bn | 0.775 | 否 |
+| `price0918` | 9/18 收盤價 | US$ | None | 否 |
+| `priceLast` | 最新收盤價 | US$ | 249.87 | 是 |
+| `priceDate` | 最新收盤價日期 | 日期 | 2026-10-06 | 是 |
+| `postQShortDated` | 期後公告摘要 | 文字 | 2026-07-10 資產擔保定期貸款 $775M（… | 是 |
+| `ttmRev` | 近十二個月營收 | US$bn | 1.36 | 是 |
+| `ttmOpInc` | 近十二個月 GAAP 營業損益 | US$bn | -0.612 | 是 |
+| `ttmDa` | 近十二個月折舊攤銷 | US$bn | 0.418 | 是 |
+| `ttmOpLease` | 近十二個月營業租賃成本 | US$bn | None | 否 |
+| `mktCapLast` | 本公司市值（Comps 用；與同業同一收盤日 peers.priceDate，v4.3 起不隨現價更新） | US$bn | 63.81 | 是 |
+| `nextEarn` | 下次財報時間 | 文字 | 2026-11（Q3 財報 6-K） | 是 |
 
 ### `scenarios`：三個擴張情境
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `scenarios.labels.low` | 保守情境名稱（空格前的文字會當作情境簡稱） | 文字 | 保守 4.2 GW | 必改 |
-| `scenarios.labels.base` | 基準情境名稱 | 文字 | 基準 5.6 GW | 必改 |
-| `scenarios.labels.high` | 積極情境名稱 | 文字 | 積極 8 GW | 必改 |
-| `scenarios.accepted.low` | 保守情境：五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期末已驗收的主動電力 | MW 清單 | 1850、3100、3800、4200、4200 | 必改 |
-| `scenarios.accepted.base` | 基準情境：同上 | MW 清單 | 1850、3100、4000、4800、5600 | 必改 |
-| `scenarios.accepted.high` | 積極情境：同上 | MW 清單 | 1850、3100、4600、6300、8000 | 必改 |
-| `scenarios.billableRatio.billable` | 計算「可計費 ÷ 已驗收」爬坡比例用的可計費 MW（與下一欄逐期相除） | MW 清單 | 1700、2900、4300、5900、7500 | 檢查 |
-| `scenarios.billableRatio.accepted` | 同上，分母的已驗收 MW | MW 清單 | 1850、3100、4600、6300、8000 | 檢查 |
-| `scenarios.leaseHighPath` | 積極情境下，尚未起租租約的新增年租金路徑；其他情境依 MW 比例縮放 | US$bn 清單 | 0.3、1.6、3、4、4.6 | 檢查 |
-| `scenarios.leaseRampFloorMw` | 低於此電力時不產生新增表外租金（縮放公式的起點） | MW | 1500 | 檢查 |
+| `scenarios.labels.low` | 保守情境名稱（空格前的文字會當作情境簡稱） | 文字 | 保守 已簽約 3.5 GW | 必改 |
+| `scenarios.labels.base` | 基準情境名稱 | 文字 | 基準 合約 5 GW | 必改 |
+| `scenarios.labels.high` | 積極情境名稱 | 文字 | 積極 每年 >1 GW | 必改 |
+| `scenarios.accepted.low` | 保守情境：五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期末已驗收的主動電力 | MW 清單 | 750、1330、1910、2490、2917 | 必改 |
+| `scenarios.accepted.base` | 基準情境：同上 | MW 清單 | 750、1330、1910、2490、3070 | 必改 |
+| `scenarios.accepted.high` | 積極情境：同上 | MW 清單 | 750、1583、2417、3250、4083 | 必改 |
+| `scenarios.billableRatio.billable` | 計算「可計費 ÷ 已驗收」爬坡比例用的可計費 MW（與下一欄逐期相除） | MW 清單 | 750、850、900、900、900 | 檢查 |
+| `scenarios.billableRatio.accepted` | 同上，分母的已驗收 MW | MW 清單 | 1000、1000、1000、1000、1000 | 檢查 |
+| `scenarios.leaseHighPath` | 積極情境下，尚未起租租約的新增年租金路徑；其他情境依 MW 比例縮放 | US$bn 清單 | 0.05、0.5、1、1、1 | 檢查 |
+| `scenarios.leaseRampFloorMw` | 低於此電力時不產生新增表外租金（縮放公式的起點） | MW | 0 | 檢查 |
 | `scenarios.mw31.low` | 保守情境：模型期後一年（FY31）新增的 MW，用於 FY30 的預建支出 | MW | 0 | 檢查 |
-| `scenarios.mw31.base` | 基準情境：同上 | MW | 500 | 檢查 |
-| `scenarios.mw31.high` | 積極情境：同上 | MW | 1000 | 檢查 |
-| `scenarios.capexTemplate.costMW` | 每 MW 建置成本（GPU＋網路＋機房內裝），各期 | US$m/MW 清單 | 34、34、34、34、34 | 檢查 |
-| `scenarios.capexTemplate.customerFund` | 客戶預付占資本支出的比例，各期 | 比例清單 | 0.08、0.08、0.08、0.08、0.08 | 檢查 |
-| `scenarios.capexTemplate.div` | JV 後續增資與策略投資，各期 | US$bn 清單 | 0.1、0.4、0.3、0.2、0.2 | 檢查 |
+| `scenarios.mw31.base` | 基準情境：同上 | MW | 580 | 檢查 |
+| `scenarios.mw31.high` | 積極情境：同上 | MW | 833 | 檢查 |
+| `scenarios.capexTemplate.costMW` | 每 MW 建置成本（GPU＋網路＋機房內裝），各期 | US$m/MW 清單 | 50.12、50.26、50.26、50.26、50.26 | 檢查 |
+| `scenarios.capexTemplate.customerFund` | 客戶預付占資本支出的比例，各期 | 比例清單 | 0.385、0.385、0.385、0.385、0.385 | 檢查 |
+| `scenarios.capexTemplate.div` | JV 後續增資與策略投資，各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
 
 ### `legacy`：舊版對照值
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `legacy.capexV14` | 舊版（v1.4）手動資本支出，只供畫面對照 | US$bn 清單 | 21、45、50、50、45 | 可沿用 |
-| `legacy.interestV14` | 舊版（v1.4）手動利息，只供畫面對照 | US$bn 清單 | 1.8、2.7、2.3、2、1.8 | 可沿用 |
+| `legacy.capexV14` | 舊版（v1.4）手動資本支出，只供畫面對照 | US$bn 清單 | 0、0、0、0、0 | 可沿用 |
+| `legacy.interestV14` | 舊版（v1.4）手動利息，只供畫面對照 | US$bn 清單 | 0、0、0、0、0 | 可沿用 |
 
 ### `defaults`：預設假設（畫面上可調的輸入）
 
@@ -404,33 +404,33 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `defaults.scenario` | 開啟時的預設情境（low／base／high） | 文字 | base | 檢查 |
 | `defaults.lambda` | 提前支出比例：次年才上線的 MW，其建置支出落在前一年的比例 | 比例 | 0.35 | 檢查 |
-| `defaults.mwYearEnd` | 各年底主動電力，以年份為鍵（例如 "2025": 850）：首期期初取首期前一財年末；GPU 汰換批次＝各年新增 MW（5a；列入滾動檢查） | MW 物件 | 物件（2023、2024、2025） | 必改 |
-| `defaults.mw31` | 模型期後一年新增 MW 的預設值（情境切換時改用 scenarios.mw31） | MW | 500 | 檢查 |
-| `defaults.capexFloorFY0` | 首期所屬財年的全年資本支出下限（已下單的承諾，取公司指引下緣；首期＝下限 − 年初至今實際認列） | US$bn | 35 | 必改 |
-| `defaults.gpuLife` | GPU 經濟壽命（決定汰換時點與折舊） | 年 | 6 | 檢查 |
+| `defaults.mwYearEnd` | 各年底主動電力，以年份為鍵（例如 "2025": 850）：首期期初取首期前一財年末；GPU 汰換批次＝各年新增 MW（5a；列入滾動檢查） | MW 物件 | 物件（2025） | 必改 |
+| `defaults.mw31` | 模型期後一年新增 MW 的預設值（情境切換時改用 scenarios.mw31） | MW | 580 | 檢查 |
+| `defaults.capexFloorFY0` | 首期所屬財年的全年資本支出下限（已下單的承諾，取公司指引下緣；首期＝下限 − 年初至今實際認列） | US$bn | 20 | 必改 |
+| `defaults.gpuLife` | GPU 經濟壽命（決定汰換時點與折舊） | 年 | 5 | 檢查 |
 | `defaults.revScale` | 每 MW 年收入整體倍數（反向 DCF 與壓力測試用，1＝不調整） | 倍 | 1 | 可沿用 |
 | `defaults.capexScale` | 每 MW 建置成本整體倍數（1＝不調整） | 倍 | 1 | 可沿用 |
-| `defaults.ebStart` | 第一期 EBITDA 率 | 比例 | 0.59 | 必改 |
-| `defaults.ebSteady` | 最後一期（穩態）EBITDA 率；中間各期線性內插 | 比例 | 0.65 | 檢查 |
-| `defaults.services` | 非算力服務營收（軟體、儲存等），各期 | US$bn 清單 | 0.3、1、1.8、2.8、3.8 | 檢查 |
-| `defaults.debtBacklog` | 新債上限：總債務不超過 backlog 的倍數 | 倍 | 1 | 檢查 |
-| `defaults.ctrTerm` | 新簽合約的平均年期（決定 backlog 補入量） | 年 | 5 | 檢查 |
+| `defaults.ebStart` | 第一期 EBITDA 率 | 比例 | 0.497 | 必改 |
+| `defaults.ebSteady` | 最後一期（穩態）EBITDA 率；中間各期線性內插 | 比例 | 0.47 | 檢查 |
+| `defaults.services` | 非算力服務營收（軟體、儲存等），各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
+| `defaults.debtBacklog` | 新債上限：總債務不超過 backlog 的倍數 | 倍 | 0.5 | 檢查 |
+| `defaults.ctrTerm` | 新簽合約的平均年期（決定 backlog 補入量） | 年 | 3 | 檢查 |
 | `defaults.minCash` | 最低現金：每期融資後期末現金不低於此值 | US$bn | 2 | 檢查 |
-| `defaults.eqPx` | 新股發行參考價（預設＝現價） | US$ | 90.13 | 必改 |
+| `defaults.eqPx` | 新股發行參考價（預設＝現價） | US$ | 249.87 | 必改 |
 | `defaults.eqDisc` | 新股發行折價 | 比例 | 0.1 | 檢查 |
 | `defaults.eqCapPct` | 每年股權募資上限（占現市值）；輸入 9 以上視為無上限 | 比例 | 0.2 | 檢查 |
-| `defaults.eqCapShares` | 股權年上限的股數基礎：現市值＝發行參考價 × 此股數（5a；評價日時點，列入滾動檢查） | bn | 0.5865 | 必改 |
+| `defaults.eqCapShares` | 股權年上限的股數基礎：現市值＝發行參考價 × 此股數（5a；評價日時點，列入滾動檢查） | bn | 0.3088 | 必改 |
 | `defaults.junkRate` | 股權上限用完後的高息債利率 | 比例 | 0.12 | 檢查 |
-| `defaults.ppeOpen` | 最新季末固定資產毛額 | US$bn | 46.736 | 必改 |
-| `defaults.jvCommit` | 已承諾的 JV 出資餘額，各期 | US$bn 清單 | 1.15、0、0、0、0 | 必改 |
-| `defaults.intCal` | 第一期利息校準值（讓模型利息對上公司季度指引） | US$bn | 0.35 | 必改 |
-| `defaults.rpoOpen` | 最新季末 RPO | US$bn | 103.7 | 必改 |
-| `defaults.rpoPendingAdd` | 季末後新簽、尚未進 RPO 的承諾 | US$bn | 25 | 必改 |
-| `defaults.rp` | RPO 在模型期內認列的比例（百分點；應與 rpo.scheduledShare 一致） | % | 84 | 必改 |
-| `defaults.cash` | 最新季末現金（第一期期初現金） | US$bn | 5.5 | 必改 |
+| `defaults.ppeOpen` | 最新季末固定資產毛額 | US$bn | 14.1495 | 必改 |
+| `defaults.jvCommit` | 已承諾的 JV 出資餘額，各期 | US$bn 清單 | 0、0、0、0、0 | 必改 |
+| `defaults.intCal` | 第一期利息校準值（讓模型利息對上公司季度指引） | US$bn | 0 | 必改 |
+| `defaults.rpoOpen` | 最新季末 RPO | US$bn | 37.4906 | 必改 |
+| `defaults.rpoPendingAdd` | 季末後新簽、尚未進 RPO 的承諾 | US$bn | 0 | 必改 |
+| `defaults.rp` | RPO 在模型期內認列的比例（百分點；應與 rpo.scheduledShare 一致） | % | 82 | 必改 |
+| `defaults.cash` | 最新季末現金（第一期期初現金） | US$bn | 8.0421 | 必改 |
 | `defaults.includeDebt` | 是否依到期表攤還既有債務（true＝是；false＝假設全數再融資） | 是／否 | 是 | 可沿用 |
 | `defaults.includeAtm` | 是否計入期後股權／可轉債募資 | 是／否 | 是 | 可沿用 |
-| `defaults.atm` | 期後股權／可轉債募資淨額（記在第一期） | US$bn | 6.2 | 必改 |
+| `defaults.atm` | 期後股權／可轉債募資淨額（記在第一期） | US$bn | 5.68 | 必改 |
 | `defaults.overlay` | 電力／維護成本另計（預設關；EBITDA 率已含電費，開啟會重複扣除） | 是／否 | 否 | 可沿用 |
 | `defaults.cdsLink` | CDS 利差是否傳入新債利率（預設關） | 是／否 | 否 | 可沿用 |
 | `defaults.cdsBaseBp` | CDS 傳入新債利率的門檻：超過此值的部分才傳入（5a） | bps | 450 | 檢查 |
@@ -438,47 +438,48 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.linkSites` | 具名站點的 MW 是否連動第一期產能下限 | 是／否 | 是 | 可沿用 |
 | `defaults.linkLeaseTail` | 舊模板遺留開關，目前程式未使用 | 是／否 | 是 | 可沿用 |
 | `defaults.useAvgMw` | 收入以平均在役 MW 計（true）或期末存量計（false） | 是／否 | 是 | 可沿用 |
-| `defaults.billableOpen` | 最新季末可計費 MW（第一期期初） | MW | 1350 | 必改 |
-| `defaults.cds` | 信用違約交換（CDS）中價 | bps | 720 | 必改 |
-| `defaults.cdsBid` | CDS 買價 | bps | 690 | 必改 |
-| `defaults.cdsAsk` | CDS 賣價 | bps | 750 | 必改 |
-| `defaults.cdsLo` | CDS 近期區間下緣 | bps | 680 | 必改 |
-| `defaults.cdsHi` | CDS 近期區間上緣 | bps | 855 | 必改 |
-| `defaults.cdsDate` | CDS 報價日期與來源標記 | 文字 | 2026-09（User-provided 報價） | 必改 |
+| `defaults.billableOpen` | 最新季末可計費 MW（第一期期初） | MW | 366 | 必改 |
+| `defaults.cds` | 信用違約交換（CDS）中價 | bps | None | 必改 |
+| `defaults.cdsBid` | CDS 買價 | bps | None | 必改 |
+| `defaults.cdsAsk` | CDS 賣價 | bps | None | 必改 |
+| `defaults.cdsLo` | CDS 近期區間下緣 | bps | None | 必改 |
+| `defaults.cdsHi` | CDS 近期區間上緣 | bps | None | 必改 |
+| `defaults.cdsDate` | CDS 報價日期與來源標記 | 文字 | 不適用（NBIS 無 CDS 報價資料） | 必改 |
 | `defaults.useFacility` | 融資時是否先動用未動用信用額度 | 是／否 | 是 | 可沿用 |
-| `defaults.facility` | 未動用信用額度 | US$bn | 10 | 必改 |
-| `defaults.m.accepted` | 已驗收 MW 的預設路徑（實際依所選情境覆寫） | MW 清單 | 1850、3100、4000、4800、5600 | 檢查 |
-| `defaults.m.billable` | 可計費 MW 的預設路徑（實際依情境與爬坡比例覆寫） | MW 清單 | 1700、2900、3739、4495、5250 | 檢查 |
-| `defaults.m.util` | 利用率，各期 | % 清單 | 95、95、94、93、92 | 檢查 |
-| `defaults.m.revMW` | 每 MW 年收入，各期 | US$bn/MW 清單 | 0.0112、0.0115、0.0115、0.011、0.0105 | 必改 |
+| `defaults.facility` | 未動用信用額度 | US$bn | 0.775 | 必改 |
+| `defaults.m.accepted` | 已驗收 MW 的預設路徑（實際依所選情境覆寫） | MW 清單 | 750、1330、1910、2490、3070 | 檢查 |
+| `defaults.m.billable` | 可計費 MW 的預設路徑（實際依情境與爬坡比例覆寫） | MW 清單 | 563、1131、1719、2241、2763 | 檢查 |
+| `defaults.m.util` | 利用率，各期 | % 清單 | 100、100、100、100、100 | 檢查 |
+| `defaults.m.revMW` | 每 MW 年收入，各期 | US$bn/MW 清單 | 0.0174、0.0174、0.0174、0.0174、0.0174 | 必改 |
 | `defaults.m.aiShare` | AI 占比，各期（目前只做範圍檢查，未參與計算） | % 清單 | 100、100、100、100、100 | 可沿用 |
-| `defaults.m.fill` | 新產能簽約率：未被既有 RPO 占用的產能能賣出的比例 | % 清單 | 100、100、90、85、80 | 檢查 |
+| `defaults.m.fill` | 新產能簽約率：未被既有 RPO 占用的產能能賣出的比例 | % 清單 | 100、100、100、100、100 | 檢查 |
 | `defaults.m.power` | 電價（overlay 開啟時才用） | $/MWh 清單 | 60、62、64、66、68 | 檢查 |
-| `defaults.m.pue` | 電力使用效率 PUE（overlay 用） | 倍 清單 | 1.25、1.24、1.22、1.2、1.2 | 檢查 |
+| `defaults.m.pue` | 電力使用效率 PUE（overlay 用） | 倍 清單 | 1.2、1.2、1.2、1.2、1.2 | 檢查 |
 | `defaults.m.maint` | 維護成本（overlay 用） | US$m/MW 清單 | 0.15、0.15、0.16、0.16、0.17 | 檢查 |
 | `defaults.m.defaultP` | 客戶違約率 | % 清單 | 0.5、1、1.5、2、2.5 | 檢查 |
 | `defaults.m.recovery` | 違約回收率 | % 清單 | 50、50、50、50、50 | 檢查 |
-| `defaults.m.rate` | 新債利率 | % 清單 | 9、9、9、9、9 | 檢查 |
+| `defaults.m.rate` | 新債利率 | % 清單 | 6.5、6.5、6.5、6.5、6.5 | 檢查 |
 | `defaults.terminal.residual` | 模型期末 GPU 殘值率 | % | 25 | 檢查 |
 | `defaults.terminal.rerent` | 期末設備再出租率 | % | 75 | 檢查 |
 | `defaults.terminal.margin` | 模型期後剩餘 RPO 的利潤率 | % | 40 | 檢查 |
-| `defaults.terminal.residualLeaseYears` | 模型期後租約剩餘年數 | 年 | 12 | 檢查 |
+| `defaults.terminal.residualLeaseYears` | 模型期後租約剩餘年數 | 年 | 9 | 檢查 |
 | `defaults.sites` | 具名資料中心站點，一站一列。欄位：id 代碼、name 名稱、operator 房東／合作方、planned 契約 MW、energized 已通電 MW、accepted 已驗收 MW、billable 可計費 MW、contract 合約總值（US$bn，可無）、years 合約年期（可無）、status 狀態說明、next 下一里程碑、date 預計時間、confidence 信心（高／中／低） | 清單 | 6 筆 | 必改 |
 
 ### `valuation`：評價參數
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `valuation.price` | 現價 | US$ | 90.13 | 必改 |
-| `valuation.shares` | 評價股數（含期後股權發行上限） | bn 股 | 0.587 | 必改 |
-| `valuation.netDebt` | 淨負債（最新季末本金 − 現金） | US$bn | 30 | 必改 |
-| `valuation.tax` | 稅率 | 比例 | 0.21 | 檢查 |
-| `valuation.nol` | 期初可扣抵虧損（NOL） | US$bn | 4 | 必改 |
+| `valuation.price` | 現價 | US$ | 249.87 | 必改 |
+| `valuation.shares` | 評價股數（含期後股權發行上限） | bn 股 | 0.3193 | 必改 |
+| `valuation.atmSharesInValuation` | 評價股數中「期後股權發行上限」的股數：期後股權／可轉債開關關閉時由評價股數扣回（v0.1b；CRWV 0.035、無此項的公司填 0） | bn 股 | 0 | 必改 |
+| `valuation.netDebt` | 淨負債（最新季末本金 − 現金） | US$bn | 2.0464 | 必改 |
+| `valuation.tax` | 稅率 | 比例 | 0.258 | 檢查 |
+| `valuation.nol` | 期初可扣抵虧損（NOL） | US$bn | 0.8 | 必改 |
 | `valuation.wacc` | 加權平均資金成本 WACC | 比例 | 0.11 | 檢查 |
-| `valuation.nolUsePct` | NOL 每年可抵用上限占應稅所得的比例（美國 80%；依公司稅籍調整；5a） | 比例 | 0.8 | 檢查 |
+| `valuation.nolUsePct` | NOL 每年可抵用上限占應稅所得的比例（美國 80%；依公司稅籍調整；5a） | 比例 | 0.5 | 檢查 |
 | `valuation.wcPctOfRevGrowth` | 營運資金變動占營收增量的比例（DCF 自由現金流；5a） | 比例 | 0.02 | 檢查 |
 | `valuation.g` | 永續成長率 | 比例 | 0.03 | 檢查 |
-| `valuation.sbc` | 年度股份基礎薪酬 | US$bn | 0.7 | 必改 |
+| `valuation.sbc` | 年度股份基礎薪酬 | US$bn | 0.13 | 必改 |
 | `valuation.maintRatio` | 終值的維持性資本支出占折舊比例 | 比例 | 0.8 | 檢查 |
 | `valuation.evEbitda` | EV/EBITDA 倍數 | 倍 | 6 | 檢查 |
 | `valuation.evYear` | EV/EBITDA 錨定年度（1＝FY27 … 4＝FY30） | 年度代碼 | 3 | 檢查 |
@@ -502,7 +503,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.rating.sellUpsideMaxIfEquityOver` | 股權募資超標時，空間小於或等於此值即賣出 | 比例（負數） | -0.08 | 可沿用 |
 | `methodology.rating.sellMarginAlert` | 任一情境與賣出門檻的距離小於「現價 × 此值」時，判斷句另外揭露 | 比例 | 0.05 | 可沿用 |
 | `methodology.rating.tvShareWarn` | 終值占企業價值超過此值時提出警示（融資說明、檢查頁） | 比例 | 0.85 | 可沿用 |
-| `methodology.checks.capexPerMwBand` | 檢查頁：模型期 CapEx 強度（每 MW 百萬美元）的合理區間下端與上端（5a） | US$m/MW 清單 | 20、45 | 檢查 |
+| `methodology.checks.capexPerMwBand` | 檢查頁：模型期 CapEx 強度（每 MW 百萬美元）的合理區間下端與上端（5a） | US$m/MW 清單 | 38、68 | 檢查 |
 | `methodology.checks.leaseVsCommitMin` | 檢查頁：表外租金路徑 ÷ 已承諾租約至少要達到的倍數（5a） | 倍 | 0.8 | 檢查 |
 | `methodology.checks.unsignedRevShareMax` | 檢查頁：後段年度依賴未簽約收入的比例上限（5a） | 比例 | 0.5 | 檢查 |
 | `methodology.checks.siteRentGapMax` | 檢查頁：站點租賃五期租金可能低估的金額上限（5a） | US$bn | 10 | 檢查 |
@@ -516,10 +517,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `peers.priceSource` | 同業市值來源 | 文字 | S&P Global via stockanalys… | 必改 |
 | `peers.list` | 同業，一家一列（HTML Comps 分頁與 Excel「可比公司」頁共用）。欄位：ticker 代號、name 公司名、labelHtml／labelXlsx 兩邊顯示的名稱、roleHtml 定位說明（HTML）、mkt 市值、netDebt 淨負債、rev 近十二個月營收、opl 營業租賃負債、opInc GAAP 營業損益、da 折舊攤銷（以上 US$bn）、asOf 資料期、noteHtml／noteXlsx 兩邊的備註。EV＝市值＋淨負債、EBITDA＝營業損益＋折舊攤銷，由程式計算 | 清單 | 4 筆 | 必改 |
 | `peers.textHtml.headerTip` | HTML Comps 表標題的浮動說明 | 文字 | 市值為 2026-09-21 收盤（S&P Glob… | 必改 |
-| `peers.textHtml.readingTip` | HTML「讀法」段落的浮動說明（折價來源） | 文字 | 這個折價有三個來源，不能全部解讀為便宜：(1) 分母… | 必改 |
+| `peers.textHtml.readingTip` | HTML「讀法」段落的浮動說明（折價來源） | 文字 | NBIS 的 TTM 倍數遠高於同業，主因分母時點：… | 必改 |
 | `peers.textHtml.caveat` | HTML Comps 表下方的「口徑與限制」 | 文字 | 口徑與限制：市值為 2026-09-21 收盤，負債… | 必改 |
 | `peers.textXlsx.subtitle` | Excel「可比公司」頁第 2 列說明 | 文字 | EV＝市值＋（有息負債−非受限現金）；含租賃＝EV＋… | 必改 |
-| `peers.textXlsx.notes` | Excel「可比公司」頁表下方的讀法說明（每句一列） | 文字清單 | 讀法：CRWV 的 TTM EV/Sales 約為同…、(2) CRWV 用租約取得機房，加入營業租賃負債後…、前瞻：NBIS 前瞻 EV/Sales 約 9.3x… | 必改 |
+| `peers.textXlsx.notes` | Excel「可比公司」頁表下方的讀法說明（每句一列） | 文字清單 | 讀法：NBIS 的 TTM EV/Sales 遠高於…、CRWV 以租約取得機房，加入營業租賃負債後倍數上升…、前瞻：見下方 NBIS 模型 FY27E 列。此表為… | 必改 |
 
 ### `quarterly`：季度層（v4.4）
 
@@ -529,18 +530,18 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `quarterly.quarters` | 追蹤的季度，一季一列：key 季別代碼（與共識檔 quarterlyEstimates 的鍵相同，例如 2026Q3）、label 顯示名稱、period 所屬模型期（0＝第 1 期…）、reportNote 財報日說明（選填）。季度加總必須等於所屬模型期的年度數字 | 清單 | 6 筆 | 必改 |
 | `quarterly.periodNames` | 各所屬模型期的顯示名稱（依期別順序，例如 2H26、FY27） | 文字清單 | 2H26、FY27 | 必改 |
 | `quarterly.focus` | 焦點季（「季度追蹤」第一屏與一頁摘要驗證點顯示的季度；財報後改為下一季） | 季別代碼 | 2026Q3 | 必改 |
-| `quarterly.keyMetrics` | 一頁摘要「驗證點」列出的指標（2–3 項；metrics 的 key） | 文字清單 | revenue、adjOpInc、capex | 檢查 |
+| `quarterly.keyMetrics` | 一頁摘要「驗證點」列出的指標（2–3 項；metrics 的 key） | 文字清單 | revenue、adjEbitda、capex | 檢查 |
 | `quarterly.driver` | 拆分依據：type＝mw 時依 MW 內插（endStart＝第 1 期期初 Accepted MW、endStartNote 來源）；type＝none（沒有 MW 資料的公司）時營收依 revenueSplit、CapEx 平分，MW 列顯示「不適用」 | 物件 | 物件（type、endStart、endStartNote） | 檢查 |
 | `quarterly.revenueSplit` | 各所屬模型期的營收拆法：anchor＝從 revenueAnchor 逐季線性爬升、driverAvg＝依平均在役 MW、equal＝平分 | 文字清單 | anchor、driverAvg | 檢查 |
 | `quarterly.revenueAnchor` | 營收拆法 anchor 的起點（最新一季實際營收）：value、label、tag | 物件 | 物件（value、label、tag） | 必改 |
 | `quarterly.metrics` | 追蹤的指標，一項一列：key（revenue、adjEbitda、ebitdaMargin、adjOpInc、capex、mw 之一）、label、unit（US$bn／%／MW）、gap 差距寫法（ratio＝比例，用於營收、CapEx；diff＝金額差；pt＝百分點）、marginOf 利潤類另列利潤率百分點時的分母指標（revenue）、consensus 共識檔季度欄位名（derived＝由共識 EBITDA ÷ 營收換算）、consensusSecondary／consensusSecondaryLabel 只列不比較的共識欄位、actualLabel 實際數列名稱 | 清單 | 6 筆 | 檢查 |
 | `quarterly.capexSplit` | CapEx 拆法：guidanceAnchor＝有季度指引的季取指引中點、其餘季分配期間餘數（依新增 MW）；driverAdds（或不填）＝全部依新增 MW | 文字 | guidanceAnchor | 檢查 |
-| `quarterly.guidanceText` | 文字型指引（例如「調整後營業利益率 low teens」），{季別: {指標: {text, source, tag}}}：只列不計差距；完整支援（年增率、利潤率區間）列入待辦 5 | 物件 | 物件（2026Q4） | 必改 |
-| `quarterly.guidance` | 季度指引（公司預估），{季別: {指標: [低, 高]}}；沒有指引的季度或公司不填，顯示「不適用」 | 物件 | 物件（2026Q3） | 必改 |
+| `quarterly.guidanceText` | 文字型指引（例如「調整後營業利益率 low teens」），{季別: {指標: {text, source, tag}}}：只列不計差距；完整支援（年增率、利潤率區間）列入待辦 5 | 物件 | 物件（） | 必改 |
+| `quarterly.guidance` | 季度指引（公司預估），{季別: {指標: [低, 高]}}；沒有指引的季度或公司不填，顯示「不適用」 | 物件 | 物件（） | 必改 |
 | `quarterly.guidanceMeta` | 季度指引的來源與標記 | 物件 | 物件（source、tag） | 必改 |
 | `quarterly.periodGuidance` | 期間隱含指引，{模型期: {指標: {range: [全年低, 全年高], less: 已實現部分}}}：只用於判斷季度差距是否為「拆法」 | 物件 | 物件（0） | 必改 |
 | `quarterly.periodGuidanceNote` | 上一欄的說明文字 | 文字 | 全年指引 − 1H 實際＝下半年隱含指引 [Deri… | 必改 |
-| `quarterly.consistency` | 建置檢查：[路徑 A, 路徑 B, 倍數（選填）]，兩者（B × 倍數）必須相同，否則建置失敗（防止同一數字在兩處不一致） | 清單 | 14 筆 | 檢查 |
+| `quarterly.consistency` | 建置檢查：[路徑 A, 路徑 B, 倍數（選填）]，兩者（B × 倍數）必須相同，否則建置失敗（防止同一數字在兩處不一致） | 清單 | 7 筆 | 檢查 |
 | `quarterly.actuals` | 季度實際數（公司公布後填入；預設空白＝待公布），{季別: {各指標, source, date, tag}}；Excel 對應「輸入與假設」J 區藍字格 | 物件 | 物件（2026Q3、2026Q4、2027Q1、2027Q2、2027Q3、2027Q4） | 必改 |
 
 ### `varianceReasons`：差異原因（v4.4）
@@ -548,29 +549,27 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `varianceReasons._note` | 差異原因的說明文字（不進程式） | 文字 | 差異原因（已決定事項 2）：差距超過 methodo… | 可沿用 |
-| `varianceReasons.list` | 差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗 | 清單 | 7 筆 | 檢查 |
+| `varianceReasons.list` | 差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗 | 清單 | 8 筆 | 檢查 |
 
 ### `texts`：公司特有的說明文字（v4.5；隨資料更新）
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `texts.fy0EquityNote` | 首期股權／可轉債的組成說明（含年初至今與首期模型的金額；v4.5；可用期間佔位符 «P0»、«YTD»、«STUB»） | 文字 | «P0»＝«YTD» 私募股權 2.982＋«STU… | 必改 |
-| `texts.sourceLine` | 頁首的資料來源一行（例如最新 10-Q、法說、期後 8-K；v4.5） | 文字 | Q2 2026 10-Q + 法說 + 9/17 8… | 必改 |
-| `texts.cashTaxNote` | 年初至今現金稅的說明（損益與評價頁；v4.5） | 文字 | H1 現金稅約 0.1bn | 必改 |
-| `texts.mwYearEndNotes` | 各年底主動電力的來源說明，以年份為鍵（Excel「輸入與假設」說明欄；5a） | 物件（文字） | 物件（2023、2024、2025） | 必改 |
+| `texts.fy0EquityNote` | 首期股權／可轉債的組成說明（含年初至今與首期模型的金額；v4.5；可用期間佔位符 «P0»、«YTD»、«STUB»） | 文字 | «P0»＝«YTD» 股權 4.811（ATM 淨 … | 必改 |
+| `texts.sourceLine` | 頁首的資料來源一行（例如最新 10-Q、法說、期後 8-K；v4.5） | 文字 | Q2 2026 6-K（財報＋股東信）+ 期後 6-… | 必改 |
+| `texts.cashTaxNote` | 年初至今現金稅的說明（損益與評價頁；v4.5） | 文字 | H1 現金稅未單獨揭露（不適用） | 必改 |
+| `texts.thesis` | 模型命題一句話（HTML 標題列與檔案說明；v0.1b） | 文字 | 預付款能否讓 backlog 變成現金 | 必改 |
+| `texts.mwYearEndNotes` | 各年底主動電力的來源說明，以年份為鍵（Excel「輸入與假設」說明欄；5a） | 物件（文字） | 物件（2025） | 必改 |
 
 ### `nebius`：Nebius 資料草稿（v0.1a；引擎尚未讀取）
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `nebius._readme` | Nebius 資料草稿區段的說明（v0.1a；引擎不讀） | 文字 | Nebius 公司專屬資料草稿（v0.1a 產出；引… | 必改 |
+| `nebius._readme` | Nebius 資料草稿區段的說明（v0.1a 產出；v0.1b 步驟 1 已搬移可對應既有欄位者，本區只留後續步驟會用的欄位） | 文字 | Nebius 資料草稿（v0.1a 產出；v0.1b… | 必改 |
 | `nebius.files` | Nebius 事實總帳、每 MW 推導、共識資料檔的路徑 | 物件（路徑） | 物件（facts、perMw、consensus） | 必改 |
-| `nebius.meta` | Nebius 基本資料草稿；每欄 value／unit／ref（事實總帳 id）／mapTo（v0.1b 目標欄位） | 物件 | 物件（company、ticker、priceClose、priceDate、consensusFile、fiscalYearEndMonth、latestQuarterFiled） | 必改 |
-| `nebius.latestQuarter` | Nebius 最新一季（Q2 2026，6-K）數字草稿；格式同上 | 物件 | 物件（revenue、h1Revenue、aiCloudRevenue、adjEbitda、adjEbitdaAiCloud、opInc、ni、da、sbc、interest、capexQ2、cashCapexH1、cfoH1、cash、restricted、deferredTotal、deferredInH1、rpo、rpo24m、rpo25to48、ppeNet、opLeaseLiab、offBalanceLease、sharesOut、basicWaso、equityH1、custA、custB、custC） | 必改 |
-| `nebius.ytdActual` | Nebius 2026 上半年實際數草稿；格式同上 | 物件 | 物件（revenue、cashCapex、cfo、prepay、adjEbitda、da、sbc、opInc、interest、cash1231、borrow、equity、cappedCall） | 必改 |
-| `nebius.debt` | Nebius 可轉債（八檔）、資產擔保融資、其他債務草稿；格式同上 | 物件 | 物件（convertibles、convertiblesAt0630、abf、otherCurrent） | 必改 |
-| `nebius.equity` | Nebius ATM、NVIDIA 預付認股權證、以股換債、選擇權與 RSU 草稿；格式同上 | 物件 | 物件（atmShareCap、atmRemaining、atmAvgPx、nvidiaPfwShares、exchangeShares、options、rsu） | 必改 |
-| `nebius.guidance` | Nebius 2026 年指引草稿（營收、ARR、資本支出、EBITDA 率、預付款）；格式同上 | 物件 | 物件（revLo、revHi、arrLo、arrHi、capexLo、capexHi、adjEbitdaMargin、prepay26Min） | 必改 |
+| `nebius.debt` | Nebius 可轉債（八檔）、資產擔保融資、其他債務草稿；格式同上 | 物件 | 物件（convertibles、abf） | 必改 |
+| `nebius.equity` | Nebius ATM、NVIDIA 預付認股權證、以股換債、選擇權與 RSU 草稿；格式同上 | 物件 | 物件（atmRemaining、atmAvgPx、nvidiaPfwShares、exchangeShares、options、rsu） | 必改 |
+| `nebius.guidance` | Nebius 2026 年指引草稿（營收、ARR、資本支出、EBITDA 率、預付款）；格式同上 | 物件 | 物件（adjEbitdaMargin、prepay26Min） | 必改 |
 | `nebius.mw` | Nebius 電力路徑草稿（active／connected／contracted 口徑分列）；格式同上 | 物件 | 物件（activeYE25、activeQ1、activeQ2、connectedYE26Lo、connectedYE26Hi、contractedNow、contractedYE26、deployPerYearFrom27、ownedPlanned） | 必改 |
 | `nebius.prepay` | Nebius 預付款與合約參數草稿（公司說法，只作對照或新欄位）；格式同上 | 物件 | 物件（shareOfDeals、capexCoverLo、capexCoverHi、recogYears、commitments） | 必改 |
 | `nebius.other` | Nebius 非核心事業與持股（Avride、TripleTen、ClickHouse、Toloka）草稿；格式同上 | 物件 | 物件（nonCoreEbitdaAnnual、clickhouseValuation、clickhouseStakeLo、clickhouseStakeHi、clickhouseBook、tolokaBook、avrideSafeLiab） | 必改 |
