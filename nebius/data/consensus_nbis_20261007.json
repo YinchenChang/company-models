@@ -1,0 +1,83 @@
+{
+  "_readme": "NBIS 市場共識資料檔。由 v0.1a 建置代理依工作單（docs/workorders/20261007_nebius_v0.1a_資料蒐集.md 步驟 7）以網路搜尋取得；數字為擷取當時值，逐筆附來源。單位：金額 US$bn（每股為 US$），日期為擷取日。chat 端審查後方可供模型使用；模型端只讀，不得自行增補或修改數字。",
+  "company": "Nebius Group",
+  "ticker": "NBIS",
+  "asOf": "2026-10-07",
+  "fiscalYearEnd": "12 月（日曆年）；FY26＝2026-01-01 至 2026-12-31",
+  "tagLegend": {
+    "Verified": "可公開查證的事實（例如公司實際公布數字、收盤價）",
+    "Interested-party": "賣方分析師預估：有利益關係（投行業務、承銷、偏多傾向），數字本身是意見而非事實；『共識是多少』可查證，但共識內容屬利害關係人觀點"
+  },
+  "sourceIndependence": "StockAnalysis.com 的目標價、評等、營收預估引用 S&P Global Market Intelligence；MarketScreener 的年度與季度預估一般亦引用 S&P Capital IQ（同 CRWV 共識檔的判斷），FY26 營收兩者 3.34 對 3.379 接近，視為同一底層來源的兩個呈現，不算獨立交叉驗證。MarketBeat 的目標價與評等為 MarketBeat 自行彙整（獨立於 S&P），可作目標價的獨立交叉。Zacks（經 AP／WTOP）只取得 Q2 2026 財報前的單季營收共識，僅供量級確認。",
+  "priceReference": {
+    "close": 249.87, "date": "2026-10-06",
+    "source": "StockAnalysis.com（收盤價）", "url": "https://stockanalysis.com/stocks/nbis/forecast/", "tag": "Verified",
+    "crossCheck": {"close": 249.87, "date": "2026-10-06", "source": "MarketBeat", "url": "https://www.marketbeat.com/stocks/NASDAQ/NBIS/forecast/"},
+    "note": "2026-10-07 盤前 $245.58（−1.72%），非收盤，不採用"
+  },
+  "priceTarget": {
+    "mean": 283.58, "median": 300.0, "low": 84.0, "high": 415.0, "analysts": 19,
+    "consensusRating": "Buy",
+    "source": "S&P Global Market Intelligence（經 StockAnalysis.com）", "url": "https://stockanalysis.com/stocks/nbis/forecast/",
+    "retrieved": "2026-10-07", "tag": "Interested-party",
+    "pageUpdated": "2026-09-25",
+    "crossCheck": [
+      {"mean": 241.80, "low": 84.0, "high": 410.0, "analysts": 20, "consensusRating": "Moderate Buy", "source": "MarketBeat（自行彙整，獨立於 S&P）", "url": "https://www.marketbeat.com/stocks/NASDAQ/NBIS/forecast/", "retrieved": "2026-10-07"},
+      {"mean": 250.75, "analysts": 18, "consensusRating": "Outperform", "lastClose": 193.23, "source": "MarketScreener（S&P Capital IQ 系，非獨立）", "url": "https://uk.marketscreener.com/quote/stock/NEBIUS-GROUP-8037501/finances/", "retrieved": "2026-10-07", "note": "頁面所附收盤 $193.23 與 10/6 收盤 $249.87 不符，目標價可能為較舊快照；僅供參考"}
+    ],
+    "spreadNote": "平均目標價三個呈現：283.58（S&P）、250.75（MarketScreener）、241.80（MarketBeat），差距約 17%；主要因納入的分析師與更新時點不同。模型對照預設用 S&P（與 CRWV 共識檔一致）。"
+  },
+  "ratings": {
+    "month": "2026-09", "strongBuy": 4, "buy": 1, "hold": 3, "sell": 0, "strongSell": 1, "total": 9,
+    "source": "S&P Global Market Intelligence（經 StockAnalysis.com）", "url": "https://stockanalysis.com/stocks/nbis/forecast/",
+    "retrieved": "2026-10-07", "tag": "Interested-party",
+    "note": "評等分布總數 9 與目標價分析師數 19 不同（S&P 兩者覆蓋範圍不同）",
+    "crossCheck": {"strongBuy": 2, "buy": 11, "hold": 6, "sell": 1, "total": 20, "source": "MarketBeat", "url": "https://www.marketbeat.com/stocks/NASDAQ/NBIS/forecast/", "retrieved": "2026-10-07"}
+  },
+  "recentActions": [
+    {"date": "2026-09-25", "firm": "Rothschild & Co Redburn", "rating": "Sell（首次評等）", "target": null},
+    {"date": "2026-09-24", "firm": "Bank of America Securities", "rating": "Buy（維持）", "target": null},
+    {"date": "2026-09-24", "firm": "Exane BNP Paribas", "rating": "Buy（調升）", "target": 399.0},
+    {"date": "2026-09-18", "firm": "Northland Securities", "rating": "Buy（重申）", "target": 410.0},
+    {"date": "2026-09-09", "firm": "Truist Financial", "rating": "Buy（首次評等）", "target": 355.0}
+  ],
+  "recentActionsMeta": {"source": "TipRanks（經 StockAnalysis.com）", "url": "https://stockanalysis.com/stocks/nbis/forecast/", "retrieved": "2026-10-07", "tag": "Interested-party", "note": "S&P 頁面未列的目標價記為 null，不以二手報導補值"},
+  "annualEstimates": {
+    "definition": "EBITDA 口徑未由 MarketScreener 說明；對照公司調整後 EBITDA 時留意（2026 Q3 共識 EBITDA 0.362、公司 Q2 實際調整後 EBITDA 0.236）。EPS 口徑未說明（推測 GAAP）。淨負債是否含租賃負債未揭露。",
+    "source": "MarketScreener（S&P Capital IQ 系共識）", "url": "https://uk.marketscreener.com/quote/stock/NEBIUS-GROUP-8037501/finances/",
+    "retrieved": "2026-10-07", "tag": "Interested-party",
+    "FY26": {"revenue": 3.379, "ebitda": 1.338, "ebitdaMargin": 0.396, "ebit": -0.9245, "netIncome": -0.7855, "eps": -2.80, "capex": 22.489, "fcf": -19.073, "netDebt": 15.446},
+    "FY27": {"revenue": 11.418, "ebitda": 6.194, "ebitdaMargin": 0.542, "ebit": -0.2319, "netIncome": -1.165, "eps": -5.827, "capex": 27.243, "fcf": -21.308, "netDebt": 31.876},
+    "FY28": {"revenue": 21.458, "ebitda": 13.404, "ebitdaMargin": 0.625, "ebit": 2.675, "netIncome": -0.08631, "eps": 2.737, "capex": 38.390, "fcf": -18.622, "netDebt": 38.685},
+    "derivedNote": "ebitdaMargin 為 [Derived]：ebitda ÷ revenue。FY27 EPS −5.827 與淨損 −1.165 隱含股數約 2 億股，與 FY26（−0.7855／−2.80≈2.8 億股）不一致，MarketScreener 各欄分析師樣本不同所致；EPS 不建議使用"
+  },
+  "annualEstimatesAlt": {
+    "note": "S&P 經 StockAnalysis 只免費提供 FY26 營收與 EPS；FY27、FY28 需付費",
+    "source": "S&P Global Market Intelligence（經 StockAnalysis.com）", "url": "https://stockanalysis.com/stocks/nbis/forecast/", "retrieved": "2026-10-07", "tag": "Interested-party",
+    "FY26": {"revenue": 3.34, "revenueLow": 3.0, "revenueHigh": 3.6, "eps": -2.23, "epsLow": -4.42, "epsHigh": 0.27},
+    "FY27": {"revenue": null, "note": "不適用：付費內容"},
+    "FY28": {"revenue": null, "note": "不適用：付費內容"}
+  },
+  "quarterlyEstimates": {
+    "source": "MarketScreener（S&P Capital IQ 系共識）", "url": "https://uk.marketscreener.com/quote/stock/NEBIUS-GROUP-8037501/finances/", "retrieved": "2026-10-07", "tag": "Interested-party",
+    "2026Q3": {"revenue": 0.8994, "ebitda": 0.3624, "ebit": -0.2239, "netIncome": -0.4157},
+    "2026Q4": {"revenue": 1.521, "ebitda": 0.740, "ebit": -0.1615, "netIncome": -0.5043},
+    "note": "H1 實際 0.9813＋Q3 0.8994＋Q4 1.521＝3.402，與 FY26 共識 3.379 差 0.023（樣本不同）；均落在公司 2026 營收指引 3.0–3.4 上緣附近"
+  },
+  "companyGuidance": {
+    "FY26": {"revenueLow": 3.0, "revenueHigh": 3.4, "arrYearEndLow": 7.0, "arrYearEndHigh": 9.0, "adjEbitdaMargin": 0.40, "capexLow": 20.0, "capexHigh": 25.0, "contractedPowerGW": 5.0, "connectedPowerGWLow": 0.8, "connectedPowerGWHigh": 1.0, "prepaymentsMin": 9.0},
+    "source": "Q1／Q2 2026 股東信（6-K 附件 99.2）；資本支出為法說會轉述（見事實總帳 g.capex26）", "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926094568/tm2622968d1_ex99-2.htm", "tag": "Interested-party",
+    "tagNote": "公司指引屬利害關係人（管理層）預估；營收、ARR、合約電力、預付款為股東信正式文字，資本支出與 EBITDA 率口徑見事實總帳"
+  },
+  "independentCrossCheck": {
+    "provider": "Zacks Investment Research", "2026Q2RevenuePre": 0.5738, "2026Q2EpsPre": -0.67, "analysts": 4, "date": "2026-08-12",
+    "source": "AP（經 WTOP）：Nebius Group: Q2 Earnings Snapshot", "url": "https://wtop.com/news/2026/08/nebius-group-q2-earnings-snapshot/", "tag": "Interested-party",
+    "note": "Q2 財報前的單季共識（實際 0.5823），僅供確認量級；非年度共識"
+  },
+  "notFound": [
+    "FY27、FY28 營收與 EBITDA 的第二個獨立來源（S&P 經 StockAnalysis 需付費；LSEG、FactSet 免費來源未找到）——「找不到」，非不存在",
+    "FY29 以後共識：公開來源只到 FY28",
+    "EBITDA 共識的高低區間：未公開",
+    "MarketScreener 目標價與收盤價的擷取時點：頁面未標日期，疑為舊快照"
+  ]
+}
