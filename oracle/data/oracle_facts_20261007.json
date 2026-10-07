@@ -5730,6 +5730,168 @@
     "tag": "[Interested-party]",
     "note": "OpenAI 模型 v0.6（P1）輸入值；原始來源見各列；不適用：main 上 openai/ 為 v0.6 P1（S0 搬遷完成，S3「P3 算力」尚未開始），Excel 只有輸入、尚無年度算力支出輸出；v0.1b 先以上列合約年額 60B 作對照列，OpenAI P3 完成後再接"
    }
+  ],
+  "6_每MW對照": [
+   {
+    "id": "pm.oci.annualized.fy27q1",
+    "item": "OCI 營收年化（Q1 × 4）",
+    "value": 29552,
+    "unit": "USD M／年",
+    "period": "FY27Q1",
+    "source": "Form 10-Q FY27 Q1（季末 2026-08-31；核閱、未查核）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm",
+    "docDate": "2026-09-11",
+    "retrieved": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "10-Q 核閱數（Oracle 自述，未經查核）；[Derived] 7,388 × 4；含非 AI 的 OCI（資料庫、一般運算、多雲資料庫等）"
+   },
+   {
+    "id": "pm.cpuGpu.annualized.fy27q1",
+    "item": "CPU＆GPU 營收年化（Q1 × 4）",
+    "value": 26000,
+    "unit": "USD M／年",
+    "period": "FY27Q1",
+    "source": "Q1 FY27 財報簡報（Oracle IR，q4cdn）",
+    "url": "https://s23.q4cdn.com/440135859/files/content_files/Q1-FY27-Oracle-Earnings-Slides.pdf",
+    "docDate": "2026-09-10",
+    "retrieved": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "公司簡報（Oracle 自述；以 WebFetch 讀取）；[Derived] 6,500 × 4"
+   },
+   {
+    "id": "pm.a1",
+    "item": "對照 (a1)：OCI 年化 ÷ 期末累計新增 MW",
+    "value": 14.42,
+    "unit": "USD M／MW·年（MW 口徑不明）",
+    "period": "FY27Q1",
+    "source": "Form 10-Q FY27 Q1（季末 2026-08-31；核閱、未查核）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm",
+    "docDate": "2026-09-11",
+    "retrieved": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "10-Q 核閱數（Oracle 自述，未經查核）；[Derived] 29,552 ÷ 2,050（FY26 1,200＋FY27Q1 850）；分母不含 FY25 以前的 AI／非 AI 產能 → 高估；Q1 新交付 850 MW 多在季中上線 → 低估。只作對照，不作輸入"
+   },
+   {
+    "id": "pm.a2",
+    "item": "對照 (a2)：CPU＆GPU 年化 ÷ 期末累計新增 MW",
+    "value": 12.68,
+    "unit": "USD M／MW·年（MW 口徑不明）",
+    "period": "FY27Q1",
+    "source": "Q1 FY27 財報簡報（Oracle IR，q4cdn）",
+    "url": "https://s23.q4cdn.com/440135859/files/content_files/Q1-FY27-Oracle-Earnings-Slides.pdf",
+    "docDate": "2026-09-10",
+    "retrieved": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "公司簡報（Oracle 自述；以 WebFetch 讀取）；[Derived] 26,000 ÷ 2,050"
+   },
+   {
+    "id": "pm.a3",
+    "item": "對照 (a3)：CPU＆GPU 年化 ÷ 季內平均新增 MW",
+    "value": 16.0,
+    "unit": "USD M／MW·年（MW 口徑不明）",
+    "period": "FY27Q1",
+    "source": "Q1 FY27 財報簡報（Oracle IR，q4cdn）",
+    "url": "https://s23.q4cdn.com/440135859/files/content_files/Q1-FY27-Oracle-Earnings-Slides.pdf",
+    "docDate": "2026-09-10",
+    "retrieved": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "公司簡報（Oracle 自述；以 WebFetch 讀取）；[Derived] 26,000 ÷ 1,625（1,200＋850 ÷ 2，假設 Q1 交付在季內均勻上線）；若 MW 為設施口徑，換成 MW-IT 再 × 1.2 ＝ 19.20"
+   },
+   {
+    "id": "pm.gm.company",
+    "item": "公司說法：大型 AI 基礎設施合約毛利率（合約期間）",
+    "value": [
+     0.3,
+     0.4
+    ],
+    "unit": "比率",
+    "period": "2025-10（分析師日）",
+    "source": "The Motley Fool：Why Oracle Fell Hard Today（2025 分析師日報導，Billy Duberstein）",
+    "url": "https://www.fool.com/investing/2025/10/17/why-oracle-fell-hard-today/",
+    "docDate": "2025-10-17",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "二手報導轉述 Oracle 分析師日目標（Oracle 自述）；Reuters 轉述為「adjusted gross margins」30–40%；兩個二手來源一致"
+   },
+   {
+    "id": "pm.gm.theinfo",
+    "item": "外部報導：Oracle 出租 NVIDIA GPU 伺服器毛利率",
+    "value": 0.139,
+    "unit": "比率",
+    "period": "截至 2025-08 的季度（報導口徑）",
+    "source": "IBKR Traders’ Insight：An Inconvenient Piece of News（轉述 The Information）",
+    "url": "https://ibkrcampus.com/campus/traders-insight/securities/stocks/an-inconvenient-piece-of-news/",
+    "docDate": "2025-10-07",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "[Derived] 毛利 125 ÷ 營收 900（The Information〈Internal Oracle Data Show Financial Challenge of Renting Out Nvidia Chips〉，2025-10-07，經 Interactive Brokers／Steve Sosnick 轉述；原文付費牆）；轉述稱可能未含另約 7 個百分點的折舊"
+   },
+   {
+    "id": "pm.ebitda.iren",
+    "item": "可觀察 neocloud EBITDA 率：IREN（FY26／FY25）",
+    "value": [
+     0.35,
+     0.54
+    ],
+    "unit": "比率",
+    "period": "FY2026／FY2025",
+    "source": "IREN FY26 財報新聞稿（經 nebius 事實總帳）",
+    "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-reports-fy26-results",
+    "docDate": "2026-08-27",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "取自 nebius/data/nebius_facts_20261007.json id mkt.iren.ebitda（IREN 自述，含比特幣挖礦）"
+   },
+   {
+    "id": "pm.ebitda.crwv",
+    "item": "可觀察 neocloud EBITDA 率：CoreWeave（Q2 2026）",
+    "value": 0.59,
+    "unit": "比率",
+    "period": "2026Q2",
+    "source": "CoreWeave 10-Q／新聞稿（經 nebius 每 MW 推導檔）",
+    "url": "https://github.com/YinchenChang/company-models/blob/main/nebius/data/permw_tokenomics_20261007.json",
+    "docDate": "2026-08",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "取自 nebius/data/permw_tokenomics_20261007.json pathA.assumptions.basis（CRWV company.json）；調整後 EBITDA"
+   },
+   {
+    "id": "pm.ebitda.mid",
+    "item": "對照表預設：OCI 穩態 EBITDA 率（neocloud 區間中點）",
+    "value": 0.47,
+    "unit": "比率",
+    "period": "穩態",
+    "source": "對照表 r1 第 4 節預設 5",
+    "url": "https://github.com/YinchenChang/company-models/blob/claude/oracle-v0.1/oracle/docs/plan/20261007_Oracle_%E5%91%BD%E9%A1%8C%E8%88%87%E9%A9%85%E5%8B%95%E5%B0%8D%E7%85%A7%E8%A1%A8_r1.md",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "[Derived] (35% ＋ 59%) ÷ 2；與 Nebius 一致（對照表 r1 預設 5）"
+   },
+   {
+    "id": "pm.renewal.vs.tk",
+    "item": "續約價對照：Oracle 續約 +20% vs Tokenomics 壽命期價格係數 L",
+    "value": {
+     "oracleRenewal": 1.2,
+     "tkBase": 1.0,
+     "tkRange": [
+      0.3,
+      1.0
+     ],
+     "tkAnalogy": [
+      0.42,
+      0.7
+     ]
+    },
+    "unit": "倍（壽命期平均實收單價 ÷ 2026-09／10 快照）",
+    "period": "—",
+    "source": "Tokenomics v5.24（builder/v522.py 說明）＋ Oracle Q1 FY27 簡報",
+    "url": "https://github.com/YinchenChang/Tokenomics/blob/master/builder/v522.py",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "Tokenomics v5.24 Cap_In!C63 具名範圍 CTL_PriceLife：基準 1＝不跌價（只驅動 _Life 並列輸出，IF_RevGW_* 不受影響）；Gov_Map 區間 0.3–1.0；類比證據 0.42–0.70（H100 租金指數）。Oracle 稱 4 年以上 GPU 續約／轉售 +20%，高於 Tokenomics 區間上緣；方向相反的是區間與類比證據，不是基準值。續約價格衰退 v0.1b 不建模（對照表預設 10）"
+   }
   ]
  }
 }

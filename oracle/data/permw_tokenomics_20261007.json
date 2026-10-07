@@ -1,5 +1,5 @@
 {
- "_readme": "Nebius 每 MW 年收入的正向推導（v0.1a 步驟 6）。輸入只取 Tokenomics（YinchenChang/Tokenomics master 098873a，model/20261007_Tokenomics_v5.24.xlsx，Interface 具名範圍 IF_*）與可觀察市場價格；未使用 Nebius 的 ACV、營收指引或回收期作為輸入（只在 comparisons 對照）。金額單位：USD M／MW·年；MW-IT＝IT 關鍵負載，MW-fac＝設施電力（＝IT × PUE）。",
+ "_readme": "Nebius 每 MW 年收入的正向推導（v0.1a 步驟 6）。輸入只取 Tokenomics（YinchenChang/Tokenomics master 098873a，model/20261007_Tokenomics_v5.24.xlsx，Interface 具名範圍 IF_*）與可觀察市場價格；未使用 Nebius 的 ACV、營收指引或回收期作為輸入（只在 comparisons 對照）。金額單位：USD M／MW·年；MW-IT＝IT 關鍵負載，MW-fac＝設施電力（＝IT × PUE）。 【Oracle v0.1a 註記（2026-10-07）】本檔為 nebius/data 同名檔的副本：沿用 Nebius v0.1a 推導，跨模型一致。已確認 Tokenomics master bdb0de7（2026-10-07 20:53）的 model/CURRENT 仍為 20261007_Tokenomics_v5.24.xlsx（v5.25 只有工作單），故不重算三情境。Oracle 專屬對照列見 oracle 區段（只作對照，不作輸入；未以 Oracle 的 RPO、OCI 目標或營收指引反推每 MW 參數）。",
  "asOf": "2026-10-07",
  "tokenomics": {
   "repo": "YinchenChang/Tokenomics",
@@ -547,5 +547,101 @@
    "status": "方向已知、粗估（以 IREN 長約對公開預留牌價推得值之比為上限）"
   },
   "summary": "差距主要可由 (b) 世代（+26%～+39%）與 (f) 客戶組合／(c) 邊際定價解釋；(a) 若有影響則使差距擴大；(d)(e) 缺輸入無法量化。"
+ },
+ "oracle": {
+  "tokenomicsCheck": {
+   "repo": "YinchenChang/Tokenomics",
+   "masterCommit": "bdb0de7",
+   "current": "20261007_Tokenomics_v5.24.xlsx",
+   "checked": "2026-10-07",
+   "result": "未更新，沿用"
+  },
+  "scenariosUsed": {
+   "保守": 11.62,
+   "基準": 17.4,
+   "積極": 24.2,
+   "unit": "USD M／MW-IT·年",
+   "note": "與 Nebius 相同；設施口徑 9.68／14.50／20.17"
+  },
+  "comparisons": [
+   {
+    "item": "(a1) OCI 年化 ÷ 期末累計新增 MW",
+    "value": 14.42,
+    "unit": "USD M／MW·年",
+    "mwBasis": "口徑不明",
+    "ref": "pm.a1",
+    "tag": "[Derived]",
+    "use": "只作對照",
+    "formula": "7,388 × 4 ÷ 2,050；分母只含 FY26 以來新增（高估），Q1 新產能季中上線（低估）；OCI 含非 AI 業務"
+   },
+   {
+    "item": "(a2) CPU＆GPU 營收年化 ÷ 期末累計新增 MW",
+    "value": 12.68,
+    "unit": "USD M／MW·年",
+    "mwBasis": "口徑不明",
+    "ref": "pm.a2",
+    "tag": "[Derived]",
+    "use": "只作對照",
+    "formula": "6,500 × 4 ÷ 2,050"
+   },
+   {
+    "item": "(a3) CPU＆GPU 營收年化 ÷ 季內平均新增 MW",
+    "value": 16.0,
+    "unit": "USD M／MW·年（若為設施口徑，MW-IT 為 19.2）",
+    "mwBasis": "口徑不明",
+    "ref": "pm.a3",
+    "tag": "[Derived]",
+    "use": "只作對照（落在基準 17.40 附近）",
+    "formula": "26,000 ÷ (1,200 ＋ 850 ÷ 2)"
+   },
+   {
+    "item": "Oracle–OpenAI 合約隱含",
+    "value": 13.33,
+    "unit": "USD M／MW·年",
+    "mwBasis": "口徑不明",
+    "ref": "oai.k.perMW",
+    "tag": "[Derived]",
+    "use": "只作對照（介於保守與基準之間）",
+    "formula": "300,000 ÷ 5 ÷ 4,500（WSJ 報導值）"
+   },
+   {
+    "item": "(b) 毛利：公司 30–40%（分析師日） vs The Information 約 14%（2025-08 季） vs neocloud EBITDA 率 IREN 35%／CRWV 59%",
+    "value": {
+     "company": [
+      0.3,
+      0.4
+     ],
+     "theInformation": 0.139,
+     "iren": 0.35,
+     "crwv": 0.59,
+     "defaultSteadyEbitda": 0.47
+    },
+    "unit": "比率",
+    "ref": [
+     "pm.gm.company",
+     "pm.gm.theinfo",
+     "pm.ebitda.iren",
+     "pm.ebitda.crwv",
+     "pm.ebitda.mid"
+    ],
+    "tag": "混合",
+    "use": "EBITDA 率穩態取 47%（對照表預設 5）；公司毛利說法與外部報導只作對照。注意毛利 ≠ EBITDA 率：毛利已扣折舊（Oracle 營業成本含折舊），EBITDA 率未扣，兩者不可直接比較"
+   },
+   {
+    "item": "(c) 續約價：Oracle +20% vs Tokenomics CTL_PriceLife（基準 1.0＝不跌價；區間 0.3–1.0；類比 0.42–0.70）",
+    "value": {
+     "oracle": 1.2,
+     "tkBase": 1.0,
+     "tkRange": [
+      0.3,
+      1.0
+     ]
+    },
+    "unit": "倍",
+    "ref": "pm.renewal.vs.tk",
+    "tag": "[Interested-party]",
+    "use": "只作對照；Tokenomics 基準本身不跌價，與 Oracle 說法的衝突在區間與類比證據；GPU 批次與續約價格衰退不做（CRWV 待辦）"
+   }
+  ]
  }
 }
