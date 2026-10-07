@@ -319,6 +319,7 @@ function scnQ(e, sc) {
     a: { ...structuredClone(e.a), newLease: [...SCENARIOS[sc].a.newLease] },
     mw31: SCENARIOS[sc].mw31,
     cvCap: SCENARIOS[sc].cvCap,
+    billableOpen: SCENARIOS[sc].bo, // v0.1c
     m: { ...e.m, accepted: [...SCENARIOS[sc].acc], billable: [...SCENARIOS[sc].bil], revMW: [...SCENARIOS[sc].rev] }
   };
 }
