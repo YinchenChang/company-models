@@ -455,7 +455,7 @@ function zM() {
                   sum: `上限 ${Y(e.debtBacklog,1)}x · 股權 ${e.eqCapPct>=9?`無上限`:hA(e.eqCapPct*100,0)} · CDS ${Y(e.cds,0)}`,
                   children: [(0, $.jsx)(LM, {
                   label: `期初現金 6/30（US$bn）`,
-                  hint: `5.524 + 有價證券 0.015；受限現金 1.38 不計`,
+                  hint: `季報現金 ${Y(LATEST_Q.cash, 3)}（受限現金不計）`,
                   children: (0, $.jsx)(IM, {
                     value: e.cash,
                     onChange: e => w({
@@ -1334,7 +1334,10 @@ function zM() {
                     [`期初本金`, d.years.map(e => e.pBeg)],
                     [`排程還本`, [...DEBT_AMORT]],
                     [`期末本金`, d.years.map(e => e.pEnd)],
-                    [`存量債務利息（含可轉債與 FY26 校準）`, d.years.map(e => e.intStock), void 0, void 0, `tot`, `＝(期初＋期末)÷2 × 8.4% × 期間長度 ＋ 3.7×2.875%×期間長度 ＋ FY26 校準 0.35。`],
+                    [`可轉債到期還本（債務處理）`, d.years.map(e => e.cvAmort)],
+                    [`可轉債期末餘額（債務處理）`, d.years.map(e => e.cvEnd)],
+                    [`可轉債票息（債務處理）`, d.years.map(e => e.cvInt)],
+                    [`存量債務利息（含可轉債與首期校準）`, d.years.map(e => e.intStock), void 0, void 0, `tot`, `＝其他借款平均本金 × ${hA(DBT_R * 100, 1)} × 期間長度 ＋ 債務處理可轉債票息（原始本金 × 票息；到期當期計半期）＋ 首期校準 ${Y(DEFAULTS.intCal, 2)}。價內可轉債以若轉換法計，不計利息。`],
                     [`對照：v1.4 手動值`, d.years.map(e => e.intOld)],
                     [`瀑布新債利息（計算）`, d.years.map(e => e.newDebtInt), void 0, void 0, `calc`, `新債利率 × 新債餘額（含本期舉借）。`]
                   ]

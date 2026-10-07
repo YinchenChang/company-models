@@ -107,8 +107,8 @@ function AM({
               step: .01
             })
           }), (0, $.jsx)(kM, {
-            label: `ATM 後股數（十億）`,
-            hint: `7/31 0.5515 · 連動後 ${Y(h,3)}`,
+            label: `評價股數（十億，不含可轉債轉股）`,
+            hint: `季末流通＋認股權證＋以股換債＋RSU＋選擇權 · 含可轉債轉股 ${Y(h,4)}`,
             children: (0, $.jsx)(OM, {
               value: n.shares,
               onChange: e => i({
@@ -118,7 +118,7 @@ function AM({
             })
           }), (0, $.jsx)(kM, {
             label: `淨負債 US$bn`,
-            hint: `6/30 30.0（本金 35.55 − 現金 5.54）`,
+            hint: `不含可轉債（其他借款 − 現金 − 期後淨現金）· 評價淨負債 ${Y(r.v.netDebt, 2)}（含債務處理可轉債與持股調整）`,
             children: (0, $.jsx)(OM, {
               value: n.netDebt,
               onChange: e => i({
@@ -253,13 +253,13 @@ function AM({
                 [`營利率`, [...HIST_PL.map(e => e.opInc / e.revenue), ...s.map(e => e.fyOpInc / e.fyRevenue)].map(e => e * 100), void 0, void 0, void 0, void 0, `%`],
                 [`D&A`, [NaN, NaN, NaN, ACTUAL_1H.da, ...s.map(e => e.fyDa)], void 0, void 0, void 0, `年初至今實際 ${Y(ACTUAL_1H.da, 3)}（季報）。`],
                 [`EBITDA（EBIT＋D&A）`, [NaN, NaN, NaN, HIST_PL[3].opInc + ACTUAL_1H.da, ...s.map(e => e.fyEbitda)], void 0, void 0, `tot`],
-                [`利息（含瀑布新債，模型期）`, [NaN, NaN, NaN, ACTUAL_1H.interest, ...s.map((e, t) => t === 0 ? ACTUAL_1H.interest + e.interest : e.interest)], void 0, void 0, void 0, `FY26E＝1H 實際 1.176＋下半年模型。FY27 起透支利息（新增借款以 9% 計）快速放大，是 FY30 淨利轉負的主因。`],
-                [`所得稅（NOL 後）`, [NaN, NaN, NaN, NaN, ...s.map(e => e.tax)], void 0, void 0, void 0, `虧損年不認列稅盾；獲利年 21%、NOL 抵扣上限 80%。`],
+                [`利息（含瀑布新債，模型期）`, [NaN, NaN, NaN, ACTUAL_1H.interest, ...s.map((e, t) => t === 0 ? ACTUAL_1H.interest + e.interest : e.interest)], void 0, void 0, void 0, `${PERIOD_FY[0]}E＝年初至今實際 ${Y(ACTUAL_1H.interest, 3)}＋剩餘期間模型；之後含瀑布新債與可轉債票息。`],
+                [`所得稅（NOL 後）`, [NaN, NaN, NaN, NaN, ...s.map(e => e.tax)], void 0, void 0, void 0, `虧損年不認列稅盾；獲利年 ${hA(n.tax * 100, 1)}、NOL 抵扣上限 ${hA(n.nolUsePct * 100, 0)}。`],
                 [`淨利`, [...HIST_PL.map(e => e.ni), ...s.map(e => e.fyNi)], void 0, void 0, `tot`, void 0, void 0, 2],
                 [`淨利率`, [...HIST_PL.map(e => e.ni / e.revenue), ...s.map(e => e.fyNi / e.fyRevenue)].map(e => e * 100), void 0, void 0, void 0, void 0, `%`],
                 [`每股`, null],
-                [`股數（含 ATM 上限，每年 +1% SBC 稀釋）`, [NaN, NaN, NaN, NaN, ...s.map(e => e.shares)], void 0, void 0, void 0, `SBC 約 0.66bn／年 ÷ $80 ≈ 8m 股 ≈ 1.4%／年，取 1%。`, `bn 股`, 4],
-                [`GAAP EPS`, [...HIST_PL.map(e => e.eps), ...s.map(e => e.fyEps)], void 0, void 0, void 0, `FY26E＝1H 實際 EPS −2.53 ＋ 下半年淨利 ÷ 股數。`, `US$`, 2],
+                [`股數（含 ATM 上限，每年 +1% SBC 稀釋）`, [NaN, NaN, NaN, NaN, ...s.map(e => e.shares)], void 0, void 0, void 0, `SBC 約 ${Y(n.sbc, 2)}bn／年 ÷ 現價 $${Y(n.price, 0)} ≈ ${Y(n.sbc / n.price * 1e3, 1)}m 股（約 ${hA(n.sbc / n.price / n.shares * 100, 1)}／年），模板固定 1%（偏保守）。起點含價內可轉債轉股。`, `bn 股`, 4],
+                [`GAAP EPS`, [...HIST_PL.map(e => e.eps), ...s.map(e => e.fyEps)], void 0, void 0, void 0, `${PERIOD_FY[0]}E＝年初至今實際 EPS ${Y(HIST_PL[3].eps, 2)} ＋ 剩餘期間淨利 ÷ 股數。`, `US$`, 2],
                 [`EPS（加回 SBC）`, [...HIST_PL.map(e => e.ngEps), ...s.map(e => e.fyNgEps)], void 0, void 0, void 0, `＝(淨利＋SBC)÷股數。處於 NOL 狀態、無現金稅，SBC 全額加回不做稅盾調整。`, `US$`, 2]
               ]
             })
@@ -857,7 +857,7 @@ function AM({
                   }, e))
                 })
               }), (0, $.jsx)(`tbody`, {
-                children: [.59, .65, .7].map((q, z) => (0, $.jsxs)(`tr`, {
+                children: [.35, .47, .59].map((q, z) => (0, $.jsxs)(`tr`, {
                   children: [(0, $.jsx)(`td`, {
                     style: {
                       ...xstyQ.tdL,

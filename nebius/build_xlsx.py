@@ -471,14 +471,14 @@ for _x in V['debtLike']:
     _DL.append(gi(r, f"類債：{_x[0]}", "US$bn", _x[1], _x[2])); r += 1
 ADJ = gi(r, "淨負債調整項（類債 − 持股 ×（1 − 折價））", "US$bn", f"={'+'.join(_DL) or '0'}-({'+'.join(_HV) or '0'})*(1-{HDISC})",
          "正值＝增加淨負債；評價淨負債與錨定年末淨負債同加"); r += 1
-WACC = gi(r, "WACC", "%", V['wacc'], "[Assumed]", PCT); r += 1
+WACC = gi(r, "WACC", "%", V['wacc'], "沿用 CRWV 模板值（Nebius 淨現金、槓桿較低，WACC 可能偏高＝偏保守；v0.1b 未另估）[Assumed]", PCT); r += 1
 GG = gi(r, "永續成長 g", "%", V['g'], "[Assumed]", PCT); r += 1
 MAINT = gi(r, "終值維持性 CapEx 占 D&A", "%", V['maintRatio'], "終值不讓成長性 CapEx 偽裝成永續 FCF [Assumed]", PCT); r += 1
 TAX = gi(r, "稅率", "%", V['tax'], "荷蘭名目稅率 25.8% [Verified]", PCT); r += 1
 NOL0 = gi(r, "期初 NOL（虧損扣抵）", "US$bn", V['nol'], f"«VMD» 累積虧損約 {V['nol']:.1f}；抵扣上限為應稅所得 {_n(V['nolUsePct'] * 100)}% [Derived]"); r += 1
 NOLU = gi(r, "NOL 每年可抵用比例", "%", V['nolUsePct'], "抵扣上限占應稅所得的比例（荷蘭規定簡化為 50%）[Assumed]", PCT); r += 1
 WCP = gi(r, "營運資金占營收增量", "%", V['wcPctOfRevGrowth'], "營運資金變動＝營收增量 × 此比例 [Assumed]", PCT); r += 1
-EVEBITDA = gi(r, "EV/EBITDA 倍數", "x", V['evEbitda'], "穩態合理倍數約 3.4–6.0x（轉換率 ÷ (WACC − g)），6x 為上緣 [Assumed]", MULT); r += 1
+EVEBITDA = gi(r, "EV/EBITDA 倍數", "x", V['evEbitda'], "沿用 CRWV 模板：穩態合理倍數約 3.4–6.0x（轉換率 ÷ (WACC − g)），6x 為上緣；共識目標價隱含約 9–10x [Assumed]", MULT); r += 1
 EVY = gi(r, "EV/EBITDA 錨定年度（1＝FY27、2＝FY28、3＝FY29、4＝FY30）", "", V['evYear'], "«EVDISC»（目標價時點）；v3.6 起預設 FY29：接近穩態利潤率，與 6x 穩態倍數一致 [Assumed]", NUM0, True); r += 1
 from openpyxl.worksheet.datavalidation import DataValidation as _DV
 _dv = _DV(type="whole", operator="between", formula1="1", formula2="4", allow_blank=False, showErrorMessage=True, error="請輸入 1–4", errorTitle="錨定年度")
@@ -1132,7 +1132,7 @@ for i, v in enumerate(CO['debt']['amortization'] + [CO['debt']['amortAfterFY30']
     c.number_format = NUM
     c.border = BOX
 debt_tbl = r
-ws.cell(row=r, column=9, value="本金合計 35.551（DDTL 13.6、票據 16.6、OEM 5.1 等）[Verified]").font = SMALL
+ws.cell(row=r, column=9, value="其他借款到期表（company.json → debt.amortization）；可轉債到期還本依融資分類另計，見『資產負債_既有債務』逐檔表").font = SMALL
 r += 1
 ws.cell(row=r, column=1, value="合計").font = BOLD
 ws.cell(row=r, column=3, value=f"=SUM(C{debt_tbl}:H{debt_tbl})").number_format = NUM
@@ -1146,14 +1146,11 @@ for j, h in enumerate(["項目", "單位", "金額", "時程", "入表？", "模
     c.font = HEAD
     c.fill = FILL_HEAD
 r += 1
+_LF = CO['leases']['facts']  # v0.1b：承諾金額讀 company.json → leases.facts（換公司不改程式）
 commit = [
-    ("未起租租賃（未折現）", "US$bn", 35.5, "2026–2029 起租，7–16 年", "否", "表外現金租金"),
-    ("單站按造價計租，上限", "US$bn", 14.7, "393 MW 未交付，16 年", "否", "表外現金租金"),
-    ("按造價計租，355 MW", "US$bn", None, "2026–2028 分期，金額未定", "否", "表外現金租金"),
-    ("承租人自備設備承諾", "US$bn", 1.2, "0.5–1.2，分期至 2028", "否", "併入毛 CapEx"),
-    ("JV 出資承諾", "US$bn", 1.7, "已付 0.55", "否", "JV／策略投資出資"),
-    ("VIE 最大損失暴露", "US$bn", 0.108, "—", "否", "不另列"),
-    ("可用信用額度（RCF＋DDTL 未動用）", "US$bn", 10.014, "DDTL 4.0 可動用至 2027-06", "否（來源）", "選用開關"),
+    ("未起租租賃（未折現）", "US$bn", _LF['notCommenced'], "季報揭露之已簽約未起租租賃", "否", "表外現金租金"),
+    ("單站按造價計租，上限", "US$bn", _LF['singleCap'], "無此類揭露時為 0", "否", "表外現金租金"),
+    ("未動用信用額度", "US$bn", D['facility'], "company.json → defaults.facility（評價日後簽約的資產擔保定期貸款）", "否（來源）", "瀑布：未動用額度"),
 ]
 c0 = r
 for nm, un, amt, sched, onbs, pos in commit:
@@ -1184,7 +1181,7 @@ r += 1
 ws.cell(row=r, column=1, value="模型路徑合計 ÷ 已承諾（≥0.8 為合理）").font = BOLD
 ws.cell(row=r, column=3, value=f"=(C{off5}+C{off_tail})/C{commit_tot}").number_format = MULT
 ws.cell(row=r, column=3).font = BOLD
-ws.cell(row=r, column=9, value="8 GW 路徑所需新租約多數尚未簽署，路徑高於已承諾屬假設而非錯誤").font = SMALL
+ws.cell(row=r, column=9, value="擴張路徑所需新租約多數尚未簽署，路徑高於已承諾屬假設而非錯誤").font = SMALL
 lease_ratio_row = r
 
 # =====================================================================

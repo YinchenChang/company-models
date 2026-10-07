@@ -754,7 +754,7 @@ function reverseDcf(e, v) {
     Eb = solve(fE, .3, .99, !0),
     Rt = solve(fR, .5, 4, !0, `tgt`),
     caps = [.7, .8, .9, 1, 1.1],
-    ebs = [.59, .65, .7, .75],
+    ebs = [.35, .47, .59, .7], // v0.1b：可觀察 neocloud 區間（IREN 約 35%、中點 47%、CRWV 約 59%）＋ 70%
     grid = caps.map(c => ebs.map(s => solve(x => run(t => {
       t.capexScale = c, t.ebSteady = s, t.revScale = x
     }), .5, 4, !0)));
@@ -808,10 +808,10 @@ function sensitivities(e, v) {
         baseGap: t.gap
       })
     };
-  return r(`穩態 EBITDA 率`, `59%`, `70%`, t => {
-    t.ebSteady = .59
+  return r(`穩態 EBITDA 率`, `35%`, `59%`, t => { // v0.1b：可觀察 neocloud 區間（IREN 約 35%、CRWV 約 59%）
+    t.ebSteady = .35
   }, t => {
-    t.ebSteady = .7
+    t.ebSteady = .59
   }), r(`債務／backlog 上限`, `0.4x`, `1.2x`, t => {
     t.debtBacklog = .4
   }, t => {
@@ -820,12 +820,12 @@ function sensitivities(e, v) {
     e.a.costMW = e.a.costMW.map(e => e * 1.2)
   }, e => {
     e.a.costMW = e.a.costMW.map(e => e * .8)
-  }), r(`GPU 經濟壽命`, `5 年`, `8 年`, e => {
-    e.gpuLife = 5
+  }), r(`GPU 經濟壽命`, `4 年`, `6 年`, e => { // v0.1b：Nebius 會計 5 年、Tokenomics 6 年
+    e.gpuLife = 4
   }, e => {
-    e.gpuLife = 8
-  }), r(`FY31 新增 MW`, `1,700`, `0`, e => {
-    e.mw31 = 1700
+    e.gpuLife = 6
+  }), r(`FY31 新增 MW`, `1,000`, `0`, e => { // v0.1b：公司 2027 起每年部署 >1 GW
+    e.mw31 = 1000
   }, e => {
     e.mw31 = 0
   }), r(`表外現金租金`, `+30%`, `−30%`, e => {
