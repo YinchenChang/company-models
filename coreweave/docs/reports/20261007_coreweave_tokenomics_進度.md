@@ -1,15 +1,15 @@
 # CoreWeave × Tokenomics 改造進度（接手用；W1–W3 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：W0 遷移（chat 端）；W1 步驟 0–6（資料蒐集 `coreweave/data/permw_inputs_20261007.json`；對照表 xlsx＋md；Excel「Tokenomics_取數」分頁＋55 個 TK_ 具名範圍、verify 23 項全過；快照 v5.24、company.json `tokenomics` 區段；取數工具 `tools/tokenomics/import_tokenomics.py`；分支 `claude/coreweave-w1-tokenomics` 自 `claude/coreweave-w0-migrate` a29db91 開出、draft PR、Tokenomics 唯讀副本 master 098873a／v5.24）。
-- 下一步：W1 步驟 7——整體 verify（--vs-dist）與 PR 回報、PR 改 ready。
-- 未解問題：Tokenomics v5.25（IF_DeprLifeIT 等 10 個名稱）尚未合併到 Tokenomics master；本張以 v5.24 產生快照，10 個名稱列為 optional（記為 missing）。
+- 已完成：W0 遷移（chat 端）；**W1 全部完成**（PR #6，疊加於 W0 分支）：取數工具 `tools/tokenomics/import_tokenomics.py`、v5.24 快照（25 名，其中 10 個 v5.25 名稱 missing）、company.json `tokenomics` 區段、Excel「Tokenomics_取數」分頁＋55 個 `TK_` 具名範圍、對照表、W2 資料蒐集；`verify.sh --vs-dist` 23 項全過（既有數字 0 差異）。
+- 下一步：W2（`claude/coreweave-w2-permw`，從 W1 分支最新 commit 開、PR base＝W1 分支，除非 W1 已合併）。**W2 第 0 步**：Tokenomics master 的 `model/CURRENT` 若已是 v5.25，以 `python3 tools/tokenomics/import_tokenomics.py --tokenomics <clone> --names coreweave/data/tokenomics_names.txt --out coreweave/data/tokenomics_snapshot_v5.25.json` 重抓、刪 v5.24 快照、改 company.json `tokenomics`（snapshotFile／version／commit），再跑 verify（2026-10-07 W1 結束時 master 為 bdb0de7，CURRENT 仍為 v5.24）。GPU 小時價格不足 → W2 依工作單採收入備案（revenue=legacy）。
+- 未解問題：(1) v5.25 的 10 個名稱尚未在 Tokenomics master；(2) GB200／GB300／VR200 的長約 GPU 小時價格找不到兩個獨立來源；(3) CoreWeave 自己文件中「active power」的定義未找到（EDGAR 全文檢索顯示 10-K 含「critical IT」字樣，但工具讀不到該段；建議 chat 端或 Andy 開 10-K 搜尋「critical IT」確認）；(4) Tokenomics 無租金與 GPU 壽命名稱（壽命待 v5.25 `IF_DeprLifeIT`）。
 
 ## 工作單總覽
 | 工作單 | 分支 | PR | 狀態 |
 |---|---|---|---|
 | W0 遷移 | `claude/coreweave-w0-migrate` | | chat 端完成 |
-| W1 Tokenomics 取數層 | `claude/coreweave-w1-tokenomics`（疊加於 W0 分支） | #6 | 進行中 |
+| W1 Tokenomics 取數層 | `claude/coreweave-w1-tokenomics`（疊加於 W0 分支） | #6 | 完成，待審 |
 | W2 每 MW 改寫 | `claude/coreweave-w2-permw` | | 未開始 |
 | W3 v4.6 成品與對照 | `claude/coreweave-w3-v4.6` | | 未開始 |
 
@@ -62,3 +62,174 @@ Tokenomics 版本：`model/CURRENT`＝`20261007_Tokenomics_v5.24.xlsx`，master 
 - **管銷率＝（60 − 12 ＋ 178 − 84）÷ 2,575 ＝ 142 ÷ 2,575 ＝ 5.51% [Derived]**；假設：銷售行銷與一般管理內的 D&A＝0 [Assumed]。區間 5.51%（扣 SBC）～9.24%（GAAP 含 SBC）；1H26 扣 SBC 為 6.15%。
 
 **6e 站點電價**：找不到（CoreWeave 與房東 Applied Digital、Core Scientific、Galaxy 公告皆未揭露電價或電費負擔方）；電價以 Tokenomics 為準。
+| 7 整體 verify 與回報 | 完成 | （本 commit） | `verify.sh --vs-dist` 23 項全過；PR 留言「[CRWV 回報] W1｜完成｜2026-10-07」 |
+
+### W1 已套用的預設（問題｜採用的預設｜替代選項｜對結果的影響）
+| 問題 | 預設 | 替代 | 影響 |
+|---|---|---|---|
+| 分頁 A 欄 | A 欄放具名範圍鍵（`TK_CapexIT_GB300`），其後依工作單欄位 | A 欄放 Tokenomics 名稱（同名多世代會重複，違反 CLAUDE.md 勿改 7） | 無數字影響 |
+| L1 名稱的低／高 | 取 L1 頁 E／F 欄（Tokenomics 自己的低／高） | 留白 | 只影響敏感度欄 |
+| 名稱清單 | 工作單 13 名＋`IF_RacksPerGW`、`IF_Util`（對照用）＋10 個 v5.25 optional | 只列工作單 13 名 | 無 |
+| 分頁位置 | 「來源」之後（最後一頁），導覽頁不加列 | 導覽加一列（會使導覽列位移） | 無 |
+| missing 名稱 | 分頁有列、不建具名範圍 | 建名稱指向空格 | W2 若誤引用會在建置時就報錯，較安全 |
+| 新工作表的比對 | `xl_diff.py`：新版多出的工作表列為「新增工作表」，不計差異 | `--ignore=Tokenomics_取數` | 無 |
+| 對照表比較世代 | FY26–27＝GB300、FY28–30＝VR200 [Assumed] | 依 W2 newMix 加權 | 差距數字會隨世代組合改變（例：每 MW 年收入 vs 持有成本 FY26 −12.0%；改 GB200 為 +22%） |
+| MW 口徑 | IT 關鍵電力 [Assumed] | 設施口徑 | 每 MW 數字差 1.2 倍（約 ±17–20%） |
+| 6/30 世代組合 | 年份分層 27／29／43% | 區間見上 | W2 敏感度 |
+| 管銷率 | 5.51%（扣 SBC；S&M／G&A 內 D&A 視為 0） | 9.24%（GAAP 含 SBC） | 改用 9.24% 時 EBITDA 率約 −3.7pt |
+| 每 MW 年收入的 Tokenomics 對照 | `IF_HoldEcon`（經濟持有成本＝打平下限） | `L1_RevGW_Fleet_VR200`（token 層上限，不同層） | 無數字影響 |
+| 快照版本 | v5.24（master 的 CURRENT 仍為 v5.24） | — | W2 第 0 步重抓 |
+
+### W1 verify.sh --vs-dist 完整輸出（2026-10-07，最終）
+<details><summary>展開</summary>
+
+```
+=== 0. 季度層檢查（季度加總＝年度、指引一致性、超過門檻的差距都有原因；v4.4）
+一致性檢查 14 組
+low：季度加總＝年度 10 項
+low：年度差異原因 7 項、季度差異原因 3 項
+base：季度加總＝年度 10 項
+base：年度差異原因 6 項、季度差異原因 3 項
+high：季度加總＝年度 10 項
+high：年度差異原因 6 項、季度差異原因 3 項
+check_quarterly：全部通過
+[PASS] check_quarterly：季度加總＝年度、差異原因齊全
+
+=== 0b. README 欄位說明與 company.json 一致（scripts/fields_doc.py --check；5a）
+README 欄位說明與 company.json 一致
+[PASS] README 欄位說明與 company.json 一致
+
+=== 0c. Tokenomics 快照可重現（tools/tokenomics/import_tokenomics.py --check；W1）
+--check 通過：25 個名稱（missing 10）與快照一致（20261007_Tokenomics_v5.24.xlsx，相對誤差 ≤ 1e-09）
+[PASS] Tokenomics 快照 --check：25 個名稱（missing 10）與快照一致（20261007_Tokenomics_v5.24.xlsx，相對誤差 ≤ 1e-09）
+
+=== 1. 建 HTML（v4.5 · 2026-09-26）
+built 965548
+[PASS] 建 HTML
+
+=== 2. 建 Excel
+saved /home/claude/company-models/coreweave/out/20260926_CoreWeave收支模型_v4_5.xlsx
+[PASS] 建 Excel
+
+=== 3. 重算（LibreOffice headless）
+{"status": "success", "total_formulas": 1955, "total_errors": 0, "error_summary": {}}
+[PASS] 重算：0 公式錯誤
+
+=== 3b. 反向 DCF：以 Excel 求解（scripts/rv_solve.py；v4.5 取代 JS 快照）
+反向 DCF（Excel 求解）：現價 90.13、R 1.3428、C 0.5970、Eb 0.8566、Rt 1.1801；矩陣 20/20 格有解
+rv_snap.json 無變動
+[PASS] 反向 DCF：Excel 求解，rv_snap.json 與 Excel 一致
+
+=== 4. fix_outline
+outline fixed
+[PASS] fix_outline
+
+=== 4b. fix_datatable（模擬運算表還原為 Excel 格式）
+datatable fixed: xl/worksheets/sheet3.xml D171:E173 輸入格 C5
+[PASS] fix_datatable
+
+=== 5. verify_ooxml
+OOXML OK
+[PASS] verify_ooxml：OOXML OK
+
+=== 5d. 快照值＝Excel「Tokenomics_取數」分頁值（scripts/check_tokenomics_tab.py；W1）
+快照值＝Excel 分頁值：25 個名稱（missing 10）、165 個值、55 個具名範圍一致；其他工作表無公式引用（v5.24）
+[PASS] 快照值＝Excel 分頁值：25 個名稱（missing 10）、165 個值、55 個具名範圍一致；其他工作表無公式引用（v5.24）
+
+=== 5c. 離線開啟檢查（已決定事項 11：單一檔案、無網路請求、console 無錯誤、關鍵數字正常顯示）
+(a) 網路請求：0 個
+(b) console 錯誤與例外：0 個
+(c) 關鍵數字：5 個分頁、15 項，失敗 0 項
+離線開啟檢查：通過
+[PASS] 離線開啟：新建 HTML
+(a) 網路請求：0 個
+(b) console 錯誤與例外：0 個
+(c) 關鍵數字：5 個分頁、15 項，失敗 0 項
+離線開啟檢查：通過
+[PASS] 離線開啟：dist/ 成品
+
+=== 6. 三情境 xlx＋cmp31（預設錨定）
+ok 1 820
+[PASS] cmp31 low：313 項全部 OK
+ok 2 820
+[PASS] cmp31 base：313 項全部 OK
+ok 3 820
+[PASS] cmp31 high：313 項全部 OK
+
+=== 7. FY27 錨定 cmp31（基準）
+ok 2 820
+[PASS] cmp31 base_FY27：313 項全部 OK
+
+=== 8. 季度層測試（暫存副本：假設 Q3 實際數、可移植性；v4.4）
+[PASS] test_quarterly：假設實際數與可移植性測試通過
+  畫面錯誤：無
+=== 結果
+test_quarterly：全部通過（測試 A 假設實際數、測試 B 可移植性）
+
+=== 8b. 期間滾動測試（暫存副本：日曆推算 6 種情況、滾動後第一屏無過期日期與期間字樣；v4.5）
+[PASS] test_rolling：日曆推算與滾動後第一屏
+C 滾動檢查：只滾日曆、未更新 asOf → 建置失敗並列出 23 項（清單 23 項）
+A 滾動 FY26Q3（評價日 2026-06-30 → 2026-09-30）：過期字樣 ['2026-06-30', 'Q2 2026', '2H26', '6/30', '1H26', '上半年', '下半年', 'H1', '1H', '2H']；第一屏命中 0 行
+期間滾動測試：通過
+
+=== 8c. 目標價變動拆解工具測試（scripts/attrib.py：(a)＝(1＋WACC)^(月數÷12)，WACC 讀 Excel、月數讀 calendar_q；四項相加＝總變動）
+[PASS] test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）
+目標價變動拆解測試：通過
+
+=== 9. 與 dist/ 成品比對
+34 views; errors []
+34 views; errors []
+畫面：dist 34 個、新版 34 個頁面／分頁，約 129,242 字；差異 0 個；頁面錯誤 dist 0、新版 0
+[PASS] crawl 畫面文字 0 差異
+0 differences
+新增工作表（不計為差異）：Tokenomics_取數
+以列名稱配對的工作表：輸入與假設
+新增列 6：
+  輸入與假設 第 13 列 表外租金起算 MW
+  輸入與假設 第 89 列 股權上限的股數基礎
+  輸入與假設 第 93 列 CDS 傳入門檻
+  輸入與假設 第 94 列 CDS 傳入比例
+  輸入與假設 第 109 列 NOL 每年可抵用比例
+  輸入與假設 第 110 列 營運資金占營收增量
+[PASS] xl_diff --values --by-label 0 差異
+0 differences
+新增工作表（不計為差異）：Tokenomics_取數
+以列名稱配對的工作表：輸入與假設
+新增列 6：
+  輸入與假設 第 13 列 表外租金起算 MW
+  輸入與假設 第 89 列 股權上限的股數基礎
+  輸入與假設 第 93 列 CDS 傳入門檻
+  輸入與假設 第 94 列 CDS 傳入比例
+  輸入與假設 第 109 列 NOL 每年可抵用比例
+  輸入與假設 第 110 列 營運資金占營收增量
+常數改為引用輸入格 30（引用換回常數後與舊版公式相同）：輸入與假設!C60、輸入與假設!D60、輸入與假設!E60、輸入與假設!F60、輸入與假設!G60、各期收支!C48、各期收支!D48、各期收支!E48、各期收支!F48、各期收支!G48、各期收支!C60、各期收支!D60、各期收支!E60、各期收支!F60、各期收支!G60、損益!C14、損益!D14、損益!E14、損益!F14、損益!G14、評價_DCF與目標價!C8、評價_DCF與目標價!D8、評價_DCF與目標價!E8、評價_DCF與目標價!F8、評價_DCF與目標價!G8、評價_DCF與目標價!C10、評價_DCF與目標價!D10、評價_DCF與目標價!E10、評價_DCF與目標價!F10、評價_DCF與目標價!G10
+[PASS] xl_diff 公式 --by-label 0 差異
+
+================ 結果 ================
+PASS  check_quarterly：季度加總＝年度、差異原因齊全
+PASS  README 欄位說明與 company.json 一致
+PASS  Tokenomics 快照 --check：25 個名稱（missing 10）與快照一致（20261007_Tokenomics_v5.24.xlsx，相對誤差 ≤ 1e-09）
+PASS  建 HTML
+PASS  建 Excel
+PASS  重算：0 公式錯誤
+PASS  反向 DCF：Excel 求解，rv_snap.json 與 Excel 一致
+PASS  fix_outline
+PASS  fix_datatable
+PASS  verify_ooxml：OOXML OK
+PASS  快照值＝Excel 分頁值：25 個名稱（missing 10）、165 個值、55 個具名範圍一致；其他工作表無公式引用（v5.24）
+PASS  離線開啟：新建 HTML
+PASS  離線開啟：dist/ 成品
+PASS  cmp31 low：313 項全部 OK
+PASS  cmp31 base：313 項全部 OK
+PASS  cmp31 high：313 項全部 OK
+PASS  cmp31 base_FY27：313 項全部 OK
+PASS  test_quarterly：假設實際數與可移植性測試通過
+PASS  test_rolling：日曆推算與滾動後第一屏
+PASS  test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）
+PASS  crawl 畫面文字 0 差異
+PASS  xl_diff --values --by-label 0 差異
+PASS  xl_diff 公式 --by-label 0 差異
+verify.sh：全部通過（23 項）
+EXIT 0
+```
+</details>
