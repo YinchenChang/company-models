@@ -1283,5 +1283,772 @@
    "2024": "S-1：2024 年底 >360 MW [Verified]",
    "2025": "Q4 2025 法說：年底 >850 MW、43 座資料中心 [Verified]"
   }
+ },
+
+ "nebius": {
+  "_readme": "Nebius 公司專屬資料草稿（v0.1a 產出；引擎尚未讀取）。每欄 value＋unit＋ref（指回 data/nebius_facts_20261007.json 的 id）＋mapTo（v0.1b 應搬到的既有欄位路徑，或「新欄位」）。金額單位依引擎慣例為 US$bn（另註明者除外）。CRWV 欄位維持不動，v0.1b 改寫時依 mapTo 搬移。",
+  "files": {
+   "facts": "data/nebius_facts_20261007.json",
+   "perMw": "data/permw_tokenomics_20261007.json",
+   "consensus": "data/consensus_nbis_20261007.json"
+  },
+  "meta": {
+   "company": {
+    "value": "Nebius Group",
+    "unit": "文字",
+    "ref": "sh.out.q2_26",
+    "mapTo": "meta.company"
+   },
+   "ticker": {
+    "value": "NBIS",
+    "unit": "文字",
+    "ref": "sh.out.q2_26",
+    "mapTo": "meta.ticker"
+   },
+   "priceClose": {
+    "value": 249.87,
+    "unit": "US$",
+    "ref": "mkt.price.close",
+    "mapTo": "valuation.price",
+    "note": "2026-10-06 收盤"
+   },
+   "priceDate": {
+    "value": "2026-10-06",
+    "unit": "日期",
+    "ref": "mkt.price.close",
+    "mapTo": "meta.priceDate"
+   },
+   "consensusFile": {
+    "value": "data/consensus_nbis_20261007.json",
+    "unit": "路徑",
+    "ref": "mkt.pt.sp",
+    "mapTo": "meta.consensusFile"
+   },
+   "fiscalYearEndMonth": {
+    "value": 12,
+    "unit": "月",
+    "ref": "is.rev.fy25",
+    "mapTo": "calendar.fiscalYearEndMonth"
+   },
+   "latestQuarterFiled": {
+    "value": "FY26Q2",
+    "unit": "文字",
+    "ref": "is.rev.q2_26",
+    "mapTo": "calendar.latestQuarterFiled",
+    "note": "6-K 2026-08-12（外國私人發行人無 10-Q；以 6-K 附件 99.2 季報為已申報口徑）"
+   }
+  },
+  "latestQuarter": {
+   "revenue": {
+    "value": 0.5823,
+    "unit": "US$bn",
+    "ref": "is.rev.q2_26",
+    "mapTo": "latestQuarter.revenue"
+   },
+   "h1Revenue": {
+    "value": 0.9813,
+    "unit": "US$bn",
+    "ref": "is.rev.h1_26",
+    "mapTo": "latestQuarter.h1Revenue"
+   },
+   "aiCloudRevenue": {
+    "value": 0.5749,
+    "unit": "US$bn",
+    "ref": "is.revAI.q2_26",
+    "mapTo": "新欄位"
+   },
+   "adjEbitda": {
+    "value": 0.2362,
+    "unit": "US$bn",
+    "ref": "is.ebitda.q2_26",
+    "mapTo": "latestQuarter.adjEbitda"
+   },
+   "adjEbitdaAiCloud": {
+    "value": 0.2857,
+    "unit": "US$bn",
+    "ref": "is.ebitdaAI.q2_26",
+    "mapTo": "新欄位"
+   },
+   "opInc": {
+    "value": -0.1759,
+    "unit": "US$bn",
+    "ref": "is.ebit.q2_26",
+    "mapTo": "latestQuarter.opInc"
+   },
+   "ni": {
+    "value": -0.1904,
+    "unit": "US$bn",
+    "ref": "is.ni.q2_26",
+    "mapTo": "latestQuarter.ni"
+   },
+   "da": {
+    "value": 0.2597,
+    "unit": "US$bn",
+    "ref": "is.da.q2_26",
+    "mapTo": "latestQuarter.da"
+   },
+   "sbc": {
+    "value": 0.1025,
+    "unit": "US$bn",
+    "ref": "is.sbc.q2_26",
+    "mapTo": "latestQuarter.sbc"
+   },
+   "interest": {
+    "value": 0.1191,
+    "unit": "US$bn",
+    "ref": "is.intExp.q2_26",
+    "mapTo": "latestQuarter.interest"
+   },
+   "capexQ2": {
+    "value": 5.6574,
+    "unit": "US$bn",
+    "ref": "cf.capexCash.q2_26",
+    "mapTo": "latestQuarter.capexQ2",
+    "note": "現金口徑（應計口徑未揭露）"
+   },
+   "cashCapexH1": {
+    "value": 8.1303,
+    "unit": "US$bn",
+    "ref": [
+     "cf.capexCash.q1_26",
+     "cf.capexCash.q2_26"
+    ],
+    "mapTo": "latestQuarter.cashCapexH1",
+    "note": "[Derived] Q1＋Q2"
+   },
+   "cfoH1": {
+    "value": 4.5041,
+    "unit": "US$bn",
+    "ref": [
+     "cf.cfo.q1_26",
+     "cf.cfo.q2_26"
+    ],
+    "mapTo": "latestQuarter.cfoH1",
+    "note": "[Derived] Q1＋Q2"
+   },
+   "cash": {
+    "value": 8.0421,
+    "unit": "US$bn",
+    "ref": "bs.cash.q2_26",
+    "mapTo": "latestQuarter.cash"
+   },
+   "restricted": {
+    "value": 1.056,
+    "unit": "US$bn",
+    "ref": "bs.restrCash.q2_26",
+    "mapTo": "latestQuarter.restricted"
+   },
+   "deferredTotal": {
+    "value": 5.9752,
+    "unit": "US$bn",
+    "ref": "bs.defRev.q2_26",
+    "mapTo": "latestQuarter.deferredTotal"
+   },
+   "deferredInH1": {
+    "value": 4.395,
+    "unit": "US$bn",
+    "ref": "pp.cfoDriver.h1",
+    "mapTo": "latestQuarter.deferredIn"
+   },
+   "rpo": {
+    "value": 37.4906,
+    "unit": "US$bn",
+    "ref": "bs.rpo.q2_26",
+    "mapTo": "latestQuarter.rpo"
+   },
+   "rpo24m": {
+    "value": 0.36,
+    "unit": "比例",
+    "ref": "bs.rpo.q2_26",
+    "mapTo": "latestQuarter.rpo24m"
+   },
+   "rpo25to48": {
+    "value": 0.4,
+    "unit": "比例",
+    "ref": "bs.rpo.q2_26",
+    "mapTo": "latestQuarter.rpo25to48"
+   },
+   "ppeNet": {
+    "value": 13.0452,
+    "unit": "US$bn",
+    "ref": "bs.ppe.q2_26",
+    "mapTo": "latestQuarter.ppe",
+    "note": "注意：CRWV 欄位 ppe 為毛額；Nebius 毛額 14.1495（附註 7）"
+   },
+   "opLeaseLiab": {
+    "value": 1.6253,
+    "unit": "US$bn",
+    "ref": "bs.leaseLiab.q2_26",
+    "mapTo": "latestQuarter.opLeaseLiab"
+   },
+   "offBalanceLease": {
+    "value": 12.0541,
+    "unit": "US$bn",
+    "ref": "bs.leaseNotCommenced.q2_26",
+    "mapTo": "leases.facts.notCommenced"
+   },
+   "sharesOut": {
+    "value": 0.271855,
+    "unit": "bn 股",
+    "ref": "sh.out.q2_26",
+    "mapTo": "latestQuarter.sharesOut",
+    "note": "不含 NVIDIA 預付認股權證 0.021066bn 股與 2026-08 以股換債約 0.0158bn 股"
+   },
+   "basicWaso": {
+    "value": 0.280382,
+    "unit": "bn 股",
+    "ref": "sh.basicW.q2_26",
+    "mapTo": "latestQuarter.basicWaso"
+   },
+   "equityH1": {
+    "value": 2.8111,
+    "unit": "US$bn",
+    "ref": "cf.cff.q2_26",
+    "mapTo": "latestQuarter.equityH1",
+    "note": "ATM 出售庫藏股 2,846.7−發行成本 35.6（另 NVIDIA 預付認股權證 2.0 列於 equity.nvidiaPfw）"
+   },
+   "custA": {
+    "value": 0.24,
+    "unit": "比例",
+    "ref": "ct.concentration.h1",
+    "mapTo": "latestQuarter.custA"
+   },
+   "custB": {
+    "value": 0.21,
+    "unit": "比例",
+    "ref": "ct.concentration.h1",
+    "mapTo": "latestQuarter.custB"
+   },
+   "custC": {
+    "value": 0.14,
+    "unit": "比例",
+    "ref": "ct.concentration.h1",
+    "mapTo": "latestQuarter.custC"
+   }
+  },
+  "ytdActual": {
+   "revenue": {
+    "value": 0.9813,
+    "unit": "US$bn",
+    "ref": "is.rev.h1_26",
+    "mapTo": "ytdActual.revenue"
+   },
+   "cashCapex": {
+    "value": 8.1303,
+    "unit": "US$bn",
+    "ref": [
+     "cf.capexCash.q1_26",
+     "cf.capexCash.q2_26"
+    ],
+    "mapTo": "ytdActual.cashCapex"
+   },
+   "cfo": {
+    "value": 4.5041,
+    "unit": "US$bn",
+    "ref": [
+     "cf.cfo.q1_26",
+     "cf.cfo.q2_26"
+    ],
+    "mapTo": "ytdActual.cfo"
+   },
+   "prepay": {
+    "value": 4.552,
+    "unit": "US$bn",
+    "ref": "pp.cashH1.derived",
+    "mapTo": "ytdActual.prepay",
+    "note": "[Derived] 遞延營收增加＋期初遞延認列"
+   },
+   "adjEbitda": {
+    "value": 0.3657,
+    "unit": "US$bn",
+    "ref": [
+     "is.ebitda.q1_26",
+     "is.ebitda.q2_26"
+    ],
+    "mapTo": "ytdActual.adjEbitda"
+   },
+   "da": {
+    "value": 0.4717,
+    "unit": "US$bn",
+    "ref": [
+     "is.da.q1_26",
+     "is.da.q2_26"
+    ],
+    "mapTo": "ytdActual.da"
+   },
+   "sbc": {
+    "value": 0.1378,
+    "unit": "US$bn",
+    "ref": [
+     "is.sbc.q1_26",
+     "is.sbc.q2_26"
+    ],
+    "mapTo": "ytdActual.sbc"
+   },
+   "opInc": {
+    "value": -0.3039,
+    "unit": "US$bn",
+    "ref": [
+     "is.ebit.q1_26",
+     "is.ebit.q2_26"
+    ],
+    "mapTo": "ytdActual.opInc"
+   },
+   "interest": {
+    "value": 0.1828,
+    "unit": "US$bn",
+    "ref": [
+     "is.intExp.q1_26",
+     "is.intExp.q2_26"
+    ],
+    "mapTo": "ytdActual.interest"
+   },
+   "cash1231": {
+    "value": 3.6781,
+    "unit": "US$bn",
+    "ref": "bs.cash.fy25",
+    "mapTo": "ytdActual.cash1231"
+   },
+   "borrow": {
+    "value": 4.3375,
+    "unit": "US$bn",
+    "ref": "cf.cff.q1_26",
+    "mapTo": "ytdActual.borrow",
+    "note": "2026-03 可轉債總價款 4,337.5"
+   },
+   "equity": {
+    "value": 4.8111,
+    "unit": "US$bn",
+    "ref": [
+     "cf.cff.q2_26",
+     "nvda.pfw"
+    ],
+    "mapTo": "ytdActual.equity",
+    "note": "ATM 淨 2,811.1＋NVIDIA 預付認股權證 2,000"
+   },
+   "cappedCall": {
+    "value": 0.0,
+    "unit": "US$bn",
+    "ref": "cv.cappedCall",
+    "mapTo": "ytdActual.cappedCall",
+    "note": "未見 capped call"
+   }
+  },
+  "debt": {
+   "convertibles": {
+    "value": [
+     [
+      "2.00% 2029（2025-06）",
+      0.0875,
+      0.02,
+      "2029-06",
+      1.2,
+      51.45
+     ],
+     [
+      "3.00% 2031（2025-06）",
+      0.0875,
+      0.03,
+      "2031-06",
+      1.25,
+      51.45
+     ],
+     [
+      "1.00% 2030（2025-09）",
+      1.58125,
+      0.01,
+      "2030-09",
+      1.15,
+      138.75
+     ],
+     [
+      "2.75% 2032（2025-09）",
+      1.58125,
+      0.0275,
+      "2032-09",
+      1.15,
+      138.75
+     ],
+     [
+      "1.25% 2031（2026-03）",
+      2.5875,
+      0.0125,
+      "2031-03",
+      1.2,
+      183.22
+     ],
+     [
+      "2.625% 2033（2026-03）",
+      1.75,
+      0.02625,
+      "2033-03",
+      1.2,
+      180.31
+     ],
+     [
+      "0.50% 2030（2026-08）",
+      3.45,
+      0.005,
+      "2030-02",
+      1.1,
+      313.46
+     ],
+     [
+      "4.50% 2034（2026-08）",
+      2.3,
+      0.045,
+      "2034-02",
+      1.25,
+      324.65
+     ]
+    ],
+    "unit": "清單：[名稱, 原始本金 US$bn, 票息, 到期, 到期累積倍數, 初始轉換價 US$]",
+    "ref": [
+     "cv.jun29.orig",
+     "cv.jun31.orig",
+     "cv.sep30.orig",
+     "cv.sep32.orig",
+     "cv.mar31.orig",
+     "cv.mar33.orig",
+     "cv.aug30.orig",
+     "cv.aug34.orig",
+     "cv.aug.exchange"
+    ],
+    "mapTo": "debt.convertible（CRWV 只有單筆期後可轉債欄位；Nebius 需新增多檔清單）＋新欄位",
+    "note": "2026-08-24 交割後；2029、2031 舊債已各交換 $400M（剩 $87.5M）。評價日 6/30 時點的本金另見 convertiblesAt0630"
+   },
+   "convertiblesAt0630": {
+    "value": [
+     10.0418,
+     8.499
+    ],
+    "unit": "[到期累積本金, 帳面值] US$bn",
+    "ref": "cv.total.q2_26",
+    "mapTo": "debt.instruments"
+   },
+   "abf": {
+    "value": [
+     "資產擔保定期貸款",
+     0.775,
+     "Term SOFR＋2.50%",
+     "2030-10-31"
+    ],
+    "unit": "清單：[名稱, 本金 US$bn, 利率, 到期]",
+    "ref": "abf.amount",
+    "mapTo": "debt.instruments",
+    "note": "2026-07-10 簽約（評價日後）；攤還時程未揭露"
+   },
+   "otherCurrent": {
+    "value": 0.0467,
+    "unit": "US$bn",
+    "ref": "debt.other.q2_26",
+    "mapTo": "debt.instruments"
+   }
+  },
+  "equity": {
+   "atmShareCap": {
+    "value": 25.0,
+    "unit": "m 股",
+    "ref": "atm.size",
+    "mapTo": "callFacts.atmShares"
+   },
+   "atmRemaining": {
+    "value": 12.271,
+    "unit": "m 股",
+    "ref": "atm.remaining.q2_26",
+    "mapTo": "defaults.eqCapShares"
+   },
+   "atmAvgPx": {
+    "value": 223.6,
+    "unit": "US$",
+    "ref": "atm.sold.q2_26",
+    "mapTo": "新欄位"
+   },
+   "nvidiaPfwShares": {
+    "value": 0.021066,
+    "unit": "bn 股",
+    "ref": "sh.pfw",
+    "mapTo": "valuation.shares（加計）"
+   },
+   "exchangeShares": {
+    "value": 0.0158,
+    "unit": "bn 股",
+    "ref": "cv.aug.exchangeShares",
+    "mapTo": "valuation.shares（加計）"
+   },
+   "options": {
+    "value": 6.741,
+    "unit": "m 股（均價 $88.65）",
+    "ref": "sh.options.q2_26",
+    "mapTo": "新欄位"
+   },
+   "rsu": {
+    "value": 6.234,
+    "unit": "m 股",
+    "ref": "sh.rsu.q2_26",
+    "mapTo": "新欄位"
+   }
+  },
+  "guidance": {
+   "revLo": {
+    "value": 3.0,
+    "unit": "US$bn",
+    "ref": "g.rev26",
+    "mapTo": "callFacts.revLo"
+   },
+   "revHi": {
+    "value": 3.4,
+    "unit": "US$bn",
+    "ref": "g.rev26",
+    "mapTo": "callFacts.revHi"
+   },
+   "arrLo": {
+    "value": 7.0,
+    "unit": "US$bn",
+    "ref": "g.arr26",
+    "mapTo": "callFacts.arrLo"
+   },
+   "arrHi": {
+    "value": 9.0,
+    "unit": "US$bn",
+    "ref": "g.arr26",
+    "mapTo": "callFacts.arrHi"
+   },
+   "capexLo": {
+    "value": 20.0,
+    "unit": "US$bn",
+    "ref": "g.capex26",
+    "mapTo": "callFacts.capexLo",
+    "note": "二手轉述"
+   },
+   "capexHi": {
+    "value": 25.0,
+    "unit": "US$bn",
+    "ref": "g.capex26",
+    "mapTo": "callFacts.capexHi",
+    "note": "二手轉述"
+   },
+   "adjEbitdaMargin": {
+    "value": 0.4,
+    "unit": "比例",
+    "ref": "g.ebitdaMargin26",
+    "mapTo": "新欄位",
+    "note": "口徑（合併或 AI cloud）未經一手確認"
+   },
+   "prepay26Min": {
+    "value": 9.0,
+    "unit": "US$bn",
+    "ref": "g.prepay26",
+    "mapTo": "新欄位"
+   }
+  },
+  "mw": {
+   "activeYE25": {
+    "value": 170,
+    "unit": "MW（IT）",
+    "ref": "mw.active.fy25",
+    "mapTo": "defaults.mwYearEnd.2025"
+   },
+   "activeQ1": {
+    "value": null,
+    "unit": "MW（IT）",
+    "ref": "mw.active.q1_26",
+    "mapTo": "callFacts.activeGw",
+    "note": "資料缺口"
+   },
+   "activeQ2": {
+    "value": null,
+    "unit": "MW（IT）",
+    "ref": "mw.active.q2_26",
+    "mapTo": "callFacts.activeGw",
+    "note": "資料缺口"
+   },
+   "connectedYE26Lo": {
+    "value": 800,
+    "unit": "MW（口徑不明）",
+    "ref": "mw.connected.target26",
+    "mapTo": "callFacts.yeActiveGw（概念不同：connected≠active，v0.1b 須決定）"
+   },
+   "connectedYE26Hi": {
+    "value": 1000,
+    "unit": "MW（口徑不明）",
+    "ref": "mw.connected.target26",
+    "mapTo": "callFacts.yeActiveGw"
+   },
+   "contractedNow": {
+    "value": 3500,
+    "unit": "MW（口徑不明，>3.5 GW）",
+    "ref": "mw.contracted.q1_26",
+    "mapTo": "callFacts.contractedGw"
+   },
+   "contractedYE26": {
+    "value": 5000,
+    "unit": "MW（口徑不明）",
+    "ref": "g.contractedPower26",
+    "mapTo": "callFacts.contractedGw"
+   },
+   "deployPerYearFrom27": {
+    "value": 1000,
+    "unit": "MW／年（>1 GW）",
+    "ref": "g.deploy27",
+    "mapTo": "scenarios.accepted（積極情境）"
+   },
+   "ownedPlanned": {
+    "value": 3000,
+    "unit": "MW",
+    "ref": "mw.owned.total",
+    "mapTo": "新欄位"
+   }
+  },
+  "prepay": {
+   "shareOfDeals": {
+    "value": 0.7,
+    "unit": "比例",
+    "ref": "pp.share",
+    "mapTo": "新欄位"
+   },
+   "capexCoverLo": {
+    "value": 0.5,
+    "unit": "比例",
+    "ref": "pp.capexCover",
+    "mapTo": "新欄位"
+   },
+   "capexCoverHi": {
+    "value": 0.6,
+    "unit": "比例",
+    "ref": "pp.capexCover",
+    "mapTo": "新欄位"
+   },
+   "recogYears": {
+    "value": [
+     1,
+     5
+    ],
+    "unit": "年",
+    "ref": "pp.defRevRecogPeriod",
+    "mapTo": "新欄位"
+   },
+   "commitments": {
+    "value": 40.0,
+    "unit": "US$bn（>）",
+    "ref": "pp.commitments",
+    "mapTo": "新欄位"
+   }
+  },
+  "other": {
+   "nonCoreEbitdaAnnual": {
+    "value": -0.188,
+    "unit": "US$bn／年",
+    "ref": "oth.nonCoreBurn.h1",
+    "mapTo": "新欄位",
+    "note": "Avride＋TripleTen H1 −94.0 × 2"
+   },
+   "clickhouseValuation": {
+    "value": 15.0,
+    "unit": "US$bn",
+    "ref": "oth.clickhouse.val",
+    "mapTo": "新欄位"
+   },
+   "clickhouseStakeLo": {
+    "value": 0.25,
+    "unit": "比例",
+    "ref": "oth.clickhouse.pct",
+    "mapTo": "新欄位",
+    "note": "[Assumed] 二手"
+   },
+   "clickhouseStakeHi": {
+    "value": 0.28,
+    "unit": "比例",
+    "ref": "oth.clickhouse.pct.nw",
+    "mapTo": "新欄位",
+    "note": "[Assumed] 二手"
+   },
+   "clickhouseBook": {
+    "value": 1.5177,
+    "unit": "US$bn",
+    "ref": "oth.clickhouse.bv",
+    "mapTo": "新欄位"
+   },
+   "tolokaBook": {
+    "value": 0.0865,
+    "unit": "US$bn",
+    "ref": "oth.toloka.bv",
+    "mapTo": "新欄位"
+   },
+   "avrideSafeLiab": {
+    "value": 0.1781,
+    "unit": "US$bn",
+    "ref": "oth.avride.safe",
+    "mapTo": "valuation.netDebt（加計）"
+   }
+  },
+  "perMw": {
+   "revPerMWit": {
+    "value": [
+     11.62,
+     17.4,
+     24.2
+    ],
+    "unit": "US$m／MW-IT·年（保守、基準、積極）",
+    "ref": [
+     "permw.保守",
+     "permw.基準",
+     "permw.積極"
+    ],
+    "mapTo": "defaults.m.revMW（÷1000 成 US$bn/MW）"
+   },
+   "revPerMWfac": {
+    "value": [
+     9.68,
+     14.5,
+     20.17
+    ],
+    "unit": "US$m／MW-設施·年",
+    "ref": [
+     "permw.保守",
+     "permw.基準",
+     "permw.積極"
+    ],
+    "mapTo": "新欄位"
+   },
+   "capexPerMWit": {
+    "value": [
+     50.12,
+     50.26
+    ],
+    "unit": "US$m／MW-IT（GB300、VR200 基準）",
+    "ref": [
+     "tok.GB300.capexTotalPerMWit",
+     "tok.VR200.capexTotalPerMWit"
+    ],
+    "mapTo": "scenarios.capexTemplate.costMW"
+   },
+   "gpuLifeYears": {
+    "value": 6,
+    "unit": "年（Tokenomics 基準；Nebius 會計 5 年）",
+    "ref": [
+     "tok.itLife",
+     "is.depLife"
+    ],
+    "mapTo": "defaults.gpuLife"
+   },
+   "pue": {
+    "value": 1.2,
+    "unit": "x",
+    "ref": [
+     "tok.GB300.pue"
+    ],
+    "mapTo": "defaults.m.pue"
+   },
+   "companyAcvCompare": {
+    "value": [
+     20,
+     25
+    ],
+    "unit": "US$m／MW·年（只作對照）",
+    "ref": "ct.q2.acvPerMW",
+    "mapTo": "新欄位"
+   }
+  }
  }
 }
