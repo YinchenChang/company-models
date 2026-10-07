@@ -47,7 +47,7 @@ function forwardPL(e, t) {
       lg = e.years[c].legacyRev || 0, // v0.1b（Oracle）：傳統事業營收
       d = l + u + lg,
       f = c === 0 ? uM(HIST_PL[3].revenue + d, r) : uM(d, r),
-      EB = (l + u) * e.years[c].ebM + (e.years[c].otherEbitda || 0) + (e.years[c].legacyEbitda || 0), // v0.1b：加其他事業 EBITDA；Oracle：EBITDA 率只套算力＋服務，傳統事業另計
+      EB = (l + u) * e.years[c].ebM + (e.years[c].otherEbitda || 0) + (e.years[c].legacyEbitda || 0) - (e.years[c].delayPen || 0), // v0.2：減延誤罰則 // v0.1b：加其他事業 EBITDA；Oracle：EBITDA 率只套算力＋服務，傳統事業另計
       p = EB - e.years[c].daFleet,
       m = e.years[c].interest,
       ai = e.years[c].prepayAccr || 0, // v0.1b（Oracle）：預付重大財務組成的非現金利息（進稅前損益，不進現金）

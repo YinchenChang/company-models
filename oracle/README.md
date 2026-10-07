@@ -229,6 +229,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `leases.uncommenced.termYears` | 每筆未起租租賃的租期（直線付租） | 年 | 17 | 檢查 |
 | `leases.uncommenced.termSens` | 租期敏感度（報告用） | 年 清單 | 15、19 | 檢查 |
 | `leases.uncommenced.note` | 起租排程的來源與假設說明 | 文字 | 10-Q FY27Q1 附註 6：未起租租賃 288… | 必改 |
+| `leases.uncommenced.delayLink` | 未起租租約起租隨建設延誤後移的比例（0–1；其餘照原時程；v0.2） | 比例 | 0.5 | 檢查 |
+| `leases.uncommenced.delayLinkNote` | delayLink 的依據說明（v0.2） | 文字 | v0.2：未起租 288B 中有此比例的起租時點隨建… | 必改 |
 | `leases.facts.singleCap` | 單一大型站點的租金上限（10-Q 揭露） | US$bn | 0 | 必改 |
 | `leases.facts.share` | 第三方租賃占機房取得的比例（用於租金基準檢驗） | 比例 | 1 | 檢查 |
 | `leases.operatingPayments` | 營業租賃到期表：五期各期，最後一格為之後合計（Excel 租賃頁） | US$bn 清單 | 3.219、4.135、4.097、4.109、4.089、28.401 | 必改 |
@@ -454,6 +456,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.legacyBiz.ebitdaMargin` | 傳統事業 EBITDA 率，各期（Oracle v0.1b） | 比例清單 | 0.5426、0.5426、0.5426、0.5426、0.5426 | 檢查 |
 | `defaults.legacyBiz.note` | 傳統事業輸入的來源與推導說明 | 文字 | 傳統事業（OCI 以外四線）：fyBase＝FY20… | 必改 |
 | `defaults.cashTaxRate` | 類現金流量的現金稅率：稅 ＝ 稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（v0.1b；虧損或 NOL 公司填 0） | 比例 | 0.151 | 檢查 |
+| `defaults.delayPenalty` | 延誤罰則／服務抵減：延誤期間應計費而未計費營收的比例，列為營業費用（預設 0＝未揭露；v0.2） | 比例 | 0 | 檢查 |
+| `defaults.delayPenaltyNote` | delayPenalty 的依據說明（v0.2） | 文字 | v0.2：延誤罰則或服務抵減＝延誤期間「應計費而未計… | 必改 |
 | `defaults.debtCapBasis` | 瀑布新債的上限基準：ebitda＝總債務 ≤ 倍數 × 當期 EBITDA（年化；投資級上限）；backlog＝模板的債務／backlog（Oracle v0.1b） | 代碼 | ebitda | 檢查 |
 | `defaults.debtEbitdaMax` | 投資級上限：總債務 ÷ 當期 EBITDA 的上限倍數（debtCapBasis＝ebitda 時使用） | 倍 | 4 | 檢查 |
 | `defaults.dividend.perShareQ` | 普通股每股每季股利（Oracle v0.1b；不發股利的公司刪除 dividend 區段） | US$ | 0.5 | 必改 |

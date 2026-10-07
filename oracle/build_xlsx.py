@@ -855,6 +855,32 @@ for _rr in range(1, r):  # 代換 §DLY§、§T…§（延誤後 Billable 與已
             for _k in COLS:
                 _v = _v.replace(f"§T{_k}§", f"${_k}${_TR}")
             _c.value = _v
+# v0.2：A3 租約起租連動、A4 延誤罰則（與 HTML segA runFunding 同一算法）
+LK = one("未起租租約起租連動比例（delayLink）", "%", CO['leases']['uncommenced'].get('delayLink', 0),
+         "未起租租金中此比例的起租時點隨延誤月數後移（開發商交付晚），其餘照原時程（company.json → leases.uncommenced.delayLink）[Assumed]；替代 0／1", PCT)
+PEN = one("延誤罰則（應計費而未計費營收的 %）", "%", D.get('delayPenalty', 0),
+          "公司未揭露合約條款：預設 0（不存在／未揭露）；敏感度 5%／10%（company.json → defaults.delayPenalty）[Assumed]", PCT)
+def _ulF2(x):  # 起算季＋延誤月數 ÷ 3 的累計已起租筆季數（與 _ulF 同式）
+    xx = f"MAX(0,{x}-({UL_S}+{DLY}/3))"
+    return f"(MIN({xx},{UL_N})*(MIN({xx},{UL_N})+1)/2+{UL_N}*MAX(0,{xx}-{UL_N}))"
+_ULQX = lambda i: f"'輸入與假設'!{COLS[i]}${IN['未起租：期末累計季數（評價日起）']}"
+crow("表外現金租金：全部隨延誤平移（對照）", "US$bn",
+     lambda i: f"={UL_TOT}/{UL_N}/{UL_T}/4*({_ulF2(_ULQX(i))}-{_ulF2(_ULQX(i - 1)) if i else _ulF2('0')})", NUM, BLACK,
+     "＝未起租排程的起算季延後 延誤月數 ÷ 3 季（其餘同『輸入與假設』表外現金租金）")
+_ULA = CR["表外現金租金：全部隨延誤平移（對照）"]
+crow("表外現金租金（未起租，延誤連動後）", "US$bn",
+     lambda i: f"=IF(OR({DLY}<=0,{LK}<=0),{inref('表外現金租金（未起租）', i)},(1-{LK})*{inref('表外現金租金（未起租）', i)}+{LK}*{COLS[i]}{_ULA})", NUM, BOLD,
+     "＝(1 − 連動比例)× 原排程＋連動比例 × 平移後排程；延誤 0 時＝原排程（『各期收支』租金引用此列）")
+ULD_ROW = CR["表外現金租金（未起租，延誤連動後）"]
+crow("容量上限（未延誤，對照）", "US$bn",
+     lambda i: (f"=IF({AVGON}=1,({MW0 if i == 0 else COLS[i-1] + str(bil_row)}+{COLS[i]}{bil_row})/2,{COLS[i]}{bil_row})"
+                f"*{inref('每 MW 年收入', i)}*{REVSC}*{inref('利用率', i)}*{COLS[i]}{CR['模型期長度（年）']}"), NUM, BLACK,
+     "＝未延誤的平均可計費 MW × 每 MW 年收入 × 利用率 × 期間長度")
+crow("應計費而未計費營收（延誤造成）", "US$bn", lambda i: f"=IF({DLY}<=0,0,MAX(0,{COLS[i]}{CR['容量上限（未延誤，對照）']}-{COLS[i]}{cap_row}))", NUM, BLACK,
+     "＝未延誤容量上限 − 延誤後容量上限")
+crow("延誤罰則（營業費用）", "US$bn", lambda i: f"={PEN}*{COLS[i]}{CR['應計費而未計費營收（延誤造成）']}", NUM, BLACK,
+     "＝罰則比例 × 應計費而未計費營收；扣 EBITDA、營運來源、稅基與債務上限。客戶預付不因延誤退還（已知限制）")
+PEN_ROW = CR["延誤罰則（營業費用）"]
 _wsi = wb["輸入與假設"]
 for _nm in ("期初毛 PP&E", "D&A（車隊）"):
     for _i in range(5):
@@ -862,7 +888,7 @@ for _nm in ("期初毛 PP&E", "D&A（車隊）"):
         for _k in COLS:
             _c.value = _c.value.replace(f"§INSVC{_k}§", f"'運營_產能與收入'!{_k}${_ISR}")
 CAP = {"cm": cm_row, "totrev": totrev_row, "cap": cap_row, "sch": sch_row, "bot": bot_row, "rev": rev_row, "newrev": newrev_row,
-       "isrev": isrev_row, "bild": bild_row, "idle": IDLE_ROW, "insvc": _ISR, "rpocash": rpocash_row, "newcash": newcash_row, "acc": acc_row,
+       "isrev": isrev_row, "bild": bild_row, "idle": IDLE_ROW, "insvc": _ISR, "uld": ULD_ROW, "pen": PEN_ROW, "lost": CR["應計費而未計費營收（延誤造成）"], "cap0": CR["容量上限（未延誤，對照）"], "rpocash": rpocash_row, "newcash": newcash_row, "acc": acc_row,
        "loss": loss_row, "coll": coll_row, "avg": avg_row}
 
 # =====================================================================
@@ -928,7 +954,7 @@ frow("① CapEx（用途用：«YTD» 現金／«STUB» 毛額）", "US$bn",
 frow("② 在帳現金租金（備忘，«YTD» 已含在 CFO）", "US$bn",
      lambda i: f"={inref('在帳現金租金（季報到期表）', i)}", NUM, GREEN,
      f"見『租賃與承諾』頁；«LASTYR» 後尚有 {CO['leases']['afterFY30']}。«P0» 欄僅 «STUB»：«YTD» 租金 {CO['ytdActual']['leasePaid']} 已含在實際 CFO 內")
-frow("② 表外現金租金（未起租）", "US$bn", lambda i: f"={inref('表外現金租金（未起租）', i)}", NUM, GREEN,
+frow("② 表外現金租金（未起租）", "US$bn", lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['uld']}", NUM, GREEN,  # v0.2：延誤連動後
      f"已簽約未起租租賃 {CO['latestQuarter']['offBalanceLease']} 的現金路徑")
 frow("　租金合計", "US$bn",
      lambda i: f"={COLS[i]}{FR['② 在帳現金租金（備忘，«YTD» 已含在 CFO）']}+{COLS[i]}{FR['② 表外現金租金（未起租）']}", NUM, BLACK,
@@ -982,7 +1008,7 @@ frow("⑥ capped call 支出（«YTD» 實際）", "US$bn",
 debt_row = FR["⑤ 排程還本（季報到期表）"]
 frow("⑦ 現金稅（«STUB» 起）", "US$bn",
      lambda i: (f"={TAXC}*MAX(0,'運營_產能與收入'!{COLS[i]}{CAP['totrev']}*{inref('EBITDA 率', i)}+{inref('其他事業 EBITDA', i)}+{inref('傳統事業 EBITDA（模型期）', i)}"
-                f"-{inref('D&A（車隊）', i)}-{inref('存量債務利息', i)})"), NUM, BLACK,
+                f"-'運營_產能與收入'!{COLS[i]}{CAP['pen']}-{inref('D&A（車隊）', i)}-{inref('存量債務利息', i)})"), NUM, BLACK,
      "＝稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)；«YTD» 的稅已含在 CFO 內（v0.1b）")
 tax_row = FR["⑦ 現金稅（«STUB» 起）"]
 frow("用途合計（現金口徑）", "US$bn",
@@ -1005,13 +1031,15 @@ frow("Ⓒ2 其他事業 EBITDA（«STUB» 起）", "US$bn", lambda i: f"={inref(
      "非核心事業 EBITDA（負值＝燒錢），視為現金（v0.1b）")
 frow("Ⓒ3 傳統事業 EBITDA（«STUB» 起）", "US$bn", lambda i: f"={inref('傳統事業 EBITDA（模型期）', i)}", NUM, GREEN,
      "SaaS、軟體、硬體、服務四線 EBITDA，視為現金（現金稅另列於用途；v0.1b）")
+frow("Ⓒ4 減：延誤罰則（營業費用）", "US$bn", lambda i: f"=-'運營_產能與收入'!{COLS[i]}{CAP['pen']}", NUM, BLACK,
+     "建設延誤期間應計費而未計費營收 × 罰則比例（預設 0；v0.2）")
 frow("Ⓓ 客戶預付（«STUB» 起）", "US$bn",
      lambda i: f"={COLS[i]}{FR['　客戶預付金額（抵減，«STUB» 起）']}", NUM, BLACK)
 frow("Ⓓ2 減：預付認列（非現金營收）", "US$bn", lambda i: f"=-{COLS[i]}{pr_row}", NUM, BLACK,
      "營收中由合約負債轉入的部分已在預付時收現，不重複計入服務現金（v0.1b）")
 frow("營運來源合計", "US$bn",
      lambda i: (f"={COLS[i]}{FR['Ⓐ0 «YTDL» 實際營運現金流（CFO）']}+{COLS[i]}{FR['Ⓐ RPO 現金（«STUB» 起）']}+"
-                f"{COLS[i]}{FR['Ⓑ 新簽約現金']}+{COLS[i]}{FR['Ⓒ 非算力服務現金']}+{COLS[i]}{FR['Ⓒ2 其他事業 EBITDA（«STUB» 起）']}+{COLS[i]}{FR['Ⓒ3 傳統事業 EBITDA（«STUB» 起）']}+{COLS[i]}{FR['Ⓓ 客戶預付（«STUB» 起）']}+"
+                f"{COLS[i]}{FR['Ⓑ 新簽約現金']}+{COLS[i]}{FR['Ⓒ 非算力服務現金']}+{COLS[i]}{FR['Ⓒ2 其他事業 EBITDA（«STUB» 起）']}+{COLS[i]}{FR['Ⓒ3 傳統事業 EBITDA（«STUB» 起）']}+{COLS[i]}{FR['Ⓒ4 減：延誤罰則（營業費用）']}+{COLS[i]}{FR['Ⓓ 客戶預付（«STUB» 起）']}+"
                 f"{COLS[i]}{FR['Ⓓ2 減：預付認列（非現金營收）']}"),
      NUM, BLACK, bold=True)
 srcop_row = FR["營運來源合計"]
@@ -1653,8 +1681,9 @@ vrow("傳統事業", "US$bn", lambda i: f"={inref('傳統事業營收（模型�
 vrow("總營收", "US$bn", lambda i: f"={COLS[i]}{VR['算力收入']}+{COLS[i]}{VR['非算力服務']}+{COLS[i]}{VR['傳統事業']}", NUM, BLACK, bold=True)
 rev_v = VR["總營收"]
 vrow("EBITDA 率", "%", lambda i: f"={inref('EBITDA 率', i)}", PCT, GREEN)
-vrow("營業利益（EBIT）", "US$bn", lambda i: f"=({COLS[i]}{VR['算力收入']}+{COLS[i]}{VR['非算力服務']})*{inref('EBITDA 率', i)}+{inref('其他事業 EBITDA', i)}+{inref('傳統事業 EBITDA（模型期）', i)}-'輸入與假設'!{COLS[i]}${IN['D&A（車隊）']}", NUM, BLACK,
-     "＝(算力＋服務營收)×EBITDA 率＋其他事業 EBITDA＋傳統事業 EBITDA − 車隊 D&A")
+vrow("延誤罰則（服務抵減，營業費用）", "US$bn", lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['pen']}", NUM, GREEN, "建設延誤期間應計費而未計費營收 × 罰則比例（預設 0；v0.2）")
+vrow("營業利益（EBIT）", "US$bn", lambda i: f"=({COLS[i]}{VR['算力收入']}+{COLS[i]}{VR['非算力服務']})*{inref('EBITDA 率', i)}+{inref('其他事業 EBITDA', i)}+{inref('傳統事業 EBITDA（模型期）', i)}-{COLS[i]}{VR['延誤罰則（服務抵減，營業費用）']}-'輸入與假設'!{COLS[i]}${IN['D&A（車隊）']}", NUM, BLACK,
+     "＝(算力＋服務營收)×EBITDA 率＋其他事業 EBITDA＋傳統事業 EBITDA − 延誤罰則 − 車隊 D&A")
 ebit_v = VR["營業利益（EBIT）"]
 vrow("利息（含瀑布新債）", "US$bn", lambda i: f"='各期收支'!{COLS[i]}{FRR['int']}", NUM, GREEN)
 int_v = VR["利息（含瀑布新債）"]
@@ -2381,9 +2410,9 @@ ws.cell(row=_r, column=2, value=f"='運營_站點'!G{RENT_PER}").number_format =
 _share_x = SHARE.replace('$C$', "'運營_站點'!$C$")  # 另存變數：f-string 內重用引號需 Python 3.12+
 ws.cell(row=_r, column=4, value=f"=IF(B{_r}>={BENCH}*{_share_x}*{_n(CK['rentVsBenchMin'])},\"通過\",\"觀察\")")
 _r = _find("EBITDA 單一來源（«P1» 算力＋服務 EBITDA÷營收 − 輸入 EBITDA 率）")
-ws.cell(row=_r, column=2, value=f"=('損益'!D{ebitda_v}-'輸入與假設'!D{IN['傳統事業 EBITDA（模型期）']}-'輸入與假設'!D{IN['其他事業 EBITDA']})/('損益'!D{VR['算力收入']}+'損益'!D{VR['非算力服務']})-'輸入與假設'!D{IN['EBITDA 率']}").number_format = '0.0000'
+ws.cell(row=_r, column=2, value=f"=('損益'!D{ebitda_v}+'損益'!D{VR['延誤罰則（服務抵減，營業費用）']}-'輸入與假設'!D{IN['傳統事業 EBITDA（模型期）']}-'輸入與假設'!D{IN['其他事業 EBITDA']})/('損益'!D{VR['算力收入']}+'損益'!D{VR['非算力服務']})-'輸入與假設'!D{IN['EBITDA 率']}").number_format = '0.0000'
 _r = _find("現金 EBITDA ＋ 信用調整 − 損益 EBITDA（«P1»）")
-ws.cell(row=_r, column=2, value=(f"=('運營_產能與收入'!D{CAP['rpocash']}+'運營_產能與收入'!D{CAP['newcash']}+'輸入與假設'!D{IN['非算力服務現金']}+'輸入與假設'!D{IN['其他事業 EBITDA']}+'輸入與假設'!D{IN['傳統事業 EBITDA（模型期）']}-'各期收支'!D{FR['　租金合計']})"
+ws.cell(row=_r, column=2, value=(f"=('運營_產能與收入'!D{CAP['rpocash']}+'運營_產能與收入'!D{CAP['newcash']}+'輸入與假設'!D{IN['非算力服務現金']}+'輸入與假設'!D{IN['其他事業 EBITDA']}+'輸入與假設'!D{IN['傳統事業 EBITDA（模型期）']}-'運營_產能與收入'!D{CAP['pen']}-'各期收支'!D{FR['　租金合計']})"
     f"+('運營_產能與收入'!D{CAP['loss']}+'運營_產能與收入'!D{CAP['newrev']}*'輸入與假設'!D{IN['客戶違約率']}*(1-'輸入與假設'!D{IN['回收率']}))*'運營_產能與收入'!D{CAP['cm']}"
     f"-'損益'!D{ebitda_v}")).number_format = NUM
 _r = _find("DCF 有效性（1＝失效）")

@@ -78,6 +78,7 @@ var PERIODS = COMPANY_DATA.periods,
   Qk = DEFAULTS; // 模板函式庫片段（mid1–mid3）仍以 Qk 引用預設值，保留別名
 DEFAULTS.cvCap = SCENARIOS[COMPANY_DATA.defaults.scenario].cvCap; // v0.1b：預設情境的可轉債年上限
 DEFAULTS.delayMonths = SCENARIOS[COMPANY_DATA.defaults.scenario].delay; // v0.2：預設情境的建設延誤月數
+DEFAULTS.delayLink = UL.delayLink ?? 0; // v0.2：未起租租約起租隨延誤後移的比例（company.json → leases.uncommenced.delayLink）
 // v0.2：期末存量路徑往後平移 dm 個月（以期間長度線性內插；評價日之前取 v0）。V＝各期末值、v0＝評價日值。
 // ＝v0＋Σ_k (V_k − V_{k−1}) × MIN(1, MAX(0, (期末時點_i − dm/12 − 期初時點_k) ÷ 期間長度_k))；Excel 同一公式。dm＝0 時原樣回傳。
 var PERIOD_T = PERIOD_YEARS.reduce((a, L, i) => (a.push((i ? a[i - 1] : 0) + L), a), []);
@@ -288,6 +289,8 @@ function runFunding(e) {
     CXSC = shiftQ(CXC, 0, DM), // v0.2：已投入使用的成長型 CapEx 累計（延誤後）
     CXS = DM > 0 ? CXSC.map((x, i) => x - (i ? CXSC[i - 1] : 0)) : CXG, // v0.2：本期投入使用的成長型 CapEx（折舊基礎）
     IDLE = CXC.map((x, i) => DM > 0 ? x - CXSC[i] : 0), // v0.2：閒置資本＝已支出而尚未產生收入的累計成長型 CapEx（期末）
+    LK = e.delayLink ?? 0, // v0.2：未起租租約起租連動比例
+    ULS = DM > 0 && LK > 0 ? ulPath(UL.termYears, UL.quarters, UL.startQ + DM / 3) : null, // v0.2：未起租租金全部隨延誤後移（起算季＋延誤月數 ÷ 3）
     PPE = [],
     DAF = CXS.map((t, n) => {
       let r = n === 0 ? e.ppeOpen : PPE[n - 1] + CXS[n - 1];
@@ -327,7 +330,10 @@ function runFunding(e) {
         h = f - m,
         nR = Math.max(0, u - s) * (t.fill[r] / 100),
         b = LEASE_CASH_ON_BAL[r],
-        x = e.a.newLease[r],
+        x = ULS ? (1 - LK) * e.a.newLease[r] + LK * ULS[r] : e.a.newLease[r], // v0.2：延誤連動部分的起租往後平移
+        c0 = r === 0 ? e.billableOpen : t.billable[r - 1], u0 = (e.useAvgMw ? (c0 + t.billable[r]) / 2 : t.billable[r]) * t.revMW[r] * (e.revScale ?? 1) * (t.util[r] / 100) * L, // v0.2：未延誤的容量上限（對照）
+        lost = DM > 0 ? Math.max(0, u0 - u) : 0, // v0.2：應計費而未計費營收（延誤造成）
+        pen = (e.delayPenalty ?? 0) * lost, // v0.2：延誤罰則／服務抵減（營業費用：扣 EBITDA、營運來源、稅基、債務上限）
         S = b + x,
         svc = e.services[r],
         totRev = f + nR + svc,
@@ -352,11 +358,11 @@ function runFunding(e) {
         O = (e.includeDebt ? DEBT_AMORT[r] : 0) + CVP[r].amort, // v0.1b：含債務處理可轉債的到期還本（到期累積本金）
         k = r === 0 && e.includeAtm ? e.atm : 0,
         lgR = LG.rev[r], lgE = LG.ebitda[r], // v0.1b（Oracle）：傳統事業營收與 EBITDA（EBITDA 視為現金，稅另列）
-        tx = (e.cashTaxRate ?? 0) * Math.max(0, totRev * ebM + ob + lgE - DAF[r] - IX[r]), // v0.1b：現金稅＝稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（不含瀑布新債利息，避免循環；偏保守）
+        tx = (e.cashTaxRate ?? 0) * Math.max(0, totRev * ebM + ob + lgE - pen - DAF[r] - IX[r]), // v0.1b：現金稅＝稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（不含瀑布新債利息，避免循環；偏保守）
         dvSh = e.dividend ? e.dividend.sharesBase + WF.sh + CVN.reduce((a, n) => a + (n.mand && n.t < r ? n.S : 0), 0) : 0, // v0.1b（Oracle）：股利股數＝期初股數（基礎＋前期累計瀑布新股＋已強制轉換的特別股）
         dvC = e.dividend ? 4 * e.dividend.perShareQ * L * dvSh : 0, // 普通股股利＝每股（每季 × 4）× 期間長度 × 期初股數
         dvP = e.dividend ? e.dividend.preferred[r] : 0, // 特別股股利（強制轉換前；company.json → defaults.dividend.preferred）
-        A = g + nC + svcCash + ob + lgE + v - pr, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
+        A = g + nC + svcCash + ob + lgE - pen + v - pr, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
         j0 = _ + S + IX[r] + e.jvCommit[r] + e.a.div[r] + T + O + tx + dvC + dvP,
         wRL = uA(e, r) / 100 * L,
         wRJ = (e.junkRate + (e.cdsLink ? Math.max(0, e.cds - e.cdsBaseBp) / 1e4 * e.cdsPassThrough : 0)) * L,
@@ -366,7 +372,7 @@ function runFunding(e) {
         wX = Math.max(0, e.minCash - wPre),
         wB = WF.B - o - nR + e.ctrTerm * Math.max(0, nR / L - WF.pnr),
         wEx = (e.includeDebt ? PB[r][1] : DBT_P) + CONV_P + CVP[r].end, // 5a：評價日後新發可轉債本金讀 company.json → debt.convertible；v0.1b：加債務處理可轉債餘額
-        wCapB = e.debtCapBasis === `ebitda` ? e.debtEbitdaMax * (totRev * ebM + ob + lgE) / L : e.debtBacklog * wB, // v0.1b（Oracle）：債務上限＝倍數 × 當期 EBITDA（年化）；模板＝債務／backlog
+        wCapB = e.debtCapBasis === `ebitda` ? e.debtEbitdaMax * (totRev * ebM + ob + lgE - pen) / L : e.debtBacklog * wB, // v0.1b（Oracle）：債務上限＝倍數 × 當期 EBITDA（年化）；模板＝債務／backlog
         wCap = wCapB - (wEx + WF.Dn + WF.Cn),
         wCapD = Math.max(0, wCap, WF.fr),
         wD = Math.min(wCapD, wX / (1 - wRL)),
@@ -481,9 +487,10 @@ function runFunding(e) {
         ebM: ebM,
         cashMargin: cm,
         totRev: totRev,
-        ebitdaPL: totRev * ebM + ob + lgE,
+        ebitdaPL: totRev * ebM + ob + lgE - pen,
+        capUndelayed: u0, lostRev: lost, delayPen: pen, // v0.2
         otherEbitda: ob,
-        cashEbitda: g + nC + svcCash + ob + lgE - S,
+        cashEbitda: g + nC + svcCash + ob + lgE - pen - S,
         creditAdj: (m + nR * (t.defaultP[r] / 100) * p) * cm,
         atm: k,
         facility: F,
