@@ -11,7 +11,7 @@
 | W0 遷移 | `claude/coreweave-w0-migrate` | | chat 端完成 |
 | W1 Tokenomics 取數層 | `claude/coreweave-w1-tokenomics`（疊加於 W0 分支） | #6 | 完成，待審 |
 | W2 每 MW 改寫 | `claude/coreweave-w2-permw`（疊加於 W1 分支） | #9 | 完成，待審 |
-| W3 v4.6 成品與對照 | `claude/coreweave-w3-v4.6` | | 未開始 |
+| W3 v4.6 成品與對照 | `claude/coreweave-w3-v4.6`（疊加於 W2 分支） | （開 PR 中） | 進行中 |
 
 <!-- 各工作單在下方新增自己的段落：「## Wx」＋步驟紀錄表（步驟｜狀態｜commit｜備註） -->
 
@@ -349,3 +349,12 @@ verify.sh：全部通過（22 項）
 EXIT 0
 ```
 </details>
+
+
+## W3 v4.6 成品與前後對照
+
+chat 端追加（優先於工作單，2026-10-07）：第 0 步把 Tokenomics 快照換成 v5.26（master `4074684`，`model/CURRENT`＝`20261007_Tokenomics_v5.26.xlsx`），補齊 W2 暫代的 `IF_MaintIT`、`IF_StaffSW`、`IF_TaxIns`、`IF_DeprLifeIT`；報告須含 FY26 每 MW 對 Q2 2026 實際的逐項對帳。
+
+| 步驟 | 狀態 | commit | 備註 |
+|---|---|---|---|
+| 0 開分支、draft PR、進度檔 W3 段落 | 完成 | （本 commit） | W0 #5、W1 #6、W2 #9 皆未合併：自 `origin/claude/coreweave-w2-permw` 9af51ca 開分支，PR base＝W2 分支 |
