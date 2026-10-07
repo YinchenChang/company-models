@@ -25,7 +25,7 @@ from v05_map import REGISTRY_PATH, SEP, build_map, coverage_report  # noqa: E402
 import p2  # noqa: E402
 import p3  # noqa: E402
 
-VERSION = "v0.6-P3"
+VERSION = "v0.6-P4"
 KIND_LABEL = {"SRC": "SRC_OAI", "INP": "Inputs", "FORMULA": "公式（後續工作包）", "DUP": "重複併入", "SKIP": "不遷入", "TK": "不遷入；改取 TK_Link"}
 SRC_COLS = ["SRC_ID", "指標", "數值", "低", "高", "單位", "口徑", "適用對象", "日期", "出處（v0.5 原文）", "來源等級", "立場", "立場說明",
             "一手／二手", "狀態", "取代者", "v0.5 標記", "查核狀態（v0.5 chk）", "v0.5 路徑", "模型使用位置", "備註",
