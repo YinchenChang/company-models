@@ -275,7 +275,7 @@ def build_map(data=None, write_registry=False) -> Recorder:
               v=f"{n}/v/0", lo=f"{n}/lo/0", hi=f"{n}/hi/0", tag="Analogy", decision="—",
               note="2025 為 Analogy（v0.5 標 Analogy/Derived 混合；2025 屬 Analogy）", meta=False)
             for p in (f"{n}/v/1", f"{n}/lo/1", f"{n}/hi/1"):
-                R.assign(p, "FORMULA", "P2（FY 平均牌價 2026：priceEvents 月加權）",
+                R.assign(p, "FORMULA", "Revenue R01–R06 的 2026 欄（P2 實作：價格事件時點天數加權，Revenue 第七節；E8c）",
                          "Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）")
             R.assign(f"{n}/tag", "INP", "listPriceFYAvg 各列", "隨附資訊")
     ch = f"{API}/listPriceAnnualChange"
@@ -291,7 +291,7 @@ def build_map(data=None, write_registry=False) -> Recorder:
             I(f"{tm}/{tier}", f"API token 層級占比：{tier} 層", index=lab, unit="比例", v=f"{tm}/{tier}/v/{i}", lo=f"{tm}/{tier}/lo/{i}",
               hi=f"{tm}/{tier}/hi/{i}", note="v0.5 陣列兩位（年份對應待 P2 確認：占比 top 0.40→0.15 判斷為 2025→2026）",
               meta=(i == 1))
-    R.take(f"{tm}/low", "FORMULA", "P2（low＝1−top−mid）", "v0.5 出處註明『low＝1−top−mid，由 Excel 計算，不另輸入』；與 Assumed 標記矛盾，依註明改為公式")
+    R.take(f"{tm}/low", "FORMULA", "Revenue R12（P2 實作：low＝1−top−mid）", "v0.5 出處註明『low＝1−top−mid，由 Excel 計算，不另輸入』；與 Assumed 標記矛盾，依註明改為公式")
     I(f"{API}/outputShare", "輸出 token 占比（API）", unit="比例", v=f"{API}/outputShare/v", lo=f"{API}/outputShare/lo", hi=f"{API}/outputShare/hi",
       tag="Analogy")
     I(f"{API}/cacheHitRate", "快取命中率（API）", unit="比例", v=f"{API}/cacheHitRate/v", lo=f"{API}/cacheHitRate/lo", hi=f"{API}/cacheHitRate/hi")
@@ -469,7 +469,7 @@ def build_map(data=None, write_registry=False) -> Recorder:
     S(f"{cmp_}/deckJul2026", "管理層營收目標：2030", v=f"{cmp_}/deckJul2026/2030", unit="$B", scope="7 月投資人簡報", date="2026-09-18", use="P5 反向模式")
     S(f"{cmp_}/deckJul2026", "管理層營收目標：2026–2030 累計", v=f"{cmp_}/deckJul2026/sum2026_2030", unit="$B", scope="7 月投資人簡報", date="2026-09-18",
       use="P5 反向模式")
-    R.take(f"{cmp_}/fy2026Independent", "FORMULA", "P2（FY2026 獨立推估：Q1＋Q2＋下半年 ARR 外推）",
+    R.take(f"{cmp_}/fy2026Independent", "FORMULA", "Revenue R41（P2 實作：FY2026 獨立推估＝Q1＋Q2＋ARR×下半年月數÷12）",
            "Derived（v0.5 標 Derived；組成值 Q1、Q2、ARR 已在 SRC_OAI）；區間 31–36 隨公式處理")
     S(f"{cmp_}/weeklyUsers2030Plan", "2030 週用戶數計畫", v=f"{cmp_}/weeklyUsers2030Plan/v", unit="M", scope="廣告預測之用戶假設", date="2026-04-09",
       use="P2 對照（廣告）")
@@ -777,6 +777,7 @@ def build_map(data=None, write_registry=False) -> Recorder:
     R.split("other.ads.arpuPerExposedUserYear", "出處『Meta FY2025 全球 ARPP $57.03（10-K）』是第三方上限參照，非 OpenAI 觀測；元素全屬 Analogy→Inputs，不拆", "Inputs 6 格", scanned_only=True)
     R.split("other.ads.exposureShare、demandGrowthExPrice、fleetMix、arpu、tokenMix、listPriceAnnualChange", "出處皆無年度觀測值（Assumed／Analogy 全期）→不拆", "Inputs", scanned_only=True)
     R.split("api.demandGrowthExPrice.tasks（2026）", "2026 為校準年（v0.4 把 53%→134% 使 FY2026 對上獨立推估 32.9）：值由校準得出，屬 Assumed、無觀測元素→不拆；校準目標 32.9 為 Derived（公式）", "Inputs", scanned_only=True)
+    p2_rows(R)
     # 殘餘：補上未登記的中介資料葉節點（tag/src/chk/_note…）隨最近的已登記兄弟
     for p in list(R.leaves):
         if p in R.dest:
@@ -790,6 +791,51 @@ def build_map(data=None, write_registry=False) -> Recorder:
     R.traced = source_rules.trace_sources(R.src_rows)      # H2：「同上」追溯為實際出處
     finalize_ids(R, write_registry)
     return R
+
+
+def p2_rows(R: Recorder):
+    """v0.6-P2（S2）新增列：價格事件的數值（SRC_OAI，由 SRC_OAI_025–029 文字列拆出）、事件時點 Inputs（E8c）、
+    定義常數（E6：公式不得內含常數）。不改 v0.5 葉節點的去處。"""
+    S, I = R.src, R.inp
+    ev = "tokenRevenue/api/priceEvents2026/數值拆分（P2 E8c）"
+    src_txt = R.get("tokenRevenue/api/priceEvents2026/src")
+    base = dict(unit="$/M tokens", tag="Verified", source=src_txt, use="P2 FY2026 平均牌價（事件時點天數加權）")
+    for metric, val, scope, dt in (
+        ("API 價格事件 1 牌價：top 層 輸入（GPT-5.6 Sol）", 5, "07-09 GPT-5.6 Sol 輸入；N3a 層級角色＝top（GPT-6 Astra 上市前）", "2026-07-09"),
+        ("API 價格事件 1 牌價：top 層 輸出（GPT-5.6 Sol）", 30, "07-09 GPT-5.6 Sol 輸出；層級角色＝top", "2026-07-09"),
+        ("API 價格事件 1 牌價：mid 層 輸入（GPT-5.6 Terra）", 2.5, "07-09 GPT-5.6 Terra 輸入；層級角色＝mid", "2026-07-09"),
+        ("API 價格事件 1 牌價：mid 層 輸出（GPT-5.6 Terra）", 15, "07-09 GPT-5.6 Terra 輸出；層級角色＝mid", "2026-07-09"),
+        ("API 價格事件 1 牌價：low 層 輸入（GPT-5.6 Luna）", 1, "07-09 GPT-5.6 Luna 輸入；層級角色＝low", "2026-07-09"),
+        ("API 價格事件 1 牌價：low 層 輸出（GPT-5.6 Luna）", 6, "07-09 GPT-5.6 Luna 輸出；層級角色＝low", "2026-07-09"),
+        ("API 價格事件 2 牌價：mid 層 輸入（Terra 降價）", 2, "07-30 Terra 降價後輸入（−20%）", "2026-07-30"),
+        ("API 價格事件 2 牌價：mid 層 輸出（Terra 降價）", 12, "07-30 Terra 降價後輸出（−20%）", "2026-07-30"),
+        ("API 價格事件 2 牌價：low 層 輸入（Luna 降價）", 0.2, "07-30 Luna 降價後輸入（−80%）", "2026-07-30"),
+        ("API 價格事件 2 牌價：low 層 輸出（Luna 降價）", 1.2, "07-30 Luna 降價後輸出（−80%）", "2026-07-30"),
+        ("API 價格事件 3 牌價：top 層 輸入（Sol 促銷）", 4, "08-22 Sol 促銷輸入", "2026-08-22"),
+        ("API 價格事件 3 牌價：top 層 輸出（Sol 促銷）", 20, "08-22 Sol 促銷輸出", "2026-08-22"),
+    ):
+        S(ev, metric, vlit=val, scope=scope, date=dt, note="由 SRC_OAI 價格事件文字列拆出的數值（同一出處）；事件 4、5 之後的價格＝2026-09-25 牌價快照列", **base)
+    for k, (dt, serial, what) in enumerate((("2026-07-30", 46233, "Terra、Luna 降價"), ("2026-08-22", 46256, "Sol 促銷"),
+                                              ("2026-09-03", 46268, "GPT-6 Astra 上市（top 層價格上升）"),
+                                              ("2026-09-22", 46287, "GPT-6 Sol／Luna 上市（mid、low 層降價）")), start=2):
+        S(ev, f"API 價格事件 {k} 公告日（Excel 日期序列值）", vlit=serial, unit="日期序列值", tag="Verified", source=src_txt, date=dt,
+          scope=f"{dt}（{what}）；公告日＝生效日（v0.5 事件清單未區分）；序列值 {serial}＝{dt}",
+          use="P2 價格事件時點基準（E8c）", note="E8c：事件時點的基準值（Verified）；區間由 Inputs 偏移天數（±1 季，Assumed）給出")
+    for k, dt in ((2, "07-30"), (3, "08-22"), (4, "09-03"), (5, "09-22")):
+        I("r5/E8c/價格事件時點", f"價格事件 {k}（{dt}）生效日偏移", unit="天", vlit=0, tag="Assumed", decision="E8c",
+          status="P2 新增（E8c）", note="基準 0＝SRC_OAI 公告日（Verified）；區間 ±91 天（±1 季，Assumed；S2 工作單預設）。偏移後日期限於 FY2026 內", meta=False)
+        R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = -91, 91
+    for name, unit, val, why in (
+        ("FY2026 起日（定義常數；Excel 日期序列值）", "日期序列值", 46023, "46023＝2026-01-01；價格事件天數加權的年度起點"),
+        ("每年天數（定義常數）", "天", 365, "每日→年換算與 FY2026 天數加權的分母（2026 為 365 天）"),
+        ("每年月數（定義常數）", "月", 12, "月 ARPU → 年營收"),
+        ("單位換算：$M → $B 的除數（定義常數）", "$M／$B", 1000, "人數（M）× $ → $M；T token × $/M token → $M"),
+        ("單位換算：T token → M token 的乘數（定義常數）", "M／T", 1000000, "與 Tokenomics IF_AllocDemand（M tok/年）並列"),
+        ("FY2026 獨立推估：下半年月數（定義常數）", "月", 6, "v0.5 fy2026Independent：Q1＋Q2＋下半年以 2026-08 ARR 外推"),
+    ):
+        I("r5/E6/P2 定義常數", name, unit=unit, vlit=val, tag="Decision", decision="E6", status="P2 新增（E6）",
+          note=f"來源：定義常數；區間不適用（低＝高）；E6：公式內不得含常數，故進 Inputs。用途：{why}", meta=False)
+        R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = val, val
 
 
 def coverage_report(R: Recorder):

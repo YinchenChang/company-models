@@ -1,12 +1,12 @@
 # Parity 情境檔（CLAUDE.md 第 3 節）。每個情境：改寫輸入 → LibreOffice 重算（基準）→ 與 engine 比對全部公式格。
-# 輸入一律以具名範圍設定（SRC_OAI_nnn、INP_nnn、TK_*）。v0.6-P1 只有檢查頁有公式，情境用來證明輸入確實連動檢查。
+# 輸入一律以具名範圍設定（SRC_OAI_nnn、INP_nnn、TK_*）。v0.6-P1 只有檢查頁有公式；v0.6-P2 起 Demand、Revenue 頁的公式也由情境驅動（h 起為 P2 情境）。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
-  sheets: [README, SRC_OAI, TK_Link, Inputs, Derived_V9, Checks, Map_v05, _Defaults]
-  formula_cells: 652
-  defined_names: 426              # S1（v5.24 快照）：401＋25 個新 TK_ 名稱
-  src_rows: 106                   # SRC_OAI 筆數（與報告一致）
-  src_named: 104                  # 有數值的列才有 SRC_OAI_nnn 名稱（Business 每席只有低／高；退役 ID 不重用）
-  inp_rows: 233
+  sheets: [README, SRC_OAI, TK_Link, Inputs, Derived_V9, Demand, Revenue, Checks, Map_v05, _Defaults]
+  formula_cells: 1260             # P2：652 → 1260（Demand、Revenue 兩頁＋SRC_OAI／Inputs 新列的檢查欄＋Checks 淨增 11）
+  defined_names: 516              # S1：426；P2：＋16 SRC_OAI＋10 INP＋64 DEM_／REV_
+  src_rows: 122                   # SRC_OAI 筆數（與報告一致）；P2：106＋16（價格事件數值與公告日）
+  src_named: 120                  # 有數值的列才有 SRC_OAI_nnn 名稱（Business 每席只有低／高；退役 ID 不重用）
+  inp_rows: 243                   # P2：233＋10（E8c 事件時點偏移 4、E6 定義常數 6）
   tk_values: 62                   # TK_Link 有值的名稱（TK_IF_／TK_SRC_／TK_L1_ 具名範圍；S1 v5.24 快照：37＋25）
   tk_pending: 0                   # 待 Tokenomics 提供（S1：v5.24 已全部提供）
   v05_leaves: 849
@@ -37,3 +37,27 @@ scenarios:
   - id: g_api_rate_high
     description: API FY2025 每分鐘 token 5→6.1（區間上緣）：V22 與 V9_ApiTok 改變
     inputs: {"INP_237": 6.1}
+  - id: h_event4_late
+    description: P2／E8c：Astra 上市（事件 4）延後一季（偏移 +91 天）：2026 top 層平均牌價下降，API 單價、需求與營收連動
+    inputs: {"INP_248": 91}
+  - id: i_event_order_broken
+    description: P2／E8c：Sol 促銷（事件 3）延後一季、Astra（事件 4）不動，使事件 3 晚於事件 4（C34 應轉 ERR）
+    inputs: {"INP_247": 91}
+  - id: j_ms_cap_low
+    description: P2：Microsoft 分成上限 38→10（SRC_OAI_010）：2026 即觸頂，淨額上升
+    inputs: {"SRC_OAI_010": 10}
+  - id: k_migration_high
+    description: P2：T4 遷移幅度基準 0.3→0.8：Go 人數上升、Plus 下降，訂閱營收、廣告與 token 連動
+    inputs: {"INP_013": 0.8}
+  - id: l_elasticity_high
+    description: P2：任務數價格彈性 −0.7→−1.05（區間下緣）：2027 起 API 任務數與營收改變
+    inputs: {"INP_048": -1.05}
+  - id: m_usage_mix_broken
+    description: P2：Free 方案 luna 占比 0.9→0.95，使 luna＋sol＋astra≠1（C30、C31 應轉 ERR）
+    inputs: {"INP_155": 0.95}
+  - id: n_revenue2025
+    description: P2：FY2025 實際營收 13.07→11（SRC_OAI_002）：2025 API 倒推值、2026 起 API 需求與營收連動；校準恆等式（C28）維持 OK
+    inputs: {"SRC_OAI_002": 11}
+  - id: o_pro_arpu
+    description: P2：Pro 2026 起 ARPU 150→190（區間上緣）：Pro 訂閱營收與總額連動
+    inputs: {"INP_100": 190}

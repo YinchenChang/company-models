@@ -105,7 +105,23 @@
 "股權融資 2026-03 輪：Amazon 首筆": "SRC_OAI_109",
 "股權融資 2026-03 輪：SoftBank（三期）": "SRC_OAI_110",
 "股權融資 2026-03 輪：Nvidia": "SRC_OAI_111",
-"股權融資 2026-03 輪：其他": "SRC_OAI_112"
+"股權融資 2026-03 輪：其他": "SRC_OAI_112",
+"API 價格事件 1 牌價：top 層 輸入（GPT-5.6 Sol）": "SRC_OAI_113",
+"API 價格事件 1 牌價：top 層 輸出（GPT-5.6 Sol）": "SRC_OAI_114",
+"API 價格事件 1 牌價：mid 層 輸入（GPT-5.6 Terra）": "SRC_OAI_115",
+"API 價格事件 1 牌價：mid 層 輸出（GPT-5.6 Terra）": "SRC_OAI_116",
+"API 價格事件 1 牌價：low 層 輸入（GPT-5.6 Luna）": "SRC_OAI_117",
+"API 價格事件 1 牌價：low 層 輸出（GPT-5.6 Luna）": "SRC_OAI_118",
+"API 價格事件 2 牌價：mid 層 輸入（Terra 降價）": "SRC_OAI_119",
+"API 價格事件 2 牌價：mid 層 輸出（Terra 降價）": "SRC_OAI_120",
+"API 價格事件 2 牌價：low 層 輸入（Luna 降價）": "SRC_OAI_121",
+"API 價格事件 2 牌價：low 層 輸出（Luna 降價）": "SRC_OAI_122",
+"API 價格事件 3 牌價：top 層 輸入（Sol 促銷）": "SRC_OAI_123",
+"API 價格事件 3 牌價：top 層 輸出（Sol 促銷）": "SRC_OAI_124",
+"API 價格事件 2 公告日（Excel 日期序列值）": "SRC_OAI_125",
+"API 價格事件 3 公告日（Excel 日期序列值）": "SRC_OAI_126",
+"API 價格事件 4 公告日（Excel 日期序列值）": "SRC_OAI_127",
+"API 價格事件 5 公告日（Excel 日期序列值）": "SRC_OAI_128"
 },
 "INP": {
 "基準年|—|tokenRevenue.meta.baseYear": "INP_001",
@@ -340,7 +356,17 @@
 "Pro 占付費訂閱總數比例（2027+ 逐年）|2029|tokenRevenue.subscription.subsFYAvg.pro.r3比例": "INP_242",
 "Pro 占付費訂閱總數比例（2027+ 逐年）|2030|tokenRevenue.subscription.subsFYAvg.pro.r3比例": "INP_243",
 "合約容量（採用值）：AWS（Trainium）|—|spending.contracts.awsTrainium.r3採用值": "INP_244",
-"Nvidia $30B 現金比例|—|funding.r3Nvidia現金": "INP_245"
+"Nvidia $30B 現金比例|—|funding.r3Nvidia現金": "INP_245",
+"價格事件 2（07-30）生效日偏移|—|r5.E8c.價格事件時點": "INP_246",
+"價格事件 3（08-22）生效日偏移|—|r5.E8c.價格事件時點": "INP_247",
+"價格事件 4（09-03）生效日偏移|—|r5.E8c.價格事件時點": "INP_248",
+"價格事件 5（09-22）生效日偏移|—|r5.E8c.價格事件時點": "INP_249",
+"FY2026 起日（定義常數；Excel 日期序列值）|—|r5.E6.P2 定義常數": "INP_250",
+"每年天數（定義常數）|—|r5.E6.P2 定義常數": "INP_251",
+"每年月數（定義常數）|—|r5.E6.P2 定義常數": "INP_252",
+"單位換算：$M → $B 的除數（定義常數）|—|r5.E6.P2 定義常數": "INP_253",
+"單位換算：T token → M token 的乘數（定義常數）|—|r5.E6.P2 定義常數": "INP_254",
+"FY2026 獨立推估：下半年月數（定義常數）|—|r5.E6.P2 定義常數": "INP_255"
 },
 "retired": {
 "SRC": [
@@ -393,6 +419,20 @@
 "E8g：Inputs AWS 容量上限＝WSJ 推論＋訓練（GW）": "C24",
 "E8j：無條件部分四個組成加總＝v0.5 值（$B）": "C25",
 "E8f：Oracle 合約年額＝v0.5 值（$B/年）": "C26",
-"E8c：listPriceFYAvg 2026 區間尚未傳遞（待 P2 事件時點 Inputs）": "C27"
-}
+"P2：2025 模型營收總額 − SRC 實際營收（$B；v0.5 校準恆等式）": "C28",
+"P2：2025 API 計費比例 ∈ (0,1]（違反數）": "C29",
+"P2：方案模型組合 luna＋sol＋astra≠1 的方案數": "C30",
+"P2：token 層級拆分合計 vs 拆分前總量（違反年數）": "C31",
+"P2：消費端＋企業端＋其他 − 總額（各年絕對值合計，$B）": "C32",
+"P2：Microsoft 分成累計超出上限的部分（$B）": "C33",
+"E8c：價格事件生效日順序違反數（基準／提前／延後三欄）": "C34",
+"E8c：2026 牌價區間 低 ≤ 基準 ≤ 高 的違反數（6 列）": "C35",
+"D11：Inputs 情境 base 列＝各參數基準值（違反數）": "C36",
+"P2 預覽：2025 token 合計 ÷ Tokenomics IF_AllocDemand": "C37",
+"P2 預覽：2025 未校準差距（$B）＝訂閱＋廣告＋其他＋處理 token×單價 − 實際": "C38",
+"P2 預覽：2030 淨營收（$B）": "C39"
+},
+"retired_CHK": [
+"C27"
+]
 }

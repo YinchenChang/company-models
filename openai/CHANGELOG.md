@@ -2,6 +2,13 @@
 
 每次同步記錄：Excel 版本、工作包、commit 與變動摘要。
 
+## 20261007_OpenAI_v0.6.xlsx — v0.6-P2（S2：需求與營收）
+
+- 新增 Demand（D01–D48）、Revenue（R01–R45＋第七節價格事件時點表）兩頁；機制沿用 v0.5「訂閱與廣告」「API」「營收彙總」頁。訂閱（T4 遷移、pro 依 V12／V15）、任務 × 每任務 token、API（2025 由營收倒推；2026 牌價依價格事件時點天數加權；2027 起年變動與價格彈性）、廣告、其他、總額、Microsoft 分成、淨額；token 量（層級 × 付費／免費）具名範圍 `DEM_Tok_*` 供 P3。
+- SRC_OAI 106→122（價格事件數值與公告日，SRC_OAI_113–128）；Inputs 233→243（E8c 事件時點偏移 INP_246–249、E6 定義常數 INP_250–255）；Checks C27 WARN 撤除（退役），新增 C28–C39；具名範圍 426→516；公式格 652→1,260。
+- 主要結果：2025 營收對 SRC 實際差距 0（校準），未校準 +1.03B；2026 總額 34.20B；2030 總額 126.38B、淨額 126.38B（分成上限 2029 觸頂）；2025 token 3,538T＝TK `IF_AllocDemand` 的 0.84 倍。
+- 測試：parity 49 項全過（新增情境 h–o；E6 掃描擴及 Demand、Revenue）；範圍外變動 0。S1 版改名移至 `model/archive/20261007_OpenAI_v0.6-P1.1.xlsx`。報告：`docs/reports/20261007_v0.6-P2.md`、`_對照.xlsx`。PR #10。
+
 ## 20261007_OpenAI_v0.6.xlsx — v0.6-P1.1（S1：TK_Link 快照更新至 Tokenomics v5.24）
 
 - 快照來源：Tokenomics master `bdb0de7`（CURRENT＝`20261007_Tokenomics_v5.24.xlsx`）。check_tk_snapshot OK 37→62、MISSING 11→0、DIFF 0。原待合併 11 名全部取得；新增 IF_TrainCost_*、IF_RevGW_*、IF_FullCostDefault_*、L1_Ans3（＋低高）、SRC_DEM_013_Lo／Hi。原 37 名中 10 名值變動（TokGW×3、HoldEcon、FullCost×3、ProgGWyr×3）；第 5 世代口徑 Rubin Ultra NVL576→MGX NVL 單架 72 GPU。
