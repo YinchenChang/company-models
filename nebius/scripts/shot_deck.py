@@ -62,6 +62,20 @@ def main(html, out):
             fn = f'{i + 1:02d}.png'
             el.screenshot(path=os.path.join(out, fn))
             res.append({'file': fn, **info})
+        # v0.2 第 2 輪：「資金模型 → 運營活動 → 收入／產能」的 MW 列（積極情境，確認 Accepted／Billable MW 為整數）
+        try:
+            click = lambda t: pg.locator('button:visible').filter(has_text=__import__('re').compile('^\\s*' + __import__('re').escape(t) + '\\s*$')).first.click(timeout=3000)
+            pg.emulate_media(media='screen'); pg.set_viewport_size({'width': 1280, 'height': 900})
+            pg.get_by_role('button', name='資金模型', exact=True).click(); pg.wait_for_timeout(500)
+            pg.locator('button:visible').filter(has_text='積極').first.click(); pg.wait_for_timeout(800)
+            click('運營活動'); pg.wait_for_timeout(400); click('收入／產能'); pg.wait_for_timeout(600)
+            row = pg.locator('tr', has_text='Accepted MW（期末主動電力）').first
+            tbl = row.locator('xpath=ancestor::table[1]')
+            tbl.scroll_into_view_if_needed(); vals = row.locator('input').evaluate_all('els => els.map(e => e.value)')
+            tbl.screenshot(path=os.path.join(out, '00_MW整數.png'))
+            print('MW 列（積極）：' + '／'.join(vals) + ('（全部整數）' if all(v.lstrip('-').isdigit() for v in vals) else '（有小數！）'))
+        except Exception as ex:
+            print('MW 列截圖失敗：', str(ex).splitlines()[0])
         b.close()
     json.dump({'slides': res, 'errors': errs}, open(os.path.join(out, 'check.json'), 'w'), ensure_ascii=False, indent=1)
     bad = 0
