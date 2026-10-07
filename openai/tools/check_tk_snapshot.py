@@ -3,7 +3,7 @@
 
 用法：python3 tools/check_tk_snapshot.py --tk-dir <Tokenomics checkout> [--model model/xxx.xlsx] [--md out.md]
 輸出：每個名稱 OK／DIFF／MISSING／PENDING。DIFF 與 MISSING 只報 WARN（結束碼 0，不擋合併）。
-- MISSING：快照有值但 Tokenomics 現行版已無此名稱，或 Tokenomics 端尚未提供（狀態「待 v5.15 合併」者報 PENDING_MISSING）。
+- MISSING：快照有值但 Tokenomics 現行版已無此名稱，或 Tokenomics 端尚未提供（狀態非 OK 者：Tokenomics 仍無此名稱報 MISSING，已提供報 NOW_AVAILABLE）。
 - 不從未合併分支取值。
 """
 import argparse

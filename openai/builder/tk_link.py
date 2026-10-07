@@ -1,8 +1,8 @@
-"""Tokenomics 快照讀取（工作單 P1-3；補充 1 第 1 點）。
+"""Tokenomics 快照讀取（工作單 P1-3；補充 1 第 1 點；S1＝v0.6-P1.1）。
 
-- 值取自 Tokenomics master 的 model/CURRENT（本包為 v5.14），逐名讀出寫入 TK_Link；不用 Excel 外部連結。
-- Block 6（IF_Alloc*）與 SRC_DEM_010–013 在 v5.14 尚無：逐名列入、值留空、狀態「待 v5.15 合併」。
-  名稱以 v5.15 分支（未合併）Interface F 節的實際名稱為準，只取名稱不取值。
+- 值取自 Tokenomics master 的 model/CURRENT，逐名讀出寫入 TK_Link；不用 Excel 外部連結。
+- 列序：P1 原 37 名（列位不變）→ SRC_DEM_010–013（＋013 低／高）→ Block 6（IF_Alloc* 7 名）→ S1 新增（r6 下游需要）。
+- 工作單要求、但 Tokenomics 現行版沒有的名稱：逐名列入、值留空、狀態 PENDING_NOTE（E1；check_tk_snapshot 報 MISSING）。
 """
 from __future__ import annotations
 
@@ -18,13 +18,16 @@ PATTERNS = [
     r"IF_Price(Fresh|Cached|Think|Out|Ref)_(Luna|Sol|Astra)", r"IF_FrontRef_(Luna|Sol|Astra)",
     r"IF_ProgGWyr_(Luna|Sol|Astra)", r"IF_RDMult", r"IF_TrainGenDefault",
 ]
-SRC_DEM = [f"SRC_DEM_{i:03d}" for i in range(4, 14)]
-# 工作單暫定名 → v5.15 分支 Interface F 節實際名稱（只對名稱；值待合併）
-BLOCK6_WORKORDER = ["IF_AllocQ1", "IF_AllocQ2", "IF_AllocServeGW", "IF_AllocRDGW", "IF_AllocDemand", "IF_AllocImpliedNk"]
-BLOCK6_V515 = {"IF_AllocQ1": "IF_AllocQ1", "IF_AllocQ2": "IF_AllocQ2", "IF_AllocServeGW": "IF_AllocServeGW", "IF_AllocRDGW": "IF_AllocRDGW",
-               "IF_AllocDemand": "IF_AllocDemand", "IF_AllocImpliedNk": "IF_AllocImpliedNk"}
-BLOCK6_EXTRA_V515 = ["IF_AllocQ1_R2"]          # v5.15 新增、工作單未列
-PENDING_NOTE = "待 v5.15 合併"
+SRC_DEM = [f"SRC_DEM_{i:03d}" for i in range(4, 14)] + ["SRC_DEM_013_Lo", "SRC_DEM_013_Hi"]   # 013 只有低／高（無點值）
+# Block 6（v5.15 起）：工作單暫定名與 Tokenomics 實際名稱相同；IF_AllocQ1_R2 為 r2 補列
+BLOCK6 = ["IF_AllocQ1", "IF_AllocQ1_R2", "IF_AllocQ2", "IF_AllocServeGW", "IF_AllocRDGW", "IF_AllocDemand", "IF_AllocImpliedNk"]
+# S1 新增（工程類；r6 下游會用到）：訓練成本（P3 研發檢查）、每 GW 理論營收（P4 命題對照）、
+# 全成本下游預設（Tokenomics 標為「下游預設」；P4 對照）、L1 問 3 研發算力成本（P4 Q3，r6 P4-2）
+EXTRA_PATTERNS = [
+    r"IF_TrainCost_(Luna|Sol|Astra)", r"IF_RevGW_(Luna|Sol|Astra)", r"IF_FullCostDefault_(Luna|Sol|Astra)",
+]
+EXTRA_NAMES = ["L1_Ans3", "L1_Ans3_Lo", "L1_Ans3_Hi"]
+PENDING_NOTE = "待 Tokenomics 提供"
 
 
 def _split(attr: str):
@@ -45,6 +48,10 @@ def read_snapshot(tk_dir: Path):
     for pat in PATTERNS:
         chosen += sorted(n for n in names if re.fullmatch(pat, n))
     chosen += [n for n in SRC_DEM if n in names]
+    chosen += [n for n in BLOCK6 if n in names]
+    for pat in EXTRA_PATTERNS:
+        chosen += sorted(n for n in names if re.fullmatch(pat, n))
+    chosen += [n for n in EXTRA_NAMES if n in names]
     rows, seen = [], set()
     for n in chosen:
         if n in seen:
@@ -60,15 +67,18 @@ def read_snapshot(tk_dir: Path):
         if sheet == "Interface":
             label = re.sub(r"[\s　]*\[IF_[^\]]*\]\s*$", "", str(ws.cell(r1, 1).value))
             unit = ws.cell(r1, 2).value or ""
+        elif sheet == "L1":
+            col = {"D": "基準", "E": "低", "F": "高"}.get(c1, c1)
+            label = f"{ws.cell(r1, 2).value}（{col}）"
+            unit = ws.cell(r1, 7).value or ""
         else:
             label = f"{ws.cell(r1, 2).value}（{ws.cell(r1, 7).value}）"
             unit = ws.cell(r1, 6).value or ""
-        rows.append(dict(name=n, kind="SRC" if n.startswith("SRC_") else "IF", label=label, unit=unit, values=vals, status="OK"))
+        rows.append(dict(name=n, kind=n.split("_")[0], label=label, unit=unit, values=vals, status="OK"))
     present = {r["name"] for r in rows}
-    pending = [dict(name=n, kind="SRC" if n.startswith("SRC_") else "IF", label="", unit="", values=[], status=PENDING_NOTE,
-                    v515=BLOCK6_V515.get(n, n)) for n in SRC_DEM if n not in present]
-    pending = [dict(name=n, kind="IF", label="Block 6（Alloc）", unit="", values=[], status=PENDING_NOTE, v515=BLOCK6_V515[n])
-               for n in BLOCK6_WORKORDER if n not in names] + pending
+    # 工作單要求、但 Tokenomics 現行版沒有者：逐名列入、值留空（E1）
+    wanted = SRC_DEM + BLOCK6 + EXTRA_NAMES
+    pending = [dict(name=n, kind=n.split("_")[0], label="", unit="", values=[], status=PENDING_NOTE) for n in wanted if n not in present]
     hdr_gen = [wb["Interface"].cell(4, k).value for k in range(3, 18)]
     hdr_cost = [wb["Interface"].cell(5, k).value for k in range(3, 18)]
     return dict(file=current, version=f"v{m.group(1)}" if m else "?", sha=sha, rows=rows, pending=pending,

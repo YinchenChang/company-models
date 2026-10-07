@@ -20,10 +20,10 @@ sys.path.insert(0, str(HERE))
 import preserve  # noqa: E402
 import source_rules  # noqa: E402
 from common import F_BOLD, F_CALC, F_IN, F_NOTE, WRAP, header, lo_recalc, put, title  # noqa: E402
-from tk_link import BLOCK6_EXTRA_V515, PENDING_NOTE, read_snapshot  # noqa: E402
+from tk_link import PENDING_NOTE, read_snapshot  # noqa: E402
 from v05_map import REGISTRY_PATH, SEP, build_map, coverage_report  # noqa: E402
 
-VERSION = "v0.6-P1"
+VERSION = "v0.6-P1.1"
 KIND_LABEL = {"SRC": "SRC_OAI", "INP": "Inputs", "FORMULA": "公式（後續工作包）", "DUP": "重複併入", "SKIP": "不遷入", "TK": "不遷入；改取 TK_Link"}
 SRC_COLS = ["SRC_ID", "指標", "數值", "低", "高", "單位", "口徑", "適用對象", "日期", "出處（v0.5 原文）", "來源等級", "立場", "立場說明",
             "一手／二手", "狀態", "取代者", "v0.5 標記", "查核狀態（v0.5 chk）", "v0.5 路徑", "模型使用位置", "備註",
@@ -99,7 +99,7 @@ def sheet_inputs(wb, R, final):
 def sheet_tk(wb, snap, date):
     ws = wb.create_sheet("TK_Link")
     title(ws, "TK_Link — Tokenomics 快照（第 0 層連結；不用 Excel 外部連結）",
-          "每列一個 Tokenomics 名稱（SRC_／IF_）。值（藍字）由 builder 從 Tokenomics master 的 model/CURRENT 讀出寫入；本模型公式只引用 TK_ 具名範圍。更新快照＝本模型的修補版。",
+          "每列一個 Tokenomics 名稱（SRC_／IF_／L1_）。值（藍字）由 builder 從 Tokenomics master 的 model/CURRENT 讀出寫入；本模型公式只引用 TK_ 具名範圍。更新快照＝本模型的修補版。",
           "Interface 向量名稱為 15 欄＝5 世代（Hopper、GB200、GB300、VR200、Rubin Ultra）× 3 成本情境（低、基準、高）；基準欄為每世代第 2 欄。")
     meta = [("Tokenomics 檔案", snap["file"], "TK_File"), ("Tokenomics 版本", snap["version"], "TK_Version"),
             ("Tokenomics 提交 SHA（master）", snap["sha"], "TK_Commit"), ("讀取日期", date, "TK_ReadDate")]
@@ -128,12 +128,8 @@ def sheet_tk(wb, snap, date):
         nm(wb, "TK_" + row["name"], f"TK_Link!$J${r}" + (f":${L(TK_VCOL0 + n - 1)}${r}" if n > 1 else ""))
         r += 1
     for row in snap["pending"]:
-        vals = [row["name"], "（待 v5.15 合併；無具名範圍）", f"v5.15 分支實際名稱：{row['v515']}", "", 0, row["status"], snap["version"], snap["sha"][:7], date]
+        vals = [row["name"], "（Tokenomics 現行版無此名稱；無具名範圍）", "Tokenomics 缺口：見報告", "", 0, row["status"], snap["version"], snap["sha"][:7], date]
         for c, v in enumerate(vals, start=1):
-            put(ws, f"{L(c)}{r}", v, F_CALC)
-        r += 1
-    for row_name in BLOCK6_EXTRA_V515:
-        for c, v in enumerate([row_name, "（待 v5.15 合併；無具名範圍）", "v5.15 新增、工作單未列", "", 0, PENDING_NOTE, snap["version"], snap["sha"][:7], date], start=1):
             put(ws, f"{L(c)}{r}", v, F_CALC)
         r += 1
     ws.column_dimensions["A"].width = 26
@@ -283,7 +279,7 @@ def sheet_checks(wb, R, n_src, n_inp, n_pending):
         ("Inputs 列數", "=SUMPRODUCT(--(LEN(Inputs!$A$5:$A$600)>0))", n_inp, "eq", ""),
         ("Inputs 區間順序異常列數", "=SUM(Inputs!$M$5:$M$600)", 0, "eq", "低 ≤ 值 ≤ 高（有三值者）"),
         ("TK_Link 已取值名稱數", '=COUNTIF(TK_Link!$F$10:$F$200,"OK")', None, "info", "取自 Tokenomics master CURRENT"),
-        ("TK_Link 待 v5.15 合併名稱數", f'=COUNTIF(TK_Link!$F$10:$F$200,"{PENDING_NOTE}")', n_pending, "eq", "Block 6（IF_Alloc*）與 SRC_DEM_010–013；值留空"),
+        ("TK_Link 待 Tokenomics 提供名稱數", f'=COUNTIF(TK_Link!$F$10:$F$200,"{PENDING_NOTE}")', n_pending, "eq", "工作單要求、Tokenomics 現行版尚無的名稱（值留空；v5.24 快照後為 0）"),
         ("TK_Link 錯誤值格數", "=SUMPRODUCT(--ISERROR(TK_Link!$J$10:$X$200))", 0, "eq", ""),
         ("TK_IF_Util 介於 (0,1]（違反數）", "=IF(AND(TK_IF_Util>0,TK_IF_Util<=1),0,1)", 0, "eq", "Tokenomics 基準利用率"),
         ("2025 推論支出：付費＋非付費−合計（$B）",
@@ -361,7 +357,7 @@ def sheet_readme(wb, snap, date, summary):
         ("本版範圍", "P1：repo 骨架、SRC_OAI（公司財務原始數據）、TK_Link（Tokenomics 快照）、Inputs（v0.5 Assumed 項目遷入）。需求、算力、成本、融資於 P2–P5。"),
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構，重建時保留 Excel 內已改過的藍字。"),
         ("SRC_OAI", f"{summary['src']} 列；v0.5『已取得的原始訊息』逐筆遷入（Interested-party／Verified）。"),
-        ("TK_Link", f"Tokenomics {snap['version']}（{snap['file']}），master 提交 {snap['sha'][:7]}，讀取日 {date}；{summary['tk_ok']} 個名稱有值、{summary['tk_pending']} 個待 v5.15 合併。"),
+        ("TK_Link", f"Tokenomics {snap['version']}（{snap['file']}），master 提交 {snap['sha'][:7]}，讀取日 {date}；{summary['tk_ok']} 個名稱有值、{summary['tk_pending']} 個待 Tokenomics 提供。"),
         ("Inputs", f"{summary['inp']} 列；v0.5 Assumed／Analogy／Decision 項目（長表）。"),
         ("Map_v05", f"v0.5 JSON {summary['leaves']} 個葉節點的去處。"),
         ("Checks", "P1 檢查；CHK_Errors 必須為 0。"),
@@ -409,7 +405,7 @@ def main():
 
     wb = openpyxl.Workbook()
     summary = dict(src=len(R.src_rows), inp=len(R.inp_rows), leaves=len(R.leaves), tk_ok=len(snap["rows"]),
-                   tk_pending=len(snap["pending"]) + len(BLOCK6_EXTRA_V515))
+                   tk_pending=len(snap["pending"]))
     sheet_readme(wb, snap, a.date, summary)
     sheet_src(wb, R, final)
     sheet_tk(wb, snap, a.date)
