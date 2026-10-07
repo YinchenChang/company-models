@@ -458,11 +458,12 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.includeDebt` | 是否依到期表攤還既有債務（true＝是；false＝假設全數再融資） | 是／否 | 是 | 可沿用 |
 | `defaults.includeAtm` | 是否計入期後股權／可轉債募資 | 是／否 | 是 | 可沿用 |
 | `defaults.atm` | 期後股權／可轉債募資淨額（記在第一期） | US$bn | 0 | 必改 |
-| `defaults.prepay.shareOfDeals` | 有預付的合約比例（股東信約 70%；預付流入＝成長型 CapEx × 此比例 × 下一欄；v0.1b） | 比例 | 0 | 檢查 |
-| `defaults.prepay.capexCover` | 有預付的合約，預付占相關資本支出的比例（股東信 50–60%，取中點） | 比例 | 0 | 檢查 |
-| `defaults.prepay.recogYears` | 預付在合約期內的認列年數：自下一期起依期初合約負債直線認列為營收（非現金） | 年 | 5 | 檢查 |
-| `defaults.prepay.openBalance` | 期初合約負債（季報遞延營收；列入滾動檢查） | US$bn | 0 | 必改 |
-| `defaults.prepay.note` | 預付款區塊的說明（來源與口徑） | 文字 | 步驟 4 填入 Oracle 客戶出資（暫定 0） | 必改 |
+| `defaults.prepay.shareOfDeals` | 有預付的合約比例（預付流入＝成長型 CapEx × 此比例 × 下一欄；覆蓋比已是整體口徑時填 1；v0.1b） | 比例 | 1 | 檢查 |
+| `defaults.prepay.capexCover` | 預付（客戶出資）占相關資本支出的比例 | 比例 | 0.243 | 檢查 |
+| `defaults.prepay.recogYears` | 預付在合約期內的認列年數：依(期初合約負債＋本期累積利息)直線認列為營收（非現金） | 年 | 5 | 檢查 |
+| `defaults.prepay.financingRate` | 預付重大財務組成的隱含利率：合約負債以此利率累積非現金利息（期初餘額＋本期流入一半），認列時轉營收；0＝不計財務組成（Oracle v0.1b） | 比例 | 0.0811 | 檢查 |
+| `defaults.prepay.openBalance` | 期初合約負債（客戶預付餘額；列入滾動檢查） | US$bn | 15.955 | 必改 |
+| `defaults.prepay.note` | 預付款區塊的說明（來源與口徑） | 文字 | 客戶出資（Oracle v0.1b 步驟 4）：預付… | 必改 |
 | `defaults.convIssue.coupon` | 瀑布新發可轉債的票息（v0.1b） | 比例 | 0 | 檢查 |
 | `defaults.convIssue.premium` | 瀑布新發可轉債的轉換溢價（轉換價＝發行參考價 ×（1＋此值）；只用於潛在股數揭露） | 比例 | 0 | 檢查 |
 | `defaults.convIssue.note` | 可轉債步驟的說明（來源與口徑） | 文字 | 不適用（Oracle 融資瀑布不設可轉債步驟；sce… | 必改 |

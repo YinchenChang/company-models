@@ -315,8 +315,9 @@ function runFunding(e) {
         v = CXG[r] * e.a.customerFund[r], // v0.1b：客戶預付流入＝成長型 CapEx × 預付比率（汰換 CapEx 不計）
         y = _ - v,
         clB = WF.cl,
-        pr = Math.min(clB, clB / e.prepay.recogYears * L), // v0.1b：預付認列（非現金營收）＝期初合約負債 ÷ 認列年數 × 期間長度
-        clE = clB + v - pr,
+        ppI = (e.prepay.financingRate ?? 0) * (clB + .5 * v) * L, // v0.1b（Oracle）：重大財務組成——合約負債以隱含利率累積的非現金利息（期初餘額＋本期流入一半）
+        pr = Math.min(clB + ppI, (clB + ppI) / e.prepay.recogYears * L), // v0.1b：預付認列（非現金營收）＝(期初合約負債＋累積利息) ÷ 認列年數 × 期間長度
+        clE = clB + v + ppI - pr,
         C = t.accepted[r] * 8760 * t.pue[r] * t.power[r] / 1e9 * L,
         w = t.accepted[r] * t.maint[r] / 1e3 * L,
         T = e.overlay ? C + w : 0,
@@ -367,6 +368,7 @@ function runFunding(e) {
         cvInt: CVP[r].int,
         prepayIn: v,
         prepayRecog: pr,
+        prepayAccr: ppI,
         clBeg: clB,
         clEnd: clE,
         junk: wJ,
@@ -710,6 +712,7 @@ function runFunding(e) {
       legacyRev: s(`legacyRev`),
       legacyEbitda: s(`legacyEbitda`),
       cashTax: s(`cashTax`),
+      prepayAccr: s(`prepayAccr`),
       newRev: s(`newRev`),
       oci36: s(`oci36`),
       newCash: s(`newCash`),

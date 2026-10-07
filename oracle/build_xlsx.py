@@ -400,10 +400,11 @@ CAPSC = gi(r, "每 MW 建置成本倍數（整體）", "%", D['capexScale'], "�
 r = phdr(r)
 r = prow(r, "每 MW 建置成本", "US$m/MW", CO['scenarios']['capexTemplate']['costMW'], NUM1, TXQ['costMwNote'])
 PPD = D['prepay']  # v0.1b：預付款區塊輸入
-PP_SH = gi(r, "有預付的合約比例", "%", PPD['shareOfDeals'], "股東信：約 70% 合約含客戶預付 [Interested-party]", PCT); r += 1
-PP_CV = gi(r, "預付占相關資本支出比", "%", PPD['capexCover'], "股東信：預付覆蓋相關資本支出 50–60%，取中點 [Interested-party]", PCT); r += 1
-PP_N = gi(r, "預付認列年數", "年", PPD['recogYears'], "季報：遞延營收預計 1–5 年內認列，取中點 3 年；自下一期起依期初合約負債直線認列 [Interested-party]", NUM1); r += 1
-PP_CL0 = gi(r, "«VMD» 合約負債（客戶預付餘額）", "US$bn", PPD['openBalance'], f"季報遞延營收 {CO['latestQuarter']['deferredTotal']}（流動 0.979＋非流動 4.996）[Interested-party]"); r += 1
+PP_SH = gi(r, "有預付的合約比例", "%", PPD['shareOfDeals'], "覆蓋比已是整體口徑時為 100%（company.json → defaults.prepay）", PCT); r += 1
+PP_CV = gi(r, "預付占相關資本支出比", "%", PPD['capexCover'], CO['texts']['prepayCoverNote'], PCT); r += 1
+PP_N = gi(r, "預付認列年數", "年", PPD['recogYears'], "依(期初合約負債＋本期累積利息)直線認列為營收（非現金）[Assumed]；完整說明見 company.json → defaults.prepay.note", NUM1); r += 1
+PP_CL0 = gi(r, "«VMD» 合約負債（客戶預付餘額）", "US$bn", PPD['openBalance'], CO['texts']['prepayOpenNote']); r += 1
+PP_FR = gi(r, "預付隱含利率（重大財務組成）", "%", PPD.get('financingRate', 0), "合約負債以此利率累積非現金利息，認列時轉營收（自營運現金扣除）、利息進損益不進現金；預設＝稅前債務成本，替代 0%", PCT); r += 1
 r = phdr(r)
 r = prow(r, "客戶預付占毛 CapEx", "%", [f"={PP_SH}*{PP_CV}"] * 5, PCT, "＝有預付的合約比例 × 預付占相關資本支出比；乘成長型 CapEx 得預付流入", BLACK)
 r = prow(r, "在帳現金租金（季報到期表）", "US$bn", CO['leases']['onBalanceCash'], NUM, f"營業＋融資租賃未折現付款；«LASTYR» 後尚有 {CO['leases']['afterFY30']} [Verified]")
@@ -799,12 +800,16 @@ frow("　客戶預付金額（抵減，«STUB» 起）", "US$bn",
      "＝成長型 CapEx × 預付比率（汰換 CapEx 不計）；«YTD» 的預付已含在實際 CFO 內，不重複計入")
 frow("　合約負債期初（客戶預付餘額）", "US$bn", lambda i: (f"={PP_CL0}" if i == 0 else "=0"), NUM, BLACK, "«P0» 期初＝«VMD» 季報遞延營收")
 cl_beg = FR["　合約負債期初（客戶預付餘額）"]
+frow("　合約負債利息累積（重大財務組成，非現金）", "US$bn",
+     lambda i: f"={PP_FR}*({COLS[i]}{cl_beg}+0.5*{COLS[i]}{FR['　客戶預付金額（抵減，«STUB» 起）']})*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}", NUM, BLACK,
+     "＝隱含利率 ×(期初合約負債＋本期預付流入 × ½)× 期間長度；進損益利息、不進現金（v0.1b）")
+ppi_row = FR["　合約負債利息累積（重大財務組成，非現金）"]
 frow("　預付認列（非現金營收）", "US$bn",
-     lambda i: f"=MIN({COLS[i]}{cl_beg},{COLS[i]}{cl_beg}/{PP_N}*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']})", NUM, BLACK,
-     "＝期初合約負債 ÷ 認列年數 × 期間長度；這部分營收已在預付時收現，自營運來源扣除")
+     lambda i: f"=MIN({COLS[i]}{cl_beg}+{COLS[i]}{ppi_row},({COLS[i]}{cl_beg}+{COLS[i]}{ppi_row})/{PP_N}*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']})", NUM, BLACK,
+     "＝(期初合約負債＋累積利息) ÷ 認列年數 × 期間長度；這部分營收已在預付時收現，自營運來源扣除")
 pr_row = FR["　預付認列（非現金營收）"]
-frow("　合約負債期末", "US$bn", lambda i: f"={COLS[i]}{cl_beg}+{COLS[i]}{FR['　客戶預付金額（抵減，«STUB» 起）']}-{COLS[i]}{pr_row}", NUM, BLACK,
-     "＝期初＋預付流入−認列")
+frow("　合約負債期末", "US$bn", lambda i: f"={COLS[i]}{cl_beg}+{COLS[i]}{FR['　客戶預付金額（抵減，«STUB» 起）']}+{COLS[i]}{ppi_row}-{COLS[i]}{pr_row}", NUM, BLACK,
+     "＝期初＋預付流入＋累積利息−認列")
 cl_end = FR["　合約負債期末"]
 for i in range(1, 5):
     ws.cell(row=cl_beg, column=3 + i, value=f"={COLS[i-1]}{cl_end}")
@@ -1529,7 +1534,8 @@ vrow("營業利益（EBIT）", "US$bn", lambda i: f"=({COLS[i]}{VR['算力收入
 ebit_v = VR["營業利益（EBIT）"]
 vrow("利息（含瀑布新債）", "US$bn", lambda i: f"='各期收支'!{COLS[i]}{FRR['int']}", NUM, GREEN)
 int_v = VR["利息（含瀑布新債）"]
-vrow("稅前損益", "US$bn", lambda i: f"={COLS[i]}{ebit_v}-{COLS[i]}{int_v}", NUM, BLACK)
+vrow("預付財務組成利息（非現金）", "US$bn", lambda i: f"='各期收支'!{COLS[i]}{ppi_row}", NUM, GREEN, "客戶預付的重大財務組成：合約負債以隱含利率累積的利息（v0.1b）")
+vrow("稅前損益", "US$bn", lambda i: f"={COLS[i]}{ebit_v}-{COLS[i]}{int_v}-{COLS[i]}{VR['預付財務組成利息（非現金）']}", NUM, BLACK)
 pre_v = VR["稅前損益"]
 vrow("NOL 期初餘額", "US$bn", lambda i: f"={NOL0}", NUM, BLACK, f"«VMD» 累積虧損約 {V['nol']:.1f}")
 nol_b = VR["NOL 期初餘額"]
