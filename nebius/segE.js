@@ -503,10 +503,10 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
     ]);
     let arr = k => elQ(`div`, { key: k, style: { textAlign: `center`, fontSize: 22, color: `var(--color-subtle)`, lineHeight: 1 } }, `↓`);
     M(`3｜預付款機制`, `客戶先付錢：少發 ${Y(dSh, 0)}m 股、目標價高 $${Y(dT, 1)}——但缺口仍有 ${money(gap0)}`, [
-      elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `360px 1fr`, gap: 40, flex: 1, minHeight: 0 } }, [
+      elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `400px 1fr`, gap: 36, flex: 1, minHeight: 0 } }, [
         elQ(`div`, { key: `f`, style: { display: `flex`, flexDirection: `column`, gap: 6 } }, [
-          step(`1`, `users`, `客戶簽約`, `約 ${hA((COMPANY_DATA.defaults.prepay?.shareOfDeals ?? 0) * 100, 0)} 合約含預付`, COLQ.op), arr(`a1`),
-          step(`2`, `coin`, `建置前先收現`, `覆蓋 ${hA((e.a.customerFund[1] ?? 0) * 100, 1)} 成長型 CapEx`, COLQ.prepay), arr(`a2`),
+          step(`1`, `users`, `客戶簽約`, `輸入：${hA((COMPANY_DATA.defaults.prepay?.shareOfDeals ?? 0) * 100, 0)} 合約含預付 × 覆蓋 ${hA((COMPANY_DATA.defaults.prepay?.capexCover ?? 0) * 100, 0)}`, COLQ.op), arr(`a1`),
+          step(`2`, `coin`, `建置前先收現`, `五期約占毛 CapEx ${hA(cover * 100, 0)}`, COLQ.prepay), arr(`a2`),
           step(`3`, `server`, `用預付款蓋 GPU`, `五期預付流入 ${money(preIn)}`, COLQ.debt), arr(`a3`),
           step(`4`, `doc`, `之後認列為營收`, `${e.prepay?.recogYears ?? `—`} 年攤入（非現金）`, COLQ.cash)
         ]),
@@ -531,15 +531,16 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
   // 4｜錢從哪裡來：五期資金來源堆疊（預付 → 營運現金 → 現金 → 資產擔保債 → 可轉債 → 新股 → 高息債）
   {
     let U = sumY(`uses`), opN = sumY(`sourcesOp`) - preIn, cashN = Math.max(0, T.atm + Math.max(0, -sumY(`gap`)));
-    let parts = [[`客戶預付`, preIn, COLQ.prepay], [`營運現金`, Math.max(0, opN), COLQ.op], [`現金與期後募資`, cashN, COLQ.cash], [`資產擔保債`, T.newDebt, COLQ.debt],
-      [`可轉債`, T.convNew, COLQ.conv], [`新股`, T.equity, COLQ.eq], [`高息債`, T.junk, COLQ.junk]];
+    let parts = [[`客戶預付`, preIn, COLQ.prepay, `預付`], [`營運現金`, Math.max(0, opN), COLQ.op, `營運`], [`現金與期後募資`, cashN, COLQ.cash, `現金`], [`資產擔保債`, T.newDebt, COLQ.debt, `擔保債`],
+      [`可轉債`, T.convNew, COLQ.conv, `可轉債`], [`新股`, T.equity, COLQ.eq, `新股`], [`高息債`, T.junk, COLQ.junk, `高息`]];
     let tot = parts.reduce((a, x) => a + x[1], 0) || 1, ext = T.convNew + T.equity;
     let useP = [[`毛 CapEx`, T.gross, COLQ.need], [`租金、利息、還本等`, Math.max(0, U - T.gross), COLQ.off]];
     let bar = (k, ps, base, h, lab, named) => elQ(`div`, { key: k, className: `sumQ-a sumQ-a2` }, [
       elQ(`div`, { key: `t`, style: { fontSize: 20, fontWeight: 700, marginBottom: 6 } }, lab),
-      elQ(`div`, { key: `b`, className: `sumQ-g`, style: { display: `flex`, height: h, borderRadius: 8, overflow: `hidden`, width: `100%` } }, ps.filter(x => x[1] > .05).map(([a, x, c]) =>
-        elQ(`div`, { key: a, title: a, style: { width: `${x / base * 100}%`, background: c, color: `#fff`, display: `flex`, alignItems: `center`, justifyContent: `center`, fontSize: 20, fontWeight: 700, overflow: `hidden`, whiteSpace: `nowrap`, borderRight: `2px solid var(--color-card)` } },
-          x / base > .06 ? `${named && x / base > .25 ? `${a} ` : ``}${Y(x, x / base > .1 ? 1 : 0)}` : ``)))
+      // v0.2 第 2 輪：色塊內同時標類別（短名）與金額，避免兩段同為「12」時無法辨識
+      elQ(`div`, { key: `b`, className: `sumQ-g`, style: { display: `flex`, height: h, borderRadius: 8, overflow: `hidden`, width: `100%` } }, ps.filter(x => x[1] > .05).map(([a, x, c, sh]) =>
+        elQ(`div`, { key: a, title: a, style: { width: `${x / base * 100}%`, background: c, color: `#fff`, display: `flex`, flexDirection: named ? `row` : `column`, gap: named ? 8 : 0, alignItems: `center`, justifyContent: `center`, fontSize: named ? 20 : 18, lineHeight: 1.15, fontWeight: 700, overflow: `hidden`, whiteSpace: `nowrap`, borderRight: `2px solid var(--color-card)` } },
+          x / base > .06 ? [named ? (x / base > .25 ? elQ(`span`, { key: `n` }, a) : null) : elQ(`span`, { key: `n`, style: { fontWeight: 600, opacity: .92 } }, sh || a), elQ(`span`, { key: `v` }, Y(x, 1))] : ``)))
     ]);
     M(`4｜錢從哪裡來`, `五期要花 ${money(U, 0)}：預付付 ${money(preIn, 0)}，可轉債與新股還要補 ${money(ext, 0)}`, [
       bar(`s`, parts, tot, 74, `資金來源（${PERIODS[0]}–${PERIODS[4]} 合計，US$bn；依瀑布順序由左至右）`),
@@ -570,7 +571,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
     ]);
     M(`5｜關鍵疑點`, K ? `每 MW 實際只收 $${Y(K.realized, 1)}m，模型用 $${Y(rv4, 1)}m${Number.isFinite(need) ? `，現價要 $${Y(need, 1)}m` : ``}` : `每 MW 年收入：模型 $${Y(rv4, 1)}m`, [
       elQ(`div`, { key: `r`, className: `sumQ-a sumQ-a2`, style: { position: `relative`, height: 290, margin: `0 40px` } }, [
-        K?.acv ? elQ(`div`, { key: `acv`, style: { position: `absolute`, left: X(K.acv[0]), width: `calc(${X(K.acv[1])} - ${X(K.acv[0])})`, top: 118, height: 50, background: `${COLQ.cons}22`, border: `2px dashed ${COLQ.cons}`, borderRadius: 8 } }) : null,
+        K?.acv ? elQ(`div`, { key: `acv`, style: { position: `absolute`, left: X(K.acv[0]), width: `calc(${X(K.acv[1])} - ${X(K.acv[0])})`, top: 110, height: 33, background: `${COLQ.cons}22`, border: `2px dashed ${COLQ.cons}`, borderRadius: 8 } }) : null, // v0.2 第 2 輪：框只在軸上方，不蓋住刻度數字
         K?.acv ? elQ(`div`, { key: `acvl`, style: { position: `absolute`, left: `calc((${X(K.acv[0])} + ${X(K.acv[1])}) / 2)`, transform: `translateX(-50%)`, top: 0, textAlign: `center`, whiteSpace: `nowrap` } }, [
           elQ(`div`, { key: `v`, style: { fontSize: 24, fontWeight: 800, color: COLQ.cons } }, `$${Y(K.acv[0], 0)}–${Y(K.acv[1], 0)}m`),
           elQ(`div`, { key: `l`, style: { fontSize: 18, color: `var(--color-muted)` } }, `公司新約 ACV（自述）`)]) : null,

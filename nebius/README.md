@@ -388,10 +388,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.mwPath.connectedStart` | 首期期末已連網 MW（三情境共用；v0.1b） | MW | 750 | 必改 |
 | `scenarios.mwPath.contracted.low` | 保守情境：五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期末的合約 MW 上限（已連網不得超過；v0.1b） | MW 清單 | 2917、2917、2917、2917、2917 | 必改 |
 | `scenarios.mwPath.contracted.base` | 基準情境：同上 | MW 清單 | 4167、4167、4167、4167、4167 | 必改 |
-| `scenarios.mwPath.contracted.high` | 積極情境：同上 | MW 清單 | 4167、5000、5833.33、6666.67、7500 | 必改 |
+| `scenarios.mwPath.contracted.high` | 積極情境：同上 | MW 清單 | 4167、5000、5833、6667、7500 | 必改 |
 | `scenarios.mwPath.pace.low` | 保守情境：併網速度（每年新增已連網 MW；已連網＝MIN(合約上限, 前期＋速度×期間長度)；v0.1b） | MW／年 | 580 | 檢查 |
 | `scenarios.mwPath.pace.base` | 基準情境：同上 | MW／年 | 580 | 檢查 |
-| `scenarios.mwPath.pace.high` | 積極情境：同上 | MW／年 | 833.333 | 檢查 |
+| `scenarios.mwPath.pace.high` | 積極情境：同上 | MW／年 | 833 | 檢查 |
 | `scenarios.mwPath.note` | 已連網 MW 路徑的說明（來源與口徑） | 文字 | 已連網 MW-IT（期末）＝MIN(合約 MW-IT… | 必改 |
 | `scenarios.revMW.low` | 保守情境：每 MW 年收入，各期（Tokenomics 正向推導；不得用公司 ACV；v0.1b） | US$bn/MW 清單 | 0.01162、0.01162、0.01162、0.01162、0.01162 | 必改 |
 | `scenarios.revMW.base` | 基準情境：同上 | US$bn/MW 清單 | 0.0174、0.0174、0.0174、0.0174、0.0174 | 必改 |
@@ -403,7 +403,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.leaseRampFloorMw` | 低於此電力時不產生新增表外租金（縮放公式的起點） | MW | 0 | 檢查 |
 | `scenarios.mw31.low` | 保守情境：模型期後一年（FY31）新增的 MW，用於 FY30 的預建支出 | MW | 0 | 檢查 |
 | `scenarios.mw31.base` | 基準情境：同上 | MW | 580 | 檢查 |
-| `scenarios.mw31.high` | 積極情境：同上 | MW | 833.333 | 檢查 |
+| `scenarios.mw31.high` | 積極情境：同上 | MW | 833 | 檢查 |
 | `scenarios.convCap.low` | 保守情境：融資瀑布可轉債步驟每年新發行上限（0＝不新發；v0.1b） | US$bn／年 | 0 | 檢查 |
 | `scenarios.convCap.base` | 基準情境：同上 | US$bn／年 | 5 | 檢查 |
 | `scenarios.convCap.high` | 積極情境：同上 | US$bn／年 | 10 | 檢查 |

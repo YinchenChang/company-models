@@ -1606,7 +1606,7 @@ dcf_lines = [
     ("五期 UFCF 現值合計", f"=SUM(C{pv_v}:G{pv_v})", NUM, "建置期現金流現值"),
     ("常態化 FCF（FY30）", f"={PL}G{ebit_v}*(1-{TAX})+{PL}G{da_v}-{PL}G{da_v}*{MAINT}", NUM,
      "＝EBIT×(1−稅)＋D&A−維持性 CapEx(D&A×比率)。不讓成長性 CapEx 偽裝成永續 FCF"),
-    ("終值（Gordon）", None, NUM, "＝常態化 FCF×(1+g)÷(WACC−g)"),
+    ("終值（Gordon）", None, NUM, "＝常態化 FCF×(1+g)÷(WACC−g)；常態化 FCF ≤ 0 時以 0 計（v0.2）"),
     ("終值現值", None, NUM, None),
     ("企業價值 EV", None, NUM, None),
     ("減：淨負債", "=-§NDX§", NUM, "＝評價淨負債（不含可轉債的淨負債＋債務處理可轉債到期本金＋調整項；見下方可轉債區）"),
@@ -1615,7 +1615,7 @@ dcf_lines = [
     ("終值占 EV 比重", None, PCT, f'="超過 "&{_PC(RT_TVW)}&" 表示結論由終值假設決定，不由現金流決定"'),
     ("新股募得現金（現值）", None, NUM, "期初到位，折現期數 0／0.5／1.5／2.5／3.5 年"),
     ("融資後股數（含瀑布新股）", None, '0.000', None),
-    ("DCF 失效？（WACC ≤ g 或常態化 FCF ≤ 0）", None, NUM0, "1＝失效：DCF 權重歸零、EV/EBITDA 100%。股權為負不算失效"),
+    ("DCF 失效？（WACC ≤ g）", None, NUM0, "1＝失效：DCF 權重歸零、EV/EBITDA 100%。常態化 FCF ≤ 0 時終值以 0 計、DCF 照常截斷並保留權重（v0.2）；股權為負不算失效"),
     ("DCF 每股：0 截斷", None, USD, None),
     ("DCF 每股：選擇權（Merton）", None, USD, "Black-Scholes：S＝企業價值＋新股現值、K＝淨負債"),
     ("　d1", None, '0.000', None),
@@ -1631,8 +1631,8 @@ for nm, f, fmt, nt in dcf_lines:
     if nt:
         ws.cell(row=r, column=9, value=nt).font = SMALL
     r += 1
-ws.cell(row=d0 + 11, column=3, value=f"=IF(OR({WACC}<={GG},C{d0+1}<=0),1,0)").number_format = NUM0
-ws.cell(row=d0 + 2, column=3, value=f"=IF(C{d0+11}=1,0,C{d0+1}*(1+{GG})/({WACC}-{GG}))").number_format = NUM
+ws.cell(row=d0 + 11, column=3, value=f"=IF({WACC}<={GG},1,0)").number_format = NUM0
+ws.cell(row=d0 + 2, column=3, value=f"=IF(OR(C{d0+11}=1,C{d0+1}<=0),0,C{d0+1}*(1+{GG})/({WACC}-{GG}))").number_format = NUM
 ws.cell(row=d0 + 3, column=3, value=f"=C{d0+2}*G{df_v}").number_format = NUM
 ws.cell(row=d0 + 4, column=3, value=f"=C{d0}+C{d0+3}").number_format = NUM
 ws.cell(row=d0 + 6, column=3, value=f"=C{d0+4}+C{d0+5}").number_format = NUM
@@ -2152,7 +2152,7 @@ checks = [
     ("現金 EBITDA ＋ 信用調整 − 損益 EBITDA（FY27）", None, "=0",
      "=IF(ABS(B{r})<0.001,\"通過\",\"不一致\")", NUM, "現金 EBITDA＝RPO 現金＋新簽約現金＋服務現金−租金；信用調整＝信用損失×EBITDAR 率"),
     ("DCF 有效性（1＝失效）", None, "0",
-     "=IF(B{r}=0,\"通過\",\"觀察\")", NUM0, "失效只定義為 WACC ≤ g 或常態化 FCF ≤ 0；股權為負不算失效"),
+     "=IF(B{r}=0,\"通過\",\"觀察\")", NUM0, "失效只定義為 WACC ≤ g（v0.2；常態化 FCF ≤ 0 時終值以 0 計、不算失效）；股權為負不算失效"),
     ("期末現金 ≥ 最低現金（期前融資）", None, f"≥{D['minCash']:.1f}",
      "=IF(B{r}>=" + _n(D['minCash'] - 0.001) + ",\"通過\",\"不一致\")", NUM, "瀑布每期補足至最低現金；最小值應等於最低現金"),
     ("股權募資 ÷ 現市值", None, f'="≤"&{_MT(RT_EQ)}&"x"',
@@ -2719,7 +2719,7 @@ if QC:
             AROW[m['key']] = qrow(al, m['unit'], lambda j, c: f'=IF(AND(ISNUMBER({JR(e_, j)}),ISNUMBER({JR(v_, j)})),{JR(e_, j)}/{JR(v_, j)},"")', PCT, "＝實際 EBITDA ÷ 實際營收")
         else:
             n_ = f"季度實際｜{m.get('actualLabel', m['label'])}"
-            AROW[m['key']] = qrow(al, m['unit'], lambda j, c, n=n_: f'=IF(ISNUMBER({JR(n, j)}),{JR(n, j)},"")', PCT if m['unit'] == "%" else NUM, None, GREEN)
+            AROW[m['key']] = qrow(al, m['unit'], lambda j, c, n=n_: f'=IF(ISNUMBER({JR(n, j)}),{JR(n, j)},"")', PCT if m['unit'] == "%" else (NUM0 if m['unit'] == "MW" else NUM), None, GREEN)  # v0.2 第 2 輪：MW 整數格式
     # 差距（v4.4 第 4 輪）：營收、CapEx＝比例；利潤類＝金額差＋利潤率百分點；EBITDA 率＝百分點；MW＝差額
     TOLX = CONS_TOL
     KIND = {m['key']: m.get('gap') or ('pt' if m['unit'] == "%" else 'ratio') for m in QMET}
