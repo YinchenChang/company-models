@@ -524,17 +524,24 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `valuation.debtLike` | 類債項目，一筆一列：[名稱, 金額（US$bn）, 備註]；加入淨負債 | 清單 |  | 必改 |
 | `valuation.tax` | 稅率 | 比例 | 0.151 | 檢查 |
 | `valuation.nol` | 期初可扣抵虧損（NOL） | US$bn | 0 | 必改 |
-| `valuation.wacc` | 加權平均資金成本 WACC | 比例 | 0.11 | 檢查 |
+| `valuation.wacc` | 加權平均資金成本 WACC 手動覆蓋（null＝採 CAPM） | 比例或 null | None | 檢查 |
+| `valuation.capm.beta` | CAPM β | 倍 | 1.77 | 檢查 |
+| `valuation.capm.erp` | CAPM 股權風險溢酬 | 比例 | 0.05 | 檢查 |
+| `valuation.capm.kdPretax` | 稅前債務成本（市場邊際） | 比例 | 0.0811 | 檢查 |
+| `valuation.capm.betaSens` | β 敏感度（報告用） | 倍 清單 | 1.2、1.5 | 檢查 |
+| `valuation.capm.note` | WACC 公式與來源說明 | 文字 | WACC＝E/(D+E)×(rf＋β×ERP)＋D/… | 必改 |
 | `valuation.nolUsePct` | NOL 每年可抵用上限占應稅所得的比例（美國 80%；依公司稅籍調整；5a） | 比例 | 0.8 | 檢查 |
 | `valuation.wcPctOfRevGrowth` | 營運資金變動占營收增量的比例（DCF 自由現金流；5a） | 比例 | 0.02 | 檢查 |
 | `valuation.g` | 永續成長率 | 比例 | 0.03 | 檢查 |
 | `valuation.sbc` | 年度股份基礎薪酬 | US$bn | 4.508 | 必改 |
 | `valuation.maintRatio` | 終值的維持性資本支出占折舊比例 | 比例 | 0.8 | 檢查 |
-| `valuation.evEbitda` | EV/EBITDA 倍數 | 倍 | 6 | 檢查 |
-| `valuation.evYear` | EV/EBITDA 錨定年度（1＝FY27 … 4＝FY30） | 年度代碼 | 3 | 檢查 |
+| `valuation.evEbitda` | EV/EBITDA 倍數（分部加總的 OCI／算力部分） | 倍 | 6 | 檢查 |
+| `valuation.evYear` | EV/EBITDA 錨定年度（1＝模型第 2 期 … 4＝第 5 期） | 年度代碼 | 2 | 檢查 |
+| `valuation.legacyEvEbitda` | 傳統事業 EV/EBITDA 手動覆蓋（null＝軟體同業中位數） | 倍或 null | None | 檢查 |
+| `valuation.legacyEvEbitdaNote` | 分部加總說明 | 文字 | 傳統事業（雲端應用＋授權＋硬體＋服務）EV/EBIT… | 必改 |
 | `valuation.dcfMode` | DCF 股權為負時的處理：zero＝0 截斷、option＝選擇權法 | 文字 | zero | 可沿用 |
 | `valuation.sigma` | 企業價值波動率（選擇權法用） | 比例 | 0.5 | 檢查 |
-| `valuation.rf` | 無風險利率（選擇權法用） | 比例 | 0.0527 | 檢查 |
+| `valuation.rf` | 無風險利率（CAPM 與選擇權法用） | 比例 | 0.0527 | 檢查 |
 
 ### `methodology`：評價方法與評等門檻
 
@@ -565,6 +572,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `peers.priceDate` | 同業市值的收盤日 | 日期 | 2026-09-21 | 必改 |
 | `peers.priceSource` | 同業市值來源 | 文字 | S&P Global via stockanalys… | 必改 |
 | `peers.list` | 同業，一家一列（HTML Comps 分頁與 Excel「可比公司」頁共用）。欄位：ticker 代號、name 公司名、labelHtml／labelXlsx 兩邊顯示的名稱、roleHtml 定位說明（HTML）、mkt 市值、netDebt 淨負債、rev 近十二個月營收、opl 營業租賃負債、opInc GAAP 營業損益、da 折舊攤銷（以上 US$bn）、asOf 資料期、noteHtml／noteXlsx 兩邊的備註。EV＝市值＋淨負債、EBITDA＝營業損益＋折舊攤銷，由程式計算 | 清單 | 5 筆 | 必改 |
+| `peers.software` | 軟體同業 NTM EV/EBITDA，一家一列（ticker、name、ntmEvEbitda、ref＝事實總帳 id）；中位數為傳統事業倍數 | 清單 | 5 筆 | 必改 |
+| `peers.softwareNote` | 軟體同業倍數的來源說明 | 文字 | 軟體同業 NTM EV/EBITDA（EV：Stoc… | 必改 |
 | `peers.textHtml.headerTip` | HTML Comps 表標題的浮動說明 | 文字 | AI 基礎設施同業（Neocloud 與房東）。市值… | 必改 |
 | `peers.textHtml.readingTip` | HTML「讀法」段落的浮動說明（折價來源） | 文字 | ORCL 列為整體公司（傳統軟體＋OCI），倍數不可… | 必改 |
 | `peers.textHtml.caveat` | HTML Comps 表下方的「口徑與限制」 | 文字 | 口徑與限制：市值日期不一致（見上），負債與現金為各公… | 必改 |

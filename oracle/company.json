@@ -1271,15 +1271,27 @@
   "nol": 0.0,
   "nolUsePct": 0.8,
   "wcPctOfRevGrowth": 0.02,
-  "wacc": 0.11,
+  "wacc": null,
+  "capm": {
+   "beta": 1.77,
+   "erp": 0.05,
+   "kdPretax": 0.0811,
+   "betaSens": [
+    1.2,
+    1.5
+   ],
+   "note": "WACC＝E/(D+E)×(rf＋β×ERP)＋D/(D+E)×kd×(1−稅率)；E＝現價 × 季末流通股數（latestQuarter.sharesOut）、D＝評價日債務本金（latestQuarter.debtPrincipal；強制轉換特別股視為股權）；β 1.77（data/oracle_facts val.beta.sa／val.beta.yahoo，5 年）、rf＝valuation.rf（10 年美債 2026-10-06）、ERP 5%（val.erp）、kd 8.11%（val.kd.pretax：6.55% 2046 票據殖利率，市場邊際成本）。valuation.wacc 為 null 時採 CAPM；填數字即手動覆蓋。"
+  },
   "g": 0.03,
   "sbc": 4.508,
   "maintRatio": 0.8,
   "evEbitda": 6,
-  "evYear": 3,
+  "legacyEvEbitda": null,
+  "evYear": 2,
   "dcfMode": "zero",
   "sigma": 0.5,
-  "rf": 0.0527
+  "rf": 0.0527,
+  "legacyEvEbitdaNote": "傳統事業（雲端應用＋授權＋硬體＋服務）EV/EBITDA：null＝採 peers.software 的 NTM 中位數；填數字即手動覆蓋。分部加總：EV＝傳統事業 EBITDA × 此倍數＋OCI EBITDA × valuation.evEbitda（錨定 valuation.evYear）。"
  },
  "methodology": {
   "blendWeights": {
@@ -1409,7 +1421,40 @@
     "CRWV 以租約取得機房，加入營業租賃負債後倍數上升；ORCL 同樣以租賃為主（未起租承諾 288B 尚未入表）。",
     "前瞻：見下方 ORCL 模型列。此表為市場比較用，不進入目標價。"
    ]
-  }
+  },
+  "software": [
+   {
+    "ticker": "MSFT",
+    "name": "Microsoft",
+    "ntmEvEbitda": 15.59,
+    "ref": "val.peer.msft"
+   },
+   {
+    "ticker": "SAP",
+    "name": "SAP",
+    "ntmEvEbitda": 15.02,
+    "ref": "val.peer.sap"
+   },
+   {
+    "ticker": "CRM",
+    "name": "Salesforce",
+    "ntmEvEbitda": 10.8,
+    "ref": "val.peer.crm"
+   },
+   {
+    "ticker": "ADBE",
+    "name": "Adobe",
+    "ntmEvEbitda": 6.6,
+    "ref": "val.peer.adbe"
+   },
+   {
+    "ticker": "NOW",
+    "name": "ServiceNow",
+    "ntmEvEbitda": 20.65,
+    "ref": "val.peer.now"
+   }
+  ],
+  "softwareNote": "軟體同業 NTM EV/EBITDA（EV：StockAnalysis 2026-10-07；NTM EBITDA：MarketScreener 共識依財年時間加權）；中位數用於傳統事業倍數 [Derived]"
  },
  "quarterly": {
   "_note": "季度層（v4.4）：由年度模型拆分，只用於追蹤，不影響目標價與任何年度數字。拆分方法由下列設定選擇；缺資料（沒有 MW、沒有共識或指引）時顯示「不適用」。",
@@ -2289,7 +2334,7 @@
      "val.beta.sa",
      "val.beta.yahoo"
     ],
-    "mapTo": "新欄位（CAPM）"
+    "mapTo": "valuation.capm.beta"
    },
    "rf": {
     "value": 0.0527,
@@ -2302,13 +2347,13 @@
     "value": 0.05,
     "unit": "比例",
     "ref": "val.erp",
-    "mapTo": "新欄位（CAPM）"
+    "mapTo": "valuation.capm.erp"
    },
    "costOfDebtPretax": {
     "value": 0.0811,
     "unit": "比例",
     "ref": "val.kd.pretax",
-    "mapTo": "新欄位（WACC）"
+    "mapTo": "valuation.capm.kdPretax"
    },
    "taxRate": {
     "value": 0.151,
@@ -2321,14 +2366,14 @@
     "value": 15.02,
     "unit": "倍",
     "ref": "val.peer.median",
-    "mapTo": "新欄位：傳統事業 EV/EBITDA（分部加總）",
+    "mapTo": "peers.software（中位數＝valuation.legacyEvEbitda 為 null 時的傳統事業倍數）",
     "note": "5 家中位；區間 6.6–20.7"
    },
    "ociEvEbitda": {
     "value": 6,
     "unit": "倍",
     "ref": "pm.ebitda.mid",
-    "mapTo": "valuation.evEbitda（OCI 部分，對照表預設 8：與 CRWV／Nebius 一致）"
+    "mapTo": "valuation.evEbitda（分部加總的 OCI 部分）"
    },
    "netDebtExLeases": {
     "value": 88.26,

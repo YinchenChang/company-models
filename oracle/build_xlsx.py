@@ -518,15 +518,31 @@ for _x in V['debtLike']:
     _DL.append(gi(r, f"類債：{_x[0]}", "US$bn", _x[1], _x[2])); r += 1
 ADJ = gi(r, "淨負債調整項（類債 − 持股 ×（1 − 折價））", "US$bn", f"={'+'.join(_DL) or '0'}-({'+'.join(_HV) or '0'})*(1-{HDISC})",
          "正值＝增加淨負債；評價淨負債與錨定年末淨負債同加"); r += 1
-WACC = gi(r, "WACC", "%", V['wacc'], "沿用 CRWV 模板值（Nebius 淨現金、槓桿較低，WACC 可能偏高＝偏保守；v0.1b 未另估）[Assumed]", PCT); r += 1
+TAX = gi(r, "稅率", "%", V['tax'], TXQ['taxNote'] + " [Interested-party]", PCT); r += 1
+_CP = V['capm']  # v0.1b（Oracle）：WACC 以 CAPM 計算（company.json → valuation.capm）；valuation.wacc 非 null 時為手動覆蓋
+RF = gi(r, "無風險利率", "%", V['rf'], "10 年期美債（CAPM 與選擇權法共用）[Verified]", PCT); r += 1
+BETA = gi(r, "CAPM：β", "x", _CP['beta'], "5 年月報酬 β（StockAnalysis／Yahoo，同值）；敏感度 1.2／1.5 見報告 [Verified]", '0.00'); r += 1
+ERP = gi(r, "CAPM：股權風險溢酬", "%", _CP['erp'], "[Assumed]（區間 4.5%–6%）", PCT); r += 1
+KE = gi(r, "股權成本 ke＝rf＋β × ERP", "%", f"={RF}+{BETA}*{ERP}", "CAPM", PCT); r += 1
+KD = gi(r, "稅前債務成本 kd", "%", _CP['kdPretax'], "2046 票據殖利率（市場邊際成本）[Verified]", PCT); r += 1
+CE = gi(r, "股權市值 E（現價 × 季末流通股數）", "US$bn", f"={PX}*{CO['latestQuarter']['sharesOut']}", f"季末流通 {CO['latestQuarter']['sharesOut']}bn 股", NUM); r += 1
+CD = gi(r, "債務 D（評價日債務本金）", "US$bn", CO['latestQuarter']['debtPrincipal'], "強制轉換特別股視為股權，不計入 [Interested-party]", NUM); r += 1
+WCAPM = gi(r, "WACC（CAPM）＝E/(D+E) × ke＋D/(D+E) × kd ×(1 − 稅率)", "%", f"={CE}/({CD}+{CE})*{KE}+{CD}/({CD}+{CE})*{KD}*(1-{TAX})", "[Derived]", PCT); r += 1
+WOV = gi(r, "WACC 手動覆蓋（空白＝採 CAPM）", "%", V['wacc'], "company.json → valuation.wacc（null＝空白）", PCT); r += 1
+WACC = gi(r, "WACC", "%", f"=IF(ISBLANK({WOV}),{WCAPM},{WOV})", "＝手動覆蓋，空白時採 CAPM", PCT); r += 1
 GG = gi(r, "永續成長 g", "%", V['g'], "[Assumed]", PCT); r += 1
 MAINT = gi(r, "終值維持性 CapEx 占 D&A", "%", V['maintRatio'], "終值不讓成長性 CapEx 偽裝成永續 FCF [Assumed]", PCT); r += 1
-TAX = gi(r, "稅率", "%", V['tax'], TXQ['taxNote'] + " [Interested-party]", PCT); r += 1
 NOL0 = gi(r, "期初 NOL（虧損扣抵）", "US$bn", V['nol'], f"«VMD» 累積虧損約 {V['nol']:.1f}；抵扣上限為應稅所得 {_n(V['nolUsePct'] * 100)}% [Derived]"); r += 1
 NOLU = gi(r, "NOL 每年可抵用比例", "%", V['nolUsePct'], "抵扣上限占應稅所得的比例 [Assumed]", PCT); r += 1
 WCP = gi(r, "營運資金占營收增量", "%", V['wcPctOfRevGrowth'], "營運資金變動＝營收增量 × 此比例 [Assumed]", PCT); r += 1
-EVEBITDA = gi(r, "EV/EBITDA 倍數", "x", V['evEbitda'], "沿用 CRWV 模板：穩態合理倍數約 3.4–6.0x（轉換率 ÷ (WACC − g)），6x 為上緣；共識目標價隱含約 9–10x [Assumed]", MULT); r += 1
-EVY = gi(r, "EV/EBITDA 錨定年度（1＝FY27、2＝FY28、3＝FY29、4＝FY30）", "", V['evYear'], "«EVDISC»（目標價時點）；v3.6 起預設 FY29：接近穩態利潤率，與 6x 穩態倍數一致 [Assumed]", NUM0, True); r += 1
+EVEBITDA = gi(r, "EV/EBITDA 倍數", "x", V['evEbitda'], "OCI（算力）部分：可觀察 neocloud 穩態合理倍數約 5–6x（轉換率 ÷ (WACC − g)），6x 為上緣 [Assumed]；傳統事業另用軟體同業倍數（分部加總）", MULT); r += 1
+_SWR = []
+for _p in CO['peers']['software']:
+    _SWR.append(gi(r, f"軟體同業 NTM EV/EBITDA｜{_p['ticker']}", "x", _p['ntmEvEbitda'], f"{_p['name']}（data/oracle_facts {_p['ref']}）[Derived]", MULT)); r += 1
+LEGMED = gi(r, "軟體同業 NTM EV/EBITDA 中位數", "x", f"=MEDIAN({','.join(_SWR)})", CO['peers']['softwareNote'], MULT); r += 1
+LEGOV = gi(r, "傳統事業 EV/EBITDA 手動覆蓋（空白＝同業中位數）", "x", V['legacyEvEbitda'], "company.json → valuation.legacyEvEbitda（null＝空白）", MULT); r += 1
+LEGM = gi(r, "傳統事業 EV/EBITDA 倍數", "x", f"=IF(ISBLANK({LEGOV}),{LEGMED},{LEGOV})", "分部加總：EV＝傳統事業 EBITDA × 此倍數＋OCI EBITDA × EV/EBITDA 倍數", MULT); r += 1
+EVY = gi(r, "EV/EBITDA 錨定年度（" + "、".join(f"{i}＝{CAL['periods'][i]}" for i in range(1, 5)) + "）", "", V['evYear'], f"«EVDISC»（目標價時點）；預設 {CAL['periods'][V['evYear']]}：接近穩態利潤率，與穩態倍數一致 [Assumed]", NUM0, True); r += 1
 from openpyxl.worksheet.datavalidation import DataValidation as _DV
 _dv = _DV(type="whole", operator="between", formula1="1", formula2="4", allow_blank=False, showErrorMessage=True, error="請輸入 1–4", errorTitle="錨定年度")
 ws.add_data_validation(_dv); _dv.add(EVY.split("!")[1].replace("$", ""))
@@ -539,7 +555,6 @@ SBCY = gi(r, "年度 SBC", "US$bn", V['sbc'], f"«YTD» SBC {YA['sbc']} 年化 [
 r = section(ws, r, "DCF 股權為負時的處理（0 截斷／選擇權）", level=2)
 DMODE = gi(r, "DCF 下限方式（1＝0 截斷、2＝選擇權）", "", (1 if V['dcfMode'] == 'zero' else 2), "0 截斷：MAX(0, 股權價值)；選擇權：Merton，股權＝以企業價值為標的、淨負債為履約價的買權", NUM0, True); r += 1
 SIGMA = gi(r, "企業價值波動率 σ", "%", V['sigma'], "選擇權法用 [Assumed]", PCT); r += 1
-RF = gi(r, "無風險利率", "%", V['rf'], "選擇權法用 [Assumed]", PCT); r += 1
 OPTT = gi(r, "選擇權期間（年）", "年", V['optT'], "至 FY30 末", NUM1); r += 1
 # v4.5（5a-1）：期間與日期——由 company.json → calendar 推算（calendar_q.py，HTML 共用同一份結果）；折現年數以月計
 r = section(ws, r, "期間與日期（company.json → calendar 推算；勿手改）", level=2)
@@ -1727,14 +1742,17 @@ _EB = f"{PL}$D${ebitda_v}:$G${ebitda_v}"
 _TD = f"'各期收支'!$D${FRR['td']}:$G${FRR['td']}"
 _CU = f"'各期收支'!$D${FRR['cum']}:$G${FRR['cum']}"
 _SHR = f"{PL}$D${shr_v}:$G${shr_v}"
+_LGE = f"'輸入與假設'!$D${IN['傳統事業 EBITDA（模型期）']}:$G${IN['傳統事業 EBITDA（模型期）']}"  # v0.1b（Oracle）：分部加總的傳統事業 EBITDA
 mult_lines = [
-    ("錨定年度", f'=CHOOSE({EVY},"FY27","FY28","FY29","FY30")', "@", "輸入與假設 F 區可改"),
+    ("錨定年度", "=CHOOSE({0}," .format(EVY) + ",".join(f'"{x}"' for x in CO['periods'][1:5]) + ")", "@", "輸入與假設 F 區可改"),
     ("錨定年度 EBITDA", f"=INDEX({_EB},1,{EVY})", NUM, None),
-    ("錨定年度企業價值（倍數 × EBITDA）", None, NUM, None),
+    ("錨定年度企業價值（倍數 × EBITDA）", None, NUM, "分部加總：OCI EBITDA × EV/EBITDA 倍數＋傳統事業 EBITDA × 傳統事業倍數（下方兩列）"),
     ("錨定年度末淨負債（總債務 − 現金）", f"=INDEX({_TD},1,{EVY})-INDEX({_CU},1,{EVY})+§NDA§", NUM, "含瀑布新債；加可轉債分類調整與淨負債調整項（見下方可轉債區）"),
     ("錨定年度末股數（含瀑布新股）", f"=INDEX({_SHR},1,{EVY})", '0.000', "損益股數：SBC 逐年稀釋＋瀑布新股"),
     ("折回 «TGT» 的折現因子", f"=1/(1+{WACC})^({EVY}-{OFF})", '0.000', "以 WACC 折現 [Assumed]"),
     ("EV/EBITDA 每股（融資後）", None, USD, "以 0 為下限"),
+    ("錨定年度傳統事業 EBITDA", f"=INDEX({_LGE},1,{EVY})", NUM, "× 傳統事業 EV/EBITDA 倍數（軟體同業 NTM 中位數）"),
+    ("錨定年度 OCI EBITDA（算力＋服務＋其他）", None, NUM, "＝錨定年度 EBITDA − 傳統事業；× EV/EBITDA 倍數"),
 ]
 for nm, f, fmt, nt in mult_lines:
     ws.cell(row=r, column=1, value=nm).font = BLACK
@@ -1745,7 +1763,8 @@ for nm, f, fmt, nt in mult_lines:
     if nt:
         ws.cell(row=r, column=9, value=nt).font = SMALL
     r += 1
-ws.cell(row=m0 + 2, column=3, value=f"=C{m0+1}*{EVEBITDA}").number_format = NUM
+ws.cell(row=m0 + 8, column=3, value=f"=C{m0+1}-C{m0+7}").number_format = NUM
+ws.cell(row=m0 + 2, column=3, value=f"=C{m0+8}*{EVEBITDA}+C{m0+7}*{LEGM}").number_format = NUM
 ws.cell(row=m0 + 6, column=3, value=f"=MAX(0,(C{m0+2}-C{m0+3})/C{m0+4})*C{m0+5}").number_format = USD
 EVE_ADJ = f"C{m0+6}"
 
@@ -1845,7 +1864,7 @@ def _code(px):  # 評等代碼：1＝買進、0＝中立、−1＝賣出（與 H
             f"IF(OR({c}<={RT_SELL},AND($C${R0+2}>{RT_EQ},{c}<={RT_SELL2})),-1,0))")
 _CALL = lambda cell: f'CHOOSE({cell}+2,"賣出","中立","買進")'
 _T1 = lambda x: f'TEXT({x},"0.0")'
-_EVM = lambda m: (f"{DCF_T}*IF({DCF_BAD}=1,0,{WDCF})+MAX(0,(C{m0+1}*{m}-C{m0+3})/C{m0+4})*C{m0+5}*IF({DCF_BAD}=1,1,1-{WDCF})")
+_EVM = lambda m: (f"{DCF_T}*IF({DCF_BAD}=1,0,{WDCF})+MAX(0,(C{m0+8}*{m}+C{m0+7}*{LEGM}-C{m0+3})/C{m0+4})*C{m0+5}*IF({DCF_BAD}=1,1,1-{WDCF})")
 rows_rg = [
     ("目標價區間｜點位（目前輸入的加權目標價）", [f"={TGT}"], USD),
     ("目標價區間｜終值占 EV（評等用）", [f"=C{d0+3}/MAX(ABS(C{d0+4}),1)*IF(C{d0+4}=0,1,SIGN(C{d0+4}))"], PCT),
@@ -1910,10 +1929,10 @@ RG_PT_CODE = f"C{R0+3}"
 from openpyxl.formatting.rule import CellIsRule as _CIR
 r += 1
 r = section(ws, r, "錨定年度 × 倍數矩陣（每股；«EVDISC»）")
-ws.cell(row=r, column=9, value="EV/EBITDA 腿＝(錨定年 EBITDA × 倍數 − 錨定年末淨負債) ÷ 錨定年末股數 × 折現因子；加權＝DCF 採用值 × 有效權重 ＋ 腿 × 有效權重。綠底＝不低於現價").font = SMALL
+ws.cell(row=r, column=9, value="EV/EBITDA 腿＝(OCI EBITDA × 倍數＋傳統事業 EBITDA × 傳統事業倍數 − 錨定年末淨負債) ÷ 錨定年末股數 × 折現因子；加權＝DCF 採用值 × 有效權重 ＋ 腿 × 有效權重。綠底＝不低於現價").font = SMALL
 EVG_M = [3.4, 4.5, 5.0, 6.0, 7.0]
 for kind in ("EV/EBITDA 腿", "加權目標價"):
-    for j, h in enumerate(["倍數 ＼ 錨定（" + kind + "）", "倍數", "FY27", "FY28", "FY29", "FY30"]):
+    for j, h in enumerate(["OCI 倍數 ＼ 錨定（" + kind + "）", "倍數"] + CO['periods'][1:5]):
         c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
     r += 1
     g0 = r
@@ -1923,7 +1942,7 @@ for kind in ("EV/EBITDA 腿", "加權目標價"):
         for k in range(1, 5):
             col = 2 + k
             if kind == "EV/EBITDA 腿":
-                f = (f"=MAX(0,(INDEX({_EB},1,{k})*$B{r}-(INDEX({_TD},1,{k})-INDEX({_CU},1,{k})+§NDA§))"
+                f = (f"=MAX(0,((INDEX({_EB},1,{k})-INDEX({_LGE},1,{k}))*$B{r}+INDEX({_LGE},1,{k})*{LEGM}-(INDEX({_TD},1,{k})-INDEX({_CU},1,{k})+§NDA§))"
                      f"/INDEX({_SHR},1,{k}))/(1+{WACC})^({k}-{OFF})")
             else:
                 leg_row = LEG0 + (r - g0)
@@ -2113,7 +2132,7 @@ _sub = lambda x, b: None if x is None else x - b
 _rows = [
     ("«PL» 每 MW 年收入（US$m）", rv["rev30"], _mul(rv["rev30"], rv["R"]), _sub(rv["R"], 1), TXQ['rvRevNote']),
     ("每 MW 建置成本（US$m）", rv["cost30"], _mul(rv["cost30"], rv["C"]), _sub(rv["C"], 1), TXQ['rvCostNote']),
-    ("穩態 EBITDA 率（«PL»）", rv["eb30"], rv["Eb"], _sub(rv["Eb"], rv["eb30"]), "可觀察 neocloud 區間 IREN 約 35%、CRWV 約 59%（變動為百分點）"),
+    ("穩態 EBITDA 率（«PL»）", rv["eb30"], rv["Eb"], _sub(rv["Eb"], rv["eb30"]), "OCI（算力）EBITDA 率；傳統事業 EBITDA 率固定不動。可觀察 neocloud 區間 IREN 約 35%、CRWV 約 59%（變動為百分點）"),
     ("（對照）加權目標價＝現價所需每 MW 年收入", rv["rev30"], _mul(rv["rev30"], rv["Rt"]), _sub(rv["Rt"], 1), f"含 EV/EBITDA 腿（{CO['periods'][V['evYear']]} 錨定）；非純反向 DCF"),
 ]
 RV_R0 = r  # v4.3：單一槓桿快照第一列（「摘要」頁引用）
@@ -2128,6 +2147,7 @@ for k, (nm, a, b, d, note) in enumerate(_rows):
 r += 1
 r = section(ws, r, "快照：收入與成本的綜合影響——要值現價，«PL» 每 MW 年收入需要多少（US$m）", span=7)
 c = ws.cell(row=r, column=1, value="建置成本 ＼ 穩態 EBITDA 率"); c.font = HEAD; c.fill = FILL_HEAD
+ws.cell(row=r, column=9, value="矩陣保留 OCI EBITDA 率維度：傳統事業（約 54% EBITDA 率、軟體同業倍數）不隨此表變動，表內只測算力業務的單位經濟").font = SMALL
 for j, e in enumerate(rv["ebs"]):
     c = ws.cell(row=r, column=2 + j, value=e); c.font = HEAD; c.fill = FILL_HEAD; c.number_format = '0%'
 r += 1
@@ -3160,10 +3180,15 @@ r = section(ws, r, "3｜現價隱含什麼")
 _E28, _N28, _PTM = CIR("年度｜調整後 EBITDA", 2), CIR("年度｜淨負債", 2), CIR("目標價｜平均")
 srow(f"隱含｜共識平均目標價隱含 {P3[2]} EV/EBITDA", "x", [f"=({_PTM}*{SH}+{_N28})/{_E28}"], MULT, f"＝（共識平均目標價 × 股數＋共識 {P3[2]} 淨負債）÷ 共識 {P3[2]} 調整後 EBITDA")
 srow(f"隱含｜現價隱含 {P3[2]} EV/EBITDA", "x", [f"=({PX}*{SH}+{_N28})/{_E28}"], MULT, f"同一共識 {P3[2]} 數字，價格換成現價")
-srow("隱含｜模型方法區間上緣", "x", [f"=MAX({RM_LO},{RM_HI})"], MULT, f"模型 EV/EBITDA 腿錨定 {CO['periods'][V['evYear']]} 並折回 «TGT»，錨定年度與此不同")
+srow("隱含｜模型方法區間上緣", "x", [f"=MAX({RM_LO},{RM_HI})"], MULT, f"模型 EV/EBITDA 腿（OCI 倍數）錨定 {CO['periods'][V['evYear']]} 並折回 «TGT»，錨定年度與此不同")
+_LG3 = f"'輸入與假設'!{COLS[2]}${IN['傳統事業 EBITDA（模型期）']}"  # v0.1b（Oracle）：分部加總——扣除傳統事業後的 OCI 隱含倍數
+srow(f"隱含｜模型 {P3[2]} 傳統事業 EBITDA", "US$bn", [f"={_LG3}"], NUM, "× 傳統事業 EV/EBITDA 倍數，自共識隱含 EV 扣除")
+srow(f"隱含｜共識平均目標價隱含 {P3[2]} OCI EV/EBITDA", "x", [f"=({_PTM}*{SH}+{_N28}-{_LG3}*{LEGM})/MAX({_E28}-{_LG3},0.01)"], MULT, "＝（隱含 EV − 傳統事業 EBITDA × 傳統事業倍數）÷（共識 EBITDA − 傳統事業 EBITDA）")
+srow(f"隱含｜現價隱含 {P3[2]} OCI EV/EBITDA", "x", [f"=({PX}*{SH}+{_N28}-{_LG3}*{LEGM})/MAX({_E28}-{_LG3},0.01)"], MULT, "同上，價格換成現價")
 _i1, _i2, _mh = f"C{SM[f'隱含｜共識平均目標價隱含 {P3[2]} EV/EBITDA']}", f"C{SM[f'隱含｜現價隱含 {P3[2]} EV/EBITDA']}", f"C{SM['隱含｜模型方法區間上緣']}"
-srow("隱含｜隱含倍數句", "", [(f'="共識平均目標價 $"&TEXT({_PTM},"0.00")&" 隱含 {P3[2]} EV/EBITDA "&TEXT({_i1},"0.0")&"x，"'
-                            f'&IF(ROUND({_i1},1)>{_mh},"高於",IF(ROUND({_i1},1)<{_mh},"低於","等於"))&"模型方法區間上緣 "&{_MT(_mh)}&"x；現價 $"&TEXT({PX},"0.00")&" 隱含 "&TEXT({_i2},"0.0")&"x。"')], bold=True)
+_o1, _o2, _lg = f"C{SM[f'隱含｜共識平均目標價隱含 {P3[2]} OCI EV/EBITDA']}", f"C{SM[f'隱含｜現價隱含 {P3[2]} OCI EV/EBITDA']}", f"C{SM[f'隱含｜模型 {P3[2]} 傳統事業 EBITDA']}"
+srow("隱含｜隱含倍數句", "", [(f'="共識平均目標價 $"&TEXT({_PTM},"0.00")&" 隱含 {P3[2]} EV/EBITDA "&TEXT({_i1},"0.0")&"x（扣除傳統事業 "&TEXT({LEGM},"0.0")&"x × 模型 EBITDA $"&TEXT({_lg},"0.0")&"bn 後，OCI "&TEXT({_o1},"0.0")&"x），OCI 倍數"'
+                            f'&IF(ROUND({_o1},1)>{_mh},"高於",IF(ROUND({_o1},1)<{_mh},"低於","等於"))&"模型方法區間上緣 "&{_MT(_mh)}&"x；現價 $"&TEXT({PX},"0.00")&" 隱含 "&TEXT({_i2},"0.0")&"x（OCI "&TEXT({_o2},"0.0")&"x）。"')], bold=True)
 _RV = "'評價_反向DCF'!"
 for k, nm in enumerate(["反向 DCF｜«PL» 每 MW 年收入（目前／隱含／變動）", "反向 DCF｜每 MW 建置成本（目前／隱含／變動）",
                         "反向 DCF｜穩態 EBITDA 率（目前／隱含／變動 pt）", "反向 DCF｜加權目標價＝現價所需每 MW 年收入（目前／隱含／變動）"]):

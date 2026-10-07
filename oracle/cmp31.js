@@ -1,7 +1,7 @@
 const fs=require('fs'); require('./load_engine.js')(); // v4.0：引擎資料來自 company.json
 // v4.5：Excel 列名稱中的期間字樣由日曆產生（佔位符 → 目前日曆字樣，與 build_xlsx 相同的 calendar_q.tokens）
 const T=s=>Object.keys(CALQ.tokens).sort((a,b)=>b.length-a.length).reduce((x,k)=>x.split(k).join(CALQ.tokens[k]),s);
-const SC=process.argv[2], AK=+(process.argv[3]||3), AKX=process.argv[3]!==undefined; // AK：EV/EBITDA 錨定年度（1＝FY27…4＝FY30）
+const SC=process.argv[2], AK=+(process.argv[3]||VAL_DEFAULTS.evYear), AKX=process.argv[3]!==undefined; // AK：EV/EBITDA 錨定年度（1＝模型第 2 期…4＝第 5 期；預設 valuation.evYear）
 const X=JSON.parse(fs.readFileSync('xl17_'+({low:1,base:2,high:3}[SC])+(AKX?'_a'+AK:'')+'.json','utf8'));
 VAL_DEFAULTS.evYear=AK;
 const q=structuredClone(DEFAULTS); q.scenario=SC; q.a=structuredClone(SCENARIOS[SC].a); q.mw31=SCENARIOS[SC].mw31; q.cvCap=SCENARIOS[SC].cvCap; q.billableOpen=SCENARIOS[SC].bOpen; q.m.accepted=[...SCENARIOS[SC].acc]; q.m.billable=[...SCENARIOS[SC].bil]; q.m.revMW=[...SCENARIOS[SC].rev];
@@ -111,6 +111,12 @@ cmp('DCF 0截斷', V+'DCF 每股：0 截斷', [p.d.zeroPerShare]);
 cmp('DCF 選擇權', V+'DCF 每股：選擇權（Merton）', [p.d.optPerShare]);
 cmp('DCF 失效', V+'DCF 失效？（WACC ≤ g 或常態化 FCF ≤ 0）', [p.d.invalid?1:0]);
 cmp('錨定年EBITDA', V+'錨定年度 EBITDA', [f[p.evK].ebitda]);
+// v0.1b（Oracle）步驟 8：CAPM WACC 與分部加總
+cmp('CAPM ke', '輸入與假設|股權成本 ke＝rf＋β × ERP', [CAPM_Q(VAL_DEFAULTS).ke]); cmp('WACC', '輸入與假設|WACC', [VAL_DEFAULTS.wacc]);
+cmp('WACC（CAPM）', '輸入與假設|WACC（CAPM）＝E/(D+E) × ke＋D/(D+E) × kd ×(1 − 稅率)', [CAPM_Q(VAL_DEFAULTS).wacc]);
+cmp('傳統事業倍數', '輸入與假設|傳統事業 EV/EBITDA 倍數', [VAL_DEFAULTS.legacyEvEbitda]);
+cmp('錨定年傳統EBITDA', V+'錨定年度傳統事業 EBITDA', [f[p.evK].legacyEbitda]);
+cmp('錨定年EV（分部加總）', V+'錨定年度企業價值（倍數 × EBITDA）', [evSotpQ(f[p.evK], VAL_DEFAULTS.evEbitda, VAL_DEFAULTS)]);
 cmp('錨定年末淨負債', V+'錨定年度末淨負債（總債務 − 現金）', [p.ndA]);
 cmp('錨定年末股數', V+'錨定年度末股數（含瀑布新股）', [p.shA]);
 // v0.1b：可轉債稀釋（分類、股數、淨負債、還本、票息、期末餘額）
@@ -158,6 +164,7 @@ cmp('加權目標價', V+'加權目標價', [p.call.blended]);
   cmp('摘要 分歧起始年',SM+`差異｜分歧起始年（1＝${PERIODS[0]}…3＝${PERIODS[2]}；0＝無）`,[cv.first+1]);
   cmp('隱含 共識目標價倍數',SM+`隱含｜共識平均目標價隱含 ${PERIODS[2]} EV/EBITDA`,[cv.impTgt]); cmp('隱含 現價倍數',SM+`隱含｜現價隱含 ${PERIODS[2]} EV/EBITDA`,[cv.impPx]);
   cmp('隱含 模型上緣',SM+'隱含｜模型方法區間上緣',[cv.mHi]);
+  cmp('隱含 共識目標價OCI倍數',SM+`隱含｜共識平均目標價隱含 ${PERIODS[2]} OCI EV/EBITDA`,[cv.impTgtOci]); cmp('隱含 現價OCI倍數',SM+`隱含｜現價隱含 ${PERIODS[2]} OCI EV/EBITDA`,[cv.impPxOci]); cmp('隱含 傳統EBITDA',SM+`隱含｜模型 ${PERIODS[2]} 傳統事業 EBITDA`,[cv.lgE]);
   cmp('摘要 點位',SM+'結論｜點位（加權目標價）',[R.pt]); cmp('摘要 空間',SM+'結論｜空間',[cv.up]); cmp('摘要 點位−門檻',SM+'結論｜點位 − 賣出門檻',[cv.gapTh]);
   cmpT('文字 摘要評等',SM+'結論｜評等',p.call.call); cmpT('文字 摘要結論句',SM+'結論｜結論句',cv.head); cmpT('文字 摘要情境判斷句',SM+'結論｜情境判斷句',R.judge);
   cmpT('文字 共識判斷句',SM+'差異｜判斷句',cv.judge); cmpT('文字 投資級句',SM+'結論｜投資級句',cv.igLine); cmpT('文字 隱含倍數句',SM+'隱含｜隱含倍數句',cv.implied);

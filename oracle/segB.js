@@ -1,6 +1,13 @@
 PERIOD_LABELS = PERIODS, // 接續模板片段 mid1 結尾未結束的宣告鏈，所以不可加 var
   HIST_PL = COMPANY_DATA.historicalPL,
-  VAL_DEFAULTS = structuredClone(COMPANY_DATA.valuation),
+  CAPM_Q = ((v, b) => { // v0.1b（Oracle）：WACC 以 CAPM 計算（company.json → valuation.capm）；b＝β（敏感度用）
+    const c = v.capm, E = v.price * COMPANY_DATA.latestQuarter.sharesOut, D = COMPANY_DATA.latestQuarter.debtPrincipal, be = b ?? c.beta,
+      ke = v.rf + be * c.erp, kd = c.kdPretax * (1 - v.tax), wE = E / (D + E);
+    return { beta: be, ke, kd, kdPre: c.kdPretax, E, D, wE, wD: 1 - wE, wacc: wE * ke + (1 - wE) * kd }
+  }),
+  MEDIAN_Q = a => { const s = [...a].sort((x, y) => x - y), n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2 },
+  SW_MEDIAN = MEDIAN_Q((COMPANY_DATA.peers.software || []).map(x => x.ntmEvEbitda)), // 軟體同業 NTM EV/EBITDA 中位數
+  VAL_DEFAULTS = (v => (v.wacc = v.wacc ?? CAPM_Q(v).wacc, v.legacyEvEbitda = v.legacyEvEbitda ?? SW_MEDIAN, v))(structuredClone(COMPANY_DATA.valuation)), // null＝採 CAPM／同業中位數；數字＝手動覆蓋
   lM = COMPANY_DATA.peers.list.map(e => ({ ...e, ev: e.mkt + e.netDebt, ebitda: e.opInc + e.da })); // 同業 Comps：資料只在 company.json → peers；EV 與 EBITDA 現算（與 Excel 公式一致）
 
 function uM(e, t) {
@@ -156,14 +163,19 @@ function evEbitdaLeg(e, t) {
   let k = Math.min(4, Math.max(1, Math.round(t.evYear ?? 1))),
     n = t.fund ? t.fund.ndY[k] : t.netDebt,
     r = t.fund ? e[k].shares : t.shares; // 損益股數：SBC 逐年複利稀釋＋瀑布新股（FY27 與 v3.4 相同）
-  return (e[k].ebitda * t.evEbitda - n) / r / Math.pow(1 + t.wacc, k - CALQ.evOffset) // v4.5：錨定期末折回目標價時點（calendar.targetHorizon）
+  return (evSotpQ(e[k], t.evEbitda, t) - n) / r / Math.pow(1 + t.wacc, k - CALQ.evOffset) // v4.5：錨定期末折回目標價時點（calendar.targetHorizon）
+}
+// v0.1b（Oracle）：分部加總企業價值＝OCI EBITDA × OCI 倍數 m＋傳統事業 EBITDA × 傳統事業倍數（軟體同業 NTM 中位數）
+function evSotpQ(f, m, t) {
+  const lg = f.legacyEbitda || 0;
+  return (f.ebitda - lg) * m + lg * (t.legacyEvEbitda ?? m)
 }
 // v3.5：錨定年度 × 倍數矩陣（加權目標價與 EV/EBITDA 腿，均為每股）
 var EVG_MULTS = [3.4, 4.5, 5, 6, 7];
 function evAnchorGrid(d, st, o) {
   let base = runValuation(d, st, o);
   let leg = EVG_MULTS.map(m => [1, 2, 3, 4].map(k => {
-    return Math.max(0, (base.fwd[k].ebitda * m - base.v.fund.ndY[k]) / base.fwd[k].shares / Math.pow(1 + o.wacc, k - CALQ.evOffset))
+    return Math.max(0, (evSotpQ(base.fwd[k], m, o) - base.v.fund.ndY[k]) / base.fwd[k].shares / Math.pow(1 + o.wacc, k - CALQ.evOffset))
   }));
   let DI = base.d.invalid, wd = DI ? 0 : BLEND_W.dcf, dcf = DI ? 0 : base.d.perShareT;
   return {
@@ -183,8 +195,8 @@ var BLEND_W = COMPANY_DATA.methodology.blendWeights,
     shares: `含 ATM ＋ 瀑布新股`,
     netDebt: `評價日本金 ${Y(LATEST_Q.debtPrincipal, 2)} − 現金 ${Y(LATEST_Q.cash + LATEST_Q.marketable, 2)}（另含期後調整）`
   }, {
-    method: `EV/EBITDA（錨定年度，可選 ${PERIODS[1]}–${PERIODS[4]}）`,
-    capex: `EBITDA 未扣 CapEx`,
+    method: `EV/EBITDA 分部加總（錨定年度，可選 ${PERIODS[1]}–${PERIODS[4]}）`,
+    capex: `EBITDA 未扣 CapEx；OCI EBITDA × OCI 倍數＋傳統事業 EBITDA × 軟體同業 NTM 中位數`,
     hole: `不扣缺口：改用錨定年末淨負債（含瀑布新債）與股數（含瀑布新股）；${CALQ.evDiscText}`,
     shares: `錨定年末（含 SBC 稀釋與新股）`,
     netDebt: `錨定年末總債務 − 現金`
@@ -473,9 +485,12 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
     PT = CONSENSUS.priceTarget, e28 = E[YN],
     impTgt = (PT.mean * o.shares + e28.netDebt) / e28.ebitda,
     impPx = (o.price * o.shares + e28.netDebt) / e28.ebitda,
+    lgE = p.fwd[CONS_YEARS.length - 1].legacyEbitda || 0, lgM = o.legacyEvEbitda ?? 0, // v0.1b（Oracle）：分部加總——扣除傳統事業（模型 EBITDA × 傳統事業倍數）後的 OCI 隱含倍數
+    impTgtOci = (PT.mean * o.shares + e28.netDebt - lgE * lgM) / Math.max(e28.ebitda - lgE, .01),
+    impPxOci = (o.price * o.shares + e28.netDebt - lgE * lgM) / Math.max(e28.ebitda - lgE, .01),
     mHi = Math.max(...RANGE_MULTS),
     rel = x => { let r = Math.round(x * 10) / 10; return r > mHi ? `高於` : r < mHi ? `低於` : `等於` },
-    implied = `共識平均目標價 $${Y(PT.mean, 2)} 隱含 ${YN} EV/EBITDA ${Y(impTgt, 1)}x，${rel(impTgt)}模型方法區間上緣 ${multTxt(mHi)}x；現價 $${Y(o.price, 2)} 隱含 ${Y(impPx, 1)}x。`,
+    implied = `共識平均目標價 $${Y(PT.mean, 2)} 隱含 ${YN} EV/EBITDA ${Y(impTgt, 1)}x（扣除傳統事業 ${Y(lgM, 1)}x × 模型 EBITDA $${Y(lgE, 1)}bn 後，OCI ${Y(impTgtOci, 1)}x），OCI 倍數${rel(impTgtOci)}模型方法區間上緣 ${multTxt(mHi)}x；現價 $${Y(o.price, 2)} 隱含 ${Y(impPx, 1)}x（OCI ${Y(impPxOci, 1)}x）。`,
     up = TR.pt / o.price - 1, gapTh = TR.pt - TR.th,
     head = `${p.call.call}：點位 $${Y(TR.pt, 1)}，較現價 $${Y(o.price, 2)} ${up >= 0 ? `高` : `低`} ${hA(Math.abs(up) * 100, 0)}；情境區間 $${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}，方法區間 $${Y(TR.B[0], 1)}–$${Y(TR.B[1], 1)}；點位${gapTh < 0 ? `低於` : `高於`}賣出門檻 $${Y(TR.th, 1)} 達 $${Y(Math.abs(gapTh), 1)}。`;
   // v4.4：差距超過門檻的項目附差異原因（已決定事項 2）；原因與類型讀 company.json → varianceReasons，找不到即為「未歸類」
@@ -487,7 +502,7 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
     rsnSum = reasonSumQ(rsn, `原因見「損益與評價 → 市場共識」。`),
     jk = d.years.reduce((a, t) => a + t.junk, 0), S0 = st || DEFAULTS, // v0.1b（Oracle）：高息債溢出＝需失去投資級才能融資的金額（一頁摘要一句）
     igLine = S0.debtCapBasis === `ebitda` ? `需失去投資級才能融資的金額：${jk > .05 ? `$${Y(jk, 1)}bn（五期高息債溢出）` : `$0`}；投資級上限＝總債務 ≤ ${multTxt(S0.debtEbitdaMax)}× 當期 EBITDA，股權每年 ≤ 現市值 ${pctQ(S0.eqCapPct)}。` : ``;
-  return { rows, ex, first, judge, impTgt, impPx, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, junk: jk }
+  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, junk: jk }
 }
 
 // v4.4：差異原因的共用工具（年度共識對照與季度層共用）。類型固定為四種（已決定事項 2）；原因文字中的 {路徑:格式} 由模型數字帶入。

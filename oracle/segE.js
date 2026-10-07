@@ -442,7 +442,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
     elQ(`p`, { key: `j`, style: { fontSize: 16, lineHeight: 1.5, margin: `16px 0 0` } },
       `情境區間（保守與積極情境）$${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}。${TR.judge}`),
     elQ(`p`, { key: `n`, style: { fontSize: 14, color: `var(--color-muted)`, marginTop: `auto`, lineHeight: 1.5 } },
-      `加權目標價＝DCF ${hA((f.call.weights?.dcf ?? .45) * 100, 0)}＋EV/EBITDA（${PERIOD_LABELS[o.evYear ?? 1]}，${Y(o.evEbitda, 1)}x）${hA((f.call.weights?.pe ?? .55) * 100, 0)}。DCF 股權價值為負時以 0 截斷；選擇權模式以 Merton（σ ${hA(o.sigma * 100, 0)}）估計有限責任下的股權價值。`)
+      `加權目標價＝DCF ${hA((f.call.weights?.dcf ?? .45) * 100, 0)}＋EV/EBITDA 分部加總（${PERIOD_LABELS[o.evYear ?? 1]}：OCI ${Y(o.evEbitda, 1)}x＋傳統事業 ${Y(o.legacyEvEbitda ?? o.evEbitda, 1)}x）${hA((f.call.weights?.pe ?? .55) * 100, 0)}；WACC ${hA(o.wacc * 100, 1)}（CAPM：rf ${hA(o.rf * 100, 2)}＋β ${Y(CAPM_Q(o).beta, 2)} × ERP ${hA(o.capm.erp * 100, 1)}；稅前 kd ${hA(o.capm.kdPretax * 100, 2)}）。DCF 股權價值為負時以 0 截斷；選擇權模式以 Merton（σ ${hA(o.sigma * 100, 0)}）估計有限責任下的股權價值。`)
   ]);
 
   // 6｜反向 DCF
@@ -473,20 +473,20 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
 
   // 7｜評價方法：錨定年度 × 倍數（v3.5）
   {
-    let k6 = eg.mults.indexOf(6), best = { v: -1 };
+    let k6 = eg.mults.indexOf(o.evEbitda), ky = (o.evYear ?? 1) - 1, best = { v: -1 };
     eg.leg.forEach((r, i) => r.forEach((x, j) => { if (x > best.v) best = { v: x, m: eg.mults[i], y: eg.years[j] }; }));
     let hits = [];
     eg.leg.forEach((r, i) => r.forEach((x, j) => { if (x >= .95 * P) hits.push(`${eg.years[j]} × ${Y(eg.mults[i], 1)}x（$${Y(x, 1)}）`); }));
-    let tmax = Math.max(...eg.tgt.flat()), l29 = k6 >= 0 ? eg.leg[k6][2] : NaN;
-    S(`評價方法`, `結論方向不變，但幅度取決於錨定年度與倍數：${Number.isFinite(l29) ? `FY29 × 6x 時 EV/EBITDA 腿為 $${Y(l29, 1)}，${l29 >= .95 * P ? `約等於` : l29 > P ? `高於` : `低於`}現價` : `見下表`}`, [
+    let tmax = Math.max(...eg.tgt.flat()), l29 = k6 >= 0 ? eg.leg[k6][ky] : NaN;
+    S(`評價方法`, `結論方向不變，但幅度取決於錨定年度與倍數：${Number.isFinite(l29) ? `${PERIOD_LABELS[o.evYear ?? 1]} × OCI ${multTxt(o.evEbitda)}x 時 EV/EBITDA 腿為 $${Y(l29, 1)}，${l29 >= .95 * P ? `約等於` : l29 > P ? `高於` : `低於`}現價` : `見下表`}`, [
       elQ(EvGridQ, { key: `g`, st: e, o: o, g: eg, big: !0 }),
       elQ(`div`, { key: `n`, style: { marginTop: 22, fontSize: 17, lineHeight: 1.6 } }, [
         elQ(`div`, { key: 1 }, `• 矩陣內加權目標價最高 $${Y(tmax, 1)}，${tmax < P ? `仍低於現價，賣出方向在所有組合下成立` : `部分組合高於現價，結論對方法選擇敏感`}。`),
-        elQ(`div`, { key: 2 }, hits.length ? `• 但 EV/EBITDA 腿單獨達到現價 95% 以上的組合：${hits.join('、')}——市場大致以穩態倍數上緣定價 FY28 以後的 EBITDA。` : `• EV/EBITDA 腿在所有組合下都低於現價的 95%。`),
-        elQ(`div`, { key: 3 }, `• 因此賣出結論實際依賴：(a) DCF 股權價值為負（權重 ${hA(eg.wd * 100, 0)} 取 $${Y(eg.dcf, 1)}）；(b) 6x 是穩態倍數上緣（約 3.4–6.0x）而非中值。`)
+        elQ(`div`, { key: 2 }, hits.length ? `• 但 EV/EBITDA 腿單獨達到現價 95% 以上的組合：${hits.join('、')}——市場大致以穩態倍數上緣定價 ${PERIODS[1]} 以後的 EBITDA。` : `• EV/EBITDA 腿在所有組合下都低於現價的 95%。`),
+        elQ(`div`, { key: 3 }, `• 結論對方法的依賴：(a) DCF 腿（權重 ${hA(eg.wd * 100, 0)}）取 $${Y(eg.dcf, 1)}；(b) OCI ${multTxt(o.evEbitda)}x 為可觀察 neocloud 穩態倍數上緣、傳統事業 ${multTxt(o.legacyEvEbitda ?? o.evEbitda)}x 為軟體同業 NTM 中位數（區間 ${multTxt(Math.min(...COMPANY_DATA.peers.software.map(x => x.ntmEvEbitda)))}–${multTxt(Math.max(...COMPANY_DATA.peers.software.map(x => x.ntmEvEbitda)))}x）。`)
       ]),
       elQ(`p`, { key: `f`, style: { fontSize: 14, color: `var(--color-muted)`, marginTop: `auto`, lineHeight: 1.5 } },
-        `目前設定：錨定 ${PERIOD_LABELS[o.evYear ?? 1]}、${Y(o.evEbitda, 1)}x（黃底）。FY27 錨定的疑慮：6x 為穩態倍數卻套在爬坡年度；FY27 年末淨負債已含 FY28 才產生 EBITDA 的預建 CapEx。`)
+        `目前設定：錨定 ${PERIOD_LABELS[o.evYear ?? 1]}、OCI ${Y(o.evEbitda, 1)}x、傳統事業 ${Y(o.legacyEvEbitda ?? o.evEbitda, 1)}x（黃底；矩陣只變動 OCI 倍數）。${PERIODS[1]} 錨定的疑慮：穩態倍數套在爬坡年度；該年末淨負債已含下一期才產生 EBITDA 的預建 CapEx。`)
     ]);
   }
 
