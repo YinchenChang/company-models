@@ -4,7 +4,7 @@ const T=s=>Object.keys(CALQ.tokens).sort((a,b)=>b.length-a.length).reduce((x,k)=
 const SC=process.argv[2], AK=+(process.argv[3]||3), AKX=process.argv[3]!==undefined; // AK：EV/EBITDA 錨定年度（1＝FY27…4＝FY30）
 const X=JSON.parse(fs.readFileSync('xl17_'+({low:1,base:2,high:3}[SC])+(AKX?'_a'+AK:'')+'.json','utf8'));
 VAL_DEFAULTS.evYear=AK;
-const q=structuredClone(DEFAULTS); q.scenario=SC; q.a=structuredClone(SCENARIOS[SC].a); q.mw31=SCENARIOS[SC].mw31; q.m.accepted=[...SCENARIOS[SC].acc]; q.m.billable=[...SCENARIOS[SC].bil];
+const q=structuredClone(DEFAULTS); q.scenario=SC; q.a=structuredClone(SCENARIOS[SC].a); q.mw31=SCENARIOS[SC].mw31; q.cvCap=SCENARIOS[SC].cvCap; q.m.accepted=[...SCENARIOS[SC].acc]; q.m.billable=[...SCENARIOS[SC].bil]; q.m.revMW=[...SCENARIOS[SC].rev];
 const d=runFunding(q), p=runValuation(d,q,VAL_DEFAULTS), y=d.years, f=p.fwd;
 const H=(k)=>y.map(e=>e[k]);
 const rows=[];
@@ -22,12 +22,14 @@ cmp('Accepted', S+'Accepted MW（已驗收，單調不減）', d.m.accepted);
 cmp('Billable', S+'Billable MW（上限為 Accepted）', d.m.billable);
 cmp('平均在役MW', S+T('平均在役 MW（«P0» 欄為«STUBW»平均）'), H('avgBillable'));
 cmp('容量上限', S+'容量上限（模型期最多能交付的收入）', H('capacity'));
-cmp('排程RPO', S+'排程 RPO（模型期，依 10-Q 桶分攤）', H('scheduled'));
+cmp('排程RPO', S+'排程 RPO（模型期，依季報桶分攤）', H('scheduled'));
 cmp('瓶頸', S+'產能瓶頸（模型期：排程 − 容量）', H('bottleneck'));
 cmp('RPO轉換', S+'期初 RPO 轉換收入（模型期）', H('revenue'));
 cmp('新簽約收入', S+'新簽約收入', H('newRev'));
 cmp('未售', S+'未售產能（浪費）', H('unsold'));
 cmp('isRev', S+'損益用算力收入（模型期＝RPO 轉換＋新簽約）', H('isRev'));
+cmp('營收−MW×單價×利用率', S+'核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間', y.map(e=>e.isRev-e.capacity)); // v0.1b：MW 驅動時為 0
+cmp('每MW年收入', '輸入|每 MW 年收入', d.m.revMW);
 cmp('信用損失', S+'信用損失（期初 RPO 部分）', H('loss'));
 cmp('RPO現金', S+'RPO 現金（可支應資本用途）', H('rpoCash'));
 cmp('新簽約現金', S+'新簽約現金', H('newCash'));
@@ -49,14 +51,16 @@ cmp('融資前現金', F+'融資前現金（扣既有新債利息）', H('preCas
 cmp('融資需求', F+'融資需求（補足至最低現金）', H('need'));
 cmp('期末backlog', F+'期末 backlog', H('backlogEnd'));
 cmp('新債舉借', F+'新債舉借', H('newDebt'));
+cmp('可轉債發行', F+'可轉債發行', H('convNew')); cmp('可轉債期末', F+'可轉債（瀑布）期末餘額', H('convEnd')); // v0.1b
 cmp('股權募資', F+'股權募資', H('equity'));
 cmp('高息債', F+'高息債舉借（溢出）', H('junk'));
 cmp('融資前累積現金', F+'融資前累積現金', H('preFinCum'));
 cmp('累計新股', F+'累計新股', H('cumNewShares'));
 cmp('總債務', F+'期末總債務（既有＋可轉債＋新債＋高息債）', H('totalDebtEnd'));
 cmp('租金合計', F+'　租金合計', H('lease'));
-cmp('排程還本(FY26含1H)', F+'⑤ 排程還本（10-Q 本金表）', y.map((e,i)=>i===0?e.fyDebtPay:e.debtPay));
+cmp('排程還本(FY26含1H)', F+'⑤ 排程還本（季報到期表）', y.map((e,i)=>i===0?e.fyDebtPay:e.debtPay));
 cmp('客戶預付', F+T('Ⓓ 客戶預付（«STUB» 起）'), H('external'));
+cmp('預付認列', F+'　預付認列（非現金營收）', H('prepayRecog')); cmp('合約負債期末', F+'　合約負債期末', H('clEnd')); cmp('合約負債期初', F+'　合約負債期初（客戶預付餘額）', H('clBeg')); // v0.1b
 cmp('營運來源合計', F+'營運來源合計', y.map((e,i)=>i===0?e.fySourcesOp:e.sourcesOp));
 cmp('營運缺口', F+'營運缺口（不含融資、不含還本）', y.map((e,i)=>i===0?e.fyOperatingGap:e.operatingGap));
 cmp('期末累積現金', F+'期末累積現金', H('cum'));
@@ -68,12 +72,12 @@ cmp('總來源', F+'總來源（含融資）', y.map((e,i)=>i===0?e.fySrcTotal:e
 cmp('CFO(1H)', F+T('Ⓐ0 «YTDL» 實際營運現金流（CFO）'), y.map((e,i)=>i===0?e.fyCfo:0));
 cmp('CapEx用途', F+T('① CapEx（用途用：«YTD» 現金／«STUB» 毛額）'), y.map((e,i)=>i===0?e.fyCapexUse:e.gross));
 cmp('調節', F+T('　«YTD» 其他／受限現金調節'), y.map((e,i)=>i===0?e.hPlug:0));
-cmp('期初累積現金', F+'　期初累積現金', y.map((e,i)=>i===0?3.127:y[i-1].cum));
+cmp('期初累積現金', F+'　期初累積現金', y.map((e,i)=>i===0?ACTUAL_1H.cash1231:y[i-1].cum));
 cmp('全年總營收', V+'全年總營收', f.map(e=>e.fyRevenue));
 cmp('全年EBIT', V+'全年 GAAP 營業利益', f.map(e=>e.fyOpInc));
 cmp('全年D&A', V+'全年 D&A', f.map(e=>e.fyDa));
 cmp('全年EBITDA', V+'全年 EBITDA', f.map(e=>e.fyEbitda));
-cmp('全年利息', V+'全年利息（含瀑布新債）', y.map((e,i)=>i===0?1.176+e.interest:e.interest));
+cmp('全年利息', V+'全年利息（含瀑布新債）', y.map((e,i)=>i===0?ACTUAL_1H.interest+e.interest:e.interest));
 cmp('全年淨利', V+'全年淨利', f.map(e=>e.fyNi));
 cmp('全年EPS', V+'全年 GAAP EPS', f.map(e=>e.fyEps));
 cmp('全年EPS加回SBC', V+'全年 EPS（加回 SBC）', f.map(e=>e.fyNgEps));
@@ -90,10 +94,10 @@ cmp('EPS(模型期)', V+'每股盈餘（EPS，模型期）', f.map(e=>e.eps));
 cmp('股數', V+'股數（含瀑布新股）', f.map(e=>e.shares));
 cmp('UFCF', V+'UFCF', f.map(e=>e.ufcf));
 cmp('UFCF現值', V+'UFCF 現值', p.d.pv);
-cmp('DCF每股', V+'DCF 每股', [p.d.perShare]);
+cmp('DCF每股', V+'DCF 每股', [p.d.invalid?0:p.d.perShare]); // v0.1b：DCF 失效時 HTML 為 NaN、Excel 為 0（與反向 DCF 同一口徑）
 const NB='資產負債_新債與新股|';
 cmp('BS 期末現金', NB+'期末現金', H('cum'));
-cmp('BS 營運收支淨額', NB+'營運收支淨額（含 9/17 可轉債／ATM，不含瀑布）', H('preFinGap'));
+cmp('BS 營運收支淨額', NB+'營運收支淨額（含期後股權／可轉債，不含瀑布）', H('preFinGap'));
 cmp('BS 總債務', NB+'總債務', H('totalDebtEnd'));
 cmp('BS 淨負債', NB+'淨負債（總債務 − 期末現金）', y.map(e=>e.totalDebtEnd-e.cum));
 cmp('BS 總股數', NB+'總股數（期末）', f.map(e=>e.shares));
@@ -104,6 +108,14 @@ cmp('DCF 失效', V+'DCF 失效？（WACC ≤ g 或常態化 FCF ≤ 0）', [p.d
 cmp('錨定年EBITDA', V+'錨定年度 EBITDA', [f[p.evK].ebitda]);
 cmp('錨定年末淨負債', V+'錨定年度末淨負債（總債務 − 現金）', [p.ndA]);
 cmp('錨定年末股數', V+'錨定年度末股數（含瀑布新股）', [p.shA]);
+// v0.1b：可轉債稀釋（分類、股數、淨負債、還本、票息、期末餘額）
+const DB='資產負債_既有債務|';
+cmp('可轉債還本', DB+'可轉債到期還本（債務處理）', H('cvAmort')); cmp('可轉債期末餘額', DB+'可轉債期末餘額（債務處理）', H('cvEnd')); cmp('可轉債票息', DB+'可轉債票息（債務處理）', H('cvInt'));
+cmp('可轉債第一輪目標價', V+'第一輪：加權目標價', [p.cv.tp1]); cmp('第二輪判斷價', V+'第二輪判斷價', [p.cv.px2]);
+cmp('第一輪轉股股數', V+'第一輪：轉股股數', [p.cv.sh1-p.shares0]); cmp('第二輪轉股股數', V+'第二輪：轉股股數', [p.cv.sh2-p.shares0]);
+cmp('評價股數', V+'評價股數（含可轉債轉股）', [p.shares]); cmp('評價淨負債', V+'評價淨負債（含可轉債與調整項）', [p.v.netDebt]);
+cmp('債務處理到期本金', V+'第二輪：債務處理到期本金', [p.cv.m2]);
+cmp('其他事業EBITDA', F+T('Ⓒ2 其他事業 EBITDA（«STUB» 起）'), H('otherEbitda')); cmp('淨負債調整項', '輸入與假設|淨負債調整項（類債 − 持股 ×（1 − 折價））', [ndAdjQ(VAL_DEFAULTS)]); // v0.1b 步驟 6
 cmp('PV股權', V+'新股募得現金（現值）', [p.d.pvEquityRaised]);
 cmp('融資後股數', V+'融資後股數（含瀑布新股）', [p.d.postShares]);
 cmp('EV/EBITDA融資後', V+'EV/EBITDA 每股（融資後）', [p.peAdj]);
@@ -180,11 +192,11 @@ console.log('HTML EPS all',f.map(e=>e.eps.toFixed(2)).join('/'),'ngEps',f.map(e=
 console.log('ni',f.map(e=>e.ni.toFixed(3)).join('/'),'EBIT',f.map(e=>e.opInc.toFixed(2)).join('/'),'int',f.map(e=>e.interest.toFixed(2)).join('/'),'tax',f.map(e=>e.tax.toFixed(3)).join('/'));
 rows.length=0;
 const CO='評價_可比公司|';
-for(const e of lM){ const key={NBIS:'NBIS Nebius',IREN:'IREN',APLD:'APLD Applied Digital',CORZ:'CORZ Core Scientific'}[e.ticker];
+for(const e of lM){ const key=e.labelXlsx;
   const xv=X[CO+key]; const ok=Math.abs(e.ev-xv[2])<0.02&&Math.abs(e.ev/e.rev-xv[4])<0.01&&Math.abs((e.ev+(e.opl||0))/e.rev-xv[5])<0.01&&Math.abs(e.ebitda-xv[6])<0.002;
   rows.push([ok?'OK ':'XX ','comps '+e.ticker,[e.ev.toFixed(2),(e.ev/e.rev).toFixed(2),((e.ev+(e.opl||0))/e.rev).toFixed(2)].join('/'),[xv[2],(+xv[4]).toFixed(2),(+xv[5]).toFixed(2)].join('/')]);}
 const med=X[CO+'同業中位數']; rows.push([Math.abs(wM(lM.map(e=>e.ev/e.rev))-med[4])<0.01?'OK ':'XX ','comps median',wM(lM.map(e=>e.ev/e.rev)).toFixed(2),(+med[4]).toFixed(2)]);
-const cr=X[CO+'CRWV（TTM 至 Q2）']; const hv=(CALL_FACTS.mktCapLast+VAL_DEFAULTS.netDebt)/CALL_FACTS.ttmRev; rows.push([Math.abs(hv-cr[4])<0.01?'OK ':'XX ','comps CRWV TTM EV/S',hv.toFixed(3),(+cr[4]).toFixed(3)]);
-const cm=X[CO+T(COMPANY_DATA.meta.ticker+' 模型 «P1»E')]; const hv2=(VAL_DEFAULTS.price*p.shares+VAL_DEFAULTS.netDebt)/f[1].revenue; rows.push([Math.abs(hv2-cm[4])<0.01?'OK ':'XX ','comps CRWV FY27E EV/S',hv2.toFixed(3),(+cm[4]).toFixed(3)]);
+const cr=X[CO+COMPANY_DATA.meta.ticker+'（TTM 至 Q2）']; const hv=(CALL_FACTS.mktCapLast+VAL_DEFAULTS.netDebt+CVN.reduce((a,c)=>a+c.M,0)+ndAdjQ(VAL_DEFAULTS))/CALL_FACTS.ttmRev; rows.push([Math.abs(hv-cr[4])<0.01?'OK ':'XX ','comps '+COMPANY_DATA.meta.ticker+' TTM EV/S',hv.toFixed(3),(+cr[4]).toFixed(3)]);
+const cm=X[CO+T(COMPANY_DATA.meta.ticker+' 模型 «P1»E')]; const hv2=(VAL_DEFAULTS.price*p.shares+p.v.netDebt)/f[1].revenue; rows.push([Math.abs(hv2-cm[4])<0.01?'OK ':'XX ','comps '+COMPANY_DATA.meta.ticker+' FY27E EV/S',hv2.toFixed(3),(+cm[4]).toFixed(3)]);
 for(const r of rows) console.log(r.join(' | '));
 console.log('bench',d.totals.bench, 'X具名', JSON.stringify(X['站點租賃|具名站點合計']));

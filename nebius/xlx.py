@@ -9,9 +9,22 @@ for r in range(1,ws.max_row+1):
     v=ws.cell(row=r,column=1).value
     if v and str(v).startswith('情境選擇'): ws.cell(row=r,column=3,value=sel)
     if ak and v and str(v).startswith('EV/EBITDA 錨定年度'): ws.cell(row=r,column=3,value=ak)
-wb.save(p)
+wb.save(p); p0=p.replace('.xlsx','_0.xlsx'); wb.save(p0)
 r=subprocess.run(['python3',os.path.join(ROOT,'scripts','recalc.py'),p,'120'],capture_output=True,text=True)
 if r.returncode: sys.exit('recalc 失敗：'+r.stdout+r.stderr)
+# v0.1b：LibreOffice 計算模擬運算表（MULTIPLE.OPERATIONS）時，會把運算表代入其他情境時算出的中間值留在部分儲存格（只在 LibreOffice 發生；
+# 例：積極情境 FY30「模型期總營收」殘留基準情境的值）。第二輪：把運算表輸出改為第一輪算出的常數、移除運算表後再重算一次，其餘儲存格全部重新計算。
+wv=load_workbook(p,data_only=True)['輸入與假設']; DT={}
+for rr in range(1,wv.max_row+1):
+    n=wv.cell(row=rr,column=1).value
+    if n and str(n).startswith('情境區間運算表｜') and '公式列' not in str(n): DT[rr]=(wv.cell(row=rr,column=4).value,wv.cell(row=rr,column=5).value)
+if DT:
+    p2=p.replace('.xlsx','_b.xlsx'); wb=load_workbook(p0); ws=wb['輸入與假設']
+    for rr,(a,b) in DT.items(): ws.cell(row=rr,column=4,value=a); ws.cell(row=rr,column=5,value=b)
+    wb.save(p2)
+    r=subprocess.run(['python3',os.path.join(ROOT,'scripts','recalc.py'),p2,'120'],capture_output=True,text=True)
+    if r.returncode: sys.exit('recalc（第二輪）失敗：'+r.stdout+r.stderr)
+    p=p2
 wb=load_workbook(p,data_only=True); o={}
 for sh in wb.sheetnames:
     ws=wb[sh]
