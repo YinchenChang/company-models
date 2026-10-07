@@ -1,0 +1,850 @@
+﻿v0.5 路徑,v0.5 值,去處類別,去處,理由／備註
+_readme,"""v0.5（2026-09-30）：核心改為算力 MW（Vera Rubin 等值，VR-eq）。token 需求→推論 MW；合約與自建→供給 MW；成本＝MW×每 MW 成本；營收以可用 MW 為上限（V1a）；供應商資金僅列或有（V2a）。VR 規格預設沿用 Tokenomics v4，要改一起改。每個輸入附 chk 查核狀態。""",不遷入,—,版本說明文字；v0.6 的版本說明在 README／CHANGELOG
+tokenRevenue.meta.company,"""OpenAI""",不遷入,—,公司名稱：表頭文字，不是參數
+tokenRevenue.meta.fiscalYearEndMonth,12,不遷入,—,工作單第 0 節已定：曆年制（12 月）；v0.6 不設此參數
+tokenRevenue.meta.years.0,2025,Inputs,INP_005,
+tokenRevenue.meta.years.1,2026,Inputs,INP_006,
+tokenRevenue.meta.years.2,2027,Inputs,INP_007,
+tokenRevenue.meta.years.3,2028,Inputs,INP_008,
+tokenRevenue.meta.years.4,2029,Inputs,INP_009,
+tokenRevenue.meta.years.5,2030,Inputs,INP_010,
+tokenRevenue.meta.baseYear,2025,Inputs,INP_001,
+tokenRevenue.meta.calibrationYears.0,2025,Inputs,INP_002,
+tokenRevenue.meta.calibrationYears.1,2026,Inputs,INP_003,
+tokenRevenue.meta.elasticityFromYear,2027,Inputs,INP_004,
+tokenRevenue.meta.units.revenue,"""$B""",不遷入,—,單位字串：v0.6 每列自帶單位欄
+tokenRevenue.meta.units.tokens,"""T (1e12)""",不遷入,—,單位字串：v0.6 每列自帶單位欄
+tokenRevenue.meta.units.price,"""$/M tokens""",不遷入,—,單位字串：v0.6 每列自帶單位欄
+tokenRevenue.meta.units.subs,"""M""",不遷入,—,單位字串：v0.6 每列自帶單位欄
+tokenRevenue.meta.units.arpu,"""$/month""",不遷入,—,單位字串：v0.6 每列自帶單位欄
+tokenRevenue.meta.decisions,"""D1c D2b D3b D4→正反兩模式 D5b D6 D7c D8a D10→FY2030 D11 D12a；N1b N2a N3a；S1c S2 S3 S4b S5a S6c S7；R1 R2 R3（Andy 2026-09-29）""",不遷入,—,決策 ID 清單：v0.6 逐項在 Inputs「v0.5 原決策」欄保留；完整文字見 reference/v0.5
+tokenRevenue.meta.version,"""0.4""",不遷入,—,v0.4 的版本字串，已過時
+tokenRevenue.actuals.revenue2024.v,3.7,SRC_OAI,SRC_OAI_001,
+tokenRevenue.actuals.revenue2024.tag,"""Interested-party""",SRC_OAI,SRC_OAI_001,隨附資訊
+tokenRevenue.actuals.revenue2024.src,"""OpenAI 揭露經媒體報導；workbook OpenAI_Sim B5""",SRC_OAI,SRC_OAI_001,隨附資訊
+tokenRevenue.actuals.revenue2025.v,13.07,SRC_OAI,SRC_OAI_002,
+tokenRevenue.actuals.revenue2025.tag,"""Interested-party""",SRC_OAI,SRC_OAI_002,隨附資訊
+tokenRevenue.actuals.revenue2025.src,"""Fortune/FT 2026-06 報導之 FY2025 認列營收（經查核數字外流）""",SRC_OAI,SRC_OAI_002,隨附資訊
+tokenRevenue.actuals.cogs2025.v,7.5,SRC_OAI,SRC_OAI_003,
+tokenRevenue.actuals.cogs2025.tag,"""Interested-party""",SRC_OAI,SRC_OAI_003,隨附資訊
+tokenRevenue.actuals.cogs2025.src,"""同上；cost of revenue 含推論""",SRC_OAI,SRC_OAI_003,隨附資訊
+tokenRevenue.actuals.revenueQ1_2026.v,5.7,SRC_OAI,SRC_OAI_004,
+tokenRevenue.actuals.revenueQ1_2026.tag,"""Interested-party""",SRC_OAI,SRC_OAI_004,隨附資訊
+tokenRevenue.actuals.revenueQ1_2026.src,"""The Information 2026-06-16（股東文件）""",SRC_OAI,SRC_OAI_004,隨附資訊
+tokenRevenue.actuals.revenueQ2_2026.v,6.7,SRC_OAI,SRC_OAI_005,
+tokenRevenue.actuals.revenueQ2_2026.tag,"""Interested-party""",SRC_OAI,SRC_OAI_005,隨附資訊
+tokenRevenue.actuals.revenueQ2_2026.src,"""WSJ 2026-08-18（告知投資人）""",SRC_OAI,SRC_OAI_005,隨附資訊
+tokenRevenue.actuals.arrAug2026.v,40,SRC_OAI,SRC_OAI_006,
+tokenRevenue.actuals.arrAug2026.tag,"""Interested-party""",SRC_OAI,SRC_OAI_006,隨附資訊
+tokenRevenue.actuals.arrAug2026.src,"""Bloomberg 2026-08-13；CNBC 2026-08-14 證實""",SRC_OAI,SRC_OAI_006,隨附資訊
+tokenRevenue.actuals.consumerShareStart2026.v,0.6,SRC_OAI,SRC_OAI_007,
+tokenRevenue.actuals.consumerShareStart2026.tag,"""Interested-party""",SRC_OAI,SRC_OAI_007,隨附資訊
+tokenRevenue.actuals.consumerShareStart2026.src,"""CFO Friar 2026-08-14 投資人會議：年初 60/40，8 月企業已超過消費端（CNBC）""",SRC_OAI,SRC_OAI_007,隨附資訊
+tokenRevenue.actuals.apiTokensPerMinOct2025.v,6.0,SRC_OAI,SRC_OAI_008,
+tokenRevenue.actuals.apiTokensPerMinOct2025.unit,"""B tok/min""",SRC_OAI,SRC_OAI_008,隨附資訊
+tokenRevenue.actuals.apiTokensPerMinOct2025.tag,"""Interested-party""",SRC_OAI,SRC_OAI_008,隨附資訊
+tokenRevenue.actuals.apiTokensPerMinOct2025.src,"""Altman DevDay 2025-10；2026 年更新揭露檢索未得""",SRC_OAI,SRC_OAI_008,隨附資訊
+tokenRevenue.actuals.apiTokensFY2025.v,2628,公式（後續工作包）,Derived_V9（V10–V12：API FY2025 token＝每分鐘 token×每年分鐘數÷單位換算）,"E8a：Derived→公式；驅動值『FY 平均每分鐘 5B token』進 Inputs（Assumed，3.8–6.1）；v0.5 值 2,628（2,000–3,200）並列於 Derived_V9"
+tokenRevenue.actuals.apiTokensFY2025.lo,2000,公式（後續工作包）,Derived_V9（V10–V12：API FY2025 token＝每分鐘 token×每年分鐘數÷單位換算）,"E8a：Derived→公式；驅動值『FY 平均每分鐘 5B token』進 Inputs（Assumed，3.8–6.1）；v0.5 值 2,628（2,000–3,200）並列於 Derived_V9"
+tokenRevenue.actuals.apiTokensFY2025.hi,3200,公式（後續工作包）,Derived_V9（V10–V12：API FY2025 token＝每分鐘 token×每年分鐘數÷單位換算）,"E8a：Derived→公式；驅動值『FY 平均每分鐘 5B token』進 Inputs（Assumed，3.8–6.1）；v0.5 值 2,628（2,000–3,200）並列於 Derived_V9"
+tokenRevenue.actuals.apiTokensFY2025.unit,"""T processed""",公式（後續工作包）,Derived_V9（V10–V12：API FY2025 token＝每分鐘 token×每年分鐘數÷單位換算）,"E8a：Derived→公式；驅動值『FY 平均每分鐘 5B token』進 Inputs（Assumed，3.8–6.1）；v0.5 值 2,628（2,000–3,200）並列於 Derived_V9"
+tokenRevenue.actuals.apiTokensFY2025.tag,"""Derived""",公式（後續工作包）,Derived_V9（V10–V12：API FY2025 token＝每分鐘 token×每年分鐘數÷單位換算）,"E8a：Derived→公式；驅動值『FY 平均每分鐘 5B token』進 Inputs（Assumed，3.8–6.1）；v0.5 值 2,628（2,000–3,200）並列於 Derived_V9"
+tokenRevenue.actuals.apiTokensFY2025.src,"""FY 平均約 5B/min（workbook 列 242 估計）× 525,600 分""",公式（後續工作包）,Derived_V9（V10–V12：API FY2025 token＝每分鐘 token×每年分鐘數÷單位換算）,"E8a：Derived→公式；驅動值『FY 平均每分鐘 5B token』進 Inputs（Assumed，3.8–6.1）；v0.5 值 2,628（2,000–3,200）並列於 Derived_V9"
+tokenRevenue.actuals.apiTokensFY2025.chk,"""待查核-workbook""",公式（後續工作包）,Derived_V9（V10–V12：API FY2025 token＝每分鐘 token×每年分鐘數÷單位換算）,"E8a：Derived→公式；驅動值『FY 平均每分鐘 5B token』進 Inputs（Assumed，3.8–6.1）；v0.5 值 2,628（2,000–3,200）並列於 Derived_V9"
+tokenRevenue.msShare.rate.v,0.2,SRC_OAI,SRC_OAI_009,
+tokenRevenue.msShare.rate.tag,"""Interested-party""",SRC_OAI,SRC_OAI_009,隨附資訊
+tokenRevenue.msShare.rate.src,"""CNBC 2026-04-27 引述知情人士；VentureBeat 同""",SRC_OAI,SRC_OAI_009,隨附資訊
+tokenRevenue.msShare.capTotal.v,38,SRC_OAI,SRC_OAI_010,
+tokenRevenue.msShare.capTotal.tag,"""Interested-party""",SRC_OAI,SRC_OAI_010,隨附資訊
+tokenRevenue.msShare.capTotal.src,"""The Information 2026-05（經 AI Magazine、GuruFocus 轉述）""",SRC_OAI,SRC_OAI_010,隨附資訊
+tokenRevenue.msShare.capThroughYear.v,2030,SRC_OAI,SRC_OAI_011,
+tokenRevenue.msShare.capThroughYear.tag,"""Verified""",SRC_OAI,SRC_OAI_011,隨附資訊
+tokenRevenue.msShare.capThroughYear.src,"""OpenAI／Microsoft 2026-04-27 公告：付款持續至 2030，受總額上限""",SRC_OAI,SRC_OAI_011,隨附資訊
+tokenRevenue.msShare.capCountFromYear.v,2026,Inputs,INP_011,
+tokenRevenue.msShare.capCountFromYear.tag,"""Assumed""",Inputs,INP_011,隨附資訊
+tokenRevenue.msShare.capCountFromYear.src,"""起算點未揭露；Andy 2026-09-29 決定 N2a""",Inputs,INP_011,隨附資訊
+tokenRevenue.msShare.azureInflowAfterApr2026.v,0,SRC_OAI,SRC_OAI_012,
+tokenRevenue.msShare.azureInflowAfterApr2026.tag,"""Verified""",SRC_OAI,SRC_OAI_012,隨附資訊
+tokenRevenue.msShare.azureInflowAfterApr2026.src,"""2026-04-27 公告：Microsoft 不再支付 OpenAI 分潤""",SRC_OAI,SRC_OAI_012,隨附資訊
+tokenRevenue.api.tiers.0,"""top""",不遷入,—,層級清單（top／mid／low）：結構，由公式頁的列結構體現
+tokenRevenue.api.tiers.1,"""mid""",不遷入,—,層級清單（top／mid／low）：結構，由公式頁的列結構體現
+tokenRevenue.api.tiers.2,"""low""",不遷入,—,層級清單（top／mid／low）：結構，由公式頁的列結構體現
+tokenRevenue.api.tierMapSep2026.top,"""gpt-6-astra""",SRC_OAI,SRC_OAI_022,
+tokenRevenue.api.tierMapSep2026.mid,"""gpt-6-sol""",SRC_OAI,SRC_OAI_023,
+tokenRevenue.api.tierMapSep2026.low,"""gpt-6-luna""",SRC_OAI,SRC_OAI_024,
+tokenRevenue.api.listPriceSnapshot.date,"""2026-09-25""",SRC_OAI,API 牌價快照列,快照日期：寫入各列日期欄
+tokenRevenue.api.listPriceSnapshot.tag,"""Verified""",SRC_OAI,SRC_OAI_013,隨附資訊
+tokenRevenue.api.listPriceSnapshot.src,"""developers.openai.com/api/docs/pricing（短上下文 Standard）""",SRC_OAI,SRC_OAI_013,隨附資訊
+tokenRevenue.api.listPriceSnapshot.top.in,10.0,SRC_OAI,SRC_OAI_013,
+tokenRevenue.api.listPriceSnapshot.top.cached,1.0,SRC_OAI,SRC_OAI_014,
+tokenRevenue.api.listPriceSnapshot.top.out,50.0,SRC_OAI,SRC_OAI_015,
+tokenRevenue.api.listPriceSnapshot.mid.in,2.0,SRC_OAI,SRC_OAI_016,
+tokenRevenue.api.listPriceSnapshot.mid.cached,0.2,SRC_OAI,SRC_OAI_017,
+tokenRevenue.api.listPriceSnapshot.mid.out,10.0,SRC_OAI,SRC_OAI_018,
+tokenRevenue.api.listPriceSnapshot.low.in,0.1,SRC_OAI,SRC_OAI_019,
+tokenRevenue.api.listPriceSnapshot.low.cached,0.01,SRC_OAI,SRC_OAI_020,
+tokenRevenue.api.listPriceSnapshot.low.out,0.5,SRC_OAI,SRC_OAI_021,
+tokenRevenue.api.priceEvents2026.tag,"""Verified""",SRC_OAI,SRC_OAI_025,隨附資訊
+tokenRevenue.api.priceEvents2026.src,"""openai.com 2026-07-30 GPT-5.6 降價公告；GPT-6 Sol/Luna 2026-09-22 發布（Techzine、MarkTechPost）；GPT-6 Astra 2026-09-03""",SRC_OAI,SRC_OAI_025,隨附資訊
+tokenRevenue.api.priceEvents2026.list.0,"""07-09 GPT-5.6 Sol 5/30、Terra 2.5/15、Luna 1/6""",SRC_OAI,SRC_OAI_025,
+tokenRevenue.api.priceEvents2026.list.1,"""07-30 Terra 2/12（-20%）、Luna 0.2/1.2（-80%）""",SRC_OAI,SRC_OAI_026,
+tokenRevenue.api.priceEvents2026.list.2,"""08-22 Sol 促銷 4/20""",SRC_OAI,SRC_OAI_027,
+tokenRevenue.api.priceEvents2026.list.3,"""09-03 GPT-6 Astra 10/50（新旗艦，層級價格上升）""",SRC_OAI,SRC_OAI_028,
+tokenRevenue.api.priceEvents2026.list.4,"""09-22 GPT-6 Sol 2/10、Luna 0.1/0.5""",SRC_OAI,SRC_OAI_029,
+tokenRevenue.api.listPriceFYAvg._note,"""依層級角色（top/mid/low）的 FY 平均牌價；2025 為 Analogy，2026 由上列事件按月加權 [Derived]""",Inputs,INP（listPriceFYAvg）,說明：2025 為 Analogy、2026 由事件月加權 [Derived]
+tokenRevenue.api.listPriceFYAvg.in.top.v.0,2.5,Inputs,INP_015,
+tokenRevenue.api.listPriceFYAvg.in.top.v.1,6.6,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.in.top.lo.0,1.5,Inputs,INP_015,
+tokenRevenue.api.listPriceFYAvg.in.top.lo.1,5.0,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.in.top.hi.0,4.0,Inputs,INP_015,
+tokenRevenue.api.listPriceFYAvg.in.top.hi.1,7.5,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.in.top.tag,"""Analogy/Derived""",Inputs,listPriceFYAvg 各列,隨附資訊
+tokenRevenue.api.listPriceFYAvg.in.mid.v.0,1.5,Inputs,INP_016,
+tokenRevenue.api.listPriceFYAvg.in.mid.v.1,2.29,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.in.mid.lo.0,1.0,Inputs,INP_016,
+tokenRevenue.api.listPriceFYAvg.in.mid.lo.1,2.0,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.in.mid.hi.0,2.5,Inputs,INP_016,
+tokenRevenue.api.listPriceFYAvg.in.mid.hi.1,2.5,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.in.mid.tag,"""Analogy/Derived""",Inputs,listPriceFYAvg 各列,隨附資訊
+tokenRevenue.api.listPriceFYAvg.in.low.v.0,0.2,Inputs,INP_017,
+tokenRevenue.api.listPriceFYAvg.in.low.v.1,0.64,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.in.low.lo.0,0.1,Inputs,INP_017,
+tokenRevenue.api.listPriceFYAvg.in.low.lo.1,0.4,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.in.low.hi.0,0.4,Inputs,INP_017,
+tokenRevenue.api.listPriceFYAvg.in.low.hi.1,0.8,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.in.low.tag,"""Analogy/Derived""",Inputs,listPriceFYAvg 各列,隨附資訊
+tokenRevenue.api.listPriceFYAvg.out.top.v.0,14.0,Inputs,INP_018,
+tokenRevenue.api.listPriceFYAvg.out.top.v.1,35.8,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.out.top.lo.0,8.0,Inputs,INP_018,
+tokenRevenue.api.listPriceFYAvg.out.top.lo.1,28.0,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.out.top.hi.0,20.0,Inputs,INP_018,
+tokenRevenue.api.listPriceFYAvg.out.top.hi.1,40.0,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.out.top.tag,"""Analogy/Derived""",Inputs,listPriceFYAvg 各列,隨附資訊
+tokenRevenue.api.listPriceFYAvg.out.mid.v.0,8.0,Inputs,INP_019,
+tokenRevenue.api.listPriceFYAvg.out.mid.v.1,13.25,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.out.mid.lo.0,5.0,Inputs,INP_019,
+tokenRevenue.api.listPriceFYAvg.out.mid.lo.1,11.0,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.out.mid.hi.0,10.0,Inputs,INP_019,
+tokenRevenue.api.listPriceFYAvg.out.mid.hi.1,15.0,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.out.mid.tag,"""Analogy/Derived""",Inputs,listPriceFYAvg 各列,隨附資訊
+tokenRevenue.api.listPriceFYAvg.out.low.v.0,1.0,Inputs,INP_020,
+tokenRevenue.api.listPriceFYAvg.out.low.v.1,3.83,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.out.low.lo.0,0.5,Inputs,INP_020,
+tokenRevenue.api.listPriceFYAvg.out.low.lo.1,2.5,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.out.low.hi.0,2.0,Inputs,INP_020,
+tokenRevenue.api.listPriceFYAvg.out.low.hi.1,5.0,公式（後續工作包）,P2（FY 平均牌價 2026：priceEvents 月加權）,Derived：2026 由價格事件按月加權；v0.5 標 Analogy/Derived 混合，依元素分開（2025→Inputs、2026→公式）
+tokenRevenue.api.listPriceFYAvg.out.low.tag,"""Analogy/Derived""",Inputs,listPriceFYAvg 各列,隨附資訊
+tokenRevenue.api.listPriceAnnualChange._note,"""2027 起每年牌價變動率（同層級角色）；情境軸之一""",Inputs,listPriceAnnualChange,說明文字
+tokenRevenue.api.listPriceAnnualChange.top.v,-0.3,Inputs,INP_021,
+tokenRevenue.api.listPriceAnnualChange.top.lo,-0.45,Inputs,INP_021,
+tokenRevenue.api.listPriceAnnualChange.top.hi,-0.15,Inputs,INP_021,
+tokenRevenue.api.listPriceAnnualChange.top.tag,"""Assumed""",Inputs,INP_021,隨附資訊
+tokenRevenue.api.listPriceAnnualChange.mid.v,-0.4,Inputs,INP_022,
+tokenRevenue.api.listPriceAnnualChange.mid.lo,-0.6,Inputs,INP_022,
+tokenRevenue.api.listPriceAnnualChange.mid.hi,-0.2,Inputs,INP_022,
+tokenRevenue.api.listPriceAnnualChange.mid.tag,"""Assumed""",Inputs,INP_022,隨附資訊
+tokenRevenue.api.listPriceAnnualChange.low.v,-0.4,Inputs,INP_023,
+tokenRevenue.api.listPriceAnnualChange.low.lo,-0.6,Inputs,INP_023,
+tokenRevenue.api.listPriceAnnualChange.low.hi,-0.2,Inputs,INP_023,
+tokenRevenue.api.listPriceAnnualChange.low.tag,"""Assumed""",Inputs,INP_023,隨附資訊
+tokenRevenue.api.cachedInputRatio.v,0.1,SRC_OAI,SRC_OAI_030,
+tokenRevenue.api.cachedInputRatio.tag,"""Verified""",SRC_OAI,SRC_OAI_030,隨附資訊
+tokenRevenue.api.cachedInputRatio.src,"""定價頁：cached input = 輸入價 10%""",SRC_OAI,SRC_OAI_030,隨附資訊
+tokenRevenue.api.tokenMix.top.v.0,0.4,Inputs,INP_024,
+tokenRevenue.api.tokenMix.top.v.1,0.15,Inputs,INP_025,
+tokenRevenue.api.tokenMix.top.lo.0,0.25,Inputs,INP_024,
+tokenRevenue.api.tokenMix.top.lo.1,0.08,Inputs,INP_025,
+tokenRevenue.api.tokenMix.top.hi.0,0.5,Inputs,INP_024,
+tokenRevenue.api.tokenMix.top.hi.1,0.25,Inputs,INP_025,
+tokenRevenue.api.tokenMix.top.tag,"""Assumed""",Inputs,INP_025,隨附資訊
+tokenRevenue.api.tokenMix.mid.v.0,0.4,Inputs,INP_026,
+tokenRevenue.api.tokenMix.mid.v.1,0.45,Inputs,INP_027,
+tokenRevenue.api.tokenMix.mid.lo.0,0.3,Inputs,INP_026,
+tokenRevenue.api.tokenMix.mid.lo.1,0.35,Inputs,INP_027,
+tokenRevenue.api.tokenMix.mid.hi.0,0.5,Inputs,INP_026,
+tokenRevenue.api.tokenMix.mid.hi.1,0.55,Inputs,INP_027,
+tokenRevenue.api.tokenMix.mid.tag,"""Assumed""",Inputs,INP_027,隨附資訊
+tokenRevenue.api.tokenMix.low.v.0,0.2,公式（後續工作包）,P2（low＝1−top−mid）,v0.5 出處註明『low＝1−top−mid，由 Excel 計算，不另輸入』；與 Assumed 標記矛盾，依註明改為公式
+tokenRevenue.api.tokenMix.low.v.1,0.4,公式（後續工作包）,P2（low＝1−top−mid）,v0.5 出處註明『low＝1−top−mid，由 Excel 計算，不另輸入』；與 Assumed 標記矛盾，依註明改為公式
+tokenRevenue.api.tokenMix.low.lo.0,0.1,公式（後續工作包）,P2（low＝1−top−mid）,v0.5 出處註明『low＝1−top−mid，由 Excel 計算，不另輸入』；與 Assumed 標記矛盾，依註明改為公式
+tokenRevenue.api.tokenMix.low.lo.1,0.25,公式（後續工作包）,P2（low＝1−top−mid）,v0.5 出處註明『low＝1−top−mid，由 Excel 計算，不另輸入』；與 Assumed 標記矛盾，依註明改為公式
+tokenRevenue.api.tokenMix.low.hi.0,0.35,公式（後續工作包）,P2（low＝1−top−mid）,v0.5 出處註明『low＝1−top−mid，由 Excel 計算，不另輸入』；與 Assumed 標記矛盾，依註明改為公式
+tokenRevenue.api.tokenMix.low.hi.1,0.55,公式（後續工作包）,P2（low＝1−top−mid）,v0.5 出處註明『low＝1−top−mid，由 Excel 計算，不另輸入』；與 Assumed 標記矛盾，依註明改為公式
+tokenRevenue.api.tokenMix.low.tag,"""Assumed""",公式（後續工作包）,P2（low＝1−top−mid）,v0.5 出處註明『low＝1−top−mid，由 Excel 計算，不另輸入』；與 Assumed 標記矛盾，依註明改為公式
+tokenRevenue.api.tokenMix.low.src,"""low = 1 - top - mid，由 Excel 計算，不另輸入""",公式（後續工作包）,P2（low＝1−top−mid）,v0.5 出處註明『low＝1−top−mid，由 Excel 計算，不另輸入』；與 Assumed 標記矛盾，依註明改為公式
+tokenRevenue.api.outputShare.v,0.2,Inputs,INP_028,
+tokenRevenue.api.outputShare.lo,0.1,Inputs,INP_028,
+tokenRevenue.api.outputShare.hi,0.35,Inputs,INP_028,
+tokenRevenue.api.outputShare.tag,"""Analogy""",Inputs,INP_028,隨附資訊
+tokenRevenue.api.outputShare.src,"""workbook API I:O 約 4:1；代理式工作負載使輸出占比上升""",Inputs,INP_028,隨附資訊
+tokenRevenue.api.cacheHitRate.v,0.55,Inputs,INP_029,
+tokenRevenue.api.cacheHitRate.lo,0.3,Inputs,INP_029,
+tokenRevenue.api.cacheHitRate.hi,0.75,Inputs,INP_029,
+tokenRevenue.api.cacheHitRate.tag,"""Assumed""",Inputs,INP_029,隨附資訊
+tokenRevenue.api.discountRate.v,0.2,Inputs,INP_030,
+tokenRevenue.api.discountRate.lo,0.1,Inputs,INP_030,
+tokenRevenue.api.discountRate.hi,0.3,Inputs,INP_030,
+tokenRevenue.api.discountRate.tag,"""Assumed""",Inputs,INP_030,隨附資訊
+tokenRevenue.api.discountRate.src,"""Batch/Flex 半價 [Verified]；企業折扣 [Analogy]；兩者合併為加權折扣""",Inputs,INP_030,隨附資訊
+tokenRevenue.api.tokensPerTaskBase.v,10,Inputs,INP_031,
+tokenRevenue.api.tokensPerTaskBase.lo,5,Inputs,INP_031,
+tokenRevenue.api.tokensPerTaskBase.hi,30,Inputs,INP_031,
+tokenRevenue.api.tokensPerTaskBase.unit,"""K tok/task""",Inputs,INP_031,隨附資訊
+tokenRevenue.api.tokensPerTaskBase.tag,"""Assumed""",Inputs,INP_031,隨附資訊
+tokenRevenue.api.tokensPerTaskBase.src,"""層級正規化：只影響 N 與 k 的水準拆分，不影響營收""",Inputs,INP_031,隨附資訊
+tokenRevenue.api.demandGrowthExPrice._note,"""未計價格反應的成長率；2026 為校準年：v0.4 將 2026 任務數成長由 53% 調為 134%，使 FY2025 API 反推值下修（3.63）後，FY2026 總額仍對上獨立推估 32.9""",Inputs,demandGrowthExPrice,說明：2026 為校準年（v0.4 調整）
+tokenRevenue.api.demandGrowthExPrice.tasks.v.0,0,Inputs,INP_032,
+tokenRevenue.api.demandGrowthExPrice.tasks.v.1,1.34,Inputs,INP_033,
+tokenRevenue.api.demandGrowthExPrice.tasks.v.2,0.45,Inputs,INP_034,
+tokenRevenue.api.demandGrowthExPrice.tasks.v.3,0.35,Inputs,INP_035,
+tokenRevenue.api.demandGrowthExPrice.tasks.v.4,0.25,Inputs,INP_036,
+tokenRevenue.api.demandGrowthExPrice.tasks.v.5,0.2,Inputs,INP_037,
+tokenRevenue.api.demandGrowthExPrice.tasks.tag,"""Assumed""",Inputs,INP_039,隨附資訊
+tokenRevenue.api.demandGrowthExPrice.tasks.lo_mult,0.5,Inputs,INP_038,
+tokenRevenue.api.demandGrowthExPrice.tasks.hi_mult,1.5,Inputs,INP_039,
+tokenRevenue.api.demandGrowthExPrice.tokensPerTask.v.0,0,Inputs,INP_040,
+tokenRevenue.api.demandGrowthExPrice.tokensPerTask.v.1,0.2,Inputs,INP_041,
+tokenRevenue.api.demandGrowthExPrice.tokensPerTask.v.2,0.15,Inputs,INP_042,
+tokenRevenue.api.demandGrowthExPrice.tokensPerTask.v.3,0.12,Inputs,INP_043,
+tokenRevenue.api.demandGrowthExPrice.tokensPerTask.v.4,0.1,Inputs,INP_044,
+tokenRevenue.api.demandGrowthExPrice.tokensPerTask.v.5,0.08,Inputs,INP_045,
+tokenRevenue.api.demandGrowthExPrice.tokensPerTask.tag,"""Assumed""",Inputs,INP_047,隨附資訊
+tokenRevenue.api.demandGrowthExPrice.tokensPerTask.lo_mult,0.5,Inputs,INP_046,
+tokenRevenue.api.demandGrowthExPrice.tokensPerTask.hi_mult,1.5,Inputs,INP_047,
+tokenRevenue.api.elasticity.tasks.v,-0.7,Inputs,INP_048,
+tokenRevenue.api.elasticity.tasks.lo,-1.05,Inputs,INP_048,
+tokenRevenue.api.elasticity.tasks.hi,-0.35,Inputs,INP_048,
+tokenRevenue.api.elasticity.tasks.tag,"""Assumed""",Inputs,INP_048,隨附資訊
+tokenRevenue.api.elasticity.tasks.src,"""無法由公開資料分離（價格與能力同時變動）""",Inputs,INP_048,隨附資訊
+tokenRevenue.api.elasticity.tokensPerTask.v,-0.3,Inputs,INP_049,
+tokenRevenue.api.elasticity.tokensPerTask.lo,-0.45,Inputs,INP_049,
+tokenRevenue.api.elasticity.tokensPerTask.hi,-0.15,Inputs,INP_049,
+tokenRevenue.api.elasticity.tokensPerTask.tag,"""Assumed""",Inputs,INP_049,隨附資訊
+tokenRevenue.api.calibration,"""2025 API 計費 token = (revenue2025 - 訂閱模型值 - other2025) / 有效單價2025；與 apiTokensFY2025 比得計費比例（檢查項）""",不遷入,—,校準方式的文字說明；P2 以公式實作，說明保留於 CLAUDE.md／報告
+tokenRevenue.api.priceBasis.v,"""tierRole""",Inputs,INP_050,
+tokenRevenue.api.priceBasis.tag,"""Decision""",Inputs,INP_050,隨附資訊
+tokenRevenue.api.priceBasis.src,"""N3a：新旗艦上市視為該層價格上升，不另立層級""",Inputs,INP_050,隨附資訊
+tokenRevenue.subscription.tiers.0,"""free""",不遷入,—,方案清單：結構
+tokenRevenue.subscription.tiers.1,"""go""",不遷入,—,方案清單：結構
+tokenRevenue.subscription.tiers.2,"""plus""",不遷入,—,方案清單：結構
+tokenRevenue.subscription.tiers.3,"""pro""",不遷入,—,方案清單：結構
+tokenRevenue.subscription.tiers.4,"""seats""",不遷入,—,方案清單：結構
+tokenRevenue.subscription.line.free,"""consumer""",不遷入,—,方案所屬營收線（consumer／enterprise）：結構，P2 以列結構體現
+tokenRevenue.subscription.line.go,"""consumer""",不遷入,—,方案所屬營收線（consumer／enterprise）：結構，P2 以列結構體現
+tokenRevenue.subscription.line.plus,"""consumer""",不遷入,—,方案所屬營收線（consumer／enterprise）：結構，P2 以列結構體現
+tokenRevenue.subscription.line.pro,"""consumer""",不遷入,—,方案所屬營收線（consumer／enterprise）：結構，P2 以列結構體現
+tokenRevenue.subscription.line.seats,"""enterprise""",不遷入,—,方案所屬營收線（consumer／enterprise）：結構，P2 以列結構體現
+tokenRevenue.subscription.listPriceSep2026.go,8,SRC_OAI,SRC_OAI_031,
+tokenRevenue.subscription.listPriceSep2026.plus,20,SRC_OAI,SRC_OAI_032,
+tokenRevenue.subscription.listPriceSep2026.pro.0,100,SRC_OAI,SRC_OAI_033,
+tokenRevenue.subscription.listPriceSep2026.pro.1,200,SRC_OAI,SRC_OAI_034,
+tokenRevenue.subscription.listPriceSep2026.businessSeat.0,20,SRC_OAI,SRC_OAI_035,
+tokenRevenue.subscription.listPriceSep2026.businessSeat.1,25,SRC_OAI,SRC_OAI_035,
+tokenRevenue.subscription.listPriceSep2026.tag,"""Verified""",SRC_OAI,SRC_OAI_031,隨附資訊
+tokenRevenue.subscription.listPriceSep2026.src,"""ChatGPT 定價頁（多家 2026-09 核對）；Enterprise 為議價""",SRC_OAI,SRC_OAI_031,隨附資訊
+tokenRevenue.subscription.subsFYAvg._note,"""FY 平均人數（M）；free 僅用於成本與 token""",Inputs,subsFYAvg,說明：FY 平均人數；free 僅用於成本與 token
+tokenRevenue.subscription.subsFYAvg.free.v.0,600,Inputs,INP_056,
+tokenRevenue.subscription.subsFYAvg.free.v.1,950,公式（後續工作包）,Derived_V9（FY 平均人數 2026：觀測值×換算係數）,V9：該年有觀測值，v0.5 值 950 改為由 SRC 推得的公式（P2 定義換算；v0.5 值供對照）
+tokenRevenue.subscription.subsFYAvg.free.v.2,1250,Inputs,INP_058,
+tokenRevenue.subscription.subsFYAvg.free.v.3,1500,Inputs,INP_059,
+tokenRevenue.subscription.subsFYAvg.free.v.4,1700,Inputs,INP_060,
+tokenRevenue.subscription.subsFYAvg.free.v.5,1850,Inputs,INP_061,
+tokenRevenue.subscription.subsFYAvg.free.tag,"""Analogy""",Inputs,INP_063,隨附資訊
+tokenRevenue.subscription.subsFYAvg.free.src,"""WAU 900M（2026-02，OpenAI）；2027+ Assumed""",Inputs,INP_063,隨附資訊
+tokenRevenue.subscription.subsFYAvg.free.lo_mult,0.8,Inputs,INP_062,
+tokenRevenue.subscription.subsFYAvg.free.hi_mult,1.2,Inputs,INP_063,
+tokenRevenue.subscription.subsFYAvg.free.chk,"""待查核-報導""",Inputs,INP_063,隨附資訊
+tokenRevenue.subscription.subsFYAvg.go.v.0,2,Inputs,INP_064,
+tokenRevenue.subscription.subsFYAvg.go.v.1,10,Inputs,INP_065,
+tokenRevenue.subscription.subsFYAvg.go.v.2,22,Inputs,INP_066,
+tokenRevenue.subscription.subsFYAvg.go.v.3,35,Inputs,INP_067,
+tokenRevenue.subscription.subsFYAvg.go.v.4,45,Inputs,INP_068,
+tokenRevenue.subscription.subsFYAvg.go.v.5,55,Inputs,INP_069,
+tokenRevenue.subscription.subsFYAvg.go.tag,"""Assumed""",Inputs,INP_071,隨附資訊
+tokenRevenue.subscription.subsFYAvg.go.lo_mult,0.6,Inputs,INP_070,
+tokenRevenue.subscription.subsFYAvg.go.hi_mult,1.5,Inputs,INP_071,
+tokenRevenue.subscription.subsFYAvg.go.src,"""2025 年 3M（年底，The Information）；2026+ 為無遷移基準 [Assumed]""",Inputs,INP_071,隨附資訊
+tokenRevenue.subscription.subsFYAvg.go.chk,"""待查核-報導""",Inputs,INP_071,隨附資訊
+tokenRevenue.subscription.subsFYAvg.plus.v.0,30,公式（後續工作包）,Derived_V9（FY 平均人數 2025：觀測值×換算係數）,V9：該年有觀測值，v0.5 值 30 改為由 SRC 推得的公式（P2 定義換算；v0.5 值供對照）
+tokenRevenue.subscription.subsFYAvg.plus.v.1,46,Inputs,INP_073,
+tokenRevenue.subscription.subsFYAvg.plus.v.2,52,Inputs,INP_074,
+tokenRevenue.subscription.subsFYAvg.plus.v.3,57,Inputs,INP_075,
+tokenRevenue.subscription.subsFYAvg.plus.v.4,61,Inputs,INP_076,
+tokenRevenue.subscription.subsFYAvg.plus.v.5,64,Inputs,INP_077,
+tokenRevenue.subscription.subsFYAvg.plus.lo_mult,0.85,Inputs,INP_078,
+tokenRevenue.subscription.subsFYAvg.plus.hi_mult,1.15,Inputs,INP_079,
+tokenRevenue.subscription.subsFYAvg.plus.tag,"""Interested-party""",Inputs,INP_079,隨附資訊
+tokenRevenue.subscription.subsFYAvg.plus.src,"""2025：7 月 Plus+Pro 約 35M（Reuters/The Information 2025-11）、OpenAI 內部文件 2025 年 44M（The Information 2026-04-28）→ FY 平均 28–33M；2026+ 為「無遷移」基準 [Assumed]""",Inputs,INP_079,隨附資訊
+tokenRevenue.subscription.subsFYAvg.plus.chk,"""待查核-報導""",Inputs,INP_079,隨附資訊
+tokenRevenue.subscription.subsFYAvg.pro.v.0,0.5,公式（後續工作包）,Derived_V9（V12：pro 2025＝2026÷SRC 倍數）,V12：v0.5 值 0.5 改為公式；v0.5 原值並列於 Derived_V9
+tokenRevenue.subscription.subsFYAvg.pro.v.1,1.0,公式（後續工作包）,Derived_V9（V12：pro 2026＝比例×付費總數（含席位））,V12：v0.5 值 1.0 改為公式；v0.5 原值並列於 Derived_V9
+tokenRevenue.subscription.subsFYAvg.pro.v.2,1.5,公式（後續工作包）,Derived_V9（V15：pro 2027＝比例_t/(1−比例_t)×(go＋plus＋seats)）,V15：v0.5 值 1.5 改為公式；v0.5 原值並列於 Derived_V9
+tokenRevenue.subscription.subsFYAvg.pro.v.3,2.0,公式（後續工作包）,Derived_V9（V15：pro 2028＝比例_t/(1−比例_t)×(go＋plus＋seats)）,V15：v0.5 值 2.0 改為公式；v0.5 原值並列於 Derived_V9
+tokenRevenue.subscription.subsFYAvg.pro.v.4,2.5,公式（後續工作包）,Derived_V9（V15：pro 2029＝比例_t/(1−比例_t)×(go＋plus＋seats)）,V15：v0.5 值 2.5 改為公式；v0.5 原值並列於 Derived_V9
+tokenRevenue.subscription.subsFYAvg.pro.v.5,3.0,公式（後續工作包）,Derived_V9（V15：pro 2030＝比例_t/(1−比例_t)×(go＋plus＋seats)）,V15：v0.5 值 3.0 改為公式；v0.5 原值並列於 Derived_V9
+tokenRevenue.subscription.subsFYAvg.pro.lo_mult,0.6,不遷入,—,V15：pro 全期改為比例公式，區間由比例 0.5–2.0% 傳遞；倍數不再使用（v0.5 原值 0.6／1.2 見對照表）
+tokenRevenue.subscription.subsFYAvg.pro.hi_mult,1.2,不遷入,—,V15：同上
+tokenRevenue.subscription.subsFYAvg.pro.tag,"""Interested-party""",公式（後續工作包）,Derived_V9（V12：pro 2025＝2026÷SRC 倍數）,隨附資訊
+tokenRevenue.subscription.subsFYAvg.pro.src,"""內部預測：2026 倍增但 <1% 付費總數（The Information 2026-04-28）；2027+ Assumed""",公式（後續工作包）,Derived_V9（V12：pro 2025＝2026÷SRC 倍數）,隨附資訊
+tokenRevenue.subscription.subsFYAvg.pro.chk,"""待查核-報導""",公式（後續工作包）,Derived_V9（V12：pro 2025＝2026÷SRC 倍數）,隨附資訊
+tokenRevenue.subscription.subsFYAvg.seats.v.0,3,Inputs,INP_088,
+tokenRevenue.subscription.subsFYAvg.seats.v.1,14,Inputs,INP_089,
+tokenRevenue.subscription.subsFYAvg.seats.v.2,26,Inputs,INP_090,
+tokenRevenue.subscription.subsFYAvg.seats.v.3,38,Inputs,INP_091,
+tokenRevenue.subscription.subsFYAvg.seats.v.4,48,Inputs,INP_092,
+tokenRevenue.subscription.subsFYAvg.seats.v.5,56,Inputs,INP_093,
+tokenRevenue.subscription.subsFYAvg.seats.tag,"""Assumed""",Inputs,INP_095,隨附資訊
+tokenRevenue.subscription.subsFYAvg.seats.src,"""逾 9M 付費企業用戶（OpenAI 2026-02）；FY2025 平均 Assumed""",Inputs,INP_095,隨附資訊
+tokenRevenue.subscription.subsFYAvg.seats.lo_mult,0.7,Inputs,INP_094,
+tokenRevenue.subscription.subsFYAvg.seats.hi_mult,1.3,Inputs,INP_095,
+tokenRevenue.subscription.subsFYAvg.seats.chk,"""待查核-報導""",Inputs,INP_095,隨附資訊
+tokenRevenue.subscription.arpu._note,"""實收 $/月（含區域定價、年繳折扣、額度加購）""",Inputs,arpu,說明：實收 $/月
+tokenRevenue.subscription.arpu.go.v.0,6,Inputs,INP_096,
+tokenRevenue.subscription.arpu.go.lo.0,4,Inputs,INP_096,
+tokenRevenue.subscription.arpu.go.hi.0,8,Inputs,INP_096,
+tokenRevenue.subscription.arpu.go.tag,"""Assumed""",Inputs,INP_096,隨附資訊
+tokenRevenue.subscription.arpu.go.chk,"""假設""",Inputs,INP_096,隨附資訊
+tokenRevenue.subscription.arpu.plus.v.0,19.5,Inputs,INP_097,
+tokenRevenue.subscription.arpu.plus.v.1,19,Inputs,INP_098,
+tokenRevenue.subscription.arpu.plus.lo.0,18,Inputs,INP_097,
+tokenRevenue.subscription.arpu.plus.lo.1,17,Inputs,INP_098,
+tokenRevenue.subscription.arpu.plus.hi.0,20,Inputs,INP_097,
+tokenRevenue.subscription.arpu.plus.hi.1,20,Inputs,INP_098,
+tokenRevenue.subscription.arpu.plus.tag,"""Assumed""",Inputs,INP_098,隨附資訊
+tokenRevenue.subscription.arpu.plus.chk,"""假設""",Inputs,INP_098,隨附資訊
+tokenRevenue.subscription.arpu.plus.src,"""$20 美國、僅月繳（2026-09 定價頁）；區間反映含稅地區與促銷""",Inputs,INP_098,隨附資訊
+tokenRevenue.subscription.arpu.pro.v.0,200,Inputs,INP_099,
+tokenRevenue.subscription.arpu.pro.v.1,150,Inputs,INP_100,
+tokenRevenue.subscription.arpu.pro.lo.0,200,Inputs,INP_099,
+tokenRevenue.subscription.arpu.pro.lo.1,120,Inputs,INP_100,
+tokenRevenue.subscription.arpu.pro.hi.0,200,Inputs,INP_099,
+tokenRevenue.subscription.arpu.pro.hi.1,190,Inputs,INP_100,
+tokenRevenue.subscription.arpu.pro.tag,"""Assumed""",Inputs,INP_100,隨附資訊
+tokenRevenue.subscription.arpu.pro.src,"""2026 起兩檔 $100/$200 加權""",Inputs,INP_100,隨附資訊
+tokenRevenue.subscription.arpu.pro.chk,"""假設""",Inputs,INP_100,隨附資訊
+tokenRevenue.subscription.arpu.seats.v.0,30,Inputs,INP_101,
+tokenRevenue.subscription.arpu.seats.lo.0,22,Inputs,INP_101,
+tokenRevenue.subscription.arpu.seats.hi.0,45,Inputs,INP_101,
+tokenRevenue.subscription.arpu.seats.tag,"""Assumed""",Inputs,INP_101,隨附資訊
+tokenRevenue.subscription.arpu.seats.src,"""Business $20-25 [Verified]；Enterprise 議價 $60+ [Analogy]""",Inputs,INP_101,隨附資訊
+tokenRevenue.subscription.arpu.seats.chk,"""假設""",Inputs,INP_101,隨附資訊
+tokenRevenue.subscription.tasksPerDay._note,"""全日平均（已含非活躍日）；2027 起年增 tasksPerDayGrowth""",Inputs,tasksPerDay,說明文字
+tokenRevenue.subscription.tasksPerDay.free.v.0,1.7,Inputs,INP_102,
+tokenRevenue.subscription.tasksPerDay.free.v.1,1.7,Inputs,INP_103,
+tokenRevenue.subscription.tasksPerDay.go.v.0,5.3,Inputs,INP_104,
+tokenRevenue.subscription.tasksPerDay.go.v.1,5.7,Inputs,INP_105,
+tokenRevenue.subscription.tasksPerDay.plus.v.0,13.4,Inputs,INP_106,
+tokenRevenue.subscription.tasksPerDay.plus.v.1,17.9,Inputs,INP_107,
+tokenRevenue.subscription.tasksPerDay.pro.v.0,41,Inputs,INP_108,
+tokenRevenue.subscription.tasksPerDay.pro.v.1,51.4,Inputs,INP_109,
+tokenRevenue.subscription.tasksPerDay.seats.v.0,10.7,Inputs,INP_110,
+tokenRevenue.subscription.tasksPerDay.seats.v.1,14.3,Inputs,INP_111,
+tokenRevenue.subscription.tasksPerDay.tag,"""Assumed""",Inputs,tasksPerDay 各列,隨附資訊
+tokenRevenue.subscription.tasksPerDay.src,"""Tokenomics workbook 8B-ii 註記（未經查核）；總量對照：2025-07 每日 2.5B 則訊息（OpenAI）""",Inputs,tasksPerDay 各列,隨附資訊
+tokenRevenue.subscription.tasksPerDay.chk,"""待查核-workbook""",Inputs,tasksPerDay 各列,隨附資訊
+tokenRevenue.subscription.tokensPerTask._note,"""K tok/task；2027 起年增 tokensPerTaskGrowth（情境軸）""",Inputs,tokensPerTask,說明文字
+tokenRevenue.subscription.tokensPerTask.free.v.0,2.0,Inputs,INP_112,
+tokenRevenue.subscription.tokensPerTask.free.v.1,2.94,Inputs,INP_113,
+tokenRevenue.subscription.tokensPerTask.go.v.0,3.0,Inputs,INP_114,
+tokenRevenue.subscription.tokensPerTask.go.v.1,4.39,Inputs,INP_115,
+tokenRevenue.subscription.tokensPerTask.plus.v.0,4.0,Inputs,INP_116,
+tokenRevenue.subscription.tokensPerTask.plus.v.1,6.15,Inputs,INP_117,
+tokenRevenue.subscription.tokensPerTask.pro.v.0,10.0,Inputs,INP_118,
+tokenRevenue.subscription.tokensPerTask.pro.v.1,15.6,Inputs,INP_119,
+tokenRevenue.subscription.tokensPerTask.seats.v.0,4.0,Inputs,INP_120,
+tokenRevenue.subscription.tokensPerTask.seats.v.1,5.94,Inputs,INP_121,
+tokenRevenue.subscription.tokensPerTask.tag,"""Assumed""",Inputs,tokensPerTask 各列,隨附資訊
+tokenRevenue.subscription.tokensPerTask.src,"""Tokenomics workbook（未經查核）；於「推論成本」頁以 FY2025 成本分拆反推校正倍數 k""",Inputs,tokensPerTask 各列,隨附資訊
+tokenRevenue.subscription.tokensPerTask.chk,"""待查核-workbook""",Inputs,tokensPerTask 各列,隨附資訊
+tokenRevenue.subscription.tasksPerDayGrowth.v,0.1,Inputs,INP_122,
+tokenRevenue.subscription.tasksPerDayGrowth.lo,0.05,Inputs,INP_122,
+tokenRevenue.subscription.tasksPerDayGrowth.hi,0.2,Inputs,INP_122,
+tokenRevenue.subscription.tasksPerDayGrowth.tag,"""Assumed""",Inputs,INP_122,隨附資訊
+tokenRevenue.subscription.tokensPerTaskGrowth.v,0.15,Inputs,INP_123,
+tokenRevenue.subscription.tokensPerTaskGrowth.lo,0.1,Inputs,INP_123,
+tokenRevenue.subscription.tokensPerTaskGrowth.hi,0.25,Inputs,INP_123,
+tokenRevenue.subscription.tokensPerTaskGrowth.tag,"""Assumed""",Inputs,INP_123,隨附資訊
+tokenRevenue.subscription.apiEquivalentTier.free,"""low""",Inputs,INP_051,
+tokenRevenue.subscription.apiEquivalentTier.go,"""low""",Inputs,INP_052,
+tokenRevenue.subscription.apiEquivalentTier.plus,"""mid""",Inputs,INP_053,
+tokenRevenue.subscription.apiEquivalentTier.pro,"""top""",Inputs,INP_054,
+tokenRevenue.subscription.apiEquivalentTier.seats,"""mid""",Inputs,INP_055,
+tokenRevenue.subscription.apiEquivalentTier.tag,"""Assumed""",Inputs,apiEquivalentTier 各列,隨附資訊
+tokenRevenue.subscription.apiEquivalentTier.src,"""2026-09 各方案預設模型（定價頁說明）""",Inputs,apiEquivalentTier 各列,隨附資訊
+tokenRevenue.subscription.migration._note,"""T4：Plus→Go 遷移與 Go 額外新增，以公司 2026 計畫（Go 112M、Plus 9M）的幅度比例表示""",SRC_OAI,SRC_OAI_036,隨附資訊
+tokenRevenue.subscription.migration.planGo2026.v,112,SRC_OAI,SRC_OAI_036,
+tokenRevenue.subscription.migration.planGo2026.tag,"""Interested-party""",SRC_OAI,SRC_OAI_036,隨附資訊
+tokenRevenue.subscription.migration.planGo2026.src,"""The Information 2026-04-28（年初內部預測）""",SRC_OAI,SRC_OAI_036,隨附資訊
+tokenRevenue.subscription.migration.planGo2026.chk,"""待查核-報導""",SRC_OAI,SRC_OAI_036,隨附資訊
+tokenRevenue.subscription.migration.planPlus2026.v,9,SRC_OAI,SRC_OAI_037,
+tokenRevenue.subscription.migration.planPlus2026.tag,"""Interested-party""",SRC_OAI,SRC_OAI_037,隨附資訊
+tokenRevenue.subscription.migration.planPlus2026.src,"""同上""",SRC_OAI,SRC_OAI_037,隨附資訊
+tokenRevenue.subscription.migration.planPlus2026.chk,"""待查核-報導""",SRC_OAI,SRC_OAI_037,隨附資訊
+tokenRevenue.subscription.migration.planFraction.low,0.0,Inputs,INP_012,
+tokenRevenue.subscription.migration.planFraction.base,0.3,Inputs,INP_013,
+tokenRevenue.subscription.migration.planFraction.high,0.8,Inputs,INP_014,
+tokenRevenue.subscription.migration.planFraction.tag,"""Decision""",Inputs,INP_014,隨附資訊
+tokenRevenue.subscription.migration.planFraction.src,"""T4（Andy 2026-09-29 採預設）""",Inputs,INP_014,隨附資訊
+tokenRevenue.other.ads._note,"""N1b 廣告為獨立列，不進核心（訂閱＋API）之敏感度、歸因與反向單一營收線分析""",Inputs,ads,說明：N1b 廣告為獨立列
+tokenRevenue.other.ads.adTiers.0,"""free""",不遷入,—,廣告曝光方案清單（free、go）：結構
+tokenRevenue.other.ads.adTiers.1,"""go""",不遷入,—,廣告曝光方案清單（free、go）：結構
+tokenRevenue.other.ads.exposureShare.v.0,0,Inputs,INP_124,
+tokenRevenue.other.ads.exposureShare.v.1,0.25,Inputs,INP_125,
+tokenRevenue.other.ads.exposureShare.v.2,0.35,Inputs,INP_126,
+tokenRevenue.other.ads.exposureShare.v.3,0.4,Inputs,INP_127,
+tokenRevenue.other.ads.exposureShare.v.4,0.45,Inputs,INP_128,
+tokenRevenue.other.ads.exposureShare.v.5,0.5,Inputs,INP_129,
+tokenRevenue.other.ads.exposureShare.lo.0,0,Inputs,INP_124,
+tokenRevenue.other.ads.exposureShare.lo.1,0.15,Inputs,INP_125,
+tokenRevenue.other.ads.exposureShare.lo.2,0.25,Inputs,INP_126,
+tokenRevenue.other.ads.exposureShare.lo.3,0.3,Inputs,INP_127,
+tokenRevenue.other.ads.exposureShare.lo.4,0.3,Inputs,INP_128,
+tokenRevenue.other.ads.exposureShare.lo.5,0.35,Inputs,INP_129,
+tokenRevenue.other.ads.exposureShare.hi.0,0,Inputs,INP_124,
+tokenRevenue.other.ads.exposureShare.hi.1,0.35,Inputs,INP_125,
+tokenRevenue.other.ads.exposureShare.hi.2,0.5,Inputs,INP_126,
+tokenRevenue.other.ads.exposureShare.hi.3,0.6,Inputs,INP_127,
+tokenRevenue.other.ads.exposureShare.hi.4,0.65,Inputs,INP_128,
+tokenRevenue.other.ads.exposureShare.hi.5,0.7,Inputs,INP_129,
+tokenRevenue.other.ads.exposureShare.tag,"""Assumed""",Inputs,INP_129,隨附資訊
+tokenRevenue.other.ads.exposureShare.src,"""Andy 2026-09-29：商業模式未成熟，2027→2030 不宜 8 倍；核心分析排除廣告""",Inputs,INP_129,隨附資訊
+tokenRevenue.other.ads.arpuPerExposedUserYear.v.0,0,Inputs,INP_130,
+tokenRevenue.other.ads.arpuPerExposedUserYear.v.1,3,Inputs,INP_131,
+tokenRevenue.other.ads.arpuPerExposedUserYear.v.2,4,Inputs,INP_132,
+tokenRevenue.other.ads.arpuPerExposedUserYear.v.3,4.5,Inputs,INP_133,
+tokenRevenue.other.ads.arpuPerExposedUserYear.v.4,5,Inputs,INP_134,
+tokenRevenue.other.ads.arpuPerExposedUserYear.v.5,5.5,Inputs,INP_135,
+tokenRevenue.other.ads.arpuPerExposedUserYear.lo.0,0,Inputs,INP_130,
+tokenRevenue.other.ads.arpuPerExposedUserYear.lo.1,1.5,Inputs,INP_131,
+tokenRevenue.other.ads.arpuPerExposedUserYear.lo.2,2,Inputs,INP_132,
+tokenRevenue.other.ads.arpuPerExposedUserYear.lo.3,2.5,Inputs,INP_133,
+tokenRevenue.other.ads.arpuPerExposedUserYear.lo.4,3,Inputs,INP_134,
+tokenRevenue.other.ads.arpuPerExposedUserYear.lo.5,3.5,Inputs,INP_135,
+tokenRevenue.other.ads.arpuPerExposedUserYear.hi.0,0,Inputs,INP_130,
+tokenRevenue.other.ads.arpuPerExposedUserYear.hi.1,5,Inputs,INP_131,
+tokenRevenue.other.ads.arpuPerExposedUserYear.hi.2,6,Inputs,INP_132,
+tokenRevenue.other.ads.arpuPerExposedUserYear.hi.3,7.5,Inputs,INP_133,
+tokenRevenue.other.ads.arpuPerExposedUserYear.hi.4,9,Inputs,INP_134,
+tokenRevenue.other.ads.arpuPerExposedUserYear.hi.5,11,Inputs,INP_135,
+tokenRevenue.other.ads.arpuPerExposedUserYear.unit,"""$/user/yr""",Inputs,INP_135,隨附資訊
+tokenRevenue.other.ads.arpuPerExposedUserYear.tag,"""Analogy""",Inputs,INP_135,隨附資訊
+tokenRevenue.other.ads.arpuPerExposedUserYear.src,"""上限參照 Meta FY2025 全球 ARPP $57.03（10-K）；base 2027→2030 約 2.9 倍""",Inputs,INP_135,隨附資訊
+tokenRevenue.other.ads.comparisonInternalTarget.2026,2.5,SRC_OAI,SRC_OAI_038,
+tokenRevenue.other.ads.comparisonInternalTarget.2027,11,SRC_OAI,SRC_OAI_039,
+tokenRevenue.other.ads.comparisonInternalTarget.2028,25,SRC_OAI,SRC_OAI_040,
+tokenRevenue.other.ads.comparisonInternalTarget.2029,53,SRC_OAI,SRC_OAI_041,
+tokenRevenue.other.ads.comparisonInternalTarget.2030,100,SRC_OAI,SRC_OAI_042,
+tokenRevenue.other.ads.comparisonInternalTarget.tag,"""Interested-party""",SRC_OAI,SRC_OAI_038,隨附資訊
+tokenRevenue.other.ads.comparisonInternalTarget.src,"""Axios 2026-04-09（投資人簡報；假設 2030 年 2.75B 週用戶），僅對照""",SRC_OAI,SRC_OAI_038,隨附資訊
+tokenRevenue.other.residual.v,0,Inputs,INP_136,
+tokenRevenue.other.residual.tag,"""Assumed""",Inputs,INP_136,隨附資訊
+tokenRevenue.other.residual.src,"""授權、一次性交易等；維持 0""",Inputs,INP_136,隨附資訊
+tokenRevenue.costInterface.hwCostPerM.v.0,0.1544,不遷入；改取 TK_Link,TK_Link IF_HoldEcon、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.costInterface.hwCostPerM.v.1,0.1018,不遷入；改取 TK_Link,TK_Link IF_HoldEcon、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.costInterface.hwCostPerM.v.2,0.073,不遷入；改取 TK_Link,TK_Link IF_HoldEcon、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.costInterface.hwCostPerM.v.3,0.0543,不遷入；改取 TK_Link,TK_Link IF_HoldEcon、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.costInterface.hwCostPerM.v.4,0.0482,不遷入；改取 TK_Link,TK_Link IF_HoldEcon、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.costInterface.hwCostPerM.v.5,0.0449,不遷入；改取 TK_Link,TK_Link IF_HoldEcon、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.costInterface.hwCostPerM.tag,"""Derived""",不遷入；改取 TK_Link,TK_Link IF_HoldEcon、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.costInterface.hwCostPerM.src,"""Tokenomics v4 OpenAI_Sim 列 200/289/390/463/533/604（艦隊組合 Assumed）；2031+ 持平""",不遷入；改取 TK_Link,TK_Link IF_HoldEcon、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.costInterface.hwCostPerM.chk,"""待查核-workbook""",不遷入；改取 TK_Link,TK_Link IF_HoldEcon、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.costInterface.overheadMultiplier,"""v0.4 廢止：改由推論成本頁校準係數 κ 與 workbook token 校正倍數 k 取代""",不遷入,—,v0.4 已廢止（文字說明）
+tokenRevenue.costInterface.capacityTokensT.v,null,不遷入,—,N/A：D8a 容量模組建成前不適用；v0.6 P3 以 TK_Link 產能實作
+tokenRevenue.costInterface.capacityTokensT.tag,"""N/A""",不遷入,—,N/A：D8a 容量模組建成前不適用；v0.6 P3 以 TK_Link 產能實作
+tokenRevenue.costInterface.capacityTokensT.src,"""D8a：容量模組建成前顯示「不適用」""",不遷入,—,N/A：D8a 容量模組建成前不適用；v0.6 P3 以 TK_Link 產能實作
+tokenRevenue.comparison._note,"""D4c：僅作對照欄，不驅動任何計算""",不遷入,—,說明文字（D4c：僅作對照欄）
+tokenRevenue.comparison.deckJul2026.2026,36,SRC_OAI,SRC_OAI_043,
+tokenRevenue.comparison.deckJul2026.2030,350,SRC_OAI,SRC_OAI_044,
+tokenRevenue.comparison.deckJul2026.sum2026_2030,840,SRC_OAI,SRC_OAI_045,
+tokenRevenue.comparison.deckJul2026.tag,"""Interested-party""",SRC_OAI,SRC_OAI_043,隨附資訊
+tokenRevenue.comparison.deckJul2026.src,"""FT 2026-09-18（7 月投資人簡報）；2027-29 未揭露""",SRC_OAI,SRC_OAI_043,隨附資訊
+tokenRevenue.comparison.fy2026Independent.v,32.9,公式（後續工作包）,P2（FY2026 獨立推估：Q1＋Q2＋下半年 ARR 外推）,Derived（v0.5 標 Derived；組成值 Q1、Q2、ARR 已在 SRC_OAI）；區間 31–36 隨公式處理
+tokenRevenue.comparison.fy2026Independent.lo,31,公式（後續工作包）,P2（FY2026 獨立推估：Q1＋Q2＋下半年 ARR 外推）,Derived（v0.5 標 Derived；組成值 Q1、Q2、ARR 已在 SRC_OAI）；區間 31–36 隨公式處理
+tokenRevenue.comparison.fy2026Independent.hi,36,公式（後續工作包）,P2（FY2026 獨立推估：Q1＋Q2＋下半年 ARR 外推）,Derived（v0.5 標 Derived；組成值 Q1、Q2、ARR 已在 SRC_OAI）；區間 31–36 隨公式處理
+tokenRevenue.comparison.fy2026Independent.tag,"""Derived""",公式（後續工作包）,P2（FY2026 獨立推估：Q1＋Q2＋下半年 ARR 外推）,Derived（v0.5 標 Derived；組成值 Q1、Q2、ARR 已在 SRC_OAI）；區間 31–36 隨公式處理
+tokenRevenue.comparison.fy2026Independent.src,"""Q1 5.7 + Q2 6.7（WSJ）+ 下半年以 8 月 ARR $40B 外推；上限放寬至簡報 36（7 月 ARR 月增 20%）""",公式（後續工作包）,P2（FY2026 獨立推估：Q1＋Q2＋下半年 ARR 外推）,Derived（v0.5 標 Derived；組成值 Q1、Q2、ARR 已在 SRC_OAI）；區間 31–36 隨公式處理
+tokenRevenue.comparison.weeklyUsers2030Plan.v,2750,SRC_OAI,SRC_OAI_046,
+tokenRevenue.comparison.weeklyUsers2030Plan.unit,"""M""",SRC_OAI,SRC_OAI_046,隨附資訊
+tokenRevenue.comparison.weeklyUsers2030Plan.tag,"""Interested-party""",SRC_OAI,SRC_OAI_046,隨附資訊
+tokenRevenue.comparison.weeklyUsers2030Plan.src,"""Axios 2026-04-09 廣告預測之用戶假設""",SRC_OAI,SRC_OAI_046,隨附資訊
+tokenRevenue.scenarios._note,"""D11 情境軸（核心）：API 彈性、牌價年變動、訂閱每任務 token 成長""",Inputs,scenarios,說明文字（D11）
+tokenRevenue.scenarios.low.elasticity.tasks,-0.35,Inputs,INP_137,
+tokenRevenue.scenarios.low.elasticity.tokensPerTask,-0.15,Inputs,INP_138,
+tokenRevenue.scenarios.low.listPriceAnnualChange.top,-0.45,Inputs,INP_140,
+tokenRevenue.scenarios.low.listPriceAnnualChange.mid,-0.6,Inputs,INP_141,
+tokenRevenue.scenarios.low.listPriceAnnualChange.low,-0.6,Inputs,INP_142,
+tokenRevenue.scenarios.low.tokensPerTaskGrowth,0.25,Inputs,INP_139,
+tokenRevenue.scenarios.base.elasticity.tasks,-0.7,Inputs,INP_143,
+tokenRevenue.scenarios.base.elasticity.tokensPerTask,-0.3,Inputs,INP_144,
+tokenRevenue.scenarios.base.listPriceAnnualChange.top,-0.3,Inputs,INP_146,
+tokenRevenue.scenarios.base.listPriceAnnualChange.mid,-0.4,Inputs,INP_147,
+tokenRevenue.scenarios.base.listPriceAnnualChange.low,-0.4,Inputs,INP_148,
+tokenRevenue.scenarios.base.tokensPerTaskGrowth,0.15,Inputs,INP_145,
+tokenRevenue.scenarios.high.elasticity.tasks,-1.05,Inputs,INP_149,
+tokenRevenue.scenarios.high.elasticity.tokensPerTask,-0.45,Inputs,INP_150,
+tokenRevenue.scenarios.high.listPriceAnnualChange.top,-0.3,Inputs,INP_152,
+tokenRevenue.scenarios.high.listPriceAnnualChange.mid,-0.4,Inputs,INP_153,
+tokenRevenue.scenarios.high.listPriceAnnualChange.low,-0.4,Inputs,INP_154,
+tokenRevenue.scenarios.high.tokensPerTaskGrowth,0.1,Inputs,INP_151,
+tokenRevenue.inferenceCost._note,"""每 token 生產成本＝Tokenomics v4 Vera Rubin NVL72 之 roofline（prefill 計算受限、decode 記憶體頻寬受限）× 艦隊硬體成本指數 × 校準係數 κ""",不遷入,—,說明文字
+tokenRevenue.inferenceCost.rack.hbmBW_TBs.v,1580,不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.fp4PFLOPS.v,3600,不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.hbmTB.v,20.7,不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.mfu.v,0.35,不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.annualOpexPerRack_M.v,1.7667,不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.annualOpexPerRack_M.src,"""DC_Cost_Model：年營運費用 $9,298M ÷ 5,263 架（含折舊）""",不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.specAccepted.v,2.94,不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.specAccepted.src,"""Config B59：推測解碼每步接受 token""",不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.utilization.v,0.6,不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.utilization.lo,0.4,不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.utilization.hi,0.8,不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.utilization.tag,"""Assumed""",不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.tag,"""Derived""",不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.src,"""Tokenomics v4（Config F 欄 VR NVL72 預設；要改一起改）""",不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.chk,"""待查核-workbook""",不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.cellRefs.hbmBW_TBs,"""Config!F18""",不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.cellRefs.fp4PFLOPS,"""Config!F19""",不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.cellRefs.hbmTB,"""Config!F17""",不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.cellRefs.mfu,"""Config!B46""",不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.cellRefs.annualOpexPerRack_M,"""DC_Cost_Model!D88 ÷ D9""",不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.rack.cellRefs.specAccepted,"""Config!B59""",不遷入；改取 TK_Link,TK_Link IF_Util（利用率）、IF_TokGW_*（產能）,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes._note,"""OpenAI 模型架構未揭露；以 Tokenomics 預設架構作類比""",不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.luna.totalB,284,不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.luna.activeB,13,不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.luna.kvBytesPerTok,2795,不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.luna.bytesPerParam,0.51,不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.luna.analog,"""DeepSeek V4-Flash""",不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.sol.totalB,1600,不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.sol.activeB,49,不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.sol.kvBytesPerTok,3965,不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.sol.bytesPerParam,0.507,不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.sol.analog,"""DeepSeek V4-Pro""",不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.astra.totalB,4000,不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.astra.activeB,180,不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.astra.kvBytesPerTok,204800,不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.astra.bytesPerParam,0.53,不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.astra.analog,"""Closed-frontier proxy""",不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.tag,"""Analogy""",不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.classes.chk,"""待查核-workbook""",不遷入；改取 TK_Link,TK_Link IF_TokGW_Luna／Sol／Astra,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.serving.batchCap.v,256,不遷入；改取 TK_Link,TK_Link IF_Util、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.serving.batchCap.lo,64,不遷入；改取 TK_Link,TK_Link IF_Util、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.serving.batchCap.hi,1024,不遷入；改取 TK_Link,TK_Link IF_Util、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.serving.batchCap.tag,"""Assumed""",不遷入；改取 TK_Link,TK_Link IF_Util、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.serving.avgContextK.v,8,不遷入；改取 TK_Link,TK_Link IF_Util、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.serving.avgContextK.lo,4,不遷入；改取 TK_Link,TK_Link IF_Util、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.serving.avgContextK.hi,32,不遷入；改取 TK_Link,TK_Link IF_Util、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.serving.avgContextK.tag,"""Assumed""",不遷入；改取 TK_Link,TK_Link IF_Util、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.serving.prefillAttnOverhead.v,1.1,不遷入；改取 TK_Link,TK_Link IF_Util、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.serving.prefillAttnOverhead.tag,"""Assumed""",不遷入；改取 TK_Link,TK_Link IF_Util、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.serving.cachedVsPrefill.v,0.1,不遷入；改取 TK_Link,TK_Link IF_Util、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.serving.cachedVsPrefill.lo,0.05,不遷入；改取 TK_Link,TK_Link IF_Util、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.serving.cachedVsPrefill.hi,0.2,不遷入；改取 TK_Link,TK_Link IF_Util、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.serving.cachedVsPrefill.tag,"""Analogy""",不遷入；改取 TK_Link,TK_Link IF_Util、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.serving.cachedVsPrefill.src,"""牌價快取讀取比 0.05–0.1 代理""",不遷入；改取 TK_Link,TK_Link IF_Util、IF_TokGW_*,不遷入；改取 TK_Link（分層優先於標記：屬 Tokenomics 領域；補充 1 第 2 點）。v0.5 原值見對照表
+tokenRevenue.inferenceCost.usage._note,"""各方案模型組合 luna/sol/astra、輸出占比（含思考）、快取命中；T6 與分層成本假設""",Inputs,usage,說明文字
+tokenRevenue.inferenceCost.usage.free.0,0.9,Inputs,INP_155,
+tokenRevenue.inferenceCost.usage.free.1,0.1,Inputs,INP_156,
+tokenRevenue.inferenceCost.usage.free.2,0.0,Inputs,INP_157,
+tokenRevenue.inferenceCost.usage.free.3,0.25,Inputs,INP_158,
+tokenRevenue.inferenceCost.usage.free.4,0.4,Inputs,INP_159,
+tokenRevenue.inferenceCost.usage.go.0,0.85,Inputs,INP_160,
+tokenRevenue.inferenceCost.usage.go.1,0.15,Inputs,INP_161,
+tokenRevenue.inferenceCost.usage.go.2,0.0,Inputs,INP_162,
+tokenRevenue.inferenceCost.usage.go.3,0.25,Inputs,INP_163,
+tokenRevenue.inferenceCost.usage.go.4,0.4,Inputs,INP_164,
+tokenRevenue.inferenceCost.usage.plus.0,0.35,Inputs,INP_165,
+tokenRevenue.inferenceCost.usage.plus.1,0.6,Inputs,INP_166,
+tokenRevenue.inferenceCost.usage.plus.2,0.05,Inputs,INP_167,
+tokenRevenue.inferenceCost.usage.plus.3,0.4,Inputs,INP_168,
+tokenRevenue.inferenceCost.usage.plus.4,0.5,Inputs,INP_169,
+tokenRevenue.inferenceCost.usage.pro.0,0.1,Inputs,INP_170,
+tokenRevenue.inferenceCost.usage.pro.1,0.5,Inputs,INP_171,
+tokenRevenue.inferenceCost.usage.pro.2,0.4,Inputs,INP_172,
+tokenRevenue.inferenceCost.usage.pro.3,0.5,Inputs,INP_173,
+tokenRevenue.inferenceCost.usage.pro.4,0.6,Inputs,INP_174,
+tokenRevenue.inferenceCost.usage.seats.0,0.3,Inputs,INP_175,
+tokenRevenue.inferenceCost.usage.seats.1,0.65,Inputs,INP_176,
+tokenRevenue.inferenceCost.usage.seats.2,0.05,Inputs,INP_177,
+tokenRevenue.inferenceCost.usage.seats.3,0.35,Inputs,INP_178,
+tokenRevenue.inferenceCost.usage.seats.4,0.55,Inputs,INP_179,
+tokenRevenue.inferenceCost.usage.tag,"""Assumed""",Inputs,usage 各列,隨附資訊
+tokenRevenue.inferenceCost.usage.chk,"""假設""",Inputs,usage 各列,隨附資訊
+tokenRevenue.inferenceCost.calibration2025.inferenceTotal.v,8.4,SRC_OAI,SRC_OAI_047,
+tokenRevenue.inferenceCost.calibration2025.inferenceTotal.tag,"""Interested-party""",SRC_OAI,SRC_OAI_047,隨附資訊
+tokenRevenue.inferenceCost.calibration2025.inferenceTotal.src,"""The Information 2026-02（投資人說明）；T1(a)""",SRC_OAI,SRC_OAI_047,隨附資訊
+tokenRevenue.inferenceCost.calibration2025.inferenceTotal.chk,"""待查核-報導""",SRC_OAI,SRC_OAI_047,隨附資訊
+tokenRevenue.inferenceCost.calibration2025.freeUsers.v,3.9,SRC_OAI,SRC_OAI_048,
+tokenRevenue.inferenceCost.calibration2025.freeUsers.tag,"""Interested-party""",SRC_OAI,SRC_OAI_048,隨附資訊
+tokenRevenue.inferenceCost.calibration2025.freeUsers.src,"""同上：非付費用戶約 $3.9B""",SRC_OAI,SRC_OAI_048,隨附資訊
+tokenRevenue.inferenceCost.calibration2025.freeUsers.chk,"""待查核-報導""",SRC_OAI,SRC_OAI_048,隨附資訊
+tokenRevenue.inferenceCost.calibration2025.paidUsers.v,4.5,SRC_OAI,SRC_OAI_049,
+tokenRevenue.inferenceCost.calibration2025.paidUsers.tag,"""Interested-party""",SRC_OAI,SRC_OAI_049,隨附資訊
+tokenRevenue.inferenceCost.calibration2025.paidUsers.src,"""同上：付費用戶 $4.5B""",SRC_OAI,SRC_OAI_049,隨附資訊
+tokenRevenue.inferenceCost.calibration2025.paidUsers.chk,"""待查核-報導""",SRC_OAI,SRC_OAI_049,隨附資訊
+tokenRevenue.inferenceCost.calibration2025.apiMargin.v,0.5,Inputs,INP_180,
+tokenRevenue.inferenceCost.calibration2025.apiMargin.lo,0.3,Inputs,INP_180,
+tokenRevenue.inferenceCost.calibration2025.apiMargin.hi,0.65,Inputs,INP_180,
+tokenRevenue.inferenceCost.calibration2025.apiMargin.tag,"""Assumed""",Inputs,INP_180,隨附資訊
+tokenRevenue.inferenceCost.calibration2025.apiMargin.src,"""T5""",Inputs,INP_180,隨附資訊
+tokenRevenue.inferenceCost.calibration2025.apiMargin.chk,"""假設""",Inputs,INP_180,隨附資訊
+tokenRevenue.inferenceCost.calibration2025.cogsReported.v,7.5,重複併入,SRC_OAI（營業成本：FY2025）,與 actuals.cogs2025 同值（7.5）同源（外流財報；FT/Fortune 2026-06）
+tokenRevenue.inferenceCost.calibration2025.cogsReported.tag,"""Interested-party""",重複併入,SRC_OAI（營業成本：FY2025）,同源
+tokenRevenue.inferenceCost.calibration2025.cogsReported.src,"""外流經查核財報（FT/Fortune 2026-06）""",重複併入,SRC_OAI（營業成本：FY2025）,同源
+tokenRevenue.inferenceCost.calibration2025.cogsReported.chk,"""待查核-報導""",重複併入,SRC_OAI（營業成本：FY2025）,同源
+tokenRevenue.inferenceCost.checks2026.inference.v,14.1,SRC_OAI,SRC_OAI_050,
+tokenRevenue.inferenceCost.checks2026.inference.paidShare,0.66,SRC_OAI,SRC_OAI_050,
+tokenRevenue.inferenceCost.checks2026.inference.tag,"""Interested-party""",SRC_OAI,SRC_OAI_050,隨附資訊
+tokenRevenue.inferenceCost.checks2026.inference.src,"""The Information 2026-02：OpenAI 2026 預測""",SRC_OAI,SRC_OAI_050,隨附資訊
+tokenRevenue.inferenceCost.checks2026.inference2030.v,85,SRC_OAI,SRC_OAI_051,
+tokenRevenue.inferenceCost.checks2026.inference2030.paidShare,0.94,SRC_OAI,SRC_OAI_051,
+tokenRevenue.inferenceCost.checks2026.inference2030.gmTarget,0.67,SRC_OAI,SRC_OAI_051,
+tokenRevenue.inferenceCost.checks2026.inference2030.tag,"""Interested-party""",SRC_OAI,SRC_OAI_051,隨附資訊
+tokenRevenue.inferenceCost.checks2026.inference2030.src,"""同上""",SRC_OAI,SRC_OAI_051,隨附資訊
+tokenRevenue.inferenceCost.nonText._note,"""T2(b)：免費層成本扣除文字推論後之殘差（圖像、影片）；2026+ 依 Free 人數 × 艦隊硬體成本指數""",公式（後續工作包）,P4（免費層非文字推論殘差）,Derived 說明；P4 以公式實作
+tokenRevenue.inferenceCost.nonText.tag,"""Derived""",公式（後續工作包）,P4（免費層非文字推論殘差）,Derived 說明；P4 以公式實作
+tokenRevenue.inferenceCost.hwCostIndexSrc,"""沿用 costInterface.hwCostPerM 相對路徑（Tokenomics v4 OpenAI_Sim 艦隊組合）""",不遷入,—,文字說明：沿用 Tokenomics v4 艦隊硬體成本指數；v0.6 由 TK_Link 取代
+reverse._note,"""R1–R3：假設管理層目標達成，反解充分條件；目標只驅動反向模式，不進正向模式""",不遷入,—,說明文字（R1–R3）
+reverse.targetVintage,"""Jul-2026""",SRC_OAI,反向目標各列（日期欄）,簡報版本 Jul-2026：寫入各列口徑
+reverse.targetRevenue.v.0,13.07,重複併入,SRC_OAI（營收：FY2025）,2025 為實際值（同 actuals.revenue2025）
+reverse.targetRevenue.v.1,36,重複併入,SRC_OAI_043,E8e：與 comparison.deckJul2026.2026 同一來源（FT 2026-09-18），合併為一組 SRC 列；reverse 引用該列
+reverse.targetRevenue.v.2,75.1,公式（後續工作包）,P5（反向目標路徑 2027–29：依 Σ840 擬合）,Derived：2027–29 為依 Σ840 擬合之路徑（v0.5 標 Interested-party/Derived 混合；依元素拆分）
+reverse.targetRevenue.v.3,141.5,公式（後續工作包）,P5（反向目標路徑 2027–29：依 Σ840 擬合）,Derived：2027–29 為依 Σ840 擬合之路徑（v0.5 標 Interested-party/Derived 混合；依元素拆分）
+reverse.targetRevenue.v.4,237.4,公式（後續工作包）,P5（反向目標路徑 2027–29：依 Σ840 擬合）,Derived：2027–29 為依 Σ840 擬合之路徑（v0.5 標 Interested-party/Derived 混合；依元素拆分）
+reverse.targetRevenue.v.5,350,重複併入,SRC_OAI_044,E8e：與 comparison.deckJul2026.2030 同一來源，合併；reverse 引用該列
+reverse.targetRevenue.tag,"""Interested-party/Derived""",重複併入,SRC_OAI_043,同源
+reverse.targetRevenue.src,"""2026、2030、Σ840：FT 2026-09-18（7 月簡報）；2027–29 為依 Σ840 擬合之路徑（Tokenomics v4 FT_Sep2026 列 24）[Derived]""",重複併入,SRC_OAI_043,同源
+reverse.targetFCFcum2026_2030.v,-278,SRC_OAI,SRC_OAI_054,
+reverse.targetFCFcum2026_2030.tag,"""Interested-party""",SRC_OAI,SRC_OAI_054,隨附資訊
+reverse.targetFCFcum2026_2030.src,"""FT 2026-09-18""",SRC_OAI,SRC_OAI_054,隨附資訊
+reverse.targetComputeCum2026_2030.v,856,重複併入,SRC_OAI_055,與 training.planCompute2026_2030 同值同源（FT 2026-09-18）
+reverse.targetComputeCum2026_2030.tag,"""Interested-party""",重複併入,SRC_OAI_055,同源
+reverse.targetComputeCum2026_2030.src,"""FT 2026-09-18""",重複併入,SRC_OAI_055,同源
+reverse.priorVintages.Feb-2026.2030,280,SRC_OAI,SRC_OAI_056,
+reverse.priorVintages.tag,"""Interested-party""",SRC_OAI,SRC_OAI_056,隨附資訊
+reverse.priorVintages.src,"""The Information 2026-02；只對照""",SRC_OAI,SRC_OAI_056,隨附資訊
+reverse.sufficientSets.0,"""apiOnly""",不遷入,—,反向模式充分條件組合（apiOnly／subOnly／proportional）：P5 以公式結構實作（R1–R3）
+reverse.sufficientSets.1,"""subOnly""",不遷入,—,反向模式充分條件組合（apiOnly／subOnly／proportional）：P5 以公式結構實作（R1–R3）
+reverse.sufficientSets.2,"""proportional""",不遷入,—,反向模式充分條件組合（apiOnly／subOnly／proportional）：P5 以公式結構實作（R1–R3）
+reverse.adsInReverse,"""forward""",不遷入,—,決策記錄：反向模式廣告列保持正向（N1b）；P5 以公式結構體現
+reverse.comparisonSetAdsPlan.v.0,0,重複併入,—,2025 為基準年（值 0）：Axios 簡報未揭露 2025；不另列 SRC_OAI
+reverse.comparisonSetAdsPlan.v.1,2.5,重複併入,SRC_OAI（內部廣告營收目標：2026）,與 other.ads.comparisonInternalTarget 同值同源
+reverse.comparisonSetAdsPlan.v.2,11,重複併入,SRC_OAI（內部廣告營收目標：2027）,與 other.ads.comparisonInternalTarget 同值同源
+reverse.comparisonSetAdsPlan.v.3,25,重複併入,SRC_OAI（內部廣告營收目標：2028）,與 other.ads.comparisonInternalTarget 同值同源
+reverse.comparisonSetAdsPlan.v.4,53,重複併入,SRC_OAI（內部廣告營收目標：2029）,與 other.ads.comparisonInternalTarget 同值同源
+reverse.comparisonSetAdsPlan.v.5,100,重複併入,SRC_OAI（內部廣告營收目標：2030）,與 other.ads.comparisonInternalTarget 同值同源
+reverse.comparisonSetAdsPlan.tag,"""Interested-party""",重複併入,SRC_OAI（內部廣告營收目標）,同源
+reverse.comparisonSetAdsPlan.src,"""Axios 2026-04-09""",重複併入,SRC_OAI（內部廣告營收目標）,同源
+spending._note,"""S1c 逐一交易對手合約；S2 已揭露者依揭露時程，未揭露者於合約期間平均攤；未揭露時程者依 N4(b) 於合約期間內線性爬升；金額 $B，名目、未折現""",不遷入,—,說明文字（S1c、S2、N4(b)）
+spending.unscheduledProfile.v,"""ramp""",Inputs,INP_181,
+spending.unscheduledProfile.options.0,"""even""",不遷入,—,選項清單（even／ramp）：結構
+spending.unscheduledProfile.options.1,"""ramp""",不遷入,—,選項清單（even／ramp）：結構
+spending.unscheduledProfile.tag,"""Decision""",Inputs,INP_181,隨附資訊
+spending.unscheduledProfile.src,"""N4(b)：期間內線性爬升（Andy 2026-09-29）；2026 算力現金 $53B 符合證詞 $50B""",Inputs,INP_181,隨附資訊
+spending.contracts.microsoftAzure.total,250,SRC_OAI,SRC_OAI_057,
+spending.contracts.microsoftAzure.start,2025,Inputs,INP_182,
+spending.contracts.microsoftAzure.end,2030,Inputs,INP_183,
+spending.contracts.microsoftAzure.annual,null,不遷入,—,null：未揭露年度金額（P3 由 N4(b) 爬升決定）
+spending.contracts.microsoftAzure.tag,"""Verified/Analogy""",SRC_OAI,SRC_OAI_057,隨附資訊
+spending.contracts.microsoftAzure.src,"""總額：OpenAI／Microsoft 2025-10 公告增購 $250B Azure [Verified]；期間 2025–2030 為估計 [Analogy]""",SRC_OAI,SRC_OAI_057,隨附資訊
+spending.contracts.oracle.total,300,SRC_OAI,SRC_OAI_058,
+spending.contracts.oracle.start,2027,SRC_OAI,SRC_OAI_059,
+spending.contracts.oracle.end,2031,SRC_OAI,SRC_OAI_060,
+spending.contracts.oracle.annual,60,公式（後續工作包）,Checks C14（E8f：Oracle annual＝total÷年數）,60＝300÷5，算術推得（v0.5 以數值寫入）
+spending.contracts.oracle.tag,"""Interested-party""",SRC_OAI,SRC_OAI_058,隨附資訊
+spending.contracts.oracle.src,"""WSJ 2025-09；Oracle 公告 5 年、2027 起、約 4.5GW""",SRC_OAI,SRC_OAI_058,隨附資訊
+spending.contracts.oracle.gw,4.5,SRC_OAI,SRC_OAI_061,
+spending.contracts.awsNvidia.total,38,SRC_OAI,SRC_OAI_062,
+spending.contracts.awsNvidia.start,2025,SRC_OAI,SRC_OAI_063,
+spending.contracts.awsNvidia.end,2031,SRC_OAI,SRC_OAI_064,
+spending.contracts.awsNvidia.annual,null,不遷入,—,null：未揭露年度金額
+spending.contracts.awsNvidia.tag,"""Verified""",SRC_OAI,SRC_OAI_062,隨附資訊
+spending.contracts.awsNvidia.src,"""AWS/OpenAI 2025-11-03，7 年""",SRC_OAI,SRC_OAI_062,隨附資訊
+spending.contracts.awsTrainium.total,100,SRC_OAI,SRC_OAI_065,
+spending.contracts.awsTrainium.start,2026,SRC_OAI,SRC_OAI_066,
+spending.contracts.awsTrainium.end,2033,SRC_OAI,SRC_OAI_067,
+spending.contracts.awsTrainium.annual,null,不遷入,—,null：未揭露年度金額
+spending.contracts.awsTrainium.tag,"""Verified""",SRC_OAI,SRC_OAI_065,隨附資訊
+spending.contracts.awsTrainium.src,"""2026-02 融資公告：AWS 追加 $100B／8 年、2GW Trainium""",SRC_OAI,SRC_OAI_065,隨附資訊
+spending.contracts.awsTrainium.gw,2.0,SRC_OAI,SRC_OAI_068,
+spending.contracts.awsTrainium.gwNote,"""揭露口徑衝突：2026-02 公告 2GW Trainium；WSJ 2026-07 另載 3GW 推論＋2GW 訓練（VR）。取 2GW，區間 2–5""",SRC_OAI,SRC_OAI_065,隨附資訊
+spending.contracts.coreweave.total,22.4,SRC_OAI,SRC_OAI_070,
+spending.contracts.coreweave.start,2025,SRC_OAI,SRC_OAI_071,
+spending.contracts.coreweave.end,2029,SRC_OAI,SRC_OAI_072,
+spending.contracts.coreweave.annual,null,不遷入,—,null：未揭露年度金額
+spending.contracts.coreweave.tag,"""Verified""",SRC_OAI,SRC_OAI_070,隨附資訊
+spending.contracts.coreweave.src,"""CoreWeave 揭露：$11.9B＋$4B＋$6.5B；日後可改接 CRWV 模型之 OpenAI 時程""",SRC_OAI,SRC_OAI_070,隨附資訊
+spending.contracts.cerebras.total,20,SRC_OAI,SRC_OAI_073,
+spending.contracts.cerebras.lo,20,SRC_OAI,SRC_OAI_073,
+spending.contracts.cerebras.hi,25,Inputs,INP_184,
+spending.contracts.cerebras.start,2026,SRC_OAI,SRC_OAI_074,
+spending.contracts.cerebras.end,2031,Inputs,INP_185,
+spending.contracts.cerebras.annual,null,不遷入,—,null：未揭露年度金額
+spending.contracts.cerebras.tag,"""Verified/Analogy""",SRC_OAI,SRC_OAI_073,隨附資訊
+spending.contracts.cerebras.src,"""Cerebras 10-Q／8-K：750MW、2026–28 分批部署、每批 3–4 年、總值逾 $20B；期間終點為推估""",SRC_OAI,SRC_OAI_073,隨附資訊
+spending.contracts.cerebras.gw,0.75,SRC_OAI,SRC_OAI_075,
+spending.excludedOrComparison.nvidia10GW,"""Nvidia 10GW／$100B 意向（未定案）與 2026-03 融資中 Nvidia $30B 之算力配置：不另列付款，避免與股權重複 [S4b]""",SRC_OAI,SRC_OAI_105,
+spending.excludedOrComparison.broadcomAmdChips,"""Broadcom 10GW、AMD 6GW：透過合作方或自有資本支出採購，併入 ownedCapex，不另列""",SRC_OAI,SRC_OAI_107,
+spending.excludedOrComparison.stargateSoftBank,"""合資建設由合作方出資部分不進 OpenAI 現金流（S3 槓桿）""",不遷入,—,決策記錄（S3）：合資建設由合作方出資部分不進 OpenAI 現金流；無揭露數字
+spending.ownedCapex.v.0,0,Inputs,INP_186,
+spending.ownedCapex.v.1,20,Inputs,INP_187,
+spending.ownedCapex.v.2,30,Inputs,INP_188,
+spending.ownedCapex.v.3,45,Inputs,INP_189,
+spending.ownedCapex.v.4,60,Inputs,INP_190,
+spending.ownedCapex.v.5,70,Inputs,INP_191,
+spending.ownedCapex.lo_mult,0.6,Inputs,INP_192,
+spending.ownedCapex.hi_mult,1.5,Inputs,INP_193,
+spending.ownedCapex.tag,"""Assumed""",Inputs,INP_193,隨附資訊
+spending.ownedCapex.src,"""自有園區與晶片（例：Project Camellia $20B，TechCrunch 2026-07-22）""",Inputs,INP_193,隨附資訊
+spending.partnerFinancedShare.v,0.0,Inputs,INP_194,
+spending.partnerFinancedShare.lo,0.0,Inputs,INP_194,
+spending.partnerFinancedShare.hi,0.3,Inputs,INP_194,
+spending.partnerFinancedShare.tag,"""Assumed""",Inputs,INP_194,隨附資訊
+spending.partnerFinancedShare.src,"""S3，沿用 v4 槓桿，情境軸""",Inputs,INP_194,隨附資訊
+spending.leases.v,null,不遷入,—,N/A：OpenAI 未揭露承租合約；雲端合約內含之租賃不另列
+spending.leases.tag,"""N/A""",不遷入,—,N/A：OpenAI 未揭露承租合約；雲端合約內含之租賃不另列
+spending.leases.src,"""OpenAI 未揭露承租合約；雲端服務合約內含之租賃不另列；顯示「不適用」""",不遷入,—,N/A：OpenAI 未揭露承租合約；雲端合約內含之租賃不另列
+spending.opexExComputePctRevenue.v.0,1.216,公式（後續工作包）,P4（2025 非算力營運費用占營收比：由財報數據推得）,V9：2025 由財報數據推得（研發不含付 Microsoft、銷售、管理 ÷ 營收）→公式；v0.5 值 1.216 供對照（原 Interested-party／Derived 混合）
+spending.opexExComputePctRevenue.v.1,0.33,Inputs,INP_196,
+spending.opexExComputePctRevenue.v.2,0.265,Inputs,INP_197,
+spending.opexExComputePctRevenue.v.3,0.22,Inputs,INP_198,
+spending.opexExComputePctRevenue.v.4,0.18,Inputs,INP_199,
+spending.opexExComputePctRevenue.v.5,0.14,Inputs,INP_200,
+spending.opexExComputePctRevenue.lo_mult,0.8,Inputs,INP_201,
+spending.opexExComputePctRevenue.hi_mult,1.3,Inputs,INP_202,
+spending.opexExComputePctRevenue.tag,"""Assumed""",Inputs,INP_202,隨附資訊
+spending.opexExComputePctRevenue.src,"""S5a；2025 為實際（研發不含付 Microsoft 約 $10.6B、銷售、管理）÷ 營收 [Interested-party]；2026+ 沿 Tokenomics v4 研發×(1−算力占比 60%)＋銷售＋管理路徑；不含股票薪酬""",Inputs,INP_202,隨附資訊
+spending.anchors.computeCum2026_2030_WSJ.v,750,SRC_OAI,SRC_OAI_076,
+spending.anchors.computeCum2026_2030_WSJ.tag,"""Interested-party""",SRC_OAI,SRC_OAI_076,隨附資訊
+spending.anchors.computeCum2026_2030_WSJ.src,"""WSJ 2026-07-22""",SRC_OAI,SRC_OAI_076,隨附資訊
+spending.anchors.computeCum2026_2030_FT.v,856,重複併入,SRC_OAI_055,與 training.planCompute2026_2030 同值同源（FT 2026-09-18）
+spending.anchors.computeCum2026_2030_FT.tag,"""Interested-party""",重複併入,SRC_OAI_055,同源
+spending.anchors.computeCum2026_2030_FT.src,"""FT 2026-09-18""",重複併入,SRC_OAI_055,同源
+spending.anchors.offBalanceCommitmentsStock.v,665,SRC_OAI,SRC_OAI_077,
+spending.anchors.offBalanceCommitmentsStock.tag,"""Interested-party""",SRC_OAI,SRC_OAI_077,隨附資訊
+spending.anchors.offBalanceCommitmentsStock.src,"""S-1 草案轉述（Tokenomics v1_3 Sources #19）""",SRC_OAI,SRC_OAI_077,隨附資訊
+spending.anchors.compute2026Testimony.v,50,SRC_OAI,SRC_OAI_078,
+spending.anchors.compute2026Testimony.tag,"""Interested-party""",SRC_OAI,SRC_OAI_078,隨附資訊
+spending.anchors.compute2026Testimony.src,"""Brockman 證詞（commitments tracker 2026-05 轉述）""",SRC_OAI,SRC_OAI_078,隨附資訊
+funding._note,"""S7 沿用 CRWV：最低現金、來源順序、缺口旗標；S4b 供應商融資只列或有負債""",不遷入,—,說明文字（S7、S4b）
+funding.cashEnd2025.v,40,SRC_OAI,SRC_OAI_079,
+funding.cashEnd2025.lo,35,SRC_OAI,SRC_OAI_079,
+funding.cashEnd2025.hi,45,SRC_OAI,SRC_OAI_079,
+funding.cashEnd2025.tag,"""Interested-party""",SRC_OAI,SRC_OAI_079,隨附資訊
+funding.cashEnd2025.src,"""2025-12 約 $40B；2026 Q1 末 $73B（The Information 經 TNW 轉述）""",SRC_OAI,SRC_OAI_079,隨附資訊
+funding.equityRound2026Mar.total,122,SRC_OAI,SRC_OAI_080,
+funding.equityRound2026Mar.unconditional2026.v,87,公式（後續工作包）,Derived_V9／Checks（SRC 四個組成加總）,E8j：87 拆為 SRC 組成（Amazon 15、SoftBank 30、Nvidia 30、其他 12）；加總驗證＝v0.5 值 87
+funding.equityRound2026Mar.unconditional2026.tag,"""Interested-party""",公式（後續工作包）,Derived_V9／Checks（SRC 四個組成加總）,E8j：87 拆為 SRC 組成（Amazon 15、SoftBank 30、Nvidia 30、其他 12）；加總驗證＝v0.5 值 87
+funding.equityRound2026Mar.unconditional2026.src,"""Amazon 首筆 $15B＋SoftBank $30B（三期）＋Nvidia $30B＋其他約 $12B；Nvidia 以現金計 [Assumed，另有報導稱多為算力]""",公式（後續工作包）,Derived_V9／Checks（SRC 四個組成加總）,E8j：87 拆為 SRC 組成（Amazon 15、SoftBank 30、Nvidia 30、其他 12）；加總驗證＝v0.5 值 87
+funding.equityRound2026Mar.conditional.v,35,SRC_OAI,SRC_OAI_082,
+funding.equityRound2026Mar.conditional.tag,"""Verified""",SRC_OAI,SRC_OAI_082,隨附資訊
+funding.equityRound2026Mar.conditional.src,"""Amazon 其餘 $35B 以 IPO 或 AGI 里程碑為條件（多家報導）；base 不計入，列情境""",SRC_OAI,SRC_OAI_082,隨附資訊
+funding.minCash.v,10,Inputs,INP_203,
+funding.minCash.lo,5,Inputs,INP_203,
+funding.minCash.hi,20,Inputs,INP_203,
+funding.minCash.tag,"""Assumed""",Inputs,INP_203,隨附資訊
+funding.contingentLiabilities.nvidiaGuarantees.v,250,SRC_OAI,SRC_OAI_083,
+funding.contingentLiabilities.nvidiaGuarantees.tag,"""Interested-party""",SRC_OAI,SRC_OAI_083,隨附資訊
+funding.contingentLiabilities.nvidiaGuarantees.src,"""WSJ（Tokenomics v1_3 Sources #21）""",SRC_OAI,SRC_OAI_083,隨附資訊
+funding.contingentLiabilities.nvidiaChipFinancingTalks.v,350,SRC_OAI,SRC_OAI_084,
+funding.contingentLiabilities.nvidiaChipFinancingTalks.tag,"""Interested-party""",SRC_OAI,SRC_OAI_084,隨附資訊
+funding.contingentLiabilities.nvidiaChipFinancingTalks.src,"""WSJ，洽談中""",SRC_OAI,SRC_OAI_084,隨附資訊
+funding.contingentLiabilities.treatment,"""只列示，不作資金來源（S4b）""",不遷入,—,決策記錄（S4b）：只列示，不作資金來源；P5 以公式結構體現
+funding.externalNeed,"""年底現金低於 minCash 之差額累計＝外部資金需求（新一輪股權、債務或延後承諾）""",不遷入,—,外部資金需求的定義（年底現金低於最低現金之差額累計）：P5 以公式實作
+training._note,"""v0.5：訓練＝訓練 GW×每 VR-eq GW 成本；計畫算力 856／600 與計畫推論降為檢查項""",不遷入,—,說明文字
+training.actual2024.v,3.0,SRC_OAI,SRC_OAI_085,
+training.actual2024.tag,"""Interested-party""",SRC_OAI,SRC_OAI_085,隨附資訊
+training.actual2024.src,"""Epoch（引 The Information/NYT）：2024 訓練算力 $3B、推論 $1.8B""",SRC_OAI,SRC_OAI_085,隨附資訊
+training.actual2024.chk,"""待查核-報導""",SRC_OAI,SRC_OAI_085,隨附資訊
+training.actual2025.v,12.0,公式（後續工作包）,訓練支出 2025＝SRC_OAI 10.59＋Inputs 其他雲端（Checks 衍生值列）,V6：Derived→公式；v0.5 值 12.0（10.6–13.5）供對照
+training.actual2025.lo,10.6,公式（後續工作包）,訓練支出 2025＝SRC_OAI 10.59＋Inputs 其他雲端（Checks 衍生值列）,V6：Derived→公式；v0.5 值 12.0（10.6–13.5）供對照
+training.actual2025.hi,13.5,公式（後續工作包）,訓練支出 2025＝SRC_OAI 10.59＋Inputs 其他雲端（Checks 衍生值列）,V6：Derived→公式；v0.5 值 12.0（10.6–13.5）供對照
+training.actual2025.tag,"""Derived""",公式（後續工作包）,訓練支出 2025＝SRC_OAI 10.59＋Inputs 其他雲端（Checks 衍生值列）,V6：Derived→公式；v0.5 值 12.0（10.6–13.5）供對照
+training.actual2025.src,"""2025 R&D 付予 Microsoft $10.59B（外流財報）＋其他雲端估計""",公式（後續工作包）,訓練支出 2025＝SRC_OAI 10.59＋Inputs 其他雲端（Checks 衍生值列）,V6：Derived→公式；v0.5 值 12.0（10.6–13.5）供對照
+training.actual2025.chk,"""待查核-報導""",公式（後續工作包）,訓練支出 2025＝SRC_OAI 10.59＋Inputs 其他雲端（Checks 衍生值列）,V6：Derived→公式；v0.5 值 12.0（10.6–13.5）供對照
+training.rd2025.v,19.18,SRC_OAI,SRC_OAI_087,
+training.rd2025.tag,"""Interested-party""",SRC_OAI,SRC_OAI_087,隨附資訊
+training.rd2025.src,"""外流財報 R&D 總額（含人事）""",SRC_OAI,SRC_OAI_087,隨附資訊
+training.planCompute2026_2030.v,856,SRC_OAI,SRC_OAI_055,
+training.planCompute2026_2030.lo,600,SRC_OAI,SRC_OAI_055,
+training.planCompute2026_2030.hi,856,SRC_OAI,SRC_OAI_055,
+training.planCompute2026_2030.tag,"""Interested-party""",SRC_OAI,SRC_OAI_055,隨附資訊
+training.planCompute2026_2030.src,"""FT 2026-09-18（7 月簡報）$856B，與 R1 反向錨點同一版本；Reuters 2026-02 約 $600B 為下限""",SRC_OAI,SRC_OAI_055,隨附資訊
+training.planCompute2026_2030.chk,"""待查核-報導""",SRC_OAI,SRC_OAI_055,隨附資訊
+training.planInference.2026,14.1,重複併入,SRC_OAI（計畫推論成本：2026）,與 checks2026.inference.v（14.1）同值同源
+training.planInference.2030,85,重複併入,SRC_OAI（計畫推論成本：2030）,與 checks2026.inference2030.v（85）同值同源
+training.planInference.tag,"""Interested-party""",重複併入,SRC_OAI（計畫推論成本）,同源
+training.planInference.src,"""The Information 2026-02；2027–29 幾何內插 [Derived]""",重複併入,SRC_OAI（計畫推論成本）,同源；2027–29 幾何內插為 Derived（P3 公式）
+training.allocation,"""計畫訓練總額（計畫算力−計畫推論）依本模型各年『算力現金−推論成本』占比分配（推論優先使用算力）[Derived]""",不遷入,—,方法說明（計畫訓練總額依各年算力現金−推論成本占比分配）：P3／P4 以公式實作
+training.tokenAllocation,"""每層級訓練分攤＝當年訓練 × 該層級推論成本占比（工程決定，僅供全成本參考）""",不遷入,—,方法說明（每層級訓練分攤）：P4 以公式實作
+computeMW._note,"""單位：GW（IT 電力）。VR-eq＝以 Vera Rubin NVL72 每 MW 輸出 token 為 1 的等值容量""",不遷入,—,說明文字：單位 GW（IT 電力）；VR-eq 概念由 TK_Link 世代產能取代
+computeMW.tokenomicsRef.racksPerGW_VR.v,5263,不遷入；改取 TK_Link,TK_Link IF_TokGW_*、IF_HoldEcon,不遷入；改取 TK_Link（補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.tokenomicsRef.racksPerGW_VR.cell,"""Config!F8""",不遷入；改取 TK_Link,TK_Link IF_TokGW_*、IF_HoldEcon,不遷入；改取 TK_Link（補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.tokenomicsRef.racksPerGW_GB200.v,7194,不遷入；改取 TK_Link,TK_Link IF_TokGW_*、IF_HoldEcon,不遷入；改取 TK_Link（補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.tokenomicsRef.racksPerGW_GB200.cell,"""Config!G8""",不遷入；改取 TK_Link,TK_Link IF_TokGW_*、IF_HoldEcon,不遷入；改取 TK_Link（補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.tokenomicsRef.tokPerSecPerRack_VR.v,105423,不遷入；改取 TK_Link,TK_Link IF_TokGW_*、IF_HoldEcon,不遷入；改取 TK_Link（補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.tokenomicsRef.tokPerSecPerRack_VR.cell,"""TL_Param!C37""",不遷入；改取 TK_Link,TK_Link IF_TokGW_*、IF_HoldEcon,不遷入；改取 TK_Link（補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.tokenomicsRef.tokPerSecPerRack_GB200.v,40668,不遷入；改取 TK_Link,TK_Link IF_TokGW_*、IF_HoldEcon,不遷入；改取 TK_Link（補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.tokenomicsRef.tokPerSecPerRack_GB200.cell,"""TL_Param!D37""",不遷入；改取 TK_Link,TK_Link IF_TokGW_*、IF_HoldEcon,不遷入；改取 TK_Link（補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.tokenomicsRef.capexPerGW.v,43.2,不遷入；改取 TK_Link,TK_Link IF_TokGW_*、IF_HoldEcon,不遷入；改取 TK_Link（補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.tokenomicsRef.capexPerGW.cell,"""DC_Cost_Model!D60""",不遷入；改取 TK_Link,TK_Link IF_TokGW_*、IF_HoldEcon,不遷入；改取 TK_Link（補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.tokenomicsRef.tag,"""Derived""",不遷入；改取 TK_Link,TK_Link IF_TokGW_*、IF_HoldEcon,不遷入；改取 TK_Link（補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.tokenomicsRef.chk,"""待查核-workbook""",不遷入；改取 TK_Link,TK_Link IF_TokGW_*、IF_HoldEcon,不遷入；改取 TK_Link（補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.genFactor.hopper.v,0.15,不遷入；改取 TK_Link,TK_Link IF_TokGW_*（Hopper 世代欄）,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.genFactor.hopper.lo,0.1,不遷入；改取 TK_Link,TK_Link IF_TokGW_*（Hopper 世代欄）,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.genFactor.hopper.hi,0.25,不遷入；改取 TK_Link,TK_Link IF_TokGW_*（Hopper 世代欄）,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.genFactor.hopper.tag,"""Analogy""",不遷入；改取 TK_Link,TK_Link IF_TokGW_*（Hopper 世代欄）,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.genFactor.custom.v,0.6,Inputs,INP_204,
+computeMW.genFactor.custom.lo,0.4,Inputs,INP_204,
+computeMW.genFactor.custom.hi,1.0,Inputs,INP_204,
+computeMW.genFactor.custom.tag,"""Assumed""",Inputs,INP_204,隨附資訊
+computeMW.genFactor.custom.src,"""Cerebras、Broadcom、AMD、Trainium""",Inputs,INP_204,隨附資訊
+computeMW.genFactor.nextGen.v,1.8,不遷入；改取 TK_Link,TK_Link IF_TokGW_*（Rubin Ultra 世代欄）,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.genFactor.nextGen.lo,1.3,不遷入；改取 TK_Link,TK_Link IF_TokGW_*（Rubin Ultra 世代欄）,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.genFactor.nextGen.hi,2.5,不遷入；改取 TK_Link,TK_Link IF_TokGW_*（Rubin Ultra 世代欄）,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.genFactor.nextGen.tag,"""Assumed""",不遷入；改取 TK_Link,TK_Link IF_TokGW_*（Rubin Ultra 世代欄）,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.genFactor.nextGen.src,"""Rubin Ultra 以後""",不遷入；改取 TK_Link,TK_Link IF_TokGW_*（Rubin Ultra 世代欄）,不遷入；改取 TK_Link（分層優先於標記；補充 1 第 2 點）。v0.5 原值見對照表
+computeMW.fleetMix._note,"""實體 GW 世代占比；自研／其他＝1−其餘""",Inputs,fleetMix,說明文字：實體 GW 世代占比；自研／其他＝1−其餘
+computeMW.fleetMix.hopper.0,0.6,Inputs,INP_205,
+computeMW.fleetMix.hopper.1,0.35,Inputs,INP_206,
+computeMW.fleetMix.hopper.2,0.15,Inputs,INP_207,
+computeMW.fleetMix.hopper.3,0.05,Inputs,INP_208,
+computeMW.fleetMix.hopper.4,0,Inputs,INP_209,
+computeMW.fleetMix.hopper.5,0,Inputs,INP_210,
+computeMW.fleetMix.blackwell.0,0.4,Inputs,INP_211,
+computeMW.fleetMix.blackwell.1,0.55,Inputs,INP_212,
+computeMW.fleetMix.blackwell.2,0.45,Inputs,INP_213,
+computeMW.fleetMix.blackwell.3,0.3,Inputs,INP_214,
+computeMW.fleetMix.blackwell.4,0.2,Inputs,INP_215,
+computeMW.fleetMix.blackwell.5,0.1,Inputs,INP_216,
+computeMW.fleetMix.veraRubin.0,0,Inputs,INP_217,
+computeMW.fleetMix.veraRubin.1,0.05,Inputs,INP_218,
+computeMW.fleetMix.veraRubin.2,0.3,Inputs,INP_219,
+computeMW.fleetMix.veraRubin.3,0.45,Inputs,INP_220,
+computeMW.fleetMix.veraRubin.4,0.5,Inputs,INP_221,
+computeMW.fleetMix.veraRubin.5,0.45,Inputs,INP_222,
+computeMW.fleetMix.nextGen.0,0,Inputs,INP_223,
+computeMW.fleetMix.nextGen.1,0,Inputs,INP_224,
+computeMW.fleetMix.nextGen.2,0,Inputs,INP_225,
+computeMW.fleetMix.nextGen.3,0.05,Inputs,INP_226,
+computeMW.fleetMix.nextGen.4,0.1,Inputs,INP_227,
+computeMW.fleetMix.nextGen.5,0.2,Inputs,INP_228,
+computeMW.fleetMix.tag,"""Assumed""",Inputs,fleetMix 各列,隨附資訊
+computeMW.fleetMix.chk,"""假設""",Inputs,fleetMix 各列,隨附資訊
+computeMW.actuals.gwEnd2023,0.2,SRC_OAI,SRC_OAI_088,
+computeMW.actuals.gwEnd2024,0.6,SRC_OAI,SRC_OAI_089,
+computeMW.actuals.gwEnd2025,1.9,SRC_OAI,SRC_OAI_090,
+computeMW.actuals.arrEnd2025,20,SRC_OAI,SRC_OAI_091,
+computeMW.actuals.tag,"""Interested-party""",SRC_OAI,算力規模各列,隨附資訊
+computeMW.actuals.src,"""CFO Friar 部落格 2026-01-18：0.2／0.6／約 1.9 GW；ARR $2B／$6B／$20B+""",SRC_OAI,算力規模各列,隨附資訊
+computeMW.actuals.chk,"""待查核-報導""",SRC_OAI,算力規模各列,隨附資訊
+computeMW.leasePricePerGWyr.v,12,Inputs,INP_229,
+computeMW.leasePricePerGWyr.lo,8,Inputs,INP_229,
+computeMW.leasePricePerGWyr.hi,16,Inputs,INP_229,
+computeMW.leasePricePerGWyr.tag,"""Analogy""",Inputs,INP_229,隨附資訊
+computeMW.leasePricePerGWyr.src,"""Oracle $300B÷5 年÷4.5GW＝$13.3B；2025 合約現金÷平均 GW≈$11.8B""",Inputs,INP_229,隨附資訊
+computeMW.idleReserve.v,0.1,Inputs,INP_232,
+computeMW.idleReserve.tag,"""Assumed""",Inputs,INP_232,隨附資訊
+computeMW.minTrainingShare.v,0.3,Inputs,INP_233,
+computeMW.minTrainingShare.tag,"""Assumed""",Inputs,INP_233,隨附資訊
+computeMW.minTrainingShare.src,"""V1a 容量上限：推論可用＝VR-eq 供給×(1−閒置)×(1−訓練最低占比)""",Inputs,INP_233,隨附資訊
+computeMW.decisions,"""V1a 營收以可用 MW 為上限；V2a 供應商資金只列或有（Andy 2026-09-30）""",不遷入,—,決策記錄（V1a、V2a）：P3、P5 以公式結構體現；v0.5 決策 ID 保留於 Inputs 欄

@@ -113,8 +113,11 @@ function dcfValue(e, t) {
     i = r.reduce((e, t) => e + t, 0),
     c = e[e.length - 1],
     l = c.opInc * (1 - t.tax) + c.da - c.da * t.maintRatio,
-    bad = t.wacc <= t.g ? `WACC ≤ 永續成長率，Gordon 終值無定義` : l <= 0 ? `常態化 FCF ≤ 0，終值無經濟意義` : ``,
-    a = bad ? 0 : l * (1 + t.g) / (t.wacc - t.g),
+    // v0.2 第 2 輪：失效只限 WACC ≤ g（方法本身無定義）。常態化 FCF ≤ 0 時終值以 0 計、DCF 照常 0 截斷（或選擇權）並保留權重——
+    // 舊口徑把它判為失效、權重改給 EV/EBITDA 100%，造成「利潤率更低、目標價反而更高」的跳躍（附錄敏感度穩態 EBITDA 率 35% 得 $73.6 > 基準 $61.7）
+    bad = t.wacc <= t.g ? `WACC ≤ 永續成長率，Gordon 終值無定義` : ``,
+    tv0 = !bad && l <= 0,
+    a = bad || tv0 ? 0 : l * (1 + t.g) / (t.wacc - t.g),
     o = a / (1 + t.wacc) ** CALQ.tEnd[CALQ.tEnd.length - 1],
     s = i + o,
     u = s - t.netDebt,
@@ -126,6 +129,7 @@ function dcfValue(e, t) {
   return {
     invalid: !!bad,
     invalidReason: bad,
+    tvZero: tv0, // v0.2 第 2 輪：常態化 FCF ≤ 0，終值以 0 計
     zeroPerShare: zr,
     optPerShare: op,
     pvFcf: i,
@@ -319,6 +323,7 @@ function scnQ(e, sc) {
     a: { ...structuredClone(e.a), newLease: [...SCENARIOS[sc].a.newLease] },
     mw31: SCENARIOS[sc].mw31,
     cvCap: SCENARIOS[sc].cvCap,
+    billableOpen: SCENARIOS[sc].bo, // v0.1c
     m: { ...e.m, accepted: [...SCENARIOS[sc].acc], billable: [...SCENARIOS[sc].bil], revMW: [...SCENARIOS[sc].rev] }
   };
 }
@@ -421,7 +426,7 @@ function EM(e, t, n) {
     ok: !e.d.invalid,
     severity: e.d.invalid ? `watch` : `ok`,
     title: e.d.invalid ? `DCF 失效：${e.d.invalidReason}` : `DCF 有效（WACC − g ＝ ${((e.v.wacc - e.v.g)*100).toFixed(1)}%，常態化 FCF ${e.d.normFcf.toFixed(1)}）`,
-    detail: `失效只定義為數學上的失效：WACC ≤ g，或常態化 FCF ≤ 0。股權價值為負不算失效——那是有效的經濟結論（企業價值低於淨負債）。目前下限方式：${e.v.dcfMode === `option` ? `選擇權（Merton，σ ${(e.v.sigma*100).toFixed(0)}%）` : `0 截斷`}；0 截斷 $${e.d.zeroPerShare.toFixed(1)}、選擇權 $${e.d.optPerShare.toFixed(1)}。失效時 DCF 權重歸零、EV/EBITDA 權重 100%。`
+    detail: `失效只定義為數學上的失效：WACC ≤ g（v0.2：常態化 FCF ≤ 0 時終值以 0 計、DCF 照常截斷並保留權重，不再判為失效）。股權價值為負不算失效——那是有效的經濟結論（企業價值低於淨負債）。目前下限方式：${e.v.dcfMode === `option` ? `選擇權（Merton，σ ${(e.v.sigma*100).toFixed(0)}%）` : `0 截斷`}；0 截斷 $${e.d.zeroPerShare.toFixed(1)}、選擇權 $${e.d.optPerShare.toFixed(1)}。失效時 DCF 權重歸零、EV/EBITDA 權重 100%。`
   }, {
     id: `val-double`,
     ok: !0,

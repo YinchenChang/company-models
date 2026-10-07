@@ -456,15 +456,15 @@
     "high": [
      4167,
      5000,
-     5833.3333,
-     6666.6667,
+     5833,
+     6667,
      7500
     ]
    },
    "pace": {
     "low": 580,
     "base": 580,
-    "high": 833.3333
+    "high": 833
    },
    "note": "已連網 MW-IT（期末）＝MIN(合約 MW-IT 上限, 前期已連網＋併網速度×期間長度)；首期期末＝2026 年底 connected 目標中點 900 MW ÷ PUE 1.2＝750（三情境共用）。合約上限：保守＝已簽約 >3.5 GW ÷1.2＝2,917；基準＝2026 年底 5 GW 目標 ÷1.2＝4,167；積極＝5 GW＋2027 起每年 >1 GW ÷1.2。併網速度：保守／基準＝歷史觀察 2026 年 170→750 MW-IT（+580／年，[Derived]）；積極＝每年 >1 GW 部署 ÷1.2＝833 MW-IT／年 [Interested-party]。"
   },
@@ -498,7 +498,15 @@
     0.9,
     0.9,
     0.9
-   ]
+   ],
+   "ramp": [
+    0.6,
+    0.8,
+    1,
+    1,
+    1
+   ],
+   "note": "v0.1c 首期營收校準：期初可計費 MW＝最新季營收 × 4 ÷ 首期每 MW 年收入（對齊 6/30 已實現年化營收 2.329，[Interested-party] 6-K；不是以公司預測或 ACV 反推）；各期期末可計費 MW＝已連網 × 在役比例 × 爬坡係數，爬坡係數 60%／80%／100%（首期末、FY27 末、FY28 起）使可計費 MW 逐步收斂到已連網 × 在役比例 [Assumed]；60% 為能讓基準 FY26 營收落入公司指引 3.0–3.4 的保守值（基準 3.04）。"
   },
   "leaseHighPath": [
    0.05,
@@ -511,7 +519,7 @@
   "mw31": {
    "low": 0,
    "base": 580,
-   "high": 833.3333
+   "high": 833
   },
   "convCap": {
    "low": 0,
@@ -623,7 +631,7 @@
   "linkSites": true,
   "linkLeaseTail": true,
   "useAvgMw": true,
-  "billableOpen": 366,
+  "billableOpen": 134,
   "cds": null,
   "cdsBid": null,
   "cdsAsk": null,
@@ -641,8 +649,8 @@
     3070
    ],
    "billable": [
-    563,
-    1131,
+    338,
+    904,
     1719,
     2241,
     2763
@@ -1193,7 +1201,7 @@
     "metric": "revenue",
     "vs": "*",
     "type": "觀點",
-    "text": "每 MW 年收入採 Tokenomics 正向推導的新約值（GB300／VR200），套用全部在役 MW；共識未揭露 MW 與單價假設"
+    "text": "每 MW 年收入採 Tokenomics 正向推導的新約值（GB300／VR200）；期初可計費 MW 以最新季實際營收年化校準，可計費 MW 依爬坡係數逐步收斂到已連網 MW（v0.1c）；共識未揭露 MW 與單價假設"
    },
    {
     "scope": "quarter",
@@ -1225,7 +1233,7 @@
     "metric": "rev",
     "vs": "consensus",
     "type": "觀點",
-    "text": "營收＝在役 MW × 每 MW 年收入（Tokenomics 正向推導）；年底已連網 {y.accepted:0} MW（目前情境）；共識未揭露 MW 假設"
+    "text": "營收＝可計費 MW × 每 MW 年收入（Tokenomics 正向推導）；首期以最新季實際營收年化校準期初可計費 MW，可計費 MW 依爬坡係數（60%／80%／100%）收斂到已連網 MW（v0.1c）；年底已連網 {y.accepted:0} MW（目前情境）；共識未揭露 MW 假設"
    },
    {
     "scope": "annual",
@@ -1253,6 +1261,12 @@
    }
   ]
  },
+ "priceCheck": {
+  "inServiceMw": 366,
+  "inServiceNote": "最新季末在役 MW 未揭露：以 2025 年底 active 170 MW 與首期末在役 563 MW 線性內插（[Derived]，v0.1c 報告第 3 節）；實現單價＝最新一季營收 × 4 ÷ 此值",
+  "acv": [20, 25],
+  "acvNote": "公司 Q2 股東信新約 ACV（US$m／MW·年）[Interested-party]，MW 口徑未定義；只作對照，不作輸入"
+ },
  "texts": {
   "fy0EquityNote": "«P0»＝«YTD» 股權 4.811（ATM 淨 2.811＋NVIDIA 預付認股權證 2.0）＋«STUB» 期後可轉債淨現金 5.68（2026-08）",
   "cashTaxNote": "H1 現金稅未單獨揭露（不適用）",
@@ -1260,7 +1274,10 @@
   "mwYearEndNotes": {
    "2025": "Q4 2025 股東信與 20-F：active power 約 170 MW（IT 口徑）[Interested-party]"
   },
-  "thesis": "預付款能否讓 backlog 變成現金"
+  "thesis": "預付款能否讓 backlog 變成現金",
+  "title": "預付款，能把 Backlog 變成現金嗎？",
+  "subtitle": "客戶預付只覆蓋約 {prepayPct} 的資本支出；剩下 {gap} 缺口仍靠資產擔保債、可轉債與新股——現價要成立，每 MW 年收入得是模型的 {rvMult} 倍",
+  "headerTag": "MW × 每 MW · 預付優先"
  },
  "nebius": {
   "_readme": "Nebius 資料草稿（v0.1a 產出；v0.1b 步驟 1 已把可對應既有欄位的資料搬入 meta、ytdActual、latestQuarter、callFacts、debt、valuation 等）。本區只保留引擎尚未使用、後續步驟（預付款、融資瀑布、可轉債稀釋、其他事業與持股、每 MW 三情境）會用的欄位；每欄 value＋unit＋ref（data/nebius_facts_20261007.json 的 id）。",

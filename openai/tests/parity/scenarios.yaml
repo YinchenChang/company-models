@@ -1,0 +1,87 @@
+# Parity 情境檔（CLAUDE.md 第 3 節）。每個情境：改寫輸入 → LibreOffice 重算（基準）→ 與 engine 比對全部公式格。
+# 輸入一律以具名範圍設定（SRC_OAI_nnn、INP_nnn、TK_*）。v0.6-P1 只有檢查頁有公式；v0.6-P2 起 Demand、Revenue 頁的公式也由情境驅動（h 起為 P2 情境）。
+workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
+  sheets: [README, SRC_OAI, TK_Link, Inputs, Derived_V9, Demand, Revenue, Compute, Checks, Map_v05, _Defaults]
+  formula_cells: 1989             # P2：652 → 1260；P3：→ 1989（Compute 頁、Revenue 第八節、Inputs 新列檢查欄、Checks C40–C66）
+  defined_names: 562              # S1：426；P2：＋16 SRC_OAI＋10 INP＋64 DEM_／REV_；P3：＋6 INP＋35 CMP_＋5 REV_
+  src_rows: 122                   # SRC_OAI 筆數（與報告一致）；P2：106＋16（價格事件數值與公告日）
+  src_named: 120                  # 有數值的列才有 SRC_OAI_nnn 名稱（Business 每席只有低／高；退役 ID 不重用）
+  inp_rows: 249                   # P2：233＋10（E8c 事件時點偏移 4、E6 定義常數 6）；P3：＋6（INP_256–261）
+  tk_values: 62                   # TK_Link 有值的名稱（TK_IF_／TK_SRC_／TK_L1_ 具名範圍；S1 v5.24 快照：37＋25）
+  tk_pending: 0                   # 待 Tokenomics 提供（S1：v5.24 已全部提供）
+  v05_leaves: 849
+  v05_tagged_objects: 121         # chat 端計數；本包以 JSON 實數核對
+
+scenarios:
+  - id: base
+    description: 基準（不改任何輸入）
+    inputs: {}
+  - id: a_equity_sum_broken
+    description: 融資輪 Amazon 首筆 15→20，使無條件部分 90、90＋35≠122（C12、C25 應轉 ERR）
+    inputs: {"SRC_OAI_109": 20}
+  - id: b_input_out_of_range
+    description: 快取命中率 0.55→0.9，超出高端 0.75（Inputs 區間異常應為 1）
+    inputs: {"INP_029": 0.9}
+  - id: c_util_out_of_range
+    description: Tokenomics 基準利用率快照 0.6→1.2（C10 應轉 ERR）
+    inputs: {"TK_IF_Util": 1.2}
+  - id: d_oracle_term
+    description: Oracle 合約迄年 2031→2026，使期間起>迄（C13 應轉 ERR；預覽價隨之改變）
+    inputs: {"SRC_OAI_060": 2026}
+  - id: e_pro_ratio_high
+    description: Pro 占付費總數比例 0.8%→2%，超出 SRC 上限 1%（C22 應轉 ERR；pro 人數與營收隨之改變）
+    inputs: {"INP_236": 0.02}
+  - id: f_pro_ratio_2030
+    description: Pro 2030 占比 0.8%→2.0%（區間上緣）：2030 pro 人數、占比與月營收改變，無檢查轉 ERR（2027+ 無約束）
+    inputs: {"INP_243": 0.02}
+  - id: g_api_rate_high
+    description: API FY2025 每分鐘 token 5→6.1（區間上緣）：V22 與 V9_ApiTok 改變
+    inputs: {"INP_237": 6.1}
+  - id: h_event4_late
+    description: P2／E8c：Astra 上市（事件 4）延後一季（偏移 +91 天）：2026 top 層平均牌價下降，API 單價、需求與營收連動
+    inputs: {"INP_248": 91}
+  - id: i_event_order_broken
+    description: P2／E8c：Sol 促銷（事件 3）延後一季、Astra（事件 4）不動，使事件 3 晚於事件 4（C34 應轉 ERR）
+    inputs: {"INP_247": 91}
+  - id: j_ms_cap_low
+    description: P2：Microsoft 分成上限 38→10（SRC_OAI_010）：2026 即觸頂，淨額上升
+    inputs: {"SRC_OAI_010": 10}
+  - id: k_migration_high
+    description: P2：T4 遷移幅度基準 0.3→0.8：Go 人數上升、Plus 下降，訂閱營收、廣告與 token 連動
+    inputs: {"INP_013": 0.8}
+  - id: l_elasticity_high
+    description: P2：任務數價格彈性 −0.7→−1.05（區間下緣）：2027 起 API 任務數與營收改變
+    inputs: {"INP_048": -1.05}
+  - id: m_usage_mix_broken
+    description: P2：Free 方案 luna 占比 0.9→0.95，使 luna＋sol＋astra≠1（C30、C31 應轉 ERR）
+    inputs: {"INP_155": 0.95}
+  - id: n_revenue2025
+    description: P2：FY2025 實際營收 13.07→11（SRC_OAI_002）：2025 API 倒推值、2026 起 API 需求與營收連動；校準恆等式（C28）維持 OK
+    inputs: {"SRC_OAI_002": 11}
+  - id: o_pro_arpu
+    description: P2：Pro 2026 起 ARPU 150→190（區間上緣）：Pro 訂閱營收與總額連動
+    inputs: {"INP_100": 190}
+  - id: p_lease_low
+    description: P3：每 GW 年合約價 12→8（區間下緣）：2025 支出換算 GW 上升、η 下降、有效推論 GW 上升；未揭露 GW 合約的供給上升
+    inputs: {"INP_229": 8}
+  - id: q_eta_recover
+    description: P3：η 路徑開關 0→1（線性回升至 2030＝1）：2026 起 η 上升、有效推論 GW 下降、研發 GW 上升
+    inputs: {"INP_258": 1}
+  - id: r_gb300_high
+    description: P3：GB300 占 Blackwell（2026 起）0.5→0.8（區間上緣）：2026 起每 GW 年產能上升、推論 GW 下降
+    inputs: {"INP_257": 0.8}
+  - id: s_custom_low
+    description: P3：自研產能係數 0.6→0.4（區間下緣）：2026 起產能下降、VR 等值係數下降
+    inputs: {"INP_204": 0.4}
+  - id: t_cap_binds
+    description: P3：訓練最低占比 0.3→0.9（壓力情境）：推論可用 GW 低於有效推論 GW，2026 起截頂係數 <1、截頂後營收下降、旗標 1（無 ERR）
+    inputs: {"INP_233": 0.9}
+  - id: u_fleet_broken
+    description: P3：Hopper 2025 占比 0.6→0.7，使自研／其他＝−0.1（C40 應轉 ERR）
+    inputs: {"INP_205": 0.7}
+  - id: v_gw_end2025
+    description: P3：SRC 2025 年底算力 1.9→2.5：年均 GW、三角對照隱含每 GW 支出與 2025 總需求差距改變（只列差距，不影響基準）
+    inputs: {"SRC_OAI_090": 2.5}
+  - id: w_even_profile
+    description: P3：未揭露時程合約的攤提方式 ramp→even：未揭露 GW 合約改為期間內平均、揭露 GW 合約改為期間內固定
+    inputs: {"INP_181": "even"}

@@ -1,5 +1,5 @@
 function zM() {
-  let [e, t] = (0, v.useState)(PM), [n, r] = (0, v.useState)(0), [i, a] = (0, v.useState)(`summary`), [o, s] = (0, v.useState)(() => structuredClone(VAL_DEFAULTS)), [c, l] = (0, v.useState)(0), u = (0, v.useRef)(null), d = (0, v.useMemo)(() => runFunding(e), [e]), f = (0, v.useMemo)(() => runValuation(d, e, o), [d, e, o]), TR = (0, v.useMemo)(() => targetRange(d, e, o, f), [d, e, o, f]), p = (0, v.useMemo)(() => EM(f, d, e), [f, d, e]), m = (0, v.useMemo)(() => sensitivities(e, o), [e, o]), h = lA(e.cds), g = d.totals.end >= 0, _ = d.totals.operatingGap + e.cash >= 0, y = (0, v.useMemo)(() => aA(e, d), [e, d]), b = (0, v.useMemo)(() => rpoBridge(d), [d]), x = (0, v.useMemo)(() => sA(e, d), [e, d]), S = (0, v.useMemo)(() => cA(e), [e]), C = e => s(t => ({
+  let [e, t] = (0, v.useState)(PM), [n, r] = (0, v.useState)(0), [i, a] = (0, v.useState)(`summary`), [o, s] = (0, v.useState)(() => structuredClone(VAL_DEFAULTS)), [c, l] = (0, v.useState)(0), u = (0, v.useRef)(null), d = (0, v.useMemo)(() => runFunding(e), [e]), f = (0, v.useMemo)(() => runValuation(d, e, o), [d, e, o]), TR = (0, v.useMemo)(() => targetRange(d, e, o, f), [d, e, o, f]), RVQ = rvHookQ(e, o), p = (0, v.useMemo)(() => EM(f, d, e), [f, d, e]), m = (0, v.useMemo)(() => sensitivities(e, o), [e, o]), h = lA(e.cds), g = d.totals.end >= 0, _ = d.totals.operatingGap + e.cash >= 0, y = (0, v.useMemo)(() => aA(e, d), [e, d]), b = (0, v.useMemo)(() => rpoBridge(d), [d]), x = (0, v.useMemo)(() => sA(e, d), [e, d]), S = (0, v.useMemo)(() => cA(e), [e]), C = e => s(t => ({
     ...t,
     ...e
   })), w = e => t(t => ({
@@ -15,6 +15,7 @@ function zM() {
     },
     mw31: SCENARIOS[e].mw31,
     cvCap: SCENARIOS[e].cvCap,
+    billableOpen: SCENARIOS[e].bo, // v0.1c
     m: {
       ...t.m,
       accepted: [...SCENARIOS[e].acc],
@@ -74,7 +75,7 @@ function zM() {
             className: `text-subtle`,
             children: `/`
           }), (0, $.jsx)(`span`, {
-            children: `產能約束 · 資金優先`
+            children: COMPANY_DATA.texts.headerTag // v0.2：頁首標籤（company.json → texts）
           }), (0, $.jsx)(`span`, {
             className: `text-subtle`,
             children: `/`
@@ -88,22 +89,22 @@ function zM() {
           })]
         }), (0, $.jsx)(`h1`, {
           className: `max-w-3xl font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl`,
-          children: `Backlog 不是現金`
+          children: COMPANY_DATA.texts.title // v0.2：主標題（company.json → texts）
         }), (0, $.jsx)(`p`, {
           className: `max-w-3xl font-display text-lg font-medium leading-snug text-accent-fg md:text-xl`,
-          children: `每 MW 賺的錢付不起 GPU 的資本成本——蓋得愈多，愈要靠外部資金`
+          children: headlineQ(d, RVQ) // v0.2：副標題＝一句話答案，數字隨情境
         }), (0, $.jsxs)(`p`, {
           className: `max-w-3xl text-sm leading-relaxed text-pretty text-accent-soft`,
-          children: [e.scenario === `custom` ? `自訂情境` : SCENARIOS[e.scenario]?.label, `：${PERIODS[0]}–${PERIODS[PERIODS.length - 1].slice(2)} 融資前缺口 `, (0, $.jsxs)(`span`, {
+          children: [e.scenario === `custom` ? `自訂情境` : SCENARIOS[e.scenario]?.label, `：營收＝已連網 MW × 每 MW 年收入（${PERIODS[PERIODS.length - 1]} `, (0, $.jsxs)(`span`, {
+            className: `font-medium text-accent-fg`,
+            children: [`$`, Y(d.m.revMW[4] * (e.revScale ?? 1) * 1e3, 1), `m`]
+          }), `，Tokenomics 正向推導${PRICE_CHK_Q ? `；最新一季每在役 MW 實現約 $${Y(PRICE_CHK_Q.realized, 1)}m` : ``}）。${PERIODS[0]}–${PERIODS[PERIODS.length - 1].slice(2)} 毛 CapEx `, mA(d.totals.gross), `bn，客戶預付先收 `, (0, $.jsxs)(`span`, {
+            className: `font-medium text-accent-fg`,
+            children: [mA(d.years.reduce((a, t) => a + t.prepayIn, 0)), `bn`]
+          }), `；融資前缺口 `, (0, $.jsxs)(`span`, {
             className: `font-medium text-accent-fg`,
             children: [mA(Math.max(0, -d.totals.preFinEnd)), `bn`]
-          }), `，加上新融資本身的利息 `, mA(d.years.reduce((e, t) => e + t.newDebtInt, 0)), `bn，由新債 `, mA(d.totals.newDebt), `bn、可轉債 `, mA(d.totals.convNew), `bn、股權 `, mA(d.totals.equity), `bn（新股 `, Y(d.totals.newShares, 2), `bn 股）`, d.totals.junk > .05 ? `、高息債 ${mA(d.totals.junk)}bn` : ``, ` 補足。每 MW 年 EBITDA 約 `, (0, $.jsxs)(`span`, {
-            className: `font-medium text-accent-fg`,
-            children: [`$`, Y(d.m.revMW[4] * (e.revScale ?? 1) * 1e3 * d.m.util[4] / 100 * d.years[4].ebM, 1), `m`]
-          }), `，回收一個 MW 的 GPU（$`, Y(e.a.costMW[4] * (e.capexScale ?? 1), 0), `m、`, e.gpuLife, ` 年、WACC `, hA(o.wacc * 100, 0), `）每年需要 `, (0, $.jsxs)(`span`, {
-            className: `font-medium text-accent-fg`,
-            children: [`$`, Y(e.a.costMW[4] * (e.capexScale ?? 1) * o.wacc / (1 - Math.pow(1 + o.wacc, -e.gpuLife)), 1), `m`]
-          }), `。目標價 `, (0, $.jsxs)(`span`, {
+          }), `，由資產擔保債 `, mA(d.totals.newDebt), `bn、可轉債 `, mA(d.totals.convNew), `bn、新股 `, mA(d.totals.equity), `bn（${Y(d.totals.newShares * 1e3, 0)}m 股）`, d.totals.junk > .05 ? `、高息債 ${mA(d.totals.junk)}bn` : ``, ` 補足；既有可轉債 ${(COMPANY_DATA.debt?.convertibles || []).length} 檔依若轉換法計稀釋。目標價 `, (0, $.jsxs)(`span`, {
             className: `font-medium text-accent-fg`,
             children: [`$`, Y(f.call.blended, 1)]
           }), `（情境區間 $${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}），較現價 `, f.call.upside >= 0 ? `+` : ``, hA(f.call.upside * 100, 0), `，結論「`, f.call.call, `」。`, (0, $.jsx)(tipQ, {
@@ -196,6 +197,7 @@ function zM() {
           o: o,
           m: m,
           tr: TR,
+          rv: RVQ,
           active: i === `summary`
         })
       }), (0, $.jsx)(`div`, {
@@ -799,7 +801,7 @@ function zM() {
                   tip: `${PERIODS[0]} 欄＝年初至今實際（季報）＋模型期，所以可直接對照公司全年指引：營收 ${CALL_FACTS.revLo}–${CALL_FACTS.revHi}、CapEx ${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}。${PERIODS[1]} 以後為純模型。負數以括號表示。現金橋：期初 ＋ 營運缺口 ＋ 股權／可轉債 ＋ 未動用額度 − 排程還本 ＝ 期末。`
                 }), (0, $.jsx)(BM, {
                   rows: [
-                    [`收入（產能約束）`, null],
+                    [`收入（MW × 每 MW；RPO 只作對照）`, null],
                     [`排程 RPO（對照）`, d.years.map(e => e.scheduled), void 0, void 0, void 0, `＝(評價日 RPO ${Y(e.rpoOpen, 1)} ＋ 期後新增 ${Y(e.rpoPendingAdd, 1)}) × 本期桶權重 ÷ 權重合計 × 五期認列比例。只作對照與產能瓶頸旗標，不驅動營收。`],
                     [`容量上限`, d.years.map(e => e.capacity), void 0, void 0, void 0, `＝平均在役 MW × 每 MW 年收入 × 利用率 × 期間係數。只看機房，不看合約。`],
                     [`平均在役 MW`, d.years.map(e => e.avgBillable), void 0, void 0, void 0, `＝(期初 Billable ＋ 期末 Billable) ÷ 2。可在左欄關閉，改用期末存量全期化。`, `MW`],
@@ -1581,7 +1583,7 @@ function zM() {
                 children: `五期融資：瀑布新債 ${mA(d.totals.newDebt)}bn、股權 ${mA(d.totals.equity)}bn（新股 ${Y(d.totals.newShares,2)}bn 股，原股東最終持股約 ${Y(f.shares/(f.shares+d.totals.newShares)*100,0)}%）。連動評價 $${Y(f.call.blended,0)}，結論「${f.call.call}」。`
               }), (0, $.jsxs)(`p`, {
                 className: `mt-2 text-sm leading-relaxed text-accent-soft`,
-                children: [`營運缺口（不含融資；含 CapEx／租金／利息／JV）為 `, mA(d.totals.operatingGap), `bn，排程還本另 `, mA(d.totals.debtPay), `bn。缺口在需要前一期先融好：依序動用未動用額度、資產層新債（總債務 ≤ `, Y(e.debtBacklog,2), `× backlog）、股權（$`, Y(e.eqPx,2), ` 折價 `, Y(e.eqDisc*100,0), `%）。CDS `, Y(e.cds, 0), ` bps。`]
+                children: [`營運缺口（不含融資；含 CapEx／租金／利息／JV）為 `, mA(d.totals.operatingGap), `bn，排程還本另 `, mA(d.totals.debtPay), `bn（營運來源已含客戶預付）。缺口在需要前一期先融好：依序動用現金、未動用額度、資產擔保新債（總債務 ≤ `, Y(e.debtBacklog,2), `× backlog）、可轉債（每年 ≤ `, Y(e.cvCap ?? 0, 1), `bn）、股權（$`, Y(e.eqPx,2), ` 折價 `, Y(e.eqDisc*100,0), `%），最後才是高息債。CDS `, Y(e.cds, 0), ` bps。`]
               })]
         }), (0, $.jsxs)(Jj, {
           className: `p-4`,

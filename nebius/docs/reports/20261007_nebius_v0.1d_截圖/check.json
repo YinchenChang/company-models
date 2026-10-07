@@ -1,0 +1,107 @@
+{
+ "slides": [
+  {
+   "file": "01.png",
+   "issues": [],
+   "title": "預付款，能把 Backlog 變成現金嗎？",
+   "kicker": "Nebius（NBIS）收支模型 · v0.2 · 2026-10-07"
+  },
+  {
+   "file": "02.png",
+   "issues": [],
+   "title": "營收＝已連網 MW × 每 MW 年收入：FY30 約 2,502 MW 計費 × $17.4m ＝ $43.5bn",
+   "kicker": "2｜Nebius 怎麼賺錢"
+  },
+  {
+   "file": "03.png",
+   "issues": [],
+   "title": "客戶先付錢：少發 102m 股、目標價高 $16.7——但缺口仍有 $59.8bn",
+   "kicker": "3｜預付款機制"
+  },
+  {
+   "file": "04.png",
+   "issues": [],
+   "title": "五期要花 $158bn：預付付 $53bn，可轉債與新股還要補 $54bn",
+   "kicker": "4｜錢從哪裡來"
+  },
+  {
+   "file": "05.png",
+   "issues": [],
+   "title": "每 MW 實際只收 $6.4m，模型用 $17.4m，現價要 $29.6m",
+   "kicker": "5｜關鍵疑點"
+  },
+  {
+   "file": "06.png",
+   "issues": [],
+   "title": "現價 $249.87 要成立：每 MW 年收入得是模型的 1.7 倍，或 EBITDA 率 91%",
+   "kicker": "6｜現價隱含什麼"
+  },
+  {
+   "file": "07.png",
+   "issues": [],
+   "title": "模型 $61.7 vs 共識 $283.6：差在倍數、利潤率、稀釋",
+   "kicker": "7｜與市場共識的差距"
+  },
+  {
+   "file": "08.png",
+   "issues": [],
+   "title": "下一個驗證點：Q3'26 財報（預計 11 月），看這 4 個數字",
+   "kicker": "8｜驗證點"
+  },
+  {
+   "file": "09.png",
+   "issues": [],
+   "title": "RPO 只作對照：排程 RPO $31bn 五期可實現 $29bn，但同期要先投入 CapEx $146bn",
+   "kicker": "附錄｜RPO 對照（不驅動營收）"
+  },
+  {
+   "file": "10.png",
+   "issues": [],
+   "title": "FY30 每 MW 每年 EBITDA $8.2m，低於 GPU 年化資本回收 $13.6m",
+   "kicker": "附錄｜單位經濟"
+  },
+  {
+   "file": "11.png",
+   "issues": [],
+   "title": "融資前缺口 $59.8bn：新債 $12.1bn、可轉債 $20.0bn、股權 $33.7bn、高息債 $0.2bn",
+   "kicker": "附錄｜融資"
+  },
+  {
+   "file": "12.png",
+   "issues": [],
+   "title": "三個情境只改擴張力道，結論皆為「賣出」",
+   "kicker": "附錄｜三情境"
+  },
+  {
+   "file": "13.png",
+   "issues": [],
+   "title": "現價 $249.87 要成立：FY30 每 MW 年收入需 +87%，或建置成本需 −77%",
+   "kicker": "附錄｜反向 DCF"
+  },
+  {
+   "file": "14.png",
+   "issues": [],
+   "title": "結論方向不變，但幅度取決於錨定年度與倍數：FY29 × 6x 時 EV/EBITDA 腿為 $112.2，低於現價",
+   "kicker": "附錄｜評價方法"
+  },
+  {
+   "file": "15.png",
+   "issues": [],
+   "title": "任一單一變數在測試範圍內，都推不到現價 $249.87；最敏感的是穩態 EBITDA 率與每 MW 年收入",
+   "kicker": "附錄｜敏感度"
+  },
+  {
+   "file": "16.png",
+   "issues": [],
+   "title": "下一個驗證點是 2026-11（Q3 財報 6-K）",
+   "kicker": "附錄｜驗證點與限制"
+  },
+  {
+   "file": "17.png",
+   "issues": [],
+   "title": "賣出：點位 $61.7（情境區間 $35.2–$154.5）；與市場共識的分歧始於 FY26",
+   "kicker": "附錄｜一頁摘要"
+  }
+ ],
+ "errors": []
+}

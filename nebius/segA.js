@@ -20,6 +20,8 @@ var PERIODS = COMPANY_DATA.periods,
   SC_ACC = Object.fromEntries([`low`, `base`, `high`].map(k => [k, PERIOD_YEARS.reduce((a, L, i) => (a.push(Math.min(SC_MWP.contracted[k][i], i === 0 ? SC_MWP.connectedStart : a[i - 1] + SC_MWP.pace[k] * L)), a), [])])),
   SC_REV = COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境（Tokenomics 正向推導三情境）
   SC_BR = COMPANY_DATA.scenarios.billableRatio.ratio,
+  SC_RAMP = COMPANY_DATA.scenarios.billableRatio.ramp, // v0.1c：首期營收校準的爬坡係數（可計費 MW 逐步收斂到已連網 × 在役比例）
+  BO_RUNRATE = COMPANY_DATA.latestQuarter.revenue * 4, // v0.1c：最新季營收年化（已實現實際數），用於校準期初可計費 MW
   SC_LEASE_HI = COMPANY_DATA.scenarios.leaseHighPath,
   SC_MW31 = COMPANY_DATA.scenarios.mw31,
   scA = e => {
@@ -34,7 +36,8 @@ var PERIODS = COMPANY_DATA.periods,
   SCENARIOS = Object.fromEntries([`low`, `base`, `high`].map(k => [k, {
     label: COMPANY_DATA.scenarios.labels[k],
     acc: SC_ACC[k],
-    bil: SC_ACC[k].map((e, t) => Math.round(e * SC_BR[t])),
+    bil: SC_ACC[k].map((e, t) => Math.round(e * SC_BR[t] * SC_RAMP[t])),
+    bo: Math.round(BO_RUNRATE / SC_REV[k][0]), // v0.1c：期初可計費 MW＝最新季營收 × 4 ÷ 首期每 MW 年收入（對齊已實現營收，非公司預測）
     rev: SC_REV[k],
     mw31: SC_MW31[k],
     cvCap: COMPANY_DATA.scenarios.convCap[k], // v0.1b：瀑布可轉債每年新發行上限（保守 0＝不新發）

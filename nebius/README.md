@@ -1,4 +1,6 @@
-# CoreWeave 收支模型 v4.5 原始碼包
+# Nebius 收支模型 v0.2 原始碼包
+
+Nebius（NBIS）收支與評價模型；由 CRWV 模型 v4.5 模板（`YinchenChang/crwv-model` @ `01b13ad`）建立。下方「v3.5」至「v4.5」各節為模板沿革與技術說明（以 CoreWeave 為例），引擎與工具仍適用；Nebius 新增的結構（MW × 每 MW 收入主軸、首期營收校準、預付款、融資瀑布的可轉債步驟、可轉債八檔稀釋、其他事業與持股）見交接檔 `docs/handoff/20261007_Nebius收支模型_交接檔_v0_2.md` 與 `company.json` 欄位說明。成品名稱＝`更新日_<meta.company>收支模型_v版本`（目前 `dist/20261007_Nebius收支模型_v0_2.html`／`.xlsx`）。主標題「預付款，能把 Backlog 變成現金嗎？」與副標題（佔位符由模型現值帶入）放 `company.json` → `texts.title`／`texts.subtitle`（v0.2）。
 
 HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo 根目錄；建置產物寫到 `out/`（不納入版控），交付成品放 `dist/`。HTML 的函式庫模板為 `docs/template_v3_3.html`。
 
@@ -14,13 +16,13 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | segA.js | 資金引擎：情境、產能與收入、CapEx／折舊、租金、期前融資瀑布、連動檢查、敏感性、反向 DCF（rvQ） |
 | segB.js | 評價引擎：損益、DCF（0 截斷／選擇權、失效條件）、EV/EBITDA、加權目標價、目標價區間（`targetRange`，v4.1）、評等規則 `rateCall`（門檻讀 `methodology.rating`，v4.2）；同業資料 `lM` 由 `company.json` → `peers` 產生（v4.2）；市場共識對照 `consensusView`、共識逐筆清單 `consensusItems`、來源頁引用句 `consSourceTxtQ`（v4.3）；季度層 `quarterlyView` 與差異原因工具 `findRsnQ`／`fillTokQ`／`reasonSumQ`（v4.4） |
 | segC.js | 「損益與評價」頁 UI（損益簡表、Comps、DCF、目標價、反向 DCF；v4.3「市場共識」分頁＝segE 的 `ConsTabQ`） |
-| segE.js | 「總結」簡報頁 UI（v3.4 新增）：10 張 1280×720 投影片（v4.3 第 1 張為一頁摘要 `onePageQ`，其餘 9 張為附錄）、簡報模式、列印 CSS；「市場共識」分頁 `ConsTabQ`（v4.3）；「資金模型 → 各期收支 → 季度追蹤」分頁 `QuarterTabQ`（v4.4）；數字即時取自 runFunding／runValuation／reverseDcf／sensitivities |
+| segE.js | 「總結」簡報頁 UI（v3.4 新增）：1280×720 投影片（v0.2：正式簡報 8 張——封面兼結論、怎麼賺錢、預付款機制、錢從哪裡來、關鍵疑點、現價隱含什麼、與共識差距、驗證點；附錄 8 張；最後一張為一頁摘要 `onePageQ`；語意色 `COLQ`、內嵌圖示 `IconQ`、簡報模式進場動畫只在 `.sumQ-pres` 內播放；頁首副標 `headlineQ`、反向 DCF 共用 `rvHookQ`）、簡報模式、列印 CSS；「市場共識」分頁 `ConsTabQ`（v4.3）；「資金模型 → 各期收支 → 季度追蹤」分頁 `QuarterTabQ`（v4.4）；數字即時取自 runFunding／runValuation／reverseDcf／sensitivities |
 | segD.js | 頁首與頁籤（總結｜資金模型｜損益與評價）、「資金模型」頁 UI（標題摘要、左欄分類選單、各模組分頁、新債與新股、版本紀錄） |
 | tail.js | 共用元件：Excel 式表格 BM、浮動說明 tipQ、分類選單 accQ、兩層選單 navQ、FMODS／VMODS、VLOG |
 | app_pretty.js | 原 Oracle 模板的美化程式碼（取其中三段共用 UI） |
 | rm_andy.js | Andy 修改過的開關元件（說明改為浮動提示） |
 | build_html_portable.py | 組裝 HTML：`python3 build_html_portable.py 4.0 out/輸出.html 2026-09-24 [模板 HTML]`（模板省略時用 `docs/template_v3_3.html`；組裝順序：segA、模板段、segB、模板段、segC、模板段、segD、tail、segE） |
-| build_xlsx.py | 產生 Excel：`python3 build_xlsx.py [輸出.xlsx]`（預設 `out/20260926_CoreWeave收支模型_v4_4.xlsx`；版本號、更新日、市價日寫在導覽 A1（v4.3 起讀 vlog.py 與 company.json）；自同目錄讀取 vlog.py、rv_snap.json、company.json 與 `meta.consensusFile` 指定的共識資料檔；群組資訊寫到 `out/outline.json`） |
+| build_xlsx.py | 產生 Excel：`python3 build_xlsx.py [輸出.xlsx]`（預設 `out/<meta.updateDate>_<meta.company>收支模型_v<VLOG 最後一列>.xlsx`；版本號、更新日、市價日寫在導覽 A1（v4.3 起讀 vlog.py 與 company.json）；自同目錄讀取 vlog.py、rv_snap.json、company.json 與 `meta.consensusFile` 指定的共識資料檔；群組資訊寫到 `out/outline.json`） |
 | fix_outline.py | LibreOffice 重算後，補回 Excel 群組按鈕位置與收合狀態：`python3 fix_outline.py 檔案.xlsx [outline.json]`（預設讀 `out/outline.json`；v3.4 修正：outlinePr 依 schema 放在 tabColor 之後） |
 | fix_datatable.py | v4.1：LibreOffice 重算後，把模擬運算表（情境區間）由 `TABLE()` 一般公式還原為 Excel 的 `dataTable` 公式，保留算出的值：`python3 fix_datatable.py 檔案.xlsx` |
 | verify_ooxml.py | Excel 嚴格結構檢查（XML 格式、工作表與 sheetPr 子元素順序；v4.1 起另檢查模擬運算表存在且無殘留 `TABLE()`）；v3.4 新增 |
@@ -39,6 +41,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | scripts/test_attrib.py | 拆解工具測試：月數推算、同版對同版全為 0、滾動一季且 WACC 改為 12% 時 (a) 係數＝(1.12)^(3/12)。verify.sh 步驟 8c |
 | scripts/test_rolling.py | v4.5：期間滾動測試（暫存副本）。B：日曆推算 6 種情況（12 月財年 Q1–Q4 已申報、5 月財年、無已申報季度）× 2 種目標價時點；C：只滾日曆、未更新 `asOf` 時建置必須失敗並逐項列出；A：把副本滾動到下一個已申報季度（只改日曆與標籤、不改數字），建 HTML 與 Excel，第一屏不得出現舊日曆特有的字樣（評價日、年初至今／首期標籤、已申報季度）。例外：版本紀錄與來源頁、整段落在 company.json／共識檔資料字串內的字樣。verify.sh 步驟 8b |
 | scripts/check_offline.py | 離線開啟檢查（已決定事項 11）：`python3 scripts/check_offline.py 檔案.html 同版.xlsx`。HTML 單獨複製到空資料夾，Playwright 阻斷網路、以 file:// 開啟；(a) 除 HTML 本身外的請求數＝0（網路與旁邊的本機檔案都算）、(b) console 無錯誤與例外、(c) 5 個分頁 10 項關鍵數字（依 A 欄列名稱取自同版 Excel）出現在畫面且無 NaN／undefined／Infinity；v4.5 另比對第一屏（視窗內）的資料更新日、模型期間、現價日與評價日（`CHECKS_FIRST`；列名稱中的期間佔位符以任意文字比對，新舊版 Excel 皆可）。verify.sh 步驟 5c 對新建 HTML 與 dist/ 成品各跑一次 |
+| scripts/shot_deck.py | 簡報逐頁截圖與自查（v0.2）：`python3 scripts/shot_deck.py 檔案.html 輸出資料夾`。頁首（1280×720 畫面）、簡報模式第 1 頁、總結頁每張投影片（列印版面 1280×720）各一張 PNG，並檢查超出投影片、壓到頁尾、文字截斷、NaN／undefined／Infinity、正式簡報頁標題 ≥36px 與說明 ≥18px；結果寫入 check.json，有問題即非零結束 |
+| scripts/expect/ | 升版驗收的預期差異清單：`EXPECT`（Excel，xl_diff.py --expect）與 `CRAWL_EXPECT`（畫面文字，v0.2：「頁面 X」整頁允許不同、「行 正規式」符合的行允許不同），用法 `EXPECT=… CRAWL_EXPECT=… scripts/verify.sh --vs-dist` |
 | scripts/check_quarterly.js | v4.4：季度加總＝年度（三情境）、`quarterly.consistency` 一致性、超過門檻的差距都有原因；`build_html_portable.py` 建置時呼叫，verify.sh 步驟 0 |
 | scripts/test_quarterly.py | v4.4：暫存副本測試——(A) 假設 Q3 實際數，Python 獨立計算差距並與 HTML、Excel 比對；(B) 可移植性（無 MW、無季度指引與共識）。verify.sh 步驟 8 |
 | scripts/cloud_setup.sh | 雲端環境 setup script（只裝 Python 套件；LibreOffice Calc 於工作階段內補裝，見 CLAUDE.md） |
@@ -136,7 +140,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY26 下半年、FY27、FY28、FY29、FY30，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 Nebius v4.5 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 Nebius v0.2 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -153,7 +157,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `calendar.fiscalYearEndMonth` | 財年結束月份（v4.5；CoreWeave 12、Oracle 5） | 月 | 12 | 必改 |
+| `calendar.fiscalYearEndMonth` | 財年結束月份（v4.5；Nebius、CoreWeave 12，Oracle 5） | 月 | 12 | 必改 |
 | `calendar.latestQuarterFiled` | 最新已申報（10-Q／10-K）的財季，格式 FYyyQn；驅動年度首期滾動與評價日（v4.5） | 文字 | FY26Q2 | 必改 |
 | `calendar.latestQuarterReported` | 最新已公布（財報新聞稿）的財季；驅動季度層，年度首期不受影響（v4.5） | 文字 | FY26Q2 | 必改 |
 | `calendar.firstModelFY` | 沒有已申報季度時（例如未上市公司）的首個模型財年，例如 FY26；有已申報季度時填 null（v4.5） | 文字 | None | 檢查 |
@@ -384,20 +388,22 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.mwPath.connectedStart` | 首期期末已連網 MW（三情境共用；v0.1b） | MW | 750 | 必改 |
 | `scenarios.mwPath.contracted.low` | 保守情境：五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期末的合約 MW 上限（已連網不得超過；v0.1b） | MW 清單 | 2917、2917、2917、2917、2917 | 必改 |
 | `scenarios.mwPath.contracted.base` | 基準情境：同上 | MW 清單 | 4167、4167、4167、4167、4167 | 必改 |
-| `scenarios.mwPath.contracted.high` | 積極情境：同上 | MW 清單 | 4167、5000、5833.33、6666.67、7500 | 必改 |
+| `scenarios.mwPath.contracted.high` | 積極情境：同上 | MW 清單 | 4167、5000、5833、6667、7500 | 必改 |
 | `scenarios.mwPath.pace.low` | 保守情境：併網速度（每年新增已連網 MW；已連網＝MIN(合約上限, 前期＋速度×期間長度)；v0.1b） | MW／年 | 580 | 檢查 |
 | `scenarios.mwPath.pace.base` | 基準情境：同上 | MW／年 | 580 | 檢查 |
-| `scenarios.mwPath.pace.high` | 積極情境：同上 | MW／年 | 833.333 | 檢查 |
+| `scenarios.mwPath.pace.high` | 積極情境：同上 | MW／年 | 833 | 檢查 |
 | `scenarios.mwPath.note` | 已連網 MW 路徑的說明（來源與口徑） | 文字 | 已連網 MW-IT（期末）＝MIN(合約 MW-IT… | 必改 |
 | `scenarios.revMW.low` | 保守情境：每 MW 年收入，各期（Tokenomics 正向推導；不得用公司 ACV；v0.1b） | US$bn/MW 清單 | 0.01162、0.01162、0.01162、0.01162、0.01162 | 必改 |
 | `scenarios.revMW.base` | 基準情境：同上 | US$bn/MW 清單 | 0.0174、0.0174、0.0174、0.0174、0.0174 | 必改 |
 | `scenarios.revMW.high` | 積極情境：同上 | US$bn/MW 清單 | 0.0242、0.0242、0.0242、0.0242、0.0242 | 必改 |
 | `scenarios.billableRatio.ratio` | 在役（可計費）÷ 已連網比例，各期（三情境共用；v0.1b） | 比例清單 | 0.75、0.85、0.9、0.9、0.9 | 檢查 |
+| `scenarios.billableRatio.ramp` | 可計費爬坡係數，各期（三情境共用；首期營收校準，可計費 MW＝已連網 × 在役比例 × 爬坡係數；v0.1c） | 比例清單 | 0.6、0.8、1、1、1 | 檢查 |
+| `scenarios.billableRatio.note` | 首期營收校準的說明（v0.1c） | 文字 | v0.1c 首期營收校準：期初可計費 MW＝最新季營… | 檢查 |
 | `scenarios.leaseHighPath` | 積極情境下，尚未起租租約的新增年租金路徑；其他情境依 MW 比例縮放 | US$bn 清單 | 0.05、0.5、1、1、1 | 檢查 |
 | `scenarios.leaseRampFloorMw` | 低於此電力時不產生新增表外租金（縮放公式的起點） | MW | 0 | 檢查 |
 | `scenarios.mw31.low` | 保守情境：模型期後一年（FY31）新增的 MW，用於 FY30 的預建支出 | MW | 0 | 檢查 |
 | `scenarios.mw31.base` | 基準情境：同上 | MW | 580 | 檢查 |
-| `scenarios.mw31.high` | 積極情境：同上 | MW | 833.333 | 檢查 |
+| `scenarios.mw31.high` | 積極情境：同上 | MW | 833 | 檢查 |
 | `scenarios.convCap.low` | 保守情境：融資瀑布可轉債步驟每年新發行上限（0＝不新發；v0.1b） | US$bn／年 | 0 | 檢查 |
 | `scenarios.convCap.base` | 基準情境：同上 | US$bn／年 | 5 | 檢查 |
 | `scenarios.convCap.high` | 積極情境：同上 | US$bn／年 | 10 | 檢查 |
@@ -462,7 +468,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.linkSites` | 具名站點的 MW 是否連動第一期產能下限 | 是／否 | 是 | 可沿用 |
 | `defaults.linkLeaseTail` | 舊模板遺留開關，目前程式未使用 | 是／否 | 是 | 可沿用 |
 | `defaults.useAvgMw` | 收入以平均在役 MW 計（true）或期末存量計（false） | 是／否 | 是 | 可沿用 |
-| `defaults.billableOpen` | 最新季末可計費 MW（第一期期初） | MW | 366 | 必改 |
+| `defaults.billableOpen` | 最新季末可計費 MW（第一期期初；v0.1c 起＝最新季營收 × 4 ÷ 預設情境首期每 MW 年收入，建置時檢查） | MW | 134 | 必改 |
 | `defaults.cds` | 信用違約交換（CDS）中價 | bps | None | 必改 |
 | `defaults.cdsBid` | CDS 買價 | bps | None | 必改 |
 | `defaults.cdsAsk` | CDS 賣價 | bps | None | 必改 |
@@ -472,7 +478,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.useFacility` | 融資時是否先動用未動用信用額度 | 是／否 | 是 | 可沿用 |
 | `defaults.facility` | 未動用信用額度 | US$bn | 0.775 | 必改 |
 | `defaults.m.accepted` | 已驗收 MW 的預設路徑（實際依所選情境覆寫） | MW 清單 | 750、1330、1910、2490、3070 | 檢查 |
-| `defaults.m.billable` | 可計費 MW 的預設路徑（實際依情境與爬坡比例覆寫） | MW 清單 | 563、1131、1719、2241、2763 | 檢查 |
+| `defaults.m.billable` | 可計費 MW 的預設路徑（實際依情境與爬坡比例覆寫） | MW 清單 | 338、904、1719、2241、2763 | 檢查 |
 | `defaults.m.util` | 利用率，各期 | % 清單 | 100、100、100、100、100 | 檢查 |
 | `defaults.m.revMW` | 每 MW 年收入，各期 | US$bn/MW 清單 | 0.0174、0.0174、0.0174、0.0174、0.0174 | 必改 |
 | `defaults.m.aiShare` | AI 占比，各期（目前只做範圍檢查，未參與計算） | % 清單 | 100、100、100、100、100 | 可沿用 |
@@ -578,6 +584,15 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `varianceReasons._note` | 差異原因的說明文字（不進程式） | 文字 | 差異原因（已決定事項 2）：差距超過 methodo… | 可沿用 |
 | `varianceReasons.list` | 差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗 | 清單 | 8 筆 | 檢查 |
 
+### `priceCheck`：單價對照（v0.2；只用於簡報，不進入計算）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `priceCheck.inServiceMw` | 最新季末在役 MW 估計（只用於簡報「實現單價 vs 推導單價」對照，不進入計算；v0.2） | MW | 366 | 必改 |
+| `priceCheck.inServiceNote` | 上一欄的來源與推估方式 | 文字 | 最新季末在役 MW 未揭露：以 2025 年底 ac… | 必改 |
+| `priceCheck.acv` | 公司揭露的新約每 MW 年收入區間（只作對照；v0.2） | US$m／MW·年 | 20、25 | 必改 |
+| `priceCheck.acvNote` | 上一欄的來源、標記與口徑 | 文字 | 公司 Q2 股東信新約 ACV（US$m／MW·年）… | 必改 |
+
 ### `texts`：公司特有的說明文字（v4.5；隨資料更新）
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
@@ -586,6 +601,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.sourceLine` | 頁首的資料來源一行（例如最新 10-Q、法說、期後 8-K；v4.5） | 文字 | Q2 2026 6-K（財報＋股東信）+ 期後 6-… | 必改 |
 | `texts.cashTaxNote` | 年初至今現金稅的說明（損益與評價頁；v4.5） | 文字 | H1 現金稅未單獨揭露（不適用） | 必改 |
 | `texts.thesis` | 模型命題一句話（HTML 標題列與檔案說明；v0.1b） | 文字 | 預付款能否讓 backlog 變成現金 | 必改 |
+| `texts.title` | 主標題（HTML 頁首與 <title>、簡報封面與頁尾、Excel 導覽首列；v0.2） | 文字 | 預付款，能把 Backlog 變成現金嗎？ | 必改 |
+| `texts.subtitle` | 副標題（一句話答案；佔位符 {prepayPct}＝五期客戶預付 ÷ 毛 CapEx、{gap}＝融資前缺口、{rvMult}＝加權目標價＝現價所需的每 MW 年收入倍數，由模型現值帶入、隨情境切換；v0.2） | 文字 | 客戶預付只覆蓋約 {prepayPct} 的資本支出… | 必改 |
+| `texts.headerTag` | 頁首標籤列的模型主軸短語（v0.2） | 文字 | MW × 每 MW · 預付優先 | 必改 |
 | `texts.mwYearEndNotes` | 各年底主動電力的來源說明，以年份為鍵（Excel「輸入與假設」說明欄；5a） | 物件（文字） | 物件（2025） | 必改 |
 
 ### `nebius`：Nebius 資料草稿（v0.1a；引擎尚未讀取）

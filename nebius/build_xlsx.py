@@ -32,7 +32,9 @@ def _conn(k, mp=CO['scenarios']['mwPath']):
     return a
 _dsc = D['scenario']
 assert all(abs(x - y) < 1e-6 for x, y in zip(_conn(_dsc), M['accepted'])), f"defaults.m.accepted ≠ {_dsc} 情境已連網 MW {_conn(_dsc)}"
-assert M['billable'] == [int(x * b + 0.5) for x, b in zip(_conn(_dsc), CO['scenarios']['billableRatio']['ratio'])], "defaults.m.billable ≠ 已連網 × 在役比例（四捨五入）"
+assert M['billable'] == [int(x * b * f + 0.5) for x, b, f in zip(_conn(_dsc), CO['scenarios']['billableRatio']['ratio'], CO['scenarios']['billableRatio']['ramp'])], "defaults.m.billable ≠ 已連網 × 在役比例 × 爬坡係數（四捨五入）"
+# v0.1c：期初可計費 MW＝最新季營收 × 4 ÷ 首期每 MW 年收入（對齊已實現營收）；defaults.billableOpen 須等於預設情境的校準值
+assert D['billableOpen'] == int(CO['latestQuarter']['revenue'] * 4 / CO['scenarios']['revMW'][_dsc][0] + 0.5), "defaults.billableOpen ≠ 最新季營收 × 4 ÷ 首期每 MW 年收入（預設情境）"
 assert M['revMW'] == CO['scenarios']['revMW'][_dsc], "defaults.m.revMW ≠ scenarios.revMW（預設情境）"
 PCT_ = lambda xs: [x / 100 for x in xs]  # HTML 以百分點存、Excel 以比例存
   # 版本紀錄單一來源：vlog.py（HTML 端為 tail.js 的 VLOG）
@@ -156,12 +158,12 @@ ws = wb.active
 ws.title = "導覽"
 ws.column_dimensions["A"].width = 118
 r = 1
-ws["A1"] = f"{CO['meta']['company']} 收支與評價模型 — Excel 版 {VLOG_X[-1][0]}（更新 {CO['meta']['updateDate']}；與 HTML {VLOG_X[-1][0]} 同步；市價截至 {CO['meta']['priceDate']} 收盤）"  # v4.3：版本、日期改讀 vlog.py 與 company.json
+ws["A1"] = f"{CO['texts']['title']}｜{CO['meta']['company']} 收支與評價模型 — Excel 版 {VLOG_X[-1][0]}（更新 {CO['meta']['updateDate']}；與 HTML {VLOG_X[-1][0]} 同步；市價截至 {CO['meta']['priceDate']} 收盤）"  # v4.3：版本、日期改讀 vlog.py 與 company.json
 ws["A1"].font = TITLE
 r = 3
 guide = [
     ("這個活頁簿在回答什麼", None),
-    (f"一句話：{CO['texts']['thesis']}——{CO['meta']['company']} 用客戶預付款支應多少擴張資本支出，剩下的缺口要靠多少資產擔保融資、可轉債與新股。", None),
+    (f"一句話：{CO['texts']['title']}——{CO['meta']['company']} 的營收＝已連網 MW × 每 MW 年收入；客戶預付款能支應多少擴張資本支出，剩下的缺口要靠多少資產擔保融資、可轉債與新股（答案見「摘要」）。", None),
     ("所有分頁用同一組數字，改任何一個輸入，後面全部會跟著動。", None),
     ("", None),
     ("分頁結構（依模組分組，分頁標籤顏色相同者為同一模組）", None),
@@ -295,6 +297,9 @@ for nm, k, _ in _SCN:
 row_line(ws, r, "在役／已連網比例", "%", CO['scenarios']['billableRatio']['ratio'], PCT, BLUE,
          "三情境共用；新連網產能自驗收到可計費需數季 [Assumed]")
 BR_ROW = r; r += 1
+row_line(ws, r, "可計費爬坡係數", "%", CO['scenarios']['billableRatio']['ramp'], PCT, BLUE,
+         "v0.1c 首期營收校準：可計費 MW＝已連網 × 在役比例 × 爬坡係數，逐步收斂（60%／80%／100%）；60% 為能讓基準 FY26 落入公司指引的保守值 [Assumed]")
+RAMP_ROW = r; r += 1
 row_line(ws, r, "表外現金租金（積極路徑）", "US$bn", CO['scenarios']['leaseHighPath'], NUM, BLUE,
          f"已簽約未起租租賃的現金路徑；其他情境依 MW 比例縮放（起算 {CO['scenarios']['leaseRampFloorMw']:,} MW）")
 LEASE_HI = r; r += 1
@@ -308,7 +313,9 @@ RP = gi(r, "五期認列比例（至 2030 末）", "%", D['rp'] / 100, "季報�
 WSUM = gi(r, "RPO 桶權重合計", "%", CO['rpo']['scheduledShare'], "下方權重列的合計，用於歸一化", PCT); r += 1
 MWY = {}  # 5a：各年底主動電力（company.json → defaults.mwYearEnd，以年份為鍵；說明在 texts.mwYearEndNotes）
 MWY[MW_Y0] = MW_YE25 = gi(r, f"{CAL['prevFYE']} 主動電力", "MW", D['mwYearEnd'][str(MW_Y0)], CO['texts']['mwYearEndNotes'][str(MW_Y0)], NUM0); r += 1
-MW0 = gi(r, "«VMD» Billable MW", "MW", D['billableOpen'], "季末在役 MW 未揭露：2025 年底 active 170 MW 與首期期末在役 MW 線性內插 [Derived]", NUM0); r += 1
+QREV = gi(r, "最新已申報季營收（單季）", "US$bn", CO['latestQuarter']['revenue'], "期初可計費 MW 校準用：季報營收 [Interested-party]（company.json → latestQuarter.revenue）", NUM); r += 1
+MW0_ROW = r
+MW0 = gi(r, "«VMD» Billable MW", "MW", D['billableOpen'], "v0.1c 校準：＝最新季營收 × 4 ÷ 首期每 MW 年收入（對齊已實現年化營收；季末在役 MW 未揭露，不用內插值）[Derived]", NUM0); r += 1
 AVGON = gi(r, "收入用平均在役 MW（1=是）", "", int(D['useAvgMw']), "0＝用期末存量全期化；建議 1", NUM0); r += 1
 REVDRV = gi(r, "營收驅動（mw＝MW × 每 MW 年收入；rpo＝RPO 排程）", "", D['revenueDriver'], "mw：新產能簽約率固定 100%，營收＝容量上限；RPO 只作對照與產能瓶頸旗標（company.json → defaults.revenueDriver）", "@"); r += 1
 REVSC = gi(r, "每 MW 年收入倍數（整體）", "%", D['revScale'], "反向 DCF 與壓力測試用；預設 100%。以『目標搜尋』調整此格即可反解市價隱含單價", PCT); r += 1
@@ -318,17 +325,18 @@ r = prow(r, "模型期長度（年）", "", CO['periodYears'], NUM,
 r = prow(r, "RPO 桶權重", "%", CO['rpo']['bucketWeights'], PCT, "季報 36%／24m、40%／25-48m、24%／之後（假設 49–72m）桶內線性分攤 [Derived]")
 ws.cell(row=IN["RPO 桶權重"], column=8, value="=SUM(C{0}:G{0})".format(IN["RPO 桶權重"])).number_format = PCT
 r = prow(r, "Accepted MW（期末主動電力）", "MW", [0] * 5, NUM0, "＝依 A 區情境選擇器（已連網 MW-IT）", BLACK)
-r = prow(r, "Billable MW", "MW", [0] * 5, NUM0, "＝已連網 × 在役比例（A 區）", BLACK)
+r = prow(r, "Billable MW", "MW", [0] * 5, NUM0, "＝已連網 × 在役比例 × 爬坡係數（A 區）", BLACK)
 _acc = IN["Accepted MW（期末主動電力）"]; _bil = IN["Billable MW"]
 for i in range(5):
     L = COLS[i]
     ws.cell(row=_acc, column=3 + i, value=f"=CHOOSE({SEL},{L}{sc_rows['保守']},{L}{sc_rows['基準']},{L}{sc_rows['積極']})")
-    ws.cell(row=_bil, column=3 + i, value=f"=ROUND({L}{_acc}*{L}{BR_ROW},0)")
+    ws.cell(row=_bil, column=3 + i, value=f"=ROUND({L}{_acc}*{L}{BR_ROW}*{L}{RAMP_ROW},0)")
 r = prow(r, "利用率", "%", PCT_(M['util']), PCT, "100%：每 MW 年收入已含可計費利用率（路徑 B 80／85／90%），不重複扣除 [Derived]")
 r = prow(r, "每 MW 年收入", "US$bn/MW", [0] * 5, '0.0000', "＝依 A 區情境選擇器（Tokenomics 正向推導三情境）", BLACK)
 for i in range(5):
     L = COLS[i]
     ws.cell(row=IN["每 MW 年收入"], column=3 + i, value=f"=CHOOSE({SEL},{L}{sc_rows['rev_保守']},{L}{sc_rows['rev_基準']},{L}{sc_rows['rev_積極']})")
+_c = ws.cell(row=MW0_ROW, column=3, value=f"=ROUND({QREV}*4/C{IN['每 MW 年收入']},0)"); _c.font = BLACK  # v0.1c：期初可計費 MW 校準（活公式）
 r = prow(r, "新產能簽約率", "%", PCT_(M['fill']), PCT, "MW 驅動：100%（RPO 只作對照）")
 r = prow(r, "客戶違約率", "%", PCT_(M['defaultP']), PCT, "前三大客戶約 59% 營收的定價，非預測 [Assumed]")
 r = prow(r, "回收率", "%", PCT_(M['recovery']), PCT, "[Assumed]")
@@ -572,7 +580,7 @@ ws.column_dimensions["B"].width = 12
 for c in COLS:
     ws.column_dimensions[c].width = 13
 ws.column_dimensions["I"].width = 96
-ws["A1"] = "產能與收入 — 合約排程 vs 機房產能"
+ws["A1"] = "產能與收入 — 已連網 MW × 每 MW 年收入（RPO 排程只作對照與產能瓶頸旗標）"  # v0.2：Nebius 營收主軸
 ws["A1"].font = TITLE
 ws["A2"] = "兩條線獨立產生後相減：排程>容量→瓶頸（收不到）；容量>排程→剩餘產能（要靠新簽約賣掉）"
 ws["A2"].font = SMALL
@@ -1598,7 +1606,7 @@ dcf_lines = [
     ("五期 UFCF 現值合計", f"=SUM(C{pv_v}:G{pv_v})", NUM, "建置期現金流現值"),
     ("常態化 FCF（FY30）", f"={PL}G{ebit_v}*(1-{TAX})+{PL}G{da_v}-{PL}G{da_v}*{MAINT}", NUM,
      "＝EBIT×(1−稅)＋D&A−維持性 CapEx(D&A×比率)。不讓成長性 CapEx 偽裝成永續 FCF"),
-    ("終值（Gordon）", None, NUM, "＝常態化 FCF×(1+g)÷(WACC−g)"),
+    ("終值（Gordon）", None, NUM, "＝常態化 FCF×(1+g)÷(WACC−g)；常態化 FCF ≤ 0 時以 0 計（v0.2）"),
     ("終值現值", None, NUM, None),
     ("企業價值 EV", None, NUM, None),
     ("減：淨負債", "=-§NDX§", NUM, "＝評價淨負債（不含可轉債的淨負債＋債務處理可轉債到期本金＋調整項；見下方可轉債區）"),
@@ -1607,7 +1615,7 @@ dcf_lines = [
     ("終值占 EV 比重", None, PCT, f'="超過 "&{_PC(RT_TVW)}&" 表示結論由終值假設決定，不由現金流決定"'),
     ("新股募得現金（現值）", None, NUM, "期初到位，折現期數 0／0.5／1.5／2.5／3.5 年"),
     ("融資後股數（含瀑布新股）", None, '0.000', None),
-    ("DCF 失效？（WACC ≤ g 或常態化 FCF ≤ 0）", None, NUM0, "1＝失效：DCF 權重歸零、EV/EBITDA 100%。股權為負不算失效"),
+    ("DCF 失效？（WACC ≤ g）", None, NUM0, "1＝失效：DCF 權重歸零、EV/EBITDA 100%。常態化 FCF ≤ 0 時終值以 0 計、DCF 照常截斷並保留權重（v0.2）；股權為負不算失效"),
     ("DCF 每股：0 截斷", None, USD, None),
     ("DCF 每股：選擇權（Merton）", None, USD, "Black-Scholes：S＝企業價值＋新股現值、K＝淨負債"),
     ("　d1", None, '0.000', None),
@@ -1623,8 +1631,8 @@ for nm, f, fmt, nt in dcf_lines:
     if nt:
         ws.cell(row=r, column=9, value=nt).font = SMALL
     r += 1
-ws.cell(row=d0 + 11, column=3, value=f"=IF(OR({WACC}<={GG},C{d0+1}<=0),1,0)").number_format = NUM0
-ws.cell(row=d0 + 2, column=3, value=f"=IF(C{d0+11}=1,0,C{d0+1}*(1+{GG})/({WACC}-{GG}))").number_format = NUM
+ws.cell(row=d0 + 11, column=3, value=f"=IF({WACC}<={GG},1,0)").number_format = NUM0
+ws.cell(row=d0 + 2, column=3, value=f"=IF(OR(C{d0+11}=1,C{d0+1}<=0),0,C{d0+1}*(1+{GG})/({WACC}-{GG}))").number_format = NUM
 ws.cell(row=d0 + 3, column=3, value=f"=C{d0+2}*G{df_v}").number_format = NUM
 ws.cell(row=d0 + 4, column=3, value=f"=C{d0}+C{d0+3}").number_format = NUM
 ws.cell(row=d0 + 6, column=3, value=f"=C{d0+4}+C{d0+5}").number_format = NUM
@@ -2144,7 +2152,7 @@ checks = [
     ("現金 EBITDA ＋ 信用調整 − 損益 EBITDA（FY27）", None, "=0",
      "=IF(ABS(B{r})<0.001,\"通過\",\"不一致\")", NUM, "現金 EBITDA＝RPO 現金＋新簽約現金＋服務現金−租金；信用調整＝信用損失×EBITDAR 率"),
     ("DCF 有效性（1＝失效）", None, "0",
-     "=IF(B{r}=0,\"通過\",\"觀察\")", NUM0, "失效只定義為 WACC ≤ g 或常態化 FCF ≤ 0；股權為負不算失效"),
+     "=IF(B{r}=0,\"通過\",\"觀察\")", NUM0, "失效只定義為 WACC ≤ g（v0.2；常態化 FCF ≤ 0 時終值以 0 計、不算失效）；股權為負不算失效"),
     ("期末現金 ≥ 最低現金（期前融資）", None, f"≥{D['minCash']:.1f}",
      "=IF(B{r}>=" + _n(D['minCash'] - 0.001) + ",\"通過\",\"不一致\")", NUM, "瀑布每期補足至最低現金；最小值應等於最低現金"),
     ("股權募資 ÷ 現市值", None, f'="≤"&{_MT(RT_EQ)}&"x"',
@@ -2711,7 +2719,7 @@ if QC:
             AROW[m['key']] = qrow(al, m['unit'], lambda j, c: f'=IF(AND(ISNUMBER({JR(e_, j)}),ISNUMBER({JR(v_, j)})),{JR(e_, j)}/{JR(v_, j)},"")', PCT, "＝實際 EBITDA ÷ 實際營收")
         else:
             n_ = f"季度實際｜{m.get('actualLabel', m['label'])}"
-            AROW[m['key']] = qrow(al, m['unit'], lambda j, c, n=n_: f'=IF(ISNUMBER({JR(n, j)}),{JR(n, j)},"")', PCT if m['unit'] == "%" else NUM, None, GREEN)
+            AROW[m['key']] = qrow(al, m['unit'], lambda j, c, n=n_: f'=IF(ISNUMBER({JR(n, j)}),{JR(n, j)},"")', PCT if m['unit'] == "%" else (NUM0 if m['unit'] == "MW" else NUM), None, GREEN)  # v0.2 第 2 輪：MW 整數格式
     # 差距（v4.4 第 4 輪）：營收、CapEx＝比例；利潤類＝金額差＋利潤率百分點；EBITDA 率＝百分點；MW＝差額
     TOLX = CONS_TOL
     KIND = {m['key']: m.get('gap') or ('pt' if m['unit'] == "%" else 'ratio') for m in QMET}
@@ -2964,7 +2972,7 @@ ws.column_dimensions["B"].width = 10
 for c in "CDEFG":
     ws.column_dimensions[c].width = 13
 ws.column_dimensions["I"].width = 70
-ws["A1"] = "一頁摘要 — 結論、與市場的差異、現價隱含什麼、驗證點（全部依輸入連動）"
+ws["A1"] = f"{CO['texts']['title']}｜一頁摘要 — 結論、與市場的差異、現價隱含什麼、驗證點（全部依輸入連動）"  # v0.2：標題與 HTML 一致
 ws["A1"].font = TITLE
 ws["A2"] = f'="模型端＝目前情境：" & CHOOSE({SEL},"{DT_NM["low"]}","{DT_NM["base"]}","{DT_NM["high"]}") & "（預設＝基準）；共識＝{CO["meta"]["consensusFile"]}（{CONS["asOf"]}）"'
 ws["A2"].font = SMALL
@@ -3130,7 +3138,7 @@ import json as _json
 # 輸出位置相對於 repo 根目錄：預設 out/；可用第 1 個參數指定 xlsx 路徑（outline.json 一律寫在 out/）
 _OUT_DIR = _osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), "out")
 _osrv.makedirs(_OUT_DIR, exist_ok=True)
-_xlsx = _sysv.argv[1] if len(_sysv.argv) > 1 else _osrv.path.join(_OUT_DIR, f"{CO['meta']['updateDate'].replace('-', '')}_CoreWeave收支模型_v{VLOG_X[-1][0][1:].replace('.', '_')}.xlsx")
+_xlsx = _sysv.argv[1] if len(_sysv.argv) > 1 else _osrv.path.join(_OUT_DIR, f"{CO['meta']['updateDate'].replace('-', '')}_{CO['meta']['company']}收支模型_v{VLOG_X[-1][0][1:].replace('.', '_')}.xlsx")
 _json.dump({k: v for k, v in OUTLINE.items()}, open(_osrv.path.join(_OUT_DIR, "outline.json"), "w"), ensure_ascii=False)
 # v4.5（5a-1）：說明文字中的期間佔位符（«YTD»、«VMD»…）換成目前日曆的字樣（calendar_q.tokens；目前日曆下與 v4.4 文字相同）
 for _ws in wb:
