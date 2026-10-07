@@ -14,6 +14,7 @@ MW_Y0 = PYEAR[0] - 1  # 首期前一財年（期初主動電力）
 _n = lambda x: f'{x:g}'  # 5a：company.json 的數字寫入公式或說明（整數不帶小數）
 YA = CO['ytdActual']
 LQ_DEBT, CONV_PR = CO['latestQuarter']['debtPrincipal'], CO['debt']['convertible']['principal']
+_DBT_BR = round(LQ_DEBT - CO['debt']['convertibleBridge']['exchangedAccreted'] + CO['debt']['convertibleBridge']['newIssuesAccreted'], 4)  # v0.1b：季報本金 − 以股換債 ＋ 期後新發（到期本金）
 LQ_RPO = CO['latestQuarter']['rpo']  # 5a：評價日債務本金、評價日後新發可轉債
 PREV_FY = f"FY{int(CO['periods'][0][2:]) - 1:02d}"  # 5a：首期的前一財年（營收 YoY 與比較基期）
 PREV_FY_REV = next(h['revenue'] for h in CO['historicalPL'] if h['year'] == PREV_FY)  # v4.5：年初至今實際（原 actual1H）；數值與逐列備註都讀 company.json，滾動時隨資料更新
@@ -457,7 +458,8 @@ r += 1
 r = section(ws, r, "F｜評價（價格、股數、折現、倍數、權重）")
 PX = gi(r, f"現價（{CO['meta']['priceDate']} 收盤）", "US$", V['price'], f"{CONS['priceReference']['source']}（{CONS['priceReference']['url']}）[Verified]", USD); r += 1
 SH = gi(r, "股數（含 ATM 上限）", "bn", V['shares'], "季末流通 0.2719＋NVIDIA 預付認股權證 0.0211＋以股換債 0.0158＋RSU 0.0062＋選擇權庫藏股法 0.0043 [Derived]", '0.0000'); r += 1
-ND = gi(r, "淨負債（6/30）", "US$bn", V['netDebt'], f"債務本金 {LQ_DEBT} − 現金 {CO['latestQuarter']['cash']} [Interested-party]"); r += 1
+ND = gi(r, "淨負債（不含可轉債）", "US$bn", V['netDebt'], f"其他借款 − 現金（含期後股權／可轉債募得淨額）；可轉債依稀釋判斷另計（見『評價_DCF與目標價』可轉債區）[Derived]"); r += 1
+ADJ = gi(r, "淨負債調整項（持股、SAFE 等）", "US$bn", V.get('ndAdj', 0), "company.json → valuation.ndAdj；正值＝增加淨負債 [Derived]"); r += 1
 WACC = gi(r, "WACC", "%", V['wacc'], "[Assumed]", PCT); r += 1
 GG = gi(r, "永續成長 g", "%", V['g'], "[Assumed]", PCT); r += 1
 MAINT = gi(r, "終值維持性 CapEx 占 D&A", "%", V['maintRatio'], "終值不讓成長性 CapEx 偽裝成永續 FCF [Assumed]", PCT); r += 1
@@ -1219,6 +1221,53 @@ c = ws.cell(row=r, column=6, value=f"=D{r}*E{r}"); c.font = BLACK; c.number_form
 ws.cell(row=r, column=9, value="company.json → debt.convertible（期後新發；不在五期還本表內，只計利息）").font = SMALL
 CONV_INT = f"'資產負債_既有債務'!$F${r}"; CONV_PR_CELL = f"'資產負債_既有債務'!$E${r}"; r += 2
 
+# v0.1b：可轉債逐檔（company.json → debt.convertibles）與若轉換法分類（與 HTML segA CVN／cvConvQ 同一算法）
+r = section(ws, r, "可轉債逐檔（若轉換法：有效轉換價 < 判斷價 → 視為轉股，不計利息與還本）")
+for j, h in enumerate(["可轉債", "到期", "票息", "原始本金", "到期累積倍數", "轉換價", "到期所屬模型期", "", "備註"]):
+    if h:
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+r += 1
+CV_LIST = CO['debt']['convertibles']
+def _cv_t(mat):  # 到期所屬模型期：第一個期末 ≥ 到期月的期別（0–4）；模型期後＝5
+    for i, pe in enumerate(CAL['periodEnd']):
+        if pe[:7] >= mat:
+            return i
+    return 5
+cv0 = r
+for nm, P, cpn, mat, acc, k, note in CV_LIST:
+    ws.cell(row=r, column=1, value=nm).font = BLACK
+    ws.cell(row=r, column=2, value=mat).font = SMALL
+    for col, v, fm in ((3, cpn, '0.000%'), (4, P, '0.0000'), (5, acc, '0.000'), (6, k, USD)):
+        c = ws.cell(row=r, column=col, value=v); c.font = BLUE; c.number_format = fm; c.border = BOX
+    c = ws.cell(row=r, column=7, value=_cv_t(mat)); c.font = BLACK; c.number_format = NUM0; c.border = BOX
+    ws.cell(row=r, column=9, value=note).font = SMALL
+    r += 1
+cv1 = r - 1
+ws.cell(row=r, column=9, value="到期所屬模型期：0＝首期 … 4＝末期、5＝模型期後（建置時依期末日推算）").font = SMALL
+r += 2
+for j, h in enumerate(["可轉債（推導）", "", "到期本金", "若轉換股數", "有效轉換價", "融資分類", "評價第一輪", "評價第二輪", "說明"]):
+    if h:
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+r += 1
+cvd0 = r
+for j in range(len(CV_LIST)):
+    sr = cv0 + j
+    ws.cell(row=r, column=1, value=f"={'A'}{sr}").font = BLACK
+    for col, f, fm in ((3, f"=D{sr}*E{sr}", '0.0000'), (4, f"=D{sr}/F{sr}", '0.0000'), (5, f"=F{sr}*E{sr}", USD),
+                       (6, f"=IF(E{r}<{EQPX},1,0)", NUM0), (7, f"=IF(E{r}<{PX},1,0)", NUM0), (8, f"=IF(E{r}<§PX2§,1,0)", NUM0)):
+        c = ws.cell(row=r, column=col, value=f); c.font = BLACK; c.number_format = fm; c.border = BOX
+    r += 1
+cvd1 = r - 1
+ws.cell(row=r, column=1, value="合計").font = BOLD
+for col in (3, 4):
+    c = ws.cell(row=r, column=col, value=f"=SUM({get_column_letter(col)}{cvd0}:{get_column_letter(col)}{cvd1})"); c.font = BOLD; c.number_format = '0.0000'
+ws.cell(row=r, column=9, value="分類 1＝轉股（若轉換法）、0＝債務。融資分類判斷價＝股權發行價；評價第一輪＝現價；第二輪＝MIN(現價, 第一輪加權目標價)").font = SMALL
+r += 2
+_DS = "'資產負債_既有債務'!"
+CV_M = f"{_DS}$C${cvd0}:$C${cvd1}"; CV_S = f"{_DS}$D${cvd0}:$D${cvd1}"
+CV_F = f"{_DS}$F${cvd0}:$F${cvd1}"; CV_F1 = f"{_DS}$G${cvd0}:$G${cvd1}"; CV_F2 = f"{_DS}$H${cvd0}:$H${cvd1}"
+CV_T = f"{_DS}$G${cv0}:$G${cv1}"; CV_PC = f"{_DS}$D${cv0}:$D${cv1}*{_DS}$C${cv0}:$C${cv1}"
+
 r = section(ws, r, "存量利息推導（本金依季報到期表遞減）")
 r = period_header(ws, r)
 DR = {}
@@ -1243,15 +1292,25 @@ drow("存量債務利息", "US$bn",
      lambda i: f"={COLS[i]}{DR['平均本金']}*{WRATE}*{inref('模型期長度（年）', i)}", NUM, BLACK,
      "＝平均本金×加權有效利率×期間長度。限制：假設利率組合不變；可轉債折價攤銷（非現金）不計")
 drow("期後新發可轉債利息", "US$bn", lambda i: f"={CONV_INT}*{inref('模型期長度（年）', i)}", NUM, BLACK)
+drow("可轉債到期還本（債務處理）", "US$bn", lambda i: f"=IF({DEBTON}=1,SUMPRODUCT((1-{CV_F})*{CV_M}*({CV_T}={i})),0)", NUM, BLACK,
+     "融資分類為債務的可轉債，到期當期以到期累積本金現金還本")
+drow("可轉債期末餘額（債務處理）", "US$bn",
+     lambda i: f"=IF({DEBTON}=1,SUMPRODUCT((1-{CV_F})*{CV_M}*({CV_T}>{i})),SUMPRODUCT((1-{CV_F})*{CV_M}))", NUM, BLACK,
+     "到期累積本金；關閉攤還時維持全額")
+drow("可轉債票息（債務處理）", "US$bn",
+     lambda i: (f"=IF({DEBTON}=1,SUMPRODUCT((1-{CV_F})*{CV_PC}*(({CV_T}>{i})+0.5*({CV_T}={i}))),SUMPRODUCT((1-{CV_F})*{CV_PC}))"
+                f"*{inref('模型期長度（年）', i)}"), NUM, BLACK, "＝原始本金 × 票息 × 期間長度；到期當期計半期")
 drow("FY26 新增借款利息校準", "US$bn", lambda i: (f"={_n(D['intCal'])}" if i == 0 else "=0"), NUM, BLUE,
      "讓首期模型利息對上公司季度利息指引的校準值（company.json → defaults.intCal）；無指引時為 0")
 drow("存量利息合計（連回輸入頁）", "US$bn",
-     lambda i: f"={COLS[i]}{DR['存量債務利息']}+{COLS[i]}{DR['期後新發可轉債利息']}+{COLS[i]}{DR['FY26 新增借款利息校準']}",
-     NUM, BLACK, "＝存量債務利息＋期後新發可轉債利息＋首期校準", bold=True)
+     lambda i: f"={COLS[i]}{DR['存量債務利息']}+{COLS[i]}{DR['期後新發可轉債利息']}+{COLS[i]}{DR['可轉債票息（債務處理）']}+{COLS[i]}{DR['FY26 新增借款利息校準']}",
+     NUM, BLACK, "＝存量債務利息＋期後新發可轉債利息＋可轉債票息＋首期校準", bold=True)
 DEBT_TOTAL_ROW = DR["存量利息合計（連回輸入頁）"]
 _wsf = wb["各期收支"]
 for i in range(5):
-    _wsf.cell(row=ex_row, column=3 + i, value=f"=IF({DEBTON}=1,'資產負債_既有債務'!{COLS[i]}{DR['期末本金']},'資產負債_既有債務'!$E${tot_r})+{CONV_PR_CELL}")
+    _wsf.cell(row=ex_row, column=3 + i, value=f"=IF({DEBTON}=1,'資產負債_既有債務'!{COLS[i]}{DR['期末本金']},'資產負債_既有債務'!$E${tot_r})+{CONV_PR_CELL}+'資產負債_既有債務'!{COLS[i]}{DR['可轉債期末餘額（債務處理）']}")
+    _c = _wsf.cell(row=debt_row, column=3 + i); _c.value = f"{_c.value}+'資產負債_既有債務'!{COLS[i]}{DR['可轉債到期還本（債務處理）']}"
+CV_AM_ROW = DR['可轉債到期還本（債務處理）']; CV_END_ROW = DR['可轉債期末餘額（債務處理）']
 wsin = wb["輸入與假設"]
 for i in range(5):
     wsin.cell(row=DEBT_INT_ROW, column=3 + i, value=f"='資產負債_既有債務'!{COLS[i]}{DEBT_TOTAL_ROW}")
@@ -1435,8 +1494,8 @@ vrow("D&A", "US$bn", lambda i: f"='輸入與假設'!{COLS[i]}${IN['D&A（車隊�
 da_v = VR["D&A"]
 vrow("EBITDA", "US$bn", lambda i: f"={COLS[i]}{ebit_v}+{COLS[i]}{da_v}", NUM, BLACK, bold=True)
 ebitda_v = VR["EBITDA"]
-vrow("　基礎股數（每年 +SBC 稀釋）", "bn", lambda i: (f"={SH}" if i == 0 else f"={COLS[i-1]}{r}*(1+{SHG})"), '0.0000', BLACK,
-     "FY26＝含 ATM 上限 0.587；之後每年 ×(1＋股數年增)")
+vrow("　基礎股數（每年 +SBC 稀釋）", "bn", lambda i: ("=§SHX§" if i == 0 else f"={COLS[i-1]}{r}*(1+{SHG})"), '0.0000', BLACK,
+     "«P0»＝評價股數（含價內可轉債轉股，見『評價_DCF與目標價』可轉債區）；之後每年 ×(1＋股數年增)")
 shb_v = VR["　基礎股數（每年 +SBC 稀釋）"]
 vrow("股數（含瀑布新股）", "bn", lambda i: f"={COLS[i]}{shb_v}+'各期收支'!{COLS[i]}{FRR['cns']}", '0.0000', BLACK,
      "＝基礎股數＋累計瀑布新股")
@@ -1532,7 +1591,7 @@ dcf_lines = [
     ("終值（Gordon）", None, NUM, "＝常態化 FCF×(1+g)÷(WACC−g)"),
     ("終值現值", None, NUM, None),
     ("企業價值 EV", None, NUM, None),
-    ("減：淨負債", f"=-{ND}", NUM, f"«VMD» 本金 {CO['latestQuarter']['debtPrincipal']} − 現金 {CO['latestQuarter']['cash']}"),
+    ("減：淨負債", "=-§NDX§", NUM, "＝評價淨負債（不含可轉債的淨負債＋債務處理可轉債到期本金＋調整項；見下方可轉債區）"),
     ("股權價值", None, NUM, None),
     ("DCF 每股", None, USD, None),
     ("終值占 EV 比重", None, PCT, f'="超過 "&{_PC(RT_TVW)}&" 表示結論由終值假設決定，不由現金流決定"'),
@@ -1561,12 +1620,12 @@ ws.cell(row=d0 + 4, column=3, value=f"=C{d0}+C{d0+3}").number_format = NUM
 ws.cell(row=d0 + 6, column=3, value=f"=C{d0+4}+C{d0+5}").number_format = NUM
 ws.cell(row=d0 + 9, column=3, value="=" + "+".join(
     f"'各期收支'!{COLS[i]}{FRR['eq']}/(1+{WACC})^'輸入與假設'!${COLS[i]}${CAL_R['tStart']}" for i in range(5))).number_format = NUM
-ws.cell(row=d0 + 10, column=3, value=f"={SH}+'各期收支'!G{FRR['cns']}").number_format = '0.000'
+ws.cell(row=d0 + 10, column=3, value=f"=§SHX§+'各期收支'!G{FRR['cns']}").number_format = '0.000'
 ws.cell(row=d0 + 12, column=3, value=f"=MAX(0,(C{d0+6}+C{d0+9})/C{d0+10})").number_format = USD
 _S = f"(C{d0+4}+C{d0+9})"
-ws.cell(row=d0 + 14, column=3, value=f"=IF({_S}<=0,0,(LN({_S}/{ND})+({RF}+{SIGMA}^2/2)*{OPTT})/({SIGMA}*SQRT({OPTT})))").number_format = '0.000'
+ws.cell(row=d0 + 14, column=3, value=f"=IF(OR({_S}<=0,§NDX§<=0),0,(LN({_S}/§NDX§)+({RF}+{SIGMA}^2/2)*{OPTT})/({SIGMA}*SQRT({OPTT})))").number_format = '0.000'
 ws.cell(row=d0 + 15, column=3, value=f"=C{d0+14}-{SIGMA}*SQRT({OPTT})").number_format = '0.000'
-ws.cell(row=d0 + 13, column=3, value=(f"=IF({_S}<=0,0,({_S}*NORMSDIST(C{d0+14})-{ND}*EXP(-{RF}*{OPTT})*NORMSDIST(C{d0+15}))/C{d0+10})")).number_format = USD
+ws.cell(row=d0 + 13, column=3, value=(f"=IF({_S}<=0,0,IF(§NDX§<=0,{_S},{_S}*NORMSDIST(C{d0+14})-§NDX§*EXP(-{RF}*{OPTT})*NORMSDIST(C{d0+15}))/C{d0+10})")).number_format = USD
 ws.cell(row=d0 + 7, column=3, value=f"=IF(C{d0+11}=1,0,IF({DMODE}=2,C{d0+13},C{d0+12}))").number_format = USD
 ws.cell(row=d0 + 7, column=9, value="採用值：失效時為 0 且權重歸零；否則依「DCF 下限方式」取 0 截斷或選擇權").font = SMALL
 ws.cell(row=d0 + 7, column=3).font = BOLD
@@ -1585,7 +1644,7 @@ mult_lines = [
     ("錨定年度", f'=CHOOSE({EVY},"FY27","FY28","FY29","FY30")', "@", "輸入與假設 F 區可改"),
     ("錨定年度 EBITDA", f"=INDEX({_EB},1,{EVY})", NUM, None),
     ("錨定年度企業價值（倍數 × EBITDA）", None, NUM, None),
-    ("錨定年度末淨負債（總債務 − 現金）", f"=INDEX({_TD},1,{EVY})-INDEX({_CU},1,{EVY})", NUM, "含瀑布新債"),
+    ("錨定年度末淨負債（總債務 − 現金）", f"=INDEX({_TD},1,{EVY})-INDEX({_CU},1,{EVY})+§NDA§", NUM, "含瀑布新債；加可轉債分類調整與淨負債調整項（見下方可轉債區）"),
     ("錨定年度末股數（含瀑布新股）", f"=INDEX({_SHR},1,{EVY})", '0.000', "損益股數：SBC 逐年稀釋＋瀑布新股"),
     ("折回 «TGT» 的折現因子", f"=1/(1+{WACC})^({EVY}-{OFF})", '0.000', "以 WACC 折現 [Assumed]"),
     ("EV/EBITDA 每股（融資後）", None, USD, "以 0 為下限"),
@@ -1633,6 +1692,46 @@ ws.cell(row=t0 + 2, column=9,
         value="期前融資瀑布：缺口先由額度與資產層新債支應，殘差以股權募足；估值不再扣缺口本金").font = SMALL
 TGT = f"C{t0+2}"
 UPS = f"C{t0+4}"
+# v0.1b：可轉債稀釋（若轉換法，兩輪；與 HTML segB runValuation 同一算法）
+# 第一輪判斷價＝現價；第二輪判斷價＝MIN(現價, 第一輪加權目標價)。評價（DCF 股數與淨負債、錨定年末淨負債與股數）依第二輪分類。
+r += 1
+r = section(ws, r, "可轉債稀釋（若轉換法；第一輪判斷價＝現價，第二輪＝MIN(現價, 第一輪目標價)）")
+CVR = {}
+_cns = f"'各期收支'!$D${FRR['cns']}:$G${FRR['cns']}"
+def cvl(name, f, fmt=NUM, note=None, bold=False):
+    global r
+    ws.cell(row=r, column=1, value=name).font = BOLD if bold else BLACK
+    c = ws.cell(row=r, column=3, value=f); c.number_format = fmt; c.font = BOLD if bold else BLACK
+    if note:
+        ws.cell(row=r, column=9, value=note).font = SMALL
+    CVR[name] = f"C{r}"; r += 1
+cvl("第一輪：轉股股數", f"=SUMPRODUCT({CV_S}*{CV_F1})", '0.0000', "有效轉換價 < 現價的可轉債：原始本金 ÷ 轉換價")
+cvl("第一輪：評價股數", f"={SH}+{CVR['第一輪：轉股股數']}", '0.0000')
+cvl("第一輪：評價淨負債", f"={ND}+SUMPRODUCT({CV_M}*(1-{CV_F1}))+{ADJ}", NUM, "＝不含可轉債的淨負債＋債務處理可轉債到期本金＋調整項")
+cvl("第一輪：DCF 融資後股數", f"={CVR['第一輪：評價股數']}+'各期收支'!G{FRR['cns']}", '0.000')
+_S1 = f"(C{d0+4}+C{d0+9})"
+cvl("第一輪：d1", f"=IF(OR({_S1}<=0,{CVR['第一輪：評價淨負債']}<=0),0,(LN({_S1}/{CVR['第一輪：評價淨負債']})+({RF}+{SIGMA}^2/2)*{OPTT})/({SIGMA}*SQRT({OPTT})))", '0.000')
+cvl("第一輪：DCF 每股（評價日）",
+    (f"=IF({DCF_BAD}=1,0,IF({DMODE}=2,IF({_S1}<=0,0,IF({CVR['第一輪：評價淨負債']}<=0,{_S1},{_S1}*NORMSDIST({CVR['第一輪：d1']})"
+     f"-{CVR['第一輪：評價淨負債']}*EXP(-{RF}*{OPTT})*NORMSDIST({CVR['第一輪：d1']}-{SIGMA}*SQRT({OPTT})))/{CVR['第一輪：DCF 融資後股數']}),"
+     f"MAX(0,(C{d0+4}-{CVR['第一輪：評價淨負債']}+C{d0+9})/{CVR['第一輪：DCF 融資後股數']})))"), USD, "與上方 DCF 同算法，只換股數與淨負債")
+cvl("第一輪：錨定年末淨負債", f"=INDEX({_TD},1,{EVY})-INDEX({_CU},1,{EVY})+SUMPRODUCT({CV_M}*({CV_F}-{CV_F1}))+{ADJ}", NUM,
+    "＝融資表錨定年末淨負債＋（融資分類為轉股、評價分類為債務的到期本金）＋調整項")
+cvl("第一輪：錨定年末股數", f"={CVR['第一輪：評價股數']}*(1+{SHG})^{EVY}+INDEX({_cns},1,{EVY})", '0.000')
+cvl("第一輪：EV/EBITDA 每股", f"=MAX(0,(C{m0+2}-{CVR['第一輪：錨定年末淨負債']})/{CVR['第一輪：錨定年末股數']})*C{m0+5}", USD)
+cvl("第一輪：加權目標價", f"={CVR['第一輪：DCF 每股（評價日）']}*(1+{WACC})^{CAL_TT}*IF({DCF_BAD}=1,0,{WDCF})+{CVR['第一輪：EV/EBITDA 每股']}*IF({DCF_BAD}=1,1,1-{WDCF})", USD, None, True)
+cvl("第二輪判斷價", f"=MIN({PX},{CVR['第一輪：加權目標價']})", USD, "＝MIN(現價, 第一輪加權目標價)：以較保守者判斷是否價內", True)
+cvl("第二輪：轉股股數", f"=SUMPRODUCT({CV_S}*{CV_F2})", '0.0000', "有效轉換價 < 第二輪判斷價的可轉債")
+cvl("第二輪：債務處理到期本金", f"=SUMPRODUCT({CV_M}*(1-{CV_F2}))", NUM)
+cvl("評價股數（含可轉債轉股）", f"={SH}+{CVR['第二輪：轉股股數']}", '0.0000', "DCF、損益股數與錨定年末股數的起點", True)
+cvl("評價淨負債（含可轉債與調整項）", f"={ND}+{CVR['第二輪：債務處理到期本金']}+{ADJ}", NUM, "DCF 減項與 Merton 履約價", True)
+cvl("錨定年末淨負債調整（可轉債分類差＋調整項）", f"=SUMPRODUCT({CV_M}*({CV_F}-{CV_F2}))+{ADJ}", NUM,
+    "融資現金流依『融資分類』（判斷價＝股權發行價）；評價依第二輪分類，差額在錨定年末淨負債補回")
+_ws_dcf = "'評價_DCF與目標價'!"
+CV_TOKENS = {"§SHX§": _ws_dcf + "$" + CVR['評價股數（含可轉債轉股）'].replace("C", "C$", 1),
+             "§NDX§": _ws_dcf + "$" + CVR['評價淨負債（含可轉債與調整項）'].replace("C", "C$", 1),
+             "§NDA§": _ws_dcf + "$" + CVR['錨定年末淨負債調整（可轉債分類差＋調整項）'].replace("C", "C$", 1),
+             "§PX2§": _ws_dcf + "$" + CVR['第二輪判斷價'].replace("C", "C$", 1)}
 NOTE_R = r  # v4.1：DCF 權重說明（公式在目標價區間段建好後寫入）
 ws.cell(row=r, column=1, value="DCF 權重說明").font = BLACK
 ws.cell(row=r, column=9, value="只在 DCF 被 0 截斷時顯示；DCF 失效時改為一句；DCF 為正時空白（與 HTML 同一字串）").font = SMALL
@@ -1736,7 +1835,7 @@ for kind in ("EV/EBITDA 腿", "加權目標價"):
         for k in range(1, 5):
             col = 2 + k
             if kind == "EV/EBITDA 腿":
-                f = (f"=MAX(0,(INDEX({_EB},1,{k})*$B{r}-(INDEX({_TD},1,{k})-INDEX({_CU},1,{k})))"
+                f = (f"=MAX(0,(INDEX({_EB},1,{k})*$B{r}-(INDEX({_TD},1,{k})-INDEX({_CU},1,{k})+§NDA§))"
                      f"/INDEX({_SHR},1,{k}))/(1+{WACC})^({k}-{OFF})")
             else:
                 leg_row = LEG0 + (r - g0)
@@ -1787,7 +1886,7 @@ med_r = r
 r += 1
 ws.cell(row=r, column=1, value=f"{CO['meta']['ticker']}（TTM 至 Q2）").font = BOLD
 c = ws.cell(row=r, column=2, value=CO['callFacts']['mktCapLast']); c.font = BLUE; c.number_format = NUM
-c = ws.cell(row=r, column=3, value=f"={ND}"); c.font = GREEN; c.number_format = NUM
+c = ws.cell(row=r, column=3, value=f"={ND}+SUM({CV_M})+{ADJ}"); c.font = GREEN; c.number_format = NUM
 c = ws.cell(row=r, column=4, value=f"=B{r}+C{r}"); c.number_format = NUM
 c = ws.cell(row=r, column=5, value=CO['callFacts']['ttmRev']); c.font = BLUE; c.number_format = NUM
 c = ws.cell(row=r, column=6, value=f"=D{r}/E{r}"); c.number_format = MULT; c.font = BOLD
@@ -1795,19 +1894,19 @@ c = ws.cell(row=r, column=7, value=f"=(D{r}+{CO['latestQuarter']['opLeaseLiab']}
 c = ws.cell(row=r, column=8, value=f"={CO['callFacts']['ttmOpInc']}+{CO['callFacts']['ttmDa']}"); c.font = BLUE; c.number_format = NUM
 c = ws.cell(row=r, column=9, value=f'=IF(H{r}>0,D{r}/H{r},"n/m")'); c.number_format = MULT
 ws.cell(row=r, column=10, value="TTM 至 Q2").font = SMALL
-ws.cell(row=r, column=11, value=f"EV 用 {PEERS['priceDate']} 市值與評價日淨負債；含租賃再加營業租賃負債 {CO['latestQuarter']['opLeaseLiab']}").font = SMALL
+ws.cell(row=r, column=11, value=f"EV 用 {PEERS['priceDate']} 市值（基本股）與評價日淨負債（可轉債全數以到期本金計入）；含租賃再加營業租賃負債 {CO['latestQuarter']['opLeaseLiab']}").font = SMALL
 crwv_r = r
 r += 1
 ws.cell(row=r, column=1, value=f"{CO['meta']['ticker']} 模型 «P1»E").font = BLACK
-c = ws.cell(row=r, column=2, value=f"={PX}*{SH}"); c.number_format = NUM
-c = ws.cell(row=r, column=3, value=f"={ND}"); c.number_format = NUM
+c = ws.cell(row=r, column=2, value=f"={PX}*§SHX§"); c.number_format = NUM
+c = ws.cell(row=r, column=3, value="=§NDX§"); c.number_format = NUM
 c = ws.cell(row=r, column=4, value=f"=B{r}+C{r}"); c.number_format = NUM
 c = ws.cell(row=r, column=5, value=f"='損益'!D{rev_v}"); c.font = GREEN; c.number_format = NUM
 c = ws.cell(row=r, column=6, value=f"=D{r}/E{r}"); c.number_format = MULT
 c = ws.cell(row=r, column=7, value=f"=(D{r}+{CO['latestQuarter']['opLeaseLiab']})/E{r}"); c.number_format = MULT
 c = ws.cell(row=r, column=8, value=f"='損益'!D{ebitda_v}"); c.font = GREEN; c.number_format = NUM
 c = ws.cell(row=r, column=9, value=f"=D{r}/H{r}"); c.number_format = MULT
-ws.cell(row=r, column=11, value="市值用模型股數（含 ATM 上限）；分母為模型 FY27 營收").font = SMALL
+ws.cell(row=r, column=11, value="市值用評價股數（含價內可轉債轉股）、淨負債用評價淨負債；分母為模型 «P1» 營收").font = SMALL
 r += 2
 notes = PEERS['textXlsx']['notes']
 for t in notes:
@@ -1855,9 +1954,10 @@ brow("期末現金", "US$bn", lambda i: f"=SUM({COLS[i]}{BR['期初現金']}:{CO
      "應等於『各期收支』期末累積現金（見下列驗算）", bold=True)
 brow("　驗算：與各期收支期末現金差異", "US$bn", lambda i: f"={COLS[i]}{BR['期末現金']}-{F_}{COLS[i]}{cum_row}", NUM, "應為 0")
 r = section(ws, r, "債務")
-brow("既有債務期初（季報本金）", "US$bn", lambda i: (f"={_n(LQ_DEBT)}" if i == 0 else f"={COLS[i-1]}{{r}}"), NUM)
-brow("− 排程還本（模型期）", "US$bn", lambda i: f"=-IF({DEBTON}=1,{I_}{COLS[i]}${IN['排程還本（季報到期表）']},0)")
-brow("既有債務期末", "US$bn", lambda i: f"={F_}{COLS[i]}{ex_row}-{_n(CONV_PR)}", NUM, f"＝依到期表遞減（關閉攤還時維持 {_n(LQ_DEBT)}）")
+brow("既有債務期初（季報本金）", "US$bn", lambda i: (f"='資產負債_既有債務'!$E${tot_r}+SUMPRODUCT((1-{CV_F})*{CV_M})" if i == 0 else f"={COLS[i-1]}{{r}}"), NUM,
+     "«P0»＝其他借款＋債務處理可轉債到期本金（轉股處理者不列）")
+brow("− 排程還本（模型期）", "US$bn", lambda i: f"=-IF({DEBTON}=1,{I_}{COLS[i]}${IN['排程還本（季報到期表）']},0)-'資產負債_既有債務'!{COLS[i]}{CV_AM_ROW}")
+brow("既有債務期末", "US$bn", lambda i: f"={F_}{COLS[i]}{ex_row}-{_n(CONV_PR)}", NUM, "＝依到期表遞減（關閉攤還時維持期初）")
 for i in range(1, 5):
     ws.cell(row=BR["既有債務期初（季報本金）"], column=3 + i, value=f"={COLS[i-1]}{BR['既有債務期末']}")
 brow("＋ 期後新發可轉債", "US$bn", lambda i: f"={_n(CONV_PR)}")
@@ -2039,8 +2139,8 @@ checks = [
      "=IF(B{r}>=" + _n(D['minCash'] - 0.001) + ",\"通過\",\"不一致\")", NUM, "瀑布每期補足至最低現金；最小值應等於最低現金"),
     ("股權募資 ÷ 現市值", None, f'="≤"&{_MT(RT_EQ)}&"x"',
      "=IF(B{r}<=" + RT_EQ + ",\"通過\",\"觀察\")", MULT, f'="超過 "&{_MT(RT_EQ)}&" 倍：市場吸收能力存疑，結論不得為買進"'),
-    (f"債務明細合計 = 季報本金 {_n(LQ_DEBT)}", None, _n(LQ_DEBT),
-     "=IF(ABS(B{r}-" + _n(LQ_DEBT) + ")<0.01,\"通過\",\"不一致\")", NUM, f"{len(CO['debt']['instruments'])} 筆工具逐筆加總"),
+    (f"債務明細合計 = 季報本金 {_n(LQ_DEBT)} − 以股換債 ＋ 期後新發", None, _n(_DBT_BR),
+     "=IF(ABS(B{r}-" + _n(_DBT_BR) + ")<0.01,\"通過\",\"不一致\")", NUM, f"其他借款 {len(CO['debt']['instruments'])} 筆＋可轉債 {len(CO['debt']['convertibles'])} 檔到期本金（company.json → debt.convertibleBridge）"),
     (f"{PERIODS[0]} 全年 CapEx（MW 公式）", None, f"{_CXLO}–{_CXHI}",
      "=IF(AND(B{r}>=" + _CXLO + ",B{r}<=" + _CXHI + "),\"通過\",\"觀察\")", NUM, "由已連網 MW 增量與預建次年推得；指引只作對照"),
     (f"JV 已承諾餘額於 {_YR0} 年內履行", None, f"={_JV0}",
@@ -2068,8 +2168,8 @@ def _find(label):
         if ws.cell(row=rr, column=1).value == label:
             return rr
     raise KeyError(label)
-_r = _find(f"債務明細合計 = 季報本金 {_n(LQ_DEBT)}")
-ws.cell(row=_r, column=2, value=f"='資產負債_既有債務'!E{tot_r}").number_format = NUM
+_r = _find(f"債務明細合計 = 季報本金 {_n(LQ_DEBT)} − 以股換債 ＋ 期後新發")
+ws.cell(row=_r, column=2, value=f"='資產負債_既有債務'!E{tot_r}+SUM({CV_M})").number_format = NUM
 _r = _find(f"{PERIODS[0]} 全年 CapEx（MW 公式）")
 ws.cell(row=_r, column=2, value=f"='輸入與假設'!C{IN['全年毛 CapEx（公式）']}").number_format = NUM
 _r = _find(f"JV 已承諾餘額於 {_YR0} 年內履行")
@@ -2112,7 +2212,7 @@ snap = [
     ("模型期毛 CapEx（«VMD» 起）", f"=SUM('輸入與假設'!C{IN['毛 CapEx']}:G{IN['毛 CapEx']})", NUM),
     ("模型期租金（«VMD» 起）", f"=SUM('各期收支'!C{FR['　租金合計']}:G{FR['　租金合計']})", NUM),
     ("模型期利息（«VMD» 起，含瀑布新債）", f"=SUM('各期收支'!C{FRR['int']}:G{FRR['int']})", NUM),
-    ("模型期排程還本（«VMD» 起）", f"=SUM('輸入與假設'!C{IN['排程還本（季報到期表）']}:G{IN['排程還本（季報到期表）']})*{DEBTON}", NUM),
+    ("模型期排程還本（«VMD» 起）", f"=SUM('輸入與假設'!C{IN['排程還本（季報到期表）']}:G{IN['排程還本（季報到期表）']})*{DEBTON}+SUM('資產負債_既有債務'!C{CV_AM_ROW}:G{CV_AM_ROW})", NUM),
     ("模型期營運缺口（«VMD» 起）", f"=SUM('各期收支'!C{FRR['opgap']}:G{FRR['opgap']})-({H_CFO}-{H_CCAPEX}-{H_JV})", NUM),
     ("«P0» 全年口徑營運缺口（含 «YTD» 實際）", f"=SUM('各期收支'!C{FRR['opgap']}:G{FRR['opgap']})", NUM),
     ("期末現金", f"='各期收支'!G{FRR['cum']}", NUM),
@@ -3027,5 +3127,8 @@ for _ws in wb:
     for _row in _ws.iter_rows():
         for _c in _row:
             if isinstance(_c.value, str) and '«' in _c.value: _c.value = _calq.fill(_c.value, CAL['tokens'])
+            if isinstance(_c.value, str) and '§' in _c.value:  # v0.1b：可轉債稀釋的前向引用（評價股數、評價淨負債、錨定調整、第二輪判斷價）
+                for _k, _v in CV_TOKENS.items(): _c.value = _c.value.replace(_k, _v)
+                assert '§' not in _c.value, _c.value
 wb.save(_xlsx)
 print("saved", _xlsx)

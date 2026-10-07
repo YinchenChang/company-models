@@ -153,6 +153,7 @@ ROLL_FIELDS = [
     ('期初餘額', 'defaults.rpoOpen', '期初 RPO'),
     ('期初餘額', 'defaults.rpoPendingAdd', '尚未入 RPO 的新增承諾'),
     ('期初餘額', 'defaults.prepay.openBalance', '期初合約負債（客戶預付餘額；v0.1b）'),
+    ('期初餘額', 'debt.convertibles', '可轉債逐檔（原始本金、轉換價；v0.1b）'),
 ]
 
 

@@ -16,7 +16,8 @@ function AM({
     hole: p,
     call: m,
     shares: h
-  } = r, g = (0, v.useMemo)(() => dcfGridWaccG(s, r.v), [s, r.v]), RV = (0, v.useMemo)(() => a === 4 ? reverseDcf(t, n) : null, [t, n, a]), y = n.price * h, b = y + n.netDebt, x = s[1].revenue, S = s[1].ebitda, C = S > 0 ? b / S : 0, E = [`損益簡表`, `Comps`, `DCF`, `目標價`], D = m.call === `買進` ? `ok` : m.call === `賣出` ? `bad` : `watch`, O = e.totals.end, Rt = (e, t) => (0, $.jsx)(`td`, {
+  } = r, g = (0, v.useMemo)(() => dcfGridWaccG(s, r.v), [s, r.v]), RV = (0, v.useMemo)(() => a === 4 ? reverseDcf(t, n) : null, [t, n, a]), y = n.price * h, b = y + r.v.netDebt, NDT = n.netDebt + CVN.reduce((a, c) => a + c.M, 0) + (n.ndAdj ?? 0), // v0.1b：模型列用評價股數與評價淨負債（含可轉債分類）；TTM 列市值為基本股，可轉債全數計入淨負債
+ x = s[1].revenue, S = s[1].ebitda, C = S > 0 ? b / S : 0, E = [`損益簡表`, `Comps`, `DCF`, `目標價`], D = m.call === `買進` ? `ok` : m.call === `賣出` ? `bad` : `watch`, O = e.totals.end, Rt = (e, t) => (0, $.jsx)(`td`, {
     className: `py-1.5 text-right font-mono tabular-nums`,
     children: Number.isFinite(e) ? Y(e, t) : `—`
   });
@@ -452,7 +453,7 @@ function AM({
                       fontWeight: 700
                     },
                     children: `${COMPANY_DATA.meta.ticker}（TTM）`
-                  }), [CALL_FACTS.mktCapLast, n.netDebt, CALL_FACTS.mktCapLast + n.netDebt, CALL_FACTS.ttmRev].map((e, t) => (0, $.jsx)(`td`, {
+                  }), [CALL_FACTS.mktCapLast, NDT, CALL_FACTS.mktCapLast + NDT, CALL_FACTS.ttmRev].map((e, t) => (0, $.jsx)(`td`, {
                     style: {
                       ...xstyQ.td,
                       background: `#eef2f7`,
@@ -465,14 +466,14 @@ function AM({
                       background: `#e6f1f1`,
                       fontWeight: 700
                     },
-                    children: `${Y((CALL_FACTS.mktCapLast + n.netDebt) / CALL_FACTS.ttmRev, 1)}x`
+                    children: `${Y((CALL_FACTS.mktCapLast + NDT) / CALL_FACTS.ttmRev, 1)}x`
                   }), (0, $.jsx)(`td`, {
                     style: {
                       ...xstyQ.td,
                       background: `#eef2f7`,
                       fontWeight: 700
                     },
-                    children: `${Y((CALL_FACTS.mktCapLast + n.netDebt + LATEST_Q.opLeaseLiab) / CALL_FACTS.ttmRev, 1)}x`
+                    children: `${Y((CALL_FACTS.mktCapLast + NDT + LATEST_Q.opLeaseLiab) / CALL_FACTS.ttmRev, 1)}x`
                   }), (0, $.jsx)(`td`, {
                     style: {
                       ...xstyQ.td,
@@ -484,7 +485,7 @@ function AM({
                       ...xstyQ.td,
                       background: `#eef2f7`
                     },
-                    children: `${Y((CALL_FACTS.mktCapLast + n.netDebt) / (CALL_FACTS.ttmOpInc + CALL_FACTS.ttmDa), 1)}x`
+                    children: `${Y((CALL_FACTS.mktCapLast + NDT) / (CALL_FACTS.ttmOpInc + CALL_FACTS.ttmDa), 1)}x`
                   }), (0, $.jsx)(`td`, {
                     style: {
                       ...xstyQ.td,
@@ -510,7 +511,7 @@ function AM({
                       background: `#fff`
                     },
                     children: `${COMPANY_DATA.meta.ticker}（模型 ${PERIODS[1]}E）`
-                  }), [y, n.netDebt, b, x].map((e, t) => (0, $.jsx)(`td`, {
+                  }), [y, r.v.netDebt, b, x].map((e, t) => (0, $.jsx)(`td`, {
                     style: {
                       ...xstyQ.td,
                       background: `#fff`
@@ -563,7 +564,7 @@ function AM({
             })
           }), (0, $.jsxs)(`p`, {
             className: `mt-3 text-xs leading-relaxed text-muted`,
-            children: [`讀法：${COMPANY_DATA.meta.ticker} 的 TTM EV/Sales `, Y((CALL_FACTS.mktCapLast + n.netDebt) / CALL_FACTS.ttmRev, 1), `x，約為同業中位數 `, Y(wM(lM.map(e => e.ev / e.rev)), 1), `x 的 `, Y((CALL_FACTS.mktCapLast + n.netDebt) / CALL_FACTS.ttmRev / wM(lM.map(e => e.ev / e.rev)), 1), ` 倍。`, (0, $.jsx)(tipQ, {
+            children: [`讀法：${COMPANY_DATA.meta.ticker} 的 TTM EV/Sales `, Y((CALL_FACTS.mktCapLast + NDT) / CALL_FACTS.ttmRev, 1), `x，約為同業中位數 `, Y(wM(lM.map(e => e.ev / e.rev)), 1), `x 的 `, Y((CALL_FACTS.mktCapLast + NDT) / CALL_FACTS.ttmRev / wM(lM.map(e => e.ev / e.rev)), 1), ` 倍。`, (0, $.jsx)(tipQ, {
               t: COMPANY_DATA.peers.textHtml.readingTip,
               w: 480
             })]

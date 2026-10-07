@@ -158,8 +158,7 @@ var EVG_MULTS = [3.4, 4.5, 5, 6, 7];
 function evAnchorGrid(d, st, o) {
   let base = runValuation(d, st, o);
   let leg = EVG_MULTS.map(m => [1, 2, 3, 4].map(k => {
-    let y = d.years[k];
-    return Math.max(0, (base.fwd[k].ebitda * m - (y.totalDebtEnd - y.cum)) / base.fwd[k].shares / Math.pow(1 + o.wacc, k - CALQ.evOffset))
+    return Math.max(0, (base.fwd[k].ebitda * m - base.v.fund.ndY[k]) / base.fwd[k].shares / Math.pow(1 + o.wacc, k - CALQ.evOffset))
   }));
   let DI = base.d.invalid, wd = DI ? 0 : BLEND_W.dcf, dcf = DI ? 0 : base.d.perShareT;
   return {
@@ -242,35 +241,52 @@ function wM(e) {
 }
 
 function runValuation(e, t, n) {
-  let r = shareCount(t, n),
+  // v0.1b：可轉債稀釋（八檔，若轉換法）。第一輪判斷價＝現價；第二輪判斷價＝MIN(現價, 第一輪加權目標價)（「以較保守者」），
+  // 評價（股數、淨負債、錨定年末淨負債）依第二輪分類。融資現金流（票息、到期還本）依 runFunding 的分類（判斷價＝發行參考價）。
+  let r0 = shareCount(t, n),
     Y2 = e.years,
-    i = {
-      ...n,
-      shares: r,
-      fund: {
-        eq: Y2.map(e => e.equity || 0),
-        sh: e.totals.newShares || 0,
-        sh27: Y2[1].cumNewShares || 0,
-        nd27: Y2[1].totalDebtEnd - Y2[1].cum,
-        shY: Y2.map(e => e.cumNewShares || 0),
-        ndY: Y2.map(e => e.totalDebtEnd - e.cum)
-      }
+    CF = e.cvFund || CVN.map(() => !1),
+    adj = n.ndAdj ?? 0, // 淨負債調整項（v0.1b 步驟 6：持股 − SAFE 等；預設 0）
+    mk = cv => {
+      let sh = r0 + CVN.reduce((a, c, j) => a + (cv[j] ? c.S : 0), 0),
+        mDebt = CVN.reduce((a, c, j) => a + (cv[j] ? 0 : c.M), 0),
+        mAdj = CVN.reduce((a, c, j) => a + c.M * ((CF[j] ? 1 : 0) - (cv[j] ? 1 : 0)), 0) + adj, // 錨定年末淨負債：融資分類與評價分類不同的部分＋調整項
+        i = {
+          ...n,
+          shares: sh,
+          netDebt: n.netDebt + mDebt + adj,
+          fund: {
+            eq: Y2.map(e => e.equity || 0),
+            sh: e.totals.newShares || 0,
+            sh27: Y2[1].cumNewShares || 0,
+            nd27: Y2[1].totalDebtEnd - Y2[1].cum + mAdj,
+            shY: Y2.map(e => e.cumNewShares || 0),
+            ndY: Y2.map(e => e.totalDebtEnd - e.cum + mAdj)
+          }
+        },
+        a = forwardPL(e, i),
+        o = dcfValue(a, i),
+        c = evEbitdaLeg(a, i),
+        d = Math.max(0, c),
+        f = blendCall({
+          spot: i.price,
+          dcfPx: o.perShareT,
+          pePx: d,
+          eqTotal: e.totals.equity || 0,
+          newSh: e.totals.newShares || 0,
+          tvShare: o.tvShare,
+          mktCap: i.price * r0,
+          shares0: sh,
+          dcfInvalid: o.invalid
+        });
+      return { i, a, o, c, d, f, sh, mDebt, mAdj }
     },
-    a = forwardPL(e, i),
-    o = dcfValue(a, i),
-    c = evEbitdaLeg(a, i),
-    d = Math.max(0, c),
-    f = blendCall({
-      spot: i.price,
-      dcfPx: o.perShareT,
-      pePx: d,
-      eqTotal: e.totals.equity || 0,
-      newSh: e.totals.newShares || 0,
-      tvShare: o.tvShare,
-      mktCap: i.price * r,
-      shares0: r,
-      dcfInvalid: o.invalid
-    });
+    cv1 = n.cvFix || cvConvQ(n.price), // cvFix：固定分類（方法區間只換倍數、不重新分類，與 Excel 相同）
+    R1 = mk(cv1),
+    px2 = n.cvFix ? NaN : Math.min(n.price, R1.f.blended),
+    cv2 = n.cvFix || cvConvQ(px2),
+    R = mk(cv2),
+    { i, a, o, c, d, f } = R;
   return {
     v: i,
     fwd: a,
@@ -280,12 +296,14 @@ function runValuation(e, t, n) {
     hole: e.totals.equity || 0,
     fullHole: e.totals.equity || 0,
     nd27: i.fund.nd27,
-    sh27: r * 1.01 + i.fund.sh27,
+    sh27: R.sh * 1.01 + i.fund.sh27,
     evK: Math.min(4, Math.max(1, Math.round(i.evYear ?? 1))),
     ndA: i.fund.ndY[Math.min(4, Math.max(1, Math.round(i.evYear ?? 1)))],
     shA: a[Math.min(4, Math.max(1, Math.round(i.evYear ?? 1)))].shares,
     call: f,
-    shares: r
+    shares: R.sh,
+    shares0: r0,
+    cv: { cv1, cv2, px2, tp1: R1.f.blended, sh1: R1.sh, sh2: R.sh, m1: R1.mDebt, m2: R.mDebt, cvFund: CF } // v0.1b：可轉債分類（第一輪／第二輪）
   }
 }
 
@@ -318,7 +336,7 @@ function targetRange(d, st, o, base) {
     }),
     A = [Math.min(sc[0].tgt, sc[2].tgt), Math.max(sc[0].tgt, sc[2].tgt)],
     mLo = Math.min(...RANGE_MULTS), mHi = Math.max(...RANGE_MULTS),
-    bm = [mLo, mHi].map(m => runValuation(d, st, { ...o, evEbitda: m }).call.blended),
+    bm = [mLo, mHi].map(m => runValuation(d, st, { ...o, evEbitda: m, cvFix: base.cv.cv2 }).call.blended),
     B = [Math.min(...bm), Math.max(...bm)],
     m = o.evEbitda, eq = (a, b) => Math.abs(a - b) < 1e-9,
     wd = base.call.weights.dcf, we = base.call.weights.pe,

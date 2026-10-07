@@ -108,6 +108,13 @@ cmp('DCF 失效', V+'DCF 失效？（WACC ≤ g 或常態化 FCF ≤ 0）', [p.d
 cmp('錨定年EBITDA', V+'錨定年度 EBITDA', [f[p.evK].ebitda]);
 cmp('錨定年末淨負債', V+'錨定年度末淨負債（總債務 − 現金）', [p.ndA]);
 cmp('錨定年末股數', V+'錨定年度末股數（含瀑布新股）', [p.shA]);
+// v0.1b：可轉債稀釋（分類、股數、淨負債、還本、票息、期末餘額）
+const DB='資產負債_既有債務|';
+cmp('可轉債還本', DB+'可轉債到期還本（債務處理）', H('cvAmort')); cmp('可轉債期末餘額', DB+'可轉債期末餘額（債務處理）', H('cvEnd')); cmp('可轉債票息', DB+'可轉債票息（債務處理）', H('cvInt'));
+cmp('可轉債第一輪目標價', V+'第一輪：加權目標價', [p.cv.tp1]); cmp('第二輪判斷價', V+'第二輪判斷價', [p.cv.px2]);
+cmp('第一輪轉股股數', V+'第一輪：轉股股數', [p.cv.sh1-p.shares0]); cmp('第二輪轉股股數', V+'第二輪：轉股股數', [p.cv.sh2-p.shares0]);
+cmp('評價股數', V+'評價股數（含可轉債轉股）', [p.shares]); cmp('評價淨負債', V+'評價淨負債（含可轉債與調整項）', [p.v.netDebt]);
+cmp('債務處理到期本金', V+'第二輪：債務處理到期本金', [p.cv.m2]);
 cmp('PV股權', V+'新股募得現金（現值）', [p.d.pvEquityRaised]);
 cmp('融資後股數', V+'融資後股數（含瀑布新股）', [p.d.postShares]);
 cmp('EV/EBITDA融資後', V+'EV/EBITDA 每股（融資後）', [p.peAdj]);
@@ -188,7 +195,7 @@ for(const e of lM){ const key=e.labelXlsx;
   const xv=X[CO+key]; const ok=Math.abs(e.ev-xv[2])<0.02&&Math.abs(e.ev/e.rev-xv[4])<0.01&&Math.abs((e.ev+(e.opl||0))/e.rev-xv[5])<0.01&&Math.abs(e.ebitda-xv[6])<0.002;
   rows.push([ok?'OK ':'XX ','comps '+e.ticker,[e.ev.toFixed(2),(e.ev/e.rev).toFixed(2),((e.ev+(e.opl||0))/e.rev).toFixed(2)].join('/'),[xv[2],(+xv[4]).toFixed(2),(+xv[5]).toFixed(2)].join('/')]);}
 const med=X[CO+'同業中位數']; rows.push([Math.abs(wM(lM.map(e=>e.ev/e.rev))-med[4])<0.01?'OK ':'XX ','comps median',wM(lM.map(e=>e.ev/e.rev)).toFixed(2),(+med[4]).toFixed(2)]);
-const cr=X[CO+COMPANY_DATA.meta.ticker+'（TTM 至 Q2）']; const hv=(CALL_FACTS.mktCapLast+VAL_DEFAULTS.netDebt)/CALL_FACTS.ttmRev; rows.push([Math.abs(hv-cr[4])<0.01?'OK ':'XX ','comps '+COMPANY_DATA.meta.ticker+' TTM EV/S',hv.toFixed(3),(+cr[4]).toFixed(3)]);
-const cm=X[CO+T(COMPANY_DATA.meta.ticker+' 模型 «P1»E')]; const hv2=(VAL_DEFAULTS.price*p.shares+VAL_DEFAULTS.netDebt)/f[1].revenue; rows.push([Math.abs(hv2-cm[4])<0.01?'OK ':'XX ','comps '+COMPANY_DATA.meta.ticker+' FY27E EV/S',hv2.toFixed(3),(+cm[4]).toFixed(3)]);
+const cr=X[CO+COMPANY_DATA.meta.ticker+'（TTM 至 Q2）']; const hv=(CALL_FACTS.mktCapLast+VAL_DEFAULTS.netDebt+CVN.reduce((a,c)=>a+c.M,0)+(VAL_DEFAULTS.ndAdj??0))/CALL_FACTS.ttmRev; rows.push([Math.abs(hv-cr[4])<0.01?'OK ':'XX ','comps '+COMPANY_DATA.meta.ticker+' TTM EV/S',hv.toFixed(3),(+cr[4]).toFixed(3)]);
+const cm=X[CO+T(COMPANY_DATA.meta.ticker+' 模型 «P1»E')]; const hv2=(VAL_DEFAULTS.price*p.shares+p.v.netDebt)/f[1].revenue; rows.push([Math.abs(hv2-cm[4])<0.01?'OK ':'XX ','comps '+COMPANY_DATA.meta.ticker+' FY27E EV/S',hv2.toFixed(3),(+cm[4]).toFixed(3)]);
 for(const r of rows) console.log(r.join(' | '));
 console.log('bench',d.totals.bench, 'X具名', JSON.stringify(X['站點租賃|具名站點合計']));

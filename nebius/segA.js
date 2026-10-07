@@ -46,6 +46,16 @@ var PERIODS = COMPANY_DATA.periods,
   DBT_R = DBT_I / DBT_P,
   CONV_P = COMPANY_DATA.debt.convertible.principal,
   CONV_I = CONV_P * COMPANY_DATA.debt.convertible.coupon,
+  // v0.1b：可轉債逐檔（company.json → debt.convertibles：[名稱, 原始本金, 票息, 到期 YYYY-MM, 到期累積倍數, 轉換價, 備註]）
+  // M＝到期本金（原始 × 累積）、S＝若轉換股數（原始 ÷ 轉換價）、x＝有效轉換價（轉換價 × 累積）、t＝到期所屬模型期（0–4；5＝模型期後）
+  CVN = COMPANY_DATA.debt.convertibles.map(c => ({ name: c[0], P: c[1], c: c[2], mat: c[3], acc: c[4], k: c[5], M: c[1] * c[4], S: c[1] / c[5], x: c[5] * c[4],
+    t: (i => i < 0 ? 5 : i)(CALQ.periodEnd.findIndex(d => d.slice(0, 7) >= c[3])) })),
+  cvConvQ = px => CVN.map(n => n.x < px), // 價內（有效轉換價 < 判斷價）＝若轉換法
+  cvFlowQ = (cv, inc, r, L) => CVN.reduce((a, n, i) => cv[i] ? a : { // 債務處理者的還本、期末餘額與票息
+    amort: a.amort + (inc && n.t === r ? n.M : 0),
+    end: a.end + (inc ? (n.t > r ? n.M : 0) : n.M),
+    int: a.int + n.P * n.c * L * (inc ? (n.t > r ? 1 : n.t === r ? .5 : 0) : 1)
+  }, { amort: 0, end: 0, int: 0 }),
   CHECK_TH = COMPANY_DATA.methodology.checks, // 5a：連動檢查門檻（Excel「檢查_連動」同一來源）
   CX_OLD = COMPANY_DATA.legacy.capexV14,
   INT_OLD = COMPANY_DATA.legacy.interestV14,
@@ -236,11 +246,13 @@ function runFunding(e) {
       let r = n === 0 ? e.ppeOpen : PPE[n - 1] + CXG[n - 1];
       return PPE.push(r), (r + .5 * t) / e.gpuLife * PERIOD_YEARS[n]
     }),
+    CVF = cvConvQ(e.eqPx), // v0.1b：融資現金流的可轉債分類（判斷價＝股權發行參考價，預設＝現價）
+    CVP = PERIOD_YEARS.map((L, n) => cvFlowQ(CVF, e.includeDebt, n, L)),
     PB = [],
     IX = DEBT_AMORT.map((t, n) => {
       let r = n === 0 ? DBT_P : PB[n - 1][1],
         i = r - t;
-      return PB.push([r, i]), (r + i) / 2 * DBT_R * PERIOD_YEARS[n] + CONV_I * PERIOD_YEARS[n] + (n === 0 ? e.intCal : 0)
+      return PB.push([r, i]), (r + i) / 2 * DBT_R * PERIOD_YEARS[n] + CONV_I * PERIOD_YEARS[n] + CVP[n].int + (n === 0 ? e.intCal : 0)
     }),
     WF = {
       Jn: 0,
@@ -285,7 +297,7 @@ function runFunding(e) {
         C = t.accepted[r] * 8760 * t.pue[r] * t.power[r] / 1e9 * L,
         w = t.accepted[r] * t.maint[r] / 1e3 * L,
         T = e.overlay ? C + w : 0,
-        O = e.includeDebt ? DEBT_AMORT[r] : 0,
+        O = (e.includeDebt ? DEBT_AMORT[r] : 0) + CVP[r].amort, // v0.1b：含債務處理可轉債的到期還本（到期累積本金）
         k = r === 0 && e.includeAtm ? e.atm : 0,
         A = g + nC + svcCash + v - pr, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
         j0 = _ + S + IX[r] + e.jvCommit[r] + e.a.div[r] + T + O,
@@ -296,7 +308,7 @@ function runFunding(e) {
         wPre = a + A + k - j0 - wI0,
         wX = Math.max(0, e.minCash - wPre),
         wB = WF.B - o - nR + e.ctrTerm * Math.max(0, nR / L - WF.pnr),
-        wEx = (e.includeDebt ? PB[r][1] : DBT_P) + CONV_P, // 5a：評價日後新發可轉債本金讀 company.json → debt.convertible
+        wEx = (e.includeDebt ? PB[r][1] : DBT_P) + CONV_P + CVP[r].end, // 5a：評價日後新發可轉債本金讀 company.json → debt.convertible；v0.1b：加債務處理可轉債餘額
         wCap = e.debtBacklog * wB - (wEx + WF.Dn + WF.Cn),
         wCapD = Math.max(0, wCap, WF.fr),
         wD = Math.min(wCapD, wX / (1 - wRL)),
@@ -325,6 +337,9 @@ function runFunding(e) {
         convBeg: wCn0,
         convEnd: WF.Cn,
         convNeedAfter: wRem2,
+        cvAmort: CVP[r].amort,
+        cvEnd: CVP[r].end,
+        cvInt: CVP[r].int,
         prepayIn: v,
         prepayRecog: pr,
         clBeg: clB,
@@ -577,10 +592,10 @@ function runFunding(e) {
     detail: `${PERIOD_FY[0]} 的支出多已下單（全年指引 ${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}，年初至今 ${Y(ACTUAL_1H.capex, 1)}）。若次年新增 MW 少到公式值低於下限，代表已採購的設備超過實際上線需求——這部分在模型中不帶來額外收入。`
   }), _({
     id: `debt-sched-int`,
-    ok: Math.abs(DBT_P - LATEST_Q.debtPrincipal) < .01,
+    ok: Math.abs(DBT_P + CVN.reduce((a, n) => a + n.M, 0) - (LATEST_Q.debtPrincipal - COMPANY_DATA.debt.convertibleBridge.exchangedAccreted + COMPANY_DATA.debt.convertibleBridge.newIssuesAccreted)) < .01,
     severity: `ok`,
-    title: `存量利息由既有債務明細推算：加權有效利率 ${(DBT_R*100).toFixed(1)}%`,
-    detail: `${DEBT_TOOLS.length} 筆工具合計 ${DBT_P.toFixed(3)}（季報 ${LATEST_Q.debtPrincipal}）。存量利息＝本金依到期表遞減的平均值×${(DBT_R*100).toFixed(1)}%×期間長度＋期後新發可轉債 ${CONV_P}×${hA(COMPANY_DATA.debt.convertible.coupon * 100, 2)}＋首期校準 ${e.intCal}。可轉債以現金票息計，不含折價攤銷（非現金）。五期合計 ${o.reduce((e,t)=>e+t.intStock,0).toFixed(2)}。`
+    title: `存量利息由既有債務與可轉債逐檔推算`,
+    detail: `其他借款 ${DBT_P.toFixed(3)}＋可轉債八檔到期本金 ${Y(CVN.reduce((a, n) => a + n.M, 0), 3)}，對照季報本金 ${LATEST_Q.debtPrincipal} − 以股換債 ${COMPANY_DATA.debt.convertibleBridge.exchangedAccreted} ＋ 期後新發 ${COMPANY_DATA.debt.convertibleBridge.newIssuesAccreted}。存量利息＝其他借款利息＋債務處理可轉債票息（原始本金 × 票息；到期當期計半年）＋首期校準 ${e.intCal}；價內可轉債（有效轉換價 < 現價）以若轉換法計，不計利息與還本。可轉債以現金票息計，不含折價攤銷（非現金）。五期合計 ${o.reduce((e,t)=>e+t.intStock,0).toFixed(2)}。`
   }), _({
     id: `jv-commit`,
     ok: Math.abs(e.jvCommit.reduce((e,t)=>e+t,0) - COMPANY_DATA.defaults.jvCommit.reduce((a,b)=>a+b,0)) < .01,
@@ -689,6 +704,7 @@ function runFunding(e) {
       fyDebtPay: o[0].fyDebtPay
     },
     checks: g,
+    cvFund: CVF,
     sites: n,
     m: t,
     leaseTail: c

@@ -164,7 +164,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance） | 必改 |
+| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles） | 必改 |
 
 ### `ytdActual`：年初至今實際數（10-Q；v4.5 前為 actual1H）
 
@@ -227,11 +227,15 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `debt.amortization` | 既有債務在五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期的排程還本 | US$bn 清單 | 0.0467、0、0、0.585、1.81844 | 必改 |
-| `debt.amortAfterFY30` | 模型期之後的還本合計 | US$bn | 7.63281 | 必改 |
-| `debt.instruments` | 既有債務逐筆明細，一筆一列：[名稱, 追索／非追索, 到期, 有效利率（比例）, 本金（US$bn）, 備註]。加總本金須等於 10-Q 本金合計 | 清單 | 7 筆 | 必改 |
-| `debt.convertible.principal` | 期後新發行可轉債本金（不在五期還本表內，只計利息） | US$bn | 5.75 | 必改 |
-| `debt.convertible.coupon` | 該可轉債票面利率 | 比例 | 0.021 | 必改 |
+| `debt.amortization` | 既有債務在五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期的排程還本 | US$bn 清單 | 0.0467、0、0、0、0 | 必改 |
+| `debt.amortAfterFY30` | 模型期之後的還本合計 | US$bn | 0 | 必改 |
+| `debt.instruments` | 既有債務逐筆明細，一筆一列：[名稱, 追索／非追索, 到期, 有效利率（比例）, 本金（US$bn）, 備註]。加總本金須等於 10-Q 本金合計 | 清單 | 1 筆 | 必改 |
+| `debt.convertible.principal` | 期後新發行可轉債本金（不在五期還本表內，只計利息） | US$bn | 0 | 必改 |
+| `debt.convertible.coupon` | 該可轉債票面利率 | 比例 | 0 | 必改 |
+| `debt.convertibles` | 可轉債逐檔，一檔一列：[名稱, 原始本金（US$bn）, 票息（比例）, 到期 YYYY-MM, 到期累積倍數, 轉換價（US$）, 備註]。有效轉換價＝轉換價 × 累積倍數；低於判斷價視為轉股（若轉換法），否則以到期累積本金計債務並付現金票息（v0.1b） | 清單 | 8 筆 | 必改 |
+| `debt.convertibleBridge.exchangedAccreted` | 評價日後以股換債註銷的舊債到期本金（季報本金與逐檔清單的調節項） | US$bn | 0.98 | 必改 |
+| `debt.convertibleBridge.newIssuesAccreted` | 評價日後新發可轉債的到期本金（季報本金與逐檔清單的調節項） | US$bn | 6.67 | 必改 |
+| `debt.convertibleBridge.note` | 調節說明與來源 | 文字 | 季報本金 10.0885（可轉債到期本金 10.04… | 必改 |
 
 ### `latestQuarter`：最新一季財報數字（10-Q）
 
@@ -490,7 +494,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `valuation.price` | 現價 | US$ | 249.87 | 必改 |
 | `valuation.shares` | 評價股數（含期後股權發行上限） | bn 股 | 0.3193 | 必改 |
 | `valuation.atmSharesInValuation` | 評價股數中「期後股權發行上限」的股數：期後股權／可轉債開關關閉時由評價股數扣回（v0.1b；CRWV 0.035、無此項的公司填 0） | bn 股 | 0 | 必改 |
-| `valuation.netDebt` | 淨負債（最新季末本金 − 現金） | US$bn | 2.0464 | 必改 |
+| `valuation.netDebt` | 淨負債（不含可轉債：其他借款 − 現金，含期後已入帳的股權／可轉債募得淨額；可轉債依 debt.convertibles 另計） | US$bn | -13.6754 | 必改 |
+| `valuation.ndAdj` | 淨負債調整項（持股價值以負數、SAFE 等類債以正數；評價淨負債與錨定年末淨負債同加） | US$bn | 0 | 必改 |
 | `valuation.tax` | 稅率 | 比例 | 0.258 | 檢查 |
 | `valuation.nol` | 期初可扣抵虧損（NOL） | US$bn | 0.8 | 必改 |
 | `valuation.wacc` | 加權平均資金成本 WACC | 比例 | 0.11 | 檢查 |
@@ -585,7 +590,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `nebius._readme` | Nebius 資料草稿區段的說明（v0.1a 產出；v0.1b 步驟 1 已搬移可對應既有欄位者，本區只留後續步驟會用的欄位） | 文字 | Nebius 資料草稿（v0.1a 產出；v0.1b… | 必改 |
 | `nebius.files` | Nebius 事實總帳、每 MW 推導、共識資料檔的路徑 | 物件（路徑） | 物件（facts、perMw、consensus） | 必改 |
-| `nebius.debt` | Nebius 可轉債（八檔）、資產擔保融資、其他債務草稿；格式同上 | 物件 | 物件（convertibles、abf） | 必改 |
+| `nebius.debt` | Nebius 可轉債（八檔）、資產擔保融資、其他債務草稿；格式同上 | 物件 | 物件（abf） | 必改 |
 | `nebius.equity` | Nebius ATM、NVIDIA 預付認股權證、以股換債、選擇權與 RSU 草稿；格式同上 | 物件 | 物件（atmRemaining、atmAvgPx、nvidiaPfwShares、exchangeShares、options、rsu） | 必改 |
 | `nebius.guidance` | Nebius 2026 年指引草稿（營收、ARR、資本支出、EBITDA 率、預付款）；格式同上 | 物件 | 物件（adjEbitdaMargin、prepay26Min） | 必改 |
 | `nebius.mw` | Nebius 電力路徑草稿（active／connected／contracted 口徑分列）；格式同上 | 物件 | 物件（activeYE25、activeQ1、activeQ2、connectedYE26Lo、connectedYE26Hi、contractedNow、contractedYE26、deployPerYearFrom27、ownedPlanned） | 必改 |
