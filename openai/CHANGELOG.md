@@ -2,6 +2,12 @@
 
 每次同步記錄：Excel 版本、工作包、commit 與變動摘要。
 
+## 20261007_OpenAI_v0.6.xlsx — v0.6-P1.1（S1：TK_Link 快照更新至 Tokenomics v5.24）
+
+- 快照來源：Tokenomics master `bdb0de7`（CURRENT＝`20261007_Tokenomics_v5.24.xlsx`）。check_tk_snapshot OK 37→62、MISSING 11→0、DIFF 0。原待合併 11 名全部取得；新增 IF_TrainCost_*、IF_RevGW_*、IF_FullCostDefault_*、L1_Ans3（＋低高）、SRC_DEM_013_Lo／Hi。原 37 名中 10 名值變動（TokGW×3、HoldEcon、FullCost×3、ProgGWyr×3）；第 5 世代口徑 Rubin Ultra NVL576→MGX NVL 單架 72 GPU。
+- 只動 TK_Link、Checks（C07、C08 標籤與期望值；ID 不變）、README 兩格；具名範圍 401→426；SRC_OAI、Inputs、Derived_V9、Map_v05 逐格不變。舊檔移至 `model/archive/`。
+- 工具：`tools/diff_tk_snapshots.py` 新增；`builder/tk_link.py`、`build.py` 沿用舊 PR #2（`479e94b`）改動。parity 32 項全過。報告：`docs/reports/20261007_v0.6-P1.1.md`、`_對照.xlsx`。PR #8。
+
 ## S0 搬遷（2026-10-07，Excel 不變）
 
 - 由 `YinchenChang/openai-model` `main@13c16f0` 搬入 `company-models/openai/`；CI 移至根目錄 `.github/workflows/openai-parity.yml`（working-directory `openai`）。新增共同規則、S1–S6 工作單、進度檔、交接檔（`docs/handoff/OpenAI_handoff.md`，取代 Project 內舊交接檔）。parity 32 項全過，Excel 逐位元組相同。
