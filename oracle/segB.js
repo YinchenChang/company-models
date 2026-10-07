@@ -319,6 +319,7 @@ function scnQ(e, sc) {
     a: { ...structuredClone(e.a), newLease: [...SCENARIOS[sc].a.newLease] },
     mw31: SCENARIOS[sc].mw31,
     cvCap: SCENARIOS[sc].cvCap,
+    billableOpen: SCENARIOS[sc].bOpen, // v0.1b：期初可計費 MW 隨情境（以實際營收校準時）
     m: { ...e.m, accepted: [...SCENARIOS[sc].acc], billable: [...SCENARIOS[sc].bil], revMW: [...SCENARIOS[sc].rev] }
   };
 }

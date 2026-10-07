@@ -20,6 +20,8 @@ var PERIODS = COMPANY_DATA.periods,
   SC_ACC = Object.fromEntries([`low`, `base`, `high`].map(k => [k, PERIOD_YEARS.reduce((a, L, i) => (a.push(Math.min(SC_MWP.contracted[k][i], i === 0 ? SC_MWP.connectedStart : a[i - 1] + SC_MWP.pace[k] * L)), a), [])])),
   SC_REV = COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境（Tokenomics 正向推導三情境）
   SC_BR = COMPANY_DATA.scenarios.billableRatio.ratio,
+  SC_BRM = COMPANY_DATA.scenarios.billableRatio.mode || `ratio`, // v0.1b（Oracle）：converge＝期初可計費 MW 以最新季實際營收年化 ÷ 每 MW 年收入校準，之後向已連網 MW 收斂
+  SC_BOPEN = k => SC_BRM === `converge` ? Math.round(COMPANY_DATA.scenarios.billableRatio.openAnnualRevenue / SC_REV[k][0]) : COMPANY_DATA.defaults.billableOpen,
   SC_LEASE_HI = COMPANY_DATA.scenarios.leaseHighPath,
   SC_MW31 = COMPANY_DATA.scenarios.mw31,
   scA = e => {
@@ -34,7 +36,8 @@ var PERIODS = COMPANY_DATA.periods,
   SCENARIOS = Object.fromEntries([`low`, `base`, `high`].map(k => [k, {
     label: COMPANY_DATA.scenarios.labels[k],
     acc: SC_ACC[k],
-    bil: SC_ACC[k].map((e, t) => Math.round(e * SC_BR[t])),
+    bil: SC_ACC[k].map((e, t) => SC_BRM === `converge` ? Math.round(SC_BOPEN(k) + (e - SC_BOPEN(k)) * SC_BR[t]) : Math.round(e * SC_BR[t])), // v0.1b：converge＝校準起點＋(已連網 − 起點)× 收斂比例
+    bOpen: SC_BOPEN(k), // v0.1b：期初可計費 MW（隨情境）
     rev: SC_REV[k],
     mw31: SC_MW31[k],
     cvCap: COMPANY_DATA.scenarios.convCap[k], // v0.1b：瀑布可轉債每年新發行上限（保守 0＝不新發）
@@ -57,6 +60,7 @@ var PERIODS = COMPANY_DATA.periods,
     int: a.int + n.P * n.c * L * (inc ? (n.t > r ? 1 : n.t === r ? .5 : 0) : 1)
   }, { amort: 0, end: 0, int: 0 }),
   CHECK_TH = COMPANY_DATA.methodology.checks, // 5a：連動檢查門檻（Excel「檢查_連動」同一來源）
+  W36 = PERIOD_YEARS.map((L, i) => Math.max(0, Math.min(L, 3 - PERIOD_YEARS.slice(0, i).reduce((a, b) => a + b, 0))) / L), // v0.1b：評價日起 36 個月落在各期的比例（RPO 對照）
   TXQ = COMPANY_DATA.texts, // v0.1b（Oracle）：公司特有說明文字
   REV_GUIDE_TXT = CALL_FACTS.revHi == null ? `≥${CALL_FACTS.revLo}` : `${CALL_FACTS.revLo}–${CALL_FACTS.revHi}`, // v0.1b：營收指引只有下限時寫「≥」
   inRevGuideQ = (x, t = 0) => x >= CALL_FACTS.revLo - t && (CALL_FACTS.revHi == null || x <= CALL_FACTS.revHi + t),
@@ -382,6 +386,7 @@ function runFunding(e) {
         newCash: nC,
         isRev: f + nR,
         unsold: Math.max(0, u - f - nR),
+        oci36: (f + nR) * W36[r], // v0.1b：評價日起 36 個月的 MW 驅動營收（RPO 36 個月內轉換比例的對照）
         gross: _,
         external: v,
         cashCapex: y,
@@ -458,6 +463,12 @@ function runFunding(e) {
     severity: `watch`,
     title: `RPO 桶 → 五期權重 [Derived]（只作對照，不驅動營收）`,
     detail: `季報：RPO $${Y(LATEST_Q.rpo, 1)}bn，${COMPANY_DATA.rpo.bucketLabels.map((b, j) => `${b} ${hA(COMPANY_DATA.rpo.split[j] * 100, 0)}`).join(`、`)}（${TXQ.rpoNote}）。桶內線性分攤得五期 ${RPO_BUCKET_W.map(x => hA(x * 100, 1)).join(`／`)}，合計 ${hA(RPO_SCHEDULED_SHARE * 100, 0)}。營收由 MW × 每 MW 年收入驅動，RPO 排程只用於產能瓶頸旗標；桶內前載或後載是 Derived，不是 Verified。`
+  }), _({
+    id: `rpo-36m`,
+    ok: !0,
+    severity: `watch`,
+    title: `RPO 36 個月內轉換 vs 模型（只作對照）`,
+    detail: `季報：RPO $${Y(LATEST_Q.rpo, 1)}bn 中約 ${hA(COMPANY_DATA.rpo.within36m * 100, 0)} 預計 36 個月內認列＝$${Y(LATEST_Q.rpo * COMPANY_DATA.rpo.within36m, 1)}bn（含傳統事業 RPO）。模型評價日起 36 個月的 MW 驅動營收 $${Y(o.reduce((a, y) => a + y.oci36, 0), 1)}bn（各期權重 ${W36.map(x => hA(x * 100, 0)).join(`／`)}）。差額不回推每 MW 單價。`
   }), _({
     id: `lease-10q`,
     ok: !0,
@@ -671,6 +682,7 @@ function runFunding(e) {
       end: o[4].cum,
       legacy: s(`legacy`),
       newRev: s(`newRev`),
+      oci36: s(`oci36`),
       newCash: s(`newCash`),
       lease: s(`lease`),
       interest: s(`interest`),

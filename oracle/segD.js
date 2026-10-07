@@ -15,6 +15,7 @@ function zM() {
     },
     mw31: SCENARIOS[e].mw31,
     cvCap: SCENARIOS[e].cvCap,
+    billableOpen: SCENARIOS[e].bOpen,
     m: {
       ...t.m,
       accepted: [...SCENARIOS[e].acc],
@@ -301,8 +302,8 @@ function zM() {
                   })
                 }),
 (0, $.jsx)(LM, {
-                  label: `6/30 Billable MW`,
-                  hint: `Assumed · 主動 1,500 減爬坡中`,
+                  label: `${CALQ.valuationMD} Billable MW`,
+                  hint: SC_BRM === `converge` ? `以 ${CALQ.filedQLabel} 實際營收年化 ÷ 每 MW 年收入校準（隨情境）` : `Assumed`,
                   children: (0, $.jsx)(IM, {
                     value: e.billableOpen,
                     onChange: e => w({

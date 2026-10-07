@@ -4,7 +4,7 @@ const T=s=>Object.keys(CALQ.tokens).sort((a,b)=>b.length-a.length).reduce((x,k)=
 const SC=process.argv[2], AK=+(process.argv[3]||3), AKX=process.argv[3]!==undefined; // AK：EV/EBITDA 錨定年度（1＝FY27…4＝FY30）
 const X=JSON.parse(fs.readFileSync('xl17_'+({low:1,base:2,high:3}[SC])+(AKX?'_a'+AK:'')+'.json','utf8'));
 VAL_DEFAULTS.evYear=AK;
-const q=structuredClone(DEFAULTS); q.scenario=SC; q.a=structuredClone(SCENARIOS[SC].a); q.mw31=SCENARIOS[SC].mw31; q.cvCap=SCENARIOS[SC].cvCap; q.m.accepted=[...SCENARIOS[SC].acc]; q.m.billable=[...SCENARIOS[SC].bil]; q.m.revMW=[...SCENARIOS[SC].rev];
+const q=structuredClone(DEFAULTS); q.scenario=SC; q.a=structuredClone(SCENARIOS[SC].a); q.mw31=SCENARIOS[SC].mw31; q.cvCap=SCENARIOS[SC].cvCap; q.billableOpen=SCENARIOS[SC].bOpen; q.m.accepted=[...SCENARIOS[SC].acc]; q.m.billable=[...SCENARIOS[SC].bil]; q.m.revMW=[...SCENARIOS[SC].rev];
 const d=runFunding(q), p=runValuation(d,q,VAL_DEFAULTS), y=d.years, f=p.fwd;
 const H=(k)=>y.map(e=>e[k]);
 const rows=[];
@@ -30,6 +30,8 @@ cmp('未售', S+'未售產能（浪費）', H('unsold'));
 cmp('isRev', S+'損益用算力收入（模型期＝RPO 轉換＋新簽約）', H('isRev'));
 cmp('營收−MW×單價×利用率', S+'核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間', y.map(e=>e.isRev-e.capacity)); // v0.1b：MW 驅動時為 0
 cmp('每MW年收入', '輸入|每 MW 年收入', d.m.revMW);
+cmp('36個月營收對照', S+'對照：評價日起 36 個月 MW 驅動營收', H('oci36')); cmp('RPO36 差額', '連動檢查|對照：RPO 36 個月內轉換 − 模型 36 個月 MW 驅動營收', [LATEST_Q.rpo*COMPANY_DATA.rpo.within36m-d.totals.oci36]); // v0.1b
+cmp('期初可計費MW', '輸入|«VMD» Billable MW'.replace('«VMD»',CALQ.valuationMD), [q.billableOpen]); // v0.1b：以實際營收校準
 cmp('信用損失', S+'信用損失（期初 RPO 部分）', H('loss'));
 cmp('RPO現金', S+'RPO 現金（可支應資本用途）', H('rpoCash'));
 cmp('新簽約現金', S+'新簽約現金', H('newCash'));
