@@ -261,11 +261,16 @@ function runFunding(e) {
     a = e.cash,
     MB = [e.mwYearEnd[PERIOD_FY[0] - 1], ...t.accepted.slice(0, 4)], // 5a：期初＝首期前一財年末主動電力（defaults.mwYearEnd 以年份為鍵）
     MN = t.accepted.map((e, n) => e - MB[n]),
+    t_acc = n => t.accepted[n],
     MX = t.accepted.map((n, r) => r < 4 ? t.accepted[r + 1] - n : e.mw31),
     CXF = MN.map((t, n) => (t * (1 - e.lambda) + MX[n] * e.lambda) * e.a.costMW[n] * (e.capexScale ?? 1) / 1e3),
     VIN = Object.fromEntries(Object.entries(e.mwYearEnd).map(([y, m]) => [y, m - (e.mwYearEnd[y - 1] ?? 0)])), // 各年新增 MW（汰換批次）
-    REF = PERIOD_FY.map( // 5a：期間的財年年份由日曆推算（滾動後不寫死）
+    RFV = PERIOD_FY.map( // 5a：期間的財年年份由日曆推算（滾動後不寫死）
       (t, n) => (VIN[t - e.gpuLife] || 0) * e.a.costMW[n] * (e.capexScale ?? 1) / 1e3),
+    // v0.1c（Oracle）：穩態汰換——已連網 MW 不再增加的期間（觸頂後）及終值年，汰換 CapEx＝期間平均已連網 MW × 每 MW GPU 資本支出 ÷ GPU 經濟壽命 × 期間長度（建築與電力屬租賃不計）；取代批次汰換
+    RFF = PERIOD_FY.map((t, n) => !!e.refreshSteady && (n === 4 || MN[n] <= 0)),
+    RFS = PERIOD_FY.map((t, n) => (MB[n] + t_acc(n)) / 2 * e.a.costMW[n] * (e.capexScale ?? 1) / 1e3 / e.gpuLife * PERIOD_YEARS[n]),
+    REF = RFV.map((x, n) => RFF[n] ? RFS[n] : x),
     CXG = CXF.map((t, n) => n === 0 ? Math.max(t, e.capexFloorFY0 ?? 0) - ACTUAL_1H.capex : t),
     CX = CXG.map((e, t) => e + REF[t]),
     PPE = [],
@@ -310,15 +315,17 @@ function runFunding(e) {
         x = e.a.newLease[r],
         S = b + x,
         svc = e.services[r],
-        ebM = e.ebStart + (e.ebSteady - e.ebStart) * r / 4,
         totRev = f + nR + svc,
-        cm = ebM + S / Math.max(totRev, .01),
+        // v0.1c（Oracle）：ebitdaBasis＝ebitdar 時，EBITDA＝EBITDAR 率 × 營收 − 租金（租金為固定成本）；EBITDAR 率＝EBITDA 率＋基準情境租金÷OCI 營收（defaults.ebitdarAdj，校準於基準情境起點與穩態）
+        eR = e.ebitdaBasis === `ebitdar` ? e.ebStart + e.ebitdarAdj[0] + (e.ebSteady + e.ebitdarAdj[1] - e.ebStart - e.ebitdarAdj[0]) * r / 4 : null,
+        ebM = eR !== null ? eR - S / Math.max(totRev, .01) : e.ebStart + (e.ebSteady - e.ebStart) * r / 4,
+        cm = eR !== null ? eR : ebM + S / Math.max(totRev, .01),
         g = h * cm,
         nC = nR * (1 - (t.defaultP[r] / 100) * p) * cm,
         svcCash = svc * cm,
         ob = (e.otherEbitda || [])[r] || 0, // v0.1b：其他事業 EBITDA（Avride＋TripleTen；負值＝燒錢），同時進入 EBITDA 與營運來源
         _ = CX[r],
-        v = CXG[r] * e.a.customerFund[r], // v0.1b：客戶預付流入＝成長型 CapEx × 預付比率（汰換 CapEx 不計）
+        v = (CXG[r] + (e.prepay.coverRefresh ? REF[r] : 0)) * e.a.customerFund[r], // v0.1b：客戶預付流入＝成長型 CapEx × 預付比率；v0.1c（Oracle）：prepay.coverRefresh 時汰換 CapEx 同樣適用覆蓋比
         y = _ - v,
         clB = WF.cl,
         ppI = (e.prepay.financingRate ?? 0) * (clB + .5 * v) * L, // v0.1b（Oracle）：重大財務組成——合約負債以隱含利率累積的非現金利息（期初餘額＋本期流入一半）
@@ -436,7 +443,13 @@ function runFunding(e) {
         mwNext: MX[r],
         capexFull: CXF[r],
         capexGrowth: CXG[r],
+        capexGrowthCash: CXG[r] * (1 - e.a.customerFund[r]), // v0.1c：成長型 CapEx 扣客戶預付後（終值基準加回用）
         refresh: REF[r],
+        refreshFlag: RFF[r] ? 1 : 0,
+        refreshSteadyV: RFS[r],
+        refreshVintage: RFV[r],
+        avgAccepted: (MB[r] + t.accepted[r]) / 2,
+        ebitdarM: eR,
         ppeBeg: PPE[r],
         daFleet: DAF[r],
         capexOld: CX_OLD[r],
@@ -623,7 +636,7 @@ function runFunding(e) {
     ok: o.every(e => Math.abs(e.cashEbitda + e.creditAdj - e.ebitdaPL) < .01),
     severity: `ok`,
     title: `資金與損益同一組 EBITDA：${PERIODS[4]} EBITDA 率 ${(o[4].ebM*100).toFixed(1)}%、EBITDAR 率 ${(o[4].cashMargin*100).toFixed(1)}%`,
-    detail: `EBITDA 率由 ${(e.ebStart*100).toFixed(0)}%（${TXQ.ebStartSource}）線性變動至 ${PERIODS[4]} ${(e.ebSteady*100).toFixed(0)}%（穩態）。資金模型用 EBITDAR 率＝EBITDA 率＋租金÷營收（因租金在支出端另列），非算力服務現金＝服務營收×同一 EBITDAR 率。恆等式：現金 EBITDA（營運來源不含預付 − 租金）＋信用損失調整＝損益 EBITDA，五期皆成立。`
+    detail: `${e.ebitdaBasis === `ebitdar` ? `EBITDAR 率由 ${((e.ebStart+e.ebitdarAdj[0])*100).toFixed(1)}% 線性變動至 ${PERIODS[4]} ${((e.ebSteady+e.ebitdarAdj[1])*100).toFixed(1)}%（三情境共用；校準使基準情境起點 ${(e.ebStart*100).toFixed(1)}%、穩態 ${(e.ebSteady*100).toFixed(1)}% EBITDA 率不變），EBITDA 率＝EBITDAR 率 − 租金÷營收（租金為固定成本）。` : `EBITDA 率由 ${(e.ebStart*100).toFixed(0)}%（${TXQ.ebStartSource}）線性變動至 ${PERIODS[4]} ${(e.ebSteady*100).toFixed(0)}%（穩態）。資金模型用 EBITDAR 率＝EBITDA 率＋租金÷營收（因租金在支出端另列），`}非算力服務現金＝服務營收×同一 EBITDAR 率。恆等式：現金 EBITDA（營運來源不含預付 − 租金）＋信用損失調整＝損益 EBITDA，五期皆成立。`
   }), _({
     id: `capex-mw`,
     ok: o[0].capexFull >= CALL_FACTS.capexLo && o[0].capexFull <= CALL_FACTS.capexHi,
@@ -641,7 +654,7 @@ function runFunding(e) {
     ok: !0,
     severity: `watch`,
     title: `GPU 汰換 CapEx：${PERIODS[3]} ${o[3].refresh.toFixed(1)}、${PERIODS[4]} ${o[4].refresh.toFixed(1)}`,
-    detail: `${PERIOD_FY[0] - 1} 年底批次（${e.mwYearEnd[PERIOD_FY[0] - 1]} MW）在第 ${e.gpuLife} 年汰換（落在模型期之後則不出現）；更早批次的 MW 未揭露。汰換取代已折舊完的設備，不增加折舊基礎。`
+    detail: `${e.refreshSteady ? `已連網 MW 不再增加的期間（觸頂後）及終值年採穩態汰換＝平均已連網 MW × 每 MW GPU 成本 ÷ 壽命 ${e.gpuLife} 年（建築與電力屬租賃不計；客戶出資覆蓋比同樣適用），終值以含汰換的末期 UFCF 為基準。其餘期間：` : ``}${PERIOD_FY[0] - 1} 年底批次（${e.mwYearEnd[PERIOD_FY[0] - 1]} MW）在第 ${e.gpuLife} 年汰換（落在模型期之後則不出現）；更早批次的 MW 未揭露。汰換取代已折舊完的設備，不增加折舊基礎。`
   }), _({
     id: `capex-floor`,
     ok: o[0].capexFull < (e.capexFloorFY0 ?? 0) ? !1 : !0,

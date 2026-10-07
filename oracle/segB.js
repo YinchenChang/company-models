@@ -97,6 +97,7 @@ function forwardPL(e, t) {
       shares: s,
       da: v,
       cashCapex: y,
+      capexGrowthCash: e.years[c].capexGrowthCash || 0,
       interest: m,
       prepayAccr: ai,
       ufcf: x
@@ -124,7 +125,7 @@ function dcfValue(e, t) {
     r = n.map((e, n) => e / (1 + t.wacc) ** CALQ.tEnd[n]), // v4.5：評價日至各期期末（月數 ÷ 12）
     i = r.reduce((e, t) => e + t, 0),
     c = e[e.length - 1],
-    l = c.opInc * (1 - t.tax) + c.da - c.da * t.maintRatio,
+    l = t.tvBasis === `ufcf` ? c.ufcf + c.capexGrowthCash : c.opInc * (1 - t.tax) + c.da - c.da * t.maintRatio, // v0.1c（Oracle）：tvBasis＝ufcf 時終值以末期 UFCF（含汰換 CapEx）為基準，加回末期成長型 CapEx（扣客戶預付後；成長由 g 表達，預設情境末期為 0）；模板＝常態化 FCF（D&A × 維持比率）
     bad = t.wacc <= t.g ? `WACC ≤ 永續成長率，Gordon 終值無定義` : l <= 0 ? `常態化 FCF ≤ 0，終值無經濟意義` : ``,
     a = bad ? 0 : l * (1 + t.g) / (t.wacc - t.g),
     o = a / (1 + t.wacc) ** CALQ.tEnd[CALQ.tEnd.length - 1],
@@ -190,7 +191,7 @@ function evAnchorGrid(d, st, o) {
 var BLEND_W = COMPANY_DATA.methodology.blendWeights,
   bM = [{
     method: `DCF（融資後每股）`,
-    capex: `已扣五期 Cash CapEx；終值用常態化 FCF（D&A×維持比率）`,
+    capex: VAL_DEFAULTS.tvBasis === `ufcf` ? `已扣五期 Cash CapEx；終值用末期 UFCF（含穩態 GPU 汰換）` : `已扣五期 Cash CapEx；終值用常態化 FCF（D&A×維持比率）`,
     hole: `不扣缺口：新債視為公允價值、價值中性；新股募得現金折現後加回，股數同步增加`,
     shares: `含 ATM ＋ 瀑布新股`,
     netDebt: `評價日本金 ${Y(LATEST_Q.debtPrincipal, 2)} − 現金 ${Y(LATEST_Q.cash + LATEST_Q.marketable, 2)}（另含期後調整）`

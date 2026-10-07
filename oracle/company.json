@@ -968,10 +968,18 @@
   "mw31": 0,
   "capexFloorFY0": 90,
   "gpuLife": 6,
+  "refreshSteady": true,
+  "refreshNote": "v0.1c：已連網 MW 不再增加的期間（觸頂後）及終值年，汰換 CapEx＝期間平均已連網 MW × 每 MW GPU 資本支出（IF_CapexIT，只含 IT）÷ GPU 經濟壽命 × 期間長度；建築與電力屬租賃不計；取代批次汰換（mwYearEnd 批次落在模型期之後）。false＝模板口徑（只有批次汰換）。",
   "revScale": 1,
   "capexScale": 1,
   "ebStart": 0.652,
   "ebSteady": 0.47,
+  "ebitdaBasis": "ebitdar",
+  "ebitdarAdj": [
+   0.193075,
+   0.156683
+  ],
+  "ebitdarNote": "v0.1c：OCI EBITDA＝EBITDAR 率 × OCI 營收 − 租金（租金為合約性固定成本）。EBITDAR 率＝EBITDA 率（ebStart／ebSteady，指基準情境）＋ebitdarAdj（基準情境租金 ÷ OCI 營收，[起點, 穩態]），使基準情境起點與穩態 EBITDA 率維持 65.2%／47%；保守與積極用同一 EBITDAR 率，因而承擔固定租金。ebitdarAdj 由 scripts/calib_ebitdar.js 自基準情境校準（verify.sh 檢查）[Derived]。ebitdaBasis 填其他值＝模板口徑（三情境共用 EBITDA 率）。",
   "services": [
    0.0,
    0.0,
@@ -1076,7 +1084,8 @@
    "recogYears": 5,
    "openBalance": 15.955,
    "financingRate": 0.0811,
-   "note": "客戶出資（Oracle v0.1b 步驟 4）：預付流入＝成長型 CapEx × 有預付的合約比例（1＝覆蓋比已是整體口徑）× 客戶出資覆蓋比 24.3%（FY27 指引：資本支出 90–95、淨現金資本支出 ≤70 → 22.2%–26.3% 中點 [Derived]；Q1 實際 37.0% 只作敏感度）。預付與客戶自帶硬體合併為一個覆蓋比；自帶硬體使每 MW 收入偏低的效果不建模（對照表預設 4）。期初合約負債＝客戶預付（重大財務組成）累計現金 15.955（FY26Q4–FY27Q1，[Derived]），不用遞延營收合計 30.789（含傳統支援預收）。認列 5 年（OpenAI 合約 2027 起 5 年 [Assumed]；替代 3 年）。重大財務組成（10-Q）：合約負債以隱含利率 8.11%（＝Oracle 稅前債務成本，6.55% 2046 票據殖利率 [Verified]；替代 0%）累積非現金利息，認列時一併轉入營收（自營運現金扣除），利息進損益不進現金。"
+   "note": "客戶出資（Oracle v0.1b 步驟 4）：預付流入＝成長型 CapEx × 有預付的合約比例（1＝覆蓋比已是整體口徑）× 客戶出資覆蓋比 24.3%（FY27 指引：資本支出 90–95、淨現金資本支出 ≤70 → 22.2%–26.3% 中點 [Derived]；Q1 實際 37.0% 只作敏感度）。預付與客戶自帶硬體合併為一個覆蓋比；自帶硬體使每 MW 收入偏低的效果不建模（對照表預設 4）。期初合約負債＝客戶預付（重大財務組成）累計現金 15.955（FY26Q4–FY27Q1，[Derived]），不用遞延營收合計 30.789（含傳統支援預收）。認列 5 年（OpenAI 合約 2027 起 5 年 [Assumed]；替代 3 年）。重大財務組成（10-Q）：合約負債以隱含利率 8.11%（＝Oracle 稅前債務成本，6.55% 2046 票據殖利率 [Verified]；替代 0%）累積非現金利息，認列時一併轉入營收（自營運現金扣除），利息進損益不進現金。",
+   "coverRefresh": true
   },
   "convIssue": {
    "coupon": 0.0,
@@ -1285,6 +1294,7 @@
   "g": 0.03,
   "sbc": 4.508,
   "maintRatio": 0.8,
+  "tvBasis": "ufcf",
   "evEbitda": 6,
   "legacyEvEbitda": null,
   "evYear": 2,

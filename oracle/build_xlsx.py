@@ -374,10 +374,17 @@ r += 1
 r = section(ws, r, "C｜利潤率（EBITDA 率單一來源；損益與資金共用）")
 EB0 = gi(r, "起始 EBITDA 率（«P0»）", "%", D['ebStart'], TXQ['ebStartSource'] + " [Derived]", PCT, True); r += 1
 EBSS = gi(r, "穩態 EBITDA 率（«PL»）", "%", D['ebSteady'], "可觀察 neocloud 區間 IREN 約 35%／CRWV 約 59% 的中點 47%；不取自每 MW 推導路徑 A 的加成 [Analogy]", PCT, True); r += 1
+EBR = D.get('ebitdaBasis') == 'ebitdar'  # v0.1c（Oracle）：EBITDA＝EBITDAR 率 × 營收 − 租金（租金為固定成本）
+if EBR:
+    EBA0 = gi(r, "基準情境租金占 OCI 營收（«P0»）", "%", D['ebitdarAdj'][0], "EBITDAR 率校準：基準情境首期租金 ÷ OCI 營收，使基準情境起始 EBITDA 率維持上列值；scripts/calib_ebitdar.js 自基準情境計算（verify.sh 檢查）[Derived]", PCT); r += 1
+    EBA4 = gi(r, "基準情境租金占 OCI 營收（«PL»）", "%", D['ebitdarAdj'][1], "同上，基準情境末期；保守與積極用同一 EBITDAR 率，因而承擔固定租金 [Derived]", PCT); r += 1
 r = phdr(r)
-r = prow(r, "EBITDA 率", "%", [0] * 5, PCT, "＝起始＋(穩態−起始)×期數÷4（公式）", BLACK)
+if EBR:
+    r = prow(r, "EBITDAR 率（路徑）", "%", [f"={EB0}+{EBA0}+({EBSS}+{EBA4}-{EB0}-{EBA0})*{i}/4" for i in range(5)], PCT,
+             "＝(起始 EBITDA 率＋基準起點租金比)＋[(穩態＋基準穩態租金比)−(起始＋基準起點租金比)]×期數÷4（公式）", BLACK)
+r = prow(r, "EBITDA 率", "%", [0] * 5, PCT, ("＝EBITDAR 率 − 租金合計 ÷ OCI 營收（公式；租金為固定成本，低營收情境 EBITDA 率較低）" if EBR else "＝起始＋(穩態−起始)×期數÷4（公式）"), BLACK)
 for i in range(5):
-    ws.cell(row=IN["EBITDA 率"], column=3 + i, value=f"={EB0}+({EBSS}-{EB0})*{i}/4")
+    ws.cell(row=IN["EBITDA 率"], column=3 + i, value=f"={EB0}+({EBSS}-{EB0})*{i}/4")  # EBR 時於各期收支建立後改寫
 r = prow(r, "非算力服務現金", "US$bn", [0] * 5, NUM, "＝服務營收 × EBITDAR 率（公式）", BLACK)
 r = section(ws, r, "電力／維護 overlay（預設關閉；EBITDA 已含電費）", level=2, collapsed=True)
 OVERLAY = gi(r, "電力／維護 overlay（1=開）", "", int(D['overlay']), "EBITDA 率已含電費，開啟會重複扣除，僅供壓力測試", NUM0); r += 1
@@ -442,10 +449,25 @@ def _vintage(i):
     for y in reversed(ys):
         x = f"IF({PYEAR[i]}-{LIFE}={y},{MWY[y]}{'-' + MWY[y - 1] if y - 1 in MWY else ''},{x})"
     return x
-r = prow(r, "GPU 汰換 CapEx", "US$bn",
-         [f"={_vintage(i)}"
-          f"*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000" for i in range(5)], NUM,
-         "＝(本年 − 壽命) 那年新增的 MW × 每 MW 成本；取代已折舊完的設備", BLACK)
+if D.get('refreshSteady'):  # v0.1c（Oracle）：觸頂後及終值年改為穩態汰換
+    r = prow(r, "批次汰換 CapEx", "US$bn",
+             [f"={_vintage(i)}"
+              f"*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000" for i in range(5)], NUM,
+             "＝(本年 − 壽命) 那年新增的 MW × 每 MW 成本；取代已折舊完的設備（批次落在模型期之後則為 0）", BLACK)
+    r = prow(r, "穩態汰換 CapEx", "US$bn",
+             [f"=({COLS[i]}{IN['期初主動電力']}+{COLS[i]}{accr})/2*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000/{LIFE}*{COLS[i]}{IN['模型期長度（年）']}" for i in range(5)], NUM,
+             "＝期間平均已連網 MW × 每 MW GPU 資本支出（只含 IT；建築與電力屬租賃不計）÷ GPU 經濟壽命 × 期間長度", BLACK)
+    r = prow(r, "穩態汰換旗標（1＝已連網 MW 不再增加或終值年）", "",
+             [f"=IF({COLS[i]}{IN['本期新增 MW']}<=0,1,0)" for i in range(4)] + ["=1"], NUM0,
+             "觸頂後（本期新增 MW ≤ 0）及終值年（«PL»）採穩態汰換，其餘採批次汰換", BLACK)
+    r = prow(r, "GPU 汰換 CapEx", "US$bn",
+             [f"=IF({COLS[i]}{r-1}=1,{COLS[i]}{r-2},{COLS[i]}{r-3})" for i in range(5)], NUM,
+             "＝旗標為 1 時取穩態汰換，否則取批次汰換；汰換不增加折舊基礎", BLACK)
+else:
+    r = prow(r, "GPU 汰換 CapEx", "US$bn",
+             [f"={_vintage(i)}"
+              f"*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000" for i in range(5)], NUM,
+             "＝(本年 − 壽命) 那年新增的 MW × 每 MW 成本；取代已折舊完的設備", BLACK)
 r = prow(r, "期初毛 PP&E", "US$bn", [f"={PPE0}"] + ["=0"] * 4, NUM, "之後＝前期期初＋前期成長型 CapEx（汰換不增加基礎）", BLACK)
 for i in range(1, 5):
     ws.cell(row=IN["期初毛 PP&E"], column=3 + i, value=f"={COLS[i-1]}{IN['期初毛 PP&E']}+{COLS[i-1]}{IN['成長型 CapEx（模型期）']}")
@@ -531,7 +553,7 @@ WCAPM = gi(r, "WACC（CAPM）＝E/(D+E) × ke＋D/(D+E) × kd ×(1 − 稅率)",
 WOV = gi(r, "WACC 手動覆蓋（空白＝採 CAPM）", "%", V['wacc'], "company.json → valuation.wacc（null＝空白）", PCT); r += 1
 WACC = gi(r, "WACC", "%", f"=IF(ISBLANK({WOV}),{WCAPM},{WOV})", "＝手動覆蓋，空白時採 CAPM", PCT); r += 1
 GG = gi(r, "永續成長 g", "%", V['g'], "[Assumed]", PCT); r += 1
-MAINT = gi(r, "終值維持性 CapEx 占 D&A", "%", V['maintRatio'], "終值不讓成長性 CapEx 偽裝成永續 FCF [Assumed]", PCT); r += 1
+MAINT = gi(r, "終值維持性 CapEx 占 D&A", "%", V['maintRatio'], ("v0.1c：終值改以末期 UFCF（含穩態汰換 CapEx）為基準（valuation.tvBasis＝ufcf），此比例不使用" if V.get('tvBasis') == 'ufcf' else "終值不讓成長性 CapEx 偽裝成永續 FCF [Assumed]"), PCT); r += 1
 NOL0 = gi(r, "期初 NOL（虧損扣抵）", "US$bn", V['nol'], f"«VMD» 累積虧損約 {V['nol']:.1f}；抵扣上限為應稅所得 {_n(V['nolUsePct'] * 100)}% [Derived]"); r += 1
 NOLU = gi(r, "NOL 每年可抵用比例", "%", V['nolUsePct'], "抵扣上限占應稅所得的比例 [Assumed]", PCT); r += 1
 WCP = gi(r, "營運資金占營收增量", "%", V['wcPctOfRevGrowth'], "營運資金變動＝營收增量 × 此比例 [Assumed]", PCT); r += 1
@@ -823,8 +845,9 @@ frow("① 毛 CapEx（認列，備忘）", "US$bn",
      f"«P0»＝«YTD» 實際認列 {CO['ytdActual']['capex']}＋«STUB» 模型；對照公司全年指引 {CO['callFacts']['capexLo']}–{CO['callFacts']['capexHi']}。備忘列：用途合計採現金口徑，不用這一列")
 frow("　客戶預付率", "%", lambda i: f"={inref('客戶預付占毛 CapEx', i)}", PCT, GREEN)
 frow("　客戶預付金額（抵減，«STUB» 起）", "US$bn",
-     lambda i: f"={inref('成長型 CapEx（模型期）', i)}*{COLS[i]}{FR['　客戶預付率']}", NUM, BLACK,
-     "＝成長型 CapEx × 預付比率（汰換 CapEx 不計）；«YTD» 的預付已含在實際 CFO 內，不重複計入")
+     (lambda i: f"=({inref('成長型 CapEx（模型期）', i)}+{inref('GPU 汰換 CapEx', i)})*{COLS[i]}{FR['　客戶預付率']}") if D['prepay'].get('coverRefresh') else
+     (lambda i: f"={inref('成長型 CapEx（模型期）', i)}*{COLS[i]}{FR['　客戶預付率']}"), NUM, BLACK,
+     ("＝(成長型＋汰換 CapEx)× 預付比率（v0.1c：汰換同樣適用覆蓋比）" if D['prepay'].get('coverRefresh') else "＝成長型 CapEx × 預付比率（汰換 CapEx 不計）") + "；«YTD» 的預付已含在實際 CFO 內，不重複計入")
 frow("　合約負債期初（客戶預付餘額）", "US$bn", lambda i: (f"={PP_CL0}" if i == 0 else "=0"), NUM, BLACK, "«P0» 期初＝«VMD» 季報遞延營收")
 cl_beg = FR["　合約負債期初（客戶預付餘額）"]
 frow("　合約負債利息累積（重大財務組成，非現金）", "US$bn",
@@ -853,6 +876,9 @@ frow("　租金合計", "US$bn",
      "租金已含在 EBITDA 率內（GAAP 營業租賃費用屬營業費用）：營運來源以 EBITDA 率＋租金÷營收計（租前），此列再扣，淨效果中性")
 _wsc = wb["運營_產能與收入"]; _wsi = wb["輸入與假設"]
 for i in range(5):
+    if EBR:  # v0.1c：EBITDA 率＝EBITDAR 率 − 租金 ÷ OCI 營收
+        _wsi.cell(row=IN["EBITDA 率"], column=3 + i,
+                  value=f"={COLS[i]}{IN['EBITDAR 率（路徑）']}-'各期收支'!{COLS[i]}{FR['　租金合計']}/MAX(0.01,'運營_產能與收入'!{COLS[i]}{CAP['totrev']})")
     _wsc.cell(row=CAP["cm"], column=3 + i,
               value=f"={inref('EBITDA 率', i)}+'各期收支'!{COLS[i]}{FR['　租金合計']}/MAX(0.01,{COLS[i]}{CAP['totrev']})")
     c = _wsi.cell(row=IN["非算力服務現金"], column=3 + i,
@@ -1688,8 +1714,10 @@ pv_v = VR["UFCF 現值"]
 r += 1
 dcf_lines = [
     ("五期 UFCF 現值合計", f"=SUM(C{pv_v}:G{pv_v})", NUM, "建置期現金流現值"),
-    ("常態化 FCF（FY30）", f"={PL}G{ebit_v}*(1-{TAX})+{PL}G{da_v}-{PL}G{da_v}*{MAINT}", NUM,
-     "＝EBIT×(1−稅)＋D&A−維持性 CapEx(D&A×比率)。不讓成長性 CapEx 偽裝成永續 FCF"),
+    (("常態化 FCF（FY30）", f"={PL}G{ebit_v}*(1-{TAX})+{PL}G{da_v}-{PL}G{da_v}*{MAINT}", NUM,
+     "＝EBIT×(1−稅)＋D&A−維持性 CapEx(D&A×比率)。不讓成長性 CapEx 偽裝成永續 FCF") if V.get('tvBasis') != 'ufcf' else
+     ("終值基準 FCF（«PL» UFCF，含汰換 CapEx）", f"=G{ufcf_v}+'輸入與假設'!G{IN['成長型 CapEx（模型期）']}*(1-'各期收支'!G{FR['　客戶預付率']})", NUM,
+     "v0.1c：終值基準＝末期 UFCF（含穩態汰換 CapEx，已扣客戶預付覆蓋）＋加回末期成長型 CapEx（扣預付後；成長由 g 表達，預設情境為 0）；GPU 不是永續資產，終值年須持續再投資")),
     ("終值（Gordon）", None, NUM, "＝常態化 FCF×(1+g)÷(WACC−g)"),
     ("終值現值", None, NUM, None),
     ("企業價值 EV", None, NUM, None),

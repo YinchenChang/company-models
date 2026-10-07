@@ -580,7 +580,7 @@ function AM({
             children: `DCF（與資金模型 Cash CapEx 連動）`
           }), (0, $.jsx)(`p`, {
             className: `mt-1 text-xs leading-relaxed text-muted`,
-            children: `UFCF = EBIT×(1−t)＋D&A−Cash CapEx−營運資金。Cash CapEx 與利息取自資金模型。五期 UFCF 多為負（建置期），終值不用 FY30 UFCF，而用常態化 FCF＝EBIT×(1−t)＋D&A−維持性 CapEx（D&A×維持比率）。DCF 已內含建置支出，不再重複扣期末現金缺口。每股值以 0 為下限：股權價值為負代表企業價值低於淨負債，股東有限責任、股價下限為 0。`
+            children: `UFCF = EBIT×(1−t)＋D&A−Cash CapEx−營運資金。Cash CapEx 與利息取自資金模型。${VAL_DEFAULTS.tvBasis === `ufcf` ? `終值以末期（${PERIODS[4]}）UFCF 為基準：MW 觸頂後與終值年含穩態 GPU 汰換 CapEx（已連網 MW × 每 MW ÷ 壽命），GPU 不是永續資產；末期若仍有成長型 CapEx 則加回（成長由 g 表達）。` : `五期 UFCF 多為負（建置期），終值不用 FY30 UFCF，而用常態化 FCF＝EBIT×(1−t)＋D&A−維持性 CapEx（D&A×維持比率）。`}DCF 已內含建置支出，不再重複扣期末現金缺口。每股值以 0 為下限：股權價值為負代表企業價值低於淨負債，股東有限責任、股價下限為 0。`
           }), (0, $.jsxs)(`table`, {
             className: `mt-3 w-full min-w-[640px] text-xs`,
             children: [(0, $.jsx)(`thead`, {
@@ -619,7 +619,7 @@ function AM({
               k: `FCF 現值`,
               v: mA(c.pvFcf)
             }), (0, $.jsx)(jM, {
-              k: `常態化 FCF（FY30）`,
+              k: VAL_DEFAULTS.tvBasis === `ufcf` ? `終值基準 FCF（${PERIODS[4]} UFCF）` : `常態化 FCF（FY30）`,
               v: mA(c.normFcf)
             }), (0, $.jsx)(jM, {
               k: `終值現值`,

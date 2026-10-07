@@ -110,6 +110,11 @@ cmp('BS 債務/EBITDA', NB+'總債務 ÷ EBITDA（年化）', y.map((e,t)=>e.tot
 cmp('DCF 0截斷', V+'DCF 每股：0 截斷', [p.d.zeroPerShare]);
 cmp('DCF 選擇權', V+'DCF 每股：選擇權（Merton）', [p.d.optPerShare]);
 cmp('DCF 失效', V+'DCF 失效？（WACC ≤ g 或常態化 FCF ≤ 0）', [p.d.invalid?1:0]);
+// v0.1c（Oracle）：穩態汰換 CapEx、EBITDAR 率、終值基準（末期 UFCF）
+if (DEFAULTS.refreshSteady) { cmp('批次汰換', '輸入|批次汰換 CapEx', H('refreshVintage')); cmp('穩態汰換', '輸入|穩態汰換 CapEx', H('refreshSteadyV')); cmp('汰換旗標', '輸入|穩態汰換旗標（1＝已連網 MW 不再增加或終值年）', H('refreshFlag')); }
+if (DEFAULTS.ebitdaBasis==='ebitdar') { cmp('EBITDAR率路徑', '輸入|EBITDAR 率（路徑）', H('ebitdarM')); cmp('EBITDA率(輸入)', '輸入|EBITDA 率', H('ebM')); }
+if (VAL_DEFAULTS.tvBasis==='ufcf') cmp('終值基準FCF', V+T('終值基準 FCF（«PL» UFCF，含汰換 CapEx）'), [p.d.normFcf]);
+cmp('終值', V+'終值（Gordon）', [p.d.invalid?0:p.d.tv]); cmp('終值現值', V+'終值現值', [p.d.invalid?0:p.d.pvTv]);
 cmp('錨定年EBITDA', V+'錨定年度 EBITDA', [f[p.evK].ebitda]);
 // v0.1b（Oracle）步驟 8：CAPM WACC 與分部加總
 cmp('CAPM ke', '輸入與假設|股權成本 ke＝rf＋β × ERP', [CAPM_Q(VAL_DEFAULTS).ke]); cmp('WACC', '輸入與假設|WACC', [VAL_DEFAULTS.wacc]);

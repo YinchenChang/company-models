@@ -771,7 +771,7 @@ function zM() {
                     [`　次期新增 MW`, d.years.map(e => e.mwNext), void 0, void 0, `calc`, `下一期新增量；${PERIODS[4]} 欄取左欄「模型期後一年新增 MW」。`, `MW`],
                     [`　全年毛 CapEx（公式）`, d.years.map(e => e.capexFull), void 0, void 0, `calc`, `＝(本期新增×(1−λ)＋次期新增×λ)×每 MW 成本。${PERIODS[0]} 對照公司全年指引 ${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}（${TXQ.capexGuideSource}）。`],
                     [`　成長型 CapEx（模型期）`, d.years.map(e => e.capexGrowth), void 0, void 0, `calc`, `${PERIODS[0]} 欄＝MAX(全年公式, 下限 ${e.capexFloorFY0}) − 年初至今 ${Y(ACTUAL_1H.capex, 3)}。下限代表當年已下單、無論情境都會發生的支出。`],
-                    [`　GPU 汰換 CapEx`, d.years.map(e => e.refresh), void 0, void 0, `calc`, `＝(本年 − 經濟壽命) 那一年新增的 MW × 每 MW 成本。壽命 ${e.gpuLife} 年；批次來源見左欄年底主動電力（${Object.entries(e.mwYearEnd).map(([y, m]) => `FY${String(y).slice(2)} 年底 ${m} MW`).join(`、`)}），汰換落在模型期之後者不出現。三情境相同。`],
+                    [`　GPU 汰換 CapEx`, d.years.map(e => e.refresh), void 0, void 0, `calc`, `${e.refreshSteady ? `已連網 MW 不再增加的期間（觸頂後）及 ${PERIODS[4]}：穩態汰換＝期間平均已連網 MW × 每 MW GPU 成本 ÷ 壽命 ${e.gpuLife} 年（建築與電力屬租賃不計）；其餘期間：` : ``}＝(本年 − 經濟壽命) 那一年新增的 MW × 每 MW 成本。壽命 ${e.gpuLife} 年；批次來源見左欄年底主動電力（${Object.entries(e.mwYearEnd).map(([y, m]) => `FY${String(y).slice(2)} 年底 ${m} MW`).join(`、`)}），汰換落在模型期之後者不出現。三情境相同。`],
                     [`① 毛 CapEx（模型期）`, d.years.map(e => e.gross), void 0, void 0, `tot`, `＝成長型＋汰換。含 OEM 融資的非現金部分。`],
                     [`　對照：v1.4 手動值`, d.years.map(e => e.capexOld), void 0, void 0, void 0, `CRWV 模板舊版手動值（Oracle 不適用，0）。`],
                     [`　客戶預付率`, e.a.customerFund.map(e => e * 100), (e, t) => E(`customerFund`, e, t / 100), void 0, void 0, `＝有預付的合約比例 × 預付占資本支出比（${TXQ.prepayCoverNote}）。只降當期外部融資需求、形成合約負債，不降專案總成本。`, `%`],
@@ -787,8 +787,8 @@ function zM() {
                     [`非算力服務營收`, e.services, (n, r) => w({
                       services: e.services.map((e, t) => t === n ? r : e)
                     }), void 0, void 0, `${TXQ.otherRevNote}。損益營收與資金現金共用這一列。`],
-                    [`EBITDA 率（路徑）`, d.years.map(e => e.ebM * 100), void 0, void 0, `calc`, `由左欄起始與穩態值線性推得。`, `%`],
-                    [`EBITDAR 率（計算）`, d.years.map(e => e.cashMargin * 100), void 0, void 0, `calc`, `＝EBITDA 率＋租金÷營收，即租金前的 EBITDA 率（業界稱 EBITDAR）。租金在支出端另列，故須加回。`, `%`],
+                    [`EBITDA 率（路徑）`, d.years.map(e => e.ebM * 100), void 0, void 0, `calc`, e.ebitdaBasis === `ebitdar` ? `＝EBITDAR 率 − 租金÷營收（租金為固定成本）。` : `由左欄起始與穩態值線性推得。`, `%`],
+                    [`EBITDAR 率（計算）`, d.years.map(e => e.cashMargin * 100), void 0, void 0, `calc`, e.ebitdaBasis === `ebitdar` ? `三情境共用：起始 ${(e.ebStart*100).toFixed(1)}%＋基準租金比 ${(e.ebitdarAdj[0]*100).toFixed(1)}% → 穩態 ${(e.ebSteady*100).toFixed(1)}%＋${(e.ebitdarAdj[1]*100).toFixed(1)}%，線性；使基準情境起點與穩態 EBITDA 率維持輸入值，低營收情境承擔固定租金。` : `＝EBITDA 率＋租金÷營收，即租金前的 EBITDA 率（業界稱 EBITDAR）。租金在支出端另列，故須加回。`, `%`],
                     [`非算力服務現金（計算）`, d.years.map(e => e.legacy), void 0, void 0, `calc`, `＝服務營收 × EBITDAR 率。`],
                     [`新簽約現金（計算）`, d.years.map(e => e.newCash), void 0, void 0, `calc`, `＝未被期初 RPO 占用的產能 × 新產能簽約率 × (1−信用損失率) × EBITDAR 率。`]
                   ]
@@ -812,7 +812,7 @@ function zM() {
                     [`損益用算力收入`, d.years.map(e => e.isRev), void 0, void 0, `tot`, `＝RPO 轉換 ＋ 新簽約。損益與評價頁用的是同一個數字。`],
                     [`來源（FY26 欄＝1H 實際現金流＋下半年模型）`, null],
                     [`Ⓐ0 年初至今實際營運現金流（CFO）`, d.years.map((e, t) => t === 0 ? e.fyCfo : 0), void 0, void 0, void 0, `季報實際值 ${Y(ACTUAL_1H.cfo, 3)}，已含年初至今的利息、租金與客戶預付（遞延營收增加 ${Y(LATEST_Q.deferredIn, 3)}），因此下方②③Ⓓ的 ${PERIODS[0]} 欄只含模型期。`],
-                    [`　EBITDA 率（損益、資金共用）`, d.years.map(e => e.ebM * 100), void 0, void 0, void 0, `起始 → 穩態線性爬升。`, `%`],
+                    [`　EBITDA 率（損益、資金共用）`, d.years.map(e => e.ebM * 100), void 0, void 0, void 0, e.ebitdaBasis === `ebitdar` ? `＝EBITDAR 率 − 租金÷營收。` : `起始 → 穩態線性爬升。`, `%`],
                     [`　EBITDAR 率（EBITDA 率＋租金÷營收）`, d.years.map(e => e.cashMargin * 100), void 0, void 0, void 0, `租金前的 EBITDA 率。租金在支出②另列，所以這裡加回，避免重複扣除。`, `%`],
                     [`Ⓐ RPO 現金（下半年起）`, d.years.map(e => e.rpoCash), void 0, void 0, void 0, `＝收現 × EBITDAR 率。`],
                     [`Ⓑ 新簽約現金`, d.years.map(e => e.newCash)],

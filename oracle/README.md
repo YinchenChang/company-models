@@ -433,10 +433,15 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.mw31` | 模型期後一年新增 MW 的預設值（情境切換時改用 scenarios.mw31） | MW | 0 | 檢查 |
 | `defaults.capexFloorFY0` | 首期所屬財年的全年資本支出下限（已下單的承諾，取公司指引下緣；首期＝下限 − 年初至今實際認列） | US$bn | 90 | 必改 |
 | `defaults.gpuLife` | GPU 經濟壽命（決定汰換時點與折舊） | 年 | 6 | 檢查 |
+| `defaults.refreshSteady` | 穩態汰換：true＝已連網 MW 不再增加的期間（觸頂後）及終值年，汰換 CapEx＝平均已連網 MW × 每 MW 建置成本 ÷ GPU 壽命 × 期間長度；false＝只有批次汰換（Oracle v0.1c） | 是／否 | 是 | 檢查 |
+| `defaults.refreshNote` | 穩態汰換的說明文字 | 文字 | v0.1c：已連網 MW 不再增加的期間（觸頂後）及… | 可沿用 |
 | `defaults.revScale` | 每 MW 年收入整體倍數（反向 DCF 與壓力測試用，1＝不調整） | 倍 | 1 | 可沿用 |
 | `defaults.capexScale` | 每 MW 建置成本整體倍數（1＝不調整） | 倍 | 1 | 可沿用 |
 | `defaults.ebStart` | 第一期 EBITDA 率 | 比例 | 0.652 | 必改 |
 | `defaults.ebSteady` | 最後一期（穩態）EBITDA 率；中間各期線性內插 | 比例 | 0.47 | 檢查 |
+| `defaults.ebitdaBasis` | EBITDA 口徑：ebitdar＝EBITDA＝EBITDAR 率 × 營收 − 租金（租金為固定成本，EBITDAR 率三情境共用）；其他值＝三情境共用 EBITDA 率（模板）（Oracle v0.1c） | 代碼 | ebitdar | 檢查 |
+| `defaults.ebitdarAdj` | EBITDAR 率校準：基準情境 [首期, 末期] 租金 ÷ OCI 營收；EBITDAR 率＝ebStart／ebSteady＋此值（scripts/calib_ebitdar.js --write 產生，verify.sh 檢查） | 比例清單 | 0.193075、0.156683 | 必改 |
+| `defaults.ebitdarNote` | EBITDAR 口徑的說明文字 | 文字 | v0.1c：OCI EBITDA＝EBITDAR 率… | 可沿用 |
 | `defaults.services` | 非算力服務營收（軟體、儲存等），各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
 | `defaults.otherEbitda` | 其他事業 EBITDA（負值＝燒錢），各期；同時進入損益 EBITDA 與營運來源（v0.1b） | US$bn 清單 | 0、0、0、0、0 | 必改 |
 | `defaults.legacyBiz.lines` | 傳統事業各線，一線一列：key、label、fyBase 上一財年實際營收（US$bn）、ytd 年初至今實際營收、g0 起始年增率、gLT 長期年增率（自首期線性收斂到末期）（Oracle v0.1b） | 清單 | 4 筆 | 必改 |
@@ -471,6 +476,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.prepay.shareOfDeals` | 有預付的合約比例（預付流入＝成長型 CapEx × 此比例 × 下一欄；覆蓋比已是整體口徑時填 1；v0.1b） | 比例 | 1 | 檢查 |
 | `defaults.prepay.capexCover` | 預付（客戶出資）占相關資本支出的比例 | 比例 | 0.243 | 檢查 |
 | `defaults.prepay.recogYears` | 預付在合約期內的認列年數：依(期初合約負債＋本期累積利息)直線認列為營收（非現金） | 年 | 5 | 檢查 |
+| `defaults.prepay.coverRefresh` | 客戶出資覆蓋比是否也適用 GPU 汰換 CapEx（true＝預付流入＝(成長型＋汰換)× 覆蓋比；Oracle v0.1c） | 是／否 | 是 | 檢查 |
 | `defaults.prepay.financingRate` | 預付重大財務組成的隱含利率：合約負債以此利率累積非現金利息（期初餘額＋本期流入一半），認列時轉營收；0＝不計財務組成（Oracle v0.1b） | 比例 | 0.0811 | 檢查 |
 | `defaults.prepay.openBalance` | 期初合約負債（客戶預付餘額；列入滾動檢查） | US$bn | 15.955 | 必改 |
 | `defaults.prepay.note` | 預付款區塊的說明（來源與口徑） | 文字 | 客戶出資（Oracle v0.1b 步驟 4）：預付… | 必改 |
@@ -535,6 +541,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `valuation.g` | 永續成長率 | 比例 | 0.03 | 檢查 |
 | `valuation.sbc` | 年度股份基礎薪酬 | US$bn | 4.508 | 必改 |
 | `valuation.maintRatio` | 終值的維持性資本支出占折舊比例 | 比例 | 0.8 | 檢查 |
+| `valuation.tvBasis` | 終值基準：ufcf＝末期 UFCF（含穩態汰換 CapEx）；其他值＝常態化 FCF（EBIT ×(1−稅)＋D&A × (1 − 維持比率)）（Oracle v0.1c） | 代碼 | ufcf | 檢查 |
 | `valuation.evEbitda` | EV/EBITDA 倍數（分部加總的 OCI／算力部分） | 倍 | 6 | 檢查 |
 | `valuation.evYear` | EV/EBITDA 錨定年度（1＝模型第 2 期 … 4＝第 5 期） | 年度代碼 | 2 | 檢查 |
 | `valuation.legacyEvEbitda` | 傳統事業 EV/EBITDA 手動覆蓋（null＝軟體同業中位數） | 倍或 null | None | 檢查 |
