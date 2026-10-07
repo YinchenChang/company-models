@@ -394,6 +394,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.mw31.low` | 保守情境：模型期後一年（FY31）新增的 MW，用於 FY30 的預建支出 | MW | 0 | 檢查 |
 | `scenarios.mw31.base` | 基準情境：同上 | MW | 580 | 檢查 |
 | `scenarios.mw31.high` | 積極情境：同上 | MW | 833.333 | 檢查 |
+| `scenarios.convCap.low` | 保守情境：融資瀑布可轉債步驟每年新發行上限（0＝不新發；v0.1b） | US$bn／年 | 0 | 檢查 |
+| `scenarios.convCap.base` | 基準情境：同上 | US$bn／年 | 5 | 檢查 |
+| `scenarios.convCap.high` | 積極情境：同上 | US$bn／年 | 10 | 檢查 |
 | `scenarios.capexTemplate.costMW` | 每 MW 建置成本（GPU＋網路＋機房內裝），各期 | US$m/MW 清單 | 50.12、50.26、50.26、50.26、50.26 | 檢查 |
 | `scenarios.capexTemplate.div` | JV 後續增資與策略投資，各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
 
@@ -443,6 +446,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.prepay.recogYears` | 預付在合約期內的認列年數：自下一期起依期初合約負債直線認列為營收（非現金） | 年 | 3 | 檢查 |
 | `defaults.prepay.openBalance` | 期初合約負債（季報遞延營收；列入滾動檢查） | US$bn | 5.9752 | 必改 |
 | `defaults.prepay.note` | 預付款區塊的說明（來源與口徑） | 文字 | 預付款（v0.1b）：預付流入＝成長型 CapEx … | 必改 |
+| `defaults.convIssue.coupon` | 瀑布新發可轉債的票息（v0.1b） | 比例 | 0.021 | 檢查 |
+| `defaults.convIssue.premium` | 瀑布新發可轉債的轉換溢價（轉換價＝發行參考價 ×（1＋此值）；只用於潛在股數揭露） | 比例 | 0.45 | 檢查 |
+| `defaults.convIssue.note` | 可轉債步驟的說明（來源與口徑） | 文字 | 融資瀑布的可轉債步驟（v0.1b）：資產擔保融資用罄… | 必改 |
 | `defaults.overlay` | 電力／維護成本另計（預設關；EBITDA 率已含電費，開啟會重複扣除） | 是／否 | 否 | 可沿用 |
 | `defaults.cdsLink` | CDS 利差是否傳入新債利率（預設關） | 是／否 | 否 | 可沿用 |
 | `defaults.cdsBaseBp` | CDS 傳入新債利率的門檻：超過此值的部分才傳入（5a） | bps | 450 | 檢查 |

@@ -14,6 +14,7 @@ function zM() {
       newLease: [...SCENARIOS[e].a.newLease]
     },
     mw31: SCENARIOS[e].mw31,
+    cvCap: SCENARIOS[e].cvCap,
     m: {
       ...t.m,
       accepted: [...SCENARIOS[e].acc],
@@ -96,7 +97,7 @@ function zM() {
           children: [e.scenario === `custom` ? `自訂情境` : SCENARIOS[e.scenario]?.label, `：${PERIODS[0]}–${PERIODS[PERIODS.length - 1].slice(2)} 融資前缺口 `, (0, $.jsxs)(`span`, {
             className: `font-medium text-accent-fg`,
             children: [mA(Math.max(0, -d.totals.preFinEnd)), `bn`]
-          }), `，加上新融資本身的利息 `, mA(d.years.reduce((e, t) => e + t.newDebtInt, 0)), `bn，由新債 `, mA(d.totals.newDebt), `bn、股權 `, mA(d.totals.equity), `bn（新股 `, Y(d.totals.newShares, 2), `bn 股）`, d.totals.junk > .05 ? `、高息債 ${mA(d.totals.junk)}bn` : ``, ` 補足。每 MW 年 EBITDA 約 `, (0, $.jsxs)(`span`, {
+          }), `，加上新融資本身的利息 `, mA(d.years.reduce((e, t) => e + t.newDebtInt, 0)), `bn，由新債 `, mA(d.totals.newDebt), `bn、可轉債 `, mA(d.totals.convNew), `bn、股權 `, mA(d.totals.equity), `bn（新股 `, Y(d.totals.newShares, 2), `bn 股）`, d.totals.junk > .05 ? `、高息債 ${mA(d.totals.junk)}bn` : ``, ` 補足。每 MW 年 EBITDA 約 `, (0, $.jsxs)(`span`, {
             className: `font-medium text-accent-fg`,
             children: [`$`, Y(d.m.revMW[4] * (e.revScale ?? 1) * 1e3 * d.m.util[4] / 100 * d.years[4].ebM, 1), `m`]
           }), `，回收一個 MW 的 GPU（$`, Y(e.a.costMW[4] * (e.capexScale ?? 1), 0), `m、`, e.gpuLife, ` 年、WACC `, hA(o.wacc * 100, 0), `）每年需要 `, (0, $.jsxs)(`span`, {
@@ -705,7 +706,7 @@ function zM() {
                         let t = 0,
                           n = 0,
                           r = 0;
-                        return d.years.map(e => (t += e.newDebt, n += e.equity, r += e.junk, {
+                        return d.years.map(e => (t += e.newDebt + e.convNew, n += e.equity, r += e.junk, {
                           name: e.year,
                           融資前累積現金: Number(e.preFinCum.toFixed(1)),
                           累計新債: Number(t.toFixed(1)),
@@ -822,7 +823,8 @@ function zM() {
                     [`Ⓔ 股權／可轉債（融資）`, d.years.map((e, t) => t === 0 ? e.fyEquity : e.atm), void 0, void 0, void 0, `${PERIODS[0]}＝年初至今股權 ${Y(ACTUAL_1H.equity, 3)}（ATM 淨額＋NVIDIA 預付認股權證）＋期後可轉債淨現金 ${Y(e.atm, 2)}。`],
                     [`Ⓕ 年初至今實際借款（融資）`, d.years.map((e, t) => t === 0 ? e.fyBorrow : 0), void 0, void 0, void 0, `季報：年初至今借款 ${Y(ACTUAL_1H.borrow, 3)}（2026-03 可轉債）。`],
                     [`Ⓖ 瀑布：新債（額度＋資產層）`, d.years.map(e => e.newDebt), void 0, void 0, void 0, `先用未動用額度，再用資產層新債；總債務不得超過 債務／backlog 上限。`],
-                    [`Ⓗ 瀑布：股權募資`, d.years.map(e => e.equity), void 0, void 0, void 0, `債務用罄後的殘差，按現價折價發行；每年不超過股權吸收上限。`],
+                    [`Ⓖ2 瀑布：可轉債`, d.years.map(e => e.convNew), void 0, void 0, void 0, `資產擔保融資用罄後、股權之前；每年上限 ${Y(e.cvCap ?? 0, 1)}bn（隨情境）、票息 ${hA(e.convIssue.coupon * 100, 1)}。`],
+                    [`Ⓗ 瀑布：股權募資`, d.years.map(e => e.equity), void 0, void 0, void 0, `債務與可轉債用罄後的殘差，按現價折價發行；每年不超過股權吸收上限。`],
                     [`Ⓘ 瀑布：高息債（股權上限溢出）`, d.years.map(e => e.junk), void 0, void 0, void 0, `股權超過每年吸收上限的部分，以高息債補足；不受 backlog 上限約束。`],
                     [`總來源（含融資）`, d.years.map((e, t) => t === 0 ? e.fySrcTotal : e.sources), void 0, void 0, `tot`],
                     [`用途（現金口徑）`, null],
@@ -841,6 +843,7 @@ function zM() {
                     [`期末總債務（既有＋可轉債＋新債）`, d.years.map(e => e.totalDebtEnd), void 0, void 0, `tot`],
                     [`每年股權吸收上限`, d.years.map(e => Number.isFinite(e.eqCap) ? e.eqCap : NaN), void 0, void 0, void 0, `＝現市值 × 上限 % × 期間長度。`],
                     [`新發行股數`, d.years.map(e => e.newShares), void 0, void 0, void 0, `＝股權募資 ÷ 發行價。`, `bn 股`, 3],
+                    [`可轉債（瀑布）餘額`, d.years.map(e => e.convEnd), void 0, void 0, void 0],
                     [`高息債餘額`, d.years.map(e => e.junkEnd), void 0, void 0, void 0],
                     [`融資前累積現金`, d.years.map(e => e.preFinCum), void 0, void 0, `tot`, `若不做任何新融資的累積現金；負值＝外部資金需求。`],
                     [`累計新股`, d.years.map(e => e.cumNewShares), void 0, void 0, `tot`, void 0, `bn 股`, 3],
@@ -1245,16 +1248,18 @@ function zM() {
                     [`期初現金`, d.years.map((t, n) => n === 0 ? e.cash : d.years[n - 1].cum), void 0, void 0, void 0, `FY26 為 2026-06-30 現金（模型期起點）。`],
                     [`營運收支淨額（含期後股權／可轉債，不含瀑布）`, d.years.map(e => e.preFinGap), void 0, void 0, void 0, `＝營運來源＋期後股權／可轉債 − 所有支出（含還本、不含新融資利息）。負值即當期外部資金需求。`],
                     [`＋ 瀑布：新債（額度＋資產層）`, d.years.map(e => e.newDebt)],
+                    [`＋ 瀑布：可轉債`, d.years.map(e => e.convNew)],
                     [`＋ 瀑布：高息債`, d.years.map(e => e.junk)],
                     [`＋ 瀑布：股權募資`, d.years.map(e => e.equity)],
-                    [`− 新融資利息（新債＋高息債）`, d.years.map(e => -e.newDebtInt)],
+                    [`− 新融資利息（新債＋可轉債＋高息債）`, d.years.map(e => -e.newDebtInt)],
                     [`期末現金`, d.years.map(e => e.cum), void 0, void 0, `tot`, `期前融資使期末現金不低於最低現金。`],
                     [`債務`, null],
                     [`既有債務期初（季報本金）`, d.years.map((t, n) => n === 0 ? (e.includeDebt ? DBT_P : DBT_P) : d.years[n - 1].existDebtEnd - CONV_P)],
                     [`− 排程還本`, d.years.map(e => -e.debtPay)],
-                    [`既有債務期末`, d.years.map(e => e.existDebtEnd - 3.7), void 0, void 0, `calc`],
+                    [`既有債務期末`, d.years.map(e => e.existDebtEnd - CONV_P), void 0, void 0, `calc`],
                     [`＋ 期後新發可轉債`, d.years.map(() => CONV_P)],
                     [`＋ 瀑布新債餘額`, d.years.map(e => e.newDebtEnd)],
+                    [`＋ 瀑布可轉債餘額`, d.years.map(e => e.convEnd)],
                     [`＋ 高息債餘額`, d.years.map(e => e.junkEnd)],
                     [`總債務`, d.years.map(e => e.totalDebtEnd), void 0, void 0, `tot`],
                     [`淨負債（總債務 − 期末現金）`, d.years.map(e => e.totalDebtEnd - e.cum), void 0, void 0, `tot`],

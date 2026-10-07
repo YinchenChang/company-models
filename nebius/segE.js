@@ -302,7 +302,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
       sc, label: SCENARIOS[sc].label,
       capex: dd.years.reduce((a, y) => a + y.gross, 0),
       gap: Math.max(0, -dd.totals.preFinEnd),
-      nd: dd.totals.newDebt, eq: dd.totals.equity, jk: dd.totals.junk,
+      nd: dd.totals.newDebt, cv: dd.totals.convNew, eq: dd.totals.equity, jk: dd.totals.junk,
       debt30: dd.years[4].totalDebtEnd,
       rev30: pp.fwd[4].fyRevenue, eb30: pp.fwd[4].fyEbitda,
       dcf: pp.d.invalid ? NaN : pp.d.perShareT, ev: pp.peAdj,
@@ -389,15 +389,15 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
   ]);
 
   // 4｜融資
-  let mx4 = Math.max(...y.map(t => t.newDebt + t.equity + t.junk), .1);
+  let mx4 = Math.max(...y.map(t => t.newDebt + t.convNew + t.equity + t.junk), .1);
   let nfi = y.reduce((a, t) => a + t.newDebtInt, 0);
-  S(`融資`, `融資前缺口 $${Y(-Math.min(0, T.preFinEnd), 1)}bn：新債 $${Y(T.newDebt, 1)}bn、股權 $${Y(T.equity, 1)}bn、高息債 $${Y(T.junk, 1)}bn`, [
+  S(`融資`, `融資前缺口 $${Y(-Math.min(0, T.preFinEnd), 1)}bn：新債 $${Y(T.newDebt, 1)}bn、可轉債 $${Y(T.convNew, 1)}bn、股權 $${Y(T.equity, 1)}bn、高息債 $${Y(T.junk, 1)}bn`, [
     elQ(`div`, { key: `c`, style: { display: `grid`, gridTemplateColumns: `repeat(5, 1fr)`, gap: 28, alignItems: `end`, height: 320, padding: `0 20px` } }, y.map(t => {
-      let tot = t.newDebt + t.equity + t.junk, H = 260;
+      let tot = t.newDebt + t.convNew + t.equity + t.junk, H = 260;
       return elQ(`div`, { key: t.year, style: { display: `flex`, flexDirection: `column`, alignItems: `center`, justifyContent: `flex-end`, height: `100%` } }, [
         elQ(`div`, { key: `v`, style: { fontSize: 18, fontWeight: 700, marginBottom: 6, fontVariantNumeric: `tabular-nums` } }, `$${Y(tot, 1)}`),
         elQ(`div`, { key: `s`, style: { width: 96, display: `flex`, flexDirection: `column-reverse` } }, [
-          [t.newDebt, `var(--color-accent)`], [t.equity, `var(--color-watch)`], [t.junk, `var(--color-bad)`]
+          [t.newDebt, `var(--color-accent)`], [t.convNew, `var(--color-ok)`], [t.equity, `var(--color-watch)`], [t.junk, `var(--color-bad)`]
         ].map(([x, c], i) => elQ(`div`, { key: i, style: { height: Math.max(0, x) / mx4 * H, background: c } }))),
         elQ(`div`, { key: `y`, style: { fontSize: 17, fontWeight: 600, marginTop: 10 } }, t.year),
         elQ(`div`, { key: `d`, style: { fontSize: 14, color: `var(--color-muted)`, marginTop: 2 } }, `總債務 $${Y(t.totalDebtEnd, 0)}bn`)
@@ -405,6 +405,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
     })),
     elQ(`div`, { key: `l`, style: { display: `flex`, gap: 26, fontSize: 15, marginTop: 36, paddingLeft: 20 } }, [
       [`新債（總債務 ≤ ${Y(e.debtBacklog, 1)}× backlog）`, `var(--color-accent)`],
+      [`可轉債（每年 ≤ ${Y(e.cvCap ?? 0, 1)}bn）`, `var(--color-ok)`],
       [`股權（$${Y(e.eqPx, 2)} 折價 ${hA(e.eqDisc * 100, 0)}，每年上限${e.eqCapPct >= 9 ? `：無` : `＝現市值 ${hA(e.eqCapPct * 100, 0)}`}）`, `var(--color-watch)`],
       [`高息債 ${hA(e.junkRate * 100, 0)}`, `var(--color-bad)`]
     ].map(([a, c]) => elQ(`span`, { key: a, style: { display: `inline-flex`, alignItems: `center`, gap: 8 } }, [
@@ -420,7 +421,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
     [`每 MW 年收入（US$m/MW-IT）`, s => Y(SCENARIOS[s.sc].rev[4] * 1e3, 2)],
     [`模型期毛 CapEx（$bn）`, s => Y(s.capex, 0)],
     [`融資前缺口（$bn）`, s => Y(s.gap, 1)],
-    [`新債／股權／高息債（$bn）`, s => `${Y(s.nd, 1)}／${Y(s.eq, 1)}／${Y(s.jk, 1)}`],
+    [`新債／可轉債／股權／高息債（$bn）`, s => `${Y(s.nd, 1)}／${Y(s.cv, 1)}／${Y(s.eq, 1)}／${Y(s.jk, 1)}`],
     [`FY30 總債務（$bn）`, s => Y(s.debt30, 1)],
     [`FY30 營收／EBITDA（$bn）`, s => `${Y(s.rev30, 1)}／${Y(s.eb30, 1)}`],
     [`DCF 腿／EV/EBITDA 腿（每股）`, s => `$${Y(s.dcf, 1)}／$${Y(s.ev, 1)}`],

@@ -4,7 +4,7 @@ const T=s=>Object.keys(CALQ.tokens).sort((a,b)=>b.length-a.length).reduce((x,k)=
 const SC=process.argv[2], AK=+(process.argv[3]||3), AKX=process.argv[3]!==undefined; // AK：EV/EBITDA 錨定年度（1＝FY27…4＝FY30）
 const X=JSON.parse(fs.readFileSync('xl17_'+({low:1,base:2,high:3}[SC])+(AKX?'_a'+AK:'')+'.json','utf8'));
 VAL_DEFAULTS.evYear=AK;
-const q=structuredClone(DEFAULTS); q.scenario=SC; q.a=structuredClone(SCENARIOS[SC].a); q.mw31=SCENARIOS[SC].mw31; q.m.accepted=[...SCENARIOS[SC].acc]; q.m.billable=[...SCENARIOS[SC].bil]; q.m.revMW=[...SCENARIOS[SC].rev];
+const q=structuredClone(DEFAULTS); q.scenario=SC; q.a=structuredClone(SCENARIOS[SC].a); q.mw31=SCENARIOS[SC].mw31; q.cvCap=SCENARIOS[SC].cvCap; q.m.accepted=[...SCENARIOS[SC].acc]; q.m.billable=[...SCENARIOS[SC].bil]; q.m.revMW=[...SCENARIOS[SC].rev];
 const d=runFunding(q), p=runValuation(d,q,VAL_DEFAULTS), y=d.years, f=p.fwd;
 const H=(k)=>y.map(e=>e[k]);
 const rows=[];
@@ -51,6 +51,7 @@ cmp('融資前現金', F+'融資前現金（扣既有新債利息）', H('preCas
 cmp('融資需求', F+'融資需求（補足至最低現金）', H('need'));
 cmp('期末backlog', F+'期末 backlog', H('backlogEnd'));
 cmp('新債舉借', F+'新債舉借', H('newDebt'));
+cmp('可轉債發行', F+'可轉債發行', H('convNew')); cmp('可轉債期末', F+'可轉債（瀑布）期末餘額', H('convEnd')); // v0.1b
 cmp('股權募資', F+'股權募資', H('equity'));
 cmp('高息債', F+'高息債舉借（溢出）', H('junk'));
 cmp('融資前累積現金', F+'融資前累積現金', H('preFinCum'));

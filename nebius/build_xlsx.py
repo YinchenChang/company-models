@@ -433,6 +433,14 @@ EQPX = gi(r, "股權發行價", "US$", D['eqPx'], f"預設＝現價（{CO['meta'
 EQDISC = gi(r, "股權發行折價", "%", D['eqDisc'], "大額增資的折讓 [Assumed]", PCT); r += 1
 EQCAP = gi(r, "每年股權吸收上限（占現市值）", "%", D['eqCapPct'], "沿用模板 20%；輸入 ≥900% 視為無上限 [Assumed]", PCT); r += 1
 EQSH = gi(r, "股權上限的股數基礎", "bn", D['eqCapShares'], "現市值＝發行參考價 × 此股數（company.json → defaults.eqCapShares）", '0.0000'); r += 1
+CVC = CO['defaults']['convIssue']  # v0.1b：瀑布可轉債步驟
+CVCAP = {}
+for _k, _nm in (("low", "保守"), ("base", "基準"), ("high", "積極")):
+    CVCAP[_k] = gi(r, f"可轉債年發行上限｜{CO['scenarios']['labels'][_k]}", "US$bn／年", CO['scenarios']['convCap'][_k],
+                   "瀑布可轉債步驟每年上限（company.json → scenarios.convCap）；保守 0＝不新發 [Assumed]"); r += 1
+CVCAP_SEL = gi(r, "可轉債年發行上限（目前情境）", "US$bn／年", f"=CHOOSE({SEL},{CVCAP['low']},{CVCAP['base']},{CVCAP['high']})", "＝依 A 區情境選擇器"); r += 1
+CVCPN = gi(r, "瀑布新發可轉債票息", "%", CVC['coupon'], "2026 年兩次發行四檔加權約 2.1% [Derived]", PCT); r += 1
+CVPRM = gi(r, "瀑布新發可轉債轉換溢價", "%", CVC['premium'], "2026 年發行溢價 40–57.5% 取 45%；只用於潛在股數揭露 [Derived]", PCT); r += 1
 JRATE = gi(r, "高息債利率（股權上限溢出）", "%", D['junkRate'], "沿用模板 12% [Assumed]", PCT); r += 1
 CDS = gi(r, "CDS 中價", "bps", D['cds'], f"{D['cdsDate']}", NUM0); r += 1
 CDSON = gi(r, "CDS 傳入新債利率（1=開）", "", int(D['cdsLink']), f"開啟：新債利率＋MAX(0,CDS−{_n(D['cdsBaseBp'])})×{_n(D['cdsPassThrough'])}/100。預設關閉", NUM0); r += 1
@@ -834,12 +842,14 @@ frow("Ⓕ «YTDL» 實際借款（融資）", "US$bn",
 borrow_row = FR["Ⓕ «YTDL» 實際借款（融資）"]
 frow("Ⓖ 瀑布：新債（額度＋資產層）", "US$bn", lambda i: "=0", NUM, BLACK, "見下方「期前融資瀑布」")
 fac_row = FR["Ⓖ 瀑布：新債（額度＋資產層）"]
-frow("Ⓗ 瀑布：股權募資", "US$bn", lambda i: "=0", NUM, BLACK, "債務用罄後的殘差；每年不超過股權吸收上限")
+frow("Ⓖ2 瀑布：可轉債", "US$bn", lambda i: "=0", NUM, BLACK, "資產擔保融資用罄後、股權之前；每年不超過可轉債上限（v0.1b）")
+cvr_row = FR["Ⓖ2 瀑布：可轉債"]
+frow("Ⓗ 瀑布：股權募資", "US$bn", lambda i: "=0", NUM, BLACK, "債務與可轉債用罄後的殘差；每年不超過股權吸收上限")
 eqr_row = FR["Ⓗ 瀑布：股權募資"]
 frow("Ⓘ 瀑布：高息債（股權上限溢出）", "US$bn", lambda i: "=0", NUM, BLACK, "股權超過每年上限的部分；不受 backlog 上限約束")
 jr_row = FR["Ⓘ 瀑布：高息債（股權上限溢出）"]
 frow("總來源（含融資）", "US$bn",
-     lambda i: f"={COLS[i]}{srcop_row}+{COLS[i]}{atm_row}+{COLS[i]}{borrow_row}+{COLS[i]}{fac_row}+{COLS[i]}{eqr_row}+{COLS[i]}{jr_row}",
+     lambda i: f"={COLS[i]}{srcop_row}+{COLS[i]}{atm_row}+{COLS[i]}{borrow_row}+{COLS[i]}{fac_row}+{COLS[i]}{cvr_row}+{COLS[i]}{eqr_row}+{COLS[i]}{jr_row}",
      NUM, BLACK, bold=True)
 src_row = FR["總來源（含融資）"]
 
@@ -881,12 +891,16 @@ frow("新債利率 × 期間長度", "%",
 rl_row = FR["新債利率 × 期間長度"]
 frow("高息債期初餘額", "US$bn", lambda i: "=0", NUM, BLACK)
 jn_beg = FR["高息債期初餘額"]
+frow("可轉債（瀑布）期初餘額", "US$bn", lambda i: "=0", NUM, BLACK)
+cn_beg = FR["可轉債（瀑布）期初餘額"]
+frow("可轉債票息 × 期間長度", "%", lambda i: f"={CVCPN}*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}", '0.00%', BLACK)
+rc_row = FR["可轉債票息 × 期間長度"]
 frow("高息債利率 × 期間長度", "%",
      lambda i: f"=({JRATE}+IF({CDSON}=1,MAX(0,{CDS}-{CDSB})/10000*{CDSP},0))*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}", '0.00%', BLACK)
 rj_row = FR["高息債利率 × 期間長度"]
 frow("融資前現金（扣既有新債利息）", "US$bn",
      lambda i: (f"={COLS[i]}{beg_cash}+{COLS[i]}{srcop_row}+{COLS[i]}{atm_row}+{COLS[i]}{borrow_row}+{COLS[i]}{plug_row}"
-                f"-{COLS[i]}{wu_row}-{COLS[i]}{rl_row}*{COLS[i]}{dn_beg}-{COLS[i]}{rj_row}*{COLS[i]}{jn_beg}"), NUM, BLACK)
+                f"-{COLS[i]}{wu_row}-{COLS[i]}{rl_row}*{COLS[i]}{dn_beg}-{COLS[i]}{rj_row}*{COLS[i]}{jn_beg}-{COLS[i]}{rc_row}*{COLS[i]}{cn_beg}"), NUM, BLACK)
 pre_row = FR["融資前現金（扣既有新債利息）"]
 frow("融資需求（補足至最低現金）", "US$bn", lambda i: f"=MAX(0,{MINC}-{COLS[i]}{pre_row})", NUM, BLACK, bold=True)
 need_row = FR["融資需求（補足至最低現金）"]
@@ -912,8 +926,8 @@ cap_row = FR["債務上限（債務／backlog × 期末 backlog）"]
 frow("未動用額度（期初）", "US$bn", lambda i: (f"=IF({FACON}=1,{FAC},0)" if i == 0 else "=0"), NUM, BLACK)
 fr_beg = FR["未動用額度（期初）"]
 frow("新債可借上限", "US$bn",
-     lambda i: f"=MAX(0,{COLS[i]}{cap_row}-({COLS[i]}{ex_row}+{COLS[i]}{dn_beg}),{COLS[i]}{fr_beg})", NUM, BLACK,
-     "＝MAX(上限 − 既有債務 − 期初新債, 未動用額度)")
+     lambda i: f"=MAX(0,{COLS[i]}{cap_row}-({COLS[i]}{ex_row}+{COLS[i]}{dn_beg}+{COLS[i]}{cn_beg}),{COLS[i]}{fr_beg})", NUM, BLACK,
+     "＝MAX(上限 − 既有債務 − 期初新債 − 期初瀑布可轉債, 未動用額度)")
 capd_row = FR["新債可借上限"]
 frow("新債舉借", "US$bn",
      lambda i: f"=MIN({COLS[i]}{capd_row},{COLS[i]}{need_row}/(1-{COLS[i]}{rl_row}))", NUM, BLACK,
@@ -922,16 +936,25 @@ nd_row = FR["新債舉借"]
 frow("債務後剩餘需求", "US$bn",
      lambda i: f"=MAX(0,{COLS[i]}{need_row}+{COLS[i]}{rl_row}*{COLS[i]}{nd_row}-{COLS[i]}{nd_row})", NUM, BLACK)
 rem_row = FR["債務後剩餘需求"]
+frow("可轉債可發行上限", "US$bn", lambda i: f"=MAX(0,{CVCAP_SEL})*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}", NUM, BLACK,
+     "＝每年上限（隨情境）× 期間長度")
+cvcap_row = FR["可轉債可發行上限"]
+frow("可轉債發行", "US$bn", lambda i: f"=MIN({COLS[i]}{cvcap_row},{COLS[i]}{rem_row}/(1-{COLS[i]}{rc_row}))", NUM, BLACK,
+     "期前融資：期初到位、當期全額計息", bold=True)
+cv_row = FR["可轉債發行"]
+frow("可轉債後剩餘需求", "US$bn", lambda i: f"=MAX(0,{COLS[i]}{rem_row}+{COLS[i]}{rc_row}*{COLS[i]}{cv_row}-{COLS[i]}{cv_row})", NUM, BLACK)
+rem2_row = FR["可轉債後剩餘需求"]
 frow("每年股權吸收上限", "US$bn",
      lambda i: f"=IF({EQCAP}>=9,1E+99,{EQCAP}*{EQPX}*{EQSH}*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']})", NUM, BLACK,
      f"＝現市值（發行參考價 × {_n(D['eqCapShares'])}bn 股）× 上限 % × 期間長度")
 eqc_row = FR["每年股權吸收上限"]
-frow("股權募資", "US$bn", lambda i: f"=MIN({COLS[i]}{rem_row},{COLS[i]}{eqc_row})", NUM, BLACK, bold=True)
+frow("股權募資", "US$bn", lambda i: f"=MIN({COLS[i]}{rem2_row},{COLS[i]}{eqc_row})", NUM, BLACK, bold=True)
 eq_row = FR["股權募資"]
-frow("高息債舉借（溢出）", "US$bn", lambda i: f"=({COLS[i]}{rem_row}-{COLS[i]}{eq_row})/(1-{COLS[i]}{rj_row})", NUM, BLACK, bold=True)
+frow("高息債舉借（溢出）", "US$bn", lambda i: f"=({COLS[i]}{rem2_row}-{COLS[i]}{eq_row})/(1-{COLS[i]}{rj_row})", NUM, BLACK, bold=True)
 jd_row = FR["高息債舉借（溢出）"]
 frow("新債＋高息債利息（期初餘額＋本期舉借）", "US$bn",
-     lambda i: f"={COLS[i]}{rl_row}*({COLS[i]}{dn_beg}+{COLS[i]}{nd_row})+{COLS[i]}{rj_row}*({COLS[i]}{jn_beg}+{COLS[i]}{jd_row})", NUM, BLACK)
+     lambda i: f"={COLS[i]}{rl_row}*({COLS[i]}{dn_beg}+{COLS[i]}{nd_row})+{COLS[i]}{rj_row}*({COLS[i]}{jn_beg}+{COLS[i]}{jd_row})+{COLS[i]}{rc_row}*({COLS[i]}{cn_beg}+{COLS[i]}{cv_row})", NUM, BLACK,
+     "含瀑布可轉債票息（v0.1b）")
 ni_row = FR["新債＋高息債利息（期初餘額＋本期舉借）"]
 frow("發行價（現價×(1−折價)）", "US$", lambda i: f"={EQPX}*(1-{EQDISC})", USD, BLACK)
 px_row = FR["發行價（現價×(1−折價)）"]
@@ -947,7 +970,9 @@ frow("未動用額度（期末）", "US$bn", lambda i: f"={COLS[i]}{fr_beg}-MIN(
 fr_end = FR["未動用額度（期末）"]
 frow("高息債期末餘額", "US$bn", lambda i: f"={COLS[i]}{jn_beg}+{COLS[i]}{jd_row}", NUM, BLACK)
 jn_end = FR["高息債期末餘額"]
-frow("期末總債務（既有＋可轉債＋新債＋高息債）", "US$bn", lambda i: f"={COLS[i]}{ex_row}+{COLS[i]}{dn_end}+{COLS[i]}{jn_end}", NUM, BLACK, bold=True)
+frow("可轉債（瀑布）期末餘額", "US$bn", lambda i: f"={COLS[i]}{cn_beg}+{COLS[i]}{cv_row}", NUM, BLACK)
+cn_end = FR["可轉債（瀑布）期末餘額"]
+frow("期末總債務（既有＋可轉債＋新債＋高息債）", "US$bn", lambda i: f"={COLS[i]}{ex_row}+{COLS[i]}{dn_end}+{COLS[i]}{cn_end}+{COLS[i]}{jn_end}", NUM, BLACK, bold=True)
 td_row = FR["期末總債務（既有＋可轉債＋新債＋高息債）"]
 frow("融資前累積現金", "US$bn",
      lambda i: (f"={COLS[i]}{beg_cash}+{COLS[i]}{srcop_row}+{COLS[i]}{atm_row}+{COLS[i]}{borrow_row}+{COLS[i]}{plug_row}-{COLS[i]}{wu_row}" if i == 0
@@ -959,10 +984,12 @@ for i in range(1, 5):
 for i in range(1, 5):
     ws.cell(row=dn_beg, column=3 + i, value=f"={COLS[i-1]}{dn_end}")
     ws.cell(row=jn_beg, column=3 + i, value=f"={COLS[i-1]}{jn_end}")
+    ws.cell(row=cn_beg, column=3 + i, value=f"={COLS[i-1]}{cn_end}")
     ws.cell(row=fr_beg, column=3 + i, value=f"={COLS[i-1]}{fr_end}")
 for i in range(5):
     ws.cell(row=newint_row, column=3 + i, value=f"={COLS[i]}{ni_row}")
     ws.cell(row=fac_row, column=3 + i, value=f"={COLS[i]}{nd_row}")
+    ws.cell(row=cvr_row, column=3 + i, value=f"={COLS[i]}{cv_row}")
     ws.cell(row=eqr_row, column=3 + i, value=f"={COLS[i]}{eq_row}")
     ws.cell(row=jr_row, column=3 + i, value=f"={COLS[i]}{jd_row}")
 
@@ -986,8 +1013,8 @@ b3c = r; r += 1
 ws.cell(row=r, column=1, value="＋ «YTD» 其他／受限現金調節").font = BLACK
 ws.cell(row=r, column=3, value=f"=SUM(C{plug_row}:G{plug_row})").number_format = NUM
 b3d = r; r += 1
-ws.cell(row=r, column=1, value="＋ 瀑布新債＋股權＋高息債合計").font = BLACK
-ws.cell(row=r, column=3, value=f"=SUM(C{fac_row}:G{fac_row})+SUM(C{eqr_row}:G{eqr_row})+SUM(C{jr_row}:G{jr_row})").number_format = NUM
+ws.cell(row=r, column=1, value="＋ 瀑布新債＋可轉債＋股權＋高息債合計").font = BLACK
+ws.cell(row=r, column=3, value=f"=SUM(C{fac_row}:G{fac_row})+SUM(C{cvr_row}:G{cvr_row})+SUM(C{eqr_row}:G{eqr_row})+SUM(C{jr_row}:G{jr_row})").number_format = NUM
 b4 = r; r += 1
 ws.cell(row=r, column=1, value="− 排程還本合計").font = BLACK
 ws.cell(row=r, column=3, value=f"=-SUM(C{debt_row}:G{debt_row})").number_format = NUM
@@ -1820,10 +1847,11 @@ brow("營運收支淨額（含期後股權／可轉債，不含瀑布）", "US$b
      lambda i: (f"={F_}{COLS[i]}{pfc_row}-{CASH0}" if i == 0 else f"={F_}{COLS[i]}{pfc_row}-{F_}{COLS[i-1]}{pfc_row}"), NUM,
      "＝融資前累積現金的當期變動；負值即當期外部資金需求")
 brow("＋ 瀑布：新債（額度＋資產層）", "US$bn", lambda i: f"={F_}{COLS[i]}{nd_row}")
+brow("＋ 瀑布：可轉債", "US$bn", lambda i: f"={F_}{COLS[i]}{cv_row}")
 brow("＋ 瀑布：高息債", "US$bn", lambda i: f"={F_}{COLS[i]}{jd_row}")
 brow("＋ 瀑布：股權募資", "US$bn", lambda i: f"={F_}{COLS[i]}{eq_row}")
-brow("− 新融資利息（新債＋高息債）", "US$bn", lambda i: f"=-{F_}{COLS[i]}{ni_row}")
-brow("期末現金", "US$bn", lambda i: f"=SUM({COLS[i]}{BR['期初現金']}:{COLS[i]}{BR['− 新融資利息（新債＋高息債）']})", NUM,
+brow("− 新融資利息（新債＋可轉債＋高息債）", "US$bn", lambda i: f"=-{F_}{COLS[i]}{ni_row}")
+brow("期末現金", "US$bn", lambda i: f"=SUM({COLS[i]}{BR['期初現金']}:{COLS[i]}{BR['− 新融資利息（新債＋可轉債＋高息債）']})", NUM,
      "應等於『各期收支』期末累積現金（見下列驗算）", bold=True)
 brow("　驗算：與各期收支期末現金差異", "US$bn", lambda i: f"={COLS[i]}{BR['期末現金']}-{F_}{COLS[i]}{cum_row}", NUM, "應為 0")
 r = section(ws, r, "債務")
@@ -1834,6 +1862,7 @@ for i in range(1, 5):
     ws.cell(row=BR["既有債務期初（季報本金）"], column=3 + i, value=f"={COLS[i-1]}{BR['既有債務期末']}")
 brow("＋ 期後新發可轉債", "US$bn", lambda i: f"={_n(CONV_PR)}")
 brow("＋ 瀑布新債餘額", "US$bn", lambda i: f"={F_}{COLS[i]}{dn_end}")
+brow("＋ 瀑布可轉債餘額", "US$bn", lambda i: f"={F_}{COLS[i]}{cn_end}")
 brow("＋ 高息債餘額", "US$bn", lambda i: f"={F_}{COLS[i]}{jn_end}")
 brow("總債務", "US$bn", lambda i: f"=SUM({COLS[i]}{BR['既有債務期末']}:{COLS[i]}{BR['＋ 高息債餘額']})", NUM, "應等於『各期收支』期末總債務", bold=True)
 brow("淨負債（總債務 − 期末現金）", "US$bn", lambda i: f"={COLS[i]}{BR['總債務']}-{COLS[i]}{BR['期末現金']}", NUM, None, bold=True)
