@@ -143,6 +143,7 @@ cmp('加權目標價', V+'加權目標價', [p.call.blended]);
   cmp('隱含 模型上緣',SM+'隱含｜模型方法區間上緣',[cv.mHi]);
   cmp('摘要 點位',SM+'結論｜點位（加權目標價）',[R.pt]); cmp('摘要 空間',SM+'結論｜空間',[cv.up]); cmp('摘要 點位−門檻',SM+'結論｜點位 − 賣出門檻',[cv.gapTh]);
   cmpT('文字 摘要評等',SM+'結論｜評等',p.call.call); cmpT('文字 摘要結論句',SM+'結論｜結論句',cv.head); cmpT('文字 摘要情境判斷句',SM+'結論｜情境判斷句',R.judge);
+  { const pl=pmLineQ(d,q); if(pl) cmpT('文字 摘要每 MW 句',SM+'結論｜每 MW 經濟性句',pl); else if(X[SM+'結論｜每 MW 經濟性句']) rows.push(['XX ','文字 摘要每 MW 句','HTML 無此句（舊方法或無 fleet）、Excel 有此列','']); } // W3
   cmpT('文字 共識判斷句',SM+'差異｜判斷句',cv.judge); cmpT('文字 隱含倍數句',SM+'隱含｜隱含倍數句',cv.implied);
   // v4.4：年度差異原因（類型＋原因逐字；Excel 每個設定組合一列，未超過門檻時為空白）與原因摘要句
   cmpT('文字 差異原因摘要',SM+'差異｜差異原因摘要',cv.rsnSum);

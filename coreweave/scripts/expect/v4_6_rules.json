@@ -1,0 +1,38 @@
+{
+ "title": "v4.6（W3：每 MW 改接 Tokenomics）對 v4.5 成品的預期差異清單",
+ "downstream": {
+  "摘要": "目標價、共識差距與差異原因隨 CapEx、EBITDA 改變",
+  "各期收支": "CapEx、EBITDA、融資瀑布；bottomUp 下電力／維護 overlay 停用（公式改 0）",
+  "季度追蹤": "年度模型拆季",
+  "損益": "EBITDA、D&A、利息、淨利",
+  "評價_DCF與目標價": "DCF 與 EV/EBITDA 兩條腿、加權目標價、區間",
+  "評價_反向DCF": "反向 DCF 求解值與矩陣（建置成本基準改為 Tokenomics）",
+  "資產負債_新債與新股": "融資需求改變 → 新債、新股、淨負債",
+  "運營_產能與收入": "EBITDA 率改由下而上 → 現金利潤率、RPO 現金",
+  "檢查_連動": "關鍵輸出快照與連動檢查"
+ },
+ "inputRows": {
+  "輸入與假設": {
+   "起始 EBITDA 率": "說明文字：bottomUp 下不使用（保留舊方法對照）",
+   "穩態 EBITDA 率": "穩態 EBITDA 率預設＝由下而上 FY30（公式）",
+   "EBITDA 率": "EBITDA 率改由下而上（每MW經濟性頁）",
+   "GPU 經濟壽命": "折舊年限改引用 IF_DeprLifeIT（加權取整，值仍 6 年）",
+   "每 MW 建置成本": "每 MW 建置成本改為 Σ 新增世代占比 × IF_CapexIT",
+   "全年毛 CapEx": "下游：每 MW 建置成本",
+   "成長型 CapEx": "下游：每 MW 建置成本",
+   "GPU 汰換 CapEx": "下游：每 MW 建置成本",
+   "期初毛 PP&E": "下游：成長型 CapEx",
+   "毛 CapEx": "下游：每 MW 建置成本",
+   "D&A（車隊折舊）": "下游：期初毛 PP&E 與成長型 CapEx",
+   "情境區間運算表": "三情境加權目標價（模擬運算表）",
+   "非算力服務現金": "下游：服務營收 × EBITDAR 率（EBITDA 率改由下而上）"
+  }
+ },
+ "peerSheets": [
+  "評價_可比公司"
+ ],
+ "peerRowKey": [
+  "CoreWeave",
+  "CRWV"
+ ]
+}

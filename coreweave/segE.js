@@ -108,7 +108,7 @@ function TagQ({ t }) {
 }
 
 // v4.3：一頁摘要（總結頁第 1 頁）的內容：2 × 2 四塊。所有數字依目前輸入與共識資料檔動態產生
-function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
+function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone, pmLine }) {
   let C = CONSENSUS, PT = C.priceTarget, RA = C.ratings, AE = C.annualEstimates, QE = C.quarterlyEstimates,
     box = (k, title, kids) => elQ(`div`, { key: k, style: { background: `var(--color-surface)`, borderRadius: 10, padding: `8px 14px`, minHeight: 0, overflow: `hidden`, display: `flex`, flexDirection: `column` } }, [
       elQ(`div`, { key: `h`, style: { fontSize: 14.5, fontWeight: 700, color: `var(--color-accent)`, marginBottom: 4 } }, title), ...kids]),
@@ -130,7 +130,8 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
       elQ(`div`, { key: `a`, style: { fontSize: 12, color: `var(--color-muted)` } }, a),
       elQ(`div`, { key: `b`, style: { fontSize: 18, fontWeight: 700, fontVariantNumeric: `tabular-nums` } }, b)]))),
     elQ(`p`, { key: `h`, style: { fontSize: 13.5, lineHeight: 1.45, margin: `6px 0 0` } }, cv.head),
-    elQ(`p`, { key: `j`, style: { ...sm, fontSize: 11.5, margin: `3px 0 0` } }, TR.judge)
+    elQ(`p`, { key: `j`, style: { ...sm, fontSize: 11.5, margin: `3px 0 0` } }, TR.judge),
+    pmLine ? elQ(`p`, { key: `m`, style: { ...sm, fontSize: 11.5, margin: `3px 0 0` } }, pmLine) : null
   ]);
   let b2 = box(`b2`, `2｜與市場的差異（模型：${scLabel} vs 共識）`, [
     elQ(`table`, { key: `t`, style: { borderCollapse: `collapse`, width: `100%`, fontSize: 12, fontVariantNumeric: `tabular-nums` } }, [
@@ -293,7 +294,7 @@ function PerMwTabQ({ d, st, o }) {
       tip: `資本支出：${M.capex[PMWQ.capex]}；營運成本：${M.cost[PMWQ.cost]}；收入：${M.revenue[PMWQ.revenue]}。Tokenomics ${tkv.version || ``}（commit ${(tkv.commit || ``).slice(0, 7)}），主值取基準成本情境。` }),
     TK_MISSQ.length ? elQ(`p`, { key: `w`, className: `text-sm`, style: { color: `#9f1239` } }, `Tokenomics 名稱缺漏 ${TK_MISSQ.length} 項（${TK_MISSQ.join(`、`)}），相關成本為暫代值（待 Tokenomics v5.26）。`) : null,
     elQ(`p`, { key: `k`, className: `text-sm leading-relaxed` }, `${PERIODS[F]} 每 MW：年收入 $${Y(g(`每 MW 年收入（算力＋服務）`)[F], 1)}m − 現金成本（含租金）$${Y(g(`現金成本合計（含租金）`)[F], 1)}m ＝ EBITDA $${Y(g(`EBITDA`)[F], 1)}m；扣 D&A $${Y(g(`D&A（模型車隊折舊）`)[F], 1)}m 與利息 $${Y(g(`利息`)[F], 1)}m 後稅前 ${mA(g(`稅前`)[F], 1)}m。`),
-    elQ(`div`, { key: `t` }, tbl(S)),
+    elQ(accQ, { key: `t`, title: `每 MW 經濟性彙總表（${PERIODS[0]}–${PERIODS[F]}；IT 與設施口徑）`, sum: `${S.length} 列` }, tbl(S)), // W3：彙總表放次層（預設收合）
     elQ(accQ, { key: `a1`, title: `世代組合與在役結構（MW）`, sum: GENQ.map(x => x.split(` `)[0]).join(`／`) }, tbl(P.fleet)),
     elQ(accQ, { key: `a2`, title: `由下而上營運成本（租金前）`, sum: PMWQ.cost === `bottomUp` ? `模型採用` : `對照` }, tbl(P.bu)),
     elQ(accQ, { key: `a3`, title: `每 MW 收入對照（隱含 GPU 小時價格、持有成本、同業與市場價格）`, sum: PMWQ.revenue === `gpuHr` ? `GPU 小時價格` : `備案 legacy` }, tbl(P.rev)),
@@ -372,7 +373,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
   let S = (kicker, title, body, tsize) => slides.push({ kicker: slides.length ? `附錄｜${kicker}` : kicker, title, body, tsize });
 
   // 0｜一頁摘要（v4.3）：結論、與市場的差異、現價隱含什麼、驗證點；原 9 頁順延為附錄
-  S(`一頁摘要`, `${f.call.call}：點位 $${Y(TR.pt, 1)}（情境區間 $${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}）；${cv.first < 0 ? `與市場共識差距在 ${pctQ(CONS_TOL)} 以內` : `與市場共識的分歧始於 ${CONS_YEARS[cv.first]}`}`, onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }), 28);
+  S(`一頁摘要`, `${f.call.call}：點位 $${Y(TR.pt, 1)}（情境區間 $${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}）；${cv.first < 0 ? `與市場共識差距在 ${pctQ(CONS_TOL)} 以內` : `與市場共識的分歧始於 ${CONS_YEARS[cv.first]}`}`, onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone, pmLine: pmLineQ(d, e) }), 28);
 
   // 1｜結論
   S(`結論`, `${TR.head}，較現價 $${Y(P, 2)} ${up >= 0 ? `高` : `低`} ${hA(Math.abs(up) * 100, 0)}：${f.call.call}`, [

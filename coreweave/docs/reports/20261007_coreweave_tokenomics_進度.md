@@ -1,8 +1,8 @@
 # CoreWeave × Tokenomics 改造進度（接手用；W1–W3 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：W0、W1（PR #6，待審）；W2（PR #9，待審）；**W3 第 0、0′ 步**（PR #18：Tokenomics 快照 v5.26，暫代值改正式值；新方法 verify 22 項、舊方法 25 項全過）。W2 原紀錄：**W2 全部完成**（PR #9，疊加於 W1 分支）：每 MW 資本支出（Tokenomics）、由下而上營運成本、收入備案（legacy）＋對照列、世代組合、每MW經濟性彙總表、敏感度快照；新方法 `verify.sh` 22 項全過；舊方法 `scripts/verify_legacy.sh`（--vs-dist）25 項全過、與 v4.5 成品 0 差異。
-- 下一步：W3 第 1 步升版 v4.6（vlog.py、tail.js VLOG、dist/、交接檔「Tokenomics 連結」、README），第 2 步 `--vs-dist --expect`。
+- 已完成：W0、W1（PR #6，待審）；W2（PR #9，待審）；**W3 第 0、0′、1、2、3、6 步**（PR #18：Tokenomics 快照 v5.26、v4.6 成品、升版驗收、變動拆解、畫面一句）。W2 原紀錄：**W2 全部完成**（PR #9，疊加於 W1 分支）：每 MW 資本支出（Tokenomics）、由下而上營運成本、收入備案（legacy）＋對照列、世代組合、每MW經濟性彙總表、敏感度快照；新方法 `verify.sh` 22 項全過；舊方法 `scripts/verify_legacy.sh`（--vs-dist）25 項全過、與 v4.5 成品 0 差異。
+- 下一步：W3 第 4、5 步（前後對照 Excel 與 md）、第 7 步整體 verify 與 PR 回報。
 - 未解問題：(1) ~~Tokenomics v5.26 暫代值~~（W3 第 0′ 步已解決）；(2) GB200／GB300／VR200 長約 GPU 小時價格不足兩個獨立來源 → 收入採備案 legacy；(3) CoreWeave「active power」口徑定義未找到（預設 IT）；(4) 由下而上 EBITDA 率 70–74% 高於 Q2 實際 58.6%（收入每 MW 10.0 vs 8.2、租金每 MW 1.6 vs 2.1；人員軟體與稅險暫代 0），需 Andy 決定是否進 v4.6。
 
 ## 工作單總覽
@@ -357,8 +357,12 @@ chat 端追加（優先於工作單，2026-10-07）：第 0 步把 Tokenomics �
 
 | 步驟 | 狀態 | commit | 備註 |
 |---|---|---|---|
-| 0 開分支、draft PR #18、進度檔 W3 段落 | 完成 | 7d0fd1b | W0 #5、W1 #6、W2 #9 皆未合併：自 `origin/claude/coreweave-w2-permw` 9af51ca 開分支，PR base＝W2 分支 |
-| 0′ Tokenomics 快照換 v5.26（chat 端追加） | 完成 | （本 commit） | 唯讀副本 `git fetch origin master` → `4074684`；`import_tokenomics.py` 重抓 `data/tokenomics_snapshot_v5.26.json`（25 名、missing 0），刪 v5.24 快照；名稱清單移除 optional；company.json `tokenomics`（v5.26、commit 4074684、optional 空）；`fields_doc.py --write`。原 15 名數值與儲存格位置與 v5.24 完全相同。檢查頁「名稱缺漏」警告消失。新方法 `verify.sh` 22 項全過；舊方法 `verify_legacy.sh` 25 項全過（與 v4.5 成品 0 差異） |
+| 0 開分支、draft PR #18、進度檔 W3 段落 | 完成 | df61c82 | W0 #5、W1 #6、W2 #9 皆未合併：自 `origin/claude/coreweave-w2-permw` 9af51ca 開分支，PR base＝W2 分支 |
+| 0′ Tokenomics 快照換 v5.26（chat 端追加） | 完成 | b32828a | 唯讀副本 `git fetch origin master` → `4074684`；`import_tokenomics.py` 重抓 `data/tokenomics_snapshot_v5.26.json`（25 名、missing 0），刪 v5.24 快照；名稱清單移除 optional；company.json `tokenomics`（v5.26、commit 4074684、optional 空）；`fields_doc.py --write`。原 15 名數值與儲存格位置與 v5.24 完全相同。檢查頁「名稱缺漏」警告消失。新方法 `verify.sh` 22 項全過；舊方法 `verify_legacy.sh` 25 項全過（與 v4.5 成品 0 差異） |
+| 1 升版 v4.6 | 完成 | （本 commit） | `vlog.py`、`tail.js` VLOG 新增 v4.6（10-08；含 (a)–(d) 拆解）；`dist/20261008_CoreWeave收支模型_v4_6.{html,xlsx}`，移除 v4.5；交接檔換成 `docs/handoff/20261008_CoreWeave收支模型_交接檔_v4_6.md`（新增 2i v4.6、2j Tokenomics 連結：快照版本、引用名稱、升版步驟）；README v4.6 段落與工具表 |
+| 2 升版驗收 | 完成 | （本 commit） | `DATE=2026-10-08 EXPECT=scripts/expect/v4_6_vs_v4_5.txt scripts/verify.sh --vs-dist`（對 v4.5 成品）25 項全過：預期差異 687 格＋5 列改名（`scripts/make_expect.py` 依 `scripts/expect/v4_6_rules.json` 產生，未歸類 0），其餘 0 差異；畫面文字為升版預期差異（無頁面錯誤、無缺頁）。舊方法組合 `verify_legacy.sh` 對 v4.5 成品 25 項全過、0 差異（副本 dist/ 改取 git 歷史的 v4.5 成品） |
+| 3 目標價變動拆解 | 完成 | （本 commit） | `scripts/attrib_permw.py`：三情境 (a)(b)(c)＝0，(d) ① 每 MW 資本支出／② 折舊年限／③ 營運成本／④ 收入／⑤ MW 口徑依序與單獨切換；各步相加＝總變動（誤差 < 0.01）；結果 `out/w3/attrib_permw.json` → 對照 Excel「變動拆解」 |
+| 6 HTML／Excel 成品畫面 | 完成 | （本 commit） | 一頁摘要「結論」加一句每 MW（HTML `pmLineQ`＝Excel「摘要」→「結論｜每 MW 經濟性句」，cmp31 逐字比對；舊方法不顯示）；「每 MW 經濟性」分頁彙總表放次層（預設收合）。新方法 `verify.sh` 22 項全過（cmp31 三情境各 427 項、FY27 錨定 406 項） |
 
 ### W3 第 0′ 步：v5.26 正式值取代 W2 暫代值（基準情境）
 

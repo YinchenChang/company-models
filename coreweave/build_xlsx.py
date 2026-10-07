@@ -2973,6 +2973,10 @@ srow("結論｜結論句", "", [(f'=C{_s("評等")}&"：點位 $"&TEXT(C{_s("點
                          f'&"；點位"&IF(C{_s("點位 − 賣出門檻")}<0,"低於","高於")&"賣出門檻 $"&TEXT(C{_s("賣出門檻價")},"0.0")&" 達 $"&TEXT(ABS(C{_s("點位 − 賣出門檻")}),"0.0")&"。"')],
      bold=True)
 srow("結論｜情境判斷句", "", [f"={VQ}C{TRROW['目標價區間｜判斷句']}"])
+# W3（v4.6）：每 MW 一句（首個完整財年；與 HTML 一頁摘要 pmLineQ 同一句）。只在每 MW 使用新方法時建列；公式在「每MW經濟性」頁建好後回填
+_PMW_ON = PMW['capex'] != 'legacy' or PMW['cost'] != 'ebitdaPct' or PMW['revenue'] != 'legacy'
+if FL and _PMW_ON:
+    srow("結論｜每 MW 經濟性句", "", [None], NUM, "首個完整財年、目前情境；數字取自『每MW經濟性』彙總表與每 MW 收入對照（持有成本＝Tokenomics IF_HoldEcon 世代加權）")
 
 r += 1
 r = section(ws, r, "2｜與市場的差異（模型：目前情境 vs 共識；FY26–FY28）")
@@ -3288,6 +3292,13 @@ if FL:
         if note: ws.cell(row=rr, column=9, value=note).font = SMALL
         PM[nm] = rr
     ws.cell(row=sum0 + len(SUMROWS), column=1, value="讀法：每 MW 收入 − 現金成本（含租金）＝EBITDA；再扣 D&A 與利息＝稅前。W3 前後對照報告直接讀本表。").font = SMALL
+    if "結論｜每 MW 經濟性句" in SM:  # W3：回填一頁摘要的每 MW 句（欄 D＝首個完整財年）
+        _X = lambda k: f"'每MW經濟性'!D{PM[k]}"
+        wb["摘要"].cell(row=SM["結論｜每 MW 經濟性句"], column=3, value=(
+            f'="每 MW（{PERIODS[1]}）：年收入 $"&TEXT({_X("每 MW 年收入（算力＋服務）")},"0.0")&"m、現金成本 $"&TEXT({_X("現金成本合計（含租金）")},"0.0")'
+            f'&"m（含租金 $"&TEXT({_X("租金")},"0.0")&"m）、EBITDA $"&TEXT({_X("EBITDA")},"0.0")&"m；計費單價為 Tokenomics 經濟持有成本（含廠房資本回收的打平線）$"'
+            f'&TEXT({_X("每 MW 經濟持有成本（不賠錢下限）")},"0.0")&"m 的 "&TEXT({_X("每 MW 年收入 ÷ 經濟持有成本")},"0.00")&" 倍"'
+            f'&IF({_X("每 MW 年收入 ÷ 經濟持有成本")}<1,"，未回收全部持有成本","")&"。"'))
     # C 區 EBITDA 率：由下而上（穩態輸入預設＝由下而上 FY30，差額線性分攤）
     if PMW['cost'] == 'bottomUp':
         _wi = wb["輸入與假設"]
