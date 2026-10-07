@@ -778,6 +778,7 @@ def build_map(data=None, write_registry=False) -> Recorder:
     R.split("other.ads.exposureShare、demandGrowthExPrice、fleetMix、arpu、tokenMix、listPriceAnnualChange", "出處皆無年度觀測值（Assumed／Analogy 全期）→不拆", "Inputs", scanned_only=True)
     R.split("api.demandGrowthExPrice.tasks（2026）", "2026 為校準年（v0.4 把 53%→134% 使 FY2026 對上獨立推估 32.9）：值由校準得出，屬 Assumed、無觀測元素→不拆；校準目標 32.9 為 Derived（公式）", "Inputs", scanned_only=True)
     p2_rows(R)
+    p3_rows(R)
     # 殘餘：補上未登記的中介資料葉節點（tag/src/chk/_note…）隨最近的已登記兄弟
     for p in list(R.leaves):
         if p in R.dest:
@@ -836,6 +837,26 @@ def p2_rows(R: Recorder):
         I("r5/E6/P2 定義常數", name, unit=unit, vlit=val, tag="Decision", decision="E6", status="P2 新增（E6）",
           note=f"來源：定義常數；區間不適用（低＝高）；E6：公式內不得含常數，故進 Inputs。用途：{why}", meta=False)
         R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = val, val
+
+
+def p3_rows(R: Recorder):
+    """v0.6-P3（S3）新增 Inputs：V1 Blackwell 拆分（r6 P3-2）、V2 η 路徑（S3 預設）、E6 定義常數。不改 v0.5 葉節點的去處。"""
+    I = R.inp
+    for idx, val, why in (("2025", 0, "r6 P3-2：2025 GB200 100%"), ("2026 起", 0.5, "r6 P3-2：2026 起 GB200 50%／GB300 50%")):
+        I("r6/P3-2/Blackwell 拆分", "GB300 占 Blackwell 比例", index=idx, unit="比例", vlit=val, tag="Assumed", decision="V1",
+          status="P3 新增（V1、r6 P3-2）", note=f"{why}；區間 GB300 占 Blackwell 0–80%（Assumed，r6 P3-2）。GB200＝Blackwell×(1−本列)", meta=False)
+        R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 0, 0.8
+    for name, unit, val, lo, hi, why in (
+        ("η 逐年路徑開關（0＝沿用 2025 η；1＝線性回升至目標）", "開關", 0, 0, 1,
+         "S3 工作單預設：基準沿用 2025 的 η（0）；情境 1＝自 2025 線性回升至目標年的目標值（r6 P3-3 待判斷事項，Andy 2026-10-07 授權依預設）"),
+        ("η 回升情境：目標值", "倍", 1, 1, 1, "S3 工作單預設：回升到 1（模型產能完全兌現）"),
+        ("η 回升情境：目標年", "年", 2030, 2030, 2030, "S3 工作單預設：2030 年"),
+    ):
+        I("r6/P3-3/η 路徑", name, unit=unit, vlit=val, tag="Decision", decision="V2", status="P3 新增（V2）", note=why, meta=False)
+        R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = lo, hi
+    I("r5/E6/P3 定義常數", "線性爬升付款：等差級數和 n(n+1)/2 的除數（定義常數）", unit="—", vlit=2, tag="Decision", decision="E6",
+      status="P3 新增（E6）", note="來源：定義常數；區間不適用（低＝高）；E6：公式內不得含常數。用途：N4(b) 期間內線性爬升的付款權重（年序 ÷ Σ年序）", meta=False)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 2, 2
 
 
 def coverage_report(R: Recorder):

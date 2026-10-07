@@ -1,12 +1,12 @@
 # Parity 情境檔（CLAUDE.md 第 3 節）。每個情境：改寫輸入 → LibreOffice 重算（基準）→ 與 engine 比對全部公式格。
 # 輸入一律以具名範圍設定（SRC_OAI_nnn、INP_nnn、TK_*）。v0.6-P1 只有檢查頁有公式；v0.6-P2 起 Demand、Revenue 頁的公式也由情境驅動（h 起為 P2 情境）。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
-  sheets: [README, SRC_OAI, TK_Link, Inputs, Derived_V9, Demand, Revenue, Checks, Map_v05, _Defaults]
-  formula_cells: 1260             # P2：652 → 1260（Demand、Revenue 兩頁＋SRC_OAI／Inputs 新列的檢查欄＋Checks 淨增 11）
-  defined_names: 516              # S1：426；P2：＋16 SRC_OAI＋10 INP＋64 DEM_／REV_
+  sheets: [README, SRC_OAI, TK_Link, Inputs, Derived_V9, Demand, Revenue, Compute, Checks, Map_v05, _Defaults]
+  formula_cells: 1989             # P2：652 → 1260；P3：→ 1989（Compute 頁、Revenue 第八節、Inputs 新列檢查欄、Checks C40–C66）
+  defined_names: 562              # S1：426；P2：＋16 SRC_OAI＋10 INP＋64 DEM_／REV_；P3：＋6 INP＋35 CMP_＋5 REV_
   src_rows: 122                   # SRC_OAI 筆數（與報告一致）；P2：106＋16（價格事件數值與公告日）
   src_named: 120                  # 有數值的列才有 SRC_OAI_nnn 名稱（Business 每席只有低／高；退役 ID 不重用）
-  inp_rows: 243                   # P2：233＋10（E8c 事件時點偏移 4、E6 定義常數 6）
+  inp_rows: 249                   # P2：233＋10（E8c 事件時點偏移 4、E6 定義常數 6）；P3：＋6（INP_256–261）
   tk_values: 62                   # TK_Link 有值的名稱（TK_IF_／TK_SRC_／TK_L1_ 具名範圍；S1 v5.24 快照：37＋25）
   tk_pending: 0                   # 待 Tokenomics 提供（S1：v5.24 已全部提供）
   v05_leaves: 849
@@ -61,3 +61,27 @@ scenarios:
   - id: o_pro_arpu
     description: P2：Pro 2026 起 ARPU 150→190（區間上緣）：Pro 訂閱營收與總額連動
     inputs: {"INP_100": 190}
+  - id: p_lease_low
+    description: P3：每 GW 年合約價 12→8（區間下緣）：2025 支出換算 GW 上升、η 下降、有效推論 GW 上升；未揭露 GW 合約的供給上升
+    inputs: {"INP_229": 8}
+  - id: q_eta_recover
+    description: P3：η 路徑開關 0→1（線性回升至 2030＝1）：2026 起 η 上升、有效推論 GW 下降、研發 GW 上升
+    inputs: {"INP_258": 1}
+  - id: r_gb300_high
+    description: P3：GB300 占 Blackwell（2026 起）0.5→0.8（區間上緣）：2026 起每 GW 年產能上升、推論 GW 下降
+    inputs: {"INP_257": 0.8}
+  - id: s_custom_low
+    description: P3：自研產能係數 0.6→0.4（區間下緣）：2026 起產能下降、VR 等值係數下降
+    inputs: {"INP_204": 0.4}
+  - id: t_cap_binds
+    description: P3：訓練最低占比 0.3→0.9（壓力情境）：推論可用 GW 低於有效推論 GW，2026 起截頂係數 <1、截頂後營收下降、旗標 1（無 ERR）
+    inputs: {"INP_233": 0.9}
+  - id: u_fleet_broken
+    description: P3：Hopper 2025 占比 0.6→0.7，使自研／其他＝−0.1（C40 應轉 ERR）
+    inputs: {"INP_205": 0.7}
+  - id: v_gw_end2025
+    description: P3：SRC 2025 年底算力 1.9→2.5：年均 GW、三角對照隱含每 GW 支出與 2025 總需求差距改變（只列差距，不影響基準）
+    inputs: {"SRC_OAI_090": 2.5}
+  - id: w_even_profile
+    description: P3：未揭露時程合約的攤提方式 ramp→even：未揭露 GW 合約改為期間內平均、揭露 GW 合約改為期間內固定
+    inputs: {"INP_181": "even"}
