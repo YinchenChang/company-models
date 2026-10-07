@@ -130,7 +130,8 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
       elQ(`div`, { key: `a`, style: { fontSize: 12, color: `var(--color-muted)` } }, a),
       elQ(`div`, { key: `b`, style: { fontSize: 18, fontWeight: 700, fontVariantNumeric: `tabular-nums` } }, b)]))),
     elQ(`p`, { key: `h`, style: { fontSize: 13.5, lineHeight: 1.45, margin: `6px 0 0` } }, cv.head),
-    elQ(`p`, { key: `j`, style: { ...sm, fontSize: 11.5, margin: `3px 0 0` } }, TR.judge)
+    elQ(`p`, { key: `j`, style: { ...sm, fontSize: 11.5, margin: `3px 0 0` } }, TR.judge),
+    cv.igLine ? elQ(`p`, { key: `ig`, style: { fontSize: 12.5, fontWeight: 600, margin: `3px 0 0` } }, cv.igLine) : null
   ]);
   let b2 = box(`b2`, `2｜與市場的差異（模型：${scLabel} vs 共識）`, [
     elQ(`table`, { key: `t`, style: { borderCollapse: `collapse`, width: `100%`, fontSize: 12, fontVariantNumeric: `tabular-nums` } }, [
@@ -145,7 +146,7 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
   let b3 = box(`b3`, `3｜現價隱含什麼`, [
     elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 8 } }, [
       [`共識平均目標價隱含`, `${Y(cv.impTgt, 1)}x`, `$${Y(PT.mean, 2)}，股數 ${Y(o.shares, 3)}bn`],
-      [`現價隱含`, `${Y(cv.impPx, 1)}x`, `$${Y(o.price, 2)}；同一共識 FY28 數字`],
+      [`現價隱含`, `${Y(cv.impPx, 1)}x`, `$${Y(o.price, 2)}；同一共識 ${CONS_YEARS[2]} 數字`],
       [`模型方法區間上緣`, `${multTxt(cv.mHi)}x`, `錨定 ${PERIOD_LABELS[o.evYear ?? 1]}、折回 ${CALQ.targetText}`]
     ].map(([a, b, c]) => elQ(`div`, { key: a, style: { background: `var(--color-card)`, borderRadius: 8, padding: `6px 10px` } }, [
       elQ(`div`, { key: `a`, style: { fontSize: 12, color: `var(--color-muted)` } }, a),
@@ -155,7 +156,7 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
     elQ(`p`, { key: `r`, style: { fontSize: 12.5, lineHeight: 1.4, margin: `4px 0 0` } }, rvOk
       ? `反向 DCF（DCF＝現價，其他不變）：FY30 每 MW 年收入需 $${Y(rv.rev30 * rv.R, 1)}m（${rv.R >= 1 ? `+` : `−`}${hA(Math.abs(rv.R - 1) * 100, 0)}），或建置成本 $${Y(rv.cost30 * rv.C, 1)}m（${rv.C >= 1 ? `+` : `−`}${hA(Math.abs(rv.C - 1) * 100, 0)}），或穩態 EBITDA 率 ${Number.isFinite(rv.Eb) ? hA(rv.Eb * 100, 0) : `無解`}${Number.isFinite(rv.Rt) ? `；加權目標價＝現價需每 MW 年收入 ${rv.Rt >= 1 ? `+` : `−`}${hA(Math.abs(rv.Rt - 1) * 100, 0)}` : ``}。`
       : `反向 DCF：計算中或無解。`),
-    elQ(`p`, { key: `n`, style: { ...sm, margin: `3px 0 0`, fontSize: 11 } }, `隱含倍數＝（價格 × 股數＋共識 FY28 淨負債）÷ 共識 FY28 調整後 EBITDA。`)
+    elQ(`p`, { key: `n`, style: { ...sm, margin: `3px 0 0`, fontSize: 11 } }, `隱含倍數＝（價格 × 股數＋共識 ${CONS_YEARS[2]} 淨負債）÷ 共識 ${CONS_YEARS[2]} 調整後 EBITDA。`)
   ]);
   let RL = [[`強力買進`, RA.strongBuy], [`買進`, RA.buy], [`持有`, RA.hold], [`賣出`, RA.sell], [`強力賣出`, RA.strongSell]];
   let b4 = box(`b4`, `4｜驗證點與市場看法`, [

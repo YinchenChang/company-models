@@ -212,7 +212,7 @@ function blendCall(e) {
     shares0: S0,
     dcfInvalid: DI
   } = e, WD = DI ? 0 : BLEND_W.dcf, WE = 1 - WD, s = (DI ? 0 : WD * n) + WE * i, c = s / Math.max(t, .01) - 1, u = a <= .01, B = a > RATE_TH.equityRaiseMaxMult * M, d = [];
-  u ? d.push(`融資狀態：五期缺口可全由債務（額度＋資產層新債，受 債務／backlog 上限約束）支應，不需新股。`) : d.push(`融資狀態：五期需股權募資 ${a.toFixed(0)}bn（約現市值 ${(a/Math.max(M,1)).toFixed(1)} 倍），新發行 ${q.toFixed(2)}bn 股，原股東最終持股約 ${(S0/(S0+q)*100).toFixed(0)}%。股權在需要前一期募足（期前融資），不再以缺口本金扣減估值。`), B && d.push(`股權募資超過現市值 ${multTxt(RATE_TH.equityRaiseMaxMult)} 倍：市場吸收能力存疑，禁止買進。`), o > RATE_TH.tvShareWarn && d.push(`終值占企業價值過高，DCF 對 WACC／永續成長／維持性 CapEx 比率極敏感。`);
+  u ? d.push(`融資狀態：五期缺口可全由債務（受債務上限約束）支應，不需新股。`) : d.push(`融資狀態：五期需股權募資 ${a.toFixed(0)}bn（約現市值 ${(a/Math.max(M,1)).toFixed(1)} 倍），新發行 ${q.toFixed(2)}bn 股，原股東最終持股約 ${(S0/(S0+q)*100).toFixed(0)}%。股權在需要前一期募足（期前融資），不再以缺口本金扣減估值。`), B && d.push(`股權募資超過現市值 ${multTxt(RATE_TH.equityRaiseMaxMult)} 倍：市場吸收能力存疑，禁止買進。`), o > RATE_TH.tvShareWarn && d.push(`終值占企業價值過高，DCF 對 WACC／永續成長／維持性 CapEx 比率極敏感。`);
   let f = rateCall(c, o, B);
   DI && d.unshift(`DCF 失效，已排除於目標價（權重改為 EV/EBITDA 100%）。`);
   return {
@@ -433,7 +433,7 @@ function EM(e, t, n) {
     ok: !0,
     severity: `ok`,
     title: `舉債與股權的分工（期前融資瀑布）`,
-    detail: `新債受 債務／backlog 上限約束，超出部分改以股權按現價折價募集：股權沒有利息、也不增加淨負債，但增加股數；新債的利息與本金都進入現金流與淨負債，兩者不重複計費。`
+    detail: `新債受債務上限約束，超出部分改以股權按現價折價募集：股權沒有利息、也不增加淨負債，但增加股數；新債的利息與本金都進入現金流與淨負債，兩者不重複計費。`
   }]
 }
 
@@ -484,8 +484,10 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
         ctx = { m: r.m, c: r.c, gap: r.gap, y: { mwNew: y[i].mwNew, accepted: d.m.accepted[i], costMW: st ? st.a.costMW[i] : NaN }, in: st || {} };
       return { yr: r.yr, key: k, name: n, gap: r.gap[k], gtxt: annGapTxtQ(r, k), type: c ? c.type : `未歸類`, text: c ? fillTokQ(c.text, ctx) : `差異原因待補` }
     })),
-    rsnSum = reasonSumQ(rsn, `原因見「損益與評價 → 市場共識」。`);
-  return { rows, ex, first, judge, impTgt, impPx, mHi, implied, head, up, gapTh, rsn, rsnSum }
+    rsnSum = reasonSumQ(rsn, `原因見「損益與評價 → 市場共識」。`),
+    jk = d.years.reduce((a, t) => a + t.junk, 0), S0 = st || DEFAULTS, // v0.1b（Oracle）：高息債溢出＝需失去投資級才能融資的金額（一頁摘要一句）
+    igLine = S0.debtCapBasis === `ebitda` ? `需失去投資級才能融資的金額：${jk > .05 ? `$${Y(jk, 1)}bn（五期高息債溢出）` : `$0`}；投資級上限＝總債務 ≤ ${multTxt(S0.debtEbitdaMax)}× 當期 EBITDA，股權每年 ≤ 現市值 ${pctQ(S0.eqCapPct)}。` : ``;
+  return { rows, ex, first, judge, impTgt, impPx, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, junk: jk }
 }
 
 // v4.4：差異原因的共用工具（年度共識對照與季度層共用）。類型固定為四種（已決定事項 2）；原因文字中的 {路徑:格式} 由模型數字帶入。

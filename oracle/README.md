@@ -164,7 +164,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles、defaults.otherEbitda[0]、valuation.holdings、valuation.debtLike、defaults.legacyBiz） | 必改 |
+| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles、defaults.otherEbitda[0]、valuation.holdings、valuation.debtLike、defaults.legacyBiz、defaults.dividend.preferred[0]） | 必改 |
 
 ### `ytdActual`：年初至今實際數（10-Q；v4.5 前為 actual1H）
 
@@ -174,7 +174,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `ytdActual.months` | 年初至今的月數，須等於日曆推算值（v4.5） | 月 | 3 | 必改 |
 | `ytdActual.label` | 「年初至今實際數」的標題 | 文字 | 1Q27 實際（10-Q） | 必改 |
 | `ytdActual.jvSplit` | JV 出資與策略投資的拆分（v4.5；說明文字與「JV 已付」讀此） | 物件（US$bn） | 物件（jv、strategic） | 必改 |
-| `ytdActual.notes` | 各欄位的逐列說明（來源、口徑、拆分；Excel「輸入與假設」G 區；v4.5 起隨資料一起更新） | 物件（文字） | 物件（cash1231、cfo、cashCapex、capex、jv、borrow、debtRepaid、cappedCall、equity、interest、leasePaid、revenue、opInc、ni、prepay、da、sbc、eps、ngEps） | 必改 |
+| `ytdActual.notes` | 各欄位的逐列說明（來源、口徑、拆分；Excel「輸入與假設」G 區；v4.5 起隨資料一起更新） | 物件（文字） | 物件（cash1231、cfo、cashCapex、capex、jv、borrow、debtRepaid、cappedCall、equity、interest、leasePaid、revenue、opInc、ni、prepay、da、sbc、eps、ngEps、dividends） | 必改 |
 | `ytdActual.cash1231` | 上一年底現金 | US$bn | 31.289 | 必改 |
 | `ytdActual.revenue` | 上半年營收 | US$bn | 19.345 | 必改 |
 | `ytdActual.capex` | 上半年資本支出（認列口徑，含設備商融資） | US$bn | 28.499 | 必改 |
@@ -194,6 +194,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `ytdActual.ni` | 上半年淨損益 | US$bn | 4.76 | 必改 |
 | `ytdActual.eps` | 上半年 GAAP 每股盈餘 | US$ | 1.56 | 必改 |
 | `ytdActual.ngEps` | 上半年每股盈餘（加回股份基礎薪酬） | US$ | 1.96 | 必改 |
+| `ytdActual.dividends` | 年初至今股利支付（普通股＋特別股；融資活動；v0.1b） | US$bn | 1.565 | 必改 |
 | `ytdActual.adjEbitda` | 上半年調整後 EBITDA（v4.3；只用於與市場共識比較 FY26，不進模型損益與評價） | US$bn | 11.307 | 必改 |
 | `ytdActual.adjEbitdaMeta` | 上述數字的 Q1／Q2 拆分、來源、標記與備註（建置時檢查 Q1＋Q2＝合計） | 物件 | 物件（q1、tag、sources、crossCheck、note、usage） | 必改 |
 
@@ -439,13 +440,19 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.legacyBiz.ebitdaMargin` | 傳統事業 EBITDA 率，各期（Oracle v0.1b） | 比例清單 | 0.5426、0.5426、0.5426、0.5426、0.5426 | 檢查 |
 | `defaults.legacyBiz.note` | 傳統事業輸入的來源與推導說明 | 文字 | 傳統事業（OCI 以外四線）：fyBase＝FY20… | 必改 |
 | `defaults.cashTaxRate` | 類現金流量的現金稅率：稅 ＝ 稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（v0.1b；虧損或 NOL 公司填 0） | 比例 | 0.151 | 檢查 |
+| `defaults.debtCapBasis` | 瀑布新債的上限基準：ebitda＝總債務 ≤ 倍數 × 當期 EBITDA（年化；投資級上限）；backlog＝模板的債務／backlog（Oracle v0.1b） | 代碼 | ebitda | 檢查 |
+| `defaults.debtEbitdaMax` | 投資級上限：總債務 ÷ 當期 EBITDA 的上限倍數（debtCapBasis＝ebitda 時使用） | 倍 | 4 | 檢查 |
+| `defaults.dividend.perShareQ` | 普通股每股每季股利（Oracle v0.1b；不發股利的公司刪除 dividend 區段） | US$ | 0.5 | 必改 |
+| `defaults.dividend.sharesBase` | 股利的基礎股數（最新流通股；另加前期累計瀑布新股與已強制轉換特別股） | bn 股 | 3.02374 | 必改 |
+| `defaults.dividend.preferred` | 特別股股利，各期 | US$bn 清單 | 0.244、0.325、0.244、0、0 | 必改 |
+| `defaults.dividend.note` | 股利的來源與推導說明 | 文字 | 普通股股利＝每股每季 $0.50 × 4 × 期間長… | 必改 |
 | `defaults.otherEbitdaNote` | 其他事業 EBITDA 的推導與來源說明 | 文字 | 不適用（Oracle 無需另列的非核心事業燒錢；傳統… | 必改 |
 | `defaults.debtBacklog` | 新債上限：總債務不超過 backlog 的倍數 | 倍 | 0.5 | 檢查 |
 | `defaults.ctrTerm` | 新簽合約的平均年期（決定 backlog 補入量） | 年 | 3 | 檢查 |
 | `defaults.minCash` | 最低現金：每期融資後期末現金不低於此值 | US$bn | 10 | 檢查 |
 | `defaults.eqPx` | 新股發行參考價（預設＝現價） | US$ | 144.77 | 必改 |
 | `defaults.eqDisc` | 新股發行折價 | 比例 | 0.1 | 檢查 |
-| `defaults.eqCapPct` | 每年股權募資上限（占現市值）；輸入 9 以上視為無上限 | 比例 | 0.2 | 檢查 |
+| `defaults.eqCapPct` | 每年股權募資上限（占現市值）；輸入 9 以上視為無上限 | 比例 | 0.05 | 檢查 |
 | `defaults.eqCapShares` | 股權年上限的股數基礎：現市值＝發行參考價 × 此股數（5a；評價日時點，列入滾動檢查） | bn | 3.02374 | 必改 |
 | `defaults.junkRate` | 股權上限用完後的高息債利率 | 比例 | 0.12 | 檢查 |
 | `defaults.ppeOpen` | 最新季末固定資產毛額 | US$bn | 75.74 | 必改 |
@@ -481,7 +488,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.cdsLo` | CDS 近期區間下緣 | bps | None | 必改 |
 | `defaults.cdsHi` | CDS 近期區間上緣 | bps | None | 必改 |
 | `defaults.cdsDate` | CDS 報價日期與來源標記 | 文字 | 不適用（ORCL CDS 無可引用的一手報價） | 必改 |
-| `defaults.useFacility` | 融資時是否先動用未動用信用額度 | 是／否 | 是 | 可沿用 |
+| `defaults.useFacility` | 融資時是否先動用未動用信用額度 | 是／否 | 否 | 可沿用 |
 | `defaults.facility` | 未動用信用額度 | US$bn | 10 | 必改 |
 | `defaults.m.accepted` | 已驗收 MW 的預設路徑（實際依所選情境覆寫） | MW 清單 | 4668、7501、8778、8778、8778 | 檢查 |
 | `defaults.m.billable` | 可計費 MW 的預設路徑（實際依情境與爬坡比例覆寫） | MW 清單 | 3183、6340、7716、8070、8070 | 檢查 |

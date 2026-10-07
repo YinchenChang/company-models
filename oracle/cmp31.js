@@ -32,7 +32,7 @@ cmp('營收−MW×單價×利用率', S+'核對：算力收入 − 平均在役 
 cmp('每MW年收入', '輸入|每 MW 年收入', d.m.revMW);
 cmp('傳統事業營收', '輸入|傳統事業營收（模型期）', H('legacyRev')); cmp('傳統事業EBITDA', '輸入|傳統事業 EBITDA（模型期）', H('legacyEbitda')); // v0.1b（Oracle）
 d.lg.lines.forEach(x=>{ cmp('傳統 '+x.key+' 全年', `輸入|傳統事業｜${x.label}｜全年營收`, x.annual); cmp('傳統 '+x.key+' 模型期', `輸入|傳統事業｜${x.label}｜模型期營收`, x.rev); });
-cmp('現金稅', F+T('⑦ 現金稅（«STUB» 起）'), H('cashTax')); cmp('來源 傳統EBITDA', F+T('Ⓒ3 傳統事業 EBITDA（«STUB» 起）'), H('legacyEbitda'));
+cmp('現金稅', F+T('⑦ 現金稅（«STUB» 起）'), H('cashTax')); cmp('股利', F+'⑧ 股利（普通股＋特別股）', y.map((e,i)=>i===0?e.fyDividend:e.dividend)); cmp('債務上限', F+'債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）', H('debtCap')); // v0.1b cmp('來源 傳統EBITDA', F+T('Ⓒ3 傳統事業 EBITDA（«STUB» 起）'), H('legacyEbitda'));
 cmp('36個月營收對照', S+'對照：評價日起 36 個月 MW 驅動營收', H('oci36')); cmp('RPO36 差額', '連動檢查|對照：RPO 36 個月內轉換 − 模型 36 個月 MW 驅動營收', [LATEST_Q.rpo*COMPANY_DATA.rpo.within36m-d.totals.oci36]); // v0.1b
 cmp('期初可計費MW', '輸入|«VMD» Billable MW'.replace('«VMD»',CALQ.valuationMD), [q.billableOpen]); // v0.1b：以實際營收校準
 cmp('信用損失', S+'信用損失（期初 RPO 部分）', H('loss'));
@@ -160,7 +160,7 @@ cmp('加權目標價', V+'加權目標價', [p.call.blended]);
   cmp('隱含 模型上緣',SM+'隱含｜模型方法區間上緣',[cv.mHi]);
   cmp('摘要 點位',SM+'結論｜點位（加權目標價）',[R.pt]); cmp('摘要 空間',SM+'結論｜空間',[cv.up]); cmp('摘要 點位−門檻',SM+'結論｜點位 − 賣出門檻',[cv.gapTh]);
   cmpT('文字 摘要評等',SM+'結論｜評等',p.call.call); cmpT('文字 摘要結論句',SM+'結論｜結論句',cv.head); cmpT('文字 摘要情境判斷句',SM+'結論｜情境判斷句',R.judge);
-  cmpT('文字 共識判斷句',SM+'差異｜判斷句',cv.judge); cmpT('文字 隱含倍數句',SM+'隱含｜隱含倍數句',cv.implied);
+  cmpT('文字 共識判斷句',SM+'差異｜判斷句',cv.judge); cmpT('文字 投資級句',SM+'結論｜投資級句',cv.igLine); cmpT('文字 隱含倍數句',SM+'隱含｜隱含倍數句',cv.implied);
   // v4.4：年度差異原因（類型＋原因逐字；Excel 每個設定組合一列，未超過門檻時為空白）與原因摘要句
   cmpT('文字 差異原因摘要',SM+'差異｜差異原因摘要',cv.rsnSum);
   for(const k of Object.keys(X).filter(k=>k.startsWith(SM+'差異原因｜'))){ const [,yr,nm]=k.split('｜'), h=cv.rsn.find(x=>x.yr===yr&&x.name===nm), x=X[k];

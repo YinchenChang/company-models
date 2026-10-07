@@ -51,9 +51,9 @@ var PERIODS = COMPANY_DATA.periods,
   CONV_I = CONV_P * COMPANY_DATA.debt.convertible.coupon,
   // v0.1b：可轉債逐檔（company.json → debt.convertibles：[名稱, 原始本金, 票息, 到期 YYYY-MM, 到期累積倍數, 轉換價, 備註]）
   // M＝到期本金（原始 × 累積）、S＝若轉換股數（原始 ÷ 轉換價）、x＝有效轉換價（轉換價 × 累積）、t＝到期所屬模型期（0–4；5＝模型期後）
-  CVN = COMPANY_DATA.debt.convertibles.map(c => ({ name: c[0], P: c[1], c: c[2], mat: c[3], acc: c[4], k: c[5], M: c[1] * c[4], S: c[1] / c[5], x: c[5] * c[4],
+  CVN = COMPANY_DATA.debt.convertibles.map(c => ({ name: c[0], P: c[1], c: c[2], mat: c[3], acc: c[4], k: c[5], M: c[1] * c[4], S: c[1] / c[5], x: c[5] * c[4], mand: c[7] === true, // v0.1b（Oracle）：第 8 格＝強制轉換（一律轉股）
     t: (i => i < 0 ? 5 : i)(CALQ.periodEnd.findIndex(d => d.slice(0, 7) >= c[3])) })),
-  cvConvQ = px => CVN.map(n => n.x < px), // 價內（有效轉換價 < 判斷價）＝若轉換法
+  cvConvQ = px => CVN.map(n => n.mand || n.x < px), // 價內（有效轉換價 < 判斷價）或強制轉換＝若轉換法
   cvFlowQ = (cv, inc, r, L) => CVN.reduce((a, n, i) => cv[i] ? a : { // 債務處理者的還本、期末餘額與票息
     amort: a.amort + (inc && n.t === r ? n.M : 0),
     end: a.end + (inc ? (n.t > r ? n.M : 0) : n.M),
@@ -325,8 +325,11 @@ function runFunding(e) {
         k = r === 0 && e.includeAtm ? e.atm : 0,
         lgR = LG.rev[r], lgE = LG.ebitda[r], // v0.1b（Oracle）：傳統事業營收與 EBITDA（EBITDA 視為現金，稅另列）
         tx = (e.cashTaxRate ?? 0) * Math.max(0, totRev * ebM + ob + lgE - DAF[r] - IX[r]), // v0.1b：現金稅＝稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（不含瀑布新債利息，避免循環；偏保守）
+        dvSh = e.dividend ? e.dividend.sharesBase + WF.sh + CVN.reduce((a, n) => a + (n.mand && n.t < r ? n.S : 0), 0) : 0, // v0.1b（Oracle）：股利股數＝期初股數（基礎＋前期累計瀑布新股＋已強制轉換的特別股）
+        dvC = e.dividend ? 4 * e.dividend.perShareQ * L * dvSh : 0, // 普通股股利＝每股（每季 × 4）× 期間長度 × 期初股數
+        dvP = e.dividend ? e.dividend.preferred[r] : 0, // 特別股股利（強制轉換前；company.json → defaults.dividend.preferred）
         A = g + nC + svcCash + ob + lgE + v - pr, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
-        j0 = _ + S + IX[r] + e.jvCommit[r] + e.a.div[r] + T + O + tx,
+        j0 = _ + S + IX[r] + e.jvCommit[r] + e.a.div[r] + T + O + tx + dvC + dvP,
         wRL = uA(e, r) / 100 * L,
         wRJ = (e.junkRate + (e.cdsLink ? Math.max(0, e.cds - e.cdsBaseBp) / 1e4 * e.cdsPassThrough : 0)) * L,
         wRC = e.convIssue.coupon * L, // v0.1b：瀑布可轉債票息 × 期間長度
@@ -335,7 +338,8 @@ function runFunding(e) {
         wX = Math.max(0, e.minCash - wPre),
         wB = WF.B - o - nR + e.ctrTerm * Math.max(0, nR / L - WF.pnr),
         wEx = (e.includeDebt ? PB[r][1] : DBT_P) + CONV_P + CVP[r].end, // 5a：評價日後新發可轉債本金讀 company.json → debt.convertible；v0.1b：加債務處理可轉債餘額
-        wCap = e.debtBacklog * wB - (wEx + WF.Dn + WF.Cn),
+        wCapB = e.debtCapBasis === `ebitda` ? e.debtEbitdaMax * (totRev * ebM + ob + lgE) / L : e.debtBacklog * wB, // v0.1b（Oracle）：債務上限＝倍數 × 當期 EBITDA（年化）；模板＝債務／backlog
+        wCap = wCapB - (wEx + WF.Dn + WF.Cn),
         wCapD = Math.max(0, wCap, WF.fr),
         wD = Math.min(wCapD, wX / (1 - wRL)),
         wRem = Math.max(0, wX + wRL * wD - wD),
@@ -386,7 +390,11 @@ function runFunding(e) {
         facBeg: wFr0,
         facEnd: WF.fr,
         backlogEnd: wB,
-        debtCap: e.debtBacklog * wB,
+        debtCap: wCapB,
+        dividend: dvC + dvP,
+        divCommon: dvC,
+        divPref: dvP,
+        divShares: dvSh,
         existDebtEnd: wEx,
         totalDebtEnd: wEx + WF.Dn + WF.Cn + WF.Jn,
         preCash: wPre,
@@ -458,10 +466,10 @@ function runFunding(e) {
         sourcesOp: A
       }
     }),
-    hOp = ACTUAL_1H.cfo - ACTUAL_1H.cashCapex - ACTUAL_1H.jv,
+    hOp = ACTUAL_1H.cfo - ACTUAL_1H.cashCapex - ACTUAL_1H.jv - (ACTUAL_1H.dividends || 0), // v0.1b：年初至今股利與模型期一樣列在營運缺口
     hFin = ACTUAL_1H.borrow - ACTUAL_1H.cappedCall + ACTUAL_1H.equity,
     hPlug = e.cash - (ACTUAL_1H.cash1231 + hOp + hFin - ACTUAL_1H.debtRepaid),
-    _fy = (o[0].fyRevenue = ACTUAL_1H.revenue + o[0].isRev + o[0].legacyRev, o[0].fyGross = ACTUAL_1H.capex + o[0].gross, o[0].fyCashCapex = ACTUAL_1H.cashCapex + o[0].cashCapex, o[0].fyLease = ACTUAL_1H.leasePaid + o[0].lease, o[0].fyInterest = ACTUAL_1H.interest + o[0].interest, o[0].fyDebtPay = ACTUAL_1H.debtRepaid + o[0].debtPay, o[0].fyDiv = ACTUAL_1H.jv + o[0].div, o[0].fyAtm = ACTUAL_1H.equity - ACTUAL_1H.cappedCall + o[0].atm, o[0].fyBorrow = ACTUAL_1H.borrow, o[0].fySourcesOp = ACTUAL_1H.cfo + o[0].sourcesOp, o[0].fyOperatingGap = hOp + o[0].operatingGap, o[0].fyExternal = ACTUAL_1H.prepay + o[0].external, o[0].h1 = ACTUAL_1H, o[0].hOp = hOp, o[0].hFin = hFin, o[0].hPlug = hPlug, o[0].fyCfo = ACTUAL_1H.cfo, o[0].fyCapexUse = ACTUAL_1H.cashCapex + o[0].gross, o[0].fyEquity = ACTUAL_1H.equity + o[0].atm, o[0].fyCapped = ACTUAL_1H.cappedCall, o[0].fyUsesCash = ACTUAL_1H.cashCapex + o[0].gross + o[0].lease + o[0].interest + ACTUAL_1H.jv + o[0].div + ACTUAL_1H.debtRepaid + o[0].debtPay + ACTUAL_1H.cappedCall + o[0].op + o[0].cashTax, o[0].fySrcTotal = ACTUAL_1H.cfo + o[0].sourcesOp + ACTUAL_1H.equity + o[0].atm + ACTUAL_1H.borrow + o[0].newDebt + o[0].equity, 0),
+    _fy = (o[0].fyRevenue = ACTUAL_1H.revenue + o[0].isRev + o[0].legacyRev, o[0].fyGross = ACTUAL_1H.capex + o[0].gross, o[0].fyCashCapex = ACTUAL_1H.cashCapex + o[0].cashCapex, o[0].fyLease = ACTUAL_1H.leasePaid + o[0].lease, o[0].fyInterest = ACTUAL_1H.interest + o[0].interest, o[0].fyDebtPay = ACTUAL_1H.debtRepaid + o[0].debtPay, o[0].fyDiv = ACTUAL_1H.jv + o[0].div, o[0].fyAtm = ACTUAL_1H.equity - ACTUAL_1H.cappedCall + o[0].atm, o[0].fyBorrow = ACTUAL_1H.borrow, o[0].fySourcesOp = ACTUAL_1H.cfo + o[0].sourcesOp, o[0].fyOperatingGap = hOp + o[0].operatingGap, o[0].fyExternal = ACTUAL_1H.prepay + o[0].external, o[0].h1 = ACTUAL_1H, o[0].hOp = hOp, o[0].hFin = hFin, o[0].hPlug = hPlug, o[0].fyCfo = ACTUAL_1H.cfo, o[0].fyCapexUse = ACTUAL_1H.cashCapex + o[0].gross, o[0].fyEquity = ACTUAL_1H.equity + o[0].atm, o[0].fyCapped = ACTUAL_1H.cappedCall, o[0].fyUsesCash = ACTUAL_1H.cashCapex + o[0].gross + o[0].lease + o[0].interest + ACTUAL_1H.jv + o[0].div + ACTUAL_1H.debtRepaid + o[0].debtPay + ACTUAL_1H.cappedCall + o[0].op + o[0].cashTax + (ACTUAL_1H.dividends || 0) + o[0].dividend, o[0].fyDividend = (ACTUAL_1H.dividends || 0) + o[0].dividend, o[0].fySrcTotal = ACTUAL_1H.cfo + o[0].sourcesOp + ACTUAL_1H.equity + o[0].atm + ACTUAL_1H.borrow + o[0].newDebt + o[0].equity, 0),
     s = e => o.reduce((t, n) => t + n[e], 0),
     c = rA(e),
     l = iA(e),
@@ -603,7 +611,7 @@ function runFunding(e) {
     ok: !0,
     severity: `watch`,
     title: `融資瀑布：新債 ${o.reduce((e,t)=>e+t.newDebt,0).toFixed(1)}bn、可轉債 ${o.reduce((e,t)=>e+t.convNew,0).toFixed(1)}bn、股權 ${o.reduce((e,t)=>e+t.equity,0).toFixed(1)}bn（新股 ${o.reduce((e,t)=>e+t.newShares,0).toFixed(2)}bn 股）、高息債 ${o.reduce((e,t)=>e+t.junk,0).toFixed(1)}bn`,
-    detail: `順序：客戶預付（營運來源）→ 現金（高於最低現金 ${e.minCash}bn 的部分）→ 未動用額度（資產擔保融資）→ 新債（總債務 ≤ ${e.debtBacklog}× backlog）→ 可轉債（每年上限 ${Y(e.cvCap ?? 0, 1)}bn、票息 ${hA(e.convIssue.coupon * 100, 1)}）→ 股權（發行價＝$${e.eqPx}×(1−${(e.eqDisc*100).toFixed(0)}%)，每年上限＝現市值 ${e.eqCapPct>=9?`無上限`:(e.eqCapPct*100).toFixed(0)+`%`}）→ 超出部分以高息債 ${(e.junkRate*100).toFixed(0)}% 補足。backlog 依合約遞減、新簽約以 ${e.ctrTerm} 年合約補入。${(q => q.length ? `本情境股權需求落在 ${q.join(`、`)}。` : `本情境不需股權。`)(o.filter(t => t.equity > .05).map(t => t.year))}`
+    detail: `順序：客戶預付（營運來源）→ 現金（高於最低現金 ${e.minCash}bn 的部分）→ ${e.useFacility ? `未動用額度（${TXQ.facilityName}）→ ` : ``}新債（${e.debtCapBasis === `ebitda` ? `總債務 ≤ ${multTxt(e.debtEbitdaMax)}× 當期 EBITDA（投資級上限）` : `總債務 ≤ ${e.debtBacklog}× backlog`}）→ ${(e.cvCap ?? 0) > 0 ? `可轉債（每年上限 ${Y(e.cvCap ?? 0, 1)}bn、票息 ${hA(e.convIssue.coupon * 100, 1)}）→ ` : ``}股權（發行價＝$${e.eqPx}×(1−${(e.eqDisc*100).toFixed(0)}%)，每年上限＝現市值 ${e.eqCapPct>=9?`無上限`:(e.eqCapPct*100).toFixed(0)+`%`}）→ 超出部分以高息債 ${(e.junkRate*100).toFixed(0)}% 補足${e.debtCapBasis === `ebitda` ? `（＝需失去投資級才能融資的金額）` : ``}。股利 ${Y(o.reduce((a, t) => a + t.dividend, 0), 1)}bn 列為用途。${(q => q.length ? `本情境股權需求落在 ${q.join(`、`)}。` : `本情境不需股權。`)(o.filter(t => t.equity > .05).map(t => t.year))}`
   }), _({
     id: `ebitda-link`,
     ok: o.every(e => Math.abs(e.cashEbitda + e.creditAdj - e.ebitdaPL) < .01),
@@ -657,7 +665,7 @@ function runFunding(e) {
     ok: !0,
     severity: `ok`,
     title: e.useFacility ? `未動用額度 ${e.facility}bn（${TXQ.facilityName}）為瀑布第一順位` : `未動用額度不動用`,
-    detail: `${CALL_FACTS.postQShortDated || ``}。已承諾額度，不受 債務／backlog 上限限制；用罄後才進入新債與股權。`
+    detail: e.useFacility ? `${CALL_FACTS.postQShortDated || ``}。已承諾額度，不受債務上限限制；用罄後才進入新債與股權。` : `${TXQ.facilityName}：不列入瀑布（流動性備援；新債一律受債務上限約束）。`
   }), _({
     id: `cds-level`,
     ok: e.cds == null || e.cds < 800,
@@ -712,6 +720,7 @@ function runFunding(e) {
       legacyRev: s(`legacyRev`),
       legacyEbitda: s(`legacyEbitda`),
       cashTax: s(`cashTax`),
+      dividend: s(`dividend`),
       prepayAccr: s(`prepayAccr`),
       newRev: s(`newRev`),
       oci36: s(`oci36`),
@@ -860,11 +869,15 @@ function sensitivities(e, v) {
     t.ebSteady = .35
   }, t => {
     t.ebSteady = .59
-  }), r(`債務／backlog 上限`, `0.4x`, `1.2x`, t => {
+  }), (e.debtCapBasis === `ebitda` ? r(`投資級上限（總債務 ÷ EBITDA）`, `3.5x`, `4.5x`, t => {
+    t.debtEbitdaMax = 3.5
+  }, t => {
+    t.debtEbitdaMax = 4.5
+  }) : r(`債務／backlog 上限`, `0.4x`, `1.2x`, t => {
     t.debtBacklog = .4
   }, t => {
     t.debtBacklog = 1.2
-  }), r(`每 MW 建置成本`, `+20%`, `−20%`, e => {
+  })), r(`每 MW 建置成本`, `+20%`, `−20%`, e => {
     e.a.costMW = e.a.costMW.map(e => e * 1.2)
   }, e => {
     e.a.costMW = e.a.costMW.map(e => e * .8)
