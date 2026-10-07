@@ -30,6 +30,9 @@ cmp('未售', S+'未售產能（浪費）', H('unsold'));
 cmp('isRev', S+'損益用算力收入（模型期＝RPO 轉換＋新簽約）', H('isRev'));
 cmp('營收−MW×單價×利用率', S+'核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間', y.map(e=>e.isRev-e.capacity)); // v0.1b：MW 驅動時為 0
 cmp('每MW年收入', '輸入|每 MW 年收入', d.m.revMW);
+cmp('傳統事業營收', '輸入|傳統事業營收（模型期）', H('legacyRev')); cmp('傳統事業EBITDA', '輸入|傳統事業 EBITDA（模型期）', H('legacyEbitda')); // v0.1b（Oracle）
+d.lg.lines.forEach(x=>{ cmp('傳統 '+x.key+' 全年', `輸入|傳統事業｜${x.label}｜全年營收`, x.annual); cmp('傳統 '+x.key+' 模型期', `輸入|傳統事業｜${x.label}｜模型期營收`, x.rev); });
+cmp('現金稅', F+T('⑦ 現金稅（«STUB» 起）'), H('cashTax')); cmp('來源 傳統EBITDA', F+T('Ⓒ3 傳統事業 EBITDA（«STUB» 起）'), H('legacyEbitda'));
 cmp('36個月營收對照', S+'對照：評價日起 36 個月 MW 驅動營收', H('oci36')); cmp('RPO36 差額', '連動檢查|對照：RPO 36 個月內轉換 − 模型 36 個月 MW 驅動營收', [LATEST_Q.rpo*COMPANY_DATA.rpo.within36m-d.totals.oci36]); // v0.1b
 cmp('期初可計費MW', '輸入|«VMD» Billable MW'.replace('«VMD»',CALQ.valuationMD), [q.billableOpen]); // v0.1b：以實際營收校準
 cmp('信用損失', S+'信用損失（期初 RPO 部分）', H('loss'));
@@ -39,7 +42,7 @@ cmp('EBITDA率', S+'EBITDA 率（損益與資金共用）', H('ebM'));
 cmp('EBITDAR率', S+'EBITDAR 率（EBITDA 率＋租金÷營收）', H('cashMargin'));
 cmp('模型期總營收', S+'模型期總營收（算力＋服務）', H('totRev'));
 cmp('服務現金', '輸入|非算力服務現金', H('legacy'));
-cmp('FY26全年營收(產能頁)', S+T('«P0» 全年總營收（«YTD» 實際＋模型期算力＋服務）'), [y[0].fyRevenue+y[0].servicesRev]);
+cmp('FY26全年營收(產能頁)', S+T('«P0» 全年總營收（«YTD» 實際＋模型期算力＋服務＋傳統事業）'), [y[0].fyRevenue+y[0].servicesRev]);
 cmp('毛CapEx模型期', '輸入|毛 CapEx（模型期，下游引用此列）', H('gross'));
 cmp('全年CapEx公式', '輸入|全年毛 CapEx（公式）', H('capexFull'));
 cmp('成長型', '輸入|成長型 CapEx（模型期）', H('capexGrowth'));

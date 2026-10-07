@@ -70,6 +70,20 @@ var PERIODS = COMPANY_DATA.periods,
   DEFAULTS = Object.fromEntries(Object.entries(structuredClone(COMPANY_DATA.defaults)).flatMap(([k, v]) => k === `intCal` ? [[k, v], [`a`, structuredClone(SCENARIOS.base.a)]] : [[k, v]])),
   Qk = DEFAULTS; // 模板函式庫片段（mid1–mid3）仍以 Qk 引用預設值，保留別名
 DEFAULTS.cvCap = SCENARIOS[COMPANY_DATA.defaults.scenario].cvCap; // v0.1b：預設情境的可轉債年上限
+// v0.1b（Oracle）：傳統事業（company.json → defaults.legacyBiz）。各線全年營收＝上一財年實際 ×(1＋年增率)，年增率自起點線性收斂到長期值；
+// 首期模型部分＝首期全年 − 年初至今實際（首期 YTD＋模型＝全年）。EBITDA＝營收 × 合併 EBITDA 率（各期一列）。沒有傳統事業時 lines 為空清單，全部為 0。
+function legacyQ(e) {
+  let B = e.legacyBiz || { lines: [], ebitdaMargin: PERIOD_YEARS.map(() => 0) },
+    lines = B.lines.map(x => {
+      let g = PERIOD_YEARS.map((L, r) => x.g0 + (x.gLT - x.g0) * r / 4), A = [];
+      g.forEach((gr, r) => A.push((r === 0 ? x.fyBase : A[r - 1]) * (1 + gr)));
+      return { key: x.key, label: x.label, g, annual: A, rev: A.map((a, r) => r === 0 ? a - x.ytd : a), ytd: x.ytd }
+    }),
+    rev = PERIOD_YEARS.map((L, r) => lines.reduce((a, x) => a + x.rev[r], 0)),
+    ebitda = rev.map((v, r) => v * B.ebitdaMargin[r]);
+  return { lines, rev, ebitda, margin: B.ebitdaMargin, annual: PERIOD_YEARS.map((L, r) => lines.reduce((a, x) => a + x.annual[r], 0)) }
+}
+
 function siteBenchQ(e) {
   let t = e.filter(e => !e.residual && e.contract && e.years && e.planned);
   return t.reduce((e, t) => e + t.contract / t.years, 0) / Math.max(t.reduce((e, t) => e + t.planned, 0), 1) * 1e3
@@ -253,6 +267,7 @@ function runFunding(e) {
       let r = n === 0 ? e.ppeOpen : PPE[n - 1] + CXG[n - 1];
       return PPE.push(r), (r + .5 * t) / e.gpuLife * PERIOD_YEARS[n]
     }),
+    LG = legacyQ(e), // v0.1b（Oracle）：傳統事業營收與 EBITDA
     CVF = cvConvQ(e.eqPx), // v0.1b：融資現金流的可轉債分類（判斷價＝股權發行參考價，預設＝現價）
     CVP = PERIOD_YEARS.map((L, n) => cvFlowQ(CVF, e.includeDebt, n, L)),
     PB = [],
@@ -307,8 +322,10 @@ function runFunding(e) {
         T = e.overlay ? C + w : 0,
         O = (e.includeDebt ? DEBT_AMORT[r] : 0) + CVP[r].amort, // v0.1b：含債務處理可轉債的到期還本（到期累積本金）
         k = r === 0 && e.includeAtm ? e.atm : 0,
-        A = g + nC + svcCash + ob + v - pr, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
-        j0 = _ + S + IX[r] + e.jvCommit[r] + e.a.div[r] + T + O,
+        lgR = LG.rev[r], lgE = LG.ebitda[r], // v0.1b（Oracle）：傳統事業營收與 EBITDA（EBITDA 視為現金，稅另列）
+        tx = (e.cashTaxRate ?? 0) * Math.max(0, totRev * ebM + ob + lgE - DAF[r] - IX[r]), // v0.1b：現金稅＝稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（不含瀑布新債利息，避免循環；偏保守）
+        A = g + nC + svcCash + ob + lgE + v - pr, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
+        j0 = _ + S + IX[r] + e.jvCommit[r] + e.a.div[r] + T + O + tx,
         wRL = uA(e, r) / 100 * L,
         wRJ = (e.junkRate + (e.cdsLink ? Math.max(0, e.cds - e.cdsBaseBp) / 1e4 * e.cdsPassThrough : 0)) * L,
         wRC = e.convIssue.coupon * L, // v0.1b：瀑布可轉債票息 × 期間長度
@@ -412,12 +429,15 @@ function runFunding(e) {
         rentBench: (MB[r] + t.accepted[r]) / 2 * siteBenchQ(e.sites) / 1e3 * LEASE_FACTS.share * L,
         legacy: svcCash,
         servicesRev: svc,
+        legacyRev: lgR,
+        legacyEbitda: lgE,
+        cashTax: tx,
         ebM: ebM,
         cashMargin: cm,
         totRev: totRev,
-        ebitdaPL: totRev * ebM + ob,
+        ebitdaPL: totRev * ebM + ob + lgE,
         otherEbitda: ob,
-        cashEbitda: g + nC + svcCash + ob - S,
+        cashEbitda: g + nC + svcCash + ob + lgE - S,
         creditAdj: (m + nR * (t.defaultP[r] / 100) * p) * cm,
         atm: k,
         facility: F,
@@ -439,7 +459,7 @@ function runFunding(e) {
     hOp = ACTUAL_1H.cfo - ACTUAL_1H.cashCapex - ACTUAL_1H.jv,
     hFin = ACTUAL_1H.borrow - ACTUAL_1H.cappedCall + ACTUAL_1H.equity,
     hPlug = e.cash - (ACTUAL_1H.cash1231 + hOp + hFin - ACTUAL_1H.debtRepaid),
-    _fy = (o[0].fyRevenue = ACTUAL_1H.revenue + o[0].isRev, o[0].fyGross = ACTUAL_1H.capex + o[0].gross, o[0].fyCashCapex = ACTUAL_1H.cashCapex + o[0].cashCapex, o[0].fyLease = ACTUAL_1H.leasePaid + o[0].lease, o[0].fyInterest = ACTUAL_1H.interest + o[0].interest, o[0].fyDebtPay = ACTUAL_1H.debtRepaid + o[0].debtPay, o[0].fyDiv = ACTUAL_1H.jv + o[0].div, o[0].fyAtm = ACTUAL_1H.equity - ACTUAL_1H.cappedCall + o[0].atm, o[0].fyBorrow = ACTUAL_1H.borrow, o[0].fySourcesOp = ACTUAL_1H.cfo + o[0].sourcesOp, o[0].fyOperatingGap = hOp + o[0].operatingGap, o[0].fyExternal = ACTUAL_1H.prepay + o[0].external, o[0].h1 = ACTUAL_1H, o[0].hOp = hOp, o[0].hFin = hFin, o[0].hPlug = hPlug, o[0].fyCfo = ACTUAL_1H.cfo, o[0].fyCapexUse = ACTUAL_1H.cashCapex + o[0].gross, o[0].fyEquity = ACTUAL_1H.equity + o[0].atm, o[0].fyCapped = ACTUAL_1H.cappedCall, o[0].fyUsesCash = ACTUAL_1H.cashCapex + o[0].gross + o[0].lease + o[0].interest + ACTUAL_1H.jv + o[0].div + ACTUAL_1H.debtRepaid + o[0].debtPay + ACTUAL_1H.cappedCall + o[0].op, o[0].fySrcTotal = ACTUAL_1H.cfo + o[0].sourcesOp + ACTUAL_1H.equity + o[0].atm + ACTUAL_1H.borrow + o[0].newDebt + o[0].equity, 0),
+    _fy = (o[0].fyRevenue = ACTUAL_1H.revenue + o[0].isRev + o[0].legacyRev, o[0].fyGross = ACTUAL_1H.capex + o[0].gross, o[0].fyCashCapex = ACTUAL_1H.cashCapex + o[0].cashCapex, o[0].fyLease = ACTUAL_1H.leasePaid + o[0].lease, o[0].fyInterest = ACTUAL_1H.interest + o[0].interest, o[0].fyDebtPay = ACTUAL_1H.debtRepaid + o[0].debtPay, o[0].fyDiv = ACTUAL_1H.jv + o[0].div, o[0].fyAtm = ACTUAL_1H.equity - ACTUAL_1H.cappedCall + o[0].atm, o[0].fyBorrow = ACTUAL_1H.borrow, o[0].fySourcesOp = ACTUAL_1H.cfo + o[0].sourcesOp, o[0].fyOperatingGap = hOp + o[0].operatingGap, o[0].fyExternal = ACTUAL_1H.prepay + o[0].external, o[0].h1 = ACTUAL_1H, o[0].hOp = hOp, o[0].hFin = hFin, o[0].hPlug = hPlug, o[0].fyCfo = ACTUAL_1H.cfo, o[0].fyCapexUse = ACTUAL_1H.cashCapex + o[0].gross, o[0].fyEquity = ACTUAL_1H.equity + o[0].atm, o[0].fyCapped = ACTUAL_1H.cappedCall, o[0].fyUsesCash = ACTUAL_1H.cashCapex + o[0].gross + o[0].lease + o[0].interest + ACTUAL_1H.jv + o[0].div + ACTUAL_1H.debtRepaid + o[0].debtPay + ACTUAL_1H.cappedCall + o[0].op + o[0].cashTax, o[0].fySrcTotal = ACTUAL_1H.cfo + o[0].sourcesOp + ACTUAL_1H.equity + o[0].atm + ACTUAL_1H.borrow + o[0].newDebt + o[0].equity, 0),
     s = e => o.reduce((t, n) => t + n[e], 0),
     c = rA(e),
     l = iA(e),
@@ -463,6 +483,12 @@ function runFunding(e) {
     severity: `watch`,
     title: `RPO 桶 → 五期權重 [Derived]（只作對照，不驅動營收）`,
     detail: `季報：RPO $${Y(LATEST_Q.rpo, 1)}bn，${COMPANY_DATA.rpo.bucketLabels.map((b, j) => `${b} ${hA(COMPANY_DATA.rpo.split[j] * 100, 0)}`).join(`、`)}（${TXQ.rpoNote}）。桶內線性分攤得五期 ${RPO_BUCKET_W.map(x => hA(x * 100, 1)).join(`／`)}，合計 ${hA(RPO_SCHEDULED_SHARE * 100, 0)}。營收由 MW × 每 MW 年收入驅動，RPO 排程只用於產能瓶頸旗標；桶內前載或後載是 Derived，不是 Verified。`
+  }), _({
+    id: `legacy-fy`,
+    ok: LG.lines.every(x => Math.abs(x.ytd + x.rev[0] - x.annual[0]) < 1e-9),
+    severity: `ok`,
+    title: `傳統事業：${PERIODS[0]} 全年 ${Y(LG.annual[0], 2)}bn（年初至今實際 ${Y(LG.lines.reduce((a, x) => a + x.ytd, 0), 3)}＋模型 ${Y(LG.rev[0], 2)}）`,
+    detail: `${LG.lines.map(x => `${x.label} ${Y(x.annual[0], 2)}（年增 ${hA(x.g[0] * 100, 1)} → ${PERIODS[4]} ${hA(x.g[4] * 100, 1)}）`).join(`；`)}。EBITDA 率 ${LG.margin.map(m => hA(m * 100, 1)).join(`／`)}（${TXQ.legacyMarginNote}）。${PERIODS[0]} 合計營收 ${Y(ACTUAL_1H.revenue + o[0].isRev + o[0].legacyRev, 2)}bn 對照公司指引 ${REV_GUIDE_TXT}。`
   }), _({
     id: `rpo-36m`,
     ok: !0,
@@ -681,6 +707,9 @@ function runFunding(e) {
       gap: s(`gap`),
       end: o[4].cum,
       legacy: s(`legacy`),
+      legacyRev: s(`legacyRev`),
+      legacyEbitda: s(`legacyEbitda`),
+      cashTax: s(`cashTax`),
       newRev: s(`newRev`),
       oci36: s(`oci36`),
       newCash: s(`newCash`),
@@ -721,6 +750,7 @@ function runFunding(e) {
       fyDebtPay: o[0].fyDebtPay
     },
     checks: g,
+    lg: LG,
     cvFund: CVF,
     sites: n,
     m: t,

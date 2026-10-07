@@ -37,9 +37,10 @@ function forwardPL(e, t) {
     let L = PERIOD_YEARS[c],
       l = e.years[c].isRev,
       u = e.years[c].servicesRev,
-      d = l + u,
+      lg = e.years[c].legacyRev || 0, // v0.1b（Oracle）：傳統事業營收
+      d = l + u + lg,
       f = c === 0 ? uM(HIST_PL[3].revenue + d, r) : uM(d, r),
-      EB = d * e.years[c].ebM + (e.years[c].otherEbitda || 0), // v0.1b：加其他事業 EBITDA
+      EB = (l + u) * e.years[c].ebM + (e.years[c].otherEbitda || 0) + (e.years[c].legacyEbitda || 0), // v0.1b：加其他事業 EBITDA；Oracle：EBITDA 率只套算力＋服務，傳統事業另計
       p = EB - e.years[c].daFleet,
       m = e.years[c].interest,
       pt = p - m,
@@ -70,6 +71,8 @@ function forwardPL(e, t) {
       year: n,
       gpu: l,
       services: u,
+      legacy: lg,
+      legacyEbitda: e.years[c].legacyEbitda || 0,
       revenue: d,
       fundingRev: S,
       inYear: w,
@@ -368,7 +371,7 @@ function targetRange(d, st, o, base) {
 function EM(e, t, n) {
   let r = e.fwd[1],
     i = r.services,
-    a = Math.abs(r.revenue - (r.gpu + i)) < .05,
+    a = Math.abs(r.revenue - (r.gpu + i + r.legacy)) < .05,
     o = e.fwd.every((e, n) => Math.abs(e.cashCapex - t.years[n].cashCapex) < 1e-6),
     s = e.fwd.every((e, n) => Math.abs(e.interest - t.years[n].interest) < 1e-6),
     c = !e.call.blocked || e.call.call !== `買進`,
@@ -380,7 +383,7 @@ function EM(e, t, n) {
     ok: a,
     severity: a ? `ok` : `block`,
     title: `營收連動產能`,
-    detail: `FY27 算力產能 ${r.gpu.toFixed(1)} + 非算力服務 ${i.toFixed(1)} = 營收 ${r.revenue.toFixed(1)}bn。改 Billable／利用率／rev/MW 會改這列。`
+    detail: `${PERIODS[1]} 算力產能 ${r.gpu.toFixed(1)} + 非算力服務 ${i.toFixed(1)} + 傳統事業 ${r.legacy.toFixed(1)} = 營收 ${r.revenue.toFixed(1)}bn。改 Billable／利用率／rev/MW 會改這列。`
   }, {
     id: `val-capex`,
     ok: o,

@@ -164,7 +164,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles、defaults.otherEbitda[0]、valuation.holdings、valuation.debtLike） | 必改 |
+| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles、defaults.otherEbitda[0]、valuation.holdings、valuation.debtLike、defaults.legacyBiz） | 必改 |
 
 ### `ytdActual`：年初至今實際數（10-Q；v4.5 前為 actual1H）
 
@@ -435,6 +435,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.ebSteady` | 最後一期（穩態）EBITDA 率；中間各期線性內插 | 比例 | 0.47 | 檢查 |
 | `defaults.services` | 非算力服務營收（軟體、儲存等），各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
 | `defaults.otherEbitda` | 其他事業 EBITDA（負值＝燒錢），各期；同時進入損益 EBITDA 與營運來源（v0.1b） | US$bn 清單 | 0、0、0、0、0 | 必改 |
+| `defaults.legacyBiz.lines` | 傳統事業各線，一線一列：key、label、fyBase 上一財年實際營收（US$bn）、ytd 年初至今實際營收、g0 起始年增率、gLT 長期年增率（自首期線性收斂到末期）（Oracle v0.1b） | 清單 | 4 筆 | 必改 |
+| `defaults.legacyBiz.ebitdaMargin` | 傳統事業 EBITDA 率，各期（Oracle v0.1b） | 比例清單 | 0.5426、0.5426、0.5426、0.5426、0.5426 | 檢查 |
+| `defaults.legacyBiz.note` | 傳統事業輸入的來源與推導說明 | 文字 | 傳統事業（OCI 以外四線）：fyBase＝FY20… | 必改 |
+| `defaults.cashTaxRate` | 類現金流量的現金稅率：稅 ＝ 稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（v0.1b；虧損或 NOL 公司填 0） | 比例 | 0.151 | 檢查 |
 | `defaults.otherEbitdaNote` | 其他事業 EBITDA 的推導與來源說明 | 文字 | 不適用（Oracle 無需另列的非核心事業燒錢；傳統… | 必改 |
 | `defaults.debtBacklog` | 新債上限：總債務不超過 backlog 的倍數 | 倍 | 0.5 | 檢查 |
 | `defaults.ctrTerm` | 新簽合約的平均年期（決定 backlog 補入量） | 年 | 3 | 檢查 |
@@ -625,6 +629,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.consistency` | 來源頁「公司說法 vs 季報」一致性表，一列一項：[項目, 公司說法, 季報, 判定]（v0.1b） | 清單 | 8 筆 | 必改 |
 | `texts.sources` | 來源頁的來源清單，一列一筆：[標記, 內容]（HTML 與 Excel「來源」頁共用；v0.1b） | 清單 | 9 筆 | 必改 |
 | `texts.headerCards` | 資金模型頁首的公司揭露卡片，一列一張：[標題, 內容]（v0.1b） | 清單 | 3 筆 | 必改 |
+| `texts.legacyMarginNote` | 傳統事業 EBITDA 率的推導說明（v0.1b） | 文字 | FY26 合併 EBITDA 率＝非 GAAP 營業… | 必改 |
 | `texts.mwYearEndNotes` | 各年底主動電力的來源說明，以年份為鍵（Excel「輸入與假設」說明欄；5a） | 物件（文字） | 物件（2026） | 必改 |
 
 ### `oracle`：Oracle 資料草稿（v0.1a；v0.1b 逐步搬入，只留後續步驟用或只作對照的欄位）

@@ -44,7 +44,8 @@
   "debt.convertibles": "FY27Q1",
   "defaults.otherEbitda[0]": "FY27Q1",
   "valuation.holdings": "FY27Q1",
-  "valuation.debtLike": "FY27Q1"
+  "valuation.debtLike": "FY27Q1",
+  "defaults.legacyBiz": "FY27Q1"
  },
  "ytdActual": {
   "throughQuarter": "FY27Q1",
@@ -970,6 +971,51 @@
    0.0
   ],
   "otherEbitdaNote": "不適用（Oracle 無需另列的非核心事業燒錢；傳統事業另列於 defaults.legacyBiz，v0.1b 步驟 3）",
+  "legacyBiz": {
+   "lines": [
+    {
+     "key": "saas",
+     "label": "SaaS（雲端應用）",
+     "fyBase": 15.888,
+     "ytd": 4.219,
+     "g0": 0.1111,
+     "gLT": 0.08
+    },
+    {
+     "key": "software",
+     "label": "軟體（授權＋支援）",
+     "fyBase": 24.541,
+     "ytd": 5.55,
+     "g0": -0.0125,
+     "gLT": -0.01
+    },
+    {
+     "key": "hardware",
+     "label": "硬體",
+     "fyBase": 3.084,
+     "ytd": 0.774,
+     "g0": 0.0803,
+     "gLT": 0.0
+    },
+    {
+     "key": "services",
+     "label": "服務",
+     "fyBase": 5.743,
+     "ytd": 1.414,
+     "g0": 0.0921,
+     "gLT": 0.03
+    }
+   ],
+   "ebitdaMargin": [
+    0.5426,
+    0.5426,
+    0.5426,
+    0.5426,
+    0.5426
+   ],
+   "note": "傳統事業（OCI 以外四線）：fyBase＝FY2026 10-K 經查核營收 [Verified]；ytd＝FY27Q1 10-Q [Interested-party]；g0＝近四季（FY26Q2–FY27Q1）對前四季年增率 [Derived]（SaaS 11.1%、軟體 −1.25%、硬體 8.0%、服務 9.2%）；gLT＝長期年增率 [Assumed]（SaaS 8%〔區間 5–10%〕、軟體 −1%〔−3%–+1%〕、硬體 0%〔−3%–+3%〕、服務 3%〔0–5%〕），自首期線性收斂至末期。EBITDA 率＝FY26 合併 EBITDA 率 54.26%（非 GAAP 營業利益 28.926＋折舊 7.623，÷ 營收 67.357；OCI 無分部揭露，無法拆分，[Derived]），各期相同。"
+  },
+  "cashTaxRate": 0.151,
   "debtBacklog": 0.5,
   "ctrTerm": 3,
   "minCash": 10,
@@ -1905,7 +1951,8 @@
     "年度指引",
     "FY27 營收 ≥90 · 資本支出 90–95（法說）· 淨現金 ≤70 · Q2 營收年增 30–34%"
    ]
-  ]
+  ],
+  "legacyMarginNote": "FY26 合併 EBITDA 率＝非 GAAP 營業利益＋折舊，OCI 無分部揭露無法拆分 [Derived]；不加無形資產攤銷，因非 GAAP 營業利益已排除攤銷"
  },
  "oracle": {
   "_readme": "Oracle 資料草稿（v0.1a 產出）。v0.1b 步驟 1 已把可對應既有欄位者搬入 meta、calendar、ytdActual、historicalPL、latestQuarter、callFacts、debt、leases、valuation、quarterly 等；本區只留後續步驟（傳統事業、客戶出資、股利、強制轉換特別股、評價、OpenAI 對照）會用或只作對照的欄位。每欄 value＋unit＋ref（data/oracle_facts_20261007.json 的 id）＋mapTo。",
