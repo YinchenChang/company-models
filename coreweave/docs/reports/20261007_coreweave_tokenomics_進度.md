@@ -1,16 +1,16 @@
 # CoreWeave × Tokenomics 改造進度（接手用；W1–W3 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：W0 遷移（chat 端）；**W1 全部完成**（PR #6，疊加於 W0 分支）：取數工具 `tools/tokenomics/import_tokenomics.py`、v5.24 快照（25 名，其中 10 個 v5.25 名稱 missing）、company.json `tokenomics` 區段、Excel「Tokenomics_取數」分頁＋55 個 `TK_` 具名範圍、對照表、W2 資料蒐集；`verify.sh --vs-dist` 23 項全過（既有數字 0 差異）。
-- 下一步：W2（`claude/coreweave-w2-permw`，從 W1 分支最新 commit 開、PR base＝W1 分支，除非 W1 已合併）。**W2 第 0 步**：Tokenomics master 的 `model/CURRENT` 若已是 v5.25，以 `python3 tools/tokenomics/import_tokenomics.py --tokenomics <clone> --names coreweave/data/tokenomics_names.txt --out coreweave/data/tokenomics_snapshot_v5.25.json` 重抓、刪 v5.24 快照、改 company.json `tokenomics`（snapshotFile／version／commit），再跑 verify（2026-10-07 W1 結束時 master 為 bdb0de7，CURRENT 仍為 v5.24）。GPU 小時價格不足 → W2 依工作單採收入備案（revenue=legacy）。
-- 未解問題：(1) v5.25 的 10 個名稱尚未在 Tokenomics master；(2) GB200／GB300／VR200 的長約 GPU 小時價格找不到兩個獨立來源；(3) CoreWeave 自己文件中「active power」的定義未找到（EDGAR 全文檢索顯示 10-K 含「critical IT」字樣，但工具讀不到該段；建議 chat 端或 Andy 開 10-K 搜尋「critical IT」確認）；(4) Tokenomics 無租金與 GPU 壽命名稱（壽命待 v5.25 `IF_DeprLifeIT`）。
+- 已完成：W0、W1（PR #6，待審）。**W2 進行中**（PR 見下表，疊加於 W1 分支 8d97234）：第 0 步完成。
+- 下一步：W2 第 1 步（世代組合 `fleet`）。逐步紀錄見下方「W2 每 MW 改寫」。
+- 未解問題：(1) Tokenomics v5.26（原 v5.25 名稱，IF_MaintIT／IF_StaffSW／IF_TaxIns／IF_DeprLifeIT 等）尚未建置，W2 以暫代值實作；(2) GB200／GB300／VR200 長約 GPU 小時價格不足兩個獨立來源 → 收入採備案 `revenue=legacy`；(3) CoreWeave「active power」口徑定義未找到（預設 IT）；(4) Tokenomics 無租金名稱（租金維持公司專屬）。
 
 ## 工作單總覽
 | 工作單 | 分支 | PR | 狀態 |
 |---|---|---|---|
 | W0 遷移 | `claude/coreweave-w0-migrate` | | chat 端完成 |
 | W1 Tokenomics 取數層 | `claude/coreweave-w1-tokenomics`（疊加於 W0 分支） | #6 | 完成，待審 |
-| W2 每 MW 改寫 | `claude/coreweave-w2-permw` | | 未開始 |
+| W2 每 MW 改寫 | `claude/coreweave-w2-permw`（疊加於 W1 分支） | （開 PR 後補） | 進行中 |
 | W3 v4.6 成品與對照 | `claude/coreweave-w3-v4.6` | | 未開始 |
 
 <!-- 各工作單在下方新增自己的段落：「## Wx」＋步驟紀錄表（步驟｜狀態｜commit｜備註） -->
@@ -233,3 +233,12 @@ verify.sh：全部通過（23 項）
 EXIT 0
 ```
 </details>
+
+
+## W2 每 MW 改寫
+
+chat 端審查 W1 後的決定（優先於工作單原文，2026-10-07）：收入採備案 `revenue=legacy`（GPU 小時路線實作、預設不啟用）；Tokenomics v5.26 未建置時成本暫代值（IT 維護＝`m.maint`、人員軟體與稅險＝0、`gpuLife`＝6）並在「檢查」頁警告；`meta.mwBasis=IT`（設施口徑換算實作並測試）；`fleet.openMix` 27／29／43%；`check_tokenomics_tab.py` 改為允許其他工作表引用；管銷率 5.51%（敏感度 9.24%）。
+
+| 步驟 | 狀態 | commit | 備註 |
+|---|---|---|---|
+| 0 開分支、draft PR、進度檔 W2 段落、檢查 Tokenomics 版本 | 完成 | （本 commit） | 自 `origin/claude/coreweave-w1-tokenomics` 8d97234 開分支；Tokenomics master `bdb0de7`，`model/CURRENT`＝`20261007_Tokenomics_v5.24.xlsx`（無 v5.26）→ 快照維持 v5.24，v5.26 名稱以暫代值處理 |
