@@ -6180,6 +6180,64 @@
     "tag": "[Interested-party]",
     "note": "Oracle 向開發方（Blue Owl）發出不可抗力通知：天然氣管線延後近 6 個月至 2027-02-01、燃料電池空氣許可待決（期限 11/23）；原訂 2028 上線。Oracle：「remains on our planned schedule」；Blue Owl：財務承諾不變。屬評價日（2026-08-31）後事件"
    }
+  ],
+  "8_市場共識": [
+   {
+    "id": "mkt.price.close",
+    "item": "ORCL 最新收盤價",
+    "value": 144.77,
+    "unit": "US$",
+    "period": "2026-10-06",
+    "source": "StockAnalysis.com（歷史股價）",
+    "url": "https://stockanalysis.com/stocks/orcl/history/",
+    "docDate": "2026-10-06",
+    "retrieved": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "Yahoo Finance 同值；完整共識見 data/consensus_orcl_20261007.json"
+   },
+   {
+    "id": "mkt.pt.sp",
+    "item": "共識平均目標價（S&P Global Market Intelligence）",
+    "value": 237.97,
+    "unit": "US$",
+    "period": "2026-10-07",
+    "source": "S&P Global（經 StockAnalysis.com）",
+    "url": "https://stockanalysis.com/stocks/orcl/forecast/",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "中位 240、低 110、高 400、43 位；評等 Buy（28／7／7／0／1）；賣方意見"
+   },
+   {
+    "id": "mkt.pt.mb",
+    "item": "共識平均目標價（MarketBeat 彙整）",
+    "value": 251.72,
+    "unit": "US$",
+    "period": "2026-10-02",
+    "source": "MarketBeat",
+    "url": "https://www.marketbeat.com/stocks/NYSE/ORCL/forecast/",
+    "docDate": "2026-10-02",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "低 110、高 400、47 位；Moderate Buy（1／36／9／1）；獨立於 S&P"
+   },
+   {
+    "id": "mkt.rev.cons",
+    "item": "共識營收 FY27／FY28／FY29",
+    "value": [
+     90449,
+     131711,
+     183569
+    ],
+    "unit": "USD M",
+    "period": "FY2027–FY2029",
+    "source": "MarketScreener（S&P Capital IQ 系）",
+    "url": "https://www.marketscreener.com/quote/stock/ORACLE-CORPORATION-13620698/finances/",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "EBITDA 51,664／74,642／107,543（非 GAAP 營業利益＋折舊口徑）；資本支出 93,961／100,962／84,848；LSEG（Yahoo）FY27／FY28 營收 90,480／131,450（獨立，一致）"
+   }
   ]
  }
 }
