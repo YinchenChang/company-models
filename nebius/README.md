@@ -582,6 +582,15 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `varianceReasons._note` | 差異原因的說明文字（不進程式） | 文字 | 差異原因（已決定事項 2）：差距超過 methodo… | 可沿用 |
 | `varianceReasons.list` | 差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗 | 清單 | 8 筆 | 檢查 |
 
+### `priceCheck`：單價對照（v0.2；只用於簡報，不進入計算）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `priceCheck.inServiceMw` | 最新季末在役 MW 估計（只用於簡報「實現單價 vs 推導單價」對照，不進入計算；v0.2） | MW | 366 | 必改 |
+| `priceCheck.inServiceNote` | 上一欄的來源與推估方式 | 文字 | 最新季末在役 MW 未揭露：以 2025 年底 ac… | 必改 |
+| `priceCheck.acv` | 公司揭露的新約每 MW 年收入區間（只作對照；v0.2） | US$m／MW·年 | 20、25 | 必改 |
+| `priceCheck.acvNote` | 上一欄的來源、標記與口徑 | 文字 | 公司 Q2 股東信新約 ACV（US$m／MW·年）… | 必改 |
+
 ### `texts`：公司特有的說明文字（v4.5；隨資料更新）
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
@@ -590,6 +599,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.sourceLine` | 頁首的資料來源一行（例如最新 10-Q、法說、期後 8-K；v4.5） | 文字 | Q2 2026 6-K（財報＋股東信）+ 期後 6-… | 必改 |
 | `texts.cashTaxNote` | 年初至今現金稅的說明（損益與評價頁；v4.5） | 文字 | H1 現金稅未單獨揭露（不適用） | 必改 |
 | `texts.thesis` | 模型命題一句話（HTML 標題列與檔案說明；v0.1b） | 文字 | 預付款能否讓 backlog 變成現金 | 必改 |
+| `texts.title` | 主標題（HTML 頁首與 <title>、簡報封面與頁尾、Excel 導覽首列；v0.2） | 文字 | 預付款，能把 Backlog 變成現金嗎？ | 必改 |
+| `texts.subtitle` | 副標題（一句話答案；佔位符 {prepayPct}＝五期客戶預付 ÷ 毛 CapEx、{gap}＝融資前缺口、{rvMult}＝加權目標價＝現價所需的每 MW 年收入倍數，由模型現值帶入、隨情境切換；v0.2） | 文字 | 客戶預付只覆蓋約 {prepayPct} 的資本支出… | 必改 |
+| `texts.headerTag` | 頁首標籤列的模型主軸短語（v0.2） | 文字 | MW × 每 MW · 預付優先 | 必改 |
 | `texts.mwYearEndNotes` | 各年底主動電力的來源說明，以年份為鍵（Excel「輸入與假設」說明欄；5a） | 物件（文字） | 物件（2025） | 必改 |
 
 ### `nebius`：Nebius 資料草稿（v0.1a；引擎尚未讀取）

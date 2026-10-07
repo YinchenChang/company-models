@@ -1261,6 +1261,12 @@
    }
   ]
  },
+ "priceCheck": {
+  "inServiceMw": 366,
+  "inServiceNote": "最新季末在役 MW 未揭露：以 2025 年底 active 170 MW 與首期末在役 563 MW 線性內插（[Derived]，v0.1c 報告第 3 節）；實現單價＝最新一季營收 × 4 ÷ 此值",
+  "acv": [20, 25],
+  "acvNote": "公司 Q2 股東信新約 ACV（US$m／MW·年）[Interested-party]，MW 口徑未定義；只作對照，不作輸入"
+ },
  "texts": {
   "fy0EquityNote": "«P0»＝«YTD» 股權 4.811（ATM 淨 2.811＋NVIDIA 預付認股權證 2.0）＋«STUB» 期後可轉債淨現金 5.68（2026-08）",
   "cashTaxNote": "H1 現金稅未單獨揭露（不適用）",
@@ -1268,7 +1274,10 @@
   "mwYearEndNotes": {
    "2025": "Q4 2025 股東信與 20-F：active power 約 170 MW（IT 口徑）[Interested-party]"
   },
-  "thesis": "預付款能否讓 backlog 變成現金"
+  "thesis": "預付款能否讓 backlog 變成現金",
+  "title": "預付款，能把 Backlog 變成現金嗎？",
+  "subtitle": "客戶預付只覆蓋約 {prepayPct} 的資本支出；剩下 {gap} 缺口仍靠資產擔保債、可轉債與新股——現價要成立，每 MW 年收入得是模型的 {rvMult} 倍",
+  "headerTag": "MW × 每 MW · 預付優先"
  },
  "nebius": {
   "_readme": "Nebius 資料草稿（v0.1a 產出；v0.1b 步驟 1 已把可對應既有欄位的資料搬入 meta、ytdActual、latestQuarter、callFacts、debt、valuation 等）。本區只保留引擎尚未使用、後續步驟（預付款、融資瀑布、可轉債稀釋、其他事業與持股、每 MW 三情境）會用的欄位；每欄 value＋unit＋ref（data/nebius_facts_20261007.json 的 id）。",

@@ -158,12 +158,12 @@ ws = wb.active
 ws.title = "導覽"
 ws.column_dimensions["A"].width = 118
 r = 1
-ws["A1"] = f"{CO['meta']['company']} 收支與評價模型 — Excel 版 {VLOG_X[-1][0]}（更新 {CO['meta']['updateDate']}；與 HTML {VLOG_X[-1][0]} 同步；市價截至 {CO['meta']['priceDate']} 收盤）"  # v4.3：版本、日期改讀 vlog.py 與 company.json
+ws["A1"] = f"{CO['texts']['title']}｜{CO['meta']['company']} 收支與評價模型 — Excel 版 {VLOG_X[-1][0]}（更新 {CO['meta']['updateDate']}；與 HTML {VLOG_X[-1][0]} 同步；市價截至 {CO['meta']['priceDate']} 收盤）"  # v4.3：版本、日期改讀 vlog.py 與 company.json
 ws["A1"].font = TITLE
 r = 3
 guide = [
     ("這個活頁簿在回答什麼", None),
-    (f"一句話：{CO['texts']['thesis']}——{CO['meta']['company']} 用客戶預付款支應多少擴張資本支出，剩下的缺口要靠多少資產擔保融資、可轉債與新股。", None),
+    (f"一句話：{CO['texts']['title']}——{CO['meta']['company']} 的營收＝已連網 MW × 每 MW 年收入；客戶預付款能支應多少擴張資本支出，剩下的缺口要靠多少資產擔保融資、可轉債與新股（答案見「摘要」）。", None),
     ("所有分頁用同一組數字，改任何一個輸入，後面全部會跟著動。", None),
     ("", None),
     ("分頁結構（依模組分組，分頁標籤顏色相同者為同一模組）", None),
@@ -580,7 +580,7 @@ ws.column_dimensions["B"].width = 12
 for c in COLS:
     ws.column_dimensions[c].width = 13
 ws.column_dimensions["I"].width = 96
-ws["A1"] = "產能與收入 — 合約排程 vs 機房產能"
+ws["A1"] = "產能與收入 — 已連網 MW × 每 MW 年收入（RPO 排程只作對照與產能瓶頸旗標）"  # v0.2：Nebius 營收主軸
 ws["A1"].font = TITLE
 ws["A2"] = "兩條線獨立產生後相減：排程>容量→瓶頸（收不到）；容量>排程→剩餘產能（要靠新簽約賣掉）"
 ws["A2"].font = SMALL
@@ -2972,7 +2972,7 @@ ws.column_dimensions["B"].width = 10
 for c in "CDEFG":
     ws.column_dimensions[c].width = 13
 ws.column_dimensions["I"].width = 70
-ws["A1"] = "一頁摘要 — 結論、與市場的差異、現價隱含什麼、驗證點（全部依輸入連動）"
+ws["A1"] = f"{CO['texts']['title']}｜一頁摘要 — 結論、與市場的差異、現價隱含什麼、驗證點（全部依輸入連動）"  # v0.2：標題與 HTML 一致
 ws["A1"].font = TITLE
 ws["A2"] = f'="模型端＝目前情境：" & CHOOSE({SEL},"{DT_NM["low"]}","{DT_NM["base"]}","{DT_NM["high"]}") & "（預設＝基準）；共識＝{CO["meta"]["consensusFile"]}（{CONS["asOf"]}）"'
 ws["A2"].font = SMALL

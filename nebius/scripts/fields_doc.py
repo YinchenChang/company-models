@@ -24,6 +24,13 @@ F = [
  ('texts.sourceLine', '頁首的資料來源一行（例如最新 10-Q、法說、期後 8-K；v4.5）', '文字', M),
  ('texts.cashTaxNote', '年初至今現金稅的說明（損益與評價頁；v4.5）', '文字', M),
  ('texts.thesis', '模型命題一句話（HTML 標題列與檔案說明；v0.1b）', '文字', M),
+ ('texts.title', '主標題（HTML 頁首與 <title>、簡報封面與頁尾、Excel 導覽首列；v0.2）', '文字', M),
+ ('texts.subtitle', '副標題（一句話答案；佔位符 {prepayPct}＝五期客戶預付 ÷ 毛 CapEx、{gap}＝融資前缺口、{rvMult}＝加權目標價＝現價所需的每 MW 年收入倍數，由模型現值帶入、隨情境切換；v0.2）', '文字', M),
+ ('texts.headerTag', '頁首標籤列的模型主軸短語（v0.2）', '文字', M),
+ ('priceCheck.inServiceMw', '最新季末在役 MW 估計（只用於簡報「實現單價 vs 推導單價」對照，不進入計算；v0.2）', 'MW', M),
+ ('priceCheck.inServiceNote', '上一欄的來源與推估方式', '文字', M),
+ ('priceCheck.acv', '公司揭露的新約每 MW 年收入區間（只作對照；v0.2）', 'US$m／MW·年', M),
+ ('priceCheck.acvNote', '上一欄的來源、標記與口徑', '文字', M),
  ('texts.mwYearEndNotes', '各年底主動電力的來源說明，以年份為鍵（Excel「輸入與假設」說明欄；5a）', '物件（文字）', M),
  ('meta.sourceOrderNote', '資料來源的先後與衝突時的取捨原則（畫面說明文字）', '文字', M),
  ('calendar.fiscalYearEndMonth', '財年結束月份（v4.5；Nebius、CoreWeave 12，Oracle 5）', '月', M),
@@ -309,7 +316,7 @@ SECT = [('meta', '基本資料'), ('calendar', '期間與日期（v4.5）'), ('a
         ('rpo', '已簽約未認列營收（RPO）'), ('leases', '租約'), ('debt', '既有債務'), ('latestQuarter', '最新一季財報數字（10-Q）'),
         ('callFacts', '法說會與期後事項'), ('scenarios', '三個擴張情境'), ('legacy', '舊版對照值'),
         ('defaults', '預設假設（畫面上可調的輸入）'), ('valuation', '評價參數'), ('methodology', '評價方法與評等門檻'), ('peers', '同業比較（Comps）'),
-        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('nebius', 'Nebius 資料草稿（v0.1a；引擎尚未讀取）')]
+        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('priceCheck', '單價對照（v0.2；只用於簡報，不進入計算）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('nebius', 'Nebius 資料草稿（v0.1a；引擎尚未讀取）')]
 out, shown = ['**填表慣例**',
                '- 金額單位是**十億美元（US$bn）**，例如 4.653 代表 46.53 億美元；另有標示的例外：每股（US$）、每 MW 建置成本（百萬美元／MW，US$m/MW）、股數（十億股，bn）。',
                '- 「比例」寫成小數（0.25＝25%）；標示「%」的欄位寫成百分點（25＝25%）。兩種寫法沿用既有程式，不可混用。',

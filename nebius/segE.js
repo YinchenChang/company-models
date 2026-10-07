@@ -5,6 +5,31 @@
 
 var SW_Q = 1280, SH_Q = 720;
 
+// v0.2：單價對照（company.json → priceCheck；只用於呈現，不進入計算）。實現單價＝最新一季營收 × 4 ÷ 在役 MW 估計
+var PRICE_CHK_Q = COMPANY_DATA.priceCheck && COMPANY_DATA.priceCheck.inServiceMw > 0
+  ? { ...COMPANY_DATA.priceCheck, realized: COMPANY_DATA.latestQuarter.revenue * 4 * 1e3 / COMPANY_DATA.priceCheck.inServiceMw } : null;
+
+// v0.2：反向 DCF 在頁首與總結頁共用；輸入變動後延遲計算（約 0.4 秒），避免輸入時卡頓
+function rvHookQ(e, o) {
+  let [r, sr] = (0, v.useState)(null);
+  (0, v.useEffect)(() => {
+    let t = setTimeout(() => { try { sr(reverseDcf(e, o)); } catch { sr(null); } }, 30);
+    return () => clearTimeout(t);
+  }, [e, o]);
+  return r;
+}
+
+// v0.2：副標題＝一句話答案（company.json → texts.subtitle 的佔位符以模型現值帶入，隨情境切換）
+function prepayCoverQ(d) { let g = d.totals.gross; return g > 0 ? d.years.reduce((a, t) => a + t.prepayIn, 0) / g : NaN; }
+function headlineQ(d, rv) {
+  let c = prepayCoverQ(d), vals = {
+    prepayPct: Number.isFinite(c) ? hA(c * 100, 0) : `不適用`,
+    gap: `$${Y(Math.max(0, -d.totals.preFinEnd), 1)}bn`,
+    rvMult: rv ? (Number.isFinite(rv.Rt) ? Y(rv.Rt, 1) : `—`) : `…`
+  };
+  return String(COMPANY_DATA.texts.subtitle || ``).replace(/\{(\w+)\}/g, (m, k) => vals[k] ?? m);
+}
+
 // 小工具：建立元素（children 為陣列時用 jsxs）
 function elQ(tag, props, children) {
   let p = { ...(props || {}) };
@@ -294,7 +319,7 @@ var SUMCSSQ = `
 .sumQ-btn.pri { background: var(--color-ink); color: var(--color-accent-fg); border-color: var(--color-ink); }
 `;
 
-function SumQ({ d, f, e, o, m, tr: TR, active }) {
+function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
   // --- 情境比較（保留目前手動調整，只換擴張力道）---
   let scen = (0, v.useMemo)(() => [`low`, `base`, `high`].map(sc => {
     let st = scnQ(e, sc), dd = runFunding(st), pp = runValuation(dd, st, o), po = runValuation(dd, st, { ...o, dcfMode: `option` });
@@ -309,8 +334,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
       tgt: pp.call.blended, opt: po.call.blended, call: pp.call.call
     };
   }), [e, o]);
-  // --- 反向 DCF（約 0.4 秒，只在本頁顯示時計算）---
-  let rv = (0, v.useMemo)(() => active ? reverseDcf(e, o) : null, [e, o, active]);
+  // --- 反向 DCF：由頁首（segD）以 rvHookQ 計算後傳入（v0.2）---
   let cv = (0, v.useMemo)(() => consensusView(d, f, o, TR, e), [d, f, o, TR, e]), qv = (0, v.useMemo)(() => quarterlyView(d, f, e), [d, f, e]);
   let eg = (0, v.useMemo)(() => evAnchorGrid(d, e, o), [d, e, o]);
   let [pres, sp] = (0, v.useState)(!1), [ix, si] = (0, v.useState)(0), pr = (0, v.useRef)(null);
@@ -318,7 +342,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
   let y = d.years, T = d.totals, b = rpoBridge(d), P = o.price, tgt = f.call.blended, up = f.call.upside;
   let scLabel = e.scenario === `custom` ? `自訂情境` : SCENARIOS[e.scenario]?.label;
   let ver = VLOG[VLOG.length - 1][0];
-  let foot = `${COMPANY_DATA.meta.company} 收支模型 ${ver}（${UPDATE_DATE}）· ${scLabel} · 現價 $${Y(P, 2)}（${COMPANY_DATA.meta.priceDate} 收盤）· 研究框架，不是投資建議`;
+  let foot = `${COMPANY_DATA.texts.title} · ${COMPANY_DATA.meta.company} 收支模型 ${ver}（${UPDATE_DATE}）· ${scLabel} · 現價 $${Y(P, 2)}（${COMPANY_DATA.meta.priceDate} 收盤）· 研究框架，不是投資建議`;
   let callTone = f.call.call === `買進` ? `var(--color-ok)` : f.call.call === `賣出` ? `var(--color-bad)` : `var(--color-watch)`;
 
   // 單位經濟（與頁首摘要同一公式）

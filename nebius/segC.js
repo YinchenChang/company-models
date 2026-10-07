@@ -34,7 +34,7 @@ function AM({
             children: `資金模型 → 評價 連動`
           }), (0, $.jsxs)(`p`, {
             className: `mt-1 text-sm leading-relaxed`,
-            children: [`算力產能、Cash CapEx、利息（含瀑布新債）、股數（含瀑布新股）皆來自資金模型。缺口在需要前一期先融好：依序動用額度、資產層新債（受 債務／backlog 上限）、股權；估值不再扣缺口本金。五期需股權 `, Y(p, 0), `bn、新股 `, Y(e.totals.newShares, 2), `bn 股。`]
+            children: [`算力產能、Cash CapEx、利息（含瀑布新債）、股數（含瀑布新股）皆來自資金模型。客戶預付先抵減資本支出；剩餘缺口在需要前一期先融好：依序動用額度、資產擔保新債（受 債務／backlog 上限）、可轉債、股權；估值不再扣缺口本金。五期需股權 `, Y(p, 0), `bn、新股 `, Y(e.totals.newShares, 2), `bn 股。`]
           })]
         }), (0, $.jsxs)(`div`, {
           className: `flex shrink-0 flex-row flex-wrap items-center gap-2`,
@@ -242,7 +242,7 @@ function AM({
               rows: [
                 [`營收`, null],
                 [`1H26 實際營收（已實現）`, [NaN, NaN, NaN, NaN, HIST_PL[3].revenue, 0, 0, 0, 0], void 0, void 0, void 0, `FY26E 欄＝1H 實際＋下半年模型；1H 營收未拆分算力與服務。`],
-                [`算力收入（模型期）`, [NaN, NaN, NaN, NaN, ...s.map(e => e.gpu)], void 0, void 0, void 0, `＝期初 RPO 轉換（產能約束後）＋新簽約。FY26E 欄只含下半年。`],
+                [`算力收入（模型期）`, [NaN, NaN, NaN, NaN, ...s.map(e => e.gpu)], void 0, void 0, void 0, `＝平均在役 MW × 每 MW 年收入（RPO 轉換只作對照拆分）。${PERIODS[0]} 欄只含模型期。`],
                 [`　其中：期初 RPO 轉換`, [NaN, NaN, NaN, NaN, ...s.map(e => e.fundingRev)]],
                 [`　其中：新簽約`, [NaN, NaN, NaN, NaN, ...s.map(e => e.inYear)], void 0, void 0, void 0, `＝(容量 − 期初 RPO 排程)×新產能簽約率。FY28 起多數收入來自尚未簽署的合約。`],
                 [`非算力服務（模型期）`, [NaN, NaN, NaN, NaN, ...s.map(e => e.services)]],
@@ -887,7 +887,7 @@ function AM({
             })
           }), (0, $.jsx)(hdrQ, {
             title: `錨定年度 × 倍數：EV/EBITDA 腿的方法敏感度（即時重算）`,
-            tip: `EV/EBITDA 腿＝（錨定年 EBITDA × 倍數 − 錨定年末淨負債）÷ 錨定年末股數，${CALQ.evDiscText}（目標價時點）。6x 是以單位經濟推算的穩態倍數上緣（約 3.4–6.0x），套在利潤率仍在爬坡的 FY27 上並不一致；FY27 年末淨負債也已含 FY28 才產生 EBITDA 的預建 CapEx。黃底為目前設定，綠底為不低於現價。`,
+            tip: `EV/EBITDA 腿＝（錨定年 EBITDA × 倍數 − 錨定年末淨負債）÷ 錨定年末股數，${CALQ.evDiscText}（目標價時點）。倍數沿用模板的穩態上緣 6x（未另估 Nebius）；錨定年度愈早，利潤率愈可能仍在爬坡、年末淨負債也愈可能含下一年才產生 EBITDA 的預建 CapEx。黃底為目前設定，綠底為不低於現價。`,
             w: 480
           }), (0, $.jsx)(EvGridQ, {
             st: t,
@@ -1020,7 +1020,7 @@ function AM({
             }, e))
           }) : null, (0, $.jsx)(`p`, {
             className: `mt-4 text-xs leading-relaxed text-muted`,
-            children: `缺口處理：採期前融資瀑布——每期在需要前先融足，使期末現金不低於最低現金；依序動用未動用額度、資產層新債（總債務 ≤ 債務／backlog 上限）、股權（按現價折價發行）。新債利息進損益，新股進股數；DCF 以融資後股數計每股，並加回新股募得現金的現值；EV/EBITDA 用錨定年末（預設 FY29）淨負債與股數。舉債部分反映在錨定年末淨負債（與舊版扣缺口本金等價），股權部分反映在股數。 結論規則：股權募資 > 現市值 ${multTxt(RATE_TH.equityRaiseMaxMult)} 倍 → 禁止買進；加權目標價低於現價 ${pctQ(SELL_TH)} 以上，或股權需求過大且目標價低於現價 ${pctQ(RATE_TH.sellUpsideMaxIfEquityOver)} 以上 → 賣出；上檔 ≥${pctQ(RATE_TH.buyUpsideMin)} 且股權需求未超標才買進。這是研究框架，不是投資建議。Street $144 隱含市場相信資產層債務能以可接受成本持續擴張、股權稀釋有限，與本模型的債務上限與股權殘差假設不同。`
+            children: `缺口處理：採期前融資瀑布——每期在需要前先融足，使期末現金不低於最低現金；客戶預付先抵減資本支出，其餘依序動用現金、未動用額度、資產擔保新債（總債務 ≤ 債務／backlog 上限）、可轉債（每年上限）、股權（按現價折價發行），最後才是高息債。新債利息進損益，新股進股數；DCF 以融資後股數計每股，並加回新股募得現金的現值；EV/EBITDA 用錨定年末（預設 FY29）淨負債與股數。舉債部分反映在錨定年末淨負債（與舊版扣缺口本金等價），股權部分反映在股數。 結論規則：股權募資 > 現市值 ${multTxt(RATE_TH.equityRaiseMaxMult)} 倍 → 禁止買進；加權目標價低於現價 ${pctQ(SELL_TH)} 以上，或股權需求過大且目標價低於現價 ${pctQ(RATE_TH.sellUpsideMaxIfEquityOver)} 以上 → 賣出；上檔 ≥${pctQ(RATE_TH.buyUpsideMin)} 且股權需求未超標才買進。這是研究框架，不是投資建議。共識平均目標價 $${Y(CONSENSUS.priceTarget.mean, 2)} 隱含市場相信擴張資金能以可接受成本取得、股權稀釋有限，與本模型的預付覆蓋、債務上限與股權殘差假設不同。`
           })]
         })]
       })]
