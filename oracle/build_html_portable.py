@@ -17,9 +17,10 @@ sys.path.insert(0, H); import calendar_q  # v4.5：期間與日期由 company.js
 _co = calendar_q.load(H)  # 公司資料單一來源
 _co.pop('asOf', None)  # 滾動檢查的季度標記只在建置時檢查（calendar_q），不注入 HTML
 _co['consensus'] = _json.load(open(os.path.join(H, _co['meta']['consensusFile']), encoding='utf-8'))  # v4.3：市場共識資料檔（只讀）併入注入資料，不另設全域變數
-_g = _co['consensus']['companyGuidance'].get('2026Q3') or {}  # Q3 營收指引以 company.json 為準；與共識檔不一致即停止建置（Excel 建置同一檢查；v0.1b：公司未給季度指引時兩邊皆為空）
+_g = _co['consensus']['companyGuidance'].get(_co['quarterly']['quarters'][0]['key']) or {}  # Q3 營收指引以 company.json 為準；與共識檔不一致即停止建置（Excel 建置同一檢查；v0.1b：公司未給季度指引時兩邊皆為空）
 assert (_g.get('revenueLow'), _g.get('revenueHigh')) == (_co['callFacts']['nextQRevLo'], _co['callFacts']['nextQRevHi']), 'Q3 營收指引：company.json 與共識檔不一致'
-assert abs(_co['ytdActual']['adjEbitda'] - _co['ytdActual']['adjEbitdaMeta']['q1'] - _co['ytdActual']['adjEbitdaMeta']['q2']) < 1e-9, '1H 調整後 EBITDA ≠ Q1＋Q2'
+import re as _re
+assert abs(_co['ytdActual']['adjEbitda'] - sum(v for k, v in _co['ytdActual']['adjEbitdaMeta'].items() if _re.fullmatch(r'q\d', k))) < 1e-9, '年初至今調整後 EBITDA ≠ 各季合計'
 import subprocess as _sp  # v4.4：季度加總＝年度、指引一致性、超過門檻的差距都有原因；不符即停止建置
 _ck = _sp.run(['node', os.path.join(H, 'scripts', 'check_quarterly.js'), H], capture_output=True, text=True)
 # CRWV_SKIP_QCHECK：只供 scripts/test_rolling.py 的暫存副本使用（只改日曆、不改數字，季度一致性必然不符）

@@ -385,7 +385,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
       elQ(StatQ, { key: 3, label: `或打平所需每 MW 建置成本`, value: `$${Y(beCost, 1)}m`, note: `目前 $${Y(cost30, 0)}m（${beCost >= cost30 ? `+` : `−`}${hA(Math.abs(beCost / cost30 - 1) * 100, 0)}）` })
     ]),
     elQ(`p`, { key: `n`, style: { fontSize: 15.5, color: `var(--color-muted)`, marginTop: `auto`, lineHeight: 1.55 } },
-      `EBITDA 率由季報 AI cloud 分部 ${hA(e.ebStart * 100, 0)} 線性變動至 FY30 ${hA(e.ebSteady * 100, 0)}；取可觀察 neocloud 區間（IREN 約 35%、CRWV 約 59%），不取自每 MW 推導的加成。`)
+      `EBITDA 率由 ${TXQ.ebStartSource} ${hA(e.ebStart * 100, 0)} 線性變動至 ${PERIODS[4]} ${hA(e.ebSteady * 100, 0)}；取可觀察 neocloud 區間（IREN 約 35%、CRWV 約 59%），不取自每 MW 推導的加成。`)
   ]);
 
   // 4｜融資
@@ -449,7 +449,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
     ? `現價 $${Y(P, 2)} 要成立：FY30 每 MW 年收入需 ${rv.R >= 1 ? `+` : `−`}${hA(Math.abs(rv.R - 1) * 100, 0)}，或建置成本需 ${rv.C >= 1 ? `+` : `−`}${hA(Math.abs(rv.C - 1) * 100, 0)}`
     : `現價要成立需要什麼（計算中或無解）`, rv ? [
       elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 20 } }, [
-        elQ(StatQ, { key: 1, label: `每 MW 年收入（FY30）`, value: Number.isFinite(rv.R) ? `$${Y(rv.rev30 * rv.R, 1)}m` : `無解`, note: `目前 $${Y(rv.rev30, 1)}m；其他條件不變` }),
+        elQ(StatQ, { key: 1, label: `每 MW 年收入（${PERIODS[4]}）`, value: Number.isFinite(rv.R) ? `$${Y(rv.rev30 * rv.R, 1)}m` : `無解`, note: `目前 $${Y(rv.rev30, 1)}m；其他條件不變` }),
         elQ(StatQ, { key: 2, label: `或每 MW 建置成本`, value: Number.isFinite(rv.C) ? `$${Y(rv.cost30 * rv.C, 1)}m` : `無解`, note: `目前 $${Y(rv.cost30, 0)}m；其他條件不變` }),
         elQ(StatQ, { key: 3, label: `或穩態 EBITDA 率`, value: Number.isFinite(rv.Eb) ? hA(rv.Eb * 100, 0) : `無解`, tone: Number.isFinite(rv.Eb) && rv.Eb > .59 ? `var(--color-bad)` : void 0, note: `目前 ${hA(rv.eb30 * 100, 0)}；可觀察 neocloud 上緣約 59%（CRWV）` })
       ]),

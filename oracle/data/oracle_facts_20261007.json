@@ -6238,6 +6238,86 @@
     "tag": "[Interested-party]",
     "note": "EBITDA 51,664／74,642／107,543（非 GAAP 營業利益＋折舊口徑）；資本支出 93,961／100,962／84,848；LSEG（Yahoo）FY27／FY28 營收 90,480／131,450（獨立，一致）"
    }
+  ],
+  "9_v0.1b補充": [
+   {
+    "id": "is.epsDil.fy2024",
+    "item": "稀釋 EPS（GAAP）",
+    "value": 3.71,
+    "unit": "US$／股",
+    "period": "FY2024",
+    "source": "SEC XBRL companyfacts（EarningsPerShareDiluted；FY2026 10-K 申報值）",
+    "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001341439.json",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "10-K 經查核；accn 0001193125-26-277521"
+   },
+   {
+    "id": "sh.dilW.fy2024x",
+    "item": "加權平均股數（稀釋）",
+    "value": 2823,
+    "unit": "m 股",
+    "period": "FY2024",
+    "source": "SEC XBRL companyfacts（WeightedAverageNumberOfDilutedSharesOutstanding）",
+    "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001341439.json",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "10-K 經查核"
+   },
+   {
+    "id": "is.epsDil.fy2025",
+    "item": "稀釋 EPS（GAAP）",
+    "value": 4.34,
+    "unit": "US$／股",
+    "period": "FY2025",
+    "source": "SEC XBRL companyfacts（EarningsPerShareDiluted；FY2026 10-K 申報值）",
+    "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001341439.json",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "10-K 經查核；accn 0001193125-26-277521"
+   },
+   {
+    "id": "sh.dilW.fy2025x",
+    "item": "加權平均股數（稀釋）",
+    "value": 2866,
+    "unit": "m 股",
+    "period": "FY2025",
+    "source": "SEC XBRL companyfacts（WeightedAverageNumberOfDilutedSharesOutstanding）",
+    "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001341439.json",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "10-K 經查核"
+   },
+   {
+    "id": "is.epsDil.fy2026",
+    "item": "稀釋 EPS（GAAP）",
+    "value": 5.83,
+    "unit": "US$／股",
+    "period": "FY2026",
+    "source": "SEC XBRL companyfacts（EarningsPerShareDiluted；FY2026 10-K 申報值）",
+    "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001341439.json",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "10-K 經查核；accn 0001193125-26-277521"
+   },
+   {
+    "id": "sh.dilW.fy2026x",
+    "item": "加權平均股數（稀釋）",
+    "value": 2914,
+    "unit": "m 股",
+    "period": "FY2026",
+    "source": "SEC XBRL companyfacts（WeightedAverageNumberOfDilutedSharesOutstanding）",
+    "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001341439.json",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "10-K 經查核"
+   }
   ]
  }
 }

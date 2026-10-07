@@ -20,9 +20,9 @@ PREV_FY = f"FY{int(CO['periods'][0][2:]) - 1:02d}"  # 5a：首期的前一財年
 PREV_FY_REV = next(h['revenue'] for h in CO['historicalPL'] if h['year'] == PREV_FY)  # v4.5：年初至今實際（原 actual1H）；數值與逐列備註都讀 company.json，滾動時隨資料更新
 # v4.3：市場共識資料檔（只讀；路徑在 company.json → meta.consensusFile）。與 HTML 相同的一致性檢查見 build_html_portable.py
 CONS = _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), CO['meta']['consensusFile']), encoding='utf-8'))
-_g3 = CONS['companyGuidance'].get('2026Q3') or {}  # v0.1b：公司未給季度指引時兩邊皆為空
+_g3 = CONS['companyGuidance'].get(CO['quarterly']['quarters'][0]['key']) or {}  # v0.1b：公司未給季度指引（或只給年增率）時兩邊皆為空；季別鍵＝季度層第一季
 assert (_g3.get('revenueLow'), _g3.get('revenueHigh')) == (CO['callFacts']['nextQRevLo'], CO['callFacts']['nextQRevHi']), 'Q3 營收指引：company.json 與共識檔不一致'
-assert abs(CO['ytdActual']['adjEbitda'] - CO['ytdActual']['adjEbitdaMeta']['q1'] - CO['ytdActual']['adjEbitdaMeta']['q2']) < 1e-9, '1H 調整後 EBITDA ≠ Q1＋Q2'
+assert abs(CO['ytdActual']['adjEbitda'] - sum(v for k, v in CO['ytdActual']['adjEbitdaMeta'].items() if re.fullmatch(r'q\d', k))) < 1e-9, '年初至今調整後 EBITDA ≠ 各季合計'
 D, V, M = CO['defaults'], CO['valuation'], CO['defaults']['m']
 # v0.1b：開啟時的預設輸入（defaults.m）必須等於預設情境的已連網 MW、可計費 MW 與每 MW 年收入（HTML 開啟時用 defaults，Excel 用情境公式）
 def _conn(k, mp=CO['scenarios']['mwPath']):
@@ -35,9 +35,12 @@ assert all(abs(x - y) < 1e-6 for x, y in zip(_conn(_dsc), M['accepted'])), f"def
 assert M['billable'] == [int(x * b + 0.5) for x, b in zip(_conn(_dsc), CO['scenarios']['billableRatio']['ratio'])], "defaults.m.billable ≠ 已連網 × 在役比例（四捨五入）"
 assert M['revMW'] == CO['scenarios']['revMW'][_dsc], "defaults.m.revMW ≠ scenarios.revMW（預設情境）"
 PCT_ = lambda xs: [x / 100 for x in xs]  # HTML 以百分點存、Excel 以比例存
+TXQ = CO['texts']  # v0.1b（Oracle）：公司特有說明文字
+P3 = CO['periods'][:3]  # v0.1b：共識對照的三個年度（模型前三期）
+REV_GUIDE_TXT = (f"≥{_n(CO['callFacts']['revLo'])}" if CO['callFacts']['revHi'] is None else f"{_n(CO['callFacts']['revLo'])}–{_n(CO['callFacts']['revHi'])}")  # v0.1b：只有下限時寫「≥」
   # 版本紀錄單一來源：vlog.py（HTML 端為 tail.js 的 VLOG）
 # -*- coding: utf-8 -*-
-"""把收支模型（CRWV 模板，現為 Nebius）轉成可重算的 Excel 活頁簿。
+"""把收支模型（CRWV 模板，現為 company.json → meta.company）轉成可重算的 Excel 活頁簿。
 所有計算格都是公式，輸入格為藍字，跨頁連結為綠字。"""
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
@@ -161,7 +164,7 @@ ws["A1"].font = TITLE
 r = 3
 guide = [
     ("這個活頁簿在回答什麼", None),
-    (f"一句話：{CO['texts']['thesis']}——{CO['meta']['company']} 用客戶預付款支應多少擴張資本支出，剩下的缺口要靠多少資產擔保融資、可轉債與新股。", None),
+    (f"一句話：{CO['texts']['thesis']}——{CO['meta']['company']} 用客戶預付款支應多少擴張資本支出，剩下的缺口要靠多少債務與新股。", None),
     ("所有分頁用同一組數字，改任何一個輸入，後面全部會跟著動。", None),
     ("", None),
     ("分頁結構（依模組分組，分頁標籤顏色相同者為同一模組）", None),
@@ -183,7 +186,7 @@ guide = [
     ("■ 營收主軸：MW × 每 MW 年收入 × 利用率", None),
     ("  已連網 MW（情境路徑，口徑不明者 ÷ PUE 1.2 換成 MW-IT）→ 在役 MW（× 在役比例）→ 平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度＝營收。", None),
     ("  每 MW 年收入取 Tokenomics 正向推導的三情境值（data/permw_tokenomics_20261007.json），不用公司 ACV（只作對照）；利用率預設 100%，因推導值已含可計費利用率。", None),
-    ("  RPO 排程（季報桶分攤）只作對照：排程 > 容量的部分顯示為『產能瓶頸』旗標，並作為資產擔保融資容量的 backlog。", None),
+    ("  RPO 排程（季報桶分攤）只作對照：排程 > 容量的部分顯示為『產能瓶頸』旗標。", None),
     ("", None),
     ("■ 收入之後的折扣", None),
     ("  收入 → 扣信用損失（違約率 × (1−回收率)）→ 乘『EBITDAR 率』→ 營運現金；客戶預付另列為來源。", None),
@@ -303,8 +306,8 @@ LEASE_FL = gi(r, "表外租金起算 MW", "MW", CO['scenarios']['leaseRampFloorM
 # ---------------- B 產能與收入 ----------------
 r = section(ws, r, "B｜產能與收入（MW、每 MW 年收入、利用率、信用；RPO 只作對照）")
 RPO0 = gi(r, "«VMD» RPO", "US$bn", D['rpoOpen'], f"季報 RPO {LQ_RPO}（只作對照與債務上限的 backlog）[Interested-party]", NUM); r += 1
-RPOADD = gi(r, "Q3 初新增承諾", "US$bn", D['rpoPendingAdd'], "評價日後新簽、尚未進 RPO 的承諾；未揭露，取 0 [Assumed]"); r += 1
-RP = gi(r, "五期認列比例（至 2030 末）", "%", D['rp'] / 100, "季報桶 36／40／24（後段假設 49–72 個月）線性分攤後五期合計 82% [Derived]", PCT); r += 1
+RPOADD = gi(r, "評價日後新增承諾", "US$bn", D['rpoPendingAdd'], "評價日後新簽、尚未進 RPO 的承諾；未揭露，取 0 [Assumed]"); r += 1
+RP = gi(r, "五期認列比例（至 2030 末）", "%", D['rp'] / 100, f"季報 RPO 桶線性分攤後五期合計 {_n(D['rp'])}% [Derived]", PCT); r += 1
 WSUM = gi(r, "RPO 桶權重合計", "%", CO['rpo']['scheduledShare'], "下方權重列的合計，用於歸一化", PCT); r += 1
 MWY = {}  # 5a：各年底主動電力（company.json → defaults.mwYearEnd，以年份為鍵；說明在 texts.mwYearEndNotes）
 MWY[MW_Y0] = MW_YE25 = gi(r, f"{CAL['prevFYE']} 主動電力", "MW", D['mwYearEnd'][str(MW_Y0)], CO['texts']['mwYearEndNotes'][str(MW_Y0)], NUM0); r += 1
@@ -315,7 +318,7 @@ REVSC = gi(r, "每 MW 年收入倍數（整體）", "%", D['revScale'], "反向 
 r = phdr(r)
 r = prow(r, "模型期長度（年）", "", CO['periodYears'], NUM,
          "勿改。由 calendar_q.py 推算；只用於容量上限、電力、維護等年率換算 [Derived]")
-r = prow(r, "RPO 桶權重", "%", CO['rpo']['bucketWeights'], PCT, "季報 36%／24m、40%／25-48m、24%／之後（假設 49–72m）桶內線性分攤 [Derived]")
+r = prow(r, "RPO 桶權重", "%", CO['rpo']['bucketWeights'], PCT, "季報 RPO 桶（{0}）桶內線性分攤 [Derived]".format(TXQ['rpoNote']) + "")
 ws.cell(row=IN["RPO 桶權重"], column=8, value="=SUM(C{0}:G{0})".format(IN["RPO 桶權重"])).number_format = PCT
 r = prow(r, "Accepted MW（期末主動電力）", "MW", [0] * 5, NUM0, "＝依 A 區情境選擇器（已連網 MW-IT）", BLACK)
 r = prow(r, "Billable MW", "MW", [0] * 5, NUM0, "＝已連網 × 在役比例（A 區）", BLACK)
@@ -333,13 +336,13 @@ r = prow(r, "新產能簽約率", "%", PCT_(M['fill']), PCT, "MW 驅動：100%�
 r = prow(r, "客戶違約率", "%", PCT_(M['defaultP']), PCT, "前三大客戶約 59% 營收的定價，非預測 [Assumed]")
 r = prow(r, "回收率", "%", PCT_(M['recovery']), PCT, "[Assumed]")
 r = prow(r, "非算力服務營收", "US$bn", D['services'], NUM, "預設 0：AI cloud 軟體已含在每 MW 年收入；其他事業另列 [Assumed]")
-r = prow(r, "其他事業 EBITDA（Avride＋TripleTen）", "US$bn", D['otherEbitda'], NUM, D['otherEbitdaNote'])
+r = prow(r, "其他事業 EBITDA", "US$bn", D['otherEbitda'], NUM, D['otherEbitdaNote'])
 r += 1
 
 # ---------------- C 利潤率 ----------------
 r = section(ws, r, "C｜利潤率（EBITDA 率單一來源；損益與資金共用）")
-EB0 = gi(r, "起始 EBITDA 率（FY26）", "%", D['ebStart'], "季報 AI cloud 分部調整後 EBITDA 率 49.7%（Q2）[Interested-party]", PCT, True); r += 1
-EBSS = gi(r, "穩態 EBITDA 率（FY30）", "%", D['ebSteady'], "可觀察 neocloud 區間 IREN 約 35%／CRWV 約 59% 的中點 47%；不取自每 MW 推導路徑 A 的加成 [Analogy]", PCT, True); r += 1
+EB0 = gi(r, "起始 EBITDA 率（«P0»）", "%", D['ebStart'], TXQ['ebStartSource'] + " [Derived]", PCT, True); r += 1
+EBSS = gi(r, "穩態 EBITDA 率（«PL»）", "%", D['ebSteady'], "可觀察 neocloud 區間 IREN 約 35%／CRWV 約 59% 的中點 47%；不取自每 MW 推導路徑 A 的加成 [Analogy]", PCT, True); r += 1
 r = phdr(r)
 r = prow(r, "EBITDA 率", "%", [0] * 5, PCT, "＝起始＋(穩態−起始)×期數÷4（公式）", BLACK)
 for i in range(5):
@@ -358,14 +361,14 @@ LAMBDA = gi(r, "提前支出比例 λ", "%", D['lambda'], "次年才上線的 MW
 MW31 = gi(r, "FY31 新增 MW（FY30 預建用）", "MW",
           f"=CHOOSE({SEL},I{sc_rows['保守']},I{sc_rows['基準']},I{sc_rows['積極']})",
           "隨情境：保守 0／基準 500／積極 1,000 [Assumed]", NUM0); r += 1
-FLOOR = gi(r, "FY26 CapEx 下限（已承諾）", "US$bn", D['capexFloorFY0'], "全年指引下緣（法說會轉述）：當年支出多已下單 [Interested-party]"); r += 1
-LIFE = gi(r, "GPU 經濟壽命（年）", "年", D['gpuLife'], "公司 2026 起伺服器與網通設備折舊年限 5 年（Tokenomics 6 年）；取較保守者 [Interested-party]", NUM0); r += 1
+FLOOR = gi(r, "«P0» CapEx 下限（已承諾）", "US$bn", D['capexFloorFY0'], f"全年指引下緣（{TXQ['capexGuideSource']}）：當年支出多已下單"); r += 1
+LIFE = gi(r, "GPU 經濟壽命（年）", "年", D['gpuLife'], "公司伺服器與網通設備耐用年限 6 年（10-K）；Tokenomics 6 年 [Interested-party]", NUM0); r += 1
 for _y in sorted(int(y) for y in D['mwYearEnd'] if int(y) != MW_Y0):
     MWY[_y] = gi(r, f"{_y} 年底主動電力", "MW", D['mwYearEnd'][str(_y)], CO['texts']['mwYearEndNotes'][str(_y)], NUM0); r += 1
-PPE0 = gi(r, "6/30 毛 PP&E", "US$bn", D['ppeOpen'], f"季報毛額（含尚未啟用資產 {CO['latestQuarter']['cip']}）[Interested-party]"); r += 1
+PPE0 = gi(r, "«VMD» 期初 PP&E 基礎", "US$bn", D['ppeOpen'], TXQ['ppeOpenNote']); r += 1
 CAPSC = gi(r, "每 MW 建置成本倍數（整體）", "%", D['capexScale'], "同時影響 CapEx、汰換與車隊折舊；反向 DCF 用；預設 100%", PCT); r += 1
 r = phdr(r)
-r = prow(r, "每 MW 建置成本", "US$m/MW", CO['scenarios']['capexTemplate']['costMW'], NUM1, "Tokenomics IF_CapexTotal（IT＋機房）：GB300 50.12、VR200 50.26 [Derived]")
+r = prow(r, "每 MW 建置成本", "US$m/MW", CO['scenarios']['capexTemplate']['costMW'], NUM1, TXQ['costMwNote'])
 PPD = D['prepay']  # v0.1b：預付款區塊輸入
 PP_SH = gi(r, "有預付的合約比例", "%", PPD['shareOfDeals'], "股東信：約 70% 合約含客戶預付 [Interested-party]", PCT); r += 1
 PP_CV = gi(r, "預付占相關資本支出比", "%", PPD['capexCover'], "股東信：預付覆蓋相關資本支出 50–60%，取中點 [Interested-party]", PCT); r += 1
@@ -422,10 +425,10 @@ r += 1
 
 # ---------------- E 融資 ----------------
 r = section(ws, r, "E｜融資（期初現金、既有債務、瀑布參數）")
-CASH0 = gi(r, "期初現金（2026-06-30）", "US$bn", D['cash'], f"季報現金 {CO['latestQuarter']['cash']}；受限現金 {CO['latestQuarter']['restricted']} 不計 [Interested-party]"); r += 1
-ATM = gi(r, "股權／可轉債金額", "US$bn", D['atm'], "2026-08 可轉債 $5.75B 淨額約 5.68（超額配售全數行使）[Interested-party]"); r += 1
+CASH0 = gi(r, "期初現金（«VD»）", "US$bn", D['cash'], f"季報現金 {CO['latestQuarter']['cash']}；受限現金 {CO['latestQuarter']['restricted']} 與有價證券 {CO['latestQuarter']['marketable']} 不計 [Interested-party]"); r += 1
+ATM = gi(r, "股權／可轉債金額", "US$bn", D['atm'], "評價日後已完成的股權／可轉債淨額（company.json → defaults.atm）"); r += 1
 ATMON = gi(r, "計入股權／可轉債（1=是）", "", int(D['includeAtm']), f"關閉則首期少 {D['atm']}bn 來源", NUM0); r += 1
-FAC = gi(r, "未動用信用額度", "US$bn", D['facility'], "資產擔保定期貸款 $775M（2026-07-10 簽約，SOFR＋2.50%）[Interested-party]"); r += 1
+FAC = gi(r, "未動用信用額度", "US$bn", D['facility'], f"{TXQ['facilityName']} [Interested-party]"); r += 1
 FACON = gi(r, "瀑布可動用未動用額度（1=是）", "", int(D['useFacility']), "瀑布第一順位；已承諾額度，不受 債務／backlog 上限限制", NUM0); r += 1
 DEBTON = gi(r, "債務排程攤還（1=開）", "", int(D['includeDebt']), "季報到期表；關閉＝假設全額再融資", NUM0); r += 1
 KBL = gi(r, "債務／backlog 上限", "x", D['debtBacklog'], "資產擔保融資容量：總債務 ≤ 此倍數 × backlog；評價日實際約 0.27x，預設 0.5x [Assumed]", '0.00', True); r += 1
@@ -450,7 +453,7 @@ CDSB = gi(r, "CDS 傳入門檻", "bps", D['cdsBaseBp'], "CDS 超過此值的部�
 CDSP = gi(r, "CDS 傳入比例", "%", D['cdsPassThrough'], "每 1bp CDS 超額傳入新債利率的比例 [Assumed]", PCT); r += 1
 r = phdr(r)
 r = prow(r, "排程還本（季報到期表）", "US$bn", CO['debt']['amortization'], NUM, f"可轉債到期累積本金與其他借款；其後 {CO['debt']['amortAfterFY30']} [Interested-party]")
-r = prow(r, "新債利率", "%", PCT_(M['rate']), PCT, "瀑布新債成本：資產擔保融資 SOFR＋2.50%（SOFR 以 rf 4% 推估）[Derived]")
+r = prow(r, "新債利率", "%", PCT_(M['rate']), PCT, TXQ['newDebtRateNote'])
 r = prow(r, "存量債務利息（下游引用此列）", "US$bn", ["=0"] * 5, NUM, "＝債務明細頁：平均本金×加權有效利率×期間長度＋可轉債利息＋FY26 校準", GREEN, key="存量債務利息")
 DEBT_INT_ROW = IN["存量債務利息"]
 r += 1
@@ -458,7 +461,7 @@ r += 1
 # ---------------- F 評價 ----------------
 r = section(ws, r, "F｜評價（價格、股數、折現、倍數、權重）")
 PX = gi(r, f"現價（{CO['meta']['priceDate']} 收盤）", "US$", V['price'], f"{CONS['priceReference']['source']}（{CONS['priceReference']['url']}）[Verified]", USD); r += 1
-SH = gi(r, "股數（含 ATM 上限）", "bn", V['shares'], "季末流通 0.2719＋NVIDIA 預付認股權證 0.0211＋以股換債 0.0158＋RSU 0.0062＋選擇權庫藏股法 0.0043 [Derived]", '0.0000'); r += 1
+SH = gi(r, "股數（含 ATM 上限）", "bn", V['shares'], f"季末流通 {CO['latestQuarter']['sharesOut']}＋{TXQ['sharesNote']} [Derived]", '0.0000'); r += 1
 ND = gi(r, "淨負債（不含可轉債）", "US$bn", V['netDebt'], f"其他借款 − 現金（含期後股權／可轉債募得淨額）；可轉債依稀釋判斷另計（見『評價_DCF與目標價』可轉債區）[Derived]"); r += 1
 _HV = []  # v0.1b：持股（估值 × 持股比例 ×（1 − 折價））與類債項目 → 淨負債調整項
 for _h in V['holdings']:
@@ -474,9 +477,9 @@ ADJ = gi(r, "淨負債調整項（類債 − 持股 ×（1 − 折價））", "U
 WACC = gi(r, "WACC", "%", V['wacc'], "沿用 CRWV 模板值（Nebius 淨現金、槓桿較低，WACC 可能偏高＝偏保守；v0.1b 未另估）[Assumed]", PCT); r += 1
 GG = gi(r, "永續成長 g", "%", V['g'], "[Assumed]", PCT); r += 1
 MAINT = gi(r, "終值維持性 CapEx 占 D&A", "%", V['maintRatio'], "終值不讓成長性 CapEx 偽裝成永續 FCF [Assumed]", PCT); r += 1
-TAX = gi(r, "稅率", "%", V['tax'], "荷蘭名目稅率 25.8% [Verified]", PCT); r += 1
+TAX = gi(r, "稅率", "%", V['tax'], TXQ['taxNote'] + " [Interested-party]", PCT); r += 1
 NOL0 = gi(r, "期初 NOL（虧損扣抵）", "US$bn", V['nol'], f"«VMD» 累積虧損約 {V['nol']:.1f}；抵扣上限為應稅所得 {_n(V['nolUsePct'] * 100)}% [Derived]"); r += 1
-NOLU = gi(r, "NOL 每年可抵用比例", "%", V['nolUsePct'], "抵扣上限占應稅所得的比例（荷蘭規定簡化為 50%）[Assumed]", PCT); r += 1
+NOLU = gi(r, "NOL 每年可抵用比例", "%", V['nolUsePct'], "抵扣上限占應稅所得的比例 [Assumed]", PCT); r += 1
 WCP = gi(r, "營運資金占營收增量", "%", V['wcPctOfRevGrowth'], "營運資金變動＝營收增量 × 此比例 [Assumed]", PCT); r += 1
 EVEBITDA = gi(r, "EV/EBITDA 倍數", "x", V['evEbitda'], "沿用 CRWV 模板：穩態合理倍數約 3.4–6.0x（轉換率 ÷ (WACC − g)），6x 為上緣；共識目標價隱含約 9–10x [Assumed]", MULT); r += 1
 EVY = gi(r, "EV/EBITDA 錨定年度（1＝FY27、2＝FY28、3＝FY29、4＝FY30）", "", V['evYear'], "«EVDISC»（目標價時點）；v3.6 起預設 FY29：接近穩態利潤率，與 6x 穩態倍數一致 [Assumed]", NUM0, True); r += 1
@@ -488,7 +491,7 @@ WEVE = gi(r, "權重：EV/EBITDA", "%", CO['methodology']['blendWeights']['pe'],
 RM_LO = gi(r, "方法區間倍數：下端", "x", min(CO['methodology']['rangeMultiples']), "v4.1 方法區間：目前輸入、EV/EBITDA 倍數換成兩端；6x 為穩態倍數上緣 [Assumed]", MULT); r += 1
 RM_HI = gi(r, "方法區間倍數：上端", "x", max(CO['methodology']['rangeMultiples']), "", MULT); r += 1
 SHG = gi(r, "股數年增（SBC 稀釋）", "%", 0.01, "模板固定 1%／年（SBC 約 0.13bn ÷ 現市值約 0.2%，偏保守）[Assumed]", PCT); r += 1
-SBCY = gi(r, "年度 SBC", "US$bn", V['sbc'], "上半年 0.138 扣 Eigen AI 一次性 0.075 後年化約 0.13 [Derived]"); r += 1
+SBCY = gi(r, "年度 SBC", "US$bn", V['sbc'], f"«YTD» SBC {YA['sbc']} 年化 [Derived]"); r += 1
 r = section(ws, r, "DCF 股權為負時的處理（0 截斷／選擇權）", level=2)
 DMODE = gi(r, "DCF 下限方式（1＝0 截斷、2＝選擇權）", "", (1 if V['dcfMode'] == 'zero' else 2), "0 截斷：MAX(0, 股權價值)；選擇權：Merton，股權＝以企業價值為標的、淨負債為履約價的買權", NUM0, True); r += 1
 SIGMA = gi(r, "企業價值波動率 σ", "%", V['sigma'], "選擇權法用 [Assumed]", PCT); r += 1
@@ -638,7 +641,7 @@ for i in range(5):
 r = section(ws, r, "（B）合約：排程 RPO")
 crow("排程 RPO（模型期，依季報桶分攤）", "US$bn",
      lambda i: f"=({RPO0}+{RPOADD})*({inref('RPO 桶權重', i)}/{WSUM})*{RP}", NUM, BLACK,
-     "＝(«VMD» RPO＋Q3 新增)×本期權重÷權重合計×五期認列比例。只看合約，不看機房")
+     "＝(«VMD» RPO＋評價日後新增)×本期權重÷權重合計×五期認列比例。只看合約，不看機房")
 sch_row = CR["排程 RPO（模型期，依季報桶分攤）"]
 ai_row = sch_row
 
@@ -679,7 +682,7 @@ crow("«YTDL» 實際營收（季報，已實現）", "US$bn",
 h1rev_row = CR["«YTDL» 實際營收（季報，已實現）"]
 crow("«P0» 全年總營收（«YTD» 實際＋模型期算力＋服務）", "US$bn",
      lambda i: (f"={COLS[i]}{h1rev_row}+{COLS[i]}{isrev_row}+{inref('非算力服務營收', i)}"), NUM, BOLD,
-     f"«P0» 欄對照公司全年指引 {CO['callFacts']['revLo']}–{CO['callFacts']['revHi']}；«P1» 以後即為該年度總營收")
+     f"«P0» 欄對照公司全年指引 {REV_GUIDE_TXT}；«P1» 以後即為該年度總營收")
 fy_rev_row = CR["«P0» 全年總營收（«YTD» 實際＋模型期算力＋服務）"]
 for i in range(5):
     ws.cell(row=fy_rev_row, column=3 + i).font = Font(name="Arial", size=10, bold=True)
@@ -790,7 +793,7 @@ frow("③ 存量債務利息（備忘，«YTD» 已含在 CFO）", "US$bn",
      # v4.5：首期模型部分的利息由本列算出，說明句改為文字公式（滾動後隨模型值更新）
      f'="«VMD» 債務餘額的利息。«P0» 全年利息＝«YTD» 實際 {YA["interest"]}＋«STUB» "&TEXT(C{r},"0.0")&"＝"&TEXT({YA["interest"]}+C{r},"0.00")&"（見下方備忘）"')
 frow("　期初累積現金", "US$bn", lambda i: f"={H_CASH1231}", NUM, BLACK,
-     "FY26 自 2025-12-31 的 3.127 起算；之後＝前期期末累積現金")
+     "«P0» 自 «PREVFYE» 起算；之後＝前期期末累積現金")
 beg_cash = FR["　期初累積現金"]
 frow("　新債利率", "%",
      lambda i: f"=IF({CDSON}=1,{inref('新債利率', i)}+MAX(0,{CDS}-450)/100*0.004,{inref('新債利率', i)})",
@@ -835,8 +838,8 @@ frow("Ⓐ0 «YTDL» 實際營運現金流（CFO）", "US$bn",
 frow("Ⓐ RPO 現金（«STUB» 起）", "US$bn", lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['rpocash']}", NUM, GREEN)
 frow("Ⓑ 新簽約現金", "US$bn", lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['newcash']}", NUM, GREEN)
 frow("Ⓒ 非算力服務現金", "US$bn", lambda i: f"={inref('非算力服務現金', i)}", NUM, GREEN)
-frow("Ⓒ2 其他事業 EBITDA（«STUB» 起）", "US$bn", lambda i: f"={inref('其他事業 EBITDA（Avride＋TripleTen）', i)}", NUM, GREEN,
-     "Avride＋TripleTen 燒錢（負值），視為現金（v0.1b）")
+frow("Ⓒ2 其他事業 EBITDA（«STUB» 起）", "US$bn", lambda i: f"={inref('其他事業 EBITDA', i)}", NUM, GREEN,
+     "非核心事業 EBITDA（負值＝燒錢），視為現金（v0.1b）")
 frow("Ⓓ 客戶預付（«STUB» 起）", "US$bn",
      lambda i: f"={COLS[i]}{FR['　客戶預付金額（抵減，«STUB» 起）']}", NUM, BLACK)
 frow("Ⓓ2 減：預付認列（非現金營收）", "US$bn", lambda i: f"=-{COLS[i]}{pr_row}", NUM, BLACK,
@@ -1010,7 +1013,7 @@ for i in range(5):
 
 r += 1
 r = section(ws, r, "四層橋（驗算）", collapsed=True)
-ws.cell(row=r, column=1, value="期初現金（2025-12-31）").font = BLACK
+ws.cell(row=r, column=1, value="期初現金（«PREVFYE»）").font = BLACK
 ws.cell(row=r, column=3, value=f"={H_CASH1231}").number_format = NUM
 b1 = r; r += 1
 ws.cell(row=r, column=1, value="＋ 營運缺口合計").font = BLACK
@@ -1019,10 +1022,10 @@ b2 = r; r += 1
 ws.cell(row=r, column=1, value="＋ 股權／可轉債合計").font = BLACK
 ws.cell(row=r, column=3, value=f"=SUM(C{atm_row}:G{atm_row})").number_format = NUM
 b3 = r; r += 1
-ws.cell(row=r, column=1, value="＋ 1H 實際借款").font = BLACK
+ws.cell(row=r, column=1, value="＋ «YTD» 實際借款").font = BLACK
 ws.cell(row=r, column=3, value=f"=SUM(C{borrow_row}:G{borrow_row})").number_format = NUM
 b3b = r; r += 1
-ws.cell(row=r, column=1, value="− capped call（1H）").font = BLACK
+ws.cell(row=r, column=1, value="− capped call（«YTD»）").font = BLACK
 ws.cell(row=r, column=3, value=f"=-SUM(C{FR['⑥ capped call 支出（«YTD» 實際）']}:G{FR['⑥ capped call 支出（«YTD» 實際）']})").number_format = NUM
 b3c = r; r += 1
 ws.cell(row=r, column=1, value="＋ «YTD» 其他／受限現金調節").font = BLACK
@@ -1047,14 +1050,14 @@ b8 = r
 ws.cell(row=r, column=9, value="若不為 0，表示公式鏈被改壞").font = SMALL
 
 r += 2
-r = section(ws, r, "FY26 全年備忘（對照公司指引）", collapsed=True)
+r = section(ws, r, "«P0» 全年備忘（對照公司指引）", collapsed=True)
 memo = [
-    ("FY26 總營收（1H 實際＋2H 模型）", f"='運營_產能與收入'!C{fy_rev_row}", NUM, f"公司指引 {CO['callFacts']['revLo']}–{CO['callFacts']['revHi']}"),
-    ("FY26 CapEx 認列（1H＋2H）", f"=C{FR['① 毛 CapEx（認列，備忘）']}", NUM, f"公司指引 {CO['callFacts']['capexLo']}–{CO['callFacts']['capexHi']}（法說會轉述）"),
+    ("«P0» 總營收（«YTD» 實際＋«STUB» 模型）", f"='運營_產能與收入'!C{fy_rev_row}", NUM, f"公司指引 {REV_GUIDE_TXT}"),
+    ("«P0» CapEx 認列（«YTD»＋«STUB»）", f"=C{FR['① 毛 CapEx（認列，備忘）']}", NUM, f"公司指引 {CO['callFacts']['capexLo']}–{CO['callFacts']['capexHi']}（{TXQ['capexGuideSource']}）"),
     ("«P0» 利息（«YTD» 實際＋«STUB» 模型）", f"={H_INT}+{inref('存量債務利息', 0)}+C{newint_row}", NUM,
-     "Q3 指引 0.86–0.94／季"),
-    ("FY26 租賃現金（1H 實際＋2H 模型）", f"={H_LEASE}+C{FR['　租金合計']}", NUM, "1H 實際支付 0.748"),
-    ("FY26 排程還本（1H 實際＋2H）", f"=C{debt_row}", NUM, "1H 實際還款 5.219＋2H 到期表 4.413"),
+     "公司未提供季度利息指引" if CO['callFacts']['nextQIntLo'] is None else f"下一季指引 {CO['callFacts']['nextQIntLo']}–{CO['callFacts']['nextQIntHi']}／季"),
+    ("«P0» 租賃現金（«YTD» 實際＋«STUB» 模型）", f"={H_LEASE}+C{FR['　租金合計']}", NUM, f"«YTD» 實際支付 {YA['leasePaid']}"),
+    ("«P0» 排程還本（«YTD» 實際＋«STUB»）", f"=C{debt_row}", NUM, f"«YTD» 實際還款 {YA['debtRepaid']}＋«STUB» 到期表 {CO['debt']['amortization'][0]}"),
 ]
 memo0 = r
 for nm, f, fmt, nt in memo:
@@ -1150,7 +1153,7 @@ _LF = CO['leases']['facts']  # v0.1b：承諾金額讀 company.json → leases.f
 commit = [
     ("未起租租賃（未折現）", "US$bn", _LF['notCommenced'], "季報揭露之已簽約未起租租賃", "否", "表外現金租金"),
     ("單站按造價計租，上限", "US$bn", _LF['singleCap'], "無此類揭露時為 0", "否", "表外現金租金"),
-    ("未動用信用額度", "US$bn", D['facility'], "company.json → defaults.facility（評價日後簽約的資產擔保定期貸款）", "否（來源）", "瀑布：未動用額度"),
+    ("未動用信用額度", "US$bn", D['facility'], f"company.json → defaults.facility（{TXQ['facilityName']}）", "否（來源）", "瀑布：未動用額度"),
 ]
 c0 = r
 for nm, un, amt, sched, onbs, pos in commit:
@@ -1237,7 +1240,7 @@ for j, h in enumerate(["可轉債", "到期", "票息", "原始本金", "到期�
     if h:
         c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
 r += 1
-CV_LIST = CO['debt']['convertibles']
+CV_LIST = CO['debt']['convertibles'] or [["（無可轉債，不適用）", 0, 0, "2099-12", 1, 1, "company.json → debt.convertibles 為空清單"]]  # v0.1b：空清單時放一列 0（範圍公式不會反轉）
 def _cv_t(mat):  # 到期所屬模型期：第一個期末 ≥ 到期月的期別（0–4）；模型期後＝5
     for i, pe in enumerate(CAL['periodEnd']):
         if pe[:7] >= mat:
@@ -1422,7 +1425,7 @@ rr_mw = srow("平均在役 MW（已連網）", "MW",
              lambda i: (f"=('輸入與假設'!{COLS[i]}${IN['期初主動電力']}+'輸入與假設'!{COLS[i]}${IN['Accepted MW（期末主動電力）']})/2"), NUM0)
 rr_len = srow("模型期長度（年）", "年", lambda i: f"={inref('模型期長度（年）', i)}")
 rr_per = srow("模型每 MW 年租金", "US$m/MW", lambda i: f"={COLS[i]}{rr_rent}/{COLS[i]}{rr_len}/{COLS[i]}{rr_mw}*1000", NUM,
-              "FY26 欄只含下半年租金、MW 取全年平均，略有低估", bold=True)
+              "«P0» 欄只含«STUBW»租金、MW 取全期平均，略有低估", bold=True)
 ws.cell(row=r, column=1, value="第三方租賃占比").font = BLACK
 c = ws.cell(row=r, column=3, value=CO['leases']['facts']['share']); c.font = BLUE; c.number_format = PCT; c.border = BOX
 ws.cell(row=r, column=11, value="其餘為自建，成本走 CapEx（company.json → leases.facts.share）[Assumed]").font = SMALL
@@ -1477,7 +1480,7 @@ vrow("非算力服務", "US$bn", lambda i: f"={inref('非算力服務營收', i)
 vrow("總營收", "US$bn", lambda i: f"={COLS[i]}{VR['算力收入']}+{COLS[i]}{VR['非算力服務']}", NUM, BLACK, bold=True)
 rev_v = VR["總營收"]
 vrow("EBITDA 率", "%", lambda i: f"={inref('EBITDA 率', i)}", PCT, GREEN)
-vrow("營業利益（EBIT）", "US$bn", lambda i: f"={COLS[i]}{rev_v}*{inref('EBITDA 率', i)}+{inref('其他事業 EBITDA（Avride＋TripleTen）', i)}-'輸入與假設'!{COLS[i]}${IN['D&A（車隊）']}", NUM, BLACK,
+vrow("營業利益（EBIT）", "US$bn", lambda i: f"={COLS[i]}{rev_v}*{inref('EBITDA 率', i)}+{inref('其他事業 EBITDA', i)}-'輸入與假設'!{COLS[i]}${IN['D&A（車隊）']}", NUM, BLACK,
      "＝營收×EBITDA 率＋其他事業 EBITDA − 車隊 D&A")
 ebit_v = VR["營業利益（EBIT）"]
 vrow("利息（含瀑布新債）", "US$bn", lambda i: f"='各期收支'!{COLS[i]}{FRR['int']}", NUM, GREEN)
@@ -1517,7 +1520,7 @@ r += 1
 r = section(ws, r, "損益表（全年口徑；«FY0»；與 HTML 損益簡表一致）")
 vrow("«YTDL» 實際營收（已實現）", "US$bn", lambda i: (f"={H_REV}" if i == 0 else "=0"), NUM, GREEN)
 fy_h1 = VR["«YTDL» 實際營收（已實現）"]
-vrow("全年總營收", "US$bn", lambda i: f"={COLS[i]}{fy_h1}+{COLS[i]}{rev_v}", NUM, BLACK, f"«P0» 可對照指引 {CO['callFacts']['revLo']}–{CO['callFacts']['revHi']}", bold=True)
+vrow("全年總營收", "US$bn", lambda i: f"={COLS[i]}{fy_h1}+{COLS[i]}{rev_v}", NUM, BLACK, f"«P0» 可對照指引 {REV_GUIDE_TXT}", bold=True)
 fy_rev = VR["全年總營收"]
 vrow("營收 YoY", "%", lambda i: (f"={COLS[i]}{fy_rev}/{_n(PREV_FY_REV)}-1" if i == 0 else f"={COLS[i]}{fy_rev}/{COLS[i-1]}{fy_rev}-1"), PCT, BLACK, f"{PREV_FY} 實際 {_n(PREV_FY_REV)}")
 vrow("全年 GAAP 營業利益", "US$bn", lambda i: (f"={H_OPINC}+{COLS[i]}{ebit_v}" if i == 0 else f"={COLS[i]}{ebit_v}"), NUM, BLACK)
@@ -1894,7 +1897,7 @@ c = ws.cell(row=r, column=6, value=f"=MEDIAN(F{p0}:F{r-1})"); c.number_format = 
 c = ws.cell(row=r, column=7, value=f"=MEDIAN(G{p0}:G{r-1})"); c.number_format = MULT
 med_r = r
 r += 1
-ws.cell(row=r, column=1, value=f"{CO['meta']['ticker']}（TTM 至 Q2）").font = BOLD
+ws.cell(row=r, column=1, value=f"{CO['meta']['ticker']}（TTM 至 {CAL['filedQLabel']}）").font = BOLD
 c = ws.cell(row=r, column=2, value=CO['callFacts']['mktCapLast']); c.font = BLUE; c.number_format = NUM
 c = ws.cell(row=r, column=3, value=f"={ND}+SUM({CV_M})+{ADJ}"); c.font = GREEN; c.number_format = NUM
 c = ws.cell(row=r, column=4, value=f"=B{r}+C{r}"); c.number_format = NUM
@@ -1903,7 +1906,7 @@ c = ws.cell(row=r, column=6, value=f"=D{r}/E{r}"); c.number_format = MULT; c.fon
 c = ws.cell(row=r, column=7, value=f"=(D{r}+{CO['latestQuarter']['opLeaseLiab']})/E{r}"); c.number_format = MULT
 c = ws.cell(row=r, column=8, value=f"={CO['callFacts']['ttmOpInc']}+{CO['callFacts']['ttmDa']}"); c.font = BLUE; c.number_format = NUM
 c = ws.cell(row=r, column=9, value=f'=IF(H{r}>0,D{r}/H{r},"n/m")'); c.number_format = MULT
-ws.cell(row=r, column=10, value="TTM 至 Q2").font = SMALL
+ws.cell(row=r, column=10, value=f"TTM 至 {CAL['filedQLabel']}").font = SMALL
 ws.cell(row=r, column=11, value=f"EV 用 {PEERS['priceDate']} 市值（基本股）與評價日淨負債（可轉債全數以到期本金計入）；含租賃再加營業租賃負債 {CO['latestQuarter']['opLeaseLiab']}").font = SMALL
 crwv_r = r
 r += 1
@@ -2030,23 +2033,25 @@ for j, h in enumerate(["單一槓桿（其他不變）", "目前", "市價隱含
     if h:
         c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
 r += 1
+_mul = lambda a, x: None if x is None else a * x   # v0.1b：反解在搜尋區間內無解時為 None（Excel 顯示「無解」）
+_sub = lambda x, b: None if x is None else x - b
 _rows = [
-    ("FY30 每 MW 年收入（US$m）", rv["rev30"], rv["rev30"] * rv["R"], rv["R"] - 1, "期末 ARR 指引隱含約 $10.0–10.5m；7 月新約漲價約 25%"),
-    ("每 MW 建置成本（US$m）", rv["cost30"], rv["cost30"] * rv["C"], rv["C"] - 1, "FY26 指引隱含約 $32–37m"),
-    ("穩態 EBITDA 率（FY30）", rv["eb30"], rv["Eb"], rv["Eb"] - rv["eb30"], "可觀察 neocloud 區間 IREN 約 35%、CRWV 約 59%（變動為百分點）"),
-    ("（對照）加權目標價＝現價所需每 MW 年收入", rv["rev30"], rv["rev30"] * rv["Rt"], rv["Rt"] - 1, "含 EV/EBITDA 6x（FY29 錨定） 腿；非純反向 DCF"),
+    ("«PL» 每 MW 年收入（US$m）", rv["rev30"], _mul(rv["rev30"], rv["R"]), _sub(rv["R"], 1), TXQ['rvRevNote']),
+    ("每 MW 建置成本（US$m）", rv["cost30"], _mul(rv["cost30"], rv["C"]), _sub(rv["C"], 1), TXQ['rvCostNote']),
+    ("穩態 EBITDA 率（«PL»）", rv["eb30"], rv["Eb"], _sub(rv["Eb"], rv["eb30"]), "可觀察 neocloud 區間 IREN 約 35%、CRWV 約 59%（變動為百分點）"),
+    ("（對照）加權目標價＝現價所需每 MW 年收入", rv["rev30"], _mul(rv["rev30"], rv["Rt"]), _sub(rv["Rt"], 1), f"含 EV/EBITDA 腿（{CO['periods'][V['evYear']]} 錨定）；非純反向 DCF"),
 ]
 RV_R0 = r  # v4.3：單一槓桿快照第一列（「摘要」頁引用）
 for k, (nm, a, b, d, note) in enumerate(_rows):
     ws.cell(row=r, column=1, value=nm).font = BLACK
     fm = PCT if k == 2 else NUM1
     for col, v in [(2, a), (3, b)]:
-        c = ws.cell(row=r, column=col, value=round(v, 4)); c.number_format = fm; c.border = BOX
-    c = ws.cell(row=r, column=4, value=round(d, 4)); c.number_format = PCT; c.border = BOX
+        c = ws.cell(row=r, column=col, value=round(v, 4) if v is not None else "無解"); c.number_format = fm; c.border = BOX
+    c = ws.cell(row=r, column=4, value=round(d, 4) if d is not None else "無解"); c.number_format = PCT; c.border = BOX
     ws.cell(row=r, column=7, value=note).font = SMALL
     r += 1
 r += 1
-r = section(ws, r, "快照：收入與成本的綜合影響——要值現價，FY30 每 MW 年收入需要多少（US$m）", span=7)
+r = section(ws, r, "快照：收入與成本的綜合影響——要值現價，«PL» 每 MW 年收入需要多少（US$m）", span=7)
 c = ws.cell(row=r, column=1, value="建置成本 ＼ 穩態 EBITDA 率"); c.font = HEAD; c.fill = FILL_HEAD
 for j, e in enumerate(rv["ebs"]):
     c = ws.cell(row=r, column=2 + j, value=e); c.font = HEAD; c.fill = FILL_HEAD; c.number_format = '0%'
@@ -2099,7 +2104,8 @@ for j, h in enumerate(["檢查項目", "實際值", "標準", "結果", "說明"
     c.fill = FILL_HEAD
 r += 1
 CK, CFq = CO['methodology']['checks'], CO['callFacts']  # 5a：檢查門檻讀 company.json → methodology.checks；指引區間讀 callFacts
-_CXLO, _CXHI, _RVLO, _RVHI = (_n(CFq[k]) for k in ('capexLo', 'capexHi', 'revLo', 'revHi'))
+_CXLO, _CXHI, _RVLO = (_n(CFq[k]) for k in ('capexLo', 'capexHi', 'revLo'))
+_RVHI = None if CFq['revHi'] is None else _n(CFq['revHi'])  # v0.1b：營收指引只有下限時，檢查為「≥下限」
 _INT_MIN = _n(round(YA['interest'] + CAL['stubMonths'] // 3 * (CFq['nextQIntLo'] or 0), 1))  # 首期利息下限＝年初至今實際＋剩餘季數 × 下一季指引下緣（v0.1b：無季度利息指引時只計年初至今實際）
 _INT_G = f"Q3 指引 {CFq['nextQIntLo']}–{CFq['nextQIntHi']}／季" if CFq['nextQIntLo'] is not None else "公司未提供季度利息指引（不適用）"
 _JV0 = _n(round(sum(D['jvCommit']), 6))
@@ -2111,14 +2117,14 @@ checks = [
     ("現金橋差異", f"='各期收支'!C{FRR['bridge_diff']}", "=0",
      "=IF(ABS(B{r})<0.01,\"通過\",\"不一致\")", NUM,
      "期初＋營運缺口＋股權＋額度−還本 ＝ 期末"),
-    ("Billable ≤ Accepted（FY30）", f"='運營_產能與收入'!G{CAP['acc']}-'運營_產能與收入'!G{bil_row}", "≥0",
+    ("Billable ≤ Accepted（«PL»）", f"='運營_產能與收入'!G{CAP['acc']}-'運營_產能與收入'!G{bil_row}", "≥0",
      "=IF(B{r}>=0,\"通過\",\"不一致\")", NUM0,
      "引擎已以 MIN 截斷；此列驗證截斷有效"),
     ("«P0» CapEx 認列 vs 指引", f"='各期收支'!C{FRR['memo_capex']}", f"{_CXLO}–{_CXHI}",
      "=IF(AND(B{r}>=" + _CXLO + ",B{r}<=" + _CXHI + "),\"通過\",\"觀察\")", NUM,
      f"«YTD» 實際認列 {CO['ytdActual']['capex']}＋«STUB» 模型；全年指引 {CO['callFacts']['capexLo']}–{CO['callFacts']['capexHi']}（法說會轉述）"),
-    ("«P0» 營收 vs 指引", f"='各期收支'!C{FRR['memo_rev']}", f"{_RVLO}–{_RVHI}",
-     "=IF(AND(B{r}>=" + _RVLO + ",B{r}<=" + _RVHI + "),\"通過\",\"觀察\")", NUM,
+    ("«P0» 營收 vs 指引", f"='各期收支'!C{FRR['memo_rev']}", REV_GUIDE_TXT,
+     ("=IF(B{r}>=" + _RVLO + ",\"通過\",\"觀察\")") if _RVHI is None else ("=IF(AND(B{r}>=" + _RVLO + ",B{r}<=" + _RVHI + "),\"通過\",\"觀察\")"), NUM,
      f"«YTD» 實際 {CO['ytdActual']['revenue']}＋«STUB» 模型（算力＋非算力服務）"),
     ("CapEx 強度（模型期合計）", None, f"${_n(CK['capexPerMwBand'][0])}–{_n(CK['capexPerMwBand'][1])}m/MW",
      "=IF(AND(B{r}>=" + _n(CK['capexPerMwBand'][0]) + ",B{r}<=" + _n(CK['capexPerMwBand'][1]) + "),\"通過\",\"觀察\")", NUM0,
@@ -2130,18 +2136,18 @@ checks = [
      "=IF(B{r}>=" + _INT_MIN + ",\"通過\",\"觀察\")", NUM,
      # v4.5：首期模型部分的存量利息讀「各期收支」③ 列（文字公式，滾動後隨模型值更新）
      f'="«YTD» 實際 {YA["interest"]}＋«STUB» 模型 "&TEXT(\'各期收支\'!C{FR["③ 存量債務利息（備忘，«YTD» 已含在 CFO）"]},"0.0")&"；{_INT_G}"'),
-    ("FY28 起收入是否依賴未簽約", None, f"<{_n(CK['unsignedRevShareMax'] * 100)}% 較穩健",
+    ("«P2» 起收入是否依賴未簽約", None, f"<{_n(CK['unsignedRevShareMax'] * 100)}% 較穩健",
      "=IF(B{r}<" + _n(CK['unsignedRevShareMax']) + ",\"通過\",\"觀察\")", PCT,
-     "FY28–30 超出期初 RPO 的收入 ÷ 同期總算力收入（MW 驅動下為未簽約產能的比重）"),
+     "«P2»–«PL» 超出期初 RPO 的收入 ÷ 同期總算力收入（MW 驅動下為未簽約產能的比重）"),
     ("損益營收＝資金營收", None, "=0",
      "=IF(ABS(B{r})<0.001,\"通過\",\"不一致\")", NUM,
-     "FY27 損益算力收入 − 產能頁 isRev。兩邊必須同一組數字"),
+     "«P1» 損益算力收入 − 產能頁 isRev。兩邊必須同一組數字"),
     ("終值占 EV 比重", f"='評價_DCF與目標價'!C{d0+8}", f'="<"&{_PC(RT_TVW)}',
      "=IF(B{r}<" + RT_TVW + ",\"通過\",\"觀察\")", PCT,
      "過高表示結論由終值假設決定"),
-    ("EBITDA 單一來源（FY27 損益 EBITDA÷營收 − 輸入 EBITDA 率）", None, "=0",
+    ("EBITDA 單一來源（«P1» 損益 EBITDA÷營收 − 輸入 EBITDA 率）", None, "=0",
      "=IF(ABS(B{r})<0.0001,\"通過\",\"不一致\")", '0.0000', "損益與資金引用同一列 EBITDA 率"),
-    ("現金 EBITDA ＋ 信用調整 − 損益 EBITDA（FY27）", None, "=0",
+    ("現金 EBITDA ＋ 信用調整 − 損益 EBITDA（«P1»）", None, "=0",
      "=IF(ABS(B{r})<0.001,\"通過\",\"不一致\")", NUM, "現金 EBITDA＝RPO 現金＋新簽約現金＋服務現金−租金；信用調整＝信用損失×EBITDAR 率"),
     ("DCF 有效性（1＝失效）", None, "0",
      "=IF(B{r}=0,\"通過\",\"觀察\")", NUM0, "失效只定義為 WACC ≤ g 或常態化 FCF ≤ 0；股權為負不算失效"),
@@ -2155,7 +2161,7 @@ checks = [
      "=IF(AND(B{r}>=" + _CXLO + ",B{r}<=" + _CXHI + "),\"通過\",\"觀察\")", NUM, "由已連網 MW 增量與預建次年推得；指引只作對照"),
     (f"JV 已承諾餘額於 {_YR0} 年內履行", None, f"={_JV0}",
      "=IF(ABS(B{r}-" + _JV0 + ")<0.01,\"通過\",\"不一致\")", NUM, "季報未揭露 JV 出資承諾（不適用）"),
-    ("模型每 MW 年租金（FY30）", None, "≥ 市場基準×占比",
+    ("模型每 MW 年租金（«PL»）", None, "≥ 市場基準×占比",
      "=IF(B{r}>=0,\"通過\",\"觀察\")", NUM, "低於基準×占比的八成即標示：模型租金路徑可能低估"),
     ("站點租賃：五期租金可能低估", None, f"<{_n(CK['siteRentGapMax'])}",
      "=IF(B{r}<" + _n(CK['siteRentGapMax']) + ",\"通過\",\"觀察\")", NUM, "＝Σ(在役 MW×市場基準×第三方占比 − 模型租金)"),
@@ -2184,13 +2190,13 @@ _r = _find(f"{PERIODS[0]} 全年 CapEx（MW 公式）")
 ws.cell(row=_r, column=2, value=f"='輸入與假設'!C{IN['全年毛 CapEx（公式）']}").number_format = NUM
 _r = _find(f"JV 已承諾餘額於 {_YR0} 年內履行")
 ws.cell(row=_r, column=2, value=f"=SUM('輸入與假設'!C{IN['JV 已承諾餘額出資']}:G{IN['JV 已承諾餘額出資']})").number_format = NUM
-_r = _find("模型每 MW 年租金（FY30）")
+_r = _find("模型每 MW 年租金（«PL»）")
 ws.cell(row=_r, column=2, value=f"='運營_站點'!G{RENT_PER}").number_format = NUM
 _share_x = SHARE.replace('$C$', "'運營_站點'!$C$")  # 另存變數：f-string 內重用引號需 Python 3.12+
 ws.cell(row=_r, column=4, value=f"=IF(B{_r}>={BENCH}*{_share_x}*{_n(CK['rentVsBenchMin'])},\"通過\",\"觀察\")")
-_r = _find("EBITDA 單一來源（FY27 損益 EBITDA÷營收 − 輸入 EBITDA 率）")
+_r = _find("EBITDA 單一來源（«P1» 損益 EBITDA÷營收 − 輸入 EBITDA 率）")
 ws.cell(row=_r, column=2, value=f"='損益'!D{ebitda_v}/'損益'!D{rev_v}-'輸入與假設'!D{IN['EBITDA 率']}").number_format = '0.0000'
-_r = _find("現金 EBITDA ＋ 信用調整 − 損益 EBITDA（FY27）")
+_r = _find("現金 EBITDA ＋ 信用調整 − 損益 EBITDA（«P1»）")
 ws.cell(row=_r, column=2, value=(f"=('運營_產能與收入'!D{CAP['rpocash']}+'運營_產能與收入'!D{CAP['newcash']}+'輸入與假設'!D{IN['非算力服務現金']}-'各期收支'!D{FR['　租金合計']})"
     f"+('運營_產能與收入'!D{CAP['loss']}+'運營_產能與收入'!D{CAP['newrev']}*'輸入與假設'!D{IN['客戶違約率']}*(1-'輸入與假設'!D{IN['回收率']}))*'運營_產能與收入'!D{CAP['cm']}"
     f"-'損益'!D{ebitda_v}")).number_format = NUM
@@ -2262,27 +2268,10 @@ _SRC_TXT = {
                 f"共識評等 {_PT['consensusRating']}。對照 {_XC0['source']}：平均 ${_XC0['mean']:,.2f}（{_XC0['analysts']} 家，{_XC0['consensusRating']}）。"
                 "數字為賣方意見；逐筆來源與日期見『輸入與假設』I 區。"),
 }
-src = [
-    ("Interested-party", "Q2 2026 6-K（2026-08-12；外國私人發行人，季報未經查核）：營收 0.582bn（年增 454%；H1 0.981）；AI cloud 分部 0.575；調整後 EBITDA 0.236（AI cloud 0.286、49.7%）；"
-     "GAAP 營損 −0.176；利息費用 0.119（含可轉債攤銷等非現金）；D&A 0.260；SBC 0.103（含 Eigen AI 收購 0.075）。"),
-    ("Interested-party", "資產負債（6/30）：現金 8.042、受限 1.056；PP&E 毛額 14.150（尚未啟用 7.836）；遞延營收 5.975；可轉債到期本金 10.042（帳面 8.499）、其他借款 0.047；"
-     "營業租賃負債 1.625；已簽約未起租租賃 12.054；股東權益 10.341。"),
-    ("Interested-party", "RPO 37.491bn：36% 於 24 個月內、40% 於 25–48 個月、其餘之後。客戶集中（Q2）：C 24%、D 21%、E 14%（名稱未揭露）。"
-     "Microsoft 5 年 TCV 約 $17.4B；Meta $2.9B 與 $12B 專用＋最高 $15B 未售容量承購。"),
-    ("Interested-party", "現金流（H1）：CFO 4.504（遞延營收增加 4.395）；現金購置 8.130；收購 0.252；可轉債 4.338（2026-03）；NVIDIA 預付認股權證 2.0；ATM 淨額 2.811。"),
-    ("Interested-party", "期後 6-K：2026-07-10 資產擔保定期貸款 $775M（SOFR＋2.50%、2030-10-31 到期）；2026-08 可轉債 $5.75B（0.50% 2030-02 轉換價 $313.46、4.50% 2034-02 轉換價 $324.65）"
-     "並以約 1,580 萬股交換 2029／2031 舊債各 $400M。"),
+src = [tuple(x) for x in TXQ['sources']] + [  # v0.1b：公司特有來源讀 company.json → texts.sources（HTML 同一份）
     ("Verified", _SRC_TXT["peers"]),
     (CONS['priceTarget']['tag'], _SRC_TXT["targets"]),
-    ("Interested-party", "股東信（Q1／Q2 2026）：2026 營收 $3.0–3.4B、年底 ARR $7–9B、調整後 EBITDA 率約 40%；2026 年底合約電力 5 GW（目前 >3.5 GW）、connected 0.8–1.0 GW；"
-     "2027 起每年部署 >1 GW；70% 合約含預付、覆蓋 50–60% 相關資本支出；2026 預付 >$9B；Q2 新約 ACV $20–25M/MW（只作對照）；回收期 1 年 10 個月（只作對照）。"),
-    ("Interested-party", "法說會（二手轉述）：2026 資本支出 $20–25B（Q1 由 $16–20B 上調、Q2 重申）。"),
-    ("Verified", "FY2025 20-F（經查核）：營收 0.530、營業損益 −0.612、續營淨損益 0.010、D&A 0.418、2025 年底現金 3.678；歷年損益 FY23–FY25 取自 20-F XBRL（SEC companyfacts）。"),
-    ("Derived", "每 MW 年收入（Tokenomics v5.24 正向推導）：保守 11.62／基準 17.40／積極 24.20 US$m/MW-IT·年（路徑 A 成本加成與路徑 B 市場價格平均）；"
-     "每 MW 建置成本 IF_CapexTotal 50.12（GB300）／50.26（VR200）；RPO 桶內線性分攤 36／40／24 → 五期 9／18／19／20／16%。"),
-    ("Assumed", "已連網 MW 路徑（歷史併網速度 +580 MW-IT／年；保守上限 2,917、基準上限 4,167、積極每年 +833）；在役比例 75%→90%；EBITDA 率 49.7%→47%（可觀察 neocloud 區間）；"
-     "違約率 0.5→2.5%；新債利率 6.5%；債務／backlog 0.5x；最低現金 2.0；股權折價 10%；終值維持性 CapEx 占 D&A 80%。"),
-    ("方法", "期前融資瀑布：客戶預付（營運來源）→ 現金 → 資產擔保融資（額度＋新債，總債務 ≤ 債務/backlog 上限）→ 股權 → 高息債；營收由 MW 驅動，RPO 只作對照。"),
+    ("方法", "期前融資瀑布：客戶預付（營運來源）→ 現金 → 未動用額度與新債（受債務上限約束）→ 股權 → 高息債；營收由 MW 驅動，RPO 只作對照。"),
 ]
 for tag, text in src:
     ws.cell(row=r, column=1, value=tag).font = BOLD
@@ -2339,47 +2328,52 @@ def cons_items():
         if XC.get('consensusRating'): add(S1, f"目標價｜{nm} 對照評等", [], "", XM, text=XC['consensusRating'])
     for a, k in [("強力買進", 'strongBuy'), ("買進", 'buy'), ("持有", 'hold'), ("賣出", 'sell'), ("強力賣出", 'strongSell'), ("合計", 'total')]:
         add(f"評等分布（{RA['month']}）", f"評等分布｜{a}", [RA[k]], "家", RA)
-    SA, YR = "年度共識（FY26／FY27／FY28）", ["FY26", "FY27", "FY28"]
-    for a, k, u in [("營收", 'revenue', "US$bn"), ("調整後 EBITDA", 'ebitda', "US$bn"), ("EBITDA 率", 'ebitdaMargin', "%"), ("EBIT", 'ebit', "US$bn"),
-                    ("利息費用", 'interest', "US$bn"), ("淨利", 'netIncome', "US$bn"), ("GAAP EPS", 'epsGaap', "US$"), ("EPS", 'eps', "US$"), ("CapEx", 'capex', "US$bn"),
-                    ("自由現金流", 'fcf', "US$bn"), ("淨負債", 'netDebt', "US$bn")]:
+    YR = CO['periods'][:3]; SA = f"年度共識（{'／'.join(YR)}）"  # v0.1b（Oracle）：年度＝模型前三期
+    for a, k, u in [("營收", 'revenue', "US$bn"), ("調整後 EBITDA", 'ebitda', "US$bn"), ("EBITDA 率", 'ebitdaMargin', "%"), ("EBIT", 'ebit', "US$bn"), ("非 GAAP 營業利益", 'ebitNonGaap', "US$bn"),
+                    ("利息費用", 'interest', "US$bn"), ("利息支付", 'interestPaid', "US$bn"), ("淨利", 'netIncome', "US$bn"), ("GAAP EPS", 'epsGaap', "US$"), ("EPS", 'eps', "US$"), ("CapEx", 'capex', "US$bn"),
+                    ("自由現金流", 'fcf', "US$bn"), ("淨負債", 'netDebt', "US$bn"), ("每股股利", 'dps', "US$")]:
         if all(num((AE.get(y) or {}).get(k)) for y in YR):
             add(SA, f"年度｜{a}", [AE[y][k] for y in YR], u, AE)
     if AE.get('definition'): add(SA, "年度｜口徑說明", [], "", AE, text=AE['definition'])
     if AL:
+        A0 = {**AL['sp'], 'note': AL.get('note')} if AL.get('sp') else AL  # v0.1b：annualEstimatesAlt 可為單一來源或 { sp, lseg }
         SB = "S&P 對照（經 StockAnalysis.com）"
-        Y2 = [y for y in ("FY26", "FY27") if num((AL.get(y) or {}).get('revenue'))]
-        F6 = AL.get('FY26') or {}
-        ek = 'epsAdjusted' if num(F6.get('epsAdjusted')) else 'eps'
+        Y01 = YR[:2]
+        Y2 = [y for y in Y01 if num((A0.get(y) or {}).get('revenue'))]
+        F6 = A0.get(YR[0]) or {}
+        ek = 'epsAdjusted' if any(num((A0.get(y) or {}).get('epsAdjusted')) for y in Y01) else 'eps'
         en = "調整後 EPS" if ek == 'epsAdjusted' else "EPS"
-        Ye = [y for y in ("FY26", "FY27") if num((AL.get(y) or {}).get(ek))]
-        if Y2: add(SB, f"S&P 對照｜營收（{'／'.join(Y2)}）", [AL[y]['revenue'] for y in Y2], "US$bn", AL)
-        if num(F6.get('revenueLow')): add(SB, "S&P 對照｜FY26 營收區間（低／高）", [F6['revenueLow'], F6['revenueHigh']], "US$bn", AL)
-        if Ye: add(SB, f"S&P 對照｜{en}（{'／'.join(Ye)}）", [AL[y][ek] for y in Ye], "US$", AL)
-        if num(F6.get(ek + 'Low')): add(SB, f"S&P 對照｜FY26 {en} 區間（低／高）", [F6[ek + 'Low'], F6[ek + 'High']], "US$", AL)
-        if num(F6.get('analysts')): add(SB, "S&P 對照｜FY26 分析師家數", [F6['analysts']], "家", AL)
-        if AL.get('note') and it and it[-1]['sec'] == SB: it[-1]['note'] = AL['note']
+        Ye = [y for y in Y01 if num((A0.get(y) or {}).get(ek))]
+        if Y2: add(SB, f"S&P 對照｜營收（{'／'.join(Y2)}）", [A0[y]['revenue'] for y in Y2], "US$bn", A0)
+        if num(F6.get('revenueLow')): add(SB, f"S&P 對照｜{YR[0]} 營收區間（低／高）", [F6['revenueLow'], F6['revenueHigh']], "US$bn", A0)
+        if Ye: add(SB, f"S&P 對照｜{en}（{'／'.join(Ye)}）", [A0[y][ek] for y in Ye], "US$", A0)
+        if num(F6.get(ek + 'Low')): add(SB, f"S&P 對照｜{YR[0]} {en} 區間（低／高）", [F6[ek + 'Low'], F6[ek + 'High']], "US$", A0)
+        if num(F6.get('analysts')): add(SB, f"S&P 對照｜{YR[0]} 分析師家數", [F6['analysts']], "家", A0)
+        if A0.get('note') and it and it[-1]['sec'] == SB: it[-1]['note'] = A0['note']
     import re as _re_c
-    QK = [k for k in (QE or {}) if _re_c.match(r'^\d{4}Q\d$', k)]  # v4.4：季度依共識檔實際列出的季別（沒有季度共識時不列）
+    QK = [k for k in (QE or {}) if _re_c.match(r'^(\d{4}|FY\d{2})Q\d$', k)]  # v4.4：季度依共識檔實際列出的季別；v0.1b：鍵可為 2026Q3 或 FY27Q2
     SQ = f"季度共識（{'／'.join(QK)}）"
     if QK:
-        for a, k in [("營收", 'revenue'), ("EBITDA", 'ebitda'), ("EBIT", 'ebit'), ("淨利", 'netIncome')]:
-            add(SQ, f"季度｜{a}", [QE[q][k] for q in QK], "US$bn", QE)
+        for a, k in [("營收", 'revenue'), ("EBITDA", 'ebitda'), ("EBIT", 'ebit'), ("非 GAAP 營業利益", 'ebitNonGaap'), ("淨利", 'netIncome')]:
+            if all(num(QE[q].get(k)) for q in QK):
+                add(SQ, f"季度｜{a}", [QE[q][k] for q in QK], "US$bn", QE)
         add(SQ, "季度｜說明", [], "", QE, text=QE['note'])
-    SG, G6 = "公司指引（管理層預估）", CG.get('FY26') or {}
-    for a, ks, u in [("FY26 營收（低／高）", ['revenueLow', 'revenueHigh'], "US$bn"), ("FY26 調整後營業利益（低／高）", ['adjOpIncomeLow', 'adjOpIncomeHigh'], "US$bn"),
-                     ("FY26 CapEx（低／高）", ['capexLow', 'capexHigh'], "US$bn"), ("FY26 年底 ARR（低／高）", ['arrYearEndLow', 'arrYearEndHigh'], "US$bn"),
-                     ("FY26 調整後 EBITDA 率", ['adjEbitdaMargin'], "%"), ("FY26 年底合約電力", ['contractedPowerGW'], "GW"),
-                     ("FY26 年底已連網電力（低／高）", ['connectedPowerGWLow', 'connectedPowerGWHigh'], "GW"), ("FY26 客戶預付（下限）", ['prepaymentsMin'], "US$bn")]:
+    SG, G6 = "公司指引（管理層預估）", CG.get(YR[0]) or {}
+    for a, ks, u in [("營收（低／高）", ['revenueLow', 'revenueHigh'], "US$bn"), ("營收（下限）", ['revenueMin'], "US$bn"), ("調整後營業利益（低／高）", ['adjOpIncomeLow', 'adjOpIncomeHigh'], "US$bn"),
+                     ("CapEx（低／高）", ['capexLow', 'capexHigh'], "US$bn"), ("淨現金 CapEx（上限）", ['netCashCapexMax'], "US$bn"), ("非 GAAP EPS", ['epsNonGaap'], "US$"),
+                     ("資本市場融資", ['capitalMarketsFunding'], "US$bn"), ("年底 ARR（低／高）", ['arrYearEndLow', 'arrYearEndHigh'], "US$bn"),
+                     ("調整後 EBITDA 率", ['adjEbitdaMargin'], "%"), ("年底合約電力", ['contractedPowerGW'], "GW"),
+                     ("年底已連網電力（低／高）", ['connectedPowerGWLow', 'connectedPowerGWHigh'], "GW"), ("客戶預付（下限）", ['prepaymentsMin'], "US$bn")]:
         if all(num(G6.get(k)) for k in ks):
-            add(SG, f"公司指引｜{a}", [G6[k] for k in ks], u, CG)
+            add(SG, f"公司指引｜{YR[0]} {a}", [G6[k] for k in ks], u, CG)
     if CO['callFacts']['nextQRevLo'] is not None:
-        add(SG, "公司指引｜Q3 營收（低／高）", [CO['callFacts']['nextQRevLo'], CO['callFacts']['nextQRevHi']], "US$bn", CG, note=CG.get('tagNote', ''))  # 以 company.json 為準（建置時已檢查與共識檔一致）
+        add(SG, "公司指引｜下一季營收（低／高）", [CO['callFacts']['nextQRevLo'], CO['callFacts']['nextQRevHi']], "US$bn", CG, note=CG.get('tagNote', ''))  # 以 company.json 為準（建置時已檢查與共識檔一致）
     if it and it[-1]['sec'] == SG and not it[-1]['note']: it[-1]['note'] = CG.get('tagNote', '')
     if IC:
         SL, LM = f"獨立對照（{IC['provider']}）", {**IC, 'source': f"{IC['provider']}（經 {IC['source']}）"}
         ICL = {'FY26RevenuePreQ2': ("FY26 營收（Q2 前）", "US$bn"), '2026Q3RevenuePreQ2': ("Q3 營收（Q2 前）", "US$bn"), '2026Q2RevenuePre': ("Q2 營收（財報前）", "US$bn"),
-               '2026Q2EpsPre': ("Q2 EPS（財報前）", "US$"), 'analysts': ("家數", "家")}
+               '2026Q2EpsPre': ("Q2 EPS（財報前）", "US$"), 'analysts': ("家數", "家"),
+               'FY27Revenue': ("FY27 營收", "US$bn"), 'FY28Revenue': ("FY28 營收", "US$bn"), 'FY27EpsAdjusted': ("FY27 調整後 EPS", "US$"), 'FY28EpsAdjusted': ("FY28 調整後 EPS", "US$")}
         ks = [k for k in IC if num(IC[k])]
         for i, k in enumerate(ks):
             a, u = ICL.get(k, (k, ""))
@@ -2558,7 +2552,7 @@ if QC:
     for P, pg in (QC.get('periodGuidance') or {}).items():
         for mk, g in pg.items():
             m = next(x for x in QMET if x['key'] == mk)
-            jrow(f"期間指引｜{PN[PERS.index(int(P))]} {m['label']}（全年低／全年高／扣除 1H 實際）", m['unit'], [g['range'][0], g['range'][1], g.get('less', 0)],
+            jrow(f"期間指引｜{PN[PERS.index(int(P))]} {m['label']}（全年低／全年高／扣除 «YTD» 實際）", m['unit'], [g['range'][0], g['range'][1], g.get('less', 0)],
                  _UF[m['unit']], QC.get('periodGuidanceNote'))
     JR = lambda name, j: f"'輸入與假設'!{QCL[j]}${JQ[name]}"
 
@@ -2688,8 +2682,8 @@ if QC:
     MROW = {"revenue": _RV_, "adjEbitda": QT["調整後 EBITDA（模型）"], "ebitdaMargin": QT["EBITDA 率（模型）"], "adjOpInc": QT["調整後營業利益（模型）"],
             "capex": QT["CapEx（毛額）（模型）"], "mw": QT[_MWL]}
     # 共識（I 區；只有共識檔列出的季度，其餘「不適用」）
-    QEK = [k for k in CONS.get('quarterlyEstimates', {}) if _re_q.match(r'^\d{4}Q\d$', k)]
-    _CL = {"revenue": "季度｜營收", "ebitda": "季度｜EBITDA", "ebit": "季度｜EBIT", "netIncome": "季度｜淨利"}
+    QEK = [k for k in CONS.get('quarterlyEstimates', {}) if _re_q.match(r'^(\d{4}|FY\d{2})Q\d$', k)]
+    _CL = {"revenue": "季度｜營收", "ebitda": "季度｜EBITDA", "ebit": "季度｜EBIT", "ebitNonGaap": "季度｜非 GAAP 營業利益", "netIncome": "季度｜淨利"}
     ciq = lambda fld, qk: CIR(_CL[fld], QEK.index(qk)) if qk in QEK and fld in _CL else None
     for m in QMET:
         if m.get('consensus') == 'derived':
@@ -2803,13 +2797,13 @@ if QC:
                     P = POS_[j][0]
                     if not _PG.get(str(P), {}).get(k):
                         return "不適用"
-                    n = f"期間指引｜{PN[PERS.index(P)]} {m['label']}（全年低／全年高／扣除 1H 實際）"
+                    n = f"期間指引｜{PN[PERS.index(P)]} {m['label']}（全年低／全年高／扣除 «YTD» 實際）"
                     return f"=('輸入與假設'!$C${JQ[n]}+'輸入與假設'!$D${JQ[n]})/2-'輸入與假設'!$E${JQ[n]}"
                 cq = lambda c: MIDX(k, c)
             else:
                 continue
             B = qrow(f"合計基準｜{m['label']}｜vs {'共識' if vs == 'consensus' else '指引'}", u, bfn, NUM,
-                     "所屬期間的季度共識合計" if vs == "consensus" else "所屬期間的隱含指引中點（全年指引中點 − 1H 實際）")
+                     "所屬期間的季度共識合計" if vs == "consensus" else "所屬期間的隱含指引中點（全年指引中點 − «YTD» 實際）")
             ok = lambda c, B=B, cq=cq: f"ISNUMBER({c}{B}),{c}{B}<>0,ISNUMBER({cq(c)}),ISNUMBER({c}{MROW[k]})"
             L = qrow(f"拆解｜{m['label']}｜vs {'共識' if vs == 'consensus' else '指引'}｜水準", u, lambda j, c, B=B, cq=cq, ok=ok: (
                 f'=IF(AND({ok(c)}),({ANN[k](POS_[j][0])}-{c}{B})*({cq(c)})/{c}{B},"不適用")'), NUM, "(模型期間 − 比較期間) × 比較的季占比")
@@ -3000,8 +2994,8 @@ srow("結論｜結論句", "", [(f'=C{_s("評等")}&"：點位 $"&TEXT(C{_s("點
 srow("結論｜情境判斷句", "", [f"={VQ}C{TRROW['目標價區間｜判斷句']}"])
 
 r += 1
-r = section(ws, r, "2｜與市場的差異（模型：目前情境 vs 共識；FY26–FY28）")
-for j, h in enumerate(["項目", "單位", "FY26", "FY27", "FY28"]):
+r = section(ws, r, f"2｜與市場的差異（模型：目前情境 vs 共識；{P3[0]}–{P3[2]}）")
+for j, h in enumerate(["項目", "單位"] + P3):
     c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
 r += 1
 _NB = "'資產負債_新債與新股'!"
@@ -3032,17 +3026,18 @@ _GT = lambda n, c: (f'{_DX(c + str(SM["差異｜調整後 EBITDA｜差距（金�
 srow("差異｜分歧項目（超過門檻者）", "", [("=MID(" + "&".join(f'IF(ABS({c}{_gr[n]})>{CONS_TOL},"、{n} "&{_GT(n, c)},"")' for n in ("營收", "EBITDA", "CapEx")) + ",2,999)") for c in "CDE"],
      NUM, "營收、EBITDA、CapEx 任一項差距絕對值超過門檻即列出（與 HTML 判斷句同一規則）")
 _L = SM["差異｜分歧項目（超過門檻者）"]
-srow("差異｜分歧起始年（1＝FY26…3＝FY28；0＝無）", "", [f'=IF(C{_L}<>"",1,IF(D{_L}<>"",2,IF(E{_L}<>"",3,0)))'], NUM0)
+srow(f"差異｜分歧起始年（1＝{P3[0]}…3＝{P3[2]}；0＝無）", "", [f'=IF(C{_L}<>"",1,IF(D{_L}<>"",2,IF(E{_L}<>"",3,0)))'], NUM0)
 _F, _T = f"C{r-1}", _PC(CONS_TOL)
 _nx = lambda c, y: f'"；{y} "&IF({c}{_L}="","回到 "&{_T}&" 以內",{c}{_L})'
-srow("差異｜判斷句", "", [(f'=CHOOSE({_F}+1,"FY26–FY28 營收、EBITDA、CapEx 與共識差距皆在 "&{_T}&" 以內。",'
-                          f'"分歧始於 FY26（"&C{_L}&"）"&{_nx("D", "FY27")}&{_nx("E", "FY28")}&"。",'
-                          f'"FY26 營收、EBITDA、CapEx 與共識差距在 "&{_T}&" 以內；分歧始於 FY27（"&D{_L}&"）"&{_nx("E", "FY28")}&"。",'
-                          f'"FY26–FY27 營收、EBITDA、CapEx 與共識差距在 "&{_T}&" 以內；分歧始於 FY28（"&E{_L}&"）。")')], bold=True)
+_y0, _y1, _y2 = P3
+srow("差異｜判斷句", "", [(f'=CHOOSE({_F}+1,"{_y0}–{_y2} 營收、EBITDA、CapEx 與共識差距皆在 "&{_T}&" 以內。",'
+                          f'"分歧始於 {_y0}（"&C{_L}&"）"&{_nx("D", _y1)}&{_nx("E", _y2)}&"。",'
+                          f'"{_y0} 營收、EBITDA、CapEx 與共識差距在 "&{_T}&" 以內；分歧始於 {_y1}（"&D{_L}&"）"&{_nx("E", _y2)}&"。",'
+                          f'"{_y0}–{_y1} 營收、EBITDA、CapEx 與共識差距在 "&{_T}&" 以內；分歧始於 {_y2}（"&E{_L}&"）。")')], bold=True)
 # v4.4：差距超過門檻的項目附差異原因（已決定事項 2；原因讀 company.json → varianceReasons，與 HTML consensusView 同一組字串）
 _ANK = [("營收", "rev", "營收"), ("EBITDA", "ebitda", "調整後 EBITDA"), ("CapEx", "capex", "CapEx（毛額）"), ("淨負債", "nd", "淨負債")]
 _SMK = {"rev": "營收", "ebitda": "調整後 EBITDA", "ebM": "EBITDA 率", "capex": "CapEx（毛額）", "nd": "淨負債"}
-_YRS = ["FY26", "FY27", "FY28"]
+_YRS = P3
 _RT = []
 for _yi, _yr in enumerate(_YRS):
     _c = "CDE"[_yi]
@@ -3070,7 +3065,7 @@ for _yi, _yr in enumerate(_YRS):
 _GR4 = [SM[f"差異｜{_full}｜差距"] for _n, _k, _full in _ANK]
 _GR4 = [SM["差異｜EBITDA 率｜差距（百分點）"] if (_k == "ebitda" and PM_TOL) else SM[f"差異｜{_full}｜差距"] for _n, _k, _full in _ANK]
 _TL4 = [PM_TOL if (_k == "ebitda" and PM_TOL) else CONS_TOL for _n, _k, _full in _ANK]
-srow("差異｜需附原因項數", "", ["=" + "+".join(f"SUMPRODUCT(--(ABS(C{g}:E{g})>{t}))" for g, t in zip(_GR4, _TL4))], NUM0, "營收、EBITDA（利潤率差）、CapEx、淨負債 × FY26–FY28")
+srow("差異｜需附原因項數", "", ["=" + "+".join(f"SUMPRODUCT(--(ABS(C{g}:E{g})>{t}))" for g, t in zip(_GR4, _TL4))], NUM0, f"營收、EBITDA（利潤率差）、CapEx、淨負債 × {P3[0]}–{P3[2]}")
 _NX = f"C{SM['差異｜需附原因項數']}"
 _cnt = lambda t: ("+".join(f'COUNTIF(C{x},"{t}")' for x in _RT) or "0")
 _parts = "&".join(f'IF(({_cnt(t)})>0,"、{t} "&({_cnt(t)})&" 項","")' for t in RSN_TYPES[:-1])
@@ -3081,14 +3076,14 @@ srow("差異｜差異原因摘要", "", [f'=IF({_NX}=0,"","需附原因的 "&{_N
 r += 1
 r = section(ws, r, "3｜現價隱含什麼")
 _E28, _N28, _PTM = CIR("年度｜調整後 EBITDA", 2), CIR("年度｜淨負債", 2), CIR("目標價｜平均")
-srow("隱含｜共識平均目標價隱含 FY28 EV/EBITDA", "x", [f"=({_PTM}*{SH}+{_N28})/{_E28}"], MULT, "＝（共識平均目標價 × 股數＋共識 FY28 淨負債）÷ 共識 FY28 調整後 EBITDA")
-srow("隱含｜現價隱含 FY28 EV/EBITDA", "x", [f"=({PX}*{SH}+{_N28})/{_E28}"], MULT, "同一共識 FY28 數字，價格換成現價")
-srow("隱含｜模型方法區間上緣", "x", [f"=MAX({RM_LO},{RM_HI})"], MULT, "模型 EV/EBITDA 腿錨定 FY29 並折回 «TGT»，錨定年度與此不同")
-_i1, _i2, _mh = f"C{SM['隱含｜共識平均目標價隱含 FY28 EV/EBITDA']}", f"C{SM['隱含｜現價隱含 FY28 EV/EBITDA']}", f"C{SM['隱含｜模型方法區間上緣']}"
-srow("隱含｜隱含倍數句", "", [(f'="共識平均目標價 $"&TEXT({_PTM},"0.00")&" 隱含 FY28 EV/EBITDA "&TEXT({_i1},"0.0")&"x，"'
+srow(f"隱含｜共識平均目標價隱含 {P3[2]} EV/EBITDA", "x", [f"=({_PTM}*{SH}+{_N28})/{_E28}"], MULT, f"＝（共識平均目標價 × 股數＋共識 {P3[2]} 淨負債）÷ 共識 {P3[2]} 調整後 EBITDA")
+srow(f"隱含｜現價隱含 {P3[2]} EV/EBITDA", "x", [f"=({PX}*{SH}+{_N28})/{_E28}"], MULT, f"同一共識 {P3[2]} 數字，價格換成現價")
+srow("隱含｜模型方法區間上緣", "x", [f"=MAX({RM_LO},{RM_HI})"], MULT, f"模型 EV/EBITDA 腿錨定 {CO['periods'][V['evYear']]} 並折回 «TGT»，錨定年度與此不同")
+_i1, _i2, _mh = f"C{SM[f'隱含｜共識平均目標價隱含 {P3[2]} EV/EBITDA']}", f"C{SM[f'隱含｜現價隱含 {P3[2]} EV/EBITDA']}", f"C{SM['隱含｜模型方法區間上緣']}"
+srow("隱含｜隱含倍數句", "", [(f'="共識平均目標價 $"&TEXT({_PTM},"0.00")&" 隱含 {P3[2]} EV/EBITDA "&TEXT({_i1},"0.0")&"x，"'
                             f'&IF(ROUND({_i1},1)>{_mh},"高於",IF(ROUND({_i1},1)<{_mh},"低於","等於"))&"模型方法區間上緣 "&{_MT(_mh)}&"x；現價 $"&TEXT({PX},"0.00")&" 隱含 "&TEXT({_i2},"0.0")&"x。"')], bold=True)
 _RV = "'評價_反向DCF'!"
-for k, nm in enumerate(["反向 DCF｜FY30 每 MW 年收入（目前／隱含／變動）", "反向 DCF｜每 MW 建置成本（目前／隱含／變動）",
+for k, nm in enumerate(["反向 DCF｜«PL» 每 MW 年收入（目前／隱含／變動）", "反向 DCF｜每 MW 建置成本（目前／隱含／變動）",
                         "反向 DCF｜穩態 EBITDA 率（目前／隱含／變動 pt）", "反向 DCF｜加權目標價＝現價所需每 MW 年收入（目前／隱含／變動）"]):
     srow(nm, "", [f"={_RV}B{RV_R0 + k}", f"={_RV}C{RV_R0 + k}", f"={_RV}D{RV_R0 + k}"], PCT if k == 2 else NUM1,
          "快照（預設輸入）：見『評價_反向DCF』；改輸入後請以目標搜尋重算" if k == 0 else None)

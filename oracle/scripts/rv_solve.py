@@ -14,7 +14,7 @@ xlsx = sys.argv[1]; out = sys.argv[2] if len(sys.argv) > 2 else os.path.join(ROO
 IN, VA = '輸入與假設', '評價_DCF與目標價'
 
 with Workbook(xlsx) as wb:
-    c_rev, c_cap, c_eb = wb.cell(IN, '每 MW 年收入倍數（整體）'), wb.cell(IN, '每 MW 建置成本倍數（整體）'), wb.cell(IN, '穩態 EBITDA 率（FY30）')
+    c_rev, c_cap, c_eb = wb.cell(IN, '每 MW 年收入倍數（整體）'), wb.cell(IN, '每 MW 建置成本倍數（整體）'), wb.cell(IN, '穩態 EBITDA 率（', prefix=True)
     c_px = wb.cell(IN, '現價（', prefix=True)
     o_dcf, o_tgt = wb.cell(VA, 'DCF 每股'), wb.cell(VA, '加權目標價')
     base_in = {k: wb.get(c) for k, c in (('rev', c_rev), ('cap', c_cap), ('eb', c_eb))}
@@ -52,7 +52,8 @@ num = lambda x: int(x) if isinstance(x, float) and x.is_integer() else x   # 與
 res = {k: ([[num(y) for y in r] for r in v] if k == 'grid' else [num(y) for y in v] if isinstance(v, list) else num(v)) for k, v in res.items()}
 txt = json.dumps(res, separators=(',', ':'), ensure_ascii=False)
 old = open(out, encoding='utf-8').read() if os.path.exists(out) else None
-print(f"反向 DCF（Excel 求解）：現價 {P}、R {R:.4f}、C {C:.4f}、Eb {Eb:.4f}、Rt {Rt:.4f}；矩陣 {sum(x is not None for r in grid for x in r)}/20 格有解")
+_f = lambda x: "無解" if x is None else f"{x:.4f}"
+print(f"反向 DCF（Excel 求解）：現價 {P}、R {_f(R)}、C {_f(C)}、Eb {_f(Eb)}、Rt {_f(Rt)}；矩陣 {sum(x is not None for r in grid for x in r)}/20 格有解")
 if old == txt:
     print('rv_snap.json 無變動'); sys.exit(0)
 open(out, 'w', encoding='utf-8').write(txt)

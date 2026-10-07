@@ -93,7 +93,7 @@ function AM({
           children: `評價假設`
         }), (0, $.jsx)(`p`, {
           className: `mt-1 text-xs leading-relaxed text-muted`,
-          children: `現價為 ${PRICE_DATE} 收盤 $${Y(VAL_DEFAULTS.price, 2)}。營收＝資金模型算力產能＋非算力服務。稅率 ${hA(VAL_DEFAULTS.tax * 100, 1)} 為荷蘭名目稅率（${COMPANY_DATA.texts.cashTaxNote}）。淨負債用 ${CALQ.valuationMD} 債務本金 ${Y(LATEST_Q.debtPrincipal, 2)} − 現金 ${Y(LATEST_Q.cash + LATEST_Q.marketable, 2)}，與期初現金同日。`
+          children: `現價為 ${PRICE_DATE} 收盤 $${Y(VAL_DEFAULTS.price, 2)}。營收＝資金模型算力產能＋非算力服務。稅率 ${hA(VAL_DEFAULTS.tax * 100, 1)}（${TXQ.taxNote}；${TXQ.cashTaxNote}）。淨負債用 ${CALQ.valuationMD} 債務本金 ${Y(LATEST_Q.debtPrincipal, 2)} − 現金 ${Y(LATEST_Q.cash + LATEST_Q.marketable, 2)}，與期初現金同日。`
         }), (0, $.jsxs)(`div`, {
           className: `mt-4 space-y-3`,
           children: [(0, $.jsx)(kM, {
@@ -108,7 +108,7 @@ function AM({
             })
           }), (0, $.jsx)(kM, {
             label: `評價股數（十億，不含可轉債轉股）`,
-            hint: `季末流通＋認股權證＋以股換債＋RSU＋選擇權 · 含可轉債轉股 ${Y(h,4)}`,
+            hint: `季末流通＋${TXQ.sharesNote} · 含可轉債／強制轉換特別股轉股 ${Y(h,4)}`,
             children: (0, $.jsx)(OM, {
               value: n.shares,
               onChange: e => i({
@@ -118,7 +118,7 @@ function AM({
             })
           }), (0, $.jsx)(kM, {
             label: `淨負債 US$bn`,
-            hint: `不含可轉債（其他借款 − 現金 − 期後淨現金）· 評價淨負債 ${Y(r.v.netDebt, 2)}（含債務處理可轉債與持股調整）`,
+            hint: `${TXQ.netDebtNote} · 評價淨負債 ${Y(r.v.netDebt, 2)}（含債務處理可轉債與持股調整）`,
             children: (0, $.jsx)(OM, {
               value: n.netDebt,
               onChange: e => i({
@@ -213,12 +213,12 @@ function AM({
           }), (0, $.jsxs)(`p`, {
             className: `text-xs text-muted`,
             children: [`DCF 失效只在 WACC ≤ g 或常態化 FCF ≤ 0 時成立，此時自動排除、權重改為 EV/EBITDA 100%。`, (0, $.jsx)(tipQ, {
-              t: `0 截斷：股權價值＝MAX(0, 企業價值 − 淨負債 ＋ 新股現值)÷融資後股數，反映有限責任，但忽略翻身的可能。選擇權（Merton）：把股權視為以企業價值為標的、淨負債為履約價的買權（Black-Scholes，期間 4.5 年、無風險利率 4%），在 0 附近連續，並保留時間價值；代價是多一個波動率假設。注意選擇權法同樣會提高股權為正的情境（例如保守情境），因為它包含時間價值。`,
+              t: `0 截斷：股權價值＝MAX(0, 企業價值 − 淨負債 ＋ 新股現值)÷融資後股數，反映有限責任，但忽略翻身的可能。選擇權（Merton）：把股權視為以企業價值為標的、淨負債為履約價的買權（Black-Scholes，期間 ${Y(n.optT, 2)} 年、無風險利率 ${hA(n.rf * 100, 2)}），在 0 附近連續，並保留時間價值；代價是多一個波動率假設。注意選擇權法同樣會提高股權為正的情境（例如保守情境），因為它包含時間價值。`,
               w: 440
             })]
           }), (0, $.jsx)(`p`, {
             className: `text-xs leading-relaxed text-muted`,
-            children: `${PERIOD_FY[0]} 營收對照公司指引 ${CALL_FACTS.revLo}–${CALL_FACTS.revHi}（年初至今 ${Y(ACTUAL_1H.revenue, 3)} 已入帳）；營收由 MW × 每 MW 年收入驅動，不回推指引。${PERIODS[1]} 無公司指引；市場共識 ${PERIODS[1]} 營收 ${Y(CONSENSUS.annualEstimates.FY27.revenue, 2)}bn（${CONSENSUS.annualEstimates.source}，擷取 ${CONSENSUS.annualEstimates.retrieved}，${CONSENSUS.annualEstimates.tag}）僅供對照，見「市場共識」分頁。改資金模型的 MW／CapEx／預付，此頁營收、UFCF、目標價與結論會跟著動。DCF 折現期數按評價日至各期期末（${CALQ.tEnd.map(x => Y(x, 1)).join('／')} 年）。`
+            children: `${PERIODS[0]} 營收對照公司指引 ${REV_GUIDE_TXT}（年初至今 ${Y(ACTUAL_1H.revenue, 3)} 已入帳）；營收由 MW × 每 MW 年收入驅動，不回推指引。${PERIODS[1]} 無公司指引；市場共識 ${PERIODS[1]} 營收 ${Y(CONSENSUS.annualEstimates[PERIODS[1]].revenue, 2)}bn（${CONSENSUS.annualEstimates.source}，擷取 ${CONSENSUS.annualEstimates.retrieved}，${CONSENSUS.annualEstimates.tag}）僅供對照，見「市場共識」分頁。改資金模型的 MW／CapEx／預付，此頁營收、UFCF、目標價與結論會跟著動。DCF 折現期數按評價日至各期期末（${CALQ.tEnd.map(x => Y(x, 1)).join('／')} 年）。`
           })]
         })]
       }), (0, $.jsxs)(`div`, {
@@ -234,19 +234,19 @@ function AM({
             children: `損益簡表（類損益表：歷史 ${HIST_PL[0].year}–${HIST_PL[HIST_PL.length - 1].year}＋前瞻五期）` // v4.5：兩端讀 historicalPL（最後一格＝年初至今實際，滾動時隨資料更新）
           }), (0, $.jsx)(`p`, {
             className: `mt-1 text-xs leading-relaxed text-muted`,
-            children: `前瞻算力收入＝平均在役 MW × 每 MW 年收入（Tokenomics 正向推導）；非算力服務預設 0（AI cloud 以外的事業另列為非核心事業現金消耗）。${PERIODS[0]} 欄＝年初至今實際（季報）＋模型期，可直接對照公司全年指引 ${CALL_FACTS.revLo}–${CALL_FACTS.revHi}；${PERIODS[1]} 起為純模型。DCF 只折現評價日之後的現金流。`
+            children: `前瞻算力收入＝平均在役 MW × 每 MW 年收入（Tokenomics 正向推導）；${TXQ.otherRevNote}。${PERIODS[0]} 欄＝年初至今實際（季報）＋模型期，可直接對照公司全年指引 ${REV_GUIDE_TXT}；${PERIODS[1]} 起為純模型。DCF 只折現評價日之後的現金流。`
           }), (0, $.jsx)(`div`, {
             className: `mt-3`,
             children: (0, $.jsx)(BM, {
-              cols: [`FY23`, `FY24`, `FY25`, `1H26 實際`, `FY26E`, `FY27E`, `FY28E`, `FY29E`, `FY30E`],
+              cols: [...HIST_PL.map((e, t) => t === HIST_PL.length - 1 ? `${e.year} 實際` : e.year), ...PERIODS.map(p => `${p}E`)], // v0.1b：欄名讀 historicalPL 與日曆
               rows: [
                 [`營收`, null],
-                [`1H26 實際營收（已實現）`, [NaN, NaN, NaN, NaN, HIST_PL[3].revenue, 0, 0, 0, 0], void 0, void 0, void 0, `FY26E 欄＝1H 實際＋下半年模型；1H 營收未拆分算力與服務。`],
-                [`算力收入（模型期）`, [NaN, NaN, NaN, NaN, ...s.map(e => e.gpu)], void 0, void 0, void 0, `＝期初 RPO 轉換（產能約束後）＋新簽約。FY26E 欄只含下半年。`],
+                [`${HIST_PL[3].year} 實際營收（已實現）`, [NaN, NaN, NaN, NaN, HIST_PL[3].revenue, 0, 0, 0, 0], void 0, void 0, void 0, `${PERIODS[0]}E 欄＝${HIST_PL[3].year} 實際＋${CALQ.stubWord}模型。`],
+                [`算力收入（模型期）`, [NaN, NaN, NaN, NaN, ...s.map(e => e.gpu)], void 0, void 0, void 0, `＝期初 RPO 轉換（產能約束後）＋新簽約。${PERIODS[0]}E 欄只含${CALQ.stubWord}。`],
                 [`　其中：期初 RPO 轉換`, [NaN, NaN, NaN, NaN, ...s.map(e => e.fundingRev)]],
-                [`　其中：新簽約`, [NaN, NaN, NaN, NaN, ...s.map(e => e.inYear)], void 0, void 0, void 0, `＝(容量 − 期初 RPO 排程)×新產能簽約率。FY28 起多數收入來自尚未簽署的合約。`],
+                [`　其中：新簽約`, [NaN, NaN, NaN, NaN, ...s.map(e => e.inYear)], void 0, void 0, void 0, `＝(容量 − 期初 RPO 排程)×新產能簽約率。`],
                 [`非算力服務（模型期）`, [NaN, NaN, NaN, NaN, ...s.map(e => e.services)]],
-                [`總營收`, [...HIST_PL.map(e => e.revenue), ...s.map(e => e.fyRevenue)], void 0, void 0, `tot`, `${PERIODS[0]}E 對照公司全年指引 ${CALL_FACTS.revLo}–${CALL_FACTS.revHi}。`],
+                [`總營收`, [...HIST_PL.map(e => e.revenue), ...s.map(e => e.fyRevenue)], void 0, void 0, `tot`, `${PERIODS[0]}E 對照公司全年指引 ${REV_GUIDE_TXT}。`],
                 [`營收 YoY`, [NaN, HIST_PL[1].revenue / HIST_PL[0].revenue - 1, HIST_PL[2].revenue / HIST_PL[1].revenue - 1, NaN, ...s.map((e, t) => t === 0 ? e.fyRevenue / HIST_PL[2].revenue - 1 : e.fyRevenue / s[t - 1].fyRevenue - 1)].map(e => e * 100), void 0, void 0, void 0, void 0, `%`],
                 [`獲利`, null],
                 [`GAAP 營業利益`, [...HIST_PL.map(e => e.opInc), ...s.map(e => e.fyOpInc)], void 0, void 0, void 0, void 0, void 0, 2],
@@ -260,12 +260,12 @@ function AM({
                 [`每股`, null],
                 [`股數（含 ATM 上限，每年 +1% SBC 稀釋）`, [NaN, NaN, NaN, NaN, ...s.map(e => e.shares)], void 0, void 0, void 0, `SBC 約 ${Y(n.sbc, 2)}bn／年 ÷ 現價 $${Y(n.price, 0)} ≈ ${Y(n.sbc / n.price * 1e3, 1)}m 股（約 ${hA(n.sbc / n.price / n.shares * 100, 1)}／年），模板固定 1%（偏保守）。起點含價內可轉債轉股。`, `bn 股`, 4],
                 [`GAAP EPS`, [...HIST_PL.map(e => e.eps), ...s.map(e => e.fyEps)], void 0, void 0, void 0, `${PERIOD_FY[0]}E＝年初至今實際 EPS ${Y(HIST_PL[3].eps, 2)} ＋ 剩餘期間淨利 ÷ 股數。`, `US$`, 2],
-                [`EPS（加回 SBC）`, [...HIST_PL.map(e => e.ngEps), ...s.map(e => e.fyNgEps)], void 0, void 0, void 0, `＝(淨利＋SBC)÷股數。處於 NOL 狀態、無現金稅，SBC 全額加回不做稅盾調整。`, `US$`, 2]
+                [`EPS（加回 SBC）`, [...HIST_PL.map(e => e.ngEps), ...s.map(e => e.fyNgEps)], void 0, void 0, void 0, `＝(淨利＋SBC)÷股數；SBC 全額加回、不做稅盾調整（與公司非 GAAP EPS 口徑不同）。`, `US$`, 2]
               ]
             })
           }), (0, $.jsxs)(`p`, {
             className: `mt-3 text-xs text-muted`,
-            children: [`公司 ${PERIOD_FY[0]} 指引：營收 ${CALL_FACTS.revLo}–${CALL_FACTS.revHi}、年底 ARR ${CALL_FACTS.arrLo}–${CALL_FACTS.arrHi}、調整後 EBITDA 率約 40%。本表 ${PERIODS[0]}E 總營收 `, Y(HIST_PL[3].revenue + s[0].revenue, 2), `bn（年初至今 ${Y(HIST_PL[3].revenue, 2)} 實際）。${PERIODS[1]} 營收 `, Y(s[1].revenue, 1), `bn。稅負採 NOL 遞延：期初虧損扣抵 ${Y(n.nol,1)}bn（20-F 遞延所得稅資產 0.206 ÷ 稅率推估），虧損年不認列稅盾，獲利年以 ${hA(n.tax * 100, 1)} 課稅、抵扣上限為應稅所得 ${hA(n.nolUsePct * 100, 0)}（荷蘭規定簡化）。DCF 的現金稅同步使用 NOL。`]
+            children: [`${TXQ.guideLine}。本表 ${PERIODS[0]}E 總營收 `, Y(HIST_PL[3].revenue + s[0].revenue, 2), `bn（年初至今 ${Y(HIST_PL[3].revenue, 2)} 實際）。${PERIODS[1]} 營收 `, Y(s[1].revenue, 1), `bn。稅率 ${hA(n.tax * 100, 1)}（${TXQ.taxNote}）；期初虧損扣抵 ${Y(n.nol,1)}bn，抵扣上限為應稅所得 ${hA(n.nolUsePct * 100, 0)}。DCF 的現金稅同步使用 NOL。`]
           }), (0, $.jsx)(`div`, {
             className: `mt-3 overflow-x-auto`,
             children: (0, $.jsxs)(`table`, {
@@ -286,7 +286,7 @@ function AM({
                   children: [(0, $.jsxs)(`td`, {
                     className: `font-medium`,
                     children: [`EBITDA 率（連動資金模型）`, (0, $.jsx)(tipQ, {
-                      t: `由資金模型左欄的「起始 EBITDA 率」與「穩態 EBITDA 率」線性推得（FY26 起始 → FY30 穩態），資金端的EBITDAR 率使用同一組數字。要修改請到資金模型左欄。EBITDA 已扣營業租賃成本；營業利益＝EBITDA − 車隊 D&A。`
+                      t: `由資金模型左欄的「起始 EBITDA 率」與「穩態 EBITDA 率」線性推得（${PERIODS[0]} 起始 → ${PERIODS[4]} 穩態），資金端的EBITDAR 率使用同一組數字。要修改請到資金模型左欄。EBITDA 已扣營業租賃成本；營業利益＝EBITDA − 車隊 D&A。`
                     })]
                   }), e.years.map((e, t) => (0, $.jsx)(`td`, {
                     className: `p-1 text-right font-mono tabular-nums`,
@@ -296,7 +296,7 @@ function AM({
                   children: [(0, $.jsxs)(`td`, {
                     className: `font-medium`,
                     children: [`D&A（車隊折舊，計算）`, (0, $.jsx)(tipQ, {
-                      t: `＝(期初毛 PP&E ＋ 本期成長型 CapEx×½) ÷ GPU 經濟壽命 × 期間長度。評價日毛 PP&E ${Y(LATEST_Q.ppe, 1)}bn（含尚未啟用資產 ${Y(LATEST_Q.cip, 1)}）；壽命 ${DEFAULTS.gpuLife} 年（預設）（公司 2026 起伺服器與網通設備折舊年限 5 年）。汰換型 CapEx 取代已折舊完的舊設備，不增加折舊基礎。季報 D&A 遠低於模型首期（模板已知限制）。`,
+                      t: `＝(期初毛 PP&E ＋ 本期成長型 CapEx×½) ÷ GPU 經濟壽命 × 期間長度。期初 PP&E 基礎 ${Y(DEFAULTS.ppeOpen, 1)}bn（${TXQ.ppeOpenNote}；評價日 PP&E 淨額 ${Y(LATEST_Q.ppe, 1)}、在建 ${Y(LATEST_Q.cip, 1)}）；壽命 ${DEFAULTS.gpuLife} 年。汰換型 CapEx 取代已折舊完的舊設備，不增加折舊基礎。`,
                       w: 440
                     })]
                   }), s.map((e, t) => (0, $.jsx)(`td`, {
@@ -492,7 +492,7 @@ function AM({
                       background: `#eef2f7`,
                       fontSize: 10.5
                     },
-                    children: `TTM 至 Q2`
+                    children: `TTM 至 ${CALQ.filedQLabel}`
                   }), (0, $.jsx)(`td`, {
                     style: {
                       ...xstyQ.td,
@@ -502,7 +502,7 @@ function AM({
                       background: `#eef2f7`,
                       fontFamily: `ui-sans-serif, system-ui, sans-serif`
                     },
-                    children: `EV 用 ${mdQ(COMPANY_DATA.peers.priceDate)} 市值與 6/30 淨負債 30.0；含租賃再加營業租賃負債 16.3。GAAP 營業損失 −0.231＋D&A 3.991`
+                    children: `EV 用 ${mdQ(CALL_FACTS.priceDate)} 市值與 ${CALQ.valuationMD} 淨負債 ${Y(NDT, 1)}；含租賃再加營業租賃負債 ${Y(LATEST_Q.opLeaseLiab, 1)}。TTM GAAP 營業損益 ${Y(CALL_FACTS.ttmOpInc, 3)}＋D&A ${Y(CALL_FACTS.ttmDa, 3)}`
                   })]
                 }), (0, $.jsxs)(`tr`, {
                   children: [(0, $.jsx)(`td`, {
@@ -557,7 +557,7 @@ function AM({
                       background: `#fff`,
                       fontFamily: `ui-sans-serif, system-ui, sans-serif`
                     },
-                    children: `市值用模型股數 ${Y(h,3)}bn（含 ATM 上限）；分母為模型 FY27 營收`
+                    children: `市值用模型股數 ${Y(h,3)}bn（含轉股）；分母為模型 ${PERIODS[1]} 營收`
                   })]
                 })]
               })]
@@ -691,9 +691,9 @@ function AM({
                 })
               }), (0, $.jsx)(`tbody`, {
                 children: [
-                  [`FY30 每 MW 年收入（US$m）`, Y(RV.rev30, 1), Number.isFinite(RV.R) ? Y(RV.rev30 * RV.R, 1) : `不可達`, Number.isFinite(RV.R) ? hA((RV.R - 1) * 100, 0) : `—`, `期末 ARR 指引隱含約 $10.0–10.5m；7 月新約漲價約 25%`],
-                  [`每 MW 建置成本（US$m）`, Y(RV.cost30, 1), Number.isFinite(RV.C) ? Y(RV.cost30 * RV.C, 1) : `不可達`, Number.isFinite(RV.C) ? hA((RV.C - 1) * 100, 0) : `—`, `FY26 指引隱含約 $32–37m；Blackwell／Rubin 世代每 MW 成本上升`],
-                  [`穩態 EBITDA 率（FY30）`, hA(RV.eb30 * 100, 1), Number.isFinite(RV.Eb) ? hA(RV.Eb * 100, 1) : `不可達（>99%）`, Number.isFinite(RV.Eb) ? `${Y((RV.Eb - RV.eb30) * 100, 1)} pt` : `—`, `可觀察 neocloud 區間：IREN 約 35%、CRWV 約 59%`],
+                  [`${PERIODS[4]} 每 MW 年收入（US$m）`, Y(RV.rev30, 1), Number.isFinite(RV.R) ? Y(RV.rev30 * RV.R, 1) : `不可達`, Number.isFinite(RV.R) ? hA((RV.R - 1) * 100, 0) : `—`, TXQ.rvRevNote],
+                  [`每 MW 建置成本（US$m）`, Y(RV.cost30, 1), Number.isFinite(RV.C) ? Y(RV.cost30 * RV.C, 1) : `不可達`, Number.isFinite(RV.C) ? hA((RV.C - 1) * 100, 0) : `—`, TXQ.rvCostNote],
+                  [`穩態 EBITDA 率（${PERIODS[4]}）`, hA(RV.eb30 * 100, 1), Number.isFinite(RV.Eb) ? hA(RV.Eb * 100, 1) : `不可達（>99%）`, Number.isFinite(RV.Eb) ? `${Y((RV.Eb - RV.eb30) * 100, 1)} pt` : `—`, `可觀察 neocloud 區間：IREN 約 35%、CRWV 約 59%`],
                   [`（對照）加權目標價＝現價所需每 MW 年收入`, Y(RV.rev30, 1), Number.isFinite(RV.Rt) ? Y(RV.rev30 * RV.Rt, 1) : `不可達`, Number.isFinite(RV.Rt) ? hA((RV.Rt - 1) * 100, 0) : `—`, `含 EV/EBITDA ${Y(n.evEbitda,1)}x（${PERIOD_LABELS[n.evYear ?? 1]}）腿；非純反向 DCF`]
                 ].map((e, t) => (0, $.jsx)(`tr`, {
                   children: e.map((e, n) => (0, $.jsx)(`td`, {
@@ -716,7 +716,7 @@ function AM({
               })]
             })
           }), (0, $.jsx)(hdrQ, {
-            title: `收入與成本的綜合影響：要值現價，FY30 每 MW 年收入需要多少（US$m）`,
+            title: `收入與成本的綜合影響：要值現價，${PERIODS[4]} 每 MW 年收入需要多少（US$m）`,
             tip: `列＝每 MW 建置成本（相對目前 $${Y(RV.cost30,1)}m 的倍數），欄＝穩態 EBITDA 率。每一格解出 DCF＝現價所需的每 MW 年收入（括號為相對目前 $${Y(RV.rev30,1)}m 的變動）。左上往右下的對角線，就是「收入 × 成本」的等價值線：成本愈低、利潤率愈高，所需收入愈低。黃底為目前設定。`,
             w: 480
           }), (0, $.jsx)(`div`, {
@@ -758,8 +758,8 @@ function AM({
             })
           }), (0, $.jsxs)(`p`, {
             className: `text-xs leading-relaxed text-muted`,
-            children: [`讀法：以目前設定，現價要成立，需要 FY30 每 MW 年收入由 $${Y(RV.rev30,1)}m 升到 $${Number.isFinite(RV.R) ? Y(RV.rev30*RV.R,1) : `—`}m（約 +${Number.isFinite(RV.R) ? hA((RV.R-1)*100,0) : `—`}）；或建置成本降到 $${Number.isFinite(RV.C) ? Y(RV.cost30*RV.C,1) : `—`}m；單靠營運效率則需 EBITDA 率 ${Number.isFinite(RV.Eb) ? hA(RV.Eb*100,0) : `>99%`}，高於由下而上的上緣。綠字格代表不需提高單價即可支撐現價的組合。`, (0, $.jsx)(tipQ, {
-              t: `單價與成本的組合比任何單一變數都更貼近現實：7 月新約漲價約 25% 只影響新合約；若新世代 GPU 同時推高每 MW 成本，兩者會互相抵銷。追蹤指標：新簽約的每 MW 年收入（法說與 8-K 揭露的合約金額 ÷ MW）、每 MW CapEx（CapEx ÷ 新增主動電力）、調整後營業利益率。`,
+            children: [`讀法：以目前設定，現價要成立，需要 ${PERIODS[4]} 每 MW 年收入由 $${Y(RV.rev30,1)}m 升到 $${Number.isFinite(RV.R) ? Y(RV.rev30*RV.R,1) : `—`}m（約 +${Number.isFinite(RV.R) ? hA((RV.R-1)*100,0) : `—`}）；或建置成本降到 $${Number.isFinite(RV.C) ? Y(RV.cost30*RV.C,1) : `—`}m；單靠營運效率則需 EBITDA 率 ${Number.isFinite(RV.Eb) ? hA(RV.Eb*100,0) : `>99%`}，高於由下而上的上緣。綠字格代表不需提高單價即可支撐現價的組合。`, (0, $.jsx)(tipQ, {
+              t: `單價與成本的組合比任何單一變數都更貼近現實：${TXQ.priceNote}；若新世代 GPU 同時推高每 MW 成本，兩者會互相抵銷。追蹤指標：新簽約的每 MW 年收入（法說與 8-K 揭露的合約金額 ÷ MW）、每 MW CapEx（CapEx ÷ 新增主動電力）、調整後營業利益率。`,
               w: 440
             })]
           })]

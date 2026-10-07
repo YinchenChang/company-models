@@ -68,15 +68,17 @@ def page_text(html):  # 開啟「資金模型 → 各期收支 → 季度追蹤�
 
 
 print('=== 測試 A｜假設 Q3 實際數（暫存副本；repo 內實際數維持空白）')
-ACT = {"revenue": 3.50, "adjEbitda": 2.00, "adjOpInc": 0.22, "capex": 12.0, "mw": 1650, "source": "假設測試（非真實數字）", "date": "2026-11-09", "tag": "Assumed"}
+ACT = {"revenue": 21.25, "adjEbitda": 12.10, "adjOpInc": 8.40, "capex": 24.0, "mw": 3100, "source": "假設測試（非真實數字）", "date": "2026-12-10", "tag": "Assumed"}  # v0.1b：Oracle 量級
+RTX = f"{ACT['revenue']:,.2f}bn"
 d = copy_repo('qtest_actual')
 co = json.load(open(os.path.join(d, 'company.json'), encoding='utf-8'))
-co['quarterly']['actuals']['2026Q3'] = ACT
+QK = co['quarterly']['focus']  # v0.1b：焦點季（原寫死 2026Q3）
+co['quarterly']['actuals'][QK] = ACT
 json.dump(co, open(os.path.join(d, 'company.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 X = build_and_compare(d, '測試 A')
 H = html_quarterly(d)
-cons = json.load(open(os.path.join(d, co['meta']['consensusFile']), encoding='utf-8'))['quarterlyEstimates']['2026Q3']
-G = co['quarterly'].get('guidance', {}).get('2026Q3', {})  # v0.1b：公司未給季度指引時為空（差距與位置皆為不適用）
+cons = json.load(open(os.path.join(d, co['meta']['consensusFile']), encoding='utf-8'))['quarterlyEstimates'][QK]
+G = co['quarterly'].get('guidance', {}).get(QK, {})  # v0.1b：公司未給季度指引時為空（差距與位置皆為不適用）
 # 獨立計算（Python）：模型值取 Excel「季度追蹤」焦點列（Q3），共識讀共識檔、指引讀 company.json、實際數為上面的假設值
 exp = {}
 for m in co['quarterly']['metrics']:
@@ -100,12 +102,12 @@ for m in co['quarterly']['metrics']:
     if exp[k]['posA'] and hq['posA'] != exp[k]['posA']:
         FAIL.append(f'測試 A {m["label"]} 指引位置：HTML {hq["posA"]} ≠ {exp[k]["posA"]}')
 fmt = lambda x: ('−' if x < 0 else '+') + f'{abs(x) * 100:,.1f}%'
-want = f"｜實際 $3.50bn（較模型 {fmt(exp['revenue']['am'])}、較共識 {fmt(exp['revenue']['ac'])}" + (f"、{exp['revenue']['posA']}" if exp['revenue']['posA'] else "") + "）"
+want = f"｜實際 ${RTX}（較模型 {fmt(exp['revenue']['am'])}、較共識 {fmt(exp['revenue']['ac'])}" + (f"、{exp['revenue']['posA']}" if exp['revenue']['posA'] else "") + "）"
 if want not in H['keyLines'][0]:
     FAIL.append(f'測試 A 驗證點句缺少「{want}」：{H["keyLines"][0]}')
 summ, txt, errs = page_text(os.path.join(d, 'out', 't.html'))
-if errs or '3.50bn' not in txt or want not in summ:
-    FAIL.append(f'測試 A 畫面：錯誤 {errs}；季度追蹤含 3.50bn：{"3.50bn" in txt}；一頁摘要含實際數句：{want in summ}')
+if errs or RTX not in txt or want not in summ:
+    FAIL.append(f'測試 A 畫面：錯誤 {errs}；季度追蹤含 {RTX}：{RTX in txt}；一頁摘要含實際數句：{want in summ}')
 for m in co['quarterly']['metrics']:
     e = exp[m['key']]
     fm = (lambda x: fmt(x)[:-1] + 'pt') if e['kind'] == 'pt' else (lambda x: ('−' if x < 0 else '+') + (f'{abs(x):,.0f} MW' if m['unit'] == 'MW' else f'${abs(x):,.2f}bn')) if e['kind'] == 'diff' else fmt
