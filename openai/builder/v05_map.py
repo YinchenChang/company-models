@@ -532,9 +532,15 @@ def build_map(data=None, write_registry=False) -> Recorder:
     R.assign(f"{tr_}/tag", "DUP", rid26, "同源")
     R.assign(f"{tr_}/src", "DUP", rid26, "同源")
     R.assign(f"{tr_}/v/0", "DUP", "SRC_OAI（營收：FY2025）", "2025 為實際值（同 actuals.revenue2025）")
-    for i in (2, 3, 4):
-        R.assign(f"{tr_}/v/{i}", "FORMULA", "P5（反向目標路徑 2027–29：依 Σ840 擬合）",
-                 "Derived：2027–29 為依 Σ840 擬合之路徑（v0.5 標 Interested-party/Derived 混合；依元素拆分）")
+    # P5（S5）：沿用 v0.5／Tokenomics v4 FT_Sep2026 列 24 的結構——2027、2028 為擬合值（線性遞減成長，閉合 36→350 與 Σ840），2029＝Σ840 殘差（公式）
+    for i, y in ((2, 2027), (3, 2028)):
+        I(tr_, "管理層營收目標擬合值（反向模式）", index=str(y), unit="$B", v=f"{tr_}/v/{i}", tag="Decision", decision="R1",
+          status="P5 新增（反向模式；S5）", meta=False,
+          note="Derived 擬合值（Tokenomics v4 FT_Sep2026 列 24：成長率線性遞減，閉合 2026 $36B→2030 $350B 且 2026–30 合計 $840B；v0.5 沿用）。"
+               "只驅動 Reverse 頁（R1），不回饋基準。替代擬合：二次式 77.0／143.0（2029 殘差 234.0）")
+        R.inp_rows[-1]["lo"] = R.inp_rows[-1]["hi"] = R.get(f"{tr_}/v/{i}")
+    R.assign(f"{tr_}/v/4", "FORMULA", "Reverse X01（2029＝Σ840 − 2026 − 2027 − 2028 − 2030；P5）",
+             "Derived：v0.5／Tokenomics v4 以 2029 為殘差使 2026–30 合計＝$840B（v0.5 標 Interested-party/Derived 混合；依元素拆分）")
     S(f"{rv}/targetFCFcum2026_2030", "管理層目標：2026–2030 累計自由現金流", v=f"{rv}/targetFCFcum2026_2030/v", unit="$B",
       scope="Jul-2026 簡報", date="2026-09-18", use="P5 反向模式")
     # 計畫算力：reverse.targetComputeCum、anchors.computeCum_FT、training.planCompute 同源（FT 2026-09-18）
@@ -773,13 +779,14 @@ def build_map(data=None, write_registry=False) -> Recorder:
     R.split("spending.ownedCapex", "出處『Project Camellia $20B（TechCrunch 2026-07-22）』為單一專案例，非整年觀測；新增 SRC_OAI 錨點列，6 個元素維持 Inputs（Assumed）", "SRC_OAI 1 列（錨點）＋Inputs 6 格", scanned_only=True)
     R.split("subscription.tasksPerDay／tokensPerTask", "出處（Tokenomics workbook，未經查核）；僅『2025-07 每日 2.5B 則訊息』為可引用觀測，與任務口徑不同；新增 SRC_OAI 錨點列，元素維持 Inputs", "SRC_OAI 1 列（錨點）＋Inputs 20 格", scanned_only=True)
     R.split("api.listPriceFYAvg", "V7 已依元素拆分：2025（Analogy）→Inputs；2026（由事件價推得）→公式", "Inputs 與公式（見分類規則 2）")
-    R.split("reverse.targetRevenue", "V7 已依元素拆分：2026、2030→SRC_OAI；2025 併入實際營收；2027–29→公式", "SRC_OAI 2 列＋重複併入 1＋公式 3")
+    R.split("reverse.targetRevenue", "V7 已依元素拆分：2026、2030→SRC_OAI；2025 併入實際營收；2027–28→Inputs（擬合值，P5）；2029→公式（Σ840 殘差，P5）", "SRC_OAI 2 列＋重複併入 1＋Inputs 2＋公式 1")
     R.split("other.ads.arpuPerExposedUserYear", "出處『Meta FY2025 全球 ARPP $57.03（10-K）』是第三方上限參照，非 OpenAI 觀測；元素全屬 Analogy→Inputs，不拆", "Inputs 6 格", scanned_only=True)
     R.split("other.ads.exposureShare、demandGrowthExPrice、fleetMix、arpu、tokenMix、listPriceAnnualChange", "出處皆無年度觀測值（Assumed／Analogy 全期）→不拆", "Inputs", scanned_only=True)
     R.split("api.demandGrowthExPrice.tasks（2026）", "2026 為校準年（v0.4 把 53%→134% 使 FY2026 對上獨立推估 32.9）：值由校準得出，屬 Assumed、無觀測元素→不拆；校準目標 32.9 為 Derived（公式）", "Inputs", scanned_only=True)
     p2_rows(R)
     p3_rows(R)
     p4_rows(R)
+    p5_rows(R)
     # 殘餘：補上未登記的中介資料葉節點（tag/src/chk/_note…）隨最近的已登記兄弟
     for p in list(R.leaves):
         if p in R.dest:
@@ -913,6 +920,20 @@ def p4_rows(R: Recorder):
       status="P4 新增（E6）", note="來源：定義常數；區間不適用（低＝高）；E6：公式內不得含常數。用途：TK $/M token × M tok/GW/年 → $B/GW/年", meta=False)
     R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 1000000000, 1000000000
     return lag
+
+
+def p5_rows(R: Recorder):
+    """v0.6-P5（S5）新增 Inputs：融資輪到位年、Amazon 條件式開關與到位年（S5 預設：不計入基準，列情境）。不改 v0.5 葉節點的去處。"""
+    I = R.inp
+    I("r6/P5-1/融資", "2026-03 融資輪無條件部分的現金到位年", unit="年", vlit=2026, tag="Decision", decision="S7",
+      status="P5 新增（S7）", note="v0.5 資金第 10 列：無條件部分全額計入 2026 股權流入；SoftBank 三期的實際分期未揭露（區間上限 2027）", meta=False)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 2026, 2027
+    I("r6/P5-1/融資", "計入 Amazon 條件式 $35B（1＝是；0＝否）", unit="開關", vlit=0, tag="Decision", decision="S7",
+      status="P5 新增（S5 預設：不計入基準，列情境）", note="v0.5 輸入第 7 列（base 不計入）；Funding 第四節另列計入情境，不受本開關影響", meta=False)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 0, 1
+    I("r6/P5-1/融資", "Amazon 條件式 $35B 到位年", unit="年", vlit=2026, tag="Assumed", decision="S7",
+      status="P5 新增（S5）", note="條件為 IPO 或 AGI 里程碑（SRC_OAI_082）；v0.5 計入時與無條件部分同在 2026；區間 2026–2027（OpenAI 2026-06 已機密遞交 S-1 草稿，上市時點未定）", meta=False)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 2026, 2027
 
 
 def coverage_report(R: Recorder):
