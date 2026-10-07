@@ -5578,6 +5578,158 @@
     "tag": "[Interested-party]",
     "note": "10-Q 核閱數（Oracle 自述，未經查核）；權益法投資；TikTok 同時為 OCI 客戶（融資計畫點名）"
    }
+  ],
+  "5_OpenAI對手方": [
+   {
+    "id": "oai.k.total",
+    "item": "OpenAI–Oracle 合約總額（OpenAI 模型採用值）",
+    "value": 300000,
+    "unit": "USD M",
+    "period": "2027–2031",
+    "source": "company-models main 273a707：openai/model/20261004_OpenAI_v0.6.xlsx（只讀）",
+    "url": "https://github.com/YinchenChang/company-models/blob/main/openai/model/20261004_OpenAI_v0.6.xlsx",
+    "docDate": "2026-10-04",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "OpenAI 模型 v0.6（P1）輸入值；原始來源見各列；SRC_OAI_058；WSJ 2025-09；與本總帳 cust.openai.contract 同源"
+   },
+   {
+    "id": "oai.k.period",
+    "item": "合約期間（起／迄）",
+    "value": [
+     2027,
+     2031
+    ],
+    "unit": "年（曆年）",
+    "period": "—",
+    "source": "company-models main 273a707：openai/model/20261004_OpenAI_v0.6.xlsx（只讀）",
+    "url": "https://github.com/YinchenChang/company-models/blob/main/openai/model/20261004_OpenAI_v0.6.xlsx",
+    "docDate": "2026-10-04",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "OpenAI 模型 v0.6（P1）輸入值；原始來源見各列；SRC_OAI_059／060；Oracle 財年對應約 FY27Q3（2027-01）起至 FY32Q3（[Derived]，假設曆年 1 月起算）"
+   },
+   {
+    "id": "oai.k.gw",
+    "item": "合約容量",
+    "value": 4500,
+    "unit": "MW（電力口徑未明）",
+    "period": "—",
+    "source": "company-models main 273a707：openai/model/20261004_OpenAI_v0.6.xlsx（只讀）",
+    "url": "https://github.com/YinchenChang/company-models/blob/main/openai/model/20261004_OpenAI_v0.6.xlsx",
+    "docDate": "2026-10-04",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "OpenAI 模型 v0.6（P1）輸入值；原始來源見各列；SRC_OAI_061"
+   },
+   {
+    "id": "oai.k.annual",
+    "item": "Oracle 合約年額（總額 ÷ 年數）",
+    "value": 60000,
+    "unit": "USD M／年",
+    "period": "2027–2031",
+    "source": "company-models main 273a707：openai/model/20261004_OpenAI_v0.6.xlsx（只讀）",
+    "url": "https://github.com/YinchenChang/company-models/blob/main/openai/model/20261004_OpenAI_v0.6.xlsx",
+    "docDate": "2026-10-04",
+    "retrieved": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "OpenAI 模型 v0.6（P1）輸入值；原始來源見各列；[Derived] 300 ÷ 5（Derived_V9 V25）；Oracle FY26 全部 OCI 營收 18.1B 的 3.3 倍"
+   },
+   {
+    "id": "oai.k.perMW",
+    "item": "Oracle–OpenAI 合約隱含每 MW 年收入",
+    "value": 13.33,
+    "unit": "USD M／MW·年（MW 口徑未明）",
+    "period": "2027–2031",
+    "source": "company-models main 273a707：openai/model/20261004_OpenAI_v0.6.xlsx（只讀）",
+    "url": "https://github.com/YinchenChang/company-models/blob/main/openai/model/20261004_OpenAI_v0.6.xlsx",
+    "docDate": "2026-10-04",
+    "retrieved": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "OpenAI 模型 v0.6（P1）輸入值；原始來源見各列；[Derived] 300,000 ÷ 5 ÷ 4,500（OpenAI 模型 Checks C14：13.3 $B/GW/年）；屬公司合約數字，只作對照，不作每 MW 輸入"
+   },
+   {
+    "id": "oai.leasePrice",
+    "item": "OpenAI 模型每 GW 年合約價參數（基準／低／高）",
+    "value": [
+     12,
+     8,
+     20
+    ],
+    "unit": "USD B／GW·年（＝USD M／MW·年）",
+    "period": "—",
+    "source": "company-models main 273a707：openai/model/20261004_OpenAI_v0.6.xlsx（只讀）",
+    "url": "https://github.com/YinchenChang/company-models/blob/main/openai/model/20261004_OpenAI_v0.6.xlsx",
+    "docDate": "2026-10-04",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "OpenAI 模型 v0.6（P1）輸入值；原始來源見各列；Inputs INP_229（[Analogy]；V8）：可比為 Oracle 遠期合約 13.3 與 2025 合約現金 ÷ 平均 GW ≈ 11.8"
+   },
+   {
+    "id": "oai.computePlan.ft",
+    "item": "OpenAI 計畫算力支出 2026–2030 累計（FT 口徑）",
+    "value": 856000,
+    "unit": "USD M",
+    "period": "2026–2030",
+    "source": "company-models main 273a707：openai/model/20261004_OpenAI_v0.6.xlsx（只讀）",
+    "url": "https://github.com/YinchenChang/company-models/blob/main/openai/model/20261004_OpenAI_v0.6.xlsx",
+    "docDate": "2026-10-04",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "OpenAI 模型 v0.6（P1）輸入值；原始來源見各列；SRC_OAI_055：FT 2026-09-18（7 月簡報）；Reuters 2026-02 約 600B 為下限"
+   },
+   {
+    "id": "oai.computePlan.wsj",
+    "item": "OpenAI 計畫算力支出 2026–2030 累計（WSJ 口徑）",
+    "value": 750000,
+    "unit": "USD M",
+    "period": "2026–2030",
+    "source": "company-models main 273a707：openai/model/20261004_OpenAI_v0.6.xlsx（只讀）",
+    "url": "https://github.com/YinchenChang/company-models/blob/main/openai/model/20261004_OpenAI_v0.6.xlsx",
+    "docDate": "2026-10-04",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "OpenAI 模型 v0.6（P1）輸入值；原始來源見各列；SRC_OAI_076：WSJ 2026-07-22"
+   },
+   {
+    "id": "oai.compute.2026",
+    "item": "OpenAI 2026 算力支出",
+    "value": 50000,
+    "unit": "USD M",
+    "period": "2026",
+    "source": "company-models main 273a707：openai/model/20261004_OpenAI_v0.6.xlsx（只讀）",
+    "url": "https://github.com/YinchenChang/company-models/blob/main/openai/model/20261004_OpenAI_v0.6.xlsx",
+    "docDate": "2026-10-04",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "OpenAI 模型 v0.6（P1）輸入值；原始來源見各列；SRC_OAI_078：Brockman 證詞（commitments tracker 2026-05 轉述）；OpenAI 模型以合約攤提得 2026 算力現金 53B（INP_181 備註）"
+   },
+   {
+    "id": "oai.k.shareOfPlan",
+    "item": "Oracle 合約占 OpenAI 2026–2030 計畫算力支出比例",
+    "value": 0.2804,
+    "unit": "比率",
+    "period": "2027–2030",
+    "source": "company-models main 273a707：openai/model/20261004_OpenAI_v0.6.xlsx（只讀）",
+    "url": "https://github.com/YinchenChang/company-models/blob/main/openai/model/20261004_OpenAI_v0.6.xlsx",
+    "docDate": "2026-10-04",
+    "retrieved": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "OpenAI 模型 v0.6（P1）輸入值；原始來源見各列；[Derived] 2027–2030 四年 × 60B ＝ 240B ÷ 856B（FT 口徑）＝28%；WSJ 口徑 750B 則 32%"
+   },
+   {
+    "id": "oai.path.annual",
+    "item": "OpenAI 模型的年度算力支出路徑",
+    "value": null,
+    "unit": "USD M／年",
+    "period": "2026–2030",
+    "source": "company-models main 273a707：openai/model/20261004_OpenAI_v0.6.xlsx（只讀）",
+    "url": "https://github.com/YinchenChang/company-models/blob/main/openai/model/20261004_OpenAI_v0.6.xlsx",
+    "docDate": "2026-10-04",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "OpenAI 模型 v0.6（P1）輸入值；原始來源見各列；不適用：main 上 openai/ 為 v0.6 P1（S0 搬遷完成，S3「P3 算力」尚未開始），Excel 只有輸入、尚無年度算力支出輸出；v0.1b 先以上列合約年額 60B 作對照列，OpenAI P3 完成後再接"
+   }
   ]
  }
 }
