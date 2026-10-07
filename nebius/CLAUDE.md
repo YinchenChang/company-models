@@ -26,7 +26,7 @@ Nebius（NBIS）資金與評價模型，核心命題「預付款是否讓 backlo
 - 先讀交接檔與 README，再動手；純結構修改的驗收標準是「數字與畫面與前一版完全相同」。
 - 每次修改後必跑 `scripts/verify.sh`，全數通過才可提交。
 - 交付的 HTML 必須是「單一檔案、離線、本機雙擊即可開啟」（已決定事項 11）：所有 JS、CSS、字型、圖片、資料在建置時內嵌；不得有任何網路請求（CDN、Google Fonts、外部圖片、fetch／XHR、外部 import），也不得讀取旁邊的檔案。`verify.sh` 的「離線開啟檢查」（`scripts/check_offline.py`）必須通過。改到數字的修改，要在回報中列出受影響的關鍵數字（三情境目標價等）前後對照。
-- 版本號：**只有 `dist/` 成品（HTML 或 Excel）改變時才升版**；純工具修改（建置／核對腳本、文件、setup script 等，`dist/` 不變）不升版、不新增 VLOG。升版時 `vlog.py`（Excel 唯一來源）與 `tail.js` 的 VLOG（HTML）**兩處都要**新增一列；成品命名 `更新日_<company.json → meta.company>收支模型_v版本號`（目前 `20261007_Nebius收支模型_v0_1`），放 `dist/`，並移除舊版成品；交接檔同樣以新版取代舊版（`docs/handoff/` 只留一個檔）。
+- 版本號：**只有 `dist/` 成品（HTML 或 Excel）改變時才升版**；純工具修改（建置／核對腳本、文件、setup script 等，`dist/` 不變）不升版、不新增 VLOG。升版時 `vlog.py`（Excel 唯一來源）與 `tail.js` 的 VLOG（HTML）**兩處都要**新增一列；成品命名 `更新日_<company.json → meta.company>收支模型_v版本號`（目前 `20261007_Nebius收支模型_v0_2`），放 `dist/`，並移除舊版成品；交接檔同樣以新版取代舊版（`docs/handoff/` 只留一個檔）。
 - 同時更新交接檔（`docs/handoff/`，只保留最新版）與 README。
 - 一個任務一個分支、一個 PR；PR 說明寫：改了什麼、驗收結果、需 Andy 決定的事項（任務完成時與報告檔「目前狀態」同步更新）。
 - 任務回報：依下節「每輪回報規則」。報告檔另須保存 `scripts/verify.sh` 完整輸出、關鍵數字前後對照（三情境目標價等；未改數字時註明「無變動」並列出現值）。
@@ -62,7 +62,7 @@ Andy 不熟程式，他透過 Claude 聊天端（讀 Gmail 裡的 GitHub 通知�
 
 ## 待辦（Nebius；依序，每項一張工作單、一個 PR）
 CRWV 時期的待辦（環境移植、區間、設定集中、季度層、期間滾動已完成；5a 精簡、5b 只讀檢視器、折舊修正、短名稱改名未做）不在 Nebius 範圍內：依 repo 根目錄 README，CRWV 未完成的待辦（5a 精簡、5b 只讀檢視器、折舊修正、機率加權目標價、GPU 批次與續約價格衰退）Nebius 也先不做。
-1. **Q3 2026 季度更新**（6-K 預計 2026-11；步驟見交接檔「待辦與季度更新」）：填 `quarterly.actuals`、滾動評價日至 2026-09-30、更新 `ytdActual`、`latestQuarter`、`asOf` 全部欄位；期初可計費 MW 依新一季營收 × 4 重新校準（`defaults.billableOpen` 隨之更新）；升版 v0.2。
+1. **Q3 2026 季度更新**（6-K 預計 2026-11；步驟見交接檔「待辦與季度更新」）：填 `quarterly.actuals`、滾動評價日至 2026-09-30、更新 `ytdActual`、`latestQuarter`、`asOf` 全部欄位；期初可計費 MW 依新一季營收 × 4 重新校準（`defaults.billableOpen` 隨之更新）；`priceCheck`（簡報的實現單價對照）同步更新；升版 v0.3（v0.2 已用於標題與簡報改版）。
 2. 若 Q3 揭露季末 active／connected MW：改以實際 MW 取代內插與校準，重估「實現單價 vs 正向推導單價」差距與爬坡係數。
 3. 市場共識與同業 Comps 更新（共識檔放 `data/`，改 `meta.consensusFile`；同業市值與淨負債仍為 2026-09-21）。
 4. 另估 Nebius 的 WACC 與 EV/EBITDA 倍數（目前沿用 CRWV 模板 11%／6x；Nebius 淨現金、槓桿較低）。
