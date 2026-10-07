@@ -32,7 +32,9 @@ def _conn(k, mp=CO['scenarios']['mwPath']):
     return a
 _dsc = D['scenario']
 assert all(abs(x - y) < 1e-6 for x, y in zip(_conn(_dsc), M['accepted'])), f"defaults.m.accepted ≠ {_dsc} 情境已連網 MW {_conn(_dsc)}"
-assert M['billable'] == [int(x * b + 0.5) for x, b in zip(_conn(_dsc), CO['scenarios']['billableRatio']['ratio'])], "defaults.m.billable ≠ 已連網 × 在役比例（四捨五入）"
+assert M['billable'] == [int(x * b * f + 0.5) for x, b, f in zip(_conn(_dsc), CO['scenarios']['billableRatio']['ratio'], CO['scenarios']['billableRatio']['ramp'])], "defaults.m.billable ≠ 已連網 × 在役比例 × 爬坡係數（四捨五入）"
+# v0.1c：期初可計費 MW＝最新季營收 × 4 ÷ 首期每 MW 年收入（對齊已實現營收）；defaults.billableOpen 須等於預設情境的校準值
+assert D['billableOpen'] == int(CO['latestQuarter']['revenue'] * 4 / CO['scenarios']['revMW'][_dsc][0] + 0.5), "defaults.billableOpen ≠ 最新季營收 × 4 ÷ 首期每 MW 年收入（預設情境）"
 assert M['revMW'] == CO['scenarios']['revMW'][_dsc], "defaults.m.revMW ≠ scenarios.revMW（預設情境）"
 PCT_ = lambda xs: [x / 100 for x in xs]  # HTML 以百分點存、Excel 以比例存
   # 版本紀錄單一來源：vlog.py（HTML 端為 tail.js 的 VLOG）
@@ -295,6 +297,9 @@ for nm, k, _ in _SCN:
 row_line(ws, r, "在役／已連網比例", "%", CO['scenarios']['billableRatio']['ratio'], PCT, BLUE,
          "三情境共用；新連網產能自驗收到可計費需數季 [Assumed]")
 BR_ROW = r; r += 1
+row_line(ws, r, "可計費爬坡係數", "%", CO['scenarios']['billableRatio']['ramp'], PCT, BLUE,
+         "v0.1c 首期營收校準：可計費 MW＝已連網 × 在役比例 × 爬坡係數，逐步收斂（60%／80%／100%）；60% 為能讓基準 FY26 落入公司指引的保守值 [Assumed]")
+RAMP_ROW = r; r += 1
 row_line(ws, r, "表外現金租金（積極路徑）", "US$bn", CO['scenarios']['leaseHighPath'], NUM, BLUE,
          f"已簽約未起租租賃的現金路徑；其他情境依 MW 比例縮放（起算 {CO['scenarios']['leaseRampFloorMw']:,} MW）")
 LEASE_HI = r; r += 1
@@ -308,7 +313,9 @@ RP = gi(r, "五期認列比例（至 2030 末）", "%", D['rp'] / 100, "季報�
 WSUM = gi(r, "RPO 桶權重合計", "%", CO['rpo']['scheduledShare'], "下方權重列的合計，用於歸一化", PCT); r += 1
 MWY = {}  # 5a：各年底主動電力（company.json → defaults.mwYearEnd，以年份為鍵；說明在 texts.mwYearEndNotes）
 MWY[MW_Y0] = MW_YE25 = gi(r, f"{CAL['prevFYE']} 主動電力", "MW", D['mwYearEnd'][str(MW_Y0)], CO['texts']['mwYearEndNotes'][str(MW_Y0)], NUM0); r += 1
-MW0 = gi(r, "«VMD» Billable MW", "MW", D['billableOpen'], "季末在役 MW 未揭露：2025 年底 active 170 MW 與首期期末在役 MW 線性內插 [Derived]", NUM0); r += 1
+QREV = gi(r, "最新已申報季營收（單季）", "US$bn", CO['latestQuarter']['revenue'], "期初可計費 MW 校準用：季報營收 [Interested-party]（company.json → latestQuarter.revenue）", NUM); r += 1
+MW0_ROW = r
+MW0 = gi(r, "«VMD» Billable MW", "MW", D['billableOpen'], "v0.1c 校準：＝最新季營收 × 4 ÷ 首期每 MW 年收入（對齊已實現年化營收；季末在役 MW 未揭露，不用內插值）[Derived]", NUM0); r += 1
 AVGON = gi(r, "收入用平均在役 MW（1=是）", "", int(D['useAvgMw']), "0＝用期末存量全期化；建議 1", NUM0); r += 1
 REVDRV = gi(r, "營收驅動（mw＝MW × 每 MW 年收入；rpo＝RPO 排程）", "", D['revenueDriver'], "mw：新產能簽約率固定 100%，營收＝容量上限；RPO 只作對照與產能瓶頸旗標（company.json → defaults.revenueDriver）", "@"); r += 1
 REVSC = gi(r, "每 MW 年收入倍數（整體）", "%", D['revScale'], "反向 DCF 與壓力測試用；預設 100%。以『目標搜尋』調整此格即可反解市價隱含單價", PCT); r += 1
@@ -318,17 +325,18 @@ r = prow(r, "模型期長度（年）", "", CO['periodYears'], NUM,
 r = prow(r, "RPO 桶權重", "%", CO['rpo']['bucketWeights'], PCT, "季報 36%／24m、40%／25-48m、24%／之後（假設 49–72m）桶內線性分攤 [Derived]")
 ws.cell(row=IN["RPO 桶權重"], column=8, value="=SUM(C{0}:G{0})".format(IN["RPO 桶權重"])).number_format = PCT
 r = prow(r, "Accepted MW（期末主動電力）", "MW", [0] * 5, NUM0, "＝依 A 區情境選擇器（已連網 MW-IT）", BLACK)
-r = prow(r, "Billable MW", "MW", [0] * 5, NUM0, "＝已連網 × 在役比例（A 區）", BLACK)
+r = prow(r, "Billable MW", "MW", [0] * 5, NUM0, "＝已連網 × 在役比例 × 爬坡係數（A 區）", BLACK)
 _acc = IN["Accepted MW（期末主動電力）"]; _bil = IN["Billable MW"]
 for i in range(5):
     L = COLS[i]
     ws.cell(row=_acc, column=3 + i, value=f"=CHOOSE({SEL},{L}{sc_rows['保守']},{L}{sc_rows['基準']},{L}{sc_rows['積極']})")
-    ws.cell(row=_bil, column=3 + i, value=f"=ROUND({L}{_acc}*{L}{BR_ROW},0)")
+    ws.cell(row=_bil, column=3 + i, value=f"=ROUND({L}{_acc}*{L}{BR_ROW}*{L}{RAMP_ROW},0)")
 r = prow(r, "利用率", "%", PCT_(M['util']), PCT, "100%：每 MW 年收入已含可計費利用率（路徑 B 80／85／90%），不重複扣除 [Derived]")
 r = prow(r, "每 MW 年收入", "US$bn/MW", [0] * 5, '0.0000', "＝依 A 區情境選擇器（Tokenomics 正向推導三情境）", BLACK)
 for i in range(5):
     L = COLS[i]
     ws.cell(row=IN["每 MW 年收入"], column=3 + i, value=f"=CHOOSE({SEL},{L}{sc_rows['rev_保守']},{L}{sc_rows['rev_基準']},{L}{sc_rows['rev_積極']})")
+_c = ws.cell(row=MW0_ROW, column=3, value=f"=ROUND({QREV}*4/C{IN['每 MW 年收入']},0)"); _c.font = BLACK  # v0.1c：期初可計費 MW 校準（活公式）
 r = prow(r, "新產能簽約率", "%", PCT_(M['fill']), PCT, "MW 驅動：100%（RPO 只作對照）")
 r = prow(r, "客戶違約率", "%", PCT_(M['defaultP']), PCT, "前三大客戶約 59% 營收的定價，非預測 [Assumed]")
 r = prow(r, "回收率", "%", PCT_(M['recovery']), PCT, "[Assumed]")

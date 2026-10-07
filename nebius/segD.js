@@ -15,6 +15,7 @@ function zM() {
     },
     mw31: SCENARIOS[e].mw31,
     cvCap: SCENARIOS[e].cvCap,
+    billableOpen: SCENARIOS[e].bo, // v0.1c
     m: {
       ...t.m,
       accepted: [...SCENARIOS[e].acc],

@@ -393,6 +393,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.revMW.base` | 基準情境：同上 | US$bn/MW 清單 | 0.0174、0.0174、0.0174、0.0174、0.0174 | 必改 |
 | `scenarios.revMW.high` | 積極情境：同上 | US$bn/MW 清單 | 0.0242、0.0242、0.0242、0.0242、0.0242 | 必改 |
 | `scenarios.billableRatio.ratio` | 在役（可計費）÷ 已連網比例，各期（三情境共用；v0.1b） | 比例清單 | 0.75、0.85、0.9、0.9、0.9 | 檢查 |
+| `scenarios.billableRatio.ramp` | 可計費爬坡係數，各期（三情境共用；首期營收校準，可計費 MW＝已連網 × 在役比例 × 爬坡係數；v0.1c） | 比例清單 | 0.6、0.8、1、1、1 | 檢查 |
+| `scenarios.billableRatio.note` | 首期營收校準的說明（v0.1c） | 文字 | v0.1c 首期營收校準：期初可計費 MW＝最新季營… | 檢查 |
 | `scenarios.leaseHighPath` | 積極情境下，尚未起租租約的新增年租金路徑；其他情境依 MW 比例縮放 | US$bn 清單 | 0.05、0.5、1、1、1 | 檢查 |
 | `scenarios.leaseRampFloorMw` | 低於此電力時不產生新增表外租金（縮放公式的起點） | MW | 0 | 檢查 |
 | `scenarios.mw31.low` | 保守情境：模型期後一年（FY31）新增的 MW，用於 FY30 的預建支出 | MW | 0 | 檢查 |
@@ -462,7 +464,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.linkSites` | 具名站點的 MW 是否連動第一期產能下限 | 是／否 | 是 | 可沿用 |
 | `defaults.linkLeaseTail` | 舊模板遺留開關，目前程式未使用 | 是／否 | 是 | 可沿用 |
 | `defaults.useAvgMw` | 收入以平均在役 MW 計（true）或期末存量計（false） | 是／否 | 是 | 可沿用 |
-| `defaults.billableOpen` | 最新季末可計費 MW（第一期期初） | MW | 366 | 必改 |
+| `defaults.billableOpen` | 最新季末可計費 MW（第一期期初；v0.1c 起＝最新季營收 × 4 ÷ 預設情境首期每 MW 年收入，建置時檢查） | MW | 134 | 必改 |
 | `defaults.cds` | 信用違約交換（CDS）中價 | bps | None | 必改 |
 | `defaults.cdsBid` | CDS 買價 | bps | None | 必改 |
 | `defaults.cdsAsk` | CDS 賣價 | bps | None | 必改 |
@@ -472,7 +474,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.useFacility` | 融資時是否先動用未動用信用額度 | 是／否 | 是 | 可沿用 |
 | `defaults.facility` | 未動用信用額度 | US$bn | 0.775 | 必改 |
 | `defaults.m.accepted` | 已驗收 MW 的預設路徑（實際依所選情境覆寫） | MW 清單 | 750、1330、1910、2490、3070 | 檢查 |
-| `defaults.m.billable` | 可計費 MW 的預設路徑（實際依情境與爬坡比例覆寫） | MW 清單 | 563、1131、1719、2241、2763 | 檢查 |
+| `defaults.m.billable` | 可計費 MW 的預設路徑（實際依情境與爬坡比例覆寫） | MW 清單 | 338、904、1719、2241、2763 | 檢查 |
 | `defaults.m.util` | 利用率，各期 | % 清單 | 100、100、100、100、100 | 檢查 |
 | `defaults.m.revMW` | 每 MW 年收入，各期 | US$bn/MW 清單 | 0.0174、0.0174、0.0174、0.0174、0.0174 | 必改 |
 | `defaults.m.aiShare` | AI 占比，各期（目前只做範圍檢查，未參與計算） | % 清單 | 100、100、100、100、100 | 可沿用 |
