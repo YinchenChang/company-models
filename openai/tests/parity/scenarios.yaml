@@ -122,7 +122,7 @@ scenarios:
     description: P5：2025 年底現金 40→35（SRC 區間下緣）：2026 起現金路徑與外部資金需求連動（反向模式亦同）
     inputs: {"SRC_OAI_079": 35}
   - id: aj_target2030_low
-    description: P5：管理層 2030 營收目標 350→280（2026-02 舊版值）：Reverse 2029 殘差、R2 倍數、橋接與反向資金連動；基準不變
+    description: P5：管理層 2030 營收目標 350→280（2026-02 舊版值）：Reverse 2029 殘差 307.4 高於 2030（C122 轉 ERR）、R2 倍數、橋接與反向資金連動；基準不變
     inputs: {"SRC_OAI_044": 280}
   - id: ak_reverse_fit_broken
     description: P5：反向目標擬合值 2028 141.5→300，使 2029 殘差 78.9 低於 2028（C122 應轉 ERR）
