@@ -26,7 +26,7 @@ F = [
  ('texts.thesis', '模型命題一句話（HTML 標題列與檔案說明；v0.1b）', '文字', M),
  ('texts.mwYearEndNotes', '各年底主動電力的來源說明，以年份為鍵（Excel「輸入與假設」說明欄；5a）', '物件（文字）', M),
  ('meta.sourceOrderNote', '資料來源的先後與衝突時的取捨原則（畫面說明文字）', '文字', M),
- ('calendar.fiscalYearEndMonth', '財年結束月份（v4.5；CoreWeave 12、Oracle 5）', '月', M),
+ ('calendar.fiscalYearEndMonth', '財年結束月份（v4.5；Nebius、CoreWeave 12，Oracle 5）', '月', M),
  ('calendar.latestQuarterFiled', '最新已申報（10-Q／10-K）的財季，格式 FYyyQn；驅動年度首期滾動與評價日（v4.5）', '文字', M),
  ('calendar.latestQuarterReported', '最新已公布（財報新聞稿）的財季；驅動季度層，年度首期不受影響（v4.5）', '文字', M),
  ('calendar.firstModelFY', '沒有已申報季度時（例如未上市公司）的首個模型財年，例如 FY26；有已申報季度時填 null（v4.5）', '文字', C),
