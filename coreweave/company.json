@@ -1236,6 +1236,17 @@
    {
     "scope": "annual",
     "period": "*",
+    "metric": "rev",
+    "vs": "consensus",
+    "type": "觀點",
+    "perMw": {
+     "revenue": "gpuHr"
+    },
+    "text": "營收依 GPU 小時合約價推導（company.json → pricing.gpuHr × 每 MW GPU 數 × 8,760 × 利用率），不以公司 ARR 指引校準；營收差距 {gap.rev:gap}"
+   },
+   {
+    "scope": "annual",
+    "period": "*",
     "metric": "ebitda",
     "vs": "consensus",
     "type": "觀點",

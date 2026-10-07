@@ -39,7 +39,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | scripts/test_attrib.py | 拆解工具測試：月數推算、同版對同版全為 0、滾動一季且 WACC 改為 12% 時 (a) 係數＝(1.12)^(3/12)。verify.sh 步驟 8c |
 | scripts/test_rolling.py | v4.5：期間滾動測試（暫存副本）。B：日曆推算 6 種情況（12 月財年 Q1–Q4 已申報、5 月財年、無已申報季度）× 2 種目標價時點；C：只滾日曆、未更新 `asOf` 時建置必須失敗並逐項列出；A：把副本滾動到下一個已申報季度（只改日曆與標籤、不改數字），建 HTML 與 Excel，第一屏不得出現舊日曆特有的字樣（評價日、年初至今／首期標籤、已申報季度）。例外：版本紀錄與來源頁、整段落在 company.json／共識檔資料字串內的字樣。verify.sh 步驟 8b |
 | scripts/check_offline.py | 離線開啟檢查（已決定事項 11）：`python3 scripts/check_offline.py 檔案.html 同版.xlsx`。HTML 單獨複製到空資料夾，Playwright 阻斷網路、以 file:// 開啟；(a) 除 HTML 本身外的請求數＝0（網路與旁邊的本機檔案都算）、(b) console 無錯誤與例外、(c) 5 個分頁 10 項關鍵數字（依 A 欄列名稱取自同版 Excel）出現在畫面且無 NaN／undefined／Infinity；v4.5 另比對第一屏（視窗內）的資料更新日、模型期間、現價日與評價日（`CHECKS_FIRST`；列名稱中的期間佔位符以任意文字比對，新舊版 Excel 皆可）。verify.sh 步驟 5c 對新建 HTML 與 dist/ 成品各跑一次 |
-| scripts/check_tokenomics_tab.py | W1：「快照值＝Excel 分頁值」檢查：`python3 scripts/check_tokenomics_tab.py 檔案.xlsx`。Excel「Tokenomics_取數」分頁每個名稱 × 世代的低成本／基準／高成本＝`company.json` → `tokenomics.snapshotFile` 快照值；每個「基準」格有具名範圍 `TK_<名稱去掉 IF_／L1_>_<世代代碼>`（H100、GB200、GB300、VR200、RU；單值名稱不加世代）；W1 期間其他工作表的公式不得引用本分頁或 TK_ 名稱。verify.sh 步驟 5d；步驟 0c 另以 `../tools/tokenomics/import_tokenomics.py --check` 確認快照可由 Tokenomics 重現（找不到 clone 時警告略過；`TOKENOMICS_DIR` 可指定） |
+| scripts/check_tokenomics_tab.py | W1：「快照值＝Excel 分頁值」檢查：`python3 scripts/check_tokenomics_tab.py 檔案.xlsx`。Excel「Tokenomics_取數」分頁每個名稱 × 世代的低成本／基準／高成本＝`company.json` → `tokenomics.snapshotFile` 快照值；每個「基準」格有具名範圍 `TK_<名稱去掉 IF_／L1_>_<世代代碼>`（H100、GB200、GB300、VR200、RU；單值名稱不加世代）；W2 起其他工作表可引用 TK_ 名稱（只核對引用的名稱都存在），本分頁值仍須＝快照值。verify.sh 步驟 5d；步驟 0c 另以 `../tools/tokenomics/import_tokenomics.py --check` 確認快照可由 Tokenomics 重現（找不到 clone 時警告略過；`TOKENOMICS_DIR` 可指定） |
+| scripts/permw_sens.py | W2：每 MW 敏感度的建置時快照。以 LibreOffice（UNO）開啟建好的 Excel，依序切換情境選擇與敏感度輸入（Tokenomics 低／高成本、GPU 小時價格低／高、世代組合 Rubin Ultra 版、管銷率 GAAP），讀加權目標價與融資缺口，寫入 `permw_sens.json`（有變動時代碼 3，verify.sh 步驟 3c 重建 Excel）；Excel「每MW經濟性」頁「敏感度」區讀此檔，並以「快照狀態」格比對目前輸入（不一致＝快照已過期） |
+| scripts/test_permw.py | W2：暫存副本測試（verify.sh 步驟 8d）——A：`meta.mwBasis`＝facility 時 Tokenomics 每 MW 值 ÷ IF_FacilityGW；B：`revenue`＝gpuHr（虛構價格，只在副本）時每 MW 年收入＝Σ 占比 × GPU 數 × 價格 × 8,760，Python 獨立計算一致；兩者 cmp31 基準全部一致 |
+| scripts/verify_legacy.sh | W2：舊方法回歸驗收。副本把 `methodology.perMw` 改為 legacy／ebitdaPct／legacy 後跑 `verify.sh --vs-dist`，畫面文字、Excel 值與公式須與 dist/ v4.5 成品 0 差異（新增列、新增工作表不計）；結果在 `out/verify_legacy.log` |
 | scripts/check_quarterly.js | v4.4：季度加總＝年度（三情境）、`quarterly.consistency` 一致性、超過門檻的差距都有原因；`build_html_portable.py` 建置時呼叫，verify.sh 步驟 0 |
 | scripts/test_quarterly.py | v4.4：暫存副本測試——(A) 假設 Q3 實際數，Python 獨立計算差距並與 HTML、Excel 比對；(B) 可移植性（無 MW、無季度指引與共識）。verify.sh 步驟 8 |
 | scripts/cloud_setup.sh | 雲端環境 setup script（只裝 Python 套件；LibreOffice Calc 於工作階段內補裝，見 CLAUDE.md） |
@@ -127,6 +130,16 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
   - 只拆解目標價採用的 0 截斷口徑；選擇權模式的 DCF 腿只列前後值（Andy 決定）。
   - 工具：`scripts/attrib.py`（數值取自 Excel；三情境以「情境選擇」切換）。測試：`scripts/test_attrib.py`（verify.sh 步驟 8c）。
 - **每季滾動流程**（已決定事項 10）：(1) 財報當天（新聞稿）：填 `quarterly.actuals`、`calendar.latestQuarterReported` 加一季、焦點季改為下一季；年度首期不動。(2) 10-Q／10-K 申報後：`calendar.latestQuarterFiled` 加一季；更新 `ytdActual`（含 `throughQuarter`、`months`、`label`、`notes`、`jvSplit`）、`historicalPL` 最後一格、`latestQuarter`、RPO 桶、債務與租賃到期表、`texts`（頁首來源一行、現金稅、首期股權組成）與各期清單（首期縮短一季）；更新首期一次性金額與期初餘額，並把 `asOf` 對應季度改為新的 `latestQuarterFiled`（滾動檢查，清單見下方「asOf」欄位說明）；建置時 `calendar_q.py` 檢查截止季與月數、`historicalPL` 與 `ytdActual.label` 的標籤是否一致，以及 `asOf` 各項的所屬季度。(3) 財年最後一季（10-K）後：首期為下一財年全年模型，模型期延長一年，需補新一年的假設（Andy 決定）。
+
+## W2 每 MW 經濟性（資本支出、營運成本、收入改接 Tokenomics）
+- **方法開關**（`company.json` → `methodology.perMw`，建置時決定公式）：`capex`＝tokenomics（每 MW 建置成本＝Σ 新增世代占比 × `IF_CapexIT`，不含廠房）｜legacy；`cost`＝bottomUp（電費 `IF_PowerCost`、IT 維護 `IF_MaintIT`、人員軟體 `IF_StaffSW`、稅險 `IF_TaxIns` × IT 資本占比，依平均在役世代加權 × 平均在役 MW；公司管銷＝營收 × 管銷率）｜ebitdaPct；`revenue`＝gpuHr（`pricing.gpuHr` × 每 MW GPU 數 × 8,760）｜legacy。全為舊方法時畫面與 Excel 與 v4.5 完全相同（`scripts/verify_legacy.sh`）。目前預設：tokenomics／bottomUp／legacy（收入採備案：W1 查不到 GB200／GB300／VR200 兩個獨立長約價來源）。
+- **世代組合**（`fleet`）：期初在役（最新季末）MW 與世代占比、各期新增 MW 的世代占比（`newMix`；`newMixAlt`＝Rubin Ultra 版敏感度）。汰換批次（各年新增 MW 在第 `gpuLife` 年）由最舊世代先出、以當期新增世代補回。Excel「輸入與假設」B 區後「世代組合」子區（含 Tokenomics 引用值：列＝世代、欄＝項目，經 `TK_` 具名範圍，`OFFSET` 依「Tokenomics 成本情境」取低／基準／高）；期初／期末／平均在役結構在「每MW經濟性」頁。
+- **EBITDA 率（bottomUp）**：由下而上 EBITDAR 率＝1 −（現金營運成本 ÷ 營收）；EBITDA 率＝EBITDAR 率 − 租金 ÷ 營收（租金只扣一次）。C 區「穩態 EBITDA 率」預設＝由下而上 FY30（公式），改成數值即為 FY30 目標、差額線性分攤到各期（反向 DCF、敏感度 59%／70% 沿用此格）。電力／維護 overlay 自動停用。
+- **Tokenomics 名稱缺漏**（v5.26 前）：`IF_MaintIT`→C 區「維護成本」、`IF_StaffSW`／`IF_TaxIns`→0、`IF_DeprLifeIT`→`defaults.gpuLife`；「檢查_連動」與 HTML 連動檢查顯示「Tokenomics 名稱缺漏 N 項，成本為暫代值」，重抓含這些名稱的快照後自動改用正式值並消失（不需改程式）。
+- **MW 口徑**（`meta.mwBasis`）：IT（預設）｜facility（Tokenomics 每 MW 值 ÷ `IF_FacilityGW`，基準；`scripts/test_permw.py` 測試 A）。
+- **對照列**（不入損益）：每 MW 經濟持有成本（`IF_HoldEcon`，在役世代加權；含廠房資本回收）、隱含每 GPU 小時價格（＝每 MW 年收入 ÷（每 MW GPU 數 × 8,760）；revMW 為 100% 計費時數的值，利用率在收入端另乘）與 `IF_GPUhrEcon` 倍數、同業每 MW 收入（`pricing.peerRevPerMw`）、各世代市場價格（`pricing.marketRefs`）、v4.5 舊值、期末 ARR ÷ MW、最近一季實際每 MW 現金營運成本。
+- **每 MW 經濟性彙總**（Excel「每MW經濟性」頁最上方；HTML「資金模型 → 運營活動 → 每 MW 經濟性」，只在使用新方法時顯示）：每平均在役 MW、年化（US$m／MW／年）的收入、電費、IT 維護、人員軟體、稅險、管銷、租金、現金成本、EBITDA、D&A、利息、稅前，另列 IT 與設施兩種 MW 口徑。cmp31 逐列比對；敏感度為建置時快照（`scripts/permw_sens.py`）。
+- **差異原因**：`varianceReasons.list` 可加 `perMw` 條件，只在方法相符時適用（排在前面者優先）。
 
 ## company.json 欄位說明（換公司填表指引）
 換成 Nebius、Oracle、OpenAI 等公司時，照這一節逐欄填寫 `company.json`；HTML 與 Excel 都從這個檔讀資料，改完執行 `scripts/verify.sh`。
@@ -346,8 +359,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `adjOpHi` | 全年調整後營業利益指引上緣 | US$bn | 1.15 | 否 |
 | `nextQAdjOpLo` | 下一季調整後營業利益指引下緣 | US$bn | 0.2 | 否 |
 | `nextQAdjOpHi` | 下一季調整後營業利益指引上緣 | US$bn | 0.26 | 否 |
-| `arrLo` | 期末年化經常性收入（ARR）指引下緣 | US$bn | 18.5 | 否 |
-| `arrHi` | 期末 ARR 指引上緣 | US$bn | 19.5 | 否 |
+| `arrLo` | 期末年化經常性收入（ARR）指引下緣 | US$bn | 18.5 | 是 |
+| `arrHi` | 期末 ARR 指引上緣 | US$bn | 19.5 | 是 |
 | `postQNewCommit` | 季末後新增承諾 | US$bn | 25 | 否 |
 | `priceUp` | 新約漲價幅度 | 比例 | 0.25 | 否 |
 | `marginStep` | 新約貢獻率提升 | 文字 | 5–10 pt | 否 |
@@ -563,7 +576,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `varianceReasons._note` | 差異原因的說明文字（不進程式） | 文字 | 差異原因（已決定事項 2）：差距超過 methodo… | 可沿用 |
-| `varianceReasons.list` | 差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗；perMw（W2，選填）＝只在 methodology.perMw 相符時適用的條件，排在前面者優先 | 清單 | 9 筆 | 檢查 |
+| `varianceReasons.list` | 差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗；perMw（W2，選填）＝只在 methodology.perMw 相符時適用的條件，排在前面者優先 | 清單 | 10 筆 | 檢查 |
 
 ### `texts`：公司特有的說明文字（v4.5；隨資料更新）
 

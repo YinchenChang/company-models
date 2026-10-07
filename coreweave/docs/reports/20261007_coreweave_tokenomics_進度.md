@@ -1,9 +1,9 @@
 # CoreWeave × Tokenomics 改造進度（接手用；W1–W3 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：W0、W1（PR #6，待審）。**W2 進行中**（PR 見下表，疊加於 W1 分支 8d97234）：第 0 步完成。
-- 下一步：W2 第 1 步（世代組合 `fleet`）。逐步紀錄見下方「W2 每 MW 改寫」。
-- 未解問題：(1) Tokenomics v5.26（原 v5.25 名稱，IF_MaintIT／IF_StaffSW／IF_TaxIns／IF_DeprLifeIT 等）尚未建置，W2 以暫代值實作；(2) GB200／GB300／VR200 長約 GPU 小時價格不足兩個獨立來源 → 收入採備案 `revenue=legacy`；(3) CoreWeave「active power」口徑定義未找到（預設 IT）；(4) Tokenomics 無租金名稱（租金維持公司專屬）。
+- 已完成：W0、W1（PR #6，待審）。**W2**（PR #9，疊加於 W1 分支）：第 0–8 步完成（3b63e34 起）；第 9 步（整體 verify 與回報）進行中。
+- 下一步：W2 第 9 步——`scripts/verify.sh`（新方法）與 `scripts/verify_legacy.sh`（舊方法 --vs-dist）全過後，PR #9 留言「[CRWV 回報] W2｜完成｜2026-10-07」並改 ready。之後 W3（v4.6 成品與對照報告）直接讀 Excel「每MW經濟性」頁彙總表；v4.5 側用 `scripts/verify_legacy.sh` 的副本或 dist/ 成品。
+- 未解問題：(1) Tokenomics v5.26 尚未建置：`IF_MaintIT`、`IF_StaffSW`、`IF_TaxIns`、`IF_DeprLifeIT` 以暫代值（檢查頁警告）；建置後只需 `import_tokenomics.py` 重抓快照、改 company.json `tokenomics`、verify；(2) GB200／GB300／VR200 長約 GPU 小時價格不足兩個獨立來源 → 收入採備案 legacy（`pricing.gpuHr` 空白）；(3) CoreWeave「active power」口徑定義未找到（預設 IT）；(4) 由下而上 EBITDA 率 70–74% 明顯高於 Q2 實際 58.6%（主因：模型每 MW 收入 10.0 對 Q2 實際 8.2、模型每 MW 租金 1.6 對 Q2 實際 2.1；人員軟體與稅險暫代 0），W3 報告需解釋。
 
 ## 工作單總覽
 | 工作單 | 分支 | PR | 狀態 |
@@ -241,4 +241,12 @@ chat 端審查 W1 後的決定（優先於工作單原文，2026-10-07）：收�
 
 | 步驟 | 狀態 | commit | 備註 |
 |---|---|---|---|
-| 0 開分支、draft PR、進度檔 W2 段落、檢查 Tokenomics 版本 | 完成 | （本 commit） | 自 `origin/claude/coreweave-w1-tokenomics` 8d97234 開分支；Tokenomics master `bdb0de7`，`model/CURRENT`＝`20261007_Tokenomics_v5.24.xlsx`（無 v5.26）→ 快照維持 v5.24，v5.26 名稱以暫代值處理 |
+| 0 開分支、draft PR、進度檔 W2 段落、檢查 Tokenomics 版本 | 完成 | d047fa8 | 自 `origin/claude/coreweave-w1-tokenomics` 8d97234 開分支；Tokenomics master `bdb0de7`，`model/CURRENT`＝`20261007_Tokenomics_v5.24.xlsx`（無 v5.26）→ 快照維持 v5.24，v5.26 名稱以暫代值處理 |
+| 1 世代組合 `fleet` | 完成 | 3b63e34 | openMix＝W1 年份分層精確值（27.27／29.37／43.37%；W1 回報 27／29／43% 為四捨五入）、newMix 工作單預設、newMixAlt＝FY29–30 Rubin Ultra；`fleet.openMix` 列入 ROLL_FIELDS／asOf；汰換由最舊世代先出 |
+| 2 每 MW 資本支出（`capex=tokenomics`） | 完成 | 3b63e34 | 每 MW 建置成本＝Σ 新增世代占比 × IF_CapexIT：34.76、37.52、37.59、37.59、37.59（舊值 34 留為對照列）；不含廠房 |
+| 3 折舊年限 | 完成（暫代） | 3b63e34 | IF_DeprLifeIT 缺 → `gpuLife` 維持 6（檢查頁警告）；有名稱時＝期初在役世代加權、取整數 |
+| 4 由下而上營運成本（`cost=bottomUp`） | 完成（部分暫代） | 3b63e34 | 電費 IF_PowerCost；IT 維護暫代 m.maint；人員軟體、稅險暫代 0；管銷率 5.51%（Excel 由 10-Q 輸入格算出）；overlay 自動停用；最近一季實際對照列 |
+| 5 每 MW 收入（備案 `revenue=legacy`） | 完成 | 3b63e34 | GPU 小時路線實作（pricing.gpuHr 空白＝「不適用」）；對照列：IF_HoldEcon、IF_GPUhrEcon 倍數、隱含每 GPU 小時價格、IREN 9.7、W1 各世代市場價格、v4.5 舊值、期末 ARR ÷ MW |
+| 6 MW 口徑 | 完成 | （本 commit） | `meta.mwBasis=IT`；設施口徑換算以 `scripts/test_permw.py` 測試 A 驗證（÷ 1.2） |
+| 7 每 MW 經濟性彙總表 | 完成 | 3b63e34 | Excel「每MW經濟性」頁最上方；HTML「資金模型 → 運營活動 → 每 MW 經濟性」（新方法時才顯示）；cmp31 逐列比對 |
+| 8 敏感度 | 完成 | （本 commit） | `scripts/permw_sens.py`（Excel 求值快照，verify 步驟 3c）＋快照狀態格；HTML 即時計算、cmp31 比對；四組：Tokenomics 低／高成本、GPU 小時價格（不適用）、Rubin Ultra 版、管銷率 GAAP 9.24% |

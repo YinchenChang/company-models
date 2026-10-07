@@ -1186,7 +1186,7 @@ function zM() {
                     children: e.detail
                   })]
                 }, e.id))]
-              }), n === 13 && (0, $.jsx)(QuarterTabQ, { d: d, p: f, st: e }), n === 14 && (0, $.jsx)(PerMwTabQ, { d: d, st: e }), n === 12 && (0, $.jsxs)(`div`, {
+              }), n === 13 && (0, $.jsx)(QuarterTabQ, { d: d, p: f, st: e }), n === 14 && (0, $.jsx)(PerMwTabQ, { d: d, st: e, o: o }), n === 12 && (0, $.jsxs)(`div`, {
                 className: `space-y-3`,
                 children: [(0, $.jsx)(hdrQ, {
                   title: `版本紀錄（基準情境目標價變化與原因）`,

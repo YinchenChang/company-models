@@ -3176,10 +3176,18 @@ if FL:
     r = section(ws, r, "每 MW 收入對照（收入方法：" + ("GPU 小時價格" if PMW['revenue'] == 'gpuHr' else "備案 legacy——每 MW 年收入為輸入，以下為對照列，不入損益") + "）", level=2, collapsed=True)
     mrow("每 MW 年收入（模型採用，100% 計費時數）", "US$m/MW", lambda i: f"={inref('每 MW 年收入', i)}*{REVSC}*1000", NUM, GREEN, "＝B 區『每 MW 年收入』× 倍數；收入端另乘利用率")
     mrow("每 MW 年收入（計費後＝× 利用率）", "US$m/MW", lambda i: f"={COLS[i]}{PM['每 MW 年收入（模型採用，100% 計費時數）']}*{inref('利用率', i)}", NUM)
+    mrow("每 MW 年收入（v4.5 舊值，對照）", "US$m/MW", lambda i: M['revMW'][i] * 1000, NUM, BLUE, "company.json → defaults.m.revMW（舊方法以期末 ARR 指引回推，只作對照）")
+    mrow("期末 ARR 指引 ÷ 年底主動電力（公司數字，只作對照）", "US$m/MW", lambda i: f"=({CO['callFacts']['arrLo']}+{CO['callFacts']['arrHi']})/2/{CO['callFacts']['yeActiveGw']}" if i == 0 else None, NUM, BLACK,
+         f"法說：期末 ARR {CO['callFacts']['arrLo']}–{CO['callFacts']['arrHi']} ÷ 年底 {CO['callFacts']['yeActiveGw']} GW [Derived]；公司數字不作參數（共同規則第 4 節）")
     mrow("每 MW GPU 數（世代加權）", "顆/MW", lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkRev', 'C')})", NUM1, BLACK, "Tokenomics IF_GPUsPerGW ÷ 1000（× MW 換算）")
     _hasPx = all((((CO.get('pricing') or {}).get('gpuHr') or {}).get(g) or {}).get('base') is not None for g in GEN)
     mrow("GPU 小時價格路線：每 MW 年收入", "US$m/MW", (lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkRev', 'C')},{TKR('tkRev', 'F')})*8760/1000000") if _hasPx else (lambda i: "不適用"), NUM, BLACK,
          "＝Σ 平均在役占比 × 每 MW GPU 數 × GPU 小時合約價 × 8,760 ÷ 10⁶（100% 計費時數）" + ("" if _hasPx else "；company.json → pricing.gpuHr 未填（W1：長約價不足兩個獨立來源）→ 不適用"))
+    if PMW['revenue'] == 'gpuHr':  # W2：B 區「每 MW 年收入」改為 GPU 小時路線（US$bn/MW；舊值見上方對照列）
+        _wi = wb["輸入與假設"]
+        for i in range(5):
+            c = _wi.cell(row=IN["每 MW 年收入"], column=3 + i, value=f"='每MW經濟性'!{COLS[i]}{PM['GPU 小時價格路線：每 MW 年收入']}/1000"); c.font = GREEN
+        _wi.cell(row=IN["每 MW 年收入"], column=9, value="W2 GPU 小時路線：＝『每MW經濟性』Σ 平均在役占比 × 每 MW GPU 數 × GPU 小時合約價 × 8,760（100% 計費時數；利用率在收入端另乘）").font = SMALL
     mrow("隱含每 GPU 小時價格（反算對照，不是輸入）", "US$/GPU-hr", lambda i: f"={COLS[i]}{PM['每 MW 年收入（模型採用，100% 計費時數）']}*1000000/MAX(1E-9,{COLS[i]}{PM['每 MW GPU 數（世代加權）']}*8760)", USD, BLACK,
          "＝每 MW 年收入 ÷（每 MW GPU 數 × 8,760）；利用率在收入端另乘，故不再除以利用率")
     mrow("每 GPU 小時經濟持有成本（GPU 數加權）", "US$/GPU-hr", lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkRev', 'C')},{TKR('tkRev', 'D')})/MAX(1E-9,{COLS[i]}{PM['每 MW GPU 數（世代加權）']})", USD, BLACK,
@@ -3211,6 +3219,38 @@ if FL:
          "可能原因：爬坡期閒置產能（分母含尚未計費的 MW）、未揭露的成本項、D&A 未依列別揭露；v5.26 前人員軟體與稅險暫代 0")
     mrow("最近一季每 MW 年租金（營業＋變動，年化）", "US$m/MW", lambda i: f"=({CSX['opLeaseCost']}+{CSX['varLeaseCost']})*4/C{PM['最近一季平均在役 MW']}*1000" if i == 0 else None, '0.000')
     mrow("模型每 MW 年租金", "US$m/MW", lambda i: f"={COLS[i]}{PM['租金合計']}/{COLS[i]}{_AT}/{_L(i)}*1000", '0.000')
+    # ---- 敏感度（建置時快照；scripts/permw_sens.py 以 Excel 依各設定重算後寫入 permw_sens.json）----
+    _SP = _osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), 'permw_sens.json')
+    _SN = _jco.load(open(_SP, encoding='utf-8')) if _osrv.path.exists(_SP) else None
+    r = section(ws, r, "敏感度（建置時快照：Tokenomics 成本情境、GPU 小時價格、世代組合、管銷率口徑 × 三情境；目標價 US$、融資缺口 US$bn）", level=2, collapsed=True)
+    for j, h in enumerate(["敏感度｜欄位", "", "加權目標價", "融資缺口", "Δ目標價", "Δ融資缺口"]):
+        c = ws.cell(row=r, column=1 + j, value=h or None); c.font = HEAD; c.fill = FILL_HEAD
+    ws.cell(row=r, column=9, value="融資缺口＝MAX(0, −FY30 融資前累積現金)；Δ＝對同情境「基準（目前輸入）」；快照由 verify.sh 步驟 3c 產生，HTML 即時計算同一組設定").font = SMALL
+    r += 1
+    _SCN = [("low", "保守"), ("base", "基準"), ("high", "積極")]
+    _SCN = [(k, CO['scenarios']['labels'][k].split(' ')[0]) for k, _ in _SCN]
+    _snap_base = {}
+    if _SN:
+        for sk, sname in _SCN:
+            row = _SN['scenarios'][sk]; b0 = row['base']
+            for k, nm in _SN['cases']:
+                ws.cell(row=r, column=1, value=f"敏感度｜{sname}｜{nm}").font = BOLD if k == 'base' else BLACK
+                ws.cell(row=r, column=2, value="US$／US$bn").font = SMALL
+                v = row.get(k)
+                vals = ["不適用", None, None, None] if v is None else [v[0], v[1], v[0] - b0[0], v[1] - b0[1]]
+                for j, x in enumerate(vals):
+                    c = ws.cell(row=r, column=3 + j, value=x); c.border = BOX; c.font = BLACK if j else BOLD
+                    c.number_format = USD if j in (0, 2) else NUM
+                if k == 'base': _snap_base[sk] = r
+                r += 1
+        ws.cell(row=r, column=1, value="敏感度快照狀態（目前輸入的加權目標價 vs 快照）").font = BOLD
+        ws.cell(row=r, column=3, value=f"='評價_DCF與目標價'!{TGT}").number_format = USD
+        ws.cell(row=r, column=4, value=f"=CHOOSE({SEL},{','.join(f'C{_snap_base[k]}' for k, _ in _SCN)})").number_format = USD
+        ws.cell(row=r, column=5, value=f'=IF(ABS(C{r}-D{r})<0.005,"與目前輸入一致","快照已過期")').font = BOLD
+        ws.cell(row=r, column=9, value="改了任何輸入後快照不會自動更新：狀態顯示「快照已過期」時，以 python3 scripts/permw_sens.py 重新產生並重建").font = SMALL
+        PM['敏感度快照狀態'] = r; r += 1
+    else:
+        ws.cell(row=r, column=1, value="敏感度快照：尚未產生（執行 scripts/verify.sh 步驟 3c 或 python3 scripts/permw_sens.py）").font = SMALL; r += 1
     # ---- 彙總表（填入保留列）----
     _pm = lambda x, i: f"{x}/MAX(1E-9,{COLS[i]}{_AT})/{_L(i)}*1000"
     _ITMW = lambda i: f"IF({MWB}=2,{COLS[i]}{_AT}/SUMPRODUCT({MIXR(i)},{TKR('tkCap', 'E')}),{COLS[i]}{_AT})"

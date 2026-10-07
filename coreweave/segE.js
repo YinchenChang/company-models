@@ -274,8 +274,8 @@ function QuarterTabQ({ d, p, st }) {
 }
 
 // W2：「資金模型 → 運營活動 → 每 MW 經濟性」（只在 methodology.perMw 使用新方法時顯示）。數字取自 perMwQ（與 Excel「每MW經濟性」頁同列名）。
-function PerMwTabQ({ d, st }) {
-  let P = (0, v.useMemo)(() => perMwQ(d, st), [d, st]);
+function PerMwTabQ({ d, st, o }) {
+  let P = (0, v.useMemo)(() => perMwQ(d, st), [d, st]), SN = (0, v.useMemo)(() => pmwSensQ(st, o), [st, o]);
   if (!P) return elQ(`p`, { className: `text-sm text-muted` }, `company.json 未設定 fleet（世代組合）：每 MW 經濟性不適用。`);
   let th = (x, k) => elQ(`th`, { key: k ?? x, style: { ...xstyQ.th, whiteSpace: `nowrap` } }, x),
     thL = x => elQ(`th`, { key: x, style: xstyQ.thL }, x),
@@ -292,13 +292,20 @@ function PerMwTabQ({ d, st }) {
     elQ(hdrQ, { key: `h`, title: `每 MW 經濟性（每平均在役 MW、年化；${MWBASISQ === `facility` ? `設施` : `IT 關鍵電力`}口徑）`,
       tip: `資本支出：${M.capex[PMWQ.capex]}；營運成本：${M.cost[PMWQ.cost]}；收入：${M.revenue[PMWQ.revenue]}。Tokenomics ${tkv.version || ``}（commit ${(tkv.commit || ``).slice(0, 7)}），主值取基準成本情境。` }),
     TK_MISSQ.length ? elQ(`p`, { key: `w`, className: `text-sm`, style: { color: `#9f1239` } }, `Tokenomics 名稱缺漏 ${TK_MISSQ.length} 項（${TK_MISSQ.join(`、`)}），相關成本為暫代值（待 Tokenomics v5.26）。`) : null,
-    elQ(`p`, { key: `k`, className: `text-sm leading-relaxed` }, `${PERIODS[F]} 每 MW：年收入 $${Y(g(`每 MW 年收入（算力＋服務）`)[F], 1)}m − 現金成本（含租金）$${Y(g(`現金成本合計（含租金）`)[F], 1)}m ＝ EBITDA $${Y(g(`EBITDA`)[F], 1)}m；扣 D&A $${Y(g(`D&A（模型車隊折舊）`)[F], 1)}m 與利息 $${Y(g(`利息`)[F], 1)}m 後稅前 $${Y(g(`稅前`)[F], 1)}m。`),
+    elQ(`p`, { key: `k`, className: `text-sm leading-relaxed` }, `${PERIODS[F]} 每 MW：年收入 $${Y(g(`每 MW 年收入（算力＋服務）`)[F], 1)}m − 現金成本（含租金）$${Y(g(`現金成本合計（含租金）`)[F], 1)}m ＝ EBITDA $${Y(g(`EBITDA`)[F], 1)}m；扣 D&A $${Y(g(`D&A（模型車隊折舊）`)[F], 1)}m 與利息 $${Y(g(`利息`)[F], 1)}m 後稅前 ${mA(g(`稅前`)[F], 1)}m。`),
     elQ(`div`, { key: `t` }, tbl(S)),
     elQ(accQ, { key: `a1`, title: `世代組合與在役結構（MW）`, sum: GENQ.map(x => x.split(` `)[0]).join(`／`) }, tbl(P.fleet)),
     elQ(accQ, { key: `a2`, title: `由下而上營運成本（租金前）`, sum: PMWQ.cost === `bottomUp` ? `模型採用` : `對照` }, tbl(P.bu)),
     elQ(accQ, { key: `a3`, title: `每 MW 收入對照（隱含 GPU 小時價格、持有成本、同業與市場價格）`, sum: PMWQ.revenue === `gpuHr` ? `GPU 小時價格` : `備案 legacy` }, tbl(P.rev)),
     elQ(accQ, { key: `a4`, title: `每 MW 資本支出對照`, sum: PMWQ.capex === `tokenomics` ? `Tokenomics` : `舊方法` }, tbl(P.cap)),
-    elQ(accQ, { key: `a5`, title: `最近一季實際對照（不強制平衡）`, sum: `` }, tbl(P.q2))
+    elQ(accQ, { key: `a5`, title: `最近一季實際對照（不強制平衡）`, sum: `` }, tbl(P.q2)),
+    elQ(accQ, { key: `a6`, title: `敏感度（加權目標價 US$／融資缺口 US$bn；三情境）`, sum: `Tokenomics 低／高成本、GPU 小時價格、Rubin Ultra 版、管銷率` },
+      elQ(`div`, { style: xstyQ.wrap }, elQ(`table`, { style: { ...xstyQ.table, minWidth: 820 } }, [
+        elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [thL(`設定`), ...[`low`, `base`, `high`].map(k => th(SCENARIOS[k].label.split(` `)[0], k))])),
+        elQ(`tbody`, { key: `b` }, SN.cases.map(([k, n]) => elQ(`tr`, { key: k }, [tdL(n, `a`), ...[`low`, `base`, `high`].map(sk => {
+          let x = SN.rows[sk][k], b = SN.rows[sk].base;
+          return td(x == null ? `不適用` : `$${Y(x[0], 1)}${k === `base` ? `` : `（${x[0] >= b[0] ? `+` : `−`}${Y(Math.abs(x[0] - b[0]), 1)}）`}／$${Y(x[1], 1)}bn`, sk)
+        })])))])))
   ]);
 }
 

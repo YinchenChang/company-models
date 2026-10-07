@@ -361,6 +361,8 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
     ],
     rev = [
       [`每 MW 年收入（模型採用，100% 計費時數）`, `US$m/MW`, revIn], [`每 MW 年收入（計費後＝× 利用率）`, `US$m/MW`, I5.map(i => revIn[i] * d.m.util[i] / 100)],
+      [`每 MW 年收入（v4.5 舊值，對照）`, `US$m/MW`, COMPANY_DATA.defaults.m.revMW.map(x => x * 1e3)],
+      [`期末 ARR 指引 ÷ 年底主動電力（公司數字，只作對照）`, `US$m/MW`, [(CALL_FACTS.arrLo + CALL_FACTS.arrHi) / 2 / CALL_FACTS.yeActiveGw, ...NA]],
       [`每 MW GPU 數（世代加權）`, `顆/MW`, gpu], [`GPU 小時價格路線：每 MW 年收入`, `US$m/MW`, gpuRev],
       [`隱含每 GPU 小時價格（反算對照，不是輸入）`, `US$/GPU-hr`, imp], [`每 GPU 小時經濟持有成本（GPU 數加權）`, `US$/GPU-hr`, gEcon],
       [`隱含價格 ÷ GPU 小時持有成本`, `倍`, I5.map(i => imp[i] / Math.max(1e-9, gEcon[i]))],
@@ -381,6 +383,18 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
       [`模型每 MW 年租金`, `US$m/MW`, I5.map(i => pm(y[i].lease, i))]
     ];
   return { sum, fleet, bu, rev, cap, q2 }
+}
+
+function pmwSensQ(e, v) { // W2：每 MW 敏感度（與 scripts/permw_sens.py 同一組設定；Excel 為建置時快照，cmp31 逐格比對）
+  let C = [[`base`, `基準（目前輸入）`, {}], [`tkLow`, `Tokenomics 低成本`, { tkCase: `低成本` }], [`tkHigh`, `Tokenomics 高成本`, { tkCase: `高成本` }],
+    [`pxLow`, `GPU 小時價格 低`, PMWQ.revenue === `gpuHr` ? { pxCase: `low` } : null], [`pxHigh`, `GPU 小時價格 高`, PMWQ.revenue === `gpuHr` ? { pxCase: `high` } : null],
+    [`mixRU`, `世代組合 Rubin Ultra 版`, { mixAlt: !0 }], [`sgaGaap`, `管銷率 GAAP（含 SBC）`, PMWQ.cost === `bottomUp` ? { sgaBasis: `gaap` } : null]],
+    rows = Object.fromEntries([`low`, `base`, `high`].map(sk => [sk, Object.fromEntries(C.map(([k, , ch]) => {
+      if (!ch) return [k, null];
+      let s2 = { ...scnQ(e, sk), ...ch }, d2 = runFunding(s2), p2 = runValuation(d2, s2, v);
+      return [k, [p2.call.blended, Math.max(0, -d2.totals.preFinEnd)]]
+    }))]));
+  return { cases: C.map(([k, n]) => [k, n]), rows }
 }
 
 function runFunding(e) {
@@ -908,7 +922,7 @@ function reverseDcf(e, v) {
     caps,
     ebs,
     grid,
-    rev30: e.m.revMW[4] * (e.revScale ?? 1) * 1e3,
+    rev30: base.d.m.revMW[4] * (e.revScale ?? 1) * 1e3, // W2：GPU 小時路線時為推導值（舊方法＝輸入值，數值相同）
     util30: e.m.util[4] / 100,
     cost30: e.a.costMW[4] * (e.capexScale ?? 1),
     eb30: e.ebSteady ?? base.d.years[4].ebM // W2 由下而上：穩態預設＝由下而上 FY30
@@ -984,9 +998,9 @@ function sensitivities(e, v) {
   }, e => {
     e.m.billable = e.m.billable.map(e => e * 1.15)
   }), r(`每 MW 年收入`, `−15%`, `+15%`, e => {
-    e.m.revMW = e.m.revMW.map(e => e * .85)
+    PMWQ.revenue === `gpuHr` ? e.revScale = (e.revScale ?? 1) * .85 : e.m.revMW = e.m.revMW.map(e => e * .85) // W2：GPU 小時路線的 revMW 由價格推導，改用整體倍數
   }, e => {
-    e.m.revMW = e.m.revMW.map(e => e * 1.15)
+    PMWQ.revenue === `gpuHr` ? e.revScale = (e.revScale ?? 1) * 1.15 : e.m.revMW = e.m.revMW.map(e => e * 1.15)
   }), r(`新產能簽約率`, `−20pt`, `+20pt`, e => {
     e.m.fill = e.m.fill.map(e => Math.max(0, e - 20))
   }, e => {
