@@ -3,12 +3,12 @@
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
   sheets: [README, SRC_OAI, TK_Link, Inputs, Derived_V9, Checks, Map_v05, _Defaults]
   formula_cells: 652
-  defined_names: 401
+  defined_names: 426              # S1（v5.24 快照）：401＋25 個新 TK_ 名稱
   src_rows: 106                   # SRC_OAI 筆數（與報告一致）
   src_named: 104                  # 有數值的列才有 SRC_OAI_nnn 名稱（Business 每席只有低／高；退役 ID 不重用）
   inp_rows: 233
-  tk_values: 37                   # TK_Link 有值的名稱（TK_ 具名範圍）
-  tk_pending: 11                  # 待 v5.15 合併（含 IF_AllocQ1_R2）
+  tk_values: 62                   # TK_Link 有值的名稱（TK_IF_／TK_SRC_／TK_L1_ 具名範圍；S1 v5.24 快照：37＋25）
+  tk_pending: 0                   # 待 Tokenomics 提供（S1：v5.24 已全部提供）
   v05_leaves: 849
   v05_tagged_objects: 121         # chat 端計數；本包以 JSON 實數核對
 

@@ -47,7 +47,7 @@ def test_workbook_expectations(model):
     assert len(eng.names) == EXPECT["defined_names"]
     assert sum(n.startswith("SRC_OAI_") for n in eng.names) == EXPECT["src_named"]
     assert sum(n.startswith("INP_") for n in eng.names) == EXPECT["inp_rows"]
-    assert sum(n.startswith(("TK_IF_", "TK_SRC_")) for n in eng.names) == EXPECT["tk_values"]
+    assert sum(n.startswith(("TK_IF_", "TK_SRC_", "TK_L1_")) for n in eng.names) == EXPECT["tk_values"]
     assert eng.get_name("CHK_Errors") == 0
 
 
@@ -58,7 +58,7 @@ def test_row_counts_match_report(model):
     assert len(ids) == EXPECT["src_rows"] and len(set(ids)) == len(ids)
     inp = [r[0] for r in eng.get("Inputs", "A5:B600") if r[0] != ""]
     assert len(inp) == EXPECT["inp_rows"] and len(set(inp)) == len(inp)
-    pending = [r for r in eng.get("TK_Link", "E10:F200") if r[1] == "待 v5.15 合併"]
+    pending = [r for r in eng.get("TK_Link", "E10:F200") if r[1] == "待 Tokenomics 提供"]
     assert len(pending) == EXPECT["tk_pending"]
 
 
