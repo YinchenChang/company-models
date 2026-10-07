@@ -22,14 +22,20 @@ var PERIODS = COMPANY_DATA.periods,
   SC_BR = COMPANY_DATA.scenarios.billableRatio.ratio,
   SC_BRM = COMPANY_DATA.scenarios.billableRatio.mode || `ratio`, // v0.1b（Oracle）：converge＝期初可計費 MW 以最新季實際營收年化 ÷ 每 MW 年收入校準，之後向已連網 MW 收斂
   SC_BOPEN = k => SC_BRM === `converge` ? Math.round(COMPANY_DATA.scenarios.billableRatio.openAnnualRevenue / SC_REV[k][0]) : COMPANY_DATA.defaults.billableOpen,
-  SC_LEASE_HI = COMPANY_DATA.scenarios.leaseHighPath,
+  UL = COMPANY_DATA.leases.uncommenced, UL_TOT = COMPANY_DATA.leases.facts.notCommenced, // v0.1b（Oracle）：未起租租賃起租排程
+  ulPath = (T = UL.termYears, N = UL.quarters, S = UL.startQ, tot = UL_TOT) => { // 每季起租 tot/N（未折現），每筆期限 T 年直線付租；各期租金＝每筆季租 ×(期末累計已起租筆季數 − 期初累計)
+    const q = tot / N / T / 4, F = x => { x = Math.max(0, x - S); const m = Math.min(x, N); return m * (m + 1) / 2 + N * Math.max(0, x - N) };
+    let c = 0;
+    return PERIOD_YEARS.map(L => { const a = c; c += Math.round(L * 4); return q * (F(c) - F(a)) })
+  },
+  ulTail = p => Math.max(0, UL_TOT - p.reduce((e, t) => e + t, 0)), // 模型期後尚未支付的未起租租金（未折現）＝總額 − 五期路徑
   SC_MW31 = COMPANY_DATA.scenarios.mw31,
   scA = e => {
-    let T = COMPANY_DATA.scenarios.capexTemplate, F = COMPANY_DATA.scenarios.leaseRampFloorMw;
+    let T = COMPANY_DATA.scenarios.capexTemplate;
     return {
       costMW: [...T.costMW],
       customerFund: PERIOD_YEARS.map(() => COMPANY_DATA.defaults.prepay.shareOfDeals * COMPANY_DATA.defaults.prepay.capexCover), // v0.1b：預付比率＝有預付的合約比例 × 預付占相關資本支出比
-      newLease: SC_LEASE_HI.map((t, n) => t * Math.max(0, SC_ACC[e][n] - F) / (SC_ACC.high[n] - F)),
+      newLease: ulPath(), // v0.1b（Oracle）：合約性，三情境相同
       div: [...T.div]
     }
   },
@@ -152,11 +158,11 @@ function nA(e) {
 }
 
 function rA(e) {
-  return (LEASE_CASH_ON_BAL[4] + e.a.newLease[4]) * e.terminal.residualLeaseYears
+  return LEASE_CASH_ON_BAL[4] * e.terminal.residualLeaseYears + ulTail(e.a.newLease) // v0.1b：表外尾端＝未起租總額 − 五期路徑（取代末期 × 年數）
 }
 
 function iA(e) {
-  return e.a.newLease.reduce((e, t) => e + t, 0) + e.a.newLease[4] * e.terminal.residualLeaseYears
+  return e.a.newLease.reduce((e, t) => e + t, 0) + ulTail(e.a.newLease)
 }
 
 function aA(e, t) {
@@ -204,7 +210,7 @@ function sA(e, t) {
 
 function cA(e) {
   let t = e.a.newLease.reduce((e, t) => e + t, 0),
-    n = e.a.newLease[4] * e.terminal.residualLeaseYears,
+    n = ulTail(e.a.newLease),
     r = t + n,
     i = LEASE_CASH_ON_BAL.reduce((e, t) => e + t, 0),
     a = LATEST_Q.offBalanceLease + LATEST_Q.singleSiteCap;
@@ -516,7 +522,7 @@ function runFunding(e) {
     ok: l >= (LATEST_Q.offBalanceLease + LATEST_Q.singleSiteCap) * CHECK_TH.leaseVsCommitMin,
     severity: `watch`,
     title: `已簽約未起租租賃 $${Y(LATEST_Q.offBalanceLease, 1)}bn`,
-    detail: `季報附註：已簽約未起租租賃未折現 $${Y(LATEST_Q.offBalanceLease, 2)}bn（${TXQ.offBalanceLeaseTerm}）。模型「表外現金租金」五期 ${e.a.newLease.reduce((e,t)=>e+t,0).toFixed(1)} + 尾端 = ${l.toFixed(1)}bn，為已承諾 ${Y(LATEST_Q.offBalanceLease + LATEST_Q.singleSiteCap, 1)}bn 的 ${(l/Math.max(LATEST_Q.offBalanceLease + LATEST_Q.singleSiteCap, .01)).toFixed(1)} 倍；低於 ${hA(CHECK_TH.leaseVsCommitMin * 100, 0)} 才標示不一致。`
+    detail: `季報附註：已簽約未起租租賃未折現 $${Y(LATEST_Q.offBalanceLease, 2)}bn（${TXQ.offBalanceLeaseTerm}）。模型排程：平均分 ${UL.quarters} 季起租（評價日後第 ${UL.startQ + 1} 季起）、每筆期限 ${UL.termYears} 年直線付租，三情境相同；五期 ${e.a.newLease.map(x => Y(x, 2)).join(`／`)}（合計 ${e.a.newLease.reduce((e,t)=>e+t,0).toFixed(1)}）＋模型期後 ${ulTail(e.a.newLease).toFixed(1)} = ${l.toFixed(1)}bn，為已承諾 ${Y(LATEST_Q.offBalanceLease + LATEST_Q.singleSiteCap, 1)}bn 的 ${(l/Math.max(LATEST_Q.offBalanceLease + LATEST_Q.singleSiteCap, .01)).toFixed(1)} 倍；低於 ${hA(CHECK_TH.leaseVsCommitMin * 100, 0)} 才標示不一致。`
   }), _({
     id: `rou-h1`,
     ok: !0,

@@ -164,7 +164,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles、defaults.otherEbitda[0]、valuation.holdings、valuation.debtLike、defaults.legacyBiz、defaults.dividend.preferred[0]） | 必改 |
+| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、leases.uncommenced、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles、defaults.otherEbitda[0]、valuation.holdings、valuation.debtLike、defaults.legacyBiz、defaults.dividend.preferred[0]） | 必改 |
 
 ### `ytdActual`：年初至今實際數（10-Q；v4.5 前為 actual1H）
 
@@ -222,6 +222,11 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `leases.afterFY30` | 已入帳租約在模型期之後還要付的租金合計 | US$bn | 39.283 | 必改 |
 | `leases.facts.onBal` | 已入帳租約未折現付款合計 | US$bn | 63.245 | 必改 |
 | `leases.facts.notCommenced` | 已簽約但尚未起租的租約（表外） | US$bn | 288 | 必改 |
+| `leases.uncommenced.startQ` | 未起租租賃自評價日後第幾季開始起租（0＝首期第一季） | 季 | 0 | 必改 |
+| `leases.uncommenced.quarters` | 未起租租賃平均分攤起租的季數 | 季 | 11 | 必改 |
+| `leases.uncommenced.termYears` | 每筆未起租租賃的租期（直線付租） | 年 | 17 | 檢查 |
+| `leases.uncommenced.termSens` | 租期敏感度（報告用） | 年 清單 | 15、19 | 檢查 |
+| `leases.uncommenced.note` | 起租排程的來源與假設說明 | 文字 | 10-Q FY27Q1 附註 6：未起租租賃 288… | 必改 |
 | `leases.facts.singleCap` | 單一大型站點的租金上限（10-Q 揭露） | US$bn | 0 | 必改 |
 | `leases.facts.share` | 第三方租賃占機房取得的比例（用於租金基準檢驗） | 比例 | 1 | 檢查 |
 | `leases.operatingPayments` | 營業租賃到期表：五期各期，最後一格為之後合計（Excel 租賃頁） | US$bn 清單 | 3.219、4.135、4.097、4.109、4.089、28.401 | 必改 |
@@ -401,8 +406,6 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.billableRatio.openAnnualRevenue` | converge 模式的校準營收：最新季實際營收（OCI 等 MW 驅動部分）× 4（v0.1b） | US$bn | 29.552 | 必改 |
 | `scenarios.billableRatio.note` | 可計費 MW 校準與收斂比例的說明（v0.1b） | 文字 | 期初可計費 MW＝Q1 FY27 實際 OCI 營收… | 必改 |
 | `scenarios.billableRatio.ratio` | 各期比例：ratio 模式＝在役 ÷ 已連網；converge 模式＝期初校準值向已連網收斂的比例（三情境共用；v0.1b） | 比例清單 | 0.5、0.8、0.85、0.9、0.9 | 檢查 |
-| `scenarios.leaseHighPath` | 積極情境下，尚未起租租約的新增年租金路徑；其他情境依 MW 比例縮放 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
-| `scenarios.leaseRampFloorMw` | 低於此電力時不產生新增表外租金（縮放公式的起點） | MW | 0 | 檢查 |
 | `scenarios.mw31.low` | 保守情境：模型期後一年（FY31）新增的 MW，用於 FY30 的預建支出 | MW | 0 | 檢查 |
 | `scenarios.mw31.base` | 基準情境：同上 | MW | 0 | 檢查 |
 | `scenarios.mw31.high` | 積極情境：同上 | MW | 0 | 檢查 |
@@ -505,7 +508,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.terminal.residual` | 模型期末 GPU 殘值率 | % | 25 | 檢查 |
 | `defaults.terminal.rerent` | 期末設備再出租率 | % | 75 | 檢查 |
 | `defaults.terminal.margin` | 模型期後剩餘 RPO 的利潤率 | % | 40 | 檢查 |
-| `defaults.terminal.residualLeaseYears` | 模型期後租約剩餘年數 | 年 | 9 | 檢查 |
+| `defaults.terminal.residualLeaseYears` | 模型期後租約剩餘年數 | 年 | 12 | 檢查 |
 | `defaults.sites` | 具名資料中心站點，一站一列。欄位：id 代碼、name 名稱、operator 房東／合作方、planned 契約 MW、energized 已通電 MW、accepted 已驗收 MW、billable 可計費 MW、contract 合約總值（US$bn，可無）、years 合約年期（可無）、status 狀態說明、next 下一里程碑、date 預計時間、confidence 信心（高／中／低） | 清單 | 5 筆 | 必改 |
 
 ### `valuation`：評價參數

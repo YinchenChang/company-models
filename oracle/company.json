@@ -27,7 +27,7 @@
   "defaults.intCal": "FY27Q1",
   "defaults.services[0]": "FY27Q1",
   "defaults.atm": "FY27Q1",
-  "scenarios.leaseHighPath[0]": "FY27Q1",
+  "leases.uncommenced": "FY27Q1",
   "rpo.bucketWeights[0]": "FY27Q1",
   "defaults.cash": "FY27Q1",
   "debt.instruments": "FY27Q1",
@@ -209,7 +209,17 @@
    0.947,
    0.971,
    10.882
-  ]
+  ],
+  "uncommenced": {
+   "startQ": 0,
+   "quarters": 11,
+   "termYears": 17,
+   "termSens": [
+    15,
+    19
+   ],
+   "note": "10-Q FY27Q1 附註 6：未起租租賃 288B（未折現），FY27Q2 至 FY2029 起租、期限 15–19 年。模型：288B 平均分 11 季（FY27Q2–FY29Q4）起租，每筆期限 17 年（區間中點）直線付租；三情境相同（合約性，不隨 MW 縮放）。startQ＝評價日後第幾季開始起租（0＝首期第一季）。[Assumed]"
+  }
  },
  "debt": {
   "amortization": [
@@ -905,14 +915,6 @@
    "openAnnualRevenue": 29.552,
    "note": "期初可計費 MW＝Q1 FY27 實際 OCI 營收 7.388 × 4＝29.552 ÷ 各情境每 MW 年收入（保守 2,543／基準 1,698／積極 1,221 MW-IT），是對齊已實現實際數的校準，不是以公司預測反推參數。各期末可計費 MW＝期初校準值＋(已連網 − 期初校準值)× 收斂比例；首期 50% 取能讓基準 FY27 營收落在公司指引 ≥90 的保守值（40% 時基準 FY27 約 89.1，低於指引），之後 80%→90%（新產能自交付到計費約一季）[Derived／Assumed]。"
   },
-  "leaseHighPath": [
-   0.0,
-   0.0,
-   0.0,
-   0.0,
-   0.0
-  ],
-  "leaseRampFloorMw": 0,
   "mw31": {
    "low": 0,
    "base": 0,
@@ -1187,7 +1189,7 @@
    "residual": 25,
    "rerent": 75,
    "margin": 40,
-   "residualLeaseYears": 9
+   "residualLeaseYears": 12
   },
   "sites": [
    {

@@ -142,7 +142,7 @@ ROLL_FIELDS = [
     ('首期一次性金額', 'defaults.dividend.preferred[0]', '特別股股利（首期；Oracle v0.1b）'),
     ('首期一次性金額', 'defaults.legacyBiz', '傳統事業各線的上一財年實際（fyBase）與年初至今實際（ytd）（Oracle v0.1b）'),
     ('首期一次性金額', 'defaults.atm', 'ATM 募資（首期）'),
-    ('首期一次性金額', 'scenarios.leaseHighPath[0]', '表外現金租金（首期；三情境依此路徑按比例）'),
+    ('首期一次性金額', 'leases.uncommenced', '未起租租賃起租排程（起算季、起租季數、期限；每季 10-Q 依附註更新，Oracle v0.1b）'),
     ('首期一次性金額', 'rpo.bucketWeights[0]', 'RPO 排程權重（首期）'),
     ('期初餘額', 'defaults.cash', '期初現金'),
     ('期初餘額', 'debt.instruments', '既有債務本金（各工具餘額）'),

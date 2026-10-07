@@ -940,7 +940,7 @@ function zM() {
                         children: `連動租賃尾端`
                       }), (0, $.jsxs)(`td`, {
                         className: `py-2 font-mono tabular-nums`,
-                        children: [Y(d.leaseTail), `bn =（在帳 ${PERIODS[4]} `, LEASE_CASH_ON_BAL[4], ` + 表外現金租金 `, e.a.newLease[4], `）×`, ` `, e.terminal.residualLeaseYears, ` 年（季報加權剩餘租期約 8.7 年，取 9）。五期表外現金 `, Y(S.cashFive), ` + 尾 `, Y(S.tail), ` = `, Y(S.mapped), ` vs 承諾 `, Y(S.committed), `；在帳之後尚有 `, Y(LEASE_AFTER_FY30), `。`]
+                        children: [Y(d.leaseTail), `bn = 在帳 ${PERIODS[4]} `, LEASE_CASH_ON_BAL[4], ` × `, e.terminal.residualLeaseYears, ` 年（年報營業租賃加權剩餘租期 12 年）＋未起租租賃模型期後未付 `, Y(S.tail), `（總額 − 五期）。五期表外現金 `, Y(S.cashFive), ` + 尾 `, Y(S.tail), ` = `, Y(S.mapped), ` vs 承諾 `, Y(S.committed), `；在帳之後尚有 `, Y(LEASE_AFTER_FY30), `。`]
                       })]
                     }), (0, $.jsxs)(`tr`, {
                       children: [(0, $.jsx)(`td`, {

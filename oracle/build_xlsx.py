@@ -305,10 +305,11 @@ if _CONV:  # v0.1b：期初可計費 MW＝最新季實際營收年化 ÷ 各情�
     for nm, k, _ in _SCN:
         sc_rows['b0_' + nm] = r
         gi(r, f"期初可計費 MW｜{CO['scenarios']['labels'][k]}", "MW", f"=ROUND({OPENREV}/C{sc_rows['rev_' + nm]},0)", "＝實際營收年化 ÷ 該情境每 MW 年收入（對齊已實現實際數的校準）", NUM0, font=BLACK); r += 1
-row_line(ws, r, "表外現金租金（積極路徑）", "US$bn", CO['scenarios']['leaseHighPath'], NUM, BLUE,
-         f"已簽約未起租租賃的現金路徑；其他情境依 MW 比例縮放（起算 {CO['scenarios']['leaseRampFloorMw']:,} MW）")
-LEASE_HI = r; r += 1
-LEASE_FL = gi(r, "表外租金起算 MW", "MW", CO['scenarios']['leaseRampFloorMw'], "表外租金依超過此值的 MW 等比例縮放（company.json → scenarios.leaseRampFloorMw）", NUM0); r += 1
+_UL = CO['leases']['uncommenced']  # v0.1b（Oracle）：未起租租賃起租排程（合約性，三情境相同）
+UL_TOT = gi(r, "未起租租賃總額（未折現）", "US$bn", CO['leases']['facts']['notCommenced'], "季報附註已簽約未起租租賃（company.json → leases.facts.notCommenced）[Interested-party]"); r += 1
+UL_S = gi(r, "未起租：評價日後第幾季開始起租（0＝首期第一季）", "季", _UL['startQ'], "company.json → leases.uncommenced.startQ", NUM0); r += 1
+UL_N = gi(r, "未起租：平均分攤起租的季數", "季", _UL['quarters'], "季報：FY27Q2 至 FY2029 起租 → 11 季 [Assumed]", NUM0); r += 1
+UL_T = gi(r, "未起租：每筆租期", "年", _UL['termYears'], "季報 15–19 年取中點；敏感度 15／19 年見報告 [Assumed]", NUM1); r += 1
 
 # ---------------- B 產能與收入 ----------------
 r = section(ws, r, "B｜產能與收入（MW、每 MW 年收入、利用率、信用；RPO 只作對照）")
@@ -408,11 +409,16 @@ PP_FR = gi(r, "預付隱含利率（重大財務組成）", "%", PPD.get('financ
 r = phdr(r)
 r = prow(r, "客戶預付占毛 CapEx", "%", [f"={PP_SH}*{PP_CV}"] * 5, PCT, "＝有預付的合約比例 × 預付占相關資本支出比；乘成長型 CapEx 得預付流入", BLACK)
 r = prow(r, "在帳現金租金（季報到期表）", "US$bn", CO['leases']['onBalanceCash'], NUM, f"營業＋融資租賃未折現付款；«LASTYR» 後尚有 {CO['leases']['afterFY30']} [Verified]")
-r = prow(r, "表外現金租金（未起租）", "US$bn", [0] * 5, NUM, "＝積極路徑 × MW 比例（A 區）[Derived]", BLACK)
-for i in range(5):
-    L = COLS[i]
-    ws.cell(row=IN["表外現金租金（未起租）"], column=3 + i,
-            value=f"={L}{LEASE_HI}*MAX(0,{L}{_acc}-{LEASE_FL})/({L}{sc_rows['積極']}-{LEASE_FL})")
+_LENR = IN['模型期長度（年）']
+r = prow(r, "未起租：期末累計季數（評價日起）", "季", [f"=ROUND(4*SUM($C${_LENR}:{COLS[i]}${_LENR}),0)" for i in range(5)], NUM0,
+         "＝4 × 累計期間長度；用於起租排程", BLACK)
+_ULQ = IN["未起租：期末累計季數（評價日起）"]
+def _ulF(x):  # 累計已起租「筆季數」：x'＝MAX(0,x−起算季)；MIN(x',N)(MIN(x',N)+1)/2＋N×MAX(0,x'−N)
+    xx = f"MAX(0,{x}-{UL_S})"
+    return f"(MIN({xx},{UL_N})*(MIN({xx},{UL_N})+1)/2+{UL_N}*MAX(0,{xx}-{UL_N}))"
+r = prow(r, "表外現金租金（未起租）", "US$bn",
+         [f"={UL_TOT}/{UL_N}/{UL_T}/4*({_ulF(f'{COLS[i]}{_ULQ}')}-{_ulF(f'{COLS[i-1]}{_ULQ}' if i else '0')})" for i in range(5)], NUM,
+         "＝每筆季租（總額 ÷ 季數 ÷ 租期 ÷ 4）×(期末 − 期初累計已起租筆季數)；三情境相同 [Derived]", BLACK)
 r = prow(r, "JV 已承諾餘額出資", "US$bn", D['jvCommit'], NUM, "季報未揭露 JV 出資承諾（不適用）")
 r = prow(r, "JV 後續增資＋策略投資", "US$bn", CO['scenarios']['capexTemplate']['div'], NUM, "收購與策略投資，未揭露計畫 [Assumed]")
 r = prow(r, "JV／策略投資出資", "US$bn",
@@ -828,7 +834,8 @@ frow("② 在帳現金租金（備忘，«YTD» 已含在 CFO）", "US$bn",
 frow("② 表外現金租金（未起租）", "US$bn", lambda i: f"={inref('表外現金租金（未起租）', i)}", NUM, GREEN,
      f"已簽約未起租租賃 {CO['latestQuarter']['offBalanceLease']} 的現金路徑")
 frow("　租金合計", "US$bn",
-     lambda i: f"={COLS[i]}{FR['② 在帳現金租金（備忘，«YTD» 已含在 CFO）']}+{COLS[i]}{FR['② 表外現金租金（未起租）']}", NUM, BLACK)
+     lambda i: f"={COLS[i]}{FR['② 在帳現金租金（備忘，«YTD» 已含在 CFO）']}+{COLS[i]}{FR['② 表外現金租金（未起租）']}", NUM, BLACK,
+     "租金已含在 EBITDA 率內（GAAP 營業租賃費用屬營業費用）：營運來源以 EBITDA 率＋租金÷營收計（租前），此列再扣，淨效果中性")
 _wsc = wb["運營_產能與收入"]; _wsi = wb["輸入與假設"]
 for i in range(5):
     _wsc.cell(row=CAP["cm"], column=3 + i,
@@ -1179,7 +1186,7 @@ for i in range(6):
     c.font = BOLD
     c.number_format = NUM
 lease_tot = r
-ws.cell(row=r, column=9, value="營業租賃負債現值 16.319、融資租賃 0.221；加權剩餘租期 12 年、折現率 10% [Verified]").font = SMALL
+ws.cell(row=r, column=9, value=f"營業租賃負債現值 {CO['latestQuarter']['opLeaseLiab']}、融資租賃 {CO['latestQuarter']['finLeaseLiab']}；年報加權剩餘租期 12／14 年、折現率 5.7% [Verified]").font = SMALL
 r += 2
 
 ws.cell(row=r, column=1, value="債務本金到期表").font = BOLD
@@ -1239,14 +1246,14 @@ ws.cell(row=r, column=3, value=f"=SUM('各期收支'!C{FR['② 表外現金租�
 ws.cell(row=r, column=3).font = GREEN
 off5 = r
 r += 1
-ws.cell(row=r, column=1, value="模型表外租金尾端（FY30×12 年）").font = BLACK
-ws.cell(row=r, column=3, value=f"='各期收支'!G{FR['② 表外現金租金（未起租）']}*12").number_format = NUM
+ws.cell(row=r, column=1, value="模型表外租金尾端（模型期後未付＝總額 − 五期）").font = BLACK
+ws.cell(row=r, column=3, value=f"=MAX(0,{UL_TOT}-C{off5})").number_format = NUM
 off_tail = r
 r += 1
 ws.cell(row=r, column=1, value="模型路徑合計 ÷ 已承諾（≥0.8 為合理）").font = BOLD
 ws.cell(row=r, column=3, value=f"=(C{off5}+C{off_tail})/C{commit_tot}").number_format = MULT
 ws.cell(row=r, column=3).font = BOLD
-ws.cell(row=r, column=9, value="擴張路徑所需新租約多數尚未簽署，路徑高於已承諾屬假設而非錯誤").font = SMALL
+ws.cell(row=r, column=9, value="起租排程依季報附註（起租期間與期限）平均分攤；五期＋尾端＝未起租總額").font = SMALL
 lease_ratio_row = r
 
 # =====================================================================
