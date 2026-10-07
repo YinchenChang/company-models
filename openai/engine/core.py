@@ -137,7 +137,9 @@ def _cache_fingerprint(path: Path) -> dict:
     here = Path(__file__).resolve().parent
     h = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()   # noqa: E731
     return {"xlsx": h(path), "core": h(here / "core.py"), "semantics": h(here / "excel_semantics.py"),
-            "pycel": getattr(pycel, "__version__", "?"), "python": platform.python_version()}
+            "pycel": getattr(pycel, "__version__", "?"),
+            # 只比到 major.minor：CI 各 runner 的 setup-python 可能給不同 patch 版（2026-10-07 實例 3.11.16／3.11.17），pickle 格式不受 patch 影響
+            "python": ".".join(platform.python_version_tuple()[:2])}
 
 
 class Engine:
