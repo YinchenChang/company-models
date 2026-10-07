@@ -224,12 +224,12 @@
     "value": -64.9,
     "unit": "USD M",
     "period": "FY2025",
-    "source": "6-K 2026-02-12 附件 99.1：Q4 與全年 2025 財報新聞稿",
-    "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926013946/tm266173d1_ex99-1.htm",
-    "docDate": "2026-02-12",
+    "source": "Form 20-F（FY2025 年報，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926052948/nbis-20251231x20f.htm",
+    "docDate": "2026-04-30",
     "retrieved": "2026-10-07",
     "tag": "[Interested-party]",
-    "note": "公司自述（Nebius，未經查核季報）；非 GAAP，不在經查核報表內"
+    "note": "公司自述（Nebius，未經查核季報）；非 GAAP；20-F 附註 15 分部合計同值（AI cloud 59.0、Avride −82.7、TripleTen −41.2），新聞稿同值"
    },
    {
     "id": "is.ebitdaAI.q1_26",
@@ -364,15 +364,15 @@
    {
     "id": "is.ni.fy25",
     "item": "續營部門淨損益",
-    "value": 29.0,
+    "value": 9.8,
     "unit": "USD M",
     "period": "FY2025",
-    "source": "6-K 2026-02-12 附件 99.1：Q4 與全年 2025 財報新聞稿",
-    "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926013946/tm266173d1_ex99-1.htm",
-    "docDate": "2026-02-12",
+    "source": "Form 20-F（FY2025 年報，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926052948/nbis-20251231x20f.htm",
+    "docDate": "2026-04-30",
     "retrieved": "2026-10-07",
-    "tag": "[Interested-party]",
-    "note": "公司自述（Nebius，未經查核季報）；20-F 經查核數同值"
+    "tag": "[Verified]",
+    "note": "20-F 經查核合併損益表 9.8；2026-02-12 新聞稿（未查核）為 29.0，差 −19.2，主要因 20-F 計入運輸中設備損失 43.6 等調整（矛盾：以經查核 20-F 為準）"
    },
    {
     "id": "is.da.q1_26",
@@ -403,15 +403,15 @@
    {
     "id": "is.da.fy25",
     "item": "折舊與攤銷（D&A）",
-    "value": 404.0,
+    "value": 417.9,
     "unit": "USD M",
     "period": "FY2025",
-    "source": "6-K 2026-02-12 附件 99.1：Q4 與全年 2025 財報新聞稿",
-    "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926013946/tm266173d1_ex99-1.htm",
-    "docDate": "2026-02-12",
+    "source": "Form 20-F（FY2025 年報，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926052948/nbis-20251231x20f.htm",
+    "docDate": "2026-04-30",
     "retrieved": "2026-10-07",
-    "tag": "[Interested-party]",
-    "note": "公司自述（Nebius，未經查核季報）；"
+    "tag": "[Verified]",
+    "note": "20-F 經查核 417.9；2026-02-12 新聞稿（未查核）為 404.0（矛盾：以 20-F 為準）"
    },
    {
     "id": "is.sbc.q1_26",
