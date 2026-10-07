@@ -961,6 +961,14 @@ function sensitivities(e, v) {
     e.a.newLease = ulPath(UL.termSens[0]), e.ulTerm = UL.termSens[0]
   }, e => {
     e.a.newLease = ulPath(UL.termSens[1]), e.ulTerm = UL.termSens[1]
+  }), r(`建設延誤月數`, `12 個月`, `0 個月`, e => { // v0.2：計費 MW 平移、GPU 資本支出照原時程
+    e.delayMonths = 12
+  }, e => {
+    e.delayMonths = 0
+  }), r(`未起租租約連動延誤`, `0%`, `100%`, e => { // v0.2：delayLink
+    e.delayLink = 0
+  }, e => {
+    e.delayLink = 1
   }), r(`預付重大財務組成`, hA((e.prepay.financingRate ?? 0) * 100, 2), `0%`, null, e => {
     e.prepay = { ...e.prepay, financingRate: 0 }
   }), r(`新債利率`, `+300bps`, `−300bps`, e => {
