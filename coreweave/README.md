@@ -149,6 +149,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `meta.priceDate` | 股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格） | 日期 | 2026-09-24 | 必改 |
 | `meta.consensusFile` | 市場共識資料檔路徑（v4.3；只讀，由使用者查證後提供；建置時併入 HTML、Excel 讀同一檔） | 路徑 | data/consensus_crwv_202609… | 必改 |
 | `meta.sourceOrderNote` | 資料來源的先後與衝突時的取捨原則（畫面說明文字） | 文字 | 時序先法說（8/11）、後 10-Q（8/12）、再… | 必改 |
+| `meta.mwBasis` | MW 口徑（W2）：IT＝IT 關鍵電力（與 Tokenomics 每 GW 相同）；facility＝設施電力（Tokenomics 每 MW 值 ÷ IF_FacilityGW） | 代碼 | IT | 必改 |
+| `meta.mwBasisNote` | MW 口徑的依據說明（W2） | 文字 | CoreWeave 的 MW（active／cont… | 必改 |
 
 ### `calendar`：期間與日期（v4.5）
 
@@ -165,7 +167,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd） | 必改 |
+| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、fleet.openMix） | 必改 |
 
 ### `ytdActual`：年初至今實際數（10-Q；v4.5 前為 actual1H）
 
@@ -303,6 +305,14 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `custA` | 最大客戶營收占比 | 比例 | 0.36 | 否 |
 | `custB` | 第二大客戶營收占比 | 比例 | 0.26 | 否 |
 | `custC` | 第三大客戶營收占比 | 比例 | 0.1 | 否 |
+| `sm` | 當季銷售行銷費用 | US$bn | 0.06 | 否 |
+| `smSbc` | 其中 SBC（銷售行銷） | US$bn | 0.012 | 否 |
+| `ga` | 當季一般管理費用 | US$bn | 0.178 | 否 |
+| `gaSbc` | 其中 SBC（一般管理） | US$bn | 0.084 | 否 |
+| `sbcCostTi` | 當季 SBC（營收成本＋技術與基礎設施） | US$bn | 0.069 | 否 |
+| `opLeaseCost` | 當季營業租賃成本 | US$bn | 0.5 | 否 |
+| `varLeaseCost` | 當季變動租賃成本 | US$bn | 0.15 | 否 |
+| `finLeaseCost` | 當季融資租賃成本 | US$bn | 0.017 | 否 |
 | `debtIssuedH1` | 上半年借款 | US$bn | 16.747 | 否 |
 | `debtRepaidH1` | 上半年還款 | US$bn | 5.219 | 否 |
 | `equityH1` | 上半年股權募資 | US$bn | 2.982 | 否 |
@@ -508,6 +518,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.checks.unsignedRevShareMax` | 檢查頁：後段年度依賴未簽約收入的比例上限（5a） | 比例 | 0.5 | 檢查 |
 | `methodology.checks.siteRentGapMax` | 檢查頁：站點租賃五期租金可能低估的金額上限（5a） | US$bn | 10 | 檢查 |
 | `methodology.checks.rentVsBenchMin` | 檢查頁：模型每 MW 年租金至少要達到「市場基準 × 第三方占比」的比例（5a） | 比例 | 0.8 | 檢查 |
+| `methodology.perMw._note` | 每 MW 方法開關的說明（不進程式；W2） | 文字 | 每 MW 方法開關（W2）：capex＝tokeno… | 可沿用 |
+| `methodology.perMw.capex` | 每 MW 資本支出方法（W2）：tokenomics＝Σ 新增世代占比 × IF_CapexIT；legacy＝scenarios.capexTemplate.costMW | 代碼 | tokenomics | 檢查 |
+| `methodology.perMw.cost` | 營運成本方法（W2）：bottomUp＝Tokenomics 電費、IT 維護、人員軟體、稅險 × 平均在役 MW＋管銷率；ebitdaPct＝起始→穩態 EBITDA 率線性 | 代碼 | bottomUp | 檢查 |
+| `methodology.perMw.revenue` | 每 MW 收入方法（W2）：gpuHr＝pricing.gpuHr × 每 MW GPU 數 × 8,760；legacy＝defaults.m.revMW（備案） | 代碼 | legacy | 檢查 |
 
 ### `peers`：同業比較（Comps）
 
@@ -549,7 +563,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `varianceReasons._note` | 差異原因的說明文字（不進程式） | 文字 | 差異原因（已決定事項 2）：差距超過 methodo… | 可沿用 |
-| `varianceReasons.list` | 差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗 | 清單 | 7 筆 | 檢查 |
+| `varianceReasons.list` | 差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗；perMw（W2，選填）＝只在 methodology.perMw 相符時適用的條件，排在前面者優先 | 清單 | 9 筆 | 檢查 |
 
 ### `texts`：公司特有的說明文字（v4.5；隨資料更新）
 
@@ -570,6 +584,39 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `tokenomics.commit` | 快照的 Tokenomics commit SHA | 文字 | 098873a3c6855d1ef5e3414d5a… | 可沿用 |
 | `tokenomics.names` | 引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW | 檢查 |
 | `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（v5.25 預計新增） | 清單 | IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW | 檢查 |
+
+### `fleet`：世代組合（W2；公司專屬）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `fleet._note` | 世代組合的說明（不進程式；W2） | 文字 | 世代組合（W2；公司專屬）：世代名稱與 Tokeno… | 可沿用 |
+| `fleet.generations` | 世代清單（與 Tokenomics 快照世代同名；順序＝由舊到新，汰換由最舊世代先出） | 文字清單 | Hopper H100、GB200 NVL72、GB300 NVL72、VR200 NVL72、Rubin Ultra（MGX NVL 單架，72 … | 檢查 |
+| `fleet.openMix.asOf` | 期初在役機隊的日期（最新已申報季末） | 日期 | 2026-06-30 | 必改 |
+| `fleet.openMix.activeMW` | 期初在役主動電力（世代組合起點；列入滾動檢查） | MW | 1500 | 必改 |
+| `fleet.openMix.mix` | 期初在役 MW 的世代占比，{世代: 比例}，合計 1 | 物件（比例） | 物件（Hopper H100、GB200 NVL72、GB300 NVL72） | 必改 |
+| `fleet.openMix.tag` | 期初世代占比的來源標記 | 文字 | [Assumed] | 必改 |
+| `fleet.openMix.source` | 期初世代占比的來源與方法 | 文字 | W1 第 6b 步（coreweave/data/p… | 必改 |
+| `fleet.newMix` | 五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期新增 MW（含汰換補回）的世代占比，每期 {世代: 比例}，合計 1 | 清單 | 5 筆 | 檢查 |
+| `fleet.newMixNote` | 新增世代占比的依據 | 文字 | 工作單 W2 預設 [Assumed]：2H26 G… | 檢查 |
+| `fleet.newMixAlt.label` | 世代組合敏感度（替代路徑）的名稱 | 文字 | Rubin Ultra 版（FY29–FY30 新增… | 檢查 |
+| `fleet.newMixAlt.mix` | 世代組合敏感度的各期新增世代占比（格式同 newMix；只作敏感度） | 清單 | 5 筆 | 檢查 |
+| `fleet.newMixAlt.tag` | 替代路徑的標記 | 文字 | [Assumed]（只作敏感度） | 檢查 |
+
+### `pricing`：GPU 小時價格與對照價格（W2）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `pricing._note` | GPU 小時價格與對照價格的說明（不進程式；W2） | 文字 | GPU 小時價格（W2，公司專屬）：gpuHr＝合約… | 可沿用 |
+| `pricing.gpuHr` | GPU 小時合約價，{世代: {base, low, high, source, date, tag}}（US$/GPU-hr）；空白＝不適用（revenue=gpuHr 時必填所有在役世代） | 物件 | 物件（） | 必改 |
+| `pricing.peerRevPerMw` | 同業每 MW 年收入對照列（label、value、unit、tag、source、date、url、note；不入損益） | 清單 | 1 筆 | 必改 |
+| `pricing.marketRefs` | 各世代市場 GPU 小時價格對照列（gen、label、value、basis、tag、source、date、url；不入損益） | 清單 | 6 筆 | 必改 |
+
+### `costs`：由下而上營運成本口徑（W2）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `costs._note` | 由下而上營運成本的公司口徑說明（不進程式；W2） | 文字 | 由下而上營運成本的公司口徑（W2）：管銷率＝（銷售行… | 可沿用 |
+| `costs.sgaBasis` | 管銷率口徑（W2）：exSbc＝扣 SBC（預設）；gaap＝GAAP 含 SBC（敏感度） | 代碼 | exSbc | 檢查 |
 
 ## v4.0 架構：公司資料單一來源
 - **company.json**：所有公司原始輸入（HTML 引擎與 Excel 共用）。換公司時先改這個檔；衍生值（情境 Billable 比率、Q3 新增 RPO 權重、債務合計與平均利率）留在 segA 開頭由程式推導。

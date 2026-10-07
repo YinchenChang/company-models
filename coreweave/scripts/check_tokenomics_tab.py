@@ -2,7 +2,8 @@
 # 用法：python3 scripts/check_tokenomics_tab.py 檔案.xlsx
 # 檢查：(1) Excel「Tokenomics_取數」分頁每個名稱 × 世代的低成本／基準／高成本值＝company.json → tokenomics.snapshotFile 快照值（相對誤差 1e-9）；
 #       (2) 每個非 missing 名稱的「基準」格都有具名範圍 TK_<名稱去掉 IF_／L1_>[_<世代代碼>]，且指向該格；
-#       (3) 快照記為 missing 的名稱有列、無具名範圍；(4) W1 範圍：其他工作表的公式都沒有引用本分頁或 TK_ 名稱。
+#       (3) 快照記為 missing 的名稱有列、無具名範圍；(4) W2 起其他工作表可以引用 TK_ 名稱（每 MW 改寫），只列出引用格數；
+#       引用的 TK_ 名稱都必須存在（缺漏名稱應以暫代值處理，不得引用不存在的名稱）。
 import json, os, re, sys
 import openpyxl
 
@@ -59,11 +60,14 @@ def main(path):
     pat = re.compile(r'Tokenomics_取數|\bTK_[A-Za-z0-9_]+')
     refs = [f'{s.title}!{c.coordinate}' for s in wb.worksheets if s.title != SHEET for row in s.iter_rows() for c in row
             if isinstance(c.value, str) and c.value.startswith('=') and pat.search(c.value)]
-    if refs: errs.append(f'W1 不得引用：{len(refs)} 格公式引用了本分頁或 TK_ 名稱（例 {refs[:3]}）')
+    used = {m for s in wb.worksheets if s.title != SHEET for row in s.iter_rows() for c in row
+            if isinstance(c.value, str) and c.value.startswith('=') for m in re.findall(r'\bTK_[A-Za-z0-9_]+', c.value)}
+    bad = sorted(u for u in used if u not in wb.defined_names)
+    if bad: errs.append(f'公式引用了不存在的 TK_ 名稱：{bad[:5]}')
     if errs:
         print(f'快照值＝Excel 分頁值：失敗 {len(errs)} 項'); [print('  ' + e) for e in errs[:20]]; return 1
     nm = sum(1 for v in SNAP['items'].values() if v.get('missing'))
-    print(f'快照值＝Excel 分頁值：{len(SNAP["items"])} 個名稱（missing {nm}）、{n_val} 個值、{n_name} 個具名範圍一致；其他工作表無公式引用（{SNAP["source"]["version"]}）')
+    print(f'快照值＝Excel 分頁值：{len(SNAP["items"])} 個名稱（missing {nm}）、{n_val} 個值、{n_name} 個具名範圍一致；其他工作表 {len(refs)} 格公式引用 {len(used)} 個 TK_ 名稱（{SNAP["source"]["version"]}）')
     return 0
 
 

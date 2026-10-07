@@ -348,6 +348,94 @@ r = prow(r, "客戶違約率", "%", PCT_(M['defaultP']), PCT, "前三大客戶 7
 r = prow(r, "回收率", "%", PCT_(M['recovery']), PCT, "[Assumed]")
 r = prow(r, "非算力服務營收", "US$bn", D['services'], NUM, "軟體／儲存／CPU／managed inference；損益營收與資金現金共用 [Derived]")
 r += 1
+# ---------------- W2：世代組合（B 區之後的子區；公司專屬輸入＋Tokenomics 引用值，依世代） ----------------
+# 方法開關 company.json → methodology.perMw（建置時決定公式）：全為 legacy／ebitdaPct 時，既有各列公式與 v4.5 完全相同（本子區與「每MW經濟性」頁只作對照）。
+PMW = {'capex': 'legacy', 'cost': 'ebitdaPct', 'revenue': 'legacy', **(CO.get('methodology', {}).get('perMw') or {})}
+FL = CO.get('fleet')
+GEN = FL['generations'] if FL else []
+MWBASIS = CO['meta'].get('mwBasis', 'IT')
+_TKX = (_jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), CO['tokenomics']['snapshotFile']), encoding='utf-8'))
+        if CO.get('tokenomics') else {'items': {}, 'source': {'generations': []}})
+_TKGC = {g['name']: g['code'] for g in _TKX['source']['generations']}
+tk_has = lambda n: n in _TKX['items'] and not _TKX['items'][n].get('missing')
+TK_PH = ['IF_MaintIT', 'IF_StaffSW', 'IF_TaxIns', 'IF_DeprLifeIT']  # 可暫代的名稱（待 Tokenomics v5.26）
+TK_MISS = [n for n in (['IF_DeprLifeIT'] if PMW['capex'] == 'tokenomics' else []) + (['IF_MaintIT', 'IF_StaffSW', 'IF_TaxIns'] if PMW['cost'] == 'bottomUp' else []) if not tk_has(n)]
+if PMW['capex'] != 'legacy' or PMW['cost'] != 'ebitdaPct' or PMW['revenue'] != 'legacy':
+    assert FL, 'methodology.perMw 使用新方法時 company.json 必須有 fleet（世代組合）'
+    for _n_ in ['IF_CapexIT', 'IF_CapexTotal', 'IF_PowerCost', 'IF_GPUsPerGW', 'IF_FacilityGW', 'IF_HoldEcon', 'IF_GPUhrEcon']:
+        assert tk_has(_n_), f'Tokenomics 快照缺少必要名稱 {_n_}（不可暫代）'
+    assert set(GEN) <= set(_TKGC), f'fleet.generations 須與 Tokenomics 世代同名：{set(GEN) - set(_TKGC)}'
+if PMW['revenue'] == 'gpuHr':
+    _P = (CO.get('pricing') or {}).get('gpuHr') or {}
+    assert all(_P.get(g, {}).get('base') is not None for g in GEN if any(m.get(g) for m in FL['newMix']) or FL['openMix']['mix'].get(g)), \
+        'revenue=gpuHr：pricing.gpuHr 缺少在役世代的 GPU 小時價格（資料不足時改用 revenue=legacy 備案）'
+FLX = {}  # 世代組合各列的列號
+if FL:
+    r = section(ws, r, "世代組合（W2；公司專屬，世代與 Tokenomics 同名；每 MW 資本支出、成本、收入依此加權）", level=2, collapsed=True)
+    ws.cell(row=r, column=1, value="每 MW 方法（資本支出／營運成本／收入）").font = BOLD
+    ws.cell(row=r, column=3, value=f"{PMW['capex']}／{PMW['cost']}／{PMW['revenue']}").font = BLACK
+    ws.cell(row=r, column=9, value="company.json → methodology.perMw（建置時決定公式）：tokenomics｜legacy、bottomUp｜ebitdaPct、gpuHr｜legacy；全為舊方法時與 v4.5 相同").font = SMALL
+    r += 1
+    MWB = gi(r, "MW 口徑（1＝IT 關鍵電力、2＝設施）", "", 1 if MWBASIS == 'IT' else 2,
+             "company.json → meta.mwBasis。Tokenomics 每 GW＝IT 關鍵電力；設施口徑時 IT MW＝設施 MW ÷ IF_FacilityGW（各 Tokenomics 每 MW 值 × 換算係數）[Assumed，見 W1 第 6a 步]", NUM0); r += 1
+    TKSEL = gi(r, "Tokenomics 成本情境（1＝低成本、2＝基準、3＝高成本）", "", 2, "模型主值取基準；低／高只作敏感度（每MW經濟性頁「敏感度」）", NUM0); r += 1
+    MIXALT = gi(r, "世代組合敏感度（0＝基準、1＝Rubin Ultra 版）", "", 0, FL['newMixAlt']['label'] + "；只作敏感度", NUM0); r += 1
+    PXSEL = gi(r, "GPU 小時價格情境（1＝低、2＝基準、3＝高）", "", 2, "只在 revenue=gpuHr 時影響收入；價格讀 company.json → pricing.gpuHr", NUM0); r += 1
+    OPENMW = gi(r, f"期初在役 MW（{FL['openMix']['asOf']}，世代組合起點）", "MW", FL['openMix']['activeMW'], "company.json → fleet.openMix.activeMW（最新已申報季末主動電力）[Verified]", NUM0); r += 1
+    FLX['open'] = {}
+    for g in GEN:
+        FLX['open'][g] = gi(r, f"期初在役占比｜{g}", "%", FL['openMix']['mix'].get(g, 0), FL['openMix']['tag'] + "；" + (FL['openMix']['source'] if g == GEN[0] else "同上"), PCT); r += 1
+    r = phdr(r, "新增 MW 的世代占比")
+    for kind, mixes, note in (("基準", FL['newMix'], FL['newMixNote']), ("Rubin Ultra 版", FL['newMixAlt']['mix'], FL['newMixAlt']['tag'])):
+        FLX[kind] = r
+        for g in GEN:
+            r = prow(r, f"新增占比（{kind}）｜{g}", "%", [m.get(g, 0) for m in mixes], PCT, note if g == GEN[0] else None)
+    FLX['adopt'] = r
+    for j, g in enumerate(GEN):
+        r = prow(r, f"新增占比（採用）｜{g}", "%", [f"=IF({MIXALT}=1,{COLS[i]}{FLX['Rubin Ultra 版'] + j},{COLS[i]}{FLX['基準'] + j})" for i in range(5)], PCT,
+                 "＝依「世代組合敏感度」選擇基準或 Rubin Ultra 版" if j == 0 else None, BLACK)
+    r = prow(r, "新增占比合計（須為 100%）", "%", [f"=SUM({COLS[i]}{FLX['adopt']}:{COLS[i]}{FLX['adopt'] + len(GEN) - 1})" for i in range(5)], PCT, "檢查頁核對", BLACK)
+    # Tokenomics 引用值（列＝世代、欄＝項目；經 W1「Tokenomics_取數」具名範圍；OFFSET 依成本情境取低／基準／高欄；換成公司 MW 口徑）
+    def _tkc(n, g, conv=True, sel=True):
+        if not tk_has(n): return ""
+        k = f"TK_{re.sub(r'^(IF|L1)_', '', n)}_{_TKGC[g]}"
+        x = f"OFFSET({k},0,{TKSEL}-2)" if sel else k
+        return f"={x}*{COLS[3]}{{conv}}" if conv else f"={x}"
+    def _tkblock(title, cols, unit_note):
+        global r
+        for j, h in enumerate([title, "世代"] + [c[0] for c in cols]):
+            c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+        ws.cell(row=r, column=9, value=unit_note).font = SMALL
+        r += 1; top = r
+        for g in GEN:
+            ws.cell(row=r, column=1, value=f"{title.split('（')[0]}｜{g}").font = BLACK
+            ws.cell(row=r, column=2, value=_TKGC[g]).font = SMALL
+            for i, (_, fn) in enumerate(cols):
+                v = fn(g, r)
+                c = ws.cell(row=r, column=3 + i, value=v if v != "" else None); c.font = GREEN; c.border = BOX
+                c.number_format = '#,##0.000;(#,##0.000);-'
+            r += 1
+        return top
+    FLX['tkCap'] = _tkblock("TK 資本與口徑（IT 設備、合計、設施／IT、MW 換算、折舊年限）", [
+        ("IT 設備", lambda g, rr: _tkc('IF_CapexIT', g).replace('{conv}', str(rr))),
+        ("合計", lambda g, rr: _tkc('IF_CapexTotal', g).replace('{conv}', str(rr))),
+        ("設施／IT", lambda g, rr: _tkc('IF_FacilityGW', g, conv=False, sel=False)),
+        ("MW 換算", lambda g, rr: f"=IF({MWB}=2,1/{COLS[2]}{rr},1)"),
+        ("折舊年限", lambda g, rr: _tkc('IF_DeprLifeIT', g, conv=False, sel=False))],
+        "US$m／公司 MW（IF_CapexIT、IF_CapexTotal 每 GW＝每 MW 百萬美元，× MW 換算）；設施／IT＝IF_FacilityGW（基準）；MW 換算＝IT 口徑 1、設施口徑 1÷設施／IT；折舊年限＝IF_DeprLifeIT（v5.26 前空白，暫代 D 區 GPU 經濟壽命）")
+    FLX['tkOp'] = _tkblock("TK 營運成本（電費、IT 維護、人員軟體、稅險）", [
+        ("電費", lambda g, rr: _tkc('IF_PowerCost', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g)))),
+        ("IT 維護", lambda g, rr: _tkc('IF_MaintIT', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g)))),
+        ("人員軟體", lambda g, rr: _tkc('IF_StaffSW', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g)))),
+        ("稅險×IT占比", lambda g, rr: (_tkc('IF_TaxIns', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g))) + f"*C{FLX['tkCap'] + GEN.index(g)}/D{FLX['tkCap'] + GEN.index(g)}") if tk_has('IF_TaxIns') else "")],
+        "US$m／公司 MW／年。電費＝IF_PowerCost（已含平均用電比與 PUE）；IT 維護 IF_MaintIT、人員軟體 IF_StaffSW、稅險 IF_TaxIns × IT 資本占總資本比（v5.26 前空白：IT 維護暫代 C 區『維護成本』、人員軟體與稅險暫代 0）")
+    FLX['tkRev'] = _tkblock("TK 收入參考（GPU 數、GPU 小時持有成本、經濟持有成本、GPU 小時合約價）", [
+        ("GPU／MW", lambda g, rr: _tkc('IF_GPUsPerGW', g, sel=False).replace('{conv}', str(FLX['tkCap'] + GEN.index(g))) + "/1000"),
+        ("GPU 時成本", lambda g, rr: _tkc('IF_GPUhrEcon', g, conv=False)),
+        ("持有成本", lambda g, rr: _tkc('IF_HoldEcon', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g)))),
+        ("合約價", lambda g, rr: (lambda P: f"=CHOOSE({PXSEL},{P['low'] if P.get('low') is not None else P['base']},{P['base']},{P['high'] if P.get('high') is not None else P['base']})" if P and P.get('base') is not None else "")(((CO.get('pricing') or {}).get('gpuHr') or {}).get(g)))],
+        "GPU／MW＝IF_GPUsPerGW ÷ 1000 × MW 換算（顆）；GPU 時成本＝IF_GPUhrEcon（US$/GPU-hr，100% 時數、不含利潤）；持有成本＝IF_HoldEcon（US$m／MW／年，含廠房資本回收）；合約價＝company.json → pricing.gpuHr（空白＝不適用）")
+    r += 1
 
 # ---------------- C 利潤率 ----------------
 r = section(ws, r, "C｜利潤率（EBITDA 率單一來源；損益與資金共用）")
@@ -362,7 +450,23 @@ r = section(ws, r, "電力／維護 overlay（預設關閉；EBITDA 已含電費
 OVERLAY = gi(r, "電力／維護 overlay（1=開）", "", int(D['overlay']), "EBITDA 率已含電費，開啟會重複扣除，僅供壓力測試", NUM0); r += 1
 r = prow(r, "電價", "$/MWh", M['power'], NUM0, "overlay 用 [Assumed]")
 r = prow(r, "PUE", "", M['pue'], '0.00', "overlay 用 [Assumed]")
-r = prow(r, "維護成本", "US$m/MW", M['maint'], '0.00', "overlay 用 [Assumed]")
+r = prow(r, "維護成本", "US$m/MW", M['maint'], '0.00', "overlay 用 [Assumed]" + ("；W2 由下而上：IT 維護暫代值（待 Tokenomics v5.26 IF_MaintIT）" if PMW['cost'] == 'bottomUp' and not tk_has('IF_MaintIT') else ""))
+CSX = {}  # W2：由下而上營運成本的公司輸入（最近一季 10-Q；company.json → latestQuarter、costs）
+if FL:
+    r = section(ws, r, "由下而上營運成本輸入（W2；最近一季 10-Q，公司專屬）", level=2, collapsed=True)
+    _LQ = CO['latestQuarter']; _CS = CO.get('costs') or {}
+    for _k, _lab, _note in (('revenue', '最近一季營收', '10-Q 損益表 [Verified]'), ('costRev', '最近一季營收成本', '10-Q 損益表 [Verified]'),
+                            ('techInfra', '最近一季技術與基礎設施', '10-Q 損益表；D&A 主要在此列 [Verified]'),
+                            ('sm', '最近一季銷售行銷', '10-Q 損益表 [Verified]'), ('smSbc', '　其中 SBC（銷售行銷）', '10-Q SBC 附註 [Verified]'),
+                            ('ga', '最近一季一般管理', '10-Q 損益表 [Verified]'), ('gaSbc', '　其中 SBC（一般管理）', '10-Q SBC 附註 [Verified]'),
+                            ('da', '最近一季 D&A 合計', '10-Q 現金流量表（未依列別揭露，視為全在營收成本與技術基礎設施）[Verified]'),
+                            ('sbcCostTi', '　SBC（營收成本＋技術與基礎設施）', '10-Q SBC 附註：技術與基礎設施 0.060＋營收成本 0.009 [Verified]'),
+                            ('opLeaseCost', '最近一季營業租賃成本', '10-Q 租賃附註 [Verified]'), ('varLeaseCost', '最近一季變動租賃成本', '10-Q 租賃附註 [Verified]')):
+        CSX[_k] = gi(r, _lab, "US$bn", _LQ[_k], _note); r += 1
+    CSX['basis'] = gi(r, "管銷率口徑（1＝扣 SBC、2＝GAAP 含 SBC）", "", 2 if _CS.get('sgaBasis') == 'gaap' else 1, "company.json → costs.sgaBasis；預設扣 SBC（W1 第 6d 步），GAAP 含 SBC 只作敏感度", NUM0); r += 1
+    CSX['sga'] = gi(r, "管銷率（扣 D&A；各期持平）", "%", f"=IF({CSX['basis']}=2,({CSX['sm']}+{CSX['ga']})/{CSX['revenue']},({CSX['sm']}-{CSX['smSbc']}+{CSX['ga']}-{CSX['gaSbc']})/{CSX['revenue']})",
+                    "＝（銷售行銷 − SBC ＋ 一般管理 − SBC）÷ 營收；銷售行銷與一般管理內的 D&A 視為 0 [Derived]", PCT); r += 1
+    CSX['addQ'] = gi(r, "最近一季新增主動電力", "MW", CO['callFacts']['activeAddQ2'], "法說（Q2 新增近 500 MW）；Q2 平均在役 MW＝期末 − 新增 ÷ 2 [Interested-party]", NUM0); r += 1
 r += 1
 
 # ---------------- D 支出 ----------------
@@ -372,13 +476,22 @@ MW31 = gi(r, "FY31 新增 MW（FY30 預建用）", "MW",
           f"=CHOOSE({SEL},I{sc_rows['保守 4.2 GW']},I{sc_rows['基準 5.6 GW']},I{sc_rows['積極 8 GW']})",
           "隨情境：保守 0／基準 500／積極 1,000 [Assumed]", NUM0); r += 1
 FLOOR = gi(r, "FY26 CapEx 下限（已承諾）", "US$bn", D['capexFloorFY0'], "全年指引下緣：2026 年支出多已下單 [Interested-party]"); r += 1
-LIFE = gi(r, "GPU 經濟壽命（年）", "年", D['gpuLife'], "公司對伺服器與網路設備的折舊年限；決定汰換時點與車隊折舊 [Verified]", NUM0); r += 1
+if PMW['capex'] == 'tokenomics' and tk_has('IF_DeprLifeIT'):  # W2：IF_DeprLifeIT 依期初在役世代加權、取整數
+    LIFE = gi(r, "GPU 經濟壽命（年）", "年", f"=ROUND(SUMPRODUCT($C${FLX['open'][GEN[0]].split('$')[-1]}:$C${FLX['open'][GEN[-1]].split('$')[-1]},$G${FLX['tkCap']}:$G${FLX['tkCap'] + len(GEN) - 1}),0)",
+              "＝Tokenomics IF_DeprLifeIT 依期初在役世代加權、取整數；決定汰換時點與車隊折舊 [Derived]", NUM0); r += 1
+else:
+    LIFE = gi(r, "GPU 經濟壽命（年）", "年", D['gpuLife'], "公司對伺服器與網路設備的折舊年限；決定汰換時點與車隊折舊 [Verified]" + ("；W2：待 Tokenomics v5.26 IF_DeprLifeIT（暫代值）" if PMW['capex'] == 'tokenomics' else ""), NUM0); r += 1
 for _y in sorted(int(y) for y in D['mwYearEnd'] if int(y) != MW_Y0):
     MWY[_y] = gi(r, f"{_y} 年底主動電力", "MW", D['mwYearEnd'][str(_y)], CO['texts']['mwYearEndNotes'][str(_y)], NUM0); r += 1
 PPE0 = gi(r, "6/30 毛 PP&E", "US$bn", D['ppeOpen'], "10-Q（含 CIP 11.9）[Verified]"); r += 1
 CAPSC = gi(r, "每 MW 建置成本倍數（整體）", "%", D['capexScale'], "同時影響 CapEx、汰換與車隊折舊；反向 DCF 用；預設 100%", PCT); r += 1
 r = phdr(r)
-r = prow(r, "每 MW 建置成本", "US$m/MW", CO['scenarios']['capexTemplate']['costMW'], NUM1, "GPU＋網路＋機房內裝；以 FY26 校準重現全年指引 35–39 [Derived]")
+if PMW['capex'] == 'tokenomics':  # W2：Σ 新增世代占比 × IF_CapexIT（不含廠房）
+    r = prow(r, "每 MW 建置成本", "US$m/MW", [f"=SUMPRODUCT({COLS[i]}{FLX['adopt']}:{COLS[i]}{FLX['adopt'] + len(GEN) - 1},$C${FLX['tkCap']}:$C${FLX['tkCap'] + len(GEN) - 1})" for i in range(5)], NUM1,
+             "＝Σ 新增世代占比（B 區後『世代組合』）× Tokenomics IF_CapexIT（基準；GPU＋網路＋機房內裝，不含廠房——CRWV 機房以租約取得，廠房成本在租金）[Derived]", BLACK)
+    r = prow(r, "每 MW 建置成本（v4.5 舊值，對照）", "US$m/MW", CO['scenarios']['capexTemplate']['costMW'], NUM1, "舊方法：以 FY26 校準重現全年指引 35–39（以公司 CapEx 指引回推；W2 起只作對照，不入模型）[Derived]")
+else:
+    r = prow(r, "每 MW 建置成本", "US$m/MW", CO['scenarios']['capexTemplate']['costMW'], NUM1, "GPU＋網路＋機房內裝；以 FY26 校準重現全年指引 35–39 [Derived]")
 r = prow(r, "客戶預付占毛 CapEx", "%", CO['scenarios']['capexTemplate']['customerFund'], PCT, "H1 遞延收入淨流入 1.365÷CapEx 16.139＝8.5% [Derived]")
 r = prow(r, "在帳現金租金（10-Q 到期表）", "US$bn", CO['leases']['onBalanceCash'], NUM, f"營業＋融資租賃未折現付款；«LASTYR» 後尚有 {CO['leases']['afterFY30']} [Verified]")
 r = prow(r, "表外現金租金（未起租）", "US$bn", [0] * 5, NUM, "＝積極路徑 × 新增 MW 比例（A 區）[Assumed]", BLACK)
@@ -778,11 +891,11 @@ frow("④ JV／策略投資出資", "US$bn",
      lambda i: (f"={H_JV}+{inref('JV／策略投資出資', i)}" if i == 0 else f"={inref('JV／策略投資出資', i)}"), NUM, BLACK,
      f"«P0»＝«YTD» 實際 {YA['jv']}（JV {YA['jvSplit']['jv']:.3f}＋策略投資 {YA['jvSplit']['strategic']:.3f}）＋«STUB» 模型。10-Q 已承諾 1.7bn。{CO['meta']['ticker']} 不發股息")
 frow("　電力（overlay）", "US$bn",
-     lambda i: (f"=IF({OVERLAY}=1,'運營_產能與收入'!{COLS[i]}{CAP['acc']}*8760*{inref('PUE', i)}*{inref('電價', i)}/1000000000*"
+     lambda i: "=0" if PMW['cost'] == 'bottomUp' else (f"=IF({OVERLAY}=1,'運營_產能與收入'!{COLS[i]}{CAP['acc']}*8760*{inref('PUE', i)}*{inref('電價', i)}/1000000000*"
                 f"'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']},0)"), NUM, BLACK,
-     "＝Accepted MW×8760×PUE×電價÷1e9×期間係數。CRWV 電費多經房東轉嫁，預設關閉")
+     "W2 由下而上：電費與維護已含在營運成本，overlay 自動停用（避免重複扣）" if PMW['cost'] == 'bottomUp' else "＝Accepted MW×8760×PUE×電價÷1e9×期間係數。CRWV 電費多經房東轉嫁，預設關閉")
 frow("　維護（overlay）", "US$bn",
-     lambda i: (f"=IF({OVERLAY}=1,'運營_產能與收入'!{COLS[i]}{CAP['acc']}*{inref('維護成本', i)}/1000*"
+     lambda i: "=0" if PMW['cost'] == 'bottomUp' else (f"=IF({OVERLAY}=1,'運營_產能與收入'!{COLS[i]}{CAP['acc']}*{inref('維護成本', i)}/1000*"
                 f"'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']},0)"), NUM, BLACK)
 frow("⑤ 排程還本（10-Q 本金表）", "US$bn",
      lambda i: (f"={H_REPAY}+IF({DEBTON}=1,{inref('排程還本（10-Q 本金表）', i)},0)" if i == 0
@@ -2034,6 +2147,10 @@ checks = [
     ("站點租賃：五期租金可能低估", None, f"<{_n(CK['siteRentGapMax'])}",
      "=IF(B{r}<" + _n(CK['siteRentGapMax']) + ",\"通過\",\"觀察\")", NUM, "＝Σ(在役 MW×市場基準×第三方占比 − 模型租金)"),
 ]
+if TK_MISS and (PMW['capex'] != 'legacy' or PMW['cost'] != 'ebitdaPct' or PMW['revenue'] != 'legacy'):  # W2：缺漏時顯示，Tokenomics 補齊名稱並重抓快照後自動消失（HTML 連動檢查同一則）
+    checks.append((f"Tokenomics 名稱缺漏 {len(TK_MISS)} 項，成本為暫代值", f"={len(TK_MISS)}", "0 項",
+                   "=IF(B{r}=0,\"通過\",\"警告\")", NUM0, f"{'、'.join(TK_MISS)} 尚未在 Tokenomics {CO['tokenomics']['version']} 提供（待 v5.26）；暫代：IT 維護＝C 區維護成本、人員軟體與稅險＝0、GPU 經濟壽命＝{D['gpuLife']} 年"))
+
 for nm, bf, std, rf, fmt, note in checks:
     ws.cell(row=r, column=1, value=nm).font = BLACK
     if bf:
@@ -2294,7 +2411,7 @@ if PM_TOL:
 # =====================================================================
 import re as _re_q
 QC = CO.get('quarterly')
-VRS = CO.get('varianceReasons', {}).get('list', [])
+VRS = [x for x in CO.get('varianceReasons', {}).get('list', []) if all(PMW.get(k) == v for k, v in (x.get('perMw') or {}).items())]  # W2：perMw 條件只在方法相符時適用
 QCOL = ["C", "D", "E", "F", "G", "H", "I", "J"]
 _FX = lambda x, dp: f'IF({x}<0,"−","")&TEXT(ABS({x}),"#,##0{"." + "0" * dp if dp else ""}")'  # 與 HTML Y() 同格式（千分位、固定小數）；負號用 −
 _GX = lambda x, pt=False: f'IF({x}<0,"−","+")&TEXT(ABS({x})*100,"#,##0.0")&"{"pt" if pt else "%"}"'  # 與 HTML gapTxtQ 同格式
@@ -2969,6 +3086,179 @@ srow("驗證｜目標價（平均／中位數／最低／最高）", "US$", [f"=
 ws.cell(row=r + 1, column=1, value="來源獨立性：" + CONS['sourceIndependence']).font = SMALL
 ws.cell(row=r + 2, column=1, value=f"共識來源：{CONS['annualEstimates']['source']}、{CONS['priceTarget']['source']}；擷取 {CONS['annualEstimates']['retrieved']}。逐筆來源、日期與標記見『輸入與假設』I 區。").font = SMALL
 
+# W2（2026-10-07）：「每MW經濟性」頁——世代結構推導、由下而上營運成本、每 MW 收入／資本支出對照、最近一季實際對照、彙總表、敏感度快照。
+# 每 MW 值＝期間金額 ÷ 平均在役 MW（公司口徑，Accepted）÷ 期間長度 × 1000（US$m／MW／年）。HTML「資金模型 → 運營活動 → 每 MW 經濟性」同一邏輯（cmp31 逐列比對）。
+PM = {}
+if FL:
+    ws = wb.create_sheet("每MW經濟性")
+    ws.column_dimensions["A"].width = 52
+    ws.column_dimensions["B"].width = 14
+    for c in COLS: ws.column_dimensions[c].width = 13
+    ws.column_dimensions["I"].width = 96
+    ws["A1"] = "每 MW 經濟性（W2：Tokenomics 物理與產業數據 × 公司專屬輸入）"; ws["A1"].font = TITLE
+    ws["A2"] = (f"方法：資本支出 {PMW['capex']}／營運成本 {PMW['cost']}／收入 {PMW['revenue']}（company.json → methodology.perMw）。MW 口徑："
+                + ("IT 關鍵電力" if MWBASIS == 'IT' else "設施（Tokenomics 值已換成每設施 MW）") + "。每 MW 值＝期間金額 ÷ 平均在役 MW ÷ 期間長度（年化）。"
+                + (f"Tokenomics 名稱缺漏 {len(TK_MISS)} 項（{'、'.join(TK_MISS)}），相關成本為暫代值（待 v5.26）。" if TK_MISS else ""))
+    ws["A2"].font = SMALL
+    _I = "'輸入與假設'!"; _C = "'運營_產能與收入'!"; _F = "'各期收支'!"
+    _L = lambda i: f"{_I}{COLS[i]}${IN['模型期長度（年）']}"
+    _NG = len(GEN)
+    def mrow(name, unit, fn, fmt=NUM, font=BLACK, note=None, bold=False):
+        global r
+        ws.cell(row=r, column=1, value=name).font = BOLD if bold else BLACK
+        ws.cell(row=r, column=2, value=unit).font = SMALL
+        for i in range(5):
+            v = fn(i); c = ws.cell(row=r, column=3 + i, value=v); c.font = font; c.number_format = fmt; c.border = BOX
+        if note: ws.cell(row=r, column=9, value=note).font = SMALL
+        PM[name] = r; r += 1
+    r = 4
+    r = period_header(ws, r)
+    # 彙總表在最上方（列數固定，數值引用下方明細）：先保留列號
+    SUMROWS = ["平均在役 MW（IT 關鍵電力）", "平均在役 MW（設施＝IT × IF_FacilityGW）", "每 MW 年收入（算力＋服務）", "　其中：算力收入", "電費", "IT 維護", "人員、軟體、水與耗材", "財產稅與保險",
+               "公司管銷與其他", "租金", "現金成本合計（含租金）", "EBITDA", "D&A（模型車隊折舊）", "利息", "稅前", "每 MW 資本支出（新增 MW 的建置成本）", "每設施 MW 年收入", "每設施 MW EBITDA"]
+    r = section(ws, r, "每 MW 經濟性彙總（每平均在役 MW、年化；US$m／MW／年；目前情境）")
+    sum0 = r; r += len(SUMROWS) + 1
+    # ---- 世代結構推導 ----
+    r = section(ws, r, "世代結構推導（期初在役 → 汰換 → 新增 → 期末／平均在役；MW，公司口徑）", level=2, collapsed=True)
+    mrow("期初在役 MW 合計", "MW", lambda i: f"={OPENMW}" if i == 0 else f"={COLS[i-1]}{{END_T}}", NUM0, BLACK, f"{PERIODS[0]} 期初＝{FL['openMix']['asOf']} 在役（世代組合起點）；之後＝前期期末")
+    _st = r
+    for j, g in enumerate(GEN):
+        mrow(f"期初在役 MW｜{g}", "MW", lambda i, j=j, g=g: f"={OPENMW}*{FLX['open'][g]}" if i == 0 else f"={COLS[i-1]}{{END_{j}}}", NUM0)
+    mrow("汰換 MW（壽命到期批次，最舊世代先出）", "MW", lambda i: f"=MIN({_vintage(i)},{COLS[i]}{PM['期初在役 MW 合計']})", NUM0, BLACK,
+         "＝(本年 − GPU 經濟壽命) 那年新增的 MW（與『GPU 汰換 CapEx』同一批次），由世代清單中最舊的世代先出，以當期新增世代補回")
+    _rt = PM["汰換 MW（壽命到期批次，最舊世代先出）"]; _ro = r
+    for j, g in enumerate(GEN):
+        mrow(f"汰換出｜{g}", "MW", lambda i, j=j: (f"=MIN({COLS[i]}{_st + j},{COLS[i]}{_rt})" if j == 0 else
+                                                 f"=MIN({COLS[i]}{_st + j},MAX(0,{COLS[i]}{_rt}-SUM({COLS[i]}{_st}:{COLS[i]}{_st + j - 1})))"), NUM0)
+    mrow("新增 MW（期末 Accepted − 期初，不為負）", "MW", lambda i: f"=MAX(0,{_C}{COLS[i]}{CAP['acc']}-{COLS[i]}{PM['期初在役 MW 合計']})", NUM0)
+    _ad = PM["新增 MW（期末 Accepted − 期初，不為負）"]; _en = r
+    for j, g in enumerate(GEN):
+        mrow(f"期末在役 MW｜{g}", "MW", lambda i, j=j: f"={COLS[i]}{_st + j}-{COLS[i]}{_ro + j}+{_I}{COLS[i]}{FLX['adopt'] + j}*({COLS[i]}{_ad}+{COLS[i]}{_rt})", NUM0)
+    mrow("期末在役 MW 合計", "MW", lambda i: f"=SUM({COLS[i]}{_en}:{COLS[i]}{_en + _NG - 1})", NUM0)
+    _av = r
+    for j, g in enumerate(GEN):
+        mrow(f"平均在役 MW｜{g}", "MW", lambda i, j=j: f"=({COLS[i]}{_st + j}+{COLS[i]}{_en + j})/2", NUM0)
+    mrow("平均在役 MW 合計", "MW", lambda i: f"=SUM({COLS[i]}{_av}:{COLS[i]}{_av + _NG - 1})", NUM0, BOLD, "公司 MW 口徑（Accepted）；每 MW 值的分母")
+    _AT = PM["平均在役 MW 合計"]; _mx = r
+    for j, g in enumerate(GEN):
+        mrow(f"平均在役占比｜{g}", "%", lambda i, j=j: f"={COLS[i]}{_av + j}/MAX({COLS[i]}{_AT},1E-9)", PCT)
+    for rr in range(_st - 1, r):  # 期初列引用前期期末（列號在上方建立後才知道）
+        for i in range(5):
+            c = ws.cell(row=rr, column=3 + i)
+            if isinstance(c.value, str) and '{END_' in c.value:
+                c.value = c.value.replace('{END_T}', str(PM['期末在役 MW 合計']))
+                for j in range(_NG): c.value = c.value.replace(f'{{END_{j}}}', str(_en + j))
+    MIXR = lambda i: f"{COLS[i]}{_mx}:{COLS[i]}{_mx + _NG - 1}"   # 平均在役占比（第 i 期）
+    TKR = lambda blk, col: f"{_I}${col}${FLX[blk]}:${col}${FLX[blk] + _NG - 1}"
+    # ---- 由下而上營運成本 ----
+    r = section(ws, r, "由下而上營運成本（租金前；US$bn，模型期）" + ("——模型採用" if PMW['cost'] == 'bottomUp' else "——對照（模型採用 EBITDA 率路徑）"), level=2, collapsed=True)
+    mrow("每 MW 電費（世代加權）", "US$m/MW", lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkOp', 'C')})", '0.000', BLACK, "Tokenomics IF_PowerCost（每 IT GW 年電費，已含平均用電比與 PUE）")
+    mrow("每 MW IT 維護（世代加權）", "US$m/MW", (lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkOp', 'D')})") if tk_has('IF_MaintIT') else (lambda i: f"={_I}{COLS[i]}${IN['維護成本']}"), '0.000', BLACK,
+         "Tokenomics IF_MaintIT" if tk_has('IF_MaintIT') else "暫代值：C 區『維護成本』（CRWV 現值；待 Tokenomics v5.26 IF_MaintIT）")
+    mrow("每 MW 人員、軟體、水與耗材", "US$m/MW", (lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkOp', 'E')})") if tk_has('IF_StaffSW') else (lambda i: "=0"), '0.000', BLACK,
+         "Tokenomics IF_StaffSW" if tk_has('IF_StaffSW') else "暫代值 0（待 Tokenomics v5.26 IF_StaffSW）")
+    mrow("每 MW 財產稅與保險（只算 IT 部分）", "US$m/MW", (lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkOp', 'F')})") if tk_has('IF_TaxIns') else (lambda i: "=0"), '0.000', BLACK,
+         "Tokenomics IF_TaxIns × IT 資本占總資本比（廠房屬房東）" if tk_has('IF_TaxIns') else "暫代值 0（待 Tokenomics v5.26 IF_TaxIns）")
+    for nm, k in (("電費", "每 MW 電費（世代加權）"), ("IT 維護", "每 MW IT 維護（世代加權）"), ("人員、軟體、水與耗材", "每 MW 人員、軟體、水與耗材"), ("財產稅與保險", "每 MW 財產稅與保險（只算 IT 部分）")):
+        mrow(f"{nm}（金額）", "US$bn", lambda i, k=k: f"={COLS[i]}{_AT}*{COLS[i]}{PM[k]}/1000*{_L(i)}", NUM, BLACK, "＝平均在役 MW × 每 MW 值 ÷ 1000 × 期間長度" if nm == "電費" else None)
+    mrow("模型期總營收（算力＋服務）", "US$bn", lambda i: f"={_C}{COLS[i]}{CAP['totrev']}", NUM, GREEN)
+    mrow("管銷率", "%", lambda i: f"={CSX['sga']}", PCT, GREEN, "C 區『由下而上營運成本輸入』：最近一季實際，各期持平 [Derived]")
+    mrow("公司管銷與其他（金額）", "US$bn", lambda i: f"={COLS[i]}{PM['模型期總營收（算力＋服務）']}*{COLS[i]}{PM['管銷率']}", NUM)
+    mrow("現金營運成本合計（租金前）", "US$bn", lambda i: "=" + "+".join(f"{COLS[i]}{PM[k]}" for k in ("電費（金額）", "IT 維護（金額）", "人員、軟體、水與耗材（金額）", "財產稅與保險（金額）", "公司管銷與其他（金額）")), NUM, BOLD,
+         "廠房維護與廠房折舊不計（房東負擔，含在租金）")
+    mrow("由下而上 EBITDAR 率", "%", lambda i: f"=1-{COLS[i]}{PM['現金營運成本合計（租金前）']}/MAX(0.01,{COLS[i]}{PM['模型期總營收（算力＋服務）']})", PCT, BLACK, "＝1 −（現金營運成本 ÷ 營收）")
+    mrow("租金合計", "US$bn", lambda i: f"={_F}{COLS[i]}{FRR['　租金合計']}", NUM, GREEN, "在帳＋表外現金租金（只扣一次：EBITDA 率＝EBITDAR 率 − 租金 ÷ 營收）")
+    mrow("由下而上 EBITDA 率", "%", lambda i: f"={COLS[i]}{PM['由下而上 EBITDAR 率']}-{COLS[i]}{PM['租金合計']}/MAX(0.01,{COLS[i]}{PM['模型期總營收（算力＋服務）']})", PCT, BOLD)
+    mrow("EBITDA 率（模型採用）", "%", lambda i: f"={inref('EBITDA 率', i)}", PCT, GREEN,
+         "＝由下而上 EBITDA 率＋（穩態輸入 − 由下而上 FY30）× 期數 ÷ 4（穩態輸入預設＝由下而上 FY30，差額 0）" if PMW['cost'] == 'bottomUp' else "舊方法：起始→穩態線性（由下而上只作對照）")
+    BU_EB = PM["由下而上 EBITDA 率"]
+    # ---- 每 MW 收入對照 ----
+    r = section(ws, r, "每 MW 收入對照（收入方法：" + ("GPU 小時價格" if PMW['revenue'] == 'gpuHr' else "備案 legacy——每 MW 年收入為輸入，以下為對照列，不入損益") + "）", level=2, collapsed=True)
+    mrow("每 MW 年收入（模型採用，100% 計費時數）", "US$m/MW", lambda i: f"={inref('每 MW 年收入', i)}*{REVSC}*1000", NUM, GREEN, "＝B 區『每 MW 年收入』× 倍數；收入端另乘利用率")
+    mrow("每 MW 年收入（計費後＝× 利用率）", "US$m/MW", lambda i: f"={COLS[i]}{PM['每 MW 年收入（模型採用，100% 計費時數）']}*{inref('利用率', i)}", NUM)
+    mrow("每 MW GPU 數（世代加權）", "顆/MW", lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkRev', 'C')})", NUM1, BLACK, "Tokenomics IF_GPUsPerGW ÷ 1000（× MW 換算）")
+    _hasPx = all((((CO.get('pricing') or {}).get('gpuHr') or {}).get(g) or {}).get('base') is not None for g in GEN)
+    mrow("GPU 小時價格路線：每 MW 年收入", "US$m/MW", (lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkRev', 'C')},{TKR('tkRev', 'F')})*8760/1000000") if _hasPx else (lambda i: "不適用"), NUM, BLACK,
+         "＝Σ 平均在役占比 × 每 MW GPU 數 × GPU 小時合約價 × 8,760 ÷ 10⁶（100% 計費時數）" + ("" if _hasPx else "；company.json → pricing.gpuHr 未填（W1：長約價不足兩個獨立來源）→ 不適用"))
+    mrow("隱含每 GPU 小時價格（反算對照，不是輸入）", "US$/GPU-hr", lambda i: f"={COLS[i]}{PM['每 MW 年收入（模型採用，100% 計費時數）']}*1000000/MAX(1E-9,{COLS[i]}{PM['每 MW GPU 數（世代加權）']}*8760)", USD, BLACK,
+         "＝每 MW 年收入 ÷（每 MW GPU 數 × 8,760）；利用率在收入端另乘，故不再除以利用率")
+    mrow("每 GPU 小時經濟持有成本（GPU 數加權）", "US$/GPU-hr", lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkRev', 'C')},{TKR('tkRev', 'D')})/MAX(1E-9,{COLS[i]}{PM['每 MW GPU 數（世代加權）']})", USD, BLACK,
+         "Tokenomics IF_GPUhrEcon（100% 時數、不含利潤）")
+    mrow("隱含價格 ÷ GPU 小時持有成本", "倍", lambda i: f"={COLS[i]}{PM['隱含每 GPU 小時價格（反算對照，不是輸入）']}/MAX(1E-9,{COLS[i]}{PM['每 GPU 小時經濟持有成本（GPU 數加權）']})", MULT)
+    mrow("每 MW 經濟持有成本（不賠錢下限）", "US$m/MW", lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkRev', 'E')})", NUM, BLACK,
+         "Tokenomics IF_HoldEcon 依在役世代加權（100% 時數、含廠房資本回收；CRWV 廠房走租金，故此線高於 CRWV 的 IT 持有成本）")
+    mrow("每 MW 年收入 ÷ 經濟持有成本", "倍", lambda i: f"={COLS[i]}{PM['每 MW 年收入（模型採用，100% 計費時數）']}/MAX(1E-9,{COLS[i]}{PM['每 MW 經濟持有成本（不賠錢下限）']})", MULT)
+    for _pr in (CO.get('pricing') or {}).get('peerRevPerMw', []):
+        mrow(f"同業｜{_pr['label']}", _pr['unit'], lambda i, v=_pr['value']: v, NUM, BLUE, f"{_pr['source']}（{_pr['date']}）{_pr['tag']}；{_pr.get('note', '')}")
+    for _mr in (CO.get('pricing') or {}).get('marketRefs', []):
+        mrow(f"市場價格｜{_mr['label']}", "US$/GPU-hr", lambda i, v=_mr['value']: v if i == 0 else None, USD, BLUE, f"{_mr['gen']}；{_mr['basis']}；{_mr['source']}（{_mr['date']}）{_mr['tag']}")
+    # ---- 每 MW 資本支出對照 ----
+    r = section(ws, r, "每 MW 資本支出對照（US$m／MW；新增 MW 的世代加權）", level=2, collapsed=True)
+    mrow("每 MW 建置成本（模型採用）", "US$m/MW", lambda i: f"={inref('每 MW 建置成本', i)}", NUM1, GREEN)
+    mrow("Tokenomics IT 設備（IF_CapexIT）", "US$m/MW", lambda i: f"=SUMPRODUCT({_I}{COLS[i]}${FLX['adopt']}:{COLS[i]}${FLX['adopt'] + _NG - 1},{TKR('tkCap', 'C')})", NUM1)
+    mrow("Tokenomics 含廠房合計（IF_CapexTotal；對照）", "US$m/MW", lambda i: f"=SUMPRODUCT({_I}{COLS[i]}${FLX['adopt']}:{COLS[i]}${FLX['adopt'] + _NG - 1},{TKR('tkCap', 'D')})", NUM1, BLACK,
+         "CRWV 機房以租約取得、不含廠房；合計只作對照")
+    mrow("v4.5 舊值（以 FY26 CapEx 指引校準）", "US$m/MW", lambda i: CO['scenarios']['capexTemplate']['costMW'][i], NUM1, BLUE, "舊方法，只作對照")
+    mrow("每 MW 建置成本 ÷ 壽命（在役世代加權；D&A 參考）", "US$m/MW", lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkCap', 'C')})/{LIFE}", NUM)
+    # ---- 最近一季實際對照 ----
+    r = section(ws, r, "最近一季實際對照（10-Q；不強制平衡）", level=2, collapsed=True)
+    mrow("最近一季平均在役 MW", "MW", lambda i: f"={OPENMW}-{CSX['addQ']}/2" if i == 0 else None, NUM0, BLACK, "＝季末主動電力 − 當季新增 ÷ 2")
+    mrow("最近一季現金營運成本（租金前，不含管銷）", "US$bn", lambda i: f"={CSX['costRev']}+{CSX['techInfra']}-{CSX['da']}-{CSX['sbcCostTi']}-{CSX['opLeaseCost']}-{CSX['varLeaseCost']}" if i == 0 else None, NUM, BLACK,
+         "＝營收成本＋技術與基礎設施 − D&A − SBC − 營業租賃成本 − 變動租賃成本")
+    mrow("最近一季每 MW 現金營運成本（年化，不含管銷）", "US$m/MW", lambda i: f"=C{PM['最近一季現金營運成本（租金前，不含管銷）']}*4/C{PM['最近一季平均在役 MW']}*1000" if i == 0 else None, '0.000')
+    mrow("模型由下而上每 MW 現金營運成本（不含管銷）", "US$m/MW", lambda i: "=" + "+".join(f"{COLS[i]}{PM[k]}" for k in ("每 MW 電費（世代加權）", "每 MW IT 維護（世代加權）", "每 MW 人員、軟體、水與耗材", "每 MW 財產稅與保險（只算 IT 部分）")), '0.000')
+    mrow("差距（模型 «P0» − 實際）", "US$m/MW", lambda i: f"=C{PM['模型由下而上每 MW 現金營運成本（不含管銷）']}-C{PM['最近一季每 MW 現金營運成本（年化，不含管銷）']}" if i == 0 else None, '0.000', BOLD,
+         "可能原因：爬坡期閒置產能（分母含尚未計費的 MW）、未揭露的成本項、D&A 未依列別揭露；v5.26 前人員軟體與稅險暫代 0")
+    mrow("最近一季每 MW 年租金（營業＋變動，年化）", "US$m/MW", lambda i: f"=({CSX['opLeaseCost']}+{CSX['varLeaseCost']})*4/C{PM['最近一季平均在役 MW']}*1000" if i == 0 else None, '0.000')
+    mrow("模型每 MW 年租金", "US$m/MW", lambda i: f"={COLS[i]}{PM['租金合計']}/{COLS[i]}{_AT}/{_L(i)}*1000", '0.000')
+    # ---- 彙總表（填入保留列）----
+    _pm = lambda x, i: f"{x}/MAX(1E-9,{COLS[i]}{_AT})/{_L(i)}*1000"
+    _ITMW = lambda i: f"IF({MWB}=2,{COLS[i]}{_AT}/SUMPRODUCT({MIXR(i)},{TKR('tkCap', 'E')}),{COLS[i]}{_AT})"
+    _FACW = lambda i: f"SUMPRODUCT({MIXR(i)},{TKR('tkCap', 'E')})"
+    _rev = lambda i: f"{_C}{COLS[i]}{CAP['totrev']}"
+    _ebd = lambda i: f"{_C}{COLS[i]}{CAP['totrev']}*{inref('EBITDA 率', i)}"
+    SUMF = {
+        "平均在役 MW（IT 關鍵電力）": (lambda i: f"={_ITMW(i)}", "MW", NUM0, "公司 MW 口徑＝IT 時同上；設施口徑時 ÷ IF_FacilityGW"),
+        "平均在役 MW（設施＝IT × IF_FacilityGW）": (lambda i: f"={_ITMW(i)}*{_FACW(i)}", "MW", NUM0, "IF_FacilityGW 依在役世代加權（基準 1.2）"),
+        "每 MW 年收入（算力＋服務）": (lambda i: "=" + _pm(_rev(i), i), "US$m/MW", NUM, "模型期總營收 ÷ 平均在役 MW ÷ 期間長度"),
+        "　其中：算力收入": (lambda i: "=" + _pm(f"{_C}{COLS[i]}{CAP['isrev']}", i), "US$m/MW", NUM, None),
+        "電費": (lambda i: "=" + _pm(f"{COLS[i]}{PM['電費（金額）']}", i), "US$m/MW", NUM, "由下而上明細（下方）"),
+        "IT 維護": (lambda i: "=" + _pm(f"{COLS[i]}{PM['IT 維護（金額）']}", i), "US$m/MW", NUM, None if tk_has('IF_MaintIT') else "暫代值（待 v5.26）"),
+        "人員、軟體、水與耗材": (lambda i: "=" + _pm(f"{COLS[i]}{PM['人員、軟體、水與耗材（金額）']}", i), "US$m/MW", NUM, None if tk_has('IF_StaffSW') else "暫代值 0（待 v5.26）"),
+        "財產稅與保險": (lambda i: "=" + _pm(f"{COLS[i]}{PM['財產稅與保險（金額）']}", i), "US$m/MW", NUM, None if tk_has('IF_TaxIns') else "暫代值 0（待 v5.26）"),
+        "公司管銷與其他": (lambda i: "=" + _pm(f"{COLS[i]}{PM['公司管銷與其他（金額）']}", i), "US$m/MW", NUM, None),
+        "租金": (lambda i: "=" + _pm(f"{COLS[i]}{PM['租金合計']}", i), "US$m/MW", NUM, None),
+        "現金成本合計（含租金）": (lambda i: "=" + _pm(f"({_rev(i)}-{_ebd(i)})", i), "US$m/MW", NUM, "＝收入 − EBITDA（模型採用的 EBITDA 率；由下而上時＝上列各項合計）"),
+        "EBITDA": (lambda i: "=" + _pm(_ebd(i), i), "US$m/MW", NUM, "＝營收 × EBITDA 率（損益與資金共用）"),
+        "D&A（模型車隊折舊）": (lambda i: "=" + _pm(f"{_I}{COLS[i]}${IN['D&A（車隊）']}", i), "US$m/MW", NUM, "模型車隊折舊（期初毛 PP&E＋本期成長型×½）÷ 壽命；在役世代加權的建置成本 ÷ 壽命見『資本支出對照』"),
+        "利息": (lambda i: "=" + _pm(f"{_F}{COLS[i]}{FRR['int']}", i), "US$m/MW", NUM, "存量債務＋瀑布新債利息"),
+        "稅前": (lambda i: f"={COLS[i]}{{EB}}-{COLS[i]}{{DA}}-{COLS[i]}{{IT}}", "US$m/MW", NUM, "＝EBITDA − D&A − 利息"),
+        "每 MW 資本支出（新增 MW 的建置成本）": (lambda i: f"={inref('每 MW 建置成本', i)}*{CAPSC}", "US$m/MW", NUM1, "存量概念（每新增 MW 一次性），與上列年化數字不同"),
+        "每設施 MW 年收入": (lambda i: f"={COLS[i]}{{RV}}*{COLS[i]}{{MI}}/{COLS[i]}{{MF}}", "US$m/MW", NUM, None),
+        "每設施 MW EBITDA": (lambda i: f"={COLS[i]}{{EB}}*{COLS[i]}{{MI}}/{COLS[i]}{{MF}}", "US$m/MW", NUM, None),
+    }
+    for k, nm in enumerate(SUMROWS):
+        rr = sum0 + k; fn, u, fmt, note = SUMF[nm]
+        ws.cell(row=rr, column=1, value=nm).font = BOLD if nm in ("每 MW 年收入（算力＋服務）", "現金成本合計（含租金）", "EBITDA", "稅前") else BLACK
+        ws.cell(row=rr, column=2, value=u).font = SMALL
+        for i in range(5):
+            v = fn(i).replace('{EB}', str(sum0 + SUMROWS.index("EBITDA"))).replace('{DA}', str(sum0 + SUMROWS.index("D&A（模型車隊折舊）"))).replace('{IT}', str(sum0 + SUMROWS.index("利息"))) \
+                .replace('{RV}', str(sum0 + 2)).replace('{MI}', str(sum0)).replace('{MF}', str(sum0 + 1))
+            c = ws.cell(row=rr, column=3 + i, value=v); c.font = BLACK; c.number_format = fmt; c.border = BOX
+        if note: ws.cell(row=rr, column=9, value=note).font = SMALL
+        PM[nm] = rr
+    ws.cell(row=sum0 + len(SUMROWS), column=1, value="讀法：每 MW 收入 − 現金成本（含租金）＝EBITDA；再扣 D&A 與利息＝稅前。W3 前後對照報告直接讀本表。").font = SMALL
+    # C 區 EBITDA 率：由下而上（穩態輸入預設＝由下而上 FY30，差額線性分攤）
+    if PMW['cost'] == 'bottomUp':
+        _wi = wb["輸入與假設"]
+        for i in range(5):
+            _wi.cell(row=IN["EBITDA 率"], column=3 + i, value=f"='每MW經濟性'!{COLS[i]}{BU_EB}+({EBSS}-'每MW經濟性'!$G${BU_EB})*{i}/4")
+        _wi.cell(row=IN["EBITDA 率"], column=9, value="W2 由下而上：＝『每MW經濟性』由下而上 EBITDA 率＋（穩態 − 由下而上 FY30）× 期數 ÷ 4（公式）").font = SMALL
+        _eb_r = int(EBSS.split('$')[-1]); _eb0 = int(EB0.split('$')[-1])
+        _wi.cell(row=_eb_r, column=3, value=f"='每MW經濟性'!G{BU_EB}").font = BLACK
+        _wi.cell(row=_eb_r, column=9, value="W2 由下而上：預設＝由下而上 FY30 EBITDA 率（公式）；改成數值即為 FY30 目標，差額線性分攤到各期（反向 DCF、敏感度用）").font = SMALL
+        _wi.cell(row=_eb0, column=9, value="W2 由下而上模式下不使用（保留為舊方法對照）").font = SMALL
+
 # W1（2026-10-07）：Tokenomics 取數分頁。值取自 company.json → tokenomics.snapshotFile 的版本固定快照（tools/tokenomics/import_tokenomics.py 產生），
 # 藍字輸入格；每個名稱的「基準」值格另建具名範圍 TK_<名稱去掉 IF_／L1_>_<世代代碼>（單值名稱不加世代），供 W2 公式引用。W1 不得讓既有公式引用這些格。
 from openpyxl.workbook.defined_name import DefinedName as _DN
@@ -3041,12 +3331,12 @@ for s in wb.worksheets:
     if s.title not in ("導覽", "來源", "摘要"):
         s.freeze_panes = "C5"
 
-_order = ["導覽", "摘要", "輸入與假設", "各期收支", "季度追蹤", "運營_產能與收入", "運營_站點", "資產負債_既有債務", "資產負債_新債與新股",
+_order = ["導覽", "摘要", "輸入與假設", "各期收支", "季度追蹤", "運營_產能與收入", "運營_站點"] + (["每MW經濟性"] if FL else []) + ["資產負債_既有債務", "資產負債_新債與新股",
           "資產負債_租賃承諾", "損益", "評價_DCF與目標價", "評價_反向DCF", "評價_可比公司", "檢查_連動", "檢查_版本紀錄", "來源"] + (["Tokenomics_取數"] if TK else [])
 wb._sheets = [wb[n] for n in _order] + [w for w in wb.worksheets if w.title not in _order]
 _tab = {"摘要": "C00000", "輸入與假設": "1F3864", "各期收支": "0F6B4C", "季度追蹤": "0F6B4C", "運營_產能與收入": "0F5C61", "運營_站點": "0F5C61",
         "資產負債_既有債務": "5B5778", "資產負債_新債與新股": "5B5778", "資產負債_租賃承諾": "5B5778",
-        "損益": "C4A35A", "評價_DCF與目標價": "9F1239", "評價_可比公司": "9F1239", "評價_反向DCF": "9F1239", "檢查_連動": "808080", "檢查_版本紀錄": "808080", "來源": "808080", **({"Tokenomics_取數": "808080"} if TK else {})}
+        "損益": "C4A35A", "評價_DCF與目標價": "9F1239", "評價_可比公司": "9F1239", "評價_反向DCF": "9F1239", "檢查_連動": "808080", "檢查_版本紀錄": "808080", "來源": "808080", **({"Tokenomics_取數": "808080"} if TK else {}), **({"每MW經濟性": "0F5C61"} if FL else {})}
 for _n, _c in _tab.items():
     wb[_n].sheet_properties.tabColor = _c
 for _ws in wb.worksheets:

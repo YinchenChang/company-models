@@ -6,6 +6,7 @@ module.exports = function loadEngine(dir = __dirname) {
   const cal = JSON.parse(require('child_process').execFileSync('python3', [path.join(dir, 'calendar_q.py'), dir], { encoding: 'utf8' }));
   Object.assign(co, { cal, periods: cal.periods, periodYears: cal.periodYears }); co.valuation.optT = cal.tEnd[cal.tEnd.length - 1];
   co.consensus = JSON.parse(fs.readFileSync(path.join(dir, co.meta.consensusFile), 'utf8'));  // v4.3：與 build_html_portable.py 相同，共識資料併入 COMPANY_DATA
+  if (co.tokenomics) { const tk = JSON.parse(fs.readFileSync(path.join(dir, co.tokenomics.snapshotFile), 'utf8')); co.tkSnap = { source: tk.source, items: tk.items }; }  // W2：與 build_html_portable.py 相同，Tokenomics 快照內嵌
   (0, eval)('var COMPANY_DATA = ' + JSON.stringify(co) + ';\n' +
     fs.readFileSync(path.join(dir, 'segA.js'), 'utf8') + '\nvar ' + fs.readFileSync(path.join(dir, 'segB.js'), 'utf8'));  // segB 在建置中接續模板宣告鏈，node 中補 var
 };

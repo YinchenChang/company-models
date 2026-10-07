@@ -48,6 +48,77 @@ var PERIODS = COMPANY_DATA.periods,
   LEASE_FACTS = COMPANY_DATA.leases.facts,
   DEFAULTS = Object.fromEntries(Object.entries(structuredClone(COMPANY_DATA.defaults)).flatMap(([k, v]) => k === `intCal` ? [[k, v], [`a`, structuredClone(SCENARIOS.base.a)]] : [[k, v]])),
   Qk = DEFAULTS; // 模板函式庫片段（mid1–mid3）仍以 Qk 引用預設值，保留別名
+// ===== W2：每 MW 經濟性（世代組合 × Tokenomics 快照 × 公司專屬輸入；Excel「輸入與假設」B 區後「世代組合」、「每MW經濟性」頁同一邏輯）=====
+// 方法開關 company.json → methodology.perMw：capex（tokenomics｜legacy）、cost（bottomUp｜ebitdaPct）、revenue（gpuHr｜legacy）。
+// 全為 legacy（ebitdaPct）時與 v4.5 完全相同，畫面不顯示 W2 內容。Tokenomics 值只讀建置時內嵌的快照（COMPANY_DATA.tkSnap），不寫死數字。
+var PMWQ = Object.assign({ capex: `legacy`, cost: `ebitdaPct`, revenue: `legacy` }, (COMPANY_DATA.methodology || {}).perMw || {}),
+  PMW_ONQ = PMWQ.capex !== `legacy` || PMWQ.cost !== `ebitdaPct` || PMWQ.revenue !== `legacy`,
+  FLEETQ = COMPANY_DATA.fleet || null,
+  GENQ = FLEETQ ? FLEETQ.generations : [],
+  TKSQ = (COMPANY_DATA.tkSnap || {}).items || {},
+  MWBASISQ = COMPANY_DATA.meta.mwBasis || `IT`,
+  PRICINGQ = COMPANY_DATA.pricing || {},
+  COSTSQ = COMPANY_DATA.costs || {},
+  TK_PHQ = [`IF_MaintIT`, `IF_StaffSW`, `IF_TaxIns`, `IF_DeprLifeIT`], // 可用暫代值的名稱（待 Tokenomics v5.26）；其餘名稱缺少時建置失敗
+  COSTMW_LEGQ = [...COMPANY_DATA.scenarios.capexTemplate.costMW]; // v4.5 舊值（對照列）
+function tkHasQ(n) { let it = TKSQ[n]; return !!it && !it.missing }
+function tkQ(n, g, cs) { // Tokenomics 快照值：成本情境 cs＝低成本／基準／高成本（單值名稱的低／高取 range）
+  let it = TKSQ[n]; cs = cs || `基準`;
+  if (!it || it.missing) return null;
+  if (it.kind === `gen_cost`) return it.values[g] ? it.values[g][cs] : null;
+  return cs === `基準` ? it.values : ((it.range || {})[cs.slice(0, 1)] ?? it.values)
+}
+function mwConvQ(g) { return MWBASISQ === `facility` ? 1 / tkQ(`IF_FacilityGW`, g) : 1 } // 每 IT MW → 每公司 MW（設施口徑：IT MW＝設施 MW ÷ IF_FacilityGW；基準值）
+function tkMwQ(n, g, cs) { let x = tkQ(n, g, cs); return x == null ? null : x * mwConvQ(g) } // 每 GW 值 ＝ 每 MW 的百萬美元值（換成公司 MW 口徑）
+function wMixQ(mx, f) { return GENQ.reduce((a, g, j) => a + (mx[j] || 0) * ((mx[j] || 0) ? f(g, j) : 0), 0) } // 依世代占比加權（占比 0 的世代不取值）
+function tkNeedQ() { // 目前方法需要、快照卻沒有的 Tokenomics 名稱（只列可暫代者；檢查頁警告「成本為暫代值」）
+  let need = [];
+  PMWQ.capex === `tokenomics` && need.push(`IF_DeprLifeIT`);
+  PMWQ.cost === `bottomUp` && need.push(`IF_MaintIT`, `IF_StaffSW`, `IF_TaxIns`);
+  return need.filter(n => !tkHasQ(n))
+}
+var TK_MISSQ = tkNeedQ();
+function newMixQ(e) { let A = FLEETQ.newMixAlt; return (e && e.mixAlt && A ? A.mix : FLEETQ.newMix).map(m => GENQ.map(g => m[g] || 0)) }
+function capexTkQ(e) { // 每 MW 建置成本（US$m/MW）＝Σ 新增世代占比 × IF_CapexIT（不含廠房：CRWV 機房以租約取得）
+  let cs = (e && e.tkCase) || `基準`;
+  return newMixQ(e).map(mx => wMixQ(mx, g => tkMwQ(`IF_CapexIT`, g, cs)))
+}
+function lifeTkQ() { // GPU 經濟壽命：IF_DeprLifeIT 依期初在役世代加權、取整數（v5.26 前暫代＝company.json defaults.gpuLife）
+  if (!tkHasQ(`IF_DeprLifeIT`)) return COMPANY_DATA.defaults.gpuLife;
+  return Math.round(GENQ.reduce((a, g) => a + (FLEETQ.openMix.mix[g] || 0) * tkQ(`IF_DeprLifeIT`, g), 0))
+}
+function sgaPctQ(e) { // 公司管銷率（扣 D&A、SBC）＝（銷售行銷 − SBC ＋ 一般管理 − SBC）÷ 營收，最近一季實際，各期持平 [Derived]
+  let q = LATEST_Q, b = (e && e.sgaBasis) || COSTSQ.sgaBasis || `exSbc`;
+  return b === `gaap` ? (q.sm + q.ga) / q.revenue : (q.sm - q.smSbc + q.ga - q.gaSbc) / q.revenue
+}
+if (PMWQ.capex === `tokenomics`) { // 建置成本與壽命改為 Tokenomics 推導（輸入格仍可手動覆寫）
+  let c = capexTkQ(null);
+  for (let k of [`low`, `base`, `high`]) SCENARIOS[k].a.costMW = [...c];
+  DEFAULTS.a.costMW = [...c];
+  DEFAULTS.gpuLife = lifeTkQ()
+}
+PMWQ.cost === `bottomUp` && (DEFAULTS.ebSteady = null); // 由下而上：穩態 EBITDA 率預設＝由下而上的 FY30 值（null）；輸入數值時視為 FY30 目標，差額線性分攤
+
+function ebPathQ(e, d) { return PMWQ.cost === `bottomUp` ? [d.years[0].ebM, d.years[4].ebM] : [e.ebStart, e.ebSteady] } // W2：畫面上的 EBITDA 率起點／FY30（由下而上時取模型路徑）
+function fleetQ(e, acc) { // 世代組合：期初（最新季末）在役機隊 → 各期期末／平均在役 MW（依世代）；汰換由最舊世代先出、以當期新增世代補回
+  if (!FLEETQ) return null;
+  let O = FLEETQ.openMix, NM = newMixQ(e),
+    VIN = Object.fromEntries(Object.entries(e.mwYearEnd).map(([y, m]) => [y, m - (e.mwYearEnd[y - 1] ?? 0)])),
+    prev = GENQ.map(g => O.activeMW * (O.mix[g] || 0)), start = [], end = [], avg = [], add = [], ret = [];
+  for (let n = 0; n < 5; n++) {
+    let pt = prev.reduce((a, b) => a + b, 0), rt = Math.min(VIN[PERIOD_FY[n] - e.gpuLife] || 0, pt), ad = Math.max(0, acc[n] - pt), left = rt,
+      cur = prev.map(x => { let k = Math.min(x, left); return left -= k, x - k });
+    cur = cur.map((x, j) => x + NM[n][j] * (ad + rt));
+    start.push(prev), end.push(cur), avg.push(cur.map((x, j) => (prev[j] + x) / 2)), add.push(ad), ret.push(rt), prev = cur
+  }
+  let tot = avg.map(a => a.reduce((x, y) => x + y, 0));
+  return { start, end, avg, tot, add, ret, nm: NM, endTot: end.map(a => a.reduce((x, y) => x + y, 0)), mix: avg.map((a, n) => a.map(x => x / Math.max(tot[n], 1e-9))) }
+}
+function gpuPerMwQ(mx) { return wMixQ(mx, g => tkMwQ(`IF_GPUsPerGW`, g) / 1e3) } // 每公司 MW GPU 數（依世代加權）
+function revGpuQ(e, F) { // 每 MW 年收入（US$bn/MW，100% 計費時數；利用率在收入端另乘）＝Σ 平均在役占比 × 每 MW GPU 數 × GPU 小時合約價 × 8,760 ÷ 10⁹
+  let P = PRICINGQ.gpuHr || {}, k = (e && e.pxCase) || `base`;
+  return F.mix.map(mx => wMixQ(mx, g => P[g] && P[g][k] != null ? tkMwQ(`IF_GPUsPerGW`, g) / 1e3 * P[g][k] * 8760 / 1e9 : NaN))
+}
 function siteBenchQ(e) {
   let t = e.filter(e => !e.residual && e.contract && e.years && e.planned);
   return t.reduce((e, t) => e + t.contract / t.years, 0) / Math.max(t.reduce((e, t) => e + t.planned, 0), 1) * 1e3
@@ -207,7 +278,113 @@ function uA(e, t) {
   return Math.max(0, n + r)
 }
 
+function revPassQ(e, t, r) { // W2：與 runFunding 同一組收入算式（由下而上的成本率需要各期營收；算式順序相同，數值逐位相同）
+  let i = e.rp / 100, L = PERIOD_YEARS[r],
+    o = e.rpoOpen * (RPO_BUCKET_W[r] / RPO_SCHEDULED_SHARE) * i + e.rpoPendingAdd * RPO_Q3ADD_W[r] * i,
+    c = r === 0 ? e.billableOpen : t.billable[r - 1],
+    l = e.useAvgMw ? (c + t.billable[r]) / 2 : t.billable[r],
+    u = l * t.revMW[r] * (e.revScale ?? 1) * (t.util[r] / 100) * L,
+    d = Math.max(0, o - u), f = o - d, nR = Math.max(0, u - o) * (t.fill[r] / 100);
+  return f + nR + e.services[r]
+}
+
+function buCostQ(e, t, F, r, rev, S) { // W2：由下而上營運成本（租金前；US$bn）——電費、IT 維護、人員軟體、稅險依平均在役世代加權 × 平均在役 MW；管銷＝營收 × 管銷率
+  let L = PERIOD_YEARS[r], M = F.tot[r], mx = F.mix[r], cs = e.tkCase || `基準`,
+    pw = wMixQ(mx, g => tkMwQ(`IF_PowerCost`, g, cs)),
+    mt = tkHasQ(`IF_MaintIT`) ? wMixQ(mx, g => tkMwQ(`IF_MaintIT`, g, cs)) : t.maint[r],
+    st = tkHasQ(`IF_StaffSW`) ? wMixQ(mx, g => tkMwQ(`IF_StaffSW`, g, cs)) : 0,
+    tx = tkHasQ(`IF_TaxIns`) ? wMixQ(mx, g => tkMwQ(`IF_TaxIns`, g, cs) * tkQ(`IF_CapexIT`, g, cs) / tkQ(`IF_CapexTotal`, g, cs)) : 0,
+    k = M / 1e3 * L, R = Math.max(rev, .01), sp = sgaPctQ(e), sga = rev * sp, cash = (pw + mt + st + tx) * k + sga;
+  return { mw: M, pwMW: pw, mtMW: mt, stMW: st, txMW: tx, sgaPct: sp, power: pw * k, maint: mt * k, staff: st * k, tax: tx * k, sga, cash, rev, rent: S, ebr: 1 - cash / R, eb: 1 - cash / R - S / R }
+}
+
+function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」頁同列名、同算式；cmp31 逐列比對）。回傳 { 區段: [[列名, 單位, 5 期值, 說明]] }
+  let F = d.fleet;
+  if (!F) return null;
+  let y = d.years, L = PERIOD_YEARS, cs = e.tkCase || `基準`, I5 = [0, 1, 2, 3, 4], G = GENQ, NG = G.length,
+    M = F.tot, mx = F.mix, nm = F.nm,
+    pm = (x, i) => x / Math.max(1e-9, M[i]) / L[i] * 1e3,
+    fac = mx.map(m => wMixQ(m, g => tkQ(`IF_FacilityGW`, g))),
+    itMw = I5.map(i => MWBASISQ === `facility` ? M[i] / fac[i] : M[i]),
+    gpu = mx.map(m => gpuPerMwQ(m)),
+    gEcon = mx.map((m, i) => wMixQ(m, g => tkMwQ(`IF_GPUsPerGW`, g) / 1e3 * tkQ(`IF_GPUhrEcon`, g, cs)) / Math.max(1e-9, gpu[i])),
+    hold = mx.map(m => wMixQ(m, g => tkMwQ(`IF_HoldEcon`, g, cs))),
+    revIn = I5.map(i => d.m.revMW[i] * (e.revScale ?? 1) * 1e3),
+    px = PRICINGQ.gpuHr || {}, hasPx = G.every(g => px[g] && px[g].base != null),
+    gpuRev = hasPx ? revGpuQ(e, F).map(x => x * 1e3) : I5.map(() => `不適用`),
+    imp = I5.map(i => revIn[i] * 1e6 / Math.max(1e-9, gpu[i] * 8760)),
+    capIT = nm.map(m => wMixQ(m, g => tkMwQ(`IF_CapexIT`, g, cs))),
+    capTot = nm.map(m => wMixQ(m, g => tkMwQ(`IF_CapexTotal`, g, cs))),
+    buM = (k) => y.map(t => t.bu[k]),
+    lq = LATEST_Q, oMW = FLEETQ.openMix.activeMW, qMW = oMW - CALL_FACTS.activeAddQ2 / 2,
+    qCost = lq.costRev + lq.techInfra - lq.da - lq.sbcCostTi - lq.opLeaseCost - lq.varLeaseCost,
+    qPM = qCost * 4 / qMW * 1e3, buPM = I5.map(i => y[i].bu.pwMW + y[i].bu.mtMW + y[i].bu.stMW + y[i].bu.txMW),
+    NA = [null, null, null, null],
+    sum = [
+      [`平均在役 MW（IT 關鍵電力）`, `MW`, itMw],
+      [`平均在役 MW（設施＝IT × IF_FacilityGW）`, `MW`, I5.map(i => itMw[i] * fac[i])],
+      [`每 MW 年收入（算力＋服務）`, `US$m/MW`, I5.map(i => pm(y[i].totRev, i))],
+      [`　其中：算力收入`, `US$m/MW`, I5.map(i => pm(y[i].isRev, i))],
+      [`電費`, `US$m/MW`, I5.map(i => pm(y[i].bu.power, i))],
+      [`IT 維護`, `US$m/MW`, I5.map(i => pm(y[i].bu.maint, i))],
+      [`人員、軟體、水與耗材`, `US$m/MW`, I5.map(i => pm(y[i].bu.staff, i))],
+      [`財產稅與保險`, `US$m/MW`, I5.map(i => pm(y[i].bu.tax, i))],
+      [`公司管銷與其他`, `US$m/MW`, I5.map(i => pm(y[i].bu.sga, i))],
+      [`租金`, `US$m/MW`, I5.map(i => pm(y[i].lease, i))],
+      [`現金成本合計（含租金）`, `US$m/MW`, I5.map(i => pm(y[i].totRev - y[i].ebitdaPL, i))],
+      [`EBITDA`, `US$m/MW`, I5.map(i => pm(y[i].ebitdaPL, i))],
+      [`D&A（模型車隊折舊）`, `US$m/MW`, I5.map(i => pm(y[i].daFleet, i))],
+      [`利息`, `US$m/MW`, I5.map(i => pm(y[i].interest, i))],
+      [`稅前`, `US$m/MW`, I5.map(i => pm(y[i].ebitdaPL, i) - pm(y[i].daFleet, i) - pm(y[i].interest, i))],
+      [`每 MW 資本支出（新增 MW 的建置成本）`, `US$m/MW`, I5.map(i => e.a.costMW[i] * (e.capexScale ?? 1))],
+      [`每設施 MW 年收入`, `US$m/MW`, I5.map(i => pm(y[i].totRev, i) * itMw[i] / (itMw[i] * fac[i]))],
+      [`每設施 MW EBITDA`, `US$m/MW`, I5.map(i => pm(y[i].ebitdaPL, i) * itMw[i] / (itMw[i] * fac[i]))]
+    ],
+    fleet = [
+      [`期初在役 MW 合計`, `MW`, F.start.map(a => a.reduce((x, z) => x + z, 0))],
+      ...G.map((g, j) => [`期初在役 MW｜${g}`, `MW`, F.start.map(a => a[j])]),
+      [`汰換 MW（壽命到期批次，最舊世代先出）`, `MW`, F.ret],
+      [`新增 MW（期末 Accepted − 期初，不為負）`, `MW`, F.add],
+      ...G.map((g, j) => [`期末在役 MW｜${g}`, `MW`, F.end.map(a => a[j])]),
+      [`期末在役 MW 合計`, `MW`, F.endTot],
+      ...G.map((g, j) => [`平均在役 MW｜${g}`, `MW`, F.avg.map(a => a[j])]),
+      [`平均在役 MW 合計`, `MW`, M],
+      ...G.map((g, j) => [`平均在役占比｜${g}`, `%`, mx.map(a => a[j])])
+    ],
+    bu = [
+      [`每 MW 電費（世代加權）`, `US$m/MW`, buM(`pwMW`)], [`每 MW IT 維護（世代加權）`, `US$m/MW`, buM(`mtMW`)],
+      [`每 MW 人員、軟體、水與耗材`, `US$m/MW`, buM(`stMW`)], [`每 MW 財產稅與保險（只算 IT 部分）`, `US$m/MW`, buM(`txMW`)],
+      [`電費（金額）`, `US$bn`, buM(`power`)], [`IT 維護（金額）`, `US$bn`, buM(`maint`)], [`人員、軟體、水與耗材（金額）`, `US$bn`, buM(`staff`)], [`財產稅與保險（金額）`, `US$bn`, buM(`tax`)],
+      [`模型期總營收（算力＋服務）`, `US$bn`, buM(`rev`)], [`管銷率`, `%`, buM(`sgaPct`)], [`公司管銷與其他（金額）`, `US$bn`, buM(`sga`)],
+      [`現金營運成本合計（租金前）`, `US$bn`, buM(`cash`)], [`由下而上 EBITDAR 率`, `%`, buM(`ebr`)], [`租金合計`, `US$bn`, buM(`rent`)],
+      [`由下而上 EBITDA 率`, `%`, buM(`eb`)], [`EBITDA 率（模型採用）`, `%`, y.map(t => t.ebM)]
+    ],
+    rev = [
+      [`每 MW 年收入（模型採用，100% 計費時數）`, `US$m/MW`, revIn], [`每 MW 年收入（計費後＝× 利用率）`, `US$m/MW`, I5.map(i => revIn[i] * d.m.util[i] / 100)],
+      [`每 MW GPU 數（世代加權）`, `顆/MW`, gpu], [`GPU 小時價格路線：每 MW 年收入`, `US$m/MW`, gpuRev],
+      [`隱含每 GPU 小時價格（反算對照，不是輸入）`, `US$/GPU-hr`, imp], [`每 GPU 小時經濟持有成本（GPU 數加權）`, `US$/GPU-hr`, gEcon],
+      [`隱含價格 ÷ GPU 小時持有成本`, `倍`, I5.map(i => imp[i] / Math.max(1e-9, gEcon[i]))],
+      [`每 MW 經濟持有成本（不賠錢下限）`, `US$m/MW`, hold], [`每 MW 年收入 ÷ 經濟持有成本`, `倍`, I5.map(i => revIn[i] / Math.max(1e-9, hold[i]))],
+      ...(PRICINGQ.peerRevPerMw || []).map(p => [`同業｜${p.label}`, p.unit, I5.map(() => p.value)]),
+      ...(PRICINGQ.marketRefs || []).map(p => [`市場價格｜${p.label}`, `US$/GPU-hr`, [p.value, ...NA]])
+    ],
+    cap = [
+      [`每 MW 建置成本（模型採用）`, `US$m/MW`, [...e.a.costMW]], [`Tokenomics IT 設備（IF_CapexIT）`, `US$m/MW`, capIT],
+      [`Tokenomics 含廠房合計（IF_CapexTotal；對照）`, `US$m/MW`, capTot], [`v4.5 舊值（以 FY26 CapEx 指引校準）`, `US$m/MW`, [...COSTMW_LEGQ]],
+      [`每 MW 建置成本 ÷ 壽命（在役世代加權；D&A 參考）`, `US$m/MW`, mx.map(m => wMixQ(m, g => tkMwQ(`IF_CapexIT`, g, cs)) / e.gpuLife)]
+    ],
+    q2 = [
+      [`最近一季平均在役 MW`, `MW`, [qMW, ...NA]], [`最近一季現金營運成本（租金前，不含管銷）`, `US$bn`, [qCost, ...NA]],
+      [`最近一季每 MW 現金營運成本（年化，不含管銷）`, `US$m/MW`, [qPM, ...NA]], [`模型由下而上每 MW 現金營運成本（不含管銷）`, `US$m/MW`, buPM],
+      [`差距（模型 ${PERIODS[0]} − 實際）`, `US$m/MW`, [buPM[0] - qPM, ...NA]],
+      [`最近一季每 MW 年租金（營業＋變動，年化）`, `US$m/MW`, [(lq.opLeaseCost + lq.varLeaseCost) * 4 / qMW * 1e3, ...NA]],
+      [`模型每 MW 年租金`, `US$m/MW`, I5.map(i => pm(y[i].lease, i))]
+    ];
+  return { sum, fleet, bu, rev, cap, q2 }
+}
+
 function runFunding(e) {
+  PMWQ.capex === `tokenomics` && (e.tkCase || e.mixAlt) && (e = { ...e, a: { ...e.a, costMW: capexTkQ(e) } }); // W2 敏感度：成本情境／世代組合改變時重算建置成本
   let t = nA(e),
     n = tA({
       ...e,
@@ -225,6 +402,9 @@ function runFunding(e) {
       (t, n) => (VIN[t - e.gpuLife] || 0) * e.a.costMW[n] * (e.capexScale ?? 1) / 1e3),
     CXG = CXF.map((t, n) => n === 0 ? Math.max(t, e.capexFloorFY0 ?? 0) - ACTUAL_1H.capex : t),
     CX = CXG.map((e, t) => e + REF[t]),
+    FQ = fleetQ(e, t.accepted), // W2：世代組合（legacy 組合只作對照，不影響任何數字）
+    _gh = PMWQ.revenue === `gpuHr` && (t.revMW = revGpuQ(e, FQ)),
+    BUQ = FQ ? PERIODS.map((n, r) => buCostQ(e, t, FQ, r, revPassQ(e, t, r), LEASE_CASH_ON_BAL[r] + e.a.newLease[r])) : null,
     PPE = [],
     DAF = CXG.map((t, n) => {
       let r = n === 0 ? e.ppeOpen : PPE[n - 1] + CXG[n - 1];
@@ -262,7 +442,7 @@ function runFunding(e) {
         x = e.a.newLease[r],
         S = b + x,
         svc = e.services[r],
-        ebM = e.ebStart + (e.ebSteady - e.ebStart) * r / 4,
+        ebM = PMWQ.cost === `bottomUp` ? BUQ[r].eb + (e.ebSteady != null ? (e.ebSteady - BUQ[4].eb) * r / 4 : 0) : e.ebStart + (e.ebSteady - e.ebStart) * r / 4,
         totRev = f + nR + svc,
         cm = ebM + S / Math.max(totRev, .01),
         g = h * cm,
@@ -273,7 +453,7 @@ function runFunding(e) {
         y = _ - v,
         C = t.accepted[r] * 8760 * t.pue[r] * t.power[r] / 1e9 * L,
         w = t.accepted[r] * t.maint[r] / 1e3 * L,
-        T = e.overlay ? C + w : 0,
+        T = e.overlay && PMWQ.cost !== `bottomUp` ? C + w : 0, // W2：由下而上已含電費與維護，overlay 自動停用
         O = e.includeDebt ? DEBT_AMORT[r] : 0,
         k = r === 0 && e.includeAtm ? e.atm : 0,
         A = g + nC + svcCash + v,
@@ -383,7 +563,8 @@ function runFunding(e) {
         avgBillable: l,
         onBalLease: b,
         offLease: x,
-        sourcesOp: A
+        sourcesOp: A,
+        bu: BUQ ? BUQ[r] : null
       }
     }),
     hOp = ACTUAL_1H.cfo - ACTUAL_1H.cashCapex - ACTUAL_1H.jv,
@@ -425,6 +606,13 @@ function runFunding(e) {
     severity: `ok`,
     title: `H1 新取得營業 ROU $8.36bn`,
     detail: `ROU＝使用權資產。上半年因起租入帳 8.359bn（ROU 由 8.231 增至 16.595）；同期現金租賃支付僅 0.748bn。$35.5bn 尚未 commence，還沒有 ROU。`
+  });
+  PMW_ONQ && TK_MISSQ.length && _({ // W2：缺漏時顯示、Tokenomics 補齊名稱後自動消失（Excel「檢查_連動」同一列）
+    id: `tk-missing`,
+    ok: !1,
+    severity: `watch`,
+    title: `Tokenomics 名稱缺漏 ${TK_MISSQ.length} 項，成本為暫代值`,
+    detail: `${TK_MISSQ.join(`、`)} 尚未在 Tokenomics ${(COMPANY_DATA.tkSnap || { source: {} }).source.version || ``} 提供（待 v5.26）。暫代：IT 維護＝輸入頁「維護成本」（CRWV 現值）、人員軟體與稅險＝0、GPU 經濟壽命＝${COMPANY_DATA.defaults.gpuLife} 年。Tokenomics 補齊後重抓快照即自動改用正式值。`
   });
   let v = o[0].gross,
     y = v >= CALL_FACTS.capexLo - LATEST_Q.capexH1 - .5 && v <= CALL_FACTS.capexHi - LATEST_Q.capexH1 + .5;
@@ -519,7 +707,7 @@ function runFunding(e) {
     ok: o.every(e => Math.abs(e.cashEbitda + e.creditAdj - e.ebitdaPL) < .01),
     severity: `ok`,
     title: `資金與損益同一組 EBITDA：FY30 EBITDA 率 ${(o[4].ebM*100).toFixed(1)}%、EBITDAR 率 ${(o[4].cashMargin*100).toFixed(1)}%`,
-    detail: `EBITDA 率由 ${(e.ebStart*100).toFixed(0)}%（Q2 實際）線性爬升至 FY30 ${(e.ebSteady*100).toFixed(0)}%（穩態）。資金模型用 EBITDAR 率＝EBITDA 率＋租金÷營收（因租金在支出端另列），非算力服務現金＝服務營收×同一 EBITDAR 率。恆等式：現金 EBITDA（營運來源不含預付 − 租金）＋信用損失調整＝損益 EBITDA，五期皆成立。`
+    detail: `${PMWQ.cost === `bottomUp` ? `EBITDA 率由下而上推導（Tokenomics 電費、IT 維護等 × 平均在役 MW＋管銷率 ${(sgaPctQ(e)*100).toFixed(1)}%；EBITDAR 率 − 租金 ÷ 營收）：${PERIODS[0]} ${(o[0].ebM*100).toFixed(1)}% → ${PERIODS[4]} ${(o[4].ebM*100).toFixed(1)}%。` : `EBITDA 率由 ${(e.ebStart*100).toFixed(0)}%（Q2 實際）線性爬升至 FY30 ${(e.ebSteady*100).toFixed(0)}%（穩態）。`}資金模型用 EBITDAR 率＝EBITDA 率＋租金÷營收（因租金在支出端另列），非算力服務現金＝服務營收×同一 EBITDAR 率。恆等式：現金 EBITDA（營運來源不含預付 − 租金）＋信用損失調整＝損益 EBITDA，五期皆成立。`
   }), _({
     id: `capex-mw`,
     ok: o[0].capexFull >= 35 && o[0].capexFull <= 39,
@@ -659,6 +847,7 @@ function runFunding(e) {
     checks: g,
     sites: n,
     m: t,
+    fleet: FQ,
     leaseTail: c
   }
 }
@@ -722,7 +911,7 @@ function reverseDcf(e, v) {
     rev30: e.m.revMW[4] * (e.revScale ?? 1) * 1e3,
     util30: e.m.util[4] / 100,
     cost30: e.a.costMW[4] * (e.capexScale ?? 1),
-    eb30: e.ebSteady
+    eb30: e.ebSteady ?? base.d.years[4].ebM // W2 由下而上：穩態預設＝由下而上 FY30
   }
 }
 
