@@ -210,6 +210,11 @@
    0.971,
    10.882
   ],
+  "liability": {
+   "discRate": 0.057,
+   "tailYears": 12,
+   "note": "v0.2：租賃負債（每期末）＝剩餘租金現值。折現率＝10-K FY2026 營業／融資租賃加權平均折現率 5.7%（事實總帳 lease.discRate.fy26）[Verified]；在帳租約＝10-Q 到期表各期現金（期中付款）＋模型期後尾端 39.283 平均分 12 年（10-K 營業租賃加權平均剩餘期限 12 年）；未起租租約只計已起租部分（每筆季末付租）。評價日在帳現值 43.1 對 10-Q 營業＋融資租賃負債 43.8（−1.6%）。"
+  },
   "uncommenced": {
    "startQ": 0,
    "quarters": 11,
@@ -1063,8 +1068,8 @@
   "debtBacklog": 0.5,
   "delayPenalty": 0,
   "delayPenaltyNote": "v0.2：延誤罰則或服務抵減＝延誤期間「應計費而未計費」營收（未延誤容量上限 − 延誤後容量上限）的此比例，列為營業費用（扣 EBITDA、營運來源、稅基與債務上限）；預設 0：公司未揭露合約條款（不存在／未揭露）；敏感度 5%／10% [Assumed]。客戶預付不因延誤退還（預設；退款風險列已知限制）。",
-  "debtCapBasis": "ebitda",
-  "debtEbitdaMax": 4.0,
+  "debtCapBasis": "leaseAdj",
+  "debtEbitdaMax": 4.5,
   "ctrTerm": 3,
   "minCash": 10,
   "eqPx": 144.77,

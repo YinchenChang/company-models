@@ -224,6 +224,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `leases.afterFY30` | 已入帳租約在模型期之後還要付的租金合計 | US$bn | 39.283 | 必改 |
 | `leases.facts.onBal` | 已入帳租約未折現付款合計 | US$bn | 63.245 | 必改 |
 | `leases.facts.notCommenced` | 已簽約但尚未起租的租約（表外） | US$bn | 288 | 必改 |
+| `leases.liability.discRate` | 租賃負債折現率（10-K 加權平均；v0.2） | 比例 | 0.057 | 必改 |
+| `leases.liability.tailYears` | 在帳到期表模型期後尾端的平均分攤年數（租賃負債用；v0.2） | 年 | 12 | 檢查 |
+| `leases.liability.note` | 租賃負債口徑說明（v0.2） | 文字 | v0.2：租賃負債（每期末）＝剩餘租金現值。折現率＝… | 必改 |
 | `leases.uncommenced.startQ` | 未起租租賃自評價日後第幾季開始起租（0＝首期第一季） | 季 | 0 | 必改 |
 | `leases.uncommenced.quarters` | 未起租租賃平均分攤起租的季數 | 季 | 11 | 必改 |
 | `leases.uncommenced.termYears` | 每筆未起租租賃的租期（直線付租） | 年 | 17 | 檢查 |
@@ -458,8 +461,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.cashTaxRate` | 類現金流量的現金稅率：稅 ＝ 稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（v0.1b；虧損或 NOL 公司填 0） | 比例 | 0.151 | 檢查 |
 | `defaults.delayPenalty` | 延誤罰則／服務抵減：延誤期間應計費而未計費營收的比例，列為營業費用（預設 0＝未揭露；v0.2） | 比例 | 0 | 檢查 |
 | `defaults.delayPenaltyNote` | delayPenalty 的依據說明（v0.2） | 文字 | v0.2：延誤罰則或服務抵減＝延誤期間「應計費而未計… | 必改 |
-| `defaults.debtCapBasis` | 瀑布新債的上限基準：ebitda＝總債務 ≤ 倍數 × 當期 EBITDA（年化；投資級上限）；backlog＝模板的債務／backlog（Oracle v0.1b） | 代碼 | ebitda | 檢查 |
-| `defaults.debtEbitdaMax` | 投資級上限：總債務 ÷ 當期 EBITDA 的上限倍數（debtCapBasis＝ebitda 時使用） | 倍 | 4 | 檢查 |
+| `defaults.debtCapBasis` | 瀑布新債的上限基準：leaseAdj＝(總債務＋租賃負債) ≤ 倍數 ×(EBITDA＋租金)（年化；S&P 口徑近似的投資級上限，v0.2）；ebitda＝總債務 ≤ 倍數 × 當期 EBITDA（v0.1b）；backlog＝模板的債務／backlog | 代碼 | leaseAdj | 檢查 |
+| `defaults.debtEbitdaMax` | 投資級上限倍數：leaseAdj＝調整後槓桿上限（S&P BBB- 降評門檻 4.5×，v0.2）；ebitda＝總債務 ÷ 當期 EBITDA 上限 | 倍 | 4.5 | 檢查 |
 | `defaults.dividend.perShareQ` | 普通股每股每季股利（Oracle v0.1b；不發股利的公司刪除 dividend 區段） | US$ | 0.5 | 必改 |
 | `defaults.dividend.sharesBase` | 股利的基礎股數（最新流通股；另加前期累計瀑布新股與已強制轉換特別股） | bn 股 | 3.02374 | 必改 |
 | `defaults.dividend.preferred` | 特別股股利，各期 | US$bn 清單 | 0.244、0.325、0.244、0、0 | 必改 |

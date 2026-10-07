@@ -491,8 +491,8 @@ FAC = gi(r, "未動用信用額度", "US$bn", D['facility'], f"{TXQ['facilityNam
 FACON = gi(r, "瀑布可動用未動用額度（1=是）", "", int(D['useFacility']), "瀑布第一順位；已承諾額度，不受 債務／backlog 上限限制", NUM0); r += 1
 DEBTON = gi(r, "債務排程攤還（1=開）", "", int(D['includeDebt']), "季報到期表；關閉＝假設全額再融資", NUM0); r += 1
 KBL = gi(r, "債務／backlog 上限", "x", D['debtBacklog'], "資產擔保融資容量：總債務 ≤ 此倍數 × backlog；評價日實際約 0.27x，預設 0.5x [Assumed]", '0.00', True); r += 1
-DCB = gi(r, "債務上限基準（ebitda＝總債務 ÷ EBITDA；backlog＝債務 ÷ backlog）", "", D.get('debtCapBasis', 'backlog'), "Oracle：投資級上限以總債務 ÷ 當期 EBITDA（年化）計（company.json → defaults.debtCapBasis）", "@"); r += 1
-LEV = gi(r, "投資級上限（總債務 ÷ 當期 EBITDA）", "x", D.get('debtEbitdaMax', 0), "對照表預設 4.0×（區間 3.5–4.5×，[Assumed]）；S&P 降評門檻：調整後槓桿持續 >4.5×；超過部分走股權再走高息債", '0.00', True); r += 1
+DCB = gi(r, "債務上限基準（leaseAdj＝(債務＋租賃負債) ÷ (EBITDA＋租金)；ebitda＝總債務 ÷ EBITDA；backlog＝債務 ÷ backlog）", "", D.get('debtCapBasis', 'backlog'), "Oracle v0.2：投資級上限以租賃調整後槓桿（S&P 口徑近似）計；租賃負債見『各期收支』（company.json → defaults.debtCapBasis）", "@"); r += 1
+LEV = gi(r, "投資級上限（leaseAdj：調整後槓桿；ebitda：總債務 ÷ EBITDA）", "x", D.get('debtEbitdaMax', 0), "S&P BBB- 降評門檻：調整後槓桿持續 >4.5×（事實總帳 rating.sp；[Interested-party] 二手轉述）；敏感度 4.0×／5.0×；超過部分走股權再走高息債", '0.00', True); r += 1
 TERM = gi(r, "新簽合約年期", "年", D['ctrTerm'], "backlog 上限模式用：新簽約以此年期補入 backlog [Assumed]", NUM0); r += 1
 DVB = D.get('dividend') or {'perShareQ': 0, 'sharesBase': 0, 'preferred': [0] * 5}
 DPS = gi(r, "普通股股利（每股每季）", "US$", DVB['perShareQ'], "每季 $0.50 [Interested-party]；不回購（company.json → defaults.dividend）", USD); r += 1
@@ -1087,6 +1087,35 @@ for i in range(5):
             value=(f"={H_CASH1231}" if i == 0 else f"={COLS[i-1]}{cum_row}"))
 
 r += 1
+# v0.2：租賃負債（期末剩餘租金現值；與 HTML segA llOnQ／llUlQ 同一算法）
+r = section(ws, r, "租賃負債（期末剩餘租金現值；調整後槓桿用，v0.2）")
+_LLC = CO['leases'].get('liability') or {}
+def _one_f(name, unit, value, note, fmt):
+    global r
+    ws.cell(row=r, column=1, value=name).font = BLACK
+    ws.cell(row=r, column=2, value=unit).font = SMALL
+    c = ws.cell(row=r, column=3, value=value); c.number_format = fmt; c.border = BOX; c.font = BLUE
+    ws.cell(row=r, column=9, value=note).font = SMALL
+    FR[name] = r; r += 1
+    return f"'各期收支'!$C${r - 1}"
+LLR = _one_f("租賃折現率（加權平均）", "%", _LLC.get('discRate', 0), "10-K FY2026 營業／融資租賃加權平均折現率（事實總帳 lease.discRate.fy26）[Verified]；company.json → leases.liability.discRate", PCT)
+LLN = _one_f("在帳租約：模型期後尾端年數", "年", _LLC.get('tailYears', 12), "到期表 «LASTYR» 後的未折現付款平均分攤年數（10-K 營業租賃加權平均剩餘期限 12 年）[Derived]", NUM1)
+_TE = lambda k: f"'運營_產能與收入'!${COLS[k]}${_TR}"  # 期末時點（年）
+_LN = lambda k: f"'運營_產能與收入'!${COLS[k]}${CR['模型期長度（年）']}"
+_TAILPV = f"{CO['leases']['afterFY30']}/{LLN}*(1+{LLR})^0.5*(1-(1+{LLR})^(-{LLN}))/{LLR}"
+frow("在帳租賃負債（期末）", "US$bn",
+     lambda i: "=" + "".join(f"{inref('在帳現金租金（季報到期表）', k)}*(1+{LLR})^(-({_TE(k)}-{_LN(k)}/2-{_TE(i)}))+" for k in range(i + 1, 5)) + f"{_TAILPV}*(1+{LLR})^(-({_TE(4)}-{_TE(i)}))", NUM, BLACK,
+     f"＝期末之後各期到期表現金（期中付款）＋模型期後尾端 {CO['leases']['afterFY30']}（平均分攤、年中付款）的現值")
+def _llul(x, S, w):  # 未起租租約已起租部分：w × q ÷ i_q × [m − v^(4T − x') ×(1 − v^m) ÷ (1 − v)]
+    xx = f"MAX(0,{x}-({S}))"; m = f"MIN({xx},{UL_N})"
+    return (f"{w}*{UL_TOT}/{UL_N}/{UL_T}/4/((1+{LLR})^0.25-1)*({m}-(1+{LLR})^(-(4*{UL_T}-{xx})/4)*(1-(1+{LLR})^(-{m}/4))/(1-(1+{LLR})^(-0.25)))")
+frow("未起租租約已起租部分的租賃負債（期末）", "US$bn",
+     lambda i: (f"=IF(OR({DLY}<=0,{LK}<=0),{_llul(_ULQX(i), UL_S, 1)},"
+                f"{_llul(_ULQX(i), UL_S, '(1-' + LK + ')')}+{_llul(_ULQX(i), UL_S + '+' + DLY + '/3', LK)})"), NUM, BLACK,
+     "每季起租 總額 ÷ 季數、每筆季末付租：已起租各筆剩餘租金現值合計（延誤連動部分起算季延後 延誤月數 ÷ 3）")
+frow("租賃負債合計（期末）", "US$bn", lambda i: f"={COLS[i]}{FR['在帳租賃負債（期末）']}+{COLS[i]}{FR['未起租租約已起租部分的租賃負債（期末）']}", NUM, BLACK, bold=True)
+LL_row = FR["租賃負債合計（期末）"]
+r += 1
 r = section(ws, r, "期前融資瀑布（缺口在需要前一期先融好：額度 → 資產層新債 → 股權）")
 LROW = f"'運營_產能與收入'!{{c}}{CR['模型期長度（年）']}"
 frow("用途（不含新債利息）", "US$bn",
@@ -1133,8 +1162,9 @@ frow("既有債務＋期後可轉債（期末）", "US$bn",
      lambda i: "=0", NUM, BLACK, f"＝(依到期表遞減的既有本金，若關閉攤還則維持 {_n(LQ_DEBT)})＋期後新發可轉債 {_n(CONV_PR)}")
 ex_row = FR["既有債務＋期後可轉債（期末）"]
 frow("債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）", "US$bn",
-     lambda i: f'=IF({DCB}="ebitda",{LEV}*§EBPL_{COLS[i]}§/\'運營_產能與收入\'!{COLS[i]}{CR["模型期長度（年）"]},{KBL}*{COLS[i]}{bl_end})', NUM, BLACK,
-     "ebitda：總債務 ≤ 倍數 × 損益 EBITDA（年化）；backlog：總債務 ≤ 倍數 × 期末 backlog（模板）")
+     lambda i: (f'=IF({DCB}="leaseAdj",{LEV}*(§EBPL_{COLS[i]}§+{COLS[i]}{FR["　租金合計"]})/\'運營_產能與收入\'!{COLS[i]}{CR["模型期長度（年）"]}-{COLS[i]}{LL_row},'
+                f'IF({DCB}="ebitda",{LEV}*§EBPL_{COLS[i]}§/\'運營_產能與收入\'!{COLS[i]}{CR["模型期長度（年）"]},{KBL}*{COLS[i]}{bl_end}))'), NUM, BLACK,
+     "leaseAdj：總債務 ≤ 倍數 ×(損益 EBITDA＋租金)（年化）− 租賃負債（v0.2）；ebitda：總債務 ≤ 倍數 × 損益 EBITDA（年化）；backlog：總債務 ≤ 倍數 × 期末 backlog（模板）")
 cap_row = FR["債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）"]
 frow("未動用額度（期初）", "US$bn", lambda i: (f"=IF({FACON}=1,{FAC},0)" if i == 0 else "=0"), NUM, BLACK)
 fr_beg = FR["未動用額度（期初）"]
@@ -2198,6 +2228,12 @@ brow("期末 backlog", "US$bn", lambda i: f"={F_}{COLS[i]}{bl_end}")
 brow("債務上限（債務／backlog × 期末 backlog）", "US$bn", lambda i: f"={F_}{COLS[i]}{cap_row}")
 brow("總債務 ÷ 期末 backlog", "x", lambda i: f"={COLS[i]}{BR['總債務']}/MAX(0.01,{COLS[i]}{BR['期末 backlog']})", '0.00x', "高息債不受 backlog 上限約束")
 brow("總債務 ÷ EBITDA（年化）", "x", lambda i: f"={COLS[i]}{BR['總債務']}/MAX(0.01,{P_}{COLS[i]}{ebitda_v}/{I_}{COLS[i]}${IN['模型期長度（年）']})", '0.0x', "FY26 模型期 EBITDA 以半年×2 年化")
+# v0.2：租賃調整後槓桿（S&P 口徑近似：租賃調整債務 ÷ EBITDAR）
+brow("租賃負債（期末）", "US$bn", lambda i: f"={F_}{COLS[i]}{LL_row}", NUM, "見『各期收支』租賃負債（期末剩餘租金現值，5.7%）")
+brow("EBITDAR（年化＝(EBITDA＋租金) ÷ 期間長度）", "US$bn", lambda i: f"=({P_}{COLS[i]}{ebitda_v}+{F_}{COLS[i]}{FR['　租金合計']})/{I_}{COLS[i]}${IN['模型期長度（年）']}", NUM)
+brow("調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）", "x", lambda i: f"=({COLS[i]}{BR['總債務']}+{COLS[i]}{BR['租賃負債（期末）']})/MAX(0.01,{COLS[i]}{BR['EBITDAR（年化＝(EBITDA＋租金) ÷ 期間長度）']})", '0.00x',
+     "S&P 降評門檻 >4.5×（[Interested-party] 二手轉述）；S&P 自身口徑另含全部未起租承諾與無條件採購義務，較本列高（見報告）", bold=True)
+brow("距投資級上限的空間（上限 − 調整後槓桿）", "x", lambda i: f"={LEV}-{COLS[i]}{BR['調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）']}", '0.00x', "負值＝超過上限：需股權或失去投資級")
 NB = dict(BR)
 
 # =====================================================================
@@ -3208,10 +3244,15 @@ srow("結論｜結論句", "", [(f'=C{_s("評等")}&"：點位 $"&TEXT(C{_s("點
      bold=True)
 srow("結論｜情境判斷句", "", [f"={VQ}C{TRROW['目標價區間｜判斷句']}"])
 _JK = f"SUM('各期收支'!C{FRR['jd']}:G{FRR['jd']})"  # v0.1b（Oracle）：高息債溢出＝需失去投資級才能融資的金額
-srow("結論｜投資級句", "", [(f'=IF({DCB}="ebitda","需失去投資級才能融資的金額："&IF({_JK}>0.05,"$"&TEXT({_JK},"0.0")&"bn（五期高息債溢出）","$0")'
-                         f'&"；投資級上限＝總債務 ≤ "&{_MT(LEV)}&"× 當期 EBITDA，股權每年 ≤ 現市值 "&{_PC(EQCAP)}&"。","")')], bold=True)
+srow("結論｜投資級句", "", [(f'=IF(OR({DCB}="ebitda",{DCB}="leaseAdj"),"需失去投資級才能融資的金額："&IF({_JK}>0.05,"$"&TEXT({_JK},"0.0")&"bn（五期高息債溢出）","$0")'
+                         f'&"；投資級上限＝"&IF({DCB}="leaseAdj","(總債務＋租賃負債) ≤ "&{_MT(LEV)}&"×(EBITDA＋租金)","總債務 ≤ "&{_MT(LEV)}&"× 當期 EBITDA")&"，股權每年 ≤ 現市值 "&{_PC(EQCAP)}&"。","")')], bold=True)
 _IDR = f"'運營_產能與收入'!$C${CAP['idle']}:$G${CAP['idle']}"  # v0.2：建設延誤一句（閒置資本峰值）
 _PLB = ",".join(f'"{x}"' for x in PERIODS)
+_ALR = f"'資產負債_新債與新股'!$C${NB['調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）']}:$G${NB['調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）']}"  # v0.2：調整後槓桿句
+_AL = lambda c: f"'資產負債_新債與新股'!{c}{NB['調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）']}"
+srow("結論｜調整後槓桿句", "", [(f'="調整後槓桿（(債務＋租賃負債) ÷ (EBITDA＋租金)）路徑 "&' + '&"／"&'.join(f'TEXT({_AL(c)},"0.0")' for c in COLS)
+                          + f'&"×；上限 "&{_MT(LEV)}&"×，"&IF(MAX({_ALR})>{LEV}+1E-9,CHOOSE(MATCH(MAX({_ALR}),{_ALR},0),{_PLB})&" 超過 "&TEXT(MAX({_ALR})-{LEV},"0.0")&"×：需股權或失去投資級。",'
+                          f'"最小空間 "&TEXT({LEV}-MAX({_ALR}),"0.0")&"×（"&CHOOSE(MATCH(MAX({_ALR}),{_ALR},0),{_PLB})&"）。")')], bold=True)
 srow("結論｜延誤句", "", [(f'=IF({DLY}>0,"建設延誤 "&{_MT(DLY)}&" 個月（GPU 資本支出照原時程）：閒置資本（已支出、尚未產生收入）峰值 $"&TEXT(MAX({_IDR}),"0.0")'
                          f'&"bn（"&CHOOSE(MATCH(MAX({_IDR}),{_IDR},0),{_PLB})&" 末）。","建設延誤：本情境 0 個月（無閒置資本）。")')])
 

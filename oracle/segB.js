@@ -503,11 +503,14 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
     })),
     rsnSum = reasonSumQ(rsn, `原因見「損益與評價 → 市場共識」。`),
     jk = d.years.reduce((a, t) => a + t.junk, 0), S0 = st || DEFAULTS, // v0.1b（Oracle）：高息債溢出＝需失去投資級才能融資的金額（一頁摘要一句）
-    igLine = S0.debtCapBasis === `ebitda` ? `需失去投資級才能融資的金額：${jk > .05 ? `$${Y(jk, 1)}bn（五期高息債溢出）` : `$0`}；投資級上限＝總債務 ≤ ${multTxt(S0.debtEbitdaMax)}× 當期 EBITDA，股權每年 ≤ 現市值 ${pctQ(S0.eqCapPct)}。` : ``;
+    igLine = S0.debtCapBasis === `ebitda` || S0.debtCapBasis === `leaseAdj` ? `需失去投資級才能融資的金額：${jk > .05 ? `$${Y(jk, 1)}bn（五期高息債溢出）` : `$0`}；投資級上限＝${S0.debtCapBasis === `leaseAdj` ? `(總債務＋租賃負債) ≤ ${multTxt(S0.debtEbitdaMax)}×(EBITDA＋租金)` : `總債務 ≤ ${multTxt(S0.debtEbitdaMax)}× 當期 EBITDA`}，股權每年 ≤ 現市值 ${pctQ(S0.eqCapPct)}。` : ``;
+  // v0.2：調整後槓桿一句（路徑、距上限空間；任一期超過上限時標示）
+  let al = d.years.map(t => t.adjLev), amx = Math.max(...al), ami = al.indexOf(amx), cap = S0.debtEbitdaMax,
+    adjLine = `調整後槓桿（(債務＋租賃負債) ÷ (EBITDA＋租金)）路徑 ${al.map(x => Y(x, 1)).join(`／`)}×；上限 ${multTxt(cap)}×，` + (amx > cap + 1e-9 ? `${PERIODS[ami]} 超過 ${Y(amx - cap, 1)}×：需股權或失去投資級。` : `最小空間 ${Y(cap - amx, 1)}×（${PERIODS[ami]}）。`);
   // v0.2：建設延誤一句（閒置資本峰值）
   let dm = S0.delayMonths ?? 0, idl = d.years.map(t => t.idleCap || 0), ipk = Math.max(...idl), ipi = idl.indexOf(ipk),
     delayLine = dm > 0 ? `建設延誤 ${multTxt(dm)} 個月（GPU 資本支出照原時程）：閒置資本（已支出、尚未產生收入）峰值 $${Y(ipk, 1)}bn（${PERIODS[ipi]} 末）。` : `建設延誤：本情境 0 個月（無閒置資本）。`;
-  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, delayLine, junk: jk }
+  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, adjLine, delayLine, junk: jk }
 }
 
 // v4.4：差異原因的共用工具（年度共識對照與季度層共用）。類型固定為四種（已決定事項 2）；原因文字中的 {路徑:格式} 由模型數字帶入。

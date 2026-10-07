@@ -1277,7 +1277,10 @@ function zM() {
                     [`期末 backlog`, d.years.map(e => e.backlogEnd)],
                     [`債務上限（債務／backlog × 期末 backlog）`, d.years.map(e => e.debtCap)],
                     [`總債務 ÷ 期末 backlog`, d.years.map(e => e.totalDebtEnd / Math.max(e.backlogEnd, .01)), void 0, void 0, void 0, `高息債不受 backlog 上限約束，所以此比率可能超過上限。`, `x`, 2],
-                    [`總債務 ÷ EBITDA（年化）`, d.years.map((e, t) => e.totalDebtEnd / Math.max(e.ebitdaPL / PERIOD_YEARS[t], .01)), void 0, void 0, void 0, `FY26 模型期 EBITDA 以半年 ×2 年化。`, `x`, 1]
+                    [`總債務 ÷ EBITDA（年化）`, d.years.map((e, t) => e.totalDebtEnd / Math.max(e.ebitdaPL / PERIOD_YEARS[t], .01)), void 0, void 0, void 0, `FY26 模型期 EBITDA 以半年 ×2 年化。`, `x`, 1],
+                    [`租賃負債（期末）`, d.years.map(e => e.leaseLiab), void 0, void 0, void 0, `剩餘租金現值（折現率 ${hA(LLQ * 100, 1)}，10-K 加權平均）：在帳到期表＋未起租租約已起租部分（v0.2）。`],
+                    [`調整後槓桿（(總債務＋租賃負債) ÷ (EBITDA＋租金)）`, d.years.map(e => e.adjLev), void 0, void 0, `tot`, `S&P 口徑近似；降評門檻 >${multTxt(e.debtCapBasis === `leaseAdj` ? e.debtEbitdaMax : 4.5)}×（二手轉述）。S&P 自身口徑另含全部未起租承諾與無條件採購義務，較本列高。`, `x`, 2],
+                    [`距投資級上限的空間`, d.years.map(t => e.debtEbitdaMax - t.adjLev), void 0, void 0, void 0, `負值＝超過上限：需股權或失去投資級。`, `x`, 2]
                   ]
                 })]
               }), n === 10 && (0, $.jsxs)(`div`, {

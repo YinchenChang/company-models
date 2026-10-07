@@ -132,6 +132,7 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
     elQ(`p`, { key: `h`, style: { fontSize: 13.5, lineHeight: 1.45, margin: `6px 0 0` } }, cv.head),
     elQ(`p`, { key: `j`, style: { ...sm, fontSize: 11.5, margin: `3px 0 0` } }, TR.judge),
     cv.igLine ? elQ(`p`, { key: `ig`, style: { fontSize: 12.5, fontWeight: 600, margin: `3px 0 0` } }, cv.igLine) : null,
+    elQ(`p`, { key: `al`, style: { fontSize: 12.5, fontWeight: 600, margin: `3px 0 0` } }, cv.adjLine), // v0.2
     elQ(`p`, { key: `dl`, style: { fontSize: 12.5, margin: `3px 0 0` } }, cv.delayLine) // v0.2
   ]);
   let b2 = box(`b2`, `2｜與市場的差異（模型：${scLabel} vs 共識）`, [
