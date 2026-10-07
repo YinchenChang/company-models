@@ -1,13 +1,13 @@
 # Parity 情境檔（CLAUDE.md 第 3 節）。每個情境：改寫輸入 → LibreOffice 重算（基準）→ 與 engine 比對全部公式格。
 # 輸入一律以具名範圍設定（SRC_OAI_nnn、INP_nnn、TK_*）。v0.6-P1 只有檢查頁有公式；v0.6-P2 起 Demand、Revenue 頁的公式也由情境驅動（h 起為 P2 情境）。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
-  sheets: [README, SRC_OAI, TK_Link, Inputs, Derived_V9, Demand, Revenue, Compute, Checks, Map_v05, _Defaults]
-  formula_cells: 1989             # P2：652 → 1260；P3：→ 1989（Compute 頁、Revenue 第八節、Inputs 新列檢查欄、Checks C40–C66）
-  defined_names: 562              # S1：426；P2：＋16 SRC_OAI＋10 INP＋64 DEM_／REV_；P3：＋6 INP＋35 CMP_＋5 REV_
-  src_rows: 122                   # SRC_OAI 筆數（與報告一致）；P2：106＋16（價格事件數值與公告日）
-  src_named: 120                  # 有數值的列才有 SRC_OAI_nnn 名稱（Business 每席只有低／高；退役 ID 不重用）
-  inp_rows: 249                   # P2：233＋10（E8c 事件時點偏移 4、E6 定義常數 6）；P3：＋6（INP_256–261）
-  tk_values: 62                   # TK_Link 有值的名稱（TK_IF_／TK_SRC_／TK_L1_ 具名範圍；S1 v5.24 快照：37＋25）
+  sheets: [README, SRC_OAI, TK_Link, Inputs, Derived_V9, Demand, Revenue, Compute, Cost, Checks, Map_v05, _Defaults]
+  formula_cells: 2629             # P2：652 → 1260；P3：→ 1989（Compute 頁、Revenue 第八節、Inputs 新列檢查欄、Checks C40–C66）；P4：→ 2629（Cost 頁、Compute 第十三節、Inputs／SRC 新列檢查欄、Checks C67–C90）
+  defined_names: 619              # S1：426；P2：＋16 SRC_OAI＋10 INP＋64 DEM_／REV_；P3：＋6 INP＋35 CMP_＋5 REV_；P4：＋9 SRC_OAI＋9 INP＋1 TK＋2 CMP_＋36 COST_
+  src_rows: 131                   # SRC_OAI 筆數（與報告一致）；P2：106＋16（價格事件數值與公告日）；P4：＋9（SRC_OAI_129–137：2025 銷售／管理／營業損失、人數、股權報酬）
+  src_named: 129                  # 有數值的列才有 SRC_OAI_nnn 名稱（Business 每席只有低／高；退役 ID 不重用）
+  inp_rows: 258                   # P2：233＋10（E8c 事件時點偏移 4、E6 定義常數 6）；P3：＋6（INP_256–261）；P4：＋9（INP_262–270）
+  tk_values: 63                   # TK_Link 有值的名稱（TK_IF_／TK_SRC_／TK_L1_ 具名範圍；S1 v5.24 快照：37＋25；S4 v5.25：＋IF_CapexTotal）
   tk_pending: 0                   # 待 Tokenomics 提供（S1：v5.24 已全部提供）
   v05_leaves: 849
   v05_tagged_objects: 121         # chat 端計數；本包以 JSON 實數核對

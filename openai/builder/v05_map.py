@@ -779,6 +779,7 @@ def build_map(data=None, write_registry=False) -> Recorder:
     R.split("api.demandGrowthExPrice.tasks（2026）", "2026 為校準年（v0.4 把 53%→134% 使 FY2026 對上獨立推估 32.9）：值由校準得出，屬 Assumed、無觀測元素→不拆；校準目標 32.9 為 Derived（公式）", "Inputs", scanned_only=True)
     p2_rows(R)
     p3_rows(R)
+    p4_rows(R)
     # 殘餘：補上未登記的中介資料葉節點（tag/src/chk/_note…）隨最近的已登記兄弟
     for p in list(R.leaves):
         if p in R.dest:
@@ -857,6 +858,61 @@ def p3_rows(R: Recorder):
     I("r5/E6/P3 定義常數", "線性爬升付款：等差級數和 n(n+1)/2 的除數（定義常數）", unit="—", vlit=2, tag="Decision", decision="E6",
       status="P3 新增（E6）", note="來源：定義常數；區間不適用（低＝高）；E6：公式內不得含常數。用途：N4(b) 期間內線性爬升的付款權重（年序 ÷ Σ年序）", meta=False)
     R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 2, 2
+
+
+LEAK_SRC = ("Where's Your Ed At 2026-06-15『Exclusive: OpenAI Losses Increased Nearly 8X in 2025』（外流 2025 經查核財報；FT 獨立核實）"
+            "https://www.wheresyoured.at/exclusive-openai-financials/；Fortune 2026-06-16 https://fortune.com/2026/06/16/openai-financials-leaked-losses-revenue-profit/")
+WSJ_SBC_SRC = ("WSJ 2025-12-30『OpenAI Is Paying Employees More Than Any Major Tech Startup in History』（OpenAI 向投資人提供的財務預測；Equilar 分析），"
+               "經 The Decoder https://the-decoder.com/openais-stock-compensation-averages-1-5-million-per-employee-dwarfing-every-tech-startup-in-history/ 、"
+               "Fortune 2026-02-18 https://fortune.com/2026/02/18/openai-chatgpt-creator-record-million-dollar-equity-compensation-ai-tech-talent-war-career-retention-sam-altman-millionaire-staff/ 轉述")
+FT_HC_SRC = ("FT 2026-03-21（兩位知情人士；招募計畫），經 Engadget https://www.engadget.com/ai/openai-reportedly-plans-to-double-its-workforce-to-8000-employees-161028377.html 轉述")
+
+
+def p4_rows(R: Recorder):
+    """v0.6-P4（S4）新增列：r6 P4-2 人數、每人成本、股權報酬的公開來源（SRC_OAI；擷取日 2026-10-07）、
+    2025 銷售／管理費用（v0.5 opexExComputePctRevenue 2025 的拆分來源）、P4 假設（Inputs）與 E6 定義常數。不改 v0.5 葉節點的去處。"""
+    S, I = R.src, R.inp
+    ex = "（擷取 2026-10-07）"
+    for metric, val, scope, use in (
+        ("銷售費用（sales and marketing）：FY2025", 5.73, "FY2025 經查核財報（GAAP 費用列；是否含股權報酬原文未交代，本模型假設含）", "P4 V4：2025 銷售費用（v0.5 opexExComputePctRevenue 2025 的拆分來源）"),
+        ("管理費用（general and administrative）：FY2025", 1.57, "FY2025 經查核財報（GAAP 費用列；是否含股權報酬原文未交代，本模型假設含）", "P4 V4：2025 管理費用（同上）"),
+        ("營業損失（loss from operations）：FY2025", 20.92, "FY2025 經查核財報；＝營收 −（營業成本＋研發＋銷售＋管理）", "P4 Checks：費用各列與營業損失對帳"),
+    ):
+        S("r6/P4/外流 2025 財報（S4 搜尋）", metric, vlit=val, unit="$B", scope=scope, date="2026-06-15", tag="Interested-party",
+          source=LEAK_SRC, use=use, note="S4 公開來源搜尋" + ex + "；與 SRC_OAI_002、003、087、098 同一份外流財報")
+    for metric, val, unit, scope, use in (
+        ("員工人數：2025（約）", 4000, "人", "2025 年員工約 4,000 人（每人股權報酬的分母；視為年均）", "P4 V4：人數 2025 值"),
+        ("平均每人股權報酬：2025", 1.5, "$M/人/年", "2025 年平均每人股權報酬約 $1.5M（投資人財務預測）", "P4 V4：每人股權報酬 2025 值"),
+        ("股權報酬占營收比：2025（投資人預測）", 0.462, "比例", "2025 年股權報酬約為營收的 46.2%（投資人財務預測）", "P4 Checks 對照"),
+        ("股權報酬年增額：至 2030（投資人預測）", 3, "$B/年", "股權報酬預期至 2030 年每年增加約 $3B（投資人財務預測）", "P4 對照列（不回饋基準）"),
+    ):
+        S("r6/P4/WSJ 股權報酬（S4 搜尋）", metric, vlit=val, unit=unit, scope=scope, date="2025-12-30", tag="Interested-party",
+          source=WSJ_SBC_SRC, use=use, note="S4 公開來源搜尋" + ex + "；原文 WSJ 付費牆，數值經兩家轉述一致")
+    for metric, val, scope, use in (
+        ("員工人數：2026-03（約）", 4500, "2026-03 員工約 4,500 人", "P4 Checks 對照（人數成長路徑）"),
+        ("員工人數目標：2026 年底（約）", 8000, "2026 年底目標約 8,000 人（公司招募計畫；只作對照，不回饋基準）", "P4 Checks 對照（人數成長路徑）"),
+    ):
+        S("r6/P4/FT 人數（S4 搜尋）", metric, vlit=val, unit="人", scope=scope, date="2026-03-21", tag="Interested-party",
+          source=FT_HC_SRC, use=use, note="S4 公開來源搜尋" + ex + "；原文 FT 付費牆")
+    lag = I("r6/P4-1/自建 GW", "自建 GW 投產落後年數", unit="年", vlit=1, tag="Assumed", decision="v0.5 算力MW 第 11 列",
+            status="P4 新增（S4 預設：自建 GW 計入供給）", note="v0.5：自建 GW＝累計自有資本支出（至前一年）÷ 每 GW 資本支出；區間 1–2 年（Assumed）", meta=False)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 1, 2
+    for y, v, lo, hi in ((2026, 0.55, 0.3, 0.8), (2027, 0.30, 0.1, 0.5), (2028, 0.20, 0.05, 0.35), (2029, 0.15, 0, 0.3), (2030, 0.10, 0, 0.25)):
+        I("r6/P4-2/人數成長", "員工人數年增率（年均人數）", index=str(y), unit="比例", vlit=v, tag="Assumed", decision="V4",
+          status="P4 新增（V4；S4 預設：成長路徑用 Inputs）",
+          note=("2026：FT 2026-03 約 4,500、年底目標約 8,000（SRC_OAI）隱含年均約 +56%，取 0.55；" if y == 2026 else "")
+               + "Assumed；不以公司目標反推（共同規則第 4 節）", meta=False)
+        R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = lo, hi
+    I("r6/P4-2/每人成本", "每人年成本（不含股權報酬）年變動率", index="2026 起", unit="比例", vlit=0.03, tag="Assumed", decision="V4",
+      status="P4 新增（V4）", note="2025 值由財報推得（Derived：非算力營運費用不含股權報酬 ÷ 人數）；之後每年變動率 0.03（0–0.08；薪資與非人事費用成長，Assumed）", meta=False)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 0, 0.08
+    I("r6/P4-2/股權報酬", "每人股權報酬年變動率", index="2026 起", unit="比例", vlit=0, tag="Assumed", decision="V4",
+      status="P4 新增（V4）", note="2025 值 $1.5M（SRC_OAI，WSJ）；之後每人不變（0；−0.2–0.2，Assumed）；WSJ『每年約 +$3B』只作對照", meta=False)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = -0.2, 0.2
+    I("r5/E6/P4 定義常數", "單位換算：$ → $B 的除數（定義常數）", unit="$／$B", vlit=1000000000, tag="Decision", decision="E6",
+      status="P4 新增（E6）", note="來源：定義常數；區間不適用（低＝高）；E6：公式內不得含常數。用途：TK $/M token × M tok/GW/年 → $B/GW/年", meta=False)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 1000000000, 1000000000
+    return lag
 
 
 def coverage_report(R: Recorder):
