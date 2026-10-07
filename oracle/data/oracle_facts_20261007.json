@@ -3512,7 +3512,7 @@
    },
    {
     "id": "bs.debtPar.fy27q1",
-    "item": "優先票據及其他長期借款（面額口徑）",
+    "item": "優先票據及其他長期借款（附註 2 揭露值）",
     "value": 125000,
     "unit": "USD M",
     "period": "2026-08-31",
@@ -3521,7 +3521,7 @@
     "docDate": "2026-09-11",
     "retrieved": "2026-10-07",
     "tag": "[Interested-party]",
-    "note": "10-Q 核閱數（Oracle 自述，未經查核）；附註 2：公允價值 105.7B（Level 2）"
+    "note": "10-Q 核閱數（Oracle 自述，未經查核）；附註 2：公允價值 105.7B（Level 2）。口徑判讀：FY26 末同一揭露為 128.1B ≈ 面額 130,105 − 商業本票 1,468 − 未攤銷折價 564，故此值為「帳面、不含商業本票」"
    },
    {
     "id": "bs.debtTotal.fy26",
@@ -4102,6 +4102,869 @@
     "retrieved": "2026-10-07",
     "tag": "[Interested-party]",
     "note": "二手報導轉述 Oracle 分析師日目標（Oracle 自述）；Reuters 同值"
+   }
+  ],
+  "2_融資與信評": [
+   {
+    "id": "debt.notes.fy26",
+    "item": "優先票據清單（逐檔）",
+    "value": [
+     [
+      "2.65% 優先票據",
+      3000,
+      0.0265,
+      "July 2026",
+      "July 2016"
+     ],
+     [
+      "2.80% 優先票據",
+      2250,
+      0.028,
+      "April 2027",
+      "April 2020"
+     ],
+     [
+      "3.25% 優先票據",
+      2750,
+      0.0325,
+      "November 2027",
+      "November 2017"
+     ],
+     [
+      "2.30% 優先票據",
+      2000,
+      0.023,
+      "March 2028",
+      "March 2021"
+     ],
+     [
+      "4.50% 優先票據",
+      750,
+      0.045,
+      "May 2028",
+      "February 2023"
+     ],
+     [
+      "4.80% 優先票據",
+      1500,
+      0.048,
+      "August 2028",
+      "February 2025"
+     ],
+     [
+      "4.55% 優先票據",
+      3000,
+      0.0455,
+      "February 2029",
+      "February 2026"
+     ],
+     [
+      "4.20% 優先票據",
+      1500,
+      0.042,
+      "September 2029",
+      "September 2024"
+     ],
+     [
+      "6.15% 優先票據",
+      1250,
+      0.0615,
+      "November 2029",
+      "November 2022"
+     ],
+     [
+      "2.95% 優先票據",
+      3250,
+      0.0295,
+      "April 2030",
+      "April 2020"
+     ],
+     [
+      "4.65% 優先票據",
+      750,
+      0.0465,
+      "May 2030",
+      "February 2023"
+     ],
+     [
+      "3.25% 優先票據",
+      500,
+      0.0325,
+      "May 2030",
+      "May 2015"
+     ],
+     [
+      "4.45% 優先票據",
+      3000,
+      0.0445,
+      "September 2030",
+      "September 2025"
+     ],
+     [
+      "4.95% 優先票據",
+      3500,
+      0.0495,
+      "February 2031",
+      "February 2026"
+     ],
+     [
+      "2.875% 優先票據",
+      3250,
+      0.02875,
+      "March 2031",
+      "March 2021"
+     ],
+     [
+      "5.25% 優先票據",
+      1250,
+      0.0525,
+      "February 2032",
+      "February 2025"
+     ],
+     [
+      "4.80% 優先票據",
+      3000,
+      0.048,
+      "September 2032",
+      "September 2025"
+     ],
+     [
+      "6.25% 優先票據",
+      2250,
+      0.0625,
+      "November 2032",
+      "November 2022"
+     ],
+     [
+      "4.90% 優先票據",
+      1500,
+      0.049,
+      "February 2033",
+      "February 2023"
+     ],
+     [
+      "5.35% 優先票據",
+      3000,
+      0.0535,
+      "May 2033",
+      "February 2026"
+     ],
+     [
+      "4.30% 優先票據",
+      1750,
+      0.043,
+      "July 2034",
+      "July 2014"
+     ],
+     [
+      "4.70% 優先票據",
+      1750,
+      0.047,
+      "September 2034",
+      "September 2024"
+     ],
+     [
+      "3.90% 優先票據",
+      1250,
+      0.039,
+      "May 2035",
+      "May 2015"
+     ],
+     [
+      "5.50% 優先票據",
+      1750,
+      0.055,
+      "August 2035",
+      "February 2025"
+     ],
+     [
+      "5.20% 優先票據",
+      4000,
+      0.052,
+      "September 2035",
+      "September 2025"
+     ],
+     [
+      "5.70% 優先票據",
+      5000,
+      0.057,
+      "February 2036",
+      "February 2026"
+     ],
+     [
+      "3.85% 優先票據",
+      1250,
+      0.0385,
+      "July 2036",
+      "July 2016"
+     ],
+     [
+      "3.80% 優先票據",
+      1750,
+      0.038,
+      "November 2037",
+      "November 2017"
+     ],
+     [
+      "6.50% 優先票據",
+      1250,
+      0.065,
+      "April 2038",
+      "April 2008"
+     ],
+     [
+      "6.125% 優先票據",
+      1250,
+      0.06125,
+      "July 2039",
+      "July 2009"
+     ],
+     [
+      "3.60% 優先票據",
+      3000,
+      0.036,
+      "April 2040",
+      "April 2020"
+     ],
+     [
+      "5.375% 優先票據",
+      2250,
+      0.05375,
+      "July 2040",
+      "July 2010"
+     ],
+     [
+      "3.65% 優先票據",
+      2250,
+      0.0365,
+      "March 2041",
+      "March 2021"
+     ],
+     [
+      "4.50% 優先票據",
+      1000,
+      0.045,
+      "July 2044",
+      "July 2014"
+     ],
+     [
+      "4.125% 優先票據",
+      2000,
+      0.04125,
+      "May 2045",
+      "May 2015"
+     ],
+     [
+      "5.875% 優先票據",
+      2500,
+      0.05875,
+      "September 2045",
+      "September 2025"
+     ],
+     [
+      "6.55% 優先票據",
+      2250,
+      0.0655,
+      "February 2046",
+      "February 2026"
+     ],
+     [
+      "4.00% 優先票據",
+      3000,
+      0.04,
+      "July 2046",
+      "July 2016"
+     ],
+     [
+      "4.00% 優先票據",
+      2250,
+      0.04,
+      "November 2047",
+      "November 2017"
+     ],
+     [
+      "3.60% 優先票據",
+      4500,
+      0.036,
+      "April 2050",
+      "April 2020"
+     ],
+     [
+      "3.95% 優先票據",
+      3250,
+      0.0395,
+      "March 2051",
+      "March 2021"
+     ],
+     [
+      "6.90% 優先票據",
+      2500,
+      0.069,
+      "November 2052",
+      "November 2022"
+     ],
+     [
+      "5.55% 優先票據",
+      2250,
+      0.0555,
+      "February 2053",
+      "February 2023"
+     ],
+     [
+      "5.375% 優先票據",
+      1750,
+      0.05375,
+      "September 2054",
+      "September 2024"
+     ],
+     [
+      "4.375% 優先票據",
+      1250,
+      0.04375,
+      "May 2055",
+      "May 2015"
+     ],
+     [
+      "6.00% 優先票據",
+      1750,
+      0.06,
+      "August 2055",
+      "February 2025"
+     ],
+     [
+      "5.95% 優先票據",
+      3500,
+      0.0595,
+      "September 2055",
+      "September 2025"
+     ],
+     [
+      "6.70% 優先票據",
+      5000,
+      0.067,
+      "February 2056",
+      "February 2026"
+     ],
+     [
+      "3.85% 優先票據",
+      3500,
+      0.0385,
+      "April 2060",
+      "April 2020"
+     ],
+     [
+      "4.10% 優先票據",
+      1500,
+      0.041,
+      "March 2061",
+      "March 2021"
+     ],
+     [
+      "5.50% 優先票據",
+      1250,
+      0.055,
+      "September 2064",
+      "September 2024"
+     ],
+     [
+      "6.125% 優先票據",
+      1000,
+      0.06125,
+      "August 2065",
+      "February 2025"
+     ],
+     [
+      "6.10% 優先票據",
+      2000,
+      0.061,
+      "September 2065",
+      "September 2025"
+     ],
+     [
+      "6.85% 優先票據",
+      2750,
+      0.0685,
+      "February 2066",
+      "February 2026"
+     ],
+     [
+      "浮動利率票據 SOFR＋0.76%",
+      500,
+      0.0443,
+      "August 2028",
+      "February 2025"
+     ],
+     [
+      "浮動利率票據 SOFR＋1.11%",
+      500,
+      0.0478,
+      "February 2029",
+      "February 2026"
+     ]
+    ],
+    "unit": "清單：[名稱, 本金 USD M, 票面利率（浮動為期末有效利率）, 到期, 發行]",
+    "period": "2026-05-31",
+    "source": "Form 10-K FY2026（期末 2026-05-31，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "10-K 經查核財報；附註 6；共 56 檔、本金 123,500；另有定期貸款 5,137、商業本票 1,468；合計 130,105。$3,000 2.65%（2026-07 到期）已於 FY27Q1 償還（10-Q：當季償還排定債務 3.1B）"
+   },
+   {
+    "id": "debt.avgCoupon.fy26",
+    "item": "固定利率優先票據加權平均票面利率",
+    "value": 0.0475,
+    "unit": "比率",
+    "period": "2026-05-31",
+    "source": "Form 10-K FY2026（期末 2026-05-31，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "10-K 經查核財報；[Derived] 由附註 6 逐檔本金加權"
+   },
+   {
+    "id": "debt.termLoan.fy26",
+    "item": "定期貸款（Term Loan Credit Agreement 2）",
+    "value": [
+     5137,
+     "SOFR＋1.125%–1.625%（依信評）；4.7B 以利率交換固定為 3.07%＋利差，有效 4.74%",
+     "2027-08-16"
+    ],
+    "unit": "[本金 USD M, 利率, 到期]",
+    "period": "2026-05-31",
+    "source": "Form 10-K FY2026（期末 2026-05-31，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "10-K 經查核財報；2026-09-30 起每季攤還原借款 2.5%；到期可由 Oracle 延長至多 2 年"
+   },
+   {
+    "id": "debt.cp.fy26",
+    "item": "商業本票",
+    "value": [
+     1468,
+     0.0435
+    ],
+    "unit": "[USD M, 有效利率]",
+    "period": "2026-05-31",
+    "source": "Form 10-K FY2026（期末 2026-05-31，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "10-K 經查核財報；額度 10.0B（2026-03 調升）；FY27Q1 償還約 1.1B（10-Q MD&A）"
+   },
+   {
+    "id": "debt.cp.fy27q1",
+    "item": "商業本票餘額（推估）",
+    "value": 337,
+    "unit": "USD M",
+    "period": "2026-08-31",
+    "source": "Form 10-Q FY27 Q1（季末 2026-08-31；核閱、未查核）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm",
+    "docDate": "2026-09-11",
+    "retrieved": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "10-Q 核閱數（Oracle 自述，未經查核）；[Derived] 帳面總借款 125,337 − 附註 2 不含商本之借款帳面 125,000；與 1,468 − 約 1,100 償還（≈368）相近；四捨五入誤差約 ±50"
+   },
+   {
+    "id": "debt.revolver",
+    "item": "循環信用額度（未動用）",
+    "value": 10000,
+    "unit": "USD M",
+    "period": "2026-05-31",
+    "source": "Form 10-K FY2026（期末 2026-05-31，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "10-K 經查核財報；2026-03-06 簽訂，五年期至 2031-03-06；SOFR＋87.5–150bp；契約：合併 EBITDA ÷ 合併淨利息費用 ≥ 3.0×；FY26 末未動用"
+   },
+   {
+    "id": "debt.maturity.fy26",
+    "item": "借款本金到期梯（FY27、FY28、FY29、FY30、FY31、其後）",
+    "value": [
+     7210,
+     10145,
+     5500,
+     7250,
+     9750,
+     90250
+    ],
+    "unit": "USD M",
+    "period": "2026-05-31",
+    "source": "Form 10-K FY2026（期末 2026-05-31，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "10-K 經查核財報；附註 6；合計 130,105（含定期貸款與商業本票）"
+   },
+   {
+    "id": "debt.fy27q1.repaid",
+    "item": "FY27Q1 償還借款（排定）",
+    "value": 3100,
+    "unit": "USD M",
+    "period": "FY27Q1",
+    "source": "Form 10-Q FY27 Q1（季末 2026-08-31；核閱、未查核）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm",
+    "docDate": "2026-09-11",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "10-Q 核閱數（Oracle 自述，未經查核）；MD&A：排定債務償還 3.1B（含 2.65% 2026-07 票據 3.0B）；另商業本票 1.1B；現金流量表合計列 4,202"
+   },
+   {
+    "id": "debt.covenant",
+    "item": "循環額度財務契約",
+    "value": 3.0,
+    "unit": "倍（EBITDA ÷ 淨利息，下限）",
+    "period": "2026-05-31",
+    "source": "Form 10-K FY2026（期末 2026-05-31，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "10-K 經查核財報；10-K 附註 6；FY26 末遵循"
+   },
+   {
+    "id": "fin.fy26.notesIssued",
+    "item": "FY26 優先票據發行面額",
+    "value": 43000,
+    "unit": "USD M",
+    "period": "FY2026",
+    "source": "Form 10-K FY2026（期末 2026-05-31，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "10-K 經查核財報；2025-09：18.0B（6 檔）；2026-02：25.0B（8 檔）"
+   },
+   {
+    "id": "fin.2026.notes0204",
+    "item": "2026-02-04 優先票據發行（一次性投資級無擔保）",
+    "value": [
+     [
+      "浮動 2029",
+      500
+     ],
+     [
+      "4.550% 2029",
+      3000
+     ],
+     [
+      "4.950% 2031",
+      3500
+     ],
+     [
+      "5.350% 2033",
+      3000
+     ],
+     [
+      "5.700% 2036",
+      5000
+     ],
+     [
+      "6.550% 2046",
+      2250
+     ],
+     [
+      "6.700% 2056",
+      5000
+     ],
+     [
+      "6.850% 2066",
+      2750
+     ]
+    ],
+    "unit": "清單：[名稱, 本金 USD M]",
+    "period": "2026-02-04",
+    "source": "8-K 2026-02-04：優先無擔保債發行（承銷協議、第 4.1 號附件）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526037840/d23732d8k.htm",
+    "docDate": "2026-02-04",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "8-K（Oracle 申報）；合計 25,000；2026-02-02 簽承銷協議"
+   },
+   {
+    "id": "fin.2026.plan",
+    "item": "2026 曆年融資計畫（毛額）",
+    "value": [
+     45000,
+     50000
+    ],
+    "unit": "USD M",
+    "period": "曆年 2026",
+    "source": "Oracle 新聞稿：Oracle announces Equity and Debt Financing Plan for Calendar Year 2026",
+    "url": "https://www.oracle.com/news/announcement/oracle-announces-equity-and-debt-financing-plan-2026-02-01/",
+    "docDate": "2026-02-01",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "約半股半債：股權＝強制轉換特別股（小部分）＋至多 $20B ATM；債＝2026 年初一次性投資級無擔保債，並稱曆年 2026 不再發行其他債券；用途列客戶 AMD、Meta、NVIDIA、OpenAI、TikTok、xAI"
+   },
+   {
+    "id": "fin.2026.raisedFeb",
+    "item": "2026-02 實際募集（債＋強制轉換特別股）",
+    "value": 30000,
+    "unit": "USD M",
+    "period": "2026-02",
+    "source": "8-K 2026-03-10 附件 99.1：Q3 FY26 財報新聞稿",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526100148/orcl-ex99_1.htm",
+    "docDate": "2026-03-10",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "公司新聞稿（Oracle 自述，未經查核）；新聞稿：「Within days of the announcement, Oracle raised $30 billion」；＝優先票據 25.0B＋強制轉換特別股 5.0B"
+   },
+   {
+    "id": "fin.2026.total",
+    "item": "2026 曆年已募集合計（毛額）",
+    "value": 50000,
+    "unit": "USD M",
+    "period": "2026-02 至 2026-08",
+    "source": "Form 10-Q FY27 Q1（季末 2026-08-31；核閱、未查核）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm",
+    "docDate": "2026-09-11",
+    "retrieved": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "10-Q 核閱數（Oracle 自述，未經查核）；[Derived] 優先票據 25,000＋強制轉換特別股 5,000（淨 4,954）＋ATM 20,000（淨 19,909）；已達計畫上緣"
+   },
+   {
+    "id": "fin.fy27.plan",
+    "item": "FY27 預計融資（債＋股，含 $20B ATM）",
+    "value": 40000,
+    "unit": "USD M",
+    "period": "FY2027",
+    "source": "8-K 2026-06-10 附件 99.1：Q4 FY26 與全年財報新聞稿",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526265848/orcl-ex99_1.htm",
+    "docDate": "2026-06-10",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "公司新聞稿（Oracle 自述，未經查核）；「approximately $40 billion」；FY27Q1 已完成 ATM 20B；餘約 20B 的形式未揭露（曆年 2026 不再發債 → 推測在 2027-01 至 2027-05）"
+   },
+   {
+    "id": "mcps.terms",
+    "item": "6.50% Series D 強制轉換特別股條款",
+    "value": {
+     "shares": 50000,
+     "liqPref": 100000,
+     "gross": 5000,
+     "net": 4954,
+     "dividendRate": 0.065,
+     "minConv": 499.8126,
+     "maxConv": 624.7657,
+     "mandatoryDate": "2029-01-15",
+     "issued": "2026-02-05"
+    },
+    "unit": "物件（股數、每股清算價 US$、毛額與淨額 USD M、股利率、轉換比率上下限〔每股特別股換普通股〕、強制轉換日、發行日）",
+    "period": "2026-05-31",
+    "source": "Form 10-K FY2026（期末 2026-05-31，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "10-K 經查核財報；附註 10；股利可付現或普通股；20 個交易日 VWAP（自 2029-01-15 前第 21 個交易日起）決定轉換比率"
+   },
+   {
+    "id": "mcps.convShares",
+    "item": "強制轉換特別股可轉普通股數（下限／上限）",
+    "value": [
+     24.991,
+     31.238
+    ],
+    "unit": "m 股",
+    "period": "2029-01-15",
+    "source": "Form 10-K FY2026（期末 2026-05-31，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "10-K 經查核財報；[Derived] 50,000 股 × 499.8126／624.7657"
+   },
+   {
+    "id": "mcps.priceBands",
+    "item": "轉換價區間（初始價／門檻升值價）",
+    "value": [
+     160.06,
+     200.07
+    ],
+    "unit": "US$",
+    "period": "2029-01-15",
+    "source": "Form 10-K FY2026（期末 2026-05-31，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+    "docDate": "2026-06-22",
+    "retrieved": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "10-K 經查核財報；[Derived] 100,000 ÷ 624.7657＝160.06（股價 ≤ 此值換最多股）；100,000 ÷ 499.8126＝200.07（股價 ≥ 此值換最少股）"
+   },
+   {
+    "id": "mcps.divAnnual",
+    "item": "強制轉換特別股年股利",
+    "value": 325,
+    "unit": "USD M／年",
+    "period": "FY2027 起",
+    "source": "Form 10-Q FY27 Q1（季末 2026-08-31；核閱、未查核）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm",
+    "docDate": "2026-09-11",
+    "retrieved": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "10-Q 核閱數（Oracle 自述，未經查核）；[Derived] 5,000 × 6.5%；每季 81（10-Q 損益表）"
+   },
+   {
+    "id": "atm.program",
+    "item": "ATM 額度",
+    "value": 20000,
+    "unit": "USD M",
+    "period": "2026-02-02 簽約",
+    "source": "8-K 2026-02-04：優先無擔保債發行（承銷協議、第 4.1 號附件）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526037840/d23732d8k.htm",
+    "docDate": "2026-02-04",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "8-K（Oracle 申報）；佣金至多 0.50%；2026-06-23 增補代理商（424B5）；FY27Q1 全數用完（141m 股）"
+   },
+   {
+    "id": "div.common.q",
+    "item": "普通股股利（每季）",
+    "value": 0.5,
+    "unit": "US$／股",
+    "period": "FY27Q1 宣告",
+    "source": "8-K 2026-09-10 附件 99.1：Q1 FY27 財報新聞稿",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526387905/orcl-ex99_1.htm",
+    "docDate": "2026-09-10",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "公司新聞稿（Oracle 自述，未經查核）；2026-10-23 發放；FY26 全年 2.00"
+   },
+   {
+    "id": "div.common.annualCash",
+    "item": "普通股股利年化現金（以 2026-09-07 流通股數）",
+    "value": 6047,
+    "unit": "USD M／年",
+    "period": "FY2027",
+    "source": "Form 10-Q FY27 Q1（季末 2026-08-31；核閱、未查核）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm",
+    "docDate": "2026-09-11",
+    "retrieved": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "10-Q 核閱數（Oracle 自述，未經查核）；[Derived] 0.50 × 4 × 3,023.7m 股"
+   },
+   {
+    "id": "buyback.auth",
+    "item": "買回授權餘額",
+    "value": 6300,
+    "unit": "USD M",
+    "period": "2026-08-31",
+    "source": "Form 10-Q FY27 Q1（季末 2026-08-31；核閱、未查核）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526389274/orcl-20260831.htm",
+    "docDate": "2026-09-11",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "10-Q 核閱數（Oracle 自述，未經查核）；FY27Q1 無買回"
+   },
+   {
+    "id": "rating.sp",
+    "item": "S&P 長期發行人評等",
+    "value": [
+     "BBB-",
+     "穩定"
+    ],
+    "unit": "[評等, 展望]",
+    "period": "2026-07-09",
+    "source": "PPC Land：S&P cuts Oracle to BBB- as AI buildout widens cash deficit to $42bn（轉述 S&P 2026-07-09 評等報告）",
+    "url": "https://ppc.land/s-p-cuts-oracle-to-bbb-as-ai-buildout-widens-cash-deficit-to-42bn/",
+    "docDate": "2026-07-09",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "2026-07-09 自 BBB 調降；短期 A-3（自 A-2）。調降門檻：調整後槓桿持續 >4.5×、或 FY2029 前無法轉正自由營運現金流、或對 AI 策略負面重估；調升需槓桿回到 mid-3×。S&P 預估 FY27 自由營運現金流約 −42B、調整後槓桿 mid-4×；調整後債務納入 260B 未起租租賃承諾與 13B 無條件採購義務"
+   },
+   {
+    "id": "rating.moodys",
+    "item": "Moody's 長期發行人／優先無擔保評等",
+    "value": [
+     "Baa2",
+     "負向"
+    ],
+    "unit": "[評等, 展望]",
+    "period": "2026-02-02",
+    "source": "StreetInsider：Moody's affirms Oracle rating at Baa2 with negative outlook",
+    "url": "https://www.streetinsider.com/Corporate+News/Moodys+affirms+Oracle+rating+at+Baa2+with+negative+outlook/25927273.html",
+    "docDate": "2026-02-02",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "2026-02-02 確認 Baa2、展望負向（理由：AI 支出與承諾的不確定性、最大 AI 客戶〔Moody's 認為是 OpenAI〕的對手方風險）；2026-07-31 德文報導仍稱 Moody's 展望負向；本次未找到 2026-02 之後的新評等行動；降評門檻原文未取得"
+   },
+   {
+    "id": "rating.fitch",
+    "item": "Fitch 長期 IDR／優先票據評等",
+    "value": [
+     "BBB",
+     "穩定"
+    ],
+    "unit": "[評等, 展望]",
+    "period": "2026-02-02",
+    "source": "Newsquawk：Fitch rates Oracle senior notes offering BBB and affirms IDR, outlook stable",
+    "url": "https://www.newsquawk.com/headlines/fitch-rates-oracles-orcl-senior-notes-offering-bbb-and-affirms-idr-with-outlook-stable",
+    "docDate": "2026-02-02",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "2026-02-02 確認 IDR BBB、短期 F2、展望穩定，並給 2026-02 票據 BBB；2025-09 報導 Fitch 預期 EBITDA 槓桿低於 3.5×；本次未找到之後的新評等行動"
+   },
+   {
+    "id": "rating.sp.prior",
+    "item": "S&P 前次評等（2025-09）",
+    "value": [
+     "BBB",
+     "負向"
+    ],
+    "unit": "[評等, 展望]",
+    "period": "2025-09-24",
+    "source": "Investing.com：Oracle's credit ratings affirmed amid AI infrastructure expansion",
+    "url": "https://www.investing.com/news/stock-market-news/oracles-credit-ratings-affirmed-amid-ai-infrastructure-expansion-93CH-4253750",
+    "docDate": "2025-09-24",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "當時將降評門檻放寬至 4× 槓桿（原 3.5×）；Moody's Baa2 負向、Fitch BBB 穩定"
+   },
+   {
+    "id": "devFin.1",
+    "item": "Vantage Data Centers：德州 Shackelford（Frontier）＋威斯康辛 Port Washington 債務包",
+    "value": 38000,
+    "unit": "USD M",
+    "period": "2025-09-05",
+    "source": "DCD：JPMorgan Chase and Mitsubishi UFJ lead $38bn debt package for Oracle-linked data centers",
+    "url": "https://www.datacenterdynamics.com/en/news/jpmorgan-chase-and-mitsubishi-ufj-lead-38bn-debt-package-for-oracle-linked-data-centers-report/",
+    "docDate": "2025-09-05",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "借款人為開發商 Vantage；其中德州 23B；Oracle 為承租人、最終用戶 OpenAI（報導）；屬 Oracle 未起租租賃承諾，不是 Oracle 債務"
+   },
+   {
+    "id": "devFin.2",
+    "item": "BorderPlex Digital／STACK（Blue Owl）：新墨西哥 Doña Ana 郡（Project Jupiter）建設貸款",
+    "value": 18000,
+    "unit": "USD M",
+    "period": "2025-11-20",
+    "source": "World Finance Informs：Banks finance Oracle data center with major $18 billion loan",
+    "url": "https://www.worldfinanceinforms.com/news/banks-finance-oracle-data-center-with-major-18-billion-loan/",
+    "docDate": "2025-11-20",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "20 家銀行；SOFR＋2.5%、4 年期加延長選擇；Blue Owl 出股權；Oracle 為承租人；屬租賃，不是 Oracle 債務"
+   },
+   {
+    "id": "devFin.3",
+    "item": "Related Digital＋Blackstone：密西根 Saline Township（The Barn）融資",
+    "value": 16000,
+    "unit": "USD M",
+    "period": "2026-04-27",
+    "source": "Commercial Property Executive：Related, Blackstone obtain $16B for Michigan Oracle project",
+    "url": "https://www.commercialsearch.com/news/related-blackstone-obtain-16b-for-michigan-oracle-project/",
+    "docDate": "2026-04-27",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "PIMCO 管理基金長期固定利率債＋開發商股權；>1 GW；Stargate 一部分；Oracle 為承租人；屬租賃，不是 Oracle 債務"
    }
   ]
  }
