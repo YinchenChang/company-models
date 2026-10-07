@@ -52,10 +52,10 @@ def build_p4(wb, R, S, I, inp_row, P2, P3, snap):
         inn = lambda c, s=s, e=e: f"({c}$6>={s})*({c}$6<={e})"  # noqa: E731
         n = f"({e}-{s}+1)"
         if kind == "flat":
-            f = lambda i, c, T=T, n=n, inn=inn: f"={inn(c)}*{T}/{n}"  # noqa: E731
+            f = lambda i, c, T=T, n=n, inn=inn: f"=IF({inn(c)},{T}/{n},{inn(c)})"  # noqa: E731  期間外（或期間無效）＝0，避免除以 0
             nt = "揭露年額＝總額 ÷ 年數（E8f；v0.5 揭露年額欄 60），期間內固定"
         else:
-            f = lambda i, c, T=T, s=s, n=n, inn=inn: f'={inn(c)}*IF({prof}="even",{T}/{n},{T}*({c}$6-{s}+1)/({n}*({n}+1)/{k2}))'  # noqa: E731
+            f = lambda i, c, T=T, s=s, n=n, inn=inn: f'=IF({inn(c)},IF({prof}="even",{T}/{n},{T}*({c}$6-{s}+1)/({n}*({n}+1)/{k2})),{inn(c)})'  # noqa: E731
             nt = "總額依攤提方式（Inputs：ramp＝期間內線性爬升，權重＝年序 ÷ n(n+1)/2；even＝平均）"
         K.add(f"合約實付：{zh}", "$B", f, v05.row("支出", v05_pay[key]), nt + "；與 Compute 供給同一時程", name=f"COST_Pay_{SUP_NAME[key]}", key=f"pay_{key}")
     keys = [k for k, *_ in P3["contracts_full"]]
@@ -216,7 +216,7 @@ def build_p4(wb, R, S, I, inp_row, P2, P3, snap):
     s26 = f"Inputs!$G${inp_row(s)}"
     n26 = f"({e}-{s26}+1)"
     K.add("起點 2026 情境：Azure 攤入額", "$B",
-          lambda i, c: f'=({c}$6>={s26})*({c}$6<={e})*IF({prof}="even",{T}/{n26},{T}*({c}$6-{s26}+1)/({n26}*({n26}+1)/{k2}))', None,
+          lambda i, c: f'=IF(({c}$6>={s26})*({c}$6<={e}),IF({prof}="even",{T}/{n26},{T}*({c}$6-{s26}+1)/({n26}*({n26}+1)/{k2})),({c}$6>={s26})*({c}$6<={e}))', None,
           "Azure 起點取 Inputs 區間高端（V16：2025–2026）；終點不變", key="v_az26")
     K.add("差異：起點 2026 − 基準", "$B", lambda i, c: f"={c}{K.rows['v_az26']}-{c}{K.rows['pay_azure']}", None, "", key="v_diff")
 
