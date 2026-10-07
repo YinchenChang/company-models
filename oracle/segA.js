@@ -47,6 +47,7 @@ var PERIODS = COMPANY_DATA.periods,
     rev: SC_REV[k],
     mw31: SC_MW31[k],
     cvCap: COMPANY_DATA.scenarios.convCap[k], // v0.1b：瀑布可轉債每年新發行上限（保守 0＝不新發）
+    delay: (COMPANY_DATA.scenarios.delayMonths || {})[k] ?? 0, // v0.2：建設延誤月數（計費 MW 平移；GPU 資本支出照原時程）
     a: scA(k)
   }])),
   DEBT_TOOLS = COMPANY_DATA.debt.instruments,
@@ -76,6 +77,14 @@ var PERIODS = COMPANY_DATA.periods,
   DEFAULTS = Object.fromEntries(Object.entries(structuredClone(COMPANY_DATA.defaults)).flatMap(([k, v]) => k === `intCal` ? [[k, v], [`a`, structuredClone(SCENARIOS.base.a)]] : [[k, v]])),
   Qk = DEFAULTS; // 模板函式庫片段（mid1–mid3）仍以 Qk 引用預設值，保留別名
 DEFAULTS.cvCap = SCENARIOS[COMPANY_DATA.defaults.scenario].cvCap; // v0.1b：預設情境的可轉債年上限
+DEFAULTS.delayMonths = SCENARIOS[COMPANY_DATA.defaults.scenario].delay; // v0.2：預設情境的建設延誤月數
+// v0.2：期末存量路徑往後平移 dm 個月（以期間長度線性內插；評價日之前取 v0）。V＝各期末值、v0＝評價日值。
+// ＝v0＋Σ_k (V_k − V_{k−1}) × MIN(1, MAX(0, (期末時點_i − dm/12 − 期初時點_k) ÷ 期間長度_k))；Excel 同一公式。dm＝0 時原樣回傳。
+var PERIOD_T = PERIOD_YEARS.reduce((a, L, i) => (a.push((i ? a[i - 1] : 0) + L), a), []);
+function shiftQ(V, v0, dm) {
+  if (!(dm > 0)) return [...V];
+  return V.map((x, i) => { const tau = PERIOD_T[i] - dm / 12; return V.reduce((a, v, k) => a + (v - (k ? V[k - 1] : v0)) * Math.min(1, Math.max(0, (tau - (k ? PERIOD_T[k - 1] : 0)) / PERIOD_YEARS[k])), v0) })
+}
 // v0.1b（Oracle）：傳統事業（company.json → defaults.legacyBiz）。各線全年營收＝上一財年實際 ×(1＋年增率)，年增率自起點線性收斂到長期值；
 // 首期模型部分＝首期全年 − 年初至今實際（首期 YTD＋模型＝全年）。EBITDA＝營收 × 合併 EBITDA 率（各期一列）。沒有傳統事業時 lines 為空清單，全部為 0。
 function legacyQ(e) {
@@ -273,9 +282,15 @@ function runFunding(e) {
     REF = RFV.map((x, n) => RFF[n] ? RFS[n] : x),
     CXG = CXF.map((t, n) => n === 0 ? Math.max(t, e.capexFloorFY0 ?? 0) - ACTUAL_1H.capex : t),
     CX = CXG.map((e, t) => e + REF[t]),
+    DM = e.delayMonths ?? 0, // v0.2：建設延誤月數
+    BD = shiftQ(t.billable, e.billableOpen, DM), // v0.2：計費用可計費 MW（原路徑平移延誤月數）
+    CXC = CXG.reduce((a, x, i) => (a.push((i ? a[i - 1] : 0) + x), a), []), // v0.2：成長型 CapEx 累計（原時程）
+    CXSC = shiftQ(CXC, 0, DM), // v0.2：已投入使用的成長型 CapEx 累計（延誤後）
+    CXS = DM > 0 ? CXSC.map((x, i) => x - (i ? CXSC[i - 1] : 0)) : CXG, // v0.2：本期投入使用的成長型 CapEx（折舊基礎）
+    IDLE = CXC.map((x, i) => DM > 0 ? x - CXSC[i] : 0), // v0.2：閒置資本＝已支出而尚未產生收入的累計成長型 CapEx（期末）
     PPE = [],
-    DAF = CXG.map((t, n) => {
-      let r = n === 0 ? e.ppeOpen : PPE[n - 1] + CXG[n - 1];
+    DAF = CXS.map((t, n) => {
+      let r = n === 0 ? e.ppeOpen : PPE[n - 1] + CXS[n - 1];
       return PPE.push(r), (r + .5 * t) / e.gpuLife * PERIOD_YEARS[n]
     }),
     LG = legacyQ(e), // v0.1b（Oracle）：傳統事業營收與 EBITDA
@@ -302,8 +317,8 @@ function runFunding(e) {
       let L = PERIOD_YEARS[r],
         o = e.rpoOpen * (RPO_BUCKET_W[r] / RPO_SCHEDULED_SHARE) * i + e.rpoPendingAdd * RPO_Q3ADD_W[r] * i,
         s = o,
-        c = r === 0 ? e.billableOpen : t.billable[r - 1],
-        l = e.useAvgMw ? (c + t.billable[r]) / 2 : t.billable[r],
+        c = r === 0 ? e.billableOpen : BD[r - 1],
+        l = e.useAvgMw ? (c + BD[r]) / 2 : BD[r], // v0.2：計費用 MW＝延誤後路徑
         u = l * t.revMW[r] * (e.revScale ?? 1) * (t.util[r] / 100) * L,
         d = Math.max(0, s - u),
         f = o - d,
@@ -448,6 +463,8 @@ function runFunding(e) {
         refreshFlag: RFF[r] ? 1 : 0,
         refreshSteadyV: RFS[r],
         refreshVintage: RFV[r],
+        billDelayed: BD[r], // v0.2
+        capexCum: CXC[r], capexInSvcCum: DM > 0 ? CXSC[r] : CXC[r], capexInSvc: CXS[r], idleCap: IDLE[r], // v0.2：閒置資本
         avgAccepted: (MB[r] + t.accepted[r]) / 2,
         ebitdarM: eR,
         ppeBeg: PPE[r],

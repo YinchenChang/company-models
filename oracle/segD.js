@@ -15,6 +15,7 @@ function zM() {
     },
     mw31: SCENARIOS[e].mw31,
     cvCap: SCENARIOS[e].cvCap,
+    delayMonths: SCENARIOS[e].delay, // v0.2
     billableOpen: SCENARIOS[e].bOpen,
     m: {
       ...t.m,
@@ -773,6 +774,7 @@ function zM() {
                     [`　成長型 CapEx（模型期）`, d.years.map(e => e.capexGrowth), void 0, void 0, `calc`, `${PERIODS[0]} 欄＝MAX(全年公式, 下限 ${e.capexFloorFY0}) − 年初至今 ${Y(ACTUAL_1H.capex, 3)}。下限代表當年已下單、無論情境都會發生的支出。`],
                     [`　GPU 汰換 CapEx`, d.years.map(e => e.refresh), void 0, void 0, `calc`, `${e.refreshSteady ? `已連網 MW 不再增加的期間（觸頂後）及 ${PERIODS[4]}：穩態汰換＝期間平均已連網 MW × 每 MW GPU 成本 ÷ 壽命 ${e.gpuLife} 年（建築與電力屬租賃不計）；其餘期間：` : ``}＝(本年 − 經濟壽命) 那一年新增的 MW × 每 MW 成本。壽命 ${e.gpuLife} 年；批次來源見左欄年底主動電力（${Object.entries(e.mwYearEnd).map(([y, m]) => `FY${String(y).slice(2)} 年底 ${m} MW`).join(`、`)}），汰換落在模型期之後者不出現。三情境相同。`],
                     [`① 毛 CapEx（模型期）`, d.years.map(e => e.gross), void 0, void 0, `tot`, `＝成長型＋汰換。含 OEM 融資的非現金部分。`],
+                    [`　閒置資本（已支出未產生收入，期末）`, d.years.map(e => e.idleCap), void 0, void 0, `calc`, `GPU 成長型資本支出照原併網時程（已採購、交貨等電），計費延後 ${multTxt(e.delayMonths ?? 0)} 個月：＝原時程累計 − 已投入使用累計；折舊自投入使用時點起算（v0.2）。`],
                     [`　對照：v1.4 手動值`, d.years.map(e => e.capexOld), void 0, void 0, void 0, `CRWV 模板舊版手動值（Oracle 不適用，0）。`],
                     [`　客戶預付率`, e.a.customerFund.map(e => e * 100), (e, t) => E(`customerFund`, e, t / 100), void 0, void 0, `＝有預付的合約比例 × 預付占資本支出比（${TXQ.prepayCoverNote}）。只降當期外部融資需求、形成合約負債，不降專案總成本。`, `%`],
                     [`② 表外現金租金（未起租）`, e.a.newLease, (e, t) => E(`newLease`, e, t), void 0, void 0, `對應季報已簽約未起租租賃 ${Y(LATEST_Q.offBalanceLease, 1)}bn（${TXQ.offBalanceLeaseTerm}）的現金支付路徑 [Derived]。`],
@@ -871,6 +873,7 @@ function zM() {
                   rows: [
                     [`Accepted MW（期末主動電力）`, d.m.accepted, (e, t) => D(`accepted`, e, t), void 0, void 0, `YE26 指引 >1,850 MW；2030 目標 ≥8,000 MW。引擎會強制單調不減。`, `MW`],
                     [`Billable MW`, d.m.billable, (e, t) => D(`billable`, e, t), void 0, void 0, `引擎會強制不超過 Accepted。`, `MW`],
+                    [`Billable MW（延誤後，計費用）`, d.years.map(e => e.billDelayed), void 0, void 0, `calc`, `＝上列往後平移建設延誤 ${multTxt(e.delayMonths ?? 0)} 個月（以期間長度線性內插；評價日之前取期初校準值）；營收依此列（v0.2）。`, `MW`],
                     [`利用率`, e.m.util, (e, t) => D(`util`, e, t), void 0, void 0, `法說稱「近期產能實質售罄」，本模型不擬合為 100%。`, `%`],
                     [`每 MW 年收入`, e.m.revMW, (e, t) => D(`revMW`, e, t), 5e-4, void 0, `Tokenomics 正向推導（data/permw_tokenomics_20261007.json）；隨情境：保守 0.01162／基準 0.0174／積極 0.0242 [Derived]。`, `US$bn/MW`],
                     [`新產能簽約率`, e.m.fill, (e, t) => D(`fill`, e, t), 1, void 0, `把這欄調成 0，就能看到只靠期初 RPO 的缺口有多大——最重要的壓力測試。`, `%`],

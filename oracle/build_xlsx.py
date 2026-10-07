@@ -470,12 +470,12 @@ else:
              "＝(本年 − 壽命) 那年新增的 MW × 每 MW 成本；取代已折舊完的設備", BLACK)
 r = prow(r, "期初毛 PP&E", "US$bn", [f"={PPE0}"] + ["=0"] * 4, NUM, "之後＝前期期初＋前期成長型 CapEx（汰換不增加基礎）", BLACK)
 for i in range(1, 5):
-    ws.cell(row=IN["期初毛 PP&E"], column=3 + i, value=f"={COLS[i-1]}{IN['期初毛 PP&E']}+{COLS[i-1]}{IN['成長型 CapEx（模型期）']}")
+    ws.cell(row=IN["期初毛 PP&E"], column=3 + i, value=f"={COLS[i-1]}{IN['期初毛 PP&E']}+§INSVC{COLS[i-1]}§")  # v0.2：前期投入使用的成長型 CapEx（延誤 0＝前期成長型）
 r = section(ws, r, "CapEx 與折舊（結果；下游引用）", level=2)
 r = prow(r, "毛 CapEx（模型期，下游引用此列）", "US$bn",
          [f"={COLS[i]}{IN['成長型 CapEx（模型期）']}+{COLS[i]}{IN['GPU 汰換 CapEx']}" for i in range(5)], NUM, "＝成長型＋汰換", BLACK, key="毛 CapEx")
 r = prow(r, "D&A（車隊折舊）", "US$bn",
-         [f"=({COLS[i]}{IN['期初毛 PP&E']}+0.5*{COLS[i]}{IN['成長型 CapEx（模型期）']})/{LIFE}*{COLS[i]}{IN['模型期長度（年）']}" for i in range(5)],
+         [f"=({COLS[i]}{IN['期初毛 PP&E']}+0.5*§INSVC{COLS[i]}§)/{LIFE}*{COLS[i]}{IN['模型期長度（年）']}" for i in range(5)],  # v0.2：本期投入使用的成長型 CapEx
          NUM, "＝(期初毛 PP&E＋本期成長型×½)÷壽命×期間長度", BLACK, key="D&A（車隊）")
 for k in ("毛 CapEx", "D&A（車隊）"):
     for i in range(5):
@@ -703,11 +703,22 @@ crow("Billable MW（上限為 Accepted）", "MW",
      lambda i: f"=MIN(MAX(0,{inref('Billable MW', i)}),{COLS[i]}{acc_row})", NUM0, BLACK,
      "引擎規則：可計費不得超過已驗收")
 bil_row = CR["Billable MW（上限為 Accepted）"]
+
+
+def shift_f(val, v0, i):  # v0.2：期末存量路徑往後平移建設延誤月數（線性內插；評價日之前取 v0）；與 HTML segA shiftQ 同一公式。§DLY§、§T…§ 於（E）區建立後代換
+    terms = "+".join(f"({val(k)}-{val(k - 1) if k else v0})*MAX(0,MIN(1,(§T{COLS[i]}§-§DLY§/12-{('§T' + COLS[k - 1] + '§') if k else 0})/${COLS[k]}${CR['模型期長度（年）']}))" for k in range(5))
+    return f"=IF(§DLY§<=0,{val(i)},{v0}+{terms})"
+
+
+crow("Billable MW（延誤後，計費用）", "MW",
+     lambda i: shift_f(lambda k: f"${COLS[k]}${bil_row}", MW0, i), NUM0, BLACK,
+     "＝上列往後平移建設延誤月數（以期間長度線性內插；評價日之前取期初校準值）；延誤 0 時＝上列；見（E）區（v0.2）")
+bild_row = CR["Billable MW（延誤後，計費用）"]
 crow("期初在役 MW", "MW",
-     lambda i: (f"={MW0}" if i == 0 else f"={COLS[i-1]}{bil_row}"), NUM0, BLACK, "前期期末＝本期期初")
+     lambda i: (f"={MW0}" if i == 0 else f"={COLS[i-1]}{bild_row}"), NUM0, BLACK, "前期期末＝本期期初（延誤後）")
 beg_row = CR["期初在役 MW"]
 crow("平均在役 MW（«P0» 欄為«STUBW»平均）", "MW",
-     lambda i: f"=IF({AVGON}=1,({COLS[i]}{beg_row}+{COLS[i]}{bil_row})/2,{COLS[i]}{bil_row})", NUM0, BLACK,
+     lambda i: f"=IF({AVGON}=1,({COLS[i]}{beg_row}+{COLS[i]}{bild_row})/2,{COLS[i]}{bild_row})", NUM0, BLACK,
      "開關在輸入頁：1＝(期初+期末)/2，0＝期末全期化")
 avg_row = CR["平均在役 MW（«P0» 欄為«STUBW»平均）"]
 crow("利用率", "%", lambda i: f"={inref('利用率', i)}", PCT, GREEN)
@@ -802,8 +813,56 @@ r += 1
 ws.cell(row=r, column=1, value="讀法：«P0»（«STUB»）與 «P1» 瓶頸>0，合約多於機房；FY28 起反轉，收入愈來愈靠『新簽約收入』這一列。").font = BOLD
 r += 1
 ws.cell(row=r, column=1, value="把『新產能簽約率』調到 0，就能看到只靠期初 RPO 的資金缺口有多大——這是最重要的一個壓力測試。").font = SMALL
+r += 2
+# v0.2：（E）建設延誤——計費 MW 平移、GPU 資本支出照原時程、折舊自投入使用起算、閒置資本（與 HTML segA runFunding 同一算法）
+r = section(ws, r, "（E）建設延誤（v0.2）：計費 MW 往後平移；GPU 資本支出與客戶出資照原時程；折舊自投入使用時點起算")
+
+
+def one(name, unit, value, note, fmt=NUM, font=None):  # 單一值輸入（C 欄）
+    global r
+    ws.cell(row=r, column=1, value=name).font = BLACK
+    ws.cell(row=r, column=2, value=unit).font = SMALL
+    c = ws.cell(row=r, column=3, value=value); c.number_format = fmt; c.border = BOX
+    c.font = font or (BLACK if isinstance(value, str) and value.startswith("=") else BLUE)
+    if note: ws.cell(row=r, column=9, value=note).font = SMALL
+    CR[name] = r; r += 1
+    return f"'運營_產能與收入'!$C${r - 1}"
+
+
+_DLM = CO['scenarios'].get('delayMonths') or {}
+DLYS = {k: one(f"建設延誤月數｜{CO['scenarios']['labels'][k]}", "月", _DLM.get(k, 0),
+               "company.json → scenarios.delayMonths；依據見該欄 note [Assumed]", NUM1) for k in ("low", "base", "high")}
+DLY = one("建設延誤月數（目前情境）", "月", f"=CHOOSE({SEL},{DLYS['low']},{DLYS['base']},{DLYS['high']})", "＝依『輸入與假設』A 區情境選擇器；0＝不延誤（＝v0.1）", NUM1)
+crow("期末時點（評價日起，年）", "年", lambda i: f"=SUM($C${CR['模型期長度（年）']}:{COLS[i]}{CR['模型期長度（年）']})", NUM, BLACK, "＝累計期間長度")
+_TR = CR["期末時點（評價日起，年）"]
+crow("成長型 CapEx 累計（原時程，評價日起）", "US$bn", lambda i: f"=SUM('輸入與假設'!$C${IN['成長型 CapEx（模型期）']}:{COLS[i]}${IN['成長型 CapEx（模型期）']})", NUM, BLACK,
+     "GPU 與網通照原併網時程採購、交貨等電（客戶出資覆蓋比同樣依原時程）")
+_CCR = CR["成長型 CapEx 累計（原時程，評價日起）"]
+crow("已投入使用累計（延誤後）", "US$bn", lambda i: shift_f(lambda k: f"${COLS[k]}${_CCR}", "0", i), NUM, BLACK,
+     "＝上列往後平移建設延誤月數（線性內插）；延誤 0 時＝上列")
+_CSR = CR["已投入使用累計（延誤後）"]
+crow("本期投入使用的成長型 CapEx（折舊基礎）", "US$bn", lambda i: f"={COLS[i]}{_CSR}" + (f"-{COLS[i-1]}{_CSR}" if i else ""), NUM, BLACK,
+     "車隊折舊自投入使用時點起算（『輸入與假設』期初毛 PP&E 與 D&A 引用此列）")
+_ISR = CR["本期投入使用的成長型 CapEx（折舊基礎）"]
+crow("閒置資本（已支出未產生收入，期末）", "US$bn", lambda i: f"={COLS[i]}{_CCR}-{COLS[i]}{_CSR}", NUM, BOLD,
+     "＝原時程累計 − 已投入使用累計；延誤 0 時為 0。一頁摘要以一句呈現峰值")
+IDLE_ROW = CR["閒置資本（已支出未產生收入，期末）"]
+for _rr in range(1, r):  # 代換 §DLY§、§T…§（延誤後 Billable 與已投入使用累計）
+    for _i in range(5):
+        _c = ws.cell(row=_rr, column=3 + _i)
+        if isinstance(_c.value, str) and "§" in _c.value:
+            _v = _c.value.replace("§DLY§", DLY.split("!")[1])
+            for _k in COLS:
+                _v = _v.replace(f"§T{_k}§", f"${_k}${_TR}")
+            _c.value = _v
+_wsi = wb["輸入與假設"]
+for _nm in ("期初毛 PP&E", "D&A（車隊）"):
+    for _i in range(5):
+        _c = _wsi.cell(row=IN[_nm], column=3 + _i)
+        for _k in COLS:
+            _c.value = _c.value.replace(f"§INSVC{_k}§", f"'運營_產能與收入'!{_k}${_ISR}")
 CAP = {"cm": cm_row, "totrev": totrev_row, "cap": cap_row, "sch": sch_row, "bot": bot_row, "rev": rev_row, "newrev": newrev_row,
-       "isrev": isrev_row, "rpocash": rpocash_row, "newcash": newcash_row, "acc": acc_row,
+       "isrev": isrev_row, "bild": bild_row, "idle": IDLE_ROW, "insvc": _ISR, "rpocash": rpocash_row, "newcash": newcash_row, "acc": acc_row,
        "loss": loss_row, "coll": coll_row, "avg": avg_row}
 
 # =====================================================================
@@ -2721,7 +2780,7 @@ if QC:
         POS_.append((q['period'], same.index(i), len(same), [QCL[x] for x in same]))
     IA = lambda name, P: f"'輸入與假設'!{COLS[P]}${IN[name]}"
     ACC = lambda P: f"'輸入與假設'!{COLS[P]}${_acc}"
-    BIL = lambda P: f"'輸入與假設'!{COLS[P]}${_bil}"
+    BIL = lambda P: f"'運營_產能與收入'!{COLS[P]}${CAP['bild']}"  # v0.2：計費用（延誤後）可計費 MW
     ANN = {"revenue": lambda P: f"{PL}{COLS[P]}{rev_v}", "adjEbitda": lambda P: f"{PL}{COLS[P]}{ebitda_v}",
            "adjOpInc": lambda P: f"{PL}{COLS[P]}{ebit_v}", "capex": lambda P: IA("毛 CapEx", P)}
     qrow("所屬期間", "", lambda j, c: f"={JR(_PERL, j)}", NUM0, "1＝" + PN[0] + (f"、2＝{PN[1]}" if len(PN) > 1 else ""), GREEN)
@@ -2776,7 +2835,7 @@ if QC:
     else:
         qrow("EBITDA 率（模型）", "%", lambda j, c: f"={'CDEFGH'[PERS.index(POS_[j][0])]}{_E}/{'CDEFGH'[PERS.index(POS_[j][0])]}{_S}", PCT, "期內常數")
     qrow("調整後 EBITDA（模型）", "US$bn", lambda j, c: f"={c}{_RV_}*{c}{QT['EBITDA 率（模型）']}", NUM)
-    qrow("車隊折舊（模型）", "US$bn", lambda j, c: (f"=({IA('期初毛 PP&E', POS_[j][0])}+{IA('成長型 CapEx（模型期）', POS_[j][0])}*{2 * POS_[j][1] + 1}/{2 * POS_[j][2]})"
+    qrow("車隊折舊（模型）", "US$bn", lambda j, c: (f"=({IA('期初毛 PP&E', POS_[j][0])}+'運營_產能與收入'!{COLS[POS_[j][0]]}${CAP['insvc']}*{2 * POS_[j][1] + 1}/{2 * POS_[j][2]})"
                                                   f"/{LIFE}*{IA('模型期長度（年）', POS_[j][0])}/{POS_[j][2]}"), NUM, "依期內平均 PP&E（與年度車隊折舊公式相同）")
     qrow("調整後營業利益（模型）", "US$bn", lambda j, c: f"={c}{QT['調整後 EBITDA（模型）']}-{c}{QT['車隊折舊（模型）']}", NUM, "＝調整後 EBITDA − 車隊折舊（未扣 SBC）")
     # 指引（J 區；數字區間與文字）——CapEx 指引錨定需先有指引列
@@ -3122,6 +3181,10 @@ srow("結論｜情境判斷句", "", [f"={VQ}C{TRROW['目標價區間｜判斷�
 _JK = f"SUM('各期收支'!C{FRR['jd']}:G{FRR['jd']})"  # v0.1b（Oracle）：高息債溢出＝需失去投資級才能融資的金額
 srow("結論｜投資級句", "", [(f'=IF({DCB}="ebitda","需失去投資級才能融資的金額："&IF({_JK}>0.05,"$"&TEXT({_JK},"0.0")&"bn（五期高息債溢出）","$0")'
                          f'&"；投資級上限＝總債務 ≤ "&{_MT(LEV)}&"× 當期 EBITDA，股權每年 ≤ 現市值 "&{_PC(EQCAP)}&"。","")')], bold=True)
+_IDR = f"'運營_產能與收入'!$C${CAP['idle']}:$G${CAP['idle']}"  # v0.2：建設延誤一句（閒置資本峰值）
+_PLB = ",".join(f'"{x}"' for x in PERIODS)
+srow("結論｜延誤句", "", [(f'=IF({DLY}>0,"建設延誤 "&{_MT(DLY)}&" 個月（GPU 資本支出照原時程）：閒置資本（已支出、尚未產生收入）峰值 $"&TEXT(MAX({_IDR}),"0.0")'
+                         f'&"bn（"&CHOOSE(MATCH(MAX({_IDR}),{_IDR},0),{_PLB})&" 末）。","建設延誤：本情境 0 個月（無閒置資本）。")')])
 
 r += 1
 r = section(ws, r, f"2｜與市場的差異（模型：目前情境 vs 共識；{P3[0]}–{P3[2]}）")

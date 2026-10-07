@@ -414,6 +414,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.convCap.low` | 保守情境：融資瀑布可轉債步驟每年新發行上限（0＝不新發；v0.1b） | US$bn／年 | 0 | 檢查 |
 | `scenarios.convCap.base` | 基準情境：同上 | US$bn／年 | 0 | 檢查 |
 | `scenarios.convCap.high` | 積極情境：同上 | US$bn／年 | 0 | 檢查 |
+| `scenarios.delayMonths.low` | 保守情境：建設延誤月數——計費 MW＝原可計費路徑往後平移此月數（期間長度線性內插）；GPU 資本支出與客戶出資照原時程，折舊自投入使用起算（v0.2） | 月 | 6 | 檢查 |
+| `scenarios.delayMonths.base` | 基準情境：同上 | 月 | 3 | 檢查 |
+| `scenarios.delayMonths.high` | 積極情境：同上 | 月 | 0 | 檢查 |
+| `scenarios.delayMonths.note` | 建設延誤月數的依據與說明（v0.2） | 文字 | 建設延誤月數（v0.2）：計費／營收的 MW＝原可計… | 必改 |
 | `scenarios.capexTemplate.costMW` | 每 MW 建置成本（GPU＋網路＋機房內裝），各期 | US$m/MW 清單 | 37.45、37.59、37.59、37.59、37.59 | 檢查 |
 | `scenarios.capexTemplate.div` | JV 後續增資與策略投資，各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
 
