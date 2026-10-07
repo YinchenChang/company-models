@@ -22,8 +22,9 @@ import source_rules  # noqa: E402
 from common import F_BOLD, F_CALC, F_IN, F_NOTE, WRAP, header, lo_recalc, put, title  # noqa: E402
 from tk_link import PENDING_NOTE, read_snapshot  # noqa: E402
 from v05_map import REGISTRY_PATH, SEP, build_map, coverage_report  # noqa: E402
+import p2  # noqa: E402
 
-VERSION = "v0.6-P1.1"
+VERSION = "v0.6-P2"
 KIND_LABEL = {"SRC": "SRC_OAI", "INP": "Inputs", "FORMULA": "公式（後續工作包）", "DUP": "重複併入", "SKIP": "不遷入", "TK": "不遷入；改取 TK_Link"}
 SRC_COLS = ["SRC_ID", "指標", "數值", "低", "高", "單位", "口徑", "適用對象", "日期", "出處（v0.5 原文）", "來源等級", "立場", "立場說明",
             "一手／二手", "狀態", "取代者", "v0.5 標記", "查核狀態（v0.5 chk）", "v0.5 路徑", "模型使用位置", "備註",
@@ -251,7 +252,7 @@ def sheet_derived(wb, R):
     ws.column_dimensions["G"].width = 70
 
 
-def sheet_checks(wb, R, n_src, n_inp, n_pending):
+def sheet_checks(wb, R, n_src, n_inp, n_pending, P2):
     ws = wb.create_sheet("Checks")
     title(ws, "Checks — P1 檢查（公式；結果 ERR 的格數＝CHK_Errors）",
           "OK／ERR：比對期望值；INFO：只列示。編號（C##）由 builder/id_registry.json 固定：新檢查取下一個號碼，退役號碼不重用（F1）。期望值為 builder 寫入的常數（黑字）。")
@@ -302,8 +303,8 @@ def sheet_checks(wb, R, n_src, n_inp, n_pending):
         ("E8g：Inputs AWS 容量上限＝WSJ 推論＋訓練（GW）", f"=Inputs!$G${aws_hi_row}-V9_AwsWsj", 0, "tol", "『5』由 SRC 兩筆揭露相加"),
         ("E8j：無條件部分四個組成加總＝v0.5 值（$B）", "=V9_Uncond2026", R.get("funding/equityRound2026Mar/unconditional2026/v"), "tol", "15＋30＋30＋12"),
         ("E8f：Oracle 合約年額＝v0.5 值（$B/年）", "=V9_OracleAnnual", R.get("spending/contracts/oracle/annual"), "tol", "總額÷年數"),
-        ("E8c：listPriceFYAvg 2026 區間尚未傳遞（待 P2 事件時點 Inputs）", '="待 P2"', None, "warn", "WARN：不計入 CHK_Errors；P2 以價格事件時點 Inputs 傳遞 2026 區間後移除"),
     ]
+    rows += p2_checks(R, P2, S, rowof)
     # F1：Checks 編號納入穩定 ID registry（label → C##）
     reg = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
     known = reg.setdefault("CHK", {})
@@ -348,19 +349,55 @@ def sheet_checks(wb, R, n_src, n_inp, n_pending):
     ws.column_dimensions["F"].width = 60
 
 
+def p2_checks(R, P2, S, rowof):
+    """v0.6-P2 新增的檢查（編號取 registry 下一號）。C27（E8c WARN）於 P2 撤除，編號退役不重用。"""
+    D, V = P2["D"], P2["V"]
+    dr, vr = D.rows, V.rows
+    mix = "+".join(f'(ABS(Inputs!$E${rowof(inp_id(R, f"方案模型組合：{p}", "luna"))}+Inputs!$E${rowof(inp_id(R, f"方案模型組合：{p}", "sol"))}'
+                   f'+Inputs!$E${rowof(inp_id(R, f"方案模型組合：{p}", "astra"))}-1)>0.000000001)' for p in p2.PLANS)
+    ev = {k: V.ev_first + i for i, k in enumerate((2, 3, 4, 5))}
+    order = "+".join(f"(Revenue!{c}{ev[3]}<Revenue!{c}{ev[4]})+(Revenue!{c}{ev[2]}<Revenue!{c}{ev[5]})" for c in "DEF")
+    lpv = "+".join(f"(Revenue!G{r}>Revenue!D{r})+(Revenue!D{r}>Revenue!H{r})" for r in range(V.ev_last - 5, V.ev_last + 1))
+    pairs = [("情境 base：價格彈性：任務數", "價格彈性：任務數"), ("情境 base：價格彈性：每任務 token", "價格彈性：每任務 token"),
+             ("情境 base：每任務 token 年增率", "每任務 token 年增率"), ("情境 base：牌價年變動率 top 層", "牌價年變動率：top 層"),
+             ("情境 base：牌價年變動率 mid 層", "牌價年變動率：mid 層"), ("情境 base：牌價年變動率 low 層", "牌價年變動率：low 層")]
+    d11 = "+".join(f"({inp_id(R, a)}<>{inp_id(R, b)})" for a, b in pairs)
+    tok_a, tok_b = dr["tok_all"], dr["tok_chk"]
+    return [
+        ("P2：2025 模型營收總額 − SRC 實際營收（$B；v0.5 校準恆等式）", "=REV_Gap2025", 0, "tol", "2025 API 為倒推項；不為 0 表示校準鏈斷裂"),
+        ("P2：2025 API 計費比例 ∈ (0,1]（違反數）", "=IF(AND(DEM_ApiBilledRatio2025>0,DEM_ApiBilledRatio2025<=1),0,1)", 0, "eq",
+         "計費 token（營收倒推）÷ 處理 token（Derived_V9 V22）；≤0 表示訂閱＋廣告已超過實際營收"),
+        ("P2：方案模型組合 luna＋sol＋astra≠1 的方案數", "=" + mix, 0, "eq", "Inputs INP_155–179；token 層級拆分的前提"),
+        ("P2：token 層級拆分合計 vs 拆分前總量（違反年數）",
+         f"=SUMPRODUCT(--(ABS(Demand!$D${tok_a}:$I${tok_a}-Demand!$D${tok_b}:$I${tok_b})>0.000000001*Demand!$D${tok_b}:$I${tok_b}))", 0, "eq",
+         "付費＋免費（層級）＝訂閱＋免費＋API 計費 token"),
+        ("P2：消費端＋企業端＋其他 − 總額（各年絕對值合計，$B）", f"=SUMPRODUCT(ABS(Revenue!$D${vr['sumchk']}:$I${vr['sumchk']}))", 0, "tol", "v0.5 檢查列"),
+        ("P2：Microsoft 分成累計超出上限的部分（$B）", f"=MAX(0,MAX(REV_MSCum)-{S('Microsoft 分成總額上限')})", 0, "tol", "上限 $38B（SRC_OAI）"),
+        ("E8c：價格事件生效日順序違反數（基準／提前／延後三欄）", "=" + order, 0, "eq",
+         "top 層：事件 3（促銷）須不晚於事件 4（Astra）；mid／low 層：事件 2 須不晚於事件 5"),
+        ("E8c：2026 牌價區間 低 ≤ 基準 ≤ 高 的違反數（6 列）", "=" + lpv, 0, "eq", "listPriceFYAvg 2026 區間由事件時點 Inputs 傳遞（取代 C27 WARN）"),
+        ("D11：Inputs 情境 base 列＝各參數基準值（違反數）", "=" + d11, 0, "eq", "本版未設情境選擇器；基準引用各參數 Inputs 值欄，情境列只作對照"),
+        ("P2 預覽：2025 token 合計 ÷ Tokenomics IF_AllocDemand", "=DEM_TkRatio2025", None, "info", "口徑不同，只列差距（工作單 P2-3）"),
+        ("P2 預覽：2025 未校準差距（$B）＝訂閱＋廣告＋其他＋處理 token×單價 − 實際", "=REV_GapUncal2025", None, "info", "自下而上口徑對實際"),
+        ("P2 預覽：2030 淨營收（$B）", f"=Revenue!$I${vr['net']}", None, "info", "總額 − Microsoft 分成"),
+    ]
+
+
 def sheet_readme(wb, snap, date, summary):
     ws = wb.active
     ws.title = "README"
     title(ws, f"OpenAI 收支模型 {VERSION}（{date}）",
           "命題（Andy 2026-09-30）：OpenAI 每 VR 等值 GW 的營收能否覆蓋每 GW 全成本；若不能，缺口由誰、以什麼條件融資。FY2025–FY2030，曆年制。")
     lines = [
-        ("本版範圍", "P1：repo 骨架、SRC_OAI（公司財務原始數據）、TK_Link（Tokenomics 快照）、Inputs（v0.5 Assumed 項目遷入）。需求、算力、成本、融資於 P2–P5。"),
+        ("本版範圍", "P1：repo 骨架、SRC_OAI（公司財務原始數據）、TK_Link（Tokenomics 快照）、Inputs（v0.5 Assumed 項目遷入）。P2：Demand（需求與 token 量）、Revenue（營收、Microsoft 分成、淨額）。算力、成本、融資於 P3–P5。"),
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構，重建時保留 Excel 內已改過的藍字。"),
         ("SRC_OAI", f"{summary['src']} 列；v0.5『已取得的原始訊息』逐筆遷入（Interested-party／Verified）。"),
         ("TK_Link", f"Tokenomics {snap['version']}（{snap['file']}），master 提交 {snap['sha'][:7]}，讀取日 {date}；{summary['tk_ok']} 個名稱有值、{summary['tk_pending']} 個待 Tokenomics 提供。"),
         ("Inputs", f"{summary['inp']} 列；v0.5 Assumed／Analogy／Decision 項目（長表）。"),
         ("Map_v05", f"v0.5 JSON {summary['leaves']} 個葉節點的去處。"),
-        ("Checks", "P1 檢查；CHK_Errors 必須為 0。"),
+        ("Demand", "P2 需求：訂閱各方案人數、每日任務數 × 每任務 token、API 任務數與計費 token；token 量（層級 × 付費／免費，具名範圍 DEM_Tok_*，供 P3）。"),
+        ("Revenue", "P2 營收：API 單價路徑（2026 依價格事件時點天數加權）、訂閱、API、廣告、其他、總額、Microsoft 分成、淨額（具名範圍 REV_*）。"),
+        ("Checks", "P1、P2 檢查；CHK_Errors 必須為 0。"),
         ("一手／二手圖例", "『二手（含一手公告轉載）』＝媒體轉載公司公開公告；『二手（含一手轉載）』＝F2，媒體轉載外流財報或內部文件；兩者不合併。（同文見 SRC_OAI 頁首說明）"),
         ("標記", "Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律附區間）。"),
         ("分層", "公司財務原始數據→SRC_OAI；AI 技術與算力→TK_Link（取自 Tokenomics 名稱）；假設→Inputs。"),
@@ -411,7 +448,8 @@ def main():
     sheet_tk(wb, snap, a.date)
     sheet_inputs(wb, R, final)
     sheet_derived(wb, R)
-    sheet_checks(wb, R, len(R.src_rows), len(R.inp_rows), summary["tk_pending"])
+    P2 = p2.build_p2(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), lambda iid: inp_row(R, iid))
+    sheet_checks(wb, R, len(R.src_rows), len(R.inp_rows), summary["tk_pending"], P2)
     sheet_map(wb, R)
     preserve.write_defaults(wb, final)
     raw = Path(tempfile.mkdtemp()) / a.out.name

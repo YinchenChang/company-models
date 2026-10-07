@@ -67,23 +67,34 @@ def test_pending_list_resolved(R):
     assert isinstance(R.pending, list) and R.pending == []
 
 
-def test_e6_no_constants_in_v9_formulas():
-    """E6：Derived_V9 的公式不得內含常數（算式中的『1-比例』恆等式除外）；換算係數與比例必須在 Inputs。"""
+def _e6_scan(ws):
     import re
-    import openpyxl
-    wb = openpyxl.load_workbook(current_model_path())
-    ws = wb["Derived_V9"]
     seen = 0
     for row in ws.iter_rows(min_row=5):
         for c in row:
             if isinstance(c.value, str) and c.value.startswith("="):
                 seen += 1
-                f = re.sub(r"'?[A-Za-z_]+'?!\$?[A-Z]{1,3}\$?\d+", "", c.value)       # 跨頁參照
+                f = re.sub(r"'?[A-Za-z_]+'?!\$?[A-Z]{1,3}\$?\d+(:\$?[A-Z]{1,3}\$?\d+)?", "", c.value)    # 跨頁參照
                 f = re.sub(r"\$?\b[A-Z]{1,3}\$?\d+\b", "", f)                          # 儲存格參照
                 f = re.sub(r"\b[A-Za-z_][A-Za-z_0-9]*\b", "", f)                          # 具名範圍與函數
-                f = f.replace("(1-", "(").replace("+1)", ")")      # 恆等式：1−比例；年數含頭尾的 +1
-                assert not re.search(r"\d", f), f"{c.coordinate} 公式含常數：{c.value}"
-    assert seen >= 9
+                f = f.replace("(1-", "(").replace("+1)", ")").replace("(1+", "(")   # 恆等式：1−比例；年數含頭尾的 +1；1＋成長率（P2）
+                assert not re.search(r"\d", f), f"{ws.title}!{c.coordinate} 公式含常數：{c.value}"
+    return seen
+
+
+def test_e6_no_constants_in_v9_formulas():
+    """E6：Derived_V9 的公式不得內含常數（算式中的『1-比例』恆等式除外）；換算係數與比例必須在 Inputs。"""
+    import openpyxl
+    wb = openpyxl.load_workbook(current_model_path())
+    assert _e6_scan(wb["Derived_V9"]) >= 9
+
+
+def test_e6_no_constants_in_p2_formulas():
+    """E6（P2）：Demand、Revenue 兩頁的公式不得內含常數；恆等式只容許 1−比例、1＋成長率；定義常數（天數、月數、單位換算）在 Inputs。"""
+    import openpyxl
+    wb = openpyxl.load_workbook(current_model_path())
+    assert _e6_scan(wb["Demand"]) >= 200
+    assert _e6_scan(wb["Revenue"]) >= 200
 
 
 def test_v12_pro_constraints_in_src(R):

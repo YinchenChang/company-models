@@ -158,7 +158,8 @@ def test_scenarios_actually_change_outputs(model, base_engine):
 
 def test_scenario_expected_results(model):
     """情境的預期結果：被改的輸入必須讓對應檢查列轉為 ERR（保證檢查有牙齒）。"""
-    want = {"a_equity_sum_broken": "C12", "c_util_out_of_range": "C10", "d_oracle_term": "C13", "b_input_out_of_range": "C06", "e_pro_ratio_high": "C22"}
+    want = {"a_equity_sum_broken": "C12", "c_util_out_of_range": "C10", "d_oracle_term": "C13", "b_input_out_of_range": "C06", "e_pro_ratio_high": "C22",
+            "i_event_order_broken": "C34", "m_usage_mix_broken": "C30"}
     eng0 = new_engine(model, fresh=True)
     assert eng0.get_name("CHK_Errors") == 0
     for sc in SCENARIOS[1:]:
