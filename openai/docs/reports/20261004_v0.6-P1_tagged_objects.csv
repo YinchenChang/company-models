@@ -1,0 +1,122 @@
+﻿v0.5 物件路徑,v0.5 標記,葉節點數,去處（可多筆）
+tokenRevenue.actuals.revenue2024,Interested-party,3,SRC_OAI：SRC_OAI_001
+tokenRevenue.actuals.revenue2025,Interested-party,3,SRC_OAI：SRC_OAI_002
+tokenRevenue.actuals.cogs2025,Interested-party,3,SRC_OAI：SRC_OAI_003
+tokenRevenue.actuals.revenueQ1_2026,Interested-party,3,SRC_OAI：SRC_OAI_004
+tokenRevenue.actuals.revenueQ2_2026,Interested-party,3,SRC_OAI：SRC_OAI_005
+tokenRevenue.actuals.arrAug2026,Interested-party,3,SRC_OAI：SRC_OAI_006
+tokenRevenue.actuals.consumerShareStart2026,Interested-party,3,SRC_OAI：SRC_OAI_007
+tokenRevenue.actuals.apiTokensPerMinOct2025,Interested-party,4,SRC_OAI：SRC_OAI_008
+tokenRevenue.actuals.apiTokensFY2025,Derived,7,公式（後續工作包）：Derived_V9（V10–V12：API FY2025 token＝每分鐘 token×每年分鐘數÷單位換算）
+tokenRevenue.msShare.rate,Interested-party,3,SRC_OAI：SRC_OAI_009
+tokenRevenue.msShare.capTotal,Interested-party,3,SRC_OAI：SRC_OAI_010
+tokenRevenue.msShare.capThroughYear,Verified,3,SRC_OAI：SRC_OAI_011
+tokenRevenue.msShare.capCountFromYear,Assumed,3,Inputs：INP_011
+tokenRevenue.msShare.azureInflowAfterApr2026,Verified,3,SRC_OAI：SRC_OAI_012
+tokenRevenue.api.listPriceSnapshot,Verified,12,SRC_OAI：API 牌價快照列；SRC_OAI：SRC_OAI_013；SRC_OAI：SRC_OAI_014；SRC_OAI：SRC_OAI_015；SRC_OAI：SRC_OAI_016；SRC_OAI：SRC_OAI_017；SRC_OAI：SRC_OAI_018；SRC_OAI：SRC_OAI_019；SRC_OAI：SRC_OAI_020；SRC_OAI：SRC_OAI_021
+tokenRevenue.api.priceEvents2026,Verified,7,SRC_OAI：SRC_OAI_025；SRC_OAI：SRC_OAI_026；SRC_OAI：SRC_OAI_027；SRC_OAI：SRC_OAI_028；SRC_OAI：SRC_OAI_029
+tokenRevenue.api.listPriceFYAvg.in.top,Analogy/Derived,7,公式（後續工作包）：P2（FY 平均牌價 2026：priceEvents 月加權）；Inputs：INP_015
+tokenRevenue.api.listPriceFYAvg.in.mid,Analogy/Derived,7,公式（後續工作包）：P2（FY 平均牌價 2026：priceEvents 月加權）；Inputs：INP_016
+tokenRevenue.api.listPriceFYAvg.in.low,Analogy/Derived,7,公式（後續工作包）：P2（FY 平均牌價 2026：priceEvents 月加權）；Inputs：INP_017
+tokenRevenue.api.listPriceFYAvg.out.top,Analogy/Derived,7,公式（後續工作包）：P2（FY 平均牌價 2026：priceEvents 月加權）；Inputs：INP_018
+tokenRevenue.api.listPriceFYAvg.out.mid,Analogy/Derived,7,公式（後續工作包）：P2（FY 平均牌價 2026：priceEvents 月加權）；Inputs：INP_019
+tokenRevenue.api.listPriceFYAvg.out.low,Analogy/Derived,7,公式（後續工作包）：P2（FY 平均牌價 2026：priceEvents 月加權）；Inputs：INP_020
+tokenRevenue.api.listPriceAnnualChange.top,Assumed,4,Inputs：INP_021
+tokenRevenue.api.listPriceAnnualChange.mid,Assumed,4,Inputs：INP_022
+tokenRevenue.api.listPriceAnnualChange.low,Assumed,4,Inputs：INP_023
+tokenRevenue.api.cachedInputRatio,Verified,3,SRC_OAI：SRC_OAI_030
+tokenRevenue.api.tokenMix.top,Assumed,7,Inputs：INP_024；Inputs：INP_025
+tokenRevenue.api.tokenMix.mid,Assumed,7,Inputs：INP_026；Inputs：INP_027
+tokenRevenue.api.tokenMix.low,Assumed,8,公式（後續工作包）：P2（low＝1−top−mid）
+tokenRevenue.api.outputShare,Analogy,5,Inputs：INP_028
+tokenRevenue.api.cacheHitRate,Assumed,4,Inputs：INP_029
+tokenRevenue.api.discountRate,Assumed,5,Inputs：INP_030
+tokenRevenue.api.tokensPerTaskBase,Assumed,6,Inputs：INP_031
+tokenRevenue.api.demandGrowthExPrice.tasks,Assumed,9,Inputs：INP_032；Inputs：INP_033；Inputs：INP_034；Inputs：INP_035；Inputs：INP_036；Inputs：INP_037；Inputs：INP_038；Inputs：INP_039
+tokenRevenue.api.demandGrowthExPrice.tokensPerTask,Assumed,9,Inputs：INP_040；Inputs：INP_041；Inputs：INP_042；Inputs：INP_043；Inputs：INP_044；Inputs：INP_045；Inputs：INP_046；Inputs：INP_047
+tokenRevenue.api.elasticity.tasks,Assumed,5,Inputs：INP_048
+tokenRevenue.api.elasticity.tokensPerTask,Assumed,4,Inputs：INP_049
+tokenRevenue.api.priceBasis,Decision,3,Inputs：INP_050
+tokenRevenue.subscription.listPriceSep2026,Verified,8,SRC_OAI：SRC_OAI_031；SRC_OAI：SRC_OAI_032；SRC_OAI：SRC_OAI_033；SRC_OAI：SRC_OAI_034；SRC_OAI：SRC_OAI_035
+tokenRevenue.subscription.subsFYAvg.free,Analogy,11,公式（後續工作包）：Derived_V9（FY 平均人數 2026：觀測值×換算係數）；Inputs：INP_056；Inputs：INP_058；Inputs：INP_059；Inputs：INP_060；Inputs：INP_061；Inputs：INP_062；Inputs：INP_063
+tokenRevenue.subscription.subsFYAvg.go,Assumed,11,Inputs：INP_064；Inputs：INP_065；Inputs：INP_066；Inputs：INP_067；Inputs：INP_068；Inputs：INP_069；Inputs：INP_070；Inputs：INP_071
+tokenRevenue.subscription.subsFYAvg.plus,Interested-party,11,公式（後續工作包）：Derived_V9（FY 平均人數 2025：觀測值×換算係數）；Inputs：INP_073；Inputs：INP_074；Inputs：INP_075；Inputs：INP_076；Inputs：INP_077；Inputs：INP_078；Inputs：INP_079
+tokenRevenue.subscription.subsFYAvg.pro,Interested-party,11,公式（後續工作包）：Derived_V9（V12：pro 2025＝2026÷SRC 倍數）；公式（後續工作包）：Derived_V9（V12：pro 2026＝比例×付費總數（含席位））；公式（後續工作包）：Derived_V9（V15：pro 2027＝比例_t/(1−比例_t)×(go＋plus＋seats)）；公式（後續工作包）：Derived_V9（V15：pro 2028＝比例_t/(1−比例_t)×(go＋plus＋seats)）；公式（後續工作包）：Derived_V9（V15：pro 2029＝比例_t/(1−比例_t)×(go＋plus＋seats)）；公式（後續工作包）：Derived_V9（V15：pro 2030＝比例_t/(1−比例_t)×(go＋plus＋seats)）；不遷入：—
+tokenRevenue.subscription.subsFYAvg.seats,Assumed,11,Inputs：INP_088；Inputs：INP_089；Inputs：INP_090；Inputs：INP_091；Inputs：INP_092；Inputs：INP_093；Inputs：INP_094；Inputs：INP_095
+tokenRevenue.subscription.arpu.go,Assumed,5,Inputs：INP_096
+tokenRevenue.subscription.arpu.plus,Assumed,9,Inputs：INP_097；Inputs：INP_098
+tokenRevenue.subscription.arpu.pro,Assumed,9,Inputs：INP_099；Inputs：INP_100
+tokenRevenue.subscription.arpu.seats,Assumed,6,Inputs：INP_101
+tokenRevenue.subscription.tasksPerDay,Assumed,14,Inputs：INP_102；Inputs：INP_103；Inputs：INP_104；Inputs：INP_105；Inputs：INP_106；Inputs：INP_107；Inputs：INP_108；Inputs：INP_109；Inputs：INP_110；Inputs：INP_111
+tokenRevenue.subscription.tokensPerTask,Assumed,14,Inputs：INP_112；Inputs：INP_113；Inputs：INP_114；Inputs：INP_115；Inputs：INP_116；Inputs：INP_117；Inputs：INP_118；Inputs：INP_119；Inputs：INP_120；Inputs：INP_121
+tokenRevenue.subscription.tasksPerDayGrowth,Assumed,4,Inputs：INP_122
+tokenRevenue.subscription.tokensPerTaskGrowth,Assumed,4,Inputs：INP_123
+tokenRevenue.subscription.apiEquivalentTier,Assumed,7,Inputs：INP_051；Inputs：INP_052；Inputs：INP_053；Inputs：INP_054；Inputs：INP_055
+tokenRevenue.subscription.migration.planGo2026,Interested-party,4,SRC_OAI：SRC_OAI_036
+tokenRevenue.subscription.migration.planPlus2026,Interested-party,4,SRC_OAI：SRC_OAI_037
+tokenRevenue.subscription.migration.planFraction,Decision,5,Inputs：INP_012；Inputs：INP_013；Inputs：INP_014
+tokenRevenue.other.ads.exposureShare,Assumed,20,Inputs：INP_124；Inputs：INP_125；Inputs：INP_126；Inputs：INP_127；Inputs：INP_128；Inputs：INP_129
+tokenRevenue.other.ads.arpuPerExposedUserYear,Analogy,21,Inputs：INP_130；Inputs：INP_131；Inputs：INP_132；Inputs：INP_133；Inputs：INP_134；Inputs：INP_135
+tokenRevenue.other.ads.comparisonInternalTarget,Interested-party,7,SRC_OAI：SRC_OAI_038；SRC_OAI：SRC_OAI_039；SRC_OAI：SRC_OAI_040；SRC_OAI：SRC_OAI_041；SRC_OAI：SRC_OAI_042
+tokenRevenue.other.residual,Assumed,3,Inputs：INP_136
+tokenRevenue.costInterface.hwCostPerM,Derived,9,不遷入；改取 TK_Link：TK_Link IF_HoldEcon、IF_TokGW_*
+tokenRevenue.costInterface.capacityTokensT,N/A,3,不遷入：—
+tokenRevenue.comparison.deckJul2026,Interested-party,5,SRC_OAI：SRC_OAI_043；SRC_OAI：SRC_OAI_044；SRC_OAI：SRC_OAI_045
+tokenRevenue.comparison.fy2026Independent,Derived,5,公式（後續工作包）：P2（FY2026 獨立推估：Q1＋Q2＋下半年 ARR 外推）
+tokenRevenue.comparison.weeklyUsers2030Plan,Interested-party,4,SRC_OAI：SRC_OAI_046
+tokenRevenue.inferenceCost.rack,Derived,21,不遷入；改取 TK_Link：TK_Link IF_Util（利用率）、IF_TokGW_*（產能）
+tokenRevenue.inferenceCost.rack.utilization,Assumed,4,不遷入；改取 TK_Link：TK_Link IF_Util（利用率）、IF_TokGW_*（產能）
+tokenRevenue.inferenceCost.classes,Analogy,18,不遷入；改取 TK_Link：TK_Link IF_TokGW_Luna／Sol／Astra
+tokenRevenue.inferenceCost.serving.batchCap,Assumed,4,不遷入；改取 TK_Link：TK_Link IF_Util、IF_TokGW_*
+tokenRevenue.inferenceCost.serving.avgContextK,Assumed,4,不遷入；改取 TK_Link：TK_Link IF_Util、IF_TokGW_*
+tokenRevenue.inferenceCost.serving.prefillAttnOverhead,Assumed,2,不遷入；改取 TK_Link：TK_Link IF_Util、IF_TokGW_*
+tokenRevenue.inferenceCost.serving.cachedVsPrefill,Analogy,5,不遷入；改取 TK_Link：TK_Link IF_Util、IF_TokGW_*
+tokenRevenue.inferenceCost.usage,Assumed,28,Inputs：INP_155；Inputs：INP_156；Inputs：INP_157；Inputs：INP_158；Inputs：INP_159；Inputs：INP_160；Inputs：INP_161；Inputs：INP_162；Inputs：INP_163；Inputs：INP_164；Inputs：INP_165；Inputs：INP_166；Inputs：INP_167；Inputs：INP_168；Inputs：INP_169；Inputs：INP_170；Inputs：INP_171；Inputs：INP_172；Inputs：INP_173；Inputs：INP_174；Inputs：INP_175；Inputs：INP_176；Inputs：INP_177；Inputs：INP_178；Inputs：INP_179
+tokenRevenue.inferenceCost.calibration2025.inferenceTotal,Interested-party,4,SRC_OAI：SRC_OAI_047
+tokenRevenue.inferenceCost.calibration2025.freeUsers,Interested-party,4,SRC_OAI：SRC_OAI_048
+tokenRevenue.inferenceCost.calibration2025.paidUsers,Interested-party,4,SRC_OAI：SRC_OAI_049
+tokenRevenue.inferenceCost.calibration2025.apiMargin,Assumed,6,Inputs：INP_180
+tokenRevenue.inferenceCost.calibration2025.cogsReported,Interested-party,4,重複併入：SRC_OAI（營業成本：FY2025）
+tokenRevenue.inferenceCost.checks2026.inference,Interested-party,4,SRC_OAI：SRC_OAI_050
+tokenRevenue.inferenceCost.checks2026.inference2030,Interested-party,5,SRC_OAI：SRC_OAI_051
+tokenRevenue.inferenceCost.nonText,Derived,2,公式（後續工作包）：P4（免費層非文字推論殘差）
+reverse.targetRevenue,Interested-party/Derived,8,重複併入：SRC_OAI_043；重複併入：SRC_OAI_044；重複併入：SRC_OAI（營收：FY2025）；公式（後續工作包）：P5（反向目標路徑 2027–29：依 Σ840 擬合）
+reverse.targetFCFcum2026_2030,Interested-party,3,SRC_OAI：SRC_OAI_054
+reverse.targetComputeCum2026_2030,Interested-party,3,重複併入：SRC_OAI_055
+reverse.priorVintages,Interested-party,3,SRC_OAI：SRC_OAI_056
+reverse.comparisonSetAdsPlan,Interested-party,8,重複併入：SRC_OAI（內部廣告營收目標：2026）；重複併入：SRC_OAI（內部廣告營收目標：2027）；重複併入：SRC_OAI（內部廣告營收目標：2028）；重複併入：SRC_OAI（內部廣告營收目標：2029）；重複併入：SRC_OAI（內部廣告營收目標：2030）；重複併入：—
+spending.unscheduledProfile,Decision,5,Inputs：INP_181；不遷入：—
+spending.contracts.microsoftAzure,Verified/Analogy,6,Inputs：INP_182；Inputs：INP_183；不遷入：—；SRC_OAI：SRC_OAI_057
+spending.contracts.oracle,Interested-party,7,公式（後續工作包）：Checks C14（E8f：Oracle annual＝total÷年數）；SRC_OAI：SRC_OAI_058；SRC_OAI：SRC_OAI_059；SRC_OAI：SRC_OAI_060；SRC_OAI：SRC_OAI_061
+spending.contracts.awsNvidia,Verified,6,不遷入：—；SRC_OAI：SRC_OAI_062；SRC_OAI：SRC_OAI_063；SRC_OAI：SRC_OAI_064
+spending.contracts.awsTrainium,Verified,8,不遷入：—；SRC_OAI：SRC_OAI_065；SRC_OAI：SRC_OAI_066；SRC_OAI：SRC_OAI_067；SRC_OAI：SRC_OAI_068
+spending.contracts.coreweave,Verified,6,不遷入：—；SRC_OAI：SRC_OAI_070；SRC_OAI：SRC_OAI_071；SRC_OAI：SRC_OAI_072
+spending.contracts.cerebras,Verified/Analogy,9,Inputs：INP_184；Inputs：INP_185；不遷入：—；SRC_OAI：SRC_OAI_073；SRC_OAI：SRC_OAI_074；SRC_OAI：SRC_OAI_075
+spending.ownedCapex,Assumed,10,Inputs：INP_186；Inputs：INP_187；Inputs：INP_188；Inputs：INP_189；Inputs：INP_190；Inputs：INP_191；Inputs：INP_192；Inputs：INP_193
+spending.partnerFinancedShare,Assumed,5,Inputs：INP_194
+spending.leases,N/A,3,不遷入：—
+spending.opexExComputePctRevenue,Assumed,10,公式（後續工作包）：P4（2025 非算力營運費用占營收比：由財報數據推得）；Inputs：INP_196；Inputs：INP_197；Inputs：INP_198；Inputs：INP_199；Inputs：INP_200；Inputs：INP_201；Inputs：INP_202
+spending.anchors.computeCum2026_2030_WSJ,Interested-party,3,SRC_OAI：SRC_OAI_076
+spending.anchors.computeCum2026_2030_FT,Interested-party,3,重複併入：SRC_OAI_055
+spending.anchors.offBalanceCommitmentsStock,Interested-party,3,SRC_OAI：SRC_OAI_077
+spending.anchors.compute2026Testimony,Interested-party,3,SRC_OAI：SRC_OAI_078
+funding.cashEnd2025,Interested-party,5,SRC_OAI：SRC_OAI_079
+funding.equityRound2026Mar.unconditional2026,Interested-party,3,公式（後續工作包）：Derived_V9／Checks（SRC 四個組成加總）
+funding.equityRound2026Mar.conditional,Verified,3,SRC_OAI：SRC_OAI_082
+funding.minCash,Assumed,4,Inputs：INP_203
+funding.contingentLiabilities.nvidiaGuarantees,Interested-party,3,SRC_OAI：SRC_OAI_083
+funding.contingentLiabilities.nvidiaChipFinancingTalks,Interested-party,3,SRC_OAI：SRC_OAI_084
+training.actual2024,Interested-party,4,SRC_OAI：SRC_OAI_085
+training.actual2025,Derived,6,公式（後續工作包）：訓練支出 2025＝SRC_OAI 10.59＋Inputs 其他雲端（Checks 衍生值列）
+training.rd2025,Interested-party,3,SRC_OAI：SRC_OAI_087
+training.planCompute2026_2030,Interested-party,6,SRC_OAI：SRC_OAI_055
+training.planInference,Interested-party,4,重複併入：SRC_OAI（計畫推論成本：2026）；重複併入：SRC_OAI（計畫推論成本：2030）
+computeMW.tokenomicsRef,Derived,12,不遷入；改取 TK_Link：TK_Link IF_TokGW_*、IF_HoldEcon
+computeMW.genFactor.hopper,Analogy,4,不遷入；改取 TK_Link：TK_Link IF_TokGW_*（Hopper 世代欄）
+computeMW.genFactor.custom,Assumed,5,Inputs：INP_204
+computeMW.genFactor.nextGen,Assumed,5,不遷入；改取 TK_Link：TK_Link IF_TokGW_*（Rubin Ultra 世代欄）
+computeMW.fleetMix,Assumed,27,Inputs：INP_205；Inputs：INP_206；Inputs：INP_207；Inputs：INP_208；Inputs：INP_209；Inputs：INP_210；Inputs：INP_211；Inputs：INP_212；Inputs：INP_213；Inputs：INP_214；Inputs：INP_215；Inputs：INP_216；Inputs：INP_217；Inputs：INP_218；Inputs：INP_219；Inputs：INP_220；Inputs：INP_221；Inputs：INP_222；Inputs：INP_223；Inputs：INP_224；Inputs：INP_225；Inputs：INP_226；Inputs：INP_227；Inputs：INP_228
+computeMW.actuals,Interested-party,7,SRC_OAI：SRC_OAI_088；SRC_OAI：SRC_OAI_089；SRC_OAI：SRC_OAI_090；SRC_OAI：SRC_OAI_091
+computeMW.leasePricePerGWyr,Analogy,5,Inputs：INP_229
+computeMW.idleReserve,Assumed,2,Inputs：INP_232
+computeMW.minTrainingShare,Assumed,3,Inputs：INP_233

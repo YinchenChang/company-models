@@ -1,0 +1,11 @@
+﻿ID,指標,出處,等級,立場,立場說明,一手／二手
+SRC_OAI_092,ChatGPT 週活躍用戶（WAU）：2026-02,OpenAI 公告（v0.5 free 出處：WAU 900M，2026,3,利害關係方,公司公告：誘因為宣傳成長與用戶規模,一手
+SRC_OAI_093,Go 付費用戶：2025 年底,The Information（v0.5 go 出處：2025 年 3M,3,利害關係方,未評,二手
+SRC_OAI_094,ChatGPT Plus＋Pro 付費訂閱：2025-07,Reuters／The Information 2025-11（v0.5,3,利害關係方,未評,二手
+SRC_OAI_095,ChatGPT 付費訂閱：2025 年（內部文件）,The Information 2026-04-28（v0.5 plus,3,利害關係方,管理層、內部文件或外流數據：誘因為募資與,二手
+SRC_OAI_097,付費企業用戶：2026-02,OpenAI 2026-02（v0.5 seats 出處）,3,利害關係方,公司公告：誘因為宣傳成長與用戶規模,一手
+SRC_OAI_098,研發費用中付 Microsoft 部分：2025,外流財報（v0.5 training.actual2025 出處：202,3,利害關係方,管理層、內部文件或外流數據：誘因為募資與,二手（含一手轉載）
+SRC_OAI_099,自有園區資本支出例：Project Camellia,TechCrunch 2026-07-22（v0.5 ownedCape,2,利害關係方,未評,二手
+SRC_OAI_100,ChatGPT 每日訊息數：2025-07,OpenAI（v0.5 tasksPerDay 出處：總量對照）,3,利害關係方,公司公告：誘因為宣傳成長與用戶規模,一手
+SRC_OAI_101,Pro 用戶倍數：2026 對 2025（內部預測：倍增）,The Information 2026-04-28（v0.5 pro ,3,利害關係方,管理層、內部文件或外流數據：誘因為募資與,二手
+SRC_OAI_102,Pro 占付費訂閱總數：2026 上限（內部預測：<1%）,The Information 2026-04-28（v0.5 pro ,3,利害關係方,管理層、內部文件或外流數據：誘因為募資與,二手

@@ -1,0 +1,69 @@
+﻿分類,葉節點數
+結構清單（方案、層級、營收線、選項、充分條件組合）,24
+說明文字／版本字串／單位字串,20
+null／N／A（未揭露、不適用）,11
+其他,2
+決策記錄（以公式結構體現）,2
+曆年制設定（工作單已定）,1
+
+v0.5 路徑,分類,理由
+_readme,說明文字／版本字串／單位字串,版本說明文字；v0.6 的版本說明在 README／CHANGELOG
+tokenRevenue.meta.company,說明文字／版本字串／單位字串,公司名稱：表頭文字，不是參數
+tokenRevenue.meta.fiscalYearEndMonth,曆年制設定（工作單已定）,工作單第 0 節已定：曆年制（12 月）；v0.6 不設此參數
+tokenRevenue.meta.version,說明文字／版本字串／單位字串,v0.4 的版本字串，已過時
+tokenRevenue.meta.decisions,結構清單（方案、層級、營收線、選項、充分條件組合）,決策 ID 清單：v0.6 逐項在 Inputs「v0.5 原決策」欄保留；完整文字見 reference/v0.5
+tokenRevenue.meta.units.revenue,說明文字／版本字串／單位字串,單位字串：v0.6 每列自帶單位欄
+tokenRevenue.meta.units.tokens,說明文字／版本字串／單位字串,單位字串：v0.6 每列自帶單位欄
+tokenRevenue.meta.units.price,說明文字／版本字串／單位字串,單位字串：v0.6 每列自帶單位欄
+tokenRevenue.meta.units.subs,說明文字／版本字串／單位字串,單位字串：v0.6 每列自帶單位欄
+tokenRevenue.meta.units.arpu,說明文字／版本字串／單位字串,單位字串：v0.6 每列自帶單位欄
+tokenRevenue.api.calibration,說明文字／版本字串／單位字串,校準方式的文字說明；P2 以公式實作，說明保留於 CLAUDE.md／報告
+tokenRevenue.api.tiers.0,結構清單（方案、層級、營收線、選項、充分條件組合）,層級清單（top／mid／low）：結構，由公式頁的列結構體現
+tokenRevenue.api.tiers.1,結構清單（方案、層級、營收線、選項、充分條件組合）,層級清單（top／mid／low）：結構，由公式頁的列結構體現
+tokenRevenue.api.tiers.2,結構清單（方案、層級、營收線、選項、充分條件組合）,層級清單（top／mid／low）：結構，由公式頁的列結構體現
+tokenRevenue.subscription.tiers.0,結構清單（方案、層級、營收線、選項、充分條件組合）,方案清單：結構
+tokenRevenue.subscription.tiers.1,結構清單（方案、層級、營收線、選項、充分條件組合）,方案清單：結構
+tokenRevenue.subscription.tiers.2,結構清單（方案、層級、營收線、選項、充分條件組合）,方案清單：結構
+tokenRevenue.subscription.tiers.3,結構清單（方案、層級、營收線、選項、充分條件組合）,方案清單：結構
+tokenRevenue.subscription.tiers.4,結構清單（方案、層級、營收線、選項、充分條件組合）,方案清單：結構
+tokenRevenue.subscription.line.free,結構清單（方案、層級、營收線、選項、充分條件組合）,方案所屬營收線（consumer／enterprise）：結構，P2 以列結構體現
+tokenRevenue.subscription.line.go,結構清單（方案、層級、營收線、選項、充分條件組合）,方案所屬營收線（consumer／enterprise）：結構，P2 以列結構體現
+tokenRevenue.subscription.line.plus,結構清單（方案、層級、營收線、選項、充分條件組合）,方案所屬營收線（consumer／enterprise）：結構，P2 以列結構體現
+tokenRevenue.subscription.line.pro,結構清單（方案、層級、營收線、選項、充分條件組合）,方案所屬營收線（consumer／enterprise）：結構，P2 以列結構體現
+tokenRevenue.subscription.line.seats,結構清單（方案、層級、營收線、選項、充分條件組合）,方案所屬營收線（consumer／enterprise）：結構，P2 以列結構體現
+tokenRevenue.subscription.subsFYAvg.pro.lo_mult,其他,V15：pro 全期改為比例公式，區間由比例 0.5–2.0% 傳遞；倍數不再使用（v0.5 原值 0.6／1.2 見對照表）
+tokenRevenue.subscription.subsFYAvg.pro.hi_mult,其他,V15：同上
+tokenRevenue.other.ads.adTiers.0,結構清單（方案、層級、營收線、選項、充分條件組合）,廣告曝光方案清單（free、go）：結構
+tokenRevenue.other.ads.adTiers.1,結構清單（方案、層級、營收線、選項、充分條件組合）,廣告曝光方案清單（free、go）：結構
+tokenRevenue.costInterface.overheadMultiplier,說明文字／版本字串／單位字串,v0.4 已廢止（文字說明）
+tokenRevenue.costInterface.capacityTokensT.v,null／N／A（未揭露、不適用）,N/A：D8a 容量模組建成前不適用；v0.6 P3 以 TK_Link 產能實作
+tokenRevenue.costInterface.capacityTokensT.tag,null／N／A（未揭露、不適用）,N/A：D8a 容量模組建成前不適用；v0.6 P3 以 TK_Link 產能實作
+tokenRevenue.costInterface.capacityTokensT.src,null／N／A（未揭露、不適用）,N/A：D8a 容量模組建成前不適用；v0.6 P3 以 TK_Link 產能實作
+tokenRevenue.comparison._note,說明文字／版本字串／單位字串,說明文字（D4c：僅作對照欄）
+tokenRevenue.inferenceCost._note,說明文字／版本字串／單位字串,說明文字
+tokenRevenue.inferenceCost.hwCostIndexSrc,說明文字／版本字串／單位字串,文字說明：沿用 Tokenomics v4 艦隊硬體成本指數；v0.6 由 TK_Link 取代
+reverse._note,說明文字／版本字串／單位字串,說明文字（R1–R3）
+reverse.sufficientSets.0,結構清單（方案、層級、營收線、選項、充分條件組合）,反向模式充分條件組合（apiOnly／subOnly／proportional）：P5 以公式結構實作（R1–R3）
+reverse.sufficientSets.1,結構清單（方案、層級、營收線、選項、充分條件組合）,反向模式充分條件組合（apiOnly／subOnly／proportional）：P5 以公式結構實作（R1–R3）
+reverse.sufficientSets.2,結構清單（方案、層級、營收線、選項、充分條件組合）,反向模式充分條件組合（apiOnly／subOnly／proportional）：P5 以公式結構實作（R1–R3）
+reverse.adsInReverse,結構清單（方案、層級、營收線、選項、充分條件組合）,決策記錄：反向模式廣告列保持正向（N1b）；P5 以公式結構體現
+spending._note,說明文字／版本字串／單位字串,說明文字（S1c、S2、N4(b)）
+spending.unscheduledProfile.options.0,結構清單（方案、層級、營收線、選項、充分條件組合）,選項清單（even／ramp）：結構
+spending.unscheduledProfile.options.1,結構清單（方案、層級、營收線、選項、充分條件組合）,選項清單（even／ramp）：結構
+spending.contracts.microsoftAzure.annual,null／N／A（未揭露、不適用）,null：未揭露年度金額（P3 由 N4(b) 爬升決定）
+spending.contracts.awsNvidia.annual,null／N／A（未揭露、不適用）,null：未揭露年度金額
+spending.contracts.awsTrainium.annual,null／N／A（未揭露、不適用）,null：未揭露年度金額
+spending.contracts.coreweave.annual,null／N／A（未揭露、不適用）,null：未揭露年度金額
+spending.contracts.cerebras.annual,null／N／A（未揭露、不適用）,null：未揭露年度金額
+spending.excludedOrComparison.stargateSoftBank,決策記錄（以公式結構體現）,決策記錄（S3）：合資建設由合作方出資部分不進 OpenAI 現金流；無揭露數字
+spending.leases.v,null／N／A（未揭露、不適用）,N/A：OpenAI 未揭露承租合約；雲端合約內含之租賃不另列
+spending.leases.tag,null／N／A（未揭露、不適用）,N/A：OpenAI 未揭露承租合約；雲端合約內含之租賃不另列
+spending.leases.src,null／N／A（未揭露、不適用）,N/A：OpenAI 未揭露承租合約；雲端合約內含之租賃不另列
+funding._note,說明文字／版本字串／單位字串,說明文字（S7、S4b）
+funding.contingentLiabilities.treatment,結構清單（方案、層級、營收線、選項、充分條件組合）,決策記錄（S4b）：只列示，不作資金來源；P5 以公式結構體現
+funding.externalNeed,決策記錄（以公式結構體現）,外部資金需求的定義（年底現金低於最低現金之差額累計）：P5 以公式實作
+training._note,說明文字／版本字串／單位字串,說明文字
+training.allocation,說明文字／版本字串／單位字串,方法說明（計畫訓練總額依各年算力現金−推論成本占比分配）：P3／P4 以公式實作
+training.tokenAllocation,說明文字／版本字串／單位字串,方法說明（每層級訓練分攤）：P4 以公式實作
+computeMW._note,說明文字／版本字串／單位字串,說明文字：單位 GW（IT 電力）；VR-eq 概念由 TK_Link 世代產能取代
+computeMW.decisions,結構清單（方案、層級、營收線、選項、充分條件組合）,決策記錄（V1a、V2a）：P3、P5 以公式結構體現；v0.5 決策 ID 保留於 Inputs 欄
