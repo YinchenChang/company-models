@@ -1,9 +1,9 @@
 # CoreWeave × Tokenomics 改造進度（接手用；W1–W3 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：W0、W1（PR #6，待審）；**W2 全部完成**（PR #9，疊加於 W1 分支）：每 MW 資本支出（Tokenomics）、由下而上營運成本、收入備案（legacy）＋對照列、世代組合、每MW經濟性彙總表、敏感度快照；新方法 `verify.sh` 22 項全過；舊方法 `scripts/verify_legacy.sh`（--vs-dist）25 項全過、與 v4.5 成品 0 差異。
-- 下一步：W3（`claude/coreweave-w3-v4.6`，疊加於 W2 分支，除非已合併）：v4.6 成品與前後對照報告；直接讀 Excel「每MW經濟性」彙總表；v4.5 側用 `scripts/verify_legacy.sh` 的副本（out/legacy_copy）或 dist/ 成品。
-- 未解問題：(1) Tokenomics v5.26 尚未建置：`IF_MaintIT`、`IF_StaffSW`、`IF_TaxIns`、`IF_DeprLifeIT` 以暫代值（檢查頁警告）；建置後只需重抓快照、改 company.json `tokenomics`、verify；(2) GB200／GB300／VR200 長約 GPU 小時價格不足兩個獨立來源 → 收入採備案 legacy；(3) CoreWeave「active power」口徑定義未找到（預設 IT）；(4) 由下而上 EBITDA 率 70–74% 高於 Q2 實際 58.6%（收入每 MW 10.0 vs 8.2、租金每 MW 1.6 vs 2.1；人員軟體與稅險暫代 0），需 Andy 決定是否進 v4.6。
+- 已完成：W0、W1（PR #6，待審）；W2（PR #9，待審）；**W3 第 0、0′ 步**（PR #18：Tokenomics 快照 v5.26，暫代值改正式值；新方法 verify 22 項、舊方法 25 項全過）。W2 原紀錄：**W2 全部完成**（PR #9，疊加於 W1 分支）：每 MW 資本支出（Tokenomics）、由下而上營運成本、收入備案（legacy）＋對照列、世代組合、每MW經濟性彙總表、敏感度快照；新方法 `verify.sh` 22 項全過；舊方法 `scripts/verify_legacy.sh`（--vs-dist）25 項全過、與 v4.5 成品 0 差異。
+- 下一步：W3 第 1 步升版 v4.6（vlog.py、tail.js VLOG、dist/、交接檔「Tokenomics 連結」、README），第 2 步 `--vs-dist --expect`。
+- 未解問題：(1) ~~Tokenomics v5.26 暫代值~~（W3 第 0′ 步已解決）；(2) GB200／GB300／VR200 長約 GPU 小時價格不足兩個獨立來源 → 收入採備案 legacy；(3) CoreWeave「active power」口徑定義未找到（預設 IT）；(4) 由下而上 EBITDA 率 70–74% 高於 Q2 實際 58.6%（收入每 MW 10.0 vs 8.2、租金每 MW 1.6 vs 2.1；人員軟體與稅險暫代 0），需 Andy 決定是否進 v4.6。
 
 ## 工作單總覽
 | 工作單 | 分支 | PR | 狀態 |
@@ -11,7 +11,7 @@
 | W0 遷移 | `claude/coreweave-w0-migrate` | | chat 端完成 |
 | W1 Tokenomics 取數層 | `claude/coreweave-w1-tokenomics`（疊加於 W0 分支） | #6 | 完成，待審 |
 | W2 每 MW 改寫 | `claude/coreweave-w2-permw`（疊加於 W1 分支） | #9 | 完成，待審 |
-| W3 v4.6 成品與對照 | `claude/coreweave-w3-v4.6`（疊加於 W2 分支） | （開 PR 中） | 進行中 |
+| W3 v4.6 成品與對照 | `claude/coreweave-w3-v4.6`（疊加於 W2 分支） | #18 | 進行中 |
 
 <!-- 各工作單在下方新增自己的段落：「## Wx」＋步驟紀錄表（步驟｜狀態｜commit｜備註） -->
 
@@ -357,4 +357,33 @@ chat 端追加（優先於工作單，2026-10-07）：第 0 步把 Tokenomics �
 
 | 步驟 | 狀態 | commit | 備註 |
 |---|---|---|---|
-| 0 開分支、draft PR、進度檔 W3 段落 | 完成 | （本 commit） | W0 #5、W1 #6、W2 #9 皆未合併：自 `origin/claude/coreweave-w2-permw` 9af51ca 開分支，PR base＝W2 分支 |
+| 0 開分支、draft PR #18、進度檔 W3 段落 | 完成 | 7d0fd1b | W0 #5、W1 #6、W2 #9 皆未合併：自 `origin/claude/coreweave-w2-permw` 9af51ca 開分支，PR base＝W2 分支 |
+| 0′ Tokenomics 快照換 v5.26（chat 端追加） | 完成 | （本 commit） | 唯讀副本 `git fetch origin master` → `4074684`；`import_tokenomics.py` 重抓 `data/tokenomics_snapshot_v5.26.json`（25 名、missing 0），刪 v5.24 快照；名稱清單移除 optional；company.json `tokenomics`（v5.26、commit 4074684、optional 空）；`fields_doc.py --write`。原 15 名數值與儲存格位置與 v5.24 完全相同。檢查頁「名稱缺漏」警告消失。新方法 `verify.sh` 22 項全過；舊方法 `verify_legacy.sh` 25 項全過（與 v4.5 成品 0 差異） |
+
+### W3 第 0′ 步：v5.26 正式值取代 W2 暫代值（基準情境）
+
+核對 Tokenomics 值（$B/GW/年＝US$m/MW/年，基準）：GB300 IT 維護 1.1234、人員軟體 0.325、稅險 0.2506；VR200 IT 維護 1.1276、稅險 0.2513（與 chat 端核對值相同）；Hopper 0.8253／0.325／0.2009、GB200 0.7205／0.325／0.1834；IF_DeprLifeIT 基準各世代 6 年（高成本 4 年）→ 加權取整 6，與暫代值相同。
+稅險口徑：各世代 IF_TaxIns × IF_CapexIT ÷ IF_CapexTotal（只算 CRWV 擁有的 IT 部分；GB300 0.2506 × 37.45 ÷ 50.12＝0.187），人員軟體全額（0.325）——W2 公式已如此實作，未改。
+
+| 每 MW（US$m／MW／年，基準） | FY26（2H） | FY27 | FY28 | FY29 | FY30 |
+|---|---|---|---|---|---|
+| 年收入 | 10.05 | 10.56 | 10.33 | 9.63 | 8.65 |
+| 電費 | 0.67 | 0.67 | 0.67 | 0.67 | 0.67 |
+| IT 維護（W2 暫代 → v5.26） | 0.15 → 0.94 | 0.15 → 0.99 | 0.16 → 1.03 | 0.16 → 1.05 | 0.17 → 1.08 |
+| 人員軟體（0 → v5.26） | 0 → 0.33 | 0 → 0.33 | 0 → 0.33 | 0 → 0.33 | 0 → 0.33 |
+| 稅險（IT 部分；0 → v5.26） | 0 → 0.16 | 0 → 0.17 | 0 → 0.17 | 0 → 0.18 | 0 → 0.18 |
+| 管銷 | 0.55 | 0.58 | 0.57 | 0.53 | 0.48 |
+| 租金 | 1.60 | 1.59 | 1.33 | 1.16 | 1.00 |
+| 現金成本合計（含租金） | 2.98 → 4.24 | 3.00 → 4.33 | 2.73 → 4.10 | 2.53 → 3.92 | 2.32 → 3.73 |
+| EBITDA | 7.07 → 5.80 | 7.56 → 6.23 | 7.60 → 6.23 | 7.10 → 5.71 | 6.33 → 4.92 |
+| EBITDA 率 | 70.4% → 57.8% | 71.6% → 59.0% | 73.5% → 60.3% | 73.7% → 59.3% | 73.2% → 56.9% |
+
+| 情境 | v4.5 加權目標價 | W2 暫代 | v5.26 正式 | 融資缺口 v4.5／W2／v5.26（US$bn） |
+|---|---|---|---|---|
+| 保守 4.2 GW | $69.74 | $106.92 | $43.99 | 19.7／12.3／32.7 |
+| 基準 5.6 GW | $45.50 | $66.70 | $29.68 | 61.7／59.1／81.6 |
+| 積極 8 GW | $30.95 | $44.18 | $19.95 | 126.2／130.6／157.9 |
+
+讀法：v5.26 補上 IT 維護（約 1.0／MW，暫代 0.15 的 6–7 倍）、人員軟體 0.33、稅險 0.16–0.18 後，每 MW 現金成本增加約 1.3–1.4，EBITDA 率由 70–74% 降到 57–60%（Q2 實際 Adj. EBITDA 率 58.6%）；三情境目標價都低於 v4.5。
+
+**verify 工具修正（不影響成品數字）**：(1) `xlx.py`：LibreOffice 把「輸入與假設」H 區模擬運算表轉成 MULTIPLE.OPERATIONS，批次重算非基準情境時部分格殘留運算表代入的中間值（v5.26 積極情境實測：D&A 車隊 FY27–28 取到基準情境值，cmp31 74 項不一致；以 UNO 逐格重算與移除運算表兩種方式確認 Excel 公式本身正確）。改為：未改錨定年度時，運算表輸出（三情境加權目標價與評等，與情境選擇無關）以來源檔快取值取代後再重算。(2) `cmp31.js`：DCF 失效（常態化 FCF ≤ 0）時 HTML 每股為 NaN（畫面顯示「失效」）、Excel 採用值為 0，比對時視為 0（v5.26 積極情境首次觸發；基準情境 DCF 0 截斷後也為 0）。

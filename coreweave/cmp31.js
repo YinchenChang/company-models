@@ -90,7 +90,7 @@ cmp('EPS(模型期)', V+'每股盈餘（EPS，模型期）', f.map(e=>e.eps));
 cmp('股數', V+'股數（含瀑布新股）', f.map(e=>e.shares));
 cmp('UFCF', V+'UFCF', f.map(e=>e.ufcf));
 cmp('UFCF現值', V+'UFCF 現值', p.d.pv);
-cmp('DCF每股', V+'DCF 每股', [p.d.perShare]);
+cmp('DCF每股', V+'DCF 每股', [p.d.invalid?0:p.d.perShare]); // W3：DCF 失效（常態化 FCF ≤ 0 等）時 HTML 為 NaN（畫面顯示「失效」）、Excel 採用值為 0（權重歸零）——同一意義，比對時視為 0
 const NB='資產負債_新債與新股|';
 cmp('BS 期末現金', NB+'期末現金', H('cum'));
 cmp('BS 營運收支淨額', NB+'營運收支淨額（含 9/17 可轉債／ATM，不含瀑布）', H('preFinGap'));
