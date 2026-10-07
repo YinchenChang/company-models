@@ -1,16 +1,16 @@
 # CoreWeave × Tokenomics 改造進度（接手用；W1–W3 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：W0、W1（PR #6，待審）。**W2**（PR #9，疊加於 W1 分支）：第 0–8 步完成（3b63e34 起）；第 9 步（整體 verify 與回報）進行中。
-- 下一步：W2 第 9 步——`scripts/verify.sh`（新方法）與 `scripts/verify_legacy.sh`（舊方法 --vs-dist）全過後，PR #9 留言「[CRWV 回報] W2｜完成｜2026-10-07」並改 ready。之後 W3（v4.6 成品與對照報告）直接讀 Excel「每MW經濟性」頁彙總表；v4.5 側用 `scripts/verify_legacy.sh` 的副本或 dist/ 成品。
-- 未解問題：(1) Tokenomics v5.26 尚未建置：`IF_MaintIT`、`IF_StaffSW`、`IF_TaxIns`、`IF_DeprLifeIT` 以暫代值（檢查頁警告）；建置後只需 `import_tokenomics.py` 重抓快照、改 company.json `tokenomics`、verify；(2) GB200／GB300／VR200 長約 GPU 小時價格不足兩個獨立來源 → 收入採備案 legacy（`pricing.gpuHr` 空白）；(3) CoreWeave「active power」口徑定義未找到（預設 IT）；(4) 由下而上 EBITDA 率 70–74% 明顯高於 Q2 實際 58.6%（主因：模型每 MW 收入 10.0 對 Q2 實際 8.2、模型每 MW 租金 1.6 對 Q2 實際 2.1；人員軟體與稅險暫代 0），W3 報告需解釋。
+- 已完成：W0、W1（PR #6，待審）；**W2 全部完成**（PR #9，疊加於 W1 分支）：每 MW 資本支出（Tokenomics）、由下而上營運成本、收入備案（legacy）＋對照列、世代組合、每MW經濟性彙總表、敏感度快照；新方法 `verify.sh` 22 項全過；舊方法 `scripts/verify_legacy.sh`（--vs-dist）25 項全過、與 v4.5 成品 0 差異。
+- 下一步：W3（`claude/coreweave-w3-v4.6`，疊加於 W2 分支，除非已合併）：v4.6 成品與前後對照報告；直接讀 Excel「每MW經濟性」彙總表；v4.5 側用 `scripts/verify_legacy.sh` 的副本（out/legacy_copy）或 dist/ 成品。
+- 未解問題：(1) Tokenomics v5.26 尚未建置：`IF_MaintIT`、`IF_StaffSW`、`IF_TaxIns`、`IF_DeprLifeIT` 以暫代值（檢查頁警告）；建置後只需重抓快照、改 company.json `tokenomics`、verify；(2) GB200／GB300／VR200 長約 GPU 小時價格不足兩個獨立來源 → 收入採備案 legacy；(3) CoreWeave「active power」口徑定義未找到（預設 IT）；(4) 由下而上 EBITDA 率 70–74% 高於 Q2 實際 58.6%（收入每 MW 10.0 vs 8.2、租金每 MW 1.6 vs 2.1；人員軟體與稅險暫代 0），需 Andy 決定是否進 v4.6。
 
 ## 工作單總覽
 | 工作單 | 分支 | PR | 狀態 |
 |---|---|---|---|
 | W0 遷移 | `claude/coreweave-w0-migrate` | | chat 端完成 |
 | W1 Tokenomics 取數層 | `claude/coreweave-w1-tokenomics`（疊加於 W0 分支） | #6 | 完成，待審 |
-| W2 每 MW 改寫 | `claude/coreweave-w2-permw`（疊加於 W1 分支） | #9 | 進行中 |
+| W2 每 MW 改寫 | `claude/coreweave-w2-permw`（疊加於 W1 分支） | #9 | 完成，待審 |
 | W3 v4.6 成品與對照 | `claude/coreweave-w3-v4.6` | | 未開始 |
 
 <!-- 各工作單在下方新增自己的段落：「## Wx」＋步驟紀錄表（步驟｜狀態｜commit｜備註） -->
@@ -250,3 +250,102 @@ chat 端審查 W1 後的決定（優先於工作單原文，2026-10-07）：收�
 | 6 MW 口徑 | 完成 | （本 commit） | `meta.mwBasis=IT`；設施口徑換算以 `scripts/test_permw.py` 測試 A 驗證（÷ 1.2） |
 | 7 每 MW 經濟性彙總表 | 完成 | 3b63e34 | Excel「每MW經濟性」頁最上方；HTML「資金模型 → 運營活動 → 每 MW 經濟性」（新方法時才顯示）；cmp31 逐列比對 |
 | 8 敏感度 | 完成 | （本 commit） | `scripts/permw_sens.py`（Excel 求值快照，verify 步驟 3c）＋快照狀態格；HTML 即時計算、cmp31 比對；四組：Tokenomics 低／高成本、GPU 小時價格（不適用）、Rubin Ultra 版、管銷率 GAAP 9.24% |
+| 9 整體 verify 與回報 | 完成 | （本 commit） | 新方法 `verify.sh` 22 項全過（cmp31 三情境各 426 項、FY27 錨定 405 項）；舊方法 `scripts/verify_legacy.sh`（--vs-dist）全過、畫面文字與 Excel 值／公式 0 差異 |
+
+### W2 關鍵數字（v4.5 → W2 新方法；基準情境除另註）
+
+| 情境 | v4.5 加權目標價（評等） | 新（評等） | 融資缺口 v4.5 → 新（US$bn） |
+|---|---|---|---|
+| 保守 4.2 GW | $69.74（賣出） | $106.92（中立） | 19.7 → 12.3 |
+| 基準 5.6 GW | $45.50（賣出） | $66.70（賣出） | 61.7 → 59.1 |
+| 積極 8 GW | $30.95（賣出） | $44.18（賣出） | 126.2 → 130.6 |
+
+情境區間：$31.0–$69.7 → $44.2–$106.9；方法區間（5–6x）：$29.5–$45.5 → $47.4–$66.7。
+
+| 每 MW（US$m／MW／年，基準情境；v4.5 → 新） | FY26（2H） | FY27 | FY28 | FY29 | FY30 |
+|---|---|---|---|---|---|
+| 年收入（算力＋服務） | 10.05 → 10.05 | 10.56 → 10.56 | 10.33 → 10.33 | 9.63 → 9.63 | 8.65 → 8.65 |
+| 電費 | 0.67 → 0.67 | 0.67 → 0.67 | 0.67 → 0.67 | 0.67 → 0.67 | 0.67 → 0.67 |
+| IT 維護（暫代） | 0.15 → 0.15 | 0.15 → 0.15 | 0.16 → 0.16 | 0.16 → 0.16 | 0.17 → 0.17 |
+| 人員、軟體、水與耗材（暫代 0） | 0.00 → 0.00 | 0.00 → 0.00 | 0.00 → 0.00 | 0.00 → 0.00 | 0.00 → 0.00 |
+| 財產稅與保險（暫代 0） | 0.00 → 0.00 | 0.00 → 0.00 | 0.00 → 0.00 | 0.00 → 0.00 | 0.00 → 0.00 |
+| 公司管銷 | 0.55 → 0.55 | 0.58 → 0.58 | 0.57 → 0.57 | 0.53 → 0.53 | 0.48 → 0.48 |
+| 租金 | 1.60 → 1.60 | 1.59 → 1.59 | 1.33 → 1.33 | 1.16 → 1.16 | 1.00 → 1.00 |
+| 現金成本合計（含租金） | 4.12 → 2.98 | 4.17 → 3.00 | 3.93 → 2.73 | 3.51 → 2.53 | 3.03 → 2.32 |
+| EBITDA | 5.93 → 7.07 | 6.39 → 7.56 | 6.40 → 7.60 | 6.11 → 7.10 | 5.62 → 6.33 |
+| D&A | 5.69 → 5.73 | 5.84 → 6.03 | 5.66 → 5.96 | 5.64 → 5.99 | 5.59 → 5.97 |
+| 利息 | 2.83 → 2.82 | 2.64 → 2.66 | 2.14 → 2.12 | 1.73 → 1.73 | 1.54 → 1.54 |
+| 稅前 | -2.59 → -1.48 | -2.10 → -1.13 | -1.40 → -0.49 | -1.25 → -0.62 | -1.50 → -1.18 |
+| 每 MW 資本支出（US$m／新增 MW） | 34.00 → 34.76 | 34.00 → 37.52 | 34.00 → 37.59 | 34.00 → 37.59 | 34.00 → 37.59 |
+| EBITDA 率 | 59.0% → 70.4% | 60.5% → 71.6% | 62.0% → 73.5% | 63.5% → 73.7% | 65.0% → 73.2% |
+
+v4.5 未拆項：v4.5 欄的電費、IT 維護、管銷是同一組由下而上對照值（不入 v4.5 損益），v4.5 的現金成本合計＝收入 − EBITDA（隱含，其中非租金部分 2.52、2.58、2.60、2.35、2.03）。新方法的非租金現金成本 1.38、1.41、1.40、1.37、1.32。
+
+**租金只扣一次（FY27 基準）**：EBITDA 率 71.62%＝由下而上 EBITDAR 率 86.69% − 租金 3.939 ÷ 營收 26.127（15.08%）；資金端現金利潤率＝EBITDA 率＋租金 ÷ 營收＝86.69%，租金 3.939 只在支出端扣一次；現金 EBITDA 18.602＋信用調整 0.109＝損益 EBITDA 18.711。
+
+**最近一季實際對照（不強制平衡）**：Q2 每 MW 現金營運成本（租金前、不含管銷）0.877 vs 模型 FY26 0.823（−0.054）；Q2 每 MW 年租金 2.08 vs 模型 1.60；Q2 每 MW 年收入 8.24（2.575 × 4 ÷ 1,250 MW）vs 模型 10.05。由下而上 EBITDA 率高於 Q2 實際 58.6%，主要來自收入（Q2 分母含爬坡中尚未計費的 MW）與租金（模型路徑每 MW 低於 Q2），營運成本本身接近。
+
+**敏感度（基準情境加權目標價，建置時快照）**：Tokenomics 低成本 $120.57／高成本 $34.04；Rubin Ultra 版 $54.92；管銷率 GAAP 9.24% $53.21；GPU 小時價格低／高：不適用（收入備案）。
+
+**收入對照（基準，FY26→FY30）**：隱含每 GPU 小時價格 $2.34→$3.11 對 IF_GPUhrEcon（GPU 加權）$2.31→$3.65，倍數 1.01→0.85；每 MW 年收入 ÷ IF_HoldEcon 1.01→0.85；同業 IREN–Microsoft 9.7 US$m/MW/年（模型 100% 計費時數 11.2→10.5）。
+
+### W2 已套用的預設（問題｜採用的預設｜替代選項｜對結果的影響）
+| 問題 | 預設 | 替代 | 影響 |
+|---|---|---|---|
+| 方法開關的實作 | 建置時依 `methodology.perMw` 產生公式（Excel 內不設即時切換格） | Excel 加方法選擇格、IF 切換 | 無數字影響；舊方法組合可證明 0 差異 |
+| revMW 是否含利用率 | revMW＝100% 計費時數的每 MW 收入（引擎在收入端另乘 `m.util`）；隱含 GPU 小時價格＝revMW ÷（GPU 數 × 8,760），GPU 路線公式也不乘利用率 | 依工作單字面在兩處都乘／除利用率 | 避免利用率重複計算；隱含價格為「每計費小時」 |
+| 世代結構起點 | 首期（2H26）自 6/30 在役 1,500 MW 起算；CapEx 仍依 YE25 850 MW 的全年新增 | 自 YE25 850 MW 起算 | 只影響世代加權（每 MW 成本、對照列） |
+| 每 MW 成本的 MW 分母 | 平均在役 Accepted MW（公司口徑） | Billable MW | 改 Billable 時由下而上成本約 −8%、EBITDA 率約 +1pt |
+| 汰換的世代 | 汰換批次由世代清單中最舊者先出、以當期新增世代補回 | 依實際年份批次的世代 | FY29–30 汰換 Hopper（100、260 MW） |
+| 建置成本的世代 | 當期新增與次年預建（λ）都用當期 newMix | 預建部分用次期 newMix | FY27 預建差 <0.2% |
+| FY26 每 MW 建置成本 | 全年新增 1,000 MW 都用 2H26 newMix（34.76） | 1H 650 MW 用 W1 的 2026 上半年組合 | FY26 CapEx 下限 35 未觸發，差 <1% |
+| 穩態 EBITDA 率（bottomUp） | 預設＝由下而上 FY30（公式）；輸入數值視為 FY30 目標、差額線性分攤（反向 DCF Eb、敏感度 59%／70% 沿用） | 停用該格 | 反向 DCF 與敏感度仍可用；預設無差額 |
+| 管銷率 | 5.51%（扣 SBC；S&M／G&A 內 D&A 視為 0），Excel 由 10-Q 輸入格算出 | 9.24%（GAAP） | 敏感度：基準目標價 $66.70 → $53.21 |
+| 最近一季實際對照 | D&A 全數視為在營收成本與技術基礎設施；租金＝營業 0.500＋變動 0.150（不含融資租賃） | 含融資租賃 0.017 | 每 MW 現金成本 ±0.05 |
+| 稅險 × IT 資本占比 | 各世代 IF_TaxIns × IF_CapexIT ÷ IF_CapexTotal，再依在役世代加權 | 單一占比 | v5.26 前暫代 0 |
+| 持有成本加權 | IF_HoldEcon 依 MW 加權；IF_GPUhrEcon 依 GPU 數加權 | 都依 MW | 只影響對照列 |
+| 設施口徑換算 | IF_FacilityGW 取基準（不隨成本情境變動） | 隨成本情境 | 只在 facility 口徑時有影響 |
+| 敏感度第 4 組 | 加管銷率 GAAP 9.24%（chat 端決定 6）；GPU 小時價格低／高在收入備案下為「不適用」 | — | 見上 |
+| 差異原因 | `varianceReasons` 加 `perMw` 條件；新方法下 FY26 EBITDA、FY26 CapEx 超過門檻，新增「觀點」原因 | — | 建置檢查通過（無「未歸類」） |
+| 新工作表位置 | Excel「每MW經濟性」放在「運營_站點」之後；世代結構推導放在此頁（輸入在「輸入與假設」B 區後） | 推導也放輸入頁 | 無數字影響 |
+
+### W2 可移植性
+- 新增公司特有內容：`fleet`（世代組合）、`pricing`（GPU 小時價格、同業與市場對照）、`costs.sgaBasis`、`latestQuarter` 費用欄（sm、smSbc、ga、gaSbc、sbcCostTi、opLeaseCost、varLeaseCost、finLeaseCost）、`meta.mwBasis`、`methodology.perMw`、`varianceReasons` 的 `perMw` 條件。換公司時：填 fleet（或刪除＝每 MW 經濟性不適用，方法須為 legacy）、pricing、latestQuarter 費用。
+- 沒有 fleet 或 Tokenomics 時：Excel 不建「每MW經濟性」頁，HTML 不顯示該分頁；新方法在建置時要求 fleet 與必要的 Tokenomics 名稱（缺少即報錯）。
+
+### W2 下一張（W3）需要知道的事
+- 前後對照：v4.5 側＝`scripts/verify_legacy.sh` 產生的副本（out/legacy_copy）或 dist/ 成品；新側＝目前 company.json。彙總表在 Excel「每MW經濟性」第 6–23 列（列名固定）。
+- 目標價變動全屬 (d) 方法變更；拆解可依序切換 capex → cost（`methodology.perMw`）各重建一次。
+- v5.26 名稱補齊後成本會上升（人員軟體、稅險目前為 0），由下而上 EBITDA 率會下降。
+
+### W2 verify.sh 完整輸出（新方法，2026-10-07 最終）
+<details><summary>展開</summary>
+
+```
+================ 結果 ================
+PASS  check_quarterly：季度加總＝年度、差異原因齊全
+PASS  README 欄位說明與 company.json 一致
+PASS  Tokenomics 快照 --check：25 個名稱（missing 10）與快照一致（20261007_Tokenomics_v5.24.xlsx，相對誤差 ≤ 1e-09）
+PASS  建 HTML
+PASS  建 Excel
+PASS  重算：0 公式錯誤
+PASS  反向 DCF：Excel 求解，rv_snap.json 與 Excel 一致
+PASS  每 MW 敏感度快照：Excel 求值，permw_sens.json 與 Excel 一致
+PASS  fix_outline
+PASS  fix_datatable
+PASS  verify_ooxml：OOXML OK
+PASS  快照值＝Excel 分頁值：25 個名稱（missing 10）、165 個值、55 個具名範圍一致；其他工作表 35 格公式引用 35 個 TK_ 名稱（v5.24）
+PASS  離線開啟：新建 HTML
+PASS  離線開啟：dist/ 成品
+PASS  cmp31 low：426 項全部 OK
+PASS  cmp31 base：426 項全部 OK
+PASS  cmp31 high：426 項全部 OK
+PASS  cmp31 base_FY27：405 項全部 OK
+PASS  test_quarterly：假設實際數與可移植性測試通過
+PASS  test_rolling：日曆推算與滾動後第一屏
+PASS  test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）
+PASS  test_permw：設施口徑換算與 GPU 小時價格路線
+verify.sh：全部通過（22 項）
+EXIT 0
+```
+</details>
