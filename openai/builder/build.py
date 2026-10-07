@@ -404,7 +404,7 @@ def p3_checks(R, P3, S, rowof):
         ("P3：η（2025）≤0 或非數值（違反數）", "=IF(ISNUMBER(CMP_Eta2025),IF(CMP_Eta2025>0,0,1),1)", 0, "eq", "V2"),
         ("P3：V2 恆等式 η × 支出換算 GW − token 換算 GW（2025，GW）", f"=CMP_Eta2025*CMP_SpendGW2025-Compute!$D${cr['gw_tok']}", 0, "tol", "計算鏈可逐列追出"),
         ("P3：2025 有效推論 GW − 支出換算 GW（GW）", f"=Compute!$D${cr['eff']}-CMP_SpendGW2025", 0, "tol", "η 定義使 2025 兩者相等"),
-        ("P3：推論（截頂後）＋研發＋閒置 − 供給（2026–2030 絕對值合計，GW）", f"=SUMPRODUCT(ABS({yr26('ident')}))", 0, "tol", "v0.5 算力MW 第 36 列"),
+        ("P3：推論（截頂後）＋研發＋閒置 − 供給（2026–2030 各年差的最大絕對值，GW）", f"=MAX(MAX({yr26('ident')}),-MIN({yr26('ident')}))", 0, "tol", "v0.5 算力MW 第 36 列（以 MAX／MIN 取最大絕對值：pycel 的 SUMPRODUCT(ABS()) 在全為 0 時回傳整數型別，ISNUMBER 判定與 Excel 不同）"),
         ("P3：容量上限係數 ∉ (0,1] 的年數", f"=SUMPRODUCT(--({yr('cap')}<=0))+SUMPRODUCT(--({yr('cap')}>1.000000001))", 0, "eq", "V1a"),
         ("P3：截頂後總額 > 未截頂總額 的年數", f"=SUMPRODUCT(--(Revenue!$D${vr['gross_c']}:$I${vr['gross_c']}>Revenue!$D${vr['gross']}:$I${vr['gross']}+0.000000001))", 0, "eq", ""),
         ("P3：研發 GW < 0 的年數", f"=SUMPRODUCT(--({yr('rd')}<0))", 0, "eq", "供給 ×（1−閒置）不足以容納截頂後推論時轉 ERR"),
