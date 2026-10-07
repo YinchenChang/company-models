@@ -23,6 +23,16 @@ _g3 = CONS['companyGuidance'].get('2026Q3') or {}  # v0.1b：公司未給季度�
 assert (_g3.get('revenueLow'), _g3.get('revenueHigh')) == (CO['callFacts']['nextQRevLo'], CO['callFacts']['nextQRevHi']), 'Q3 營收指引：company.json 與共識檔不一致'
 assert abs(CO['ytdActual']['adjEbitda'] - CO['ytdActual']['adjEbitdaMeta']['q1'] - CO['ytdActual']['adjEbitdaMeta']['q2']) < 1e-9, '1H 調整後 EBITDA ≠ Q1＋Q2'
 D, V, M = CO['defaults'], CO['valuation'], CO['defaults']['m']
+# v0.1b：開啟時的預設輸入（defaults.m）必須等於預設情境的已連網 MW、可計費 MW 與每 MW 年收入（HTML 開啟時用 defaults，Excel 用情境公式）
+def _conn(k, mp=CO['scenarios']['mwPath']):
+    a = []
+    for i, L in enumerate(CO['periodYears']):
+        a.append(min(mp['contracted'][k][i], mp['connectedStart'] if i == 0 else a[i - 1] + mp['pace'][k] * L))
+    return a
+_dsc = D['scenario']
+assert all(abs(x - y) < 1e-6 for x, y in zip(_conn(_dsc), M['accepted'])), f"defaults.m.accepted ≠ {_dsc} 情境已連網 MW {_conn(_dsc)}"
+assert M['billable'] == [int(x * b + 0.5) for x, b in zip(_conn(_dsc), CO['scenarios']['billableRatio']['ratio'])], "defaults.m.billable ≠ 已連網 × 在役比例（四捨五入）"
+assert M['revMW'] == CO['scenarios']['revMW'][_dsc], "defaults.m.revMW ≠ scenarios.revMW（預設情境）"
 PCT_ = lambda xs: [x / 100 for x in xs]  # HTML 以百分點存、Excel 以比例存
   # 版本紀錄單一來源：vlog.py（HTML 端為 tail.js 的 VLOG）
 # -*- coding: utf-8 -*-
@@ -258,20 +268,30 @@ for j, h in enumerate(["已連網 MW 路徑", "單位"] + PERIODS + ["", "FY31 �
         cc = ws.cell(row=r, column=1 + j, value=h); cc.font = HEAD; cc.fill = FILL_HEAD
 r += 1
 sc_rows = {}
-for nm, vals, m31, note in [
-    ("保守", CO['scenarios']['accepted']['low'], CO['scenarios']['mw31']['low'], "只交付已簽約電力（>3.5 GW ÷1.2＝2,917 MW-IT），依歷史併網速度"),
-    ("基準", CO['scenarios']['accepted']['base'], CO['scenarios']['mw31']['base'], "2026 年底 5 GW 合約目標（÷1.2＝4,167 MW-IT）依歷史併網速度實現"),
-    ("積極", CO['scenarios']['accepted']['high'], CO['scenarios']['mw31']['high'], "2027 起每年部署 >1 GW 全數實現（÷1.2＝833 MW-IT／年）"),
-]:
-    ws.cell(row=r, column=1, value=CO['scenarios']['labels'][{"保守": "low", "基準": "base", "積極": "high"}[nm]]).font = BLACK
+MWP = CO['scenarios']['mwPath']  # v0.1b：已連網 MW＝MIN(合約上限, 前期＋併網速度×期間長度)；首期期末三情境共用
+CONN0 = gi(r, "首期期末已連網 MW（三情境共用）", "MW", MWP['connectedStart'], "2026 年底 connected 目標 0.8–1.0 GW 中點 ÷ PUE 1.2 [Interested-party／Derived]", NUM0); r += 1
+_SCN = [("保守", "low", "只交付已簽約電力（>3.5 GW ÷1.2＝2,917 MW-IT），依歷史併網速度"),
+        ("基準", "base", "2026 年底 5 GW 合約目標（÷1.2＝4,167 MW-IT）依歷史併網速度實現"),
+        ("積極", "high", "2027 起每年部署 >1 GW 全數實現（÷1.2＝833 MW-IT／年）")]
+for nm, k, note in _SCN:
+    lb = CO['scenarios']['labels'][k]
+    row_line(ws, r, f"{lb}｜合約 MW 上限", "MW", MWP['contracted'][k], NUM0, BLUE, "company.json → scenarios.mwPath.contracted"); _cr = r; r += 1
+    _pc = gi(r, f"{lb}｜併網速度", "MW／年", MWP['pace'][k], "company.json → scenarios.mwPath.pace", NUM0); r += 1
+    ws.cell(row=r, column=1, value=lb).font = BLACK
     ws.cell(row=r, column=2, value="MW").font = SMALL
-    for i, v in enumerate(vals):
-        c = ws.cell(row=r, column=3 + i, value=v); c.font = BLUE; c.number_format = NUM0; c.border = BOX
-    c = ws.cell(row=r, column=9, value=m31); c.font = BLUE; c.number_format = NUM0; c.border = BOX
-    ws.cell(row=r, column=10, value=note).font = SMALL
+    for i in range(5):
+        L = COLS[i]
+        f = f"=MIN({L}{_cr},{CONN0})" if i == 0 else f"=MIN({L}{_cr},{COLS[i-1]}{r}+{_pc}*§LEN{L}§)"
+        c = ws.cell(row=r, column=3 + i, value=f); c.font = BLACK; c.number_format = NUM0; c.border = BOX
+    c = ws.cell(row=r, column=9, value=CO['scenarios']['mw31'][k]); c.font = BLUE; c.number_format = NUM0; c.border = BOX
+    ws.cell(row=r, column=10, value=note + "；I 欄＝FY31 新增 MW").font = SMALL
     sc_rows[nm] = r
     r += 1
-row_line(ws, r, "在役／已連網比例", "%", [b / a for b, a in zip(CO['scenarios']['billableRatio']['billable'], CO['scenarios']['billableRatio']['accepted'])], PCT, BLUE,
+for nm, k, _ in _SCN:
+    row_line(ws, r, f"每 MW 年收入｜{CO['scenarios']['labels'][k]}", "US$bn/MW", CO['scenarios']['revMW'][k], '0.0000', BLUE,
+             "Tokenomics 正向推導三情境（data/permw_tokenomics_20261007.json）；不用公司 ACV [Derived]")
+    sc_rows['rev_' + nm] = r; r += 1
+row_line(ws, r, "在役／已連網比例", "%", CO['scenarios']['billableRatio']['ratio'], PCT, BLUE,
          "三情境共用；新連網產能自驗收到可計費需數季 [Assumed]")
 BR_ROW = r; r += 1
 row_line(ws, r, "表外現金租金（積極路徑）", "US$bn", CO['scenarios']['leaseHighPath'], NUM, BLUE,
@@ -289,6 +309,7 @@ MWY = {}  # 5a：各年底主動電力（company.json → defaults.mwYearEnd，�
 MWY[MW_Y0] = MW_YE25 = gi(r, f"{CAL['prevFYE']} 主動電力", "MW", D['mwYearEnd'][str(MW_Y0)], CO['texts']['mwYearEndNotes'][str(MW_Y0)], NUM0); r += 1
 MW0 = gi(r, "«VMD» Billable MW", "MW", D['billableOpen'], "季末在役 MW 未揭露：2025 年底 active 170 MW 與首期期末在役 MW 線性內插 [Derived]", NUM0); r += 1
 AVGON = gi(r, "收入用平均在役 MW（1=是）", "", int(D['useAvgMw']), "0＝用期末存量全期化；建議 1", NUM0); r += 1
+REVDRV = gi(r, "營收驅動（mw＝MW × 每 MW 年收入；rpo＝RPO 排程）", "", D['revenueDriver'], "mw：新產能簽約率固定 100%，營收＝容量上限；RPO 只作對照與產能瓶頸旗標（company.json → defaults.revenueDriver）", "@"); r += 1
 REVSC = gi(r, "每 MW 年收入倍數（整體）", "%", D['revScale'], "反向 DCF 與壓力測試用；預設 100%。以『目標搜尋』調整此格即可反解市價隱含單價", PCT); r += 1
 r = phdr(r)
 r = prow(r, "模型期長度（年）", "", CO['periodYears'], NUM,
@@ -303,7 +324,10 @@ for i in range(5):
     ws.cell(row=_acc, column=3 + i, value=f"=CHOOSE({SEL},{L}{sc_rows['保守']},{L}{sc_rows['基準']},{L}{sc_rows['積極']})")
     ws.cell(row=_bil, column=3 + i, value=f"=ROUND({L}{_acc}*{L}{BR_ROW},0)")
 r = prow(r, "利用率", "%", PCT_(M['util']), PCT, "100%：每 MW 年收入已含可計費利用率（路徑 B 80／85／90%），不重複扣除 [Derived]")
-r = prow(r, "每 MW 年收入", "US$bn/MW", M['revMW'], '0.0000', "Tokenomics 正向推導（data/permw_tokenomics_20261007.json）；不用公司 ACV [Derived]")
+r = prow(r, "每 MW 年收入", "US$bn/MW", [0] * 5, '0.0000', "＝依 A 區情境選擇器（Tokenomics 正向推導三情境）", BLACK)
+for i in range(5):
+    L = COLS[i]
+    ws.cell(row=IN["每 MW 年收入"], column=3 + i, value=f"=CHOOSE({SEL},{L}{sc_rows['rev_保守']},{L}{sc_rows['rev_基準']},{L}{sc_rows['rev_積極']})")
 r = prow(r, "新產能簽約率", "%", PCT_(M['fill']), PCT, "MW 驅動：100%（RPO 只作對照）")
 r = prow(r, "客戶違約率", "%", PCT_(M['defaultP']), PCT, "前三大客戶約 59% 營收的定價，非預測 [Assumed]")
 r = prow(r, "回收率", "%", PCT_(M['recovery']), PCT, "[Assumed]")
@@ -502,6 +526,8 @@ for row in ws.iter_rows():
     for cc in row:
         if isinstance(cc.value, str) and "§H_CAPEX§" in cc.value:
             cc.value = cc.value.replace("§H_CAPEX§", H_CAPEX)
+        if isinstance(cc.value, str) and "§LEN" in cc.value:  # v0.1b：已連網 MW 公式引用「模型期長度（年）」列
+            cc.value = re.sub(r"§LEN([A-G])§", lambda m: f"{m.group(1)}${IN['模型期長度（年）']}", cc.value)
 
 IN_ref = {k: f"'輸入與假設'!{{col}}${v}" for k, v in IN.items()}
 
@@ -604,9 +630,9 @@ crow("未被期初 RPO 占用的產能", "US$bn",
      lambda i: f"=MAX(0,{COLS[i]}{cap_row}-{COLS[i]}{ai_row})", NUM, BLACK,
      "容量 − 排程。機房有、期初合約沒占滿 → 要靠新簽約")
 free_row = CR["未被期初 RPO 占用的產能"]
-crow("新產能簽約率", "%", lambda i: f"={inref('新產能簽約率', i)}", PCT, GREEN)
+crow("新產能簽約率", "%", lambda i: f'=IF({REVDRV}="mw",1,{inref("新產能簽約率", i)})', PCT, GREEN, "MW 驅動時固定 100%")
 crow("新簽約收入", "US$bn",
-     lambda i: f"={COLS[i]}{free_row}*{inref('新產能簽約率', i)}", NUM, BLACK,
+     lambda i: f"={COLS[i]}{free_row}*{COLS[i]}{CR['新產能簽約率']}", NUM, BLACK,
      "超出期初 RPO 的產能收入（MW 驅動，簽約率 100%）")
 newrev_row = CR["新簽約收入"]
 crow("未售產能（浪費）", "US$bn",
@@ -616,6 +642,9 @@ crow("損益用算力收入（模型期＝RPO 轉換＋新簽約）", "US$bn",
      lambda i: f"={COLS[i]}{rev_row}+{COLS[i]}{newrev_row}", NUM, BOLD,
      "損益與評價頁的算力收入由此連結，確保現金與損益同一組數字")
 isrev_row = CR["損益用算力收入（模型期＝RPO 轉換＋新簽約）"]
+crow("核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間", "US$bn",
+     lambda i: f"={COLS[i]}{isrev_row}-{COLS[i]}{avg_row}*{inref('每 MW 年收入', i)}*{REVSC}*{inref('利用率', i)}*{COLS[i]}{CR['模型期長度（年）']}", NUM, BLACK,
+     "MW 驅動時應為 0：營收可追溯為 MW × 每 MW 年收入 × 利用率（v0.1b）")
 
 crow("«YTDL» 實際營收（季報，已實現）", "US$bn",
      lambda i: (f"={H_REV}" if i == 0 else "=0"), NUM, GREEN,
@@ -1968,6 +1997,8 @@ checks = [
      "=IF(B{r}>=0,\"通過\",\"觀察\")", NUM, "低於基準×占比的八成即標示：模型租金路徑可能低估"),
     ("站點租賃：五期租金可能低估", None, f"<{_n(CK['siteRentGapMax'])}",
      "=IF(B{r}<" + _n(CK['siteRentGapMax']) + ",\"通過\",\"觀察\")", NUM, "＝Σ(在役 MW×市場基準×第三方占比 − 模型租金)"),
+    ("營收＝在役 MW × 每 MW × 利用率（五期差額）", f"=SUM('運營_產能與收入'!C{CR['核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間']}:G{CR['核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間']})", "=0",
+     "=IF(ABS(B{r})<0.000001,\"通過\",\"不一致\")", NUM, "MW 驅動：營收＝平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度"),
 ]
 for nm, bf, std, rf, fmt, note in checks:
     ws.cell(row=r, column=1, value=nm).font = BLACK

@@ -16,8 +16,10 @@ var PERIODS = COMPANY_DATA.periods,
   LEASE_AFTER_FY30 = COMPANY_DATA.leases.afterFY30,
   LATEST_Q = COMPANY_DATA.latestQuarter,
   CALL_FACTS = COMPANY_DATA.callFacts,
-  SC_ACC = COMPANY_DATA.scenarios.accepted,
-  SC_BR = COMPANY_DATA.scenarios.billableRatio.billable.map((b, i) => b / COMPANY_DATA.scenarios.billableRatio.accepted[i]),
+  SC_MWP = COMPANY_DATA.scenarios.mwPath, // v0.1b：已連網 MW＝MIN(合約上限, 前期＋併網速度×期間長度)；首期期末三情境共用
+  SC_ACC = Object.fromEntries([`low`, `base`, `high`].map(k => [k, PERIOD_YEARS.reduce((a, L, i) => (a.push(Math.min(SC_MWP.contracted[k][i], i === 0 ? SC_MWP.connectedStart : a[i - 1] + SC_MWP.pace[k] * L)), a), [])])),
+  SC_REV = COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境（Tokenomics 正向推導三情境）
+  SC_BR = COMPANY_DATA.scenarios.billableRatio.ratio,
   SC_LEASE_HI = COMPANY_DATA.scenarios.leaseHighPath,
   SC_MW31 = COMPANY_DATA.scenarios.mw31,
   scA = e => {
@@ -33,6 +35,7 @@ var PERIODS = COMPANY_DATA.periods,
     label: COMPANY_DATA.scenarios.labels[k],
     acc: SC_ACC[k],
     bil: SC_ACC[k].map((e, t) => Math.round(e * SC_BR[t])),
+    rev: SC_REV[k],
     mw31: SC_MW31[k],
     a: scA(k)
   }])),
@@ -109,6 +112,7 @@ function nA(e) {
       rate: [...e.m.rate]
     },
     n = eA(e.sites);
+  e.revenueDriver === `mw` && (t.fill = t.fill.map(() => 100)); // v0.1b：MW 驅動——營收＝容量上限（平均在役 MW × 每 MW 年收入 × 利用率），RPO 只作對照
   e.linkSites && (t.accepted[0] = Math.max(t.accepted[0], n.accepted), t.billable[0] = Math.max(t.billable[0], n.billable));
   for (let e = 0; e < 5; e++) t.accepted[e] = Math.max(0, t.accepted[e]), e > 0 && (t.accepted[e] = Math.max(t.accepted[e], t.accepted[e - 1])), t.billable[e] = Math.min(Math.max(0, t.billable[e]), t.accepted[e]), t.util[e] = Math.min(100, Math.max(0, t.util[e])), t.aiShare[e] = Math.min(100, Math.max(0, t.aiShare[e])), t.fill[e] = Math.min(100, Math.max(0, t.fill[e])), t.defaultP[e] = Math.min(100, Math.max(0, t.defaultP[e])), t.recovery[e] = Math.min(100, Math.max(0, t.recovery[e]));
   return t
@@ -402,6 +406,12 @@ function runFunding(e) {
     g = [],
     _ = e => g.push(e);
   _({
+    id: `rev-mw`,
+    ok: o.every(y => Math.abs(y.isRev - y.capacity) < 1e-9) || e.revenueDriver !== `mw`,
+    severity: `ok`,
+    title: `營收＝平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度`,
+    detail: `${e.revenueDriver === `mw` ? `MW 驅動` : `RPO 驅動`}：五期算力營收 ${o.map(y => Y(y.isRev, 2)).join(`／`)}；容量上限 ${o.map(y => Y(y.capacity, 2)).join(`／`)}。每 MW 年收入 ${t.revMW.map(x => Y(x * 1e3, 2)).join(`／`)} US$m/MW-IT（Tokenomics 正向推導；公司 ACV $20–25M 只作對照）。`
+  }), _({
     id: `rpo-weights`,
     ok: Math.abs(RPO_BUCKET_W.reduce((e, t) => e + t, 0) - RPO_SCHEDULED_SHARE) < 1e-6,
     severity: `watch`,
@@ -798,7 +808,7 @@ function sensitivities(e, v) {
     e.m.revMW = e.m.revMW.map(e => e * .85)
   }, e => {
     e.m.revMW = e.m.revMW.map(e => e * 1.15)
-  }), r(`新產能簽約率`, `−20pt`, `+20pt`, e => {
+  }), e.revenueDriver !== `mw` && r(`新產能簽約率`, `−20pt`, `+20pt`, e => {
     e.m.fill = e.m.fill.map(e => Math.max(0, e - 20))
   }, e => {
     e.m.fill = e.m.fill.map(e => Math.min(100, e + 20))

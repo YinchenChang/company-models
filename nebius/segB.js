@@ -296,7 +296,7 @@ function scnQ(e, sc) {
     scenario: sc,
     a: { ...structuredClone(e.a), newLease: [...SCENARIOS[sc].a.newLease] },
     mw31: SCENARIOS[sc].mw31,
-    m: { ...e.m, accepted: [...SCENARIOS[sc].acc], billable: [...SCENARIOS[sc].bil] }
+    m: { ...e.m, accepted: [...SCENARIOS[sc].acc], billable: [...SCENARIOS[sc].bil], revMW: [...SCENARIOS[sc].rev] }
   };
 }
 

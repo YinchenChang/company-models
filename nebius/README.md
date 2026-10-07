@@ -377,16 +377,23 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.labels.low` | 保守情境名稱（空格前的文字會當作情境簡稱） | 文字 | 保守 已簽約 3.5 GW | 必改 |
 | `scenarios.labels.base` | 基準情境名稱 | 文字 | 基準 合約 5 GW | 必改 |
 | `scenarios.labels.high` | 積極情境名稱 | 文字 | 積極 每年 >1 GW | 必改 |
-| `scenarios.accepted.low` | 保守情境：五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期末已驗收的主動電力 | MW 清單 | 750、1330、1910、2490、2917 | 必改 |
-| `scenarios.accepted.base` | 基準情境：同上 | MW 清單 | 750、1330、1910、2490、3070 | 必改 |
-| `scenarios.accepted.high` | 積極情境：同上 | MW 清單 | 750、1583、2417、3250、4083 | 必改 |
-| `scenarios.billableRatio.billable` | 計算「可計費 ÷ 已驗收」爬坡比例用的可計費 MW（與下一欄逐期相除） | MW 清單 | 750、850、900、900、900 | 檢查 |
-| `scenarios.billableRatio.accepted` | 同上，分母的已驗收 MW | MW 清單 | 1000、1000、1000、1000、1000 | 檢查 |
+| `scenarios.mwPath.connectedStart` | 首期期末已連網 MW（三情境共用；v0.1b） | MW | 750 | 必改 |
+| `scenarios.mwPath.contracted.low` | 保守情境：五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期末的合約 MW 上限（已連網不得超過；v0.1b） | MW 清單 | 2917、2917、2917、2917、2917 | 必改 |
+| `scenarios.mwPath.contracted.base` | 基準情境：同上 | MW 清單 | 4167、4167、4167、4167、4167 | 必改 |
+| `scenarios.mwPath.contracted.high` | 積極情境：同上 | MW 清單 | 4167、5000、5833.33、6666.67、7500 | 必改 |
+| `scenarios.mwPath.pace.low` | 保守情境：併網速度（每年新增已連網 MW；已連網＝MIN(合約上限, 前期＋速度×期間長度)；v0.1b） | MW／年 | 580 | 檢查 |
+| `scenarios.mwPath.pace.base` | 基準情境：同上 | MW／年 | 580 | 檢查 |
+| `scenarios.mwPath.pace.high` | 積極情境：同上 | MW／年 | 833.333 | 檢查 |
+| `scenarios.mwPath.note` | 已連網 MW 路徑的說明（來源與口徑） | 文字 | 已連網 MW-IT（期末）＝MIN(合約 MW-IT… | 必改 |
+| `scenarios.revMW.low` | 保守情境：每 MW 年收入，各期（Tokenomics 正向推導；不得用公司 ACV；v0.1b） | US$bn/MW 清單 | 0.01162、0.01162、0.01162、0.01162、0.01162 | 必改 |
+| `scenarios.revMW.base` | 基準情境：同上 | US$bn/MW 清單 | 0.0174、0.0174、0.0174、0.0174、0.0174 | 必改 |
+| `scenarios.revMW.high` | 積極情境：同上 | US$bn/MW 清單 | 0.0242、0.0242、0.0242、0.0242、0.0242 | 必改 |
+| `scenarios.billableRatio.ratio` | 在役（可計費）÷ 已連網比例，各期（三情境共用；v0.1b） | 比例清單 | 0.75、0.85、0.9、0.9、0.9 | 檢查 |
 | `scenarios.leaseHighPath` | 積極情境下，尚未起租租約的新增年租金路徑；其他情境依 MW 比例縮放 | US$bn 清單 | 0.05、0.5、1、1、1 | 檢查 |
 | `scenarios.leaseRampFloorMw` | 低於此電力時不產生新增表外租金（縮放公式的起點） | MW | 0 | 檢查 |
 | `scenarios.mw31.low` | 保守情境：模型期後一年（FY31）新增的 MW，用於 FY30 的預建支出 | MW | 0 | 檢查 |
 | `scenarios.mw31.base` | 基準情境：同上 | MW | 580 | 檢查 |
-| `scenarios.mw31.high` | 積極情境：同上 | MW | 833 | 檢查 |
+| `scenarios.mw31.high` | 積極情境：同上 | MW | 833.333 | 檢查 |
 | `scenarios.capexTemplate.costMW` | 每 MW 建置成本（GPU＋網路＋機房內裝），各期 | US$m/MW 清單 | 50.12、50.26、50.26、50.26、50.26 | 檢查 |
 | `scenarios.capexTemplate.customerFund` | 客戶預付占資本支出的比例，各期 | 比例清單 | 0.385、0.385、0.385、0.385、0.385 | 檢查 |
 | `scenarios.capexTemplate.div` | JV 後續增資與策略投資，各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
@@ -403,6 +410,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `defaults.scenario` | 開啟時的預設情境（low／base／high） | 文字 | base | 檢查 |
+| `defaults.revenueDriver` | 營收驅動：mw＝平均在役 MW × 每 MW 年收入 × 利用率（新產能簽約率固定 100%，RPO 只作對照）；rpo＝CRWV 模板的 RPO 排程＋新簽約（v0.1b） | 代碼 | mw | 檢查 |
 | `defaults.lambda` | 提前支出比例：次年才上線的 MW，其建置支出落在前一年的比例 | 比例 | 0.35 | 檢查 |
 | `defaults.mwYearEnd` | 各年底主動電力，以年份為鍵（例如 "2025": 850）：首期期初取首期前一財年末；GPU 汰換批次＝各年新增 MW（5a；列入滾動檢查） | MW 物件 | 物件（2025） | 必改 |
 | `defaults.mw31` | 模型期後一年新增 MW 的預設值（情境切換時改用 scenarios.mw31） | MW | 580 | 檢查 |

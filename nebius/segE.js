@@ -416,7 +416,8 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
 
   // 5｜三情境
   let rowsQ = [
-    [`2030 年 Accepted MW`, s => Y(SCENARIOS[s.sc].acc[4], 0)],
+    [`${PERIODS[4]} 年底已連網 MW`, s => Y(SCENARIOS[s.sc].acc[4], 0)],
+    [`每 MW 年收入（US$m/MW-IT）`, s => Y(SCENARIOS[s.sc].rev[4] * 1e3, 2)],
     [`模型期毛 CapEx（$bn）`, s => Y(s.capex, 0)],
     [`融資前缺口（$bn）`, s => Y(s.gap, 1)],
     [`新債／股權／高息債（$bn）`, s => `${Y(s.nd, 1)}／${Y(s.eq, 1)}／${Y(s.jk, 1)}`],

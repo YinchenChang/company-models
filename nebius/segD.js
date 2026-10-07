@@ -17,7 +17,8 @@ function zM() {
     m: {
       ...t.m,
       accepted: [...SCENARIOS[e].acc],
-      billable: [...SCENARIOS[e].bil]
+      billable: [...SCENARIOS[e].bil],
+      revMW: [...SCENARIOS[e].rev]
     }
   })), E = (e, n, r) => t(t => {
     let i = structuredClone(t.a);
@@ -247,7 +248,7 @@ function zM() {
                 }, t))
               }), (0, $.jsxs)(`p`, {
                 className: `mt-2 text-xs text-muted`,
-                children: [`目前：`, e.scenario === `custom` ? `自訂` : SCENARIOS[e.scenario]?.label, ` · 2030 年 `, Y(d.m.accepted[4], 0), ` MW · 模型期 CapEx `, Y(d.years.reduce((e, t) => e + t.gross, 0), 0), `bn`]
+                children: [`目前：`, e.scenario === `custom` ? `自訂` : SCENARIOS[e.scenario]?.label, ` · ${PERIODS[4]} 年底已連網 `, Y(d.m.accepted[4], 0), ` MW · 模型期 CapEx `, Y(d.years.reduce((e, t) => e + t.gross, 0), 0), `bn`]
               }), (0, $.jsxs)(`div`, {
                 className: `mt-4 space-y-2`,
                 children: [(0, $.jsx)(accQ, {
