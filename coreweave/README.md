@@ -29,7 +29,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | scripts/rv_solve.py | v4.5：反向 DCF 求解。以 LibreOffice（UNO，`scripts/uno_q.py`）開啟建好的 Excel，改「每 MW 年收入倍數」「每 MW 建置成本倍數」「穩態 EBITDA 率」並重算，依與 HTML `reverseDcf` 相同的規則（同一上下界、22 次對半）二分法反解，寫入 rv_snap.json；結果有變動時代碼 3 |
 | scripts/uno_q.py | v4.5：以 LibreOffice UNO 驅動 Excel 的共用模組（依 A 欄列名稱找格、改值、讀重算後的值；不存檔） |
 | data/consensus_crwv_20260925.json | 市場共識資料檔（v4.3；Andy 查證後提供，只讀，不得增補或修改數字）；路徑寫在 `company.json` → `meta.consensusFile`，HTML 建置時併入 `COMPANY_DATA.consensus`，Excel 直接讀取 |
-| xl_diff.py | Excel 比對：`python3 xl_diff.py 舊.xlsx 新.xlsx [--values] [--by-label] [--ignore=工作表,…] [--expect=清單檔]`（v4.5 `--expect`：預期差異清單，每行「工作表!儲存格 原因」，列出但不計入差異數）；（v4.2 `--by-label`：新增列造成位移時以「區段＋列名稱」配對，見「v4.2 核對方式」；v4.3 `--ignore`：兩檔都略過指定工作表） |
+| xl_diff.py | Excel 比對：`python3 xl_diff.py 舊.xlsx 新.xlsx [--values] [--by-label] [--ignore=工作表,…] [--expect=清單檔]`（W1：新版多出的工作表列為「新增工作表」、不計為差異；v4.5 `--expect`：預期差異清單，每行「工作表!儲存格 原因」，列出但不計入差異數）；（v4.2 `--by-label`：新增列造成位移時以「區段＋列名稱」配對，見「v4.2 核對方式」；v4.3 `--ignore`：兩檔都略過指定工作表） |
 | scripts/fields_doc.py | v4.2：產生下方「company.json 欄位說明」的表格（`python3 scripts/fields_doc.py > out/fields.md`）；company.json 有欄位沒寫說明即報錯 |
 | xlx.py／cmp31.js | 一致性核對：xlx.py 依情境重算 Excel 並擷取數值（暫存檔在 `out/`，以 `scripts/recalc.py` 重算）；cmp31.js 以 HTML 引擎逐列比對（三情境各 313 項，含 v4.1 目標價區間與判斷句、v4.3 市場共識逐筆與一頁摘要的差距、隱含倍數與句子逐字比對、v4.4 季度層 6 季數字／差距／差異原因／驗證點句與年度差異原因；讀取目前目錄的 `xl17_*.json`） |
 | scripts/recalc.py | LibreOffice headless 重算：`python3 scripts/recalc.py 檔案.xlsx [逾時秒數]`＝開啟、全部重算、原地存檔，輸出 JSON 並回報公式錯誤數（#REF!、#DIV/0!、#VALUE!、#NAME?、#N/A）；有錯誤或失敗時代碼 1 |
@@ -39,6 +39,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | scripts/test_attrib.py | 拆解工具測試：月數推算、同版對同版全為 0、滾動一季且 WACC 改為 12% 時 (a) 係數＝(1.12)^(3/12)。verify.sh 步驟 8c |
 | scripts/test_rolling.py | v4.5：期間滾動測試（暫存副本）。B：日曆推算 6 種情況（12 月財年 Q1–Q4 已申報、5 月財年、無已申報季度）× 2 種目標價時點；C：只滾日曆、未更新 `asOf` 時建置必須失敗並逐項列出；A：把副本滾動到下一個已申報季度（只改日曆與標籤、不改數字），建 HTML 與 Excel，第一屏不得出現舊日曆特有的字樣（評價日、年初至今／首期標籤、已申報季度）。例外：版本紀錄與來源頁、整段落在 company.json／共識檔資料字串內的字樣。verify.sh 步驟 8b |
 | scripts/check_offline.py | 離線開啟檢查（已決定事項 11）：`python3 scripts/check_offline.py 檔案.html 同版.xlsx`。HTML 單獨複製到空資料夾，Playwright 阻斷網路、以 file:// 開啟；(a) 除 HTML 本身外的請求數＝0（網路與旁邊的本機檔案都算）、(b) console 無錯誤與例外、(c) 5 個分頁 10 項關鍵數字（依 A 欄列名稱取自同版 Excel）出現在畫面且無 NaN／undefined／Infinity；v4.5 另比對第一屏（視窗內）的資料更新日、模型期間、現價日與評價日（`CHECKS_FIRST`；列名稱中的期間佔位符以任意文字比對，新舊版 Excel 皆可）。verify.sh 步驟 5c 對新建 HTML 與 dist/ 成品各跑一次 |
+| scripts/check_tokenomics_tab.py | W1：「快照值＝Excel 分頁值」檢查：`python3 scripts/check_tokenomics_tab.py 檔案.xlsx`。Excel「Tokenomics_取數」分頁每個名稱 × 世代的低成本／基準／高成本＝`company.json` → `tokenomics.snapshotFile` 快照值；每個「基準」格有具名範圍 `TK_<名稱去掉 IF_／L1_>_<世代代碼>`（H100、GB200、GB300、VR200、RU；單值名稱不加世代）；W1 期間其他工作表的公式不得引用本分頁或 TK_ 名稱。verify.sh 步驟 5d；步驟 0c 另以 `../tools/tokenomics/import_tokenomics.py --check` 確認快照可由 Tokenomics 重現（找不到 clone 時警告略過；`TOKENOMICS_DIR` 可指定） |
 | scripts/check_quarterly.js | v4.4：季度加總＝年度（三情境）、`quarterly.consistency` 一致性、超過門檻的差距都有原因；`build_html_portable.py` 建置時呼叫，verify.sh 步驟 0 |
 | scripts/test_quarterly.py | v4.4：暫存副本測試——(A) 假設 Q3 實際數，Python 獨立計算差距並與 HTML、Excel 比對；(B) 可移植性（無 MW、無季度指引與共識）。verify.sh 步驟 8 |
 | scripts/cloud_setup.sh | 雲端環境 setup script（只裝 Python 套件；LibreOffice Calc 於工作階段內補裝，見 CLAUDE.md） |

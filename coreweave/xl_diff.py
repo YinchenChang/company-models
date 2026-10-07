@@ -3,7 +3,7 @@
 # --by-label（v4.2）：列數或 A 欄不同的工作表（例如新增輸入列造成位移），改以「區段＋A 欄列名稱」配對列再逐格比對；
 #   區段＝該列之上最近的第一層區段標題列（淺藍底 D9E2F3），同名的表頭列（例如各區的「項目」）因此可區分。
 #   配對鍵重複、或 A 欄空白的列有內容時直接報錯並列出，不自行配對。A、B 兩檔結構相同的工作表仍逐格比對。
-#   新版多出的列列為「新增列」，不計為差異；舊版有、新版沒有的列計為差異。
+#   新版多出的列列為「新增列」，不計為差異；舊版有、新版沒有的列計為差異。新版多出的工作表列為「新增工作表」（W1），不計為差異；舊版工作表缺少或順序改變計為差異。
 #   公式比對時，舊版公式中的列號（含跨工作表引用）先依列對照換算成新位置再比；
 #   舊版是文字、新版改為文字公式且重算後的值與舊版文字相同者列為「文字改為活公式」，不計為差異（值由 --values 另行核對）。
 #   新版公式把對「新增列」儲存格的引用換回該格的常數後（「+-」併為「-」）與舊版公式相同者，列為「常數改為引用輸入格」，不計為差異。
@@ -67,7 +67,9 @@ for _w in (wa, wb) + ((vb,) if vb else ()):
     for _n in IGN:
         if _n in _w.sheetnames: del _w[_n]
 diffs, added, conv, errs, inl = [], [], [], [], []
-if wa.sheetnames != wb.sheetnames: diffs.append(('sheets', wa.sheetnames, wb.sheetnames))
+# W1（2026-10-07）：新版多出的工作表列為「新增工作表」、不計為差異（例如 Tokenomics_取數）；舊版工作表須全部存在且相對順序不變
+NEW_SHEETS = [n for n in wb.sheetnames if n not in wa.sheetnames]
+if [n for n in wb.sheetnames if n in wa.sheetnames] != wa.sheetnames: diffs.append(('sheets', wa.sheetnames, wb.sheetnames))
 col_a = lambda ws: [ws.cell(r, 1).value for r in range(1, ws.max_row + 1)]
 rowmap, mode = {}, {}  # rowmap[工作表][舊列號] = 新列號（label 模式）
 for n in wa.sheetnames:
@@ -155,6 +157,7 @@ if EXP:
     miss = sorted(set(EXP) - {f'{n}!{c}' for n, c, *_ in hit})
     if miss: print(f'清單中沒有差異的格 {len(miss)}：' + '、'.join(miss))
 if IGN: print(f'略過的工作表（未比對）：{"、".join(IGN)}')
+if NEW_SHEETS: print(f'新增工作表（不計為差異）：{"、".join(NEW_SHEETS)}')
 if by_label:
     lab = [n for n, m in mode.items() if m == 'label']
     print(f'以列名稱配對的工作表：{"、".join(lab) if lab else "無（全部逐格）"}')
