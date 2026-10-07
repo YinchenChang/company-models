@@ -10,7 +10,7 @@
 |---|---|---|---|
 | W0 遷移 | `claude/coreweave-w0-migrate` | | chat 端完成 |
 | W1 Tokenomics 取數層 | `claude/coreweave-w1-tokenomics`（疊加於 W0 分支） | #6 | 完成，待審 |
-| W2 每 MW 改寫 | `claude/coreweave-w2-permw`（疊加於 W1 分支） | （開 PR 後補） | 進行中 |
+| W2 每 MW 改寫 | `claude/coreweave-w2-permw`（疊加於 W1 分支） | #9 | 進行中 |
 | W3 v4.6 成品與對照 | `claude/coreweave-w3-v4.6` | | 未開始 |
 
 <!-- 各工作單在下方新增自己的段落：「## Wx」＋步驟紀錄表（步驟｜狀態｜commit｜備註） -->
