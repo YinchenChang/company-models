@@ -16,7 +16,7 @@ function AM({
     hole: p,
     call: m,
     shares: h
-  } = r, g = (0, v.useMemo)(() => dcfGridWaccG(s, r.v), [s, r.v]), RV = (0, v.useMemo)(() => a === 4 ? reverseDcf(t, n) : null, [t, n, a]), y = n.price * h, b = y + r.v.netDebt, NDT = n.netDebt + CVN.reduce((a, c) => a + c.M, 0) + (n.ndAdj ?? 0), // v0.1b：模型列用評價股數與評價淨負債（含可轉債分類）；TTM 列市值為基本股，可轉債全數計入淨負債
+  } = r, g = (0, v.useMemo)(() => dcfGridWaccG(s, r.v), [s, r.v]), RV = (0, v.useMemo)(() => a === 4 ? reverseDcf(t, n) : null, [t, n, a]), y = n.price * h, b = y + r.v.netDebt, NDT = n.netDebt + CVN.reduce((a, c) => a + c.M, 0) + ndAdjQ(n), // v0.1b：模型列用評價股數與評價淨負債（含可轉債分類）；TTM 列市值為基本股，可轉債全數計入淨負債
  x = s[1].revenue, S = s[1].ebitda, C = S > 0 ? b / S : 0, E = [`損益簡表`, `Comps`, `DCF`, `目標價`], D = m.call === `買進` ? `ok` : m.call === `賣出` ? `bad` : `watch`, O = e.totals.end, Rt = (e, t) => (0, $.jsx)(`td`, {
     className: `py-1.5 text-right font-mono tabular-nums`,
     children: Number.isFinite(e) ? Y(e, t) : `—`

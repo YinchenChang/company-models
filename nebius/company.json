@@ -41,7 +41,10 @@
   "defaults.eqCapShares": "FY26Q2",
   "defaults.mwYearEnd": "FY26Q2",
   "defaults.prepay.openBalance": "FY26Q2",
-  "debt.convertibles": "FY26Q2"
+  "debt.convertibles": "FY26Q2",
+  "defaults.otherEbitda[0]": "FY26Q2",
+  "valuation.holdings": "FY26Q2",
+  "valuation.debtLike": "FY26Q2"
  },
  "ytdActual": {
   "throughQuarter": "FY26Q2",
@@ -569,6 +572,14 @@
    0.0,
    0.0
   ],
+  "otherEbitda": [
+   -0.094,
+   -0.141,
+   -0.094,
+   -0.047,
+   0
+  ],
+  "otherEbitdaNote": "其他事業（Avride＋TripleTen）EBITDA：上半年 −0.094 × 2＝−0.188／年，各期＝−0.188 × 期間長度 × 線性遞減（首期 100%、FY27 75%、FY28 50%、FY29 25%、FY30 0%）；假設處分或自給 [Derived／Assumed]",
   "debtBacklog": 0.5,
   "ctrTerm": 3,
   "minCash": 2,
@@ -799,7 +810,28 @@
   "shares": 0.3193,
   "atmSharesInValuation": 0,
   "netDebt": -13.6754,
-  "ndAdj": 0,
+  "holdings": [
+   [
+    "ClickHouse 持股",
+    15.0,
+    0.25,
+    "ClickHouse 2025 年估值 US$15bn × 持股約 25%（持股比例為二手資料 [Assumed]；帳面 1.5177）"
+   ],
+   [
+    "Toloka 持股",
+    0.0865,
+    1.0,
+    "帳面價值（6/30 季報）[Verified]"
+   ]
+  ],
+  "holdingsDiscount": 0.3,
+  "debtLike": [
+   [
+    "Avride SAFE 負債",
+    0.1781,
+    "6/30 季報 SAFE 負債 [Verified]"
+   ]
+  ],
   "tax": 0.258,
   "nol": 0.8,
   "nolUsePct": 0.5,

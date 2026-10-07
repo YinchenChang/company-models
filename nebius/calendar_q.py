@@ -138,6 +138,7 @@ ROLL_FIELDS = [
     ('首期一次性金額', 'scenarios.capexTemplate.div[0]', 'JV 後續增資＋策略投資（首期）'),
     ('首期一次性金額', 'defaults.intCal', '利息校正（只加在首期）'),
     ('首期一次性金額', 'defaults.services[0]', '非算力服務收入（首期）'),
+    ('首期一次性金額', 'defaults.otherEbitda[0]', '其他事業 EBITDA（首期；v0.1b）'),
     ('首期一次性金額', 'defaults.atm', 'ATM 募資（首期）'),
     ('首期一次性金額', 'scenarios.leaseHighPath[0]', '表外現金租金（首期；三情境依此路徑按比例）'),
     ('首期一次性金額', 'rpo.bucketWeights[0]', 'RPO 排程權重（首期）'),
@@ -154,6 +155,8 @@ ROLL_FIELDS = [
     ('期初餘額', 'defaults.rpoPendingAdd', '尚未入 RPO 的新增承諾'),
     ('期初餘額', 'defaults.prepay.openBalance', '期初合約負債（客戶預付餘額；v0.1b）'),
     ('期初餘額', 'debt.convertibles', '可轉債逐檔（原始本金、轉換價；v0.1b）'),
+    ('期初餘額', 'valuation.holdings', '持股價值（估值、持股比例；v0.1b）'),
+    ('期初餘額', 'valuation.debtLike', '類債項目（SAFE 等；v0.1b）'),
 ]
 
 

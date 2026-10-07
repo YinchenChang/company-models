@@ -164,7 +164,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles） | 必改 |
+| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles、defaults.otherEbitda[0]、valuation.holdings、valuation.debtLike） | 必改 |
 
 ### `ytdActual`：年初至今實際數（10-Q；v4.5 前為 actual1H）
 
@@ -427,6 +427,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.ebStart` | 第一期 EBITDA 率 | 比例 | 0.497 | 必改 |
 | `defaults.ebSteady` | 最後一期（穩態）EBITDA 率；中間各期線性內插 | 比例 | 0.47 | 檢查 |
 | `defaults.services` | 非算力服務營收（軟體、儲存等），各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
+| `defaults.otherEbitda` | 其他事業 EBITDA（負值＝燒錢），各期；同時進入損益 EBITDA 與營運來源（v0.1b） | US$bn 清單 | -0.094、-0.141、-0.094、-0.047、0 | 必改 |
+| `defaults.otherEbitdaNote` | 其他事業 EBITDA 的推導與來源說明 | 文字 | 其他事業（Avride＋TripleTen）EBIT… | 必改 |
 | `defaults.debtBacklog` | 新債上限：總債務不超過 backlog 的倍數 | 倍 | 0.5 | 檢查 |
 | `defaults.ctrTerm` | 新簽合約的平均年期（決定 backlog 補入量） | 年 | 3 | 檢查 |
 | `defaults.minCash` | 最低現金：每期融資後期末現金不低於此值 | US$bn | 2 | 檢查 |
@@ -495,7 +497,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `valuation.shares` | 評價股數（含期後股權發行上限） | bn 股 | 0.3193 | 必改 |
 | `valuation.atmSharesInValuation` | 評價股數中「期後股權發行上限」的股數：期後股權／可轉債開關關閉時由評價股數扣回（v0.1b；CRWV 0.035、無此項的公司填 0） | bn 股 | 0 | 必改 |
 | `valuation.netDebt` | 淨負債（不含可轉債：其他借款 − 現金，含期後已入帳的股權／可轉債募得淨額；可轉債依 debt.convertibles 另計） | US$bn | -13.6754 | 必改 |
-| `valuation.ndAdj` | 淨負債調整項（持股價值以負數、SAFE 等類債以正數；評價淨負債與錨定年末淨負債同加） | US$bn | 0 | 必改 |
+| `valuation.holdings` | 持股清單，一筆一列：[名稱, 估值（100%，US$bn）, 持股比例, 備註]；價值＝估值 × 持股比例 ×（1 − holdingsDiscount），自淨負債扣除 | 清單 | 2 筆 | 必改 |
+| `valuation.holdingsDiscount` | 持股折價（流動性、少數股權） | 比例 | 0.3 | 必改 |
+| `valuation.debtLike` | 類債項目，一筆一列：[名稱, 金額（US$bn）, 備註]；加入淨負債 | 清單 | 1 筆 | 必改 |
 | `valuation.tax` | 稅率 | 比例 | 0.258 | 檢查 |
 | `valuation.nol` | 期初可扣抵虧損（NOL） | US$bn | 0.8 | 必改 |
 | `valuation.wacc` | 加權平均資金成本 WACC | 比例 | 0.11 | 檢查 |

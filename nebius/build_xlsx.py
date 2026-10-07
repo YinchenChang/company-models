@@ -333,6 +333,7 @@ r = prow(r, "新產能簽約率", "%", PCT_(M['fill']), PCT, "MW 驅動：100%�
 r = prow(r, "客戶違約率", "%", PCT_(M['defaultP']), PCT, "前三大客戶約 59% 營收的定價，非預測 [Assumed]")
 r = prow(r, "回收率", "%", PCT_(M['recovery']), PCT, "[Assumed]")
 r = prow(r, "非算力服務營收", "US$bn", D['services'], NUM, "預設 0：AI cloud 軟體已含在每 MW 年收入；其他事業另列 [Assumed]")
+r = prow(r, "其他事業 EBITDA（Avride＋TripleTen）", "US$bn", D['otherEbitda'], NUM, D['otherEbitdaNote'])
 r += 1
 
 # ---------------- C 利潤率 ----------------
@@ -459,7 +460,17 @@ r = section(ws, r, "F｜評價（價格、股數、折現、倍數、權重）")
 PX = gi(r, f"現價（{CO['meta']['priceDate']} 收盤）", "US$", V['price'], f"{CONS['priceReference']['source']}（{CONS['priceReference']['url']}）[Verified]", USD); r += 1
 SH = gi(r, "股數（含 ATM 上限）", "bn", V['shares'], "季末流通 0.2719＋NVIDIA 預付認股權證 0.0211＋以股換債 0.0158＋RSU 0.0062＋選擇權庫藏股法 0.0043 [Derived]", '0.0000'); r += 1
 ND = gi(r, "淨負債（不含可轉債）", "US$bn", V['netDebt'], f"其他借款 − 現金（含期後股權／可轉債募得淨額）；可轉債依稀釋判斷另計（見『評價_DCF與目標價』可轉債區）[Derived]"); r += 1
-ADJ = gi(r, "淨負債調整項（持股、SAFE 等）", "US$bn", V.get('ndAdj', 0), "company.json → valuation.ndAdj；正值＝增加淨負債 [Derived]"); r += 1
+_HV = []  # v0.1b：持股（估值 × 持股比例 ×（1 − 折價））與類債項目 → 淨負債調整項
+for _h in V['holdings']:
+    _a = gi(r, f"{_h[0]}｜估值（100%）", "US$bn", _h[1], _h[3]); r += 1
+    _b = gi(r, f"{_h[0]}｜持股比例", "%", _h[2], "", PCT); r += 1
+    _HV.append(f"{_a}*{_b}")
+HDISC = gi(r, "持股折價（流動性、少數股權）", "%", V['holdingsDiscount'], "非上市少數股權折價 [Assumed]；敏感度見報告（20%／40%）", PCT); r += 1
+_DL = []
+for _x in V['debtLike']:
+    _DL.append(gi(r, f"類債：{_x[0]}", "US$bn", _x[1], _x[2])); r += 1
+ADJ = gi(r, "淨負債調整項（類債 − 持股 ×（1 − 折價））", "US$bn", f"={'+'.join(_DL) or '0'}-({'+'.join(_HV) or '0'})*(1-{HDISC})",
+         "正值＝增加淨負債；評價淨負債與錨定年末淨負債同加"); r += 1
 WACC = gi(r, "WACC", "%", V['wacc'], "[Assumed]", PCT); r += 1
 GG = gi(r, "永續成長 g", "%", V['g'], "[Assumed]", PCT); r += 1
 MAINT = gi(r, "終值維持性 CapEx 占 D&A", "%", V['maintRatio'], "終值不讓成長性 CapEx 偽裝成永續 FCF [Assumed]", PCT); r += 1
@@ -824,13 +835,15 @@ frow("Ⓐ0 «YTDL» 實際營運現金流（CFO）", "US$bn",
 frow("Ⓐ RPO 現金（«STUB» 起）", "US$bn", lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['rpocash']}", NUM, GREEN)
 frow("Ⓑ 新簽約現金", "US$bn", lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['newcash']}", NUM, GREEN)
 frow("Ⓒ 非算力服務現金", "US$bn", lambda i: f"={inref('非算力服務現金', i)}", NUM, GREEN)
+frow("Ⓒ2 其他事業 EBITDA（«STUB» 起）", "US$bn", lambda i: f"={inref('其他事業 EBITDA（Avride＋TripleTen）', i)}", NUM, GREEN,
+     "Avride＋TripleTen 燒錢（負值），視為現金（v0.1b）")
 frow("Ⓓ 客戶預付（«STUB» 起）", "US$bn",
      lambda i: f"={COLS[i]}{FR['　客戶預付金額（抵減，«STUB» 起）']}", NUM, BLACK)
 frow("Ⓓ2 減：預付認列（非現金營收）", "US$bn", lambda i: f"=-{COLS[i]}{pr_row}", NUM, BLACK,
      "營收中由合約負債轉入的部分已在預付時收現，不重複計入服務現金（v0.1b）")
 frow("營運來源合計", "US$bn",
      lambda i: (f"={COLS[i]}{FR['Ⓐ0 «YTDL» 實際營運現金流（CFO）']}+{COLS[i]}{FR['Ⓐ RPO 現金（«STUB» 起）']}+"
-                f"{COLS[i]}{FR['Ⓑ 新簽約現金']}+{COLS[i]}{FR['Ⓒ 非算力服務現金']}+{COLS[i]}{FR['Ⓓ 客戶預付（«STUB» 起）']}+"
+                f"{COLS[i]}{FR['Ⓑ 新簽約現金']}+{COLS[i]}{FR['Ⓒ 非算力服務現金']}+{COLS[i]}{FR['Ⓒ2 其他事業 EBITDA（«STUB» 起）']}+{COLS[i]}{FR['Ⓓ 客戶預付（«STUB» 起）']}+"
                 f"{COLS[i]}{FR['Ⓓ2 減：預付認列（非現金營收）']}"),
      NUM, BLACK, bold=True)
 srcop_row = FR["營運來源合計"]
@@ -1467,8 +1480,8 @@ vrow("非算力服務", "US$bn", lambda i: f"={inref('非算力服務營收', i)
 vrow("總營收", "US$bn", lambda i: f"={COLS[i]}{VR['算力收入']}+{COLS[i]}{VR['非算力服務']}", NUM, BLACK, bold=True)
 rev_v = VR["總營收"]
 vrow("EBITDA 率", "%", lambda i: f"={inref('EBITDA 率', i)}", PCT, GREEN)
-vrow("營業利益（EBIT）", "US$bn", lambda i: f"={COLS[i]}{rev_v}*{inref('EBITDA 率', i)}-'輸入與假設'!{COLS[i]}${IN['D&A（車隊）']}", NUM, BLACK,
-     "＝營收×EBITDA 率 − 車隊 D&A")
+vrow("營業利益（EBIT）", "US$bn", lambda i: f"={COLS[i]}{rev_v}*{inref('EBITDA 率', i)}+{inref('其他事業 EBITDA（Avride＋TripleTen）', i)}-'輸入與假設'!{COLS[i]}${IN['D&A（車隊）']}", NUM, BLACK,
+     "＝營收×EBITDA 率＋其他事業 EBITDA − 車隊 D&A")
 ebit_v = VR["營業利益（EBIT）"]
 vrow("利息（含瀑布新債）", "US$bn", lambda i: f"='各期收支'!{COLS[i]}{FRR['int']}", NUM, GREEN)
 int_v = VR["利息（含瀑布新債）"]

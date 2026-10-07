@@ -288,6 +288,7 @@ function runFunding(e) {
         g = h * cm,
         nC = nR * (1 - (t.defaultP[r] / 100) * p) * cm,
         svcCash = svc * cm,
+        ob = (e.otherEbitda || [])[r] || 0, // v0.1b：其他事業 EBITDA（Avride＋TripleTen；負值＝燒錢），同時進入 EBITDA 與營運來源
         _ = CX[r],
         v = CXG[r] * e.a.customerFund[r], // v0.1b：客戶預付流入＝成長型 CapEx × 預付比率（汰換 CapEx 不計）
         y = _ - v,
@@ -299,7 +300,7 @@ function runFunding(e) {
         T = e.overlay ? C + w : 0,
         O = (e.includeDebt ? DEBT_AMORT[r] : 0) + CVP[r].amort, // v0.1b：含債務處理可轉債的到期還本（到期累積本金）
         k = r === 0 && e.includeAtm ? e.atm : 0,
-        A = g + nC + svcCash + v - pr, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
+        A = g + nC + svcCash + ob + v - pr, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
         j0 = _ + S + IX[r] + e.jvCommit[r] + e.a.div[r] + T + O,
         wRL = uA(e, r) / 100 * L,
         wRJ = (e.junkRate + (e.cdsLink ? Math.max(0, e.cds - e.cdsBaseBp) / 1e4 * e.cdsPassThrough : 0)) * L,
@@ -406,8 +407,9 @@ function runFunding(e) {
         ebM: ebM,
         cashMargin: cm,
         totRev: totRev,
-        ebitdaPL: totRev * ebM,
-        cashEbitda: g + nC + svcCash - S,
+        ebitdaPL: totRev * ebM + ob,
+        otherEbitda: ob,
+        cashEbitda: g + nC + svcCash + ob - S,
         creditAdj: (m + nR * (t.defaultP[r] / 100) * p) * cm,
         atm: k,
         facility: F,

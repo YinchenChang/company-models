@@ -39,7 +39,7 @@ function forwardPL(e, t) {
       u = e.years[c].servicesRev,
       d = l + u,
       f = c === 0 ? uM(HIST_PL[3].revenue + d, r) : uM(d, r),
-      EB = d * e.years[c].ebM,
+      EB = d * e.years[c].ebM + (e.years[c].otherEbitda || 0), // v0.1b：加其他事業 EBITDA
       p = EB - e.years[c].daFleet,
       m = e.years[c].interest,
       pt = p - m,
@@ -240,13 +240,17 @@ function wM(e) {
   return t.length ? t.length % 2 ? t[n] : (t[n - 1] + t[n]) / 2 : NaN
 }
 
+function ndAdjQ(n) { // v0.1b：淨負債調整項＝類債項目合計 − Σ 持股估值 × 持股比例 ×（1 − 持股折價）
+  return (n.debtLike || []).reduce((a, x) => a + x[1], 0) - (n.holdings || []).reduce((a, h) => a + h[1] * h[2], 0) * (1 - (n.holdingsDiscount ?? 0))
+}
+
 function runValuation(e, t, n) {
   // v0.1b：可轉債稀釋（八檔，若轉換法）。第一輪判斷價＝現價；第二輪判斷價＝MIN(現價, 第一輪加權目標價)（「以較保守者」），
   // 評價（股數、淨負債、錨定年末淨負債）依第二輪分類。融資現金流（票息、到期還本）依 runFunding 的分類（判斷價＝發行參考價）。
   let r0 = shareCount(t, n),
     Y2 = e.years,
     CF = e.cvFund || CVN.map(() => !1),
-    adj = n.ndAdj ?? 0, // 淨負債調整項（v0.1b 步驟 6：持股 − SAFE 等；預設 0）
+    adj = ndAdjQ(n), // 淨負債調整項（v0.1b：類債 − 持股 ×（1 − 折價））
     mk = cv => {
       let sh = r0 + CVN.reduce((a, c, j) => a + (cv[j] ? c.S : 0), 0),
         mDebt = CVN.reduce((a, c, j) => a + (cv[j] ? 0 : c.M), 0),
