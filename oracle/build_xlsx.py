@@ -1967,7 +1967,7 @@ med_r = r
 r += 1
 ws.cell(row=r, column=1, value=f"{CO['meta']['ticker']}（TTM 至 {CAL['filedQLabel']}）").font = BOLD
 c = ws.cell(row=r, column=2, value=CO['callFacts']['mktCapLast']); c.font = BLUE; c.number_format = NUM
-c = ws.cell(row=r, column=3, value=f"={ND}+SUM({CV_M})+{ADJ}"); c.font = GREEN; c.number_format = NUM
+c = ws.cell(row=r, column=3, value=f"={ND}+SUMPRODUCT({CV_M}*(1-{CV_MAND}))+{ADJ}"); c.font = GREEN; c.number_format = NUM  # v0.1b：強制轉換特別股不列淨負債
 c = ws.cell(row=r, column=4, value=f"=B{r}+C{r}"); c.number_format = NUM
 c = ws.cell(row=r, column=5, value=CO['callFacts']['ttmRev']); c.font = BLUE; c.number_format = NUM
 c = ws.cell(row=r, column=6, value=f"=D{r}/E{r}"); c.number_format = MULT; c.font = BOLD
@@ -2257,7 +2257,7 @@ def _find(label):
             return rr
     raise KeyError(label)
 _r = _find(f"債務明細合計 = 季報本金 {_n(LQ_DEBT)} − 以股換債 ＋ 期後新發")
-ws.cell(row=_r, column=2, value=f"='資產負債_既有債務'!E{tot_r}+SUM({CV_M})").number_format = NUM
+ws.cell(row=_r, column=2, value=f"='資產負債_既有債務'!E{tot_r}+SUMPRODUCT({CV_M}*(1-{CV_MAND}))").number_format = NUM
 _r = _find(f"{PERIODS[0]} 全年 CapEx（MW 公式）")
 ws.cell(row=_r, column=2, value=f"='輸入與假設'!C{IN['全年毛 CapEx（公式）']}").number_format = NUM
 _r = _find(f"JV 已承諾餘額於 {_YR0} 年內履行")

@@ -104,7 +104,7 @@ F = [
  ('debt.instruments', '既有債務逐筆明細，一筆一列：[名稱, 追索／非追索, 到期, 有效利率（比例）, 本金（US$bn）, 備註]。加總本金須等於 10-Q 本金合計', '清單', M),
  ('debt.convertible.principal', '期後新發行可轉債本金（不在五期還本表內，只計利息）', 'US$bn', M),
  ('debt.convertible.coupon', '該可轉債票面利率', '比例', M),
- ('debt.convertibles', '可轉債逐檔，一檔一列：[名稱, 原始本金（US$bn）, 票息（比例）, 到期 YYYY-MM, 到期累積倍數, 轉換價（US$）, 備註]。有效轉換價＝轉換價 × 累積倍數；低於判斷價視為轉股（若轉換法），否則以到期累積本金計債務並付現金票息（v0.1b）', '清單', M),
+ ('debt.convertibles', '可轉債逐檔，一檔一列：[名稱, 原始本金（US$bn）, 票息（比例）, 到期 YYYY-MM, 到期累積倍數, 轉換價（US$）, 備註, 強制轉換（選填；true＝一律轉股、不計利息與還本、不列債務本金；Oracle v0.1b）]。有效轉換價＝轉換價 × 累積倍數；低於判斷價視為轉股（若轉換法），否則以到期累積本金計債務並付現金票息（v0.1b）', '清單', M),
  ('debt.convertibleBridge.exchangedAccreted', '評價日後以股換債註銷的舊債到期本金（季報本金與逐檔清單的調節項）', 'US$bn', M),
  ('debt.convertibleBridge.newIssuesAccreted', '評價日後新發可轉債的到期本金（季報本金與逐檔清單的調節項）', 'US$bn', M),
  ('debt.convertibleBridge.note', '調節說明與來源', '文字', M),

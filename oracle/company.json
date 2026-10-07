@@ -682,11 +682,22 @@
    "principal": 0.0,
    "coupon": 0.0
   },
-  "convertibles": [],
+  "convertibles": [
+   [
+    "6.50% Series D 強制轉換特別股（2026-02）",
+    5.0,
+    0.065,
+    "2029-01",
+    1.0,
+    160.06,
+    "清算價 $5B（5,000 萬股 × $100）；2029-01-15 強制轉換為普通股，每股特別股轉 499.8126–624.7657 股（2,499–3,124 萬股）；一律轉股，取稀釋最大 31.238m 股（轉換價下限 $160.06）[Interested-party 8-K 2026-02]；6.50% 股利列於 defaults.dividend.preferred；權益，不列債務本金",
+    true
+   ]
+  ],
   "convertibleBridge": {
    "exchangedAccreted": 0.0,
    "newIssuesAccreted": 0.0,
-   "note": "無評價日後新發可轉債、無以股換債；債務明細＝55 檔優先票據 120.5＋定期貸款 5.067＋商業本票 0.337＝125.904（面額；資產負債表帳面 125.337）[Derived]"
+   "note": "無評價日後新發可轉債、無以股換債；債務明細＝55 檔優先票據 120.5＋定期貸款 5.067＋商業本票 0.337＝125.904（面額；資產負債表帳面 125.337）[Derived]。強制轉換特別股為權益，不列入對帳。"
   }
  },
  "latestQuarter": {
@@ -1980,24 +1991,6 @@
    "consensus": "data/consensus_orcl_20261007.json"
   },
   "debt": {
-   "mcps": {
-    "value": {
-     "liqPref": 5.0,
-     "dividendRate": 0.065,
-     "minShares": 0.024991,
-     "maxShares": 0.031238,
-     "lowPx": 160.06,
-     "highPx": 200.07,
-     "mandatoryDate": "2029-01-15"
-    },
-    "unit": "物件（US$bn、bn 股、US$）",
-    "ref": [
-     "mcps.terms",
-     "mcps.convShares",
-     "mcps.priceBands"
-    ],
-    "mapTo": "debt.convertibles（改承接強制轉換特別股：一律轉股；股利 0.325／年列特別股股利）"
-   },
    "ratings": {
     "value": {
      "sp": "BBB-／穩定（2026-07-09）",

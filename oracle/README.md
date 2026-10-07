@@ -236,7 +236,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `debt.instruments` | 既有債務逐筆明細，一筆一列：[名稱, 追索／非追索, 到期, 有效利率（比例）, 本金（US$bn）, 備註]。加總本金須等於 10-Q 本金合計 | 清單 | 57 筆 | 必改 |
 | `debt.convertible.principal` | 期後新發行可轉債本金（不在五期還本表內，只計利息） | US$bn | 0 | 必改 |
 | `debt.convertible.coupon` | 該可轉債票面利率 | 比例 | 0 | 必改 |
-| `debt.convertibles` | 可轉債逐檔，一檔一列：[名稱, 原始本金（US$bn）, 票息（比例）, 到期 YYYY-MM, 到期累積倍數, 轉換價（US$）, 備註]。有效轉換價＝轉換價 × 累積倍數；低於判斷價視為轉股（若轉換法），否則以到期累積本金計債務並付現金票息（v0.1b） | 清單 |  | 必改 |
+| `debt.convertibles` | 可轉債逐檔，一檔一列：[名稱, 原始本金（US$bn）, 票息（比例）, 到期 YYYY-MM, 到期累積倍數, 轉換價（US$）, 備註, 強制轉換（選填；true＝一律轉股、不計利息與還本、不列債務本金；Oracle v0.1b）]。有效轉換價＝轉換價 × 累積倍數；低於判斷價視為轉股（若轉換法），否則以到期累積本金計債務並付現金票息（v0.1b） | 清單 | 1 筆 | 必改 |
 | `debt.convertibleBridge.exchangedAccreted` | 評價日後以股換債註銷的舊債到期本金（季報本金與逐檔清單的調節項） | US$bn | 0 | 必改 |
 | `debt.convertibleBridge.newIssuesAccreted` | 評價日後新發可轉債的到期本金（季報本金與逐檔清單的調節項） | US$bn | 0 | 必改 |
 | `debt.convertibleBridge.note` | 調節說明與來源 | 文字 | 無評價日後新發可轉債、無以股換債；債務明細＝55 檔… | 必改 |
@@ -646,7 +646,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `oracle._readme` | Oracle 資料草稿區段的說明（v0.1a 產出；引擎尚未讀取，v0.1b 依 mapTo 搬入既有欄位或新增） | 文字 | Oracle 資料草稿（v0.1a 產出）。v0.1… | 必改 |
 | `oracle.files` | Oracle 事實總帳、每 MW 推導、共識資料檔的路徑 | 物件（路徑） | 物件（facts、perMw、consensus） | 必改 |
-| `oracle.debt` | Oracle 債務草稿（逐檔票券、定期貸款、商業本票、到期梯、循環額度、強制轉換特別股、信評）；格式同上 | 物件 | 物件（mcps、ratings） | 必改 |
+| `oracle.debt` | Oracle 債務草稿（逐檔票券、定期貸款、商業本票、到期梯、循環額度、強制轉換特別股、信評）；格式同上 | 物件 | 物件（ratings） | 必改 |
 | `oracle.equity` | Oracle ATM、FY27 融資計畫、股利、買回授權、股價草稿；格式同上 | 物件 | 物件（atmDone、fundingPlanFY27、dividendPerShareQ、buybackAuth、eqPx） | 必改 |
 | `oracle.prepay` | Oracle 客戶出資覆蓋比、預付累計、預付＋自帶硬體合約額草稿；格式同上 | 物件 | 物件（capexCover、cashCum、prepayAndByohContract、q1NewContracts） | 必改 |
 | `oracle.mw` | Oracle 已交付 MW、站點、合約容量、利用率、續約溢價草稿（口徑逐欄註明）；格式同上 | 物件 | 物件（deliveredFY26、deliveredFY27Q1、deliveredCumSinceFY26、abileneDelivered、openaiContract、oracleStargateSitesEpoch、gpusQ1、utilization、renewalPremium、pue） | 必改 |
