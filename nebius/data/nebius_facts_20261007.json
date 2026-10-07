@@ -2973,6 +2973,64 @@
     "tag": "[Derived]",
     "note": "(路徑 A 積極 18.38 ＋ 路徑 B 積極 30.03) ÷ 2；設施口徑 ÷ PUE 1.2；區間 IT [18.38, 30.03]、設施 20.17（[15.32, 25.03]）"
    }
+  ],
+  "7_市場共識": [
+   {
+    "id": "mkt.price.close",
+    "item": "NBIS 最新收盤價",
+    "value": 249.87,
+    "unit": "US$",
+    "period": "2026-10-06",
+    "source": "StockAnalysis.com（Nasdaq 收盤）",
+    "url": "https://stockanalysis.com/stocks/nbis/forecast/",
+    "docDate": "2026-10-06",
+    "retrieved": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "MarketBeat 同值；完整共識見 data/consensus_nbis_20261007.json"
+   },
+   {
+    "id": "mkt.pt.sp",
+    "item": "共識平均目標價（S&P Global Market Intelligence）",
+    "value": 283.58,
+    "unit": "US$",
+    "period": "2026-09-25 更新",
+    "source": "S&P Global Market Intelligence（經 StockAnalysis.com）",
+    "url": "https://stockanalysis.com/stocks/nbis/forecast/",
+    "docDate": "2026-09-25",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "中位 300、低 84、高 415、19 位分析師；賣方意見"
+   },
+   {
+    "id": "mkt.pt.mb",
+    "item": "共識平均目標價（MarketBeat 彙整）",
+    "value": 241.8,
+    "unit": "US$",
+    "period": "2026-10-07",
+    "source": "MarketBeat",
+    "url": "https://www.marketbeat.com/stocks/NASDAQ/NBIS/forecast/",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "低 84、高 410、20 位；Moderate Buy；獨立於 S&P"
+   },
+   {
+    "id": "mkt.rev.cons",
+    "item": "共識營收 FY26／FY27／FY28",
+    "value": [
+     3379,
+     11418,
+     21458
+    ],
+    "unit": "USD M",
+    "period": "FY2026–FY2028",
+    "source": "MarketScreener（S&P Capital IQ 系）",
+    "url": "https://uk.marketscreener.com/quote/stock/NEBIUS-GROUP-8037501/finances/",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-07",
+    "tag": "[Interested-party]",
+    "note": "EBITDA 1,338／6,194／13,404；資本支出 22,489／27,243／38,390；S&P 經 StockAnalysis FY26 營收 3,340（同源）"
+   }
   ]
  }
 }

@@ -189,6 +189,19 @@ F = [
  ('quarterly.actuals', '季度實際數（公司公布後填入；預設空白＝待公布），{季別: {各指標, source, date, tag}}；Excel 對應「輸入與假設」J 區藍字格', '物件', M),
  ('varianceReasons._note', '差異原因的說明文字（不進程式）', '文字', K),
  ('varianceReasons.list', '差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗', '清單', C),
+ # Nebius v0.1a：公司專屬資料草稿（引擎尚未讀取；v0.1b 依各欄 mapTo 搬到既有欄位）
+ ('nebius._readme', 'Nebius 資料草稿區段的說明（v0.1a；引擎不讀）', '文字', M),
+ ('nebius.files', 'Nebius 事實總帳、每 MW 推導、共識資料檔的路徑', '物件（路徑）', M),
+ ('nebius.meta', 'Nebius 基本資料草稿；每欄 value／unit／ref（事實總帳 id）／mapTo（v0.1b 目標欄位）', '物件', M),
+ ('nebius.latestQuarter', 'Nebius 最新一季（Q2 2026，6-K）數字草稿；格式同上', '物件', M),
+ ('nebius.ytdActual', 'Nebius 2026 上半年實際數草稿；格式同上', '物件', M),
+ ('nebius.debt', 'Nebius 可轉債（八檔）、資產擔保融資、其他債務草稿；格式同上', '物件', M),
+ ('nebius.equity', 'Nebius ATM、NVIDIA 預付認股權證、以股換債、選擇權與 RSU 草稿；格式同上', '物件', M),
+ ('nebius.guidance', 'Nebius 2026 年指引草稿（營收、ARR、資本支出、EBITDA 率、預付款）；格式同上', '物件', M),
+ ('nebius.mw', 'Nebius 電力路徑草稿（active／connected／contracted 口徑分列）；格式同上', '物件', M),
+ ('nebius.prepay', 'Nebius 預付款與合約參數草稿（公司說法，只作對照或新欄位）；格式同上', '物件', M),
+ ('nebius.other', 'Nebius 非核心事業與持股（Avride、TripleTen、ClickHouse、Toloka）草稿；格式同上', '物件', M),
+ ('nebius.perMw', 'Nebius 每 MW 年收入三情境（Tokenomics 正向推導）、每 MW 資本支出、GPU 壽命、PUE 草稿；格式同上', '物件', M),
 ]
 LQ = {
  'filed': ('申報日', '日期'), 'periodEnd': ('季末日', '日期'), 'revenue': ('當季營收', 'US$bn'), 'yoy': ('當季營收年增率', '比例'),
@@ -274,7 +287,7 @@ SECT = [('meta', '基本資料'), ('calendar', '期間與日期（v4.5）'), ('a
         ('rpo', '已簽約未認列營收（RPO）'), ('leases', '租約'), ('debt', '既有債務'), ('latestQuarter', '最新一季財報數字（10-Q）'),
         ('callFacts', '法說會與期後事項'), ('scenarios', '三個擴張情境'), ('legacy', '舊版對照值'),
         ('defaults', '預設假設（畫面上可調的輸入）'), ('valuation', '評價參數'), ('methodology', '評價方法與評等門檻'), ('peers', '同業比較（Comps）'),
-        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）')]
+        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('nebius', 'Nebius 資料草稿（v0.1a；引擎尚未讀取）')]
 out, shown = ['**填表慣例**',
                '- 金額單位是**十億美元（US$bn）**，例如 4.653 代表 46.53 億美元；另有標示的例外：每股（US$）、每 MW 建置成本（百萬美元／MW，US$m/MW）、股數（十億股，bn）。',
                '- 「比例」寫成小數（0.25＝25%）；標示「%」的欄位寫成百分點（25＝25%）。兩種寫法沿用既有程式，不可混用。',

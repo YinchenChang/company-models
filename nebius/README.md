@@ -559,6 +559,23 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.cashTaxNote` | 年初至今現金稅的說明（損益與評價頁；v4.5） | 文字 | H1 現金稅約 0.1bn | 必改 |
 | `texts.mwYearEndNotes` | 各年底主動電力的來源說明，以年份為鍵（Excel「輸入與假設」說明欄；5a） | 物件（文字） | 物件（2023、2024、2025） | 必改 |
 
+### `nebius`：Nebius 資料草稿（v0.1a；引擎尚未讀取）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `nebius._readme` | Nebius 資料草稿區段的說明（v0.1a；引擎不讀） | 文字 | Nebius 公司專屬資料草稿（v0.1a 產出；引… | 必改 |
+| `nebius.files` | Nebius 事實總帳、每 MW 推導、共識資料檔的路徑 | 物件（路徑） | 物件（facts、perMw、consensus） | 必改 |
+| `nebius.meta` | Nebius 基本資料草稿；每欄 value／unit／ref（事實總帳 id）／mapTo（v0.1b 目標欄位） | 物件 | 物件（company、ticker、priceClose、priceDate、consensusFile、fiscalYearEndMonth、latestQuarterFiled） | 必改 |
+| `nebius.latestQuarter` | Nebius 最新一季（Q2 2026，6-K）數字草稿；格式同上 | 物件 | 物件（revenue、h1Revenue、aiCloudRevenue、adjEbitda、adjEbitdaAiCloud、opInc、ni、da、sbc、interest、capexQ2、cashCapexH1、cfoH1、cash、restricted、deferredTotal、deferredInH1、rpo、rpo24m、rpo25to48、ppeNet、opLeaseLiab、offBalanceLease、sharesOut、basicWaso、equityH1、custA、custB、custC） | 必改 |
+| `nebius.ytdActual` | Nebius 2026 上半年實際數草稿；格式同上 | 物件 | 物件（revenue、cashCapex、cfo、prepay、adjEbitda、da、sbc、opInc、interest、cash1231、borrow、equity、cappedCall） | 必改 |
+| `nebius.debt` | Nebius 可轉債（八檔）、資產擔保融資、其他債務草稿；格式同上 | 物件 | 物件（convertibles、convertiblesAt0630、abf、otherCurrent） | 必改 |
+| `nebius.equity` | Nebius ATM、NVIDIA 預付認股權證、以股換債、選擇權與 RSU 草稿；格式同上 | 物件 | 物件（atmShareCap、atmRemaining、atmAvgPx、nvidiaPfwShares、exchangeShares、options、rsu） | 必改 |
+| `nebius.guidance` | Nebius 2026 年指引草稿（營收、ARR、資本支出、EBITDA 率、預付款）；格式同上 | 物件 | 物件（revLo、revHi、arrLo、arrHi、capexLo、capexHi、adjEbitdaMargin、prepay26Min） | 必改 |
+| `nebius.mw` | Nebius 電力路徑草稿（active／connected／contracted 口徑分列）；格式同上 | 物件 | 物件（activeYE25、activeQ1、activeQ2、connectedYE26Lo、connectedYE26Hi、contractedNow、contractedYE26、deployPerYearFrom27、ownedPlanned） | 必改 |
+| `nebius.prepay` | Nebius 預付款與合約參數草稿（公司說法，只作對照或新欄位）；格式同上 | 物件 | 物件（shareOfDeals、capexCoverLo、capexCoverHi、recogYears、commitments） | 必改 |
+| `nebius.other` | Nebius 非核心事業與持股（Avride、TripleTen、ClickHouse、Toloka）草稿；格式同上 | 物件 | 物件（nonCoreEbitdaAnnual、clickhouseValuation、clickhouseStakeLo、clickhouseStakeHi、clickhouseBook、tolokaBook、avrideSafeLiab） | 必改 |
+| `nebius.perMw` | Nebius 每 MW 年收入三情境（Tokenomics 正向推導）、每 MW 資本支出、GPU 壽命、PUE 草稿；格式同上 | 物件 | 物件（revPerMWit、revPerMWfac、capexPerMWit、gpuLifeYears、pue、companyAcvCompare） | 必改 |
+
 ## v4.0 架構：公司資料單一來源
 - **company.json**：所有公司原始輸入（HTML 引擎與 Excel 共用）。換公司時先改這個檔；衍生值（情境 Billable 比率、Q3 新增 RPO 權重、債務合計與平均利率）留在 segA 開頭由程式推導。
 - HTML：`build_html_portable.py` 把 company.json 注入為 `COMPANY_DATA`，segA 開頭讀取。Excel：`build_xlsx.py` 開頭讀同一檔（75 項輸入，百分點欄位以 `PCT_()` 轉成比例）。
