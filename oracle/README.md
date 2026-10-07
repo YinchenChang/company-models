@@ -1,4 +1,6 @@
-# CoreWeave 收支模型 v4.5 原始碼包
+# Oracle 收支模型 v0.1 原始碼包
+
+Oracle（ORCL）收支與評價模型；由 `nebius/` @ `642d144`（CRWV v4.5＋Nebius v0.1b）複製建立。下方各節為模板沿革與技術說明（以 CoreWeave 為例），引擎與工具仍適用；Oracle 新增的結構（OCI 以 MW × 每 MW 收入、首期以 Q1 OCI 校準可計費 MW、傳統事業四線、客戶出資與預付重大財務組成、股利、投資級融資瀑布、強制轉換特別股、未起租租賃排程、CAPM WACC、分部 EV/EBITDA；v0.1c：EBITDAR 率 − 固定租金、MW 觸頂後穩態 GPU 汰換、終值以末期 UFCF 為基準）見交接檔 `docs/handoff/20261008_Oracle收支模型_交接檔_v0_1.md` 與下方「company.json 欄位說明」。成品名稱＝`更新日_<meta.company>收支模型_v版本`（目前 `dist/20261008_Oracle收支模型_v0_1.html`／`.xlsx`）。`scripts/calib_ebitdar.js`：EBITDAR 率校準（`defaults.ebitdarAdj`；verify.sh 第 0c 項）。
 
 HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo 根目錄；建置產物寫到 `out/`（不納入版控），交付成品放 `dist/`。HTML 的函式庫模板為 `docs/template_v3_3.html`。
 
@@ -20,7 +22,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | app_pretty.js | 原 Oracle 模板的美化程式碼（取其中三段共用 UI） |
 | rm_andy.js | Andy 修改過的開關元件（說明改為浮動提示） |
 | build_html_portable.py | 組裝 HTML：`python3 build_html_portable.py 4.0 out/輸出.html 2026-09-24 [模板 HTML]`（模板省略時用 `docs/template_v3_3.html`；組裝順序：segA、模板段、segB、模板段、segC、模板段、segD、tail、segE） |
-| build_xlsx.py | 產生 Excel：`python3 build_xlsx.py [輸出.xlsx]`（預設 `out/20260926_CoreWeave收支模型_v4_4.xlsx`；版本號、更新日、市價日寫在導覽 A1（v4.3 起讀 vlog.py 與 company.json）；自同目錄讀取 vlog.py、rv_snap.json、company.json 與 `meta.consensusFile` 指定的共識資料檔；群組資訊寫到 `out/outline.json`） |
+| build_xlsx.py | 產生 Excel：`python3 build_xlsx.py [輸出.xlsx]`（預設 `out/<更新日>_<meta.company>收支模型_v<版本>.xlsx`；版本號、更新日、市價日寫在導覽 A1（v4.3 起讀 vlog.py 與 company.json）；自同目錄讀取 vlog.py、rv_snap.json、company.json 與 `meta.consensusFile` 指定的共識資料檔；群組資訊寫到 `out/outline.json`） |
 | fix_outline.py | LibreOffice 重算後，補回 Excel 群組按鈕位置與收合狀態：`python3 fix_outline.py 檔案.xlsx [outline.json]`（預設讀 `out/outline.json`；v3.4 修正：outlinePr 依 schema 放在 tabColor 之後） |
 | fix_datatable.py | v4.1：LibreOffice 重算後，把模擬運算表（情境區間）由 `TABLE()` 一般公式還原為 Excel 的 `dataTable` 公式，保留算出的值：`python3 fix_datatable.py 檔案.xlsx` |
 | verify_ooxml.py | Excel 嚴格結構檢查（XML 格式、工作表與 sheetPr 子元素順序；v4.1 起另檢查模擬運算表存在且無殘留 `TABLE()`）；v3.4 新增 |
