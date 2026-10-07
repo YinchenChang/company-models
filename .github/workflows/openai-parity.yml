@@ -72,6 +72,9 @@ jobs:
         # 不符時，測試訊息會列出前 20 個不符格：頁名、座標、引擎值、Excel 值
         # test_scenario_parity 一律用重建引擎；test_cache_matches_fresh 以快取載入實例與同一個重建實例精確比對
         run: python -m pytest tests/parity/test_parity.py -k "test_scenario_parity or test_cache_matches_fresh" -v --tb=short -p no:cacheprovider --junitxml=junit.xml
+      - name: 失敗註記
+        if: failure()
+        run: python tools/junit_annotations.py junit.xml
       - name: job summary
         if: always()
         run: python tools/ci_summary.py job "scenarios 第 ${{ matrix.shard }} 片" junit.xml "$PARITY_RESULTS" >> "$GITHUB_STEP_SUMMARY"
@@ -111,6 +114,9 @@ jobs:
       - name: Parity 其餘測試（工作表、名稱、CURRENT、形狀、函數語意、兩條重算）
         # 兩條重算測試（增量 <2 秒、全簿 <2 秒）一律用重建的引擎，不經快取
         run: python -m pytest tests/parity -k "not test_scenario_parity and not test_cache_matches_fresh and not test_scenarios_actually_change_outputs" -v --tb=short -p no:cacheprovider --junitxml=junit.xml
+      - name: 失敗註記
+        if: failure()
+        run: python tools/junit_annotations.py junit.xml
       - name: job summary
         if: always()
         run: python tools/ci_summary.py job "structure-recalc" junit.xml "$PARITY_RESULTS" >> "$GITHUB_STEP_SUMMARY"
@@ -143,6 +149,9 @@ jobs:
           path: openai/engine-cache/
       - name: 防空轉（test_scenarios_actually_change_outputs；不需 LibreOffice）
         run: python -m pytest tests/parity/test_parity.py -k test_scenarios_actually_change_outputs -v --tb=short -p no:cacheprovider --junitxml=junit.xml
+      - name: 失敗註記
+        if: failure()
+        run: python tools/junit_annotations.py junit.xml
       - name: job summary
         if: always()
         run: python tools/ci_summary.py job "scenario-guard" junit.xml >> "$GITHUB_STEP_SUMMARY"
