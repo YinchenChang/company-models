@@ -1,5 +1,5 @@
 # 用法：python3 build_html_portable.py <版本> <輸出路徑> <日期> [模板 HTML]（模板省略時用 repo 內的 docs/template_v3_3.html；相對路徑以目前目錄為準）
-# 模板可用任一版已發布的 HTML（例如 20260923_CoreWeave收支模型_v3_3.html），只取其中的 React／Recharts 函式庫部分。
+# 模板可用任一版已發布的 HTML（例如 CRWV 的 20260923_CoreWeave收支模型_v3_3.html），只取其中的 React／Recharts 函式庫部分。
 import sys, os
 H = os.path.dirname(os.path.abspath(__file__))
 ver, out, date = sys.argv[1], sys.argv[2], sys.argv[3]

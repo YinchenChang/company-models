@@ -21,7 +21,8 @@ DIST_HTML="$(ls dist/*_v*.html | head -1)"
 DIST_XLSX="$(ls dist/*_v*.xlsx | head -1)"
 DATE_TAG="$(basename "$DIST_HTML" | cut -d_ -f1)"           # 20260924
 DATE="${DATE:-${DATE_TAG:0:4}-${DATE_TAG:4:2}-${DATE_TAG:6:2}}"  # 2026-09-24
-NAME="${DATE//-/}_CoreWeave收支模型_v${VER//./_}"
+COMPANY="$(python3 -c "import json; print(json.load(open('company.json', encoding='utf-8'))['meta']['company'])")"  # 成品名稱＝更新日_公司收支模型_v版本（Oracle v0.1c：公司名讀 company.json → meta.company）
+NAME="${DATE//-/}_${COMPANY}收支模型_v${VER//./_}"
 HTML="$OUT/$NAME.html"
 XLSX="$OUT/$NAME.xlsx"
 

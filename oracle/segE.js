@@ -386,7 +386,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
       elQ(StatQ, { key: 3, label: `或打平所需每 MW 建置成本`, value: `$${Y(beCost, 1)}m`, note: `目前 $${Y(cost30, 0)}m（${beCost >= cost30 ? `+` : `−`}${hA(Math.abs(beCost / cost30 - 1) * 100, 0)}）` })
     ]),
     elQ(`p`, { key: `n`, style: { fontSize: 15.5, color: `var(--color-muted)`, marginTop: `auto`, lineHeight: 1.55 } },
-      `EBITDA 率由 ${TXQ.ebStartSource} ${hA(e.ebStart * 100, 0)} 線性變動至 ${PERIODS[4]} ${hA(e.ebSteady * 100, 0)}；取可觀察 neocloud 區間（IREN 約 35%、CRWV 約 59%），不取自每 MW 推導的加成。`)
+      `EBITDA 率由 ${TXQ.ebStartSource} ${hA(e.ebStart * 100, 0)} 線性變動至 ${PERIODS[4]} ${hA(e.ebSteady * 100, 0)}${e.ebitdaBasis === `ebitdar` ? `（基準情境；EBITDAR 率三情境共用，租金為固定成本，本情境 ${PERIODS[4]} ${hA(y[4].ebM * 100, 1)}）` : ``}；取可觀察 neocloud 區間（IREN 約 35%、CRWV 約 59%），不取自每 MW 推導的加成。`)
   ]);
 
   // 4｜融資

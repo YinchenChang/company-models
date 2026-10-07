@@ -2,7 +2,7 @@
  "meta": {
   "company": "Oracle",
   "ticker": "ORCL",
-  "updateDate": "2026-10-07",
+  "updateDate": "2026-10-08",
   "priceDate": "2026-10-06",
   "sourceOrderNote": "時序先 FY27Q1 財報新聞稿與法說（2026-09-10），再 10-Q（2026-09-11，核閱、未查核）與 FY2026 10-K（經查核）。入帳數字聽 10-Q／10-K；指引聽新聞稿，資本支出指引只見於法說二手逐字稿者標明。累計在役 MW 未揭露（只揭露新增），不以營收反推；期初可計費 MW 以 Q1 實際 OCI 年化校準。",
   "consensusFile": "data/consensus_orcl_20261007.json"
