@@ -1048,11 +1048,61 @@
    },
    "cloud": {
     "label": "非 AI 雲端",
-    "useAi": true,
-    "note": "非 AI 雲端無同業組（v0.1a 未蒐集；可比的雲端／軟體同業都含大量 AI）→ 沿用 AI 雲端倍數 6×（同一推導：穩態 FCF ÷ EBITDA 約 0.55 ×(1＋g) ÷ (WACC 12.2% − g 3%) ≈ 6.2×）[Assumed]；敏感度 10×／15×"
+    "source": "data/peers_cloud_20261008.json",
+    "peers": [
+     {
+      "ticker": "ORCL",
+      "name": "Oracle",
+      "ntmEvEbitda": 9.49,
+      "ref": "val.peer.cloud.orcl"
+     },
+     {
+      "ticker": "IBM",
+      "name": "IBM",
+      "ntmEvEbitda": 12.51,
+      "ref": "val.peer.cloud.ibm"
+     },
+     {
+      "ticker": "SAP",
+      "name": "SAP",
+      "ntmEvEbitda": 15.13,
+      "ref": "val.peer.cloud.sap"
+     },
+     {
+      "ticker": "CRM",
+      "name": "Salesforce",
+      "ntmEvEbitda": 10.81,
+      "ref": "val.peer.cloud.crm"
+     },
+     {
+      "ticker": "NOW",
+      "name": "ServiceNow",
+      "ntmEvEbitda": 20.63,
+      "ref": "val.peer.cloud.now"
+     },
+     {
+      "ticker": "AKAM",
+      "name": "Akamai",
+      "ntmEvEbitda": 9.7,
+      "ref": "val.peer.cloud.akam"
+     },
+     {
+      "ticker": "EQIX",
+      "name": "Equinix",
+      "ntmEvEbitda": 21.2,
+      "ref": "val.peer.cloud.eqix"
+     },
+     {
+      "ticker": "DOCN",
+      "name": "DigitalOcean",
+      "ntmEvEbitda": 24.49,
+      "ref": "val.peer.cloud.docn"
+     }
+    ],
+    "note": "共用非 AI 雲端同業組 ORCL、IBM、SAP、CRM、NOW、AKAM、EQIX、DOCN（MAG 對照表 r1 C12；data/peers_cloud_20261008.json，三家共用）；中位數 13.82× [Derived]"
    }
   },
-  "segmentMultiplesNote": "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 NTM EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家；TTD、SPOT、DIS 以 TTM 代替，v0.1a 已註明），AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）"
+  "segmentMultiplesNote": "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 NTM EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家；TTD、SPOT、DIS 以 TTM 代替，v0.1a 已註明）；非 AI 雲端＝共用同業組 8 家中位數（C12，data/peers_cloud_20261008.json），AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）"
  },
  "methodology": {
   "blendWeights": {
@@ -3096,13 +3146,15 @@
      "retail": 17.72,
      "ads": 10.79,
      "subs": 15.41,
-     "aiCloud": 6.0
+     "aiCloud": 6.0,
+     "cloud": 13.82
     },
     "unit": "倍（EV/EBITDA）",
     "ref": [
      "val.peer.median.retail",
      "val.peer.median.ads",
      "val.peer.median.subs",
+     "val.peer.median.cloud",
      "val.ai6x"
     ],
     "mapTo": "peers／分部 EV/EBITDA（D6）"
