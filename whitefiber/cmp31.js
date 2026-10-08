@@ -148,6 +148,11 @@ cmp('錨定年EBITDA', V+'錨定年度 EBITDA', [f[p.evK].ebitda]);
 // v0.1b（Oracle）步驟 8：CAPM WACC 與分部加總
 cmp('CAPM ke', '輸入與假設|股權成本 ke＝rf＋β × ERP', [CAPM_Q(VAL_DEFAULTS).ke]); cmp('WACC', '輸入與假設|WACC', [VAL_DEFAULTS.wacc]);
 cmp('WACC（CAPM）', '輸入與假設|WACC（CAPM）＝E/(D+E) × ke＋D/(D+E) × kd ×(1 − 稅率)', [CAPM_Q(VAL_DEFAULTS).wacc]);
+{ const CQ=CAPM_Q(VAL_DEFAULTS); cmp('CAPM E（期後股數）', '輸入與假設|股權市值 E（現價 × 季末流通股數）', [CQ.E]); cmp('CAPM D（期後債務）', '輸入與假設|債務 D（評價日債務本金）', [CQ.D]); } // WhiteFiber v0.1b：期後事件
+cmp('評價股數（含期後事件）', '輸入與假設|股數（含 ATM 上限）', [VAL_DEFAULTS.shares]); cmp('評價淨負債（含期後事件）', '輸入與假設|淨負債（不含可轉債）', [VAL_DEFAULTS.netDebt]);
+(COMPANY_DATA.valuation.postEvents||[]).forEach(x=>cmp('期後事件 '+x[0], '輸入與假設|期後事件｜'+x[0], [x[2],x[3],x[4],x[5]]));
+(COMPANY_DATA.debt.extraCost||[]).forEach(x=>cmp('額外融資成本 '+x[0], '資產負債_既有債務|額外融資成本｜'+x[0], x[1]));
+cmp('未動用額度期初(含專案融資)', F+'未動用額度（期初）', H('facBeg')); cmp('未動用額度期末', F+'未動用額度（期末）', H('facEnd'));
 cmp('傳統事業倍數', '輸入與假設|傳統事業 EV/EBITDA 倍數', [VAL_DEFAULTS.legacyEvEbitda]);
 cmp('錨定年傳統EBITDA', V+'錨定年度傳統事業 EBITDA', [f[p.evK].legacyEbitda]);
 cmp('錨定年EV（分部加總）', V+'錨定年度企業價值（倍數 × EBITDA）', [evSotpQ(f[p.evK], VAL_DEFAULTS.evEbitda, VAL_DEFAULTS)]);

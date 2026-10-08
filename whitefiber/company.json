@@ -50,7 +50,8 @@
   "defaults.dividend.preferred[0]": "FY26Q2",
   "valuation.postEvents": "FY26Q2",
   "debt.extraCost": "FY26Q2",
-  "defaults.colo": "FY26Q2"
+  "defaults.colo": "FY26Q2",
+  "scenarios.projectFinance": "FY26Q2"
  },
  "ytdActual": {
   "throughQuarter": "FY26Q2",
@@ -563,6 +564,13 @@
     0.0,
     0.0
    ]
+  },
+  "projectFinance": {
+   "low": 0.0,
+   "base": 0.307125,
+   "high": 0.307125,
+   "period": 1,
+   "note": "NC-1 專案融資（v0.1b 步驟 6）：10-Q 稱與貸款團獨家協商、未完成（原預期 2026 Q1）。基準與積極假設於 FY27 完成：金額＝NC-1 累計建置成本約 472.5（2025 年約 150＋1H26 開發 322.5，[Derived]）× 貸款比率 65%（[Assumed] 60–70%）＝307.1；保守不完成。建模為自 FY27 起可動用的已承諾額度（瀑布第一順位、不受債務上限限制；與 DDTL 未動用 20 同列），利率取瀑布新債利率 9.5%、模型期內不攤還（[Assumed]；DDTL 2027-03 到期以此再融資）。"
   }
  },
  "legacy": {

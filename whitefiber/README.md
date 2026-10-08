@@ -167,7 +167,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、leases.uncommenced、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles、defaults.otherEbitda[0]、valuation.holdings、valuation.debtLike、defaults.legacyBiz、defaults.dividend.preferred[0]、valuation.postEvents、debt.extraCost、defaults.colo） | 必改 |
+| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、leases.uncommenced、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles、defaults.otherEbitda[0]、valuation.holdings、valuation.debtLike、defaults.legacyBiz、defaults.dividend.preferred[0]、valuation.postEvents、debt.extraCost、defaults.colo、scenarios.projectFinance） | 必改 |
 
 ### `ytdActual`：年初至今實際數（10-Q；v4.5 前為 actual1H）
 
@@ -399,6 +399,11 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `scenarios.billableRatio.roundDp` | 可計費 MW 的小數位數（WhiteFiber v0.1b；小型公司 MW 為個位數取 2；Oracle 0） | 整數 | 2 | 檢查 |
+| `scenarios.projectFinance.low` | 情境專案融資額度｜保守（自 period 期起成為已承諾額度，瀑布第一順位、不受債務上限限制；WhiteFiber v0.1b） | US$bn | 0 | 必改 |
+| `scenarios.projectFinance.base` | 情境專案融資額度｜基準 | US$bn | 0.307125 | 必改 |
+| `scenarios.projectFinance.high` | 情境專案融資額度｜積極 | US$bn | 0.307125 | 必改 |
+| `scenarios.projectFinance.period` | 專案融資可動用的期別（0＝首期） | 整數 | 1 | 必改 |
+| `scenarios.projectFinance.note` | 專案融資的依據與假設（金額＝建置成本 × 貸款比率、時點、利率） | 文字 | NC-1 專案融資（v0.1b 步驟 6）：10-Q… | 必改 |
 | `scenarios.labels.low` | 保守情境名稱（空格前的文字會當作情境簡稱） | 文字 | 保守 只有已簽約 | 必改 |
 | `scenarios.labels.base` | 基準情境名稱 | 文字 | 基準 加 NC-1 下一批 | 必改 |
 | `scenarios.labels.high` | 積極情境名稱 | 文字 | 積極 NC-2／3 與 Krambu | 必改 |

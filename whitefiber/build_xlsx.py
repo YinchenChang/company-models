@@ -557,6 +557,10 @@ ATM = gi(r, "股權／可轉債金額", "US$bn", D['atm'], "評價日後已完�
 ATMON = gi(r, "計入股權／可轉債（1=是）", "", int(D['includeAtm']), f"關閉則首期少 {D['atm']}bn 來源", NUM0); r += 1
 FAC = gi(r, "未動用信用額度", "US$bn", D['facility'], f"{TXQ['facilityName']} [Interested-party]"); r += 1
 FACON = gi(r, "瀑布可動用未動用額度（1=是）", "", int(D['useFacility']), "瀑布第一順位；已承諾額度，不受 債務／backlog 上限限制", NUM0); r += 1
+_PFC = CO['scenarios'].get('projectFinance') or {'low': 0, 'base': 0, 'high': 0, 'period': 1}  # WhiteFiber v0.1b：情境專案融資（自該期起成為已承諾額度）
+_PFR = {k: gi(r + j, f"專案融資額度｜{CO['scenarios']['labels'][k]}", "US$bn", _PFC[k], "company.json → scenarios.projectFinance（依據見 note）[Assumed]") for j, k in enumerate(("low", "base", "high"))}; r += 3
+PFSEL = gi(r, "專案融資額度（目前情境）", "US$bn", f"=CHOOSE({SEL},{_PFR['low']},{_PFR['base']},{_PFR['high']})", "＝依 A 區情境選擇器；加入未動用額度（瀑布第一順位，不受債務上限限制）", font=BLACK); r += 1
+PFP = gi(r, "專案融資可動用期別（0＝«P0»）", "", _PFC['period'], "自該期期初起可動用", NUM0); r += 1
 DEBTON = gi(r, "債務排程攤還（1=開）", "", int(D['includeDebt']), "季報到期表；關閉＝假設全額再融資", NUM0); r += 1
 KBL = gi(r, "債務／backlog 上限", "x", D['debtBacklog'], "資產擔保融資容量（debtCapBasis＝backlog 時使用）：總債務 ≤ 此倍數 × backlog [Assumed]", '0.00', True); r += 1
 DCB = gi(r, "債務上限基準（ebitda＝總債務 ÷ EBITDA；backlog＝債務 ÷ backlog）", "", D.get('debtCapBasis', 'backlog'), "v0.2：另有 leaseAdj＝(債務＋租賃負債) ÷ (EBITDA＋租金)（租賃調整後槓桿，S&P 口徑近似；租賃負債見『各期收支』）。A 欄名稱沿用 v0.1（本頁 D 區既有重複表頭，改 A 欄會使 --vs-dist 無法配對）；company.json → defaults.debtCapBasis", "@"); r += 1
@@ -1254,7 +1258,7 @@ frow("債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog�
                 f'IF({DCB}="ebitda",{LEV}*§EBPL_{COLS[i]}§/\'運營_產能與收入\'!{COLS[i]}{CR["模型期長度（年）"]},{KBL}*{COLS[i]}{bl_end}))'), NUM, BLACK,
      "leaseAdj：總債務 ≤ 倍數 ×(損益 EBITDA＋租金)（年化）− 租賃負債（v0.2）；ebitda：總債務 ≤ 倍數 × 損益 EBITDA（年化）；backlog：總債務 ≤ 倍數 × 期末 backlog（模板）")
 cap_row = FR["債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）"]
-frow("未動用額度（期初）", "US$bn", lambda i: (f"=IF({FACON}=1,{FAC},0)" if i == 0 else "=0"), NUM, BLACK)
+frow("未動用額度（期初）", "US$bn", lambda i: (f"=IF({FACON}=1,{FAC},0)+IF({PFP}=0,{PFSEL},0)" if i == 0 else "=0"), NUM, BLACK, "＝前期期末未動用＋本期起可動用的專案融資額度（WhiteFiber v0.1b）")
 fr_beg = FR["未動用額度（期初）"]
 frow("新債可借上限", "US$bn",
      lambda i: f"=MAX(0,{COLS[i]}{cap_row}-({COLS[i]}{ex_row}+{COLS[i]}{dn_beg}+{COLS[i]}{cn_beg}),{COLS[i]}{fr_beg})", NUM, BLACK,
@@ -1318,7 +1322,7 @@ for i in range(1, 5):
     ws.cell(row=dn_beg, column=3 + i, value=f"={COLS[i-1]}{dn_end}")
     ws.cell(row=jn_beg, column=3 + i, value=f"={COLS[i-1]}{jn_end}")
     ws.cell(row=cn_beg, column=3 + i, value=f"={COLS[i-1]}{cn_end}")
-    ws.cell(row=fr_beg, column=3 + i, value=f"={COLS[i-1]}{fr_end}")
+    ws.cell(row=fr_beg, column=3 + i, value=f"={COLS[i-1]}{fr_end}+IF({PFP}={i},{PFSEL},0)")
 for i in range(5):
     ws.cell(row=newint_row, column=3 + i, value=f"={COLS[i]}{ni_row}")
     ws.cell(row=fac_row, column=3 + i, value=f"={COLS[i]}{nd_row}")

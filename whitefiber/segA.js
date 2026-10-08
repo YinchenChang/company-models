@@ -72,7 +72,8 @@ var PERIODS = COMPANY_DATA.periods,
   }, { amort: 0, end: 0, int: 0 }),
   CHECK_TH = COMPANY_DATA.methodology.checks, // 5a：連動檢查門檻（Excel「檢查_連動」同一來源）
   W36 = PERIOD_YEARS.map((L, i) => Math.max(0, Math.min(L, 3 - PERIOD_YEARS.slice(0, i).reduce((a, b) => a + b, 0))) / L), // v0.1b：評價日起 36 個月落在各期的比例（RPO 對照）
-  TXQ = COMPANY_DATA.texts, // v0.1b（Oracle）：公司特有說明文字
+  TXQ = COMPANY_DATA.texts,
+  DCSENS_Q = COMPANY_DATA.methodology.debtCapSens || [3.5, 4.5], // WhiteFiber v0.1b：債務上限敏感度兩端 // v0.1b（Oracle）：公司特有說明文字
   REV_GUIDE_TXT = CALL_FACTS.revLo == null ? `不適用（公司未給指引）` : CALL_FACTS.revHi == null ? `≥${CALL_FACTS.revLo}` : `${CALL_FACTS.revLo}–${CALL_FACTS.revHi}`, // v0.1b：營收指引只有下限時寫「≥」；WhiteFiber v0.1b：無指引時寫「不適用」
   HAS_CX_G = CALL_FACTS.capexLo != null, // WhiteFiber v0.1b：公司未給資本支出指引時，相關檢查不比對
   CAPEX_GUIDE_TXT = HAS_CX_G ? `${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}` : `不適用（公司未給指引）`,
@@ -369,7 +370,9 @@ function runFunding(e) {
       cl: e.prepay.openBalance, // v0.1b：合約負債（客戶預付餘額）期初
       Cn: 0 // v0.1b：瀑布新發可轉債餘額
     },
+    PFQ = { a: ((COMPANY_DATA.scenarios.projectFinance || {})[e.scenario || `base`]) ?? 0, p: (COMPANY_DATA.scenarios.projectFinance || {}).period ?? 1 }, // WhiteFiber v0.1b：情境專案融資（NC-1）：自該期起成為已承諾額度
     o = PERIODS.map((n, r) => {
+      if (r === PFQ.p && !e.noProjectFinance) WF.fr += PFQ.a;
       let L = PERIOD_YEARS[r],
         o = e.rpoOpen * (RPO_BUCKET_W[r] / RPO_SCHEDULED_SHARE) * i + e.rpoPendingAdd * RPO_Q3ADD_W[r] * i,
         s = o,
@@ -986,10 +989,10 @@ function sensitivities(e, v) {
     t.debtEbitdaMax = 4
   }, t => {
     t.debtEbitdaMax = 5
-  }) : e.debtCapBasis === `ebitda` ? r(`投資級上限（總債務 ÷ EBITDA）`, `3.5x`, `4.5x`, t => {
-    t.debtEbitdaMax = 3.5
+  }) : e.debtCapBasis === `ebitda` ? r(`投資級上限（總債務 ÷ EBITDA）`, `${multTxt(DCSENS_Q[0])}x`, `${multTxt(DCSENS_Q[1])}x`, t => { // WhiteFiber v0.1b：兩端讀 methodology.debtCapSens
+    t.debtEbitdaMax = DCSENS_Q[0]
   }, t => {
-    t.debtEbitdaMax = 4.5
+    t.debtEbitdaMax = DCSENS_Q[1]
   }) : r(`債務／backlog 上限`, `0.4x`, `1.2x`, t => {
     t.debtBacklog = .4
   }, t => {
