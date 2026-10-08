@@ -33,9 +33,26 @@ def _fy_end(fy, fye):  # FYyy（財年結束所在的日曆年）→ (年, 月)
 
 
 def _parse_q(s):
-    m = re.fullmatch(r'FY(\d{2})Q([1-4])', s or '')
-    if not m: raise ValueError(f'calendar：季度格式應為 FYyyQn，收到 {s!r}')
+    # FYyyQn（財年制，例如 FY27Q1）或 yyyyQn（日曆年制，例如 2026Q2；MAG v0.1b）
+    m = re.fullmatch(r'FY(\d{2})Q([1-4])', s or '') or re.fullmatch(r'20(\d{2})Q([1-4])', s or '')
+    if not m: raise ValueError(f'calendar：季度格式應為 FYyyQn 或 yyyyQn，收到 {s!r}')
     return 2000 + int(m.group(1)), int(m.group(2))
+
+
+def label_style(c):
+    """期間標籤寫法（MAG v0.1b）：calendar.periodLabel＝'year'（日曆年，例如 2026）或 'FY'（財年，例如 FY27）；未填時財年結束於 12 月者用 'year'。"""
+    st = c.get('periodLabel') or ('year' if int(c['fiscalYearEndMonth']) == 12 else 'FY')
+    assert st in ('year', 'FY'), f'calendar.periodLabel 不支援：{st}'
+    return st
+
+
+def fy_label(fy, st):
+    return f'{fy}' if st == 'year' else f'FY{fy % 100:02d}'
+
+
+def q_key(fy, q, st):
+    """季度鍵：日曆年制 2026Q3、財年制 FY27Q2（與 calendar.latestQuarterFiled 同格式）。"""
+    return f'{fy}Q{q}' if st == 'year' else f'FY{fy % 100:02d}Q{q}'
 
 
 def derive(co):
@@ -50,7 +67,7 @@ def derive(co):
         ytd = 3 * q
         if q == 4: fy, ytd = fy + 1, 0                       # Q4（10-K）後：首期＝下一財年全年模型
     else:
-        fy = 2000 + int(re.fullmatch(r'FY(\d{2})', c['firstModelFY']).group(1))
+        fy = 2000 + int((re.fullmatch(r'FY(\d{2})', c['firstModelFY']) or re.fullmatch(r'20(\d{2})', c['firstModelFY'])).group(1))
         vy, vm = _fy_end(fy - 1, fye); ytd = 0
     stub = 12 - ytd                                          # 首期模型部分的月數
     fys = [fy + i for i in range(years + 1)]
@@ -61,18 +78,22 @@ def derive(co):
     tgt_m = mo(*ends[1]) if hz == 'firstFullYearEnd' else 12
     ty, tm = _add_months(vy, vm, tgt_m)
     yy = lambda f: f'{f % 100:02d}'
+    st = label_style(c)
     num = lambda x: int(x) if float(x).is_integer() else x  # 整數寫成 int（與舊版公式的常數寫法一致）
     out = {
         'fiscalYearEndMonth': fye, 'latestQuarterFiled': c.get('latestQuarterFiled'),
         'latestQuarterReported': c.get('latestQuarterReported'), 'targetHorizon': hz,
         'valuationDate': _eom(vy, vm), 'prevFYE': _eom(*_add_months(*_fy_end(fy - 1, fye), 0)), 'valuationMD': f'{vm}/{_cal.monthrange(vy, vm)[1]}',
         'ytdMonths': ytd, 'stubMonths': stub,
-        'filedQLabel': (f"Q{c['latestQuarterFiled'][-1]} 20{c['latestQuarterFiled'][2:4]}" if c.get('latestQuarterFiled') else None),
+        'periodLabel': st,
+        'filedQLabel': (f"Q{_parse_q(c['latestQuarterFiled'])[1]} {_parse_q(c['latestQuarterFiled'])[0]}" if c.get('latestQuarterFiled') else None),
         'ytdLabel': (YTD_NAME[ytd] + yy(fy)) if ytd else None,
         'ytdShort': YTD_NAME.get(ytd), 'ytdShortAlt': YTD_ALT.get(ytd), 'ytdWord': YTD_WORD.get(ytd),
         'stubShort': STUB_NAME[stub] or None, 'stubWord': STUB_WORD[stub],
-        'stubLabel': (STUB_NAME[stub] + yy(fy)) if stub < 12 else f'FY{yy(fy)}',
-        'periods': [f'FY{yy(f)}' for f in fys],
+        'stubLabel': (STUB_NAME[stub] + yy(fy)) if stub < 12 else fy_label(fy, st),
+        'periods': [fy_label(f, st) for f in fys],
+        'prevFYLabel': fy_label(fy - 1, st),
+        'nextFYLabel': fy_label(fys[-1] + 1, st),  # MAG v0.1b：模型末期的下一年（預建 MW 用）
         'periodYears': [num(stub / 12)] + [1] * years,
         'periodEnd': [_eom(*e) for e in ends],
         'tEnd': [num(x) for x in t_end], 'tStart': [num(x) for x in t_start],
@@ -211,5 +232,35 @@ def apply(co):
     return co
 
 
+def norm_consensus(cons, periods):
+    """共識資料檔的唯讀檢視（MAG v0.1b；不改數字）：年度鍵以模型期間標籤取用（共識檔可寫 2026、FY2026 或 FY26），
+    缺 EBITDA 率時以 EBITDA ÷ 營收補一欄（[Derived]，標記於 _derived），獨立對照缺 source 時以供應商名稱代替。HTML、Excel、核對腳本共用。"""
+    import copy
+    c = copy.deepcopy(cons)
+    def alias(d):
+        if not isinstance(d, dict): return
+        for p in periods:
+            if p in d: continue
+            for k in (f'FY{p}', f'FY{p[2:]}' if len(p) == 4 else None, f'20{p[2:]}' if p.startswith('FY') else None):
+                if k and k in d: d[p] = d[k]; break
+    alias(c.get('annualEstimates')); alias(c.get('companyGuidance'))
+    al = c.get('annualEstimatesAlt') or {}
+    alias(al)
+    for v in al.values(): alias(v)
+    ae = c.get('annualEstimates') or {}
+    for p in periods:
+        y = ae.get(p)
+        if isinstance(y, dict) and y.get('ebitdaMargin') is None and isinstance(y.get('ebitda'), (int, float)) and y.get('revenue'):
+            y['ebitdaMargin'] = y['ebitda'] / y['revenue']; y.setdefault('_derived', []).append('ebitdaMargin')
+    ic = c.get('independentCrossCheck')
+    if isinstance(ic, dict) and 'source' not in ic: ic['source'] = ic.get('url') or ic.get('provider', '')
+    return c
+
+
 if __name__ == '__main__':
-    print(json.dumps(load(sys.argv[1] if len(sys.argv) > 1 else None)['cal'], ensure_ascii=False))
+    if '--consensus' in sys.argv:  # MAG v0.1b：印出正規化後的共識資料（load_engine.js 用）
+        a = [x for x in sys.argv[1:] if x != '--consensus']; _r = a[0] if a else os.path.dirname(os.path.abspath(__file__))
+        _co = load(_r)
+        print(json.dumps(norm_consensus(json.load(open(os.path.join(_r, _co['meta']['consensusFile']), encoding='utf-8')), _co['periods']), ensure_ascii=False))
+    else:
+        print(json.dumps(load(sys.argv[1] if len(sys.argv) > 1 else None)['cal'], ensure_ascii=False))

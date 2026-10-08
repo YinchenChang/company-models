@@ -30,9 +30,9 @@ cmp('未售', S+'未售產能（浪費）', H('unsold'));
 cmp('isRev', S+'損益用算力收入（模型期＝RPO 轉換＋新簽約）', H('isRev'));
 cmp('營收−MW×單價×利用率', S+'核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間', y.map(e=>e.isRev-e.capacity)); // v0.1b：MW 驅動時為 0
 cmp('每MW年收入', '輸入|每 MW 年收入', d.m.revMW);
-cmp('傳統事業營收', '輸入|傳統事業營收（模型期）', H('legacyRev')); cmp('傳統事業EBITDA', '輸入|傳統事業 EBITDA（模型期）', H('legacyEbitda')); // v0.1b（Oracle）
-d.lg.lines.forEach(x=>{ cmp('傳統 '+x.key+' 全年', `輸入|傳統事業｜${x.label}｜全年營收`, x.annual); cmp('傳統 '+x.key+' 模型期', `輸入|傳統事業｜${x.label}｜模型期營收`, x.rev); });
-cmp('現金稅', F+T('⑦ 現金稅（«STUB» 起）'), H('cashTax')); cmp('股利', F+'⑧ 股利（普通股＋特別股）', y.map((e,i)=>i===0?e.fyDividend:e.dividend)); cmp('債務上限', F+'債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）', H('debtCap')); // v0.1b cmp('來源 傳統EBITDA', F+T('Ⓒ3 傳統事業 EBITDA（«STUB» 起）'), H('legacyEbitda'));
+cmp('非 AI 事業營收', '輸入|非 AI 事業營收（模型期）', H('legacyRev')); cmp('非 AI 事業EBITDA', '輸入|非 AI 事業 EBITDA（模型期）', H('legacyEbitda')); // v0.1b（Oracle）
+d.lg.lines.forEach(x=>{ cmp('傳統 '+x.key+' 全年', `輸入|非 AI 事業｜${x.label}｜全年營收`, x.annual); cmp('傳統 '+x.key+' 模型期', `輸入|非 AI 事業｜${x.label}｜模型期營收`, x.rev); });
+cmp('現金稅', F+T('⑦ 現金稅（«STUB» 起）'), H('cashTax')); cmp('股利', F+'⑧ 股利（普通股＋特別股）', y.map((e,i)=>i===0?e.fyDividend:e.dividend)); cmp('債務上限', F+'債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）', H('debtCap')); // v0.1b cmp('來源 傳統EBITDA', F+T('Ⓒ3 非 AI 事業 EBITDA（«STUB» 起）'), H('legacyEbitda'));
 cmp('36個月營收對照', S+'對照：評價日起 36 個月 MW 驅動營收', H('oci36')); cmp('RPO36 差額', '連動檢查|對照：RPO 36 個月內轉換 − 模型 36 個月 MW 驅動營收', [LATEST_Q.rpo*COMPANY_DATA.rpo.within36m-d.totals.oci36]); // v0.1b
 cmp('期初可計費MW', '輸入|«VMD» Billable MW'.replace('«VMD»',CALQ.valuationMD), [q.billableOpen]); // v0.1b：以實際營收校準
 cmp('信用損失', S+'信用損失（期初 RPO 部分）', H('loss'));
@@ -42,7 +42,7 @@ cmp('EBITDA率', S+'EBITDA 率（損益與資金共用）', H('ebM'));
 cmp('EBITDAR率', S+'EBITDAR 率（EBITDA 率＋租金÷營收）', H('cashMargin'));
 cmp('模型期總營收', S+'模型期總營收（算力＋服務）', H('totRev'));
 cmp('服務現金', '輸入|非算力服務現金', H('legacy'));
-cmp('FY26全年營收(產能頁)', S+T('«P0» 全年總營收（«YTD» 實際＋模型期算力＋服務＋傳統事業）'), [y[0].fyRevenue+y[0].servicesRev]);
+cmp('FY26全年營收(產能頁)', S+T('«P0» 全年總營收（«YTD» 實際＋模型期算力＋服務＋非 AI 事業）'), [y[0].fyRevenue+y[0].servicesRev]);
 cmp('毛CapEx模型期', '輸入|毛 CapEx（模型期，下游引用此列）', H('gross'));
 cmp('全年CapEx公式', '輸入|全年毛 CapEx（公式）', H('capexFull'));
 cmp('成長型', '輸入|成長型 CapEx（模型期）', H('capexGrowth'));
@@ -135,8 +135,8 @@ cmp('錨定年EBITDA', V+'錨定年度 EBITDA', [f[p.evK].ebitda]);
 // v0.1b（Oracle）步驟 8：CAPM WACC 與分部加總
 cmp('CAPM ke', '輸入與假設|股權成本 ke＝rf＋β × ERP', [CAPM_Q(VAL_DEFAULTS).ke]); cmp('WACC', '輸入與假設|WACC', [VAL_DEFAULTS.wacc]);
 cmp('WACC（CAPM）', '輸入與假設|WACC（CAPM）＝E/(D+E) × ke＋D/(D+E) × kd ×(1 − 稅率)', [CAPM_Q(VAL_DEFAULTS).wacc]);
-cmp('傳統事業倍數', '輸入與假設|傳統事業 EV/EBITDA 倍數', [VAL_DEFAULTS.legacyEvEbitda]);
-cmp('錨定年傳統EBITDA', V+'錨定年度傳統事業 EBITDA', [f[p.evK].legacyEbitda]);
+cmp('非 AI 事業倍數', '輸入與假設|非 AI 事業 EV/EBITDA 倍數', [VAL_DEFAULTS.legacyEvEbitda]);
+cmp('錨定年傳統EBITDA', V+'錨定年度非 AI 事業 EBITDA', [f[p.evK].legacyEbitda]);
 cmp('錨定年EV（分部加總）', V+'錨定年度企業價值（倍數 × EBITDA）', [evSotpQ(f[p.evK], VAL_DEFAULTS.evEbitda, VAL_DEFAULTS)]);
 cmp('錨定年末淨負債', V+'錨定年度末淨負債（總債務 − 現金）', [p.ndA]);
 cmp('錨定年末股數', V+'錨定年度末股數（含瀑布新股）', [p.shA]);
@@ -185,7 +185,7 @@ cmp('加權目標價', V+'加權目標價', [p.call.blended]);
   cmp('摘要 分歧起始年',SM+`差異｜分歧起始年（1＝${PERIODS[0]}…3＝${PERIODS[2]}；0＝無）`,[cv.first+1]);
   cmp('隱含 共識目標價倍數',SM+`隱含｜共識平均目標價隱含 ${PERIODS[2]} EV/EBITDA`,[cv.impTgt]); cmp('隱含 現價倍數',SM+`隱含｜現價隱含 ${PERIODS[2]} EV/EBITDA`,[cv.impPx]);
   cmp('隱含 模型上緣',SM+'隱含｜模型方法區間上緣',[cv.mHi]);
-  cmp('隱含 共識目標價OCI倍數',SM+`隱含｜共識平均目標價隱含 ${PERIODS[2]} OCI EV/EBITDA`,[cv.impTgtOci]); cmp('隱含 現價OCI倍數',SM+`隱含｜現價隱含 ${PERIODS[2]} OCI EV/EBITDA`,[cv.impPxOci]); cmp('隱含 傳統EBITDA',SM+`隱含｜模型 ${PERIODS[2]} 傳統事業 EBITDA`,[cv.lgE]);
+  cmp('隱含 共識目標價AI 雲端倍數',SM+`隱含｜共識平均目標價隱含 ${PERIODS[2]} AI 雲端 EV/EBITDA`,[cv.impTgtOci]); cmp('隱含 現價AI 雲端倍數',SM+`隱含｜現價隱含 ${PERIODS[2]} AI 雲端 EV/EBITDA`,[cv.impPxOci]); cmp('隱含 傳統EBITDA',SM+`隱含｜模型 ${PERIODS[2]} 非 AI 事業 EBITDA`,[cv.lgE]);
   cmp('摘要 點位',SM+'結論｜點位（加權目標價）',[R.pt]); cmp('摘要 空間',SM+'結論｜空間',[cv.up]); cmp('摘要 點位−門檻',SM+'結論｜點位 − 賣出門檻',[cv.gapTh]);
   cmpT('文字 摘要評等',SM+'結論｜評等',p.call.call); cmpT('文字 摘要結論句',SM+'結論｜結論句',cv.head); cmpT('文字 摘要情境判斷句',SM+'結論｜情境判斷句',R.judge);
   cmpT('文字 共識判斷句',SM+'差異｜判斷句',cv.judge); cmpT('文字 投資級句',SM+'結論｜投資級句',cv.igLine); cmpT('文字 延誤句',SM+'結論｜延誤句',cv.delayLine); cmpT('文字 調整後槓桿句',SM+'結論｜調整後槓桿句',cv.adjLine); cmpT('文字 隱含倍數句',SM+'隱含｜隱含倍數句',cv.implied);
