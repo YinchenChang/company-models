@@ -37,6 +37,10 @@ if (PMW_REVQ === 'tkAnchor') { // v0.2a：Tokenomics 錨 × k（Excel「每MW收
     cmp('k ' + k, W + '定價倍數 k（長約占比 × k_長約＋（1 − 長約占比）× k_現貨）', A.k);
     cmp('錨×k ' + k, W + '每 MW 年收入（錨 × k，100% 計費時數）', A.rev.map(x => x * 1e3));
     cmp('上限比 ' + k, W + '上限檢查｜每 MW 收入 ÷ 客戶付費 token 營收', A.capRatio); }
+  if (!AKX) { const TS = tkSensQ(DEFAULTS, VAL_DEFAULTS), lb = COMPANY_DATA.scenarios.labels[SC], K3 = ['low', 'base', 'high']; // v0.2a 步驟 5：快照＝引擎即時（tk_sens.json 未過期；快照為預設錨定年度，FY27 錨定測試不比）
+    cmp('矩陣目標價 ' + SC, '每MW收入_錨定|矩陣｜加權目標價｜' + lb, K3.map(p => TS.matrix[SC][p].tgt));
+    cmp('矩陣募資 ' + SC, '每MW收入_錨定|矩陣｜五期股權募資｜' + lb, K3.map(p => TS.matrix[SC][p].eq));
+    for (const x of TS.sens) cmp('敏感度 ' + x.key, '每MW收入_錨定|敏感度｜' + x.label, K3.map(s => x.res[s].tgt)); }
   { const A = tkAnchorQ(SC), FL = COMPANY_DATA.fleet, TK = COMPANY_DATA.tkSnap, W = '每MW收入_錨定|', ann = LATEST_Q.revenue * 4, svc = COMPANY_DATA.priceCheck.inServiceMw, bo = q.billableOpen, // v0.2a 步驟 4：Q2 驗證拆解
       a0 = FL.generations.reduce((s, g) => s + (FL.openMix.mix[g] || 0) * TK.IF_HoldEcon[g]['基準'], 0), rS = ann / svc * 1e3, rB = ann / bo * 1e3, kB = rB / a0, m = A.rev[0] * 1e3, gap = m - rS,
       i1 = rB - rS, i2 = (A.k[0] - kB) * a0, i3 = (A.anchor[0] * 1e3 - a0) * A.k[0];

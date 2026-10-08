@@ -72,6 +72,9 @@ fi
 step "1. 建 HTML（v$VER · $DATE）"
 if python3 build_html_portable.py "$VER" "$HTML" "$DATE" docs/template_v3_3.html; then ok "建 HTML"; else bad "建 HTML"; finish; fi
 
+step "1b. 每 MW 收入 3 × 3 矩陣與敏感度快照（scripts/tk_sens.js → tk_sens.json；v0.2a）"
+if r=$(node scripts/tk_sens.js); then echo "$r"; ok "tk_sens 快照：$(sed 's/^3×3（容量 × 價格，加權目標價）：//' <<<"$r")"; else echo "$r"; bad "tk_sens 快照"; finish; fi
+
 step "2. 建 Excel"
 if python3 build_xlsx.py "$XLSX"; then ok "建 Excel"; else bad "建 Excel"; finish; fi
 

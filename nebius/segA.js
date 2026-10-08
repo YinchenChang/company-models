@@ -72,7 +72,8 @@ function tkAnchorQ(sc, o = {}) { // v0.2a：每 MW 年收入＝Tokenomics 錨 ×
   // 期末在役 MW＝已連網 × 在役比例；平均在役世代占比 × IF_HoldEcon（成本情境）÷ 1000＝錨；長約占比＝MIN(1, 已揭露長約 MW ÷ 平均在役 MW)；k＝長約占比 × k_長約＋（1 − 長約占比）× k_現貨
   let AM = COMPANY_DATA.pricing.anchorMultiple, FL = COMPANY_DATA.fleet, G = FL.generations, TK = COMPANY_DATA.tkSnap, P = COMPANY_DATA.scenarios.mwPath,
     br = COMPANY_DATA.scenarios.billableRatio.ratio, px = o.px || `base`, cs = o.tkCase || `基準`, lsk = o.ls || `mw`, nm = o.newMix || FL.newMix,
-    kL = o.kLong ?? AM.long[px], kS = o.kSpot ?? AM.spot[px], acc = [], R = { start: [], end: [], add: [], avg: [], anchor: [], longMw: [], ls: [], k: [], rev: [], capRef: [], capRatio: [], share: {}, kL, kS },
+    ref = side => AM.evidence.find(x => x.label === AM[side].refEvidence), rr = x => cs === `基準` ? 1 : TK[x.tkName][x.gen][`基準`] / TK[x.tkName][x.gen][cs], // k＝價格 ÷ 同成本情境持有成本：非基準成本情境以證據世代的成本比例重算（價格是事實；比照 CoreWeave W4 r2）
+    kL = (o.kLong ?? AM.long[px]) * rr(ref(`long`)), kS = (o.kSpot ?? AM.spot[px]) * rr(ref(`spot`)), acc = [], R = { start: [], end: [], add: [], avg: [], anchor: [], longMw: [], ls: [], k: [], rev: [], capRef: [], capRatio: [], share: {}, kL, kS },
     prevT = COMPANY_DATA.priceCheck.inServiceMw, prev = {};
   G.forEach(g => { prev[g] = prevT * (FL.openMix.mix[g] || 0); R.share[g] = [] });
   for (let t = 0; t < 5; t++) {

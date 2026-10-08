@@ -34,8 +34,10 @@ def compute(co, tk, sc, years, px='base', tkCase='基準', ls='mw', kLong=None, 
     st0 = co['priceCheck']['inServiceMw']
     nm = newMix or FL['newMix']
     prev = {g: st0 * FL['openMix']['mix'].get(g, 0) for g in G}; prevT = st0
-    kL = AM['long'][px] if kLong is None else kLong
-    kS = AM['spot'][px] if kSpot is None else kSpot
+    ref = lambda side: next(x for x in AM['evidence'] if x['label'] == AM[side]['refEvidence'])
+    rr = lambda x: 1 if tkCase == '基準' else tk[x['tkName']]['values'][x['gen']]['基準'] / tk[x['tkName']]['values'][x['gen']][tkCase]  # 非基準成本情境：k 以證據世代成本比例重算（價格是事實）
+    kL = (AM['long'][px] if kLong is None else kLong) * rr(ref('long'))
+    kS = (AM['spot'][px] if kSpot is None else kSpot) * rr(ref('spot'))
     he = {g: tk['IF_HoldEcon']['values'][g][tkCase] for g in G}
     rf = {g: tk['IF_RevGWFleet']['values'][g][tkCase] for g in G}
     R = {k: [] for k in ('start', 'end', 'add', 'avg', 'anchor', 'longMw', 'ls', 'k', 'rev', 'capRef', 'capRatio')}

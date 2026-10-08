@@ -3375,6 +3375,69 @@ srow("驗證｜目標價（平均／中位數／最低／最高）", "US$", [f"=
 ws.cell(row=r + 1, column=1, value="來源獨立性：" + CONS['sourceIndependence']).font = SMALL
 ws.cell(row=r + 2, column=1, value=f"共識來源：{CONS['annualEstimates']['source']}、{CONS['priceTarget']['source']}；擷取 {CONS['annualEstimates']['retrieved']}。逐筆來源、日期與標記見『輸入與假設』I 區。").font = SMALL
 
+# v0.2a 步驟 5：「每MW收入_錨定」G 區——3 × 3 容量 × 價格矩陣與每 MW 收入敏感度（建置時快照：scripts/tk_sens.js 以 HTML 引擎計算，
+# 該引擎與本 Excel 經 cmp31 逐項一致；改輸入後快照不會自動更新，過期檢查列會顯示「快照已過期」）
+if AR:
+    _TS = _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), 'tk_sens.json'), encoding='utf-8'))
+    assert _TS.get('method') == 'tkAnchor', 'tk_sens.json 不是 tkAnchor 快照（先執行 node scripts/tk_sens.js）'
+    ws = wb['每MW收入_錨定']
+    r = ws.max_row + 2
+    _K3 = ['low', 'base', 'high']; _PXN = {'low': '價格低', 'base': '價格基準', 'high': '價格高'}
+    r = section(ws, r, "G｜3 × 3 容量 × 價格：加權目標價（US$／股；快照）與五期股權募資（US$bn）")
+    for j, h in enumerate(["容量情境 ＼ 價格情境", "單位", "價格低", "價格基準", "價格高"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    c = ws.cell(row=r, column=9, value="說明"); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    _m0 = r
+    for k in _K3:
+        ws.cell(row=r, column=1, value=f"矩陣｜加權目標價｜{CO['scenarios']['labels'][k]}").font = BLACK
+        ws.cell(row=r, column=2, value="US$").font = SMALL
+        for j, px in enumerate(_K3):
+            c = ws.cell(row=r, column=3 + j, value=_TS['matrix'][k][px]['tgt']); c.font = BLACK; c.number_format = USD; c.border = BOX
+        if k == 'low':
+            ws.cell(row=r, column=9, value=(f"價格低＝k_長約 {CO['pricing']['anchorMultiple']['long']['low']:.2f}、k_現貨 {CO['pricing']['anchorMultiple']['spot']['low']:.2f}；"
+                                            f"基準＝{CO['pricing']['anchorMultiple']['long']['base']:.2f}、{CO['pricing']['anchorMultiple']['spot']['base']:.2f}；"
+                                            f"高＝{CO['pricing']['anchorMultiple']['long']['high']:.2f}、{CO['pricing']['anchorMultiple']['spot']['high']:.2f}")).font = SMALL
+        r += 1
+    for k in _K3:
+        ws.cell(row=r, column=1, value=f"矩陣｜五期股權募資｜{CO['scenarios']['labels'][k]}").font = BLACK
+        ws.cell(row=r, column=2, value="US$bn").font = SMALL
+        for j, px in enumerate(_K3):
+            c = ws.cell(row=r, column=3 + j, value=_TS['matrix'][k][px]['eq']); c.font = BLACK; c.number_format = NUM; c.border = BOX
+        r += 1
+    for k in _K3:
+        ws.cell(row=r, column=1, value=f"矩陣｜融資前缺口｜{CO['scenarios']['labels'][k]}").font = BLACK
+        ws.cell(row=r, column=2, value="US$bn").font = SMALL
+        for j, px in enumerate(_K3):
+            c = ws.cell(row=r, column=3 + j, value=_TS['matrix'][k][px]['gap']); c.font = BLACK; c.number_format = NUM; c.border = BOX
+        r += 1
+    ws.cell(row=r, column=1, value="快照檢查：目前情境 × 目前價格情境的快照 − 即時加權目標價").font = BOLD
+    ws.cell(row=r, column=2, value="US$").font = SMALL
+    c = ws.cell(row=r, column=3, value=f"=INDEX(C{_m0}:E{_m0 + 2},{SEL},{PXSEL})-'評價_DCF與目標價'!{TGT}"); c.number_format = '0.0000'; c.border = BOX
+    ws.cell(row=r, column=4, value=f'=IF(ABS(C{r})<0.01,"通過","快照已過期")').font = BOLD
+    ws.cell(row=r, column=9, value="改了任何輸入後快照不會自動更新；重建（node scripts/tk_sens.js → build_xlsx.py）即更新").font = SMALL
+    AR['snapChk'] = r; r += 2
+    r = section(ws, r, "G2｜每 MW 收入敏感度（價格基準；加權目標價 US$／股與五期股權募資 US$bn；快照）")
+    for j, h in enumerate(["變動", "單位", "保守", "基準", "積極", "保守 募資", "基準 募資", "積極 募資"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    ws.cell(row=r, column=1, value="敏感度｜基準（目前輸入）").font = BOLD
+    ws.cell(row=r, column=2, value="US$").font = SMALL
+    for j, k in enumerate(_K3):
+        c = ws.cell(row=r, column=3 + j, value=_TS['matrix'][k]['base']['tgt']); c.number_format = USD; c.border = BOX
+        c = ws.cell(row=r, column=6 + j, value=_TS['matrix'][k]['base']['eq']); c.number_format = NUM; c.border = BOX
+    r += 1
+    for x in _TS['sens']:
+        ws.cell(row=r, column=1, value=f"敏感度｜{x['label']}").font = BLACK
+        ws.cell(row=r, column=2, value="US$").font = SMALL
+        for j, k in enumerate(_K3):
+            c = ws.cell(row=r, column=3 + j, value=x['res'][k]['tgt']); c.number_format = USD; c.border = BOX
+            c = ws.cell(row=r, column=6 + j, value=x['res'][k]['eq']); c.number_format = NUM; c.border = BOX
+        r += 1
+    ws.cell(row=r, column=1, value=("Tokenomics 低／高成本：錨（IF_HoldEcon）與每 MW 建置成本（IF_CapexTotal 比例）同時改變，k 以證據世代的成本比例重算（k＝市場價格 ÷ 同情境持有成本；價格是事實），"
+                                    "所以收入大致不隨成本情境改變、成本改變。長約占比上緣含 Meta 未售容量承購 $15bn。首期末爬坡 50–80% 為 [Assumed] 區間（預設 60%）。")).font = SMALL
+    r += 1
+
 # v0.2a（2026-10-08，比照 CoreWeave W1）：Tokenomics 取數分頁。值取自 company.json → tokenomics.snapshotFile 的版本固定快照（tools/tokenomics/import_tokenomics.py 產生），
 # 藍字輸入格；每個名稱的「基準」值格另建具名範圍 TK_<名稱去掉 IF_／L1_>_<世代代碼>（單值名稱不加世代），供每 MW 收入錨定（v0.2a 步驟 3）公式引用。
 from openpyxl.workbook.defined_name import DefinedName as _DN
