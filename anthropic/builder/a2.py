@@ -2,9 +2,10 @@
 
 Python 只產生結構：每列的公式文字由此組裝，數值一律引用 SRC_ANT／Inputs／TK_ 具名範圍（E6：公式不含常數；恆等式 1−x、1＋成長率、年數 +1 除外）。
 兩頁互相引用（API 2025／2026 token 由 Revenue 的營收倒推；訂閱營收用 Demand 的人數），公式先以列鍵記號撰寫，兩頁建好後一次換成儲存格位址：
-  «k»＝本頁同欄、«k@p»＝本頁前一欄、«k@D»＝本頁 D 欄（2025）、«D:k»／«R:k»＝Demand／Revenue 同欄（亦可加 @p、@D）。
+  «k»＝本頁同欄、«k@p»＝本頁前一欄、«k@D»＝本頁 D 欄（2025）、«k@$»＝本頁 $D$（只在 D 欄有值的參數列）、«k@R»＝本頁整列 $D:$I、
+  «D:k»／«R:k»／«C:k»／«K:k»＝Demand／Revenue／Compute／Cost 同欄（亦可加 @p、@D、@$；A3 起 Compute、Cost 沿用本類別）。
 層級對應：Haiku→低層（Tokenomics Luna）、Sonnet→中層（Sol）、Opus→頂層（Astra）；具名範圍沿用 OpenAI v0.6 的 Top／Mid／Low。
-A3 接手點：Revenue「容量上限係數」列（REV_CapFactor）目前＝Inputs 佔位 1；A3 把該列公式改為 =CMP_CapFactor（Compute 頁）即可，其餘截頂列自動連動。
+容量上限：Revenue「容量上限係數」列（REV_CapFactor）由 A3（builder/a3.py）填入 Compute 頁 CMP_CapFactor 同欄（2025、2026 固定 1）；其餘截頂列自動連動。
 """
 from __future__ import annotations
 
@@ -30,7 +31,7 @@ CHAINS = {
 }
 FMT = {"$B": "#,##0.000", "T": "#,##0", "M": "#,##0.000", "比例": "0.0%", "比例/年": "0.0%", "$/M": "0.000", "$/月": "0.00", "倍": "0.000",
        "日期": "0", "任務/日": "0.00", "K tok/任務": "#,##0.0", "十億任務": "#,##0.00", "$B/年": "#,##0.000"}
-TOK = re.compile(r"«(?:(D|R):)?([A-Za-z0-9_]+)(?:@(p|[D-I]))?»")
+TOK = re.compile(r"«(?:(D|R|C|K):)?([A-Za-z0-9_]+)(?:@(p|[D-I]|\$|R))?»")
 
 
 class Sheet:
@@ -88,10 +89,15 @@ def _resolve(f, me, col, i, extra):
         if key in extra:
             return extra[key](col)
         tgt = Sheet.all[sh] if sh else me
-        c = YC[i - 1] if at == "p" else (at or col)
         if at == "p" and i == 0:
             raise ValueError(f"«{key}@p» 用在 2025 欄：{f}")
-        ref = f"{c}{tgt.rows[key]}"
+        if at == "$":                                  # 只在 D 欄有值的參數列：絕對位址
+            ref = f"$D${tgt.rows[key]}"
+        elif at == "R":                                # 整列 2025–2030（SUMPRODUCT 用）
+            ref = f"$D${tgt.rows[key]}:$I${tgt.rows[key]}"
+        else:
+            c = YC[i - 1] if at == "p" else (at or col)
+            ref = f"{c}{tgt.rows[key]}"
         return ref if tgt is me else f"{tgt.name}!{ref}"
     return TOK.sub(rep, f)
 
@@ -212,8 +218,9 @@ def build(ctx):
     R.add("growth", "總額年增率", "比例", lambda i, c: None if i == 0 else "=(«gross»-«gross@p»)/«gross@p»", "")
     R.add("subshare", "訂閱占總額", "比例", lambda i, c: "=«sub»/«gross»", "對照：2025 說明書約 17%；Sacra 2026 估 10–15%（SRC_ANT_062）")
 
-    R.section("十、容量上限（A2 佔位＝1；A3 以 Compute 的 CMP_CapFactor 取代本節第一列）")
-    R.add("cap", "容量上限係數（A2 佔位＝Inputs；A3 改為 =CMP_CapFactor）", "倍", lambda i, c: f"={I('cap_factor_placeholder')}", "", name="REV_CapFactor")
+    R.section("十、容量上限（Compute 的 CMP_CapFactor；2025、2026 固定 1）")
+    R.add("cap", "容量上限係數（＝Compute 容量上限係數 CMP_CapFactor）", "倍", lambda i, c: None, "A3 填入：＝Compute 同欄（推論 GW 截頂後 ÷ 有效推論 GW）；2025、2026 為校準年固定 1",
+          name="REV_CapFactor")
     R.add("gross_c", "營收總額（截頂後）", "$B", lambda i, c: "=«gross»*«cap»", "", name="REV_GrossCapped")
     R.add("pshare_c", "雲端平台抽成（截頂後）", "$B", lambda i, c: "=«pshare»*«cap»", "", name="REV_PartnerShareCapped")
     R.add("net_c", "營收淨額（截頂後）", "$B", lambda i, c: "=«gross_c»-«pshare_c»", "", name="REV_NetCapped")
@@ -437,7 +444,7 @@ def checks(ctx):
          f"=(Demand!$D${dr['u_cons']}<=0)+(Demand!$D${dr['s_total']}<=0)+(Demand!$D${dr['u_free']}<0)+(Demand!$D${dr['api_tok']}<=0)", 0, "eq",
          "例：消費者訂閱占營收（SRC Analogy）取高值 20% 時個人訂閱 0.92 > 訂閱合計 0.789，席位轉負"),
         ("a2_api26", "2026 API 校準營收 ≤ 0（半校準後訂閱＋其他已超過總額）", f"=IF(Revenue!$E${rr['calib']}<=0,1,0)", 0, "eq", ""),
-        ("a2_cap", "容量上限係數 ∉ (0,1] 的年數", "=SUMPRODUCT(--(REV_CapFactor<=0))+SUMPRODUCT(--(REV_CapFactor>1.000000001))", 0, "eq", "A2 佔位＝1；A3 接 Compute"),
+        ("a2_cap", "容量上限係數 ∉ (0,1] 的年數", "=SUMPRODUCT(--(REV_CapFactor<=0))+SUMPRODUCT(--(REV_CapFactor>1.000000001))", 0, "eq", "A3 起＝Compute CMP_CapFactor"),
         ("a2_ads", "廣告營收 ≠ 0 的年數（D3）", "=SUMPRODUCT(--(REV_Ads<>0))", 0, "eq", "Anthropic 公開承諾不放廣告"),
         ("a2_evorder", "價格事件公告日順序違反數（各層級序列須依日期遞增）", "=" + "+".join(order), 0, "eq", "SRC 日期被改錯時轉 ERR"),
         ("a2_tktask", "任務類別對應的 Tokenomics 任務名稱在 TK_IF_HdrTask 找不到的數",

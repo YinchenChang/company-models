@@ -19,7 +19,6 @@ rows:
 - {key: spacex_term_months, name: SpaceX 月費合約期間（月）, index: —, unit: 月, value: 36, lo: 36, hi: 36, tag: Decision, basis: SRC_ANT_227 期間「2026-05 至 2029-05」＝36 個月（定義值）, range_why: 由揭露期間換算，不另設區間, note: SRC_ANT_230（Derived）＝月費 × 本列}
 # ── 1. 開關與門檻（Decision）
 - {key: elasticity_start_year, name: 價格彈性起算年, index: —, unit: 年, value: 2027, lo: 2027, hi: 2027, tag: Decision, basis: 2025 校準年、2026 半校準年（D14、D15 r1）不套彈性；同 OpenAI v0.6 INP_004, range_why: 定義值, note: Demand API 第三節}
-- {key: cap_factor_placeholder, name: 容量上限係數（A2 佔位）, index: —, unit: 倍, value: 1, lo: 1, hi: 1, tag: Decision, basis: 工作單 A2 第 5 步：容量上限先以 1 佔位；A3 由 Compute（CMP_CapFactor）取代 Revenue「容量上限係數」列的公式, range_why: 佔位值, note: Revenue 第十節}
 - {key: ads_revenue, name: 廣告營收（D3）, index: —, unit: $B/年, value: 0, lo: 0, hi: 0, tag: Decision, basis: 規格 D3：Anthropic 公開承諾 Claude 不放廣告，不設驅動, range_why: 公司公開立場；若反轉再加驅動, note: Revenue 第八節}
 - {key: runrate_warn_threshold, name: 2026 年營收對里程碑推估差距的 WARN 門檻, index: —, unit: 比例, value: 0.25, lo: 0.25, hi: 0.25, tag: Decision, basis: 工作單 A2 第 6 步：2026 run-rate 對照差距 >25% 立 WARN（規格 D15）, range_why: 工作單定值, note: Checks}
 # ── 2. 訂閱：年付占比、方案組合、轉換率（Assumed／Analogy）
@@ -114,3 +113,61 @@ rows:
 - {key: channel_delta, name: 雲端通路占 API 營收比例：相對 2025 的變動, index: 2026 起, unit: 比例（百分點）, value: 0, lo: -0.15, hi: 0.15, tag: Assumed, basis: 2025 通路占比由 SRC 推得（總營收 47% 經雲端，SRC_ANT_027；全歸 API）；2023 11% → 2024 32% → 2025 47%（SRC_ANT_027–029）上升中，Microsoft Foundry 2026 加入；基準持平, range_why: ±15 個百分點, note: 通路占比＝2025 值 ＋ 本列}
 - {key: partner_fee_rate, name: 雲端平台抽成率（每 $1 通路營收）, index: 2026 起, unit: 比例, value: 0.16, lo: 0.16, hi: 0.3, tag: Analogy, basis: 規格 D5 r1：基準取說明書隱含約 16%（Reuters，SRC_ANT_031、032）；高值取 BofA 2026 估計 $6.4B（SRC_ANT_034）÷ 本模型 2026 通路營收約 $23B ≈ 0.28，取 0.30（BofA 口徑可能含算力租金，故只作上緣；Checks 另列即時隱含值）, range_why: 下緣＝說明書隱含值；上緣＝BofA 推得, note: 2025 用報導實際通路費 SRC_ANT_031}
 - {key: g_other, name: 其他營收年增率（政府、授權等）, index: 2026 起, unit: 比例/年, value: 0, lo: 0, hi: 0.5, tag: Assumed, basis: 2025 其他＝認列營收 − 訂閱 − 用量計價（約 $0.01B，含四捨五入）；無驅動, range_why: 0–0.5, note: 金額小，不影響結論}
+# ── 7. 算力（A3；規格 D6–D12；工作單 A3 判斷類預設）
+- {key: t_to_m, name: 單位換算：T token → M token 的乘數（定義常數）, index: —, unit: M／T, value: 1000000, lo: 1000000, hi: 1000000, tag: Decision, basis: 定義常數, range_why: 不適用, note: Compute：token（T）× 本列 ＝ M token（TK 產能單位 M tok/GW/年）}
+- {key: mw_to_gw, name: 單位換算：MW → GW 的除數（定義常數）, index: —, unit: MW／GW, value: 1000, lo: 1000, hi: 1000, tag: Decision, basis: 定義常數, range_why: 不適用, note: SRC 以 MW 揭露的容量}
+- {key: usd_to_b, name: 單位換算：$ → $B 的除數（定義常數）, index: —, unit: $／$B, value: 1000000000, lo: 1000000000, hi: 1000000000, tag: Decision, basis: 定義常數, range_why: 不適用, note: TK 單位成本（$/M）× 每 GW 年產出（M tok）→ $B}
+- {key: arith_k2, name: 線性爬坡付款：等差級數和的除數（定義常數）, index: —, unit: —, value: 2, lo: 2, hi: 2, tag: Decision, basis: 同 OpenAI v0.6 INP_261（E6）；爬坡權重和＝（2n − r ＋ 1）÷ 2, range_why: 定義常數, note: Cost 逐合約實付}
+- {key: cap_fixed_year, name: 容量上限係數固定為 1 的最後一年, index: —, unit: 年, value: 2026, lo: 2026, hi: 2026, tag: Decision, basis: chat 端交接：2025（實際）與 2026（半校準，D15 r1）營收已校準到實際值，容量上限不得再截頂, range_why: 定義值, note: Compute 容量上限；Revenue REV_CapFactor 改接 CMP_CapFactor（取代 A2 佔位 INP_016，該號退役）}
+- {key: contract_price, name: 每 GW 年合約價（NVIDIA 基準）, index: —, unit: $B/GW/年, value: 12, lo: 8, hi: 20, tag: Analogy, basis: 規格 D9；同 OpenAI v0.6 INP_229（V8：12，8–20）。TPU／Trainium／AMD 再乘 TK NonNV 持有比, range_why: 同 OpenAI, note: 只揭露金額的合約：GW＝付款 ÷（本列 × 持有比）；只揭露 GW 者：付款＝GW × 本列 × 持有比（D10）}
+- {key: idle_share, name: 閒置保留比例, index: —, unit: 比例, value: 0.1, lo: 0.05, hi: 0.2, tag: Analogy, basis: 同 OpenAI v0.6 INP_232（0.1；OpenAI 未給區間，本模型補 0.05–0.2 以符合共同規則第 4 節）, range_why: 補區間：常見維運與冗餘保留, note: 2026 起；研發 GW＝供給 ×（1 − 本列）− 推論（D12）}
+- {key: train_min_share, name: 訓練最低占比（推論可用 GW 上限）, index: —, unit: 比例, value: 0.3, lo: 0.2, hi: 0.4, tag: Analogy, basis: 同 OpenAI v0.6 INP_233（0.3；V1a；OpenAI 未給區間，本模型補 0.2–0.4）, range_why: 補區間, note: 推論可用 GW＝供給 ×（1 − 閒置）×（1 − 本列）}
+- {key: eta_switch, name: η 逐年路徑開關（0＝沿用 2025 η；1＝線性回升至目標）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 規格 D8；同 OpenAI v0.6 INP_258, range_why: 開關, note: Compute η}
+- {key: eta_target, name: η 回升情境：目標值, index: —, unit: 倍, value: 1, lo: 1, hi: 1, tag: Decision, basis: 規格 D8；同 OpenAI v0.6 INP_259, range_why: 定義值, note: ""}
+- {key: eta_target_year, name: η 回升情境：目標年, index: —, unit: 年, value: 2030, lo: 2030, hi: 2030, tag: Decision, basis: 規格 D8；同 OpenAI v0.6 INP_260, range_why: 定義值, note: ""}
+- {key: eta_warn_lo, name: η 合理範圍下限（Checks WARN）, index: —, unit: 倍, value: 0.5, lo: 0.5, hi: 0.5, tag: Decision, basis: 工作單 A3 第 3 步：η 合理範圍 WARN；η 偏離 1 超過一倍即提示, range_why: 門檻, note: Checks}
+- {key: eta_warn_hi, name: η 合理範圍上限（Checks WARN）, index: —, unit: 倍, value: 2, lo: 2, hi: 2, tag: Decision, basis: 同上, range_why: 門檻, note: Checks}
+- {key: ramp_years, name: 合約爬坡年數（起始後線性爬坡至公告規模）, index: —, unit: 年, value: 2, lo: 1, hi: 3, tag: Assumed, basis: 工作單 A3 判斷類預設：起始與爬坡無揭露者，公告後次季起線性爬坡至公告規模（Assumed 2 年，1–3 年）；本模型對全部爬坡型合約共用, range_why: 工作單預設區間, note: 第 k 年權重＝MIN(r, k)÷r；金額型合約年付款＝總額 ÷ Σ 權重 × 權重}
+- {key: upto_share, name: 「最高可達」GW 計入比例, index: —, unit: 比例, value: 0.8, lo: 0.5, hi: 1, tag: Assumed, basis: 工作單 A3 判斷類預設（Assumed 0.8，0.5–1.0）；只用於只以 GW 計的「最高可達」合約（AMD 最多 2 GW）；有承諾金額者以金額為準, range_why: 工作單預設區間, note: Compute 逐合約}
+- {key: unclear_facility_share, name: 口徑未明的揭露 GW 視為設施口徑的比例, index: —, unit: 比例, value: 0, lo: 0, hi: 1, tag: Assumed, basis: CLAUDE.md 第 7 節：GW 以 IT 為準，設施口徑以 PUE 換算；A1 判斷多數合約 GW 口徑未明；基準視同 IT（同 OpenAI v0.6 慣例），1＝全部視為設施口徑 ÷ PUE, range_why: 0＝全為 IT；1＝全為設施, note: IT 換算係數＝（1 − 本列）＋ 本列 ÷ PUE（TK_PUE，取自 Tokenomics）}
+- {key: legacy_share_trn2, name: 既有雲端算力（2025 前簽）組合：Trainium2 占比, index: 2025–2026, unit: 比例, value: 0.4, lo: 0.2, hi: 0.6, tag: Assumed, basis: 規格 D7（2025 以 Trainium2＋TPU v6e＋Hopper 為主）；外流帳單 2025 年 1–9 月付 AWS $2.66B（SRC_ANT_257）年化約占 2025 算力 $7.33B 的 48%；AWS 部分以 Trainium2（Project Rainier）為主, range_why: AWS 占比與其 GPU 比例未揭露, note: TPU v6e＝1 − Trainium2 − Hopper}
+- {key: legacy_share_hopper, name: 既有雲端算力（2025 前簽）組合：NVIDIA Hopper 占比, index: 2025–2026, unit: 比例, value: 0.1, lo: 0, hi: 0.3, tag: Assumed, basis: 同上；AWS／Google 的 NVIDIA GPU 執行個體, range_why: 同上, note: ""}
+- {key: legacy_carry_2026, name: 既有雲端算力 2026 延續比例（相對 2025 年付款）, index: 2026, unit: 比例, value: 0.33, lo: 0, hi: 1, tag: Assumed, basis: 招股書的 Google（2026-04 起）、Amazon（2026-05 起）承諾應已涵蓋既有用量；既有合約只延續至新約起算前約 4 個月（4 ÷ 12）, range_why: 0＝新約完全取代；1＝既有用量全年另計, note: 2027 起＝0}
+- {key: broadcom_gw_switch, name: Google／Broadcom 次世代 TPU 容量採用值（0＝Broadcom 8-K 3.5 GW；1＝Anthropic 自述 5 GW）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: chat 端預設：報導衝突時基準取 Verified／較低值（SRC_ANT_188 Broadcom 8-K），另一值（SRC_ANT_189）作區間, range_why: 兩個揭露值之間, note: 容量＝3.5 ＋ 開關 ×（5 − 3.5）}
+- {key: google_start, name: 合約起始年：Google Cloud TPU（招股書 ≥$111.1B）, index: —, unit: 年, value: 2026, lo: 2026, hi: 2026, tag: Decision, basis: SRC_ANT_247 期間 2026-04 至 2033-07, range_why: 揭露期間, note: ""}
+- {key: google_end, name: 合約結束年：Google Cloud TPU, index: —, unit: 年, value: 2033, lo: 2033, hi: 2033, tag: Decision, basis: 同上, range_why: 揭露期間, note: ""}
+- {key: broadcom_start, name: 合約起始年：Google／Broadcom 次世代 TPU, index: —, unit: 年, value: 2027, lo: 2027, hi: 2027, tag: Decision, basis: SRC_ANT_188、250：容量 2027 起, range_why: 揭露期間, note: ""}
+- {key: broadcom_end, name: 合約結束年：Google／Broadcom 次世代 TPU（五年 TPU 租賃）, index: —, unit: 年, value: 2031, lo: 2031, hi: 2031, tag: Decision, basis: SRC_ANT_250 五年租賃 $125.2B（2027 起）, range_why: 揭露期間, note: ""}
+- {key: aws_start, name: 合約起始年：Amazon 擴大協議（招股書 $110B）, index: —, unit: 年, value: 2026, lo: 2026, hi: 2026, tag: Decision, basis: SRC_ANT_248 期間 2026-05 至 2036-04, range_why: 揭露期間, note: ""}
+- {key: aws_end, name: 合約結束年：Amazon 擴大協議, index: —, unit: 年, value: 2035, lo: 2035, hi: 2035, tag: Decision, basis: 同上（十年；曆年整數化）, range_why: 揭露期間, note: ""}
+- {key: azure_start, name: 合約起始年：Microsoft Azure＋NVIDIA（招股書 $31.4B）, index: —, unit: 年, value: 2027, lo: 2026, hi: 2027, tag: Assumed, basis: SRC_ANT_211 期間 2026-11 至 2033-05；2026 只有約 2 個月，取 2027 為首個爬坡年, range_why: 2026（含 2 個月）–2027, note: ""}
+- {key: azure_end, name: 合約結束年：Microsoft Azure＋NVIDIA, index: —, unit: 年, value: 2033, lo: 2033, hi: 2033, tag: Decision, basis: 同上, range_why: 揭露期間, note: ""}
+- {key: amd_start, name: 合約起始年：AMD MI455X（最多 2 GW）, index: —, unit: 年, value: 2027, lo: 2027, hi: 2027, tag: Decision, basis: SRC_ANT_231 首 1 GW 2027H1 起, range_why: 揭露期間, note: ""}
+- {key: amd_term, name: 合約期間（年）：AMD MI455X, index: —, unit: 年, value: 5, lo: 3, hi: 7, tag: Assumed, basis: 期間未揭露（A1 找不到）；GPU 租用常見 3–7 年, range_why: 常見租期, note: 結束年＝起始 ＋ 期間 − 1}
+- {key: spacex_start, name: 合約起始年：SpaceX／xAI（月費）, index: —, unit: 年, value: 2026, lo: 2026, hi: 2026, tag: Decision, basis: SRC_ANT_227 期間 2026-05 至 2029-05（SpaceX IPO 申報，Verified）, range_why: 揭露期間, note: ""}
+- {key: spacex_end, name: 合約結束年：SpaceX／xAI, index: —, unit: 年, value: 2029, lo: 2029, hi: 2029, tag: Decision, basis: 同上, range_why: 揭露期間, note: ""}
+- {key: spacex_m1, name: SpaceX 首年計費月數（2026-05～12）, index: —, unit: 月, value: 8, lo: 8, hi: 8, tag: Decision, basis: 同上（定義值）, range_why: 揭露期間, note: 年付款＝月費 × 當年月數}
+- {key: spacex_m2, name: SpaceX 末年計費月數（2029-01～04）, index: —, unit: 月, value: 4, lo: 4, hi: 4, tag: Decision, basis: 期間 2026-05 至 2029-05 共 36 個月（同 SRC_ANT_230＝月費 × 36，Inputs spacex_term_months）→ 2026 年 8 個月、2027–2028 各 12、2029 年 4 個月, range_why: 揭露期間, note: ""}
+- {key: nscale_start, name: 合約起始年：Nscale Monarch（$45B／六年）, index: —, unit: 年, value: 2028, lo: 2028, hi: 2028, tag: Decision, basis: SRC_ANT_221 六年、2027 年底起上線 → 首個爬坡年 2028, range_why: 揭露期間, note: ""}
+- {key: nscale_end, name: 合約結束年：Nscale Monarch, index: —, unit: 年, value: 2033, lo: 2033, hi: 2033, tag: Decision, basis: 同上（六年）, range_why: 揭露期間, note: ""}
+- {key: lambda_start, name: 合約起始年：Lambda（$35B，多年；350 MW）, index: —, unit: 年, value: 2027, lo: 2027, hi: 2028, tag: Assumed, basis: SRC_ANT_223、224 期間未揭露；工作單預設「公告（2026-09）後次季起」→ 首個完整爬坡年 2027, range_why: 1 年延後, note: ""}
+- {key: lambda_term, name: 合約期間（年）：Lambda, index: —, unit: 年, value: 6, lo: 4, hi: 8, tag: Assumed, basis: 「多年」未揭露；比照同期 Nscale 六年, range_why: 常見租期, note: 結束年＝起始 ＋ 期間 − 1}
+- {key: volta_start, name: 合約起始年：Volta Infra（$10B／六年；133 MW）, index: —, unit: 年, value: 2027, lo: 2027, hi: 2027, tag: Decision, basis: SRC_ANT_236 分兩期至 2027-03 交付, range_why: 揭露期間, note: ""}
+- {key: volta_end, name: 合約結束年：Volta Infra, index: —, unit: 年, value: 2032, lo: 2032, hi: 2032, tag: Decision, basis: 同上（六年）, range_why: 揭露期間, note: ""}
+- {key: akamai_start, name: 合約起始年：Akamai（$1.8B／七年）, index: —, unit: 年, value: 2026, lo: 2026, hi: 2026, tag: Decision, basis: SRC_ANT_234 2026–2033, range_why: 揭露期間, note: ""}
+- {key: akamai_end, name: 合約結束年：Akamai, index: —, unit: 年, value: 2032, lo: 2032, hi: 2032, tag: Decision, basis: 同上（七年）, range_why: 揭露期間, note: ""}
+- {key: fluid_start, name: 自建（Fluidstack $50B）資本支出起始年, index: —, unit: 年, value: 2026, lo: 2026, hi: 2026, tag: Decision, basis: SRC_ANT_212「2026 起陸續上線」, range_why: 揭露期間, note: 規格 D11}
+- {key: fluid_years, name: 自建（Fluidstack）資本支出均攤年數, index: —, unit: 年, value: 3, lo: 2, hi: 5, tag: Assumed, basis: 規格 D11：無時程者按 Inputs 均攤；首批站點 2026 上線、其餘未揭露, range_why: 2–5 年, note: 年資本支出＝總額 ÷ 年數}
+- {key: own_lag, name: 自建 GW 投產落後年數, index: —, unit: 年, value: 1, lo: 1, hi: 2, tag: Analogy, basis: 同 OpenAI v0.6 INP_262（1，1–2）, range_why: 同 OpenAI, note: 自建 GW＝累計資本支出（至年 − 本列）÷ TK IF_CapexTotal}
+- {key: gw_warn_threshold, name: 模型年底 GW 對報導值差距的 WARN 門檻, index: —, unit: 比例, value: 0.25, lo: 0.25, hi: 0.25, tag: Decision, basis: chat 端預設：模型年底 GW 對報導約 1.4 GW（2025）、約 5 GW（2026）只作對照（WARN，不校準）, range_why: 門檻, note: Checks}
+- {key: commit_warn_threshold, name: 逐合約金額加總對招股書總承諾差距的 WARN 門檻, index: —, unit: 比例, value: 0.25, lo: 0.25, hi: 0.25, tag: Decision, basis: chat 端預設：逐合約加總對招股書約 $518B（SRC_ANT_245）差距 >25% 立 WARN, range_why: 門檻, note: Checks}
+# ── 8. 成本（A3；規格 D13；OpenAI v0.6 V4 同結構）
+- {key: hc_g_2026, name: 員工人數年增率（年均人數）, index: 2026, unit: 比例, value: 0.8, lo: 0.5, hi: 1.2, tag: Assumed, basis: 2025 年均（2024Q4 1,324 與 2025Q4 3,089 的平均，SRC_ANT_284、285）約 2,207；2026Q1 已 3,950（SRC_ANT_286），2026-06 公司口述約 3,500（SRC_ANT_295）→ 2026 年均約 3,700–4,500, range_why: 第三方人數口徑不一（SRC_ANT_287：2,500–5,000）, note: OpenAI v0.6 INP_263 為 0.55}
+- {key: hc_g_2027, name: 員工人數年增率（年均人數）, index: 2027, unit: 比例, value: 0.3, lo: 0.1, hi: 0.5, tag: Analogy, basis: 同 OpenAI v0.6 INP_264, range_why: 同 OpenAI, note: ""}
+- {key: hc_g_2028, name: 員工人數年增率（年均人數）, index: 2028, unit: 比例, value: 0.2, lo: 0.05, hi: 0.35, tag: Analogy, basis: 同 OpenAI v0.6 INP_265, range_why: 同 OpenAI, note: ""}
+- {key: hc_g_2029, name: 員工人數年增率（年均人數）, index: 2029, unit: 比例, value: 0.15, lo: 0, hi: 0.3, tag: Analogy, basis: 同 OpenAI v0.6 INP_266, range_why: 同 OpenAI, note: ""}
+- {key: hc_g_2030, name: 員工人數年增率（年均人數）, index: 2030, unit: 比例, value: 0.1, lo: 0, hi: 0.25, tag: Analogy, basis: 同 OpenAI v0.6 INP_267, range_why: 同 OpenAI, note: ""}
+- {key: pp_cost_g, name: 每人年成本（不含股權報酬）年變動率, index: 2026 起, unit: 比例, value: 0.03, lo: 0, hi: 0.08, tag: Analogy, basis: 同 OpenAI v0.6 INP_268, range_why: 同 OpenAI, note: ""}
+- {key: sbc_pp_2025, name: 每人股權報酬（2025）, index: 2025, unit: $M/人/年, value: 0.8, lo: 0.4, hi: 1.1, tag: Assumed, basis: Anthropic 股權報酬未揭露（A1 找不到）。上限：2026Q1 員工費用約 $1.25B／季（SRC_ANT_297，Derived）× 4 ÷ 約 3,950 人 ≈ $1.27M／人（含現金薪酬與非現金項）；OpenAI v0.6 每人 $1.5M（WSJ）超過此上限，不直接沿用, range_why: 0.4（現金薪酬為主）–1.1（員工費用幾乎全為股權）, note: 規格 D13：股權報酬單列；2025 營業費用視為含股權報酬（GAAP 常見口徑，同 OpenAI v0.6 S4 預設）}
+- {key: sbc_pp_g, name: 每人股權報酬年變動率, index: 2026 起, unit: 比例, value: 0, lo: -0.2, hi: 0.2, tag: Analogy, basis: 同 OpenAI v0.6 INP_269, range_why: 同 OpenAI, note: ""}
+- {key: quarters_per_year, name: 每年季數（定義常數）, index: —, unit: 季, value: 4, lo: 4, hi: 4, tag: Decision, basis: 定義常數, range_why: 不適用, note: 季度對照列年化}

@@ -5,7 +5,7 @@
 輸出：每個名稱 OK／DIFF／MISSING／PENDING。DIFF 與 MISSING 只報 WARN（結束碼 0，不擋合併）。
 - MISSING：快照有值但 Tokenomics 現行版已無此名稱，或 Tokenomics 端尚未提供（狀態非 OK 者：Tokenomics 仍無此名稱報 MISSING，已提供報 NOW_AVAILABLE）。
 - 不從未合併分支取值。
-- Anthropic A2（規格 D6）：狀態「讀表（非具名）」的 NonNV 列，以列標籤＋欄標題在 Tokenomics NonNV 頁找值比對（名稱格式 NonNV!<列標籤>!<欄標題>）；
+- Anthropic A2（規格 D6）：狀態「讀表（非具名）」的列（NonNV；A3 起加 Inputs 頁 PUE），以列標籤＋欄標題在 Tokenomics 該頁找值比對（名稱格式 <頁>!<列標籤>!<欄標題>）；
   找不到報 MISSING（Tokenomics 改了表的列標籤或欄標題）。
 """
 import argparse
@@ -19,7 +19,7 @@ REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 from engine import current_model_path  # noqa: E402
 sys.path.insert(0, str(REPO / "builder"))
-from tk_link import NONNV_STATUS, nonnv_lookup  # noqa: E402
+from tk_link import NONNV_STATUS, table_lookup  # noqa: E402
 
 
 def tk_values(tk_dir: Path):
@@ -57,10 +57,10 @@ def main():
         status, n = ws.cell(r, 6).value, ws.cell(r, 5).value or 0
         snap = [ws.cell(r, 10 + k).value for k in range(n)]
         if status == NONNV_STATUS:                       # 讀表列：NonNV!<列標籤>!<欄標題>
-            _, label, hdr = name.split("!")
-            v, addr = nonnv_lookup(tkwb, label, hdr) if "NonNV" in tkwb.sheetnames else (None, None)
+            sheet, label, hdr = name.split("!")
+            v, addr = table_lookup(tkwb, sheet, label, hdr)
             if addr is None:
-                rows.append((name, "MISSING", "Tokenomics NonNV 表找不到此列標籤或欄標題"))
+                rows.append((name, "MISSING", f"Tokenomics {sheet} 表找不到此列標籤或欄標題"))
                 bad += 1
                 continue
             tk[name] = [v]

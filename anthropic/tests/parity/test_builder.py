@@ -36,9 +36,9 @@ def _same(a, b):
 
 
 def test_e6_no_constants_in_calc_sheets(wb):
-    """E6：計算頁（A2：Demand、Revenue）公式不得內含常數；恆等式只容許 1−比例、1＋成長率、年數 +1；定義常數在 Inputs。"""
+    """E6：計算頁（A2：Demand、Revenue；A3：Compute、Cost）公式不得內含常數；恆等式只容許 1−比例、1＋成長率、年數 +1；定義常數在 Inputs。"""
     present = [s for s in CALC_SHEETS if s in wb.sheetnames]
-    assert {"Demand", "Revenue"} <= set(present)
+    assert {"Demand", "Revenue", "Compute", "Cost"} <= set(present)
     bad = [c for s in present for c in e6_violations(wb[s])]
     assert bad == [], bad[:10]
     n = sum(1 for s in present for row in wb[s].iter_rows(min_row=5) for c in row if isinstance(c.value, str) and c.value.startswith("="))
@@ -67,7 +67,7 @@ def test_stable_ids():
         assert len(vals) == len(set(vals))
         assert not set(vals) & set(REG.get(f"retired_{kind}", []))
     assert {r["key"] for r in INP} == set(REG["INP"])
-    assert set(REG.get("retired_INP", [])) >= {"INP_067", "INP_068", "INP_069"}     # A2：每任務 token 改取 Tokenomics，舊號退役
+    assert set(REG.get("retired_INP", [])) >= {"INP_016", "INP_067", "INP_068", "INP_069"}     # A2：每任務 token 改取 Tokenomics；A3：容量上限佔位改接 Compute
 
 
 def test_src_and_inputs_values_equal_yaml(eng):
@@ -115,3 +115,16 @@ def test_named_outputs_for_a3(eng):
         v = eng.get_name(n)
         assert isinstance(v, list) and len(v) == 6 and all(isinstance(x, (int, float)) for x in v), n
     assert eng.get_name("CHK_Errors") == 0
+
+
+def test_named_outputs_for_a4(eng):
+    """A3 輸出、A4 會用到的具名範圍（與 OpenAI v0.6 同名）存在且為 6 年；容量上限 2025、2026＝1；Revenue 與 Compute 一致。"""
+    for n in ("CMP_SupplyGW", "CMP_Supply_VReq", "CMP_InfGW_Eff", "CMP_InfGW", "CMP_RDGW", "CMP_DemandGW", "CMP_InfAvailGW", "CMP_CapFactor", "CMP_Eta",
+              "COST_Compute", "COST_ContractPay", "COST_OwnedCapex", "COST_NonCompExSBC", "COST_SBC", "COST_FullCash", "COST_PropRev_VR",
+              "COST_PropFull_VR", "COST_PropGap_VR", "COST_Coverage", "COST_CloudGM", "COST_ComputeEcon", "COST_GapCash"):
+        v = eng.get_name(n)
+        assert isinstance(v, list) and len(v) == 6 and all(isinstance(x, (int, float)) for x in v), n
+    cap = eng.get_name("CMP_CapFactor")
+    assert cap[0] == 1 and cap[1] == 1
+    assert eng.get_name("REV_CapFactor") == cap
+    assert abs(eng.get_name("COST_Gap2025")) < 1e-9                     # 2025 算力成本＝說明書 7.33

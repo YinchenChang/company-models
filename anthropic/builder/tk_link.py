@@ -99,14 +99,27 @@ NONNV_COLS = [("Out", "產出比 基準"), ("OutLo", "產出比 低"), ("OutHi",
 NONNV_STATUS = "讀表（非具名）"
 
 
-def nonnv_lookup(wb, label: str, hdr: str):
-    """在 NonNV 頁找 A 欄＝label 的列、第 4 列標題＝hdr 的欄；回傳 (值, 儲存格位址)；找不到回傳 (None, None)。"""
-    ws = wb[NONNV_SHEET]
-    col = next((c for c in range(1, ws.max_column + 1) if ws.cell(4, c).value == hdr), None)
-    row = next((r for r in range(5, ws.max_row + 1) if ws.cell(r, 1).value == label), None)
+# 讀表的頁與標題列（A3 起加 Tokenomics Inputs 頁的 PUE 列：Tokenomics 未設具名範圍；工作單 A3「PUE：TK 若有則改引用」）
+TABLE_HDR_ROW = {"NonNV": 4, "Inputs": 3}
+TABLE_ROWS = [("Inputs", "PUE", [("TK_PUE", "基準"), ("TK_PUE_Lo", "低成本"), ("TK_PUE_Hi", "高成本")], "x（設施電力 ÷ IT 電力）")]
+
+
+def table_lookup(wb, sheet: str, label: str, hdr: str):
+    """在 sheet 頁找 A 欄＝label 的列、標題列（TABLE_HDR_ROW）＝hdr 的欄；回傳 (值, 儲存格位址)；找不到回傳 (None, None)。"""
+    if sheet not in wb.sheetnames:
+        return None, None
+    ws = wb[sheet]
+    h = TABLE_HDR_ROW.get(sheet, 4)
+    col = next((c for c in range(1, ws.max_column + 1) if ws.cell(h, c).value == hdr), None)
+    row = next((r for r in range(h + 1, ws.max_row + 1) if ws.cell(r, 1).value == label), None)
     if col is None or row is None:
         return None, None
     return ws.cell(row, col).value, ws.cell(row, col).coordinate
+
+
+def nonnv_lookup(wb, label: str, hdr: str):
+    """在 NonNV 頁找 A 欄＝label 的列、第 4 列標題＝hdr 的欄；回傳 (值, 儲存格位址)；找不到回傳 (None, None)。"""
+    return table_lookup(wb, NONNV_SHEET, label, hdr)
 
 
 def read_nonnv(tk_dir: Path):
@@ -121,4 +134,11 @@ def read_nonnv(tk_dir: Path):
                 raise RuntimeError(f"Tokenomics NonNV 找不到：{label}／{hdr}")
             rows.append(dict(name=f"{NONNV_SHEET}!{label}!{hdr}", our=f"TK_NNV_{fam}_{suf}", label=f"{label}：{hdr}（相對 VR200；NonNV!{addr}）",
                              unit="倍", values=[v], status=NONNV_STATUS))
+    for sheet, label, cols, unit in TABLE_ROWS:          # A3：PUE（Tokenomics Inputs 頁，非具名）
+        for our, hdr in cols:
+            v, addr = table_lookup(wb, sheet, label, hdr)
+            if v is None:
+                raise RuntimeError(f"Tokenomics {sheet} 找不到：{label}／{hdr}")
+            rows.append(dict(name=f"{sheet}!{label}!{hdr}", our=our, label=f"{label}：{hdr}（Tokenomics {sheet}!{addr}；非具名）",
+                             unit=unit, values=[v], status=NONNV_STATUS))
     return rows

@@ -35,7 +35,7 @@ from oai_link import read_oai  # noqa: E402
 from tk_link import NONNV_STATUS, PENDING_NOTE, read_nonnv, read_snapshot  # noqa: E402
 
 VERSION = "v0.1"
-STAGE = "v0.1-A2"
+STAGE = "v0.1-A3"
 REGISTRY_PATH = HERE / "id_registry.json"
 SRC_YAML = ROOT / "data" / "anthropic_src.yaml"
 INP_YAML = ROOT / "data" / "anthropic_inputs.yaml"
@@ -174,15 +174,19 @@ def sheet_readme(ctx, summary):
           "命題（與 OpenAI v0.6 同一句）：Anthropic 每 VR 等值 GW 的年營收能否覆蓋每 GW 年全成本；若不能，缺口要多少外部資金、由誰以什麼條件提供。FY2025–FY2030，曆年制，2025 為實際校準年。")
     sn, oa = ctx.snap, ctx.oai
     lines = [
-        ("本版範圍", f"{STAGE}：SRC_ANT、TK_Link（含 NonNV 讀表）、OAI_Link、Inputs、Demand（需求與 token 量）、Revenue（訂閱方案別、API 層級別、通路分成、淨額、容量上限佔位）、Checks。"
-                    "Compute／Cost 於 A3、Funding／Reverse 於 A4 加入（命題輸出屆時才有值）。"),
+        ("本版範圍", f"{STAGE}：SRC_ANT、TK_Link（含 NonNV 讀表）、OAI_Link、Inputs、Demand（需求與 token 量）、Revenue（訂閱方案別、API 層級別、通路分成、淨額、容量上限）、Compute（加速器族、逐合約供給 GW、η、推論與研發 GW、容量上限、VR 等值）、"
+                    "Cost（逐合約實付、自建資本支出、供應商持有成本、非算力成本、股權報酬、命題表）、Checks。Funding／Reverse 於 A4 加入（命題 2 屆時才有值）。"),
+        ("Compute", "加速器族 × 世代（NVIDIA Hopper／GB200／GB300／VR200；TPU v6e／v7；Trainium2／3；AMD MI455X）每 GW 年產能＝TK IF_TokGW_* ×（NonNV 產出比）；供給 GW 只由算力合約加總（D10 r1；機房租約只列對照）；"
+                    "η＝2025 token 換算推論 GW ÷ 2025 推論支出換算 GW（D8）；研發 GW＝供給 ×（1 − 閒置）− 推論（D12）；容量上限 2025、2026 固定 1；VR 等值＝各族 Sol 產能比。"),
+        ("Cost", "算力成本（現金）＝逐合約實付＋自建資本支出（D10、D11）；供應商持有成本＝GW × TK IF_HoldEcon × 持有比、雲端毛利；非算力成本 2025＝說明書營業費用 − 算力 − 平台抽成（D13、D5 r1），之後人數 × 每人成本；"
+                 "股權報酬單列；命題表：每 VR 等值 GW 營收淨額、算力、非算力、全成本（含／不含股權報酬）、差額、覆蓋率。"),
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有，重建時保留已改過的值）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構（data/*.yaml → SRC_ANT／Inputs；Tokenomics → TK_Link；OpenAI → OAI_Link）。"),
         ("SRC_ANT", f"{summary['src']} 列：公司財務原始數據（A1 蒐集 376 列＋A2 新增 3 列供 Derived 列公式化）。標記 Derived 的 12 列：11 列改為公式、1 列（Reuters 自行計算後公布的通路費）保留報導值。"),
-        ("TK_Link", f"Tokenomics {sn['version']}（{sn['file']}），master 提交 {sn['sha'][:7]}；{summary['tk_ok']} 個具名範圍（OpenAI v0.6 同一組 63 名＋A2 新增任務 token 5 名）＋ NonNV 表 {summary['tk_nnv']} 格（讀表，非具名；規格 D6）。"),
+        ("TK_Link", f"Tokenomics {sn['version']}（{sn['file']}），master 提交 {sn['sha'][:7]}；{summary['tk_ok']} 個具名範圍（OpenAI v0.6 同一組 63 名＋A2 新增任務 token 5 名）＋ 讀表（非具名）{summary['tk_nnv']} 格：NonNV 18 格（規格 D6）與 PUE 3 格（A3；Tokenomics Inputs 頁）。"),
         ("OAI_Link", f"OpenAI v0.6 命題輸出快照（{oa['file']}；SHA-256 {oa['sha256'][:12]}…）；只被 Checks 引用（規格 D20）。"),
         ("Inputs", f"{summary['inp']} 列：假設（值、低、高、標記、依據、區間理由）；定義常數（年度、天數、單位換算）也在此（E6：公式不含常數）。"),
         ("Demand", "個人方案（Free／Pro／Max 5x／Max 20x）人數、企業席位（Team 標準／Premium、Enterprise）、任務類別（對話、程式代理、其他代理）× 每任務 token × 層級組合；API：2025 由 API 營收 ÷ 有效單價倒推、2026 由半校準總額倒推、2027 起任務成長 × 每任務 token 成長 × 價格彈性；輸出 DEM_Tok_*（層級 × 付費／免費）。"),
-        ("Revenue", "API 牌價（價格事件依公告日天數加權）、有效單價（快取、批次、議價折扣）、訂閱方案別、API 層級別、其他、廣告（＝0，D3）、總額、雲端通路平台抽成（D5 r1）、淨額、個人 vs 企業；2025 校準（D14）、2026 半校準（D15 r1）、容量上限係數（A2 佔位＝1，A3 接 Compute）。"),
+        ("Revenue", "API 牌價（價格事件依公告日天數加權）、有效單價（快取、批次、議價折扣）、訂閱方案別、API 層級別、其他、廣告（＝0，D3）、總額、雲端通路平台抽成（D5 r1）、淨額、個人 vs 企業；2025 校準（D14）、2026 半校準（D15 r1）、容量上限係數（＝Compute CMP_CapFactor；2025、2026 固定 1）。"),
         ("Checks", "C01 起；ERR 格數＝CHK_Errors（必須 0）；WARN 格數＝CHK_Warnings（只提示）。"),
         ("層級對應", "Haiku→低層（Tokenomics Luna）、Sonnet→中層（Sol）、Opus→頂層（Astra）；具名範圍沿用 OpenAI 的 Top／Mid／Low。"),
         ("標記", "Verified／Interested-party／Analogy／Assumed／Derived／Decision（Analogy、Assumed 一律附區間）。"),
@@ -335,7 +339,8 @@ def sheet_inputs(ctx, final):
 
 def base_checks(ctx, n_src, n_inp):
     snap = ctx.snap
-    nnv = [r["our"] for r in snap.get("nonnv", [])]
+    tbl = [r["our"] for r in snap.get("nonnv", [])]
+    nnv = [x for x in tbl if x.startswith("TK_NNV_")]
     fams = sorted({x.split("_")[2] for x in nnv})
     order = "+".join(f"(TK_NNV_{f}_{a}Lo>TK_NNV_{f}_{a})+(TK_NNV_{f}_{a}>TK_NNV_{f}_{a}Hi)" for f in fams for a in ("Out", "Hold"))
     rows = [
@@ -348,10 +353,12 @@ def base_checks(ctx, n_src, n_inp):
         ("inp_order", "Inputs 區間順序異常列數", "=SUM(Inputs!$L$5:$L$600)", 0, "eq", "低 ≤ 值 ≤ 高（有三值者）"),
         ("inp_norange", "Inputs Analogy／Assumed 缺區間列數", "=SUM(Inputs!$M$5:$M$600)", 0, "eq", "共同規則第 4 節：Analogy／Assumed 一律給區間"),
         ("tk_ok", "TK_Link 具名範圍已取值名稱數", '=COUNTIF(TK_Link!$F$10:$F$200,"OK")', len(snap["rows"]), "eq", "OpenAI v0.6 同一組 63 名＋A2 新增 5 名（IF_HdrTask、IF_TaskLen、IF_TaskTok*）"),
-        ("tk_nnv", "TK_Link NonNV 讀表格數", f'=COUNTIF(TK_Link!$F$10:$F$200,"{NONNV_STATUS}")', len(nnv), "eq", "TPU v7、Trainium3、AMD MI455X × 6 值（規格 D6、D6 r1）"),
+        ("tk_nnv", "TK_Link 讀表（非具名）格數：NonNV 18＋PUE 3", f'=COUNTIF(TK_Link!$F$10:$F$200,"{NONNV_STATUS}")', len(tbl), "eq",
+         "TPU v7、Trainium3、AMD MI455X × 6 值（規格 D6、D6 r1）；A3 加 Tokenomics Inputs 頁 PUE（低／基準／高）"),
         ("tk_pending", "TK_Link 待 Tokenomics 提供名稱數", f'=COUNTIF(TK_Link!$F$10:$F$200,"{PENDING_NOTE}")', len(snap["pending"]), "eq", ""),
         ("tk_err", "TK_Link 錯誤值格數", "=SUMPRODUCT(--ISERROR(TK_Link!$J$10:$X$200))", 0, "eq", ""),
         ("tk_nnv_order", "TK NonNV 產出比、持有比 低 ≤ 基準 ≤ 高 違反數", "=" + order if order else "=0", 0, "eq", "Tokenomics 快照被改寫時轉 ERR"),
+        ("tk_pue_order", "TK PUE 低 ≤ 基準 ≤ 高 違反數", "=(TK_PUE_Lo>TK_PUE)+(TK_PUE>TK_PUE_Hi)", 0, "eq", "A3：PUE 取自 Tokenomics Inputs 頁（非具名）"),
         ("tk_version", "TK 快照：Tokenomics 版本", "=TK_Version", None, "info", "check_tk_snapshot 結果見報告"),
         ("tk_commit", "TK 快照：Tokenomics master 提交", "=TK_Commit", None, "info", ""),
         ("oai_isolated", "OAI_Link 被計算頁引用的公式格數（builder 掃描）", ctx.scan["oai_refs"], 0, "eq",
