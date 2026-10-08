@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tokenomics 取數工具（各公司共用）：把 Tokenomics 的 IF_／L1_ 具名範圍讀成版本固定的快照 JSON。
+"""Tokenomics 取數工具（各公司共用）：把 Tokenomics 的 IF_／IFW_／IFC_／L1_／SRC_ 具名範圍讀成版本固定的快照 JSON。
 
 用法：
   產生快照：python3 tools/tokenomics/import_tokenomics.py --tokenomics <Tokenomics clone> --names <名稱清單> --out <快照.json> [--optional <清單檔或逗號分隔>]
@@ -9,7 +9,12 @@
             都找不到時印警告、以代碼 0 結束（略過，不算失敗）。
 
 規則：
-  - 只接受 `IF_`（不含 `IF_Hdr*`）與 `L1_` 開頭的名稱（Tokenomics README「具名範圍與下游連結」）；其他名稱報錯。
+  - 只接受下游資料契約第 2 條第 1 項允許的名稱（Tokenomics `docs/plan/Tokenomics_downstream_contract.md`）：
+    `IF_`（不含 `IF_Hdr*`）、`IFW_`（四層瀑布，v5.29 起）、`IFC_`（用途欄，v5.29 起）、`L1_`、`SRC_`（只限狀態 Active）；其他名稱報錯。
+  - `IFW_*`：與 IF_ 相同，依世代 × 成本情境拆開；取用時須四層一起取（契約第 2 條第 2 項）。
+  - `IFC_Conf／IFC_Use／IFC_Layer／IFC_Updated`（Interface R／S／T／U 整欄）：存成 {該列的 IF_／IFW_ 名稱: 值}，
+    只保留有具名範圍的列；用來檢查所取名稱的用途限制（例如「上限，不得作預測」）。
+  - `SRC_*`（SRC_* 工作表單格 C 欄）：值取 C 欄，另存同列紀錄（指標、低、高、單位、口徑、日期、出處、來源等級、狀態）；狀態不是 Active 即報錯。
   - 名稱清單：一行一個名稱，`#` 之後為註解；行尾加 `optional`（或列在 --optional）＝ Tokenomics 尚無此名稱時記為 {"missing": true} 並警告，不中斷。
   - 讀快取值（openpyxl data_only=True）；需要的格有公式但快取值缺漏時，先以 LibreOffice headless 重算暫存副本再讀。
   - Interface 世代 × 成本情境範圍（C:Q 共 15 欄）依 IF_HdrGen、IF_HdrCost 表頭拆成 {世代: {低成本, 基準, 高成本}}；單格名稱存單值。
@@ -33,9 +38,13 @@ def gen_code(header):
     raise SystemExit(f'無法辨識的世代表頭：{header!r}（請更新 GEN_CODES）')
 
 
+ALLOWED_PREFIX = ('IF_', 'IFW_', 'IFC_', 'L1_', 'SRC_')
+SRC_FIELDS = {2: '指標', 4: '低', 5: '高', 6: '單位', 7: '口徑', 9: '日期', 10: '出處', 11: '來源等級', 15: '狀態'}
+
+
 def check_name(n):
-    if n.startswith('IF_Hdr') or not (n.startswith('IF_') or n.startswith('L1_')):
-        raise SystemExit(f'名稱不合規則：{n}（只接受 IF_（不含 IF_Hdr*）與 L1_）')
+    if n.startswith('IF_Hdr') or not n.startswith(ALLOWED_PREFIX):
+        raise SystemExit(f'名稱不合規則：{n}（只接受 IF_（不含 IF_Hdr*）、IFW_、IFC_、L1_、SRC_）')
 
 
 def read_names(path):
@@ -186,7 +195,37 @@ def extract(xlsx, names, optional, force_recalc=False):
     for n, (sh, c1, r1, c2, r2) in plan.items():
         ws = wb_v[sh]
         it = {'sheet': sh, 'ref': ref_text(sh, c1, r1, c2, r2)}
-        if sh == 'L1':
+        if n.startswith('IFC_'):
+            if c1 != c2:
+                raise SystemExit(f'{n}：IFC_ 名稱預期為單欄，實際為 {it["ref"]}')
+            row_name = {}
+            for m, d in dn.items():
+                if m.startswith(('IF_', 'IFW_')) and not m.startswith('IF_Hdr'):
+                    try:
+                        msh, _, mr1, _, mr2 = parse_ref(d.attr_text)
+                    except SystemExit:
+                        continue
+                    if msh == sh and mr1 == mr2 and r1 <= mr1 <= r2:
+                        row_name.setdefault(mr1, m)
+            it['label'] = next((ws.cell(r, c1).value for r in range(r1 - 1, 0, -1)
+                                if ws.cell(r, c1).value not in (None, '')), None)
+            it['unit'] = None
+            it['kind'] = 'by_name'
+            it['values'] = {row_name[r]: val(sh, r, c1) for r in sorted(row_name)}
+            it['cells'] = {row_name[r]: f'{sh}!{get_column_letter(c1)}{r}' for r in sorted(row_name)}
+        elif sh.startswith('SRC_'):
+            if not (c1 == c2 and r1 == r2):
+                raise SystemExit(f'{n}：SRC_ 名稱預期為單格，實際為 {it["ref"]}')
+            rec = {k: val(sh, r1, c) for c, k in SRC_FIELDS.items()}
+            if rec['狀態'] != 'Active':
+                raise SystemExit(f'{n}：狀態為 {rec["狀態"]!r}，契約只允許取 Active 紀錄')
+            it['label'] = rec.pop('指標')
+            it['unit'] = rec.pop('單位')
+            it['kind'] = 'single'
+            it['values'] = val(sh, r1, c1)
+            it['cell'] = f'{sh}!{get_column_letter(c1)}{r1}'
+            it['record'] = rec
+        elif sh == 'L1':
             if not (c1 == c2 and r1 == r2):
                 raise SystemExit(f'{n}：L1 名稱預期為單格，實際為 {it["ref"]}')
             it['label'] = ws.cell(r1, 2).value
@@ -202,7 +241,7 @@ def extract(xlsx, names, optional, force_recalc=False):
                 it['external'] = ext
         else:
             lab = ws.cell(r1, 1).value
-            it['label'] = re.sub(r'\s*\[(IF|L1)_[^\]]*\]\s*$', '', str(lab)).strip() if lab is not None else None
+            it['label'] = re.sub(r'\s*\[(IF|IFW|L1)_[^\]]*\]\s*$', '', str(lab)).strip() if lab is not None else None
             it['unit'] = ws.cell(r1, 2).value
             if r1 == r2 and c1 == c2:
                 it['kind'] = 'single'
