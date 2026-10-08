@@ -1,7 +1,7 @@
 # MiniMax｜Tokenomics 連接審視（v5.29）
 
 - 分支：`claude/minimax-tk-link-review`
-- 底稿：company-models main `75327ef`；報告提交 SHA：`__SHA__`
+- 底稿：company-models main `75327ef`；報告提交 SHA：`5c4074d`（初稿；本行更新於下一個提交）
 - 報告路徑：`minimax/docs/reports/20261008_minimax_tokenomics_link_review.md`
 - 依據：共用工作單 `docs/workorders/20261008_tokenomics_link_review.md`、本公司工作單 `minimax/docs/workorders/20261008_minimax_tokenomics_link_review.md`；Tokenomics 下游資料契約 v0.1；Tokenomics master `a5061d9`（`model/CURRENT`＝`20261008_Tokenomics_v5.29.xlsx`，前提成立）。
 - 本輪**只審視、不改模型**：`build_xlsx.py`、`build_html.py`、`data/`、`dist/` 的 Excel 都沒有動。v5.29 快照只產生在暫存路徑（`/tmp/minimax_v529_snapshot.json`），未提交。
