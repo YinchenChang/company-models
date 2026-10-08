@@ -17,3 +17,96 @@ rows:
 - {key: m_to_b, name: 單位換算：$M → $B 的除數（定義常數）, index: —, unit: $M／$B, value: 1000, lo: 1000, hi: 1000, tag: Decision, basis: 定義常數, range_why: 不適用, note: 人數（M）× 月費 × 12＝$M；T token × $/M token＝$M}
 - {key: b_to_t, name: 單位換算：B token → T token 的除數（定義常數）, index: —, unit: B／T, value: 1000, lo: 1000, hi: 1000, tag: Decision, basis: 定義常數, range_why: 不適用, note: 人數（M）× 任務 × 每任務 K token＝B token}
 - {key: spacex_term_months, name: SpaceX 月費合約期間（月）, index: —, unit: 月, value: 36, lo: 36, hi: 36, tag: Decision, basis: SRC_ANT_227 期間「2026-05 至 2029-05」＝36 個月（定義值）, range_why: 由揭露期間換算，不另設區間, note: SRC_ANT_230（Derived）＝月費 × 本列}
+# ── 1. 開關與門檻（Decision）
+- {key: elasticity_start_year, name: 價格彈性起算年, index: —, unit: 年, value: 2027, lo: 2027, hi: 2027, tag: Decision, basis: 2025 校準年、2026 半校準年（D14、D15 r1）不套彈性；同 OpenAI v0.6 INP_004, range_why: 定義值, note: Demand API 第三節}
+- {key: cap_factor_placeholder, name: 容量上限係數（A2 佔位）, index: —, unit: 倍, value: 1, lo: 1, hi: 1, tag: Decision, basis: 工作單 A2 第 5 步：容量上限先以 1 佔位；A3 由 Compute（CMP_CapFactor）取代 Revenue「容量上限係數」列的公式, range_why: 佔位值, note: Revenue 第十節}
+- {key: ads_revenue, name: 廣告營收（D3）, index: —, unit: $B/年, value: 0, lo: 0, hi: 0, tag: Decision, basis: 規格 D3：Anthropic 公開承諾 Claude 不放廣告，不設驅動, range_why: 公司公開立場；若反轉再加驅動, note: Revenue 第八節}
+- {key: runrate_warn_threshold, name: 2026 年營收對里程碑推估差距的 WARN 門檻, index: —, unit: 比例, value: 0.25, lo: 0.25, hi: 0.25, tag: Decision, basis: 工作單 A2 第 6 步：2026 run-rate 對照差距 >25% 立 WARN（規格 D15）, range_why: 工作單定值, note: Checks}
+# ── 2. 訂閱：年付占比、方案組合、轉換率（Assumed／Analogy）
+- {key: pro_annual_share, name: Pro 年付占比, index: —, unit: 比例, value: 0.3, lo: 0.1, hi: 0.5, tag: Assumed, basis: 工作單 A2 判斷類預設（年付占比 0.3）；Pro 年付月均 $17（SRC_ANT_142）vs 月付 $20（SRC_ANT_141）, range_why: 工作單預設區間 0.1–0.5, note: Pro 實收月費＝月付 ×（1−占比）＋年付月均 × 占比}
+- {key: team_annual_share, name: Team 年付占比（標準與 Premium 席位）, index: —, unit: 比例, value: 0.3, lo: 0.1, hi: 0.5, tag: Assumed, basis: 同 Pro 年付占比（工作單預設）；Team 年付 $20／$100 vs 月付 $25／$125（SRC_ANT_146–149）, range_why: 同上, note: ""}
+- {key: cons_mix_pro_2025, name: 個人付費方案組合：Pro 占付費人數, index: 2025, unit: 比例, value: 0.85, lo: 0.75, hi: 0.95, tag: Assumed, basis: 方案別人數未揭露（A1 找不到）；Max 方案 2025-04 才上市（SRC_ANT_145），2025 年均以 Pro 為主, range_why: Max 上市後占比未知，給 ±0.1, note: Max 20x＝1 − Pro − Max 5x}
+- {key: cons_mix_max5_2025, name: 個人付費方案組合：Max 5x 占付費人數, index: 2025, unit: 比例, value: 0.1, lo: 0.03, hi: 0.15, tag: Assumed, basis: 同上；Max 5x（$100）多於 Max 20x（$200）, range_why: 上市首年占比低, note: ""}
+- {key: cons_mix_pro_2026, name: 個人付費方案組合：Pro 占付費人數, index: 2026 起, unit: 比例, value: 0.7, lo: 0.55, hi: 0.85, tag: Assumed, basis: Claude Code 帶動 Max 需求（Claude Code 年化營收 2025-08 $0.5B → 2026-02 $2.5B，SRC_ANT_055、058；企業占一半 SRC_ANT_059）, range_why: Max 占比可能更高或回落, note: 2027 起沿用}
+- {key: cons_mix_max5_2026, name: 個人付費方案組合：Max 5x 占付費人數, index: 2026 起, unit: 比例, value: 0.18, lo: 0.1, hi: 0.25, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: seat_mix_std_2025, name: 企業席位組合：Team 標準席位占席位數, index: 2025, unit: 比例, value: 0.5, lo: 0.3, hi: 0.7, tag: Assumed, basis: 席位別數量未揭露；大單（Deloitte 47 萬、Cognizant 35 萬，SRC_ANT_174、175）多為 Enterprise, range_why: ±0.2, note: Enterprise＝1 − 標準 − Premium}
+- {key: seat_mix_prem_2025, name: 企業席位組合：Team Premium 席位占席位數, index: 2025, unit: 比例, value: 0.15, lo: 0.05, hi: 0.3, tag: Assumed, basis: Premium（含 Claude Code）以開發者為主, range_why: 同上, note: ""}
+- {key: seat_mix_std_2026, name: 企業席位組合：Team 標準席位占席位數, index: 2026 起, unit: 比例, value: 0.35, lo: 0.2, hi: 0.5, tag: Assumed, basis: 2026 大型企業部署（TCS、TELUS、Barclays，SRC_ANT_178–180）使 Enterprise 占比上升, range_why: ±0.15, note: 2027 起沿用}
+- {key: seat_mix_prem_2026, name: 企業席位組合：Team Premium 席位占席位數, index: 2026 起, unit: 比例, value: 0.2, lo: 0.1, hi: 0.35, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: paid_conv_2025, name: 個人付費轉換率（付費 ÷ 月活；只用於 2025 未校準對照）, index: 2025, unit: 比例, value: 0.05, lo: 0.03, hi: 0.08, tag: Analogy, basis: OpenAI ChatGPT 付費約占週活 4–5%（OpenAI v0.6 SRC_OAI 35M 付費 ÷ 約 700–800M 週活）；Anthropic 付費人數不揭露（SRC_ANT not_found）, range_why: 消費 AI 訂閱常見 3–8%, note: 只進 Revenue 第十一節未校準列，不進基準}
+# ── 3. 人數成長（FY 平均人數年增率；Assumed）
+- {key: g_cons_2026, name: 個人付費人數年增率, index: 2026, unit: 比例/年, value: 3.0, lo: 1.5, hi: 5.0, tag: Assumed, basis: 「付費訂閱今年以來已翻倍以上」（2026-03，SRC_ANT_169）；App 月活年增 640%（SRC_ANT_171）。FY 平均 ÷ FY 平均，年初 3 個月已 ×2, range_why: 下限＝全年只再小幅成長；上限＝App 月活增速, note: 2026 只影響訂閱與 API 的拆分（總額由 D15 r1 半校準決定）}
+- {key: g_cons_2027, name: 個人付費人數年增率, index: 2027, unit: 比例/年, value: 0.6, lo: 0.3, hi: 1.0, tag: Assumed, basis: 成長遞減；不以公司目標反推, range_why: ±0.3–0.4, note: ""}
+- {key: g_cons_2028, name: 個人付費人數年增率, index: 2028, unit: 比例/年, value: 0.4, lo: 0.2, hi: 0.7, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: g_cons_2029, name: 個人付費人數年增率, index: 2029, unit: 比例/年, value: 0.3, lo: 0.1, hi: 0.5, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: g_cons_2030, name: 個人付費人數年增率, index: 2030, unit: 比例/年, value: 0.2, lo: 0.05, hi: 0.4, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: g_free_2026, name: 免費人數年增率, index: 2026, unit: 比例/年, value: 1.0, lo: 0.5, hi: 2.0, tag: Assumed, basis: 消費者用戶 1,800–3,000 萬（2026-03，SRC_ANT_170）vs 2025 月活約 1,890 萬（SRC_ANT_173）；App 月活 5,600 萬（2026-Q2，僅 App，SRC_ANT_171）, range_why: 第三方估計分歧大, note: 免費只產生 token（A3 算力），不產生營收}
+- {key: g_free_2027, name: 免費人數年增率, index: 2027, unit: 比例/年, value: 0.5, lo: 0.2, hi: 0.8, tag: Assumed, basis: 成長遞減, range_why: ±0.3, note: ""}
+- {key: g_free_2028, name: 免費人數年增率, index: 2028, unit: 比例/年, value: 0.3, lo: 0.1, hi: 0.5, tag: Assumed, basis: 同上, range_why: ±0.2, note: ""}
+- {key: g_free_2029, name: 免費人數年增率, index: 2029, unit: 比例/年, value: 0.2, lo: 0.05, hi: 0.4, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: g_free_2030, name: 免費人數年增率, index: 2030, unit: 比例/年, value: 0.15, lo: 0.05, hi: 0.3, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: g_seats_2026, name: 企業席位數年增率, index: 2026, unit: 比例/年, value: 3.0, lo: 1.0, hi: 5.0, tag: Assumed, basis: 2025-10 起大單陸續部署（Deloitte 47 萬、Cognizant 35 萬、TCS 5 萬、TELUS 5.7 萬，SRC_ANT_174–179）；2025 倒推席位約 16 萬, range_why: 大單部署時程與計費方式（席位 vs 用量）不明, note: Enterprise 2026 起改「$20 席位費＋用量按 API 計價」（SRC_ANT_152），用量落在 API 營收}
+- {key: g_seats_2027, name: 企業席位數年增率, index: 2027, unit: 比例/年, value: 1.0, lo: 0.5, hi: 1.5, tag: Assumed, basis: 成長遞減；不以公司目標反推, range_why: ±0.5, note: ""}
+- {key: g_seats_2028, name: 企業席位數年增率, index: 2028, unit: 比例/年, value: 0.5, lo: 0.25, hi: 0.8, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: g_seats_2029, name: 企業席位數年增率, index: 2029, unit: 比例/年, value: 0.35, lo: 0.15, hi: 0.5, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: g_seats_2030, name: 企業席位數年增率, index: 2030, unit: 比例/年, value: 0.25, lo: 0.1, hi: 0.4, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+# ── 4. 訂閱與席位使用量：每日任務數、任務類別、每任務 token、層級組合（只影響 token，A3 算力用）
+- {key: tasks_free, name: 每人每日任務數：Free, index: 2025, unit: 任務/日, value: 2, lo: 1, hi: 4, tag: Analogy, basis: OpenAI v0.6 INP_102（free 1.7）, range_why: ×0.5–×2, note: 2026 起 ×（1＋每日任務數年增率）}
+- {key: tasks_pro, name: 每人每日任務數：Pro, index: 2025, unit: 任務/日, value: 8, lo: 4, hi: 15, tag: Analogy, basis: OpenAI v0.6 INP_106（plus 13.4）；Pro 有用量上限（五小時窗）, range_why: ×0.5–×2, note: ""}
+- {key: tasks_max5, name: 每人每日任務數：Max 5x, index: 2025, unit: 任務/日, value: 20, lo: 10, hi: 40, tag: Analogy, basis: OpenAI v0.6 INP_108（pro 41）；Max 5x 用量上限為 Pro 的 5 倍, range_why: ×0.5–×2, note: ""}
+- {key: tasks_max20, name: 每人每日任務數：Max 20x, index: 2025, unit: 任務/日, value: 40, lo: 20, hi: 80, tag: Analogy, basis: 同上；Max 20x 用量上限為 Pro 的 20 倍, range_why: ×0.5–×2, note: ""}
+- {key: tasks_team_std, name: 每席每日任務數：Team 標準, index: 2025, unit: 任務/日, value: 6, lo: 3, hi: 12, tag: Analogy, basis: OpenAI v0.6 INP_110（seats 10.7）；企業席位使用率不均, range_why: ×0.5–×2, note: ""}
+- {key: tasks_team_prem, name: 每席每日任務數：Team Premium, index: 2025, unit: 任務/日, value: 15, lo: 8, hi: 30, tag: Assumed, basis: Premium 含 Claude Code，開發者用量高於標準席位, range_why: ×0.5–×2, note: ""}
+- {key: tasks_ent, name: 每席每日任務數：Enterprise, index: 2025, unit: 任務/日, value: 8, lo: 4, hi: 15, tag: Analogy, basis: OpenAI v0.6 INP_110（seats 10.7）, range_why: ×0.5–×2, note: ""}
+- {key: g_tasks, name: 每人每日任務數年增率, index: 2026 起, unit: 比例/年, value: 0.1, lo: 0.05, hi: 0.2, tag: Analogy, basis: OpenAI v0.6 INP_122（0.1；0.05–0.2）, range_why: 同 OpenAI, note: 全部方案同一年增率}
+- {key: cat_chat_free, name: 任務類別占比：對話, index: Free, unit: 比例, value: 0.95, lo: 0.85, hi: 1.0, tag: Assumed, basis: 免費方案不含 Claude Code, range_why: ±0.1, note: 其他代理＝1 − 對話 − 程式代理}
+- {key: cat_code_free, name: 任務類別占比：程式代理, index: Free, unit: 比例, value: 0, lo: 0, hi: 0.05, tag: Assumed, basis: 免費方案不含 Claude Code, range_why: 網頁版偶有程式任務, note: ""}
+- {key: cat_chat_pro, name: 任務類別占比：對話, index: Pro, unit: 比例, value: 0.65, lo: 0.5, hi: 0.8, tag: Assumed, basis: Pro 含 Claude Code（有用量上限）, range_why: ±0.15, note: ""}
+- {key: cat_code_pro, name: 任務類別占比：程式代理, index: Pro, unit: 比例, value: 0.25, lo: 0.1, hi: 0.4, tag: Assumed, basis: 同上, range_why: ±0.15, note: ""}
+- {key: cat_chat_max5, name: 任務類別占比：對話, index: Max 5x, unit: 比例, value: 0.3, lo: 0.15, hi: 0.5, tag: Assumed, basis: Max 用戶以 Claude Code 為主（D4：Claude Code 營收落在 Max 與 Team Premium）, range_why: ±0.15–0.2, note: ""}
+- {key: cat_code_max5, name: 任務類別占比：程式代理, index: Max 5x, unit: 比例, value: 0.6, lo: 0.4, hi: 0.75, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: cat_chat_max20, name: 任務類別占比：對話, index: Max 20x, unit: 比例, value: 0.2, lo: 0.1, hi: 0.35, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: cat_code_max20, name: 任務類別占比：程式代理, index: Max 20x, unit: 比例, value: 0.7, lo: 0.5, hi: 0.85, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: cat_chat_team_std, name: 任務類別占比：對話, index: Team 標準, unit: 比例, value: 0.75, lo: 0.6, hi: 0.9, tag: Assumed, basis: 標準席位以對話與文件為主, range_why: ±0.15, note: ""}
+- {key: cat_code_team_std, name: 任務類別占比：程式代理, index: Team 標準, unit: 比例, value: 0.15, lo: 0.05, hi: 0.3, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: cat_chat_team_prem, name: 任務類別占比：對話, index: Team Premium, unit: 比例, value: 0.3, lo: 0.15, hi: 0.5, tag: Assumed, basis: Premium 席位含 Claude Code, range_why: 同上, note: ""}
+- {key: cat_code_team_prem, name: 任務類別占比：程式代理, index: Team Premium, unit: 比例, value: 0.6, lo: 0.4, hi: 0.75, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: cat_chat_ent, name: 任務類別占比：對話, index: Enterprise, unit: 比例, value: 0.55, lo: 0.4, hi: 0.7, tag: Assumed, basis: 企業部署含開發者與一般員工, range_why: ±0.15, note: ""}
+- {key: cat_code_ent, name: 任務類別占比：程式代理, index: Enterprise, unit: 比例, value: 0.3, lo: 0.15, hi: 0.45, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: k_chat, name: 每任務 token：對話, index: 2025, unit: K tok/任務, value: 4, lo: 2, hi: 8, tag: Analogy, basis: OpenAI v0.6 INP_116（plus 4）, range_why: ×0.5–×2, note: 2026 起 ×（1＋每任務 token 年增率）}
+- {key: k_code, name: 每任務 token：程式代理, index: 2025, unit: K tok/任務, value: 200, lo: 50, hi: 500, tag: Assumed, basis: 程式代理一次任務多輪讀檔與工具呼叫，含大量快取上下文；Anthropic token 量未揭露（SRC_ANT not_found）, range_why: 數量級不確定，給 ×0.25–×2.5, note: Tokenomics 缺口：每任務 token 宜由 Tokenomics Harness 提供}
+- {key: k_other, name: 每任務 token：其他代理, index: 2025, unit: K tok/任務, value: 50, lo: 20, hi: 150, tag: Assumed, basis: 研究、瀏覽、文件代理；介於對話與程式代理之間, range_why: ×0.4–×3, note: 同上}
+- {key: g_k, name: 每任務 token 年增率（訂閱與席位）, index: 2026 起, unit: 比例/年, value: 0.15, lo: 0.05, hi: 0.3, tag: Analogy, basis: OpenAI v0.6 INP_123（0.15；0.1–0.25）；Anthropic 下限放寬, range_why: OpenAI 區間放寬, note: ""}
+- {key: tier_haiku_chat, name: 層級組合：Haiku（低層）占 token, index: 對話, unit: 比例, value: 0.3, lo: 0.15, hi: 0.5, tag: Assumed, basis: 對話以 Sonnet 為預設、Haiku 為輕量；A1 未取得 OpenRouter 模型別份額（資料缺口）, range_why: ±0.15–0.2, note: Opus＝1 − Haiku − Sonnet}
+- {key: tier_sonnet_chat, name: 層級組合：Sonnet（中層）占 token, index: 對話, unit: 比例, value: 0.65, lo: 0.45, hi: 0.8, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: tier_haiku_code, name: 層級組合：Haiku（低層）占 token, index: 程式代理, unit: 比例, value: 0.05, lo: 0, hi: 0.15, tag: Assumed, basis: 程式代理以 Sonnet／Opus 為主（Opus 4.5 降價後 Opus 占比上升，SRC_ANT_157）, range_why: 同上, note: ""}
+- {key: tier_sonnet_code, name: 層級組合：Sonnet（中層）占 token, index: 程式代理, unit: 比例, value: 0.6, lo: 0.4, hi: 0.8, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+- {key: tier_haiku_other, name: 層級組合：Haiku（低層）占 token, index: 其他代理, unit: 比例, value: 0.25, lo: 0.1, hi: 0.4, tag: Assumed, basis: 代理子任務常用輕量模型, range_why: 同上, note: ""}
+- {key: tier_sonnet_other, name: 層級組合：Sonnet（中層）占 token, index: 其他代理, unit: 比例, value: 0.6, lo: 0.4, hi: 0.75, tag: Assumed, basis: 同上, range_why: 同上, note: ""}
+# ── 5. API：層級組合、有效價組成、需求驅動與彈性
+- {key: api_mix_haiku_2025, name: API token 層級組合：Haiku（低層）, index: 2025, unit: 比例, value: 0.2, lo: 0.1, hi: 0.35, tag: Assumed, basis: 層級別用量未揭露（資料缺口；OpenRouter 只給公司份額 SRC_ANT_181）, range_why: ±0.1–0.15, note: Opus＝1 − Haiku − Sonnet}
+- {key: api_mix_sonnet_2025, name: API token 層級組合：Sonnet（中層）, index: 2025, unit: 比例, value: 0.65, lo: 0.5, hi: 0.8, tag: Assumed, basis: 2025 程式代理（Cursor、GitHub Copilot 合計約 $1.2B 年化，SRC_ANT_040）以 Sonnet 為主, range_why: ±0.15, note: ""}
+- {key: api_mix_haiku_2026, name: API token 層級組合：Haiku（低層）, index: 2026 起, unit: 比例, value: 0.15, lo: 0.05, hi: 0.3, tag: Assumed, basis: 同上, range_why: 同上, note: 2027 起沿用}
+- {key: api_mix_sonnet_2026, name: API token 層級組合：Sonnet（中層）, index: 2026 起, unit: 比例, value: 0.5, lo: 0.35, hi: 0.65, tag: Assumed, basis: Opus 4.5 起 Opus 降價 2/3（SRC_ANT_157），頂層占比上升, range_why: ±0.15, note: ""}
+- {key: api_out_share, name: API 輸出 token 占比（含思考）, index: —, unit: 比例, value: 0.2, lo: 0.1, hi: 0.35, tag: Analogy, basis: OpenAI v0.6 INP_028（0.2；0.1–0.35）, range_why: 同 OpenAI, note: 有效單價＝（1−輸出占比）× 輸入價 × 快取倍數 ＋ 輸出占比 × 輸出價}
+- {key: api_cache_hit, name: API 快取命中（讀取）占輸入 token, index: —, unit: 比例, value: 0.6, lo: 0.3, hi: 0.85, tag: Analogy, basis: OpenAI v0.6 INP_029（0.55；0.3–0.75）；差異：Anthropic 程式代理比重高、長上下文重複讀取多，上限放寬至 0.85, range_why: OpenAI 區間上限放寬, note: 讀取價＝輸入價 × SRC_ANT_137（0.1）}
+- {key: api_cache_write, name: API 快取寫入占輸入 token, index: —, unit: 比例, value: 0.05, lo: 0, hi: 0.15, tag: Assumed, basis: 快取寫入價＝輸入價 × 1.25（SRC_ANT_135，5 分鐘 TTL）, range_why: 0–0.15, note: ""}
+- {key: api_batch_share, name: API Batch 占 token, index: —, unit: 比例, value: 0.05, lo: 0, hi: 0.2, tag: Assumed, basis: Batch 折扣 50%（SRC_ANT_138）；即時程式代理為主，批次占比低, range_why: 0–0.2, note: ""}
+- {key: api_neg_disc, name: API 企業議價與承諾用量折扣, index: —, unit: 比例, value: 0.1, lo: 0, hi: 0.25, tag: Assumed, basis: OpenAI v0.6 INP_030 加權折扣 0.2（含 Batch）；本模型 Batch 另列，議價部分取 0.1, range_why: 0–0.25, note: ""}
+- {key: api_k_base, name: API 基準每任務 token（層級正規化）, index: 2025, unit: K tok/任務, value: 50, lo: 10, hi: 200, tag: Assumed, basis: 同 OpenAI v0.6 INP_031：只影響任務數與每任務 token 的水準拆分，不影響營收與 token 總量, range_why: 正規化值, note: ""}
+- {key: api_gk_2026, name: API 每任務 token 成長率（不含價格）, index: 2026, unit: 比例/年, value: 0.2, lo: 0.1, hi: 0.3, tag: Analogy, basis: OpenAI v0.6 INP_041（0.2）；區間 ×0.5–×1.5（同 OpenAI 情境倍數 INP_046、047）, range_why: 同 OpenAI, note: 2026 只影響任務數與每任務 token 的拆分（總量由半校準決定）}
+- {key: api_gk_2027, name: API 每任務 token 成長率（不含價格）, index: 2027, unit: 比例/年, value: 0.15, lo: 0.075, hi: 0.225, tag: Analogy, basis: OpenAI v0.6 INP_042, range_why: ×0.5–×1.5, note: ""}
+- {key: api_gk_2028, name: API 每任務 token 成長率（不含價格）, index: 2028, unit: 比例/年, value: 0.12, lo: 0.06, hi: 0.18, tag: Analogy, basis: OpenAI v0.6 INP_043, range_why: ×0.5–×1.5, note: ""}
+- {key: api_gk_2029, name: API 每任務 token 成長率（不含價格）, index: 2029, unit: 比例/年, value: 0.1, lo: 0.05, hi: 0.15, tag: Analogy, basis: OpenAI v0.6 INP_044, range_why: ×0.5–×1.5, note: ""}
+- {key: api_gk_2030, name: API 每任務 token 成長率（不含價格）, index: 2030, unit: 比例/年, value: 0.08, lo: 0.04, hi: 0.12, tag: Analogy, basis: OpenAI v0.6 INP_045, range_why: ×0.5–×1.5, note: ""}
+- {key: api_gn_2027, name: API 任務數成長率（不含價格）, index: 2027, unit: 比例/年, value: 0.45, lo: 0.225, hi: 0.9, tag: Analogy, basis: OpenAI v0.6 INP_034（0.45）；兩家同值以便並排（D1）。差異：Anthropic 2026 實際成長遠高於 OpenAI，上限放寬至 ×2；不以公司目標反推, range_why: ×0.5–×2, note: 2027 起正向推導（D15 r1）}
+- {key: api_gn_2028, name: API 任務數成長率（不含價格）, index: 2028, unit: 比例/年, value: 0.35, lo: 0.175, hi: 0.7, tag: Analogy, basis: OpenAI v0.6 INP_035, range_why: ×0.5–×2, note: ""}
+- {key: api_gn_2029, name: API 任務數成長率（不含價格）, index: 2029, unit: 比例/年, value: 0.25, lo: 0.125, hi: 0.5, tag: Analogy, basis: OpenAI v0.6 INP_036, range_why: ×0.5–×2, note: ""}
+- {key: api_gn_2030, name: API 任務數成長率（不含價格）, index: 2030, unit: 比例/年, value: 0.2, lo: 0.1, hi: 0.4, tag: Analogy, basis: OpenAI v0.6 INP_037, range_why: ×0.5–×2, note: ""}
+- {key: api_elast_n, name: 價格彈性：API 任務數, index: —, unit: 彈性, value: -0.7, lo: -1.05, hi: -0.35, tag: Analogy, basis: OpenAI v0.6 INP_048（−0.7；−1.05～−0.35）；無法由公開資料分離（價格與能力同時變動）, range_why: 同 OpenAI, note: 底數＝API 組合有效單價 ÷ 前一年}
+- {key: api_elast_k, name: 價格彈性：API 每任務 token, index: —, unit: 彈性, value: -0.3, lo: -0.45, hi: -0.15, tag: Analogy, basis: OpenAI v0.6 INP_049, range_why: 同 OpenAI, note: ""}
+- {key: price_chg, name: API 牌價年變動率（各層級；2027 起）, index: 2027 起, unit: 比例/年, value: -0.15, lo: -0.35, hi: 0, tag: Assumed, basis: 工作單 A2 判斷類預設：每代新模型同價或降價（−15%，−35%～0%）；已發生的價格事件在 SRC（Opus 4.5 −67%、Opus 5.5 −20%、Haiku 5.5 −90%、Sonnet 5 −33%）, range_why: 工作單預設區間, note: 2027＝2026 年底牌價 ×（1＋本列）；之後逐年}
+# ── 6. 通路（D5 r1）與其他營收
+- {key: channel_delta, name: 雲端通路占 API 營收比例：相對 2025 的變動, index: 2026 起, unit: 比例（百分點）, value: 0, lo: -0.15, hi: 0.15, tag: Assumed, basis: 2025 通路占比由 SRC 推得（總營收 47% 經雲端，SRC_ANT_027；全歸 API）；2023 11% → 2024 32% → 2025 47%（SRC_ANT_027–029）上升中，Microsoft Foundry 2026 加入；基準持平, range_why: ±15 個百分點, note: 通路占比＝2025 值 ＋ 本列}
+- {key: partner_fee_rate, name: 雲端平台抽成率（每 $1 通路營收）, index: 2026 起, unit: 比例, value: 0.16, lo: 0.16, hi: 0.3, tag: Analogy, basis: 規格 D5 r1：基準取說明書隱含約 16%（Reuters，SRC_ANT_031、032）；高值取 BofA 2026 估計 $6.4B（SRC_ANT_034）÷ 本模型 2026 通路營收約 $23B ≈ 0.28，取 0.30（BofA 口徑可能含算力租金，故只作上緣；Checks 另列即時隱含值）, range_why: 下緣＝說明書隱含值；上緣＝BofA 推得, note: 2025 用報導實際通路費 SRC_ANT_031}
+- {key: g_other, name: 其他營收年增率（政府、授權等）, index: 2026 起, unit: 比例/年, value: 0, lo: 0, hi: 0.5, tag: Assumed, basis: 2025 其他＝認列營收 − 訂閱 − 用量計價（約 $0.01B，含四捨五入）；無驅動, range_why: 0–0.5, note: 金額小，不影響結論}
