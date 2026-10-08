@@ -9,6 +9,12 @@ import re
 import calendar_q as _calq  # v4.5：期間與日期由 company.json → calendar 推算（與 HTML 共用）
 CO = _calq.load(_osrv.path.dirname(_osrv.path.abspath(__file__)))  # 公司資料單一來源（與 HTML 共用）
 CAL = CO['cal']
+UF = _calq.unit_factor(CO)  # WhiteFiber v0.1c：金額單位（company.json → meta.unit；m＝US$m、股數 m 股）；程式內以 US$bn 寫的常數一律 × UF
+UN = 'm' if UF > 1 else 'bn'; UB = f'US${UN}'  # 金額字尾與單位欄
+DU = lambda d: min(d, 1) if UF > 1 else d  # 金額小數位（與 HTML DUQ 相同）
+UKD = '' if UF > 1 else '/1000'  # US$m 輸入（每 MW 租金、每 MW 成本、維護）換成引擎單位
+UKM = '' if UF > 1 else '*1000'  # 引擎單位換成 US$m（對照列）
+_u = lambda x: f'{x * UF:g}'  # 以 US$bn 寫的公式常數（容差、下限）換成引擎單位
 PYEAR = [2000 + int(p[2:]) for p in CO['periods']]  # 5a：各期財年年份由日曆推算
 MW_Y0 = PYEAR[0] - 1  # 首期前一財年（期初主動電力）
 _n = lambda x: f'{x:g}'  # 5a：company.json 的數字寫入公式或說明（整數不帶小數）
@@ -299,27 +305,27 @@ for nm, k, note in _SCN:
     sc_rows[nm] = r
     r += 1
 for nm, k, _ in _SCN:
-    row_line(ws, r, f"每 MW 年收入｜{CO['scenarios']['labels'][k]}", "US$bn/MW", CO['scenarios']['revMW'][k], '0.0000', BLUE,
+    row_line(ws, r, f"每 MW 年收入｜{CO['scenarios']['labels'][k]}", UB + "/MW", CO['scenarios']['revMW'][k], '0.0000', BLUE,
              "Tokenomics 正向推導三情境（data/permw_tokenomics_20261008.json）；不用公司 ACV [Derived]")
     sc_rows['rev_' + nm] = r; r += 1
 row_line(ws, r, "在役 MW 收斂比例（期初校準值 → 已連網）" if _CONV else "在役／已連網比例", "%", CO['scenarios']['billableRatio']['ratio'], PCT, BLUE,
          _BRC.get('note') or "三情境共用；新連網產能自驗收到可計費需數季 [Assumed]")
 BR_ROW = r; r += 1
 if _CONV:  # v0.1b：期初可計費 MW＝最新季實際營收年化 ÷ 各情境每 MW 年收入（首期第一欄）
-    OPENREV = gi(r, f"期初可計費 MW 校準：{CAL['filedQLabel']} 實際營收年化", "US$bn", _BRC['openAnnualRevenue'], "最新季實際營收 × 4（company.json → scenarios.billableRatio.openAnnualRevenue）[Derived]"); r += 1
+    OPENREV = gi(r, f"期初可計費 MW 校準：{CAL['filedQLabel']} 實際營收年化", UB, _BRC['openAnnualRevenue'], "最新季實際營收 × 4（company.json → scenarios.billableRatio.openAnnualRevenue）[Derived]"); r += 1
     for nm, k, _ in _SCN:
         sc_rows['b0_' + nm] = r
         gi(r, f"期初可計費 MW｜{CO['scenarios']['labels'][k]}", "MW", f"=ROUND({OPENREV}/C{sc_rows['rev_' + nm]},{_RDP})", "＝實際營收年化 ÷ 該情境每 MW 年收入（對齊已實現實際數的校準）", NUM0, font=BLACK); r += 1
 _UL = CO['leases']['uncommenced']  # v0.1b（Oracle）：未起租租賃起租排程（合約性，三情境相同）
-UL_TOT = gi(r, "未起租租賃總額（未折現）", "US$bn", CO['leases']['facts']['notCommenced'], "季報附註已簽約未起租租賃（company.json → leases.facts.notCommenced）[Interested-party]"); r += 1
+UL_TOT = gi(r, "未起租租賃總額（未折現）", UB, CO['leases']['facts']['notCommenced'], "季報附註已簽約未起租租賃（company.json → leases.facts.notCommenced）[Interested-party]"); r += 1
 UL_S = gi(r, "未起租：評價日後第幾季開始起租（0＝首期第一季）", "季", _UL['startQ'], "company.json → leases.uncommenced.startQ", NUM0); r += 1
 UL_N = gi(r, "未起租：平均分攤起租的季數", "季", _UL['quarters'], "季報：FY27Q2 至 FY2029 起租 → 11 季 [Assumed]", NUM0); r += 1
 UL_T = gi(r, "未起租：每筆租期", "年", _UL['termYears'], "季報 15–19 年取中點；敏感度 15／19 年見報告 [Assumed]", NUM1); r += 1
 
 # ---------------- B 產能與收入 ----------------
 r = section(ws, r, "B｜產能與收入（MW、每 MW 年收入、利用率、信用；RPO 只作對照）")
-RPO0 = gi(r, "«VMD» RPO", "US$bn", D['rpoOpen'], f"季報 RPO {LQ_RPO}（只作對照與債務上限的 backlog）[Interested-party]", NUM); r += 1
-RPOADD = gi(r, "評價日後新增承諾", "US$bn", D['rpoPendingAdd'], "評價日後新簽、尚未進 RPO 的承諾；未揭露，取 0 [Assumed]"); r += 1
+RPO0 = gi(r, "«VMD» RPO", UB, D['rpoOpen'], f"季報 RPO {LQ_RPO}（只作對照與債務上限的 backlog）[Interested-party]", NUM); r += 1
+RPOADD = gi(r, "評價日後新增承諾", UB, D['rpoPendingAdd'], "評價日後新簽、尚未進 RPO 的承諾；未揭露，取 0 [Assumed]"); r += 1
 RP = gi(r, "五期認列比例（至 2030 末）", "%", D['rp'] / 100, f"季報 RPO 桶線性分攤後五期合計 {_n(D['rp'])}% [Derived]", PCT); r += 1
 WSUM = gi(r, "RPO 桶權重合計", "%", CO['rpo']['scheduledShare'], "下方權重列的合計，用於歸一化", PCT); r += 1
 MWY = {}  # 5a：各年底主動電力（company.json → defaults.mwYearEnd，以年份為鍵；說明在 texts.mwYearEndNotes）
@@ -342,15 +348,15 @@ for i in range(5):
     ws.cell(row=_acc, column=3 + i, value=f"=CHOOSE({SEL},{L}{sc_rows['保守']},{L}{sc_rows['基準']},{L}{sc_rows['積極']})")
     ws.cell(row=_bil, column=3 + i, value=(f"=ROUND({MW0}+({L}{_acc}-{MW0})*{L}{BR_ROW},{_RDP})" if _CONV else f"=ROUND({L}{_acc}*{L}{BR_ROW},{_RDP})"))
 r = prow(r, "利用率", "%", PCT_(M['util']), PCT, "100%：每 MW 年收入已含可計費利用率（路徑 B 80／85／90%），不重複扣除 [Derived]")
-r = prow(r, "每 MW 年收入", "US$bn/MW", [0] * 5, '0.0000', "＝依 A 區情境選擇器（Tokenomics 正向推導三情境）", BLACK)
+r = prow(r, "每 MW 年收入", UB + "/MW", [0] * 5, '0.0000', "＝依 A 區情境選擇器（Tokenomics 正向推導三情境）", BLACK)
 for i in range(5):
     L = COLS[i]
     ws.cell(row=IN["每 MW 年收入"], column=3 + i, value=f"=CHOOSE({SEL},{L}{sc_rows['rev_保守']},{L}{sc_rows['rev_基準']},{L}{sc_rows['rev_積極']})")
 r = prow(r, "新產能簽約率", "%", PCT_(M['fill']), PCT, "MW 驅動：100%（RPO 只作對照）")
 r = prow(r, "客戶違約率", "%", PCT_(M['defaultP']), PCT, "客戶集中度的定價（company.json → texts.concentration），非預測 [Assumed]")
 r = prow(r, "回收率", "%", PCT_(M['recovery']), PCT, "[Assumed]")
-r = prow(r, "非算力服務營收", "US$bn", D['services'], NUM, "預設 0：AI cloud 軟體已含在每 MW 年收入；其他事業另列 [Assumed]")
-r = prow(r, "其他事業 EBITDA", "US$bn", D['otherEbitda'], NUM, D['otherEbitdaNote'])
+r = prow(r, "非算力服務營收", UB, D['services'], NUM, "預設 0：AI cloud 軟體已含在每 MW 年收入；其他事業另列 [Assumed]")
+r = prow(r, "其他事業 EBITDA", UB, D['otherEbitda'], NUM, D['otherEbitdaNote'])
 # v0.1b（Oracle）：B2｜傳統事業（company.json → defaults.legacyBiz；與 HTML segA legacyQ 同一算法）
 LGB = D.get('legacyBiz') or {'lines': [], 'ebitdaMargin': [0] * 5}
 r = section(ws, r, "B2｜傳統事業（各線全年營收＝上一財年 ×(1＋年增率)，年增率自起點線性收斂到長期值；«P0» 模型期＝全年 − «YTD» 實際）", level=2)
@@ -358,16 +364,16 @@ _LGM = []  # 各線模型期營收列
 _LGC = []  # 各線首期核對（«YTD»＋模型期 − 全年）
 for _x in LGB['lines']:
     _nm = _x['label']
-    _fy = gi(r, f"傳統事業｜{_nm}｜上一財年實際", "US$bn", _x['fyBase'], "上一財年經查核營收（company.json → defaults.legacyBiz）[Verified]"); r += 1
-    _yt = gi(r, f"傳統事業｜{_nm}｜«YTD» 實際", "US$bn", _x['ytd'], "年初至今實際營收（10-Q）[Interested-party]"); r += 1
+    _fy = gi(r, f"傳統事業｜{_nm}｜上一財年實際", UB, _x['fyBase'], "上一財年經查核營收（company.json → defaults.legacyBiz）[Verified]"); r += 1
+    _yt = gi(r, f"傳統事業｜{_nm}｜«YTD» 實際", UB, _x['ytd'], "年初至今實際營收（10-Q）[Interested-party]"); r += 1
     _g0 = gi(r, f"傳統事業｜{_nm}｜起始年增率", "%", _x['g0'], "近四季對前四季年增率 [Derived]", PCT); r += 1
     _gl = gi(r, f"傳統事業｜{_nm}｜長期年增率", "%", _x['gLT'], "長期值 [Assumed]（區間見 company.json → defaults.legacyBiz.note）", PCT); r += 1
     _gr = r
     r = prow(r, f"傳統事業｜{_nm}｜年增率", "%", [f"={_g0}+({_gl}-{_g0})*{i}/4" for i in range(5)], PCT, "＝起始＋(長期 − 起始)×期數÷4", BLACK)
     _ar = r
-    r = prow(r, f"傳統事業｜{_nm}｜全年營收", "US$bn", [f"={_fy}*(1+C{_gr})"] + [f"={COLS[i-1]}{_ar}*(1+{COLS[i]}{_gr})" for i in range(1, 5)], NUM, "＝前一年 ×(1＋年增率)", BLACK)
+    r = prow(r, f"傳統事業｜{_nm}｜全年營收", UB, [f"={_fy}*(1+C{_gr})"] + [f"={COLS[i-1]}{_ar}*(1+{COLS[i]}{_gr})" for i in range(1, 5)], NUM, "＝前一年 ×(1＋年增率)", BLACK)
     _mr = r
-    r = prow(r, f"傳統事業｜{_nm}｜模型期營收", "US$bn", [f"=C{_ar}-{_yt}"] + [f"={COLS[i]}{_ar}" for i in range(1, 5)], NUM, "«P0»＝全年 − «YTD» 實際", BLACK)
+    r = prow(r, f"傳統事業｜{_nm}｜模型期營收", UB, [f"=C{_ar}-{_yt}"] + [f"={COLS[i]}{_ar}" for i in range(1, 5)], NUM, "«P0»＝全年 − «YTD» 實際", BLACK)
     _LGM.append(_mr); _LGC.append(f"{_yt}+C{_mr}-C{_ar}")
 # WhiteFiber v0.1b：第二分部的 MW 驅動站點（company.json → defaults.colo；與 HTML segA coloQ 同一公式）
 CLB = D.get('colo')
@@ -380,33 +386,33 @@ if CLB and CLB.get('sites'):
     _CREV, _CCX, _CSG = [], [], []
     for _x in CLB['sites']:
         _nm = _x['label']
-        r = prow(r, f"託管｜{_nm}｜IT MW／起租（年）／第一年租金（US$m/MW）／年調／建置 CapEx（US$bn）", "", [_x['mw'], _x['start'], _x['rent'], _x['esc'], _x['capex']], '0.0000', _x['note']); _ra = r - 1
+        r = prow(r, f"託管｜{_nm}｜IT MW／起租（年）／第一年租金（US$m/MW）／年調／建置 CapEx（{UB}）", "", [_x['mw'], _x['start'], _x['rent'], _x['esc'], _x['capex']], '0.0000', _x['note']); _ra = r - 1
         r = prow(r, f"託管｜{_nm}｜建置起（年）／建置訖（年）／隨延誤後移／已簽約", "", [_x['capexStart'], _x['capexEnd'], _x['delay'], _x['signed'], None], '0.0000', "時點為評價日起的年數；隨延誤後移＝1 時起租加上建設延誤月數 ÷ 12（建置不後移）"); _rb = r - 1
         r = prow(r, f"託管｜{_nm}｜情境（保守／基準／積極；1＝納入）", "", list(_x['scen']) + [None, None], NUM0, "依『輸入與假設』A 區情境選擇器"); _rc = r - 1
         _act = f"CHOOSE({SEL},$C${_rc},$D${_rc},$E${_rc})"
         _s0 = f"($D${_ra}+$E${_rb}*§DLYC§/12)"
         _a = lambda L: f"MAX({L}${_t0},{_s0})"
-        r = prow(r, f"託管｜{_nm}｜營收（模型期）", "US$bn",
-                 [f"={_act}*IF({L}${_t1}>{_a(L)},$C${_ra}*$E${_ra}/1000*(1+$F${_ra})^(({_a(L)}+{L}${_t1})/2-{_s0})*({L}${_t1}-{_a(L)}),0)" for L in COLS], NUM,
-                 "＝情境旗標 × MW × 第一年租金 ÷ 1000 ×(1＋年調)^(期中點 − 起租) × 期間內在租年數", BLACK); _CREV.append(r - 1)
+        r = prow(r, f"託管｜{_nm}｜營收（模型期）", UB,
+                 [f"={_act}*IF({L}${_t1}>{_a(L)},$C${_ra}*$E${_ra}{UKD}*(1+$F${_ra})^(({_a(L)}+{L}${_t1})/2-{_s0})*({L}${_t1}-{_a(L)}),0)" for L in COLS], NUM,
+                 f"＝情境旗標 × MW × 第一年租金{"" if UF > 1 else " ÷ 1000"} ×(1＋年調)^(期中點 − 起租) × 期間內在租年數", BLACK); _CREV.append(r - 1)
         if _x['signed']: _CSG.append(r - 1)
-        r = prow(r, f"託管｜{_nm}｜建置 CapEx（模型期）", "US$bn",
+        r = prow(r, f"託管｜{_nm}｜建置 CapEx（模型期）", UB,
                  [f"={_act}*IF($D${_rb}>$C${_rb},$G${_ra}*MAX(0,MIN({L}${_t1},$D${_rb})-MAX({L}${_t0},$C${_rb}))/($D${_rb}-$C${_rb}),IF(OR(AND($C${_rb}>={L}${_t0},$C${_rb}<{L}${_t1})" + (f",$C${_rb}<{L}${_t0}" if i == 0 else "") + f"),$G${_ra},0))"
                   for i, L in enumerate(COLS)], NUM, "＝建置總額 × 建置期間落在本期的比例（不隨延誤後移）", BLACK); _CCX.append(r - 1)
-    r = prow(r, "託管營收（站點合計）", "US$bn", [f"=" + "+".join(f"{L}{x}" for x in _CREV) for L in COLS], NUM, "各站點營收合計（併入第二分部營收）", BLACK); COLO_REV = r - 1
-    r = prow(r, "託管建置 CapEx（站點合計）", "US$bn", [f"=" + "+".join(f"{L}{x}" for x in _CCX) for L in COLS], NUM, "併入毛 CapEx（D 區）與託管 PP&E", BLACK); COLO_CAPEX = r - 1
-    _CPO = gi(r, "託管期初 PP&E（建物折舊基礎）", "US$bn", CLB['ppeOpen'], "10-Q 託管設備帳面淨額（含 NC-1 在建工程）556.3 [Interested-party]"); r += 1
+    r = prow(r, "託管營收（站點合計）", UB, [f"=" + "+".join(f"{L}{x}" for x in _CREV) for L in COLS], NUM, "各站點營收合計（併入第二分部營收）", BLACK); COLO_REV = r - 1
+    r = prow(r, "託管建置 CapEx（站點合計）", UB, [f"=" + "+".join(f"{L}{x}" for x in _CCX) for L in COLS], NUM, "併入毛 CapEx（D 區）與託管 PP&E", BLACK); COLO_CAPEX = r - 1
+    _CPO = gi(r, "託管期初 PP&E（建物折舊基礎）", UB, CLB['ppeOpen'], "10-Q 託管設備帳面淨額（含 NC-1 在建工程）556.3 [Interested-party]"); r += 1
     _CLF = gi(r, "託管建物折舊年限", "年", CLB['life'], "對照表預設 20 年（區間 15–30；10-K 30 年 vs 10-Q 20–25 年）[Assumed]", NUM0); r += 1
-    r = prow(r, "託管期初 PP&E（各期）", "US$bn", [f"={_CPO}"] + [f"={COLS[i-1]}{r}+{COLS[i-1]}{COLO_CAPEX}" for i in range(1, 5)], NUM, "＝前期期初＋前期託管建置", BLACK); _cpr = r - 1
+    r = prow(r, "託管期初 PP&E（各期）", UB, [f"={_CPO}"] + [f"={COLS[i-1]}{r}+{COLS[i-1]}{COLO_CAPEX}" for i in range(1, 5)], NUM, "＝前期期初＋前期託管建置", BLACK); _cpr = r - 1
     for i in range(1, 5): ws.cell(row=_cpr, column=3 + i, value=f"={COLS[i-1]}{_cpr}+{COLS[i-1]}{COLO_CAPEX}")
-    r = prow(r, "託管 D&A（建物）", "US$bn", [f"=({L}{_cpr}+0.5*{L}{COLO_CAPEX})/{_CLF}*{L}${IN['模型期長度（年）']}" for L in COLS], NUM, "＝(期初託管 PP&E＋本期建置 × ½) ÷ 年限 × 期間長度；併入 D&A（與 GPU 車隊折舊分列）", BLACK); COLO_DA = r - 1
-    r = prow(r, "託管｜對照：已簽約站點營收（模型）", "US$bn", [("=" + "+".join(f"{L}{x}" for x in _CSG)) if _CSG else "=0" for L in COLS], NUM, "已簽約站點（NC-1、MTL-3、MTL-1）模型營收；只作對照", BLACK); COLO_SIG = r - 1
-    r = prow(r, "託管｜對照：季報託管 RPO（年度分布）", "US$bn", CLB.get('rpoColo', [0] * 5), NUM, "10-Q 託管 RPO 932.9：2026 下半年 36.1、2027 93.5、2028 94.8、2029 95.3、2030 94.0、其後 519.2（不含轉嫁電費等變動對價）[Interested-party]")
-    r = prow(r, "託管｜對照：模型 − RPO", "US$bn", [f"={L}{COLO_SIG}-{L}{r-1}" for L in COLS], NUM, "差額來自 NRC、計費起點、年調計法與 MTL-1 短約；不回推租金", BLACK)
-r = prow(r, "傳統事業營收（模型期）", "US$bn", [("=" + "+".join([f"{COLS[i]}{m}" for m in _LGM] + ([f"{COLS[i]}{COLO_REV}"] if COLO_REV else []))) if (_LGM or COLO_REV) else "=0" for i in range(5)], NUM, "各線合計（含託管站點；下游引用此列）", BLACK)
+    r = prow(r, "託管 D&A（建物）", UB, [f"=({L}{_cpr}+0.5*{L}{COLO_CAPEX})/{_CLF}*{L}${IN['模型期長度（年）']}" for L in COLS], NUM, "＝(期初託管 PP&E＋本期建置 × ½) ÷ 年限 × 期間長度；併入 D&A（與 GPU 車隊折舊分列）", BLACK); COLO_DA = r - 1
+    r = prow(r, "託管｜對照：已簽約站點營收（模型）", UB, [("=" + "+".join(f"{L}{x}" for x in _CSG)) if _CSG else "=0" for L in COLS], NUM, "已簽約站點（NC-1、MTL-3、MTL-1）模型營收；只作對照", BLACK); COLO_SIG = r - 1
+    r = prow(r, "託管｜對照：季報託管 RPO（年度分布）", UB, CLB.get('rpoColo', [0] * 5), NUM, "10-Q 託管 RPO 932.9：2026 下半年 36.1、2027 93.5、2028 94.8、2029 95.3、2030 94.0、其後 519.2（不含轉嫁電費等變動對價）[Interested-party]")
+    r = prow(r, "託管｜對照：模型 − RPO", UB, [f"={L}{COLO_SIG}-{L}{r-1}" for L in COLS], NUM, "差額來自 NRC、計費起點、年調計法與 MTL-1 短約；不回推租金", BLACK)
+r = prow(r, "傳統事業營收（模型期）", UB, [("=" + "+".join([f"{COLS[i]}{m}" for m in _LGM] + ([f"{COLS[i]}{COLO_REV}"] if COLO_REV else []))) if (_LGM or COLO_REV) else "=0" for i in range(5)], NUM, "各線合計（含託管站點；下游引用此列）", BLACK)
 r = prow(r, "傳統事業 EBITDA 率", "%", (CLB['margin'] if COLO_REV else LGB['ebitdaMargin']), PCT, (CLB.get('marginNote', '') if COLO_REV else CO['texts'].get('legacyMarginNote', '')))
-r = prow(r, "傳統事業 EBITDA（模型期）", "US$bn", [f"={COLS[i]}{IN['傳統事業營收（模型期）']}*{COLS[i]}{IN['傳統事業 EBITDA 率']}" for i in range(5)], NUM, "＝營收 × EBITDA 率；同時進入損益 EBITDA 與營運來源（現金稅另列）", BLACK)
-LG_CHK = gi(r, "傳統事業｜«P0» 核對（«YTD»＋模型期 − 全年）", "US$bn", ("=" + "+".join(_LGC)) if _LGC else "=0", "應為 0：首期年初至今實際＋模型期＝首期全年（各線合計）", NUM, font=BLACK); r += 1
+r = prow(r, "傳統事業 EBITDA（模型期）", UB, [f"={COLS[i]}{IN['傳統事業營收（模型期）']}*{COLS[i]}{IN['傳統事業 EBITDA 率']}" for i in range(5)], NUM, "＝營收 × EBITDA 率；同時進入損益 EBITDA 與營運來源（現金稅另列）", BLACK)
+LG_CHK = gi(r, "傳統事業｜«P0» 核對（«YTD»＋模型期 − 全年）", UB, ("=" + "+".join(_LGC)) if _LGC else "=0", "應為 0：首期年初至今實際＋模型期＝首期全年（各線合計）", NUM, font=BLACK); r += 1
 r += 1
 
 # ---------------- C 利潤率 ----------------
@@ -424,7 +430,7 @@ if EBR:
 r = prow(r, "EBITDA 率", "%", [0] * 5, PCT, ("＝EBITDAR 率 − 租金合計 ÷ OCI 營收（公式；租金為固定成本，低營收情境 EBITDA 率較低）" if EBR else "＝起始＋(穩態−起始)×期數÷4（公式）"), BLACK)
 for i in range(5):
     ws.cell(row=IN["EBITDA 率"], column=3 + i, value=f"={EB0}+({EBSS}-{EB0})*{i}/4")  # EBR 時於各期收支建立後改寫
-r = prow(r, "非算力服務現金", "US$bn", [0] * 5, NUM, "＝服務營收 × EBITDAR 率（公式）", BLACK)
+r = prow(r, "非算力服務現金", UB, [0] * 5, NUM, "＝服務營收 × EBITDAR 率（公式）", BLACK)
 r = section(ws, r, "電力／維護 overlay（預設關閉；EBITDA 已含電費）", level=2, collapsed=True)
 OVERLAY = gi(r, "電力／維護 overlay（1=開）", "", int(D['overlay']), "EBITDA 率已含電費，開啟會重複扣除，僅供壓力測試", NUM0); r += 1
 r = prow(r, "電價", "$/MWh", M['power'], NUM0, "overlay 用 [Assumed]")
@@ -438,11 +444,11 @@ LAMBDA = gi(r, "提前支出比例 λ", "%", D['lambda'], "次年才上線的 MW
 MW31 = gi(r, "FY31 新增 MW（FY30 預建用）", "MW",
           f"=CHOOSE({SEL},I{sc_rows['保守']},I{sc_rows['基準']},I{sc_rows['積極']})",
           "隨情境：保守 0／基準 500／積極 1,000 [Assumed]", NUM0); r += 1
-FLOOR = gi(r, "«P0» CapEx 下限（已承諾）", "US$bn", D['capexFloorFY0'], f"全年指引下緣（{TXQ['capexGuideSource']}）：當年支出多已下單"); r += 1
+FLOOR = gi(r, "«P0» CapEx 下限（已承諾）", UB, D['capexFloorFY0'], f"全年指引下緣（{TXQ['capexGuideSource']}）：當年支出多已下單"); r += 1
 LIFE = gi(r, "GPU 經濟壽命（年）", "年", D['gpuLife'], "公司伺服器與網通設備耐用年限 6 年（10-K）；Tokenomics 6 年 [Interested-party]", NUM0); r += 1
 for _y in sorted(int(y) for y in D['mwYearEnd'] if int(y) != MW_Y0):
     MWY[_y] = gi(r, f"{_y} 年底主動電力", "MW", D['mwYearEnd'][str(_y)], CO['texts']['mwYearEndNotes'][str(_y)], NUM0); r += 1
-PPE0 = gi(r, "«VMD» 期初 PP&E 基礎", "US$bn", D['ppeOpen'], TXQ['ppeOpenNote']); r += 1
+PPE0 = gi(r, "«VMD» 期初 PP&E 基礎", UB, D['ppeOpen'], TXQ['ppeOpenNote']); r += 1
 CAPSC = gi(r, "每 MW 建置成本倍數（整體）", "%", D['capexScale'], "同時影響 CapEx、汰換與車隊折舊；反向 DCF 用；預設 100%", PCT); r += 1
 _GL = D.get('gpuLease') or {'share': 0, 'rentFactor': 0}  # WhiteFiber v0.1b：新增 GPU 的租賃比例與年租金係數（與 HTML segA 同一算法）
 GLS = gi(r, "GPU 租賃比例（新增 GPU）", "%", _GL['share'], "新增 GPU（成長型與汰換）以租賃取得的比例；租賃部分不計資本支出、改計固定租金（company.json → defaults.gpuLease）[Assumed]", PCT); r += 1
@@ -453,11 +459,11 @@ PPD = D['prepay']  # v0.1b：預付款區塊輸入
 PP_SH = gi(r, "有預付的合約比例", "%", PPD['shareOfDeals'], "覆蓋比已是整體口徑時為 100%（company.json → defaults.prepay）", PCT); r += 1
 PP_CV = gi(r, "預付占相關資本支出比", "%", PPD['capexCover'], CO['texts']['prepayCoverNote'], PCT); r += 1
 PP_N = gi(r, "預付認列年數", "年", PPD['recogYears'], "依(期初合約負債＋本期累積利息)直線認列為營收（非現金）[Assumed]；完整說明見 company.json → defaults.prepay.note", NUM1); r += 1
-PP_CL0 = gi(r, "«VMD» 合約負債（客戶預付餘額）", "US$bn", PPD['openBalance'], CO['texts']['prepayOpenNote']); r += 1
+PP_CL0 = gi(r, "«VMD» 合約負債（客戶預付餘額）", UB, PPD['openBalance'], CO['texts']['prepayOpenNote']); r += 1
 PP_FR = gi(r, "預付隱含利率（重大財務組成）", "%", PPD.get('financingRate', 0), f"合約負債以此利率累積非現金利息，認列時轉營收（自營運現金扣除）、利息進損益不進現金；敏感度 {PPD.get('financingSens', 0):.1%}（company.json → defaults.prepay.note）", PCT); r += 1
 r = phdr(r)
 r = prow(r, "客戶預付占毛 CapEx", "%", [f"={PP_SH}*{PP_CV}"] * 5, PCT, "＝有預付的合約比例 × 預付占相關資本支出比；乘成長型 CapEx 得預付流入", BLACK)
-r = prow(r, "在帳現金租金（季報到期表）", "US$bn", CO['leases']['onBalanceCash'], NUM, f"營業＋融資租賃未折現付款；«LASTYR» 後尚有 {CO['leases']['afterFY30']} [Verified]")
+r = prow(r, "在帳現金租金（季報到期表）", UB, CO['leases']['onBalanceCash'], NUM, f"營業＋融資租賃未折現付款；«LASTYR» 後尚有 {CO['leases']['afterFY30']} [Verified]")
 _LENR = IN['模型期長度（年）']
 r = prow(r, "未起租：期末累計季數（評價日起）", "季", [f"=ROUND(4*SUM($C${_LENR}:{COLS[i]}${_LENR}),0)" for i in range(5)], NUM0,
          "＝4 × 累計期間長度；用於起租排程", BLACK)
@@ -465,12 +471,12 @@ _ULQ = IN["未起租：期末累計季數（評價日起）"]
 def _ulF(x):  # 累計已起租「筆季數」：x'＝MAX(0,x−起算季)；MIN(x',N)(MIN(x',N)+1)/2＋N×MAX(0,x'−N)
     xx = f"MAX(0,{x}-{UL_S})"
     return f"(MIN({xx},{UL_N})*(MIN({xx},{UL_N})+1)/2+{UL_N}*MAX(0,{xx}-{UL_N}))"
-r = prow(r, "表外現金租金（未起租）", "US$bn",
+r = prow(r, "表外現金租金（未起租）", UB,
          [f"={UL_TOT}/{UL_N}/{UL_T}/4*({_ulF(f'{COLS[i]}{_ULQ}')}-{_ulF(f'{COLS[i-1]}{_ULQ}' if i else '0')})" for i in range(5)], NUM,
          "＝每筆季租（總額 ÷ 季數 ÷ 租期 ÷ 4）×(期末 − 期初累計已起租筆季數)；三情境相同 [Derived]", BLACK)
-r = prow(r, "JV 已承諾餘額出資", "US$bn", D['jvCommit'], NUM, "季報未揭露 JV 出資承諾（不適用）")
-r = prow(r, "JV 後續增資＋策略投資", "US$bn", CO['scenarios']['capexTemplate']['div'], NUM, "收購與策略投資，未揭露計畫 [Assumed]")
-r = prow(r, "JV／策略投資出資", "US$bn",
+r = prow(r, "JV 已承諾餘額出資", UB, D['jvCommit'], NUM, "季報未揭露 JV 出資承諾（不適用）")
+r = prow(r, "JV 後續增資＋策略投資", UB, CO['scenarios']['capexTemplate']['div'], NUM, "收購與策略投資，未揭露計畫 [Assumed]")
+r = prow(r, "JV／策略投資出資", UB,
          [f"=C{IN['JV 已承諾餘額出資']}+C{IN['JV 後續增資＋策略投資']}".replace("C", COLS[0], 0)] * 5, NUM, "＝已承諾餘額＋後續增資", BLACK)
 for i in range(5):
     L = COLS[i]
@@ -480,13 +486,13 @@ accr = _acc
 r = prow(r, "期初主動電力", "MW", [f"={MW_YE25}"] + [f"={COLS[i-1]}{accr}" for i in range(1, 5)], NUM0, f"{PERIODS[0]} 期初＝{MW_Y0} 年底 {D['mwYearEnd'][str(MW_Y0)]} MW", BLACK)
 r = prow(r, "本期新增 MW", "MW", [f"={COLS[i]}{accr}-{COLS[i]}{r-1}" for i in range(5)], NUM0, None, BLACK)
 r = prow(r, "次期新增 MW", "MW", [f"={COLS[i+1]}{accr}-{COLS[i]}{accr}" for i in range(4)] + [f"={MW31}"], NUM0, None, BLACK)
-r = prow(r, "全年毛 CapEx（公式）", "US$bn",
-         [f"=({COLS[i]}{r-2}*(1-{LAMBDA})+{COLS[i]}{r-1}*{LAMBDA})*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000" for i in range(5)],
+r = prow(r, "全年毛 CapEx（公式）", UB,
+         [f"=({COLS[i]}{r-2}*(1-{LAMBDA})+{COLS[i]}{r-1}*{LAMBDA})*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}{UKD}" for i in range(5)],
          NUM, "＝(本期新增×(1−λ)＋次期新增×λ)×每 MW 成本", BLACK)
-r = prow(r, "GPU 成長型投資（自購＋租賃）", "US$bn",
+r = prow(r, "GPU 成長型投資（自購＋租賃）", UB,
          [f"=MAX({COLS[0]}{r-1},{FLOOR})-§H_CAPEXC§"] + [f"={COLS[i]}{r-1}" for i in range(1, 5)], NUM,
          "WhiteFiber v0.1b：新增 GPU 的總投資；自購部分＝下一列，租賃部分改計租金（GPU 租賃列）", BLACK)
-r = prow(r, "成長型 CapEx（模型期）", "US$bn",
+r = prow(r, "成長型 CapEx（模型期）", UB,
          [f"={COLS[i]}{r-1}*(1-{GLS})" for i in range(5)], NUM,
          f"«P0»＝MAX(全年公式, 下限) − «YTD» 已認列（第一分部 GPU 部分 {YA.get('capexCore', YA['capex'])}；WhiteFiber：«YTD» 資本支出幾乎全為託管，見 G 區）", BLACK)
 def _vintage(i):
@@ -495,36 +501,36 @@ def _vintage(i):
         x = f"IF({PYEAR[i]}-{LIFE}={y},{MWY[y]}{'-' + MWY[y - 1] if y - 1 in MWY else ''},{x})"
     return x
 if D.get('refreshSteady'):  # v0.1c（Oracle）：觸頂後及終值年改為穩態汰換
-    r = prow(r, "批次汰換 CapEx", "US$bn",
+    r = prow(r, "批次汰換 CapEx", UB,
              [f"={_vintage(i)}"
-              f"*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000" for i in range(5)], NUM,
+              f"*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}{UKD}" for i in range(5)], NUM,
              "＝(本年 − 壽命) 那年新增的 MW × 每 MW 成本；取代已折舊完的設備（批次落在模型期之後則為 0）", BLACK)
-    r = prow(r, "穩態汰換 CapEx", "US$bn",
-             [f"=({COLS[i]}{IN['期初主動電力']}+{COLS[i]}{accr})/2*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000/{LIFE}*{COLS[i]}{IN['模型期長度（年）']}" for i in range(5)], NUM,
+    r = prow(r, "穩態汰換 CapEx", UB,
+             [f"=({COLS[i]}{IN['期初主動電力']}+{COLS[i]}{accr})/2*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}{UKD}/{LIFE}*{COLS[i]}{IN['模型期長度（年）']}" for i in range(5)], NUM,
              "＝期間平均已連網 MW × 每 MW GPU 資本支出（只含 IT；建築與電力屬租賃不計）÷ GPU 經濟壽命 × 期間長度", BLACK)
     r = prow(r, "穩態汰換旗標（1＝已連網 MW 不再增加或終值年）", "",
              [f"=IF({COLS[i]}{IN['本期新增 MW']}<=0,1,0)" for i in range(4)] + ["=1"], NUM0,
              "觸頂後（本期新增 MW ≤ 0）及終值年（«PL»）採穩態汰換，其餘採批次汰換", BLACK)
-    r = prow(r, "GPU 汰換 CapEx", "US$bn",
+    r = prow(r, "GPU 汰換 CapEx", UB,
              [f"=IF({COLS[i]}{r-1}=1,{COLS[i]}{r-2},{COLS[i]}{r-3})*(1-{GLS})" for i in range(5)], NUM,
              "＝旗標為 1 時取穩態汰換，否則取批次汰換；只計自購部分（×(1 − GPU 租賃比例)；租賃部分由續租承擔）；汰換不增加折舊基礎", BLACK)
 else:
-    r = prow(r, "GPU 汰換 CapEx", "US$bn",
+    r = prow(r, "GPU 汰換 CapEx", UB,
              [f"={_vintage(i)}"
-              f"*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000*(1-{GLS})" for i in range(5)], NUM,
+              f"*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}{UKD}*(1-{GLS})" for i in range(5)], NUM,
              "＝(本年 − 壽命) 那年新增的 MW × 每 MW 成本 ×(1 − GPU 租賃比例)；取代已折舊完的設備", BLACK)
-r = prow(r, "GPU 租賃｜本期新增租賃設備", "US$bn", [f"={COLS[i]}{IN['GPU 成長型投資（自購＋租賃）']}*{GLS}" for i in range(5)], NUM, "＝GPU 成長型投資 × 租賃比例（WhiteFiber v0.1b）", BLACK)
-r = prow(r, "GPU 租賃｜期初累計租賃設備", "US$bn", ["=0"] + [f"={COLS[i-1]}{r}+{COLS[i-1]}{r-1}" for i in range(1, 5)], NUM, "＝前期期初＋前期新增（租約到期以同租金續租）", BLACK)
+r = prow(r, "GPU 租賃｜本期新增租賃設備", UB, [f"={COLS[i]}{IN['GPU 成長型投資（自購＋租賃）']}*{GLS}" for i in range(5)], NUM, "＝GPU 成長型投資 × 租賃比例（WhiteFiber v0.1b）", BLACK)
+r = prow(r, "GPU 租賃｜期初累計租賃設備", UB, ["=0"] + [f"={COLS[i-1]}{r}+{COLS[i-1]}{r-1}" for i in range(1, 5)], NUM, "＝前期期初＋前期新增（租約到期以同租金續租）", BLACK)
 for i in range(1, 5): ws.cell(row=r - 1, column=3 + i, value=f"={COLS[i-1]}{r-1}+{COLS[i-1]}{r-2}")
-r = prow(r, "GPU 租金（租賃設備）", "US$bn", [f"=({COLS[i]}{r-1}+0.5*{COLS[i]}{r-2})*{GLF}*{COLS[i]}{IN['模型期長度（年）']}" for i in range(5)], NUM,
+r = prow(r, "GPU 租金（租賃設備）", UB, [f"=({COLS[i]}{r-1}+0.5*{COLS[i]}{r-2})*{GLF}*{COLS[i]}{IN['模型期長度（年）']}" for i in range(5)], NUM,
          "＝(期初累計＋本期新增 × ½) × 年租金係數 × 期間長度；固定租金，進租金合計（扣 EBITDA）", BLACK)
-r = prow(r, "期初毛 PP&E", "US$bn", [f"={PPE0}"] + ["=0"] * 4, NUM, "之後＝前期期初＋前期成長型 CapEx（汰換不增加基礎）", BLACK)
+r = prow(r, "期初毛 PP&E", UB, [f"={PPE0}"] + ["=0"] * 4, NUM, "之後＝前期期初＋前期成長型 CapEx（汰換不增加基礎）", BLACK)
 for i in range(1, 5):
     ws.cell(row=IN["期初毛 PP&E"], column=3 + i, value=f"={COLS[i-1]}{IN['期初毛 PP&E']}+§INSVC{COLS[i-1]}§")  # v0.2：前期投入使用的成長型 CapEx（延誤 0＝前期成長型）
 r = section(ws, r, "CapEx 與折舊（結果；下游引用）", level=2)
-r = prow(r, "毛 CapEx（模型期，下游引用此列）", "US$bn",
+r = prow(r, "毛 CapEx（模型期，下游引用此列）", UB,
          [f"={COLS[i]}{IN['成長型 CapEx（模型期）']}+{COLS[i]}{IN['GPU 汰換 CapEx']}" + (f"+{COLS[i]}{COLO_CAPEX}" if COLO_CAPEX else "") for i in range(5)], NUM, "＝成長型＋汰換" + ("＋託管建置（B2）" if COLO_CAPEX else ""), BLACK, key="毛 CapEx")
-r = prow(r, "D&A（車隊折舊）", "US$bn",
+r = prow(r, "D&A（車隊折舊）", UB,
          [f"=({COLS[i]}{IN['期初毛 PP&E']}+0.5*§INSVC{COLS[i]}§)/{LIFE}*{COLS[i]}{IN['模型期長度（年）']}" + (f"+{COLS[i]}{COLO_DA}" if COLO_DA else "") for i in range(5)],  # v0.2：本期投入使用的成長型 CapEx；WhiteFiber v0.1b：加託管建物 D&A
          NUM, "＝(期初毛 PP&E＋本期成長型×½)÷壽命×期間長度" + ("＋託管 D&A（建物，B2）" if COLO_DA else ""), BLACK, key="D&A（車隊）")
 for k in ("毛 CapEx", "D&A（車隊）"):
@@ -537,7 +543,7 @@ r = section(ws, r, "E｜融資（期初現金、既有債務、瀑布參數）")
 # WhiteFiber v0.1b：期後事件（company.json → valuation.postEvents）：評價日後、資料截止前的融資與股數變動；評價日現金、淨負債、股數與 CAPM 權重採期後調整（pro forma；審查留言第 1 條）
 _PEV = V.get('postEvents') or []
 r = section(ws, r, "期後事件（期後調整：評價日現金、淨負債、股數、CAPM 權重；逐筆）", level=2)
-for j, h in enumerate(["期後事件", "日期", "現金", "其他借款", "可轉債", "股數（bn）"]):
+for j, h in enumerate(["期後事件", "日期", "現金", "其他借款", "可轉債", f"股數（{UN}）"]):
     c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
 ws.cell(row=r, column=9, value="說明").font = HEAD; ws.cell(row=r, column=9).fill = FILL_HEAD
 r += 1
@@ -552,14 +558,14 @@ for _e in _PEV:
 _pe1 = r - 1
 _PES = (lambda col: f"SUM('輸入與假設'!${col}${_pe0}:${col}${_pe1})" if _PEV else "0")
 PE_CASH, PE_OD, PE_CV, PE_SH = (_PES(c) for c in "CDEF")
-CASH0 = gi(r, "期初現金（«VD»）", "US$bn", D['cash'], f"季報現金 {CO['latestQuarter']['cash']}；受限現金 {CO['latestQuarter']['restricted']} 與有價證券 {CO['latestQuarter']['marketable']} 不計；期後事件現金列於『各期收支』Ⓔ（«P0»）[Interested-party]"); r += 1
-ATM = gi(r, "股權／可轉債金額", "US$bn", D['atm'], "評價日後已完成的股權／可轉債淨額（company.json → defaults.atm）"); r += 1
-ATMON = gi(r, "計入股權／可轉債（1=是）", "", int(D['includeAtm']), f"關閉則首期少 {D['atm']}bn 來源", NUM0); r += 1
-FAC = gi(r, "未動用信用額度", "US$bn", D['facility'], f"{TXQ['facilityName']} [Interested-party]"); r += 1
+CASH0 = gi(r, "期初現金（«VD»）", UB, D['cash'], f"季報現金 {CO['latestQuarter']['cash']}；受限現金 {CO['latestQuarter']['restricted']} 與有價證券 {CO['latestQuarter']['marketable']} 不計；期後事件現金列於『各期收支』Ⓔ（«P0»）[Interested-party]"); r += 1
+ATM = gi(r, "股權／可轉債金額", UB, D['atm'], "評價日後已完成的股權／可轉債淨額（company.json → defaults.atm）"); r += 1
+ATMON = gi(r, "計入股權／可轉債（1=是）", "", int(D['includeAtm']), f"關閉則首期少 {D['atm']}{UN} 來源", NUM0); r += 1
+FAC = gi(r, "未動用信用額度", UB, D['facility'], f"{TXQ['facilityName']} [Interested-party]"); r += 1
 FACON = gi(r, "瀑布可動用未動用額度（1=是）", "", int(D['useFacility']), "瀑布第一順位；已承諾額度，不受 債務／backlog 上限限制", NUM0); r += 1
 _PFC = CO['scenarios'].get('projectFinance') or {'low': 0, 'base': 0, 'high': 0, 'period': 1}  # WhiteFiber v0.1b：情境專案融資（自該期起成為已承諾額度）
-_PFR = {k: gi(r + j, f"專案融資額度｜{CO['scenarios']['labels'][k]}", "US$bn", _PFC[k], "company.json → scenarios.projectFinance（依據見 note）[Assumed]") for j, k in enumerate(("low", "base", "high"))}; r += 3
-PFSEL = gi(r, "專案融資額度（目前情境）", "US$bn", f"=CHOOSE({SEL},{_PFR['low']},{_PFR['base']},{_PFR['high']})", "＝依 A 區情境選擇器；加入未動用額度（瀑布第一順位，不受債務上限限制）", font=BLACK); r += 1
+_PFR = {k: gi(r + j, f"專案融資額度｜{CO['scenarios']['labels'][k]}", UB, _PFC[k], "company.json → scenarios.projectFinance（依據見 note）[Assumed]") for j, k in enumerate(("low", "base", "high"))}; r += 3
+PFSEL = gi(r, "專案融資額度（目前情境）", UB, f"=CHOOSE({SEL},{_PFR['low']},{_PFR['base']},{_PFR['high']})", "＝依 A 區情境選擇器；加入未動用額度（瀑布第一順位，不受債務上限限制）", font=BLACK); r += 1
 PFP = gi(r, "專案融資可動用期別（0＝«P0»）", "", _PFC['period'], "自該期期初起可動用", NUM0); r += 1
 DEBTON = gi(r, "債務排程攤還（1=開）", "", int(D['includeDebt']), "季報到期表；關閉＝假設全額再融資", NUM0); r += 1
 KBL = gi(r, "債務／backlog 上限", "x", D['debtBacklog'], "資產擔保融資容量（debtCapBasis＝backlog 時使用）：總債務 ≤ 此倍數 × backlog [Assumed]", '0.00', True); r += 1
@@ -568,18 +574,18 @@ LEV = gi(r, "投資級上限（總債務 ÷ 當期 EBITDA）", "x", D.get('debtE
 TERM = gi(r, "新簽合約年期", "年", D['ctrTerm'], "backlog 上限模式用：新簽約以此年期補入 backlog [Assumed]", NUM0); r += 1
 DVB = D.get('dividend') or {'perShareQ': 0, 'sharesBase': 0, 'preferred': [0] * 5}
 DPS = gi(r, "普通股股利（每股每季）", "US$", DVB['perShareQ'], DVB.get('note', '') + '（company.json → defaults.dividend）', USD); r += 1
-DSB = gi(r, "股利基礎股數", "bn", DVB['sharesBase'], "最新流通股；另加前期累計瀑布新股與已強制轉換的特別股", '0.0000'); r += 1
-MINC = gi(r, "最低現金", "US$bn", D['minCash'], "期前融資的現金底線 [Assumed]"); r += 1
+DSB = gi(r, "股利基礎股數", UN, DVB['sharesBase'], "最新流通股；另加前期累計瀑布新股與已強制轉換的特別股", '0.0000'); r += 1
+MINC = gi(r, "最低現金", UB, D['minCash'], "期前融資的現金底線 [Assumed]"); r += 1
 EQPX = gi(r, "股權發行價", "US$", D['eqPx'], f"預設＝現價（{CO['meta']['priceDate']} 收盤）[Verified]", USD); r += 1
 EQDISC = gi(r, "股權發行折價", "%", D['eqDisc'], "大額增資的折讓 [Assumed]", PCT); r += 1
 EQCAP = gi(r, "每年股權吸收上限（占現市值）", "%", D['eqCapPct'], "占現市值的比例（company.json → defaults.eqCapPct）；輸入 ≥900% 視為無上限 [Assumed]", PCT); r += 1
-EQSH = gi(r, "股權上限的股數基礎", "bn", D['eqCapShares'], "現市值＝發行參考價 × 此股數（company.json → defaults.eqCapShares）", '0.0000'); r += 1
+EQSH = gi(r, "股權上限的股數基礎", UN, D['eqCapShares'], "現市值＝發行參考價 × 此股數（company.json → defaults.eqCapShares）", '0.0000'); r += 1
 CVC = CO['defaults']['convIssue']  # v0.1b：瀑布可轉債步驟
 CVCAP = {}
 for _k, _nm in (("low", "保守"), ("base", "基準"), ("high", "積極")):
-    CVCAP[_k] = gi(r, f"可轉債年發行上限｜{CO['scenarios']['labels'][_k]}", "US$bn／年", CO['scenarios']['convCap'][_k],
+    CVCAP[_k] = gi(r, f"可轉債年發行上限｜{CO['scenarios']['labels'][_k]}", UB + "／年", CO['scenarios']['convCap'][_k],
                    "瀑布可轉債步驟每年上限（company.json → scenarios.convCap；0＝不新發）[Assumed]"); r += 1
-CVCAP_SEL = gi(r, "可轉債年發行上限（目前情境）", "US$bn／年", f"=CHOOSE({SEL},{CVCAP['low']},{CVCAP['base']},{CVCAP['high']})", "＝依 A 區情境選擇器"); r += 1
+CVCAP_SEL = gi(r, "可轉債年發行上限（目前情境）", UB + "／年", f"=CHOOSE({SEL},{CVCAP['low']},{CVCAP['base']},{CVCAP['high']})", "＝依 A 區情境選擇器"); r += 1
 CVCPN = gi(r, "瀑布新發可轉債票息", "%", CVC['coupon'], CVC.get('note', ''), PCT); r += 1
 CVPRM = gi(r, "瀑布新發可轉債轉換溢價", "%", CVC['premium'], "只用於潛在股數揭露（company.json → defaults.convIssue）", PCT); r += 1
 JRATE = gi(r, "高息債利率（股權上限溢出）", "%", D['junkRate'], "沿用模板 12% [Assumed]", PCT); r += 1
@@ -589,28 +595,28 @@ CDSON = gi(r, "CDS 傳入新債利率（1=開）", "", int(D['cdsLink']), f"開�
 CDSB = gi(r, "CDS 傳入門檻", "bps", D['cdsBaseBp'], "CDS 超過此值的部分才傳入新債利率 [Assumed]", NUM0); r += 1
 CDSP = gi(r, "CDS 傳入比例", "%", D['cdsPassThrough'], "每 1bp CDS 超額傳入新債利率的比例 [Assumed]", PCT); r += 1
 r = phdr(r)
-r = prow(r, "特別股股利", "US$bn", DVB['preferred'], NUM, "強制轉換前的特別股股利（company.json → defaults.dividend.preferred）[Derived]")
-r = prow(r, "排程還本（季報到期表）", "US$bn", CO['debt']['amortization'], NUM, f"可轉債到期累積本金與其他借款；其後 {CO['debt']['amortAfterFY30']} [Interested-party]")
+r = prow(r, "特別股股利", UB, DVB['preferred'], NUM, "強制轉換前的特別股股利（company.json → defaults.dividend.preferred）[Derived]")
+r = prow(r, "排程還本（季報到期表）", UB, CO['debt']['amortization'], NUM, f"可轉債到期累積本金與其他借款；其後 {CO['debt']['amortAfterFY30']} [Interested-party]")
 r = prow(r, "新債利率", "%", PCT_(M['rate']), PCT, TXQ['newDebtRateNote'])
-r = prow(r, "存量債務利息（下游引用此列）", "US$bn", ["=0"] * 5, NUM, "＝債務明細頁：平均本金×加權有效利率×期間長度＋可轉債利息＋FY26 校準", GREEN, key="存量債務利息")
+r = prow(r, "存量債務利息（下游引用此列）", UB, ["=0"] * 5, NUM, "＝債務明細頁：平均本金×加權有效利率×期間長度＋可轉債利息＋FY26 校準", GREEN, key="存量債務利息")
 DEBT_INT_ROW = IN["存量債務利息"]
 r += 1
 
 # ---------------- F 評價 ----------------
 r = section(ws, r, "F｜評價（價格、股數、折現、倍數、權重）")
 PX = gi(r, f"現價（{CO['meta']['priceDate']} 收盤）", "US$", V['price'], f"{CONS['priceReference']['source']}（{CONS['priceReference']['url']}）[Verified]", USD); r += 1
-SH = gi(r, "股數（含 ATM 上限）", "bn", f"={V['shares']!r}+{PE_SH}", f"季末流通 {CO['latestQuarter']['sharesOut']}＋{TXQ['sharesNote']}＋期後事件股數（E 區）[Derived]", '0.0000', font=BLACK); r += 1
-ND = gi(r, "淨負債（不含可轉債）", "US$bn", f"={V['netDebt']!r}+{PE_OD}-{PE_CASH}", f"評價日其他借款 − 現金 {_n(V['netDebt'])}＋期後事件（其他借款 − 現金，E 區）；可轉債依稀釋判斷另計（見『評價_DCF與目標價』可轉債區）[Derived]", font=BLACK); r += 1
+SH = gi(r, "股數（含 ATM 上限）", UN, f"={V['shares']!r}+{PE_SH}", f"季末流通 {CO['latestQuarter']['sharesOut']}＋{TXQ['sharesNote']}＋期後事件股數（E 區）[Derived]", '0.0000', font=BLACK); r += 1
+ND = gi(r, "淨負債（不含可轉債）", UB, f"={V['netDebt']!r}+{PE_OD}-{PE_CASH}", f"評價日其他借款 − 現金 {_n(V['netDebt'])}＋期後事件（其他借款 − 現金，E 區）；可轉債依稀釋判斷另計（見『評價_DCF與目標價』可轉債區）[Derived]", font=BLACK); r += 1
 _HV = []  # v0.1b：持股（估值 × 持股比例 ×（1 − 折價））與類債項目 → 淨負債調整項
 for _h in V['holdings']:
-    _a = gi(r, f"{_h[0]}｜估值（100%）", "US$bn", _h[1], _h[3]); r += 1
+    _a = gi(r, f"{_h[0]}｜估值（100%）", UB, _h[1], _h[3]); r += 1
     _b = gi(r, f"{_h[0]}｜持股比例", "%", _h[2], "", PCT); r += 1
     _HV.append(f"{_a}*{_b}")
 HDISC = gi(r, "持股折價（流動性、少數股權）", "%", V['holdingsDiscount'], "非上市少數股權折價 [Assumed]；敏感度見報告（20%／40%）", PCT); r += 1
 _DL = []
 for _x in V['debtLike']:
-    _DL.append(gi(r, f"類債：{_x[0]}", "US$bn", _x[1], _x[2])); r += 1
-ADJ = gi(r, "淨負債調整項（類債 − 持股 ×（1 − 折價））", "US$bn", f"={'+'.join(_DL) or '0'}-({'+'.join(_HV) or '0'})*(1-{HDISC})",
+    _DL.append(gi(r, f"類債：{_x[0]}", UB, _x[1], _x[2])); r += 1
+ADJ = gi(r, "淨負債調整項（類債 − 持股 ×（1 − 折價））", UB, f"={'+'.join(_DL) or '0'}-({'+'.join(_HV) or '0'})*(1-{HDISC})",
          "正值＝增加淨負債；評價淨負債與錨定年末淨負債同加"); r += 1
 TAX = gi(r, "稅率", "%", V['tax'], TXQ['taxNote'] + " [Interested-party]", PCT); r += 1
 _CP = V['capm']  # v0.1b（Oracle）：WACC 以 CAPM 計算（company.json → valuation.capm）；valuation.wacc 非 null 時為手動覆蓋
@@ -619,14 +625,14 @@ BETA = gi(r, "CAPM：β", "x", _CP['beta'], f"company.json → valuation.capm.be
 ERP = gi(r, "CAPM：股權風險溢酬", "%", _CP['erp'], "[Assumed]（區間 4.5%–6%）", PCT); r += 1
 KE = gi(r, "股權成本 ke＝rf＋β × ERP", "%", f"={RF}+{BETA}*{ERP}", "CAPM", PCT); r += 1
 KD = gi(r, "稅前債務成本 kd", "%", _CP['kdPretax'], "company.json → valuation.capm.kdPretax（來源見 capm.note）", PCT); r += 1
-CE = gi(r, "股權市值 E（現價 × 季末流通股數）", "US$bn", f"={PX}*({CO['latestQuarter']['sharesOut']!r}+{PE_SH})", f"季末流通 {CO['latestQuarter']['sharesOut']}bn 股＋期後事件股數（E 區）", NUM); r += 1
-CD = gi(r, "債務 D（評價日債務本金）", "US$bn", f"={CO['latestQuarter']['debtPrincipal']!r}+{PE_OD}+{PE_CV}", "季末債務本金＋期後事件（其他借款＋可轉債，E 區）；強制轉換特別股視為股權，不計入 [Interested-party／Derived]", NUM, font=BLACK); r += 1
+CE = gi(r, "股權市值 E（現價 × 季末流通股數）", UB, f"={PX}*({CO['latestQuarter']['sharesOut']!r}+{PE_SH})", f"季末流通 {CO['latestQuarter']['sharesOut']}{UN} 股＋期後事件股數（E 區）", NUM); r += 1
+CD = gi(r, "債務 D（評價日債務本金）", UB, f"={CO['latestQuarter']['debtPrincipal']!r}+{PE_OD}+{PE_CV}", "季末債務本金＋期後事件（其他借款＋可轉債，E 區）；強制轉換特別股視為股權，不計入 [Interested-party／Derived]", NUM, font=BLACK); r += 1
 WCAPM = gi(r, "WACC（CAPM）＝E/(D+E) × ke＋D/(D+E) × kd ×(1 − 稅率)", "%", f"={CE}/({CD}+{CE})*{KE}+{CD}/({CD}+{CE})*{KD}*(1-{TAX})", "[Derived]", PCT); r += 1
 WOV = gi(r, "WACC 手動覆蓋（空白＝採 CAPM）", "%", V['wacc'], "company.json → valuation.wacc（null＝空白）", PCT); r += 1
 WACC = gi(r, "WACC", "%", f"=IF(ISBLANK({WOV}),{WCAPM},{WOV})", "＝手動覆蓋，空白時採 CAPM", PCT); r += 1
 GG = gi(r, "永續成長 g", "%", V['g'], "[Assumed]", PCT); r += 1
 MAINT = gi(r, "終值維持性 CapEx 占 D&A", "%", V['maintRatio'], ("v0.1c：終值改以末期 UFCF（含穩態汰換 CapEx）為基準（valuation.tvBasis＝ufcf），此比例不使用" if V.get('tvBasis') == 'ufcf' else "終值不讓成長性 CapEx 偽裝成永續 FCF [Assumed]"), PCT); r += 1
-NOL0 = gi(r, "期初 NOL（虧損扣抵）", "US$bn", V['nol'], f"«VMD» 累積虧損約 {V['nol']:.1f}；抵扣上限為應稅所得 {_n(V['nolUsePct'] * 100)}% [Derived]"); r += 1
+NOL0 = gi(r, "期初 NOL（虧損扣抵）", UB, V['nol'], f"«VMD» 累積虧損約 {V['nol']:.1f}；抵扣上限為應稅所得 {_n(V['nolUsePct'] * 100)}% [Derived]"); r += 1
 NOLU = gi(r, "NOL 每年可抵用比例", "%", V['nolUsePct'], "抵扣上限占應稅所得的比例 [Assumed]", PCT); r += 1
 WCP = gi(r, "營運資金占營收增量", "%", V['wcPctOfRevGrowth'], "營運資金變動＝營收增量 × 此比例 [Assumed]", PCT); r += 1
 EVEBITDA = gi(r, "EV/EBITDA 倍數", "x", V['evEbitda'], "OCI（算力）部分：可觀察 neocloud 穩態合理倍數約 5–6x（轉換率 ÷ (WACC − g)），6x 為上緣 [Assumed]；傳統事業另用軟體同業倍數（分部加總）", MULT); r += 1
@@ -644,8 +650,8 @@ WDCF = gi(r, "權重：DCF", "%", CO['methodology']['blendWeights']['dcf'], "", 
 WEVE = gi(r, "權重：EV/EBITDA", "%", CO['methodology']['blendWeights']['pe'], "", PCT); r += 1
 RM_LO = gi(r, "方法區間倍數：下端", "x", min(CO['methodology']['rangeMultiples']), "v4.1 方法區間：目前輸入、EV/EBITDA 倍數換成兩端；6x 為穩態倍數上緣 [Assumed]", MULT); r += 1
 RM_HI = gi(r, "方法區間倍數：上端", "x", max(CO['methodology']['rangeMultiples']), "", MULT); r += 1
-SHG = gi(r, "股數年增（SBC 稀釋）", "%", 0.01, "模板固定 1%／年（SBC 約 0.13bn ÷ 現市值約 0.2%，偏保守）[Assumed]", PCT); r += 1
-SBCY = gi(r, "年度 SBC", "US$bn", V['sbc'], f"«YTD» SBC {YA['sbc']} 年化 [Derived]"); r += 1
+SHG = gi(r, "股數年增（SBC 稀釋）", "%", 0.01, "模板固定 1%／年（偏保守）[Assumed]", PCT); r += 1
+SBCY = gi(r, "年度 SBC", UB, V['sbc'], f"«YTD» SBC {YA['sbc']} 年化 [Derived]"); r += 1
 r = section(ws, r, "DCF 股權為負時的處理（0 截斷／選擇權）", level=2)
 DMODE = gi(r, "DCF 下限方式（1＝0 截斷、2＝選擇權）", "", (1 if V['dcfMode'] == 'zero' else 2), "0 截斷：MAX(0, 股權價值)；選擇權：Merton，股權＝以企業價值為標的、淨負債為履約價的買權", NUM0, True); r += 1
 SIGMA = gi(r, "企業價值波動率 σ", "%", V['sigma'], "選擇權法用 [Assumed]", PCT); r += 1
@@ -687,17 +693,17 @@ r += 1
 
 # ---------------- G 參考：1H26 實際 ----------------
 r = section(ws, r, "G｜參考：«YTDL» 實際（季報，«FYSTART» 至 «VMMDD»；硬編碼，勿改）", collapsed=True)
-h1_rows = [(lab, "US$" if k in ('eps', 'ngEps') else "US$bn", YA[k], YA['notes'][k]) for lab, k in [
+h1_rows = [(lab, "US$" if k in ('eps', 'ngEps') else UB, YA[k], YA['notes'][k]) for lab, k in [
     ("«PREVFYE» 現金", 'cash1231'), ("營運現金流 CFO", 'cfo'), ("現金購置 PP&E", 'cashCapex'), ("CapEx 認列（含 OEM 融資）", 'capex'),
     ("JV＋策略投資出資", 'jv'), ("借款", 'borrow'), ("還款", 'debtRepaid'), ("capped call 支出", 'cappedCall'), ("私募股權", 'equity'),
     ("利息費用", 'interest'), ("租賃現金支付", 'leasePaid'), ("營收", 'revenue'), ("GAAP 營業損益", 'opInc'), ("淨損", 'ni'),
     ("遞延收入淨流入", 'prepay'), ("D&A", 'da'), ("SBC", 'sbc'), ("GAAP EPS", 'eps'), ("EPS（加回 SBC）", 'ngEps'), ("股利支付（普通股＋特別股）", 'dividends')]] + [
     # v4.3：只用於「摘要」頁與市場共識的 FY26 調整後 EBITDA 比較；模型 GAAP 損益與評價不使用
-    ("調整後 EBITDA（«YTDQS»）", "US$bn", YA['adjEbitda'],
+    ("調整後 EBITDA（«YTDQS»）", UB, YA['adjEbitda'],
      "＋".join(f"{k.upper()} {YA['adjEbitdaMeta'][k]:.3f}" for k in sorted(YA['adjEbitdaMeta']) if re.fullmatch(r'q\d', k)) + "；"
      + "；".join(f"{x['quarter']} {x['name']}" for x in YA['adjEbitdaMeta']['sources'])
      + f"；{YA['adjEbitdaMeta']['crossCheck']}。{YA['adjEbitdaMeta']['note']} [{YA['adjEbitdaMeta']['tag']}]"),
-    ("CapEx 認列：第一分部（GPU）部分", "US$bn", YA.get('capexCore', YA['capex']), YA['notes']['capex']),  # WhiteFiber v0.1b：成長型 CapEx 首期只扣第一分部（雲端 GPU）的年初至今認列
+    ("CapEx 認列：第一分部（GPU）部分", UB, YA.get('capexCore', YA['capex']), YA['notes']['capex']),  # WhiteFiber v0.1b：成長型 CapEx 首期只扣第一分部（雲端 GPU）的年初至今認列
 ]
 start_h1 = r
 for nm, un, v, nt in h1_rows:
@@ -797,8 +803,8 @@ crow("平均在役 MW（«P0» 欄為«STUBW»平均）", "MW",
      "開關在輸入頁：1＝(期初+期末)/2，0＝期末全期化")
 avg_row = CR["平均在役 MW（«P0» 欄為«STUBW»平均）"]
 crow("利用率", "%", lambda i: f"={inref('利用率', i)}", PCT, GREEN)
-crow("每 MW 年收入", "US$bn/MW", lambda i: f"={inref('每 MW 年收入', i)}", '0.0000', GREEN)
-crow("容量上限（模型期最多能交付的收入）", "US$bn",
+crow("每 MW 年收入", UB + "/MW", lambda i: f"={inref('每 MW 年收入', i)}", '0.0000', GREEN)
+crow("容量上限（模型期最多能交付的收入）", UB,
      lambda i: f"={COLS[i]}{avg_row}*{inref('每 MW 年收入', i)}*{REVSC}*{inref('利用率', i)}*{COLS[i]}{CR['模型期長度（年）']}",
      NUM, BOLD, "＝平均在役 MW × 每 MW 年收入 × 利用率 × 期間係數。只看機房，不看合約")
 cap_row = CR["容量上限（模型期最多能交付的收入）"]
@@ -806,53 +812,53 @@ for i in range(5):
     ws.cell(row=cap_row, column=3 + i).font = Font(name="Arial", size=10, bold=True)
 
 r = section(ws, r, "（B）合約：排程 RPO")
-crow("排程 RPO（模型期，依季報桶分攤）", "US$bn",
+crow("排程 RPO（模型期，依季報桶分攤）", UB,
      lambda i: f"=({RPO0}+{RPOADD})*({inref('RPO 桶權重', i)}/{WSUM})*{RP}", NUM, BLACK,
      "＝(«VMD» RPO＋評價日後新增)×本期權重÷權重合計×五期認列比例。只看合約，不看機房")
 sch_row = CR["排程 RPO（模型期，依季報桶分攤）"]
 ai_row = sch_row
 
 r = section(ws, r, "（C）兩條線相減")
-crow("產能瓶頸（模型期：排程 − 容量）", "US$bn",
+crow("產能瓶頸（模型期：排程 − 容量）", UB,
      lambda i: f"=MAX(0,{COLS[i]}{ai_row}-{COLS[i]}{cap_row})", NUM, BOLD,
      "合約有、機房沒有 → 本期收不到，且不遞延到下期（保守處理）")
 bot_row = CR["產能瓶頸（模型期：排程 − 容量）"]
 for i in range(5):
     ws.cell(row=bot_row, column=3 + i).font = Font(name="Arial", size=10, bold=True)
-crow("期初 RPO 轉換收入（模型期）", "US$bn",
+crow("期初 RPO 轉換收入（模型期）", UB,
      lambda i: f"={COLS[i]}{sch_row}-{COLS[i]}{bot_row}", NUM, BLACK,
      "＝排程 − 瓶頸。當瓶頸>0 時，此值恆等於容量上限")
 rev_row = CR["期初 RPO 轉換收入（模型期）"]
-crow("未被期初 RPO 占用的產能", "US$bn",
+crow("未被期初 RPO 占用的產能", UB,
      lambda i: f"=MAX(0,{COLS[i]}{cap_row}-{COLS[i]}{ai_row})", NUM, BLACK,
      "容量 − 排程。機房有、期初合約沒占滿 → 要靠新簽約")
 free_row = CR["未被期初 RPO 占用的產能"]
 crow("新產能簽約率", "%", lambda i: f'=IF({REVDRV}="mw",1,{inref("新產能簽約率", i)})', PCT, GREEN, "MW 驅動時固定 100%")
-crow("新簽約收入", "US$bn",
+crow("新簽約收入", UB,
      lambda i: f"={COLS[i]}{free_row}*{COLS[i]}{CR['新產能簽約率']}", NUM, BLACK,
      "超出期初 RPO 的產能收入（MW 驅動，簽約率 100%）")
 newrev_row = CR["新簽約收入"]
-crow("未售產能（浪費）", "US$bn",
+crow("未售產能（浪費）", UB,
      lambda i: f"=MAX(0,{COLS[i]}{cap_row}-{COLS[i]}{rev_row}-{COLS[i]}{newrev_row})", NUM, BLACK,
      "蓋好但賣不掉（MW 驅動時為 0）")
-crow("損益用算力收入（模型期＝RPO 轉換＋新簽約）", "US$bn",
+crow("損益用算力收入（模型期＝RPO 轉換＋新簽約）", UB,
      lambda i: f"={COLS[i]}{rev_row}+{COLS[i]}{newrev_row}", NUM, BOLD,
      "損益與評價頁的算力收入由此連結，確保現金與損益同一組數字")
 isrev_row = CR["損益用算力收入（模型期＝RPO 轉換＋新簽約）"]
-crow("核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間", "US$bn",
+crow("核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間", UB,
      lambda i: f"={COLS[i]}{isrev_row}-{COLS[i]}{avg_row}*{inref('每 MW 年收入', i)}*{REVSC}*{inref('利用率', i)}*{COLS[i]}{CR['模型期長度（年）']}", NUM, BLACK,
      "MW 驅動時應為 0：營收可追溯為 MW × 每 MW 年收入 × 利用率（v0.1b）")
 
 _W36 = [max(0, min(L, 3 - sum(CO['periodYears'][:i]))) / L for i, L in enumerate(CO['periodYears'])]  # v0.1b：評價日起 36 個月落在各期的比例
 crow("對照：評價日起 36 個月營收權重", "%", lambda i: _W36[i], PCT, BLACK, "RPO 36 個月內轉換的對照用（只作對照，不驅動營收）")
-crow("對照：評價日起 36 個月 MW 驅動營收", "US$bn", lambda i: f"={COLS[i]}{isrev_row}*{COLS[i]}{CR['對照：評價日起 36 個月營收權重']}", NUM, BLACK,
+crow("對照：評價日起 36 個月 MW 驅動營收", UB, lambda i: f"={COLS[i]}{isrev_row}*{COLS[i]}{CR['對照：評價日起 36 個月營收權重']}", NUM, BLACK,
      f"合計對照季報 RPO {_n(LQ_RPO)} × 36 個月內 {_n(CO['rpo']['within36m'] * 100)}%（含傳統事業 RPO）；差額不回推每 MW 單價")
 o36_row = CR["對照：評價日起 36 個月 MW 驅動營收"]
-crow("«YTDL» 實際營收（季報，已實現）", "US$bn",
+crow("«YTDL» 實際營收（季報，已實現）", UB,
      lambda i: (f"={H_REV}" if i == 0 else "=0"), NUM, GREEN,
      "«FYSTART» 至 «VMMDD» 已認列營收。已實現，不受«STUBW»產能約束，故不進入上方的瓶頸計算")
 h1rev_row = CR["«YTDL» 實際營收（季報，已實現）"]
-crow("«P0» 全年總營收（«YTD» 實際＋模型期算力＋服務＋傳統事業）", "US$bn",
+crow("«P0» 全年總營收（«YTD» 實際＋模型期算力＋服務＋傳統事業）", UB,
      lambda i: (f"={COLS[i]}{h1rev_row}+{COLS[i]}{isrev_row}+{inref('非算力服務營收', i)}+{inref('傳統事業營收（模型期）', i)}"), NUM, BOLD,
      f"«P0» 欄對照公司全年指引 {REV_GUIDE_TXT}；«P1» 以後即為該年度總營收")
 fy_rev_row = CR["«P0» 全年總營收（«YTD» 實際＋模型期算力＋服務＋傳統事業）"]
@@ -870,7 +876,7 @@ if TXQ.get('revMwContracts'):
         ws.cell(row=r, column=1, value=f"對照｜合約隱含每 MW｜{_x[0]}").font = BLACK
         ws.cell(row=r, column=2, value="US$m/MW-IT·年").font = SMALL
         c = ws.cell(row=r, column=3, value=_x[1]); c.font = BLUE; c.number_format = NUM; c.border = BOX
-        c = ws.cell(row=r, column=4, value=f"='輸入與假設'!C{IN['每 MW 年收入']}*1000*{REVSC}"); c.font = GREEN; c.number_format = NUM; c.border = BOX
+        c = ws.cell(row=r, column=4, value=f"='輸入與假設'!C{IN['每 MW 年收入']}{UKM}*{REVSC}"); c.font = GREEN; c.number_format = NUM; c.border = BOX
         c = ws.cell(row=r, column=5, value=f"=C{r}/D{r}"); c.font = BLACK; c.number_format = PCT; c.border = BOX
         ws.cell(row=r, column=9, value=_x[2]).font = SMALL
         CR[f"對照｜合約隱含每 MW｜{_x[0]}"] = r
@@ -880,23 +886,23 @@ ws.cell(row=fy_rev_row, column=3).fill = FILL_KEY
 r = section(ws, r, "（D）收入 → 現金：三道折扣")
 crow("客戶違約率", "%", lambda i: f"={inref('客戶違約率', i)}", PCT, GREEN)
 crow("回收率", "%", lambda i: f"={inref('回收率', i)}", PCT, GREEN)
-crow("信用損失（期初 RPO 部分）", "US$bn",
+crow("信用損失（期初 RPO 部分）", UB,
      lambda i: f"={COLS[i]}{rev_row}*{inref('客戶違約率', i)}*(1-{inref('回收率', i)})", NUM, BLACK,
      "＝收入 × 違約率 × (1−回收率)")
 loss_row = CR["信用損失（期初 RPO 部分）"]
-crow("收現（期初 RPO 部分）", "US$bn", lambda i: f"={COLS[i]}{rev_row}-{COLS[i]}{loss_row}", NUM, BLACK)
+crow("收現（期初 RPO 部分）", UB, lambda i: f"={COLS[i]}{rev_row}-{COLS[i]}{loss_row}", NUM, BLACK)
 coll_row = CR["收現（期初 RPO 部分）"]
 crow("EBITDA 率（損益與資金共用）", "%", lambda i: f"={inref('EBITDA 率', i)}", PCT, GREEN, "起始→穩態線性爬升")
-crow("模型期總營收（算力＋服務）", "US$bn", lambda i: f"={COLS[i]}{isrev_row}+{inref('非算力服務營收', i)}", NUM, BLACK)
+crow("模型期總營收（算力＋服務）", UB, lambda i: f"={COLS[i]}{isrev_row}+{inref('非算力服務營收', i)}", NUM, BLACK)
 totrev_row = CR["模型期總營收（算力＋服務）"]
 crow("EBITDAR 率（EBITDA 率＋租金÷營收）", "%", lambda i: "=0", PCT, BOLD,
      "租金前的 EBITDA 率。EBITDA 已扣租金，而資金模型把租金列在支出端，所以要加回，避免重複扣除")
 cm_row = CR["EBITDAR 率（EBITDA 率＋租金÷營收）"]
-crow("RPO 現金（可支應資本用途）", "US$bn",
+crow("RPO 現金（可支應資本用途）", UB,
      lambda i: f"={COLS[i]}{coll_row}*{COLS[i]}{cm_row}", NUM, BOLD,
      "×EBITDAR 率。租金與利息在支出頁單獨列示")
 rpocash_row = CR["RPO 現金（可支應資本用途）"]
-crow("新簽約現金", "US$bn",
+crow("新簽約現金", UB,
      lambda i: f"={COLS[i]}{newrev_row}*(1-{inref('客戶違約率', i)}*(1-{inref('回收率', i)}))*{COLS[i]}{cm_row}", NUM, BLACK,
      "同樣扣信用損失、乘 EBITDAR 率")
 newcash_row = CR["新簽約現金"]
@@ -927,16 +933,16 @@ DLYS = {k: one(f"建設延誤月數｜{CO['scenarios']['labels'][k]}", "月", _D
 DLY = one("建設延誤月數（目前情境）", "月", f"=CHOOSE({SEL},{DLYS['low']},{DLYS['base']},{DLYS['high']})", "＝依『輸入與假設』A 區情境選擇器；0＝不延誤（＝v0.1）", NUM1)
 crow("期末時點（評價日起，年）", "年", lambda i: f"=SUM($C${CR['模型期長度（年）']}:{COLS[i]}{CR['模型期長度（年）']})", NUM, BLACK, "＝累計期間長度")
 _TR = CR["期末時點（評價日起，年）"]
-crow("成長型 CapEx 累計（原時程，評價日起）", "US$bn", lambda i: f"=SUM('輸入與假設'!$C${IN['成長型 CapEx（模型期）']}:{COLS[i]}${IN['成長型 CapEx（模型期）']})", NUM, BLACK,
+crow("成長型 CapEx 累計（原時程，評價日起）", UB, lambda i: f"=SUM('輸入與假設'!$C${IN['成長型 CapEx（模型期）']}:{COLS[i]}${IN['成長型 CapEx（模型期）']})", NUM, BLACK,
      "GPU 與網通照原併網時程採購、交貨等電（客戶出資覆蓋比同樣依原時程）")
 _CCR = CR["成長型 CapEx 累計（原時程，評價日起）"]
-crow("已投入使用累計（延誤後）", "US$bn", lambda i: shift_f(lambda k: f"${COLS[k]}${_CCR}", "0", i), NUM, BLACK,
+crow("已投入使用累計（延誤後）", UB, lambda i: shift_f(lambda k: f"${COLS[k]}${_CCR}", "0", i), NUM, BLACK,
      "＝上列往後平移建設延誤月數（線性內插）；延誤 0 時＝上列")
 _CSR = CR["已投入使用累計（延誤後）"]
-crow("本期投入使用的成長型 CapEx（折舊基礎）", "US$bn", lambda i: f"={COLS[i]}{_CSR}" + (f"-{COLS[i-1]}{_CSR}" if i else ""), NUM, BLACK,
+crow("本期投入使用的成長型 CapEx（折舊基礎）", UB, lambda i: f"={COLS[i]}{_CSR}" + (f"-{COLS[i-1]}{_CSR}" if i else ""), NUM, BLACK,
      "車隊折舊自投入使用時點起算（『輸入與假設』期初毛 PP&E 與 D&A 引用此列）")
 _ISR = CR["本期投入使用的成長型 CapEx（折舊基礎）"]
-crow("閒置資本（已支出未產生收入，期末）", "US$bn", lambda i: f"={COLS[i]}{_CCR}-{COLS[i]}{_CSR}", NUM, BOLD,
+crow("閒置資本（已支出未產生收入，期末）", UB, lambda i: f"={COLS[i]}{_CCR}-{COLS[i]}{_CSR}", NUM, BOLD,
      "＝原時程累計 − 已投入使用累計；延誤 0 時為 0。一頁摘要以一句呈現峰值")
 IDLE_ROW = CR["閒置資本（已支出未產生收入，期末）"]
 for _rr in range(1, r):  # 代換 §DLY§、§T…§（延誤後 Billable 與已投入使用累計）
@@ -956,21 +962,21 @@ def _ulF2(x):  # 起算季＋延誤月數 ÷ 3 的累計已起租筆季數（與
     xx = f"MAX(0,{x}-({UL_S}+{DLY}/3))"
     return f"(MIN({xx},{UL_N})*(MIN({xx},{UL_N})+1)/2+{UL_N}*MAX(0,{xx}-{UL_N}))"
 _ULQX = lambda i: f"'輸入與假設'!{COLS[i]}${IN['未起租：期末累計季數（評價日起）']}"
-crow("表外現金租金：全部隨延誤平移（對照）", "US$bn",
+crow("表外現金租金：全部隨延誤平移（對照）", UB,
      lambda i: f"={UL_TOT}/{UL_N}/{UL_T}/4*({_ulF2(_ULQX(i))}-{_ulF2(_ULQX(i - 1)) if i else _ulF2('0')})", NUM, BLACK,
      "＝未起租排程的起算季延後 延誤月數 ÷ 3 季（其餘同『輸入與假設』表外現金租金）")
 _ULA = CR["表外現金租金：全部隨延誤平移（對照）"]
-crow("表外現金租金（未起租，延誤連動後）", "US$bn",
+crow("表外現金租金（未起租，延誤連動後）", UB,
      lambda i: f"=IF(OR({DLY}<=0,{LK}<=0),{inref('表外現金租金（未起租）', i)},(1-{LK})*{inref('表外現金租金（未起租）', i)}+{LK}*{COLS[i]}{_ULA})", NUM, BOLD,
      "＝(1 − 連動比例)× 原排程＋連動比例 × 平移後排程；延誤 0 時＝原排程（『各期收支』租金引用此列）")
 ULD_ROW = CR["表外現金租金（未起租，延誤連動後）"]
-crow("容量上限（未延誤，對照）", "US$bn",
+crow("容量上限（未延誤，對照）", UB,
      lambda i: (f"=IF({AVGON}=1,({MW0 if i == 0 else COLS[i-1] + str(bil_row)}+{COLS[i]}{bil_row})/2,{COLS[i]}{bil_row})"
                 f"*{inref('每 MW 年收入', i)}*{REVSC}*{inref('利用率', i)}*{COLS[i]}{CR['模型期長度（年）']}"), NUM, BLACK,
      "＝未延誤的平均可計費 MW × 每 MW 年收入 × 利用率 × 期間長度")
-crow("應計費而未計費營收（延誤造成）", "US$bn", lambda i: f"=IF({DLY}<=0,0,MAX(0,{COLS[i]}{CR['容量上限（未延誤，對照）']}-{COLS[i]}{cap_row}))", NUM, BLACK,
+crow("應計費而未計費營收（延誤造成）", UB, lambda i: f"=IF({DLY}<=0,0,MAX(0,{COLS[i]}{CR['容量上限（未延誤，對照）']}-{COLS[i]}{cap_row}))", NUM, BLACK,
      "＝未延誤容量上限 − 延誤後容量上限")
-crow("延誤罰則（營業費用）", "US$bn", lambda i: f"={PEN}*{COLS[i]}{CR['應計費而未計費營收（延誤造成）']}", NUM, BLACK,
+crow("延誤罰則（營業費用）", UB, lambda i: f"={PEN}*{COLS[i]}{CR['應計費而未計費營收（延誤造成）']}", NUM, BLACK,
      "＝罰則比例 × 應計費而未計費營收；扣 EBITDA、營運來源、稅基與債務上限。客戶預付不因延誤退還（已知限制）")
 PEN_ROW = CR["延誤罰則（營業費用）"]
 _wsi = wb["輸入與假設"]
@@ -1017,93 +1023,93 @@ def frow(name, unit, fn, fmt=NUM, font=BLACK, note=None, bold=False):
 
 
 r = section(ws, r, "支出（五層）")
-frow("① 毛 CapEx（認列，備忘）", "US$bn",
+frow("① 毛 CapEx（認列，備忘）", UB,
      lambda i: (f"={H_CAPEX}+{inref('毛 CapEx', i)}" if i == 0 else f"={inref('毛 CapEx', i)}"), NUM, BLACK,
      f"«P0»＝«YTD» 實際認列 {CO['ytdActual']['capex']}＋«STUB» 模型；對照公司全年指引 {CAPEX_GUIDE_TXT}。備忘列：用途合計採現金口徑，不用這一列")
 frow("　客戶預付率", "%", lambda i: f"={inref('客戶預付占毛 CapEx', i)}", PCT, GREEN)
-frow("　客戶預付金額（抵減，«STUB» 起）", "US$bn",
+frow("　客戶預付金額（抵減，«STUB» 起）", UB,
      (lambda i: f"=({inref('成長型 CapEx（模型期）', i)}" + (f"+{inref('GPU 汰換 CapEx', i)}" if D['prepay'].get('coverRefresh') else "") + (f"+'輸入與假設'!{COLS[i]}${COLO_CAPEX}" if (COLO_CAPEX and CLB.get('coverPrepay')) else "") + f")*{COLS[i]}{FR['　客戶預付率']}"), NUM, BLACK,
      ("＝(成長型＋汰換 CapEx)× 預付比率（v0.1c：汰換同樣適用覆蓋比）" if D['prepay'].get('coverRefresh') else "＝成長型 CapEx × 預付比率（汰換 CapEx 不計）") + ("；含託管建置（WhiteFiber v0.1b：defaults.colo.coverPrepay）" if (COLO_CAPEX and CLB.get('coverPrepay')) else "") + "；«YTD» 的預付已含在實際 CFO 內，不重複計入")
-frow("　合約負債期初（客戶預付餘額）", "US$bn", lambda i: (f"={PP_CL0}" if i == 0 else "=0"), NUM, BLACK, "«P0» 期初＝«VMD» 季報遞延營收")
+frow("　合約負債期初（客戶預付餘額）", UB, lambda i: (f"={PP_CL0}" if i == 0 else "=0"), NUM, BLACK, "«P0» 期初＝«VMD» 季報遞延營收")
 cl_beg = FR["　合約負債期初（客戶預付餘額）"]
-frow("　合約負債利息累積（重大財務組成，非現金）", "US$bn",
+frow("　合約負債利息累積（重大財務組成，非現金）", UB,
      lambda i: f"={PP_FR}*({COLS[i]}{cl_beg}+0.5*{COLS[i]}{FR['　客戶預付金額（抵減，«STUB» 起）']})*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}", NUM, BLACK,
      "＝隱含利率 ×(期初合約負債＋本期預付流入 × ½)× 期間長度；進損益利息、不進現金（v0.1b）")
 ppi_row = FR["　合約負債利息累積（重大財務組成，非現金）"]
-frow("　預付認列（非現金營收）", "US$bn",
+frow("　預付認列（非現金營收）", UB,
      lambda i: f"=MIN({COLS[i]}{cl_beg}+{COLS[i]}{ppi_row},({COLS[i]}{cl_beg}+{COLS[i]}{ppi_row})/{PP_N}*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']})", NUM, BLACK,
      "＝(期初合約負債＋累積利息) ÷ 認列年數 × 期間長度；這部分營收已在預付時收現，自營運來源扣除")
 pr_row = FR["　預付認列（非現金營收）"]
-frow("　合約負債期末", "US$bn", lambda i: f"={COLS[i]}{cl_beg}+{COLS[i]}{FR['　客戶預付金額（抵減，«STUB» 起）']}+{COLS[i]}{ppi_row}-{COLS[i]}{pr_row}", NUM, BLACK,
+frow("　合約負債期末", UB, lambda i: f"={COLS[i]}{cl_beg}+{COLS[i]}{FR['　客戶預付金額（抵減，«STUB» 起）']}+{COLS[i]}{ppi_row}-{COLS[i]}{pr_row}", NUM, BLACK,
      "＝期初＋預付流入＋累積利息−認列")
 cl_end = FR["　合約負債期末"]
 for i in range(1, 5):
     ws.cell(row=cl_beg, column=3 + i, value=f"={COLS[i-1]}{cl_end}")
-frow("① CapEx（用途用：«YTD» 現金／«STUB» 毛額）", "US$bn",
+frow("① CapEx（用途用：«YTD» 現金／«STUB» 毛額）", UB,
      lambda i: (f"={H_CCAPEX}+{inref('毛 CapEx', i)}" if i == 0 else f"={inref('毛 CapEx', i)}"), NUM, BLACK,
      f"«YTD» 採現金流量表的現金購置 {CO['ytdActual']['cashCapex']}；«STUB» 起採毛額，客戶預付在來源端抵回（避免重複計入）")
-frow("② 在帳現金租金（備忘，«YTD» 已含在 CFO）", "US$bn",
+frow("② 在帳現金租金（備忘，«YTD» 已含在 CFO）", UB,
      lambda i: f"={inref('在帳現金租金（季報到期表）', i)}", NUM, GREEN,
      f"見『租賃與承諾』頁；«LASTYR» 後尚有 {CO['leases']['afterFY30']}。«P0» 欄僅 «STUB»：«YTD» 租金 {CO['ytdActual']['leasePaid']} 已含在實際 CFO 內")
-frow("② 表外現金租金（未起租）", "US$bn", lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['uld']}", NUM, GREEN,  # v0.2：延誤連動後
+frow("② 表外現金租金（未起租）", UB, lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['uld']}", NUM, GREEN,  # v0.2：延誤連動後
      f"已簽約未起租租賃 {CO['latestQuarter']['offBalanceLease']} 的現金路徑")
-frow("② GPU 租金（租賃設備）", "US$bn", lambda i: f"={inref('GPU 租金（租賃設備）', i)}", NUM, GREEN, "新增 GPU 租賃部分的固定租金（『輸入與假設』D 區；WhiteFiber v0.1b）")
-frow("　租金合計", "US$bn",
+frow("② GPU 租金（租賃設備）", UB, lambda i: f"={inref('GPU 租金（租賃設備）', i)}", NUM, GREEN, "新增 GPU 租賃部分的固定租金（『輸入與假設』D 區；WhiteFiber v0.1b）")
+frow("　租金合計", UB,
      lambda i: f"={COLS[i]}{FR['② 在帳現金租金（備忘，«YTD» 已含在 CFO）']}+{COLS[i]}{FR['② 表外現金租金（未起租）']}+{COLS[i]}{FR['② GPU 租金（租賃設備）']}", NUM, BLACK,
      "租金已含在 EBITDA 率內（GAAP 營業租賃費用屬營業費用）：營運來源以 EBITDA 率＋租金÷營收計（租前），此列再扣，淨效果中性")
 _wsc = wb["運營_產能與收入"]; _wsi = wb["輸入與假設"]
 for i in range(5):
     if EBR:  # v0.1c：EBITDA 率＝EBITDAR 率 − 租金 ÷ OCI 營收
         _wsi.cell(row=IN["EBITDA 率"], column=3 + i,
-                  value=f"={COLS[i]}{IN['EBITDAR 率（路徑）']}-'各期收支'!{COLS[i]}{FR['　租金合計']}/MAX(0.01,'運營_產能與收入'!{COLS[i]}{CAP['totrev']})")
+                  value=f"={COLS[i]}{IN['EBITDAR 率（路徑）']}-'各期收支'!{COLS[i]}{FR['　租金合計']}/MAX({_u(0.01)},'運營_產能與收入'!{COLS[i]}{CAP['totrev']})")
     _wsc.cell(row=CAP["cm"], column=3 + i,
-              value=f"={inref('EBITDA 率', i)}+'各期收支'!{COLS[i]}{FR['　租金合計']}/MAX(0.01,{COLS[i]}{CAP['totrev']})")
+              value=f"={inref('EBITDA 率', i)}+'各期收支'!{COLS[i]}{FR['　租金合計']}/MAX({_u(0.01)},{COLS[i]}{CAP['totrev']})")
     c = _wsi.cell(row=IN["非算力服務現金"], column=3 + i,
                   value=f"={inref('非算力服務營收', i)}*'運營_產能與收入'!{COLS[i]}{CAP['cm']}"); c.font = BLACK
-frow("③ 存量債務利息（備忘，«YTD» 已含在 CFO）", "US$bn",
+frow("③ 存量債務利息（備忘，«YTD» 已含在 CFO）", UB,
      lambda i: f"={inref('存量債務利息', i)}", NUM, GREEN,
      # v4.5：首期模型部分的利息由本列算出，說明句改為文字公式（滾動後隨模型值更新）
      f'="«VMD» 債務餘額的利息。«P0» 全年利息＝«YTD» 實際 {YA["interest"]}＋«STUB» "&TEXT(C{r},"0.0")&"＝"&TEXT({YA["interest"]}+C{r},"0.00")&"（見下方備忘）"')
-frow("　期初累積現金", "US$bn", lambda i: f"={H_CASH1231}", NUM, BLACK,
+frow("　期初累積現金", UB, lambda i: f"={H_CASH1231}", NUM, BLACK,
      "«P0» 自 «PREVFYE» 起算；之後＝前期期末累積現金")
 beg_cash = FR["　期初累積現金"]
 frow("　新債利率", "%",
      lambda i: f"=IF({CDSON}=1,{inref('新債利率', i)}+MAX(0,{CDS}-450)/100*0.004,{inref('新債利率', i)})",
      PCT, BLACK, f"CDS 開關：＋MAX(0,CDS−{_n(D['cdsBaseBp'])})×{_n(D['cdsPassThrough'])}bp/bp")
 od_rate = FR["　新債利率"]
-frow("③ 新債利息（瀑布）", "US$bn", lambda i: "=0", NUM, BLACK,
+frow("③ 新債利息（瀑布）", UB, lambda i: "=0", NUM, BLACK,
      "＝新債利率×期間長度×(期初新債＋本期舉借)；見下方「期前融資瀑布」")
 newint_row = FR["③ 新債利息（瀑布）"]
-frow("　利息合計", "US$bn",
+frow("　利息合計", UB,
      lambda i: f"={COLS[i]}{FR['③ 存量債務利息（備忘，«YTD» 已含在 CFO）']}+{COLS[i]}{newint_row}", NUM, BLACK)
 int_row = FR["　利息合計"]
-frow("④ JV／策略投資出資", "US$bn",
+frow("④ JV／策略投資出資", UB,
      lambda i: (f"={H_JV}+{inref('JV／策略投資出資', i)}" if i == 0 else f"={inref('JV／策略投資出資', i)}"), NUM, BLACK,
      f"«P0»＝«YTD» 實際 {YA['jv']}（JV {YA['jvSplit']['jv']:.3f}＋策略投資 {YA['jvSplit']['strategic']:.3f}）＋«STUB» 模型。{CO['meta']['ticker']} 不發股息")
-frow("⑧ 股利（普通股＋特別股）", "US$bn",
+frow("⑧ 股利（普通股＋特別股）", UB,
      lambda i: ((f"={H_DIV}+" if i == 0 else "=") + f"4*{DPS}*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}*({DSB}+§CNSP{i}§+§MCSH{i}§)+{inref('特別股股利', i)}"), NUM, BLACK,
      "普通股＝每股每季 × 4 × 期間長度 ×(基礎股數＋前期累計瀑布新股＋已強制轉換特別股)＋特別股股利；«P0»＝«YTD» 實際＋«STUB» 模型（v0.1b）")
 div_row = FR["⑧ 股利（普通股＋特別股）"]
-frow("　電力（overlay）", "US$bn",
-     lambda i: (f"=IF({OVERLAY}=1,'運營_產能與收入'!{COLS[i]}{CAP['acc']}*8760*{inref('PUE', i)}*{inref('電價', i)}/1000000000*"
+frow("　電力（overlay）", UB,
+     lambda i: (f"=IF({OVERLAY}=1,'運營_產能與收入'!{COLS[i]}{CAP['acc']}*8760*{inref('PUE', i)}*{inref('電價', i)}/{int(1e9 / UF)}*"
                 f"'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']},0)"), NUM, BLACK,
      "＝已連網 MW×8760×PUE×電價÷1e9×期間係數。EBITDA 率已含電費，預設關閉")
-frow("　維護（overlay）", "US$bn",
-     lambda i: (f"=IF({OVERLAY}=1,'運營_產能與收入'!{COLS[i]}{CAP['acc']}*{inref('維護成本', i)}/1000*"
+frow("　維護（overlay）", UB,
+     lambda i: (f"=IF({OVERLAY}=1,'運營_產能與收入'!{COLS[i]}{CAP['acc']}*{inref('維護成本', i)}{UKD}*"
                 f"'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']},0)"), NUM, BLACK)
-frow("⑤ 排程還本（季報到期表）", "US$bn",
+frow("⑤ 排程還本（季報到期表）", UB,
      lambda i: (f"={H_REPAY}+IF({DEBTON}=1,{inref('排程還本（季報到期表）', i)},0)" if i == 0
                 else f"=IF({DEBTON}=1,{inref('排程還本（季報到期表）', i)},0)"), NUM, BLACK,
      f"«P0»＝«YTD» 實際還款 {CO['ytdActual']['debtRepaid']}＋«STUB» 到期表 {CO['debt']['amortization'][0]}")
-frow("⑥ capped call 支出（«YTD» 實際）", "US$bn",
+frow("⑥ capped call 支出（«YTD» 實際）", UB,
      lambda i: (f"={H_CAP}" if i == 0 else "=0"), NUM, BLACK, "可轉債配套 capped call 現金支出（未見揭露，0）")
 debt_row = FR["⑤ 排程還本（季報到期表）"]
-frow("⑦ 現金稅（«STUB» 起）", "US$bn",
+frow("⑦ 現金稅（«STUB» 起）", UB,
      lambda i: (f"={TAXC}*MAX(0,'運營_產能與收入'!{COLS[i]}{CAP['totrev']}*{inref('EBITDA 率', i)}+{inref('其他事業 EBITDA', i)}+{inref('傳統事業 EBITDA（模型期）', i)}"
                 f"-'運營_產能與收入'!{COLS[i]}{CAP['pen']}-{inref('D&A（車隊）', i)}-{inref('存量債務利息', i)})"), NUM, BLACK,
      "＝稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)；«YTD» 的稅已含在 CFO 內（v0.1b）")
 tax_row = FR["⑦ 現金稅（«STUB» 起）"]
-frow("用途合計（現金口徑）", "US$bn",
+frow("用途合計（現金口徑）", UB,
      lambda i: (f"={COLS[i]}{FR['① CapEx（用途用：«YTD» 現金／«STUB» 毛額）']}+{COLS[i]}{FR['　租金合計']}+{COLS[i]}{int_row}+"
                 f"{COLS[i]}{FR['④ JV／策略投資出資']}+{COLS[i]}{FR['　電力（overlay）']}+"
                 f"{COLS[i]}{FR['　維護（overlay）']}+{COLS[i]}{debt_row}+{COLS[i]}{FR['⑥ capped call 支出（«YTD» 實際）']}+{COLS[i]}{tax_row}+{COLS[i]}{div_row}"),
@@ -1113,63 +1119,63 @@ frow("用途合計（現金口徑）", "US$bn",
 uses_row = FR["用途合計（現金口徑）"]
 
 r = section(ws, r, "來源（四層）")
-frow("Ⓐ0 «YTDL» 實際營運現金流（CFO）", "US$bn",
+frow("Ⓐ0 «YTDL» 實際營運現金流（CFO）", UB,
      lambda i: (f"={H_CFO}" if i == 0 else "=0"), NUM, GREEN,
      "季報實際值，取代模型推算；已含 «YTD» 的利息、租金與客戶預付")
-frow("Ⓐ RPO 現金（«STUB» 起）", "US$bn", lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['rpocash']}", NUM, GREEN)
-frow("Ⓑ 新簽約現金", "US$bn", lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['newcash']}", NUM, GREEN)
-frow("Ⓒ 非算力服務現金", "US$bn", lambda i: f"={inref('非算力服務現金', i)}", NUM, GREEN)
-frow("Ⓒ2 其他事業 EBITDA（«STUB» 起）", "US$bn", lambda i: f"={inref('其他事業 EBITDA', i)}", NUM, GREEN,
+frow("Ⓐ RPO 現金（«STUB» 起）", UB, lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['rpocash']}", NUM, GREEN)
+frow("Ⓑ 新簽約現金", UB, lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['newcash']}", NUM, GREEN)
+frow("Ⓒ 非算力服務現金", UB, lambda i: f"={inref('非算力服務現金', i)}", NUM, GREEN)
+frow("Ⓒ2 其他事業 EBITDA（«STUB» 起）", UB, lambda i: f"={inref('其他事業 EBITDA', i)}", NUM, GREEN,
      "非核心事業 EBITDA（負值＝燒錢），視為現金（v0.1b）")
-frow("Ⓒ3 傳統事業 EBITDA（«STUB» 起）", "US$bn", lambda i: f"={inref('傳統事業 EBITDA（模型期）', i)}", NUM, GREEN,
+frow("Ⓒ3 傳統事業 EBITDA（«STUB» 起）", UB, lambda i: f"={inref('傳統事業 EBITDA（模型期）', i)}", NUM, GREEN,
      "SaaS、軟體、硬體、服務四線 EBITDA，視為現金（現金稅另列於用途；v0.1b）")
-frow("Ⓒ4 減：延誤罰則（營業費用）", "US$bn", lambda i: f"=-'運營_產能與收入'!{COLS[i]}{CAP['pen']}", NUM, BLACK,
+frow("Ⓒ4 減：延誤罰則（營業費用）", UB, lambda i: f"=-'運營_產能與收入'!{COLS[i]}{CAP['pen']}", NUM, BLACK,
      "建設延誤期間應計費而未計費營收 × 罰則比例（預設 0；v0.2）")
-frow("Ⓓ 客戶預付（«STUB» 起）", "US$bn",
+frow("Ⓓ 客戶預付（«STUB» 起）", UB,
      lambda i: f"={COLS[i]}{FR['　客戶預付金額（抵減，«STUB» 起）']}", NUM, BLACK)
-frow("Ⓓ2 減：預付認列（非現金營收）", "US$bn", lambda i: f"=-{COLS[i]}{pr_row}", NUM, BLACK,
+frow("Ⓓ2 減：預付認列（非現金營收）", UB, lambda i: f"=-{COLS[i]}{pr_row}", NUM, BLACK,
      "營收中由合約負債轉入的部分已在預付時收現，不重複計入服務現金（v0.1b）")
-frow("營運來源合計", "US$bn",
+frow("營運來源合計", UB,
      lambda i: (f"={COLS[i]}{FR['Ⓐ0 «YTDL» 實際營運現金流（CFO）']}+{COLS[i]}{FR['Ⓐ RPO 現金（«STUB» 起）']}+"
                 f"{COLS[i]}{FR['Ⓑ 新簽約現金']}+{COLS[i]}{FR['Ⓒ 非算力服務現金']}+{COLS[i]}{FR['Ⓒ2 其他事業 EBITDA（«STUB» 起）']}+{COLS[i]}{FR['Ⓒ3 傳統事業 EBITDA（«STUB» 起）']}+{COLS[i]}{FR['Ⓒ4 減：延誤罰則（營業費用）']}+{COLS[i]}{FR['Ⓓ 客戶預付（«STUB» 起）']}+"
                 f"{COLS[i]}{FR['Ⓓ2 減：預付認列（非現金營收）']}"),
      NUM, BLACK, bold=True)
 srcop_row = FR["營運來源合計"]
-frow("Ⓔ 股權／可轉債（融資）", "US$bn",
+frow("Ⓔ 股權／可轉債（融資）", UB,
      lambda i: (f"={H_EQ}+IF({ATMON}=1,{ATM},0)+{PE_CASH}" if i == 0 else "=0"), NUM, BLACK,
      CO['texts']['fy0EquityNote'] + "；另含期後事件現金淨額（『輸入與假設』E 區，WhiteFiber v0.1b）")
 atm_row = FR["Ⓔ 股權／可轉債（融資）"]
-frow("Ⓕ «YTDL» 實際借款（融資）", "US$bn",
+frow("Ⓕ «YTDL» 實際借款（融資）", UB,
      lambda i: (f"={H_BORROW}" if i == 0 else "=0"), NUM, GREEN,
      f"季報：«YTDA» 借款 {YA['borrow']}（2026-03 可轉債）")
 borrow_row = FR["Ⓕ «YTDL» 實際借款（融資）"]
-frow("Ⓖ 瀑布：新債（額度＋資產層）", "US$bn", lambda i: "=0", NUM, BLACK, "見下方「期前融資瀑布」")
+frow("Ⓖ 瀑布：新債（額度＋資產層）", UB, lambda i: "=0", NUM, BLACK, "見下方「期前融資瀑布」")
 fac_row = FR["Ⓖ 瀑布：新債（額度＋資產層）"]
-frow("Ⓖ2 瀑布：可轉債", "US$bn", lambda i: "=0", NUM, BLACK, "資產擔保融資用罄後、股權之前；每年不超過可轉債上限（v0.1b）")
+frow("Ⓖ2 瀑布：可轉債", UB, lambda i: "=0", NUM, BLACK, "資產擔保融資用罄後、股權之前；每年不超過可轉債上限（v0.1b）")
 cvr_row = FR["Ⓖ2 瀑布：可轉債"]
-frow("Ⓗ 瀑布：股權募資", "US$bn", lambda i: "=0", NUM, BLACK, "債務與可轉債用罄後的殘差；每年不超過股權吸收上限")
+frow("Ⓗ 瀑布：股權募資", UB, lambda i: "=0", NUM, BLACK, "債務與可轉債用罄後的殘差；每年不超過股權吸收上限")
 eqr_row = FR["Ⓗ 瀑布：股權募資"]
-frow("Ⓘ 瀑布：高息債（股權上限溢出）", "US$bn", lambda i: "=0", NUM, BLACK, "股權超過每年上限的部分；不受 backlog 上限約束")
+frow("Ⓘ 瀑布：高息債（股權上限溢出）", UB, lambda i: "=0", NUM, BLACK, "股權超過每年上限的部分；不受 backlog 上限約束")
 jr_row = FR["Ⓘ 瀑布：高息債（股權上限溢出）"]
-frow("總來源（含融資）", "US$bn",
+frow("總來源（含融資）", UB,
      lambda i: f"={COLS[i]}{srcop_row}+{COLS[i]}{atm_row}+{COLS[i]}{borrow_row}+{COLS[i]}{fac_row}+{COLS[i]}{cvr_row}+{COLS[i]}{eqr_row}+{COLS[i]}{jr_row}",
      NUM, BLACK, bold=True)
 src_row = FR["總來源（含融資）"]
 
 r = section(ws, r, "缺口與現金橋")
-frow("　«YTD» 其他／受限現金調節", "US$bn",
+frow("　«YTD» 其他／受限現金調節", UB,
      lambda i: (f"={CASH0}-({H_CASH1231}+{H_CFO}+{H_BORROW}+{H_EQ}-{H_CCAPEX}-{H_JV}-{H_REPAY}-{H_CAP}-{H_DIV})"
                 if i == 0 else "=0"), NUM, BLACK,
      "使 «YTD» 實際流量接回 «VMD» 現金餘額；差額來自受限現金重分類與未逐項列出的項目")
 plug_row = FR["　«YTD» 其他／受限現金調節"]
-frow("營運缺口（不含融資、不含還本）", "US$bn",
+frow("營運缺口（不含融資、不含還本）", UB,
      lambda i: f"={COLS[i]}{srcop_row}-({COLS[i]}{uses_row}-{COLS[i]}{debt_row}-{COLS[i]}{FR['⑥ capped call 支出（«YTD» 實際）']})",
      NUM, BLACK, "本業能不能自給：營運來源 −（用途 − 排程還本 − capped call）", bold=True)
 opgap_row = FR["營運缺口（不含融資、不含還本）"]
-frow("期間缺口（含融資）", "US$bn",
+frow("期間缺口（含融資）", UB,
      lambda i: f"={COLS[i]}{src_row}-{COLS[i]}{uses_row}+{COLS[i]}{plug_row}", NUM, BLACK)
 gap_row = FR["期間缺口（含融資）"]
-frow("期末累積現金", "US$bn",
+frow("期末累積現金", UB,
      lambda i: f"={COLS[i]}{beg_cash}+{COLS[i]}{gap_row}", NUM, BLACK,
      "期前融資：每期末不低於最低現金", bold=True)
 cum_row = FR["期末累積現金"]
@@ -1195,121 +1201,121 @@ LLN = _one_f("在帳租約：模型期後尾端年數", "年", _LLC.get('tailYea
 _TE = lambda k: f"'運營_產能與收入'!${COLS[k]}${_TR}"  # 期末時點（年）
 _LN = lambda k: f"'運營_產能與收入'!${COLS[k]}${CR['模型期長度（年）']}"
 _TAILPV = f"{CO['leases']['afterFY30']}/{LLN}*(1+{LLR})^0.5*(1-(1+{LLR})^(-{LLN}))/{LLR}"
-frow("在帳租賃負債（期末）", "US$bn",
+frow("在帳租賃負債（期末）", UB,
      lambda i: "=" + "".join(f"{inref('在帳現金租金（季報到期表）', k)}*(1+{LLR})^(-({_TE(k)}-{_LN(k)}/2-{_TE(i)}))+" for k in range(i + 1, 5)) + f"{_TAILPV}*(1+{LLR})^(-({_TE(4)}-{_TE(i)}))", NUM, BLACK,
      f"＝期末之後各期到期表現金（期中付款）＋模型期後尾端 {CO['leases']['afterFY30']}（平均分攤、年中付款）的現值")
 def _llul(x, S, w):  # 未起租租約已起租部分：w × q ÷ i_q × [m − v^(4T − x') ×(1 − v^m) ÷ (1 − v)]
     xx = f"MAX(0,{x}-({S}))"; m = f"MIN({xx},{UL_N})"
     return (f"{w}*{UL_TOT}/{UL_N}/{UL_T}/4/((1+{LLR})^0.25-1)*({m}-(1+{LLR})^(-(4*{UL_T}-{xx})/4)*(1-(1+{LLR})^(-{m}/4))/(1-(1+{LLR})^(-0.25)))")
-frow("未起租租約已起租部分的租賃負債（期末）", "US$bn",
+frow("未起租租約已起租部分的租賃負債（期末）", UB,
      lambda i: (f"=IF(OR({DLY}<=0,{LK}<=0),{_llul(_ULQX(i), UL_S, 1)},"
                 f"{_llul(_ULQX(i), UL_S, '(1-' + LK + ')')}+{_llul(_ULQX(i), UL_S + '+' + DLY + '/3', LK)})"), NUM, BLACK,
      "每季起租 總額 ÷ 季數、每筆季末付租：已起租各筆剩餘租金現值合計（延誤連動部分起算季延後 延誤月數 ÷ 3）")
-frow("租賃負債合計（期末）", "US$bn", lambda i: f"={COLS[i]}{FR['在帳租賃負債（期末）']}+{COLS[i]}{FR['未起租租約已起租部分的租賃負債（期末）']}", NUM, BLACK, bold=True)
+frow("租賃負債合計（期末）", UB, lambda i: f"={COLS[i]}{FR['在帳租賃負債（期末）']}+{COLS[i]}{FR['未起租租約已起租部分的租賃負債（期末）']}", NUM, BLACK, bold=True)
 LL_row = FR["租賃負債合計（期末）"]
 r += 1
 r = section(ws, r, "期前融資瀑布（缺口在需要前一期先融好：額度 → 資產層新債 → 股權）")
 LROW = f"'運營_產能與收入'!{{c}}{CR['模型期長度（年）']}"
-frow("用途（不含新債利息）", "US$bn",
+frow("用途（不含新債利息）", UB,
      lambda i: (f"={COLS[i]}{FR['① CapEx（用途用：«YTD» 現金／«STUB» 毛額）']}+{COLS[i]}{FR['　租金合計']}+"
                 f"{COLS[i]}{FR['③ 存量債務利息（備忘，«YTD» 已含在 CFO）']}+{COLS[i]}{FR['④ JV／策略投資出資']}+"
                 f"{COLS[i]}{FR['　電力（overlay）']}+{COLS[i]}{FR['　維護（overlay）']}+{COLS[i]}{debt_row}+"
                 f"{COLS[i]}{FR['⑥ capped call 支出（«YTD» 實際）']}+{COLS[i]}{tax_row}+{COLS[i]}{div_row}"), NUM, BLACK, "避免循環參照：直接由各支出列加總")
 wu_row = FR["用途（不含新債利息）"]
-frow("新債期初餘額", "US$bn", lambda i: "=0", NUM, BLACK)
+frow("新債期初餘額", UB, lambda i: "=0", NUM, BLACK)
 dn_beg = FR["新債期初餘額"]
 frow("新債利率 × 期間長度", "%",
      lambda i: f"={COLS[i]}{od_rate}*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}", '0.00%', BLACK)
 rl_row = FR["新債利率 × 期間長度"]
-frow("高息債期初餘額", "US$bn", lambda i: "=0", NUM, BLACK)
+frow("高息債期初餘額", UB, lambda i: "=0", NUM, BLACK)
 jn_beg = FR["高息債期初餘額"]
-frow("可轉債（瀑布）期初餘額", "US$bn", lambda i: "=0", NUM, BLACK)
+frow("可轉債（瀑布）期初餘額", UB, lambda i: "=0", NUM, BLACK)
 cn_beg = FR["可轉債（瀑布）期初餘額"]
 frow("可轉債票息 × 期間長度", "%", lambda i: f"={CVCPN}*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}", '0.00%', BLACK)
 rc_row = FR["可轉債票息 × 期間長度"]
 frow("高息債利率 × 期間長度", "%",
      lambda i: f"=({JRATE}+IF({CDSON}=1,MAX(0,{CDS}-{CDSB})/10000*{CDSP},0))*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}", '0.00%', BLACK)
 rj_row = FR["高息債利率 × 期間長度"]
-frow("融資前現金（扣既有新債利息）", "US$bn",
+frow("融資前現金（扣既有新債利息）", UB,
      lambda i: (f"={COLS[i]}{beg_cash}+{COLS[i]}{srcop_row}+{COLS[i]}{atm_row}+{COLS[i]}{borrow_row}+{COLS[i]}{plug_row}"
                 f"-{COLS[i]}{wu_row}-{COLS[i]}{rl_row}*{COLS[i]}{dn_beg}-{COLS[i]}{rj_row}*{COLS[i]}{jn_beg}-{COLS[i]}{rc_row}*{COLS[i]}{cn_beg}"), NUM, BLACK)
 pre_row = FR["融資前現金（扣既有新債利息）"]
-frow("融資需求（補足至最低現金）", "US$bn", lambda i: f"=MAX(0,{MINC}-{COLS[i]}{pre_row})", NUM, BLACK, bold=True)
+frow("融資需求（補足至最低現金）", UB, lambda i: f"=MAX(0,{MINC}-{COLS[i]}{pre_row})", NUM, BLACK, bold=True)
 need_row = FR["融資需求（補足至最低現金）"]
-frow("期初 backlog", "US$bn", lambda i: (f"={RPO0}+{RPOADD}" if i == 0 else "=0"), NUM, BLACK,
+frow("期初 backlog", UB, lambda i: (f"={RPO0}+{RPOADD}" if i == 0 else "=0"), NUM, BLACK,
      f"«P0» 期初＝«VMD» RPO {D['rpoOpen']}＋期後新增 {D['rpoPendingAdd']}")
 bl_beg = FR["期初 backlog"]
-frow("　新簽合約增量（年化增量×年期）", "US$bn",
+frow("　新簽合約增量（年化增量×年期）", UB,
      lambda i: (f"=MAX(0,'運營_產能與收入'!{COLS[i]}{CAP['newrev']}/'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}-0)*{TERM}" if i == 0 else
                 f"=MAX(0,'運營_產能與收入'!{COLS[i]}{CAP['newrev']}/'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}-'運營_產能與收入'!{COLS[i-1]}{CAP['newrev']}/'運營_產能與收入'!{COLS[i-1]}{CR['模型期長度（年）']})*{TERM}"),
      NUM, BLACK)
 bl_add = FR["　新簽合約增量（年化增量×年期）"]
-frow("期末 backlog", "US$bn",
+frow("期末 backlog", UB,
      lambda i: f"={COLS[i]}{bl_beg}-'運營_產能與收入'!{COLS[i]}{CAP['sch']}-'運營_產能與收入'!{COLS[i]}{CAP['newrev']}+{COLS[i]}{bl_add}",
      NUM, BLACK, "＝期初 − 排程認列 − 新簽約認列 ＋ 新簽合約增量")
 bl_end = FR["期末 backlog"]
 for i in range(1, 5):
     ws.cell(row=bl_beg, column=3 + i, value=f"={COLS[i-1]}{bl_end}")
-frow("既有債務＋期後可轉債（期末）", "US$bn",
+frow("既有債務＋期後可轉債（期末）", UB,
      lambda i: "=0", NUM, BLACK, f"＝(依到期表遞減的既有本金，若關閉攤還則維持 {_n(LQ_DEBT)})＋期後新發可轉債 {_n(CONV_PR)}")
 ex_row = FR["既有債務＋期後可轉債（期末）"]
-frow("債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）", "US$bn",
+frow("債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）", UB,
      lambda i: (f'=IF({DCB}="leaseAdj",{LEV}*(§EBPL_{COLS[i]}§+{COLS[i]}{FR["　租金合計"]})/\'運營_產能與收入\'!{COLS[i]}{CR["模型期長度（年）"]}-{COLS[i]}{LL_row},'
                 f'IF({DCB}="ebitda",{LEV}*§EBPL_{COLS[i]}§/\'運營_產能與收入\'!{COLS[i]}{CR["模型期長度（年）"]},{KBL}*{COLS[i]}{bl_end}))'), NUM, BLACK,
      "leaseAdj：總債務 ≤ 倍數 ×(損益 EBITDA＋租金)（年化）− 租賃負債（v0.2）；ebitda：總債務 ≤ 倍數 × 損益 EBITDA（年化）；backlog：總債務 ≤ 倍數 × 期末 backlog（模板）")
 cap_row = FR["債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）"]
-frow("未動用額度（期初）", "US$bn", lambda i: (f"=IF({FACON}=1,{FAC},0)+IF({PFP}=0,{PFSEL},0)" if i == 0 else "=0"), NUM, BLACK, "＝前期期末未動用＋本期起可動用的專案融資額度（WhiteFiber v0.1b）")
+frow("未動用額度（期初）", UB, lambda i: (f"=IF({FACON}=1,{FAC},0)+IF({PFP}=0,{PFSEL},0)" if i == 0 else "=0"), NUM, BLACK, "＝前期期末未動用＋本期起可動用的專案融資額度（WhiteFiber v0.1b）")
 fr_beg = FR["未動用額度（期初）"]
-frow("新債可借上限", "US$bn",
+frow("新債可借上限", UB,
      lambda i: f"=MAX(0,{COLS[i]}{cap_row}-({COLS[i]}{ex_row}+{COLS[i]}{dn_beg}+{COLS[i]}{cn_beg}),{COLS[i]}{fr_beg})", NUM, BLACK,
      "＝MAX(上限 − 既有債務 − 期初新債 − 期初瀑布可轉債, 未動用額度)")
 capd_row = FR["新債可借上限"]
-frow("新債舉借", "US$bn",
+frow("新債舉借", UB,
      lambda i: f"=MIN({COLS[i]}{capd_row},{COLS[i]}{need_row}/(1-{COLS[i]}{rl_row}))", NUM, BLACK,
      "期前融資：期初到位，當期全額計息，所以需求要除以 (1−利率×期間)", bold=True)
 nd_row = FR["新債舉借"]
-frow("債務後剩餘需求", "US$bn",
+frow("債務後剩餘需求", UB,
      lambda i: f"=MAX(0,{COLS[i]}{need_row}+{COLS[i]}{rl_row}*{COLS[i]}{nd_row}-{COLS[i]}{nd_row})", NUM, BLACK)
 rem_row = FR["債務後剩餘需求"]
-frow("可轉債可發行上限", "US$bn", lambda i: f"=MAX(0,{CVCAP_SEL})*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}", NUM, BLACK,
+frow("可轉債可發行上限", UB, lambda i: f"=MAX(0,{CVCAP_SEL})*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}", NUM, BLACK,
      "＝每年上限（隨情境）× 期間長度")
 cvcap_row = FR["可轉債可發行上限"]
-frow("可轉債發行", "US$bn", lambda i: f"=MIN({COLS[i]}{cvcap_row},{COLS[i]}{rem_row}/(1-{COLS[i]}{rc_row}))", NUM, BLACK,
+frow("可轉債發行", UB, lambda i: f"=MIN({COLS[i]}{cvcap_row},{COLS[i]}{rem_row}/(1-{COLS[i]}{rc_row}))", NUM, BLACK,
      "期前融資：期初到位、當期全額計息", bold=True)
 cv_row = FR["可轉債發行"]
-frow("可轉債後剩餘需求", "US$bn", lambda i: f"=MAX(0,{COLS[i]}{rem_row}+{COLS[i]}{rc_row}*{COLS[i]}{cv_row}-{COLS[i]}{cv_row})", NUM, BLACK)
+frow("可轉債後剩餘需求", UB, lambda i: f"=MAX(0,{COLS[i]}{rem_row}+{COLS[i]}{rc_row}*{COLS[i]}{cv_row}-{COLS[i]}{cv_row})", NUM, BLACK)
 rem2_row = FR["可轉債後剩餘需求"]
-frow("每年股權吸收上限", "US$bn",
+frow("每年股權吸收上限", UB,
      lambda i: f"=IF({EQCAP}>=9,1E+99,{EQCAP}*{EQPX}*{EQSH}*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']})", NUM, BLACK,
-     f"＝現市值（發行參考價 × {_n(D['eqCapShares'])}bn 股）× 上限 % × 期間長度")
+     f"＝現市值（發行參考價 × {_n(D['eqCapShares'])}{UN} 股）× 上限 % × 期間長度")
 eqc_row = FR["每年股權吸收上限"]
-frow("股權募資", "US$bn", lambda i: f"=MIN({COLS[i]}{rem2_row},{COLS[i]}{eqc_row})", NUM, BLACK, bold=True)
+frow("股權募資", UB, lambda i: f"=MIN({COLS[i]}{rem2_row},{COLS[i]}{eqc_row})", NUM, BLACK, bold=True)
 eq_row = FR["股權募資"]
-frow("高息債舉借（溢出）", "US$bn", lambda i: f"=({COLS[i]}{rem2_row}-{COLS[i]}{eq_row})/(1-{COLS[i]}{rj_row})", NUM, BLACK, bold=True)
+frow("高息債舉借（溢出）", UB, lambda i: f"=({COLS[i]}{rem2_row}-{COLS[i]}{eq_row})/(1-{COLS[i]}{rj_row})", NUM, BLACK, bold=True)
 jd_row = FR["高息債舉借（溢出）"]
-frow("新債＋高息債利息（期初餘額＋本期舉借）", "US$bn",
+frow("新債＋高息債利息（期初餘額＋本期舉借）", UB,
      lambda i: f"={COLS[i]}{rl_row}*({COLS[i]}{dn_beg}+{COLS[i]}{nd_row})+{COLS[i]}{rj_row}*({COLS[i]}{jn_beg}+{COLS[i]}{jd_row})+{COLS[i]}{rc_row}*({COLS[i]}{cn_beg}+{COLS[i]}{cv_row})", NUM, BLACK,
      "含瀑布可轉債票息（v0.1b）")
 ni_row = FR["新債＋高息債利息（期初餘額＋本期舉借）"]
 frow("發行價（現價×(1−折價)）", "US$", lambda i: f"={EQPX}*(1-{EQDISC})", USD, BLACK)
 px_row = FR["發行價（現價×(1−折價)）"]
-frow("新發行股數", "bn", lambda i: f"={COLS[i]}{eq_row}/{COLS[i]}{px_row}", '0.000', BLACK)
+frow("新發行股數", UN, lambda i: f"={COLS[i]}{eq_row}/{COLS[i]}{px_row}", '0.000', BLACK)
 ns_row = FR["新發行股數"]
-frow("累計新股", "bn", lambda i: (f"={COLS[i]}{ns_row}" if i == 0 else f"={COLS[i-1]}{{r}}+{COLS[i]}{ns_row}"), '0.000', BLACK, bold=True)
+frow("累計新股", UN, lambda i: (f"={COLS[i]}{ns_row}" if i == 0 else f"={COLS[i-1]}{{r}}+{COLS[i]}{ns_row}"), '0.000', BLACK, bold=True)
 cns_row = FR["累計新股"]
 for i in range(1, 5):
     ws.cell(row=cns_row, column=3 + i, value=f"={COLS[i-1]}{cns_row}+{COLS[i]}{ns_row}")
-frow("新債期末餘額", "US$bn", lambda i: f"={COLS[i]}{dn_beg}+{COLS[i]}{nd_row}", NUM, BLACK)
+frow("新債期末餘額", UB, lambda i: f"={COLS[i]}{dn_beg}+{COLS[i]}{nd_row}", NUM, BLACK)
 dn_end = FR["新債期末餘額"]
-frow("未動用額度（期末）", "US$bn", lambda i: f"={COLS[i]}{fr_beg}-MIN({COLS[i]}{fr_beg},{COLS[i]}{nd_row})", NUM, BLACK)
+frow("未動用額度（期末）", UB, lambda i: f"={COLS[i]}{fr_beg}-MIN({COLS[i]}{fr_beg},{COLS[i]}{nd_row})", NUM, BLACK)
 fr_end = FR["未動用額度（期末）"]
-frow("高息債期末餘額", "US$bn", lambda i: f"={COLS[i]}{jn_beg}+{COLS[i]}{jd_row}", NUM, BLACK)
+frow("高息債期末餘額", UB, lambda i: f"={COLS[i]}{jn_beg}+{COLS[i]}{jd_row}", NUM, BLACK)
 jn_end = FR["高息債期末餘額"]
-frow("可轉債（瀑布）期末餘額", "US$bn", lambda i: f"={COLS[i]}{cn_beg}+{COLS[i]}{cv_row}", NUM, BLACK)
+frow("可轉債（瀑布）期末餘額", UB, lambda i: f"={COLS[i]}{cn_beg}+{COLS[i]}{cv_row}", NUM, BLACK)
 cn_end = FR["可轉債（瀑布）期末餘額"]
-frow("期末總債務（既有＋可轉債＋新債＋高息債）", "US$bn", lambda i: f"={COLS[i]}{ex_row}+{COLS[i]}{dn_end}+{COLS[i]}{cn_end}+{COLS[i]}{jn_end}", NUM, BLACK, bold=True)
+frow("期末總債務（既有＋可轉債＋新債＋高息債）", UB, lambda i: f"={COLS[i]}{ex_row}+{COLS[i]}{dn_end}+{COLS[i]}{cn_end}+{COLS[i]}{jn_end}", NUM, BLACK, bold=True)
 td_row = FR["期末總債務（既有＋可轉債＋新債＋高息債）"]
-frow("融資前累積現金", "US$bn",
+frow("融資前累積現金", UB,
      lambda i: (f"={COLS[i]}{beg_cash}+{COLS[i]}{srcop_row}+{COLS[i]}{atm_row}+{COLS[i]}{borrow_row}+{COLS[i]}{plug_row}-{COLS[i]}{wu_row}" if i == 0
                 else f"={COLS[i-1]}{{r}}+{COLS[i]}{srcop_row}+{COLS[i]}{atm_row}-{COLS[i]}{wu_row}"), NUM, BLACK,
      "若不做任何新融資的累積現金；負值＝外部資金需求", bold=True)
@@ -1416,8 +1422,8 @@ for j, h in enumerate(heads):
     c.fill = FILL_HEAD
 r += 1
 lease_tbl = [
-    ("營業租賃付款", "US$bn", CO['leases']['operatingPayments']),
-    ("融資租賃付款", "US$bn", CO['leases']['financePayments']),
+    ("營業租賃付款", UB, CO['leases']['operatingPayments']),
+    ("融資租賃付款", UB, CO['leases']['financePayments']),
 ]
 lr0 = r
 for nm, un, vals in lease_tbl:
@@ -1447,7 +1453,7 @@ for j, h in enumerate(heads):
     c.fill = FILL_HEAD
 r += 1
 ws.cell(row=r, column=1, value="本金（＝支出頁「排程還本」）").font = BLACK
-ws.cell(row=r, column=2, value="US$bn").font = SMALL
+ws.cell(row=r, column=2, value=UB).font = SMALL
 for i, v in enumerate(CO['debt']['amortization'] + [CO['debt']['amortAfterFY30']]):
     c = ws.cell(row=r, column=3 + i, value=v)
     c.font = BLUE
@@ -1470,9 +1476,9 @@ for j, h in enumerate(["項目", "單位", "金額", "時程", "入表？", "模
 r += 1
 _LF = CO['leases']['facts']  # v0.1b：承諾金額讀 company.json → leases.facts（換公司不改程式）
 commit = [
-    ("未起租租賃（未折現）", "US$bn", _LF['notCommenced'], "季報揭露之已簽約未起租租賃", "否", "表外現金租金"),
-    ("單站按造價計租，上限", "US$bn", _LF['singleCap'], "無此類揭露時為 0", "否", "表外現金租金"),
-    ("未動用信用額度", "US$bn", D['facility'], f"company.json → defaults.facility（{TXQ['facilityName']}）", "否（來源）", "瀑布：未動用額度"),
+    ("未起租租賃（未折現）", UB, _LF['notCommenced'], "季報揭露之已簽約未起租租賃", "否", "表外現金租金"),
+    ("單站按造價計租，上限", UB, _LF['singleCap'], "無此類揭露時為 0", "否", "表外現金租金"),
+    ("未動用信用額度", UB, D['facility'], f"company.json → defaults.facility（{TXQ['facilityName']}）", "否（來源）", "瀑布：未動用額度"),
 ]
 c0 = r
 for nm, un, amt, sched, onbs, pos in commit:
@@ -1617,31 +1623,31 @@ def drow(name, unit, fn, fmt=NUM, font=BLACK, note=None, bold=False):
     if note:
         ws.cell(row=r, column=9, value=note).font = SMALL
     DR[name] = r; r += 1
-drow("期初本金", "US$bn", lambda i: f"=E{tot_r}" if i == 0 else "=0", NUM, BLACK, "«P0» 期初為 «VMD» 本金（模型期起點）")
-drow("排程還本", "US$bn", lambda i: f"={inref('排程還本（季報到期表）', i)}", NUM, GREEN, "季報到期表")
-drow("期末本金", "US$bn", lambda i: f"={COLS[i]}{DR['期初本金']}-{COLS[i]}{DR['排程還本']}", NUM, BLACK)
+drow("期初本金", UB, lambda i: f"=E{tot_r}" if i == 0 else "=0", NUM, BLACK, "«P0» 期初為 «VMD» 本金（模型期起點）")
+drow("排程還本", UB, lambda i: f"={inref('排程還本（季報到期表）', i)}", NUM, GREEN, "季報到期表")
+drow("期末本金", UB, lambda i: f"={COLS[i]}{DR['期初本金']}-{COLS[i]}{DR['排程還本']}", NUM, BLACK)
 for i in range(1, 5):
     ws.cell(row=DR["期初本金"], column=3 + i, value=f"={COLS[i-1]}{DR['期末本金']}")
-drow("平均本金", "US$bn", lambda i: f"=({COLS[i]}{DR['期初本金']}+{COLS[i]}{DR['期末本金']})/2", NUM, BLACK)
-drow("存量債務利息", "US$bn",
+drow("平均本金", UB, lambda i: f"=({COLS[i]}{DR['期初本金']}+{COLS[i]}{DR['期末本金']})/2", NUM, BLACK)
+drow("存量債務利息", UB,
      lambda i: f"={COLS[i]}{DR['平均本金']}*{WRATE}*{inref('模型期長度（年）', i)}", NUM, BLACK,
      "＝平均本金×加權有效利率×期間長度。限制：假設利率組合不變；可轉債折價攤銷（非現金）不計")
-drow("期後新發可轉債利息", "US$bn", lambda i: f"={CONV_INT}*{inref('模型期長度（年）', i)}", NUM, BLACK)
-drow("可轉債到期還本（債務處理）", "US$bn", lambda i: f"=IF({DEBTON}=1,SUMPRODUCT((1-{CV_F})*{CV_M}*({CV_T}={i})),0)", NUM, BLACK,
+drow("期後新發可轉債利息", UB, lambda i: f"={CONV_INT}*{inref('模型期長度（年）', i)}", NUM, BLACK)
+drow("可轉債到期還本（債務處理）", UB, lambda i: f"=IF({DEBTON}=1,SUMPRODUCT((1-{CV_F})*{CV_M}*({CV_T}={i})),0)", NUM, BLACK,
      "融資分類為債務的可轉債，到期當期以到期累積本金現金還本")
-drow("可轉債期末餘額（債務處理）", "US$bn",
+drow("可轉債期末餘額（債務處理）", UB,
      lambda i: f"=IF({DEBTON}=1,SUMPRODUCT((1-{CV_F})*{CV_M}*({CV_T}>{i})),SUMPRODUCT((1-{CV_F})*{CV_M}))", NUM, BLACK,
      "到期累積本金；關閉攤還時維持全額")
-drow("可轉債票息（債務處理）", "US$bn",
+drow("可轉債票息（債務處理）", UB,
      lambda i: (f"=IF({DEBTON}=1,SUMPRODUCT((1-{CV_F})*{CV_PC}*(({CV_T}>{i})+0.5*({CV_T}={i}))),SUMPRODUCT((1-{CV_F})*{CV_PC}))"
                 f"*{inref('模型期長度（年）', i)}"), NUM, BLACK, "＝原始本金 × 票息 × 期間長度；到期當期計半期")
-drow("FY26 新增借款利息校準", "US$bn", lambda i: (f"={_n(D['intCal'])}" if i == 0 else "=0"), NUM, BLUE,
+drow("FY26 新增借款利息校準", UB, lambda i: (f"={_n(D['intCal'])}" if i == 0 else "=0"), NUM, BLUE,
      "讓首期模型利息對上公司季度利息指引的校準值（company.json → defaults.intCal）；無指引時為 0")
 _XCR = []  # WhiteFiber v0.1b：債務額外融資成本（company.json → debt.extraCost，例如 DDTL 1.1× MOIC 到期加付）
 for _xc in CO['debt'].get('extraCost', []):
-    drow(f"額外融資成本｜{_xc[0]}", "US$bn", lambda i, _xc=_xc: f"={_xc[1][i]!r}", NUM, BLUE, _xc[2])
+    drow(f"額外融資成本｜{_xc[0]}", UB, lambda i, _xc=_xc: f"={_xc[1][i]!r}", NUM, BLUE, _xc[2])
     _XCR.append(DR[f"額外融資成本｜{_xc[0]}"])
-drow("存量利息合計（連回輸入頁）", "US$bn",
+drow("存量利息合計（連回輸入頁）", UB,
      lambda i: f"={COLS[i]}{DR['存量債務利息']}+{COLS[i]}{DR['期後新發可轉債利息']}+{COLS[i]}{DR['可轉債票息（債務處理）']}+{COLS[i]}{DR['FY26 新增借款利息校準']}" + "".join(f"+{COLS[i]}{x}" for x in _XCR),
      NUM, BLACK, "＝存量債務利息＋期後新發可轉債利息＋可轉債票息＋首期校準＋額外融資成本", bold=True)
 DEBT_TOTAL_ROW = DR["存量利息合計（連回輸入頁）"]
@@ -1666,7 +1672,7 @@ ws["A1"].font = TITLE
 ws["A2"] = "季報不揭露逐站租金；下表為具名站點（company.json → defaults.sites），有租約金額者用來檢驗『每 MW 年租金』與模型租金路徑是否一致"
 ws["A2"].font = SMALL
 r = 4
-heads = ["站點", "營運方", "契約 MW", "已驗收 MW", "合約總值 $bn", "年期", "年租金 $bn", "每 MW 年租金 $m", "時程", "季報對應", "說明"]
+heads = ["站點", "營運方", "契約 MW", "已驗收 MW", f"合約總值 ${UN}", "年期", f"年租金 ${UN}", "每 MW 年租金 $m", "時程", "季報對應", "說明"]
 for j, h in enumerate(heads):
     c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
 r += 1
@@ -1684,7 +1690,7 @@ for nm, ll, mw, com, val, yrs, sched, map10q, src in sites:
         c.border = BOX
     if val is not None and yrs:
         c = ws.cell(row=r, column=7, value=f"=E{r}/F{r}"); c.number_format = NUM; c.border = BOX
-        c = ws.cell(row=r, column=8, value=f"=G{r}/C{r}*1000"); c.number_format = NUM; c.border = BOX
+        c = ws.cell(row=r, column=8, value=f"=G{r}/C{r}{UKM}"); c.number_format = NUM; c.border = BOX
     ws.cell(row=r, column=9, value=sched).font = SMALL
     ws.cell(row=r, column=10, value=map10q).font = SMALL
     ws.cell(row=r, column=11, value=src).font = SMALL
@@ -1696,7 +1702,7 @@ for col in (3, 4, 5, 7):
     c = ws.cell(row=r, column=col, value=f"=SUM({L}{s0}:{L}{s1})"); c.font = BOLD
     c.number_format = NUM0 if col in (3, 4) else NUM
 c = ws.cell(row=r, column=9, value=f"=SUMPRODUCT(ISNUMBER(G{s0}:G{s1})*C{s0}:C{s1})"); c.number_format = NUM0  # 有租約金額站點的契約 MW（與 HTML siteBenchQ 同一分母）
-c = ws.cell(row=r, column=8, value=f"=IF(I{r}>0,G{r}/I{r}*1000,0)"); c.font = BOLD; c.number_format = NUM; c.fill = FILL_KEY
+c = ws.cell(row=r, column=8, value=f"=IF(I{r}>0,G{r}/I{r}{UKM},0)"); c.font = BOLD; c.number_format = NUM; c.fill = FILL_KEY
 ws.cell(row=r, column=11, value="加權每 MW 年租金＝具名站點的市場基準（I 欄＝有租約金額站點的契約 MW；沒有時為 0，不適用）").font = SMALL
 named_r = r
 BENCH = f"'運營_站點'!$H${r}"
@@ -1746,20 +1752,20 @@ def srow(name, unit, fn, fmt=NUM, note=None, bold=False):
         ws.cell(row=r, column=11, value=note).font = SMALL
     r += 1
     return r - 1
-rr_rent = srow("模型租金（在帳＋表外）", "US$bn", lambda i: f"='各期收支'!{COLS[i]}{FR['　租金合計']}")
+rr_rent = srow("模型租金（在帳＋表外）", UB, lambda i: f"='各期收支'!{COLS[i]}{FR['　租金合計']}")
 rr_mw = srow("平均在役 MW（已連網）", "MW",
              lambda i: (f"=('輸入與假設'!{COLS[i]}${IN['期初主動電力']}+'輸入與假設'!{COLS[i]}${IN['Accepted MW（期末主動電力）']})/2"), NUM0)
 rr_len = srow("模型期長度（年）", "年", lambda i: f"={inref('模型期長度（年）', i)}")
-rr_per = srow("模型每 MW 年租金", "US$m/MW", lambda i: f"={COLS[i]}{rr_rent}/{COLS[i]}{rr_len}/{COLS[i]}{rr_mw}*1000", NUM,
+rr_per = srow("模型每 MW 年租金", "US$m/MW", lambda i: f"={COLS[i]}{rr_rent}/{COLS[i]}{rr_len}/{COLS[i]}{rr_mw}{UKM}", NUM,
               "«P0» 欄只含«STUBW»租金、MW 取全期平均，略有低估", bold=True)
 ws.cell(row=r, column=1, value="第三方租賃占比").font = BLACK
 c = ws.cell(row=r, column=3, value=CO['leases']['facts']['share']); c.font = BLUE; c.number_format = PCT; c.border = BOX
 ws.cell(row=r, column=11, value="其餘為自建，成本走 CapEx（company.json → leases.facts.share）[Assumed]").font = SMALL
 SHARE = f"$C${r}"; r += 1
-rr_bench = srow("基準租金（MW×市場基準×占比）", "US$bn",
-                lambda i: f"={COLS[i]}{rr_mw}*{BENCH}/1000*{SHARE}*{COLS[i]}{rr_len}", NUM,
+rr_bench = srow("基準租金（MW×市場基準×占比）", UB,
+                lambda i: f"={COLS[i]}{rr_mw}*{BENCH}{UKD}*{SHARE}*{COLS[i]}{rr_len}", NUM,
                 "具名站點有租約金額時才有意義；否則為 0")
-rr_gap = srow("差額（基準 − 模型）", "US$bn", lambda i: f"={COLS[i]}{rr_bench}-{COLS[i]}{rr_rent}", NUM,
+rr_gap = srow("差額（基準 − 模型）", UB, lambda i: f"={COLS[i]}{rr_bench}-{COLS[i]}{rr_rent}", NUM,
               "正值＝模型租金可能低估的金額", bold=True)
 ws.cell(row=r, column=1, value="五期差額合計").font = BOLD
 c = ws.cell(row=r, column=3, value=f"=SUM(C{rr_gap}:G{rr_gap})"); c.font = BOLD; c.number_format = NUM; c.fill = FILL_KEY
@@ -1801,45 +1807,45 @@ def vrow(name, unit, fn, fmt=NUM, font=BLACK, note=None, bold=False):
 
 
 r = section(ws, r, "損益表")
-vrow("算力收入", "US$bn", lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['isrev']}", NUM, GREEN, "＝RPO 轉換＋新簽約")
-vrow("非算力服務", "US$bn", lambda i: f"={inref('非算力服務營收', i)}", NUM, GREEN)
-vrow("傳統事業", "US$bn", lambda i: f"={inref('傳統事業營收（模型期）', i)}", NUM, GREEN, "SaaS、軟體、硬體、服務（v0.1b）")
-vrow("總營收", "US$bn", lambda i: f"={COLS[i]}{VR['算力收入']}+{COLS[i]}{VR['非算力服務']}+{COLS[i]}{VR['傳統事業']}", NUM, BLACK, bold=True)
+vrow("算力收入", UB, lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['isrev']}", NUM, GREEN, "＝RPO 轉換＋新簽約")
+vrow("非算力服務", UB, lambda i: f"={inref('非算力服務營收', i)}", NUM, GREEN)
+vrow("傳統事業", UB, lambda i: f"={inref('傳統事業營收（模型期）', i)}", NUM, GREEN, "SaaS、軟體、硬體、服務（v0.1b）")
+vrow("總營收", UB, lambda i: f"={COLS[i]}{VR['算力收入']}+{COLS[i]}{VR['非算力服務']}+{COLS[i]}{VR['傳統事業']}", NUM, BLACK, bold=True)
 rev_v = VR["總營收"]
 vrow("EBITDA 率", "%", lambda i: f"={inref('EBITDA 率', i)}", PCT, GREEN)
-vrow("延誤罰則（服務抵減，營業費用）", "US$bn", lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['pen']}", NUM, GREEN, "建設延誤期間應計費而未計費營收 × 罰則比例（預設 0；v0.2）")
-vrow("營業利益（EBIT）", "US$bn", lambda i: f"=({COLS[i]}{VR['算力收入']}+{COLS[i]}{VR['非算力服務']})*{inref('EBITDA 率', i)}+{inref('其他事業 EBITDA', i)}+{inref('傳統事業 EBITDA（模型期）', i)}-{COLS[i]}{VR['延誤罰則（服務抵減，營業費用）']}-'輸入與假設'!{COLS[i]}${IN['D&A（車隊）']}", NUM, BLACK,
+vrow("延誤罰則（服務抵減，營業費用）", UB, lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['pen']}", NUM, GREEN, "建設延誤期間應計費而未計費營收 × 罰則比例（預設 0；v0.2）")
+vrow("營業利益（EBIT）", UB, lambda i: f"=({COLS[i]}{VR['算力收入']}+{COLS[i]}{VR['非算力服務']})*{inref('EBITDA 率', i)}+{inref('其他事業 EBITDA', i)}+{inref('傳統事業 EBITDA（模型期）', i)}-{COLS[i]}{VR['延誤罰則（服務抵減，營業費用）']}-'輸入與假設'!{COLS[i]}${IN['D&A（車隊）']}", NUM, BLACK,
      "＝(算力＋服務營收)×EBITDA 率＋其他事業 EBITDA＋傳統事業 EBITDA − 延誤罰則 − 車隊 D&A")
 ebit_v = VR["營業利益（EBIT）"]
-vrow("利息（含瀑布新債）", "US$bn", lambda i: f"='各期收支'!{COLS[i]}{FRR['int']}", NUM, GREEN)
+vrow("利息（含瀑布新債）", UB, lambda i: f"='各期收支'!{COLS[i]}{FRR['int']}", NUM, GREEN)
 int_v = VR["利息（含瀑布新債）"]
-vrow("預付財務組成利息（非現金）", "US$bn", lambda i: f"='各期收支'!{COLS[i]}{ppi_row}", NUM, GREEN, "客戶預付的重大財務組成：合約負債以隱含利率累積的利息（v0.1b）")
-vrow("稅前損益", "US$bn", lambda i: f"={COLS[i]}{ebit_v}-{COLS[i]}{int_v}-{COLS[i]}{VR['預付財務組成利息（非現金）']}", NUM, BLACK)
+vrow("預付財務組成利息（非現金）", UB, lambda i: f"='各期收支'!{COLS[i]}{ppi_row}", NUM, GREEN, "客戶預付的重大財務組成：合約負債以隱含利率累積的利息（v0.1b）")
+vrow("稅前損益", UB, lambda i: f"={COLS[i]}{ebit_v}-{COLS[i]}{int_v}-{COLS[i]}{VR['預付財務組成利息（非現金）']}", NUM, BLACK)
 pre_v = VR["稅前損益"]
-vrow("NOL 期初餘額", "US$bn", lambda i: f"={NOL0}", NUM, BLACK, f"«VMD» 累積虧損約 {V['nol']:.1f}")
+vrow("NOL 期初餘額", UB, lambda i: f"={NOL0}", NUM, BLACK, f"«VMD» 累積虧損約 {V['nol']:.1f}")
 nol_b = VR["NOL 期初餘額"]
-vrow("　本期動用 NOL", "US$bn",
+vrow("　本期動用 NOL", UB,
      lambda i: f"=MIN({COLS[i]}{nol_b},MAX(0,{COLS[i]}{pre_v})*{NOLU})", NUM, BLACK, f"美國規定：抵扣上限為應稅所得 {_n(V['nolUsePct'] * 100)}%")
 nol_u = VR["　本期動用 NOL"]
-vrow("NOL 期末餘額", "US$bn",
+vrow("NOL 期末餘額", UB,
      lambda i: f"={COLS[i]}{nol_b}-{COLS[i]}{nol_u}+MAX(0,-{COLS[i]}{pre_v})", NUM, BLACK)
 nol_e = VR["NOL 期末餘額"]
 for i in range(5):
     ws.cell(row=nol_b, column=3 + i, value=(f"={NOL0}" if i == 0 else f"={COLS[i-1]}{nol_e}"))
-vrow("所得稅", "US$bn",
+vrow("所得稅", UB,
      lambda i: f"=MAX(0,{COLS[i]}{pre_v}-{COLS[i]}{nol_u})*{TAX}", NUM, BLACK,
      "虧損年不認列稅盾（與公司評價備抵一致）")
 tax_v = VR["所得稅"]
-vrow("淨利", "US$bn", lambda i: f"={COLS[i]}{pre_v}-{COLS[i]}{tax_v}", NUM, BLACK, bold=True)
+vrow("淨利", UB, lambda i: f"={COLS[i]}{pre_v}-{COLS[i]}{tax_v}", NUM, BLACK, bold=True)
 ni_v = VR["淨利"]
-vrow("D&A", "US$bn", lambda i: f"='輸入與假設'!{COLS[i]}${IN['D&A（車隊）']}", NUM, GREEN, "車隊折舊，見輸入頁")
+vrow("D&A", UB, lambda i: f"='輸入與假設'!{COLS[i]}${IN['D&A（車隊）']}", NUM, GREEN, "車隊折舊，見輸入頁")
 da_v = VR["D&A"]
-vrow("EBITDA", "US$bn", lambda i: f"={COLS[i]}{ebit_v}+{COLS[i]}{da_v}", NUM, BLACK, bold=True)
+vrow("EBITDA", UB, lambda i: f"={COLS[i]}{ebit_v}+{COLS[i]}{da_v}", NUM, BLACK, bold=True)
 ebitda_v = VR["EBITDA"]
-vrow("　基礎股數（每年 +SBC 稀釋）", "bn", lambda i: ("=§SHX§" if i == 0 else f"={COLS[i-1]}{r}*(1+{SHG})"), '0.0000', BLACK,
+vrow("　基礎股數（每年 +SBC 稀釋）", UN, lambda i: ("=§SHX§" if i == 0 else f"={COLS[i-1]}{r}*(1+{SHG})"), '0.0000', BLACK,
      "«P0»＝評價股數（含價內可轉債轉股，見『評價_DCF與目標價』可轉債區）；之後每年 ×(1＋股數年增)")
 shb_v = VR["　基礎股數（每年 +SBC 稀釋）"]
-vrow("股數（含瀑布新股）", "bn", lambda i: f"={COLS[i]}{shb_v}+'各期收支'!{COLS[i]}{FRR['cns']}", '0.0000', BLACK,
+vrow("股數（含瀑布新股）", UN, lambda i: f"={COLS[i]}{shb_v}+'各期收支'!{COLS[i]}{FRR['cns']}", '0.0000', BLACK,
      "＝基礎股數＋累計瀑布新股")
 shr_v = VR["股數（含瀑布新股）"]
 vrow("每股盈餘（EPS，模型期）", "US$", lambda i: f"={COLS[i]}{ni_v}/{COLS[i]}{shr_v}", USD, BLACK,
@@ -1847,20 +1853,20 @@ vrow("每股盈餘（EPS，模型期）", "US$", lambda i: f"={COLS[i]}{ni_v}/{C
 
 r += 1
 r = section(ws, r, "損益表（全年口徑；«FY0»；與 HTML 損益簡表一致）")
-vrow("«YTDL» 實際營收（已實現）", "US$bn", lambda i: (f"={H_REV}" if i == 0 else "=0"), NUM, GREEN)
+vrow("«YTDL» 實際營收（已實現）", UB, lambda i: (f"={H_REV}" if i == 0 else "=0"), NUM, GREEN)
 fy_h1 = VR["«YTDL» 實際營收（已實現）"]
-vrow("全年總營收", "US$bn", lambda i: f"={COLS[i]}{fy_h1}+{COLS[i]}{rev_v}", NUM, BLACK, f"«P0» 可對照指引 {REV_GUIDE_TXT}", bold=True)
+vrow("全年總營收", UB, lambda i: f"={COLS[i]}{fy_h1}+{COLS[i]}{rev_v}", NUM, BLACK, f"«P0» 可對照指引 {REV_GUIDE_TXT}", bold=True)
 fy_rev = VR["全年總營收"]
 vrow("營收 YoY", "%", lambda i: (f"={COLS[i]}{fy_rev}/{_n(PREV_FY_REV)}-1" if i == 0 else f"={COLS[i]}{fy_rev}/{COLS[i-1]}{fy_rev}-1"), PCT, BLACK, f"{PREV_FY} 實際 {_n(PREV_FY_REV)}")
-vrow("全年 GAAP 營業利益", "US$bn", lambda i: (f"={H_OPINC}+{COLS[i]}{ebit_v}" if i == 0 else f"={COLS[i]}{ebit_v}"), NUM, BLACK)
+vrow("全年 GAAP 營業利益", UB, lambda i: (f"={H_OPINC}+{COLS[i]}{ebit_v}" if i == 0 else f"={COLS[i]}{ebit_v}"), NUM, BLACK)
 fy_ebit = VR["全年 GAAP 營業利益"]
 vrow("營利率", "%", lambda i: f"={COLS[i]}{fy_ebit}/{COLS[i]}{fy_rev}", PCT, BLACK)
-vrow("全年 D&A", "US$bn", lambda i: (f"={H_DA}+{COLS[i]}{da_v}" if i == 0 else f"={COLS[i]}{da_v}"), NUM, BLACK, f"«YTD» 實際 {YA['da']:.3f}")
+vrow("全年 D&A", UB, lambda i: (f"={H_DA}+{COLS[i]}{da_v}" if i == 0 else f"={COLS[i]}{da_v}"), NUM, BLACK, f"«YTD» 實際 {YA['da']:.3f}")
 fy_da = VR["全年 D&A"]
-vrow("全年 EBITDA", "US$bn", lambda i: f"={COLS[i]}{fy_ebit}+{COLS[i]}{fy_da}", NUM, BLACK, bold=True)
-vrow("全年利息（含瀑布新債）", "US$bn", lambda i: (f"={H_INT}+{COLS[i]}{int_v}" if i == 0 else f"={COLS[i]}{int_v}"), NUM, BLACK,
+vrow("全年 EBITDA", UB, lambda i: f"={COLS[i]}{fy_ebit}+{COLS[i]}{fy_da}", NUM, BLACK, bold=True)
+vrow("全年利息（含瀑布新債）", UB, lambda i: (f"={H_INT}+{COLS[i]}{int_v}" if i == 0 else f"={COLS[i]}{int_v}"), NUM, BLACK,
      "FY27 起瀑布新債利息（9%）與新股同時影響 EPS")
-vrow("全年淨利", "US$bn", lambda i: (f"={H_NI}+{COLS[i]}{ni_v}" if i == 0 else f"={COLS[i]}{ni_v}"), NUM, BLACK, bold=True)
+vrow("全年淨利", UB, lambda i: (f"={H_NI}+{COLS[i]}{ni_v}" if i == 0 else f"={COLS[i]}{ni_v}"), NUM, BLACK, bold=True)
 fy_ni = VR["全年淨利"]
 vrow("淨利率", "%", lambda i: f"={COLS[i]}{fy_ni}/{COLS[i]}{fy_rev}", PCT, BLACK)
 vrow("全年 GAAP EPS", "US$", lambda i: (f"={H_EPS}+{COLS[i]}{ni_v}/{COLS[i]}{shr_v}" if i == 0 else f"={COLS[i]}{ni_v}/{COLS[i]}{shr_v}"),
@@ -1884,36 +1890,36 @@ ws["A2"].font = SMALL
 r = 4
 r = period_header(ws, r)
 r = section(ws, r, "DCF（無槓桿自由現金流；起點為 «VD»）")
-vrow("現金 CapEx（«VD» 之後）", "US$bn",
+vrow("現金 CapEx（«VD» 之後）", UB,
      lambda i: f"={inref('毛 CapEx', i)}-'各期收支'!{COLS[i]}{FR['　客戶預付金額（抵減，«STUB» 起）']}", NUM, BLACK,
      f"DCF 起點為 «VMD»，故 «P0» 欄只含 «STUB» 的建置支出，不含 «YTD» 已發生的 {YA['cashCapex']}")
 capex_v = VR["現金 CapEx（«VD» 之後）"]
-vrow("比較基期營收", "US$bn",
+vrow("比較基期營收", UB,
      lambda i: (f"={_n(PREV_FY_REV)}" if i == 0 else (f"={_n(YA['revenue'])}+{PL}{COLS[0]}{rev_v}" if i == 1 else f"={PL}{COLS[i-1]}{rev_v}")),
      NUM, BLACK, f"{PREV_FY} 實際 {_n(PREV_FY_REV)}；«P1» 基期＝«YTD» 實際 {CO['ytdActual']['revenue']}＋«P0» 模型期營收")
 base_v = VR["比較基期營收"]
-vrow("預付認列（非現金營收，扣除）", "US$bn", lambda i: f"='各期收支'!{COLS[i]}{pr_row}", NUM, GREEN,
+vrow("預付認列（非現金營收，扣除）", UB, lambda i: f"='各期收支'!{COLS[i]}{pr_row}", NUM, GREEN,
      "營收中由合約負債轉入的部分已在預付時收現（預付流入已自現金 CapEx 抵減），UFCF 扣除以免重複（v0.1b）")
 prr_v = VR["預付認列（非現金營收，扣除）"]
-vrow("營運資金變動", "US$bn",
+vrow("營運資金變動", UB,
      lambda i: f"={WCP}*MAX(0,{PL}{COLS[i]}{rev_v}-{COLS[i]}{base_v})", NUM, BLACK, f"營收增量的 {_n(V['wcPctOfRevGrowth'] * 100)}%")
 wc_v = VR["營運資金變動"]
-vrow("無槓桿 NOL 期初", "US$bn", lambda i: f"={NOL0}", NUM, BLACK,
+vrow("無槓桿 NOL 期初", UB, lambda i: f"={NOL0}", NUM, BLACK,
      "DCF 用無槓桿稅（利息不可抵稅，否則稅盾被計兩次：一次在 UFCF、一次在 WACC）")
 nolu_b = VR["無槓桿 NOL 期初"]
-vrow("　本期動用（無槓桿）", "US$bn",
+vrow("　本期動用（無槓桿）", UB,
      lambda i: f"=MIN({COLS[i]}{nolu_b},MAX(0,{PL}{COLS[i]}{ebit_v})*{NOLU})", NUM, BLACK)
 nolu_u = VR["　本期動用（無槓桿）"]
-vrow("無槓桿 NOL 期末", "US$bn",
+vrow("無槓桿 NOL 期末", UB,
      lambda i: f"={COLS[i]}{nolu_b}-{COLS[i]}{nolu_u}+MAX(0,-{PL}{COLS[i]}{ebit_v})", NUM, BLACK)
 nolu_e = VR["無槓桿 NOL 期末"]
 for i in range(5):
     ws.cell(row=nolu_b, column=3 + i, value=(f"={NOL0}" if i == 0 else f"={COLS[i-1]}{nolu_e}"))
-vrow("無槓桿所得稅（DCF 用）", "US$bn",
+vrow("無槓桿所得稅（DCF 用）", UB,
      lambda i: f"=MAX(0,{PL}{COLS[i]}{ebit_v}-{COLS[i]}{nolu_u})*{TAX}", NUM, BLACK,
      "與損益表的所得稅不同：此處不扣利息，數字較高，這是 DCF 的正確口徑")
 utax_v = VR["無槓桿所得稅（DCF 用）"]
-vrow("UFCF", "US$bn",
+vrow("UFCF", UB,
      lambda i: f"={PL}{COLS[i]}{ebit_v}-{COLS[i]}{utax_v}+{PL}{COLS[i]}{da_v}-{COLS[i]}{capex_v}-{COLS[i]}{wc_v}-{COLS[i]}{prr_v}",
      NUM, BLACK, "＝EBIT−無槓桿稅＋D&A−現金 CapEx（已扣客戶預付）−營運資金−預付認列。建置期全為負是正常的", bold=True)
 ufcf_v = VR["UFCF"]
@@ -1922,7 +1928,7 @@ vrow("折現期數", "年", lambda i: f"='輸入與假設'!${COLS[i]}${CAL_R['tE
 t_v = VR["折現期數"]
 vrow("折現因子", "", lambda i: f"=1/(1+{WACC})^{COLS[i]}{t_v}", '0.000', BLACK)
 df_v = VR["折現因子"]
-vrow("UFCF 現值", "US$bn", lambda i: f"={COLS[i]}{ufcf_v}*{COLS[i]}{df_v}", NUM, BLACK)
+vrow("UFCF 現值", UB, lambda i: f"={COLS[i]}{ufcf_v}*{COLS[i]}{df_v}", NUM, BLACK)
 pv_v = VR["UFCF 現值"]
 
 r += 1
@@ -2290,48 +2296,48 @@ def brow(name, unit, fn, fmt=NUM, note=None, bold=False):
         ws.cell(row=r, column=9, value=note).font = SMALL
     BR[name] = r; r += 1
 r = section(ws, r, "現金")
-brow("期初現金", "US$bn", lambda i: (f"={CASH0}" if i == 0 else f"={F_}{COLS[i-1]}{cum_row}"), NUM, "«P0»＝«VMD» 現金（模型期起點）")
-brow("營運收支淨額（含期後股權／可轉債，不含瀑布）", "US$bn",
+brow("期初現金", UB, lambda i: (f"={CASH0}" if i == 0 else f"={F_}{COLS[i-1]}{cum_row}"), NUM, "«P0»＝«VMD» 現金（模型期起點）")
+brow("營運收支淨額（含期後股權／可轉債，不含瀑布）", UB,
      lambda i: (f"={F_}{COLS[i]}{pfc_row}-{CASH0}" if i == 0 else f"={F_}{COLS[i]}{pfc_row}-{F_}{COLS[i-1]}{pfc_row}"), NUM,
      "＝融資前累積現金的當期變動；負值即當期外部資金需求")
-brow("＋ 瀑布：新債（額度＋資產層）", "US$bn", lambda i: f"={F_}{COLS[i]}{nd_row}")
-brow("＋ 瀑布：可轉債", "US$bn", lambda i: f"={F_}{COLS[i]}{cv_row}")
-brow("＋ 瀑布：高息債", "US$bn", lambda i: f"={F_}{COLS[i]}{jd_row}")
-brow("＋ 瀑布：股權募資", "US$bn", lambda i: f"={F_}{COLS[i]}{eq_row}")
-brow("− 新融資利息（新債＋可轉債＋高息債）", "US$bn", lambda i: f"=-{F_}{COLS[i]}{ni_row}")
-brow("期末現金", "US$bn", lambda i: f"=SUM({COLS[i]}{BR['期初現金']}:{COLS[i]}{BR['− 新融資利息（新債＋可轉債＋高息債）']})", NUM,
+brow("＋ 瀑布：新債（額度＋資產層）", UB, lambda i: f"={F_}{COLS[i]}{nd_row}")
+brow("＋ 瀑布：可轉債", UB, lambda i: f"={F_}{COLS[i]}{cv_row}")
+brow("＋ 瀑布：高息債", UB, lambda i: f"={F_}{COLS[i]}{jd_row}")
+brow("＋ 瀑布：股權募資", UB, lambda i: f"={F_}{COLS[i]}{eq_row}")
+brow("− 新融資利息（新債＋可轉債＋高息債）", UB, lambda i: f"=-{F_}{COLS[i]}{ni_row}")
+brow("期末現金", UB, lambda i: f"=SUM({COLS[i]}{BR['期初現金']}:{COLS[i]}{BR['− 新融資利息（新債＋可轉債＋高息債）']})", NUM,
      "應等於『各期收支』期末累積現金（見下列驗算）", bold=True)
-brow("　驗算：與各期收支期末現金差異", "US$bn", lambda i: f"={COLS[i]}{BR['期末現金']}-{F_}{COLS[i]}{cum_row}", NUM, "應為 0")
+brow("　驗算：與各期收支期末現金差異", UB, lambda i: f"={COLS[i]}{BR['期末現金']}-{F_}{COLS[i]}{cum_row}", NUM, "應為 0")
 r = section(ws, r, "債務")
-brow("既有債務期初（季報本金）", "US$bn", lambda i: (f"='資產負債_既有債務'!$E${tot_r}+SUMPRODUCT((1-{CV_F})*{CV_M})" if i == 0 else f"={COLS[i-1]}{{r}}"), NUM,
+brow("既有債務期初（季報本金）", UB, lambda i: (f"='資產負債_既有債務'!$E${tot_r}+SUMPRODUCT((1-{CV_F})*{CV_M})" if i == 0 else f"={COLS[i-1]}{{r}}"), NUM,
      "«P0»＝其他借款＋債務處理可轉債到期本金（轉股處理者不列）")
-brow("− 排程還本（模型期）", "US$bn", lambda i: f"=-IF({DEBTON}=1,{I_}{COLS[i]}${IN['排程還本（季報到期表）']},0)-'資產負債_既有債務'!{COLS[i]}{CV_AM_ROW}")
-brow("既有債務期末", "US$bn", lambda i: f"={F_}{COLS[i]}{ex_row}-{_n(CONV_PR)}", NUM, "＝依到期表遞減（關閉攤還時維持期初）")
+brow("− 排程還本（模型期）", UB, lambda i: f"=-IF({DEBTON}=1,{I_}{COLS[i]}${IN['排程還本（季報到期表）']},0)-'資產負債_既有債務'!{COLS[i]}{CV_AM_ROW}")
+brow("既有債務期末", UB, lambda i: f"={F_}{COLS[i]}{ex_row}-{_n(CONV_PR)}", NUM, "＝依到期表遞減（關閉攤還時維持期初）")
 for i in range(1, 5):
     ws.cell(row=BR["既有債務期初（季報本金）"], column=3 + i, value=f"={COLS[i-1]}{BR['既有債務期末']}")
-brow("＋ 期後新發可轉債", "US$bn", lambda i: f"={_n(CONV_PR)}")
-brow("＋ 瀑布新債餘額", "US$bn", lambda i: f"={F_}{COLS[i]}{dn_end}")
-brow("＋ 瀑布可轉債餘額", "US$bn", lambda i: f"={F_}{COLS[i]}{cn_end}")
-brow("＋ 高息債餘額", "US$bn", lambda i: f"={F_}{COLS[i]}{jn_end}")
-brow("總債務", "US$bn", lambda i: f"=SUM({COLS[i]}{BR['既有債務期末']}:{COLS[i]}{BR['＋ 高息債餘額']})", NUM, "應等於『各期收支』期末總債務", bold=True)
-brow("淨負債（總債務 − 期末現金）", "US$bn", lambda i: f"={COLS[i]}{BR['總債務']}-{COLS[i]}{BR['期末現金']}", NUM, None, bold=True)
+brow("＋ 期後新發可轉債", UB, lambda i: f"={_n(CONV_PR)}")
+brow("＋ 瀑布新債餘額", UB, lambda i: f"={F_}{COLS[i]}{dn_end}")
+brow("＋ 瀑布可轉債餘額", UB, lambda i: f"={F_}{COLS[i]}{cn_end}")
+brow("＋ 高息債餘額", UB, lambda i: f"={F_}{COLS[i]}{jn_end}")
+brow("總債務", UB, lambda i: f"=SUM({COLS[i]}{BR['既有債務期末']}:{COLS[i]}{BR['＋ 高息債餘額']})", NUM, "應等於『各期收支』期末總債務", bold=True)
+brow("淨負債（總債務 − 期末現金）", UB, lambda i: f"={COLS[i]}{BR['總債務']}-{COLS[i]}{BR['期末現金']}", NUM, None, bold=True)
 r = section(ws, r, "股本")
-brow("基礎股數（含 ATM 上限、SBC 稀釋）", "bn", lambda i: f"={P_}{COLS[i]}{shb_v}", '0.000')
-brow("＋ 本期新股", "bn", lambda i: f"={F_}{COLS[i]}{ns_row}", '0.000')
-brow("總股數（期末）", "bn", lambda i: f"={P_}{COLS[i]}{shr_v}", '0.000', "＝基礎股數＋累計新股", bold=True)
+brow("基礎股數（含 ATM 上限、SBC 稀釋）", UN, lambda i: f"={P_}{COLS[i]}{shb_v}", '0.000')
+brow("＋ 本期新股", UN, lambda i: f"={F_}{COLS[i]}{ns_row}", '0.000')
+brow("總股數（期末）", UN, lambda i: f"={P_}{COLS[i]}{shr_v}", '0.000', "＝基礎股數＋累計新股", bold=True)
 r = section(ws, r, "槓桿")
-brow("期末 backlog", "US$bn", lambda i: f"={F_}{COLS[i]}{bl_end}")
-brow("債務上限（債務／backlog × 期末 backlog）", "US$bn", lambda i: f"={F_}{COLS[i]}{cap_row}")
-brow("總債務 ÷ 期末 backlog", "x", lambda i: f"={COLS[i]}{BR['總債務']}/MAX(0.01,{COLS[i]}{BR['期末 backlog']})", '0.00x', "高息債不受 backlog 上限約束")
-brow("總債務 ÷ EBITDA（年化）", "x", lambda i: f"={COLS[i]}{BR['總債務']}/MAX(0.01,{P_}{COLS[i]}{ebitda_v}/{I_}{COLS[i]}${IN['模型期長度（年）']})", '0.0x', "FY26 模型期 EBITDA 以半年×2 年化")
+brow("期末 backlog", UB, lambda i: f"={F_}{COLS[i]}{bl_end}")
+brow("債務上限（債務／backlog × 期末 backlog）", UB, lambda i: f"={F_}{COLS[i]}{cap_row}")
+brow("總債務 ÷ 期末 backlog", "x", lambda i: f"={COLS[i]}{BR['總債務']}/MAX({_u(0.01)},{COLS[i]}{BR['期末 backlog']})", '0.00x', "高息債不受 backlog 上限約束")
+brow("總債務 ÷ EBITDA（年化）", "x", lambda i: f"={COLS[i]}{BR['總債務']}/MAX({_u(0.01)},{P_}{COLS[i]}{ebitda_v}/{I_}{COLS[i]}${IN['模型期長度（年）']})", '0.0x', "FY26 模型期 EBITDA 以半年×2 年化")
 # v0.2：租賃調整後槓桿（S&P 口徑近似：租賃調整債務 ÷ EBITDAR）
-brow("租賃負債（期末）", "US$bn", lambda i: f"={F_}{COLS[i]}{LL_row}", NUM, "見『各期收支』租賃負債（期末剩餘租金現值，5.7%）")
-brow("EBITDAR（年化＝(EBITDA＋租金) ÷ 期間長度）", "US$bn", lambda i: f"=({P_}{COLS[i]}{ebitda_v}+{F_}{COLS[i]}{FR['　租金合計']})/{I_}{COLS[i]}${IN['模型期長度（年）']}", NUM)
-brow("調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）", "x", lambda i: f"=({COLS[i]}{BR['總債務']}+{COLS[i]}{BR['租賃負債（期末）']})/MAX(0.01,{COLS[i]}{BR['EBITDAR（年化＝(EBITDA＋租金) ÷ 期間長度）']})", '0.00x',
+brow("租賃負債（期末）", UB, lambda i: f"={F_}{COLS[i]}{LL_row}", NUM, "見『各期收支』租賃負債（期末剩餘租金現值，5.7%）")
+brow("EBITDAR（年化＝(EBITDA＋租金) ÷ 期間長度）", UB, lambda i: f"=({P_}{COLS[i]}{ebitda_v}+{F_}{COLS[i]}{FR['　租金合計']})/{I_}{COLS[i]}${IN['模型期長度（年）']}", NUM)
+brow("調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）", "x", lambda i: f"=({COLS[i]}{BR['總債務']}+{COLS[i]}{BR['租賃負債（期末）']})/MAX({_u(0.01)},{COLS[i]}{BR['EBITDAR（年化＝(EBITDA＋租金) ÷ 期間長度）']})", '0.00x',
      "S&P 降評門檻 >4.5×（[Interested-party] 二手轉述）；S&P 自身口徑另含全部未起租承諾與無條件採購義務，較本列高（見報告）", bold=True)
 brow("距投資級上限的空間（上限 − 調整後槓桿）", "x", lambda i: f"={LEV}-{COLS[i]}{BR['調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）']}", '0.00x', "負值＝超過上限：需股權或失去投資級")
-brow("總債務 ÷ EBITDA（年化）", "x", lambda i: f"={COLS[i]}{BR['總債務']}/MAX(0.01,{COLS[i]}{BR['EBITDAR（年化＝(EBITDA＋租金) ÷ 期間長度）']}-'各期收支'!{COLS[i]}{FR['　租金合計']}/'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']})", '0.00x',
-     "債務上限基準為 ebitda 時的槓桿（總債務含可轉債；EBITDA 為負或極小時以 0.01 為下限）；WhiteFiber v0.1b")
+brow("總債務 ÷ EBITDA（年化）", "x", lambda i: f"={COLS[i]}{BR['總債務']}/MAX({_u(0.01)},{COLS[i]}{BR['EBITDAR（年化＝(EBITDA＋租金) ÷ 期間長度）']}-'各期收支'!{COLS[i]}{FR['　租金合計']}/'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']})", '0.00x',
+     "債務上限基準為 ebitda 時的槓桿（總債務含可轉債；EBITDA 為負或極小時以 US$10m 為下限）；WhiteFiber v0.1b")
 NB = dict(BR)
 
 # =====================================================================
@@ -2462,7 +2468,7 @@ checks = [
      "=IF(ABS(B{r}-C{r})<0.0001,\"通過\",\"不一致\")", PCT,
      f"季報桶線性分攤後應為 {_n(CO['rpo']['scheduledShare'] * 100)}%"),
     ("現金橋差異", f"='各期收支'!C{FRR['bridge_diff']}", "=0",
-     "=IF(ABS(B{r})<0.01,\"通過\",\"不一致\")", NUM,
+     "=IF(ABS(B{r})<" + _u(0.01) + ",\"通過\",\"不一致\")", NUM,
      "期初＋營運缺口＋股權＋額度−還本 ＝ 期末"),
     ("Billable ≤ Accepted（«PL»）", f"='運營_產能與收入'!G{CAP['acc']}-'運營_產能與收入'!G{bil_row}", "≥0",
      "=IF(B{r}>=0,\"通過\",\"不一致\")", NUM0,
@@ -2487,7 +2493,7 @@ checks = [
      "=IF(B{r}<" + _n(CK['unsignedRevShareMax']) + ",\"通過\",\"觀察\")", PCT,
      "«P2»–«PL» 超出期初 RPO 的收入 ÷ 同期總算力收入（MW 驅動下為未簽約產能的比重）"),
     ("損益營收＝資金營收", None, "=0",
-     "=IF(ABS(B{r})<0.001,\"通過\",\"不一致\")", NUM,
+     "=IF(ABS(B{r})<" + _u(0.001) + ",\"通過\",\"不一致\")", NUM,
      "«P1» 損益算力收入 − 產能頁 isRev。兩邊必須同一組數字"),
     ("終值占 EV 比重", f"='評價_DCF與目標價'!C{d0+8}", f'="<"&{_PC(RT_TVW)}',
      "=IF(B{r}<" + RT_TVW + ",\"通過\",\"觀察\")", PCT,
@@ -2495,19 +2501,19 @@ checks = [
     ("EBITDA 單一來源（«P1» 算力＋服務 EBITDA÷營收 − 輸入 EBITDA 率）", None, "=0",
      "=IF(ABS(B{r})<0.0001,\"通過\",\"不一致\")", '0.0000', "損益與資金引用同一列 EBITDA 率"),
     ("現金 EBITDA ＋ 信用調整 − 損益 EBITDA（«P1»）", None, "=0",
-     "=IF(ABS(B{r})<0.001,\"通過\",\"不一致\")", NUM, "現金 EBITDA＝RPO 現金＋新簽約現金＋服務現金−租金；信用調整＝信用損失×EBITDAR 率"),
+     "=IF(ABS(B{r})<" + _u(0.001) + ",\"通過\",\"不一致\")", NUM, "現金 EBITDA＝RPO 現金＋新簽約現金＋服務現金−租金；信用調整＝信用損失×EBITDAR 率"),
     ("DCF 有效性（1＝失效）", None, "0",
      "=IF(B{r}=0,\"通過\",\"觀察\")", NUM0, "失效只定義為 WACC ≤ g 或常態化 FCF ≤ 0；股權為負不算失效"),
-    ("期末現金 ≥ 最低現金（期前融資）", None, f"≥{D['minCash']:.1f}",
-     "=IF(B{r}>=" + _n(D['minCash'] - 0.001) + ",\"通過\",\"不一致\")", NUM, "瀑布每期補足至最低現金；最小值應等於最低現金"),
+    ("期末現金 ≥ 最低現金（期前融資）", None, f"≥{D['minCash']:.{DU(1)}f}",
+     "=IF(B{r}>=" + _n(D['minCash'] - 0.001 * UF) + ",\"通過\",\"不一致\")", NUM, "瀑布每期補足至最低現金；最小值應等於最低現金"),
     ("股權募資 ÷ 現市值", None, f'="≤"&{_MT(RT_EQ)}&"x"',
      "=IF(B{r}<=" + RT_EQ + ",\"通過\",\"觀察\")", MULT, f'="超過 "&{_MT(RT_EQ)}&" 倍：市場吸收能力存疑，結論不得為買進"'),
     (f"債務明細合計 = 季報本金 {_n(LQ_DEBT)} − 以股換債 ＋ 期後新發", None, _n(_DBT_BR),
-     "=IF(ABS(B{r}-" + _n(_DBT_BR) + ")<0.01,\"通過\",\"不一致\")", NUM, f"其他借款 {len(CO['debt']['instruments'])} 筆＋可轉債 {len(CO['debt']['convertibles'])} 檔到期本金（company.json → debt.convertibleBridge）"),
+     "=IF(ABS(B{r}-" + _n(_DBT_BR) + ")<" + _u(0.01) + ",\"通過\",\"不一致\")", NUM, f"其他借款 {len(CO['debt']['instruments'])} 筆＋可轉債 {len(CO['debt']['convertibles'])} 檔到期本金（company.json → debt.convertibleBridge）"),
     (f"{PERIODS[0]} 全年 CapEx（MW 公式）", None, CAPEX_GUIDE_TXT,
      _CXCHK(), NUM, "由已連網 MW 增量與預建次年推得；指引只作對照"),
     (f"JV 已承諾餘額於 {_YR0} 年內履行", None, f"={_JV0}",
-     "=IF(ABS(B{r}-" + _JV0 + ")<0.01,\"通過\",\"不一致\")", NUM, "季報未揭露 JV 出資承諾（不適用）"),
+     "=IF(ABS(B{r}-" + _JV0 + ")<" + _u(0.01) + ",\"通過\",\"不一致\")", NUM, "季報未揭露 JV 出資承諾（不適用）"),
     ("模型每 MW 年租金（«PL»）", None, "≥ 市場基準×占比",
      "=IF(B{r}>=0,\"通過\",\"觀察\")", NUM, "低於基準×占比的八成即標示：模型租金路徑可能低估"),
     ("站點租賃：五期租金可能低估", None, f"<{_n(CK['siteRentGapMax'])}",
@@ -2562,7 +2568,7 @@ ws.cell(row=_r, column=2, value=f"={LEASE_GAP}").number_format = NUM
 ci = 4  # first check row
 ws.cell(row=ci + 5, column=2,
         value=(f"=SUM('各期收支'!C{FR['① 毛 CapEx（認列，備忘）']}:G{FR['① 毛 CapEx（認列，備忘）']})/"
-               f"(('運營_產能與收入'!G{CAP['acc']}-{MW0})/1000)/1000*1000")).number_format = NUM0
+               f"(('運營_產能與收入'!G{CAP['acc']}-{MW0})/1000)/{UF}")).number_format = NUM0
 ws.cell(row=ci + 8, column=2,
         value=(f"=SUM('運營_產能與收入'!E{CAP['newrev']}:G{CAP['newrev']})/"
                f"SUM('運營_產能與收入'!E{CAP['isrev']}:G{CAP['isrev']})")).number_format = PCT
@@ -2612,9 +2618,9 @@ _PE, _PT = CO['peers'], CONS['priceTarget']
 _XC0 = (_PT['crossCheck'] if isinstance(_PT['crossCheck'], list) else [_PT['crossCheck']])[0]
 _SRC_TXT = {
     "peers": (f"市值（{_PE['priceDate']} 收盤，{_PE['priceSource']}）：{CO['meta']['ticker']} 現價 ${CO['callFacts']['priceLast']:,.2f}（{CO['callFacts']['priceDate']} 收盤）、"
-              f"市值 {CO['callFacts']['mktCapLast']:,.2f}bn（{_PE['priceDate']}）、流通 {CO['latestQuarter']['sharesOut'] * 1e3:,.2f}m；"
-              + "；".join(f"{p['ticker']} {p['mkt']:,.2f}" for p in _PE['list']) + "。淨負債取各公司最新申報："
-              + "、".join(f"{p['ticker']} {p['netDebt']:,.2f}" for p in _PE['list']) + "。"),
+              f"市值 {CO['callFacts']['mktCapLast']:,.{DU(2)}f}{UN}（{_PE['priceDate']}）、流通 {CO['latestQuarter']['sharesOut'] * 1e3 / UF:,.2f}m；"
+              + "；".join(f"{p['ticker']} {p['mkt']:,.{DU(2)}f}" for p in _PE['list']) + "。淨負債取各公司最新申報："
+              + "、".join(f"{p['ticker']} {p['netDebt']:,.{DU(2)}f}" for p in _PE['list']) + "。"),
     "targets": (f"賣方目標價（{_PT['source']}，擷取 {_PT['retrieved']}）：平均 ${_PT['mean']:,.2f}{'' if _PT.get('median') is None else f"、中位數 ${_PT['median']:,.2f}"}、區間 ${_PT['low']:,.2f}–${_PT['high']:,.2f}（{_PT['analysts']} 家）；"
                 f"共識評等 {_PT['consensusRating']}。對照 {_XC0['source']}：平均 ${_XC0['mean']:,.2f}（{_XC0['analysts']} 家，{_XC0['consensusRating']}）。"
                 "數字為賣方意見；逐筆來源與日期見『輸入與假設』I 區。"),
@@ -2680,9 +2686,9 @@ def cons_items():
     for a, k in [("強力買進", 'strongBuy'), ("買進", 'buy'), ("持有", 'hold'), ("賣出", 'sell'), ("強力賣出", 'strongSell'), ("合計", 'total')]:
         add(f"評等分布（{RA['month']}）", f"評等分布｜{a}", [RA[k]], "家", RA)
     YR = CO['periods'][:3]; SA = f"年度共識（{'／'.join(YR)}）"  # v0.1b（Oracle）：年度＝模型前三期
-    for a, k, u in [("營收", 'revenue', "US$bn"), ("調整後 EBITDA", 'ebitda', "US$bn"), ("EBITDA 率", 'ebitdaMargin', "%"), ("EBIT", 'ebit', "US$bn"), ("非 GAAP 營業利益", 'ebitNonGaap', "US$bn"),
-                    ("利息費用", 'interest', "US$bn"), ("利息支付", 'interestPaid', "US$bn"), ("淨利", 'netIncome', "US$bn"), ("GAAP EPS", 'epsGaap', "US$"), ("EPS", 'eps', "US$"), ("CapEx", 'capex', "US$bn"),
-                    ("自由現金流", 'fcf', "US$bn"), ("淨負債", 'netDebt', "US$bn"), ("每股股利", 'dps', "US$")]:
+    for a, k, u in [("營收", 'revenue', UB), ("調整後 EBITDA", 'ebitda', UB), ("EBITDA 率", 'ebitdaMargin', "%"), ("EBIT", 'ebit', UB), ("非 GAAP 營業利益", 'ebitNonGaap', UB),
+                    ("利息費用", 'interest', UB), ("利息支付", 'interestPaid', UB), ("淨利", 'netIncome', UB), ("GAAP EPS", 'epsGaap', "US$"), ("EPS", 'eps', "US$"), ("CapEx", 'capex', UB),
+                    ("自由現金流", 'fcf', UB), ("淨負債", 'netDebt', UB), ("每股股利", 'dps', "US$")]:
         if all(num((AE.get(y) or {}).get(k)) for y in YR):
             add(SA, f"年度｜{a}", [AE[y][k] for y in YR], u, AE)
     if AE.get('definition'): add(SA, "年度｜口徑說明", [], "", AE, text=AE['definition'])
@@ -2695,8 +2701,8 @@ def cons_items():
         ek = 'epsAdjusted' if any(num((A0.get(y) or {}).get('epsAdjusted')) for y in Y01) else 'eps'
         en = "調整後 EPS" if ek == 'epsAdjusted' else "EPS"
         Ye = [y for y in Y01 if num((A0.get(y) or {}).get(ek))]
-        if Y2: add(SB, f"S&P 對照｜營收（{'／'.join(Y2)}）", [A0[y]['revenue'] for y in Y2], "US$bn", A0)
-        if num(F6.get('revenueLow')): add(SB, f"S&P 對照｜{YR[0]} 營收區間（低／高）", [F6['revenueLow'], F6['revenueHigh']], "US$bn", A0)
+        if Y2: add(SB, f"S&P 對照｜營收（{'／'.join(Y2)}）", [A0[y]['revenue'] for y in Y2], UB, A0)
+        if num(F6.get('revenueLow')): add(SB, f"S&P 對照｜{YR[0]} 營收區間（低／高）", [F6['revenueLow'], F6['revenueHigh']], UB, A0)
         if Ye: add(SB, f"S&P 對照｜{en}（{'／'.join(Ye)}）", [A0[y][ek] for y in Ye], "US$", A0)
         if num(F6.get(ek + 'Low')): add(SB, f"S&P 對照｜{YR[0]} {en} 區間（低／高）", [F6[ek + 'Low'], F6[ek + 'High']], "US$", A0)
         if num(F6.get('analysts')): add(SB, f"S&P 對照｜{YR[0]} 分析師家數", [F6['analysts']], "家", A0)
@@ -2707,24 +2713,24 @@ def cons_items():
     if QK:
         for a, k in [("營收", 'revenue'), ("EBITDA", 'ebitda'), ("EBIT", 'ebit'), ("非 GAAP 營業利益", 'ebitNonGaap'), ("淨利", 'netIncome')]:
             if all(num(QE[q].get(k)) for q in QK):
-                add(SQ, f"季度｜{a}", [QE[q][k] for q in QK], "US$bn", QE)
+                add(SQ, f"季度｜{a}", [QE[q][k] for q in QK], UB, QE)
         add(SQ, "季度｜說明", [], "", QE, text=QE['note'])
     SG, G6 = "公司指引（管理層預估）", CG.get(YR[0]) or {}
-    for a, ks, u in [("營收（低／高）", ['revenueLow', 'revenueHigh'], "US$bn"), ("營收（下限）", ['revenueMin'], "US$bn"), ("調整後營業利益（低／高）", ['adjOpIncomeLow', 'adjOpIncomeHigh'], "US$bn"),
-                     ("CapEx（低／高）", ['capexLow', 'capexHigh'], "US$bn"), ("淨現金 CapEx（上限）", ['netCashCapexMax'], "US$bn"), ("非 GAAP EPS", ['epsNonGaap'], "US$"),
-                     ("資本市場融資", ['capitalMarketsFunding'], "US$bn"), ("年底 ARR（低／高）", ['arrYearEndLow', 'arrYearEndHigh'], "US$bn"),
+    for a, ks, u in [("營收（低／高）", ['revenueLow', 'revenueHigh'], UB), ("營收（下限）", ['revenueMin'], UB), ("調整後營業利益（低／高）", ['adjOpIncomeLow', 'adjOpIncomeHigh'], UB),
+                     ("CapEx（低／高）", ['capexLow', 'capexHigh'], UB), ("淨現金 CapEx（上限）", ['netCashCapexMax'], UB), ("非 GAAP EPS", ['epsNonGaap'], "US$"),
+                     ("資本市場融資", ['capitalMarketsFunding'], UB), ("年底 ARR（低／高）", ['arrYearEndLow', 'arrYearEndHigh'], UB),
                      ("調整後 EBITDA 率", ['adjEbitdaMargin'], "%"), ("年底合約電力", ['contractedPowerGW'], "GW"),
-                     ("年底已連網電力（低／高）", ['connectedPowerGWLow', 'connectedPowerGWHigh'], "GW"), ("客戶預付（下限）", ['prepaymentsMin'], "US$bn")]:
+                     ("年底已連網電力（低／高）", ['connectedPowerGWLow', 'connectedPowerGWHigh'], "GW"), ("客戶預付（下限）", ['prepaymentsMin'], UB)]:
         if all(num(G6.get(k)) for k in ks):
             add(SG, f"公司指引｜{YR[0]} {a}", [G6[k] for k in ks], u, CG)
     if CO['callFacts']['nextQRevLo'] is not None:
-        add(SG, "公司指引｜下一季營收（低／高）", [CO['callFacts']['nextQRevLo'], CO['callFacts']['nextQRevHi']], "US$bn", CG, note=CG.get('tagNote', ''))  # 以 company.json 為準（建置時已檢查與共識檔一致）
+        add(SG, "公司指引｜下一季營收（低／高）", [CO['callFacts']['nextQRevLo'], CO['callFacts']['nextQRevHi']], UB, CG, note=CG.get('tagNote', ''))  # 以 company.json 為準（建置時已檢查與共識檔一致）
     if it and it[-1]['sec'] == SG and not it[-1]['note']: it[-1]['note'] = CG.get('tagNote', '')
     if IC:
         SL, LM = f"獨立對照（{IC['provider']}）", {**IC, 'source': f"{IC['provider']}（經 {IC['source']}）"}
-        ICL = {'FY26RevenuePreQ2': ("FY26 營收（Q2 前）", "US$bn"), '2026Q3RevenuePreQ2': ("Q3 營收（Q2 前）", "US$bn"), '2026Q2RevenuePre': ("Q2 營收（財報前）", "US$bn"),
+        ICL = {'FY26RevenuePreQ2': ("FY26 營收（Q2 前）", UB), '2026Q3RevenuePreQ2': ("Q3 營收（Q2 前）", UB), '2026Q2RevenuePre': ("Q2 營收（財報前）", UB),
                '2026Q2EpsPre': ("Q2 EPS（財報前）", "US$"), 'analysts': ("家數", "家"),
-               'FY27Revenue': ("FY27 營收", "US$bn"), 'FY28Revenue': ("FY28 營收", "US$bn"), 'FY27EpsAdjusted': ("FY27 調整後 EPS", "US$"), 'FY28EpsAdjusted': ("FY28 調整後 EPS", "US$")}
+               'FY27Revenue': ("FY27 營收", UB), 'FY28Revenue': ("FY28 營收", UB), 'FY27EpsAdjusted': ("FY27 調整後 EPS", "US$"), 'FY28EpsAdjusted': ("FY28 調整後 EPS", "US$")}
         ks = [k for k in IC if num(IC[k])]
         for i, k in enumerate(ks):
             a, u = ICL.get(k, (k, ""))
@@ -2745,7 +2751,7 @@ ws.cell(row=r - 1, column=9, value=f"標記：Verified＝{CONS['tagLegend']['Ver
 ws.column_dimensions["G"].width = 16
 CI = {}
 _sec = None
-_FMT = {"US$": USD, "US$bn": '#,##0.000', "%": PCT, "家": NUM0, "GW": NUM1, "": NUM}
+_FMT = {"US$": USD, UB: '#,##0.000', "%": PCT, "家": NUM0, "GW": NUM1, "": NUM}
 for x in cons_items():
     if x['sec'] != _sec:
         _sec = x['sec']
@@ -2789,12 +2795,13 @@ _FX = lambda x, dp: f'IF({x}<0,"−","")&TEXT(ABS({x}),"#,##0{"." + "0" * dp if 
 _GX = lambda x, pt=False: f'IF({x}<0,"−","+")&TEXT(ABS({x})*100,"#,##0.0")&"{"pt" if pt else "%"}"'  # 與 HTML gapTxtQ 同格式
 
 
-def _VX(x, u, dp=2):  # 與 HTML valTxtQ 同格式（US$bn 預設 2 位小數）
+def _VX(x, u, dp=2):  # 與 HTML valTxtQ 同格式（US$bn 預設 2 位小數；US$m 最多 1 位，DU）
     if u == "%":
         return f'IF({x}<0,"−","")&TEXT(ABS({x})*100,"#,##0.0")&"%"'
     if u == "MW":
         return f'IF({x}<0,"−","")&TEXT(ABS({x}),"#,##0")&" MW"'
-    return f'IF({x}<0,"−","")&"$"&TEXT(ABS({x}),"#,##0.{"0" * dp}")&"bn"'
+    dp = DU(dp)
+    return f'IF({x}<0,"−","")&"$"&TEXT(ABS({x}),"#,##0{"." + "0" * dp if dp else ""}")&"{UN}"'
 
 
 def _RX(lo, hi, u):  # 與 HTML rngTxtQ 同格式
@@ -2802,7 +2809,7 @@ def _RX(lo, hi, u):  # 與 HTML rngTxtQ 同格式
         return f'{_FX(lo, 0)}&"–"&{_FX(hi, 0)}&" MW"'
     if u == "%":
         return f'{_FX(lo + "*100", 2)}&"–"&{_FX(hi + "*100", 2)}&"%"'
-    return f'"$"&{_FX(lo, 2)}&"–"&{_FX(hi, 2)}&"bn"'
+    return f'"$"&{_FX(lo, DU(2))}&"–"&{_FX(hi, DU(2))}&"{UN}"'
 
 
 _POS = lambda x, lo, hi: f'IF({x}>{hi},"高於上緣",IF({x}<{lo},"低於下緣",IF({x}>=({lo}+{hi})/2,"區間上半部","區間下半部")))'
@@ -2852,7 +2859,7 @@ if QC:
     PN = QC['periodNames']; PERS = sorted({q['period'] for q in QS})
     DRV = (QC.get('driver') or {}).get('type') == 'mw'
     QMET = QC['metrics']
-    _UF = {"US$bn": '#,##0.000', "MW": NUM0, "%": PCT}
+    _UF = {UB: '#,##0.000', "MW": NUM0, "%": PCT}
     for j, h in enumerate(["季度", "單位"] + [q['label'] for q in QS]):
         c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
     c = ws.cell(row=r, column=3 + max(NQ, 6) + 1, value="說明"); c.font = HEAD; c.fill = FILL_HEAD
@@ -2881,7 +2888,7 @@ if QC:
     FOCUS = f"'輸入與假設'!$C${JQ[f'季度｜焦點季（1–{NQ}）']}"
     if QC.get('revenueAnchor'):
         A_ = QC['revenueAnchor']
-        jrow(f"季度｜營收起點（{A_['label']}）", "US$bn", [A_['value']], '#,##0.000', f"營收拆分 anchor 用：從此值逐季線性爬升 [{A_.get('tag', '')}]")
+        jrow(f"季度｜營收起點（{A_['label']}）", UB, [A_['value']], '#,##0.000', f"營收拆分 anchor 用：從此值逐季線性爬升 [{A_.get('tag', '')}]")
     if DRV:
         jrow("季度｜MW 起點（第 1 期期初 Accepted）", "MW", [QC['driver']['endStart']], NUM0, QC['driver'].get('endStartNote'))
     for m in QMET:
@@ -2977,7 +2984,7 @@ if QC:
         if how == "driverAvg" and DRV:
             return f"={R}*{c}{_AV}/(" + "+".join(f"{x}{_AV}" for x in cols) + ")"
         return f"={R}/{k}"
-    qrow("營收（模型）", "US$bn", _rev, NUM, "拆分方法見『輸入與假設』J 區與 HTML「拆分方法」")
+    qrow("營收（模型）", UB, _rev, NUM, "拆分方法見『輸入與假設』J 區與 HTML「拆分方法」")
     _RV_ = QT["營收（模型）"]
     # EBITDA 率直線：兩個期間時同時符合兩期年度 EBITDA（a＋b × 季序）；一個期間時為常數
     for nm, fn in (("EBITDA 率直線｜各期營收合計 S", lambda P, cols: "=" + "+".join(f"{x}{_RV_}" for x in cols)),
@@ -3001,12 +3008,12 @@ if QC:
         qrow("EBITDA 率（模型）", "%", lambda j, c: f"=$C${_AB}+$D${_AB}*{c}{QT['季序']}", PCT, "跨季一條直線，季度 EBITDA 加總＝年度")
     else:
         qrow("EBITDA 率（模型）", "%", lambda j, c: f"={'CDEFGH'[PERS.index(POS_[j][0])]}{_E}/{'CDEFGH'[PERS.index(POS_[j][0])]}{_S}", PCT, "期內常數")
-    qrow("調整後 EBITDA（模型）", "US$bn", lambda j, c: f"={c}{_RV_}*{c}{QT['EBITDA 率（模型）']}", NUM)
-    qrow("車隊折舊（模型）", "US$bn", lambda j, c: (f"=({IA('期初毛 PP&E', POS_[j][0])}+'運營_產能與收入'!{COLS[POS_[j][0]]}${CAP['insvc']}*{2 * POS_[j][1] + 1}/{2 * POS_[j][2]})"
+    qrow("調整後 EBITDA（模型）", UB, lambda j, c: f"={c}{_RV_}*{c}{QT['EBITDA 率（模型）']}", NUM)
+    qrow("車隊折舊（模型）", UB, lambda j, c: (f"=({IA('期初毛 PP&E', POS_[j][0])}+'運營_產能與收入'!{COLS[POS_[j][0]]}${CAP['insvc']}*{2 * POS_[j][1] + 1}/{2 * POS_[j][2]})"
                                                   f"/{LIFE}*{IA('模型期長度（年）', POS_[j][0])}/{POS_[j][2]}"
                                                   + (f"+({IA('託管期初 PP&E（各期）', POS_[j][0])}+{IA('託管建置 CapEx（站點合計）', POS_[j][0])}*{2 * POS_[j][1] + 1}/{2 * POS_[j][2]})/{_CLF}*{IA('模型期長度（年）', POS_[j][0])}/{POS_[j][2]}" if COLO_DA else "")),
          NUM, "依期內平均 PP&E（與年度車隊折舊公式相同；含託管建物 D&A）")
-    qrow("調整後營業利益（模型）", "US$bn", lambda j, c: f"={c}{QT['調整後 EBITDA（模型）']}-{c}{QT['車隊折舊（模型）']}", NUM, "＝調整後 EBITDA − 車隊折舊（未扣 SBC）")
+    qrow("調整後營業利益（模型）", UB, lambda j, c: f"={c}{QT['調整後 EBITDA（模型）']}-{c}{QT['車隊折舊（模型）']}", NUM, "＝調整後 EBITDA − 車隊折舊（未扣 SBC）")
     # 指引（J 區；數字區間與文字）——CapEx 指引錨定需先有指引列
     CROW, CSEC, GLO, GHI, AROW, GTX = {}, {}, {}, {}, {}, {}
     for m in QMET:
@@ -3020,7 +3027,7 @@ if QC:
     MIDX = lambda k, c: f"(({c}{GLO[k]}+{c}{GHI[k]})/2)"
     GOKX = lambda k, c: f"ISNUMBER({c}{GLO[k]}),ISNUMBER({c}{GHI[k]})"
     if QC.get('capexSplit') == 'guidanceAnchor' and 'capex' in GLO:
-        qrow("CapEx 指引錨定值", "US$bn", lambda j, c: f'=IF(AND({GOKX("capex", c)}),{MIDX("capex", c)},"")', NUM, "有季度指引的季取指引中點（capexSplit＝guidanceAnchor）")
+        qrow("CapEx 指引錨定值", UB, lambda j, c: f'=IF(AND({GOKX("capex", c)}),{MIDX("capex", c)},"")', NUM, "有季度指引的季取指引中點（capexSplit＝guidanceAnchor）")
         _ANC = QT["CapEx 指引錨定值"]
         qrow("CapEx 未錨定季的新增 MW", "MW", lambda j, c: f'=IF(ISNUMBER({c}{_ANC}),0,{c}{_AD})', NUM0, "期間餘數依此分配")
         _FR = QT["CapEx 未錨定季的新增 MW"]
@@ -3030,9 +3037,9 @@ if QC:
             sa, sf = "+".join(f"{x}{_ANC}" for x in cols), "+".join(f"{x}{_FR}" for x in cols)
             rem = f"({ANN['capex'](P)}-SUM({','.join(f'{x}{_ANC}' for x in cols)}))"
             return f"=IF(ISNUMBER({c}{_ANC}),{c}{_ANC},IF(({sf})>0,{rem}*{c}{_FR}/({sf}),{rem}/({k}-COUNT({','.join(f'{x}{_ANC}' for x in cols)}))))"
-        qrow("CapEx（毛額）（模型）", "US$bn", _cx, NUM, "有季度指引的季＝指引中點；其餘季＝期間餘數依新增 Accepted MW 分配")
+        qrow("CapEx（毛額）（模型）", UB, _cx, NUM, "有季度指引的季＝指引中點；其餘季＝期間餘數依新增 Accepted MW 分配")
     else:
-        qrow("CapEx（毛額）（模型）", "US$bn", lambda j, c: (f"=IF((" + "+".join(f"{x}{_AD}" for x in POS_[j][3]) + f")>0,{ANN['capex'](POS_[j][0])}*{c}{_AD}/("
+        qrow("CapEx（毛額）（模型）", UB, lambda j, c: (f"=IF((" + "+".join(f"{x}{_AD}" for x in POS_[j][3]) + f")>0,{ANN['capex'](POS_[j][0])}*{c}{_AD}/("
                                                             + "+".join(f"{x}{_AD}" for x in POS_[j][3]) + f"),{ANN['capex'](POS_[j][0])}/{POS_[j][2]})"), NUM, "依季內新增 Accepted MW")
     MROW = {"revenue": _RV_, "adjEbitda": QT["調整後 EBITDA（模型）"], "ebitdaMargin": QT["EBITDA 率（模型）"], "adjOpInc": QT["調整後營業利益（模型）"],
             "capex": QT["CapEx（毛額）（模型）"], "mw": QT[_MWL]}
@@ -3348,7 +3355,7 @@ srow("結論｜結論句", "", [(f'=C{_s("評等")}&"：點位 $"&TEXT(C{_s("點
      bold=True)
 srow("結論｜情境判斷句", "", [f"={VQ}C{TRROW['目標價區間｜判斷句']}"])
 _JK = f"SUM('各期收支'!C{FRR['jd']}:G{FRR['jd']})"  # v0.1b（Oracle）：高息債溢出＝需失去投資級才能融資的金額
-srow("結論｜投資級句", "", [(f'=IF(OR({DCB}="ebitda",{DCB}="leaseAdj"),"需失去投資級才能融資的金額："&IF({_JK}>0.05,"$"&TEXT({_JK},"0.0")&"bn（五期高息債溢出）","$0")'
+srow("結論｜投資級句", "", [(f'=IF(OR({DCB}="ebitda",{DCB}="leaseAdj"),"需失去投資級才能融資的金額："&IF({_JK}>{_u(0.05)},"$"&TEXT({_JK},"#,##0.0")&"{UN}（五期高息債溢出）","$0")'
                          f'&"；投資級上限＝"&IF({DCB}="leaseAdj","(總債務＋租賃負債) ≤ "&{_MT(LEV)}&"×(EBITDA＋租金)","總債務 ≤ "&{_MT(LEV)}&"× 當期 EBITDA")&"，股權每年 ≤ 現市值 "&{_PC(EQCAP)}&"。","")')], bold=True)
 _IDR = f"'運營_產能與收入'!$C${CAP['idle']}:$G${CAP['idle']}"  # v0.2：建設延誤一句（閒置資本峰值）
 _PLB = ",".join(f'"{x}"' for x in PERIODS)
@@ -3362,8 +3369,8 @@ srow("結論｜調整後槓桿句", "", [(f'=IF({DCB}="leaseAdj","調整後槓�
                           f'"總債務 ÷ EBITDA（年化）路徑 "&' + '&"／"&'.join(f'TEXT({_LV(c)},"0.0")' for c in COLS)
                           + f'&"×；上限 "&{_MT(LEV)}&"×，"&IF(MAX({_LVR})>{LEV}+1E-9,CHOOSE(MATCH(MAX({_LVR}),{_LVR},0),{_PLB})&" 最高超過 "&TEXT(MAX({_LVR})-{LEV},"0.0")&"×：超過期間新債只能動用已承諾額度，其餘靠可轉債、股權或高息債。",'
                           f'"最小空間 "&TEXT({LEV}-MAX({_LVR}),"0.0")&"×（"&CHOOSE(MATCH(MAX({_LVR}),{_LVR},0),{_PLB})&"）。"))')], bold=True)
-srow("結論｜延誤句", "", [(f'=IF({DLY}>0,"建設延誤 "&{_MT(DLY)}&" 個月（GPU 資本支出照原時程）：閒置資本（已支出、尚未產生收入）峰值 $"&TEXT(MAX({_IDR}),"0.0")'
-                         f'&"bn（"&CHOOSE(MATCH(MAX({_IDR}),{_IDR},0),{_PLB})&" 末）。","建設延誤：本情境 0 個月（無閒置資本）。")')])
+srow("結論｜延誤句", "", [(f'=IF({DLY}>0,"建設延誤 "&{_MT(DLY)}&" 個月（GPU 資本支出照原時程）：閒置資本（已支出、尚未產生收入）峰值 $"&TEXT(MAX({_IDR}),"#,##0.0")'
+                         f'&"{UN}（"&CHOOSE(MATCH(MAX({_IDR}),{_IDR},0),{_PLB})&" 末）。","建設延誤：本情境 0 個月（無閒置資本）。")')])
 
 r += 1
 r = section(ws, r, f"2｜與市場的差異（模型：目前情境 vs 共識；{P3[0]}–{P3[2]}）")
@@ -3384,15 +3391,15 @@ for k in ["營收", "調整後 EBITDA", "EBITDA 率", "CapEx（毛額）", "淨�
         srow("差異｜EBITDA 率｜共識", "%", [f"={CIR('年度｜EBITDA 率', j)}" for j in range(3)], PCT)
         srow("差異｜EBITDA 率｜差距（百分點）", "pt", [f'=IFERROR({c}{r-2}-{c}{r-1},"—")' for c in "CDE"], PCT, "EBITDA 率以百分點列差距，不納入判斷")
         continue
-    srow(f"差異｜{k}｜模型", "US$bn", _MOD[k], NUM)
-    srow(f"差異｜{k}｜共識", "US$bn", [f"={CIR(_CON[k], j)}" for j in range(3)], NUM)
+    srow(f"差異｜{k}｜模型", UB, _MOD[k], NUM)
+    srow(f"差異｜{k}｜共識", UB, [f"={CIR(_CON[k], j)}" for j in range(3)], NUM)
     srow(f"差異｜{k}｜差距", "%", [f'=IFERROR({c}{r-2}/{c}{r-1}-1,"—")' for c in "CDE"], PCT,
          "共識淨負債不含租賃、口徑未揭露：只列不判斷" if k == "淨負債" else ("共識 CapEx 口徑未揭露；«P0»＝«YTD» 實際毛額＋«STUB» 模型毛額" if k.startswith("CapEx") else
          ("«P0» 模型＝«YTD» 實際調整後 EBITDA（輸入與假設 G 區，報導轉述 [Verified]）＋«STUB» 模型" if k == "調整後 EBITDA" else None)))
     if k in ("調整後 EBITDA", "淨負債"):  # v4.4：利潤類與淨負債以金額差呈現（比例列保留作判斷門檻）
-        srow(f"差異｜{k}｜差距（金額）", "US$bn", [f'=IFERROR({c}{r-3}-{c}{r-2},"—")' for c in "CDE"], NUM, "與 HTML 一頁摘要、市場共識分頁同一呈現；判斷門檻仍用上一列比例")
+        srow(f"差異｜{k}｜差距（金額）", UB, [f'=IFERROR({c}{r-3}-{c}{r-2},"—")' for c in "CDE"], NUM, "與 HTML 一頁摘要、市場共識分頁同一呈現；判斷門檻仍用上一列比例")
 _gr = {"營收": SM["差異｜營收｜差距"], "EBITDA": SM["差異｜調整後 EBITDA｜差距"], "CapEx": SM["差異｜CapEx（毛額）｜差距"]}
-_DX = lambda x: f'IF({x}<0,"−","+")&"$"&TEXT(ABS({x}),"#,##0.00")&"bn"'  # 與 HTML dTxtQ 同格式
+_DX = lambda x: f'IF({x}<0,"−","+")&"$"&TEXT(ABS({x}),"#,##0.{"0" * DU(2)}")&"{UN}"'  # 與 HTML dTxtQ 同格式
 _GT = lambda n, c: (f'{_DX(c + str(SM["差異｜調整後 EBITDA｜差距（金額）"]))}&"／"&{_G(c + str(SM["差異｜EBITDA 率｜差距（百分點）"]), True)}'
                     if n == "EBITDA" else _G(f"{c}{_gr[n]}"))  # EBITDA：金額差／EBITDA 率百分點
 _JK = [n for n, k in (("營收", "rev"), ("EBITDA", "ebitda"), ("CapEx", "capex")) if k in CONS_AV]; _JN = "、".join(_JK)  # WhiteFiber v0.1b：只判斷共識有數字的項目
@@ -3455,12 +3462,12 @@ srow(f"隱含｜共識平均目標價隱含 {P3[2]} EV/EBITDA", "x", [f"=({_PTM}
 srow(f"隱含｜現價隱含 {P3[2]} EV/EBITDA", "x", [f"=({PX}*{SH}+{_N28})/{_E28}" if _IMPOK else _NA], MULT, f"同一共識 {P3[2]} 數字，價格換成現價")
 srow("隱含｜模型方法區間上緣", "x", [f"=MAX({RM_LO},{RM_HI})"], MULT, f"模型 EV/EBITDA 腿（OCI 倍數）錨定 {CO['periods'][V['evYear']]} 並折回 «TGT»，錨定年度與此不同")
 _LG3 = f"'輸入與假設'!{COLS[2]}${IN['傳統事業 EBITDA（模型期）']}"  # v0.1b（Oracle）：分部加總——扣除傳統事業後的 OCI 隱含倍數
-srow(f"隱含｜模型 {P3[2]} 傳統事業 EBITDA", "US$bn", [f"={_LG3}"], NUM, "× 傳統事業 EV/EBITDA 倍數，自共識隱含 EV 扣除")
-srow(f"隱含｜共識平均目標價隱含 {P3[2]} OCI EV/EBITDA", "x", [f"=({_PTM}*{SH}+{_N28}-{_LG3}*{LEGM})/MAX({_E28}-{_LG3},0.01)" if _IMPOK else _NA], MULT, "＝（隱含 EV − 傳統事業 EBITDA × 傳統事業倍數）÷（共識 EBITDA − 傳統事業 EBITDA）")
-srow(f"隱含｜現價隱含 {P3[2]} OCI EV/EBITDA", "x", [f"=({PX}*{SH}+{_N28}-{_LG3}*{LEGM})/MAX({_E28}-{_LG3},0.01)" if _IMPOK else _NA], MULT, "同上，價格換成現價")
+srow(f"隱含｜模型 {P3[2]} 傳統事業 EBITDA", UB, [f"={_LG3}"], NUM, "× 傳統事業 EV/EBITDA 倍數，自共識隱含 EV 扣除")
+srow(f"隱含｜共識平均目標價隱含 {P3[2]} OCI EV/EBITDA", "x", [f"=({_PTM}*{SH}+{_N28}-{_LG3}*{LEGM})/MAX({_E28}-{_LG3},{_u(0.01)})" if _IMPOK else _NA], MULT, "＝（隱含 EV − 傳統事業 EBITDA × 傳統事業倍數）÷（共識 EBITDA − 傳統事業 EBITDA）")
+srow(f"隱含｜現價隱含 {P3[2]} OCI EV/EBITDA", "x", [f"=({PX}*{SH}+{_N28}-{_LG3}*{LEGM})/MAX({_E28}-{_LG3},{_u(0.01)})" if _IMPOK else _NA], MULT, "同上，價格換成現價")
 _i1, _i2, _mh = f"C{SM[f'隱含｜共識平均目標價隱含 {P3[2]} EV/EBITDA']}", f"C{SM[f'隱含｜現價隱含 {P3[2]} EV/EBITDA']}", f"C{SM['隱含｜模型方法區間上緣']}"
 _o1, _o2, _lg = f"C{SM[f'隱含｜共識平均目標價隱含 {P3[2]} OCI EV/EBITDA']}", f"C{SM[f'隱含｜現價隱含 {P3[2]} OCI EV/EBITDA']}", f"C{SM[f'隱含｜模型 {P3[2]} 傳統事業 EBITDA']}"
-srow("隱含｜隱含倍數句", "", [(f'="共識平均目標價 $"&TEXT({_PTM},"0.00")&" 隱含 {P3[2]} EV/EBITDA "&TEXT({_i1},"0.0")&"x（扣除傳統事業 "&TEXT({LEGM},"0.0")&"x × 模型 EBITDA $"&TEXT({_lg},"0.0")&"bn 後，OCI "&TEXT({_o1},"0.0")&"x），OCI 倍數"'
+srow("隱含｜隱含倍數句", "", [(f'="共識平均目標價 $"&TEXT({_PTM},"0.00")&" 隱含 {P3[2]} EV/EBITDA "&TEXT({_i1},"0.0")&"x（扣除傳統事業 "&TEXT({LEGM},"0.0")&"x × 模型 EBITDA $"&TEXT({_lg},"#,##0.0")&"{UN} 後，OCI "&TEXT({_o1},"0.0")&"x），OCI 倍數"'
                             f'&IF(ROUND({_o1},1)>{_mh},"高於",IF(ROUND({_o1},1)<{_mh},"低於","等於"))&"模型方法區間上緣 "&{_MT(_mh)}&"x；現價 $"&TEXT({PX},"0.00")&" 隱含 "&TEXT({_i2},"0.0")&"x（OCI "&TEXT({_o2},"0.0")&"x）。"') if _IMPOK else
                             f'="共識 {P3[2]} 調整後 EBITDA 未列：隱含倍數不適用（共識平均目標價 $"&TEXT({_PTM},"0.00")&"、現價 $"&TEXT({PX},"0.00")&"）。"'], bold=True)
 _RV = "'評價_反向DCF'!"

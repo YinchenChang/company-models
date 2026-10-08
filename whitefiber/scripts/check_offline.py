@@ -39,7 +39,7 @@ CHECKS_FIRST = [
 BAD_TEXT = ('NaN', 'undefined', 'Infinity')
 
 
-def xl_value(wb, sheet, label, col):
+def xl_value(wb, sheet, label, col, unit=None):
     # 列名稱中的期間佔位符（«VMD» 等，v4.5）以任意文字比對，新舊兩版的 Excel 都能找到
     parts = re.split(r'(«[A-Z0-9]+»)', label)   # 偶數位置為原文、奇數位置為佔位符
     pat = re.compile('^' + ''.join('.+?' if i % 2 else re.escape(x) for i, x in enumerate(parts)) + '$') if len(parts) > 1 else None
@@ -47,6 +47,7 @@ def xl_value(wb, sheet, label, col):
     for r in range(1, ws.max_row + 1):
         a = ws.cell(r, 1).value
         if (a == label or (pat and isinstance(a, str) and pat.match(a))) and ws.cell(r, col).value is not None:
+            if unit is not None: unit.append(ws.cell(r, 2).value)  # WhiteFiber v0.1c：B 欄單位（US$m 時畫面金額 1 位小數）
             return ws.cell(r, col).value
     raise KeyError(f'Excel 找不到：{sheet}｜{label}（第 {col} 欄）')
 
@@ -62,7 +63,9 @@ def main(html, xlsx):
     wb = load_workbook(xlsx, data_only=True)
     expect, first = {}, {}
     for tab, sh, lab, col, how in CHECKS:
-        expect.setdefault(tab, []).append((f'{sh}｜{lab}', fmt(xl_value(wb, sh, lab, col), how)))
+        u = []; v = xl_value(wb, sh, lab, col, u)
+        if how == 'n2' and u and u[0] == 'US$m': how = 'n1'  # WhiteFiber v0.1c：US$m 金額畫面最多 1 位小數（DUQ）
+        expect.setdefault(tab, []).append((f'{sh}｜{lab}', fmt(v, how)))
     for tab, sh, lab, col, how in CHECKS_FIRST:
         try: v = xl_value(wb, sh, lab, col)
         except KeyError:

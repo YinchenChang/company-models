@@ -137,17 +137,17 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
   ]);
   let b2 = box(`b2`, `2｜與市場的差異（模型：${scLabel} vs 共識）`, [
     elQ(`table`, { key: `t`, style: { borderCollapse: `collapse`, width: `100%`, fontSize: 12, fontVariantNumeric: `tabular-nums` } }, [
-      elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [td(`US$bn`, { textAlign: `left`, fontWeight: 600, borderBottom: `2px solid var(--color-ink)` }),
+      elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [td(`US$${UNQ}`, { textAlign: `left`, fontWeight: 600, borderBottom: `2px solid var(--color-ink)` }),
         ...CONS_YEARS.map(yr => td(`${yr} 模型／共識／差距`, { fontWeight: 600, borderBottom: `2px solid var(--color-ink)` }))])),
       elQ(`tbody`, { key: `b` }, MET.map(([n, k]) => elQ(`tr`, { key: k }, [td(n, { textAlign: `left` }),
-        ...cv.rows.map(r => td([fmtV(k, r.m[k]), `／`, fmtV(k, r.c[k]), `　`, elQ(`b`, { key: `g`, style: { color: k === `nd` || k === `ebM` ? `var(--color-fg)` : gcol(r.gap[k]) } }, k === `ebitda` || k === `nd` ? dTxtQ(r.dif[k], `US$bn`) : gapTxtQ(r.gap[k], k === `ebM`))]))])))
+        ...cv.rows.map(r => td([fmtV(k, r.m[k]), `／`, fmtV(k, r.c[k]), `　`, elQ(`b`, { key: `g`, style: { color: k === `nd` || k === `ebM` ? `var(--color-fg)` : gcol(r.gap[k]) } }, k === `ebitda` || k === `nd` ? dTxtQ(r.dif[k], `US$${UNQ}`) : gapTxtQ(r.gap[k], k === `ebM`))]))])))
     ]),
     elQ(`p`, { key: `j`, style: { fontSize: 13, lineHeight: 1.4, margin: `5px 0 0`, fontWeight: 600 } }, cv.judge),
     cv.rsnSum ? elQ(`p`, { key: `r`, style: { fontSize: 11.5, lineHeight: 1.35, margin: `2px 0 0` } }, cv.rsnSum) : null
   ]);
   let b3 = box(`b3`, `3｜現價隱含什麼`, [
     elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 8 } }, [
-      [`共識平均目標價隱含`, `${Y(cv.impTgt, 1)}x`, `$${Y(PT.mean, 2)}，股數 ${Y(o.shares, 3)}bn`],
+      [`共識平均目標價隱含`, `${Y(cv.impTgt, 1)}x`, `$${Y(PT.mean, 2)}，股數 ${Y(o.shares, DUQ(3))}${UNQ}`],
       [`現價隱含`, `${Y(cv.impPx, 1)}x`, `$${Y(o.price, 2)}；同一共識 ${CONS_YEARS[2]} 數字`],
       [`模型方法區間上緣`, `${multTxt(cv.mHi)}x`, `錨定 ${PERIOD_LABELS[o.evYear ?? 1]}、折回 ${CALQ.targetText}`]
     ].map(([a, b, c]) => elQ(`div`, { key: a, style: { background: `var(--color-card)`, borderRadius: 8, padding: `6px 10px` } }, [
@@ -191,12 +191,12 @@ function ConsTabQ({ d, p, o, tr: TR, st }) {
     elQ(`div`, { key: `cmp`, className: `max-w-full overflow-x-auto` }, [
       elQ(`h3`, { key: `h`, className: `text-sm font-semibold` }, `模型（目前情境）vs 共識：FY26–FY28`),
       elQ(`table`, { key: `t`, className: `mt-2 w-full text-sm` }, [
-        elQ(`thead`, { key: `h` }, elQ(`tr`, { className: `border-b border-border` }, [th(`US$bn`), ...CONS_YEARS.flatMap(y => [th(`${y} 模型`, 1), th(`共識`, 1), th(`差距`, 1)])])),
+        elQ(`thead`, { key: `h` }, elQ(`tr`, { className: `border-b border-border` }, [th(`US$${UNQ}`), ...CONS_YEARS.flatMap(y => [th(`${y} 模型`, 1), th(`共識`, 1), th(`差距`, 1)])])),
         elQ(`tbody`, { key: `b` }, MET.map(([n, k]) => elQ(`tr`, { key: k, className: `border-t border-border` }, [
           elQ(`td`, { key: `n`, className: `px-2 py-1.5 font-medium` }, n),
           ...cv.rows.flatMap((r, i) => [r.m[k], r.c[k], r.gap[k]].map((x, j) => elQ(`td`, {
             key: `${i}${j}`, className: `px-2 py-1.5 text-right font-mono tabular-nums ${j === 2 && k !== `ebM` && k !== `nd` && Math.abs(x) > CONS_TOL ? `text-bad font-semibold` : ``}`
-          }, j === 2 ? (k === `ebitda` || k === `nd` ? dTxtQ(r.dif[k], `US$bn`) : gapTxtQ(x, k === `ebM`)) : k === `ebM` ? hA(x * 100, 1) : Y(x, 2))))
+          }, j === 2 ? (k === `ebitda` || k === `nd` ? dTxtQ(r.dif[k], `US$${UNQ}`) : gapTxtQ(x, k === `ebM`)) : k === `ebM` ? hA(x * 100, 1) : Y(x, 2))))
         ])))
       ]),
       elQ(`p`, { key: `j`, className: `mt-2 text-sm font-semibold` }, cv.judge),
@@ -204,7 +204,7 @@ function ConsTabQ({ d, p, o, tr: TR, st }) {
         ...cv.rsn.map((x, i) => elQ(`div`, { key: i, className: `text-xs leading-relaxed` }, `${x.yr} ${x.name} ${x.gtxt}｜${x.type}：${x.text}`))]) : null,
       elQ(`p`, { key: `i`, className: `mt-1 text-sm` }, cv.implied),
       elQ(`p`, { key: `n`, className: `mt-1 text-xs leading-relaxed text-muted` },
-        `判斷只用營收、EBITDA、CapEx，門檻 ${pctQ(CONS_TOL)}（company.json → methodology.consensusGapTol）；營收、CapEx 以比例列差距，調整後 EBITDA 與淨負債以金額差、EBITDA 率以百分點列示（判斷門檻仍以比例計）；淨負債只列不判斷（共識口徑未揭露）。FY26 模型為全年口徑：營收＝1H 實際＋2H 模型；調整後 EBITDA＝1H 實際 ${Y(ACTUAL_1H.adjEbitda, 3)}（Q1 ${Y(ACTUAL_1H.adjEbitdaMeta.q1, 3)}＋Q2 ${Y(ACTUAL_1H.adjEbitdaMeta.q2, 3)}；${ACTUAL_1H.adjEbitdaMeta.tag}：${ACTUAL_1H.adjEbitdaMeta.note}；${ACTUAL_1H.adjEbitdaMeta.sources.map(x => `${x.quarter} ${x.name}`).join(`、`)}；${ACTUAL_1H.adjEbitdaMeta.crossCheck}）＋2H 模型，只用於本對照，不改模型 GAAP 損益與評價；CapEx＝1H 實際毛額 ${Y(ACTUAL_1H.capex, 3)}＋2H 模型毛額（共識口徑未揭露）。隱含倍數＝（價格 × 股數 ${Y(o.shares, 3)}bn＋共識 FY28 淨負債）÷ 共識 FY28 調整後 EBITDA。`)
+        `判斷只用營收、EBITDA、CapEx，門檻 ${pctQ(CONS_TOL)}（company.json → methodology.consensusGapTol）；營收、CapEx 以比例列差距，調整後 EBITDA 與淨負債以金額差、EBITDA 率以百分點列示（判斷門檻仍以比例計）；淨負債只列不判斷（共識口徑未揭露）。FY26 模型為全年口徑：營收＝1H 實際＋2H 模型；調整後 EBITDA＝1H 實際 ${Y(ACTUAL_1H.adjEbitda, 3)}（Q1 ${Y(ACTUAL_1H.adjEbitdaMeta.q1, 3)}＋Q2 ${Y(ACTUAL_1H.adjEbitdaMeta.q2, 3)}；${ACTUAL_1H.adjEbitdaMeta.tag}：${ACTUAL_1H.adjEbitdaMeta.note}；${ACTUAL_1H.adjEbitdaMeta.sources.map(x => `${x.quarter} ${x.name}`).join(`、`)}；${ACTUAL_1H.adjEbitdaMeta.crossCheck}）＋2H 模型，只用於本對照，不改模型 GAAP 損益與評價；CapEx＝1H 實際毛額 ${Y(ACTUAL_1H.capex, 3)}＋2H 模型毛額（共識口徑未揭露）。隱含倍數＝（價格 × 股數 ${Y(o.shares, DUQ(3))}${UNQ}＋共識 FY28 淨負債）÷ 共識 FY28 調整後 EBITDA。`)
     ]),
     ...secs.map(sc => elQ(`div`, { key: sc, className: `max-w-full overflow-x-auto` }, [
       elQ(`h3`, { key: `h`, className: `text-sm font-semibold` }, sc),
@@ -249,17 +249,17 @@ function QuarterTabQ({ d, p, st }) {
   let L = qv.Qs.map(q => q.label),
     path = tbl([thL(`項目`), th(`單位`), ...L.map((x, k) => th(x, k))], [
       ...qv.rows.map(m => [m.label + `（模型）`, m.unit, m.q.map(r => r.model)]),
-      [`車隊折舊（模型）`, `US$bn`, qv.da], [`平均在役 MW（Billable，拆分依據）`, `MW`, qv.avgBil],
+      [`車隊折舊（模型）`, `US$${UNQ}`, qv.da], [`平均在役 MW（Billable，拆分依據）`, `MW`, qv.avgBil],
       ...qv.rows.filter(m => m.consensus).map(m => [`共識｜${m.label}${m.consensus === `derived` ? ` [Derived]` : ``}`, m.unit, m.q.map(r => r.cons)]),
       ...qv.rows.filter(m => m.consensusSecondary).map(m => [m.consensusSecondaryLabel || `共識｜${m.consensusSecondary}`, m.unit, m.q.map(r => r.consSec)]),
       ...qv.rows.filter(m => m.q.some(r => r.guide || r.gtext)).map(m => [`指引｜${m.label}`, m.unit, m.q.map(r => r.guide || r.gtext), 1]),
       ...qv.rows.map(m => [`實際｜${m.actualLabel || m.label}`, m.unit, m.q.map(r => r.actual), 2])
     ].map(([a, u, xs, kind], k) => elQ(`tr`, { key: k }, [tdL(a, `a`), td(u, `u`, { textAlign: `left`, color: `#6b7280` }),
-      ...xs.map((x, j) => td(kind === 1 ? (!x ? NA : Array.isArray(x) ? rngTxtQ(x, u) : `${x.text}（文字，${x.tag}）`) : x == null ? (kind === 2 ? TBD : NA) : valTxtQ(x, u).replace(/bn$|\sMW$/, ``).replace(`$`, ``), j))])));
+      ...xs.map((x, j) => td(kind === 1 ? (!x ? NA : Array.isArray(x) ? rngTxtQ(x, u) : `${x.text}（文字，${x.tag}）`) : x == null ? (kind === 2 ? TBD : NA) : valTxtQ(x, u).replace(/(bn|m)$|\sMW$/, ``).replace(`$`, ``), j))])));
   let sums = tbl([thL(`期間`), th(`指標`), th(`季度加總`), th(`年度模型`), th(`差額`)],
     qv.sums.flatMap(s => [[`revenue`, `營收`], [`adjEbitda`, `調整後 EBITDA`], [`adjOpInc`, `調整後營業利益`], [`capex`, `CapEx（毛額）`], [`da`, `車隊折舊`]].map(([k, n]) =>
       elQ(`tr`, { key: s.name + k }, [tdL(s.name, `p`), td(n, `n`, { textAlign: `left` }), td(Y(s[k].q, 3), `q`), td(Y(s[k].a, 3), `a`), td(Y(s[k].q - s[k].a, 6), `d`)]))));
-  let HOW = { anchor: `從${C.revenueAnchor ? ` ${C.revenueAnchor.label} ${valTxtQ(C.revenueAnchor.value, `US$bn`)}` : `最新一季實際`}起逐季線性爬升`, driverAvg: qv.drv ? `依平均在役 MW 分配` : `平分（無 MW 資料）`, equal: `平分` },
+  let HOW = { anchor: `從${C.revenueAnchor ? ` ${C.revenueAnchor.label} ${valTxtQ(C.revenueAnchor.value, `US$${UNQ}`)}` : `最新一季實際`}起逐季線性爬升`, driverAvg: qv.drv ? `依平均在役 MW 分配` : `平分（無 MW 資料）`, equal: `平分` },
     meth = [`營收：${C.periodNames.map((n, j) => `${n} ${HOW[(C.revenueSplit || [])[j] || `equal`]}`).join(`；`)}。`,
       `EBITDA 率：跨季一條直線，同時符合各期年度 EBITDA。調整後營業利益＝調整後 EBITDA − 車隊折舊（依期內平均 PP&E）。`,
       `CapEx：${C.capexSplit === `guidanceAnchor` ? `有季度指引的季取指引中點，其餘季分配期間餘數（` : ``}${qv.drv ? `依季內新增 Accepted MW` : `期內平分`}${C.capexSplit === `guidanceAnchor` ? `）` : ``}。${qv.drv && C.driver.endStartNote ? `MW 起點：${C.driver.endStartNote}。` : ``}`,
@@ -325,14 +325,14 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
   let callTone = f.call.call === `買進` ? `var(--color-ok)` : f.call.call === `賣出` ? `var(--color-bad)` : `var(--color-watch)`;
 
   // 單位經濟（與頁首摘要同一公式）
-  let rev30 = d.m.revMW[4] * (e.revScale ?? 1) * 1e3, util30 = d.m.util[4] / 100, eb30 = y[4].ebM;
+  let rev30 = d.m.revMW[4] * (e.revScale ?? 1) * 1e3 / UFQ, util30 = d.m.util[4] / 100, eb30 = y[4].ebM;
   let ebMW = rev30 * util30 * eb30, cost30 = e.a.costMW[4] * (e.capexScale ?? 1);
   let crf = o.wacc / (1 - Math.pow(1 + o.wacc, -e.gpuLife)), recov = cost30 * crf;
   let beRev = recov / (util30 * eb30), beCost = ebMW / crf;
 
   // 模型限制用數字
   let rentGap = y.reduce((a, t) => a + (t.rentBench - t.lease), 0);
-  let eqYears = y.filter(t => t.equity > .05).map(t => t.year);
+  let eqYears = y.filter(t => t.equity > .05 * UFQ).map(t => t.year);
   let rateLo = Math.min(...e.m.rate), rateHi = Math.max(...e.m.rate);
 
   let slides = [];
@@ -355,9 +355,9 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
     elQ(`p`, { key: `j`, style: { fontSize: 16, lineHeight: 1.5, margin: `14px 0 0`, maxWidth: 1180 } },
       `${TR.judge}${TR.bLabel} $${Y(TR.B[0], 1)}–$${Y(TR.B[1], 1)}：${TR.pos}；評等依點位。`),
     elQ(`div`, { key: `r`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 18, marginTop: 22 } }, [
-      [`收入受產能約束`, `排程 RPO $${Y(b.scheduled, 1)}bn，五期可實現 $${Y(b.collected, 1)}bn；模型期毛 CapEx $${Y(T.gross, 0)}bn。`],
+      [`收入受產能約束`, `排程 RPO $${Y(b.scheduled, DUQ(1))}${UNQ}，五期可實現 $${Y(b.collected, DUQ(1))}${UNQ}；模型期毛 CapEx $${Y(T.gross, DUQ(0))}${UNQ}。`],
       [ebMW < recov ? `單位經濟為負` : `單位經濟為正`, `FY30 每 MW 年 EBITDA $${Y(ebMW, 1)}m，${ebMW < recov ? `低於` : `高於`} GPU 年化資本回收 $${Y(recov, 1)}m。`],
-      [`依賴外部資金`, `融資前缺口 $${Y(T.preFinEnd < 0 ? -T.preFinEnd : 0, 1)}bn，FY30 總債務 $${Y(y[4].totalDebtEnd, 0)}bn。`]
+      [`依賴外部資金`, `融資前缺口 $${Y(T.preFinEnd < 0 ? -T.preFinEnd : 0, DUQ(1))}${UNQ}，FY30 總債務 $${Y(y[4].totalDebtEnd, DUQ(0))}${UNQ}。`]
     ].map(([a, c]) => elQ(`div`, { key: a, style: { borderTop: `3px solid var(--color-accent)`, paddingTop: 12 } }, [
       elQ(`div`, { key: `a`, style: { fontSize: 18, fontWeight: 700 } }, a),
       elQ(`div`, { key: `c`, style: { fontSize: 15.5, lineHeight: 1.55, color: `var(--color-muted)`, marginTop: 6 } }, c)
@@ -366,7 +366,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
 
   // 2｜Backlog 不是現金
   let mx2 = Math.max(b.scheduled, T.gross, T.newRev);
-  S(`RPO 對照與資本支出`, `排程 RPO $${Y(b.scheduled, 0)}bn 五期可實現 $${Y(b.collected, 0)}bn，但同期要先投入 CapEx $${Y(T.gross, 0)}bn`, [
+  S(`RPO 對照與資本支出`, `排程 RPO $${Y(b.scheduled, DUQ(0))}${UNQ} 五期可實現 $${Y(b.collected, DUQ(0))}${UNQ}，但同期要先投入 CapEx $${Y(T.gross, DUQ(0))}${UNQ}`, [
     elQ(BarQ, { key: 1, label: `排程 RPO（五期應認列）`, sub: `評價日 RPO＋期後新增，依季報桶分攤（只作對照）`, val: b.scheduled, max: mx2, color: `var(--color-accent)` }),
     elQ(BarQ, { key: 2, label: `扣：產能瓶頸`, sub: `排程 > 容量的部分收不到、不遞延`, val: b.bottleneck, max: mx2, color: `var(--color-bad)`, neg: !0 }),
     elQ(BarQ, { key: 3, label: `扣：信用損失`, val: b.credit, max: mx2, color: `var(--color-bad)`, neg: !0 }),
@@ -374,7 +374,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
     elQ(BarQ, { key: 5, label: `新簽約收入（尚未簽署）`, sub: `容量 > 排程的部分 × 新產能簽約率`, val: T.newRev, max: mx2, color: `var(--color-watch)` }),
     elQ(BarQ, { key: 6, label: `模型期毛 CapEx`, sub: `MW 連動，每 MW $${Y(cost30, 0)}m`, val: T.gross, max: mx2, color: `var(--color-ink)` }),
     elQ(`p`, { key: `n`, style: { fontSize: 15.5, color: `var(--color-muted)`, marginTop: `auto`, lineHeight: 1.55 } },
-      `以上為營收，不是現金利潤：營收乘上 EBITDAR 率才是營運現金，還要再付租金 $${Y(T.lease, 0)}bn、利息 $${Y(T.interest, 0)}bn（含新融資利息）。`)
+      `以上為營收，不是現金利潤：營收乘上 EBITDAR 率才是營運現金，還要再付租金 $${Y(T.lease, DUQ(0))}${UNQ}、利息 $${Y(T.interest, DUQ(0))}${UNQ}（含新融資利息）。`)
   ]);
 
   // 3｜單位經濟
@@ -392,9 +392,9 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
   ]);
 
   // 4｜融資
-  let mx4 = Math.max(...y.map(t => t.newDebt + t.convNew + t.equity + t.junk), .1);
+  let mx4 = Math.max(...y.map(t => t.newDebt + t.convNew + t.equity + t.junk), .1 * UFQ);
   let nfi = y.reduce((a, t) => a + t.newDebtInt, 0);
-  S(`融資`, `融資前缺口 $${Y(-Math.min(0, T.preFinEnd), 1)}bn：新債 $${Y(T.newDebt, 1)}bn、可轉債 $${Y(T.convNew, 1)}bn、股權 $${Y(T.equity, 1)}bn、高息債 $${Y(T.junk, 1)}bn`, [
+  S(`融資`, `融資前缺口 $${Y(-Math.min(0, T.preFinEnd), DUQ(1))}${UNQ}：新債 $${Y(T.newDebt, DUQ(1))}${UNQ}、可轉債 $${Y(T.convNew, DUQ(1))}${UNQ}、股權 $${Y(T.equity, DUQ(1))}${UNQ}、高息債 $${Y(T.junk, DUQ(1))}${UNQ}`, [
     elQ(`div`, { key: `c`, style: { display: `grid`, gridTemplateColumns: `repeat(5, 1fr)`, gap: 28, alignItems: `end`, height: 320, padding: `0 20px` } }, y.map(t => {
       let tot = t.newDebt + t.convNew + t.equity + t.junk, H = 260;
       return elQ(`div`, { key: t.year, style: { display: `flex`, flexDirection: `column`, alignItems: `center`, justifyContent: `flex-end`, height: `100%` } }, [
@@ -403,30 +403,30 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
           [t.newDebt, `var(--color-accent)`], [t.convNew, `var(--color-ok)`], [t.equity, `var(--color-watch)`], [t.junk, `var(--color-bad)`]
         ].map(([x, c], i) => elQ(`div`, { key: i, style: { height: Math.max(0, x) / mx4 * H, background: c } }))),
         elQ(`div`, { key: `y`, style: { fontSize: 17, fontWeight: 600, marginTop: 10 } }, t.year),
-        elQ(`div`, { key: `d`, style: { fontSize: 14, color: `var(--color-muted)`, marginTop: 2 } }, `總債務 $${Y(t.totalDebtEnd, 0)}bn`)
+        elQ(`div`, { key: `d`, style: { fontSize: 14, color: `var(--color-muted)`, marginTop: 2 } }, `總債務 $${Y(t.totalDebtEnd, DUQ(0))}${UNQ}`)
       ]);
     })),
     elQ(`div`, { key: `l`, style: { display: `flex`, gap: 26, fontSize: 15, marginTop: 36, paddingLeft: 20 } }, [
       [e.debtCapBasis === `ebitda` ? `新債（額度＋總債務 ≤ ${multTxt(e.debtEbitdaMax)}× EBITDA）` : e.debtCapBasis === `leaseAdj` ? `新債（調整後槓桿 ≤ ${multTxt(e.debtEbitdaMax)}×）` : `新債（總債務 ≤ ${Y(e.debtBacklog, 1)}× backlog）`, `var(--color-accent)`], // WhiteFiber v0.1b：依上限基準
-      [`可轉債（每年 ≤ ${Y(e.cvCap ?? 0, 1)}bn）`, `var(--color-ok)`],
+      [`可轉債（每年 ≤ ${Y(e.cvCap ?? 0, DUQ(1))}${UNQ}）`, `var(--color-ok)`],
       [`股權（$${Y(e.eqPx, 2)} 折價 ${hA(e.eqDisc * 100, 0)}，每年上限${e.eqCapPct >= 9 ? `：無` : `＝現市值 ${hA(e.eqCapPct * 100, 0)}`}）`, `var(--color-watch)`],
       [`高息債 ${hA(e.junkRate * 100, 0)}`, `var(--color-bad)`]
     ].map(([a, c]) => elQ(`span`, { key: a, style: { display: `inline-flex`, alignItems: `center`, gap: 8 } }, [
       elQ(`i`, { key: `i`, style: { width: 14, height: 14, background: c, display: `inline-block`, borderRadius: 3 } }), a
     ]))),
     elQ(`p`, { key: `n`, style: { fontSize: 15.5, color: `var(--color-muted)`, marginTop: `auto`, lineHeight: 1.55 } },
-      `新融資本身的利息 $${Y(nfi, 1)}bn 也由瀑布支應；每期在需要前先融足、期末現金不低於 $${Y(e.minCash ?? 2, 1)}bn。${eqYears.length ? `股權需求落在 ${eqYears.join('、')}，新股 ${Y(T.newShares, 2)}bn 股。` : `本情境不需股權。`}`)
+      `新融資本身的利息 $${Y(nfi, DUQ(1))}${UNQ} 也由瀑布支應；每期在需要前先融足、期末現金不低於 $${Y(e.minCash ?? 2, DUQ(1))}${UNQ}。${eqYears.length ? `股權需求落在 ${eqYears.join('、')}，新股 ${Y(T.newShares, DUQ(2))}${UNQ} 股。` : `本情境不需股權。`}`)
   ]);
 
   // 5｜三情境
   let rowsQ = [
     [`${PERIODS[4]} 年底已連網 MW`, s => Y(SCENARIOS[s.sc].acc[4], 0)],
-    [`每 MW 年收入（US$m/MW-IT）`, s => Y(SCENARIOS[s.sc].rev[4] * 1e3, 2)],
-    [`模型期毛 CapEx（$bn）`, s => Y(s.capex, 0)],
-    [`融資前缺口（$bn）`, s => Y(s.gap, 1)],
-    [`新債／可轉債／股權／高息債（$bn）`, s => `${Y(s.nd, 1)}／${Y(s.cv, 1)}／${Y(s.eq, 1)}／${Y(s.jk, 1)}`],
-    [`FY30 總債務（$bn）`, s => Y(s.debt30, 1)],
-    [`FY30 營收／EBITDA（$bn）`, s => `${Y(s.rev30, 1)}／${Y(s.eb30, 1)}`],
+    [`每 MW 年收入（US$m/MW-IT）`, s => Y(SCENARIOS[s.sc].rev[4] * 1e3 / UFQ, 2)],
+    [`模型期毛 CapEx（$${UNQ}）`, s => Y(s.capex, 0)],
+    [`融資前缺口（$${UNQ}）`, s => Y(s.gap, 1)],
+    [`新債／可轉債／股權／高息債（$${UNQ}）`, s => `${Y(s.nd, 1)}／${Y(s.cv, 1)}／${Y(s.eq, 1)}／${Y(s.jk, 1)}`],
+    [`FY30 總債務（$${UNQ}）`, s => Y(s.debt30, 1)],
+    [`FY30 營收／EBITDA（$${UNQ}）`, s => `${Y(s.rev30, 1)}／${Y(s.eb30, 1)}`],
     [`DCF 腿／EV/EBITDA 腿（每股）`, s => `$${Y(s.dcf, 1)}／$${Y(s.ev, 1)}`],
     [`加權目標價（0 截斷）`, s => `$${Y(s.tgt, 1)}`],
     [`加權目標價（選擇權模式）`, s => `$${Y(s.opt, 1)}`],
@@ -527,8 +527,8 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
         elQ(`div`, { key: `h`, style: { fontSize: 20, fontWeight: 700, marginBottom: 10 } }, `模型限制`),
         elQ(`ul`, { key: `u`, style: { fontSize: 18, paddingLeft: 24, margin: 0, listStyle: `disc` } }, [
           li(`DCF 股權價值${f.d.perShareRaw < 0 ? `為負（未截斷每股 −$${Y(-f.d.perShareRaw, 1)}），以 0 截斷` : `為正`}；截斷時，只影響 DCF 的變數（如股權折價與上限）不反映在目標價`, 1),
-          li(`終值現值 ${mA(f.d.pvTv, 1)}bn、五期 FCF 現值 ${mA(f.d.pvFcf, 1)}bn：企業價值幾乎全來自終值，DCF 對 WACC、永續成長極敏感`, 2),
-          li(`租金尚未改為 MW 驅動；以具名站點基準計，五期可能低估約 $${Y(rentGap, 1)}bn`, 3),
+          li(`終值現值 ${mA(f.d.pvTv, DUQ(1))}${UNQ}、五期 FCF 現值 ${mA(f.d.pvFcf, DUQ(1))}${UNQ}：企業價值幾乎全來自終值，DCF 對 WACC、永續成長極敏感`, 2),
+          li(`租金尚未改為 MW 驅動；以具名站點基準計，五期可能低估約 $${Y(rentGap, DUQ(1))}${UNQ}`, 3),
           li(`EV/EBITDA 腿錨定 ${PERIOD_LABELS[o.evYear ?? 1]}；錨定年度與倍數的選擇會大幅改變目標價（見評價方法頁）`, 4)
         ])
       ])

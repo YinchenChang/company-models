@@ -42,7 +42,8 @@ with Workbook(xlsx) as wb:
     caps, ebs = [.7, .8, .9, 1, 1.1], [.35, .47, .59, .7]  # v0.1b：可觀察 neocloud 區間（與 segA reverseDcf 相同）
     grid = [[solve(lambda x: run(cap=cp, eb=s, rev=x), .5, 4, True) for s in ebs] for cp in caps]
     run()  # 還原輸入（不存檔）
-    rev30 = wb.get(wb.cell(IN, '每 MW 年收入', col='G')) * base_in['rev'] * 1e3
+    _UF = 1000 if json.load(open(os.path.join(ROOT, 'company.json'), encoding='utf-8'))['meta'].get('unit') == 'm' else 1  # WhiteFiber v0.1c：金額單位
+    rev30 = wb.get(wb.cell(IN, '每 MW 年收入', col='G')) * base_in['rev'] * 1e3 / _UF  # US$m/MW
     util30 = wb.get(wb.cell(IN, '利用率', col='G'))
     cost30 = wb.get(wb.cell(IN, '每 MW 建置成本', col='G')) * base_in['cap']
 

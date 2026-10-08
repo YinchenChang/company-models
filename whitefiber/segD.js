@@ -98,10 +98,10 @@ function zM() {
           className: `max-w-3xl text-sm leading-relaxed text-pretty text-accent-soft`,
           children: [e.scenario === `custom` ? `自訂情境` : SCENARIOS[e.scenario]?.label, `：${PERIODS[0]}–${PERIODS[PERIODS.length - 1].slice(2)} 融資前缺口 `, (0, $.jsxs)(`span`, {
             className: `font-medium text-accent-fg`,
-            children: [mA(Math.max(0, -d.totals.preFinEnd)), `bn`]
-          }), `，加上新融資本身的利息 `, mA(d.years.reduce((e, t) => e + t.newDebtInt, 0)), `bn，由新債 `, mA(d.totals.newDebt), `bn、可轉債 `, mA(d.totals.convNew), `bn、股權 `, mA(d.totals.equity), `bn（新股 `, Y(d.totals.newShares, 2), `bn 股）`, d.totals.junk > .05 ? `、高息債 ${mA(d.totals.junk)}bn` : ``, ` 補足。每 MW 年 EBITDA 約 `, (0, $.jsxs)(`span`, {
+            children: [mA(Math.max(0, -d.totals.preFinEnd)), `${UNQ}`]
+          }), `，加上新融資本身的利息 `, mA(d.years.reduce((e, t) => e + t.newDebtInt, 0)), `${UNQ}，由新債 `, mA(d.totals.newDebt), `${UNQ}、可轉債 `, mA(d.totals.convNew), `${UNQ}、股權 `, mA(d.totals.equity), `${UNQ}（新股 `, Y(d.totals.newShares, 2), `${UNQ} 股）`, d.totals.junk > .05 * UFQ ? `、高息債 ${mA(d.totals.junk)}${UNQ}` : ``, ` 補足。每 MW 年 EBITDA 約 `, (0, $.jsxs)(`span`, {
             className: `font-medium text-accent-fg`,
-            children: [`$`, Y(d.m.revMW[4] * (e.revScale ?? 1) * 1e3 * d.m.util[4] / 100 * d.years[4].ebM, 1), `m`]
+            children: [`$`, Y(d.m.revMW[4] * (e.revScale ?? 1) * 1e3 / UFQ * d.m.util[4] / 100 * d.years[4].ebM, 1), `m`]
           }), `，回收一個 MW 的 GPU（$`, Y(e.a.costMW[4] * (e.capexScale ?? 1), 0), `m、`, e.gpuLife, ` 年、WACC `, hA(o.wacc * 100, 0), `）每年需要 `, (0, $.jsxs)(`span`, {
             className: `font-medium text-accent-fg`,
             children: [`$`, Y(e.a.costMW[4] * (e.capexScale ?? 1) * o.wacc / (1 - Math.pow(1 + o.wacc, -e.gpuLife)), 1), `m`]
@@ -217,11 +217,11 @@ function zM() {
         children: [(0, $.jsx)(`div`, {
           className: `grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6`,
           children: [
-            [`排程 RPO（五期）`, mA(b.scheduled) + `bn`],
-            [`可實現（扣產能／信用）`, mA(b.collected) + `bn`],
-            [`營運缺口（不含股權）`, mA(d.totals.operatingGap) + `bn`],
-            [`期初＋可轉債＋瀑布融資`, mA(e.cash + d.totals.atm + d.totals.facility) + `bn`],
-            [`需股權募資（瀑布）`, mA(d.totals.equity) + `bn`],
+            [`排程 RPO（五期）`, mA(b.scheduled) + `${UNQ}`],
+            [`可實現（扣產能／信用）`, mA(b.collected) + `${UNQ}`],
+            [`營運缺口（不含股權）`, mA(d.totals.operatingGap) + `${UNQ}`],
+            [`期初＋可轉債＋瀑布融資`, mA(e.cash + d.totals.atm + d.totals.facility) + `${UNQ}`],
+            [`需股權募資（瀑布）`, mA(d.totals.equity) + `${UNQ}`],
             [`連動評價／結論`, `$${Y(f.call.blended,1)}（$${Y(TR.A[0],1)}–$${Y(TR.A[1],1)}）· ${f.call.call}`]
           ].map(([e, t], n) => (0, $.jsxs)(Jj, {
             className: `p-3 md:p-4`,
@@ -251,7 +251,7 @@ function zM() {
                 }, t))
               }), (0, $.jsxs)(`p`, {
                 className: `mt-2 text-xs text-muted`,
-                children: [`目前：`, e.scenario === `custom` ? `自訂` : SCENARIOS[e.scenario]?.label, ` · ${PERIODS[4]} 年底已連網 `, Y(d.m.accepted[4], 0), ` MW · 模型期 CapEx `, Y(d.years.reduce((e, t) => e + t.gross, 0), 0), `bn`]
+                children: [`目前：`, e.scenario === `custom` ? `自訂` : SCENARIOS[e.scenario]?.label, ` · ${PERIODS[4]} 年底已連網 `, Y(d.m.accepted[4], 0), ` MW · 模型期 CapEx `, Y(d.years.reduce((e, t) => e + t.gross, 0), 0), `${UNQ}`]
               }), (0, $.jsxs)(`div`, {
                 className: `mt-4 space-y-2`,
                 children: [(0, $.jsx)(accQ, {
@@ -269,7 +269,7 @@ function zM() {
                     })
                   }),
 (0, $.jsx)(LM, {
-                  label: `6/30 RPO（US$bn）`,
+                  label: `6/30 RPO（US$${UNQ}）`,
                   hint: `${Y(LATEST_Q.rpo, 1)} 季報 RPO（只作對照，不驅動營收）`,
                   children: (0, $.jsx)(IM, {
                     value: e.rpoOpen,
@@ -279,7 +279,7 @@ function zM() {
                   })
                 }),
 (0, $.jsx)(LM, {
-                  label: `Q3 初新增承諾（US$bn）`,
+                  label: `Q3 初新增承諾（US$${UNQ}）`,
                   hint: `法說「>25」，未入 RPO；口徑為 net new commitments`,
                   children: (0, $.jsx)(IM, {
                     value: e.rpoPendingAdd,
@@ -456,7 +456,7 @@ function zM() {
                   title: `E｜融資（瀑布與信用）`,
                   sum: `上限 ${Y(e.debtBacklog,1)}x · 股權 ${e.eqCapPct>=9?`無上限`:hA(e.eqCapPct*100,0)} · CDS ${Y(e.cds,0)}`,
                   children: [(0, $.jsx)(LM, {
-                  label: `期初現金 6/30（US$bn）`,
+                  label: `期初現金 6/30（US$${UNQ}）`,
                   hint: `季報現金 ${Y(LATEST_Q.cash, 3)}（受限現金不計）`,
                   children: (0, $.jsx)(IM, {
                     value: e.cash,
@@ -471,11 +471,11 @@ function zM() {
                     includeAtm: t,
                     scenario: e.scenario
                   }),
-                  label: `計入期後股權／可轉債淨現金 $${Y(e.atm, 2)}bn`,
-                  hint: `${CALL_FACTS.postQShortDated || ``}。淨現金 ${e.atm}bn 記於首期模型部分，不算進「營運缺口」；新可轉債同時是負債（見既有債務）。`
+                  label: `計入期後股權／可轉債淨現金 $${Y(e.atm, DUQ(2))}${UNQ}`,
+                  hint: `${CALL_FACTS.postQShortDated || ``}。淨現金 ${e.atm}${UNQ} 記於首期模型部分，不算進「營運缺口」；新可轉債同時是負債（見既有債務）。`
                 }),
 (0, $.jsx)(LM, {
-                  label: `股權／可轉債金額（US$bn）`,
+                  label: `股權／可轉債金額（US$${UNQ}）`,
                   hint: `3.2（可轉債淨現金）＋ 3.0（ATM 上限）`,
                   children: (0, $.jsx)(IM, {
                     value: e.atm,
@@ -490,8 +490,8 @@ function zM() {
                     useFacility: t,
                     scenario: e.scenario
                   }),
-                  label: `瀑布可動用未動用額度 $${e.facility}bn`,
-                  hint: `未動用額度 ${e.facility}bn（資產擔保定期貸款，2026-07 簽約）。瀑布第一順位，不受 債務／backlog 上限限制（已承諾額度）。關閉＝不動用額度，直接進入新債與股權。`
+                  label: `瀑布可動用未動用額度 $${e.facility}${UNQ}`,
+                  hint: `未動用額度 ${e.facility}${UNQ}（資產擔保定期貸款，2026-07 簽約）。瀑布第一順位，不受 債務／backlog 上限限制（已承諾額度）。關閉＝不動用額度，直接進入新債與股權。`
                 }),
 (0, $.jsx)(RM, {
                   checked: e.includeDebt,
@@ -524,7 +524,7 @@ function zM() {
                   })
                 }),
 (0, $.jsx)(LM, {
-                  label: `最低現金（US$bn）`,
+                  label: `最低現金（US$${UNQ}）`,
                   hint: `期前融資的現金底線 [Assumed]`,
                   children: (0, $.jsx)(IM, {
                     value: e.minCash,
@@ -558,7 +558,7 @@ function zM() {
                 }),
 (0, $.jsx)(LM, {
                   label: `每年股權吸收上限（占現市值 %）`,
-                  hint: e.eqCapPct >= 9 ? `無上限` : `${hA(e.eqCapPct*100,0)} · 約 $${Y(e.eqCapPct*e.eqPx*.5865,1)}bn／年；2026 年實際約 13%`,
+                  hint: e.eqCapPct >= 9 ? `無上限` : `${hA(e.eqCapPct*100,0)} · 約 $${Y(e.eqCapPct*e.eqPx*.5865,1)}${UNQ}／年；2026 年實際約 13%`,
                   children: (0, $.jsx)(IM, {
                     value: e.eqCapPct * 100,
                     onChange: e => w({
@@ -630,7 +630,7 @@ function zM() {
                 children: [(0, $.jsx)(`h2`, {
                   className: `font-display text-lg font-semibold`,
                   children: [`各期收支狀況`, (0, $.jsx)(tipQ, {
-                    t: `左圖：各期營運來源、融資來源與用途。右圖：紅色面積為「融資前累積現金」＝若不做任何新融資，評價日現金加上各期營運來源（含客戶預付）與期後股權／可轉債、減去所有支出後的累積結果，負值即需要外部資金的規模；線條為瀑布累計補入的新債、股權與高息債。期前融資後的期末現金固定在最低現金 2.0bn，因此不再畫出。`,
+                    t: `左圖：各期營運來源、融資來源與用途。右圖：紅色面積為「融資前累積現金」＝若不做任何新融資，評價日現金加上各期營運來源（含客戶預付）與期後股權／可轉債、減去所有支出後的累積結果，負值即需要外部資金的規模；線條為瀑布累計補入的新債、股權與高息債。期前融資後的期末現金固定在最低現金 ${Y(DEFAULTS.minCash, DUQ(1))}${UNQ}，因此不再畫出。`,
                     w: 440
                   })]
                 }), (0, $.jsxs)(`div`, {
@@ -640,7 +640,7 @@ function zM() {
                     children: [`營運`, _ ? `可覆蓋（含期初現金）` : `仍缺資金`]
                   }), (0, $.jsx)(Uj, {
                     tone: g ? `ok` : `bad`,
-                    children: d.totals.equity > .01 ? `需股權 ${Y(d.totals.equity,0)}bn（新股 ${Y(d.totals.newShares,2)}bn 股）` : `缺口可全由債務支應`
+                    children: d.totals.equity > .01 * UFQ ? `需股權 ${Y(d.totals.equity,0)}${UNQ}（新股 ${Y(d.totals.newShares,2)}${UNQ} 股）` : `缺口可全由債務支應`
                   })]
                 })]
               }), (0, $.jsxs)(`div`, {
@@ -763,7 +763,7 @@ function zM() {
                 className: `space-y-3`,
                 children: [(0, $.jsx)(hdrQ, {
                   title: `收支假設（FY26 欄＝1H 實際＋2H 模型）`,
-                  tip: `支出五層：① 毛 CapEx（由已連網 MW 推導；客戶預付在來源端列示）→ ② 租金（在帳＝季報到期表固定值；表外＝已簽約未起租 ${Y(LATEST_Q.offBalanceLease, 1)}bn 的現金路徑）→ ③ 利息（存量債務依既有債務推算；瀑布新債另計利息）→ ④ 策略投資出資 → ⑤ 排程還本（季報到期表）。藍色可編輯格為輸入；灰底列為計算結果。本頁輸入為首期模型部分的金額，${PERIODS[0]} 欄在「各期收支」頁才加回年初至今實際。`
+                  tip: `支出五層：① 毛 CapEx（由已連網 MW 推導；客戶預付在來源端列示）→ ② 租金（在帳＝季報到期表固定值；表外＝已簽約未起租 ${Y(LATEST_Q.offBalanceLease, DUQ(1))}${UNQ} 的現金路徑）→ ③ 利息（存量債務依既有債務推算；瀑布新債另計利息）→ ④ 策略投資出資 → ⑤ 排程還本（季報到期表）。藍色可編輯格為輸入；灰底列為計算結果。本頁輸入為首期模型部分的金額，${PERIODS[0]} 欄在「各期收支」頁才加回年初至今實際。`
                 }), (0, $.jsx)(BM, {
                   rows: [
                     [`支出（可編輯輸入；${PERIODS[0]} 欄為${CALQ.stubWord}模型值）`, null],
@@ -779,7 +779,7 @@ function zM() {
                     [`　閒置資本（已支出未產生收入，期末）`, d.years.map(e => e.idleCap), void 0, void 0, `calc`, `GPU 成長型資本支出照原併網時程（已採購、交貨等電），計費延後 ${multTxt(e.delayMonths ?? 0)} 個月：＝原時程累計 − 已投入使用累計；折舊自投入使用時點起算（v0.2）。`],
                     [`　對照：v1.4 手動值`, d.years.map(e => e.capexOld), void 0, void 0, void 0, `CRWV 模板舊版手動值（本公司不適用，0）。`],
                     [`　客戶預付率`, e.a.customerFund.map(e => e * 100), (e, t) => E(`customerFund`, e, t / 100), void 0, void 0, `＝有預付的合約比例 × 預付占資本支出比（${TXQ.prepayCoverNote}）。只降當期外部融資需求、形成合約負債，不降專案總成本。`, `%`],
-                    [`② 表外現金租金（未起租）`, e.a.newLease, (e, t) => E(`newLease`, e, t), void 0, void 0, `對應季報已簽約未起租租賃 ${Y(LATEST_Q.offBalanceLease, 1)}bn（${TXQ.offBalanceLeaseTerm}）的現金支付路徑 [Derived]。`],
+                    [`② 表外現金租金（未起租）`, e.a.newLease, (e, t) => E(`newLease`, e, t), void 0, void 0, `對應季報已簽約未起租租賃 ${Y(LATEST_Q.offBalanceLease, DUQ(1))}${UNQ}（${TXQ.offBalanceLeaseTerm}）的現金支付路徑 [Derived]。`],
                     [`　表外租金（延誤連動後）`, d.years.map(e => e.offLease), void 0, void 0, `calc`, `上列原排程中 ${pctQ(e.delayLink ?? 0)} 的起租隨建設延誤 ${multTxt(e.delayMonths ?? 0)} 個月後移（開發商交付晚），其餘照原時程；租金合計用此列（v0.2）。`],
                     [`② 在帳現金租金（季報固定）`, [...LEASE_CASH_ON_BAL], void 0, void 0, void 0, `季報到期表：${LEASE_CASH_ON_BAL.map(x => Y(x, 2)).join(`／`)}，之後尚有 ${Y(LEASE_AFTER_FY30, 2)}。`],
                     [`③ 存量債務利息（既有債務推算）`, d.years.map(e => e.intStock), void 0, void 0, `calc`, `＝平均本金（依到期表遞減）× 加權有效利率 ${hA(DBT_R * 100, 1)} × 期間長度 ＋ 期後新發可轉債利息 ＋ 首期校準 ${e.intCal}。明細見「既有債務」分頁。`],
@@ -832,7 +832,7 @@ function zM() {
                     [`Ⓔ 股權／可轉債（融資）`, d.years.map((e, t) => t === 0 ? e.fyEquity : e.atm), void 0, void 0, void 0, `${PERIODS[0]}＝年初至今股權 ${Y(ACTUAL_1H.equity, 3)}（${TXQ.ytdEquityNote}）＋期後 ${Y(e.atm, 2)}。`],
                     [`Ⓕ 年初至今實際借款（融資）`, d.years.map((e, t) => t === 0 ? e.fyBorrow : 0), void 0, void 0, void 0, `季報：年初至今借款 ${Y(ACTUAL_1H.borrow, 3)}。`],
                     [`Ⓖ 瀑布：新債（額度＋資產層）`, d.years.map(e => e.newDebt), void 0, void 0, void 0, `先用未動用額度，再用資產層新債；總債務不得超過 債務／backlog 上限。`],
-                    [`Ⓖ2 瀑布：可轉債`, d.years.map(e => e.convNew), void 0, void 0, void 0, `資產擔保融資用罄後、股權之前；每年上限 ${Y(e.cvCap ?? 0, 1)}bn（隨情境）、票息 ${hA(e.convIssue.coupon * 100, 1)}。`],
+                    [`Ⓖ2 瀑布：可轉債`, d.years.map(e => e.convNew), void 0, void 0, void 0, `資產擔保融資用罄後、股權之前；每年上限 ${Y(e.cvCap ?? 0, DUQ(1))}${UNQ}（隨情境）、票息 ${hA(e.convIssue.coupon * 100, 1)}。`],
                     [`Ⓗ 瀑布：股權募資`, d.years.map(e => e.equity), void 0, void 0, void 0, `債務與可轉債用罄後的殘差，按現價折價發行；每年不超過股權吸收上限。`],
                     [`Ⓘ 瀑布：高息債（股權上限溢出）`, d.years.map(e => e.junk), void 0, void 0, void 0, `股權超過每年吸收上限的部分，以高息債補足；不受 backlog 上限約束。`],
                     [`總來源（含融資）`, d.years.map((e, t) => t === 0 ? e.fySrcTotal : e.sources), void 0, void 0, `tot`],
@@ -851,16 +851,16 @@ function zM() {
                     [`債務上限（債務／backlog）`, d.years.map(e => e.debtCap)],
                     [`期末總債務（既有＋可轉債＋新債）`, d.years.map(e => e.totalDebtEnd), void 0, void 0, `tot`],
                     [`每年股權吸收上限`, d.years.map(e => Number.isFinite(e.eqCap) ? e.eqCap : NaN), void 0, void 0, void 0, `＝現市值 × 上限 % × 期間長度。`],
-                    [`新發行股數`, d.years.map(e => e.newShares), void 0, void 0, void 0, `＝股權募資 ÷ 發行價。`, `bn 股`, 3],
+                    [`新發行股數`, d.years.map(e => e.newShares), void 0, void 0, void 0, `＝股權募資 ÷ 發行價。`, `${UNQ} 股`, 3],
                     [`可轉債（瀑布）餘額`, d.years.map(e => e.convEnd), void 0, void 0, void 0],
                     [`高息債餘額`, d.years.map(e => e.junkEnd), void 0, void 0, void 0],
                     [`融資前累積現金`, d.years.map(e => e.preFinCum), void 0, void 0, `tot`, `若不做任何新融資的累積現金；負值＝外部資金需求。`],
-                    [`累計新股`, d.years.map(e => e.cumNewShares), void 0, void 0, `tot`, void 0, `bn 股`, 3],
+                    [`累計新股`, d.years.map(e => e.cumNewShares), void 0, void 0, `tot`, void 0, `${UNQ} 股`, 3],
                     [`缺口與現金`, null],
                     [`營運缺口（不含融資與還本）`, d.years.map((e, t) => t === 0 ? e.fyOperatingGap : e.operatingGap), void 0, void 0, `tot`, `本業能不能自給。${PERIODS[0]} 的年初至今部分＝CFO ${Y(ACTUAL_1H.cfo, 3)} − 現金 CapEx ${Y(ACTUAL_1H.cashCapex, 3)} − 策略投資 ${Y(ACTUAL_1H.jv, 3)}（皆為季報實際值）。`],
                     [`期初累積現金`, d.years.map((e, t) => t === 0 ? ACTUAL_1H.cash1231 : d.years[t - 1].cum), void 0, void 0, void 0, `${PERIODS[0]} 自上一年底現金 ${Y(ACTUAL_1H.cash1231, 3)} 起算。`],
                     [`1H 其他／受限現金調節`, d.years.map((e, t) => t === 0 ? e.hPlug : 0), void 0, void 0, void 0, `使年初至今實際流量接回評價日現金餘額；差額來自受限現金變動、匯率與未逐項列出的項目。`],
-                    [`期末累積現金`, d.years.map(e => e.cum), void 0, void 0, `tot`, `負值＝尚需向資產擔保融資／可轉債／股權市場籌措的金額。未動用額度 ${Y(e.facility, 3)}bn 未預先扣減。`],
+                    [`期末累積現金`, d.years.map(e => e.cum), void 0, void 0, `tot`, `負值＝尚需向資產擔保融資／可轉債／股權市場籌措的金額。未動用額度 ${Y(e.facility, DUQ(3))}${UNQ} 未預先扣減。`],
                     [`FY26 全年備忘（認列口徑，對照公司指引）`, null],
                     [`CapEx 認列（年初至今 ${Y(ACTUAL_1H.capex, 3)}＋模型期）`, d.years.map((e, t) => t === 0 ? e.fyGross : e.gross), void 0, void 0, void 0, `公司全年指引 ${CAPEX_GUIDE_TXT}（法說會轉述）。`],
                     [`利息（1H ${Y(ACTUAL_1H.interest, 3)}＋下半年）`, d.years.map((e, t) => t === 0 ? e.fyInterest : e.interest), void 0, void 0, void 0, `公司未提供季度利息指引。`],
@@ -881,7 +881,7 @@ function zM() {
                     [`Billable MW`, d.m.billable, (e, t) => D(`billable`, e, t), void 0, void 0, `引擎會強制不超過 Accepted。`, `MW`],
                     [`Billable MW（延誤後，計費用）`, d.years.map(e => e.billDelayed), void 0, void 0, `calc`, `＝上列往後平移建設延誤 ${multTxt(e.delayMonths ?? 0)} 個月（以期間長度線性內插；評價日之前取期初校準值）；營收依此列（v0.2）。`, `MW`],
                     [`利用率`, e.m.util, (e, t) => D(`util`, e, t), void 0, void 0, `法說稱「近期產能實質售罄」，本模型不擬合為 100%。`, `%`],
-                    [`每 MW 年收入`, e.m.revMW, (e, t) => D(`revMW`, e, t), 5e-4, void 0, `Tokenomics 正向推導（data/permw_tokenomics_20261008.json）；隨情境：保守 0.01162／基準 0.0174／積極 0.0242 [Derived]。`, `US$bn/MW`],
+                    [`每 MW 年收入`, e.m.revMW, (e, t) => D(`revMW`, e, t), 5e-4 * UFQ, void 0, `Tokenomics 正向推導（data/permw_tokenomics_20261008.json）；隨情境：保守 ${SC_REV.low[0]}／基準 ${SC_REV.base[0]}／積極 ${SC_REV.high[0]} [Derived]。`, `US$${UNQ}/MW`],
                     [`新產能簽約率`, e.m.fill, (e, t) => D(`fill`, e, t), 1, void 0, `把這欄調成 0，就能看到只靠期初 RPO 的缺口有多大——最重要的壓力測試。`, `%`],
 
                   ]
@@ -949,7 +949,7 @@ function zM() {
                         children: `連動租賃尾端`
                       }), (0, $.jsxs)(`td`, {
                         className: `py-2 font-mono tabular-nums`,
-                        children: [Y(d.leaseTail), `bn = 在帳 ${PERIODS[4]} `, LEASE_CASH_ON_BAL[4], ` × `, e.terminal.residualLeaseYears, ` 年（年報營業租賃加權剩餘租期 12 年）＋未起租租賃模型期後未付 `, Y(S.tail), `（總額 − 五期）。五期表外現金 `, Y(S.cashFive), ` + 尾 `, Y(S.tail), ` = `, Y(S.mapped), ` vs 承諾 `, Y(S.committed), `；在帳之後尚有 `, Y(LEASE_AFTER_FY30), `。`]
+                        children: [Y(d.leaseTail), `${UNQ} = 在帳 ${PERIODS[4]} `, LEASE_CASH_ON_BAL[4], ` × `, e.terminal.residualLeaseYears, ` 年（年報營業租賃加權剩餘租期 12 年）＋未起租租賃模型期後未付 `, Y(S.tail), `（總額 − 五期）。五期表外現金 `, Y(S.cashFive), ` + 尾 `, Y(S.tail), ` = `, Y(S.mapped), ` vs 承諾 `, Y(S.committed), `；在帳之後尚有 `, Y(LEASE_AFTER_FY30), `。`]
                       })]
                     }), (0, $.jsxs)(`tr`, {
                       children: [(0, $.jsx)(`td`, {
@@ -957,7 +957,7 @@ function zM() {
                         children: `終值淨額`
                       }), (0, $.jsxs)(`td`, {
                         className: `py-2 font-mono tabular-nums`,
-                        children: [Y(d.totals.terminal), `bn（法說：A100 續約至 2029、舊世代仍售罄——殘值假設 25% 偏保守，但 GPU 折舊爭議未解）`]
+                        children: [Y(d.totals.terminal), `${UNQ}（法說：A100 續約至 2029、舊世代仍售罄——殘值假設 25% 偏保守，但 GPU 折舊爭議未解）`]
                       })]
                     })
                   ]
@@ -1009,7 +1009,7 @@ function zM() {
                     },
                     children: [(0, $.jsx)(`thead`, {
                       children: (0, $.jsx)(`tr`, {
-                        children: [`站點`, `契約 MW`, `合約總值 $bn`, `年期`, `年租金 $bn`, `每 MW 年租金 $m`, `季報對應`].map((e, t) => (0, $.jsx)(`th`, {
+                        children: [`站點`, `契約 MW`, `合約總值 $${UNQ}`, `年期`, `年租金 $${UNQ}`, `每 MW 年租金 $m`, `季報對應`].map((e, t) => (0, $.jsx)(`th`, {
                           style: t === 0 ? xstyQ.thL : xstyQ.th,
                           children: e
                         }, e))
@@ -1022,7 +1022,7 @@ function zM() {
                             background: t % 2 ? `#fbfaf7` : `#fff`
                           },
                           children: e.name
-                        }), [e.planned, e.contract, e.years, e.contract / e.years, e.contract / e.years / e.planned * 1e3].map((e, n) => (0, $.jsx)(`td`, {
+                        }), [e.planned, e.contract, e.years, e.contract / e.years, e.contract / e.years / e.planned * 1e3 / UFQ].map((e, n) => (0, $.jsx)(`td`, {
                           style: {
                             ...xstyQ.td,
                             background: t % 2 ? `#fbfaf7` : `#fff`
@@ -1167,7 +1167,7 @@ function zM() {
                   })
                 }), (0, $.jsx)(`p`, {
                   className: `text-xs text-muted`,
-                  children: `股權需求與融資前缺口單位為 US$bn（模型期合計）。「每 MW 年收入」敏感性將 FY26–FY30 五期 Revenue/MW 同比調整 ±15%，其他假設不變，並重新計算容量收入上限、資金瀑布及評價。WACC 與 EV/EBITDA 倍數只影響評價，不改變融資。`
+                  children: `股權需求與融資前缺口單位為 US$${UNQ}（模型期合計）。「每 MW 年收入」敏感性將 FY26–FY30 五期 Revenue/MW 同比調整 ±15%，其他假設不變，並重新計算容量收入上限、資金瀑布及評價。WACC 與 EV/EBITDA 倍數只影響評價，不改變融資。`
                 })]
               }), n === 8 && (0, $.jsxs)(`ul`, {
                 className: `space-y-2`,
@@ -1274,14 +1274,14 @@ function zM() {
                     [`總債務`, d.years.map(e => e.totalDebtEnd), void 0, void 0, `tot`],
                     [`淨負債（總債務 − 期末現金）`, d.years.map(e => e.totalDebtEnd - e.cum), void 0, void 0, `tot`],
                     [`股本`, null],
-                    [`基礎股數（含 ATM 上限、SBC 稀釋）`, f.fwd.map((e, t) => e.shares - d.years[t].cumNewShares), void 0, void 0, void 0, void 0, `bn 股`, 3],
-                    [`＋ 本期新股`, d.years.map(e => e.newShares), void 0, void 0, void 0, `＝股權募資 ÷ 發行價。`, `bn 股`, 3],
-                    [`總股數（期末）`, f.fwd.map(e => e.shares), void 0, void 0, `tot`, void 0, `bn 股`, 3],
+                    [`基礎股數（含 ATM 上限、SBC 稀釋）`, f.fwd.map((e, t) => e.shares - d.years[t].cumNewShares), void 0, void 0, void 0, void 0, `${UNQ} 股`, 3],
+                    [`＋ 本期新股`, d.years.map(e => e.newShares), void 0, void 0, void 0, `＝股權募資 ÷ 發行價。`, `${UNQ} 股`, 3],
+                    [`總股數（期末）`, f.fwd.map(e => e.shares), void 0, void 0, `tot`, void 0, `${UNQ} 股`, 3],
                     [`槓桿`, null],
                     [`期末 backlog`, d.years.map(e => e.backlogEnd)],
                     [`債務上限（債務／backlog × 期末 backlog）`, d.years.map(e => e.debtCap)],
-                    [`總債務 ÷ 期末 backlog`, d.years.map(e => e.totalDebtEnd / Math.max(e.backlogEnd, .01)), void 0, void 0, void 0, `高息債不受 backlog 上限約束，所以此比率可能超過上限。`, `x`, 2],
-                    [`總債務 ÷ EBITDA（年化）`, d.years.map((e, t) => e.totalDebtEnd / Math.max(e.ebitdaPL / PERIOD_YEARS[t], .01)), void 0, void 0, void 0, `FY26 模型期 EBITDA 以半年 ×2 年化。`, `x`, 1],
+                    [`總債務 ÷ 期末 backlog`, d.years.map(e => e.totalDebtEnd / Math.max(e.backlogEnd, .01 * UFQ)), void 0, void 0, void 0, `高息債不受 backlog 上限約束，所以此比率可能超過上限。`, `x`, 2],
+                    [`總債務 ÷ EBITDA（年化）`, d.years.map((e, t) => e.totalDebtEnd / Math.max(e.ebitdaPL / PERIOD_YEARS[t], .01 * UFQ)), void 0, void 0, void 0, `FY26 模型期 EBITDA 以半年 ×2 年化。`, `x`, 1],
                     [`租賃負債（期末）`, d.years.map(e => e.leaseLiab), void 0, void 0, void 0, `剩餘租金現值（折現率 ${hA(LLQ * 100, 1)}，10-K 加權平均）：在帳到期表＋未起租租約已起租部分（v0.2）。`],
                     [`調整後槓桿（(總債務＋租賃負債) ÷ (EBITDA＋租金)）`, d.years.map(e => e.adjLev), void 0, void 0, `tot`, `S&P 口徑近似；降評門檻 >${multTxt(e.debtCapBasis === `leaseAdj` ? e.debtEbitdaMax : 4.5)}×（二手轉述）。S&P 自身口徑另含全部未起租承諾與無條件採購義務，較本列高。`, `x`, 2],
                     [`距投資級上限的空間`, d.years.map(t => e.debtEbitdaMax - t.adjLev), void 0, void 0, void 0, `負值＝超過上限：需股權或失去投資級。`, `x`, 2]
@@ -1407,7 +1407,7 @@ function zM() {
                   className: `border-border bg-surface p-4`,
                   children: [(0, $.jsx)(`h3`, {
                     className: `font-display text-base font-semibold`,
-                    children: `表外與契約性支出總表（季報，${CALQ.valuationDate}，US$bn）`
+                    children: `表外與契約性支出總表（季報，${CALQ.valuationDate}，US$${UNQ}）`
                   }), (0, $.jsx)(`div`, {
                     className: `mt-2 overflow-x-auto`,
                     children: (0, $.jsxs)(`table`, {
@@ -1449,7 +1449,7 @@ function zM() {
                     children: [(0, $.jsxs)(`p`, {
                       children: [(0, $.jsx)(`span`, {
                         className: `font-medium text-fg`,
-                        children: `未起租 $${Y(LATEST_Q.offBalanceLease, 1)}bn 是契約，不是或有事項。`
+                        children: `未起租 $${Y(LATEST_Q.offBalanceLease, DUQ(1))}${UNQ} 是契約，不是或有事項。`
                       }), `ASC 842 規定租賃在 commencement 才入表；已簽約、機房未交付 → 表外揭露。${TXQ.leaseNote}。`]
                     }), (0, $.jsx)(`p`, {
                       children: `客戶預付是合約負債，不是收入：預付現金在建置前先收，之後隨服務提供認列為營收（非現金）。${TXQ.prepayRiskNote}`
@@ -1516,17 +1516,17 @@ function zM() {
                   text: consSourceTxtQ().targets
                 }), (0, $.jsxs)(`p`, {
                   className: `text-xs text-muted`,
-                  children: [`損益兩平貢獻率 `, hA(d.totals.be * 100), `。終值 `, mA(d.totals.terminal), `bn。本工具是現金資金模型，不是評等預測或投資建議。`]
+                  children: [`損益兩平貢獻率 `, hA(d.totals.be * 100), `。終值 `, mA(d.totals.terminal), `${UNQ}。本工具是現金資金模型，不是評等預測或投資建議。`]
                 })]
               })]
             }), (0, $.jsxs)(Jj, {
               className: `bg-ink text-accent-fg`,
               children: [(0, $.jsx)(`h2`, {
                 className: `font-display text-2xl font-semibold`,
-                children: `五期融資：瀑布新債 ${mA(d.totals.newDebt)}bn、股權 ${mA(d.totals.equity)}bn（新股 ${Y(d.totals.newShares,2)}bn 股，原股東最終持股約 ${Y(f.shares/(f.shares+d.totals.newShares)*100,0)}%）。連動評價 $${Y(f.call.blended,0)}，結論「${f.call.call}」。`
+                children: `五期融資：瀑布新債 ${mA(d.totals.newDebt)}${UNQ}、股權 ${mA(d.totals.equity)}${UNQ}（新股 ${Y(d.totals.newShares,2)}${UNQ} 股，原股東最終持股約 ${Y(f.shares/(f.shares+d.totals.newShares)*100,0)}%）。連動評價 $${Y(f.call.blended,0)}，結論「${f.call.call}」。`
               }), (0, $.jsxs)(`p`, {
                 className: `mt-2 text-sm leading-relaxed text-accent-soft`,
-                children: [`營運缺口（不含融資；含 CapEx／租金／利息／JV）為 `, mA(d.totals.operatingGap), `bn，排程還本另 `, mA(d.totals.debtPay), `bn。缺口在需要前一期先融好：依序動用未動用額度、資產層新債（總債務 ≤ `, Y(e.debtBacklog,2), `× backlog）、股權（$`, Y(e.eqPx,2), ` 折價 `, Y(e.eqDisc*100,0), `%）。CDS `, Y(e.cds, 0), ` bps。`]
+                children: [`營運缺口（不含融資；含 CapEx／租金／利息／JV）為 `, mA(d.totals.operatingGap), `${UNQ}，排程還本另 `, mA(d.totals.debtPay), `${UNQ}。缺口在需要前一期先融好：依序動用未動用額度、資產層新債（總債務 ≤ `, Y(e.debtBacklog,2), `× backlog）、股權（$`, Y(e.eqPx,2), ` 折價 `, Y(e.eqDisc*100,0), `%）。CDS `, Y(e.cds, 0), ` bps。`]
               })]
         }), (0, $.jsxs)(Jj, {
           className: `p-4`,
@@ -1548,11 +1548,11 @@ function zM() {
           }), (0, $.jsx)(`div`, {
             className: `mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6`,
             children: [
-              [`${CALQ.filedQLabel} 營收`, `${Y(LATEST_Q.revenue,3)}bn +${hA(LATEST_Q.yoy*100,0)} · 年初至今 ${Y(LATEST_Q.h1Revenue,3)}`],
-              [`RPO 桶`, `${Y(LATEST_Q.rpo,1)}bn · ${COMPANY_DATA.rpo.split.map(x => hA(x*100,0)).join(`／`)}（${COMPANY_DATA.rpo.bucketLabels.join(`／`)}）· 只作對照`],
+              [`${CALQ.filedQLabel} 營收`, `${Y(LATEST_Q.revenue,3)}${UNQ} +${hA(LATEST_Q.yoy*100,0)} · 年初至今 ${Y(LATEST_Q.h1Revenue,3)}`],
+              [`RPO 桶`, `${Y(LATEST_Q.rpo,1)}${UNQ} · ${COMPANY_DATA.rpo.split.map(x => hA(x*100,0)).join(`／`)}（${COMPANY_DATA.rpo.bucketLabels.join(`／`)}）· 只作對照`],
               [`CapEx`, `年初至今 ${Y(LATEST_Q.capexH1,2)}（現金）· 全年 ${CAPEX_GUIDE_TXT}（${TXQ.capexGuideSource}）`],
-              [`債務本金`, `${Y(LATEST_Q.debtPrincipal,2)}bn · 五期攤還 ${Y(DEBT_AMORT.reduce((e,t)=>e+t,0),2)}`],
-              [`客戶預付`, `合約負債 ${Y(LATEST_Q.deferredTotal,2)}bn · 年初至今淨增 ${Y(LATEST_Q.deferredIn,2)}`],
+              [`債務本金`, `${Y(LATEST_Q.debtPrincipal,2)}${UNQ} · 五期攤還 ${Y(DEBT_AMORT.reduce((e,t)=>e+t,0),2)}`],
+              [`客戶預付`, `合約負債 ${Y(LATEST_Q.deferredTotal,2)}${UNQ} · 年初至今淨增 ${Y(LATEST_Q.deferredIn,2)}`],
               [`租賃`, `在帳未折現 ${Y(LATEST_Q.onBalanceUndiscounted,2)} · 未起租 ${Y(LATEST_Q.offBalanceLease,1)}`]
             ].map(([e, t]) => (0, $.jsxs)(`div`, {
               className: `rounded-md bg-card/80 px-3 py-2`,

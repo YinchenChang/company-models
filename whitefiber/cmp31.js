@@ -10,7 +10,7 @@ const q=structuredClone(DEFAULTS); q.scenario=SC; q.a=structuredClone(SCENARIOS[
 const d=runFunding(q), p=runValuation(d,q,VAL_DEFAULTS), y=d.years, f=p.fwd;
 const H=(k)=>y.map(e=>e[k]);
 const rows=[];
-const CMP_TOL=(COMPANY_DATA.methodology.checks||{}).cmpTol ?? 0.005; // WhiteFiber v0.1b：容差讀 company.json（US$bn 口徑；小型公司 1e-4＝US$0.1m）
+const CMP_TOL=(COMPANY_DATA.methodology.checks||{}).cmpTol ?? 0.005; // WhiteFiber v0.1b：容差讀 company.json（引擎金額單位：meta.unit；US$m 下 1e-4＝US$100，比 US$bn 口徑更嚴；比率、MW、每股同一容差）
 function cmp(label, xlKey, html, note){
   xlKey=LABEL_MAP_Q(xlKey); // WhiteFiber v0.1b：Excel 列名稱已依 texts.labelMap 換成公司用語
   const MAP={'產能與收入|':['運營_產能與收入|'],'支出與資金|':['各期收支|'],'損益與評價|':['損益|','評價_DCF與目標價|'],'輸入|':['輸入與假設|'],'債務明細|':['資產負債_既有債務|'],'站點租賃|':['運營_站點|'],'可比公司|':['評價_可比公司|'],'連動檢查|':['檢查_連動|']};
@@ -34,7 +34,7 @@ cmp('未售', S+'未售產能（浪費）', H('unsold'));
 cmp('isRev', S+'損益用算力收入（模型期＝RPO 轉換＋新簽約）', H('isRev'));
 cmp('營收−MW×單價×利用率', S+'核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間', y.map(e=>e.isRev-e.capacity)); // v0.1b：MW 驅動時為 0
 cmp('每MW年收入', '輸入|每 MW 年收入', d.m.revMW);
-(COMPANY_DATA.texts.revMwContracts||[]).forEach(x=>cmp('合約隱含 '+x[0], S+'對照｜合約隱含每 MW｜'+x[0], [x[1], d.m.revMW[0]*1e3*(q.revScale??1), x[1]/(d.m.revMW[0]*1e3*(q.revScale??1))])); // WhiteFiber v0.1b：合約隱含每 MW 對照列
+(COMPANY_DATA.texts.revMwContracts||[]).forEach(x=>cmp('合約隱含 '+x[0], S+'對照｜合約隱含每 MW｜'+x[0], [x[1], d.m.revMW[0]*1e3/UFQ*(q.revScale??1), x[1]/(d.m.revMW[0]*1e3/UFQ*(q.revScale??1))])); // WhiteFiber v0.1b：合約隱含每 MW 對照列
 cmp('傳統事業營收', '輸入|傳統事業營收（模型期）', H('legacyRev')); cmp('傳統事業EBITDA', '輸入|傳統事業 EBITDA（模型期）', H('legacyEbitda')); // v0.1b（Oracle）
 cmp('GPU投資(自購＋租賃)', '輸入|GPU 成長型投資（自購＋租賃）', H('gpuInvest')); cmp('GPU租賃新增', '輸入|GPU 租賃｜本期新增租賃設備', H('gpuLeaseNew')); // WhiteFiber v0.1b：GPU 租賃
 cmp('GPU租賃期初累計', '輸入|GPU 租賃｜期初累計租賃設備', H('gpuLeaseBeg')); cmp('GPU租金', '輸入|GPU 租金（租賃設備）', H('gpuRent')); cmp('GPU租金(收支)', F+'② GPU 租金（租賃設備）', H('gpuRent'));
@@ -135,7 +135,7 @@ cmp('BS 營運收支淨額', NB+'營運收支淨額（含期後股權／可轉�
 cmp('BS 總債務', NB+'總債務', H('totalDebtEnd'));
 cmp('BS 淨負債', NB+'淨負債（總債務 − 期末現金）', y.map(e=>e.totalDebtEnd-e.cum));
 cmp('BS 總股數', NB+'總股數（期末）', f.map(e=>e.shares));
-cmp('BS 債務/EBITDA', NB+'總債務 ÷ EBITDA（年化）', y.map((e,t)=>e.totalDebtEnd/Math.max(e.ebitdaPL/PERIOD_YEARS[t],.01)));
+cmp('BS 債務/EBITDA', NB+'總債務 ÷ EBITDA（年化）', y.map((e,t)=>e.totalDebtEnd/Math.max(e.ebitdaPL/PERIOD_YEARS[t],.01*UFQ)));
 cmp('DCF 0截斷', V+'DCF 每股：0 截斷', [p.d.zeroPerShare]);
 cmp('DCF 選擇權', V+'DCF 每股：選擇權（Merton）', [p.d.optPerShare]);
 cmp('DCF 失效', V+'DCF 失效？（WACC ≤ g 或常態化 FCF ≤ 0）', [p.d.invalid?1:0]);
@@ -244,7 +244,7 @@ console.log('ni',f.map(e=>e.ni.toFixed(3)).join('/'),'EBIT',f.map(e=>e.opInc.toF
 rows.length=0;
 const CO='評價_可比公司|';
 for(const e of lM){ const key=e.labelXlsx;
-  const xv=X[CO+key]; const ok=Math.abs(e.ev-xv[2])<0.02&&Math.abs(e.ev/e.rev-xv[4])<0.01&&Math.abs((e.ev+(e.opl||0))/e.rev-xv[5])<0.01&&Math.abs(e.ebitda-xv[6])<0.002;
+  const xv=X[CO+key]; const ok=Math.abs(e.ev-xv[2])<0.02*UFQ&&Math.abs(e.ev/e.rev-xv[4])<0.01&&Math.abs((e.ev+(e.opl||0))/e.rev-xv[5])<0.01&&Math.abs(e.ebitda-xv[6])<0.002*UFQ;
   rows.push([ok?'OK ':'XX ','comps '+e.ticker,[e.ev.toFixed(2),(e.ev/e.rev).toFixed(2),((e.ev+(e.opl||0))/e.rev).toFixed(2)].join('/'),[xv[2],(+xv[4]).toFixed(2),(+xv[5]).toFixed(2)].join('/')]);}
 const med=X[CO+'同業中位數']; rows.push([Math.abs(wM(lM.map(e=>e.ev/e.rev))-med[4])<0.01?'OK ':'XX ','comps median',wM(lM.map(e=>e.ev/e.rev)).toFixed(2),(+med[4]).toFixed(2)]);
 const cr=X[CO+COMPANY_DATA.meta.ticker+`（TTM 至 ${CALQ.filedQLabel}）`]; const hv=(CALL_FACTS.mktCapLast+VAL_DEFAULTS.netDebt+CVN.reduce((a,c)=>a+(c.mand?0:c.M),0)+ndAdjQ(VAL_DEFAULTS))/CALL_FACTS.ttmRev; rows.push([Math.abs(hv-cr[4])<0.01?'OK ':'XX ','comps '+COMPANY_DATA.meta.ticker+' TTM EV/S',hv.toFixed(3),(+cr[4]).toFixed(3)]);

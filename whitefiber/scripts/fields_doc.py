@@ -10,6 +10,8 @@ CODE = ''.join(open(f'{REPO}/{f}', encoding='utf-8').read() for f in
                ['segA.js', 'segB.js', 'segC.js', 'segD.js', 'segE.js', 'tail.js', 'build_xlsx.py', 'cmp31.js'])
 sys.path.insert(0, REPO); import calendar_q, vlog  # 5a：期間字樣與版本號自動帶入（滾動或升版後不必手改）
 CAL = calendar_q.derive(CO)
+_UM = CO['meta'].get('unit', 'bn')  # WhiteFiber v0.1c：金額單位
+UU = (lambda t: 'm' if t == 'bn' else t.replace('US$bn', 'US$m').replace('（bn）', '（m）').replace('bn 股', 'm 股')) if _UM == 'm' else (lambda t: t)
 VER = vlog.VLOG[-1][0]
 PL = [f"{CAL['periods'][0]} {CAL['stubWord']}" if CAL['stubMonths'] < 12 else CAL['periods'][0]] + CAL['periods'][1:]  # FY26 下半年、FY27…
 P5 = f"五期（首期模型部分＋4 個完整財年；目前為 {'、'.join(PL)}）"
@@ -20,6 +22,7 @@ F = [
  ('meta.company', '公司名稱', '文字', M), ('meta.ticker', '股票代號', '文字', M),
  ('meta.updateDate', '資料更新日', '日期', M), ('meta.priceDate', '股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格）', '日期', M),
  ('meta.consensusFile', '市場共識資料檔路徑（v4.3；只讀，由使用者查證後提供；建置時併入 HTML、Excel 讀同一檔）', '路徑', M),
+ ('meta.unit', '金額單位（WhiteFiber v0.1c）：m＝US$m、股數 m 股；省略或 bn＝US$bn、bn 股。下表「單位」欄依此顯示；程式內以 US$bn 寫的常數（容差、下限）自動換算', '文字', C),
  ('meta.factsFile', '事實總帳路徑（WhiteFiber v0.1b；資料來源，逐筆 value＋單位＋來源＋標記；引擎不讀，只供追溯）', '路徑', M),
  ('ytdActual.capexCore', '年初至今資本支出中屬第一分部（雲端 GPU）的部分（WhiteFiber v0.1b；首期成長型 CapEx 只扣此數；缺欄時用 ytdActual.capex）', 'US$bn', M),
  ('rpo.colo', '第二分部（託管）RPO 年度分布（2026 下半年…其後、合計；季報；託管合約排程的核對列；WhiteFiber v0.1b）', 'US$bn（物件）', M),
@@ -288,7 +291,7 @@ F = [
  ('methodology.rating.sellUpsideMaxIfEquityOver', '股權募資超標時，空間小於或等於此值即賣出', '比例（負數）', K),
  ('methodology.rating.sellMarginAlert', '任一情境與賣出門檻的距離小於「現價 × 此值」時，判斷句另外揭露', '比例', K),
  ('methodology.rating.tvShareWarn', '終值占企業價值超過此值時提出警示（融資說明、檢查頁）', '比例', K),
- ('methodology.checks.cmpTol', 'cmp31（HTML vs Excel）數值比對的絕對容差（US$bn 口徑；預設 0.005，小型公司 0.0001＝US$0.1m；WhiteFiber v0.1b）', '數字', C),
+ ('methodology.checks.cmpTol', 'cmp31（HTML vs Excel）數值比對的絕對容差（引擎金額單位 meta.unit；預設 0.005；WhiteFiber 0.0001，US$m 口徑下＝US$100，比率、MW、每股同一容差；WhiteFiber v0.1b／v0.1c）', '數字', C),
  ('methodology.checks.capexPerMwBand', '檢查頁：模型期 CapEx 強度（每 MW 百萬美元）的合理區間下端與上端（5a）', 'US$m/MW 清單', C),
  ('methodology.checks.leaseVsCommitMin', '檢查頁：表外租金路徑 ÷ 已承諾租約至少要達到的倍數（5a）', '倍', C),
  ('methodology.checks.unsignedRevShareMax', '檢查頁：後段年度依賴未簽約收入的比例上限（5a）', '比例', C),
@@ -412,7 +415,7 @@ SECT = [('meta', '基本資料'), ('calendar', '期間與日期（v4.5）'), ('a
         ('defaults', '預設假設（畫面上可調的輸入）'), ('valuation', '評價參數'), ('methodology', '評價方法與評等門檻'), ('peers', '同業比較（Comps）'),
         ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）')]
 out, shown = ['**填表慣例**',
-               '- 金額單位是**十億美元（US$bn）**，例如 4.653 代表 46.53 億美元；另有標示的例外：每股（US$）、每 MW 建置成本（百萬美元／MW，US$m/MW）、股數（十億股，bn）。',
+               ('- 金額單位是**百萬美元（US$m）**（`meta.unit`＝m），例如 129.9 代表 1.299 億美元；另有標示的例外：每股（US$）、每 MW 建置成本與每 MW 租金（百萬美元／MW，US$m/MW）、股數（百萬股，m）。' if _UM == 'm' else '- 金額單位是**十億美元（US$bn）**，例如 4.653 代表 46.53 億美元；另有標示的例外：每股（US$）、每 MW 建置成本（百萬美元／MW，US$m/MW）、股數（十億股，bn）。'),
                '- 「比例」寫成小數（0.25＝25%）；標示「%」的欄位寫成百分點（25＝25%）。兩種寫法沿用既有程式，不可混用。',
                f"- 「清單」依模型期順序填：{'、'.join(PL)}，共 {len(PL)} 格（除非另有說明）。",
                '- 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。',
@@ -427,13 +430,13 @@ for top, title in SECT:
         out.append('| 欄位 | 意義 | 單位 | 目前數值 | 程式使用 |\n|---|---|---|---|---|')
         for k, (m, u) in tbl.items():
             used = re.search(rf"({re.escape(acc)}|{top}'\]\['){k}\b", CODE) is not None
-            out.append(f'| `{k}` | {m} | {u} | {fmt(CO[top][k])} | {"是" if used else "否"} |')
+            out.append(f'| `{k}` | {UU(m)} | {UU(u)} | {fmt(CO[top][k])} | {"是" if used else "否"} |')
         continue
     out.append('| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |\n|---|---|---|---|---|')
     for p, m, u, c in F:
         if p == top or p.startswith(top + '.'):
             shown.add(p)
-            out.append(f'| `{p}` | {m} | {u} | {fmt(get(p))} | {c} |')
+            out.append(f'| `{p}` | {UU(m)} | {UU(u)} | {fmt(get(p))} | {c} |')
 assert shown == {p for p, *_ in F}, set(p for p, *_ in F) - shown
 txt = '\n'.join(out)
 if sys.argv[1:2] == ['--check']:  # 5a：README「填表慣例」起至各區表格結束，須與本檔輸出相同（verify.sh 步驟 0b）

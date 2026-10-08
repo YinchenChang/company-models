@@ -68,8 +68,10 @@ def page_text(html):  # 開啟「資金模型 → 各期收支 → 季度追蹤�
 
 
 print('=== 測試 A｜假設 Q3 實際數（暫存副本；repo 內實際數維持空白）')
-ACT = {"revenue": 0.046, "adjEbitda": 0.006, "adjOpInc": -0.004, "capex": 0.15, "mw": 12, "source": "假設測試（非真實數字）", "date": "2026-11-12", "tag": "Assumed"}  # WhiteFiber v0.1b：WhiteFiber 量級（US$bn）
-RTX = f"{ACT['revenue']:,.2f}bn"
+_UF = 1000 if json.load(open(os.path.join(ROOT, 'company.json'), encoding='utf-8'))['meta'].get('unit') == 'm' else 1  # WhiteFiber v0.1c：金額單位（meta.unit）
+_UN, _DP = ('m', 1) if _UF > 1 else ('bn', 2)
+ACT = {"revenue": 0.046 * _UF, "adjEbitda": 0.006 * _UF, "adjOpInc": -0.004 * _UF, "capex": 0.15 * _UF, "mw": 12, "source": "假設測試（非真實數字）", "date": "2026-11-12", "tag": "Assumed"}  # WhiteFiber v0.1b：WhiteFiber 量級（US$bn 寫法 × 單位係數）
+RTX = f"{ACT['revenue']:,.{_DP}f}{_UN}"
 d = copy_repo('qtest_actual')
 co = json.load(open(os.path.join(d, 'company.json'), encoding='utf-8'))
 QK = co['quarterly']['focus']  # v0.1b：焦點季（原寫死 2026Q3）
@@ -111,7 +113,7 @@ if errs or RTX not in txt or want not in summ:
     FAIL.append(f'測試 A 畫面：錯誤 {errs}；季度追蹤含 {RTX}：{RTX in txt}；一頁摘要含實際數句：{want in summ}')
 for m in co['quarterly']['metrics']:
     e = exp[m['key']]
-    fm = (lambda x: fmt(x)[:-1] + 'pt') if e['kind'] == 'pt' else (lambda x: ('−' if x < 0 else '+') + (f'{abs(x):,.0f} MW' if m['unit'] == 'MW' else f'${abs(x):,.2f}bn')) if e['kind'] == 'diff' else fmt
+    fm = (lambda x: fmt(x)[:-1] + 'pt') if e['kind'] == 'pt' else (lambda x: ('−' if x < 0 else '+') + (f'{abs(x):,.0f} MW' if m['unit'] == 'MW' else f'${abs(x):,.{_DP}f}{_UN}')) if e['kind'] == 'diff' else fmt
     print(f"  {m['label']}：實際 {e['actual']:.4g}；較模型 {fm(e['am'])}" + (f"、較共識 {fm(e['ac'])}" if e['ac'] is not None else '') +
           (f"、較指引中點 {fm(e['ag'])}（{e['posA']}）" if e['ag'] is not None else ''))
 print('  驗證點句：' + H['keyLines'][0])

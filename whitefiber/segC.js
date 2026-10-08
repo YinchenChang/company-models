@@ -34,7 +34,7 @@ function AM({
             children: `資金模型 → 評價 連動`
           }), (0, $.jsxs)(`p`, {
             className: `mt-1 text-sm leading-relaxed`,
-            children: [`算力產能、Cash CapEx、利息（含瀑布新債）、股數（含瀑布新股）皆來自資金模型。缺口在需要前一期先融好：依序動用額度、資產層新債（受 債務／backlog 上限）、股權；估值不再扣缺口本金。五期需股權 `, Y(p, 0), `bn、新股 `, Y(e.totals.newShares, 2), `bn 股。`]
+            children: [`算力產能、Cash CapEx、利息（含瀑布新債）、股數（含瀑布新股）皆來自資金模型。缺口在需要前一期先融好：依序動用額度、資產層新債（受 債務／backlog 上限）、股權；估值不再扣缺口本金。五期需股權 `, Y(p, 0), `${UNQ}、新股 `, Y(e.totals.newShares, 2), `${UNQ} 股。`]
           })]
         }), (0, $.jsxs)(`div`, {
           className: `flex shrink-0 flex-row flex-wrap items-center gap-2`,
@@ -49,10 +49,10 @@ function AM({
       }), (0, $.jsx)(`div`, {
         className: `mt-3 grid grid-cols-2 gap-2 md:grid-cols-5`,
         children: [
-          [`${PERIODS[1]} 算力產能`, mA(s[1].gpu) + `bn`],
-          [`五期 Cash CapEx`, mA(e.totals.cashCapex) + `bn`],
-          [`需股權募資`, mA(p) + `bn`],
-          [`ATM／股數`, `${t.includeAtm?`含`:`不含`} · ${Y(h,3)}bn`],
+          [`${PERIODS[1]} 算力產能`, mA(s[1].gpu) + `${UNQ}`],
+          [`五期 Cash CapEx`, mA(e.totals.cashCapex) + `${UNQ}`],
+          [`需股權募資`, mA(p) + `${UNQ}`],
+          [`ATM／股數`, `${t.includeAtm?`含`:`不含`} · ${Y(h,3)}${UNQ}`],
           [`評價結論`, m.call]
         ].map(([e, t]) => (0, $.jsxs)(`div`, {
           className: `rounded-md bg-card/80 px-3 py-2`,
@@ -60,7 +60,7 @@ function AM({
             className: `text-[11px] text-muted`,
             children: e
           }), (0, $.jsx)(`div`, {
-            className: Vj(`mt-0.5 font-mono text-sm tabular-nums`, e === `需股權募資` && (p > .01 ? `text-bad` : `text-ok`), e === `評價結論` && (D === `ok` ? `text-ok` : D === `bad` ? `text-bad` : `text-watch`)),
+            className: Vj(`mt-0.5 font-mono text-sm tabular-nums`, e === `需股權募資` && (p > .01 * UFQ ? `text-bad` : `text-ok`), e === `評價結論` && (D === `ok` ? `text-ok` : D === `bad` ? `text-bad` : `text-watch`)),
             children: t
           })]
         }, e))
@@ -69,8 +69,8 @@ function AM({
       className: `grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6`,
       children: [
         [`現價（${mdQ(PRICE_DATE)} 收）`, `$${Y(n.price,2)}`],
-        [`市值`, `${Y(y,0)}bn`],
-        [`企業價值`, `${Y(b,0)}bn`],
+        [`市值`, `${Y(y,0)}${UNQ}`],
+        [`企業價值`, `${Y(b,0)}${UNQ}`],
         [`本模型目標價（情境區間）`, `$${Y(m.blended,1)}（$${Y(TR.A[0],1)}–$${Y(TR.A[1],1)}）`],
         [`潛在空間`, hA(m.upside * 100, 0)],
         [`投資結論`, m.call]
@@ -117,7 +117,7 @@ function AM({
               step: .001
             })
           }), (0, $.jsx)(kM, {
-            label: `淨負債 US$bn`,
+            label: `淨負債 US$${UNQ}`,
             hint: `${TXQ.netDebtNote} · 評價淨負債 ${Y(r.v.netDebt, 2)}（含債務處理可轉債與持股調整）`,
             children: (0, $.jsx)(OM, {
               value: n.netDebt,
@@ -218,7 +218,7 @@ function AM({
             })]
           }), (0, $.jsx)(`p`, {
             className: `text-xs leading-relaxed text-muted`,
-            children: `${PERIODS[0]} 營收對照公司指引 ${REV_GUIDE_TXT}（年初至今 ${Y(ACTUAL_1H.revenue, 3)} 已入帳）；營收由 MW × 每 MW 年收入驅動，不回推指引。${PERIODS[1]} 無公司指引；市場共識 ${PERIODS[1]} 營收 ${Y(CONSENSUS.annualEstimates[PERIODS[1]].revenue, 2)}bn（${CONSENSUS.annualEstimates.source}，擷取 ${CONSENSUS.annualEstimates.retrieved}，${CONSENSUS.annualEstimates.tag}）僅供對照，見「市場共識」分頁。改資金模型的 MW／CapEx／預付，此頁營收、UFCF、目標價與結論會跟著動。DCF 折現期數按評價日至各期期末（${CALQ.tEnd.map(x => Y(x, 1)).join('／')} 年）。`
+            children: `${PERIODS[0]} 營收對照公司指引 ${REV_GUIDE_TXT}（年初至今 ${Y(ACTUAL_1H.revenue, 3)} 已入帳）；營收由 MW × 每 MW 年收入驅動，不回推指引。${PERIODS[1]} 無公司指引；市場共識 ${PERIODS[1]} 營收 ${Y(CONSENSUS.annualEstimates[PERIODS[1]].revenue, DUQ(2))}${UNQ}（${CONSENSUS.annualEstimates.source}，擷取 ${CONSENSUS.annualEstimates.retrieved}，${CONSENSUS.annualEstimates.tag}）僅供對照，見「市場共識」分頁。改資金模型的 MW／CapEx／預付，此頁營收、UFCF、目標價與結論會跟著動。DCF 折現期數按評價日至各期期末（${CALQ.tEnd.map(x => Y(x, 1)).join('／')} 年）。`
           })]
         })]
       }), (0, $.jsxs)(`div`, {
@@ -258,14 +258,14 @@ function AM({
                 [`淨利`, [...HIST_PL.map(e => e.ni), ...s.map(e => e.fyNi)], void 0, void 0, `tot`, void 0, void 0, 2],
                 [`淨利率`, [...HIST_PL.map(e => e.ni / e.revenue), ...s.map(e => e.fyNi / e.fyRevenue)].map(e => e * 100), void 0, void 0, void 0, void 0, `%`],
                 [`每股`, null],
-                [`股數（含 ATM 上限，每年 +1% SBC 稀釋）`, [NaN, NaN, NaN, NaN, ...s.map(e => e.shares)], void 0, void 0, void 0, `SBC 約 ${Y(n.sbc, 2)}bn／年 ÷ 現價 $${Y(n.price, 0)} ≈ ${Y(n.sbc / n.price * 1e3, 1)}m 股（約 ${hA(n.sbc / n.price / n.shares * 100, 1)}／年），模板固定 1%（偏保守）。起點含價內可轉債轉股。`, `bn 股`, 4],
+                [`股數（含 ATM 上限，每年 +1% SBC 稀釋）`, [NaN, NaN, NaN, NaN, ...s.map(e => e.shares)], void 0, void 0, void 0, `SBC 約 ${Y(n.sbc, DUQ(2))}${UNQ}／年 ÷ 現價 $${Y(n.price, 0)} ≈ ${Y(n.sbc / n.price * 1e3 / UFQ, 1)}m 股（約 ${hA(n.sbc / n.price / n.shares * 100, 1)}／年），模板固定 1%（偏保守）。起點含價內可轉債轉股。`, `${UNQ} 股`, 4],
                 [`GAAP EPS`, [...HIST_PL.map(e => e.eps), ...s.map(e => e.fyEps)], void 0, void 0, void 0, `${PERIOD_FY[0]}E＝年初至今實際 EPS ${Y(HIST_PL[3].eps, 2)} ＋ 剩餘期間淨利 ÷ 股數。`, `US$`, 2],
                 [`EPS（加回 SBC）`, [...HIST_PL.map(e => e.ngEps), ...s.map(e => e.fyNgEps)], void 0, void 0, void 0, `＝(淨利＋SBC)÷股數；SBC 全額加回、不做稅盾調整（與公司非 GAAP EPS 口徑不同）。`, `US$`, 2]
               ]
             })
           }), (0, $.jsxs)(`p`, {
             className: `mt-3 text-xs text-muted`,
-            children: [`${TXQ.guideLine}。本表 ${PERIODS[0]}E 總營收 `, Y(HIST_PL[3].revenue + s[0].revenue, 2), `bn（年初至今 ${Y(HIST_PL[3].revenue, 2)} 實際）。${PERIODS[1]} 營收 `, Y(s[1].revenue, 1), `bn。稅率 ${hA(n.tax * 100, 1)}（${TXQ.taxNote}）；期初虧損扣抵 ${Y(n.nol,1)}bn，抵扣上限為應稅所得 ${hA(n.nolUsePct * 100, 0)}。DCF 的現金稅同步使用 NOL。`]
+            children: [`${TXQ.guideLine}。本表 ${PERIODS[0]}E 總營收 `, Y(HIST_PL[3].revenue + s[0].revenue, 2), `${UNQ}（年初至今 ${Y(HIST_PL[3].revenue, 2)} 實際）。${PERIODS[1]} 營收 `, Y(s[1].revenue, 1), `${UNQ}。稅率 ${hA(n.tax * 100, 1)}（${TXQ.taxNote}）；期初虧損扣抵 ${Y(n.nol,1)}${UNQ}，抵扣上限為應稅所得 ${hA(n.nolUsePct * 100, 0)}。DCF 的現金稅同步使用 NOL。`]
           }), (0, $.jsx)(`div`, {
             className: `mt-3 overflow-x-auto`,
             children: (0, $.jsxs)(`table`, {
@@ -296,7 +296,7 @@ function AM({
                   children: [(0, $.jsxs)(`td`, {
                     className: `font-medium`,
                     children: [`D&A（車隊折舊，計算）`, (0, $.jsx)(tipQ, {
-                      t: `＝(期初毛 PP&E ＋ 本期成長型 CapEx×½) ÷ GPU 經濟壽命 × 期間長度。期初 PP&E 基礎 ${Y(DEFAULTS.ppeOpen, 1)}bn（${TXQ.ppeOpenNote}；評價日 PP&E 淨額 ${Y(LATEST_Q.ppe, 1)}、在建 ${Y(LATEST_Q.cip, 1)}）；壽命 ${DEFAULTS.gpuLife} 年。汰換型 CapEx 取代已折舊完的舊設備，不增加折舊基礎。`,
+                      t: `＝(期初毛 PP&E ＋ 本期成長型 CapEx×½) ÷ GPU 經濟壽命 × 期間長度。期初 PP&E 基礎 ${Y(DEFAULTS.ppeOpen, DUQ(1))}${UNQ}（${TXQ.ppeOpenNote}；評價日 PP&E 淨額 ${Y(LATEST_Q.ppe, 1)}、在建 ${Y(LATEST_Q.cip, 1)}）；壽命 ${DEFAULTS.gpuLife} 年。汰換型 CapEx 取代已折舊完的舊設備，不增加折舊基礎。`,
                       w: 440
                     })]
                   }), s.map((e, t) => (0, $.jsx)(`td`, {
@@ -557,7 +557,7 @@ function AM({
                       background: `#fff`,
                       fontFamily: `ui-sans-serif, system-ui, sans-serif`
                     },
-                    children: `市值用模型股數 ${Y(h,3)}bn（含轉股）；分母為模型 ${PERIODS[1]} 營收`
+                    children: `市值用模型股數 ${Y(h,3)}${UNQ}（含轉股）；分母為模型 ${PERIODS[1]} 營收`
                   })]
                 })]
               })]
@@ -588,7 +588,7 @@ function AM({
                 className: `text-muted`,
                 children: [(0, $.jsx)(`th`, {
                   className: `py-2 text-left font-medium`,
-                  children: `US$bn`
+                  children: `US$${UNQ}`
                 }), s.map(e => (0, $.jsx)(`th`, {
                   className: `py-2 text-right font-medium`,
                   children: e.year
@@ -631,7 +631,7 @@ function AM({
               k: `新股募得現金（現值）`,
               v: mA(c.pvEquityRaised)
             }), (0, $.jsx)(jM, {
-              k: `融資後股數（bn）`,
+              k: `融資後股數（${UNQ}）`,
               v: Y(c.postShares, 3)
             }), (0, $.jsx)(jM, {
               k: `DCF 每股（${c.invalid ? `失效` : n.dcfMode === `option` ? `選擇權` : `0 截斷`}）`,
@@ -774,7 +774,7 @@ function AM({
               children: m.call
             }), (0, $.jsx)(Uj, {
               tone: m.funded ? `ok` : `bad`,
-              children: m.funded ? `無需新股` : `需股權 ${Y(p,0)}bn`
+              children: m.funded ? `無需新股` : `需股權 ${Y(p,0)}${UNQ}`
             })]
           }), (0, $.jsxs)(`p`, {
             className: `mt-2 text-sm leading-relaxed`,
@@ -784,7 +784,7 @@ function AM({
             }), c.invalid ? `＝ EV/EBITDA（融資後）$${Y(f, 0)} × 100%（DCF 失效已排除）` : `＝ DCF $${Y(c.perShareT, 0)}（${n.dcfMode === `option` ? `選擇權` : `0 截斷`}，推到 ${CALQ.targetDate}）× ${hA(m.weights.dcf * 100, 0)} ＋ EV/EBITDA（融資後）$${Y(f, 0)} × ${hA(m.weights.pe * 100, 0)}`, `。相對現價 $`, Y(n.price, 2), ` 為`, ` `, (0, $.jsx)(`span`, {
               className: m.upside >= 0 ? `text-ok` : `text-bad`,
               children: hA(m.upside * 100, 0)
-            }), `。五期需股權 `, Y(p, 0), `bn。`]
+            }), `。五期需股權 `, Y(p, 0), `${UNQ}。`]
           }), TR.note ? (0, $.jsx)(`p`, {
             className: `mt-2 text-xs leading-relaxed text-muted`,
             children: TR.note
@@ -936,7 +936,7 @@ function AM({
                           background: on ? `#fff2a8` : z % 2 ? `#fbfaf7` : `#fff`,
                           fontWeight: on ? 700 : 400
                         },
-                        title: `股權 ${Y(dd.totals.equity,1)}bn、高息債 ${Y(dd.totals.junk,1)}bn`,
+                        title: `股權 ${Y(dd.totals.equity,1)}${UNQ}、高息債 ${Y(dd.totals.junk,1)}${UNQ}`,
                         children: [`$${Y(pp.call.blended, 1)}`, (0, $.jsx)(`div`, {
                           style: {
                             fontSize: 10.5,
@@ -966,7 +966,7 @@ function AM({
                   tgt: pp.call.blended,
                   raw: pp.d.perShareRaw,
                   ev: pp.peAdj,
-                  yrs: dd.years.filter(e => e.equity + e.junk > .05).map(e => e.year)
+                  yrs: dd.years.filter(e => e.equity + e.junk > .05 * UFQ).map(e => e.year)
                 }
               })),
               lo = Math.min(...G.map(e => e.tgt)),
@@ -976,14 +976,14 @@ function AM({
               yrs = [...new Set(G.flatMap(e => e.yrs))].sort();
             return (0, $.jsx)(`p`, {
               className: `mt-2 text-xs leading-relaxed text-muted`,
-              children: hi - lo < .05 ? `左表 16 格皆為 $${Y(lo,1)}，計算正確但此表在目前設定下不具鑑別力：(1) DCF 腿股權價值為負（未截斷每股 ${mA(rl,1)} 至 ${mA(rh,1)}，確實隨折價與上限變動），被 ${n.dcfMode === `option` ? `選擇權模式壓縮` : `0 截斷`}；(2) EV/EBITDA 腿以 ${PERIOD_LABELS[n.evYear ?? 1]} 末淨負債與股數計算，而股權與高息債只出現在 ${yrs.join('、') || '—'}${yrs.every(y => y > PERIOD_LABELS[n.evYear ?? 1]) ? `，不影響錨定年` : ``}。每格下方小字為五期股權｜高息債（$bn），可看出融資組合確有變化；右表（0.4x）股權需求提前，兩腿都會反映。` : `左表範圍 $${Y(lo,1)}–$${Y(hi,1)}；每格下方小字為五期股權｜高息債（$bn）。`
+              children: hi - lo < .05 ? `左表 16 格皆為 $${Y(lo,1)}，計算正確但此表在目前設定下不具鑑別力：(1) DCF 腿股權價值為負（未截斷每股 ${mA(rl,1)} 至 ${mA(rh,1)}，確實隨折價與上限變動），被 ${n.dcfMode === `option` ? `選擇權模式壓縮` : `0 截斷`}；(2) EV/EBITDA 腿以 ${PERIOD_LABELS[n.evYear ?? 1]} 末淨負債與股數計算，而股權與高息債只出現在 ${yrs.join('、') || '—'}${yrs.every(y => y > PERIOD_LABELS[n.evYear ?? 1]) ? `，不影響錨定年` : ``}。每格下方小字為五期股權｜高息債（$${UNQ}），可看出融資組合確有變化；右表（0.4x）股權需求提前，兩腿都會反映。` : `左表範圍 $${Y(lo,1)}–$${Y(hi,1)}；每格下方小字為五期股權｜高息債（$${UNQ}）。`
             })
           })(), (0, $.jsx)(`table`, {
             className: `mt-4 w-full text-sm`,
             children: (0, $.jsx)(`tbody`, {
               children: [
                 [`DCF（已含 CapEx）`, c.perShareT, `不重複扣缺口；以 WACC 推到 ${CALQ.targetDate}`],
-                [`EV/EBITDA（融資後）`, f, `${PERIOD_LABELS[r.evK]} 末淨負債 ${Y(r.ndA,1)}bn ／ ${PERIOD_LABELS[r.evK]} 末股數 ${Y(r.shA,3)}bn${r.evK >= CALQ.evDiscFrom ? `；以 WACC 折回 ${CALQ.targetText}` : ``}`],
+                [`EV/EBITDA（融資後）`, f, `${PERIOD_LABELS[r.evK]} 末淨負債 ${Y(r.ndA,1)}${UNQ} ／ ${PERIOD_LABELS[r.evK]} 末股數 ${Y(r.shA,3)}${UNQ}${r.evK >= CALQ.evDiscFrom ? `；以 WACC 折回 ${CALQ.targetText}` : ``}`],
               ].map(([e, t, n]) => (0, $.jsxs)(`tr`, {
                 className: `border-t border-border`,
                 children: [(0, $.jsx)(`td`, {

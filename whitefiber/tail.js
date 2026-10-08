@@ -164,7 +164,7 @@ function BM({
   rows: e,
   step: t = .1,
   cols: n = PERIODS,
-  unit: r = `US$bn`
+  unit: r = `US$${UNQ}`
 }) {
   let i = (e, t) => t ? {
     ...xstyQ.tdL,

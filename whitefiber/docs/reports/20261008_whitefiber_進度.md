@@ -1,16 +1,16 @@
 # WhiteFiber v0.1 分段建置進度（接手用；三張工作單共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：v0.1a 全部；v0.1b 全部：步驟 0（b1febb9）、1（9ecd657）、2（bf0a433）、3（7e386fc）、4（9b42228）、5（a278f8f）、6（cea4245）、7（6269e22）、8（cfa727f）、9（報告與回報）。目標價 保守 $10.0（賣出）／基準 $16.7（中立）／積極 $32.3（中立）。
-- 下一步：v0.1c 起點（chat 端審查 v0.1b 後）：(1) 升版 v0.1：vlog.py 與 tail.js VLOG 重設為 WhiteFiber v0.1、成品 dist/20261008_WhiteFiber收支模型_v0_1.html／.xlsx（移除 Oracle v0.2 成品）、docs/handoff 換 WhiteFiber 交接檔；(2) whitefiber/README.md 與 CLAUDE.md 開頭、待辦改 WhiteFiber，根目錄 README WhiteFiber 列；(3) 建議畫面金額改 US$m 顯示、HTML 託管站點明細表（v0.1b 報告 §7）；(4) 新成品放入 dist/ 後跑 verify.sh 與 --vs-dist。
-- 未解問題：(a) 託管同業 NTM 只 2 家（DLR、EQIX）；(b) 個股 beta 不可靠（預設 2.5）；(c) EBITDA、CapEx、淨負債共識找不到；(d) 畫面金額以 US$bn 顯示、精度不足（v0.1c 建議改 US$m）；(e) 託管站點逐列明細只在 Excel；(f) Krambu、NC-1 擴建、NC-2／3 經濟條件多為 [Assumed]。
+- 已完成：v0.1a、v0.1b 全部（見下方各段）；v0.1c 步驟 0（進度檔段落）、0.5-1（金額單位改 US$m）。
+- 下一步：v0.1c 步驟 0.5-2（NC-1 專案融資改為排程貸款：建置完成時一次動用、自有利率與攤還；驗收三情境「未完成」≤「完成」）。
+- 未解問題：(a) 託管同業 NTM 只 2 家（DLR、EQIX）；(b) 個股 beta 不可靠（預設 2.5）；(c) EBITDA、CapEx、淨負債共識找不到；(d) 託管站點逐列明細只在 Excel；(e) Krambu、NC-1 擴建、NC-2／3 經濟條件多為 [Assumed]。
 
 ## 工作單總覽
 | 工作單 | 分支 | PR | 狀態 |
 |---|---|---|---|
 | v0.1a 資料蒐集 | `claude/whitefiber-v0.1` | #23（draft） | 完成（chat 端審查通過） |
-| v0.1b 模型改寫 | `claude/whitefiber-v0.1` | 同一 PR | 完成（待 chat 端審查） |
-| v0.1c 驗證與成品 | `claude/whitefiber-v0.1` | 同一 PR | 未開始 |
+| v0.1b 模型改寫 | `claude/whitefiber-v0.1` | 同一 PR | 完成（chat 端審查：有條件通過，3 項於 v0.1c 步驟 0.5 處理） |
+| v0.1c 驗證與成品 | `claude/whitefiber-v0.1` | 同一 PR | 進行中 |
 
 <!-- 各工作單在下方新增自己的段落：「## v0.1x」＋步驟紀錄表（步驟｜狀態｜commit｜備註） -->
 
@@ -65,3 +65,14 @@
 | 7 建設延誤 | 完成 | （本 commit） | scenarios.delayMonths 保守 6／基準 3／積極 0（步驟 1 設定；依據：NC-1 計費晚合約目標 3–4 個月、MTL-2 曾暫停、巴黎 7 月延至 9 月底、NC-1 專案融資延後）：雲端計費 MW 平移、GPU 資本支出照原時程（閒置資本）、雪梨未起租租約 delayLink 0.5、罰則 0（合約條款未揭露）；託管未簽約站點（MTL-2、NC-1 下一批、NC-2／3、NC-1 擴建、Krambu）起租同步後移、建置不後移（步驟 3）。基準目標價對延誤月數：0 個月 $17.74／3 個月 $16.74／6 個月 $16.18／12 個月 $15.00；delayLink 0／0.5／1：$16.74／$16.74／$16.75。已知限制：閒置資本只計 GPU（託管建置已支出未起租部分未列入閒置資本列）。引擎未改，verify.sh 沿用步驟 6 結果（19 項全過）；目標價不變：保守 $10.0／基準 $16.7／積極 $32.3 |
 | 8 評價 | 完成 | （本 commit） | WACC＝CAPM（valuation.capm）：ke＝5.27%＋2.5 × 5%＝17.77%；kd 稅後＝9.5% ×(1 − 21%)＝7.505%；E＝16.83 × 45.120m＝0.759、D＝期後債務 0.466（含可轉債）→ 權重 62.0%／38.0% → WACC 13.87%（Excel「輸入與假設」F 區逐列公式）。EV/EBITDA 腿分部加總：託管 EBITDA × 20.75×（DLR 20.4、EQIX 21.1 中位，只 2 家）＋雲端 EBITDA × 6×，錨定 FY29（evYear 3）；權重 DCF 45%／倍數 55%。反向 DCF 格線維持雲端口徑、託管 EBITDA 率與倍數固定（說明文字改讀 colo.margin）。一頁摘要：標題／副標讀 texts.headline／subhead；槓桿句依上限基準改列「總債務 ÷ EBITDA（年化）」（新列：資產負債_新債與新股，cmp31 比對）；融資圖例依上限基準；共識未列中位數不顯示「—」。龍捲風新增託管倍數 15×／21.1×（審查留言第 4 條）、託管未簽約租金 1.45／2.35、託管建置成本 13.5／9.0；模型期後新增 MW 兩端改讀 methodology.mw31Sens（6／0）。共識差距：只有營收共識（EBITDA、CapEx、淨負債共識未列）→ FY26 −5.2%／FY27 −6.0%／FY28 −21.2% 附「觀點」原因。cmp31 每情境 418 項。verify.sh 19 項全過；目標價 保守 $10.0（賣出）／基準 $16.7（中立）／積極 $32.3（中立） |
 | 9 整體 verify 與回報 | 完成 | （本 commit） | verify.sh 19 項全過（cmp31 三情境＋FY27 錨定各 418 項、重算 0 錯誤、OOXML、離線開啟）；crawl 描述本公司的 Oracle／CoreWeave／Nebius 0 處。報告 docs/reports/20261008_whitefiber_v0.1b_模型.md：三情境 保守 $10.04（賣出）／基準 $16.74（中立）／積極 $32.32（中立），情境區間 $10.0–$32.3、方法區間 $16.3–$16.7；雲端每 MW 3×3；合約隱含單價 18.16 → $17.44；託管租金 × 建置成本格線；Nscale 違約（NC-1 營收歸零）基準 $4.9；NC-1 專案融資未完成 基準 $16.31（新股 5.0m、高息債 200m）；債務上限 4×／6×；審查留言替代值（零履約價買權計入 $14.56、含一次性起點 $19.50、託管 15× $10.78）；已套用的預設 25 項、已知問題 11 項。PR #23 留言回報。 |
+
+## v0.1c 驗證、報告、交接檔、成品
+
+- 分支：`claude/whitefiber-v0.1`（接續 e82d777）；PR #23。
+- chat 端 v0.1b 審查（PR #23 留言「[WhiteFiber 審查] v0.1b｜有條件通過」，與工作單同等效力）步驟 0.5：(1) 畫面與 Excel 金額單位改 US$m（單位放 company.json）；(2) NC-1 專案融資改為排程貸款（建置完成時一次動用、自有利率與攤還），三情境「未完成」目標價 ≤「完成」；(3) 雲端每 MW 經濟性比較同口徑，一頁摘要句子與報告結論依修正後數字改寫。其餘（託管站點明細只在 Excel、敏感度只在 HTML、labelMap 用語替換、GPU 租賃負債未計入 leaseAdj）列入已知限制。
+
+### 步驟紀錄
+| 步驟 | 狀態 | commit | 備註 |
+|---|---|---|---|
+| 0 進度檔 v0.1c 段落 | 完成 | （與 0.5-1 同一 commit） | 基線 verify.sh 19 項全過（e82d777；cmp31 三情境＋FY27 錨定各 418 項）。 |
+| 0.5-1 金額單位改 US$m | 完成 | （本 commit） | `company.json → meta.unit＝"m"`；company.json 金額欄位 ×1000（223 個欄位：ytdActual、historicalPL、rpo.colo、leases、debt、latestQuarter、callFacts、scenarios.revMW／openAnnualRevenue／convCap／capexTemplate.div／projectFinance、defaults 金額、colo.capex／ppeOpen／rpoColo、valuation 股數與金額、postEvents、peers 金額、quarterly.revenueAnchor），股數改 m 股；本來就是 US$m/MW 的欄位（costMW、託管 rent、m.maint、revMwContracts）不變。引擎（雙邊）：`calendar_q.unit_factor`（Python）／`UFQ`（JS）＝1000；以 US$bn 寫死的常數一律 × 單位係數（JS 容差 .01／.05、股數下限 1e-4、EBITDA 下限 .01、圖表下限；Excel MAX(0.01,…)、檢查容差、高息債句門檻）；US$m 輸入（託管租金、每 MW 成本、維護、電價）的 ÷1000 在 m 單位下取消（Excel `UKD`／`UKM`）；畫面字尾 `UNQ`／Excel `UN`、單位欄 `UB`；US$m 金額最多 1 位小數（`DUQ`／`DU`；Excel TEXT 文字公式同步、加千分位）；共識檔 US$M 依引擎單位載入（m 下不換算）；cmp31 容差 1e-4 不變（US$m 口徑＝US$100，比原 US$0.1m 嚴）；check_offline 依 B 欄單位取小數位；test_quarterly 假設實際數 × 單位係數；rv_solve rev30 ÷ 單位係數；fields_doc 單位欄依 meta.unit。**數值不變性核對**（Excel 三情境全部數值格，e82d777 vs 本 commit）：每格比值為 1（比率、MW、每股、目標價）或 1000（金額、股數）；例外 2 項，皆為模板以 US$bn 寫死的下限在 WhiteFiber 規模失真、改 m 後按實際值計算：(a) 終值占 EV（評等用）的分母下限 1（原＝US$1bn，WhiteFiber EV < US$1bn 時壓低占比）：保守 19.3%→153.8%、基準 47.4%→268.2%、積極 195.3%→1,927%，只影響「100% EV/EBITDA 目標價」評等代碼（基準 買進→中立：終值占比 > 90% 不得買進），加權目標價與三情境評等不變；(b) HTML 損益兩平貢獻率分母下限（只顯示）。三情境目標價不變：保守 $10.04（賣出）／基準 $16.74（中立）／積極 $32.32（中立）。verify.sh 19 項全過（cmp31 三情境＋FY27 錨定各 418 項）。 |

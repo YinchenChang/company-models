@@ -228,7 +228,7 @@ def apply(co):
 
 
 # WhiteFiber v0.1b：市場共識資料檔的正規化（資料檔只讀、不改數字；載入時換算為引擎口徑）。
-# (1) 單位：資料檔 unit 為「US$M」時，金額欄位 ÷1000 換成引擎的 US$bn（每股、家數、比率不變）；
+# (1) 單位：資料檔 unit 為「US$M」時，金額欄位換成引擎單位（meta.unit：US$bn ÷1000、US$m 不變；每股、家數、比率不變）；
 # (2) 年度鍵：日曆年寫法 FY2026 → 引擎期間標籤 FY26（只換鍵名，不改值）；
 # (3) 評等分布沒有 month 時以擷取日的年月代稱（畫面標題用）。HTML、Excel、核對腳本都經由這裡讀共識檔。
 CONS_MONEY = {'revenue', 'ebitda', 'adjEbitda', 'netIncome', 'cfo', 'fcf', 'capex', 'netDebt', 'ebit', 'ebitNonGaap', 'interest', 'interestPaid',
@@ -247,11 +247,19 @@ def _cons_norm(x, scale):
     return x
 
 
+def unit_factor(co):
+    """WhiteFiber v0.1c：引擎金額單位（company.json → meta.unit：「m」＝US$m、股數 m 股；省略或「bn」＝US$bn、bn 股）。回傳每 US$bn 的單位數（1 或 1000）。"""
+    u = (co.get('meta') or {}).get('unit', 'bn')
+    assert u in ('bn', 'm'), f'meta.unit 只能是 bn 或 m（目前 {u}）'
+    return 1000 if u == 'm' else 1
+
+
 def load_consensus(root, co):
     c = json.load(open(os.path.join(root, co['meta']['consensusFile']), encoding='utf-8'))
-    scale = 1000 if str(c.get('unit', '')).startswith('US$M') else 1
+    uf = unit_factor(co)  # WhiteFiber v0.1c：換成引擎單位（meta.unit）
+    scale = (1000 if str(c.get('unit', '')).startswith('US$M') else 1) / uf
     c = _cons_norm(c, scale)
-    if scale != 1: c['_unitNote'] = '載入時金額 ÷1000 換成 US$bn（資料檔原為 US$M）'
+    if scale != 1: c['_unitNote'] = f"載入時金額 ÷{scale:g} 換成 US${co['meta'].get('unit', 'bn')}（資料檔原為 {c.get('unit')}）"
     ra = c.get('ratings') or {}
     if ra and not ra.get('month'): ra['month'] = str(ra.get('retrieved') or c.get('asOf') or '')[:7]
     _rk = ('strongBuy', 'buy', 'hold', 'sell', 'strongSell')
