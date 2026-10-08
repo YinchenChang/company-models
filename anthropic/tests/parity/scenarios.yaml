@@ -3,12 +3,12 @@
 # expect_err：該情境必須讓這些檢查轉 ERR（保證檢查有牙齒）；expect_warn：CHK_Warnings ≥ 1。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
   sheets: [README, SRC_ANT, TK_Link, OAI_Link, Inputs, Demand, Revenue, Checks, _Defaults]
-  formula_cells: 2931             # A2：SRC_ANT 379×4 檢查欄＋11 Derived 公式、Inputs 101×2、Demand、Revenue（含價格事件表 38 列）、Checks C01–C46
-  defined_names: 829
+  formula_cells: 2942             # A2：SRC_ANT 379×4 檢查欄＋11 Derived 公式、Inputs 105×2、Demand、Revenue（含價格事件表 38 列）、Checks C01–C48
+  defined_names: 838
   src_rows: 379                   # A1 376＋A2 新增 3（SRC_ANT_377–379）
   src_named: 330                  # 有值欄的列才有 SRC_ANT_nnn 名稱（另有 _Lo／_Hi／_Date）
-  inp_rows: 101
-  tk_values: 63                   # 與 OpenAI v0.6 同一組（TK_IF_／TK_SRC_／TK_L1_）
+  inp_rows: 105                   # INP_001–108；INP_067–069 退役（每任務 token 改取 Tokenomics）
+  tk_values: 68                   # OpenAI v0.6 同一組 63 名＋A2 新增 5 名（IF_HdrTask、IF_TaskLen、IF_TaskTokFresh／Cached／Dec）
   tk_nonnv: 18                    # TK_NNV_*（TPU v7、Trainium3、MI455X × 6；讀表，非具名）
   oai_names: 21                   # OAI_ 17 個逐年名稱＋4 個中繼資料
   tk_pending: 0
@@ -73,5 +73,8 @@ scenarios:
     inputs: {"SRC_ANT_023": 30}
     expect_warn: true
   - id: q_code_tokens
-    description: 程式代理每任務 token 200K → 500K（區間上緣；只改 token，不改營收）
-    inputs: {"INP_068": 500}
+    description: 程式代理每任務 token 倍數（相對 Tokenomics 長程任務）0.15 → 0.4（區間上緣；只改 token，不改營收）
+    inputs: {"INP_106": 0.4}
+  - id: r_tk_task_tokens
+    description: Tokenomics 快照：各任務每次嘗試快取 token ×（Coding agent 1,263,600 → 2,000,000）；程式代理 token 與 API 以外的 token 改變
+    inputs: {"TK_IF_TaskTokCached[5]": 2000000}

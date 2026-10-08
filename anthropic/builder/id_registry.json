@@ -447,9 +447,6 @@
 "cat_code_team_prem": "INP_064",
 "cat_chat_ent": "INP_065",
 "cat_code_ent": "INP_066",
-"k_chat": "INP_067",
-"k_code": "INP_068",
-"k_other": "INP_069",
 "g_k": "INP_070",
 "tier_haiku_chat": "INP_071",
 "tier_sonnet_chat": "INP_072",
@@ -481,7 +478,14 @@
 "price_chg": "INP_098",
 "channel_delta": "INP_099",
 "partner_fee_rate": "INP_100",
-"g_other": "INP_101"
+"g_other": "INP_101",
+"tk_task_chat": "INP_102",
+"tk_task_code": "INP_103",
+"tk_task_other": "INP_104",
+"k_ratio_chat": "INP_105",
+"k_ratio_code": "INP_106",
+"k_ratio_other": "INP_107",
+"tok_per_k": "INP_108"
 },
 "CHK": {
 "src_rows": "C01",
@@ -529,6 +533,13 @@
 "a2_net30": "C43",
 "a2_oai25": "C44",
 "a2_oai30": "C45",
-"a2_oaitok30": "C46"
-}
+"a2_oaitok30": "C46",
+"a2_tktask": "C47",
+"a2_tkcache": "C48"
+},
+"retired_INP": [
+"INP_067",
+"INP_068",
+"INP_069"
+]
 }

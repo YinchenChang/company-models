@@ -178,7 +178,7 @@ def sheet_readme(ctx, summary):
                     "Compute／Cost 於 A3、Funding／Reverse 於 A4 加入（命題輸出屆時才有值）。"),
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有，重建時保留已改過的值）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構（data/*.yaml → SRC_ANT／Inputs；Tokenomics → TK_Link；OpenAI → OAI_Link）。"),
         ("SRC_ANT", f"{summary['src']} 列：公司財務原始數據（A1 蒐集 376 列＋A2 新增 3 列供 Derived 列公式化）。標記 Derived 的 12 列：11 列改為公式、1 列（Reuters 自行計算後公布的通路費）保留報導值。"),
-        ("TK_Link", f"Tokenomics {sn['version']}（{sn['file']}），master 提交 {sn['sha'][:7]}；{summary['tk_ok']} 個具名範圍（與 OpenAI v0.6 同一組）＋ NonNV 表 {summary['tk_nnv']} 格（讀表，非具名；規格 D6）。"),
+        ("TK_Link", f"Tokenomics {sn['version']}（{sn['file']}），master 提交 {sn['sha'][:7]}；{summary['tk_ok']} 個具名範圍（OpenAI v0.6 同一組 63 名＋A2 新增任務 token 5 名）＋ NonNV 表 {summary['tk_nnv']} 格（讀表，非具名；規格 D6）。"),
         ("OAI_Link", f"OpenAI v0.6 命題輸出快照（{oa['file']}；SHA-256 {oa['sha256'][:12]}…）；只被 Checks 引用（規格 D20）。"),
         ("Inputs", f"{summary['inp']} 列：假設（值、低、高、標記、依據、區間理由）；定義常數（年度、天數、單位換算）也在此（E6：公式不含常數）。"),
         ("Demand", "個人方案（Free／Pro／Max 5x／Max 20x）人數、企業席位（Team 標準／Premium、Enterprise）、任務類別（對話、程式代理、其他代理）× 每任務 token × 層級組合；API：2025 由 API 營收 ÷ 有效單價倒推、2026 由半校準總額倒推、2027 起任務成長 × 每任務 token 成長 × 價格彈性；輸出 DEM_Tok_*（層級 × 付費／免費）。"),
@@ -242,7 +242,7 @@ def sheet_tk(ctx):
     wb, snap, date = ctx.wb, ctx.snap, ctx.date
     ws = wb.create_sheet("TK_Link")
     title(ws, "TK_Link — Tokenomics 快照（第 0 層連結；不用 Excel 外部連結）",
-          "每列一個 Tokenomics 名稱。值（藍字）由 builder 從 Tokenomics master 的 model/CURRENT 讀出寫入；本模型公式只引用 TK_ 具名範圍。前 63 名與 OpenAI v0.6 相同；"
+          "每列一個 Tokenomics 名稱。值（藍字）由 builder 從 Tokenomics master 的 model/CURRENT 讀出寫入；本模型公式只引用 TK_ 具名範圍。前 63 名與 OpenAI v0.6 相同，其後 5 名為 A2 新增（任務別每次嘗試 token）；"
           "其後為 NonNV 表（Tokenomics 未設具名範圍，以列標籤＋欄標題讀表；狀態「讀表（非具名）」，列入 Tokenomics 缺口：建議 Tokenomics 把 NonNV 比例列進 Interface）。",
           "Interface 向量名稱為 15 欄＝5 世代（Hopper、GB200、GB300、VR200、Rubin Ultra）× 3 成本情境（低、基準、高）；NonNV 比例皆相對 VR200（同層級、同 SLO）。")
     meta = [("Tokenomics 檔案", snap["file"], "TK_File"), ("Tokenomics 版本", snap["version"], "TK_Version"),
@@ -347,7 +347,7 @@ def base_checks(ctx, n_src, n_inp):
         ("inp_rows", "Inputs 列數", "=SUMPRODUCT(--(LEN(Inputs!$A$5:$A$600)>0))", n_inp, "eq", ""),
         ("inp_order", "Inputs 區間順序異常列數", "=SUM(Inputs!$L$5:$L$600)", 0, "eq", "低 ≤ 值 ≤ 高（有三值者）"),
         ("inp_norange", "Inputs Analogy／Assumed 缺區間列數", "=SUM(Inputs!$M$5:$M$600)", 0, "eq", "共同規則第 4 節：Analogy／Assumed 一律給區間"),
-        ("tk_ok", "TK_Link 具名範圍已取值名稱數", '=COUNTIF(TK_Link!$F$10:$F$200,"OK")', len(snap["rows"]), "eq", "與 OpenAI v0.6 同一組 63 名"),
+        ("tk_ok", "TK_Link 具名範圍已取值名稱數", '=COUNTIF(TK_Link!$F$10:$F$200,"OK")', len(snap["rows"]), "eq", "OpenAI v0.6 同一組 63 名＋A2 新增 5 名（IF_HdrTask、IF_TaskLen、IF_TaskTok*）"),
         ("tk_nnv", "TK_Link NonNV 讀表格數", f'=COUNTIF(TK_Link!$F$10:$F$200,"{NONNV_STATUS}")', len(nnv), "eq", "TPU v7、Trainium3、AMD MI455X × 6 值（規格 D6、D6 r1）"),
         ("tk_pending", "TK_Link 待 Tokenomics 提供名稱數", f'=COUNTIF(TK_Link!$F$10:$F$200,"{PENDING_NOTE}")', len(snap["pending"]), "eq", ""),
         ("tk_err", "TK_Link 錯誤值格數", "=SUMPRODUCT(--ISERROR(TK_Link!$J$10:$X$200))", 0, "eq", ""),

@@ -67,6 +67,7 @@ def test_stable_ids():
         assert len(vals) == len(set(vals))
         assert not set(vals) & set(REG.get(f"retired_{kind}", []))
     assert {r["key"] for r in INP} == set(REG["INP"])
+    assert set(REG.get("retired_INP", [])) >= {"INP_067", "INP_068", "INP_069"}     # A2：每任務 token 改取 Tokenomics，舊號退役
 
 
 def test_src_and_inputs_values_equal_yaml(eng):
@@ -99,7 +100,10 @@ def test_inputs_ranges_and_tags():
     for r in INP:
         assert r["tag"] in ("Assumed", "Analogy", "Decision"), r["key"]
         assert r["lo"] is not None and r["hi"] is not None, r["key"]
-        assert r["lo"] <= r["value"] <= r["hi"], r["key"]
+        if isinstance(r["value"], str):          # 文字鍵（Tokenomics 任務名稱）：Decision，低＝高＝值
+            assert r["tag"] == "Decision" and r["lo"] == r["hi"] == r["value"], r["key"]
+        else:
+            assert r["lo"] <= r["value"] <= r["hi"], r["key"]
         assert r.get("basis"), r["key"]
 
 

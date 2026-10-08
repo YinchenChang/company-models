@@ -29,6 +29,8 @@ EXTRA_PATTERNS = [
 EXTRA_NAMES = ["L1_Ans3", "L1_Ans3_Lo", "L1_Ans3_Hi"]
 # S4 新增（工程類；P4 自建 GW 需要每 GW 資本支出；列於最後，既有列位不變）
 S4_NAMES = ["IF_CapexTotal"]
+# Anthropic A2 新增（工程類；任務類別每任務 token 取自 Tokenomics，不在本模型自設）：任務名稱、任務長度、每次嘗試新鮮／快取／decode token
+A2_NAMES = ["IF_HdrTask", "IF_TaskLen", "IF_TaskTokFresh", "IF_TaskTokCached", "IF_TaskTokDec"]
 PENDING_NOTE = "待 Tokenomics 提供"
 
 
@@ -55,6 +57,7 @@ def read_snapshot(tk_dir: Path):
         chosen += sorted(n for n in names if re.fullmatch(pat, n))
     chosen += [n for n in EXTRA_NAMES if n in names]
     chosen += [n for n in S4_NAMES if n in names]
+    chosen += [n for n in A2_NAMES if n in names]
     rows, seen = [], set()
     for n in chosen:
         if n in seen:
@@ -80,7 +83,7 @@ def read_snapshot(tk_dir: Path):
         rows.append(dict(name=n, kind=n.split("_")[0], label=label, unit=unit, values=vals, status="OK"))
     present = {r["name"] for r in rows}
     # 工作單要求、但 Tokenomics 現行版沒有者：逐名列入、值留空（E1）
-    wanted = SRC_DEM + BLOCK6 + EXTRA_NAMES + S4_NAMES
+    wanted = SRC_DEM + BLOCK6 + EXTRA_NAMES + S4_NAMES + A2_NAMES
     pending = [dict(name=n, kind=n.split("_")[0], label="", unit="", values=[], status=PENDING_NOTE) for n in wanted if n not in present]
     hdr_gen = [wb["Interface"].cell(4, k).value for k in range(3, 18)]
     hdr_cost = [wb["Interface"].cell(5, k).value for k in range(3, 18)]

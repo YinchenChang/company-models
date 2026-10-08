@@ -298,7 +298,10 @@ def build(ctx):
     for p, pz, P in PLANS:
         Dm.add(f"tasks_{p}", f"{pz} 每人（席）每日任務數", "任務/日", grow(f"tasks_{p}", f"={I('tasks_' + p)}", lambda i: I("g_tasks")), "Inputs 2025；之後 ×（1＋年增率）")
     for c_, cz in CATS:
-        Dm.add(f"k_{c_}", f"每任務 token：{cz}", "K tok/任務", grow(f"k_{c_}", f"={I('k_' + c_)}", lambda i: I("g_k")), "Inputs 2025；之後 ×（1＋年增率）")
+        task = I(f"tk_task_{c_}")
+        tk = "+".join(f"SUMIFS(TK_IF_TaskTok{x},TK_IF_HdrTask,{task})" for x in ("Fresh", "Cached", "Dec"))
+        Dm.add(f"k_{c_}", f"每任務 token：{cz}", "K tok/任務", grow(f"k_{c_}", f"=({tk})/{I('tok_per_k')}*{I('k_ratio_' + c_)}", lambda i: I("g_k")),
+               "2025＝Tokenomics 對應任務每次嘗試 token（新鮮＋快取＋decode）× Inputs 倍數；之後 ×（1＋年增率）")
 
     def share(p, c_):
         if c_ == "other":
@@ -437,6 +440,11 @@ def checks(ctx):
         ("a2_cap", "容量上限係數 ∉ (0,1] 的年數", "=SUMPRODUCT(--(REV_CapFactor<=0))+SUMPRODUCT(--(REV_CapFactor>1.000000001))", 0, "eq", "A2 佔位＝1；A3 接 Compute"),
         ("a2_ads", "廣告營收 ≠ 0 的年數（D3）", "=SUMPRODUCT(--(REV_Ads<>0))", 0, "eq", "Anthropic 公開承諾不放廣告"),
         ("a2_evorder", "價格事件公告日順序違反數（各層級序列須依日期遞增）", "=" + "+".join(order), 0, "eq", "SRC 日期被改錯時轉 ERR"),
+        ("a2_tktask", "任務類別對應的 Tokenomics 任務名稱在 TK_IF_HdrTask 找不到的數",
+         "=" + "+".join(f"(COUNTIF(TK_IF_HdrTask,{I('tk_task_' + c_)})<>1)" for c_, _ in CATS), 0, "eq", "Tokenomics 改任務名稱時轉 ERR"),
+        ("a2_tkcache", "對照：Tokenomics 程式代理任務的快取輸入占輸入 token（vs Inputs API 快取命中）",
+         f"=SUMIFS(TK_IF_TaskTokCached,TK_IF_HdrTask,{I('tk_task_code')})/(SUMIFS(TK_IF_TaskTokCached,TK_IF_HdrTask,{I('tk_task_code')})+SUMIFS(TK_IF_TaskTokFresh,TK_IF_HdrTask,{I('tk_task_code')}))",
+         None, "info", f"Inputs {I('api_cache_hit')} 基準 0.6（API 全體）"),
         ("a2_src12", "對照：2025 營收兩筆 SRC 之差（4.6 − 4.59，$B）", f"={S('rev_2025_recognized')}-{S('rev_2025_recognized_b')}", None, "info", "基準用 SRC_ANT_001（Reuters 經 Fortune）"),
         ("a2_unc25", "對照：2025 未校準個人訂閱 − 校準值（$B）", "=REV_GapUncal2025", None, "info", "月活 × 付費轉換率（Analogy）× 加權月費"),
         ("a2_rr25", "對照：2025 模型總額 ÷ run-rate 對數平均推估 − 1", f"=Revenue!$D${rr['rr25gap']}", None, "info", "D14：run-rate 只作對照"),
