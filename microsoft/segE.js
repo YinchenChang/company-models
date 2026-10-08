@@ -133,6 +133,8 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
     elQ(`p`, { key: `j`, style: { ...sm, fontSize: 11.5, margin: `3px 0 0` } }, TR.judge),
     cv.igLine ? elQ(`p`, { key: `ig`, style: { fontSize: 12.5, fontWeight: 600, margin: `3px 0 0` } }, cv.igLine) : null,
     elQ(`p`, { key: `al`, style: { fontSize: 12.5, fontWeight: 600, margin: `3px 0 0` } }, cv.adjLine), // v0.2
+    cv.thesisLine ? elQ(`p`, { key: `thesis`, style: { fontSize: 13, fontWeight: 700, margin: `3px 0 0` } }, cv.thesisLine) : null, // MAG v0.1b：主命題答案
+    cv.fcfLine ? elQ(`p`, { key: `fcf`, style: { fontSize: 12.5, fontWeight: 600, margin: `3px 0 0` } }, cv.fcfLine) : null, // MAG v0.1b：股東回饋與 FCF
     elQ(`p`, { key: `dl`, style: { fontSize: 12.5, margin: `3px 0 0` } }, cv.delayLine) // v0.2
   ]);
   let b2 = box(`b2`, `2｜與市場的差異（模型：${scLabel} vs 共識）`, [
@@ -156,7 +158,7 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
       elQ(`div`, { key: `c`, style: { fontSize: 10.5, color: `var(--color-muted)`, lineHeight: 1.35 } }, c)]))),
     elQ(`p`, { key: `i`, style: { fontSize: 13, lineHeight: 1.4, margin: `5px 0 0`, fontWeight: 600 } }, cv.implied),
     elQ(`p`, { key: `r`, style: { fontSize: 12.5, lineHeight: 1.4, margin: `4px 0 0` } }, rvOk
-      ? `反向 DCF（DCF＝現價，其他不變）：FY30 每 MW 年收入需 $${Y(rv.rev30 * rv.R, 1)}m（${rv.R >= 1 ? `+` : `−`}${hA(Math.abs(rv.R - 1) * 100, 0)}），或建置成本 $${Y(rv.cost30 * rv.C, 1)}m（${rv.C >= 1 ? `+` : `−`}${hA(Math.abs(rv.C - 1) * 100, 0)}），或穩態 EBITDA 率 ${Number.isFinite(rv.Eb) ? hA(rv.Eb * 100, 0) : `無解`}${Number.isFinite(rv.Rt) ? `；加權目標價＝現價需每 MW 年收入 ${rv.Rt >= 1 ? `+` : `−`}${hA(Math.abs(rv.Rt - 1) * 100, 0)}` : ``}。`
+      ? `反向 DCF（DCF＝現價，其他不變）：${PERIODS[4]} 每 MW 年收入需 $${Y(rv.rev30 * rv.R, 1)}m（${rv.R >= 1 ? `+` : `−`}${hA(Math.abs(rv.R - 1) * 100, 0)}），或建置成本 $${Y(rv.cost30 * rv.C, 1)}m（${rv.C >= 1 ? `+` : `−`}${hA(Math.abs(rv.C - 1) * 100, 0)}），或穩態 EBITDA 率 ${Number.isFinite(rv.Eb) ? hA(rv.Eb * 100, 0) : `無解`}${Number.isFinite(rv.Rt) ? `；加權目標價＝現價需每 MW 年收入 ${rv.Rt >= 1 ? `+` : `−`}${hA(Math.abs(rv.Rt - 1) * 100, 0)}` : ``}。`
       : `反向 DCF：計算中或無解。`),
     elQ(`p`, { key: `n`, style: { ...sm, margin: `3px 0 0`, fontSize: 11 } }, `隱含倍數＝（價格 × 股數＋共識 ${CONS_YEARS[2]} 淨負債）÷ 共識 ${CONS_YEARS[2]} 調整後 EBITDA。`)
   ]);
@@ -189,7 +191,7 @@ function ConsTabQ({ d, p, o, tr: TR, st }) {
     ]),
     elQ(`div`, { key: `si`, className: `rounded-lg border border-watch/40 bg-watch/5 px-3 py-2 text-sm leading-relaxed` }, [elQ(`b`, { key: `b` }, `來源獨立性：`), C.sourceIndependence]),
     elQ(`div`, { key: `cmp`, className: `max-w-full overflow-x-auto` }, [
-      elQ(`h3`, { key: `h`, className: `text-sm font-semibold` }, `模型（目前情境）vs 共識：FY26–FY28`),
+      elQ(`h3`, { key: `h`, className: `text-sm font-semibold` }, `模型（目前情境）vs 共識：${PERIODS[0]}–${PERIODS[2]}`),
       elQ(`table`, { key: `t`, className: `mt-2 w-full text-sm` }, [
         elQ(`thead`, { key: `h` }, elQ(`tr`, { className: `border-b border-border` }, [th(`US$bn`), ...CONS_YEARS.flatMap(y => [th(`${y} 模型`, 1), th(`共識`, 1), th(`差距`, 1)])])),
         elQ(`tbody`, { key: `b` }, MET.map(([n, k]) => elQ(`tr`, { key: k, className: `border-t border-border` }, [
@@ -204,7 +206,7 @@ function ConsTabQ({ d, p, o, tr: TR, st }) {
         ...cv.rsn.map((x, i) => elQ(`div`, { key: i, className: `text-xs leading-relaxed` }, `${x.yr} ${x.name} ${x.gtxt}｜${x.type}：${x.text}`))]) : null,
       elQ(`p`, { key: `i`, className: `mt-1 text-sm` }, cv.implied),
       elQ(`p`, { key: `n`, className: `mt-1 text-xs leading-relaxed text-muted` },
-        `判斷只用營收、EBITDA、CapEx，門檻 ${pctQ(CONS_TOL)}（company.json → methodology.consensusGapTol）；營收、CapEx 以比例列差距，調整後 EBITDA 與淨負債以金額差、EBITDA 率以百分點列示（判斷門檻仍以比例計）；淨負債只列不判斷（共識口徑未揭露）。FY26 模型為全年口徑：營收＝1H 實際＋2H 模型；調整後 EBITDA＝1H 實際 ${Y(ACTUAL_1H.adjEbitda, 3)}（Q1 ${Y(ACTUAL_1H.adjEbitdaMeta.q1, 3)}＋Q2 ${Y(ACTUAL_1H.adjEbitdaMeta.q2, 3)}；${ACTUAL_1H.adjEbitdaMeta.tag}：${ACTUAL_1H.adjEbitdaMeta.note}；${ACTUAL_1H.adjEbitdaMeta.sources.map(x => `${x.quarter} ${x.name}`).join(`、`)}；${ACTUAL_1H.adjEbitdaMeta.crossCheck}）＋2H 模型，只用於本對照，不改模型 GAAP 損益與評價；CapEx＝1H 實際毛額 ${Y(ACTUAL_1H.capex, 3)}＋2H 模型毛額（共識口徑未揭露）。隱含倍數＝（價格 × 股數 ${Y(o.shares, 3)}bn＋共識 FY28 淨負債）÷ 共識 FY28 調整後 EBITDA。`)
+        `判斷只用營收、EBITDA、CapEx，門檻 ${pctQ(CONS_TOL)}（company.json → methodology.consensusGapTol）；營收、CapEx 以比例列差距，調整後 EBITDA 與淨負債以金額差、EBITDA 率以百分點列示（判斷門檻仍以比例計）；淨負債只列不判斷（共識口徑未揭露）。${PERIODS[0]} 模型為全年口徑：營收＝${CALQ.ytdShort} 實際＋${CALQ.stubShort} 模型；調整後 EBITDA＝${CALQ.ytdShort} 實際 ${Y(ACTUAL_1H.adjEbitda, 3)}（Q1 ${Y(ACTUAL_1H.adjEbitdaMeta.q1, 3)}＋Q2 ${Y(ACTUAL_1H.adjEbitdaMeta.q2, 3)}；${ACTUAL_1H.adjEbitdaMeta.tag}：${ACTUAL_1H.adjEbitdaMeta.note}；${ACTUAL_1H.adjEbitdaMeta.sources.map(x => `${x.quarter} ${x.name}`).join(`、`)}；${ACTUAL_1H.adjEbitdaMeta.crossCheck}）＋${CALQ.stubShort} 模型，只用於本對照，不改模型 GAAP 損益與評價；CapEx＝${CALQ.ytdShort} 實際 ${Y(ACTUAL_1H.capex, 3)}＋${CALQ.stubShort} 模型（共識口徑未揭露）。隱含倍數＝（價格 × 股數 ${Y(o.shares, 3)}bn＋共識 ${CONS_YEARS[2]} 淨負債）÷ 共識 ${CONS_YEARS[2]} 調整後 EBITDA。`)
     ]),
     ...secs.map(sc => elQ(`div`, { key: sc, className: `max-w-full overflow-x-auto` }, [
       elQ(`h3`, { key: `h`, className: `text-sm font-semibold` }, sc),
@@ -356,8 +358,8 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
       `${TR.judge}${TR.bLabel} $${Y(TR.B[0], 1)}–$${Y(TR.B[1], 1)}：${TR.pos}；評等依點位。`),
     elQ(`div`, { key: `r`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 18, marginTop: 22 } }, [
       [`收入受產能約束`, `排程 RPO $${Y(b.scheduled, 1)}bn，五期可實現 $${Y(b.collected, 1)}bn；模型期毛 CapEx $${Y(T.gross, 0)}bn。`],
-      [ebMW < recov ? `單位經濟為負` : `單位經濟為正`, `FY30 每 MW 年 EBITDA $${Y(ebMW, 1)}m，${ebMW < recov ? `低於` : `高於`} GPU 年化資本回收 $${Y(recov, 1)}m。`],
-      [`依賴外部資金`, `融資前缺口 $${Y(T.preFinEnd < 0 ? -T.preFinEnd : 0, 1)}bn，FY30 總債務 $${Y(y[4].totalDebtEnd, 0)}bn。`]
+      [ebMW < recov ? `單位經濟為負` : `單位經濟為正`, `${PERIODS[4]} 每 MW 年 EBITDA $${Y(ebMW, 1)}m，${ebMW < recov ? `低於` : `高於`} GPU 年化資本回收 $${Y(recov, 1)}m。`],
+      [`依賴外部資金`, `融資前缺口 $${Y(T.preFinEnd < 0 ? -T.preFinEnd : 0, 1)}bn，${PERIODS[4]} 總債務 $${Y(y[4].totalDebtEnd, 0)}bn。`]
     ].map(([a, c]) => elQ(`div`, { key: a, style: { borderTop: `3px solid var(--color-accent)`, paddingTop: 12 } }, [
       elQ(`div`, { key: `a`, style: { fontSize: 18, fontWeight: 700 } }, a),
       elQ(`div`, { key: `c`, style: { fontSize: 15.5, lineHeight: 1.55, color: `var(--color-muted)`, marginTop: 6 } }, c)
@@ -379,7 +381,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
 
   // 3｜單位經濟
   let mx3 = Math.max(ebMW, recov) * 1.1;
-  S(`單位經濟`, `FY30 每 MW 每年 EBITDA $${Y(ebMW, 1)}m，${ebMW < recov ? `低於` : `高於`} GPU 年化資本回收 $${Y(recov, 1)}m`, [
+  S(`單位經濟`, `${PERIODS[4]} 每 MW 每年 EBITDA $${Y(ebMW, 1)}m，${ebMW < recov ? `低於` : `高於`} GPU 年化資本回收 $${Y(recov, 1)}m`, [
     elQ(BarQ, { key: 1, label: `每 MW 年 EBITDA`, sub: `$${Y(rev30, 1)}m 年收入 × ${hA(util30 * 100, 0)} 利用率 × ${hA(eb30 * 100, 0)} EBITDA 率`, val: ebMW, max: mx3, color: `var(--color-accent)`, fmt: x => `$${Y(x, 1)}m` }),
     elQ(BarQ, { key: 2, label: `GPU 年化資本回收`, sub: `$${Y(cost30, 0)}m 建置成本 × 回收係數 ${Y(crf, 3)}（WACC ${hA(o.wacc * 100, 0)}、${e.gpuLife} 年）`, val: recov, max: mx3, color: `var(--color-bad)`, fmt: x => `$${Y(x, 1)}m` }),
     elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 18, marginTop: 30 } }, [
@@ -425,8 +427,8 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
     [`模型期毛 CapEx（$bn）`, s => Y(s.capex, 0)],
     [`融資前缺口（$bn）`, s => Y(s.gap, 1)],
     [`新債／可轉債／股權／高息債（$bn）`, s => `${Y(s.nd, 1)}／${Y(s.cv, 1)}／${Y(s.eq, 1)}／${Y(s.jk, 1)}`],
-    [`FY30 總債務（$bn）`, s => Y(s.debt30, 1)],
-    [`FY30 營收／EBITDA（$bn）`, s => `${Y(s.rev30, 1)}／${Y(s.eb30, 1)}`],
+    [`${PERIODS[4]} 總債務（$bn）`, s => Y(s.debt30, 1)],
+    [`${PERIODS[4]} 營收／EBITDA（$bn）`, s => `${Y(s.rev30, 1)}／${Y(s.eb30, 1)}`],
     [`DCF 腿／EV/EBITDA 腿（每股）`, s => `$${Y(s.dcf, 1)}／$${Y(s.ev, 1)}`],
     [`加權目標價（0 截斷）`, s => `$${Y(s.tgt, 1)}`],
     [`加權目標價（選擇權模式）`, s => `$${Y(s.opt, 1)}`],
@@ -444,12 +446,12 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
     elQ(`p`, { key: `j`, style: { fontSize: 16, lineHeight: 1.5, margin: `16px 0 0` } },
       `情境區間（保守與積極情境）$${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}。${TR.judge}`),
     elQ(`p`, { key: `n`, style: { fontSize: 14, color: `var(--color-muted)`, marginTop: `auto`, lineHeight: 1.5 } },
-      `加權目標價＝DCF ${hA((f.call.weights?.dcf ?? .45) * 100, 0)}＋EV/EBITDA 分部加總（${PERIOD_LABELS[o.evYear ?? 1]}：OCI ${Y(o.evEbitda, 1)}x＋傳統事業 ${Y(o.legacyEvEbitda ?? o.evEbitda, 1)}x）${hA((f.call.weights?.pe ?? .55) * 100, 0)}；WACC ${hA(o.wacc * 100, 1)}（CAPM：rf ${hA(o.rf * 100, 2)}＋β ${Y(CAPM_Q(o).beta, 2)} × ERP ${hA(o.capm.erp * 100, 1)}；稅前 kd ${hA(o.capm.kdPretax * 100, 2)}）。DCF 股權價值為負時以 0 截斷；選擇權模式以 Merton（σ ${hA(o.sigma * 100, 0)}）估計有限責任下的股權價值。`)
+      `加權目標價＝DCF ${hA((f.call.weights?.dcf ?? .45) * 100, 0)}＋EV/EBITDA 分部加總（${PERIOD_LABELS[o.evYear ?? 1]}：AI 雲端 ${Y(o.evEbitda, 1)}x＋非 AI 事業 ${Y(f.v.legacyEvEbitda ?? o.evEbitda, 1)}x）${hA((f.call.weights?.pe ?? .55) * 100, 0)}；WACC ${hA(o.wacc * 100, 1)}（CAPM：rf ${hA(o.rf * 100, 2)}＋β ${Y(CAPM_Q(o).beta, 2)} × ERP ${hA(o.capm.erp * 100, 1)}；稅前 kd ${hA(o.capm.kdPretax * 100, 2)}）。DCF 股權價值為負時以 0 截斷；選擇權模式以 Merton（σ ${hA(o.sigma * 100, 0)}）估計有限責任下的股權價值。`)
   ]);
 
   // 6｜反向 DCF
   S(`反向 DCF`, rv && Number.isFinite(rv.R)
-    ? `現價 $${Y(P, 2)} 要成立：FY30 每 MW 年收入需 ${rv.R >= 1 ? `+` : `−`}${hA(Math.abs(rv.R - 1) * 100, 0)}，或建置成本需 ${rv.C >= 1 ? `+` : `−`}${hA(Math.abs(rv.C - 1) * 100, 0)}`
+    ? `現價 $${Y(P, 2)} 要成立：${PERIODS[4]} 每 MW 年收入需 ${rv.R >= 1 ? `+` : `−`}${hA(Math.abs(rv.R - 1) * 100, 0)}，或建置成本需 ${rv.C >= 1 ? `+` : `−`}${hA(Math.abs(rv.C - 1) * 100, 0)}`
     : `現價要成立需要什麼（計算中或無解）`, rv ? [
       elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 20 } }, [
         elQ(StatQ, { key: 1, label: `每 MW 年收入（${PERIODS[4]}）`, value: Number.isFinite(rv.R) ? `$${Y(rv.rev30 * rv.R, 1)}m` : `無解`, note: `目前 $${Y(rv.rev30, 1)}m；其他條件不變` }),
@@ -467,7 +469,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
           ])))
         ]),
         elQ(`p`, { key: `p`, style: { fontSize: 16.5, lineHeight: 1.65, margin: 0 } },
-        `解法：固定其他輸入，只調一個變數，使 DCF 每股＝現價。${Number.isFinite(rv.Rt) ? `若改以加權目標價＝現價反解，每 MW 年收入需 ${rv.Rt >= 1 ? `+` : `−`}${hA(Math.abs(rv.Rt - 1) * 100, 0)}。` : ``}左表為 DCF＝現價所需的 FY30 每 MW 年收入（綠底＝不高於目前 $${Y(rv.rev30, 1)}m）。`)
+        `解法：固定其他輸入，只調一個變數，使 DCF 每股＝現價。${Number.isFinite(rv.Rt) ? `若改以加權目標價＝現價反解，每 MW 年收入需 ${rv.Rt >= 1 ? `+` : `−`}${hA(Math.abs(rv.Rt - 1) * 100, 0)}。` : ``}左表為 DCF＝現價所需的 ${PERIODS[4]} 每 MW 年收入（綠底＝不高於目前 $${Y(rv.rev30, 1)}m）。`)
       ]),
       elQ(`p`, { key: `n`, style: { fontSize: 15, color: `var(--color-muted)`, marginTop: `auto`, lineHeight: 1.55 } },
         Number.isFinite(rv.Eb) && rv.Eb > .59 ? `解讀：現價隱含單位經濟大幅改善（更高租價或更低 GPU 成本）；單靠營運效率，EBITDA 率須超出可觀察 neocloud 上緣。` : `解讀：現價所需條件落在可觀察 neocloud 範圍內，需逐項檢驗。`)
@@ -480,15 +482,15 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
     let hits = [];
     eg.leg.forEach((r, i) => r.forEach((x, j) => { if (x >= .95 * P) hits.push(`${eg.years[j]} × ${Y(eg.mults[i], 1)}x（$${Y(x, 1)}）`); }));
     let tmax = Math.max(...eg.tgt.flat()), l29 = k6 >= 0 ? eg.leg[k6][ky] : NaN;
-    S(`評價方法`, `結論方向不變，但幅度取決於錨定年度與倍數：${Number.isFinite(l29) ? `${PERIOD_LABELS[o.evYear ?? 1]} × OCI ${multTxt(o.evEbitda)}x 時 EV/EBITDA 腿為 $${Y(l29, 1)}，${l29 >= .95 * P ? `約等於` : l29 > P ? `高於` : `低於`}現價` : `見下表`}`, [
+    S(`評價方法`, `結論方向不變，但幅度取決於錨定年度與倍數：${Number.isFinite(l29) ? `${PERIOD_LABELS[o.evYear ?? 1]} × AI 雲端 ${multTxt(o.evEbitda)}x 時 EV/EBITDA 腿為 $${Y(l29, 1)}，${l29 >= .95 * P ? `約等於` : l29 > P ? `高於` : `低於`}現價` : `見下表`}`, [
       elQ(EvGridQ, { key: `g`, st: e, o: o, g: eg, big: !0 }),
       elQ(`div`, { key: `n`, style: { marginTop: 22, fontSize: 17, lineHeight: 1.6 } }, [
         elQ(`div`, { key: 1 }, `• 矩陣內加權目標價最高 $${Y(tmax, 1)}，${tmax < P ? `仍低於現價，賣出方向在所有組合下成立` : `部分組合高於現價，結論對方法選擇敏感`}。`),
         elQ(`div`, { key: 2 }, hits.length ? `• 但 EV/EBITDA 腿單獨達到現價 95% 以上的組合：${hits.join('、')}——市場大致以穩態倍數上緣定價 ${PERIODS[1]} 以後的 EBITDA。` : `• EV/EBITDA 腿在所有組合下都低於現價的 95%。`),
-        elQ(`div`, { key: 3 }, `• 結論對方法的依賴：(a) DCF 腿（權重 ${hA(eg.wd * 100, 0)}）取 $${Y(eg.dcf, 1)}；(b) OCI ${multTxt(o.evEbitda)}x 為可觀察 neocloud 穩態倍數上緣、傳統事業 ${multTxt(o.legacyEvEbitda ?? o.evEbitda)}x 為軟體同業 NTM 中位數（區間 ${multTxt(Math.min(...COMPANY_DATA.peers.software.map(x => x.ntmEvEbitda)))}–${multTxt(Math.max(...COMPANY_DATA.peers.software.map(x => x.ntmEvEbitda)))}x）。`)
+        elQ(`div`, { key: 3 }, `• 結論對方法的依賴：(a) DCF 腿（權重 ${hA(eg.wd * 100, 0)}）取 $${Y(eg.dcf, 1)}；(b) AI 雲端 ${multTxt(o.evEbitda)}x 為可觀察 neocloud 穩態倍數上緣、非 AI 事業 ${multTxt(Math.round((eg.legM ?? o.legacyEvEbitda ?? o.evEbitda) * 10) / 10)}x 為各分部同業 NTM 中位數（區間 ${multTxt(Math.min(...COMPANY_DATA.peers.software.map(x => x.ntmEvEbitda)))}–${multTxt(Math.max(...COMPANY_DATA.peers.software.map(x => x.ntmEvEbitda)))}x）。`)
       ]),
       elQ(`p`, { key: `f`, style: { fontSize: 14, color: `var(--color-muted)`, marginTop: `auto`, lineHeight: 1.5 } },
-        `目前設定：錨定 ${PERIOD_LABELS[o.evYear ?? 1]}、OCI ${Y(o.evEbitda, 1)}x、傳統事業 ${Y(o.legacyEvEbitda ?? o.evEbitda, 1)}x（黃底；矩陣只變動 OCI 倍數）。${PERIODS[1]} 錨定的疑慮：穩態倍數套在爬坡年度；該年末淨負債已含下一期才產生 EBITDA 的預建 CapEx。`)
+        `目前設定：錨定 ${PERIOD_LABELS[o.evYear ?? 1]}、AI 雲端 ${Y(o.evEbitda, 1)}x、非 AI 事業 ${Y(eg.legM ?? o.legacyEvEbitda ?? o.evEbitda, 1)}x（黃底；矩陣只變動 AI 雲端 倍數）。${PERIODS[1]} 錨定的疑慮：穩態倍數套在爬坡年度；該年末淨負債已含下一期才產生 EBITDA 的預建 CapEx。`)
     ]);
   }
 

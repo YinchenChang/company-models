@@ -1,9 +1,29 @@
 # Microsoft v0.1 進度檔（接手用）
 
 ## 目前狀態（每次 push 前覆寫）
-- **已完成**：v0.1a 全部步驟（0–9）。總帳 722 筆、Tokenomics v5.27 快照（41 名、missing 3）、k 證據、共識檔、`company.json` → `mag` 區段（21 子區）、資料報告 `docs/reports/20261008_microsoft_v0.1a_資料.md`；verify.sh 19 項全過（引擎未動）。PR #33 已留言回報。
-- **下一步（v0.1b′ 起點）**：等 Amazon v0.1b 產出 MAG 共用引擎後移植（可讀 `amazon/` 複製）。起點：(1) `meta.consensusFile` → `data/consensus_msft_20261008.json`，刪 `consensus_orcl_20261007.json`、`consensus_crwv_20260925.json` 與 `company.json` → `oracle` 區段；(2) `calendar.fiscalYearEndMonth`＝6、最新已申報 FY26Q4、首期 FY27 全年（若 FY27Q1 已於 2026-10-28 公布，改 Q1 實際＋0.75 年，並更新總帳）；(3) 依 `mag.*.mapTo` 搬欄位：分部用 FY27 新分部（Agents and Infra／Devices and Consumer）＋新產品別，雲端拆分對象＝Azure（新定義，FY26Q4 年化 117.7）；(4) AI MW 期初 4.5 GW-IT（3.5–5.5）、對外 60%、k 1.06（0.76–1.31）；(5) neocloud 租金入營業成本；(6) 租賃改分類（FY27 起更多營業租賃）與未起租 329.1 的處理需設預設。注意事項全文見資料報告第 10 節。
-- **未解問題**：無（停止條件未觸發）。待 chat 端知悉：拆分基準 36.5 可能偏高 20–40%（公司 AI run-rate 對照）、上限檢查 59% > 50% 示警。
+- **已完成**：v0.1b′ 步驟 0–2（引擎與工具自 `origin/claude/amazon-v0.1` @ `59f4d5f`〔Amazon v0.1b r2 完成版〕複製；`company.json` 以 Amazon 結構填入 Microsoft 資料；C1–C15 的本家參數；verify.sh 23 項全過）。
+- **下一步**：步驟 3–4：敏感度（`node scripts/mag_sens.js`）與 opShare／selfBuild 等變體、報告 `docs/reports/20261008_microsoft_v0.1b2_移植.md`、PR #33 留言；收尾前再 `git fetch origin claude/amazon-v0.1` 檢查 Amazon 是否在 `59f4d5f` 之後又改引擎。
+- **未解問題**：見 v0.1b′ 段落「待 chat 端判斷」。
+
+## v0.1b′ 移植（2026-10-09）
+工作單：`mag/docs/workorders/20261008_mag_v0.1b2_移植.md`（對照表 r1 第 7、8 節 C1–C15 優先）；引擎來源：`origin/claude/amazon-v0.1` @ `59f4d5f`（Amazon 進度檔已寫「v0.1b r2 完成」，C10–C15 已含在內）。
+
+| 步驟 | 狀態 | commit | 備註 |
+|---|---|---|---|
+| 0 進度檔段落 | 完成 | （步驟 1–2 同 commit） | — |
+| 1 複製引擎 | 完成 | （本次） | Amazon 移植說明第 6 節清單＋r2 改檔（`scripts/calib_pace.js` 等）原樣複製；保留本家 `data/`、`docs/`、`dist/`（Oracle v0.2 成品不動）、`CLAUDE.md`；刪除 `data/consensus_orcl_20261007.json`、`consensus_crwv_20260925.json`；Tokenomics 快照改用 Amazon 引擎的名稱清單重產（35 名、missing 3：IF_NonNVRatio、IF_NonNVCostRatio、IF_NonNV_Maia；`--check` 通過）；`data/peers_cloud_20261008.json` 自 amazon/ 只讀複製（C12） |
+| 2 company.json | 完成 | （本次） | 以 Amazon r2 `company.json` 為骨架（產生腳本 `scripts/port_company_json.py`；Amazon 引擎欄位再變時可重跑）；財年 6 月、FY26Q4 已申報、首期 FY27 全年 1.0 年、期間 FY27–FY31、錨定 FY29（evYear＝2、roicYear＝2）；6 線＋AI 雲端；C10 基準速度 2,294.1 MW-IT／年（calib_pace 解；首期資本支出 204.2、對帳落差 0）；verify.sh 23 項全過 |
+| 3 引擎差異 | 完成（隨步驟 1–2） | （本次） | 見下「引擎差異」 |
+| 4 敏感度、報告、PR 留言 | 進行中 | — | — |
+
+### 引擎差異（相對 Amazon @ 59f4d5f；全部在 microsoft/，chat 端決定是否回寫）
+1. `build_xlsx.py`、`segB.js`：共識檔沒有 `recentActions`／`recentActionsMeta`（Microsoft v0.1a 共識檔未蒐集最新分析師動作）時略過，不報錯。
+2. `build_xlsx.py`：普通股股利列備註改讀 `defaults.dividend.note`（原寫死 Oracle「每季 $0.50；不回購」）。
+3. `build_xlsx.py`：未起租「自現金扣除比例」列名可由 `leases.uncommenced.cashShareLabel` 指定（本家＝營業租賃部分；見已套用預設 opShare），備註尾改為「本格＝1 − leases.uncommenced.opShare」。
+4. `scripts/test_rolling.py`、`scripts/test_attrib.py`：Q4 已申報（年初至今無標籤）時，滾動一季的 ytdActual.label 改寫為新標籤；test_rolling 的「過期字樣」排除在新日曆仍有效者（新的上一財年末日期、期間標籤、「全年」）——Microsoft 型日曆（評價日＝上一財年末）才會碰到。
+5. `scripts/mag_sens.js`：對外比例敏感度列名依 `capexModel.extShare` 產生（原寫死 80% 口徑）；有租用算力時加兩列（租金全額、租金 0）。
+6. `scripts/fields_doc.py`：mag 區段說明換回 Microsoft v0.1a 版；新增 `leases.uncommenced.cashShareLabel`、`defaults.legacyBiz.split.*`（Microsoft 營業利益率分配）、`mag.mw.externalIT` 的說明。
+7. `historicalPL` 第 4 格為年初至今（引擎以索引 3 讀取）：Microsoft 首期為全年，加一格「FY27 年初至今」全 0（company.json 表達，非引擎改動）。
 
 ## v0.1a 資料蒐集（2026-10-08）
 工作單：`mag/docs/workorders/20261008_mag_v0.1a_資料蒐集.md`；分支 `claude/microsoft-v0.1`；PR #33。

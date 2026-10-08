@@ -35,7 +35,7 @@ fy, q = calendar_q._parse_q(co['calendar']['latestQuarterFiled'])
 nq = f'FY{(fy + (q == 4)) % 100:02d}Q{q % 4 + 1}'
 co['calendar']['latestQuarterFiled'] = co['calendar']['latestQuarterReported'] = nq
 new = calendar_q.derive(co)
-co['ytdActual'].update(throughQuarter=nq, months=new['ytdMonths'], label=co['ytdActual']['label'].replace(old['ytdLabel'], new['ytdLabel'] or ''))
+co['ytdActual'].update(throughQuarter=nq, months=new['ytdMonths'], label=(co['ytdActual']['label'].replace(old['ytdLabel'], new['ytdLabel'] or '') if old['ytdLabel'] else f"{new['ytdLabel']} 實際（滾動測試）"))  # MAG v0.1b′：Q4 已申報（年初至今無標籤）時改寫為新標籤
 co['historicalPL'][-1]['year'] = new['ytdLabel']
 co['asOf'].update({p: nq for _, p, _ in calendar_q.ROLL_FIELDS})
 json.dump(co, open(os.path.join(tmp, 'roll.json'), 'w', encoding='utf-8'), ensure_ascii=False)
