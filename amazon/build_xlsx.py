@@ -2060,7 +2060,7 @@ dcf_lines = [
     ("股權價值", None, NUM, None),
     ("DCF 每股", None, USD, None),
     ("終值占 EV 比重", None, PCT, f'="超過 "&{_PC(RT_TVW)}&" 表示結論由終值假設決定，不由現金流決定"'),
-    ("新股募得現金（現值）", None, NUM, "期初到位，折現期數 0／0.5／1.5／2.5／3.5 年"),
+    ("新股募得現金（現值）", None, NUM, "期初到位，折現期數 0／0.5／1.5／2.5／3.5 年；MAG v0.1b：扣瀑布回購現金（淨股權）"),
     ("融資後股數（含瀑布新股）", None, '0.000', None),
     ("DCF 失效？（WACC ≤ g 或常態化 FCF ≤ 0）", None, NUM0, "1＝失效：DCF 權重歸零、EV/EBITDA 100%。股權為負不算失效"),
     ("DCF 每股：0 截斷", None, USD, None),
@@ -2083,8 +2083,8 @@ ws.cell(row=d0 + 2, column=3, value=f"=IF(C{d0+11}=1,0,C{d0+1}*(1+{GG})/({WACC}-
 ws.cell(row=d0 + 3, column=3, value=f"=C{d0+2}*G{df_v}").number_format = NUM
 ws.cell(row=d0 + 4, column=3, value=f"=C{d0}+C{d0+3}").number_format = NUM
 ws.cell(row=d0 + 6, column=3, value=f"=C{d0+4}+C{d0+5}").number_format = NUM
-ws.cell(row=d0 + 9, column=3, value="=" + "+".join(
-    f"'各期收支'!{COLS[i]}{FRR['eq']}/(1+{WACC})^'輸入與假設'!${COLS[i]}${CAL_R['tStart']}" for i in range(5))).number_format = NUM
+ws.cell(row=d0 + 9, column=3, value="=" + "+".join(  # MAG v0.1b：股權募資 − 瀑布回購（回購股數已自融資後股數扣除）
+    f"('各期收支'!{COLS[i]}{FRR['eq']}-'各期收支'!{COLS[i]}{bba_row})/(1+{WACC})^'輸入與假設'!${COLS[i]}${CAL_R['tStart']}" for i in range(5))).number_format = NUM
 ws.cell(row=d0 + 10, column=3, value=f"=§SHX§+'各期收支'!G{FRR['cns']}").number_format = '0.000'
 ws.cell(row=d0 + 12, column=3, value=f"=MAX(0,(C{d0+6}+C{d0+9})/C{d0+10})").number_format = USD
 _S = f"(C{d0+4}+C{d0+9})"
@@ -2428,6 +2428,7 @@ brow("＋ 瀑布：新債（額度＋資產層）", "US$bn", lambda i: f"={F_}{C
 brow("＋ 瀑布：可轉債", "US$bn", lambda i: f"={F_}{COLS[i]}{cv_row}")
 brow("＋ 瀑布：高息債", "US$bn", lambda i: f"={F_}{COLS[i]}{jd_row}")
 brow("＋ 瀑布：股權募資", "US$bn", lambda i: f"={F_}{COLS[i]}{eq_row}")
+brow("− 回購（瀑布第二步）", "US$bn", lambda i: f"=-{F_}{COLS[i]}{bba_row}")  # MAG v0.1b
 brow("− 新融資利息（新債＋可轉債＋高息債）", "US$bn", lambda i: f"=-{F_}{COLS[i]}{ni_row}")
 brow("期末現金", "US$bn", lambda i: f"=SUM({COLS[i]}{BR['期初現金']}:{COLS[i]}{BR['− 新融資利息（新債＋可轉債＋高息債）']})", NUM,
      "應等於『各期收支』期末累積現金（見下列驗算）", bold=True)

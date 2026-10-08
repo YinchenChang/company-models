@@ -1,4 +1,15 @@
-# Oracle 收支模型 v0.2 原始碼包
+# Amazon 收支模型原始碼包（MAG 共用引擎 v0.1b；由 Oracle v0.2 改寫）
+
+**MAG v0.1b（2026-10-08）**：本資料夾的引擎是 Amazon、Alphabet、Microsoft 三家共用的「MAG 引擎」，公司差異全部由 `company.json` 驅動（移植步驟見 `docs/reports/20261008_amazon_v0.1b_模型.md`「移植說明」）。相對 Oracle v0.2 新增：
+- **對外 AI 雲端**（`pricing`）：每 MW 年收入＝Σ 在役世代占比 × `TK_HoldEcon_<世代>` × 晶片係數 × k（k＝長約占比 × k_長約＋(1 − 占比) × k_現貨；價格軸低／基準／高與容量軸分離，3 × 3 目標價矩陣由 `scripts/rv_solve.py` 以 Excel 求解）；AI 雲端 EBITDA 率＝1 − Tokenomics 加權每 MW 營運成本 ÷ 每 MW 年收入（`defaults.ebitdaBasis`＝tk）。Excel「Tokenomics_取數」頁與 `TK_` 具名範圍（`scripts/check_tokenomics_tab.py`）。
+- **非 AI 事業 N 線**（`defaults.legacyBiz.lines`，kind＝growth／cloudResidual／explicit）：各線 EBITDA 率（m0→mLT）、其他攤銷（oa）、資本支出強度（cx）、同業倍數組（peer）；雲端分部的非 AI 部分＝分部首期估計 − 對外 AI 雲端模型值（殘差）。
+- **資本支出與 D&A 分池**（`capexModel`）：AI＝新增對外 MW ÷ 對外比例 × Tokenomics 每 MW 成本（IT＋自建 × 機房）＋汰換（IT）；非 AI＝各線營收 × cx；D&A 分 AI（IT／機房）與非 AI 兩池；對帳列（指引隱含 MW vs 路徑）。
+- **租賃與租用算力**（`leases.operatingInEbitda`、`uncommenced.opShare`、`rentedCompute`）；**回購**（`defaults.buyback`；瀑布第二步「減少回購」）；**SBC 現金加回**（`defaults.sbcRate`）；**持股清單**（上市不折價）；**關聯方並排**（`related`）；**AI 增量報酬**（Excel「AI增量報酬」：AI ROIC vs WACC、打平 k）；**分部倍數**（`valuation.segmentMultiples`）。
+- 核對：cmp31 涵蓋上述每個區塊；`scripts/test_mag_mechanisms.py`（verify.sh 8d）以測試用 company.json 變體驗證 C8 (a)–(f) 非零時 HTML 與 Excel 一致；`scripts/mag_sens.js` 產生報告敏感度。
+
+以下為 Oracle 時期的說明（引擎沿革與工具仍適用）。
+
+# Oracle 收支模型 v0.2 原始碼包（沿革）
 
 Oracle（ORCL）收支與評價模型；由 `nebius/` @ `642d144`（CRWV v4.5＋Nebius v0.1b）複製建立。下方各節為模板沿革與技術說明（以 CoreWeave 為例），引擎與工具仍適用；Oracle 新增的結構（OCI 以 MW × 每 MW 收入、首期以 Q1 OCI 校準可計費 MW、傳統事業四線、客戶出資與預付重大財務組成、股利、投資級融資瀑布、強制轉換特別股、未起租租賃排程、CAPM WACC、分部 EV/EBITDA；v0.1c：EBITDAR 率 − 固定租金、MW 觸頂後穩態 GPU 汰換、終值以末期 UFCF 為基準）見交接檔 `docs/handoff/20261008_Oracle收支模型_交接檔_v0_2.md` 與下方「company.json 欄位說明」；v0.2 新增建設延誤模組（計費 MW 平移、GPU 資本支出照原時程與閒置資本、租約起租連動、延誤罰則；Excel「運營_產能與收入」（E）區）與租賃負債／租賃調整後槓桿（投資級上限 ≤ 4.5×；「各期收支」租賃負債區、「資產負債_新債與新股」槓桿列）。成品名稱＝`更新日_<meta.company>收支模型_v版本`（目前 `dist/20261008_Oracle收支模型_v0_2.html`／`.xlsx`）。升版驗收的預期差異清單在 `scripts/expect/`（v0.2：`v0_2_vs_v0_1.txt`；延誤 0 不變性：`v0_2_delay0_vs_v0_1.txt`）。`scripts/calib_ebitdar.js`：EBITDAR 率校準（`defaults.ebitdarAdj`；verify.sh 第 0c 項）。
 

@@ -304,8 +304,8 @@ function runValuation(e, t, n) {
           shares: sh,
           netDebt: n.netDebt + mDebt + adj,
           fund: {
-            eq: Y2.map(e => e.equity || 0),
-            sh: e.totals.newShares || 0,
+            eq: Y2.map(e => (e.equity || 0) - (e.buyback || 0)), // MAG v0.1b：淨股權（扣瀑布回購）
+            sh: Y2[Y2.length - 1].cumNewShares || 0, // MAG v0.1b：淨新股（扣回購股數；Excel「累計新股」末期）
             sh27: Y2[1].cumNewShares || 0,
             nd27: Y2[1].totalDebtEnd - Y2[1].cum + mAdj,
             shY: Y2.map(e => e.cumNewShares || 0),

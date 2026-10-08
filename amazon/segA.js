@@ -547,7 +547,7 @@ function runFunding(e) {
         divShares: dvSh,
         existDebtEnd: wEx,
         totalDebtEnd: wEx + WF.Dn + WF.Cn + WF.Jn,
-        preCash: wPre,
+        preCash: wPre0, // MAG v0.1b：融資前現金（回購前；Excel 同列）
         need: wX,
         capD: wCapD,
         year: n,
@@ -675,7 +675,7 @@ function runFunding(e) {
   })(), COMPANY_DATA.related && (() => { // MAG v0.1b：關聯方——合約年化與兩家模型快照並排（只讀、不連動）；對手方集中度＝合約年化 ÷ 對外 AI 雲端收入（年化）
     const R = relatedQ(o);
     return _({ id: `related`, ok: !0, severity: `watch`,
-      title: `對手方集中度：OpenAI＋Anthropic 合約年化 ${PERIODS[2]} $${Y(R.tot[2], 1)}bn ÷ 對外 AI 雲端收入 $${Y(R.ai[2], 1)}bn＝${hA(R.ratio[2] * 100, 0)}（RPO 上限約 ${hA(COMPANY_DATA.related.rpoShareMax * 100, 0)}）`,
+      title: `對手方集中度：關聯方合約年化 ${PERIODS[2]} $${Y(R.tot[2], 1)}bn ÷ 對外 AI 雲端收入 $${Y(R.ai[2], 1)}bn＝${hA(R.ratio[2] * 100, 0)}（RPO 上限約 ${hA(COMPANY_DATA.related.rpoShareMax * 100, 0)}）`,
       detail: `${COMPANY_DATA.related.contracts.map((c, j) => `${c.name} ${R.rows[j].map(x => Y(x, 1)).join(`／`)}`).join(`；`)}；模型快照：${COMPANY_DATA.related.snapshots.map((c, j) => `${c.name} ${R.snap[j].map(x => x == null ? `—` : Y(x, 1)).join(`／`)}`).join(`；`)}（US$bn／年，${PERIODS.join(`／`)}；只讀，不回饋計算）。` })
   })(), _({
     id: `rpo-weights`,

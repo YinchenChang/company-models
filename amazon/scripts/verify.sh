@@ -125,6 +125,10 @@ step "8b. 期間滾動測試（暫存副本：日曆推算 6 種情況、滾動�
 if python3 scripts/test_rolling.py > "$OUT/test_rolling.log" 2>&1; then ok "test_rolling：日曆推算與滾動後第一屏"; tail -3 "$OUT/test_rolling.log"
 else bad "test_rolling（見 $OUT/test_rolling.log）"; tail -30 "$OUT/test_rolling.log"; fi
 
+step "8d. MAG 共用引擎機制測試（暫存副本：C8 (a)–(f)＋回購非零時 HTML 與 Excel 一致；MAG v0.1b）"
+if python3 scripts/test_mag_mechanisms.py > "$OUT/test_mag_mechanisms.log" 2>&1; then ok "test_mag_mechanisms：C8 (a)–(f)＋回購非零 一致"; tail -2 "$OUT/test_mag_mechanisms.log"
+else bad "test_mag_mechanisms（見 $OUT/test_mag_mechanisms.log）"; tail -20 "$OUT/test_mag_mechanisms.log"; fi
+
 step "8c. 目標價變動拆解工具測試（scripts/attrib.py：(a)＝(1＋WACC)^(月數÷12)，WACC 讀 Excel、月數讀 calendar_q；四項相加＝總變動）"
 if python3 scripts/test_attrib.py "$XLSX" > "$OUT/test_attrib.log" 2>&1; then ok "test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）"; tail -1 "$OUT/test_attrib.log"
 else bad "test_attrib（見 $OUT/test_attrib.log）"; tail -20 "$OUT/test_attrib.log"; fi
