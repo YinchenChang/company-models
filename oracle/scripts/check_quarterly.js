@@ -13,7 +13,7 @@ for (const [a, b, k] of (COMPANY_DATA.quarterly?.consistency || [])) {
 }
 info.push(`一致性檢查 ${(COMPANY_DATA.quarterly?.consistency || []).length} 組`);
 for (const SC of Object.keys(SCENARIOS)) {
-  const q = structuredClone(DEFAULTS); q.scenario = SC; q.a = structuredClone(SCENARIOS[SC].a); q.mw31 = SCENARIOS[SC].mw31; q.cvCap = SCENARIOS[SC].cvCap; q.billableOpen = SCENARIOS[SC].bOpen;
+  const q = structuredClone(DEFAULTS); q.scenario = SC; q.a = structuredClone(SCENARIOS[SC].a); q.mw31 = SCENARIOS[SC].mw31; q.cvCap = SCENARIOS[SC].cvCap; q.delayMonths = SCENARIOS[SC].delay; q.billableOpen = SCENARIOS[SC].bOpen;
   q.m.accepted = [...SCENARIOS[SC].acc]; q.m.billable = [...SCENARIOS[SC].bil]; q.m.revMW = [...SCENARIOS[SC].rev];
   const d = runFunding(q), p = runValuation(d, q, VAL_DEFAULTS), qv = quarterlyView(d, p, q);
   const cv = consensusView(d, p, VAL_DEFAULTS, targetRange(d, q, VAL_DEFAULTS, p), q);
