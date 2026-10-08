@@ -173,7 +173,352 @@
 - 換公司時：填 `companyAdjust.params`（各參數的實際、機制、標記）、`capexActual`（年初至今資本支出、期初／期末 MW、技術設備毛額）、`existingK.on`（沒有可用的季報單價時設 0）；沒有 `companyAdjust` 時模型與 W4 相同（舊方法回歸即以此驗證）、「公司實況驗證」頁不建。期間標籤取日曆的年初至今標籤，滾動後自動更新。
 - 只適用 CoreWeave、無法設定的部分：無。
 
-## 11. verify 輸出（摘要；完整輸出見本節末）
-- 新方法 `scripts/verify.sh --vs-dist`（對新 v4.7 成品）：見 PR 回報與下方完整輸出。
-- 升版驗收（對 v4.6 成品，`EXPECT=scripts/expect/v4_7_vs_v4_6.txt`，980 格＋4 列改名、未歸類 0）。
-- 舊方法回歸 `scripts/verify_legacy.sh`（revenue=legacy、移除 companyAdjust，對 v4.6 成品 0 差異）。
+## 11. verify 輸出
+- **新方法** `scripts/verify.sh --vs-dist`（對新 v4.7 成品）：**25 項全部通過**；畫面文字 35 頁 0 差異、Excel 值與公式 0 差異；cmp31 三情境各 528 項、FY27 錨定 474 項全部 OK；離線開啟通過。
+- **升版驗收**（對 v4.6 成品，`EXPECT=scripts/expect/v4_7_vs_v4_6.txt`，980 格＋4 列改名、未歸類 0）：**25 項全部通過**；新增列 107（W4＋W5）；畫面文字差異 35 頁為升版預期（無錯誤、無缺頁）。
+- **舊方法回歸** `scripts/verify_legacy.sh`（revenue=legacy、移除 companyAdjust，對 v4.6 成品）：**25 項全部通過**；畫面文字、Excel 值與公式 0 差異（新增列 45）。
+
+
+### 完整輸出（各組最後一段；全文在 out/，不入版控）
+
+#### 新方法 --vs-dist
+```
+
+=== 0. 季度層檢查（季度加總＝年度、指引一致性、超過門檻的差距都有原因；v4.4）
+一致性檢查 14 組
+low：季度加總＝年度 10 項
+low：年度差異原因 11 項、季度差異原因 6 項
+base：季度加總＝年度 10 項
+base：年度差異原因 10 項、季度差異原因 6 項
+high：季度加總＝年度 10 項
+high：年度差異原因 11 項、季度差異原因 6 項
+check_quarterly：全部通過
+[PASS] check_quarterly：季度加總＝年度、差異原因齊全
+
+=== 0b. README 欄位說明與 company.json 一致（scripts/fields_doc.py --check；5a）
+README 欄位說明與 company.json 一致
+[PASS] README 欄位說明與 company.json 一致
+
+=== 0c. Tokenomics 快照可重現（tools/tokenomics/import_tokenomics.py --check；W1）
+--check 通過：26 個名稱（missing 0）與快照一致（20261008_Tokenomics_v5.27.xlsx，相對誤差 ≤ 1e-09）
+[PASS] Tokenomics 快照 --check：26 個名稱（missing 0）與快照一致（20261008_Tokenomics_v5.27.xlsx，相對誤差 ≤ 1e-09）
+
+=== 1. 建 HTML（v4.7 · 2026-10-08）
+built 1049872
+[PASS] 建 HTML
+
+=== 2. 建 Excel
+saved /home/claude/company-models/coreweave/out/20261008_CoreWeave收支模型_v4_7.xlsx
+[PASS] 建 Excel
+
+=== 3. 重算（LibreOffice headless）
+{"status": "success", "total_formulas": 2689, "total_errors": 0, "error_summary": {}}
+[PASS] 重算：0 公式錯誤
+
+=== 3b. 反向 DCF：以 Excel 求解（scripts/rv_solve.py；v4.5 取代 JS 快照）
+反向 DCF（Excel 求解）：現價 90.13、R 1.8961、C 0.2224、Eb 無解、Rt 1.6369；矩陣 20/20 格有解
+rv_snap.json 無變動
+[PASS] 反向 DCF：Excel 求解，rv_snap.json 與 Excel 一致
+
+=== 3c. 每 MW 敏感度快照：以 Excel 求值（scripts/permw_sens.py；W2）
+每 MW 敏感度快照（Excel 求值）：基準情境加權目標價 13.29、Tokenomics 低／高 44.84／0.00、Rubin Ultra 版 6.74
+permw_sens.json 無變動
+[PASS] 每 MW 敏感度快照：Excel 求值，permw_sens.json 與 Excel 一致
+
+=== 4. fix_outline
+outline fixed
+[PASS] fix_outline
+
+=== 4b. fix_datatable（模擬運算表還原為 Excel 格式）
+datatable fixed: xl/worksheets/sheet3.xml D248:E250 輸入格 C5
+[PASS] fix_datatable
+
+=== 5. verify_ooxml
+OOXML OK
+[PASS] verify_ooxml：OOXML OK
+
+=== 5d. 快照值＝Excel「Tokenomics_取數」分頁值（scripts/check_tokenomics_tab.py；W1）
+快照值＝Excel 分頁值：26 個名稱（missing 0）、330 個值、110 個具名範圍一致；其他工作表 84 格公式引用 60 個 TK_ 名稱（v5.27）
+[PASS] 快照值＝Excel 分頁值：26 個名稱（missing 0）、330 個值、110 個具名範圍一致；其他工作表 84 格公式引用 60 個 TK_ 名稱（v5.27）
+
+=== 5c. 離線開啟檢查（已決定事項 11：單一檔案、無網路請求、console 無錯誤、關鍵數字正常顯示）
+(a) 網路請求：0 個
+(b) console 錯誤與例外：0 個
+(c) 關鍵數字：5 個分頁、15 項，失敗 0 項
+離線開啟檢查：通過
+[PASS] 離線開啟：新建 HTML
+(a) 網路請求：0 個
+(b) console 錯誤與例外：0 個
+(c) 關鍵數字：5 個分頁、15 項，失敗 0 項
+離線開啟檢查：通過
+[PASS] 離線開啟：dist/ 成品
+
+=== 6. 三情境 xlx＋cmp31（預設錨定）
+ok 1 1162
+[PASS] cmp31 low：528 項全部 OK
+ok 2 1162
+[PASS] cmp31 base：528 項全部 OK
+ok 3 1162
+[PASS] cmp31 high：528 項全部 OK
+
+=== 7. FY27 錨定 cmp31（基準）
+ok 2 1162
+[PASS] cmp31 base_FY27：474 項全部 OK
+
+=== 8. 季度層測試（暫存副本：假設 Q3 實際數、可移植性；v4.4）
+[PASS] test_quarterly：假設實際數與可移植性測試通過
+  畫面錯誤：無
+=== 結果
+test_quarterly：全部通過（測試 A 假設實際數、測試 B 可移植性）
+
+=== 8b. 期間滾動測試（暫存副本：日曆推算 6 種情況、滾動後第一屏無過期日期與期間字樣；v4.5）
+[PASS] test_rolling：日曆推算與滾動後第一屏
+C 滾動檢查：只滾日曆、未更新 asOf → 建置失敗並列出 25 項（清單 25 項）
+A 滾動 FY26Q3（評價日 2026-06-30 → 2026-09-30）：過期字樣 ['2026-06-30', 'Q2 2026', '6/30', '1H26', '2H26', '上半年', '下半年', '1H', 'H1', '2H']；第一屏命中 0 行
+期間滾動測試：通過
+
+=== 8c. 目標價變動拆解工具測試（scripts/attrib.py：(a)＝(1＋WACC)^(月數÷12)，WACC 讀 Excel、月數讀 calendar_q；四項相加＝總變動）
+[PASS] test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）
+目標價變動拆解測試：通過
+
+=== 8d. 每 MW 改寫測試（暫存副本：MW 設施口徑換算、GPU 小時價格路線；W2）
+[PASS] test_permw：設施口徑換算與 GPU 小時價格路線
+test_permw：全部通過（測試 A 設施口徑、測試 B GPU 小時價格路線）
+
+=== 9. 與 dist/ 成品比對
+35 views; errors []
+35 views; errors []
+畫面：dist 35 個、新版 35 個頁面／分頁，約 135,540 字；差異 0 個；頁面錯誤 dist 0、新版 0
+[PASS] crawl 畫面文字 0 差異
+0 differences
+以列名稱配對的工作表：無（全部逐格）
+新增列 0：
+[PASS] xl_diff --values --by-label 0 差異
+0 differences
+以列名稱配對的工作表：無（全部逐格）
+新增列 0：
+[PASS] xl_diff 公式 --by-label 0 差異
+
+================ 結果 ================
+PASS  check_quarterly：季度加總＝年度、差異原因齊全
+PASS  README 欄位說明與 company.json 一致
+PASS  Tokenomics 快照 --check：26 個名稱（missing 0）與快照一致（20261008_Tokenomics_v5.27.xlsx，相對誤差 ≤ 1e-09）
+PASS  建 HTML
+PASS  建 Excel
+PASS  重算：0 公式錯誤
+PASS  反向 DCF：Excel 求解，rv_snap.json 與 Excel 一致
+PASS  每 MW 敏感度快照：Excel 求值，permw_sens.json 與 Excel 一致
+PASS  fix_outline
+PASS  fix_datatable
+PASS  verify_ooxml：OOXML OK
+PASS  快照值＝Excel 分頁值：26 個名稱（missing 0）、330 個值、110 個具名範圍一致；其他工作表 84 格公式引用 60 個 TK_ 名稱（v5.27）
+PASS  離線開啟：新建 HTML
+PASS  離線開啟：dist/ 成品
+PASS  cmp31 low：528 項全部 OK
+PASS  cmp31 base：528 項全部 OK
+PASS  cmp31 high：528 項全部 OK
+PASS  cmp31 base_FY27：474 項全部 OK
+PASS  test_quarterly：假設實際數與可移植性測試通過
+PASS  test_rolling：日曆推算與滾動後第一屏
+PASS  test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）
+PASS  test_permw：設施口徑換算與 GPU 小時價格路線
+PASS  crawl 畫面文字 0 差異
+PASS  xl_diff --values --by-label 0 差異
+PASS  xl_diff 公式 --by-label 0 差異
+verify.sh：全部通過（25 項）
+EXIT 0
+
+```
+
+#### 升版驗收（對 v4.6）
+```
+_產能與收入!F23、運營_產能與收入!F24、運營_產能與收入!F25、運營_產能與收入!F27、運營_產能與收入!F33、運營_產能與收入!F34、運營_產能與收入!F35、運營_產能與收入!F36、運營_產能與收入!F37、運營_產能與收入!G14、運營_產能與收入!G15、運營_產能與收入!G21、運營_產能與收入!G23、運營_產能與收入!G24、運營_產能與收入!G25、運營_產能與收入!G27、運營_產能與收入!G33、運營_產能與收入!G34、運營_產能與收入!G35、運營_產能與收入!G36、運營_產能與收入!G37
+新增工作表（不計為差異）：公司實況驗證
+以列名稱配對的工作表：導覽、摘要、輸入與假設、每MW經濟性、檢查_連動、檢查_版本紀錄、Tokenomics_取數
+新增列 107：
+  摘要 第 40 列 差異原因｜FY26｜營收
+  摘要 第 44 列 差異原因｜FY27｜營收
+  輸入與假設 第 82 列 定價倍數 k（W4；Tokenomics 錨的公司因素）
+  輸入與假設 第 83 列 定價倍數 k_長約（市場長約價 ÷ Tokenomics 同世代持有成本）
+  輸入與假設 第 84 列 定價倍數 k_現貨（市場現貨價 ÷ Tokenomics 同世代持有成本）
+  輸入與假設 第 85 列 隨需占比（占在役計費產能）
+  輸入與假設 第 86 列 既有合約 k 開關（1＝套用、0＝不套用）
+  輸入與假設 第 87 列 新約價格調整（相對 k_長約；只作用於長約部分）
+  輸入與假設 第 88 列 TK 收入上限（客戶每 GW 付費 token 營收）
+  輸入與假設 第 89 列 TK 收入上限｜Hopper H100
+  輸入與假設 第 90 列 TK 收入上限｜GB200 NVL72
+  輸入與假設 第 91 列 TK 收入上限｜GB300 NVL72
+  輸入與假設 第 92 列 TK 收入上限｜VR200 NVL72
+  輸入與假設 第 93 列 TK 收入上限｜Rubin Ultra（MGX NVL 單架，72 GPU）
+  輸入與假設 第 121 列 由下而上營運成本倍數（1＝Tokenomics 值）
+  每MW經濟性 第 92 列 ▸ 每 MW 收入：Tokenomics 錨 × 定價倍數 k（W4）——模型採用
+  每MW經濟性 第 93 列 錨｜每 MW 經濟持有成本（IF_HoldEcon，在役世代加權）
+  每MW經濟性 第 94 列 錨｜排程 RPO（模型期）
+  每MW經濟性 第 95 列 錨｜平均計費 MW
+  每MW經濟性 第 96 列 錨｜利用率
+  每MW經濟性 第 97 列 長約價產能收入（平均計費 MW × 錨 × k_長約 × 利用率 × 期間長度）
+  每MW經濟性 第 98 列 RPO 涵蓋的產能 ÷ 在役計費產能（對照，不驅動）
+  每MW經濟性 第 99 列 k_長約（依目前成本情境重算）
+  每MW經濟性 第 100 列 k_現貨（依目前成本情境重算）
+  每MW經濟性 第 101 列 隨需占比（輸入）
+  每MW經濟性 第 102 列 新約價格調整（輸入；只作用於長約部分）
+  每MW經濟性 第 103 列 k_新約（隨需占比 × k_現貨 ＋（1 − 隨需占比）× k_長約 ×（1＋新約價格調整））
+  每MW經濟性 第 104 列 既有合約 MW｜期初（最新季末在役，逐期扣汰換）
+  每MW經濟性 第 105 列 既有合約 MW｜期末
+  每MW經濟性 第 106 列 既有合約占比（平均既有 MW ÷ 平均在役 MW × 開關）
+  每MW經濟性 第 107 列 k_既有｜Q2 每 MW 年收入（營收 × 4 ÷ Q2 平均在役 MW）
+  每MW經濟性 第 108 列 k_既有｜Q2 服務收入（首期服務年化 ÷ Q2 平均在役 MW）
+  每MW經濟性 第 109 列 k_既有｜Q2 計費比例（季末 Billable ÷ 季末在役，假設）
+  每MW經濟性 第 110 列 k_既有｜Q2 利用率（＝首期利用率，假設）
+  每MW經濟性 第 111 列 k_既有｜Q2 錨（季末在役世代 × IF_HoldEcon，目前成本情境）
+  每MW經濟性 第 112 列 k_既有（Q2 實現單價 ÷ Q2 錨；合約期內固定）
+  每MW經濟性 第 113 列 既有合約 k 開關（1＝套用、0＝不套用）
+  每MW經濟性 第 114 列 定價倍數 k（既有占比 × k_既有 ＋（1 − 既有占比）× k_新約）
+  每MW經濟性 第 115 列 Tokenomics 錨 × k：每 MW 年收入（100% 計費時數）
+  每MW經濟性 第 116 列 錨 × k 相對 vX 舊輸入 m.revMW
+  每MW經濟性 第 117 列 上限檢查｜客戶每 MW 付費 token 營收（IF_RevGWFleet，在役世代加權）
+  每MW經濟性 第 118 列 上限檢查｜CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收
+  每MW經濟性 第 119 列 上限檢查｜各期結果
+  每MW經濟性 第 120 列 ▸ 定價倍數 k 證據表（市場價格 ÷ Tokenomics 同世代持有成本；用途：long＝k_長約基準、spot＝k
+  每MW經濟性 第 121 列 證據
+  每MW經濟性 第 122 列 k 證據｜IREN–Microsoft GB300 五年約
+  每MW經濟性 第 123 列 k 證據｜IREN–NVIDIA 氣冷 Blackwell 五年約（GB300 類比）
+  每MW經濟性 第 124 列 k 證據｜Oracle–OpenAI 約 $300bn／4.5 GW（未經證實）
+  每MW經濟性 第 125 列 k 證據｜H100 Silicon Data 現貨指數
+  每MW經濟性 第 126 列 k 證據｜B300 Silicon Data 現貨指數（GB300 類比）
+  每MW經濟性 第 127 列 k 證據｜B200 Ornn 成交指數（GB200 類比）
+  每MW經濟性 第 128 列 k 證據｜B200 Silicon Data 現貨指數（GB200 類比）
+  每MW經濟性 第 129 列 k 證據｜B300 Nebius 隨需牌價（GB300 類比）
+  每MW經濟性 第 130 列 k 證據｜GB200 CoreWeave 隨需牌價
+  每MW經濟性 第 131 列 k 證據｜H100 CoreWeave 隨需牌價
+  每MW經濟性 第 132 列 k 證據｜CoreWeave Q3 短天期合約（3–6 個月，公司新聞稿）
+  每MW經濟性 第 133 列 合約組合｜已承諾合約加權平均年期
+  每MW經濟性 第 134 列 合約組合｜收入以多年期已承諾合約為主（未給百分比）
+  每MW經濟性 第 135 列 合約組合｜長約與隨需收入比例（百分比）
+  每MW經濟性 第 136 列 找不到｜第 1 項
+  每MW經濟性 第 137 列 找不到｜第 2 項
+  每MW經濟性 第 138 列 找不到｜第 3 項
+  每MW經濟性 第 153 列 最近一季每 MW 年收入（營收 × 4 ÷ 平均在役 MW）
+  每MW經濟性 第 154 列 最近一季計費比例（季末 Billable ÷ 季末在役 MW，假設）
+  每MW經濟性 第 155 列 最近一季每 MW 年收入（÷ 平均計費 MW）
+  每MW經濟性 第 156 列 最近一季錨（季末在役世代 × IF_HoldEcon）
+  每MW經濟性 第 157 列 最近一季隱含 k（年化營收 ÷ 平均在役 MW ÷ 錨，未調整）
+  每MW經濟性 第 167 列 敏感度｜保守｜k_長約 0.70
+  每MW經濟性 第 168 列 敏感度｜保守｜k_長約 0.89（三筆長約中位數）
+  每MW經濟性 第 169 列 敏感度｜保守｜k_長約 1.00
+  每MW經濟性 第 170 列 敏感度｜保守｜隨需占比 10%（k_現貨 1.76）
+  每MW經濟性 第 171 列 敏感度｜保守｜隨需占比 20%（k_現貨 1.76）
+  每MW經濟性 第 172 列 敏感度｜保守｜既有合約 k 不套用（全部按 k_新約）
+  每MW經濟性 第 173 列 敏感度｜保守｜新約價格 +25%（公司說法，只作用於長約）
+  每MW經濟性 第 174 列 敏感度｜保守｜隨需 10% × CRWV 短天期 k 3.14
+  每MW經濟性 第 175 列 敏感度｜保守｜營運成本＝Q2 實際比率（× 0.65）
+  每MW經濟性 第 176 列 敏感度｜保守｜每 MW 建置成本＝1H26 實際比率（× 0.71）
+  每MW經濟性 第 177 列 敏感度｜保守｜營運成本與建置成本皆用公司實際比率
+  每MW經濟性 第 185 列 敏感度｜基準｜k_長約 0.70
+  每MW經濟性 第 186 列 敏感度｜基準｜k_長約 0.89（三筆長約中位數）
+  每MW經濟性 第 187 列 敏感度｜基準｜k_長約 1.00
+  每MW經濟性 第 188 列 敏感度｜基準｜隨需占比 10%（k_現貨 1.76）
+  每MW經濟性 第 189 列 敏感度｜基準｜隨需占比 20%（k_現貨 1.76）
+  每MW經濟性 第 190 列 敏感度｜基準｜既有合約 k 不套用（全部按 k_新約）
+  每MW經濟性 第 191 列 敏感度｜基準｜新約價格 +25%（公司說法，只作用於長約）
+  每MW經濟性 第 192 列 敏感度｜基準｜隨需 10% × CRWV 短天期 k 3.14
+  每MW經濟性 第 193 列 敏感度｜基準｜營運成本＝Q2 實際比率（× 0.65）
+  每MW經濟性 第 194 列 敏感度｜基準｜每 MW 建置成本＝1H26 實際比率（× 0.71）
+  每MW經濟性 第 195 列 敏感度｜基準｜營運成本與建置成本皆用公司實際比率
+  每MW經濟性 第 203 列 敏感度｜積極｜k_長約 0.70
+  每MW經濟性 第 204 列 敏感度｜積極｜k_長約 0.89（三筆長約中位數）
+  每MW經濟性 第 205 列 敏感度｜積極｜k_長約 1.00
+  每MW經濟性 第 206 列 敏感度｜積極｜隨需占比 10%（k_現貨 1.76）
+  每MW經濟性 第 207 列 敏感度｜積極｜隨需占比 20%（k_現貨 1.76）
+  每MW經濟性 第 208 列 敏感度｜積極｜既有合約 k 不套用（全部按 k_新約）
+  每MW經濟性 第 209 列 敏感度｜積極｜新約價格 +25%（公司說法，只作用於長約）
+  每MW經濟性 第 210 列 敏感度｜積極｜隨需 10% × CRWV 短天期 k 3.14
+  每MW經濟性 第 211 列 敏感度｜積極｜營運成本＝Q2 實際比率（× 0.65）
+  每MW經濟性 第 212 列 敏感度｜積極｜每 MW 建置成本＝1H26 實際比率（× 0.71）
+  每MW經濟性 第 213 列 敏感度｜積極｜營運成本與建置成本皆用公司實際比率
+  檢查_連動 第 25 列 收入上限：CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收（各期最高）
+  檢查_版本紀錄 第 5 列 v4.7
+  Tokenomics_取數 第 110 列 TK_RevGWFleet_H100
+  Tokenomics_取數 第 111 列 TK_RevGWFleet_GB200
+  Tokenomics_取數 第 112 列 TK_RevGWFleet_GB300
+  Tokenomics_取數 第 113 列 TK_RevGWFleet_VR200
+  Tokenomics_取數 第 114 列 TK_RevGWFleet_RU
+[PASS] xl_diff 公式 --by-label 0 差異
+
+================ 結果 ================
+PASS  check_quarterly：季度加總＝年度、差異原因齊全
+PASS  README 欄位說明與 company.json 一致
+PASS  Tokenomics 快照 --check：26 個名稱（missing 0）與快照一致（20261008_Tokenomics_v5.27.xlsx，相對誤差 ≤ 1e-09）
+PASS  建 HTML
+PASS  建 Excel
+PASS  重算：0 公式錯誤
+PASS  反向 DCF：Excel 求解，rv_snap.json 與 Excel 一致
+PASS  每 MW 敏感度快照：Excel 求值，permw_sens.json 與 Excel 一致
+PASS  fix_outline
+PASS  fix_datatable
+PASS  verify_ooxml：OOXML OK
+PASS  快照值＝Excel 分頁值：26 個名稱（missing 0）、330 個值、110 個具名範圍一致；其他工作表 84 格公式引用 60 個 TK_ 名稱（v5.27）
+PASS  離線開啟：新建 HTML
+PASS  離線開啟：dist/ 成品
+PASS  cmp31 low：528 項全部 OK
+PASS  cmp31 base：528 項全部 OK
+PASS  cmp31 high：528 項全部 OK
+PASS  cmp31 base_FY27：474 項全部 OK
+PASS  test_quarterly：假設實際數與可移植性測試通過
+PASS  test_rolling：日曆推算與滾動後第一屏
+PASS  test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）
+PASS  test_permw：設施口徑換算與 GPU 小時價格路線
+PASS  crawl 畫面文字：升版預期差異（頁面無錯誤、無缺頁；明細見 out/crawl_upgrade_diff.txt）
+PASS  xl_diff --values --by-label 0 差異
+PASS  xl_diff 公式 --by-label 0 差異
+verify.sh：全部通過（25 項）
+EXIT 0
+
+```
+
+#### 舊方法回歸
+```
+TKSNAP data/tokenomics_snapshot_v5.26.json
+  每MW經濟性 第 116 列 k 證據｜B200 Silicon Data 現貨指數（GB200 類比）
+  每MW經濟性 第 117 列 k 證據｜B300 Nebius 隨需牌價（GB300 類比）
+  每MW經濟性 第 118 列 k 證據｜GB200 CoreWeave 隨需牌價
+  每MW經濟性 第 119 列 k 證據｜H100 CoreWeave 隨需牌價
+  每MW經濟性 第 120 列 k 證據｜CoreWeave Q3 短天期合約（3–6 個月，公司新聞稿）
+  每MW經濟性 第 121 列 合約組合｜已承諾合約加權平均年期
+  每MW經濟性 第 122 列 合約組合｜收入以多年期已承諾合約為主（未給百分比）
+  每MW經濟性 第 123 列 合約組合｜長約與隨需收入比例（百分比）
+  每MW經濟性 第 124 列 找不到｜第 1 項
+  每MW經濟性 第 125 列 找不到｜第 2 項
+  每MW經濟性 第 126 列 找不到｜第 3 項
+[PASS] xl_diff 公式 --by-label 0 差異
+
+================ 結果 ================
+PASS  check_quarterly：季度加總＝年度、差異原因齊全
+PASS  README 欄位說明與 company.json 一致
+PASS  Tokenomics 快照 --check：25 個名稱（missing 0）與快照一致（20261007_Tokenomics_v5.26.xlsx，相對誤差 ≤ 1e-09）
+PASS  建 HTML
+PASS  建 Excel
+PASS  重算：0 公式錯誤
+PASS  反向 DCF：Excel 求解，rv_snap.json 與 Excel 一致
+PASS  每 MW 敏感度快照：Excel 求值，permw_sens.json 與 Excel 一致
+PASS  fix_outline
+PASS  fix_datatable
+PASS  verify_ooxml：OOXML OK
+PASS  快照值＝Excel 分頁值：25 個名稱（missing 0）、315 個值、105 個具名範圍一致；其他工作表 76 格公式引用 55 個 TK_ 名稱（v5.26）
+PASS  離線開啟：新建 HTML
+PASS  離線開啟：dist/ 成品
+PASS  cmp31 low：451 項全部 OK
+PASS  cmp31 base：451 項全部 OK
+PASS  cmp31 high：451 項全部 OK
+PASS  cmp31 base_FY27：430 項全部 OK
+PASS  test_quarterly：假設實際數與可移植性測試通過
+PASS  test_rolling：日曆推算與滾動後第一屏
+PASS  test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）
+PASS  test_permw：設施口徑換算與 GPU 小時價格路線
+PASS  crawl 畫面文字 0 差異
+PASS  xl_diff --values --by-label 0 差異
+PASS  xl_diff 公式 --by-label 0 差異
+verify.sh：全部通過（25 項）
+EXIT 0
+
+```
