@@ -1,7 +1,7 @@
 """Tokenomics 快照讀取（沿用 OpenAI v0.6 的 63 名；智譜 Z2 另以列標籤讀 Cap_In／Price_Frontier 的 GLM 列與中國合格前緣）。
 
 - 值取自 Tokenomics master 的 model/CURRENT，逐名讀出寫入 TK_Link；不用 Excel 外部連結。
-- 列序：P1 原 37 名（列位不變）→ SRC_DEM_010–013（＋013 低／高）→ Block 6（IF_Alloc* 7 名）→ S1 新增（r6 下游需要）→ S4 新增（IF_CapexTotal）。
+- 列序：P1 原 37 名（列位不變）→ SRC_DEM_010–013（＋013 低／高）→ Block 6（IF_Alloc* 7 名）→ S1 新增（r6 下游需要）→ S4 新增（IF_CapexTotal）→ 智譜 Z3b 新增（IF_CostPre／Cache／Dec_*，9 名）。
 - 工作單要求、但 Tokenomics 現行版沒有的名稱：逐名列入、值留空、狀態 PENDING_NOTE（E1；check_tk_snapshot 報 MISSING）。
 """
 from __future__ import annotations
@@ -29,6 +29,8 @@ EXTRA_PATTERNS = [
 EXTRA_NAMES = ["L1_Ans3", "L1_Ans3_Lo", "L1_Ans3_Hi"]
 # S4 新增（工程類；P4 自建 GW 需要每 GW 資本支出；列於最後，既有列位不變）
 S4_NAMES = ["IF_CapexTotal"]
+# 智譜 Z3b（F1）新增：逐 token 類型單位成本（經濟口徑、100% 利用率；新鮮 prefill／快取命中 prefill／decode），列於最後
+Z3B_PATTERNS = [r"IF_Cost(Pre|Cache|Dec)_(Luna|Sol|Astra)"]
 PENDING_NOTE = "待 Tokenomics 提供"
 TABLE_NOTE = "讀表（非具名）"
 
@@ -91,6 +93,8 @@ def read_snapshot(tk_dir: Path):
         chosen += sorted(n for n in names if re.fullmatch(pat, n))
     chosen += [n for n in EXTRA_NAMES if n in names]
     chosen += [n for n in S4_NAMES if n in names]
+    for pat in Z3B_PATTERNS:
+        chosen += sorted(n for n in names if re.fullmatch(pat, n))
     rows, seen = [], set()
     for n in chosen:
         if n in seen:
@@ -116,7 +120,7 @@ def read_snapshot(tk_dir: Path):
         rows.append(dict(name=n, kind=n.split("_")[0], label=label, unit=unit, values=vals, status="OK"))
     present = {r["name"] for r in rows}
     # 工作單要求、但 Tokenomics 現行版沒有者：逐名列入、值留空（E1）
-    wanted = SRC_DEM + BLOCK6 + EXTRA_NAMES + S4_NAMES
+    wanted = SRC_DEM + BLOCK6 + EXTRA_NAMES + S4_NAMES + [f"IF_Cost{k}_{t}" for k in ("Pre", "Cache", "Dec") for t in ("Luna", "Sol", "Astra")]
     pending = [dict(name=n, kind=n.split("_")[0], label="", unit="", values=[], status=PENDING_NOTE) for n in wanted if n not in present]
     hdr_gen = [wb["Interface"].cell(4, k).value for k in range(3, 18)]
     hdr_cost = [wb["Interface"].cell(5, k).value for k in range(3, 18)]

@@ -87,42 +87,76 @@ def build(wb, D, Z, snap):
     C.add("組合產出係數（÷ Hopper）＝Σ 占比 × 產出比", "倍", {c: f"={c}«C.s_hop»+{c}«C.s_h20»*{c}«C.r_h20»+{c}«C.s_dom»*{c}«C.r_dom»" for c in ALL},
           "各族每 GW 產出＝Hopper × 比例，故組合產能＝Hopper 產能 × 本係數", key="mixf")
 
-    # 三、token 與層級組合
-    C.section("三、token（Demand；T）與層級組合：付費、免費分開（半年欄：API／Coding Plan 取 Demand 半年欄；清言為年度值 × 天數比例）")
+    # 三、token（依來源 × 層級）與層級組合
+    C.section("三、token（Demand；T）：依來源（API 按量、Coding Plan、免費 API、智譜清言）× 層級（半年欄：API／Coding Plan 取 Demand 半年欄；清言為年度值 × 天數比例）")
+    SRCS = (("api", "API 按量計費", TIERS), ("cp", "Coding Plan", TIERS), ("fapi", "免費 API 型號", ("luna",)), ("qy", "智譜清言", TIERS))
+    dkey = {("api", "sol"): "api_tok_sol", ("api", "luna"): "api_tok_luna", ("cp", "sol"): "cptok_sol", ("cp", "luna"): "cptok_luna",
+            ("fapi", "luna"): "api_free", ("qy", "sol"): "qy_sol", ("qy", "luna"): "qy_luna"}
 
-    def tok(kind, t):
+    def stok(src, t):
         def f(c):
-            if c == "E":
-                return f"=K«C.t_{kind}_{t}»+L«C.t_{kind}_{t}»"
-            if c in YC:
-                return f"=Demand!{c}{dr[f'{kind}_{t}']}"
-            if kind == "paid":
-                return f"=Demand!{c}{dr[f'api_tok_{t}']}+Demand!{c}{dr[f'cptok_{t}']}"
-            q = f"Demand!$E${dr[f'qy_{t}']}*{frac(c)}"
-            return f"={q}+Demand!{c}{dr['api_free']}" if t == "luna" else f"={q}"
+            if src == "qy":
+                if c == "E":
+                    return f"=K«C.s_{src}_{t}»+L«C.s_{src}_{t}»"
+                if c in HC:
+                    return f"=Demand!$E${dr[dkey[(src, t)]]}*{frac(c)}"
+            return f"=Demand!{c}{dr[dkey[(src, t)]]}"
         return f
-    for kind, zh in (("paid", "付費"), ("free", "免費")):
+    for src, zh, tiers in SRCS:
+        for t in tiers:
+            C.add(f"{zh} token：{TIER_ZH[t]}", "T", stok(src, t), f"Demand（{dkey[(src, t)]}）", key=f"s_{src}_{t}")
+    psum = {"sol": ("api", "cp"), "luna": ("api", "cp")}
+    fsum = {"sol": ("qy",), "luna": ("fapi", "qy")}
+    for kind, zh, sm in (("paid", "付費", psum), ("free", "免費", fsum)):
         for t in TIERS:
-            C.add(f"{zh} token：{TIER_ZH[t]}", "T", tok(kind, t), "Demand DEM_Tok_*（半年欄見本節標題）", key=f"t_{kind}_{t}")
+            C.add(f"{zh} token：{TIER_ZH[t]}", "T", {c: "=" + "+".join(f"{c}«C.s_{x}_{t}»" for x in sm[t]) for c in ALL}, "＝Demand DEM_Tok_*", key=f"t_{kind}_{t}")
     for kind, zh in (("paid", "付費"), ("free", "免費")):
         C.add(f"{zh} token 合計", "T", {c: f"={c}«C.t_{kind}_sol»+{c}«C.t_{kind}_luna»" for c in ALL}, "", key=f"t_{kind}")
         C.add(f"{zh}：Sol 占比", "比例", {c: f"={c}«C.t_{kind}_sol»/{c}«C.t_{kind}»" for c in ALL}, "", key=f"m_{kind}_sol")
         C.add(f"{zh}：Luna 占比", "比例", {c: f"={c}«C.t_{kind}_luna»/{c}«C.t_{kind}»" for c in ALL}, "", key=f"m_{kind}_luna")
 
-    # 四、每 GW 年產能與 token 換算 GW
-    C.section("四、每 GW 年產能（基準利用率 TK IF_Util；IF_Util ÷ Σ 層級占比 ÷ 每 GW 產出，同 Tokenomics Alloc 與 OpenAI v0.6）與 token 換算推論 GW")
-    for kind, zh in (("paid", "付費"), ("free", "免費")):
-        for f in FAM:
-            C.add(f"{zh}每 GW 年產能：{FAM_ZH[f]}", "M tok/GW/年",
-                  {c: f"=TK_IF_Util/({c}«C.m_{kind}_sol»/{c}«C.cap_{f}_sol»+{c}«C.m_{kind}_luna»/{c}«C.cap_{f}_luna»)" for c in ALL}, "", key=f"pc_{kind}_{f}")
-        C.add(f"{zh}每 GW 年產能：組合後", "M tok/GW/年",
-              {c: "=" + "+".join(f"{c}«C.s_{f}»*{c}«C.pc_{kind}_{f}»" for f in FAM) for c in ALL}, "Σ 晶片族占比 × 各族產能", key=f"pc_{kind}",
-              name=f"CMP_Cap{kind.capitalize()}")
+    # 四、token 換算推論 GW（Z3b F1：依 token 類型加權）
+    C.section("四、token 換算推論 GW（Z3b F1）＝Σ token × 類型組成 × TK 逐類型單位成本（Hopper 基準欄，經濟、100% 利用率）÷ TK IF_HoldEcon（Hopper，100% 時數）÷ IF_Util ÷ 組合產出係數")
+    for t in TIERS:
+        for k, zh in (("Pre", "新鮮 prefill"), ("Cache", "快取命中 prefill"), ("Dec", "decode")):
+            C.add(f"TK 單位成本：Hopper × {TIER_ZH[t]} × {zh}", "$/M", {c: f"=SUMIFS(TK_IF_Cost{k}_{t.capitalize()},TK_HdrGen,{kh},TK_HdrCost,{kc})" for c in ALL},
+                  f"TK IF_Cost{k}_{t.capitalize()}（經濟、100%；Hopper H100 基準欄）", key=f"uc_{t}_{k}")
+    C.add("TK 每 GW 年持有成本：Hopper（經濟）", "$B／GW／年", {c: f"=SUMIFS(TK_IF_HoldEcon,TK_HdrGen,{kh},TK_HdrCost,{kc})" for c in ALL},
+          "與單位成本同為經濟口徑、100% 時數（單位成本＝每 GPU 小時持有成本 × 每 M token GPU 時間），兩者相除＝100% 利用率下所需 GW", key="uc_hold")
+    mix = {"api": (I("cache_hit"), I("out_share")), "cp": (I("cp_cache_hit"), I("cp_out_share"))}
+    for g, zh in (("api", "API 按量／免費 API／清言（沿用 API 快取命中、輸出占比）"), ("cp", "Coding Plan（Inputs 快取命中 0.9、輸出 0.03）")):
+        h_, o_ = mix[g]
+        C.add(f"類型組成：{zh}：新鮮輸入", "比例", {c: f"=(1-{o_})*(1-{h_})" for c in ALL}, "(1−輸出占比)×(1−快取命中)", key=f"ty_{g}_pre")
+        C.add(f"類型組成：{zh}：快取命中輸入", "比例", {c: f"=(1-{o_})*{h_}" for c in ALL}, "(1−輸出占比)×快取命中", key=f"ty_{g}_cache")
+        C.add(f"類型組成：{zh}：輸出", "比例", {c: f"={o_}" for c in ALL}, "輸出占比", key=f"ty_{g}_dec")
+        for t in TIERS:
+            C.add(f"加權單位成本：{zh} × {TIER_ZH[t]}", "$/M",
+                  {c: "=" + "+".join(f"{c}«C.ty_{g}_{k.lower()}»*{c}«C.uc_{t}_{k}»" for k in ("Pre", "Cache", "Dec")) for c in ALL}, "Hopper、100%", key=f"wc_{g}_{t}")
+    grp = {"api": "api", "cp": "cp", "fapi": "api", "qy": "api"}
+    work = {"paid": [("api", t) for t in TIERS] + [("cp", t) for t in TIERS], "free": [("fapi", "luna"), ("qy", "sol"), ("qy", "luna")]}
+    den = lambda c: per(c, f"({c}«C.uc_hold»*{I('div_usd_b')}*TK_IF_Util*{c}«C.mixf»)")  # noqa: E731
     for kind, zh in (("paid", "付費"), ("free", "免費")):
         C.add(f"推論 GW（token 換算）：{zh}", "GW",
-              lambda c, kind=kind: wavg(f"g_{kind}") if c == "E" else f"={c}«C.t_{kind}»*{I('mul_t_m')}/{per(c, f'{c}«C.pc_{kind}»')}",
-              "token（T）× 10^6 ÷（每 GW 年產能 × 期間比例）", key=f"g_{kind}", name=f"CMP_TokGW_{kind.capitalize()}")
+              lambda c, kind=kind: wavg(f"g_{kind}") if c == "E" else
+              "=(" + "+".join(f"{c}«C.s_{x}_{t}»*{c}«C.wc_{grp[x]}_{t}»" for x, t in work[kind]) + f")*{I('mul_t_m')}/{den(c)}",
+              "Σ token（T）× 10^6 × 加權單位成本 ÷（持有成本 × 10^9 × IF_Util × 組合產出係數 × 期間比例）；國產、H20 每 GW 產出＝Hopper × 產出比（持有比在成本與持有成本兩端相消）",
+              key=f"g_{kind}", name=f"CMP_TokGW_{kind.capitalize()}")
     C.add("推論 GW（token 換算）：合計", "GW", {c: f"={c}«C.g_paid»+{c}«C.g_free»" for c in ALL}, "", key="g_tok", name="CMP_TokGW")
+    C.add("其中 Coding Plan", "GW", lambda c: wavg("g_cp") if c == "E" else
+          "=(" + "+".join(f"{c}«C.s_cp_{t}»*{c}«C.wc_cp_{t}»" for t in TIERS) + f")*{I('mul_t_m')}/{den(c)}", "R4 對帳用", key="g_cp")
+
+    C.section("四之一、對照：舊法（Z3）＝token ÷ 參考請求組合每 GW 年產能（TK IF_TokGW × IF_Util；Z3b F3：只列，不進計算鏈）")
+    for kind, zh in (("paid", "付費"), ("free", "免費")):
+        for f in FAM:
+            C.add(f"舊法：{zh}每 GW 年產能：{FAM_ZH[f]}", "M tok/GW/年",
+                  {c: f"=TK_IF_Util/({c}«C.m_{kind}_sol»/{c}«C.cap_{f}_sol»+{c}«C.m_{kind}_luna»/{c}«C.cap_{f}_luna»)" for c in ALL}, "", key=f"pc_{kind}_{f}")
+        C.add(f"舊法：{zh}每 GW 年產能：組合後", "M tok/GW/年",
+              {c: "=" + "+".join(f"{c}«C.s_{f}»*{c}«C.pc_{kind}_{f}»" for f in FAM) for c in ALL}, "Σ 晶片族占比 × 各族產能", key=f"pc_{kind}",
+              name=f"CMP_Cap{kind.capitalize()}")
+    C.add("舊法：token 換算推論 GW（合計）", "GW",
+          lambda c: wavg("g_old") if c == "E" else f"=({c}«C.t_paid»*{I('mul_t_m')}/{per(c, f'{c}«C.pc_paid»')})+({c}«C.t_free»*{I('mul_t_m')}/{per(c, f'{c}«C.pc_free»')})",
+          "Z3 原式", key="g_old", name="CMP_TokGW_Old")
+    C.add("新法 ÷ 舊法", "倍", {c: f"={c}«C.g_tok»/{c}«C.g_old»" for c in ALL}, "類型加權使快取命中為主的流量所需 GW 大幅下降", key="g_ratio")
 
     # 五、算力服務費（D8r、D10r）
     C.section("五、算力服務費（財報推得；RMB 億；2025 年報、1H26 中期公告）：推論＝開放平台及 API 銷售成本 × 占比（D8r）；研發＝研發開支（扣股權報酬）× 算力占比（D10r）")
@@ -179,15 +213,18 @@ def build(wb, D, Z, snap):
     C.add("η（校準值）", "倍", {c: f"={c}«C.g_tok»/{c}«C.e_spend»" for c in cal}, "D 欄＝2025、K 欄＝1H26（Derived）", key="e_cal")
     C.add("η 2025", "倍", {"D": "=D«C.e_cal»"}, "", key="e25", name="CMP_Eta2025", name_col="D")
     C.add("η 1H26", "倍", {"K": "=K«C.e_cal»"}, "", key="e1h", name="CMP_Eta1H26", name_col="K")
+    C.add("對照：舊法 η（Z3：參考組合 token GW ÷ 支出換算 GW）", "倍", {c: f"={c}«C.g_old»/{c}«C.e_spend»" for c in cal}, "Z3b F3：只列", key="e_old",
+          name="CMP_EtaOld")
     sw, tgt, ty = I("eta_sw"), I("eta_target"), I("eta_target_year")
+    swx = f"IF($K$«C.e_cal»<={tgt},{I('eta_up_sw')},{sw})"
 
     def eta(c):
         if c in cal:
             return f"={c}«C.e_cal»"
         if c == "E":
             return "=E«C.g_tok»/E«C.eff»"
-        return f"=$K$«C.e_cal»+{sw}*({tgt}-$K$«C.e_cal»)*MIN({ty}-{y26},{yr(c)}-{y26})/({ty}-{y26})"
-    C.add("η（逐年）", "倍", eta, "2H26 起＝η₁H₂₆＋開關 ×（目標 − η₁H₂₆）× MIN(目標年 − 2026, 年 − 2026) ÷（目標年 − 2026）；開關 0（基準）＝沿用 1H26；E 欄＝token GW ÷ 有效 GW",
+        return f"=$K$«C.e_cal»+{swx}*({tgt}-$K$«C.e_cal»)*MIN({ty}-{y26},{yr(c)}-{y26})/({ty}-{y26})"
+    C.add("η（逐年）", "倍", eta, "Z3b F2：2H26 起＝η₁H₂₆＋開關 ×（目標 1 − η₁H₂₆）× 進度；開關＝η₁H₂₆≤1 時 INP（回升，同 OpenAI），>1 時 INP（基準 0＝沿用 1H26；1＝收斂至 1）；E 欄＝token GW ÷ 有效 GW",
           key="eta", name="CMP_Eta")
     C.add("有效推論 GW（未截頂）＝token 換算 GW ÷ η", "GW", lambda c: wavg("eff") if c == "E" else f"={c}«C.g_tok»/{c}«C.eta»",
           "2025、1H26＝支出換算 GW（校準恆等式）", key="eff", name="CMP_InfGW_Eff")
@@ -273,13 +310,20 @@ def build(wb, D, Z, snap):
     # 十二、R4：Coding Plan token 對帳
     C.section("十二、R4 對帳：Coding Plan token 換算 GW 與 API 銷售成本推得的推論 GW（2025、1H26；不自動調整，見報告）")
     C.add("Coding Plan token（T）", "T", {c: f"=Demand!{c}{dr['cptok']}" for c in cal}, "Demand DEM_Tok_CP", key="r4_tok")
-    C.add("Coding Plan token 換算 GW（以付費組合後產能）", "GW", {c: f"=Demand!{c}{dr['cptok']}*{I('mul_t_m')}/{per(c, f'{c}«C.pc_paid»')}" for c in cal}, "", key="r4_gw")
+    C.add("Coding Plan token 換算 GW（類型加權，第四節）", "GW", {c: f"={c}«C.g_cp»" for c in cal}, "", key="r4_gw")
+    C.add("對照：舊法 Coding Plan token 換算 GW（參考組合產能）", "GW", {c: f"=Demand!{c}{dr['cptok']}*{I('mul_t_m')}/{per(c, f'{c}«C.pc_paid»')}" for c in cal}, "Z3 原式",
+          key="r4_gw_old")
     C.add("Coding Plan 占 token 換算推論 GW", "比例", {c: f"={c}«C.r4_gw»/{c}«C.g_tok»" for c in cal}, "", key="r4_sh")
     C.add("倍數：Coding Plan token GW ÷ 支出換算推論 GW", "倍", {c: f"={c}«C.r4_gw»/{c}«C.e_spend»" for c in cal}, ">1＝Coding Plan 單項已超過推論算力支出買得到的 GW", key="r4_mult",
           name="CMP_R4Mult")
     C.add("對照：使 token GW＝支出 GW 的 Coding Plan 額度使用率", "比例",
           {c: f"={I('cp_util')}*({c}«C.e_spend»-({c}«C.g_tok»-{c}«C.r4_gw»))/{c}«C.r4_gw»" for c in cal},
           "＝Inputs 使用率 ×（支出 GW − 非 Coding Plan token GW）÷ Coding Plan token GW；負值＝其他 token 已超過；只對照，不回饋（R4）", key="r4_util")
+    C.add("對照：使 token GW＝支出 GW 的 Coding Plan 快取命中占比（其他不變）", "比例",
+          {c: f"=({c}«C.e_spend»-({c}«C.g_tok»-{c}«C.g_cp»)-{c}«C.g_cp»*{c}«C.ty_cp_dec»*{c}«C.uc_sol_Dec»/{c}«C.wc_cp_sol»)"
+              f"/({c}«C.g_cp»*(1-{c}«C.ty_cp_dec»)/{c}«C.wc_cp_sol»*({c}«C.uc_sol_Cache»-{c}«C.uc_sol_Pre»))+{c}«C.uc_sol_Pre»/({c}«C.uc_sol_Pre»-{c}«C.uc_sol_Cache»)"
+              for c in cal},
+          "以 Sol 單位成本近似：解 Coding Plan GW 使總 token GW＝支出 GW；>1 或 <0＝無解（只對照）", key="r4_hit")
 
     # 十三、敏感度
     C.section("十三、敏感度（Excel 公式；引用 Inputs 低／高欄與 SRC 區間；K＝1H26、I＝2030）：A 每 GW 價格、B η 路徑、C 國產產出比")
@@ -298,9 +342,9 @@ def build(wb, D, Z, snap):
               {"K": f"=K«C.f_tot»/(K«C.{k}_p»*{frac('K')})",
                "I": f"=I«C.g_tok»/$K$«C.{k}_eta»/((1-{idle})*(1-I«C.rdsh»))"}, "1H26＝算力費 ÷ 價格；2030＝有效推論 ÷［(1−閒置)(1−研發占比)］（η 沿用）", key=f"{k}_sup")
         C.add(f"A 供給 VR 等值 GW（{zh}）", "GW", {c: f"={c}«C.{k}_sup»*{c}«C.vrf»" for c in two}, "", key=f"{k}_vr")
-    C.add("B η 回升至 2030＝目標：2030 有效推論 GW", "GW", {"I": f"=I«C.g_tok»/{tgt}"}, "η 線性回升情境（開關＝1）", key="B_eff")
-    C.add("B η 回升：2030 供給 GW", "GW", {"I": f"=I«C.B_eff»/((1-{idle})*(1-I«C.rdsh»))"}, "", key="B_sup")
-    C.add("B η 回升：2030 供給 VR 等值 GW", "GW", {"I": "=I«C.B_sup»*I«C.vrf»"}, "", key="B_vr")
+    C.add("B η 收斂至 2030＝目標：2030 有效推論 GW", "GW", {"I": f"=I«C.g_tok»/{tgt}"}, "η 線性收斂至 1 的情境（η>1 時開關＝1）", key="B_eff")
+    C.add("B η 收斂：2030 供給 GW", "GW", {"I": f"=I«C.B_eff»/((1-{idle})*(1-I«C.rdsh»))"}, "", key="B_sup")
+    C.add("B η 收斂：2030 供給 VR 等值 GW", "GW", {"I": "=I«C.B_sup»*I«C.vrf»"}, "", key="B_vr")
     for tag, col, zh in (("lo", "G", "低端"), ("hi", "H", "高端")):
         k = f"C_{tag}"
         ralt = D.I_cell("dom_ratio", col)

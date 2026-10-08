@@ -119,7 +119,8 @@ items:
 - {key: rd_compute_share, name: 研發開支（扣股權報酬）中的算力服務費占比, index: 2025、1H26, unit: 比例, value: 0.707, lo: 0.6, hi: 0.8, tag: Analogy, basis: 規格 D10r：FY2024 研發算力費 15.52 億（SRC_ZP_232，媒體轉述招股章程）÷ 研發開支 21.95 億（SRC_ZP_048）＝0.707；FY2025、1H26 未揭露；1H25 媒體稱 ≥70%（SRC_ZP_234）, range: 規格 D10r（60–80%）}
 - {key: sbc_rd_share, name: 股權報酬中歸研發開支的比例, index: 2025、1H26, unit: 比例, value: 0.744, lo: 0.5, hi: 0.9, tag: Analogy, basis: 研發人員占員工 74.4%（SRC_ZP_240，2025-06-30）；股權報酬依功能別拆分未揭露, range: 0.5～0.9}
 # ── Z3 η 路徑（D8）
-- {key: eta_sw, name: η 逐年路徑開關（0＝沿用最新實際值；1＝線性回升至目標）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 規格 D8：基準沿用（r1 起以 1H26 為最新實際點，D14）；情境線性回升至 2030＝1（同 OpenAI v0.6 INP_258）, range: 開關}
+- {key: eta_sw, name: η>1 時的情境開關（0＝沿用 1H26 校準值；1＝線性收斂至目標 1）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 工作單 Z3b F2：校準 η > 1 時基準沿用 1H26 值（『回升至 1』在 η>1 時等於無依據的效率衰退），情境收斂至 1 並列；η ≤ 1 時改用 eta_up_sw（同 OpenAI v0.6 INP_258 回升路徑）, range: 開關}
+- {key: eta_up_sw, name: η ≤ 1 時的路徑開關（1＝線性回升至目標，同 OpenAI v0.6）, index: —, unit: 開關, value: 1, lo: 0, hi: 1, tag: Decision, basis: 工作單 Z3b F2：校準 η ≤ 1 → 同 OpenAI（線性回升至 2030＝1）, range: 開關}
 - {key: eta_target, name: η 回升情境：目標值, index: —, unit: 倍, value: 1, lo: 1, hi: 1, tag: Decision, basis: 規格 D8（同 OpenAI v0.6 INP_259）, range: 定義}
 - {key: eta_target_year, name: η 回升情境：目標年, index: —, unit: 年, value: 2030, lo: 2030, hi: 2030, tag: Decision, basis: 規格 D8（同 OpenAI v0.6 INP_260）, range: 定義}
 # ── Z3 供給（2H26 起：依需求配置；容量上限）
@@ -138,3 +139,6 @@ items:
 - {key: hc_g, name: 員工人數年增率（年均人數）, index: 2027 起, unit: 比例／年, value: 0.1, lo: 0, hi: 0.3, tag: Assumed, basis: OpenAI v0.6 INP_264–267（2027 +30% 遞減至 2030 +10%）為 Analogy；智譜 2025→1H26 人數下降，取較低值, range: 0～0.3}
 - {key: pp_g, name: 每人年成本（不含股權報酬）年變動率, index: 2H26 起, unit: 比例／年, value: 0.03, lo: 0, hi: 0.08, tag: Analogy, basis: OpenAI v0.6 INP_268（0.03，0–0.08）；2H26 以半年計（÷ 半年數）, range: 同 OpenAI}
 - {key: sbc_pp_g, name: 每人股權報酬年變動率, index: 2H26 起, unit: 比例／年, value: 0, lo: -0.2, hi: 0.2, tag: Analogy, basis: OpenAI v0.6 INP_269（0，−0.2～0.2）；基期＝1H26 年化（上市後；2025 含上市前一次性授予 5.58 億）, range: 同 OpenAI}
+# ── Z3b（F1）：Coding Plan token 類型組成（逐 token 類型換算 GW）
+- {key: cp_cache_hit, name: Coding Plan 輸入 token 中快取命中占比, index: 全期, unit: 比例, value: 0.9, lo: 0.8, hi: 0.97, tag: Analogy, basis: 工作單 Z3b F1（Analogy 0.9，0.8–0.97）：程式碼代理每次呼叫重送專案上下文，前綴快取命中為主；Z1-R：Coding Plan 每 prompt 15–20 次呼叫（SRC_ZP_379）、每次攜帶大量重複上下文；API 按量計費沿用 cache_hit（INP 0.5）, range: 0.8～0.97（工作單）}
+- {key: cp_out_share, name: Coding Plan token 中輸出 token 占比, index: 全期, unit: 比例, value: 0.03, lo: 0.01, hi: 0.08, tag: Analogy, basis: 工作單 Z3b F1（Analogy 0.03，0.01–0.08）：程式碼代理以讀取上下文為主、輸出（含工具呼叫）占比低；API 按量計費沿用 out_share（0.15）, range: 0.01～0.08（工作單）}

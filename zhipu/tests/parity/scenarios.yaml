@@ -2,12 +2,12 @@
 # 輸入以具名範圍設定（SRC_ZP_nnn、INP_nnn、TK_*；多格名稱用 NAME[k]）。v0.1-Z2：Demand、Revenue、Checks；v0.1-Z3：Compute、Cost。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
   sheets: [README, SRC_ZP, TK_Link, OAI_Link, Inputs, Demand, Revenue, Compute, Cost, Checks, _Defaults]
-  formula_cells: 3834             # Z3：Z2 的 2,644 ＋ Inputs 檢查欄 ＋Compute＋Cost＋Checks 新列（builder 重建時有意識地更新）
-  defined_names: 1006             # Z2 887 − INP_072（退役）＋ INP 46（INP_074–120）＋ CMP_／COST_ 具名範圍
+  formula_cells: 4062             # Z3b：Compute 第三、四節改依來源 × token 類型（＋類型組成、TK 單位成本、舊法對照列）
+  defined_names: 1020             # Z3 1,006 ＋ TK_IF_Cost* 9 ＋ INP_121–123 ＋ CMP_TokGW_Old、CMP_EtaOld
   src_rows: 604                   # SRC_ZP 筆數（Z1 資料報告）
   src_named: 655                  # SRC_ZP_nnn（有數值 570）＋_Lo（46）＋_Hi（39）
-  inp_rows: 119                   # data/zhipu_inputs.yaml（Z3：＋46、INP_072 退役）
-  tk_values: 63                   # TK_IF_／TK_SRC_／TK_L1_（同 OpenAI v0.6）
+  inp_rows: 122                   # data/zhipu_inputs.yaml（Z3b：＋eta_up_sw、cp_cache_hit、cp_out_share）
+  tk_values: 72                   # OpenAI v0.6 的 63 名 ＋ Z3b IF_CostPre／Cache／Dec_* 9 名
   tk_table: 7                     # TK_RD_（以列標籤讀表；只供對照）
   oai_named: 18                   # OAI_ 14 個輸出列＋4 個中繼（檔名、SHA-256、分支、讀取日）
   tk_pending: 0
@@ -91,7 +91,7 @@ scenarios:
     description: 每 GW 價格：H800 卡時租價 13.36→18.75（阿里雲單卡時租，SRC_ZP_472）；Hopper 每 GW 價格上升，2025／1H26 供給 GW 與 η 下降，命題分母縮小
     inputs: {"SRC_ZP_474": 18.75}
   - id: s_eta_rise
-    description: η 路徑開關 0→1（自 1H26 值線性移至 2030＝1）；2H26 起有效推論 GW、供給與算力成本大增
+    description: η>1 情境開關 0→1（自 1H26 值線性收斂至 2030＝1；Z3b F2）；2H26 起有效推論 GW、供給與算力成本大增
     inputs: {"INP_105": 1}
   - id: t_dom_ratio_low
     description: 國產產出比 0.6→0.4（區間下緣）；組合產能下降、token 換算 GW 上升，η 重新校準；VR 等值係數下降
@@ -123,3 +123,10 @@ scenarios:
   - id: ac_cap_binding
     description: 壓力：訓練最低占比 0.3→0.9（超出區間，C06 應轉 ERR）；推論可用 GW 低於有效推論，2H26 起容量上限係數 <1，雲端營收截頂
     inputs: {"INP_109": 0.9}
+  # ── Z3b：token 類型加權
+  - id: ad_cp_cache_low
+    description: Coding Plan 快取命中占比 0.9→0.8（區間下緣）；Coding Plan 加權單位成本上升，token GW 與 η 上升，2H26 起有效推論 GW 依 η 重新校準
+    inputs: {"INP_122": 0.8}
+  - id: ae_cp_out_high
+    description: Coding Plan 輸出占比 0.03→0.08（區間上緣）；decode 工作量上升
+    inputs: {"INP_123": 0.08}

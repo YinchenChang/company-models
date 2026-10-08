@@ -724,7 +724,10 @@
 "hc_g": "INP_117",
 "pp_g": "INP_118",
 "sbc_pp_g": "INP_119",
-"rd_share_sw": "INP_120"
+"rd_share_sw": "INP_120",
+"eta_up_sw": "INP_121",
+"cp_cache_hit": "INP_122",
+"cp_out_share": "INP_123"
 },
 "retired_INP": [
 "INP_072"
