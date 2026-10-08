@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """產生每段報告的對照 Excel（CLAUDE.md 第 5 節）與報告用的 Markdown 表（Anthropic v0.1）。
 
-用法：python3 tools/make_report_tables.py --stage A2 --out docs/reports/20261008_v0.1-A2_對照.xlsx [--md build_out/report_tables.md]
+用法：python3 tools/make_report_tables.py --stage A2|A3 --out docs/reports/20261008_v0.1-An_對照.xlsx --report <報告.md> [--md build_out/report_tables.md]
 三頁：①本段新增或變動的每一列（頁、編號／ID、列名、值、來源／標記）；②本段關鍵輸出 FY2025–2030；③已套用的預設。
 數值一律讀現行活頁簿（LibreOffice 重算後的快取值）；③的文字取自 docs/reports/<報告>.md 的「已套用的預設」表（同一份內容，不另抄）。
 """
@@ -11,7 +11,6 @@ import sys
 from pathlib import Path
 
 import openpyxl
-import yaml
 from openpyxl.styles import Alignment, Font, PatternFill
 
 REPO = Path(__file__).resolve().parent.parent
@@ -39,6 +38,30 @@ KEY_OUT = [
     ("OAI_Link", "OAI_DEM_Tok_Total", "OpenAI v0.6 token 合計（對照）"),
 ]
 
+# A3：② 第一部分＝命題表（每 VR 等值 GW），其後為算力與成本關鍵輸出，最後為 OpenAI v0.6 並排
+KEY_OUT_A3 = [
+    ("Cost", "COST_PropRev_VR", "命題表｜每 VR 等值 GW：營收淨額（$B/GW/年）"), ("Cost", "COST_PropCompute_VR", "命題表｜每 VR 等值 GW：算力成本（現金）"),
+    ("Cost", "COST_PropNonComp_VR", "命題表｜每 VR 等值 GW：非算力成本（不含股權報酬）"), ("Cost", "COST_PropSBC_VR", "命題表｜每 VR 等值 GW：股權報酬"),
+    ("Cost", "COST_PropFull_VR", "命題表｜每 VR 等值 GW：全成本（含股權報酬）"), ("Cost", "COST_PropFullExSBC_VR", "命題表｜每 VR 等值 GW：全成本（不含股權報酬）"),
+    ("Cost", "COST_PropGap_VR", "命題表｜每 VR 等值 GW：差額（含股權報酬；命題 1）"), ("Cost", "COST_PropGapExSBC_VR", "命題表｜每 VR 等值 GW：差額（不含股權報酬）"),
+    ("Cost", "COST_Coverage", "命題表｜覆蓋率（營收淨額 ÷ 全成本，含股權報酬）"), ("Cost", "COST_CoverageExSBC", "命題表｜覆蓋率（不含股權報酬）"),
+    ("Cost", "COST_PropGapEcon_VR", "命題表（經濟口徑）｜每 VR 等值 GW 差額（含股權報酬）"),
+    ("Compute", "CMP_SupplyGW", "供給 GW（實體）"), ("Compute", "CMP_Supply_VReq", "供給 VR 等值 GW（命題分母）"), ("Compute", "CMP_VReqFactor", "機隊 VR 等值係數"),
+    ("Compute", "CMP_Eta", "η"), ("Compute", "CMP_TokGW", "推論 GW（token 換算）"), ("Compute", "CMP_InfGW_Eff", "有效推論 GW（未截頂）"),
+    ("Compute", "CMP_InfGW", "推論 GW（截頂後）"), ("Compute", "CMP_RDGW", "研發 GW"), ("Compute", "CMP_InfAvailGW", "推論可用 GW"),
+    ("Compute", "CMP_CapFactor", "容量上限係數"), ("Compute", "CMP_Share_TPUv7", "組合：TPU v7／次世代"), ("Compute", "CMP_Share_Hopper", "組合：Hopper"),
+    ("Compute", "CMP_Share_MI455X", "組合：AMD MI455X"),
+    ("Cost", "COST_ContractPay", "合約實付合計（$B）"), ("Cost", "COST_OwnedCapex", "自建資本支出（Fluidstack）"), ("Cost", "COST_Compute", "算力成本（現金）"),
+    ("Cost", "COST_ComputeEcon", "算力成本（經濟口徑）"), ("Cost", "COST_SupplierHold", "供應商持有成本（TK）"), ("Cost", "COST_CloudGM", "雲端毛利"),
+    ("Cost", "COST_Headcount", "員工人數（年均）"), ("Cost", "COST_NonCompExSBC", "非算力成本（不含股權報酬）"), ("Cost", "COST_SBC", "股權報酬"),
+    ("Cost", "COST_FullCash", "全成本（含股權報酬）"), ("Revenue", "REV_NetCapped", "營收淨額（截頂後）"), ("Cost", "COST_GapCash", "差額（營收淨額 − 全成本）"),
+    ("Cost", "COST_InfCompute", "推論算力成本"), ("Cost", "COST_RDCompute", "研發算力成本"),
+    ("OAI_Link", "OAI_CMP_SupplyGW", "OpenAI v0.6｜供給 GW"), ("OAI_Link", "OAI_CMP_Supply_VReq", "OpenAI v0.6｜供給 VR 等值 GW"),
+    ("OAI_Link", "OAI_COST_Compute", "OpenAI v0.6｜算力成本"), ("OAI_Link", "OAI_COST_FullCash", "OpenAI v0.6｜全成本"),
+    ("OAI_Link", "OAI_COST_PropRev_VR", "OpenAI v0.6｜每 VR 等值 GW 營收淨額"), ("OAI_Link", "OAI_COST_PropFull_VR", "OpenAI v0.6｜每 VR 等值 GW 全成本"),
+    ("OAI_Link", "OAI_COST_PropGap_VR", "OpenAI v0.6｜每 VR 等值 GW 差額"), ("OAI_Link", "OAI_COST_Coverage", "OpenAI v0.6｜覆蓋率"),
+]
+
 
 def name_values(wb, names, n):
     sh, rng = names[n].split("!")
@@ -63,23 +86,55 @@ def defaults_from_md(md: Path):
     return out
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--stage", default="A2")
-    ap.add_argument("--out", required=True, type=Path)
-    ap.add_argument("--report", required=True, type=Path, help="報告 .md（讀其中的「已套用的預設」表）")
-    ap.add_argument("--md", type=Path, help="輸出 ② 的 Markdown 表（貼入報告）")
-    a = ap.parse_args()
-    model = current_model_path()
-    wb = openpyxl.load_workbook(model, data_only=True)
+def sheet1(a, wb):
     names = {k: v.attr_text for k, v in wb.defined_names.items()}
-    src = yaml.safe_load((REPO / "data" / "anthropic_src.yaml").read_text(encoding="utf-8"))["rows"]
     out = openpyxl.Workbook()
 
     # ① 本段新增或變動的每一列
     ws = out.active
     ws.title = "①新增與變動列"
     ws.append(["頁", "編號／ID", "列名", "單位", "值（2025 或單值）", "值（2030）", "來源／標記", "說明"])
+    if a.stage == "A3":
+        stage_a3_rows(wb, ws)
+    else:
+        stage_a2_rows(wb, ws)
+    for c, w in zip("ABCDEFGH", (10, 22, 60, 14, 16, 14, 18, 70)):
+        ws.column_dimensions[c].width = w
+    key_out = KEY_OUT_A3 if a.stage == "A3" else KEY_OUT
+    return out, names, key_out
+
+
+def stage_a3_rows(wb, ws):
+    """A3 新增或變動：Inputs INP_109 起（A3 新增）、TK_PUE、Revenue 容量上限列、Compute、Cost 每列、Checks C49 起。"""
+    s = wb["Inputs"]
+    for r in range(5, s.max_row + 1):
+        iid = s.cell(r, 1).value
+        if iid and int(iid[4:]) >= 109:
+            ws.append(["Inputs", iid, f"{s.cell(r, 2).value}（{s.cell(r, 3).value}）", s.cell(r, 4).value, s.cell(r, 5).value, None,
+                       s.cell(r, 8).value, f"低 {s.cell(r, 6).value}／高 {s.cell(r, 7).value}；{s.cell(r, 9).value}"])
+    ws.append(["Inputs", "INP_016", "容量上限係數（A2 佔位）", "倍", None, None, "退役", "A3：REV_CapFactor 改接 CMP_CapFactor；號碼不重用"])
+    s = wb["TK_Link"]
+    for r in range(10, s.max_row + 1):
+        if str(s.cell(r, 2).value or "").startswith("TK_PUE"):
+            ws.append(["TK_Link", s.cell(r, 2).value, s.cell(r, 3).value, s.cell(r, 4).value, s.cell(r, 10).value, None, s.cell(r, 6).value, s.cell(r, 1).value])
+    s = wb["Revenue"]
+    for r in range(7, s.max_row + 1):
+        if s.cell(r, 2).value and str(s.cell(r, 2).value).startswith("容量上限係數"):
+            ws.append(["Revenue", s.cell(r, 1).value, s.cell(r, 2).value, s.cell(r, 3).value, s.cell(r, 4).value, s.cell(r, 9).value, "公式（變動）", "＝Compute CMP_CapFactor"])
+    for sh, pre in (("Compute", "C"), ("Cost", "K")):
+        s = wb[sh]
+        for r in range(7, s.max_row + 1):
+            code, lab = s.cell(r, 1).value, s.cell(r, 2).value
+            if code and lab and re.fullmatch(pre + r"\d+", str(code)):
+                ws.append([sh, code, lab, s.cell(r, 3).value, s.cell(r, 4).value, s.cell(r, 9).value, "公式／參數", s.cell(r, 11).value])
+    s = wb["Checks"]
+    for r in range(5, s.max_row + 1):
+        cid = str(s.cell(r, 1).value or "")
+        if re.fullmatch(r"C\d+", cid) and int(cid[1:]) >= 49:
+            ws.append(["Checks", cid, s.cell(r, 2).value, None, s.cell(r, 3).value, None, s.cell(r, 5).value, s.cell(r, 6).value])
+
+
+def stage_a2_rows(wb, ws):
     s = wb["SRC_ANT"]
     for r in range(5, s.max_row + 1):
         sid, status = s.cell(r, 1).value, s.cell(r, 22).value
@@ -112,19 +167,29 @@ def main():
     for r in range(5, s.max_row + 1):
         if s.cell(r, 1).value and str(s.cell(r, 1).value).startswith("C"):
             ws.append(["Checks", s.cell(r, 1).value, s.cell(r, 2).value, None, s.cell(r, 3).value, None, s.cell(r, 5).value, s.cell(r, 6).value])
-    for c, w in zip("ABCDEFGH", (10, 22, 60, 14, 16, 14, 18, 70)):
-        ws.column_dimensions[c].width = w
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--stage", default="A2")
+    ap.add_argument("--out", required=True, type=Path)
+    ap.add_argument("--report", required=True, type=Path, help="報告 .md（讀其中的「已套用的預設」表）")
+    ap.add_argument("--md", type=Path, help="輸出 ② 的 Markdown 表（貼入報告）")
+    a = ap.parse_args()
+    model = current_model_path()
+    wb = openpyxl.load_workbook(model, data_only=True)
+    out, names, key_out = sheet1(a, wb)
 
     # ② 關鍵輸出
     ws2 = out.create_sheet("②關鍵輸出 FY2025–2030")
     ws2.append(["項目", "具名範圍"] + YEARS)
     md = ["| 項目 | " + " | ".join(YEARS) + " |", "|---|" + "---|" * 6]
-    for sh, n, lab in KEY_OUT:
+    for sh, n, lab in key_out:
         v = name_values(wb, names, n)
         ws2.append([lab, n] + v)
         fmt = (lambda x: f"{x:,.0f}") if "（T）" in lab else (lambda x: f"{x:,.2f}") if "（M）" in lab or "$/M" in lab else (lambda x: f"{x:,.2f}")
         md.append(f"| {lab} | " + " | ".join(fmt(x) if isinstance(x, (int, float)) else "" for x in v) + " |")
-    ws2.column_dimensions["A"].width = 34
+    ws2.column_dimensions["A"].width = 52
     ws2.column_dimensions["B"].width = 24
 
     # ③ 已套用的預設
