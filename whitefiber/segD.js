@@ -240,7 +240,7 @@ function zM() {
             children: (0, $.jsxs)(Jj, {
               children: [(0, $.jsx)(hdrQ, {
                 title: `管理層情境與全域假設`,
-                tip: `三個情境依對照表 r1 第 4 節第 1 條：保守＝只交付已簽約電力（>3.5 GW，÷1.2 換 MW-IT）；基準＝2026 年底 5 GW 合約目標依歷史併網速度實現；積極＝2027 起每年 >1 GW 部署全數實現。每 MW 年收入隨情境取 Tokenomics 正向推導三情境值（保守／基準／積極）。毛 CapEx 由 MW 公式自動增減；FY31 預建隨情境。切換情境只會改寫已連網／可計費 MW、每 MW 年收入、FY31 預建與表外租金；你手動調整的其他數字會保留，按頁首「重設」才回到預設值。`,
+                tip: TXQ.scenarioTip,
                 w: 460
               }), (0, $.jsx)(`div`, {
                 className: `mt-3 grid grid-cols-3 gap-1 rounded-lg bg-surface p-1`,
@@ -962,7 +962,7 @@ function zM() {
                 className: `space-y-3`,
                 children: [(0, $.jsx)(hdrQ, {
                   title: `站點`,
-                  tip: `具名站點可編輯。公司不逐站揭露 MW；下列 MW 為公司公告的站點電力（口徑不明，÷1.2 換 MW-IT）。最後一列是殘差＝年度已連網 MW − 具名加總；殘差偏大是必然，代表容量預測多數不是由具名站點支撐。`
+                  tip: TXQ.siteTip
                 }), (0, $.jsxs)(`table`, {
                   className: `w-full min-w-[960px] text-xs`,
                   children: [(0, $.jsx)(`thead`, {

@@ -558,6 +558,12 @@ function runFunding(e) {
     title: `營收＝平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度`,
     detail: `${e.revenueDriver === `mw` ? `MW 驅動` : `RPO 驅動`}：五期算力營收 ${o.map(y => Y(y.isRev, 2)).join(`／`)}；容量上限 ${o.map(y => Y(y.capacity, 2)).join(`／`)}。每 MW 年收入 ${t.revMW.map(x => Y(x * 1e3, 2)).join(`／`)} US$m/MW-IT（Tokenomics 正向推導；${TXQ.revMwCompare}）。`
   }), _({
+    id: `rev-contract`, // WhiteFiber v0.1b：合約隱含每 MW 年收入（只作對照，不作輸入；Excel「運營_產能與收入」對照列同一組數字）
+    ok: !0,
+    severity: `watch`,
+    title: `合約隱含每 MW 年收入 vs Tokenomics ${Y(t.revMW[0] * 1e3 * (e.revScale ?? 1), 2)}（對照）`,
+    detail: `${(TXQ.revMwContracts || []).map(x => `${x[0]} ${Y(x[1], 2)}`).join(`；`)} US$m/MW-IT·年。${TXQ.revMwContractsNote || ``}`
+  }), _({
     id: `rpo-weights`,
     ok: Math.abs(RPO_BUCKET_W.reduce((e, t) => e + t, 0) - RPO_SCHEDULED_SHARE) < 1e-6,
     severity: `watch`,
@@ -613,7 +619,7 @@ function runFunding(e) {
     ok: !0,
     severity: `watch`,
     title: `已連網 MW-IT：${PERIOD_FY[0] - 1} 年底 ${e.mwYearEnd[PERIOD_FY[0] - 1]} MW → ${PERIODS[0]} 年底 ${t.accepted[0]} MW`,
-    detail: `${TXQ.mwFacts}口徑不明者以 ÷ PUE 1.2 換成 MW-IT。目前情境：${PERIODS[0]} 已連網 ${t.accepted[0]} MW、${PERIODS[1]} ${t.accepted[1]} MW、${PERIODS[4]} ${t.accepted[4]} MW。累計在役 MW 未揭露，不以營收反推（期初可計費 MW 以實際營收校準）。`
+    detail: `${TXQ.mwFacts}目前情境：${PERIODS[0]} 已連網 ${t.accepted[0]} MW、${PERIODS[1]} ${t.accepted[1]} MW、${PERIODS[4]} ${t.accepted[4]} MW。累計在役 MW 未揭露，不以營收反推（期初可計費 MW 以實際營收校準）。`
   }), _({
     id: `call-util`,
     ok: t.util[0] <= 100,
@@ -752,8 +758,8 @@ function runFunding(e) {
     id: `tier34`,
     ok: !0,
     severity: `watch`,
-    title: `MW 口徑：合約／已連網電力未說明 IT 或設施口徑`,
-    detail: `模型以 MW-IT 為主口徑（Tokenomics 與 active power 皆為 IT）；公司合約電力與已連網電力 ÷ PUE 1.2 換算。若公司數字其實是 IT 口徑，可部署 MW 約多 20%，營收與 CapEx 同步放大。`
+    title: TXQ.mwBasis.title, // WhiteFiber v0.1b：口徑說明讀 company.json → texts.mwBasis
+    detail: TXQ.mwBasis.detail
   });
   let C = r.accepted,
     w = Math.max(0, t.accepted[0] - C),

@@ -809,6 +809,23 @@ crow("«P0» 全年總營收（«YTD» 實際＋模型期算力＋服務＋傳�
 fy_rev_row = CR["«P0» 全年總營收（«YTD» 實際＋模型期算力＋服務＋傳統事業）"]
 for i in range(5):
     ws.cell(row=fy_rev_row, column=3 + i).font = Font(name="Arial", size=10, bold=True)
+# WhiteFiber v0.1b：合約隱含每 MW 年收入（company.json → texts.revMwContracts；只作對照與敏感度，不作輸入；HTML 檢查頁 rev-contract 同一組數字）
+if TXQ.get('revMwContracts'):
+    r += 1
+    r = section(ws, r, "對照：合約隱含每 MW-IT 年收入 vs Tokenomics（只作對照，不作輸入）", level=2, collapsed=True)
+    for j, h in enumerate(["合約", "單位", "合約隱含", "Tokenomics（«P0»）", "合約 ÷ Tokenomics"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    ws.cell(row=r, column=9, value=TXQ.get('revMwContractsNote', '')).font = SMALL
+    r += 1
+    for _x in TXQ['revMwContracts']:
+        ws.cell(row=r, column=1, value=f"對照｜合約隱含每 MW｜{_x[0]}").font = BLACK
+        ws.cell(row=r, column=2, value="US$m/MW-IT·年").font = SMALL
+        c = ws.cell(row=r, column=3, value=_x[1]); c.font = BLUE; c.number_format = NUM; c.border = BOX
+        c = ws.cell(row=r, column=4, value=f"='輸入與假設'!C{IN['每 MW 年收入']}*1000*{REVSC}"); c.font = GREEN; c.number_format = NUM; c.border = BOX
+        c = ws.cell(row=r, column=5, value=f"=C{r}/D{r}"); c.font = BLACK; c.number_format = PCT; c.border = BOX
+        ws.cell(row=r, column=9, value=_x[2]).font = SMALL
+        CR[f"對照｜合約隱含每 MW｜{_x[0]}"] = r
+        r += 1
 ws.cell(row=fy_rev_row, column=3).fill = FILL_KEY
 
 r = section(ws, r, "（D）收入 → 現金：三道折扣")

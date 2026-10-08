@@ -641,6 +641,12 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
+| `texts.revMwContracts` | 合約隱含每 MW-IT 年收入對照列：[合約, US$m/MW-IT·年, 推導]（只作對照與敏感度，不作輸入；運營頁與檢查頁；WhiteFiber v0.1b） | 清單 | 9 筆 | 必改 |
+| `texts.revMwContractsNote` | 合約隱含單價的推導口徑說明（WhiteFiber v0.1b） | 文字 | 合約隱含每 MW-IT 年營收 [Derived]：… | 必改 |
+| `texts.mwBasis.title` | MW 口徑檢查項的標題（檢查頁；WhiteFiber v0.1b） | 文字 | MW 口徑：雲端 MW-IT 由合約 GPU 數換算… | 必改 |
+| `texts.mwBasis.detail` | MW 口徑說明（IT／毛容量、換算方式；檢查頁；WhiteFiber v0.1b） | 文字 | 模型以 MW-IT 為主口徑（Tokenomics … | 必改 |
+| `texts.scenarioTip` | 情境選擇的浮動說明（資金模型頁；WhiteFiber v0.1b） | 文字 | 三個情境依對照表 r1 第 4 節第 1 條與審查留… | 必改 |
+| `texts.siteTip` | 站點表的浮動說明（WhiteFiber v0.1b） | 文字 | 具名雲端站點可編輯。公司多數雲端站點為第三方機房、不… | 必改 |
 | `texts.labelMap` | 畫面與 Excel 的公司用語替換：[[模板用語, 公司用語], …]（模板第一分部 OCI、第二分部「傳統事業」、投資級口徑 → 公司用語；建置時套用於 segA–segE 與 Excel，版本紀錄不換；WhiteFiber v0.1b） | 清單 | 11 筆 | 必改 |
 | `texts.fy0EquityNote` | 首期股權／可轉債的組成說明（含年初至今與首期模型的金額；v4.5；可用期間佔位符 «P0»、«YTD»、«STUB»） | 文字 | «P0»＝«YTD» 未發行普通股（0）＋«STUB… | 必改 |
 | `texts.sourceLine` | 頁首的資料來源一行（例如最新 10-Q、法說、期後 8-K；v4.5） | 文字 | 2026 Q2 10-Q（2026-08-12）＋財… | 必改 |
