@@ -340,7 +340,7 @@ function tkScnQ(e, sc, o = {}) {
   if (o.ramp0 != null) s.m.billable = s.m.billable.map((x, i) => i === 0 ? Math.round(SCENARIOS[sc].acc[0] * SC_BR[0] * o.ramp0) : x);
   return s
 }
-function tkSensQ(e, v) { // v0.2a：3 × 3 容量 × 價格矩陣與每 MW 收入敏感度（目標價 tgt、五期股權募資 eq、融資前缺口 gap）
+function tkSensQ(e, v, onlyMatrix) { // v0.2a：3 × 3 容量 × 價格矩陣與每 MW 收入敏感度（目標價 tgt、五期股權募資 eq、融資前缺口 gap）
   let K = [`low`, `base`, `high`], AM = COMPANY_DATA.pricing.anchorMultiple, run = (sc, o) => fA(tkScnQ(e, sc, o), null, v),
     C = [[`kLongLo`, `k_長約 ${AM.long.low.toFixed(2)}`, { kLong: AM.long.low }], [`kLongHi`, `k_長約 ${AM.long.high.toFixed(2)}`, { kLong: AM.long.high }],
       [`kSpotLo`, `k_現貨 ${AM.spot.low.toFixed(2)}`, { kSpot: AM.spot.low }], [`kSpotHi`, `k_現貨 ${AM.spot.high.toFixed(2)}`, { kSpot: AM.spot.high }],
@@ -349,7 +349,7 @@ function tkSensQ(e, v) { // v0.2a：3 × 3 容量 × 價格矩陣與每 MW 收�
       [`ramp50`, `首期末爬坡 50%`, { ramp0: .5 }], [`ramp80`, `首期末爬坡 80%`, { ramp0: .8 }]];
   return {
     matrix: Object.fromEntries(K.map(sc => [sc, Object.fromEntries(K.map(px => [px, run(sc, { px })]))])),
-    sens: C.map(([key, label, o]) => ({ key, label, res: Object.fromEntries(K.map(sc => [sc, run(sc, o)])) }))
+    sens: onlyMatrix ? [] : C.map(([key, label, o]) => ({ key, label, res: Object.fromEntries(K.map(sc => [sc, run(sc, o)])) }))
   }
 }
 

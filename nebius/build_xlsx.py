@@ -194,7 +194,8 @@ guide = [
     ("", None),
     ("■ 營收主軸：MW × 每 MW 年收入 × 利用率", None),
     ("  已連網 MW（情境路徑，口徑不明者 ÷ PUE 1.2 換成 MW-IT）→ 在役 MW（× 在役比例）→ 平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度＝營收。", None),
-    ("  每 MW 年收入取 Tokenomics 正向推導的三情境值（data/permw_tokenomics_20261007.json），不用公司 ACV（只作對照）；利用率預設 100%，因推導值已含可計費利用率。", None),
+    (("  每 MW 年收入＝Tokenomics 錨（IF_HoldEcon，在役世代加權的打平租金）× 定價倍數 k（市場價格證據；『每MW收入_錨定』），不用公司 ACV（只作對照）；按 MW-year 計價、不乘 IF_Util，利用率預設 100%。容量情境與價格情境分離。" if PMW_REV == 'tkAnchor'
+      else "  每 MW 年收入取 Tokenomics 正向推導的三情境值（data/permw_tokenomics_20261007.json），不用公司 ACV（只作對照）；利用率預設 100%，因推導值已含可計費利用率。"), None),
     ("  RPO 排程（季報桶分攤）只作對照：排程 > 容量的部分顯示為『產能瓶頸』旗標，並作為資產擔保融資容量的 backlog。", None),
     ("", None),
     ("■ 收入之後的折扣", None),
@@ -2542,7 +2543,9 @@ src = [
      "2027 起每年部署 >1 GW；70% 合約含預付、覆蓋 50–60% 相關資本支出；2026 預付 >$9B；Q2 新約 ACV $20–25M/MW（只作對照）；回收期 1 年 10 個月（只作對照）。"),
     ("Interested-party", "法說會（二手轉述）：2026 資本支出 $20–25B（Q1 由 $16–20B 上調、Q2 重申）。"),
     ("Verified", "FY2025 20-F（經查核）：營收 0.530、營業損益 −0.612、續營淨損益 0.010、D&A 0.418、2025 年底現金 3.678；歷年損益 FY23–FY25 取自 20-F XBRL（SEC companyfacts）。"),
-    ("Derived", "每 MW 年收入（Tokenomics v5.24 正向推導）：保守 11.62／基準 17.40／積極 24.20 US$m/MW-IT·年（路徑 A 成本加成與路徑 B 市場價格平均）；"
+    ("Derived", (f"每 MW 年收入＝Tokenomics {CO['tokenomics']['version']}（{CO['tokenomics']['currentFile']}，合併 {CO['tokenomics']['mergeCommit']}；官方快照 {CO['tokenomics']['snapshotFile']}）IF_HoldEcon 在役世代加權 × 定價倍數 k"
+                 f"（k_長約 {CO['pricing']['anchorMultiple']['long']['base']}：IREN–Microsoft 長約；k_現貨 {CO['pricing']['anchorMultiple']['spot']['base']}：H100 現貨指數；長約占比依 Microsoft、Meta 合約 MW）；"
+                 if PMW_REV == 'tkAnchor' else "每 MW 年收入（Tokenomics v5.24 正向推導）：保守 11.62／基準 17.40／積極 24.20 US$m/MW-IT·年（路徑 A 成本加成與路徑 B 市場價格平均）；") +
      "每 MW 建置成本 IF_CapexTotal 50.12（GB300）／50.26（VR200）；RPO 桶內線性分攤 36／40／24 → 五期 9／18／19／20／16%。"),
     ("Assumed", "已連網 MW 路徑（歷史併網速度 +580 MW-IT／年；保守上限 2,917、基準上限 4,167、積極每年 +833）；在役比例 75%→90%；EBITDA 率 49.7%→47%（可觀察 neocloud 區間）；"
      "違約率 0.5→2.5%；新債利率 6.5%；債務／backlog 0.5x；最低現金 2.0；股權折價 10%；終值維持性 CapEx 占 D&A 80%。"),

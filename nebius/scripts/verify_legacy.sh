@@ -13,9 +13,12 @@ rm -rf "$DST"; mkdir -p "$DST/nebius"
 ( cd "$ROOT" && tar --exclude=./out --exclude=./__pycache__ --exclude=./scripts/__pycache__ -cf - . ) | ( cd "$DST/nebius" && tar -xf - )
 cp -r "$ROOT/../tools" "$DST/tools"
 mkdir -p "$DST/nebius/out"
-python3 - "$DST/nebius/company.json" <<'PY'
+git -C "$ROOT" show "${LEGACY_DIST_REF:-6760147}:nebius/company.json" > "$DST/ref_company.json"
+python3 - "$DST/nebius/company.json" "$DST/ref_company.json" <<'PY'
 import json, sys, re
 p = sys.argv[1]; s = open(p, encoding='utf-8').read(); co = json.loads(s)
+ref = json.load(open(sys.argv[2], encoding='utf-8'))
+co['texts'] = ref['texts']; co['varianceReasons'] = ref['varianceReasons']  # 畫面文字（副標、差異原因）還原為 v0.2
 sc = co['defaults']['scenario']; rev = co['scenarios']['revMW'][sc]
 bo = int(co['latestQuarter']['revenue'] * 4 / rev[0] + 0.5)
 co['methodology']['perMw']['revenue'] = 'legacy'

@@ -1206,7 +1206,7 @@
     "metric": "revenue",
     "vs": "*",
     "type": "觀點",
-    "text": "每 MW 年收入採 Tokenomics 正向推導的新約值（GB300／VR200）；期初可計費 MW 以最新季實際營收年化校準，可計費 MW 依爬坡係數逐步收斂到已連網 MW（v0.1c）；共識未揭露 MW 與單價假設"
+    "text": "每 MW 年收入＝Tokenomics 錨（IF_HoldEcon，在役世代加權）× 定價倍數 k（市場價格證據；v0.2a）；期初可計費 MW 以最新季實際營收年化校準，可計費 MW 依爬坡係數逐步收斂到已連網 MW（v0.1c）；共識未揭露 MW 與單價假設"
    },
    {
     "scope": "quarter",
@@ -1238,7 +1238,7 @@
     "metric": "rev",
     "vs": "consensus",
     "type": "觀點",
-    "text": "營收＝可計費 MW × 每 MW 年收入（Tokenomics 正向推導）；首期以最新季實際營收年化校準期初可計費 MW，可計費 MW 依爬坡係數（60%／80%／100%）收斂到已連網 MW（v0.1c）；年底已連網 {y.accepted:0} MW（目前情境）；共識未揭露 MW 假設"
+    "text": "營收＝可計費 MW × 每 MW 年收入（Tokenomics 錨 × 定價倍數 k；v0.2a）；首期以最新季實際營收年化校準期初可計費 MW，可計費 MW 依爬坡係數（60%／80%／100%）收斂到已連網 MW（v0.1c）；年底已連網 {y.accepted:0} MW（目前情境）；共識未揭露 MW 假設"
    },
    {
     "scope": "annual",
@@ -1281,7 +1281,7 @@
   },
   "thesis": "預付款能否讓 backlog 變成現金",
   "title": "預付款，能把 Backlog 變成現金嗎？",
-  "subtitle": "客戶預付只覆蓋約 {prepayPct} 的資本支出；剩下 {gap} 缺口仍靠資產擔保債、可轉債與新股——現價要成立，每 MW 年收入得是模型的 {rvMult} 倍",
+  "subtitle": "客戶預付只覆蓋約 {prepayPct} 的資本支出；剩下 {gap} 缺口仍靠資產擔保債、可轉債與新股——模型每 MW 年收入已是 Tokenomics 打平租金的 {kMult} 倍，現價要成立得到 {rvAnchorMult} 倍",
   "headerTag": "MW × 每 MW · 預付優先"
  },
  "tokenomics": {

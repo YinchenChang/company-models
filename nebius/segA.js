@@ -19,6 +19,7 @@ var PERIODS = COMPANY_DATA.periods,
   SC_MWP = COMPANY_DATA.scenarios.mwPath, // v0.1b：已連網 MW＝MIN(合約上限, 前期＋併網速度×期間長度)；首期期末三情境共用
   SC_ACC = Object.fromEntries([`low`, `base`, `high`].map(k => [k, PERIOD_YEARS.reduce((a, L, i) => (a.push(Math.min(SC_MWP.contracted[k][i], i === 0 ? SC_MWP.connectedStart : a[i - 1] + SC_MWP.pace[k] * L)), a), [])])),
   PMW_REVQ = ((COMPANY_DATA.methodology || {}).perMw || {}).revenue || `legacy`, // v0.2a：每 MW 收入方法（tkAnchor＝Tokenomics 錨 × k；legacy＝scenarios.revMW）
+  REVSRCQ = PMW_REVQ === `tkAnchor` ? `Tokenomics 錨 × 定價倍數 k` : `Tokenomics 正向推導`, // v0.2a：畫面文字的每 MW 收入來源（legacy 時與 v0.2 相同）
   SC_REV = PMW_REVQ === `tkAnchor` ? Object.fromEntries([`low`, `base`, `high`].map(k => [k, tkAnchorQ(k).rev])) : COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境；v0.2a：tkAnchor 時＝錨 × k（價格軸基準），容量情境與價格脫鉤
   SC_BR = COMPANY_DATA.scenarios.billableRatio.ratio,
   SC_RAMP = COMPANY_DATA.scenarios.billableRatio.ramp, // v0.1c：首期營收校準的爬坡係數（可計費 MW 逐步收斂到已連網 × 在役比例）
@@ -472,7 +473,7 @@ function runFunding(e) {
     ok: o.every(y => Math.abs(y.isRev - y.capacity) < 1e-9) || e.revenueDriver !== `mw`,
     severity: `ok`,
     title: `營收＝平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度`,
-    detail: `${e.revenueDriver === `mw` ? `MW 驅動` : `RPO 驅動`}：五期算力營收 ${o.map(y => Y(y.isRev, 2)).join(`／`)}；容量上限 ${o.map(y => Y(y.capacity, 2)).join(`／`)}。每 MW 年收入 ${t.revMW.map(x => Y(x * 1e3, 2)).join(`／`)} US$m/MW-IT（Tokenomics 正向推導；公司 ACV $20–25M 只作對照）。`
+    detail: `${e.revenueDriver === `mw` ? `MW 驅動` : `RPO 驅動`}：五期算力營收 ${o.map(y => Y(y.isRev, 2)).join(`／`)}；容量上限 ${o.map(y => Y(y.capacity, 2)).join(`／`)}。每 MW 年收入 ${t.revMW.map(x => Y(x * 1e3, 2)).join(`／`)} US$m/MW-IT（${REVSRCQ}；公司 ACV $20–25M 只作對照）。`
   }), _({
     id: `rpo-weights`,
     ok: Math.abs(RPO_BUCKET_W.reduce((e, t) => e + t, 0) - RPO_SCHEDULED_SHARE) < 1e-6,
@@ -685,7 +686,7 @@ function runFunding(e) {
     ok: !0,
     severity: `watch`,
     title: `營收＝在役 MW × 每 MW 年收入（新產能全數可出租）`,
-    detail: `營收由 MW 驅動：已連網 MW 依在役比例轉為可計費，乘每 MW 年收入（Tokenomics 正向推導）；新產能簽約率 ${t.fill[0]}%，RPO 只作對照（${PERIODS[2]}–${PERIODS[4]} 超出期初 RPO 的部分合計 ${(o[2].newRev+o[3].newRev+o[4].newRev).toFixed(0)}bn）。風險：已連網但尚未簽約的產能；續約價格衰退未建模（預付款優勢可能高估）。`
+    detail: `營收由 MW 驅動：已連網 MW 依在役比例轉為可計費，乘每 MW 年收入（${REVSRCQ}）；新產能簽約率 ${t.fill[0]}%，RPO 只作對照（${PERIODS[2]}–${PERIODS[4]} 超出期初 RPO 的部分合計 ${(o[2].newRev+o[3].newRev+o[4].newRev).toFixed(0)}bn）。風險：已連網但尚未簽約的產能；續約價格衰退未建模（預付款優勢可能高估）。`
   }), e.useAvgMw || _({
     id: `year-end-mw`,
     ok: !0,

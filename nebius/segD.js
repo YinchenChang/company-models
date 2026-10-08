@@ -92,13 +92,13 @@ function zM() {
           children: COMPANY_DATA.texts.title // v0.2：主標題（company.json → texts）
         }), (0, $.jsx)(`p`, {
           className: `max-w-3xl font-display text-lg font-medium leading-snug text-accent-fg md:text-xl`,
-          children: headlineQ(d, RVQ) // v0.2：副標題＝一句話答案，數字隨情境
+          children: headlineQ(d, RVQ, e) // v0.2：副標題＝一句話答案，數字隨情境
         }), (0, $.jsxs)(`p`, {
           className: `max-w-3xl text-sm leading-relaxed text-pretty text-accent-soft`,
           children: [e.scenario === `custom` ? `自訂情境` : SCENARIOS[e.scenario]?.label, `：營收＝已連網 MW × 每 MW 年收入（${PERIODS[PERIODS.length - 1]} `, (0, $.jsxs)(`span`, {
             className: `font-medium text-accent-fg`,
             children: [`$`, Y(d.m.revMW[4] * (e.revScale ?? 1) * 1e3, 1), `m`]
-          }), `，Tokenomics 正向推導${PRICE_CHK_Q ? `；最新一季每在役 MW 實現約 $${Y(PRICE_CHK_Q.realized, 1)}m` : ``}）。${PERIODS[0]}–${PERIODS[PERIODS.length - 1].slice(2)} 毛 CapEx `, mA(d.totals.gross), `bn，客戶預付先收 `, (0, $.jsxs)(`span`, {
+          }), `，${REVSRCQ}${PRICE_CHK_Q ? `；最新一季每在役 MW 實現約 $${Y(PRICE_CHK_Q.realized, 1)}m` : ``}）。${PERIODS[0]}–${PERIODS[PERIODS.length - 1].slice(2)} 毛 CapEx `, mA(d.totals.gross), `bn，客戶預付先收 `, (0, $.jsxs)(`span`, {
             className: `font-medium text-accent-fg`,
             children: [mA(d.years.reduce((a, t) => a + t.prepayIn, 0)), `bn`]
           }), `；融資前缺口 `, (0, $.jsxs)(`span`, {
@@ -108,7 +108,7 @@ function zM() {
             className: `font-medium text-accent-fg`,
             children: [`$`, Y(f.call.blended, 1)]
           }), `（情境區間 $${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}），較現價 `, f.call.upside >= 0 ? `+` : ``, hA(f.call.upside * 100, 0), `，結論「`, f.call.call, `」。`, (0, $.jsx)(tipQ, {
-            t: `三個判斷依據：(1) 預付款能否讓 backlog 變成現金——營收由已連網 MW × 每 MW 年收入（Tokenomics 正向推導，不用公司 ACV）驅動，客戶預付在建置前先收現、之後認列為非現金營收；(2) 單位經濟——每 MW 年 EBITDA（每 MW 年收入×利用率×EBITDA 率）是否高於 GPU 的年化資本回收（每 MW 成本×資本回收係數）；(3) 融資——缺口依序由預付、現金、資產擔保融資、可轉債、ATM 股權補足，最後才是高息債；市場願意以多少價格吸收多少新股，是估值最敏感的假設之一（見目標價頁敏感度表）。${PERIODS[0]} 欄為年初至今實際＋模型期。`,
+            t: `三個判斷依據：(1) 預付款能否讓 backlog 變成現金——營收由已連網 MW × 每 MW 年收入（${REVSRCQ}，不用公司 ACV）驅動，客戶預付在建置前先收現、之後認列為非現金營收；(2) 單位經濟——每 MW 年 EBITDA（每 MW 年收入×利用率×EBITDA 率）是否高於 GPU 的年化資本回收（每 MW 成本×資本回收係數）；(3) 融資——缺口依序由預付、現金、資產擔保融資、可轉債、ATM 股權補足，最後才是高息債；市場願意以多少價格吸收多少新股，是估值最敏感的假設之一（見目標價頁敏感度表）。${PERIODS[0]} 欄為年初至今實際＋模型期。`,
             w: 500
           })]
         }), (0, $.jsxs)(`div`, {
@@ -867,13 +867,13 @@ function zM() {
                 className: `space-y-3`,
                 children: [(0, $.jsx)(hdrQ, {
                   title: `收入／產能輸入`,
-                  tip: `營收 ＝ 平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度（MW 驅動，新產能簽約率 100%）。每 MW 年收入取 Tokenomics 正向推導三情境（11.62／17.40／24.20 US$m/MW-IT），不用公司 ACV（$20–25M 只作對照）。路徑 B 已含可計費利用率，所以利用率預設 100%。RPO 排程只作對照與產能瓶頸旗標。${PERIODS[0]} 欄的 MW 為年底存量、收入為模型期金額。`
+                  tip: `營收 ＝ 平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度（MW 驅動，新產能簽約率 100%）。${PMW_REVQ === `tkAnchor` ? `每 MW 年收入＝Tokenomics 錨（IF_HoldEcon，在役世代加權的打平租金）× 定價倍數 k（長約占比 × k_長約＋其餘 × k_現貨），容量情境與價格情境分離；不用公司 ACV（$20–25M 只作對照）。按 MW-year 計價，不乘 IF_Util，所以利用率預設 100%。` : `每 MW 年收入取 Tokenomics 正向推導三情境（11.62／17.40／24.20 US$m/MW-IT），不用公司 ACV（$20–25M 只作對照）。路徑 B 已含可計費利用率，所以利用率預設 100%。`}RPO 排程只作對照與產能瓶頸旗標。${PERIODS[0]} 欄的 MW 為年底存量、收入為模型期金額。`
                 }), (0, $.jsx)(BM, {
                   rows: [
                     [`Accepted MW（期末主動電力）`, d.m.accepted, (e, t) => D(`accepted`, e, t), void 0, void 0, `YE26 指引 >1,850 MW；2030 目標 ≥8,000 MW。引擎會強制單調不減。`, `MW`],
                     [`Billable MW`, d.m.billable, (e, t) => D(`billable`, e, t), void 0, void 0, `引擎會強制不超過 Accepted。`, `MW`],
                     [`利用率`, e.m.util, (e, t) => D(`util`, e, t), void 0, void 0, `法說稱「近期產能實質售罄」，本模型不擬合為 100%。`, `%`],
-                    [`每 MW 年收入`, e.m.revMW, (e, t) => D(`revMW`, e, t), 5e-4, void 0, `Tokenomics 正向推導（data/permw_tokenomics_20261007.json）；隨情境：保守 0.01162／基準 0.0174／積極 0.0242 [Derived]。`, `US$bn/MW`],
+                    [`每 MW 年收入`, e.m.revMW, (e, t) => D(`revMW`, e, t), 5e-4, void 0, PMW_REVQ === `tkAnchor` ? `Tokenomics 錨 × 定價倍數 k（Excel「每MW收入_錨定」；${COMPANY_DATA.tokenomics.version}）；容量情境只改 MW，價格情境改 k [Derived]。` : `Tokenomics 正向推導（data/permw_tokenomics_20261007.json）；隨情境：保守 0.01162／基準 0.0174／積極 0.0242 [Derived]。`, `US$bn/MW`],
                     [`新產能簽約率`, e.m.fill, (e, t) => D(`fill`, e, t), 1, void 0, `把這欄調成 0，就能看到只靠期初 RPO 的缺口有多大——最重要的壓力測試。`, `%`],
 
                   ]
@@ -1384,7 +1384,7 @@ function zM() {
                         [`期後籌資`, `2026-07 資產擔保 $775M；2026-08 可轉債 $5.75B、以股換債 $800M`, `期後事項，季報未含`, `淨現金 ${Y(e.atm, 2)} 記於首期模型部分；資產擔保額度為瀑布第一順位`],
                         [`已連網／合約電力`, `2026 年底 connected 0.8–1.0 GW；合約 5 GW；2027 起每年 >1 GW`, `季末 active MW 未揭露`, `三情境依對照表 r1；口徑不明者 ÷1.2 換 MW-IT`],
                         [`利用率`, `未揭露`, `無`, `每 MW 年收入已含可計費利用率，利用率欄 100%`],
-                        [`定價`, `Q2 新約 ACV $20–25M/MW；短約 $40–50M/MW`, `無`, `不用公司 ACV；每 MW 年收入取 Tokenomics 正向推導 11.62／17.40／24.20`],
+                        [`定價`, `Q2 新約 ACV $20–25M/MW；短約 $40–50M/MW`, `無`, PMW_REVQ === `tkAnchor` ? `不用公司 ACV；每 MW 年收入＝Tokenomics 錨 × 定價倍數 k（市場價格證據）` : `不用公司 ACV；每 MW 年收入取 Tokenomics 正向推導 11.62／17.40／24.20`],
                         [`營收／EBITDA 指引`, `營收 ${CALL_FACTS.revLo}–${CALL_FACTS.revHi}；年底 ARR ${CALL_FACTS.arrLo}–${CALL_FACTS.arrHi}；調整後 EBITDA 率約 40%`, `年初至今營收 ${Y(ACTUAL_1H.revenue, 3)}；GAAP 營損 ${Y(ACTUAL_1H.opInc, 3)}`, `營收不回推單價；EBITDA 率取可觀察 neocloud 區間`],
                         [`客戶集中`, `Microsoft、Meta 大單`, `C ${hA(LATEST_Q.custA * 100, 0)}／D ${hA(LATEST_Q.custB * 100, 0)}／E ${hA(LATEST_Q.custC * 100, 0)}`, `違約率 0.5→2.5%、回收 50%`],
                         [`回收期`, `新約 1 年 10 個月（先前 2–3 年）`, `無`, `公司說法只作對照，不作輸入`],
@@ -1501,7 +1501,7 @@ function zM() {
                         children: [
                           [`預付款覆蓋資本支出`, `70% 合約含預付、覆蓋 50–60%`, `年初至今遞延營收增加 ${Y(LATEST_Q.deferredIn, 3)}、現金資本支出 ${Y(LATEST_Q.capexH1, 3)}`, `方向一致；年初至今約 56%，全年 >$9B 待驗證`],
                           [`2026 CapEx $20–25B`, `法說會轉述（股東信未列）`, `年初至今現金購置 ${Y(LATEST_Q.capexH1, 3)}；尚未啟用資產 ${Y(LATEST_Q.cip, 2)}`, `只有二手來源；模型 CapEx 由 MW 推導`],
-                          [`ACV $20–25M/MW`, `Q2 四筆大單（MW 口徑未定義）`, `無`, `不作輸入；每 MW 年收入取 Tokenomics 正向推導`],
+                          [`ACV $20–25M/MW`, `Q2 四筆大單（MW 口徑未定義）`, `無`, `不作輸入；每 MW 年收入取 ${REVSRCQ}`],
                           [`回收期 1 年 10 個月`, `以預測成本與已簽約未來容量估計`, `無`, `只作對照`],
                           [`可轉債稀釋`, `未提`, `八檔；轉換價 $51.45–$324.65；未見 capped call`, `依轉換價計算潛在股數（v0.1b 步驟 5）`],
                           [`ATM`, `25M 股計畫`, `截至 6/30 已售 12.73M 股（均價 $223.6）、剩 12.27M 股`, `瀑布股權步驟沿用模板機制；Q3 使用量未知`],
@@ -1567,7 +1567,7 @@ function zM() {
                   text: `5Y CDS：無報價資料（不適用）。`
                 }), (0, $.jsx)(VM, {
                   tag: `Derived`,
-                  text: `每 MW 年收入（Tokenomics v5.24 正向推導，data/permw_tokenomics_20261007.json）：保守 11.62／基準 17.40／積極 24.20 US$m/MW-IT·年（路徑 A 成本加成與路徑 B 市場價格平均）；每 MW 建置成本 IF_CapexTotal 50.12（GB300）／50.26（VR200）。公司 ACV $20–25M 只作對照。`
+                  text: PMW_REVQ === `tkAnchor` ? `每 MW 年收入＝Tokenomics ${COMPANY_DATA.tokenomics.version}（${COMPANY_DATA.tokenomics.currentFile}，合併 ${COMPANY_DATA.tokenomics.mergeCommit}）IF_HoldEcon 在役世代加權 × 定價倍數 k（k_長約 ${COMPANY_DATA.pricing.anchorMultiple.long.base}：IREN–Microsoft 長約；k_現貨 ${COMPANY_DATA.pricing.anchorMultiple.spot.base}：H100 現貨指數）；長約占比依已揭露 Microsoft、Meta 合約 MW；每 MW 建置成本 IF_CapexTotal 50.12（GB300）／50.26（VR200）。公司 ACV $20–25M 只作對照。` : `每 MW 年收入（Tokenomics v5.24 正向推導，data/permw_tokenomics_20261007.json）：保守 11.62／基準 17.40／積極 24.20 US$m/MW-IT·年（路徑 A 成本加成與路徑 B 市場價格平均）；每 MW 建置成本 IF_CapexTotal 50.12（GB300）／50.26（VR200）。公司 ACV $20–25M 只作對照。`
                 }), (0, $.jsx)(VM, {
                   tag: `Assumed`,
                   text: `三情境 MW 路徑（已連網 MW-IT）：歷史併網速度 +580 MW-IT／年（2025 年底 170 → 2026 年底 750）；保守上限 2,917（>3.5 GW ÷1.2）、基準上限 4,167（5 GW ÷1.2）、積極每年 +833（>1 GW ÷1.2）；在役比例 75%→90%；利用率 100%（已含於每 MW 年收入）；EBITDA 率 49.7%→47%（可觀察 neocloud 區間）；違約率 0.5→2.5%；新債利率 6.5%；債務／backlog 0.5x；最低現金 2.0；股權折價 10%。`
