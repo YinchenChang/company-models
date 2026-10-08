@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """產生每段報告的對照 Excel（CLAUDE.md 第 5 節）與報告用的 Markdown 表（Anthropic v0.1）。
 
-用法：python3 tools/make_report_tables.py --stage A2|A3 --out docs/reports/20261008_v0.1-An_對照.xlsx --report <報告.md> [--md build_out/report_tables.md]
+用法：python3 tools/make_report_tables.py --stage A2|A3|A4 --out docs/reports/20261008_v0.1-An_對照.xlsx --report <報告.md> [--md build_out/report_tables.md]
 三頁：①本段新增或變動的每一列（頁、編號／ID、列名、值、來源／標記）；②本段關鍵輸出 FY2025–2030；③已套用的預設。
+A4（v0.1 完成報告）另加：④A1–A4 已套用的預設彙總（報告中以「| # | 段 |」開頭的表；規格層級另一表以「| ID | 規格預設」開頭）；⑤關鍵驅動敏感度（build_out/sensitivity.json，tools/sensitivity.py 產生）。
 數值一律讀現行活頁簿（LibreOffice 重算後的快取值）；③的文字取自 docs/reports/<報告>.md 的「已套用的預設」表（同一份內容，不另抄）。
 """
 import argparse
@@ -63,6 +64,48 @@ KEY_OUT_A3 = [
 ]
 
 
+# A4：② 第一部分＝融資（命題 2），其後為命題 1 三種口徑、情境、反向、OpenAI 並排
+KEY_OUT_A4 = [
+    ("Funding", "FND_FCF", "自由現金流（營收淨額 − 算力 − 非算力，不含股權報酬）"), ("Funding", "FND_Committed", "已到位融資（來源順序 ②）"),
+    ("Funding", "FND_EquityIn", "計入基準的股權流入"), ("Funding", "FND_MinCash", "最低現金（D17）"), ("Funding", "FND_CashOpen", "期初現金"),
+    ("Funding", "FND_ExtNeed", "當年外部資金需求（命題 2）"), ("Funding", "FND_ExtNeedCum", "累計外部資金需求（命題 2）"), ("Funding", "FND_CashEnd", "年底現金"),
+    ("Funding", "FND_Headroom", "現金餘裕（年底現金 − 最低現金）"), ("Funding", "FND_CashNoExt", "只靠已到位融資的年底現金"),
+    ("Cost", "COST_PropGap_VR", "命題 1｜每 VR 等值 GW 差額（現金，含股權報酬）"), ("Cost", "COST_PropGapEcon_VR", "命題 1｜經濟口徑每 VR 等值 GW 差額"),
+    ("Cost", "COST_PropGap_GW", "命題 1｜每實體 GW 差額"), ("Cost", "COST_Coverage", "覆蓋率"), ("Cost", "COST_GapCash", "差額（$B）"),
+    ("Cost", "COST_ComputeAnchor", "敏感度｜算力成本（逐家錨定招股書）"), ("Cost", "COST_PropGap_VR_Anchor", "敏感度｜每 VR 等值 GW 差額（錨定招股書）"),
+    ("Cost", "COST_LeaseRent", "敏感度｜機房租約租金"), ("Cost", "COST_PropGap_VR_Rent", "敏感度｜每 VR 等值 GW 差額（加計租金）"),
+    ("Cost", "COST_D22DeltaNC", "敏感度｜D22 非算力成本增加"), ("Cost", "COST_PropGap_VR_D22", "敏感度｜每 VR 等值 GW 差額（D22 補足）"),
+    ("Funding", "FND_ExtNeedCumIPO", "情境 S1｜＋IPO：累計外部資金需求"), ("Funding", "FND_CashEndIPO", "情境 S1｜＋IPO：年底現金"),
+    ("Funding", "FND_ExtNeedCumCond", "情境 S2｜＋條件式：累計外部資金需求"), ("Funding", "FND_ExtNeedCumAll", "情境 S3｜＋IPO＋條件式：累計外部資金需求"),
+    ("Funding", "FND_CashEndAll", "情境 S3｜年底現金"), ("Funding", "FND_ExtNeedCumAnchor", "情境 S4｜錨定招股書：累計外部資金需求"),
+    ("Funding", "FND_ExtNeedCumRent", "情境 S5｜機房租金：累計外部資金需求"), ("Funding", "FND_ExtNeedCumD22", "情境 S6｜D22：累計外部資金需求"),
+    ("Funding", "FND_ExtNeedCumAdverse", "情境 S7｜S4＋S5＋S6：累計外部資金需求"),
+    ("Reverse", "RVS_Target", "反向｜管理層營收目標"), ("Reverse", "RVS_Gap", "反向｜目標 − 正向"), ("Reverse", "RVS_MultAPI", "反向｜只靠 API 倍數"),
+    ("Reverse", "RVS_MultSub", "反向｜只靠訂閱倍數"), ("Reverse", "RVS_MultProp", "反向｜兩線等比例倍數"), ("Reverse", "RVS_FCF", "反向｜自由現金流"),
+    ("Reverse", "RVS_ExtNeedCum", "反向｜累計外部資金需求"), ("Reverse", "RVS_CashEnd", "反向｜年底現金"),
+    ("OAI_Link", "OAI_COST_PropGap_VR", "OpenAI v0.6｜每 VR 等值 GW 差額"), ("OAI_Link", "OAI_COST_Coverage", "OpenAI v0.6｜覆蓋率"),
+    ("OAI_Link", "OAI_FND_ExtNeed", "OpenAI v0.6｜當年外部資金需求"), ("OAI_Link", "OAI_FND_ExtNeedCum", "OpenAI v0.6｜累計外部資金需求"),
+    ("OAI_Link", "OAI_FND_CashEnd", "OpenAI v0.6｜年底現金"),
+]
+
+
+def table_from_md(md: Path, head: str):
+    """讀報告中第一個以 head 開頭的 Markdown 表。"""
+    out, on = [], False
+    for ln in md.read_text(encoding="utf-8").splitlines():
+        if ln.startswith(head):
+            on = True
+            out.append([c.strip() for c in ln.strip("|").split("|")])
+            continue
+        if on:
+            if not ln.startswith("|"):
+                break
+            if re.match(r"^\|[-| ]+\|$", ln):
+                continue
+            out.append([c.strip() for c in ln.strip("|").split("|")])
+    return out
+
+
 def name_values(wb, names, n):
     sh, rng = names[n].split("!")
     return [c.value for row in wb[sh][rng.replace("$", "")] for c in row]
@@ -94,13 +137,15 @@ def sheet1(a, wb):
     ws = out.active
     ws.title = "①新增與變動列"
     ws.append(["頁", "編號／ID", "列名", "單位", "值（2025 或單值）", "值（2030）", "來源／標記", "說明"])
-    if a.stage == "A3":
+    if a.stage == "A4":
+        stage_a4_rows(wb, ws)
+    elif a.stage == "A3":
         stage_a3_rows(wb, ws)
     else:
         stage_a2_rows(wb, ws)
     for c, w in zip("ABCDEFGH", (10, 22, 60, 14, 16, 14, 18, 70)):
         ws.column_dimensions[c].width = w
-    key_out = KEY_OUT_A3 if a.stage == "A3" else KEY_OUT
+    key_out = {"A3": KEY_OUT_A3, "A4": KEY_OUT_A4}.get(a.stage, KEY_OUT)
     return out, names, key_out
 
 
@@ -131,6 +176,37 @@ def stage_a3_rows(wb, ws):
     for r in range(5, s.max_row + 1):
         cid = str(s.cell(r, 1).value or "")
         if re.fullmatch(r"C\d+", cid) and int(cid[1:]) >= 49:
+            ws.append(["Checks", cid, s.cell(r, 2).value, None, s.cell(r, 3).value, None, s.cell(r, 5).value, s.cell(r, 6).value])
+
+
+def stage_a4_rows(wb, ws):
+    """A4 新增或變動：Inputs INP_165 起、Cost 第十二節起、Funding、Reverse 每列、Checks C83 起。"""
+    s = wb["Inputs"]
+    for r in range(5, s.max_row + 1):
+        iid = s.cell(r, 1).value
+        if iid and int(iid[4:]) >= 165:
+            ws.append(["Inputs", iid, f"{s.cell(r, 2).value}（{s.cell(r, 3).value}）", s.cell(r, 4).value, s.cell(r, 5).value, None,
+                       s.cell(r, 8).value, f"低 {s.cell(r, 6).value}／高 {s.cell(r, 7).value}；{s.cell(r, 9).value}"])
+    s = wb["Cost"]
+    on = False
+    for r in range(7, s.max_row + 1):
+        code, lab = s.cell(r, 1).value, s.cell(r, 2).value
+        if isinstance(code, str) and code.startswith("十二"):
+            on = True
+        if lab == "對照：每實體 GW 差額（含股權報酬）":
+            ws.append(["Cost", code, lab, s.cell(r, 3).value, s.cell(r, 4).value, s.cell(r, 9).value, "公式（變動：新增具名範圍 COST_PropGap_GW）", s.cell(r, 11).value])
+        if on and code and lab and re.fullmatch(r"K\d+", str(code)):
+            ws.append(["Cost", code, lab, s.cell(r, 3).value, s.cell(r, 4).value, s.cell(r, 9).value, "公式（A4 新增）", s.cell(r, 11).value])
+    for sh, pre in (("Funding", "F"), ("Reverse", "X")):
+        s = wb[sh]
+        for r in range(7, s.max_row + 1):
+            code, lab = s.cell(r, 1).value, s.cell(r, 2).value
+            if code and lab and re.fullmatch(pre + r"\d+", str(code)):
+                ws.append([sh, code, lab, s.cell(r, 3).value, s.cell(r, 4).value, s.cell(r, 9).value, "公式", s.cell(r, 11).value])
+    s = wb["Checks"]
+    for r in range(5, s.max_row + 1):
+        cid = str(s.cell(r, 1).value or "")
+        if re.fullmatch(r"C\d+", cid) and int(cid[1:]) >= 83:
             ws.append(["Checks", cid, s.cell(r, 2).value, None, s.cell(r, 3).value, None, s.cell(r, 5).value, s.cell(r, 6).value])
 
 
@@ -198,6 +274,26 @@ def main():
         ws3.append(row)
     for c, w in zip("ABCDE", (5, 40, 60, 40, 60)):
         ws3.column_dimensions[c].width = w
+    if a.stage == "A4":
+        ws4 = out.create_sheet("④A1–A4 預設彙總")
+        for row in table_from_md(a.report, "| ID | 規格預設"):
+            ws4.append(row)
+        ws4.append([])
+        for row in table_from_md(a.report, "| # | 段 |"):
+            ws4.append(row)
+        for c, w in zip("ABCDEF", (6, 8, 40, 60, 40, 60)):
+            ws4.column_dimensions[c].width = w
+        import json
+        sj = json.loads((REPO / "build_out" / "sensitivity.json").read_text(encoding="utf-8"))
+        ws5 = out.create_sheet("⑤敏感度")
+        ws5.append(["排名", "驅動", "群組", "設定（低）", "設定（高）", "2030 營收淨額 低", "高", "2027 差額 低", "高", "2030 差額 低", "高",
+                    "累計外部資金需求 低", "高", "現金谷底 低", "高"])
+        ws5.append([0, "基準", "", "", "", sj["base"]["rev30"], None, sj["base"]["gap27"], None, sj["base"]["gap30"], None, sj["base"]["cum30"], None,
+                    sj["base"]["trough"], None])
+        for i, d in enumerate(sj["drivers"], 1):
+            ws5.append([i, d["driver"], d["group"], str(d["lo_set"]), str(d["hi_set"]), d["lo"]["rev30"], d["hi"]["rev30"], d["lo"]["gap27"], d["hi"]["gap27"],
+                        d["lo"]["gap30"], d["hi"]["gap30"], d["lo"]["cum30"], d["hi"]["cum30"], d["lo"]["trough"], d["hi"]["trough"]])
+        ws5.column_dimensions["B"].width = 36
     for w_ in out.worksheets:
         for c in w_[1]:
             c.font, c.fill = BOLD, HDR
