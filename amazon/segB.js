@@ -518,7 +518,13 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
   // v0.2：建設延誤一句（閒置資本峰值）
   let dm = S0.delayMonths ?? 0, idl = d.years.map(t => t.idleCap || 0), ipk = Math.max(...idl), ipi = idl.indexOf(ipk),
     delayLine = dm > 0 ? `建設延誤 ${multTxt(dm)} 個月（GPU 資本支出照原時程）：閒置資本（已支出、尚未產生收入）峰值 $${Y(ipk, 1)}bn（${PERIODS[ipi]} 末）。` : `建設延誤：本情境 0 個月（無閒置資本）。`;
-  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, adjLine, delayLine, junk: jk }
+  // MAG v0.1b：股東回饋與 FCF 句（一頁摘要；Excel「摘要」同句，cmp31 逐字比對）
+  let Yd = d.years, fn = Yd.findIndex(t => t.fcf < 0), bp = Yd.reduce((a, t) => a + t.buybackPlan, 0), bcut = Yd.map((t, i) => [PERIODS[i], t.buybackCut]).filter(x => x[1] > .05),
+    ndS = Yd.reduce((a, t) => a + t.newDebt + t.junk, 0), eqS = Yd.reduce((a, t) => a + t.equity, 0),
+    fcfLine = `股東回饋與 FCF：FCF ${fn < 0 ? `五期皆為正` : `首次為負 ${PERIODS[fn]}（−$${Y(-Yd[fn].fcf, 1)}bn）`}；` +
+      (bp <= .05 ? `無回購計畫（減少回購步驟不適用）` : bcut.length ? `回購被迫減少：${bcut.map(x => `${x[0]} $${Y(x[1], 1)}`).join(`、`)}bn` : `回購未被迫減少`) +
+      `；五期新債 $${Y(ndS, 1)}bn、股權 $${Y(eqS, 1)}bn。`;
+  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, adjLine, delayLine, junk: jk, fcfLine }
 }
 
 // v4.4：差異原因的共用工具（年度共識對照與季度層共用）。類型固定為四種（已決定事項 2）；原因文字中的 {路徑:格式} 由模型數字帶入。

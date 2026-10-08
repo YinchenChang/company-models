@@ -173,11 +173,12 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
+| `ytdActual.buyback` | 年初至今回購（MAG v0.1b） | US$bn | 0 | 必改 |
 | `ytdActual.throughQuarter` | 年初至今實際數的截止財季，須等於 calendar.latestQuarterFiled（v4.5，原 actual1H） | 文字 | 2026Q2 | 必改 |
 | `ytdActual.months` | 年初至今的月數，須等於日曆推算值（v4.5） | 月 | 6 | 必改 |
 | `ytdActual.label` | 「年初至今實際數」的標題 | 文字 | 1H26 實際（10-Q） | 必改 |
 | `ytdActual.jvSplit` | JV 出資與策略投資的拆分（v4.5；說明文字與「JV 已付」讀此） | 物件（US$bn） | 物件（jv、strategic） | 必改 |
-| `ytdActual.notes` | 各欄位的逐列說明（來源、口徑、拆分；Excel「輸入與假設」G 區；v4.5 起隨資料一起更新） | 物件（文字） | 物件（cash1231、cfo、cashCapex、capex、jv、borrow、debtRepaid、cappedCall、equity、interest、leasePaid、revenue、opInc、ni、prepay、da、sbc、eps、ngEps、dividends） | 必改 |
+| `ytdActual.notes` | 各欄位的逐列說明（來源、口徑、拆分；Excel「輸入與假設」G 區；v4.5 起隨資料一起更新） | 物件（文字） | 物件（cash1231、cfo、cashCapex、capex、jv、borrow、debtRepaid、cappedCall、equity、interest、leasePaid、revenue、opInc、ni、prepay、da、sbc、eps、ngEps、dividends、buyback） | 必改 |
 | `ytdActual.cash1231` | 上一年底現金 | US$bn | 123.029 | 必改 |
 | `ytdActual.revenue` | 上半年營收 | US$bn | 382.125 | 必改 |
 | `ytdActual.capex` | 上半年資本支出（認列口徑，含設備商融資） | US$bn | 96.31 | 必改 |
@@ -445,6 +446,11 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `defaults.legacyBiz.cxNote` | 各線資本支出強度（cx）的依據 | 文字 | cx＝非 AI 資本支出占全年營收比：零售、廣告、訂… | 必改 |
+| `defaults.buyback.annual` | 回購基準年額（近四季實際；瀑布第二步「減少回購」的計畫值；MAG v0.1b） | US$bn | 0 | 必改 |
+| `defaults.buyback.floorShare` | 回購可減到計畫的比例下限（0＝可全數取消） | 比例 | 0 | 檢查 |
+| `defaults.buyback.note` | 回購基準的來源 | 文字 | 回購基準＝近四季實際年額（Amazon 2023 年… | 必改 |
+| `defaults.sbcRate` | 股權報酬（SBC）占營收：非現金費用，營運現金加回（MAG v0.1b） | 比例 | 0.024899 | 檢查 |
+| `defaults.sbcNote` | SBC 加回的口徑說明 | 文字 | 股權報酬（SBC）為非現金費用：分部營業利益已扣除，… | 必改 |
 | `defaults.scenario` | 開啟時的預設情境（low／base／high） | 文字 | base | 檢查 |
 | `defaults.revenueDriver` | 營收驅動：mw＝平均在役 MW × 每 MW 年收入 × 利用率（新產能簽約率固定 100%，RPO 只作對照）；rpo＝CRWV 模板的 RPO 排程＋新簽約（v0.1b） | 代碼 | mw | 檢查 |
 | `defaults.lambda` | 提前支出比例：次年才上線的 MW，其建置支出落在前一年的比例 | 比例 | 0.35 | 檢查 |

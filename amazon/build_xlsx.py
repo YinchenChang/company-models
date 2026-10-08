@@ -368,6 +368,7 @@ for _c in _RCL:
 r = prow(r, "租用算力租金（營運成本）", "US$bn", [("=" + "+".join(f"{a_}*{COLS[i]}{y_}" for a_, y_ in _RTR)) if _RTR else "=0" for i in range(5)], NUM,
          CO['leases'].get('rentedComputeNote', "租用算力租金") if not _RTR else "＝Σ 年租金 × 在租年數（扣 EBITDA 與營運現金；不是資本支出）", BLACK)
 r = prow(r, "其他事業 EBITDA", "US$bn", [f"={COLS[i]}{IN['其他事業 EBITDA（輸入）']}-{COLS[i]}{IN['租用算力租金（營運成本）']}" for i in range(5)], NUM, "＝輸入 − 租用算力租金（下游引用此列）", BLACK)
+SBCR = gi(r, "股權報酬占營收（SBC，非現金加回）", "%", D.get('sbcRate', 0), D.get('sbcNote', '不加回'), '0.00%'); r += 1
 # MAG v0.1b：B0｜對外 AI 雲端定價（company.json → pricing；HTML segA revPathQ 同式）
 if PRC:
     r = section(ws, r, "B0｜對外 AI 雲端定價：每 MW 年收入＝Σ 在役世代占比 × Tokenomics 持有成本 × 晶片係數 × k（收入端不乘 IF_Util）", level=2)
@@ -664,6 +665,9 @@ DVB = D.get('dividend') or {'perShareQ': 0, 'sharesBase': 0, 'preferred': [0] * 
 DPS = gi(r, "普通股股利（每股每季）", "US$", DVB['perShareQ'], "每季 $0.50 [Interested-party]；不回購（company.json → defaults.dividend）", USD); r += 1
 DSB = gi(r, "股利基礎股數", "bn", DVB['sharesBase'], "最新流通股；另加前期累計瀑布新股與已強制轉換的特別股", '0.0000'); r += 1
 MINC = gi(r, "最低現金", "US$bn", D['minCash'], "期前融資的現金底線 [Assumed]"); r += 1
+_BBK = D.get('buyback') or {'annual': 0, 'floorShare': 0, 'note': ''}  # MAG v0.1b：股東回饋——回購（瀑布第二步：現金不足時先減，下限＝計畫 × floorShare）
+BBANN = gi(r, "回購基準（年額）", "US$bn", _BBK['annual'], _BBK.get('note', '')); r += 1
+BBFL = gi(r, "回購下限（占計畫）", "%", _BBK.get('floorShare', 0), "0＝缺口時可全數取消回購（對照表 r1 第 5 節第 8 條）", PCT); r += 1
 EQPX = gi(r, "股權發行價", "US$", D['eqPx'], f"預設＝現價（{CO['meta']['priceDate']} 收盤）[Verified]", USD); r += 1
 EQDISC = gi(r, "股權發行折價", "%", D['eqDisc'], "大額增資的折讓 [Assumed]", PCT); r += 1
 EQCAP = gi(r, "每年股權吸收上限（占現市值）", "%", D['eqCapPct'], "沿用模板 20%；輸入 ≥900% 視為無上限 [Assumed]", PCT); r += 1
@@ -791,13 +795,14 @@ h1_rows = [(lab, "US$" if k in ('eps', 'ngEps') else "US$bn", YA[k], YA['notes']
      "＋".join(f"{k.upper()} {YA['adjEbitdaMeta'][k]:.3f}" for k in sorted(YA['adjEbitdaMeta']) if re.fullmatch(r'q\d', k)) + "；"
      + "；".join(f"{x['quarter']} {x['name']}" for x in YA['adjEbitdaMeta']['sources'])
      + f"；{YA['adjEbitdaMeta']['crossCheck']}。{YA['adjEbitdaMeta']['note']} [{YA['adjEbitdaMeta']['tag']}]"),
+    ("回購（買回庫藏股）", "US$bn", YA.get('buyback', 0), YA['notes'].get('buyback', '')),  # MAG v0.1b
 ]
 start_h1 = r
 for nm, un, v, nt in h1_rows:
     gi(r, nm, un, v, nt)
     r += 1
 (H_CASH1231, H_CFO, H_CCAPEX, H_CAPEX, H_JV, H_BORROW, H_REPAY, H_CAP, H_EQ,
- H_INT, H_LEASE, H_REV, H_OPINC, H_NI, H_PREPAY, H_DA, H_SBC, H_EPS, H_NGEPS, H_DIV, H_ADJEB) = [f"'輸入與假設'!$C${start_h1 + i}" for i in range(len(h1_rows))]
+ H_INT, H_LEASE, H_REV, H_OPINC, H_NI, H_PREPAY, H_DA, H_SBC, H_EPS, H_NGEPS, H_DIV, H_ADJEB, H_BB) = [f"'輸入與假設'!$C${start_h1 + i}" for i in range(len(h1_rows))]
 # resolve forward references
 for row in ws.iter_rows():
     for cc in row:
@@ -1162,6 +1167,8 @@ frow("⑧ 股利（普通股＋特別股）", "US$bn",
      lambda i: ((f"={H_DIV}+" if i == 0 else "=") + f"4*{DPS}*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}*({DSB}+§CNSP{i}§+§MCSH{i}§)+{inref('特別股股利', i)}"), NUM, BLACK,
      "普通股＝每股每季 × 4 × 期間長度 ×(基礎股數＋前期累計瀑布新股＋已強制轉換特別股)＋特別股股利；«P0»＝«YTD» 實際＋«STUB» 模型（v0.1b）")
 div_row = FR["⑧ 股利（普通股＋特別股）"]
+frow("⑨ 回購（瀑布：現金不足時先減）", "US$bn", lambda i: "=0", NUM, BLACK, "«P0»＝«YTD» 實際＋«STUB» 瀑布後實際回購；計畫與被迫減少見下方「期前融資瀑布」（MAG v0.1b）")
+bb_use = FR["⑨ 回購（瀑布：現金不足時先減）"]
 frow("　電力（overlay）", "US$bn",
      lambda i: (f"=IF({OVERLAY}=1,'運營_產能與收入'!{COLS[i]}{CAP['acc']}*8760*{inref('PUE', i)}*{inref('電價', i)}/1000000000*"
                 f"'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']},0)"), NUM, BLACK,
@@ -1184,7 +1191,7 @@ tax_row = FR["⑦ 現金稅（«STUB» 起）"]
 frow("用途合計（現金口徑）", "US$bn",
      lambda i: (f"={COLS[i]}{FR['① CapEx（用途用：«YTD» 現金／«STUB» 毛額）']}+{COLS[i]}{FR['　租金合計']}+{COLS[i]}{int_row}+"
                 f"{COLS[i]}{FR['④ JV／策略投資出資']}+{COLS[i]}{FR['　電力（overlay）']}+"
-                f"{COLS[i]}{FR['　維護（overlay）']}+{COLS[i]}{debt_row}+{COLS[i]}{FR['⑥ capped call 支出（«YTD» 實際）']}+{COLS[i]}{tax_row}+{COLS[i]}{div_row}"),
+                f"{COLS[i]}{FR['　維護（overlay）']}+{COLS[i]}{debt_row}+{COLS[i]}{FR['⑥ capped call 支出（«YTD» 實際）']}+{COLS[i]}{tax_row}+{COLS[i]}{div_row}+{COLS[i]}{bb_use}"),
      NUM, BLACK,
      "«P0» 的 «YTD» 部分採季報現金流量表口徑（現金購置、還款、JV、capped call）；«YTD» 的利息與租金已含在 CFO 內，不重複列",
      bold=True)
@@ -1203,16 +1210,21 @@ frow("Ⓒ3 非 AI 事業 EBITDA（«STUB» 起）", "US$bn", lambda i: f"={inref
      "各線 EBITDA − 其他攤銷（視為等額現金支出），視為現金（現金稅另列於用途；MAG v0.1b）")
 frow("Ⓒ4 減：延誤罰則（營業費用）", "US$bn", lambda i: f"=-'運營_產能與收入'!{COLS[i]}{CAP['pen']}", NUM, BLACK,
      "建設延誤期間應計費而未計費營收 × 罰則比例（預設 0；v0.2）")
+frow("Ⓒ5 加回：股權報酬（非現金）", "US$bn", lambda i: f"={SBCR}*('運營_產能與收入'!{COLS[i]}{CAP['totrev']}+{inref('非 AI 事業營收（模型期）', i)})", NUM, BLACK,
+     "＝SBC 占營收 × 模型期總營收（分部營業利益已扣 SBC；«YTD» 已含在實際 CFO；MAG v0.1b）")
 frow("Ⓓ 客戶預付（«STUB» 起）", "US$bn",
      lambda i: f"={COLS[i]}{FR['　客戶預付金額（抵減，«STUB» 起）']}", NUM, BLACK)
 frow("Ⓓ2 減：預付認列（非現金營收）", "US$bn", lambda i: f"=-{COLS[i]}{pr_row}", NUM, BLACK,
      "營收中由合約負債轉入的部分已在預付時收現，不重複計入服務現金（v0.1b）")
 frow("營運來源合計", "US$bn",
      lambda i: (f"={COLS[i]}{FR['Ⓐ0 «YTDL» 實際營運現金流（CFO）']}+{COLS[i]}{FR['Ⓐ RPO 現金（«STUB» 起）']}+"
-                f"{COLS[i]}{FR['Ⓑ 新簽約現金']}+{COLS[i]}{FR['Ⓒ 非算力服務現金']}+{COLS[i]}{FR['Ⓒ2 其他事業 EBITDA（«STUB» 起）']}+{COLS[i]}{FR['Ⓒ3 非 AI 事業 EBITDA（«STUB» 起）']}+{COLS[i]}{FR['Ⓒ4 減：延誤罰則（營業費用）']}+{COLS[i]}{FR['Ⓓ 客戶預付（«STUB» 起）']}+"
+                f"{COLS[i]}{FR['Ⓑ 新簽約現金']}+{COLS[i]}{FR['Ⓒ 非算力服務現金']}+{COLS[i]}{FR['Ⓒ2 其他事業 EBITDA（«STUB» 起）']}+{COLS[i]}{FR['Ⓒ3 非 AI 事業 EBITDA（«STUB» 起）']}+{COLS[i]}{FR['Ⓒ4 減：延誤罰則（營業費用）']}+{COLS[i]}{FR['Ⓒ5 加回：股權報酬（非現金）']}+{COLS[i]}{FR['Ⓓ 客戶預付（«STUB» 起）']}+"
                 f"{COLS[i]}{FR['Ⓓ2 減：預付認列（非現金營收）']}"),
      NUM, BLACK, bold=True)
 srcop_row = FR["營運來源合計"]
+frow("自由現金流（FCF＝營運現金 − 現金資本支出）", "US$bn", lambda i: f"={COLS[i]}{srcop_row}-{COLS[i]}{tax_row}-{COLS[i]}{int_row}-{COLS[i]}{FR['① CapEx（用途用：«YTD» 現金／«STUB» 毛額）']}", NUM, BLACK,
+     "公司定義近似：營運來源（«P0» 含 «YTD» 實際 CFO）− 現金稅 − 利息 − 現金資本支出（不扣融資租賃本金）；一頁摘要「FCF 首次為負的年份」（MAG v0.1b）", bold=True)
+fcf_row = FR["自由現金流（FCF＝營運現金 − 現金資本支出）"]
 frow("Ⓔ 股權／可轉債（融資）", "US$bn",
      lambda i: (f"={H_EQ}+IF({ATMON}=1,{ATM},0)" if i == 0 else "=0"), NUM, BLACK,
      CO['texts']['fy0EquityNote'])
@@ -1236,7 +1248,7 @@ src_row = FR["總來源（含融資）"]
 
 r = section(ws, r, "缺口與現金橋")
 frow("　«YTD» 其他／受限現金調節", "US$bn",
-     lambda i: (f"={CASH0}-({H_CASH1231}+{H_CFO}+{H_BORROW}+{H_EQ}-{H_CCAPEX}-{H_JV}-{H_REPAY}-{H_CAP}-{H_DIV})"
+     lambda i: (f"={CASH0}-({H_CASH1231}+{H_CFO}+{H_BORROW}+{H_EQ}-{H_CCAPEX}-{H_JV}-{H_REPAY}-{H_CAP}-{H_DIV}-{H_BB})"
                 if i == 0 else "=0"), NUM, BLACK,
      "使 «YTD» 實際流量接回 «VMD» 現金餘額；差額來自受限現金重分類與未逐項列出的項目")
 plug_row = FR["　«YTD» 其他／受限現金調節"]
@@ -1314,6 +1326,18 @@ frow("融資前現金（扣既有新債利息）", "US$bn",
 pre_row = FR["融資前現金（扣既有新債利息）"]
 frow("融資需求（補足至最低現金）", "US$bn", lambda i: f"=MAX(0,{MINC}-{COLS[i]}{pre_row})", NUM, BLACK, bold=True)
 need_row = FR["融資需求（補足至最低現金）"]
+frow("回購計畫（基準年額 × 期間長度）", "US$bn", lambda i: f"={BBANN}*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}", NUM, BLACK, "MAG v0.1b：瀑布第二步（現金之後、新債之前）")
+bbp_row = FR["回購計畫（基準年額 × 期間長度）"]
+frow("回購（實際，減少後）", "US$bn", lambda i: f"=MIN({COLS[i]}{bbp_row},MAX({COLS[i]}{bbp_row}*{BBFL},{COLS[i]}{pre_row}-{MINC}))", NUM, BLACK, "＝MIN(計畫, MAX(下限, 融資前現金 − 最低現金))", bold=True)
+bba_row = FR["回購（實際，減少後）"]
+frow("回購被迫減少", "US$bn", lambda i: f"={COLS[i]}{bbp_row}-{COLS[i]}{bba_row}", NUM, BLACK, "＝計畫 − 實際（一頁摘要「回購被迫減少的年份與金額」）")
+bbc_row = FR["回購被迫減少"]
+frow("回購股數", "bn", lambda i: f"={COLS[i]}{bba_row}/MAX(0.01,{EQPX})", '0.000', BLACK, "＝實際回購 ÷ 發行參考價（現價）")
+bbs_row = FR["回購股數"]
+for i in range(5):
+    ws.cell(row=need_row, column=3 + i, value=f"=MAX(0,{MINC}-({COLS[i]}{pre_row}-{COLS[i]}{bba_row}))")
+    ws.cell(row=bb_use, column=3 + i, value=(f"={H_BB}+{COLS[i]}{bba_row}" if i == 0 else f"={COLS[i]}{bba_row}"))
+ws.cell(row=need_row, column=9, value="＝MAX(0, 最低現金 −(融資前現金 − 實際回購))").font = SMALL
 frow("期初 backlog", "US$bn", lambda i: (f"={RPO0}+{RPOADD}" if i == 0 else "=0"), NUM, BLACK,
      f"«P0» 期初＝«VMD» RPO {D['rpoOpen']}＋期後新增 {D['rpoPendingAdd']}")
 bl_beg = FR["期初 backlog"]
@@ -1373,10 +1397,10 @@ frow("發行價（現價×(1−折價)）", "US$", lambda i: f"={EQPX}*(1-{EQDIS
 px_row = FR["發行價（現價×(1−折價)）"]
 frow("新發行股數", "bn", lambda i: f"={COLS[i]}{eq_row}/{COLS[i]}{px_row}", '0.000', BLACK)
 ns_row = FR["新發行股數"]
-frow("累計新股", "bn", lambda i: (f"={COLS[i]}{ns_row}" if i == 0 else f"={COLS[i-1]}{{r}}+{COLS[i]}{ns_row}"), '0.000', BLACK, bold=True)
+frow("累計新股", "bn", lambda i: (f"={COLS[i]}{ns_row}-{COLS[i]}{bbs_row}" if i == 0 else f"={COLS[i-1]}{{r}}+{COLS[i]}{ns_row}-{COLS[i]}{bbs_row}"), '0.000', BLACK, bold=True)
 cns_row = FR["累計新股"]
 for i in range(1, 5):
-    ws.cell(row=cns_row, column=3 + i, value=f"={COLS[i-1]}{cns_row}+{COLS[i]}{ns_row}")
+    ws.cell(row=cns_row, column=3 + i, value=f"={COLS[i-1]}{cns_row}+{COLS[i]}{ns_row}-{COLS[i]}{bbs_row}")  # MAG v0.1b：淨新股（扣回購股數）
 frow("新債期末餘額", "US$bn", lambda i: f"={COLS[i]}{dn_beg}+{COLS[i]}{nd_row}", NUM, BLACK)
 dn_end = FR["新債期末餘額"]
 frow("未動用額度（期末）", "US$bn", lambda i: f"={COLS[i]}{fr_beg}-MIN({COLS[i]}{fr_beg},{COLS[i]}{nd_row})", NUM, BLACK)
@@ -3455,6 +3479,13 @@ _AL = lambda c: f"'資產負債_新債與新股'!{c}{NB['調整後槓桿（(總�
 srow("結論｜調整後槓桿句", "", [(f'="調整後槓桿（(債務＋租賃負債) ÷ (EBITDA＋租金)）路徑 "&' + '&"／"&'.join(f'TEXT({_AL(c)},"0.0")' for c in COLS)
                           + f'&"×；上限 "&{_MT(LEV)}&"×，"&IF(MAX({_ALR})>{LEV}+1E-9,CHOOSE(MATCH(MAX({_ALR}),{_ALR},0),{_PLB})&" 超過 "&TEXT(MAX({_ALR})-{LEV},"0.0")&"×：需股權或失去投資級。",'
                           f'"最小空間 "&TEXT({LEV}-MAX({_ALR}),"0.0")&"×（"&CHOOSE(MATCH(MAX({_ALR}),{_ALR},0),{_PLB})&"）。")')], bold=True)
+_FC = lambda c: f"'各期收支'!{c}{fcf_row}"  # MAG v0.1b：股東回饋與 FCF 句
+_fcf_first = "".join(f'IF({_FC(c)}<0,"首次為負 {PERIODS[i]}（−$"&TEXT(-{_FC(c)},"0.0")&"bn）",' for i, c in enumerate(COLS)) + '"五期皆為正"' + ")" * 5
+_BBC = lambda c: f"'各期收支'!{c}{bbc_row}"
+_bcl = "&".join(f'IF({_BBC(c)}>0.05,"、{PERIODS[i]} $"&TEXT({_BBC(c)},"0.0"),"")' for i, c in enumerate(COLS))
+srow("結論｜股東回饋與 FCF 句", "", [(f'="股東回饋與 FCF：FCF "&{_fcf_first}&"；"&IF(SUM(\'各期收支\'!C{bbp_row}:G{bbp_row})<=0.05,"無回購計畫（減少回購步驟不適用）",'
+                                f'IF(SUM(\'各期收支\'!C{bbc_row}:G{bbc_row})>0,"回購被迫減少："&MID({_bcl},2,999)&"bn","回購未被迫減少"))'
+                                f'&"；五期新債 $"&TEXT(SUM(\'各期收支\'!C{nd_row}:G{nd_row})+SUM(\'各期收支\'!C{jd_row}:G{jd_row}),"0.0")&"bn、股權 $"&TEXT(SUM(\'各期收支\'!C{eq_row}:G{eq_row}),"0.0")&"bn。"')], bold=True)
 srow("結論｜延誤句", "", [(f'=IF({DLY}>0,"建設延誤 "&{_MT(DLY)}&" 個月（GPU 資本支出照原時程）：閒置資本（已支出、尚未產生收入）峰值 $"&TEXT(MAX({_IDR}),"0.0")'
                          f'&"bn（"&CHOOSE(MATCH(MAX({_IDR}),{_IDR},0),{_PLB})&" 末）。","建設延誤：本情境 0 個月（無閒置資本）。")')])
 

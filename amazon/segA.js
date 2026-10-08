@@ -465,13 +465,17 @@ function runFunding(e) {
         dvSh = e.dividend ? e.dividend.sharesBase + WF.sh + CVN.reduce((a, n) => a + (n.mand && n.t < r ? n.S : 0), 0) : 0, // v0.1b（Oracle）：股利股數＝期初股數（基礎＋前期累計瀑布新股＋已強制轉換的特別股）
         dvC = e.dividend ? 4 * e.dividend.perShareQ * L * dvSh : 0, // 普通股股利＝每股（每季 × 4）× 期間長度 × 期初股數
         dvP = e.dividend ? e.dividend.preferred[r] : 0, // 特別股股利（強制轉換前；company.json → defaults.dividend.preferred）
-        A = g + nC + svcCash + ob + lgE - lgO - pen + v - pr, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
+        sbcC = (e.sbcRate ?? 0) * (totRev + lgR), // MAG v0.1b：股權報酬（非現金）加回營運現金＝SBC 占營收 × 模型期總營收
+        A = g + nC + svcCash + ob + lgE - lgO - pen + v - pr + sbcC, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
         j0 = _ + S + IX[r] + e.jvCommit[r] + e.a.div[r] + T + O + tx + dvC + dvP,
         wRL = uA(e, r) / 100 * L,
         wRJ = (e.junkRate + (e.cdsLink ? Math.max(0, e.cds - e.cdsBaseBp) / 1e4 * e.cdsPassThrough : 0)) * L,
         wRC = e.convIssue.coupon * L, // v0.1b：瀑布可轉債票息 × 期間長度
         wI0 = wRL * WF.Dn + wRJ * WF.Jn + wRC * WF.Cn,
-        wPre = a + A + k - j0 - wI0,
+        wPre0 = a + A + k - j0 - wI0,
+        // MAG v0.1b：瀑布第二步「減少回購」——計畫回購＝基準年額 × 期間長度；實際＝MIN(計畫, MAX(下限, 融資前現金 − 最低現金))；不足才進入新債
+        bbP = (e.buyback?.annual ?? 0) * L, bbA = Math.min(bbP, Math.max(bbP * (e.buyback?.floorShare ?? 0), wPre0 - e.minCash)), bbSh = bbA / Math.max(e.eqPx, .01),
+        wPre = wPre0 - bbA,
         wX = Math.max(0, e.minCash - wPre),
         wB = WF.B - o - nR + e.ctrTerm * Math.max(0, nR / L - WF.pnr),
         wEx = (e.includeDebt ? PB[r][1] : DBT_P) + CONV_P + CVP[r].end, // 5a：評價日後新發可轉債本金讀 company.json → debt.convertible；v0.1b：加債務處理可轉債餘額
@@ -489,7 +493,7 @@ function runFunding(e) {
         E = wI0 + wRL * wD + wRC * wC + wRJ * wJ,
         wSh = wEq / (e.eqPx * (1 - e.eqDisc)),
         D = IX[r] + E,
-        j = j0 + E,
+        j = j0 + bbA + E,
         F = wD + wC + wEq + wJ,
         M = A + k + F,
         N = M - j,
@@ -498,7 +502,7 @@ function runFunding(e) {
         wDn0 = WF.Dn,
         wCn0 = WF.Cn,
         wPc = WF.pc + A + k - j0;
-      return a += N, WF.fr -= Math.min(WF.fr, wD), WF.Dn += wD, WF.Jn += wJ, WF.pc = wPc, WF.B = wB, WF.pnr = nR / L, WF.sh += wSh, WF.cl = clE, WF.Cn += wC, {
+      return a += N, WF.fr -= Math.min(WF.fr, wD), WF.Dn += wD, WF.Jn += wJ, WF.pc = wPc, WF.B = wB, WF.pnr = nR / L, WF.sh += wSh - bbSh, WF.cl = clE, WF.Cn += wC, {
         convNew: wC,
         convCap: wCapC,
         convBeg: wCn0,
@@ -521,6 +525,8 @@ function runFunding(e) {
         newDebtInt: E,
         equity: wEq,
         newShares: wSh,
+        buybackPlan: bbP, buyback: bbA, buybackCut: bbP - bbA, buybackShares: bbSh, // MAG v0.1b：回購（計畫、實際、被迫減少、股數）
+        fcf: (r === 0 ? ACTUAL_1H.cfo - ACTUAL_1H.cashCapex : 0) + A - tx - D - _, // MAG v0.1b：自由現金流（公司定義近似：營運現金 − 現金資本支出；首期含年初至今實際）
         cumNewShares: WF.sh,
         newDebtBeg: wDn0,
         newDebtEnd: WF.Dn,
@@ -600,7 +606,7 @@ function runFunding(e) {
         leaseLiabOn: LLON[r], leaseLiabUl: LLUL[r], leaseLiab: LLON[r] + LLUL[r], ebitdarAnn: (totRev * ebM + ob + lgE - pen + S) / L, // v0.2：租賃負債與 EBITDAR（年化）
         adjLev: (wEx + WF.Dn + WF.Cn + WF.Jn + LLON[r] + LLUL[r]) / Math.max((totRev * ebM + ob + lgE - pen + S) / L, .01), // v0.2：調整後槓桿（期末）
         otherEbitda: ob,
-        rentedCompute: RENTC[r], onBalLeaseAll: b0, offLeaseAll: x0, // MAG v0.1b
+        rentedCompute: RENTC[r], sbcCash: sbcC, onBalLeaseAll: b0, offLeaseAll: x0, // MAG v0.1b
         cashEbitda: g + nC + svcCash + ob + lgE - lgO - pen - S,
         creditAdj: (m + nR * (t.defaultP[r] / 100) * p) * cm,
         atm: k,
@@ -621,10 +627,10 @@ function runFunding(e) {
         sourcesOp: A
       }
     }),
-    hOp = ACTUAL_1H.cfo - ACTUAL_1H.cashCapex - ACTUAL_1H.jv - (ACTUAL_1H.dividends || 0), // v0.1b：年初至今股利與模型期一樣列在營運缺口
+    hOp = ACTUAL_1H.cfo - ACTUAL_1H.cashCapex - ACTUAL_1H.jv - (ACTUAL_1H.dividends || 0) - (ACTUAL_1H.buyback || 0), // MAG v0.1b：年初至今回購 // v0.1b：年初至今股利與模型期一樣列在營運缺口
     hFin = ACTUAL_1H.borrow - ACTUAL_1H.cappedCall + ACTUAL_1H.equity,
     hPlug = e.cash - (ACTUAL_1H.cash1231 + hOp + hFin - ACTUAL_1H.debtRepaid),
-    _fy = (o[0].fyRevenue = ACTUAL_1H.revenue + o[0].isRev + o[0].legacyRev, o[0].fyGross = ACTUAL_1H.capex + o[0].gross, o[0].fyCashCapex = ACTUAL_1H.cashCapex + o[0].cashCapex, o[0].fyLease = ACTUAL_1H.leasePaid + o[0].lease, o[0].fyInterest = ACTUAL_1H.interest + o[0].interest, o[0].fyDebtPay = ACTUAL_1H.debtRepaid + o[0].debtPay, o[0].fyDiv = ACTUAL_1H.jv + o[0].div, o[0].fyAtm = ACTUAL_1H.equity - ACTUAL_1H.cappedCall + o[0].atm, o[0].fyBorrow = ACTUAL_1H.borrow, o[0].fySourcesOp = ACTUAL_1H.cfo + o[0].sourcesOp, o[0].fyOperatingGap = hOp + o[0].operatingGap, o[0].fyExternal = ACTUAL_1H.prepay + o[0].external, o[0].h1 = ACTUAL_1H, o[0].hOp = hOp, o[0].hFin = hFin, o[0].hPlug = hPlug, o[0].fyCfo = ACTUAL_1H.cfo, o[0].fyCapexUse = ACTUAL_1H.cashCapex + o[0].gross, o[0].fyEquity = ACTUAL_1H.equity + o[0].atm, o[0].fyCapped = ACTUAL_1H.cappedCall, o[0].fyUsesCash = ACTUAL_1H.cashCapex + o[0].gross + o[0].lease + o[0].interest + ACTUAL_1H.jv + o[0].div + ACTUAL_1H.debtRepaid + o[0].debtPay + ACTUAL_1H.cappedCall + o[0].op + o[0].cashTax + (ACTUAL_1H.dividends || 0) + o[0].dividend, o[0].fyDividend = (ACTUAL_1H.dividends || 0) + o[0].dividend, o[0].fySrcTotal = ACTUAL_1H.cfo + o[0].sourcesOp + ACTUAL_1H.equity + o[0].atm + ACTUAL_1H.borrow + o[0].newDebt + o[0].equity, 0),
+    _fy = (o[0].fyRevenue = ACTUAL_1H.revenue + o[0].isRev + o[0].legacyRev, o[0].fyGross = ACTUAL_1H.capex + o[0].gross, o[0].fyCashCapex = ACTUAL_1H.cashCapex + o[0].cashCapex, o[0].fyLease = ACTUAL_1H.leasePaid + o[0].lease, o[0].fyInterest = ACTUAL_1H.interest + o[0].interest, o[0].fyDebtPay = ACTUAL_1H.debtRepaid + o[0].debtPay, o[0].fyDiv = ACTUAL_1H.jv + o[0].div, o[0].fyAtm = ACTUAL_1H.equity - ACTUAL_1H.cappedCall + o[0].atm, o[0].fyBorrow = ACTUAL_1H.borrow, o[0].fySourcesOp = ACTUAL_1H.cfo + o[0].sourcesOp, o[0].fyOperatingGap = hOp + o[0].operatingGap, o[0].fyExternal = ACTUAL_1H.prepay + o[0].external, o[0].h1 = ACTUAL_1H, o[0].hOp = hOp, o[0].hFin = hFin, o[0].hPlug = hPlug, o[0].fyCfo = ACTUAL_1H.cfo, o[0].fyCapexUse = ACTUAL_1H.cashCapex + o[0].gross, o[0].fyEquity = ACTUAL_1H.equity + o[0].atm, o[0].fyCapped = ACTUAL_1H.cappedCall, o[0].fyUsesCash = ACTUAL_1H.cashCapex + o[0].gross + o[0].lease + o[0].interest + ACTUAL_1H.jv + o[0].div + ACTUAL_1H.debtRepaid + o[0].debtPay + ACTUAL_1H.cappedCall + o[0].op + o[0].cashTax + (ACTUAL_1H.dividends || 0) + o[0].dividend + (ACTUAL_1H.buyback || 0) + o[0].buyback, o[0].fyBuyback = (ACTUAL_1H.buyback || 0) + o[0].buyback, o[0].fyDividend = (ACTUAL_1H.dividends || 0) + o[0].dividend, o[0].fySrcTotal = ACTUAL_1H.cfo + o[0].sourcesOp + ACTUAL_1H.equity + o[0].atm + ACTUAL_1H.borrow + o[0].newDebt + o[0].equity, 0),
     s = e => o.reduce((t, n) => t + n[e], 0),
     c = rA(e),
     l = iA(e),

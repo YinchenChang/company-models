@@ -117,9 +117,11 @@
    "sbc": "股權報酬 Q1 4,032＋Q2 6,038 [Interested-party]",
    "eps": "GAAP 稀釋 EPS 上半年 8.53（10-Q）[Interested-party]",
    "ngEps": "(淨利＋SBC) ÷ 上半年稀釋加權股數 10,889m [Derived]",
-   "dividends": "不配息（10-Q）[Interested-party]"
+   "dividends": "不配息（10-Q）[Interested-party]",
+   "buyback": "不適用（2026 上半年無買回；10-Q）[Interested-party]"
   },
-  "dividends": 0.0
+  "dividends": 0.0,
+  "buyback": 0.0
  },
  "historicalPL": [
   {
@@ -915,7 +917,14 @@
     "date": "2025",
     "confidence": "中"
    }
-  ]
+  ],
+  "buyback": {
+   "annual": 0.0,
+   "floorShare": 0.0,
+   "note": "回購基準＝近四季實際年額（Amazon 2023 年以來無買回；授權餘額 6.1B；10-Q 附註 6，事實總帳 sh.buyback.2026h1）→ 0（瀑布「減少回購」步驟不適用）；floorShare＝回購可減到計畫的比例下限（0＝可全數取消；對照表 r1 第 5 節第 8 條）[Interested-party]"
+  },
+  "sbcRate": 0.024899,
+  "sbcNote": "股權報酬（SBC）為非現金費用：分部營業利益已扣除，營運現金加回＝SBC 占營收 × 模型期總營收；近四季 SBC 19.314 ÷ 營收 775.680＝2.49%（現金流量表；[Derived]）。股數稀釋沿用模板每年 1%（EBITDA 已扣 SBC，評價略重複計入，偏保守）"
  },
  "valuation": {
   "price": 259.92,
