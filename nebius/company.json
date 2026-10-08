@@ -631,7 +631,7 @@
   "linkSites": true,
   "linkLeaseTail": true,
   "useAvgMw": true,
-  "billableOpen": 165,
+  "billableOpen": 264,
   "cds": null,
   "cdsBid": null,
   "cdsAsk": null,
@@ -663,11 +663,11 @@
     100
    ],
    "revMW": [
-    0.0141591394,
-    0.0150466722,
-    0.0179703341,
-    0.0192057711,
-    0.0198748171
+    0.0088251999,
+    0.0092117983,
+    0.0094067648,
+    0.0094887531,
+    0.0095326451
    ],
    "aiShare": [
     100,
@@ -1324,13 +1324,20 @@
  "pricing": {
   "_note": "v0.2a：每 MW 收入的公司因素（定價倍數 k）與證據表；只有 anchorMultiple 驅動計算（methodology.perMw.revenue＝tkAnchor）。",
   "anchorMultiple": {
-   "_note": "v0.2a（已決定事項 14、下游資料契約第 4 條）：每 MW 年收入（100% 計費時數）＝ Σ 平均在役世代占比 × IF_HoldEcon（基準成本情境）÷ 1000 × 定價倍數 k；k_t＝長約占比_t × k_長約 ＋（1 − 長約占比_t）× k_現貨。k 只取「市場價格 ÷ 同世代 Tokenomics 持有成本」證據（evidence，use＝long／spot 者驅動，range 只支持區間，list 只列）；不得用 Nebius 的營收、ARR、RPO、ACV 反推。合約期內 k 固定；續約價格衰退不做。價格軸（k 低／基準／高）與容量軸（scenarios）分離。",
+   "_note": "v0.2a 第 2 輪（已決定事項 14、15，比照 CoreWeave W4 r2）：每 MW 年收入（100% 計費時數）＝ Σ 平均在役世代占比 × IF_HoldEcon（基準成本情境）÷ 1000 × 定價倍數 k；k＝隨需占比 × k_現貨 ＋（1 − 隨需占比）× k_長約。Nebius 先簽多年期合約再建產能（大型合約＋約 70% 合約含預付），新增產能按長約價；隨需占比基準 0%（[Assumed]，不得用 Q2 隱含 k 反推）。長約占比（已揭露合約 MW ÷ 平均在役 MW）降為對照列。k 只取「市場價格或公司已揭露合約條款 ÷ 同世代 Tokenomics 持有成本」證據（evidence，use＝long／spot 者驅動，range 只支持區間，list 只列）；不得用 Nebius 的營收、ARR、RPO、ACV 反推。k 隨 Tokenomics 成本情境以證據世代成本比例重算。合約期內 k 固定；續約價格衰退不做。價格軸（k 低／基準／高）與容量軸（scenarios）分離。",
    "long": {
     "base": 0.76,
     "low": 0.7,
     "high": 1.0,
     "tag": "[Analogy]",
     "refEvidence": "IREN–Microsoft GB300 五年約",
+    "sensMedian": 0.89,
+    "nebiusContract": {
+     "values": [0.91, 1.09, 1.33],
+     "labels": ["Vineland 300 MW 視為 IT", "Vineland 300 MW 視為設施（÷ PUE 1.2）", "約 10 萬顆 GB300（Bloomberg）"],
+     "tag": "[Derived]／[Assumed]",
+     "note": "已決定事項 15：公司自身合約條款可作公司因素證據，但須能完全由已揭露條款算出。Microsoft 6-K（2025-09-08）與 Q3 2025 附註只揭露 TCV $17.4bn（可擴至 $19.4bn）、5 年、Vineland 專用 GPU 容量分批交付，未揭露 MW 或 GPU 數；Meta 兩份 6-K 亦未揭露容量。換算必須假設容量：Vineland 站點 300 MW（Nebius 新聞稿，站點容量而非合約容量）→ 17.4 ÷ 5 ÷ 250（設施口徑）÷ 12.72＝1.09、或 ÷ 300（IT 口徑）＝0.91；Bloomberg 引述匿名消息約 10 萬顆 GB300 → ÷ 487 顆/MW＝205 MW → 1.33。條款不足以算出 → k_長約 基準維持市場長約 0.76，Nebius 自身合約列敏感度（區間 0.91–1.33）。"
+    },
     "note": "基準＝IREN–Microsoft GB300 五年約 9.70 ÷ IF_HoldEcon GB300 12.72＝0.762（取兩位）；區間 0.70–1.00（工作單預設；IREN–NVIDIA 0.89 落在區間內）",
     "interpretation": "契約第 4 條指定解讀（預設）：長約以低於打平租金（WACC 10% 經濟持有成本）的價格換取預付（20%）與五年確定性，客戶分攤部分資本成本——Nebius 對 Microsoft／Meta 長約同樣收預付（股東信約 70% 合約、預付占資本支出 50–60%）。替代解讀：(a) 成本結構不同（IREN 自有電力與廠房，持有成本低於 Tokenomics 基準）→ k 應以 IREN 自身成本計、高於 0.76；(b) 合約含非收入條款（預付的資金成本價值未計入價格）→ 經濟價格高於帳面價格。三者對 Nebius 收入的影響方向：預設解讀最保守。"
    },
@@ -1342,8 +1349,14 @@
     "refEvidence": "H100 Silicon Data 現貨指數",
     "note": "基準＝H100 Silicon Data 現貨指數 2.82 ÷ IF_GPUhrEcon H100 1.605＝1.757（取兩位）；上緣 2.3（B300 指數 ÷ GB300 2.29）；下緣 1.5（工作單預設）。Nebius 非長約客戶多為預留（數月至數年），介於長約與隨需之間，以現貨指數代表"
    },
-   "longShare": {
-    "method": "contractMw",
+   "onDemandShare": {
+     "base": 0,
+     "sens": [0.1, 0.2],
+     "tag": "[Assumed]",
+     "note": "隨需（現貨）占在役計費產能的比例；公司未揭露長約／隨需比例（找不到）。基準 0%（新增產能按長約價：先簽多年期合約再建產能），敏感度 10%／20%；不得用 Q2 隱含 k 反推（第 2 輪，比照 CoreWeave W4 r2）"
+    },
+    "longShare": {
+    "method": "contractMw（第 2 輪起為對照列，不驅動 k）",
     "tag": "[Derived]",
     "formula": "長約占比_t＝MIN(1, 已揭露多年期合約在役 MW_t ÷ 平均在役 MW_t)；合約 MW＝揭露的 GPU 數 ÷ 每 MW GPU 數（Microsoft），未揭露者＝TCV ÷ 年期 ÷ 錨價（IF_HoldEcon 基準，未乘 k）；平均在役 MW＝（期初＋期末）÷ 2，期末＝已連網 MW × 在役比例，期初（首期）＝priceCheck.inServiceMw",
     "contracts": [

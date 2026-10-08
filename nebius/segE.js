@@ -224,7 +224,7 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
       elQ(`div`, { key: `c`, style: { fontSize: 10.5, color: `var(--color-muted)`, lineHeight: 1.35 } }, c)]))),
     elQ(`p`, { key: `i`, style: { fontSize: 13, lineHeight: 1.4, margin: `5px 0 0`, fontWeight: 600 } }, cv.implied),
     elQ(`p`, { key: `r`, style: { fontSize: 12.5, lineHeight: 1.4, margin: `4px 0 0` } }, rvOk
-      ? `反向 DCF（DCF＝現價，其他不變）：FY30 每 MW 年收入需 $${Y(rv.rev30 * rv.R, 1)}m（${rv.R >= 1 ? `+` : `−`}${hA(Math.abs(rv.R - 1) * 100, 0)}），或建置成本 $${Y(rv.cost30 * rv.C, 1)}m（${rv.C >= 1 ? `+` : `−`}${hA(Math.abs(rv.C - 1) * 100, 0)}），或穩態 EBITDA 率 ${Number.isFinite(rv.Eb) ? hA(rv.Eb * 100, 0) : `無解`}${Number.isFinite(rv.Rt) ? `；加權目標價＝現價需每 MW 年收入 ${rv.Rt >= 1 ? `+` : `−`}${hA(Math.abs(rv.Rt - 1) * 100, 0)}` : ``}。`
+      ? `反向 DCF（DCF＝現價，其他不變）：FY30 每 MW 年收入需 $${Y(rv.rev30 * rv.R, 1)}m（${rv.R >= 1 ? `+` : `−`}${hA(Math.abs(rv.R - 1) * 100, 0)}），或建置成本 ${Number.isFinite(rv.C) ? `$${Y(rv.cost30 * rv.C, 1)}m（${rv.C >= 1 ? `+` : `−`}${hA(Math.abs(rv.C - 1) * 100, 0)}）` : `無解（降到 1 成仍不夠）`}，或穩態 EBITDA 率 ${Number.isFinite(rv.Eb) ? hA(rv.Eb * 100, 0) : `無解`}${Number.isFinite(rv.Rt) ? `；加權目標價＝現價需每 MW 年收入 ${rv.Rt >= 1 ? `+` : `−`}${hA(Math.abs(rv.Rt - 1) * 100, 0)}` : ``}。`
       : `反向 DCF：計算中或無解。`),
     elQ(`p`, { key: `n`, style: { ...sm, margin: `3px 0 0`, fontSize: 11 } }, `隱含倍數＝（價格 × 股數＋共識 FY28 淨負債）÷ 共識 FY28 調整後 EBITDA。`)
   ]);
@@ -588,7 +588,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
         ...der.map(([lab, x, sc, col, big]) => mark(sc, x, lab, `$${Y(x, 1)}m`, col, !1, `c`, big)),
         Number.isFinite(need) ? mark(`need`, need, `現價所需`, `$${Y(need, 1)}m`, COLQ.need, !0, `d`, !0) : null
       ]),
-      elQ(`div`, { key: `c`, className: `sumQ-a sumQ-a3`, style: { display: `flex`, gap: 14, marginTop: 4, flexWrap: `wrap` } }, (TK5 ? [[`爬坡時點`, K ? `Q2 差距 ${hA((LATEST_Q.revenue * 4e3 / e.billableOpen - K.realized) / (TK5.rev[0] * 1e3 - K.realized) * 100, 0)} 來自計費 MW 少於在役` : `營收落後於交付`], [`定價倍數 k`, `長約 ${Y(TK5.kL, 2)}／現貨 ${Y(TK5.kS, 2)}，${PERIODS[4]} 長約占比 ${hA(TK5.ls[4] * 100, 0)}`], [`MW 口徑`, `在役 MW 為內插估計`]]
+      elQ(`div`, { key: `c`, className: `sumQ-a sumQ-a3`, style: { display: `flex`, gap: 14, marginTop: 4, flexWrap: `wrap` } }, (TK5 ? [[`爬坡時點`, K ? `Q2 差距 ${hA((LATEST_Q.revenue * 4e3 / e.billableOpen - K.realized) / (TK5.rev[0] * 1e3 - K.realized) * 100, 0)} 來自計費 MW 少於在役` : `營收落後於交付`], [`定價倍數 k`, `新增產能按長約價：k＝${Y(TK5.k[4], 2)}（隨需 ${hA(TK5.od * 100, 0)}）`], [`MW 口徑`, `在役 MW 為內插估計`]]
         : [[`爬坡時點`, `模型採用：營收落後於交付`], [`舊世代機隊`, `H100／H200 單價較低`], [`MW 口徑`, `在役 MW 為內插估計`]]).map(([a, b], i) =>
         elQ(`div`, { key: a, style: { flex: 1, padding: `10px 14px`, borderRadius: 10, background: `var(--color-surface)`, borderLeft: `4px solid ${i ? COLQ.cash : COLQ.model}` } }, [
           elQ(`div`, { key: `a`, style: { fontSize: 20, fontWeight: 700 } }, a), elQ(`div`, { key: `b`, style: { fontSize: 18, color: `var(--color-muted)` } }, b)]))),
@@ -642,7 +642,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
         elQ(`div`, { key: `h0` }),
         ...K3.map(px => elQ(`div`, { key: `h` + px, className: `sumQ-a sumQ-a2`, style: { textAlign: `center` } }, [
           elQ(`div`, { key: `a`, style: { fontSize: 22, fontWeight: 700 } }, pxN[px]),
-          elQ(`div`, { key: `b`, style: { fontSize: 18, color: `var(--color-muted)` } }, `k 長約 ${Y(AM.long[px], 2)}／現貨 ${Y(AM.spot[px], 2)}`)])),
+          elQ(`div`, { key: `b`, style: { fontSize: 18, color: `var(--color-muted)` } }, `k_長約 ${Y(AM.long[px], 2)}`)])),
         ...K3.flatMap(sc => [elQ(`div`, { key: `r` + sc, className: `sumQ-a sumQ-a2`, style: { fontSize: 20, fontWeight: 700 } }, SCENARIOS[sc].label), ...K3.map(px => cell(sc, px))])
       ]),
       elQ(`div`, { key: `l`, className: `sumQ-a sumQ-a3`, style: { marginTop: 14 } }, elQ(LegQ, { items: [[`低於賣出門檻 $${Y(TR.th, 1)}`, COLQ.real], [`門檻與現價之間`, COLQ.conv], [`高於現價 $${Y(P, 1)}`, `var(--color-ok)`]] })),
@@ -785,7 +785,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
 
   // 6｜反向 DCF
   S(`反向 DCF`, rv && Number.isFinite(rv.R)
-    ? `現價 $${Y(P, 2)} 要成立：FY30 每 MW 年收入需 ${rv.R >= 1 ? `+` : `−`}${hA(Math.abs(rv.R - 1) * 100, 0)}，或建置成本需 ${rv.C >= 1 ? `+` : `−`}${hA(Math.abs(rv.C - 1) * 100, 0)}`
+    ? `現價 $${Y(P, 2)} 要成立：FY30 每 MW 年收入需 ${rv.R >= 1 ? `+` : `−`}${hA(Math.abs(rv.R - 1) * 100, 0)}${Number.isFinite(rv.C) ? `，或建置成本需 ${rv.C >= 1 ? `+` : `−`}${hA(Math.abs(rv.C - 1) * 100, 0)}` : `；建置成本單獨調整無解`}`
     : `現價要成立需要什麼（計算中或無解）`, rv ? [
       elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 20 } }, [
         elQ(StatQ, { key: 1, label: `每 MW 年收入（FY30）`, value: Number.isFinite(rv.R) ? `$${Y(rv.rev30 * rv.R, 1)}m` : `無解`, note: `目前 $${Y(rv.rev30, 1)}m；其他條件不變` }),

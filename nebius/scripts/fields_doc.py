@@ -227,9 +227,10 @@ F = [
  # Nebius v0.1a：公司專屬資料草稿（引擎尚未讀取；v0.1b 依各欄 mapTo 搬到既有欄位）
  ('pricing._note', '每 MW 收入公司因素區段的說明（不進程式；v0.2a）', '文字', K),
  ('pricing.anchorMultiple._note', '定價倍數 k 的口徑說明（已決定事項 14、下游資料契約第 4 條；不進程式）', '文字', K),
- ('pricing.anchorMultiple.long', 'k_長約：base／low／high（價格軸低／基準／高）、證據來源 refEvidence、契約第 4 條指定解讀 interpretation、標記', '物件（倍數）', C),
+ ('pricing.anchorMultiple.long', 'k_長約：base／low／high（價格軸低／基準／高）、證據來源 refEvidence、契約第 4 條指定解讀 interpretation、三筆長約中位數 sensMedian、Nebius 自身合約換算 nebiusContract（只列敏感度）、標記', '物件（倍數）', C),
  ('pricing.anchorMultiple.spot', 'k_現貨：base／low／high、refEvidence、標記（非長約客戶的價格倍數）', '物件（倍數）', C),
- ('pricing.anchorMultiple.longShare', '長約占比的算法：contracts＝已揭露多年期合約（label、start＝起始模型期 0–4、mw 基準／lo／hi、換算依據、來源、標記）；占比＝MIN(1, 合約 MW ÷ 平均在役 MW)', '物件', M),
+ ('pricing.anchorMultiple.onDemandShare', '隨需占比（第 2 輪，比照 CoreWeave W4 r2）：base（基準 0＝新增產能按長約價）、sens（敏感度清單）、標記與說明；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約', '物件（比例）', C),
+ ('pricing.anchorMultiple.longShare', '長約占比（第 2 輪起只作對照列，不驅動 k）的算法：contracts＝已揭露多年期合約（label、start＝起始模型期 0–4、mw 基準／lo／hi、換算依據、來源、標記）；占比＝MIN(1, 合約 MW ÷ 平均在役 MW)', '物件', M),
  ('pricing.anchorMultiple.contractMix', '合約組合的揭露（只作對照；找不到者寫明試過的來源）', '清單', M),
  ('pricing.anchorMultiple.notFound', '找不到的價格證據與試過的來源（「找不到」與「不存在」分開寫）', '清單（文字）', M),
  ('pricing.anchorMultiple.evidence', 'k 證據表：每筆 label、gen（Tokenomics 世代名）、price、unit、tkName（IF_HoldEcon 或 IF_GPUhrEcon）、合約型態與期間、use（long／spot＝驅動基準，range＝只支持區間，list＝只列）、來源、日期、標記；倍數＝price ÷ 同世代 Tokenomics 基準值（建置時計算）', '清單', M),

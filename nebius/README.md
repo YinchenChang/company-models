@@ -484,7 +484,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.linkSites` | 具名站點的 MW 是否連動第一期產能下限 | 是／否 | 是 | 可沿用 |
 | `defaults.linkLeaseTail` | 舊模板遺留開關，目前程式未使用 | 是／否 | 是 | 可沿用 |
 | `defaults.useAvgMw` | 收入以平均在役 MW 計（true）或期末存量計（false） | 是／否 | 是 | 可沿用 |
-| `defaults.billableOpen` | 最新季末可計費 MW（第一期期初；v0.1c 起＝最新季營收 × 4 ÷ 預設情境首期每 MW 年收入，建置時檢查） | MW | 165 | 必改 |
+| `defaults.billableOpen` | 最新季末可計費 MW（第一期期初；v0.1c 起＝最新季營收 × 4 ÷ 預設情境首期每 MW 年收入，建置時檢查） | MW | 264 | 必改 |
 | `defaults.cds` | 信用違約交換（CDS）中價 | bps | None | 必改 |
 | `defaults.cdsBid` | CDS 買價 | bps | None | 必改 |
 | `defaults.cdsAsk` | CDS 賣價 | bps | None | 必改 |
@@ -496,7 +496,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.m.accepted` | 已驗收 MW 的預設路徑（實際依所選情境覆寫） | MW 清單 | 750、1330、1910、2490、3070 | 檢查 |
 | `defaults.m.billable` | 可計費 MW 的預設路徑（實際依情境與爬坡比例覆寫） | MW 清單 | 338、904、1719、2241、2763 | 檢查 |
 | `defaults.m.util` | 利用率，各期 | % 清單 | 100、100、100、100、100 | 檢查 |
-| `defaults.m.revMW` | 每 MW 年收入，各期 | US$bn/MW 清單 | 0.0141591、0.0150467、0.0179703、0.0192058、0.0198748 | 必改 |
+| `defaults.m.revMW` | 每 MW 年收入，各期 | US$bn/MW 清單 | 0.0088252、0.0092118、0.00940676、0.00948875、0.00953265 | 必改 |
 | `defaults.m.aiShare` | AI 占比，各期（目前只做範圍檢查，未參與計算） | % 清單 | 100、100、100、100、100 | 可沿用 |
 | `defaults.m.fill` | 新產能簽約率：未被既有 RPO 占用的產能能賣出的比例 | % 清單 | 100、100、100、100、100 | 檢查 |
 | `defaults.m.power` | 電價（overlay 開啟時才用） | $/MWh 清單 | 60、62、64、66、68 | 檢查 |
@@ -643,10 +643,11 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `pricing._note` | 每 MW 收入公司因素區段的說明（不進程式；v0.2a） | 文字 | v0.2a：每 MW 收入的公司因素（定價倍數 k）… | 可沿用 |
-| `pricing.anchorMultiple._note` | 定價倍數 k 的口徑說明（已決定事項 14、下游資料契約第 4 條；不進程式） | 文字 | v0.2a（已決定事項 14、下游資料契約第 4 條… | 可沿用 |
-| `pricing.anchorMultiple.long` | k_長約：base／low／high（價格軸低／基準／高）、證據來源 refEvidence、契約第 4 條指定解讀 interpretation、標記 | 物件（倍數） | 物件（base、low、high、tag、refEvidence、note、interpretation） | 檢查 |
+| `pricing.anchorMultiple._note` | 定價倍數 k 的口徑說明（已決定事項 14、下游資料契約第 4 條；不進程式） | 文字 | v0.2a 第 2 輪（已決定事項 14、15，比照… | 可沿用 |
+| `pricing.anchorMultiple.long` | k_長約：base／low／high（價格軸低／基準／高）、證據來源 refEvidence、契約第 4 條指定解讀 interpretation、三筆長約中位數 sensMedian、Nebius 自身合約換算 nebiusContract（只列敏感度）、標記 | 物件（倍數） | 物件（base、low、high、tag、refEvidence、sensMedian、nebiusContract、note、interpretation） | 檢查 |
 | `pricing.anchorMultiple.spot` | k_現貨：base／low／high、refEvidence、標記（非長約客戶的價格倍數） | 物件（倍數） | 物件（base、low、high、tag、refEvidence、note） | 檢查 |
-| `pricing.anchorMultiple.longShare` | 長約占比的算法：contracts＝已揭露多年期合約（label、start＝起始模型期 0–4、mw 基準／lo／hi、換算依據、來源、標記）；占比＝MIN(1, 合約 MW ÷ 平均在役 MW) | 物件 | 物件（method、tag、formula、contracts、note） | 必改 |
+| `pricing.anchorMultiple.onDemandShare` | 隨需占比（第 2 輪，比照 CoreWeave W4 r2）：base（基準 0＝新增產能按長約價）、sens（敏感度清單）、標記與說明；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約 | 物件（比例） | 物件（base、sens、tag、note） | 檢查 |
+| `pricing.anchorMultiple.longShare` | 長約占比（第 2 輪起只作對照列，不驅動 k）的算法：contracts＝已揭露多年期合約（label、start＝起始模型期 0–4、mw 基準／lo／hi、換算依據、來源、標記）；占比＝MIN(1, 合約 MW ÷ 平均在役 MW) | 物件 | 物件（method、tag、formula、contracts、note） | 必改 |
 | `pricing.anchorMultiple.contractMix` | 合約組合的揭露（只作對照；找不到者寫明試過的來源） | 清單 | 3 筆 | 必改 |
 | `pricing.anchorMultiple.notFound` | 找不到的價格證據與試過的來源（「找不到」與「不存在」分開寫） | 清單（文字） | VR200 長約或現貨每 GPU 小時價格：找不到（…、第二筆獨立於 IREN 的 neocloud 長約（…、Nebius 自身長約每 GPU 小時價格：不得作為… | 必改 |
 | `pricing.anchorMultiple.evidence` | k 證據表：每筆 label、gen（Tokenomics 世代名）、price、unit、tkName（IF_HoldEcon 或 IF_GPUhrEcon）、合約型態與期間、use（long／spot＝驅動基準，range＝只支持區間，list＝只列）、來源、日期、標記；倍數＝price ÷ 同世代 Tokenomics 基準值（建置時計算） | 清單 | 11 筆 | 必改 |

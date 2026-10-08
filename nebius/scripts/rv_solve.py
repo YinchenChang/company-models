@@ -35,10 +35,12 @@ with Workbook(xlsx) as wb:
         return (lo + hi) / 2
 
     base = run()
-    R = solve(lambda x: run(rev=x), .5, 4, True)
+    # v0.2a 第 2 輪：0.5–4 倍無解時改在 4–10 倍求解（與 segA reverseDcf 相同；有解時結果與舊版完全相同）
+    wide = lambda f, key='dcf': (lambda a: a if a is not None else solve(f, 4, 10, True, key))(solve(f, .5, 4, True, key))
+    R = wide(lambda x: run(rev=x))
     C = solve(lambda x: run(cap=x), .1, 1.5, False)
     Eb = solve(lambda x: run(eb=x), .3, .99, True)
-    Rt = solve(lambda x: run(rev=x), .5, 4, True, 'tgt')
+    Rt = wide(lambda x: run(rev=x), 'tgt')
     caps, ebs = [.7, .8, .9, 1, 1.1], [.35, .47, .59, .7]  # v0.1b：可觀察 neocloud 區間（與 segA reverseDcf 相同）
     grid = [[solve(lambda x: run(cap=cp, eb=s, rev=x), .5, 4, True) for s in ebs] for cp in caps]
     run()  # 還原輸入（不存檔）
@@ -52,7 +54,8 @@ num = lambda x: int(x) if isinstance(x, float) and x.is_integer() else x   # 與
 res = {k: ([[num(y) for y in r] for r in v] if k == 'grid' else [num(y) for y in v] if isinstance(v, list) else num(v)) for k, v in res.items()}
 txt = json.dumps(res, separators=(',', ':'), ensure_ascii=False)
 old = open(out, encoding='utf-8').read() if os.path.exists(out) else None
-print(f"反向 DCF（Excel 求解）：現價 {P}、R {R:.4f}、C {C:.4f}、Eb {Eb:.4f}、Rt {Rt:.4f}；矩陣 {sum(x is not None for r in grid for x in r)}/20 格有解")
+fx = lambda x: "無解" if x is None else f"{x:.4f}"
+print(f"反向 DCF（Excel 求解）：現價 {P}、R {fx(R)}、C {fx(C)}、Eb {fx(Eb)}、Rt {fx(Rt)}；矩陣 {sum(x is not None for r in grid for x in r)}/20 格有解")
 if old == txt:
     print('rv_snap.json 無變動'); sys.exit(0)
 open(out, 'w', encoding='utf-8').write(txt)

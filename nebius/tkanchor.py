@@ -7,7 +7,7 @@
 #   各世代期末 MW＝期初世代 MW＋新增 × newMix_t；平均在役世代占比＝（期初_g＋期末_g）÷（期初＋期末）
 #   錨_t＝Σ 占比 × IF_HoldEcon_g（成本情境，預設基準）÷ 1000（US$bn/MW·年）
 #   長約 MW_t＝Σ 起始期 ≤ t 的合約 MW；長約占比_t＝MIN(1, 長約 MW_t ÷ 平均在役 MW_t)
-#   k_t＝長約占比 × k_長約 ＋（1 − 長約占比）× k_現貨；每 MW 年收入_t＝錨_t × k_t（100% 計費時數；利用率不另扣）
+#   k_t＝隨需占比 × k_現貨 ＋（1 − 隨需占比）× k_長約（第 2 輪；長約占比只作對照）；每 MW 年收入_t＝錨_t × k_t（100% 計費時數；利用率不另扣）
 import json, os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -27,7 +27,7 @@ def acc_path(co, sc, years):
     return a
 
 
-def compute(co, tk, sc, years, px='base', tkCase='基準', ls='mw', kLong=None, kSpot=None, newMix=None):
+def compute(co, tk, sc, years, px='base', tkCase='基準', ls='mw', kLong=None, kSpot=None, newMix=None, od=None):
     AM = co['pricing']['anchorMultiple']; FL = co['fleet']; G = FL['generations']
     acc = acc_path(co, sc, years); br = co['scenarios']['billableRatio']['ratio']
     end = [acc[i] * br[i] for i in range(5)]
@@ -38,6 +38,7 @@ def compute(co, tk, sc, years, px='base', tkCase='基準', ls='mw', kLong=None, 
     rr = lambda x: 1 if tkCase == '基準' else tk[x['tkName']]['values'][x['gen']]['基準'] / tk[x['tkName']]['values'][x['gen']][tkCase]  # 非基準成本情境：k 以證據世代成本比例重算（價格是事實）
     kL = (AM['long'][px] if kLong is None else kLong) * rr(ref('long'))
     kS = (AM['spot'][px] if kSpot is None else kSpot) * rr(ref('spot'))
+    odv = AM['onDemandShare']['base'] if od is None else od
     he = {g: tk['IF_HoldEcon']['values'][g][tkCase] for g in G}
     rf = {g: tk['IF_RevGWFleet']['values'][g][tkCase] for g in G}
     R = {k: [] for k in ('start', 'end', 'add', 'avg', 'anchor', 'longMw', 'ls', 'k', 'rev', 'capRef', 'capRatio')}
@@ -51,7 +52,7 @@ def compute(co, tk, sc, years, px='base', tkCase='基準', ls='mw', kLong=None, 
         avg = tot / 2
         lm = sum(c[ls] for c in AM['longShare']['contracts'] if c['start'] <= t)
         s = min(1.0, lm / avg)
-        k = s * kL + (1 - s) * kS
+        k = odv * kS + (1 - odv) * kL  # 第 2 輪（W4 r2）：隨需占比；長約占比 s 只作對照
         cap = sum(sh[g] * rf[g] for g in G) / 1000
         for key, v in (('start', prevT), ('end', end[t]), ('add', add), ('avg', avg), ('anchor', A), ('longMw', lm), ('ls', s), ('k', k),
                        ('rev', A * k), ('capRef', cap), ('capRatio', A * k / cap)):

@@ -342,9 +342,11 @@ function tkScnQ(e, sc, o = {}) {
 }
 function tkSensQ(e, v, onlyMatrix) { // v0.2a：3 × 3 容量 × 價格矩陣與每 MW 收入敏感度（目標價 tgt、五期股權募資 eq、融資前缺口 gap）
   let K = [`low`, `base`, `high`], AM = COMPANY_DATA.pricing.anchorMultiple, run = (sc, o) => fA(tkScnQ(e, sc, o), null, v),
-    C = [[`kLongLo`, `k_長約 ${AM.long.low.toFixed(2)}`, { kLong: AM.long.low }], [`kLongHi`, `k_長約 ${AM.long.high.toFixed(2)}`, { kLong: AM.long.high }],
-      [`kSpotLo`, `k_現貨 ${AM.spot.low.toFixed(2)}`, { kSpot: AM.spot.low }], [`kSpotHi`, `k_現貨 ${AM.spot.high.toFixed(2)}`, { kSpot: AM.spot.high }],
-      [`lsLo`, `長約占比 下緣（合約 MW 下緣）`, { ls: `lo` }], [`lsHi`, `長約占比 上緣（合約 MW 上緣，含 Meta 承購）`, { ls: `hi` }],
+    NB = AM.long.nebiusContract,
+    C = [[`kLongLo`, `k_長約 ${AM.long.low.toFixed(2)}`, { kLong: AM.long.low }], [`kLongMed`, `k_長約 ${AM.long.sensMedian.toFixed(2)}（三筆長約中位數）`, { kLong: AM.long.sensMedian }],
+      [`kLongHi`, `k_長約 ${AM.long.high.toFixed(2)}`, { kLong: AM.long.high }],
+      ...NB.values.map((x, j) => [`kNb${j + 1}`, `k_長約 ${x.toFixed(2)}（Nebius–Microsoft：${NB.labels[j]}）`, { kLong: x }]),
+      ...AM.onDemandShare.sens.map((x, j) => [`od${j + 1}`, `隨需占比 ${Math.round(x * 100)}%（k_現貨 ${AM.spot.base.toFixed(2)}）`, { od: x }]),
       [`tkLow`, `Tokenomics 低成本（錨與建置成本同動；k 依證據重算）`, { tkCase: `低成本` }], [`tkHigh`, `Tokenomics 高成本（錨與建置成本同動；k 依證據重算）`, { tkCase: `高成本` }],
       [`ramp50`, `首期末爬坡 50%`, { ramp0: .5 }], [`ramp80`, `首期末爬坡 80%`, { ramp0: .8 }]];
   return {
