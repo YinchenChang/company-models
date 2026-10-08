@@ -487,7 +487,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.ebitdarNote` | EBITDAR 口徑的說明文字 | 文字 | 不適用（ebitdaBasis＝tk：AI 雲端 E… | 可沿用 |
 | `defaults.services` | 非算力服務營收（軟體、儲存等），各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
 | `defaults.otherEbitda` | 其他事業 EBITDA（負值＝燒錢），各期；同時進入損益 EBITDA 與營運來源（v0.1b） | US$bn 清單 | 0、0、0、0、0 | 必改 |
-| `defaults.legacyBiz.lines` | 非 AI 事業各線（N ≤ 6），一線一列：key、label、kind（growth＝上一財年 ×(1＋年增率)；cloudResidual＝雲端分部 − 對外 AI 雲端；explicit＝各期營收直接輸入 rev；未分攤公司層費用用 explicit＋rev 全 0＋ebitda 負值陣列）、peer（評價同業倍數組，valuation.segmentMultiples 的鍵）、fyBase、ytd、g0、gLT、m0／mLT（EBITDA 率起點／長期，線性收斂；mLT 空白＝固定）、oa（其他攤銷占營收）、cx（非 AI 資本支出占全年營收，capexModel.mode＝tk 時使用）；cloudResidual 另有 priorStub、g4q、ttm、prevTTM、ebitdaTTM、aiMwTTM、aiMwPrevTTM（MAG v0.1b；Oracle v0.1b 起） | 清單（物件） | 5 筆 | 必改 |
+| `defaults.legacyBiz.lines` | 非 AI 事業各線（N ≤ 6），一線一列：key、label、kind（growth＝上一財年 ×(1＋年增率)；cloudResidual＝雲端分部 − 對外 AI 雲端；explicit＝各期營收直接輸入 rev；未分攤公司層費用用 explicit＋rev 全 0＋ebitda 負值陣列）、peer（評價同業倍數組，valuation.segmentMultiples 的鍵）、fyBase、ytd、g0、gLT、m0／mLT（EBITDA 率起點／長期，線性收斂；mLT 空白＝固定）、oa（其他攤銷占營收）、cx（非 AI 資本支出占全年營收，capexModel.mode＝tk 時使用）、m0Note（起始 EBITDA 率的來源與標記，選填；v0.1 交付前修訂）；cloudResidual 另有 priorStub、g4q、ttm、prevTTM、ebitdaTTM、aiMwTTM、aiMwPrevTTM（MAG v0.1b；Oracle v0.1b 起） | 清單（物件） | 5 筆 | 必改 |
 | `defaults.legacyBiz.split.adsMargin` | 廣告 EBITDA 率（分部未揭露，[Assumed]；MAG v0.1b） | 比例 | 0.5 | 檢查 |
 | `defaults.legacyBiz.split.adsMarginRange` | 廣告 EBITDA 率區間（敏感度） | 比例清單 | 0.4、0.6 | 檢查 |
 | `defaults.legacyBiz.split.subsMargin` | 訂閱 EBITDA 率（[Assumed]） | 比例 | 0.1 | 檢查 |
@@ -574,6 +574,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `valuation.holdingsNote` | 持股清單格式與估值口徑（MAG v0.1b，C8 c） | 文字 | 持股清單：[名稱, 估值（100%，US$bn）, … | 必改 |
 | `valuation.segmentMultiples` | 分部同業倍數組（物件，鍵＝legacyBiz.lines.peer）：{label, peers:[{ticker, name, ntmEvEbitda, ref}]（中位數，每組至少 3 家）} 或 {label, useAi: true, note}（沿用 AI 雲端倍數）；換公司時鍵與同業全部重填（MAG v0.1b） | 物件 | 物件（retail、ads、subs、cloud） | 必改 |
 | `valuation.segmentMultiplesNote` | 分部加總口徑說明 | 文字 | 分部 EV/EBITDA：各非 AI 分部 × 所屬… | 必改 |
+| `valuation.ownMultiple` | 公司自身 NTM EV/EBITDA（{value, ev, ntmEbitda, ref, note}；評價口徑敏感度「非 AI 分部改用自身倍數」用；v0.1 交付前修訂） | 物件 | 物件（value、ev、ntmEbitda、ref、note） | 必改 |
 | `valuation.price` | 現價 | US$ | 259.92 | 必改 |
 | `valuation.shares` | 評價股數（含期後股權發行上限） | bn 股 | 11.0303 | 必改 |
 | `valuation.atmSharesInValuation` | 評價股數中「期後股權發行上限」的股數：期後股權／可轉債開關關閉時由評價股數扣回（v0.1b；CRWV 0.035、無此項的公司填 0） | bn 股 | 0 | 必改 |
@@ -756,6 +757,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `pricing.kNote.longShare` | 長約占比的依據 | 文字 | 長約占比 80%（Anthropic Trainiu… | 必改 |
 | `pricing.customFactor` | 自研晶片持有成本係數（同期 NVIDIA 世代 IF_HoldEcon × 此值；對照表 r1 C2 基準 1.0） | 倍 | 1 | 檢查 |
 | `pricing.customFactorSens` | 自研晶片係數的敏感度值（0.7） | 倍 | 0.7 | 檢查 |
+| `pricing.customCapexFactor` | 自研晶片每 MW IT 資本支出係數（同期 NVIDIA TK_CapexIT × 此值；預設 1；雙邊晶片係數敏感度用；v0.1 交付前修訂） | 倍 | 1 | 檢查 |
+| `pricing.customCapexNote` | 上列的依據 | 文字 | 自研晶片每 MW IT 資本支出係數：預設 1（Tr… | 必改 |
 | `pricing.customNote` | 自研晶片對應世代與缺口說明 | 文字 | 自研晶片（Trainium）每 MW 錨＝同期 NV… | 必改 |
 | `pricing.chips` | 世代清單：[{key, label, tk＝Tokenomics 世代代碼（H100／GB200／GB300／VR200／RU）, custom＝自研（乘 customFactor）, mixOpen＝評價日在役占比（合計 100%）, mixAdds＝各期新增 MW 占比（每期合計 100%）}] | 清單（物件） | 6 筆 | 必改 |
 | `pricing.mixNote` | 世代組合的依據 | 文字 | 期初在役（評價日）：Trainium2 55%、Ho… | 必改 |

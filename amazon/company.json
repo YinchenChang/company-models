@@ -677,7 +677,8 @@
      "m0": 0.5,
      "mLT": null,
      "oa": 0.018092,
-     "cx": 0.0591
+     "cx": 0.0591,
+     "m0Note": "分部未揭露廣告利潤率：50%（40%–60%）[Assumed]"
     },
     {
      "key": "subs",
@@ -691,7 +692,8 @@
      "m0": 0.1,
      "mLT": null,
      "oa": 0.018092,
-     "cx": 0.0591
+     "cx": 0.0591,
+     "m0Note": "分部未揭露訂閱利潤率：10%（0%–20%）[Assumed]"
     },
     {
      "key": "awsNonAi",
@@ -1153,7 +1155,14 @@
     "note": "共用非 AI 雲端同業組 ORCL、IBM、SAP、CRM、NOW、AKAM、EQIX、DOCN（MAG 對照表 r1 C12；data/peers_cloud_20261008.json，三家共用）；中位數 13.82× [Derived]"
    }
   },
-  "segmentMultiplesNote": "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 NTM EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家；SPOT、DIS 以 TTM 代替，v0.1a 已註明；數位廣告＝共用同業組 6 家（C18，data/peers_ads_20261009.json））；非 AI 雲端＝共用同業組 8 家中位數（C12，data/peers_cloud_20261008.json），AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）"
+  "segmentMultiplesNote": "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 NTM EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家；SPOT、DIS 以 TTM 代替，v0.1a 已註明；數位廣告＝共用同業組 6 家（C18，data/peers_ads_20261009.json））；非 AI 雲端＝共用同業組 8 家中位數（C12，data/peers_cloud_20261008.json），AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）",
+  "ownMultiple": {
+   "value": 11.26,
+   "ev": 2930,
+   "ntmEbitda": 260.296,
+   "ref": "val.amzn.ownNtm",
+   "note": "公司自身 NTM EV/EBITDA＝EV 2.93T（StockAnalysis 2026-10-07，事實總帳 val.amzn.evEbitdaTTM）÷ NTM EBITDA 260.3（MarketScreener 共識 2026E 216.957、2027E 273.452，FY1 權重 0.2329）[Derived]；只用於評價口徑敏感度（非 AI 分部改用自身倍數）"
+  }
  },
  "methodology": {
   "blendWeights": {
@@ -3387,6 +3396,8 @@
   },
   "customFactor": 1.0,
   "customFactorSens": 0.7,
+  "customCapexFactor": 1.0,
+  "customCapexNote": "自研晶片每 MW IT 資本支出係數：預設 1（Trainium 的資本支出以同期 NVIDIA 世代 TK_CapexIT 計）；雙邊敏感度時與 customFactor 同乘 0.7（收入錨與資本支出同降）；機房成本不變 [Assumed]",
   "customNote": "自研晶片（Trainium）每 MW 錨＝同期 NVIDIA 世代 IF_HoldEcon × 1.0（Trainium2 → Hopper、Trainium3 → GB300；對照表 r1 C2）；敏感度 × 0.7。Tokenomics 無 NonNV 具名範圍（IF_NonNVRatio、IF_NonNVCostRatio 為 missing），已列缺口回報。",
   "chips": [
    {

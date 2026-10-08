@@ -16,7 +16,8 @@ const line = k => st => (st.legacyBiz.lines.find(x => x.key === k) || {});
 const rows = [
   ['基準', s => s],
   ['價格軸 k 低（' + kAxQ(0).toFixed(3) + '）', s => (s.kAxis = 0, s)], ['價格軸 k 高（' + kAxQ(2).toFixed(3) + '）', s => (s.kAxis = 2, s)],
-  ['自研晶片係數 0.7（C2 敏感度）', s => (s.customFactor = PRICING.customFactorSens ?? .7, s)],
+  [`自研晶片係數 ${PRICING.customFactorSens ?? .7}（收入端單邊壓力測試）`, s => (s.customFactor = PRICING.customFactorSens ?? .7, s)],
+  [`自研晶片係數 ${PRICING.customFactorSens ?? .7}（雙邊：收入錨與每 MW IT 資本支出同乘）`, s => (s.customFactor = PRICING.customFactorSens ?? .7, s.customCapexFactor = PRICING.customFactorSens ?? .7, s)], // v0.1 交付前修訂：機房成本不變；MW 速度不重解
   ...(([lo, hi]) => [[`期初對外 AI MW ${lo.toLocaleString()}（區間下緣）`, s => pathQ(s, lo)], [`期初對外 AI MW ${hi.toLocaleString()}（區間上緣）`, s => pathQ(s, hi)]])(
     COMPANY_DATA.mag?.mw?.externalIT?.value ? [COMPANY_DATA.mag.mw.externalIT.value.low, COMPANY_DATA.mag.mw.externalIT.value.high] : [Math.round(DEFAULTS.billableOpen * .7), Math.round(DEFAULTS.billableOpen * 1.3)]), // v0.1a 區間（mag 區段）；沒有時 ±30%
   [`對外比例 ${Math.round(((CM.extShare ?? .8) - .2) * 100)}%（−20pt，C9）`, s => (s.extShare = (CM.extShare ?? .8) - .2, s)], [`對外比例 ${Math.round(Math.min(1, (CM.extShare ?? .8) + .2) * 100)}%（＋20pt）`, s => (s.extShare = Math.min(1, (CM.extShare ?? .8) + .2), s)], // MAG v0.1b′：列名依 company.json 對外比例

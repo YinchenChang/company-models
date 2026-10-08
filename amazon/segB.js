@@ -226,6 +226,22 @@ function read2Q(e, p) {
     WD = o.invalid ? 0 : BLEND_W.dcf, tp = (o.invalid ? 0 : WD * o.perShareT) + (1 - WD) * d;
   return { tp, dcfT: o.perShareT, ev: d, diff: tp - p.call.blended, shadow: e.years.map(y => y.shadowEb1 || 0) }
 }
+// v0.1 交付前修訂：評價口徑敏感度（WACC 以 ERP 調整達成、ERP、非 AI 改公司自身 NTM 倍數、AI 雲端 15×、組合）與評等翻轉點（WACC 降到多少時由賣出轉中立）。
+// Excel 為建置時快照（scripts/rv_solve.py「vs」「vflip」，同一演算法：ERP 對 WACC 線性；翻轉點 30 次對半）。
+function erpForWaccQ(o, w) { const c = o.capm || COMPANY_DATA.valuation.capm, f = e => CAPM_Q({ ...o, capm: { ...c, erp: e } }).wacc, a = f(c.erp), b = f(c.erp + .01); return c.erp + (w - a) / (b - a) * .01 }
+function valAtQ(d, st, o, chg) { let i = { ...o }; if (chg.erp != null) i = { ...i, capm: { ...(o.capm || COMPANY_DATA.valuation.capm), erp: chg.erp } }, i.wacc = CAPM_Q(i).wacc;
+  if (chg.own) i.legacyEvEbitda = chg.own; if (chg.ai) i.evEbitda = chg.ai; const p = runValuation(d, st, i); return { tp: p.call.blended, call: p.call.call, wacc: i.wacc } }
+function valSensQ(d, st, o) {
+  const OM = COMPANY_DATA.valuation.ownMultiple, own = OM && OM.value, th = o.price * (1 + SELL_TH), ew = w => erpForWaccQ(o, w),
+    R = [[`WACC 9%（ERP 調整）`, { erp: ew(.09) }], [`WACC 10%（ERP 調整）`, { erp: ew(.10) }], [`WACC 11%（ERP 調整）`, { erp: ew(.11) }], [`ERP 4%`, { erp: .04 }], [`ERP 6%`, { erp: .06 }],
+      ...(own ? [[`非 AI 分部改用公司自身 NTM EV/EBITDA ${Y(own, 2)}×`, { own }]] : []), [`AI 雲端 15×`, { ai: 15 }],
+      [`組合：WACC 9%＋${own ? `非 AI 自身倍數＋` : ``}AI 15×`, { erp: ew(.09), own, ai: 15 }]].map(([l, c]) => ({ label: l, erp: c.erp, ...valAtQ(d, st, o, c) })),
+    base = valAtQ(d, st, o, {});
+  let flip = null;
+  if (base.tp < th) { let lo = .05, hi = o.wacc; const f = w => valAtQ(d, st, o, { erp: ew(w) }).tp - th;
+    if (f(lo) >= 0) { for (let i = 0; i < 30; i++) { const m = (lo + hi) / 2; f(m) >= 0 ? lo = m : hi = m } flip = { wacc: (lo + hi) / 2, erp: ew((lo + hi) / 2) } } }
+  return { rows: R, base, th, flip }
+}
 function blendCall(e) {
   let {
     spot: t,
@@ -587,13 +603,18 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
       (bp <= .05 ? `無回購計畫（減少回購步驟不適用）` : bcut.length ? `回購被迫減少：${bcut.map(x => `${x[0]} $${Y(x[1], 1)}`).join(`、`)}bn` : `回購未被迫減少`) +
       `；五期新債 $${Y(ndS, 1)}bn、股權 $${Y(eqS, 1)}bn。`;
   let AQ = aiRoicQ(d, st || DEFAULTS, o), thesisLine = AQ ? `主命題（AI 資本支出有沒有賺到資金成本）：${PERIODS[AQ.ry]} 對外 AI ROIC ${Y(AQ.roic[AQ.ry] * 100, 1)}% vs WACC ${Y(AQ.wacc * 100, 1)}%（${AQ.spread[AQ.ry] < 0 ? `−` : `+`}${Y(Math.abs(AQ.spread[AQ.ry]) * 100, 1)}pt）；打平 k ${Y(AQ.breakevenK, 2)}（目前 ${Y(AQ.k, 2)}）；全 AI（含影子收入）${Y(AQ.roicSh[AQ.ry] * 100, 1)}%。` : ``; // MAG v0.1b
+  // v0.1 交付前修訂：評價口徑敏感度句、終值占比規則句
+  let VS = valSensQ(d, st || DEFAULTS, o), CODEq = { 買進: `買進`, 中立: `中立`, 賣出: `賣出` },
+    vsLine = `評價口徑敏感度：` + VS.rows.filter((x, i) => i < 3).map(x => `${x.label.replace(`（ERP 調整）`, ``)} $${Y(x.tp, 2)}（${x.call}）`).join(`、`) + `；` + VS.rows.slice(5).map(x => `${x.label} $${Y(x.tp, 2)}（${x.call}）`).join(`、`) +
+      `；評等翻轉點：${VS.flip ? `WACC 約 ${Y(VS.flip.wacc * 100, 1)}%（ERP ${Y(VS.flip.erp * 100, 2)}%）以下由「賣出」轉為「中立」` : VS.base.tp >= VS.th ? `目前已高於賣出門檻` : `WACC 5% 仍為「賣出」`}。`,
+    tvq = p.d.tvShare, tvLine = `評等規則：買進須空間 ≥ +${pctQ(RATE_TH.buyUpsideMin)} 且終值占 EV < ${pctQ(RATE_TH.buyTvShareMax)}；目前終值占 EV ${hA(tvq * 100, 0)}${tvq >= RATE_TH.buyTvShareMax ? `，此規則下只可能「賣出」或「中立」` : ``}（規則是否修改待 Andy 決定）。`;
   // MAG v0.1b r3（對照表 r1 C16、C23）：兩種讀法並列＋差額；對外比例（無揭露）±20pt 目標價
   let CMq = COMPANY_DATA.capexModel, TK = CMq && CMq.mode === `tk`, R2 = TK ? read2Q(d, p) : null, S0q = st || DEFAULTS,
     read2Line = R2 ? `兩種讀法（自用 AI）：讀法 1（影子收入不進評價）$${Y(p.call.blended, 2)}；讀法 2（自用 AI 價值中性：自用 MW 以 k＝1 計影子收入並進評價）$${Y(R2.tp, 2)}；差額 ${R2.diff < 0 ? `−` : `+`}$${Y(Math.abs(R2.diff), 2)}。主值取哪一個是 Andy 的判斷（待決）。` : ``,
     XSq = TK ? S0q.extShare ?? CMq.extShare : null,
     xsTp = TK ? [XSq - .2, Math.min(1, XSq + .2)].map(x => { const s2 = { ...S0q, extShare: x }, d2 = runFunding(s2); return { x, tp: runValuation(d2, s2, o).call.blended } }) : null,
     extLine = TK ? `對外比例無揭露（目前 ${Math.round(XSq * 100)}%，[Assumed]），是最大不確定：${xsTp.map(z => `${Math.round(z.x * 100)}% → $${Y(z.tp, 2)}`).join(`、`)}（基準 $${Y(p.call.blended, 2)}）。` : ``;
-  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, adjLine, delayLine, junk: jk, fcfLine, thesisLine, read2Line, read2: R2, extLine, xsTp, aiRoic: AQ }
+  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, adjLine, delayLine, junk: jk, fcfLine, thesisLine, read2Line, read2: R2, extLine, xsTp, vsLine, vsens: VS, tvLine, aiRoic: AQ }
 }
 
 // v4.4：差異原因的共用工具（年度共識對照與季度層共用）。類型固定為四種（已決定事項 2）；原因文字中的 {路徑:格式} 由模型數字帶入。

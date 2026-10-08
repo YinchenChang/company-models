@@ -8018,6 +8018,19 @@
     "retrieved": "2026-10-08",
     "tag": "[Assumed]",
     "note": "對照表預設 9"
+   },
+   {
+    "id": "val.amzn.ownNtm",
+    "item": "AMZN 自身 NTM EV/EBITDA",
+    "value": 11.26,
+    "unit": "倍",
+    "period": "2026-10-07",
+    "source": "StockAnalysis＋MarketScreener",
+    "url": "https://www.marketscreener.com/quote/stock/AMAZON-COM-INC-12864605/finances/",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "＝EV 2,930B（StockAnalysis 統計頁，val.amzn.evEbitdaTTM）÷ NTM EBITDA 260.296（共識 2026E 216.957 × 0.2329＋2027E 273.452 × 0.7671）"
    }
   ],
   "8_市場共識": [

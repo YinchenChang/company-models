@@ -50,7 +50,7 @@ var PERIODS = COMPANY_DATA.periods,
   scA = e => {
     let T = COMPANY_DATA.scenarios.capexTemplate;
     return {
-      costMW: COMPANY_DATA.capexModel?.mode === `tk` ? capexCostQ(COMPANY_DATA.capexModel.selfBuild).map(x => x.all) : [...T.costMW], // MAG v0.1b：tk＝Tokenomics 每 MW 成本（顯示用；引擎於 runFunding 依自建比例重算）
+      costMW: COMPANY_DATA.capexModel?.mode === `tk` ? capexCostQ(COMPANY_DATA.capexModel.selfBuild, (COMPANY_DATA.pricing || {}).customCapexFactor ?? 1).map(x => x.all) : [...T.costMW], // MAG v0.1b：tk＝Tokenomics 每 MW 成本（顯示用；引擎於 runFunding 依自建比例重算）
       customerFund: PERIOD_YEARS.map(() => COMPANY_DATA.defaults.prepay.shareOfDeals * COMPANY_DATA.defaults.prepay.capexCover), // v0.1b：預付比率＝有預付的合約比例 × 預付占相關資本支出比
       newLease: ulPath(), // v0.1b（Oracle）：合約性，三情境相同
       div: [...T.div]
@@ -95,7 +95,7 @@ var PERIODS = COMPANY_DATA.periods,
   Qk = DEFAULTS; // 模板函式庫片段（mid1–mid3）仍以 Qk 引用預設值，保留別名
 DEFAULTS.cvCap = SCENARIOS[COMPANY_DATA.defaults.scenario].cvCap; // v0.1b：預設情境的可轉債年上限
 if (SC_MWP.connectedStart == null) DEFAULTS.m.accepted = [...SCENARIOS[COMPANY_DATA.defaults.scenario].acc], DEFAULTS.m.billable = [...SCENARIOS[COMPANY_DATA.defaults.scenario].bil]; // MAG v0.1b：首期自評價日起算——預設 MW 路徑隨日曆（與 calendar_q.apply 同一規則）
-if (PRICING) DEFAULTS.priceLink = !0, DEFAULTS.kAxis = K_AX.indexOf(PRICING.axis), DEFAULTS.customFactor = PRICING.customFactor, DEFAULTS.m.revMW = [...SC_REV[COMPANY_DATA.defaults.scenario]]; // MAG v0.1b：價格軸（0 低、1 基準、2 高）與自研晶片係數；priceLink 時每 MW 年收入由 MW 路徑與 k 推得
+if (PRICING) DEFAULTS.priceLink = !0, DEFAULTS.kAxis = K_AX.indexOf(PRICING.axis), DEFAULTS.customFactor = PRICING.customFactor, DEFAULTS.customCapexFactor = PRICING.customCapexFactor ?? 1, DEFAULTS.m.revMW = [...SC_REV[COMPANY_DATA.defaults.scenario]]; // MAG v0.1b：價格軸（0 低、1 基準、2 高）與自研晶片係數；priceLink 時每 MW 年收入由 MW 路徑與 k 推得
 DEFAULTS.delayMonths = SCENARIOS[COMPANY_DATA.defaults.scenario].delay; // v0.2：預設情境的建設延誤月數
 DEFAULTS.delayLink = UL.delayLink ?? 0; // v0.2：未起租租約起租隨延誤後移的比例（company.json → leases.uncommenced.delayLink）
 DEFAULTS.ulTerm = UL.termYears; // v0.2：未起租租約租期（延誤平移與租賃負債用；租期敏感度同時改 a.newLease 與此值）
@@ -161,9 +161,9 @@ var LEASE_OIE = !!COMPANY_DATA.leases.operatingInEbitda,
   RENT_OV = (c => PERIOD_YEARS.map((L, r) => { const v = monQ(CALQ.valuationDate.slice(0, 7)) + 1, a = v + Math.round(CALQ.tStart[r] * 12), b = v + Math.round(CALQ.tEnd[r] * 12), s0 = monQ(c.start), s1 = s0 + Math.round(c.years * 12); return Math.max(0, Math.min(b, s1) - Math.max(a, s0)) / 12 })),
   rentedQ = L => PERIOD_YEARS.map((x, r) => L.reduce((a, c) => a + c.annualRent * RENT_OV(c)[r], 0));
 // MAG v0.1b：每 MW 資本支出（US$m/MW）＝Σ 新增占比 × (TK_CapexIT＋自建比例 × TK_CapexFacility)；IT 部分＝Σ 新增占比 × TK_CapexIT（Excel「輸入與假設」D 區同式）
-function capexCostQ(sb) {
+function capexCostQ(sb, ccf = 1) { // v0.1 交付前修訂：ccf＝自研晶片 IT 資本支出係數（pricing.customCapexFactor；雙邊晶片係數敏感度用，預設 1；機房成本不變）
   return PERIOD_YEARS.map((L, r) => {
-    const it = PRICING.chips.reduce((a, c) => a + c.mixAdds[r] * TKV.IF_CapexIT[c.tk], 0), fc = PRICING.chips.reduce((a, c) => a + c.mixAdds[r] * TKV.IF_CapexFacility[c.tk], 0) * sb;
+    const it = PRICING.chips.reduce((a, c) => a + c.mixAdds[r] * TKV.IF_CapexIT[c.tk] * (c.custom ? ccf : 1), 0), fc = PRICING.chips.reduce((a, c) => a + c.mixAdds[r] * TKV.IF_CapexFacility[c.tk], 0) * sb;
     return { it, fac: fc, all: it + fc, itShare: it / Math.max(it + fc, 1e-9) }
   })
 }
@@ -171,7 +171,7 @@ function capexCostQ(sb) {
 // 非 AI 期初基礎＝期初 PP&E − AI 估計，壽命＝非 AI 基礎 ÷ (最新季分部 D&A 年化 − AI 期初 D&A)（校準）
 function aiOpenQ(e, XS) {
   const CM = COMPANY_DATA.capexModel, sb = e.selfBuild ?? CM.selfBuild, mw = Math.max(0, e.billableOpen / XS - ((CM.rentedExt || {}).open || 0)), // MAG v0.1b r3（C20）：自有 AI 總 MW＝對外 ÷ 對外比例 − 租用對外 MW
-    W = f => PRICING.chips.reduce((a, c) => a + c.mixOpen * TKV[f][c.tk], 0),
+    W = f => PRICING.chips.reduce((a, c) => a + c.mixOpen * TKV[f][c.tk] * (f === `IF_CapexIT` && c.custom ? e.customCapexFactor ?? 1 : 1), 0), // v0.1 交付前修訂：自研晶片 IT 成本係數
     it = mw * W(`IF_CapexIT`) / 1e3, fac = mw * sb * W(`IF_CapexFacility`) / 1e3, facLife = W(`IF_CapexFacility`) / W(`IF_DeprFac`),
     da0 = it / e.gpuLife + fac / facLife, n0 = e.ppeOpen - it - fac;
   const nLife = CM.nonAiLife ?? 10; // MAG v0.1b r3（對照表 r1 C17）：非 AI 折舊年限＝預設年限（不再以分部 D&A 反解，避免 AI 期初 D&A > 合併 D&A 時退化）
@@ -363,7 +363,7 @@ function runFunding(e) {
     RENTC = rentedQ(e.rentedCompute ?? COMPANY_DATA.leases.rentedCompute ?? []), // MAG v0.1b：租用算力租金（各期；C8 d）
     CXM = COMPANY_DATA.capexModel && COMPANY_DATA.capexModel.mode === `tk` ? COMPANY_DATA.capexModel : null, // MAG v0.1b：資本支出由 Tokenomics 每 MW 成本推導（AI 與非 AI 分池）
     XS = CXM ? e.extShare ?? CXM.extShare : 1, // 對外比例：新增 AI 總 MW＝新增對外 MW ÷ 對外比例（自用 AI 同樣需要資本支出）
-    CC = CXM ? capexCostQ(e.selfBuild ?? CXM.selfBuild) : null, // 各期新增 MW 的每 MW 成本（US$m/MW：IT＋自建比例 × 機房）與 IT 占比
+    CC = CXM ? capexCostQ(e.selfBuild ?? CXM.selfBuild, e.customCapexFactor ?? 1) : null, // 各期新增 MW 的每 MW 成本（US$m/MW：IT＋自建比例 × 機房）與 IT 占比
     CMW = CXM ? CC.map(x => x.all) : e.a.costMW, CIT = CXM ? CC.map(x => x.it) : e.a.costMW, // 汰換只換 IT（機房不換）；非 tk 模式沿用 e.a.costMW
     RXP = CXM ? rentedExtQ() : null, RXD = n => RXP ? (n < 5 ? RXP.path[n] - (n ? RXP.path[n - 1] : RXP.open) : 0) : 0, // MAG v0.1b r3（C20）：租用對外 MW 的新增（不需資本支出）
     CXF = MN.map((t, n) => (CXM ? Math.max(0, (t * (1 - e.lambda) + MX[n] * e.lambda) / XS - (RXD(n) * (1 - e.lambda) + RXD(n + 1) * e.lambda)) : t * (1 - e.lambda) + MX[n] * e.lambda) * CMW[n] * (e.capexScale ?? 1) / 1e3),
