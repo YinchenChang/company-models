@@ -1254,7 +1254,7 @@
     "perMw": {
      "revenue": "tkAnchor"
     },
-    "text": "營收依 Tokenomics 錨推導：在役世代 IF_HoldEcon（WACC 10% 打平租金）× 定價倍數 k（長約／現貨依 RPO 涵蓋的產能加權，證據為市場長約價與現貨指數），不以公司 ARR 指引或 Q2 營收校準；營收差距 {gap.rev:gap}"
+    "text": "營收依 Tokenomics 錨推導：在役世代 IF_HoldEcon（WACC 10% 打平租金）× 定價倍數 k（長約倍數 0.76，以市場長約價為證據；隨需占比 0%），不以公司 ARR 指引或 Q2 營收校準；營收差距 {gap.rev:gap}"
    },
    {
     "scope": "annual",
@@ -1527,28 +1527,28 @@
    }
   ],
   "anchorMultiple": {
-   "_note": "W4（已決定事項 14）：每 MW 年收入（100% 計費時數）＝ Σ 平均在役占比 × IF_HoldEcon（目前成本情境）× k；k＝長約占比 × k_長約＋（1 − 長約占比）× k_現貨。k_長約、k_現貨以『市場價格 ÷ Tokenomics 同世代持有成本（IF_GPUhrEcon 或 IF_HoldEcon）』為證據（evidence；倍數在 Excel 以 TK_ 名稱計算）；不以 CoreWeave 的營收、ARR 或 RPO 金額反推 k。長約占比＝RPO 涵蓋的產能 ÷ 在役計費產能（longShare.formula）。合約期內 k 固定；續約價格衰退、壽命期係數 L 不做。",
+   "_note": "W4 r2（已決定事項 14）：每 MW 年收入（100% 計費時數）＝ Σ 平均在役占比 × IF_HoldEcon（目前成本情境）× k；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約。CRWV 先簽多年期合約再建產能（10-K 加權平均約 5 年），RPO 未覆蓋的新增產能也按長約價出售；RPO 覆蓋率只作對照列。k 以『市場價格 ÷ 同成本情境的 Tokenomics 持有成本』計：輸入值為基準成本情境，其他情境以基準證據世代的成本比例重算（價格是事實，不隨 Tokenomics 成本情境變）。不以 CoreWeave 的營收、ARR 或 RPO 金額反推 k 或隨需占比。",
    "long": {
     "base": 0.76,
     "low": 0.7,
     "high": 1.0,
     "tag": "[Analogy]",
-    "note": "基準＝IREN–Microsoft GB300 五年約（evidence 第 1 筆，0.762 取兩位）；區間 0.70–1.00（工作單 W4 預設）。第 2 筆 IREN–NVIDIA（0.89）與第 1 筆同一供應商、世代與 MW 口徑為類比，只用來支持區間、不改基準"
+    "note": "基準＝IREN–Microsoft GB300 五年約（evidence 第 1 筆，0.762 取兩位；唯一已證實的可比長約）；區間 0.70–1.00；三筆長約中位數 0.89（IREN–Microsoft 0.76、IREN–NVIDIA 0.89、Oracle–OpenAI 1.05〔未證實〕）列為敏感度（sensMedian），基準用哪個待 Andy 決定",
+    "sensMedian": 0.89,
+    "refEvidence": "IREN–Microsoft GB300 五年約"
    },
    "spot": {
     "base": 1.76,
     "low": 1.5,
     "high": 2.3,
     "tag": "[Analogy]",
-    "note": "基準＝H100 Silicon Data 現貨指數 ÷ IF_GPUhrEcon（1.757）；上緣＝B300 指數（GB300 類比，2.29）；下緣 1.5（工作單 W4 預設）"
+    "note": "基準＝H100 Silicon Data 現貨指數 ÷ IF_GPUhrEcon（1.757）；上緣＝B300 指數（GB300 類比，2.29）；下緣 1.5（工作單 W4 預設）",
+    "refEvidence": "H100 Silicon Data 現貨指數"
    },
    "longShare": {
     "method": "rpoCover",
-    "adj": 0,
-    "sensLowPt": -0.2,
     "tag": "[Derived]",
-    "formula": "長約占比_t ＝ MIN(1, MAX(0, 排程 RPO_t ÷（平均計費 MW_t × 錨_t × k_長約 × 利用率_t × 期間長度_t）＋ 調整))：把模型期認列的 RPO 金額以長約價換成 MW，除以在役計費產能；未被 RPO 涵蓋的產能以現貨倍數計價",
-    "sens": "敏感度：調整 −20pt（較多現貨）、100%（新簽約全視為長約，k＝k_長約）"
+    "formula": "對照列（不驅動）：RPO 涵蓋的產能 ÷ 在役計費產能＝排程 RPO ÷（平均計費 MW × 錨 × k_長約 × 利用率 × 期間長度）"
    },
    "contractMix": [
     {
@@ -1613,7 +1613,7 @@
      "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-34bn-ai-cloud-contract-nvidia",
      "date": "2026-05-07",
      "retrieved": "2026-10-08",
-     "note": "$3.4bn ÷ 5 年 ÷ 約 60 MW（Childress；MW 口徑未註明，視為 IT）；氣冷 Blackwell（非 NVL72）以 GB300 類比；與第 1 筆同一供應商，只支持區間"
+     "note": "$3.4bn ÷ 5 年 ÷ 約 60 MW（Childress；MW 口徑未註明，視為 IT）；氣冷 Blackwell（非 NVL72）以 GB300 類比；與第 1 筆同一供應商，只支持區間；三筆長約中位數＝本筆 0.89（敏感度）"
     },
     {
      "label": "Oracle–OpenAI 約 $300bn／4.5 GW（未經證實）",
@@ -1629,7 +1629,7 @@
      "url": "https://www.theregister.com/2025/09/11/openai_reportedly_on_the_hook/",
      "date": "2025-09-11",
      "retrieved": "2026-10-08",
-     "note": "$300bn ÷ 5 ÷ 4,500 MW；金額未經當事方證實、MW 口徑不明（若為設施口徑，每 IT MW 再 × 1.2）、Oracle 自有廠房；只列不用"
+     "note": "$300bn ÷ 5 ÷ 4,500 MW；金額未經當事方證實、MW 口徑不明（若為設施口徑，每 IT MW 再 × 1.2）、Oracle 自有廠房；只列不用；納入三筆長約中位數的敏感度"
     },
     {
      "label": "H100 Silicon Data 現貨指數",
@@ -1748,7 +1748,16 @@
     "VR200 NVL72 長約或多年期合約的每 GPU 小時／每 MW 價格：Nebius–Meta（2026-03-16，$12bn 專屬產能、Vera Rubin、五年）與 Nebius–Microsoft（2025-09-08，$17.4–19.4bn、五年）都未揭露 MW 或 GPU 數，無法換算（找不到）",
     "GB200 NVL72 長約價：找不到可換算的揭露（Nscale–Microsoft 約 20 萬顆 GB300 未揭露金額，FT 估約 $14bn 屬估計，不用）",
     "其他 neocloud 對 hyperscaler／實驗室的長約（獨立於 IREN 的供應商）：上列 Nebius、Nscale 皆缺 MW 或金額；Oracle–OpenAI 金額未經證實、只列"
-   ]
+   ],
+   "onDemandShare": {
+    "base": 0,
+    "sens": [
+     0.1,
+     0.2
+    ],
+    "tag": "[Assumed]",
+    "note": "隨需（現貨）占在役計費產能的比例；公司未揭露（S-1：絕大多數收入來自多年期已承諾合約）。基準 0%、敏感度 10%／20%；不得用 Q2 隱含 k 反推"
+   }
   }
  }
 }

@@ -13,7 +13,7 @@ from openpyxl.styles import Font, PatternFill, Alignment
 ROWS = ['每 MW 年收入（算力＋服務）', '　其中：算力收入', '現金成本合計（含租金）', 'EBITDA', '稅前', '平均在役 MW 合計',
         '每 MW 年收入（模型採用，100% 計費時數）', '每 MW 年收入（計費後＝× 利用率）', '每 MW 經濟持有成本（不賠錢下限）', '每 MW 年收入 ÷ 經濟持有成本']
 W4ROWS = ['錨｜每 MW 經濟持有成本（IF_HoldEcon，在役世代加權）', '錨｜排程 RPO（模型期）', '錨｜平均計費 MW', '長約價產能收入（平均計費 MW × 錨 × k_長約 × 利用率 × 期間長度）',
-          'RPO 涵蓋的產能 ÷ 在役計費產能（未截斷）', '長約占比（截斷於 0–100%，含調整）', '定價倍數 k（長約占比 × k_長約 ＋（1 − 長約占比）× k_現貨）',
+          'RPO 涵蓋的產能 ÷ 在役計費產能（對照，不驅動）', 'k_長約（依目前成本情境重算）', '隨需占比（輸入）', '定價倍數 k（隨需占比 × k_現貨 ＋（1 − 隨需占比）× k_長約）',
           'Tokenomics 錨 × k：每 MW 年收入（100% 計費時數）', '錨 × k 相對 v4.6 舊輸入 m.revMW',
           '上限檢查｜客戶每 MW 付費 token 營收（IF_RevGWFleet，在役世代加權）', '上限檢查｜CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收']
 COST = ['電費', 'IT 維護', '人員、軟體、水與耗材', '財產稅與保險', '租金']
@@ -58,7 +58,7 @@ def main():
             c = ws.cell(row=r, column=1 + j, value=x); c.font = H; c.fill = FH
     b6, b7 = A[2], B[2]
     ws['A1'] = 'CoreWeave v4.6 → v4.7 收入錨定對照（每 MW 收入＝Tokenomics IF_HoldEcon × 定價倍數 k）'; ws['A1'].font = T
-    ws['A2'] = f"Tokenomics {CO['tokenomics']['version']}（commit {CO['tokenomics']['commit'][:7]}）；k_長約 {AM['long']['base']}（{AM['long']['low']}–{AM['long']['high']}）、k_現貨 {AM['spot']['base']}（{AM['spot']['low']}–{AM['spot']['high']}）；長約占比＝RPO 涵蓋的產能 ÷ 在役計費產能"
+    ws['A2'] = f"Tokenomics {CO['tokenomics']['version']}（commit {CO['tokenomics']['commit'][:7]}）；k_長約 {AM['long']['base']}（{AM['long']['low']}–{AM['long']['high']}）、k_現貨 {AM['spot']['base']}（{AM['spot']['low']}–{AM['spot']['high']}）；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約，隨需占比 {AM['onDemandShare']['base']:.0%}"
     ws['A2'].font = S_
     r = 4; hdr(ws, r, ['情境', 'v4.6 加權目標價', 'v4.7 加權目標價', '變動', 'v4.6 評等', 'v4.7 評等', 'v4.6 融資缺口', 'v4.7 融資缺口', '變動']); r += 1
     for s in (1, 2, 3):
@@ -67,7 +67,7 @@ def main():
         r += 1
     r += 1; hdr(ws, r, ['基準：每 MW（US$m／MW／年）'] + P); r += 1
     for lab, src, nm in [('v4.6 每 MW 年收入（100% 計費）', A, '每 MW 年收入（模型採用，100% 計費時數）'), ('v4.7 錨（IF_HoldEcon 在役加權）', B, 'Tokenomics 錨 × k：每 MW 年收入（100% 計費時數）'),
-                         ('v4.7 定價倍數 k', B, '定價倍數 k（長約占比 × k_長約 ＋（1 − 長約占比）× k_現貨）'), ('v4.7 長約占比', B, '長約占比（截斷於 0–100%，含調整）')]:
+                         ('v4.7 定價倍數 k', B, '定價倍數 k（隨需占比 × k_現貨 ＋（1 − 隨需占比）× k_長約）'), ('v4.7 RPO 覆蓋率（對照，不驅動）', B, 'RPO 涵蓋的產能 ÷ 在役計費產能（對照，不驅動）')]:
         vals = src[2][nm] if lab != 'v4.7 錨（IF_HoldEcon 在役加權）' else src[2]['錨｜每 MW 經濟持有成本（IF_HoldEcon，在役世代加權）']
         ws.cell(row=r, column=1, value=lab)
         for i, v in enumerate(vals): ws.cell(row=r, column=2 + i, value=v).number_format = '0.000'

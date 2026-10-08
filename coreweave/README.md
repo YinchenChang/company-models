@@ -156,13 +156,15 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **verify 工具修正**：`xlx.py` 切換情境前把模擬運算表輸出換成來源檔的快取值（LibreOffice 批次重算時運算表會使非基準情境的部分格殘留中間值；改錨定年度時保留運算表）；`cmp31.js` DCF 失效時 HTML 的 NaN 與 Excel 的 0 視為一致。
 - **Tokenomics 升版時**：見交接檔「Tokenomics 連結」（重抓快照 → verify → 升版）。
 
-## v4.7 每 MW 收入以 Tokenomics 為錨（W4；2026-10-08；已決定事項 14）
-- **方法**：`methodology.perMw.revenue`＝tkAnchor（預設）。每 MW 年收入（100% 計費時數）＝Σ 平均在役占比 × `IF_HoldEcon`（`TK_HoldEcon_*`，目前 Tokenomics 成本情境）× 定價倍數 k；k＝長約占比 × k_長約＋（1 − 長約占比）× k_現貨；長約占比＝MIN(1, MAX(0, 排程 RPO ÷（平均計費 MW × 錨 × k_長約 × 利用率 × 期間長度）＋調整))。B 區「每 MW 年收入」改引用「每MW經濟性」頁「Tokenomics 錨 × k」列 ÷ 1000；利用率與爬坡分母（Billable ÷ Accepted）照舊在收入端另乘。
-- **公司因素**（`pricing.anchorMultiple`）：k_長約 0.76（0.70–1.00）、k_現貨 1.76（1.5–2.3），以「市場價格 ÷ Tokenomics 同世代持有成本（IF_GPUhrEcon 或 IF_HoldEcon）」為證據（`evidence`；倍數在 Excel 以 TK_ 名稱計算，「每MW經濟性」k 證據表）；`longShare.adj`＝長約占比調整（預設 0）。不以公司營收、ARR、RPO 金額反推 k；Q2 只作驗證（`scripts/q2_check_w4.py`）。合約期內 k 固定；續約價格衰退與壽命期係數 L 不做。
-- **輸入頁**：B 區後「世代組合」子區新增「定價倍數 k」三格（k_長約、k_現貨、長約占比調整）與「TK 收入上限」區塊（`IF_RevGWFleet`）。
+## v4.7 每 MW 收入以 Tokenomics 為錨（W4 r2；2026-10-08；已決定事項 14）
+- **方法**：`methodology.perMw.revenue`＝tkAnchor（預設）。每 MW 年收入（100% 計費時數）＝Σ 平均在役占比 × `IF_HoldEcon`（`TK_HoldEcon_*`，目前 Tokenomics 成本情境）× 定價倍數 k；**k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約**（r2：CRWV 先簽多年期合約再建產能，RPO 未覆蓋的新增產能也按長約價；隨需占比基準 0%、敏感度 10%／20%）。B 區「每 MW 年收入」改引用「每MW經濟性」頁「Tokenomics 錨 × k」列 ÷ 1000；利用率與爬坡分母（Billable ÷ Accepted）照舊在收入端另乘。
+- **k 隨成本情境重算**（r2）：輸入的 k_長約、k_現貨 是基準成本情境的值；其他成本情境以基準證據世代（`long.refEvidence`／`spot.refEvidence`）的 Tokenomics 成本比例重算（k＝市場價格 ÷ 同情境持有成本），所以 Tokenomics 低／高成本敏感度下收入大致不變、成本改變。
+- **公司因素**（`pricing.anchorMultiple`）：k_長約 0.76（0.70–1.00；三筆長約中位數 0.89 列為敏感度）、k_現貨 1.76（1.5–2.3），以「市場價格 ÷ Tokenomics 同世代持有成本（IF_GPUhrEcon 或 IF_HoldEcon）」為證據（`evidence`；倍數在 Excel 以 TK_ 名稱計算，「每MW經濟性」k 證據表）；`onDemandShare`＝隨需占比。不以公司營收、ARR、RPO 金額或 Q2 隱含 k 反推 k 或隨需占比；Q2 只作驗證（`scripts/q2_check_w4.py`）。RPO 覆蓋率（排程 RPO ÷ 長約價產能收入）只作對照列。
+- **輸入頁**：B 區後「世代組合」子區新增「定價倍數 k」三格（k_長約、k_現貨、隨需占比）與「TK 收入上限」區塊（`IF_RevGWFleet`）。
 - **上限檢查**：CRWV 每 MW 計費收入 ÷ `IF_RevGWFleet`（Tokenomics 客戶端每 GW 付費 token 營收，在役世代加權）＝neocloud 拿走客戶營收的比例；> `methodology.checks.revCapShareMax`（50%）時「檢查_連動」與 HTML 連動檢查警示。快照沒有 `IF_RevGWFleet` 時顯示「不適用」。
-- **對照列（不驅動）**：v4.6 舊輸入 `m.revMW`、GPU 小時路線（`pricing.gpuHr` 空白＝不適用）、期末 ARR ÷ MW、Q2 每 MW 年收入 ÷ 平均在役 MW 與 ÷ 計費 MW、Q2 隱含 k。
-- **敏感度**（`permw_sens.json` 建置時快照＋HTML 即時）：既有四組外新增 k_長約 0.70／1.00、k_現貨 1.50／2.30、長約占比 −20pt、長約占比 100%（新簽約全視為長約）。注意：tkAnchor 下 Tokenomics 低／高成本同時移動錨（收入）與成本，方向與 v4.6 相反（高成本 → 收入較高）。
+- **對照列（不驅動）**：v4.6 舊輸入 `m.revMW`、RPO 覆蓋率、GPU 小時路線（`pricing.gpuHr` 空白＝不適用）、期末 ARR ÷ MW、Q2 每 MW 年收入 ÷ 平均在役 MW 與 ÷ 計費 MW、Q2 隱含 k。
+- **敏感度**（`permw_sens.json` 建置時快照＋HTML 即時）：既有四組外新增 k_長約 0.70／0.89（三筆中位數）／1.00、隨需占比 10%／20%。
+- **反向 DCF**：`rv_solve.py` 在區間內無解時寫 null，Excel 顯示「無解」（v4.7 穩態 EBITDA 率在 99% 內無解）。
 - **Tokenomics 快照**：v5.27（`data/tokenomics_snapshot_v5.27.json`，commit 862bdd4；引用的 25 個名稱數值與位置與 v5.26 相同，新增 `IF_RevGWFleet`）。
 - **升版驗收**：`DATE=2026-10-08 EXPECT=scripts/expect/v4_7_vs_v4_6.txt scripts/verify.sh --vs-dist`（對 v4.6 成品；清單由 `scripts/make_expect.py` 依 `scripts/expect/v4_7_rules.json` 產生，規則檔新增 `renames`〔指定列改名〕；營運成本列〔電費、IT 維護、人員軟體、稅險、租金〕不在清單＝須 0 差異）。舊方法組合（revenue=legacy）對 v4.6 成品 0 差異：`scripts/verify_legacy.sh`。
 - **JS 修正**：segB 無槓桿 NOL 的虧損改為全額加回（原只加回 80%，與 Excel 不一致；v4.6 前未觸發）。
@@ -649,7 +651,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `pricing._note` | GPU 小時價格與對照價格的說明（不進程式；W2） | 文字 | GPU 小時價格（W2，公司專屬）：gpuHr＝合約… | 可沿用 |
 | `pricing.gpuHr` | GPU 小時合約價，{世代: {base, low, high, source, date, tag}}（US$/GPU-hr）；空白＝不適用（revenue=gpuHr 時必填所有在役世代） | 物件 | 物件（） | 必改 |
-| `pricing.anchorMultiple._note` | Tokenomics 錨的公司因素說明（不進程式；W4） | 文字 | W4（已決定事項 14）：每 MW 年收入（100%… | 可沿用 |
+| `pricing.anchorMultiple._note` | Tokenomics 錨的公司因素說明（不進程式；W4） | 文字 | W4 r2（已決定事項 14）：每 MW 年收入（1… | 可沿用 |
 | `pricing.anchorMultiple.long.base` | 定價倍數 k_長約 基準（市場長約價 ÷ Tokenomics 同世代持有成本；W4） | 倍 | 0.76 | 檢查 |
 | `pricing.anchorMultiple.long.low` | k_長約 區間下緣（敏感度） | 倍 | 0.7 | 檢查 |
 | `pricing.anchorMultiple.long.high` | k_長約 區間上緣（敏感度） | 倍 | 1 | 檢查 |
@@ -660,12 +662,16 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `pricing.anchorMultiple.spot.high` | k_現貨 區間上緣（敏感度） | 倍 | 2.3 | 檢查 |
 | `pricing.anchorMultiple.spot.tag` | k_現貨 的資料標記 | 文字 | [Analogy] | 可沿用 |
 | `pricing.anchorMultiple.spot.note` | k_現貨 基準與區間的依據 | 文字 | 基準＝H100 Silicon Data 現貨指數 … | 可沿用 |
-| `pricing.anchorMultiple.longShare.method` | 長約占比估計方法（rpoCover＝RPO 涵蓋的產能 ÷ 在役計費產能） | 代碼 | rpoCover | 檢查 |
-| `pricing.anchorMultiple.longShare.adj` | 長約占比調整（百分點，加在 RPO 涵蓋估計上；預設 0） | 比例 | 0 | 檢查 |
-| `pricing.anchorMultiple.longShare.sensLowPt` | 長約占比敏感度的下調幅度（百分點） | 比例 | -0.2 | 檢查 |
-| `pricing.anchorMultiple.longShare.tag` | 長約占比的資料標記 | 文字 | [Derived] | 可沿用 |
-| `pricing.anchorMultiple.longShare.formula` | 長約占比算式說明（不進程式） | 文字 | 長約占比_t ＝ MIN(1, MAX(0, 排程 … | 可沿用 |
-| `pricing.anchorMultiple.longShare.sens` | 長約占比敏感度說明（不進程式） | 文字 | 敏感度：調整 −20pt（較多現貨）、100%（新簽… | 可沿用 |
+| `pricing.anchorMultiple.longShare.method` | RPO 覆蓋率對照列的算法（rpoCover＝RPO 涵蓋的產能 ÷ 在役計費產能；r2 起只作對照、不驅動） | 代碼 | rpoCover | 檢查 |
+| `pricing.anchorMultiple.longShare.tag` | RPO 覆蓋率對照列的資料標記 | 文字 | [Derived] | 可沿用 |
+| `pricing.anchorMultiple.longShare.formula` | RPO 覆蓋率對照列算式說明（不進程式） | 文字 | 對照列（不驅動）：RPO 涵蓋的產能 ÷ 在役計費產… | 可沿用 |
+| `pricing.anchorMultiple.long.sensMedian` | k_長約 三筆長約中位數（敏感度；W4 r2） | 倍 | 0.89 | 檢查 |
+| `pricing.anchorMultiple.long.refEvidence` | k_長約 的基準證據（evidence.label；成本情境重算時用其世代的 Tokenomics 成本比例） | 文字 | IREN–Microsoft GB300 五年約 | 檢查 |
+| `pricing.anchorMultiple.spot.refEvidence` | k_現貨 的基準證據（evidence.label；成本情境重算時用其世代的 Tokenomics 成本比例） | 文字 | H100 Silicon Data 現貨指數 | 檢查 |
+| `pricing.anchorMultiple.onDemandShare.base` | 隨需（現貨）占在役計費產能比例，基準（W4 r2；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約） | 比例 | 0 | 檢查 |
+| `pricing.anchorMultiple.onDemandShare.sens` | 隨需占比敏感度 | 清單 | 0.1、0.2 | 檢查 |
+| `pricing.anchorMultiple.onDemandShare.tag` | 隨需占比的資料標記 | 文字 | [Assumed] | 可沿用 |
+| `pricing.anchorMultiple.onDemandShare.note` | 隨需占比依據 | 文字 | 隨需（現貨）占在役計費產能的比例；公司未揭露（S-1… | 可沿用 |
 | `pricing.anchorMultiple.contractMix` | 公司合約組合事實（label、value、unit、tag、source、url、date、retrieved；只列，不入公式） | 清單 | 3 筆 | 必改 |
 | `pricing.anchorMultiple.evidence` | k 證據表：label、gen、price、unit、tkName（IF_GPUhrEcon／IF_HoldEcon）、contract、term、use（long／spot／range／list）、tag、source、url、date、retrieved、note；倍數在 Excel 以 TK_ 名稱計算 | 清單 | 10 筆 | 必改 |
 | `pricing.anchorMultiple.notFound` | 找不到的資料（試過的來源；W4） | 清單 | VR200 NVL72 長約或多年期合約的每 GPU…、GB200 NVL72 長約價：找不到可換算的揭露（…、其他 neocloud 對 hyperscaler／… | 可沿用 |

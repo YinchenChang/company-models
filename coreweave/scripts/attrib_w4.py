@@ -2,7 +2,7 @@
 # (a) 時間推移＝0（評價日不變）、(b) 實際數更新＝0（無新財報）、(c) 假設變更＝0（Tokenomics v5.26 → v5.27：本模型引用的 25 個名稱數值與位置相同；
 #     新增 IF_RevGWFleet 只用於上限檢查），全部變動屬 (d) 方法變更（每 MW 收入改以 Tokenomics 為錨）。(d) 依序再拆：
 #   ① 錨取代舊輸入（k＝1）：revenue＝tkAnchor、k_長約＝k_現貨＝1 → 每 MW 年收入＝Σ 平均在役占比 × IF_HoldEcon
-#   ② 套用 k：k_長約、k_現貨、長約占比為 company.json 預設（＝v4.7）
+#   ② 套用 k：k_長約、k_現貨、隨需占比為 company.json 預設（＝v4.7 r2）
 #   ③ 上限檢查：只新增檢查列、不改數字（應為 0）
 # 數值取自 Excel（scripts/attrib.py 的 read／legs：LibreOffice 開啟、三情境切換「情境選擇」）；另讀融資缺口＝MAX(0, −FY30 融資前累積現金)。
 # 用法：python3 scripts/attrib_w4.py --v46 v4.6成品.xlsx [--v47 v4.7.xlsx] [--json 輸出.json]
@@ -39,7 +39,7 @@ def k1(co):
     co['pricing']['anchorMultiple']['long']['base'] = 1; co['pricing']['anchorMultiple']['spot']['base'] = 1
 
 
-STEPS = [('anchor', '① 錨取代舊輸入（k＝1：每 MW 年收入＝在役世代 IF_HoldEcon）'), ('k', '② 套用定價倍數 k（長約／現貨依 RPO 涵蓋加權）'), ('cap', '③ 上限檢查（只新增檢查列）')]
+STEPS = [('anchor', '① 錨取代舊輸入（k＝1：每 MW 年收入＝在役世代 IF_HoldEcon）'), ('k', '② 套用定價倍數 k（隨需占比 0%：k＝k_長約 0.76）'), ('cap', '③ 上限檢查（只新增檢查列）')]
 
 
 def main():

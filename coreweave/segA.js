@@ -58,7 +58,7 @@ var PMWQ = Object.assign({ capex: `legacy`, cost: `ebitdaPct`, revenue: `legacy`
   TKSQ = (COMPANY_DATA.tkSnap || {}).items || {},
   MWBASISQ = COMPANY_DATA.meta.mwBasis || `IT`,
   PRICINGQ = COMPANY_DATA.pricing || {},
-  AMQ = (COMPANY_DATA.pricing || {}).anchorMultiple || null, // W4：Tokenomics 錨的公司因素（定價倍數 k、長約占比、證據表）
+  AMQ = (COMPANY_DATA.pricing || {}).anchorMultiple || null, // W4：Tokenomics 錨的公司因素（定價倍數 k、隨需占比、證據表）
   COSTSQ = COMPANY_DATA.costs || {},
   TK_PHQ = [`IF_MaintIT`, `IF_StaffSW`, `IF_TaxIns`, `IF_DeprLifeIT`], // 可用暫代值的名稱（待 Tokenomics v5.26）；其餘名稱缺少時建置失敗
   COSTMW_LEGQ = [...COMPANY_DATA.scenarios.capexTemplate.costMW]; // v4.5 舊值（對照列）
@@ -98,7 +98,7 @@ if (PMWQ.capex === `tokenomics`) { // 建置成本與壽命改為 Tokenomics 推
   DEFAULTS.a.costMW = [...c];
   DEFAULTS.gpuLife = lifeTkQ()
 }
-AMQ && Object.assign(DEFAULTS, { kLong: AMQ.long.base, kSpot: AMQ.spot.base, lsAdj: AMQ.longShare.adj || 0 }); // W4：定價倍數 k 與長約占比調整（敏感度以 e 覆寫）
+AMQ && Object.assign(DEFAULTS, { kLong: AMQ.long.base, kSpot: AMQ.spot.base, odShare: AMQ.onDemandShare.base }); // W4 r2：定價倍數 k 與隨需占比（敏感度以 e 覆寫）
 PMWQ.cost === `bottomUp` && (DEFAULTS.ebSteady = null); // 由下而上：穩態 EBITDA 率預設＝由下而上的 FY30 值（null）；輸入數值時視為 FY30 目標，差額線性分攤
 
 function ebPathQ(e, d) { return PMWQ.cost === `bottomUp` ? [d.years[0].ebM, d.years[4].ebM] : [e.ebStart, e.ebSteady] } // W2：畫面上的 EBITDA 率起點／FY30（由下而上時取模型路徑）
@@ -121,16 +121,18 @@ function revGpuQ(e, F) { // 每 MW 年收入（US$bn/MW，100% 計費時數；�
   let P = PRICINGQ.gpuHr || {}, k = (e && e.pxCase) || `base`;
   return F.mix.map(mx => wMixQ(mx, g => P[g] && P[g][k] != null ? tkMwQ(`IF_GPUsPerGW`, g) / 1e3 * P[g][k] * 8760 / 1e9 : NaN))
 }
-function anchorRevQ(e, F, t) { // W4：每 MW 年收入＝Tokenomics 錨（Σ 平均在役占比 × IF_HoldEcon）× 定價倍數 k（Excel「每MW經濟性」W4 區同列同算式）
-  // k＝長約占比 × k_長約＋（1 − 長約占比）× k_現貨；長約占比＝MIN(1, MAX(0, 排程 RPO ÷（平均計費 MW × 錨 × k_長約 × 利用率 × 期間長度）＋調整))
-  let cs = e.tkCase || `基準`, i = e.rp / 100, kL = e.kLong ?? AMQ.long.base, kS = e.kSpot ?? AMQ.spot.base, adj = e.lsAdj ?? 0,
-    R = { anchor: [], sched: [], avgB: [], util: [], longCap: [], cover: [], share: [], kL: [], kS: [], k: [], rev: [] };
+function anchorRevQ(e, F, t) { // W4 r2：每 MW 年收入＝Tokenomics 錨（Σ 平均在役占比 × IF_HoldEcon）× 定價倍數 k（Excel「每MW經濟性」W4 區同列同算式）
+  // k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約；k_長約、k_現貨 為基準成本情境的值，其他情境以基準證據世代的成本比例重算（價格是事實）；RPO 覆蓋率只作對照
+  let cs = e.tkCase || `基準`, i = e.rp / 100, ref = side => AMQ.evidence.find(x => x.label === AMQ[side].refEvidence),
+    rr = x => tkQ(x.tkName, x.gen, `基準`) / tkQ(x.tkName, x.gen, cs), rL = ref(`long`), rS = ref(`spot`),
+    kL0 = e.kLong ?? AMQ.long.base, kS0 = e.kSpot ?? AMQ.spot.base, kL = kL0 * rr(rL), kS = kS0 * rr(rS), od = e.odShare ?? AMQ.onDemandShare.base,
+    R = { anchor: [], sched: [], avgB: [], util: [], longCap: [], cover: [], kL: [], kS: [], od: [], k: [], rev: [] };
   for (let r = 0; r < 5; r++) {
     let L = PERIOD_YEARS[r], A = wMixQ(F.mix[r], g => tkMwQ(`IF_HoldEcon`, g, cs)),
       o = e.rpoOpen * (RPO_BUCKET_W[r] / RPO_SCHEDULED_SHARE) * i + e.rpoPendingAdd * RPO_Q3ADD_W[r] * i,
       c = r === 0 ? e.billableOpen : t.billable[r - 1], l = e.useAvgMw ? (c + t.billable[r]) / 2 : t.billable[r],
-      lc = l * A / 1e3 * kL * (t.util[r] / 100) * L, cv = o / Math.max(1e-9, lc), sh = Math.min(1, Math.max(0, cv + adj)), k = sh * kL + (1 - sh) * kS;
-    R.anchor.push(A), R.sched.push(o), R.avgB.push(l), R.util.push(t.util[r] / 100), R.longCap.push(lc), R.cover.push(cv), R.share.push(sh), R.kL.push(kL), R.kS.push(kS), R.k.push(k), R.rev.push(A * k)
+      lc = l * A / 1e3 * kL0 * (t.util[r] / 100) * L, k = od * kS + (1 - od) * kL;
+    R.anchor.push(A), R.sched.push(o), R.avgB.push(l), R.util.push(t.util[r] / 100), R.longCap.push(lc), R.cover.push(o / Math.max(1e-9, lc)), R.kL.push(kL), R.kS.push(kS), R.od.push(od), R.k.push(k), R.rev.push(A * k)
   }
   return R
 }
@@ -424,9 +426,9 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
       [`錨｜每 MW 經濟持有成本（IF_HoldEcon，在役世代加權）`, `US$m/MW`, A.anchor], [`錨｜排程 RPO（模型期）`, `US$bn`, A.sched],
       [`錨｜平均計費 MW`, `MW`, A.avgB], [`錨｜利用率`, `%`, A.util],
       [`長約價產能收入（平均計費 MW × 錨 × k_長約 × 利用率 × 期間長度）`, `US$bn`, A.longCap],
-      [`RPO 涵蓋的產能 ÷ 在役計費產能（未截斷）`, `%`, A.cover], [`長約占比（截斷於 0–100%，含調整）`, `%`, A.share],
-      [`k_長約（輸入）`, `倍`, A.kL], [`k_現貨（輸入）`, `倍`, A.kS],
-      [`定價倍數 k（長約占比 × k_長約 ＋（1 − 長約占比）× k_現貨）`, `倍`, A.k],
+      [`RPO 涵蓋的產能 ÷ 在役計費產能（對照，不驅動）`, `%`, A.cover],
+      [`k_長約（依目前成本情境重算）`, `倍`, A.kL], [`k_現貨（依目前成本情境重算）`, `倍`, A.kS], [`隨需占比（輸入）`, `%`, A.od],
+      [`定價倍數 k（隨需占比 × k_現貨 ＋（1 − 隨需占比）× k_長約）`, `倍`, A.k],
       [`Tokenomics 錨 × k：每 MW 年收入（100% 計費時數）`, `US$m/MW`, A.rev],
       [`錨 × k 相對 v4.6 舊輸入 m.revMW`, `%`, I5.map(i => A.rev[i] / Math.max(1e-9, old[i]) - 1)],
       [`上限檢查｜客戶每 MW 付費 token 營收（IF_RevGWFleet，在役世代加權）`, `US$m/MW`, rf],
@@ -445,10 +447,10 @@ function pmwSensQ(e, v) { // W2：每 MW 敏感度（與 scripts/permw_sens.py �
   let C = [[`base`, `基準（目前輸入）`, {}], [`tkLow`, `Tokenomics 低成本`, { tkCase: `低成本` }], [`tkHigh`, `Tokenomics 高成本`, { tkCase: `高成本` }],
     [`pxLow`, `GPU 小時價格 低`, PMWQ.revenue === `gpuHr` ? { pxCase: `low` } : null], [`pxHigh`, `GPU 小時價格 高`, PMWQ.revenue === `gpuHr` ? { pxCase: `high` } : null],
     [`mixRU`, `世代組合 Rubin Ultra 版`, { mixAlt: !0 }], [`sgaGaap`, `管銷率 GAAP（含 SBC）`, PMWQ.cost === `bottomUp` ? { sgaBasis: `gaap` } : null],
-    ...(PMWQ.revenue === `tkAnchor` ? [ // W4：定價倍數 k 與長約占比（與 scripts/permw_sens.py 同一組設定）
-      [`kLongLo`, `k_長約 ${Y(AMQ.long.low, 2)}`, { kLong: AMQ.long.low }], [`kLongHi`, `k_長約 ${Y(AMQ.long.high, 2)}`, { kLong: AMQ.long.high }],
-      [`kSpotLo`, `k_現貨 ${Y(AMQ.spot.low, 2)}`, { kSpot: AMQ.spot.low }], [`kSpotHi`, `k_現貨 ${Y(AMQ.spot.high, 2)}`, { kSpot: AMQ.spot.high }],
-      [`lsLow`, `長約占比 ${Math.round(AMQ.longShare.sensLowPt * 100)}pt`, { lsAdj: AMQ.longShare.sensLowPt }], [`lsAll`, `長約占比 100%（新簽約全視為長約）`, { lsAdj: 1 }]] : [])],
+    ...(PMWQ.revenue === `tkAnchor` ? [ // W4 r2：定價倍數 k 與隨需占比（與 scripts/permw_sens.py 同一組設定）
+      [`kLongLo`, `k_長約 ${Y(AMQ.long.low, 2)}`, { kLong: AMQ.long.low }], [`kLongMed`, `k_長約 ${Y(AMQ.long.sensMedian, 2)}（三筆長約中位數）`, { kLong: AMQ.long.sensMedian }],
+      [`kLongHi`, `k_長約 ${Y(AMQ.long.high, 2)}`, { kLong: AMQ.long.high }],
+      ...AMQ.onDemandShare.sens.map((x, j) => [`od${j + 1}`, `隨需占比 ${Math.round(x * 100)}%（k_現貨 ${Y(AMQ.spot.base, 2)}）`, { odShare: x }])]: [])],
     rows = Object.fromEntries([`low`, `base`, `high`].map(sk => [sk, Object.fromEntries(C.map(([k, , ch]) => {
       if (!ch) return [k, null];
       let s2 = { ...scnQ(e, sk), ...ch }, d2 = runFunding(s2), p2 = runValuation(d2, s2, v);
