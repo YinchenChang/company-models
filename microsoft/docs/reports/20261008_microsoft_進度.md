@@ -1,9 +1,15 @@
 # Microsoft v0.1 進度檔（接手用）
 
 ## 目前狀態（每次 push 前覆寫）
-- **已完成**：v0.1b′；v0.1b r3 同步（引擎檔與 amazon@`6ac9745` 逐檔相同，company.json、data/、文件、`scripts/fields_doc.py` 的 mag 說明、`scripts/port_company_json.py` 除外；C16–C23 的本家參數；verify.sh 23 項全過）。
-- **下一步**：v0.1c 步驟 1–6（VLOG 重設 v0.1、dist/ 換 Microsoft 成品、--vs-dist、截圖、交接檔、最終報告與重點 Excel、根目錄 README、PR ready）。
-- **未解問題**：見最終報告「需 Andy 決定」。
+- **已完成：v0.1b r3 同步＋v0.1c**。引擎檔與 amazon@`6ac9745` 逐檔相同（公司資料、文件、fields_doc mag 說明、port 腳本除外）；成品 `dist/20261009_Microsoft收支模型_v0_1.html／.xlsx`；交接檔 v0.1；最終報告 `docs/reports/20261008_microsoft_v0.1.md`；重點 Excel；截圖 17 張；verify.sh --vs-dist 26 項全過；PR #33 轉 ready。讀法 1：385.73／357.24／356.78；讀法 2：410.44／426.15／426.13；FY29 對外 AI ROIC 10.1% vs WACC 10.9%、打平 k 1.084。
+- **下一步**：FY27Q1 季度更新（財報 2026-10-28；步驟見交接檔第 8 節），升版 v0.2。
+- **未解問題（待 Andy）**：讀法 1／2 主值；對外比例證據；opShare 營業部分機房租金是否入 AI EBITDA。
+
+## v0.1c（2026-10-09）
+| 步驟 | 內容 | commit |
+|---|---|---|
+| 1–4 | VLOG 重設 v0.1；dist/ 移除 Oracle v0.2、放入 Microsoft v0.1；--vs-dist 26 項全過；crawl：描述本公司的 Oracle／OCI 為 0（只剩版本沿革、同業 ORCL）；截圖 17 張（溢出 0、錯誤 0）；交接檔 v0.1 取代 Oracle v0.2；README／CLAUDE.md 開頭；根目錄 README Microsoft 列 | a34d1f4 |
+| 5–6 | 最終報告、重點 Excel（6 頁）、PR 回報並轉 ready | （本次） |
 
 ## v0.1b r3 同步（2026-10-09；對照表 r1 第 9 節 C16–C23）
 | 步驟 | 內容 | commit |
