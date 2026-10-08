@@ -1,13 +1,13 @@
 # Parity 情境檔（CLAUDE.md 第 3 節）。每個情境：改寫輸入 → LibreOffice 重算（基準）→ 與 engine 比對全部公式格。
 # 輸入一律以具名範圍設定（SRC_OAI_nnn、INP_nnn、TK_*）。v0.6-P1 只有檢查頁有公式；v0.6-P2 起 Demand、Revenue 頁的公式也由情境驅動（h 起為 P2 情境）。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
-  sheets: [README, SRC_OAI, TK_Link, Inputs, Derived_V9, Demand, Revenue, Compute, Checks, Map_v05, _Defaults]
-  formula_cells: 1989             # P2：652 → 1260；P3：→ 1989（Compute 頁、Revenue 第八節、Inputs 新列檢查欄、Checks C40–C66）
-  defined_names: 562              # S1：426；P2：＋16 SRC_OAI＋10 INP＋64 DEM_／REV_；P3：＋6 INP＋35 CMP_＋5 REV_
-  src_rows: 122                   # SRC_OAI 筆數（與報告一致）；P2：106＋16（價格事件數值與公告日）
-  src_named: 120                  # 有數值的列才有 SRC_OAI_nnn 名稱（Business 每席只有低／高；退役 ID 不重用）
-  inp_rows: 249                   # P2：233＋10（E8c 事件時點偏移 4、E6 定義常數 6）；P3：＋6（INP_256–261）
-  tk_values: 62                   # TK_Link 有值的名稱（TK_IF_／TK_SRC_／TK_L1_ 具名範圍；S1 v5.24 快照：37＋25）
+  sheets: [README, SRC_OAI, TK_Link, Inputs, Derived_V9, Demand, Revenue, Compute, Cost, Funding, Reverse, Checks, Map_v05, _Defaults]
+  formula_cells: 3063             # P2：652 → 1260；P3：→ 1989（Compute 頁、Revenue 第八節、Inputs 新列檢查欄、Checks C40–C66）；P4：→ 2629（Cost 頁、Compute 第十三節、Inputs／SRC 新列檢查欄、Checks C67–C90）；P5：→ 3063（Funding 192、Reverse 184、Inputs 新列檢查欄 5、Checks C91–C130 共 53）
+  defined_names: 646              # S1：426；P2：＋16 SRC_OAI＋10 INP＋64 DEM_／REV_；P3：＋6 INP＋35 CMP_＋5 REV_；P4：＋9 SRC_OAI＋9 INP＋1 TK＋2 CMP_＋36 COST_；P5：＋5 INP＋14 FND_＋8 RVS_
+  src_rows: 131                   # SRC_OAI 筆數（與報告一致）；P2：106＋16（價格事件數值與公告日）；P4：＋9（SRC_OAI_129–137：2025 銷售／管理／營業損失、人數、股權報酬）
+  src_named: 129                  # 有數值的列才有 SRC_OAI_nnn 名稱（Business 每席只有低／高；退役 ID 不重用）
+  inp_rows: 263                   # P2：233＋10（E8c 事件時點偏移 4、E6 定義常數 6）；P3：＋6（INP_256–261）；P4：＋9（INP_262–270）；P5：＋5（INP_271–275）
+  tk_values: 63                   # TK_Link 有值的名稱（TK_IF_／TK_SRC_／TK_L1_ 具名範圍；S1 v5.24 快照：37＋25；S4 v5.25：＋IF_CapexTotal；S5 v5.26：數值不變）
   tk_pending: 0                   # 待 Tokenomics 提供（S1：v5.24 已全部提供）
   v05_leaves: 849
   v05_tagged_objects: 121         # chat 端計數；本包以 JSON 實數核對
@@ -85,3 +85,60 @@ scenarios:
   - id: w_even_profile
     description: P3：未揭露時程合約的攤提方式 ramp→even：未揭露 GW 合約改為期間內平均、揭露 GW 合約改為期間內固定
     inputs: {"INP_181": "even"}
+  - id: x_owned_capex_2027
+    description: P4：自有資本支出 2027 30→45（高情境倍數 1.5）：2028 起自建 GW、供給、研發 GW、算力成本（現金與經濟）、命題分母與差額連動
+    inputs: {"INP_188": 45}
+  - id: y_partner_share
+    description: P4：合作方出資占比 0→0.3（區間上緣）：自有資本支出（扣合作方）與現金口徑算力成本下降；自建 GW 不變（毛額形成 GW）
+    inputs: {"INP_194": 0.3}
+  - id: z_headcount_2026
+    description: P4：員工人數年增率 2026 0.55→0.8（區間上緣）：2026 起人數、非算力成本、股權報酬、Q3 與命題差額連動
+    inputs: {"INP_263": 0.8}
+  - id: aa_sbc_growth
+    description: P4：每人股權報酬年變動率 0→0.2（區間上緣）：2026 起股權報酬上升；全成本（含股權報酬）與差額連動
+    inputs: {"INP_269": 0.2}
+  - id: ab_build_lag2
+    description: P4：自建 GW 投產落後年數 1→2（區間上緣）：自建 GW 延後一年；供給、研發 GW、經濟口徑算力成本與命題分母連動
+    inputs: {"INP_262": 2}
+  - id: ac_azure_start_2026
+    description: P4／V16：Microsoft Azure 起點 2025→2026（區間上緣）：2025 攤入額 0、2026 起付款與供給重排；V16 起點 2026 情境列與基準相同
+    inputs: {"INP_182": 2026}
+  - id: ad_sbc_too_high
+    description: P4：2025 每人股權報酬 1.5→4（$M）：股權報酬 16 超過 2025 非算力營運費用（財報）14.48，不含股權報酬的費用為負（C73 應轉 ERR）
+    inputs: {"SRC_OAI_133": 4}
+  - id: ae_cost_growth_high
+    description: P4：每人年成本（不含股權報酬）年變動率 0.03→0.08（區間上緣）：2026 起非算力成本、Q3 與命題差額連動
+    inputs: {"INP_268": 0.08}
+  - id: af_min_cash_high
+    description: P5：最低現金 10→20（區間上緣）：2027 起每年外部資金需求與年底現金上升 10（累計＋10）
+    inputs: {"INP_203": 20}
+  - id: ag_amazon_on
+    description: P5：計入 Amazon 條件式 $35B 開關 0→1：基準股權流入 2026＝122，累計外部資金需求 −35，與第四節情境相同
+    inputs: {"INP_274": 1}
+  - id: ah_nvidia_noncash
+    description: P5：Nvidia $30B 現金比例 1→0（區間下緣）：已到位融資 87→57、非現金部分 30 只列示；外部資金需求提前並增加
+    inputs: {"INP_245": 0}
+  - id: ai_cash2025_low
+    description: P5：2025 年底現金 40→35（SRC 區間下緣）：2026 起現金路徑與外部資金需求連動（反向模式亦同）
+    inputs: {"SRC_OAI_079": 35}
+  - id: aj_target2030_low
+    description: P5：管理層 2030 營收目標 350→280（2026-02 舊版值）：Reverse 2029 殘差 307.4 高於 2030（C122 轉 ERR）、R2 倍數、橋接與反向資金連動；基準不變
+    inputs: {"SRC_OAI_044": 280}
+  - id: ak_reverse_fit_broken
+    description: P5：反向目標擬合值 2028 141.5→300，使 2029 殘差 78.9 低於 2028（C122 應轉 ERR）
+    inputs: {"INP_272": 300}
+  - id: al_min_cash_negative
+    description: P5：最低現金 10→−5（C95 應轉 ERR；C06 區間異常亦轉 ERR）
+    inputs: {"INP_203": -5}
+  - id: am_amazon_switch_half
+    description: P5：Amazon 條件式開關 0→0.5（非 0／1；C96 應轉 ERR）
+    inputs: {"INP_274": 0.5}
+  - id: an_round_2027
+    description: P5：2026-03 輪無條件部分到位年 2026→2027（區間上緣）：2026 年即需外部資金、2027 流入 87
+    inputs: {"INP_273": 2027}
+  - id: ao_round_outside
+    description: P5：2026-03 輪到位年 2026→2031（模型期間外）：已到位融資 0，與 SRC 組成不符（C94 應轉 ERR；C06 亦轉 ERR）
+    inputs: {"INP_273": 2031}
+  - id: ap_amazon_2027
+    description: P5：Amazon 條件式到位年 2026→2027（區間上緣）：第四節情境 2027 流入 35；基準不變（開關 0）
+    inputs: {"INP_275": 2027}

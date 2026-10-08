@@ -1,7 +1,7 @@
 """Tokenomics 快照讀取（工作單 P1-3；補充 1 第 1 點；S1＝v0.6-P1.1）。
 
 - 值取自 Tokenomics master 的 model/CURRENT，逐名讀出寫入 TK_Link；不用 Excel 外部連結。
-- 列序：P1 原 37 名（列位不變）→ SRC_DEM_010–013（＋013 低／高）→ Block 6（IF_Alloc* 7 名）→ S1 新增（r6 下游需要）。
+- 列序：P1 原 37 名（列位不變）→ SRC_DEM_010–013（＋013 低／高）→ Block 6（IF_Alloc* 7 名）→ S1 新增（r6 下游需要）→ S4 新增（IF_CapexTotal）。
 - 工作單要求、但 Tokenomics 現行版沒有的名稱：逐名列入、值留空、狀態 PENDING_NOTE（E1；check_tk_snapshot 報 MISSING）。
 """
 from __future__ import annotations
@@ -27,6 +27,8 @@ EXTRA_PATTERNS = [
     r"IF_TrainCost_(Luna|Sol|Astra)", r"IF_RevGW_(Luna|Sol|Astra)", r"IF_FullCostDefault_(Luna|Sol|Astra)",
 ]
 EXTRA_NAMES = ["L1_Ans3", "L1_Ans3_Lo", "L1_Ans3_Hi"]
+# S4 新增（工程類；P4 自建 GW 需要每 GW 資本支出；列於最後，既有列位不變）
+S4_NAMES = ["IF_CapexTotal"]
 PENDING_NOTE = "待 Tokenomics 提供"
 
 
@@ -52,6 +54,7 @@ def read_snapshot(tk_dir: Path):
     for pat in EXTRA_PATTERNS:
         chosen += sorted(n for n in names if re.fullmatch(pat, n))
     chosen += [n for n in EXTRA_NAMES if n in names]
+    chosen += [n for n in S4_NAMES if n in names]
     rows, seen = [], set()
     for n in chosen:
         if n in seen:
@@ -77,7 +80,7 @@ def read_snapshot(tk_dir: Path):
         rows.append(dict(name=n, kind=n.split("_")[0], label=label, unit=unit, values=vals, status="OK"))
     present = {r["name"] for r in rows}
     # 工作單要求、但 Tokenomics 現行版沒有者：逐名列入、值留空（E1）
-    wanted = SRC_DEM + BLOCK6 + EXTRA_NAMES
+    wanted = SRC_DEM + BLOCK6 + EXTRA_NAMES + S4_NAMES
     pending = [dict(name=n, kind=n.split("_")[0], label="", unit="", values=[], status=PENDING_NOTE) for n in wanted if n not in present]
     hdr_gen = [wb["Interface"].cell(4, k).value for k in range(3, 18)]
     hdr_cost = [wb["Interface"].cell(5, k).value for k in range(3, 18)]

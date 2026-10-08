@@ -47,7 +47,7 @@ function forwardPL(e, t) {
       lg = e.years[c].legacyRev || 0, // v0.1b（Oracle）：傳統事業營收
       d = l + u + lg,
       f = c === 0 ? uM(HIST_PL[3].revenue + d, r) : uM(d, r),
-      EB = (l + u) * e.years[c].ebM + (e.years[c].otherEbitda || 0) + (e.years[c].legacyEbitda || 0), // v0.1b：加其他事業 EBITDA；Oracle：EBITDA 率只套算力＋服務，傳統事業另計
+      EB = (l + u) * e.years[c].ebM + (e.years[c].otherEbitda || 0) + (e.years[c].legacyEbitda || 0) - (e.years[c].delayPen || 0), // v0.2：減延誤罰則 // v0.1b：加其他事業 EBITDA；Oracle：EBITDA 率只套算力＋服務，傳統事業另計
       p = EB - e.years[c].daFleet,
       m = e.years[c].interest,
       ai = e.years[c].prepayAccr || 0, // v0.1b（Oracle）：預付重大財務組成的非現金利息（進稅前損益，不進現金）
@@ -337,6 +337,7 @@ function scnQ(e, sc) {
     a: { ...structuredClone(e.a), newLease: [...SCENARIOS[sc].a.newLease] },
     mw31: SCENARIOS[sc].mw31,
     cvCap: SCENARIOS[sc].cvCap,
+    delayMonths: SCENARIOS[sc].delay, // v0.2
     billableOpen: SCENARIOS[sc].bOpen, // v0.1b：期初可計費 MW 隨情境（以實際營收校準時）
     m: { ...e.m, accepted: [...SCENARIOS[sc].acc], billable: [...SCENARIOS[sc].bil], revMW: [...SCENARIOS[sc].rev] }
   };
@@ -502,8 +503,14 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
     })),
     rsnSum = reasonSumQ(rsn, `原因見「損益與評價 → 市場共識」。`),
     jk = d.years.reduce((a, t) => a + t.junk, 0), S0 = st || DEFAULTS, // v0.1b（Oracle）：高息債溢出＝需失去投資級才能融資的金額（一頁摘要一句）
-    igLine = S0.debtCapBasis === `ebitda` ? `需失去投資級才能融資的金額：${jk > .05 ? `$${Y(jk, 1)}bn（五期高息債溢出）` : `$0`}；投資級上限＝總債務 ≤ ${multTxt(S0.debtEbitdaMax)}× 當期 EBITDA，股權每年 ≤ 現市值 ${pctQ(S0.eqCapPct)}。` : ``;
-  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, junk: jk }
+    igLine = S0.debtCapBasis === `ebitda` || S0.debtCapBasis === `leaseAdj` ? `需失去投資級才能融資的金額：${jk > .05 ? `$${Y(jk, 1)}bn（五期高息債溢出）` : `$0`}；投資級上限＝${S0.debtCapBasis === `leaseAdj` ? `(總債務＋租賃負債) ≤ ${multTxt(S0.debtEbitdaMax)}×(EBITDA＋租金)` : `總債務 ≤ ${multTxt(S0.debtEbitdaMax)}× 當期 EBITDA`}，股權每年 ≤ 現市值 ${pctQ(S0.eqCapPct)}。` : ``;
+  // v0.2：調整後槓桿一句（路徑、距上限空間；任一期超過上限時標示）
+  let al = d.years.map(t => t.adjLev), amx = Math.max(...al), ami = al.indexOf(amx), cap = S0.debtEbitdaMax,
+    adjLine = `調整後槓桿（(債務＋租賃負債) ÷ (EBITDA＋租金)）路徑 ${al.map(x => Y(x, 1)).join(`／`)}×；上限 ${multTxt(cap)}×，` + (amx > cap + 1e-9 ? `${PERIODS[ami]} 超過 ${Y(amx - cap, 1)}×：需股權或失去投資級。` : `最小空間 ${Y(cap - amx, 1)}×（${PERIODS[ami]}）。`);
+  // v0.2：建設延誤一句（閒置資本峰值）
+  let dm = S0.delayMonths ?? 0, idl = d.years.map(t => t.idleCap || 0), ipk = Math.max(...idl), ipi = idl.indexOf(ipk),
+    delayLine = dm > 0 ? `建設延誤 ${multTxt(dm)} 個月（GPU 資本支出照原時程）：閒置資本（已支出、尚未產生收入）峰值 $${Y(ipk, 1)}bn（${PERIODS[ipi]} 末）。` : `建設延誤：本情境 0 個月（無閒置資本）。`;
+  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, adjLine, delayLine, junk: jk }
 }
 
 // v4.4：差異原因的共用工具（年度共識對照與季度層共用）。類型固定為四種（已決定事項 2）；原因文字中的 {路徑:格式} 由模型數字帶入。
@@ -572,11 +579,11 @@ function quarterlyView(d, p, st) { // d＝runFunding、p＝runValuation、st＝�
   pers.forEach(P => {
     let ix = inP(P), k = ix.length, L = PERIOD_YEARS[P],
       a0 = P === pers[0] ? C.driver?.endStart : d.m.accepted[P - 1], a1 = d.m.accepted[P],
-      b0 = P === pers[0] ? st.billableOpen : d.m.billable[P - 1], b1 = d.m.billable[P],
+      b0 = P === pers[0] ? st.billableOpen : y[P - 1].billDelayed, b1 = y[P].billDelayed, // v0.2：計費用（延誤後）可計費 MW
       R = f[P].revenue, how = (C.revenueSplit || [])[pers.indexOf(P)] || `equal`;
     ix.forEach((i, j) => {
       if (drv) endAcc[i] = a0 + (a1 - a0) * (j + 1) / k, avgBil[i] = b0 + (b1 - b0) * (2 * j + 1) / (2 * k);
-      da[i] = (y[P].ppeBeg + y[P].capexGrowth * (2 * j + 1) / (2 * k)) / st.gpuLife * L / k;
+      da[i] = (y[P].ppeBeg + y[P].capexInSvc * (2 * j + 1) / (2 * k)) / st.gpuLife * L / k;
     });
     if (how === `anchor` && C.revenueAnchor) {
       let A = C.revenueAnchor.value, g = (R - k * A) / (k * (k + 1) / 2);
