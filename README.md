@@ -24,9 +24,9 @@
 - 成品的 Drive 位置：`02-算力收支/<公司>/`（資料夾 2026-10-07 由錯字「02-算利收支」改名）。
 
 ## 共用工具：Tokenomics 取數（`tools/tokenomics/import_tokenomics.py`）
-- **用途**：把 Tokenomics 的 Interface（`IF_`）與 L1（`L1_`）具名範圍讀成版本固定的快照 JSON（記錄檔名、`model/CURRENT`、commit、擷取日；每個值記名稱、世代、成本情境、單位、工作表!儲存格），供各公司 `company.json` → `tokenomics.snapshotFile` 引用。公司模型只讀快照，不直接讀 Tokenomics。
+- **用途**：把 Tokenomics 的 Interface（`IF_`、四層瀑布 `IFW_`、用途欄 `IFC_`）、L1（`L1_`）與來源（`SRC_`，限 Active）具名範圍讀成版本固定的快照 JSON（記錄檔名、`model/CURRENT`、commit、擷取日；每個值記名稱、世代、成本情境、單位、工作表!儲存格），供各公司 `company.json` → `tokenomics.snapshotFile` 引用。公司模型只讀快照，不直接讀 Tokenomics。
 - **產生快照**：`python3 tools/tokenomics/import_tokenomics.py --tokenomics <Tokenomics 唯讀 clone> --names <公司>/data/tokenomics_names.txt --out <公司>/data/tokenomics_snapshot_v<版本>.json`
   （唯讀 clone：`GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://github.com/YinchenChang/tokenomics <路徑>`；讀 `model/CURRENT` 指向的 xlsx。）
 - **重現檢查**：`python3 tools/tokenomics/import_tokenomics.py --check <快照.json> [--tokenomics <clone>]`：重新讀取快照記錄的同一個 xlsx，任何值差異（相對誤差 > 1e-9）即失敗；找不到 clone 時警告並略過（`TOKENOMICS_DIR` 環境變數可指定路徑）。
-- **名稱規則**：只接受 `IF_`（不含 `IF_Hdr*`）與 `L1_`，其他名稱報錯；不得引用 Inputs、DC_Cost 等內部頁。名稱清單一行一個，行尾 `optional`（或 `--optional`）＝Tokenomics 尚未提供時記為 `{"missing": true}` 並警告。世代 × 成本情境範圍依 `IF_HdrGen`、`IF_HdrCost` 拆成 `{世代: {低成本, 基準, 高成本}}`；模型主值一律取「基準」，低／高只作敏感度。Tokenomics 的「每 GW」＝IT 關鍵電力；公司 MW 口徑不同時在公司端換算。
+- **名稱規則**（Tokenomics 下游資料契約第 2 條第 1 項）：只接受 `IF_`（不含 `IF_Hdr*`）、`IFW_`、`IFC_`、`L1_`、`SRC_`，其他名稱報錯；`IFW_` 須四層（`_100`／`_Util`／`_Prod`／`_Life`）一起取（契約第 2 條第 2 項）；`IFC_Use` 等用途欄存成 {列上的 IF_／IFW_ 名稱: 值}，標「上限，不得作預測」者不得當收入預測；`SRC_` 只取狀態 Active 的紀錄，另存同列的低／高、口徑、日期、出處、來源等級；不得引用 Inputs、DC_Cost 等內部頁。名稱清單一行一個，行尾 `optional`（或 `--optional`）＝Tokenomics 尚未提供時記為 `{"missing": true}` 並警告。世代 × 成本情境範圍依 `IF_HdrGen`、`IF_HdrCost` 拆成 `{世代: {低成本, 基準, 高成本}}`；模型主值一律取「基準」，低／高只作敏感度。Tokenomics 的「每 GW」＝IT 關鍵電力；公司 MW 口徑不同時在公司端換算。
 - 快取值缺漏時自動以 LibreOffice headless 重算暫存副本再讀（`--force-recalc` 可強制；v5.24 實測重算值＝快取值）。
