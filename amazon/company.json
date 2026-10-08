@@ -2482,5 +2482,1518 @@
     "mapTo": "texts（期後事件）／保守情境依據"
    }
   }
+ },
+ "mag": {
+  "_readme": "Amazon MAG 資料草稿（v0.1a 產出；引擎尚未讀取）。v0.1b 依各欄 mapTo 搬入既有欄位或新增欄位。每欄 value＋unit＋ref（data/amazon_facts_20261008.json 的 id；kevidence: 開頭者指 data/kevidence_amazon_20261008.json）＋mapTo。金額單位 US$bn（另註明者除外）。只作對照的欄位在 mapTo 標明「只作對照」。",
+  "files": {
+   "facts": "data/amazon_facts_20261008.json",
+   "kevidence": "data/kevidence_amazon_20261008.json",
+   "consensus": "data/consensus_amzn_20261008.json",
+   "tokenomicsSnapshot": "data/tokenomics_snapshot_v5.27.json",
+   "tokenomicsNames": "data/tokenomics_names.txt"
+  },
+  "calendar": {
+   "fiscalYearEndMonth": {
+    "value": 12,
+    "unit": "月",
+    "ref": "is.TOT.rev.fy2025",
+    "mapTo": "calendar.fiscalYearEndMonth"
+   },
+   "latestQuarterFiled": {
+    "value": "2026Q2",
+    "unit": "季",
+    "ref": "is.TOT.rev.2026q2",
+    "mapTo": "calendar.latestQuarterFiled；ytdActual.months＝6"
+   },
+   "firstPeriod": {
+    "value": {
+     "label": "2026H2",
+     "years": 0.5,
+     "periodLabels": [
+      "2026",
+      "2027",
+      "2028",
+      "2029",
+      "2030"
+     ]
+    },
+    "unit": "物件",
+    "ref": "is.TOT.rev.2026q2",
+    "mapTo": "calendar（首期＝2026 上半年實際＋下半年模型；對照表預設 12）",
+    "note": "2026Q3 財報預計 2026-10 下旬；若 v0.1b 期間已公布，改以 Q3 為最新季"
+   }
+  },
+  "segments": {
+   "NA": {
+    "revQ": {
+     "value": {
+      "2025Q3": 106.267,
+      "2025Q4": 127.083,
+      "2026Q1": 104.143,
+      "2026Q2": 116.177
+     },
+     "unit": "US$bn／季",
+     "ref": [
+      "is.NA.rev.2025q3",
+      "is.NA.rev.2025q4",
+      "is.NA.rev.2026q1",
+      "is.NA.rev.2026q2"
+     ],
+     "mapTo": "新欄位（非雲端分部／雲端分部近四季；北美）"
+    },
+    "oiQ": {
+     "value": {
+      "2025Q3": 4.789,
+      "2025Q4": 11.472,
+      "2026Q1": 8.267,
+      "2026Q2": 9.123
+     },
+     "unit": "US$bn／季",
+     "ref": [
+      "is.NA.oi.2025q3",
+      "is.NA.oi.2025q4",
+      "is.NA.oi.2026q1",
+      "is.NA.oi.2026q2"
+     ],
+     "mapTo": "新欄位（分部營業利益近四季；北美）"
+    },
+    "revFY": {
+     "value": {
+      "FY2023": 352.828,
+      "FY2024": 387.497,
+      "FY2025": 426.305
+     },
+     "unit": "US$bn／年",
+     "ref": [
+      "is.NA.rev.fy2023",
+      "is.NA.rev.fy2024",
+      "is.NA.rev.fy2025"
+     ],
+     "mapTo": "historicalPL（分部）"
+    },
+    "oiFY": {
+     "value": {
+      "FY2023": 14.877,
+      "FY2024": 24.967,
+      "FY2025": 29.619
+     },
+     "unit": "US$bn／年",
+     "ref": [
+      "is.NA.oi.fy2023",
+      "is.NA.oi.fy2024",
+      "is.NA.oi.fy2025"
+     ],
+     "mapTo": "historicalPL（分部）"
+    },
+    "daFY": {
+     "value": {
+      "FY2023": 13.678,
+      "FY2024": 14.285,
+      "FY2025": 15.503
+     },
+     "unit": "US$bn／年",
+     "ref": [
+      "is.NA.da.fy2023",
+      "is.NA.da.fy2024",
+      "is.NA.da.fy2025"
+     ],
+     "mapTo": "分部 EBITDA＝營業利益＋分部 D&A（對照表預設 5）"
+    },
+    "daQ": {
+     "value": {
+      "2025Q2": 3.742,
+      "2026Q1": 4.28,
+      "2026Q2": 4.5
+     },
+     "unit": "US$bn／季",
+     "ref": [
+      "is.NA.da.2025q2",
+      "is.NA.da.2026q1",
+      "is.NA.da.2026q2"
+     ],
+     "mapTo": "分部 EBITDA（近期）",
+     "note": "2025Q3、2025Q4 單季分部 D&A 未取（10-Q Q3 與 10-K 可補）"
+    }
+   },
+   "INTL": {
+    "revQ": {
+     "value": {
+      "2025Q3": 40.896,
+      "2025Q4": 50.724,
+      "2026Q1": 39.789,
+      "2026Q2": 42.197
+     },
+     "unit": "US$bn／季",
+     "ref": [
+      "is.INTL.rev.2025q3",
+      "is.INTL.rev.2025q4",
+      "is.INTL.rev.2026q1",
+      "is.INTL.rev.2026q2"
+     ],
+     "mapTo": "新欄位（非雲端分部／雲端分部近四季；國際）"
+    },
+    "oiQ": {
+     "value": {
+      "2025Q3": 1.199,
+      "2025Q4": 1.04,
+      "2026Q1": 1.424,
+      "2026Q2": 1.717
+     },
+     "unit": "US$bn／季",
+     "ref": [
+      "is.INTL.oi.2025q3",
+      "is.INTL.oi.2025q4",
+      "is.INTL.oi.2026q1",
+      "is.INTL.oi.2026q2"
+     ],
+     "mapTo": "新欄位（分部營業利益近四季；國際）"
+    },
+    "revFY": {
+     "value": {
+      "FY2023": 131.2,
+      "FY2024": 142.906,
+      "FY2025": 161.894
+     },
+     "unit": "US$bn／年",
+     "ref": [
+      "is.INTL.rev.fy2023",
+      "is.INTL.rev.fy2024",
+      "is.INTL.rev.fy2025"
+     ],
+     "mapTo": "historicalPL（分部）"
+    },
+    "oiFY": {
+     "value": {
+      "FY2023": -2.656,
+      "FY2024": 3.792,
+      "FY2025": 4.75
+     },
+     "unit": "US$bn／年",
+     "ref": [
+      "is.INTL.oi.fy2023",
+      "is.INTL.oi.fy2024",
+      "is.INTL.oi.fy2025"
+     ],
+     "mapTo": "historicalPL（分部）"
+    },
+    "daFY": {
+     "value": {
+      "FY2023": 4.016,
+      "FY2024": 4.462,
+      "FY2025": 4.907
+     },
+     "unit": "US$bn／年",
+     "ref": [
+      "is.INTL.da.fy2023",
+      "is.INTL.da.fy2024",
+      "is.INTL.da.fy2025"
+     ],
+     "mapTo": "分部 EBITDA＝營業利益＋分部 D&A（對照表預設 5）"
+    },
+    "daQ": {
+     "value": {
+      "2025Q2": 1.18,
+      "2026Q1": 1.277,
+      "2026Q2": 1.293
+     },
+     "unit": "US$bn／季",
+     "ref": [
+      "is.INTL.da.2025q2",
+      "is.INTL.da.2026q1",
+      "is.INTL.da.2026q2"
+     ],
+     "mapTo": "分部 EBITDA（近期）",
+     "note": "2025Q3、2025Q4 單季分部 D&A 未取（10-Q Q3 與 10-K 可補）"
+    }
+   },
+   "AWS": {
+    "revQ": {
+     "value": {
+      "2025Q3": 33.006,
+      "2025Q4": 35.579,
+      "2026Q1": 37.587,
+      "2026Q2": 42.232
+     },
+     "unit": "US$bn／季",
+     "ref": [
+      "is.AWS.rev.2025q3",
+      "is.AWS.rev.2025q4",
+      "is.AWS.rev.2026q1",
+      "is.AWS.rev.2026q2"
+     ],
+     "mapTo": "新欄位（非雲端分部／雲端分部近四季；AWS）"
+    },
+    "oiQ": {
+     "value": {
+      "2025Q3": 11.434,
+      "2025Q4": 12.465,
+      "2026Q1": 14.161,
+      "2026Q2": 16.621
+     },
+     "unit": "US$bn／季",
+     "ref": [
+      "is.AWS.oi.2025q3",
+      "is.AWS.oi.2025q4",
+      "is.AWS.oi.2026q1",
+      "is.AWS.oi.2026q2"
+     ],
+     "mapTo": "新欄位（分部營業利益近四季；AWS）"
+    },
+    "revFY": {
+     "value": {
+      "FY2023": 90.757,
+      "FY2024": 107.556,
+      "FY2025": 128.725
+     },
+     "unit": "US$bn／年",
+     "ref": [
+      "is.AWS.rev.fy2023",
+      "is.AWS.rev.fy2024",
+      "is.AWS.rev.fy2025"
+     ],
+     "mapTo": "historicalPL（分部）"
+    },
+    "oiFY": {
+     "value": {
+      "FY2023": 24.631,
+      "FY2024": 39.834,
+      "FY2025": 45.606
+     },
+     "unit": "US$bn／年",
+     "ref": [
+      "is.AWS.oi.fy2023",
+      "is.AWS.oi.fy2024",
+      "is.AWS.oi.fy2025"
+     ],
+     "mapTo": "historicalPL（分部）"
+    },
+    "daFY": {
+     "value": {
+      "FY2023": 12.531,
+      "FY2024": 13.32,
+      "FY2025": 21.45
+     },
+     "unit": "US$bn／年",
+     "ref": [
+      "is.AWS.da.fy2023",
+      "is.AWS.da.fy2024",
+      "is.AWS.da.fy2025"
+     ],
+     "mapTo": "分部 EBITDA＝營業利益＋分部 D&A（對照表預設 5）"
+    },
+    "daQ": {
+     "value": {
+      "2025Q2": 4.844,
+      "2026Q1": 7.277,
+      "2026Q2": 8.076
+     },
+     "unit": "US$bn／季",
+     "ref": [
+      "is.AWS.da.2025q2",
+      "is.AWS.da.2026q1",
+      "is.AWS.da.2026q2"
+     ],
+     "mapTo": "分部 EBITDA（近期）",
+     "note": "2025Q3、2025Q4 單季分部 D&A 未取（10-Q Q3 與 10-K 可補）"
+    }
+   },
+   "_note": "分部 D&A 只含不動產與設備（依使用量分攤）；合併現金流量表 D&A 另含影音內容與營業租賃資產攤銷（FY2025 65.8 vs 分部合計 41.9），差額 v0.1b 需決定分攤方式（預設按營收比例，標 [Derived]）"
+  },
+  "revenueCategories": {
+   "online": {
+    "value": {
+     "Q": {
+      "2025Q3": 67.407,
+      "2025Q4": 82.988,
+      "2026Q1": 64.254,
+      "2026Q2": 70.432
+     },
+     "FY2025": 269.287
+    },
+    "unit": "US$bn",
+    "ref": [
+     "is.cat.online.2025q3",
+     "is.cat.online.2025q4",
+     "is.cat.online.2026q1",
+     "is.cat.online.2026q2",
+     "is.cat.online.fy2025"
+    ],
+    "mapTo": "新欄位（營收類別：線上商店；非雲端事業拆線候選，D4）",
+    "note": "營收類別橫跨北美與國際分部，無類別別利潤揭露"
+   },
+   "physical": {
+    "value": {
+     "Q": {
+      "2025Q3": 5.578,
+      "2025Q4": 5.855,
+      "2026Q1": 5.785,
+      "2026Q2": 5.794
+     },
+     "FY2025": 22.561
+    },
+    "unit": "US$bn",
+    "ref": [
+     "is.cat.physical.2025q3",
+     "is.cat.physical.2025q4",
+     "is.cat.physical.2026q1",
+     "is.cat.physical.2026q2",
+     "is.cat.physical.fy2025"
+    ],
+    "mapTo": "新欄位（營收類別：實體店；非雲端事業拆線候選，D4）",
+    "note": "營收類別橫跨北美與國際分部，無類別別利潤揭露"
+   },
+   "seller3p": {
+    "value": {
+     "Q": {
+      "2025Q3": 42.486,
+      "2025Q4": 52.816,
+      "2026Q1": 41.578,
+      "2026Q2": 46.78
+     },
+     "FY2025": 172.162
+    },
+    "unit": "US$bn",
+    "ref": [
+     "is.cat.seller3p.2025q3",
+     "is.cat.seller3p.2025q4",
+     "is.cat.seller3p.2026q1",
+     "is.cat.seller3p.2026q2",
+     "is.cat.seller3p.fy2025"
+    ],
+    "mapTo": "新欄位（營收類別：第三方賣家服務；非雲端事業拆線候選，D4）",
+    "note": "營收類別橫跨北美與國際分部，無類別別利潤揭露"
+   },
+   "ads": {
+    "value": {
+     "Q": {
+      "2025Q3": 17.703,
+      "2025Q4": 21.317,
+      "2026Q1": 17.243,
+      "2026Q2": 19.809
+     },
+     "FY2025": 68.635
+    },
+    "unit": "US$bn",
+    "ref": [
+     "is.cat.ads.2025q3",
+     "is.cat.ads.2025q4",
+     "is.cat.ads.2026q1",
+     "is.cat.ads.2026q2",
+     "is.cat.ads.fy2025"
+    ],
+    "mapTo": "新欄位（營收類別：廣告；非雲端事業拆線候選，D4）",
+    "note": "營收類別橫跨北美與國際分部，無類別別利潤揭露"
+   },
+   "subs": {
+    "value": {
+     "Q": {
+      "2025Q3": 12.574,
+      "2025Q4": 13.122,
+      "2026Q1": 13.427,
+      "2026Q2": 13.73
+     },
+     "FY2025": 49.619
+    },
+    "unit": "US$bn",
+    "ref": [
+     "is.cat.subs.2025q3",
+     "is.cat.subs.2025q4",
+     "is.cat.subs.2026q1",
+     "is.cat.subs.2026q2",
+     "is.cat.subs.fy2025"
+    ],
+    "mapTo": "新欄位（營收類別：訂閱；非雲端事業拆線候選，D4）",
+    "note": "營收類別橫跨北美與國際分部，無類別別利潤揭露"
+   },
+   "other": {
+    "value": {
+     "Q": {
+      "2025Q3": 1.415,
+      "2025Q4": 1.709,
+      "2026Q1": 1.645,
+      "2026Q2": 1.829
+     },
+     "FY2025": 5.935
+    },
+    "unit": "US$bn",
+    "ref": [
+     "is.cat.other.2025q3",
+     "is.cat.other.2025q4",
+     "is.cat.other.2026q1",
+     "is.cat.other.2026q2",
+     "is.cat.other.fy2025"
+    ],
+    "mapTo": "新欄位（營收類別：其他；非雲端事業拆線候選，D4）",
+    "note": "營收類別橫跨北美與國際分部，無類別別利潤揭露"
+   }
+  },
+  "cashflow": {
+   "cfoQ": {
+    "value": {
+     "2025Q3": 35.525,
+     "2025Q4": 54.459,
+     "2026Q1": 26.032,
+     "2026Q2": 45.387
+    },
+    "unit": "US$bn／季",
+    "ref": [
+     "cf.cfo.2025q3",
+     "cf.cfo.2025q4",
+     "cf.cfo.2026q1",
+     "cf.cfo.2026q2"
+    ],
+    "mapTo": "ytdActual／quarterly.actuals"
+   },
+   "capexNetQ": {
+    "value": {
+     "2025Q3": 34.228,
+     "2025Q4": 38.469,
+     "2026Q1": 43.234,
+     "2026Q2": 53.076
+    },
+    "unit": "US$bn／季",
+    "ref": [
+     "cf.capexNet.2025q3",
+     "cf.capexNet.2025q4",
+     "cf.capexNet.2026q1",
+     "cf.capexNet.2026q2"
+    ],
+    "mapTo": "ytdActual.capex（現金口徑，扣出售及獎勵）"
+   },
+   "fcfQ": {
+    "value": {
+     "2025Q3": 1.297,
+     "2025Q4": 15.99,
+     "2026Q1": -17.202,
+     "2026Q2": -7.689
+    },
+    "unit": "US$bn／季",
+    "ref": [
+     "cf.fcf.2025q3",
+     "cf.fcf.2025q4",
+     "cf.fcf.2026q1",
+     "cf.fcf.2026q2"
+    ],
+    "mapTo": "只作對照"
+   },
+   "daQ": {
+    "value": {
+     "2025Q3": 16.796,
+     "2025Q4": 19.471,
+     "2026Q1": 18.945,
+     "2026Q2": 19.988
+    },
+    "unit": "US$bn／季",
+    "ref": [
+     "cf.da.2025q3",
+     "cf.da.2025q4",
+     "cf.da.2026q1",
+     "cf.da.2026q2"
+    ],
+    "mapTo": "latestQuarter.ttmDa（合併口徑）"
+   },
+   "sbcQ": {
+    "value": {
+     "2025Q3": 4.847,
+     "2025Q4": 4.397,
+     "2026Q1": 4.032,
+     "2026Q2": 6.038
+    },
+    "unit": "US$bn／季",
+    "ref": [
+     "cf.sbc.2025q3",
+     "cf.sbc.2025q4",
+     "cf.sbc.2026q1",
+     "cf.sbc.2026q2"
+    ],
+    "mapTo": "股權報酬（EBITDA 口徑說明）"
+   },
+   "finLeasePPEQ": {
+    "value": {
+     "2025Q3": 0.977,
+     "2025Q4": 0.943,
+     "2026Q1": 1.565,
+     "2026Q2": 0.563
+    },
+    "unit": "US$bn／季",
+    "ref": [
+     "cf.finLeasePPE.2025q3",
+     "cf.finLeasePPE.2025q4",
+     "cf.finLeasePPE.2026q1",
+     "cf.finLeasePPE.2026q2"
+    ],
+    "mapTo": "新欄位（以融資租賃取得 PP&E；資本支出外的資產增加，工作單附錄特別注意）"
+   },
+   "ttm": {
+    "value": {
+     "cfo": 161.403,
+     "capexNet": 169.007,
+     "fcf": -7.604,
+     "ppeUnpaidIncrease": 29.267,
+     "opLeaseAssets": 24.897
+    },
+    "unit": "US$bn（TTM 至 2026-06-30）",
+    "ref": [
+     "cf.cfo.ttm2026q2",
+     "cf.capexNet.ttm2026q2",
+     "cf.fcf.ttm2026q2",
+     "cf.ppeUnpaid.ttm2026q2",
+     "cf.opLeaseAssets.ttm2026q2"
+    ],
+    "mapTo": "只作對照（副命題：FCF 已於 TTM 轉負）"
+   },
+   "fy": {
+    "value": {
+     "fy2023": {
+      "cfo": 84.946,
+      "capexNet": 48.133,
+      "fcf": 36.813,
+      "da": 48.663,
+      "sbc": 24.023,
+      "finLeasePPE": 0.642
+     },
+     "fy2024": {
+      "cfo": 115.877,
+      "capexNet": 77.658,
+      "fcf": 38.219,
+      "da": 52.795,
+      "sbc": 22.011,
+      "finLeasePPE": 0.854
+     },
+     "fy2025": {
+      "cfo": 139.514,
+      "capexNet": 128.32,
+      "fcf": 11.194,
+      "da": 65.756,
+      "sbc": 19.467,
+      "finLeasePPE": 2.911
+     }
+    },
+    "unit": "US$bn／年",
+    "ref": [
+     "cf.cfo.fy2023",
+     "cf.cfo.fy2024",
+     "cf.cfo.fy2025",
+     "cf.capexNet.fy2023",
+     "cf.capexNet.fy2024",
+     "cf.capexNet.fy2025",
+     "cf.fcf.fy2023",
+     "cf.fcf.fy2024",
+     "cf.fcf.fy2025",
+     "cf.da.fy2023",
+     "cf.da.fy2024",
+     "cf.da.fy2025",
+     "cf.sbc.fy2023",
+     "cf.sbc.fy2024",
+     "cf.sbc.fy2025",
+     "cf.finLeasePPE.fy2023",
+     "cf.finLeasePPE.fy2024",
+     "cf.finLeasePPE.fy2025"
+    ],
+    "mapTo": "historicalPL／歷年現金流"
+   },
+   "investments2026h1": {
+    "value": 39.767,
+    "unit": "US$bn",
+    "ref": "cf.acqInvest.2026h1",
+    "mapTo": "新欄位（OpenAI／Anthropic 投資現金流出；融資缺口的一部分）"
+   }
+  },
+  "capex": {
+   "guide2026": {
+    "value": 220.0,
+    "unit": "US$bn（現金資本支出，約）",
+    "ref": "guide.2026.capex",
+    "mapTo": "callFacts.capexGuide；首期資本支出＝指引 − 上半年實際（對照表預設 6）",
+    "note": "前次約 200（guide.2026.capexPrior）；指引為單點，無區間"
+   },
+   "actual2026h1": {
+    "value": 96.3,
+    "unit": "US$bn",
+    "ref": "guide.capex.h1actual",
+    "mapTo": "ytdActual.capex",
+    "note": "首期（2026H2）隱含 ≈ 123.7"
+   },
+   "netAddBySegFY": {
+    "value": {
+     "NA": {
+      "fy2023": 17.529,
+      "fy2024": 24.348,
+      "fy2025": 35.919
+     },
+     "INTL": {
+      "fy2023": 4.144,
+      "fy2024": 6.643,
+      "fy2025": 7.617
+     },
+     "AWS": {
+      "fy2023": 24.843,
+      "fy2024": 53.267,
+      "fy2025": 96.496
+     },
+     "CORP": {
+      "fy2023": 1.828,
+      "fy2024": 1.494,
+      "fy2025": 2.32
+     }
+    },
+    "unit": "US$bn",
+    "ref": [
+     "capex.netAdd.NA.fy2023",
+     "capex.netAdd.NA.fy2024",
+     "capex.netAdd.NA.fy2025",
+     "capex.netAdd.INTL.fy2023",
+     "capex.netAdd.INTL.fy2024",
+     "capex.netAdd.INTL.fy2025",
+     "capex.netAdd.AWS.fy2023",
+     "capex.netAdd.AWS.fy2024",
+     "capex.netAdd.AWS.fy2025",
+     "capex.netAdd.CORP.fy2023",
+     "capex.netAdd.CORP.fy2024",
+     "capex.netAdd.CORP.fy2025"
+    ],
+    "mapTo": "非 AI 資本支出拆分（零售物流 vs AWS）",
+    "note": "淨增加含融資租賃與未付款，非現金口徑"
+   },
+   "netAddBySeg2026h1": {
+    "value": {
+     "NA": 23.265,
+     "INTL": 4.267,
+     "AWS": 90.12,
+     "CORP": 0.996
+    },
+    "unit": "US$bn",
+    "ref": [
+     "capex.netAdd.NA.2026h1",
+     "capex.netAdd.INTL.2026h1",
+     "capex.netAdd.AWS.2026h1",
+     "capex.netAdd.CORP.2026h1"
+    ],
+    "mapTo": "同上（AWS 占 76%）"
+   },
+   "nonAwsCapexToRev": {
+    "value": {
+     "fy2023": 0.0448,
+     "fy2024": 0.0584,
+     "fy2025": 0.074,
+     "avg3y": 0.0591
+    },
+    "unit": "比率（北美＋國際 PP&E 淨增加 ÷ 北美＋國際營收）",
+    "ref": [
+     "capex.netAdd.NA.fy2023",
+     "capex.netAdd.NA.fy2024",
+     "capex.netAdd.NA.fy2025",
+     "is.NA.rev.fy2023",
+     "is.NA.rev.fy2024",
+     "is.NA.rev.fy2025"
+    ],
+    "mapTo": "非 AI（零售物流）資本支出比例（對照表預設 6：近三年平均）",
+    "note": "[Derived]；北美／國際淨增加含分攤的技術基礎設施（含部分 AI 自用，如 Rufus／Alexa+），比例可能偏高"
+   },
+   "aiCapexPerMW": {
+    "value": {
+     "itPerMW": {
+      "Hopper H100": 27.51,
+      "GB200 NVL72": 24.015,
+      "GB300 NVL72": 37.446,
+      "VR200 NVL72": 37.586,
+      "Rubin Ultra（MGX NVL 單架，72 GPU）": 50.086
+     },
+     "facilityPerMW": 12.67
+    },
+    "unit": "US／MW-IT（＝／GW）",
+    "ref": [
+     "tk.IF_CapexIT",
+     "tk.L1_FacCapexMW"
+    ],
+    "mapTo": "MW → 資本支出（第三年起）；對帳列：指引 ÷ 每 MW 全成本＝隱含新增 MW",
+    "note": "IT 依世代（IF_CapexIT 基準）＋廠房 L1_FacCapexMW 12.67"
+   }
+  },
+  "balance": {
+   "cashMs": {
+    "value": 122.988,
+    "unit": "US$bn",
+    "ref": [
+     "bs.cash.2026q2",
+     "bs.mktSec.2026q2"
+    ],
+    "mapTo": "latestQuarter.cash"
+   },
+   "debtFace": {
+    "value": 132.995,
+    "unit": "US$bn",
+    "ref": "debt.face.2026q2",
+    "mapTo": "latestQuarter.debtPrincipal；debt.instruments（以發行批次）"
+   },
+   "debtBatches": {
+    "value": [
+     [
+      "2014 票據（發行 6.0B）",
+      2750,
+      "4.80%–4.95%",
+      "4.93%–5.12%",
+      "2034–2044",
+      13.9
+     ],
+     [
+      "2017 票據（17.0B）",
+      12000,
+      "3.15%–4.25%",
+      "3.25%–4.33%",
+      "2027–2057",
+      14.9
+     ],
+     [
+      "2020 票據（10.0B）",
+      7750,
+      "1.20%–2.70%",
+      "1.26%–2.77%",
+      "2027–2060",
+      17.6
+     ],
+     [
+      "2021 票據（18.5B）",
+      12250,
+      "1.65%–3.25%",
+      "1.70%–3.31%",
+      "2028–2061",
+      15.6
+     ],
+     [
+      "2022-04 票據（12.8B）",
+      9750,
+      "3.30%–4.10%",
+      "3.40%–4.15%",
+      "2027–2062",
+      13.3
+     ],
+     [
+      "2022-12 票據（8.3B）",
+      5750,
+      "4.55%–4.70%",
+      "4.61%–4.74%",
+      "2027–2032",
+      3.9
+     ],
+     [
+      "2025 票據（15.0B）",
+      15000,
+      "3.90%–5.55%",
+      "3.99%–5.62%",
+      "2028–2065",
+      15.1
+     ],
+     [
+      "2026-03 美元票據（37.0B；含浮動 2.8B）",
+      37000,
+      "3.85%–6.05%",
+      "3.96%–6.12%",
+      "2028–2076",
+      16.4
+     ],
+     [
+      "2026-03 歐元票據（€14.5B；含浮動 €1.8B）",
+      16550,
+      "2.50%–4.85%",
+      "2.59%–4.88%",
+      "2028–2064",
+      10.1
+     ],
+     [
+      "2026-05 瑞士法郎票據（CHF2.8B）",
+      3487,
+      "0.84%–2.08%",
+      "0.90%–2.10%",
+      "2029–2051",
+      8.9
+     ],
+     [
+      "2026-06 加幣票據（C$14.0B）",
+      9853,
+      "3.40%–5.00%",
+      "3.46%–5.05%",
+      "2029–2056",
+      14.8
+     ],
+     [
+      "其他長期債",
+      855,
+      null,
+      null,
+      null,
+      null
+     ]
+    ],
+    "unit": "清單（US$m）",
+    "ref": "debt.notes.2026q2",
+    "mapTo": "debt.instruments（格式需改；逐檔票券 10-Q 未列）"
+   },
+   "debtSchedule": {
+    "value": {
+     "2026H2": 2.361,
+     "2027": 14.06,
+     "2028": 17.087,
+     "2029": 13.528,
+     "2030": 11.112,
+     "thereafter": 162.161
+    },
+    "unit": "US$bn（本金＋利息）",
+    "ref": "debt.schedule.2026q2",
+    "mapTo": "debt 到期梯"
+   },
+   "postQ2Issuance": {
+    "value": {
+     "usd202607": 25.0,
+     "gbp202609_GBPbn": 4.25
+    },
+    "unit": "US$bn／GBP bn",
+    "ref": [
+     "debt.postQ2.usd202607",
+     "debt.postQ2.gbp202609"
+    ],
+    "mapTo": "callFacts.postQ（期後發債；首期融資）"
+   },
+   "cp": {
+    "value": 0.0,
+    "unit": "US$bn",
+    "ref": "debt.cp.2026q2",
+    "mapTo": "debt（商業本票）",
+    "note": "計畫上限 30"
+   },
+   "revolver": {
+    "value": 20.0,
+    "unit": "US$bn（未動用）",
+    "ref": "debt.revolver.2026q2",
+    "mapTo": "texts.facilityName／瀑布"
+   },
+   "leaseLiab": {
+    "value": {
+     "operatingPV": 96.32,
+     "financePV": 13.451,
+     "financingObligations": 9.315
+    },
+    "unit": "US$bn",
+    "ref": [
+     "lease.opPV.2026q2",
+     "lease.finPV.2026q2",
+     "lease.finObl.2026q2"
+    ],
+    "mapTo": "leases（租賃調整後槓桿）",
+    "note": "融資義務本金＝流動 0.415＋非流動 8.9"
+   },
+   "uncommencedLeases": {
+    "value": {
+     "2026H2": 4.018,
+     "2027": 11.732,
+     "2028": 9.278,
+     "2029": 9.483,
+     "2030": 9.227,
+     "thereafter": 93.476
+    },
+    "unit": "US$bn（未折現付款）",
+    "ref": "lease.uncommenced.2026q2",
+    "mapTo": "leases.uncommenced（起租時程未揭露；租期未揭露）"
+   },
+   "purchaseObligations": {
+    "value": 130.065,
+    "unit": "US$bn",
+    "ref": "commit.purchase.2026q2",
+    "mapTo": "texts.commitments（只作對照）"
+   },
+   "ppeNet": {
+    "value": 446.046,
+    "unit": "US$bn",
+    "ref": "bs.ppe.TOT.2026q2",
+    "mapTo": "期初 PP&E 基礎（AWS 263.75）"
+   }
+  },
+  "shares": {
+   "outstanding": {
+    "value": 10.786314,
+    "unit": "bn 股",
+    "ref": "sh.out.20260722",
+    "mapTo": "latestQuarter.sharesOut"
+   },
+   "dilutedWeightedQ2": {
+    "value": 10.903,
+    "unit": "bn 股",
+    "ref": "sh.wDiluted.2026q2",
+    "mapTo": "texts.sharesNote（稀釋）"
+   },
+   "awards": {
+    "value": 0.244,
+    "unit": "bn 股",
+    "ref": "sh.awards.2026q2",
+    "mapTo": "評價股數（RSU 稀釋）"
+   },
+   "dps": {
+    "value": 0.0,
+    "unit": "US$／股",
+    "ref": "sh.dps",
+    "mapTo": "股利列＝0（無股利）"
+   },
+   "buybackBase": {
+    "value": 0.0,
+    "unit": "US$bn／年",
+    "ref": [
+     "cf.buyback.fy2025",
+     "sh.buyback.2026h1"
+    ],
+    "mapTo": "回購基準＝近四季實際 0（對照表預設 8）→ 瀑布「減少回購」步驟無空間",
+    "note": "Amazon 2023 年以來無買回"
+   },
+   "buybackAuthRemaining": {
+    "value": 6.1,
+    "unit": "US$bn",
+    "ref": "sh.buybackAuthRemaining.2026q2",
+    "mapTo": "只作對照"
+   }
+  },
+  "rpo": {
+   "total": {
+    "value": 496.0,
+    "unit": "US$bn",
+    "ref": "rpo.2026q2",
+    "mapTo": "rpo（總額）",
+    "note": "12 個月內比例不存在（未揭露），只揭露加權剩餘年限 6.4 年"
+   },
+   "life": {
+    "value": 6.4,
+    "unit": "年",
+    "ref": "rpo.life.2026q2",
+    "mapTo": "texts.rpoNote"
+   },
+   "history": {
+    "value": {
+     "2025-12-31": 244.0,
+     "2026-03-31": 364.0,
+     "2026-06-30": 496.0
+    },
+    "unit": "US$bn",
+    "ref": [
+     "rpo.fy2025",
+     "rpo.2026q1",
+     "rpo.2026q2"
+    ],
+    "mapTo": "只作對照"
+   }
+  },
+  "mw": {
+   "aiInServiceIT": {
+    "value": {
+     "low": 2000,
+     "base": 2600,
+     "high": 3300
+    },
+    "unit": "MW-IT",
+    "ref": "mw.ai.inService.2026q2",
+    "mapTo": "運營_AI 雲端：期初 AI 在役 MW（區間；保守／基準／積極）"
+   },
+   "externalShare": {
+    "value": {
+     "low": 0.7,
+     "base": 0.8,
+     "high": 0.9
+    },
+    "unit": "比率",
+    "ref": "mw.ai.extShare",
+    "mapTo": "自用 vs 對外比例（對照表預設 4）"
+   },
+   "externalIT": {
+    "value": {
+     "low": 1400,
+     "base": 2080,
+     "high": 2970
+    },
+    "unit": "MW-IT",
+    "ref": "mw.ai.ext.2026q2",
+    "mapTo": "期初對外計費 MW（AI／非 AI 拆分用）"
+   },
+   "epochSites": {
+    "value": {
+     "newCarlisle": 910,
+     "ridgeland": 228,
+     "madison": 284,
+     "sum": 1422,
+     "proj2028": 3448
+    },
+    "unit": "MW-IT",
+    "ref": [
+     "mw.epoch.newCarlisle",
+     "mw.epoch.ridgeland",
+     "mw.epoch.madison",
+     "mw.epoch.sum",
+     "mw.epoch.proj2028"
+    ],
+    "mapTo": "保守情境下限（已交付＋已公開在建）"
+   },
+   "companyAdds": {
+    "value": {
+     "2025": 3900,
+     "2025Q4": 1200
+    },
+    "unit": "MW（口徑不明）",
+    "ref": [
+     "mw.co.added2025",
+     "mw.co.added2025q4"
+    ],
+    "mapTo": "基準情境：依過去四季新增速度延續（2026 未揭露）"
+   },
+   "target": {
+    "value": {
+     "capacity2027vs2025": 2.0
+    },
+    "unit": "倍",
+    "ref": "mw.target.2027",
+    "mapTo": "積極情境：公司目標全數實現（總容量翻倍；AI 占比需假設）"
+   },
+   "contracts": {
+    "value": {
+     "anthropicUpTo": 5000,
+     "anthropic2026YE": 1000,
+     "openaiTrainium": 2000
+    },
+    "unit": "MW（口徑不明）",
+    "ref": [
+     "mw.anthropic.contract",
+     "mw.openai.trn"
+    ],
+    "mapTo": "對手方合約容量（只作對照與 MW 路徑上限）"
+   },
+   "trainium2": {
+    "value": {
+     "landed2025YE": 1400000,
+     "kWperChipIT": 0.871
+    },
+    "unit": "顆／kW",
+    "ref": [
+     "chip.trn2.landed",
+     "chip.trn2.kWperChip"
+    ],
+    "mapTo": "自研晶片：Trainium 部署量（NonNV 換算待 Tokenomics）"
+   },
+   "thirdPartyAdds": {
+    "value": {
+     "MS2026": 6000,
+     "MS2027": 8000
+    },
+    "unit": "MW（口徑不明）",
+    "ref": [
+     "mw.ms.add2026",
+     "mw.ms.add2027"
+    ],
+    "mapTo": "只作對照（賣方）"
+   }
+  },
+  "k": {
+   "longContract": {
+    "value": {
+     "base": 0.75,
+     "low": 0.55,
+     "high": 1.0
+    },
+    "unit": "倍",
+    "ref": [
+     "kevidence:longContracts",
+     "contract.openai.trn",
+     "contract.openai.nv",
+     "contract.anthropic"
+    ],
+    "mapTo": "defaults.k（長約）"
+   },
+   "spotReserved": {
+    "value": {
+     "base": 1.85,
+     "low": 1.85,
+     "high": 4.29
+    },
+    "unit": "倍",
+    "ref": [
+     "kevidence:listPrices",
+     "price.p5.sp3",
+     "price.p5.od"
+    ],
+    "mapTo": "defaults.k（現貨／預留）"
+   },
+   "longShare": {
+    "value": {
+     "base": 0.8,
+     "low": 0.7,
+     "high": 0.9
+    },
+    "unit": "比率",
+    "ref": "kevidence:recommendation",
+    "mapTo": "defaults.k 組合權重"
+   },
+   "blended": {
+    "value": {
+     "base": 0.97,
+     "low": 0.68,
+     "high": 1.987
+    },
+    "unit": "倍",
+    "ref": "kevidence:recommendation",
+    "mapTo": "defaults.k（價格軸 低／基準／高；對照表預設 1）",
+    "note": "對照 Nebius 0.76、CoreWeave 1.76"
+   }
+  },
+  "perMw": {
+   "genMix": {
+    "value": {
+     "trn2": 0.55,
+     "H100": 0.15,
+     "GB200": 0.15,
+     "GB300": 0.15
+    },
+    "unit": "比率",
+    "ref": "split.genMix",
+    "mapTo": "世代占比（期初）"
+   },
+   "holdEconWeighted": {
+    "value": 8.686,
+    "unit": "US$m／MW-IT·年",
+    "ref": "split.holdEconW",
+    "mapTo": "每 MW 年收入＝本值 × k（對照表預設 2）",
+    "note": "Trainium2 以 Hopper × 0.7 代理（Tokenomics NonNV 缺具名範圍）"
+   },
+   "revPerMwBase": {
+    "value": 8.425,
+    "unit": "US$m／MW-IT·年",
+    "ref": [
+     "split.holdEconW",
+     "kevidence:recommendation"
+    ],
+    "mapTo": "scenarios.revMW（基準）"
+   },
+   "deprLifeIT": {
+    "value": 6,
+    "unit": "年",
+    "ref": "tk.IF_DeprLifeIT",
+    "mapTo": "defaults.gpuLife",
+    "note": "管理層口述 5–6 年（guide.server.life）"
+   }
+  },
+  "split": {
+   "awsAnnualized": {
+    "value": 168.928,
+    "unit": "US$bn／年",
+    "ref": "is.AWS.rev.2026q2",
+    "mapTo": "雲端分部最新年化"
+   },
+   "aiRev": {
+    "value": {
+     "low": 8.269,
+     "base": 17.524,
+     "high": 51.257
+    },
+    "unit": "US$bn／年",
+    "ref": [
+     "split.aiRev.low",
+     "split.aiRev.base",
+     "split.aiRev.high"
+    ],
+    "mapTo": "首期對外 AI 雲端收入（模型值）"
+   },
+   "nonAiResidual": {
+    "value": {
+     "low": 160.659,
+     "base": 151.404,
+     "high": 117.671
+    },
+    "unit": "US$bn／年",
+    "ref": [
+     "split.nonAI.low",
+     "split.nonAI.base",
+     "split.nonAI.high"
+    ],
+    "mapTo": "非 AI 雲端（[Derived]；之後成長率收斂）"
+   },
+   "companyAiRunRate": {
+    "value": 25.0,
+    "unit": "US$bn（下限）",
+    "ref": "aws.aiRunRate.2026q2",
+    "mapTo": "只作驗證，不作輸入"
+   },
+   "warning": {
+    "value": {
+     "company": 25000,
+     "model": 17520,
+     "gap": -7480
+    },
+    "unit": "物件",
+    "ref": "split.validate",
+    "mapTo": "報告示警（不回頭改 k）"
+   }
+  },
+  "related": {
+   "anthropic": {
+    "value": {
+     "invested": 18.0,
+     "carrying": 190.4,
+     "stakeRange": [
+      0.15,
+      0.21
+     ],
+     "stakeBase": 0.18,
+     "postMoney": 965.0,
+     "facilityRemaining": 15.0
+    },
+    "unit": "US$bn／比率",
+    "ref": [
+     "rel.ant.invested",
+     "rel.ant.carryTotal",
+     "rel.ant.stakeFortune",
+     "rel.ant.stakeCB",
+     "rel.ant.valSeriesH",
+     "rel.ant.facility"
+    ],
+    "mapTo": "持股與關聯方：持股價值＝比例 × 投後估值 × (1 − 流動性折價)（對照表預設 9）",
+    "note": "stakeBase 0.18＝Fortune「mid-to-high teens」上緣與 Crypto Briefing 21% 之間的中點（[Assumed]）；一手不存在。帳列 190.4 ÷ 965＝19.7% 作對照"
+   },
+   "openai": {
+    "value": {
+     "invested": 50.0,
+     "stake": 0.0595,
+     "preMoney": 730.0,
+     "postMoneyDerived": 840.0
+    },
+    "unit": "US$bn／比率",
+    "ref": [
+     "rel.oai.invested",
+     "rel.oai.stakeImplied",
+     "rel.oai.valPre"
+    ],
+    "mapTo": "持股（分部加總項）"
+   },
+   "cloudCommitments": {
+    "value": {
+     "openaiNvidia": {
+      "total": 38.0,
+      "years": 7
+     },
+     "openaiExpansion": {
+      "total": 100.0,
+      "years": 8,
+      "trainiumGW": 2.0
+     },
+     "anthropic": {
+      "totalMin": 100.0,
+      "years": 10,
+      "gwMax": 5.0
+     }
+    },
+    "unit": "US$bn／年",
+    "ref": [
+     "contract.openai.nv",
+     "contract.openai.trn",
+     "contract.anthropic"
+    ],
+    "mapTo": "對手方集中度（只作對照）"
+   },
+   "rpoShareMax": {
+    "value": 0.48,
+    "unit": "比率（上限）",
+    "ref": "rel.rpoShare",
+    "mapTo": "對手方集中度"
+   },
+   "modelSnapshots": {
+    "value": {
+     "anthropic": {
+      "2026": 5.789,
+      "2027": 11.579,
+      "2028": 11.579,
+      "2029": 11.579,
+      "2030": 11.579,
+      "existing2025": "AWS 占既有雲端 7.33B 的約 48%"
+     },
+     "openai": {
+      "nvidia": {
+       "2025": 1.357,
+       "2026": 2.714,
+       "2027": 4.071,
+       "2028": 5.429,
+       "2029": 6.786,
+       "2030": 8.143
+      },
+      "trainium": {
+       "2025": 0,
+       "2026": 2.778,
+       "2027": 5.556,
+       "2028": 8.333,
+       "2029": 11.111,
+       "2030": 13.889
+      }
+     }
+    },
+    "unit": "US$bn／年",
+    "ref": [
+     "rel.model.anthropic",
+     "rel.model.openai"
+    ],
+    "mapTo": "OpenAI／Anthropic 快照並排（D5；不回饋計算）"
+   }
+  },
+  "valuation": {
+   "rf": {
+    "value": 0.0528,
+    "unit": "比率",
+    "ref": "val.rf",
+    "mapTo": "valuation.rf"
+   },
+   "beta": {
+    "value": {
+     "base": 1.46,
+     "alt": 0.78
+    },
+    "unit": "倍",
+    "ref": [
+     "val.beta.sa",
+     "val.beta.yahoo",
+     "val.beta.alphaspread"
+    ],
+    "mapTo": "valuation.beta",
+    "note": "兩個 1.46 疑同源；Alpha Spread 0.78 口徑不明，列敏感度"
+   },
+   "erp": {
+    "value": 0.05,
+    "unit": "比率",
+    "ref": "val.erp",
+    "mapTo": "valuation.erp"
+   },
+   "kdPretax": {
+    "value": 0.0633,
+    "unit": "比率",
+    "ref": "val.kd.newIssue2066",
+    "mapTo": "valuation.kd"
+   },
+   "taxRate": {
+    "value": {
+     "fy2023": 0.1896,
+     "fy2024": 0.135,
+     "fy2025": 0.1961,
+     "avg3y": 0.1736
+    },
+    "unit": "比率",
+    "ref": [
+     "is.etr.fy2023",
+     "is.etr.fy2024",
+     "is.etr.fy2025"
+    ],
+    "mapTo": "defaults.taxRate",
+    "note": "2026H1 受 Anthropic 離散稅影響不宜外推"
+   },
+   "peerMedians": {
+    "value": {
+     "retail": 17.72,
+     "ads": 10.79,
+     "subs": 15.41,
+     "aiCloud": 6.0
+    },
+    "unit": "倍（EV/EBITDA）",
+    "ref": [
+     "val.peer.median.retail",
+     "val.peer.median.ads",
+     "val.peer.median.subs",
+     "val.ai6x"
+    ],
+    "mapTo": "peers／分部 EV/EBITDA（D6）"
+   },
+   "g": {
+    "value": 0.03,
+    "unit": "比率",
+    "ref": "val.erp",
+    "mapTo": "valuation.g（對照表預設 10）"
+   },
+   "anchorYear": {
+    "value": 2029,
+    "unit": "年",
+    "ref": "val.erp",
+    "mapTo": "valuation.anchor（日曆年 2029）"
+   },
+   "liqDiscount": {
+    "value": {
+     "base": 0.2,
+     "low": 0.0,
+     "high": 0.4
+    },
+    "unit": "比率",
+    "ref": "val.ant.liqDisc",
+    "mapTo": "持股流動性折價"
+   },
+   "netDebtExLease": {
+    "value": 10.007,
+    "unit": "US$bn",
+    "ref": [
+     "debt.face.2026q2",
+     "bs.cashMs.2026q2"
+    ],
+    "mapTo": "texts.netDebtNote（不含租賃；不含期後發債 25＋£4.25）"
+   }
+  },
+  "guidance": {
+   "q3rev": {
+    "value": [
+     197.0,
+     202.0
+    ],
+    "unit": "US$bn",
+    "ref": "guide.2026q3.rev",
+    "mapTo": "quarterly.periodGuidance"
+   },
+   "q3oi": {
+    "value": [
+     22.5,
+     26.5
+    ],
+    "unit": "US$bn",
+    "ref": "guide.2026q3.oi",
+    "mapTo": "quarterly.periodGuidance"
+   }
+  },
+  "tokenomics": {
+   "version": {
+    "value": {
+     "file": "20261008_Tokenomics_v5.27.xlsx",
+     "current": "20261008_Tokenomics_v5.27.xlsx",
+     "commit": "ca78a8f42af36caa1af2cc6234d8e322f0415769",
+     "extracted": "2026-10-08"
+    },
+    "unit": "物件",
+    "ref": "tk.IF_HoldEcon",
+    "mapTo": "tokenomics.snapshotFile"
+   },
+   "missing": {
+    "value": [
+     "IF_NonNVRatio",
+     "IF_NonNVCostRatio"
+    ],
+    "unit": "清單",
+    "ref": "tk.NonNV",
+    "mapTo": "資料缺口：NonNV 比例（Trainium → VR 等值）"
+   }
+  },
+  "events": {
+   "postQ2": {
+    "value": [
+     "OpenAI 剩餘承諾 21.3B 於 Q2 後投入（合計 50.0B）",
+     "2026-07 美元票據 25.0B",
+     "2026-09 英鎊票據 £4.25B",
+     "Globalstar 收購（2026-04 簽約，約 10.9B 含債，現金＋股票）",
+     "2026-08-26 NVIDIA 追加 200 萬顆 GPU（2027–2028）",
+     "Cipher Black Pearl 216 MW-IT 租約 2026-10 起租"
+    ],
+    "unit": "清單",
+    "ref": [
+     "rel.oai.invested",
+     "debt.postQ2.usd202607",
+     "debt.postQ2.gbp202609",
+     "event.globalstar",
+     "chip.nv.order2027",
+     "rent.cipher"
+    ],
+    "mapTo": "callFacts.postQShortDated"
+   }
+  }
  }
 }

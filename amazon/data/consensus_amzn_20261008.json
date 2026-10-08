@@ -1,0 +1,219 @@
+{
+ "_readme": "AMZN 市場共識資料檔。由 MAG v0.1a 建置代理依工作單（mag/docs/workorders/20261008_mag_v0.1a_資料蒐集.md 步驟 8）以網路讀取取得；數字為擷取當時值，逐筆附來源。單位：金額 US$bn（每股為 US$），日期為擷取日。會計年度＝日曆年。chat 端審查後方可供模型使用；模型端只讀，不得自行增補或修改數字。",
+ "company": "Amazon",
+ "ticker": "AMZN",
+ "asOf": "2026-10-08",
+ "fiscalYearEnd": "12 月；最新已公布季 2026Q2（季末 2026-06-30）；2026Q3 財報預計 2026-10 下旬",
+ "tagLegend": {
+  "Verified": "可公開查證的事實（例如公司實際公布數字、收盤價）",
+  "Interested-party": "賣方分析師預估：有利益關係，數字本身是意見而非事實；『共識是多少』可查證，但共識內容屬利害關係人觀點"
+ },
+ "sourceIndependence": "StockAnalysis 的目標價、評等、2026–2027 營收與 EPS 引用 S&P Global Market Intelligence。Yahoo Finance Analysis 的 2026／2027 營收（828.44／948.44）與 StockAnalysis 完全相同，推測同源（本次不視為獨立）；Yahoo 的 EPS（12.88／10.51，GAAP 口徑）與 MarketScreener 相同。MarketScreener（S&P Capital IQ 系）營收 828.285／947.853 與 S&P 相差 <0.1%，同一底層的兩個呈現，不算獨立。MarketBeat 目標價與評等為自行彙整（獨立於 S&P），作目標價的獨立交叉。營收與 EBITDA 共識本次只有 S&P 系，找不到第二個獨立供應商。",
+ "priceReference": {
+  "close": 259.92,
+  "date": "2026-10-07",
+  "source": "StockAnalysis.com（歷史股價）",
+  "url": "https://stockanalysis.com/stocks/amzn/history/",
+  "tag": "Verified",
+  "crossCheck": {
+   "close": 259.92,
+   "date": "2026-10-07",
+   "source": "Yahoo Finance",
+   "url": "https://finance.yahoo.com/quote/AMZN/"
+  },
+  "note": "前五日收盤：10-01 248.23、10-02 251.52、10-05 251.40、10-06 256.29、10-07 259.92；2026-10-08 盤前約 258.6（非收盤，不採用）；市值約 2.80T"
+ },
+ "priceTarget": {
+  "mean": 331.53,
+  "median": 330.0,
+  "low": 230.0,
+  "high": 405.0,
+  "analysts": 59,
+  "consensusRating": "Strong Buy",
+  "source": "S&P Global Market Intelligence（經 StockAnalysis.com）",
+  "url": "https://stockanalysis.com/stocks/amzn/forecast/",
+  "retrieved": "2026-10-08",
+  "tag": "Interested-party",
+  "crossCheck": [
+   {
+    "mean": 322.86,
+    "low": 200.0,
+    "high": 400.0,
+    "analysts": 59,
+    "consensusRating": "Moderate Buy",
+    "source": "MarketBeat（自行彙整，獨立於 S&P）",
+    "url": "https://www.marketbeat.com/stocks/NASDAQ/AMZN/forecast/",
+    "retrieved": "2026-10-08"
+   },
+   {
+    "mean": 331.53,
+    "source": "Yahoo Finance（1y Target Est；與 S&P 同值，推測同源）",
+    "url": "https://finance.yahoo.com/quote/AMZN/",
+    "retrieved": "2026-10-08"
+   }
+  ]
+ },
+ "ratings": {
+  "month": "2026-10",
+  "strongBuy": 42,
+  "buy": 15,
+  "hold": 2,
+  "sell": 0,
+  "strongSell": 0,
+  "total": 59,
+  "source": "S&P Global Market Intelligence（經 StockAnalysis.com）",
+  "url": "https://stockanalysis.com/stocks/amzn/forecast/",
+  "retrieved": "2026-10-08",
+  "tag": "Interested-party",
+  "crossCheck": {
+   "buy": 56,
+   "hold": 3,
+   "sell": 0,
+   "total": 59,
+   "source": "MarketBeat",
+   "url": "https://www.marketbeat.com/stocks/NASDAQ/AMZN/forecast/",
+   "retrieved": "2026-10-08"
+  }
+ },
+ "recentActions": [
+  {
+   "date": "2026-08（Q2 財報後）",
+   "firm": "Morgan Stanley（Brian Nowak）",
+   "rating": "Overweight（維持）",
+   "target": 335.0,
+   "source": "Invezz 轉述",
+   "url": "https://invezz.com/news/2026/08/18/could-amazon-stock-double-by-end-of-next-year-heres-what-morgan-stanley-says/"
+  }
+ ],
+ "recentActionsMeta": {
+  "note": "逐家評等動作未完整蒐集（S&P／TipRanks 明細未逐筆讀取）；只列取得的一筆",
+  "tag": "Interested-party"
+ },
+ "annualEstimates": {
+  "definition": "MarketScreener 年度共識；EBITDA、EBIT 口徑由供應商定義（未揭露是否扣 SBC）；EPS 為 GAAP（2026 含 Q2 Anthropic 公允價值利益，故 2026 EPS 12.88 高於 2027 10.51）；淨負債正值＝淨負債（2025 實際 −57.381＝淨現金）；資本支出為共識（非公司指引）",
+  "source": "MarketScreener（S&P Capital IQ 系共識）",
+  "url": "https://www.marketscreener.com/quote/stock/AMAZON-COM-INC-12864605/finances/",
+  "retrieved": "2026-10-08",
+  "tag": "Interested-party",
+  "FY2025": {
+   "revenue": 716.924,
+   "note": "實際數（10-K）",
+   "netDebt": -57.381
+  },
+  "FY2026": {
+   "revenue": 828.285,
+   "ebitda": 216.957,
+   "ebit": 109.867,
+   "netIncome": 140.133,
+   "epsGaap": 12.88,
+   "capex": 220.5,
+   "fcf": -34.027,
+   "netDebt": 22.278,
+   "dps": 0.0
+  },
+  "FY2027": {
+   "revenue": 947.853,
+   "ebitda": 273.452,
+   "ebit": 140.372,
+   "netIncome": 115.541,
+   "epsGaap": 10.51,
+   "capex": 275.063,
+   "fcf": -5.631,
+   "netDebt": 74.022,
+   "dps": 0.0
+  },
+  "FY2028": {
+   "revenue": 1097.389,
+   "ebitda": 355.29,
+   "ebit": 182.749,
+   "netIncome": 147.701,
+   "epsGaap": 13.81,
+   "capex": 292.927,
+   "fcf": 41.402,
+   "netDebt": 104.013,
+   "dps": 0.0
+  }
+ },
+ "annualEstimatesAlt": {
+  "note": "S&P 經 StockAnalysis 免費提供 2026–2027 營收與 non-GAAP EPS（與上表 GAAP EPS 口徑不同，不可混用）；2028 需付費。",
+  "sp": {
+   "source": "S&P Global Market Intelligence（經 StockAnalysis.com）",
+   "url": "https://stockanalysis.com/stocks/amzn/forecast/",
+   "retrieved": "2026-10-08",
+   "tag": "Interested-party",
+   "FY2026": {
+    "revenue": 828.44,
+    "revenueLow": 815.9,
+    "revenueHigh": 842.0,
+    "epsAdjusted": 8.31,
+    "epsLow": 7.65,
+    "epsHigh": 9.49,
+    "analysts": 56
+   },
+   "FY2027": {
+    "revenue": 948.44,
+    "epsAdjusted": 10.47
+   },
+   "FY2028": {
+    "revenue": null,
+    "note": "不適用：付費內容"
+   }
+  },
+  "yahoo": {
+   "source": "Yahoo Finance Analysis（營收與 S&P 同值，推測同源）",
+   "url": "https://finance.yahoo.com/quote/AMZN/analysis/",
+   "retrieved": "2026-10-08",
+   "tag": "Interested-party",
+   "FY2026": {
+    "revenue": 828.44,
+    "revenueLow": 815.87,
+    "revenueHigh": 841.98,
+    "analysts": 56,
+    "eps": 12.88
+   },
+   "FY2027": {
+    "revenue": 948.44,
+    "revenueLow": 898.02,
+    "revenueHigh": 992.15,
+    "analysts": 58,
+    "eps": 10.51
+   }
+  }
+ },
+ "quarterlyEstimates": {
+  "note": "找不到：2026Q3 共識（營收、營業利益）未取得公開頁面數字",
+  "tag": "Interested-party"
+ },
+ "companyGuidance": {
+  "2026Q3": {
+   "revenueLow": 197.0,
+   "revenueHigh": 202.0,
+   "operatingIncomeLow": 22.5,
+   "operatingIncomeHigh": 26.5
+  },
+  "FY2026": {
+   "cashCapex": 220.0,
+   "cashCapexPrior": 200.0,
+   "capexH1Actual": 96.3
+  },
+  "source": "2026Q2 財報新聞稿（8-K 附件 99.1）；資本支出為法說會口述（二手逐字稿）",
+  "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000024/amzn-20260630xex991.htm",
+  "tag": "Interested-party",
+  "tagNote": "公司指引屬利害關係人（管理層）預估；營收與營業利益為新聞稿正式文字；2026 現金資本支出約 220 只見於法說（見事實總帳 guide.2026.capex）。共識資本支出 220.5 與指引一致"
+ },
+ "independentCrossCheck": {
+  "provider": "MarketBeat（目標價）",
+  "meanTarget": 322.86,
+  "date": "2026-10-07",
+  "url": "https://www.marketbeat.com/stocks/NASDAQ/AMZN/forecast/",
+  "tag": "Interested-party",
+  "note": "與 S&P 平均 331.53 差 2.6%；營收／EBITDA 無獨立第二來源"
+ },
+ "notFound": [
+  "2026–2028 營收與 EBITDA 的第二個獨立供應商（Yahoo 與 S&P 同值、MarketScreener 屬 S&P 系）——「找不到」，非不存在",
+  "2029 以後共識：公開來源只到 2028",
+  "EBITDA、資本支出共識的高低區間：未公開",
+  "2026Q3 單季共識：未取得",
+  "逐家目標價變動明細：未逐筆蒐集"
+ ]
+}

@@ -5878,6 +5878,19 @@
     "note": "能源、影音內容、設備、軟體；2026H2 23,452、2027 33,026"
    },
    {
+    "id": "event.globalstar",
+    "item": "Globalstar 收購（簽約，現金＋股票；每股 $90 現金或 0.3210 股 AMZN，現金上限 40%）",
+    "value": 10900,
+    "unit": "USD M（含債，簽約日隱含）",
+    "period": "2026-04-13",
+    "source": "Form 10-Q 2026Q2（期末 2026-06-30，核閱未查核）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/amzn-20260630.htm",
+    "docDate": "2026-07-31",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "10-Q 附註 4；同時與 Apple 簽服務協議；尚待完成"
+   },
+   {
     "id": "commit.total.2026q2",
     "item": "主要合約承諾合計",
     "value": 650034,
@@ -6782,6 +6795,32 @@
     "note": "公開價目表（市場事實）；換成每 GPU-hr 與 k 見 data/kevidence_amazon_20261008.json"
    },
    {
+    "id": "price.p6b200.cb",
+    "item": "p6-b200.48xlarge Capacity Block",
+    "value": 113.666,
+    "unit": "US$／執行個體-hr（us-east-1，Linux）",
+    "period": "2026-10-08",
+    "source": "AWS EC2 Capacity Blocks 定價頁",
+    "url": "https://aws.amazon.com/ec2/capacityblocks/pricing/",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "公開價目表（市場事實）；換成每 GPU-hr 與 k 見 data/kevidence_amazon_20261008.json"
+   },
+   {
+    "id": "price.p6b300.cb",
+    "item": "p6-b300.48xlarge Capacity Block",
+    "value": 129.168,
+    "unit": "US$／執行個體-hr（us-east-1，Linux）",
+    "period": "2026-10-08",
+    "source": "AWS EC2 Capacity Blocks 定價頁",
+    "url": "https://aws.amazon.com/ec2/capacityblocks/pricing/",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "公開價目表（市場事實）；換成每 GPU-hr 與 k 見 data/kevidence_amazon_20261008.json"
+   },
+   {
     "id": "price.gb200.cb",
     "item": "u-p6e-gb200x72 UltraServer Capacity Block（72×B200）",
     "value": 761.904,
@@ -7156,6 +7195,134 @@
     "retrieved": "2026-10-08",
     "tag": "[Derived]",
     "note": "openai/dist/20261008_OpenAI收支模型_v0_6.xlsx Cost K11、K12（main d4026cf；只讀對照）；隱含 Trainium 每 GW 年價 6.25（Checks C15）"
+   }
+  ],
+  "6_AI非AI拆分試算": [
+   {
+    "id": "split.genMix",
+    "item": "對外 AI 機隊世代占比（期初）",
+    "value": {
+     "trn2": 0.55,
+     "H100": 0.15,
+     "GB200": 0.15,
+     "GB300": 0.15
+    },
+    "unit": "比率",
+    "period": "2026-06-30",
+    "source": "本報告假設（無外部文件；推導與假設說明見 v0.1a 資料報告）",
+    "url": "https://github.com/YinchenChang/company-models/blob/claude/amazon-v0.1/amazon/docs/reports/20261008_amazon_v0.1a_%E8%B3%87%E6%96%99.md",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Assumed]",
+    "note": "Trainium2 ≈ Epoch 三站 1,422 ÷ 在役 2,600 ≈ 55%；其餘 NVIDIA Hopper／GB200／GB300 各 15%（[Assumed]）；Trainium2＝Hopper × 持有比 0.7（anthropic/ 參考值；Tokenomics NonNV 缺具名範圍）"
+   },
+   {
+    "id": "split.holdEconW",
+    "item": "世代加權 IF_HoldEcon",
+    "value": 8.686,
+    "unit": "US／MW-IT·年",
+    "period": "v5.27",
+    "source": "Tokenomics 快照 × split.genMix（無外部文件；推導與假設說明見 v0.1a 資料報告）",
+    "url": "https://github.com/YinchenChang/company-models/blob/claude/amazon-v0.1/amazon/docs/reports/20261008_amazon_v0.1a_%E8%B3%87%E6%96%99.md",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "＝Σ 占比 × IF_HoldEcon（基準）；Trainium2 以 Hopper × 0.7"
+   },
+   {
+    "id": "split.aiRev.low",
+    "item": "對外 AI 雲端年收入（low）",
+    "value": 8269,
+    "unit": "USD M／年",
+    "period": "首期（2026-06-30 期初年化）",
+    "source": "本報告換算（無外部文件；推導與假設說明見 v0.1a 資料報告）",
+    "url": "https://github.com/YinchenChang/company-models/blob/claude/amazon-v0.1/amazon/docs/reports/20261008_amazon_v0.1a_%E8%B3%87%E6%96%99.md",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "＝對外 AI MW 1400 × 加權持有成本 8.686 × k 0.68；收入端不乘 IF_Util（契約第 3 條）"
+   },
+   {
+    "id": "split.nonAI.low",
+    "item": "非 AI 雲端年收入殘差（low）",
+    "value": 160659,
+    "unit": "USD M／年",
+    "period": "首期",
+    "source": "本報告換算（無外部文件；推導與假設說明見 v0.1a 資料報告）",
+    "url": "https://github.com/YinchenChang/company-models/blob/claude/amazon-v0.1/amazon/docs/reports/20261008_amazon_v0.1a_%E8%B3%87%E6%96%99.md",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "＝AWS 2026Q2 年化 168928 − AI 雲端 8269"
+   },
+   {
+    "id": "split.aiRev.base",
+    "item": "對外 AI 雲端年收入（base）",
+    "value": 17524,
+    "unit": "USD M／年",
+    "period": "首期（2026-06-30 期初年化）",
+    "source": "本報告換算（無外部文件；推導與假設說明見 v0.1a 資料報告）",
+    "url": "https://github.com/YinchenChang/company-models/blob/claude/amazon-v0.1/amazon/docs/reports/20261008_amazon_v0.1a_%E8%B3%87%E6%96%99.md",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "＝對外 AI MW 2080 × 加權持有成本 8.686 × k 0.97；收入端不乘 IF_Util（契約第 3 條）"
+   },
+   {
+    "id": "split.nonAI.base",
+    "item": "非 AI 雲端年收入殘差（base）",
+    "value": 151404,
+    "unit": "USD M／年",
+    "period": "首期",
+    "source": "本報告換算（無外部文件；推導與假設說明見 v0.1a 資料報告）",
+    "url": "https://github.com/YinchenChang/company-models/blob/claude/amazon-v0.1/amazon/docs/reports/20261008_amazon_v0.1a_%E8%B3%87%E6%96%99.md",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "＝AWS 2026Q2 年化 168928 − AI 雲端 17524"
+   },
+   {
+    "id": "split.aiRev.high",
+    "item": "對外 AI 雲端年收入（high）",
+    "value": 51257,
+    "unit": "USD M／年",
+    "period": "首期（2026-06-30 期初年化）",
+    "source": "本報告換算（無外部文件；推導與假設說明見 v0.1a 資料報告）",
+    "url": "https://github.com/YinchenChang/company-models/blob/claude/amazon-v0.1/amazon/docs/reports/20261008_amazon_v0.1a_%E8%B3%87%E6%96%99.md",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "＝對外 AI MW 2970 × 加權持有成本 8.686 × k 1.987；收入端不乘 IF_Util（契約第 3 條）"
+   },
+   {
+    "id": "split.nonAI.high",
+    "item": "非 AI 雲端年收入殘差（high）",
+    "value": 117671,
+    "unit": "USD M／年",
+    "period": "首期",
+    "source": "本報告換算（無外部文件；推導與假設說明見 v0.1a 資料報告）",
+    "url": "https://github.com/YinchenChang/company-models/blob/claude/amazon-v0.1/amazon/docs/reports/20261008_amazon_v0.1a_%E8%B3%87%E6%96%99.md",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "＝AWS 2026Q2 年化 168928 − AI 雲端 51257"
+   },
+   {
+    "id": "split.validate",
+    "item": "驗證：公司 AI run-rate（>25,000）vs 模型基準 17,520",
+    "value": {
+     "company": 25000,
+     "model": 17520,
+     "gap": -7480
+    },
+    "unit": "USD M／年",
+    "period": "2026Q2",
+    "source": "本報告換算（無外部文件；推導與假設說明見 v0.1a 資料報告）",
+    "url": "https://github.com/YinchenChang/company-models/blob/claude/amazon-v0.1/amazon/docs/reports/20261008_amazon_v0.1a_%E8%B3%87%E6%96%99.md",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "示警：模型基準低於公司揭露下限 30%；且殘差 151.4B 對 2025Q2 AWS 年化 123.5B 隱含非 AI 年增 ≥22.6%（即使一年前 AI 為 0），高於 AWS 2023–2025 年增 17%–20% → 期初對外 AI MW 或 k 可能偏低（或公司 AI 口徑含 Bedrock 軟體／晶片業務）。依規則不回頭改 k；v0.1b 以敏感度呈現"
    }
   ],
   "7_評價輸入": [

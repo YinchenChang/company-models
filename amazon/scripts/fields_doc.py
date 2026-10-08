@@ -301,6 +301,26 @@ F = [
  ('oracle.perMw', 'Oracle 每 MW 年收入三情境（沿用 Nebius 的 Tokenomics 推導）、EBITDA 率、伺服器壽命草稿；格式同上', '物件', M),
  ('oracle.openai', 'Oracle–OpenAI 合約年額、隱含每 MW、OpenAI 計畫算力支出（只作對照）；格式同上', '物件', M),
  ('oracle.events', 'Oracle 評價日後事件（Project Jupiter 不可抗力通知）；格式同上', '物件', M),
+ # MAG v0.1a（Amazon）：公司專屬資料草稿（引擎尚未讀取；v0.1b 依各欄 mapTo 搬到既有欄位或新增）
+ ('mag._readme', 'MAG（Amazon）資料草稿區段的說明（v0.1a 產出；引擎尚未讀取，v0.1b 依 mapTo 搬入既有欄位或新增）', '文字', M),
+ ('mag.files', 'Amazon 事實總帳、k 證據表、共識、Tokenomics 快照與名稱清單的路徑', '物件（路徑）', M),
+ ('mag.calendar', '會計年度、最新已申報季、首期（2026H2，0.5 年）與期間標籤草稿；每欄 value＋unit＋ref（事實總帳 id）＋mapTo', '物件', M),
+ ('mag.segments', '北美、國際、AWS 三分部近四季與近三年營收、營業利益、分部折舊草稿；格式同上', '物件', M),
+ ('mag.revenueCategories', '營收類別（線上商店、實體店、第三方賣家、廣告、訂閱、其他）近四季與 FY2025 草稿；格式同上', '物件', M),
+ ('mag.cashflow', '營運現金流、資本支出淨額、FCF、D&A、股權報酬、融資租賃取得 PP&E（季、TTM、年）草稿；格式同上', '物件', M),
+ ('mag.capex', '2026 資本支出指引與上半年實際、分部 PP&E 淨增加、非 AWS 資本支出比例、每 MW 建置成本草稿；格式同上', '物件', M),
+ ('mag.balance', '現金與有價證券、債務（批次、到期梯、期後發債、商本、循環額度）、租賃負債、尚未起租租賃、採購義務、PP&E 草稿；格式同上', '物件', M),
+ ('mag.shares', '流通股、稀釋股、RSU、股利（0）、回購基準（0）與授權餘額草稿；格式同上', '物件', M),
+ ('mag.rpo', 'RPO 總額、加權剩餘年限與歷史草稿；格式同上', '物件', M),
+ ('mag.mw', 'AI 在役 MW（區間）、對外比例、Epoch 站點、公司新增電力、目標、合約容量、Trainium 部署、第三方估計草稿（口徑逐欄註明）；格式同上', '物件', M),
+ ('mag.k', 'k 的建議值（長約、現貨／預留、長約占比、混合；低／基準／高）草稿；ref 指 kevidence 檔；格式同上', '物件', C),
+ ('mag.perMw', '世代占比、加權 IF_HoldEcon、每 MW 年收入基準、IT 折舊年限草稿；格式同上', '物件', C),
+ ('mag.split', 'AI／非 AI 雲端拆分試算（AWS 年化、AI 雲端收入、非 AI 殘差、公司 AI run-rate 驗證、示警）草稿；格式同上', '物件', C),
+ ('mag.related', 'Anthropic／OpenAI 持股、估值、雲端承諾、RPO 占比上限、兩家模型快照（只作對照）草稿；格式同上', '物件', M),
+ ('mag.valuation', '評價輸入草稿（rf、beta、ERP、債務成本、稅率、同業倍數中位數、g、錨定年、流動性折價、淨負債）；格式同上', '物件', C),
+ ('mag.guidance', '2026Q3 營收與營業利益指引草稿；格式同上', '物件', M),
+ ('mag.tokenomics', 'Tokenomics 快照版本（檔名、CURRENT、commit）與缺漏名稱；格式同上', '物件', M),
+ ('mag.events', '評價日後事件清單（OpenAI 剩餘投資、期後發債、Globalstar、NVIDIA 追加訂單、Cipher 租約）；格式同上', '物件', M),
 ]
 LQ = {
  'filed': ('申報日', '日期'), 'periodEnd': ('季末日', '日期'), 'revenue': ('當季營收', 'US$bn'), 'yoy': ('當季營收年增率', '比例'),
@@ -386,7 +406,7 @@ SECT = [('meta', '基本資料'), ('calendar', '期間與日期（v4.5）'), ('a
         ('rpo', '已簽約未認列營收（RPO）'), ('leases', '租約'), ('debt', '既有債務'), ('latestQuarter', '最新一季財報數字（10-Q）'),
         ('callFacts', '法說會與期後事項'), ('scenarios', '三個擴張情境'), ('legacy', '舊版對照值'),
         ('defaults', '預設假設（畫面上可調的輸入）'), ('valuation', '評價參數'), ('methodology', '評價方法與評等門檻'), ('peers', '同業比較（Comps）'),
-        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('oracle', 'Oracle 資料草稿（v0.1a；v0.1b 逐步搬入，只留後續步驟用或只作對照的欄位）')]
+        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('oracle', 'Oracle 資料草稿（v0.1a；v0.1b 逐步搬入，只留後續步驟用或只作對照的欄位）'), ('mag', 'MAG（Amazon）資料草稿（v0.1a；引擎尚未讀取，v0.1b 依 mapTo 搬入）')]
 out, shown = ['**填表慣例**',
                '- 金額單位是**十億美元（US$bn）**，例如 4.653 代表 46.53 億美元；另有標示的例外：每股（US$）、每 MW 建置成本（百萬美元／MW，US$m/MW）、股數（十億股，bn）。',
                '- 「比例」寫成小數（0.25＝25%）；標示「%」的欄位寫成百分點（25＝25%）。兩種寫法沿用既有程式，不可混用。',

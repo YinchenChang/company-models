@@ -689,6 +689,30 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `oracle.openai` | Oracle–OpenAI 合約年額、隱含每 MW、OpenAI 計畫算力支出（只作對照）；格式同上 | 物件 | 物件（contractAnnual、contractPerMw、computePlan2026to2030） | 必改 |
 | `oracle.events` | Oracle 評價日後事件（Project Jupiter 不可抗力通知）；格式同上 | 物件 | 物件（jupiterForceMajeure） | 必改 |
 
+### `mag`：MAG（Amazon）資料草稿（v0.1a；引擎尚未讀取，v0.1b 依 mapTo 搬入）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `mag._readme` | MAG（Amazon）資料草稿區段的說明（v0.1a 產出；引擎尚未讀取，v0.1b 依 mapTo 搬入既有欄位或新增） | 文字 | Amazon MAG 資料草稿（v0.1a 產出；引… | 必改 |
+| `mag.files` | Amazon 事實總帳、k 證據表、共識、Tokenomics 快照與名稱清單的路徑 | 物件（路徑） | 物件（facts、kevidence、consensus、tokenomicsSnapshot、tokenomicsNames） | 必改 |
+| `mag.calendar` | 會計年度、最新已申報季、首期（2026H2，0.5 年）與期間標籤草稿；每欄 value＋unit＋ref（事實總帳 id）＋mapTo | 物件 | 物件（fiscalYearEndMonth、latestQuarterFiled、firstPeriod） | 必改 |
+| `mag.segments` | 北美、國際、AWS 三分部近四季與近三年營收、營業利益、分部折舊草稿；格式同上 | 物件 | 物件（NA、INTL、AWS、_note） | 必改 |
+| `mag.revenueCategories` | 營收類別（線上商店、實體店、第三方賣家、廣告、訂閱、其他）近四季與 FY2025 草稿；格式同上 | 物件 | 物件（online、physical、seller3p、ads、subs、other） | 必改 |
+| `mag.cashflow` | 營運現金流、資本支出淨額、FCF、D&A、股權報酬、融資租賃取得 PP&E（季、TTM、年）草稿；格式同上 | 物件 | 物件（cfoQ、capexNetQ、fcfQ、daQ、sbcQ、finLeasePPEQ、ttm、fy、investments2026h1） | 必改 |
+| `mag.capex` | 2026 資本支出指引與上半年實際、分部 PP&E 淨增加、非 AWS 資本支出比例、每 MW 建置成本草稿；格式同上 | 物件 | 物件（guide2026、actual2026h1、netAddBySegFY、netAddBySeg2026h1、nonAwsCapexToRev、aiCapexPerMW） | 必改 |
+| `mag.balance` | 現金與有價證券、債務（批次、到期梯、期後發債、商本、循環額度）、租賃負債、尚未起租租賃、採購義務、PP&E 草稿；格式同上 | 物件 | 物件（cashMs、debtFace、debtBatches、debtSchedule、postQ2Issuance、cp、revolver、leaseLiab、uncommencedLeases、purchaseObligations、ppeNet） | 必改 |
+| `mag.shares` | 流通股、稀釋股、RSU、股利（0）、回購基準（0）與授權餘額草稿；格式同上 | 物件 | 物件（outstanding、dilutedWeightedQ2、awards、dps、buybackBase、buybackAuthRemaining） | 必改 |
+| `mag.rpo` | RPO 總額、加權剩餘年限與歷史草稿；格式同上 | 物件 | 物件（total、life、history） | 必改 |
+| `mag.mw` | AI 在役 MW（區間）、對外比例、Epoch 站點、公司新增電力、目標、合約容量、Trainium 部署、第三方估計草稿（口徑逐欄註明）；格式同上 | 物件 | 物件（aiInServiceIT、externalShare、externalIT、epochSites、companyAdds、target、contracts、trainium2、thirdPartyAdds） | 必改 |
+| `mag.k` | k 的建議值（長約、現貨／預留、長約占比、混合；低／基準／高）草稿；ref 指 kevidence 檔；格式同上 | 物件 | 物件（longContract、spotReserved、longShare、blended） | 檢查 |
+| `mag.perMw` | 世代占比、加權 IF_HoldEcon、每 MW 年收入基準、IT 折舊年限草稿；格式同上 | 物件 | 物件（genMix、holdEconWeighted、revPerMwBase、deprLifeIT） | 檢查 |
+| `mag.split` | AI／非 AI 雲端拆分試算（AWS 年化、AI 雲端收入、非 AI 殘差、公司 AI run-rate 驗證、示警）草稿；格式同上 | 物件 | 物件（awsAnnualized、aiRev、nonAiResidual、companyAiRunRate、warning） | 檢查 |
+| `mag.related` | Anthropic／OpenAI 持股、估值、雲端承諾、RPO 占比上限、兩家模型快照（只作對照）草稿；格式同上 | 物件 | 物件（anthropic、openai、cloudCommitments、rpoShareMax、modelSnapshots） | 必改 |
+| `mag.valuation` | 評價輸入草稿（rf、beta、ERP、債務成本、稅率、同業倍數中位數、g、錨定年、流動性折價、淨負債）；格式同上 | 物件 | 物件（rf、beta、erp、kdPretax、taxRate、peerMedians、g、anchorYear、liqDiscount、netDebtExLease） | 檢查 |
+| `mag.guidance` | 2026Q3 營收與營業利益指引草稿；格式同上 | 物件 | 物件（q3rev、q3oi） | 必改 |
+| `mag.tokenomics` | Tokenomics 快照版本（檔名、CURRENT、commit）與缺漏名稱；格式同上 | 物件 | 物件（version、missing） | 必改 |
+| `mag.events` | 評價日後事件清單（OpenAI 剩餘投資、期後發債、Globalstar、NVIDIA 追加訂單、Cipher 租約）；格式同上 | 物件 | 物件（postQ2） | 必改 |
+
 ## v4.0 架構：公司資料單一來源
 - **company.json**：所有公司原始輸入（HTML 引擎與 Excel 共用）。換公司時先改這個檔；衍生值（情境 Billable 比率、Q3 新增 RPO 權重、債務合計與平均利率）留在 segA 開頭由程式推導。
 - HTML：`build_html_portable.py` 把 company.json 注入為 `COMPANY_DATA`，segA 開頭讀取。Excel：`build_xlsx.py` 開頭讀同一檔（75 項輸入，百分點欄位以 `PCT_()` 轉成比例）。
