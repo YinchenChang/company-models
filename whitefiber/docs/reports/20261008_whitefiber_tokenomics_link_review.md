@@ -1,7 +1,7 @@
 # WhiteFiber｜Tokenomics 連接審視（v5.29）報告（2026-10-08）
 
 - 分支：`claude/whitefiber-tk-link-review`（自 main `75327ef` 開出）
-- 最新提交 SHA：見 PR 的最新提交（本檔第一次提交後，PR 留言會註明 SHA）
+- 最新提交 SHA：報告內容提交 `fb06b49`（其後只有本行 SHA 補註的提交；以 PR 最新提交為準）
 - 報告路徑：`whitefiber/docs/reports/20261008_whitefiber_tokenomics_link_review.md`
 - 依據：共用工作單 `docs/workorders/20261008_tokenomics_link_review.md`、`whitefiber/docs/workorders/20261008_whitefiber_tokenomics_link_review.md`；Tokenomics 下游資料契約 v0.1（`docs/plan/Tokenomics_downstream_contract.md`）。
 - 對照的 Tokenomics：master `a5061d9`，`model/CURRENT`＝`20261008_Tokenomics_v5.29.xlsx`（`IFW_` 44 個、`IFC_` 4 個名稱存在 → **前提成立**，第 1–4 節全做）。
