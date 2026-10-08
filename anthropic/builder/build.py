@@ -35,7 +35,7 @@ from oai_link import read_oai  # noqa: E402
 from tk_link import NONNV_STATUS, PENDING_NOTE, read_nonnv, read_snapshot  # noqa: E402
 
 VERSION = "v0.1"
-STAGE = "v0.1-A3"
+STAGE = "v0.1"
 REGISTRY_PATH = HERE / "id_registry.json"
 SRC_YAML = ROOT / "data" / "anthropic_src.yaml"
 INP_YAML = ROOT / "data" / "anthropic_inputs.yaml"
@@ -175,11 +175,14 @@ def sheet_readme(ctx, summary):
     sn, oa = ctx.snap, ctx.oai
     lines = [
         ("本版範圍", f"{STAGE}：SRC_ANT、TK_Link（含 NonNV 讀表）、OAI_Link、Inputs、Demand（需求與 token 量）、Revenue（訂閱方案別、API 層級別、通路分成、淨額、容量上限）、Compute（加速器族、逐合約供給 GW、η、推論與研發 GW、容量上限、VR 等值）、"
-                    "Cost（逐合約實付、自建資本支出、供應商持有成本、非算力成本、股權報酬、命題表）、Checks。Funding／Reverse 於 A4 加入（命題 2 屆時才有值）。"),
+                    "Cost（逐合約實付、自建資本支出、供應商持有成本、非算力成本、股權報酬、命題表；A4 補逐家對帳與敏感度）、Funding（命題 2）、Reverse（管理層目標反解，只作對照）、Checks。"),
         ("Compute", "加速器族 × 世代（NVIDIA Hopper／GB200／GB300／VR200；TPU v6e／v7；Trainium2／3；AMD MI455X）每 GW 年產能＝TK IF_TokGW_* ×（NonNV 產出比）；供給 GW 只由算力合約加總（D10 r1；機房租約只列對照）；"
                     "η＝2025 token 換算推論 GW ÷ 2025 推論支出換算 GW（D8）；研發 GW＝供給 ×（1 − 閒置）− 推論（D12）；容量上限 2025、2026 固定 1；VR 等值＝各族 Sol 產能比。"),
         ("Cost", "算力成本（現金）＝逐合約實付＋自建資本支出（D10、D11）；供應商持有成本＝GW × TK IF_HoldEcon × 持有比、雲端毛利；非算力成本 2025＝說明書營業費用 − 算力 − 平台抽成（D13、D5 r1），之後人數 × 每人成本；"
                  "股權報酬單列；命題表：每 VR 等值 GW 營收淨額、算力、非算力、全成本（含／不含股權報酬）、差額、覆蓋率。"),
+        ("Funding", "自由現金流＝營收淨額（截頂後）− 算力成本（現金）− 非算力成本（不含股權報酬）；來源順序（D16 r1）：2025 年底現金 → 2026 已交割股權（Series G 30、Amazon G 5、Series H 65）→ 外部資金（補足至最低現金＝次年非算力 6 個月，D17）；"
+                    "條件式（Amazon 15、Google 30、NVIDIA 10、AMD 5）與 IPO 約 100 只列情境；或有負債只列示；情境 S1–S7（IPO、條件式、逐家錨定招股書、機房租金、D22、合併）；回流對照（D18）。"),
+        ("Reverse", "管理層營收目標（2026 18、2027 55、2028 70、2029 148；2030 無目標取正向）→ 只靠 API／只靠訂閱／兩線等比例的所需倍數 → 反向資金（同一支出）；只被 Checks 引用（D19）。"),
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有，重建時保留已改過的值）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構（data/*.yaml → SRC_ANT／Inputs；Tokenomics → TK_Link；OpenAI → OAI_Link）。"),
         ("SRC_ANT", f"{summary['src']} 列：公司財務原始數據（A1 蒐集 376 列＋A2 新增 3 列供 Derived 列公式化）。標記 Derived 的 12 列：11 列改為公式、1 列（Reuters 自行計算後公布的通路費）保留報導值。"),
         ("TK_Link", f"Tokenomics {sn['version']}（{sn['file']}），master 提交 {sn['sha'][:7]}；{summary['tk_ok']} 個具名範圍（OpenAI v0.6 同一組 63 名＋A2 新增任務 token 5 名）＋ 讀表（非具名）{summary['tk_nnv']} 格：NonNV 18 格（規格 D6）與 PUE 3 格（A3；Tokenomics Inputs 頁）。"),
@@ -429,7 +432,15 @@ def scan(wb):
             for c in row:
                 if isinstance(c.value, str) and c.value.startswith("=") and ("OAI_" in c.value or "OAI_Link!" in c.value):
                     oai.append(f"{ws.title}!{c.coordinate}")
-    return dict(e6=len(e6), e6_cells=e6, oai_refs=len(oai), oai_cells=oai)
+    rvs = []                                          # D19：Reverse 只被 Checks 引用（不回饋基準）
+    for ws in wb.worksheets:
+        if ws.title in ("Reverse", "Checks"):
+            continue
+        for row in ws.iter_rows():
+            for c in row:
+                if isinstance(c.value, str) and c.value.startswith("=") and ("Reverse!" in c.value or "RVS_" in c.value):
+                    rvs.append(f"{ws.title}!{c.coordinate}")
+    return dict(e6=len(e6), e6_cells=e6, oai_refs=len(oai), oai_cells=oai, rvs_refs=len(rvs), rvs_cells=rvs)
 
 
 def main():

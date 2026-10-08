@@ -2,12 +2,13 @@
 # 輸入一律以具名範圍設定（SRC_ANT_nnn、INP_nnn、TK_*）。v0.1-A2：Demand、Revenue、Checks 由情境驅動；v0.1-A3 加 Compute、Cost。
 # expect_err：該情境必須讓這些檢查轉 ERR（保證檢查有牙齒）；expect_warn：CHK_Warnings ≥ 1。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
-  sheets: [README, SRC_ANT, TK_Link, OAI_Link, Inputs, Demand, Revenue, Compute, Cost, Checks, _Defaults]
-  formula_cells: 4720             # A3：A2 的 2,942 − Inputs 退役 1 列 ×2 ＋ Inputs 新增 56 列 ×2 ＋ Compute、Cost ＋ Checks C49–C82
-  defined_names: 1007              # A3：＋Inputs 55（淨）、TK_PUE 3、CMP_*／COST_* 等
+  sheets: [README, SRC_ANT, TK_Link, OAI_Link, Inputs, Demand, Revenue, Compute, Cost, Funding, Reverse, Checks, _Defaults]
+  formula_cells: 5491             # v0.1（A4）：A3 的 4,720 ＋ Inputs 新增 15 列 ×2 ＋ Cost 第十二–十五節 ＋ Funding、Reverse ＋ Checks C83–C105
+  defined_names: 1068              # v0.1（A4）：＋Inputs 15、FND_* 26、RVS_* 11、COST_*（A4）8、COST_PropGap_GW
   src_rows: 379                   # A1 376＋A2 新增 3（SRC_ANT_377–379）
   src_named: 330                  # 有值欄的列才有 SRC_ANT_nnn 名稱（另有 _Lo／_Hi／_Date）
-  inp_rows: 160                   # INP_001–164；INP_016（A2 容量上限佔位）、INP_067–069 退役
+  inp_rows: 175                   # INP_001–179；INP_016（A2 容量上限佔位）、INP_067–069 退役
+  base_warnings: 1                # v0.1（A4）：C89 逐家合約總額對招股書（AMD ×3.9）基準即 WARN（chat 端 A3 審查要求）
   tk_values: 68                   # OpenAI v0.6 同一組 63 名＋A2 新增 5 名（IF_HdrTask、IF_TaskLen、IF_TaskTokFresh／Cached／Dec）
   tk_nonnv: 18                    # TK_NNV_*（TPU v7、Trainium3、MI455X × 6；讀表，非具名）
   oai_names: 21                   # OAI_ 17 個逐年名稱＋4 個中繼資料
@@ -104,3 +105,26 @@ scenarios:
     description: 每人股權報酬 0.8 → 3（$M）：2025 股權報酬超過說明書非算力費用（非算力 ≤0 應 ERR；Inputs 區間 ERR）
     inputs: {"INP_162": 3}
     expect_err: [a3_ncx25, inp_order]
+  # ── v0.1（A4）：Funding、Reverse（工作單 A4 第 3 步：parity 情境 ≥4 ＋ 檢查有牙齒）
+  - id: fa_min_cash_12
+    description: 最低現金月數 6 → 12（D17 區間上緣）：最低現金加倍、現金餘裕下降
+    inputs: {"INP_165": 12}
+  - id: fb_cond_in_base
+    description: 條件式融資與 IPO 計入基準（開關 0 → 1）：2026 股權流入 ＋100（IPO）、2027 ＋50（Amazon、Google、AMD）
+    inputs: {"INP_169": 1}
+  - id: fc_funding_switches
+    description: Microsoft $5B 另計 2026（0 → 1）、Amazon Series G $5B 不另計（1 → 0）、Google 即時 $10B 另計（0 → 1）：已到位融資 100 → 110
+    inputs: {"INP_167": 1, "INP_166": 0, "INP_168": 1}
+  - id: fd_no_2026_rounds
+    description: Series G、Series H 改為 0（壓力測試）：只剩 Amazon G $5B，2027 起現金低於最低現金 → 外部資金需求、缺口旗標、首次缺口年、峰值有值
+    inputs: {"SRC_ANT_298": 0, "SRC_ANT_302": 0}
+  - id: fe_target_2029_alt
+    description: 管理層 2029 營收目標 148 → 100：Reverse 倍數、反向自由現金流與反向外部資金改變（基準不變）
+    inputs: {"SRC_ANT_370": 100}
+  - id: ff_ipo_lease_2027
+    description: IPO 到位年 2026 → 2027、機房租金起算 2028 → 2027：S1、S3 情境與租金敏感度改變
+    inputs: {"INP_170": 2027, "INP_175": 2027}
+  - id: fg_min_cash_negative
+    description: 最低現金月數 → −1（最低現金 ≤ 0 應 ERR；Inputs 區間 ERR）
+    inputs: {"INP_165": -1}
+    expect_err: [a4_mincash, inp_order]

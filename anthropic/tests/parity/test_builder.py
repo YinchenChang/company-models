@@ -38,7 +38,7 @@ def _same(a, b):
 def test_e6_no_constants_in_calc_sheets(wb):
     """E6：計算頁（A2：Demand、Revenue；A3：Compute、Cost）公式不得內含常數；恆等式只容許 1−比例、1＋成長率、年數 +1；定義常數在 Inputs。"""
     present = [s for s in CALC_SHEETS if s in wb.sheetnames]
-    assert {"Demand", "Revenue", "Compute", "Cost"} <= set(present)
+    assert {"Demand", "Revenue", "Compute", "Cost", "Funding", "Reverse"} <= set(present)
     bad = [c for s in present for c in e6_violations(wb[s])]
     assert bad == [], bad[:10]
     n = sum(1 for s in present for row in wb[s].iter_rows(min_row=5) for c in row if isinstance(c.value, str) and c.value.startswith("="))
@@ -128,3 +128,33 @@ def test_named_outputs_for_a4(eng):
     assert cap[0] == 1 and cap[1] == 1
     assert eng.get_name("REV_CapFactor") == cap
     assert abs(eng.get_name("COST_Gap2025")) < 1e-9                     # 2025 算力成本＝說明書 7.33
+
+
+def test_reverse_not_fed_back(wb):
+    """D19：Reverse（管理層目標反解）只作對照，不回饋基準——除 Reverse 本頁與 Checks 外，任何公式不得引用 Reverse! 或 RVS_ 名稱。"""
+    assert "Reverse" in wb.sheetnames
+    for ws in wb.worksheets:
+        if ws.title in ("Reverse", "Checks"):
+            continue
+        for row in ws.iter_rows():
+            for c in row:
+                if isinstance(c.value, str) and c.value.startswith("="):
+                    assert "Reverse!" not in c.value and "RVS_" not in c.value, f"{ws.title}!{c.coordinate} 引用 Reverse：{c.value}"
+
+
+def test_named_outputs_v01(eng):
+    """v0.1（A4）命題 2 與反向模式輸出（與 OpenAI v0.6 同名）存在；2025 為實際年（流量欄空白），2026–2030 為數值；外部資金需求非負、年底現金 ≥ 最低現金。"""
+    for n in ("FND_FCF", "FND_Committed", "FND_EquityIn", "FND_MinCash", "FND_CashEnd", "RVS_Target", "RVS_MultAPI", "RVS_MultSub", "RVS_MultProp", "RVS_FCF",
+              "COST_PropGap_GW", "COST_ComputeAnchor", "COST_PropGap_VR_Anchor", "COST_LeaseRent", "COST_PropGap_VR_Rent", "COST_PropGap_VR_D22"):
+        v = eng.get_name(n)
+        assert isinstance(v, list) and len(v) == 6 and all(isinstance(x, (int, float)) for x in v), n
+    for n in ("FND_ExtNeed", "FND_ExtNeedCum", "FND_CashOpen", "FND_Headroom", "RVS_ExtNeedCum", "FND_ExtNeedCumIPO", "FND_ExtNeedCumCond", "FND_ExtNeedCumAll",
+              "FND_ExtNeedCumAnchor", "FND_ExtNeedCumRent", "FND_ExtNeedCumD22", "FND_ExtNeedCumAdverse"):
+        v = eng.get_name(n)
+        assert len(v) == 6 and all(isinstance(x, (int, float)) for x in v[1:]), n
+    ext, end, mn = eng.get_name("FND_ExtNeed"), eng.get_name("FND_CashEnd"), eng.get_name("FND_MinCash")
+    assert all(x >= 0 for x in ext[1:])
+    assert all(e >= m - 1e-9 for e, m in zip(end[1:], mn[1:]))
+    for n in ("FND_FirstGapYear", "FND_ExtNeedPeak", "FND_PeakYear", "FND_Contingent", "FND_CommitAfter2030", "COST_PartnerGapMax"):
+        assert eng.get_name(n) not in (None, ""), n
+    assert eng.get_name("CHK_Errors") == 0

@@ -3,7 +3,7 @@
 Python 只產生結構：每列的公式文字由此組裝，數值一律引用 SRC_ANT／Inputs／TK_ 具名範圍（E6：公式不含常數；恆等式 1−x、1＋成長率、年數 +1 除外）。
 兩頁互相引用（API 2025／2026 token 由 Revenue 的營收倒推；訂閱營收用 Demand 的人數），公式先以列鍵記號撰寫，兩頁建好後一次換成儲存格位址：
   «k»＝本頁同欄、«k@p»＝本頁前一欄、«k@D»＝本頁 D 欄（2025）、«k@$»＝本頁 $D$（只在 D 欄有值的參數列）、«k@R»＝本頁整列 $D:$I、
-  «D:k»／«R:k»／«C:k»／«K:k»＝Demand／Revenue／Compute／Cost 同欄（亦可加 @p、@D、@$；A3 起 Compute、Cost 沿用本類別）。
+  «D:k»／«R:k»／«C:k»／«K:k»／«F:k»／«X:k»＝Demand／Revenue／Compute／Cost／Funding／Reverse 同欄（亦可加 @p、@D、@$；A3 起 Compute、Cost，A4 起 Funding、Reverse 沿用本類別）。
 層級對應：Haiku→低層（Tokenomics Luna）、Sonnet→中層（Sol）、Opus→頂層（Astra）；具名範圍沿用 OpenAI v0.6 的 Top／Mid／Low。
 容量上限：Revenue「容量上限係數」列（REV_CapFactor）由 A3（builder/a3.py）填入 Compute 頁 CMP_CapFactor 同欄（2025、2026 固定 1）；其餘截頂列自動連動。
 """
@@ -31,7 +31,7 @@ CHAINS = {
 }
 FMT = {"$B": "#,##0.000", "T": "#,##0", "M": "#,##0.000", "比例": "0.0%", "比例/年": "0.0%", "$/M": "0.000", "$/月": "0.00", "倍": "0.000",
        "日期": "0", "任務/日": "0.00", "K tok/任務": "#,##0.0", "十億任務": "#,##0.00", "$B/年": "#,##0.000"}
-TOK = re.compile(r"«(?:(D|R|C|K):)?([A-Za-z0-9_]+)(?:@(p|[D-I]|\$|R))?»")
+TOK = re.compile(r"«(?:(D|R|C|K|F|X):)?([A-Za-z0-9_]+)(?:@(p|[D-I]|\$|R))?»")
 
 
 class Sheet:

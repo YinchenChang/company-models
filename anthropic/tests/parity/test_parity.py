@@ -166,7 +166,7 @@ def test_scenario_expected_results(model):
     """情境的預期結果：被改的輸入必須讓對應檢查列轉為 ERR（保證檢查有牙齒）；WARN 情境 CHK_Warnings ≥ 1 且不 ERR。"""
     eng0 = new_engine(model, fresh=True)
     assert eng0.get_name("CHK_Errors") == 0
-    assert eng0.get_name("CHK_Warnings") == 0
+    assert eng0.get_name("CHK_Warnings") == EXPECT["base_warnings"]
     for sc in SCENARIOS[1:]:
         eng = new_engine(model, fresh=True)
         for k, v in sc["inputs"].items():
@@ -177,7 +177,7 @@ def test_scenario_expected_results(model):
         if not sc.get("expect_err"):
             assert not errs, (sc["id"], errs)
         if sc.get("expect_warn"):
-            assert eng.get_name("CHK_Warnings") >= 1, sc["id"]
+            assert eng.get_name("CHK_Warnings") > EXPECT["base_warnings"], sc["id"]
         assert eng.get_name("CHK_Errors") == len(errs)
 
 

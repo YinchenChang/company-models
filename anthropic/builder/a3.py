@@ -425,7 +425,7 @@ def build(ctx):
     K.add("p_cov", "覆蓋率＝營收淨額 ÷ 全成本（含股權報酬）", "倍", lambda i, c: "=«p_rev»/«full»", "", name="COST_Coverage")
     K.add("p_covx", "覆蓋率（不含股權報酬）", "倍", lambda i, c: "=«p_rev»/«fullx»", "", name="COST_CoverageExSBC")
     K.add("p_rev_gw", "對照：每實體 GW 營收淨額", "$B/GW/年", lambda i, c: "=«p_rev»/«C:sup»", "分母改用實體 GW")
-    K.add("p_gap_gw", "對照：每實體 GW 差額（含股權報酬）", "$B/GW/年", lambda i, c: "=«gap_b»/«C:sup»", "")
+    K.add("p_gap_gw", "對照：每實體 GW 差額（含股權報酬）", "$B/GW/年", lambda i, c: "=«gap_b»/«C:sup»", "", name="COST_PropGap_GW")
     K.add("e_cc_vr", "經濟口徑：每 VR 等值 GW 算力成本", "$B/GW/年", lambda i, c: "=«ce»/«p_den»", "")
     K.add("e_gap_vr", "經濟口徑：每 VR 等值 GW 差額（含股權報酬）", "$B/GW/年", lambda i, c: "=«p_rev_vr»-«e_cc_vr»-«p_nc_vr»-«p_sbc_vr»", "", name="COST_PropGapEcon_VR")
     K.add("e_gap_b", "經濟口徑：差額（含股權報酬）", "$B", lambda i, c: "=«p_rev»-«ce»-«ncx»-«sbc»", "", name="COST_GapEcon")
