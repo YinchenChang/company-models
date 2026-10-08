@@ -1,16 +1,16 @@
 # WhiteFiber v0.1 分段建置進度（接手用；三張工作單共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：v0.1a、v0.1b 全部；v0.1c 步驟 0、0.5-1（f61b36e）、0.5-2／0.5-3（790ea4e）、1（d78d3fc）、2／3（e807bf5）、4（交接檔與文件）。目標價 保守 $10.04（賣出）／基準 $16.84（中立）／積極 $34.66（中立）。
-- 下一步：v0.1c 步驟 5（最終報告 docs/reports/20261008_whitefiber_v0.1.md：結論、三情境與共識、雲端三種單價、NC-1 每 MW 經濟性、敏感度、預設、缺口、限制、verify 完整輸出），接著步驟 6（PR #23 留言 `[WhiteFiber 回報] v0.1c｜完成｜2026-10-08`、轉 ready）。
-- 未解問題：(a) 託管同業 NTM 只 2 家（DLR、EQIX）；(b) 個股 beta 不可靠（預設 2.5）；(c) EBITDA、CapEx、淨負債共識找不到；(d) 託管站點逐列明細只在 Excel；(e) Krambu、NC-1 擴建、NC-2／3 經濟條件多為 [Assumed]。
+- 已完成：v0.1a、v0.1b、v0.1c 全部：步驟 0、0.5-1（f61b36e）、0.5-2／0.5-3（790ea4e）、1（d78d3fc）、2／3（e807bf5）、4（fd67595）、5（最終報告）、6（PR 回報）。目標價 保守 $10.04（賣出）／基準 $16.84（中立）／積極 $34.66（中立）；verify.sh 19 項、--vs-dist 22 項全過。
+- 下一步：等 chat 端審查與 Andy 合併（代理不合併）；之後 FY26Q3 季度更新（財報約 2026-11 中，步驟見交接檔 §9），升 v0.2。
+- 未解問題：(a) 託管同業 NTM 只 2 家（DLR、EQIX）；(b) 個股 beta 不可靠（預設 2.5）；(c) EBITDA、CapEx、淨負債共識找不到；(d) 託管站點逐列明細只在 Excel；(e) Krambu、NC-1 擴建、NC-2／3 經濟條件多為 [Assumed]；(f) NC-1 專案貸款不占公司層級上限為 [Assumed]、65% × 10 年直線攤還時 FY28–FY29 償債保障 < 1。
 
 ## 工作單總覽
 | 工作單 | 分支 | PR | 狀態 |
 |---|---|---|---|
 | v0.1a 資料蒐集 | `claude/whitefiber-v0.1` | #23（draft） | 完成（chat 端審查通過） |
 | v0.1b 模型改寫 | `claude/whitefiber-v0.1` | 同一 PR | 完成（chat 端審查：有條件通過，3 項於 v0.1c 步驟 0.5 處理） |
-| v0.1c 驗證與成品 | `claude/whitefiber-v0.1` | 同一 PR | 進行中 |
+| v0.1c 驗證與成品 | `claude/whitefiber-v0.1` | 同一 PR | 完成（待 chat 端審查） |
 
 <!-- 各工作單在下方新增自己的段落：「## v0.1x」＋步驟紀錄表（步驟｜狀態｜commit｜備註） -->
 
@@ -81,4 +81,6 @@
 | 1 版本與命名 | 完成 | d78d3fc | vlog.py 與 tail.js 的 VLOG 重設為一列 v0.1（10-08；由 CRWV v4.5／Nebius v0.1／Oracle v0.2 模板建立，雲端 MW × 每 MW 收入、託管分部、GPU 租賃、預付、可轉債、NC-1 專案貸款、融資瀑布、建設延誤、CAPM、分部 EV/EBITDA；CRWV／Nebius／Oracle 歷史一句話帶過）；成品名稱由 meta.company 組成（verify.sh、build_xlsx.py 沿用 Oracle v0.1c 機制）→ out/20261008_WhiteFiber收支模型_v0_1.html／.xlsx；meta.updateDate＝2026-10-08（建置日，原已是）；README 欄位表重新產生（版本 v0.1）。verify.sh 19 項全過（DATE=2026-10-08；cmp31 各 427 項）。 |
 | 2 成品 | 完成 | e807bf5 | dist/ 移除 20261008_Oracle收支模型_v0_2.html／.xlsx，放入 20261008_WhiteFiber收支模型_v0_1.html（1.09 MB，單一檔案、離線開啟檢查通過：網路請求 0、console 錯誤 0、關鍵數字 15 項）與 .xlsx（173 KB，公式 2,363 個、重算錯誤 0）。 |
 | 3 完整驗證 | 完成 | e807bf5 | DATE=2026-10-08 verify.sh 19 項全過（cmp31 三情境＋FY27 錨定各 427 項）；verify.sh --vs-dist（對剛放入的 dist/ 成品）22 項全過：crawl 畫面 33 頁、約 135,038 字 0 差異，xl_diff 值與公式 0 差異。crawl 描述本公司的 Oracle／CoreWeave／Nebius／OCI：**0 處**；其餘出現處：Oracle 1（版本紀錄，模板來源）；CRWV 6（同業 Comps 2、來源（同業市值來源）1、EBITDA 率可觀察上緣「約 59%（CRWV）」2〔反向 DCF 與 EBITDA 率說明〕、版本紀錄 1）；NBIS 3（同業 Comps 2、來源 1）；Nebius 1（版本紀錄）；CoreWeave、ORCL、OCI 0。完整輸出見最終報告附錄。 |
-| 4 交接檔與文件 | 完成 | （本 commit） | docs/handoff/ 以 20261008_WhiteFiber收支模型_交接檔_v0_1.md 取代 Oracle v0.2 交接檔（命題與目前答案、檔案與規則、結構與因果、目前結果、來源與標記、已套用的預設、資料缺口、已知限制 11 項、待辦與 FY26Q3 季度更新步驟、如何重建）；whitefiber/README.md 開頭改為 WhiteFiber（模板來源 oracle/ @ e4540c3、WhiteFiber 新結構、成品名稱）；CLAUDE.md 開頭改 WhiteFiber、待辦改 WhiteFiber 待辦（守則條文保留）；根目錄 README 新增 `whitefiber/`｜WhiteFiber（WYFI）｜`oracle/` @ `e4540c3`（Oracle v0.2 分支）｜v0.1。dist/ 不變，不升版。 |
+| 4 交接檔與文件 | 完成 | fd67595 | docs/handoff/ 以 20261008_WhiteFiber收支模型_交接檔_v0_1.md 取代 Oracle v0.2 交接檔（命題與目前答案、檔案與規則、結構與因果、目前結果、來源與標記、已套用的預設、資料缺口、已知限制 11 項、待辦與 FY26Q3 季度更新步驟、如何重建）；whitefiber/README.md 開頭改為 WhiteFiber（模板來源 oracle/ @ e4540c3、WhiteFiber 新結構、成品名稱）；CLAUDE.md 開頭改 WhiteFiber、待辦改 WhiteFiber 待辦（守則條文保留）；根目錄 README 新增 `whitefiber/`｜WhiteFiber（WYFI）｜`oracle/` @ `e4540c3`（Oracle v0.2 分支）｜v0.1。dist/ 不變，不升版。 |
+| 5 最終報告 | 完成 | （本 commit） | docs/reports/20261008_whitefiber_v0.1.md：一句話結論、三情境目標價與共識差距、步驟 0.5 前後對照、雲端三種單價、NC-1 每 MW 經濟性（租金、建置、EBITDA、回收、可借額度、償債保障）、敏感度 9 組、已套用的預設 30 項、資料缺口、已知限制 12 項、verify.sh 與 --vs-dist 完整輸出（最終重跑：19 項、22 項全過）。 |
+| 6 PR 回報 | 完成 | （本 commit 之後） | PR #23 留言 `[WhiteFiber 回報] v0.1c｜完成｜2026-10-08`；PR 轉 ready、不合併。 |
