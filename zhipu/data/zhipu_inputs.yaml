@@ -126,8 +126,8 @@ items:
 # ── Z3 供給（2H26 起：依需求配置；容量上限）
 - {key: idle, name: 閒置保留比例, index: 2H26 起, unit: 比例, value: 0.1, lo: 0.05, hi: 0.2, tag: Analogy, basis: OpenAI v0.6 INP_232（0.1；v0.5 computeMW.idleReserve，OpenAI 無區間）；工作單：沿用 OpenAI 同名 Inputs 的值；區間為本模型補, range: 0.05～0.2（本模型補）}
 - {key: min_train, name: 訓練最低占比, index: 2H26 起, unit: 比例, value: 0.3, lo: 0.2, hi: 0.4, tag: Analogy, basis: OpenAI v0.6 INP_233（0.3；v0.5 computeMW.minTrainingShare，V1a 容量上限，OpenAI 無區間）；區間為本模型補, range: 0.2～0.4（本模型補）}
-- {key: rd_share_sw, name: 研發占比路徑開關（0＝沿用 1H26 實際值；1＝線性移至 2030 目標）, index: 2H26 起, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 2H26 起供給依需求配置（規格未定；見報告已套用的預設）：供給＝有效推論 GW ÷（(1−閒置)×(1−研發占比)）；基準沿用最新實際值（1H26：研發算力費 ÷ 算力費合計），與 η 沿用 1H26 同一原則，且研發算力較多＝較保守, range: 開關}
-- {key: rd_share_2030, name: 研發 GW 占非閒置供給比例：2030 目標（開關＝1 時自 1H26 實際值線性移動）, index: '2030', unit: 比例, value: 0.5, lo: 0.3, hi: 0.7, tag: Analogy, basis: OpenAI v0.6 2030 研發 GW 6.11 ÷（供給 13.01 ×（1−0.1））＝0.52；只在開關＝1 時使用, range: 0.3（＝訓練最低占比）～0.7（≈1H26 實際）}
+- {key: rd_share_sw, name: 研發占比路徑開關（0＝沿用 1H26 實際值；1＝線性移至 2030 目標）, index: 2H26 起, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 2H26 起供給依需求配置（規格未定；見報告已套用的預設）：供給＝有效推論 GW ÷（(1−閒置)×(1−研發占比)）；基準沿用最新實際值（r2 P1 起：1H26 研發 GW 殘差 ÷ 供給；Z3 原為研發算力費 ÷ 算力費合計），與 η 沿用 1H26 同一原則, range: 開關}
+- {key: rd_share_2030, name: 研發 GW 占非閒置供給比例：2030 目標（開關＝1 時自 1H26 實際值線性移動）, index: '2030', unit: 比例, value: 0.5, lo: 0.3, hi: 0.7, tag: Analogy, basis: OpenAI v0.6 2030 研發 GW 6.11 ÷（供給 13.01 ×（1−0.1））＝0.52；只在開關＝1 時使用；r2 P1 後 1H26 起點為研發殘差占比（η 上調使其＝訓練最低占比 0.3），不再是會計科目占比 0.70, range: 0.3（＝訓練最低占比）～0.7（Z3 會計科目占比）}
 # ── Z3 自有算力（D11、D11r）
 - {key: owned_capex, name: 其他自有算力資本支出（2027 起每年）, index: 2027 起, unit: RMB 億／年, value: 0, lo: 0, hi: 50, tag: Assumed, basis: 規格 D11r：自有算力資本支出基準＝0（Decision；1H26 資本開支 3.906 億為北京紅鑽辦公樓，非算力）；高端為情境, range: 0～50（情境）}
 - {key: dc1gw_sw, name: 情境開關：1 GW 國產算力資料中心（0＝基準不計）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 規格 D11r：公司 2026-07 稱 1 GW 國產算力資料中心（SRC_ZP_458，口徑、地點、持有方式未揭露）→ 只列情境，基準關, range: 開關}
@@ -158,3 +158,8 @@ items:
 - {key: peer_mult_range, name: 同業 EV／年化營收倍數 ÷ MiniMax 推導值（市值隱含營收用）, index: —, unit: 倍, value: 1, lo: 0.5, hi: 2, tag: Analogy, basis: 規格 D22r：以 MiniMax（00100.HK）當前 EV ÷ 年化營收（1H26 × 2；Reverse 頁由 SRC_ZP_596、601、603 與匯率推導）為 Analogy；區間：MiniMax 52 週低點約為現值 0.8 倍、國證國際 SOTP 給 API 業務 2027 年 80 倍 PS（約 2 倍）, range: 0.5～2.0}
 # ── Z5b（獨立查核後修正，2026-10-08）
 - {key: min_gm, name: 供應商最低毛利（每 GW 租價下限＝供應商持有成本 ×（1＋本值），2H26 起）, index: 2H26 起, unit: 比例, value: 0, lo: 0, hi: 0.2, tag: Assumed, basis: 工作單 Z5b V1：供應商不可長期賠本出租；基準 0＝租價不低於持有成本（經濟口徑）, range: 0～0.2（工作單）}
+# ── r2 P1（招股章程到位後：推論算力支出口徑更正，取代規格 D8r）
+- {key: rd_fee_share, name: 研發開支中的算力服務費占比（P1：研發 × 本值＝研發項下算力費；FY2025、1H26 未揭露者用）, index: 2025、1H26, unit: 比例, value: 0.718, lo: 0.6, hi: 0.8, tag: Analogy, basis: 工作單 P1：招股章程 1H25 研發算力服務費 11.45 億 ÷ 研發開支 15.95 億＝71.8%（SRC_ZP_640；FY2024 70.7% SRC_ZP_638、1H24 70.2% SRC_ZP_639）；占比以研發開支總額（含股權報酬）為分母，故乘研發開支總額, range: 工作單 P1（60–80%）}
+- {key: eta_base, name: η 基準值（P1：信任 Tokenomics 物理；校準期殘差不足時才上調）, index: 2025、1H26, unit: 倍, value: 1, lo: 1, hi: 1, tag: Decision, basis: 工作單 P1：η 基準＝1（Decision）；若研發殘差 < 訓練最低占比 × 供給，η 校準為使殘差＝最低占比的值並 WARN（Checks）, range: 定義}
+- {key: eta_old_sw, name: η 校準方法開關（0＝P1：基準 1、殘差觸及訓練最低占比時上調；1＝舊法 D8r：token GW ÷ API 銷售成本換算 GW）, index: 2025、1H26, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 工作單 P1：舊法（API 營業成本＝推論支出）保留為對照；開關＝1 只供情境與 parity, range: 開關}
+- {key: eta_lift_warn, name: η 上調期數 WARN 門檻（P1）, index: —, unit: 期, value: 0, lo: 0, hi: 0, tag: Decision, basis: 工作單 P1：η 被上調（殘差觸及訓練最低占比）時 WARN, range: 定義}

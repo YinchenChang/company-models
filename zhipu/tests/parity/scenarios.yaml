@@ -2,11 +2,11 @@
 # 輸入以具名範圍設定（SRC_ZP_nnn、INP_nnn、TK_*；多格名稱用 NAME[k]）。v0.1-Z2：Demand、Revenue、Checks；v0.1-Z3：Compute、Cost。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
   sheets: [README, SRC_ZP, TK_Link, OAI_Link, Inputs, Demand, Revenue, Compute, Cost, Funding, Reverse, Checks, _Defaults]
-  formula_cells: 4810             # Z5b：＋Compute 第十四節（租價下限、自有營運費用、攤提）、Cost 第十節、Checks C93（Z4 4,671）
-  defined_names: 1111             # Z4 1,103 ＋ Z5b：INP_136、TK_IF_OpexGW、TK_IF_DeprLifeIT、CMP_OwnedOpex／Amort、COST_FullAmort、COST_PropGap_VR_Amort、COST_Coverage_Amort
-  src_rows: 610                   # SRC_ZP 筆數（Z1 604＋Z4 由 note 拆出 6 列：SRC_ZP_605–610）
-  src_named: 661                  # SRC_ZP_nnn（有數值 576）＋_Lo（46）＋_Hi（39）
-  inp_rows: 135                   # data/zhipu_inputs.yaml（Z4：＋INP_124–135；Z5b：＋INP_136 最低毛利）
+  formula_cells: 6190             # r2 P1：＋SRC_ZP 444 列 × 3 公式欄（1,332）＋Compute 第十五節、敏感度改寫、Checks C94–C95（Z5b 4,810）
+  defined_names: 1558             # Z5b 1,111 ＋ r2：SRC_ZP 新列 442 名、INP_137–140、CMP_EtaD8r
+  src_rows: 1054                  # SRC_ZP 筆數（Z1 604＋Z4 6 列＋招股章程 Z1-P 444 列：SRC_ZP_611–1054）
+  src_named: 1103                 # SRC_ZP_nnn＋_Lo＋_Hi（Z5b 661 ＋ 招股章程 442）
+  inp_rows: 139                   # data/zhipu_inputs.yaml（Z4：＋INP_124–135；Z5b：＋INP_136 最低毛利；r2 P1：＋INP_137–140）
   tk_values: 74                   # OpenAI v0.6 的 63 名 ＋ Z3b IF_CostPre／Cache／Dec_* 9 名 ＋ Z5b IF_OpexGW、IF_DeprLifeIT
   tk_table: 7                     # TK_RD_（以列標籤讀表；只供對照）
   oai_named: 21                   # OAI_ 17 個輸出列（Z4＋FND_CashEnd、FND_Committed、RVS_ExtNeedCum）＋4 個中繼
@@ -110,17 +110,17 @@ scenarios:
     description: 匯率 USD/CNY 6.7399→6.4029（−5%）；持有成本、每 GW 資本支出、美元命題表與 Coding Plan 國際站價格連動
     inputs: {"INP_023": 6.4029}
   - id: y_rd_share_path
-    description: 研發占比路徑開關 0→1（自 1H26 實際 0.70 線性移至 2030 目標 0.5）；供給與算力成本下降
+    description: 研發占比路徑開關 0→1（r2 P1 後自 1H26 研發殘差占比 0.30 線性移至 2030 目標 0.5）；供給與算力成本上升
     inputs: {"INP_120": 1}
   - id: ab_inf_fee_low
-    description: 推論算力費占 API 銷售成本 1→0.22（D8r 下限）；η 上升、有效推論 GW 下降，校準期非算力成本上升（對帳仍為 0）
+    description: 營業成本計算服務費占 API 銷售成本 1→0.22（下限）；總算力費與供給 GW 下降，η（P1）上調幅度加大，校準期非算力成本上升（對帳仍為 0）
     inputs: {"INP_102": 0.22}
   - id: z_chip_share_broken
     description: 2027 國產 0.75→0.9、H20 0.1→0.2，Hopper＝−0.1（C43 應轉 ERR）
     inputs: {"INP_086": 0.9, "INP_092": 0.2}
   - id: aa_rd_fee_too_high
-    description: 研發算力占比 0.707→1.5（超出區間）：研發算力費超過財報可容納，校準期非算力成本為負（C53、C06 應轉 ERR）
-    inputs: {"INP_103": 1.5}
+    description: r2 P1：研發項下算力費占研發開支 0.718→1.5（超出區間）：研發算力費超過財報可容納，校準期非算力成本為負（C53、C06 應轉 ERR）
+    inputs: {"INP_137": 1.5}
   - id: ac_cap_binding
     description: 壓力：訓練最低占比 0.3→0.9（超出區間，C06 應轉 ERR）；推論可用 GW 低於有效推論，2H26 起容量上限係數 <1，雲端營收截頂
     inputs: {"INP_109": 0.9}
@@ -162,3 +162,10 @@ scenarios:
   - id: aq_owned_opex_amort
     description: Z5b V2：1 GW 資料中心開＋其他自有資本支出 30 億／年；投產後自有算力營運費用（TK IF_OpexGW）計入算力成本，Cost 第十節攤提口徑與現金口徑分開
     inputs: {"INP_112": 1, "INP_111": 30}
+  # ── r2 P1：推論算力支出口徑更正（η 基準 1、殘差觸及訓練最低占比時上調）
+  - id: ar_eta_old_method
+    description: r2 P1：η 校準方法開關 0→1（舊法 D8r：token GW ÷ API 銷售成本換算 GW；1H26 η 3.91→9.46）；推論 GW 降、研發殘差占比回到會計口徑約 0.71，2H26 起供給依舊法 η 與研發占比配置
+    inputs: {"INP_139": 1}
+  - id: as_rd_fee_share_low
+    description: r2 P1：研發項下算力費占研發開支 0.718→0.6（區間下緣）；總算力費與供給 GW 下降，η 上調幅度加大，校準期非算力成本上升
+    inputs: {"INP_137": 0.6}

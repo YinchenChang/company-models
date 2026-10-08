@@ -405,10 +405,10 @@ def checks(D, Z, summary, snap, e6, oref):
     entsum = "+".join(f"ABS(Revenue!{c}«V.sumchk»)" for c in cols8)
     rows = [
         # ── 資料表
-        ("SRC_ZP 列數", f"=SUMPRODUCT(--(LEN({preserve_src()}!$A$5:$A$800)>0))", n_src, "eq", "Z1 資料報告所列 604 筆（SRC_ZP_001–604）"),
-        ("SRC_ZP 無數值列數（日期、事件、找不到數值的說明列）", f"=SUM({preserve_src()}!$U$5:$U$800)", n_empty, "eq", "值、低、高皆空的列數；與 yaml 一致（列被誤刪或誤填時轉 ERR）"),
-        ("SRC_ZP 缺出處列數", f"=SUM({preserve_src()}!$V$5:$V$800)", 0, "eq", ""),
-        ("SRC_ZP 區間順序異常列數（低 ≤ 值 ≤ 高）", f"=SUM({preserve_src()}!$W$5:$W$800)", 0, "eq", ""),
+        ("SRC_ZP 列數", f"=SUMPRODUCT(--(LEN({preserve_src()}!$A$5:$A$2000)>0))", n_src, "eq", "Z1 604 筆（SRC_ZP_001–604）＋ Z4 補 6 筆＋招股章程 Z1-P 444 筆（SRC_ZP_611–1054）"),
+        ("SRC_ZP 無數值列數（日期、事件、找不到數值的說明列）", f"=SUM({preserve_src()}!$U$5:$U$2000)", n_empty, "eq", "值、低、高皆空的列數；與 yaml 一致（列被誤刪或誤填時轉 ERR）"),
+        ("SRC_ZP 缺出處列數", f"=SUM({preserve_src()}!$V$5:$V$2000)", 0, "eq", ""),
+        ("SRC_ZP 區間順序異常列數（低 ≤ 值 ≤ 高）", f"=SUM({preserve_src()}!$W$5:$W$2000)", 0, "eq", ""),
         ("Inputs 列數", "=SUMPRODUCT(--(LEN(Inputs!$A$5:$A$600)>0))", n_inp, "eq", "data/zhipu_inputs.yaml"),
         ("Inputs 區間順序異常列數", "=SUM(Inputs!$L$5:$L$600)", 0, "eq", "低 ≤ 值 ≤ 高"),
         ("Inputs Analogy／Assumed 缺區間列數", "=SUM(Inputs!$M$5:$M$600)", 0, "eq", "共同規則第 4 節：Analogy／Assumed 一律給區間"),
