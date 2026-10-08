@@ -110,3 +110,12 @@ def test_e6_no_constants_in_p3_formulas():
     import openpyxl
     wb = openpyxl.load_workbook(current_model_path())
     assert _e6_scan(wb["Compute"]) >= 600
+
+
+def test_e6_no_constants_in_p4_formulas():
+    """E6（P4）：Cost 頁的公式不得內含常數；恆等式只容許 1−比例、年數 +1、1＋成長率；定義常數（$M→$B、$→$B、等差級數除數）在 Inputs。
+    世代名稱與成本情境為文字格（SUMIFS 的鍵），不在公式內。"""
+    import openpyxl
+    wb = openpyxl.load_workbook(current_model_path())
+    assert _e6_scan(wb["Cost"]) >= 500
+    assert _e6_scan(wb["Compute"]) >= 620
