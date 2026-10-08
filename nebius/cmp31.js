@@ -37,6 +37,13 @@ if (PMW_REVQ === 'tkAnchor') { // v0.2a：Tokenomics 錨 × k（Excel「每MW收
     cmp('k ' + k, W + '定價倍數 k（長約占比 × k_長約＋（1 − 長約占比）× k_現貨）', A.k);
     cmp('錨×k ' + k, W + '每 MW 年收入（錨 × k，100% 計費時數）', A.rev.map(x => x * 1e3));
     cmp('上限比 ' + k, W + '上限檢查｜每 MW 收入 ÷ 客戶付費 token 營收', A.capRatio); }
+  { const A = tkAnchorQ(SC), FL = COMPANY_DATA.fleet, TK = COMPANY_DATA.tkSnap, W = '每MW收入_錨定|', ann = LATEST_Q.revenue * 4, svc = COMPANY_DATA.priceCheck.inServiceMw, bo = q.billableOpen, // v0.2a 步驟 4：Q2 驗證拆解
+      a0 = FL.generations.reduce((s, g) => s + (FL.openMix.mix[g] || 0) * TK.IF_HoldEcon[g]['基準'], 0), rS = ann / svc * 1e3, rB = ann / bo * 1e3, kB = rB / a0, m = A.rev[0] * 1e3, gap = m - rS,
+      i1 = rB - rS, i2 = (A.k[0] - kB) * a0, i3 = (A.anchor[0] * 1e3 - a0) * A.k[0];
+    cmp('Q2÷在役', W + 'Q2 實現每 MW 年收入（÷ 在役 MW）', [rS]); cmp('Q2÷計費', W + 'Q2 實現每 MW 年收入（÷ 計費 MW）', [rB]);
+    cmp('Q2隱含k', W + 'Q2 隱含 k（÷ 在役 MW ÷ 期初錨；只列，不用）', [rS / a0]); cmp('Q2總差距', W + '總差距（模型 − Q2 實現 ÷ 在役）', [gap]);
+    cmp('Q2(i)', W + '(i) 爬坡分母：計費 MW 對在役 MW', [i1]); cmp('Q2(ii)', W + '(ii) 定價倍數 k：模型 k 對 Q2 隱含 k（÷ 計費）', [i2]);
+    cmp('Q2(iii)', W + '(iii) 世代組合：FY26 平均在役世代對季末世代', [i3]); cmp('Q2(iv)', W + '(iv) 其他（殘差）', [gap - i1 - i2 - i3]); }
 }
 cmp('信用損失', S+'信用損失（期初 RPO 部分）', H('loss'));
 cmp('RPO現金', S+'RPO 現金（可支應資本用途）', H('rpoCash'));

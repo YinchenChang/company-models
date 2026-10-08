@@ -787,6 +787,41 @@ if PMW_REV == 'tkAnchor':
          "v0.1a 路徑 A 基準（經濟利潤加成 15%、公司層級費用 8% [Assumed]）；契約第 4 條：只作 ROIC 與資金缺口檢查，不作收入輸入"); r += 1
     arow('cmp_acv', "對照｜公司新約 ACV（下緣、上緣）", "US$m/MW", [CO['priceCheck']['acv'][0], CO['priceCheck']['acv'][1], "", "", ""], _MF, BLUE, CO['priceCheck']['acvNote']); r += 1
     r += 1
+    r = section(ws, r, "F｜Q2 驗證（不是校準；只列，不回頭改 k）：FY26 模型每 MW 年收入 vs 最新季實現")
+    for j, h in enumerate(["項目", "單位", "數值"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    c = ws.cell(row=r, column=9, value="算式／說明"); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    _q = {}
+    def qrow(key, name, unit, f, fmt=_MF, note=None, bold=False):
+        global r
+        ws.cell(row=r, column=1, value=name).font = BOLD if bold else BLACK
+        ws.cell(row=r, column=2, value=unit).font = SMALL
+        c = ws.cell(row=r, column=3, value=f); c.font = BOLD if bold else BLACK; c.number_format = fmt; c.border = BOX
+        if note: ws.cell(row=r, column=9, value=note).font = SMALL
+        _q[key] = f"$C${r}"; AR['q2_' + key] = r; r += 1
+    qrow('ann', "Q2｜年化營收（最新季 × 4）", "US$bn", f"={QREV}*4", NUM, "已實現實際數 [Interested-party]")
+    qrow('svc', "Q2｜季末在役 MW（內插）", "MW", f"={OPEN}", NUM0, CO['priceCheck']['inServiceNote'])
+    qrow('bo', "Q2｜期初可計費 MW（模型校準值）", "MW", f"={MW0}", NUM0, "＝最新季營收 × 4 ÷ 首期每 MW 年收入（輸入與假設 B 區；已實現狀態對齊，非推價格）")
+    qrow('rSvc', "Q2 實現每 MW 年收入（÷ 在役 MW）", "US$m/MW", f"={_q['ann']}/{_q['svc']}*1000", note="工作單「約 6.4」")
+    qrow('rBo', "Q2 實現每 MW 年收入（÷ 計費 MW）", "US$m/MW", f"={_q['ann']}/{_q['bo']}*1000", note="與模型首期每 MW 年收入只差期初可計費 MW 的四捨五入")
+    qrow('a0', "Q2｜期初錨（季末世代組合 × IF_HoldEcon）", "US$m/MW", "=" + "+".join(f"$E${AR['gen_' + g]}*$C${AR['gen_' + g]}" for g in GEN))
+    qrow('kSvc', "Q2 隱含 k（÷ 在役 MW ÷ 期初錨；只列，不用）", "倍", f"={_q['rSvc']}/{_q['a0']}", '0.000', "不得用來校準 k（已決定事項 14）")
+    qrow('kBo', "Q2 隱含 k（÷ 計費 MW ÷ 期初錨；只列，不用）", "倍", f"={_q['rBo']}/{_q['a0']}", '0.000')
+    qrow('mRev', "模型 FY26 每 MW 年收入（目前情境，錨 × k）", "US$m/MW", f"=C{AR['cur_rev']}", bold=True)
+    qrow('mA', "模型 FY26 錨（平均在役世代）", "US$m/MW", f"=C{AR['cur_anchor']}")
+    qrow('mK', "模型 FY26 定價倍數 k", "倍", f"=C{AR['cur_k']}", '0.000')
+    qrow('gap', "總差距（模型 − Q2 實現 ÷ 在役）", "US$m/MW", f"={_q['mRev']}-{_q['rSvc']}", bold=True)
+    qrow('gapPct', "總差距 ÷ Q2 實現（÷ 在役）", "%", f"={_q['gap']}/{_q['rSvc']}", PCT)
+    qrow('i', "(i) 爬坡分母：計費 MW 對在役 MW", "US$m/MW", f"={_q['rBo']}-{_q['rSvc']}", note="＝Q2 年化 ÷ 計費 MW − Q2 年化 ÷ 在役 MW")
+    qrow('ii', "(ii) 定價倍數 k：模型 k 對 Q2 隱含 k（÷ 計費）", "US$m/MW", f"=({_q['mK']}-{_q['kBo']})*{_q['a0']}", note="＝（模型 k − Q2 隱含 k）× 期初錨；模型 k 不因此調整")
+    qrow('iii', "(iii) 世代組合：FY26 平均在役世代對季末世代", "US$m/MW", f"=({_q['mA']}-{_q['a0']})*{_q['mK']}", note="＝（FY26 錨 − 期初錨）× 模型 k")
+    qrow('iv', "(iv) 其他（殘差）", "US$m/MW", f"={_q['gap']}-{_q['i']}-{_q['ii']}-{_q['iii']}", note="依定義為 0（(i)–(iii) 已涵蓋）；Q2 營收含非 AI cloud 收入等差異併入 (ii)")
+    qrow('sum', "核對：(i)＋(ii)＋(iii)＋(iv) − 總差距", "US$m/MW", f"={_q['i']}+{_q['ii']}+{_q['iii']}+{_q['iv']}-{_q['gap']}", '0.000000', "應為 0（誤差 < 0.01）")
+    ws.cell(row=r, column=1, value="差異原因（已決定事項 2）").font = BOLD
+    ws.cell(row=r, column=9, value=("類型：觀點／已知限制。差距幾乎全部來自 (i) 爬坡分母——6/30 在役約 366 MW（內插）中只有約 165 MW 依 Q2 營收計費（Microsoft 全部 tranche 於第二季下半季才交付、"
+                                    "其他新容量第二季下半季上線），模型把差距歸為爬坡而非低價；Q2 隱含 k（÷ 在役）約 0.56 只列不用。季末在役 MW 公司未揭露（資料缺口），Q3 揭露後重估。")).font = SMALL
+    AR['q2_reason'] = r; r += 2
     ws = _wi  # 還原（下方 IN_ref 等不依賴 ws）
 
 # =====================================================================
