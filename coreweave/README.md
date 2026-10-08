@@ -49,7 +49,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | scripts/compare_w5.py | W5：v4.6／v4.7 W4／v4.7 W5 三版對照 Excel（摘要、每MW_三版、公司實況驗證、敏感度、變動拆解） |
 | scripts/compare_w4.py | W4：v4.6 → v4.7 收入錨定對照 Excel（摘要、每MW_前後、錨與k、證據表、Q2驗證、敏感度、變動拆解） |
 | scripts/attrib_permw.py | W3：v4.5 → v4.6 目標價變動拆解（(d) 方法變更逐項依序／單獨切換；數值取自 Excel；三情境；檢查相加＝總變動） |
-| scripts/attrib_w6.py | W6：v4.7 → v4.8 目標價變動拆解（(c) ① GB300 機架價格〔IF_CapexIT 等換 v5.31〕→ ② 收入錨〔IF_HoldEcon 等換 v5.31〕→ (d) ③ IT 維護依機齡兩段 → ④ MW 口徑；混合快照自 git 歷史 v5.27；檢查相加＝總變動） |
+| scripts/attrib_w6.py | W6：v4.7 → v4.8 目標價變動拆解（先重現 v4.7；(b) 2023 年底 MW → (c) ① GB300 機架價格 → ②a 收入錨下降〔k 舊數字〕→ ②b k 隨錨重算 → (d) ③ IT 維護依機齡兩段 → ④ MW 口徑；混合快照自 git 歷史 v5.27；檢查相加＝總變動） |
 | scripts/compare_w6.py | W6：v4.7 → v4.8 對照 Excel（摘要、每MW_前後〔三情境〕、IT維護機齡、兩版公司實況驗證、Tokenomics 前後值、敏感度、變動拆解） |
 | scripts/make_expect.py | W3：升版預期差異清單產生器（規則檔 `scripts/expect/*_rules.json`；未歸類的差異即失敗） |
 | scripts/compare_gather.py、scripts/build_compare.py | W3：前後對照取數（三檔 × 三情境，xlx.py）與對照 Excel 產生 |
@@ -186,6 +186,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **快照**：`data/tokenomics_snapshot_v5.31.json`（GB300 機架價格 5.0 → 4.3 $M；IT 維護改為保固期內／期滿兩段）；名稱清單新增 `IF_MaintITWarr`、`IF_MaintITPost`、`IF_WarrantyYrs`。
 - **IT 維護依機齡兩段**（`methodology.perMw.maint`＝age｜flat）：每期 IT 維護＝Σ 世代［保固期內平均在役 MW × `IF_MaintITWarr`＋保固期滿 × `IF_MaintITPost`］÷ 平均在役 MW。時間以首期期初（評價日）起算；期初機齡層（`fleet.openMix.vintages`：MW、投入使用月、世代占比；建置時檢查合計＝`activeMW` 與 `mix`）的保固到期＝`IF_WarrantyYrs` − 評價日時機齡；各期新增 MW（含汰換補回）於該期中點投入、到期＝中點＋保固年限；保固期內比例＝到期前占該期的比例；當期新增只計一半（與平均在役 MW 一致）；保固期內 MW 不超過該世代平均在役 MW。Excel：「輸入與假設」世代組合區（期初機齡層、TK IT 維護機齡兩段、保固年限）、「每MW經濟性」「機齡與保固」區與 IT 維護兩部分、等值費率對照列；「公司實況驗證」IT 維護與 Q2 季末營運成本合計改依機齡（新增「Q2 季末保固期內占比」）。HTML `vintQ`／`maintAgeQ`／`q2WarrQ`（cmp31 比對）。
 - **換公司**：填 `fleet.openMix.vintages`（沒有機齡資料時 `maint` 設 flat）；Tokenomics 須為 v5.31 起。
+- **k 隨錨重算（r1）**：`pricing.anchorMultiple.long／spot` 的 base、low、high、sensMedian 可寫成規格——`{ref: 證據 label}`（＝該筆價格 ÷ 同世代 Tokenomics 基準值）、`{priceEq, gen, tkName}`（固定價格）、`{median: [label]}`——建置時依目前快照推算（`kspec.py`；HTML `kSpecQ`；敏感度快照 `permw_sens.py` 同規則）。Excel 輸入格 k_長約／k_現貨 為活公式；k 證據表並列 `evidence[].multipleV527`（前一版倍數）。
+- **2023 年底主動電力**：100 → 70 MW（10-K FY2025 原文）；期初機齡層 2023 年 70／2024 年 290。`verify_legacy.sh` 的 v4.6 副本取回 v4.6 的 `mwYearEnd` 與說明。
 - **工具**：`scripts/attrib_w6.py`、`scripts/compare_w6.py`；`verify_legacy.sh` 的 v4.6 副本設 maint=flat；升版清單 `scripts/expect/v4_8_rules.json` → `v4_8_vs_v4_7.txt`。
 - **報告**：`docs/reports/20261009_coreweave_v4.8_Tokenomics_v5.31.{xlsx,md}`。
 
