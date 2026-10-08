@@ -5,6 +5,7 @@
 | 資料夾 | 公司 | 來源模板 | 狀態 |
 |---|---|---|---|
 | `nebius/` | Nebius（NBIS） | `YinchenChang/crwv-model` @ `01b13ad`（v4.5） | v0.1 |
+| `coreweave/` | CoreWeave（CRWV） | `YinchenChang/crwv-model` @ `01b13ad`（v4.5；2026-10-07 起在此維護，改接 Tokenomics 中，見 `coreweave/docs/workorders/`） | 改造中 |
 | `openai/` | OpenAI（未上市） | `YinchenChang/openai-model` @ `13c16f0`（v0.6-P1；原 repo 停用，歷史留在原處） | 建置中（v0.6） |
 | `oracle/` | Oracle（ORCL） | `nebius/` @ `642d144`（CRWV v4.5＋Nebius v0.1b） | v0.1 |
 | `minimax/` | MiniMax（00100.HK） | 比照 `openai/` v0.6 結構（MW 主軸、TK v5.24）；獨立的 Python→Excel 產生器 | v0.1 |
