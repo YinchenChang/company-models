@@ -232,7 +232,7 @@
    "note": "10-Q 2026Q2 附註 4：尚未起租租賃 137.2B（逐年付款 2026H2 4.0、2027 11.7、2028 9.3、2029 9.5、2030 9.2、其後 93.5；起租時程與租期未揭露）。模型：平均分 4 季（2026H2–2027H1）起租、每筆 14.75 年直線付租（＝總額 ÷ 2028–2030 穩定年付款約 9.3）[Derived]；敏感度 12／18 年。",
    "cashShareLabel": null,
    "opShare": 0.8088,
-   "opShareNote": "未起租租賃的營業部分比例（起租後營業部分成本進分部 EBITDA 率、不另扣現金；融資部分為現金支出）：取在帳租賃負債的營業占比 96.32 ÷ (96.32＋13.451＋9.315)＝80.9%（10-Q 附註 3；[Derived]；類型未揭露）"
+   "opShareNote": "三家統一定義（MAG 對照表 r1 C21）：未起租租約中預期列為營業租賃的比例（租金入 EBITDA 的部分；不另自現金扣除；1 − opShare＝融資部分，自現金扣除）。Amazon：取在帳租賃負債的營業占比 96.32 ÷ (96.32＋13.451＋9.315)＝80.9%（10-Q 附註 3；[Derived]；類型未揭露）"
   },
   "operatingInEbitda": true,
   "operatingInEbitdaNote": "分部營業利益已扣營業租賃成本（C5 放大的 D&A 含營業租賃資產攤銷，以其他攤銷 oa 等額扣回）→ 在帳營業租賃現金不再自現金扣除；融資租賃與融資義務的本息仍為現金支出（對照表 r1 C8 f）",
@@ -1033,6 +1033,7 @@
    },
    "ads": {
     "label": "數位廣告",
+    "source": "data/peers_ads_20261009.json",
     "peers": [
      {
       "ticker": "META",
@@ -1041,18 +1042,37 @@
       "ref": "val.peer.ads.meta"
      },
      {
-      "ticker": "GOOGL",
-      "name": "Alphabet",
-      "ntmEvEbitda": 14.68,
-      "ref": "val.peer.ads.googl"
+      "ticker": "PINS",
+      "name": "Pinterest",
+      "ntmEvEbitda": 6.91,
+      "ref": "val.peer.ads.pins"
      },
      {
       "ticker": "TTD",
       "name": "The Trade Desk",
-      "ntmEvEbitda": 6.68,
-      "ref": "val.peerTTM.ads.ttd（TTM，非 NTM）"
+      "ntmEvEbitda": 6.53,
+      "ref": "val.peer.ads.ttd"
+     },
+     {
+      "ticker": "APP",
+      "name": "AppLovin",
+      "ntmEvEbitda": 11.38,
+      "ref": "val.peer.ads.app"
+     },
+     {
+      "ticker": "RDDT",
+      "name": "Reddit",
+      "ntmEvEbitda": 13.63,
+      "ref": "val.peer.ads.rddt"
+     },
+     {
+      "ticker": "SNAP",
+      "name": "Snap",
+      "ntmEvEbitda": 7.43,
+      "ref": "val.peer.ads.snap"
      }
-    ]
+    ],
+    "note": "共用數字廣告同業組 META、PINS、TTD、APP、RDDT、SNAP（MAG 對照表 r1 C18；不含 AMZN、GOOGL、MSFT；data/peers_ads_20261009.json，三家共用）；中位數 9.11× [Derived]"
    },
    "subs": {
     "label": "訂閱影音",
@@ -1133,7 +1153,7 @@
     "note": "共用非 AI 雲端同業組 ORCL、IBM、SAP、CRM、NOW、AKAM、EQIX、DOCN（MAG 對照表 r1 C12；data/peers_cloud_20261008.json，三家共用）；中位數 13.82× [Derived]"
    }
   },
-  "segmentMultiplesNote": "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 NTM EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家；TTD、SPOT、DIS 以 TTM 代替，v0.1a 已註明）；非 AI 雲端＝共用同業組 8 家中位數（C12，data/peers_cloud_20261008.json），AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）"
+  "segmentMultiplesNote": "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 NTM EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家；SPOT、DIS 以 TTM 代替，v0.1a 已註明；數位廣告＝共用同業組 6 家（C18，data/peers_ads_20261009.json））；非 AI 雲端＝共用同業組 8 家中位數（C12，data/peers_cloud_20261008.json），AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）"
  },
  "methodology": {
   "blendWeights": {
@@ -3177,7 +3197,7 @@
    "peerMedians": {
     "value": {
      "retail": 17.72,
-     "ads": 10.79,
+     "ads": 9.11,
      "subs": 15.41,
      "aiCloud": 6.0,
      "cloud": 13.82

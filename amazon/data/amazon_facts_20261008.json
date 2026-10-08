@@ -7640,16 +7640,16 @@
    },
    {
     "id": "val.peer.ads.meta",
-    "item": "同業 NTM EV/EBITDA（ads）：Meta",
+    "item": "同業 NTM EV/EBITDA（ads，共用組 C18）：Meta",
     "value": 10.79,
     "unit": "倍",
     "period": "2026-10-07",
     "source": "StockAnalysis＋MarketScreener",
     "url": "https://www.marketscreener.com/quote/stock/META-PLATFORMS-INC-10547141/finances/",
     "docDate": "2026-10-07",
-    "retrieved": "2026-10-08",
+    "retrieved": "2026-10-09",
     "tag": "[Derived]",
-    "note": "＝EV 1860.0B（StockAnalysis，2026-10-07 收盤）÷ NTM EBITDA 172.45B（MarketScreener 共識 2026E 144.533、2027E 180.925，時間加權）；EV 與 EBITDA 來自不同供應商"
+    "note": "＝EV 1860.0 USD bn（StockAnalysis，2026-10-07 收盤（v0.1a 事實總帳 val.peer.ads.meta 同一組數字））÷ NTM EBITDA 172.450（MarketScreener 共識 2026E 144533、2027E 180925，FY1 權重 0.2329）；共用檔 data/peers_ads_20261009.json"
    },
    {
     "id": "val.peer.ads.googl",
@@ -7769,17 +7769,82 @@
     "note": "見同組各筆；零售＝WMT、COST、TGT；廣告＝META、GOOGL、TTD（TTM）；訂閱＝NFLX、SPOT（TTM）、DIS（TTM）"
    },
    {
+    "id": "val.peer.ads.pins",
+    "item": "同業 NTM EV/EBITDA（ads，共用組 C18）：Pinterest",
+    "value": 6.91,
+    "unit": "倍",
+    "period": "2026-10-07",
+    "source": "StockAnalysis＋MarketScreener",
+    "url": "https://www.marketscreener.com/quote/stock/PINTEREST-INC-57086058/finances/",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "＝EV 11.42 USD bn（StockAnalysis，2026-10-08 盤中）÷ NTM EBITDA 1.652（MarketScreener 共識 2026E 1482、2027E 1704，FY1 權重 0.2329）；共用檔 data/peers_ads_20261009.json"
+   },
+   {
+    "id": "val.peer.ads.ttd",
+    "item": "同業 NTM EV/EBITDA（ads，共用組 C18）：The Trade Desk",
+    "value": 6.53,
+    "unit": "倍",
+    "period": "2026-10-07",
+    "source": "StockAnalysis＋MarketScreener",
+    "url": "https://www.marketscreener.com/quote/stock/THE-TRADE-DESK-INC-31370485/finances/",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "＝EV 4.73 USD bn（StockAnalysis，2026-10-08 盤中）÷ NTM EBITDA 0.725（MarketScreener 共識 2026E 817.2、2027E 696.4，FY1 權重 0.2329）；共用檔 data/peers_ads_20261009.json"
+   },
+   {
+    "id": "val.peer.ads.app",
+    "item": "同業 NTM EV/EBITDA（ads，共用組 C18）：AppLovin",
+    "value": 11.38,
+    "unit": "倍",
+    "period": "2026-10-07",
+    "source": "StockAnalysis＋MarketScreener",
+    "url": "https://in.marketscreener.com/quote/stock/APPLOVIN-CORPORATION-121407289/finances/",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "＝EV 92.97 USD bn（StockAnalysis，2026-10-08 盤中）÷ NTM EBITDA 8.167（MarketScreener 共識 2026E 6800、2027E 8582，FY1 權重 0.2329）；共用檔 data/peers_ads_20261009.json"
+   },
+   {
+    "id": "val.peer.ads.rddt",
+    "item": "同業 NTM EV/EBITDA（ads，共用組 C18）：Reddit",
+    "value": 13.63,
+    "unit": "倍",
+    "period": "2026-10-07",
+    "source": "StockAnalysis＋MarketScreener",
+    "url": "https://www.marketscreener.com/quote/stock/REDDIT-INC-167442757/finances/",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "＝EV 26.62 USD bn（StockAnalysis，2026-10-07 收盤）÷ NTM EBITDA 1.953（MarketScreener 共識 2026E 1514、2027E 2086，FY1 權重 0.2329）；共用檔 data/peers_ads_20261009.json"
+   },
+   {
+    "id": "val.peer.ads.snap",
+    "item": "同業 NTM EV/EBITDA（ads，共用組 C18）：Snap",
+    "value": 7.43,
+    "unit": "倍",
+    "period": "2026-10-07",
+    "source": "StockAnalysis＋MarketScreener",
+    "url": "https://www.marketscreener.com/quote/stock/SNAP-INC-34091150/finances/",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "＝EV 11.39 USD bn（StockAnalysis，2026-10-07 收盤）÷ NTM EBITDA 1.534（MarketScreener 共識 2026E 1312、2027E 1601，FY1 權重 0.2329）；共用檔 data/peers_ads_20261009.json"
+   },
+   {
     "id": "val.peer.median.ads",
-    "item": "同業 EV/EBITDA 中位數（ads；NTM 為主、缺者以 TTM 補）",
-    "value": 10.79,
+    "item": "同業 NTM EV/EBITDA 中位數（ads：META、PINS、TTD、APP、RDDT、SNAP；共用組 C18）",
+    "value": 9.11,
     "unit": "倍",
     "period": "2026-10-07",
     "source": "本報告換算（無外部文件；推導與假設說明見 v0.1a 資料報告）",
     "url": "https://github.com/YinchenChang/company-models/blob/claude/amazon-v0.1/amazon/docs/reports/20261008_amazon_v0.1a_%E8%B3%87%E6%96%99.md",
     "docDate": "2026-10-08",
-    "retrieved": "2026-10-08",
+    "retrieved": "2026-10-09",
     "tag": "[Derived]",
-    "note": "見同組各筆；零售＝WMT、COST、TGT；廣告＝META、GOOGL、TTD（TTM）；訂閱＝NFLX、SPOT（TTM）、DIS（TTM）"
+    "note": "6 家中位數（中間兩家 SNAP 7.43、META 10.79 平均）；r3 前為 META、GOOGL、TTD（TTM）10.79"
    },
    {
     "id": "val.peer.median.subs",
