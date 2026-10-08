@@ -204,9 +204,9 @@ def build(wb, D, tk_cells):
            key="impl_vol", name="DEM_ImpliedVolGrowth", name_col="K")
     Dm.add("模型 2H26 ÷ 1H26 API 按量計費 token", "倍", {"L": "=L«D.api_tok»/K«D.api_tok»"}, "對照：公司稱 MaaS token 呼叫量『較年初 40 倍以上』（SRC_ZP_410；基期為年初時點，口徑不同）", key="vol_ratio")
     Dm.add("公司說法：MaaS token 呼叫量較年初倍數", "倍", {"K": f"={S('tok_maas_growth_ytd')}"}, "Interested-party；只對照，不反推（D14r）", key="vol_claim")
-    Dm.add("模型 2025 token 合計 ÷ 天數", "T／日", {"D": f"=D«D.tok_all»/{I('days_year')}"}, "對照：招股章程 2025-11 日均 4.2T（SRC_ZP_413；口徑可能含全部雲端與免費）", key="daily25")
-    Dm.add("公司揭露：2025-11 日均 token", "T／日", {"D": f"={S('tok_daily_nov25')}"}, "Interested-party", key="daily_src")
-    Dm.add("2025 計費比例＝API 按量計費 token ÷（日均 4.2T × 365）", "比例", {"D": f"=D«D.api_tok»/({S('tok_daily_nov25')}*{I('days_year')})"},
+    Dm.add("模型 2025 token 合計 ÷ 天數", "T／日", {"D": f"=D«D.tok_all»/{I('days_year')}"}, "對照：招股章程 2025-11 日均 4.2T（SRC_ZP_991，招股章程第 32 頁；r2 P2 改引用一手列；口徑可能含全部雲端與免費）", key="daily25")
+    Dm.add("公司揭露：2025-11 日均 token", "T／日", {"D": f"={S('tok_daily_nov25_p')}"}, "Interested-party（SRC_ZP_991，招股章程月度點）", key="daily_src")
+    Dm.add("2025 計費比例＝API 按量計費 token ÷（日均 4.2T × 365）", "比例", {"D": f"=D«D.api_tok»/({S('tok_daily_nov25_p')}*{I('days_year')})"},
            "類比 OpenAI v0.6 DEM_ApiBilledRatio2025：揭露量多為免費、Coding Plan 與折扣流量", key="billed", name="DEM_ApiBilledRatio2025", name_col="D")
 
     # ═════════════════════ Revenue ═════════════════════
@@ -354,7 +354,7 @@ def build(wb, D, tk_cells):
     V.add("1H26 校準差距：營收總額（模型 − 中期公告）", "RMB 億", {"K": f"=K«V.gross»-{S('rev_total_1h26')}"},
           "公告以千元四捨五入至億元四位小數：四線合計 9.53892 vs 總額 9.5389", key="g1h", name="REV_Gap1H26", name_col="K")
     V.add("2025 未校準 ①：日均 4.2T × 365 × 組合有效單價 ÷ 100 ＋ Coding Plan", "RMB 億",
-          {"D": f"={S('tok_daily_nov25')}*{I('days_year')}*D«V.p»/{divrev}+D«V.cp»"}, "自下而上口徑（假設揭露 token 全數按有效單價計費）", key="unc25")
+          {"D": f"={S('tok_daily_nov25_p')}*{I('days_year')}*D«V.p»/{divrev}+D«V.cp»"}, "自下而上口徑（假設揭露 token 全數按有效單價計費）", key="unc25")
     V.add("2025 未校準差距：未校準 − 年報 ①", "RMB 億", {"D": f"=D«V.unc25»-{S('rev_api_fy25')}"}, "差距大＝揭露量多為免費、Coding Plan 或年末時點", key="uncgap25", name="REV_GapUncal2025", name_col="D")
     V.add("模型組合有效單價變動：1H26 對 2025", "比例", {"K": "=(K«V.p»-D«V.p»)/D«V.p»"}, "對照：公司稱 API 平均售價較年初 +101%（SRC_ZP_347）", key="asp_1h")
     V.add("模型組合有效單價變動：2H26 對 2025", "比例", {"L": "=(L«V.p»-D«V.p»)/D«V.p»"}, "對照：較 2025 年底 +83%（SRC_ZP_346，截至 2026-03）", key="asp_2h")

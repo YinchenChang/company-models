@@ -150,7 +150,7 @@ items:
 - {key: cb_conv_sw, name: 可換股債券處理開關（0＝視為債務、到期現金償還；1＝轉股、不償還）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 規格 D16r：基準＝債務、2027-09-16 到期以現金償還（現價 HK$696 低於換股價 HK$892.50，較保守）；轉股情境另列（Funding 第五節，不受本開關影響）, range: 開關}
 - {key: cb_redeem, name: 可換股債券到期贖回價（占本金）, index: —, unit: 倍, value: 1, lo: 1, hi: 1, tag: Decision, basis: 零息、發行價 100.5%（SRC_ZP_545）；到期贖回溢價未揭露 → 以本金 100% 償還, range: —}
 - {key: cb_year, name: 可換股債券到期年, index: —, unit: 年, value: 2027, lo: 2027, hi: 2027, tag: Decision, basis: 2027-09-16 到期（SRC_ZP_548 note）, range: —}
-- {key: capex_nc, name: 非算力資本支出（辦公設備等）：2H26 起每年, index: 2H26 起, unit: RMB 億／年, value: 0.75, lo: 0, hi: 1.5, tag: Assumed, basis: FY2025 資本開支 0.747 億（SRC_ZP_149；公告稱算力由租賃轉為採購服務，故非算力）延續；1H26 3.906 億主要為北京紅鑽物業（一次性，D11r）；自有算力資本支出在 Cost 算力成本內（D11r 基準 0）, range: 0～1.5（FY2025 的 0～2 倍）}
+- {key: capex_nc, name: 非算力資本支出（辦公設備等）：2H26 起每年, index: 2H26 起, unit: RMB 億／年, value: 0.75, lo: 0, hi: 1.5, tag: Assumed, basis: FY2025 資本開支 0.747 億（SRC_ZP_149；公告稱算力由租賃轉為採購服務，故非算力）延續；r2 P2：公告口徑含使用權資產添置，招股章程現金口徑 FY2024 1.33、1H25 0.24 億（年化 0.48，SRC_ZP_889、891），落在區間內；1H26 3.906 億主要為北京紅鑽物業（一次性，D11r）；自有算力資本支出在 Cost 算力成本內（D11r 基準 0）, range: 0～1.5（FY2025 的 0～2 倍）}
 - {key: zkjh_cash, name: 併購現金支出：中科加禾約 60%（2H26）, index: 2H2026, unit: RMB 億, value: 3, lo: 1, hi: 5, tag: Assumed, basis: 規格 D18；對價未揭露，媒體只寫『數億元』（SRC_ZP_559）、『2.92 億』找不到原文 → 取 3 億, range: 1～5 億（『數億元』）}
 - {key: days_jul_aug, name: 2026-07-01～08-31 天數（定義常數）, index: 2H2026, unit: 天, value: 62, lo: 62, hi: 62, tag: Decision, basis: 配售款動用對照（2026-07 配售至 08-31 已動用）, range: —}
 # ── Z4 反向模式（D22、D22r；工作單 Z4 判斷類預設）

@@ -2,7 +2,7 @@
 # 輸入以具名範圍設定（SRC_ZP_nnn、INP_nnn、TK_*；多格名稱用 NAME[k]）。v0.1-Z2：Demand、Revenue、Checks；v0.1-Z3：Compute、Cost。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
   sheets: [README, SRC_ZP, TK_Link, OAI_Link, Inputs, Demand, Revenue, Compute, Cost, Funding, Reverse, Checks, _Defaults]
-  formula_cells: 6190             # r2 P1：＋SRC_ZP 444 列 × 3 公式欄（1,332）＋Compute 第十五節、敏感度改寫、Checks C94–C95（Z5b 4,810）
+  formula_cells: 6198             # r2 P2：＋Funding 第十一節 8 格；P1：＋SRC_ZP 444 列 × 3 公式欄（1,332）＋Compute 第十五節、敏感度改寫、Checks C94–C95（Z5b 4,810）
   defined_names: 1558             # Z5b 1,111 ＋ r2：SRC_ZP 新列 442 名、INP_137–140、CMP_EtaD8r
   src_rows: 1054                  # SRC_ZP 筆數（Z1 604＋Z4 6 列＋招股章程 Z1-P 444 列：SRC_ZP_611–1054）
   src_named: 1103                 # SRC_ZP_nnn＋_Lo＋_Hi（Z5b 661 ＋ 招股章程 442）

@@ -172,9 +172,9 @@ def build(wb, D, Z, snap):
     C.add("研發項下算力服務費（基準：P1）＝研發開支 × 1H25 占比", "RMB 億", {c: f"={c}«C.f_rd_tot»*{I('rd_fee_share')}" for c in cal},
           "r2 P1：占比 Inputs（招股章程 1H25 71.8%，SRC_ZP_640；Analogy 60–80%）；分母為研發開支總額（同招股章程）", key="f_rd", name="CMP_RDFee")
     C.add("研發算力支出（對照：扣除法）＝研發（扣股權報酬）−（薪酬總額 − 股權報酬）× 研發人員占比", "RMB 億",
-          {c: f"={c}«C.f_rd_x»-({S('remun_fy25' if c == 'D' else 'remun_1h26')}-{c}«C.f_sbc»)*{S('rd_staff_pct_1h25')}/{pct}" for c in cal},
-          "D10r 第一法；薪酬 SRC_ZP_163、224；研發人員占比 SRC_ZP_240（Interested-party）；扣除法把研發中的非人事非算力費用也算成算力（上限）", key="f_rd_a")
-    C.add("對照：FY2024 研發算力占研發開支（SRC）", "比例", {"D": f"={S('rd_compute_fy24')}/{S('rd_fy24')}"}, "SRC_ZP_232 ÷ SRC_ZP_048（媒體轉述招股章程）", key="f_fy24")
+          {c: f"={c}«C.f_rd_x»-({S('remun_fy25' if c == 'D' else 'remun_1h26')}-{c}«C.f_sbc»)*{S('employees_rd_share_1h25')}/{pct}" for c in cal},
+          "D10r 第一法；薪酬 SRC_ZP_163、224；研發人員占比 SRC_ZP_848（招股章程第 221 頁 657／883；r2 P2 改引用一手列）；扣除法把研發中的非人事非算力費用也算成算力（上限）", key="f_rd_a")
+    C.add("對照：FY2024 研發算力占研發開支（SRC）", "比例", {"D": f"={S('rd_compute_fy24_p')}/{S('rd_fy24')}"}, "SRC_ZP_613（招股章程一手；r2 P2 取代媒體 SRC_ZP_232）÷ SRC_ZP_048", key="f_fy24")
     C.add("總算力費＝營業成本計算服務費＋研發項下算力費", "RMB 億", {c: f"={c}«C.f_inf»+{c}«C.f_rd»" for c in cal}, "r2 P1；銷售及營銷項下算力費未揭露（招股章程期間占總算力費 0–1.7%），不另估（見報告）", key="f_tot", name="CMP_ComputeFee")
     C.add("研發科目占總算力費（會計科目；只列）", "比例", {c: f"={c}«C.f_rd»/{c}«C.f_tot»" for c in cal}, "Z3–Z5b 以本列為研發占比起點；r2 P1 起改用研發 GW 殘差占比（第八節）", key="f_rdsh")
 
@@ -484,7 +484,7 @@ def build(wb, D, Z, snap):
 
     def hc(c):
         if c == "D":
-            return f"=AVERAGE({S('employees_1h25')},{S('employees_fy25')})"
+            return f"=AVERAGE({S('employees_1h25_p')},{S('employees_fy25')})"
         if c == "K":
             return f"=AVERAGE({S('employees_fy25')},{S('employees_1h26')})"
         if c == "L":
@@ -492,7 +492,7 @@ def build(wb, D, Z, snap):
         if c == "E":
             return f"=(K«K.hc»+L«K.hc»)/{halves}"
         return f"={PREV[c]}«K.hc»*(1+{I('hc_g')})"
-    K.add("員工人數（期間平均）", "人", hc, "2025＝AVERAGE（2025-06-30 883, 2025-12-31 1,094）；1H26＝AVERAGE（1,094, 2026-06-30 981）（SRC_ZP_223、162、222）；之後 Inputs 成長率",
+    K.add("員工人數（期間平均）", "人", hc, "2025＝AVERAGE（2025-06-30 883, 2025-12-31 1,094）；1H26＝AVERAGE（1,094, 2026-06-30 981）（SRC_ZP_844 招股章程、162、222；r2 P2 改引用一手列）；之後 Inputs 成長率",
           key="hc", name="COST_Headcount")
 
     def perhead(src_key, g):

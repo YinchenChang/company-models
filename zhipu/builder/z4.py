@@ -94,7 +94,7 @@ def build(wb, D, Z):
         if c == "E":
             return "=K«F.capex»+L«F.capex»"
         return f"={I('capex_nc')}"
-    F.add("非算力資本支出", "RMB 億", capex, "2025、1H26＝財報資本開支（SRC_ZP_149、209；1H26 主要為北京紅鑽物業）；2H26 起 Inputs（FY2025 水準延續）", key="capex")
+    F.add("非算力資本支出", "RMB 億", capex, "2025、1H26＝財報公告資本開支（SRC_ZP_149、209；1H26 主要為北京紅鑽物業；r2 P2：公告口徑可能含使用權資產添置，FY2025、1H26 現金口徑未揭露，見第十一節）；2H26 起 Inputs（FY2025 水準延續）", key="capex")
     F.add("對照：北京紅鑽 100% 總代價上限（已含於 1H26 資本開支，只列）", "RMB 億", {"K": f"={S('ma_hongzuan_consideration')}/{mn}"},
           "SRC_ZP_555（股權現金 0.82 億＋承接債務約 2.79 億；海淀辦公樓，自用）", key="ma_hz")
     F.add("併購現金支出：中科加禾約 60%", "RMB 億", {"L": f"={I('zkjh_cash')}", "E": "=L«F.ma»"},
@@ -138,7 +138,7 @@ def build(wb, D, Z):
 
     def loan_chg(c):
         if c == "D":
-            return f"=D«F.loan_end»-{S('bank_loans_fy24')}"
+            return f"=D«F.loan_end»-{S('bank_loans_p_fy24')}"
         return f"={c}«F.loan_end»-{prev_loan[c]}«F.loan_end»"
     F.add("銀行借款淨增（減）", "RMB 億", loan_chg, "1H26 +15.35 已反映於 2026-06-30 現金", key="loan_chg")
 
@@ -253,8 +253,8 @@ def build(wb, D, Z):
     F.add("倍數：兩次用途（研發與算力）合計 ÷ 模型同期支出", "倍", {"L": "=(L«F.u_pl1»+L«F.u_pl2»)/L«F.u_model»"}, "", key="u_ratio2")
 
     F.section("八、回流對照（D19：誰出錢；只列對照、不沖銷）")
-    F.add("最大客戶 A：智譜對其銷售（2022–1H25 累計）", "RMB 億", {"D": f"={S('cust_a_sales_vs_purch')}"}, "SRC_ZP_433（Interested-party）", key="rf_sales")
-    F.add("最大客戶 A：智譜向其採購（同期）", "RMB 億", {"D": f"={S('cust_a_purch')}"}, "SRC_ZP_605；客戶兼供應商", key="rf_purch")
+    F.add("最大客戶 A：智譜對其銷售（FY2024＋1H25）", "RMB 億", {"D": f"={S('cust_a_overlap_p')}"}, "SRC_ZP_785（招股章程會計師報告，Verified；r2 P2：媒體 SRC_ZP_433 的 2.42 億差 10 倍）", key="rf_sales")
+    F.add("最大客戶 A：智譜向其採購（同期）", "RMB 億", {"D": f"={S('cust_a_purch_p')}"}, "SRC_ZP_786（Verified；採購內容為數據庫及知識產權授權）；客戶兼供應商", key="rf_purch")
     F.add("採購 ÷ 銷售", "倍", {"D": "=D«F.rf_purch»/D«F.rf_sales»"}, "≈1：營收與採購互相抵銷", key="rf_ratio")
     F.add("2025 地方國資投資（杭州≥10、珠海華發 5、成都高新 3、上海浦東張江 10）", "RMB 億",
           {"D": f"={S('round_2025_03_hangzhou', 'lo')}+{S('round_2025_03_huafa')}+{S('round_2025_03_chengdu')}+{S('round_2025_07_shanghai')}"},
@@ -277,6 +277,15 @@ def build(wb, D, Z):
                           ("s_end", "年底現金（轉股）", "FND_CashEndConv_USD")):
         cols = YC if key_ in ("fcf", "end") else YE
         F.add(f"{zh}（美元）", "$B", {c: f"={c}«F.{key_}»/{fxu}/{bn}" for c in cols}, "", key=f"u_{key_}", name=nm_)
+
+    F.section("十一、r2 P2（招股章程，只列對照，不進現金流）：資本開支口徑")
+    pairs = (("fy24", "FY2024"), ("1h25", "1H2025"))
+    F.add("P2 公告資本開支（權責口徑；含使用權資產添置）：FY2024", "RMB 億", {"D": f"={S('capex_fy24')}"}, "SRC_ZP_150（年度公告比較數）", key="p2_acc_fy24")
+    F.add("P2 公告資本開支（權責口徑）：1H2025", "RMB 億", {"D": f"={S('capex_1h25')}"}, "SRC_ZP_210（中期公告比較數）", key="p2_acc_1h25")
+    for k, zh in pairs:
+        F.add(f"P2 現金資本開支（購買物業及設備＋無形資產）：{zh}", "RMB 億", {"D": f"={S('capex_cash_total_' + k)}"}, "SRC_ZP_889／891（招股章程現金流量表）", key=f"p2_cash_{k}")
+        F.add(f"P2 其中使用權資產添置（不是現金資本開支）：{zh}", "RMB 億", {"D": f"={S('rou_add_' + k)}"}, "SRC_ZP_898／899", key=f"p2_rou_{k}")
+        F.add(f"P2 權責 − 現金：{zh}", "RMB 億", {"D": f"=D«F.p2_acc_{k}»-D«F.p2_cash_{k}»"}, "差額主要是使用權資產（租賃算力硬件與辦公室）", key=f"p2_diff_{k}")
 
     for c, w in (("A", 7), ("B", 66), ("C", 10)):
         F.ws.column_dimensions[c].width = w
