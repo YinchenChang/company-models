@@ -6,7 +6,8 @@ const dir = path.join(__dirname, '..');
 require(path.join(dir, 'load_engine.js'))(dir);
 if (DEFAULTS.ebitdaBasis !== 'ebitdar') { console.log('ebitdaBasis 不是 ebitdar：不適用'); process.exit(0); }
 const SC = 'base', q = structuredClone(DEFAULTS);
-q.scenario = SC; q.a = structuredClone(SCENARIOS[SC].a); q.mw31 = SCENARIOS[SC].mw31; q.cvCap = SCENARIOS[SC].cvCap; q.billableOpen = SCENARIOS[SC].bOpen;
+q.scenario = SC; q.a = structuredClone(SCENARIOS[SC].a); q.mw31 = SCENARIOS[SC].mw31; q.cvCap = SCENARIOS[SC].cvCap; q.delayMonths = 0; // v0.2：以未延誤的合約排程校準（延誤是情境假設，不改 EBITDAR 率）
+ q.billableOpen = SCENARIOS[SC].bOpen;
 q.m.accepted = [...SCENARIOS[SC].acc]; q.m.billable = [...SCENARIOS[SC].bil]; q.m.revMW = [...SCENARIOS[SC].rev];
 const y = runFunding(q).years, n = y.length - 1;
 const adj = [y[0].lease / y[0].totRev, y[n].lease / y[n].totRev].map(x => +x.toFixed(6));

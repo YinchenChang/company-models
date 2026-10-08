@@ -4,7 +4,7 @@ const T=s=>Object.keys(CALQ.tokens).sort((a,b)=>b.length-a.length).reduce((x,k)=
 const SC=process.argv[2], AK=+(process.argv[3]||VAL_DEFAULTS.evYear), AKX=process.argv[3]!==undefined; // AK：EV/EBITDA 錨定年度（1＝模型第 2 期…4＝第 5 期；預設 valuation.evYear）
 const X=JSON.parse(fs.readFileSync('xl17_'+({low:1,base:2,high:3}[SC])+(AKX?'_a'+AK:'')+'.json','utf8'));
 VAL_DEFAULTS.evYear=AK;
-const q=structuredClone(DEFAULTS); q.scenario=SC; q.a=structuredClone(SCENARIOS[SC].a); q.mw31=SCENARIOS[SC].mw31; q.cvCap=SCENARIOS[SC].cvCap; q.billableOpen=SCENARIOS[SC].bOpen; q.m.accepted=[...SCENARIOS[SC].acc]; q.m.billable=[...SCENARIOS[SC].bil]; q.m.revMW=[...SCENARIOS[SC].rev];
+const q=structuredClone(DEFAULTS); q.scenario=SC; q.a=structuredClone(SCENARIOS[SC].a); q.mw31=SCENARIOS[SC].mw31; q.cvCap=SCENARIOS[SC].cvCap; q.delayMonths=SCENARIOS[SC].delay; q.billableOpen=SCENARIOS[SC].bOpen; q.m.accepted=[...SCENARIOS[SC].acc]; q.m.billable=[...SCENARIOS[SC].bil]; q.m.revMW=[...SCENARIOS[SC].rev];
 const d=runFunding(q), p=runValuation(d,q,VAL_DEFAULTS), y=d.years, f=p.fwd;
 const H=(k)=>y.map(e=>e[k]);
 const rows=[];
@@ -17,7 +17,7 @@ function cmp(label, xlKey, html, note){
   const ok=diff.every(d=>d<0.005||(!Number.isFinite(d)&&false));
   rows.push([ok?'OK ':'XX ',label, html.map(v=>+(+v).toFixed(3)).join('/'), xv.map(v=>+(+v).toFixed(3)).join('/'), note||'']);
 }
-const S='產能與收入|', F='支出與資金|', V='損益與評價|';
+const S='產能與收入|', F='支出與資金|', V='損益與評價|', NB0='資產負債_新債與新股|';
 cmp('Accepted', S+'Accepted MW（已驗收，單調不減）', d.m.accepted);
 cmp('Billable', S+'Billable MW（上限為 Accepted）', d.m.billable);
 cmp('平均在役MW', S+T('平均在役 MW（«P0» 欄為«STUBW»平均）'), H('avgBillable'));
@@ -48,6 +48,22 @@ cmp('全年CapEx公式', '輸入|全年毛 CapEx（公式）', H('capexFull'));
 cmp('成長型', '輸入|成長型 CapEx（模型期）', H('capexGrowth'));
 cmp('汰換', '輸入|GPU 汰換 CapEx', H('refresh'));
 cmp('D&A車隊', '輸入|D&A（車隊折舊）', H('daFleet'));
+// v0.2：建設延誤（計費 MW 平移、GPU 資本支出照原時程、折舊自投入使用起算、閒置資本）
+cmp('期末時點', S+'期末時點（評價日起，年）', PERIOD_T); cmp('計費MW延誤後', S+'Billable MW（延誤後，計費用）', H('billDelayed'));
+cmp('期初在役MW', S+'期初在役 MW', y.map((e,i)=>i===0?q.billableOpen:y[i-1].billDelayed));
+cmp('成長型累計', S+'成長型 CapEx 累計（原時程，評價日起）', H('capexCum')); cmp('已投入使用累計', S+'已投入使用累計（延誤後）', H('capexInSvcCum'));
+cmp('本期投入使用', S+'本期投入使用的成長型 CapEx（折舊基礎）', H('capexInSvc')); cmp('閒置資本', S+'閒置資本（已支出未產生收入，期末）', H('idleCap'));
+cmp('延誤月數', S+'建設延誤月數（目前情境）', [q.delayMonths]);
+cmp('期初毛PP&E', '輸入|期初毛 PP&E', H('ppeBeg'));
+// v0.2：A3 租約起租連動、A4 延誤罰則
+cmp('表外租金(延誤連動後)', S+'表外現金租金（未起租，延誤連動後）', H('offLease')); cmp('表外租金(各期收支)', F+'② 表外現金租金（未起租）', H('offLease'));
+cmp('容量上限(未延誤)', S+'容量上限（未延誤，對照）', H('capUndelayed')); cmp('應計費未計費', S+'應計費而未計費營收（延誤造成）', H('lostRev'));
+cmp('延誤罰則', S+'延誤罰則（營業費用）', H('delayPen')); cmp('來源 延誤罰則', F+'Ⓒ4 減：延誤罰則（營業費用）', y.map(e=>-e.delayPen)); cmp('損益 延誤罰則', V+'延誤罰則（服務抵減，營業費用）', H('delayPen'));
+// v0.2：租賃負債與調整後槓桿
+cmp('在帳租賃負債', F+'在帳租賃負債（期末）', H('leaseLiabOn')); cmp('未起租租賃負債', F+'未起租租約已起租部分的租賃負債（期末）', H('leaseLiabUl')); cmp('租賃負債合計', F+'租賃負債合計（期末）', H('leaseLiab'));
+cmp('BS 租賃負債', NB0+'租賃負債（期末）', H('leaseLiab')); cmp('BS EBITDAR', NB0+'EBITDAR（年化＝(EBITDA＋租金) ÷ 期間長度）', H('ebitdarAnn'));
+cmp('BS 調整後槓桿', NB0+'調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）', H('adjLev')); cmp('BS 距上限空間', NB0+'距投資級上限的空間（上限 − 調整後槓桿）', y.map(e=>q.debtEbitdaMax-e.adjLev));
+cmp('連動比例', S+'未起租租約起租連動比例（delayLink）', [q.delayLink]); cmp('罰則比例', S+'延誤罰則（應計費而未計費營收的 %）', [q.delayPenalty]);
 cmp('表外租金', '輸入|表外現金租金（未起租）', q.a.newLease);
 cmp('存量利息', '輸入|存量債務利息（下游引用此列）', H('intStock'));
 cmp('JV合計(模型期)', '輸入|JV／策略投資出資', H('div'));
@@ -172,7 +188,7 @@ cmp('加權目標價', V+'加權目標價', [p.call.blended]);
   cmp('隱含 共識目標價OCI倍數',SM+`隱含｜共識平均目標價隱含 ${PERIODS[2]} OCI EV/EBITDA`,[cv.impTgtOci]); cmp('隱含 現價OCI倍數',SM+`隱含｜現價隱含 ${PERIODS[2]} OCI EV/EBITDA`,[cv.impPxOci]); cmp('隱含 傳統EBITDA',SM+`隱含｜模型 ${PERIODS[2]} 傳統事業 EBITDA`,[cv.lgE]);
   cmp('摘要 點位',SM+'結論｜點位（加權目標價）',[R.pt]); cmp('摘要 空間',SM+'結論｜空間',[cv.up]); cmp('摘要 點位−門檻',SM+'結論｜點位 − 賣出門檻',[cv.gapTh]);
   cmpT('文字 摘要評等',SM+'結論｜評等',p.call.call); cmpT('文字 摘要結論句',SM+'結論｜結論句',cv.head); cmpT('文字 摘要情境判斷句',SM+'結論｜情境判斷句',R.judge);
-  cmpT('文字 共識判斷句',SM+'差異｜判斷句',cv.judge); cmpT('文字 投資級句',SM+'結論｜投資級句',cv.igLine); cmpT('文字 隱含倍數句',SM+'隱含｜隱含倍數句',cv.implied);
+  cmpT('文字 共識判斷句',SM+'差異｜判斷句',cv.judge); cmpT('文字 投資級句',SM+'結論｜投資級句',cv.igLine); cmpT('文字 延誤句',SM+'結論｜延誤句',cv.delayLine); cmpT('文字 調整後槓桿句',SM+'結論｜調整後槓桿句',cv.adjLine); cmpT('文字 隱含倍數句',SM+'隱含｜隱含倍數句',cv.implied);
   // v4.4：年度差異原因（類型＋原因逐字；Excel 每個設定組合一列，未超過門檻時為空白）與原因摘要句
   cmpT('文字 差異原因摘要',SM+'差異｜差異原因摘要',cv.rsnSum);
   for(const k of Object.keys(X).filter(k=>k.startsWith(SM+'差異原因｜'))){ const [,yr,nm]=k.split('｜'), h=cv.rsn.find(x=>x.yr===yr&&x.name===nm), x=X[k];

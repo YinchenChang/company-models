@@ -110,3 +110,33 @@ def test_e6_no_constants_in_p3_formulas():
     import openpyxl
     wb = openpyxl.load_workbook(current_model_path())
     assert _e6_scan(wb["Compute"]) >= 600
+
+
+def test_e6_no_constants_in_p4_formulas():
+    """E6（P4）：Cost 頁的公式不得內含常數；恆等式只容許 1−比例、年數 +1、1＋成長率；定義常數（$M→$B、$→$B、等差級數除數）在 Inputs。
+    世代名稱與成本情境為文字格（SUMIFS 的鍵），不在公式內。"""
+    import openpyxl
+    wb = openpyxl.load_workbook(current_model_path())
+    assert _e6_scan(wb["Cost"]) >= 500
+    assert _e6_scan(wb["Compute"]) >= 620
+
+
+def test_e6_no_constants_in_p5_formulas():
+    """E6（P5）：Funding、Reverse 兩頁的公式不得內含常數；恆等式只容許 1−比例、年數 +1、1＋成長率；定義常數（$M→$B、月數）在 Inputs。"""
+    import openpyxl
+    wb = openpyxl.load_workbook(current_model_path())
+    assert _e6_scan(wb["Funding"]) >= 150
+    assert _e6_scan(wb["Reverse"]) >= 180
+
+
+def test_reverse_not_fed_back():
+    """R1／共同規則第 4 節：反向模式只作對照區塊——除 Checks 外，沒有任何頁的公式引用 Reverse 頁或 RVS_ 具名範圍。"""
+    import openpyxl
+    wb = openpyxl.load_workbook(current_model_path())
+    for ws in wb.worksheets:
+        if ws.title in ("Reverse", "Checks"):
+            continue
+        for row in ws.iter_rows():
+            for c in row:
+                if isinstance(c.value, str) and c.value.startswith("="):
+                    assert "Reverse!" not in c.value and "RVS_" not in c.value, f"{ws.title}!{c.coordinate} 引用反向模式：{c.value}"

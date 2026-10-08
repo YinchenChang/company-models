@@ -1,6 +1,6 @@
-# Oracle 收支模型 v0.1 原始碼包
+# Oracle 收支模型 v0.2 原始碼包
 
-Oracle（ORCL）收支與評價模型；由 `nebius/` @ `642d144`（CRWV v4.5＋Nebius v0.1b）複製建立。下方各節為模板沿革與技術說明（以 CoreWeave 為例），引擎與工具仍適用；Oracle 新增的結構（OCI 以 MW × 每 MW 收入、首期以 Q1 OCI 校準可計費 MW、傳統事業四線、客戶出資與預付重大財務組成、股利、投資級融資瀑布、強制轉換特別股、未起租租賃排程、CAPM WACC、分部 EV/EBITDA；v0.1c：EBITDAR 率 − 固定租金、MW 觸頂後穩態 GPU 汰換、終值以末期 UFCF 為基準）見交接檔 `docs/handoff/20261008_Oracle收支模型_交接檔_v0_1.md` 與下方「company.json 欄位說明」。成品名稱＝`更新日_<meta.company>收支模型_v版本`（目前 `dist/20261008_Oracle收支模型_v0_1.html`／`.xlsx`）。`scripts/calib_ebitdar.js`：EBITDAR 率校準（`defaults.ebitdarAdj`；verify.sh 第 0c 項）。
+Oracle（ORCL）收支與評價模型；由 `nebius/` @ `642d144`（CRWV v4.5＋Nebius v0.1b）複製建立。下方各節為模板沿革與技術說明（以 CoreWeave 為例），引擎與工具仍適用；Oracle 新增的結構（OCI 以 MW × 每 MW 收入、首期以 Q1 OCI 校準可計費 MW、傳統事業四線、客戶出資與預付重大財務組成、股利、投資級融資瀑布、強制轉換特別股、未起租租賃排程、CAPM WACC、分部 EV/EBITDA；v0.1c：EBITDAR 率 − 固定租金、MW 觸頂後穩態 GPU 汰換、終值以末期 UFCF 為基準）見交接檔 `docs/handoff/20261008_Oracle收支模型_交接檔_v0_2.md` 與下方「company.json 欄位說明」；v0.2 新增建設延誤模組（計費 MW 平移、GPU 資本支出照原時程與閒置資本、租約起租連動、延誤罰則；Excel「運營_產能與收入」（E）區）與租賃負債／租賃調整後槓桿（投資級上限 ≤ 4.5×；「各期收支」租賃負債區、「資產負債_新債與新股」槓桿列）。成品名稱＝`更新日_<meta.company>收支模型_v版本`（目前 `dist/20261008_Oracle收支模型_v0_2.html`／`.xlsx`）。升版驗收的預期差異清單在 `scripts/expect/`（v0.2：`v0_2_vs_v0_1.txt`；延誤 0 不變性：`v0_2_delay0_vs_v0_1.txt`）。`scripts/calib_ebitdar.js`：EBITDAR 率校準（`defaults.ebitdarAdj`；verify.sh 第 0c 項）。
 
 HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo 根目錄；建置產物寫到 `out/`（不納入版控），交付成品放 `dist/`。HTML 的函式庫模板為 `docs/template_v3_3.html`。
 
@@ -138,7 +138,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY27 第 2–4 季、FY28、FY29、FY30、FY31，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 Oracle v0.1 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 Oracle v0.2 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -224,11 +224,16 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `leases.afterFY30` | 已入帳租約在模型期之後還要付的租金合計 | US$bn | 39.283 | 必改 |
 | `leases.facts.onBal` | 已入帳租約未折現付款合計 | US$bn | 63.245 | 必改 |
 | `leases.facts.notCommenced` | 已簽約但尚未起租的租約（表外） | US$bn | 288 | 必改 |
+| `leases.liability.discRate` | 租賃負債折現率（10-K 加權平均；v0.2） | 比例 | 0.057 | 必改 |
+| `leases.liability.tailYears` | 在帳到期表模型期後尾端的平均分攤年數（租賃負債用；v0.2） | 年 | 12 | 檢查 |
+| `leases.liability.note` | 租賃負債口徑說明（v0.2） | 文字 | v0.2：租賃負債（每期末）＝剩餘租金現值。折現率＝… | 必改 |
 | `leases.uncommenced.startQ` | 未起租租賃自評價日後第幾季開始起租（0＝首期第一季） | 季 | 0 | 必改 |
 | `leases.uncommenced.quarters` | 未起租租賃平均分攤起租的季數 | 季 | 11 | 必改 |
 | `leases.uncommenced.termYears` | 每筆未起租租賃的租期（直線付租） | 年 | 17 | 檢查 |
 | `leases.uncommenced.termSens` | 租期敏感度（報告用） | 年 清單 | 15、19 | 檢查 |
 | `leases.uncommenced.note` | 起租排程的來源與假設說明 | 文字 | 10-Q FY27Q1 附註 6：未起租租賃 288… | 必改 |
+| `leases.uncommenced.delayLink` | 未起租租約起租隨建設延誤後移的比例（0–1；其餘照原時程；v0.2） | 比例 | 0.5 | 檢查 |
+| `leases.uncommenced.delayLinkNote` | delayLink 的依據說明（v0.2） | 文字 | v0.2：未起租 288B 中有此比例的起租時點隨建… | 必改 |
 | `leases.facts.singleCap` | 單一大型站點的租金上限（10-Q 揭露） | US$bn | 0 | 必改 |
 | `leases.facts.share` | 第三方租賃占機房取得的比例（用於租金基準檢驗） | 比例 | 1 | 檢查 |
 | `leases.operatingPayments` | 營業租賃到期表：五期各期，最後一格為之後合計（Excel 租賃頁） | US$bn 清單 | 3.219、4.135、4.097、4.109、4.089、28.401 | 必改 |
@@ -414,6 +419,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.convCap.low` | 保守情境：融資瀑布可轉債步驟每年新發行上限（0＝不新發；v0.1b） | US$bn／年 | 0 | 檢查 |
 | `scenarios.convCap.base` | 基準情境：同上 | US$bn／年 | 0 | 檢查 |
 | `scenarios.convCap.high` | 積極情境：同上 | US$bn／年 | 0 | 檢查 |
+| `scenarios.delayMonths.low` | 保守情境：建設延誤月數——計費 MW＝原可計費路徑往後平移此月數（期間長度線性內插）；GPU 資本支出與客戶出資照原時程，折舊自投入使用起算（v0.2） | 月 | 6 | 檢查 |
+| `scenarios.delayMonths.base` | 基準情境：同上 | 月 | 3 | 檢查 |
+| `scenarios.delayMonths.high` | 積極情境：同上 | 月 | 0 | 檢查 |
+| `scenarios.delayMonths.note` | 建設延誤月數的依據與說明（v0.2） | 文字 | 建設延誤月數（v0.2）：計費／營收的 MW＝原可計… | 必改 |
 | `scenarios.capexTemplate.costMW` | 每 MW 建置成本（GPU＋網路＋機房內裝），各期 | US$m/MW 清單 | 37.45、37.59、37.59、37.59、37.59 | 檢查 |
 | `scenarios.capexTemplate.div` | JV 後續增資與策略投資，各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
 
@@ -450,8 +459,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.legacyBiz.ebitdaMargin` | 傳統事業 EBITDA 率，各期（Oracle v0.1b） | 比例清單 | 0.5426、0.5426、0.5426、0.5426、0.5426 | 檢查 |
 | `defaults.legacyBiz.note` | 傳統事業輸入的來源與推導說明 | 文字 | 傳統事業（OCI 以外四線）：fyBase＝FY20… | 必改 |
 | `defaults.cashTaxRate` | 類現金流量的現金稅率：稅 ＝ 稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（v0.1b；虧損或 NOL 公司填 0） | 比例 | 0.151 | 檢查 |
-| `defaults.debtCapBasis` | 瀑布新債的上限基準：ebitda＝總債務 ≤ 倍數 × 當期 EBITDA（年化；投資級上限）；backlog＝模板的債務／backlog（Oracle v0.1b） | 代碼 | ebitda | 檢查 |
-| `defaults.debtEbitdaMax` | 投資級上限：總債務 ÷ 當期 EBITDA 的上限倍數（debtCapBasis＝ebitda 時使用） | 倍 | 4 | 檢查 |
+| `defaults.delayPenalty` | 延誤罰則／服務抵減：延誤期間應計費而未計費營收的比例，列為營業費用（預設 0＝未揭露；v0.2） | 比例 | 0 | 檢查 |
+| `defaults.delayPenaltyNote` | delayPenalty 的依據說明（v0.2） | 文字 | v0.2：延誤罰則或服務抵減＝延誤期間「應計費而未計… | 必改 |
+| `defaults.debtCapBasis` | 瀑布新債的上限基準：leaseAdj＝(總債務＋租賃負債) ≤ 倍數 ×(EBITDA＋租金)（年化；S&P 口徑近似的投資級上限，v0.2）；ebitda＝總債務 ≤ 倍數 × 當期 EBITDA（v0.1b）；backlog＝模板的債務／backlog | 代碼 | leaseAdj | 檢查 |
+| `defaults.debtEbitdaMax` | 投資級上限倍數：leaseAdj＝調整後槓桿上限（S&P BBB- 降評門檻 4.5×，v0.2）；ebitda＝總債務 ÷ 當期 EBITDA 上限 | 倍 | 4.5 | 檢查 |
 | `defaults.dividend.perShareQ` | 普通股每股每季股利（Oracle v0.1b；不發股利的公司刪除 dividend 區段） | US$ | 0.5 | 必改 |
 | `defaults.dividend.sharesBase` | 股利的基礎股數（最新流通股；另加前期累計瀑布新股與已強制轉換特別股） | bn 股 | 3.02374 | 必改 |
 | `defaults.dividend.preferred` | 特別股股利，各期 | US$bn 清單 | 0.244、0.325、0.244、0、0 | 必改 |
