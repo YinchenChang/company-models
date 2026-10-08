@@ -689,6 +689,32 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `oracle.openai` | Oracle–OpenAI 合約年額、隱含每 MW、OpenAI 計畫算力支出（只作對照）；格式同上 | 物件 | 物件（contractAnnual、contractPerMw、computePlan2026to2030） | 必改 |
 | `oracle.events` | Oracle 評價日後事件（Project Jupiter 不可抗力通知）；格式同上 | 物件 | 物件（jupiterForceMajeure） | 必改 |
 
+### `whitefiber`：WhiteFiber 資料草稿（v0.1a；v0.1b 依 mapTo 搬入）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `whitefiber._readme` | WhiteFiber 資料草稿區段的說明（v0.1a 產出；引擎尚未讀取，v0.1b 依 mapTo 搬入既有欄位或新增；金額 USD M） | 文字 | WhiteFiber 資料草稿（v0.1a 產出；引… | 必改 |
+| `whitefiber.files` | WhiteFiber 事實總帳、每 MW 推導、共識資料檔的路徑與 SEC CIK | 物件（路徑） | 物件（facts、perMw、consensus、cik） | 必改 |
+| `whitefiber.calendar` | WhiteFiber 日曆草稿（12 月財年、最新已申報季 2026Q2、首期 0.5 年）；每欄 value＋unit＋ref（總帳 id）＋mapTo | 物件 | 物件（value、unit、ref、mapTo） | 必改 |
+| `whitefiber.ytdActual` | WhiteFiber 1H26 實際數草稿（營收分線、成本、D&A、利息、淨損、調整後 EBITDA、營運現金流、資本支出、預付、融資）；格式同上 | 物件 | 物件（value、unit、ref、mapTo、note） | 必改 |
+| `whitefiber.historicalPL` | WhiteFiber FY2024–FY2025 年度損益與現金流草稿（10-K 查核數）；格式同上 | 物件 | 物件（value、unit、ref、mapTo） | 必改 |
+| `whitefiber.quarters` | WhiteFiber 2025Q2–2026Q2 季度營收分線與調整後 EBITDA 草稿（2025Q4 為 FY−9M 推得）；格式同上 | 物件 | 物件（value、unit、ref、mapTo） | 必改 |
+| `whitefiber.latestQuarter` | WhiteFiber 2026 Q2 財報數字草稿（10-Q）；格式同上 | 物件 | 物件（value、unit、ref、mapTo） | 必改 |
+| `whitefiber.onetime` | WhiteFiber 2026 Q2 一次性項目（終止費、GPU 租賃終止成本、呆帳）與扣除後的經常性數字（首期校準用）；格式同上 | 物件 | 物件（value、unit、ref、mapTo、note） | 必改 |
+| `whitefiber.balance` | WhiteFiber 2026-06-30 資產負債草稿（現金、PP&E、在建工程、遞延營收、客戶押金、權益）；格式同上 | 物件 | 物件（value、unit、ref、mapTo） | 必改 |
+| `whitefiber.debt` | WhiteFiber 債務草稿（2031／2032 可轉債條款、零履約價買權、Bit Digital DDTL、冰島貸款、RBC 聯貸、NC-1／巴黎專案融資狀態）；格式同上 | 物件 | 物件（value、unit、ref、mapTo、note） | 必改 |
+| `whitefiber.shares` | WhiteFiber 股數草稿（季末、交換後、Bit Digital 持股、RSU、可轉債轉換股數、零履約價買權收回股數）；格式同上 | 物件 | 物件（value、unit、ref、mapTo） | 必改 |
+| `whitefiber.leases` | WhiteFiber 租賃草稿（營業租賃負債與到期表、GPU 變動租金、未起租雪梨租約）；格式同上 | 物件 | 物件（value、unit、ref、mapTo） | 必改 |
+| `whitefiber.rpo` | WhiteFiber RPO 草稿（託管與雲端依年度、6/30 後新簽雲端合約）；格式同上 | 物件 | 物件（value、unit、ref、mapTo、note） | 必改 |
+| `whitefiber.mw` | WhiteFiber 逐站點 MW 草稿（毛／IT 分列、狀態、自有或承租、PUE）；格式同上 | 物件 | 物件（value、unit、ref、mapTo） | 必改 |
+| `whitefiber.contracts` | WhiteFiber 合約草稿（託管：Nscale、Cerebras；雲端：Baseten、Prime Intellect、冰島、巴黎等；隱含每 MW-IT 年營收只作對照）；格式同上 | 物件 | 物件（value、unit、ref、mapTo） | 必改 |
+| `whitefiber.perMw` | WhiteFiber 雲端每 MW-IT 年收入三情境（Tokenomics v5.26，與 v5.24 相同）、對照值、每顆 GPU IT kW；格式同上 | 物件 | 物件（value、unit、ref、mapTo） | 必改 |
+| `whitefiber.colo` | WhiteFiber 託管分部草稿（可比租金區間、年調、每 MW-IT 建置成本區間、建物與設備折舊年限、託管毛利率）；格式同上 | 物件 | 物件（value、unit、ref、mapTo） | 必改 |
+| `whitefiber.prepay` | WhiteFiber 預付草稿（遞延營收、1H26 預付流入、巴黎 12 個月預付、客戶押金）；格式同上 | 物件 | 物件（value、unit、ref、mapTo） | 必改 |
+| `whitefiber.valuation` | WhiteFiber 評價輸入草稿（股價、股數、市值、無風險利率、ERP、beta 預設與觀察值、股權與債務成本、g、分部 EV/EBITDA）；格式同上 | 物件 | 物件（value、unit、ref、mapTo） | 必改 |
+| `whitefiber.consensus` | WhiteFiber 市場共識摘要與共識檔路徑；格式同上 | 物件 | 物件（value、unit、ref、mapTo） | 必改 |
+| `whitefiber.guidance` | WhiteFiber 公司目標（雲端年化 >200、毛 MW 上線目標；無正式指引；只作對照）；格式同上 | 物件 | 物件（value、unit、ref、mapTo） | 必改 |
+
 ## v4.0 架構：公司資料單一來源
 - **company.json**：所有公司原始輸入（HTML 引擎與 Excel 共用）。換公司時先改這個檔；衍生值（情境 Billable 比率、Q3 新增 RPO 權重、債務合計與平均利率）留在 segA 開頭由程式推導。
 - HTML：`build_html_portable.py` 把 company.json 注入為 `COMPANY_DATA`，segA 開頭讀取。Excel：`build_xlsx.py` 開頭讀同一檔（75 項輸入，百分點欄位以 `PCT_()` 轉成比例）。

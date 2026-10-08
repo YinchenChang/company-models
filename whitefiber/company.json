@@ -2482,5 +2482,718 @@
     "mapTo": "texts（期後事件）／保守情境依據"
    }
   }
+ },
+ "whitefiber": {
+  "_readme": "WhiteFiber 資料草稿（v0.1a 產出；引擎尚未讀取）。每欄 value＋unit＋ref（data/whitefiber_facts_20261008.json 的 id）＋mapTo（v0.1b 應搬到的既有欄位路徑或「新欄位」）。金額除另註明外為 USD M；引擎既有欄位多為 US$bn，搬入時換算。上方 meta、calendar、ytdActual 等仍是 Oracle v0.2 的值，v0.1b 步驟 1 換成 WhiteFiber 後刪除本區已搬入的欄位與 oracle 區段。",
+  "files": {
+   "facts": "data/whitefiber_facts_20261008.json",
+   "perMw": "data/permw_tokenomics_20261008.json",
+   "consensus": "data/consensus_wyfi_20261008.json",
+   "cik": "0002042022"
+  },
+  "calendar": {
+   "value": {
+    "fiscalYearEndMonth": 12,
+    "latestQuarterFiled": "2026Q2",
+    "periodEnd": "2026-06-30",
+    "filed": "2026-08-12",
+    "firstStubYears": 0.5
+   },
+   "unit": "物件",
+   "ref": [
+    "sh.wavg.2026Q2"
+   ],
+   "mapTo": "calendar（fiscalYearEndMonth＝12、latestQuarterFiled／Reported＝FY26Q2；首期＝FY26 下半年 0.5 年）"
+  },
+  "ytdActual": {
+   "value": {
+    "revenue": 50.762,
+    "cloud": 40.573,
+    "colo": 9.5,
+    "other": 0.689,
+    "cogs": 20.441,
+    "da": 13.008,
+    "impairment": 5.006,
+    "ga": 32.582,
+    "interest": 8.011,
+    "ni": -27.018,
+    "adjEbitda": 8.536,
+    "sbc": 11.017,
+    "cfo": 89.105,
+    "capex": 344.712,
+    "disposals": 26.082,
+    "prepayIn": 72.6,
+    "cash1231": 118.298,
+    "convNet": 222.118,
+    "zeroStrike": -120.0,
+    "debtBorrow": 82.408,
+    "leaseRepaid": 12.599
+   },
+   "unit": "物件（USD M，1H26）",
+   "ref": [
+    "is.rev.2026Q1",
+    "is.rev.2026Q2",
+    "cf.cfo.2026H1",
+    "cf.capex.2026H1",
+    "cf.disposal.2026H1",
+    "cf.prepayIn.2026H1",
+    "cf.cff.2026H1",
+    "bs.cash.2025"
+   ],
+   "mapTo": "ytdActual.*（引擎單位 US$bn：搬入時 ÷1000）",
+   "note": "1H26＝Q1＋Q2；interest＝第三方 6.573＋關係人 1.438；debtBorrow＝53.308＋29.1；cash1231 含受限"
+  },
+  "historicalPL": {
+   "value": {
+    "FY2024": {
+     "revenue": 47.639,
+     "adjEbitda": 21.926,
+     "ni": 1.37,
+     "da": 16.511
+    },
+    "FY2025": {
+     "revenue": 79.164,
+     "adjEbitda": 17.295,
+     "ni": -24.683,
+     "da": 23.441,
+     "cfo": 45.655,
+     "capex": 268.403
+    }
+   },
+   "unit": "物件（USD M）",
+   "ref": [
+    "is.rev.FY2024",
+    "is.rev.FY2025",
+    "is.adjEbitda.FY2025",
+    "cf.cfo.FY2025",
+    "cf.capex.FY2025"
+   ],
+   "mapTo": "historicalPL（tag Verified）（引擎單位 US$bn：搬入時 ÷1000）"
+  },
+  "quarters": {
+   "value": {
+    "2025Q2": {
+     "revenue": 18.662,
+     "cloud": 16.595,
+     "colo": 1.729,
+     "adjEbitda": 3.283
+    },
+    "2025Q3": {
+     "revenue": 20.18,
+     "cloud": 18.033,
+     "colo": 1.692,
+     "adjEbitda": 2.277
+    },
+    "2025Q4": {
+     "revenue": 23.561,
+     "cloud": 19.284,
+     "colo": 3.854,
+     "adjEbitda": 5.791
+    },
+    "2026Q1": {
+     "revenue": 21.923,
+     "cloud": 16.767,
+     "colo": 4.774,
+     "adjEbitda": 3.001
+    },
+    "2026Q2": {
+     "revenue": 28.839,
+     "cloud": 23.806,
+     "colo": 4.726,
+     "adjEbitda": 5.535
+    }
+   },
+   "unit": "物件（USD M）",
+   "ref": [
+    "is.rev.2025Q2",
+    "is.rev.2025Q3",
+    "is.rev.2025Q4",
+    "is.rev.2026Q1",
+    "is.rev.2026Q2"
+   ],
+   "mapTo": "quarterly.actuals（2025Q4 為 [Derived] FY−9M）"
+  },
+  "latestQuarter": {
+   "value": {
+    "revenue": 28.839,
+    "cloud": 23.806,
+    "colo": 4.726,
+    "other": 0.307,
+    "grossProfit": 17.129,
+    "da": 6.567,
+    "impairment": 5.006,
+    "ga": 14.811,
+    "interestTP": 4.578,
+    "interestRP": 1.438,
+    "ni": -14.976,
+    "eps": -0.39,
+    "adjEbitda": 5.535,
+    "sbc": 3.671,
+    "cash": 56.056,
+    "restricted": 4.313
+   },
+   "unit": "物件（USD M）",
+   "ref": [
+    "is.rev.2026Q2",
+    "is.gp.2026Q2",
+    "is.ni.2026Q2",
+    "is.adjEbitda.2026Q2",
+    "bs.cash.2026Q2",
+    "bs.restricted.2026Q2"
+   ],
+   "mapTo": "latestQuarter.*（引擎單位 US$bn：搬入時 ÷1000）"
+  },
+  "onetime": {
+   "value": {
+    "termFeeRev": 12.3,
+    "termFeeAmendedQ3": 15.7,
+    "gpuLeaseCost": 4.0,
+    "badDebt": 2.2,
+    "recurringCloudRev": 11.506,
+    "recurringGm": 0.534,
+    "recurringAdjEbitda": -0.565
+   },
+   "unit": "物件（USD M；比率）",
+   "ref": [
+    "is.onetime.termFee",
+    "is.onetime.termFeeAmended",
+    "is.onetime.gpuLeaseCost",
+    "is.onetime.badDebt",
+    "is.recurring.cloudRev.2026Q2",
+    "is.recurring.gm.2026Q2",
+    "is.recurring.adjEbitda.2026Q2"
+   ],
+   "mapTo": "新欄位（首期校準：以 recurringCloudRev × 4 校準期初可計費雲端 MW；EBITDA 率起點用 recurring 口徑）；quarterly.varianceReasons",
+   "note": "gpuLeaseCost 4.0 為二手法說數；終止費修訂差額 3.4 可能於 Q3 認列"
+  },
+  "balance": {
+   "value": {
+    "cashTotal": 60.369,
+    "ar": 23.243,
+    "ppe": 651.085,
+    "cip": 484.588,
+    "cloudNbv": 95.8,
+    "coloNbv": 556.3,
+    "nc1Dev1H26": 322.5,
+    "deferredRevenue": 143.11,
+    "deferredCurrent": 17.909,
+    "customerDepositsLT": 6.279,
+    "dueRelatedParty": 7.942,
+    "equity": 337.386
+   },
+   "unit": "物件（USD M，2026-06-30）",
+   "ref": [
+    "bs.cashTotal.2026Q2",
+    "bs.ppe.2026Q2",
+    "bs.ppeByClass.2026Q2",
+    "bs.ppe.coloNbv.2026Q2",
+    "bs.defRev.2026Q2",
+    "bs.custDepositLT.2026Q2"
+   ],
+   "mapTo": "defaults.cash／defaults.ppeOpen／defaults.prepay.openBalance（遞延營收 143.1）（引擎單位 US$bn：搬入時 ÷1000）"
+  },
+  "debt": {
+   "value": {
+    "cv31": {
+     "faceOrig": 230.0,
+     "faceNow": 31.85,
+     "coupon": 0.045,
+     "eir": 0.0537,
+     "maturity": "2031-02-01",
+     "convPrice": 25.91,
+     "convSharesNow": 1.229,
+     "put": "2029-02-06",
+     "callFrom": "2029-02-06"
+    },
+    "cv32": {
+     "face": 310.0,
+     "coupon": 0.05,
+     "maturity": "2032-09-01",
+     "convPrice": 33.84,
+     "convShares": 9.161,
+     "put": "2030-09-06",
+     "callFrom": "2030-09-06",
+     "netProceeds": 298.5,
+     "cappedCall": null
+    },
+    "zeroStrikeCall": {
+     "shares": 5.905511,
+     "premiumPaid": 120.0,
+     "settle": "2031-02 起（可提前）"
+    },
+    "ddtl": {
+     "facility": 100.0,
+     "upsize": 150.0,
+     "drawnBitDigital": 60.0,
+     "drawnBRiley": 20.0,
+     "rate": 0.095,
+     "rateStepDown": 0.08,
+     "moic": 1.1,
+     "oid": 0.03,
+     "tenorDays": "90–180",
+     "note": "截至 2026-07-31 累計動用 80（6/30 為 50）"
+    },
+    "iceland": {
+     "facility": 20.0,
+     "drawn": 18.0,
+     "rate": "SOFR＋4.25%（7.92%）",
+     "maturity": "2028-03（可延 2 年）",
+     "amort": "季攤還"
+    },
+    "rbcSyndicated": {
+     "commitUSD": 80.8,
+     "accordionUSD": 17.7,
+     "drawnUSD": 26.2,
+     "rate": "CORRA＋2.45%＋CSA",
+     "term": "3 年",
+     "amort": "15 年",
+     "note": "2026-07-15 再融資 RBC 修訂後信貸 17.3"
+    },
+    "termNet0630": 83.206,
+    "termPrincipal0630": 85.339,
+    "nc1ProjectFinancing": "獨家協商中、未完成",
+    "franceProjectFinancing": "條件書、未完成"
+   },
+   "unit": "物件（USD M；M 股）",
+   "ref": [
+    "debt.cv31.terms",
+    "debt.cv31.remaining",
+    "debt.cv32.terms",
+    "debt.cv32.convShares",
+    "debt.zsc",
+    "debt.ddtl.terms",
+    "debt.ddtl.drawnPost",
+    "debt.iceland.2026Q2",
+    "debt.rbcSynd",
+    "debt.term.2026Q2",
+    "debt.nc1Pf",
+    "debt.francePf"
+   ],
+   "mapTo": "debt.instruments（DDTL、冰島、RBC 聯貸）／debt.convertibles（cv31 剩餘、cv32）／新欄位（零履約價買權：到期收回 5.91M 股，減少稀釋）（引擎單位 US$bn：搬入時 ÷1000）",
+   "note": "評價日 6/30 帳面：可轉債 230（cv32 為期後事件，v0.1b 決定以期後資本結構或 6/30 結構建模並寫明）"
+  },
+  "shares": {
+   "value": {
+    "out0630": 38.841201,
+    "out0810": 38.848118,
+    "outPostExchange": 45.119652,
+    "exchangeShares": 6.27,
+    "btbtShares": 27.04375,
+    "btbtPct": 0.599,
+    "rsuUnvested": 0.124349,
+    "convShares": {
+     "cv32": 9.161,
+     "cv31": 1.229
+    },
+    "zeroStrikeReceive": -5.905511,
+    "singleClass": true
+   },
+   "unit": "物件（M 股）",
+   "ref": [
+    "sh.out.2026Q2",
+    "sh.out.0810",
+    "sh.out.postExchange",
+    "sh.btbt",
+    "debt.cv32.convShares",
+    "debt.zsc"
+   ],
+   "mapTo": "valuation.shares（引擎單位 bn 股）；debt.convertibles 稀釋"
+  },
+  "leases": {
+   "value": {
+    "opLiability": 15.376,
+    "opPayments": {
+     "2026H2": 3.268,
+     "2027": 4.28,
+     "2028": 2.465,
+     "2029": 2.304,
+     "2030": 2.358,
+     "after": 5.76
+    },
+    "waRate": 0.083,
+    "waTermYears": 8.9,
+    "gpuLeaseVariableQ2": 5.6,
+    "uncommenced": {
+     "sydneyMonthlyUSD": 0.344,
+     "sydneyMonths": 59,
+     "sydneyStart": "2026Q4",
+     "others": "巴黎、安大略、加拿大第三方機房：未揭露"
+    }
+   },
+   "unit": "物件（USD M）",
+   "ref": [
+    "lease.opLiab.2026Q2",
+    "lease.opPayments.2026Q2",
+    "lease.gpu",
+    "lease.uncommenced.sydney",
+    "lease.uncommenced.other"
+   ],
+   "mapTo": "leases.operatingPayments／leases.liability／leases.uncommenced（引擎單位 US$bn：搬入時 ÷1000）"
+  },
+  "rpo": {
+   "value": {
+    "colo": {
+     "2026H2": 36.053,
+     "2027": 93.465,
+     "2028": 94.835,
+     "2029": 95.285,
+     "2030": 94.021,
+     "after": 519.236,
+     "total": 932.895
+    },
+    "cloud": {
+     "2026H2": 21.627,
+     "2027": 43.254,
+     "2028": 10.265,
+     "total": 75.146
+    },
+    "total": 1008.041,
+    "cloudSignedAfter0630": 377.0
+   },
+   "unit": "物件（USD M）",
+   "ref": [
+    "rpo.colo.2026Q2",
+    "rpo.cloud.2026Q2",
+    "rpo.total.2026Q2",
+    "ct.baseten",
+    "ct.primeVR",
+    "ct.icelandB300",
+    "ct.b300_128"
+   ],
+   "mapTo": "rpo.*（託管 RPO 為合約事實，可作託管營收排程輸入）",
+   "note": "cloudSignedAfter0630＝Baseten 165.2＋Prime VR200 108.2＋冰島 87.5＋128 顆 B300 16.0＝376.9 [Derived]；巴黎 >160 似未計入 6/30 雲端 RPO"
+  },
+  "mw": {
+   "value": {
+    "MTL-1": {
+     "gross": 4,
+     "it": 3,
+     "status": "營運",
+     "tenure": "承租"
+    },
+    "MTL-2": {
+     "gross": 5,
+     "it": 3,
+     "status": "2026 年底",
+     "tenure": "自有"
+    },
+    "MTL-3": {
+     "gross": 7,
+     "it": 5,
+     "status": "營運（Cerebras）",
+     "tenure": "自有",
+     "pue": 1.3
+    },
+    "NC-1": {
+     "grossUtility": 99,
+     "grossPhase1": 54,
+     "itContracted": 40,
+     "nextGross": 45,
+     "longTermGross": "200–300",
+     "it2gross": 0.741
+    },
+    "Iceland": {
+     "gross": 6,
+     "it": 5.5,
+     "tenure": "承租（雲端）"
+    },
+    "Sydney": {
+     "it": 2.5,
+     "start": "2026Q4",
+     "tenure": "承租（雲端）"
+    },
+    "NC-2/3": {
+     "grossInitial": 60,
+     "grossMax": 198,
+     "rfs": "2027Q3",
+     "status": "買賣協議，2026 Q4 交割"
+    },
+    "Krambu": {
+     "mw": 100,
+     "start": 2027,
+     "basis": "口徑不明"
+    },
+    "grossOnline": {
+     "YE25": 11,
+     "YE26E": 70,
+     "YE27E": 175
+    }
+   },
+   "unit": "物件（MW）",
+   "ref": [
+    "site.mtl1",
+    "site.mtl2",
+    "site.mtl3",
+    "site.nc1",
+    "site.nc1.gross2it",
+    "site.iceland",
+    "site.sydney",
+    "site.nc23",
+    "site.krambu",
+    "site.totalGross"
+   ],
+   "mapTo": "scenarios.mwPath（託管 MW 分部，新欄位）；毛→IT 用 PUE（MTL-3 1.3；NC-1 第一期 54／40＝1.35）"
+  },
+  "contracts": {
+   "value": {
+    "colo": {
+     "nscale": {
+      "tcv": 865.0,
+      "years": 10,
+      "mwIT": 40,
+      "escalator": 0.03,
+      "perMWitAvg": 2.163,
+      "perMWitY1": 1.886,
+      "passThrough": "電費、PUE、地產稅",
+      "billing": "2026Q3 起（8 月底全額）"
+     },
+     "cerebras": {
+      "annual": 11.75,
+      "mwIT": 5,
+      "perMWit": 2.35,
+      "years": 5,
+      "start": "2025-11"
+     }
+    },
+    "cloud": {
+     "baseten": {
+      "tcv": 165.2,
+      "years": 3,
+      "gpus": 1392,
+      "gpu": "B300",
+      "start": "2026-11",
+      "perMWit": 19.27
+     },
+     "primeVR200": {
+      "tcv": 108.2,
+      "years": 3,
+      "gpus": 576,
+      "gpu": "VR200",
+      "start": "2027Q2",
+      "perMWit": 18.27
+     },
+     "icelandB300": {
+      "tcv": 87.5,
+      "years": 5,
+      "gpus": 576,
+      "gpu": "B300",
+      "start": "2026-12",
+      "perMWit": 14.8
+     },
+     "paris": {
+      "tcv": ">160",
+      "years": 5,
+      "gpus": null,
+      "start": "2026-09-30",
+      "prepayMonths": 12
+     },
+     "b300_128": {
+      "tcv": 16.0,
+      "years": 3,
+      "gpus": 128,
+      "perMWit": 20.29
+     },
+     "hyperbolic": {
+      "tcv": 17.0,
+      "years": 2,
+      "start": "2026-06"
+     },
+     "h100_2048": {
+      "tcv": 50.2,
+      "years": 2,
+      "perMWit": 8.8
+     }
+    },
+    "concentration": {
+     "largest1H26": 0.63
+    }
+   },
+   "unit": "物件",
+   "ref": [
+    "ct.nscale",
+    "ct.nscale.perMW",
+    "ct.cerebras.perMW",
+    "ct.baseten",
+    "ct.primeVR",
+    "ct.icelandB300",
+    "ct.paris",
+    "ct.b300_128",
+    "ct.hyperbolic",
+    "ct.h100_2048",
+    "ct.concentration.1H26"
+   ],
+   "mapTo": "託管：新欄位（已簽約排程＝合約事實，可作輸入，對照表 r1 第 4 節第 4 條）；雲端：只作對照列與敏感度（雲端 MW 由合約 GPU 數換算 IT MW，[Derived]）；texts.concentration"
+  },
+  "perMw": {
+   "value": {
+    "cloud": {
+     "保守": 11.62,
+     "基準": 17.4,
+     "積極": 24.2
+    },
+    "tokenomics": "v5.26（I7:N15 與 v5.24 相同，未重算）",
+    "compare": {
+     "q2Recurring": 8.37,
+     "newContractsAvg": 18.2
+    },
+    "kwPerGpuIT": {
+     "H100": 1.393,
+     "GB200": 1.993,
+     "GB300": 2.053,
+     "VR200": 3.428
+    }
+   },
+   "unit": "物件（USD M／MW-IT·年；kW）",
+   "ref": [
+    "pm.a.perMW",
+    "pm.b.contracts"
+   ],
+   "mapTo": "scenarios.revMW（÷1000 → US$bn／MW）"
+  },
+  "colo": {
+   "value": {
+    "rentRange": {
+     "low": 1.45,
+     "mid": 1.85,
+     "high": 2.35
+    },
+    "escalator": 0.03,
+    "buildCostPerMWit": {
+     "low": 9.0,
+     "mid": 11.5,
+     "high": 13.5
+    },
+    "buildingLifeYears": {
+     "default": 20,
+     "10K": 30,
+     "10Q": "20–25",
+     "range": [
+      15,
+      30
+     ]
+    },
+    "coloEquipLife": "10–15",
+    "coloGm": 0.632
+   },
+   "unit": "物件（USD M／MW-IT；年）",
+   "ref": [
+    "colo.range",
+    "build.range",
+    "dep.building.10K",
+    "dep.building.10Q",
+    "dep.coloEquip",
+    "is.recurring.coloGm.2026Q2"
+   ],
+   "mapTo": "新欄位（託管分部：未簽約擴建租金＝區間中點 1.85、建置成本 11.5／MW-IT、建物折舊 20 年 [對照表預設]）"
+  },
+  "prepay": {
+   "value": {
+    "deferredRevenue0630": 143.11,
+    "prepayIn1H26": 72.6,
+    "parisPrepayMonths": 12,
+    "customerDepositsLT": 6.279
+   },
+   "unit": "物件（USD M）",
+   "ref": [
+    "bs.defRev.2026Q2",
+    "cf.prepayIn.2026H1",
+    "ct.paris",
+    "bs.custDepositLT.2026Q2"
+   ],
+   "mapTo": "defaults.prepay.openBalance（143.1）；覆蓋比與認列年數 v0.1b 定（未分託管／雲端）"
+  },
+  "valuation": {
+   "value": {
+    "price": 16.83,
+    "priceDate": "2026-10-07",
+    "shares": 45.119652,
+    "mktCap": 759.4,
+    "rf": 0.0527,
+    "erp": 0.05,
+    "beta": {
+     "default": 2.5,
+     "range": [
+      1.5,
+      3.5
+     ],
+     "observed": {
+      "eToro": 4.76,
+      "FFFinstill": 4.77,
+      "Snowball": 0.84
+     }
+    },
+    "ke": 0.1777,
+    "kdPreTax": {
+     "default": 0.095,
+     "range": [
+      0.079,
+      0.106
+     ]
+    },
+    "g": 0.03,
+    "evEbitda": {
+     "colo": 20.7,
+     "coloLow": 15.0,
+     "cloud": 6.0,
+     "peers": {
+      "DLR": 20.4,
+      "EQIX": 21.1
+     }
+    }
+   },
+   "unit": "物件",
+   "ref": [
+    "mkt.price.close",
+    "mkt.mktcap",
+    "val.ust10",
+    "val.beta.default",
+    "val.capm.ke",
+    "val.kd.default",
+    "val.peer.coloDefault",
+    "val.peer.cloudDefault"
+   ],
+   "mapTo": "valuation.price／shares／rf／capm／wacc／evEbitda（分部）；netDebt 由 v0.1b 依結構計算"
+  },
+  "consensus": {
+   "value": {
+    "file": "data/consensus_wyfi_20261008.json",
+    "ptMean": 38.0,
+    "ptRange": [
+     32.0,
+     50.0
+    ],
+    "analysts": 11,
+    "revenue": {
+     "FY2026": 137,
+     "FY2027": 296,
+     "FY2028": 530
+    },
+    "ebitda": null
+   },
+   "unit": "物件（US$；USD M）",
+   "ref": [
+    "cons.pt.marketbeat",
+    "cons.est.sws",
+    "cons.ebitda"
+   ],
+   "mapTo": "meta.consensusFile＝data/consensus_wyfi_20261008.json（v0.1b 換檔並依日曆年改共識年度鍵）"
+  },
+  "guidance": {
+   "value": {
+    "cloudAnnualizedTarget": ">200（全部部署後）",
+    "grossMwYE26": 70,
+    "grossMwYE27": 175,
+    "mw2027Add": ">100",
+    "formalGuidance": null
+   },
+   "unit": "物件",
+   "ref": [
+    "guide.cloudAnnualized",
+    "guide.gwOnline",
+    "guide.100mw2027",
+    "guide.none"
+   ],
+   "mapTo": "callFacts（只作對照；不作模型輸入）"
+  }
  }
 }

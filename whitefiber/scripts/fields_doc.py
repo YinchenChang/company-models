@@ -301,6 +301,28 @@ F = [
  ('oracle.perMw', 'Oracle 每 MW 年收入三情境（沿用 Nebius 的 Tokenomics 推導）、EBITDA 率、伺服器壽命草稿；格式同上', '物件', M),
  ('oracle.openai', 'Oracle–OpenAI 合約年額、隱含每 MW、OpenAI 計畫算力支出（只作對照）；格式同上', '物件', M),
  ('oracle.events', 'Oracle 評價日後事件（Project Jupiter 不可抗力通知）；格式同上', '物件', M),
+ # WhiteFiber v0.1a：公司專屬資料草稿（引擎尚未讀取；v0.1b 依各欄 mapTo 搬到既有欄位或新增）
+ ('whitefiber._readme', 'WhiteFiber 資料草稿區段的說明（v0.1a 產出；引擎尚未讀取，v0.1b 依 mapTo 搬入既有欄位或新增；金額 USD M）', '文字', M),
+ ('whitefiber.files', 'WhiteFiber 事實總帳、每 MW 推導、共識資料檔的路徑與 SEC CIK', '物件（路徑）', M),
+ ('whitefiber.calendar', 'WhiteFiber 日曆草稿（12 月財年、最新已申報季 2026Q2、首期 0.5 年）；每欄 value＋unit＋ref（總帳 id）＋mapTo', '物件', M),
+ ('whitefiber.ytdActual', 'WhiteFiber 1H26 實際數草稿（營收分線、成本、D&A、利息、淨損、調整後 EBITDA、營運現金流、資本支出、預付、融資）；格式同上', '物件', M),
+ ('whitefiber.historicalPL', 'WhiteFiber FY2024–FY2025 年度損益與現金流草稿（10-K 查核數）；格式同上', '物件', M),
+ ('whitefiber.quarters', 'WhiteFiber 2025Q2–2026Q2 季度營收分線與調整後 EBITDA 草稿（2025Q4 為 FY−9M 推得）；格式同上', '物件', M),
+ ('whitefiber.latestQuarter', 'WhiteFiber 2026 Q2 財報數字草稿（10-Q）；格式同上', '物件', M),
+ ('whitefiber.onetime', 'WhiteFiber 2026 Q2 一次性項目（終止費、GPU 租賃終止成本、呆帳）與扣除後的經常性數字（首期校準用）；格式同上', '物件', M),
+ ('whitefiber.balance', 'WhiteFiber 2026-06-30 資產負債草稿（現金、PP&E、在建工程、遞延營收、客戶押金、權益）；格式同上', '物件', M),
+ ('whitefiber.debt', 'WhiteFiber 債務草稿（2031／2032 可轉債條款、零履約價買權、Bit Digital DDTL、冰島貸款、RBC 聯貸、NC-1／巴黎專案融資狀態）；格式同上', '物件', M),
+ ('whitefiber.shares', 'WhiteFiber 股數草稿（季末、交換後、Bit Digital 持股、RSU、可轉債轉換股數、零履約價買權收回股數）；格式同上', '物件', M),
+ ('whitefiber.leases', 'WhiteFiber 租賃草稿（營業租賃負債與到期表、GPU 變動租金、未起租雪梨租約）；格式同上', '物件', M),
+ ('whitefiber.rpo', 'WhiteFiber RPO 草稿（託管與雲端依年度、6/30 後新簽雲端合約）；格式同上', '物件', M),
+ ('whitefiber.mw', 'WhiteFiber 逐站點 MW 草稿（毛／IT 分列、狀態、自有或承租、PUE）；格式同上', '物件', M),
+ ('whitefiber.contracts', 'WhiteFiber 合約草稿（託管：Nscale、Cerebras；雲端：Baseten、Prime Intellect、冰島、巴黎等；隱含每 MW-IT 年營收只作對照）；格式同上', '物件', M),
+ ('whitefiber.perMw', 'WhiteFiber 雲端每 MW-IT 年收入三情境（Tokenomics v5.26，與 v5.24 相同）、對照值、每顆 GPU IT kW；格式同上', '物件', M),
+ ('whitefiber.colo', 'WhiteFiber 託管分部草稿（可比租金區間、年調、每 MW-IT 建置成本區間、建物與設備折舊年限、託管毛利率）；格式同上', '物件', M),
+ ('whitefiber.prepay', 'WhiteFiber 預付草稿（遞延營收、1H26 預付流入、巴黎 12 個月預付、客戶押金）；格式同上', '物件', M),
+ ('whitefiber.valuation', 'WhiteFiber 評價輸入草稿（股價、股數、市值、無風險利率、ERP、beta 預設與觀察值、股權與債務成本、g、分部 EV/EBITDA）；格式同上', '物件', M),
+ ('whitefiber.consensus', 'WhiteFiber 市場共識摘要與共識檔路徑；格式同上', '物件', M),
+ ('whitefiber.guidance', 'WhiteFiber 公司目標（雲端年化 >200、毛 MW 上線目標；無正式指引；只作對照）；格式同上', '物件', M),
 ]
 LQ = {
  'filed': ('申報日', '日期'), 'periodEnd': ('季末日', '日期'), 'revenue': ('當季營收', 'US$bn'), 'yoy': ('當季營收年增率', '比例'),
@@ -386,7 +408,7 @@ SECT = [('meta', '基本資料'), ('calendar', '期間與日期（v4.5）'), ('a
         ('rpo', '已簽約未認列營收（RPO）'), ('leases', '租約'), ('debt', '既有債務'), ('latestQuarter', '最新一季財報數字（10-Q）'),
         ('callFacts', '法說會與期後事項'), ('scenarios', '三個擴張情境'), ('legacy', '舊版對照值'),
         ('defaults', '預設假設（畫面上可調的輸入）'), ('valuation', '評價參數'), ('methodology', '評價方法與評等門檻'), ('peers', '同業比較（Comps）'),
-        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('oracle', 'Oracle 資料草稿（v0.1a；v0.1b 逐步搬入，只留後續步驟用或只作對照的欄位）')]
+        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('oracle', 'Oracle 資料草稿（v0.1a；v0.1b 逐步搬入，只留後續步驟用或只作對照的欄位）'), ('whitefiber', 'WhiteFiber 資料草稿（v0.1a；v0.1b 依 mapTo 搬入）')]
 out, shown = ['**填表慣例**',
                '- 金額單位是**十億美元（US$bn）**，例如 4.653 代表 46.53 億美元；另有標示的例外：每股（US$）、每 MW 建置成本（百萬美元／MW，US$m/MW）、股數（十億股，bn）。',
                '- 「比例」寫成小數（0.25＝25%）；標示「%」的欄位寫成百分點（25＝25%）。兩種寫法沿用既有程式，不可混用。',
