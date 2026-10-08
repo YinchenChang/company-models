@@ -1,0 +1,38 @@
+# HTML 一頁摘要的敏感度情境（Z5／Z5b r2；沿用 tools/sensitivity_r2.yaml 的設定）。
+# 只定義「改哪些輸入格」，不含數值參數：值一律取自 Excel（Inputs 低／高欄），
+# 翻轉點取自 docs/reports/20261008_v0.1-r2_敏感度.json（tools/sensitivity_z4.py --yaml tools/sensitivity_r2.yaml，以 engine 執行 Excel 二分搜尋的結果）。
+# 覆寫寫法（鍵＝INP_nnn 或 SRC_ZP_nnn 具名範圍）：
+#   lo / hi          → 該 Inputs 列的「低」「高」欄
+#   {flip: f_xxx}    → 敏感度 JSON flips[id＝f_xxx].value
+#   0                → 歸零（只用於「只計部分已到位融資」情境：把該筆 SRC_ZP 融資淨額設為 0）
+# 計算一律由 Excel 執行：build_html.py 以 LibreOffice 重算；tests/test_html.py 以 engine（pycel）重算比對。
+flips_json: docs/reports/20261008_v0.1-r2_敏感度.json
+
+scenarios:
+  base: {label: 基準, set: {}}
+  # 三個關鍵驅動（依 2030 差額擺幅）
+  rd_05: {label: 研發占比線性降至 2030＝0.5（INP_120＝1）, set: {INP_120: hi}}
+  rd_03: {label: 研發占比線性降至 2030＝0.3（INP_120＝1、INP_110 低欄）, set: {INP_120: hi, INP_110: lo}}
+  px_m25: {label: 每 GW 價格每年 −25%（INP_100 低欄）, set: {INP_100: lo}}
+  px_0: {label: 每 GW 價格不變（INP_100 高欄）, set: {INP_100: hi}}
+  util_hi: {label: Coding Plan 額度使用率取高（INP_060 高欄）, set: {INP_060: hi}}
+  util_lo: {label: Coding Plan 額度使用率取低（INP_060 低欄）, set: {INP_060: lo}}
+  rd_px: {label: 研發 0.5＋價格 −25%, set: {INP_120: hi, INP_100: lo}}
+  # 其他重要預設
+  task_lo: {label: 2H26 任務數成長取低（INP_038 低欄）, set: {INP_038: lo}}
+  task_hi: {label: 2H26 任務數成長取高（INP_038 高欄）, set: {INP_038: hi}}
+  eta_conv: {label: η 線性收斂至 2030＝1（INP_105＝1）, set: {INP_105: hi}}
+  dc1gw: {label: 1 GW 國產資料中心（INP_112＝1）, set: {INP_112: hi}}
+  mgm_hi: {label: 供應商最低毛利取高（INP_136 高欄；Z5b V1）, set: {INP_136: hi}}
+  stress: {label: 壓力組合：η 收斂＋1 GW＋價格不變＋員工年增取高, set: {INP_105: hi, INP_112: hi, INP_100: hi, INP_117: hi}}
+  # 已到位融資的子集合（回答「2026-07 配售後現金可撐到哪一年」）
+  only_pl1: {label: 只計 IPO＋2026-07 配售, set: {SRC_ZP_544: 0, SRC_ZP_547: 0, SRC_ZP_545: 0}}
+  ipo_only: {label: 只計 IPO, set: {SRC_ZP_536: 0, SRC_ZP_544: 0, SRC_ZP_547: 0, SRC_ZP_545: 0}}
+  # 翻轉點（Z5b r2，V1 後重算）
+  # 命題 1（2030 每 VR 等值 GW 差額＝0）：只有研發占比存在翻轉點；每 GW 價格（租價下限）與 2H26 任務成長在搜尋範圍內不存在
+  flip_rd: {label: 翻轉點：研發占比 2030 目標（命題 1）, set: {INP_120: hi, INP_110: {flip: f_rd}}}
+  flip_util: {label: 只列：Coding Plan 額度使用率（η 同步重校準的假象，不列入翻轉點）, set: {INP_060: {flip: f_util}}}
+  # 命題 2（2030 前累計外部資金需求＝0）
+  flip_rd_ext: {label: 翻轉點：研發占比 2030 目標（命題 2）, set: {INP_120: hi, INP_110: {flip: f_rd_ext}}}
+  flip_task_ext: {label: 翻轉點：2H26 任務數成長（命題 2）, set: {INP_038: {flip: f_task_ext}}}
+  flip_mgm_ext: {label: 翻轉點：供應商最低毛利（命題 2；負值＝供應商願意小幅賠本）, set: {INP_136: {flip: f_mgm_ext}}}

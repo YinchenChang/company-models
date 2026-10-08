@@ -1,0 +1,4075 @@
+items:
+- key: px_usd_glm53_in
+  group: B
+  metric: GLM-5.3 國際站牌價（輸入）
+  value: 1.4
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5.3：Input $1.4／Cached Input $0.26／Output $4.4；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm53_cache
+  group: B
+  metric: GLM-5.3 國際站牌價（快取命中輸入）
+  value: 0.26
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5.3：Input $1.4／Cached Input $0.26／Output $4.4；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm53_out
+  group: B
+  metric: GLM-5.3 國際站牌價（輸出）
+  value: 4.4
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5.3：Input $1.4／Cached Input $0.26／Output $4.4；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm52_in
+  group: B
+  metric: GLM-5.2 國際站牌價（輸入）
+  value: 1.4
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5.2：Input $1.4／Cached Input $0.26／Output $4.4；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm52_cache
+  group: B
+  metric: GLM-5.2 國際站牌價（快取命中輸入）
+  value: 0.26
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5.2：Input $1.4／Cached Input $0.26／Output $4.4；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm52_out
+  group: B
+  metric: GLM-5.2 國際站牌價（輸出）
+  value: 4.4
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5.2：Input $1.4／Cached Input $0.26／Output $4.4；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm51_in
+  group: B
+  metric: GLM-5.1 國際站牌價（輸入）
+  value: 1.4
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5.1：Input $1.4／Cached Input $0.26／Output $4.4；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm51_cache
+  group: B
+  metric: GLM-5.1 國際站牌價（快取命中輸入）
+  value: 0.26
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5.1：Input $1.4／Cached Input $0.26／Output $4.4；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm51_out
+  group: B
+  metric: GLM-5.1 國際站牌價（輸出）
+  value: 4.4
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5.1：Input $1.4／Cached Input $0.26／Output $4.4；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm5_in
+  group: B
+  metric: GLM-5 國際站牌價（輸入）
+  value: 1.0
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5：Input $1.0／Cached Input $0.2／Output $3.2；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm5_cache
+  group: B
+  metric: GLM-5 國際站牌價（快取命中輸入）
+  value: 0.2
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5：Input $1.0／Cached Input $0.2／Output $3.2；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm5_out
+  group: B
+  metric: GLM-5 國際站牌價（輸出）
+  value: 3.2
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5：Input $1.0／Cached Input $0.2／Output $3.2；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm47_in
+  group: B
+  metric: GLM-4.7 國際站牌價（輸入）
+  value: 0.6
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.7：Input $0.6／Cached Input $0.11／Output $2.2；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm47_cache
+  group: B
+  metric: GLM-4.7 國際站牌價（快取命中輸入）
+  value: 0.11
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.7：Input $0.6／Cached Input $0.11／Output $2.2；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm47_out
+  group: B
+  metric: GLM-4.7 國際站牌價（輸出）
+  value: 2.2
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.7：Input $0.6／Cached Input $0.11／Output $2.2；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm46_in
+  group: B
+  metric: GLM-4.6 國際站牌價（輸入）
+  value: 0.6
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.6：Input $0.6／Cached Input $0.11／Output $2.2；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm46_cache
+  group: B
+  metric: GLM-4.6 國際站牌價（快取命中輸入）
+  value: 0.11
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.6：Input $0.6／Cached Input $0.11／Output $2.2；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm46_out
+  group: B
+  metric: GLM-4.6 國際站牌價（輸出）
+  value: 2.2
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.6：Input $0.6／Cached Input $0.11／Output $2.2；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm45_in
+  group: B
+  metric: GLM-4.5 國際站牌價（輸入）
+  value: 0.6
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.5：Input $0.6／Cached Input $0.11／Output $2.2；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm45_cache
+  group: B
+  metric: GLM-4.5 國際站牌價（快取命中輸入）
+  value: 0.11
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.5：Input $0.6／Cached Input $0.11／Output $2.2；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm45_out
+  group: B
+  metric: GLM-4.5 國際站牌價（輸出）
+  value: 2.2
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.5：Input $0.6／Cached Input $0.11／Output $2.2；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm45x_in
+  group: B
+  metric: GLM-4.5-X 國際站牌價（輸入）
+  value: 2.2
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.5-X：Input $2.2／Cached Input $0.45／Output $8.9；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm45x_cache
+  group: B
+  metric: GLM-4.5-X 國際站牌價（快取命中輸入）
+  value: 0.45
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.5-X：Input $2.2／Cached Input $0.45／Output $8.9；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm45x_out
+  group: B
+  metric: GLM-4.5-X 國際站牌價（輸出）
+  value: 8.9
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.5-X：Input $2.2／Cached Input $0.45／Output $8.9；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm45air_in
+  group: B
+  metric: GLM-4.5-Air 國際站牌價（輸入）
+  value: 0.2
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.5-Air：Input $0.2／Cached Input $0.03／Output $1.1；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm45air_cache
+  group: B
+  metric: GLM-4.5-Air 國際站牌價（快取命中輸入）
+  value: 0.03
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.5-Air：Input $0.2／Cached Input $0.03／Output $1.1；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm45air_out
+  group: B
+  metric: GLM-4.5-Air 國際站牌價（輸出）
+  value: 1.1
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.5-Air：Input $0.2／Cached Input $0.03／Output $1.1；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm45airx_in
+  group: B
+  metric: GLM-4.5-AirX 國際站牌價（輸入）
+  value: 1.1
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.5-AirX：Input $1.1／Cached Input $0.22／Output $4.5；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm45airx_cache
+  group: B
+  metric: GLM-4.5-AirX 國際站牌價（快取命中輸入）
+  value: 0.22
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.5-AirX：Input $1.1／Cached Input $0.22／Output $4.5；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm45airx_out
+  group: B
+  metric: GLM-4.5-AirX 國際站牌價（輸出）
+  value: 4.5
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.5-AirX：Input $1.1／Cached Input $0.22／Output $4.5；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm53flash_in
+  group: B
+  metric: GLM-5.3-Flash 國際站牌價（輸入）
+  value: 0.15
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5.3-Flash：Input $0.15／Cached Input $0.03／Output $0.5；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm53flash_cache
+  group: B
+  metric: GLM-5.3-Flash 國際站牌價（快取命中輸入）
+  value: 0.03
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5.3-Flash：Input $0.15／Cached Input $0.03／Output $0.5；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm53flash_out
+  group: B
+  metric: GLM-5.3-Flash 國際站牌價（輸出）
+  value: 0.5
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5.3-Flash：Input $0.15／Cached Input $0.03／Output $0.5；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm53flashx_in
+  group: B
+  metric: GLM-5.3-FlashX 國際站牌價（輸入）
+  value: 0.37
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5.3-FlashX：Input $0.37／Cached Input $0.075／Output $1.25；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm53flashx_cache
+  group: B
+  metric: GLM-5.3-FlashX 國際站牌價（快取命中輸入）
+  value: 0.075
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5.3-FlashX：Input $0.37／Cached Input $0.075／Output $1.25；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm53flashx_out
+  group: B
+  metric: GLM-5.3-FlashX 國際站牌價（輸出）
+  value: 1.25
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-5.3-FlashX：Input $0.37／Cached Input $0.075／Output $1.25；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm47flashx_in
+  group: B
+  metric: GLM-4.7-FlashX 國際站牌價（輸入）
+  value: 0.07
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.7-FlashX：Input $0.07／Cached Input $0.01／Output $0.4；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm47flashx_cache
+  group: B
+  metric: GLM-4.7-FlashX 國際站牌價（快取命中輸入）
+  value: 0.01
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.7-FlashX：Input $0.07／Cached Input $0.01／Output $0.4；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_glm47flashx_out
+  group: B
+  metric: GLM-4.7-FlashX 國際站牌價（輸出）
+  value: 0.4
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.7-FlashX：Input $0.07／Cached Input $0.01／Output $0.4；快取儲存「Limited-time free」；無長度分段
+- key: px_usd_free_flash
+  group: B
+  metric: 國際站免費模型
+  value: 0
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 GLM-4.7-Flash、GLM-4.5-Flash、GLM-4.6V-Flash 輸入／輸出皆「Free」
+- key: px_usd_websearch
+  group: B
+  metric: 國際站內建 Web Search 單價
+  value: 0.01
+  lo: null
+  hi: null
+  unit: USD／次
+  period: 2026-10（現行）
+  source: Z.ai 開發者文件 Pricing 頁（國際站官方牌價）
+  url: https://docs.z.ai/guides/overview/pricing.md
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 官方表列 Web Search $0.01 per use
+- key: px_usd_glm5turbo_in
+  group: B
+  metric: GLM-5-Turbo 國際站牌價（輸入）
+  value: 1.2
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-07-22 擷取
+  source: UsagePricing〈Zhipu AI 2026-07-22 price change〉（官方 API 文件截圖）
+  url: https://usagepricing.com/blueprint/activity/zhipu-ai-2026-07-22-price-change
+  doc_date: '2026-07-22'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方 API 頁截圖：GLM-5-Turbo $1.2 input／$4.0 output；現行 docs.z.ai 定價頁已未列此型號
+- key: px_usd_glm5turbo_out
+  group: B
+  metric: GLM-5-Turbo 國際站牌價（輸出）
+  value: 4.0
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: 2026-07-22 擷取
+  source: UsagePricing〈Zhipu AI 2026-07-22 price change〉（官方 API 文件截圖）
+  url: https://usagepricing.com/blueprint/activity/zhipu-ai-2026-07-22-price-change
+  doc_date: '2026-07-22'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 同上
+- key: px_rmb_glm53_in
+  group: B
+  metric: GLM-5.3 開放平台牌價（1M 全量（不分段），輸入）
+  value: 8
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5.3 1M 全量（不分段）：輸入 8／快取 2／輸出 28；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm53_cache
+  group: B
+  metric: GLM-5.3 開放平台牌價（1M 全量（不分段），快取命中）
+  value: 2
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5.3 1M 全量（不分段）：輸入 8／快取 2／輸出 28；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm53_out
+  group: B
+  metric: GLM-5.3 開放平台牌價（1M 全量（不分段），輸出）
+  value: 28
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5.3 1M 全量（不分段）：輸入 8／快取 2／輸出 28；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm52_in
+  group: B
+  metric: GLM-5.2 開放平台牌價（1M 全量（不分段），輸入）
+  value: 8
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5.2 1M 全量（不分段）：輸入 8／快取 2／輸出 28；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm52_cache
+  group: B
+  metric: GLM-5.2 開放平台牌價（1M 全量（不分段），快取命中）
+  value: 2
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5.2 1M 全量（不分段）：輸入 8／快取 2／輸出 28；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm52_out
+  group: B
+  metric: GLM-5.2 開放平台牌價（1M 全量（不分段），輸出）
+  value: 28
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5.2 1M 全量（不分段）：輸入 8／快取 2／輸出 28；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm51_lt32k_in
+  group: B
+  metric: GLM-5.1 開放平台牌價（輸入 <32K，輸入）
+  value: 6
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5.1 輸入 <32K：輸入 6／快取 1.3／輸出 24；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm51_lt32k_cache
+  group: B
+  metric: GLM-5.1 開放平台牌價（輸入 <32K，快取命中）
+  value: 1.3
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5.1 輸入 <32K：輸入 6／快取 1.3／輸出 24；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm51_lt32k_out
+  group: B
+  metric: GLM-5.1 開放平台牌價（輸入 <32K，輸出）
+  value: 24
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5.1 輸入 <32K：輸入 6／快取 1.3／輸出 24；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm51_ge32k_in
+  group: B
+  metric: GLM-5.1 開放平台牌價（輸入 ≥32K，輸入）
+  value: 8
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5.1 輸入 ≥32K：輸入 8／快取 2／輸出 28；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm51_ge32k_cache
+  group: B
+  metric: GLM-5.1 開放平台牌價（輸入 ≥32K，快取命中）
+  value: 2
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5.1 輸入 ≥32K：輸入 8／快取 2／輸出 28；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm51_ge32k_out
+  group: B
+  metric: GLM-5.1 開放平台牌價（輸入 ≥32K，輸出）
+  value: 28
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5.1 輸入 ≥32K：輸入 8／快取 2／輸出 28；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm5turbo_lt32k_in
+  group: B
+  metric: GLM-5-Turbo 開放平台牌價（輸入 <32K，輸入）
+  value: 5
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5-Turbo 輸入 <32K：輸入 5／快取 1.2／輸出 22；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm5turbo_lt32k_cache
+  group: B
+  metric: GLM-5-Turbo 開放平台牌價（輸入 <32K，快取命中）
+  value: 1.2
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5-Turbo 輸入 <32K：輸入 5／快取 1.2／輸出 22；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm5turbo_lt32k_out
+  group: B
+  metric: GLM-5-Turbo 開放平台牌價（輸入 <32K，輸出）
+  value: 22
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5-Turbo 輸入 <32K：輸入 5／快取 1.2／輸出 22；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm5turbo_ge32k_in
+  group: B
+  metric: GLM-5-Turbo 開放平台牌價（輸入 ≥32K，輸入）
+  value: 7
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5-Turbo 輸入 ≥32K：輸入 7／快取 1.8／輸出 26；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm5turbo_ge32k_cache
+  group: B
+  metric: GLM-5-Turbo 開放平台牌價（輸入 ≥32K，快取命中）
+  value: 1.8
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5-Turbo 輸入 ≥32K：輸入 7／快取 1.8／輸出 26；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm5turbo_ge32k_out
+  group: B
+  metric: GLM-5-Turbo 開放平台牌價（輸入 ≥32K，輸出）
+  value: 26
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5-Turbo 輸入 ≥32K：輸入 7／快取 1.8／輸出 26；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm5_lt32k_in
+  group: B
+  metric: GLM-5 開放平台牌價（輸入 <32K，輸入）
+  value: 4
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5 輸入 <32K：輸入 4／快取 1／輸出 18；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm5_lt32k_cache
+  group: B
+  metric: GLM-5 開放平台牌價（輸入 <32K，快取命中）
+  value: 1
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5 輸入 <32K：輸入 4／快取 1／輸出 18；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm5_lt32k_out
+  group: B
+  metric: GLM-5 開放平台牌價（輸入 <32K，輸出）
+  value: 18
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5 輸入 <32K：輸入 4／快取 1／輸出 18；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm5_ge32k_in
+  group: B
+  metric: GLM-5 開放平台牌價（輸入 ≥32K，輸入）
+  value: 6
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5 輸入 ≥32K：輸入 6／快取 1.5／輸出 22；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm5_ge32k_cache
+  group: B
+  metric: GLM-5 開放平台牌價（輸入 ≥32K，快取命中）
+  value: 1.5
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5 輸入 ≥32K：輸入 6／快取 1.5／輸出 22；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm5_ge32k_out
+  group: B
+  metric: GLM-5 開放平台牌價（輸入 ≥32K，輸出）
+  value: 22
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5 輸入 ≥32K：輸入 6／快取 1.5／輸出 22；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm47_short_in
+  group: B
+  metric: GLM-4.7 開放平台牌價（輸入 <32K 且輸出 <0.2K，輸入）
+  value: 2
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.7 輸入 <32K 且輸出 <0.2K：輸入 2／快取 0.4／輸出 8；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm47_short_cache
+  group: B
+  metric: GLM-4.7 開放平台牌價（輸入 <32K 且輸出 <0.2K，快取命中）
+  value: 0.4
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.7 輸入 <32K 且輸出 <0.2K：輸入 2／快取 0.4／輸出 8；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm47_short_out
+  group: B
+  metric: GLM-4.7 開放平台牌價（輸入 <32K 且輸出 <0.2K，輸出）
+  value: 8
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.7 輸入 <32K 且輸出 <0.2K：輸入 2／快取 0.4／輸出 8；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm47_long_out_in
+  group: B
+  metric: GLM-4.7 開放平台牌價（輸入 <32K 且輸出 ≥0.2K，輸入）
+  value: 3
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.7 輸入 <32K 且輸出 ≥0.2K：輸入 3／快取 0.6／輸出 14；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm47_long_out_cache
+  group: B
+  metric: GLM-4.7 開放平台牌價（輸入 <32K 且輸出 ≥0.2K，快取命中）
+  value: 0.6
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.7 輸入 <32K 且輸出 ≥0.2K：輸入 3／快取 0.6／輸出 14；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm47_long_out_out
+  group: B
+  metric: GLM-4.7 開放平台牌價（輸入 <32K 且輸出 ≥0.2K，輸出）
+  value: 14
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.7 輸入 <32K 且輸出 ≥0.2K：輸入 3／快取 0.6／輸出 14；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm47_32k200k_in
+  group: B
+  metric: GLM-4.7 開放平台牌價（輸入 32K–200K，輸入）
+  value: 4
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.7 輸入 32K–200K：輸入 4／快取 0.8／輸出 16；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm47_32k200k_cache
+  group: B
+  metric: GLM-4.7 開放平台牌價（輸入 32K–200K，快取命中）
+  value: 0.8
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.7 輸入 32K–200K：輸入 4／快取 0.8／輸出 16；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm47_32k200k_out
+  group: B
+  metric: GLM-4.7 開放平台牌價（輸入 32K–200K，輸出）
+  value: 16
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.7 輸入 32K–200K：輸入 4／快取 0.8／輸出 16；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm45air_short_in
+  group: B
+  metric: GLM-4.5-Air 開放平台牌價（輸入 <32K 且輸出 <0.2K，輸入）
+  value: 0.8
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.5-Air 輸入 <32K 且輸出 <0.2K：輸入 0.8／快取 0.16／輸出 2；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm45air_short_cache
+  group: B
+  metric: GLM-4.5-Air 開放平台牌價（輸入 <32K 且輸出 <0.2K，快取命中）
+  value: 0.16
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.5-Air 輸入 <32K 且輸出 <0.2K：輸入 0.8／快取 0.16／輸出 2；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm45air_short_out
+  group: B
+  metric: GLM-4.5-Air 開放平台牌價（輸入 <32K 且輸出 <0.2K，輸出）
+  value: 2
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.5-Air 輸入 <32K 且輸出 <0.2K：輸入 0.8／快取 0.16／輸出 2；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm45air_long_out_in
+  group: B
+  metric: GLM-4.5-Air 開放平台牌價（輸入 <32K 且輸出 ≥0.2K，輸入）
+  value: 0.8
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.5-Air 輸入 <32K 且輸出 ≥0.2K：輸入 0.8／快取 0.16／輸出 6；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm45air_long_out_cache
+  group: B
+  metric: GLM-4.5-Air 開放平台牌價（輸入 <32K 且輸出 ≥0.2K，快取命中）
+  value: 0.16
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.5-Air 輸入 <32K 且輸出 ≥0.2K：輸入 0.8／快取 0.16／輸出 6；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm45air_long_out_out
+  group: B
+  metric: GLM-4.5-Air 開放平台牌價（輸入 <32K 且輸出 ≥0.2K，輸出）
+  value: 6
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.5-Air 輸入 <32K 且輸出 ≥0.2K：輸入 0.8／快取 0.16／輸出 6；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm45air_32k128k_in
+  group: B
+  metric: GLM-4.5-Air 開放平台牌價（輸入 32K–128K，輸入）
+  value: 1.2
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.5-Air 輸入 32K–128K：輸入 1.2／快取 0.24／輸出 8；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm45air_32k128k_cache
+  group: B
+  metric: GLM-4.5-Air 開放平台牌價（輸入 32K–128K，快取命中）
+  value: 0.24
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.5-Air 輸入 32K–128K：輸入 1.2／快取 0.24／輸出 8；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm45air_32k128k_out
+  group: B
+  metric: GLM-4.5-Air 開放平台牌價（輸入 32K–128K，輸出）
+  value: 8
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.5-Air 輸入 32K–128K：輸入 1.2／快取 0.24／輸出 8；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm47flashx_in
+  group: B
+  metric: GLM-4.7-FlashX 開放平台牌價（200K，輸入）
+  value: 0.5
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.7-FlashX 200K：輸入 0.5／快取 0.1／輸出 3；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm47flashx_cache
+  group: B
+  metric: GLM-4.7-FlashX 開放平台牌價（200K，快取命中）
+  value: 0.1
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.7-FlashX 200K：輸入 0.5／快取 0.1／輸出 3；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm47flashx_out
+  group: B
+  metric: GLM-4.7-FlashX 開放平台牌價（200K，輸出）
+  value: 3
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-4.7-FlashX 200K：輸入 0.5／快取 0.1／輸出 3；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm53flash_in
+  group: B
+  metric: GLM-5.3-Flash 開放平台牌價（1M（原價；限時五折見 note），輸入）
+  value: 0.8
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5.3-Flash 1M（原價；限時五折見 note）：輸入 0.8／快取 0.23／輸出 2.8；限時五折 0.4／0.115／1.4；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm53flash_cache
+  group: B
+  metric: GLM-5.3-Flash 開放平台牌價（1M（原價；限時五折見 note），快取命中）
+  value: 0.23
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5.3-Flash 1M（原價；限時五折見 note）：輸入 0.8／快取 0.23／輸出 2.8；限時五折 0.4／0.115／1.4；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_glm53flash_out
+  group: B
+  metric: GLM-5.3-Flash 開放平台牌價（1M（原價；限時五折見 note），輸出）
+  value: 2.8
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08-09（GLM-5.3 系列 2026-09-28）
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 轉錄官方表 GLM-5.3-Flash 1M（原價；限時五折見 note）：輸入 0.8／快取 0.23／輸出 2.8；限時五折 0.4／0.115／1.4；官方頁需 JS 無法直讀，第三方轉錄
+- key: px_rmb_batch_discount
+  group: B
+  metric: 開放平台 Batch API 折扣
+  value: 0.5
+  lo: null
+  hi: null
+  unit: 倍（原價）
+  period: 2026-08
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 引官方說明 Batch API「只需五折費用」
+- key: px_rmb_glm47flash_free
+  group: B
+  metric: GLM-4.7-Flash 開放平台價格
+  value: 0
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2026-08
+  source: 奇連 AI〈GLM API 價格怎麼算〉（轉錄 bigmodel.cn/pricing，資料截至 2026-08-09，09-28 補 GLM-5.3）
+  url: https://iqilian.com/learn/glm-api-jifei/
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 價目表輸入／輸出／快取皆標「免費」，稱長期免費；GLM-4.5-Flash 已於 2026-01-30 下線改路由至 4.7-Flash
+- key: px_rmb_glm52_huaweicloud_in
+  group: B
+  metric: GLM-5.2 華為雲 MaaS 價（輸入，區間）
+  value: null
+  lo: 5.6
+  hi: 8.0
+  unit: RMB 元／百萬 token
+  period: 2026-10（現行）
+  source: 華為雲 ModelArts Studio MaaS GLM 頁
+  url: https://www.huaweicloud.com/product/modelarts/studio/maas-GLM.html
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 華為雲：合作方宣傳、雲平台導流誘因
+  basis: null
+  note: 頁示「推理輸入 ¥5.60 - ¥8.00 / 百萬tokens」；與 bigmodel 8 元上限一致，低端或為折扣價
+- key: px_rmb_glm52_huaweicloud_out
+  group: B
+  metric: GLM-5.2 華為雲 MaaS 價（輸出，區間）
+  value: null
+  lo: 19.6
+  hi: 28.0
+  unit: RMB 元／百萬 token
+  period: 2026-10（現行）
+  source: 華為雲 ModelArts Studio MaaS GLM 頁
+  url: https://www.huaweicloud.com/product/modelarts/studio/maas-GLM.html
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 華為雲：合作方宣傳、雲平台導流誘因
+  basis: null
+  note: 頁示「推理輸出 ¥19.60 - ¥28.00 / 百萬tokens」
+- key: px_rmb_glm45_launch_in
+  group: B
+  metric: GLM-4.5 上市時開放平台價（輸入，最低檔）
+  value: 0.8
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2025-07
+  source: 愛范兒〈智譜發布新開源模型〉
+  url: https://www.ifanr.com/1632223
+  doc_date: '2025-07-29'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 原文「輸入 0.8 元/百萬tokens」「輸出 2 元/百萬tokens」；為最低檔位價，未列長上下文檔
+- key: px_rmb_glm45_launch_out
+  group: B
+  metric: GLM-4.5 上市時開放平台價（輸出，最低檔）
+  value: 2
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: 2025-07
+  source: 愛范兒〈智譜發布新開源模型〉
+  url: https://www.ifanr.com/1632223
+  doc_date: '2025-07-29'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 同上
+- key: px_rmb_glm4plus_cut_2025
+  group: B
+  metric: GLM-4-Plus 降價後價格
+  value: 5
+  lo: null
+  hi: null
+  unit: RMB 元／百萬 token
+  period: '2025-04-24'
+  source: 愛范兒〈BigModel 進入「億」時代〉
+  url: https://www.ifanr.com/1621829
+  doc_date: '2025-04-24'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: GLM-4-Plus 降價 90%，由 50 元降至 5 元/百萬 Tokens（輸入輸出同價）；價格戰期間事件
+- key: px_usd_glm46_launch_in
+  group: B
+  metric: GLM-4.6 上市時國際站價（輸入）
+  value: 0.6
+  lo: 0.6
+  hi: 0.6
+  unit: USD／百萬 token
+  period: '2025-09-30'
+  source: TypingMind Zhipu GLM-4.6 價格頁
+  url: https://custom.typingmind.com/tools/estimate-llm-usage-costs/zhipuai/glm-4-6
+  doc_date: '2025-09-30'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 頁示 Input $0.6000、Cache read $0.11、Output $2.20，更新日 2025-09-30；第三方彙整，與現行官方表一致（即上市後未改價）
+- key: px_usd_glm5_launch_in
+  group: B
+  metric: GLM-5 上市時國際站價（輸入）
+  value: 1.0
+  lo: 1.0
+  hi: 1.0
+  unit: USD／百萬 token
+  period: '2026-02-11'
+  source: TypingMind Zhipu GLM-5 價格頁
+  url: https://custom.typingmind.com/tools/estimate-llm-usage-costs/zhipuai/glm-5
+  doc_date: '2026-02-11'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 「priced at $1.00/1M input tokens and $3.20/1M output tokens」；更新日 2026-02-11；與現行官方表一致
+- key: px_usd_glm53flash_launch
+  group: B
+  metric: GLM-5.3-Flash 上市國際站價（輸入）
+  value: 0.15
+  lo: null
+  hi: null
+  unit: USD／百萬 token
+  period: '2026-08-26'
+  source: 80AJ〈GLM-5.3-Flash 價格〉（引官方博客）
+  url: https://www.80aj.com/2026/08/26/glm-5-3-flash-price-drop/
+  doc_date: '2026-08-26'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 原文「每百萬 tokens 輸入 0.15 美元」「輸出 0.50 美元」快取「0.03 美元」；與官方表一致
+- key: pxev_api_overseas_feb2026
+  group: B
+  metric: 海外 API 呼叫價格上調幅度（2026-02-12）
+  value: null
+  lo: 67
+  hi: 100
+  unit: '%'
+  period: '2026-02-12'
+  source: AIbase〈智譜連發兩項重磅動作〉
+  url: https://www.aibase.com/zh/news/25514
+  doc_date: '2026-02-13'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體（AIbase）轉述智譜調價函；智譜誘因同上
+  basis: null
+  note: 原文「API 調用價格更是直接提升了 67%-100%」；媒體轉述，未見官方百分比；GLM-4.7 $0.6/$2.2→GLM-5 $1.0/$3.2 合 +67%/+45%
+- key: pxev_api_glm51_apr2026
+  group: B
+  metric: GLM-5.1 上線時 API 再漲幅（2026-04）
+  value: 10
+  lo: null
+  hi: null
+  unit: '%'
+  period: '2026-04-07'
+  source: 騰訊新聞（2026-04-08）
+  url: https://news.qq.com/rain/a/20260408A05BMM00
+  doc_date: '2026-04-08'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述；智譜：上市後股價誘因
+  basis: null
+  note: 原文「智譜GLM再提價10%」；另稱雲端調用價「較舊版GLM-5 Turbo上調8%至17%不等」；Wikipedia 引 SCMP 同稱 API 漲 10%
+- key: pxev_api_glm51_vs_turbo
+  group: B
+  metric: GLM-5.1 雲端調用價較 GLM-5-Turbo 漲幅
+  value: null
+  lo: 8
+  hi: 17
+  unit: '%'
+  period: 2026-04
+  source: 騰訊新聞（2026-04-08）
+  url: https://news.qq.com/rain/a/20260408A05BMM00
+  doc_date: '2026-04-08'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: null
+  note: 原文「較舊版GLM-5 Turbo上調8%至17%不等」；bigmodel 牌價 5→6、22→24、7→8、26→28 合 +8%～+20%
+- key: pxev_api_cum_feb_apr2026
+  group: B
+  metric: 2026-02～04 API 連續三次漲價累計幅度
+  value: 83
+  lo: null
+  hi: null
+  unit: '%'
+  period: 2026-02～2026-04
+  source: 虎嗅（2026-09-14）
+  url: https://m.huxiu.com/article/4890871.html
+  doc_date: '2026-09-14'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述公司數字；智譜誘因同上
+  basis: null
+  note: 原文「2026年2月到4月，智譜連續三次上調API價格，累計漲幅超過83%」；與年度業績公告 83% 同數，口徑疑為同一數
+- key: pxev_api_price_vs_ye2025
+  group: B
+  metric: API 呼叫定價較 2025 年底上升
+  value: 83
+  lo: null
+  hi: null
+  unit: '%'
+  period: 截至 2026-03
+  source: 智譜 2025 年度業績公告（截至 2025-12-31）（第 4 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「despite an 83% increase in API call pricing compared to the end of last year」；口徑：牌價或呼叫定價，非實現 ASP
+- key: pxev_api_asp_1h26
+  group: B
+  metric: API 平均售價較年初上升（中期口徑）
+  value: 101
+  lo: null
+  hi: null
+  unit: '%'
+  period: 2026-01-01→2026-06-30（或公告日）
+  source: 智譜 2026 中期業績公告（Z.AI Co., Ltd.，截至 2026-06-30 止六個月）（第 14 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「the average API selling price increased by approximately 101%」；基期「from the beginning of 2026」；實現售價口徑（收入÷token），非牌價
+- key: pxev_api_asp_1h26_b
+  group: B
+  metric: API 平均售價較年初上升（媒體中文轉述）
+  value: 101
+  lo: null
+  hi: null
+  unit: '%'
+  period: 1H2026
+  source: 科創板日報（財聯社）
+  url: https://m.cls.cn/detail/2470120
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「API平均售價提高約101%，推動該業務毛利率由負轉正至24.6%」；與公告一致
+- key: pxev_cp_cn_feb2026
+  group: B
+  metric: GLM Coding Plan（國內）結構性漲價幅度
+  value: 30
+  lo: 30
+  hi: null
+  unit: '%（下限）'
+  period: '2026-02-12'
+  source: 財聯社〈智譜：對GLM Coding Plan套餐價格進行結構性調整〉
+  url: https://m.cls.cn/detail/2287878
+  doc_date: '2026-02-12'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「整體漲幅自30%起」，生效 2026-02-12；取消首購優惠，保留包季包年折扣，「已訂閱用戶價格保持不變」
+- key: pxev_cp_ar_feb2026
+  group: B
+  metric: Coding Plan 漲價（年度業績公告口徑）
+  value: 30
+  lo: null
+  hi: null
+  unit: '%'
+  period: 2026-02
+  source: 智譜 2025 年度業績公告（截至 2025-12-31）（第 4 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「we proactively raised prices by 30%」並取消首購優惠（2026-02）
+- key: pxev_cp_overseas_feb2026
+  group: B
+  metric: 海外 Coding Plan 漲幅（2026-02）
+  value: null
+  lo: 30
+  hi: 60
+  unit: '%'
+  period: '2026-02-12'
+  source: AIbase（2026-02-13）
+  url: https://www.aibase.com/zh/news/25514
+  doc_date: '2026-02-13'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: null
+  note: 原文海外 Coding Plan 訂閱上調 30%～60%
+- key: pxev_cp_overseas_feb2026_b
+  group: B
+  metric: 海外 Coding Plan 漲幅（虎嗅口徑）
+  value: null
+  lo: 80
+  hi: 150
+  unit: '%'
+  period: 2026（未明）
+  source: 虎嗅（2026-09-14）
+  url: https://m.huxiu.com/article/4890871.html
+  doc_date: '2026-09-14'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: null
+  note: 原文「海外版Coding Plan漲幅在80%到150%之間」；與 AIbase 30–60% 矛盾，疑為累計（含 2026-07 再調價）
+- key: pxev_cp_oldplan_apr2026
+  group: B
+  metric: Coding Plan 舊套餐（無週限額）停止自動續訂日
+  value: null
+  lo: null
+  hi: null
+  unit: 日期
+  period: '2026-04-30'
+  source: IT之家（2026-04-22）
+  url: https://www.ithome.com/0/941/977.htm
+  doc_date: '2026-04-22'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 原文「GLM Coding Plan 老套餐（無周限額版本）將停止自動續訂」2026-04-30 10:00 起；改新套餐並贈 2 個月，實質加週限額＝變相漲價
+- key: pxev_cp_cn_launch_2025
+  group: B
+  metric: GLM Coding Plan 國內上市價（2025-09）
+  value: null
+  lo: 20
+  hi: 100
+  unit: RMB 元／月
+  period: '2025-09-01'
+  source: 鳳凰網科技（2025-09-02）
+  url: https://tech.ifeng.com/c/8mJoak9q60M
+  doc_date: '2025-09-02'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 原文「每月 20~100 元」，「自 9 月 1 日起」；未分方案
+- key: pxev_cp_intl_promo_pre2026
+  group: B
+  metric: 國際站 Coding Plan 舊促銷價（Lite）
+  value: 3
+  lo: 3
+  hi: 3
+  unit: USD／月
+  period: 2026-02-11 前
+  source: Labmemo〈Zai GLM Coding Plan 値上げ完了〉
+  url: https://labmemo.com/zai-glm-price-increase-2026/
+  doc_date: '2026-04-14'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文「$3/月という破格のプロモーション価格が廃止され」2026-02-11 起改三段定額；第三方部落格
+- key: cp_rmb_lite_month
+  group: B
+  metric: GLM Coding Plan Lite（國內）月付
+  value: 49
+  lo: null
+  hi: null
+  unit: RMB 元／月
+  period: 2026-05（2026-02 漲價後）
+  source: CodePick〈國內 Coding API 橫評 2026〉
+  url: https://codepick.dev/zh/guides/china-coding-api-roundup-2026/
+  doc_date: '2026-05-19'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 表列 Lite 月付 ¥49、包季每月 ¥44、包年每月 ¥34；「包季 9 折／包年 7 折」；第三方整理官方價
+- key: cp_rmb_lite_qtr_permonth
+  group: B
+  metric: GLM Coding Plan Lite（國內）包季折合每月
+  value: 44
+  lo: null
+  hi: null
+  unit: RMB 元／月
+  period: 2026-05
+  source: CodePick〈國內 Coding API 橫評 2026〉
+  url: https://codepick.dev/zh/guides/china-coding-api-roundup-2026/
+  doc_date: '2026-05-19'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 同上（9 折）
+- key: cp_rmb_lite_yr_permonth
+  group: B
+  metric: GLM Coding Plan Lite（國內）包年折合每月
+  value: 34
+  lo: null
+  hi: null
+  unit: RMB 元／月
+  period: 2026-05
+  source: CodePick〈國內 Coding API 橫評 2026〉
+  url: https://codepick.dev/zh/guides/china-coding-api-roundup-2026/
+  doc_date: '2026-05-19'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 同上（7 折）
+- key: cp_rmb_pro_month
+  group: B
+  metric: GLM Coding Plan Pro（國內）月付
+  value: 149
+  lo: null
+  hi: null
+  unit: RMB 元／月
+  period: 2026-05（2026-02 漲價後）
+  source: CodePick〈國內 Coding API 橫評 2026〉
+  url: https://codepick.dev/zh/guides/china-coding-api-roundup-2026/
+  doc_date: '2026-05-19'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 表列 Pro 月付 ¥149、包季每月 ¥134、包年每月 ¥104；「包季 9 折／包年 7 折」；第三方整理官方價
+- key: cp_rmb_pro_qtr_permonth
+  group: B
+  metric: GLM Coding Plan Pro（國內）包季折合每月
+  value: 134
+  lo: null
+  hi: null
+  unit: RMB 元／月
+  period: 2026-05
+  source: CodePick〈國內 Coding API 橫評 2026〉
+  url: https://codepick.dev/zh/guides/china-coding-api-roundup-2026/
+  doc_date: '2026-05-19'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 同上（9 折）
+- key: cp_rmb_pro_yr_permonth
+  group: B
+  metric: GLM Coding Plan Pro（國內）包年折合每月
+  value: 104
+  lo: null
+  hi: null
+  unit: RMB 元／月
+  period: 2026-05
+  source: CodePick〈國內 Coding API 橫評 2026〉
+  url: https://codepick.dev/zh/guides/china-coding-api-roundup-2026/
+  doc_date: '2026-05-19'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 同上（7 折）
+- key: cp_rmb_max_month
+  group: B
+  metric: GLM Coding Plan Max（國內）月付
+  value: 469
+  lo: null
+  hi: null
+  unit: RMB 元／月
+  period: 2026-05（2026-02 漲價後）
+  source: CodePick〈國內 Coding API 橫評 2026〉
+  url: https://codepick.dev/zh/guides/china-coding-api-roundup-2026/
+  doc_date: '2026-05-19'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 表列 Max 月付 ¥469、包季每月 ¥422、包年每月 ¥328；「包季 9 折／包年 7 折」；第三方整理官方價
+- key: cp_rmb_max_qtr_permonth
+  group: B
+  metric: GLM Coding Plan Max（國內）包季折合每月
+  value: 422
+  lo: null
+  hi: null
+  unit: RMB 元／月
+  period: 2026-05
+  source: CodePick〈國內 Coding API 橫評 2026〉
+  url: https://codepick.dev/zh/guides/china-coding-api-roundup-2026/
+  doc_date: '2026-05-19'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 同上（9 折）
+- key: cp_rmb_max_yr_permonth
+  group: B
+  metric: GLM Coding Plan Max（國內）包年折合每月
+  value: 328
+  lo: null
+  hi: null
+  unit: RMB 元／月
+  period: 2026-05
+  source: CodePick〈國內 Coding API 橫評 2026〉
+  url: https://codepick.dev/zh/guides/china-coding-api-roundup-2026/
+  doc_date: '2026-05-19'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 同上（7 折）
+- key: cp_rmb_pro_qtr
+  group: B
+  metric: GLM Coding Pro 連續包季
+  value: 402
+  lo: null
+  hi: null
+  unit: RMB 元／季
+  period: '2026-02-13'
+  source: 17173 新聞（2026-02-13）
+  url: https://news.17173.com/content/02132026/080853761.shtml
+  doc_date: '2026-02-13'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 原文「連續包季享受 9 折優惠（402 元/季）」；月付「149 元 / 月」；與 CodePick 134×3=402 一致
+- key: cp_rmb_pro_yr
+  group: B
+  metric: GLM Coding Pro 連續包年
+  value: 1251
+  lo: null
+  hi: null
+  unit: RMB 元／年
+  period: '2026-02-13'
+  source: 17173 新聞（2026-02-13）
+  url: https://news.17173.com/content/02132026/080853761.shtml
+  doc_date: '2026-02-13'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 原文「連續包年享 7 折優惠（1251 元/年）」；與 CodePick 104×12=1248 差 3 元（四捨五入）
+- key: cp_usd_lite_list
+  group: B
+  metric: GLM Coding Plan Lite（國際）牌價
+  value: 18
+  lo: null
+  hi: null
+  unit: USD／月
+  period: 2026-07-03 起（快照）
+  source: Digital Applied〈GLM Coding Plan worth it 2026〉
+  url: https://www.digitalapplied.com/blog/glm-coding-plan-worth-it-2026-value-analysis
+  doc_date: '2026-07-03'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 表列 Lite 牌價 $18；月付 −10% $16.2；季付 −20% $14.4/月；年付 −30% $12.6/月；aipricing.guru 2026-10-07 核對同價
+- key: cp_usd_lite_yr_permonth
+  group: B
+  metric: GLM Coding Plan Lite（國際）年付折合每月
+  value: 12.6
+  lo: null
+  hi: null
+  unit: USD／月
+  period: 2026-07～2026-10
+  source: UsagePricing〈2026-07-22 price change〉
+  url: https://usagepricing.com/blueprint/activity/zhipu-ai-2026-07-22-price-change
+  doc_date: '2026-07-22'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 年付 30% off：$12.6／$50.4／$112；季付 20% off：$14.4／$57.6／$128
+- key: cp_usd_pro_list
+  group: B
+  metric: GLM Coding Plan Pro（國際）牌價
+  value: 72
+  lo: null
+  hi: null
+  unit: USD／月
+  period: 2026-07-03 起（快照）
+  source: Digital Applied〈GLM Coding Plan worth it 2026〉
+  url: https://www.digitalapplied.com/blog/glm-coding-plan-worth-it-2026-value-analysis
+  doc_date: '2026-07-03'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 表列 Pro 牌價 $72；月付 −10% $64.8；季付 −20% $57.6/月；年付 −30% $50.4/月；aipricing.guru 2026-10-07 核對同價
+- key: cp_usd_pro_yr_permonth
+  group: B
+  metric: GLM Coding Plan Pro（國際）年付折合每月
+  value: 50.4
+  lo: null
+  hi: null
+  unit: USD／月
+  period: 2026-07～2026-10
+  source: UsagePricing〈2026-07-22 price change〉
+  url: https://usagepricing.com/blueprint/activity/zhipu-ai-2026-07-22-price-change
+  doc_date: '2026-07-22'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 年付 30% off：$12.6／$50.4／$112；季付 20% off：$14.4／$57.6／$128
+- key: cp_usd_max_list
+  group: B
+  metric: GLM Coding Plan Max（國際）牌價
+  value: 160
+  lo: null
+  hi: null
+  unit: USD／月
+  period: 2026-07-03 起（快照）
+  source: Digital Applied〈GLM Coding Plan worth it 2026〉
+  url: https://www.digitalapplied.com/blog/glm-coding-plan-worth-it-2026-value-analysis
+  doc_date: '2026-07-03'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 表列 Max 牌價 $160；月付 −10% $144；季付 −20% $128/月；年付 −30% $112/月；aipricing.guru 2026-10-07 核對同價
+- key: cp_usd_max_yr_permonth
+  group: B
+  metric: GLM Coding Plan Max（國際）年付折合每月
+  value: 112
+  lo: null
+  hi: null
+  unit: USD／月
+  period: 2026-07～2026-10
+  source: UsagePricing〈2026-07-22 price change〉
+  url: https://usagepricing.com/blueprint/activity/zhipu-ai-2026-07-22-price-change
+  doc_date: '2026-07-22'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 年付 30% off：$12.6／$50.4／$112；季付 20% off：$14.4／$57.6／$128
+- key: cp_usd_lite_qtr_feb2026
+  group: B
+  metric: GLM Coding Plan Lite（國際）2026-02～07 季付價
+  value: 30
+  lo: null
+  hi: null
+  unit: USD／季
+  period: 2026-02-11～2026-07
+  source: UsagePricing〈2026-07-22 price change〉（before 欄）
+  url: https://usagepricing.com/blueprint/activity/zhipu-ai-2026-07-22-price-change
+  doc_date: '2026-07-22'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: before：約 $30/季（約 $10/月）；Labmemo 2026-04 同列 $30/$90/$240 季付
+- key: cp_usd_pro_qtr_feb2026
+  group: B
+  metric: GLM Coding Plan Pro（國際）2026-02～07 季付價
+  value: 90
+  lo: null
+  hi: null
+  unit: USD／季
+  period: 2026-02-11～2026-07
+  source: UsagePricing〈2026-07-22 price change〉（before 欄）
+  url: https://usagepricing.com/blueprint/activity/zhipu-ai-2026-07-22-price-change
+  doc_date: '2026-07-22'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: before：約 $90/季（約 $30/月）；Labmemo 2026-04 同列 $30/$90/$240 季付
+- key: cp_usd_max_qtr_feb2026
+  group: B
+  metric: GLM Coding Plan Max（國際）2026-02～07 季付價
+  value: 240
+  lo: null
+  hi: null
+  unit: USD／季
+  period: 2026-02-11～2026-07
+  source: UsagePricing〈2026-07-22 price change〉（before 欄）
+  url: https://usagepricing.com/blueprint/activity/zhipu-ai-2026-07-22-price-change
+  doc_date: '2026-07-22'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: before：約 $240/季（約 $80/月）；Labmemo 2026-04 同列 $30/$90/$240 季付
+- key: cp_quota_lite_5h
+  group: B
+  metric: Coding Plan Lite 額度（每 5 小時）
+  value: 80
+  lo: null
+  hi: null
+  unit: prompts／5 小時
+  period: 2026-04-30 起
+  source: IT之家（2026-04-22）
+  url: https://www.ithome.com/0/941/977.htm
+  doc_date: '2026-04-22'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: Lite ~80／5h、~400／週；Pro ~400／~2000；Max ~1600／~8000；每 prompt 約 15–20 次模型呼叫
+- key: cp_quota_pro_5h
+  group: B
+  metric: Coding Plan Pro 額度（每 5 小時）
+  value: 400
+  lo: null
+  hi: null
+  unit: prompts／5 小時
+  period: 2026-04-30 起
+  source: IT之家（2026-04-22）
+  url: https://www.ithome.com/0/941/977.htm
+  doc_date: '2026-04-22'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: Pro＝5× Lite；週 ~2000
+- key: cp_quota_max_5h
+  group: B
+  metric: Coding Plan Max 額度（每 5 小時）
+  value: 1600
+  lo: null
+  hi: null
+  unit: prompts／5 小時
+  period: 2026-04-30 起
+  source: IT之家（2026-04-22）
+  url: https://www.ithome.com/0/941/977.htm
+  doc_date: '2026-04-22'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: Max＝20× Lite；週 ~8000
+- key: cp_calls_per_prompt
+  group: B
+  metric: 每 prompt 對應模型呼叫次數
+  value: null
+  lo: 15
+  hi: 20
+  unit: 次
+  period: 2026-04
+  source: IT之家（2026-04-22）
+  url: https://www.ithome.com/0/941/977.htm
+  doc_date: '2026-04-22'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文每 prompt「預計可調用模型 15–20 次」；公司估計
+- key: qy_iap_auto_month
+  group: B
+  metric: 清言連續包月會員（App 內購）
+  value: 79
+  lo: null
+  hi: null
+  unit: RMB 元／月
+  period: 2026-10（App Store 現行）
+  source: Apple App Store 中國區「智譜清言」頁
+  url: https://apps.apple.com/cn/app/%E6%99%BA%E8%B0%B1%E6%B8%85%E8%A8%80-%E5%B7%A5%E4%BD%9C%E7%94%9F%E6%B4%BB%E5%AD%A6%E4%B9%A0ai%E5%8A%A9%E6%89%8B/id6450893458
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: App 內購買列「連續包月會員 ¥79.00」；與 App 描述價矛盾（見 _b）
+- key: qy_iap_auto_qtr
+  group: B
+  metric: 清言連續包季會員（App 內購）
+  value: 219
+  lo: null
+  hi: null
+  unit: RMB 元／季
+  period: 2026-10（App Store 現行）
+  source: Apple App Store 中國區「智譜清言」頁
+  url: https://apps.apple.com/cn/app/%E6%99%BA%E8%B0%B1%E6%B8%85%E8%A8%80-%E5%B7%A5%E4%BD%9C%E7%94%9F%E6%B4%BB%E5%AD%A6%E4%B9%A0ai%E5%8A%A9%E6%89%8B/id6450893458
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 「連續包季會員 ¥219.00」；與 App 描述價矛盾（見 _b）
+- key: qy_iap_auto_year
+  group: B
+  metric: 清言連續包年會員（App 內購）
+  value: 859
+  lo: null
+  hi: null
+  unit: RMB 元／年
+  period: 2026-10（App Store 現行）
+  source: Apple App Store 中國區「智譜清言」頁
+  url: https://apps.apple.com/cn/app/%E6%99%BA%E8%B0%B1%E6%B8%85%E8%A8%80-%E5%B7%A5%E4%BD%9C%E7%94%9F%E6%B4%BB%E5%AD%A6%E4%B9%A0ai%E5%8A%A9%E6%89%8B/id6450893458
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 「連續包年會員 ¥859.00」；與 App 描述價矛盾（見 _b）
+- key: qy_iap_month_card
+  group: B
+  metric: 清言月卡會員（App 內購）
+  value: 119
+  lo: null
+  hi: null
+  unit: RMB 元／月
+  period: 2026-10（App Store 現行）
+  source: Apple App Store 中國區「智譜清言」頁
+  url: https://apps.apple.com/cn/app/%E6%99%BA%E8%B0%B1%E6%B8%85%E8%A8%80-%E5%B7%A5%E4%BD%9C%E7%94%9F%E6%B4%BB%E5%AD%A6%E4%B9%A0ai%E5%8A%A9%E6%89%8B/id6450893458
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 「清言月卡會員 ¥119.00」；與 App 描述價矛盾（見 _b）
+- key: qy_iap_svip_month
+  group: B
+  metric: 清言 SVIP 連續包月（App 內購）
+  value: 229
+  lo: null
+  hi: null
+  unit: RMB 元／月
+  period: 2026-10（App Store 現行）
+  source: Apple App Store 中國區「智譜清言」頁
+  url: https://apps.apple.com/cn/app/%E6%99%BA%E8%B0%B1%E6%B8%85%E8%A8%80-%E5%B7%A5%E4%BD%9C%E7%94%9F%E6%B4%BB%E5%AD%A6%E4%B9%A0ai%E5%8A%A9%E6%89%8B/id6450893458
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 「清言SVIP連續包月 ¥229.00」；與 App 描述價矛盾（見 _b）
+- key: qy_desc_auto_month_b
+  group: B
+  metric: 清言連續包月（App 描述文字）
+  value: 19
+  lo: null
+  hi: null
+  unit: RMB 元／月
+  period: 描述文字（日期未明）
+  source: Apple App Store 中國區「智譜清言」頁
+  url: https://apps.apple.com/cn/app/%E6%99%BA%E8%B0%B1%E6%B8%85%E8%A8%80-%E5%B7%A5%E4%BD%9C%E7%94%9F%E6%B4%BB%E5%AD%A6%E4%B9%A0ai%E5%8A%A9%E6%89%8B/id6450893458
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 描述「連續包月（¥19/月）」「連續包季（¥79/季）」「連續包年（¥299/年）」「單月¥59」「年卡 ¥399」；與內購清單 ¥79/219/859 矛盾，疑描述為舊版或不同檔位
+- key: rel_glm45
+  group: B
+  metric: GLM-4.5／4.5-Air 發布日
+  value: null
+  lo: null
+  hi: null
+  unit: 日期
+  period: '2025-07-28'
+  source: Wikipedia〈Z.ai〉（引 Z.ai blog）
+  url: https://en.wikipedia.org/wiki/Z.ai
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: '引 Z.ai blog〈GLM-4.5: Reasoning, Coding, and Agentic Abilities〉28 July 2025；愛范兒 2025-07-29 07:44 稱「就在剛剛」'
+- key: rel_glm45_b
+  group: B
+  metric: GLM-4.5 發布日（彙整站）
+  value: null
+  lo: null
+  hi: null
+  unit: 日期
+  period: '2025-07-25'
+  source: The GTM Directory GLM 頁
+  url: https://thegtmdirectory.com/models/z-ai-glm
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 表列 2025-07-25；與 07-28 矛盾，以官方 blog 07-28 為準
+- key: rel_glm46
+  group: B
+  metric: GLM-4.6 發布日
+  value: null
+  lo: null
+  hi: null
+  unit: 日期
+  period: '2025-09-30'
+  source: Wikipedia〈Z.ai〉（引 Z.ai blog）
+  url: https://en.wikipedia.org/wiki/Z.ai
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 「reported as 30 September 2025」；GTM Directory 同
+- key: rel_glm47
+  group: B
+  metric: GLM-4.7 發布日
+  value: null
+  lo: null
+  hi: null
+  unit: 日期
+  period: '2025-12-22'
+  source: The GTM Directory GLM 頁
+  url: https://thegtmdirectory.com/models/z-ai-glm
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 表列 2025-12-22；Wikipedia 稱 December 2025（Gigazine 23 Dec 2025）
+- key: rel_glm5
+  group: B
+  metric: GLM-5 發布日
+  value: null
+  lo: null
+  hi: null
+  unit: 日期
+  period: '2026-02-12'
+  source: 上海證券報（同花順 2026-02-13）
+  url: https://stock.10jqka.com.cn/20260213/c674781266.shtml
+  doc_date: '2026-02-13'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: GLM-5「正式開源並上線」於 2 月 12 日；同日發 Coding Plan 調價函
+- key: rel_glm5_b
+  group: B
+  metric: GLM-5 發布日（彙整站／Reuters）
+  value: null
+  lo: null
+  hi: null
+  unit: 日期
+  period: '2026-02-11'
+  source: The GTM Directory GLM 頁
+  url: https://thegtmdirectory.com/models/z-ai-glm
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 表列 2026-02-11；Wikipedia 稱 Reuters 記 11 February（時區差）
+- key: rel_glm51
+  group: B
+  metric: GLM-5.1 開源發布日
+  value: null
+  lo: null
+  hi: null
+  unit: 日期
+  period: '2026-04-07'
+  source: Wikipedia〈Z.ai〉（引 SCMP、Computerworld）
+  url: https://en.wikipedia.org/wiki/Z.ai
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 「released as open-source on 7 April 2026」；3 月底先推訂閱用戶；GTM 列 04-06
+- key: rel_glm52
+  group: B
+  metric: GLM-5.2 發布日
+  value: null
+  lo: null
+  hi: null
+  unit: 日期
+  period: '2026-06-16'
+  source: 36氪（2026-06-18）
+  url: https://www.36kr.com/p/3858548611709828
+  doc_date: '2026-06-18'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 原文「6月16日晚，智譜正式開源新一代旗艦模型GLM-5.2」；1M 上下文
+- key: rel_glm52_b
+  group: B
+  metric: GLM-5.2 發布日（華為雲）
+  value: null
+  lo: null
+  hi: null
+  unit: 日期
+  period: '2026-06-17'
+  source: 華為雲 MaaS GLM 頁
+  url: https://www.huaweicloud.com/product/modelarts/studio/maas-GLM.html
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 頁示「GLM-5.2 20260617」；與 06-16 晚差一日
+- key: rel_glm53
+  group: B
+  metric: GLM-5.3 發布日
+  value: null
+  lo: null
+  hi: null
+  unit: 日期
+  period: '2026-08-14'
+  source: DataNorth〈Z.ai releases GLM-5.3〉
+  url: https://datanorth.ai/news/z-ai-releases-glm-5-3
+  doc_date: '2026-08-17'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 「released GLM-5.3 on 14 August 2026」，API 上市時「coming soon」，先經 Coding Plan；權重約 08-28；DataLearner 同 08-14；GTM 列 08-16
+- key: rel_glm53flash
+  group: B
+  metric: GLM-5.3-Flash 發布日
+  value: null
+  lo: null
+  hi: null
+  unit: 日期
+  period: '2026-08-26'
+  source: AIToolly（2026-08-27）
+  url: https://aitoolly.com/zh/ai-news/article/2026-08-27-glm-53-flash-zhipu-ais-strategic-leap-in-high-efficiency-language-model-performance
+  doc_date: '2026-08-27'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 原文「2026年8月26日，關於 GLM-5.3-Flash 的消息在 Hacker News 及 z.ai 博客上發布」；上市前以代號 Ox-Alpha 匿名測試（中期公告）
+- key: usr_maas_1h26_pe
+  group: C
+  metric: GLM MaaS 平台企業及開發者用戶數（期末）
+  value: 580
+  lo: null
+  hi: null
+  unit: 萬
+  period: '2026-06-30'
+  source: 智譜 2026 中期業績公告（Z.AI Co., Ltd.，截至 2026-06-30 止六個月）（第 3 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: 管理層口徑
+  note: 原文「enterprise and developer users on the GLM MaaS platform exceeded 5.8 million」（報告期末）
+- key: usr_maas_ann
+  group: C
+  metric: GLM MaaS 平台企業及開發者用戶數（公告日）
+  value: 740
+  lo: null
+  hi: null
+  unit: 萬
+  period: 2026-08-31（公告日）
+  source: 智譜 2026 中期業績公告（Z.AI Co., Ltd.，截至 2026-06-30 止六個月）（第 3 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: 管理層口徑
+  note: 原文「As of the date of this announcement ... over 7.4 million enterprise and developer users」；第 15 頁稱較年初 +144%
+- key: usr_maas_growth_ytd
+  group: C
+  metric: MaaS 用戶數較年初增幅
+  value: 144
+  lo: null
+  hi: null
+  unit: '%'
+  period: 2026-01-01→公告日
+  source: 智譜 2026 中期業績公告（Z.AI Co., Ltd.，截至 2026-06-30 止六個月）（第 15 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「over 7.4 million users, an increase of 144% from the beginning of 2026」；反推年初約 303 萬（Derived）
+- key: usr_maas_mar26
+  group: C
+  metric: 開放平台註冊用戶數
+  value: 400
+  lo: null
+  hi: null
+  unit: 萬
+  period: 2026-03
+  source: 智譜 2025 年度業績公告（截至 2025-12-31）（第 4 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「surpassed 4 million registered users as of March 2026」；另稱合作「over 4 million small and medium-sized enterprises and developers」
+- key: usr_paid_dau_growth
+  group: C
+  metric: 付費日活用戶較年初增幅
+  value: 603
+  lo: null
+  hi: null
+  unit: '%'
+  period: 2026-01-01→1H2026
+  source: 智譜 2026 中期業績公告（Z.AI Co., Ltd.，截至 2026-06-30 止六個月）（第 15 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「the number of paid daily active users rising by 603%」；未揭露絕對數
+- key: usr_cp_paying_dev
+  group: C
+  metric: GLM Coding Plan 付費開發者數
+  value: 24.2
+  lo: null
+  hi: null
+  unit: 萬
+  period: 截至 2026-03
+  source: 智譜 2025 年度業績公告（截至 2025-12-31）（第 4 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「reaching over 242,000 paying developers」（Coding Plan 段落）
+- key: usr_clawplan_subs
+  group: C
+  metric: Claw Plan 訂閱數（20 天）
+  value: 40
+  lo: null
+  hi: null
+  unit: 萬
+  period: 2026-03
+  source: 智譜 2025 年度業績公告（截至 2025-12-31）（第 4 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「100,000 subscribers within just two days and 400,000 subscribers within 20 days」；未稱付費
+- key: usr_inst_cust_1h25
+  group: C
+  metric: 機構客戶數
+  value: 8000
+  lo: null
+  hi: null
+  unit: 家
+  period: '2025-06-30'
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「empowered over eight thousand institutional customers as of June 30, 2025」
+- key: usr_inst_cust_9m25
+  group: C
+  metric: 機構客戶數（九個月）
+  value: 12000
+  lo: null
+  hi: null
+  unit: 家
+  period: 9M2025（截至 2025-09-30）
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「over 12,000 institutional customers」
+- key: usr_devices
+  group: C
+  metric: 賦能終端設備數
+  value: 8000
+  lo: null
+  hi: null
+  unit: 萬台
+  period: 最後實際可行日期（2025-12）
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「approximately 80 million devices」
+- key: usr_top10_internet
+  group: C
+  metric: 中國前十大互聯網公司中接入 GLM 家數
+  value: 9
+  lo: null
+  hi: null
+  unit: 家
+  period: 2026-03
+  source: 智譜 2025 年度業績公告（截至 2025-12-31）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「9 of the top 10 Internet companies in China have now deeply integrated GLM」
+- key: usr_countries_fy25
+  group: C
+  metric: 用戶覆蓋國家與地區
+  value: 218
+  lo: null
+  hi: null
+  unit: 個
+  period: FY2025
+  source: 智譜 2025 年度業績公告（截至 2025-12-31）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「covering 218 countries and regions worldwide」
+- key: usr_countries_1h26_b
+  group: C
+  metric: 用戶覆蓋國家與地區（中期媒體轉述）
+  value: 233
+  lo: null
+  hi: null
+  unit: 個
+  period: 1H2026
+  source: 科創板日報（財聯社）
+  url: https://m.cls.cn/detail/2470120
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「用戶覆蓋233個國家和地區」；公告本文未查得此句
+- key: tok_maas_growth_ytd
+  group: C
+  metric: MaaS 平台 token 呼叫量較年初倍數
+  value: 40
+  lo: null
+  hi: null
+  unit: 倍（以上）
+  period: 2026-01-01→1H2026
+  source: 智譜 2026 中期業績公告（Z.AI Co., Ltd.，截至 2026-06-30 止六個月）（第 14 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「Token invocation volume of the MaaS platform had increased over 40 times from the beginning of 2026」
+- key: tok_cp_growth_ytd
+  group: C
+  metric: Coding Plan 呼叫量較年初倍數
+  value: 23
+  lo: null
+  hi: null
+  unit: 倍（以上）
+  period: 2026-01-01→1H2026
+  source: 智譜 2026 中期業績公告（Z.AI Co., Ltd.，截至 2026-06-30 止六個月）（第 14 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「with Coding Plan invocation volume growing over 23 times」
+- key: tok_top10_daily_growth
+  group: C
+  metric: 前十大付費客戶日均呼叫量較年初倍數
+  value: 98
+  lo: null
+  hi: null
+  unit: 倍
+  period: 2026-01-01→1H2026
+  source: 智譜 2026 中期業績公告（Z.AI Co., Ltd.，截至 2026-06-30 止六個月）（第 15 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「For the top ten customers by revenue, the average daily invocation volume soared 98 times」
+- key: tok_daily_nov25
+  group: C
+  metric: 日均 token 消耗量
+  value: 4.2
+  lo: null
+  hi: null
+  unit: T／日
+  period: 2025-11
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: 管理層口徑
+  note: 原文「our average daily token consumption volume was 4.2 trillion in November 2025」；口徑可能含本地化以外全部雲端
+- key: tok_daily_1h25_b
+  group: C
+  metric: 日均 token 消耗量（媒體轉述招股書）
+  value: 4.6
+  lo: null
+  hi: null
+  unit: T／日
+  period: 1H2025
+  source: 鈦媒體（2025-12-26）
+  url: https://www.tmtpost.com/7821744.html
+  doc_date: '2025-12-26'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述 PHIP；智譜誘因同上
+  basis: null
+  note: 原文「日均token消耗量，從2022年的5億上升到2025年上半年4.6萬億」；與招股章程 2025-11 的 4.2T 矛盾（期間不同或口徑不同），全部登錄
+- key: tok_daily_2022_b
+  group: C
+  metric: 日均 token 消耗量（2022）
+  value: 0.0005
+  lo: null
+  hi: null
+  unit: T／日
+  period: FY2022
+  source: 鈦媒體（2025-12-26）
+  url: https://www.tmtpost.com/7821744.html
+  doc_date: '2025-12-26'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述 PHIP
+  basis: null
+  note: 原文「從2022年的5億」＝5 億 token／日＝0.0005T
+- key: tok_oxalpha_6d
+  group: C
+  metric: GLM-5.3-Flash（代號 Ox-Alpha）匿名測試 6 日累計 token
+  value: 62
+  lo: null
+  hi: null
+  unit: T（6 日累計）
+  period: 2026-08（上市前一週）
+  source: 智譜 2026 中期業績公告（Z.AI Co., Ltd.，截至 2026-06-30 止六個月）（第 10 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「6-day cumulative Token volume of more than 62 trillion」，於 OpenCode／OpenRouter 匿名部署；含免費流量，非付費口徑
+- key: arr_maas_aug26_monthly
+  group: C
+  metric: MaaS 平台 ARR（月度年化）
+  value: 16
+  lo: null
+  hi: null
+  unit: USD 億
+  period: 2026-08 末
+  source: 網易科技（同花順轉載，業績電話會）
+  url: https://stock.10jqka.com.cn/20260901/c679482271.shtml
+  doc_date: '2026-09-01'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「截至8月末…MaaS平台按月度收入年化計算的ARR達到16億美元，按周度年化口徑超過20億美元」
+- key: arr_maas_aug26_weekly_b
+  group: C
+  metric: MaaS 平台 ARR（週度年化）
+  value: 20
+  lo: null
+  hi: null
+  unit: USD 億（以上）
+  period: 2026-08 末
+  source: 網易科技（同花順轉載，業績電話會）
+  url: https://stock.10jqka.com.cn/20260901/c679482271.shtml
+  doc_date: '2026-09-01'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 同上「按周度年化口徑超過20億美元」
+- key: arr_total_sep26
+  group: C
+  metric: 全業務 ARR
+  value: 18
+  lo: null
+  hi: null
+  unit: USD 億
+  period: '2026-09-16'
+  source: 證券日報（同花順 2026-09-16）
+  url: https://stock.10jqka.com.cn/20260916/c679973930.shtml
+  doc_date: '2026-09-16'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「全業務口徑ARR…已經達到18億美元，年末ARR指引由24億美元上調至30億美元」；指引不得用於反推
+- key: arr_guide_ye26
+  group: C
+  metric: 年末 ARR 指引（上調後）
+  value: 30
+  lo: null
+  hi: null
+  unit: USD 億
+  period: 2026-12（目標）
+  source: 證券日報（同花順 2026-09-16）
+  url: https://stock.10jqka.com.cn/20260916/c679973930.shtml
+  doc_date: '2026-09-16'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 由 24 億美元上調至 30 億美元；屬公司目標，只作對照（規格 D22）
+- key: dem_glm5_10x
+  group: C
+  metric: GLM-5 發布後模型呼叫需求倍數
+  value: 10
+  lo: null
+  hi: null
+  unit: 倍
+  period: 2026-02 後
+  source: 證券日報（同花順 2026-09-16）
+  url: https://stock.10jqka.com.cn/20260916/c679973930.shtml
+  doc_date: '2026-09-16'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「模型調用需求量比發布之前增長10倍」
+- key: dem_signup_restrict_feb26
+  group: C
+  metric: 2026-02 算力不足限制新用戶註冊
+  value: null
+  lo: null
+  hi: null
+  unit: 事件
+  period: 2026-02 下旬
+  source: Wikipedia〈Z.ai〉（引 SCMP 2026-02-23）
+  url: https://en.wikipedia.org/wiki/Z.ai
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體（SCMP）
+  basis: null
+  note: 引 SCMP：compute shortage 致用戶抱怨，「new user signups were restricted」；容量上限曾綁定
+- key: cust_top5_share_fy22
+  group: C
+  metric: 前五大客戶收入占比
+  value: 55.4
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2022
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（往績記錄期）
+  note: 招股章程：前五大 55.4%、最大客戶 15.4%
+- key: cust_top1_share_fy22
+  group: C
+  metric: 最大客戶收入占比
+  value: 15.4
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2022
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（往績記錄期）
+  note: 同上
+- key: cust_top5_share_fy23
+  group: C
+  metric: 前五大客戶收入占比
+  value: 61.5
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2023
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（往績記錄期）
+  note: 招股章程：前五大 61.5%、最大客戶 14.7%
+- key: cust_top1_share_fy23
+  group: C
+  metric: 最大客戶收入占比
+  value: 14.7
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2023
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（往績記錄期）
+  note: 同上
+- key: cust_top5_share_fy24
+  group: C
+  metric: 前五大客戶收入占比
+  value: 45.5
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2024
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（往績記錄期）
+  note: 招股章程：前五大 45.5%、最大客戶 19.0%
+- key: cust_top1_share_fy24
+  group: C
+  metric: 最大客戶收入占比
+  value: 19.0
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2024
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（往績記錄期）
+  note: 同上
+- key: cust_top5_share_1h25
+  group: C
+  metric: 前五大客戶收入占比
+  value: 40.0
+  lo: null
+  hi: null
+  unit: '%'
+  period: 1H2025
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（往績記錄期）
+  note: 招股章程：前五大 40.0%、最大客戶 11.0%
+- key: cust_top1_share_1h25
+  group: C
+  metric: 最大客戶收入占比
+  value: 11.0
+  lo: null
+  hi: null
+  unit: '%'
+  period: 1H2025
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（往績記錄期）
+  note: 同上
+- key: cust_top5_rev_fy24
+  group: C
+  metric: 前五大客戶收入金額
+  value: 1.42
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 華爾街見聞（2025-12-20）
+  url: https://wallstreetcn.com/articles/3761769
+  doc_date: '2025-12-20'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 原文「2024年前五大客戶貢獻了1.42億元的收入，佔比達到45.5%」；轉述招股文件
+- key: cust_no10pct_fy25
+  group: C
+  metric: FY2025 單一客戶占收入 >10% 者
+  value: 0
+  lo: null
+  hi: null
+  unit: 家
+  period: FY2025
+  source: 智譜 2025 年度業績公告（截至 2025-12-31）（第 24 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計
+  note: 原文「There is no individual customer contributing over 10% of the total revenue」
+- key: cust_a_sales_vs_purch
+  group: C
+  metric: 最大客戶 A：銷售 vs 向其採購（2022–1H25 累計）
+  value: 2.42
+  lo: null
+  hi: null
+  unit: RMB 億（銷售）
+  period: 2022～1H2025
+  source: 鈦媒體（2025-12-26）
+  url: https://www.tmtpost.com/7821744.html
+  doc_date: '2025-12-26'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: null
+  note: 原文「向最大客戶A銷售了2.42億元，但卻向客戶採購了2.47億元」；客戶兼供應商（D19 回流對照）
+- key: qy_mau_q1_26
+  group: C
+  metric: 智譜清言月活排名（QuestMobile 2026Q1）
+  value: null
+  lo: null
+  hi: null
+  unit: 排名
+  period: 2026Q1
+  source: 每日經濟新聞×QuestMobile〈2026 年一季度 AI 應用價值榜〉
+  url: https://www.nbd.com.cn/articles/2026-04-21/4350446.html
+  doc_date: '2026-04-21'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文「智譜清言、階躍、MiniMax均未進入一季度月活、下載TOP 20」；無絕對值；C 端規模小
+- key: or_glm52_weekly_tok
+  group: C
+  metric: OpenRouter：GLM-5.2 週呼叫量
+  value: 2.58
+  lo: 2.58
+  hi: 2.58
+  unit: T／週
+  period: 2026-06-29～07-05
+  source: 21世紀經濟報道（新浪財經 2026-07-06）
+  url: https://finance.sina.cn/2026-07-06/detail-inifwfpy8578766.d.html
+  doc_date: '2026-07-06'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文 GLM-5.2「2.58萬億Token」週增 22%、進前五；同週全平台「46.7萬億Token」
+- key: or_total_weekly_tok
+  group: C
+  metric: OpenRouter：全平台週呼叫量
+  value: 46.7
+  lo: 46.7
+  hi: 46.7
+  unit: T／週
+  period: 2026-06-29～07-05
+  source: 21世紀經濟報道（新浪財經 2026-07-06）
+  url: https://finance.sina.cn/2026-07-06/detail-inifwfpy8578766.d.html
+  doc_date: '2026-07-06'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文「46.7萬億Token」
+- key: or_glm52_share_derived
+  group: C
+  metric: OpenRouter：GLM-5.2 週 token 份額
+  value: 5.5
+  lo: 4.0
+  hi: 7.0
+  unit: '%'
+  period: 2026-06-29～07-05
+  source: 由 or_glm52_weekly_tok ÷ or_total_weekly_tok
+  url: https://finance.sina.cn/2026-07-06/detail-inifwfpy8578766.d.html
+  doc_date: '2026-07-06'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: null
+  note: 2.58÷46.7＝5.52%；僅單一型號，不含 GLM 其他版本；OpenRouter 為海外開發者通路，不代表智譜整體（Analogy 用途）
+- key: or_glm52_rank_jul26
+  group: C
+  metric: OpenRouter：GLM-5.2 週排名
+  value: 4
+  lo: 4
+  hi: 5
+  unit: 名
+  period: 2026-07-20～26
+  source: 老虎證券（2026-07-27）
+  url: https://www.itiger.com/hans/news/2654013695
+  doc_date: '2026-07-27'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文「智譜GLM-5.2及DeepSeek-V4-Pro分列第四及第五位」；同週總量「58萬億Token」
+- key: or_glm52_share_c
+  group: C
+  metric: OpenRouter：GLM-5.2「市占 75%」說法
+  value: 75
+  lo: null
+  hi: null
+  unit: '%（口徑不明）'
+  period: 2026-06 上市首週
+  source: GIGAZINE（2026-06-23）
+  url: https://www.gigazine.net/gsc_news/en/20260623-glm-5-2-openrouter
+  doc_date: '2026-06-23'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文「GLM-5.2 reportedly accounts for 75% of the market share」，分母未明（疑為 Z.ai 自家型號內占比）；與 5.5% 矛盾，不建議使用
+- key: sup_top5_share_fy22
+  group: D
+  metric: 前五大供應商採購占比
+  value: 54.5
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2022
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（往績記錄期）
+  note: 招股章程：前五大 54.5%、最大供應商 33.1%；供應商含「providers of computing resources, such as computing hardware」，未揭露名稱與是否皆為算力
+- key: sup_top1_share_fy22
+  group: D
+  metric: 最大供應商採購占比
+  value: 33.1
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2022
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（往績記錄期）
+  note: 同上
+- key: sup_top5_share_fy23
+  group: D
+  metric: 前五大供應商採購占比
+  value: 53.6
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2023
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（往績記錄期）
+  note: 招股章程：前五大 53.6%、最大供應商 16.4%；供應商含「providers of computing resources, such as computing hardware」，未揭露名稱與是否皆為算力
+- key: sup_top1_share_fy23
+  group: D
+  metric: 最大供應商採購占比
+  value: 16.4
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2023
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（往績記錄期）
+  note: 同上
+- key: sup_top5_share_fy24
+  group: D
+  metric: 前五大供應商採購占比
+  value: 47.3
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2024
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（往績記錄期）
+  note: 招股章程：前五大 47.3%、最大供應商 15.6%；供應商含「providers of computing resources, such as computing hardware」，未揭露名稱與是否皆為算力
+- key: sup_top1_share_fy24
+  group: D
+  metric: 最大供應商採購占比
+  value: 15.6
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2024
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（往績記錄期）
+  note: 同上
+- key: sup_top5_share_1h25
+  group: D
+  metric: 前五大供應商採購占比
+  value: 50.2
+  lo: null
+  hi: null
+  unit: '%'
+  period: 1H2025
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（往績記錄期）
+  note: 招股章程：前五大 50.2%、最大供應商 13.4%；供應商含「providers of computing resources, such as computing hardware」，未揭露名稱與是否皆為算力
+- key: sup_top1_share_1h25
+  group: D
+  metric: 最大供應商採購占比
+  value: 13.4
+  lo: null
+  hi: null
+  unit: '%'
+  period: 1H2025
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（往績記錄期）
+  note: 同上
+- key: cmp_fee_total_fy24
+  group: D
+  metric: 算力服務費（研發＋銷售成本合計）
+  value: 15.52
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 華爾街見聞（2025-12-20）
+  url: https://wallstreetcn.com/articles/3761769
+  doc_date: '2025-12-20'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: null
+  note: 原文「2024年，智譜的算力服務費達到15.52億元，這已然是同期收入的5倍左右」；轉述 PHIP
+- key: cmp_fee_total_fy24_b
+  group: D
+  metric: 算力服務費（媒體 b）
+  value: 15.53
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 每日經濟新聞（2025-12-21）
+  url: https://www.nbd.com.cn/articles/2025-12-21/4189232.html
+  doc_date: '2025-12-21'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: null
+  note: 原文「2024年，智譜算力服務費用為15.53億元，佔研發開支的比重超過70%」；與 15.52 差 0.01（四捨五入）
+- key: cmp_fee_total_1h25
+  group: D
+  metric: 算力服務費（含訓練與雲端部署）
+  value: 11.45
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 鈦媒體（2025-12-26）
+  url: https://www.tmtpost.com/7821744.html
+  doc_date: '2025-12-26'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: null
+  note: 原文「算力服務費（包括模型訓練以及通過雲端部署為客戶提供服務）從2022年的0.15億元到2025年上半年的11.45億」
+- key: cmp_fee_total_fy22
+  group: D
+  metric: 算力服務費（含訓練與雲端部署）
+  value: 0.15
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 鈦媒體（2025-12-26）
+  url: https://www.tmtpost.com/7821744.html
+  doc_date: '2025-12-26'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: null
+  note: 同上「2022年的0.15億元」
+- key: cmp_chips_domestic_100k
+  group: D
+  metric: 推論用國產晶片規模
+  value: 100000
+  lo: null
+  hi: null
+  unit: 張（以上，「10 萬級」）
+  period: 截至 2026-08-31
+  source: 智譜 2026 中期業績公告（Z.AI Co., Ltd.，截至 2026-06-30 止六個月）（第 4 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: 管理層口徑
+  note: 原文「large-scale, low-cost inference across a cluster of over 100,000 domestic chips」；未揭露廠牌、自有或租用、型號
+- key: cmp_chips_domestic_100k_b
+  group: D
+  metric: 推論用國產晶片規模（中文轉述）
+  value: 100000
+  lo: null
+  hi: null
+  unit: 張（10 萬級）
+  period: '2026'
+  source: 網易科技（同花順 2026-09-01）
+  url: https://stock.10jqka.com.cn/20260901/c679482271.shtml
+  doc_date: '2026-09-01'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「已經實現10萬級國產晶片的規模化低成本推理」，2026 年初起全面實施 All-in-Infra 戰略
+- key: cmp_inf_cost_drop
+  group: D
+  metric: 單位 token 推論成本較年初降幅
+  value: 80
+  lo: null
+  hi: null
+  unit: '%'
+  period: 2026-01-01→2026-08
+  source: 智譜 2026 中期業績公告（Z.AI Co., Ltd.，截至 2026-06-30 止六個月）（第 4 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「unit Token inference costs declining by 80% from the beginning of the year」；未說明是否含晶片折舊
+- key: cmp_e2e_perf_3x
+  group: D
+  metric: 同硬體端到端服務效能提升倍數
+  value: 3
+  lo: null
+  hi: null
+  unit: 倍
+  period: 2026（相對初始基線）
+  source: 智譜 2026 中期業績公告（Z.AI Co., Ltd.，截至 2026-06-30 止六個月）（第 12 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「Compared with the initial baseline on the same hardware, end-to-end service performance tripled」；第 21 頁 GLM-5.3-Flash 於國產晶片「300% improvement」
+- key: cmp_multiplier_yoy
+  group: D
+  metric: 「算力乘數」同比增幅
+  value: 14
+  lo: null
+  hi: null
+  unit: 倍
+  period: 1H2026 vs 1H2025
+  source: 智譜 2026 中期業績公告（Z.AI Co., Ltd.，截至 2026-06-30 止六個月）（第 15 頁）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 定義「open platform and API revenue generated from every RMB1 of computing power investment」（分母含訓練與推論），「increased by approximately 14 times year-on-year」
+- key: cmp_deploy_cost_50
+  group: D
+  metric: 部署成本降幅（FY2025 說法）
+  value: 50
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2025
+  source: 智譜 2025 年度業績公告（截至 2025-12-31）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「cutting deployment costs by 50% with zero performance degradation」；另稱國產晶片推論效率「comparable to that of international top-tier chips」
+- key: cmp_1gw_dc
+  group: D
+  metric: 國產 AI 算力資料中心規模
+  value: 1
+  lo: null
+  hi: null
+  unit: GW（口徑未明）
+  period: '2026-07-21'
+  source: 財聞（同花順 2026-07-21）
+  url: https://stock.10jqka.com.cn/20260721/c678310697.shtml
+  doc_date: '2026-07-21'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: GW 口徑未明
+  note: 原文「已落地1GW級國產AI算力數據中心建設，並全部採用國產AI晶片」；未揭露地點、夥伴、IT／設施口徑、持有方式、完工時點
+- key: cmp_entity_list
+  group: D
+  metric: 美國實體清單列入日
+  value: null
+  lo: null
+  hi: null
+  unit: 日期
+  period: '2025-01-16'
+  source: 智譜招股章程（全球發售，2025-12-30）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: 公司及 9 家子公司 2025-01-16 列入 BIS 實體清單；稱往績期間未依賴 EAR 物項，董事與制裁律師預期無重大不利影響
+- key: cmp_glm52_day0_vendors
+  group: D
+  metric: GLM-5.2 Day-0 適配國產晶片平台
+  value: 5
+  lo: null
+  hi: null
+  unit: 家（以上）
+  period: 2026-06
+  source: 同花順（2026-06-23）
+  url: https://news.10jqka.com.cn/20260623/c677629958.shtml
+  doc_date: '2026-06-23'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 晶片廠與智譜：合作宣傳誘因
+  basis: null
+  note: 原文「與昇騰、寒武紀、海光、崑崙芯、壁仞等多個國產算力平台的Day0適配」；36氪另列摩爾線程；適配≠採購，不表示 10 萬張晶片的供應方
+- key: cmp_capacity_refi_sep26
+  group: D
+  metric: 為算力擴容之再融資（小股大債）
+  value: 50
+  lo: null
+  hi: null
+  unit: USD 億
+  period: 2026-09
+  source: 證券日報（同花順 2026-09-16）
+  url: https://stock.10jqka.com.cn/20260916/c679973930.shtml
+  doc_date: '2026-09-16'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售、招募誘因
+  basis: null
+  note: 原文「以“小股大債”的結構完成總額50億美元的再融資，此次融資是出於算力擴容要求」；7 月另完成 40 億美元；細節屬 F 組（Z1-M）
+- key: rent_h20_cardhr_sep26
+  group: D
+  metric: H20-96G 卡時租價（京津冀均價）
+  value: 7.47
+  lo: 7.03
+  hi: 8.16
+  unit: RMB 元／卡／小時
+  period: '2026-09-01'
+  source: 上海有色網 SMM 算力日報
+  url: https://news.metal.com/newscontent/104091780-smm-computing-power-daily-h20-beijing-tianjin-hebei-highest-price-rises-12-dual-track-pricing-emerges-for-domestic-server-computing-power-leasing
+  doc_date: '2026-09-01'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 均價 7.47（前 7.03）、最高 8.16（前 7.29）元/卡/時；整機月租均 43,000、最高 47,000
+- key: rent_h20_machmo_sep26
+  group: D
+  metric: H20-96G 整機月租（京津冀均價）
+  value: 43000
+  lo: 40500
+  hi: 47000
+  unit: RMB 元／台／月
+  period: '2026-09-01'
+  source: 上海有色網 SMM 算力日報
+  url: https://news.metal.com/newscontent/104091780-smm-computing-power-daily-h20-beijing-tianjin-hebei-highest-price-rises-12-dual-track-pricing-emerges-for-domestic-server-computing-power-leasing
+  doc_date: '2026-09-01'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 均 43,000（前 40,500），最高 47,000；與卡時價 7.47×8 卡×730h≈43,600 吻合，推定整機＝8 卡
+- key: rent_h20_machmo_jul26
+  group: D
+  metric: H20 96G 整機月租（華東，一年約）
+  value: 35000
+  lo: 34000
+  hi: 35000
+  unit: RMB 元／台／月
+  period: '2026-07-23'
+  source: 上海有色網 SMM 算力日報
+  url: https://news.metal.com/newscontent/104021324-smm-computing-power-daily-h100-spot-rental-quotes-hit-a-new-high-of-85000-h20-and-a800-long-term-agreement-resources-ent
+  doc_date: '2026-07-23'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 一年約 35,000、三年約 34,000；H20 141G 版 42,000（年約）～46,000（月租）
+- key: rent_h800_machmo_aug26
+  group: D
+  metric: H800 月租（湖南，兩年長約）
+  value: 78000
+  lo: 78000
+  hi: 85000
+  unit: RMB 元／台／月
+  period: '2026-08-21'
+  source: 上海有色網 SMM 算力日報
+  url: https://news.metal.com/newscontent/104072164-smm-computing-power-news-h800-signed-a-2-year-long-term-agreement-at-78000-yuan-per-month-tight-spot-supply
+  doc_date: '2026-08-21'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文「78,000 yuan per unit per month on a two-year long-term agreement」；短租含維運 85,000；unit 未定義（推定 8 卡整機）
+- key: rent_a800_machmo_jul26
+  group: D
+  metric: A800 80G 整機月租（華中）
+  value: 36000
+  lo: 34000
+  hi: 36000
+  unit: RMB 元／台／月
+  period: '2026-07-23'
+  source: 上海有色網 SMM 算力日報
+  url: https://news.metal.com/newscontent/104021324-smm-computing-power-daily-h100-spot-rental-quotes-hit-a-new-high-of-85000-h20-and-a800-long-term-agreement-resources-ent
+  doc_date: '2026-07-23'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 一年約 36,000、三年約 34,000（16 台）
+- key: rent_h100_machmo_jul26
+  group: D
+  metric: H100 80G SXM 整機月租（長三角）
+  value: 85000
+  lo: 75000
+  hi: 85000
+  unit: RMB 元／台／月
+  period: '2026-07-23'
+  source: 上海有色網 SMM 算力日報
+  url: https://news.metal.com/newscontent/104021324-smm-computing-power-daily-h100-spot-rental-quotes-hit-a-new-high-of-85000-h20-and-a800-long-term-agreement-resources-ent
+  doc_date: '2026-07-23'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 短租 85,000（新高）、一年以上 80,000；前主流 75,000–80,000；表頭為 per 8-card server
+- key: rent_910b4_mo_aug26
+  group: D
+  metric: 昇騰 910B4 月租（西南）
+  value: 16000
+  lo: 15000
+  hi: 16000
+  unit: RMB 元／unit／月
+  period: '2026-08-27'
+  source: 上海有色網 SMM 算力日報
+  url: https://news.metal.com/newscontent/104082769-smm-computing-power-midday-review-market-overall-sideways-domestic-computing-power-rental-and-procurement-prices-emerge
+  doc_date: '2026-08-27'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文「monthly rental quote for the 910B was 16,000 yuan per unit per month」，未定義 unit（卡或 8 卡整機）；華東一年全包 15,000；910B4 八卡整機採購約 76 萬元
+- key: rent_910b3_mo_sep26
+  group: D
+  metric: 昇騰 910B3 月租（線上雲）
+  value: 16000
+  lo: 16000
+  hi: 19000
+  unit: RMB 元／unit／月
+  period: '2026-09-07'
+  source: 上海有色網 SMM 算力日報
+  url: https://news.metal.com/newscontent/104099764-smm-computing-power-flash-30-units-of-910b3-available-for-online-rental-at-16000-yuan-3000-yuan-lower-than-relocatable-units
+  doc_date: '2026-09-07'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 線上 16,000、華東可搬遷 19,000；910B2 線上 17,000；unit 未定義
+- key: rent_910b2_mo_aug26
+  group: D
+  metric: 昇騰 910B2 月租（華東）
+  value: 12000
+  lo: 12000
+  hi: 17000
+  unit: RMB 元／unit／月
+  period: '2026-08-31'
+  source: 上海有色網 SMM 算力日報
+  url: https://news.metal.com/newscontent/104088520-smm-computing-power-flash-ascend-910b-rental-demand-heats-up-preference-for-910b3-or-higher-specifications
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文「910B2 monthly rentals at 12,000 yuan in east China」；合約常見「兩年固定加一年開放」；unit 未定義
+- key: rent_910b_8card_mo_may26
+  group: D
+  metric: 昇騰 910B 八卡月租（智星雲）
+  value: 25000
+  lo: 16000
+  hi: 25000
+  unit: RMB 元／8 卡／月
+  period: '2026-05-12'
+  source: AtomGit／CSDN〈2026 怎麼租到高性價比 GPU 算力〉
+  url: https://gitcode.csdn.net/6a02e16154b52172bc73777e.html
+  doc_date: '2026-05-12'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 表列昇騰 910B 八卡配置月租 25,000；與 SMM 16,000 矛盾（若 SMM unit＝8 卡）
+- key: rent_h800_cardhr_aliyun
+  group: D
+  metric: H800 80G 單卡時租（阿里雲）
+  value: 18.75
+  lo: 11.83
+  hi: 18.75
+  unit: RMB 元／卡／小時
+  period: '2026-05-12'
+  source: AtomGit／CSDN〈2026 怎麼租到高性價比 GPU 算力〉
+  url: https://gitcode.csdn.net/6a02e16154b52172bc73777e.html
+  doc_date: '2026-05-12'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 表列阿里雲 H800 時租 18.75、月約 13,500；圖靈小鎮 11.83／月約 8,518
+- key: rent_h800_cardhr_turing_b
+  group: D
+  metric: H800 80G 單卡時租（圖靈小鎮）
+  value: 11.83
+  lo: 11.83
+  hi: 18.75
+  unit: RMB 元／卡／小時
+  period: '2026-05-12'
+  source: AtomGit／CSDN〈2026 怎麼租到高性價比 GPU 算力〉
+  url: https://gitcode.csdn.net/6a02e16154b52172bc73777e.html
+  doc_date: '2026-05-12'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 同上
+- key: rent_h800_cardhr_derived
+  group: D
+  metric: H800（SMM 兩年約） 折算卡時價
+  value: 13.36
+  lo: null
+  hi: null
+  unit: RMB 元／卡／小時
+  period: 2026-07～09
+  source: 由 rent_h800_machmo_aug26 ÷ 8 卡 ÷ 730 小時
+  url: https://news.metal.com/
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: null
+  note: 78000÷8÷730＝13.36；假設整機 8 卡、每月 730 小時、全月計費
+- key: rent_a800_cardhr_derived
+  group: D
+  metric: A800（SMM 一年約） 折算卡時價
+  value: 6.16
+  lo: null
+  hi: null
+  unit: RMB 元／卡／小時
+  period: 2026-07～09
+  source: 由 rent_a800_machmo_jul26 ÷ 8 卡 ÷ 730 小時
+  url: https://news.metal.com/
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: null
+  note: 36000÷8÷730＝6.16；假設整機 8 卡、每月 730 小時、全月計費
+- key: rent_h100_cardhr_derived
+  group: D
+  metric: H100（SMM 一年以上） 折算卡時價
+  value: 13.7
+  lo: null
+  hi: null
+  unit: RMB 元／卡／小時
+  period: 2026-07～09
+  source: 由 rent_h100_machmo_jul26 ÷ 8 卡 ÷ 730 小時
+  url: https://news.metal.com/
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: null
+  note: 80000÷8÷730＝13.7；假設整機 8 卡、每月 730 小時、全月計費
+- key: rent_h20_cardhr_derived
+  group: D
+  metric: H20 96G（SMM 京津冀均） 折算卡時價
+  value: 7.36
+  lo: null
+  hi: null
+  unit: RMB 元／卡／小時
+  period: 2026-07～09
+  source: 由 rent_h20_machmo_sep26 ÷ 8 卡 ÷ 730 小時
+  url: https://news.metal.com/
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: null
+  note: 43000÷8÷730＝7.36；假設整機 8 卡、每月 730 小時、全月計費
+- key: rent_910b4_cardhr_derived
+  group: D
+  metric: 昇騰 910B4／910B3 16,000 折算卡時價（假設 8 卡整機）
+  value: 2.74
+  lo: 2.74
+  hi: 4.28
+  unit: RMB 元／卡／小時
+  period: 2026-05～09
+  source: 由 SMM／AtomGit 月租 ÷ 8 ÷ 730
+  url: https://news.metal.com/
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: null
+  note: 16000÷8÷730＝2.74；若 unit 為單卡則為 21.9（不合理高於 H800，故推定 8 卡）
+- key: rent_910b_zxy_cardhr_derived
+  group: D
+  metric: 昇騰 910B 八卡 25,000（智星雲） 折算卡時價（假設 8 卡整機）
+  value: 4.28
+  lo: 2.74
+  hi: 4.28
+  unit: RMB 元／卡／小時
+  period: 2026-05～09
+  source: 由 SMM／AtomGit 月租 ÷ 8 ÷ 730
+  url: https://news.metal.com/
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: null
+  note: 25000÷8÷730＝4.28；若 unit 為單卡則為 34.2（不合理高於 H800，故推定 8 卡）
+- key: perf_910c_vs_h100_inf
+  group: D
+  metric: 昇騰 910C 推論效能／H100
+  value: 0.6
+  lo: 0.6
+  hi: 0.8
+  unit: 倍
+  period: 2025-02
+  source: GIGAZINE（2025-02-07，引 AGI Hunt／DeepSeek 測試）
+  url: https://gigazine.net/gsc_news/en/20250207-huawei-ascend-910c-inference-performance-nvidia
+  doc_date: '2025-02-07'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文「Ascend 910C delivered 60% of the performance of NVIDIA’s H100 in inference tasks」；aiwiki 另引 Reuters 同 60%，分析師估 BF16 吞吐約 80%
+- key: perf_910c_power
+  group: D
+  metric: 昇騰 910C 單卡功耗
+  value: 310
+  lo: 310
+  hi: 350
+  unit: W
+  period: 2024-11（2025-02 更新）
+  source: Unite.AI〈Huawei Ascend 910C〉
+  url: https://www.unite.ai/huaweis-ascend-910c-a-bold-challenge-to-nvidia-in-the-ai-chip-market
+  doc_date: '2025-02-23'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文「consuming around 310 watts」；aiwiki 列 310–350W（引 SemiAnalysis）；晶片 TDP，非全設施
+- key: perf_910c_bf16
+  group: D
+  metric: 昇騰 910C BF16 稠密算力
+  value: 752
+  lo: 752
+  hi: 780
+  unit: TFLOPS
+  period: 2025-07
+  source: The Register（2025-07-29）
+  url: https://www.theregister.com/2025/07/29/huawei_rackscale_boogeyman/
+  doc_date: '2025-07-29'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文「752 teraFLOPS of dense FP16/BF16」，128GB HBM、3.2TB/s；Tom's Hardware（SemiAnalysis）列 780
+- key: perf_cm384_power
+  group: D
+  metric: CloudMatrix 384 系統功耗
+  value: 559
+  lo: 559
+  hi: 600
+  unit: kW
+  period: 2025-04
+  source: Tom's Hardware（2025-04-18，引 SemiAnalysis）
+  url: https://www.tomshardware.com/tech-industry/artificial-intelligence/huaweis-new-ai-cloudmatrix-cluster-beats-nvidias-gb200-by-brute-force-uses-4x-the-power
+  doc_date: '2025-04-18'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 「all system power (including networking and storage)」約 559kW；The Register 引 SemiAnalysis「~600 kW all in」；少數派亦 559kW 未註源。【所有來源皆追溯至 SemiAnalysis，依規則不可單獨引用，暫不入模型】
+- key: perf_cm384_vs_nvl72_power
+  group: D
+  metric: CloudMatrix 384 功耗／GB200 NVL72
+  value: 3.9
+  lo: 3.9
+  hi: 4.1
+  unit: 倍
+  period: 2025-04
+  source: Tom's Hardware（2025-04-18，引 SemiAnalysis）
+  url: https://www.tomshardware.com/tech-industry/artificial-intelligence/huaweis-new-ai-cloudmatrix-cluster-beats-nvidias-gb200-by-brute-force-uses-4x-the-power
+  doc_date: '2025-04-18'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 559kW vs 約 145kW；每 TFLOP 功耗差 2.3×（1.87 vs 0.81 W/TFLOP）。【僅 SemiAnalysis 源頭，不可單獨引用】
+- key: perf_cm384_decode_per_npu
+  group: D
+  metric: CloudMatrix384 DeepSeek-R1 解碼吞吐（每 NPU）
+  value: 1943
+  lo: null
+  hi: null
+  unit: token／秒／NPU
+  period: 2025-06
+  source: 華為 CloudMatrix-Infer 論文（arXiv 2506.12708）
+  url: https://arxiv.org/abs/2506.12708v1
+  doc_date: '2025-06-15'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 華為：自家硬體宣傳誘因
+  basis: null
+  note: 摘要「prefill throughput of 6,688 tokens/s per NPU and decode throughput of 1,943 tokens/s per NPU (<50 ms TPOT)」；15ms 約束下 538；INT8
+- key: perf_cm384_vs_h800_eff
+  group: D
+  metric: CloudMatrix384 計算效率對 H800（prefill）
+  value: 4.45
+  lo: null
+  hi: null
+  unit: token／秒／TFLOPS
+  period: 2025-06
+  source: The Register（2025-07-29，轉述華為論文）
+  url: https://www.theregister.com/2025/07/29/huawei_rackscale_boogeyman/
+  doc_date: '2025-07-29'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 華為論文自述
+  basis: null
+  note: 原文「4.5 tokens/sec per teraFLOPS, just ahead of Nvidia’s H800 at 3.96」；decode「roughly 10 percent lead over Nvidia’s H800」；為每 TFLOPS 效率，非每卡
+- key: perf_h20_bf16
+  group: D
+  metric: H20 BF16 稠密算力
+  value: 148
+  lo: null
+  hi: null
+  unit: TFLOPS
+  period: 2024-02
+  source: Tom's Hardware（2024-02-01）
+  url: https://tomshardware.com/pc-components/gpus/new-nvidia-ai-gpus-designed-to-get-around-us-export-bans-come-to-china-h20-l20-and-l2-to-fill-void-left-by-restricted-models
+  doc_date: '2024-02-01'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: BF16 148、FP8 296 TFLOPS，96GB HBM3、4.0TB/s、TDP 400W
+- key: perf_h100_bf16_sparse
+  group: D
+  metric: H100 SXM BF16 峰值（含稀疏）
+  value: 1979
+  lo: null
+  hi: null
+  unit: TFLOPS
+  period: —
+  source: Lenovo Press LP1732（H100 規格）
+  url: https://lenovopress.lenovo.com/lp1732.pdf
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: null
+  note: '原文「Peak Bfloat16 (BF16) performance: 1,979 TFLOPS*」*＝structural sparsity；稠密＝÷2＝989.5；TDP 700W'
+- key: perf_h20_vs_h100_compute
+  group: D
+  metric: H20 算力／H100（BF16 稠密）
+  value: 0.15
+  lo: null
+  hi: null
+  unit: 倍
+  period: —
+  source: 由 perf_h20_bf16 ÷（perf_h100_bf16_sparse÷2）
+  url: https://lenovopress.lenovo.com/lp1732.pdf
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: null
+  note: 148÷989.5＝0.150；頻寬 4.0÷3.35＝1.19（H20 較高）；decode 受頻寬限制，故推論比遠高於 0.15
+- key: perf_h20_vs_h100_inf
+  group: D
+  metric: H20 推論吞吐／H100（Llama2-70B 估計）
+  value: 0.34
+  lo: 0.26
+  hi: 0.42
+  unit: 倍
+  period: 2026-08
+  source: DatabaseMart〈H20 vs H100〉
+  url: https://www.databasemart.com/blog/nvidia-h20-vs-nvidia-h100
+  doc_date: '2026-08-25'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: H100 約 21,500–23,000 token/s（MLPerf），H20 約 6,000–9,000（「engineering-level estimate」）；比值 0.26–0.42（Derived 中點 0.34）
+- key: perf_h20_vs_h100_inf_b
+  group: D
+  metric: H20 對 H100 LLM 推論（SemiAnalysis 說法）
+  value: 1.2
+  lo: 0.5
+  hi: 1.2
+  unit: 倍（以上）
+  period: 2023-11
+  source: Asia Times（2024-01-04，引 SemiAnalysis Dylan Patel）
+  url: https://asiatimes.com/2024/01/nvidia-chips-for-china-dumbed-down-but-lean-and-mean/
+  doc_date: '2024-01-04'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文「H20 actually is over 20% faster than the H100 in large language model (LLM) reasoning」；同文稱多卡環境約 H100 的 50%。【SemiAnalysis 單一源，不可單獨引用；與 0.26–0.42 矛盾】
+not_found:
+- item: bigmodel.cn 官方定價頁直讀
+  tried: WebFetch open.bigmodel.cn/pricing、bigmodel.cn/pricing（需 JS，回傳空殼；curl 被代理拒絕）；改用奇連 AI 轉錄＋華為雲／17173／CodePick 交叉核對
+  verdict: 找不到（技術限制，非未揭露）
+- item: z.ai 官方 Coding Plan 訂閱頁（z.ai/subscribe）與 docs.z.ai release notes
+  tried: WebFetch 需使用者授權逾時；改用 Digital Applied、UsagePricing、aipricing.guru（2026-10-07 核對）
+  verdict: 找不到（技術限制）
+- item: GLM-4.6、GLM-4.7、GLM-5 上市當日的人民幣牌價（官方公告原文）
+  tried: 搜尋「GLM-4.6 發布 價格 元」「GLM-5 4元 18元」「GLM-4.7 2元 8元」；僅得現行價轉錄與 TypingMind 美元價
+  verdict: 找不到（現行價可得，歷史 RMB 公告原文未查得）
+- item: 開放平台離峰（閒時／錯峰）折扣
+  tried: 奇連 AI 價目文、docs.z.ai pricing.md、搜尋「智譜 錯峰 折扣」
+  verdict: 可能不存在（官方表與轉錄均未列）
+- item: 新用戶免費額度（贈送 token 數）
+  tried: docs.z.ai pricing、奇連 AI（明言未核實）
+  verdict: 找不到
+- item: Coding Plan 訂閱收入金額、訂閱者絕對數（中期）
+  tried: 中期業績公告全文（僅「Coding Plan subscription prices also went up」與 23 倍）、年度業績公告（24.2 萬付費開發者，2026-03）
+  verdict: 可能未揭露
+- item: 付費用戶絕對數、付費日活絕對數
+  tried: 中期公告（僅 +603%）、年度公告、招股章程
+  verdict: 可能未揭露
+- item: 企業客戶數（2026）
+  tried: 中期公告（只有「enterprise and developer users」合計 740 萬）、年度公告
+  verdict: 可能未揭露（最新為招股章程 9M25 >12,000 機構客戶）
+- item: 2026 年日均 token 絕對值
+  tried: 中期公告（只有倍數；唯一絕對值為 Ox-Alpha 6 日 62T）、業績會轉述、搜尋「智譜 日均 token 萬億 2026」
+  verdict: 可能未揭露；可由 2025-11 4.2T × 倍數推估（Derived，需注意基期為年初而非 2025-11）
+- item: 智譜清言月活絕對值
+  tried: QuestMobile（每經 2026Q1 榜：未進 TOP20）、QuestMobile 2026H1（IT之家）、新京報×Xsignal 4 月榜、第一財經 AI 產品榜
+  verdict: 找不到（第三方榜單未列，僅知未進前 20）
+- item: 前五大供應商名稱、算力採購金額（FY2025、1H26）
+  tried: 年度業績公告（未列供應商）、中期公告（未列）、招股章程（只有占比）；年報全文 PDF 未在搜尋結果中出現
+  verdict: 可能未揭露名稱；FY2025 年報占比可能有但本次未取得
+- item: 10 萬級國產晶片的廠牌、型號、自有或租用比例
+  tried: 中期公告第 4、11–12 頁（只稱 domestic chips）、媒體（同花順、財聞、虎嗅）、搜尋「智譜 10萬 國產芯片 昇騰 寒武紀」
+  verdict: 可能未揭露（僅知多平台 Day-0 適配：昇騰、寒武紀、海光、崑崙芯、壁仞、摩爾線程）
+- item: 1GW 國產算力資料中心的地點、夥伴、IT／設施口徑、持有方式
+  tried: 財聞、華爾街見聞、虎嗅、北京日報（搜尋結果）
+  verdict: 可能未揭露
+- item: 自有伺服器／GPU 數量與型號
+  tried: 招股章程（只稱 procurement and lease of computing hardware）、年度與中期公告（僅資本支出金額）
+  verdict: 可能未揭露
+- item: 昇騰 910C 卡時租價
+  tried: SMM 算力日報（只有 910B2／B3／B4）、CSDN／AtomGit、搜尋「910C 租賃 價格」
+  verdict: 找不到
+- item: 昇騰 910B 租價的 unit 定義（單卡或 8 卡整機）
+  tried: SMM 多篇（皆未定義）
+  verdict: 找不到；以 H20 卡時價與整機價吻合推定 SMM 整機＝8 卡
+- item: CloudMatrix 384 系統功耗的非 SemiAnalysis 獨立來源
+  tried: Tom's Hardware、The Register、少數派、DIGITIMES（付費牆）、HuaweiCentral、aiwiki（皆引 SemiAnalysis 或未註源）
+  verdict: 找不到（華為未公布官方功耗）；依規則不可單獨引用
+- item: H20 對 H100 推論效能比的獨立量測（MLPerf 官方）
+  tried: DatabaseMart（工程估計）、Asia Times（SemiAnalysis）、flopper.io 規格比較
+  verdict: 可能不存在（NVIDIA 未提交 H20 MLPerf）
+- item: 開放平台企業客戶前十大集中度（2026）
+  tried: 中期公告（僅前十大日均呼叫 98 倍）
+  verdict: 可能未揭露
