@@ -1316,6 +1316,348 @@
   ],
   "optional": []
  },
+ "pricing": {
+  "_note": "v0.2a：每 MW 收入的公司因素（定價倍數 k）與證據表；只有 anchorMultiple 驅動計算（methodology.perMw.revenue＝tkAnchor）。",
+  "anchorMultiple": {
+   "_note": "v0.2a（已決定事項 14、下游資料契約第 4 條）：每 MW 年收入（100% 計費時數）＝ Σ 平均在役世代占比 × IF_HoldEcon（基準成本情境）÷ 1000 × 定價倍數 k；k_t＝長約占比_t × k_長約 ＋（1 − 長約占比_t）× k_現貨。k 只取「市場價格 ÷ 同世代 Tokenomics 持有成本」證據（evidence，use＝long／spot 者驅動，range 只支持區間，list 只列）；不得用 Nebius 的營收、ARR、RPO、ACV 反推。合約期內 k 固定；續約價格衰退不做。價格軸（k 低／基準／高）與容量軸（scenarios）分離。",
+   "long": {
+    "base": 0.76,
+    "low": 0.7,
+    "high": 1.0,
+    "tag": "[Analogy]",
+    "refEvidence": "IREN–Microsoft GB300 五年約",
+    "note": "基準＝IREN–Microsoft GB300 五年約 9.70 ÷ IF_HoldEcon GB300 12.72＝0.762（取兩位）；區間 0.70–1.00（工作單預設；IREN–NVIDIA 0.89 落在區間內）",
+    "interpretation": "契約第 4 條指定解讀（預設）：長約以低於打平租金（WACC 10% 經濟持有成本）的價格換取預付（20%）與五年確定性，客戶分攤部分資本成本——Nebius 對 Microsoft／Meta 長約同樣收預付（股東信約 70% 合約、預付占資本支出 50–60%）。替代解讀：(a) 成本結構不同（IREN 自有電力與廠房，持有成本低於 Tokenomics 基準）→ k 應以 IREN 自身成本計、高於 0.76；(b) 合約含非收入條款（預付的資金成本價值未計入價格）→ 經濟價格高於帳面價格。三者對 Nebius 收入的影響方向：預設解讀最保守。"
+   },
+   "spot": {
+    "base": 1.76,
+    "low": 1.5,
+    "high": 2.3,
+    "tag": "[Analogy]",
+    "refEvidence": "H100 Silicon Data 現貨指數",
+    "note": "基準＝H100 Silicon Data 現貨指數 2.82 ÷ IF_GPUhrEcon H100 1.605＝1.757（取兩位）；上緣 2.3（B300 指數 ÷ GB300 2.29）；下緣 1.5（工作單預設）。Nebius 非長約客戶多為預留（數月至數年），介於長約與隨需之間，以現貨指數代表"
+   },
+   "longShare": {
+    "method": "contractMw",
+    "tag": "[Derived]",
+    "formula": "長約占比_t＝MIN(1, 已揭露多年期合約在役 MW_t ÷ 平均在役 MW_t)；合約 MW＝揭露的 GPU 數 ÷ 每 MW GPU 數（Microsoft），未揭露者＝TCV ÷ 年期 ÷ 錨價（IF_HoldEcon 基準，未乘 k）；平均在役 MW＝（期初＋期末）÷ 2，期末＝已連網 MW × 在役比例，期初（首期）＝priceCheck.inServiceMw",
+    "contracts": [
+     {
+      "label": "Microsoft（Vineland，5 年）",
+      "start": 0,
+      "mw": 205,
+      "lo": 50,
+      "hi": 274,
+      "basis": "約 10 萬顆 GB300 ÷ 487 顆/MW＝205 MW-IT（Bloomberg 引述匿名消息）；下緣 50 MW＝Epoch AI 衛星估計 Vineland 第一期 IT 容量（2026-07）；上緣＝$17.4bn ÷ 5 ÷ 12.72＝274",
+      "source": "6-K 2025-09-08；Bloomberg 2025-10-02；Epoch AI Frontier Data Centers（2026-08-24 更新）",
+      "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465925088312/tm2525580d1_6k.htm",
+      "tag": "[Derived]"
+     },
+     {
+      "label": "Meta 第一份（5 年）",
+      "start": 0,
+      "mw": 46,
+      "lo": 37,
+      "hi": 60,
+      "basis": "$2.9bn ÷ 5 ÷ 12.72（GB300 錨）＝46 MW；區間 [Assumed]：下緣＝基準 × 0.8（價格高於錨）、上緣＝÷（12.72 × k_長約 0.76）",
+      "source": "6-K 2025-11-13 附件 99.2",
+      "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465925110831/tm2531034d1_ex99-2.htm",
+      "tag": "[Derived]"
+     },
+     {
+      "label": "Meta 第二份專用容量（5 年，2027 年初起）",
+      "start": 1,
+      "mw": 188,
+      "lo": 150,
+      "hi": 247,
+      "basis": "$12bn ÷ 5 ÷ 12.76（VR200 錨）＝188 MW；區間 [Assumed]：下緣＝基準 × 0.8、上緣＝÷（12.76 × 0.76）",
+      "source": "6-K 2026-03-16 附件 99.1",
+      "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926027886/tm268879d1_ex99-1.htm",
+      "tag": "[Derived]"
+     },
+     {
+      "label": "Meta 未售容量承購（或有，最高 $15bn）",
+      "start": 1,
+      "mw": 0,
+      "lo": 0,
+      "hi": 235,
+      "basis": "公司擬先賣給第三方客戶、未售部分才由 Meta 承購 → 基準不計為長約；上緣＝$15bn ÷ 5 ÷ 12.76＝235",
+      "source": "6-K 2026-03-16 附件 99.1",
+      "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926027886/tm268879d1_ex99-1.htm",
+      "tag": "[Assumed]"
+     }
+    ],
+    "note": "工作單預設 2；只用合約 MW 換算占比，不用來推 k。Microsoft 的 MW 以 GPU 數換算（不需 k）；Meta 未揭露 MW／GPU，以錨價（k＝1）換算並給區間（[Derived]）"
+   },
+   "contractMix": [
+    {
+     "label": "客戶承諾總額（公司說法）",
+     "value": 40,
+     "unit": "US$bn",
+     "tag": "[Interested-party]",
+     "source": "Q2 2026 股東信「more than $40 billion of customer commitments」",
+     "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926094568/tm2622968d1_ex99-2.htm",
+     "date": "2026-08-12",
+     "retrieved": "2026-10-08"
+    },
+    {
+     "label": "長約與隨需／預留收入比例（百分比）",
+     "value": null,
+     "unit": "",
+     "tag": "找不到",
+     "source": "試過：20-F FY2025、Q1／Q2 2026 6-K 與股東信、Microsoft／Meta 協議 6-K、網路搜尋；公司未揭露（找不到，不代表不存在）",
+     "url": "",
+     "date": "",
+     "retrieved": "2026-10-08"
+    },
+    {
+     "label": "Nebius 自助／預留折扣",
+     "value": 0.35,
+     "unit": "比例",
+     "tag": "[Interested-party]",
+     "source": "Nebius 官網價目「Pay up to 35% less than on-demand rates by reserving large-scale clusters for multiple months」",
+     "url": "https://nebius.com/prices",
+     "date": "2026-10-07",
+     "retrieved": "2026-10-08"
+    }
+   ],
+   "notFound": [
+    "VR200 長約或現貨每 GPU 小時價格：找不到（尚未上市交付；試過 Nebius／CoreWeave／Verda 價目、Silicon Data、GetDeploying、新聞搜尋）",
+    "第二筆獨立於 IREN 的 neocloud 長約（含年期與 GPU 數）：找不到可換算者——Nscale–Microsoft（FT 報導約 $14bn、約 11.6 萬顆 GB300）未揭露年期，無法換算；Lambda–Microsoft 未揭露金額",
+    "Nebius 自身長約每 GPU 小時價格：不得作為證據（工作單；屬 RPO），Microsoft 合約只列（evidence 最後一筆）"
+   ],
+   "evidence": [
+    {
+     "label": "IREN–Microsoft GB300 五年約",
+     "gen": "GB300 NVL72",
+     "price": 9.7,
+     "unit": "US$m/MW/年",
+     "tkName": "IF_HoldEcon",
+     "contract": "長約（hyperscaler）",
+     "term": "5 年",
+     "use": "long",
+     "tag": "[Derived]",
+     "source": "IREN Secures $9.7bn AI Cloud Contract with Microsoft（IREN 新聞稿）",
+     "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-97bn-ai-cloud-contract-microsoft",
+     "date": "2025-11-03",
+     "retrieved": "2026-10-08",
+     "note": "$9.7bn ÷ 5 年 ÷ 200 MW critical IT；含 20% 預付；非 Nebius 合約（同業成交）；契約第 4 條指定解讀見 long.interpretation"
+    },
+    {
+     "label": "IREN–NVIDIA 氣冷 Blackwell 五年約（GB300 類比）",
+     "gen": "GB300 NVL72",
+     "price": 11.333,
+     "unit": "US$m/MW/年",
+     "tkName": "IF_HoldEcon",
+     "contract": "長約（晶片商客戶）",
+     "term": "5 年",
+     "use": "range",
+     "tag": "[Analogy]",
+     "source": "IREN Secures $3.4bn AI Cloud Contract with NVIDIA（IREN 新聞稿）",
+     "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-34bn-ai-cloud-contract-nvidia",
+     "date": "2026-05-07",
+     "retrieved": "2026-10-08",
+     "note": "$3.4bn ÷ 5 年 ÷ 約 60 MW（MW 口徑未註明，視為 IT）；氣冷 Blackwell 以 GB300 類比；與第 1 筆同一供應商，只支持區間"
+    },
+    {
+     "label": "Oracle–OpenAI 約 $300bn／4.5 GW（未經證實）",
+     "gen": "GB300 NVL72",
+     "price": 13.333,
+     "unit": "US$m/MW/年",
+     "tkName": "IF_HoldEcon",
+     "contract": "長約（hyperscaler 對實驗室）",
+     "term": "約 5 年（2027 起）",
+     "use": "list",
+     "tag": "[Analogy]",
+     "source": "The Register 轉述 WSJ（2025-09-11）",
+     "url": "https://www.theregister.com/2025/09/11/openai_reportedly_on_the_hook/",
+     "date": "2025-09-11",
+     "retrieved": "2026-10-08",
+     "note": "$300bn ÷ 5 ÷ 4,500 MW；金額未經當事方證實、MW 口徑不明；只列不用"
+    },
+    {
+     "label": "H100 Silicon Data 現貨指數",
+     "gen": "Hopper H100",
+     "price": 2.82,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "現貨（市場租金指數）",
+     "term": "隨需／短期",
+     "use": "spot",
+     "tag": "[Verified]",
+     "source": "Silicon Data H100 Index 頁面",
+     "url": "https://www.silicondata.com/products/silicon-index/h100",
+     "date": "2026-10-06",
+     "retrieved": "2026-10-08",
+     "note": "價格 [Verified]；倍數 [Derived]；k_現貨 基準"
+    },
+    {
+     "label": "B300 Silicon Data 現貨指數（GB300 類比）",
+     "gen": "GB300 NVL72",
+     "price": 6.82,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "現貨（市場租金指數）",
+     "term": "隨需／短期",
+     "use": "range",
+     "tag": "[Analogy]",
+     "source": "Silicon Data H100 Index 頁面（含 B200、B300 指數）",
+     "url": "https://www.silicondata.com/products/silicon-index/h100",
+     "date": "2026-10-06",
+     "retrieved": "2026-10-08",
+     "note": "HGX B300 對 GB300 NVL72 類比；k_現貨 上緣"
+    },
+    {
+     "label": "B200 Ornn 成交指數（GB200 類比）",
+     "gen": "GB200 NVL72",
+     "price": 4.08,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "現貨（市場成交指數）",
+     "term": "隨需／短期",
+     "use": "range",
+     "tag": "[Analogy]",
+     "source": "Ornn（經 WSJ 轉述；CoreWeave W1 第 6c 步）",
+     "url": "",
+     "date": "2026-04-13",
+     "retrieved": "2026-10-08",
+     "note": "HGX B200 對 GB200 NVL72 類比；落在 k_現貨 區間內"
+    },
+    {
+     "label": "B200 Silicon Data 現貨指數（GB200 類比）",
+     "gen": "GB200 NVL72",
+     "price": 5.87,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "現貨（市場租金指數）",
+     "term": "隨需／短期",
+     "use": "list",
+     "tag": "[Analogy]",
+     "source": "Silicon Data H100 Index 頁面（含 B200、B300 指數）",
+     "url": "https://www.silicondata.com/products/silicon-index/h100",
+     "date": "2026-10-06",
+     "retrieved": "2026-10-08",
+     "note": "高於 k_現貨 區間上緣；HGX 對 NVL72 類比偏高，只列"
+    },
+    {
+     "label": "Nebius H100 隨需牌價（10/1 起）",
+     "gen": "Hopper H100",
+     "price": 4.5,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "隨需牌價",
+     "term": "隨需",
+     "use": "list",
+     "tag": "[Interested-party]",
+     "source": "Nebius NVIDIA GPU Pricing（官網價目；2026-10-01 起 4.50，此前 3.85）",
+     "url": "https://nebius.com/prices",
+     "date": "2026-10-01",
+     "retrieved": "2026-10-08",
+     "note": "牌價非成交價；官網稱多月期預留最多便宜 35%（→ 2.93，倍數約 1.82）；只列不用"
+    },
+    {
+     "label": "Nebius H200 隨需牌價（Hopper 類比，10/1 起）",
+     "gen": "Hopper H100",
+     "price": 5.4,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "隨需牌價",
+     "term": "隨需",
+     "use": "list",
+     "tag": "[Interested-party]",
+     "source": "Nebius NVIDIA GPU Pricing（官網價目；2026-10-01 起 5.40，此前 4.50）",
+     "url": "https://nebius.com/prices",
+     "date": "2026-10-01",
+     "retrieved": "2026-10-08",
+     "note": "Tokenomics 無 H200 欄，以 Hopper H100 欄代表；牌價非成交價；只列不用"
+    },
+    {
+     "label": "Nebius B300 隨需牌價（GB300 類比，10/1 起）",
+     "gen": "GB300 NVL72",
+     "price": 9.5,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "隨需牌價",
+     "term": "隨需",
+     "use": "list",
+     "tag": "[Interested-party]",
+     "source": "Nebius NVIDIA GPU Pricing（官網價目；2026-10-01 起 9.50，此前 7.85；GB300 NVL72 為洽詢報價）",
+     "url": "https://nebius.com/prices",
+     "date": "2026-10-01",
+     "retrieved": "2026-10-08",
+     "note": "牌價非成交價；預留最多便宜 35%（→ 6.18，倍數約 2.07）；只列不用"
+    },
+    {
+     "label": "Nebius–Microsoft 五年約（約 10 萬顆 GB300，Nebius 自身合約）",
+     "gen": "GB300 NVL72",
+     "price": 3.973,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "長約（hyperscaler；Nebius 自身）",
+     "term": "5 年",
+     "use": "list",
+     "tag": "[Derived]",
+     "source": "Nebius 6-K 2025-09-08（TCV $17.4bn，5 年）＋Bloomberg 2025-10-02 引述匿名消息（約 10 萬顆 GB300，經 TechNews 轉述）",
+     "url": "https://technews.tw/?p=1448224",
+     "date": "2025-10-02",
+     "retrieved": "2026-10-08",
+     "note": "17,400 ÷ 5 ÷ 100,000 ÷ 8,760 ×1e6＝3.97 US$/GPU-hr；GPU 數未經公司證實、TCV 可能含非 GPU 服務；屬 Nebius 自身合約（RPO 的一部分），依工作單不得作為 k 的證據，只列作對照（是否採用見『需要 Andy 決定』）"
+    }
+   ]
+  }
+ },
+ "fleet": {
+  "_note": "世代組合（v0.2a，比照 CoreWeave W2 的簡化版）：世代名稱與 Tokenomics 快照同名。期初在役 MW（priceCheck.inServiceMw）依 openMix；各期新增在役 MW（期末在役＝已連網 × 在役比例；新增＝期末 − 期初）依 newMix；汰換不做（Hopper 在 FY29–FY30 才屆 5 年，影響列於已知限制）。平均在役世代占比＝各世代（期初＋期末）÷ 2 ÷ 平均在役 MW，供收入錨加權。",
+  "generations": [
+   "Hopper H100",
+   "GB200 NVL72",
+   "GB300 NVL72",
+   "VR200 NVL72"
+  ],
+  "openMix": {
+   "asOf": "2026-06-30",
+   "mix": {
+    "Hopper H100": 0.28,
+    "GB200 NVL72": 0.19,
+    "GB300 NVL72": 0.53
+   },
+   "tag": "[Assumed]",
+   "range": {
+    "Hopper H100": [
+     0.2,
+     0.4
+    ],
+    "GB200 NVL72": [
+     0.1,
+     0.25
+    ],
+    "GB300 NVL72": [
+     0.4,
+     0.65
+    ]
+   },
+   "source": "2025 年底 active 170 MW（20-F／股東信）假設 Hopper（H100／H200）60%、Blackwell（B200／GB200，以 GB200 欄代表）40%；2026 上半年新增約 196 MW（366 − 170，內插）以 Microsoft Vineland GB300／B300 為主（Bloomberg：約 10 萬顆 GB300；Epoch AI 估 B300）＝GB300 100%。公司未揭露世代組合（找不到）；Tokenomics 無 H200 欄，以 Hopper H100 欄代表。"
+  },
+  "newMix": [
+   {
+    "GB300 NVL72": 1
+   },
+   {
+    "GB300 NVL72": 0.5,
+    "VR200 NVL72": 0.5
+   },
+   {
+    "VR200 NVL72": 1
+   },
+   {
+    "VR200 NVL72": 1
+   },
+   {
+    "VR200 NVL72": 1
+   }
+  ],
+  "newMixNote": "[Assumed]：2H26 GB300 100%（2026 年交付主力）；FY27 GB300 50%／VR200 50%（Meta 第二份為 Vera Rubin、2027 年初起交付）；FY28–FY30 VR200 100%。區間：VR200 提前一年（FY27 100%）或延後一年（FY28 50%）"
+ },
  "nebius": {
   "_readme": "Nebius 資料草稿（v0.1a 產出；v0.1b 步驟 1 已把可對應既有欄位的資料搬入 meta、ytdActual、latestQuarter、callFacts、debt、valuation 等）。本區只保留引擎尚未使用、後續步驟（預付款、融資瀑布、可轉債稀釋、其他事業與持股、每 MW 三情境）會用的欄位；每欄 value＋unit＋ref（data/nebius_facts_20261007.json 的 id）。",
   "files": {

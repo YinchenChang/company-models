@@ -222,6 +222,19 @@ F = [
  ('varianceReasons._note', '差異原因的說明文字（不進程式）', '文字', K),
  ('varianceReasons.list', '差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗', '清單', C),
  # Nebius v0.1a：公司專屬資料草稿（引擎尚未讀取；v0.1b 依各欄 mapTo 搬到既有欄位）
+ ('pricing._note', '每 MW 收入公司因素區段的說明（不進程式；v0.2a）', '文字', K),
+ ('pricing.anchorMultiple._note', '定價倍數 k 的口徑說明（已決定事項 14、下游資料契約第 4 條；不進程式）', '文字', K),
+ ('pricing.anchorMultiple.long', 'k_長約：base／low／high（價格軸低／基準／高）、證據來源 refEvidence、契約第 4 條指定解讀 interpretation、標記', '物件（倍數）', C),
+ ('pricing.anchorMultiple.spot', 'k_現貨：base／low／high、refEvidence、標記（非長約客戶的價格倍數）', '物件（倍數）', C),
+ ('pricing.anchorMultiple.longShare', '長約占比的算法：contracts＝已揭露多年期合約（label、start＝起始模型期 0–4、mw 基準／lo／hi、換算依據、來源、標記）；占比＝MIN(1, 合約 MW ÷ 平均在役 MW)', '物件', M),
+ ('pricing.anchorMultiple.contractMix', '合約組合的揭露（只作對照；找不到者寫明試過的來源）', '清單', M),
+ ('pricing.anchorMultiple.notFound', '找不到的價格證據與試過的來源（「找不到」與「不存在」分開寫）', '清單（文字）', M),
+ ('pricing.anchorMultiple.evidence', 'k 證據表：每筆 label、gen（Tokenomics 世代名）、price、unit、tkName（IF_HoldEcon 或 IF_GPUhrEcon）、合約型態與期間、use（long／spot＝驅動基準，range＝只支持區間，list＝只列）、來源、日期、標記；倍數＝price ÷ 同世代 Tokenomics 基準值（建置時計算）', '清單', M),
+ ('fleet._note', '世代組合區段的說明（不進程式；v0.2a）', '文字', K),
+ ('fleet.generations', '使用的世代（與 Tokenomics 快照世代同名）', '清單', K),
+ ('fleet.openMix', '期初在役機隊世代占比（asOf、mix、range、來源、標記）；期初在役 MW 取 priceCheck.inServiceMw', '物件', M),
+ ('fleet.newMix', '各期新增在役 MW 的世代占比（五期，每期一個 {世代: 占比}，合計 100%）', '清單', C),
+ ('fleet.newMixNote', '新增世代占比的依據與區間', '文字', C),
  ('tokenomics._note', 'Tokenomics 取數層的說明（不進程式；v0.2a，比照 CoreWeave W1）', '文字', K),
  ('tokenomics.snapshotFile', 'Tokenomics 快照檔路徑（tools/tokenomics/import_tokenomics.py 產生；Excel「Tokenomics_取數」分頁讀此檔）', '路徑', K),
  ('tokenomics.version', '快照的 Tokenomics 版本（model/CURRENT 的版本號）', '文字', K),
@@ -324,7 +337,7 @@ SECT = [('meta', '基本資料'), ('calendar', '期間與日期（v4.5）'), ('a
         ('rpo', '已簽約未認列營收（RPO）'), ('leases', '租約'), ('debt', '既有債務'), ('latestQuarter', '最新一季財報數字（10-Q）'),
         ('callFacts', '法說會與期後事項'), ('scenarios', '三個擴張情境'), ('legacy', '舊版對照值'),
         ('defaults', '預設假設（畫面上可調的輸入）'), ('valuation', '評價參數'), ('methodology', '評價方法與評等門檻'), ('peers', '同業比較（Comps）'),
-        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('priceCheck', '單價對照（v0.2；只用於簡報，不進入計算）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('tokenomics', 'Tokenomics 取數層（v0.2a；快照檔、版本與引用名稱）'), ('nebius', 'Nebius 資料草稿（v0.1a；引擎尚未讀取）')]
+        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('priceCheck', '單價對照（v0.2；只用於簡報，不進入計算）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('tokenomics', 'Tokenomics 取數層（v0.2a；快照檔、版本與引用名稱）'), ('pricing', '每 MW 收入的公司因素：定價倍數 k、長約占比、證據表（v0.2a）'), ('fleet', '世代組合（v0.2a；收入錨加權）'), ('nebius', 'Nebius 資料草稿（v0.1a；引擎尚未讀取）')]
 out, shown = ['**填表慣例**',
                '- 金額單位是**十億美元（US$bn）**，例如 4.653 代表 46.53 億美元；另有標示的例外：每股（US$）、每 MW 建置成本（百萬美元／MW，US$m/MW）、股數（十億股，bn）。',
                '- 「比例」寫成小數（0.25＝25%）；標示「%」的欄位寫成百分點（25＝25%）。兩種寫法沿用既有程式，不可混用。',

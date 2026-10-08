@@ -619,6 +619,29 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `tokenomics.names` | 引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW、IF_RevGWFleet | 檢查 |
 | `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（目前無） | 清單 |  | 檢查 |
 
+### `pricing`：每 MW 收入的公司因素：定價倍數 k、長約占比、證據表（v0.2a）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `pricing._note` | 每 MW 收入公司因素區段的說明（不進程式；v0.2a） | 文字 | v0.2a：每 MW 收入的公司因素（定價倍數 k）… | 可沿用 |
+| `pricing.anchorMultiple._note` | 定價倍數 k 的口徑說明（已決定事項 14、下游資料契約第 4 條；不進程式） | 文字 | v0.2a（已決定事項 14、下游資料契約第 4 條… | 可沿用 |
+| `pricing.anchorMultiple.long` | k_長約：base／low／high（價格軸低／基準／高）、證據來源 refEvidence、契約第 4 條指定解讀 interpretation、標記 | 物件（倍數） | 物件（base、low、high、tag、refEvidence、note、interpretation） | 檢查 |
+| `pricing.anchorMultiple.spot` | k_現貨：base／low／high、refEvidence、標記（非長約客戶的價格倍數） | 物件（倍數） | 物件（base、low、high、tag、refEvidence、note） | 檢查 |
+| `pricing.anchorMultiple.longShare` | 長約占比的算法：contracts＝已揭露多年期合約（label、start＝起始模型期 0–4、mw 基準／lo／hi、換算依據、來源、標記）；占比＝MIN(1, 合約 MW ÷ 平均在役 MW) | 物件 | 物件（method、tag、formula、contracts、note） | 必改 |
+| `pricing.anchorMultiple.contractMix` | 合約組合的揭露（只作對照；找不到者寫明試過的來源） | 清單 | 3 筆 | 必改 |
+| `pricing.anchorMultiple.notFound` | 找不到的價格證據與試過的來源（「找不到」與「不存在」分開寫） | 清單（文字） | VR200 長約或現貨每 GPU 小時價格：找不到（…、第二筆獨立於 IREN 的 neocloud 長約（…、Nebius 自身長約每 GPU 小時價格：不得作為… | 必改 |
+| `pricing.anchorMultiple.evidence` | k 證據表：每筆 label、gen（Tokenomics 世代名）、price、unit、tkName（IF_HoldEcon 或 IF_GPUhrEcon）、合約型態與期間、use（long／spot＝驅動基準，range＝只支持區間，list＝只列）、來源、日期、標記；倍數＝price ÷ 同世代 Tokenomics 基準值（建置時計算） | 清單 | 11 筆 | 必改 |
+
+### `fleet`：世代組合（v0.2a；收入錨加權）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `fleet._note` | 世代組合區段的說明（不進程式；v0.2a） | 文字 | 世代組合（v0.2a，比照 CoreWeave W2… | 可沿用 |
+| `fleet.generations` | 使用的世代（與 Tokenomics 快照世代同名） | 清單 | Hopper H100、GB200 NVL72、GB300 NVL72、VR200 NVL72 | 可沿用 |
+| `fleet.openMix` | 期初在役機隊世代占比（asOf、mix、range、來源、標記）；期初在役 MW 取 priceCheck.inServiceMw | 物件 | 物件（asOf、mix、tag、range、source） | 必改 |
+| `fleet.newMix` | 各期新增在役 MW 的世代占比（五期，每期一個 {世代: 占比}，合計 100%） | 清單 | 5 筆 | 檢查 |
+| `fleet.newMixNote` | 新增世代占比的依據與區間 | 文字 | [Assumed]：2H26 GB300 100%（… | 檢查 |
+
 ### `nebius`：Nebius 資料草稿（v0.1a；引擎尚未讀取）
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
