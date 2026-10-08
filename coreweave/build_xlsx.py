@@ -357,6 +357,8 @@ MWBASIS = CO['meta'].get('mwBasis', 'IT')
 _TKX = (_jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), CO['tokenomics']['snapshotFile']), encoding='utf-8'))
         if CO.get('tokenomics') else {'items': {}, 'source': {'generations': []}})
 _TKGC = {g['name']: g['code'] for g in _TKX['source']['generations']}
+import kspec as _kspec
+KSPEC = _kspec.resolve(CO, _TKX['items']) if CO.get('tokenomics') else {}  # W6 r1：k 基準與區間＝證據價格 ÷ 目前快照（錨改變時 k 跟著重算）
 tk_has = lambda n: n in _TKX['items'] and not _TKX['items'][n].get('missing')
 TK_PH = ['IF_MaintIT', 'IF_StaffSW', 'IF_TaxIns', 'IF_DeprLifeIT']  # 可暫代的名稱（待 Tokenomics v5.26）
 TK_MISS = [n for n in (['IF_DeprLifeIT'] if PMW['capex'] == 'tokenomics' else []) + (['IF_MaintIT', 'IF_StaffSW', 'IF_TaxIns'] if PMW['cost'] == 'bottomUp' else []) if not tk_has(n)]
@@ -473,9 +475,15 @@ if FL:
     if AMQ:
         r = phdr(r, "定價倍數 k（W4；Tokenomics 錨的公司因素）")
         _kl, _ks, _od = AMQ['long'], AMQ['spot'], AMQ['onDemandShare']
-        AMX['kL'] = gi(r, "定價倍數 k_長約（市場長約價 ÷ Tokenomics 同世代持有成本）", "倍", _kl['base'],
+        def _kf(side):  # W6 r1：基準為證據 ref 時寫成活公式（價格 ÷ TK_ 同世代基準值）
+            sp = KSPEC.get(side, {}).get('base')
+            if isinstance(sp, dict) and 'ref' in sp:
+                e_ = next(x for x in AMQ['evidence'] if x['label'] == sp['ref'])
+                return f"={e_['price']}/TK_{re.sub(r'^(IF|L1)_', '', e_['tkName'])}_{_TKGC[e_['gen']]}"
+            return AMQ[side]['base']
+        AMX['kL'] = gi(r, "定價倍數 k_長約（市場長約價 ÷ Tokenomics 同世代持有成本）", "倍", _kf('long'),
                        f"company.json → pricing.anchorMultiple.long（基準成本情境的值；其他成本情境以基準證據世代的成本比例重算）；區間 {_n(_kl['low'])}–{_n(_kl['high'])}、三筆長約中位數 {_n(_kl['sensMedian'])} {_kl['tag']}；證據見『每MW經濟性』k 證據表（不以公司營收、ARR、RPO 金額反推）", '0.00'); r += 1
-        AMX['kS'] = gi(r, "定價倍數 k_現貨（市場現貨價 ÷ Tokenomics 同世代持有成本）", "倍", _ks['base'],
+        AMX['kS'] = gi(r, "定價倍數 k_現貨（市場現貨價 ÷ Tokenomics 同世代持有成本）", "倍", _kf('spot'),
                        f"company.json → pricing.anchorMultiple.spot（基準成本情境的值）；區間 {_n(_ks['low'])}–{_n(_ks['high'])} {_ks['tag']}", '0.00'); r += 1
         AMX['od'] = gi(r, "隨需占比（占在役計費產能）", "%", _od['base'],
                        "k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約；CRWV 先簽多年期合約再建產能，RPO 未覆蓋的新增產能也按長約價（W4 r2）。公司未揭露隨需比例，敏感度 " + "／".join(f"{x * 100:g}%" for x in _od['sens']) + f" {_od['tag']}；不得以 Q2 隱含 k 反推", PCT); r += 1
@@ -3373,7 +3381,7 @@ if FL:
         mrow("上限檢查｜各期結果", "", (lambda i: f'=IF({COLS[i]}{PM["上限檢查｜CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收"]}>{_gq(CK["revCapShareMax"])},"警示","通過")') if _hasRF else (lambda i: "不適用"), NUM, BOLD)
         # k 證據表（市場價格 ÷ Tokenomics 同世代持有成本；成本取基準、不隨成本情境）
         r = section(ws, r, "定價倍數 k 證據表（市場價格 ÷ Tokenomics 同世代持有成本；用途：long＝k_長約基準、spot＝k_現貨基準、range＝支持區間、list＝只列不用）", level=2, collapsed=True)
-        for j, h in enumerate(["證據", "單位", "價格", "Tokenomics 同世代", "倍數", "用途", ""]):
+        for j, h in enumerate(["證據", "單位", "價格", "Tokenomics 同世代", "倍數", "用途", "v5.27 倍數（v4.7）" if any('multipleV527' in x for x in AMQ['evidence']) else ""]):
             c = ws.cell(row=r, column=1 + j, value=h or None); c.font = HEAD; c.fill = FILL_HEAD
         ws.cell(row=r, column=9, value="Tokenomics＝IF_GPUhrEcon（US$/GPU-hr）或 IF_HoldEcon（US$m／IT MW／年），基準成本情境；世代｜合約型態｜期間｜來源（文件日期）標記｜說明").font = SMALL
         r += 1
@@ -3385,6 +3393,8 @@ if FL:
             c = ws.cell(row=r, column=4, value=f"={_k}" if tk_has(e_['tkName']) else "不適用"); c.font = GREEN; c.number_format = '0.000'; c.border = BOX
             c = ws.cell(row=r, column=5, value=f"=C{r}/D{r}" if tk_has(e_['tkName']) else "不適用"); c.font = BOLD; c.number_format = '0.00'; c.border = BOX
             ws.cell(row=r, column=6, value=e_['use']).font = BLACK
+            if e_.get('multipleV527') is not None:  # W6 r1：前一版 Tokenomics（v5.27）下的倍數，並列對照（價格不變、錨改變）
+                c = ws.cell(row=r, column=7, value=e_['multipleV527']); c.font = BLUE; c.number_format = '0.00'; c.border = BOX
             ws.cell(row=r, column=9, value=f"{e_['gen']}｜{e_['contract']}｜{e_['term']}｜{e_['source']}（{e_['date']}）{e_['tag']}｜{e_['note']}" + (f"｜{e_['url']}" if e_['url'] else "")).font = SMALL
             PM[f"k 證據｜{e_['label']}"] = r; r += 1
         for cm in AMQ.get('contractMix', []):

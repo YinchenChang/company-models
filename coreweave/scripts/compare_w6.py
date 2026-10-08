@@ -73,7 +73,7 @@ def main():
         for j, x in enumerate(xs):
             c = ws.cell(row=r, column=1 + j, value=x); c.font = H; c.fill = FH
     ws['A1'] = 'CoreWeave v4.7 → v4.8（接 Tokenomics v5.31：GB300 機架價格、IT 維護機齡兩段）'; ws['A1'].font = T
-    ws['A2'] = '收入口徑（k、隨需比例）不動；MW 口徑查證後維持 IT（10-K、10-Q 無原文定義）'; ws['A2'].font = S_
+    ws['A2'] = 'k 隨錨重算（價格不變，k＝證據價格 ÷ v5.31 同世代成本）；2023 年底 MW 依 10-K 原文 70；MW 口徑查證後維持 IT（10-K、10-Q 無原文定義）'; ws['A2'].font = S_
     r = 4; hdr(ws, r, ['情境', 'v4.7 目標價', 'v4.8 目標價', '變動', 'v4.7 評等', 'v4.8 評等', 'v4.7 融資缺口', 'v4.8 融資缺口', '缺口變動']); r += 1
     for s in (1, 2, 3):
         for j, v in enumerate([SCN[s], A[s]['tp'], B[s]['tp'], f'=C{r}-B{r}', A[s]['rating'], B[s]['rating'], A[s]['gap'], B[s]['gap'], f'=H{r}-G{r}']):
@@ -135,7 +135,7 @@ def main():
     r += 1; w.cell(row=r, column=1, value='檢查（合計 − 總變動，應為 0）')
     for j in range(3): w.cell(row=r, column=2 + j, value=f'=IF(ABS({chr(66 + j)}{r - 2}-{chr(66 + j)}{r - 1})<0.01,"通過","不通過")')
     r += 2
-    for k, nm in (('a', '(a) 時間推移'), ('b', '(b) 實際數更新'), ('c', '(c) 假設變更（①＋②）'), ('d', '(d) 方法變更（③＋④）')):
+    for k, nm in (('a', '(a) 時間推移'), ('b', '(b) 實際數更新（2023 年底 MW）'), ('c', '(c) 假設變更（①＋②a＋②b）'), ('d', '(d) 方法變更（③＋④）')):
         w.cell(row=r, column=1, value=nm)
         for j, sc in enumerate(AT['scenarios']): w.cell(row=r, column=2 + j, value=AT['scenarios'][sc]['abcd'][k]).number_format = '+0.00;-0.00'
         r += 1

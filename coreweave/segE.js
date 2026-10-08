@@ -300,8 +300,8 @@ function PerMwTabQ({ d, st, o }) {
     PMWQ.revenue === `tkAnchor` && P.tk ? elQ(accQ, { key: `a3t`, title: `每 MW 收入：Tokenomics 錨 × 定價倍數 k（隨需占比、成本情境重算、上限檢查）`, sum: `模型採用` }, tbl(P.tk)) : null, // W4
     PMWQ.revenue === `tkAnchor` && P.kev ? elQ(accQ, { key: `a3k`, title: `定價倍數 k 證據表（價格／Tokenomics 同世代／倍數／用途）`, sum: `${AMQ.evidence.length} 筆` },
       elQ(`div`, { style: xstyQ.wrap }, elQ(`table`, { style: { ...xstyQ.table, minWidth: 820 } }, [
-        elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [thL(`證據`), th(`單位`), th(`價格`), th(`Tokenomics 同世代`), th(`倍數`), th(`用途`)])),
-        elQ(`tbody`, { key: `b` }, P.kev.map(([a, u, xs], k) => elQ(`tr`, { key: k }, [tdL(a, `a`), td(u, `u`), ...xs.slice(0, 4).map((x, j) => td(x == null ? `` : typeof x === `string` ? x : Y(x, j === 2 ? 2 : 3), j))])))]))) : null,
+        elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [thL(`證據`), th(`單位`), th(`價格`), th(`Tokenomics 同世代`), th(`倍數`), th(`用途`), th(`v5.27 倍數（v4.7）`)])),
+        elQ(`tbody`, { key: `b` }, P.kev.map(([a, u, xs], k) => elQ(`tr`, { key: k }, [tdL(a, `a`), td(u, `u`), ...xs.slice(0, 5).map((x, j) => td(x == null ? `` : typeof x === `string` ? x : Y(x, j >= 2 ? 2 : 3), j))])))]))) : null,
     elQ(accQ, { key: `a3`, title: `每 MW 收入對照（隱含 GPU 小時價格、持有成本、同業與市場價格）`, sum: { gpuHr: `GPU 小時價格`, tkAnchor: `對照` }[PMWQ.revenue] || `備案 legacy` }, tbl(P.rev)),
     elQ(accQ, { key: `a4`, title: `每 MW 資本支出對照`, sum: PMWQ.capex === `tokenomics` ? `Tokenomics` : `舊方法` }, tbl(P.cap)),
     elQ(accQ, { key: `a5`, title: `最近一季實際對照（不強制平衡）`, sum: `` }, tbl(P.q2)),

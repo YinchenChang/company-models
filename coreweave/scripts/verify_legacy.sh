@@ -26,6 +26,7 @@ import json, sys
 p, base, refp = sys.argv[1:4]; co = json.load(open(p, encoding='utf-8')); ref = json.load(open(refp, encoding='utf-8'))
 if base == 'v4.6':
     co['methodology']['perMw']['revenue'] = 'legacy'
+    co['defaults']['mwYearEnd'] = ref['defaults']['mwYearEnd']; co['texts']['mwYearEndNotes'] = ref['texts']['mwYearEndNotes']  # W6 r1：2023 年底 70 MW（10-K 原文）屬新版實際數更新；舊方法回歸用 v4.6 的值
     co['methodology']['perMw']['maint'] = 'flat'  # W6：IT 維護依機齡兩段只在新方法使用；舊方法回歸用 v4.6 的等值費率（IF_MaintIT）
     co.pop('companyAdjust', None)                 # W5：公司調整只在新方法（tkAnchor）使用；舊方法回歸不含
     co['tokenomics'] = ref['tokenomics']          # v4.6 用的快照（v5.26）

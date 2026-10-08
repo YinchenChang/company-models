@@ -580,7 +580,7 @@
   "scenario": "base",
   "lambda": 0.35,
   "mwYearEnd": {
-   "2023": 100,
+   "2023": 70,
    "2024": 360,
    "2025": 850
   },
@@ -1343,7 +1343,7 @@
   "cashTaxNote": "H1 現金稅約 0.1bn",
   "sourceLine": "Q2 2026 10-Q + 法說 + 9/17 8-K · 口徑分層",
   "mwYearEndNotes": {
-   "2023": "由 2023 CapEx 約 3.1bn ÷ 約 $30m/MW 推估 [Assumed]",
+   "2023": "10-K FY2025 Item 1 Business〈Overview〉：「As of December 31, 2023, we operated 10 data centers with approximately 70 MW of active power.」；同文件 Item 7 MD&A〈Securing Sufficient Power Capacity〉：「As of December 31, 2023, we had 10 data centers supported by 70 MW of active power」[Verified]（W6 r1：原 100 MW 為 2023 CapEx 推估，改用原文）",
    "2024": "S-1：2024 年底 >360 MW [Verified]",
    "2025": "Q4 2025 法說：年底 >850 MW、43 座資料中心 [Verified]"
   }
@@ -1408,7 +1408,7 @@
    "vintages": [
     {
      "label": "2023 年新增",
-     "mw": 100,
+     "mw": 70,
      "inService": "2023-06",
      "mix": {
       "Hopper H100": 1
@@ -1416,7 +1416,7 @@
     },
     {
      "label": "2024 年新增",
-     "mw": 260,
+     "mw": 290,
      "inService": "2024-06",
      "mix": {
       "Hopper H100": 1
@@ -1442,7 +1442,7 @@
      }
     }
    ],
-   "vintageNote": "W6：期初機齡層（IT 維護依機齡兩段）。MW＝W1 年份分層（2024 年底前 360 MW 依 defaults.mwYearEnd 拆為 2023 年 100、2024 年 260；2025 年新增 490；2026 上半年新增 650）[Verified 錨點]；各層世代占比同 W1 第 6b 步 [Assumed]；投入使用月＝新增期間中點（全年層 6 月底、上半年層 3 月底）[Assumed]。保固期內＝投入使用後 IF_WarrantyYrs 年內；各期新增 MW 的投入使用＝該期中點。各層 MW 合計須＝activeMW、各世代合計須＝activeMW × mix（建置時檢查）"
+   "vintageNote": "W6：期初機齡層（IT 維護依機齡兩段）。MW＝W1 年份分層（2024 年底前 360 MW 依 defaults.mwYearEnd 拆為 2023 年 70、2024 年 290（W6 r1：2023 年底 70 MW 依 10-K 原文）；2025 年新增 490；2026 上半年新增 650）[Verified 錨點]；各層世代占比同 W1 第 6b 步 [Assumed]；投入使用月＝新增期間中點（全年層 6 月底、上半年層 3 月底）[Assumed]。保固期內＝投入使用後 IF_WarrantyYrs 年內；各期新增 MW 的投入使用＝該期中點。各層 MW 合計須＝activeMW、各世代合計須＝activeMW × mix（建置時檢查）"
   },
   "newMix": [
    {
@@ -1572,20 +1572,44 @@
   "anchorMultiple": {
    "_note": "W4 r2（已決定事項 14）：每 MW 年收入（100% 計費時數）＝ Σ 平均在役占比 × IF_HoldEcon（目前成本情境）× k；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約。CRWV 先簽多年期合約再建產能（10-K 加權平均約 5 年），RPO 未覆蓋的新增產能也按長約價出售；RPO 覆蓋率只作對照列。k 以『市場價格 ÷ 同成本情境的 Tokenomics 持有成本』計：輸入值為基準成本情境，其他情境以基準證據世代的成本比例重算（價格是事實，不隨 Tokenomics 成本情境變）。不以 CoreWeave 的營收、ARR 或 RPO 金額反推 k 或隨需占比。",
    "long": {
-    "base": 0.76,
-    "low": 0.7,
-    "high": 1.0,
+    "base": {
+     "ref": "IREN–Microsoft GB300 五年約"
+    },
+    "low": {
+     "priceEq": 8.9073,
+     "gen": "GB300 NVL72",
+     "tkName": "IF_HoldEcon"
+    },
+    "high": {
+     "priceEq": 12.7247,
+     "gen": "GB300 NVL72",
+     "tkName": "IF_HoldEcon"
+    },
     "tag": "[Analogy]",
-    "note": "基準＝IREN–Microsoft GB300 五年約（evidence 第 1 筆，0.762 取兩位；唯一已證實的可比長約）；區間 0.70–1.00；三筆長約中位數 0.89（IREN–Microsoft 0.76、IREN–NVIDIA 0.89、Oracle–OpenAI 1.05〔未證實〕）列為敏感度（sensMedian），基準用哪個待 Andy 決定",
-    "sensMedian": 0.89,
+    "note": "W6 r1：k 依目前快照重算（價格是事實，k＝價格 ÷ 同世代 Tokenomics 持有成本，錨改變時 k 跟著改）。基準＝IREN–Microsoft GB300 五年約 9.70 ÷ IF_HoldEcon｜GB300（v5.27 0.762、v5.31 0.891）；區間端點為 W4 的 0.70–1.00 × v5.27 錨 12.725 換成固定價格 8.907／12.725 US$m/MW/年 [Derived]；中位數＝三筆長約（IREN–Microsoft、IREN–NVIDIA、Oracle–OpenAI〔未證實〕）倍數的中位數",
+    "sensMedian": {
+     "median": [
+      "IREN–Microsoft GB300 五年約",
+      "IREN–NVIDIA 氣冷 Blackwell 五年約（GB300 類比）",
+      "Oracle–OpenAI 約 $300bn／4.5 GW（未經證實）"
+     ]
+    },
     "refEvidence": "IREN–Microsoft GB300 五年約"
    },
    "spot": {
-    "base": 1.76,
-    "low": 1.5,
-    "high": 2.3,
+    "base": {
+     "ref": "H100 Silicon Data 現貨指數"
+    },
+    "low": {
+     "priceEq": 2.4075,
+     "gen": "Hopper H100",
+     "tkName": "IF_GPUhrEcon"
+    },
+    "high": {
+     "ref": "B300 Silicon Data 現貨指數（GB300 類比）"
+    },
     "tag": "[Analogy]",
-    "note": "基準＝H100 Silicon Data 現貨指數 ÷ IF_GPUhrEcon（1.757）；上緣＝B300 指數（GB300 類比，2.29）；下緣 1.5（工作單 W4 預設）",
+    "note": "W6 r1：基準＝H100 Silicon Data 現貨指數 2.82 ÷ IF_GPUhrEcon｜H100（v5.27 1.757、v5.31 1.828）；上緣＝B300 指數 ÷ IF_GPUhrEcon｜GB300；下緣＝W4 預設 1.5 × v5.27 H100 成本 1.605 換成固定價格 2.408 US$/GPU-hr [Derived]",
     "refEvidence": "H100 Silicon Data 現貨指數"
    },
    "longShare": {
@@ -1640,7 +1664,8 @@
      "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-97bn-ai-cloud-contract-microsoft",
      "date": "2025-11-03",
      "retrieved": "2026-10-08",
-     "note": "$9.7bn ÷ 5 年 ÷ 200 MW critical IT；含 20% 預付；W1 換算 ≈ $2.27/GPU-hr（487 顆/MW）"
+     "note": "$9.7bn ÷ 5 年 ÷ 200 MW critical IT；含 20% 預付；W1 換算 ≈ $2.27/GPU-hr（487 顆/MW）",
+     "multipleV527": 0.7622941729959212
     },
     {
      "label": "IREN–NVIDIA 氣冷 Blackwell 五年約（GB300 類比）",
@@ -1656,7 +1681,8 @@
      "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-34bn-ai-cloud-contract-nvidia",
      "date": "2026-05-07",
      "retrieved": "2026-10-08",
-     "note": "$3.4bn ÷ 5 年 ÷ 約 60 MW（Childress；MW 口徑未註明，視為 IT）；氣冷 Blackwell（非 NVL72）以 GB300 類比；與第 1 筆同一供應商，只支持區間；三筆長約中位數＝本筆 0.89（敏感度）"
+     "note": "$3.4bn ÷ 5 年 ÷ 約 60 MW（Childress；MW 口徑未註明，視為 IT）；氣冷 Blackwell（非 NVL72）以 GB300 類比；與第 1 筆同一供應商，只支持區間；三筆長約中位數＝本筆 0.89（敏感度）",
+     "multipleV527": 0.8906267899549253
     },
     {
      "label": "Oracle–OpenAI 約 $300bn／4.5 GW（未經證實）",
@@ -1672,7 +1698,8 @@
      "url": "https://www.theregister.com/2025/09/11/openai_reportedly_on_the_hook/",
      "date": "2025-09-11",
      "retrieved": "2026-10-08",
-     "note": "$300bn ÷ 5 ÷ 4,500 MW；金額未經當事方證實、MW 口徑不明（若為設施口徑，每 IT MW 再 × 1.2）、Oracle 自有廠房；只列不用；納入三筆長約中位數的敏感度"
+     "note": "$300bn ÷ 5 ÷ 4,500 MW；金額未經當事方證實、MW 口徑不明（若為設施口徑，每 IT MW 再 × 1.2）、Oracle 自有廠房；只列不用；納入三筆長約中位數的敏感度",
+     "multipleV527": 1.0478008462427442
     },
     {
      "label": "H100 Silicon Data 現貨指數",
@@ -1688,7 +1715,8 @@
      "url": "https://www.silicondata.com/products/silicon-index/h100",
      "date": "2026-10-06",
      "retrieved": "2026-10-08",
-     "note": "價格 [Verified]；倍數 [Derived]"
+     "note": "價格 [Verified]；倍數 [Derived]",
+     "multipleV527": 1.7569773191392963
     },
     {
      "label": "B300 Silicon Data 現貨指數（GB300 類比）",
@@ -1704,7 +1732,8 @@
      "url": "https://www.silicondata.com/products/silicon-index/h100",
      "date": "2026-10-06",
      "retrieved": "2026-10-08",
-     "note": "HGX B300 對 GB300 NVL72 類比；k_現貨上緣"
+     "note": "HGX B300 對 GB300 NVL72 類比；k_現貨上緣",
+     "multipleV527": 2.286522303210439
     },
     {
      "label": "B200 Ornn 成交指數（GB200 類比）",
@@ -1720,7 +1749,8 @@
      "url": "",
      "date": "2026-04-13",
      "retrieved": "2026-10-08",
-     "note": "HGX B200 對 GB200 NVL72 類比；落在 k_現貨區間內"
+     "note": "HGX B200 對 GB200 NVL72 類比；落在 k_現貨區間內",
+     "multipleV527": 1.9554710603734917
     },
     {
      "label": "B200 Silicon Data 現貨指數（GB200 類比）",
@@ -1736,7 +1766,8 @@
      "url": "https://www.silicondata.com/products/silicon-index/h100",
      "date": "2026-10-06",
      "retrieved": "2026-10-08",
-     "note": "高於 k_現貨區間上緣；HGX B200 每 GPU 小時成本低於 GB200 NVL72 的機架攤提，類比偏高，只列"
+     "note": "高於 k_現貨區間上緣；HGX B200 每 GPU 小時成本低於 GB200 NVL72 的機架攤提，類比偏高，只列",
+     "multipleV527": 2.813386059900097
     },
     {
      "label": "B300 Nebius 隨需牌價（GB300 類比）",
@@ -1752,7 +1783,8 @@
      "url": "https://nebius.com/prices",
      "date": "2026-10-07",
      "retrieved": "2026-10-08",
-     "note": "牌價非成交價（10/1 起 9.50）；只列不用"
+     "note": "牌價非成交價（10/1 起 9.50）；只列不用",
+     "multipleV527": 2.6318475190911945
     },
     {
      "label": "GB200 CoreWeave 隨需牌價",
@@ -1768,7 +1800,8 @@
      "url": "https://www.coreweave.com/pricing",
      "date": "2026-10-07",
      "retrieved": "2026-10-08",
-     "note": "牌價非成交價（長約最多 −60%）；只列不用"
+     "note": "牌價非成交價（長約最多 −60%）；只列不用",
+     "multipleV527": 5.032462287725897
     },
     {
      "label": "H100 CoreWeave 隨需牌價",
@@ -1784,7 +1817,8 @@
      "url": "https://www.coreweave.com/pricing",
      "date": "2026-10-07",
      "retrieved": "2026-10-08",
-     "note": "牌價非成交價；只列不用"
+     "note": "牌價非成交價；只列不用",
+     "multipleV527": 3.8348210635824005
     },
     {
      "label": "CoreWeave Q3 短天期合約（3–6 個月，公司新聞稿）",
@@ -1800,7 +1834,8 @@
      "url": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Continues-to-Contract-New-Compute-Capacity-at-Higher-Prices/default.aspx",
      "date": "2026-09-16",
      "retrieved": "2026-10-08",
-     "note": "公司定義：年化營收 ÷ 服務該叢集所需電力；世代與 MW 口徑未揭露（以 GB300 類比）；短約，只用於隨需敏感度（W5）"
+     "note": "公司定義：年化營收 ÷ 服務該叢集所需電力；世代與 MW 口徑未揭露（以 GB300 類比）；短約，只用於隨需敏感度（W5）",
+     "multipleV527": 3.143481125756376
     }
    ],
    "notFound": [

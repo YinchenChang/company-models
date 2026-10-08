@@ -10,6 +10,9 @@ from uno_q import Workbook
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 xlsx = sys.argv[1]; out = sys.argv[2] if len(sys.argv) > 2 else os.path.join(ROOT, 'permw_sens.json')
 CO = json.load(open(os.path.join(ROOT, 'company.json'), encoding='utf-8'))
+if CO.get('tokenomics'):  # W6 r1：k 基準與區間依目前快照推算（與 build_xlsx、HTML 同一規則：kspec.py）
+    sys.path.insert(0, ROOT); import kspec
+    kspec.resolve(CO, json.load(open(os.path.join(ROOT, CO['tokenomics']['snapshotFile']), encoding='utf-8'))['items'])
 PMW = {'capex': 'legacy', 'cost': 'ebitdaPct', 'revenue': 'legacy', **(CO.get('methodology', {}).get('perMw') or {})}
 IN, VA, FR = '輸入與假設', '評價_DCF與目標價', '各期收支'
 # (代碼, 名稱, {輸入列名稱: 值}；None＝本方法不適用)

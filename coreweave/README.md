@@ -674,20 +674,20 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `pricing._note` | GPU 小時價格與對照價格的說明（不進程式；W2） | 文字 | GPU 小時價格（W2，公司專屬）：gpuHr＝合約… | 可沿用 |
 | `pricing.gpuHr` | GPU 小時合約價，{世代: {base, low, high, source, date, tag}}（US$/GPU-hr）；空白＝不適用（revenue=gpuHr 時必填所有在役世代） | 物件 | 物件（） | 必改 |
 | `pricing.anchorMultiple._note` | Tokenomics 錨的公司因素說明（不進程式；W4） | 文字 | W4 r2（已決定事項 14）：每 MW 年收入（1… | 可沿用 |
-| `pricing.anchorMultiple.long.base` | 定價倍數 k_長約 基準（市場長約價 ÷ Tokenomics 同世代持有成本；W4） | 倍 | 0.76 | 檢查 |
-| `pricing.anchorMultiple.long.low` | k_長約 區間下緣（敏感度） | 倍 | 0.7 | 檢查 |
-| `pricing.anchorMultiple.long.high` | k_長約 區間上緣（敏感度） | 倍 | 1 | 檢查 |
+| `pricing.anchorMultiple.long.base` | 定價倍數 k_長約 基準（市場長約價 ÷ Tokenomics 同世代持有成本；W4）。W6 r1 起可寫成規格，建置時依目前快照推算（kspec.py）：數字｜{ref: 證據 label}｜{priceEq, gen, tkName}｜{median: [證據 label]} | 倍或規格 | 物件（ref） | 檢查 |
+| `pricing.anchorMultiple.long.low` | k_長約 區間下緣（敏感度；規格同 base） | 倍或規格 | 物件（priceEq、gen、tkName） | 檢查 |
+| `pricing.anchorMultiple.long.high` | k_長約 區間上緣（敏感度；規格同 base） | 倍或規格 | 物件（priceEq、gen、tkName） | 檢查 |
 | `pricing.anchorMultiple.long.tag` | k_長約 的資料標記 | 文字 | [Analogy] | 可沿用 |
-| `pricing.anchorMultiple.long.note` | k_長約 基準與區間的依據 | 文字 | 基準＝IREN–Microsoft GB300 五年… | 可沿用 |
-| `pricing.anchorMultiple.spot.base` | 定價倍數 k_現貨 基準（市場現貨價 ÷ Tokenomics 同世代持有成本；W4） | 倍 | 1.76 | 檢查 |
-| `pricing.anchorMultiple.spot.low` | k_現貨 區間下緣（敏感度） | 倍 | 1.5 | 檢查 |
-| `pricing.anchorMultiple.spot.high` | k_現貨 區間上緣（敏感度） | 倍 | 2.3 | 檢查 |
+| `pricing.anchorMultiple.long.note` | k_長約 基準與區間的依據 | 文字 | W6 r1：k 依目前快照重算（價格是事實，k＝價格… | 可沿用 |
+| `pricing.anchorMultiple.spot.base` | 定價倍數 k_現貨 基準（市場現貨價 ÷ Tokenomics 同世代持有成本；W4；規格同 long.base） | 倍或規格 | 物件（ref） | 檢查 |
+| `pricing.anchorMultiple.spot.low` | k_現貨 區間下緣（敏感度；規格同 long.base） | 倍或規格 | 物件（priceEq、gen、tkName） | 檢查 |
+| `pricing.anchorMultiple.spot.high` | k_現貨 區間上緣（敏感度；規格同 long.base） | 倍或規格 | 物件（ref） | 檢查 |
 | `pricing.anchorMultiple.spot.tag` | k_現貨 的資料標記 | 文字 | [Analogy] | 可沿用 |
-| `pricing.anchorMultiple.spot.note` | k_現貨 基準與區間的依據 | 文字 | 基準＝H100 Silicon Data 現貨指數 … | 可沿用 |
+| `pricing.anchorMultiple.spot.note` | k_現貨 基準與區間的依據 | 文字 | W6 r1：基準＝H100 Silicon Data… | 可沿用 |
 | `pricing.anchorMultiple.longShare.method` | RPO 覆蓋率對照列的算法（rpoCover＝RPO 涵蓋的產能 ÷ 在役計費產能；r2 起只作對照、不驅動） | 代碼 | rpoCover | 檢查 |
 | `pricing.anchorMultiple.longShare.tag` | RPO 覆蓋率對照列的資料標記 | 文字 | [Derived] | 可沿用 |
 | `pricing.anchorMultiple.longShare.formula` | RPO 覆蓋率對照列算式說明（不進程式） | 文字 | 對照列（不驅動）：RPO 涵蓋的產能 ÷ 在役計費產… | 可沿用 |
-| `pricing.anchorMultiple.long.sensMedian` | k_長約 三筆長約中位數（敏感度；W4 r2） | 倍 | 0.89 | 檢查 |
+| `pricing.anchorMultiple.long.sensMedian` | k_長約 三筆長約中位數（敏感度；W4 r2；W6 r1 起為 {median: [證據 label]}） | 倍或規格 | 物件（median） | 檢查 |
 | `pricing.anchorMultiple.long.refEvidence` | k_長約 的基準證據（evidence.label；成本情境重算時用其世代的 Tokenomics 成本比例） | 文字 | IREN–Microsoft GB300 五年約 | 檢查 |
 | `pricing.anchorMultiple.spot.refEvidence` | k_現貨 的基準證據（evidence.label；成本情境重算時用其世代的 Tokenomics 成本比例） | 文字 | H100 Silicon Data 現貨指數 | 檢查 |
 | `pricing.anchorMultiple.onDemandShare.base` | 隨需（現貨）占在役計費產能比例，基準（W4 r2；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約） | 比例 | 0 | 檢查 |

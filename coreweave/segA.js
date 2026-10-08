@@ -99,6 +99,15 @@ if (PMWQ.capex === `tokenomics`) { // 建置成本與壽命改為 Tokenomics 推
   DEFAULTS.a.costMW = [...c];
   DEFAULTS.gpuLife = lifeTkQ()
 }
+function kSpecQ(sp) { // W6 r1：k 規格 → 倍數（價格 ÷ 目前快照基準值；kspec.py 同算式）：數字｜{ref}｜{priceEq, gen, tkName}｜{median: [label]}
+  if (typeof sp === `number`) return sp;
+  let ev = l => AMQ.evidence.find(x => x.label === l), m = x => x.price / tkQ(x.tkName, x.gen, `基準`);
+  if (sp.ref) return m(ev(sp.ref));
+  if (sp.priceEq != null) return sp.priceEq / tkQ(sp.tkName, sp.gen, `基準`);
+  if (sp.median) { let a = sp.median.map(l => m(ev(l))).sort((x, y) => x - y), n = a.length; return n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2 }
+  throw new Error(`pricing.anchorMultiple：無法辨識的 k 規格`)
+}
+AMQ && [`long`, `spot`].forEach(sd => [`base`, `low`, `high`, `sensMedian`].forEach(k => AMQ[sd][k] != null && (AMQ[sd][k] = kSpecQ(AMQ[sd][k])))); // W6 r1：錨改變時 k 跟著重算
 AMQ && Object.assign(DEFAULTS, { kLong: AMQ.long.base, kSpot: AMQ.spot.base, odShare: AMQ.onDemandShare.base }); // W4 r2：定價倍數 k 與隨需占比（敏感度以 e 覆寫）
 CAQ && Object.assign(DEFAULTS, { kExOn: CAQ.existingK.on, kNewAdj: CAQ.newK.adjBase, opexScale: CAQ.opexScale.base }); // W5：既有合約 k 開關、新約價格調整、營運成本倍數（敏感度以 e 覆寫）
 function exFleetQ(F) { // W5：既有合約 MW＝最新季末在役（fleet.openMix.activeMW）逐期扣汰換（汰換由最舊世代先出；Excel「每MW經濟性」W4 區同列）
@@ -502,7 +511,7 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
       [`上限檢查｜各期結果`, ``, hasRF ? ratio.map(x => x > th ? `警示` : `通過`) : I5.map(() => `不適用`)]
     ];
     kev = [
-      ...AMQ.evidence.map(x => { let v = tkQ(x.tkName, x.gen); return [`k 證據｜${x.label}`, x.unit, v == null ? [x.price, `不適用`, `不適用`, x.use, null] : [x.price, v, x.price / v, x.use, null]] }),
+      ...AMQ.evidence.map(x => { let v = tkQ(x.tkName, x.gen); return [`k 證據｜${x.label}`, x.unit, v == null ? [x.price, `不適用`, `不適用`, x.use, x.multipleV527 ?? null] : [x.price, v, x.price / v, x.use, x.multipleV527 ?? null]] }), // W6 r1：第 5 欄＝v5.27 倍數
       ...(AMQ.contractMix || []).map(x => [`合約組合｜${x.label}`, x.unit, [x.value ?? x.tag, null, null, null, null]])
     ]
   }
