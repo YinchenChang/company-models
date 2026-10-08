@@ -1,4 +1,6 @@
-# Anthropic 收支模型 v0.1 規格（r0，2026-10-08，chat 端）
+# Anthropic 收支模型 v0.1 規格（r1，2026-10-08，chat 端）
+
+- 修訂 r0 → r1（A1 資料審查後）：D5、D6、D10、D15、D16 改寫；新增 D21–D23。改動處標「r1」。
 
 - 依據：Andy 2026-10-08「請比照 OpenAI，做 Anthropic」；OpenAI v0.6（`openai/`，分支 `claude/openai-s6-release` @ `e91df57`）的命題、頁結構、具名範圍與工具鏈；Tokenomics master `3dd1216`（CURRENT `20261007_Tokenomics_v5.26.xlsx`，與 OpenAI v0.6 同一快照，兩家可直接並排）。
 - 授權：Andy 2026-10-07「改吧！就讓我們試試看」——新公司模型由 Claude 套用預設、不先確認；命題與驅動對照表隨成品交付。本規格第 3 節 D1–D20 即本版預設，全部在 v0.1 完成報告彙總給 Andy 審查。
@@ -78,6 +80,20 @@ Checks：讀全部頁；CHK_Errors＝0
 | D18 | 回流對照：策略投資人（Amazon、Google、Microsoft、NVIDIA）各自的投資額 vs Anthropic 對同一方的算力合約金額，Funding 頁只列對照、不沖銷 | 沖銷 | 檢驗「誰出錢」的命題第二問 |
 | D19 | 反向模式：管理層營收目標（各年基準／樂觀）與現金流轉正年 → 所需倍數與反向資金（同一支出）；只作對照，不回饋（同 OpenAI） | — | Andy：不以公司數字反推 |
 | D20 | OAI_Link：讀 OpenAI v0.6 Excel（`openai/model/CURRENT` 所指檔；建置時以分支 `claude/openai-s6-release` 或其合併後的 `main`），快照其命題輸出逐年值與檔案 SHA-256；只被 Checks 與 HTML 引用 | 不並排 | 比較問題 |
+
+
+### r1 修訂（A1 資料審查後，chat 端；取代上表同 ID 各列）
+
+| ID | r1 預設 | 替代 | 依據（SRC_ANT 見 `data/anthropic_src.yaml`） |
+|---|---|---|---|
+| D5 r1 | Anthropic 對雲端市集（Bedrock、Vertex）銷售以**總額**認列，平台抽成記為行銷費用（草擬公開說明書，經 Reuters 轉述）。本模型：`REV_Gross`＝報導口徑（總額）；`REV_PartnerShare`＝通路營收 × 平台抽成率（Inputs：基準取說明書隱含約 16%，區間取 Reuters 隱含值與 BofA 估計推得的高值）；`REV_Net`＝總額 − 抽成。命題與現金流用淨額（與 OpenAI 扣 Microsoft 分成同口徑）；抽成不再列入非算力費用，避免重複 | 用總額 | 2025 經雲端通路占 47% |
+| D6 r1 | 加速器族增加 AMD（MI450／MI455X Helios，取 TK NonNV「AMD MI455X」列）；NVIDIA 經 SpaceX／xAI、Nscale、Lambda、Volta 等取得者歸 NVIDIA 族（世代依揭露：Vera Rubin＝VR200，其餘 GB200／GB300） | — | 2026 新合約 |
+| D10 r1 | 供給 GW 只由「算力合約」（含晶片或算力服務者：Google／Broadcom TPU、AWS、Azure、AMD、SpaceX／xAI、Nscale、Lambda、Volta、CoreWeave、Akamai、Fluidstack 自建）加總；**機房租約**（TeraWulf、Riot、Hut 8、Nexus 等只含建物與電力）不另計 GW，只登 SRC 並在 Compute 對照列標明「容量已含於 TPU／AMD 合約」（不重複）。說明書總承諾約 $518B（約 80% 不可取消）作為逐合約加總的對帳列 | 機房租約另計 | 避免重複計算 |
+| D15 r1 | 2026 為**半校準年**：2026 營收基準＝2026 Q1＋Q2 實際（SRC，說明書）＋下半年＝最新觀測年化營收 ÷ 2（持平，保守；Decision）；2026 需求驅動（API 任務成長等）校準到該總額（同 D8 的「以實際值校準」，非以公司目標反推）。2027 起由驅動正向推導。2026 年底投資人預期年化 $100–120B 只作對照列 | 2026 純驅動推導（將嚴重偏離已觀測實際值） | 2026 已過三季且有季度實際值 |
+| D16 r1 | 已到位：2025 年底現金與短期投資（SRC）；Series H $65B（2026-05，含 $15B 早先超大雲端業者承諾，避免與各家「已到位」重複計）；Microsoft $5B（已全額）。條件式（情境）：Amazon 依算力交付里程碑的 $15B、Google 依績效的最高 $30B、NVIDIA 最高 $10B 未揭露到位部分、**IPO 募資（報導約 $100B，2026-11）**。或有：$15B 循環信貸、表外 TPU 融資（只有單一來源者標未證實） | IPO 計入基準 | 保守；IPO 尚未發生 |
+| D21（新增） | 2025 淨損 $42B 中約 $34B 為非現金會計費用：Funding 一律用現金口徑；Cost 的命題表不含該非現金項 | — | 說明書 |
+| D22（新增） | 2026 Q2 首次調整後營業利益（說明書／報導）：列 Checks 對照（模型 2026 營業口徑 vs 報導），不校準 | — | — |
+| D23（新增） | 年化營收里程碑（含 YipitData 等第三方估計，Analogy）全部只作對照；HTML 以里程碑折線並列模型年營收 | — | — |
 
 ## 4. A1 資料需求（SRC_ANT；每筆依共同規則第 4 節的欄位）
 
