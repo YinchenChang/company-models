@@ -48,7 +48,8 @@ function forwardPL(e, t) {
       d = l + u + lg,
       f = c === 0 ? uM(HIST_PL[3].revenue + d, r) : uM(d, r),
       EB = (l + u) * e.years[c].ebM + (e.years[c].otherEbitda || 0) + (e.years[c].legacyEbitda || 0) - (e.years[c].delayPen || 0), // v0.2：減延誤罰則 // v0.1b：加其他事業 EBITDA；Oracle：EBITDA 率只套算力＋服務，非 AI 事業另計
-      p = EB - e.years[c].daFleet,
+      lgO = e.years[c].legacyOa || 0, // MAG v0.1b：非 AI 事業其他攤銷（影音內容、營業租賃資產等；進 D&A，現金上視為等額支出，UFCF 不加回）
+      p = EB - e.years[c].daFleet - lgO,
       m = e.years[c].interest,
       ai = e.years[c].prepayAccr || 0, // v0.1b（Oracle）：預付重大財務組成的非現金利息（進稅前損益，不進現金）
       pt = p - m - ai,
@@ -59,11 +60,12 @@ function forwardPL(e, t) {
     sb = c === 0 ? t.shares : sb * 1.01, s = sb + (e.years[c].cumNewShares || 0);
     let g = h / s,
       _ = (h + t.sbc * L) / s,
-      v = e.years[c].daFleet,
+      v = e.years[c].daFleet + lgO,
+      vF = e.years[c].daFleet,
       y = e.years[c].cashCapex,
       b = t.wcPctOfRevGrowth * Math.max(0, d - r),
       tb2 = Math.max(0, p - Math.min(N2, p * NOL_USE)),
-      x = p - tb2 * t.tax + v - y - b - (e.years[c].prepayRecog || 0), // v0.1b：預付認列為非現金營收，自 UFCF 扣除（預付流入已在現金 CapEx 抵減）
+      x = p - tb2 * t.tax + vF - y - b - (e.years[c].prepayRecog || 0), // v0.1b：預付認列為非現金營收，自 UFCF 扣除（預付流入已在現金 CapEx 抵減）
       S = e.years[c].revenue,
       w = e.years[c].newRev,
       T = e.years[c].capacity > 0 ? e.years[c].unsold / e.years[c].capacity : 0,
@@ -494,8 +496,8 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
     impTgt = (PT.mean * o.shares + e28.netDebt) / e28.ebitda,
     impPx = (o.price * o.shares + e28.netDebt) / e28.ebitda,
     lgE = p.fwd[CONS_YEARS.length - 1].legacyEbitda || 0, lgM = o.legacyEvEbitda ?? 0, // v0.1b（Oracle）：分部加總——扣除非 AI 事業（模型 EBITDA × 非 AI 事業倍數）後的 AI 雲端 隱含倍數
-    impTgtOci = (PT.mean * o.shares + e28.netDebt - lgE * lgM) / Math.max(e28.ebitda - lgE, .01),
-    impPxOci = (o.price * o.shares + e28.netDebt - lgE * lgM) / Math.max(e28.ebitda - lgE, .01),
+    impTgtOci = (x => Math.abs(x) < .05 ? 0 : x)((PT.mean * o.shares + e28.netDebt - lgE * lgM) / Math.max(e28.ebitda - lgE, .01)), // MAG v0.1b：|x|<0.05 視為 0（與 Excel TEXT 一致，避免 −0.0）
+    impPxOci = (x => Math.abs(x) < .05 ? 0 : x)((o.price * o.shares + e28.netDebt - lgE * lgM) / Math.max(e28.ebitda - lgE, .01)),
     mHi = Math.max(...RANGE_MULTS),
     rel = x => { let r = Math.round(x * 10) / 10; return r > mHi ? `高於` : r < mHi ? `低於` : `等於` },
     implied = `共識平均目標價 $${Y(PT.mean, 2)} 隱含 ${YN} EV/EBITDA ${Y(impTgt, 1)}x（扣除非 AI 事業 ${Y(lgM, 1)}x × 模型 EBITDA $${Y(lgE, 1)}bn 後，AI 雲端 ${Y(impTgtOci, 1)}x），AI 雲端 倍數${rel(impTgtOci)}模型方法區間上緣 ${multTxt(mHi)}x；現價 $${Y(o.price, 2)} 隱含 ${Y(impPx, 1)}x（AI 雲端 ${Y(impPxOci, 1)}x）。`,
@@ -611,7 +613,8 @@ function quarterlyView(d, p, st) { // d＝runFunding、p＝runValuation、st＝�
     let det = S[0] * T[1] - T[0] * S[1], a = (E[0] * T[1] - T[0] * E[1]) / det, b = (S[0] * E[1] - S[1] * E[0]) / det;
     idx.forEach((x, i) => mg[i] = a + b * x)
   } else Qs.forEach((q, i) => { let j = pers.indexOf(q.period); mg[i] = E[j] / S[j] });
-  let model = { revenue: rev, adjEbitda: rev.map((r, i) => r * mg[i]), ebitdaMargin: mg, adjOpInc: rev.map((r, i) => r * mg[i] - da[i]), capex, mw: endAcc },
+  let oaQ = Qs.map((q, i) => (y[q.period].legacyOa || 0) * rev[i] / Math.max(S[pers.indexOf(q.period)], 1e-9)), // MAG v0.1b：非 AI 事業其他攤銷依季營收占比分配
+    model = { revenue: rev, adjEbitda: rev.map((r, i) => r * mg[i]), ebitdaMargin: mg, adjOpInc: rev.map((r, i) => r * mg[i] - da[i] - oaQ[i]), capex, mw: endAcc },
     annual = { revenue: P => f[P].revenue, adjEbitda: P => f[P].ebitda, adjOpInc: P => f[P].opInc, capex: P => y[P].gross },
     QE = (typeof CONSENSUS !== `undefined` && CONSENSUS && CONSENSUS.quarterlyEstimates) || {},
     num = x => typeof x === `number` && Number.isFinite(x) ? x : null,

@@ -6275,6 +6275,84 @@
     "retrieved": "2026-10-08",
     "tag": "[Interested-party]",
     "note": "「five to six years for chips, servers, and networking gear」「30-plus years for data centers」；與 Tokenomics IF_DeprLifeIT 6 年（基準）一致"
+   },
+   {
+    "id": "is.NA.da.2025q3",
+    "item": "NA 分部折舊與攤銷（不動產與設備，依使用量分攤）",
+    "value": 4001,
+    "unit": "USD M",
+    "period": "2025Q3",
+    "source": "Form 10-Q 2025Q3（期末 2025-09-30，核閱未查核）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000123/amzn-20250930.htm",
+    "docDate": "2025-10-31",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "10-Q 附註分部資訊（Total depreciation and amortization expense, by segment）"
+   },
+   {
+    "id": "is.NA.da.2025m9",
+    "item": "NA 分部折舊與攤銷，前九個月",
+    "value": 11273,
+    "unit": "USD M",
+    "period": "2025 前九個月",
+    "source": "Form 10-Q 2025Q3（期末 2025-09-30，核閱未查核）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000123/amzn-20250930.htm",
+    "docDate": "2025-10-31",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "10-Q 附註分部資訊（Total depreciation and amortization expense, by segment）"
+   },
+   {
+    "id": "is.INTL.da.2025q3",
+    "item": "INTL 分部折舊與攤銷（不動產與設備，依使用量分攤）",
+    "value": 1276,
+    "unit": "USD M",
+    "period": "2025Q3",
+    "source": "Form 10-Q 2025Q3（期末 2025-09-30，核閱未查核）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000123/amzn-20250930.htm",
+    "docDate": "2025-10-31",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "10-Q 附註分部資訊（Total depreciation and amortization expense, by segment）"
+   },
+   {
+    "id": "is.INTL.da.2025m9",
+    "item": "INTL 分部折舊與攤銷，前九個月",
+    "value": 3592,
+    "unit": "USD M",
+    "period": "2025 前九個月",
+    "source": "Form 10-Q 2025Q3（期末 2025-09-30，核閱未查核）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000123/amzn-20250930.htm",
+    "docDate": "2025-10-31",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "10-Q 附註分部資訊（Total depreciation and amortization expense, by segment）"
+   },
+   {
+    "id": "is.AWS.da.2025q3",
+    "item": "AWS 分部折舊與攤銷（不動產與設備，依使用量分攤）",
+    "value": 5648,
+    "unit": "USD M",
+    "period": "2025Q3",
+    "source": "Form 10-Q 2025Q3（期末 2025-09-30，核閱未查核）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000123/amzn-20250930.htm",
+    "docDate": "2025-10-31",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "10-Q 附註分部資訊（Total depreciation and amortization expense, by segment）"
+   },
+   {
+    "id": "is.AWS.da.2025m9",
+    "item": "AWS 分部折舊與攤銷，前九個月",
+    "value": 14882,
+    "unit": "USD M",
+    "period": "2025 前九個月",
+    "source": "Form 10-Q 2025Q3（期末 2025-09-30，核閱未查核）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000123/amzn-20250930.htm",
+    "docDate": "2025-10-31",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "10-Q 附註分部資訊（Total depreciation and amortization expense, by segment）"
    }
   ],
   "2_AI容量": [
@@ -7323,6 +7401,32 @@
     "retrieved": "2026-10-08",
     "tag": "[Derived]",
     "note": "示警：模型基準低於公司揭露下限 30%；且殘差 151.4B 對 2025Q2 AWS 年化 123.5B 隱含非 AI 年增 ≥22.6%（即使一年前 AI 為 0），高於 AWS 2023–2025 年增 17%–20% → 期初對外 AI MW 或 k 可能偏低（或公司 AI 口徑含 Bedrock 軟體／晶片業務）。依規則不回頭改 k；v0.1b 以敏感度呈現"
+   },
+   {
+    "id": "is.segDA.ttm2026q2",
+    "item": "分部 D&A 合計（TTM 2025Q3–2026Q2）",
+    "value": 49741.0,
+    "unit": "USD M",
+    "period": "TTM 至 2026-06-30",
+    "source": "由 2025Q3、2025 10-K（Q4＝全年 − 前九個月）、2026Q1、2026Q2 分部 D&A 加總",
+    "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000123/amzn-20250930.htm",
+    "docDate": "2026-07-31",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "北美 17.011、國際 5.161、AWS 27.569（US$bn）"
+   },
+   {
+    "id": "is.daScale.ttm2026q2",
+    "item": "合併 D&A ÷ 分部 D&A（C5 放大倍數）",
+    "value": 1.511831,
+    "unit": "倍",
+    "period": "TTM 至 2026-06-30",
+    "source": "合併現金流量表 D&A（TTM）÷ 分部 D&A 合計（TTM）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000123/amzn-20250930.htm",
+    "docDate": "2026-07-31",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "對照表 r1 C5：差額（影音內容、營業租賃資產等攤銷）按各分部 D&A 比例放大分攤；合併 75.200 ÷ 分部 49.741"
    }
   ],
   "7_評價輸入": [

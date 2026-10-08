@@ -120,18 +120,32 @@ function shiftQ(V, v0, dm) {
   if (!(dm > 0)) return [...V];
   return V.map((x, i) => { const tau = PERIOD_T[i] - dm / 12; return V.reduce((a, v, k) => a + (v - (k ? V[k - 1] : v0)) * Math.min(1, Math.max(0, (tau - (k ? PERIOD_T[k - 1] : 0)) / PERIOD_YEARS[k])), v0) })
 }
-// v0.1b（Oracle）：非 AI 事業（company.json → defaults.legacyBiz）。各線全年營收＝上一財年實際 ×(1＋年增率)，年增率自起點線性收斂到長期值；
-// 首期模型部分＝首期全年 − 年初至今實際（首期 YTD＋模型＝全年）。EBITDA＝營收 × 合併 EBITDA 率（各期一列）。沒有非 AI 事業時 lines 為空清單，全部為 0。
-function legacyQ(e) {
-  let B = e.legacyBiz || { lines: [], ebitdaMargin: PERIOD_YEARS.map(() => 0) },
+// v0.1b（Oracle）：非 AI 事業（company.json → defaults.legacyBiz）；MAG v0.1b：改為 N 線（kind），各線自有 EBITDA 率與其他攤銷。
+// growth：全年營收＝上一財年實際 ×(1＋年增率)，年增率自 g0 線性收斂到 gLT；首期模型部分＝首期全年 − 年初至今實際。
+// cloudResidual：雲端分部的非 AI 部分＝雲端分部首期估計〔年初至今＋去年同期 ×(1＋近四季年增率)〕− 對外 AI 雲端模型值（年初至今以期初 MW 平均 × 首期每 MW 年收入估計）；
+//   g0＝(雲端近四季 − AI 近四季估計) ÷ (前四季 − AI 前四季估計) − 1；m0＝(雲端近四季 EBITDA − AI 近四季估計 × AI 首期 EBITDA 率) ÷ (雲端近四季 − AI 近四季估計)。X＝{ aiRev（各期 AI 模型期營收）, rev0（首期每 MW 年收入）, m0（AI 首期 EBITDA 率）}。
+// explicit：各期模型期營收直接輸入（rev；首期為模型部分），EBITDA 率同 m0→mLT 或 ebitda 陣列直接輸入（未分攤公司層費用：rev 全 0、ebitda 為負）。
+// EBITDA 率 m＝m0＋(mLT − m0)× 期數 ÷ 4（mLT 空白＝m0）；oa＝其他攤銷占營收比（進損益 D&A、自營運現金扣除）。沒有非 AI 事業時 lines 為空清單，全部為 0。Excel「輸入與假設」B2 同式。
+var B_LINE = k => (COMPANY_DATA.defaults.legacyBiz?.lines || []).find(x => x.key === k) || {}; // MAG v0.1b：各線原始輸入（檢查文字用）
+function legacyQ(e, X) {
+  let B = e.legacyBiz || { lines: [] }, Y0 = CALQ.ytdMonths / 12,
     lines = B.lines.map(x => {
-      let g = PERIOD_YEARS.map((L, r) => x.g0 + (x.gLT - x.g0) * r / 4), A = [];
-      g.forEach((gr, r) => A.push((r === 0 ? x.fyBase : A[r - 1]) * (1 + gr)));
-      return { key: x.key, label: x.label, g, annual: A, rev: A.map((a, r) => r === 0 ? a - x.ytd : a), ytd: x.ytd }
+      const k = x.kind || `growth`;
+      let g0 = x.g0, m0 = x.m0, A = [], ytd = x.ytd || 0, ai = null;
+      if (k === `cloudResidual`) {
+        const aiY = X.rev0 * ((e.mwYearEnd[PERIOD_FY[0] - 1] ?? 0) + e.billableOpen) / 2 * Y0, aiT = X.rev0 * x.aiMwTTM, aiP = X.rev0 * x.aiMwPrevTTM;
+        g0 = (x.ttm - aiT) / (x.prevTTM - aiP) - 1, m0 = (x.ebitdaTTM - aiT * X.m0) / (x.ttm - aiT), ytd = x.ytd - aiY;
+        ai = { ytd: aiY, ttm: aiT, prevTTM: aiP, segFy0: x.ytd + x.priorStub * (1 + x.g4q) }
+      }
+      const mLT = x.mLT ?? m0, g = PERIOD_YEARS.map((L, r) => k === `explicit` ? 0 : g0 + (x.gLT - g0) * r / 4), m = PERIOD_YEARS.map((L, r) => m0 + (mLT - m0) * r / 4);
+      if (k === `explicit`) A = x.rev.map((v, r) => r === 0 ? v + ytd : v);
+      else g.forEach((gr, r) => A.push(r === 0 ? (k === `cloudResidual` ? ai.segFy0 - ai.ytd - X.aiRev[0] : x.fyBase * (1 + gr)) : A[r - 1] * (1 + gr)));
+      const rev = A.map((a, r) => r === 0 ? a - ytd : a), eb = rev.map((v, r) => x.ebitda ? x.ebitda[r] : v * m[r]);
+      return { key: x.key, label: x.label, kind: k, peer: x.peer, g, m, g0, m0, annual: A, rev, ytd, ebitda: eb, oa: rev.map(v => v * (x.oa || 0)), ai }
     }),
-    rev = PERIOD_YEARS.map((L, r) => lines.reduce((a, x) => a + x.rev[r], 0)),
-    ebitda = rev.map((v, r) => v * B.ebitdaMargin[r]);
-  return { lines, rev, ebitda, margin: B.ebitdaMargin, annual: PERIOD_YEARS.map((L, r) => lines.reduce((a, x) => a + x.annual[r], 0)) }
+    sumQ = f => PERIOD_YEARS.map((L, r) => lines.reduce((a, x) => a + x[f][r], 0)),
+    rev = sumQ(`rev`), ebitda = sumQ(`ebitda`);
+  return { lines, rev, ebitda, oa: sumQ(`oa`), margin: rev.map((v, r) => ebitda[r] / Math.max(v, 1e-9)), annual: sumQ(`annual`) }
 }
 
 function siteBenchQ(e) {
@@ -338,7 +352,9 @@ function runFunding(e) {
       let r = n === 0 ? e.ppeOpen : PPE[n - 1] + CXS[n - 1];
       return PPE.push(r), (r + .5 * t) / e.gpuLife * PERIOD_YEARS[n]
     }),
-    LG = legacyQ(e), // v0.1b（Oracle）：非 AI 事業營收與 EBITDA
+    AIR = PERIOD_YEARS.map((L, r) => (e.useAvgMw ? ((r === 0 ? e.billableOpen : BD[r - 1]) + BD[r]) / 2 : BD[r]) * t.revMW[r] * (e.revScale ?? 1) * (t.util[r] / 100) * L), // MAG v0.1b：對外 AI 雲端模型期營收（＝下方容量 u；非 AI 雲端殘差用）
+    AIM = PERIOD_YEARS.map((L, r) => e.ebitdaBasis === `tk` ? 1 - t.opexMW[r] / Math.max(t.revMW[r] * (e.revScale ?? 1), 1e-9) : null), // MAG v0.1b：tk＝AI 雲端 EBITDA 率＝1 − Tokenomics 加權每 MW 營運成本 ÷ 每 MW 年收入（價格倍數改變收入、不改成本）
+    LG = legacyQ(e, { aiRev: AIR, rev0: t.revMW[0] * (e.revScale ?? 1) * (t.util[0] / 100), m0: AIM[0] ?? e.ebStart }), // v0.1b（Oracle）：非 AI 事業營收與 EBITDA；MAG v0.1b：N 線
     CVF = cvConvQ(e.eqPx), // v0.1b：融資現金流的可轉債分類（判斷價＝股權發行參考價，預設＝現價）
     CVP = PERIOD_YEARS.map((L, n) => cvFlowQ(CVF, e.includeDebt, n, L)),
     PB = [],
@@ -381,7 +397,7 @@ function runFunding(e) {
         totRev = f + nR + svc,
         // v0.1c（Oracle）：ebitdaBasis＝ebitdar 時，EBITDA＝EBITDAR 率 × 營收 − 租金（租金為固定成本）；EBITDAR 率＝EBITDA 率＋基準情境租金÷AI 雲端 營收（defaults.ebitdarAdj，校準於基準情境起點與穩態）
         eR = e.ebitdaBasis === `ebitdar` ? e.ebStart + e.ebitdarAdj[0] + (e.ebSteady + e.ebitdarAdj[1] - e.ebStart - e.ebitdarAdj[0]) * r / 4 : null,
-        ebM = eR !== null ? eR - S / Math.max(totRev, .01) : e.ebStart + (e.ebSteady - e.ebStart) * r / 4,
+        ebM = eR !== null ? eR - S / Math.max(totRev, .01) : AIM[r] ?? e.ebStart + (e.ebSteady - e.ebStart) * r / 4,
         cm = eR !== null ? eR : e.ebitdaBasis === `tk` ? ebM : ebM + S / Math.max(totRev, .01), // MAG v0.1b：tk＝AI 雲端 EBITDA 率由 Tokenomics 營運成本推得（未扣租金），租金另列現金支出，不加回
         g = h * cm,
         nC = nR * (1 - (t.defaultP[r] / 100) * p) * cm,
@@ -399,12 +415,12 @@ function runFunding(e) {
         T = e.overlay ? C + w : 0,
         O = (e.includeDebt ? DEBT_AMORT[r] : 0) + CVP[r].amort, // v0.1b：含債務處理可轉債的到期還本（到期累積本金）
         k = r === 0 && e.includeAtm ? e.atm : 0,
-        lgR = LG.rev[r], lgE = LG.ebitda[r], // v0.1b（Oracle）：非 AI 事業營收與 EBITDA（EBITDA 視為現金，稅另列）
-        tx = (e.cashTaxRate ?? 0) * Math.max(0, totRev * ebM + ob + lgE - pen - DAF[r] - IX[r]), // v0.1b：現金稅＝稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（不含瀑布新債利息，避免循環；偏保守）
+        lgR = LG.rev[r], lgE = LG.ebitda[r], lgO = LG.oa[r], // v0.1b（Oracle）：非 AI 事業營收與 EBITDA（EBITDA 視為現金，稅另列）；MAG v0.1b：lgO＝其他攤銷（損益 D&A；視為等額現金支出，自營運來源扣除）
+        tx = (e.cashTaxRate ?? 0) * Math.max(0, totRev * ebM + ob + lgE - lgO - pen - DAF[r] - IX[r]), // v0.1b：現金稅＝稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（不含瀑布新債利息，避免循環；偏保守）
         dvSh = e.dividend ? e.dividend.sharesBase + WF.sh + CVN.reduce((a, n) => a + (n.mand && n.t < r ? n.S : 0), 0) : 0, // v0.1b（Oracle）：股利股數＝期初股數（基礎＋前期累計瀑布新股＋已強制轉換的特別股）
         dvC = e.dividend ? 4 * e.dividend.perShareQ * L * dvSh : 0, // 普通股股利＝每股（每季 × 4）× 期間長度 × 期初股數
         dvP = e.dividend ? e.dividend.preferred[r] : 0, // 特別股股利（強制轉換前；company.json → defaults.dividend.preferred）
-        A = g + nC + svcCash + ob + lgE - pen + v - pr, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
+        A = g + nC + svcCash + ob + lgE - lgO - pen + v - pr, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
         j0 = _ + S + IX[r] + e.jvCommit[r] + e.a.div[r] + T + O + tx + dvC + dvP,
         wRL = uA(e, r) / 100 * L,
         wRJ = (e.junkRate + (e.cdsLink ? Math.max(0, e.cds - e.cdsBaseBp) / 1e4 * e.cdsPassThrough : 0)) * L,
@@ -525,6 +541,8 @@ function runFunding(e) {
         servicesRev: svc,
         legacyRev: lgR,
         legacyEbitda: lgE,
+        legacyOa: lgO, // MAG v0.1b：非 AI 事業其他攤銷
+        aiRevQ: AIR[r],
         cashTax: tx,
         ebM: ebM,
         cashMargin: cm,
@@ -534,7 +552,7 @@ function runFunding(e) {
         leaseLiabOn: LLON[r], leaseLiabUl: LLUL[r], leaseLiab: LLON[r] + LLUL[r], ebitdarAnn: (totRev * ebM + ob + lgE - pen + S) / L, // v0.2：租賃負債與 EBITDAR（年化）
         adjLev: (wEx + WF.Dn + WF.Cn + WF.Jn + LLON[r] + LLUL[r]) / Math.max((totRev * ebM + ob + lgE - pen + S) / L, .01), // v0.2：調整後槓桿（期末）
         otherEbitda: ob,
-        cashEbitda: g + nC + svcCash + ob + lgE - pen - S,
+        cashEbitda: g + nC + svcCash + ob + lgE - lgO - pen - S,
         creditAdj: (m + nR * (t.defaultP[r] / 100) * p) * cm,
         atm: k,
         facility: F,
@@ -580,7 +598,18 @@ function runFunding(e) {
     severity: t.price.every(x => x.capRatio <= PRICING.capWarn) ? `ok` : `watch`,
     title: `每 MW 年收入 ÷ Tokenomics 參考付費營收：最高 ${hA(Math.max(...t.price.map(x => x.capRatio)) * 100, 1)}（門檻 ${hA(PRICING.capWarn * 100, 0)}）`,
     detail: `五期 ${t.price.map(x => hA(x.capRatio * 100, 1)).join(`／`)}；參考付費營收＝Σ 世代占比 × IF_RevGWFleet（1 GW 參考機隊付費營收，理論上限）。超過門檻表示 hyperscaler 每 MW 收入占客戶 token 營收的比例偏高（${PRICING.capWarnNote}）。`
-  }), _({
+  }), LG.lines.filter(x => x.kind === `cloudResidual`).forEach(x => _({ // MAG v0.1b：非 AI 雲端殘差的合理性（殘差為正、推估年增率介於 0 與雲端分部年增率之間）
+    id: `residual-${x.key}`,
+    ok: x.rev[0] > 0 && x.g0 >= 0 && x.g0 <= (B_LINE(x.key).g4q ?? 1),
+    severity: x.rev[0] > 0 && x.g0 >= 0 && x.g0 <= (B_LINE(x.key).g4q ?? 1) ? `ok` : `watch`,
+    title: `${x.label}（殘差）：${PERIODS[0]} 模型期 ${Y(x.rev[0], 2)}bn、推估近四季年增率 ${hA(x.g0 * 100, 1)}（雲端分部 ${hA((B_LINE(x.key).g4q ?? 0) * 100, 1)}）、EBITDA 率 ${hA(x.m0 * 100, 1)}`,
+    detail: `＝雲端分部首期估計 ${Y(x.ai.segFy0, 2)} − AI 年初至今估計 ${Y(x.ai.ytd, 2)} − AI 模型期 ${Y(o[0].isRev, 2)}；AI 近四季估計 ${Y(x.ai.ttm, 2)}、前四季 ${Y(x.ai.prevTTM, 2)}。殘差為負或年增率超出區間時示警（不回頭改 k 或 MW；敏感度見報告）。`
+  })), CALL_FACTS.aiRunRate != null && (() => { // MAG v0.1b：公司 AI run-rate 驗證列（對照表 r1 C3）——不作輸入；寫出要對上須多少 MW 或 k
+    const r0 = t.revMW[0] * (e.revScale ?? 1), mdl = e.billableOpen * r0, rr = CALL_FACTS.aiRunRate;
+    return _({ id: `ai-runrate`, ok: mdl >= rr, severity: `watch`,
+      title: `公司 AI run-rate >${Y(rr, 0)}B vs 模型評價日年化 ${Y(mdl, 1)}B（${hA((mdl / rr - 1) * 100, 1)}）`,
+      detail: `模型＝評價日在役 ${Y(e.billableOpen, 0)} MW × 首期每 MW 年收入 ${Y(r0 * 1e3, 2)}m。要對上公司說法：對外 MW 需 ${Y(rr / r0, 0)}（k 不變），或 k 需 ${Y((t.price ? t.price[0].k : 1) * rr / mdl, 3)}（MW 不變）。${CALL_FACTS.aiRunRateNote || ``}` })
+  })(), _({
     id: `rpo-weights`,
     ok: Math.abs(RPO_BUCKET_W.reduce((e, t) => e + t, 0) - RPO_SCHEDULED_SHARE) < 1e-6,
     severity: `watch`,
@@ -707,7 +736,7 @@ function runFunding(e) {
     detail: `順序：客戶預付（營運來源）→ 現金（高於最低現金 ${e.minCash}bn 的部分）→ ${e.useFacility ? `未動用額度（${TXQ.facilityName}）→ ` : ``}新債（${e.debtCapBasis === `leaseAdj` ? `(總債務＋租賃負債) ≤ ${multTxt(e.debtEbitdaMax)}×(EBITDA＋租金)（投資級上限，租賃調整後槓桿）` : e.debtCapBasis === `ebitda` ? `總債務 ≤ ${multTxt(e.debtEbitdaMax)}× 當期 EBITDA（投資級上限）` : `總債務 ≤ ${e.debtBacklog}× backlog`}）→ ${(e.cvCap ?? 0) > 0 ? `可轉債（每年上限 ${Y(e.cvCap ?? 0, 1)}bn、票息 ${hA(e.convIssue.coupon * 100, 1)}）→ ` : ``}股權（發行價＝$${e.eqPx}×(1−${(e.eqDisc*100).toFixed(0)}%)，每年上限＝現市值 ${e.eqCapPct>=9?`無上限`:(e.eqCapPct*100).toFixed(0)+`%`}）→ 超出部分以高息債 ${(e.junkRate*100).toFixed(0)}% 補足${e.debtCapBasis === `ebitda` || e.debtCapBasis === `leaseAdj` ? `（＝需失去投資級才能融資的金額）` : ``}。股利 ${Y(o.reduce((a, t) => a + t.dividend, 0), 1)}bn 列為用途。${(q => q.length ? `本情境股權需求落在 ${q.join(`、`)}。` : `本情境不需股權。`)(o.filter(t => t.equity > .05).map(t => t.year))}`
   }), _({
     id: `ebitda-link`,
-    ok: o.every(e => Math.abs(e.cashEbitda + e.creditAdj - e.ebitdaPL) < .01),
+    ok: o.every(y => Math.abs(y.cashEbitda + y.creditAdj + (y.legacyOa || 0) + (e.ebitdaBasis === `tk` ? y.lease : 0) - y.ebitdaPL) < .01), // MAG v0.1b：tk 時 AI 雲端 EBITDA 未扣租金（租金另列現金支出），其他攤銷自現金扣除
     severity: `ok`,
     title: `資金與損益同一組 EBITDA：${PERIODS[4]} EBITDA 率 ${(o[4].ebM*100).toFixed(1)}%、EBITDAR 率 ${(o[4].cashMargin*100).toFixed(1)}%`,
     detail: `${e.ebitdaBasis === `ebitdar` ? `EBITDAR 率由 ${((e.ebStart+e.ebitdarAdj[0])*100).toFixed(1)}% 線性變動至 ${PERIODS[4]} ${((e.ebSteady+e.ebitdarAdj[1])*100).toFixed(1)}%（三情境共用；校準使基準情境起點 ${(e.ebStart*100).toFixed(1)}%、穩態 ${(e.ebSteady*100).toFixed(1)}% EBITDA 率不變），EBITDA 率＝EBITDAR 率 − 租金÷營收（租金為固定成本）。` : `EBITDA 率由 ${(e.ebStart*100).toFixed(0)}%（${TXQ.ebStartSource}）線性變動至 ${PERIODS[4]} ${(e.ebSteady*100).toFixed(0)}%（穩態）。資金模型用 EBITDAR 率＝EBITDA 率＋租金÷營收（因租金在支出端另列），`}非算力服務現金＝服務營收×同一 EBITDAR 率。恆等式：現金 EBITDA（營運來源不含預付 − 租金）＋信用損失調整＝損益 EBITDA，五期皆成立。`
@@ -812,6 +841,7 @@ function runFunding(e) {
       legacy: s(`legacy`),
       legacyRev: s(`legacyRev`),
       legacyEbitda: s(`legacyEbitda`),
+      legacyOa: s(`legacyOa`),
       cashTax: s(`cashTax`),
       dividend: s(`dividend`),
       prepayAccr: s(`prepayAccr`),

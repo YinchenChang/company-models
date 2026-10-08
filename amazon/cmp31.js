@@ -36,10 +36,15 @@ if(PRICING){ // MAG v0.1b：B0 對外 AI 雲端定價（Tokenomics × k）
   cmp('世代MW合計', '輸入|在役 MW 合計（世代加總）', PR.map(x=>x.tot)); cmp('加權持有成本', '輸入|加權每 MW 年持有成本', PR.map(x=>x.hold));
   cmp('加權營運成本', '輸入|加權每 MW 年營運成本', PR.map(x=>x.opex)); cmp('加權參考營收', '輸入|加權每 MW 參考付費營收', PR.map(x=>x.ref));
   cmp('上限比', '輸入|每 MW 年收入 ÷ 參考付費營收', PR.map(x=>x.capRatio));
+  cmp('上限檢查(檢查頁)', '連動檢查|每 MW 年收入 ÷ 參考付費營收（五期最高）', [Math.max(...PR.map(x=>x.capRatio))]); cmp('世代MW核對', T('連動檢查|世代在役 MW 合計 − Accepted MW（«PL»）'), [PR[4].tot-d.m.accepted[4]]);
   if(SC==='base'&&!AKX){ const G=grid33Q(q,VAL_DEFAULTS); [`low`,`base`,`high`].forEach((k,j)=>cmp('3x3 '+k, `評價_DCF與目標價|3×3｜${SCENARIOS[k].label}（價格軸 低／基準／高）`, G[j])); }
 }
 cmp('非 AI 事業營收', '輸入|非 AI 事業營收（模型期）', H('legacyRev')); cmp('非 AI 事業EBITDA', '輸入|非 AI 事業 EBITDA（模型期）', H('legacyEbitda')); // v0.1b（Oracle）
-d.lg.lines.forEach(x=>{ cmp('傳統 '+x.key+' 全年', `輸入|非 AI 事業｜${x.label}｜全年營收`, x.annual); cmp('傳統 '+x.key+' 模型期', `輸入|非 AI 事業｜${x.label}｜模型期營收`, x.rev); });
+d.lg.lines.forEach(x=>{ cmp('傳統 '+x.key+' 全年', `輸入|非 AI 事業｜${x.label}｜全年營收`, x.annual); cmp('傳統 '+x.key+' 模型期', x.kind==='explicit'?`輸入|非 AI 事業｜${x.label}｜模型期營收（輸入）`:`輸入|非 AI 事業｜${x.label}｜模型期營收`, x.rev);
+  cmp('分部 '+x.key+' EBITDA', `輸入|非 AI 事業｜${x.label}｜EBITDA`, x.ebitda); cmp('分部 '+x.key+' 其他攤銷', `輸入|非 AI 事業｜${x.label}｜其他攤銷`, x.oa); cmp('分部 '+x.key+' EBITDA率', `輸入|非 AI 事業｜${x.label}｜EBITDA 率`, x.m); // MAG v0.1b
+  if(x.kind!=='explicit') cmp('分部 '+x.key+' 起始年增率', `輸入|非 AI 事業｜${x.label}｜起始年增率`, [x.g0]); cmp('分部 '+x.key+' 起始EBITDA率', `輸入|非 AI 事業｜${x.label}｜起始 EBITDA 率`, [x.m0]);
+  if(x.ai){ cmp('非AI雲端 AI YTD', T(`輸入|非 AI 事業｜${x.label}｜AI «YTD» 營收估計`), [x.ai.ytd]); cmp('非AI雲端 AI TTM', `輸入|非 AI 事業｜${x.label}｜AI 近四季營收估計`, [x.ai.ttm]); } });
+cmp('非 AI 事業其他攤銷', '輸入|非 AI 事業其他攤銷（模型期）', H('legacyOa')); if(CALL_FACTS.aiRunRate!=null) cmp('AI runrate 驗證', '連動檢查|公司 AI run-rate 驗證（模型評價日年化）', [q.billableOpen*d.m.revMW[0]*(q.revScale??1)]); d.lg.lines.filter(x=>x.kind==='cloudResidual').forEach(x=>cmp('殘差檢查 '+x.key, T(`連動檢查|${x.label}（殘差）«P0» 模型期營收`), [x.rev[0]])); cmp('AI雲端營收(引自運營)', '輸入|對外 AI 雲端營收（模型期，引自運營頁）', H('aiRevQ')); // MAG v0.1b
 cmp('現金稅', F+T('⑦ 現金稅（«STUB» 起）'), H('cashTax')); cmp('股利', F+'⑧ 股利（普通股＋特別股）', y.map((e,i)=>i===0?e.fyDividend:e.dividend)); cmp('債務上限', F+'債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）', H('debtCap')); // v0.1b cmp('來源 傳統EBITDA', F+T('Ⓒ3 非 AI 事業 EBITDA（«STUB» 起）'), H('legacyEbitda'));
 cmp('36個月營收對照', S+'對照：評價日起 36 個月 MW 驅動營收', H('oci36')); cmp('RPO36 差額', '連動檢查|對照：RPO 36 個月內轉換 − 模型 36 個月 MW 驅動營收', [LATEST_Q.rpo*COMPANY_DATA.rpo.within36m-d.totals.oci36]); // v0.1b
 cmp('期初可計費MW', '輸入|«VMD» Billable MW'.replace('«VMD»',CALQ.valuationMD), [q.billableOpen]); // v0.1b：以實際營收校準

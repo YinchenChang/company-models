@@ -473,7 +473,9 @@
   "ttmDa": 75.2,
   "ttmOpLease": 96.32,
   "mktCapLast": 2803.579,
-  "nextEarn": "2026-10 下旬（2026Q3 財報）"
+  "nextEarn": "2026-10 下旬（2026Q3 財報）",
+  "aiRunRate": 25.0,
+  "aiRunRateNote": "2026Q2 法說：AWS AI 業務年化營收「超過 25B」（口徑可能含 Bedrock 軟體與自研晶片收入；事實總帳 aws.aiRunRate.2026q2）[Interested-party]；只作驗證列，不回頭改 MW 或 k（對照表 r1 C3）"
  },
  "scenarios": {
   "labels": {
@@ -622,37 +624,49 @@
    "lines": [
     {
      "key": "na",
-     "label": "北美零售（含廣告、訂閱）",
+     "label": "北美",
+     "kind": "growth",
+     "peer": "retail",
      "fyBase": 426.305,
      "ytd": 220.32,
-     "g0": 0.1227,
-     "gLT": 0.06
+     "g0": 0.122729,
+     "gLT": 0.06,
+     "m0": 0.130863,
+     "mLT": 0.11877,
+     "oa": 0.019192
     },
     {
      "key": "intl",
-     "label": "國際零售（含廣告、訂閱）",
+     "label": "國際",
+     "kind": "growth",
+     "peer": "retail",
      "fyBase": 161.894,
      "ytd": 81.986,
-     "g0": 0.1606,
-     "gLT": 0.07
+     "g0": 0.160608,
+     "gLT": 0.06,
+     "m0": 0.075934,
+     "mLT": 0.061311,
+     "oa": 0.015216
     },
     {
-     "key": "aws",
-     "label": "AWS（步驟 3 拆 AI／非 AI）",
-     "fyBase": 128.725,
+     "key": "awsNonAi",
+     "label": "AWS 非 AI 雲端",
+     "kind": "cloudResidual",
+     "peer": "cloud",
      "ytd": 79.819,
-     "g0": 0.2752,
-     "gLT": 0.08
+     "priorStub": 68.585,
+     "g4q": 0.275189,
+     "ttm": 148.404,
+     "prevTTM": 116.378,
+     "ebitdaTTM": 96.360677,
+     "aiMwTTM": 1490.0,
+     "aiMwPrevTTM": 570.0,
+     "gLT": 0.08,
+     "mLT": null,
+     "oa": 0.095083
     }
    ],
-   "ebitdaMargin": [
-    0.2178,
-    0.2178,
-    0.2178,
-    0.2178,
-    0.2178
-   ],
-   "note": "步驟 1 暫用三分部（北美、國際、AWS）；步驟 3–4 改為 company.json → segments 驅動的 N 線與非 AI 雲端殘差。"
+   "note": "各線：growth＝全年營收＝上一財年 ×(1＋年增率)，年增率自近四季對前四季年增率（g0，[Derived]）線性收斂到長期值（gLT，[Assumed]，區間 ±3 個百分點）；cloudResidual（雲端分部的非 AI 部分）＝雲端分部首期估計〔年初至今實際＋去年同期 ×(1＋近四季年增率)〕− 對外 AI 雲端模型值（年初至今以期初 MW 平均 × 首期每 MW 年收入估計），之後年增率由推估的近四季非 AI 年增率〔(雲端近四季 − AI 近四季估計) ÷ (前四季 − AI 前四季估計) − 1〕收斂到 gLT（預設 8%，5%–12%，[Assumed]）；EBITDA 率＝(雲端分部 EBITDA − AI 雲端 EBITDA 估計) ÷ 非 AI 雲端營收（[Derived]，固定）。EBITDA 率（m0→mLT 線性收斂）＝(分部營業利益＋分部 D&A × 合併 D&A ÷ 分部 D&A 合計) ÷ 營收（對照表 r1 C5，[Derived]）；m0＝近四季、mLT＝2023–2025 平均（對照表第 5 節第 5 條）。oa＝其他攤銷（影音內容、營業租賃資產等，C5 放大部分）占營收比：進損益 D&A、自營運現金扣除（視為等額現金支出）。C5 放大倍數 1.5118（近四季合併 D&A 75.200 ÷ 分部 49.741）；替代（按營收分攤）列敏感度。peer＝評價時套用的同業倍數組（valuation.segmentMultiples）。"
   },
   "cashTaxRate": 0.1736,
   "dividend": {
@@ -1356,7 +1370,7 @@
   "capexGuideSource": "法說會二手逐字稿（2026-07-30）；新聞稿與 10-Q 未列金額 [Interested-party]",
   "prepayCheck": "不適用（Amazon 無客戶預付融資）。",
   "mwFacts": "公司：2025 年新增電力 3.9 GW、2025Q4 單季 1.2 GW（口徑不明，推定設施）；2027 年底容量為 2025 年兩倍（總容量未揭露）。第三方：Epoch AI 追蹤三站 1,422 MW-IT（Trainium2，Anthropic），2028 預測 3,448 [Interested-party／第三方]。",
-  "ebStartSource": "Tokenomics 由下而上營運成本（IF_OpexGW 世代加權）÷ 每 MW 年收入",
+  "ebStartSource": "AI 雲端 EBITDA 率＝1 − Tokenomics 加權每 MW 營運成本 ÷ 每 MW 年收入",
   "costMwNote": "Tokenomics IF_CapexIT（GB300 37.45、VR200 37.59 US$m/MW-IT）＋自建比例 80% × 機房 L1_FacCapexMW 12.67 [Derived]",
   "ppeOpenNote": "評價日 PP&E 淨額 446.0（10-Q；含 AWS 263.8）[Interested-party]",
   "facilityName": "循環信用額度 20B，未動用",
@@ -1532,7 +1546,7 @@
     "2026 現金資本支出約 220（法說）· Q3 營收 197–202 · 營業利益 22.5–26.5"
    ]
   ],
-  "legacyMarginNote": "分部 EBITDA 率＝(分部營業利益＋分部 D&A × 合併 D&A ÷ 分部 D&A 合計) ÷ 營收（對照表 C5，[Derived]）；步驟 1 暫用三分部合計 21.8%",
+  "legacyMarginNote": "分部 EBITDA 率＝(分部營業利益＋分部 D&A × 1.512) ÷ 營收（C5 放大分攤；近四季 m0 → 2023–2025 平均 mLT）；AWS 非 AI 雲端＝殘差（AWS EBITDA − AI 雲端 EBITDA 估計），[Derived]",
   "scenarioTip": "三個情境只改容量軸（對外 AI MW 路徑，對照表 r1 第 5 節第 1 條）：保守＝只計第三方追蹤的已交付＋在建；基準＝依過去四季新增電力速度延續；積極＝依公司公開的容量目標。價格軸（k 低／基準／高）另列 3 × 3 矩陣，三容量情境都用基準 k。毛 CapEx 由 MW 公式自動增減。切換情境只改寫 MW 路徑與預建 MW；你手動調整的其他數字會保留，按頁首「重設」才回到預設值。",
   "ebitdaPathTip": "AI 雲端 EBITDA 率＝1 − Tokenomics 每 MW 營運成本 ÷ 每 MW 年收入（由下而上，[Derived]），不取可比公司區間；租金另列現金支出，不加回。",
   "ebitdaPathLine": "損益與資金共用；AI 雲端 EBITDA 率由 Tokenomics 營運成本推得"
