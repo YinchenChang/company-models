@@ -2,7 +2,7 @@
 # 舊方法組合的回歸驗收：把 coreweave/ 與 tools/ 複製到暫存目錄，改 company.json → methodology.perMw，在副本跑 scripts/verify.sh --vs-dist：
 # 畫面文字、Excel 值與公式都必須與前一版成品 0 差異（新增列、新增工作表不計），證明新方法沒有改到舊邏輯。
 # 基準（LEGACY_BASE）：
-#   v4.6（預設；W4 起）：只把收入改回 revenue=legacy（capex=tokenomics、cost=bottomUp 維持 v4.6），Tokenomics 快照換回 v4.6 用的 v5.26
+#   v4.6（預設；W4 起）：只把收入改回 revenue=legacy（capex=tokenomics、cost=bottomUp 維持 v4.6；W5 起另移除 companyAdjust），Tokenomics 快照換回 v4.6 用的 v5.26
 #        （自 git 歷史 LEGACY_DIST_REF 取 company.json 的 tokenomics 區段與快照檔；v5.27 原 25 名數值與 v5.26 相同），
 #        副本 dist/ 換成 v4.6 成品（git 歷史 LEGACY_DIST_REF，預設 f373885），版本紀錄截到 v4.6，以 VER=4.6、DATE=2026-10-08 建置。
 #   v4.5（W2／W3 原用法）：capex=legacy、cost=ebitdaPct、revenue=legacy，對 v4.5 成品（LEGACY_DIST_REF 預設 9af51ca），版本紀錄截到 v4.5。
@@ -26,6 +26,7 @@ import json, sys
 p, base, refp = sys.argv[1:4]; co = json.load(open(p, encoding='utf-8')); ref = json.load(open(refp, encoding='utf-8'))
 if base == 'v4.6':
     co['methodology']['perMw']['revenue'] = 'legacy'
+    co.pop('companyAdjust', None)                 # W5：公司調整只在新方法（tkAnchor）使用；舊方法回歸不含
     co['tokenomics'] = ref['tokenomics']          # v4.6 用的快照（v5.26）
 else:
     co['methodology']['perMw'].update({'capex': 'legacy', 'cost': 'ebitdaPct', 'revenue': 'legacy'})

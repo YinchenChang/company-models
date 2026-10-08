@@ -153,6 +153,7 @@ ROLL_FIELDS = [
     ('期初餘額', 'defaults.rpoOpen', '期初 RPO'),
     ('期初餘額', 'defaults.rpoPendingAdd', '尚未入 RPO 的新增承諾'),
     ('期初餘額', 'fleet.openMix', '期初在役機隊的 MW 與世代占比（W2 世代組合起點）'),
+    ('年初至今實際', 'companyAdjust.capexActual', '公司實況驗證：年初至今資本支出、期初／期末主動電力、PP&E 毛額（W5）'),
 ]
 
 

@@ -305,6 +305,11 @@ function PerMwTabQ({ d, st, o }) {
     elQ(accQ, { key: `a3`, title: `每 MW 收入對照（隱含 GPU 小時價格、持有成本、同業與市場價格）`, sum: { gpuHr: `GPU 小時價格`, tkAnchor: `對照` }[PMWQ.revenue] || `備案 legacy` }, tbl(P.rev)),
     elQ(accQ, { key: `a4`, title: `每 MW 資本支出對照`, sum: PMWQ.capex === `tokenomics` ? `Tokenomics` : `舊方法` }, tbl(P.cap)),
     elQ(accQ, { key: `a5`, title: `最近一季實際對照（不強制平衡）`, sum: `` }, tbl(P.q2)),
+    P.cv ? elQ(accQ, { key: `a5v`, title: `公司實況驗證（W5：Tokenomics 值 → CRWV 實際 → 差距 → 採用值；處理規則 1／3／4a）`, sum: `${P.cv.length} 列` }, // W5（Excel「公司實況驗證」頁同列）
+      elQ(`div`, { style: xstyQ.wrap }, elQ(`table`, { style: { ...xstyQ.table, minWidth: 820 } }, [
+        elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [thL(`參數`), th(`單位`), th(`Tokenomics 值`), th(`CRWV 實際`), th(`差距`), th(`採用值`), th(`規則`)])),
+        elQ(`tbody`, { key: `b` }, [...P.cv, ...P.q2r].map(([a, u, xs], k) => elQ(`tr`, { key: k }, [tdL(a, `a`), td(u, `u`),
+          ...xs.map((x, j) => td(x == null ? `` : typeof x === `string` ? x : j === 2 ? (u === `%` ? `${x >= 0 ? `+` : `−`}${Y(Math.abs(x * 100), 1)}pt` : hA(x * 100, 1)) : fmt(x, u), j))])))]))) : null,
     elQ(accQ, { key: `a6`, title: `敏感度（加權目標價 US$／融資缺口 US$bn；三情境）`, sum: `Tokenomics 低／高成本、GPU 小時價格、Rubin Ultra 版、管銷率${PMWQ.revenue === `tkAnchor` ? `、定價倍數 k、隨需占比` : ``}` },
       elQ(`div`, { style: xstyQ.wrap }, elQ(`table`, { style: { ...xstyQ.table, minWidth: 820 } }, [
         elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [thL(`設定`), ...[`low`, `base`, `high`].map(k => th(SCENARIOS[k].label.split(` `)[0], k))])),

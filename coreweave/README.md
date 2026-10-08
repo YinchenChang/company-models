@@ -209,7 +209,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、fleet.openMix） | 必改 |
+| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、fleet.openMix、companyAdjust.capexActual） | 必改 |
 
 ### `ytdActual`：年初至今實際數（10-Q；v4.5 前為 actual1H）
 
@@ -673,10 +673,47 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `pricing.anchorMultiple.onDemandShare.tag` | 隨需占比的資料標記 | 文字 | [Assumed] | 可沿用 |
 | `pricing.anchorMultiple.onDemandShare.note` | 隨需占比依據 | 文字 | 隨需（現貨）占在役計費產能的比例；公司未揭露（S-1… | 可沿用 |
 | `pricing.anchorMultiple.contractMix` | 公司合約組合事實（label、value、unit、tag、source、url、date、retrieved；只列，不入公式） | 清單 | 3 筆 | 必改 |
-| `pricing.anchorMultiple.evidence` | k 證據表：label、gen、price、unit、tkName（IF_GPUhrEcon／IF_HoldEcon）、contract、term、use（long／spot／range／list）、tag、source、url、date、retrieved、note；倍數在 Excel 以 TK_ 名稱計算 | 清單 | 10 筆 | 必改 |
+| `pricing.anchorMultiple.evidence` | k 證據表：label、gen、price、unit、tkName（IF_GPUhrEcon／IF_HoldEcon）、contract、term、use（long／spot／range／list）、tag、source、url、date、retrieved、note；倍數在 Excel 以 TK_ 名稱計算 | 清單 | 11 筆 | 必改 |
 | `pricing.anchorMultiple.notFound` | 找不到的資料（試過的來源；W4） | 清單 | VR200 NVL72 長約或多年期合約的每 GPU…、GB200 NVL72 長約價：找不到可換算的揭露（…、其他 neocloud 對 hyperscaler／… | 可沿用 |
 | `pricing.peerRevPerMw` | 同業每 MW 年收入對照列（label、value、unit、tag、source、date、url、note；不入損益） | 清單 | 1 筆 | 必改 |
 | `pricing.marketRefs` | 各世代市場 GPU 小時價格對照列（gen、label、value、basis、tag、source、date、url；不入損益） | 清單 | 6 筆 | 必改 |
+
+### `companyAdjust`：公司實況驗證與公司調整（W5）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `companyAdjust._note` | 公司實況驗證與公司調整的說明（不進程式；W5，已決定事項 15） | 文字 | W5（2026-10-08，已決定事項 15）：每個… | 可沿用 |
+| `companyAdjust.gapTol` | 驗證門檻：差距 ≤ 此值直接用 Tokenomics 值（規則 1）；超過時須有證據的機制才調整（W5） | 比例 | 0.1 | 可沿用 |
+| `companyAdjust.existingK.on` | 既有合約 k 開關（1＝最新季末在役 MW 按 Q2 實現單價 ÷ Q2 錨；0＝全部按 k_新約） | 代碼 | 1 | 檢查 |
+| `companyAdjust.existingK.tag` | 既有合約 k 的資料標記 | 文字 | [Derived] | 可沿用 |
+| `companyAdjust.existingK.formula` | 既有合約 k 的算式說明（不進程式） | 文字 | k_既有＝（Q2 營收 × 4 ÷ Q2 平均在役 … | 可沿用 |
+| `companyAdjust.existingK.appliesTo` | 既有合約 k 適用的 MW 說明（不進程式） | 文字 | 6/30 在役的 1,500 MW（既有合約）；汰換… | 可沿用 |
+| `companyAdjust.existingK.reverts` | 何時回到 k_新約（不進程式） | 文字 | 該批 MW 汰換時回到 k_新約（市場長約證據）；不… | 可沿用 |
+| `companyAdjust.existingK.assumptions` | Q2 計費比例、利用率、服務收入的假設說明（不進程式） | 文字 | Q2 計費比例＝季末 Billable ÷ 季末在役… | 可沿用 |
+| `companyAdjust.existingK.evidence` | 既有合約 k 的證據 id（companyAdjust.evidence） | 清單 | crwvQ2Rev、crwvContractDur | 必改 |
+| `companyAdjust.newK.adjBase` | 新約價格調整基準（相對 k_長約；只作用於長約部分） | 比例 | 0 | 檢查 |
+| `companyAdjust.newK.adjSens` | 新約價格調整敏感度（公司說法） | 比例 | 0.25 | 必改 |
+| `companyAdjust.newK.tag` | 新約價格調整的資料標記 | 文字 | [Interested-party] | 可沿用 |
+| `companyAdjust.newK.note` | 新約 k 的說明（不進程式） | 文字 | 新合約 k＝隨需占比 × k_現貨＋（1 − 隨需占… | 必改 |
+| `companyAdjust.newK.evidence` | 新約 k 的證據 id | 清單 | crwvPriceUp、crwvShortDated | 必改 |
+| `companyAdjust.spotCw.evidenceLabel` | 公司短天期合約證據（pricing.anchorMultiple.evidence 的 label；隨需敏感度用其倍數） | 文字 | CoreWeave Q3 短天期合約（3–6 個月，… | 必改 |
+| `companyAdjust.spotCw.od` | 公司短天期敏感度的隨需占比 | 比例 | 0.1 | 檢查 |
+| `companyAdjust.spotCw.tag` | 公司短天期證據的標記 | 文字 | [Interested-party] | 可沿用 |
+| `companyAdjust.opexScale.base` | 由下而上營運成本倍數基準（1＝Tokenomics 值；敏感度改為 Q2 實際比率） | 倍 | 1 | 可沿用 |
+| `companyAdjust.opexScale.tag` | 營運成本倍數的資料標記 | 文字 | [Assumed] | 可沿用 |
+| `companyAdjust.opexScale.note` | 營運成本倍數的說明 | 文字 | 由下而上營運成本（電費、IT 維護、人員軟體、稅險；… | 可沿用 |
+| `companyAdjust.capexActual.mwStart` | 年初至今期初主動電力（前一財年末；期間標籤取日曆的年初至今標籤） | MW | 850 | 必改 |
+| `companyAdjust.capexActual.mwEnd` | 年初至今期末主動電力（最新已申報季末） | MW | 1500 | 必改 |
+| `companyAdjust.capexActual.techEquip` | 技術設備 PP&E 毛額 [期初, 期末] | US$bn | 20.903、33.823 | 必改 |
+| `companyAdjust.capexActual.dcEquip` | 資料中心設備與租賃改良 PP&E 毛額 [期初, 期末]（只列） | US$bn | 2.842、5.997 | 必改 |
+| `companyAdjust.capexActual.cip` | 在建工程 [期初, 期末]（只列） | US$bn | 9.376、11.918 | 必改 |
+| `companyAdjust.capexActual.tag` | 資本支出驗證資料的標記 | 文字 | [Verified] | 可沿用 |
+| `companyAdjust.capexActual.note` | 資本支出驗證資料的來源說明 | 文字 | 10-Q Q2 2026 附註 5（PP&E 毛額：… | 必改 |
+| `companyAdjust.capexActual.evidence` | 資本支出驗證的證據 id | 清單 | crwvPPE、crwvCapex | 必改 |
+| `companyAdjust.params` | 驗證表逐列文字：key、label、unit、tkName、actual、tag、mechanism、adjust、rule（1／3／4a）、evidence（數值列由 Excel「公司實況驗證」頁與 HTML 以同一算式產生） | 清單 | 11 筆 | 必改 |
+| `companyAdjust.evidence` | 證據清單：id、text、source、url、date、retrieved、tag | 清單 | 15 筆 | 必改 |
+| `companyAdjust.notFound` | 找不到的資料（試過的來源；W5） | 清單 | CRWV 伺服器／GPU 保固或維護合約條款：10-…、電費、維護、財產稅、保險的金額：10-Q／10-K …、CRWV 新長約的每 MW 價格或合約金額 ÷ MW…、主動電力（active power）的 IT／設施口… | 必改 |
+| `companyAdjust.q2Notes` | Q2 逐項對帳各列的差異說明（鍵＝列名稱） | 物件（文字） | 物件（Q2 對帳｜每 MW 年收入（算力＋服務）、Q2 對帳｜每 MW 營運成本（租金前、不含管銷；Q2 含變動租賃）、Q2 對帳｜每 MW 固定租金、Q2 對帳｜每 MW 管銷（扣 SBC）、Q2 對帳｜每 MW EBITDA（Q2＝調整後 EBITDA）、Q2 對帳｜EBITDA 率（差距＝百分點）） | 必改 |
 
 ### `costs`：由下而上營運成本口徑（W2）
 

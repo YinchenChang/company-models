@@ -42,7 +42,8 @@
   "defaults.rpoPendingAdd": "FY26Q2",
   "defaults.eqCapShares": "FY26Q2",
   "defaults.mwYearEnd": "FY26Q2",
-  "fleet.openMix": "FY26Q2"
+  "fleet.openMix": "FY26Q2",
+  "companyAdjust.capexActual": "FY26Q2"
  },
  "ytdActual": {
   "throughQuarter": "FY26Q2",
@@ -1742,6 +1743,22 @@
      "date": "2026-10-07",
      "retrieved": "2026-10-08",
      "note": "牌價非成交價；只列不用"
+    },
+    {
+     "label": "CoreWeave Q3 短天期合約（3–6 個月，公司新聞稿）",
+     "gen": "GB300 NVL72",
+     "price": 40,
+     "unit": "US$m/MW/年",
+     "tkName": "IF_HoldEcon",
+     "contract": "短天期（3–6 個月）",
+     "term": "3–6 個月",
+     "use": "list",
+     "tag": "[Interested-party]",
+     "source": "CoreWeave 新聞稿「Continues to Contract New Compute Capacity at Higher Prices」",
+     "url": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Continues-to-Contract-New-Compute-Capacity-at-Higher-Prices/default.aspx",
+     "date": "2026-09-16",
+     "retrieved": "2026-10-08",
+     "note": "公司定義：年化營收 ÷ 服務該叢集所需電力；世代與 MW 口徑未揭露（以 GB300 類比）；短約，只用於隨需敏感度（W5）"
     }
    ],
    "notFound": [
@@ -1758,6 +1775,383 @@
     "tag": "[Assumed]",
     "note": "隨需（現貨）占在役計費產能的比例；公司未揭露（S-1：絕大多數收入來自多年期已承諾合約）。基準 0%、敏感度 10%／20%；不得用 Q2 隱含 k 反推"
    }
+  }
+ },
+ "companyAdjust": {
+  "_note": "W5（2026-10-08，已決定事項 15）：每個取自 Tokenomics 的參數 → 公司實況驗證（與 CRWV 已申報實際數逐項對照）→ 公司調整（只限有證據的機制）。規則：差距 ≤ gapTol 直接用 Tokenomics 值；> gapTol 且找到有證據的機制 → 依機制調整並寫明何時回到 Tokenomics 值；> gapTol 但找不到機制 → Tokenomics 為基準、公司實際為敏感度，列入需要 Andy 決定。不以營收或 EBITDA 總數倒推無機制的係數；驗證完成後不為方向回頭調參數。數值列（Tokenomics 值、CRWV 實際、差距、採用值）由 Excel「公司實況驗證」頁與 HTML 以同一算式產生；本區只放證據、文字與開關。",
+  "gapTol": 0.1,
+  "existingK": {
+   "on": 1,
+   "tag": "[Derived]",
+   "formula": "k_既有＝（Q2 營收 × 4 ÷ Q2 平均在役 MW − 服務收入年化 ÷ Q2 平均在役 MW）÷（Q2 計費比例 × 利用率 × Q2 錨）；Q2 錨＝季末在役世代 × IF_HoldEcon（目前成本情境：價格是事實，k 隨同情境成本換算）",
+   "appliesTo": "6/30 在役的 1,500 MW（既有合約）；汰換由最舊世代先出，汰換後補回的 MW 改按 k_新約",
+   "reverts": "該批 MW 汰換時回到 k_新約（市場長約證據）；不做續約價格衰退（工作單 W5「不做」）",
+   "assumptions": "Q2 計費比例＝季末 Billable ÷ 季末在役（90%）[Assumed]；Q2 利用率＝模型首期利用率 [Assumed]；Q2 服務收入＝模型首期服務收入的年化值 [Assumed]",
+   "evidence": [
+    "crwvQ2Rev",
+    "crwvContractDur"
+   ]
+  },
+  "newK": {
+   "adjBase": 0,
+   "adjSens": 0.25,
+   "tag": "[Interested-party]",
+   "note": "新合約 k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約 ×（1＋新約價格調整）；基準調整 0（市場長約證據 0.76 [Analogy]）。公司說法「7 月起各 SKU 漲價約 25%」只有轉述來源、未見合約金額，列為敏感度（＋25%）。Q3 短天期（3–6 個月）合約每 MW 年化約 $40m（公司新聞稿）屬短約、列入 k 證據表與隨需敏感度",
+   "evidence": [
+    "crwvPriceUp",
+    "crwvShortDated"
+   ]
+  },
+  "spotCw": {
+   "evidenceLabel": "CoreWeave Q3 短天期合約（3–6 個月，公司新聞稿）",
+   "od": 0.1,
+   "tag": "[Interested-party]"
+  },
+  "opexScale": {
+   "base": 1,
+   "tag": "[Assumed]",
+   "note": "由下而上營運成本（電費、IT 維護、人員軟體、稅險；租金前、不含管銷）的倍數：基準 1（Tokenomics 值）；敏感度＝Q2 實際 ÷ 模型首期（公司實況驗證頁）"
+  },
+  "capexActual": {
+   "mwStart": 850,
+   "mwEnd": 1500,
+   "techEquip": [
+    20.903,
+    33.823
+   ],
+   "dcEquip": [
+    2.842,
+    5.997
+   ],
+   "cip": [
+    9.376,
+    11.918
+   ],
+   "tag": "[Verified]",
+   "note": "10-Q Q2 2026 附註 5（PP&E 毛額：技術設備、資料中心設備與租賃改良、在建工程；2025-12-31 → 2026-06-30）；新增主動電力 850 → 1,500 MW（10-K／法說）；資本支出 1H26＝latestQuarter.capexH1",
+   "evidence": [
+    "crwvPPE",
+    "crwvCapex"
+   ]
+  },
+  "params": [
+   {
+    "key": "kExist",
+    "label": "定價倍數 k｜既有合約（最新季末在役）",
+    "unit": "倍",
+    "tkName": "k_長約（W4 市場長約證據；Tokenomics 錨的公司因素）",
+    "actual": "Q2 2026 實現單價 ÷ Q2 錨（10-Q 營收 2.575；季末在役 1,500 MW、Billable 1,350 MW）",
+    "tag": "[Derived]",
+    "mechanism": "既有合約在 6/30 前已簽訂、合約期內價格固定（已承諾合約加權平均約 5 年 [Verified]）；Q2 已實現單價是這批 MW 的直接證據（工作單 W5 第 4(a) 項）",
+    "adjust": "既有合約 MW（6/30 在役 1,500 MW，汰換由最舊世代先出）按 k_既有；該批汰換後回到 k_新約",
+    "rule": "4a",
+    "evidence": [
+     "crwvQ2Rev",
+     "crwvContractDur"
+    ]
+   },
+   {
+    "key": "kNew",
+    "label": "定價倍數 k｜新合約（季末後新增與汰換補回）",
+    "unit": "倍",
+    "tkName": "k_長約（IREN–Microsoft GB300 五年約 ÷ IF_HoldEcon）",
+    "actual": "CRWV 未揭露新長約每 MW 價格（找不到）；公司說法 7 月各 SKU 漲價約 25%（轉述）；Q3 短天期 3–6 個月合約約 $40m/MW 年化（新聞稿）",
+    "tag": "[Interested-party]",
+    "mechanism": "找不到可換算的 CRWV 新長約金額與 MW；25% 只有轉述來源、基期不明；$40m/MW 為 3–6 個月短約（屬隨需／短天期，不是長約證據）",
+    "adjust": "無（沿用市場長約證據）；敏感度 k_長約 ×（1＋25%）、隨需 10% × CRWV 短天期 k",
+    "rule": "3",
+    "evidence": [
+     "crwvPriceUp",
+     "crwvShortDated"
+    ]
+   },
+   {
+    "key": "odShare",
+    "label": "隨需／短天期占比",
+    "unit": "%",
+    "tkName": "—（公司因素，W4 預設 0%）",
+    "actual": "公司未揭露比例（找不到）；Q3 已簽 3–6 個月短天期合約（新聞稿），證明短天期存在但無比例",
+    "tag": "[Interested-party]",
+    "mechanism": "找不到比例",
+    "adjust": "無（0%）；敏感度 10%／20%、10% × CRWV 短天期 k",
+    "rule": "3",
+    "evidence": [
+     "crwvShortDated"
+    ]
+   },
+   {
+    "key": "power",
+    "label": "電費（每 MW 年）",
+    "unit": "US$m/MW",
+    "tkName": "IF_PowerCost（在役世代加權）",
+    "actual": "未單獨揭露（不存在於 10-Q 列項）：電費含在營收成本（直接購電）與變動租賃（轉付房東的水電）",
+    "tag": "[Verified]",
+    "mechanism": "CRWV 自付電費（10-K 營收成本含 utilities including power；Core Scientific：客戶付 power and utilities；10-Q 電力交換合約認列於營收成本）；變動租賃含轉付房東的水電——模型租金只含固定租金，無重複計算",
+    "adjust": "無（單項無法量測；併入下方「營運成本合計」驗證）",
+    "rule": "—",
+    "evidence": [
+     "crwvCostRevPolicy",
+     "crwvVarLease",
+     "corzPower",
+     "crwvPowerSwap"
+    ]
+   },
+   {
+    "key": "maint",
+    "label": "IT 維護（每 MW 年）",
+    "unit": "US$m/MW",
+    "tkName": "IF_MaintIT（約 IT 資本 3%／年，在役世代加權）",
+    "actual": "未單獨揭露（不存在於 10-Q 列項）；CRWV 伺服器保固條款找不到（10-K、10-Q、S-1 未見）",
+    "tag": "[Verified]",
+    "mechanism": "技術與基礎設施費用含「維護運算基礎設施的人員」（10-K）；OEM 標準保固（例：Supermicro GPU 系統人工 3 年、零件 1 年）只是廠商通則，不是 CRWV 合約證據 → 保固機制未證實",
+    "adjust": "無；保固期內維護較低的可能性以「營運成本＝Q2 實際比率」敏感度呈現",
+    "rule": "3",
+    "evidence": [
+     "crwvTiPolicy",
+     "smcWarranty"
+    ]
+   },
+   {
+    "key": "staff",
+    "label": "人員、軟體、水與耗材（每 MW 年）",
+    "unit": "US$m/MW",
+    "tkName": "IF_StaffSW",
+    "actual": "未單獨揭露；技術與基礎設施含研發與基礎設施人員、軟體訂閱（Q2 研發 $117m）；員工 2,189 人（2025-12-31）",
+    "tag": "[Verified]",
+    "mechanism": "模型管銷率只含銷售行銷與一般管理（扣 SBC），不含技術與基礎設施人員 → 與 IF_StaffSW 無重複；研發在 Q2 實際數內、Tokenomics 無對應項",
+    "adjust": "無（併入營運成本合計驗證）",
+    "rule": "—",
+    "evidence": [
+     "crwvTiPolicy",
+     "crwvRd",
+     "crwvEmployees"
+    ]
+   },
+   {
+    "key": "taxIns",
+    "label": "財產稅與保險（只算 IT 部分）",
+    "unit": "US$m/MW",
+    "tkName": "IF_TaxIns × IT 資本占比",
+    "actual": "未單獨揭露（10-K、10-Q 找不到財產稅或保險金額）",
+    "tag": "找不到",
+    "mechanism": "找不到",
+    "adjust": "無（併入營運成本合計驗證）",
+    "rule": "—",
+    "evidence": []
+   },
+   {
+    "key": "opexBundle",
+    "label": "營運成本合計（電費＋IT 維護＋人員軟體＋稅險；租金前、不含管銷）",
+    "unit": "US$m/MW",
+    "tkName": "上列四項 Tokenomics 值合計（模型首期）",
+    "actual": "Q2 2026：營收成本＋技術與基礎設施 − D&A − SBC − 營業租賃成本（含變動租賃＝轉付房東的水電），年化 ÷ Q2 平均在役 MW",
+    "tag": "[Derived]",
+    "mechanism": "找不到可證實的機制：可能原因（未證實）——多數機隊仍在 OEM 保固期（CRWV 條款找不到）、Q2 平均在役 MW 含 6 月才上線的 300 MW（爬坡期用電低）、單項未揭露；Q2 實際另含研發",
+    "adjust": "無（Tokenomics 為基準）；敏感度＝營運成本倍數 Q2 實際 ÷ 模型首期",
+    "rule": "3",
+    "evidence": [
+     "crwvCostRevPolicy",
+     "crwvTiPolicy",
+     "crwvVarLease",
+     "crwvRd"
+    ]
+   },
+   {
+    "key": "rent",
+    "label": "租金（固定，每 MW 年）",
+    "unit": "US$m/MW",
+    "tkName": "—（公司租約路徑；Tokenomics 不含，CRWV 廠房以租約取得）",
+    "actual": "Q2 2026 營業租賃成本 0.500 年化 ÷ Q2 平均在役 MW；變動租賃 0.150（共同區域維護、轉付房東的水電、保全）歸入營運成本",
+    "tag": "[Verified]",
+    "mechanism": "v4.6–v4.7 W4 的對照把變動租賃算進租金（2.08）；變動租賃是水電與共同區域維護，不是固定租金。固定租金對照後差距在 10% 內",
+    "adjust": "無（模型租金不變）；Q2 對照改為固定租金對固定租金",
+    "rule": "1",
+    "evidence": [
+     "crwvVarLease",
+     "corzPower"
+    ]
+   },
+   {
+    "key": "capex",
+    "label": "每 MW 資本支出（新增 MW）",
+    "unit": "US$m/MW",
+    "tkName": "IF_CapexIT（新增世代加權，模型首期）",
+    "actual": "1H26 資本支出 16.139 ÷ 新增主動電力 650 MW（850 → 1,500）；另列技術設備毛額增加 ÷ 新增 MW",
+    "tag": "[Derived]",
+    "mechanism": "找不到可證實的機制：可能原因（未證實）——MW 口徑（主動電力若為設施口徑，換成 IT MW 後差距縮小約 1/6）、議價（未揭露）、Tokenomics IT 單價偏高；預建（1H 支出含 2H 上線的 MW）只會使實際偏高，方向相反",
+    "adjust": "無（Tokenomics 為基準）；敏感度＝每 MW 建置成本倍數 1H26 實際 ÷ 模型首期",
+    "rule": "3",
+    "evidence": [
+     "crwvPPE",
+     "crwvCapex"
+    ]
+   },
+   {
+    "key": "life",
+    "label": "折舊年限（IT 設備）",
+    "unit": "年",
+    "tkName": "IF_DeprLifeIT（期初在役世代加權）",
+    "actual": "技術設備 6 年（10-K FY2025 會計政策）",
+    "tag": "[Verified]",
+    "mechanism": "一致",
+    "adjust": "無",
+    "rule": "1",
+    "evidence": [
+     "crwvLife"
+    ],
+    "actualValue": 6
+   }
+  ],
+  "evidence": [
+   {
+    "id": "crwvQ2Rev",
+    "text": "Q2 2026 營收 2,575（百萬美元）；營收成本 879、技術與基礎設施 1,507（三個月）",
+    "source": "CoreWeave Form 10-Q（2026-06-30）",
+    "url": "https://www.sec.gov/Archives/edgar/data/0001769628/000176962826000366/crwv-20260630.htm",
+    "date": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]"
+   },
+   {
+    "id": "crwvContractDur",
+    "text": "As of December 31, 2025, our committed contracts had a weighted-average contract duration of approximately five years",
+    "source": "CoreWeave Form 10-K FY2025",
+    "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm",
+    "date": "2025-12-31（期末）",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]"
+   },
+   {
+    "id": "crwvCostRevPolicy",
+    "text": "營收成本：資料中心直接成本——租金、utilities including power、資料中心資產（含電力安裝與配電系統）折舊、資料中心營運與客戶成功人員；非租賃的 colocation 費用",
+    "source": "CoreWeave Form 10-K FY2025 會計政策（R28）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/R28.htm",
+    "date": "2025-12-31（期末）",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]"
+   },
+   {
+    "id": "crwvTiPolicy",
+    "text": "技術與基礎設施：伺服器、交換器、網路設備與自建軟體的折舊攤銷；研發與「維護運算基礎設施」人員；軟體訂閱；2025 研發 $352m",
+    "source": "CoreWeave Form 10-K FY2025 會計政策（R28）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/R28.htm",
+    "date": "2025-12-31（期末）",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]"
+   },
+   {
+    "id": "crwvVarLease",
+    "text": "變動租賃成本（common area maintenance, utilities reimbursed to the landlord, physical security）不含在營業／融資租賃成本、發生時費用化；Q2 營業租賃成本 500、6M 888（百萬美元）；FY2025 變動租賃 252、營業租賃 825",
+    "source": "CoreWeave Form 10-Q 附註 8（2026-06-30）；10-K FY2025 附註（R16）",
+    "url": "https://www.sec.gov/Archives/edgar/data/0001769628/000176962826000366/crwv-20260630.htm",
+    "date": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]"
+   },
+   {
+    "id": "corzPower",
+    "text": "CoreWeave 合約摘要：「Client pays for capex, power, and utilities」；約 590 MW、年化 colocation 營收約 $850M、12 年 take-or-pay",
+    "source": "Core Scientific Q2 FY26 法說簡報（交易對手）",
+    "url": "https://investors.corescientific.com/sec-filings/all-sec-filings/content/0001839341-26-000012/q2fy26earningsdeck728am.htm",
+    "date": "2026-07-28",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]"
+   },
+   {
+    "id": "crwvPowerSwap",
+    "text": "電力交換合約名目 $104m，未指定避險、損益認列於營收成本",
+    "source": "CoreWeave Form 10-Q（2026-06-30）",
+    "url": "https://www.sec.gov/Archives/edgar/data/0001769628/000176962826000366/crwv-20260630.htm",
+    "date": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]"
+   },
+   {
+    "id": "crwvRd",
+    "text": "研發費用 Q2 $117m、6M $221m，含在技術與基礎設施",
+    "source": "CoreWeave Form 10-Q（2026-06-30）",
+    "url": "https://www.sec.gov/Archives/edgar/data/0001769628/000176962826000366/crwv-20260630.htm",
+    "date": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]"
+   },
+   {
+    "id": "crwvEmployees",
+    "text": "As of December 31, 2025, we had 2,189 employees",
+    "source": "CoreWeave Form 10-K FY2025",
+    "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm",
+    "date": "2025-12-31（期末）",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]"
+   },
+   {
+    "id": "smcWarranty",
+    "text": "Supermicro 標準保固（發票無特別條款時）：GPU Systems 人工 3 年、零件 1 年",
+    "source": "Supermicro Warranty 頁面（廠商通則，非 CRWV 合約）",
+    "url": "https://www.supermicro.com/en/support/warranty",
+    "date": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Analogy]"
+   },
+   {
+    "id": "crwvPPE",
+    "text": "PP&E 毛額（百萬美元，2025-12-31 → 2026-06-30）：技術設備 20,903 → 33,823；資料中心設備與租賃改良 2,842 → 5,997；在建工程 9,376 → 11,918",
+    "source": "CoreWeave Form 10-Q 附註 5（2026-06-30）",
+    "url": "https://www.sec.gov/Archives/edgar/data/0001769628/000176962826000366/crwv-20260630.htm",
+    "date": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]"
+   },
+   {
+    "id": "crwvCapex",
+    "text": "1H26 資本支出 16.139bn（latestQuarter.capexH1）；主動電力 2025 年底 850 MW、2026-06-30 1.5 GW",
+    "source": "CoreWeave 10-Q／法說（company.json latestQuarter、defaults.mwYearEnd、fleet.openMix）",
+    "url": "https://www.sec.gov/Archives/edgar/data/0001769628/000176962826000366/crwv-20260630.htm",
+    "date": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]"
+   },
+   {
+    "id": "crwvLife",
+    "text": "Technology equipment：6 years（PP&E 耐用年限表）",
+    "source": "CoreWeave Form 10-K FY2025（edgar.tools 轉載會計政策表）",
+    "url": "https://app.edgar.tools/companies/CRWV/disclosures/property-plant-equipment",
+    "date": "2025-12-31（期末）",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]"
+   },
+   {
+    "id": "crwvPriceUp",
+    "text": "「in July the company pushed through an approximately 25% price increase across SKUs」；新簽合約貢獻率預期高 5–10 個百分點（轉述，非逐字稿）",
+    "source": "Trefis（轉述 Q2 2026 法說）",
+    "url": "https://www.trefis.com/stock/crwv/articles2/611369/coreweave-is-winning-on-price-and-racing-its-own-interest-bill/2026-08-13",
+    "date": "2026-08-13",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]"
+   },
+   {
+    "id": "crwvShortDated",
+    "text": "In the third quarter of 2026, CoreWeave has signed short-dated customer contracts of approximately three to six months, with pricing of approximately $40 million per megawatt（annualized revenue ÷ power required to service the related clusters）；>$25bn 新增承諾",
+    "source": "CoreWeave 新聞稿「Continues to Contract New Compute Capacity at Higher Prices」",
+    "url": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Continues-to-Contract-New-Compute-Capacity-at-Higher-Prices/default.aspx",
+    "date": "2026-09-16",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]"
+   }
+  ],
+  "notFound": [
+   "CRWV 伺服器／GPU 保固或維護合約條款：10-K FY2025（Item 1、1A、會計政策）、10-Q Q2 2026、搜尋皆未見（找不到，不代表不存在）",
+   "電費、維護、財產稅、保險的金額：10-Q／10-K 損益只到營收成本與技術與基礎設施兩列，未拆項（不存在於列項）",
+   "CRWV 新長約的每 MW 價格或合約金額 ÷ MW：$25bn 新增承諾未揭露 MW；Q2 法說逐字稿原文未取得（只有轉述）",
+   "主動電力（active power）的 IT／設施口徑定義：10-K、10-Q 未見（找不到）"
+  ],
+  "q2Notes": {
+   "Q2 對帳｜每 MW 年收入（算力＋服務）": "模型首期：既有合約 MW 按 Q2 實現單價（k_既有），新增 MW 按市場長約 k；分母都是平均在役 MW（含爬坡中尚未計費的 MW）",
+   "Q2 對帳｜每 MW 營運成本（租金前、不含管銷；Q2 含變動租賃）": "差距 > 10% 且找不到可證實的機制（單項未揭露、保固條款找不到）：依規則 3 以 Tokenomics 為基準，Q2 實際比率列為敏感度，需要 Andy 決定；Q2 實際另含研發（Q2 $117m）",
+   "Q2 對帳｜每 MW 固定租金": "Q2 營業租賃成本年化（固定租金）對模型在帳＋表外現金租金；變動租賃（水電、共同區域維護、保全）歸入營運成本",
+   "Q2 對帳｜每 MW 管銷（扣 SBC）": "模型管銷率＝Q2 實際（扣 SBC）× 營收；每 MW 差距只來自每 MW 營收差距",
+   "Q2 對帳｜每 MW EBITDA（Q2＝調整後 EBITDA）": "差距主要來自營運成本（Tokenomics 滿載穩態 vs Q2 實際）；Q2 調整後 EBITDA＝營收 − 現金成本（扣 D&A、SBC），與模型 EBITDA 同口徑",
+   "Q2 對帳｜EBITDA 率（差距＝百分點）": "同上；模型首期為 2H 模型值"
   }
  }
 }
