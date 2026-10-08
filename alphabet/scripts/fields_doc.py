@@ -301,6 +301,22 @@ F = [
  ('oracle.perMw', 'Oracle 每 MW 年收入三情境（沿用 Nebius 的 Tokenomics 推導）、EBITDA 率、伺服器壽命草稿；格式同上', '物件', M),
  ('oracle.openai', 'Oracle–OpenAI 合約年額、隱含每 MW、OpenAI 計畫算力支出（只作對照）；格式同上', '物件', M),
  ('oracle.events', 'Oracle 評價日後事件（Project Jupiter 不可抗力通知）；格式同上', '物件', M),
+ ('mag._readme', 'MAG（Alphabet）資料草稿區段的說明（v0.1a 產出；引擎尚未讀取，v0.1b′ 依 mapTo 搬入 MAG 共用引擎欄位）', '文字', M),
+ ('mag.files', 'MAG 事實總帳、k 證據表、Tokenomics 快照與名稱清單、市場共識資料檔的路徑', '物件（路徑）', M),
+ ('mag.calendar', 'MAG 期間草稿（最新已申報季、年初至今月數）；每欄 value＋unit＋ref（總帳 id）＋mapTo', '物件', M),
+ ('mag.segments', 'MAG 各營收線近四季營收、TTM、年增（搜尋、YouTube、聯播網、訂閱平台裝置、雲端、Other Bets）；格式同上', '物件', M),
+ ('mag.segmentOpInc', 'MAG 各分部營業利益近四季與近三年（含 Alphabet 層級費用）；格式同上', '物件', M),
+ ('mag.pl', 'MAG 損益草稿（D&A、SBC、利息、稅率、權益證券一次性利益）；格式同上', '物件', M),
+ ('mag.cashflow', 'MAG 現金流草稿（營運現金流、資本支出、FCF、回購、股利、特別股股利）；格式同上', '物件', M),
+ ('mag.capexGuidance', 'MAG 資本支出指引、組成與共識（D3 首期與次期）；格式同上', '物件', M),
+ ('mag.balance', 'MAG 資產負債草稿（現金、債務、租賃與未起租承諾、RPO、採購承諾、擔保、評等）；格式同上', '物件', M),
+ ('mag.shares', 'MAG 股數、強制轉換特別股、回購授權、ATM、2026 股權募資；格式同上', '物件', M),
+ ('mag.ai', 'MAG AI 容量草稿（期初在役 MW、對外比例、新增速度、已公開管線、TPU 出貨、用電交叉檢查；口徑 MW-IT）；格式同上', '物件', M),
+ ('mag.perMw', 'MAG 每 MW 年收入錨（IF_HoldEcon 世代組合）與 k 建議值；格式同上', '物件', M),
+ ('mag.split', 'MAG AI／非 AI 雲端拆分試算起點（只作 v0.1b 校準起點）；格式同上', '物件', M),
+ ('mag.relatedParties', 'MAG 關聯方（Anthropic 持股、承諾、雲端承諾、支出路徑；SpaceX 持股）；格式同上', '物件', M),
+ ('mag.rentals', 'MAG 租用算力（SpaceX 雲端服務合約）；格式同上', '物件', M),
+ ('mag.valuation', 'MAG 評價輸入草稿（beta、無風險利率、債務成本、ERP、現價、同業倍數、共識目標價）；格式同上', '物件', M),
 ]
 LQ = {
  'filed': ('申報日', '日期'), 'periodEnd': ('季末日', '日期'), 'revenue': ('當季營收', 'US$bn'), 'yoy': ('當季營收年增率', '比例'),
@@ -386,7 +402,7 @@ SECT = [('meta', '基本資料'), ('calendar', '期間與日期（v4.5）'), ('a
         ('rpo', '已簽約未認列營收（RPO）'), ('leases', '租約'), ('debt', '既有債務'), ('latestQuarter', '最新一季財報數字（10-Q）'),
         ('callFacts', '法說會與期後事項'), ('scenarios', '三個擴張情境'), ('legacy', '舊版對照值'),
         ('defaults', '預設假設（畫面上可調的輸入）'), ('valuation', '評價參數'), ('methodology', '評價方法與評等門檻'), ('peers', '同業比較（Comps）'),
-        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('oracle', 'Oracle 資料草稿（v0.1a；v0.1b 逐步搬入，只留後續步驟用或只作對照的欄位）')]
+        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('oracle', 'Oracle 資料草稿（v0.1a；v0.1b 逐步搬入，只留後續步驟用或只作對照的欄位）'), ('mag', 'MAG（Alphabet）資料草稿（MAG v0.1a；引擎尚未讀取，v0.1b′ 依 mapTo 搬入）')]
 out, shown = ['**填表慣例**',
                '- 金額單位是**十億美元（US$bn）**，例如 4.653 代表 46.53 億美元；另有標示的例外：每股（US$）、每 MW 建置成本（百萬美元／MW，US$m/MW）、股數（十億股，bn）。',
                '- 「比例」寫成小數（0.25＝25%）；標示「%」的欄位寫成百分點（25＝25%）。兩種寫法沿用既有程式，不可混用。',
