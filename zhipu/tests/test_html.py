@@ -148,9 +148,10 @@ def test_no_external_references(page):
 
 def test_required_sections(page):
     """chat 端要求的各節都在。"""
-    for h in ("命題與一句話結論（兩種讀法）", "主要風險／與實際觀察的落差", "市值對照", "與 OpenAI v0.6 並排（美元）", "在轉正邊緣"):
+    for h in ("命題與一句話結論（兩種讀法）", "主要風險／與實際觀察的落差", "市值對照", "與 OpenAI v0.6 並排（美元）", "2028 年後不再收斂", "可信度低", "僅供參考"):
         assert h in page, f"缺少：{h}"
-    for sid in ("SRC_ZP_540", "SRC_ZP_458", "SRC_ZP_219", "SRC_ZP_220"):
+    assert "優於 OpenAI" not in page, "第①節不得出現『優於 OpenAI』之類讀法（Z5b V7）"
+    for sid in ("SRC_ZP_540", "SRC_ZP_458", "SRC_ZP_219", "SRC_ZP_220", "Compute G129"):
         assert sid in page, f"主要風險一節缺少來源 {sid}"
 
 
@@ -163,15 +164,18 @@ def test_dist_xlsx_is_current_model():
 
 
 def test_narrative_claims(engine, loc):
-    """HTML 文字中的定性主張。"""
+    """HTML 文字中的定性主張（Z5b r2）。"""
     gap = engine.get_name("COST_PropGap_VR")
     assert all(g < 0 for g in gap), "『2025–2030 每一年都還沒覆蓋全成本』不成立"
-    cov = engine.get_name("COST_Coverage")
-    assert all(b > a for a, b in zip(cov, cov[1:])), "『差距快速收斂』（覆蓋率逐年上升）不成立"
-    assert engine.get_name("FND_ExtNeedCum")[-1] == 0, "『2030 前不需外部資金』不成立"
+    assert gap[5] < gap[4] and all(g < 0 for g in gap[3:]), "『2028 年後不再收斂』不成立"
+    cum = engine.get_name("FND_ExtNeedCum")
+    assert cum[5] > 0 and min(engine.get_name("FND_CashEnd")[1:]) > 0, "『只為補足最低現金、不是現金歸零』不成立"
     assert engine.get_name("CHK_Errors") == 0
-    # 四個翻轉點：在翻轉值下 2030 差額≈0（|差額| < 1 RMB 億／GW，相對基準擺幅可忽略）
-    sheet, coord, _ = loc.locate("COST_PropGap_VR", 2030)
-    for sc in ("flip_px", "flip_rd", "flip_util", "flip_task"):
-        v = _scenario_values(engine, loc, sc, [("COST_PropGap_VR", 2030)])[("COST_PropGap_VR", 2030)]
-        assert abs(v) < 1, f"{sc}：2030 差額 {v} 不≈0"
+    g30 = lambda sc: _scenario_values(engine, loc, sc, [("COST_PropGap_VR", 2030)])[("COST_PropGap_VR", 2030)]  # noqa: E731
+    c30 = lambda sc: _scenario_values(engine, loc, sc, [("FND_ExtNeedCum", 2030)])[("FND_ExtNeedCum", 2030)]  # noqa: E731
+    for sc in ("flip_rd", "flip_util"):
+        assert abs(g30(sc)) < 1, f"{sc}：2030 差額不≈0"
+    for sc in ("flip_rd_ext", "flip_task_ext", "flip_mgm_ext"):
+        assert abs(c30(sc)) < 1, f"{sc}：2030 累計外部資金需求不≈0"
+    assert abs(g30("px_m25") - gap[5]) < 1e-6, "『每 GW 價格降 25% 時 2030 差額與基準相同（租價下限）』不成立"
+    assert g30("task_hi") < 0, "『2H26 任務數成長取高仍不轉正』不成立"
