@@ -33,3 +33,9 @@
 - 命題 2：累計外部資金需求 2026–2030 全為 0；年底現金 624.2／382.7／352.4／330.8／321.2 RMB 億（可轉債轉股 624.2／584.1／553.8／532.2／522.6）；命題 1 不變（2030 −231 RMB 億／VR 等值 GW；每實體 GW −12.96，−$0.19B）。
 - 反向：共識 2028 平均 324.7 億＝正向 2.47 倍；市值隱含營收 62.7 億（MiniMax 39.8 倍），正向 2027 達到。
 - 驗收：pytest（見報告）；CHK_Errors＝0；TK 快照 OK 79（Tokenomics master 70d859e，CURRENT 仍 v5.26）。報告 `docs/reports/20261008_v0.1.md`＋`_對照.xlsx`＋`_敏感度.json`。
+
+## v0.1 成品（Z5，2026-10-08，建置代理）— Excel 未改（`model/20261008_Zhipu_v0.1.xlsx`）
+- commit：9c60ffa（HTML 一頁摘要、dist、test_html、截圖）、e391320（命題與驅動對照表）、本節交接檔／README／報告 commit。
+- `dist/20261008_智譜收支模型_v0_1.html`：11 節（命題與兩種讀法＋四個翻轉點、每 GW、營收與共識、算力、現金與外部資金、敏感度、主要風險／與實際觀察的落差、市值對照、與 OpenAI v0.6 並排（美元）、最該審的 5 項預設、資料與版本）；686 個數字皆讀自 LibreOffice 重算後的 Excel（19 個情境），附 Excel 位置；單一檔案、無外部資源、圖表內嵌 SVG。
+- `dist/20261008_智譜收支模型_v0_1.xlsx`＝model 複本；`tools/build_html.py` 改寫為智譜（Inputs 欄位 F／G／H、OAI_Link F–K 欄位移、半年欄 K／L、翻轉點取自敏感度 JSON）；`tools/html_scenarios.yaml`；`tests/test_html.py`（6 項）。
+- `docs/plan/20261008_Zhipu_命題與驅動對照表.md`；交接檔改為 v0.1 完成狀態（未解問題、v0.2 建議）；根目錄 README 智譜列「v0.1」。
