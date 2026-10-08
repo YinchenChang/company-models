@@ -1348,10 +1348,10 @@
   }
  },
  "tokenomics": {
-  "_note": "算力相關的產業與物理層資料改引用 Tokenomics（YinchenChang/Tokenomics）：只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱，經版本固定的快照檔讀入；模型主值一律取「基準」成本情境，低成本／高成本只作敏感度。Tokenomics 每 GW＝IT 關鍵電力。Excel「Tokenomics_取數」分頁建具名範圍（TK_），每 MW 資本支出、營運成本與對照列引用之（W2）；v5.26 起 W2 暫代的 IT 維護、人員軟體、稅險、折舊年限改用正式值（W3）。 W4：快照換 v5.27（原 25 名數值與位置與 v5.26 相同），新增 IF_RevGWFleet（收入上限檢查）。",
-  "snapshotFile": "data/tokenomics_snapshot_v5.27.json",
-  "version": "v5.27",
-  "commit": "862bdd46d199ab5047b77dcba17fb356d9a1d562",
+  "_note": "算力相關的產業與物理層資料改引用 Tokenomics（YinchenChang/Tokenomics）：只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱，經版本固定的快照檔讀入；模型主值一律取「基準」成本情境，低成本／高成本只作敏感度。Tokenomics 每 GW＝IT 關鍵電力。Excel「Tokenomics_取數」分頁建具名範圍（TK_），每 MW 資本支出、營運成本與對照列引用之（W2）；v5.26 起 W2 暫代的 IT 維護、人員軟體、稅險、折舊年限改用正式值（W3）。 W4：快照換 v5.27（原 25 名數值與位置與 v5.26 相同），新增 IF_RevGWFleet（收入上限檢查）。 W6：快照換 v5.31（GB300 機架價格 5.0→4.3 $M：IF_CapexIT GB300 37.45→32.24；IT 維護改為保固期內／期滿後兩段，IF_MaintIT 改為壽命期等值費率 3%→1.57%），新增 IF_MaintITWarr、IF_MaintITPost、IF_WarrantyYrs（每期 IT 維護依機齡兩段；IF_MaintIT 只作對照）。",
+  "snapshotFile": "data/tokenomics_snapshot_v5.31.json",
+  "version": "v5.31",
+  "commit": "f16f161a28b5d43e00e89aa019e4d3e10fae4e3d",
   "names": [
    "IF_RacksPerGW",
    "IF_GPUsPerGW",
@@ -1378,7 +1378,10 @@
    "IF_StaffSW",
    "IF_TaxIns",
    "IF_OpexGW",
-   "IF_RevGWFleet"
+   "IF_RevGWFleet",
+   "IF_MaintITWarr",
+   "IF_MaintITPost",
+   "IF_WarrantyYrs"
   ],
   "optional": []
  },

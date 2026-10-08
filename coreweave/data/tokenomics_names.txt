@@ -26,3 +26,6 @@ IF_StaffSW # 人員、軟體、水與耗材（v5.26）
 IF_TaxIns # 財產稅與保險（v5.26）
 IF_OpexGW # 營運費用小計，不含折舊（v5.26）
 IF_RevGWFleet # 客戶每 GW 付費 token 營收（層級組合，理想上限；W4 上限檢查）
+IF_MaintITWarr # IT 維護（保固期內；v5.31，W6 依機齡兩段）
+IF_MaintITPost # IT 維護（保固期滿後；v5.31）
+IF_WarrantyYrs # IT 原廠保固年限（v5.31；單值）

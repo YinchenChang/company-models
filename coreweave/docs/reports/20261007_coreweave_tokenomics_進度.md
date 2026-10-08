@@ -1,8 +1,8 @@
 # CoreWeave × Tokenomics 改造進度（接手用；W1–W3 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：W0–W5（v4.7，已合併）；**W6 進行中**（分支 `claude/coreweave-w6-v4.8`，自 main 8671a11）：第 0 步完成。
-- 下一步：W6 第 1 步——重抓 Tokenomics v5.31 快照（`data/tokenomics_snapshot_v5.31.json`），名稱清單加 `IF_MaintITWarr`、`IF_MaintITPost`、`IF_WarrantyYrs`。
+- 已完成：W0–W5（v4.7，已合併）；**W6 進行中**（PR #48，分支 `claude/coreweave-w6-v4.8`）：第 0、1 步完成（快照 v5.31）。
+- 下一步：W6 第 2 步——IT 維護依機齡兩段（`fleet.openMix.vintages` 期初機齡層；Excel「輸入與假設」TK IT 維護兩段＋保固年限、「每MW經濟性」機齡與保固區；JS `maintAgeQ`；cmp31 新增列；`methodology.perMw.maint`＝age｜flat，舊方法回歸設 flat）。
 - 未解問題（W6）：見 W6 段落。
 
 ## 工作單總覽
@@ -506,3 +506,22 @@ Tokenomics：master `f16f161`（PR #36 合併），`model/CURRENT`＝`20261008_T
 | 步驟 | 狀態 | commit | 備註 |
 |---|---|---|---|
 | 0 開分支、draft PR、Tokenomics 副本更新 | 完成 | （本 commit） | 自 origin/main 8671a11；環境：soffice 24.2.7、openpyxl、playwright Chromium 可啟動（未補裝） |
+| 1 快照 v5.31、名稱清單、`tokenomics` 區段 | 完成 | （本 commit） | `data/tokenomics_snapshot_v5.31.json`（29 名、missing 0；刪 v5.27 快照）；新增 `IF_MaintITWarr`、`IF_MaintITPost`、`IF_WarrantyYrs`；各名稱儲存格位置與 v5.27 相同。`verify.sh` 22 項全過（cmp31 三情境各 528 項、FY27 錨定 474 項）。此時 IT 維護仍為等值費率（IF_MaintIT v5.31），基準加權目標價 $13.29 → $15.37（中間值，只作紀錄） |
+
+#### W6 第 1 步：引用名稱前後值（v5.27 → v5.31；US$m／MW／年＝$B/GW/年，基準欄；低／高另列於對照報告）
+| 名稱 | 變動 |
+|---|---|
+| IF_CapexIT | GB300 37.45 → 32.24（−13.9%；高 50.95 → 39.28）；其他世代不變 |
+| IF_CapexTotal | GB300 50.12 → 44.91（高 67.14 → 55.47） |
+| IF_DeprIT | GB300 6.24 → 5.37（高 12.74 → 9.82） |
+| IF_TaxIns | GB300 0.2506 → 0.2245（高 0.537 → 0.444） |
+| IF_MaintIT（等值費率 3% → 1.57%） | Hopper 0.825 → 0.433、GB200 0.721 → 0.378、GB300 1.123 → 0.507、VR200 1.128 → 0.591、Rubin Ultra 1.503 → 0.788 |
+| IF_MaintITWarr（新，保固期內） | Hopper 0.138、GB200 0.120、GB300 0.161、VR200 0.188、Rubin Ultra 0.250 |
+| IF_MaintITPost（新，保固期滿） | Hopper 0.825、GB200 0.720、GB300 0.967、VR200 1.128、Rubin Ultra 1.503（＝IT 資本 × 3%；GB300 隨資本下降） |
+| IF_WarrantyYrs（新） | 3 年 |
+| IF_HoldEcon | Hopper 10.10 → 9.70、GB200 9.17 → 8.83、GB300 12.72 → 10.89、VR200 12.76 → 12.23、Rubin Ultra 16.07 → 15.35 |
+| IF_HoldAcct | GB300 9.50 → 7.99；其他世代 −4% 到 −6% |
+| IF_GPUhrEcon（US$/GPU-hr） | H100 1.605 → 1.543、GB200 2.087 → 2.009、GB300 2.983 → 2.552、VR200 4.994 → 4.784 |
+| IF_OpexGW | GB300 2.63 → 1.98；其他世代 −17% 到 −23%（只對照） |
+| L1_GPUhr_GB200_vsCW／L1_GPUhr_GB300_vsBE | 2.086 → 2.008／2.983 → 2.552 |
+| 不變 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexFacility、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintFac、IF_StaffSW、IF_RevGWFleet |
