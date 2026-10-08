@@ -353,7 +353,21 @@ r = prow(r, "新產能簽約率", "%", PCT_(M['fill']), PCT, "MW 驅動：100%�
 r = prow(r, "客戶違約率", "%", PCT_(M['defaultP']), PCT, "前三大客戶約 59% 營收的定價，非預測 [Assumed]")
 r = prow(r, "回收率", "%", PCT_(M['recovery']), PCT, "[Assumed]")
 r = prow(r, "非算力服務營收", "US$bn", D['services'], NUM, "預設 0：AI cloud 軟體已含在每 MW 年收入；其他事業另列 [Assumed]")
-r = prow(r, "其他事業 EBITDA", "US$bn", D['otherEbitda'], NUM, D['otherEbitdaNote'])
+_RCL = CO['leases'].get('rentedCompute') or []  # MAG v0.1b：租用算力排程（C8 d）；租金計入營運成本（自其他事業 EBITDA 扣除）
+r = prow(r, "其他事業 EBITDA（輸入）", "US$bn", D['otherEbitda'], NUM, D['otherEbitdaNote'])
+import datetime as _dt
+def _mon(sx): y_, m_ = map(int, sx.split('-')[:2]); return y_ * 12 + m_ - 1
+_V0 = _mon(CAL['valuationDate']) + 1
+_RTR = []
+for _c in _RCL:
+    _ar_ = gi(r, f"租用算力｜{_c['name']}｜年租金", "US$bn／年", _c['annualRent'], f"起租 {_c['start']}、{_c['years']} 年、{_c.get('mw', '—')} MW（{_c.get('use', '')}）；company.json → leases.rentedCompute", NUM); r += 1
+    _s0, _s1 = _mon(_c['start']), _mon(_c['start']) + round(_c['years'] * 12)
+    _yrs = [max(0, min(_V0 + round(CAL['tEnd'][i] * 12), _s1) - max(_V0 + round(CAL['tStart'][i] * 12), _s0)) / 12 for i in range(5)]
+    _yr = r; r = prow(r, f"租用算力｜{_c['name']}｜在租年數", "年", _yrs, '0.000', "＝各期與租約期間重疊的月數 ÷ 12（建置時由日曆推算）", BLACK)
+    _RTR.append((_ar_, _yr))
+r = prow(r, "租用算力租金（營運成本）", "US$bn", [("=" + "+".join(f"{a_}*{COLS[i]}{y_}" for a_, y_ in _RTR)) if _RTR else "=0" for i in range(5)], NUM,
+         CO['leases'].get('rentedComputeNote', "租用算力租金") if not _RTR else "＝Σ 年租金 × 在租年數（扣 EBITDA 與營運現金；不是資本支出）", BLACK)
+r = prow(r, "其他事業 EBITDA", "US$bn", [f"={COLS[i]}{IN['其他事業 EBITDA（輸入）']}-{COLS[i]}{IN['租用算力租金（營運成本）']}" for i in range(5)], NUM, "＝輸入 − 租用算力租金（下游引用此列）", BLACK)
 # MAG v0.1b：B0｜對外 AI 雲端定價（company.json → pricing；HTML segA revPathQ 同式）
 if PRC:
     r = section(ws, r, "B0｜對外 AI 雲端定價：每 MW 年收入＝Σ 在役世代占比 × Tokenomics 持有成本 × 晶片係數 × k（收入端不乘 IF_Util）", level=2)
@@ -544,6 +558,11 @@ def _ulF(x):  # 累計已起租「筆季數」：x'＝MAX(0,x−起算季)；MIN
 r = prow(r, "表外現金租金（未起租）", "US$bn",
          [f"={UL_TOT}/{UL_N}/{UL_T}/4*({_ulF(f'{COLS[i]}{_ULQ}')}-{_ulF(f'{COLS[i-1]}{_ULQ}' if i else '0')})" for i in range(5)], NUM,
          "＝每筆季租（總額 ÷ 季數 ÷ 租期 ÷ 4）×(期末 − 期初累計已起租筆季數)；三情境相同 [Derived]", BLACK)
+_OIE = bool(CO['leases'].get('operatingInEbitda'))  # MAG v0.1b：分部 EBITDA 已扣營業租賃成本——只扣融資部分現金
+r = prow(r, "在帳現金租金（自現金扣除）", "US$bn", (CO['leases']['financePayments'] if _OIE else [f"={COLS[i]}{IN['在帳現金租金（季報到期表）']}" for i in range(5)]), NUM,
+         ("融資租賃＋融資義務未折現付款（營業租賃已含在分部 EBITDA；company.json → leases.operatingInEbitdaNote）[Interested-party]" if _OIE else "＝在帳現金租金"), BLUE if _OIE else BLACK)
+ULFS = gi(r, "未起租：自現金扣除比例（融資部分）", "%", (1 - CO['leases']['uncommenced'].get('opShare', 0)) if _OIE else 1,
+          (CO['leases']['uncommenced'].get('opShareNote', '') + "；本格＝1 − 營業部分比例") if _OIE else "全部自現金扣除", PCT); r += 1
 r = prow(r, "JV 已承諾餘額出資", "US$bn", D['jvCommit'], NUM, "季報未揭露 JV 出資承諾（不適用）")
 r = prow(r, "JV 後續增資＋策略投資", "US$bn", CO['scenarios']['capexTemplate']['div'], NUM, "收購與策略投資，未揭露計畫 [Assumed]")
 r = prow(r, "JV／策略投資出資", "US$bn",
@@ -1107,8 +1126,8 @@ frow("② 在帳現金租金（備忘，«YTD» 已含在 CFO）", "US$bn",
 frow("② 表外現金租金（未起租）", "US$bn", lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['uld']}", NUM, GREEN,  # v0.2：延誤連動後
      f"已簽約未起租租賃 {CO['latestQuarter']['offBalanceLease']} 的現金路徑")
 frow("　租金合計", "US$bn",
-     lambda i: f"={COLS[i]}{FR['② 在帳現金租金（備忘，«YTD» 已含在 CFO）']}+{COLS[i]}{FR['② 表外現金租金（未起租）']}", NUM, BLACK,
-     "租金已含在 EBITDA 率內（GAAP 營業租賃費用屬營業費用）：營運來源以 EBITDA 率＋租金÷營收計（租前），此列再扣，淨效果中性")
+     lambda i: f"={inref('在帳現金租金（自現金扣除）', i)}+{COLS[i]}{FR['② 表外現金租金（未起租）']}*{ULFS}", NUM, BLACK,
+     ("＝在帳融資租賃現金＋未起租 × 融資部分比例（MAG v0.1b：營業租賃已含在分部 EBITDA，不重複扣除；AI 雲端 EBITDA 由 Tokenomics 推得、未扣租金）" if _OIE else "租金已含在 EBITDA 率內（GAAP 營業租賃費用屬營業費用）：營運來源以 EBITDA 率＋租金÷營收計（租前），此列再扣，淨效果中性"))
 _wsc = wb["運營_產能與收入"]; _wsi = wb["輸入與假設"]
 for i in range(5):
     if EBR:  # v0.1c：EBITDA 率＝EBITDAR 率 − 租金 ÷ AI 雲端 營收

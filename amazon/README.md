@@ -221,6 +221,12 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
+| `leases.operatingInEbitda` | 分部 EBITDA 是否已扣營業租賃成本（true＝在帳只扣融資租賃現金、未起租只扣融資部分；MAG v0.1b，C8 f） | 是／否 | 是 | 檢查 |
+| `leases.operatingInEbitdaNote` | 上欄的依據 | 文字 | 分部營業利益已扣營業租賃成本（C5 放大的 D&A … | 必改 |
+| `leases.uncommenced.opShare` | 未起租租賃的營業部分比例（operatingInEbitda 時不自現金扣除；C8 f） | 比例 | 0.8088 | 檢查 |
+| `leases.uncommenced.opShareNote` | 營業部分比例的依據 | 文字 | 未起租租賃的營業部分比例（起租後營業部分成本進分部 … | 必改 |
+| `leases.rentedCompute` | 租用算力排程：[{name, start（YYYY-MM）, years, annualRent（US$bn／年）, mw, use}]；租金計入營運成本（自其他事業 EBITDA 扣除；C8 d） | 清單（物件） |  | 必改 |
+| `leases.rentedComputeNote` | 租用算力的揭露與口徑 | 文字 | 租用算力（向 neocloud 租 GPU）：未見 … | 必改 |
 | `leases.onBalanceCash` | 已入帳租約在五期（首期模型部分＋4 個完整財年；目前為 2026 下半年、2027、2028、2029、2030）各期的現金租金 | US$bn 清單 | 10.776、17.222、16.503、14.787、13.258 | 必改 |
 | `leases.afterFY30` | 已入帳租約在模型期之後還要付的租金合計 | US$bn | 71.534 | 必改 |
 | `leases.facts.onBal` | 已入帳租約未折現付款合計 | US$bn | 144.08 | 必改 |

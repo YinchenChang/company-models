@@ -148,6 +148,11 @@ function legacyQ(e, X) {
   return { lines, rev, ebitda, oa: sumQ(`oa`), margin: rev.map((v, r) => ebitda[r] / Math.max(v, 1e-9)), annual: sumQ(`annual`) }
 }
 
+// MAG v0.1b：租用算力排程（leases.rentedCompute：[{name, start＝YYYY-MM 起租, years, annualRent（US$bn／年）, mw, use}]）：各期租金＝年租金 × 期間內在租月數 ÷ 12（Excel 同式，月數由建置時推算）
+var LEASE_OIE = !!COMPANY_DATA.leases.operatingInEbitda,
+  monQ = s => { const [y, m] = s.split(`-`).map(Number); return y * 12 + m - 1 },
+  RENT_OV = (c => PERIOD_YEARS.map((L, r) => { const v = monQ(CALQ.valuationDate.slice(0, 7)) + 1, a = v + Math.round(CALQ.tStart[r] * 12), b = v + Math.round(CALQ.tEnd[r] * 12), s0 = monQ(c.start), s1 = s0 + Math.round(c.years * 12); return Math.max(0, Math.min(b, s1) - Math.max(a, s0)) / 12 })),
+  rentedQ = L => PERIOD_YEARS.map((x, r) => L.reduce((a, c) => a + c.annualRent * RENT_OV(c)[r], 0));
 // MAG v0.1b：每 MW 資本支出（US$m/MW）＝Σ 新增占比 × (TK_CapexIT＋自建比例 × TK_CapexFacility)；IT 部分＝Σ 新增占比 × TK_CapexIT（Excel「輸入與假設」D 區同式）
 function capexCostQ(sb) {
   return PERIOD_YEARS.map((L, r) => {
@@ -347,6 +352,7 @@ function runFunding(e) {
     AIR = PERIOD_YEARS.map((L, r) => (e.useAvgMw ? ((r === 0 ? e.billableOpen : BD[r - 1]) + BD[r]) / 2 : BD[r]) * t.revMW[r] * (e.revScale ?? 1) * (t.util[r] / 100) * L), // MAG v0.1b：對外 AI 雲端模型期營收（＝下方容量 u；非 AI 雲端殘差用）
     AIM = PERIOD_YEARS.map((L, r) => e.ebitdaBasis === `tk` ? 1 - t.opexMW[r] / Math.max(t.revMW[r] * (e.revScale ?? 1), 1e-9) : null), // MAG v0.1b：tk＝AI 雲端 EBITDA 率＝1 − Tokenomics 加權每 MW 營運成本 ÷ 每 MW 年收入（價格倍數改變收入、不改成本）
     LG = legacyQ(e, { aiRev: AIR, rev0: t.revMW[0] * (e.revScale ?? 1) * (t.util[0] / 100), m0: AIM[0] ?? e.ebStart }), // v0.1b（Oracle）：非 AI 事業營收與 EBITDA；MAG v0.1b：N 線
+    RENTC = rentedQ(e.rentedCompute ?? COMPANY_DATA.leases.rentedCompute ?? []), // MAG v0.1b：租用算力租金（各期；C8 d）
     CXM = COMPANY_DATA.capexModel && COMPANY_DATA.capexModel.mode === `tk` ? COMPANY_DATA.capexModel : null, // MAG v0.1b：資本支出由 Tokenomics 每 MW 成本推導（AI 與非 AI 分池）
     XS = CXM ? e.extShare ?? CXM.extShare : 1, // 對外比例：新增 AI 總 MW＝新增對外 MW ÷ 對外比例（自用 AI 同樣需要資本支出）
     CC = CXM ? capexCostQ(e.selfBuild ?? CXM.selfBuild) : null, // 各期新增 MW 的每 MW 成本（US$m/MW：IT＋自建比例 × 機房）與 IT 占比
@@ -423,8 +429,11 @@ function runFunding(e) {
         m = f * (t.defaultP[r] / 100) * p,
         h = f - m,
         nR = Math.max(0, u - s) * (t.fill[r] / 100),
-        b = LEASE_CASH_ON_BAL[r],
-        x = ULS ? (1 - LK) * e.a.newLease[r] + LK * ULS[r] : e.a.newLease[r], // v0.2：延誤連動部分的起租往後平移
+        b0 = LEASE_CASH_ON_BAL[r],
+        x0 = ULS ? (1 - LK) * e.a.newLease[r] + LK * ULS[r] : e.a.newLease[r], // v0.2：延誤連動部分的起租往後平移
+        // MAG v0.1b：operatingInEbitda＝分部 EBITDA 已扣營業租賃成本——在帳只扣融資租賃（含融資義務）現金、未起租只扣融資部分（1 − opShare）；營業部分視為已含在 EBITDA 率
+        b = LEASE_OIE ? COMPANY_DATA.leases.financePayments[r] : b0,
+        x = LEASE_OIE ? x0 * (1 - (UL.opShare ?? 0)) : x0,
         c0 = r === 0 ? e.billableOpen : t.billable[r - 1], u0 = (e.useAvgMw ? (c0 + t.billable[r]) / 2 : t.billable[r]) * t.revMW[r] * (e.revScale ?? 1) * (t.util[r] / 100) * L, // v0.2：未延誤的容量上限（對照）
         lost = DM > 0 ? Math.max(0, u0 - u) : 0, // v0.2：應計費而未計費營收（延誤造成）
         pen = (e.delayPenalty ?? 0) * lost, // v0.2：延誤罰則／服務抵減（營業費用：扣 EBITDA、營運來源、稅基、債務上限）
@@ -438,7 +447,7 @@ function runFunding(e) {
         g = h * cm,
         nC = nR * (1 - (t.defaultP[r] / 100) * p) * cm,
         svcCash = svc * cm,
-        ob = (e.otherEbitda || [])[r] || 0, // v0.1b：其他事業 EBITDA（Avride＋TripleTen；負值＝燒錢），同時進入 EBITDA 與營運來源
+        ob = ((e.otherEbitda || [])[r] || 0) - RENTC[r], // v0.1b：其他事業 EBITDA（負值＝燒錢），同時進入 EBITDA 與營運來源；MAG v0.1b：扣租用算力租金（營運成本，C8 d）
         _ = CX[r],
         v = (CXG[r] + (e.prepay.coverRefresh ? REF[r] : 0)) * e.a.customerFund[r], // v0.1b：客戶預付流入＝成長型 CapEx × 預付比率；v0.1c（Oracle）：prepay.coverRefresh 時汰換 CapEx 同樣適用覆蓋比
         y = _ - v,
@@ -591,6 +600,7 @@ function runFunding(e) {
         leaseLiabOn: LLON[r], leaseLiabUl: LLUL[r], leaseLiab: LLON[r] + LLUL[r], ebitdarAnn: (totRev * ebM + ob + lgE - pen + S) / L, // v0.2：租賃負債與 EBITDAR（年化）
         adjLev: (wEx + WF.Dn + WF.Cn + WF.Jn + LLON[r] + LLUL[r]) / Math.max((totRev * ebM + ob + lgE - pen + S) / L, .01), // v0.2：調整後槓桿（期末）
         otherEbitda: ob,
+        rentedCompute: RENTC[r], onBalLeaseAll: b0, offLeaseAll: x0, // MAG v0.1b
         cashEbitda: g + nC + svcCash + ob + lgE - lgO - pen - S,
         creditAdj: (m + nR * (t.defaultP[r] / 100) * p) * cm,
         atm: k,
@@ -605,8 +615,9 @@ function runFunding(e) {
         operatingGap: ee,
         cum: a,
         avgBillable: l,
-        onBalLease: b,
-        offLease: x,
+        onBalLease: b0,
+        offLease: x0,
+        leaseCashOn: b, leaseCashOff: x, // MAG v0.1b：自現金扣除的租金（operatingInEbitda 時只含融資部分）
         sourcesOp: A
       }
     }),
