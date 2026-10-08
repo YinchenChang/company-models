@@ -1,10 +1,11 @@
 # 記憶體市場層（共用）：季度價格路徑（情境 A／B／C）、加速器數量層、HBM 市場。
 # 各公司模型（tools/memory_model/build.py）引用本檔，確保所有記憶體公司用同一組市場假設。
-QUARTERS = [f"{y}Q{q}" for y in (2025, 2026, 2027, 2028) for q in (1, 2, 3, 4)]  # Path!C..R
+QUARTERS = [f"{y}Q{q}" for y in (2025, 2026, 2027, 2028, 2029) for q in (1, 2, 3, 4)]  # Path!C..V
+NQ = len(QUARTERS)
 SCEN = ("A", "B", "C")
-SCEN_DESC = {"A": "2027–28 高檔持平（BofA、TrendForce 型）",
-             "B": "2027 Q2 見頂、2028 回落約一半（Citi、Bernstein 型）",
-             "C": "2028 回到 2025 年價格水準（完整谷底；歷史循環型）"}
+SCEN_DESC = {"A": "2027–28 高檔持平、2029 緩降（BofA、TrendForce 型）",
+             "B": "2027 Q2 見頂、2028 回落約一半、2029 溫和回升（Citi、Bernstein 型）",
+             "C": "2028 回到 2025 年價格水準、2029 自谷底回升（完整循環）"}
 
 def qcol(i):  # 0..15 → Path 欄
     return chr(ord("C") + i)
@@ -12,17 +13,17 @@ def qcol(i):  # 0..15 → Path 欄
 # 價格季增（QoQ）：2025Q2–2026Q4 共用；2027Q1–2028Q4 依情境
 CONV_COMMON = [-0.025, 0.125, 0.475, 0.95, 0.605, 0.155, 0.125]
 CONV_SRC = "TrendForce 合約價：2Q25 0~−5%、3Q25 +10~15%、4Q25 實際 +45~50%、1Q26 實際約 +93~98%、2Q26 +58~63%、3Q26 +13~18%（MS 實際約 +15%）、4Q26 +10~15%"
-CONV_S = {"A": [0.03, 0.0, -0.02, -0.03, -0.03, -0.03, -0.02, -0.02],
-          "B": [0.05, 0.02, -0.08, -0.15, -0.25, -0.15, -0.10, -0.05],
-          "C": [0.05, 0.02, -0.08, -0.15, -0.35, -0.30, -0.25, -0.20]}
-CONV_S_SRC = {"A": "BofA：2027 持平略降、2027 均價仍高於 2026；2028 溫和修正（年均約 −10%）",
-              "B": "Citi：2027 Q2 見頂；Bernstein：2028 DRAM $/GB −52.9%（本路徑 2028 年均約 −47%）",
-              "C": "Assumed：2028 年底回到約 2025Q4 水準（自高點約 −79%），比照 2019、2023 年谷底"}
+CONV_S = {"A": [0.03, 0.0, -0.02, -0.03, -0.03, -0.03, -0.02, -0.02, -0.03, -0.03, -0.02, -0.02],
+          "B": [0.05, 0.02, -0.08, -0.15, -0.25, -0.15, -0.10, -0.05, 0.05, 0.05, 0.03, 0.03],
+          "C": [0.05, 0.02, -0.08, -0.15, -0.35, -0.30, -0.25, -0.20, 0.0, 0.05, 0.08, 0.10]}
+CONV_S_SRC = {"A": "BofA：2027 持平略降、2027 均價仍高於 2026；2028 溫和修正（年均約 −10%）；2029 Assumed 緩降",
+              "B": "Citi：2027 Q2 見頂；Bernstein：2028 DRAM $/GB −52.9%（本路徑 2028 年均約 −47%）；2029 Assumed 溫和回升",
+              "C": "Assumed：2028 年底回到約 2025Q4 水準（自高點約 −79%），比照 2019、2023 年谷底；2029 自谷底回升"}
 NAND_COMMON = [0.0, 0.05, 0.30, 0.875, 0.725, 0.15, 0.175]
 NAND_SRC = "TrendForce：1Q26 +85~90%、2Q26 +70~75%、3Q26 +10~15%（MS 實際約 +20%）、4Q26 +15~20%；2025Q2–Q4 為 Assumed"
-NAND_S = {"A": [0.03, 0.0, -0.05, -0.07, -0.05, -0.05, -0.05, -0.05],
-          "B": [0.05, 0.02, -0.10, -0.20, -0.30, -0.25, -0.20, -0.10],
-          "C": [0.05, 0.02, -0.10, -0.20, -0.35, -0.35, -0.25, -0.20]}
+NAND_S = {"A": [0.03, 0.0, -0.05, -0.07, -0.05, -0.05, -0.05, -0.05, -0.03, -0.03, -0.03, -0.03],
+          "B": [0.05, 0.02, -0.10, -0.20, -0.30, -0.25, -0.20, -0.10, 0.05, 0.05, 0.03, 0.03],
+          "C": [0.05, 0.02, -0.10, -0.20, -0.35, -0.35, -0.25, -0.20, 0.0, 0.05, 0.08, 0.10]}
 NAND_S_SRC = {"A": "TrendForce：2027 下半年供需平衡、價格面臨下修壓力",
               "B": "Citi：2027 Q2 見頂；Bernstein：NAND $/GB 2028 −68.8%",
               "C": "Assumed：回到約 2025 年水準"}
@@ -67,6 +68,11 @@ def inputs(sec, inp):
     inp("hbm_p28_A", "HBM 單價 2028 變動（A）", "%", 0.0, 0.10, 0.25, "Interested-party", "JPMorgan 2028 +25%（上限）")
     inp("hbm_p28_B", "HBM 單價 2028 變動（B）", "%", -0.40, -0.25, -0.10, "Assumed", "一般 DRAM 大跌時 HBM 年約重議下修")
     inp("hbm_p28_C", "HBM 單價 2028 變動（C）", "%", -0.55, -0.40, -0.25, "Assumed", "完整谷底")
+    inp("hbm_dem29", "2029 HBM 需求位元成長", "%", 0.20, 0.30, 0.45, "Assumed", "2029 無顆數預測；Micron：HBM 位元成長快於一般 DRAM 至 2028")
+    inp("hbm_sup29", "2029 HBM 位元供給成長", "%", 0.25, 0.35, 0.50, "Assumed", "P5、龍仁、M15X 等新廠 2028–29 投產")
+    inp("hbm_p29_A", "HBM 單價 2029 變動（A）", "%", -0.15, -0.05, 0.05, "Assumed", "")
+    inp("hbm_p29_B", "HBM 單價 2029 變動（B）", "%", -0.10, 0.0, 0.10, "Assumed", "")
+    inp("hbm_p29_C", "HBM 單價 2029 變動（C）", "%", -0.10, 0.05, 0.15, "Assumed", "自谷底回升")
 
 def write(wb, hdr, Font):
     """寫 Path、Mkt 兩頁；回傳參照表"""
@@ -80,29 +86,29 @@ def write(wb, hdr, Font):
         for s in SCEN:
             P.cell(r, 1, npre); P.cell(r, 2, s)
             P.cell(r, 3, 1)
-            for i in range(1, 16):
+            for i in range(1, NQ):
                 key = f"{cpre}_{i}" if i <= 7 else f"{cpre}{s}_{i}"
                 P.cell(r, 3 + i, f"={qcol(i-1)}{r}*(1+{key})").number_format = "0.00"
             ref[kind][s] = r
             r += 1
         r += 1
     P.cell(r, 1, "年均指數").font = BOLD; r += 1
-    hdr(P, r, ["路徑", "情境", "2025", "2026", "2027", "2028", "2026÷2025", "2027÷2026", "2028÷2027"]); r += 1
+    hdr(P, r, ["路徑", "情境", "2025", "2026", "2027", "2028", "2029", "2026÷2025", "2027÷2026", "2028÷2027", "2029÷2028"]); r += 1
     for kind, npre in (("conv", "一般 DRAM"), ("nand", "NAND")):
         for s in SCEN:
             src = ref[kind][s]
             P.cell(r, 1, npre); P.cell(r, 2, s)
-            for j in range(4):
+            for j in range(5):
                 P.cell(r, 3 + j, f"=AVERAGE({qcol(4*j)}{src}:{qcol(4*j+3)}{src})").number_format = "0.00"
-            for j, (a, b) in enumerate((("D", "C"), ("E", "D"), ("F", "E"))):
-                P.cell(r, 7 + j, f"={a}{r}/{b}{r}-1").number_format = "0%"
+            for j, (a, b) in enumerate((("D", "C"), ("E", "D"), ("F", "E"), ("G", "F"))):
+                P.cell(r, 8 + j, f"={a}{r}/{b}{r}-1").number_format = "0%"
             r += 1
     P.column_dimensions["A"].width = 14
-    for i in range(16): P.column_dimensions[qcol(i)].width = 8
+    for i in range(NQ): P.column_dimensions[qcol(i)].width = 8
 
     M = wb.create_sheet("Mkt")
     M["A1"] = "Mkt — 加速器數量層（最小版）與 HBM 市場（日曆年）。需求＝顆數 × GB；出貨＝MIN(需求, 供給)；市場＝出貨 × 單價"
-    hdr(M, 3, ["項目", "單位", "2025", "2026", "2027", "2028", "說明"])
+    hdr(M, 3, ["項目", "單位", "2025", "2026", "2027", "2028", "2029", "說明"])
     MK = {}; mr = [4]
     def put(label, unit, fs, key=None, fmt="0.00", note=""):
         rr = mr[0]
@@ -110,30 +116,31 @@ def write(wb, hdr, Font):
         for j, f in enumerate(fs):
             if f is None or f == "": continue
             M.cell(rr, 3 + j, f).number_format = fmt
-        M.cell(rr, 7, note)
+        M.cell(rr, 8, note)
         if key: MK[key] = rr
         mr[0] += 1
-    YC = {25: "C", 26: "D", 27: "E", 28: "F"}
+    YC = {25: "C", 26: "D", 27: "E", 28: "F", 29: "G"}
     M.cell(mr[0], 1, "需求：加速器裝載的 HBM（PB）").font = BOLD; mr[0] += 1
     for k, nm, *_ in UNITS:
         put(f"  {nm}", "PB", [None] + [f"=u_{k}_{y}*g_{k}_{y}" for y in (26, 27, 28)], key="pb_" + k, fmt="0")
     a, b = MK["pb_bw"], MK["pb_oth"]
     put("需求合計（裝載）", "EB", [None] + [f"=SUM({YC[y]}{a}:{YC[y]}{b})/1000" for y in (26, 27, 28)], key="dem")
-    put("需求 × 出貨係數", "EB", [None] + [f"={YC[y]}{MK['dem']}*hbm_gross" for y in (26, 27, 28)], key="demg")
+    M.cell(MK["dem"], 7, f"=F{MK['dem']}*(1+hbm_dem29)").number_format = "0.00"
+    put("需求 × 出貨係數", "EB", [None] + [f"={YC[y]}{MK['dem']}*hbm_gross" for y in (26, 27, 28, 29)], key="demg")
     put("加速器顆數合計", "百萬顆", [None] + ["=" + "+".join(f"u_{k}_{y}" for k, *_ in UNITS) for y in (26, 27, 28)], key="units", fmt="0.0", note="JPMorgan 2027：GPU 10.9M、ASIC 12.5M")
     put("每顆平均 HBM", "GB", [None] + [f"={YC[y]}{MK['dem']}*1000/{YC[y]}{MK['units']}" for y in (26, 27, 28)], key="gbavg", fmt="0")
     put("供給", "EB", ["=D{s}/(1+hbm_g26)", "=D{d}", "=D{s}*(1+hbm_sup27)", "=E{s}*(1+hbm_sup28)"], key="sup", note="2026 供給＝需求出貨（年中已成交）")
     rr = MK["sup"]
-    for j, f in enumerate(["=D{0}/(1+hbm_g26)".format(rr), "=D{0}".format(MK["demg"]), "=D{0}*(1+hbm_sup27)".format(rr), "=E{0}*(1+hbm_sup28)".format(rr)]):
+    for j, f in enumerate(["=D{0}/(1+hbm_g26)".format(rr), "=D{0}".format(MK["demg"]), "=D{0}*(1+hbm_sup27)".format(rr), "=E{0}*(1+hbm_sup28)".format(rr), "=F{0}*(1+hbm_sup29)".format(rr)]):
         M.cell(rr, 3 + j, f).number_format = "0.00"
-    put("出貨＝MIN(需求, 供給)", "EB", [f"=C{MK['sup']}"] + [f"=MIN({YC[y]}{MK['demg']},{YC[y]}{MK['sup']})" for y in (26, 27, 28)], key="ship")
-    put("需求 − 供給（>0＝短缺）", "EB", [None] + [f"={YC[y]}{MK['demg']}-{YC[y]}{MK['sup']}" for y in (26, 27, 28)], key="gap")
+    put("出貨＝MIN(需求, 供給)", "EB", [f"=C{MK['sup']}"] + [f"=MIN({YC[y]}{MK['demg']},{YC[y]}{MK['sup']})" for y in (26, 27, 28, 29)], key="ship")
+    put("需求 − 供給（>0＝短缺）", "EB", [None] + [f"={YC[y]}{MK['demg']}-{YC[y]}{MK['sup']}" for y in (26, 27, 28, 29)], key="gap")
     for s in SCEN:
         put(f"HBM 單價（{s}）", "$/GB", [f"=hbm_mkt25/C{MK['ship']}", "=hbm_p26", "=D{r}*(1+hbm_p27)", f"=E{{r}}*(1+hbm_p28_{s})"], key="p" + s)
         rr = MK["p" + s]
-        M.cell(rr, 5, f"=D{rr}*(1+hbm_p27)"); M.cell(rr, 6, f"=E{rr}*(1+hbm_p28_{s})")
+        M.cell(rr, 5, f"=D{rr}*(1+hbm_p27)"); M.cell(rr, 6, f"=E{rr}*(1+hbm_p28_{s})"); M.cell(rr, 7, f"=F{rr}*(1+hbm_p29_{s})")
     for s in SCEN:
-        put(f"HBM 市場（{s}）", "$B", [f"={YC[y]}{MK['ship']}*{YC[y]}{MK['p' + s]}" for y in (25, 26, 27, 28)], key="m" + s, fmt="0.0")
+        put(f"HBM 市場（{s}）", "$B", [f"={YC[y]}{MK['ship']}*{YC[y]}{MK['p' + s]}" for y in (25, 26, 27, 28, 29)], key="m" + s, fmt="0.0")
     mr[0] += 1
     M.cell(mr[0], 1, "對帳（樣板驗收 2）").font = BOLD; mr[0] += 1
     put("由下而上：NVIDIA 裝載 HBM × 單價（2026）", "$B", [None, f"=(D{MK['pb_bw']}+D{MK['pb_rb']}+D{MK['pb_ru']}+D{MK['pb_hp']})/1000*hbm_p26"], key="bu", fmt="0.0")
@@ -143,8 +150,8 @@ def write(wb, hdr, Font):
     put("已發布：SK 海力士自估 2026／BofA 2026／BofA 2027", "$B", [None, "=pub26_lo", "=pub26_hi", "=pub27"], key="pub", fmt="0.0")
     put("  本模型 2026 ÷ SK 海力士自估、2027 ÷ BofA", "%", [None, f"=D{MK['mA']}/pub26_lo-1", None, f"=E{MK['mA']}/pub27-1"], fmt="0%")
     M.column_dimensions["A"].width = 58
-    for c in "CDEF": M.column_dimensions[c].width = 10
-    M.column_dimensions["G"].width = 50
+    for c in "CDEFG": M.column_dimensions[c].width = 10
+    M.column_dimensions["H"].width = 50
     return {"path": ref, "mk": MK}
 
 def ref_inputs(sec, inp):

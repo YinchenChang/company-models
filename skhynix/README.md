@@ -7,7 +7,7 @@ AI 半導體樣板的第一家公司（之後複製到美光、三星）。
 | 檔案 | 內容 |
 |---|---|
 | `company.py` | 設定檔（只放參數）；結構在 `tools/memory_model/build.py`（記憶體樣板）與 `markets/memory/market.py`（共用市場層） |
-| `dist/20261008_SK海力士模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261008_SK海力士模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 
 ## 建置
 
@@ -25,6 +25,10 @@ README（命題、驅動 → 推導、驗收清單）、In（輸入、標記、�
 - `markets/chip_bridge` v0.1（Tokenomics v5.27）：每顆 GPU HBM 金額、每顆 GPU 的 NVIDIA 內容。
 - 公司數字：SEC 424B4（2026-07）、6-K 半年報（2026-08-18）、公司法說。
 - SemiAnalysis 未使用。參數不由共識回推；共識只在 Recon 頁事後對照。
+
+## v0.3 變更（2026-10-08）
+
+預測延長到 2029（樣板 v0.3）；三情境各加 2029 年走法。2026–2028 數字與 v0.2 相同。
 
 ## v0.2 變更（2026-10-08，因美光複製測試而改樣板）
 

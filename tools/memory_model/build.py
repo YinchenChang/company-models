@@ -1,4 +1,4 @@
-# 記憶體公司收支與估值樣板 v0.2（AI 半導體 Project）
+# 記憶體公司收支與估值樣板 v0.3（v0.3：預測 3 年、非記憶體事業列）（AI 半導體 Project）
 # 用法：python3 tools/memory_model/build.py <公司設定檔 company.py> <輸出 raw.xlsx>
 # 公司設定檔只放參數（幣別、會計年度、季度實績、輸入值）；結構全部在本檔與 markets/memory/market.py。
 import sys, os, importlib.util
@@ -26,7 +26,7 @@ CCY = C["ccy_per_usdB"]  # 1 十億美元 換算成公司單位的公式
 SS = C["share_scale"]    # 每股金額＝金額 ÷ 股數(百萬) × SS
 BASE = C["base_fy"]; OFF = C["fy_offset"]
 FYL = C["fy_label"]      # 例："{}"、"FY{}"
-YRS = [BASE + 1, BASE + 2]
+YRS = [BASE + 1, BASE + 2, BASE + 3]
 
 # ---------------- In ----------------
 IN = wb.active; IN.title = "In"
@@ -58,7 +58,7 @@ IN.freeze_panes = "D4"
 
 ref = MKT.write(wb, hdr, Font)
 PATH, MK = ref["path"], ref["mk"]
-MYC = {2025: "C", 2026: "D", 2027: "E", 2028: "F"}
+MYC = {2025: "C", 2026: "D", 2027: "E", 2028: "F", 2029: "G"}
 
 def fy_quarters(y):
     """會計年度 y 的四個日曆季（0..15 索引）"""
@@ -80,8 +80,8 @@ Q["A1"] = f"Q — 季度損益（{U}）。實績：{C['q_source']}；推估季�
 qs = C["quarters"]
 hdr(Q, 3, ["項目"] + [q["label"] for q in qs] + [f"{FYL.format(BASE)} 合計"])
 QROWS = ["rev", "dram", "nand", "oth", "cogs", "opex", "op", "opm", "ni", "da", "dbi", "nbi"]
-QLAB = {"rev": "營收", "dram": "  DRAM（含 HBM）", "nand": "  NAND", "oth": "  其他", "cogs": "營業成本", "opex": "營業費用", "op": "營業利益",
-        "opm": "營業利益率", "ni": "淨利", "da": "折舊攤銷", "dbi": "DRAM 位元指數（最後實績季＝1）", "nbi": "NAND 位元指數"}
+QLAB = {"rev": "記憶體營收", "dram": "  DRAM（含 HBM）", "nand": "  NAND", "oth": "  其他", "cogs": "營業成本", "opex": "營業費用", "op": "記憶體營業利益",
+        "opm": "記憶體營業利益率", "ni": "淨利（合併，含非記憶體事業）", "da": "折舊攤銷", "dbi": "DRAM 位元指數（最後實績季＝1）", "nbi": "NAND 位元指數"}
 QR = {k: 4 + i for i, k in enumerate(QROWS)}
 for k in QROWS: Q.cell(QR[k], 1, QLAB[k])
 QC = [chr(ord("B") + i) for i in range(len(qs))]
@@ -109,7 +109,7 @@ for i, q in enumerate(qs):
         Q[f"{c}{QR['cogs']}"] = (f"=({p}{QR['cogs']}-da_cogs*{p}{QR['da']})*((w_c+w_h)*{c}{QR['dbi']}/{p}{QR['dbi']}+w_n*{c}{QR['nbi']}/{p}{QR['nbi']})*(1-costdn_q)+da_cogs*{g['da']}")
         Q[f"{c}{QR['opex']}"] = f"=opex_fix_q+opex_var*{c}{QR['rev']}"
         Q[f"{c}{QR['op']}"] = f"={c}{QR['rev']}-{c}{QR['cogs']}-{c}{QR['opex']}"
-        Q[f"{c}{QR['ni']}"] = f"=({c}{QR['op']}+nonop_q)*(1-tax)"
+        Q[f"{c}{QR['ni']}"] = f"=({c}{QR['op']}+nonop_q+nm_op_q)*(1-tax)"
         Q[f"{c}{QR['da']}"] = f"={g['da']}"
 Q[f"{QC[last_act]}{QR['dbi']}"] = 1; Q[f"{QC[last_act]}{QR['nbi']}"] = 1
 for c in QC:
@@ -130,15 +130,15 @@ Y = wb.create_sheet("Y")
 Y["A1"] = f"Y — 年度（{U}；股數百萬股）。情境 A：{MKT.SCEN_DESC['A']}；B：{MKT.SCEN_DESC['B']}；C：{MKT.SCEN_DESC['C']}"
 cols = [("B", FYL.format(BASE - 1) + " 實績", None, None), ("C", FYL.format(BASE) + "（基準）", None, None)]
 FC = {}
-letters = iter("DEFGHI")
+letters = iter("DEFGHIJKL")
 for s in MKT.SCEN:
     for n, y in enumerate(YRS, 1):
         L = next(letters); FC[(s, n)] = L
         cols.append((L, f"{FYL.format(y)} {s}", s, n))
 hdr(Y, 3, ["項目"] + [c[1] for c in cols] + ["說明"])
-YR = {k: 4 + i for i, k in enumerate(["rev", "conv", "hbm", "nand", "oth", "hbmsh", "da", "vol", "cogs", "opex", "op", "opm", "ni", "capex", "fcf", "div", "bb", "eq", "nc", "sh", "bvps", "eps", "roe", "hbmbits"])}
-YLAB = {"rev": "營收", "conv": "  一般 DRAM", "hbm": "  HBM", "nand": "  NAND", "oth": "  其他", "hbmsh": "  HBM ÷ 營收", "da": "折舊攤銷",
-        "vol": "成本量指數（÷ 前一年）", "cogs": "營業成本", "opex": "營業費用", "op": "營業利益", "opm": "營業利益率", "ni": "淨利", "capex": "資本支出",
+YR = {k: 4 + i for i, k in enumerate(["rev", "conv", "hbm", "nand", "oth", "hbmsh", "da", "vol", "cogs", "opex", "op", "opm", "nmrev", "nmop", "crev", "cop", "ni", "capex", "fcf", "div", "bb", "eq", "nc", "sh", "bvps", "eps", "roe", "hbmbits"])}
+YLAB = {"nmrev": "非記憶體事業營收", "nmop": "非記憶體事業營業利益", "crev": "合併營收", "cop": "合併營業利益", "rev": "記憶體營收", "conv": "  一般 DRAM", "hbm": "  HBM", "nand": "  NAND", "oth": "  其他", "hbmsh": "  HBM ÷ 營收", "da": "折舊攤銷",
+        "vol": "成本量指數（÷ 前一年）", "cogs": "營業成本", "opex": "營業費用", "op": "記憶體營業利益", "opm": "記憶體營業利益率", "ni": "淨利（合併）", "capex": "資本支出",
         "fcf": "自由現金流（淨利＋折舊 − 資本支出）", "div": "股利", "bb": "買回", "eq": "期末權益", "nc": "期末淨現金", "sh": "期末流通股數",
         "bvps": "每股淨值 BVPS", "eps": "每股盈餘 EPS（期末股數）", "roe": "ROE（期末權益）", "hbmbits": "HBM 出貨位元（EB，公司）"}
 for k, rr in YR.items(): Y.cell(rr, 1, YLAB[k])
@@ -155,6 +155,7 @@ qs_ = lambda k: f"=Q!{TOT}{QR[k]}"
 setc("C", "rev", qs_("rev")); setc("C", "hbm", "=" + hbm_fy(BASE, "A")); setc("C", "conv", f"=Q!{TOT}{QR['dram']}-C{R['hbm']}")
 setc("C", "nand", qs_("nand")); setc("C", "oth", qs_("oth")); setc("C", "da", qs_("da")); setc("C", "cogs", qs_("cogs"))
 setc("C", "opex", qs_("opex")); setc("C", "op", qs_("op")); setc("C", "ni", qs_("ni")); setc("C", "capex", "=cap_0")
+setc("C", "nmrev", "=nm_rev_0"); setc("C", "nmop", "=nm_op_0")
 setc("C", "hbmbits", "=" + hbmbits_fy(BASE), "0.00")
 fq = [i for i, q in enumerate(qs[-4:]) if q["type"] == "F"]
 fni = "+".join(f"Q!{qs and QC[-4 + i]}{QR['ni']}" for i in fq) or "0"
@@ -166,6 +167,8 @@ setc("C", "sh", "=sh_last+extra_sh-bb_sh_0", "0.0")
 for k in ("hbmsh", "opm", "fcf", "bvps", "eps", "roe"):
     pass
 def common(col, P):
+    setc(col, "crev", f"={col}{R['rev']}+{col}{R['nmrev']}")
+    setc(col, "cop", f"={col}{R['op']}+{col}{R['nmop']}")
     setc(col, "hbmsh", f"={col}{R['hbm']}/{col}{R['rev']}", "0.0%")
     setc(col, "opm", f"={col}{R['op']}/{col}{R['rev']}", "0.0%")
     setc(col, "fcf", f"={col}{R['ni']}+{col}{R['da']}-{col}{R['capex']}")
@@ -187,7 +190,8 @@ for (s, n), col in FC.items():
     setc(col, "cogs", f"=({P}{R['cogs']}-da_cogs*{P}{R['da']})*{col}{R['vol']}*(1-costdn_y)+da_cogs*{col}{R['da']}")
     setc(col, "opex", f"=opex_fix_y*(1+opex_g)^{n}+opex_var*{col}{R['rev']}")
     setc(col, "op", f"={col}{R['rev']}-{col}{R['cogs']}-{col}{R['opex']}")
-    setc(col, "ni", f"=({col}{R['op']}+rf*{P}{R['nc']})*(1-tax)")
+    setc(col, "nmrev", f"=nm_rev_{n}"); setc(col, "nmop", f"=nm_op_{n}")
+    setc(col, "ni", f"=({col}{R['cop']}+rf*{P}{R['nc']})*(1-tax)")
     setc(col, "capex", f"=cap_{n}")
     setc(col, "div", f"=dps_{n}*{P}{R['sh']}/{SS}")
     setc(col, "bb", f"=MAX(0,payout*{col}{R['fcf']}-{col}{R['div']})")
@@ -196,11 +200,11 @@ for (s, n), col in FC.items():
     setc(col, "sh", f"={P}{R['sh']}-{col}{R['bb']}/bb_px*{SS}", "0.0")
     common(col, P)
 Y.column_dimensions["A"].width = 34
-for c in "BCDEFGHI": Y.column_dimensions[c].width = 12
+for c in "BCDEFGHIJKL": Y.column_dimensions[c].width = 12
 notes = {"conv": "前一年 × (1＋位元) × 會計年度價格指數平均比（Path）", "hbm": "Σ 會計年度各季：HBM 市場 ÷ 4 × 市占 × 匯率（Mkt）",
          "cogs": "現金成本 × 量 × (1 − 年降)＋折舊", "ni": "（營業利益＋淨現金 × 收益率）× (1 − 稅率)", "bb": "回饋比例 × FCF − 股利"}
-for k, t in notes.items(): Y.cell(R[k], 10, t)
-Y.column_dimensions["J"].width = 50
+for k, t in notes.items(): Y.cell(R[k], 13, t)
+Y.column_dimensions["M"].width = 50
 
 # ---------------- Val ----------------
 V = wb.create_sheet("Val")
@@ -231,7 +235,7 @@ SE = wb.create_sheet("Sens")
 SE["A1"] = "Sens — 一次只動一個價格或份額輸入；Δ營業利益＝Δ營收 × (1 − 營業費用變動率)（成本只隨量變動，所以這是精確值，不是近似）"
 hdr(SE, 3, ["欄", "輸入變動", "Δ營收", "營業利益", "相對基準"])
 sr = 4
-for (s, n) in (("A", 1), ("B", 2), ("C", 2)):
+for (s, n) in (("A", 1), ("B", 2), ("C", 2), ("C", 3)):
     col = FC[(s, n)]; lab = f"{FYL.format(YRS[n-1])} {s}"
     SE.cell(sr, 1, lab).font = BOLD; SE.cell(sr, 2, "基準"); SE.cell(sr, 4, f"=Y!{col}{R['op']}").number_format = "0.0"; base_r = sr; sr += 1
     items = [("一般 DRAM 收入 −20%", f"=-0.2*Y!{col}{R['conv']}"), ("一般 DRAM 收入 +20%", f"=0.2*Y!{col}{R['conv']}"),
@@ -252,7 +256,7 @@ RC["A1"] = f"Recon — 本模型（正向推導）vs 共識或公司指引（只
 hdr(RC, 3, ["項目", "本模型", "對照值", "差距", "對照來源"])
 for i, (nm, f, v, src) in enumerate(C["recon"]):
     rr = 4 + i
-    RC.cell(rr, 1, nm); RC.cell(rr, 2, f).number_format = "0.0"
+    RC.cell(rr, 1, nm); RC.cell(rr, 2, f.format(**R)).number_format = "0.0"
     RC.cell(rr, 3, v).font = BLUE
     RC.cell(rr, 4, f"=B{rr}/C{rr}-1").number_format = "0%"; RC.cell(rr, 5, src)
 RC.column_dimensions["A"].width = 46; RC.column_dimensions["E"].width = 50
@@ -272,13 +276,13 @@ for i, (a, b) in enumerate(C["sources"] + [("markets/memory/market.py（共用�
     SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 60; SO.column_dimensions["B"].width = 120
 RD = wb.create_sheet("README", 0)
-lines = [(f"{C['name']} 收支與估值模型 {C['version']}（記憶體樣板 v0.2）　{C['date']}", True), ("模型命題：" + C["thesis"], False), ("", False),
+lines = [(f"{C['name']} 收支與估值模型 {C['version']}（記憶體樣板 v0.3）　{C['date']}", True), ("模型命題：" + C["thesis"], False), ("", False),
  ("驅動因子 → 推導量", True),
  ("Path（共用市場層）：一般 DRAM、NAND 合約價季增 → 季度指數（情境 A／B／C）；各公司依會計年度取平均，算年均價變動", False),
  ("Mkt（共用市場層）：加速器顆數 × 每顆 GB → 需求位元；MIN(需求, 供給) → 出貨；× 單價 → HBM 市場（日曆年）", False),
  ("Q：最後實績季 × 公司指引 × TrendForce 季價 → 基準年剩餘季度", False),
  ("Y：前一年 × (1＋位元) × 價格指數比 → 一般 DRAM、NAND；Σ 各季 HBM 市場 × 市占 → HBM；成本量 × (1 − 年降)＋折舊 → 營業利益 → 淨利 → 權益 → 每股淨值", False),
- ("Val：每股淨值 × P/B（主）、EPS × P/E（對照）", False), ("Sens：各收入線同幅變動對營業利益的影響", False), ("Recon：與共識、公司指引事後對照", False), ("", False),
+ ("Val：每股淨值 × P/B（主）、EPS × P/E（對照）", False), ("Sens：各收入線同幅變動對營業利益的影響", False), ("非記憶體事業（只有三星）：營收與營業利益為輸入，不建模", False), ("Recon：與共識、公司指引事後對照", False), ("", False),
  (f"情境：A＝{MKT.SCEN_DESC['A']}；B＝{MKT.SCEN_DESC['B']}；C＝{MKT.SCEN_DESC['C']}", False),
  (f"幣別單位：{U}；會計年度：{C['fy_desc']}", False), ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。", False), ("", False)] + [(t, False) for t in C["readme_extra"]]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
