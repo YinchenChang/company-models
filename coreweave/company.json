@@ -1283,5 +1283,50 @@
    "2024": "S-1：2024 年底 >360 MW [Verified]",
    "2025": "Q4 2025 法說：年底 >850 MW、43 座資料中心 [Verified]"
   }
+ },
+ "tokenomics": {
+  "_note": "算力相關的產業與物理層資料改引用 Tokenomics（YinchenChang/Tokenomics）：只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱，經版本固定的快照檔讀入；模型主值一律取「基準」成本情境，低成本／高成本只作敏感度。Tokenomics 每 GW＝IT 關鍵電力。W1 只建取數層（Excel「Tokenomics_取數」分頁），既有公式尚未引用。",
+  "snapshotFile": "data/tokenomics_snapshot_v5.24.json",
+  "version": "v5.24",
+  "commit": "098873a3c6855d1ef5e3414d5a0f12e39b2644ed",
+  "names": [
+   "IF_RacksPerGW",
+   "IF_GPUsPerGW",
+   "IF_FacilityGW",
+   "IF_CapexIT",
+   "IF_CapexFacility",
+   "IF_CapexTotal",
+   "IF_HoldAcct",
+   "IF_HoldEcon",
+   "IF_GPUhrEcon",
+   "IF_PowerCost",
+   "IF_Util",
+   "L1_FacCapexMW",
+   "L1_GPUhr_GB200_vsCW",
+   "L1_GPUhr_GB300_vsBE",
+   "L1_RevGW_Fleet_VR200",
+   "IF_DeprLifeIT",
+   "IF_DeprIT",
+   "IF_DeprFac",
+   "IF_AvgDraw",
+   "IF_PowerPrice",
+   "IF_MaintIT",
+   "IF_MaintFac",
+   "IF_StaffSW",
+   "IF_TaxIns",
+   "IF_OpexGW"
+  ],
+  "optional": [
+   "IF_DeprLifeIT",
+   "IF_DeprIT",
+   "IF_DeprFac",
+   "IF_AvgDraw",
+   "IF_PowerPrice",
+   "IF_MaintIT",
+   "IF_MaintFac",
+   "IF_StaffSW",
+   "IF_TaxIns",
+   "IF_OpexGW"
+  ]
  }
 }

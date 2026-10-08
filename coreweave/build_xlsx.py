@@ -2969,17 +2969,84 @@ srow("驗證｜目標價（平均／中位數／最低／最高）", "US$", [f"=
 ws.cell(row=r + 1, column=1, value="來源獨立性：" + CONS['sourceIndependence']).font = SMALL
 ws.cell(row=r + 2, column=1, value=f"共識來源：{CONS['annualEstimates']['source']}、{CONS['priceTarget']['source']}；擷取 {CONS['annualEstimates']['retrieved']}。逐筆來源、日期與標記見『輸入與假設』I 區。").font = SMALL
 
+# W1（2026-10-07）：Tokenomics 取數分頁。值取自 company.json → tokenomics.snapshotFile 的版本固定快照（tools/tokenomics/import_tokenomics.py 產生），
+# 藍字輸入格；每個名稱的「基準」值格另建具名範圍 TK_<名稱去掉 IF_／L1_>_<世代代碼>（單值名稱不加世代），供 W2 公式引用。W1 不得讓既有公式引用這些格。
+from openpyxl.workbook.defined_name import DefinedName as _DN
+TK = CO.get('tokenomics')
+if TK:
+    _TKS = _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), TK['snapshotFile']), encoding='utf-8'))
+    _src = _TKS['source']
+    assert _src['commit'] == TK['commit'] and _src['version'] == TK['version'], 'company.json → tokenomics 的版本／commit 與快照檔不一致'
+    assert list(_TKS['items']) == TK['names'], 'company.json → tokenomics.names 與快照檔名稱不一致'
+    ws = wb.create_sheet("Tokenomics_取數")
+    for _col, _w in zip("ABCDEFGHIJ", (26, 24, 44, 12, 30, 13, 13, 13, 24, 22)):
+        ws.column_dimensions[_col].width = _w
+    ws["A1"] = "Tokenomics 取數（算力相關的產業與物理層資料）"; ws["A1"].font = TITLE
+    _GC = {g['name']: g['code'] for g in _src['generations']}
+    ws["A2"] = (f"來源：{_src['repo']} {_src['file']}（{_src['version']}，commit {_src['commit'][:7]}，擷取 {_src['extractedAt']}）。"
+                "只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱；模型主值取「基準」，低／高只作敏感度；Tokenomics 每 GW＝IT 關鍵電力。")
+    ws["A2"].font = SMALL
+    ws["A3"] = "本分頁目前只顯示、尚未被任何公式引用（W1）；值為快照的藍字輸入格，更新方式見 repo 根目錄 README「共用工具：Tokenomics 取數」。"
+    ws["A3"].font = SMALL
+    r = 4
+    for j, h in enumerate(["具名範圍（基準）", "名稱", "中文標籤", "單位", "世代", "低成本", "基準", "高成本", "Tokenomics 位置", "版本與 commit"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    _ver = f"{_src['version']} · {_src['commit'][:7]}"
+    _short = lambda n: re.sub(r'^(IF|L1)_', '', n)
+    def _tkrow(key, name, lab, unit, gen, vals, loc, fmt):
+        global r
+        ws.cell(row=r, column=1, value=key).font = BLACK
+        ws.cell(row=r, column=2, value=name).font = BLACK
+        ws.cell(row=r, column=3, value=lab).font = BLACK
+        ws.cell(row=r, column=4, value=unit).font = SMALL
+        ws.cell(row=r, column=5, value=gen).font = BLACK
+        for j, v in enumerate(vals):
+            c = ws.cell(row=r, column=6 + j, value=v); c.border = BOX
+            if isinstance(v, (int, float)): c.font = BLUE; c.number_format = fmt
+            else: c.font = SMALL
+        ws.cell(row=r, column=9, value=loc).font = SMALL
+        ws.cell(row=r, column=10, value=_ver).font = SMALL
+        r += 1
+    def _fmt(unit, vals):
+        nums = [abs(v) for v in vals if isinstance(v, (int, float))]
+        if unit in ('%',): return '0.0%'
+        if unit in ('顆', '架'): return NUM0
+        if nums and max(nums) >= 1000: return NUM0
+        return '#,##0.0000;(#,##0.0000);-'
+    for _nm, _it in _TKS['items'].items():
+        if _it.get('missing'):
+            _tkrow(f"TK_{_short(_nm)}", _nm, "（Tokenomics 尚無此名稱）", "", "", ["", "", ""],
+                   f"{_src['version']} 無此名稱（列為 optional；Tokenomics v5.25 預計新增）；未建具名範圍", NUM)
+            continue
+        if _it['kind'] == 'gen_cost':
+            for _g, _v3 in _it['values'].items():
+                _vals = [_v3['低成本'], _v3['基準'], _v3['高成本']]
+                _key = f"TK_{_short(_nm)}_{_GC[_g]}"
+                _tkrow(_key, _nm, _it['label'], _it['unit'], _g, _vals,
+                       f"{_it['cells'][_g]['低成本']}:{_it['cells'][_g]['高成本'].split('!')[1]}", _fmt(_it['unit'], _vals))
+                wb.defined_names[_key] = _DN(_key, attr_text=f"'Tokenomics_取數'!$G${r - 1}")
+        elif _it['kind'] == 'single':
+            _rg = _it.get('range') or {}
+            _vals = [_rg.get('低', ''), _it['values'], _rg.get('高', '')] if _rg else ["", _it['values'], ""]
+            _loc = _it['cell'] + (f"（低／高＝{_rg['cells']['低'].split('!')[1]}／{_rg['cells']['高'].split('!')[1]}；{_rg.get('def') or ''}）" if _rg else "")
+            _key = f"TK_{_short(_nm)}"
+            _tkrow(_key, _nm, _it['label'], _it['unit'], "—", _vals, _loc, _fmt(_it['unit'], _vals))
+            wb.defined_names[_key] = _DN(_key, attr_text=f"'Tokenomics_取數'!$G${r - 1}")
+        else:
+            raise SystemExit(f'Tokenomics_取數：不支援的快照型態 {_it["kind"]}（{_nm}）')
+
 for s in wb.worksheets:
     s.sheet_view.showGridLines = False
     if s.title not in ("導覽", "來源", "摘要"):
         s.freeze_panes = "C5"
 
 _order = ["導覽", "摘要", "輸入與假設", "各期收支", "季度追蹤", "運營_產能與收入", "運營_站點", "資產負債_既有債務", "資產負債_新債與新股",
-          "資產負債_租賃承諾", "損益", "評價_DCF與目標價", "評價_反向DCF", "評價_可比公司", "檢查_連動", "檢查_版本紀錄", "來源"]
+          "資產負債_租賃承諾", "損益", "評價_DCF與目標價", "評價_反向DCF", "評價_可比公司", "檢查_連動", "檢查_版本紀錄", "來源"] + (["Tokenomics_取數"] if TK else [])
 wb._sheets = [wb[n] for n in _order] + [w for w in wb.worksheets if w.title not in _order]
 _tab = {"摘要": "C00000", "輸入與假設": "1F3864", "各期收支": "0F6B4C", "季度追蹤": "0F6B4C", "運營_產能與收入": "0F5C61", "運營_站點": "0F5C61",
         "資產負債_既有債務": "5B5778", "資產負債_新債與新股": "5B5778", "資產負債_租賃承諾": "5B5778",
-        "損益": "C4A35A", "評價_DCF與目標價": "9F1239", "評價_可比公司": "9F1239", "評價_反向DCF": "9F1239", "檢查_連動": "808080", "檢查_版本紀錄": "808080", "來源": "808080"}
+        "損益": "C4A35A", "評價_DCF與目標價": "9F1239", "評價_可比公司": "9F1239", "評價_反向DCF": "9F1239", "檢查_連動": "808080", "檢查_版本紀錄": "808080", "來源": "808080", **({"Tokenomics_取數": "808080"} if TK else {})}
 for _n, _c in _tab.items():
     wb[_n].sheet_properties.tabColor = _c
 for _ws in wb.worksheets:
