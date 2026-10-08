@@ -142,3 +142,17 @@ items:
 # ── Z3b（F1）：Coding Plan token 類型組成（逐 token 類型換算 GW）
 - {key: cp_cache_hit, name: Coding Plan 輸入 token 中快取命中占比, index: 全期, unit: 比例, value: 0.9, lo: 0.8, hi: 0.97, tag: Analogy, basis: 工作單 Z3b F1（Analogy 0.9，0.8–0.97）：程式碼代理每次呼叫重送專案上下文，前綴快取命中為主；Z1-R：Coding Plan 每 prompt 15–20 次呼叫（SRC_ZP_379）、每次攜帶大量重複上下文；API 按量計費沿用 cache_hit（INP 0.5）, range: 0.8～0.97（工作單）}
 - {key: cp_out_share, name: Coding Plan token 中輸出 token 占比, index: 全期, unit: 比例, value: 0.03, lo: 0.01, hi: 0.08, tag: Analogy, basis: 工作單 Z3b F1（Analogy 0.03，0.01–0.08）：程式碼代理以讀取上下文為主、輸出（含工具呼叫）占比低；API 按量計費沿用 out_share（0.15）, range: 0.01～0.08（工作單）}
+# ── Z4 融資（D16r、D17、D18、D20；工作單 Z4 判斷類預設）
+- {key: min_cash_months, name: 最低現金：次年（算力成本＋非算力成本不含股權報酬）的月數, index: 2026 起, unit: 月, value: 6, lo: 3, hi: 12, tag: Assumed, basis: 規格 D17（基準 6 個月；同 OpenAI／CRWV S7 以比例表示規模差異）；2030 無次年，以 2030 當年代替, range: 3～12 個月（D17）}
+- {key: other_inc_future, name: 其他收益（政府補助、利息收入等）：2H26 起每年, index: 2H26 起, unit: RMB 億／年, value: 0, lo: 0, hi: 0.83, tag: Decision, basis: 規格 D20：未來補助＝0（Decision）；1H26 其他收入 0.41 億主要為上市後存款利息（SRC_ZP_203），保守不外推；高端＝1H26 年化（只作情境）, range: 0～1H26 年化 0.83}
+- {key: bank_rate, name: 銀行借款年利率, index: 2H26 起, unit: 比例／年, value: 0.03, lo: 0.025, hi: 0.045, tag: Analogy, basis: 工作單 Z4『利息以財報利率計入』；利率與到期未揭露（Z1 not_found）；財報財務成本含匯兌損失與租賃利息，不能直接推利率 → 以中國一年期 LPR 約 3.0% 為 Analogy；2025、1H26 用財報財務成本實際值, range: 2.5%～4.5%（LPR 至 LPR＋150bp）}
+- {key: bank_repay_sw, name: 銀行借款到期處理開關（0＝續借；1＝流動部分 2027、非流動部分 2028 償還）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 工作單 Z4 預設：到期續借（Decision）；替代＝到期償還（列情境）, range: 開關}
+- {key: cb_conv_sw, name: 可換股債券處理開關（0＝視為債務、到期現金償還；1＝轉股、不償還）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 規格 D16r：基準＝債務、2027-09-16 到期以現金償還（現價 HK$696 低於換股價 HK$892.50，較保守）；轉股情境另列（Funding 第五節，不受本開關影響）, range: 開關}
+- {key: cb_redeem, name: 可換股債券到期贖回價（占本金）, index: —, unit: 倍, value: 1, lo: 1, hi: 1, tag: Decision, basis: 零息、發行價 100.5%（SRC_ZP_545）；到期贖回溢價未揭露 → 以本金 100% 償還, range: —}
+- {key: cb_year, name: 可換股債券到期年, index: —, unit: 年, value: 2027, lo: 2027, hi: 2027, tag: Decision, basis: 2027-09-16 到期（SRC_ZP_548 note）, range: —}
+- {key: capex_nc, name: 非算力資本支出（辦公設備等）：2H26 起每年, index: 2H26 起, unit: RMB 億／年, value: 0.75, lo: 0, hi: 1.5, tag: Assumed, basis: FY2025 資本開支 0.747 億（SRC_ZP_149；公告稱算力由租賃轉為採購服務，故非算力）延續；1H26 3.906 億主要為北京紅鑽物業（一次性，D11r）；自有算力資本支出在 Cost 算力成本內（D11r 基準 0）, range: 0～1.5（FY2025 的 0～2 倍）}
+- {key: zkjh_cash, name: 併購現金支出：中科加禾約 60%（2H26）, index: 2H2026, unit: RMB 億, value: 3, lo: 1, hi: 5, tag: Assumed, basis: 規格 D18；對價未揭露，媒體只寫『數億元』（SRC_ZP_559）、『2.92 億』找不到原文 → 取 3 億, range: 1～5 億（『數億元』）}
+- {key: days_jul_aug, name: 2026-07-01～08-31 天數（定義常數）, index: 2H2026, unit: 天, value: 62, lo: 62, hi: 62, tag: Decision, basis: 配售款動用對照（2026-07 配售至 08-31 已動用）, range: —}
+# ── Z4 反向模式（D22、D22r；工作單 Z4 判斷類預設）
+- {key: cons_g_late, name: 反向模式：2029–2030 目標營收年增率（共識只到 FY2028）, index: 2029–2030, unit: 比例／年, value: 0, lo: 0, hi: 0.25, tag: Assumed, basis: 共識只到 FY2028（SRC_ZP_582–584 等）；基準持平於 FY2028 平均（較保守）；高端＝大和 2029 年 475 億 ÷ 共識 FY2028 379 億 − 1（SRC_ZP_610，單一券商）, range: 0～+25%}
+- {key: peer_mult_range, name: 同業 EV／年化營收倍數 ÷ MiniMax 推導值（市值隱含營收用）, index: —, unit: 倍, value: 1, lo: 0.5, hi: 2, tag: Analogy, basis: 規格 D22r：以 MiniMax（00100.HK）當前 EV ÷ 年化營收（1H26 × 2；Reverse 頁由 SRC_ZP_596、601、603 與匯率推導）為 Analogy；區間：MiniMax 52 週低點約為現值 0.8 倍、國證國際 SOTP 給 API 業務 2027 年 80 倍 PS（約 2 倍）, range: 0.5～2.0}

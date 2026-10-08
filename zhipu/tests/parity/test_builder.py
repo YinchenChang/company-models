@@ -116,14 +116,14 @@ def test_onprem_not_in_demand(wb):
 def test_no_external_links_and_allowed_names(wb):
     """不使用 Excel 外部連結；計算頁引用的具名範圍只限 TK_／SRC_ZP_／INP_ 與本模型 DEM_／REV_ 名稱。"""
     names = set(wb.defined_names.keys())
-    for s in ("Demand", "Revenue", "Compute", "Cost"):
+    for s in ("Demand", "Revenue", "Compute", "Cost", "Funding", "Reverse"):
         for row in wb[s].iter_rows():
             for c in row:
                 if isinstance(c.value, str) and c.value.startswith("="):
                     assert "[" not in c.value, c.coordinate
                     for tok in re.findall(r"\b[A-Za-z_][A-Za-z0-9_]*\b", c.value):
                         if tok in names:
-                            assert tok.startswith(("TK_", "SRC_ZP_", "INP_", "DEM_", "REV_", "CMP_", "COST_")), (s, c.coordinate, tok)
+                            assert tok.startswith(("TK_", "SRC_ZP_", "INP_", "DEM_", "REV_", "CMP_", "COST_", "FND_", "RVS_")), (s, c.coordinate, tok)
 
 
 def test_z3_structure(wb):
@@ -159,3 +159,25 @@ def test_tk_table_rows_not_drivers(wb):
             v = wb["Revenue"][f"{col}{r}"].value
             if isinstance(v, str) and "TK_Link!" in v:
                 assert str(lab).startswith("TK："), (r, lab)
+
+
+def test_z4_structure(wb):
+    """Z4：Funding、Reverse 位於 Cost 與 Checks 之間；命題 2 與反向模式具名範圍與 OpenAI 同名。"""
+    order = wb.sheetnames
+    assert order.index("Cost") < order.index("Funding") < order.index("Reverse") < order.index("Checks")
+    names = set(wb.defined_names.keys())
+    for n in ("FND_FCF", "FND_Committed", "FND_ExtNeed", "FND_ExtNeedCum", "FND_CashEnd", "FND_Contingent", "FND_MinCash", "FND_CashNoExt",
+              "FND_ExtNeedCumConv", "FND_FirstGapYear", "RVS_Target", "RVS_MultAPI", "RVS_MultSub", "RVS_MultProp", "RVS_ExtNeedCum",
+              "RVS_MktImpliedRev", "RVS_EV", "RVS_PeerMult"):
+        assert n in names, n
+
+
+def test_reverse_not_fed_back(wb):
+    """D22：反向模式只作對照，不回饋基準。Reverse 頁與 RVS_ 名稱只可被 Checks 引用；Reverse 只讀其他頁（不被讀）。"""
+    for ws in wb.worksheets:
+        if ws.title in ("Reverse", "Checks"):
+            continue
+        for row in ws.iter_rows():
+            for c in row:
+                if isinstance(c.value, str) and c.value.startswith("="):
+                    assert "Reverse!" not in c.value and "RVS_" not in c.value, f"{ws.title}!{c.coordinate}"

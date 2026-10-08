@@ -1,15 +1,15 @@
 # Parity 情境檔（CLAUDE.md 第 3 節）。每個情境：改寫輸入 → LibreOffice 重算（基準）→ 與 engine 比對全部公式格。
 # 輸入以具名範圍設定（SRC_ZP_nnn、INP_nnn、TK_*；多格名稱用 NAME[k]）。v0.1-Z2：Demand、Revenue、Checks；v0.1-Z3：Compute、Cost。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
-  sheets: [README, SRC_ZP, TK_Link, OAI_Link, Inputs, Demand, Revenue, Compute, Cost, Checks, _Defaults]
-  formula_cells: 4062             # Z3b：Compute 第三、四節改依來源 × token 類型（＋類型組成、TK 單位成本、舊法對照列）
-  defined_names: 1020             # Z3 1,006 ＋ TK_IF_Cost* 9 ＋ INP_121–123 ＋ CMP_TokGW_Old、CMP_EtaOld
-  src_rows: 604                   # SRC_ZP 筆數（Z1 資料報告）
-  src_named: 655                  # SRC_ZP_nnn（有數值 570）＋_Lo（46）＋_Hi（39）
-  inp_rows: 122                   # data/zhipu_inputs.yaml（Z3b：＋eta_up_sw、cp_cache_hit、cp_out_share）
+  sheets: [README, SRC_ZP, TK_Link, OAI_Link, Inputs, Demand, Revenue, Compute, Cost, Funding, Reverse, Checks, _Defaults]
+  formula_cells: 4586             # Z4：＋Funding、Reverse、Checks C68–C92
+  defined_names: 1090             # Z3b 1,020 ＋ SRC 6 ＋ INP_124–135 ＋ OAI 3 ＋ FND_／RVS_ 49
+  src_rows: 610                   # SRC_ZP 筆數（Z1 604＋Z4 由 note 拆出 6 列：SRC_ZP_605–610）
+  src_named: 661                  # SRC_ZP_nnn（有數值 576）＋_Lo（46）＋_Hi（39）
+  inp_rows: 134                   # data/zhipu_inputs.yaml（Z4：＋INP_124–135）
   tk_values: 72                   # OpenAI v0.6 的 63 名 ＋ Z3b IF_CostPre／Cache／Dec_* 9 名
   tk_table: 7                     # TK_RD_（以列標籤讀表；只供對照）
-  oai_named: 18                   # OAI_ 14 個輸出列＋4 個中繼（檔名、SHA-256、分支、讀取日）
+  oai_named: 21                   # OAI_ 17 個輸出列（Z4＋FND_CashEnd、FND_Committed、RVS_ExtNeedCum）＋4 個中繼
   tk_pending: 0
 
 # 預期轉 ERR 的檢查（保證檢查有牙齒）；未列出的情境不得有任何 ERR
@@ -24,6 +24,7 @@ expected_errors:
   z_chip_share_broken: [C43]
   aa_rd_fee_too_high: [C06, C53]
   ac_cap_binding: [C06]
+  ao_mincash_out: [C06]
 
 scenarios:
   - id: base
@@ -130,3 +131,28 @@ scenarios:
   - id: ae_cp_out_high
     description: Coding Plan 輸出占比 0.03→0.08（區間上緣）；decode 工作量上升
     inputs: {"INP_123": 0.08}
+  # ── Z4：Funding、Reverse（工作單 Z4 第 3 步：≥4 個）
+  - id: af_cb_convert
+    description: 可換股債券轉股開關 0→1（D16r 情境）；2027 不償還本金 201.4 億，2027 起年底現金上升；轉股情境列不變
+    inputs: {"INP_128": 1}
+  - id: ag_bank_repay
+    description: 銀行借款到期償還開關 0→1；2027 償還流動部分 7.90 億、2028 償還非流動 14.35 億，利息隨餘額下降
+    inputs: {"INP_127": 1}
+  - id: ah_mincash_12
+    description: 最低現金 6→12 個月（D17 上緣）；最低現金加倍，外部資金需求判斷門檻上升
+    inputs: {"INP_124": 12}
+  - id: ai_px_gw_m25
+    description: 每 GW 價格年變動 −10%→−25%（chat 端指定敏感度）；2H26 起算力成本下降，2028 轉正，年底現金上升
+    inputs: {"INP_100": -0.25}
+  - id: aj_util_lo_extneed
+    description: Coding Plan 額度使用率 0.15→0.05（下緣）；η 下降、API token 換算 GW 上升，算力成本上升，2029 出現外部資金需求（缺口旗標、峰值、首次缺口年連動）
+    inputs: {"INP_060": 0.05}
+  - id: ak_reverse_inputs
+    description: 反向：2029–30 目標年增 0→25%、同業倍數係數 1→2（只影響 Reverse 與 Checks 預覽）
+    inputs: {"INP_134": 0.25, "INP_135": 2}
+  - id: al_cash_actual
+    description: 校準：2026-06-30 期末現金 39.94→45（SRC_ZP_211）；1H26 對帳差改變，之後年底現金與淨現金估計、EV、市值隱含營收連動
+    inputs: {"SRC_ZP_211": 45}
+  - id: ao_mincash_out
+    description: 最低現金 24 個月（超出區間 3–12；C06 應轉 ERR）
+    inputs: {"INP_124": 24}

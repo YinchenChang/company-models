@@ -603,7 +603,13 @@
 "peer_mmx_rev_1h26": "SRC_ZP_601",
 "peer_mmx_nl_1h26": "SRC_ZP_602",
 "peer_mmx_cash_1h26": "SRC_ZP_603",
-"peer_mmx_ev_rev": "SRC_ZP_604"
+"peer_mmx_ev_rev": "SRC_ZP_604",
+"cust_a_purch": "SRC_ZP_605",
+"broker_guosen_rev_fy27": "SRC_ZP_606",
+"broker_guosen_rev_fy28": "SRC_ZP_607",
+"broker_guozheng_rev_fy27": "SRC_ZP_608",
+"broker_guozheng_rev_fy28": "SRC_ZP_609",
+"broker_daiwa_rev_fy29": "SRC_ZP_610"
 },
 "INP": {
 "year_2025": "INP_001",
@@ -727,7 +733,19 @@
 "rd_share_sw": "INP_120",
 "eta_up_sw": "INP_121",
 "cp_cache_hit": "INP_122",
-"cp_out_share": "INP_123"
+"cp_out_share": "INP_123",
+"min_cash_months": "INP_124",
+"other_inc_future": "INP_125",
+"bank_rate": "INP_126",
+"bank_repay_sw": "INP_127",
+"cb_conv_sw": "INP_128",
+"cb_redeem": "INP_129",
+"cb_year": "INP_130",
+"capex_nc": "INP_131",
+"zkjh_cash": "INP_132",
+"days_jul_aug": "INP_133",
+"cons_g_late": "INP_134",
+"peer_mult_range": "INP_135"
 },
 "retired_INP": [
 "INP_072"
@@ -798,7 +816,32 @@
 "預覽：2030 每 VR 等值 GW 差額（RMB 億）": "C64",
 "預覽：2030 每 VR 等值 GW 雲端口徑差額（RMB 億）": "C65",
 "預覽：2030 覆蓋率": "C66",
-"對照：2030 每 VR 等值 GW 差額：智譜（$B）− OpenAI v0.6（$B）": "C67"
+"對照：2030 每 VR 等值 GW 差額：智譜（$B）− OpenAI v0.6（$B）": "C67",
+"Funding：自由現金流恆等式（營收 − 算力 − 本地化交付 − 非算力 ＋ 其他收益 − 利息；各期最大絕對差）": "C68",
+"Funding：差額 − Cost COST_GapCash（年度欄最大絕對差）": "C69",
+"Funding：2026 營收（1H＋2H）− Revenue REV_NetCapped 2026": "C70",
+"Funding：2026 流量列 E −（K＋L）最大絕對差": "C71",
+"Funding：1H26 期末現金 − 中期報告（SRC_ZP_211）": "C72",
+"Funding：外部資金需求 < 0 的年數": "C73",
+"Funding：年底現金 < 最低現金的年數（補足後）": "C74",
+"Funding：轉股情境累計外部資金需求 > 基準的年數": "C75",
+"Funding：2026 年底現金 − 2H26 期末現金": "C76",
+"Reverse：2025 目標營收 − 正向（應為 0：2025 為實際）": "C77",
+"Reverse：共識登錄筆數 < 1 的年數": "C78",
+"Reverse：共識 最低 ≤ 平均 ≤ 最高 不成立的年數": "C79",
+"對照：1H26 其他現金流（對帳差，RMB 億）": "C80",
+"對照：2025 現金對帳差異（隱含 − 模型，RMB 億）": "C81",
+"對照：2026-07 配售已動用 ÷ 模型同期流出": "C82",
+"預覽：累計外部資金需求 2030（RMB 億）": "C83",
+"預覽：累計外部資金需求 2030（轉股情境）": "C84",
+"預覽：首次缺口年": "C85",
+"預覽：2030 年底現金（RMB 億）": "C86",
+"預覽：只靠已到位融資撐不過的第一年": "C87",
+"預覽：反向累計外部資金需求 2030（RMB 億）": "C88",
+"預覽：市值隱含營收（RMB 億）": "C89",
+"預覽：正向營收首次達到市值隱含營收的年度": "C90",
+"對照：MiniMax EV ÷ 年化營收": "C91",
+"對照：2030 累計外部資金需求：智譜（$B）− OpenAI v0.6（$B）": "C92"
 },
 "retired_CHK": [
 "C42"

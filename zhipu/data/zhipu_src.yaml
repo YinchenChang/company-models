@@ -10872,6 +10872,114 @@ items:
   party: null
   basis: 計算
   note: 規則禁自行換匯；公式＝(830.72億HKD÷HKD/USD−13.2億USD)÷TTM營收（2H25＋1H26，2H25 需推算）
+- id: SRC_ZP_605
+  team: Z4
+  key: cust_a_purch
+  group: C
+  metric: 最大客戶 A：智譜向其採購（2022–1H25 累計）
+  value: 2.47
+  lo: null
+  hi: null
+  unit: RMB 億（採購）
+  period: 2022～1H2025
+  source: 鈦媒體（2025-12-26）
+  url: https://www.tmtpost.com/7821744.html
+  doc_date: 2025-12-26
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 媒體轉述
+  basis: null
+  note: Z4 由 SRC_ZP_433 的 note 拆出數值列（同一原文「向客戶採購了2.47億元」）；D19 回流對照
+- id: SRC_ZP_606
+  team: Z4
+  key: broker_guosen_rev_fy27
+  group: G
+  metric: 國信證券營收預測 FY2027
+  value: 155
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2027
+  source: 格隆匯（國信證券 26H1 點評）
+  url: https://m.gelonghui.com/news/5306647
+  doc_date: 2026-09-04
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 國信證券（交易誘因）
+  basis: 券商
+  note: Z4 由 SRC_ZP_591 的 note 拆出（營收 62／155／344 億元）
+- id: SRC_ZP_607
+  team: Z4
+  key: broker_guosen_rev_fy28
+  group: G
+  metric: 國信證券營收預測 FY2028
+  value: 344
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2028
+  source: 格隆匯（國信證券 26H1 點評）
+  url: https://m.gelonghui.com/news/5306647
+  doc_date: 2026-09-04
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 國信證券（交易誘因）
+  basis: 券商
+  note: Z4 由 SRC_ZP_591 的 note 拆出
+- id: SRC_ZP_608
+  team: Z4
+  key: broker_guozheng_rev_fy27
+  group: G
+  metric: 國證國際營收預測 FY2027
+  value: 114
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2027
+  source: 格隆匯（國證國際首次覆蓋）
+  url: https://m.gelonghui.com/news/5270015
+  doc_date: 2026-07-15
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 國證國際（交易誘因）
+  basis: 券商
+  note: Z4 由 SRC_ZP_592 的 note 拆出（42／114／251 億元）
+- id: SRC_ZP_609
+  team: Z4
+  key: broker_guozheng_rev_fy28
+  group: G
+  metric: 國證國際營收預測 FY2028
+  value: 251
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2028
+  source: 格隆匯（國證國際首次覆蓋）
+  url: https://m.gelonghui.com/news/5270015
+  doc_date: 2026-07-15
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 國證國際（交易誘因）
+  basis: 券商
+  note: Z4 由 SRC_ZP_592 的 note 拆出
+- id: SRC_ZP_610
+  team: Z4
+  key: broker_daiwa_rev_fy29
+  group: G
+  metric: 大和營收預測 FY2029
+  value: 475
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2029
+  source: 同花順
+  url: https://stock.10jqka.com.cn/20260812/c678896247.shtml
+  doc_date: 2026-08-12
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 大和（交易誘因）
+  basis: 券商
+  note: Z4 由 SRC_ZP_593 的 note 拆出（2025 年 7.24 億升至 2029 年 475 億元，CAGR 185%）；Reverse 只作 2029 對照
 not_found:
 - team: Z1-F
   item: 研發開支組成（算力服務費、人工、股權報酬）FY2023、FY2025、1H2026 金額

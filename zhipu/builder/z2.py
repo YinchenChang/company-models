@@ -27,7 +27,7 @@ IO = ("in", "cache", "out")
 IO_ZH = {"in": "輸入", "cache": "快取命中輸入", "out": "輸出"}
 SEGS = ("agent", "gpllm", "techsvc")
 SEG_ZH = {"agent": "②企業級智能體", "gpllm": "③企業級通用大模型", "techsvc": "④技術服務及其他（含 C 端）"}
-PH = re.compile(r"«([DVCK])\.([A-Za-z0-9_]+)»")
+PH = re.compile(r"«([DVCKFX])\.([A-Za-z0-9_]+)»")
 
 
 def nm(wb, name, ref):
@@ -77,7 +77,7 @@ class Sheet:
 
 
 def fill(wb, Z):
-    rows = {k: Z[k].rows for k in ("D", "V", "C", "K") if k in Z}
+    rows = {k: Z[k].rows for k in ("D", "V", "C", "K", "F", "X") if k in Z}
     for ws in wb.worksheets:
         for row in ws.iter_rows():
             for c in row:

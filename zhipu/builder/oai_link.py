@@ -27,6 +27,9 @@ NAMES = [
     ("FND_FCF", "自由現金流", "$B"),
     ("FND_ExtNeed", "外部資金需求（單年）", "$B"),
     ("FND_ExtNeedCum", "累計外部資金需求（命題 2）", "$B"),
+    ("FND_CashEnd", "年底現金", "$B"),
+    ("FND_Committed", "已到位融資", "$B"),
+    ("RVS_ExtNeedCum", "反向累計外部資金需求（管理層目標）", "$B"),
 ]
 
 

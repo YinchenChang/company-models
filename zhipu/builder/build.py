@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""產生智譜收支模型 Excel（v0.1-Z3：README、SRC_ZP、TK_Link、OAI_Link、Inputs、Demand、Revenue、Compute、Cost、Checks）。
+"""產生智譜收支模型 Excel（v0.1：README、SRC_ZP、TK_Link、OAI_Link、Inputs、Demand、Revenue、Compute、Cost、Funding、Reverse、Checks）。
 
 用法（在 zhipu/ 內）：
   python3 builder/build.py --tk-dir <Tokenomics checkout> --oai-xlsx <OpenAI v0.6 xlsx> --out model/20261008_Zhipu_v0.1.xlsx \
@@ -34,8 +34,9 @@ from oai_link import read_oai  # noqa: E402
 from tk_link import PENDING_NOTE, TABLE_NOTE, read_snapshot  # noqa: E402
 import z2  # noqa: E402
 import z3  # noqa: E402
+import z4  # noqa: E402
 
-VERSION = "v0.1-Z3"
+VERSION = "v0.1"
 SRC_YAML = ROOT / "data" / "zhipu_src.yaml"
 INP_YAML = ROOT / "data" / "zhipu_inputs.yaml"
 REGISTRY_PATH = HERE / "id_registry.json"
@@ -115,8 +116,8 @@ def sheet_readme(wb, D, snap, oai, date, summary):
     title(ws, f"智譜（智譜華章，02513.HK）收支模型 {VERSION}（{date}）",
           "命題（規格 D1，與 OpenAI v0.6 同一句）：智譜每 VR 等值 GW 的年營收能否覆蓋每 GW 年全成本；若不能，缺口要多少外部資金、由誰以什麼條件提供。FY2025–FY2030，曆年制。")
     lines = [
-        ("本版範圍", "v0.1-Z3：SRC_ZP（公司財務原始數據）、TK_Link（Tokenomics 快照）、OAI_Link（OpenAI v0.6 命題輸出快照）、Inputs（假設）、Demand（需求與 token）、Revenue（營收）、"
-                     "Compute（算力）、Cost（成本與命題表）、Checks。Funding、Reverse（Z4）尚未建立。"),
+        ("本版範圍", "v0.1（Z2–Z4）：SRC_ZP（公司財務原始數據）、TK_Link（Tokenomics 快照）、OAI_Link（OpenAI v0.6 命題輸出快照）、Inputs（假設）、Demand（需求與 token）、Revenue（營收）、"
+                     "Compute（算力）、Cost（成本與命題表）、Funding（融資，命題 2）、Reverse（反向模式，只對照）、Checks。"),
         ("幣別與單位", "公司金額一律人民幣億元（RMB 億），與財報一致。港幣、美元數據以 Inputs 匯率（USD/CNY、HKD/CNY，2026-09-28 中間價；定義常數，區間 ±5%）換算後才進計算頁。"
                      "API 牌價：人民幣元／百萬 token；token：兆（T）；Coding Plan 訂閱者：萬人；智譜清言用戶：百萬人。OAI_Link 為美元（$B），不換算、不參與計算。"),
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構，重建時保留 Excel 內已改過的藍字（隱藏頁 _Defaults）。公式不含常數（E6）：單位換算、天數、月數為 Inputs 的定義常數。"),
@@ -134,6 +135,9 @@ def sheet_readme(wb, D, snap, oai, date, summary):
         ("Cost", "算力成本（2025、1H26＝算力服務費實付；之後＝租用 GW × 每 GW 價格＋自有資本支出，基準 0）、供應商持有成本與雲端毛利、本地化部署交付成本、"
                  "非算力成本（2025、1H26＝財報殘差；之後人數 × 每人成本）、股權報酬；命題表：每 VR 等值 GW 的營收、成本、差額、雲端口徑差額、覆蓋率（人民幣億與美元 $B）。"
                  "2025 與 1H26 全成本對財報費用合計差距＝0。"),
+        ("Funding", "自由現金流（營收 − 算力 − 本地化交付 − 非算力（股權報酬加回）＋其他收益 − 利息）→ 非算力資本支出、併購 → 來源順序：①期初現金 ②已到位股權（2026-01 IPO、2026-07、2026-09 配售淨額，港幣 × 匯率）"
+                    "③已提用債務（銀行借款續借；可換股債券 2H26 流入、2027-09 到期償還，D16r）④外部資金需求（年底補足至最低現金，D17）。另列可換股債券轉股情境、或有、配售用途對照、回流對照（D19）、2025／1H26 現金對帳。"),
+        ("Reverse", "反向模式（D22、D22r；只作對照，不回饋）：①管理層量化目標不存在（ARR 只對照）②分析師共識營收（全部登錄、平均為基準）→ 所需倍數與反向外部資金（同一支出）③市值隱含營收＝EV ÷ 同業（MiniMax）EV／年化營收。"),
         ("Checks", "C01 起；CHK_Errors 必須為 0。WARN（ARR、η 合理範圍、國產晶片 GW 對照）與 INFO 不計入。"),
         ("標記", "Verified／Interested-party／Analogy／Assumed／Derived／Decision（Analogy、Assumed 一律附區間）。"),
         ("分層", "公司財務原始數據→SRC_ZP；AI 技術與算力→TK_Link（取自 Tokenomics）；假設→Inputs；OpenAI 對照→OAI_Link（不進計算）。"),
@@ -398,11 +402,12 @@ def main():
     sheet_inputs(wb, D, final)
     Z = z2.build(wb, D, tk_cells)
     Z.update(z3.build(wb, D, Z, snap))
+    Z.update(z4.build(wb, D, Z))
     z2.fill(wb, Z)
     # 結構掃描（結果寫入 Checks 作為常數；test_builder 另行逐格驗證）
     e6 = sum(len(e6_violations(wb[s])) for s in CALC_SHEETS if s in wb.sheetnames)
     oref = len(oai_refs(wb))
-    rows = z2.checks(D, Z, summary, snap, e6, oref) + z3.checks(D, Z)
+    rows = z2.checks(D, Z, summary, snap, e6, oref) + z3.checks(D, Z) + z4.checks(D, Z)
     sheet_checks(wb, D, rows)
     z2.fill(wb, Z)
     D.save_registry()
