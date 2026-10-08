@@ -34,10 +34,10 @@ for sc in K3:
 sheet('每MW收入_v0.2對v0.3', ['US$m／MW-IT·年'] + P, rows, '每 MW 年收入（100% 計費時數）；v0.2＝路徑 A 成本加成與路徑 B 市場價 50/50 平均、隨容量情境同向（已停用）')
 rows = []
 for sc in K3:
-    for key, lab, f in (('anchor', '錨（IF_HoldEcon 在役世代加權，US$m）', 1e3), ('ls', '長約占比', 1), ('k', '定價倍數 k', 1), ('rev', '錨 × k（US$m）', 1e3), ('capRatio', '上限比（÷ IF_RevGWFleet）', 1)):
+    for key, lab, f in (('anchor', '錨（IF_HoldEcon 在役世代加權，US$m）', 1e3), ('ls', '長約占比（對照，不驅動）', 1), ('k', '定價倍數 k（隨需 0%＝k_長約）', 1), ('rev', '錨 × k（US$m）', 1e3), ('capRatio', '上限比（÷ IF_RevGWFleet）', 1)):
         rows.append([f'{LB[sc]}｜{lab}'] + [x * f for x in R[sc][key]])
     for g in co['fleet']['generations']: rows.append([f'{LB[sc]}｜平均在役占比｜{g}'] + R[sc]['share'][g])
-sheet('錨與k逐年', ['項目'] + P, rows, f"Tokenomics {co['tokenomics']['version']}（{co['tokenomics']['currentFile']}，合併 {co['tokenomics']['mergeCommit']}）；k_長約 {AM['long']['base']}、k_現貨 {AM['spot']['base']}")
+sheet('錨與k逐年', ['項目'] + P, rows, f"Tokenomics {co['tokenomics']['version']}（{co['tokenomics']['currentFile']}，合併 {co['tokenomics']['mergeCommit']}）；第 2 輪 k＝隨需占比 {AM['onDemandShare']['base']:.0%} × k_現貨 {AM['spot']['base']}＋其餘 × k_長約 {AM['long']['base']}")
 rows = [[e['label'], e['gen'], e['price'], e['unit'], e['tkName'], tk[e['tkName']]['values'][e['gen']]['基準'], e['price'] / tk[e['tkName']]['values'][e['gen']]['基準'], e['use'], e['contract'], e['term'], e['tag'], e['source'], e['date'], e['url'], e['note']] for e in AM['evidence']]
 rows += [[f"合約組合｜{x['label']}", '', x['value'], x['unit'], '', '', '', '', '', '', x['tag'], x['source'], x.get('date', ''), x['url'], ''] for x in AM['contractMix']]
 rows += [[f"長約合約｜{c['label']}", '', c['mw'], 'MW', '', '', '', f"起始期 {c['start']}", f"下緣 {c['lo']}", f"上緣 {c['hi']}", c['tag'], c['source'], '', c['url'], c['basis']] for c in AM['longShare']['contracts']]
@@ -60,8 +60,8 @@ sheet('敏感度', ['變動', '目標價｜保守', '目標價｜基準', '目�
 rows = []
 for sc in K3:
     a = AT[sc]; S = a['steps']
-    rows.append([LB[sc], S[0]['tgt'], 0, 0, 0, a['d1'], a['d2'], a['d3'], 0, S[3]['tgt'], a['total'], S[0]['gap'], S[3]['gap'], S[0]['eq'], S[3]['eq']])
-sheet('目標價變動拆解', ['情境', 'v0.2', '(a) 時間推移', '(b) 實際數', '(c) 假設', '(d)① 錨取代舊推導（k＝1）', '(d)② 套用 k', '(d)③ 情境軸分離', '(d)④ 上限檢查', 'v0.3', '總變動', '融資前缺口 v0.2', '融資前缺口 v0.3', '股權募資 v0.2', '股權募資 v0.3'], rows,
+    rows.append([LB[sc], S[0]['tgt'], 0, 0, 0, a['d1'], a['d2'], a['d3'], 0, a['r1'], a['d5'], 0, S[4]['tgt'], a['total'], S[0]['gap'], S[4]['gap'], S[0]['eq'], S[4]['eq']])
+sheet('目標價變動拆解', ['情境', 'v0.2', '(a) 時間推移', '(b) 實際數', '(c) 假設', '(d)① 錨取代舊推導（k＝1）', '(d)② 套用 k（第 1 輪口徑）', '(d)③ 情境軸分離', '(d)④ 上限檢查', '＝第 1 輪', '(d)⑤ 新增產能按長約價（W4 r2）', '(d)⑥ 公司合約 k（未採用）', 'v0.3（第 2 輪）', '總變動', '融資前缺口 v0.2', '融資前缺口 v0.3', '股權募資 v0.2', '股權募資 v0.3'], rows,
       '已決定事項 12；(a)(b)(c) 由 scripts/attrib.py（Excel）確認為 0；(d) 再拆由 scripts/attrib_tkanchor.js（HTML 引擎，與 Excel 經 cmp31 一致）')
 G = co['fleet']['generations']; rows = []
 for n in ('IF_OpexGW', 'IF_PowerCost', 'IF_MaintIT', 'IF_MaintFac', 'IF_StaffSW', 'IF_TaxIns'):
@@ -70,6 +70,10 @@ op = rows[0][1:]
 rows.append(['每 MW 年收入（錨 × k，基準）'] + [x * 1e3 for x in R['base']['rev']])
 rows.append(['由下而上隱含 EBITDA 率（未扣管銷、租金）'] + [1 - op[t] / (R['base']['rev'][t] * 1e3) for t in range(5)])
 rows.append(['模型 EBITDA 率路徑（現行，可觀察 neocloud 區間）'] + [co['defaults']['ebStart'] + (co['defaults']['ebSteady'] - co['defaults']['ebStart']) * t / 4 for t in range(5)])
-sheet('成本端評估', ['項目'] + P, rows, '只評估並列、不切換（工作單預設 7）；是否切換由 Andy 決定。穩態 EBITDA 率 59%／70%／75% 時基準目標價 $132.2／$203.7／$236.0')
+sheet('成本端評估', ['項目'] + P, rows, '只評估並列、不切換（工作單預設 7；第 2 輪保留）；是否切換由 Andy 決定。穩態 EBITDA 率 59%／70%／75% 時基準目標價 $26.5／$35.4／$39.6')
+CC = co['companyCheck']['rows']
+sheet('公司實況驗證', ['參數', 'Tokenomics 值', 'Tokenomics', 'Nebius 實際', '實際', '差距', '機制與證據', '公司調整', '採用值', '標記', '來源網址'],
+      [[x['param'], x['tk'], x['tkv'], x['actual'] + '（' + x['src'] + '）', x['actv'], x['gap'], x['mech'], x['adj'], x['adopted'], x['tag'], x['url']] for x in CC],
+      '已決定事項 15：差距 > 10% 需有證據的機制才調整；找不到機制則維持 Tokenomics／現行值，公司實際列敏感度')
 out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(REPO, 'docs', 'reports', '20261008_nebius_v0.3_收入錨定.xlsx')
 wb.save(out); print('saved', out)

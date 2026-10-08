@@ -55,13 +55,13 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | scripts/cloud_setup.sh | 雲端環境 setup script（只裝 Python 套件；LibreOffice Calc 於工作階段內補裝，見 CLAUDE.md） |
 
 ## v0.3 每 MW 收入以 Tokenomics 為錨（工作單 v0.2a；已決定事項 14、Tokenomics 下游資料契約第 2–5 條）
-- **公式**：每 MW 年收入（100% 計費時數）＝ Σ 平均在役世代占比 × `IF_HoldEcon`（基準成本情境；Excel 經 `TK_HoldEcon_<世代>` 具名範圍）÷ 1000 × 定價倍數 k；k＝長約占比 × k_長約＋（1 − 長約占比）× k_現貨。長約占比＝MIN(1, 已揭露多年期合約 MW ÷ 平均在役 MW)。方法開關 `methodology.perMw.revenue`（tkAnchor／legacy）。
+- **公式**：每 MW 年收入（100% 計費時數）＝ Σ 平均在役世代占比 × `IF_HoldEcon`（基準成本情境；Excel 經 `TK_HoldEcon_<世代>` 具名範圍）÷ 1000 × 定價倍數 k；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約（第 2 輪，比照 CoreWeave W4 r2：新增產能按長約價，隨需 0%；k_長約 0.76）。長約占比（已揭露合約 MW ÷ 平均在役 MW）只作對照列。公司實況驗證（已決定事項 15）見 Excel「公司實況驗證」分頁（`company.json` → `companyCheck`）。方法開關 `methodology.perMw.revenue`（tkAnchor／legacy）。
 - **兩條情境軸**：容量情境（「輸入與假設」A 區情境選擇，C 欄）只改 MW 路徑；價格情境（同列 F 欄，1 低／2 基準／3 高）只改 k。舊做法（每 MW 收入隨容量情境 11.62／17.40／24.20 同向）停用，保留為 legacy 與對照列。
 - **按 MW-year 計價**：收入取決於簽約率（MW 驅動 100%）與爬坡（可計費 MW），不乘 Tokenomics `IF_Util`（重複扣減禁止）；利用率欄 100%。
-- **Excel**：新分頁「每MW收入_錨定」（A 價格軸、B 世代與 TK_ 值、C 已揭露合約、三個容量情境的錨 → k → 錨 × k、上限檢查、D 證據表、E 對照列、F Q2 驗證、G 3 × 3 與敏感度快照）；「Tokenomics_取數」分頁（110 個 TK_ 名稱）；「檢查_連動」收入上限列。
+- **Excel**：新分頁「公司實況驗證」（第 2 輪）、「每MW收入_錨定」（A 價格軸、B 世代與 TK_ 值、C 已揭露合約、三個容量情境的錨 → k → 錨 × k、上限檢查、D 證據表、E 對照列、F Q2 驗證、G 3 × 3 與敏感度快照）；「Tokenomics_取數」分頁（110 個 TK_ 名稱）；「檢查_連動」收入上限列。
 - **HTML**：segA `tkAnchorQ()`、segB `tkScnQ()`／`tkSensQ()`；總結簡報新增第 7 頁「容量 × 價格」。
 - **Tokenomics 版本**：v5.27（`model/CURRENT`＝`20261008_Tokenomics_v5.27.xlsx`，master 合併 `19d667f`；快照 commit `ca78a8f`）。v5.29 合併後另開工作單重取（`L1_HoldEconMW_*`、`L1_TokMW_Gen_ratio_*`、`IFW_` 四層瀑布、`IFC_Use`）。
-- **驗收**：`TOKENOMICS_DIR=<clone> LEGACY=1 scripts/verify.sh`（25 項，含 legacy 對 v0.2 0 差異）；升版對 v0.2：`DATE=2026-10-08 EXPECT=scripts/expect/v0_3_vs_v0_2.txt CRAWL_EXPECT=scripts/expect/v0_3_vs_v0_2_crawl.txt scripts/verify.sh --vs-dist`（需以 v0.2 成品為 dist）。
+- **驗收**：`TOKENOMICS_DIR=<clone> LEGACY=1 scripts/verify.sh`（25 項，含 legacy 對 v0.2：只有「檢查_連動」兩列修正的 4 格不同，清單 `scripts/expect/legacy_vs_v0_2.txt`）；升版對 v0.2：`DATE=2026-10-08 EXPECT=scripts/expect/v0_3_vs_v0_2.txt CRAWL_EXPECT=scripts/expect/v0_3_vs_v0_2_crawl.txt scripts/verify.sh --vs-dist`（需以 v0.2 成品為 dist）。
 
 ## Excel 產生流程（scripts/verify.sh 步驟 2–7 即為此流程）
 1. `python3 build_xlsx.py`（輸出到 `out/`）
@@ -621,7 +621,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.cashTaxNote` | 年初至今現金稅的說明（損益與評價頁；v4.5） | 文字 | H1 現金稅未單獨揭露（不適用） | 必改 |
 | `texts.thesis` | 模型命題一句話（HTML 標題列與檔案說明；v0.1b） | 文字 | 預付款能否讓 backlog 變成現金 | 必改 |
 | `texts.title` | 主標題（HTML 頁首與 <title>、簡報封面與頁尾、Excel 導覽首列；v0.2） | 文字 | 預付款，能把 Backlog 變成現金嗎？ | 必改 |
-| `texts.subtitle` | 副標題（一句話答案；佔位符 {prepayPct}＝五期客戶預付 ÷ 毛 CapEx、{gap}＝融資前缺口、{rvMult}＝加權目標價＝現價所需的每 MW 年收入倍數，由模型現值帶入、隨情境切換；v0.2） | 文字 | 客戶預付只覆蓋約 {prepayPct} 的資本支出… | 必改 |
+| `texts.subtitle` | 副標題（一句話答案；佔位符 {prepayPct}＝五期客戶預付 ÷ 毛 CapEx、{gap}＝融資前缺口、{rvMult}＝加權目標價＝現價所需的每 MW 年收入倍數，由模型現值帶入、隨情境切換；v0.2） | 文字 | 預付只覆蓋約 {prepayPct} 的資本支出，{… | 必改 |
 | `texts.headerTag` | 頁首標籤列的模型主軸短語（v0.2） | 文字 | MW × 每 MW · 預付優先 | 必改 |
 | `texts.mwYearEndNotes` | 各年底主動電力的來源說明，以年份為鍵（Excel「輸入與假設」說明欄；5a） | 物件（文字） | 物件（2025） | 必改 |
 

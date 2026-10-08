@@ -65,7 +65,7 @@ CRWV 時期的待辦（環境移植、區間、設定集中、季度層、期間
 1. **Q3 2026 季度更新**（6-K 預計 2026-11；步驟見交接檔「待辦與季度更新」）：填 `quarterly.actuals`、滾動評價日至 2026-09-30、更新 `ytdActual`、`latestQuarter`、`asOf` 全部欄位；期初可計費 MW 依新一季營收 × 4 重新校準（`defaults.billableOpen` 隨之更新）；`priceCheck`（簡報的實現單價對照）同步更新；升版 v0.4（v0.2 標題與簡報、v0.3 每 MW 收入 Tokenomics 錨定已用）。期初可計費 MW 校準後，同時重看「每MW收入_錨定」F 區 Q2 驗證（改用 Q3）。
 2. 若 Q3 揭露季末 active／connected MW：改以實際 MW 取代內插與校準（`priceCheck.inServiceMw`），重估「Q2／Q3 實現 vs Tokenomics 錨 × k」差距與爬坡係數。
 2b. **Tokenomics v5.29 重取數**（v5.29 合併後另開工作單）：以 `tools/tokenomics/import_tokenomics.py` 重抓快照（`--check` 列出變動）；改取 `L1_HoldEconMW_*`、`L1_TokMW_Gen_ratio_*`、`IFW_` 四層瀑布與 `IFC_Use` 用途限制；`scenarios.capexTemplate.costMW` 改引用 `TK_CapexTotal_*`；交接檔記錄新版檔名與合併雜湊。
-2c. 定價倍數 k 的證據更新：第二筆獨立 neocloud 長約（含年期與 GPU 數）、VR200 價格出現時更新 `pricing.anchorMultiple`；Nebius 自身合約（Microsoft 約 1.33 倍）是否可作 k 證據待 Andy 決定。
+2c. 定價倍數 k 的證據更新：第二筆獨立 neocloud 長約（含年期與 GPU 數）、VR200 價格出現時更新 `pricing.anchorMultiple`；Nebius 自身合約：依已決定事項 15（CoreWeave CLAUDE.md 第 15 條）可作公司因素證據，但須能完全由已揭露條款算出——Microsoft、Meta 合約目前未揭露 MW／GPU 數，k_長約 維持市場 0.76，自身合約（0.91–1.33）列敏感度；公司揭露容量時改用自身合約 k（TCV 加權），並寫明合約到期後回到市場長約。
 3. 市場共識與同業 Comps 更新（共識檔放 `data/`，改 `meta.consensusFile`；同業市值與淨負債仍為 2026-09-21）。
 4. 另估 Nebius 的 WACC 與 EV/EBITDA 倍數（目前沿用 CRWV 模板 11%／6x；Nebius 淨現金、槓桿較低）。
 5. ClickHouse 持股比例一手揭露後更新 `valuation.holdings`。

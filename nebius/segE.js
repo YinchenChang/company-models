@@ -564,7 +564,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
   {
     let K = PRICE_CHK_Q, rv4 = d.m.revMW[4] * (e.revScale ?? 1) * 1e3, need = rv && Number.isFinite(rv.Rt) ? rv4 * rv.Rt : NaN,
       TK5 = PMW_REVQ === `tkAnchor` ? tkAnchorQ(curSc || `base`) : null, // v0.2a：刻度尺＝Q2 實現／Tokenomics 錨／錨 × k（模型）／公司 ACV／現價所需
-      der = TK5 ? [[`Tokenomics 錨（打平租金）`, TK5.anchor[4] * 1e3, `anc`, COLQ.cash, !1], [`錨 × k ${Y(rv4 / (TK5.anchor[4] * 1e3), 2)}（模型）`, rv4, `mod`, COLQ.model, !0]]
+      der = TK5 ? [[`Tokenomics 錨（打平租金）`, TK5.anchor[4] * 1e3, `anc`, COLQ.cash, !1, !0], [`錨 × k ${Y(rv4 / (TK5.anchor[4] * 1e3), 2)}（模型）`, rv4, `mod`, COLQ.model, !0, !1]]
         : [`low`, `base`, `high`].map(sc => [`推導・${SCENARIOS[sc].label.split(/\s/)[0]}`, SCENARIOS[sc].rev[4] * 1e3, sc, sc === curSc ? COLQ.model : `${COLQ.model}99`, sc === curSc]);
     let pts = [...der.map(x => x[1]), K ? K.realized : 0, ...(K?.acv || []), Number.isFinite(need) ? need : 0];
     let hi = Math.ceil(Math.max(...pts) * 1.12 / 5) * 5, X = x => `${x / hi * 100}%`;
@@ -585,7 +585,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
         elQ(`div`, { key: `ax`, style: { position: `absolute`, left: 0, right: 0, top: 141, height: 4, background: `var(--color-border)` } }),
         ...ticks.map(t => elQ(`div`, { key: `t${t}`, style: { position: `absolute`, left: X(t), top: 150, transform: `translateX(-50%)`, fontSize: 18, color: `var(--color-subtle)` } }, `${t}`)),
         K ? mark(`real`, K.realized, `實現（最新一季）`, `$${Y(K.realized, 1)}m`, COLQ.real, !0, `c`, !0) : null,
-        ...der.map(([lab, x, sc, col, big]) => mark(sc, x, lab, `$${Y(x, 1)}m`, col, !1, `c`, big)),
+        ...der.map(([lab, x, sc, col, big, up]) => mark(sc, x, lab, `$${Y(x, 1)}m`, col, !!up, `c`, big)), // v0.2a 第 2 輪：錨標籤放軸上方（模型低於錨時兩標籤相鄰）
         Number.isFinite(need) ? mark(`need`, need, `現價所需`, `$${Y(need, 1)}m`, COLQ.need, !0, `d`, !0) : null
       ]),
       elQ(`div`, { key: `c`, className: `sumQ-a sumQ-a3`, style: { display: `flex`, gap: 14, marginTop: 4, flexWrap: `wrap` } }, (TK5 ? [[`爬坡時點`, K ? `Q2 差距 ${hA((LATEST_Q.revenue * 4e3 / e.billableOpen - K.realized) / (TK5.rev[0] * 1e3 - K.realized) * 100, 0)} 來自計費 MW 少於在役` : `營收落後於交付`], [`定價倍數 k`, `新增產能按長約價：k＝${Y(TK5.k[4], 2)}（隨需 ${hA(TK5.od * 100, 0)}）`], [`MW 口徑`, `在役 MW 為內插估計`]]

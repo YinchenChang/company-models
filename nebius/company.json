@@ -1281,7 +1281,7 @@
   },
   "thesis": "預付款能否讓 backlog 變成現金",
   "title": "預付款，能把 Backlog 變成現金嗎？",
-  "subtitle": "客戶預付只覆蓋約 {prepayPct} 的資本支出；剩下 {gap} 缺口仍靠資產擔保債、可轉債與新股——模型每 MW 年收入已是 Tokenomics 打平租金的 {kMult} 倍，現價要成立得到 {rvAnchorMult} 倍",
+  "subtitle": "預付只覆蓋約 {prepayPct} 的資本支出，{gap} 缺口靠債與新股；每 MW 收入是打平租金的 {kMult} 倍，現價要 {rvAnchorMult} 倍",
   "headerTag": "MW × 每 MW · 預付優先"
  },
  "tokenomics": {

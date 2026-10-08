@@ -274,7 +274,7 @@ r = section(ws, r, "A｜情境與規模（管理層擴張力道）")
 ws.cell(row=r, column=1, value=f"情境選擇（1＝{CO['scenarios']['labels']['low']}、2＝{CO['scenarios']['labels']['base']}、3＝{CO['scenarios']['labels']['high']}）").font = BOLD
 c = ws.cell(row=r, column=3, value=2); c.font = BLUE; c.number_format = NUM0; c.border = BOX; c.fill = FILL_KEY
 ws.cell(row=r, column=4, value=f'=CHOOSE(C{r},"{CO["scenarios"]["labels"]["low"]}","{CO["scenarios"]["labels"]["base"]}","{CO["scenarios"]["labels"]["high"]}")').font = BOLD
-ws.cell(row=r, column=9, value=("三情境只改擴張力道（已連網 MW 路徑）；每 MW 年收入由下一列價格情境（定價倍數 k）決定，兩條軸分離（v0.2a）" if PMW_REV == 'tkAnchor' else
+ws.cell(row=r, column=9, value=("三情境只改擴張力道（已連網 MW 路徑）；每 MW 年收入由同列 E–G 欄價格情境（定價倍數 k）決定，兩條軸分離（v0.2a）" if PMW_REV == 'tkAnchor' else
                                 "三情境改變擴張力道（已連網 MW 路徑）與每 MW 年收入（Tokenomics 正向推導三情境值）；其餘假設相同（對照表 r1 第 4 節第 1 條）")).font = SMALL
 SEL = f"'輸入與假設'!$C${r}"; r += 1
 PXSEL = None
@@ -832,7 +832,7 @@ if PMW_REV == 'tkAnchor':
     qrow('iv', "(iv) 其他（殘差）", "US$m/MW", f"={_q['gap']}-{_q['i']}-{_q['ii']}-{_q['iii']}", note="依定義為 0（(i)–(iii) 已涵蓋）；Q2 營收含非 AI cloud 收入等差異併入 (ii)")
     qrow('sum', "核對：(i)＋(ii)＋(iii)＋(iv) − 總差距", "US$m/MW", f"={_q['i']}+{_q['ii']}+{_q['iii']}+{_q['iv']}-{_q['gap']}", '0.000000', "應為 0（誤差 < 0.01）")
     ws.cell(row=r, column=1, value="差異原因（已決定事項 2）").font = BOLD
-    ws.cell(row=r, column=9, value=("類型：觀點／已知限制。差距幾乎全部來自 (i) 爬坡分母——6/30 在役約 366 MW（內插）中只有約 165 MW 依 Q2 營收計費（Microsoft 全部 tranche 於第二季下半季才交付、"
+    ws.cell(row=r, column=9, value=(f"類型：觀點／已知限制。差距幾乎全部來自 (i) 爬坡分母——6/30 在役約 {CO['priceCheck']['inServiceMw']} MW（內插）中只有約 {D['billableOpen']} MW 依 Q2 營收計費（Microsoft 全部 tranche 於第二季下半季才交付、"
                                     "其他新容量第二季下半季上線），模型把差距歸為爬坡而非低價；Q2 隱含 k（÷ 在役）約 0.56 只列不用。季末在役 MW 公司未揭露（資料缺口），Q3 揭露後重估。")).font = SMALL
     AR['q2_reason'] = r; r += 2
     # v0.2a 第 2 輪：公司實況驗證（已決定事項 15；company.json → companyCheck）
