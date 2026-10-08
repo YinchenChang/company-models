@@ -389,6 +389,7 @@ if PRC:
              "＝長約占比 × k_長約＋(1 − 長約占比) × k_現貨"); IN["混合 k"] = _KMIX = r; r += 1
     KSEL = gi(r, "採用 k（依價格軸）", "倍", f"=CHOOSE({PSEL},C{_KMIX},D{_KMIX},E{_KMIX})", "＝依上方價格軸選擇", '0.000', True, font=BLACK); r += 1
     CFAC = gi(r, "自研晶片持有成本係數", "倍", PRC['customFactor'], PRC['customNote'], '0.00'); r += 1
+    CCAPF = gi(r, "自研晶片 IT 資本支出係數", "倍", PRC.get('customCapexFactor', 1), PRC.get('customCapexNote', '預設 1（每 MW IT 資本支出＝同期 NVIDIA 世代）；雙邊晶片係數敏感度時與上列同乘；機房成本不變（v0.1 交付前修訂）'), '0.00'); r += 1
     CAPW = gi(r, "上限檢查門檻（每 MW 年收入 ÷ 參考付費營收）", "%", PRC['capWarn'], PRC['capWarnNote'], PCT); r += 1
     r = phdr(r)
     _GR = []
@@ -454,7 +455,7 @@ for _x in LGB['lines']:
         _fy = gi(r, _p + "上一財年實際", "US$bn", _x['fyBase'], "上一財年經查核營收（company.json → defaults.legacyBiz）[Verified]"); r += 1
         _yt = gi(r, _p + "«YTD» 實際", "US$bn", _x['ytd'], "年初至今實際營收（10-Q）[Interested-party]"); r += 1
         _g0 = gi(r, _p + "起始年增率", "%", _x['g0'], "近四季對前四季年增率 [Derived]", PCT); r += 1
-        _m0 = gi(r, _p + "起始 EBITDA 率", "%", _x['m0'], "近四季（分部營業利益＋放大 D&A）÷ 營收 [Derived]", PCT); r += 1
+        _m0 = gi(r, _p + "起始 EBITDA 率", "%", _x['m0'], _x.get('m0Note') or "近四季（分部營業利益＋放大 D&A）÷ 營收 [Derived]", PCT); r += 1  # v0.1 交付前修訂：各線可指定來源與標記
     if _k != 'explicit':
         _gl = gi(r, _p + "長期年增率", "%", _x['gLT'], "長期值 [Assumed]（區間見 company.json → defaults.legacyBiz.note）", PCT); r += 1
     _ml = gi(r, _p + "長期 EBITDA 率", "%", (f"={_m0}" if _x.get('mLT') is None else _x['mLT']), ("＝起始（固定）" if _x.get('mLT') is None else "2023–2025 平均 [Derived]"), PCT, font=BLACK if _x.get('mLT') is None else None); r += 1
@@ -539,8 +540,8 @@ r = prow(r, "每 MW 建置成本", "US$m/MW", CO['scenarios']['capexTemplate']['
 if CXM:  # MAG v0.1b：Σ 新增世代占比 × (TK_CapexIT＋自建比例 × TK_CapexFacility)；IT 部分另列（汰換只換 IT）
     _ADD = lambda ch, i: f"{COLS[i]}{IN[f'世代｜{ch["label"]}｜新增 MW 占比']}"
     for i in range(5):
-        c = ws.cell(row=IN["每 MW 建置成本"], column=3 + i, value="=" + "+".join(f"{_ADD(ch, i)}*(TK_CapexIT_{ch['tk']}+{SELFB}*TK_CapexFacility_{ch['tk']})" for ch in PRC['chips'])); c.font = BLACK
-    r = prow(r, "每 MW IT 成本", "US$m/MW", ["=" + "+".join(f"{_ADD(ch, i)}*TK_CapexIT_{ch['tk']}" for ch in PRC['chips']) for i in range(5)], NUM1, "＝Σ 新增世代占比 × TK_CapexIT（GPU 汰換只換 IT）", BLACK)
+        c = ws.cell(row=IN["每 MW 建置成本"], column=3 + i, value="=" + "+".join(f"{_ADD(ch, i)}*(TK_CapexIT_{ch['tk']}{'*' + CCAPF if ch['custom'] else ''}+{SELFB}*TK_CapexFacility_{ch['tk']})" for ch in PRC['chips'])); c.font = BLACK
+    r = prow(r, "每 MW IT 成本", "US$m/MW", ["=" + "+".join(f"{_ADD(ch, i)}*TK_CapexIT_{ch['tk']}{'*' + CCAPF if ch['custom'] else ''}" for ch in PRC['chips']) for i in range(5)], NUM1, "＝Σ 新增世代占比 × TK_CapexIT（GPU 汰換只換 IT）", BLACK)
 PPD = D['prepay']  # v0.1b：預付款區塊輸入
 PP_SH = gi(r, "有預付的合約比例", "%", PPD['shareOfDeals'], "覆蓋比已是整體口徑時為 100%（company.json → defaults.prepay）", PCT); r += 1
 PP_CV = gi(r, "預付占相關資本支出比", "%", PPD['capexCover'], CO['texts']['prepayCoverNote'], PCT); r += 1
@@ -628,7 +629,7 @@ for i in range(1, 5):
     ws.cell(row=IN["期初毛 PP&E"], column=3 + i, value=f"={COLS[i-1]}{IN['期初毛 PP&E']}+§INSVC{COLS[i-1]}§")  # v0.2：前期投入使用的成長型 CapEx（延誤 0＝前期成長型）
 if CXM:  # MAG v0.1b：D&A 分池（HTML segA aiOpenQ／DAI／DAN 同式）
     r = section(ws, r, "D&A 分池（AI：IT 依 GPU 壽命、機房依機房壽命；非 AI：期初＝PP&E − AI 估計，預設年限；汰換不增加基礎）", level=2)
-    _W = lambda nm: "+".join(f"{ch['mixOpen']}*TK_{nm}_{ch['tk']}" for ch in PRC['chips'])
+    _W = lambda nm: "+".join(f"{ch['mixOpen']}*TK_{nm}_{ch['tk']}" + (f"*{CCAPF}" if nm == 'CapexIT' and ch['custom'] else "") for ch in PRC['chips'])
     AIMW0 = gi(r, "評價日自有 AI 總 MW（對外 ÷ 對外比例 − 租用對外）", "MW", f"=MAX(0,{MW0}/{EXTS}-{RXO})", "＝評價日在役對外 AI MW ÷ 對外比例 − 租用對外 MW（C20）[Derived]", NUM0, font=BLACK); r += 1
     AIIT0 = gi(r, "AI 期初 IT 毛額（估計）", "US$bn", f"={AIMW0}*({_W('CapexIT')})/1000", "＝AI 總 MW × Σ 期初世代占比 × TK_CapexIT [Derived]", font=BLACK); r += 1
     AIFC0 = gi(r, "AI 期初機房毛額（估計）", "US$bn", f"={AIMW0}*{SELFB}*({_W('CapexFacility')})/1000", "＝AI 總 MW × 自建比例 × Σ 期初世代占比 × TK_CapexFacility [Derived]", font=BLACK); r += 1
@@ -2286,6 +2287,8 @@ def _code(px):  # 評等代碼：1＝買進、0＝中立、−1＝賣出（與 H
 _CALL = lambda cell: f'CHOOSE({cell}+2,"賣出","中立","買進")'
 _T1 = lambda x: f'TEXT({x},"0.0")'
 _EVM = lambda m: (f"{DCF_T}*IF({DCF_BAD}=1,0,{WDCF})+MAX(0,(C{m0+8}*{m}+C{m0+7}*{LEGM}-C{m0+3})/C{m0+4})*C{m0+5}*IF({DCF_BAD}=1,1,1-{WDCF})")
+_OWN = (V.get('ownMultiple') or {}).get('value')
+VS_LB = ["WACC 9%（ERP 調整）", "WACC 10%（ERP 調整）", "WACC 11%（ERP 調整）", "ERP 4%", "ERP 6%"] + ([f"非 AI 分部改用公司自身 NTM EV/EBITDA {_OWN:.2f}×"] if _OWN else []) + ["AI 雲端 15×", "組合：WACC 9%＋" + ("非 AI 自身倍數＋" if _OWN else "") + "AI 15×"]
 rows_rg = [
     ("目標價區間｜點位（目前輸入的加權目標價）", [f"={TGT}"], USD),
     ("目標價區間｜終值占 EV（評等用）", [f"=C{d0+3}/MAX(ABS(C{d0+4}),1)*IF(C{d0+4}=0,1,SIGN(C{d0+4}))"], PCT),
@@ -2304,7 +2307,8 @@ rows_rg += [
     ("目標價區間｜未截斷 DCF 每股", [f"=(C{d0+6}+C{d0+9})/C{d0+10}"], USD),
 ] + ([(f"讀法 2｜{DT_NM[k]}（加權目標價／讀法 2 − 讀法 1）", [(rv.get('r2s') or [0, 0, 0])[j], f"=C§R§-{_IW}D{DT_H+1+j}"], USD) for j, k in enumerate(DT_SC)]  # MAG v0.1b r3（C16）：三情境讀法 2（建置時快照：scripts/rv_solve.py「r2s」）
      + [(f"對外比例敏感度｜{lb_}（對外比例／加權目標價）", [round(x_, 6), (rv.get('xs') or [0, 0])[j]], USD) for j, (lb_, x_) in enumerate((("−20pt", CXM['extShare'] - 0.2), ("＋20pt", min(1, CXM['extShare'] + 0.2))))]  # C23：快照「xs」（基準 MW 速度不重解）
-     if CXM and 'TGT2' in globals() else [])
+     if CXM and 'TGT2' in globals() else []) + ([(f"評價口徑敏感度｜{lb_}（加權目標價／評等代碼）", list(v_), USD) for lb_, v_ in zip(VS_LB, rv.get('vs') or [[0, 0]] * len(VS_LB))]
+     + [("評價口徑敏感度｜評等翻轉點（WACC／ERP）", list(rv.get('vflip') or ["無", "無"]), PCT)])  # v0.1 交付前修訂：評價口徑敏感度（快照：scripts/rv_solve.py「vs」「vflip」）
 RGR = {}
 for nm, fs, fmt in rows_rg:
     ws.cell(row=r, column=1, value=nm).font = BLACK
@@ -2313,7 +2317,8 @@ for nm, fs, fmt in rows_rg:
         if isinstance(f, str): f = f.replace("§R§", str(r))
         c = ws.cell(row=r, column=3 + j, value=f); c.number_format = fmt; c.font = BLUE if not (isinstance(f, str) and f.startswith('=')) else BLACK
         if nm.startswith("對外比例敏感度") and j == 0: c.number_format = PCT
-    if nm.startswith(("讀法 2｜", "對外比例敏感度")): ws.cell(row=r, column=9, value="快照（verify.sh 步驟 3b 以 LibreOffice 重算求得；scripts/rv_solve.py；HTML 即時計算，cmp31 比對）").font = SMALL
+        if nm.startswith("評價口徑敏感度") and j == 1 and "翻轉點" not in nm: c.number_format = NUM0
+    if nm.startswith(("讀法 2｜", "對外比例敏感度", "評價口徑敏感度")): ws.cell(row=r, column=9, value="快照（verify.sh 步驟 3b 以 LibreOffice 重算求得；scripts/rv_solve.py；HTML 即時計算，cmp31 比對）").font = SMALL
     r += 1
 if PRC:  # MAG v0.1b：容量軸 × 價格軸 3 × 3 加權目標價（建置時以 LibreOffice 求解的快照：scripts/rv_solve.py → rv_snap.json「g33」；HTML grid33Q 即時計算，cmp31 比對）
     _G33 = rv.get('g33') or [[0] * 3] * 3
@@ -3716,6 +3721,17 @@ _AL = lambda c: f"'資產負債_新債與新股'!{c}{NB['調整後槓桿（(總�
 srow("結論｜調整後槓桿句", "", [(f'="調整後槓桿（(債務＋租賃負債) ÷ (EBITDA＋租金)）路徑 "&' + '&"／"&'.join(f'TEXT({_AL(c)},"0.0")' for c in COLS)
                           + f'&"×；上限 "&{_MT(LEV)}&"×，"&IF(MAX({_ALR})>{LEV}+1E-9,CHOOSE(MATCH(MAX({_ALR}),{_ALR},0),{_PLB})&" 超過 "&TEXT(MAX({_ALR})-{LEV},"0.0")&"×：需股權或失去投資級。",'
                           f'"最小空間 "&TEXT({LEV}-MAX({_ALR}),"0.0")&"×（"&CHOOSE(MATCH(MAX({_ALR}),{_ALR},0),{_PLB})&"）。")')], bold=True)
+_VSR = lambda lb_: f"'評價_DCF與目標價'!C{RGR[f'評價口徑敏感度｜{lb_}（加權目標價／評等代碼）']}"
+_VSD = lambda lb_: f"'評價_DCF與目標價'!D{RGR[f'評價口徑敏感度｜{lb_}（加權目標價／評等代碼）']}"
+_RTX = lambda ref: f'CHOOSE({ref}+2,"賣出","中立","買進")'
+_vsp = lambda lb_, nm_: f'"{nm_} $"&TEXT({_VSR(lb_)},"0.00")&"（"&{_RTX(_VSD(lb_))}&"）"'
+_VF = rv.get('vflip')
+_FR = f"'評價_DCF與目標價'!C{RGR['評價口徑敏感度｜評等翻轉點（WACC／ERP）']}"; _FE = f"'評價_DCF與目標價'!D{RGR['評價口徑敏感度｜評等翻轉點（WACC／ERP）']}"
+_flip = (f'"WACC 約 "&TEXT({_FR}*100,"0.0")&"%（ERP "&TEXT({_FE}*100,"0.00")&"%）以下由「賣出」轉為「中立」"' if _VF else
+         f'IF(\'評價_DCF與目標價\'!{TGT}>=\'評價_DCF與目標價\'!C{R0+4},"目前已高於賣出門檻","WACC 5% 仍為「賣出」")')
+srow("結論｜評價口徑敏感度句", "", [("=" + '"評價口徑敏感度："&' + '&"、"&'.join(_vsp(l_, l_.replace("（ERP 調整）", "")) for l_ in VS_LB[:3]) + '&"；"&' + '&"、"&'.join(_vsp(l_, l_) for l_ in VS_LB[5:]) + '&"；評等翻轉點："&' + _flip + '&"。"')], bold=True)
+_TVC = f"'評價_DCF與目標價'!C{R0+1}"
+srow("結論｜終值占比規則句", "", [(f'="評等規則：買進須空間 ≥ +"&{_PC(RT_BUY)}&" 且終值占 EV < "&{_PC(RT_TV)}&"；目前終值占 EV "&TEXT({_TVC}*100,"0")&"%"&IF({_TVC}>={RT_TV},"，此規則下只可能「賣出」或「中立」","")&"（規則是否修改待 Andy 決定）。"')], bold=True)
 if CXM and 'TGT2' in globals():  # MAG v0.1b r3（C16、C23）：兩種讀法並列＋差額；對外比例 ±20pt
     _T2 = f"'評價_DCF與目標價'!{TGT2}"; _T1q = f"'評價_DCF與目標價'!{TGT}"
     srow("結論｜兩種讀法句", "", [(f'="兩種讀法（自用 AI）：讀法 1（影子收入不進評價）$"&TEXT({_T1q},"0.00")&"；讀法 2（自用 AI 價值中性：自用 MW 以 k＝1 計影子收入並進評價）$"&TEXT({_T2},"0.00")&"；差額 "&IF({_T2}-{_T1q}<0,"−","+")&"$"&TEXT(ABS({_T2}-{_T1q}),"0.00")&"。主值取哪一個是 Andy 的判斷（待決）。"')], bold=True)

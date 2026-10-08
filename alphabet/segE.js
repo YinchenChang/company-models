@@ -150,8 +150,8 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
     elQ(`p`, { key: `j`, style: { fontSize: 13, lineHeight: 1.4, margin: `5px 0 0`, fontWeight: 600 } }, cv.judge),
     cv.rsnSum ? elQ(`p`, { key: `r`, style: { fontSize: 11.5, lineHeight: 1.35, margin: `2px 0 0` } }, cv.rsnSum) : null
   ]);
-  let b3 = box(`b3`, `3｜現價隱含什麼`, [
-    elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 8 } }, [
+  let b3 = box(`b3`, cv.vsLine ? `3｜現價隱含什麼、評價口徑敏感度` : `3｜現價隱含什麼`, [
+    cv.vsLine ? null : elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 8 } }, [ // v0.1 交付前修訂：有評價口徑敏感度時省略三張卡（數字已在下一句）
       [`共識平均目標價隱含`, `${Y(cv.impTgt, 1)}x`, `$${Y(PT.mean, 2)}，股數 ${Y(o.shares, 3)}bn`],
       [`現價隱含`, `${Y(cv.impPx, 1)}x`, `$${Y(o.price, 2)}；同一共識 ${CONS_YEARS[2]} 數字`],
       [`模型方法區間上緣`, `${multTxt(cv.mHi)}x`, `錨定 ${PERIOD_LABELS[o.evYear ?? 1]}、折回 ${CALQ.targetText}`]
@@ -159,11 +159,13 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
       elQ(`div`, { key: `a`, style: { fontSize: 12, color: `var(--color-muted)` } }, a),
       elQ(`div`, { key: `b`, style: { fontSize: 19, fontWeight: 700, fontVariantNumeric: `tabular-nums` } }, b),
       elQ(`div`, { key: `c`, style: { fontSize: 10.5, color: `var(--color-muted)`, lineHeight: 1.35 } }, c)]))),
-    elQ(`p`, { key: `i`, style: { fontSize: 13, lineHeight: 1.4, margin: `5px 0 0`, fontWeight: 600 } }, cv.implied),
+    elQ(`p`, { key: `i`, style: { fontSize: cv.vsLine ? 12 : 13, lineHeight: 1.4, margin: `5px 0 0`, fontWeight: 600 } }, cv.implied),
+    ...(cv.vsLine ? [elQ(`p`, { key: `vs`, style: { fontSize: 11.5, lineHeight: 1.35, margin: `4px 0 0`, fontWeight: 600 } }, cv.vsLine), // v0.1 交付前修訂：評價口徑敏感度（反向 DCF 移到附錄頁）
+      elQ(`p`, { key: `tv`, style: { fontSize: 11.5, lineHeight: 1.35, margin: `3px 0 0` } }, cv.tvLine)] : [
     elQ(`p`, { key: `r`, style: { fontSize: 12.5, lineHeight: 1.4, margin: `4px 0 0` } }, rvOk
       ? `反向 DCF（DCF＝現價，其他不變）：${PERIODS[4]} 每 MW 年收入需 $${Y(rv.rev30 * rv.R, 1)}m（${rv.R >= 1 ? `+` : `−`}${hA(Math.abs(rv.R - 1) * 100, 0)}），或建置成本 $${Y(rv.cost30 * rv.C, 1)}m（${rv.C >= 1 ? `+` : `−`}${hA(Math.abs(rv.C - 1) * 100, 0)}），或穩態 EBITDA 率 ${Number.isFinite(rv.Eb) ? hA(rv.Eb * 100, 0) : `無解`}${Number.isFinite(rv.Rt) ? `；加權目標價＝現價需每 MW 年收入 ${rv.Rt >= 1 ? `+` : `−`}${hA(Math.abs(rv.Rt - 1) * 100, 0)}` : ``}。`
       : `反向 DCF：計算中或無解。`),
-    elQ(`p`, { key: `n`, style: { ...sm, margin: `3px 0 0`, fontSize: 11 } }, `隱含倍數＝（價格 × 股數＋共識 ${CONS_YEARS[2]} 淨負債）÷ 共識 ${CONS_YEARS[2]} 調整後 EBITDA。`)
+    elQ(`p`, { key: `n`, style: { ...sm, margin: `3px 0 0`, fontSize: 11 } }, `隱含倍數＝（價格 × 股數＋共識 ${CONS_YEARS[2]} 淨負債）÷ 共識 ${CONS_YEARS[2]} 調整後 EBITDA。`)])
   ]);
   let RL = [[`強力買進`, RA.strongBuy], [`買進`, RA.buy], [`持有`, RA.hold], [`賣出`, RA.sell], [`強力賣出`, RA.strongSell]];
   let b4 = box(`b4`, `4｜驗證點與市場看法`, [

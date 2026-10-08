@@ -9,13 +9,13 @@
  },
  "asOf": "2026-10-08",
  "counts": {
-  "total": 729,
+  "total": 730,
   "byTag": {
    "[Analogy]": 8,
    "[Assumed]": 4,
-   "[Derived]": 68,
-   "[Interested-party]": 489,
-   "[Verified]": 160
+   "[Derived]": 69,
+   "[Interested-party]": 490,
+   "[Verified]": 159
   }
  },
  "groups": {
@@ -6448,12 +6448,12 @@
     "value": 1283,
     "unit": "USD M",
     "period": "2025-12-31",
-    "source": "Alphabet Form 10-K FY2025（期末 2025-12-31，經查核合併財報）",
-    "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm",
-    "docDate": "2026-02-05",
-    "retrieved": "2026-10-08",
-    "tag": "[Verified]",
-    "note": "10-K 合併資產負債表"
+    "source": "Alphabet Form 10-Q 2026Q2（期末 2026-06-30）資產負債表比較欄；XBRL IntangibleAssetsNetExcludingGoodwill（2025-12-31，accn 0001652044-26-000071、-000048）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000071/goog-20260630.htm",
+    "docDate": "2026-07-23",
+    "retrieved": "2026-10-09",
+    "tag": "[Interested-party]",
+    "note": "10-K 合併資產負債表未單列無形資產（含在其他非流動資產）；本值取自 2026 年 10-Q 比較欄與 XBRL（原標「10-K 合併資產負債表」有誤，v0.1 交付前修訂更正）"
    },
    {
     "id": "bs.intang.2026q2",
@@ -9760,6 +9760,24 @@
     "retrieved": "2026-10-09",
     "tag": "[Derived]",
     "note": "WebFetch 讀取（中位數）；年底值 × 1.65 × 對外 30% → defaults.mwYearEnd；近四季平均在役 MW 內插用"
+   },
+   {
+    "id": "val.googl.ownNtm",
+    "item": "GOOGL 自身 NTM EV/EBITDA",
+    "value": {
+     "value": 14.68,
+     "ev": 4160,
+     "ntmEbitda": 283.47,
+     "fy1Weight": 0.2329
+    },
+    "unit": "倍；US$bn",
+    "period": "2026-10-07",
+    "source": "StockAnalysis〈GOOGL statistics〉EV（val.ev）÷ MarketScreener 共識 EBITDA（data/consensus_googl_20261008.json annualEstimates 2026E 233.431、2027E 298.668）",
+    "url": "https://stockanalysis.com/stocks/googl/statistics/",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "NTM＝0.2329 × 233.431＋0.7671 × 298.668＝283.47（FY1 權重＝(2026-12-31 − 2026-10-07) 85 天 ÷ 365）；MarketScreener EBITDA 含加回 SBC（v0.1a 矛盾 5）；與 Amazon 事實總帳 val.peer.ads.googl 14.68 同值；只用於評價口徑敏感度"
    }
   ]
  }

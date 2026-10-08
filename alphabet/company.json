@@ -661,7 +661,8 @@
      "m0": 0.586717,
      "mLT": 0.541632,
      "oa": 0.0,
-     "cx": 0.06
+     "cx": 0.06,
+     "m0Note": "Google Services 分部 EBITDA − 其他三線（殘差）[Derived]；依賴其他三線的 [Assumed] 利潤率"
     },
     {
      "key": "youtube",
@@ -675,7 +676,8 @@
      "m0": 0.4,
      "mLT": 0.354915,
      "oa": 0.0,
-     "cx": 0.06
+     "cx": 0.06,
+     "m0Note": "Services 分部未拆線揭露：YouTube 廣告 EBITDA 率 40%（30%–50%）[Assumed]"
     },
     {
      "key": "network",
@@ -689,7 +691,8 @@
      "m0": 0.15,
      "mLT": 0.104915,
      "oa": 0.0,
-     "cx": 0.06
+     "cx": 0.06,
+     "m0Note": "Services 分部未拆線揭露：聯播網 EBITDA 率 15%（10%–25%）[Assumed]"
     },
     {
      "key": "subs",
@@ -703,7 +706,8 @@
      "m0": 0.2,
      "mLT": 0.154915,
      "oa": 0.0,
-     "cx": 0.06
+     "cx": 0.06,
+     "m0Note": "Services 分部未拆線揭露：訂閱、平台與裝置 EBITDA 率 20%（10%–30%）[Assumed]"
     },
     {
      "key": "cloudNonAi",
@@ -764,7 +768,8 @@
      "m0": 0.25,
      "mLT": null,
      "oa": 0.0,
-     "cx": 0.0
+     "cx": 0.0,
+     "m0Note": "TPU 系統銷售利潤率未揭露：25%（15%–35%）[Assumed]"
     },
     {
      "key": "corp",
@@ -1223,7 +1228,14 @@
     "note": "未蒐集半導體同業倍數 → 沿用 AI 雲端倍數 6× [Assumed]"
    }
   },
-  "segmentMultiplesNote": "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 NTM EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家）：搜尋、YouTube 廣告、聯播網、Alphabet 層級費用＝數位廣告＝共用同業組 6 家（META、PINS、TTD、APP、RDDT、SNAP；中位數 9.11×；C18，data/peers_ads_20261009.json，複製自 amazon/data/）；訂閱平台裝置＝訂閱影音（NFLX、SPOT、DIS，與 Amazon 同組；中位數 15.41×）；非 AI 雲端＝共用同業組 8 家中位數（C12，data/peers_cloud_20261008.json）；Other Bets、TPU 硬體銷售無同業組 → AI 雲端倍數；AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）"
+  "segmentMultiplesNote": "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 NTM EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家）：搜尋、YouTube 廣告、聯播網、Alphabet 層級費用＝數位廣告＝共用同業組 6 家（META、PINS、TTD、APP、RDDT、SNAP；中位數 9.11×；C18，data/peers_ads_20261009.json，複製自 amazon/data/）；訂閱平台裝置＝訂閱影音（NFLX、SPOT、DIS，與 Amazon 同組；中位數 15.41×）；非 AI 雲端＝共用同業組 8 家中位數（C12，data/peers_cloud_20261008.json）；Other Bets、TPU 硬體銷售無同業組 → AI 雲端倍數；AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）",
+  "ownMultiple": {
+   "value": 14.68,
+   "ev": 4160,
+   "ntmEbitda": 283.47,
+   "ref": "val.googl.ownNtm",
+   "note": "公司自身 NTM EV/EBITDA＝EV 4.16T（StockAnalysis 2026-10-07，事實總帳 val.ev）÷ NTM EBITDA 283.5（MarketScreener 共識 2026E 233.431、2027E 298.668，FY1 權重 0.2329；含加回 SBC）[Derived]；只用於評價口徑敏感度（非 AI 分部改用自身倍數）"
+  }
  },
  "methodology": {
   "blendWeights": {
@@ -2929,6 +2941,8 @@
   },
   "customFactor": 1.0,
   "customFactorSens": 0.7,
+  "customCapexFactor": 1.0,
+  "customCapexNote": "自研晶片（TPU）每 MW IT 資本支出係數：預設 1（TPU 的資本支出以同期 NVIDIA 世代 TK_CapexIT 計）；雙邊敏感度時與 customFactor 同乘 0.7（收入錨與資本支出同降）；機房成本不變 [Assumed]",
   "customNote": "自研晶片（TPU）每 MW 錨＝同期 NVIDIA 世代 IF_HoldEcon × 1.0（對照表 r1 C2：TPU v4／v5e／v5p → Hopper、Trillium（v6e）→ GB200、Ironwood → GB300；Ironwood 之後世代 → VR200 [Assumed]）；敏感度 × 0.7。C2 原文「TPU v6e → Hopper；Trillium → GB200」中 v6e 即 Trillium，本模型以「v6e 之前世代 → Hopper」解讀（見報告已套用的預設）。Tokenomics 無 NonNV 具名範圍（IF_NonNVRatio、IF_NonNVCostRatio 為 missing），已列缺口回報。",
   "chips": [
    {
