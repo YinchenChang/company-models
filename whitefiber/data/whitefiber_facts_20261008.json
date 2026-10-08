@@ -3504,6 +3504,334 @@
     "tag": "[Interested-party]",
     "note": "AI Business 報導（引述 Nscale 說法）；未提 WhiteFiber 或北卡；只作文字對照"
    }
+  ],
+  "4_託管租金與建置成本": [
+   {
+    "id": "colo.apld",
+    "item": "Applied Digital–CoreWeave（Polaris Forge 1，北達科他）",
+    "value": {
+     "mwIT": 400,
+     "tcv": 11000,
+     "years": 15,
+     "perMWitYr": 1.83,
+     "passThrough": "未揭露"
+    },
+    "unit": "物件（MW-IT；USD M；年；USD M／MW-IT·年）",
+    "period": "2025-05～09 簽約",
+    "source": "Applied Digital FY26 Q1 財報新聞稿（8-K 附件 99.1）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487925000068/apldq126earningsrelease.htm",
+    "docDate": "2025-10-09",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "APLD 自述（動機：展示合約規模）；每 MW [Derived]＝11,000 ÷ 15 ÷ 400＝1.83；含年調與否未揭露"
+   },
+   {
+    "id": "colo.glxy",
+    "item": "Galaxy–CoreWeave（Helios，德州）",
+    "value": {
+     "mwIT": 526,
+     "approvedPowerMW": 800,
+     "annualRevenue": "> 1,000",
+     "years": 15,
+     "perMWitYr": "≥ 1.90"
+    },
+    "unit": "物件",
+    "period": "2025-08",
+    "source": "Galaxy 新聞稿：Galaxy Closes $1.4 Billion Project Financing Facility（Helios）",
+    "url": "https://www.galaxy.com/newsroom/galaxy-closes-helios-project-financing",
+    "docDate": "2025-08-15",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "Galaxy 自述：「average annual revenue of more than $1 billion over the 15-year term」；CoreWeave 承諾全部 800 MW 核准電力；IT 口徑 526 MW（第一期 133＋第二期 260＋選擇權 133；第一期 [Derived]＝526 − 260 − 133，526 見 The Energy Mag 報導 https://theenergymag.com/news/market-news/galaxy-digital-reports-85-million-q2-2026-net-loss-and-526-mw-coreweave-lease）；每 MW [Derived]＝1,000 ÷ 526"
+   },
+   {
+    "id": "colo.corz",
+    "item": "Core Scientific–CoreWeave（6 站點）",
+    "value": {
+     "mwIT": 590,
+     "tcv": 10200,
+     "years": 12,
+     "perMWitYr": 1.44,
+     "tenantFundsFitOut": true,
+     "landlordCapexPerMW": 1.5
+    },
+    "unit": "物件",
+    "period": "2025-02-26",
+    "source": "Core Scientific 8-K 附件 99.1：Core Scientific and CoreWeave Announce $1.2 Billion Expansion at Denton",
+    "url": "https://www.sec.gov/Archives/edgar/data/1839341/000162828025008312/ex991-coreweavepressrelease.htm",
+    "docDate": "2025-02-26",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "CORZ 自述；CoreWeave 負擔大部分改建資本支出、CORZ 只出殼體約 $1.5M／MW → 租金偏低，不可與自建全套直接比；每 MW [Derived]＝10,200 ÷ 12 ÷ 590"
+   },
+   {
+    "id": "colo.cifr.fluidstack",
+    "item": "Cipher–Fluidstack（Google 擔保 $1.4B）",
+    "value": {
+     "mwIT": 168,
+     "mwGross": 244,
+     "tcv": 3000,
+     "years": 10,
+     "perMWitYr": 1.79,
+     "rentStart": "2026-10"
+    },
+    "unit": "物件",
+    "period": "2025-11-03",
+    "source": "Cipher Mining 8-K：Presentation for Business Update",
+    "url": "https://www.sec.gov/Archives/edgar/data/1819989/000181998925000110/ciphermining_businessupd.htm",
+    "docDate": "2025-11-03",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "CIFR 自述；每 MW [Derived]＝3,000 ÷ 10 ÷ 168"
+   },
+   {
+    "id": "colo.cifr.aws",
+    "item": "Cipher–AWS",
+    "value": {
+     "mwGross": 300,
+     "tcv": 5500,
+     "years": 15,
+     "perMWgrossYr": 1.22,
+     "perMWitYr_atPUE1.3": 1.59,
+     "rentStart": "2026-08"
+    },
+    "unit": "物件",
+    "period": "2025-11-03",
+    "source": "Cipher Mining 8-K：Presentation for Business Update",
+    "url": "https://www.sec.gov/Archives/edgar/data/1819989/000181998925000110/ciphermining_businessupd.htm",
+    "docDate": "2025-11-03",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "CIFR 自述（TCV 為估計）；只揭露毛 MW；IT 換算 [Assumed] 毛／IT＝1.3（區間 1.2–1.4 → 1.47–1.71）"
+   },
+   {
+    "id": "colo.wyfi.nc1",
+    "item": "WhiteFiber NC-1（自家）",
+    "value": 2.16,
+    "unit": "USD M／MW-IT·年",
+    "period": "10 年平均",
+    "source": "Form 8-K 附件 99.1 新聞稿：WhiteFiber and Nscale Announce 10-Year, 40 MW Colocation Agreement",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390025123321/ea026991801ex99-1_white.htm",
+    "docDate": "2025-12-18",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "見 ct.nscale.perMW；第 1 年約 1.89；不含轉嫁電費"
+   },
+   {
+    "id": "colo.wyfi.mtl3",
+    "item": "WhiteFiber MTL-3（自家，Cerebras）",
+    "value": 2.35,
+    "unit": "USD M／MW-IT·年",
+    "period": "2025-11 起",
+    "source": "Form 10-Q 2026 Q2（季末 2026-06-30；10-Q 核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026088026/ea0300877-10q_whitefiber.htm",
+    "docDate": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "見 ct.cerebras.perMW；小規模、液冷、5 年"
+   },
+   {
+    "id": "colo.range",
+    "item": "託管租金區間（未簽約擴建 MW 定價用）",
+    "value": {
+     "low": 1.45,
+     "mid": 1.85,
+     "high": 2.35,
+     "unit": "USD M／MW-IT·年（第 1 年等值，含年調平均）"
+    },
+    "unit": "USD M／MW-IT·年",
+    "period": "2026-10",
+    "source": "由 colo.* 各筆推估",
+    "url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487925000068/apldq126earningsrelease.htm",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Analogy]",
+    "note": "可比：CORZ 1.44（租戶出資改建，下緣）、CIFR–AWS 約 1.59（IT 換算）、CIFR–Fluidstack 1.79、APLD 1.83、GLXY ≥1.90、NC-1 2.16、MTL-3 2.35（上緣，小站點）；中點取大型批發案 1.79–1.90 與 NC-1 的中段 1.85；差異：大型案 15 年、規模 100× WhiteFiber 擴建；轉嫁口徑多未揭露"
+   },
+   {
+    "id": "build.wyfi.retrofit",
+    "item": "WhiteFiber 改建成本（每毛 MW）",
+    "value": {
+     "low": 8.0,
+     "high": 10.0
+    },
+    "unit": "USD M／MW（毛）",
+    "period": "2026-09",
+    "source": "Form 8-K 附件 99.1：Investor Overview September 2026（公司簡報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026099424/ea030525701ex99-1.htm",
+    "docDate": "2026-09-14",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "公司估計（「up to 40% cheaper than greenfield」）；換算 IT（毛／IT 1.35，site.nc1.gross2it）約 10.8–13.5 [Derived]"
+   },
+   {
+    "id": "build.wyfi.mtl3",
+    "item": "MTL-3 建置成本",
+    "value": "< CAD 9M／MW",
+    "unit": "CAD M／MW（口徑不明，推測 IT）",
+    "period": "2025",
+    "source": "Form 8-K 附件 99.1：Investor Overview September 2026（公司簡報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026099424/ea030525701ex99-1.htm",
+    "docDate": "2026-09-14",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "約 < USD 6.5M／MW（匯率約 0.70）；小站點、殼體為租賃後購入"
+   },
+   {
+    "id": "build.wyfi.nc1",
+    "item": "NC-1 投入成本（至 2026-06-30）",
+    "value": {
+     "landBuilding": 45.0,
+     "dev1H26": 322.5,
+     "equityByDec25": 150.0
+    },
+    "unit": "USD M",
+    "period": "2026-06-30",
+    "source": "Form 10-Q 2026 Q2（季末 2026-06-30；10-Q 核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026088026/ea0300877-10q_whitefiber.htm",
+    "docDate": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "10-Q 核閱數；總成本未揭露；若 2025 年投入 ≈150（含 45 購置）＋1H26 322.5 ≈ 472，÷ 40 MW IT ≈ 11.8／MW-IT（[Derived]，口徑粗、含尚未完工與部分長交期設備）"
+   },
+   {
+    "id": "build.apld.pf2",
+    "item": "Applied Digital Polaris Forge 2（約 $3B、300 MW IT）",
+    "value": 10.0,
+    "unit": "USD M／MW-IT",
+    "period": "2025-10",
+    "source": "Applied Digital FY26 Q1 財報新聞稿（8-K 附件 99.1）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487925000068/apldq126earningsrelease.htm",
+    "docDate": "2025-10-09",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "APLD 自述 [Derived]＝3,000 ÷ 300"
+   },
+   {
+    "id": "build.glxy.helios1",
+    "item": "Galaxy Helios 第一期（債 1.4B @ 80% LTC＋股權 0.35B）",
+    "value": 13.2,
+    "unit": "USD M／MW-IT",
+    "period": "2025-08",
+    "source": "Galaxy 新聞稿：Galaxy Closes $1.4 Billion Project Financing Facility（Helios）",
+    "url": "https://www.galaxy.com/newsroom/galaxy-closes-helios-project-financing",
+    "docDate": "2025-08-15",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "(1,400 ＋ 350) ÷ 133 MW IT；第一期 MW 為推得值，總成本未直接揭露"
+   },
+   {
+    "id": "build.corz.shell",
+    "item": "Core Scientific 殼體（租戶另付改建）",
+    "value": 1.5,
+    "unit": "USD M／MW",
+    "period": "2025-02",
+    "source": "Core Scientific 8-K 附件 99.1：Core Scientific and CoreWeave Announce $1.2 Billion Expansion at Denton",
+    "url": "https://www.sec.gov/Archives/edgar/data/1839341/000162828025008312/ex991-coreweavepressrelease.htm",
+    "docDate": "2025-02-26",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "只含 powered core & shell，不可作全套建置成本"
+   },
+   {
+    "id": "build.tk",
+    "item": "Tokenomics 每 MW-IT 廠房資本支出（低／基準／高）",
+    "value": {
+     "low": 10.21,
+     "base": 12.67,
+     "high": 16.19
+    },
+    "unit": "USD M／MW-IT",
+    "period": "v5.26",
+    "source": "Tokenomics v5.26（YinchenChang/Tokenomics master 70d859e，model/20261007_Tokenomics_v5.26.xlsx，Interface!C10:Q10 IF_CapexFacility）",
+    "url": "https://github.com/YinchenChang/Tokenomics/blob/70d859e/model/20261007_Tokenomics_v5.26.xlsx",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "Interface 每 GW 資本支出－廠房（$B/GW＝$M/MW）；與 v5.24 相同"
+   },
+   {
+    "id": "build.range",
+    "item": "每 MW-IT 建置成本區間（建物＋電力＋冷卻，不含 GPU）",
+    "value": {
+     "low": 9.0,
+     "mid": 11.5,
+     "high": 13.5
+    },
+    "unit": "USD M／MW-IT",
+    "period": "2026-10",
+    "source": "由 build.* 各筆推估",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026099424/ea030525701ex99-1.htm",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Analogy]",
+    "note": "下緣：APLD PF2 10.0、WhiteFiber 改建 8–10／毛 MW；中點：NC-1 粗估 11.8、Tokenomics 低–基準 10.2–12.7；上緣：Helios 13.2、WhiteFiber 改建上緣換 IT 13.5；Tokenomics 高 16.2 列敏感度"
+   },
+   {
+    "id": "dep.building.10K",
+    "item": "建物折舊年限（FY2025 10-K 會計政策）",
+    "value": 30,
+    "unit": "年",
+    "period": "FY2025",
+    "source": "Form 10-K FY2025（期末 2025-12-31，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026034341/ea0278305-10k_white.htm",
+    "docDate": "2026-03-26",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "10-K 附註 2"
+   },
+   {
+    "id": "dep.building.10Q",
+    "item": "建物折舊年限（2026 Q2 10-Q 會計政策）",
+    "value": "20–25",
+    "unit": "年",
+    "period": "2026-06-30",
+    "source": "Form 10-Q 2026 Q2（季末 2026-06-30；10-Q 核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026088026/ea0300877-10q_whitefiber.htm",
+    "docDate": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "10-Q 核閱數；與 10-K 30 年不一致（見矛盾 C6）"
+   },
+   {
+    "id": "dep.coloEquip",
+    "item": "託管設備折舊年限",
+    "value": "10–15",
+    "unit": "年",
+    "period": "2026-06-30",
+    "source": "Form 10-Q 2026 Q2（季末 2026-06-30；10-Q 核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026088026/ea0300877-10q_whitefiber.htm",
+    "docDate": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "10-Q 核閱數；10-K 相同"
+   },
+   {
+    "id": "dep.cloudEquip",
+    "item": "雲端設備（GPU）折舊年限",
+    "value": 5,
+    "unit": "年",
+    "period": "2026-06-30",
+    "source": "Form 10-Q 2026 Q2（季末 2026-06-30；10-Q 核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026088026/ea0300877-10q_whitefiber.htm",
+    "docDate": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "10-Q 核閱數；2025-01-01 起由 3 年改 5 年（10-K）"
+   },
+   {
+    "id": "dep.leasehold",
+    "item": "租賃改良折舊年限",
+    "value": 15,
+    "unit": "年",
+    "period": "2026-06-30",
+    "source": "Form 10-Q 2026 Q2（季末 2026-06-30；10-Q 核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026088026/ea0300877-10q_whitefiber.htm",
+    "docDate": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "10-Q 核閱數"
+   }
   ]
  }
 }
