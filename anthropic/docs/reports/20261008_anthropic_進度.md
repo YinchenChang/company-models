@@ -1,7 +1,7 @@
 # Anthropic v0.1 分段建置進度（接手用；A1–A5 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：A0（`aa925dd`）；A1（`8d955cf`）；A2（`fd5db5b`＋報告 `e903023`）；A3（`c9d2478`＋報告 `a1b7b8c`）；**A4 完成＝v0.1**：步驟 1–3（`07565be`）、步驟 4–5 完成報告、對照 Excel、CHANGELOG、交接檔（本 commit）。報告 `docs/reports/20261008_v0.1.md`。
+- 已完成：A0（`aa925dd`）；A1（`8d955cf`）；A2（`fd5db5b`＋報告 `e903023`）；A3（`c9d2478`＋報告 `a1b7b8c`）；**A4 完成＝v0.1**：步驟 1–3（`07565be`）、步驟 4–5 完成報告、對照 Excel、CHANGELOG、交接檔（`7842e3f`）。報告 `docs/reports/20261008_v0.1.md`。
 - 下一步：等 chat 端審查 v0.1（Andy 審查 ④ 預設彙總）後開工 A5（工作單 A5：HTML 一頁摘要含 OpenAI 並排、命題與驅動對照表定稿、交接檔、dist）。HTML 可直接讀 FND_*、RVS_*、COST_PropGap_VR／Econ／GW、情境 FND_ExtNeedCum*、FND_RoundTrip。
 - 未解問題：(1) GitHub Actions 因帳號付款／用量上限未啟動（本地 87 項全過）；(2) 基準 CHK_Warnings＝1（C89：AMD 模型 77.8 vs 招股書 20，chat 端要求的 WARN；待決定以金額或 GW 為準）；(3) D22：模型 2026 非算力成本隱含低估約 $7.0B（未校準，待公開版 S-1）；(4) 合約價 12 對 VR 世代偏低（雲端毛利 −6% 至 −10%），兩家同一參數；(5) 「只計已簽合約」使 2029–2030 轉正，新增合約機制需 Andy 決定。
 
@@ -55,7 +55,7 @@
 | 0 check_tk_snapshot | 完成 | — | CURRENT 仍 v5.26（master `70d859e`）；OK 89 |
 | 1 Funding（自由現金流、來源順序、最低現金、外部資金、條件式、或有、回流對照）＋Cost 第十二–十五節 | 完成 | `07565be` | 已到位 $100B；累計外部資金需求 0；谷底 80.2（2028） |
 | 2 Reverse＋test_reverse_not_fed_back | 完成 | 同上 | 反向累計 25.2 |
-| 3 Checks C83–C105、parity 情境 ＋7（共 34）、敏感度 | 完成 | 同上；`tools/sensitivity.py` 於報告 commit | pytest 87 項全過；CHK_Warnings＝1（C89 預期） |
+| 3 Checks C83–C105、parity 情境 ＋7（共 34）、敏感度 | 完成 | 同上（含 `tools/sensitivity.py`） | pytest 87 項全過；CHK_Warnings＝1（C89 預期） |
 | 4 v0.1 完成報告＋對照 Excel（①–⑤） | 完成 | 見 git log「A4 步驟 4–5」 | ④A1–A4 預設彙總 |
 | 5 CHANGELOG、進度檔、交接檔、PR 留言 | 完成 | 同上 | — |
 
