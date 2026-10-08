@@ -3,18 +3,22 @@ const fs=require('fs'); require('./load_engine.js')(); // v4.0：引擎資料來
 const T=s=>Object.keys(CALQ.tokens).sort((a,b)=>b.length-a.length).reduce((x,k)=>x.split(k).join(CALQ.tokens[k]),s);
 const SC=process.argv[2], AK=+(process.argv[3]||VAL_DEFAULTS.evYear), AKX=process.argv[3]!==undefined; // AK：EV/EBITDA 錨定年度（1＝模型第 2 期…4＝第 5 期；預設 valuation.evYear）
 const X=JSON.parse(fs.readFileSync('xl17_'+({low:1,base:2,high:3}[SC])+(AKX?'_a'+AK:'')+'.json','utf8'));
+{ const RV=((COMPANY_DATA.texts||{}).labelMap||[]).slice().sort((a,b)=>b[1].length-a[1].length); // WhiteFiber v0.1b：Excel 列名稱已換成公司用語；另建模板用語別名，供以模板名稱直接查找的比對
+  for(const k of Object.keys(X)){ const k0=RV.reduce((x,[a,b])=>x.split(b).join(a),k); if(!(k0 in X)) X[k0]=X[k]; } }
 VAL_DEFAULTS.evYear=AK;
 const q=structuredClone(DEFAULTS); q.scenario=SC; q.a=structuredClone(SCENARIOS[SC].a); q.mw31=SCENARIOS[SC].mw31; q.cvCap=SCENARIOS[SC].cvCap; q.delayMonths=SCENARIOS[SC].delay; q.billableOpen=SCENARIOS[SC].bOpen; q.m.accepted=[...SCENARIOS[SC].acc]; q.m.billable=[...SCENARIOS[SC].bil]; q.m.revMW=[...SCENARIOS[SC].rev];
 const d=runFunding(q), p=runValuation(d,q,VAL_DEFAULTS), y=d.years, f=p.fwd;
 const H=(k)=>y.map(e=>e[k]);
 const rows=[];
+const CMP_TOL=(COMPANY_DATA.methodology.checks||{}).cmpTol ?? 0.005; // WhiteFiber v0.1b：容差讀 company.json（US$bn 口徑；小型公司 1e-4＝US$0.1m）
 function cmp(label, xlKey, html, note){
+  xlKey=LABEL_MAP_Q(xlKey); // WhiteFiber v0.1b：Excel 列名稱已依 texts.labelMap 換成公司用語
   const MAP={'產能與收入|':['運營_產能與收入|'],'支出與資金|':['各期收支|'],'損益與評價|':['損益|','評價_DCF與目標價|'],'輸入|':['輸入與假設|'],'債務明細|':['資產負債_既有債務|'],'站點租賃|':['運營_站點|'],'可比公司|':['評價_可比公司|'],'連動檢查|':['檢查_連動|']};
   let x=X[xlKey]; if(!x){for(const [o,ns] of Object.entries(MAP)){if(xlKey.startsWith(o)){for(const n of ns){const k=n+xlKey.slice(o.length); if(X[k]){x=X[k];break;}}}}}
   if(!x){rows.push([label,'MISSING XL KEY '+xlKey]);return;}
   const xv=x.slice(0,html.length).map(v=>typeof v==='number'?v:NaN);
   const diff=html.map((h,i)=>Math.abs((h??NaN)-(xv[i]??NaN)));
-  const ok=diff.every(d=>d<0.005||(!Number.isFinite(d)&&false));
+  const ok=diff.every((d,i)=>d<CMP_TOL||(!Number.isFinite(html[i]??NaN)&&!Number.isFinite(xv[i]))); // WhiteFiber v0.1b：兩邊皆無數值（HTML NaN／不適用、Excel 文字「—」）視為一致
   rows.push([ok?'OK ':'XX ',label, html.map(v=>+(+v).toFixed(3)).join('/'), xv.map(v=>+(+v).toFixed(3)).join('/'), note||'']);
 }
 const S='產能與收入|', F='支出與資金|', V='損益與評價|', NB0='資產負債_新債與新股|';

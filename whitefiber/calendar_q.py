@@ -116,6 +116,18 @@ def _next_day(iso):
     return (_dt.date.fromisoformat(iso) + _dt.timedelta(days=1)).isoformat()
 
 
+def label_map(co):
+    """WhiteFiber v0.1b：畫面與 Excel 文字的公司用語替換（company.json → texts.labelMap：[[模板用語, 公司用語], …]，長的先換）。
+    模板沿用 Oracle 的分部名稱（OCI＝第一分部、傳統事業＝第二分部）與投資級口徑；換公司時在這裡換成公司用語，程式不必改。"""
+    return sorted(((a, b) for a, b in (co.get('texts', {}).get('labelMap') or [])), key=lambda x: -len(x[0]))
+
+
+def apply_map(s, pairs):
+    if not isinstance(s, str): return s
+    for a, b in pairs: s = s.replace(a, b)
+    return s
+
+
 def fill(s, tk):
     """把字串中的佔位符換成目前日曆的字樣（長的先換，避免 «YTD» 吃掉 «YTDL»）。"""
     if not isinstance(s, str) or '«' not in s: return s
@@ -159,6 +171,8 @@ ROLL_FIELDS = [
     ('期初餘額', 'debt.convertibles', '可轉債逐檔（原始本金、轉換價；v0.1b）'),
     ('期初餘額', 'valuation.holdings', '持股價值（估值、持股比例；v0.1b）'),
     ('期初餘額', 'valuation.debtLike', '類債項目（SAFE 等；v0.1b）'),
+    ('期初餘額', 'valuation.postEvents', '期後事件（評價日後、資料截止前的融資與股數變動；評價日現金、淨負債、股數、CAPM 權重的期後調整；WhiteFiber v0.1b）'),
+    ('首期一次性金額', 'debt.extraCost', '債務額外融資成本（例如 MOIC 到期加付；各期金額；WhiteFiber v0.1b）'),
 ]
 
 
@@ -211,5 +225,44 @@ def apply(co):
     return co
 
 
+# WhiteFiber v0.1b：市場共識資料檔的正規化（資料檔只讀、不改數字；載入時換算為引擎口徑）。
+# (1) 單位：資料檔 unit 為「US$M」時，金額欄位 ÷1000 換成引擎的 US$bn（每股、家數、比率不變）；
+# (2) 年度鍵：日曆年寫法 FY2026 → 引擎期間標籤 FY26（只換鍵名，不改值）；
+# (3) 評等分布沒有 month 時以擷取日的年月代稱（畫面標題用）。HTML、Excel、核對腳本都經由這裡讀共識檔。
+CONS_MONEY = {'revenue', 'ebitda', 'adjEbitda', 'netIncome', 'cfo', 'fcf', 'capex', 'netDebt', 'ebit', 'ebitNonGaap', 'interest', 'interestPaid',
+              'revenueLow', 'revenueHigh', 'revenueQuarterSum', 'marketCap', 'FY2026revenueH2'}
+
+
+def _cons_norm(x, scale):
+    if isinstance(x, dict):
+        out = {}
+        for k, v in x.items():
+            k2 = ('FY' + k[4:]) if re.fullmatch(r'FY20\d\d', k) else k
+            out[k2] = (v / scale) if (scale != 1 and k in CONS_MONEY and isinstance(v, (int, float)) and not isinstance(v, bool)) else _cons_norm(v, scale)
+        return out
+    if isinstance(x, list):
+        return [_cons_norm(v, scale) for v in x]
+    return x
+
+
+def load_consensus(root, co):
+    c = json.load(open(os.path.join(root, co['meta']['consensusFile']), encoding='utf-8'))
+    scale = 1000 if str(c.get('unit', '')).startswith('US$M') else 1
+    c = _cons_norm(c, scale)
+    if scale != 1: c['_unitNote'] = '載入時金額 ÷1000 換成 US$bn（資料檔原為 US$M）'
+    ra = c.get('ratings') or {}
+    if ra and not ra.get('month'): ra['month'] = str(ra.get('retrieved') or c.get('asOf') or '')[:7]
+    _rk = ('strongBuy', 'buy', 'hold', 'sell', 'strongSell')
+    if ra and isinstance(ra.get('total'), (int, float)):  # (4) 未列的評等家數：其餘各類加總已等於合計時記 0（[Derived]，例如 MarketBeat 無「強力賣出」欄）
+        miss = [k for k in _rk if not isinstance(ra.get(k), (int, float))]
+        if miss and sum(ra.get(k) or 0 for k in _rk if k not in miss) == ra['total']:
+            for k in miss: ra[k] = 0
+    return c
+
+
 if __name__ == '__main__':
-    print(json.dumps(load(sys.argv[1] if len(sys.argv) > 1 else None)['cal'], ensure_ascii=False))
+    _root = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith('--') else os.path.dirname(os.path.abspath(__file__))
+    if '--consensus' in sys.argv:  # load_engine.js：正規化後的共識資料（與建置相同）
+        print(json.dumps(load_consensus(_root, json.load(open(os.path.join(_root, 'company.json'), encoding='utf-8'))), ensure_ascii=False))
+    else:
+        print(json.dumps(load(_root)['cal'], ensure_ascii=False))

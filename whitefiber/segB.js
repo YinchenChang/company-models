@@ -1,13 +1,13 @@
 PERIOD_LABELS = PERIODS, // 接續模板片段 mid1 結尾未結束的宣告鏈，所以不可加 var
   HIST_PL = COMPANY_DATA.historicalPL,
   CAPM_Q = ((v, b) => { // v0.1b（Oracle）：WACC 以 CAPM 計算（company.json → valuation.capm）；b＝β（敏感度用）
-    const c = v.capm, E = v.price * COMPANY_DATA.latestQuarter.sharesOut, D = COMPANY_DATA.latestQuarter.debtPrincipal, be = b ?? c.beta,
+    const c = v.capm, E = v.price * (COMPANY_DATA.latestQuarter.sharesOut + PE_Q.sh), D = COMPANY_DATA.latestQuarter.debtPrincipal + PE_Q.od + PE_Q.cv, be = b ?? c.beta, // WhiteFiber v0.1b：期後股數與債務（postEvents）
       ke = v.rf + be * c.erp, kd = c.kdPretax * (1 - v.tax), wE = E / (D + E);
     return { beta: be, ke, kd, kdPre: c.kdPretax, E, D, wE, wD: 1 - wE, wacc: wE * ke + (1 - wE) * kd }
   }),
   MEDIAN_Q = a => { const s = [...a].sort((x, y) => x - y), n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2 },
   SW_MEDIAN = MEDIAN_Q((COMPANY_DATA.peers.software || []).map(x => x.ntmEvEbitda)), // 軟體同業 NTM EV/EBITDA 中位數
-  VAL_DEFAULTS = (v => (v.wacc = v.wacc ?? CAPM_Q(v).wacc, v.legacyEvEbitda = v.legacyEvEbitda ?? SW_MEDIAN, v))(structuredClone(COMPANY_DATA.valuation)), // null＝採 CAPM／同業中位數；數字＝手動覆蓋
+  VAL_DEFAULTS = (v => (v.shares += PE_Q.sh, v.netDebt += PE_Q.od - PE_Q.cash, v.wacc = v.wacc ?? CAPM_Q(v).wacc, v.legacyEvEbitda = v.legacyEvEbitda ?? SW_MEDIAN, v))(structuredClone(COMPANY_DATA.valuation)), // WhiteFiber v0.1b：股數與淨負債加期後事件 // null＝採 CAPM／同業中位數；數字＝手動覆蓋
   lM = COMPANY_DATA.peers.list.map(e => ({ ...e, ev: e.mkt + e.netDebt, ebitda: e.opInc + e.da })); // 同業 Comps：資料只在 company.json → peers；EV 與 EBITDA 現算（與 Excel 公式一致）
 
 function uM(e, t) {
@@ -21,7 +21,7 @@ var fM = COMPANY_DATA.valuation.atmSharesInValuation ?? 0; // v0.1b：評價股�
 
 function shareCount(e, t) {
   let n = e.includeAtm ? 0 : fM;
-  return Math.max(.1, t.shares - n)
+  return Math.max(1e-4, t.shares - n) // WhiteFiber v0.1b：下限由 0.1bn 改為 0.0001bn（小型公司股數約 0.04bn）
 }
 
 function mM(e, t, n) {
@@ -62,13 +62,14 @@ function forwardPL(e, t) {
       v = e.years[c].daFleet,
       y = e.years[c].cashCapex,
       b = t.wcPctOfRevGrowth * Math.max(0, d - r),
-      tb2 = Math.max(0, p - Math.min(N2, p * NOL_USE)),
+      u2 = Math.min(N2, Math.max(0, p) * NOL_USE), // WhiteFiber v0.1b：無槓桿 NOL 與 Excel 同式（虧損全額累積；原式虧損年只累積 80%）
+      tb2 = Math.max(0, p - u2),
       x = p - tb2 * t.tax + v - y - b - (e.years[c].prepayRecog || 0), // v0.1b：預付認列為非現金營收，自 UFCF 扣除（預付流入已在現金 CapEx 抵減）
       S = e.years[c].revenue,
       w = e.years[c].newRev,
       T = e.years[c].capacity > 0 ? e.years[c].unsold / e.years[c].capacity : 0,
       E = p + v;
-    return N2 -= Math.min(N2, p * NOL_USE), r = c === 0 ? HIST_PL[3].revenue + d : d, {
+    return N2 = N2 - u2 + Math.max(0, -p), r = c === 0 ? HIST_PL[3].revenue + d : d, {
       fyRevenue: c === 0 ? HIST_PL[3].revenue + d : d,
       fyOpInc: c === 0 ? HIST_PL[3].opInc + p : p,
       fyNi: c === 0 ? HIST_PL[3].ni + h : h,
@@ -460,6 +461,10 @@ var PRICE_DATE = COMPANY_DATA.meta.priceDate, // 現價收盤日（HTML 畫面�
   CONS_TOL = COMPANY_DATA.methodology.consensusGapTol, // 判斷句門檻：營收、EBITDA、CapEx 與共識差距（絕對值）超過此比例即視為分歧
   CONS_YEARS = PERIODS.slice(0, 3), // v0.1b（Oracle）：共識年度＝模型前三期（依公司財年；共識檔年度標籤須相同）
   CONS_JUDGE_KEYS = [[`營收`, `rev`], [`EBITDA`, `ebitda`], [`CapEx`, `capex`]];
+function consAvQ(k) { // WhiteFiber v0.1b：共識檔前三期都有該欄數字（Excel 同一規則：build_xlsx CONS_AV）
+  let f = { rev: `revenue`, ebitda: `ebitda`, capex: `capex`, nd: `netDebt`, ebM: `ebitdaMargin` }[k], E = CONSENSUS.annualEstimates;
+  return CONS_YEARS.every(y => E[y] && typeof E[y][f] === `number`)
+}
 function gapTxtQ(g, pt) { // 差距文字：比例 → +1.4%；pt＝true 時為百分點 → −2.8pt
   return `${g < 0 ? `−` : `+`}${Y(Math.abs(g) * 100, 1)}${pt ? `pt` : `%`}`
 }
@@ -472,16 +477,18 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
       let rev = f[i].fyRevenue,
         ebitda = i === 0 ? ACTUAL_1H.adjEbitda + f[0].ebitda : f[i].fyEbitda,
         m = { rev, ebitda, ebM: ebitda / rev, capex: i === 0 ? ACTUAL_1H.capex + y[0].gross : y[i].gross, nd: y[i].totalDebtEnd - y[i].cum },
-        c = { rev: E[yr].revenue, ebitda: E[yr].ebitda, ebM: E[yr].ebitdaMargin, capex: E[yr].capex, nd: E[yr].netDebt };
+        nq = x => typeof x === `number` ? x : NaN, // WhiteFiber v0.1b：共識未列（null／缺欄）→ NaN（畫面「—」；Excel「—」）
+        c = { rev: nq(E[yr].revenue), ebitda: nq(E[yr].ebitda), ebM: nq(E[yr].ebitdaMargin), capex: nq(E[yr].capex), nd: nq(E[yr].netDebt) };
       return { yr, m, c, gap: { rev: m.rev / c.rev - 1, ebitda: m.ebitda / c.ebitda - 1, ebM: m.ebM - c.ebM, capex: m.capex / c.capex - 1, nd: m.nd / c.nd - 1 },
         dif: { ebitda: m.ebitda - c.ebitda, nd: m.nd - c.nd } } // v4.4：利潤類與淨負債以金額差呈現（門檻判斷仍用比例）
     }),
     tol = pctQ(CONS_TOL),
-    ex = rows.map(r => CONS_JUDGE_KEYS.filter(([, k]) => Math.abs(r.gap[k]) > CONS_TOL).map(([n, k]) => `${n} ${annGapTxtQ(r, k)}`)),
+    JK = CONS_JUDGE_KEYS.filter(([, k]) => consAvQ(k)), JN = JK.map(x => x[0]).join(`、`), // WhiteFiber v0.1b：只判斷共識檔有數字的項目（EBITDA、CapEx 共識未列時不列入）
+    ex = rows.map(r => JK.filter(([, k]) => Math.abs(r.gap[k]) > CONS_TOL).map(([n, k]) => `${n} ${annGapTxtQ(r, k)}`)),
     first = ex.findIndex(x => x.length),
     Y0 = CONS_YEARS[0], YN = CONS_YEARS[CONS_YEARS.length - 1],
-    judge = first < 0 ? `${Y0}–${YN} 營收、EBITDA、CapEx 與共識差距皆在 ${tol} 以內。`
-      : (first > 0 ? `${first === 1 ? Y0 : `${Y0}–${CONS_YEARS[first - 1]}`} 營收、EBITDA、CapEx 與共識差距在 ${tol} 以內；` : ``) +
+    judge = first < 0 ? `${Y0}–${YN} ${JN} 與共識差距皆在 ${tol} 以內。`
+      : (first > 0 ? `${first === 1 ? Y0 : `${Y0}–${CONS_YEARS[first - 1]}`} ${JN} 與共識差距在 ${tol} 以內；` : ``) +
         `分歧始於 ${CONS_YEARS[first]}（${ex[first].join(`、`)}）` +
         ex.slice(first + 1).map((x, j) => `；${CONS_YEARS[first + 1 + j]} ${x.length ? x.join(`、`) : `回到 ${tol} 以內`}`).join(``) + `。`,
     PT = CONSENSUS.priceTarget, e28 = E[YN],
@@ -492,11 +499,11 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
     impPxOci = (o.price * o.shares + e28.netDebt - lgE * lgM) / Math.max(e28.ebitda - lgE, .01),
     mHi = Math.max(...RANGE_MULTS),
     rel = x => { let r = Math.round(x * 10) / 10; return r > mHi ? `高於` : r < mHi ? `低於` : `等於` },
-    implied = `共識平均目標價 $${Y(PT.mean, 2)} 隱含 ${YN} EV/EBITDA ${Y(impTgt, 1)}x（扣除傳統事業 ${Y(lgM, 1)}x × 模型 EBITDA $${Y(lgE, 1)}bn 後，OCI ${Y(impTgtOci, 1)}x），OCI 倍數${rel(impTgtOci)}模型方法區間上緣 ${multTxt(mHi)}x；現價 $${Y(o.price, 2)} 隱含 ${Y(impPx, 1)}x（OCI ${Y(impPxOci, 1)}x）。`,
+    implied = !(consAvQ(`ebitda`) && consAvQ(`nd`)) ? `共識 ${YN} 調整後 EBITDA 未列：隱含倍數不適用（共識平均目標價 $${Y(PT.mean, 2)}、現價 $${Y(o.price, 2)}）。` : `共識平均目標價 $${Y(PT.mean, 2)} 隱含 ${YN} EV/EBITDA ${Y(impTgt, 1)}x（扣除傳統事業 ${Y(lgM, 1)}x × 模型 EBITDA $${Y(lgE, 1)}bn 後，OCI ${Y(impTgtOci, 1)}x），OCI 倍數${rel(impTgtOci)}模型方法區間上緣 ${multTxt(mHi)}x；現價 $${Y(o.price, 2)} 隱含 ${Y(impPx, 1)}x（OCI ${Y(impPxOci, 1)}x）。`,
     up = TR.pt / o.price - 1, gapTh = TR.pt - TR.th,
     head = `${p.call.call}：點位 $${Y(TR.pt, 1)}，較現價 $${Y(o.price, 2)} ${up >= 0 ? `高` : `低`} ${hA(Math.abs(up) * 100, 0)}；情境區間 $${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}，方法區間 $${Y(TR.B[0], 1)}–$${Y(TR.B[1], 1)}；點位${gapTh < 0 ? `低於` : `高於`}賣出門檻 $${Y(TR.th, 1)} 達 $${Y(Math.abs(gapTh), 1)}。`;
   // v4.4：差距超過門檻的項目附差異原因（已決定事項 2）；原因與類型讀 company.json → varianceReasons，找不到即為「未歸類」
-  let rsn = rows.flatMap((r, i) => ANN_RSN_KEYS.filter(([, k]) => k === `ebitda` && PM_TOL != null ? Math.abs(r.gap.ebM) > PM_TOL : Math.abs(r.gap[k]) > CONS_TOL).map(([n, k]) => {
+  let rsn = rows.flatMap((r, i) => ANN_RSN_KEYS.filter(([, k]) => consAvQ(k)).filter(([, k]) => k === `ebitda` && PM_TOL != null ? Math.abs(r.gap.ebM) > PM_TOL : Math.abs(r.gap[k]) > CONS_TOL).map(([n, k]) => {
       let c = findRsnQ(`annual`, r.yr, k, `consensus`),
         ctx = { m: r.m, c: r.c, gap: r.gap, y: { mwNew: y[i].mwNew, accepted: d.m.accepted[i], costMW: st ? st.a.costMW[i] : NaN }, in: st || {} };
       return { yr: r.yr, key: k, name: n, gap: r.gap[k], gtxt: annGapTxtQ(r, k), type: c ? c.type : `未歸類`, text: c ? fillTokQ(c.text, ctx) : `差異原因待補` }
@@ -748,7 +755,7 @@ function consSourceTxtQ() {
   return {
     peers: `市值（${PE.priceDate} 收盤，${PE.priceSource}）：${COMPANY_DATA.meta.ticker} 現價 $${Y(CALL_FACTS.priceLast, 2)}（${CALL_FACTS.priceDate} 收盤）、市值 ${Y(CALL_FACTS.mktCapLast, 2)}bn（${PE.priceDate}）、流通 ${Y(LATEST_Q.sharesOut * 1e3, 2)}m；` +
       `${PE.list.map(p => `${p.ticker} ${Y(p.mkt, 2)}`).join(`；`)}。淨負債取各公司最新申報：${PE.list.map(p => `${p.ticker} ${Y(p.netDebt, 2)}`).join(`、`)}。`,
-    targets: `賣方目標價（${PT.source}，擷取 ${PT.retrieved}）：平均 $${Y(PT.mean, 2)}、中位數 $${Y(PT.median, 2)}、區間 $${Y(PT.low, 2)}–$${Y(PT.high, 2)}（${PT.analysts} 家）；共識評等 ${PT.consensusRating}。` +
+    targets: `賣方目標價（${PT.source}，擷取 ${PT.retrieved}）：平均 $${Y(PT.mean, 2)}${PT.median == null ? `` : `、中位數 $${Y(PT.median, 2)}`}、區間 $${Y(PT.low, 2)}–$${Y(PT.high, 2)}（${PT.analysts} 家）；共識評等 ${PT.consensusRating}。` +
       `對照 ${XC.source}：平均 $${Y(XC.mean, 2)}（${XC.analysts} 家，${XC.consensusRating}）。數字為賣方意見；逐筆來源與日期見「損益與評價 → 市場共識」。`
   }
 }

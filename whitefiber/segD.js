@@ -770,7 +770,7 @@ function zM() {
                     [`　每 MW 建置成本`, e.a.costMW, (e, t) => E(`costMW`, e, t), 1, void 0, `${TXQ.costMwNote}。全年指引不用來回推。`, `US$m/MW`],
                     [`　本期新增 MW`, d.years.map(e => e.mwNew), void 0, void 0, `calc`, `＝期末 Accepted − 期初。${PERIODS[0]} 期初為上一財年底 ${e.mwYearEnd[PERIOD_FY[0] - 1]} MW。`, `MW`],
                     [`　次期新增 MW`, d.years.map(e => e.mwNext), void 0, void 0, `calc`, `下一期新增量；${PERIODS[4]} 欄取左欄「模型期後一年新增 MW」。`, `MW`],
-                    [`　全年毛 CapEx（公式）`, d.years.map(e => e.capexFull), void 0, void 0, `calc`, `＝(本期新增×(1−λ)＋次期新增×λ)×每 MW 成本。${PERIODS[0]} 對照公司全年指引 ${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}（${TXQ.capexGuideSource}）。`],
+                    [`　全年毛 CapEx（公式）`, d.years.map(e => e.capexFull), void 0, void 0, `calc`, `＝(本期新增×(1−λ)＋次期新增×λ)×每 MW 成本。${PERIODS[0]} 對照公司全年指引 ${CAPEX_GUIDE_TXT}（${TXQ.capexGuideSource}）。`],
                     [`　成長型 CapEx（模型期）`, d.years.map(e => e.capexGrowth), void 0, void 0, `calc`, `${PERIODS[0]} 欄＝MAX(全年公式, 下限 ${e.capexFloorFY0}) − 年初至今 ${Y(ACTUAL_1H.capex, 3)}。下限代表當年已下單、無論情境都會發生的支出。`],
                     [`　GPU 汰換 CapEx`, d.years.map(e => e.refresh), void 0, void 0, `calc`, `${e.refreshSteady ? `已連網 MW 不再增加的期間（觸頂後）及 ${PERIODS[4]}：穩態汰換＝期間平均已連網 MW × 每 MW GPU 成本 ÷ 壽命 ${e.gpuLife} 年（建築與電力屬租賃不計）；其餘期間：` : ``}＝(本年 − 經濟壽命) 那一年新增的 MW × 每 MW 成本。壽命 ${e.gpuLife} 年；批次來源見左欄年底主動電力（${Object.entries(e.mwYearEnd).map(([y, m]) => `FY${String(y).slice(2)} 年底 ${m} MW`).join(`、`)}），汰換落在模型期之後者不出現。三情境相同。`],
                     [`① 毛 CapEx（模型期）`, d.years.map(e => e.gross), void 0, void 0, `tot`, `＝成長型＋汰換。含 OEM 融資的非現金部分。`],
@@ -800,7 +800,7 @@ function zM() {
                 className: `space-y-3`,
                 children: [(0, $.jsx)(hdrQ, {
                   title: `各期收支（類現金流量）`,
-                  tip: `${PERIODS[0]} 欄＝年初至今實際（季報）＋模型期，所以可直接對照公司全年指引：營收 ${REV_GUIDE_TXT}、CapEx ${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}。${PERIODS[1]} 以後為純模型。負數以括號表示。現金橋：期初 ＋ 營運缺口 ＋ 股權／可轉債 ＋ 未動用額度 − 排程還本 ＝ 期末。`
+                  tip: `${PERIODS[0]} 欄＝年初至今實際（季報）＋模型期，所以可直接對照公司全年指引：營收 ${REV_GUIDE_TXT}、CapEx ${CAPEX_GUIDE_TXT}。${PERIODS[1]} 以後為純模型。負數以括號表示。現金橋：期初 ＋ 營運缺口 ＋ 股權／可轉債 ＋ 未動用額度 − 排程還本 ＝ 期末。`
                 }), (0, $.jsx)(BM, {
                   rows: [
                     [`收入（產能約束）`, null],
@@ -858,7 +858,7 @@ function zM() {
                     [`1H 其他／受限現金調節`, d.years.map((e, t) => t === 0 ? e.hPlug : 0), void 0, void 0, void 0, `使年初至今實際流量接回評價日現金餘額；差額來自受限現金變動、匯率與未逐項列出的項目。`],
                     [`期末累積現金`, d.years.map(e => e.cum), void 0, void 0, `tot`, `負值＝尚需向資產擔保融資／可轉債／股權市場籌措的金額。未動用額度 ${Y(e.facility, 3)}bn 未預先扣減。`],
                     [`FY26 全年備忘（認列口徑，對照公司指引）`, null],
-                    [`CapEx 認列（年初至今 ${Y(ACTUAL_1H.capex, 3)}＋模型期）`, d.years.map((e, t) => t === 0 ? e.fyGross : e.gross), void 0, void 0, void 0, `公司全年指引 ${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}（法說會轉述）。`],
+                    [`CapEx 認列（年初至今 ${Y(ACTUAL_1H.capex, 3)}＋模型期）`, d.years.map((e, t) => t === 0 ? e.fyGross : e.gross), void 0, void 0, void 0, `公司全年指引 ${CAPEX_GUIDE_TXT}（法說會轉述）。`],
                     [`利息（1H ${Y(ACTUAL_1H.interest, 3)}＋下半年）`, d.years.map((e, t) => t === 0 ? e.fyInterest : e.interest), void 0, void 0, void 0, `公司未提供季度利息指引。`],
                     [`租金現金（1H ${Y(ACTUAL_1H.leasePaid, 3)}＋下半年）`, d.years.map((e, t) => t === 0 ? e.fyLease : e.lease)]
                   ]
@@ -877,7 +877,7 @@ function zM() {
                     [`Billable MW`, d.m.billable, (e, t) => D(`billable`, e, t), void 0, void 0, `引擎會強制不超過 Accepted。`, `MW`],
                     [`Billable MW（延誤後，計費用）`, d.years.map(e => e.billDelayed), void 0, void 0, `calc`, `＝上列往後平移建設延誤 ${multTxt(e.delayMonths ?? 0)} 個月（以期間長度線性內插；評價日之前取期初校準值）；營收依此列（v0.2）。`, `MW`],
                     [`利用率`, e.m.util, (e, t) => D(`util`, e, t), void 0, void 0, `法說稱「近期產能實質售罄」，本模型不擬合為 100%。`, `%`],
-                    [`每 MW 年收入`, e.m.revMW, (e, t) => D(`revMW`, e, t), 5e-4, void 0, `Tokenomics 正向推導（data/permw_tokenomics_20261007.json）；隨情境：保守 0.01162／基準 0.0174／積極 0.0242 [Derived]。`, `US$bn/MW`],
+                    [`每 MW 年收入`, e.m.revMW, (e, t) => D(`revMW`, e, t), 5e-4, void 0, `Tokenomics 正向推導（data/permw_tokenomics_20261008.json）；隨情境：保守 0.01162／基準 0.0174／積極 0.0242 [Derived]。`, `US$bn/MW`],
                     [`新產能簽約率`, e.m.fill, (e, t) => D(`fill`, e, t), 1, void 0, `把這欄調成 0，就能看到只靠期初 RPO 的缺口有多大——最重要的壓力測試。`, `%`],
 
                   ]
@@ -1546,7 +1546,7 @@ function zM() {
             children: [
               [`${CALQ.filedQLabel} 營收`, `${Y(LATEST_Q.revenue,3)}bn +${hA(LATEST_Q.yoy*100,0)} · 年初至今 ${Y(LATEST_Q.h1Revenue,3)}`],
               [`RPO 桶`, `${Y(LATEST_Q.rpo,1)}bn · ${COMPANY_DATA.rpo.split.map(x => hA(x*100,0)).join(`／`)}（${COMPANY_DATA.rpo.bucketLabels.join(`／`)}）· 只作對照`],
-              [`CapEx`, `年初至今 ${Y(LATEST_Q.capexH1,2)}（現金）· 全年 ${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}（${TXQ.capexGuideSource}）`],
+              [`CapEx`, `年初至今 ${Y(LATEST_Q.capexH1,2)}（現金）· 全年 ${CAPEX_GUIDE_TXT}（${TXQ.capexGuideSource}）`],
               [`債務本金`, `${Y(LATEST_Q.debtPrincipal,2)}bn · 五期攤還 ${Y(DEBT_AMORT.reduce((e,t)=>e+t,0),2)}`],
               [`客戶預付`, `合約負債 ${Y(LATEST_Q.deferredTotal,2)}bn · 年初至今淨增 ${Y(LATEST_Q.deferredIn,2)}`],
               [`租賃`, `在帳未折現 ${Y(LATEST_Q.onBalanceUndiscounted,2)} · 未起租 ${Y(LATEST_Q.offBalanceLease,1)}`]

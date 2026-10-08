@@ -1,8 +1,8 @@
 # WhiteFiber v0.1 分段建置進度（接手用；三張工作單共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：v0.1a 全部（見下方 v0.1a 段落）；v0.1b 步驟 0（基線 verify.sh 19 項全過；審查留言 6 項列入 v0.1b 待辦）。
-- 下一步：v0.1b 步驟 1 欄位搬移與換名（company.json 換 WhiteFiber、刪 oracle 區段與 Oracle 資料檔、共識檔單位與年度鍵正規化、畫面文字 OCI／傳統事業 → 雲端／託管）。
+- 已完成：v0.1a 全部；v0.1b 步驟 0（b1febb9）、1（欄位搬移與換名）。
+- 下一步：v0.1b 步驟 2 雲端營收主軸：合約隱含單價對照列（運營頁與檢查頁）、首期校準說明、雲端 EBITDA 起點（經常性 −11.5%）與含一次性替代值。
 - 未解問題：(a) 託管同業 NTM 只 2 家；(b) 個股 beta 不可靠（預設 2.5）；(c) EBITDA 共識找不到。
 
 ## 工作單總覽
@@ -56,3 +56,4 @@
 | 步驟 | 狀態 | commit | 備註 |
 |---|---|---|---|
 | 0 進度檔 v0.1b 段落 | 完成 | （本 commit） | 基線 verify.sh 19 項全過（2 分 36 秒；首次背景執行 fix_datatable 偶發失敗一次，重跑通過）；三情境目標價（仍為 Oracle v0.2 引擎與資料）不記錄 |
+| 1 欄位搬移與換名 | 完成 | （本 commit） | company.json 換成 WhiteFiber（meta WYFI、12 月財年 FY26Q2、首期 0.5 年 FY26–FY30、ytdActual 1H26、historicalPL〔FY23 不適用、FY24–FY25 10-K、1H26〕、latestQuarter、callFacts〔無指引〕、雲端 RPO、租賃到期表＋雪梨未起租、期後結構債務、valuation〔16.83、CAPM β 2.5、kd 9.5%〕、peers〔CRWV、NBIS、IREN、APLD、CORZ；託管同業 DLR／EQIX〕、quarterly〔FY26Q3 焦點、無季度共識與指引〕、texts）；刪 oracle／whitefiber 草稿區段與 Oracle／CRWV 資料檔。引擎（雙邊）：共識檔正規化（US$M→bn、FY2026→FY26、未列評等家數，calendar_q.load_consensus）；畫面用語替換 texts.labelMap（OCI→雲端、傳統事業→託管、投資級→可融資／債務上限、軟體同業→託管同業；segA–E 與 Excel，版本紀錄不換）；無指引時文字與檢查為「不適用」；共識未列欄位（EBITDA、CapEx、淨負債）為「—」、判斷只用有數字的項目；可計費 MW 小數 2 位（roundDp）；首期成長型 CapEx 只扣雲端年初至今（capexCore）；期後事件 valuation.postEvents（現金列首期 Ⓔ、淨負債、股數、CAPM 權重）；debt.extraCost（DDTL MOIC 加付 1.9，FY27）；HTML 股數下限 0.1bn→0.0001bn；修正 HTML 無槓桿 NOL（虧損只累積 80% → 與 Excel 同為全額）；cmp31 容差改讀 methodology.checks.cmpTol（0.0001）、兩邊皆無數值視為一致。crawl：描述本公司的 Oracle／CoreWeave／Nebius 0 處（CRWV、NBIS 只在同業、對照、來源；版本紀錄另計）。verify.sh 19 項全過（cmp31 每情境 364 項）；目標價（託管未建模、雲端起點負）保守 $0.0／基準 $1.2／積極 $4.3 |

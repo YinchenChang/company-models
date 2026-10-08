@@ -21,7 +21,8 @@ var PERIODS = COMPANY_DATA.periods,
   SC_REV = COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境（Tokenomics 正向推導三情境）
   SC_BR = COMPANY_DATA.scenarios.billableRatio.ratio,
   SC_BRM = COMPANY_DATA.scenarios.billableRatio.mode || `ratio`, // v0.1b（Oracle）：converge＝期初可計費 MW 以最新季實際營收年化 ÷ 每 MW 年收入校準，之後向已連網 MW 收斂
-  SC_BOPEN = k => SC_BRM === `converge` ? Math.round(COMPANY_DATA.scenarios.billableRatio.openAnnualRevenue / SC_REV[k][0]) : COMPANY_DATA.defaults.billableOpen,
+  SC_RDP = 10 ** (COMPANY_DATA.scenarios.billableRatio.roundDp || 0), RNDQ = x => Math.round(x * SC_RDP) / SC_RDP, // WhiteFiber v0.1b：可計費 MW 小數位數（roundDp；Oracle 0）
+  SC_BOPEN = k => SC_BRM === `converge` ? RNDQ(COMPANY_DATA.scenarios.billableRatio.openAnnualRevenue / SC_REV[k][0]) : COMPANY_DATA.defaults.billableOpen,
   UL = COMPANY_DATA.leases.uncommenced, UL_TOT = COMPANY_DATA.leases.facts.notCommenced, // v0.1b（Oracle）：未起租租賃起租排程
   ulPath = (T = UL.termYears, N = UL.quarters, S = UL.startQ, tot = UL_TOT) => { // 每季起租 tot/N（未折現），每筆期限 T 年直線付租；各期租金＝每筆季租 ×(期末累計已起租筆季數 − 期初累計)
     const q = tot / N / T / 4, F = x => { x = Math.max(0, x - S); const m = Math.min(x, N); return m * (m + 1) / 2 + N * Math.max(0, x - N) };
@@ -42,7 +43,7 @@ var PERIODS = COMPANY_DATA.periods,
   SCENARIOS = Object.fromEntries([`low`, `base`, `high`].map(k => [k, {
     label: COMPANY_DATA.scenarios.labels[k],
     acc: SC_ACC[k],
-    bil: SC_ACC[k].map((e, t) => SC_BRM === `converge` ? Math.round(SC_BOPEN(k) + (e - SC_BOPEN(k)) * SC_BR[t]) : Math.round(e * SC_BR[t])), // v0.1b：converge＝校準起點＋(已連網 − 起點)× 收斂比例
+    bil: SC_ACC[k].map((e, t) => SC_BRM === `converge` ? RNDQ(SC_BOPEN(k) + (e - SC_BOPEN(k)) * SC_BR[t]) : RNDQ(e * SC_BR[t])), // v0.1b：converge＝校準起點＋(已連網 − 起點)× 收斂比例
     bOpen: SC_BOPEN(k), // v0.1b：期初可計費 MW（隨情境）
     rev: SC_REV[k],
     mw31: SC_MW31[k],
@@ -55,6 +56,9 @@ var PERIODS = COMPANY_DATA.periods,
   DBT_I = DEBT_TOOLS.reduce((e, t) => e + t[3] * t[4], 0),
   DBT_R = DBT_I / DBT_P,
   CONV_P = COMPANY_DATA.debt.convertible.principal,
+  XCOST_Q = PERIOD_YEARS.map((L, n) => (COMPANY_DATA.debt.extraCost || []).reduce((a, x) => a + (x[1][n] || 0), 0)), // WhiteFiber v0.1b：額外融資成本（debt.extraCost）
+  // WhiteFiber v0.1b：期後事件（valuation.postEvents：[名稱, 日期, 現金, 其他借款, 可轉債, 股數, 說明]）——評價日現金、淨負債、股數與 CAPM 權重的期後調整
+  PE_Q = (COMPANY_DATA.valuation.postEvents || []).reduce((a, x) => ({ cash: a.cash + x[2], od: a.od + x[3], cv: a.cv + x[4], sh: a.sh + x[5] }), { cash: 0, od: 0, cv: 0, sh: 0 }),
   CONV_I = CONV_P * COMPANY_DATA.debt.convertible.coupon,
   // v0.1b：可轉債逐檔（company.json → debt.convertibles：[名稱, 原始本金, 票息, 到期 YYYY-MM, 到期累積倍數, 轉換價, 備註]）
   // M＝到期本金（原始 × 累積）、S＝若轉換股數（原始 ÷ 轉換價）、x＝有效轉換價（轉換價 × 累積）、t＝到期所屬模型期（0–4；5＝模型期後）
@@ -69,8 +73,10 @@ var PERIODS = COMPANY_DATA.periods,
   CHECK_TH = COMPANY_DATA.methodology.checks, // 5a：連動檢查門檻（Excel「檢查_連動」同一來源）
   W36 = PERIOD_YEARS.map((L, i) => Math.max(0, Math.min(L, 3 - PERIOD_YEARS.slice(0, i).reduce((a, b) => a + b, 0))) / L), // v0.1b：評價日起 36 個月落在各期的比例（RPO 對照）
   TXQ = COMPANY_DATA.texts, // v0.1b（Oracle）：公司特有說明文字
-  REV_GUIDE_TXT = CALL_FACTS.revHi == null ? `≥${CALL_FACTS.revLo}` : `${CALL_FACTS.revLo}–${CALL_FACTS.revHi}`, // v0.1b：營收指引只有下限時寫「≥」
-  inRevGuideQ = (x, t = 0) => x >= CALL_FACTS.revLo - t && (CALL_FACTS.revHi == null || x <= CALL_FACTS.revHi + t),
+  REV_GUIDE_TXT = CALL_FACTS.revLo == null ? `不適用（公司未給指引）` : CALL_FACTS.revHi == null ? `≥${CALL_FACTS.revLo}` : `${CALL_FACTS.revLo}–${CALL_FACTS.revHi}`, // v0.1b：營收指引只有下限時寫「≥」；WhiteFiber v0.1b：無指引時寫「不適用」
+  HAS_CX_G = CALL_FACTS.capexLo != null, // WhiteFiber v0.1b：公司未給資本支出指引時，相關檢查不比對
+  CAPEX_GUIDE_TXT = HAS_CX_G ? `${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}` : `不適用（公司未給指引）`,
+  inRevGuideQ = (x, t = 0) => CALL_FACTS.revLo == null || x >= CALL_FACTS.revLo - t && (CALL_FACTS.revHi == null || x <= CALL_FACTS.revHi + t),
   CX_OLD = COMPANY_DATA.legacy.capexV14,
   INT_OLD = COMPANY_DATA.legacy.interestV14,
   LEASE_FACTS = COMPANY_DATA.leases.facts,
@@ -296,7 +302,7 @@ function runFunding(e) {
     RFF = PERIOD_FY.map((t, n) => !!e.refreshSteady && (n === 4 || MN[n] <= 0)),
     RFS = PERIOD_FY.map((t, n) => (MB[n] + t_acc(n)) / 2 * e.a.costMW[n] * (e.capexScale ?? 1) / 1e3 / e.gpuLife * PERIOD_YEARS[n]),
     REF = RFV.map((x, n) => RFF[n] ? RFS[n] : x),
-    CXG = CXF.map((t, n) => n === 0 ? Math.max(t, e.capexFloorFY0 ?? 0) - ACTUAL_1H.capex : t),
+    CXG = CXF.map((t, n) => n === 0 ? Math.max(t, e.capexFloorFY0 ?? 0) - (ACTUAL_1H.capexCore ?? ACTUAL_1H.capex) : t), // WhiteFiber v0.1b：首期只扣第一分部（雲端 GPU）的年初至今認列
     CX = CXG.map((e, t) => e + REF[t]),
     DM = e.delayMonths ?? 0, // v0.2：建設延誤月數
     BD = shiftQ(t.billable, e.billableOpen, DM), // v0.2：計費用可計費 MW（原路徑平移延誤月數）
@@ -322,7 +328,7 @@ function runFunding(e) {
     IX = DEBT_AMORT.map((t, n) => {
       let r = n === 0 ? DBT_P : PB[n - 1][1],
         i = r - t;
-      return PB.push([r, i]), (r + i) / 2 * DBT_R * PERIOD_YEARS[n] + CONV_I * PERIOD_YEARS[n] + CVP[n].int + (n === 0 ? e.intCal : 0)
+      return PB.push([r, i]), (r + i) / 2 * DBT_R * PERIOD_YEARS[n] + CONV_I * PERIOD_YEARS[n] + CVP[n].int + (n === 0 ? e.intCal : 0) + XCOST_Q[n] // WhiteFiber v0.1b：額外融資成本（MOIC 加付）
     }),
     WF = {
       Jn: 0,
@@ -375,7 +381,7 @@ function runFunding(e) {
         w = t.accepted[r] * t.maint[r] / 1e3 * L,
         T = e.overlay ? C + w : 0,
         O = (e.includeDebt ? DEBT_AMORT[r] : 0) + CVP[r].amort, // v0.1b：含債務處理可轉債的到期還本（到期累積本金）
-        k = r === 0 && e.includeAtm ? e.atm : 0,
+        k = (r === 0 && e.includeAtm ? e.atm : 0) + (r === 0 ? PE_Q.cash : 0), // WhiteFiber v0.1b：期後事件現金淨額列於首期股權／可轉債（融資）
         lgR = LG.rev[r], lgE = LG.ebitda[r], // v0.1b（Oracle）：傳統事業營收與 EBITDA（EBITDA 視為現金，稅另列）
         tx = (e.cashTaxRate ?? 0) * Math.max(0, totRev * ebM + ob + lgE - pen - DAF[r] - IX[r]), // v0.1b：現金稅＝稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（不含瀑布新債利息，避免循環；偏保守）
         dvSh = e.dividend ? e.dividend.sharesBase + WF.sh + CVN.reduce((a, n) => a + (n.mand && n.t < r ? n.S : 0), 0) : 0, // v0.1b（Oracle）：股利股數＝期初股數（基礎＋前期累計瀑布新股＋已強制轉換的特別股）
@@ -589,13 +595,13 @@ function runFunding(e) {
     detail: `使用權資產對應的租賃負債 ${Y(LATEST_Q.opLeaseLiab, 3)}bn（${TXQ.leaseLiabNote}）。$${Y(LATEST_Q.offBalanceLease, 1)}bn 尚未起租，還沒有使用權資產。`
   });
   let v = o[0].gross,
-    y = v >= CALL_FACTS.capexLo - LATEST_Q.capexH1 - .5 && v <= CALL_FACTS.capexHi - LATEST_Q.capexH1 + .5;
+    y = !HAS_CX_G || v >= CALL_FACTS.capexLo - LATEST_Q.capexH1 - .5 && v <= CALL_FACTS.capexHi - LATEST_Q.capexH1 + .5;
   _({
     id: `h2-capex`,
     ok: y,
     severity: y ? `ok` : `watch`,
-    title: `${PERIOD_FY[0]} CapEx 指引 ${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi} → ${PERIODS[0]} 模型期 ${(CALL_FACTS.capexLo-LATEST_Q.capexH1).toFixed(1)}–${(CALL_FACTS.capexHi-LATEST_Q.capexH1).toFixed(1)}`,
-    detail: `全年資本支出指引 $${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}bn（${TXQ.capexGuideSource}）；年初至今現金資本支出 ${Y(LATEST_Q.capexH1, 2)}（應計口徑未揭露，以現金口徑代替）。模型 ${PERIOD_FY[0]}（年初至今實際＋首期模型）毛額 ${(v+ACTUAL_1H.capex).toFixed(1)}。`
+    title: HAS_CX_G ? `${PERIOD_FY[0]} CapEx 指引 ${CAPEX_GUIDE_TXT} → ${PERIODS[0]} 模型期 ${(CALL_FACTS.capexLo-LATEST_Q.capexH1).toFixed(1)}–${(CALL_FACTS.capexHi-LATEST_Q.capexH1).toFixed(1)}` : `${PERIOD_FY[0]} CapEx 指引：${CAPEX_GUIDE_TXT}`,
+    detail: `全年資本支出指引 $${CAPEX_GUIDE_TXT}bn（${TXQ.capexGuideSource}）；年初至今現金資本支出 ${Y(LATEST_Q.capexH1, 2)}（應計口徑未揭露，以現金口徑代替）。模型 ${PERIOD_FY[0]}（年初至今實際＋首期模型）毛額 ${(v+ACTUAL_1H.capex).toFixed(1)}。`
   }), _({
     id: `prepay`,
     ok: !0,
@@ -684,9 +690,9 @@ function runFunding(e) {
     detail: `${e.ebitdaBasis === `ebitdar` ? `EBITDAR 率由 ${((e.ebStart+e.ebitdarAdj[0])*100).toFixed(1)}% 線性變動至 ${PERIODS[4]} ${((e.ebSteady+e.ebitdarAdj[1])*100).toFixed(1)}%（三情境共用；校準使基準情境起點 ${(e.ebStart*100).toFixed(1)}%、穩態 ${(e.ebSteady*100).toFixed(1)}% EBITDA 率不變），EBITDA 率＝EBITDAR 率 − 租金÷營收（租金為固定成本）。` : `EBITDA 率由 ${(e.ebStart*100).toFixed(0)}%（${TXQ.ebStartSource}）線性變動至 ${PERIODS[4]} ${(e.ebSteady*100).toFixed(0)}%（穩態）。資金模型用 EBITDAR 率＝EBITDA 率＋租金÷營收（因租金在支出端另列），`}非算力服務現金＝服務營收×同一 EBITDAR 率。恆等式：現金 EBITDA（營運來源不含預付 − 租金）＋信用損失調整＝損益 EBITDA，五期皆成立。`
   }), _({
     id: `capex-mw`,
-    ok: o[0].capexFull >= CALL_FACTS.capexLo && o[0].capexFull <= CALL_FACTS.capexHi,
-    severity: o[0].capexFull >= CALL_FACTS.capexLo && o[0].capexFull <= CALL_FACTS.capexHi ? `ok` : `watch`,
-    title: `毛 CapEx 由 MW 推導：${PERIODS[0]} 全年 ${o[0].capexFull.toFixed(1)}（指引 ${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}）`,
+    ok: !HAS_CX_G || o[0].capexFull >= CALL_FACTS.capexLo && o[0].capexFull <= CALL_FACTS.capexHi,
+    severity: !HAS_CX_G || o[0].capexFull >= CALL_FACTS.capexLo && o[0].capexFull <= CALL_FACTS.capexHi ? `ok` : `watch`,
+    title: `毛 CapEx 由 MW 推導：${PERIODS[0]} 全年 ${o[0].capexFull.toFixed(1)}（指引 ${CAPEX_GUIDE_TXT}）`,
     detail: `公式＝(本期新增 MW×(1−λ)＋次期新增 MW×λ)×每 MW 成本。${PERIOD_FY[0] - 1} 年底 ${e.mwYearEnd[PERIOD_FY[0] - 1]} MW → ${PERIODS[0]} 年底 ${t.accepted[0]} MW、λ ${(e.lambda*100).toFixed(0)}%、每 MW $${e.a.costMW[0]}m（${TXQ.costMwNote}）。五期（首期為模型部分）合計 ${CX.reduce((e,t)=>e+t,0).toFixed(1)}。指引口徑：${TXQ.capexGuideSource}。`
   }), _({
     id: `fleet-da`,
@@ -705,7 +711,7 @@ function runFunding(e) {
     ok: o[0].capexFull < (e.capexFloorFY0 ?? 0) ? !1 : !0,
     severity: `watch`,
     title: o[0].capexFull < (e.capexFloorFY0 ?? 0) ? `${PERIODS[0]} CapEx 公式值 ${o[0].capexFull.toFixed(1)} 低於下限 ${e.capexFloorFY0}：差額 ${(e.capexFloorFY0 - o[0].capexFull).toFixed(1)} 為轉向太晚的成本` : `${PERIODS[0]} CapEx 公式值 ${o[0].capexFull.toFixed(1)} 高於下限 ${e.capexFloorFY0}`,
-    detail: `${PERIOD_FY[0]} 的支出多已下單（全年指引 ${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}，年初至今 ${Y(ACTUAL_1H.capex, 1)}）。若次年新增 MW 少到公式值低於下限，代表已採購的設備超過實際上線需求——這部分在模型中不帶來額外收入。`
+    detail: `${PERIOD_FY[0]} 的支出多已下單（全年指引 ${CAPEX_GUIDE_TXT}，年初至今 ${Y(ACTUAL_1H.capex, 1)}）。若次年新增 MW 少到公式值低於下限，代表已採購的設備超過實際上線需求——這部分在模型中不帶來額外收入。`
   }), _({
     id: `debt-sched-int`,
     ok: Math.abs(DBT_P + CVN.reduce((a, n) => a + (n.mand ? 0 : n.M), 0) - (LATEST_Q.debtPrincipal - COMPANY_DATA.debt.convertibleBridge.exchangedAccreted + COMPANY_DATA.debt.convertibleBridge.newIssuesAccreted)) < .01,

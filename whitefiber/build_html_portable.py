@@ -11,12 +11,13 @@ mid3 = mid3.replace("var NM = [`年度假設`, `年度結果`, `收入／容量`
                     "var NM = [`支出假設`, `各期結果`, `收入／產能`, `電力成本`, `信用／利率`, `終值`, `站點`, `敏感性`, `連動檢查`, `來源與承諾`, `債務明細`];")
 k = mid3.index('function RM('); ke = mid3.find('\nfunction ', k + 10); ke = len(mid3) if ke < 0 else ke
 mid3 = mid3[:k] + open(os.path.join(H, 'rm_andy.js'), encoding='utf-8').read().rstrip('\n') + mid3[ke:]
-seg = lambda n: open(os.path.join(H, n), encoding='utf-8').read()
 import json as _json
 sys.path.insert(0, H); import calendar_q  # v4.5：期間與日期由 company.json → calendar 推算（與 Excel 共用）
 _co = calendar_q.load(H)  # 公司資料單一來源
+_LM = calendar_q.label_map(_co)  # WhiteFiber v0.1b：畫面用語替換（texts.labelMap；segA–segE 的字串，tail.js 版本紀錄不換）
+seg = lambda n: (calendar_q.apply_map if n.startswith('seg') else (lambda x, p: x))(open(os.path.join(H, n), encoding='utf-8').read(), _LM)
 _co.pop('asOf', None)  # 滾動檢查的季度標記只在建置時檢查（calendar_q），不注入 HTML
-_co['consensus'] = _json.load(open(os.path.join(H, _co['meta']['consensusFile']), encoding='utf-8'))  # v4.3：市場共識資料檔（只讀）併入注入資料，不另設全域變數
+_co['consensus'] = calendar_q.load_consensus(H, _co)  # v4.3：市場共識資料檔（只讀）併入注入資料，不另設全域變數
 _g = _co['consensus']['companyGuidance'].get(_co['quarterly']['quarters'][0]['key']) or {}  # Q3 營收指引以 company.json 為準；與共識檔不一致即停止建置（Excel 建置同一檢查；v0.1b：公司未給季度指引時兩邊皆為空）
 assert (_g.get('revenueLow'), _g.get('revenueHigh')) == (_co['callFacts']['nextQRevLo'], _co['callFacts']['nextQRevHi']), 'Q3 營收指引：company.json 與共識檔不一致'
 import re as _re
