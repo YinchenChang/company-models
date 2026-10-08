@@ -1,4 +1,4 @@
-# CoreWeave 收支模型 v4.7 原始碼包
+# CoreWeave 收支模型 v4.8 原始碼包
 
 HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo 根目錄；建置產物寫到 `out/`（不納入版控），交付成品放 `dist/`。HTML 的函式庫模板為 `docs/template_v3_3.html`。
 
@@ -49,6 +49,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | scripts/compare_w5.py | W5：v4.6／v4.7 W4／v4.7 W5 三版對照 Excel（摘要、每MW_三版、公司實況驗證、敏感度、變動拆解） |
 | scripts/compare_w4.py | W4：v4.6 → v4.7 收入錨定對照 Excel（摘要、每MW_前後、錨與k、證據表、Q2驗證、敏感度、變動拆解） |
 | scripts/attrib_permw.py | W3：v4.5 → v4.6 目標價變動拆解（(d) 方法變更逐項依序／單獨切換；數值取自 Excel；三情境；檢查相加＝總變動） |
+| scripts/attrib_w6.py | W6：v4.7 → v4.8 目標價變動拆解（(c) ① GB300 機架價格〔IF_CapexIT 等換 v5.31〕→ ② 收入錨〔IF_HoldEcon 等換 v5.31〕→ (d) ③ IT 維護依機齡兩段 → ④ MW 口徑；混合快照自 git 歷史 v5.27；檢查相加＝總變動） |
+| scripts/compare_w6.py | W6：v4.7 → v4.8 對照 Excel（摘要、每MW_前後〔三情境〕、IT維護機齡、兩版公司實況驗證、Tokenomics 前後值、敏感度、變動拆解） |
 | scripts/make_expect.py | W3：升版預期差異清單產生器（規則檔 `scripts/expect/*_rules.json`；未歸類的差異即失敗） |
 | scripts/compare_gather.py、scripts/build_compare.py | W3：前後對照取數（三檔 × 三情境，xlx.py）與對照 Excel 產生 |
 | scripts/check_quarterly.js | v4.4：季度加總＝年度（三情境）、`quarterly.consistency` 一致性、超過門檻的差距都有原因；`build_html_portable.py` 建置時呼叫，verify.sh 步驟 0 |
@@ -180,6 +182,13 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **工具**：`scripts/attrib_w5.py`（W4 的 ①②③ 後加 ④ 公司調整逐項）、`scripts/compare_w5.py`（三版對照 Excel）；`verify_legacy.sh` 的 v4.6 副本移除 `companyAdjust`；`calendar_q.ROLL_FIELDS` 新增 `companyAdjust.capexActual`（選用區段，沒有時不檢查）。
 - **報告**：`docs/reports/20261008_coreweave_v4.7_公司實況驗證.{xlsx,md}`。
 
+## v4.8 接 Tokenomics v5.31（W6；2026-10-09）
+- **快照**：`data/tokenomics_snapshot_v5.31.json`（GB300 機架價格 5.0 → 4.3 $M；IT 維護改為保固期內／期滿兩段）；名稱清單新增 `IF_MaintITWarr`、`IF_MaintITPost`、`IF_WarrantyYrs`。
+- **IT 維護依機齡兩段**（`methodology.perMw.maint`＝age｜flat）：每期 IT 維護＝Σ 世代［保固期內平均在役 MW × `IF_MaintITWarr`＋保固期滿 × `IF_MaintITPost`］÷ 平均在役 MW。時間以首期期初（評價日）起算；期初機齡層（`fleet.openMix.vintages`：MW、投入使用月、世代占比；建置時檢查合計＝`activeMW` 與 `mix`）的保固到期＝`IF_WarrantyYrs` − 評價日時機齡；各期新增 MW（含汰換補回）於該期中點投入、到期＝中點＋保固年限；保固期內比例＝到期前占該期的比例；當期新增只計一半（與平均在役 MW 一致）；保固期內 MW 不超過該世代平均在役 MW。Excel：「輸入與假設」世代組合區（期初機齡層、TK IT 維護機齡兩段、保固年限）、「每MW經濟性」「機齡與保固」區與 IT 維護兩部分、等值費率對照列；「公司實況驗證」IT 維護與 Q2 季末營運成本合計改依機齡（新增「Q2 季末保固期內占比」）。HTML `vintQ`／`maintAgeQ`／`q2WarrQ`（cmp31 比對）。
+- **換公司**：填 `fleet.openMix.vintages`（沒有機齡資料時 `maint` 設 flat）；Tokenomics 須為 v5.31 起。
+- **工具**：`scripts/attrib_w6.py`、`scripts/compare_w6.py`；`verify_legacy.sh` 的 v4.6 副本設 maint=flat；升版清單 `scripts/expect/v4_8_rules.json` → `v4_8_vs_v4_7.txt`。
+- **報告**：`docs/reports/20261009_coreweave_v4.8_Tokenomics_v5.31.{xlsx,md}`。
+
 ## company.json 欄位說明（換公司填表指引）
 換成 Nebius、Oracle、OpenAI 等公司時，照這一節逐欄填寫 `company.json`；HTML 與 Excel 都從這個檔讀資料，改完執行 `scripts/verify.sh`。
 
@@ -189,7 +198,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY26 下半年、FY27、FY28、FY29、FY30，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 CoreWeave v4.7 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 CoreWeave v4.8 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
