@@ -231,7 +231,8 @@
    ],
    "note": "10-Q 2026Q2 附註 4：尚未起租租賃 85.2B（主要為資料中心；2026–2031 起租、不可取消期 1–26 年；逐年付款未揭露）。模型：平均分 22 季（2026Q3–2031Q4）起租、每筆 15 年直線付租 [Assumed；v0.1a 預設 16]；敏感度 10／20 年。另 2026-06 短期租約不可取消約 5.8B（2026Q3 起租）推定為 SpaceX 算力合約，不重複計入（見 rentedCompute）。",
    "opShare": 0.874436,
-   "opShareNote": "未起租租賃的營業部分比例（起租後營業部分成本進分部 EBITDA 率、不另扣現金；融資部分為現金支出）：取在帳租賃負債的營業占比 18.037 ÷ (18.037＋2.590)＝87.4%（10-Q 附註 4；[Derived]；類型未揭露；未起租預付款 835 預期為融資租賃）"
+   "opShareNote": "三家統一定義（MAG 對照表 r1 C21）：未起租租約中預期列為營業租賃的比例（租金入 EBITDA 的部分；不另自現金扣除；1 − opShare＝融資部分，自現金扣除）。Alphabet：取在帳租賃負債的營業占比 18.037 ÷ (18.037＋2.590)＝87.4%（10-Q 附註 4；[Derived]；類型未揭露；未起租預付款 835 預期為融資租賃）",
+   "cashShareLabel": null
   },
   "operatingInEbitda": true,
   "operatingInEbitdaNote": "分部營業利益已扣營業租賃成本 → 在帳營業租賃現金不再自現金扣除；融資租賃本息仍為現金支出（對照表 r1 C8 f）",
@@ -618,6 +619,7 @@
   "mw31": 1069.4,
   "capexFloorFY0": 200,
   "gpuLife": 6,
+  "gpuLifeNote": "Tokenomics IF_DeprLifeIT 6 年；Alphabet 10-K 2025：伺服器與網通設備一般依 6 年折舊 [Verified]",
   "refreshSteady": true,
   "refreshNote": "v0.1c：已連網 MW 不再增加的期間（觸頂後）及終值年，汰換 CapEx＝期間平均已連網 MW × 每 MW GPU 資本支出（IF_CapexIT，只含 IT）÷ GPU 經濟壽命 × 期間長度；建築與電力屬租賃不計；取代批次汰換（mwYearEnd 批次落在模型期之後）。false＝模板口徑（只有批次汰換）。",
   "revScale": 1,
@@ -825,7 +827,9 @@
     0.602,
     0.0
    ],
-   "note": "普通股股利＝每股每季 $0.22（2026-04 起）× 4 × 期間長度 × 期初股數（基礎 12.230bn＝2026-07-15 流通股＋前期累計瀑布新股＋已強制轉換的特別股）；每股固定（引擎不支援每股成長；近三年 0.60 → 0.83 → 0.88 年化，替代＝依成長率遞增）[Interested-party]；特別股股利：6.25% × $19.25B＝1.203／年，每季 2/15、5/15、8/15、11/15 支付至 2029-05-15 轉換（首期 2026-08-15 短期 0.234＋11-15 0.301＝0.535、2029 兩季 0.602，[Derived]；v0.1a mapTo 的 0.937／年誤用首期短期股利，已更正）。"
+   "note": "普通股股利＝每股每季 $0.22（2026-04 起）× 4 × 期間長度 × 期初股數（基礎 12.230bn＝2026-07-15 流通股＋前期累計瀑布新股＋已強制轉換的特別股）；每股依 growth 5%／年遞增（第 n 期 ×(1＋g)^n）[Interested-party]；特別股股利：6.25% × $19.25B＝1.203／年，每季 2/15、5/15、8/15、11/15 支付至 2029-05-15 轉換（首期 2026-08-15 短期 0.234＋11-15 0.301＝0.535、2029 兩季 0.602，[Derived]；v0.1a mapTo 的 0.937／年誤用首期短期股利，已更正）。",
+   "growth": 0.05,
+   "growthNote": "每季股利 0.20（2024 首次）→ 0.21（2025-04，+5%，10-K）→ 0.22（2026-04，+4.8%）→ 每股年成長 5% [Derived]（對照表 r1 第 5 節第 8 條；MAG v0.1b r3 C19）"
   },
   "debtBacklog": 0.5,
   "delayPenalty": 0,
@@ -1058,7 +1062,7 @@
      "period": "3 年",
      "frequency": "頁面未寫明",
      "asOf": "2026-10-08",
-     "ref": "gurufocus.com/term/beta/GOOGL（2026-10-09 擷取）"
+     "ref": "val.beta.gurufocus"
     }
    ],
    "erp": 0.05,
@@ -1068,7 +1072,8 @@
     1.3669
    ],
    "note": "WACC＝E/(D+E)×(rf＋β×ERP)＋D/(D+E)×kd×(1−稅率)；E＝現價 × 流通股數（latestQuarter.sharesOut）、D＝評價日債務面額（latestQuarter.debtPrincipal）；β 1.288（獨立來源平均，見 betaNote）、rf 5.28%（10 年美債 2026-10-07）、ERP 5%、kd 6.527%（2026-08 新發 2066 票據發行殖利率）；稅率 16.8%（2025 有效稅率，v0.1a 建議）。valuation.wacc 為 null 時採 CAPM。",
-   "betaNote": "β＝獨立來源平均（MAG 對照表 r1 C13）：StockAnalysis 5 年月 1.21（Yahoo、MarketBeat 同值，推測同源，只算 1 個）、GuruFocus 3 年 1.3669（2026-10-08；不同資料商、不同期間）→ 1.288；敏感度＝獨立來源區間 1.21–1.367 [Derived]"
+   "betaNote": "β＝獨立來源平均（MAG 對照表 r1 C13）：StockAnalysis 5 年月 1.21（Yahoo、MarketBeat 同值，推測同源，只算 1 個）、GuruFocus 3 年 1.3669（2026-10-08；不同資料商、不同期間）→ 1.288；敏感度＝獨立來源區間 1.21–1.367 [Derived]",
+   "kdNote": "2026-08 新發 6.500% 2066 票據發行殖利率 6.527%（T＋130bp；FWP 2026-08-06）（市場邊際成本）[Verified]"
   },
   "g": 0.03,
   "sbc": 28.147,
@@ -1085,26 +1090,46 @@
   "segmentMultiples": {
    "ads": {
     "label": "數位廣告",
+    "source": "data/peers_ads_20261009.json",
     "peers": [
      {
       "ticker": "META",
       "name": "Meta",
       "ntmEvEbitda": 10.79,
-      "ref": "val.peer.meta"
+      "ref": "val.peer.ads.meta"
      },
      {
       "ticker": "PINS",
       "name": "Pinterest",
-      "ntmEvEbitda": 6.83,
-      "ref": "val.peer.pins（MarketScreener 調整後 EBITDA）"
+      "ntmEvEbitda": 6.91,
+      "ref": "val.peer.ads.pins"
      },
      {
       "ticker": "TTD",
       "name": "The Trade Desk",
-      "ntmEvEbitda": 6.68,
-      "ref": "val.peer.ttd（TTM，非 NTM）"
+      "ntmEvEbitda": 6.53,
+      "ref": "val.peer.ads.ttd"
+     },
+     {
+      "ticker": "APP",
+      "name": "AppLovin",
+      "ntmEvEbitda": 11.38,
+      "ref": "val.peer.ads.app"
+     },
+     {
+      "ticker": "RDDT",
+      "name": "Reddit",
+      "ntmEvEbitda": 13.63,
+      "ref": "val.peer.ads.rddt"
+     },
+     {
+      "ticker": "SNAP",
+      "name": "Snap",
+      "ntmEvEbitda": 7.43,
+      "ref": "val.peer.ads.snap"
      }
-    ]
+    ],
+    "note": "共用數字廣告同業組 META、PINS、TTD、APP、RDDT、SNAP（MAG 對照表 r1 C18；不含 AMZN、GOOGL、MSFT；data/peers_ads_20261009.json，三家共用）；中位數 9.11× [Derived]"
    },
    "subs": {
     "label": "訂閱影音",
@@ -1198,7 +1223,7 @@
     "note": "未蒐集半導體同業倍數 → 沿用 AI 雲端倍數 6× [Assumed]"
    }
   },
-  "segmentMultiplesNote": "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 NTM EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家）：搜尋、YouTube 廣告、聯播網、Alphabet 層級費用＝數位廣告（META、PINS、TTD；中位數 6.83×，v0.1a 建議以 META 10.8× 為主，列敏感度）；訂閱平台裝置＝訂閱影音（NFLX、SPOT、DIS，與 Amazon 同組；中位數 15.41×）；非 AI 雲端＝共用同業組 8 家中位數（C12，data/peers_cloud_20261008.json）；Other Bets、TPU 硬體銷售無同業組 → AI 雲端倍數；AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）"
+  "segmentMultiplesNote": "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 NTM EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家）：搜尋、YouTube 廣告、聯播網、Alphabet 層級費用＝數位廣告＝共用同業組 6 家（META、PINS、TTD、APP、RDDT、SNAP；中位數 9.11×；C18，data/peers_ads_20261009.json，複製自 amazon/data/）；訂閱平台裝置＝訂閱影音（NFLX、SPOT、DIS，與 Amazon 同組；中位數 15.41×）；非 AI 雲端＝共用同業組 8 家中位數（C12，data/peers_cloud_20261008.json）；Other Bets、TPU 硬體銷售無同業組 → AI 雲端倍數；AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）"
  },
  "methodology": {
   "blendWeights": {
@@ -1229,7 +1254,8 @@
    "unsignedRevShareMax": 0.5,
    "siteRentGapMax": 10,
    "rentVsBenchMin": 0.8,
-   "c15Tol": 0.05
+   "c15Tol": 0.05,
+   "daReconTol": 0.1
   }
  },
  "peers": {
@@ -1335,22 +1361,40 @@
     "ticker": "META",
     "name": "Meta",
     "ntmEvEbitda": 10.79,
-    "ref": "val.peer.meta"
+    "ref": "val.peer.ads.meta"
    },
    {
     "ticker": "PINS",
     "name": "Pinterest",
-    "ntmEvEbitda": 6.83,
-    "ref": "val.peer.pins（MarketScreener 調整後 EBITDA）"
+    "ntmEvEbitda": 6.91,
+    "ref": "val.peer.ads.pins"
    },
    {
     "ticker": "TTD",
     "name": "The Trade Desk",
-    "ntmEvEbitda": 6.68,
-    "ref": "val.peer.ttd（TTM，非 NTM）"
+    "ntmEvEbitda": 6.53,
+    "ref": "val.peer.ads.ttd"
+   },
+   {
+    "ticker": "APP",
+    "name": "AppLovin",
+    "ntmEvEbitda": 11.38,
+    "ref": "val.peer.ads.app"
+   },
+   {
+    "ticker": "RDDT",
+    "name": "Reddit",
+    "ntmEvEbitda": 13.63,
+    "ref": "val.peer.ads.rddt"
+   },
+   {
+    "ticker": "SNAP",
+    "name": "Snap",
+    "ntmEvEbitda": 7.43,
+    "ref": "val.peer.ads.snap"
    }
   ],
-  "softwareNote": "數位廣告同業 EV/EBITDA（StockAnalysis EV ÷ MarketScreener NTM EBITDA，2026-10-07；TTD 為 TTM；data/alphabet_facts val.peer.*）；分部倍數見 valuation.segmentMultiples [Derived]"
+  "softwareNote": "數位廣告共用同業組 6 家 NTM EV/EBITDA（C18；data/peers_ads_20261009.json）；分部倍數見 valuation.segmentMultiples [Derived]"
  },
  "quarterly": {
   "_note": "季度層（v4.4）：由年度模型拆分，只用於追蹤，不影響目標價與任何年度數字。拆分方法由下列設定選擇；缺資料（沒有 MW、沒有共識或指引）時顯示「不適用」。",
@@ -3012,8 +3056,26 @@
   "selfBuild": 0.85,
   "selfBuildNote": "自建機房比例 85%（75%–95%，[Assumed]）：營業租賃負債 18.0B 對 PP&E 321.2B，租用占比低；但尚未起租租賃 85.2B（主要為資料中心）顯示租用上升。租用部分不計機房資本支出（租金由未起租租賃承擔）",
   "segDaRunRate": 28.416,
-  "segDaRunRateNote": "最新季（2026Q2）合併折舊 7.104 × 4（現金流量表；公司不揭露分部 D&A；[Derived]）：校準非 AI 折舊年限",
+  "segDaRunRateNote": "最新季（2026Q2）合併折舊 7.104 × 4（現金流量表；公司不揭露分部 D&A；[Derived]）：D&A 對帳基準（C17）",
   "guideNote": "2026 指引 195–205（中點 200；法說二手逐字稿）；2027「顯著增加」無數字 → 次期起由 MW 推導（對照共識 2027 301.0、2028 339.5）",
+  "rentedExt": {
+   "open": 0,
+   "path": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rentMW": 0,
+   "note": "Alphabet 無已揭露的租用對外 AI 算力：SpaceX 雲端服務合約（219 MW-IT）用途未揭露，列自用（leases.rentedCompute，租金入營運成本）[Assumed]；MAG 對照表 r1 C20"
+  },
+  "nonAiLife": 10,
+  "nonAiLifeRange": [
+   8,
+   15
+  ],
+  "nonAiLifeNote": "非 AI 折舊年限預設 10 年（區間 8–15 年）[Assumed]；r2 以合併折舊反解時退化（AI 期初折舊 34.0 > 合併折舊年化 28.4，年限 ≈ 7×10¹⁰ 年），MAG 對照表 r1 C17 改為預設年限，差額列 D&A 對帳殘差（10-K：伺服器與網通設備 6 年、資料中心與辦公建築 7–40 年）",
   "aiNetShare": 0.75,
   "aiNetShareNote": "期初 AI PP&E 淨額 ÷ 毛額 75%（機隊多為 2024–2026 建置、IT 壽命 6 年；[Assumed]，區間 60%–90%）：AI 增量 ROIC 的期初投入資本",
   "roicYear": 3,

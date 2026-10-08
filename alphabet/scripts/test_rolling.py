@@ -49,7 +49,7 @@ fy, q = calendar_q._parse_q(co['calendar']['latestQuarterFiled'])
 nq = calendar_q.q_key(fy + (q == 4), q % 4 + 1, calendar_q.label_style(co['calendar']))  # MAG v0.1b：與 latestQuarterFiled 同格式
 co['calendar']['latestQuarterFiled'] = co['calendar']['latestQuarterReported'] = nq
 new = calendar_q.derive(co)
-co['ytdActual'].update(throughQuarter=nq, months=new['ytdMonths'], label=co['ytdActual']['label'].replace(old['ytdLabel'], new['ytdLabel'] or ''))
+co['ytdActual'].update(throughQuarter=nq, months=new['ytdMonths'], label=(co['ytdActual']['label'].replace(old['ytdLabel'], new['ytdLabel'] or '') if old['ytdLabel'] else f"{new['ytdLabel']} 實際（滾動測試）"))  # MAG v0.1b′：Q4 已申報（年初至今無標籤）時改寫為新標籤
 co['historicalPL'][-1]['year'] = new['ytdLabel']  # 資料更新時一併更新的標籤（數字不動）
 # C. 滾動檢查（首期一次性金額與期初餘額的所屬季度）：只滾日曆、未更新 asOf 時必須失敗，且逐項列出全部欄位
 try:
@@ -76,7 +76,9 @@ def toks(c):  # 舊日曆特有的字樣（新日曆沒有者才算過期）
     for k in ('ytdShort', 'ytdShortAlt', 'stubShort', 'ytdWord', 'stubWord', 'filedQLabel'):
         if c.get(k): out.add(c[k])
     return out
-stale = sorted(toks(old) - toks(new), key=len, reverse=True)
+# MAG v0.1b′（Microsoft）：Q4 已申報（評價日＝上一財年末）滾動一季後，舊評價日仍是新日曆的上一財年末、舊首期標籤仍是新首期的期間標籤、「全年」仍是全年口徑用字——這些在新日曆仍有效，不算過期
+_valid = {new['prevFYE'], f"{int(new['prevFYE'][5:7])}/{int(new['prevFYE'][8:10])}", *new['periods'], '全年'}
+stale = sorted(toks(old) - toks(new) - _valid, key=len, reverse=True)
 data_str = set()
 def walk(x):
     if isinstance(x, dict): [walk(v) for v in x.values()]

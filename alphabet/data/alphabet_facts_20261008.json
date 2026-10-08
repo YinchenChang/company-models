@@ -9,13 +9,13 @@
  },
  "asOf": "2026-10-08",
  "counts": {
-  "total": 708,
+  "total": 729,
   "byTag": {
    "[Analogy]": 8,
    "[Assumed]": 4,
-   "[Derived]": 58,
-   "[Interested-party]": 482,
-   "[Verified]": 156
+   "[Derived]": 68,
+   "[Interested-party]": 489,
+   "[Verified]": 160
   }
  },
  "groups": {
@@ -9447,6 +9447,319 @@
     "retrieved": "2026-10-08",
     "tag": "[Interested-party]",
     "note": "不存在（Alphabet 未揭露 AI 雲端營收或 run-rate；只揭露 API token 每分鐘 22B、Gemini Enterprise 滲透等使用量）"
+   }
+  ],
+  "10_v0.1b′補充": [
+   {
+    "id": "cf.wc.fy2025",
+    "item": "資產與負債變動合計（營運資金；應收、所得稅、其他資產、應付、應計、應計分潤、遞延收入）",
+    "value": 618,
+    "unit": "USD M",
+    "period": "FY2025",
+    "source": "Alphabet Form 10-K FY2025（期末 2025-12-31，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm",
+    "docDate": "2026-02-05",
+    "retrieved": "2026-10-09",
+    "tag": "[Verified]",
+    "note": "−8,779−3,226−4,542＋907＋12,939＋899＋2,420 [Derived 加總]；C14 wcStub 用"
+   },
+   {
+    "id": "cf.wc.2025h1",
+    "item": "資產與負債變動合計（2025 上半年）",
+    "value": -7872,
+    "unit": "USD M",
+    "period": "2025H1",
+    "source": "Alphabet Form 10-Q 2026Q2（期末 2026-06-30，核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000071/goog-20260630.htm",
+    "docDate": "2026-07-23",
+    "retrieved": "2026-10-09",
+    "tag": "[Interested-party]",
+    "note": "2026Q2 10-Q 比較欄：應收 −1,201、存貨 −628、所得稅 −2,434、其他資產 −2,139、應付 −327、應計 −1,779、遞延收入 +636 [Derived 加總]"
+   },
+   {
+    "id": "cf.wc.2025h2",
+    "item": "資產與負債變動（2025 下半年，C14 wcStub）",
+    "value": 8490,
+    "unit": "USD M",
+    "period": "2025H2",
+    "source": "Alphabet Form 10-K FY2025（期末 2025-12-31，經查核合併財報）＋Alphabet Form 10-Q 2026Q2（期末 2026-06-30，核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm",
+    "docDate": "2026-07-23",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "＝cf.wc.fy2025 − cf.wc.2025h1"
+   },
+   {
+    "id": "cf.wc.2026h1",
+    "item": "資產與負債變動合計（2026 上半年）",
+    "value": -12502,
+    "unit": "USD M",
+    "period": "2026H1",
+    "source": "Alphabet Form 10-Q 2026Q2（期末 2026-06-30，核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000071/goog-20260630.htm",
+    "docDate": "2026-07-23",
+    "retrieved": "2026-10-09",
+    "tag": "[Interested-party]",
+    "note": "應收 −6,904、存貨 −7,739、所得稅 +8,304、其他資產 −9,950、應付 +2,090、應計 +308、遞延收入 +789 [Derived 加總]"
+   },
+   {
+    "id": "bs.mktEq.fy2025",
+    "item": "有價權益證券（流動）",
+    "value": 6313,
+    "unit": "USD M",
+    "period": "2025-12-31",
+    "source": "Alphabet Form 10-K FY2025（期末 2025-12-31，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm",
+    "docDate": "2026-02-05",
+    "retrieved": "2026-10-09",
+    "tag": "[Verified]",
+    "note": "附註 3 公允價值表；模型現金口徑扣除、改列持股"
+   },
+   {
+    "id": "bs.mktEq.2026q2",
+    "item": "有價權益證券（流動；含 SpaceX 短期限售 80.0B）",
+    "value": 87063,
+    "unit": "USD M",
+    "period": "2026-06-30",
+    "source": "Alphabet Form 10-Q 2026Q2（期末 2026-06-30，核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000071/goog-20260630.htm",
+    "docDate": "2026-07-23",
+    "retrieved": "2026-10-09",
+    "tag": "[Interested-party]",
+    "note": "附註 3；另其他非流動資產中有價權益證券 14,126（含 SpaceX 長期限售 14.1B）"
+   },
+   {
+    "id": "bs.mktEq.lt.2026q2",
+    "item": "有價權益證券（其他非流動資產）",
+    "value": 14126,
+    "unit": "USD M",
+    "period": "2026-06-30",
+    "source": "Alphabet Form 10-Q 2026Q2（期末 2026-06-30，核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000071/goog-20260630.htm",
+    "docDate": "2026-07-23",
+    "retrieved": "2026-10-09",
+    "tag": "[Interested-party]",
+    "note": "附註 3"
+   },
+   {
+    "id": "lease.cash.2026h1",
+    "item": "租賃現金支付（營業租賃營運現金 1,817、融資租賃利息 35、融資租賃本金 840）",
+    "value": 2692,
+    "unit": "USD M",
+    "period": "2026H1",
+    "source": "Alphabet Form 10-Q 2026Q2（期末 2026-06-30，核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000071/goog-20260630.htm",
+    "docDate": "2026-07-23",
+    "retrieved": "2026-10-09",
+    "tag": "[Interested-party]",
+    "note": "附註 4 補充資訊；ytdActual.leasePaid"
+   },
+   {
+    "id": "lease.rate.2026q2",
+    "item": "加權平均折現率（營業／融資）",
+    "value": {
+     "operating": 0.038,
+     "finance": 0.033
+    },
+    "unit": "比例",
+    "period": "2026-06-30",
+    "source": "Alphabet Form 10-Q 2026Q2（期末 2026-06-30，核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000071/goog-20260630.htm",
+    "docDate": "2026-07-23",
+    "retrieved": "2026-10-09",
+    "tag": "[Interested-party]",
+    "note": "加權剩餘期限 8.4／8.6 年"
+   },
+   {
+    "id": "debt.principalSched.fy2025",
+    "item": "未來本金到期表（2025-12-31）",
+    "value": {
+     "2026": 2000,
+     "2027": 1000,
+     "2028": 2676,
+     "2029": 1764,
+     "2030": 5500,
+     "thereafter": 36145
+    },
+    "unit": "USD M",
+    "period": "2025-12-31",
+    "source": "Alphabet Form 10-K FY2025（期末 2025-12-31，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm",
+    "docDate": "2026-02-05",
+    "retrieved": "2026-10-09",
+    "tag": "[Verified]",
+    "note": "附註 6；2026 年新發票據到期逐年未揭露"
+   },
+   {
+    "id": "div.dps.history",
+    "item": "每季股利每股",
+    "value": {
+     "2024": 0.2,
+     "2025-04": 0.21,
+     "2026-04": 0.22
+    },
+    "unit": "USD/股",
+    "period": "2024–2026",
+    "source": "Alphabet Form 10-K FY2025（期末 2025-12-31，經查核合併財報）＋Alphabet Form 10-Q 2026Q2（期末 2026-06-30，核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm",
+    "docDate": "2026-07-23",
+    "retrieved": "2026-10-09",
+    "tag": "[Interested-party]",
+    "note": "10-K：2025-04 每季股利調高 5% 至 0.21；2026 0.22 → 年成長約 5%"
+   },
+   {
+    "id": "ppe.serverLife",
+    "item": "伺服器與網通設備折舊年限",
+    "value": 6,
+    "unit": "年",
+    "period": "FY2025",
+    "source": "Alphabet Form 10-K FY2025（期末 2025-12-31，經查核合併財報）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm",
+    "docDate": "2026-02-05",
+    "retrieved": "2026-10-09",
+    "tag": "[Verified]",
+    "note": "附註 1：伺服器與網通設備一般 6 年；資料中心與辦公建築 7–40 年"
+   },
+   {
+    "id": "val.beta.gurufocus",
+    "item": "beta（3 年）",
+    "value": 1.3669,
+    "unit": "倍",
+    "period": "2026-10-08",
+    "source": "GuruFocus〈GOOGL Beta〉",
+    "url": "https://www.gurufocus.com/term/beta/GOOGL",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "三年期報酬；頻率與基準指數頁面未寫明；與 StockAnalysis 1.21（5 年月）為不同資料商、不同期間 → C13 獨立第二來源"
+   },
+   {
+    "id": "mw.epoch.power.2023q1",
+    "item": "Google 擁有的累計晶片功耗（TPU／NVIDIA，TDP 加總）",
+    "value": {
+     "tpu": 80,
+     "nvidia": 35.73
+    },
+    "unit": "MW（晶片 TDP）",
+    "period": "2023Q1",
+    "source": "Epoch AI〈AI Chip Owners〉資料集：cumulative by designer（CSV）",
+    "url": "https://epoch.ai/data/ai_chip_owners_cumulative_by_designer.csv",
+    "docDate": "2026-05-12",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "WebFetch 讀取（中位數）；年底值 × 1.65 × 對外 30% → defaults.mwYearEnd；近四季平均在役 MW 內插用"
+   },
+   {
+    "id": "mw.epoch.power.2023q2",
+    "item": "Google 擁有的累計晶片功耗（TPU／NVIDIA，TDP 加總）",
+    "value": {
+     "tpu": 130,
+     "nvidia": 49.48
+    },
+    "unit": "MW（晶片 TDP）",
+    "period": "2023Q2",
+    "source": "Epoch AI〈AI Chip Owners〉資料集：cumulative by designer（CSV）",
+    "url": "https://epoch.ai/data/ai_chip_owners_cumulative_by_designer.csv",
+    "docDate": "2026-05-12",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "WebFetch 讀取（中位數）；年底值 × 1.65 × 對外 30% → defaults.mwYearEnd；近四季平均在役 MW 內插用"
+   },
+   {
+    "id": "mw.epoch.power.2023q3",
+    "item": "Google 擁有的累計晶片功耗（TPU／NVIDIA，TDP 加總）",
+    "value": {
+     "tpu": 190,
+     "nvidia": 71.0
+    },
+    "unit": "MW（晶片 TDP）",
+    "period": "2023Q3",
+    "source": "Epoch AI〈AI Chip Owners〉資料集：cumulative by designer（CSV）",
+    "url": "https://epoch.ai/data/ai_chip_owners_cumulative_by_designer.csv",
+    "docDate": "2026-05-12",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "WebFetch 讀取（中位數）；年底值 × 1.65 × 對外 30% → defaults.mwYearEnd；近四季平均在役 MW 內插用"
+   },
+   {
+    "id": "mw.epoch.power.2023q4",
+    "item": "Google 擁有的累計晶片功耗（TPU／NVIDIA，TDP 加總）",
+    "value": {
+     "tpu": 287,
+     "nvidia": 97.96
+    },
+    "unit": "MW（晶片 TDP）",
+    "period": "2023Q4",
+    "source": "Epoch AI〈AI Chip Owners〉資料集：cumulative by designer（CSV）",
+    "url": "https://epoch.ai/data/ai_chip_owners_cumulative_by_designer.csv",
+    "docDate": "2026-05-12",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "WebFetch 讀取（中位數）；年底值 × 1.65 × 對外 30% → defaults.mwYearEnd；近四季平均在役 MW 內插用"
+   },
+   {
+    "id": "mw.epoch.power.2024q1",
+    "item": "Google 擁有的累計晶片功耗（TPU／NVIDIA，TDP 加總）",
+    "value": {
+     "tpu": 427,
+     "nvidia": 133.46
+    },
+    "unit": "MW（晶片 TDP）",
+    "period": "2024Q1",
+    "source": "Epoch AI〈AI Chip Owners〉資料集：cumulative by designer（CSV）",
+    "url": "https://epoch.ai/data/ai_chip_owners_cumulative_by_designer.csv",
+    "docDate": "2026-05-12",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "WebFetch 讀取（中位數）；年底值 × 1.65 × 對外 30% → defaults.mwYearEnd；近四季平均在役 MW 內插用"
+   },
+   {
+    "id": "mw.epoch.power.2024q2",
+    "item": "Google 擁有的累計晶片功耗（TPU／NVIDIA，TDP 加總）",
+    "value": {
+     "tpu": 592,
+     "nvidia": 177.69
+    },
+    "unit": "MW（晶片 TDP）",
+    "period": "2024Q2",
+    "source": "Epoch AI〈AI Chip Owners〉資料集：cumulative by designer（CSV）",
+    "url": "https://epoch.ai/data/ai_chip_owners_cumulative_by_designer.csv",
+    "docDate": "2026-05-12",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "WebFetch 讀取（中位數）；年底值 × 1.65 × 對外 30% → defaults.mwYearEnd；近四季平均在役 MW 內插用"
+   },
+   {
+    "id": "mw.epoch.power.2024q3",
+    "item": "Google 擁有的累計晶片功耗（TPU／NVIDIA，TDP 加總）",
+    "value": {
+     "tpu": 779,
+     "nvidia": 231.78
+    },
+    "unit": "MW（晶片 TDP）",
+    "period": "2024Q3",
+    "source": "Epoch AI〈AI Chip Owners〉資料集：cumulative by designer（CSV）",
+    "url": "https://epoch.ai/data/ai_chip_owners_cumulative_by_designer.csv",
+    "docDate": "2026-05-12",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "WebFetch 讀取（中位數）；年底值 × 1.65 × 對外 30% → defaults.mwYearEnd；近四季平均在役 MW 內插用"
+   },
+   {
+    "id": "mw.epoch.power.2024q4",
+    "item": "Google 擁有的累計晶片功耗（TPU／NVIDIA，TDP 加總）",
+    "value": {
+     "tpu": 991,
+     "nvidia": 307.27
+    },
+    "unit": "MW（晶片 TDP）",
+    "period": "2024Q4",
+    "source": "Epoch AI〈AI Chip Owners〉資料集：cumulative by designer（CSV）",
+    "url": "https://epoch.ai/data/ai_chip_owners_cumulative_by_designer.csv",
+    "docDate": "2026-05-12",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "WebFetch 讀取（中位數）；年底值 × 1.65 × 對外 30% → defaults.mwYearEnd；近四季平均在役 MW 內插用"
    }
   ]
  }

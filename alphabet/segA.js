@@ -170,11 +170,12 @@ function capexCostQ(sb) {
 // MAG v0.1b：期初 AI 毛 PP&E 估計＝評價日 AI 總 MW（對外 ÷ 對外比例）× Σ 期初占比 × Tokenomics 每 MW 成本；機房壽命＝TK_CapexFacility ÷ TK_DeprFac；
 // 非 AI 期初基礎＝期初 PP&E − AI 估計，壽命＝非 AI 基礎 ÷ (最新季分部 D&A 年化 − AI 期初 D&A)（校準）
 function aiOpenQ(e, XS) {
-  const CM = COMPANY_DATA.capexModel, sb = e.selfBuild ?? CM.selfBuild, mw = e.billableOpen / XS,
+  const CM = COMPANY_DATA.capexModel, sb = e.selfBuild ?? CM.selfBuild, mw = Math.max(0, e.billableOpen / XS - ((CM.rentedExt || {}).open || 0)), // MAG v0.1b r3（C20）：自有 AI 總 MW＝對外 ÷ 對外比例 − 租用對外 MW
     W = f => PRICING.chips.reduce((a, c) => a + c.mixOpen * TKV[f][c.tk], 0),
     it = mw * W(`IF_CapexIT`) / 1e3, fac = mw * sb * W(`IF_CapexFacility`) / 1e3, facLife = W(`IF_CapexFacility`) / W(`IF_DeprFac`),
     da0 = it / e.gpuLife + fac / facLife, n0 = e.ppeOpen - it - fac;
-  return { mw, it, fac, facLife, da0, n0, nLife: n0 / Math.max(CM.segDaRunRate - da0, 1e-9) }
+  const nLife = CM.nonAiLife ?? 10; // MAG v0.1b r3（對照表 r1 C17）：非 AI 折舊年限＝預設年限（不再以分部 D&A 反解，避免 AI 期初 D&A > 合併 D&A 時退化）
+  return { mw, it, fac, facLife, da0, n0, nLife, daRecon: CM.segDaRunRate - da0 - n0 / nLife } // daRecon＝最新季分部 D&A 年化 −（AI 期初 D&A＋非 AI 期初 ÷ 年限）：對帳殘差（示警，不回填）
 }
 
 function siteBenchQ(e) {
@@ -364,7 +365,8 @@ function runFunding(e) {
     XS = CXM ? e.extShare ?? CXM.extShare : 1, // 對外比例：新增 AI 總 MW＝新增對外 MW ÷ 對外比例（自用 AI 同樣需要資本支出）
     CC = CXM ? capexCostQ(e.selfBuild ?? CXM.selfBuild) : null, // 各期新增 MW 的每 MW 成本（US$m/MW：IT＋自建比例 × 機房）與 IT 占比
     CMW = CXM ? CC.map(x => x.all) : e.a.costMW, CIT = CXM ? CC.map(x => x.it) : e.a.costMW, // 汰換只換 IT（機房不換）；非 tk 模式沿用 e.a.costMW
-    CXF = MN.map((t, n) => (t * (1 - e.lambda) + MX[n] * e.lambda) / XS * CMW[n] * (e.capexScale ?? 1) / 1e3),
+    RXP = CXM ? rentedExtQ() : null, RXD = n => RXP ? (n < 5 ? RXP.path[n] - (n ? RXP.path[n - 1] : RXP.open) : 0) : 0, // MAG v0.1b r3（C20）：租用對外 MW 的新增（不需資本支出）
+    CXF = MN.map((t, n) => (CXM ? Math.max(0, (t * (1 - e.lambda) + MX[n] * e.lambda) / XS - (RXD(n) * (1 - e.lambda) + RXD(n + 1) * e.lambda)) : t * (1 - e.lambda) + MX[n] * e.lambda) * CMW[n] * (e.capexScale ?? 1) / 1e3),
     CXNF = PERIOD_YEARS.map((L, r) => CXM ? LG.lines.reduce((a, x) => a + x.annual[r] * (x.cx || 0), 0) : 0), // MAG v0.1b：非 AI 資本支出（全年）＝Σ 各線全年營收 × 資本支出強度
     VIN = Object.fromEntries(Object.entries(e.mwYearEnd).map(([y, m]) => [y, m - (e.mwYearEnd[y - 1] ?? 0)])), // 各年新增 MW（汰換批次）
     RFV = PERIOD_FY.map( // 5a：期間的財年年份由日曆推算（滾動後不寫死）
@@ -470,7 +472,7 @@ function runFunding(e) {
         lgR = LG.rev[r], lgE = LG.ebitda[r], lgO = LG.oa[r], // v0.1b（Oracle）：非 AI 事業營收與 EBITDA（EBITDA 視為現金，稅另列）；MAG v0.1b：lgO＝其他攤銷（損益 D&A；視為等額現金支出，自營運來源扣除）
         tx = (e.cashTaxRate ?? 0) * Math.max(0, totRev * ebM + ob + lgE - lgO - pen - DAF[r] - IX[r]), // v0.1b：現金稅＝稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（不含瀑布新債利息，避免循環；偏保守）
         dvSh = e.dividend ? e.dividend.sharesBase + WF.sh + CVN.reduce((a, n) => a + (n.mand && n.t < r ? n.S : 0), 0) : 0, // v0.1b（Oracle）：股利股數＝期初股數（基礎＋前期累計瀑布新股＋已強制轉換的特別股）
-        dvC = e.dividend ? 4 * e.dividend.perShareQ * L * dvSh : 0, // 普通股股利＝每股（每季 × 4）× 期間長度 × 期初股數
+        dvC = e.dividend ? 4 * e.dividend.perShareQ * Math.pow(1 + (e.dividend.growth ?? 0), r) * L * dvSh : 0, // MAG v0.1b r3（C19）：每股股利年成長 defaults.dividend.growth // 普通股股利＝每股（每季 × 4）× 期間長度 × 期初股數
         dvP = e.dividend ? e.dividend.preferred[r] : 0, // 特別股股利（強制轉換前；company.json → defaults.dividend.preferred）
         sbcC = (e.sbcRate ?? 0) * (totRev + lgR), // MAG v0.1b：股權報酬（非現金）加回營運現金＝SBC 占營收 × 模型期總營收
         wcS = r === 0 ? e.wcStub ?? 0 : 0, // MAG v0.1b r2（C14）：首期剩餘季度營運資金變動＝上一年度同期實際（流入為正；company.json → defaults.wcStub）
@@ -607,6 +609,7 @@ function runFunding(e) {
         aiRevQ: AIR[r],
         cashTax: tx,
         ebM: ebM,
+        shadowEb1: CXM && t.price ? ((f + nR) / Math.max(t.price[r].k, 1e-9) - (f + nR) * (1 - ebM)) * (1 / XS - 1) : 0, // MAG v0.1b r3（對照表 r1 C16）：讀法 2——自用 AI MW（對外 ×(1 ÷ 對外比例 − 1)）以 k＝1 計影子收入，減同口徑營運成本（模型期金額）
         cashMargin: cm,
         totRev: totRev,
         ebitdaPL: totRev * ebM + ob + lgE - pen,
@@ -816,7 +819,7 @@ function runFunding(e) {
     title: `毛 CapEx 由 MW 推導：${PERIODS[0]} 全年 ${o[0].capexFormulaFY.toFixed(1)}${CXM ? `（AI ${o[0].capexFull.toFixed(1)}＋非 AI ${o[0].capexNonAiFull.toFixed(1)}）` : ``}（指引 ${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}）`,
     detail: `公式＝(本期新增 MW×(1−λ)＋次期新增 MW×λ)×每 MW 成本。${PERIOD_FY[0] - 1} 年底 ${e.mwYearEnd[PERIOD_FY[0] - 1]} MW → ${PERIODS[0]} 年底 ${t.accepted[0]} MW、λ ${(e.lambda*100).toFixed(0)}%、每 MW $${e.a.costMW[0]}m（${TXQ.costMwNote}）。五期（首期為模型部分）合計 ${CX.reduce((e,t)=>e+t,0).toFixed(1)}。指引口徑：${TXQ.capexGuideSource}。`
   }), CXM && CALL_FACTS.capexLo != null && (() => { // MAG v0.1b：對帳列——指引 ÷ 每 MW 全成本＝隱含 AI 建置 MW，對照 MW 路徑（對照表 r1 第 5 節第 6 條）
-    const g = (CALL_FACTS.capexLo + CALL_FACTS.capexHi) / 2, imp = (g - CXNF[0] - REF[0]) / (CMW[0] * (e.capexScale ?? 1) / 1e3), pth = (MN[0] * (1 - e.lambda) + MX[0] * e.lambda) / XS;
+    const g = (CALL_FACTS.capexLo + CALL_FACTS.capexHi) / 2, imp = (g - CXNF[0] - REF[0]) / (CMW[0] * (e.capexScale ?? 1) / 1e3), pth = (MN[0] * (1 - e.lambda) + MX[0] * e.lambda) / XS - (RXD(0) * (1 - e.lambda) + RXD(1) * e.lambda); // MAG v0.1b r3（C20）：扣租用對外 MW 新增
     return _({ id: `capex-recon`, ok: Math.abs(imp / pth - 1) <= .2, severity: `watch`, imp, pth, // MAG v0.1b r2：imp／pth 供 scripts/calib_pace.js 讀取（C10）
       title: `對帳：${PERIODS[0]} 資本支出指引隱含 AI 建置 ${Y(imp, 0)} MW vs MW 路徑 ${Y(pth, 0)} MW（${hA((imp / pth - 1) * 100, 0)}）`,
       detail: `隱含＝(指引 ${Y(g, 1)} − 非 AI ${Y(CXNF[0], 1)} − 汰換 ${Y(REF[0], 1)}) ÷ 每 MW 成本 $${Y(CMW[0] * (e.capexScale ?? 1), 1)}m；路徑＝(本期新增 ${Y(MN[0], 0)}×(1−λ)＋次期新增 ${Y(MX[0], 0)}×λ) ÷ 對外比例 ${hA(XS * 100, 0)}（對外當量 ${Y(imp * XS, 0)} vs ${Y(pth * XS, 0)} MW）。落差表示指引含 MW 路徑以外的支出（未上線容量的預付與在建、記憶體漲價、網路與土地），或 MW 路徑偏低；首期以指引為準（差額歸 AI 成長型）。` })
@@ -831,8 +834,12 @@ function runFunding(e) {
     ok: !0,
     severity: `watch`,
     title: CXM ? `D&A 分池：${PERIODS[4]} AI ${o[4].daAi.toFixed(1)}＋非 AI ${o[4].daNonAi.toFixed(1)}＋其他攤銷 ${o[4].legacyOa.toFixed(1)}bn` : `D&A 改由車隊推算：${PERIODS[4]} ${o[4].daFleet.toFixed(1)}bn（壽命 ${e.gpuLife} 年）`,
-    detail: CXM ? `AI：IT 依 GPU 壽命 ${e.gpuLife} 年、機房依 ${Y(AP0.facLife, 1)} 年（期初毛額估計 IT ${Y(AP0.it, 1)}、機房 ${Y(AP0.fac, 1)}）；非 AI：期初基礎 ${Y(AP0.n0, 1)}、折舊年限 ${Y(AP0.nLife, 1)} 年（以最新季分部 D&A 年化 ${Y(COMPANY_DATA.capexModel.segDaRunRate, 1)} 校準）；其他攤銷依各線占營收比（C5）。季報 D&A ${Y(LATEST_Q.da, 3)}／季。` : `D&A＝(期初毛 PP&E＋本期成長型 CapEx×½)÷壽命。期初 PP&E 基礎 ${e.ppeOpen}（${TXQ.ppeOpenNote}）；季報 D&A ${Y(LATEST_Q.da, 3)}／季。CapEx 隨 MW 增加，折舊跟著增加。`
-  }), _({
+    detail: CXM ? `AI：IT 依 GPU 壽命 ${e.gpuLife} 年、機房依 ${Y(AP0.facLife, 1)} 年（期初毛額估計 IT ${Y(AP0.it, 1)}、機房 ${Y(AP0.fac, 1)}）；非 AI：期初基礎 ${Y(AP0.n0, 1)}、折舊年限 ${Y(AP0.nLife, 1)} 年（預設年限；最新季分部 D&A 年化 ${Y(COMPANY_DATA.capexModel.segDaRunRate, 1)} 只作對帳，C17）；其他攤銷依各線占營收比（C5）。季報 D&A ${Y(LATEST_Q.da, 3)}／季。` : `D&A＝(期初毛 PP&E＋本期成長型 CapEx×½)÷壽命。期初 PP&E 基礎 ${e.ppeOpen}（${TXQ.ppeOpenNote}）；季報 D&A ${Y(LATEST_Q.da, 3)}／季。CapEx 隨 MW 增加，折舊跟著增加。`
+  }), CXM && (() => { const R = AP0.daRecon, B = COMPANY_DATA.capexModel.segDaRunRate, tol = CHECK_TH.daReconTol ?? .1; // MAG v0.1b r3（C17）：D&A 對帳殘差
+    return _({ id: `da-recon`, ok: Math.abs(R) <= tol * B, severity: `watch`, resid: R,
+      title: `D&A 對帳：最新季分部 D&A 年化 ${Y(B, 1)} vs AI 期初 ${Y(AP0.da0, 1)}＋非 AI ${Y(AP0.n0 / AP0.nLife, 1)}（殘差 ${Y(R, 1)}，${hA(R / B * 100, 0)}）`,
+      detail: `非 AI 折舊＝非 AI 期初基礎 ${Y(AP0.n0, 1)} ÷ 預設年限 ${Y(AP0.nLife, 0)} 年（capexModel.nonAiLife，區間 ${(COMPANY_DATA.capexModel.nonAiLifeRange || []).join('–')} 年 [Assumed]）＋新增非 AI 資本支出同年限；AI 期初折舊依 Tokenomics。殘差不回填（容許 ±${hA(tol * 100, 0)}）：正值＝模型 D&A 低於公司實際（年限偏長或 AI 期初估計偏低）。` })
+  })(), _({
     id: `gpu-refresh`,
     ok: !0,
     severity: `watch`,

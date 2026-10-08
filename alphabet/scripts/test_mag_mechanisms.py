@@ -40,6 +40,8 @@ co['debt']['convertibles'].append(['測試｜強制轉換特別股', 5.0, 0.06, 
 co['defaults']['dividend']['preferred'] = [0.15, 0.3, 0.3, 0.13, 0]
 co['leases']['uncommenced']['opShare'] = 0.5
 co['defaults']['buyback'] = {'annual': 40.0, 'floorShare': 0.25, 'note': '虛構測試值'}
+co['capexModel']['rentedExt'] = {'open': 200, 'path': [260, 320, 380, 380, 380], 'rentMW': 9.0, 'note': '虛構測試值'}  # MAG v0.1b r3（C20）：租用對外 MW
+co['defaults']['dividend']['perShareQ'] = 0.05; co['defaults']['dividend']['growth'] = 0.08  # MAG v0.1b r3（C19）：股利每股成長
 json.dump(co, open(P, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 
 run(['node', os.path.join(d, 'scripts', 'check_quarterly.js'), d])
