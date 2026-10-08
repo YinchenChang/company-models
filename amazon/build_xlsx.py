@@ -2573,8 +2573,8 @@ if CXM:
     ws = wb.create_sheet("AI增量報酬")
     for _col, _w in zip("ABCDEFGHI", (46, 12, 13, 13, 13, 13, 13, 4, 70)):
         ws.column_dimensions[_col].width = _w
-    ws["A1"] = "AI 增量報酬：AI ROIC ＝(對外 AI 雲端 EBITDA − AI 折舊)×(1 − 稅率) ÷ 平均 AI 投入資本，對 WACC"; ws["A1"].font = TITLE
-    ws["A2"] = "年化＝模型期 ÷ 期間長度（«P0» 只含 «STUB»）；投入資本＝AI 期初毛額 × 淨額比＋累計 AI 成長型與汰換 − 累計 AI 折舊；打平 k＝使錨定期 AI ROIC＝WACC 的 k（解出的門檻，不是輸入）"; ws["A2"].font = SMALL
+    ws["A1"] = "AI 增量報酬：對外 AI ROIC ＝(對外 AI 雲端 EBITDA − AI 折舊 × 對外比例)×(1 − 稅率) ÷ (平均 AI 投入資本 × 對外比例)，對 WACC"; ws["A1"].font = TITLE
+    ws["A2"] = "年化＝模型期 ÷ 期間長度（«P0» 只含 «STUB»）；投入資本（全 AI）＝AI 期初毛額 × 淨額比＋累計 AI 成長型與汰換 − 累計 AI 折舊；對外口徑＝投入資本與折舊 × 對外比例（主值）；全 AI 口徑（含影子收入）只作對照；打平 k＝使錨定期對外 AI ROIC＝WACC 的 k（解出的門檻，不是輸入）"; ws["A2"].font = SMALL
     r = 4
     AR = {}
     r = period_header(ws, r)
@@ -2593,23 +2593,26 @@ if CXM:
     arow("AI 雲端 EBITDA（年化）", "US$bn", lambda i: f"={COLS[i]}{AR['對外 AI 雲端營收（年化）']}*{COLS[i]}{AR['AI 雲端 EBITDA 率']}")
     arow("AI 營運成本（年化）", "US$bn", lambda i: f"={COLS[i]}{AR['對外 AI 雲端營收（年化）']}-{COLS[i]}{AR['AI 雲端 EBITDA（年化）']}")
     arow("AI 折舊（年化）", "US$bn", lambda i: f"={inref('AI D&A', i)}/{_L(i)}", NUM, GREEN, "D&A 分池（輸入與假設 D 區）")
-    arow("AI NOPAT（年化）", "US$bn", lambda i: f"=({COLS[i]}{AR['AI 雲端 EBITDA（年化）']}-{COLS[i]}{AR['AI 折舊（年化）']})*(1-{TAX})", NUM, BLACK, "＝(EBITDA − 折舊)×(1 − 稅率)")
+    arow("對外比例", "%", lambda i: f"={EXTS}", PCT, GREEN, "投入資本與折舊按對外 MW 比例分攤（MAG v0.1b r2 C11）")
+    arow("對外 AI 折舊（年化，按對外比例分攤）", "US$bn", lambda i: f"={COLS[i]}{AR['AI 折舊（年化）']}*{COLS[i]}{AR['對外比例']}")
+    arow("對外 AI NOPAT（年化）", "US$bn", lambda i: f"=({COLS[i]}{AR['AI 雲端 EBITDA（年化）']}-{COLS[i]}{AR['對外 AI 折舊（年化，按對外比例分攤）']})*(1-{TAX})", NUM, BLACK, "＝(對外 EBITDA − 對外折舊)×(1 − 稅率)")
     arow("AI 投入資本（期初）", "US$bn", lambda i: (f"=({AIIT0}+{AIFC0})*{AINET}" if i == 0 else f"={COLS[i-1]}{{r}}"), NUM, BLACK, "«P0»＝AI 期初毛額 × 淨額比；之後＝前期期末")
     arow("AI 投入（成長型＋汰換，模型期）", "US$bn", lambda i: f"={inref('AI 成長型 CapEx（模型期）', i)}+{inref('GPU 汰換 CapEx', i)}", NUM, GREEN)
     arow("AI 投入資本（期末）", "US$bn", lambda i: f"={COLS[i]}{AR['AI 投入資本（期初）']}+{COLS[i]}{AR['AI 投入（成長型＋汰換，模型期）']}-{inref('AI D&A', i)}", NUM, BLACK, "＝期初＋投入 − AI 折舊")
     for i in range(1, 5):
         ws.cell(row=AR['AI 投入資本（期初）'], column=3 + i, value=f"={COLS[i-1]}{AR['AI 投入資本（期末）']}")
-    arow("AI ROIC", "%", lambda i: f"={COLS[i]}{AR['AI NOPAT（年化）']}/MAX(1E-9,({COLS[i]}{AR['AI 投入資本（期初）']}+{COLS[i]}{AR['AI 投入資本（期末）']})/2)", PCT, BLACK, "＝NOPAT ÷ 平均投入資本", True)
+    arow("對外 AI 平均投入資本（按對外比例分攤）", "US$bn", lambda i: f"=({COLS[i]}{AR['AI 投入資本（期初）']}+{COLS[i]}{AR['AI 投入資本（期末）']})/2*{COLS[i]}{AR['對外比例']}")
+    arow("對外 AI ROIC（主值）", "%", lambda i: f"={COLS[i]}{AR['對外 AI NOPAT（年化）']}/MAX(1E-9,{COLS[i]}{AR['對外 AI 平均投入資本（按對外比例分攤）']})", PCT, BLACK, "＝對外 NOPAT ÷ 對外平均投入資本（對照表 r1 C11）", True)
     arow("WACC", "%", lambda i: f"={WACC}", PCT, GREEN)
-    arow("AI ROIC − WACC", "%", lambda i: f"={COLS[i]}{AR['AI ROIC']}-{COLS[i]}{AR['WACC']}", PCT, BLACK, "負值＝AI 投資未賺到資金成本", True)
+    arow("對外 AI ROIC − WACC", "%", lambda i: f"={COLS[i]}{AR['對外 AI ROIC（主值）']}-{COLS[i]}{AR['WACC']}", PCT, BLACK, "負值＝AI 投資未賺到資金成本", True)
     arow("影子收入（自用 AI MW × 每 MW 年收入，年化）", "US$bn", lambda i: f"={COLS[i]}{AR['對外 AI 雲端營收（年化）']}*(1/{EXTS}-1)", NUM, BLACK, "自用 AI MW＝對外 ×(1 ÷ 對外比例 − 1)；只作對照，不進評價（對照表 r1 D2）")
-    arow("AI ROIC（含影子收入，對照）", "%", lambda i: f"=({COLS[i]}{AR['AI 雲端 EBITDA（年化）']}+{COLS[i]}{AR['影子收入（自用 AI MW × 每 MW 年收入，年化）']}*{COLS[i]}{AR['AI 雲端 EBITDA 率']}-{COLS[i]}{AR['AI 折舊（年化）']})*(1-{TAX})/MAX(1E-9,({COLS[i]}{AR['AI 投入資本（期初）']}+{COLS[i]}{AR['AI 投入資本（期末）']})/2)", PCT)
+    arow("全 AI ROIC（含影子收入，對照）", "%", lambda i: f"=({COLS[i]}{AR['AI 雲端 EBITDA（年化）']}+{COLS[i]}{AR['影子收入（自用 AI MW × 每 MW 年收入，年化）']}*{COLS[i]}{AR['AI 雲端 EBITDA 率']}-{COLS[i]}{AR['AI 折舊（年化）']})*(1-{TAX})/MAX(1E-9,({COLS[i]}{AR['AI 投入資本（期初）']}+{COLS[i]}{AR['AI 投入資本（期末）']})/2)", PCT)
     _RY = COLS[CXM.get('roicYear', 3)]
     r += 1
-    ws.cell(row=r, column=1, value=f"打平 k（使 {PERIODS[CXM.get('roicYear', 3)]} AI ROIC＝WACC）").font = BOLD
-    c = ws.cell(row=r, column=3, value=f"={KSEL}*({WACC}*({_RY}{AR['AI 投入資本（期初）']}+{_RY}{AR['AI 投入資本（期末）']})/2/(1-{TAX})+{_RY}{AR['AI 營運成本（年化）']}+{_RY}{AR['AI 折舊（年化）']})/MAX(1E-9,{_RY}{AR['對外 AI 雲端營收（年化）']})")
+    ws.cell(row=r, column=1, value=f"打平 k（使 {PERIODS[CXM.get('roicYear', 3)]} 對外 AI ROIC＝WACC）").font = BOLD
+    c = ws.cell(row=r, column=3, value=f"={KSEL}*({WACC}*{_RY}{AR['對外 AI 平均投入資本（按對外比例分攤）']}/(1-{TAX})+{_RY}{AR['AI 營運成本（年化）']}+{_RY}{AR['對外 AI 折舊（年化，按對外比例分攤）']})/MAX(1E-9,{_RY}{AR['對外 AI 雲端營收（年化）']})")
     c.number_format = '0.000'; c.border = BOX; c.fill = FILL_KEY
-    ws.cell(row=r, column=9, value="＝k ×(WACC × 平均投入資本 ÷ (1 − 稅率)＋營運成本＋折舊) ÷ 營收（AI EBITDA 對 k 線性，閉式解）").font = SMALL
+    ws.cell(row=r, column=9, value="＝k ×(WACC × 對外平均投入資本 ÷ (1 − 稅率)＋營運成本＋對外折舊) ÷ 營收（AI EBITDA 對 k 線性，閉式解；對外口徑）").font = SMALL
     AR["打平 k"] = r; r += 1
     ws.cell(row=r, column=1, value="目前採用 k").font = BLACK
     c = ws.cell(row=r, column=3, value=f"={KSEL}"); c.number_format = '0.000'; c.border = BOX; c.font = GREEN
@@ -3589,8 +3592,8 @@ srow("結論｜調整後槓桿句", "", [(f'="調整後槓桿（(債務＋租賃
 if CXM:  # MAG v0.1b：主命題句（AI ROIC vs WACC、打平 k、含影子收入）
     _AW = "'AI增量報酬'!"; _RYC = COLS[CXM.get('roicYear', 3)]
     _ar_ = lambda k_: f"{_AW}{_RYC}{AIROIC[k_]}"
-    srow("結論｜主命題句", "", [(f'="主命題（AI 資本支出有沒有賺到資金成本）：{PERIODS[CXM.get("roicYear", 3)]} AI ROIC "&TEXT({_ar_("AI ROIC")}*100,"0.0")&"% vs WACC "&TEXT({WACC}*100,"0.0")&"%（"'
-                               f'&IF({_ar_("AI ROIC − WACC")}<0,"−","+")&TEXT(ABS({_ar_("AI ROIC − WACC")})*100,"0.0")&"pt）；打平 k "&TEXT({_AW}C{AIROIC["打平 k"]},"0.00")&"（目前 "&TEXT({KSEL},"0.00")&"）；含影子收入 "&TEXT({_ar_("AI ROIC（含影子收入，對照）")}*100,"0.0")&"%。"')], bold=True)
+    srow("結論｜主命題句", "", [(f'="主命題（AI 資本支出有沒有賺到資金成本）：{PERIODS[CXM.get("roicYear", 3)]} 對外 AI ROIC "&TEXT({_ar_("對外 AI ROIC（主值）")}*100,"0.0")&"% vs WACC "&TEXT({WACC}*100,"0.0")&"%（"'
+                               f'&IF({_ar_("對外 AI ROIC − WACC")}<0,"−","+")&TEXT(ABS({_ar_("對外 AI ROIC − WACC")})*100,"0.0")&"pt）；打平 k "&TEXT({_AW}C{AIROIC["打平 k"]},"0.00")&"（目前 "&TEXT({KSEL},"0.00")&"）；全 AI（含影子收入）"&TEXT({_ar_("全 AI ROIC（含影子收入，對照）")}*100,"0.0")&"%。"')], bold=True)
 _FC = lambda c: f"'各期收支'!{c}{fcf_row}"  # MAG v0.1b：股東回饋與 FCF 句
 _fcf_first = "".join(f'IF({_FC(c)}<0,"首次為負 {PERIODS[i]}（−$"&TEXT(-{_FC(c)},"0.0")&"bn）",' for i, c in enumerate(COLS)) + '"五期皆為正"' + ")" * 5
 _BBC = lambda c: f"'各期收支'!{c}{bbc_row}"

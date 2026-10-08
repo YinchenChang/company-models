@@ -1,6 +1,6 @@
 // MAG v0.1b：報告用敏感度（HTML 引擎重算；Excel 為計算事實來源，基準值已由 cmp31 核對一致）。不進成品、不寫檔。
 // 用法：node scripts/mag_sens.js [--json]；每列只改一個輸入，其餘為預設（基準容量情境、基準價格軸）。
-// 輸出：加權目標價、DCF 腿、EV/EBITDA 腿、錨定期 AI ROIC、打平 k。
+// 輸出：加權目標價、DCF 腿、EV/EBITDA 腿、錨定期對外 AI ROIC、打平 k（對外口徑；MAG v0.1b r2 C11）。
 const path = require('path'); require(path.join(__dirname, '..', 'load_engine.js'))(path.join(__dirname, '..'));
 const CM = COMPANY_DATA.capexModel, RY = (CM && CM.roicYear) ?? 3;
 function evalQ(fs = s => s, fo = o => o) {
@@ -42,6 +42,6 @@ for (const m of [10, 15]) {
 }
 if (process.argv.includes('--json')) { console.log(JSON.stringify(out)); process.exit(0) }
 const f1 = x => Number.isFinite(x) ? x.toFixed(2) : '—', pc = x => Number.isFinite(x) ? (x * 100).toFixed(1) + '%' : '—';
-console.log(`| 敏感度（一次只改一項） | 加權目標價 | 較基準 | DCF 腿 | EV/EBITDA 腿 | ${PERIODS[RY]} AI ROIC | 打平 k |`);
+console.log(`| 敏感度（一次只改一項） | 加權目標價 | 較基準 | DCF 腿 | EV/EBITDA 腿 | ${PERIODS[RY]} 對外 AI ROIC | 打平 k |`);
 console.log('|---|---|---|---|---|---|---|');
 for (const [n, r] of out) console.log(`| ${n} | ${f1(r.tgt)} | ${n === '基準' ? '—' : (r.tgt - base.tgt >= 0 ? '+' : '−') + Math.abs(r.tgt - base.tgt).toFixed(2)} | ${f1(r.dcf)} | ${f1(r.ev)} | ${pc(r.roic)} | ${f1(r.be)} |`);

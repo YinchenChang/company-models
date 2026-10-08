@@ -264,22 +264,23 @@ function wM(e) {
   return t.length ? t.length % 2 ? t[n] : (t[n - 1] + t[n]) / 2 : NaN
 }
 
-// MAG v0.1b：AI 增量報酬（主命題）。各期（年化＝模型期 ÷ 期間長度）：AI 雲端 EBITDA＝對外 AI 雲端營收 × AI EBITDA 率；NOPAT＝(EBITDA − AI 折舊)×(1 − 稅率)；
-// 投入資本：期初＝AI 期初毛額（IT＋機房）× 淨額比；期末＝期初＋AI 成長型＋汰換 − AI 折舊；ROIC＝NOPAT 年化 ÷ 平均投入資本；打平 k（錨定期）＝k ×(WACC × 平均投入資本 ÷ (1 − 稅率)＋營運成本＋折舊) ÷ 營收（AI EBITDA 對 k 線性，其他不變）。
-// 影子收入（只作對照）：自用 AI MW（＝對外 ×(1 ÷ 對外比例 − 1)）× 每 MW 年收入，減同口徑營運成本，與對外合併後的 ROIC。Excel「AI增量報酬」同式。
+// MAG v0.1b：AI 增量報酬（主命題）。各期（年化＝模型期 ÷ 期間長度）：AI 雲端 EBITDA＝對外 AI 雲端營收 × AI EBITDA 率；
+// 投入資本（全 AI）：期初＝AI 期初毛額（IT＋機房）× 淨額比；期末＝期初＋AI 成長型＋汰換 − AI 折舊。
+// MAG v0.1b r2（對照表 r1 C11）：主值＝對外 AI ROIC＝(對外 EBITDA − AI 折舊 × 對外比例)×(1 − 稅率) ÷ (平均投入資本 × 對外比例)（投入資本與折舊按對外 MW 比例分攤）；
+// 對照＝全 AI ROIC（含影子收入）＝(對外 EBITDA＋影子收入 EBITDA − AI 折舊)×(1 − 稅率) ÷ 全 AI 平均投入資本；影子收入＝自用 AI MW（＝對外 ×(1 ÷ 對外比例 − 1)）× 每 MW 年收入 × 同一 EBITDA 率。
+// 打平 k（錨定期，對外口徑）＝k ×(WACC × 平均投入資本 × 對外比例 ÷ (1 − 稅率)＋營運成本＋折舊 × 對外比例) ÷ 營收（AI EBITDA 對 k 線性，其他不變）。Excel「AI增量報酬」同式。
 function aiRoicQ(d, st, o) {
   const CM = COMPANY_DATA.capexModel; if (!CM || CM.mode !== `tk`) return null;
   const Y = d.years, XS = st.extShare ?? CM.extShare, A0 = aiOpenQ(st, XS), tax = o.tax, k = d.m.price ? d.m.price[0].k : 1, ry = CM.roicYear ?? 3;
-  let ic = (A0.it + A0.fac) * (CM.aiNetShare ?? 1), out = { icBeg: [], icEnd: [], ebitda: [], da: [], opex: [], rev: [], nopat: [], roic: [], spread: [], shRev: [], shEbitda: [], roicSh: [] };
+  let ic = (A0.it + A0.fac) * (CM.aiNetShare ?? 1), out = { xs: XS, icBeg: [], icEnd: [], ebitda: [], da: [], daExt: [], icExt: [], opex: [], rev: [], nopat: [], roic: [], spread: [], shRev: [], shEbitda: [], roicSh: [] };
   Y.forEach((y, r) => {
     const L = PERIOD_YEARS[r], rev = y.isRev / L, eb = y.isRev * y.ebM / L, da = y.daAi / L, opx = rev - eb, b = ic, e = b + y.capexAi + y.refresh - y.daAi, avg = (b + e) / 2,
-      np = (eb - da) * (1 - tax), sr = rev * (1 / XS - 1), se = sr * y.ebM;
+      np = (eb - da * XS) * (1 - tax), sr = rev * (1 / XS - 1), se = sr * y.ebM;
     ic = e;
-    out.icBeg.push(b), out.icEnd.push(e), out.ebitda.push(eb), out.da.push(da), out.opex.push(opx), out.rev.push(rev), out.nopat.push(np), out.roic.push(np / avg), out.spread.push(np / avg - o.wacc),
-      out.shRev.push(sr), out.shEbitda.push(se), out.roicSh.push((eb + se - da) * (1 - tax) / avg)
+    out.icBeg.push(b), out.icEnd.push(e), out.ebitda.push(eb), out.da.push(da), out.daExt.push(da * XS), out.icExt.push(avg * XS), out.opex.push(opx), out.rev.push(rev), out.nopat.push(np), out.roic.push(np / Math.max(1e-9, avg * XS)), out.spread.push(np / Math.max(1e-9, avg * XS) - o.wacc),
+      out.shRev.push(sr), out.shEbitda.push(se), out.roicSh.push((eb + se - da) * (1 - tax) / Math.max(1e-9, avg))
   });
-  const avgY = (out.icBeg[ry] + out.icEnd[ry]) / 2;
-  out.k = k, out.ry = ry, out.breakevenK = k * (o.wacc * avgY / (1 - tax) + out.opex[ry] + out.da[ry]) / Math.max(out.rev[ry], 1e-9), out.wacc = o.wacc;
+  out.k = k, out.ry = ry, out.breakevenK = k * (o.wacc * out.icExt[ry] / (1 - tax) + out.opex[ry] + out.daExt[ry]) / Math.max(out.rev[ry], 1e-9), out.wacc = o.wacc;
   return out
 }
 function legBlendQ(f, o) { const S = f.segEb.reduce((a, x) => a + x[1], 0); return S > 1e-9 ? f.segEb.reduce((a, x) => a + x[1] * segMultQ(x[0], o), 0) / S : o.evEbitda }
@@ -549,7 +550,7 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
     fcfLine = `股東回饋與 FCF：FCF ${fn < 0 ? `五期皆為正` : `首次為負 ${PERIODS[fn]}（−$${Y(-Yd[fn].fcf, 1)}bn）`}；` +
       (bp <= .05 ? `無回購計畫（減少回購步驟不適用）` : bcut.length ? `回購被迫減少：${bcut.map(x => `${x[0]} $${Y(x[1], 1)}`).join(`、`)}bn` : `回購未被迫減少`) +
       `；五期新債 $${Y(ndS, 1)}bn、股權 $${Y(eqS, 1)}bn。`;
-  let AQ = aiRoicQ(d, st || DEFAULTS, o), thesisLine = AQ ? `主命題（AI 資本支出有沒有賺到資金成本）：${PERIODS[AQ.ry]} AI ROIC ${Y(AQ.roic[AQ.ry] * 100, 1)}% vs WACC ${Y(AQ.wacc * 100, 1)}%（${AQ.spread[AQ.ry] < 0 ? `−` : `+`}${Y(Math.abs(AQ.spread[AQ.ry]) * 100, 1)}pt）；打平 k ${Y(AQ.breakevenK, 2)}（目前 ${Y(AQ.k, 2)}）；含影子收入 ${Y(AQ.roicSh[AQ.ry] * 100, 1)}%。` : ``; // MAG v0.1b
+  let AQ = aiRoicQ(d, st || DEFAULTS, o), thesisLine = AQ ? `主命題（AI 資本支出有沒有賺到資金成本）：${PERIODS[AQ.ry]} 對外 AI ROIC ${Y(AQ.roic[AQ.ry] * 100, 1)}% vs WACC ${Y(AQ.wacc * 100, 1)}%（${AQ.spread[AQ.ry] < 0 ? `−` : `+`}${Y(Math.abs(AQ.spread[AQ.ry]) * 100, 1)}pt）；打平 k ${Y(AQ.breakevenK, 2)}（目前 ${Y(AQ.k, 2)}）；全 AI（含影子收入）${Y(AQ.roicSh[AQ.ry] * 100, 1)}%。` : ``; // MAG v0.1b
   return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, adjLine, delayLine, junk: jk, fcfLine, thesisLine, aiRoic: AQ }
 }
 
