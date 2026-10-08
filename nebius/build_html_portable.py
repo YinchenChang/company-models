@@ -1,5 +1,5 @@
 # 用法：python3 build_html_portable.py <版本> <輸出路徑> <日期> [模板 HTML]（模板省略時用 repo 內的 docs/template_v3_3.html；相對路徑以目前目錄為準）
-# 模板可用任一版已發布的 HTML（例如 20260923_CoreWeave收支模型_v3_3.html），只取其中的 React／Recharts 函式庫部分。
+# 模板可用任一版已發布的 HTML（例如 CRWV 時期的 20260923_CoreWeave收支模型_v3_3.html；成品名稱見 verify.sh：更新日_公司收支模型_v版本），只取其中的 React／Recharts 函式庫部分。
 import sys, os
 H = os.path.dirname(os.path.abspath(__file__))
 ver, out, date = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -17,8 +17,8 @@ sys.path.insert(0, H); import calendar_q  # v4.5：期間與日期由 company.js
 _co = calendar_q.load(H)  # 公司資料單一來源
 _co.pop('asOf', None)  # 滾動檢查的季度標記只在建置時檢查（calendar_q），不注入 HTML
 _co['consensus'] = _json.load(open(os.path.join(H, _co['meta']['consensusFile']), encoding='utf-8'))  # v4.3：市場共識資料檔（只讀）併入注入資料，不另設全域變數
-_g = _co['consensus']['companyGuidance']['2026Q3']  # Q3 營收指引以 company.json 為準；與共識檔不一致即停止建置（Excel 建置同一檢查）
-assert (_g['revenueLow'], _g['revenueHigh']) == (_co['callFacts']['nextQRevLo'], _co['callFacts']['nextQRevHi']), 'Q3 營收指引：company.json 與共識檔不一致'
+_g = _co['consensus']['companyGuidance'].get('2026Q3') or {}  # Q3 營收指引以 company.json 為準；與共識檔不一致即停止建置（Excel 建置同一檢查；v0.1b：公司未給季度指引時兩邊皆為空）
+assert (_g.get('revenueLow'), _g.get('revenueHigh')) == (_co['callFacts']['nextQRevLo'], _co['callFacts']['nextQRevHi']), 'Q3 營收指引：company.json 與共識檔不一致'
 assert abs(_co['ytdActual']['adjEbitda'] - _co['ytdActual']['adjEbitdaMeta']['q1'] - _co['ytdActual']['adjEbitdaMeta']['q2']) < 1e-9, '1H 調整後 EBITDA ≠ Q1＋Q2'
 import subprocess as _sp  # v4.4：季度加總＝年度、指引一致性、超過門檻的差距都有原因；不符即停止建置
 _ck = _sp.run(['node', os.path.join(H, 'scripts', 'check_quarterly.js'), H], capture_output=True, text=True)
@@ -34,8 +34,9 @@ for _mk in ('COMPANY_DATA = {"meta"', 'zk=[`FY27`', 'zk = [`FY26`'):  # v4.0 起
 j = s.find('</script>', i)
 html = s[:i] + app + s[j:]
 import re
-html = re.sub(r'<!-- .*?-->', f'<!-- Backlog 不是現金 · CoreWeave 收支模型 v{ver}（更新 {date}）· 雙擊以 Chrome / Edge 開啟，不需安裝或連網 -->', html, count=1)
-html = re.sub(r'<title>.*?</title>', f'<title>Backlog 不是現金 · CoreWeave 收支模型 v{ver} · {date} · 離線版</title>', html, count=1)
+_nm, _th = _co['meta']['company'], _co['texts'].get('title') or _co['texts']['thesis']  # v0.1b：公司名稱與命題讀 company.json；v0.2：改用主標題 texts.title
+html = re.sub(r'<!-- .*?-->', f'<!-- {_th} · {_nm} 收支模型 v{ver}（更新 {date}）· 雙擊以 Chrome / Edge 開啟，不需安裝或連網 -->', html, count=1)
+html = re.sub(r'<title>.*?</title>', f'<title>{_th} · {_nm} 收支模型 v{ver} · {date} · 離線版</title>', html, count=1)
 tag = ver.replace('.', '')
 html = html.replace('`v`, `1.0`', f'`v`, `{ver}`').replace('crwv_annual_v10', f'crwv_annual_v{tag}').replace('crwv_sites_v10', f'crwv_sites_v{tag}').replace('crwv_model_v10', f'crwv_model_v{tag}')
 open(out, 'w', encoding='utf-8').write(html)

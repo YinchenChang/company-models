@@ -1,0 +1,272 @@
+name: anthropic-parity
+
+# CLAUDE.md 第 3 節：每次 push 與 PR 執行；任一格不符即失敗（合併閘門）。
+# 2026-10-04 提速（工程類）：情境分 2 片並行（本模型情境少，沿用分片機制）；結構性測試與兩條重算測試另成一個 job；防空轉測試獨立一個 job；
+# engine 計算圖由 engine-cache job 建一次、以 pycel 序列化檔分給 scenario-guard 與 structure-recalc 使用；
+# scenarios 的核心斷言用重建引擎，另以 test_cache_matches_fresh 每次 CI 驗證快取與重建精確相等（比對範圍、容差、情境、斷言皆不變）。
+# 合併門檻＝名為 parity 的最後一個 job（needs 全部 job，任一未通過即失敗）。
+on:
+  push:
+    paths: ['anthropic/**', '.github/workflows/anthropic-parity.yml']
+  pull_request:
+    paths: ['anthropic/**', '.github/workflows/anthropic-parity.yml']
+
+# Anthropic v0.1（A2；由 openai-parity.yml 改寫）：所有指令在 anthropic/ 子資料夾執行。
+defaults:
+  run:
+    working-directory: anthropic
+
+env:
+  ANTHROPIC_ENGINE_CACHE: ${{ github.workspace }}/anthropic/engine-cache/engine.pkl
+
+jobs:
+  engine-cache:
+    name: engine-cache（建一次計算圖）
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: anthropic/requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - name: 建圖、重算並序列化
+        run: python tools/build_engine_cache.py engine-cache/engine.pkl | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: engine-cache
+          path: anthropic/engine-cache/
+          retention-days: 1
+
+  scenarios:
+    name: scenarios（第 ${{ matrix.shard }} 片／共 2）
+    needs: engine-cache
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1]
+    env:
+      PARITY_SHARD: ${{ matrix.shard }}/2
+      PARITY_RESULTS: tests/parity/_results_shard${{ matrix.shard }}.json
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: anthropic/requirements-dev.txt
+      - name: 安裝 LibreOffice Calc（headless 重算基準）
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q libreoffice-calc
+      - run: pip install -r requirements-dev.txt
+      - uses: actions/download-artifact@v4
+        with:
+          name: engine-cache
+          path: anthropic/engine-cache/
+      - name: Parity 情境（重建引擎：全部公式格＋錯誤值＋增量重算門檻）＋快取等價（此片的情境）
+        # 不符時，測試訊息會列出前 20 個不符格：頁名、座標、引擎值、Excel 值
+        # test_scenario_parity 一律用重建引擎；test_cache_matches_fresh 以快取載入實例與同一個重建實例精確比對
+        run: python -m pytest tests/parity/test_parity.py -k "test_scenario_parity or test_cache_matches_fresh" -v --tb=short -p no:cacheprovider --junitxml=junit.xml
+      - name: 失敗註記
+        if: failure()
+        run: python tools/junit_annotations.py junit.xml
+      - name: job summary
+        if: always()
+        run: python tools/ci_summary.py job "scenarios 第 ${{ matrix.shard }} 片" junit.xml "$PARITY_RESULTS" >> "$GITHUB_STEP_SUMMARY"
+      - name: 上傳 parity 統計
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: parity-results-scenarios-${{ matrix.shard }}
+          path: |
+            anthropic/tests/parity/_results_shard${{ matrix.shard }}.json
+            anthropic/junit.xml
+          if-no-files-found: ignore
+
+  structure-recalc:
+    name: structure-recalc（結構性測試＋函數語意＋兩條重算）
+    needs: engine-cache
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PARITY_RESULTS: tests/parity/_results_structure.json
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: anthropic/requirements-dev.txt
+      - name: 安裝 LibreOffice Calc（headless 重算基準）
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q libreoffice-calc
+      - run: pip install -r requirements-dev.txt
+      - uses: actions/download-artifact@v4
+        with:
+          name: engine-cache
+          path: anthropic/engine-cache/
+      - name: Parity 其餘測試（工作表、名稱、CURRENT、形狀、函數語意、兩條重算）
+        # 兩條重算測試（增量 <2 秒、全簿 <2 秒）一律用重建的引擎，不經快取
+        run: python -m pytest tests/parity -k "not test_scenario_parity and not test_cache_matches_fresh and not test_scenarios_actually_change_outputs" -v --tb=short -p no:cacheprovider --junitxml=junit.xml
+      - name: 失敗註記
+        if: failure()
+        run: python tools/junit_annotations.py junit.xml
+      - name: job summary
+        if: always()
+        run: python tools/ci_summary.py job "structure-recalc" junit.xml "$PARITY_RESULTS" >> "$GITHUB_STEP_SUMMARY"
+      - name: 上傳 parity 統計
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: parity-results-structure
+          path: |
+            anthropic/tests/parity/_results_structure.json
+            anthropic/junit.xml
+          if-no-files-found: ignore
+
+  scenario-guard:
+    name: scenario-guard（防空轉：每個情境至少改變一格）
+    needs: engine-cache
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: anthropic/requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - uses: actions/download-artifact@v4
+        with:
+          name: engine-cache
+          path: anthropic/engine-cache/
+      - name: 防空轉（test_scenarios_actually_change_outputs；不需 LibreOffice）
+        run: python -m pytest tests/parity/test_parity.py -k test_scenarios_actually_change_outputs -v --tb=short -p no:cacheprovider --junitxml=junit.xml
+      - name: 失敗註記
+        if: failure()
+        run: python tools/junit_annotations.py junit.xml
+      - name: job summary
+        if: always()
+        run: python tools/ci_summary.py job "scenario-guard" junit.xml >> "$GITHUB_STEP_SUMMARY"
+
+  governance:
+    name: governance（CHK_Errors 必須為 0；匯出 CSV）
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: anthropic/requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - name: 檢查頁（CHK_Errors 必須為 0）並匯出 SRC_ANT／Inputs／TK_Link／OAI_Link／Checks CSV
+        run: python tools/export_csv.py --out data/export | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: HTML 一頁摘要：數字與 Excel 一致（engine 逐一比對）、無外部引用、dist xlsx＝現行模型（A5）
+        run: python -m pytest tests/test_html.py -v --tb=short -p no:cacheprovider -W ignore::DeprecationWarning
+      - name: 上傳匯出 CSV
+        uses: actions/upload-artifact@v4
+        with:
+          name: export-csv
+          path: anthropic/data/export/*.csv
+          if-no-files-found: ignore
+
+  tk-snapshot:
+    name: tk-snapshot（Tokenomics 快照比對；WARN 不擋合併）
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: YinchenChang/Tokenomics
+          path: anthropic/tokenomics-master
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: anthropic/requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - name: 逐名比對 TK_Link 與 Tokenomics master CURRENT（DIFF／MISSING 只報 WARN）
+        run: python tools/check_tk_snapshot.py --tk-dir tokenomics-master --md tk_snapshot.md | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tk-snapshot
+          path: anthropic/tk_snapshot.md
+
+  rebuild:
+    name: rebuild（以 builder 重建並經 LibreOffice 重算；上傳供比對）
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: YinchenChang/Tokenomics
+          path: anthropic/tokenomics-master
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: anthropic/requirements-dev.txt
+      - run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q libreoffice-calc
+      - run: pip install -r requirements-dev.txt
+      - name: 取 OpenAI v0.6 活頁簿（OAI_Link 快照來源；D20：分支 claude/openai-s6-release，合併後改取 main 的 CURRENT）
+        run: |
+          if git fetch --depth 1 origin claude/openai-s6-release && git show FETCH_HEAD:openai/model/20261008_OpenAI_v0.6.xlsx > build_out_oai.xlsx; then echo "OpenAI v0.6（s6-release）";
+          else git fetch --depth 1 origin main && git show FETCH_HEAD:openai/model/$(git show FETCH_HEAD:openai/model/CURRENT) > build_out_oai.xlsx; fi
+      - name: 以現行檔為底稿重建（Excel 優先；冪等）
+        run: python builder/build.py --tk-dir tokenomics-master --oai-xlsx build_out_oai.xlsx --out build_out/$(cat model/CURRENT) --base model/$(cat model/CURRENT) --date "$(date -u +%F)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rebuilt-model
+          path: anthropic/build_out/
+
+  # 合併閘門：沿用原 job 名稱 parity，既有的必要狀態檢查不必改。
+  parity:
+    name: parity
+    needs: [engine-cache, scenarios, structure-recalc, scenario-guard, governance]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pyyaml
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: parity-results-*
+          path: anthropic/results/
+      - name: 各 job 結果
+        run: |
+          {
+            echo "## parity 合併門檻"
+            echo "| job | 結果 |"
+            echo "|---|---|"
+            echo "| engine-cache | ${{ needs.engine-cache.result }} |"
+            echo "| scenarios（2 片） | ${{ needs.scenarios.result }} |"
+            echo "| structure-recalc | ${{ needs.structure-recalc.result }} |"
+            echo "| scenario-guard | ${{ needs.scenario-guard.result }} |"
+            echo "| governance | ${{ needs.governance.result }} |"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: 情境覆蓋（全部情境恰各跑一次）
+        run: python tools/ci_summary.py gate results/ | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: 全部 job 必須通過
+        if: needs.engine-cache.result != 'success' || needs.scenarios.result != 'success' || needs.structure-recalc.result != 'success' || needs.scenario-guard.result != 'success' || needs.governance.result != 'success'
+        run: |
+          echo "有 job 未通過" >&2
+          exit 1

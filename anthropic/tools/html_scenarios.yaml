@@ -1,0 +1,46 @@
+# HTML 一頁摘要第 ⑥ 節的敏感度情境（A5；沿用 v0.1 完成報告③「三個關鍵驅動」與「要成立必須…」的設定）。
+# 只定義「改哪些輸入格」，不含任何數值參數：值一律取自 Excel（Inputs 的低／高欄；TK NonNV 比例取 TK_Link 的 Lo／Hi 具名格）。
+# 覆寫寫法（鍵＝INP_nnn 或 TK_NNV_* 具名範圍）：
+#   lo / hi        → Inputs：該列的「低」「高」欄；TK_NNV_*：同名加 Lo／Hi 的具名格
+#   {mul: INP_xxx} → 該格基準值 × INP_xxx 的值（本版未使用）
+# 計算一律由 Excel 執行：build_html.py 以 LibreOffice 重算；tests/test_html.py 以 engine（pycel）重算比對。
+groups:
+  api_task_lo: {label: "API 任務數成長 2027–30 取低欄", set: {INP_092: lo, INP_093: lo, INP_094: lo, INP_095: lo}}
+  api_task_hi: {label: "API 任務數成長 2027–30 取高欄", set: {INP_092: hi, INP_093: hi, INP_094: hi, INP_095: hi}}
+  tok_lo: {label: "API 每任務 token 成長 2026–30 取低欄", set: {INP_087: lo, INP_088: lo, INP_089: lo, INP_090: lo, INP_091: lo}}
+  tok_hi: {label: "API 每任務 token 成長 2026–30 取高欄", set: {INP_087: hi, INP_088: hi, INP_089: hi, INP_090: hi, INP_091: hi}}
+  elast_strong: {label: "價格彈性（任務數）取低欄（−1.05）", set: {INP_096: lo}}
+  elast_weak: {label: "價格彈性（任務數）取高欄（−0.35）", set: {INP_096: hi}}
+  price_cut: {label: "API 牌價年變動取低欄（−35%）", set: {INP_098: lo}}
+  price_lo: {label: "每 GW 年合約價取低欄", set: {INP_114: lo}}
+  price_hi: {label: "每 GW 年合約價取高欄", set: {INP_114: hi}}
+  ramp_lo: {label: "爬坡年數取低欄", set: {INP_122: lo}}
+  ramp_hi: {label: "爬坡年數取高欄", set: {INP_122: hi}}
+  amd_short: {label: "AMD 合約期間取低欄", set: {INP_138: lo}}
+  nnv_lo: {label: "NonNV 產出比（TPU、Trainium、AMD）取 TK 低", set: {TK_NNV_TPUv7_Out: lo, TK_NNV_Trn3_Out: lo, TK_NNV_MI455X_Out: lo}}
+  nnv_hi: {label: "NonNV 產出比（TPU、Trainium、AMD）取 TK 高", set: {TK_NNV_TPUv7_Out: hi, TK_NNV_Trn3_Out: hi, TK_NNV_MI455X_Out: hi}}
+  hc_hi: {label: "員工人數年增率 2026–30 取高欄", set: {INP_156: hi, INP_157: hi, INP_158: hi, INP_159: hi, INP_160: hi}}
+  fee_hi: {label: "雲端平台抽成率取高欄", set: {INP_100: hi}}
+
+# 情境＝群組的組合（依序套用）
+scenarios:
+  base: []
+  api_task_lo: [api_task_lo]
+  api_task_hi: [api_task_hi]
+  tok_lo: [tok_lo]
+  tok_hi: [tok_hi]
+  elast_strong: [elast_strong]
+  elast_weak: [elast_weak]
+  price_cut: [price_cut]
+  price_lo: [price_lo]
+  price_hi: [price_hi]
+  ramp_lo: [ramp_lo]
+  ramp_hi: [ramp_hi]
+  amd_short: [amd_short]
+  nnv_lo: [nnv_lo]
+  nnv_hi: [nnv_hi]
+  combo1: [api_task_lo, elast_weak]
+  combo2: [api_task_lo, price_hi]
+  combo3: [elast_weak, price_hi, ramp_lo]
+  combo4: [api_task_lo, elast_weak, price_hi, ramp_lo]
+  combo5: [api_task_lo, elast_weak, price_hi, ramp_lo, tok_lo, hc_hi, fee_hi]
