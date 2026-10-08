@@ -281,7 +281,24 @@ function aiRoicQ(d, st, o) {
       out.shRev.push(sr), out.shEbitda.push(se), out.roicSh.push((eb + se - da) * (1 - tax) / Math.max(1e-9, avg))
   });
   out.k = k, out.ry = ry, out.breakevenK = k * (o.wacc * out.icExt[ry] / (1 - tax) + out.opex[ry] + out.daExt[ry]) / Math.max(out.rev[ry], 1e-9), out.wacc = o.wacc;
+  out.c15 = c15Q(d, st, out, A0, tax);
   return out
+}
+// MAG v0.1b r2（對照表 r1 C15）：一致性檢查——錨定期對外 AI ROIC 依序改成「k＝1、Tokenomics 成本、無爬坡延遲、無稅」，與 IF_HoldEcon 隱含報酬（Tokenomics WACC，tokenomics.holdEconWacc）比較；
+// 各步差額依序相加＝總差距（序列拆解，順序固定）：稅 → k＝1（含自研晶片係數）→ 營運成本來源 → 汰換 → 爬坡／閒置（投入資本與折舊改為在役 MW 的穩態，淨額比 ½）→ 機房（自建比例 → 1）→ 會計口徑殘差（平均淨帳面 vs 年金）。Excel「AI增量報酬」同式。
+function c15Q(d, st, A, A0, tax) {
+  const TKH = COMPANY_DATA.tokenomics && COMPANY_DATA.tokenomics.holdEconWacc, P = d.m.price; if (TKH == null || !P) return null;
+  const ry = A.ry, XS = A.xs, pr = P[ry], CM = COMPANY_DATA.capexModel, sb = st.selfBuild ?? CM.selfBuild, life = st.gpuLife,
+    W = f => PRICING.chips.reduce((a, c, j) => a + pr.gens[j] * TKV[f][c.tk], 0) / Math.max(pr.tot, 1e-9) / 1e3,
+    rev = A.rev[ry], eb = A.ebitda[ry], opx = A.opex[ry], da = A.daExt[ry], ic = A.icExt[ry],
+    mw = rev / Math.max(pr.hold * pr.k / 1e3, 1e-12), rev1 = mw * W(`IF_HoldEcon`), opTK = mw * W(`IF_OpexGW`),
+    cR = XS * (d.years.slice(0, ry).reduce((a, y) => a + y.refresh, 0) + d.years[ry].refresh / 2), dR = cR / life,
+    cIT = W(`IF_CapexIT`), cF = W(`IF_CapexFacility`), ss = b => ({ ic: mw * (cIT + b * cF) * .5, da: mw * (cIT / life + b * cF / A0.facLife) }),
+    s5 = ss(sb), s6 = ss(1),
+    R = [A.roic[ry], (eb - da) / ic, (rev1 - opx - da) / ic, (rev1 - opTK - da) / ic, (rev1 - opTK - (da - dR)) / Math.max(1e-9, ic - cR), (rev1 - opTK - s5.da) / s5.ic, (rev1 - opTK - s6.da) / s6.ic],
+    lb = [`稅（稅後 → 稅前）`, `k＝1（含自研晶片係數）`, `營運成本來源（模型 → Tokenomics IF_OpexGW）`, `汰換（自投入資本與折舊移除累計汰換）`, `爬坡／閒置（投入資本與折舊改為在役 MW 穩態，淨額比 ½）`, `機房（自建比例 → 100%）`];
+  const items = lb.map((l, i) => [l, R[i + 1] - R[i]]); items.push([`會計口徑殘差（平均淨帳面 vs ${Math.round(TKH * 100)}% 年金）`, TKH - R[6]]);
+  return { ry, hurdle: TKH, model: R[0], clean: R[6], gap: TKH - R[0], items, stages: R, mw, rev1, opTK, cR, dR, ss5: s5, ss6: s6 }
 }
 function legBlendQ(f, o) { const S = f.segEb.reduce((a, x) => a + x[1], 0); return S > 1e-9 ? f.segEb.reduce((a, x) => a + x[1] * segMultQ(x[0], o), 0) / S : o.evEbitda }
 function holdValQ(n) { return (n.holdings || []).reduce((a, h) => a + h[1] * h[2] * (1 - (h[4] ? 0 : n.holdingsDiscount ?? 0)), 0) } // MAG v0.1b：持股價值（分部加總項）

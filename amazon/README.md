@@ -620,6 +620,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.checks.unsignedRevShareMax` | 檢查頁：後段年度依賴未簽約收入的比例上限（5a） | 比例 | 0.5 | 檢查 |
 | `methodology.checks.siteRentGapMax` | 檢查頁：站點租賃五期租金可能低估的金額上限（5a） | US$bn | 10 | 檢查 |
 | `methodology.checks.rentVsBenchMin` | 檢查頁：模型每 MW 年租金至少要達到「市場基準 × 第三方占比」的比例（5a） | 比例 | 0.8 | 檢查 |
+| `methodology.checks.c15Tol` | 檢查頁：一致性檢查（C15）乾淨稅前 ROIC 與 IF_HoldEcon 隱含報酬的容許差（比例，0.05＝5 個百分點；MAG v0.1b r2） | 比例 | 0.05 | 檢查 |
 
 ### `peers`：同業比較（Comps）
 
@@ -721,6 +722,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `tokenomics.commit` | 快照的 Tokenomics master commit（須與快照檔一致） | 文字 | ca78a8f42af36caa1af2cc6234… | 必改 |
 | `tokenomics.names` | 快照名稱清單（須與快照檔一致；Excel「Tokenomics_取數」逐名稱建 TK_ 具名範圍） | 清單 | IF_HoldEcon、IF_HoldAcct、IF_GPUhrEcon、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、L1_FacCapexMW、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_OpexGW、IF_PowerPrice、IF_PowerCost、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_AvgDraw、IF_FacilityGW、IF_GPUsPerGW、IF_RacksPerGW、IF_Util、IF_RevGWFleet、L1_GPUhr_Hopper、L1_GPUhr_GB200、L1_GPUhr_GB300、L1_GPUhr_VR200、L1_HoldEconGW_Hopper、L1_HoldEconGW_GB200、L1_HoldEconGW_GB300、L1_HoldEconGW_VR200、L1_NvContentGW_VR200、IF_NonNVRatio、IF_NonNVCostRatio | 必改 |
 | `tokenomics.optional` | Tokenomics 尚未提供、記為 missing 的名稱（資料缺口） | 清單 | IF_NonNVRatio、IF_NonNVCostRatio | 必改 |
+| `tokenomics.holdEconWacc` | IF_HoldEcon 資本回收年金的折現率（Tokenomics「WACC（經濟口徑）」；只用於一致性檢查，MAG v0.1b r2 C15） | 比例 | 0.1 | 檢查 |
+| `tokenomics.holdEconWaccNote` | 上列的來源 | 文字 | IF_HoldEcon 的資本回收年金折現率：Tok… | 必改 |
 
 ### `pricing`：對外 AI 雲端定價（MAG v0.1b）
 

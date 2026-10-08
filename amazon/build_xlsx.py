@@ -2617,6 +2617,47 @@ if CXM:
     ws.cell(row=r, column=1, value="目前採用 k").font = BLACK
     c = ws.cell(row=r, column=3, value=f"={KSEL}"); c.number_format = '0.000'; c.border = BOX; c.font = GREEN
     AR["目前採用 k"] = r; r += 1
+    _TKH = CO.get('tokenomics', {}).get('holdEconWacc')
+    if _TKH is not None and PRC:  # MAG v0.1b r2（對照表 r1 C15）：一致性檢查——錨定期對外 AI ROIC 依序改成 k＝1、Tokenomics 成本、穩態、無稅（HTML segB c15Q 同式）
+        r += 1
+        ws.cell(row=r, column=1, value=f"C15 一致性檢查（{PERIODS[CXM.get('roicYear', 3)]}，對外口徑；序列拆解，各步差額加總＝總差距）").font = BOLD; r += 1
+        _ry = CXM.get('roicYear', 3)
+        def c1(name, f, fmt=PCT, note=None, bold=False, font=BLACK):
+            global r
+            AR[name] = r
+            ws.cell(row=r, column=1, value=name).font = BOLD if bold else BLACK
+            c = ws.cell(row=r, column=3, value=f); c.number_format = fmt; c.font = font; c.border = BOX
+            if note: ws.cell(row=r, column=9, value=note).font = SMALL
+            r += 1
+            return f"C{AR[name]}"
+        _a = lambda k_: f"{_RY}{AR[k_]}"
+        _GT = f"'輸入與假設'!{_RY}{IN['在役 MW 合計（世代加總）']}"
+        _WG = lambda nm: "(" + "+".join(f"'輸入與假設'!{_RY}{g[0]}*TK_{nm}_{ch['tk']}" for g, ch in zip(_GR, PRC['chips'])) + f")/MAX(1E-9,{_GT})/1000"
+        HUR = c1("IF_HoldEcon 隱含報酬（Tokenomics WACC，經濟口徑）", _TKH, PCT, CO['tokenomics'].get('holdEconWaccNote', ''), font=BLUE)
+        _mw = c1("在役對外 MW（有效，＝營收 ÷ 每 MW 年收入）", f"={_a('對外 AI 雲端營收（年化）')}/MAX(1E-12,'輸入與假設'!{_RY}{IN['加權每 MW 年持有成本']}*{KSEL}/1000)", NUM0)
+        _rv1 = c1("k＝1 營收（Σ 在役世代 × IF_HoldEcon，不含晶片係數）", f"={_mw}*{_WG('HoldEcon')}", NUM)
+        _otk = c1("Tokenomics 營運成本（Σ 在役世代 × IF_OpexGW）", f"={_mw}*{_WG('OpexGW')}", NUM)
+        _cR = c1("累計汰換（對外，至錨定期中點）", "=" + EXTS + "*(" + "+".join([inref('GPU 汰換 CapEx', j) for j in range(_ry)] + [f"{inref('GPU 汰換 CapEx', _ry)}/2"]) + ")", NUM)
+        _cit, _cfc = _WG('CapexIT'), _WG('CapexFacility')
+        _ic5 = c1("穩態投入資本（在役 MW ×(IT＋自建 × 機房)× ½）", f"={_mw}*({_cit}+{SELFB}*{_cfc})*0.5", NUM)
+        _da5 = c1("穩態折舊（在役 MW ×(IT ÷ 壽命＋自建 × 機房 ÷ 機房壽命)）", f"={_mw}*({_cit}/{LIFE}+{SELFB}*{_cfc}/{FACL})", NUM)
+        _ic6 = c1("穩態投入資本（自建 100%）", f"={_mw}*({_cit}+{_cfc})*0.5", NUM)
+        _da6 = c1("穩態折舊（自建 100%）", f"={_mw}*({_cit}/{LIFE}+{_cfc}/{FACL})", NUM)
+        _eb, _op, _dx, _ix = _a('AI 雲端 EBITDA（年化）'), _a('AI 營運成本（年化）'), _a('對外 AI 折舊（年化，按對外比例分攤）'), _a('對外 AI 平均投入資本（按對外比例分攤）')
+        S = [c1("階段 0｜模型對外 AI ROIC（稅後）", f"={_a('對外 AI ROIC（主值）')}"),
+             c1("階段 1｜稅前", f"=({_eb}-{_dx})/MAX(1E-9,{_ix})"),
+             c1("階段 2｜k＝1（含自研晶片係數）", f"=({_rv1}-{_op}-{_dx})/MAX(1E-9,{_ix})"),
+             c1("階段 3｜營運成本改 Tokenomics", f"=({_rv1}-{_otk}-{_dx})/MAX(1E-9,{_ix})"),
+             c1("階段 4｜移除汰換", f"=({_rv1}-{_otk}-({_dx}-{_cR}/{LIFE}))/MAX(1E-9,{_ix}-{_cR})"),
+             c1("階段 5｜穩態（無爬坡／閒置）", f"=({_rv1}-{_otk}-{_da5})/MAX(1E-9,{_ic5})"),
+             c1("階段 6｜機房自建 100%＝乾淨稅前 ROIC", f"=({_rv1}-{_otk}-{_da6})/MAX(1E-9,{_ic6})", PCT, "k＝1、Tokenomics 成本、無爬坡延遲、無稅（對照表 r1 C15）", True)]
+        _L15 = ["稅（稅後 → 稅前）", "k＝1（含自研晶片係數）", "營運成本來源（模型 → Tokenomics IF_OpexGW）", "汰換（自投入資本與折舊移除累計汰換）",
+                "爬坡／閒置（投入資本與折舊改為在役 MW 穩態，淨額比 ½）", "機房（自建比例 → 100%）"]
+        for j_, l_ in enumerate(_L15):
+            c1(f"拆解｜{l_}", f"={S[j_ + 1]}-{S[j_]}")
+        c1(f"拆解｜會計口徑殘差（平均淨帳面 vs {round(_TKH * 100)}% 年金）", f"={HUR}-{S[6]}")
+        c1("總差距（IF_HoldEcon 隱含報酬 − 模型稅後）", f"={HUR}-{S[0]}", PCT, "＝上方各拆解項加總", True)
+        C15CL, C15HUR = S[6], HUR
     AIROIC = AR
 ws = wb.create_sheet("檢查_連動")
 ws.column_dimensions["A"].width = 44
@@ -2632,6 +2673,7 @@ for j, h in enumerate(["檢查項目", "實際值", "標準", "結果", "說明"
     c.font = HEAD
     c.fill = FILL_HEAD
 r += 1
+_RYC0 = COLS[CXM.get('roicYear', 3)] if CXM else 'C'  # MAG v0.1b r2
 CK, CFq = CO['methodology']['checks'], CO['callFacts']  # 5a：檢查門檻讀 company.json → methodology.checks；指引區間讀 callFacts
 _CXLO, _CXHI = (_n(CFq[k]) for k in ('capexLo', 'capexHi'))
 _RVLO = None if CFq['revLo'] is None else _n(CFq['revLo'])  # MAG v0.1b：未給全年營收指引時為「不適用」
@@ -2672,7 +2714,12 @@ checks = [
     (f"{PERIODS[0]} 對帳：指引隱含 AI 建置 MW", f"=(({_CXLO}+{_CXHI})/2-'輸入與假設'!C{IN['非 AI 資本支出（全年）']}-'輸入與假設'!C{IN['GPU 汰換 CapEx']})/('輸入與假設'!C{IN['每 MW 建置成本']}*{CAPSC}/1000)",
      "MW 路徑 ±20%", f"=IF(ABS(B{{r}}/(('輸入與假設'!C{IN['本期新增 MW']}*(1-{LAMBDA})+'輸入與假設'!C{IN['次期新增 MW']}*{LAMBDA})/{EXTS})-1)<=0.2,\"通過\",\"觀察\")", NUM0,
      f'="MW 路徑（AI 總 MW 當量）"&TEXT((\'輸入與假設\'!C{IN["本期新增 MW"]}*(1-{LAMBDA})+\'輸入與假設\'!C{IN["次期新增 MW"]}*{LAMBDA})/{EXTS},"#,##0")&"；落差＝指引含 MW 路徑以外的支出或路徑偏低（首期以指引為準）"'),
-] if CXM and CFq.get('capexLo') is not None else []) + [
+] if CXM and CFq.get('capexLo') is not None else []) + ([  # MAG v0.1b r2（對照表 r1 C15）：一致性檢查列
+    (f"{PERIODS[CXM.get('roicYear', 3)]} 一致性：對外 AI 稅前 ROIC（k＝1、Tokenomics 成本、穩態、無稅）", f"='AI增量報酬'!{C15CL}",
+     f"IF_HoldEcon 隱含 {_n(CO['tokenomics']['holdEconWacc'] * 100)}% ±{_n(CK.get('c15Tol', 0.05) * 100)}pt",
+     f"=IF(ABS(B{{r}}-'AI增量報酬'!{C15HUR})<={_n(CK.get('c15Tol', 0.05))},\"通過\",\"觀察\")", PCT,
+     f'="模型稅後 "&TEXT(\'AI增量報酬\'!{_RYC0}{AIROIC["對外 AI ROIC（主值）"]}*100,"0.0")&"%；差距與逐項拆解見「AI增量報酬」C15 區（各項加總＝總差距）"'),
+] if CXM and 'C15CL' in globals() else []) + [
     ("CapEx 強度（模型期合計）", None, f"${_n(CK['capexPerMwBand'][0])}–{_n(CK['capexPerMwBand'][1])}m/MW",
      "=IF(AND(B{r}>=" + _n(CK['capexPerMwBand'][0]) + ",B{r}<=" + _n(CK['capexPerMwBand'][1]) + "),\"通過\",\"觀察\")", NUM0,
      "Tokenomics IF_CapexTotal 低／高成本情境（GB300 38.8–67.1 US$m/MW-IT）"),

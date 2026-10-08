@@ -1158,7 +1158,8 @@
    "leaseVsCommitMin": 0.8,
    "unsignedRevShareMax": 0.5,
    "siteRentGapMax": 10,
-   "rentVsBenchMin": 0.8
+   "rentVsBenchMin": 0.8,
+   "c15Tol": 0.05
   }
  },
  "peers": {
@@ -3326,7 +3327,9 @@
   "optional": [
    "IF_NonNVRatio",
    "IF_NonNVCostRatio"
-  ]
+  ],
+  "holdEconWacc": 0.1,
+  "holdEconWaccNote": "IF_HoldEcon 的資本回收年金折現率：Tokenomics Inputs!E28「WACC（經濟口徑）」基準 10%（builder v5：L1_HoldEconGW＝資本回收年金（WACC 10%）＋營運費用）；非具名範圍，換 Tokenomics 版本時核對 [Verified]；只用於一致性檢查（對照表 r1 C15）"
  },
  "pricing": {
   "_note": "對外 AI 雲端每 MW 年收入＝Σ 在役世代占比 × TK_HoldEcon_<世代>／1000 × 晶片係數 × k；k＝長約占比 × k_長約＋(1 − 長約占比) × k_現貨。價格軸（低／基準／高）與容量軸（scenarios 三情境 MW 路徑）分離；收入端不乘 IF_Util（MW-year 計價）。k 的證據見 data/kevidence_amazon_20261008.json；不以公司雲端營收、RPO、AI run-rate 反推（共同規則第 4 節）。",

@@ -214,7 +214,12 @@ cmp('加權目標價', V+'加權目標價', [p.call.blended]);
   cmpT('文字 共識判斷句',SM+'差異｜判斷句',cv.judge); cmpT('文字 投資級句',SM+'結論｜投資級句',cv.igLine); cmpT('文字 延誤句',SM+'結論｜延誤句',cv.delayLine); cmpT('文字 調整後槓桿句',SM+'結論｜調整後槓桿句',cv.adjLine); cmpT('文字 隱含倍數句',SM+'隱含｜隱含倍數句',cv.implied); cmpT('文字 FCF句',SM+'結論｜股東回饋與 FCF 句',cv.fcfLine); // MAG v0.1b
   if(cv.aiRoic){ cmpT('文字 主命題句',SM+'結論｜主命題句',cv.thesisLine); const A=cv.aiRoic, AW='AI增量報酬|'; // MAG v0.1b：AI 增量報酬
     [['rev','對外 AI 雲端營收（年化）'],['ebitda','AI 雲端 EBITDA（年化）'],['opex','AI 營運成本（年化）'],['da','AI 折舊（年化）'],['daExt','對外 AI 折舊（年化，按對外比例分攤）'],['nopat','對外 AI NOPAT（年化）'],['icExt','對外 AI 平均投入資本（按對外比例分攤）'],['icBeg','AI 投入資本（期初）'],['icEnd','AI 投入資本（期末）'],['roic','對外 AI ROIC（主值）'],['spread','對外 AI ROIC − WACC'],['shRev','影子收入（自用 AI MW × 每 MW 年收入，年化）'],['roicSh','全 AI ROIC（含影子收入，對照）']].forEach(([k,l])=>cmp('AIROIC '+k, AW+l, A[k]));
-    cmp('打平k', AW+T(`打平 k（使 ${PERIODS[A.ry]} 對外 AI ROIC＝WACC）`), [A.breakevenK]); }
+    cmp('打平k', AW+T(`打平 k（使 ${PERIODS[A.ry]} 對外 AI ROIC＝WACC）`), [A.breakevenK]);
+    if(A.c15){ const C=A.c15; // MAG v0.1b r2（C15）：一致性檢查與拆解
+      cmp('C15 有效MW', AW+'在役對外 MW（有效，＝營收 ÷ 每 MW 年收入）', [C.mw]); cmp('C15 k1營收', AW+'k＝1 營收（Σ 在役世代 × IF_HoldEcon，不含晶片係數）', [C.rev1]); cmp('C15 TK營運成本', AW+'Tokenomics 營運成本（Σ 在役世代 × IF_OpexGW）', [C.opTK]); cmp('C15 累計汰換', AW+'累計汰換（對外，至錨定期中點）', [C.cR]);
+      ['階段 0｜模型對外 AI ROIC（稅後）','階段 1｜稅前','階段 2｜k＝1（含自研晶片係數）','階段 3｜營運成本改 Tokenomics','階段 4｜移除汰換','階段 5｜穩態（無爬坡／閒置）','階段 6｜機房自建 100%＝乾淨稅前 ROIC'].forEach((l,i)=>cmp('C15 階段'+i, AW+l, [C.stages[i]]));
+      C.items.forEach(([l,v])=>cmp('C15 '+l, AW+'拆解｜'+l, [v])); cmp('C15 總差距', AW+'總差距（IF_HoldEcon 隱含報酬 − 模型稅後）', [C.gap]);
+      cmp('C15 檢查列', `連動檢查|${PERIODS[C.ry]} 一致性：對外 AI 稅前 ROIC（k＝1、Tokenomics 成本、穩態、無稅）`, [C.clean]); } }
   // v4.4：年度差異原因（類型＋原因逐字；Excel 每個設定組合一列，未超過門檻時為空白）與原因摘要句
   cmpT('文字 差異原因摘要',SM+'差異｜差異原因摘要',cv.rsnSum);
   for(const k of Object.keys(X).filter(k=>k.startsWith(SM+'差異原因｜'))){ const [,yr,nm]=k.split('｜'), h=cv.rsn.find(x=>x.yr===yr&&x.name===nm), x=X[k];

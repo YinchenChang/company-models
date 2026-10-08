@@ -820,6 +820,12 @@ function runFunding(e) {
     return _({ id: `capex-recon`, ok: Math.abs(imp / pth - 1) <= .2, severity: `watch`, imp, pth, // MAG v0.1b r2：imp／pth 供 scripts/calib_pace.js 讀取（C10）
       title: `對帳：${PERIODS[0]} 資本支出指引隱含 AI 建置 ${Y(imp, 0)} MW vs MW 路徑 ${Y(pth, 0)} MW（${hA((imp / pth - 1) * 100, 0)}）`,
       detail: `隱含＝(指引 ${Y(g, 1)} − 非 AI ${Y(CXNF[0], 1)} − 汰換 ${Y(REF[0], 1)}) ÷ 每 MW 成本 $${Y(CMW[0] * (e.capexScale ?? 1), 1)}m；路徑＝(本期新增 ${Y(MN[0], 0)}×(1−λ)＋次期新增 ${Y(MX[0], 0)}×λ) ÷ 對外比例 ${hA(XS * 100, 0)}（對外當量 ${Y(imp * XS, 0)} vs ${Y(pth * XS, 0)} MW）。落差表示指引含 MW 路徑以外的支出（未上線容量的預付與在建、記憶體漲價、網路與土地），或 MW 路徑偏低；首期以指引為準（差額歸 AI 成長型）。` })
+  })(), CXM && (() => { // MAG v0.1b r2（對照表 r1 C15）：一致性檢查——k＝1、Tokenomics 成本、無爬坡延遲、無稅的對外 AI 稅前 ROIC vs IF_HoldEcon 隱含報酬
+    const Q = aiRoicQ({ years: o, m: t }, e, { tax: COMPANY_DATA.valuation.tax, wacc: 0 }), c = Q && Q.c15; if (!c) return;
+    const tol = CHECK_TH.c15Tol ?? .05;
+    return _({ id: `c15`, ok: Math.abs(c.clean - c.hurdle) <= tol, severity: `watch`, clean: c.clean,
+      title: `一致性：${PERIODS[c.ry]} 對外 AI 稅前 ROIC（k＝1、Tokenomics 成本、穩態、無稅）${hA(c.clean * 100, 1)} vs IF_HoldEcon 隱含 ${hA(c.hurdle * 100, 0)}（模型稅後 ${hA(c.model * 100, 1)}）`,
+      detail: `差距 ${Y(c.gap * 100, 1)}pt 依序拆解：` + c.items.map(x => `${x[0]} ${x[1] >= 0 ? `+` : `−`}${Y(Math.abs(x[1]) * 100, 2)}pt`).join(`；`) + `（加總＝總差距；序列拆解，順序固定）。` })
   })(), _({
     id: `fleet-da`,
     ok: !0,
