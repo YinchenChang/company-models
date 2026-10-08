@@ -887,7 +887,7 @@ function AM({
             })
           }), (0, $.jsx)(hdrQ, {
             title: `錨定年度 × 倍數：EV/EBITDA 腿的方法敏感度（即時重算）`,
-            tip: `EV/EBITDA 腿（分部加總）＝（錨定年 AI 雲端 EBITDA × 倍數＋非 AI 事業 EBITDA × ${multTxt(VAL_DEFAULTS.legacyEvEbitda)}x − 錨定年末淨負債）÷ 錨定年末股數，${CALQ.evDiscText}（目標價時點）。矩陣只變動 AI 雲端 倍數；非 AI 事業倍數固定為同業 NTM 中位數。AI 雲端 6x 為可觀察 neocloud 穩態倍數上緣，套在利潤率仍在爬坡的 ${PERIODS[1]} 上並不一致。黃底為目前設定，綠底為不低於現價。`,
+            tip: `EV/EBITDA 腿（分部加總）＝（錨定年 AI 雲端 EBITDA × 倍數＋非 AI 事業 EBITDA × ${VAL_DEFAULTS.legacyEvEbitda == null ? `各分部同業倍數（錨定年度加權）` : `${multTxt(VAL_DEFAULTS.legacyEvEbitda)}x`} − 錨定年末淨負債）÷ 錨定年末股數，${CALQ.evDiscText}（目標價時點）。矩陣只變動 AI 雲端 倍數；非 AI 事業倍數固定為同業 NTM 中位數。AI 雲端 6x 為可觀察 neocloud 穩態倍數上緣，套在利潤率仍在爬坡的 ${PERIODS[1]} 上並不一致。黃底為目前設定，綠底為不低於現價。`,
             w: 480
           }), (0, $.jsx)(EvGridQ, {
             st: t,

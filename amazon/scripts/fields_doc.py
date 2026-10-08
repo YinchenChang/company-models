@@ -48,6 +48,8 @@ F = [
  ('related.rpoShareMax', '關聯方承諾占 RPO 上限（對照）', '比例', M), ('related.rpoShareNote', '上欄的推導', '文字', M),
  ('capexModel.aiNetShare', '期初 AI PP&E 淨額 ÷ 毛額（AI 增量 ROIC 的期初投入資本；MAG v0.1b）', '比例', C), ('capexModel.aiNetShareNote', '上欄依據', '文字', M),
  ('capexModel.roicYear', '打平 k 的錨定期（0–4；3＝模型第 4 期）', '整數', K), ('capexModel.roicYearNote', '上欄說明', '文字', K),
+ ('valuation.segmentMultiples', '分部同業倍數組（物件，鍵＝legacyBiz.lines.peer）：{label, peers:[{ticker, name, ntmEvEbitda, ref}]（中位數，每組至少 3 家）} 或 {label, useAi: true, note}（沿用 AI 雲端倍數）；換公司時鍵與同業全部重填（MAG v0.1b）', '物件', M),
+ ('valuation.segmentMultiplesNote', '分部加總口徑說明', '文字', M),
  ('meta.company', '公司名稱', '文字', M), ('meta.ticker', '股票代號', '文字', M),
  ('meta.updateDate', '資料更新日', '日期', M), ('meta.priceDate', '股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格）', '日期', M),
  ('meta.consensusFile', '市場共識資料檔路徑（v4.3；只讀，由使用者查證後提供；建置時併入 HTML、Excel 讀同一檔）', '路徑', M),

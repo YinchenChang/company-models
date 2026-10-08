@@ -158,9 +158,9 @@ cmp('錨定年EBITDA', V+'錨定年度 EBITDA', [f[p.evK].ebitda]);
 // v0.1b（Oracle）步驟 8：CAPM WACC 與分部加總
 cmp('CAPM ke', '輸入與假設|股權成本 ke＝rf＋β × ERP', [CAPM_Q(VAL_DEFAULTS).ke]); cmp('WACC', '輸入與假設|WACC', [VAL_DEFAULTS.wacc]);
 cmp('WACC（CAPM）', '輸入與假設|WACC（CAPM）＝E/(D+E) × ke＋D/(D+E) × kd ×(1 − 稅率)', [CAPM_Q(VAL_DEFAULTS).wacc]);
-cmp('非 AI 事業倍數', '輸入與假設|非 AI 事業 EV/EBITDA 倍數', [VAL_DEFAULTS.legacyEvEbitda]);
+cmp('非 AI 事業倍數', '輸入與假設|非 AI 事業 EV/EBITDA 倍數', [p.v.legacyEvEbitda]); if(SEGM_Q){ cmp('非 AI 加權倍數', '輸入與假設|非 AI 事業加權倍數（錨定年度各線 EBITDA 加權）', [p.v.legacyEvEbitda]); Object.entries(SEGM_Q).forEach(([k,g])=>cmp('分部倍數 '+k, g.useAi?`輸入與假設|分部倍數｜${g.label}`:`輸入與假設|分部倍數｜${g.label}（同業 NTM 中位數）`, [segMultQ(k,VAL_DEFAULTS)])); } // MAG v0.1b
 cmp('錨定年傳統EBITDA', V+'錨定年度非 AI 事業 EBITDA', [f[p.evK].legacyEbitda]);
-cmp('錨定年EV（分部加總）', V+'錨定年度企業價值（倍數 × EBITDA）', [evSotpQ(f[p.evK], VAL_DEFAULTS.evEbitda, VAL_DEFAULTS)]);
+cmp('錨定年EV（分部加總）', V+'錨定年度企業價值（倍數 × EBITDA）', [evSotpQ(f[p.evK], VAL_DEFAULTS.evEbitda, p.v)]);
 cmp('錨定年末淨負債', V+'錨定年度末淨負債（總債務 − 現金）', [p.ndA]);
 cmp('錨定年末股數', V+'錨定年度末股數（含瀑布新股）', [p.shA]);
 // v0.1b：可轉債稀釋（分類、股數、淨負債、還本、票息、期末餘額）

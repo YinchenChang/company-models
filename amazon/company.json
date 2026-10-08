@@ -975,7 +975,84 @@
   "sigma": 0.5,
   "rf": 0.0528,
   "legacyEvEbitdaNote": "非 AI 分部 EV/EBITDA：null＝採同業 NTM 中位數；步驟 10 改為各分部各自同業倍數。",
-  "holdingsNote": "持股清單：[名稱, 估值（100%，US$bn）, 持股比例, 說明, 上市（true＝不折價）]；價值＝Σ 估值 × 比例 ×（1 − 折價；上市持股不折價），自淨負債扣除（分部加總項）。流動性折價 20%（0%–40%，[Assumed]；對照表 r1 第 5 節第 9 條、C8 c）"
+  "holdingsNote": "持股清單：[名稱, 估值（100%，US$bn）, 持股比例, 說明, 上市（true＝不折價）]；價值＝Σ 估值 × 比例 ×（1 − 折價；上市持股不折價），自淨負債扣除（分部加總項）。流動性折價 20%（0%–40%，[Assumed]；對照表 r1 第 5 節第 9 條、C8 c）",
+  "segmentMultiples": {
+   "retail": {
+    "label": "零售",
+    "peers": [
+     {
+      "ticker": "WMT",
+      "name": "Walmart",
+      "ntmEvEbitda": 17.72,
+      "ref": "val.peer.retail.wmt"
+     },
+     {
+      "ticker": "COST",
+      "name": "Costco",
+      "ntmEvEbitda": 25.33,
+      "ref": "val.peer.retail.cost"
+     },
+     {
+      "ticker": "TGT",
+      "name": "Target",
+      "ntmEvEbitda": 8.77,
+      "ref": "val.peer.retail.tgt"
+     }
+    ]
+   },
+   "ads": {
+    "label": "數位廣告",
+    "peers": [
+     {
+      "ticker": "META",
+      "name": "Meta",
+      "ntmEvEbitda": 10.79,
+      "ref": "val.peer.ads.meta"
+     },
+     {
+      "ticker": "GOOGL",
+      "name": "Alphabet",
+      "ntmEvEbitda": 14.68,
+      "ref": "val.peer.ads.googl"
+     },
+     {
+      "ticker": "TTD",
+      "name": "The Trade Desk",
+      "ntmEvEbitda": 6.68,
+      "ref": "val.peerTTM.ads.ttd（TTM，非 NTM）"
+     }
+    ]
+   },
+   "subs": {
+    "label": "訂閱影音",
+    "peers": [
+     {
+      "ticker": "NFLX",
+      "name": "Netflix",
+      "ntmEvEbitda": 15.41,
+      "ref": "val.peer.subs.nflx"
+     },
+     {
+      "ticker": "SPOT",
+      "name": "Spotify",
+      "ntmEvEbitda": 31.97,
+      "ref": "val.peerTTM.subs.spot（TTM，非 NTM）"
+     },
+     {
+      "ticker": "DIS",
+      "name": "Disney",
+      "ntmEvEbitda": 10.58,
+      "ref": "val.peerTTM.subs.dis（TTM，非 NTM）"
+     }
+    ]
+   },
+   "cloud": {
+    "label": "非 AI 雲端",
+    "useAi": true,
+    "note": "非 AI 雲端無同業組（v0.1a 未蒐集；可比的雲端／軟體同業都含大量 AI）→ 沿用 AI 雲端倍數 6×（同一推導：穩態 FCF ÷ EBITDA 約 0.55 ×(1＋g) ÷ (WACC 12.2% − g 3%) ≈ 6.2×）[Assumed]；敏感度 10×／15×"
+   }
+  },
+  "segmentMultiplesNote": "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 NTM EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家；TTD、SPOT、DIS 以 TTM 代替，v0.1a 已註明），AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）"
  },
  "methodology": {
   "blendWeights": {
@@ -1385,7 +1462,7 @@
     "metric": "rev",
     "vs": "consensus",
     "type": "觀點",
-    "text": "營收＝對外 AI 雲端（年底 {y.accepted:0} MW-IT × 每 MW 年收入）＋各分部近四季年增率收斂；共識未揭露 MW 與單價假設"
+    "text": "營收＝對外 AI 雲端（年底 {y.accepted:0} MW-IT × 每 MW 年收入，Tokenomics × k）＋零售／廣告／訂閱／AWS 非 AI（近四季年增率收斂到長期值）；共識未揭露 MW 與單價假設"
    },
    {
     "scope": "annual",
@@ -1393,7 +1470,7 @@
     "metric": "ebitda",
     "vs": "consensus",
     "type": "觀點",
-    "text": "營收差距 {gap.rev:gap}；EBITDA 率 {m.ebM:%1} 對共識 {c.ebM:%1}（分部 EBITDA 率由近四季收斂到近三年平均；AI 雲端以 Tokenomics 營運成本）"
+    "text": "營收差距 {gap.rev:gap}；EBITDA 率 {m.ebM:%1} 對共識 {c.ebM:%1}（分部 EBITDA 率依 C5 放大分攤 D&A，近四季收斂到近三年平均；AI 雲端以 Tokenomics 營運成本推得；共識 EBITDA 口徑未揭露是否扣 SBC）"
    },
    {
     "scope": "annual",
@@ -1401,7 +1478,7 @@
     "metric": "capex",
     "vs": "consensus",
     "type": "觀點",
-    "text": "CapEx：首期取公司指引；之後依新增 MW（{y.mwNew:0} MW-IT）× 每 MW ${y.costMW:0}m＋非 AI 資本支出；共識口徑未揭露"
+    "text": "CapEx：首期取公司指引約 220；公司未給 2027 以後指引 → 依新增 AI MW（{y.mwNew:0} MW-IT 對外）÷ 對外比例 × 每 MW ${y.costMW:0}m＋非 AI 強度推導；對帳列顯示 2026 指引隱含的 AI 建置量約為 MW 路徑的 2 倍（共識口徑未揭露）"
    },
    {
     "scope": "annual",

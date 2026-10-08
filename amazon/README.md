@@ -552,6 +552,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `valuation.holdingsNote` | 持股清單格式與估值口徑（MAG v0.1b，C8 c） | 文字 | 持股清單：[名稱, 估值（100%，US$bn）, … | 必改 |
+| `valuation.segmentMultiples` | 分部同業倍數組（物件，鍵＝legacyBiz.lines.peer）：{label, peers:[{ticker, name, ntmEvEbitda, ref}]（中位數，每組至少 3 家）} 或 {label, useAi: true, note}（沿用 AI 雲端倍數）；換公司時鍵與同業全部重填（MAG v0.1b） | 物件 | 物件（retail、ads、subs、cloud） | 必改 |
+| `valuation.segmentMultiplesNote` | 分部加總口徑說明 | 文字 | 分部 EV/EBITDA：各非 AI 分部 × 所屬… | 必改 |
 | `valuation.price` | 現價 | US$ | 259.92 | 必改 |
 | `valuation.shares` | 評價股數（含期後股權發行上限） | bn 股 | 11.0303 | 必改 |
 | `valuation.atmSharesInValuation` | 評價股數中「期後股權發行上限」的股數：期後股權／可轉債開關關閉時由評價股數扣回（v0.1b；CRWV 0.035、無此項的公司填 0） | bn 股 | 0 | 必改 |

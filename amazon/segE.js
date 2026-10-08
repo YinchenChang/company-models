@@ -446,7 +446,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
     elQ(`p`, { key: `j`, style: { fontSize: 16, lineHeight: 1.5, margin: `16px 0 0` } },
       `情境區間（保守與積極情境）$${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}。${TR.judge}`),
     elQ(`p`, { key: `n`, style: { fontSize: 14, color: `var(--color-muted)`, marginTop: `auto`, lineHeight: 1.5 } },
-      `加權目標價＝DCF ${hA((f.call.weights?.dcf ?? .45) * 100, 0)}＋EV/EBITDA 分部加總（${PERIOD_LABELS[o.evYear ?? 1]}：AI 雲端 ${Y(o.evEbitda, 1)}x＋非 AI 事業 ${Y(o.legacyEvEbitda ?? o.evEbitda, 1)}x）${hA((f.call.weights?.pe ?? .55) * 100, 0)}；WACC ${hA(o.wacc * 100, 1)}（CAPM：rf ${hA(o.rf * 100, 2)}＋β ${Y(CAPM_Q(o).beta, 2)} × ERP ${hA(o.capm.erp * 100, 1)}；稅前 kd ${hA(o.capm.kdPretax * 100, 2)}）。DCF 股權價值為負時以 0 截斷；選擇權模式以 Merton（σ ${hA(o.sigma * 100, 0)}）估計有限責任下的股權價值。`)
+      `加權目標價＝DCF ${hA((f.call.weights?.dcf ?? .45) * 100, 0)}＋EV/EBITDA 分部加總（${PERIOD_LABELS[o.evYear ?? 1]}：AI 雲端 ${Y(o.evEbitda, 1)}x＋非 AI 事業 ${Y(f.v.legacyEvEbitda ?? o.evEbitda, 1)}x）${hA((f.call.weights?.pe ?? .55) * 100, 0)}；WACC ${hA(o.wacc * 100, 1)}（CAPM：rf ${hA(o.rf * 100, 2)}＋β ${Y(CAPM_Q(o).beta, 2)} × ERP ${hA(o.capm.erp * 100, 1)}；稅前 kd ${hA(o.capm.kdPretax * 100, 2)}）。DCF 股權價值為負時以 0 截斷；選擇權模式以 Merton（σ ${hA(o.sigma * 100, 0)}）估計有限責任下的股權價值。`)
   ]);
 
   // 6｜反向 DCF
@@ -487,10 +487,10 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
       elQ(`div`, { key: `n`, style: { marginTop: 22, fontSize: 17, lineHeight: 1.6 } }, [
         elQ(`div`, { key: 1 }, `• 矩陣內加權目標價最高 $${Y(tmax, 1)}，${tmax < P ? `仍低於現價，賣出方向在所有組合下成立` : `部分組合高於現價，結論對方法選擇敏感`}。`),
         elQ(`div`, { key: 2 }, hits.length ? `• 但 EV/EBITDA 腿單獨達到現價 95% 以上的組合：${hits.join('、')}——市場大致以穩態倍數上緣定價 ${PERIODS[1]} 以後的 EBITDA。` : `• EV/EBITDA 腿在所有組合下都低於現價的 95%。`),
-        elQ(`div`, { key: 3 }, `• 結論對方法的依賴：(a) DCF 腿（權重 ${hA(eg.wd * 100, 0)}）取 $${Y(eg.dcf, 1)}；(b) AI 雲端 ${multTxt(o.evEbitda)}x 為可觀察 neocloud 穩態倍數上緣、非 AI 事業 ${multTxt(o.legacyEvEbitda ?? o.evEbitda)}x 為同業 NTM 中位數（區間 ${multTxt(Math.min(...COMPANY_DATA.peers.software.map(x => x.ntmEvEbitda)))}–${multTxt(Math.max(...COMPANY_DATA.peers.software.map(x => x.ntmEvEbitda)))}x）。`)
+        elQ(`div`, { key: 3 }, `• 結論對方法的依賴：(a) DCF 腿（權重 ${hA(eg.wd * 100, 0)}）取 $${Y(eg.dcf, 1)}；(b) AI 雲端 ${multTxt(o.evEbitda)}x 為可觀察 neocloud 穩態倍數上緣、非 AI 事業 ${multTxt(Math.round((eg.legM ?? o.legacyEvEbitda ?? o.evEbitda) * 10) / 10)}x 為各分部同業 NTM 中位數（區間 ${multTxt(Math.min(...COMPANY_DATA.peers.software.map(x => x.ntmEvEbitda)))}–${multTxt(Math.max(...COMPANY_DATA.peers.software.map(x => x.ntmEvEbitda)))}x）。`)
       ]),
       elQ(`p`, { key: `f`, style: { fontSize: 14, color: `var(--color-muted)`, marginTop: `auto`, lineHeight: 1.5 } },
-        `目前設定：錨定 ${PERIOD_LABELS[o.evYear ?? 1]}、AI 雲端 ${Y(o.evEbitda, 1)}x、非 AI 事業 ${Y(o.legacyEvEbitda ?? o.evEbitda, 1)}x（黃底；矩陣只變動 AI 雲端 倍數）。${PERIODS[1]} 錨定的疑慮：穩態倍數套在爬坡年度；該年末淨負債已含下一期才產生 EBITDA 的預建 CapEx。`)
+        `目前設定：錨定 ${PERIOD_LABELS[o.evYear ?? 1]}、AI 雲端 ${Y(o.evEbitda, 1)}x、非 AI 事業 ${Y(eg.legM ?? o.legacyEvEbitda ?? o.evEbitda, 1)}x（黃底；矩陣只變動 AI 雲端 倍數）。${PERIODS[1]} 錨定的疑慮：穩態倍數套在爬坡年度；該年末淨負債已含下一期才產生 EBITDA 的預建 CapEx。`)
     ]);
   }
 

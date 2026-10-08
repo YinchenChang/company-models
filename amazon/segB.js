@@ -7,7 +7,9 @@ PERIOD_LABELS = PERIODS, // 接續模板片段 mid1 結尾未結束的宣告鏈�
   }),
   MEDIAN_Q = a => { const s = [...a].sort((x, y) => x - y), n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2 },
   SW_MEDIAN = MEDIAN_Q((COMPANY_DATA.peers.software || []).map(x => x.ntmEvEbitda)), // 同業 NTM EV/EBITDA 中位數
-  VAL_DEFAULTS = (v => (v.wacc = v.wacc ?? CAPM_Q(v).wacc, v.legacyEvEbitda = v.legacyEvEbitda ?? SW_MEDIAN, v))(structuredClone(COMPANY_DATA.valuation)), // null＝採 CAPM／同業中位數；數字＝手動覆蓋
+  SEGM_Q = COMPANY_DATA.valuation.segmentMultiples || null, // MAG v0.1b：各分部同業倍數組（legacyBiz.lines.peer）
+  segMultQ = (k, o) => { const g = SEGM_Q && SEGM_Q[k]; return !g || g.useAi ? o.evEbitda : MEDIAN_Q(g.peers.map(x => x.ntmEvEbitda)) },
+  VAL_DEFAULTS = (v => (v.wacc = v.wacc ?? CAPM_Q(v).wacc, v.legacyEvEbitda = v.legacyEvEbitda ?? (SEGM_Q ? null : SW_MEDIAN), v))(structuredClone(COMPANY_DATA.valuation)), // MAG v0.1b：分部倍數時 null＝錨定年度各線 EBITDA 加權 // null＝採 CAPM／同業中位數；數字＝手動覆蓋
   lM = COMPANY_DATA.peers.list.map(e => ({ ...e, ev: e.mkt + e.netDebt, ebitda: e.opInc + e.da })); // 同業 Comps：資料只在 company.json → peers；EV 與 EBITDA 現算（與 Excel 公式一致）
 
 function uM(e, t) {
@@ -83,6 +85,7 @@ function forwardPL(e, t) {
       services: u,
       legacy: lg,
       legacyEbitda: e.years[c].legacyEbitda || 0,
+      segEb: (e.lg ? e.lg.lines : []).map(x => [x.peer, x.ebitda[c]]), // MAG v0.1b：各線 EBITDA（分部加總倍數）
       revenue: d,
       fundingRev: S,
       inYear: w,
@@ -178,7 +181,7 @@ var EVG_MULTS = [3.4, 4.5, 5, 6, 7];
 function evAnchorGrid(d, st, o) {
   let base = runValuation(d, st, o);
   let leg = EVG_MULTS.map(m => [1, 2, 3, 4].map(k => {
-    return Math.max(0, (evSotpQ(base.fwd[k], m, o) - base.v.fund.ndY[k]) / base.fwd[k].shares / Math.pow(1 + o.wacc, k - CALQ.evOffset))
+    return Math.max(0, (evSotpQ(base.fwd[k], m, base.v) - base.v.fund.ndY[k]) / base.fwd[k].shares / Math.pow(1 + o.wacc, k - CALQ.evOffset)) // MAG v0.1b：非 AI 倍數取該次評價的加權值
   }));
   let DI = base.d.invalid, wd = DI ? 0 : BLEND_W.dcf, dcf = DI ? 0 : base.d.perShareT;
   return {
@@ -187,7 +190,8 @@ function evAnchorGrid(d, st, o) {
     leg: leg,
     tgt: leg.map(r => r.map(x => wd * dcf + (1 - wd) * x)),
     dcf: dcf,
-    wd: wd
+    wd: wd,
+    legM: base.v.legacyEvEbitda // MAG v0.1b：非 AI 事業加權倍數（顯示用）
   }
 }
 var BLEND_W = COMPANY_DATA.methodology.blendWeights,
@@ -278,6 +282,7 @@ function aiRoicQ(d, st, o) {
   out.k = k, out.ry = ry, out.breakevenK = k * (o.wacc * avgY / (1 - tax) + out.opex[ry] + out.da[ry]) / Math.max(out.rev[ry], 1e-9), out.wacc = o.wacc;
   return out
 }
+function legBlendQ(f, o) { const S = f.segEb.reduce((a, x) => a + x[1], 0); return S > 1e-9 ? f.segEb.reduce((a, x) => a + x[1] * segMultQ(x[0], o), 0) / S : o.evEbitda }
 function holdValQ(n) { return (n.holdings || []).reduce((a, h) => a + h[1] * h[2] * (1 - (h[4] ? 0 : n.holdingsDiscount ?? 0)), 0) } // MAG v0.1b：持股價值（分部加總項）
 function ndAdjQ(n) { // v0.1b：淨負債調整項＝類債項目合計 − Σ 持股估值 × 持股比例 ×（1 − 持股折價）
   return (n.debtLike || []).reduce((a, x) => a + x[1], 0) - holdValQ(n) // MAG v0.1b：持股清單第 5 格＝上市（不折價）
@@ -308,6 +313,7 @@ function runValuation(e, t, n) {
           }
         },
         a = forwardPL(e, i),
+        _lm = i.legacyEvEbitda == null && (i.legacyEvEbitda = legBlendQ(a[Math.min(4, Math.max(1, Math.round(i.evYear ?? 1)))], i)), // MAG v0.1b：非 AI 事業加權倍數（錨定年度；Excel「非 AI 事業加權倍數」同式）
         o = dcfValue(a, i),
         c = evEbitdaLeg(a, i),
         d = Math.max(0, c),
@@ -387,7 +393,7 @@ function targetRange(d, st, o, base) {
     }),
     A = [Math.min(sc[0].tgt, sc[2].tgt), Math.max(sc[0].tgt, sc[2].tgt)],
     mLo = Math.min(...RANGE_MULTS), mHi = Math.max(...RANGE_MULTS),
-    bm = [mLo, mHi].map(m => runValuation(d, st, { ...o, evEbitda: m, cvFix: base.cv.cv2 }).call.blended),
+    bm = [mLo, mHi].map(m => runValuation(d, st, { ...o, evEbitda: m, cvFix: base.cv.cv2, legacyEvEbitda: base.v.legacyEvEbitda }).call.blended), // MAG v0.1b：方法區間只換 AI 雲端倍數（非 AI 加權倍數固定，與 Excel 相同）
     B = [Math.min(...bm), Math.max(...bm)],
     m = o.evEbitda, eq = (a, b) => Math.abs(a - b) < 1e-9,
     wd = base.call.weights.dcf, we = base.call.weights.pe,
@@ -514,7 +520,7 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
     PT = CONSENSUS.priceTarget, e28 = E[YN],
     impTgt = (PT.mean * o.shares + e28.netDebt) / e28.ebitda,
     impPx = (o.price * o.shares + e28.netDebt) / e28.ebitda,
-    lgE = p.fwd[CONS_YEARS.length - 1].legacyEbitda || 0, lgM = o.legacyEvEbitda ?? 0, // v0.1b（Oracle）：分部加總——扣除非 AI 事業（模型 EBITDA × 非 AI 事業倍數）後的 AI 雲端 隱含倍數
+    lgE = p.fwd[CONS_YEARS.length - 1].legacyEbitda || 0, lgM = p.v.legacyEvEbitda ?? o.legacyEvEbitda ?? 0, // v0.1b（Oracle）：分部加總——扣除非 AI 事業（模型 EBITDA × 非 AI 事業倍數）後的 AI 雲端 隱含倍數
     impTgtOci = (x => Math.abs(x) < .05 ? 0 : x)((PT.mean * o.shares + e28.netDebt - lgE * lgM) / Math.max(e28.ebitda - lgE, .01)), // MAG v0.1b：|x|<0.05 視為 0（與 Excel TEXT 一致，避免 −0.0）
     impPxOci = (x => Math.abs(x) < .05 ? 0 : x)((o.price * o.shares + e28.netDebt - lgE * lgM) / Math.max(e28.ebitda - lgE, .01)),
     mHi = Math.max(...RANGE_MULTS),

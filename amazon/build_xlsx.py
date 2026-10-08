@@ -734,10 +734,30 @@ EVEBITDA = gi(r, "EV/EBITDA 倍數", "x", V['evEbitda'], "AI 雲端（算力）�
 _SWR = []
 for _p in CO['peers']['software']:
     _SWR.append(gi(r, f"同業 NTM EV/EBITDA｜{_p['ticker']}", "x", _p['ntmEvEbitda'], f"{_p['name']}（{_p['ref']}）[Derived]", MULT)); r += 1
-LEGMED = gi(r, "同業 NTM EV/EBITDA 中位數", "x", f"=MEDIAN({','.join(_SWR)})", CO['peers']['softwareNote'], MULT); r += 1
+SEGM = V.get('segmentMultiples')  # MAG v0.1b：各分部同業倍數組（legacyBiz.lines.peer）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權
+if SEGM:
+    _GM = {}
+    for _gk, _g in SEGM.items():
+        if _g.get('useAi'):
+            _GM[_gk] = gi(r, f"分部倍數｜{_g['label']}", "x", f"={EVEBITDA}", _g.get('note', '＝AI 雲端倍數'), MULT, font=BLACK); r += 1
+        else:
+            _pr = []
+            for _p in _g['peers']:
+                _pr.append(gi(r, f"分部倍數｜{_g['label']}｜{_p['ticker']}", "x", _p['ntmEvEbitda'], f"{_p['name']}（{_p['ref']}）[Derived]", MULT)); r += 1
+            _GM[_gk] = gi(r, f"分部倍數｜{_g['label']}（同業 NTM 中位數）", "x", f"=MEDIAN({','.join(_pr)})", "同業 NTM EV/EBITDA 中位數 [Derived]", MULT, font=BLACK); r += 1
+    _LGI = lambda row: f"INDEX('輸入與假設'!$D${row}:$G${row},1,§EVY§)"
+    _lgl = [(v_['ebitda'], _GM.get(v_['peer'], EVEBITDA)) for v_ in LGL.values()]
+    LEGMED = gi(r, "非 AI 事業加權倍數（錨定年度各線 EBITDA 加權）", "x",
+                ("=(" + "+".join(f"{_LGI(e_)}*{m_}" for e_, m_ in _lgl) + ")/MAX(1E-9," + "+".join(_LGI(e_) for e_, m_ in _lgl) + ")") if _lgl else f"={EVEBITDA}",
+                V.get('segmentMultiplesNote', ''), MULT, font=BLACK); r += 1
+else:
+    LEGMED = gi(r, "同業 NTM EV/EBITDA 中位數", "x", f"=MEDIAN({','.join(_SWR)})", CO['peers']['softwareNote'], MULT); r += 1
 LEGOV = gi(r, "非 AI 事業 EV/EBITDA 手動覆蓋（空白＝同業中位數）", "x", V['legacyEvEbitda'], "company.json → valuation.legacyEvEbitda（null＝空白）", MULT); r += 1
 LEGM = gi(r, "非 AI 事業 EV/EBITDA 倍數", "x", f"=IF(ISBLANK({LEGOV}),{LEGMED},{LEGOV})", "分部加總：EV＝非 AI 事業 EBITDA × 此倍數＋AI 雲端 EBITDA × EV/EBITDA 倍數", MULT); r += 1
+_evy_row = r
 EVY = gi(r, "EV/EBITDA 錨定年度（" + "、".join(f"{i}＝{CAL['periods'][i]}" for i in range(1, 5)) + "）", "", V['evYear'], f"«EVDISC»（目標價時點）；預設 {CAL['periods'][V['evYear']]}：接近穩態利潤率，與穩態倍數一致 [Assumed]", NUM0, True); r += 1
+if SEGM:  # MAG v0.1b：加權倍數引用錨定年度（前向引用）
+    _c = ws.cell(row=int(LEGMED.split('$')[-1]), column=3); _c.value = _c.value.replace("§EVY§", EVY)
 from openpyxl.worksheet.datavalidation import DataValidation as _DV
 _dv = _DV(type="whole", operator="between", formula1="1", formula2="4", allow_blank=False, showErrorMessage=True, error="請輸入 1–4", errorTitle="錨定年度")
 ws.add_data_validation(_dv); _dv.add(EVY.split("!")[1].replace("$", ""))
