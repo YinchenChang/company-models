@@ -1,7 +1,7 @@
 # CoreWeave｜Tokenomics 連接審視（v5.29；只審視回報，不改模型）
 
 - 分支：`claude/coreweave-tk-link-review`
-- 最新提交 SHA：見 PR 最後一則留言（本檔的內容提交為底稿 `75327ef` 之後的第一個提交）
+- 最新提交 SHA：內容提交 `2ab148c`（底稿 main `75327ef`）；本行回填 SHA 的提交見 PR 留言
 - 報告檔：`coreweave/docs/reports/20261008_coreweave_tokenomics_link_review.md`
 - 依據：共用工作單 `docs/workorders/20261008_tokenomics_link_review.md`；本公司工作單 `coreweave/docs/workorders/20261008_coreweave_tokenomics_link_review.md`；Tokenomics 下游資料契約 v0.1（`docs/plan/Tokenomics_downstream_contract.md`）。
 - 審視對象：(1) main 上的現行成品 **v4.6**（`dist/20261008_CoreWeave收支模型_v4_6.*`）；(2) 未合併的 **PR #27**（分支 `claude/coreweave-w4-revenue` @ `a3405e2`，W4 收入錨定＋W5 公司實況驗證，成品 v4.7）只作背景閱讀，未合併。
