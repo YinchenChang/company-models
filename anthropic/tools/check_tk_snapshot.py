@@ -5,6 +5,8 @@
 輸出：每個名稱 OK／DIFF／MISSING／PENDING。DIFF 與 MISSING 只報 WARN（結束碼 0，不擋合併）。
 - MISSING：快照有值但 Tokenomics 現行版已無此名稱，或 Tokenomics 端尚未提供（狀態非 OK 者：Tokenomics 仍無此名稱報 MISSING，已提供報 NOW_AVAILABLE）。
 - 不從未合併分支取值。
+- Anthropic A2（規格 D6）：狀態「讀表（非具名）」的 NonNV 列，以列標籤＋欄標題在 Tokenomics NonNV 頁找值比對（名稱格式 NonNV!<列標籤>!<欄標題>）；
+  找不到報 MISSING（Tokenomics 改了表的列標籤或欄標題）。
 """
 import argparse
 import re
@@ -16,6 +18,8 @@ import openpyxl
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 from engine import current_model_path  # noqa: E402
+sys.path.insert(0, str(REPO / "builder"))
+from tk_link import NONNV_STATUS, nonnv_lookup  # noqa: E402
 
 
 def tk_values(tk_dir: Path):
@@ -32,7 +36,7 @@ def tk_values(tk_dir: Path):
         c2 = ci(m.group(5)) if m.group(5) else c1
         r2 = int(m.group(6)) if m.group(6) else r1
         out[n] = [ws.cell(r, c).value for r in range(r1, r2 + 1) for c in range(c1, c2 + 1)]
-    return cur, out
+    return cur, out, wb
 
 
 def main():
@@ -41,7 +45,7 @@ def main():
     ap.add_argument("--model", type=Path)
     ap.add_argument("--md", type=Path)
     a = ap.parse_args()
-    cur, tk = tk_values(a.tk_dir)
+    cur, tk, tkwb = tk_values(a.tk_dir)
     wb = openpyxl.load_workbook(a.model or current_model_path(), data_only=False)
     ws = wb["TK_Link"]
     snap_file, snap_ver = ws["B3"].value, ws["B4"].value
@@ -52,7 +56,15 @@ def main():
             continue
         status, n = ws.cell(r, 6).value, ws.cell(r, 5).value or 0
         snap = [ws.cell(r, 10 + k).value for k in range(n)]
-        if status != "OK":
+        if status == NONNV_STATUS:                       # 讀表列：NonNV!<列標籤>!<欄標題>
+            _, label, hdr = name.split("!")
+            v, addr = nonnv_lookup(tkwb, label, hdr) if "NonNV" in tkwb.sheetnames else (None, None)
+            if addr is None:
+                rows.append((name, "MISSING", "Tokenomics NonNV 表找不到此列標籤或欄標題"))
+                bad += 1
+                continue
+            tk[name] = [v]
+        elif status != "OK":
             rows.append((name, "MISSING" if name not in tk else "NOW_AVAILABLE", status))
             if name in tk:
                 bad += 1
