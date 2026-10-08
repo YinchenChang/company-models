@@ -88,8 +88,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--defaults", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
-    ap.add_argument("--seg", default="z2", choices=("z2", "z3"))
+    ap.add_argument("--seg", default="z2", choices=("z2", "z3", "v01"))
+    ap.add_argument("--sens", type=Path, help="v01：tools/sensitivity_z4.py 的 JSON 輸出")
     a = ap.parse_args()
+    if a.seg == "v01":
+        return main_v01(a)
     z3 = a.seg == "z3"
     sheets, codes = (("Compute", "Cost"), r"^[GK]\d+$") if z3 else (("Demand", "Revenue"), r"^[DR]\d+$")
     model = current_model_path()
@@ -192,6 +195,130 @@ def main():
     for row in ws.iter_rows():
         for c in row:
             c.alignment = WRAP
+    a.out.parent.mkdir(parents=True, exist_ok=True)
+    out.save(a.out)
+    print("saved", a.out, "defaults rows", len(rows) - 1)
+
+
+V01_PROP = [("CMP_SupplyGW", "供給 GW（實體）", "GW"), ("CMP_Supply_VReq", "供給 VR 等值 GW（命題分母）", "GW"),
+            ("REV_NetCapped", "營收淨額", "RMB 億"), ("COST_FullCash", "全成本（含股權報酬）", "RMB 億"), ("COST_GapCash", "差額", "RMB 億"),
+            ("COST_PropRev_VR", "每 VR 等值 GW 營收", "RMB 億／GW"), ("COST_PropFull_VR", "每 VR 等值 GW 全成本", "RMB 億／GW"),
+            ("COST_PropGap_VR", "每 VR 等值 GW 差額（命題 1）", "RMB 億／GW"), ("COST_Coverage", "覆蓋率", "倍"),
+            ("COST_PropRev_VR_USD", "每 VR 等值 GW 營收（美元）", "$B／GW"), ("COST_PropFull_VR_USD", "每 VR 等值 GW 全成本（美元）", "$B／GW"),
+            ("COST_PropGap_VR_USD", "每 VR 等值 GW 差額（美元）", "$B／GW"),
+            ("COST_PropRev_Phys_USD", "每實體 GW 營收（美元）", "$B／GW"), ("COST_PropFull_Phys_USD", "每實體 GW 全成本（美元）", "$B／GW"),
+            ("COST_PropGap_Phys_USD", "每實體 GW 差額（美元）", "$B／GW"),
+            ("FND_FCF", "自由現金流", "RMB 億"), ("FND_NetOp", "融資前淨現金流（含資本支出、併購）", "RMB 億"), ("FND_Committed", "已到位融資", "RMB 億"),
+            ("FND_DebtRepay", "可換股債券償還", "RMB 億"), ("FND_MinCash", "最低現金", "RMB 億"), ("FND_ExtNeed", "當年外部資金需求", "RMB 億"),
+            ("FND_ExtNeedCum", "累計外部資金需求（命題 2）", "RMB 億"), ("FND_CashEnd", "年底現金", "RMB 億"),
+            ("FND_ExtNeedCumConv", "累計外部資金需求（可轉債轉股）", "RMB 億"), ("FND_CashEndConv", "年底現金（可轉債轉股）", "RMB 億")]
+V01_SINGLE = [("FND_FirstGapYear", "首次缺口年"), ("FND_PeakYear", "峰值年"), ("FND_PeakExtNeed", "峰值（RMB 億）"), ("FND_NoExtFailYear", "只靠已到位融資撐不過的第一年"),
+              ("FND_RunwayAfter2030", "2030 年後跑道（年）"), ("FND_UseVsModel", "2026-07 配售已動用 ÷ 模型同期流出"), ("FND_Contingent", "或有：可換股債券本金（RMB 億）"),
+              ("CHK_Errors", "CHK_Errors")]
+V01_OAI = [("COST_PropRev_VR_USD", "OAI_COST_PropRev_VR", "每 VR 等值 GW 營收", "$B／GW"), ("COST_PropFull_VR_USD", "OAI_COST_PropFull_VR", "每 VR 等值 GW 全成本", "$B／GW"),
+           ("COST_PropGap_VR_USD", "OAI_COST_PropGap_VR", "每 VR 等值 GW 差額", "$B／GW"), ("COST_Coverage", "OAI_COST_Coverage", "覆蓋率", "倍"),
+           ("FND_FCF_USD", "OAI_FND_FCF", "自由現金流", "$B"), ("FND_Committed_USD", "OAI_FND_Committed", "已到位融資", "$B"),
+           ("FND_ExtNeedCum_USD", "OAI_FND_ExtNeedCum", "累計外部資金需求", "$B"), ("FND_CashEnd_USD", "OAI_FND_CashEnd", "年底現金", "$B")]
+
+
+def main_v01(a):
+    """v0.1 完成報告對照 Excel：工作單 Z4 第 4 步 ①–⑥（值一律讀現行模型或 sensitivity_z4.py 的 engine 輸出）。"""
+    import json
+    model = current_model_path()
+    wbv = openpyxl.load_workbook(model, data_only=True)
+    names = {k: v.attr_text for k, v in wbv.defined_names.items()}
+    out = openpyxl.Workbook()
+    yrs = ["2025", "2026", "2027", "2028", "2029", "2030"]
+    ws = out.active
+    ws.title = "①結論_關鍵輸出"
+    head(ws, ["項目", "單位"] + yrs + ["具名範圍"])
+    for n, lab, unit in V01_PROP:
+        ws.append([lab, unit] + _vals(wbv, names[n]) + [n])
+    ws.append([])
+    head(ws, ["摘要", "值", "", "", "", "", "", "", "具名範圍"])
+    for n, lab in V01_SINGLE:
+        ws.append([lab, _vals(wbv, names[n])[0]] + [None] * 6 + [n])
+    ws.column_dimensions["A"].width = 44
+    ws = out.create_sheet("②OpenAI並排（美元）")
+    head(ws, ["項目", "公司", "單位"] + yrs + ["具名範圍"])
+    for zn, on, lab, unit in V01_OAI:
+        ws.append([lab, "智譜", unit] + _vals(wbv, names[zn]) + [zn])
+        ws.append([lab, "OpenAI v0.6", unit] + _vals(wbv, names[on]) + [on])
+    ws.column_dimensions["A"].width = 30
+    ws = out.create_sheet("③敏感度與翻轉條件")
+    sens = json.loads(a.sens.read_text(encoding="utf-8"))
+    head(ws, ["情境", "類別", "改寫輸入", "2030 每 VR 等值 GW 差額（RMB 億）", "對基準變動", "首次轉正年", "2030 覆蓋率", "2030 供給 GW",
+              "累計外部資金需求 2030（RMB 億）", "同（可轉債轉股）", "首次缺口年", "峰值", "2030 年底現金", "反向累計外部資金需求 2030"])
+    for s in sens["scenarios"]:
+        ws.append([s["label"], s["group"], json.dumps(s["inputs"], ensure_ascii=False), s["gap30"], s["d_gap30"], str(s["first_pos"]), s["cov30"], s["sup30"],
+                   s["cum30"], s["cumconv30"], str(s["first_gap"]), s["peak"], s["cash30"], s["rvs30"]])
+    ws.append([])
+    head(ws, ["翻轉條件（二分搜尋；engine 執行 Excel）", "輸入", "搜尋區間", "轉折值", "說明"])
+    for f in sens["flips"]:
+        ws.append([f["label"], f["key"], f"{f['lo']}～{f['hi']}" + (f"（固定 {f['fixed']}）" if f.get("fixed") else ""), f["value"],
+                   "區間內不翻轉" if f["value"] is None else ""])
+    ws.column_dimensions["A"].width = 60
+    ws = out.create_sheet("④已套用的預設（Z1–Z4）")
+    rows = parse_defaults(a.defaults)
+    for i, r in enumerate(rows):
+        if i == 0:
+            head(ws, r)
+        else:
+            ws.append(r)
+    for col, w in zip("ABCDEF", (8, 8, 30, 50, 36, 60)):
+        ws.column_dimensions[col].width = w
+    for row in ws.iter_rows():
+        for c in row:
+            c.alignment = WRAP
+    ws = out.create_sheet("⑤市值隱含營收")
+    head(ws, ["編號", "項目", "單位", "值（D）", "2026", "2027", "2028", "2029", "2030", "說明"])
+    s = wbv["Reverse"]
+    for r in range(7, s.max_row + 1):
+        code = s.cell(r, 1).value
+        if code and re.match(r"^X\d+$", str(code)):
+            ws.append([code, s.cell(r, 2).value, s.cell(r, 3).value] + [s[f"{c}{r}"].value for c in "DEFGHI"] + [s[f"M{r}"].value])
+    ws.column_dimensions["B"].width = 60
+    ws = out.create_sheet("⑥缺口與後續")
+    md = a.defaults.read_text(encoding="utf-8").splitlines()
+    on = False
+    for line in md:
+        if line.startswith("## ") and any(k in line for k in ("資料缺口", "Tokenomics 缺口", "建議後續", "未解問題")):
+            on = True
+            ws.append([line[3:]])
+            ws[ws.max_row][0].font = BOLD
+            continue
+        if line.startswith("## "):
+            on = False
+        if on and line.strip():
+            ws.append([line])
+    ws.column_dimensions["A"].width = 160
+    for sh, codes in (("Funding", r"^F\d+$"), ("Reverse", r"^X\d+$")):
+        ws = out.create_sheet(f"新增列_{sh}")
+        head(ws, ["頁", "編號", "列名", "單位", "2025", "2026", "2027", "2028", "2029", "2030", "1H2026", "2H2026", "說明"])
+        s = wbv[sh]
+        for r in range(7, s.max_row + 1):
+            code = s.cell(r, 1).value
+            if code and re.match(codes, str(code)):
+                ws.append([sh, code, s.cell(r, 2).value, s.cell(r, 3).value] + [s[f"{c}{r}"].value for c in "DEFGHIKL"] + [s[f"M{r}"].value])
+        ws.column_dimensions["C"].width = 60
+    ws = out.create_sheet("新增列_Inputs_SRC_Checks")
+    head(ws, ["頁", "ID", "鍵", "項目", "值", "低", "高", "標記", "依據／說明"])
+    s = wbv["Inputs"]
+    for r in range(5, s.max_row + 1):
+        v = s.cell(r, 1).value
+        if v and str(v).startswith("INP_") and int(str(v)[4:]) >= 124:
+            ws.append(["Inputs", v, s.cell(r, 2).value, s.cell(r, 3).value, s.cell(r, 6).value, s.cell(r, 7).value, s.cell(r, 8).value, s.cell(r, 9).value, s.cell(r, 10).value])
+    s = wbv["SRC_ZP"]
+    for r in range(5, s.max_row + 1):
+        v = s.cell(r, 1).value
+        if v and str(v).startswith("SRC_ZP_") and int(str(v)[7:]) >= 605:
+            ws.append(["SRC_ZP", v, s.cell(r, 2).value, s.cell(r, 3).value, s.cell(r, 4).value, s.cell(r, 5).value, s.cell(r, 6).value, s.cell(r, 13).value, s.cell(r, 20).value])
+    s = wbv["Checks"]
+    for r in range(5, s.max_row + 1):
+        v = s.cell(r, 1).value
+        if v and re.match(r"^C\d+$", str(v)) and int(str(v)[1:]) >= 68:
+            ws.append(["Checks", v, None, s.cell(r, 2).value, s.cell(r, 3).value, None, None, s.cell(r, 5).value, s.cell(r, 6).value])
+    ws.column_dimensions["D"].width = 60
     a.out.parent.mkdir(parents=True, exist_ok=True)
     out.save(a.out)
     print("saved", a.out, "defaults rows", len(rows) - 1)

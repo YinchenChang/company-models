@@ -2,8 +2,8 @@
 # 輸入以具名範圍設定（SRC_ZP_nnn、INP_nnn、TK_*；多格名稱用 NAME[k]）。v0.1-Z2：Demand、Revenue、Checks；v0.1-Z3：Compute、Cost。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
   sheets: [README, SRC_ZP, TK_Link, OAI_Link, Inputs, Demand, Revenue, Compute, Cost, Funding, Reverse, Checks, _Defaults]
-  formula_cells: 4586             # Z4：＋Funding、Reverse、Checks C68–C92
-  defined_names: 1090             # Z3b 1,020 ＋ SRC 6 ＋ INP_124–135 ＋ OAI 3 ＋ FND_／RVS_ 49
+  formula_cells: 4671             # Z4：＋Funding、Reverse、Checks C68–C92、Cost 第九節（每實體 GW）
+  defined_names: 1103             # Z3b 1,020 ＋ SRC 6 ＋ INP_124–135 ＋ OAI 3 ＋ FND_／RVS_ 56 ＋ COST_*_Phys 6
   src_rows: 610                   # SRC_ZP 筆數（Z1 604＋Z4 由 note 拆出 6 列：SRC_ZP_605–610）
   src_named: 661                  # SRC_ZP_nnn（有數值 576）＋_Lo（46）＋_Hi（39）
   inp_rows: 134                   # data/zhipu_inputs.yaml（Z4：＋INP_124–135）

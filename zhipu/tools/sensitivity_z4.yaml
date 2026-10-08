@@ -31,6 +31,8 @@ scenarios:
   - {id: zkjh_hi, label: 中科加禾對價 5 億（INP_132 上緣）, group: fund, inputs: {INP_132: 5}}
   - {id: capexnc_hi, label: 非算力資本支出 1.5 億／年（INP_131 上緣）, group: fund, inputs: {INP_131: 1.5}}
   - {id: cons_g_hi, label: 反向：2029–30 目標年增 25%（INP_134 上緣）, group: fund, inputs: {INP_134: 0.25}}
+  - {id: only_pl1, label: 只計 IPO＋2026-07 配售（不含 2026-09 配售與可換股債券；回答「2026-07 配售後現金可撐到哪一年」）, group: fund, inputs: {SRC_ZP_544: 0, SRC_ZP_547: 0, SRC_ZP_545: 0}}
+  - {id: ipo_only, label: 只計 IPO（不含 2026-07、09 配售與可換股債券）, group: fund, inputs: {SRC_ZP_536: 0, SRC_ZP_544: 0, SRC_ZP_547: 0, SRC_ZP_545: 0}}
   - {id: stress, label: 壓力組合：η 收斂＋1 GW 資料中心＋每 GW 價格不變＋員工年增 30%, group: other, inputs: {INP_105: 1, INP_112: 1, INP_100: 0, INP_117: 0.3}}
 flips:
   - {id: f_px, label: 2030 差額轉正所需每 GW 價格年變動率, key: INP_100, lo: -0.5, hi: 0, target: gap30}

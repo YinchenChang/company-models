@@ -504,6 +504,16 @@ def build(wb, D, Z, snap):
                   f"*TK_IF_Util/{I('div_usd_b')}*{fx}*{bn}" for c in YC}, "TK $/M（VR200 Sol 基準欄）× 每 GW 年產出 × IF_Util ÷ 10^9 × USD/CNY × 10", key=key_)
     K.add("差距：每 VR 等值 GW 算力成本 − TK 參考（下游預設）", "RMB 億／GW／年", {c: f"={c}«K.p_cc»-{c}«K.tk_def»" for c in YC}, "", key="tk_gap")
 
+    K.section("九、對照：每實體 GW 口徑（Z4 報告第二種讀法；分母＝供給 GW（實體、IT），不換 VR 等值；命題仍以每 VR 等值 GW 為準）")
+    K.add("分母：供給 GW（實體）", "GW", {c: f"={cmp_('sup', c)}" for c in YC}, "CMP_SupplyGW（期間平均）", key="ph_den")
+    K.add("機隊 VR 等值係數＝VR 等值 GW ÷ 實體 GW", "倍", {c: f"=IF({c}«K.ph_den»,{c}«K.den»/{c}«K.ph_den»,{c}«K.ph_den»)" for c in YC}, "中國晶片組合換成 VR200 等值只值約此倍數；分母為 0 時顯示 0", key="ph_vrf")
+    K.add("每實體 GW：營收淨額", "RMB 億／GW／年", {c: f"=IF({c}«K.ph_den»,{c}«K.rev»/{c}«K.ph_den»,{c}«K.ph_den»)" for c in YC}, "分母為 0（壓力情境）時顯示 0", key="ph_rev", name="COST_PropRev_Phys")
+    K.add("每實體 GW：全成本（含股權報酬）", "RMB 億／GW／年", {c: f"=IF({c}«K.ph_den»,{c}«K.full»/{c}«K.ph_den»,{c}«K.ph_den»)" for c in YC}, "分母為 0（壓力情境）時顯示 0", key="ph_full", name="COST_PropFull_Phys")
+    K.add("每實體 GW：差額", "RMB 億／GW／年", {c: f"={c}«K.ph_rev»-{c}«K.ph_full»" for c in YC}, "＝每 VR 等值 GW 差額 × 機隊 VR 等值係數", key="ph_gap", name="COST_PropGap_Phys")
+    K.add("每實體 GW：營收淨額（美元）", "$B／GW／年", {c: f"={c}«K.ph_rev»/{fx}/{bn}" for c in YC}, "", key="ph_rev_u", name="COST_PropRev_Phys_USD")
+    K.add("每實體 GW：全成本（美元）", "$B／GW／年", {c: f"={c}«K.ph_full»/{fx}/{bn}" for c in YC}, "", key="ph_full_u", name="COST_PropFull_Phys_USD")
+    K.add("每實體 GW：差額（美元）", "$B／GW／年", {c: f"={c}«K.ph_gap»/{fx}/{bn}" for c in YC}, "", key="ph_gap_u", name="COST_PropGap_Phys_USD")
+
     for S_, w in ((C, 62), (K, 62)):
         ws = S_.ws
         ws.column_dimensions["A"].width = 7

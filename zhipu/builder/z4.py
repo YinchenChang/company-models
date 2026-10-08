@@ -271,6 +271,13 @@ def build(wb, D, Z):
           name="FND_CashRecon")
     F.add("對照：經調整淨虧損（非 IFRS，負值）", "RMB 億", {"D": f"=-{S('adj_loss_fy25')}", "K": f"=-{S('adj_loss_1h26')}"}, "SRC_ZP_146、206", key="rc_adj")
 
+    F.section("十、美元口徑（與 OpenAI v0.6 並排；÷ USD/CNY ÷ 10，同一匯率 D23）")
+    for key_, zh, nm_ in (("fcf", "自由現金流", "FND_FCF_USD"), ("committed", "已到位融資合計", "FND_Committed_USD"), ("ext", "當年外部資金需求", "FND_ExtNeed_USD"),
+                          ("cum", "累計外部資金需求", "FND_ExtNeedCum_USD"), ("end", "年底現金", "FND_CashEnd_USD"), ("s_cum", "累計外部資金需求（轉股）", "FND_ExtNeedCumConv_USD"),
+                          ("s_end", "年底現金（轉股）", "FND_CashEndConv_USD")):
+        cols = YC if key_ in ("fcf", "end") else YE
+        F.add(f"{zh}（美元）", "$B", {c: f"={c}«F.{key_}»/{fxu}/{bn}" for c in cols}, "", key=f"u_{key_}", name=nm_)
+
     for c, w in (("A", 7), ("B", 66), ("C", 10)):
         F.ws.column_dimensions[c].width = w
     for c in YC + HC:
