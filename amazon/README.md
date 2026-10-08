@@ -773,6 +773,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `capexModel.segDaRunRate` | 最新季分部 D&A 年化（D&A 對帳基準；MAG v0.1b r3 C17 起不再反解非 AI 年限） | US$bn | 55.476 | 必改 |
 | `capexModel.segDaRunRateNote` | 分部 D&A 年化的來源 | 文字 | 最新季（2026Q2）分部 D&A（不動產與設備）北… | 必改 |
 | `capexModel.guideNote` | 資本支出指引期數與對照 | 文字 | 2026 指引約 220（法說二手逐字稿）；公司未給… | 必改 |
+| `capexModel.rentedExt.open` | 評價日租用的對外 AI MW（neocloud 等；收入照算、投入資本與折舊不計、租金只進 AI 增量報酬；MAG v0.1b r3 C20） | MW | 0 | 檢查 |
+| `capexModel.rentedExt.path` | 各期末租用的對外 AI MW（新增不需資本支出） | MW 清單 | 0、0、0、0、0 | 檢查 |
+| `capexModel.rentedExt.rentMW` | 租用對外 MW 每 MW 年租金（US$m/MW-年） | US$m | 0 | 檢查 |
+| `capexModel.rentedExt.note` | 租用對外 MW 的來源 | 文字 | Amazon 無租用的對外 AI 算力（對外 MW … | 必改 |
 | `capexModel.nonAiLife` | 非 AI 折舊年限（預設 10 年；MAG v0.1b r3 C17） | 年 | 10 | 檢查 |
 | `capexModel.nonAiLifeRange` | 非 AI 折舊年限區間（敏感度） | 年 清單 | 8、15 | 檢查 |
 | `capexModel.nonAiLifeNote` | 非 AI 折舊年限的依據 | 文字 | 非 AI 折舊年限預設 10 年（區間 8–15 年… | 必改 |

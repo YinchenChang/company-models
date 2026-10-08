@@ -3468,6 +3468,18 @@
   "segDaRunRate": 55.476,
   "segDaRunRateNote": "最新季（2026Q2）分部 D&A（不動產與設備）北美 4.500＋國際 1.293＋AWS 8.076＝13.869 × 4（10-Q 附註分部資訊；[Derived]）：校準非 AI 折舊年限",
   "guideNote": "2026 指引約 220（法說二手逐字稿）；公司未給 2027 指引 → 次期起由 MW 推導（對照共識 2027 275.1、2028 292.9）",
+  "rentedExt": {
+   "open": 0,
+   "path": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rentMW": 0,
+   "note": "Amazon 無租用的對外 AI 算力（對外 MW 全部自有；租用第三方機房屬 selfBuild 的 20%）[Assumed]；MAG 對照表 r1 C20"
+  },
   "nonAiLife": 10,
   "nonAiLifeRange": [
    8,

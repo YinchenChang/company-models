@@ -578,9 +578,16 @@ accr = _acc
 r = prow(r, "期初主動電力", "MW", [f"={MW_YE25}"] + [f"={COLS[i-1]}{accr}" for i in range(1, 5)], NUM0, f"{PERIODS[0]} 期初＝{MW_Y0} 年底 {D['mwYearEnd'][str(MW_Y0)]} MW", BLACK)
 r = prow(r, "本期新增 MW", "MW", [f"={COLS[i]}{accr}-{COLS[i]}{r-1}" for i in range(5)], NUM0, None, BLACK)
 r = prow(r, "次期新增 MW", "MW", [f"={COLS[i+1]}{accr}-{COLS[i]}{accr}" for i in range(4)] + [f"={MW31}"], NUM0, None, BLACK)
+_RXC = (CXM or {}).get('rentedExt') or {}  # MAG v0.1b r3（C20）：租用對外 MW（不需資本支出、不計投入資本與折舊；租金只進 AI 增量報酬）
+if CXM:
+    RXO = gi(r, "租用對外 MW（評價日）", "MW", _RXC.get('open', 0), _RXC.get('note', '無（0）'), NUM0); r += 1
+    r = prow(r, "租用對外 MW（期末）", "MW", _RXC.get('path') or [_RXC.get('open', 0)] * 5, NUM0, "company.json → capexModel.rentedExt.path（C20）")
+    r = prow(r, "租用對外 MW 新增", "MW", [f"={COLS[i]}{IN['租用對外 MW（期末）']}-" + (RXO if i == 0 else f"{COLS[i-1]}{IN['租用對外 MW（期末）']}") for i in range(5)], NUM0, "不需資本支出（C20）", BLACK)
+    r = prow(r, "租用對外 MW 次期新增", "MW", [f"={COLS[i+1]}{IN['租用對外 MW 新增']}" for i in range(4)] + ["=0"], NUM0, None, BLACK)
+_RXS = lambda i: (f"-({COLS[i]}{IN['租用對外 MW 新增']}*(1-{LAMBDA})+{COLS[i]}{IN['租用對外 MW 次期新增']}*{LAMBDA})" if CXM else "")
 r = prow(r, "全年毛 CapEx（公式）", "US$bn",
-         [f"=({COLS[i]}{r-2}*(1-{LAMBDA})+{COLS[i]}{r-1}*{LAMBDA})" + (f"/{EXTS}" if CXM else "") + f"*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000" for i in range(5)],
-         NUM, "＝(本期新增×(1−λ)＋次期新增×λ)" + ("÷ 對外比例（AI 總 MW）" if CXM else "") + "×每 MW 成本" + ("（AI 成長型，全年）" if CXM else ""), BLACK)
+         [(f"=MAX(0,({COLS[i]}{IN['本期新增 MW']}*(1-{LAMBDA})+{COLS[i]}{IN['次期新增 MW']}*{LAMBDA})/{EXTS}{_RXS(i)})" if CXM else f"=({COLS[i]}{IN['本期新增 MW']}*(1-{LAMBDA})+{COLS[i]}{IN['次期新增 MW']}*{LAMBDA})") + f"*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000" for i in range(5)],
+         NUM, "＝(本期新增×(1−λ)＋次期新增×λ)" + ("÷ 對外比例（AI 總 MW）− 租用對外 MW 新增（C20）" if CXM else "") + "×每 MW 成本" + ("（AI 成長型，全年）" if CXM else ""), BLACK)
 if CXM:  # MAG v0.1b：非 AI 資本支出＝Σ 各線全年營收 × 資本支出強度；首期模型部分＝全年 × 模型期月數 ÷ 12
     r = prow(r, "非 AI 資本支出（全年）", "US$bn", [("=" + "+".join(f"{COLS[i]}{a}*{c}" for a, c in _LGX)) if _LGX else "=0" for i in range(5)], NUM, "＝Σ 非 AI 事業各線全年營收 × 資本支出強度", BLACK)
     r = prow(r, "非 AI 資本支出（模型期）", "US$bn", [f"=C{r-1}*{_n(CAL['stubMonths'] / 12)}"] + [f"={COLS[i]}{r-1}" for i in range(1, 5)], NUM, "«P0»＝全年 × 模型期月數 ÷ 12", BLACK)
@@ -622,7 +629,7 @@ for i in range(1, 5):
 if CXM:  # MAG v0.1b：D&A 分池（HTML segA aiOpenQ／DAI／DAN 同式）
     r = section(ws, r, "D&A 分池（AI：IT 依 GPU 壽命、機房依機房壽命；非 AI：期初＝PP&E − AI 估計，預設年限；汰換不增加基礎）", level=2)
     _W = lambda nm: "+".join(f"{ch['mixOpen']}*TK_{nm}_{ch['tk']}" for ch in PRC['chips'])
-    AIMW0 = gi(r, "評價日 AI 總 MW（對外 ÷ 對外比例）", "MW", f"={MW0}/{EXTS}", "＝評價日在役對外 AI MW ÷ 對外比例 [Derived]", NUM0, font=BLACK); r += 1
+    AIMW0 = gi(r, "評價日自有 AI 總 MW（對外 ÷ 對外比例 − 租用對外）", "MW", f"=MAX(0,{MW0}/{EXTS}-{RXO})", "＝評價日在役對外 AI MW ÷ 對外比例 − 租用對外 MW（C20）[Derived]", NUM0, font=BLACK); r += 1
     AIIT0 = gi(r, "AI 期初 IT 毛額（估計）", "US$bn", f"={AIMW0}*({_W('CapexIT')})/1000", "＝AI 總 MW × Σ 期初世代占比 × TK_CapexIT [Derived]", font=BLACK); r += 1
     AIFC0 = gi(r, "AI 期初機房毛額（估計）", "US$bn", f"={AIMW0}*{SELFB}*({_W('CapexFacility')})/1000", "＝AI 總 MW × 自建比例 × Σ 期初世代占比 × TK_CapexFacility [Derived]", font=BLACK); r += 1
     FACL = gi(r, "機房折舊年限", "年", f"=({_W('CapexFacility')})/({_W('DeprFac')})", "＝TK_CapexFacility ÷ TK_DeprFac（Tokenomics；土地不折舊）", NUM1, font=BLACK); r += 1
@@ -2596,26 +2603,38 @@ if CXM:
     arow("AI 雲端 EBITDA（年化）", "US$bn", lambda i: f"={COLS[i]}{AR['對外 AI 雲端營收（年化）']}*{COLS[i]}{AR['AI 雲端 EBITDA 率']}")
     arow("AI 營運成本（年化）", "US$bn", lambda i: f"={COLS[i]}{AR['對外 AI 雲端營收（年化）']}-{COLS[i]}{AR['AI 雲端 EBITDA（年化）']}")
     arow("AI 折舊（年化）", "US$bn", lambda i: f"={inref('AI D&A', i)}/{_L(i)}", NUM, GREEN, "D&A 分池（輸入與假設 D 區）")
-    arow("對外比例", "%", lambda i: f"={EXTS}", PCT, GREEN, "投入資本與折舊按對外 MW 比例分攤（MAG v0.1b r2 C11）")
-    arow("對外 AI 折舊（年化，按對外比例分攤）", "US$bn", lambda i: f"={COLS[i]}{AR['AI 折舊（年化）']}*{COLS[i]}{AR['對外比例']}")
-    arow("對外 AI NOPAT（年化）", "US$bn", lambda i: f"=({COLS[i]}{AR['AI 雲端 EBITDA（年化）']}-{COLS[i]}{AR['對外 AI 折舊（年化，按對外比例分攤）']})*(1-{TAX})", NUM, BLACK, "＝(對外 EBITDA − 對外折舊)×(1 − 稅率)")
+    _TKW = CO.get('tokenomics', {}).get('holdEconWacc', 0.1)
+    _GTi = lambda i: f"'輸入與假設'!{COLS[i]}{IN['在役 MW 合計（世代加總）']}"
+    _WGi = lambda nm, i: "(" + "+".join(f"'輸入與假設'!{COLS[i]}{g[0]}*TK_{nm}_{ch['tk']}" for g, ch in zip(_GR, PRC['chips'])) + f")/MAX(1E-9,{_GTi(i)})/1000"
+    arow("有效在役對外 MW（＝營收 ÷ 每 MW 年收入）", "MW", lambda i: f"={COLS[i]}{AR['對外 AI 雲端營收（年化）']}/MAX(1E-12,'輸入與假設'!{COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/1000)", NUM0)
+    arow("租用對外 MW（平均）", "MW", lambda i: f"=(" + (RXO if i == 0 else f"{inref('租用對外 MW（期末）', i-1)}") + f"+{inref('租用對外 MW（期末）', i)})/2", NUM0, GREEN, "capexModel.rentedExt（C20）：收入照算、投入資本與折舊不計")
+    arow("自有對外占自有 AI MW 比例", "%", lambda i: f"=MAX(0,{COLS[i]}{AR['有效在役對外 MW（＝營收 ÷ 每 MW 年收入）']}-{COLS[i]}{AR['租用對外 MW（平均）']})/MAX(1E-9,{COLS[i]}{AR['有效在役對外 MW（＝營收 ÷ 每 MW 年收入）']}/{EXTS}-{COLS[i]}{AR['租用對外 MW（平均）']})", PCT, BLACK,
+         "投入資本與折舊按此比例分攤（無租用時＝對外比例；C11、C20）")
+    arow("每 MW 機房年租金（Tokenomics 機房成本 × 資本回收係數）", "US$bn/MW", lambda i: f"={_WGi('CapexFacility', i)}*{_n(_TKW)}/(1-(1+{_n(_TKW)})^(-{FACL}))", '0.0000', BLACK,
+         f"出租方打平租金＝在役世代加權 TK_CapexFacility × {_n(_TKW * 100)}% 資本回收係數（機房年限）[Derived]（C22）")
+    arow("機房租金（自有對外 MW ×(1 − 自建比例)）", "US$bn", lambda i: f"=(1-{SELFB})*MAX(0,{COLS[i]}{AR['有效在役對外 MW（＝營收 ÷ 每 MW 年收入）']}-{COLS[i]}{AR['租用對外 MW（平均）']})*{COLS[i]}{AR['每 MW 機房年租金（Tokenomics 機房成本 × 資本回收係數）']}", NUM, BLACK,
+         "只進 AI 增量報酬（資金與評價的租金現金已在租賃承諾內，不重複扣；C22）")
+    arow("租用對外 MW 租金", "US$bn", lambda i: f"={COLS[i]}{AR['租用對外 MW（平均）']}*{_n(_RXC.get('rentMW', 0) or 0)}/1000", NUM, BLACK, "＝租用對外 MW × 每 MW 年租金（capexModel.rentedExt.rentMW；C20）")
+    arow("對外 AI EBITDA（扣租金）", "US$bn", lambda i: f"={COLS[i]}{AR['AI 雲端 EBITDA（年化）']}-{COLS[i]}{AR['機房租金（自有對外 MW ×(1 − 自建比例)）']}-{COLS[i]}{AR['租用對外 MW 租金']}")
+    arow("對外 AI 折舊（年化，按對外比例分攤）", "US$bn", lambda i: f"={COLS[i]}{AR['AI 折舊（年化）']}*{COLS[i]}{AR['自有對外占自有 AI MW 比例']}")
+    arow("對外 AI NOPAT（年化）", "US$bn", lambda i: f"=({COLS[i]}{AR['對外 AI EBITDA（扣租金）']}-{COLS[i]}{AR['對外 AI 折舊（年化，按對外比例分攤）']})*(1-{TAX})", NUM, BLACK, "＝(對外 EBITDA − 對外折舊)×(1 − 稅率)")
     arow("AI 投入資本（期初）", "US$bn", lambda i: (f"=({AIIT0}+{AIFC0})*{AINET}" if i == 0 else f"={COLS[i-1]}{{r}}"), NUM, BLACK, "«P0»＝AI 期初毛額 × 淨額比；之後＝前期期末")
     arow("AI 投入（成長型＋汰換，模型期）", "US$bn", lambda i: f"={inref('AI 成長型 CapEx（模型期）', i)}+{inref('GPU 汰換 CapEx', i)}", NUM, GREEN)
     arow("AI 投入資本（期末）", "US$bn", lambda i: f"={COLS[i]}{AR['AI 投入資本（期初）']}+{COLS[i]}{AR['AI 投入（成長型＋汰換，模型期）']}-{inref('AI D&A', i)}", NUM, BLACK, "＝期初＋投入 − AI 折舊")
     for i in range(1, 5):
         ws.cell(row=AR['AI 投入資本（期初）'], column=3 + i, value=f"={COLS[i-1]}{AR['AI 投入資本（期末）']}")
-    arow("對外 AI 平均投入資本（按對外比例分攤）", "US$bn", lambda i: f"=({COLS[i]}{AR['AI 投入資本（期初）']}+{COLS[i]}{AR['AI 投入資本（期末）']})/2*{COLS[i]}{AR['對外比例']}")
+    arow("對外 AI 平均投入資本（按對外比例分攤）", "US$bn", lambda i: f"=({COLS[i]}{AR['AI 投入資本（期初）']}+{COLS[i]}{AR['AI 投入資本（期末）']})/2*{COLS[i]}{AR['自有對外占自有 AI MW 比例']}")
     arow("對外 AI ROIC（主值）", "%", lambda i: f"={COLS[i]}{AR['對外 AI NOPAT（年化）']}/MAX(1E-9,{COLS[i]}{AR['對外 AI 平均投入資本（按對外比例分攤）']})", PCT, BLACK, "＝對外 NOPAT ÷ 對外平均投入資本（對照表 r1 C11）", True)
     arow("WACC", "%", lambda i: f"={WACC}", PCT, GREEN)
     arow("對外 AI ROIC − WACC", "%", lambda i: f"={COLS[i]}{AR['對外 AI ROIC（主值）']}-{COLS[i]}{AR['WACC']}", PCT, BLACK, "負值＝AI 投資未賺到資金成本", True)
     arow("影子收入（自用 AI MW × 每 MW 年收入，年化）", "US$bn", lambda i: f"={COLS[i]}{AR['對外 AI 雲端營收（年化）']}*(1/{EXTS}-1)", NUM, BLACK, "自用 AI MW＝對外 ×(1 ÷ 對外比例 − 1)；只作對照，不進評價（對照表 r1 D2）")
-    arow("全 AI ROIC（含影子收入，對照）", "%", lambda i: f"=({COLS[i]}{AR['AI 雲端 EBITDA（年化）']}+{COLS[i]}{AR['影子收入（自用 AI MW × 每 MW 年收入，年化）']}*{COLS[i]}{AR['AI 雲端 EBITDA 率']}-{COLS[i]}{AR['AI 折舊（年化）']})*(1-{TAX})/MAX(1E-9,({COLS[i]}{AR['AI 投入資本（期初）']}+{COLS[i]}{AR['AI 投入資本（期末）']})/2)", PCT)
+    arow("全 AI ROIC（含影子收入，對照）", "%", lambda i: f"=({COLS[i]}{AR['AI 雲端 EBITDA（年化）']}+{COLS[i]}{AR['影子收入（自用 AI MW × 每 MW 年收入，年化）']}*{COLS[i]}{AR['AI 雲端 EBITDA 率']}-(1-{SELFB})*MAX(1E-9,{COLS[i]}{AR['有效在役對外 MW（＝營收 ÷ 每 MW 年收入）']}/{EXTS}-{COLS[i]}{AR['租用對外 MW（平均）']})*{COLS[i]}{AR['每 MW 機房年租金（Tokenomics 機房成本 × 資本回收係數）']}-{COLS[i]}{AR['租用對外 MW 租金']}-{COLS[i]}{AR['AI 折舊（年化）']})*(1-{TAX})/MAX(1E-9,({COLS[i]}{AR['AI 投入資本（期初）']}+{COLS[i]}{AR['AI 投入資本（期末）']})/2)", PCT, BLACK, "全 AI 機房租金＝(1 − 自建)× 自有 AI 總 MW × 每 MW 機房年租金（C22）")
     _RY = COLS[CXM.get('roicYear', 3)]
     r += 1
     ws.cell(row=r, column=1, value=f"打平 k（使 {PERIODS[CXM.get('roicYear', 3)]} 對外 AI ROIC＝WACC）").font = BOLD
-    c = ws.cell(row=r, column=3, value=f"={KSEL}*({WACC}*{_RY}{AR['對外 AI 平均投入資本（按對外比例分攤）']}/(1-{TAX})+{_RY}{AR['AI 營運成本（年化）']}+{_RY}{AR['對外 AI 折舊（年化，按對外比例分攤）']})/MAX(1E-9,{_RY}{AR['對外 AI 雲端營收（年化）']})")
+    c = ws.cell(row=r, column=3, value=f"={KSEL}*({WACC}*{_RY}{AR['對外 AI 平均投入資本（按對外比例分攤）']}/(1-{TAX})+{_RY}{AR['AI 營運成本（年化）']}+{_RY}{AR['機房租金（自有對外 MW ×(1 − 自建比例)）']}+{_RY}{AR['租用對外 MW 租金']}+{_RY}{AR['對外 AI 折舊（年化，按對外比例分攤）']})/MAX(1E-9,{_RY}{AR['對外 AI 雲端營收（年化）']})")
     c.number_format = '0.000'; c.border = BOX; c.fill = FILL_KEY
-    ws.cell(row=r, column=9, value="＝k ×(WACC × 對外平均投入資本 ÷ (1 − 稅率)＋營運成本＋對外折舊) ÷ 營收（AI EBITDA 對 k 線性，閉式解；對外口徑）").font = SMALL
+    ws.cell(row=r, column=9, value="＝k ×(WACC × 對外平均投入資本 ÷ (1 − 稅率)＋營運成本＋租金＋對外折舊) ÷ 營收（AI EBITDA 對 k 線性，閉式解；對外口徑）").font = SMALL
     AR["打平 k"] = r; r += 1
     ws.cell(row=r, column=1, value="目前採用 k").font = BLACK
     c = ws.cell(row=r, column=3, value=f"={KSEL}"); c.number_format = '0.000'; c.border = BOX; c.font = GREEN
@@ -2637,25 +2656,27 @@ if CXM:
         _GT = f"'輸入與假設'!{_RY}{IN['在役 MW 合計（世代加總）']}"
         _WG = lambda nm: "(" + "+".join(f"'輸入與假設'!{_RY}{g[0]}*TK_{nm}_{ch['tk']}" for g, ch in zip(_GR, PRC['chips'])) + f")/MAX(1E-9,{_GT})/1000"
         HUR = c1("IF_HoldEcon 隱含報酬（Tokenomics WACC，經濟口徑）", _TKH, PCT, CO['tokenomics'].get('holdEconWaccNote', ''), font=BLUE)
-        _mw = c1("在役對外 MW（有效，＝營收 ÷ 每 MW 年收入）", f"={_a('對外 AI 雲端營收（年化）')}/MAX(1E-12,'輸入與假設'!{_RY}{IN['加權每 MW 年持有成本']}*{KSEL}/1000)", NUM0)
+        _mw = c1("在役對外 MW（有效，＝營收 ÷ 每 MW 年收入）", f"={_a('有效在役對外 MW（＝營收 ÷ 每 MW 年收入）')}", NUM0)
+        _own = c1("自有在役對外 MW（有效 − 租用）", f"=MAX(0,{_mw}-{_a('租用對外 MW（平均）')})", NUM0)
         _rv1 = c1("k＝1 營收（Σ 在役世代 × IF_HoldEcon，不含晶片係數）", f"={_mw}*{_WG('HoldEcon')}", NUM)
         _otk = c1("Tokenomics 營運成本（Σ 在役世代 × IF_OpexGW）", f"={_mw}*{_WG('OpexGW')}", NUM)
-        _cR = c1("累計汰換（對外，至錨定期中點）", "=" + EXTS + "*(" + "+".join([inref('GPU 汰換 CapEx', j) for j in range(_ry)] + [f"{inref('GPU 汰換 CapEx', _ry)}/2"]) + ")", NUM)
+        _cR = c1("累計汰換（對外，至錨定期中點）", "=" + _a('自有對外占自有 AI MW 比例') + "*(" + "+".join([inref('GPU 汰換 CapEx', j) for j in range(_ry)] + [f"{inref('GPU 汰換 CapEx', _ry)}/2"]) + ")", NUM)
         _cit, _cfc = _WG('CapexIT'), _WG('CapexFacility')
-        _ic5 = c1("穩態投入資本（在役 MW ×(IT＋自建 × 機房)× ½）", f"={_mw}*({_cit}+{SELFB}*{_cfc})*0.5", NUM)
-        _da5 = c1("穩態折舊（在役 MW ×(IT ÷ 壽命＋自建 × 機房 ÷ 機房壽命)）", f"={_mw}*({_cit}/{LIFE}+{SELFB}*{_cfc}/{FACL})", NUM)
-        _ic6 = c1("穩態投入資本（自建 100%）", f"={_mw}*({_cit}+{_cfc})*0.5", NUM)
-        _da6 = c1("穩態折舊（自建 100%）", f"={_mw}*({_cit}/{LIFE}+{_cfc}/{FACL})", NUM)
-        _eb, _op, _dx, _ix = _a('AI 雲端 EBITDA（年化）'), _a('AI 營運成本（年化）'), _a('對外 AI 折舊（年化，按對外比例分攤）'), _a('對外 AI 平均投入資本（按對外比例分攤）')
+        _ic5 = c1("穩態投入資本（自有在役 MW ×(IT＋自建 × 機房)× ½）", f"={_own}*({_cit}+{SELFB}*{_cfc})*0.5", NUM)
+        _da5 = c1("穩態折舊（自有在役 MW ×(IT ÷ 壽命＋自建 × 機房 ÷ 機房壽命)）", f"={_own}*({_cit}/{LIFE}+{SELFB}*{_cfc}/{FACL})", NUM)
+        _ic6 = c1("穩態投入資本（全部自有、自建 100%）", f"={_mw}*({_cit}+{_cfc})*0.5", NUM)
+        _da6 = c1("穩態折舊（全部自有、自建 100%）", f"={_mw}*({_cit}/{LIFE}+{_cfc}/{FACL})", NUM)
+        _eb, _op, _dx, _ix = _a('對外 AI EBITDA（扣租金）'), _a('AI 營運成本（年化）'), _a('對外 AI 折舊（年化，按對外比例分攤）'), _a('對外 AI 平均投入資本（按對外比例分攤）')
+        _rt = f"({_a('機房租金（自有對外 MW ×(1 − 自建比例)）')}+{_a('租用對外 MW 租金')})"
         S = [c1("階段 0｜模型對外 AI ROIC（稅後）", f"={_a('對外 AI ROIC（主值）')}"),
              c1("階段 1｜稅前", f"=({_eb}-{_dx})/MAX(1E-9,{_ix})"),
-             c1("階段 2｜k＝1（含自研晶片係數）", f"=({_rv1}-{_op}-{_dx})/MAX(1E-9,{_ix})"),
-             c1("階段 3｜營運成本改 Tokenomics", f"=({_rv1}-{_otk}-{_dx})/MAX(1E-9,{_ix})"),
-             c1("階段 4｜移除汰換", f"=({_rv1}-{_otk}-({_dx}-{_cR}/{LIFE}))/MAX(1E-9,{_ix}-{_cR})"),
-             c1("階段 5｜穩態（無爬坡／閒置）", f"=({_rv1}-{_otk}-{_da5})/MAX(1E-9,{_ic5})"),
-             c1("階段 6｜機房自建 100%＝乾淨稅前 ROIC", f"=({_rv1}-{_otk}-{_da6})/MAX(1E-9,{_ic6})", PCT, "k＝1、Tokenomics 成本、無爬坡延遲、無稅（對照表 r1 C15）", True)]
+             c1("階段 2｜k＝1（含自研晶片係數）", f"=({_rv1}-{_op}-{_rt}-{_dx})/MAX(1E-9,{_ix})"),
+             c1("階段 3｜營運成本改 Tokenomics", f"=({_rv1}-{_otk}-{_rt}-{_dx})/MAX(1E-9,{_ix})"),
+             c1("階段 4｜移除汰換", f"=({_rv1}-{_otk}-{_rt}-({_dx}-{_cR}/{LIFE}))/MAX(1E-9,{_ix}-{_cR})"),
+             c1("階段 5｜穩態（無爬坡／閒置）", f"=({_rv1}-{_otk}-{_rt}-{_da5})/MAX(1E-9,{_ic5})"),
+             c1("階段 6｜全部自有、自建 100%、無租金＝乾淨稅前 ROIC", f"=({_rv1}-{_otk}-{_da6})/MAX(1E-9,{_ic6})", PCT, "k＝1、Tokenomics 成本、無爬坡延遲、無稅（對照表 r1 C15）", True)]
         _L15 = ["稅（稅後 → 稅前）", "k＝1（含自研晶片係數）", "營運成本來源（模型 → Tokenomics IF_OpexGW）", "汰換（自投入資本與折舊移除累計汰換）",
-                "爬坡／閒置（投入資本與折舊改為在役 MW 穩態，淨額比 ½）", "機房（自建比例 → 100%）"]
+                "爬坡／閒置（投入資本與折舊改為自有在役 MW 穩態，淨額比 ½）", "機房與租用（全部自有、自建 100%、無租金）"]
         for j_, l_ in enumerate(_L15):
             c1(f"拆解｜{l_}", f"={S[j_ + 1]}-{S[j_]}")
         c1(f"拆解｜會計口徑殘差（平均淨帳面 vs {round(_TKH * 100)}% 年金）", f"={HUR}-{S[6]}")
@@ -2715,8 +2736,8 @@ checks = [
      f'="要對上公司說法：對外 MW 需 "&TEXT({_n(CFq["aiRunRate"])}/{AIREV0},"#,##0")&"（k 不變），或 k 需 "&TEXT({KSEL}*{_n(CFq["aiRunRate"])}/({MW0}*{AIREV0}),"0.000")&"（MW 不變）；只作驗證（對照表 r1 C3）"'),
 ] if CFq.get('aiRunRate') is not None and 'AIREV0' in globals() else []) + ([  # MAG v0.1b：對帳列（指引 ÷ 每 MW 全成本＝隱含 AI 建置 MW vs MW 路徑）
     (f"{PERIODS[0]} 對帳：指引隱含 AI 建置 MW", f"=(({_CXLO}+{_CXHI})/2-'輸入與假設'!C{IN['非 AI 資本支出（全年）']}-'輸入與假設'!C{IN['GPU 汰換 CapEx']})/('輸入與假設'!C{IN['每 MW 建置成本']}*{CAPSC}/1000)",
-     "MW 路徑 ±20%", f"=IF(ABS(B{{r}}/(('輸入與假設'!C{IN['本期新增 MW']}*(1-{LAMBDA})+'輸入與假設'!C{IN['次期新增 MW']}*{LAMBDA})/{EXTS})-1)<=0.2,\"通過\",\"觀察\")", NUM0,
-     f'="MW 路徑（AI 總 MW 當量）"&TEXT((\'輸入與假設\'!C{IN["本期新增 MW"]}*(1-{LAMBDA})+\'輸入與假設\'!C{IN["次期新增 MW"]}*{LAMBDA})/{EXTS},"#,##0")&"；落差＝指引含 MW 路徑以外的支出或路徑偏低（首期以指引為準）"'),
+     "MW 路徑 ±20%", f"=IF(ABS(B{{r}}/(('輸入與假設'!C{IN['本期新增 MW']}*(1-{LAMBDA})+'輸入與假設'!C{IN['次期新增 MW']}*{LAMBDA})/{EXTS}-('輸入與假設'!C{IN['租用對外 MW 新增']}*(1-{LAMBDA})+'輸入與假設'!C{IN['租用對外 MW 次期新增']}*{LAMBDA}))-1)<=0.2,\"通過\",\"觀察\")", NUM0,
+     f'="MW 路徑（AI 總 MW 當量）"&TEXT((\'輸入與假設\'!C{IN["本期新增 MW"]}*(1-{LAMBDA})+\'輸入與假設\'!C{IN["次期新增 MW"]}*{LAMBDA})/{EXTS}-(\'輸入與假設\'!C{IN["租用對外 MW 新增"]}*(1-{LAMBDA})+\'輸入與假設\'!C{IN["租用對外 MW 次期新增"]}*{LAMBDA}),"#,##0")&"；落差＝指引含 MW 路徑以外的支出或路徑偏低（首期以指引為準）"'),
 ] if CXM and CFq.get('capexLo') is not None else []) + ([  # MAG v0.1b r2（對照表 r1 C15）：一致性檢查列
     (f"{PERIODS[CXM.get('roicYear', 3)]} 一致性：對外 AI 稅前 ROIC（k＝1、Tokenomics 成本、穩態、無稅）", f"='AI增量報酬'!{C15CL}",
      f"IF_HoldEcon 隱含 {_n(CO['tokenomics']['holdEconWacc'] * 100)}% ±{_n(CK.get('c15Tol', 0.05) * 100)}pt",

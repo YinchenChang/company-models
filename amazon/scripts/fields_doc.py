@@ -47,6 +47,7 @@ F = [
  ('related._note', '關聯方並排口徑（只讀、不連動；D5）', '文字', M), ('related.contracts', '關聯方合約：[{name, annual（年化 US$bn）, startFY（起始財年）, note}]；年化 ÷ 對外 AI 雲端收入＝對手方集中度', '清單（物件）', M),
  ('related.snapshots', '關聯方模型快照：[{name, series（以期間標籤為鍵，US$bn／年）, note}]（其他資料夾成品只讀）', '清單（物件）', M),
  ('related.rpoShareMax', '關聯方承諾占 RPO 上限（對照）', '比例', M), ('related.rpoShareNote', '上欄的推導', '文字', M),
+ ('capexModel.rentedExt.open', '評價日租用的對外 AI MW（neocloud 等；收入照算、投入資本與折舊不計、租金只進 AI 增量報酬；MAG v0.1b r3 C20）', 'MW', C), ('capexModel.rentedExt.path', '各期末租用的對外 AI MW（新增不需資本支出）', 'MW 清單', C), ('capexModel.rentedExt.rentMW', '租用對外 MW 每 MW 年租金（US$m/MW-年）', 'US$m', C), ('capexModel.rentedExt.note', '租用對外 MW 的來源', '文字', M),
  ('capexModel.nonAiLife', '非 AI 折舊年限（預設 10 年；MAG v0.1b r3 C17）', '年', C), ('capexModel.nonAiLifeRange', '非 AI 折舊年限區間（敏感度）', '年 清單', C), ('capexModel.nonAiLifeNote', '非 AI 折舊年限的依據', '文字', M),
  ('capexModel.aiNetShare', '期初 AI PP&E 淨額 ÷ 毛額（AI 增量 ROIC 的期初投入資本；MAG v0.1b）', '比例', C), ('capexModel.aiNetShareNote', '上欄依據', '文字', M),
  ('capexModel.roicYear', '打平 k 的錨定期（0–4；3＝模型第 4 期）', '整數', K), ('capexModel.roicYearNote', '上欄說明', '文字', K),

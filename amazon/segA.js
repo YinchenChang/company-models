@@ -170,7 +170,7 @@ function capexCostQ(sb) {
 // MAG v0.1b：期初 AI 毛 PP&E 估計＝評價日 AI 總 MW（對外 ÷ 對外比例）× Σ 期初占比 × Tokenomics 每 MW 成本；機房壽命＝TK_CapexFacility ÷ TK_DeprFac；
 // 非 AI 期初基礎＝期初 PP&E − AI 估計，壽命＝非 AI 基礎 ÷ (最新季分部 D&A 年化 − AI 期初 D&A)（校準）
 function aiOpenQ(e, XS) {
-  const CM = COMPANY_DATA.capexModel, sb = e.selfBuild ?? CM.selfBuild, mw = e.billableOpen / XS,
+  const CM = COMPANY_DATA.capexModel, sb = e.selfBuild ?? CM.selfBuild, mw = Math.max(0, e.billableOpen / XS - ((CM.rentedExt || {}).open || 0)), // MAG v0.1b r3（C20）：自有 AI 總 MW＝對外 ÷ 對外比例 − 租用對外 MW
     W = f => PRICING.chips.reduce((a, c) => a + c.mixOpen * TKV[f][c.tk], 0),
     it = mw * W(`IF_CapexIT`) / 1e3, fac = mw * sb * W(`IF_CapexFacility`) / 1e3, facLife = W(`IF_CapexFacility`) / W(`IF_DeprFac`),
     da0 = it / e.gpuLife + fac / facLife, n0 = e.ppeOpen - it - fac;
@@ -365,7 +365,8 @@ function runFunding(e) {
     XS = CXM ? e.extShare ?? CXM.extShare : 1, // 對外比例：新增 AI 總 MW＝新增對外 MW ÷ 對外比例（自用 AI 同樣需要資本支出）
     CC = CXM ? capexCostQ(e.selfBuild ?? CXM.selfBuild) : null, // 各期新增 MW 的每 MW 成本（US$m/MW：IT＋自建比例 × 機房）與 IT 占比
     CMW = CXM ? CC.map(x => x.all) : e.a.costMW, CIT = CXM ? CC.map(x => x.it) : e.a.costMW, // 汰換只換 IT（機房不換）；非 tk 模式沿用 e.a.costMW
-    CXF = MN.map((t, n) => (t * (1 - e.lambda) + MX[n] * e.lambda) / XS * CMW[n] * (e.capexScale ?? 1) / 1e3),
+    RXP = CXM ? rentedExtQ() : null, RXD = n => RXP ? (n < 5 ? RXP.path[n] - (n ? RXP.path[n - 1] : RXP.open) : 0) : 0, // MAG v0.1b r3（C20）：租用對外 MW 的新增（不需資本支出）
+    CXF = MN.map((t, n) => (CXM ? Math.max(0, (t * (1 - e.lambda) + MX[n] * e.lambda) / XS - (RXD(n) * (1 - e.lambda) + RXD(n + 1) * e.lambda)) : t * (1 - e.lambda) + MX[n] * e.lambda) * CMW[n] * (e.capexScale ?? 1) / 1e3),
     CXNF = PERIOD_YEARS.map((L, r) => CXM ? LG.lines.reduce((a, x) => a + x.annual[r] * (x.cx || 0), 0) : 0), // MAG v0.1b：非 AI 資本支出（全年）＝Σ 各線全年營收 × 資本支出強度
     VIN = Object.fromEntries(Object.entries(e.mwYearEnd).map(([y, m]) => [y, m - (e.mwYearEnd[y - 1] ?? 0)])), // 各年新增 MW（汰換批次）
     RFV = PERIOD_FY.map( // 5a：期間的財年年份由日曆推算（滾動後不寫死）
@@ -817,7 +818,7 @@ function runFunding(e) {
     title: `毛 CapEx 由 MW 推導：${PERIODS[0]} 全年 ${o[0].capexFormulaFY.toFixed(1)}${CXM ? `（AI ${o[0].capexFull.toFixed(1)}＋非 AI ${o[0].capexNonAiFull.toFixed(1)}）` : ``}（指引 ${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}）`,
     detail: `公式＝(本期新增 MW×(1−λ)＋次期新增 MW×λ)×每 MW 成本。${PERIOD_FY[0] - 1} 年底 ${e.mwYearEnd[PERIOD_FY[0] - 1]} MW → ${PERIODS[0]} 年底 ${t.accepted[0]} MW、λ ${(e.lambda*100).toFixed(0)}%、每 MW $${e.a.costMW[0]}m（${TXQ.costMwNote}）。五期（首期為模型部分）合計 ${CX.reduce((e,t)=>e+t,0).toFixed(1)}。指引口徑：${TXQ.capexGuideSource}。`
   }), CXM && CALL_FACTS.capexLo != null && (() => { // MAG v0.1b：對帳列——指引 ÷ 每 MW 全成本＝隱含 AI 建置 MW，對照 MW 路徑（對照表 r1 第 5 節第 6 條）
-    const g = (CALL_FACTS.capexLo + CALL_FACTS.capexHi) / 2, imp = (g - CXNF[0] - REF[0]) / (CMW[0] * (e.capexScale ?? 1) / 1e3), pth = (MN[0] * (1 - e.lambda) + MX[0] * e.lambda) / XS;
+    const g = (CALL_FACTS.capexLo + CALL_FACTS.capexHi) / 2, imp = (g - CXNF[0] - REF[0]) / (CMW[0] * (e.capexScale ?? 1) / 1e3), pth = (MN[0] * (1 - e.lambda) + MX[0] * e.lambda) / XS - (RXD(0) * (1 - e.lambda) + RXD(1) * e.lambda); // MAG v0.1b r3（C20）：扣租用對外 MW 新增
     return _({ id: `capex-recon`, ok: Math.abs(imp / pth - 1) <= .2, severity: `watch`, imp, pth, // MAG v0.1b r2：imp／pth 供 scripts/calib_pace.js 讀取（C10）
       title: `對帳：${PERIODS[0]} 資本支出指引隱含 AI 建置 ${Y(imp, 0)} MW vs MW 路徑 ${Y(pth, 0)} MW（${hA((imp / pth - 1) * 100, 0)}）`,
       detail: `隱含＝(指引 ${Y(g, 1)} − 非 AI ${Y(CXNF[0], 1)} − 汰換 ${Y(REF[0], 1)}) ÷ 每 MW 成本 $${Y(CMW[0] * (e.capexScale ?? 1), 1)}m；路徑＝(本期新增 ${Y(MN[0], 0)}×(1−λ)＋次期新增 ${Y(MX[0], 0)}×λ) ÷ 對外比例 ${hA(XS * 100, 0)}（對外當量 ${Y(imp * XS, 0)} vs ${Y(pth * XS, 0)} MW）。落差表示指引含 MW 路徑以外的支出（未上線容量的預付與在建、記憶體漲價、網路與土地），或 MW 路徑偏低；首期以指引為準（差額歸 AI 成長型）。` })
