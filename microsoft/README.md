@@ -1,4 +1,6 @@
-# Microsoft 收支模型原始碼包（MAG 共用引擎 v0.1b′；引擎移植自 Amazon v0.1b r2，Oracle v0.2 沿革）
+# Microsoft 收支模型原始碼包 v0.1（MAG 共用引擎；引擎與 Amazon v0.1b r3 @ 6ac9745 逐檔相同，Oracle v0.2 沿革）
+
+**v0.1（2026-10-09）**：成品 `dist/20261009_Microsoft收支模型_v0_1.html／.xlsx`；交接檔 `docs/handoff/20261009_Microsoft收支模型_交接檔_v0_1.md`；最終報告 `docs/reports/20261008_microsoft_v0.1.md`。基準目標價 $357.24（讀法 1）／$426.15（讀法 2，自用 AI 價值中性；主值待 Andy 決定），三情境皆賣出（現價 $529.76）；對外比例無揭露是最大不確定（40% → $287.99、80% → $387.51）。本家專屬：`scripts/port_company_json.py`（以 Amazon company.json 為骨架產生本家 company.json）。
 
 **MAG v0.1b（2026-10-08）**：本資料夾的引擎是 Amazon、Alphabet、Microsoft 三家共用的「MAG 引擎」，公司差異全部由 `company.json` 驅動（移植步驟見 Amazon 分支 `amazon/docs/reports/20261008_amazon_v0.1b_模型.md`「移植說明」；本家移植紀錄與引擎差異見 `docs/reports/20261008_microsoft_v0.1b2_移植.md`）。相對 Oracle v0.2 新增：
 - **對外 AI 雲端**（`pricing`）：每 MW 年收入＝Σ 在役世代占比 × `TK_HoldEcon_<世代>` × 晶片係數 × k（k＝長約占比 × k_長約＋(1 − 占比) × k_現貨；價格軸低／基準／高與容量軸分離，3 × 3 目標價矩陣由 `scripts/rv_solve.py` 以 Excel 求解）；AI 雲端 EBITDA 率＝1 − Tokenomics 加權每 MW 營運成本 ÷ 每 MW 年收入（`defaults.ebitdaBasis`＝tk）。Excel「Tokenomics_取數」頁與 `TK_` 具名範圍（`scripts/check_tokenomics_tab.py`）。

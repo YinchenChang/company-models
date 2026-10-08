@@ -14,7 +14,7 @@
 | `whitefiber/` | WhiteFiber（WYFI） | `oracle/` @ `e4540c3`（Oracle v0.2 分支） | v0.1 |
 | `amazon/` | Amazon（AMZN） | `oracle/`（main，v0.2）→ MAG 共用引擎（共用文件見 `mag/`） | 建置中（v0.1） |
 | `alphabet/` | Alphabet（GOOGL） | `oracle/`（main，v0.2）→ 套用 Amazon 引擎 | 建置中（v0.1） |
-| `microsoft/` | Microsoft（MSFT） | `oracle/`（main，v0.2）→ 套用 Amazon 引擎 | 建置中（v0.1） |
+| `microsoft/` | Microsoft（MSFT） | `oracle/`（v0.2）→ MAG 共用引擎（Amazon v0.1b） | v0.1 |
 
 規則：
 - 事實來源與分層：算力相關的產業與物理層資料取自 Tokenomics（`YinchenChang/Tokenomics` 的 Interface／L1／SRC，X8）；公司專屬資料放各公司的 `company.json` 與 `data/`。
