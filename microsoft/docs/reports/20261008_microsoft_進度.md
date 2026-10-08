@@ -1,9 +1,9 @@
 # Microsoft v0.1 進度檔（接手用）
 
 ## 目前狀態（每次 push 前覆寫）
-- **已完成**：v0.1b′ 步驟 0–2（引擎與工具自 `origin/claude/amazon-v0.1` @ `59f4d5f`〔Amazon v0.1b r2 完成版〕複製；`company.json` 以 Amazon 結構填入 Microsoft 資料；C1–C15 的本家參數；verify.sh 23 項全過）。
-- **下一步**：步驟 3–4：敏感度（`node scripts/mag_sens.js`）與 opShare／selfBuild 等變體、報告 `docs/reports/20261008_microsoft_v0.1b2_移植.md`、PR #33 留言；收尾前再 `git fetch origin claude/amazon-v0.1` 檢查 Amazon 是否在 `59f4d5f` 之後又改引擎。
-- **未解問題**：見 v0.1b′ 段落「待 chat 端判斷」。
+- **已完成：v0.1b′ 全部步驟**（引擎與工具自 `origin/claude/amazon-v0.1` @ `59f4d5f`〔Amazon v0.1b r2 完成版〕複製，收尾前再 fetch：Amazon 分支無新 commit，**不需在 v0.1c 前重新同步**；`company.json` 填入 Microsoft 資料與 C1–C15；verify.sh 23 項全過；報告 `docs/reports/20261008_microsoft_v0.1b2_移植.md`；PR #33 已留言）。基準：三情境目標價 393.65／365.96／363.81（現價 529.76）；FY29 對外 AI ROIC 11.2% vs WACC 10.9%、打平 k 1.05（目前 1.06）。
+- **下一步（v0.1c）**：升版 v0.1（`vlog.py`、`tail.js` VLOG）、`dist/` 換 Microsoft 成品並移除 Oracle 成品、交接檔改 Microsoft、根目錄 README 一列、修報告第 7 節末的畫面小瑕疵；FY27Q1（2026-10-28）公布後另出 v0.2 滾動（C7）。若 Amazon 引擎再變：`python3 scripts/port_company_json.py …` 重產後 `node scripts/calib_pace.js --write`、`python3 scripts/fields_doc.py --write`、verify。
+- **未解問題（待 chat 端判斷）**：見報告第 10 節（對外比例、AI run-rate 落差、期初 AI 毛 PP&E 含租用高估、FY27 資本支出換算、opShare 語意與 Amazon 相反、Tokenomics NonNV 缺口、Anthropic 持股、6× 倍數）。
 
 ## v0.1b′ 移植（2026-10-09）
 工作單：`mag/docs/workorders/20261008_mag_v0.1b2_移植.md`（對照表 r1 第 7、8 節 C1–C15 優先）；引擎來源：`origin/claude/amazon-v0.1` @ `59f4d5f`（Amazon 進度檔已寫「v0.1b r2 完成」，C10–C15 已含在內）。
@@ -14,7 +14,7 @@
 | 1 複製引擎 | 完成 | （本次） | Amazon 移植說明第 6 節清單＋r2 改檔（`scripts/calib_pace.js` 等）原樣複製；保留本家 `data/`、`docs/`、`dist/`（Oracle v0.2 成品不動）、`CLAUDE.md`；刪除 `data/consensus_orcl_20261007.json`、`consensus_crwv_20260925.json`；Tokenomics 快照改用 Amazon 引擎的名稱清單重產（35 名、missing 3：IF_NonNVRatio、IF_NonNVCostRatio、IF_NonNV_Maia；`--check` 通過）；`data/peers_cloud_20261008.json` 自 amazon/ 只讀複製（C12） |
 | 2 company.json | 完成 | （本次） | 以 Amazon r2 `company.json` 為骨架（產生腳本 `scripts/port_company_json.py`；Amazon 引擎欄位再變時可重跑）；財年 6 月、FY26Q4 已申報、首期 FY27 全年 1.0 年、期間 FY27–FY31、錨定 FY29（evYear＝2、roicYear＝2）；6 線＋AI 雲端；C10 基準速度 2,294.1 MW-IT／年（calib_pace 解；首期資本支出 204.2、對帳落差 0）；verify.sh 23 項全過 |
 | 3 引擎差異 | 完成（隨步驟 1–2） | （本次） | 見下「引擎差異」 |
-| 4 敏感度、報告、PR 留言 | 進行中 | — | — |
+| 4 敏感度、報告、PR 留言 | 完成 | （本次） | `node scripts/mag_sens.js`＋暫存副本變體（opShare、起租季數、自建比例、期初 MW 不含租用、股利調升）；報告第 1–11 節；收尾 fetch amazon：無新 commit |
 
 ### 引擎差異（相對 Amazon @ 59f4d5f；全部在 microsoft/，chat 端決定是否回寫）
 1. `build_xlsx.py`、`segB.js`：共識檔沒有 `recentActions`／`recentActionsMeta`（Microsoft v0.1a 共識檔未蒐集最新分析師動作）時略過，不報錯。
