@@ -1,9 +1,18 @@
 # Microsoft v0.1 進度檔（接手用）
 
 ## 目前狀態（每次 push 前覆寫）
-- **已完成：v0.1b r3 同步＋v0.1c**。引擎檔與 amazon@`6ac9745` 逐檔相同（公司資料、文件、fields_doc mag 說明、port 腳本除外）；成品 `dist/20261009_Microsoft收支模型_v0_1.html／.xlsx`；交接檔 v0.1；最終報告 `docs/reports/20261008_microsoft_v0.1.md`；重點 Excel；截圖 17 張；verify.sh --vs-dist 26 項全過；PR #33 轉 ready。讀法 1：385.73／357.24／356.78；讀法 2：410.44／426.15／426.13；FY29 對外 AI ROIC 10.1% vs WACC 10.9%、打平 k 1.084。
-- **下一步**：FY27Q1 季度更新（財報 2026-10-28；步驟見交接檔第 8 節），升版 v0.2。
-- **未解問題（待 Andy）**：讀法 1／2 主值；對外比例證據；opShare 營業部分機房租金是否入 AI EBITDA。
+- **已完成：v0.1 交付前修訂（查核後，不升版）**。引擎與 amazon@`d07bfbe` 逐檔相同；ownMultiple 15.67×、customCapexFactor；(a) neocloud 租約續約延續租金（−$2.41）、(b) Maia 200 → GB300（−$1.29）、(c) 主值措辭、(d) 長約 k 標 [Analogy]、(e) 共識 FY29 淨負債標資料可疑、(f) 一頁摘要第 3 塊不再裁切；dist 重建；verify.sh --vs-dist 26 項全過。讀法 1（D2）382.25／353.55／351.96；讀法 2 407.13／422.48／422.39；主值待 Andy 決定。
+- **下一步**：FY27Q1 季度更新（2026-10-28 後），升版 v0.2。
+- **未解問題（待 Andy）**：讀法主值；對外比例；長約 k 證據；未起租營業部分租金。
+
+## v0.1 交付前修訂（2026-10-09；查核後，不升版）
+| 項 | 內容 | 結果 |
+|---|---|---|
+| 引擎同步 | amazon@d07bfbe：segA、segB、segE、build_xlsx.py、cmp31.js、rv_solve.py、mag_sens.js、test_mag_mechanisms.py、fields_doc.py（mag 說明保留本家） | 逐檔相同（公司資料、文件、VLOG 除外） |
+| 評價口徑 | ownMultiple 15.67×（val.msft.ownNtm）；翻轉點 WACC 8.15%、非 AI 18.05×、AI 26.2×；終值占比 94.5% 封鎖買進 | 報告第 6 節 |
+| (a)(b) | 租金 years 10；Maia 200 → GB300；基準速度重解 2,325.9 | 基準 357.24 → 353.55 |
+| (c)(d)(e)(f) | 措辭；kevidence [Analogy]；varianceReasons FY29 nd「資料可疑」；截圖 | — |
+| verify | --vs-dist 26 項全過（cmp31 基準 554 項） | — |
 
 ## v0.1c（2026-10-09）
 | 步驟 | 內容 | commit |

@@ -227,7 +227,7 @@
    {
     "name": "CoreWeave",
     "start": "2025-07",
-    "years": 5,
+    "years": 10,
     "annualRent": 2.985,
     "mw": 700,
     "use": "自用 50%／對外 50%"
@@ -235,7 +235,7 @@
    {
     "name": "Nebius",
     "start": "2025-11",
-    "years": 5,
+    "years": 10,
     "annualRent": 3.022,
     "mw": 205,
     "use": "自用 50%／對外 50%"
@@ -243,7 +243,7 @@
    {
     "name": "IREN",
     "start": "2026-06",
-    "years": 5,
+    "years": 10,
     "annualRent": 1.685,
     "mw": 200,
     "use": "自用 50%／對外 50%"
@@ -251,7 +251,7 @@
    {
     "name": "Nscale",
     "start": "2026-10",
-    "years": 5,
+    "years": 10,
     "annualRent": 3.994,
     "mw": 411,
     "use": "自用 50%／對外 50%"
@@ -259,13 +259,13 @@
    {
     "name": "Lambda",
     "start": "2026-01",
-    "years": 5,
+    "years": 10,
     "annualRent": 0.434,
     "mw": 55,
     "use": "自用 50%／對外 50%"
    }
   ],
-  "rentedComputeNote": "租用算力（向 neocloud 租 GPU；對照表 r1 第 5 節第 7 條、C8 d、C20）：租金計入營運成本（扣 EBITDA 與營運現金，不是資本支出）；用途無揭露 → 對外／自用各半。年租金（全額）：CoreWeave 3.438（2025 實際推估；起訖未揭露，假設 FY26 起 5 年）、Nebius 3.48（17.4 ÷ 5 年）、IREN 1.94（9.7 ÷ 5 年）、Nscale 4.6（金額未揭露，二手 23 ÷ 5 年，[Interested-party 二手／Assumed]）、Lambda 0.5（multibillion，[Assumed]）。本表每筆＝自用 50% 全額＋對外 50% 扣 Tokenomics 營運成本後的淨額（對外 MW 的營運成本已在 AI 雲端 EBITDA 內）＝全額 × 0.868（[Derived]）；對外 50% 的 MW 列 capexModel.rentedExt（收入照算、不計資本支出與折舊）。分部 EBITDA 率的起點已加回 FY26 neocloud 租金約 6.3（[Assumed]），避免與本表重複扣。"
+  "rentedComputeNote": "租用算力（向 neocloud 租 GPU；對照表 r1 第 5 節第 7 條、C8 d、C20）：租金計入營運成本（扣 EBITDA 與營運現金，不是資本支出）；用途無揭露 → 對外／自用各半。年租金（全額）：CoreWeave 3.438（2025 實際推估；起訖未揭露，假設 FY26 起 5 年）、Nebius 3.48（17.4 ÷ 5 年）、IREN 1.94（9.7 ÷ 5 年）、Nscale 4.6（金額未揭露，二手 23 ÷ 5 年，[Interested-party 二手／Assumed]）、Lambda 0.5（multibillion，[Assumed]）。年期：合約 5 年＋假設續約 5 年（years 10，與 rentedExt 的續約假設一致；查核 a）。本表每筆＝自用 50% 全額＋對外 50% 扣 Tokenomics 營運成本後的淨額（對外 MW 的營運成本已在 AI 雲端 EBITDA 內）＝全額 × 0.868（[Derived]）；對外 50% 的 MW 列 capexModel.rentedExt（收入照算、不計資本支出與折舊）。分部 EBITDA 率的起點已加回 FY26 neocloud 租金約 6.3（[Assumed]），避免與本表重複扣。"
  },
  "debt": {
   "amortization": [
@@ -565,7 +565,7 @@
    },
    "pace": {
     "low": 650,
-    "base": 2376,
+    "base": 2325.9,
     "high": 2400
    },
    "note": "對外 AI MW-IT（在役）：評價日 3,250（v0.1a：自有在役 AI 4,500 × 對外 60%＋neocloud 租用 1,100 × 50%；三法交叉估計，事實總帳 split.extMW）[Derived／Assumed]；各期期末＝MIN(上限, 前期＋速度 × 期間長度)，首期自評價日起算（connectedStart＝null）。MAG r1 C10：基準速度由 calibrate 設定以資本支出指引解出（scripts/calib_pace.js；verify 檢查）；保守＝第三方可辨識站點速度、積極＝公司容量目標換算。"
@@ -584,7 +584,7 @@
   },
   "mw31": {
    "low": 0,
-   "base": 2376,
+   "base": 2325.9,
    "high": 2400
   },
   "delayMonths": {
@@ -640,7 +640,7 @@
    "2025": 1630,
    "2026": 3250
   },
-  "mw31": 2376,
+  "mw31": 2325.9,
   "capexFloorFY0": 204.2,
   "gpuLife": 6,
   "gpuLifeNote": "Tokenomics IF_DeprLifeIT 6 年（tk.IF_DeprLifeIT）；10-K 伺服器與網路設備 2–6 年（事實總帳 pl.usefulLife.servers）[Verified]",
@@ -685,7 +685,8 @@
      "m0": 0.716123,
      "mLT": null,
      "oa": 0.0,
-     "cx": 0.1
+     "cx": 0.1,
+     "m0Note": "營業利益率分配 60%（舊 PBP 分部 59.9% 類比）＋D&A 按營收 11.6% [Assumed]"
     },
     {
      "key": "licensing",
@@ -699,7 +700,8 @@
      "m0": 0.866123,
      "mLT": null,
      "oa": 0.0,
-     "cx": 0.02
+     "cx": 0.02,
+     "m0Note": "營業利益率分配 75%＋D&A 11.6% [Assumed]（產品線利潤不揭露）"
     },
     {
      "key": "indFrontier",
@@ -713,7 +715,8 @@
      "m0": 0.416123,
      "mLT": null,
      "oa": 0.0,
-     "cx": 0.05
+     "cx": 0.05,
+     "m0Note": "營業利益率分配 30%＋D&A 11.6% [Assumed]"
     },
     {
      "key": "searchAds",
@@ -727,7 +730,8 @@
      "m0": 0.416123,
      "mLT": null,
      "oa": 0.0,
-     "cx": 0.08
+     "cx": 0.08,
+     "m0Note": "營業利益率分配 30%＋D&A 11.6% [Assumed]"
     },
     {
      "key": "devGaming",
@@ -741,7 +745,8 @@
      "m0": 0.409908,
      "mLT": null,
      "oa": 0.0,
-     "cx": 0.03
+     "cx": 0.03,
+     "m0Note": "Devices and Consumer 分部扣搜尋與廣告後的殘差 29.4%＋D&A 11.6% [Derived]"
     },
     {
      "key": "azureNonAi",
@@ -1212,7 +1217,14 @@
     "note": "共用非 AI 雲端同業組 ORCL、IBM、SAP、CRM、NOW、AKAM、EQIX、DOCN（MAG 對照表 r1 C12；data/peers_cloud_20261008.json，三家共用）；中位數 13.82× [Derived]"
    }
   },
-  "segmentMultiplesNote": "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家）：企業軟體 ORCL、SAP、CRM、ADBE、NOW（NTM，不含 MSFT 本身）；數位廣告共用同業組 META、PINS、TTD、APP、RDDT、SNAP（C18，data/peers_ads_20261009.json 自 amazon/ 複製）；遊戲與 PC TTWO、NTDOY、NTES、HPQ、DELL、Lenovo（TTM，NTM 找不到）；非 AI 雲端＝共用同業組 8 家中位數（C12，data/peers_cloud_20261008.json 自 amazon/ 複製）；AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）"
+  "segmentMultiplesNote": "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家）：企業軟體 ORCL、SAP、CRM、ADBE、NOW（NTM，不含 MSFT 本身）；數位廣告共用同業組 META、PINS、TTD、APP、RDDT、SNAP（C18，data/peers_ads_20261009.json 自 amazon/ 複製）；遊戲與 PC TTWO、NTDOY、NTES、HPQ、DELL、Lenovo（TTM，NTM 找不到）；非 AI 雲端＝共用同業組 8 家中位數（C12，data/peers_cloud_20261008.json 自 amazon/ 複製）；AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）",
+  "ownMultiple": {
+   "value": 15.67,
+   "ev": 3990,
+   "ntmEbitda": 254.683,
+   "ref": "val.msft.ownNtm",
+   "note": "公司自身 NTM EV/EBITDA＝EV 3.99T（StockAnalysis 2026-10-07，含租賃負債；事實總帳 val.ev）÷ NTM EBITDA 254.7（MarketScreener 共識 FY27 239.452、FY28 295.606，FY1 權重 0.7288＝(2027-06-30 − 2026-10-07) ÷ 365）[Derived]；只用於評價口徑敏感度（非 AI 分部改用自身倍數）"
+  }
  },
  "methodology": {
   "blendWeights": {
@@ -1661,6 +1673,14 @@
     "vs": "consensus",
     "type": "觀點",
     "text": "淨負債隨 CapEx、投資與融資瀑布而定（模型 CapEx 差距 {gap.capex:gap}）；共識淨負債不含租賃"
+   },
+   {
+    "scope": "annual",
+    "period": "FY29",
+    "metric": "nd",
+    "vs": "consensus",
+    "type": "已知限制",
+    "text": "共識 FY29 淨負債 +99.6 與 FY28 −38.8、FY29 FCF 89.0 方向矛盾（MarketScreener 原文，2026-10-09 複查同值，原因無法確認）→ 資料可疑，本期差距不具意義"
    }
   ]
  },
@@ -1945,7 +1965,9 @@
   },
   "customFactor": 1.0,
   "customFactorSens": 0.7,
-  "customNote": "自研晶片（Maia 100／200）每 MW 錨＝同期 NVIDIA 世代 IF_HoldEcon × 1.0（Maia → Hopper；對照表 r1 C2）；敏感度 × 0.7。Tokenomics 無 NonNV 具名範圍（IF_NonNVRatio、IF_NonNVCostRatio、IF_NonNV_Maia 為 missing），已列缺口回報。",
+  "customCapexFactor": 1.0,
+  "customCapexNote": "自研晶片每 MW IT 資本支出係數：預設 1（Maia 200 的資本支出以同期 NVIDIA GB300 的 TK_CapexIT 計）；雙邊敏感度時與 customFactor 同乘 0.7（收入錨與資本支出同降）；機房成本不變 [Assumed]",
+  "customNote": "自研晶片每 MW 錨＝同期 NVIDIA 世代 IF_HoldEcon × 1.0（對照表 r1 C2）：Maia 100 → Hopper（期初未列，部署量不存在）、Maia 200（2026 起量產）→ GB300（v0.1 交付前修訂，查核 b；原 v0.1 誤對 Hopper）；敏感度 × 0.7（收入端單邊與收入＋資本支出雙邊兩版）。Tokenomics 無 NonNV 具名範圍（IF_NonNVRatio、IF_NonNVCostRatio、IF_NonNV_Maia 為 missing），已列缺口回報。",
   "chips": [
    {
     "key": "h100",
@@ -1992,7 +2014,7 @@
    {
     "key": "maia",
     "label": "Maia 200",
-    "tk": "H100",
+    "tk": "GB300",
     "custom": true,
     "mixOpen": 0,
     "mixAdds": [
@@ -2018,7 +2040,7 @@
     ]
    }
   ],
-  "mixNote": "期初在役（評價日 2026-06-30）：Hopper 20%、GB200 45%、GB300 35%（v0.1a mw.genMix.open，[Assumed]；Maia 部署量未揭露，期初不另列）。新增 MW：Maia 200 10%（「continues to scale」，部署量不存在，[Assumed] 0%–20%）；NVIDIA 部分 FY27 GB300 60%／VR200 30%、FY28 GB300 20%／VR200 70%、FY29 起 VR200 90% [Assumed]（VR200 2026 下半年起出貨）。在役占比＝各世代累計 MW ÷ 對外 AI MW。",
+  "mixNote": "期初在役（評價日 2026-06-30）：Hopper 20%、GB200 45%、GB300 35%（v0.1a mw.genMix.open，[Assumed]；Maia 部署量未揭露，期初不另列）。新增 MW：Maia 200 10%（對應 GB300；「continues to scale」，部署量不存在，[Assumed] 0%–20%）；NVIDIA 部分 FY27 GB300 60%／VR200 30%、FY28 GB300 20%／VR200 70%、FY29 起 VR200 90% [Assumed]（VR200 2026 下半年起出貨）。在役占比＝各世代累計 MW ÷ 對外 AI MW。",
   "capWarn": 0.5,
   "capWarnNote": "上限檢查：每 MW 年收入 ÷（Σ 世代占比 × IF_RevGWFleet／1000）> 50% 時示警（工作單 v0.1b 第 2 步）"
  },

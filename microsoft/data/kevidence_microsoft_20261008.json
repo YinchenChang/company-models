@@ -309,12 +309,14 @@
    "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-97bn-ai-cloud-contract-microsoft",
    "date": "2025-11-03",
    "retrieved": "2026-10-08",
-   "tag": "[Derived]",
+   "tag": "[Analogy]",
    "IF_HoldEcon_perMW": 12.725,
    "IF_GPUhrEcon": 2.9827,
    "k": 0.762,
    "side": "Microsoft 買價（neocloud 長約）",
-   "note": "200 MW critical IT（Childress, TX）、GB300、20% 預付；與 nebius/coreweave 的 k_長約 0.76 同一筆"
+   "note": "200 MW critical IT（Childress, TX）、GB300、20% 預付；與 nebius/coreweave 的 k_長約 0.76 同一筆",
+   "tagOriginal": "[Derived]",
+   "analogyNote": "Microsoft 付給 neocloud 的買價，代理 Microsoft 對外長約的賣價（v0.1 交付前修訂，查核 d）：買價含 neocloud 的利潤，作為 Microsoft 賣價下緣方向偏保守（k 偏低）；原標記見 tagOriginal"
   },
   {
    "id": "lc.nebius",
@@ -332,12 +334,14 @@
    "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465925088312/tm2525580d1_6k.htm",
    "date": "2025-09-08",
    "retrieved": "2026-10-08",
-   "tag": "[Derived]",
+   "tag": "[Analogy]",
    "IF_HoldEcon_perMW": 12.725,
    "IF_GPUhrEcon": 2.9827,
    "k": 1.332,
    "side": "Microsoft 買價（neocloud 長約）",
-   "note": "MW 未揭露：以「more than 100,000 GB300」÷ IF_GPUsPerGW GB300 487,008 ＝ 205 MW-IT（GPU 數為下限 → k 為上限）；TCV 上限 19.4B 時 k＝1.48；GPU 數來源 Bloomberg 知情人士（二手，DCD 2025-10-02）"
+   "note": "MW 未揭露：以「more than 100,000 GB300」÷ IF_GPUsPerGW GB300 487,008 ＝ 205 MW-IT（GPU 數為下限 → k 為上限）；TCV 上限 19.4B 時 k＝1.48；GPU 數來源 Bloomberg 知情人士（二手，DCD 2025-10-02）",
+   "tagOriginal": "[Derived]",
+   "analogyNote": "Microsoft 付給 neocloud 的買價，代理 Microsoft 對外長約的賣價（v0.1 交付前修訂，查核 d）：買價含 neocloud 的利潤，作為 Microsoft 賣價下緣方向偏保守（k 偏低）；原標記見 tagOriginal"
   },
   {
    "id": "lc.nscale",
@@ -355,12 +359,14 @@
    "url": "https://nscale.com/press-releases/nscale-microsoft-2025",
    "date": "2025-10-15",
    "retrieved": "2026-10-08",
-   "tag": "[Assumed]",
+   "tag": "[Analogy]",
    "IF_HoldEcon_perMW": 12.725,
    "IF_GPUhrEcon": 2.9827,
    "k": 0.88,
    "side": "Microsoft 買價（neocloud 長約）",
-   "note": "金額與年期皆非一手：TCV 23B 為二手、年期 5 年為假設（區間 4–6 年 → k 0.73–1.10）；MW＝200,000 ÷ 487,008 × 1,000＝411；Texas 站點 104k 顆／~240 MW（設施或 IT 未註明）"
+   "note": "金額與年期皆非一手：TCV 23B 為二手、年期 5 年為假設（區間 4–6 年 → k 0.73–1.10）；MW＝200,000 ÷ 487,008 × 1,000＝411；Texas 站點 104k 顆／~240 MW（設施或 IT 未註明）",
+   "tagOriginal": "[Assumed]",
+   "analogyNote": "Microsoft 付給 neocloud 的買價，代理 Microsoft 對外長約的賣價（v0.1 交付前修訂，查核 d）：買價含 neocloud 的利潤，作為 Microsoft 賣價下緣方向偏保守（k 偏低）；原標記見 tagOriginal"
   },
   {
    "id": "lc.anthropic",

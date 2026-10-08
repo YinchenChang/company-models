@@ -1,6 +1,6 @@
-# Microsoft 收支模型原始碼包 v0.1（MAG 共用引擎；引擎與 Amazon v0.1b r3 @ 6ac9745 逐檔相同，Oracle v0.2 沿革）
+# Microsoft 收支模型原始碼包 v0.1（MAG 共用引擎；引擎與 Amazon @ d07bfbe（v0.1 交付前修訂）逐檔相同，Oracle v0.2 沿革）
 
-**v0.1（2026-10-09）**：成品 `dist/20261009_Microsoft收支模型_v0_1.html／.xlsx`；交接檔 `docs/handoff/20261009_Microsoft收支模型_交接檔_v0_1.md`；最終報告 `docs/reports/20261008_microsoft_v0.1.md`。基準目標價 $357.24（讀法 1）／$426.15（讀法 2，自用 AI 價值中性；主值待 Andy 決定），三情境皆賣出（現價 $529.76）；對外比例無揭露是最大不確定（40% → $287.99、80% → $387.51）。本家專屬：`scripts/port_company_json.py`（以 Amazon company.json 為骨架產生本家 company.json）。
+**v0.1（2026-10-09）**：成品 `dist/20261009_Microsoft收支模型_v0_1.html／.xlsx`；交接檔 `docs/handoff/20261009_Microsoft收支模型_交接檔_v0_1.md`；最終報告 `docs/reports/20261008_microsoft_v0.1.md`。基準目標價 $353.55（讀法 1，D2）／$422.48（讀法 2，自用 AI 價值中性）；主值待 Andy 決定，三情境皆賣出（現價 $529.76）；對外比例無揭露是最大不確定（40% → $283.83、80% → $383.95）。本家專屬：`scripts/port_company_json.py`（以 Amazon company.json 為骨架產生本家 company.json）。
 
 **MAG v0.1b（2026-10-08）**：本資料夾的引擎是 Amazon、Alphabet、Microsoft 三家共用的「MAG 引擎」，公司差異全部由 `company.json` 驅動（移植步驟見 Amazon 分支 `amazon/docs/reports/20261008_amazon_v0.1b_模型.md`「移植說明」；本家移植紀錄與引擎差異見 `docs/reports/20261008_microsoft_v0.1b2_移植.md`）。相對 Oracle v0.2 新增：
 - **對外 AI 雲端**（`pricing`）：每 MW 年收入＝Σ 在役世代占比 × `TK_HoldEcon_<世代>` × 晶片係數 × k（k＝長約占比 × k_長約＋(1 − 占比) × k_現貨；價格軸低／基準／高與容量軸分離，3 × 3 目標價矩陣由 `scripts/rv_solve.py` 以 Excel 求解）；AI 雲端 EBITDA 率＝1 − Tokenomics 加權每 MW 營運成本 ÷ 每 MW 年收入（`defaults.ebitdaBasis`＝tk）。Excel「Tokenomics_取數」頁與 `TK_` 具名範圍（`scripts/check_tokenomics_tab.py`）。
@@ -427,7 +427,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.mwPath.contracted.base` | 基準情境：同上 | MW 清單 | 99999、99999、99999、99999、99999 | 必改 |
 | `scenarios.mwPath.contracted.high` | 積極情境：同上 | MW 清單 | 99999、99999、99999、99999、99999 | 必改 |
 | `scenarios.mwPath.pace.low` | 保守情境：併網速度（每年新增已連網 MW；已連網＝MIN(合約上限, 前期＋速度×期間長度)；v0.1b） | MW／年 | 650 | 檢查 |
-| `scenarios.mwPath.pace.base` | 基準情境：同上 | MW／年 | 2376 | 檢查 |
+| `scenarios.mwPath.pace.base` | 基準情境：同上 | MW／年 | 2325.9 | 檢查 |
 | `scenarios.mwPath.pace.high` | 積極情境：同上 | MW／年 | 2400 | 檢查 |
 | `scenarios.mwPath.calibrate` | 併網速度校準（MAG v0.1b r2 C10）：{scenario, decimals}；該情境速度由 scripts/calib_pace.js 以首期資本支出指引中點解出（全年公式值＝指引，對帳落差 0），同時寫入 scenarios.mw31 與 defaults.mw31；省略＝不校準 | 物件 | 物件（scenario、decimals） | 必改 |
 | `scenarios.mwPath.note` | 已連網 MW 路徑的說明（來源與口徑） | 文字 | 對外 AI MW-IT（在役）：評價日 3,250（… | 必改 |
@@ -437,7 +437,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.billableRatio.note` | 可計費 MW 校準與收斂比例的說明（v0.1b） | 文字 | 對外 AI MW 依 MW-year 計價：已連網即… | 必改 |
 | `scenarios.billableRatio.ratio` | 各期比例：ratio 模式＝在役 ÷ 已連網；converge 模式＝期初校準值向已連網收斂的比例（三情境共用；v0.1b） | 比例清單 | 1、1、1、1、1 | 檢查 |
 | `scenarios.mw31.low` | 保守情境：模型期後一年（FY31）新增的 MW，用於 FY30 的預建支出 | MW | 0 | 檢查 |
-| `scenarios.mw31.base` | 基準情境：同上 | MW | 2376 | 檢查 |
+| `scenarios.mw31.base` | 基準情境：同上 | MW | 2325.9 | 檢查 |
 | `scenarios.mw31.high` | 積極情境：同上 | MW | 2400 | 檢查 |
 | `scenarios.convCap.low` | 保守情境：融資瀑布可轉債步驟每年新發行上限（0＝不新發；v0.1b） | US$bn／年 | 0 | 檢查 |
 | `scenarios.convCap.base` | 基準情境：同上 | US$bn／年 | 0 | 檢查 |
@@ -472,7 +472,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.revenueDriver` | 營收驅動：mw＝平均在役 MW × 每 MW 年收入 × 利用率（新產能簽約率固定 100%，RPO 只作對照）；rpo＝CRWV 模板的 RPO 排程＋新簽約（v0.1b） | 代碼 | mw | 檢查 |
 | `defaults.lambda` | 提前支出比例：次年才上線的 MW，其建置支出落在前一年的比例 | 比例 | 0.35 | 檢查 |
 | `defaults.mwYearEnd` | 各年底主動電力，以年份為鍵（例如 "2025": 850）：首期期初取首期前一財年末；GPU 汰換批次＝各年新增 MW（5a；列入滾動檢查） | MW 物件 | 物件（2024、2025、2026） | 必改 |
-| `defaults.mw31` | 模型期後一年新增 MW 的預設值（情境切換時改用 scenarios.mw31） | MW | 2376 | 檢查 |
+| `defaults.mw31` | 模型期後一年新增 MW 的預設值（情境切換時改用 scenarios.mw31） | MW | 2325.9 | 檢查 |
 | `defaults.capexFloorFY0` | 首期所屬財年的全年資本支出下限（已下單的承諾，取公司指引下緣；首期＝下限 − 年初至今實際認列） | US$bn | 204.2 | 必改 |
 | `defaults.gpuLife` | GPU 經濟壽命（決定汰換時點與折舊） | 年 | 6 | 檢查 |
 | `defaults.gpuLifeNote` | GPU 經濟壽命的來源（Excel 列備註；MAG v0.1b r3 C19） | 文字 | Tokenomics IF_DeprLifeIT 6… | 必改 |
@@ -487,7 +487,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.ebitdarNote` | EBITDAR 口徑的說明文字 | 文字 | 不適用（ebitdaBasis＝tk：AI 雲端 E… | 可沿用 |
 | `defaults.services` | 非算力服務營收（軟體、儲存等），各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
 | `defaults.otherEbitda` | 其他事業 EBITDA（負值＝燒錢），各期；同時進入損益 EBITDA 與營運來源（v0.1b） | US$bn 清單 | 0、0、0、0、0 | 必改 |
-| `defaults.legacyBiz.lines` | 非 AI 事業各線（N ≤ 6），一線一列：key、label、kind（growth＝上一財年 ×(1＋年增率)；cloudResidual＝雲端分部 − 對外 AI 雲端；explicit＝各期營收直接輸入 rev；未分攤公司層費用用 explicit＋rev 全 0＋ebitda 負值陣列）、peer（評價同業倍數組，valuation.segmentMultiples 的鍵）、fyBase、ytd、g0、gLT、m0／mLT（EBITDA 率起點／長期，線性收斂；mLT 空白＝固定）、oa（其他攤銷占營收）、cx（非 AI 資本支出占全年營收，capexModel.mode＝tk 時使用）；cloudResidual 另有 priorStub、g4q、ttm、prevTTM、ebitdaTTM、aiMwTTM、aiMwPrevTTM（MAG v0.1b；Oracle v0.1b 起） | 清單（物件） | 6 筆 | 必改 |
+| `defaults.legacyBiz.lines` | 非 AI 事業各線（N ≤ 6），一線一列：key、label、kind（growth＝上一財年 ×(1＋年增率)；cloudResidual＝雲端分部 − 對外 AI 雲端；explicit＝各期營收直接輸入 rev；未分攤公司層費用用 explicit＋rev 全 0＋ebitda 負值陣列）、peer（評價同業倍數組，valuation.segmentMultiples 的鍵）、fyBase、ytd、g0、gLT、m0／mLT（EBITDA 率起點／長期，線性收斂；mLT 空白＝固定）、oa（其他攤銷占營收）、cx（非 AI 資本支出占全年營收，capexModel.mode＝tk 時使用）、m0Note（起始 EBITDA 率的來源與標記，選填；v0.1 交付前修訂）；cloudResidual 另有 priorStub、g4q、ttm、prevTTM、ebitdaTTM、aiMwTTM、aiMwPrevTTM（MAG v0.1b；Oracle v0.1b 起） | 清單（物件） | 6 筆 | 必改 |
 | `defaults.legacyBiz.split.opMargins` | 各線分配的營業利益率（分部合計＝實際，Azure 與 Windows＋XBOX 為殘差；[Assumed]；MAG v0.1b′ Microsoft） | 物件 | 物件（m365cloud、licensing、indfront、searchads、devgame） | 檢查 |
 | `defaults.legacyBiz.split.daShare` | D&A 按營收分攤的比例（合併 D&A ÷ 營收；分部 D&A 不揭露） | 比例 | 0.116123 | 檢查 |
 | `defaults.legacyBiz.split.rentAddBack` | Azure EBITDA 起點加回的 FY26 neocloud 租金（US$bn；避免與 leases.rentedCompute 重複扣） | US$bn | 6.3 | 檢查 |
@@ -573,6 +573,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `valuation.holdingsNote` | 持股清單格式與估值口徑（MAG v0.1b，C8 c） | 文字 | 持股清單：[名稱, 估值（100%，US$bn）, … | 必改 |
 | `valuation.segmentMultiples` | 分部同業倍數組（物件，鍵＝legacyBiz.lines.peer）：{label, peers:[{ticker, name, ntmEvEbitda, ref}]（中位數，每組至少 3 家）} 或 {label, useAi: true, note}（沿用 AI 雲端倍數）；換公司時鍵與同業全部重填（MAG v0.1b） | 物件 | 物件（software、ads、devGaming、cloud） | 必改 |
 | `valuation.segmentMultiplesNote` | 分部加總口徑說明 | 文字 | 分部 EV/EBITDA：各非 AI 分部 × 所屬… | 必改 |
+| `valuation.ownMultiple` | 公司自身 NTM EV/EBITDA（{value, ev, ntmEbitda, ref, note}；評價口徑敏感度「非 AI 分部改用自身倍數」用；v0.1 交付前修訂） | 物件 | 物件（value、ev、ntmEbitda、ref、note） | 必改 |
 | `valuation.price` | 現價 | US$ | 529.76 | 必改 |
 | `valuation.shares` | 評價股數（含期後股權發行上限） | bn 股 | 7.453 | 必改 |
 | `valuation.atmSharesInValuation` | 評價股數中「期後股權發行上限」的股數：期後股權／可轉債開關關閉時由評價股數扣回（v0.1b；CRWV 0.035、無此項的公司填 0） | bn 股 | 0 | 必改 |
@@ -671,7 +672,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `varianceReasons._note` | 差異原因的說明文字（不進程式） | 文字 | 差異原因（已決定事項 2）：差距超過 methodo… | 可沿用 |
-| `varianceReasons.list` | 差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗 | 清單 | 8 筆 | 檢查 |
+| `varianceReasons.list` | 差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗 | 清單 | 9 筆 | 檢查 |
 
 ### `texts`：公司特有的說明文字（v4.5；隨資料更新）
 
@@ -755,7 +756,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `pricing.kNote.longShare` | 長約占比的依據 | 文字 | 長約占比 70%（OpenAI 約占商用 RPO 4… | 必改 |
 | `pricing.customFactor` | 自研晶片持有成本係數（同期 NVIDIA 世代 IF_HoldEcon × 此值；對照表 r1 C2 基準 1.0） | 倍 | 1 | 檢查 |
 | `pricing.customFactorSens` | 自研晶片係數的敏感度值（0.7） | 倍 | 0.7 | 檢查 |
-| `pricing.customNote` | 自研晶片對應世代與缺口說明 | 文字 | 自研晶片（Maia 100／200）每 MW 錨＝同… | 必改 |
+| `pricing.customCapexFactor` | 自研晶片每 MW IT 資本支出係數（同期 NVIDIA TK_CapexIT × 此值；預設 1；雙邊晶片係數敏感度用；v0.1 交付前修訂） | 倍 | 1 | 檢查 |
+| `pricing.customCapexNote` | 上列的依據 | 文字 | 自研晶片每 MW IT 資本支出係數：預設 1（Ma… | 必改 |
+| `pricing.customNote` | 自研晶片對應世代與缺口說明 | 文字 | 自研晶片每 MW 錨＝同期 NVIDIA 世代 IF… | 必改 |
 | `pricing.chips` | 世代清單：[{key, label, tk＝Tokenomics 世代代碼（H100／GB200／GB300／VR200／RU）, custom＝自研（乘 customFactor）, mixOpen＝評價日在役占比（合計 100%）, mixAdds＝各期新增 MW 占比（每期合計 100%）}] | 清單（物件） | 5 筆 | 必改 |
 | `pricing.mixNote` | 世代組合的依據 | 文字 | 期初在役（評價日 2026-06-30）：Hoppe… | 必改 |
 | `pricing.capWarn` | 上限檢查門檻：每 MW 年收入 ÷ 參考付費營收（IF_RevGWFleet） | 比例 | 0.5 | 可沿用 |

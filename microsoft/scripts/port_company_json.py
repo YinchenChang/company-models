@@ -64,12 +64,12 @@ C['leases'] = {
   "operatingInEbitda": True,
   "operatingInEbitdaNote": "分部營業利益已扣在帳營業租賃成本（FY26 6.968）→ 在帳營業租賃現金不再自現金扣除；在帳融資租賃本息仍為現金支出（過去以融資租賃取得、尚未付清的資產）；未起租部分見 uncommenced.opShareNote（對照表 r1 C8 f）",
   "rentedCompute": [
-    {"name": "CoreWeave", "start": "2025-07", "years": 5, "annualRent": round(3.438 * RCF, 3), "mw": 700, "use": "自用 50%／對外 50%"},
-    {"name": "Nebius", "start": "2025-11", "years": 5, "annualRent": round(3.48 * RCF, 3), "mw": 205, "use": "自用 50%／對外 50%"},
-    {"name": "IREN", "start": "2026-06", "years": 5, "annualRent": round(1.94 * RCF, 3), "mw": 200, "use": "自用 50%／對外 50%"},
-    {"name": "Nscale", "start": "2026-10", "years": 5, "annualRent": round(4.6 * RCF, 3), "mw": 411, "use": "自用 50%／對外 50%"},
-    {"name": "Lambda", "start": "2026-01", "years": 5, "annualRent": round(0.5 * RCF, 3), "mw": 55, "use": "自用 50%／對外 50%"}],
-  "rentedComputeNote": "租用算力（向 neocloud 租 GPU；對照表 r1 第 5 節第 7 條、C8 d、C20）：租金計入營運成本（扣 EBITDA 與營運現金，不是資本支出）；用途無揭露 → 對外／自用各半。年租金（全額）：CoreWeave 3.438（2025 實際推估；起訖未揭露，假設 FY26 起 5 年）、Nebius 3.48（17.4 ÷ 5 年）、IREN 1.94（9.7 ÷ 5 年）、Nscale 4.6（金額未揭露，二手 23 ÷ 5 年，[Interested-party 二手／Assumed]）、Lambda 0.5（multibillion，[Assumed]）。本表每筆＝自用 50% 全額＋對外 50% 扣 Tokenomics 營運成本後的淨額（對外 MW 的營運成本已在 AI 雲端 EBITDA 內）＝全額 × " + f"{RCF:.3f}" + "（[Derived]）；對外 50% 的 MW 列 capexModel.rentedExt（收入照算、不計資本支出與折舊）。分部 EBITDA 率的起點已加回 FY26 neocloud 租金約 6.3（[Assumed]），避免與本表重複扣。"}
+    {"name": "CoreWeave", "start": "2025-07", "years": 10, "annualRent": round(3.438 * RCF, 3), "mw": 700, "use": "自用 50%／對外 50%"},
+    {"name": "Nebius", "start": "2025-11", "years": 10, "annualRent": round(3.48 * RCF, 3), "mw": 205, "use": "自用 50%／對外 50%"},
+    {"name": "IREN", "start": "2026-06", "years": 10, "annualRent": round(1.94 * RCF, 3), "mw": 200, "use": "自用 50%／對外 50%"},
+    {"name": "Nscale", "start": "2026-10", "years": 10, "annualRent": round(4.6 * RCF, 3), "mw": 411, "use": "自用 50%／對外 50%"},
+    {"name": "Lambda", "start": "2026-01", "years": 10, "annualRent": round(0.5 * RCF, 3), "mw": 55, "use": "自用 50%／對外 50%"}],
+  "rentedComputeNote": "租用算力（向 neocloud 租 GPU；對照表 r1 第 5 節第 7 條、C8 d、C20）：租金計入營運成本（扣 EBITDA 與營運現金，不是資本支出）；用途無揭露 → 對外／自用各半。年租金（全額）：CoreWeave 3.438（2025 實際推估；起訖未揭露，假設 FY26 起 5 年）、Nebius 3.48（17.4 ÷ 5 年）、IREN 1.94（9.7 ÷ 5 年）、Nscale 4.6（金額未揭露，二手 23 ÷ 5 年，[Interested-party 二手／Assumed]）、Lambda 0.5（multibillion，[Assumed]）。年期：合約 5 年＋假設續約 5 年（years 10，與 rentedExt 的續約假設一致；查核 a）。本表每筆＝自用 50% 全額＋對外 50% 扣 Tokenomics 營運成本後的淨額（對外 MW 的營運成本已在 AI 雲端 EBITDA 內）＝全額 × " + f"{RCF:.3f}" + "（[Derived]）；對外 50% 的 MW 列 capexModel.rentedExt（收入照算、不計資本支出與折舊）。分部 EBITDA 率的起點已加回 FY26 neocloud 租金約 6.3（[Assumed]），避免與本表重複扣。"}
 
 # ---------- 債務 ----------
 notes = [  # (名稱, 面額, 到期年區間, 票面區間)
@@ -157,11 +157,11 @@ g0 = {k: r6(rev[k][0] / rev[k][1] - 1) for k in rev}
 aiTTM, aiPrev = (1630 + 3250) / 2, (640 + 1630) / 2
 CX = {"m365cloud": 0.10, "licensing": 0.02, "indfront": 0.05, "searchads": 0.08, "devgame": 0.03, "azure": 0.20}
 lines = [
-  {"key": "m365", "label": "M365 雲端（商用＋消費）", "kind": "growth", "peer": "software", "fyBase": rev['m365cloud'][0], "ytd": 0.0, "g0": g0['m365cloud'], "gLT": 0.10, "m0": m0['m365cloud'], "mLT": None, "oa": 0.0, "cx": CX['m365cloud']},
-  {"key": "licensing", "label": "生產力與伺服器授權", "kind": "growth", "peer": "software", "fyBase": rev['licensing'][0], "ytd": 0.0, "g0": g0['licensing'], "gLT": 0.02, "m0": m0['licensing'], "mLT": None, "oa": 0.0, "cx": CX['licensing']},
-  {"key": "indFrontier", "label": "產業解決方案＋Frontier 與支援服務", "kind": "growth", "peer": "software", "fyBase": rev['indfront'][0], "ytd": 0.0, "g0": g0['indfront'], "gLT": 0.07, "m0": m0['indfront'], "mLT": None, "oa": 0.0, "cx": CX['indfront']},
-  {"key": "searchAds", "label": "搜尋與廣告（含 LinkedIn 行銷）", "kind": "growth", "peer": "ads", "fyBase": rev['searchads'][0], "ytd": 0.0, "g0": g0['searchads'], "gLT": 0.07, "m0": m0['searchads'], "mLT": None, "oa": 0.0, "cx": CX['searchads']},
-  {"key": "devGaming", "label": "Windows 與裝置＋XBOX", "kind": "growth", "peer": "devGaming", "fyBase": rev['devgame'][0], "ytd": 0.0, "g0": g0['devgame'], "gLT": 0.02, "m0": m0['devgame'], "mLT": None, "oa": 0.0, "cx": CX['devgame']},
+  {"key": "m365", "label": "M365 雲端（商用＋消費）", "kind": "growth", "peer": "software", "fyBase": rev['m365cloud'][0], "ytd": 0.0, "g0": g0['m365cloud'], "gLT": 0.10, "m0": m0['m365cloud'], "mLT": None, "oa": 0.0, "cx": CX['m365cloud'], "m0Note": "營業利益率分配 60%（舊 PBP 分部 59.9% 類比）＋D&A 按營收 11.6% [Assumed]"},
+  {"key": "licensing", "label": "生產力與伺服器授權", "kind": "growth", "peer": "software", "fyBase": rev['licensing'][0], "ytd": 0.0, "g0": g0['licensing'], "gLT": 0.02, "m0": m0['licensing'], "mLT": None, "oa": 0.0, "cx": CX['licensing'], "m0Note": "營業利益率分配 75%＋D&A 11.6% [Assumed]（產品線利潤不揭露）"},
+  {"key": "indFrontier", "label": "產業解決方案＋Frontier 與支援服務", "kind": "growth", "peer": "software", "fyBase": rev['indfront'][0], "ytd": 0.0, "g0": g0['indfront'], "gLT": 0.07, "m0": m0['indfront'], "mLT": None, "oa": 0.0, "cx": CX['indfront'], "m0Note": "營業利益率分配 30%＋D&A 11.6% [Assumed]"},
+  {"key": "searchAds", "label": "搜尋與廣告（含 LinkedIn 行銷）", "kind": "growth", "peer": "ads", "fyBase": rev['searchads'][0], "ytd": 0.0, "g0": g0['searchads'], "gLT": 0.07, "m0": m0['searchads'], "mLT": None, "oa": 0.0, "cx": CX['searchads'], "m0Note": "營業利益率分配 30%＋D&A 11.6% [Assumed]"},
+  {"key": "devGaming", "label": "Windows 與裝置＋XBOX", "kind": "growth", "peer": "devGaming", "fyBase": rev['devgame'][0], "ytd": 0.0, "g0": g0['devgame'], "gLT": 0.02, "m0": m0['devgame'], "mLT": None, "oa": 0.0, "cx": CX['devgame'], "m0Note": "Devices and Consumer 分部扣搜尋與廣告後的殘差 29.4%＋D&A 11.6% [Derived]"},
   {"key": "azureNonAi", "label": "Azure 非 AI 雲端", "kind": "cloudResidual", "peer": "cloud", "ytd": 0.0, "priorStub": rev['azure'][0], "g4q": g0['azure'], "ttm": rev['azure'][0], "prevTTM": rev['azure'][1],
    "ebitdaTTM": az_eb, "aiMwTTM": aiTTM, "aiMwPrevTTM": aiPrev, "gLT": 0.08, "mLT": None, "oa": 0.0, "cx": CX['azure']}]
 DFL = C['defaults']
@@ -206,6 +206,8 @@ V['segmentMultiples'] = {
      {"ticker": "DELL", "name": "Dell", "ntmEvEbitda": 22.1, "ref": "val.peer.pc.dell（TTM，含 AI 伺服器）"}, {"ticker": "0992.HK", "name": "Lenovo", "ntmEvEbitda": 14.47, "ref": "val.peer.pc.0992.hk（TTM）"}]},
   "cloud": cloud}
 V['segmentMultiplesNote'] = "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家）：企業軟體 ORCL、SAP、CRM、ADBE、NOW（NTM，不含 MSFT 本身）；數位廣告共用同業組 META、PINS、TTD、APP、RDDT、SNAP（C18，data/peers_ads_20261009.json 自 amazon/ 複製）；遊戲與 PC TTWO、NTDOY、NTES、HPQ、DELL、Lenovo（TTM，NTM 找不到）；非 AI 雲端＝共用同業組 8 家中位數（C12，data/peers_cloud_20261008.json 自 amazon/ 複製）；AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）"
+V['ownMultiple'] = {"value": 15.67, "ev": 3990, "ntmEbitda": 254.683, "ref": "val.msft.ownNtm",
+  "note": "公司自身 NTM EV/EBITDA＝EV 3.99T（StockAnalysis 2026-10-07，含租賃負債；事實總帳 val.ev）÷ NTM EBITDA 254.7（MarketScreener 共識 FY27 239.452、FY28 295.606，FY1 權重 0.7288＝(2027-06-30 − 2026-10-07) ÷ 365）[Derived]；只用於評價口徑敏感度（非 AI 分部改用自身倍數）"}
 V['holdingsNote'] = "持股清單：[名稱, 估值（100%，US$bn）, 持股比例, 說明, 上市（true＝不折價）]；價值＝Σ 估值 × 比例 ×（1 − 折價；上市持股不折價），自淨負債扣除（分部加總項）。流動性折價 20%（0%–40%，[Assumed]；對照表 r1 第 5 節第 9 條、C8 c）。OpenAI 25% × 852 × 0.8＝170.4；Anthropic 比例未揭露，不估值（少計約 5–14）"
 V['legacyEvEbitdaNote'] = "非 AI 分部 EV/EBITDA：null＝各分部同業倍數加權。"
 
@@ -223,13 +225,14 @@ P.update({"_note": P['_note'].replace('kevidence_amazon_20261008', 'kevidence_mi
   "kNote": {"kLong": "長約 k：IREN–Microsoft 0.76（一手 MW）、Nscale 約 0.88（金額二手）、Anthropic–Azure 0.39–0.71（年期假設）、Nebius ≤1.33 → 基準 0.76；低＝長約區間下緣 0.45（Anthropic 隱含）[Assumed]（kevidence longContracts）",
             "kSpot": "現貨 k：基準 1.76＝與 Nebius／CRWV 同一市場現貨指數（對照表 r1 C1）；高＝Azure 牌價換算（H100 隨需 12.29 ÷ IF_GPUhrEcon H100 1.605＝7.66，kevidence az.h100.od；與 Amazon 同取隨需層；牌價不是大客戶成交價，只作上限；替代：3 年預留 3.36 → 混合 1.54）",
             "longShare": "長約占比 70%（OpenAI 約占商用 RPO 45%＋Anthropic 等長約；45%–100% [Assumed]）"},
-  "customNote": "自研晶片（Maia 100／200）每 MW 錨＝同期 NVIDIA 世代 IF_HoldEcon × 1.0（Maia → Hopper；對照表 r1 C2）；敏感度 × 0.7。Tokenomics 無 NonNV 具名範圍（IF_NonNVRatio、IF_NonNVCostRatio、IF_NonNV_Maia 為 missing），已列缺口回報。",
+  "customNote": "自研晶片每 MW 錨＝同期 NVIDIA 世代 IF_HoldEcon × 1.0（對照表 r1 C2）：Maia 100 → Hopper（期初未列，部署量不存在）、Maia 200（2026 起量產）→ GB300（v0.1 交付前修訂，查核 b；原 v0.1 誤對 Hopper）；敏感度 × 0.7（收入端單邊與收入＋資本支出雙邊兩版）。Tokenomics 無 NonNV 具名範圍（IF_NonNVRatio、IF_NonNVCostRatio、IF_NonNV_Maia 為 missing），已列缺口回報。",
+  "customCapexFactor": 1.0, "customCapexNote": "自研晶片每 MW IT 資本支出係數：預設 1（Maia 200 的資本支出以同期 NVIDIA GB300 的 TK_CapexIT 計）；雙邊敏感度時與 customFactor 同乘 0.7（收入錨與資本支出同降）；機房成本不變 [Assumed]",
   "chips": [{"key": "h100", "label": "Hopper（H100／H200）", "tk": "H100", "custom": False, "mixOpen": 0.20, "mixAdds": [0] * 5},
             {"key": "gb200", "label": "GB200", "tk": "GB200", "custom": False, "mixOpen": 0.45, "mixAdds": [0] * 5},
             {"key": "gb300", "label": "GB300", "tk": "GB300", "custom": False, "mixOpen": 0.35, "mixAdds": [0.6, 0.2, 0, 0, 0]},
-            {"key": "maia", "label": "Maia 200", "tk": "H100", "custom": True, "mixOpen": 0, "mixAdds": [0.1, 0.1, 0.1, 0.1, 0.1]},
+            {"key": "maia", "label": "Maia 200", "tk": "GB300", "custom": True, "mixOpen": 0, "mixAdds": [0.1, 0.1, 0.1, 0.1, 0.1]},
             {"key": "vr200", "label": "Vera Rubin（VR200）", "tk": "VR200", "custom": False, "mixOpen": 0, "mixAdds": [0.3, 0.7, 0.9, 0.9, 0.9]}],
-  "mixNote": "期初在役（評價日 2026-06-30）：Hopper 20%、GB200 45%、GB300 35%（v0.1a mw.genMix.open，[Assumed]；Maia 部署量未揭露，期初不另列）。新增 MW：Maia 200 10%（「continues to scale」，部署量不存在，[Assumed] 0%–20%）；NVIDIA 部分 FY27 GB300 60%／VR200 30%、FY28 GB300 20%／VR200 70%、FY29 起 VR200 90% [Assumed]（VR200 2026 下半年起出貨）。在役占比＝各世代累計 MW ÷ 對外 AI MW。"})
+  "mixNote": "期初在役（評價日 2026-06-30）：Hopper 20%、GB200 45%、GB300 35%（v0.1a mw.genMix.open，[Assumed]；Maia 部署量未揭露，期初不另列）。新增 MW：Maia 200 10%（對應 GB300；「continues to scale」，部署量不存在，[Assumed] 0%–20%）；NVIDIA 部分 FY27 GB300 60%／VR200 30%、FY28 GB300 20%／VR200 70%、FY29 起 VR200 90% [Assumed]（VR200 2026 下半年起出貨）。在役占比＝各世代累計 MW ÷ 對外 AI MW。"})
 C['pricing'] = P
 
 # ---------- 資本支出模型 ----------
@@ -281,6 +284,7 @@ for x in VR['list']:
     t = t.replace('首期取公司指引約 220；公司未給 2027 以後指引', '首期取 FY27 推估 204.2（公司口徑含融資租賃；共識推定現金口徑）；公司未給 FY28 以後指引').replace('對帳列顯示 2026 指引隱含的 AI 建置量約為 MW 路徑的 2 倍（共識口徑未揭露）', '基準情境 MW 速度由首期資本支出解出（對帳落差 0）')
     t = t.replace('分部 EBITDA 率依 C5 放大分攤 D&A，近四季收斂到近三年平均', '各線 EBITDA 率＝分配營業利益率＋D&A 按營收分攤，五期固定').replace('；年度總額線性分到各季，未建模第四季季節性', '；年度總額線性分到各季，未建模季節性')
     x['text'] = t
+VR['list'].append({"scope": "annual", "period": "FY29", "metric": "nd", "vs": "consensus", "type": "已知限制", "text": "共識 FY29 淨負債 +99.6 與 FY28 −38.8、FY29 FCF 89.0 方向矛盾（MarketScreener 原文，2026-10-09 複查同值，原因無法確認）→ 資料可疑，本期差距不具意義"})
 C['varianceReasons'] = VR
 
 # ---------- 同業（市場比較用，不進目標價）----------

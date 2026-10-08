@@ -9773,6 +9773,32 @@
     "retrieved": "2026-10-09",
     "tag": "[Assumed]",
     "note": "分部內產品線營業利益公司不揭露（不存在）；M365 參考舊 PBP 分部 FY26 59.9%；區間 ±10pt"
+   },
+   {
+    "id": "val.msft.ownNtm",
+    "item": "MSFT 自身 NTM EV/EBITDA（共識）",
+    "value": 15.67,
+    "unit": "倍",
+    "period": "2026-10-07",
+    "source": "EV：StockAnalysis 統計頁（val.ev 3,990,000）；NTM EBITDA：MarketScreener 共識 FY27 239,452、FY28 295,606 時間加權（FY1 權重 0.7288）",
+    "url": "https://stockanalysis.com/stocks/msft/statistics/",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-09",
+    "tag": "[Derived]",
+    "note": "3,990 ÷ 254.683＝15.67；v0.1a val.ntm.msft 15.74 用 FY1 權重 0.75（約數）；評價口徑敏感度用"
+   },
+   {
+    "id": "cons.netDebt.fy2029.check",
+    "item": "共識 FY29 淨負債複查（MarketScreener）",
+    "value": 99570,
+    "unit": "USD M",
+    "period": "FY2029",
+    "source": "MarketScreener 財務頁（2026-10-09 複查）",
+    "url": "https://www.marketscreener.com/quote/stock/MICROSOFT-CORPORATION-4835/finances/",
+    "docDate": "2026-10-09",
+    "retrieved": "2026-10-09",
+    "tag": "[Interested-party]",
+    "note": "原文 FY25 −51,414、FY26 −36,549、FY27 −51,842、FY28 −38,829、FY29 +99,570；同頁 FY29 FCF 89,023 → 方向矛盾，原因無法確認：資料可疑（查核 e）"
    }
   ]
  }

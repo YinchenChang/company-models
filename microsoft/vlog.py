@@ -1,4 +1,4 @@
 # 版本紀錄（Excel 唯一來源；HTML 端為 tail.js 的 VLOG，兩處同步）。模板來源：oracle/ v0.2（MAG v0.1b 起改為 MAG 共用引擎）；CRWV、Nebius、Oracle 歷史版本紀錄見各自資料夾。
 VLOG = [
- ("v0.1", "10-09", "由 Oracle v0.2 模板建立（CRWV v1.0–v4.5、Nebius v0.1–v0.2、Oracle v0.1–v0.2 的歷史見各自資料夾）；MAG 共用引擎（Amazon v0.1b r3）：對外 AI 雲端 MW × Tokenomics 錨 × k、非 AI 雲端殘差、非雲端分部、回購彈性瀑布、持股、AI 增量報酬（含 C15 一致性檢查與讀法 2 並列）；Microsoft 財年 6 月、首期 FY27 全年、租用 neocloud 對外 MW", "$357.2", "首版（基準）；保守 $385.7、積極 $356.8（三情境皆賣出）；讀法 2（自用 AI 價值中性）基準 $426.1"),
+ ("v0.1", "10-09", "由 Oracle v0.2 模板建立（CRWV v1.0–v4.5、Nebius v0.1–v0.2、Oracle v0.1–v0.2 的歷史見各自資料夾）；MAG 共用引擎（Amazon v0.1b r3）：對外 AI 雲端 MW × Tokenomics 錨 × k、非 AI 雲端殘差、非雲端分部、回購彈性瀑布、持股、AI 增量報酬（含 C15 一致性檢查與讀法 2 並列）；Microsoft 財年 6 月、首期 FY27 全年、租用 neocloud 對外 MW", "$353.6", "首版（基準）；保守 $382.3、積極 $352.0（三情境皆賣出）；讀法 2（自用 AI 價值中性）基準 $422.5；交付前修訂（查核後，不升版）：引擎同步 amazon@d07bfbe（評價口徑敏感度與評等翻轉點、終值占比規則、晶片係數雙邊）、Maia 200 改對應 GB300、neocloud 租約續約延續租金"),
 ]
