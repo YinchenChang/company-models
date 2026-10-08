@@ -456,7 +456,12 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.ebitdarNote` | EBITDAR 口徑的說明文字 | 文字 | 不適用（ebitdaBasis＝tk：AI 雲端 E… | 可沿用 |
 | `defaults.services` | 非算力服務營收（軟體、儲存等），各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
 | `defaults.otherEbitda` | 其他事業 EBITDA（負值＝燒錢），各期；同時進入損益 EBITDA 與營運來源（v0.1b） | US$bn 清單 | 0、0、0、0、0 | 必改 |
-| `defaults.legacyBiz.lines` | 非 AI 事業各線（N ≤ 6），一線一列：key、label、kind（growth＝上一財年 ×(1＋年增率)；cloudResidual＝雲端分部 − 對外 AI 雲端；explicit＝各期營收直接輸入 rev；未分攤公司層費用用 explicit＋rev 全 0＋ebitda 負值陣列）、peer（評價同業倍數組，valuation.segmentMultiples 的鍵）、fyBase、ytd、g0、gLT、m0／mLT（EBITDA 率起點／長期，線性收斂；mLT 空白＝固定）、oa（其他攤銷占營收）；cloudResidual 另有 priorStub、g4q、ttm、prevTTM、ebitdaTTM、aiMwTTM、aiMwPrevTTM（MAG v0.1b；Oracle v0.1b 起） | 清單（物件） | 3 筆 | 必改 |
+| `defaults.legacyBiz.lines` | 非 AI 事業各線（N ≤ 6），一線一列：key、label、kind（growth＝上一財年 ×(1＋年增率)；cloudResidual＝雲端分部 − 對外 AI 雲端；explicit＝各期營收直接輸入 rev；未分攤公司層費用用 explicit＋rev 全 0＋ebitda 負值陣列）、peer（評價同業倍數組，valuation.segmentMultiples 的鍵）、fyBase、ytd、g0、gLT、m0／mLT（EBITDA 率起點／長期，線性收斂；mLT 空白＝固定）、oa（其他攤銷占營收）；cloudResidual 另有 priorStub、g4q、ttm、prevTTM、ebitdaTTM、aiMwTTM、aiMwPrevTTM（MAG v0.1b；Oracle v0.1b 起） | 清單（物件） | 5 筆 | 必改 |
+| `defaults.legacyBiz.split.adsMargin` | 廣告 EBITDA 率（分部未揭露，[Assumed]；MAG v0.1b） | 比例 | 0.5 | 檢查 |
+| `defaults.legacyBiz.split.adsMarginRange` | 廣告 EBITDA 率區間（敏感度） | 比例清單 | 0.4、0.6 | 檢查 |
+| `defaults.legacyBiz.split.subsMargin` | 訂閱 EBITDA 率（[Assumed]） | 比例 | 0.1 | 檢查 |
+| `defaults.legacyBiz.split.subsMarginRange` | 訂閱 EBITDA 率區間（敏感度） | 比例清單 | 0、0.2 | 檢查 |
+| `defaults.legacyBiz.split.note` | 營收類別拆線的分攤方法與利潤率依據（零售＝分部殘差） | 文字 | 分部營業利益只揭露北美、國際、AWS；廣告與訂閱營收… | 必改 |
 | `defaults.legacyBiz.note` | 非 AI 事業輸入的來源與推導說明 | 文字 | 各線：growth＝全年營收＝上一財年 ×(1＋年增… | 必改 |
 | `defaults.cashTaxRate` | 類現金流量的現金稅率：稅 ＝ 稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（v0.1b；虧損或 NOL 公司填 0） | 比例 | 0.1736 | 檢查 |
 | `defaults.delayPenalty` | 延誤罰則／服務抵減：延誤期間應計費而未計費營收的比例，列為營業費用（預設 0＝未揭露；v0.2） | 比例 | 0 | 檢查 |
