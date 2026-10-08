@@ -1,175 +1,162 @@
 #!/usr/bin/env python3
-"""由 builder/v05_map.py 產生報告附表（不手寫）：leafmap.csv、tagged_objects.csv、v9_splits.csv、v10_stats.md。
-用法：python3 tools/make_report_tables.py [--out docs/reports] [--prefix 20261004_v0.6-P1]"""
+"""產生每段報告的對照 Excel（CLAUDE.md 第 5 節）：①本段新增或變動的每一列 ②本段關鍵輸出 FY2025–2030 ③已套用的預設。
+
+用法：python3 tools/make_report_tables.py --defaults docs/reports/<報告>.md --out docs/reports/<報告>_對照.xlsx
+值一律讀現行模型（LibreOffice 重算後的快取值；不另算）。③由報告 md 的「已套用的預設」表解析，報告與 Excel 同一來源。
+"""
 import argparse
-import csv
-import json
+import re
 import sys
-from collections import Counter
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(REPO / "builder"))
-import source_rules  # noqa: E402
-from v05_map import META_KEYS, SEP, build_map  # noqa: E402
+import openpyxl
+from openpyxl.styles import Alignment, Font, PatternFill
 
-KL = {"SRC": "SRC_OAI", "INP": "Inputs", "FORMULA": "公式（後續工作包）", "DUP": "重複併入", "SKIP": "不遷入", "TK": "不遷入；改取 TK_Link"}
+REPO = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO))
+from engine import current_model_path  # noqa: E402
+
+BOLD = Font(bold=True)
+HDR = PatternFill("solid", fgColor="FFEDEDED")
+WRAP = Alignment(wrap_text=True, vertical="top")
+KEY_NAMES = [
+    ("REV_API", "①開放平台及 API（按量計費＋Coding Plan）", "RMB 億"), ("REV_API_PayGo", "　其中按量計費", "RMB 億"),
+    ("REV_Sub", "　其中 Coding Plan 子列（訂閱）", "RMB 億"), ("REV_Sub_Lite", "　　Lite", "RMB 億"), ("REV_Sub_Pro", "　　Pro", "RMB 億"),
+    ("REV_Sub_Max", "　　Max", "RMB 億"), ("REV_OnPrem_Agent", "②企業級智能體", "RMB 億"), ("REV_OnPrem_GPLLM", "③企業級通用大模型", "RMB 億"),
+    ("REV_Other", "④技術服務及其他", "RMB 億"), ("REV_OnPrem", "本地化部署（②＋③＋④）", "RMB 億"), ("REV_Ads", "廣告", "RMB 億"),
+    ("REV_Gross", "營收總額（＝淨額）", "RMB 億"), ("REV_Cloud", "雲端營收（①）", "RMB 億"), ("REV_GrossCapped", "營收總額（截頂後；係數佔位 1）", "RMB 億"),
+    ("REV_Enterprise", "企業", "RMB 億"), ("REV_Individual", "個人", "RMB 億"), ("REV_ApiPrice", "組合有效單價", "元／百萬 token"),
+    ("DEM_Subs_CP", "Coding Plan 訂閱者（期間平均）", "萬人"), ("DEM_Users_Consumer", "智譜清言月活", "百萬人"),
+    ("DEM_Tok_API", "API 按量計費 token", "T"), ("DEM_Tok_CP", "Coding Plan token", "T"), ("DEM_Tok_Consumer", "智譜清言 token", "T"),
+    ("DEM_Tok_APIFree", "免費 API 型號 token", "T"), ("DEM_Tok_Paid_Sol", "付費 token：Sol", "T"), ("DEM_Tok_Paid_Luna", "付費 token：Luna", "T"),
+    ("DEM_Tok_Free_Sol", "免費 token：Sol", "T"), ("DEM_Tok_Free_Luna", "免費 token：Luna", "T"), ("DEM_Tok_Total", "token 合計", "T"),
+]
+HALF_NAMES = [("REV_API_H", "①開放平台及 API"), ("REV_Sub_H", "Coding Plan 子列"), ("REV_OnPrem_H", "本地化部署"), ("REV_Gross_H", "營收總額"),
+              ("DEM_Tok_API_H", "API 按量計費 token（T）"), ("REV_ApiPrice_H", "組合有效單價（元／M）")]
+
+
+def _vals(wb, attr):
+    m = re.match(r"^(?:'([^']+)'|([^!]+))!\$?([A-Z]+)\$?(\d+)(?::\$?([A-Z]+)\$?(\d+))?$", attr)
+    ws = wb[m.group(1) or m.group(2)]
+    from openpyxl.utils import column_index_from_string as ci
+    c1, r1 = ci(m.group(3)), int(m.group(4))
+    c2 = ci(m.group(5)) if m.group(5) else c1
+    return [ws.cell(r1, c).value for c in range(c1, c2 + 1)]
+
+
+def head(ws, labels):
+    ws.append(labels)
+    for c in ws[ws.max_row]:
+        c.font, c.fill, c.alignment = BOLD, HDR, WRAP
+
+
+def parse_defaults(md: Path):
+    rows, on = [], False
+    for line in md.read_text(encoding="utf-8").splitlines():
+        if line.startswith("## ") and "已套用的預設" in line:
+            on = True
+            continue
+        if on and line.startswith("## "):
+            break
+        if on and line.startswith("|") and not line.startswith("|---"):
+            cells = [c.strip() for c in line.strip("|").split("|")]
+            rows.append(cells)
+    return rows
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", type=Path, default=REPO / "docs" / "reports")
-    ap.add_argument("--prefix", default="20261004_v0.6-P1")
+    ap.add_argument("--defaults", type=Path, required=True)
+    ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
-    R = build_map()
-    with open(a.out / f"{a.prefix}_leafmap.csv", "w", newline="", encoding="utf-8-sig") as f:
-        w = csv.writer(f)
-        w.writerow(["v0.5 路徑", "v0.5 值", "去處類別", "去處", "理由／備註"])
-        for p, v in R.leaves.items():
-            k, ref, why = R.dest[p]
-            w.writerow([p.replace(SEP, "."), json.dumps(v, ensure_ascii=False), KL[k], ref, why])
-    rows = []
+    model = current_model_path()
+    wbv = openpyxl.load_workbook(model, data_only=True)
+    names = {k: v.attr_text for k, v in wbv.defined_names.items()}
+    out = openpyxl.Workbook()
 
-    def walk(o, path):
-        if isinstance(o, dict):
-            if "tag" in o:
-                leaves = R.under(SEP.join(path))
-                core = [p for p in leaves if p.split(SEP)[-1] not in META_KEYS] or leaves
-                ds = sorted({(R.dest[p][0], R.dest[p][1]) for p in core})
-                rows.append((".".join(path), o["tag"], len(leaves), "；".join(f"{KL[k]}：{r}" for k, r in ds)))
-            for k, v in o.items():
-                walk(v, path + [k])
-        elif isinstance(o, list):
-            for i, v in enumerate(o):
-                walk(v, path + [str(i)])
+    # ① 本段新增的每一列
+    ws = out.active
+    ws.title = "①新增列_Demand_Revenue"
+    head(ws, ["頁", "編號／ID", "列名", "單位", "2025", "2026", "2027", "2028", "2029", "2030", "1H2026", "2H2026", "具名範圍", "來源／標記／說明"])
+    for sh in ("Demand", "Revenue"):
+        s = wbv[sh]
+        nm_by_row = {}
+        for n, t in names.items():
+            mm = re.match(rf"^{sh}!\$[A-Z]+\$(\d+)", t)
+            if mm:
+                nm_by_row.setdefault(int(mm.group(1)), []).append(n)
+        for r in range(7, s.max_row + 1):
+            code = s.cell(r, 1).value
+            if not code or not re.match(r"^[DR]\d+$", str(code)):
+                continue
+            vals = [s[f"{c}{r}"].value for c in "DEFGHIKL"]
+            ws.append([sh, code, s.cell(r, 2).value, s.cell(r, 3).value] + vals + ["、".join(sorted(nm_by_row.get(r, []))), s[f"M{r}"].value])
+    for col, w in zip("ABCDEFGHIJKLMN", (9, 18, 50, 12, 10, 10, 10, 10, 10, 10, 10, 10, 30, 70)):
+        ws.column_dimensions[col].width = w
+    ws = out.create_sheet("①新增列_Inputs")
+    head(ws, ["INP_ID", "鍵", "參數", "索引", "單位", "值", "低", "高", "標記", "依據", "區間理由"])
+    s = wbv["Inputs"]
+    for r in range(5, s.max_row + 1):
+        if s.cell(r, 1).value:
+            ws.append([s.cell(r, c).value for c in range(1, 12)])
+    for col, w in zip("ABCDEFGHIJK", (9, 16, 46, 10, 12, 9, 9, 9, 11, 80, 36)):
+        ws.column_dimensions[col].width = w
+    ws = out.create_sheet("①新增列_TK_OAI_Checks")
+    head(ws, ["頁", "名稱／編號", "說明", "單位／結果", "值1", "值2", "值3", "值4", "值5", "值6", "來源／期望／說明"])
+    s = wbv["TK_Link"]
+    for r in range(10, s.max_row + 1):
+        if s.cell(r, 6).value == "讀表（非具名）":
+            ws.append(["TK_Link", s.cell(r, 2).value, s.cell(r, 3).value, s.cell(r, 4).value] + [s.cell(r, 10 + k).value for k in range(5)]
+                      + [None, f"Tokenomics {s.cell(r, 7).value}（{s.cell(r, 8).value}）讀表，只供對照"])
+    s = wbv["OAI_Link"]
+    for r in range(10, s.max_row + 1):
+        if s.cell(r, 1).value:
+            ws.append(["OAI_Link", s.cell(r, 2).value, s.cell(r, 3).value, s.cell(r, 4).value] + [s.cell(r, 6 + k).value for k in range(6)]
+                      + [f"OpenAI v0.6（{wbv['OAI_Link']['B5'].value}；SHA-256 {str(wbv['OAI_Link']['B4'].value)[:12]}…）；值為 2025–2030"])
+    s = wbv["Checks"]
+    for r in range(5, s.max_row + 1):
+        if s.cell(r, 1).value and re.match(r"^C\d+$", str(s.cell(r, 1).value)):
+            ws.append(["Checks", s.cell(r, 1).value, s.cell(r, 2).value, s.cell(r, 5).value, s.cell(r, 3).value, None, None, None, None, None,
+                       f"期望 {s.cell(r, 4).value}；{s.cell(r, 6).value}"])
+    for col, w in zip("ABCDEFGHIJK", (9, 24, 60, 12, 10, 10, 10, 10, 10, 10, 70)):
+        ws.column_dimensions[col].width = w
 
-    walk(R.data, [])
-    with open(a.out / f"{a.prefix}_tagged_objects.csv", "w", newline="", encoding="utf-8-sig") as f:
-        w = csv.writer(f)
-        w.writerow(["v0.5 物件路徑", "v0.5 標記", "葉節點數", "去處（可多筆）"])
-        w.writerows(rows)
-    with open(a.out / f"{a.prefix}_v9_splits.csv", "w", newline="", encoding="utf-8-sig") as f:
-        w = csv.writer(f)
-        w.writerow(["多年期項目", "處理", "結果去處", "掃描後未拆"])
-        for r in R.v9:
-            w.writerow([r["item"], r["detail"], r["dest"], "是" if r["scanned_only"] else "否（已拆）"])
-    cnt = {k: Counter() for k in ("grade", "stance", "hand", "why")}
-    unrated = {k: [] for k in cnt}
-    for i, r in enumerate(R.src_rows):
-        c = source_rules.classify(r, R.src_rows[i - 1]["source"] if i else "")
-        for k in cnt:
-            cnt[k][c[k]] += 1
-            if c[k] == source_rules.UNRATED:
-                unrated[k].append(f"{r['id']} {r['metric']}")
-    lines = [f"SRC_OAI {len(R.src_rows)} 列 V10 初評統計"]
-    for k, lab in (("grade", "來源等級"), ("stance", "立場"), ("hand", "一手／二手"), ("why", "立場說明")):
-        lines.append(f"- {lab}：" + "；".join(f"{v}＝{n}" for v, n in cnt[k].most_common()))
-    for k, lab in (("grade", "來源等級"), ("hand", "一手／二手"), ("stance", "立場")):
-        lines.append(f"- 『未評』明細（{lab}，{len(unrated[k])} 列）：" + "；".join(unrated[k]))
-    (a.out / f"{a.prefix}_v10_stats.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    # ② 關鍵輸出
+    ws = out.create_sheet("②關鍵輸出")
+    head(ws, ["項目", "單位", "2025", "2026", "2027", "2028", "2029", "2030", "具名範圍"])
+    for n, lab, unit in KEY_NAMES:
+        ws.append([lab, unit] + _vals(wbv, names[n]) + [n])
+    ws.append([])
+    head(ws, ["2026 半年拆分", "", "1H2026（實際）", "2H2026（驅動）", "", "", "", "", "具名範圍"])
+    for n, lab in HALF_NAMES:
+        ws.append([lab, ""] + _vals(wbv, names[n]) + ["", "", "", "", n])
+    ws.append([])
+    head(ws, ["對照（只列差距，不反推）", "單位", "值", "", "", "", "", "", "具名範圍"])
+    for n, lab, unit in (("REV_ARRGapMaaS", "模型 2H26 年化雲端營收 ÷ MaaS ARR − 1", "比例"), ("REV_ARRGapTotal", "模型 2H26 年化總營收 ÷ 全業務 ARR − 1", "比例"),
+                         ("REV_Gap2025", "2025 營收總額校準差距", "RMB 億"), ("REV_Gap1H26", "1H26 營收總額校準差距（公告四捨五入）", "RMB 億"),
+                         ("REV_GapUncal2025", "2025 未校準差距", "RMB 億"), ("DEM_ApiBilledRatio2025", "2025 計費比例", "比例"),
+                         ("DEM_ImpliedVolGrowth", "2H25→1H26 實際隱含量成長", "倍"), ("CHK_Errors", "CHK_Errors", "格")):
+        ws.append([lab, unit, _vals(wbv, names[n])[0], "", "", "", "", "", n])
+    ws.column_dimensions["A"].width = 44
+    for col in "CDEFGH":
+        ws.column_dimensions[col].width = 12
 
-    # ── E7 帳目 ────────────────────────────────────────────
-    # (a) SRC_OAI／Inputs 列數變動逐筆對帳（初審 SHA ebe08a4 → 第二版 SHA 711cfec → 本版）
-    recon = [
-        ("SRC_OAI", "SRC_OAI_086", "訓練算力支出：2025（12.0）", "ebe08a4 有；711cfec 移除", "V6（r2 §5）：12.0＝10.59＋其他雲端 1.41，改為公式；ID 退役"),
-        ("SRC_OAI", "SRC_OAI_092", "ChatGPT 週活躍用戶（WAU）：2026-02", "711cfec 新增", "V9 free：出處文字內的觀測值"),
-        ("SRC_OAI", "SRC_OAI_093", "Go 付費用戶：2025 年底", "711cfec 新增", "V9 掃描 go：錨點"),
-        ("SRC_OAI", "SRC_OAI_094", "ChatGPT Plus＋Pro 付費訂閱：2025-07", "711cfec 新增", "V9 plus：觀測值（公式依據）"),
-        ("SRC_OAI", "SRC_OAI_095", "ChatGPT 付費訂閱：2025 年（內部文件）", "711cfec 新增", "V9 plus：觀測值"),
-        ("SRC_OAI", "SRC_OAI_096", "Pro 用戶 FY 平均：2026（內部預測，1.0M）", "711cfec 新增；本版移除", "V12（r3）：SRC 只登兩個約束，不登 pro 人數點值；ID 退役"),
-        ("SRC_OAI", "SRC_OAI_097", "付費企業用戶：2026-02", "711cfec 新增", "V9 掃描 seats：錨點"),
-        ("SRC_OAI", "SRC_OAI_098", "研發費用中付 Microsoft 部分：2025（10.59）", "711cfec 新增", "V6：10.59 進 SRC_OAI"),
-        ("SRC_OAI", "SRC_OAI_099", "自有園區資本支出例：Project Camellia", "711cfec 新增", "V9 掃描 ownedCapex：錨點"),
-        ("SRC_OAI", "SRC_OAI_100", "ChatGPT 每日訊息數：2025-07", "711cfec 新增", "V9 掃描 tasksPerDay：錨點"),
-        ("SRC_OAI", "SRC_OAI_101", "Pro 用戶倍數：2026 對 2025（倍增）", "本版新增", "V12 約束一"),
-        ("SRC_OAI", "SRC_OAI_102", "Pro 占付費訂閱總數：2026 上限（<1%）", "本版新增", "V12 約束二（只有『高』欄，無點值）"),
-        ("Inputs", "INP_057", "FY 平均用戶數：free 2026（950）", "ebe08a4 有；711cfec 移除", "V9：2026 有觀測（WAU）→公式（Derived_V9 V01）"),
-        ("Inputs", "INP_072", "FY 平均用戶數：plus 2025（30）", "ebe08a4 有；711cfec 移除", "V9：2025 有觀測→公式（V02）"),
-        ("Inputs", "INP_080", "FY 平均用戶數：pro 2025（0.5）", "ebe08a4 有；711cfec 移除", "V9／V12：公式（V04）"),
-        ("Inputs", "INP_081", "FY 平均用戶數：pro 2026（1.0）", "ebe08a4 有；711cfec 移除", "V9／V12：公式（V03）"),
-        ("Inputs", "INP_195", "非算力營運費用占營收比 2025（1.216）", "ebe08a4 有；711cfec 移除", "V9：2025 由財報數據推得→公式（P4 實作）"),
-        ("Inputs", "INP_231", "每 GW 年合約價（r1 新增重複列）", "ebe08a4 有；711cfec 移除", "V8：合約價只留遷入的 leasePricePerGWyr（INP_229）"),
-        ("Inputs", "INP_229", "每 GW 年合約價（leasePricePerGWyr）", "711cfec 更名、上限 16→20", "V8"),
-        ("Inputs", "INP_183", "合約期間迄：Microsoft Azure", "本版：Analogy→Assumed，值 2030，區間 2029–2032", "V13（同 ID，值不變）"),
-        ("Inputs", "INP_184", "合約總額（估計）：Cerebras", "本版：原『總額上緣 25』改為 20（20–25），Assumed", "V13（同 ID，更名）"),
-        ("Inputs", "INP_185", "合約期間迄：Cerebras", "本版：Analogy→Assumed，值 2031，區間 2029–2032", "V13（同 ID）"),
-        ("Inputs", "INP_234", "換算係數：free FY2026 平均 ÷ 2026-02 WAU", "23a4e04 新增", "E6：V9 公式的換算係數進 Inputs（1.0556，0.844–1.267，Assumed）"),
-        ("Inputs", "INP_235", "換算係數：Plus FY2025 平均 ÷ 2025-07 付費訂閱", "23a4e04 新增", "E6（0.857，0.8–0.943，Assumed）"),
-        ("Inputs", "INP_236", "Pro 占付費訂閱總數比例（2026）", "23a4e04 新增", "V12（0.8%，0.5–1.0%，Assumed）"),
-        # ── 本版（r3 補做＋V15；基準＝23a4e04）──
-        ("SRC_OAI", "SRC_OAI_052", "反向目標營收：2026", "23a4e04 有；本版移除", "E8e：與 deckJul2026 同一來源（FT 2026-09-18），合併為 SRC_OAI_043（reverse 引用）；ID 退役"),
-        ("SRC_OAI", "SRC_OAI_053", "反向目標營收：2030", "23a4e04 有；本版移除", "E8e：合併為 SRC_OAI_044；ID 退役"),
-        ("SRC_OAI", "SRC_OAI_069", "合約容量（另一口徑）：AWS Trainium＝5", "23a4e04 有；本版移除", "E8g：『5』改公式（Derived_V9 V26＝103＋104）；ID 退役"),
-        ("SRC_OAI", "SRC_OAI_081", "股權融資：2026 無條件部分＝87", "23a4e04 有；本版移除", "E8j：87 拆為四個 SRC 組成（109–112），加總為公式（V27）；ID 退役"),
-        ("SRC_OAI", "SRC_OAI_103", "合約容量（WSJ 口徑）：AWS Trainium 推論 3GW", "本版新增", "E8g：WSJ 2026-07 揭露"),
-        ("SRC_OAI", "SRC_OAI_104", "合約容量（WSJ 口徑）：AWS Trainium 訓練（VR）2GW", "本版新增", "E8g：WSJ 2026-07 揭露"),
-        ("SRC_OAI", "SRC_OAI_105", "Nvidia 意向：10GW", "本版新增", "E8h：比較用，不計入現金流"),
-        ("SRC_OAI", "SRC_OAI_106", "Nvidia 意向：$100B", "本版新增", "E8h：比較用，不計入現金流"),
-        ("SRC_OAI", "SRC_OAI_107", "Broadcom 晶片：10GW", "本版新增", "E8h：比較用，不計入現金流"),
-        ("SRC_OAI", "SRC_OAI_108", "AMD 晶片：6GW", "本版新增", "E8h：比較用，不計入現金流"),
-        ("SRC_OAI", "SRC_OAI_109", "股權融資 2026-03 輪：Amazon 首筆 15", "本版新增", "E8j"),
-        ("SRC_OAI", "SRC_OAI_110", "股權融資 2026-03 輪：SoftBank（三期）30", "本版新增", "E8j"),
-        ("SRC_OAI", "SRC_OAI_111", "股權融資 2026-03 輪：Nvidia 30", "本版新增", "E8j"),
-        ("SRC_OAI", "SRC_OAI_112", "股權融資 2026-03 輪：其他 12", "本版新增", "E8j"),
-        ("SRC_OAI", "SRC_OAI_043／044", "管理層營收目標 2026／2030", "同 ID；備註改為 reverse 引用", "E8e"),
-        ("SRC_OAI", "SRC_OAI_080", "股權融資：2026-03 輪總額 122", "同 ID；標記改 Interested-party、出處『OpenAI 公告』", "E8i"),
-        ("SRC_OAI", "SRC_OAI_022–024", "API 層級對應 top／mid／low", "同 ID；標記改 Verified、出處『OpenAI 價格頁』", "E8b"),
-        ("Inputs", "INP_082–085", "FY 平均用戶數：pro 2027–2030（1.5／2.0／2.5／3.0）", "23a4e04 有；本版移除", "V15：改為公式（Derived_V9 V10–V13）；ID 退役"),
-        ("Inputs", "INP_086、087", "FY 平均用戶數：pro 低／高情境倍數（0.6／1.2）", "23a4e04 有；本版移除", "V15：區間由比例 0.5–2.0% 傳遞，倍數不再使用；ID 退役"),
-        ("Inputs", "INP_237", "API FY2025 平均每分鐘 token（5，3.8–6.1）", "本版新增", "E8a：驅動值進 Inputs（Assumed）"),
-        ("Inputs", "INP_238", "每年分鐘數（525,600，定義常數）", "本版新增", "E6／E8a：公式內不含常數"),
-        ("Inputs", "INP_239", "單位換算：B→T 除數（1000，定義常數）", "本版新增", "E6／E8a"),
-        ("Inputs", "INP_240–243", "Pro 占付費訂閱總數比例 2027–2030（0.8%，0.5–2.0%）", "本版新增", "V15"),
-        ("Inputs", "INP_244", "合約容量（採用值）：AWS（Trainium）2（2–5）", "本版新增", "E8g"),
-        ("Inputs", "INP_245", "Nvidia $30B 現金比例（1，0–1）", "本版新增", "E8j（沿用 v0.5 S4b）"),
-        ("Inputs", "INP_182", "合約期間起：Microsoft Azure", "同 ID：值 2025；低 空→2025；高 空→2026；Analogy 不變；備註改", "V16（Andy 2026-10-04）"),
-    ]
-    with open(a.out / f"{a.prefix}_row_reconciliation.csv", "w", newline="", encoding="utf-8-sig") as f:
-        w = csv.writer(f)
-        w.writerow(["頁", "ID", "項目", "變動", "原因"])
-        w.writerows(recon)
-    # (b) Decision 標記的 Inputs 列展開
-    with open(a.out / f"{a.prefix}_decision_rows.csv", "w", newline="", encoding="utf-8-sig") as f:
-        w = csv.writer(f)
-        w.writerow(["ID", "參數", "索引", "值", "原決策", "v0.5 路徑"])
-        for r in R.inp_rows:
-            if str(r["tag"]).startswith("Decision"):
-                w.writerow([r["id"], r["name"], r["index"], r["value"], r["decision"], r["v05"].replace(SEP, ".")])
-    # (c) 不遷入葉節點分類小計
-    cats = [("說明文字／版本字串／單位字串", ("說明", "版本", "單位字串", "公司名稱", "文字說明")),
-            ("結構清單（方案、層級、營收線、選項、充分條件組合）", ("清單", "結構", "營收線", "選項", "充分條件")),
-            ("決策記錄（以公式結構體現）", ("決策記錄", "方法說明", "定義", "校準方式")),
-            ("null／N／A（未揭露、不適用）", ("null", "N/A")),
-            ("v0.4 已廢止或已過時", ("廢止", "過時")),
-            ("曆年制設定（工作單已定）", ("曆年制",))]
-    cnt = Counter()
-    rows_skip = []
-    for p, (k, ref, why) in R.dest.items():
-        if k != "SKIP":
-            continue
-        c = next((n for n, keys in cats if any(x in why for x in keys)), "其他")
-        cnt[c] += 1
-        rows_skip.append((p.replace(SEP, "."), c, why))
-    with open(a.out / f"{a.prefix}_skip_summary.csv", "w", newline="", encoding="utf-8-sig") as f:
-        w = csv.writer(f)
-        w.writerow(["分類", "葉節點數"])
-        w.writerows(cnt.most_common())
-        w.writerow([])
-        w.writerow(["v0.5 路徑", "分類", "理由"])
-        w.writerows(rows_skip)
-    # (d) V9／V12 新增 SRC_OAI 列的初評一致性
-    v9rows = []
-    for i, r in enumerate(R.src_rows):
-        if "r2/V9" in r["v05"] or "src文字（V9" in r["v05"] or r["metric"].startswith(("Pro ", "研發費用中付")):
-            c = source_rules.classify(r, R.src_rows[i - 1]["source"])
-            v9rows.append((r["id"], r["metric"], r["source"][:36], c["grade"], c["stance"], c["why"][:20], c["hand"]))
-    with open(a.out / f"{a.prefix}_v9_src_rows.csv", "w", newline="", encoding="utf-8-sig") as f:
-        w = csv.writer(f)
-        w.writerow(["ID", "指標", "出處", "等級", "立場", "立場說明", "一手／二手"])
-        w.writerows(v9rows)
-    print("skip", dict(cnt), "v9 rows", len(v9rows))
-    print("\n".join(lines))
-    print("tagged objects", len(rows), "v9", len(R.v9))
+    # ③ 已套用的預設
+    ws = out.create_sheet("③已套用的預設")
+    rows = parse_defaults(a.defaults)
+    for i, r in enumerate(rows):
+        if i == 0:
+            head(ws, r)
+        else:
+            ws.append(r)
+    for col, w in zip("ABCDE", (6, 30, 60, 40, 70)):
+        ws.column_dimensions[col].width = w
+    for row in ws.iter_rows():
+        for c in row:
+            c.alignment = WRAP
+    a.out.parent.mkdir(parents=True, exist_ok=True)
+    out.save(a.out)
+    print("saved", a.out, "defaults rows", len(rows) - 1)
 
 
 if __name__ == "__main__":
