@@ -2,7 +2,7 @@
  "meta": {
   "company": "Nebius",
   "ticker": "NBIS",
-  "updateDate": "2026-10-07",
+  "updateDate": "2026-10-08",
   "priceDate": "2026-10-06",
   "sourceOrderNote": "時序先 Q2 6-K 財報與股東信（8/12），再期後 6-K（7/10 資產擔保融資、8 月可轉債與以股換債）。入帳數字聽 6-K 財報（未經查核）與經查核 20-F；指引聽股東信；法說會只有二手轉述者標明。Q1／Q2 季末 active MW 未揭露，不以營收反推。",
   "consensusFile": "data/consensus_nbis_20261007.json"

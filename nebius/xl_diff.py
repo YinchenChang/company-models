@@ -24,10 +24,10 @@ def norm(v):
 EXP, SEC_RENAME, ROW_RENAME = {}, {}, {}  # SEC_RENAME：新版區段標題 → 舊版（「區段 舊標題 => 新標題」；該區段的列仍以列名稱配對比對）
 for o in sys.argv:
     if o.startswith('--expect='):
-        for ln in open(o.split('=', 1)[1], encoding='utf-8'):
-            ln = ln.strip()
-            if ln.startswith('列 ') and ' => ' in ln:  # 列名稱改名（同一區段內）
-                o_, n_ = ln[2:].split(' => ', 1); ROW_RENAME[norm(n_.strip())] = norm(o_.strip()); continue
+        for raw in open(o.split('=', 1)[1], encoding='utf-8'):
+            ln = raw.strip()
+            if ln.startswith('列 ') and ' => ' in ln:  # 列名稱改名（同一區段內）；v0.2a：保留列名稱開頭的空白（導覽頁說明列以兩個空白縮排）
+                o_, n_ = raw.rstrip('\n')[2:].split(' => ', 1); ROW_RENAME[norm(n_.rstrip())] = norm(o_); continue
             if ln.startswith('區段 ') and ' => ' in ln:
                 o_, n_ = ln[3:].split(' => ', 1); SEC_RENAME[norm(n_.split('  ')[0].strip())] = norm(o_.strip()); continue
             if ln and not ln.startswith('#'):

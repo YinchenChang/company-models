@@ -278,12 +278,13 @@ ws.cell(row=r, column=9, value=("三情境只改擴張力道（已連網 MW 路�
                                 "三情境改變擴張力道（已連網 MW 路徑）與每 MW 年收入（Tokenomics 正向推導三情境值）；其餘假設相同（對照表 r1 第 4 節第 1 條）")).font = SMALL
 SEL = f"'輸入與假設'!$C${r}"; r += 1
 PXSEL = None
-if PMW_REV == 'tkAnchor':  # v0.2a：價格軸（定價倍數 k 低／基準／高），與容量情境分離
-    ws.cell(row=r, column=1, value="價格情境選擇（1＝低、2＝基準、3＝高；定價倍數 k）").font = BOLD
-    c = ws.cell(row=r, column=3, value=2); c.font = BLUE; c.number_format = NUM0; c.border = BOX; c.fill = FILL_KEY
-    ws.cell(row=r, column=4, value=f'=CHOOSE(C{r},"價格低","價格基準","價格高")').font = BOLD
-    ws.cell(row=r, column=9, value="k_長約 與 k_現貨 同時取低／基準／高（『每MW收入_錨定』A 區；證據見同頁 D 區）；三個容量情境預設都用基準").font = SMALL
-    PXSEL = f"'輸入與假設'!$C${r}"; r += 1
+if PMW_REV == 'tkAnchor':  # v0.2a：價格軸（定價倍數 k 低／基準／高），與容量情境分離；放在情境選擇同一列的 E–G 欄（不新增列，避免下方列位移）
+    _r0 = r - 1
+    ws.cell(row=_r0, column=5, value="價格情境（1 低／2 基準／3 高）").font = BOLD
+    c = ws.cell(row=_r0, column=6, value=2); c.font = BLUE; c.number_format = NUM0; c.border = BOX; c.fill = FILL_KEY
+    ws.cell(row=_r0, column=7, value=f'=CHOOSE(F{_r0},"價格低","價格基準","價格高")').font = BOLD
+    ws.cell(row=_r0, column=9, value=ws.cell(row=_r0, column=9).value + "。E–G 欄＝價格情境選擇（定價倍數 k 低／基準／高；k_長約 與 k_現貨 同時取低／基準／高，見『每MW收入_錨定』A 區），三個容量情境預設都用基準")
+    PXSEL = f"'輸入與假設'!$F${_r0}"
 r = section(ws, r, "情境路徑明細（已連網 MW、在役比例、表外租金基準）", level=2)
 for j, h in enumerate(["已連網 MW 路徑", "單位"] + PERIODS + ["", "FY31 新增 MW"]):
     if h:
@@ -2395,9 +2396,6 @@ checks = [
     ("FY28 起收入是否依賴未簽約", None, f"<{_n(CK['unsignedRevShareMax'] * 100)}% 較穩健",
      "=IF(B{r}<" + _n(CK['unsignedRevShareMax']) + ",\"通過\",\"觀察\")", PCT,
      "FY28–30 超出期初 RPO 的收入 ÷ 同期總算力收入（MW 驅動下為未簽約產能的比重）"),
-] + ([("收入上限：每 MW 收入 ÷ 客戶付費 token 營收（最高）", f"='每MW收入_錨定'!C{AR['cur_capMax']}", f"≤{_n(CK['revCapShareMax'] * 100)}%",
-     "=IF(B{r}<=" + _n(CK['revCapShareMax']) + ",\"通過\",\"警示\")", PCT,
-     "neocloud 拿走客戶 token 營收的比例＝每 MW 年收入 ÷ Tokenomics IF_RevGWFleet（在役世代加權；理想上限）；只警示、不改數字（v0.2a）")] if AR else []) + [
     ("損益營收＝資金營收", None, "=0",
      "=IF(ABS(B{r})<0.001,\"通過\",\"不一致\")", NUM,
      "FY27 損益算力收入 − 產能頁 isRev。兩邊必須同一組數字"),
@@ -2427,6 +2425,10 @@ checks = [
     ("營收＝在役 MW × 每 MW × 利用率（五期差額）", f"=SUM('運營_產能與收入'!C{CR['核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間']}:G{CR['核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間']})", "=0",
      "=IF(ABS(B{r})<0.000001,\"通過\",\"不一致\")", NUM, "MW 驅動：營收＝平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度"),
 ]
+if AR:  # v0.2a：收入上限檢查列放在清單最後（前面各列有依位置補公式的程式，不可插在中間）
+    checks += [("收入上限：每 MW 收入 ÷ 客戶付費 token 營收（最高）", f"='每MW收入_錨定'!C{AR['cur_capMax']}", f"≤{_n(CK['revCapShareMax'] * 100)}%",
+     "=IF(B{r}<=" + _n(CK['revCapShareMax']) + ",\"通過\",\"警示\")", PCT,
+     "neocloud 拿走客戶 token 營收的比例＝每 MW 年收入 ÷ Tokenomics IF_RevGWFleet（在役世代加權；理想上限）；只警示、不改數字（v0.2a）")]
 for nm, bf, std, rf, fmt, note in checks:
     ws.cell(row=r, column=1, value=nm).font = BLACK
     if bf:

@@ -18,7 +18,7 @@ python3 - "$DST/nebius/company.json" "$DST/ref_company.json" <<'PY'
 import json, sys, re
 p = sys.argv[1]; s = open(p, encoding='utf-8').read(); co = json.loads(s)
 ref = json.load(open(sys.argv[2], encoding='utf-8'))
-co['texts'] = ref['texts']; co['varianceReasons'] = ref['varianceReasons']  # 畫面文字（副標、差異原因）還原為 v0.2
+co['texts'] = ref['texts']; co['varianceReasons'] = ref['varianceReasons']; co['meta']['updateDate'] = ref['meta']['updateDate']  # 畫面文字（副標、差異原因、更新日）還原為 v0.2
 sc = co['defaults']['scenario']; rev = co['scenarios']['revMW'][sc]
 bo = int(co['latestQuarter']['revenue'] * 4 / rev[0] + 0.5)
 co['methodology']['perMw']['revenue'] = 'legacy'
