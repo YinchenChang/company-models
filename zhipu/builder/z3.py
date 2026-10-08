@@ -339,8 +339,9 @@ def build(wb, D, Z, snap):
           "命題輸出基準", key="cc", name="COST_Compute")
     for key_, zh, g in (("cc_inf", "推論", "infcap"), ("cc_rd", "研發", "rd"), ("cc_idle", "閒置", "idle")):
         K.add(f"算力成本拆分：{zh}", "RMB 億",
-              lambda c, g=g, key_=key_: f"=K«K.{key_}»+L«K.{key_}»" if c == "E" else f"={c}«K.cc»*{cmp_(g, c)}/{cmp_('sup', c)}",
-              "依 GW 占比拆分（校準期：推論＝推論算力支出、研發＝研發算力支出）", key=key_, name={"cc_inf": "COST_InfCompute", "cc_rd": "COST_RDCompute"}.get(key_))
+              lambda c, g=g, key_=key_: f"=K«K.{key_}»+L«K.{key_}»" if c == "E" else
+              f"=IF({cmp_('sup', c)},{c}«K.cc»*{cmp_(g, c)}/{cmp_('sup', c)},{cmp_('sup', c)})",
+              "依 GW 占比拆分（校準期：推論＝推論算力支出、研發＝研發算力支出）；供給為 0 時顯示 0", key=key_, name={"cc_inf": "COST_InfCompute", "cc_rd": "COST_RDCompute"}.get(key_))
     K.add("檢查：算力成本 −（實付推論＋研發）", "RMB 億", {c: f"={c}«K.cc»-{c}«K.inf_fee»-{c}«K.rd_fee»" for c in cal}, "2025、1H26 應為 0（Checks）", key="ck_fee")
 
     K.section("二、供應商持有成本與雲端毛利（D10：持有成本＝租用 GW × TK IF_HoldEcon（Hopper）× 持有比 × 匯率；差額＝雲端毛利，只作參考）")
@@ -434,7 +435,8 @@ def build(wb, D, Z, snap):
             ("p_nc", "非算力成本（不含股權報酬）", "nc_cal_m", "COST_PropNonComp_VR"), ("p_sbc", "股權報酬", "x_sbc_m", "COST_PropSBC_VR"),
             ("p_full", "全成本（含股權報酬）", "full", "COST_PropFull_VR"), ("p_fullx", "全成本（不含股權報酬）", "fullx", "COST_PropFullExSBC_VR")]
     for key_, zh, src, nm_ in prop:
-        K.add(f"每 VR 等值 GW：{zh}", "RMB 億／GW／年", {c: f"={c}«K.{src}»/{c}«K.den»" for c in YC}, "", key=key_, name=nm_)
+        K.add(f"每 VR 等值 GW：{zh}", "RMB 億／GW／年", {c: f"=IF({c}«K.den»,{c}«K.{src}»/{c}«K.den»,{c}«K.den»)" for c in YC}, "分母為 0（壓力情境）時顯示 0",
+              key=key_, name=nm_)
     K.add("每 VR 等值 GW：差額（含股權報酬）", "RMB 億／GW／年", {c: f"={c}«K.p_rev»-{c}«K.p_full»" for c in YC}, "命題：負＝營收不足以覆蓋全成本", key="p_gap", name="COST_PropGap_VR")
     K.add("每 VR 等值 GW：差額（不含股權報酬）", "RMB 億／GW／年", {c: f"={c}«K.p_rev»-{c}«K.p_fullx»" for c in YC}, "", key="p_gapx", name="COST_PropGapExSBC_VR")
     K.add("每 VR 等值 GW：雲端口徑差額＝雲端營收 −（全成本 − 本地化交付成本）", "RMB 億／GW／年", {c: f"={c}«K.p_cl»-{c}«K.p_full»+{c}«K.p_op»" for c in YC},
