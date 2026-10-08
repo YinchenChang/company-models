@@ -740,7 +740,7 @@ function consensusItems() {
   let C = CONSENSUS, it = [], num = x => typeof x === `number`,
     add = (sec, label, vals, unit, dp, m, extra) => it.push({ sec, label: `共識｜${label}`, vals, unit, dp, src: m.source, url: m.url || ``, date: m.retrieved || m.date || `未列`, tag: m.tag || ``, note: ``, text: ``, ...(extra || {}) }),
     PR = C.priceReference, PT = C.priceTarget, XCS = PT.crossCheck == null ? [] : Array.isArray(PT.crossCheck) ? PT.crossCheck : [PT.crossCheck], RA = C.ratings, AE = C.annualEstimates, AL = C.annualEstimatesAlt,
-    QE = C.quarterlyEstimates, CG = C.companyGuidance || {}, IC = C.independentCrossCheck, RM = C.recentActionsMeta, S1 = `價格與目標價`;
+    QE = C.quarterlyEstimates, CG = C.companyGuidance || {}, IC = C.independentCrossCheck, RM = C.recentActionsMeta || {}, S1 = `價格與目標價`;
   add(S1, `現價參考（收盤）`, [PR.close], `US$`, 2, { ...PR, retrieved: PR.date }, { note: `收盤日 ${PR.date}` });
   [[`平均`, PT.mean], [`中位數`, PT.median], [`最低`, PT.low], [`最高`, PT.high]].filter(([, x]) => num(x)).forEach(([a, x]) => add(S1, `目標價｜${a}`, [x], `US$`, 2, PT));
   add(S1, `目標價｜分析師家數`, [PT.analysts], `家`, 0, PT);
@@ -775,7 +775,7 @@ function consensusItems() {
     [[`營收`, `revenue`], [`EBITDA`, `ebitda`], [`EBIT`, `ebit`], [`非 GAAP 營業利益`, `ebitNonGaap`], [`淨利`, `netIncome`]]
       .filter(([, k]) => QK.every(q => num(QE[q][k])))
       .forEach(([a, k]) => add(SQ, `季度｜${a}`, QK.map(q => QE[q][k]), `US$bn`, 3, QE));
-    add(SQ, `季度｜說明`, [], ``, 0, QE, { text: QE.note });
+    add(SQ, `季度｜說明`, [], ``, 0, QE, { text: QE.note || `` });
   }
   let SG = `公司指引（管理層預估）`, GM = { ...CG, tag: CG.tag }, G6 = CG[YR[0]] || {};
   [[`營收（低／高）`, [`revenueLow`, `revenueHigh`], `US$bn`, 2], [`營收（下限）`, [`revenueMin`], `US$bn`, 2], [`調整後營業利益（低／高）`, [`adjOpIncomeLow`, `adjOpIncomeHigh`], `US$bn`, 2],
@@ -794,10 +794,10 @@ function consensusItems() {
       ks = Object.keys(IC).filter(k => num(IC[k]));
     ks.forEach((k, i) => { let [a, u, dp] = ICL[k] || [k, ``, 2]; add(SL, `${IC.provider} 對照｜${a}`, [IC[k]], u, dp, LM, i === ks.length - 1 ? { note: IC.note || `` } : {}) });
   }
-  C.recentActions.forEach(x => add(`最新分析師動作`, `分析師動作｜${x.date} ${x.firm}`, x.target == null ? [] : [x.target], `US$`, 0, RM,
+  (C.recentActions || []).forEach(x => add(`最新分析師動作`, `分析師動作｜${x.date} ${x.firm}`, x.target == null ? [] : [x.target], `US$`, 0, RM,
     { text: x.target == null ? `目標價未列` : ``, note: `${x.rating}${x.note ? `；${x.note}` : ``}` }));
   add(`來源與限制`, `來源獨立性`, [], ``, 0, { source: `資料檔說明`, retrieved: C.asOf }, { text: C.sourceIndependence });
-  C.notFound.forEach((t, i) => add(`來源與限制`, `未取得｜${i + 1}`, [], ``, 0, { source: `資料檔說明`, retrieved: C.asOf }, { text: t }));
+  (C.notFound || []).forEach((t, i) => add(`來源與限制`, `未取得｜${i + 1}`, [], ``, 0, { source: `資料檔說明`, retrieved: C.asOf }, { text: t }));
   return it
 }
 

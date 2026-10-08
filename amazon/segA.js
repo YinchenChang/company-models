@@ -470,7 +470,7 @@ function runFunding(e) {
         lgR = LG.rev[r], lgE = LG.ebitda[r], lgO = LG.oa[r], // v0.1b（Oracle）：非 AI 事業營收與 EBITDA（EBITDA 視為現金，稅另列）；MAG v0.1b：lgO＝其他攤銷（損益 D&A；視為等額現金支出，自營運來源扣除）
         tx = (e.cashTaxRate ?? 0) * Math.max(0, totRev * ebM + ob + lgE - lgO - pen - DAF[r] - IX[r]), // v0.1b：現金稅＝稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（不含瀑布新債利息，避免循環；偏保守）
         dvSh = e.dividend ? e.dividend.sharesBase + WF.sh + CVN.reduce((a, n) => a + (n.mand && n.t < r ? n.S : 0), 0) : 0, // v0.1b（Oracle）：股利股數＝期初股數（基礎＋前期累計瀑布新股＋已強制轉換的特別股）
-        dvC = e.dividend ? 4 * e.dividend.perShareQ * L * dvSh : 0, // 普通股股利＝每股（每季 × 4）× 期間長度 × 期初股數
+        dvC = e.dividend ? 4 * e.dividend.perShareQ * Math.pow(1 + (e.dividend.growth ?? 0), r) * L * dvSh : 0, // MAG v0.1b r3（C19）：每股股利年成長 defaults.dividend.growth // 普通股股利＝每股（每季 × 4）× 期間長度 × 期初股數
         dvP = e.dividend ? e.dividend.preferred[r] : 0, // 特別股股利（強制轉換前；company.json → defaults.dividend.preferred）
         sbcC = (e.sbcRate ?? 0) * (totRev + lgR), // MAG v0.1b：股權報酬（非現金）加回營運現金＝SBC 占營收 × 模型期總營收
         wcS = r === 0 ? e.wcStub ?? 0 : 0, // MAG v0.1b r2（C14）：首期剩餘季度營運資金變動＝上一年度同期實際（流入為正；company.json → defaults.wcStub）

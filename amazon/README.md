@@ -235,7 +235,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `leases.operatingInEbitda` | 分部 EBITDA 是否已扣營業租賃成本（true＝在帳只扣融資租賃現金、未起租只扣融資部分；MAG v0.1b，C8 f） | 是／否 | 是 | 檢查 |
 | `leases.operatingInEbitdaNote` | 上欄的依據 | 文字 | 分部營業利益已扣營業租賃成本（C5 放大的 D&A … | 必改 |
-| `leases.uncommenced.opShare` | 未起租租賃的營業部分比例（operatingInEbitda 時不自現金扣除；C8 f） | 比例 | 0.8088 | 檢查 |
+| `leases.uncommenced.cashShareLabel` | Excel「自現金扣除比例」列的列名（選填；預設「未起租：自現金扣除比例（融資部分）」；MAG v0.1b′） | 文字 | None | 可沿用 |
+| `leases.uncommenced.opShare` | 未起租租約中預期列為營業租賃的比例（租金入 EBITDA 的部分；operatingInEbitda 時不另自現金扣除；1 − opShare＝融資部分，自現金扣除）——三家統一定義（MAG 對照表 r1 C21） | 比例 | 0.8088 | 檢查 |
 | `leases.uncommenced.opShareNote` | 營業部分比例的依據 | 文字 | 未起租租賃的營業部分比例（起租後營業部分成本進分部 … | 必改 |
 | `leases.rentedCompute` | 租用算力排程：[{name, start（YYYY-MM）, years, annualRent（US$bn／年）, mw, use}]；租金計入營運成本（自其他事業 EBITDA 扣除；C8 d） | 清單（物件） |  | 必改 |
 | `leases.rentedComputeNote` | 租用算力的揭露與口徑 | 文字 | 租用算力（向 neocloud 租 GPU）：未見 … | 必改 |
@@ -472,6 +473,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.mw31` | 模型期後一年新增 MW 的預設值（情境切換時改用 scenarios.mw31） | MW | 3173.5 | 檢查 |
 | `defaults.capexFloorFY0` | 首期所屬財年的全年資本支出下限（已下單的承諾，取公司指引下緣；首期＝下限 − 年初至今實際認列） | US$bn | 220 | 必改 |
 | `defaults.gpuLife` | GPU 經濟壽命（決定汰換時點與折舊） | 年 | 6 | 檢查 |
+| `defaults.gpuLifeNote` | GPU 經濟壽命的來源（Excel 列備註；MAG v0.1b r3 C19） | 文字 | Tokenomics IF_DeprLifeIT 6… | 必改 |
 | `defaults.refreshSteady` | 穩態汰換：true＝已連網 MW 不再增加的期間（觸頂後）及終值年，汰換 CapEx＝平均已連網 MW × 每 MW 建置成本 ÷ GPU 壽命 × 期間長度；false＝只有批次汰換（Oracle v0.1c） | 是／否 | 是 | 檢查 |
 | `defaults.refreshNote` | 穩態汰換的說明文字 | 文字 | v0.1c：已連網 MW 不再增加的期間（觸頂後）及… | 可沿用 |
 | `defaults.revScale` | 每 MW 年收入整體倍數（反向 DCF 與壓力測試用，1＝不調整） | 倍 | 1 | 可沿用 |
@@ -496,6 +498,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.debtCapBasis` | 瀑布新債的上限基準：leaseAdj＝(總債務＋租賃負債) ≤ 倍數 ×(EBITDA＋租金)（年化；S&P 口徑近似的投資級上限，v0.2）；ebitda＝總債務 ≤ 倍數 × 當期 EBITDA（v0.1b）；backlog＝模板的債務／backlog | 代碼 | leaseAdj | 檢查 |
 | `defaults.debtEbitdaMax` | 投資級上限倍數：leaseAdj＝調整後槓桿上限（S&P BBB- 降評門檻 4.5×，v0.2）；ebitda＝總債務 ÷ 當期 EBITDA 上限 | 倍 | 3 | 檢查 |
 | `defaults.dividend.perShareQ` | 普通股每股每季股利（Oracle v0.1b；不發股利的公司刪除 dividend 區段） | US$ | 0 | 必改 |
+| `defaults.dividend.growth` | 普通股每股股利年成長率（第 n 期 ×(1＋g)^n；預設 0；MAG v0.1b r3 C19） | 比例 | 0 | 檢查 |
+| `defaults.dividend.growthNote` | 股利成長率的來源 | 文字 | 不配息 | 必改 |
 | `defaults.dividend.sharesBase` | 股利的基礎股數（最新流通股；另加前期累計瀑布新股與已強制轉換特別股） | bn 股 | 10.7863 | 必改 |
 | `defaults.dividend.preferred` | 特別股股利，各期 | US$bn 清單 | 0、0、0、0、0 | 必改 |
 | `defaults.dividend.note` | 股利的來源與推導說明 | 文字 | 不配息（10-Q；事實總帳 sh.dps）[Inte… | 必改 |
@@ -583,6 +587,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `valuation.capm.kdPretax` | 稅前債務成本（市場邊際） | 比例 | 0.0633 | 檢查 |
 | `valuation.capm.betaSens` | β 敏感度（報告用） | 倍 清單 | 1.46、1.567 | 檢查 |
 | `valuation.capm.note` | WACC 公式與來源說明 | 文字 | WACC＝E/(D+E)×(rf＋β×ERP)＋D/… | 必改 |
+| `valuation.capm.kdNote` | 稅前債務成本的來源（Excel kd 列備註；MAG v0.1b r3 C19） | 文字 | 2026-07 新發 2066 票據有效利率（市場邊… | 必改 |
 | `valuation.capm.betaSources` | β 獨立來源清單：[{vendor, value, period, frequency, asOf, ref}]；beta＝平均、betaSens＝[最小, 最大]（MAG 對照表 r1 C13；報告用） | 清單（物件） | 2 筆 | 必改 |
 | `valuation.capm.betaNote` | β 來源與平均說明（Excel β 列備註） | 文字 | β＝獨立來源平均（MAG 對照表 r1 C13）：S… | 必改 |
 | `valuation.nolUsePct` | NOL 每年可抵用上限占應稅所得的比例（美國 80%；依公司稅籍調整；5a） | 比例 | 0.8 | 檢查 |

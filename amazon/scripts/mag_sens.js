@@ -19,7 +19,8 @@ const rows = [
   ['自研晶片係數 0.7（C2 敏感度）', s => (s.customFactor = PRICING.customFactorSens ?? .7, s)],
   ...(([lo, hi]) => [[`期初對外 AI MW ${lo.toLocaleString()}（區間下緣）`, s => pathQ(s, lo)], [`期初對外 AI MW ${hi.toLocaleString()}（區間上緣）`, s => pathQ(s, hi)]])(
     COMPANY_DATA.mag?.mw?.externalIT?.value ? [COMPANY_DATA.mag.mw.externalIT.value.low, COMPANY_DATA.mag.mw.externalIT.value.high] : [Math.round(DEFAULTS.billableOpen * .7), Math.round(DEFAULTS.billableOpen * 1.3)]), // v0.1a 區間（mag 區段）；沒有時 ±30%
-  ['對外比例 60%（−20pt，C9）', s => (s.extShare = (CM.extShare ?? .8) - .2, s)], ['對外比例 100%（＋20pt）', s => (s.extShare = Math.min(1, (CM.extShare ?? .8) + .2), s)],
+  [`對外比例 ${Math.round(((CM.extShare ?? .8) - .2) * 100)}%（−20pt，C9）`, s => (s.extShare = (CM.extShare ?? .8) - .2, s)], [`對外比例 ${Math.round(Math.min(1, (CM.extShare ?? .8) + .2) * 100)}%（＋20pt）`, s => (s.extShare = Math.min(1, (CM.extShare ?? .8) + .2), s)], // MAG v0.1b′：列名依 company.json 對外比例
+  ...((COMPANY_DATA.leases.rentedCompute || []).length ? [['租用算力租金 ×2', s => (s.rentedCompute = (COMPANY_DATA.leases.rentedCompute || []).map(c => ({ ...c, annualRent: c.annualRent * 2 })), s)], ['租用算力租金 0', s => (s.rentedCompute = [], s)]] : []), // MAG v0.1b′（Microsoft C8 d）
   ['非 AI 雲端長期年增率 5%', s => (s.legacyBiz.lines.filter(x => x.kind === `cloudResidual`).forEach(x => x.gLT = .05), s)],
   ['非 AI 雲端長期年增率 12%', s => (s.legacyBiz.lines.filter(x => x.kind === `cloudResidual`).forEach(x => x.gLT = .12), s)],
   ['GPU 壽命 5 年', s => (s.gpuLife = 5, s)],

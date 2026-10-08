@@ -230,6 +230,7 @@
     18
    ],
    "note": "10-Q 2026Q2 附註 4：尚未起租租賃 137.2B（逐年付款 2026H2 4.0、2027 11.7、2028 9.3、2029 9.5、2030 9.2、其後 93.5；起租時程與租期未揭露）。模型：平均分 4 季（2026H2–2027H1）起租、每筆 14.75 年直線付租（＝總額 ÷ 2028–2030 穩定年付款約 9.3）[Derived]；敏感度 12／18 年。",
+   "cashShareLabel": null,
    "opShare": 0.8088,
    "opShareNote": "未起租租賃的營業部分比例（起租後營業部分成本進分部 EBITDA 率、不另扣現金；融資部分為現金支出）：取在帳租賃負債的營業占比 96.32 ÷ (96.32＋13.451＋9.315)＝80.9%（10-Q 附註 3；[Derived]；類型未揭露）"
   },
@@ -606,6 +607,7 @@
   "mw31": 3173.5,
   "capexFloorFY0": 220,
   "gpuLife": 6,
+  "gpuLifeNote": "Tokenomics IF_DeprLifeIT 6 年（tk.IF_DeprLifeIT）；管理層口述伺服器 5–6 年（事實總帳 guide.server.life）[Derived]",
   "refreshSteady": true,
   "refreshNote": "v0.1c：已連網 MW 不再增加的期間（觸頂後）及終值年，汰換 CapEx＝期間平均已連網 MW × 每 MW GPU 資本支出（IF_CapexIT，只含 IT）÷ GPU 經濟壽命 × 期間長度；建築與電力屬租賃不計；取代批次汰換（mwYearEnd 批次落在模型期之後）。false＝模板口徑（只有批次汰換）。",
   "revScale": 1,
@@ -729,6 +731,8 @@
   "cashTaxRate": 0.1736,
   "dividend": {
    "perShareQ": 0.0,
+   "growth": 0,
+   "growthNote": "不配息",
    "sharesBase": 10.786314,
    "preferred": [
     0.0,
@@ -983,6 +987,7 @@
    ],
    "erp": 0.05,
    "kdPretax": 0.0633,
+   "kdNote": "2026-07 新發 2066 票據有效利率（市場邊際成本）[Verified]",
    "betaSens": [
     1.46,
     1.567

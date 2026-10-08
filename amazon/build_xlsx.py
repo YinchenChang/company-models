@@ -20,7 +20,7 @@ PREV_FY = CAL['prevFYLabel']  # 5a：首期的前一財年（營收 YoY 與比�
 PREV_FY_REV = next(h['revenue'] for h in CO['historicalPL'] if h['year'] == PREV_FY)  # v4.5：年初至今實際（原 actual1H）；數值與逐列備註都讀 company.json，滾動時隨資料更新
 # v4.3：市場共識資料檔（只讀；路徑在 company.json → meta.consensusFile）。與 HTML 相同的一致性檢查見 build_html_portable.py
 CONS = _calq.norm_consensus(_jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), CO['meta']['consensusFile']), encoding='utf-8')), CO['periods'])  # MAG v0.1b：年度鍵依模型期間標籤取用（不改數字）
-_g3 = CONS['companyGuidance'].get(CO['quarterly']['quarters'][0]['key']) or {}  # v0.1b：公司未給季度指引（或只給年增率）時兩邊皆為空；季別鍵＝季度層第一季
+_g3 = (CONS.get('companyGuidance') or {}).get(CO['quarterly']['quarters'][0]['key']) or {}  # v0.1b：公司未給季度指引（或只給年增率）時兩邊皆為空；季別鍵＝季度層第一季
 assert (_g3.get('revenueLow'), _g3.get('revenueHigh')) == (CO['callFacts']['nextQRevLo'], CO['callFacts']['nextQRevHi']), 'Q3 營收指引：company.json 與共識檔不一致'
 assert abs(CO['ytdActual']['adjEbitda'] - sum(v for k, v in CO['ytdActual']['adjEbitdaMeta'].items() if re.fullmatch(r'q\d', k))) < 1e-9, '年初至今調整後 EBITDA ≠ 各季合計'
 D, V, M = CO['defaults'], CO['valuation'], CO['defaults']['m']
@@ -524,7 +524,7 @@ MW31 = gi(r, f"{CAL['nextFYLabel']} 新增 MW（{PERIODS[4]} 預建用）", "MW"
           f"=CHOOSE({SEL},I{sc_rows['保守']},I{sc_rows['基準']},I{sc_rows['積極']})",
           "隨情境：保守 0／基準 500／積極 1,000 [Assumed]", NUM0); r += 1
 FLOOR = gi(r, "«P0» CapEx 下限（已承諾）", "US$bn", D['capexFloorFY0'], f"全年指引下緣（{TXQ['capexGuideSource']}）：當年支出多已下單"); r += 1
-LIFE = gi(r, "GPU 經濟壽命（年）", "年", D['gpuLife'], "公司伺服器與網通設備耐用年限 6 年（10-K）；Tokenomics IF_DeprLifeIT 6 年 [Interested-party]", NUM0); r += 1
+LIFE = gi(r, "GPU 經濟壽命（年）", "年", D['gpuLife'], D.get('gpuLifeNote') or "Tokenomics IF_DeprLifeIT [Derived]", NUM0); r += 1
 CXM = CO.get('capexModel') if (CO.get('capexModel') or {}).get('mode') == 'tk' and PRC else None  # MAG v0.1b：資本支出由 Tokenomics 每 MW 成本推導（AI／非 AI 分池）
 if CXM:
     EXTS = gi(r, "對外 AI MW 占 AI 總 MW 比例", "%", CXM['extShare'], CXM['extShareNote'], PCT); r += 1
@@ -563,8 +563,9 @@ r = prow(r, "表外現金租金（未起租）", "US$bn",
 _OIE = bool(CO['leases'].get('operatingInEbitda'))  # MAG v0.1b：分部 EBITDA 已扣營業租賃成本——只扣融資部分現金
 r = prow(r, "在帳現金租金（自現金扣除）", "US$bn", (CO['leases']['financePayments'] if _OIE else [f"={COLS[i]}{IN['在帳現金租金（季報到期表）']}" for i in range(5)]), NUM,
          ("融資租賃＋融資義務未折現付款（營業租賃已含在分部 EBITDA；company.json → leases.operatingInEbitdaNote）[Interested-party]" if _OIE else "＝在帳現金租金"), BLUE if _OIE else BLACK)
-ULFS = gi(r, "未起租：自現金扣除比例（融資部分）", "%", (1 - CO['leases']['uncommenced'].get('opShare', 0)) if _OIE else 1,
-          (CO['leases']['uncommenced'].get('opShareNote', '') + "；本格＝1 − 營業部分比例") if _OIE else "全部自現金扣除", PCT); r += 1
+ULFS = gi(r, CO['leases']['uncommenced'].get('cashShareLabel') or "未起租：自現金扣除比例（融資部分）", "%",  # MAG v0.1b′：列名可由 company.json 指定（Microsoft＝營業租賃部分）
+          (1 - CO['leases']['uncommenced'].get('opShare', 0)) if _OIE else 1,
+          (CO['leases']['uncommenced'].get('opShareNote', '') + "；本格＝1 − leases.uncommenced.opShare") if _OIE else "全部自現金扣除", PCT); r += 1
 r = prow(r, "JV 已承諾餘額出資", "US$bn", D['jvCommit'], NUM, "季報未揭露 JV 出資承諾（不適用）")
 r = prow(r, "JV 後續增資＋策略投資", "US$bn", CO['scenarios']['capexTemplate']['div'], NUM, "收購與策略投資，未揭露計畫 [Assumed]")
 r = prow(r, "JV／策略投資出資", "US$bn",
@@ -664,7 +665,8 @@ DCB = gi(r, "債務上限基準（ebitda＝總債務 ÷ EBITDA；backlog＝債�
 LEV = gi(r, "投資級上限（總債務 ÷ 當期 EBITDA）", "x", D.get('debtEbitdaMax', 0), "v0.2：基準為 leaseAdj 時本格＝調整後槓桿 (債務＋租賃負債) ÷ (EBITDA＋租金) 的上限。S&P BBB- 降評門檻：調整後槓桿持續 >4.5×（事實總帳 rating.sp；[Interested-party] 二手轉述）；敏感度 4.0×／5.0×；超過部分走股權再走高息債", '0.00', True); r += 1
 TERM = gi(r, "新簽合約年期", "年", D['ctrTerm'], "backlog 上限模式用：新簽約以此年期補入 backlog [Assumed]", NUM0); r += 1
 DVB = D.get('dividend') or {'perShareQ': 0, 'sharesBase': 0, 'preferred': [0] * 5}
-DPS = gi(r, "普通股股利（每股每季）", "US$", DVB['perShareQ'], "每季 $0.50 [Interested-party]；不回購（company.json → defaults.dividend）", USD); r += 1
+DPS = gi(r, "普通股股利（每股每季）", "US$", DVB['perShareQ'], (DVB.get('note') or "[Interested-party]") + "（company.json → defaults.dividend）", USD); r += 1
+DPG = gi(r, "普通股每股股利年成長率", "%", DVB.get('growth', 0), DVB.get('growthNote', '預設 0（每股股利固定）') + "；第 n 期每股＝每季 × (1＋成長率)^n（MAG v0.1b r3 C19）", PCT); r += 1  # MAG v0.1b′：備註改讀 company.json（原寫死 Oracle 文字）
 DSB = gi(r, "股利基礎股數", "bn", DVB['sharesBase'], "最新流通股；另加前期累計瀑布新股與已強制轉換的特別股", '0.0000'); r += 1
 MINC = gi(r, "最低現金", "US$bn", D['minCash'], "期前融資的現金底線 [Assumed]"); r += 1
 _BBK = D.get('buyback') or {'annual': 0, 'floorShare': 0, 'note': ''}  # MAG v0.1b：股東回饋——回購（瀑布第二步：現金不足時先減，下限＝計畫 × floorShare）
@@ -720,7 +722,7 @@ RF = gi(r, "無風險利率", "%", V['rf'], "10 年期美債（CAPM 與選擇權
 BETA = gi(r, "CAPM：β", "x", _CP['beta'], _CP.get('betaNote', '[Verified]'), '0.00'); r += 1
 ERP = gi(r, "CAPM：股權風險溢酬", "%", _CP['erp'], "[Assumed]（區間 4.5%–6%）", PCT); r += 1
 KE = gi(r, "股權成本 ke＝rf＋β × ERP", "%", f"={RF}+{BETA}*{ERP}", "CAPM", PCT); r += 1
-KD = gi(r, "稅前債務成本 kd", "%", _CP['kdPretax'], "2046 票據殖利率（市場邊際成本）[Verified]", PCT); r += 1
+KD = gi(r, "稅前債務成本 kd", "%", _CP['kdPretax'], _CP.get('kdNote') or "市場邊際成本 [Verified]", PCT); r += 1
 CE = gi(r, "股權市值 E（現價 × 季末流通股數）", "US$bn", f"={PX}*{CO['latestQuarter']['sharesOut']}", f"季末流通 {CO['latestQuarter']['sharesOut']}bn 股", NUM); r += 1
 CD = gi(r, "債務 D（評價日債務本金）", "US$bn", CO['latestQuarter']['debtPrincipal'], "強制轉換特別股視為股權，不計入 [Interested-party]", NUM); r += 1
 WCAPM = gi(r, "WACC（CAPM）＝E/(D+E) × ke＋D/(D+E) × kd ×(1 − 稅率)", "%", f"={CE}/({CD}+{CE})*{KE}+{CD}/({CD}+{CE})*{KD}*(1-{TAX})", "[Derived]", PCT); r += 1
@@ -1188,7 +1190,7 @@ frow("④ JV／策略投資出資", "US$bn",
      lambda i: (f"={H_JV}+{inref('JV／策略投資出資', i)}" if i == 0 else f"={inref('JV／策略投資出資', i)}"), NUM, BLACK,
      f"«P0»＝«YTD» 實際 {YA['jv']}（JV {YA['jvSplit']['jv']:.3f}＋策略投資 {YA['jvSplit']['strategic']:.3f}）＋«STUB» 模型。{CO['meta']['ticker']} 不發股息")
 frow("⑧ 股利（普通股＋特別股）", "US$bn",
-     lambda i: ((f"={H_DIV}+" if i == 0 else "=") + f"4*{DPS}*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}*({DSB}+§CNSP{i}§+§MCSH{i}§)+{inref('特別股股利', i)}"), NUM, BLACK,
+     lambda i: ((f"={H_DIV}+" if i == 0 else "=") + f"4*{DPS}*(1+{DPG})^{i}*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}*({DSB}+§CNSP{i}§+§MCSH{i}§)+{inref('特別股股利', i)}"), NUM, BLACK,
      "普通股＝每股每季 × 4 × 期間長度 ×(基礎股數＋前期累計瀑布新股＋已強制轉換特別股)＋特別股股利；«P0»＝«YTD» 實際＋«STUB» 模型（v0.1b）")
 div_row = FR["⑧ 股利（普通股＋特別股）"]
 frow("⑨ 回購（瀑布：現金不足時先減）", "US$bn", lambda i: "=0", NUM, BLACK, "«P0»＝«YTD» 實際＋«STUB» 瀑布後實際回購；計畫與被迫減少見下方「期前融資瀑布」（MAG v0.1b）")
@@ -2944,7 +2946,7 @@ def cons_items():
                        date=m.get('retrieved') or m.get('date') or '未列', tag=m.get('tag', ''), note=ex.get('note', ''), text=ex.get('text', '')))
     PR, PT, RA, AE, AL = C['priceReference'], C['priceTarget'], C['ratings'], C['annualEstimates'], C.get('annualEstimatesAlt')
     XCS = [] if PT.get('crossCheck') is None else (PT['crossCheck'] if isinstance(PT['crossCheck'], list) else [PT['crossCheck']])
-    QE, CG, IC, RM = C.get('quarterlyEstimates', {}), C.get('companyGuidance') or {}, C.get('independentCrossCheck'), C['recentActionsMeta']
+    QE, CG, IC, RM = C.get('quarterlyEstimates', {}), C.get('companyGuidance') or {}, C.get('independentCrossCheck'), C.get('recentActionsMeta') or {}  # MAG v0.1b′（Microsoft）：共識檔無最新分析師動作時為空
     S1 = "價格與目標價"
     add(S1, "現價參考（收盤）", [PR['close']], "US$", {**PR, 'retrieved': PR['date']}, note=f"收盤日 {PR['date']}")
     for a, x in [("平均", PT.get('mean')), ("中位數", PT.get('median')), ("最低", PT.get('low')), ("最高", PT.get('high'))]:
@@ -2987,7 +2989,7 @@ def cons_items():
         for a, k in [("營收", 'revenue'), ("EBITDA", 'ebitda'), ("EBIT", 'ebit'), ("非 GAAP 營業利益", 'ebitNonGaap'), ("淨利", 'netIncome')]:
             if all(num(QE[q].get(k)) for q in QK):
                 add(SQ, f"季度｜{a}", [QE[q][k] for q in QK], "US$bn", QE)
-        add(SQ, "季度｜說明", [], "", QE, text=QE['note'])
+        add(SQ, "季度｜說明", [], "", QE, text=QE.get('note', ''))
     SG, G6 = "公司指引（管理層預估）", CG.get(YR[0]) or {}
     for a, ks, u in [("營收（低／高）", ['revenueLow', 'revenueHigh'], "US$bn"), ("營收（下限）", ['revenueMin'], "US$bn"), ("調整後營業利益（低／高）", ['adjOpIncomeLow', 'adjOpIncomeHigh'], "US$bn"),
                      ("CapEx（低／高）", ['capexLow', 'capexHigh'], "US$bn"), ("淨現金 CapEx（上限）", ['netCashCapexMax'], "US$bn"), ("非 GAAP EPS", ['epsNonGaap'], "US$"),
@@ -3008,11 +3010,11 @@ def cons_items():
         for i, k in enumerate(ks):
             a, u = ICL.get(k, (k, ""))
             add(SL, f"{IC['provider']} 對照｜{a}", [IC[k]], u, LM, **({'note': IC.get('note', '')} if i == len(ks) - 1 else {}))
-    for x in C['recentActions']:
+    for x in C.get('recentActions') or []:  # MAG v0.1b′：共識檔無此欄時略過
         add("最新分析師動作", f"分析師動作｜{x['date']} {x['firm']}", [] if x['target'] is None else [x['target']], "US$", RM,
             text="目標價未列" if x['target'] is None else "", note=x['rating'] + (f"；{x['note']}" if x.get('note') else ""))
     add("來源與限制", "來源獨立性", [], "", {'source': "資料檔說明", 'retrieved': C['asOf']}, text=C['sourceIndependence'])
-    for i, t in enumerate(C['notFound']):
+    for i, t in enumerate(C.get('notFound') or []):  # MAG v0.1b r3（C19，Alphabet 建議 3）：選填
         add("來源與限制", f"未取得｜{i + 1}", [], "", {'source': "資料檔說明", 'retrieved': C['asOf']}, text=t)
     return it
 
@@ -3318,7 +3320,7 @@ if QC:
     # 共識（I 區；只有共識檔列出的季度，其餘「不適用」）
     QEK = [k for k in CONS.get('quarterlyEstimates', {}) if _re_q.match(r'^(\d{4}|FY\d{2})Q\d$', k)]
     _CL = {"revenue": "季度｜營收", "ebitda": "季度｜EBITDA", "ebit": "季度｜EBIT", "ebitNonGaap": "季度｜非 GAAP 營業利益", "netIncome": "季度｜淨利"}
-    ciq = lambda fld, qk: CIR(_CL[fld], QEK.index(qk)) if qk in QEK and fld in _CL else None
+    ciq = lambda fld, qk: CIR(_CL[fld], QEK.index(qk)) if qk in QEK and fld in _CL and ('共識｜' + _CL[fld]) in CI else None  # MAG v0.1b r3（C19，Alphabet 建議 3）：季度共識只有部分欄位時該欄為「不適用」
     for m in QMET:
         if m.get('consensus') == 'derived':
             def _cd(j, c):
