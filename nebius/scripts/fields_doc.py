@@ -222,6 +222,14 @@ F = [
  ('varianceReasons._note', '差異原因的說明文字（不進程式）', '文字', K),
  ('varianceReasons.list', '差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗', '清單', C),
  # Nebius v0.1a：公司專屬資料草稿（引擎尚未讀取；v0.1b 依各欄 mapTo 搬到既有欄位）
+ ('tokenomics._note', 'Tokenomics 取數層的說明（不進程式；v0.2a，比照 CoreWeave W1）', '文字', K),
+ ('tokenomics.snapshotFile', 'Tokenomics 快照檔路徑（tools/tokenomics/import_tokenomics.py 產生；Excel「Tokenomics_取數」分頁讀此檔）', '路徑', K),
+ ('tokenomics.version', '快照的 Tokenomics 版本（model/CURRENT 的版本號）', '文字', K),
+ ('tokenomics.commit', '快照的 Tokenomics commit SHA（取數時 clone 的 HEAD）', '文字', K),
+ ('tokenomics.mergeCommit', '該版 xlsx 合併進 Tokenomics master 的雜湊（下游資料契約第 5 條）', '文字', K),
+ ('tokenomics.currentFile', '取數時 Tokenomics model/CURRENT 的檔名', '文字', K),
+ ('tokenomics.names', '引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt）', '清單', C),
+ ('tokenomics.optional', '其中 Tokenomics 尚未提供時記為 missing 的名稱（目前無）', '清單', C),
  ('nebius._readme', 'Nebius 資料草稿區段的說明（v0.1a 產出；v0.1b 步驟 1 已搬移可對應既有欄位者，本區只留後續步驟會用的欄位）', '文字', M),
  ('nebius.files', 'Nebius 事實總帳、每 MW 推導、共識資料檔的路徑', '物件（路徑）', M),
  ('nebius.debt', 'Nebius 可轉債（八檔）、資產擔保融資、其他債務草稿；格式同上', '物件', M),
@@ -316,7 +324,7 @@ SECT = [('meta', '基本資料'), ('calendar', '期間與日期（v4.5）'), ('a
         ('rpo', '已簽約未認列營收（RPO）'), ('leases', '租約'), ('debt', '既有債務'), ('latestQuarter', '最新一季財報數字（10-Q）'),
         ('callFacts', '法說會與期後事項'), ('scenarios', '三個擴張情境'), ('legacy', '舊版對照值'),
         ('defaults', '預設假設（畫面上可調的輸入）'), ('valuation', '評價參數'), ('methodology', '評價方法與評等門檻'), ('peers', '同業比較（Comps）'),
-        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('priceCheck', '單價對照（v0.2；只用於簡報，不進入計算）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('nebius', 'Nebius 資料草稿（v0.1a；引擎尚未讀取）')]
+        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('priceCheck', '單價對照（v0.2；只用於簡報，不進入計算）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('tokenomics', 'Tokenomics 取數層（v0.2a；快照檔、版本與引用名稱）'), ('nebius', 'Nebius 資料草稿（v0.1a；引擎尚未讀取）')]
 out, shown = ['**填表慣例**',
                '- 金額單位是**十億美元（US$bn）**，例如 4.653 代表 46.53 億美元；另有標示的例外：每股（US$）、每 MW 建置成本（百萬美元／MW，US$m/MW）、股數（十億股，bn）。',
                '- 「比例」寫成小數（0.25＝25%）；標示「%」的欄位寫成百分點（25＝25%）。兩種寫法沿用既有程式，不可混用。',

@@ -1279,6 +1279,43 @@
   "subtitle": "客戶預付只覆蓋約 {prepayPct} 的資本支出；剩下 {gap} 缺口仍靠資產擔保債、可轉債與新股——現價要成立，每 MW 年收入得是模型的 {rvMult} 倍",
   "headerTag": "MW × 每 MW · 預付優先"
  },
+ "tokenomics": {
+  "_note": "算力相關的產業與物理層資料改引用 Tokenomics（YinchenChang/Tokenomics）：只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱，經版本固定的快照檔讀入（tools/tokenomics/import_tokenomics.py；下游資料契約第 2 條）；模型主值一律取「基準」成本情境，低成本／高成本只作敏感度。Tokenomics 每 GW＝IT 關鍵電力。Excel「Tokenomics_取數」分頁建具名範圍（TK_）。v0.2a：取代手工 JSON data/permw_tokenomics_20261007.json（v5.24，已標「已被快照取代」）；v5.24 → v5.27 Interface 既有數值逐格不變。",
+  "snapshotFile": "data/tokenomics_snapshot_v5.27.json",
+  "version": "v5.27",
+  "commit": "ca78a8f42af36caa1af2cc6234d8e322f0415769",
+  "mergeCommit": "19d667f",
+  "currentFile": "20261008_Tokenomics_v5.27.xlsx",
+  "names": [
+   "IF_RacksPerGW",
+   "IF_GPUsPerGW",
+   "IF_FacilityGW",
+   "IF_CapexIT",
+   "IF_CapexFacility",
+   "IF_CapexTotal",
+   "IF_HoldAcct",
+   "IF_HoldEcon",
+   "IF_GPUhrEcon",
+   "IF_PowerCost",
+   "IF_Util",
+   "L1_FacCapexMW",
+   "L1_GPUhr_GB200_vsCW",
+   "L1_GPUhr_GB300_vsBE",
+   "L1_RevGW_Fleet_VR200",
+   "IF_DeprLifeIT",
+   "IF_DeprIT",
+   "IF_DeprFac",
+   "IF_AvgDraw",
+   "IF_PowerPrice",
+   "IF_MaintIT",
+   "IF_MaintFac",
+   "IF_StaffSW",
+   "IF_TaxIns",
+   "IF_OpexGW",
+   "IF_RevGWFleet"
+  ],
+  "optional": []
+ },
  "nebius": {
   "_readme": "Nebius 資料草稿（v0.1a 產出；v0.1b 步驟 1 已把可對應既有欄位的資料搬入 meta、ytdActual、latestQuarter、callFacts、debt、valuation 等）。本區只保留引擎尚未使用、後續步驟（預付款、融資瀑布、可轉債稀釋、其他事業與持股、每 MW 三情境）會用的欄位；每欄 value＋unit＋ref（data/nebius_facts_20261007.json 的 id）。",
   "files": {

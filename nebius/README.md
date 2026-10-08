@@ -606,6 +606,19 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.headerTag` | 頁首標籤列的模型主軸短語（v0.2） | 文字 | MW × 每 MW · 預付優先 | 必改 |
 | `texts.mwYearEndNotes` | 各年底主動電力的來源說明，以年份為鍵（Excel「輸入與假設」說明欄；5a） | 物件（文字） | 物件（2025） | 必改 |
 
+### `tokenomics`：Tokenomics 取數層（v0.2a；快照檔、版本與引用名稱）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `tokenomics._note` | Tokenomics 取數層的說明（不進程式；v0.2a，比照 CoreWeave W1） | 文字 | 算力相關的產業與物理層資料改引用 Tokenomic… | 可沿用 |
+| `tokenomics.snapshotFile` | Tokenomics 快照檔路徑（tools/tokenomics/import_tokenomics.py 產生；Excel「Tokenomics_取數」分頁讀此檔） | 路徑 | data/tokenomics_snapshot_v… | 可沿用 |
+| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v5.27 | 可沿用 |
+| `tokenomics.commit` | 快照的 Tokenomics commit SHA（取數時 clone 的 HEAD） | 文字 | ca78a8f42af36caa1af2cc6234… | 可沿用 |
+| `tokenomics.mergeCommit` | 該版 xlsx 合併進 Tokenomics master 的雜湊（下游資料契約第 5 條） | 文字 | 19d667f | 可沿用 |
+| `tokenomics.currentFile` | 取數時 Tokenomics model/CURRENT 的檔名 | 文字 | 20261008_Tokenomics_v5.27.… | 可沿用 |
+| `tokenomics.names` | 引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW、IF_RevGWFleet | 檢查 |
+| `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（目前無） | 清單 |  | 檢查 |
+
 ### `nebius`：Nebius 資料草稿（v0.1a；引擎尚未讀取）
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
