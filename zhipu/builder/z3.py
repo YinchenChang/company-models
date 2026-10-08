@@ -159,24 +159,24 @@ def build(wb, D, Z, snap):
     C.add("新法 ÷ 舊法", "倍", {c: f"={c}«C.g_tok»/{c}«C.g_old»" for c in ALL}, "類型加權使快取命中為主的流量所需 GW 大幅下降", key="g_ratio")
 
     # 五、算力服務費（D8r、D10r）
-    C.section("五、算力服務費（財報推得；RMB 億；2025 年報、1H26 中期公告）：推論＝開放平台及 API 銷售成本 × 占比（D8r）；研發＝研發開支（扣股權報酬）× 算力占比（D10r）")
+    C.section("五、算力服務費（財報推得；RMB 億；2025 年報、1H26 中期公告）：r2 P1：總算力費＝營業成本中的計算服務費（推估＝開放平台及 API 銷售成本 × 占比）＋研發項下算力費（研發開支 × 1H25 占比 71.8%）；推論與研發不再以會計科目拆分（招股章程第 255 頁：研發算力費涵蓋訓練、推理及持續開發）")
     cal = ("D", "K")
     sv = lambda k25, k1h: {"D": f"={S(k25)}", "K": f"={S(k1h)}"}  # noqa: E731
     C.add("開放平台及 API 銷售成本（推算）", "RMB 億", sv("cogs_api_fy25", "cogs_api_1h26"), "SRC_ZP_197、195（Derived：毛利 − 收入）", key="f_cogs_api")
-    C.add("推論算力支出＝API 銷售成本 × 算力費占比", "RMB 億", {c: f"={c}«C.f_cogs_api»*{I('inf_fee_share')}" for c in cal},
-          "Inputs（D8r：基準 1＝上限；下限 0.22＝FY2024 銷售成本中算力費占比）", key="f_inf", name="CMP_InfFee")
+    C.add("營業成本中的計算服務費（推估）＝API 銷售成本 × 算力費占比", "RMB 億", {c: f"={c}«C.f_cogs_api»*{I('inf_fee_share')}" for c in cal},
+          "Inputs（基準 1＝上限；下限 0.22＝FY2024 銷售成本中算力費占比）。r2 P1：只是總算力費的一部分（招股章程期間占 2–3%），不再等於推論支出；舊法（D8r）以本列為推論支出，見第七節對照與第十五節", key="f_inf", name="CMP_InfFee")
     C.add("研發開支", "RMB 億", sv("rd_fy25", "rd_1h26"), "SRC_ZP_139、199", key="f_rd_tot")
     C.add("股權報酬（總額）", "RMB 億", sv("sbc_fy25", "sbc_1h26"), "SRC_ZP_142、202", key="f_sbc")
     C.add("研發開支（扣股權報酬中研發部分）", "RMB 億", {c: f"={c}«C.f_rd_tot»-{c}«C.f_sbc»*{I('sbc_rd_share')}" for c in cal},
           "股權報酬 × 研發比例（Inputs，Analogy：研發人員占比 74.4%）", key="f_rd_x")
-    C.add("研發算力支出（基準：占比法）＝研發（扣股權報酬）× 算力占比", "RMB 億", {c: f"={c}«C.f_rd_x»*{I('rd_compute_share')}" for c in cal},
-          "D10r 兩法並列、取本法為基準；占比 Inputs（FY2024 70.7%，60–80%）", key="f_rd", name="CMP_RDFee")
+    C.add("研發項下算力服務費（基準：P1）＝研發開支 × 1H25 占比", "RMB 億", {c: f"={c}«C.f_rd_tot»*{I('rd_fee_share')}" for c in cal},
+          "r2 P1：占比 Inputs（招股章程 1H25 71.8%，SRC_ZP_640；Analogy 60–80%）；分母為研發開支總額（同招股章程）", key="f_rd", name="CMP_RDFee")
     C.add("研發算力支出（對照：扣除法）＝研發（扣股權報酬）−（薪酬總額 − 股權報酬）× 研發人員占比", "RMB 億",
-          {c: f"={c}«C.f_rd_x»-({S('remun_fy25' if c == 'D' else 'remun_1h26')}-{c}«C.f_sbc»)*{S('rd_staff_pct_1h25')}/{pct}" for c in cal},
-          "D10r 第一法；薪酬 SRC_ZP_163、224；研發人員占比 SRC_ZP_240（Interested-party）；扣除法把研發中的非人事非算力費用也算成算力（上限）", key="f_rd_a")
-    C.add("對照：FY2024 研發算力占研發開支（SRC）", "比例", {"D": f"={S('rd_compute_fy24')}/{S('rd_fy24')}"}, "SRC_ZP_232 ÷ SRC_ZP_048（媒體轉述招股章程）", key="f_fy24")
-    C.add("算力服務費合計（推論＋研發）", "RMB 億", {c: f"={c}«C.f_inf»+{c}«C.f_rd»" for c in cal}, "", key="f_tot", name="CMP_ComputeFee")
-    C.add("研發占算力服務費", "比例", {c: f"={c}«C.f_rd»/{c}«C.f_tot»" for c in cal}, "1H26 值為 2H26 起研發占比路徑的起點（第八節）", key="f_rdsh")
+          {c: f"={c}«C.f_rd_x»-({S('remun_fy25' if c == 'D' else 'remun_1h26')}-{c}«C.f_sbc»)*{S('employees_rd_share_1h25')}/{pct}" for c in cal},
+          "D10r 第一法；薪酬 SRC_ZP_163、224；研發人員占比 SRC_ZP_848（招股章程第 221 頁 657／883；r2 P2 改引用一手列）；扣除法把研發中的非人事非算力費用也算成算力（上限）", key="f_rd_a")
+    C.add("對照：FY2024 研發算力占研發開支（SRC）", "比例", {"D": f"={S('rd_compute_fy24_p')}/{S('rd_fy24')}"}, "SRC_ZP_613（招股章程一手；r2 P2 取代媒體 SRC_ZP_232）÷ SRC_ZP_048", key="f_fy24")
+    C.add("總算力費＝營業成本計算服務費＋研發項下算力費", "RMB 億", {c: f"={c}«C.f_inf»+{c}«C.f_rd»" for c in cal}, "r2 P1；銷售及營銷項下算力費未揭露（招股章程期間占總算力費 0–1.7%），不另估（見報告）", key="f_tot", name="CMP_ComputeFee")
+    C.add("研發科目占總算力費（會計科目；只列）", "比例", {c: f"={c}«C.f_rd»/{c}«C.f_tot»" for c in cal}, "Z3–Z5b 以本列為研發占比起點；r2 P1 起改用研發 GW 殘差占比（第八節）", key="f_rdsh")
 
     # 六、每 GW 價格（D9、D9r）
     C.section("六、每 GW 年算力價格（租用；D9r）＝卡時租價 × 每 GW 卡數 × 每年小時 ÷ 10^8（元→億）；2H26 起 ×（1＋年變動率），2H26 以半年計")
@@ -208,13 +208,15 @@ def build(wb, D, Z, snap):
     C.add("對照：組合後每 GW 年價格（美元）", "$B／GW／年", {c: f"={c}«C.p»/{fx}/{bn}" for c in ALL}, "÷ USD/CNY ÷ 10（億→十億）；OpenAI v0.6 合約價 12（INP_229，8–20）", key="p_usd")
 
     # 七、η（D8、D8r）
-    C.section("七、η（有效產出係數）＝token 換算推論 GW ÷ 支出換算推論 GW（2025、1H26 各自校準；2H26 起依 Inputs 路徑，基準沿用 1H26）")
-    C.add("支出換算推論 GW＝推論算力支出 ÷（每 GW 價格 × 期間比例）", "GW", {c: f"={c}«C.f_inf»/{per(c, f'{c}«C.p»')}" for c in cal},
-          "D8r", key="e_spend", name="CMP_SpendGW")
-    C.add("η（校準值）", "倍", {c: f"={c}«C.g_tok»/{c}«C.e_spend»" for c in cal}, "D 欄＝2025、K 欄＝1H26（Derived）", key="e_cal")
+    C.section("七、η（有效產出係數）：r2 P1 基準＝1（信任 TK 物理）；校準期研發殘差 < 訓練最低占比 × 供給時，上調為使殘差＝最低占比的值（WARN）；舊法（D8r：token GW ÷ API 銷售成本換算 GW）以開關保留；2H26 起依 Inputs 路徑，基準沿用 1H26")
+    C.add("對照（舊法 D8r）：API 銷售成本換算推論 GW＝營業成本計算服務費 ÷（每 GW 價格 × 期間比例）", "GW", {c: f"={c}«C.f_inf»/{per(c, f'{c}«C.p»')}" for c in cal},
+          "Z3–Z5b 的推論支出口徑；r2 P1 起只用於舊法 η 與 R4 對照", key="e_spend", name="CMP_SpendGW")
+    C.add("η（校準值）", "倍",
+          {c: f"=IF({I('eta_old_sw')},{c}«C.g_tok»/{c}«C.e_spend»,MAX({I('eta_base')},{c}«C.g_tok»/({c}«C.sup»*(1-{I('min_train')}))))" for c in cal},
+          "r2 P1：＝MAX（基準 1, token 換算 GW ÷［供給 ×（1−訓練最低占比）］）；開關＝1 時為舊法（token GW ÷ API 銷售成本換算 GW）。D 欄＝2025、K 欄＝1H26", key="e_cal")
     C.add("η 2025", "倍", {"D": "=D«C.e_cal»"}, "", key="e25", name="CMP_Eta2025", name_col="D")
     C.add("η 1H26", "倍", {"K": "=K«C.e_cal»"}, "", key="e1h", name="CMP_Eta1H26", name_col="K")
-    C.add("對照：舊法 η（Z3：參考組合 token GW ÷ 支出換算 GW）", "倍", {c: f"={c}«C.g_old»/{c}«C.e_spend»" for c in cal}, "Z3b F3：只列", key="e_old",
+    C.add("對照：Z3 舊法 η（參考組合 token GW ÷ API 銷售成本換算 GW）", "倍", {c: f"={c}«C.g_old»/{c}«C.e_spend»" for c in cal}, "Z3b F3：只列", key="e_old",
           name="CMP_EtaOld")
     sw, tgt, ty = I("eta_sw"), I("eta_target"), I("eta_target_year")
     swx = f"IF($K$«C.e_cal»<={tgt},{I('eta_up_sw')},{sw})"
@@ -237,11 +239,11 @@ def build(wb, D, Z, snap):
 
     def rdsh(c):
         if c in cal:
-            return f"={c}«C.f_rdsh»"
+            return f"=IF({c}«C.p1_lift»,{I('min_train')},{c}«C.rd»/{c}«C.sup»)"
         if c == "E":
             return None
-        return f"=$K$«C.f_rdsh»+{I('rd_share_sw')}*({tgt_rd}-$K$«C.f_rdsh»)*MIN({y30}-{y26},{yr(c)}-{y26})/({y30}-{y26})"
-    C.add("研發占非閒置供給比例（路徑）", "比例", rdsh, "2025、1H26＝實際（研發算力費 ÷ 合計）；2H26 起＝1H26 實際＋開關 ×（2030 目標 − 1H26）× 進度；開關 0（基準）＝沿用 1H26",
+        return f"=$K$«C.rdsh»+{I('rd_share_sw')}*({tgt_rd}-$K$«C.rdsh»)*MIN({y30}-{y26},{yr(c)}-{y26})/({y30}-{y26})"
+    C.add("研發占非閒置供給比例（路徑）", "比例", rdsh, "2025、1H26＝研發 GW 殘差 ÷ 供給（r2 P1；η 上調時＝訓練最低占比；Z3–Z5b 為會計科目占比）；2H26 起＝1H26 值＋開關 ×（2030 目標 − 1H26）× 進度；開關 0（基準）＝沿用 1H26",
           key="rdsh", name="CMP_RDShare")
     C.add("每 GW 資本支出（國產；IT＋廠房）", "RMB 億／GW",
           {c: f"=SUMIFS(TK_IF_CapexTotal,TK_HdrGen,{kh},TK_HdrCost,{kc})*{I('hold_ratio_dom')}*{fx}*{bn}" for c in ALL},
@@ -272,13 +274,14 @@ def build(wb, D, Z, snap):
     C.section("九、容量上限（V1a 同式）、研發 GW（殘差，D12）與總需求 GW")
     C.add("推論可用 GW＝供給 ×（1−閒置）×（1−訓練最低占比）", "GW",
           lambda c: wavg("avail") if c == "E" else f"={c}«C.sup»*(1-{idle})*(1-{I('min_train')})", "", key="avail", name="CMP_InfAvailGW")
-    C.add("推論 GW（截頂後）", "GW", lambda c: wavg("infcap") if c == "E" else (f"={c}«C.eff»" if c in cal else f"=MIN({c}«C.avail»,{c}«C.eff»)"),
-          "校準期＝有效推論（營收＝實際）；之後＝MIN（可用, 有效）", key="infcap", name="CMP_InfGW")
+    C.add("推論 GW（截頂後）", "GW", lambda c: wavg("infcap") if c == "E" else (f"={c}«C.eff»" if c in cal else
+          f"=IF({c}«C.rdsh»>={I('min_train')},{c}«C.eff»,MIN({c}«C.avail»,{c}«C.eff»))"),
+          "校準期＝有效推論（營收＝實際）；之後＝MIN（可用, 有效）；研發占比 ≥ 訓練最低占比時供給依需求配置、必然足夠，直接取有效推論（r2：避免浮點誤差翻轉缺口旗標）", key="infcap", name="CMP_InfGW")
     C.add("容量上限係數（1＝未受限）", "倍", {c: f"={c}«C.infcap»/{c}«C.eff»" for c in ALL}, "Revenue 容量上限列引用（只回乘雲端營收）", key="cap", name="CMP_CapFactor")
     C.add("缺口旗標（1＝需求超過可用 GW）", "旗標", {c: f"=({c}«C.eff»>{c}«C.infcap»)" for c in ALL}, "不自動假設新增算力", key="flag", name="CMP_CapFlag")
     C.add("研發 GW（殘差）", "GW",
           lambda c: wavg("rd") if c == "E" else (f"={c}«C.sup»-{c}«C.infcap»" if c in cal else f"={c}«C.sup»*(1-{idle})-{c}«C.infcap»"),
-          "校準期＝供給 − 推論（＝研發算力費 ÷ 每 GW 價格）；之後＝供給 ×（1−閒置）− 推論（截頂後）", key="rd", name="CMP_RDGW")
+          "校準期＝供給 − 推論（r2 P1：殘差，同 OpenAI；不再等於研發算力費 ÷ 每 GW 價格）；之後＝供給 ×（1−閒置）− 推論（截頂後）", key="rd", name="CMP_RDGW")
     C.add("總需求 GW＝有效推論（未截頂）＋研發", "GW", {c: f"={c}«C.eff»+{c}«C.rd»" for c in ALL}, "", key="dem", name="CMP_DemandGW")
     C.add("檢查：推論（截頂後）＋研發＋閒置 − 供給", "GW", {c: f"={c}«C.infcap»+{c}«C.rd»+{c}«C.idle»-{c}«C.sup»" for c in ALL}, "各期應為 0", key="ident")
     C.add("對照：研發 GW（扣除法研發算力費 ÷ 每 GW 價格）", "GW", {c: f"={c}«C.f_rd_a»/{per(c, f'{c}«C.p»')}" for c in cal},
@@ -338,11 +341,16 @@ def build(wb, D, Z, snap):
         C.add(f"A 每 GW 價格（{zh}租價）", "RMB 億／GW／年",
               {c: "=" + "+".join(f"{c}«C.s_{f}»*{c}«C.p_{f}»*{pr[tag][f]}/{base_r[f]}" for f in FAM) for c in two},
               "各族租價取區間端點（Hopper 11.83／18.75；H20 7.03／8.16；910B 2.74／4.28）", key=f"{k}_p")
-        C.add(f"A η 1H26（{zh}）", "倍", {"K": f"=K«C.g_tok»/(K«C.f_inf»/(K«C.{k}_p»*{frac('K')}))"}, "", key=f"{k}_eta")
-        C.add(f"A 供給 GW（{zh}）", "GW",
-              {"K": f"=K«C.f_tot»/(K«C.{k}_p»*{frac('K')})",
-               "I": f"=I«C.g_tok»/$K$«C.{k}_eta»/((1-{idle})*(1-I«C.rdsh»))"}, "1H26＝算力費 ÷ 價格；2030＝有效推論 ÷［(1−閒置)(1−研發占比)］（η 沿用）", key=f"{k}_sup")
-        C.add(f"A 供給 VR 等值 GW（{zh}）", "GW", {c: f"={c}«C.{k}_sup»*{c}«C.vrf»" for c in two}, "", key=f"{k}_vr")
+        C.add(f"A 供給 GW（{zh}）", "GW", {"K": f"=K«C.f_tot»/(K«C.{k}_p»*{frac('K')})"}, "1H26＝總算力費 ÷ 價格", key=f"{k}_sup")
+        C.add(f"A η 1H26（{zh}）", "倍",
+              {"K": f"=IF({I('eta_old_sw')},K«C.g_tok»/(K«C.f_inf»/(K«C.{k}_p»*{frac('K')})),MAX({I('eta_base')},K«C.g_tok»/(K«C.{k}_sup»*(1-{I('min_train')}))))"},
+              "同第七節（r2 P1）", key=f"{k}_eta")
+        C.add(f"A 研發占比 1H26→2030（{zh}）", "比例",
+              {"K": f"=(1-K«C.g_tok»/K«C.{k}_eta»/K«C.{k}_sup»)", "I": f"=K«C.{k}_rdsh»+{I('rd_share_sw')}*({tgt_rd}-K«C.{k}_rdsh»)"},
+              "1H26＝研發殘差 ÷ 供給；2030＝同第八節路徑", key=f"{k}_rdsh")
+        C.add(f"A 2030 供給 GW（{zh}）", "GW", {"I": f"=I«C.g_tok»/$K$«C.{k}_eta»/((1-{idle})*(1-I«C.{k}_rdsh»))"},
+              "有效推論 ÷［(1−閒置)(1−研發占比)］（η 沿用）", key=f"{k}_sup30")
+        C.add(f"A 供給 VR 等值 GW（{zh}）", "GW", {"K": f"=K«C.{k}_sup»*K«C.vrf»", "I": f"=I«C.{k}_sup30»*I«C.vrf»"}, "", key=f"{k}_vr")
     C.add("B η 收斂至 2030＝目標：2030 有效推論 GW", "GW", {"I": f"=I«C.g_tok»/{tgt}"}, "η 線性收斂至 1 的情境（η>1 時開關＝1）", key="B_eff")
     C.add("B η 收斂：2030 供給 GW", "GW", {"I": f"=I«C.B_eff»/((1-{idle})*(1-I«C.rdsh»))"}, "", key="B_sup")
     C.add("B η 收斂：2030 供給 VR 等值 GW", "GW", {"I": "=I«C.B_sup»*I«C.vrf»"}, "", key="B_vr")
@@ -352,8 +360,11 @@ def build(wb, D, Z, snap):
         C.add(f"C 國產產出比（{zh}）", "倍", {c: f"={ralt}" for c in two}, f"Inputs 國產產出比的{zh}欄", key=f"{k}_r")
         C.add(f"C 組合產出係數（{zh}）", "倍", {c: f"={c}«C.s_hop»+{c}«C.s_h20»*{c}«C.r_h20»+{c}«C.s_dom»*{c}«C.{k}_r»" for c in two}, "", key=f"{k}_mixf")
         C.add(f"C token 換算 GW（{zh}）", "GW", {c: f"={c}«C.g_tok»*{c}«C.mixf»/{c}«C.{k}_mixf»" for c in two}, "各族產能同比例變動：token GW ∝ 1 ÷ 組合產出係數", key=f"{k}_g")
-        C.add(f"C η 1H26（{zh}）", "倍", {"K": f"=K«C.{k}_g»/K«C.e_spend»"}, "", key=f"{k}_eta")
-        C.add(f"C 2030 供給 GW（{zh}）", "GW", {"I": f"=I«C.{k}_g»/$K$«C.{k}_eta»/((1-{idle})*(1-I«C.rdsh»))"}, "", key=f"{k}_sup")
+        C.add(f"C η 1H26（{zh}）", "倍",
+              {"K": f"=IF({I('eta_old_sw')},K«C.{k}_g»/K«C.e_spend»,MAX({I('eta_base')},K«C.{k}_g»/(K«C.sup»*(1-{I('min_train')}))))"}, "同第七節（r2 P1）", key=f"{k}_eta")
+        C.add(f"C 研發占比 1H26→2030（{zh}）", "比例",
+              {"K": f"=(1-K«C.{k}_g»/K«C.{k}_eta»/K«C.sup»)", "I": f"=K«C.{k}_rdsh»+{I('rd_share_sw')}*({tgt_rd}-K«C.{k}_rdsh»)"}, "", key=f"{k}_rdsh")
+        C.add(f"C 2030 供給 GW（{zh}）", "GW", {"I": f"=I«C.{k}_g»/$K$«C.{k}_eta»/((1-{idle})*(1-I«C.{k}_rdsh»))"}, "", key=f"{k}_sup")
         C.add(f"C 2030 供給 VR 等值 GW（{zh}）", "GW",
               {"I": f"=I«C.{k}_sup»*(I«C.s_hop»*I«C.vr_hop»+I«C.s_h20»*I«C.vr_h20»+I«C.s_dom»*I«C.vr_hop»*I«C.{k}_r»)"}, "", key=f"{k}_vr")
 
@@ -384,6 +395,27 @@ def build(wb, D, Z, snap):
           {c: f"=SUMPRODUCT(($F$6:$I$6<{c}$6)*($F$«C.cpx»:$I$«C.cpx»))/{c}«C.life»" for c in LATE},
           "只用於 Cost 第十節攤提口徑並列；現金口徑（命題、Funding）仍以資本支出實付計", key="amort", name="CMP_OwnedAmort")
 
+    # 十五、r2 P1：招股章程算力費口徑（FY2024、1H2025）與舊法對照
+    C.section("十五、r2 P1：招股章程的算力費去向（FY2024、1H2025；只列）、η 上調判斷、舊法（D8r：API 銷售成本＝推論支出）對照")
+    for per_, sfx, zh in (("fy24", "fy24", "FY2024"), ("1h25", "1h25", "1H2025")):
+        C.add(f"招股章程 {zh}：研發項下算力服務費", "RMB 億", {"D": f"={S('rd_compute_' + sfx + '_p')}"}, f"SRC_ZP（Verified；第 267 頁）", key=f"pp_rd_{per_}")
+        C.add(f"招股章程 {zh}：營業成本中的計算服務費", "RMB 億", {"D": f"={S('cogs_compute_p_' + sfx)}"}, "SRC_ZP（Verified；第 264 頁：本地化交付前訓練微調＋雲端推論）", key=f"pp_cogs_{per_}")
+        C.add(f"招股章程 {zh}：銷售及營銷項下算力服務費", "RMB 億", {"D": f"={S('sm_compute_' + sfx)}"}, "SRC_ZP（Verified；第 267 頁）", key=f"pp_sm_{per_}")
+        C.add(f"招股章程 {zh}：算力服務費合計", "RMB 億", {"D": f"={S('cmp_fee_total_' + sfx + '_p')}"}, "SRC_ZP（Derived：三科目加總）", key=f"pp_tot_{per_}")
+        C.add(f"招股章程 {zh}：營業成本計算服務費占合計", "比例", {"D": f"=D«C.pp_cogs_{per_}»/D«C.pp_tot_{per_}»"}, "P1 理由：只占 2–3%", key=f"pp_cogsh_{per_}")
+        C.add(f"招股章程 {zh}：研發項下算力費 ÷ 研發開支", "比例", {"D": f"={S('rd_compute_share_' + ('fy24' if per_ == 'fy24' else '1h25_p'))}/{pct}"},
+              "SRC_ZP_638／640；1H25 值為 Inputs 研發占比基準", key=f"pp_rdsh_{per_}")
+    C.add("對照：Z3 占比法（研發算力費）＝研發（扣股權報酬）× 0.707（D10r）", "RMB 億", {c: f"={c}«C.f_rd_x»*{I('rd_compute_share')}" for c in cal},
+          "Z3–Z5b 基準（D10r；FY2024 70.7%）；r2 P1 起只列", key="f_rd_z3")
+    C.add("η 上調前研發殘差＝供給 − token 換算 GW ÷ η 基準", "GW", {c: f"={c}«C.sup»-{c}«C.g_tok»/{I('eta_base')}" for c in cal}, "負＝以 TK 物理計，token 已超過全部供給", key="p1_res0")
+    C.add("η 上調前研發殘差占供給", "比例", {c: f"={c}«C.p1_res0»/{c}«C.sup»" for c in cal}, "< 訓練最低占比 → η 上調（WARN）", key="p1_res0sh")
+    C.add("η 上調旗標（1＝殘差觸及訓練最低占比、η 高於基準）", "旗標", {c: f"=(1-{I('eta_old_sw')})*({c}«C.e_cal»>{I('eta_base')})" for c in cal}, "Checks WARN；舊法開關＝1 時為 0", key="p1_lift")
+    C.add("舊法（D8r）：η＝token 換算 GW ÷ API 銷售成本換算 GW", "倍", {c: f"={c}«C.g_tok»/{c}«C.e_spend»" for c in cal}, "Z3b–Z5b 基準 η（η 開關＝1 時第七節採用）", key="p1_eta_old",
+          name="CMP_EtaD8r")
+    C.add("舊法（D8r）：推論 GW＝API 銷售成本換算 GW", "GW", {c: f"={c}«C.e_spend»" for c in cal}, "", key="p1_inf_old")
+    C.add("舊法（D8r）：研發 GW＝供給 − 推論", "GW", {c: f"={c}«C.sup»-{c}«C.e_spend»" for c in cal}, "供給同第八節（r2 P1 總算力費 ÷ 價格）", key="p1_rd_old")
+    C.add("舊法（D8r）：研發占供給", "比例", {c: f"={c}«C.p1_rd_old»/{c}«C.sup»" for c in cal}, "Z3–Z5b 的研發占比起點（會計科目）", key="p1_rdsh_old")
+
     # ══════════════════════════════════ Cost ══════════════════════════════════
     K = Sheet(wb, "Cost", "K",
               "Cost — 成本與命題表：算力成本（2025、1H26＝算力服務費實付；之後＝租用 GW × 每 GW 價格＋自有資本支出）、供應商持有成本與雲端毛利、本地化部署交付成本、非算力成本、股權報酬、每 VR 等值 GW 命題表（人民幣與美元）",
@@ -395,8 +427,8 @@ def build(wb, D, Z, snap):
     cmp_ = lambda key, c: f"Compute!{c}«C.{key}»"  # noqa: E731
 
     K.section("一、算力成本（D10）：2025、1H26＝算力服務費實付（Compute 第五節）；2H26 起＝租用 GW × 每 GW 價格 × 期間比例＋自有資本支出")
-    K.add("推論算力支出（實付）", "RMB 億", {c: f"={cmp_('f_inf', c)}" for c in cal}, "", key="inf_fee")
-    K.add("研發算力支出（實付）", "RMB 億", {c: f"={cmp_('f_rd', c)}" for c in cal}, "", key="rd_fee")
+    K.add("營業成本中的計算服務費（實付推估）", "RMB 億", {c: f"={cmp_('f_inf', c)}" for c in cal}, "r2 P1：不再等於推論支出", key="inf_fee")
+    K.add("研發項下算力服務費（實付推估）", "RMB 億", {c: f"={cmp_('f_rd', c)}" for c in cal}, "r2 P1：研發開支 × 71.8%；含推理", key="rd_fee")
 
     def rentpay(c):
         if c in cal:
@@ -413,8 +445,8 @@ def build(wb, D, Z, snap):
         K.add(f"算力成本拆分：{zh}", "RMB 億",
               lambda c, g=g, key_=key_: f"=K«K.{key_}»+L«K.{key_}»" if c == "E" else
               f"=IF({cmp_('sup', c)},{c}«K.cc»*{cmp_(g, c)}/{cmp_('sup', c)},{cmp_('sup', c)})",
-              "依 GW 占比拆分（校準期：推論＝推論算力支出、研發＝研發算力支出）；供給為 0 時顯示 0", key=key_, name={"cc_inf": "COST_InfCompute", "cc_rd": "COST_RDCompute"}.get(key_))
-    K.add("檢查：算力成本 −（實付推論＋研發）", "RMB 億", {c: f"={c}«K.cc»-{c}«K.inf_fee»-{c}«K.rd_fee»" for c in cal}, "2025、1H26 應為 0（Checks）", key="ck_fee")
+              "依 GW 占比拆分（r2 P1：校準期也依 GW 占比，不再等於會計科目）；供給為 0 時顯示 0", key=key_, name={"cc_inf": "COST_InfCompute", "cc_rd": "COST_RDCompute"}.get(key_))
+    K.add("檢查：算力成本 −（營業成本計算服務費＋研發項下算力費）", "RMB 億", {c: f"={c}«K.cc»-{c}«K.inf_fee»-{c}«K.rd_fee»" for c in cal}, "2025、1H26 應為 0（Checks）", key="ck_fee")
 
     K.section("二、供應商持有成本與供應商推算毛利（D10：持有成本＝租用 GW × TK IF_HoldEcon（Hopper）× 持有比 × 匯率；差額＝供應商推算毛利，只作參考；Z5b V1：2H26 起不得為負）")
     hr = {"hop": None, "h20": I("hold_ratio_h20"), "dom": I("hold_ratio_dom")}
@@ -452,7 +484,7 @@ def build(wb, D, Z, snap):
 
     def hc(c):
         if c == "D":
-            return f"=AVERAGE({S('employees_1h25')},{S('employees_fy25')})"
+            return f"=AVERAGE({S('employees_1h25_p')},{S('employees_fy25')})"
         if c == "K":
             return f"=AVERAGE({S('employees_fy25')},{S('employees_1h26')})"
         if c == "L":
@@ -460,7 +492,7 @@ def build(wb, D, Z, snap):
         if c == "E":
             return f"=(K«K.hc»+L«K.hc»)/{halves}"
         return f"={PREV[c]}«K.hc»*(1+{I('hc_g')})"
-    K.add("員工人數（期間平均）", "人", hc, "2025＝AVERAGE（2025-06-30 883, 2025-12-31 1,094）；1H26＝AVERAGE（1,094, 2026-06-30 981）（SRC_ZP_223、162、222）；之後 Inputs 成長率",
+    K.add("員工人數（期間平均）", "人", hc, "2025＝AVERAGE（2025-06-30 883, 2025-12-31 1,094）；1H26＝AVERAGE（1,094, 2026-06-30 981）（SRC_ZP_844 招股章程、162、222；r2 P2 改引用一手列）；之後 Inputs 成長率",
           key="hc", name="COST_Headcount")
 
     def perhead(src_key, g):
@@ -598,6 +630,10 @@ def checks(D, Z):
         ("對照：雲端毛利率 2025（供應商）", "=Cost!D«K.gmp»", None, "info", "Z5b 起顯示名為『供應商推算毛利率』"),
         ("Cost：2H26 起供應商推算毛利 < 0 的期數（Z5b V1：租價下限）", "=" + "+".join(f"(Cost!{c}«K.gm»<-0.00000001)" for c in ("L",) + tuple(LATE)), 0, "eq",
          "每 GW 租價 ≥ 供應商持有成本 ×（1＋最低毛利）"),
+        ("r2 P1：η 上調（研發殘差觸及訓練最低占比）的校準期數", "=Compute!D«C.p1_lift»+Compute!K«C.p1_lift»", "eta_lift_warn", "warnabs",
+         "工作單 P1：η 基準 1；>0＝以 TK 物理計，token 換算 GW 超過供給 ×（1−訓練最低占比），η 上調使殘差＝最低占比（見報告）"),
+        ("對照：研發 GW 1H26（殘差）÷ 研發項下算力費換算 GW", "=Compute!K«C.rd»/(Compute!K«C.f_rd»/(Compute!K«C.p»*"
+         + f"{I('days_1h26')}/{I('days_year')}))", None, "info", "r2 P1：研發科目算力費含推論，比值 <1"),
         ("預覽：2026 供給 GW", "=INDEX(CMP_SupplyGW,1,2)", None, "info", ""),
         ("預覽：2030 供給 GW", "=INDEX(CMP_SupplyGW,1,6)", None, "info", ""),
         ("預覽：2030 每 VR 等值 GW 差額（RMB 億）", "=INDEX(COST_PropGap_VR,1,6)", None, "info", "命題"),

@@ -132,6 +132,9 @@ def fmt(v, kind: str) -> str:
     if kind == "pct0":
         x = round(v * 100)
         return f"{MINUS if x < 0 else ''}{abs(x):d}%"
+    if kind == "pct2":
+        x = round(v * 100, 2)
+        return f"{MINUS if x < 0 else ''}{abs(x):.2f}%"
     if kind == "pct1":
         x = round(v * 100, 1)
         return f"{MINUS if x < 0 else ''}{abs(x):.1f}%"
@@ -511,7 +514,7 @@ def render(V: Values, model: Path, ver: str, stamp: str, cfg: dict) -> str:
     # ── ① 命題與結論 ──
     S.append(f"""<section id="s1"><h2><span class="no">①</span>命題與一句話結論（兩種讀法）</h2>
 <p class="note">命題：智譜（02513.HK）每 VR 等值 GW 的年營收，能否覆蓋每 GW 年全成本？若不能，缺口要多少外部資金、由誰補？</p>
-<p class="lead">不能，而且 2028 年後不再收斂。每 GW 算力租價設下限（供應商不長期賠本出租）後，基準 2030 年每 VR 等值 GW 差額 {n("COST_PropGap_VR", Y, "f0")} RMB 億（{n("COST_PropGap_VR_USD", Y, "f1")} $B），覆蓋率 {n("COST_Coverage", Y, "pct0")}；2028–2030 差額 {n("COST_PropGap_VR", 2028, "f0")}／{n("COST_PropGap_VR", 2029, "f0")}／{n("COST_PropGap_VR", 2030, "f0")}。資金面，模型基準 2030 前累計外部資金需求只有 {n("FND_ExtNeedCum", Y, "f1")} 億（{n("FND_FirstGapYear", None, "yrt")} 年補足最低現金），但這個結論可信度低（見下）。</p>
+<p class="lead">不能，而且 2028 年後不再收斂。依招股章程更正算力費口徑（r2 P1）並設每 GW 算力租價下限（供應商不長期賠本出租）後，基準 2030 年每 VR 等值 GW 差額 {n("COST_PropGap_VR", Y, "f0")} RMB 億（{n("COST_PropGap_VR_USD", Y, "f1")} $B），覆蓋率 {n("COST_Coverage", Y, "pct0")}；2028–2030 差額 {n("COST_PropGap_VR", 2028, "f0")}／{n("COST_PropGap_VR", 2029, "f0")}／{n("COST_PropGap_VR", 2030, "f0")}。資金面，模型基準 2030 前累計外部資金需求只有 {n("FND_ExtNeedCum", Y, "f1")} 億（{n("FND_FirstGapYear", None, "yrt")} 年補足最低現金），但這個結論可信度低（見下）。</p>
 <div class="kpis">
 <div class="kpi"><div class="k">讀法一：2030 每 VR 等值 GW 差額（命題定義）</div><div class="v neg">{n("COST_PropGap_VR", Y, "f0")}</div><div class="s">RMB 億/GW/年；＝{n("COST_PropGap_VR_USD", Y, "f1")} $B</div></div>
 <div class="kpi"><div class="k">讀法二：2030 每實體 GW 差額</div><div class="v neg">{n("COST_PropGap_Phys_USD", Y, "f2")}</div><div class="s">$B/GW/年；＝{n("COST_PropGap_Phys", Y, "f1")} RMB 億；2025 為 {n("COST_PropGap_Phys_USD", 2025, "f1")}</div></div>
@@ -521,15 +524,14 @@ def render(V: Values, model: Path, ver: str, stamp: str, cfg: dict) -> str:
 <h3>兩種讀法怎麼看</h3>
 <p><b>讀法一（每 VR 等值 GW）</b>是命題定義，與 OpenAI 同口徑：把算力換成 NVIDIA VR200 的產能再除。<b>讀法二（每實體 GW）</b>直接除以智譜實際租用的 GW。白話說：<b>智譜的國產／H20／Hopper 機隊換成 VR200 等值，只值約 {n("Cost!K67", Y, "f3")} 倍</b>（2030；2026 為 {n("Cost!K67", 2026, "f3")}），所以讀法一的分母很小、每 GW 數字被放大。2030 每實體 GW 營收 {n("COST_PropRev_Phys_USD", Y, "f2")} $B、全成本 {n("COST_PropFull_Phys_USD", Y, "f2")} $B——不要把讀法一的「每 GW 數千億人民幣」理解成智譜每 GW 真的燒那麼多錢；它燒得少，是因為它的 GW 很便宜也很弱。</p>
 <div class="must"><b>命題 2「2030 前大致不需外部資金」可信度低。</b>這是模型基準；但唯一即時觀察——2026-07 配售款 7–8 月已動用 {n("Funding!F52", H2, "f1")} 億，模型同期只流出 {n("Funding!F53", H2, "f1")} 億（{n("FND_UseVsModel", H2, "f1")} 倍）——與 1H26 現金對帳差 {n("Funding!F26", "1H26", "f1")} 億，都指向模型<b>低估燒錢</b>。反方向的落差也要對稱看：模型 2H26 年化雲端營收對公司 MaaS ARR 差距 {n("REV_ARRGapMaaS", None, "pct0")}，指向<b>營收低估</b>。兩者都未證實（第 ⑦ 節）。</div>
-<div class="must"><b>翻轉點（V1 後重算；其餘不變，以 Excel 重算確認）</b>
+<div class="must"><b>翻轉點（r2：招股章程 P1 後重算；每一點都在該值以 LibreOffice 重算 Excel 確認）</b>
 <ul>
-<li><b>命題 1（2030 每 VR 等值 GW 轉正）只剩一個翻轉點</b>：研發 GW 占比 2030 降到 ≤ {n("INP_110", None, "f3", "flip_rd")}（基準沿用 1H26 實際 {n("Compute!G98", Y, "f3")}）——此時 2030 差額 {n("COST_PropGap_VR", Y, "f0", "flip_rd")}。</li>
-<li><b>每 GW 價格年降幅</b>：不再是翻轉點——租價有下限（供應商持有成本），降 25% 時 2030 差額仍為 {n("COST_PropGap_VR", Y, "f0", "px_m25")}（與基準相同）。</li>
-<li><b>2H26 任務數成長</b>：不是翻轉點——任務越多，所需 GW 與算力成本同步增加；取高（+{n("INP_038", None, "pct0", "task_hi")}）時 2030 差額 {n("COST_PropGap_VR", Y, "f0", "task_hi")}，搜尋至 +2,000% 仍不轉正（敏感度 JSON）。</li>
-<li><b>命題 2（2030 前不需外部資金）</b>：研發占比 2030 ≤ {n("INP_110", None, "f3", "flip_rd_ext")}、或 2H26 任務成長 ≥ +{n("INP_038", None, "pct0", "flip_task_ext")}、或供應商最低毛利 ≤ {n("INP_136", None, "pct1", "flip_mgm_ext")}（即供應商願意小幅賠本出租）；在這些值下累計外部資金需求分別為 {n("FND_ExtNeedCum", Y, "f1", "flip_rd_ext")}／{n("FND_ExtNeedCum", Y, "f1", "flip_task_ext")}／{n("FND_ExtNeedCum", Y, "f1", "flip_mgm_ext")}。</li>
+<li><b>命題 1（2030 每 VR 等值 GW 轉正）只剩一個翻轉點</b>：研發項下算力費占研發開支降到 ≤ {n("INP_137", None, "pct1", "flip_rdfee")}（基準 {n("INP_137", None, "pct1")}＝招股章程 1H25 實際），也就是 1H26 總算力費只有 {n("Compute!G75", "1H26", "f1", "flip_rdfee")} 億、不是 {n("Compute!G75", "1H26", "f1")} 億——此時 2030 差額 {n("COST_PropGap_VR", Y, "f0", "flip_rdfee")}。白話：未來算力成本是按 1H26「每 token 花多少算力費」外推的，只有這個比例被高估一半以上，2030 才會打平。</li>
+<li><b>不是翻轉點</b>：每 GW 價格年降幅（租價有下限；降 25% 時 2030 差額仍為 {n("COST_PropGap_VR", Y, "f0", "px_m25")}）、供應商最低毛利（搜尋到 −90% 仍不轉正）、研發占比路徑、2H26 任務數成長（取高 +{n("INP_038", None, "pct0", "task_hi")} 時 2030 差額 {n("COST_PropGap_VR", Y, "f0", "task_hi")}，搜尋到 +2,000% 仍不轉正）。</li>
+<li><b>命題 2（2030 前不需外部資金）</b>：研發項下算力費占比 ≤ {n("INP_137", None, "pct1", "flip_rdfee_ext")}、或營業成本計算服務費占 API 銷售成本 ≤ {n("INP_102", None, "pct0", "flip_inffee_ext")}（基準 {n("INP_102", None, "pct0")}）、或供應商最低毛利 ≤ {n("INP_136", None, "pct1", "flip_mgm_ext")}（供應商願意小幅賠本出租）；在這些值下累計外部資金需求分別為 {n("FND_ExtNeedCum", Y, "f1", "flip_rdfee_ext")}／{n("FND_ExtNeedCum", Y, "f1", "flip_inffee_ext")}／{n("FND_ExtNeedCum", Y, "f1", "flip_mgm_ext")}。</li>
 </ul>
-Coding Plan 額度使用率不列為翻轉點：它同時改變 1H26 的 η 校準（token GW 與 η 同比例變動），結果是假象而非經濟機制（第 ⑥ 節註明）。翻轉值由 <code>tools/sensitivity_z4.py</code>（設定 <code>tools/sensitivity_r2.yaml</code>）以 engine 執行 Excel 二分搜尋得到，本頁在該值以 LibreOffice 重算 Excel 驗證。</div>
-{V.src("COST_PropGap_VR", "COST_PropGap_VR_USD", "COST_PropGap_Phys", "COST_PropGap_Phys_USD", "Cost!K67", "COST_Coverage", "FND_ExtNeedCum", "FND_FirstGapYear", "FND_UseVsModel", "Funding!F52", "Funding!F53", "Funding!F26", "REV_ARRGapMaaS", "INP_110", "INP_038", "INP_136", "Compute!G98")}
+Coding Plan 額度使用率與 Coding Plan 輸出占比不列為翻轉點：它們同時改變 1H26 的 η 校準，結果是假象而非經濟機制（第 ⑥ 節註明）。招股章程更正後，Z5b 的「研發占比 2030 ≤0.572」不再成立：研發占比起點已是訓練最低占比 0.30，無法再降。翻轉值由 <code>tools/sensitivity_z4.py</code>（設定 <code>tools/sensitivity_r2.yaml</code>）以 engine 執行 Excel 二分搜尋得到。</div>
+{V.src("COST_PropGap_VR", "COST_PropGap_VR_USD", "COST_PropGap_Phys", "COST_PropGap_Phys_USD", "Cost!K67", "COST_Coverage", "FND_ExtNeedCum", "FND_FirstGapYear", "FND_UseVsModel", "Funding!F52", "Funding!F53", "Funding!F26", "REV_ARRGapMaaS", "INP_137", "INP_102", "INP_038", "INP_136", "Compute!G75")}
 </section>""")
 
     # ── ② 每 VR 等值 GW ──
@@ -545,7 +547,7 @@ Coding Plan 額度使用率不列為翻轉點：它同時改變 1H26 的 η 校�
                 ("每實體 GW 營收淨額", "COST_PropRev_Phys", "f0", ""), ("每實體 GW 全成本", "COST_PropFull_Phys", "f0", ""),
                 ("每實體 GW 差額", "COST_PropGap_Phys", "f1", "em neg"), ("每實體 GW 差額（$B）", "COST_PropGap_Phys_USD", "f2", "")], head="每實體 GW（RMB 億/GW/年）")}
 {year_table(V, [("營收淨額", "Cost!K35", "f1", ""), ("全成本（含股權報酬）", "COST_FullCash", "f1", ""), ("差額", "COST_GapCash", "f1", "em neg")], head="絕對金額（RMB 億）")}
-<p class="note">2027 年前差額快速收斂（營收成長快於成本）；2028 年起每 GW 租價觸及下限＝供應商持有成本（組合後 {n("CMP_PricePerGW", 2028, "f0")}→{n("CMP_PricePerGW", Y, "f0")}，未設下限時會降到 {n("Compute!G170", Y, "f0")}），每 GW 算力成本不再下降，差額不再收斂（2028–2030 見上表）。2025 分母只有 {n("CMP_Supply_VReq", 2025, "f3")} VR 等值 GW，每 GW 數字特別大。絕對金額：2030 年差額 {n("COST_GapCash", Y, "f1")} 億。</p>
+<p class="note">2027 年前差額快速收斂（營收成長快於成本）；2028 年起每 GW 租價觸及下限＝供應商持有成本（組合後 {n("CMP_PricePerGW", 2028, "f0")}→{n("CMP_PricePerGW", Y, "f0")}，未設下限時會降到 {n("Compute!G176", Y, "f0")}），每 GW 算力成本不再下降，差額不再收斂（2028–2030 見上表）。2025 分母只有 {n("CMP_Supply_VReq", 2025, "f3")} VR 等值 GW，每 GW 數字特別大。絕對金額：2030 年差額 {n("COST_GapCash", Y, "f1")} 億。</p>
 {V.src("COST_PropRev_VR", "COST_PropCompute_VR", "COST_PropOnPrem_VR", "COST_PropNonComp_VR", "COST_PropSBC_VR", "COST_PropFull_VR", "COST_PropGap_VR", "COST_Coverage", "CMP_Supply_VReq", "Cost!K66", "Cost!K67", "COST_PropRev_Phys", "COST_PropFull_Phys", "COST_PropGap_Phys", "COST_PropGap_Phys_USD", "Cost!K35", "COST_FullCash", "COST_GapCash")}
 </section>""")
 
@@ -567,12 +569,12 @@ Coding Plan 額度使用率不列為翻轉點：它同時改變 1H26 的 η 校�
 {year_table(V, [("推論 GW（截頂後）", "CMP_InfGW", "f3", ""), ("研發 GW", "CMP_RDGW", "f3", ""), ("閒置 GW", "Compute!G106", "f3", ""),
                 ("供給 GW（租用＋自有）", "CMP_SupplyGW", "f3", "em"), ("其中自有", "CMP_Supply_Owned", "f3", ""),
                 ("機隊 VR 等值係數", "CMP_VReqFactor", "f3", ""), ("供給 VR 等值 GW（命題分母）", "CMP_Supply_VReq", "f3", ""),
-                ("η（token 換算 GW ÷ 支出換算 GW）", "CMP_Eta", "f2", ""), ("研發占非閒置供給", "CMP_RDShare", "pct0", ""),
-                ("每 GW 年租價（組合後；2H26 起不低於持有成本）", "CMP_PricePerGW", "f0", "em"), ("　對照：未設下限的觀察租價", "Compute!G170", "f0", ""),
+                ("η（P1：基準 1；1H26 殘差不足而上調，之後沿用）", "CMP_Eta", "f2", ""), ("研發占非閒置供給（殘差）", "CMP_RDShare", "pct0", ""),
+                ("每 GW 年租價（組合後；2H26 起不低於持有成本）", "CMP_PricePerGW", "f0", "em"), ("　對照：未設下限的觀察租價", "Compute!G176", "f0", ""),
                 ("　供應商持有成本（組合後＝下限）", "COST_HoldW", "f0", ""), ("　供應商推算毛利率", "COST_CloudGMPct", "pct0", "")], head="GW／比例／RMB 億")}
-<p>智譜揭露研發算力費，所以研發 GW 不是殘差：1H26 研發占算力服務費 {n("Compute!G76", "1H26", "pct0")}，2H26 起沿用（基準）。供給 GW 由需求配置：有效推論 ÷［(1−閒置)(1−研發占比)］。<b>η 仍約 {n("CMP_Eta1H26", None, "f1")}</b>（2025 {n("CMP_Eta2025", None, "f1")}）：以 Tokenomics 單位成本換算的 token GW 是支出換算 GW 的 9 倍以上，殘差來源（研發算力費含雲端部署服務、參考架構差異）未證實；基準以 η 吸收、不收斂。</p>
+<p><b>招股章程更正（r2 P1）</b>：研發項下的算力費也涵蓋推理（第 255 頁），營業成本中的計算服務費只占總算力費 2–3%（1H25 {n("Compute!G192", 2025, "pct1")}，Compute G192）。所以推論與研發不再以會計科目拆分：供給 GW＝總算力費（1H26 {n("Compute!G75", "1H26", "f1")} 億＝營業成本計算服務費 {n("Compute!G68", "1H26", "f2")}＋研發開支 × {n("INP_137", None, "pct1")}）÷ 每 GW 價格；推論 GW＝token 換算 GW ÷ η，η 基準＝1（信任 Tokenomics 物理）；研發 GW＝殘差（同 OpenAI）。1H26 token 換算 GW {n("Compute!G55", "1H26", "f3")} 已是供給 {n("Compute!G104", "1H26", "f3")} 的兩倍多，所以 η 只能上調到 <b>{n("CMP_Eta1H26", None, "f2")}</b>（使研發殘差＝訓練最低占比 {n("INP_109", None, "pct0")}；Checks WARN），2025 為 {n("CMP_Eta2025", None, "f2")}；舊法（API 銷售成本＝推論支出）的 η 是 {n("Compute!G198", "1H26", "f2")}。2H26 起 η 與研發占比沿用 1H26，供給 GW 由需求配置：有效推論 ÷［(1−閒置)(1−研發占比)］。因為未來供給只依 1H26「供給 ÷ token」比例外推，<b>新舊兩法的命題結果相同</b>（舊法情境 2030 差額 {n("COST_PropGap_VR", Y, "f0", "eta_old")}）；P1 改的是推論與研發的拆分、η 的大小，以及總算力費的估計（研發開支 × {n("INP_137", None, "pct1")}；Z3 為扣股權報酬後 × {n("INP_103", None, "pct1")}）。</p>
 <p class="note">租價下限（Z5b V1）：觀察租價每年降 10% 會在 2027–2028 年低於供應商持有成本（原模型 2028 起供應商毛利率 −9%～−37%，即長期賠本出租，不可持續）；現在 2H26 起每 GW 租價＝MAX（觀察租價, 持有成本 ×（1＋最低毛利 {n("INP_136", None, "pct0")}））。</p>
-{V.src("CMP_InfGW", "CMP_RDGW", "Compute!G106", "CMP_SupplyGW", "CMP_Supply_Owned", "CMP_VReqFactor", "CMP_Supply_VReq", "CMP_Eta", "CMP_RDShare", "CMP_PricePerGW", "Compute!G170", "COST_HoldW", "COST_CloudGMPct", "INP_136", "Compute!G76", "CMP_Eta1H26", "CMP_Eta2025")}
+{V.src("CMP_InfGW", "CMP_RDGW", "Compute!G106", "CMP_SupplyGW", "CMP_Supply_Owned", "CMP_VReqFactor", "CMP_Supply_VReq", "CMP_Eta", "CMP_RDShare", "CMP_PricePerGW", "Compute!G176", "COST_HoldW", "COST_CloudGMPct", "INP_136", "Compute!G192", "Compute!G75", "Compute!G68", "INP_137", "Compute!G55", "Compute!G104", "CMP_Eta1H26", "INP_109", "CMP_Eta2025", "Compute!G198")}
 </section>""")
 
     # ── ⑤ 現金與外部資金 ──
@@ -586,25 +588,25 @@ Coding Plan 額度使用率不列為翻轉點：它同時改變 1H26 的 η 校�
                 ("當年外部資金需求", "FND_ExtNeed", "f1", "em"), ("累計外部資金需求", "FND_ExtNeedCum", "f1", "em"),
                 ("年底現金", "FND_CashEnd", "f1", ""), ("轉股情境：累計外部資金需求", "FND_ExtNeedCumConv", "f1", ""),
                 ("轉股情境：年底現金", "FND_CashEndConv", "f1", "")])}
-<p class="note">來源順序：①期初現金（2025 年底 {n("FND_CashEnd", 2025, "f1")}）→ ②已到位股權：2026-01 IPO {n("Funding!F14", "1H26", "f1")}（1H26 已全數動用）、2026-07 配售 {n("Funding!F15", H2, "f1")}、2026-09 配售 {n("Funding!F16", H2, "f1")} → ③債務：可換股債券 {n("Funding!F18", H2, "f1")}（2027-09 現金償還 {n("FND_DebtRepay", 2027, "f1")}）、銀行借款 {n("FND_BankLoans", Y, "f2")} 續借 → ④外部資金。補足者是港股公開市場投資人（兩次折價配售）與可換股債券投資人。<b>只靠 IPO＋2026-07 配售</b>：2030 年底現金 {n("FND_CashEnd", Y, "f1", "only_pl1")}、累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "only_pl1")}；<b>只靠 IPO</b>：首次缺口年 {n("FND_FirstGapYear", None, "yrt", "ipo_only")}、2030 累計 {n("FND_ExtNeedCum", Y, "f1", "ipo_only")}。轉股稀釋 {n("Funding!F45", None, "pct1")}。或有：可換股債券本金 {n("FND_Contingent", None, "f1")}；未提用授信、算力採購承諾找不到（Funding F49）。</p>
-{V.src("Funding!F01", "Funding!F02", "Funding!F03", "Funding!F04", "FND_FCF", "FND_NetOp", "FND_Committed", "FND_DebtRepay", "FND_MinCash", "FND_ExtNeed", "FND_ExtNeedCum", "FND_CashEnd", "FND_ExtNeedCumConv", "FND_CashEndConv", "Funding!F14", "Funding!F15", "Funding!F16", "Funding!F18", "FND_BankLoans", "FND_FirstGapYear", "Funding!F45", "FND_Contingent")}
+<p class="note">來源順序：①期初現金（2025 年底 {n("FND_CashEnd", 2025, "f1")}）→ ②已到位股權：2026-01 IPO {n("Funding!F14", "1H26", "f1")}（1H26 已全數動用）、2026-07 配售 {n("Funding!F15", H2, "f1")}、2026-09 配售 {n("Funding!F16", H2, "f1")} → ③債務：可換股債券 {n("Funding!F18", H2, "f1")}（2027-09 現金償還 {n("FND_DebtRepay", 2027, "f1")}）、銀行借款 {n("FND_BankLoans", Y, "f2")} 續借 → ④外部資金。補足者是港股公開市場投資人（兩次折價配售）與可換股債券投資人。<b>只靠 IPO＋2026-07 配售</b>：2030 年底現金 {n("FND_CashEnd", Y, "f1", "only_pl1")}、累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "only_pl1")}；<b>只靠 IPO</b>：首次缺口年 {n("FND_FirstGapYear", None, "yrt", "ipo_only")}、2030 累計 {n("FND_ExtNeedCum", Y, "f1", "ipo_only")}。轉股稀釋 {n("Funding!F45", None, "pct1")}。或有：可換股債券本金 {n("FND_Contingent", None, "f1")}；租賃負債 {n("FND_LeaseLiab", None, "f2")} 億（2025 年底；租賃算力硬件與辦公室，含 2024 年售後租回 {n("Funding!F89", None, "f2")} 億；利率 {n("Funding!F88", None, "pct2")}）列債務對照——租賃付款不在算力服務費內，但其折舊已在校準期非算力成本內，不另加（r2 P3）；政府補助沖減開支、已含在費用淨額（r2 P4）；未提用授信、算力採購承諾找不到（Funding F49）。</p>
+{V.src("Funding!F01", "Funding!F02", "Funding!F03", "Funding!F04", "FND_FCF", "FND_NetOp", "FND_Committed", "FND_DebtRepay", "FND_MinCash", "FND_ExtNeed", "FND_ExtNeedCum", "FND_CashEnd", "FND_ExtNeedCumConv", "FND_CashEndConv", "Funding!F14", "Funding!F15", "Funding!F16", "Funding!F18", "FND_BankLoans", "FND_FirstGapYear", "Funding!F45", "FND_Contingent", "FND_LeaseLiab", "Funding!F88", "Funding!F89")}
 </section>""")
 
     # ── ⑥ 關鍵驅動與敏感度 ──
-    rows = ["base", "rd_05", "rd_03", "px_m25", "px_0", "mgm_hi", "util_hi", "util_lo", "rd_px", "task_lo", "task_hi", "eta_conv", "dc1gw", "stress"]
+    rows = ["base", "rdfee_lo", "rdfee_hi", "inffee_lo", "px_m25", "px_0", "mgm_hi", "eta_conv", "eta_old", "rd_05", "util_hi", "util_lo", "task_lo", "task_hi", "dc1gw", "stress"]
     tr = []
     for sc in rows:
         tr.append(f'<tr class="{"em" if sc == "base" else ""}"><td>{html.escape(lab[sc])}</td><td>{n("REV_NetCapped", Y, "f1", sc)}</td>'
                   f'<td>{n("COST_PropGap_VR", Y, "f0", sc)}</td><td>{n("COST_Coverage", Y, "f2", sc)}</td><td>{n("CMP_SupplyGW", Y, "f2", sc)}</td>'
                   f'<td>{n("FND_ExtNeedCum", Y, "f0", sc)}</td><td>{n("FND_FirstGapYear", None, "yrt", sc)}</td><td>{n("FND_CashEnd", Y, "f0", sc)}</td></tr>')
     S.append(f"""<section id="s6"><h2><span class="no">⑥</span>三個關鍵驅動與敏感度</h2>
-<p class="note">①研發占比路徑（INP_120／INP_110）②每 GW 算力價格：年變動（INP_100）與租價下限的最低毛利（INP_136）③Coding Plan 額度使用率（INP_060）；另列 2H26 任務成長、η 收斂、1 GW 資料中心與壓力組合。設定取自 Inputs 低／高欄；全部由 Excel 重算。2030 差額單位 RMB 億／VR 等值 GW。</p>
+<p class="note">r2（招股章程 P1 後）的三個關鍵驅動：①總算力費的估計——研發項下算力費占研發開支（INP_137）與營業成本計算服務費占 API 銷售成本（INP_102），決定 1H26「每 token 花多少算力費」，未來算力成本依此外推 ②每 GW 算力價格：年變動（INP_100）與租價下限的最低毛利（INP_136）③η 路徑（INP_105：沿用 1H26 上調值或收斂至 1）。另列 η 舊法、研發占比路徑、Coding Plan 使用率、2H26 任務成長、1 GW 資料中心與壓力組合。設定取自 Inputs 低／高欄；全部由 Excel 重算。2030 差額單位 RMB 億／VR 等值 GW。</p>
 <div class="tw"><table><thead><tr><th>情境</th><th>2030 營收淨額</th><th>2030 每 VR GW 差額</th><th>2030 覆蓋率</th><th>2030 供給 GW</th><th>累計外部資金需求 2030</th><th>首次缺口年</th><th>2030 年底現金</th></tr></thead><tbody>
 {"".join(tr)}
 </tbody></table></div>
-<p class="note"><b>Coding Plan 額度使用率的擺幅是假象</b>：使用率同時改變 1H26 的 token 換算 GW 與 η 校準（η 吸收），2H26 起才因 token 結構不同而分歧；使用率 {n("INP_060", None, "f3", "flip_util")} 時 2030 差額 {n("COST_PropGap_VR", Y, "f0", "flip_util")}，但這不是經濟機制，因此不列為翻轉點。每 GW 價格降 25% 時 2030 差額與基準相同（租價下限），只改 2026–2027 的現金。</p>
-<div class="must"><b>命題 2</b>：模型基準只在 2030 年為補足最低現金需要 {n("FND_ExtNeedCum", Y, "f1")} 億（年底現金 {n("FND_CashEnd", Y, "f0")}，不是現金歸零）；最低毛利取高 → {n("FND_ExtNeedCum", Y, "f0", "mgm_hi")}（{n("FND_FirstGapYear", None, "yrt", "mgm_hi")}）；每 GW 價格不變 → {n("FND_ExtNeedCum", Y, "f0", "px_0")}（{n("FND_FirstGapYear", None, "yrt", "px_0")}）；η 收斂至 1 → {n("FND_ExtNeedCum", Y, "f0", "eta_conv")}（{n("FND_FirstGapYear", None, "yrt", "eta_conv")}）；1 GW 資料中心 → {n("FND_ExtNeedCum", Y, "f0", "dc1gw")}（{n("FND_FirstGapYear", None, "yrt", "dc1gw")}）。</div>
-{V.src("REV_NetCapped", "COST_PropGap_VR", "COST_Coverage", "CMP_SupplyGW", "FND_ExtNeedCum", "FND_FirstGapYear", "FND_CashEnd", "INP_060", "INP_136")}
+<p class="note"><b>Coding Plan 額度使用率（與輸出占比）的擺幅是假象</b>：它們同時改變 1H26 的 token 換算 GW 與 η 校準（η 吸收），2H26 起才因 token 結構不同而分歧；使用率 {n("INP_060", None, "f3", "flip_util")} 時 2030 差額 {n("COST_PropGap_VR", Y, "f0", "flip_util")}，但這不是經濟機制，因此不列為翻轉點。η 舊法與基準結果相同（第 ④ 節）；研發占比升至 0.5 使供給與成本上升。每 GW 價格降 25% 時 2030 差額與基準相同（租價下限），只改 2026–2027 的現金。</p>
+<div class="must"><b>命題 2</b>：模型基準只在 2030 年為補足最低現金需要 {n("FND_ExtNeedCum", Y, "f1")} 億（年底現金 {n("FND_CashEnd", Y, "f0")}，不是現金歸零）；最低毛利取高 → {n("FND_ExtNeedCum", Y, "f0", "mgm_hi")}（{n("FND_FirstGapYear", None, "yrt", "mgm_hi")}）；每 GW 價格不變 → {n("FND_ExtNeedCum", Y, "f0", "px_0")}（{n("FND_FirstGapYear", None, "yrt", "px_0")}）；η 收斂至 1 → {n("FND_ExtNeedCum", Y, "f0", "eta_conv")}（{n("FND_FirstGapYear", None, "yrt", "eta_conv")}；招股章程更正後 η 起點降低，此情境比 Z5b 小得多）；研發項下算力費占比取高 → {n("FND_ExtNeedCum", Y, "f0", "rdfee_hi")}、取低 → {n("FND_ExtNeedCum", Y, "f0", "rdfee_lo")}；1 GW 資料中心 → {n("FND_ExtNeedCum", Y, "f0", "dc1gw")}（{n("FND_FirstGapYear", None, "yrt", "dc1gw")}）。</div>
+{V.src("REV_NetCapped", "COST_PropGap_VR", "COST_Coverage", "CMP_SupplyGW", "FND_ExtNeedCum", "FND_FirstGapYear", "FND_CashEnd", "INP_060", "INP_136", "INP_137", "INP_102")}
 </section>""")
 
     # ── ⑦ 主要風險／與實際觀察的落差 ──
@@ -612,14 +614,14 @@ Coding Plan 額度使用率不列為翻轉點：它同時改變 1H26 的 η 校�
 <p class="note">以下是模型與公司實際揭露對不上的地方；任何一項若證實，結論（特別是命題 2）可能改變。支出面的落差（第 1、4 項）指向燒錢被低估，營收面的落差（第 5 項）指向營收被低估，方向相反、都未證實。</p>
 <ol class="risk">
 <li><b>配售款動用速度遠高於模型</b>：2026-07 配售款截至 2026-08-31 已動用 HK$ {n("SRC_ZP_540", None, "hm2y")} 億（SRC_ZP_540；約 RMB {n("Funding!F52", H2, "f1")} 億），是模型同期（7–8 月）融資前淨現金流出 {n("Funding!F53", H2, "f1")} 億的 <b>{n("FND_UseVsModel", H2, "f1")} 倍</b>（Funding F52–F54）。這是唯一的即時觀察，與 1H26 現金對帳差（第 4 項）同樣指向<b>模型低估燒錢</b>；若這筆是算力預付或 1 GW 資料中心支出，命題 2「2030 前大致不需外部資金」不成立：1 GW 資料中心情境下 2030 累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0", "dc1gw")} 億、首次缺口年 {n("FND_FirstGapYear", None, "yrt", "dc1gw")}。市值隱含營收的淨現金已扣除這筆已動用款（第 ⑧ 節，V3）。</li>
-<li><b>公司稱「已落地 1GW 級國產 AI 算力數據中心」</b>（SRC_ZP_458：{n("SRC_ZP_458", None, "f0")} GW，口徑未明；若為設施口徑，÷ PUE ＝ IT {n("Compute!G130", H2, "f2")} GW，Compute G130）；模型基準 2H26 供給只有 {n("Compute!G104", H2, "f2")} GW（實體，Compute G104），1 GW 只列情境（INP_112）：2027 計入資本支出、2028 投產（2030 供給 {n("CMP_SupplyGW", Y, "f2", "dc1gw")} GW，其中自有 {n("CMP_Supply_Owned", Y, "f2", "dc1gw")} GW），投產後計入營運費用（TK IF_OpexGW，2030 {n("CMP_OwnedOpex", Y, "f1", "dc1gw")} 億）。<b>現金口徑</b>：2027 每 VR 等值 GW 差額 {n("COST_PropGap_VR", 2027, "f0", "dc1gw")}（一次性資本支出）、2030 {n("COST_PropGap_VR", Y, "f0", "dc1gw")}；<b>攤提口徑</b>（資本支出依 TK 折舊年限 {n("Compute!G174", Y, "f0", "dc1gw")} 年攤提，Cost 第十節）：2030 差額 {n("COST_PropGap_VR_Amort", Y, "f0", "dc1gw")}、覆蓋率 {n("COST_Coverage_Amort", Y, "pct0", "dc1gw")}——投產後並未轉正；累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0", "dc1gw")}、2030 年底現金 {n("FND_CashEnd", Y, "f0", "dc1gw")}。</li>
-<li><b>國產晶片同口徑對照</b>：公司稱推論用國產晶片 10 萬張級（SRC_ZP_452），換算 IT {n("Compute!G124", H2, "f2")} GW；同口徑的模型 2H26 <b>國產推論 GW</b> 只有 {n("Compute!G127", H2, "f3")} GW（差距 {n("Compute!G129", H2, "pct0")}，Compute G127、G129）。供給口徑另列：模型 2H26 國產供給 {n("Compute!G126", H2, "f3")} GW（差距 {n("Compute!G128", H2, "pct0")}）。</li>
+<li><b>公司說法前後不一：資料中心</b>（r2 P5）。招股章程（2025-12-30，第 223 頁）稱「並無計劃開發我們自身的 AI 數據中心」，列入實體清單後未採購任何 AI 晶片、全部向雲服務商採購算力（SRC_ZP_810、SRC_ZP_1051）；七個月後（2026-07）公司卻稱「已落地 1GW 級國產 AI 算力數據中心」（SRC_ZP_458：{n("SRC_ZP_458", None, "f0")} GW，口徑未明；若為設施口徑，÷ PUE ＝ IT {n("Compute!G130", H2, "f2")} GW，Compute G130）；模型基準 2H26 供給只有 {n("Compute!G104", H2, "f2")} GW（實體，Compute G104），1 GW 只列情境（INP_112）：2027 計入資本支出、2028 投產（2030 供給 {n("CMP_SupplyGW", Y, "f2", "dc1gw")} GW，其中自有 {n("CMP_Supply_Owned", Y, "f2", "dc1gw")} GW），投產後計入營運費用（TK IF_OpexGW，2030 {n("CMP_OwnedOpex", Y, "f1", "dc1gw")} 億）。<b>現金口徑</b>：2027 每 VR 等值 GW 差額 {n("COST_PropGap_VR", 2027, "f0", "dc1gw")}（一次性資本支出）、2030 {n("COST_PropGap_VR", Y, "f0", "dc1gw")}；<b>攤提口徑</b>（資本支出依 TK 折舊年限 {n("Compute!G180", Y, "f0", "dc1gw")} 年攤提，Cost 第十節）：2030 差額 {n("COST_PropGap_VR_Amort", Y, "f0", "dc1gw")}、覆蓋率 {n("COST_Coverage_Amort", Y, "pct0", "dc1gw")}——投產後並未轉正；累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0", "dc1gw")}、2030 年底現金 {n("FND_CashEnd", Y, "f0", "dc1gw")}。</li>
+<li><b>國產晶片同口徑對照</b>：公司稱推論用國產晶片 10 萬張級（SRC_ZP_452），換算 IT {n("Compute!G124", H2, "f2")} GW；同口徑的模型 2H26 <b>國產推論 GW</b> 為 {n("Compute!G127", H2, "f3")} GW（差距 {n("Compute!G129", H2, "pct0")}，Compute G127、G129；招股章程 P1 後推論占供給七成，差距縮小）。供給口徑另列：模型 2H26 國產供給 {n("Compute!G126", H2, "f3")} GW（差距 {n("Compute!G128", H2, "pct0")}）。</li>
 <li><b>預付算力服務費暴增</b>：2025 年底 {n("SRC_ZP_220", None, "f2")} 億 → 2026-06-30 {n("SRC_ZP_219", None, "f2")} 億（SRC_ZP_220／219，含其他）。模型算力成本＝算力服務費實付（費用口徑），預付不在內；1H26 現金對帳差 {n("Funding!F26", "1H26", "f2")} 億（Funding F26）可能部分來自此。</li>
 <li><b>營收低於公司 ARR</b>：模型 2H26 年化雲端營收 {n("Revenue!R70", H2, "f1")} 億，公司 MaaS ARR（2026-08 月度年化）{n("Revenue!R71", H2, "f1")} 億，差距 {n("REV_ARRGapMaaS", None, "pct0")}（Revenue R70–R72；Checks WARN；不反推）。若 ARR 為真，營收被低估、命題 1 偏保守（與第 1、4 項方向相反）。</li>
-<li><b>η 仍約 {n("CMP_Eta1H26", None, "f1")}</b>（Compute G94；2025 {n("CMP_Eta2025", None, "f1")}）：殘差來源未證實。若 η 收斂至 1（INP_105），2030 供給 {n("CMP_SupplyGW", Y, "f2", "eta_conv")} GW、2030 差額 {n("COST_PropGap_VR", Y, "f0", "eta_conv")}、累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0", "eta_conv")}——是命題 1、2 最大的單一不確定。</li>
+<li><b>η 仍約 {n("CMP_Eta1H26", None, "f1")}</b>（Compute G94；2025 {n("CMP_Eta2025", None, "f2")}）：招股章程更正（P1）後已不是會計科目拆分造成，而是 1H26 的 token 量以 Tokenomics 物理換算，已超過總算力費買得到的 GW——國產晶片實際效率、token 量估計（API 由營收倒推、Coding Plan 用量）或租價三者至少一個有偏差，未證實。若 η 收斂至 1（INP_105），2030 供給 {n("CMP_SupplyGW", Y, "f2", "eta_conv")} GW、2030 差額 {n("COST_PropGap_VR", Y, "f0", "eta_conv")}、累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0", "eta_conv")}——是命題 1、2 最大的單一不確定。</li>
 </ol>
 <p class="note">已在 Excel 的兩個情境：<b>1 GW 資料中心</b>（見上，INP_112）；<b>可換股債券轉股</b>（Funding 第五節，不受開關影響）：2030 年底現金 {n("FND_CashEndConv", Y, "f1")}（基準 {n("FND_CashEnd", Y, "f1")}）、累計外部資金需求 {n("FND_ExtNeedCumConv", Y, "f0")}、稀釋 {n("Funding!F45", None, "pct1")}；現價 ÷ 換股價 {n("Funding!F47", None, "f2")}。壓力組合（η 收斂＋1 GW＋價格不變＋員工年增取高）累計 {n("FND_ExtNeedCum", Y, "f0", "stress")}。</p>
-{V.src("SRC_ZP_540", "Funding!F52", "Funding!F53", "FND_UseVsModel", "SRC_ZP_458", "Compute!G130", "Compute!G104", "Compute!G124", "Compute!G126", "Compute!G127", "Compute!G128", "Compute!G129", "CMP_OwnedOpex", "Compute!G174", "COST_PropGap_VR_Amort", "COST_Coverage_Amort", "SRC_ZP_452", "INP_112", "SRC_ZP_220", "SRC_ZP_219", "Funding!F26", "Revenue!R70", "Revenue!R71", "REV_ARRGapMaaS", "CMP_Eta1H26", "CMP_Eta2025", "INP_105", "FND_CashEndConv", "FND_ExtNeedCumConv", "Funding!F45", "Funding!F47")}
+{V.src("SRC_ZP_540", "Funding!F52", "Funding!F53", "FND_UseVsModel", "SRC_ZP_458", "Compute!G130", "Compute!G104", "Compute!G124", "Compute!G126", "Compute!G127", "Compute!G128", "Compute!G129", "CMP_OwnedOpex", "Compute!G180", "COST_PropGap_VR_Amort", "COST_Coverage_Amort", "SRC_ZP_452", "SRC_ZP_810", "SRC_ZP_1051", "INP_112", "SRC_ZP_220", "SRC_ZP_219", "Funding!F26", "Revenue!R70", "Revenue!R71", "REV_ARRGapMaaS", "CMP_Eta1H26", "CMP_Eta2025", "INP_105", "FND_CashEndConv", "FND_ExtNeedCumConv", "Funding!F45", "Funding!F47")}
 </section>""")
 
     # ── ⑧ 市值對照 ──
@@ -663,7 +665,7 @@ Coding Plan 額度使用率不列為翻轉點：它同時改變 1H26 的 η 校�
             c = (cls + (" sep" if k == 0 else "")).strip()
             tb.append(f'<tr class="{c}"><td>{lab_ if k == 0 else ""}　{who}</td>{"".join(cells)}</tr>')
     S.append(f"""<section id="s9"><h2><span class="no">⑨</span>與 OpenAI v0.6 並排（美元）</h2>
-<div class="must"><b>讀法提醒</b>：智譜每 VR 等值 GW 營收（2030 {n("COST_PropRev_VR_USD", Y, "f1")} $B）約為 OpenAI（{n("OAI_COST_PropRev_VR", Y, "f1")} $B）的 10 倍，經濟上不合理——反映在 η≈{n("CMP_Eta1H26", None, "f1")} 下，智譜的 GW 分母（由算力支出 ÷ 租價推得）可能偏小。因此<b>並排以覆蓋率與現金流為主讀，每 GW 金額僅供參考</b>，不能據此說哪一家每 GW 經濟較好。</div>
+<div class="must"><b>讀法提醒</b>：智譜每 VR 等值 GW 營收（2030 {n("COST_PropRev_VR_USD", Y, "f1")} $B）約為 OpenAI（{n("OAI_COST_PropRev_VR", Y, "f1")} $B）的 10 倍，經濟上不合理。招股章程更正（P1）後 η 已由約 9.5 降到 {n("CMP_Eta1H26", None, "f1")}，但供給 GW 幾乎不變（2030 {n("CMP_SupplyGW", Y, "f3")} GW），10 倍仍在——所以不能只歸因於 η：智譜的 GW 分母是「算力費 ÷ 租價」推得，而 1H26 的 token 量以 Tokenomics 物理換算所需的 GW 是其中推論部分的 {n("CMP_Eta1H26", None, "f1")} 倍（η），再乘上機隊 VR 等值係數 {n("Cost!K67", Y, "f3")}，分母可能偏小。因此<b>並排以覆蓋率與現金流為主讀，每 GW 金額僅供參考</b>，不能據此說哪一家每 GW 經濟較好。</div>
 <div class="legend"><span><i style="background:var(--gap)"></i>智譜每 VR 等值 GW 差額（僅供參考）</span><span><i style="background:var(--oai)"></i>OpenAI v0.6</span></div>
 <div class="cw">{chart_vs(V)}</div>
 <div class="tw"><table><thead><tr><th>項目</th>{hd}</tr></thead><tbody>
@@ -671,19 +673,19 @@ Coding Plan 額度使用率不列為翻轉點：它同時改變 1H26 的 η 校�
 <tr class="sep"><td>每實體 GW 差額（$B/GW）　智譜</td>{"".join(f"<td>{n('COST_PropGap_Phys_USD', y, 'f2')}</td>" for y in YEARS)}</tr>
 </tbody></table></div>
 <p class="note">主讀：2030 覆蓋率智譜 {n("COST_Coverage", Y, "f2")}、OpenAI {n("OAI_COST_Coverage", Y, "f2")}；規模差距很大（2030 供給 VR 等值 GW {n("CMP_Supply_VReq", Y, "f3")} 對 {n("OAI_CMP_Supply_VReq", Y, "f1")}），絕對缺口小兩個數量級。OpenAI 的問題是「錢不夠」（2030 累計外部資金需求 {n("OAI_FND_ExtNeedCum", Y, "f0")} $B）；智譜的模型基準燒錢小、已募資金多（累計 {n("FND_ExtNeedCum_USD", Y, "f2")} $B），但實際燒錢速度可能遠高於模型（第 ⑦ 節）。美元口徑＝RMB ÷ USD/CNY {n("INP_023", None, "f4")} ÷ 10；OpenAI 數字取自 OAI_Link 快照（{html.escape(str(V.get("OAI_Ref")))}），只並排、不參與計算。</p>
-{V.src("COST_PropRev_VR_USD", "COST_PropFull_VR_USD", "COST_PropGap_VR_USD", "COST_Coverage", "CMP_Supply_VReq", "FND_FCF_USD", "FND_Committed_USD", "FND_ExtNeedCum_USD", "FND_CashEnd_USD", "COST_PropGap_Phys_USD", "OAI_COST_PropRev_VR", "OAI_COST_PropFull_VR", "OAI_COST_PropGap_VR", "OAI_COST_Coverage", "OAI_CMP_Supply_VReq", "OAI_FND_FCF", "OAI_FND_Committed", "OAI_FND_ExtNeedCum", "OAI_FND_CashEnd", "CMP_Eta1H26", "INP_023")}
+{V.src("COST_PropRev_VR_USD", "COST_PropFull_VR_USD", "COST_PropGap_VR_USD", "COST_Coverage", "CMP_Supply_VReq", "FND_FCF_USD", "FND_Committed_USD", "FND_ExtNeedCum_USD", "FND_CashEnd_USD", "COST_PropGap_Phys_USD", "OAI_COST_PropRev_VR", "OAI_COST_PropFull_VR", "OAI_COST_PropGap_VR", "OAI_COST_Coverage", "OAI_CMP_Supply_VReq", "OAI_FND_FCF", "OAI_FND_Committed", "OAI_FND_ExtNeedCum", "OAI_FND_CashEnd", "CMP_Eta1H26", "CMP_SupplyGW", "Cost!K67", "INP_023")}
 </section>""")
 
     # ── ⑩ 最該審的 5 項預設 ──
     S.append(f"""<section id="s10"><h2><span class="no">⑩</span>最該審的 5 項預設</h2>
 <ol>
+<li><b>總算力費的估計（r2 P1）：研發項下算力費＝研發開支 × {n("INP_137", None, "pct1")}（INP_137，招股章程 1H25；FY2025、1H26 未揭露）、營業成本計算服務費＝API 銷售成本 × {n("INP_102", None, "pct0")}（INP_102）</b>：命題 1 唯一的翻轉點（≤{n("INP_137", None, "pct1", "flip_rdfee")}）；取低／高時 2030 差額 {n("COST_PropGap_VR", Y, "f0", "rdfee_lo")}／{n("COST_PropGap_VR", Y, "f0", "rdfee_hi")}、累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0", "rdfee_lo")}／{n("FND_ExtNeedCum", Y, "f0", "rdfee_hi")}。</li>
 <li><b>每 GW 租價下限：供應商最低毛利 {n("INP_136", None, "pct0")}（INP_136；Z5b V1）</b>：2028 起租價由下限決定；取高時 2030 差額 {n("COST_PropGap_VR", Y, "f0", "mgm_hi")}、累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0", "mgm_hi")}。觀察租價年變動 {n("INP_100", None, "pct0")}（INP_100）只影響 2026–2027。</li>
-<li><b>研發占比沿用 1H26 實際 {n("Compute!G98", Y, "f2")}（INP_120＝0；完成報告 ④ #29、#65）</b>：命題 1 唯一的翻轉點；線性降至 0.5 時 2030 差額 {n("COST_PropGap_VR", Y, "f0", "rd_05")}、2030 供給 {n("CMP_SupplyGW", Y, "f2", "rd_05")} GW。</li>
-<li><b>η 沿用 1H26 校準值 {n("CMP_Eta1H26", None, "f2")}（INP_105＝0；#30、#64）</b>：η 收斂至 1 時累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0", "eta_conv")}——基準與該情境差距最大，也影響與 OpenAI 的每 GW 比較。</li>
+<li><b>η 沿用 1H26 上調值 {n("CMP_Eta1H26", None, "f2")}（INP_105＝0；η 基準 1 是 P1 的 Decision，INP_138）</b>：η 收斂至 1 時累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0", "eta_conv")}——基準與該情境差距最大，也影響與 OpenAI 的每 GW 比較。</li>
 <li><b>Coding Plan 額度使用率 {n("INP_060", None, "f2")}（INP_060；#13、#56、#66）</b>：擺幅大（取高／低 2030 差額 {n("COST_PropGap_VR", Y, "f0", "util_hi")}／{n("COST_PropGap_VR", Y, "f0", "util_lo")}），但主要經由 η 重校準，不是經濟機制。</li>
-<li><b>2H26 API 任務數成長 +{n("INP_038", None, "pct0")}（INP_038；#15、#27）</b>：取低／高時 2030 營收淨額 {n("REV_NetCapped", Y, "f1", "task_lo")}／{n("REV_NetCapped", Y, "f1", "task_hi")}（基準 {n("REV_NetCapped", Y, "f1")}），但差額幾乎不變（成本同步增加）。</li>
+<li><b>2H26 API 任務數成長 +{n("INP_038", None, "pct0")}（INP_038；#15、#27）</b>：取低／高時 2030 營收淨額 {n("REV_NetCapped", Y, "f1", "task_lo")}／{n("REV_NetCapped", Y, "f1", "task_hi")}（基準 {n("REV_NetCapped", Y, "f1")}），但差額仍為負（成本同步增加）。</li>
 </ol>
-<p class="note">Z1–Z4 共 101 項已套用預設的全表：<code>docs/reports/20261008_v0.1.md</code> ④；Z5b 修正與前後對照：<code>docs/reports/20261008_v0.1-r2_查核修正.md</code>；敏感度原始輸出 <code>20261008_v0.1-r2_敏感度.json</code>。</p>
+<p class="note">Z1–Z4 共 101 項已套用預設的全表：<code>docs/reports/20261008_v0.1.md</code> ④；r2（招股章程 P1–P5＋Z5b V1–V9）修正與前後對照：<code>docs/reports/20261008_v0.1-r2_查核修正.md</code>；敏感度原始輸出 <code>20261008_v0.1-r2_敏感度.json</code>。</p>
 </section>""")
 
     # ── ⑪ 資料與版本 ──
@@ -692,8 +694,8 @@ Coding Plan 額度使用率不列為翻轉點：它同時改變 1H26 的 η 校�
 <dt>Excel</dt><dd><code>{html.escape(model.name)}</code>（v{ver}；唯一計算引擎；本頁同資料夾附 xlsx）</dd>
 <dt>Tokenomics</dt><dd>{html.escape(str(tk_ver))}（<code>{html.escape(str(tk_file))}</code>），master <code>{html.escape(str(tk_sha))}</code>，讀取日 {html.escape(str(tk_date))}</dd>
 <dt>OpenAI 對照</dt><dd><code>{html.escape(str(V.get("OAI_File")))}</code>（{html.escape(str(V.get("OAI_Ref")))}；SHA-256 <code>{html.escape(str(V.get("OAI_SHA256")))[:12]}…</code>）</dd>
-<dt>資料日期</dt><dd>SRC_ZP 最新文件日期 {latest_src_date(model)}；股價 2026-10-07；匯率 2026-09-28 中間價；模型日期 {date_disp}</dd>
-<dt>檢查</dt><dd>CHK_Errors＝{n("CHK_Errors", None, "f0")}（Checks C01–C93；WARN：ARR 差距兩項、η 兩項）</dd>
+<dt>資料日期</dt><dd>SRC_ZP 最新文件日期 {latest_src_date(model)}（含招股章程 2025-12-30 擷取 SRC_ZP_611–1054）；股價 2026-10-07；匯率 2026-09-28 中間價；模型日期 {date_disp}</dd>
+<dt>檢查</dt><dd>CHK_Errors＝{n("CHK_Errors", None, "f0")}（Checks C01–C95；WARN：ARR 差距兩項、η 範圍兩項、η 上調一項）</dd>
 <dt>期間與單位</dt><dd>FY2025–FY2030 曆年制，2025 為實際校準年、1H26 為第二個實際點；RMB 億；GW＝IT 關鍵電力；VR 等值＝以 VR200 Sol 層級每 GW 產能換算</dd>
 </dl>
 <p class="note"><span class="tag">Verified</span>已查核原文 <span class="tag">Interested-party</span>公司或利害關係方說法 <span class="tag">Analogy</span>類比推估（附區間） <span class="tag">Assumed</span>假設（附區間） <span class="tag">Derived</span>由其他數字推得 <span class="tag">Decision</span>建模決定。公司原始數據在 SRC_ZP、算力物理取自 Tokenomics（TK_Link）、假設在 Inputs、OpenAI 對照在 OAI_Link。</p>
