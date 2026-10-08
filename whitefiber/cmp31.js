@@ -36,6 +36,12 @@ cmp('營收−MW×單價×利用率', S+'核對：算力收入 − 平均在役 
 cmp('每MW年收入', '輸入|每 MW 年收入', d.m.revMW);
 (COMPANY_DATA.texts.revMwContracts||[]).forEach(x=>cmp('合約隱含 '+x[0], S+'對照｜合約隱含每 MW｜'+x[0], [x[1], d.m.revMW[0]*1e3*(q.revScale??1), x[1]/(d.m.revMW[0]*1e3*(q.revScale??1))])); // WhiteFiber v0.1b：合約隱含每 MW 對照列
 cmp('傳統事業營收', '輸入|傳統事業營收（模型期）', H('legacyRev')); cmp('傳統事業EBITDA', '輸入|傳統事業 EBITDA（模型期）', H('legacyEbitda')); // v0.1b（Oracle）
+if(d.lg.colo&&d.lg.colo.on){ const CL=d.lg.colo; // WhiteFiber v0.1b：託管站點（MW 驅動；逐站點營收、建置 CapEx 與合計、PP&E、建物 D&A、RPO 對照）
+  CL.sites.forEach(x=>{ cmp('託管 '+x.key+' 營收', '輸入|託管｜'+x.label+'｜營收（模型期）', x.rev); cmp('託管 '+x.key+' CapEx', '輸入|託管｜'+x.label+'｜建置 CapEx（模型期）', x.capex); });
+  cmp('託管營收合計', '輸入|託管營收（站點合計）', CL.rev); cmp('託管CapEx合計', '輸入|託管建置 CapEx（站點合計）', CL.capex);
+  cmp('託管PP&E', '輸入|託管期初 PP&E（各期）', CL.ppe); cmp('託管D&A', '輸入|託管 D&A（建物）', CL.da);
+  cmp('託管已簽約營收', '輸入|託管｜對照：已簽約站點營收（模型）', CL.signedRev); cmp('託管 模型−RPO', '輸入|託管｜對照：模型 − RPO', CL.signedRev.map((v,i)=>v-q.colo.rpoColo[i]));
+  cmp('D&A合計(GPU＋託管)', '輸入|D&A（車隊折舊）', H('daFleet')); cmp('毛CapEx含託管', '輸入|毛 CapEx（模型期，下游引用此列）', H('gross')); }
 d.lg.lines.forEach(x=>{ cmp('傳統 '+x.key+' 全年', `輸入|傳統事業｜${x.label}｜全年營收`, x.annual); cmp('傳統 '+x.key+' 模型期', `輸入|傳統事業｜${x.label}｜模型期營收`, x.rev); });
 cmp('現金稅', F+T('⑦ 現金稅（«STUB» 起）'), H('cashTax')); cmp('股利', F+'⑧ 股利（普通股＋特別股）', y.map((e,i)=>i===0?e.fyDividend:e.dividend)); cmp('債務上限', F+'債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）', H('debtCap')); // v0.1b cmp('來源 傳統EBITDA', F+T('Ⓒ3 傳統事業 EBITDA（«STUB» 起）'), H('legacyEbitda'));
 cmp('36個月營收對照', S+'對照：評價日起 36 個月 MW 驅動營收', H('oci36')); cmp('RPO36 差額', '連動檢查|對照：RPO 36 個月內轉換 − 模型 36 個月 MW 驅動營收', [LATEST_Q.rpo*COMPANY_DATA.rpo.within36m-d.totals.oci36]); // v0.1b

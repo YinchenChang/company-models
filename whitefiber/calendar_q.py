@@ -172,6 +172,7 @@ ROLL_FIELDS = [
     ('期初餘額', 'valuation.holdings', '持股價值（估值、持股比例；v0.1b）'),
     ('期初餘額', 'valuation.debtLike', '類債項目（SAFE 等；v0.1b）'),
     ('期初餘額', 'valuation.postEvents', '期後事件（評價日後、資料截止前的融資與股數變動；評價日現金、淨負債、股數、CAPM 權重的期後調整；WhiteFiber v0.1b）'),
+    ('期初餘額', 'defaults.colo', '第二分部（託管）站點：起租與建置時點以評價日起算的年數、期初託管 PP&E（WhiteFiber v0.1b）'),
     ('首期一次性金額', 'debt.extraCost', '債務額外融資成本（例如 MOIC 到期加付；各期金額；WhiteFiber v0.1b）'),
 ]
 

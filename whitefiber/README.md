@@ -167,7 +167,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、leases.uncommenced、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles、defaults.otherEbitda[0]、valuation.holdings、valuation.debtLike、defaults.legacyBiz、defaults.dividend.preferred[0]、valuation.postEvents、debt.extraCost） | 必改 |
+| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、leases.uncommenced、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles、defaults.otherEbitda[0]、valuation.holdings、valuation.debtLike、defaults.legacyBiz、defaults.dividend.preferred[0]、valuation.postEvents、debt.extraCost、defaults.colo） | 必改 |
 
 ### `ytdActual`：年初至今實際數（10-Q；v4.5 前為 actual1H）
 
@@ -442,6 +442,14 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
+| `defaults.colo.sites` | 第二分部（託管）MW 驅動站點：key、label、mw（IT MW）、start（起租，評價日起年數）、rent（第一年租金 US$m/MW-IT·年）、esc（年調）、capex（剩餘建置 US$bn）、capexStart／capexEnd（建置起訖年數）、scen（[保守, 基準, 積極] 1＝納入）、delay（1＝起租隨延誤後移）、signed（1＝已簽約）、note（WhiteFiber v0.1b） | 清單 | 10 筆 | 必改 |
+| `defaults.colo.margin` | 託管分部 EBITDA 率（五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）；有站點時取代 legacyBiz.ebitdaMargin） | 比例清單 | 0.522、0.554、0.586、0.618、0.65 | 檢查 |
+| `defaults.colo.marginNote` | 託管 EBITDA 率的推導（起點＝站點毛利率扣分攤 G&A；穩態＝[Analogy] 區間中點） | 文字 | 託管分部 EBITDA 率（審查留言第 5 條）：起… | 必改 |
+| `defaults.colo.ppeOpen` | 期初託管 PP&E（建物 D&A 基礎；10-Q 託管設備帳面淨額含在建） | US$bn | 0.5563 | 必改 |
+| `defaults.colo.life` | 託管建物折舊年限 | 年 | 20 | 檢查 |
+| `defaults.colo.coverPrepay` | 客戶預付覆蓋比是否也適用於託管建置 CapEx | 是／否 | 是 | 檢查 |
+| `defaults.colo.rpoColo` | 季報託管 RPO 的年度分布（五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）；已簽約站點模型營收的對照列） | US$bn 清單 | 0.036053、0.093465、0.094835、0.095285、0.094021 | 必改 |
+| `defaults.colo.note` | 託管分部的建模說明（公式、轉嫁電費、期初 PP&E、年限、預付） | 文字 | 託管分部（v0.1b 步驟 3；另建 MW 驅動區塊… | 必改 |
 | `defaults.scenario` | 開啟時的預設情境（low／base／high） | 文字 | base | 檢查 |
 | `defaults.revenueDriver` | 營收驅動：mw＝平均在役 MW × 每 MW 年收入 × 利用率（新產能簽約率固定 100%，RPO 只作對照）；rpo＝CRWV 模板的 RPO 排程＋新簽約（v0.1b） | 代碼 | mw | 檢查 |
 | `defaults.lambda` | 提前支出比例：次年才上線的 MW，其建置支出落在前一年的比例 | 比例 | 0.35 | 檢查 |

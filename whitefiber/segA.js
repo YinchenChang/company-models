@@ -109,6 +109,27 @@ function shiftQ(V, v0, dm) {
 }
 // v0.1b（Oracle）：傳統事業（company.json → defaults.legacyBiz）。各線全年營收＝上一財年實際 ×(1＋年增率)，年增率自起點線性收斂到長期值；
 // 首期模型部分＝首期全年 − 年初至今實際（首期 YTD＋模型＝全年）。EBITDA＝營收 × 合併 EBITDA 率（各期一列）。沒有傳統事業時 lines 為空清單，全部為 0。
+// WhiteFiber v0.1b：第二分部的 MW 驅動站點（company.json → defaults.colo；託管）。期間 i 的起訖時點（評價日起，年）T0＝CALQ.tStart[i]、T1＝CALQ.tEnd[i]；
+// 站點 s 起租 s0＝start＋delay × 延誤月數 ÷ 12（未簽約站點隨建設延誤後移）；營收＝情境旗標 × MW × 第一年租金 ÷ 1000 ×(1＋年調)^((MAX(T0, s0)＋T1)÷2 − s0) × MAX(0, T1 − MAX(T0, s0))；
+// 建置 CapEx＝總額 × 建置期間落在本期的比例（不隨延誤後移；起訖相同時落在所屬期間）；EBITDA＝營收 × EBITDA 率；D&A＝(期初託管 PP&E＋本期建置 × ½) ÷ 年限 × 期間長度。Excel「輸入與假設」B2 同一公式。
+function coloQ(e) {
+  let C = e.colo, n = PERIOD_YEARS.length, Z = () => PERIOD_YEARS.map(() => 0);
+  if (!C || !C.sites) return { sites: [], rev: Z(), capex: Z(), ebitda: Z(), da: Z(), margin: Z(), signedRev: Z(), ppe: Z(), on: !1 };
+  let si = { low: 0, base: 1, high: 2 }[e.scenario || `base`] ?? 1, DM = e.delayMonths ?? 0,
+    sites = C.sites.map(x => {
+      let act = x.scen[si] ? 1 : 0, s0 = x.start + (x.delay ? DM / 12 : 0),
+        rev = PERIOD_YEARS.map((L, i) => { let T0 = CALQ.tStart[i], T1 = CALQ.tEnd[i], a = Math.max(T0, s0); return T1 > a ? act * x.mw * x.rent / 1e3 * (1 + x.esc) ** ((a + T1) / 2 - s0) * (T1 - a) : 0 }),
+        capex = PERIOD_YEARS.map((L, i) => { let T0 = CALQ.tStart[i], T1 = CALQ.tEnd[i], cs = x.capexStart, ce = x.capexEnd;
+          return act * (ce > cs ? x.capex * Math.max(0, Math.min(T1, ce) - Math.max(T0, cs)) / (ce - cs) : (cs >= T0 && cs < T1) || (i === 0 && cs < T0) ? x.capex : 0) });
+      return { ...x, act, s0, rev, capex }
+    }),
+    rev = PERIOD_YEARS.map((L, i) => sites.reduce((a, x) => a + x.rev[i], 0)),
+    capex = PERIOD_YEARS.map((L, i) => sites.reduce((a, x) => a + x.capex[i], 0)),
+    signedRev = PERIOD_YEARS.map((L, i) => sites.reduce((a, x) => a + (x.signed ? x.rev[i] : 0), 0)),
+    ppe = [], da = PERIOD_YEARS.map((L, i) => { let b = i === 0 ? C.ppeOpen : ppe[i - 1] + capex[i - 1]; ppe.push(b); return (b + .5 * capex[i]) / C.life * L });
+  return { sites, rev, capex, ebitda: rev.map((v, i) => v * C.margin[i]), da, margin: C.margin, signedRev, ppe, on: !0 }
+}
+
 function legacyQ(e) {
   let B = e.legacyBiz || { lines: [], ebitdaMargin: PERIOD_YEARS.map(() => 0) },
     lines = B.lines.map(x => {
@@ -117,8 +138,11 @@ function legacyQ(e) {
       return { key: x.key, label: x.label, g, annual: A, rev: A.map((a, r) => r === 0 ? a - x.ytd : a), ytd: x.ytd }
     }),
     rev = PERIOD_YEARS.map((L, r) => lines.reduce((a, x) => a + x.rev[r], 0)),
-    ebitda = rev.map((v, r) => v * B.ebitdaMargin[r]);
-  return { lines, rev, ebitda, margin: B.ebitdaMargin, annual: PERIOD_YEARS.map((L, r) => lines.reduce((a, x) => a + x.annual[r], 0)) }
+    CO = coloQ(e), // WhiteFiber v0.1b：託管站點併入第二分部（有站點時 EBITDA 率改用 colo.margin）
+    mg = CO.on ? CO.margin : B.ebitdaMargin,
+    rev2 = rev.map((v, r) => v + CO.rev[r]),
+    ebitda = rev2.map((v, r) => v * mg[r]);
+  return { lines, rev: rev2, ebitda, margin: mg, annual: PERIOD_YEARS.map((L, r) => lines.reduce((a, x) => a + x.annual[r], 0)), capex: CO.capex, da: CO.da, colo: CO }
 }
 
 function siteBenchQ(e) {
@@ -370,8 +394,9 @@ function runFunding(e) {
         nC = nR * (1 - (t.defaultP[r] / 100) * p) * cm,
         svcCash = svc * cm,
         ob = (e.otherEbitda || [])[r] || 0, // v0.1b：其他事業 EBITDA（Avride＋TripleTen；負值＝燒錢），同時進入 EBITDA 與營運來源
-        _ = CX[r],
-        v = (CXG[r] + (e.prepay.coverRefresh ? REF[r] : 0)) * e.a.customerFund[r], // v0.1b：客戶預付流入＝成長型 CapEx × 預付比率；v0.1c（Oracle）：prepay.coverRefresh 時汰換 CapEx 同樣適用覆蓋比
+        _ = CX[r] + LG.capex[r], // WhiteFiber v0.1b：毛 CapEx 含第二分部（託管）建置
+        CPV = e.colo && e.colo.coverPrepay ? 1 : 0, // WhiteFiber v0.1b：客戶預付覆蓋比同樣適用於託管建置
+        v = (CXG[r] + (e.prepay.coverRefresh ? REF[r] : 0) + CPV * LG.capex[r]) * e.a.customerFund[r], // v0.1b：客戶預付流入＝成長型 CapEx × 預付比率；v0.1c（Oracle）：prepay.coverRefresh 時汰換 CapEx 同樣適用覆蓋比
         y = _ - v,
         clB = WF.cl,
         ppI = (e.prepay.financingRate ?? 0) * (clB + .5 * v) * L, // v0.1b（Oracle）：重大財務組成——合約負債以隱含利率累積的非現金利息（期初餘額＋本期流入一半）
@@ -383,7 +408,7 @@ function runFunding(e) {
         O = (e.includeDebt ? DEBT_AMORT[r] : 0) + CVP[r].amort, // v0.1b：含債務處理可轉債的到期還本（到期累積本金）
         k = (r === 0 && e.includeAtm ? e.atm : 0) + (r === 0 ? PE_Q.cash : 0), // WhiteFiber v0.1b：期後事件現金淨額列於首期股權／可轉債（融資）
         lgR = LG.rev[r], lgE = LG.ebitda[r], // v0.1b（Oracle）：傳統事業營收與 EBITDA（EBITDA 視為現金，稅另列）
-        tx = (e.cashTaxRate ?? 0) * Math.max(0, totRev * ebM + ob + lgE - pen - DAF[r] - IX[r]), // v0.1b：現金稅＝稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（不含瀑布新債利息，避免循環；偏保守）
+        tx = (e.cashTaxRate ?? 0) * Math.max(0, totRev * ebM + ob + lgE - pen - DAF[r] - LG.da[r] - IX[r]), // WhiteFiber v0.1b：扣託管建物 D&A // v0.1b：現金稅＝稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（不含瀑布新債利息，避免循環；偏保守）
         dvSh = e.dividend ? e.dividend.sharesBase + WF.sh + CVN.reduce((a, n) => a + (n.mand && n.t < r ? n.S : 0), 0) : 0, // v0.1b（Oracle）：股利股數＝期初股數（基礎＋前期累計瀑布新股＋已強制轉換的特別股）
         dvC = e.dividend ? 4 * e.dividend.perShareQ * L * dvSh : 0, // 普通股股利＝每股（每季 × 4）× 期間長度 × 期初股數
         dvP = e.dividend ? e.dividend.preferred[r] : 0, // 特別股股利（強制轉換前；company.json → defaults.dividend.preferred）
@@ -489,7 +514,7 @@ function runFunding(e) {
         mwNext: MX[r],
         capexFull: CXF[r],
         capexGrowth: CXG[r],
-        capexGrowthCash: CXG[r] * (1 - e.a.customerFund[r]), // v0.1c：成長型 CapEx 扣客戶預付後（終值基準加回用）
+        capexGrowthCash: CXG[r] * (1 - e.a.customerFund[r]) + LG.capex[r] * (1 - (e.colo && e.colo.coverPrepay ? e.a.customerFund[r] : 0)), // WhiteFiber v0.1b：含託管建置（成長型） // v0.1c：成長型 CapEx 扣客戶預付後（終值基準加回用）
         refresh: REF[r],
         refreshFlag: RFF[r] ? 1 : 0,
         refreshSteadyV: RFS[r],
@@ -499,7 +524,7 @@ function runFunding(e) {
         avgAccepted: (MB[r] + t.accepted[r]) / 2,
         ebitdarM: eR,
         ppeBeg: PPE[r],
-        daFleet: DAF[r],
+        daFleet: DAF[r] + LG.da[r], daGpu: DAF[r], daColo: LG.da[r], coloCapex: LG.capex[r], coloRev: LG.colo.rev[r], coloSigned: LG.colo.signedRev[r], coloPpe: LG.colo.ppe[r], // WhiteFiber v0.1b：D&A＝GPU 車隊＋託管建物
         capexOld: CX_OLD[r],
         intOld: INT_OLD[r],
         rentPerMW: (b + x) / L / ((MB[r] + t.accepted[r]) / 2) * 1e3,
@@ -539,7 +564,7 @@ function runFunding(e) {
     hOp = ACTUAL_1H.cfo - ACTUAL_1H.cashCapex - ACTUAL_1H.jv - (ACTUAL_1H.dividends || 0), // v0.1b：年初至今股利與模型期一樣列在營運缺口
     hFin = ACTUAL_1H.borrow - ACTUAL_1H.cappedCall + ACTUAL_1H.equity,
     hPlug = e.cash - (ACTUAL_1H.cash1231 + hOp + hFin - ACTUAL_1H.debtRepaid),
-    _fy = (o[0].fyRevenue = ACTUAL_1H.revenue + o[0].isRev + o[0].legacyRev, o[0].fyGross = ACTUAL_1H.capex + o[0].gross, o[0].fyCashCapex = ACTUAL_1H.cashCapex + o[0].cashCapex, o[0].fyLease = ACTUAL_1H.leasePaid + o[0].lease, o[0].fyInterest = ACTUAL_1H.interest + o[0].interest, o[0].fyDebtPay = ACTUAL_1H.debtRepaid + o[0].debtPay, o[0].fyDiv = ACTUAL_1H.jv + o[0].div, o[0].fyAtm = ACTUAL_1H.equity - ACTUAL_1H.cappedCall + o[0].atm, o[0].fyBorrow = ACTUAL_1H.borrow, o[0].fySourcesOp = ACTUAL_1H.cfo + o[0].sourcesOp, o[0].fyOperatingGap = hOp + o[0].operatingGap, o[0].fyExternal = ACTUAL_1H.prepay + o[0].external, o[0].h1 = ACTUAL_1H, o[0].hOp = hOp, o[0].hFin = hFin, o[0].hPlug = hPlug, o[0].fyCfo = ACTUAL_1H.cfo, o[0].fyCapexUse = ACTUAL_1H.cashCapex + o[0].gross, o[0].fyEquity = ACTUAL_1H.equity + o[0].atm, o[0].fyCapped = ACTUAL_1H.cappedCall, o[0].fyUsesCash = ACTUAL_1H.cashCapex + o[0].gross + o[0].lease + o[0].interest + ACTUAL_1H.jv + o[0].div + ACTUAL_1H.debtRepaid + o[0].debtPay + ACTUAL_1H.cappedCall + o[0].op + o[0].cashTax + (ACTUAL_1H.dividends || 0) + o[0].dividend, o[0].fyDividend = (ACTUAL_1H.dividends || 0) + o[0].dividend, o[0].fySrcTotal = ACTUAL_1H.cfo + o[0].sourcesOp + ACTUAL_1H.equity + o[0].atm + ACTUAL_1H.borrow + o[0].newDebt + o[0].equity, 0),
+    _fy = (o[0].fyRevenue = ACTUAL_1H.revenue + o[0].isRev + o[0].legacyRev, o[0].fyGross = ACTUAL_1H.capex + o[0].gross, o[0].fyCashCapex = ACTUAL_1H.cashCapex + o[0].cashCapex, o[0].fyLease = ACTUAL_1H.leasePaid + o[0].lease, o[0].fyInterest = ACTUAL_1H.interest + o[0].interest, o[0].fyDebtPay = ACTUAL_1H.debtRepaid + o[0].debtPay, o[0].fyDiv = ACTUAL_1H.jv + o[0].div, o[0].fyAtm = ACTUAL_1H.equity - ACTUAL_1H.cappedCall + o[0].atm, o[0].fyBorrow = ACTUAL_1H.borrow, o[0].fySourcesOp = ACTUAL_1H.cfo + o[0].sourcesOp, o[0].fyOperatingGap = hOp + o[0].operatingGap, o[0].fyExternal = ACTUAL_1H.prepay + o[0].external, o[0].h1 = ACTUAL_1H, o[0].hOp = hOp, o[0].hFin = hFin, o[0].hPlug = hPlug, o[0].fyCfo = ACTUAL_1H.cfo, o[0].fyCapexUse = ACTUAL_1H.cashCapex + o[0].gross, o[0].fyEquity = ACTUAL_1H.equity + o[0].atm, o[0].fyCapped = ACTUAL_1H.cappedCall, o[0].fyUsesCash = ACTUAL_1H.cashCapex + o[0].gross + o[0].lease + o[0].interest + ACTUAL_1H.jv + o[0].div + ACTUAL_1H.debtRepaid + o[0].debtPay + ACTUAL_1H.cappedCall + o[0].op + o[0].cashTax + (ACTUAL_1H.dividends || 0) + o[0].dividend, o[0].fyDividend = (ACTUAL_1H.dividends || 0) + o[0].dividend, o[0].fySrcTotal = ACTUAL_1H.cfo + o[0].sourcesOp + ACTUAL_1H.equity + o[0].atm + ACTUAL_1H.borrow + o[0].newDebt + o[0].convNew + o[0].equity + o[0].junk, /* WhiteFiber v0.1b：補瀑布可轉債與高息債（Excel 總來源同式） */ 0),
     s = e => o.reduce((t, n) => t + n[e], 0),
     c = rA(e),
     l = iA(e),
@@ -573,8 +598,15 @@ function runFunding(e) {
     id: `legacy-fy`,
     ok: LG.lines.every(x => Math.abs(x.ytd + x.rev[0] - x.annual[0]) < 1e-9),
     severity: `ok`,
-    title: `傳統事業：${PERIODS[0]} 全年 ${Y(LG.annual[0], 2)}bn（年初至今實際 ${Y(LG.lines.reduce((a, x) => a + x.ytd, 0), 3)}＋模型 ${Y(LG.rev[0], 2)}）`,
-    detail: `${LG.lines.map(x => `${x.label} ${Y(x.annual[0], 2)}（年增 ${hA(x.g[0] * 100, 1)} → ${PERIODS[4]} ${hA(x.g[4] * 100, 1)}）`).join(`；`)}。EBITDA 率 ${LG.margin.map(m => hA(m * 100, 1)).join(`／`)}（${TXQ.legacyMarginNote}）。${PERIODS[0]} 合計營收 ${Y(ACTUAL_1H.revenue + o[0].isRev + o[0].legacyRev, 2)}bn 對照公司指引 ${REV_GUIDE_TXT}。`
+    title: LG.colo.on ? `託管分部：${PERIODS[0]} 模型期營收 ${Y(LG.colo.rev[0], 3)}bn → ${PERIODS[4]} ${Y(LG.colo.rev[4], 3)}bn；建置 CapEx 五期 ${Y(LG.colo.capex.reduce((a, b) => a + b, 0), 3)}bn` : `傳統事業：${PERIODS[0]} 全年 ${Y(LG.annual[0], 2)}bn（年初至今實際 ${Y(LG.lines.reduce((a, x) => a + x.ytd, 0), 3)}＋模型 ${Y(LG.rev[0], 2)}）`,
+    detail: LG.colo.on ? `${LG.colo.sites.filter(x => x.act).map(x => `${x.label} ${Y(x.mw, 1)} MW（起租評價日後 ${Y(x.s0, 2)} 年、第一年 ${Y(x.rent, 2)}、${PERIODS[4]} 營收 ${Y(x.rev[4] * 1e3, 1)}m）`).join(`；`)}。EBITDA 率 ${LG.margin.map(m => hA(m * 100, 1)).join(`／`)}；建物 D&A ${LG.colo.da.map(x => Y(x * 1e3, 1)).join(`／`)}m（年限 ${e.colo.life} 年）。${PERIODS[0]} 合計營收 ${Y(ACTUAL_1H.revenue + o[0].isRev + o[0].legacyRev, 3)}bn 對照公司指引 ${REV_GUIDE_TXT}。`
+      : `${LG.lines.map(x => `${x.label} ${Y(x.annual[0], 2)}（年增 ${hA(x.g[0] * 100, 1)} → ${PERIODS[4]} ${hA(x.g[4] * 100, 1)}）`).join(`；`)}。EBITDA 率 ${LG.margin.map(m => hA(m * 100, 1)).join(`／`)}（${TXQ.legacyMarginNote}）。${PERIODS[0]} 合計營收 ${Y(ACTUAL_1H.revenue + o[0].isRev + o[0].legacyRev, 2)}bn 對照公司指引 ${REV_GUIDE_TXT}。`
+  }), LG.colo.on && _({
+    id: `colo-rpo`, // WhiteFiber v0.1b：託管 RPO（季報年度分布）vs 已簽約站點模型營收（只作對照）
+    ok: !0,
+    severity: `watch`,
+    title: `託管 RPO 對照：已簽約站點模型營收 vs 季報託管 RPO`,
+    detail: `已簽約站點（${LG.colo.sites.filter(x => x.signed).map(x => x.label).join(`、`)}）模型營收 ${LG.colo.signedRev.map(x => Y(x * 1e3, 1)).join(`／`)}m；季報託管 RPO ${(e.colo.rpoColo || []).map(x => Y(x * 1e3, 1)).join(`／`)}m（不含轉嫁電費等變動對價；MTL-1 短約多不在 RPO 內）。差額來自 NRC、計費起點與年調計法，不回推租金。`
   }), _({
     id: `rpo-36m`,
     ok: !0,

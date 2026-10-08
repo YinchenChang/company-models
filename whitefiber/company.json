@@ -49,7 +49,8 @@
   "defaults.legacyBiz": "FY26Q2",
   "defaults.dividend.preferred[0]": "FY26Q2",
   "valuation.postEvents": "FY26Q2",
-  "debt.extraCost": "FY26Q2"
+  "debt.extraCost": "FY26Q2",
+  "defaults.colo": "FY26Q2"
  },
  "ytdActual": {
   "throughQuarter": "FY26Q2",
@@ -857,7 +858,220 @@
     "date": "2027 Q2",
     "confidence": "中"
    }
-  ]
+  ],
+  "colo": {
+   "sites": [
+    {
+     "key": "nc1a",
+     "label": "NC-1 第一期 A（Nscale 20 MW）",
+     "mw": 20,
+     "start": 0.0833,
+     "rent": 1.886,
+     "esc": 0.03,
+     "capex": 0.0,
+     "capexStart": 0,
+     "capexEnd": 0,
+     "scen": [
+      1,
+      1,
+      1
+     ],
+     "delay": 0,
+     "signed": 1,
+     "note": "Nscale 10 年約 865／40 MW-IT／年調 3%：第 1 年等值 1.886 US$m/MW-IT·年（865 ÷ (40 × Σ1.03^t) [Derived]；NRC 未揭露，若 NRC>0 第 1 年更低）；2026 Q3 開始計費，前 20 MW 以 2026-08-01 起算（評價日後 0.083 年）[Interested-party／Assumed]；建置已完成（6/30 在建工程 484.6 含於託管期初 PP&E）"
+    },
+    {
+     "key": "nc1b",
+     "label": "NC-1 第一期 B（Nscale 20 MW）",
+     "mw": 20,
+     "start": 0.1667,
+     "rent": 1.886,
+     "esc": 0.03,
+     "capex": 0.0,
+     "capexStart": 0,
+     "capexEnd": 0,
+     "scen": [
+      1,
+      1,
+      1
+     ],
+     "delay": 0,
+     "signed": 1,
+     "note": "同上；後 20 MW 於 8 月底全額計費（2026-09-01 起算，評價日後 0.167 年）[Interested-party]"
+    },
+    {
+     "key": "mtl3",
+     "label": "MTL-3（Cerebras 5 MW）",
+     "mw": 5,
+     "start": -0.6667,
+     "rent": 2.35,
+     "esc": 0.0,
+     "capex": 0.0,
+     "capexStart": 0,
+     "capexEnd": 0,
+     "scen": [
+      1,
+      1,
+      1
+     ],
+     "delay": 0,
+     "signed": 1,
+     "note": "Cerebras 5 年約、每月 CAD 1.4（約 USD 0.979）＝11.75／年 ÷ 5 MW-IT＝2.35；2025-11 起計費；年調未揭露，取 0 [Interested-party]"
+    },
+    {
+     "key": "mtl1",
+     "label": "MTL-1（3 MW，14 家客戶）",
+     "mw": 3,
+     "start": -5.5,
+     "rent": 2.38,
+     "esc": 0.0,
+     "capex": 0.0,
+     "capexStart": 0,
+     "capexEnd": 0,
+     "scen": [
+      1,
+      1,
+      1
+     ],
+     "delay": 0,
+     "signed": 1,
+     "note": "100% 已簽約、平均合約約 2.5 年；每 MW 2.38＝(Q2 託管營收 4.726 − MTL-3 2.94) × 4 ÷ 3 [Derived]；到期以同價續約 [Assumed]"
+    },
+    {
+     "key": "mtl2",
+     "label": "MTL-2（3 MW-IT，2026 年底）",
+     "mw": 3,
+     "start": 0.5,
+     "rent": 1.85,
+     "esc": 0.03,
+     "capex": 0.0236,
+     "capexStart": 0,
+     "capexEnd": 0.5,
+     "scen": [
+      0,
+      1,
+      1
+     ],
+     "delay": 1,
+     "signed": 0,
+     "note": "5 毛／3 IT；2026 Q3 啟動初期施工、目標 2026 年底完工；建置估 23.6（10-Q）；客戶未定 → 租金取可比區間中點 1.85 [Analogy]；保守情境不納入（未簽約）"
+    },
+    {
+     "key": "nc1next",
+     "label": "NC-1 下一批（45 毛 MW ÷ 1.35）",
+     "mw": 33.33,
+     "start": 1.5,
+     "rent": 1.85,
+     "esc": 0.03,
+     "capex": 0.383295,
+     "capexStart": 0.5,
+     "capexEnd": 1.5,
+     "scen": [
+      0,
+      1,
+      1
+     ],
+     "delay": 1,
+     "signed": 0,
+     "note": "Duke 容量協議下一批 45 毛 MW（÷1.35＝33.33 MW-IT；Nscale 有優先權）；2028-01 起租（評價日後 1.5 年，對照表「2027–28 起租」）；租金 1.85（可比區間中點 [Analogy]）；建置 11.5／MW-IT（區間 9.0–13.5 [Analogy]）於 2027 年支出"
+    },
+    {
+     "key": "nc23",
+     "label": "NC-2／3（60 毛 MW 起 ÷ 1.35）",
+     "mw": 44.44,
+     "start": 1.25,
+     "rent": 1.85,
+     "esc": 0.03,
+     "capex": 0.57106,
+     "capexStart": 0.375,
+     "capexEnd": 1.25,
+     "scen": [
+      0,
+      0,
+      1
+     ],
+     "delay": 1,
+     "signed": 0,
+     "note": "北卡 Yadkin County 兩處（買賣協議 60.0，2026 Q4 交割、2027 Q3 RFS；60 毛 MW 起、最多 198）；44.44 MW-IT；租金 1.85 [Analogy]；資本支出＝土地 60.0＋建置 11.5／MW-IT；只放積極（審查留言第 6 條）"
+    },
+    {
+     "key": "nc1x1",
+     "label": "NC-1 擴建 A（＋100 毛 MW）",
+     "mw": 74.07,
+     "start": 2.5,
+     "rent": 1.85,
+     "esc": 0.03,
+     "capex": 0.851805,
+     "capexStart": 1.5,
+     "capexEnd": 2.5,
+     "scen": [
+      0,
+      0,
+      1
+     ],
+     "delay": 1,
+     "signed": 0,
+     "note": "NC-1 長期毛容量約 200（10-Q）／約 300（法說）：積極情境擴至約 300 毛 MW 的第一段（＋100 毛，2029-01 起租）[Interested-party 目標／Assumed 時程]；只放積極"
+    },
+    {
+     "key": "nc1x2",
+     "label": "NC-1 擴建 B（＋101 毛 MW，至約 300 毛）",
+     "mw": 74.81,
+     "start": 3.5,
+     "rent": 1.85,
+     "esc": 0.03,
+     "capex": 0.860315,
+     "capexStart": 2.5,
+     "capexEnd": 3.5,
+     "scen": [
+      0,
+      0,
+      1
+     ],
+     "delay": 1,
+     "signed": 0,
+     "note": "同上第二段（＋101 毛，2030-01 起租）；只放積極"
+    },
+    {
+     "key": "krambu",
+     "label": "Krambu（100 MW，口徑不明）",
+     "mw": 74.07,
+     "start": 1.5,
+     "rent": 1.85,
+     "esc": 0.03,
+     "capex": 0.851805,
+     "capexStart": 0.5,
+     "capexEnd": 1.5,
+     "scen": [
+      0,
+      0,
+      1
+     ],
+     "delay": 1,
+     "signed": 0,
+     "note": "法說二手摘要：Krambu 100 MW 液冷託管獨家使用權（2027 起）；10-Q 與簡報未提、條件與價格未揭露、口徑不明 → 以 100 毛 MW ÷1.35、自建同口徑（租金 1.85、建置 11.5／MW-IT）建模 [Assumed]；只放積極並標註（審查留言第 6 條）"
+    }
+   ],
+   "margin": [
+    0.522,
+    0.554,
+    0.586,
+    0.618,
+    0.65
+   ],
+   "marginNote": "託管分部 EBITDA 率（審查留言第 5 條）：起點＝Q2 託管分部毛利 3.005 ÷ 分部營收 4.752＝63.2%（10-Q 附註 16；站點層級）扣分攤 G&A：經常性現金 G&A（14.811 − SBC 3.671 − 呆帳 2.2＝8.94／季）依 Q2 經常性營收占比 28.6% 分攤＝2.555／季，以 2H26 託管營收規模（NC-1 全額計費約 23.6／季）換算為 10.8pt → 起點 52.2% [Derived]；穩態取 [Analogy] 區間中點 65%（區間 55%–80%：APLD Polaris Forge 1 年化 NOI 約 500 ÷ 年營收約 733＝68%〔[Interested-party] APLD FY26Q1 新聞稿〕、Galaxy Helios 租約層級調整後 EBITDA 率 90%+（不含總部費用，[Interested-party] Galaxy 2026 Q2 簡報）、WhiteFiber Q2 站點層級 63%；扣總部費用後取 55%–80%），線性走向 FY30。",
+   "ppeOpen": 0.5563,
+   "life": 20,
+   "coverPrepay": true,
+   "rpoColo": [
+    0.036053,
+    0.093465,
+    0.094835,
+    0.095285,
+    0.094021
+   ],
+   "note": "託管分部（v0.1b 步驟 3；另建 MW 驅動區塊，營收與 EBITDA 經由第二分部〔模板「傳統事業」〕列進入損益、營運來源與分部 EV/EBITDA）：各站點營收＝IT MW × 第一年租金（US$m/MW-IT·年）×(1＋年調)^(期中點 − 起租) × 期間內在租年數；未簽約站點的起租時點隨建設延誤月數後移（delay＝1）；建置 CapEx 在建置起訖期間平均分攤（不隨延誤後移），進類現金流量與託管 PP&E；建物 D&A＝(期初託管 PP&E＋本期建置 × ½) ÷ 年限 × 期間長度，與 GPU 折舊分列。轉嫁電費以淨額處理（Nscale 合約 TCV 不含電費，不計入營收與成本；對照表 r1 第 4 節第 4 條）。期初託管 PP&E＝10-Q 託管設備帳面淨額（含 NC-1 在建）556.3；建物折舊 20 年（區間 15–30：10-K 30 年 vs 10-Q 20–25 年）[Assumed]。客戶預付覆蓋比同樣適用於託管建置 CapEx（coverPrepay；1H26 預付 72.6 ÷ 資本支出 344.7 的口徑含託管）。"
+  }
  },
  "valuation": {
   "price": 16.83,

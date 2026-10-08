@@ -369,8 +369,42 @@ for _x in LGB['lines']:
     _mr = r
     r = prow(r, f"傳統事業｜{_nm}｜模型期營收", "US$bn", [f"=C{_ar}-{_yt}"] + [f"={COLS[i]}{_ar}" for i in range(1, 5)], NUM, "«P0»＝全年 − «YTD» 實際", BLACK)
     _LGM.append(_mr); _LGC.append(f"{_yt}+C{_mr}-C{_ar}")
-r = prow(r, "傳統事業營收（模型期）", "US$bn", [("=" + "+".join(f"{COLS[i]}{m}" for m in _LGM)) if _LGM else "=0" for i in range(5)], NUM, "四線合計（下游引用此列）", BLACK)
-r = prow(r, "傳統事業 EBITDA 率", "%", LGB['ebitdaMargin'], PCT, CO['texts'].get('legacyMarginNote', ''))
+# WhiteFiber v0.1b：第二分部的 MW 驅動站點（company.json → defaults.colo；與 HTML segA coloQ 同一公式）
+CLB = D.get('colo')
+COLO_REV = COLO_CAPEX = COLO_DA = COLO_SIG = None
+if CLB and CLB.get('sites'):
+    r = section(ws, r, "託管站點（MW 驅動：IT MW × 第一年租金 ×(1＋年調)^(期中點 − 起租) × 在租年數；建置 CapEx 依建置起訖分攤；建物 D&A 另列）", level=2, collapsed=True)
+    ws.cell(row=r - 1, column=9, value=CLB.get('note', '')).font = SMALL
+    _T0 = prow(r, "託管｜期初時點（評價日起，年）", "年", CAL['tStart'], NUM, "由 calendar_q.py 推算（勿改）", BLACK); _t0 = r; r = _T0
+    _T1 = prow(r, "託管｜期末時點（評價日起，年）", "年", CAL['tEnd'], NUM, "由 calendar_q.py 推算（勿改）", BLACK); _t1 = r; r = _T1
+    _CREV, _CCX, _CSG = [], [], []
+    for _x in CLB['sites']:
+        _nm = _x['label']
+        r = prow(r, f"託管｜{_nm}｜IT MW／起租（年）／第一年租金（US$m/MW）／年調／建置 CapEx（US$bn）", "", [_x['mw'], _x['start'], _x['rent'], _x['esc'], _x['capex']], '0.0000', _x['note']); _ra = r - 1
+        r = prow(r, f"託管｜{_nm}｜建置起（年）／建置訖（年）／隨延誤後移／已簽約", "", [_x['capexStart'], _x['capexEnd'], _x['delay'], _x['signed'], None], '0.0000', "時點為評價日起的年數；隨延誤後移＝1 時起租加上建設延誤月數 ÷ 12（建置不後移）"); _rb = r - 1
+        r = prow(r, f"託管｜{_nm}｜情境（保守／基準／積極；1＝納入）", "", list(_x['scen']) + [None, None], NUM0, "依『輸入與假設』A 區情境選擇器"); _rc = r - 1
+        _act = f"CHOOSE({SEL},$C${_rc},$D${_rc},$E${_rc})"
+        _s0 = f"($D${_ra}+$E${_rb}*§DLYC§/12)"
+        _a = lambda L: f"MAX({L}${_t0},{_s0})"
+        r = prow(r, f"託管｜{_nm}｜營收（模型期）", "US$bn",
+                 [f"={_act}*IF({L}${_t1}>{_a(L)},$C${_ra}*$E${_ra}/1000*(1+$F${_ra})^(({_a(L)}+{L}${_t1})/2-{_s0})*({L}${_t1}-{_a(L)}),0)" for L in COLS], NUM,
+                 "＝情境旗標 × MW × 第一年租金 ÷ 1000 ×(1＋年調)^(期中點 − 起租) × 期間內在租年數", BLACK); _CREV.append(r - 1)
+        if _x['signed']: _CSG.append(r - 1)
+        r = prow(r, f"託管｜{_nm}｜建置 CapEx（模型期）", "US$bn",
+                 [f"={_act}*IF($D${_rb}>$C${_rb},$G${_ra}*MAX(0,MIN({L}${_t1},$D${_rb})-MAX({L}${_t0},$C${_rb}))/($D${_rb}-$C${_rb}),IF(OR(AND($C${_rb}>={L}${_t0},$C${_rb}<{L}${_t1})" + (f",$C${_rb}<{L}${_t0}" if i == 0 else "") + f"),$G${_ra},0))"
+                  for i, L in enumerate(COLS)], NUM, "＝建置總額 × 建置期間落在本期的比例（不隨延誤後移）", BLACK); _CCX.append(r - 1)
+    r = prow(r, "託管營收（站點合計）", "US$bn", [f"=" + "+".join(f"{L}{x}" for x in _CREV) for L in COLS], NUM, "各站點營收合計（併入第二分部營收）", BLACK); COLO_REV = r - 1
+    r = prow(r, "託管建置 CapEx（站點合計）", "US$bn", [f"=" + "+".join(f"{L}{x}" for x in _CCX) for L in COLS], NUM, "併入毛 CapEx（D 區）與託管 PP&E", BLACK); COLO_CAPEX = r - 1
+    _CPO = gi(r, "託管期初 PP&E（建物折舊基礎）", "US$bn", CLB['ppeOpen'], "10-Q 託管設備帳面淨額（含 NC-1 在建工程）556.3 [Interested-party]"); r += 1
+    _CLF = gi(r, "託管建物折舊年限", "年", CLB['life'], "對照表預設 20 年（區間 15–30；10-K 30 年 vs 10-Q 20–25 年）[Assumed]", NUM0); r += 1
+    r = prow(r, "託管期初 PP&E（各期）", "US$bn", [f"={_CPO}"] + [f"={COLS[i-1]}{r}+{COLS[i-1]}{COLO_CAPEX}" for i in range(1, 5)], NUM, "＝前期期初＋前期託管建置", BLACK); _cpr = r - 1
+    for i in range(1, 5): ws.cell(row=_cpr, column=3 + i, value=f"={COLS[i-1]}{_cpr}+{COLS[i-1]}{COLO_CAPEX}")
+    r = prow(r, "託管 D&A（建物）", "US$bn", [f"=({L}{_cpr}+0.5*{L}{COLO_CAPEX})/{_CLF}*{L}${IN['模型期長度（年）']}" for L in COLS], NUM, "＝(期初託管 PP&E＋本期建置 × ½) ÷ 年限 × 期間長度；併入 D&A（與 GPU 車隊折舊分列）", BLACK); COLO_DA = r - 1
+    r = prow(r, "託管｜對照：已簽約站點營收（模型）", "US$bn", [("=" + "+".join(f"{L}{x}" for x in _CSG)) if _CSG else "=0" for L in COLS], NUM, "已簽約站點（NC-1、MTL-3、MTL-1）模型營收；只作對照", BLACK); COLO_SIG = r - 1
+    r = prow(r, "託管｜對照：季報託管 RPO（年度分布）", "US$bn", CLB.get('rpoColo', [0] * 5), NUM, "10-Q 託管 RPO 932.9：2026 下半年 36.1、2027 93.5、2028 94.8、2029 95.3、2030 94.0、其後 519.2（不含轉嫁電費等變動對價）[Interested-party]")
+    r = prow(r, "託管｜對照：模型 − RPO", "US$bn", [f"={L}{COLO_SIG}-{L}{r-1}" for L in COLS], NUM, "差額來自 NRC、計費起點、年調計法與 MTL-1 短約；不回推租金", BLACK)
+r = prow(r, "傳統事業營收（模型期）", "US$bn", [("=" + "+".join([f"{COLS[i]}{m}" for m in _LGM] + ([f"{COLS[i]}{COLO_REV}"] if COLO_REV else []))) if (_LGM or COLO_REV) else "=0" for i in range(5)], NUM, "各線合計（含託管站點；下游引用此列）", BLACK)
+r = prow(r, "傳統事業 EBITDA 率", "%", (CLB['margin'] if COLO_REV else LGB['ebitdaMargin']), PCT, (CLB.get('marginNote', '') if COLO_REV else CO['texts'].get('legacyMarginNote', '')))
 r = prow(r, "傳統事業 EBITDA（模型期）", "US$bn", [f"={COLS[i]}{IN['傳統事業營收（模型期）']}*{COLS[i]}{IN['傳統事業 EBITDA 率']}" for i in range(5)], NUM, "＝營收 × EBITDA 率；同時進入損益 EBITDA 與營運來源（現金稅另列）", BLACK)
 LG_CHK = gi(r, "傳統事業｜«P0» 核對（«YTD»＋模型期 − 全年）", "US$bn", ("=" + "+".join(_LGC)) if _LGC else "=0", "應為 0：首期年初至今實際＋模型期＝首期全年（各線合計）", NUM, font=BLACK); r += 1
 r += 1
@@ -478,10 +512,10 @@ for i in range(1, 5):
     ws.cell(row=IN["期初毛 PP&E"], column=3 + i, value=f"={COLS[i-1]}{IN['期初毛 PP&E']}+§INSVC{COLS[i-1]}§")  # v0.2：前期投入使用的成長型 CapEx（延誤 0＝前期成長型）
 r = section(ws, r, "CapEx 與折舊（結果；下游引用）", level=2)
 r = prow(r, "毛 CapEx（模型期，下游引用此列）", "US$bn",
-         [f"={COLS[i]}{IN['成長型 CapEx（模型期）']}+{COLS[i]}{IN['GPU 汰換 CapEx']}" for i in range(5)], NUM, "＝成長型＋汰換", BLACK, key="毛 CapEx")
+         [f"={COLS[i]}{IN['成長型 CapEx（模型期）']}+{COLS[i]}{IN['GPU 汰換 CapEx']}" + (f"+{COLS[i]}{COLO_CAPEX}" if COLO_CAPEX else "") for i in range(5)], NUM, "＝成長型＋汰換" + ("＋託管建置（B2）" if COLO_CAPEX else ""), BLACK, key="毛 CapEx")
 r = prow(r, "D&A（車隊折舊）", "US$bn",
-         [f"=({COLS[i]}{IN['期初毛 PP&E']}+0.5*§INSVC{COLS[i]}§)/{LIFE}*{COLS[i]}{IN['模型期長度（年）']}" for i in range(5)],  # v0.2：本期投入使用的成長型 CapEx
-         NUM, "＝(期初毛 PP&E＋本期成長型×½)÷壽命×期間長度", BLACK, key="D&A（車隊）")
+         [f"=({COLS[i]}{IN['期初毛 PP&E']}+0.5*§INSVC{COLS[i]}§)/{LIFE}*{COLS[i]}{IN['模型期長度（年）']}" + (f"+{COLS[i]}{COLO_DA}" if COLO_DA else "") for i in range(5)],  # v0.2：本期投入使用的成長型 CapEx；WhiteFiber v0.1b：加託管建物 D&A
+         NUM, "＝(期初毛 PP&E＋本期成長型×½)÷壽命×期間長度" + ("＋託管 D&A（建物，B2）" if COLO_DA else ""), BLACK, key="D&A（車隊）")
 for k in ("毛 CapEx", "D&A（車隊）"):
     for i in range(5):
         ws.cell(row=IN[k], column=3 + i).font = Font(name="Arial", size=10, bold=True)
@@ -973,9 +1007,8 @@ frow("① 毛 CapEx（認列，備忘）", "US$bn",
      f"«P0»＝«YTD» 實際認列 {CO['ytdActual']['capex']}＋«STUB» 模型；對照公司全年指引 {CAPEX_GUIDE_TXT}。備忘列：用途合計採現金口徑，不用這一列")
 frow("　客戶預付率", "%", lambda i: f"={inref('客戶預付占毛 CapEx', i)}", PCT, GREEN)
 frow("　客戶預付金額（抵減，«STUB» 起）", "US$bn",
-     (lambda i: f"=({inref('成長型 CapEx（模型期）', i)}+{inref('GPU 汰換 CapEx', i)})*{COLS[i]}{FR['　客戶預付率']}") if D['prepay'].get('coverRefresh') else
-     (lambda i: f"={inref('成長型 CapEx（模型期）', i)}*{COLS[i]}{FR['　客戶預付率']}"), NUM, BLACK,
-     ("＝(成長型＋汰換 CapEx)× 預付比率（v0.1c：汰換同樣適用覆蓋比）" if D['prepay'].get('coverRefresh') else "＝成長型 CapEx × 預付比率（汰換 CapEx 不計）") + "；«YTD» 的預付已含在實際 CFO 內，不重複計入")
+     (lambda i: f"=({inref('成長型 CapEx（模型期）', i)}" + (f"+{inref('GPU 汰換 CapEx', i)}" if D['prepay'].get('coverRefresh') else "") + (f"+'輸入與假設'!{COLS[i]}${COLO_CAPEX}" if (COLO_CAPEX and CLB.get('coverPrepay')) else "") + f")*{COLS[i]}{FR['　客戶預付率']}"), NUM, BLACK,
+     ("＝(成長型＋汰換 CapEx)× 預付比率（v0.1c：汰換同樣適用覆蓋比）" if D['prepay'].get('coverRefresh') else "＝成長型 CapEx × 預付比率（汰換 CapEx 不計）") + ("；含託管建置（WhiteFiber v0.1b：defaults.colo.coverPrepay）" if (COLO_CAPEX and CLB.get('coverPrepay')) else "") + "；«YTD» 的預付已含在實際 CFO 內，不重複計入")
 frow("　合約負債期初（客戶預付餘額）", "US$bn", lambda i: (f"={PP_CL0}" if i == 0 else "=0"), NUM, BLACK, "«P0» 期初＝«VMD» 季報遞延營收")
 cl_beg = FR["　合約負債期初（客戶預付餘額）"]
 frow("　合約負債利息累積（重大財務組成，非現金）", "US$bn",
@@ -1881,7 +1914,7 @@ dcf_lines = [
     ("五期 UFCF 現值合計", f"=SUM(C{pv_v}:G{pv_v})", NUM, "建置期現金流現值"),
     (("常態化 FCF（FY30）", f"={PL}G{ebit_v}*(1-{TAX})+{PL}G{da_v}-{PL}G{da_v}*{MAINT}", NUM,
      "＝EBIT×(1−稅)＋D&A−維持性 CapEx(D&A×比率)。不讓成長性 CapEx 偽裝成永續 FCF") if V.get('tvBasis') != 'ufcf' else
-     ("終值基準 FCF（«PL» UFCF，含汰換 CapEx）", f"=G{ufcf_v}+'輸入與假設'!G{IN['成長型 CapEx（模型期）']}*(1-'各期收支'!G{FR['　客戶預付率']})", NUM,
+     ("終值基準 FCF（«PL» UFCF，含汰換 CapEx）", f"=G{ufcf_v}+'輸入與假設'!G{IN['成長型 CapEx（模型期）']}*(1-'各期收支'!G{FR['　客戶預付率']})" + (f"+'輸入與假設'!G{COLO_CAPEX}*(1-" + (f"'各期收支'!G{FR['　客戶預付率']}" if CLB.get('coverPrepay') else "0") + ")" if COLO_CAPEX else ""), NUM,
      "v0.1c：終值基準＝末期 UFCF（含穩態汰換 CapEx，已扣客戶預付覆蓋）＋加回末期成長型 CapEx（扣預付後；成長由 g 表達，預設情境為 0）；GPU 不是永續資產，終值年須持續再投資")),
     ("終值（Gordon）", None, NUM, "＝常態化 FCF×(1+g)÷(WACC−g)"),
     ("終值現值", None, NUM, None),
@@ -2952,7 +2985,9 @@ if QC:
         qrow("EBITDA 率（模型）", "%", lambda j, c: f"={'CDEFGH'[PERS.index(POS_[j][0])]}{_E}/{'CDEFGH'[PERS.index(POS_[j][0])]}{_S}", PCT, "期內常數")
     qrow("調整後 EBITDA（模型）", "US$bn", lambda j, c: f"={c}{_RV_}*{c}{QT['EBITDA 率（模型）']}", NUM)
     qrow("車隊折舊（模型）", "US$bn", lambda j, c: (f"=({IA('期初毛 PP&E', POS_[j][0])}+'運營_產能與收入'!{COLS[POS_[j][0]]}${CAP['insvc']}*{2 * POS_[j][1] + 1}/{2 * POS_[j][2]})"
-                                                  f"/{LIFE}*{IA('模型期長度（年）', POS_[j][0])}/{POS_[j][2]}"), NUM, "依期內平均 PP&E（與年度車隊折舊公式相同）")
+                                                  f"/{LIFE}*{IA('模型期長度（年）', POS_[j][0])}/{POS_[j][2]}"
+                                                  + (f"+({IA('託管期初 PP&E（各期）', POS_[j][0])}+{IA('託管建置 CapEx（站點合計）', POS_[j][0])}*{2 * POS_[j][1] + 1}/{2 * POS_[j][2]})/{_CLF}*{IA('模型期長度（年）', POS_[j][0])}/{POS_[j][2]}" if COLO_DA else "")),
+         NUM, "依期內平均 PP&E（與年度車隊折舊公式相同；含託管建物 D&A）")
     qrow("調整後營業利益（模型）", "US$bn", lambda j, c: f"={c}{QT['調整後 EBITDA（模型）']}-{c}{QT['車隊折舊（模型）']}", NUM, "＝調整後 EBITDA − 車隊折舊（未扣 SBC）")
     # 指引（J 區；數字區間與文字）——CapEx 指引錨定需先有指引列
     CROW, CSEC, GLO, GHI, AROW, GTX = {}, {}, {}, {}, {}, {}
@@ -3456,7 +3491,7 @@ for _ws in wb:
         for _c in _row:
             if isinstance(_c.value, str) and '«' in _c.value: _c.value = _calq.fill(_c.value, CAL['tokens'])
             if isinstance(_c.value, str) and '§' in _c.value:  # v0.1b：可轉債稀釋的前向引用（評價股數、評價淨負債、錨定調整、第二輪判斷價）
-                for _k, _v in {**CV_TOKENS, **EB_TOKENS, **MC_TOKENS}.items(): _c.value = _c.value.replace(_k, _v)
+                for _k, _v in {**CV_TOKENS, **EB_TOKENS, **MC_TOKENS, '§DLYC§': DLY}.items(): _c.value = _c.value.replace(_k, _v)  # WhiteFiber v0.1b：§DLYC§＝建設延誤月數（託管站點起租後移）
                 assert '§' not in _c.value, _c.value
 _LMX = _calq.label_map(CO)  # WhiteFiber v0.1b：公司用語替換（texts.labelMap；與 HTML 相同；版本紀錄頁不換）
 if _LMX:
