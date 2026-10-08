@@ -1,0 +1,1704 @@
+# A1-F 成本、人數、融資、管理層目標（規格第 4 節 E、F、G）
+# 擷取日 2026-10-08；每筆皆有實際開啟過的網址與原文摘錄
+rows:
+# ===== F. 融資：股權輪 =====
+- key: fund_series_h_amount
+  group: F
+  metric: Series H 募資金額
+  value: 65
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-05-28
+  source: Anthropic 新聞稿〈Series H〉
+  url: https://www.anthropic.com/news/series-h
+  doc_date: 2026-05-28
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: 總額
+  note: "原文：raised $65 billion in Series H funding led by Altimeter Capital, Dragoneer, Greenoaks, and Sequoia。含 $15B 先前承諾的雲端業者投資"
+- key: fund_series_h_post_val
+  group: F
+  metric: Series H 投後估值
+  value: 965
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-05-28
+  source: TechCrunch〈Anthropic raises $65 billion, nears $1T valuation ahead of IPO〉
+  url: https://techcrunch.com/2026/05/28/anthropic-raises-65-billion-nears-1t-valuation-ahead-of-ipo/
+  doc_date: 2026-05-28
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因；媒體轉述公司公告）
+  basis: null
+  note: "$965 billion post-money；投前約 $900B（=965−65，Derived，未見原文）"
+- key: fund_series_h_hyperscaler_component
+  group: F
+  metric: Series H 中先前承諾的雲端業者投資
+  value: 15
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-05-28
+  source: Anthropic 新聞稿〈Series H〉
+  url: https://www.anthropic.com/news/series-h
+  doc_date: 2026-05-28
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: 總額
+  note: "原文：includes $15 billion of previously committed investments from hyperscalers, including $5 billion from Amazon。新現金約 $50B（Derived）"
+- key: fund_series_h_coleads
+  group: F
+  metric: Series H 共同領投（文字）
+  value: null
+  lo: null
+  hi: null
+  unit: 文字
+  period: 2026-05-28
+  source: Anthropic 新聞稿〈Series H〉
+  url: https://www.anthropic.com/news/series-h
+  doc_date: 2026-05-28
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: null
+  note: "原文：co-led by Capital Group, Coatue, D1 Capital Partners, GIC, ICONIQ, and XN；策略夥伴 Micron、Samsung、SK hynix 參與"
+- key: fund_series_g_amount
+  group: F
+  metric: Series G 募資金額
+  value: 30
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-02
+  source: Orrick〈Anthropic Raises $30B Series G at $380B Post-Money Valuation〉
+  url: https://www.orrick.com/en/News/2026/02/Anthropic-Raises-30B-Series-G-at-380B-Post-Money-Valuation
+  doc_date: 2026-02
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因；律所為公司代表）
+  basis: 總額
+  note: "標題：Anthropic Raises $30B Series G at $380B Post-Money Valuation"
+- key: fund_series_g_post_val
+  group: F
+  metric: Series G 投後估值
+  value: 380
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-02
+  source: Orrick〈Anthropic Raises $30B Series G at $380B Post-Money Valuation〉
+  url: https://www.orrick.com/en/News/2026/02/Anthropic-Raises-30B-Series-G-at-380B-Post-Money-Valuation
+  doc_date: 2026-02
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: null
+  note: "$380B Post-Money；投前約 $350B（Derived）"
+- key: fund_private_raised_cum_2026
+  group: F
+  metric: 成立以來私募累計募資
+  value: 125
+  lo: 125
+  hi: null
+  unit: $B
+  period: 2026-09
+  source: PYMNTS 轉述 Reuters 所見招股書草稿
+  url: https://www.pymnts.com/news/artificial-intelligence/2026/anthropic-prospectus-shows-what-2-trillion-dollar-ai-company-costs-run/
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 招股書草稿；募資誘因）
+  basis: 總額
+  note: "原文：has raised more than $125 billion privately since its founding five years ago（下限）"
+# ===== F. 現金、債務、IPO =====
+- key: cash_2025_12_31
+  group: F
+  metric: 現金、約當現金及短期投資（2025 年底）
+  value: 20.28
+  lo: null
+  hi: null
+  unit: $B
+  period: 2025-12-31
+  source: The Next Web 轉述 Reuters 所見招股書草稿
+  url: https://thenextweb.com/news/anthropic-ipo-prospectus-42bn-loss-518bn-compute
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 招股書草稿，未公開；募資誘因）
+  basis: null
+  note: "原文：ended 2025 with $20.28bn in cash, cash equivalents and short-term investments"
+- key: debt_credit_facility_15b
+  group: F
+  metric: 循環信貸額度
+  value: 15
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-09
+  source: ZeroHedge 轉述 Reuters 所見招股書草稿
+  url: https://www.zerohedge.com/markets/leaked-anthropic-ipo-prospectus-shows-42bn-net-loss-518bn-unfunded-spending-commitments-and
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 招股書草稿）
+  basis: 總額
+  note: "原文：It also has a $15 billion credit facility；另一來源稱 concurrently finalizing（尚在定案）"
+- key: debt_spv_tpu_financing
+  group: F
+  metric: 為 Google TPU 融資的特殊目的載體（SPV）累計
+  value: 71
+  lo: 71
+  hi: null
+  unit: $B
+  period: 2026-09
+  source: ZeroHedge 轉述 Reuters 所見招股書草稿
+  url: https://www.zerohedge.com/markets/leaked-anthropic-ipo-prospectus-shows-42bn-net-loss-518bn-unfunded-spending-commitments-and
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 招股書草稿）；ZeroHedge 為二手評論
+  basis: 總額
+  note: "原文：stacked over $71 billion through special purpose vehicles to finance Google TPU chips；表外，未見 Reuters 原文佐證，待核"
+- key: ipo_confidential_s1
+  group: F
+  metric: 秘密遞交 S-1 草稿（日期）
+  value: null
+  lo: null
+  hi: null
+  unit: 日期
+  period: 2026-06-01
+  source: Anthropic 新聞稿〈confidential draft S-1〉
+  url: https://www.anthropic.com/news/confidential-draft-s1-sec
+  doc_date: 2026-06-01
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: null
+  note: "Rule 135 公告：confidentially submitted a draft registration statement on Form S-1；股數、價格未定"
+- key: ipo_banks
+  group: F
+  metric: IPO 主辦承銷商（文字）
+  value: null
+  lo: null
+  hi: null
+  unit: 文字
+  period: 2026-06-03
+  source: Yahoo Finance／Investing.com 轉述 Bloomberg
+  url: https://finance.yahoo.com/markets/stocks/articles/anthropic-said-pick-morgan-stanley-175802678.html
+  doc_date: 2026-06-03
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 知情人士（Anthropic；募資誘因）
+  basis: null
+  note: "原文：chosen Morgan Stanley and Goldman Sachs Group Inc. to lead the offering；JPMorgan will also work on the deal"
+- key: ipo_target_valuation
+  group: F
+  metric: IPO 目標估值
+  value: 2000
+  lo: 2000
+  hi: null
+  unit: $B
+  period: 2026-Q4
+  source: The Next Web 轉述 Reuters
+  url: https://thenextweb.com/news/anthropic-ipo-prospectus-42bn-loss-518bn-compute
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 知情人士（Anthropic／投資人；募資誘因）
+  basis: null
+  note: "原文：aiming for a valuation of more than $2tn；listing likely after the US midterm elections in November"
+- key: ipo_founder_votes
+  group: F
+  metric: 共同創辦人經 Founder LLC 掌握投票權
+  value: 50.1
+  lo: null
+  hi: null
+  unit: '%'
+  period: 2026-09
+  source: The Next Web 轉述 Reuters 所見招股書草稿
+  url: https://thenextweb.com/news/anthropic-ipo-prospectus-42bn-loss-518bn-compute
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 招股書草稿）
+  basis: null
+  note: "原文：gives the seven co-founders 50.1% of the votes through a new Founder LLC"
+# ===== E. 成本（招股書草稿） =====
+- key: cost_opex_2025
+  group: E
+  metric: 2025 營業費用總額
+  value: 12.65
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2025
+  source: The Next Web 轉述 Reuters 所見招股書草稿
+  url: https://thenextweb.com/news/anthropic-ipo-prospectus-42bn-loss-518bn-compute
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 招股書草稿）
+  basis: 總額
+  note: "原文：Operating expenses reached $12.65bn（似含算力成本；即總成本費用）"
+- key: cost_opex_2025_b
+  group: E
+  metric: 2025 營業費用總額（約數）
+  value: 13
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2025
+  source: Fortune〈Anthropic's $2 trillion IPO prospectus has leaked〉
+  url: https://fortune.com/2026/09/29/anthropic-ipo-s-1-prospectus-income-statement/
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 招股書草稿）
+  basis: 總額
+  note: "原文：Operating expenses: $13 billion.（為 $12.65B 之四捨五入，非真正矛盾）"
+- key: cost_compute_2025
+  group: E
+  metric: 2025 算力與基礎設施支出（費用口徑）
+  value: 7.33
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2025
+  source: The Next Web 轉述 Reuters 所見招股書草稿
+  url: https://thenextweb.com/news/anthropic-ipo-prospectus-42bn-loss-518bn-compute
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 招股書草稿）
+  basis: 總額
+  note: "原文：Compute and infrastructure took $7.33bn of that, three times the 2024 figure（占營費 58%；2024 約 $2.4B，Derived）"
+- key: cost_noncompute_opex_2025
+  group: E
+  metric: 2025 非算力營業費用（人事、銷管等）
+  value: 5.32
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2025
+  source: Derived：12.65 − 7.33（同上 Reuters 轉述）
+  url: https://thenextweb.com/news/anthropic-ipo-prospectus-42bn-loss-518bn-compute
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Derived
+  party: null
+  basis: 總額
+  note: "營費 $12.65bn 減算力 $7.33bn；研發／銷售／管理細項未揭露"
+- key: cost_oploss_2025
+  group: E
+  metric: 2025 營業虧損
+  value: 8.06
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2025
+  source: The Next Web 轉述 Reuters 所見招股書草稿
+  url: https://thenextweb.com/news/anthropic-ipo-prospectus-42bn-loss-518bn-compute
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 招股書草稿）
+  basis: null
+  note: "原文：operating loss ... widened to $8.06bn from $2.98bn in 2024"
+- key: cost_oploss_2024
+  group: E
+  metric: 2024 營業虧損
+  value: 2.98
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2024
+  source: The Next Web 轉述 Reuters 所見招股書草稿
+  url: https://thenextweb.com/news/anthropic-ipo-prospectus-42bn-loss-518bn-compute
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 招股書草稿）
+  basis: null
+  note: "原文：widened to $8.06bn from $2.98bn in 2024"
+- key: cost_netloss_2025
+  group: E
+  metric: 2025 淨虧損
+  value: 42
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2025
+  source: The Next Web 轉述 Reuters 所見招股書草稿
+  url: https://thenextweb.com/news/anthropic-ipo-prospectus-42bn-loss-518bn-compute
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 招股書草稿）
+  basis: null
+  note: "原文：Anthropic lost $42bn in 2025；約 $34bn 為可轉換融資公允價值上升之非現金會計費用"
+- key: cost_netloss_2025_noncash_charge
+  group: E
+  metric: 2025 淨虧損中之非現金會計費用（可轉換融資重估）
+  value: 34
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2025
+  source: The Next Web 轉述 Reuters 所見招股書草稿
+  url: https://thenextweb.com/news/anthropic-ipo-prospectus-42bn-loss-518bn-compute
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 招股書草稿）
+  basis: null
+  note: "原文：About $34bn of the net loss was an accounting charge ... financing that could later turn into Anthropic shares"
+- key: cost_compute_per_rev_2026q1
+  group: E
+  metric: 2026 Q1 每 1 美元營收之算力支出
+  value: 0.71
+  lo: null
+  hi: null
+  unit: $/營收$
+  period: 2026-Q1
+  source: PYMNTS 轉述 WSJ 所見財務預測
+  url: https://www.pymnts.com/artificial-intelligence-2/2026/anthropic-on-track-for-first-operating-profit-as-revenue-surges/
+  doc_date: 2026-05-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：In the first quarter, Anthropic spent 71 cents on compute for every dollar of revenue"
+- key: cost_compute_per_rev_2026q2_proj
+  group: G
+  metric: 2026 Q2 預測每 1 美元營收之算力支出
+  value: 0.56
+  lo: null
+  hi: null
+  unit: $/營收$
+  period: 2026-Q2
+  source: PYMNTS 轉述 WSJ 所見財務預測
+  url: https://www.pymnts.com/artificial-intelligence-2/2026/anthropic-on-track-for-first-operating-profit-as-revenue-surges/
+  doc_date: 2026-05-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：That ratio is expected to fall to 56 cents in the current quarter"
+# ===== G. 管理層預測（2026 年） =====
+- key: proj_rev_2026q2_wsj
+  group: G
+  metric: 2026 Q2 營收預測（5 月時）
+  value: 10.9
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-Q2
+  source: PYMNTS 轉述 WSJ 所見財務預測
+  url: https://www.pymnts.com/artificial-intelligence-2/2026/anthropic-on-track-for-first-operating-profit-as-revenue-surges/
+  doc_date: 2026-05-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：projects $10.9 billion in revenue for the June quarter, up 130% from $4.8 billion in the first quarter；實際 >$11.5B"
+- key: proj_opinc_2026q2_wsj
+  group: G
+  metric: 2026 Q2 營業利益預測（首次轉正）
+  value: 0.559
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-Q2
+  source: PYMNTS 轉述 WSJ 所見財務預測
+  url: https://www.pymnts.com/artificial-intelligence-2/2026/anthropic-on-track-for-first-operating-profit-as-revenue-surges/
+  doc_date: 2026-05-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：expects operating income of $559 million；先前預期 full-year profit until at least 2028"
+- key: proj_profit_year_prior
+  group: G
+  metric: 先前（2026 年前）預期全年獲利年度
+  value: 2028
+  lo: null
+  hi: null
+  unit: 年
+  period: FY2028
+  source: PYMNTS 轉述 WSJ
+  url: https://www.pymnts.com/artificial-intelligence-2/2026/anthropic-on-track-for-first-operating-profit-as-revenue-surges/
+  doc_date: 2026-05-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：did not expect to turn a full-year profit until at least 2028"
+- key: actual_rev_2026q2
+  group: G
+  metric: 2026 Q2 營收（實際，對照預測）
+  value: 11.5
+  lo: 11.5
+  hi: null
+  unit: $B
+  period: 2026-Q2
+  source: The Next Web 轉述 Bloomberg 所見投資人文件
+  url: https://thenextweb.com/news/anthropic-q2-2026-revenue-11-5-billion-operating-income
+  doc_date: 2026-08-15
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人文件；募資誘因）
+  basis: null
+  note: "原文：second-quarter revenue passed $11.5bn ... recorded positive adjusted operating income；Q1 $4.73bn（A 組重複，供 G 對照）"
+- key: actual_adj_opinc_2026_q3_expect
+  group: G
+  metric: 預期連續第二季調整後營業利益（2026 Q3）
+  value: null
+  lo: null
+  hi: null
+  unit: 文字
+  period: 2026-Q3
+  source: The Next Web 轉述 CNBC
+  url: https://thenextweb.com/news/anthropic-ipo-prospectus-42bn-loss-518bn-compute
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: null
+  note: "原文：It expects a second straight quarter of adjusted operating profit；金額未揭露；「調整後」之排除項目未見一手說明"
+# ===== F. 早期股權輪 =====
+- key: fund_series_f_amount
+  group: F
+  metric: Series F 募資金額
+  value: 13
+  lo: null
+  hi: null
+  unit: $B
+  period: 2025-09-02
+  source: Anthropic 新聞稿〈Anthropic raises Series F at US$183B post-money valuation〉
+  url: https://www.anthropic.com/news/anthropic-raises-series-f-at-usd183b-post-money-valuation
+  doc_date: 2025-09-02
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: 總額
+  note: "原文：completed a Series F fundraising of $13 billion led by ICONIQ；co-led by Fidelity 與 Lightspeed"
+- key: fund_series_f_post_val
+  group: F
+  metric: Series F 投後估值
+  value: 183
+  lo: null
+  hi: null
+  unit: $B
+  period: 2025-09-02
+  source: Anthropic 新聞稿〈Anthropic raises Series F at US$183B post-money valuation〉
+  url: https://www.anthropic.com/news/anthropic-raises-series-f-at-usd183b-post-money-valuation
+  doc_date: 2025-09-02
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: null
+  note: "原文：This financing values Anthropic at $183 billion post-money；投前約 $170B（Derived）"
+- key: fund_series_e_amount
+  group: F
+  metric: Series E 募資金額
+  value: 3.5
+  lo: null
+  hi: null
+  unit: $B
+  period: 2025-03-03
+  source: Anthropic 新聞稿〈Anthropic raises Series E at US$61.5B post-money valuation〉
+  url: https://www.anthropic.com/news/anthropic-raises-series-e-at-usd61-5b-post-money-valuation
+  doc_date: 2025-03-03
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: 總額
+  note: "原文：raised $3.5 billion at a $61.5 billion post-money valuation；led by Lightspeed Venture Partners"
+- key: fund_series_e_post_val
+  group: F
+  metric: Series E 投後估值
+  value: 61.5
+  lo: null
+  hi: null
+  unit: $B
+  period: 2025-03-03
+  source: Anthropic 新聞稿〈Series E〉
+  url: https://www.anthropic.com/news/anthropic-raises-series-e-at-usd61-5b-post-money-valuation
+  doc_date: 2025-03-03
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: null
+  note: "原文：$61.5 billion post-money valuation；投前約 $58B（Derived）"
+- key: fund_series_g_leads
+  group: F
+  metric: Series G 領投與結構（文字）
+  value: null
+  lo: null
+  hi: null
+  unit: 文字
+  period: 2026-02-12
+  source: Anthropic 新聞稿〈Series G〉
+  url: https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation
+  doc_date: 2026-02-12
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: null
+  note: "原文：led by GIC and Coatue；also includes a portion of the previously announced investments from Microsoft and NVIDIA（金額未揭露）"
+# ===== F. 策略投資 =====
+- key: strat_amzn_notes_cum_2025
+  group: F
+  metric: Amazon 可轉債投資累計（2023Q3–2025Q4）
+  value: 8.0
+  lo: null
+  hi: null
+  unit: $B
+  period: 2025-12-31
+  source: Amazon 10-Q（2026-03-31 季）
+  url: https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/amzn-20260331.htm
+  doc_date: 2026-04-30
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 總額
+  note: "原文：we invested $8.0 billion in convertible notes from Anthropic；部分已轉為無投票權特別股"
+- key: strat_amzn_8b_announce
+  group: F
+  metric: Amazon 2024-11 新增投資（累計達 $8B）
+  value: 4.0
+  lo: null
+  hi: null
+  unit: $B
+  period: 2024-11-22
+  source: Anthropic 新聞稿〈Powering the next generation of AI development with AWS〉
+  url: https://www.anthropic.com/news/anthropic-amazon-trainium
+  doc_date: 2024-11-22
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: 總額
+  note: "原文：a new $4 billion investment from Amazon ... bring Amazon's total investment in Anthropic to $8 billion"
+- key: strat_amzn_2026_series_g
+  group: F
+  metric: Amazon 2026 Q2 投資 Series G 無投票權特別股
+  value: 5.0
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-Q2
+  source: Amazon 10-Q（2026-06-30 季）
+  url: https://www.sec.gov/Archives/edgar/data/0001018724/000101872426000026/amzn-20260630.htm
+  doc_date: 2026-07-30
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 總額
+  note: "原文：In Q2 2026, we invested $5.0 billion in Anthropic Series G nonvoting preferred stock（2026-04-20 宣布）"
+- key: strat_amzn_2026_series_h
+  group: F
+  metric: Amazon 2026 Q2 經融資額度投資 Series H
+  value: 5.0
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-Q2
+  source: Amazon 10-Q（2026-06-30 季）
+  url: https://www.sec.gov/Archives/edgar/data/0001018724/000101872426000026/amzn-20260630.htm
+  doc_date: 2026-07-30
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 總額
+  note: "10-Q：$5.0B Series H nonvoting preferred；reduced the amount available under the facility to $15.0 billion"
+- key: strat_amzn_facility_total
+  group: F
+  metric: Amazon 對 Anthropic 融資額度上限（依算力交付里程碑）
+  value: 20.0
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-04
+  source: Amazon 10-Q（2026-03-31 季，期後事項）
+  url: https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/amzn-20260331.htm
+  doc_date: 2026-04-30
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 總額
+  note: "原文：aggregate facility not to exceed $20.0 billion ... as we reach certain delivery milestones of compute capacity；以新可轉債提領"
+- key: strat_amzn_facility_remaining
+  group: F
+  metric: Amazon 融資額度剩餘可用（2026-06-30）
+  value: 15.0
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-06-30
+  source: Amazon 10-Q（2026-06-30 季）
+  url: https://www.sec.gov/Archives/edgar/data/0001018724/000101872426000026/amzn-20260630.htm
+  doc_date: 2026-07-30
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 總額
+  note: "原文：reduced the amount available under the facility to $15.0 billion（條件式，非已到位）"
+- key: strat_amzn_funded_cum_2026h1
+  group: F
+  metric: Amazon 累計已到位投資（2026-06-30）
+  value: 18.0
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-06-30
+  source: Derived：8.0 + 5.0 + 5.0（Amazon 10-Q）
+  url: https://www.sec.gov/Archives/edgar/data/0001018724/000101872426000026/amzn-20260630.htm
+  doc_date: 2026-07-30
+  retrieved: 2026-10-08
+  tag: Derived
+  party: null
+  basis: 總額
+  note: "可轉債 $8.0B＋Series G $5.0B＋Series H $5.0B；10-Q 未直接給累計"
+- key: strat_amzn_announce_2026_04
+  group: F
+  metric: Amazon 2026-04 宣布投資（即時＋未來上限）
+  value: 25
+  lo: 5
+  hi: 25
+  unit: $B
+  period: 2026-04-20
+  source: Nasdaq〈Anthropic, Amazon expand collaboration〉
+  url: https://nasdaq.com/articles/anthropic-amazon-expand-collaboration-amazon-invest-anthropic
+  doc_date: 2026-04-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Amazon／Anthropic（雲端業務宣傳、募資誘因）
+  basis: 總額
+  note: "原文：investing $5 billion in Anthropic, with up to an additional $20 billion in the future；Anthropic 承諾 10 年 >$100B AWS"
+- key: strat_amzn_pref_carrying_2026_06
+  group: F
+  metric: Amazon 帳上 Anthropic 無投票權特別股（2026-06-30）
+  value: 92.5
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-06-30
+  source: Amazon 10-Q（2026-06-30 季）
+  url: https://www.sec.gov/Archives/edgar/data/0001018724/000101872426000026/amzn-20260630.htm
+  doc_date: 2026-07-30
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: null
+  note: "2025-12-31 約 $14.8B；Q2 2026 upward adjustments of approximately $50.5 billion（依 Series H 價格重估）"
+- key: strat_amzn_notes_fv_2026_06
+  group: F
+  metric: Amazon 帳上 Anthropic 可轉債公允價值（2026-06-30）
+  value: 97.9
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-06-30
+  source: Amazon 10-Q（2026-06-30 季）
+  url: https://www.sec.gov/Archives/edgar/data/0001018724/000101872426000026/amzn-20260630.htm
+  doc_date: 2026-07-30
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: null
+  note: "2025-12-31 約 $45.8B；可轉債估值上升即 Anthropic 端認列 $34B 非現金費用之對手面"
+- key: strat_googl_cum_2025_03
+  group: F
+  metric: Google 累計投資與持股（2025-03 法院文件）
+  value: 3.0
+  lo: 3.0
+  hi: null
+  unit: $B
+  period: 2025-03
+  source: DCD 轉述 NYT 所見法院文件
+  url: https://www.datacenterdynamics.com/en/news/google-owns-14-percent-of-generative-ai-business-anthropic/
+  doc_date: 2025-03-12
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 總額
+  note: "法院文件：持股 14%、上限 15%、無投票權；投資 >$3B，另將於 2025-09 以可轉債再投 $750M"
+- key: strat_googl_2026_04_upfront
+  group: F
+  metric: Google 2026-04 即時投資（$350B 估值）
+  value: 10
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-04-24
+  source: TechCrunch 轉述 Bloomberg〈Google to invest up to $40B in Anthropic〉
+  url: https://techcrunch.com/2026/04/24/google-to-invest-up-to-40b-in-anthropic-in-cash-and-compute/
+  doc_date: 2026-04-24
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Google／Anthropic（雲端業務宣傳、募資誘因）
+  basis: 總額
+  note: "原文：committing to invest $10 billion now, at a $350 billion valuation；是否即 Series H 中 $15B 雲端業者部分之剩餘 $10B 未證實"
+- key: strat_googl_2026_04_conditional
+  group: F
+  metric: Google 2026-04 條件式後續投資（績效目標）
+  value: 30
+  lo: 0
+  hi: 30
+  unit: $B
+  period: 2026-04-24
+  source: TechCrunch 轉述 Bloomberg
+  url: https://techcrunch.com/2026/04/24/google-to-invest-up-to-40b-in-anthropic-in-cash-and-compute/
+  doc_date: 2026-04-24
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Google／Anthropic（雲端業務宣傳、募資誘因）
+  basis: 總額
+  note: "原文：another $30 billion to follow if Anthropic hits certain performance targets"
+- key: strat_msft_nvda_announce
+  group: F
+  metric: NVIDIA 與 Microsoft 承諾投資上限
+  value: 15
+  lo: null
+  hi: 15
+  unit: $B
+  period: 2025-11-18
+  source: Anthropic 新聞稿〈Microsoft, NVIDIA, and Anthropic announce strategic partnerships〉
+  url: https://www.anthropic.com/news/microsoft-nvidia-anthropic-announce-strategic-partnerships
+  doc_date: 2025-11-18
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic／Microsoft／NVIDIA（募資、雲端與晶片業務宣傳）
+  basis: 總額
+  note: "原文：committing to invest up to $10 billion and up to $5 billion respectively（NVIDIA $10B、Microsoft $5B）；Anthropic 承諾購買 $30B Azure"
+- key: strat_msft_funded
+  group: F
+  metric: Microsoft 已投資金額
+  value: 5
+  lo: null
+  hi: null
+  unit: $B
+  period: 2025-11
+  source: TechCrunch〈Microsoft logs $3.2B from Anthropic investment〉
+  url: https://techcrunch.com/2026/07/29/microsoft-logs-3-2b-from-anthropic-investment-but-openai-was-a-mixed-bag/
+  doc_date: 2026-07-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 媒體轉述 Microsoft 財報（雲端業務誘因）
+  basis: 總額
+  note: "原文：Microsoft invested $5 billion in Anthropic in November 2025；FY26Q4 認列 $3.2B 收益"
+- key: strat_amd_commit
+  group: F
+  metric: AMD 承諾購買 Anthropic 股票上限
+  value: 5
+  lo: null
+  hi: 5
+  unit: $B
+  period: 2026-09
+  source: The Next Web 轉述 Reuters 所見招股書草稿
+  url: https://thenextweb.com/news/anthropic-ipo-prospectus-42bn-loss-518bn-compute
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 招股書草稿）
+  basis: 總額
+  note: "原文：AMD has committed to buy up to $5bn of Anthropic stock and to supply computing capacity expected to exceed $20bn"
+- key: strat_nvda_ipo_anchor
+  group: F
+  metric: NVIDIA 考慮 IPO 基石認購
+  value: 10
+  lo: null
+  hi: 10
+  unit: $B
+  period: 2026-09-11
+  source: Crowdfund Insider 轉述 Reuters
+  url: https://www.crowdfundinsider.com/2026/09/309905-nvidia-considers-10b-anchor-stake-in-anthropics-planned-ipo/
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 知情人士（NVIDIA／Anthropic）
+  basis: 總額
+  note: "原文：as much as $10 billion as an early cornerstone buyer；尚未定案"
+# ===== F. 員工股份出售 =====
+- key: tender_2025_05
+  group: F
+  metric: 2025 員工庫藏股回購價格（每股）
+  value: 56.09
+  lo: null
+  hi: null
+  unit: $/股
+  period: 2025-05
+  source: Maginative 轉述 The Information
+  url: https://www.maginative.com/article/anthropic-launches-first-employee-share-buyback-at-61-5-billion-valuation/
+  doc_date: 2025-05-02
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 知情人士（Anthropic；招募誘因）
+  basis: null
+  note: "以 $61.5B 估值、每人上限 $2M、可賣持股 20%；總額未揭露"
+- key: tender_2026_02
+  group: F
+  metric: 2026 員工股份出售規模（$350B 估值）
+  value: null
+  lo: 5
+  hi: 6
+  unit: $B
+  period: 2026-02
+  source: Benzinga 轉述 Bloomberg
+  url: https://www.benzinga.com/markets/private-markets/26/02/50826554/anthropic-plans-employee-share-sale-worth-up-to-6b
+  doc_date: 2026-02-24
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 知情人士（Anthropic；招募誘因）
+  basis: 總額
+  note: "原文：allocated $5 to $6 billion to the program；valuation of about $350 billion；限任職滿 12 個月"
+- key: tender_2026_02_b
+  group: F
+  metric: 2026 員工股份出售實際成交（低於上限）
+  value: null
+  lo: null
+  hi: 6
+  unit: $B
+  period: 2026-04
+  source: Tech Insider（二手彙整，引 Bloomberg）
+  url: https://tech-insider.org/anthropic-350-billion-tender-offer-share-sale-ipo-2026/
+  doc_date: 2026-04-12
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 二手來源；可信度低
+  basis: 總額
+  note: "原文：finished below that $6 billion target；員工多選擇持有；實際金額未揭露"
+# ===== E. 人數 =====
+- key: hc_revelio_2023q4
+  group: E
+  metric: 員工人數（Revelio 估計）
+  value: 718
+  lo: null
+  hi: null
+  unit: 人
+  period: 2023-Q4
+  source: Revelio Labs〈Anthropic Number of Employees〉
+  url: https://www.reveliolabs.com/companies/anthropic-pbc/employees/
+  doc_date: 2026-03
+  retrieved: 2026-10-08
+  tag: Analogy
+  party: null
+  basis: null
+  note: "第三方以公開職涯資料推估；Q2 2023 546、Q3 613、Q4 718；可能低估未上 LinkedIn 者"
+- key: hc_revelio_2024q4
+  group: E
+  metric: 員工人數（Revelio 估計）
+  value: 1324
+  lo: null
+  hi: null
+  unit: 人
+  period: 2024-Q4
+  source: Revelio Labs
+  url: https://www.reveliolabs.com/companies/anthropic-pbc/employees/
+  doc_date: 2026-03
+  retrieved: 2026-10-08
+  tag: Analogy
+  party: null
+  basis: null
+  note: "Q1 2024 867、Q2 1,022、Q3 1,163、Q4 1,324"
+- key: hc_revelio_2025q4
+  group: E
+  metric: 員工人數（Revelio 估計）
+  value: 3089
+  lo: null
+  hi: null
+  unit: 人
+  period: 2025-Q4
+  source: Revelio Labs
+  url: https://www.reveliolabs.com/companies/anthropic-pbc/employees/
+  doc_date: 2026-03
+  retrieved: 2026-10-08
+  tag: Analogy
+  party: null
+  basis: null
+  note: "Q1 2025 1,588、Q2 1,894、Q3 2,435、Q4 3,089（頁面自身百分比有誤，僅取原始人數）"
+- key: hc_revelio_2026q1
+  group: E
+  metric: 員工人數（Revelio 估計）
+  value: 3950
+  lo: null
+  hi: null
+  unit: 人
+  period: 2026-Q1
+  source: Revelio Labs
+  url: https://www.reveliolabs.com/companies/anthropic-pbc/employees/
+  doc_date: 2026-03
+  retrieved: 2026-10-08
+  tag: Analogy
+  party: null
+  basis: null
+  note: "原文：approximately 3,950 total employees worldwide as of March 2026"
+- key: hc_2026_range_saastr
+  group: E
+  metric: 員工人數（多來源區間）
+  value: null
+  lo: 2500
+  hi: 5000
+  unit: 人
+  period: 2026-03
+  source: SaaStr〈Anthropic Only Has ~5,000 Employees〉
+  url: https://www.saastr.com/anthropic-only-has-5000-employees-almost-no-one-has-ever-been-this-efficient-thats-by-choice/
+  doc_date: 2026-04-14
+  retrieved: 2026-10-08
+  tag: Analogy
+  party: null
+  basis: null
+  note: "原文：Tracxn pegs it at ~5,000 as of March 2026. TrueUp says ~3,000；PitchBook ~2,500；來源口徑不一"
+# ===== F. 2023–2024 輪與其他 =====
+- key: fund_series_c_amount
+  group: F
+  metric: Series C 募資金額
+  value: 0.45
+  lo: null
+  hi: null
+  unit: $B
+  period: 2023-05-23
+  source: Anthropic 新聞稿〈Anthropic Raises $450 Million in Series C Funding〉
+  url: https://www.anthropic.com/news/anthropic-series-c
+  doc_date: 2023-05-23
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: 總額
+  note: "原文：$450 million ... led by Spark Capital；估值未揭露"
+- key: fund_menlo_2023_talks
+  group: F
+  metric: 2023-12 洽談輪（Menlo 領投）金額與估值
+  value: 0.75
+  lo: null
+  hi: null
+  unit: $B
+  period: 2023-12
+  source: HPCwire 轉述 Bloomberg／The Information
+  url: https://www.hpcwire.com/aiwire/2023/12/22/anthropic-in-talks-with-menlo-ventures-to-raise-750m/
+  doc_date: 2023-12-22
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 知情人士（Anthropic；募資誘因）
+  basis: 總額
+  note: "原文：hoping to raise $750 million ... valuation to an estimated $18.4 billion；當時尚未定案，結案金額未查到一手"
+- key: val_secondary_2026_04
+  group: F
+  metric: 次級市場隱含估值（Forge）
+  value: 1000
+  lo: 960
+  hi: 1150
+  unit: $B
+  period: 2026-04
+  source: The Next Web 轉述 Business Insider
+  url: https://thenextweb.com/news/anthropic-1-trillion-valuation-secondary-market
+  doc_date: 2026-04-23
+  retrieved: 2026-10-08
+  tag: Analogy
+  party: null
+  basis: null
+  note: "原文：implied valuation of approximately $1 trillion on secondary share trading platforms；報價區間 $960B–$1.15T；非主要融資價"
+- key: ipo_timing_2026_10
+  group: F
+  metric: IPO 時程（投資人會、路演、掛牌）
+  value: null
+  lo: null
+  hi: null
+  unit: 文字
+  period: 2026-11
+  source: Yahoo Finance／Barchart〈Anthropic Targets $2 Trillion IPO Before Thanksgiving〉
+  url: https://finance.yahoo.com/markets/stocks/articles/anthropic-targets-2-trillion-ipo-150408036.html
+  doc_date: 2026-10-02
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 知情人士（Anthropic／承銷商；募資誘因）
+  basis: null
+  note: "原文：October 14 investor gathering；roadshow as early as the week of November 9；trading on the Nasdaq before Thanksgiving"
+- key: ipo_raise_size
+  group: F
+  metric: IPO 預計募資規模
+  value: 100
+  lo: null
+  hi: 100
+  unit: $B
+  period: 2026-11
+  source: Yahoo Finance／Barchart
+  url: https://finance.yahoo.com/markets/stocks/articles/anthropic-targets-2-trillion-ipo-150408036.html
+  doc_date: 2026-10-02
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 知情人士（Anthropic；募資誘因）
+  basis: 總額
+  note: "原文：expected to raise approximately $100 billion；投資人估值 $1.8T–$2T；Crowdfund Insider 引 Reuters 為 up to $100 billion"
+- key: ipo_target_valuation_b
+  group: F
+  metric: IPO 估值（潛在投資人區間）
+  value: null
+  lo: 1800
+  hi: 2000
+  unit: $B
+  period: 2026-11
+  source: Yahoo Finance／Barchart
+  url: https://finance.yahoo.com/markets/stocks/articles/anthropic-targets-2-trillion-ipo-150408036.html
+  doc_date: 2026-10-02
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 潛在投資人（Anthropic 募資誘因）
+  basis: null
+  note: "原文：prospective investors pegging a fair valuation between $1.8 trillion and $2 trillion（與 Reuters「>$2tn」並列）"
+- key: ipo_public_s1_status
+  group: F
+  metric: 公開版 S-1 狀態
+  value: null
+  lo: null
+  hi: null
+  unit: 文字
+  period: 2026-09-22
+  source: Empower〈Anthropic is going public. Here's where things stand〉
+  url: https://www.empower.com/the-currency/money/anthropic-ipo-news
+  doc_date: 2026-09-22
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 媒體彙整
+  basis: null
+  note: "原文：Draft S-1 filed in June; public filing pending；9/28–29 財務數字來自 Reuters 所見草稿，非 EDGAR 公開文件"
+# ===== E. 2024 對照與燒錢 =====
+- key: cost_compute_2024
+  group: E
+  metric: 2024 算力與基礎設施支出
+  value: 2.5
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2024
+  source: Wolf Street〈Anthropic Lost $42 Billion on $4.6 Billion in Revenues〉（轉述 Reuters 所見草稿）
+  url: https://wolfstreet.com/2026/09/28/anthropic-lost-42-billion-on-4-6-billion-in-revenues-in-2025-leaked-ipo-prospectus/
+  doc_date: 2026-09-28
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 招股書草稿）
+  basis: 總額
+  note: "原文：$7.3 billion ... nearly tripled from $2.5 billion in 2024"
+- key: cost_netloss_2024
+  group: E
+  metric: 2024 淨虧損
+  value: 8
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2024
+  source: Wolf Street（轉述 Reuters 所見草稿）
+  url: https://wolfstreet.com/2026/09/28/anthropic-lost-42-billion-on-4-6-billion-in-revenues-in-2025-leaked-ipo-prospectus/
+  doc_date: 2026-09-28
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 招股書草稿）
+  basis: null
+  note: "原文：The net loss had multiplied by five from $8 billion in 2024；2024 營業虧損 $2.98B，差額亦屬非營業項目"
+- key: burn_2024
+  group: E
+  metric: 2024 現金燃燒
+  value: 5.6
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2024
+  source: Yahoo Finance 轉述 The Information〈Anthropic sees revenue potentially soaring to $34.5 billion in 2027〉
+  url: https://finance.yahoo.com/news/anthropic-projects-soaring-growth-34-002016708.html
+  doc_date: 2025-02-12
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：last year, when it burned $5.6 billion"
+- key: burn_2025_proj
+  group: G
+  metric: 2025 現金燃燒預測（2025-02 時）
+  value: 3
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2025
+  source: Yahoo Finance 轉述 The Information
+  url: https://finance.yahoo.com/news/anthropic-projects-soaring-growth-34-002016708.html
+  doc_date: 2025-02-12
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：it expects to burn $3 billion this year；2025 實際燃燒未見揭露"
+- key: burn_2026_ratio_proj
+  group: G
+  metric: 2026 現金燃燒占營收比（預測）
+  value: 0.33
+  lo: null
+  hi: null
+  unit: 比例
+  period: FY2026
+  source: Cybernews 轉述 WSJ
+  url: https://cybernews.com/ai-news/openai-anthropic-profit-revenue-ai/
+  doc_date: 2025-11-15
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：forecasts its cash burn to drop to one-third of revenue in 2026 and 9% by 2027"
+- key: burn_2027_ratio_proj
+  group: G
+  metric: 2027 現金燃燒占營收比（預測）
+  value: 0.09
+  lo: null
+  hi: null
+  unit: 比例
+  period: FY2027
+  source: Cybernews 轉述 WSJ
+  url: https://cybernews.com/ai-news/openai-anthropic-profit-revenue-ai/
+  doc_date: 2025-11-15
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：9% by 2027；Profit is envisioned by 2028, according to the WSJ"
+- key: cost_train_infer_2026_proj
+  group: G
+  metric: 2026 預計訓練支出
+  value: 12
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2026
+  source: Yahoo Finance／GuruFocus 轉述 The Information〈Anthropic Quietly Raises the Ceiling〉
+  url: https://finance.yahoo.com/news/anthropic-quietly-raises-ceiling-121501064.html
+  doc_date: 2026-01-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：In 2026 alone, it expects to spend about $12 billion training models and another $7 billion running them"
+- key: cost_infer_2026_proj
+  group: G
+  metric: 2026 預計推論（運行模型）支出
+  value: 7
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2026
+  source: Yahoo Finance／GuruFocus 轉述 The Information
+  url: https://finance.yahoo.com/news/anthropic-quietly-raises-ceiling-121501064.html
+  doc_date: 2026-01-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：another $7 billion running them（2026 年初預測，當時營收預測上限 $18B；之後營收大幅超標）"
+- key: cost_train_peak_proj_wsj
+  group: G
+  metric: 訓練支出高峰（約 2028）
+  value: 30
+  lo: null
+  hi: null
+  unit: $B/年
+  period: FY2028
+  source: SaaStr 轉述 WSJ（2026-04 機密財務）
+  url: https://www.saastr.com/anthropic-just-passed-openai-in-revenue-while-spending-4x-less-to-train-their-models/
+  doc_date: 2026-04-07
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）；二手轉述
+  basis: null
+  note: "原文：Anthropic's training costs peak at around $30 billion in that same period；與 OpenAI 2028 $121B 對照；年度未精確"
+# ===== G. 營收目標與獲利年 =====
+- key: proj_rev_2025_base_2025_02
+  group: G
+  metric: 2025 營收（基準情境，2025-02 預測）
+  value: 2.2
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2025
+  source: Yahoo Finance 轉述 The Information
+  url: https://finance.yahoo.com/news/anthropic-projects-soaring-growth-34-002016708.html
+  doc_date: 2025-02-12
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：In a base case scenario, Anthropic said revenue would reach $12 billion in 2027, up from $2.2 billion in 2025"
+- key: proj_rev_2027_base_2025_02
+  group: G
+  metric: 2027 營收（基準情境，2025-02 預測）
+  value: 12
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2027
+  source: Yahoo Finance 轉述 The Information
+  url: https://finance.yahoo.com/news/anthropic-projects-soaring-growth-34-002016708.html
+  doc_date: 2025-02-12
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "同上；基準情境"
+- key: proj_rev_2027_opt_2025_02
+  group: G
+  metric: 2027 營收（樂觀情境，2025-02 預測）
+  value: 34.5
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2027
+  source: Yahoo Finance 轉述 The Information
+  url: https://finance.yahoo.com/news/anthropic-projects-soaring-growth-34-002016708.html
+  doc_date: 2025-02-12
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：revenue could reach as high as $34.5 billion in 2027；當時預期 2027 停止燒錢"
+- key: proj_cfpos_year_2025_02
+  group: G
+  metric: 現金流轉正年（2025-02 預測）
+  value: 2027
+  lo: null
+  hi: null
+  unit: 年
+  period: FY2027
+  source: Yahoo Finance 轉述 The Information
+  url: https://finance.yahoo.com/news/anthropic-projects-soaring-growth-34-002016708.html
+  doc_date: 2025-02-12
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：management expects the company to stop burning cash in 2027"
+- key: proj_rev_2028_2025_11
+  group: G
+  metric: 2028 營收（上限，2025-11 預測）
+  value: 70
+  lo: null
+  hi: 70
+  unit: $B
+  period: FY2028
+  source: TechCrunch 轉述 The Information
+  url: https://techcrunch.com/2025/11/04/anthropic-expects-b2b-demand-to-boost-revenue-to-70b-in-2028-report/
+  doc_date: 2025-11-04
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：expects to generate as much as $70 billion in revenue（2028）"
+- key: proj_rev_path_2025_11
+  group: G
+  metric: 樂觀營收路徑 2026／2027（2025-11 預測）
+  value: null
+  lo: 15.2
+  hi: 38.9
+  unit: $B
+  period: FY2026–FY2027
+  source: The Decoder 轉述 The Information
+  url: https://the-decoder.com/anthropic-is-betting-on-an-audacious-leap-from-4-7-billion-to-70-billion-in-revenue-by-2028/
+  doc_date: 2025-11
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "lo=2026 $15.2B、hi=2027 $38.9B（非區間，為兩年值）；2025 $4.7B；可能為 Decoder 依成長率推算，待核"
+- key: proj_arr_2026_target_2025_11
+  group: G
+  metric: 2026 年底年化營收目標（2025-11）
+  value: null
+  lo: 20
+  hi: 26
+  unit: $B/年
+  period: 2026-12
+  source: TechCrunch 轉述 The Information
+  url: https://techcrunch.com/2025/11/04/anthropic-expects-b2b-demand-to-boost-revenue-to-70b-in-2028-report/
+  doc_date: 2025-11-04
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：set a target of $20 billion to $26 billion ARR for 2026；實際 2026-07 已達 $65B"
+- key: proj_cf_2028_2025_11
+  group: G
+  metric: 2028 現金流（預測）
+  value: 17
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2028
+  source: TechCrunch 轉述 The Information
+  url: https://techcrunch.com/2025/11/04/anthropic-expects-b2b-demand-to-boost-revenue-to-70b-in-2028-report/
+  doc_date: 2025-11-04
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：a projection of $17 billion in cash flow in 2028；positive cash flow by 2028"
+- key: proj_cfpos_year_2025_11
+  group: G
+  metric: 現金流轉正年（2025-11 預測）
+  value: 2028
+  lo: null
+  hi: null
+  unit: 年
+  period: FY2028
+  source: TechCrunch 轉述 The Information
+  url: https://techcrunch.com/2025/11/04/anthropic-expects-b2b-demand-to-boost-revenue-to-70b-in-2028-report/
+  doc_date: 2025-11-04
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：projecting positive cash flow by 2028（與 2025-02 之 2027 矛盾，已延後）"
+- key: proj_cfpos_year_2025_11_b
+  group: G
+  metric: 獲利年（2025-11 WSJ 版本）
+  value: 2028
+  lo: null
+  hi: null
+  unit: 年
+  period: FY2028
+  source: Cybernews 轉述 WSJ
+  url: https://cybernews.com/ai-news/openai-anthropic-profit-revenue-ai/
+  doc_date: 2025-11-15
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：Profit is envisioned by 2028, according to the WSJ；2027 燒錢仍占營收 9%——與 2025-02 版「2027 停止燒錢」矛盾"
+- key: proj_rev_2026_2026_01
+  group: G
+  metric: 2026 營收預測（2026-01 上調後）
+  value: 18
+  lo: null
+  hi: 18
+  unit: $B
+  period: FY2026
+  source: Investing.com 轉述 The Information〈Anthropic ups 2026 revenue forecast, delays cash-positive target〉
+  url: https://www.investing.com/news/stock-market-news/anthropic-ups-2026-revenue-forecast-delays-cashpositive-target--the-information-4469111
+  doc_date: 2026-01-27
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：nearly quadruple this year to as much as $18 billion；上調約 20%；實際 H1 已 ~$16.2B"
+- key: proj_rev_2027_2026_01
+  group: G
+  metric: 2027 營收預測（2026-01，樂觀）
+  value: 55
+  lo: null
+  hi: null
+  unit: $B
+  period: FY2027
+  source: Investing.com 轉述 The Information
+  url: https://www.investing.com/news/stock-market-news/anthropic-ups-2026-revenue-forecast-delays-cashpositive-target--the-information-4469111
+  doc_date: 2026-01-27
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：rising to around $55 billion in 2027；GuruFocus 稱 most optimistic scenarios"
+- key: proj_rev_2029_2026_01
+  group: G
+  metric: 2029 營收預測（2026-01，樂觀）
+  value: 148
+  lo: null
+  hi: 148
+  unit: $B
+  period: FY2029
+  source: Yahoo Finance／GuruFocus 轉述 The Information
+  url: https://finance.yahoo.com/news/anthropic-quietly-raises-ceiling-121501064.html
+  doc_date: 2026-01-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：as much as $148 billion by 2029"
+- key: proj_cfpos_year_2026_01
+  group: G
+  metric: 現金流轉正年（2026-01 預測）
+  value: 2028
+  lo: null
+  hi: null
+  unit: 年
+  period: FY2028
+  source: Investing.com 轉述 The Information
+  url: https://www.investing.com/news/stock-market-news/anthropic-ups-2026-revenue-forecast-delays-cashpositive-target--the-information-4469111
+  doc_date: 2026-01-27
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：delay its target for positive cash flow to 2028（較先前晚一年）"
+- key: proj_breakeven_2026_04_wsj
+  group: G
+  metric: 損益兩平年（2026-04 WSJ 機密財務）
+  value: 2028
+  lo: null
+  hi: null
+  unit: 年
+  period: FY2028
+  source: The Decoder 轉述 WSJ
+  url: https://the-decoder.com/?p=31547
+  doc_date: 2026-04
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：Anthropic expects to break even in 2028, while OpenAI ... until 2030；之後 2026 Q2 已出現調整後營業利益"
+- key: proj_arr_2026_end_investors
+  group: G
+  metric: 2026 年底年化營收（投資人預期）
+  value: null
+  lo: 100
+  hi: 120
+  unit: $B/年
+  period: 2026-12
+  source: TechCrunch〈Anthropic's annualized revenue surges to $65B〉
+  url: https://techcrunch.com/2026/08/17/anthropics-annualized-revenue-surges-to-65b/
+  doc_date: 2026-08-17
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 投資人（持股者；IPO 估值誘因）
+  basis: null
+  note: "原文：finishing 2026 between $100 billion and $120 billion；非公司正式指引"
+- key: proj_tam_30t
+  group: G
+  metric: 向 IPO 投資人提出之潛在市場（TAM）
+  value: 30000
+  lo: 30000
+  hi: null
+  unit: $B
+  period: 2026-08
+  source: PYMNTS 轉述 WSJ
+  url: https://www.pymnts.com/news/artificial-intelligence/2026/anthropic-readies-30-trillion-dollar-revenue-forecast-investors/
+  doc_date: 2026-08-25
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 募資誘因）
+  basis: null
+  note: "原文：anticipates potential revenues of more than $30 trillion（TAM，非營收預測，僅供參考）"
+# ===== G／E. 毛利率 =====
+- key: gm_2024_actual
+  group: E
+  metric: 2024 毛利率
+  value: -0.94
+  lo: null
+  hi: null
+  unit: 比例
+  period: FY2024
+  source: TechCrunch 轉述 The Information
+  url: https://techcrunch.com/2025/11/04/anthropic-expects-b2b-demand-to-boost-revenue-to-70b-in-2028-report/
+  doc_date: 2025-11-04
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：up from negative 94% last year；含免費用戶為 −109%（The Decoder）"
+- key: gm_2025_target_2025_11
+  group: G
+  metric: 2025 毛利率目標（2025-11）
+  value: 0.50
+  lo: null
+  hi: null
+  unit: 比例
+  period: FY2025
+  source: TechCrunch 轉述 The Information
+  url: https://techcrunch.com/2025/11/04/anthropic-expects-b2b-demand-to-boost-revenue-to-70b-in-2028-report/
+  doc_date: 2025-11-04
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：to reach 50% this year and 77% in 2028；含免費用戶 47%"
+- key: gm_2028_target
+  group: G
+  metric: 2028 毛利率目標
+  value: 0.77
+  lo: null
+  hi: null
+  unit: 比例
+  period: FY2028
+  source: TechCrunch 轉述 The Information
+  url: https://techcrunch.com/2025/11/04/anthropic-expects-b2b-demand-to-boost-revenue-to-70b-in-2028-report/
+  doc_date: 2025-11-04
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：77% in 2028；含免費用戶 75%（The Decoder）"
+- key: gm_2025_revised
+  group: E
+  metric: 2025 毛利率（2026-01 下修）
+  value: 0.40
+  lo: null
+  hi: null
+  unit: 比例
+  period: FY2025
+  source: WebProNews 轉述 The Information
+  url: https://www.webpronews.com/anthropic-slashes-2025-margin-forecast-to-40-amid-ai-cost-surge/
+  doc_date: 2026-01-22
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人資料；募資誘因）
+  basis: null
+  note: "原文：anticipates gross margins of around 40% for its enterprise and developer sales in 2025（原 50%；推論成本高於預期）"
+- key: gm_2026_ft_pre_revshare
+  group: E
+  metric: 毛利率（未扣通路分潤與訓練成本前）
+  value: 0.80
+  lo: 0.80
+  hi: null
+  unit: 比例
+  period: 2026-Q2
+  source: Dealroom 轉述 Financial Times
+  url: https://dealroom.co/news/other-1wfgfsc-anthropic-tells-investors-it-will-be-profitable-for-second-straight-quar/
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 知情人士（Anthropic；IPO 誘因）
+  basis: 總額
+  note: "原文：gross margins exceed 80% before revenue shared with distributors such as Amazon and before model-training costs；口徑寬鬆"
+- key: cost_compute_to_rev_2025
+  group: E
+  metric: 2025 算力支出／營收
+  value: 1.6
+  lo: null
+  hi: null
+  unit: 倍
+  period: FY2025
+  source: Yahoo Finance〈8 Things That Don't Add Up About Anthropic's IPO〉
+  url: https://finance.yahoo.com/technology/ai/articles/8-things-don-t-add-173232536.html
+  doc_date: 2026-09
+  retrieved: 2026-10-08
+  tag: Derived
+  party: null
+  basis: null
+  note: "原文：about $1.60 of computing for every $1 of revenue（7.33／4.6）；與毛利率 40% 不相容，顯示算力含訓練"
+# ===== 補充 =====
+- key: debt_credit_facility_15b_b
+  group: F
+  metric: 循環信貸額度（定案前報導）
+  value: 15
+  lo: 10
+  hi: 15
+  unit: $B
+  period: 2026-09-03
+  source: Quartz 轉述 Bloomberg〈Anthropic nears $15 billion credit facility before IPO〉
+  url: https://qz.com/anthropic-15-billion-credit-facility-ipo-090426
+  doc_date: 2026-09-04
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 知情人士（Anthropic；IPO 誘因）
+  basis: 總額
+  note: "原文：on the verge of locking in a $15 billion revolving credit facility；Morgan Stanley 主導；原目標約 $10B；動用金額未揭露"
+- key: hc_2026_06_company
+  group: E
+  metric: 員工人數（公司高層口述）
+  value: 3500
+  lo: null
+  hi: null
+  unit: 人
+  period: 2026-06-01
+  source: CEO Interviews 逐字稿（Daniela Amodei，Snowflake Summit 2026 主題演講）
+  url: https://ceointerviews.ai/quote/five-years-ago-anthropic-was-about-15-people-MTA3MDEwMQ/
+  doc_date: 2026-06-01
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（招募、市場地位誘因）
+  basis: null
+  note: "原文：Five years ago Anthropic was about 15 people and today were about 3,500 people（約數；低於 Revelio 2026Q1 3,950）"
+- key: cost_charity_match_q1_2026
+  group: E
+  metric: 員工捐股配捐費用（非現金，2026 Q1）
+  value: 0.125
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-Q1
+  source: Crypto Briefing〈Anthropic's charitable stock-matching program racks up over $660 million in expenses〉
+  url: https://cryptobriefing.com/anthropic-charitable-stock-matching-660-million/
+  doc_date: 2026-10-05
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic 揭露（來源文件未標明）；二手媒體
+  basis: null
+  note: "原文：Approximately $125 million ... in Q1 2026 alone ... about 10% of total employee expenses（隱含 Q1 員工費用約 $1.25B，Derived）；2025-10～2026-03 合計 >$660M"
+- key: cost_employee_q1_2026_derived
+  group: E
+  metric: 2026 Q1 員工費用總額（推算）
+  value: 1.25
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-Q1
+  source: Derived：0.125 ÷ 10%（Crypto Briefing）
+  url: https://cryptobriefing.com/anthropic-charitable-stock-matching-660-million/
+  doc_date: 2026-10-05
+  retrieved: 2026-10-08
+  tag: Derived
+  party: null
+  basis: null
+  note: "以「約 10% of total employee expenses」反推，約數；是否含股權報酬未明；同文稱約占營業成本 2%（隱含 Q1 營業成本約 $6B）"
+- key: equity_employee_pool
+  group: F
+  metric: 員工股權池占總股本
+  value: 0.19
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2026-09
+  source: ChainCatcher〈Anthropic prospectus 7 key pieces of information〉
+  url: https://www.chaincatcher.com/en/article/2292921
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（IPO 招股書草稿）；二手媒體
+  basis: null
+  note: "原文：The employee equity pool at Anthropic accounts for about 19% of the company's total equity；未見 Reuters 原文佐證"
+not_found:
+- item: 股權報酬（SBC）年度金額 2023–2026
+  tried: "Reuters/Fortune/TNW/PYMNTS/ZeroHedge 招股書草稿報導；搜尋 'Anthropic stock-based compensation billion'、'prospectus share-based compensation'"
+  verdict: 可能未揭露
+- item: 研發、銷售行銷、一般管理費用細項（2024、2025）
+  tried: "招股書草稿各轉述（TNW、PYMNTS、ZeroHedge、36Kr、ChainCatcher、Fortune、Wolf Street）；僅有總營費 $12.65B 與算力 $7.33B"
+  verdict: 可能未揭露
+- item: 2025 實際現金燃燒、營業現金流、自由現金流
+  tried: "招股書草稿轉述、The Information、WSJ、Wolf Street；搜尋 'Anthropic burned in 2025'、'cash flow from operations 2025'"
+  verdict: 可能未揭露
+- item: 2026 年中以後現金餘額（Series H 到位後）
+  tried: "搜尋 'Anthropic cash balance 2026'；招股書草稿轉述僅 2025-12-31"
+  verdict: 找不到
+- item: NVIDIA 最高 $10B 承諾之已到位金額
+  tried: "Anthropic Series G 新聞稿（僅稱 a portion）；NVIDIA 10-Q（2026-04-26）未點名；Yahoo/BofA、Crowdfund Insider"
+  verdict: 可能未揭露
+- item: Microsoft 與 NVIDIA 於 Series G 之各自金額
+  tried: "Anthropic 與 GIC 新聞稿、Yahoo Finance 轉述"
+  verdict: 可能未揭露
+- item: Google 2023–2025 各筆投資官方金額與 2026 累計已到位
+  tried: "DCD 轉述 NYT 法院文件（>$3B+$750M）；TechCrunch 2026-04（$10B 即時）；Alphabet 未在可得文件逐筆揭露"
+  verdict: 找不到
+- item: 2026 全年營收公司正式指引與 2027、2028 最新（2026 下半年）基準／樂觀預測
+  tried: "CNBC（403）、TechCrunch、NYT 經 Bloomberg（robots 擋）、FT 經 Dealroom、PYMNTS"
+  verdict: 找不到
+- item: 2026 下半年後的算力支出逐年預測（公司版）
+  tried: "WSJ 2026-04（直接網址未授權開啟）、SaaStr 轉述、aiafterhours 轉述；招股書草稿僅有 $518B 十年承諾（屬 D 組）"
+  verdict: 找不到
+- item: 公司官方員工人數時間序列（2023–2025）
+  tried: "Anthropic 新聞稿、高層訪談、招股書草稿轉述；僅得 Daniela Amodei 2026-06 約 3,500 人與 Revelio 第三方估計"
+  verdict: 可能未揭露
+- item: Series H、Series G 投前估值官方數字
+  tried: "Anthropic 新聞稿僅揭露投後；投前以投後減募資額推算"
+  verdict: 可能未揭露
+- item: 2026 員工股份出售實際成交金額
+  tried: "Bloomberg（付費）、Benzinga、Tech Insider"
+  verdict: 找不到
+- item: 公開版 S-1（EDGAR）
+  tried: "Anthropic 新聞稿（僅 2026-06-01 秘密遞交）、Empower 2026-09-22（public filing pending）、Barchart 2026-10-02"
+  verdict: 找不到

@@ -47,6 +47,7 @@ var PERIODS = COMPANY_DATA.periods,
     rev: SC_REV[k],
     mw31: SC_MW31[k],
     cvCap: COMPANY_DATA.scenarios.convCap[k], // v0.1b：瀑布可轉債每年新發行上限（保守 0＝不新發）
+    delay: (COMPANY_DATA.scenarios.delayMonths || {})[k] ?? 0, // v0.2：建設延誤月數（計費 MW 平移；GPU 資本支出照原時程）
     a: scA(k)
   }])),
   DEBT_TOOLS = COMPANY_DATA.debt.instruments,
@@ -76,6 +77,30 @@ var PERIODS = COMPANY_DATA.periods,
   DEFAULTS = Object.fromEntries(Object.entries(structuredClone(COMPANY_DATA.defaults)).flatMap(([k, v]) => k === `intCal` ? [[k, v], [`a`, structuredClone(SCENARIOS.base.a)]] : [[k, v]])),
   Qk = DEFAULTS; // 模板函式庫片段（mid1–mid3）仍以 Qk 引用預設值，保留別名
 DEFAULTS.cvCap = SCENARIOS[COMPANY_DATA.defaults.scenario].cvCap; // v0.1b：預設情境的可轉債年上限
+DEFAULTS.delayMonths = SCENARIOS[COMPANY_DATA.defaults.scenario].delay; // v0.2：預設情境的建設延誤月數
+DEFAULTS.delayLink = UL.delayLink ?? 0; // v0.2：未起租租約起租隨延誤後移的比例（company.json → leases.uncommenced.delayLink）
+DEFAULTS.ulTerm = UL.termYears; // v0.2：未起租租約租期（延誤平移與租賃負債用；租期敏感度同時改 a.newLease 與此值）
+// v0.2：租賃負債（期末剩餘租金現值；company.json → leases.liability）。LLQ＝租賃折現率、LLN＝在帳到期表模型期後尾端年數
+var LLQ = (COMPANY_DATA.leases.liability || {}).discRate ?? 0, LLN = (COMPANY_DATA.leases.liability || {}).tailYears ?? 12;
+// 在帳租約：期末之後各期到期表現金（期中付款）＋模型期後尾端（LEASE_AFTER_FY30 平均分 LLN 年、年中付款）的現值
+function llOnQ(r) {
+  const D = x => (1 + LLQ) ** -x, T = PERIOD_T, tail = LLQ > 0 ? LEASE_AFTER_FY30 / LLN * (1 + LLQ) ** .5 * (1 - (1 + LLQ) ** -LLN) / LLQ : LEASE_AFTER_FY30;
+  return LEASE_CASH_ON_BAL.reduce((a, c, k) => a + (k > r ? c * D(T[k] - PERIOD_YEARS[k] / 2 - T[r]) : 0), 0) + tail * D(T[4] - T[r])
+}
+// 未起租租約已起租部分：每季起租 tot/N、每筆 4T 季、季末付 q＝tot/N/T/4；期末累計季數 x、起算季 S、權重 w：
+// ＝w × q ÷ i_q × [m − v^(4T − x') ×(1 − v^m) ÷ (1 − v)]，x'＝MAX(0, x − S)、m＝MIN(x', N)、v＝(1＋折現率)^(−1/4)、i_q＝(1＋折現率)^(1/4) − 1（Excel 同式）
+function llUlQ(x, S, w, T) {
+  const xx = Math.max(0, x - S), m = Math.min(xx, UL.quarters), q = UL_TOT / UL.quarters / T / 4, R = 1 + LLQ;
+  if (!(LLQ > 0)) return w * q * (m * 4 * T - (m * (2 * xx - m + 1)) / 2);
+  return w * q / (R ** .25 - 1) * (m - R ** (-(4 * T - xx) / 4) * (1 - R ** (-m / 4)) / (1 - R ** -.25))
+}
+// v0.2：期末存量路徑往後平移 dm 個月（以期間長度線性內插；評價日之前取 v0）。V＝各期末值、v0＝評價日值。
+// ＝v0＋Σ_k (V_k − V_{k−1}) × MIN(1, MAX(0, (期末時點_i − dm/12 − 期初時點_k) ÷ 期間長度_k))；Excel 同一公式。dm＝0 時原樣回傳。
+var PERIOD_T = PERIOD_YEARS.reduce((a, L, i) => (a.push((i ? a[i - 1] : 0) + L), a), []);
+function shiftQ(V, v0, dm) {
+  if (!(dm > 0)) return [...V];
+  return V.map((x, i) => { const tau = PERIOD_T[i] - dm / 12; return V.reduce((a, v, k) => a + (v - (k ? V[k - 1] : v0)) * Math.min(1, Math.max(0, (tau - (k ? PERIOD_T[k - 1] : 0)) / PERIOD_YEARS[k])), v0) })
+}
 // v0.1b（Oracle）：傳統事業（company.json → defaults.legacyBiz）。各線全年營收＝上一財年實際 ×(1＋年增率)，年增率自起點線性收斂到長期值；
 // 首期模型部分＝首期全年 − 年初至今實際（首期 YTD＋模型＝全年）。EBITDA＝營收 × 合併 EBITDA 率（各期一列）。沒有傳統事業時 lines 為空清單，全部為 0。
 function legacyQ(e) {
@@ -273,9 +298,21 @@ function runFunding(e) {
     REF = RFV.map((x, n) => RFF[n] ? RFS[n] : x),
     CXG = CXF.map((t, n) => n === 0 ? Math.max(t, e.capexFloorFY0 ?? 0) - ACTUAL_1H.capex : t),
     CX = CXG.map((e, t) => e + REF[t]),
+    DM = e.delayMonths ?? 0, // v0.2：建設延誤月數
+    BD = shiftQ(t.billable, e.billableOpen, DM), // v0.2：計費用可計費 MW（原路徑平移延誤月數）
+    CXC = CXG.reduce((a, x, i) => (a.push((i ? a[i - 1] : 0) + x), a), []), // v0.2：成長型 CapEx 累計（原時程）
+    CXSC = shiftQ(CXC, 0, DM), // v0.2：已投入使用的成長型 CapEx 累計（延誤後）
+    CXS = DM > 0 ? CXSC.map((x, i) => x - (i ? CXSC[i - 1] : 0)) : CXG, // v0.2：本期投入使用的成長型 CapEx（折舊基礎）
+    IDLE = CXC.map((x, i) => DM > 0 ? x - CXSC[i] : 0), // v0.2：閒置資本＝已支出而尚未產生收入的累計成長型 CapEx（期末）
+    LK = e.delayLink ?? 0, // v0.2：未起租租約起租連動比例
+    ULT = e.ulTerm ?? UL.termYears,
+    ULS = DM > 0 && LK > 0 ? ulPath(ULT, UL.quarters, UL.startQ + DM / 3) : null, // v0.2：未起租租金全部隨延誤後移（起算季＋延誤月數 ÷ 3）
+    ULX = PERIOD_YEARS.reduce((a, L, i) => (a.push((i ? a[i - 1] : 0) + Math.round(L * 4)), a), []), // 期末累計季數
+    LLON = PERIOD_YEARS.map((L, r) => llOnQ(r)), // v0.2：在帳租賃負債（期末）
+    LLUL = ULX.map(x => ULS ? llUlQ(x, UL.startQ, 1 - LK, ULT) + llUlQ(x, UL.startQ + DM / 3, LK, ULT) : llUlQ(x, UL.startQ, 1, ULT)), // v0.2：未起租租約已起租部分的租賃負債（期末）
     PPE = [],
-    DAF = CXG.map((t, n) => {
-      let r = n === 0 ? e.ppeOpen : PPE[n - 1] + CXG[n - 1];
+    DAF = CXS.map((t, n) => {
+      let r = n === 0 ? e.ppeOpen : PPE[n - 1] + CXS[n - 1];
       return PPE.push(r), (r + .5 * t) / e.gpuLife * PERIOD_YEARS[n]
     }),
     LG = legacyQ(e), // v0.1b（Oracle）：傳統事業營收與 EBITDA
@@ -302,8 +339,8 @@ function runFunding(e) {
       let L = PERIOD_YEARS[r],
         o = e.rpoOpen * (RPO_BUCKET_W[r] / RPO_SCHEDULED_SHARE) * i + e.rpoPendingAdd * RPO_Q3ADD_W[r] * i,
         s = o,
-        c = r === 0 ? e.billableOpen : t.billable[r - 1],
-        l = e.useAvgMw ? (c + t.billable[r]) / 2 : t.billable[r],
+        c = r === 0 ? e.billableOpen : BD[r - 1],
+        l = e.useAvgMw ? (c + BD[r]) / 2 : BD[r], // v0.2：計費用 MW＝延誤後路徑
         u = l * t.revMW[r] * (e.revScale ?? 1) * (t.util[r] / 100) * L,
         d = Math.max(0, s - u),
         f = o - d,
@@ -312,7 +349,10 @@ function runFunding(e) {
         h = f - m,
         nR = Math.max(0, u - s) * (t.fill[r] / 100),
         b = LEASE_CASH_ON_BAL[r],
-        x = e.a.newLease[r],
+        x = ULS ? (1 - LK) * e.a.newLease[r] + LK * ULS[r] : e.a.newLease[r], // v0.2：延誤連動部分的起租往後平移
+        c0 = r === 0 ? e.billableOpen : t.billable[r - 1], u0 = (e.useAvgMw ? (c0 + t.billable[r]) / 2 : t.billable[r]) * t.revMW[r] * (e.revScale ?? 1) * (t.util[r] / 100) * L, // v0.2：未延誤的容量上限（對照）
+        lost = DM > 0 ? Math.max(0, u0 - u) : 0, // v0.2：應計費而未計費營收（延誤造成）
+        pen = (e.delayPenalty ?? 0) * lost, // v0.2：延誤罰則／服務抵減（營業費用：扣 EBITDA、營運來源、稅基、債務上限）
         S = b + x,
         svc = e.services[r],
         totRev = f + nR + svc,
@@ -337,11 +377,11 @@ function runFunding(e) {
         O = (e.includeDebt ? DEBT_AMORT[r] : 0) + CVP[r].amort, // v0.1b：含債務處理可轉債的到期還本（到期累積本金）
         k = r === 0 && e.includeAtm ? e.atm : 0,
         lgR = LG.rev[r], lgE = LG.ebitda[r], // v0.1b（Oracle）：傳統事業營收與 EBITDA（EBITDA 視為現金，稅另列）
-        tx = (e.cashTaxRate ?? 0) * Math.max(0, totRev * ebM + ob + lgE - DAF[r] - IX[r]), // v0.1b：現金稅＝稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（不含瀑布新債利息，避免循環；偏保守）
+        tx = (e.cashTaxRate ?? 0) * Math.max(0, totRev * ebM + ob + lgE - pen - DAF[r] - IX[r]), // v0.1b：現金稅＝稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（不含瀑布新債利息，避免循環；偏保守）
         dvSh = e.dividend ? e.dividend.sharesBase + WF.sh + CVN.reduce((a, n) => a + (n.mand && n.t < r ? n.S : 0), 0) : 0, // v0.1b（Oracle）：股利股數＝期初股數（基礎＋前期累計瀑布新股＋已強制轉換的特別股）
         dvC = e.dividend ? 4 * e.dividend.perShareQ * L * dvSh : 0, // 普通股股利＝每股（每季 × 4）× 期間長度 × 期初股數
         dvP = e.dividend ? e.dividend.preferred[r] : 0, // 特別股股利（強制轉換前；company.json → defaults.dividend.preferred）
-        A = g + nC + svcCash + ob + lgE + v - pr, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
+        A = g + nC + svcCash + ob + lgE - pen + v - pr, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
         j0 = _ + S + IX[r] + e.jvCommit[r] + e.a.div[r] + T + O + tx + dvC + dvP,
         wRL = uA(e, r) / 100 * L,
         wRJ = (e.junkRate + (e.cdsLink ? Math.max(0, e.cds - e.cdsBaseBp) / 1e4 * e.cdsPassThrough : 0)) * L,
@@ -351,7 +391,7 @@ function runFunding(e) {
         wX = Math.max(0, e.minCash - wPre),
         wB = WF.B - o - nR + e.ctrTerm * Math.max(0, nR / L - WF.pnr),
         wEx = (e.includeDebt ? PB[r][1] : DBT_P) + CONV_P + CVP[r].end, // 5a：評價日後新發可轉債本金讀 company.json → debt.convertible；v0.1b：加債務處理可轉債餘額
-        wCapB = e.debtCapBasis === `ebitda` ? e.debtEbitdaMax * (totRev * ebM + ob + lgE) / L : e.debtBacklog * wB, // v0.1b（Oracle）：債務上限＝倍數 × 當期 EBITDA（年化）；模板＝債務／backlog
+        wCapB = e.debtCapBasis === `leaseAdj` ? e.debtEbitdaMax * (totRev * ebM + ob + lgE - pen + S) / L - LLON[r] - LLUL[r] : e.debtCapBasis === `ebitda` ? e.debtEbitdaMax * (totRev * ebM + ob + lgE - pen) / L : e.debtBacklog * wB, // v0.2：leaseAdj＝(總債務＋租賃負債) ≤ 倍數 ×(EBITDA＋租金)（年化） // v0.1b（Oracle）：債務上限＝倍數 × 當期 EBITDA（年化）；模板＝債務／backlog
         wCap = wCapB - (wEx + WF.Dn + WF.Cn),
         wCapD = Math.max(0, wCap, WF.fr),
         wD = Math.min(wCapD, wX / (1 - wRL)),
@@ -448,6 +488,8 @@ function runFunding(e) {
         refreshFlag: RFF[r] ? 1 : 0,
         refreshSteadyV: RFS[r],
         refreshVintage: RFV[r],
+        billDelayed: BD[r], // v0.2
+        capexCum: CXC[r], capexInSvcCum: DM > 0 ? CXSC[r] : CXC[r], capexInSvc: CXS[r], idleCap: IDLE[r], // v0.2：閒置資本
         avgAccepted: (MB[r] + t.accepted[r]) / 2,
         ebitdarM: eR,
         ppeBeg: PPE[r],
@@ -464,9 +506,12 @@ function runFunding(e) {
         ebM: ebM,
         cashMargin: cm,
         totRev: totRev,
-        ebitdaPL: totRev * ebM + ob + lgE,
+        ebitdaPL: totRev * ebM + ob + lgE - pen,
+        capUndelayed: u0, lostRev: lost, delayPen: pen, // v0.2
+        leaseLiabOn: LLON[r], leaseLiabUl: LLUL[r], leaseLiab: LLON[r] + LLUL[r], ebitdarAnn: (totRev * ebM + ob + lgE - pen + S) / L, // v0.2：租賃負債與 EBITDAR（年化）
+        adjLev: (wEx + WF.Dn + WF.Cn + WF.Jn + LLON[r] + LLUL[r]) / Math.max((totRev * ebM + ob + lgE - pen + S) / L, .01), // v0.2：調整後槓桿（期末）
         otherEbitda: ob,
-        cashEbitda: g + nC + svcCash + ob + lgE - S,
+        cashEbitda: g + nC + svcCash + ob + lgE - pen - S,
         creditAdj: (m + nR * (t.defaultP[r] / 100) * p) * cm,
         atm: k,
         facility: F,
@@ -630,7 +675,7 @@ function runFunding(e) {
     ok: !0,
     severity: `watch`,
     title: `融資瀑布：新債 ${o.reduce((e,t)=>e+t.newDebt,0).toFixed(1)}bn、可轉債 ${o.reduce((e,t)=>e+t.convNew,0).toFixed(1)}bn、股權 ${o.reduce((e,t)=>e+t.equity,0).toFixed(1)}bn（新股 ${o.reduce((e,t)=>e+t.newShares,0).toFixed(2)}bn 股）、高息債 ${o.reduce((e,t)=>e+t.junk,0).toFixed(1)}bn`,
-    detail: `順序：客戶預付（營運來源）→ 現金（高於最低現金 ${e.minCash}bn 的部分）→ ${e.useFacility ? `未動用額度（${TXQ.facilityName}）→ ` : ``}新債（${e.debtCapBasis === `ebitda` ? `總債務 ≤ ${multTxt(e.debtEbitdaMax)}× 當期 EBITDA（投資級上限）` : `總債務 ≤ ${e.debtBacklog}× backlog`}）→ ${(e.cvCap ?? 0) > 0 ? `可轉債（每年上限 ${Y(e.cvCap ?? 0, 1)}bn、票息 ${hA(e.convIssue.coupon * 100, 1)}）→ ` : ``}股權（發行價＝$${e.eqPx}×(1−${(e.eqDisc*100).toFixed(0)}%)，每年上限＝現市值 ${e.eqCapPct>=9?`無上限`:(e.eqCapPct*100).toFixed(0)+`%`}）→ 超出部分以高息債 ${(e.junkRate*100).toFixed(0)}% 補足${e.debtCapBasis === `ebitda` ? `（＝需失去投資級才能融資的金額）` : ``}。股利 ${Y(o.reduce((a, t) => a + t.dividend, 0), 1)}bn 列為用途。${(q => q.length ? `本情境股權需求落在 ${q.join(`、`)}。` : `本情境不需股權。`)(o.filter(t => t.equity > .05).map(t => t.year))}`
+    detail: `順序：客戶預付（營運來源）→ 現金（高於最低現金 ${e.minCash}bn 的部分）→ ${e.useFacility ? `未動用額度（${TXQ.facilityName}）→ ` : ``}新債（${e.debtCapBasis === `leaseAdj` ? `(總債務＋租賃負債) ≤ ${multTxt(e.debtEbitdaMax)}×(EBITDA＋租金)（投資級上限，租賃調整後槓桿）` : e.debtCapBasis === `ebitda` ? `總債務 ≤ ${multTxt(e.debtEbitdaMax)}× 當期 EBITDA（投資級上限）` : `總債務 ≤ ${e.debtBacklog}× backlog`}）→ ${(e.cvCap ?? 0) > 0 ? `可轉債（每年上限 ${Y(e.cvCap ?? 0, 1)}bn、票息 ${hA(e.convIssue.coupon * 100, 1)}）→ ` : ``}股權（發行價＝$${e.eqPx}×(1−${(e.eqDisc*100).toFixed(0)}%)，每年上限＝現市值 ${e.eqCapPct>=9?`無上限`:(e.eqCapPct*100).toFixed(0)+`%`}）→ 超出部分以高息債 ${(e.junkRate*100).toFixed(0)}% 補足${e.debtCapBasis === `ebitda` || e.debtCapBasis === `leaseAdj` ? `（＝需失去投資級才能融資的金額）` : ``}。股利 ${Y(o.reduce((a, t) => a + t.dividend, 0), 1)}bn 列為用途。${(q => q.length ? `本情境股權需求落在 ${q.join(`、`)}。` : `本情境不需股權。`)(o.filter(t => t.equity > .05).map(t => t.year))}`
   }), _({
     id: `ebitda-link`,
     ok: o.every(e => Math.abs(e.cashEbitda + e.creditAdj - e.ebitdaPL) < .01),
@@ -888,7 +933,11 @@ function sensitivities(e, v) {
     t.ebSteady = .35
   }, t => {
     t.ebSteady = .59
-  }), (e.debtCapBasis === `ebitda` ? r(`投資級上限（總債務 ÷ EBITDA）`, `3.5x`, `4.5x`, t => {
+  }), (e.debtCapBasis === `leaseAdj` ? r(`投資級上限（調整後槓桿）`, `4.0x`, `5.0x`, t => { // v0.2：(債務＋租賃負債) ÷ (EBITDA＋租金)
+    t.debtEbitdaMax = 4
+  }, t => {
+    t.debtEbitdaMax = 5
+  }) : e.debtCapBasis === `ebitda` ? r(`投資級上限（總債務 ÷ EBITDA）`, `3.5x`, `4.5x`, t => {
     t.debtEbitdaMax = 3.5
   }, t => {
     t.debtEbitdaMax = 4.5
@@ -909,9 +958,17 @@ function sensitivities(e, v) {
   }, e => {
     e.mw31 = 0
   }), r(`未起租租期`, `${UL.termSens[0]} 年`, `${UL.termSens[1]} 年`, e => { // v0.1b（Oracle）：租期越短年租越高（租金含在 EBITDA 率內，現金中性）
-    e.a.newLease = ulPath(UL.termSens[0])
+    e.a.newLease = ulPath(UL.termSens[0]), e.ulTerm = UL.termSens[0]
   }, e => {
-    e.a.newLease = ulPath(UL.termSens[1])
+    e.a.newLease = ulPath(UL.termSens[1]), e.ulTerm = UL.termSens[1]
+  }), r(`建設延誤月數`, `12 個月`, `0 個月`, e => { // v0.2：計費 MW 平移、GPU 資本支出照原時程
+    e.delayMonths = 12
+  }, e => {
+    e.delayMonths = 0
+  }), r(`未起租租約連動延誤`, `0%`, `100%`, e => { // v0.2：delayLink
+    e.delayLink = 0
+  }, e => {
+    e.delayLink = 1
   }), r(`預付重大財務組成`, hA((e.prepay.financingRate ?? 0) * 100, 2), `0%`, null, e => {
     e.prepay = { ...e.prepay, financingRate: 0 }
   }), r(`新債利率`, `+300bps`, `−300bps`, e => {

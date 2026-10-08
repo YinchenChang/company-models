@@ -24,8 +24,10 @@ from tk_link import PENDING_NOTE, read_snapshot  # noqa: E402
 from v05_map import REGISTRY_PATH, SEP, build_map, coverage_report  # noqa: E402
 import p2  # noqa: E402
 import p3  # noqa: E402
+import p4  # noqa: E402
+import p5  # noqa: E402
 
-VERSION = "v0.6-P3"
+VERSION = "v0.6"
 KIND_LABEL = {"SRC": "SRC_OAI", "INP": "Inputs", "FORMULA": "公式（後續工作包）", "DUP": "重複併入", "SKIP": "不遷入", "TK": "不遷入；改取 TK_Link"}
 SRC_COLS = ["SRC_ID", "指標", "數值", "低", "高", "單位", "口徑", "適用對象", "日期", "出處（v0.5 原文）", "來源等級", "立場", "立場說明",
             "一手／二手", "狀態", "取代者", "v0.5 標記", "查核狀態（v0.5 chk）", "v0.5 路徑", "模型使用位置", "備註",
@@ -253,9 +255,9 @@ def sheet_derived(wb, R):
     ws.column_dimensions["G"].width = 70
 
 
-def sheet_checks(wb, R, n_src, n_inp, n_pending, P2, P3):
+def sheet_checks(wb, R, n_src, n_inp, n_pending, P2, P3, P4, P5):
     ws = wb.create_sheet("Checks")
-    title(ws, "Checks — P1 檢查（公式；結果 ERR 的格數＝CHK_Errors）",
+    title(ws, "Checks — P1–P5 檢查（公式；結果 ERR 的格數＝CHK_Errors）",
           "OK／ERR：比對期望值；INFO：只列示。編號（C##）由 builder/id_registry.json 固定：新檢查取下一個號碼，退役號碼不重用（F1）。期望值為 builder 寫入的常數（黑字）。")
     header(ws, 4, ["編號", "檢查項", "值（公式）", "期望", "結果", "說明"])
     S = lambda m: sid(R, m)  # noqa: E731
@@ -307,6 +309,8 @@ def sheet_checks(wb, R, n_src, n_inp, n_pending, P2, P3):
     ]
     rows += p2_checks(R, P2, S, rowof)
     rows += p3_checks(R, P3, S, rowof)
+    rows += p4_checks(R, P3, P4, S, rowof)
+    rows += p5_checks(R, P2, P3, P4, P5, S, rowof)
     # F1：Checks 編號納入穩定 ID registry（label → C##）
     reg = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
     known = reg.setdefault("CHK", {})
@@ -321,7 +325,7 @@ def sheet_checks(wb, R, n_src, n_inp, n_pending, P2, P3):
     for k in [k for k in known if k not in {r_[0] for r_ in rows}]:
         reg.setdefault("retired_CHK", []).append(known.pop(k))
     REGISTRY_PATH.write_text(json.dumps(reg, ensure_ascii=False, indent=0), encoding="utf-8")
-    order = sorted(range(len(rows)), key=lambda i: ids[i])
+    order = sorted(range(len(rows)), key=lambda i: int(ids[i][1:]))   # 數字排序（C100 起不得排在 C91 之前）
     rows = [rows[i] for i in order]
     ids = [ids[i] for i in order]
     oc_row = rowof(inp_id(R, "2025 其他雲端"))
@@ -395,7 +399,7 @@ def p3_checks(R, P3, S, rowof):
     g3r = rowof(inp_id(R, "GB300 占 Blackwell 比例", "2025")), rowof(inp_id(R, "GB300 占 Blackwell 比例", "2026 起"))
     g3 = "+".join(f"(Inputs!$E${r}<0)+(Inputs!$E${r}>1)" for r in g3r)
     labels = "+".join(f"(COUNTIF(TK_HdrGen,Compute!${c}${cr['g_lab']})=0)" for c in "DEFGH")
-    sup_sum = ",".join(f"Compute!$D${cr['sup_' + k]}:$I${cr['sup_' + k]}" for k in P3["contracts"])
+    sup_sum = ",".join(f"Compute!$D${cr['sup_' + k]}:$I${cr['sup_' + k]}" for k in P3["contracts"]) + f",Compute!$D${cr['own']}:$I${cr['own']}"   # S4：＋自建 GW
     return [
         ("P3：世代占比合計≠1 的年數＋任一世代占比 <0 的格數", f"=SUMPRODUCT(--(ABS({yr('s_sum')}-1)>0.000000001))+{shares}", 0, "eq",
          "六世代（Hopper、GB200、GB300、VR200、Rubin Ultra、自研／其他）；自研＝1−其餘，不得為負"),
@@ -408,7 +412,7 @@ def p3_checks(R, P3, S, rowof):
         ("P3：容量上限係數 ∉ (0,1] 的年數", f"=SUMPRODUCT(--({yr('cap')}<=0))+SUMPRODUCT(--({yr('cap')}>1.000000001))", 0, "eq", "V1a"),
         ("P3：截頂後總額 > 未截頂總額 的年數", f"=SUMPRODUCT(--(Revenue!$D${vr['gross_c']}:$I${vr['gross_c']}>Revenue!$D${vr['gross']}:$I${vr['gross']}+0.000000001))", 0, "eq", ""),
         ("P3：研發 GW < 0 的年數", f"=SUMPRODUCT(--({yr('rd')}<0))", 0, "eq", "供給 ×（1−閒置）不足以容納截頂後推論時轉 ERR"),
-        ("P3：逐合約加總 − 合約供給合計（絕對值合計，GW）", f"=ABS(SUM({sup_sum})-SUM({yr('sup')}))", 0, "tol", "揭露／未揭露小計與合計一致"),
+        ("P3：逐合約加總 − 合約供給合計（絕對值合計，GW）", f"=ABS(SUM({sup_sum})-SUM({yr('sup')}))", 0, "tol", "揭露／未揭露小計＋自建 GW（S4 起計入供給）與合計一致"),
         ("P3：截頂後 Microsoft 分成累計超出上限的部分（$B）", f"=MAX(0,MAX(REV_MSCumCapped)-{S('Microsoft 分成總額上限')})", 0, "tol", "上限 $38B（SRC_OAI）"),
         ("P3 預覽：η（2025）", "=CMP_Eta2025", None, "info", "工作單參考值 0.196 為 Tokenomics v5.14 Block 6 需求口徑；本模型需求口徑不同（P2），以實算為準"),
         ("P3 並列：本模型 2025 推論 GW（token 換算）", f"=Compute!$D${cr['gw_tok']}", None, "info", "V11：本模型組合 × TK 世代產能"),
@@ -430,13 +434,126 @@ def p3_checks(R, P3, S, rowof):
     ]
 
 
+def p4_checks(R, P3, P4, S, rowof):
+    """v0.6-P4 新增的檢查（編號取 registry 下一號）。"""
+    C, K = P3["C"], P4["K"]
+    cr, kr = C.rows, K.rows
+    yk = lambda key: f"Cost!$D${kr[key]}:$I${kr[key]}"  # noqa: E731
+    yc = lambda key: f"Compute!$D${cr[key]}:$I${cr[key]}"  # noqa: E731
+    mx = lambda key: f"=MAX(MAX({yk(key)}),-MIN({yk(key)}))"  # noqa: E731
+    return [
+        ("P4：逐合約實付加總 − 合約實付合計（各年差的最大絕對值，$B）", mx("ck_pay"), 0, "tol", "v0.5 支出第 11 列"),
+        ("P4：未揭露 GW 合約（Azure、AWS Nvidia、CoreWeave）|實付 − 供給 GW × 合約價|（各年最大值，$B）", mx("ck_und"), 0, "tol",
+         "S3：未揭露 GW＝付款 ÷ 合約價；成本與 GW 同一時程"),
+        ("P4：算力成本（現金）−（合約實付＋自有資本支出扣合作方）（最大絕對值，$B）", mx("ck_cc"), 0, "tol", "V3"),
+        ("P4：推論＋研發＋閒置算力 − 算力成本（Q3 口徑）（最大絕對值，$B）", mx("ck_split"), 0, "tol", "依 GW 拆分（v0.5 算力MW 第 47 列）；2025＝實際"),
+        ("P4：非算力研發＋銷售＋管理（不含股權報酬）− 合計（最大絕對值，$B）", mx("ck_nc"), 0, "tol", "功能別占比加總＝1"),
+        ("P4：2025 費用對帳：營收 −（營業成本＋研發＋銷售＋管理）＋營業損失（$B）",
+         f"={S('營收：FY2025')}-({S('營業成本（cost of revenue）：FY2025')}+{S('研發費用總額：2025')}+{S('銷售費用（sales and marketing）：FY2025')}"
+         f"+{S('管理費用（general and administrative）：FY2025')})+{S('營業損失（loss from operations）：FY2025')}", None, "info", "外流財報各列四捨五入；應接近 0"),
+        ("P4：非算力營運費用（不含股權報酬）≤0 的年數", f"=SUMPRODUCT(--({yk('ncx')}<=0))", 0, "eq", "2025＝財報 − 股權報酬；股權報酬超過財報費用時轉 ERR"),
+        ("P4：員工人數 ≤0 的年數＋自建 GW <0 的年數", f"=SUMPRODUCT(--({yk('hc')}<=0))+SUMPRODUCT(--({yc('own')}<0))", 0, "eq", ""),
+        ("P4：Q3 ∉ [0,1] 的年數", f"=SUMPRODUCT(--({yk('q3')}<0))+SUMPRODUCT(--({yk('q3')}>1))", 0, "eq", "r6 P4-2"),
+        ("P4 預覽：2025 算力成本（合約實付）− 實際算力支出（$B）", f"=Cost!$D${kr['gap25']}", None, "info", "只列差距"),
+        ("P4 預覽：2025 非算力研發（財報口徑，$B）", "=COST_NonCompRD2025", None, "info", "r6：≈7.19（5.68–8.59）"),
+        ("P4 預覽：2025 非算力營運費用（財報口徑）÷ 營收 vs v0.5 1.216", f"=Cost!$D${kr['v05pct']}", None, "info", "研發不含付 Microsoft＋銷售＋管理"),
+        ("P4 預覽：2025 股權報酬（$B）÷ WSJ 46.2% × 營收", f"=Cost!$D${kr['sbc']}/Cost!$D${kr['wsj']}", None, "info", "人數 × 每人 vs 占營收比，兩個 WSJ 數字的一致性"),
+        ("P4 預覽：2030 雲端毛利率（基準持有成本）", f"=Cost!$I${kr['gmp']}", None, "info", "V3"),
+        ("P4 預覽：2025 Q3", f"=Cost!$D${kr['q3']}", None, "info", "r6 P4-2"),
+        ("P4 並列：2025 研發算力 − TK L1_Ans3（$B/年）", f"=Cost!$D${kr['q_gap']}", None, "info", "只列差距"),
+        ("P4 預覽：2030 每 VR 等值 GW 差額（含股權報酬；現金口徑，$B/GW/年）", f"=Cost!$I${kr['p_gap_vr']}", None, "info", "命題"),
+        ("P4 預覽：2030 每 VR 等值 GW 差額（含股權報酬；經濟口徑，$B/GW/年）", f"=Cost!$I${kr['e_gap_vr']}", None, "info", "命題（經濟口徑）"),
+        ("P4 預覽：2025–2030 累計差額（含股權報酬；現金口徑，$B）", f"=SUM({yk('p_gap_b')})", None, "info", "P5 融資需求的起點（不含既有現金與融資）"),
+        ("P4 預覽：差額 <0 的年數（含股權報酬；現金口徑）", f"=SUMPRODUCT(--({yk('p_gap_vr')}<0))", None, "info", "6＝每一年營收都未覆蓋全成本"),
+        ("P4 V16：2025 Azure 攤入額超過實際算力支出（旗標）", "=COST_V16Flag", None, "info", "S4 預設：只立旗標；基準起點維持 2025"),
+        ("P4 V16：起點 2026 情境的 2025 攤入額差異（$B）", f"=Cost!$D${kr['v_diff']}", None, "info", "起點 2026 時 2025 攤入額為 0"),
+        ("P4 並列：TK 每 VR200 GW 年全成本（下游預設）−（IF_FullCost）（$B/GW/年）", f"=Cost!$D${kr['tk_def']}-Cost!$D${kr['tk_full']}", None, "info",
+         "S4 預設：下游預設為基準，IF_FullCost 並列"),
+        ("P4 預覽：2030 自建 GW", f"=Compute!$I${cr['own']}", None, "info", "S4 預設：自建 GW 計入供給"),
+    ]
+
+
+def p5_checks(R, P2, P3, P4, P5, S, rowof):
+    """v0.6-P5 新增的檢查（編號取 registry 下一號）：融資恆等式與缺口、2025 實際值對帳（r6 P5-2）、反向模式、TK 快照狀態。"""
+    F, X, K = P5["F"], P5["X"], P4["K"]
+    fr, xr, kr = F.rows, X.rows, K.rows
+    cr, vr = P3["C"].rows, P2["V"].rows
+    yf = lambda key, a="E": f"Funding!${a}${fr[key]}:$I${fr[key]}"  # noqa: E731
+    yx = lambda key, a="E": f"Reverse!${a}${xr[key]}:$I${xr[key]}"  # noqa: E731
+    mx = lambda rng: f"=MAX(MAX({rng}),-MIN({rng}))"  # noqa: E731
+    fcf_id = "+".join(f"ABS(Funding!{c}{fr['rev']}-Funding!{c}{fr['cc']}-Funding!{c}{fr['ncx']}-Funding!{c}{fr['fcf']})" for c in "DEFGHI")
+    cash_id = "+".join(f"ABS(Funding!{c}{fr['open']}+Funding!{c}{fr['fcf']}+Funding!{c}{fr['eq']}+Funding!{c}{fr['ext']}-Funding!{c}{fr['end']})" for c in "EFGHI")
+    gap_sbc = "+".join(f"ABS(Funding!{c}{fr['fcf']}-Cost!{c}{kr['p_gap_b']}-Cost!{c}{kr['sbc']})" for c in "DEFGHI")
+    tgt_up = "+".join(f"(Reverse!{c}{xr['tgt']}<=Reverse!{p}{xr['tgt']})" for p, c in zip("DEFGH", "EFGHI"))
+    rev25 = f"Revenue!$D${vr['gross_c']}"
+    amz = inp_id(R, "計入 Amazon 條件式 $35B")
+    return [
+        # ── 融資（OK／ERR）
+        ("P5：自由現金流 − （營收淨額 − 算力成本 − 非算力成本）（各年絕對值合計，$B）", "=" + fcf_id, 0, "tol", "現金流恆等式"),
+        ("P5：自由現金流 − （COST_GapCash ＋ COST_SBC）（各年絕對值合計，$B）", "=" + gap_sbc, 0, "tol", "S4 給 S5：股權報酬為非現金，加回"),
+        ("P5：年底現金 −（期初＋自由現金流＋股權流入＋外部資金）（2026–2030 絕對值合計，$B）", "=" + cash_id, 0, "tol", "現金流量恆等式（來源順序 ①②③）"),
+        ("P5：已到位融資＋Nvidia 非現金部分 − 2026-03 輪無條件部分（$B）",
+         f"=SUM({yf('committed', 'D')})+SUM({yf('nv_nc', 'D')})-V9_Uncond2026", 0, "tol", "到位年須落在 2025–2030；組成＝SRC 四列（E8j）"),
+        ("P5：最低現金 <0 或 2025 年底現金 <0（違反數）", f"=({S('現金：2025 年底')}<0)+(Funding!$D${fr['min']}<0)", 0, "eq", "S7"),
+        ("P5：Amazon 條件式開關 ∉ {0,1}（違反數）", f"=IF(OR({S('股權融資：條件式部分（Amazon）')}<0,AND({amz}<>0,{amz}<>1)),1,0)", 0, "eq", "S5 預設：基準 0（不計入）"),
+        ("P5：外部資金需求 <0 的年數＋年底現金低於最低現金的年數（2026–2030）",
+         f"=SUMPRODUCT(--({yf('ext')}<0))+SUMPRODUCT(--({yf('end')}<{yf('min')}-0.000000001))", 0, "eq", "補足至最低現金的定義"),
+        # ── 融資（INFO）
+        ("P5 結果：2025–2030 累計外部資金需求（基準，$B）", f"=Funding!$I${fr['cum']}", None, "info", "r6 P5-1"),
+        ("P5 結果：單年外部資金需求峰值（$B）", f"=MAX({yf('ext')})", None, "info", ""),
+        ("P5 結果：峰值年度", f"=MIN({yf('peak_y')})", None, "info", ""),
+        ("P5 結果：首次需要外部資金的年度（現金跌破最低現金）", f'=IF(COUNT({yf("flag_y")})=0,"無",MIN({yf("flag_y")}))', None, "info", "S7 缺口旗標"),
+        ("P5 結果：只靠已到位融資，現金首次低於最低現金的年度", f'=IF(COUNT({yf("noext_y")})=0,"無",MIN({yf("noext_y")}))', None, "info",
+         "已到位融資能撐到此年度的前一年"),
+        ("P5 結果：缺口旗標年數（2026–2030）", f"=SUM({yf('flag')})", None, "info", ""),
+        ("P5 結果：2030 年底現金（基準，$B）", f"=Funding!$I${fr['end']}", None, "info", "＝最低現金（有缺口時）"),
+        ("P5 情境：計入 Amazon 條件式 $35B 的累計外部資金需求（$B）", f"=Funding!$I${fr['s_cum']}", None, "info", "S5 預設：不計入基準，列情境"),
+        ("P5 情境：Amazon 條件式使累計外部資金需求減少（$B）", f"=Funding!$I${fr['cum']}-Funding!$I${fr['s_cum']}", None, "info", ""),
+        ("P5 或有負債合計（只列示，$B）", "=FND_Contingent", None, "info", "S4b：Nvidia 擔保＋晶片融資洽談；不作資金來源"),
+        ("P5 或有：合約剩餘承諾（2030 年後，$B）", "=FND_CommitAfter2030", None, "info", "v0.5 支出 J 欄"),
+        # ── 2025 實際值對帳（r6 P5-2）
+        ("P5 對帳 2025 營收：模型總額（截頂後）− SRC 實際（$B）", f"={rev25}-{S('營收：FY2025')}", 0, "tol", "v0.5 校準：2025 API 為倒推項"),
+        ("P5 對帳 2025 推論支出：有效推論 GW × 合約價 − SRC 8.4（$B）", f"=Compute!$D${cr['eff']}*{inp_id(R, '每 GW 年合約價')}-{S('推論成本合計：2025')}", 0, "tol",
+         "V2：η 以 2025 推論支出校準，故為 0"),
+        ("P5 對帳 2025 推論支出 − 財報營業成本（$B）", f"={S('推論成本合計：2025')}-{S('營業成本（cost of revenue）：FY2025')}", None, "info",
+         "推論 8.4 高於營業成本 7.5（口徑差異；營業成本可能不含部分推論或已扣折扣）"),
+        ("P5 對帳 2025 訓練支出：研發 GW × 合約價 −（10.59＋其他雲端）（$B）",
+         f"=Compute!$D${cr['rd']}*{inp_id(R, '每 GW 年合約價')}-({S('研發費用中付 Microsoft 部分：2025')}+{inp_id(R, '2025 其他雲端')})", 0, "tol", "r6 P3-4：2025 研發 GW＝訓練支出 ÷ 合約價"),
+        ("P5 對帳 2025 GW：模型總需求 GW − SRC 2025 年底 1.9（GW）", f"=Compute!$D${cr['dem']}-{S('算力規模：2025 年底')}", None, "info", "只列差距（口徑未明：年底 vs 年均）"),
+        ("P5 對帳 2025 GW：合約推得供給 GW − SRC 年均（(0.6＋1.9)÷2）（GW）", f"=Compute!$D${cr['sup']}-Compute!$D${cr['t_avg']}", None, "info", "S3：合約推得 1.23 對年均 1.25（C65 同源）"),
+        ("P5 對帳 2025 算力成本：合約實付 − 實際算力支出 20.4（$B）", f"=Cost!$D${kr['cc']}-COST_Actual2025", None, "info", "S4 預設：基準用合約實付（r6）"),
+        ("P5 對帳 2025 營業損益：模型（總額 − 實際算力 − 非算力 − 股權報酬）（$B）",
+         f"={rev25}-COST_Actual2025-Cost!$D${kr['ncx']}-Cost!$D${kr['sbc']}", None, "info", "以實際算力支出 20.4 計"),
+        ("P5 對帳 2025 營業損益：模型 − 財報（−營業損失）（$B）",
+         f"=({rev25}-COST_Actual2025-Cost!$D${kr['ncx']}-Cost!$D${kr['sbc']})+{S('營業損失（loss from operations）：FY2025')}", None, "info",
+         "差距主要＝推論 8.4 − 營業成本 7.5（下一列為扣除後殘差）"),
+        ("P5 對帳 2025 營業損益殘差：差距 ＋（推論 − 營業成本）（$B）",
+         f"=({rev25}-COST_Actual2025-Cost!$D${kr['ncx']}-Cost!$D${kr['sbc']})+{S('營業損失（loss from operations）：FY2025')}+{S('推論成本合計：2025')}-{S('營業成本（cost of revenue）：FY2025')}",
+         None, "info", "≈0（財報各列四捨五入）"),
+        ("P5 對帳 2025 Microsoft 分成（現金流已扣；財報位置未揭露，$B）", f"=Revenue!$D${vr['ms_c']}", None, "info", "若財報營業成本已含分成，現金流有重複扣除之虞（資料缺口）"),
+        ("P5 對帳 2025 自由現金流（實際算力支出口徑，$B）", "=FND_FCF2025Act", None, "info", "只對照；現金流自 2026 起"),
+        # ── 反向模式
+        ("P5 反向：目標路徑 2026–2030 合計 − SRC Σ840（$B）", f"=Reverse!$D${xr['tsum_ck']}", 0, "tol", "2029＝殘差，恆為 0"),
+        ("P5 反向：目標路徑非遞增的年數（2026–2030）", "=" + tgt_up, 0, "eq", "擬合值（Inputs）使 2029 殘差低於前一年時轉 ERR"),
+        ("P5 反向：Microsoft 分成累計超出上限的部分（$B）", f"=MAX(0,MAX(RVS_MSCum)-{S('Microsoft 分成總額上限')})", 0, "tol", "同上限規則"),
+        ("P5 反向 R2：2030 只靠 API 的倍數", f"=Reverse!$I${xr['m_api']}", None, "info", "v0.5 4.55"),
+        ("P5 反向 R2：2030 只靠訂閱的倍數", f"=Reverse!$I${xr['m_sub']}", None, "info", "v0.5 5.66"),
+        ("P5 反向 R2：2030 兩線等比例倍數", f"=Reverse!$I${xr['m_prop']}", None, "info", "v0.5 3.01"),
+        ("P5 反向：2025–2030 累計外部資金需求（目標營收、同一支出，$B）", f"=Reverse!$I${xr['cum']}", None, "info", "v0.5 115.5"),
+        ("P5 反向：Σ自由現金流 2026–30 − 簡報 −278（$B）", f"=Reverse!$D${xr['r_diff']}", None, "info", "v0.5 +118.3"),
+        # ── TK 快照狀態（r6 P5-2）
+        ("P5 TK 快照：Tokenomics 版本", "=TK_Version", None, "info", "check_tk_snapshot 結果見報告"),
+        ("P5 TK 快照：Tokenomics master 提交", "=TK_Commit", None, "info", ""),
+    ]
+
+
 def sheet_readme(wb, snap, date, summary):
     ws = wb.active
     ws.title = "README"
     title(ws, f"OpenAI 收支模型 {VERSION}（{date}）",
           "命題（Andy 2026-09-30）：OpenAI 每 VR 等值 GW 的營收能否覆蓋每 GW 全成本；若不能，缺口由誰、以什麼條件融資。FY2025–FY2030，曆年制。")
     lines = [
-        ("本版範圍", "P1：repo 骨架、SRC_OAI（公司財務原始數據）、TK_Link（Tokenomics 快照）、Inputs（v0.5 Assumed 項目遷入）。P2：Demand（需求與 token 量）、Revenue（營收、Microsoft 分成、淨額）。P3：Compute（算力需求與供給、η、容量上限、VR 等值）、Revenue 第八節（截頂後營收）。成本、融資於 P4–P5。"),
+        ("本版範圍", "P1：repo 骨架、SRC_OAI（公司財務原始數據）、TK_Link（Tokenomics 快照）、Inputs（v0.5 Assumed 項目遷入）。P2：Demand（需求與 token 量）、Revenue（營收、Microsoft 分成、淨額）。P3：Compute（算力需求與供給、η、容量上限、VR 等值）、Revenue 第八節（截頂後營收）。P4：Cost（算力成本、供應商持有成本與雲端毛利、非算力成本、Q3、命題輸出、V16 Azure 檢查）、Compute 第十三節（自建 GW 計入供給）。融資於 P5。"),
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構，重建時保留 Excel 內已改過的藍字。"),
         ("SRC_OAI", f"{summary['src']} 列；v0.5『已取得的原始訊息』逐筆遷入（Interested-party／Verified）。"),
         ("TK_Link", f"Tokenomics {snap['version']}（{snap['file']}），master 提交 {snap['sha'][:7]}，讀取日 {date}；{summary['tk_ok']} 個名稱有值、{summary['tk_pending']} 個待 Tokenomics 提供。"),
@@ -445,7 +562,10 @@ def sheet_readme(wb, snap, date, summary):
         ("Demand", "P2 需求：訂閱各方案人數、每日任務數 × 每任務 token、API 任務數與計費 token；token 量（層級 × 付費／免費，具名範圍 DEM_Tok_*，供 P3）。"),
         ("Revenue", "P2 營收：API 單價路徑（2026 依價格事件時點天數加權）、訂閱、API、廣告、其他、總額、Microsoft 分成、淨額（具名範圍 REV_*）。"),
         ("Compute", "P3 算力：V1 世代組合（Blackwell 拆 GB200／GB300；自研＝VR200 × 係數）、付費／免費每 GW 年產能（TK IF_TokGW × IF_Util）、推論 GW（token 換算）、V2 η（2025 推論支出 ÷ 合約價校準）、有效推論 GW、三角對照、研發 GW、總需求 GW、供給 GW（逐合約）、容量上限（V1a）、VR 等值換算、敏感度（具名範圍 CMP_*）。"),
-        ("Checks", "P1、P2、P3 檢查；CHK_Errors 必須為 0。"),
+        ("Cost", "P4 成本：算力成本（V3：合約實付＋自有資本支出；現金口徑）、供應商持有成本（TK IF_HoldEcon 世代加權）與雲端毛利、經濟口徑、非算力成本（V4：2025 財報；2026 起人數 × 每人年成本，股權報酬單列）、Q3（對 TK L1_Ans3）、命題輸出（每 VR 等值 GW 的營收、成本、差額；現金與經濟口徑）、V16 Azure 攤入檢查（具名範圍 COST_*）。"),
+        ("Funding", "P5 融資（S7）：自由現金流（營收淨額 − 算力成本 − 非算力成本；股權報酬加回）、已到位融資（2026-03 輪無條件部分）、最低現金、外部資金需求（年底現金低於最低現金的累計差額）、缺口旗標、Amazon 條件式情境、或有負債（S4b，只列示）（具名範圍 FND_*）。"),
+        ("Reverse", "P5 反向模式（R1–R3）：管理層營收目標路徑、三組充分條件倍數、2030 可觀測量、橋接、反向資金、與簡報對帳；只作對照，不回饋基準（具名範圍 RVS_*）。"),
+        ("Checks", "P1–P5 檢查（含 2025 實際值對帳、Tokenomics 快照狀態）；CHK_Errors 必須為 0。"),
         ("一手／二手圖例", "『二手（含一手公告轉載）』＝媒體轉載公司公開公告；『二手（含一手轉載）』＝F2，媒體轉載外流財報或內部文件；兩者不合併。（同文見 SRC_OAI 頁首說明）"),
         ("標記", "Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律附區間）。"),
         ("分層", "公司財務原始數據→SRC_OAI；AI 技術與算力→TK_Link（取自 Tokenomics 名稱）；假設→Inputs。"),
@@ -498,7 +618,9 @@ def main():
     sheet_derived(wb, R)
     P2 = p2.build_p2(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), lambda iid: inp_row(R, iid))
     P3 = p3.build_p3(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), lambda iid: inp_row(R, iid), P2, snap)
-    sheet_checks(wb, R, len(R.src_rows), len(R.inp_rows), summary["tk_pending"], P2, P3)
+    P4 = p4.build_p4(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), lambda iid: inp_row(R, iid), P2, P3, snap)
+    P5 = p5.build_p5(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), lambda iid: inp_row(R, iid), P2, P3, P4)
+    sheet_checks(wb, R, len(R.src_rows), len(R.inp_rows), summary["tk_pending"], P2, P3, P4, P5)
     sheet_map(wb, R)
     preserve.write_defaults(wb, final)
     raw = Path(tempfile.mkdtemp()) / a.out.name

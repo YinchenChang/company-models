@@ -532,9 +532,15 @@ def build_map(data=None, write_registry=False) -> Recorder:
     R.assign(f"{tr_}/tag", "DUP", rid26, "同源")
     R.assign(f"{tr_}/src", "DUP", rid26, "同源")
     R.assign(f"{tr_}/v/0", "DUP", "SRC_OAI（營收：FY2025）", "2025 為實際值（同 actuals.revenue2025）")
-    for i in (2, 3, 4):
-        R.assign(f"{tr_}/v/{i}", "FORMULA", "P5（反向目標路徑 2027–29：依 Σ840 擬合）",
-                 "Derived：2027–29 為依 Σ840 擬合之路徑（v0.5 標 Interested-party/Derived 混合；依元素拆分）")
+    # P5（S5）：沿用 v0.5／Tokenomics v4 FT_Sep2026 列 24 的結構——2027、2028 為擬合值（線性遞減成長，閉合 36→350 與 Σ840），2029＝Σ840 殘差（公式）
+    for i, y in ((2, 2027), (3, 2028)):
+        I(tr_, "管理層營收目標擬合值（反向模式）", index=str(y), unit="$B", v=f"{tr_}/v/{i}", tag="Decision", decision="R1",
+          status="P5 新增（反向模式；S5）", meta=False,
+          note="Derived 擬合值（Tokenomics v4 FT_Sep2026 列 24：成長率線性遞減，閉合 2026 $36B→2030 $350B 且 2026–30 合計 $840B；v0.5 沿用）。"
+               "只驅動 Reverse 頁（R1），不回饋基準。替代擬合：二次式 77.0／143.0（2029 殘差 234.0）")
+        R.inp_rows[-1]["lo"] = R.inp_rows[-1]["hi"] = R.get(f"{tr_}/v/{i}")
+    R.assign(f"{tr_}/v/4", "FORMULA", "Reverse X01（2029＝Σ840 − 2026 − 2027 − 2028 − 2030；P5）",
+             "Derived：v0.5／Tokenomics v4 以 2029 為殘差使 2026–30 合計＝$840B（v0.5 標 Interested-party/Derived 混合；依元素拆分）")
     S(f"{rv}/targetFCFcum2026_2030", "管理層目標：2026–2030 累計自由現金流", v=f"{rv}/targetFCFcum2026_2030/v", unit="$B",
       scope="Jul-2026 簡報", date="2026-09-18", use="P5 反向模式")
     # 計畫算力：reverse.targetComputeCum、anchors.computeCum_FT、training.planCompute 同源（FT 2026-09-18）
@@ -773,12 +779,14 @@ def build_map(data=None, write_registry=False) -> Recorder:
     R.split("spending.ownedCapex", "出處『Project Camellia $20B（TechCrunch 2026-07-22）』為單一專案例，非整年觀測；新增 SRC_OAI 錨點列，6 個元素維持 Inputs（Assumed）", "SRC_OAI 1 列（錨點）＋Inputs 6 格", scanned_only=True)
     R.split("subscription.tasksPerDay／tokensPerTask", "出處（Tokenomics workbook，未經查核）；僅『2025-07 每日 2.5B 則訊息』為可引用觀測，與任務口徑不同；新增 SRC_OAI 錨點列，元素維持 Inputs", "SRC_OAI 1 列（錨點）＋Inputs 20 格", scanned_only=True)
     R.split("api.listPriceFYAvg", "V7 已依元素拆分：2025（Analogy）→Inputs；2026（由事件價推得）→公式", "Inputs 與公式（見分類規則 2）")
-    R.split("reverse.targetRevenue", "V7 已依元素拆分：2026、2030→SRC_OAI；2025 併入實際營收；2027–29→公式", "SRC_OAI 2 列＋重複併入 1＋公式 3")
+    R.split("reverse.targetRevenue", "V7 已依元素拆分：2026、2030→SRC_OAI；2025 併入實際營收；2027–28→Inputs（擬合值，P5）；2029→公式（Σ840 殘差，P5）", "SRC_OAI 2 列＋重複併入 1＋Inputs 2＋公式 1")
     R.split("other.ads.arpuPerExposedUserYear", "出處『Meta FY2025 全球 ARPP $57.03（10-K）』是第三方上限參照，非 OpenAI 觀測；元素全屬 Analogy→Inputs，不拆", "Inputs 6 格", scanned_only=True)
     R.split("other.ads.exposureShare、demandGrowthExPrice、fleetMix、arpu、tokenMix、listPriceAnnualChange", "出處皆無年度觀測值（Assumed／Analogy 全期）→不拆", "Inputs", scanned_only=True)
     R.split("api.demandGrowthExPrice.tasks（2026）", "2026 為校準年（v0.4 把 53%→134% 使 FY2026 對上獨立推估 32.9）：值由校準得出，屬 Assumed、無觀測元素→不拆；校準目標 32.9 為 Derived（公式）", "Inputs", scanned_only=True)
     p2_rows(R)
     p3_rows(R)
+    p4_rows(R)
+    p5_rows(R)
     # 殘餘：補上未登記的中介資料葉節點（tag/src/chk/_note…）隨最近的已登記兄弟
     for p in list(R.leaves):
         if p in R.dest:
@@ -857,6 +865,75 @@ def p3_rows(R: Recorder):
     I("r5/E6/P3 定義常數", "線性爬升付款：等差級數和 n(n+1)/2 的除數（定義常數）", unit="—", vlit=2, tag="Decision", decision="E6",
       status="P3 新增（E6）", note="來源：定義常數；區間不適用（低＝高）；E6：公式內不得含常數。用途：N4(b) 期間內線性爬升的付款權重（年序 ÷ Σ年序）", meta=False)
     R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 2, 2
+
+
+LEAK_SRC = ("Where's Your Ed At 2026-06-15『Exclusive: OpenAI Losses Increased Nearly 8X in 2025』（外流 2025 經查核財報；FT 獨立核實）"
+            "https://www.wheresyoured.at/exclusive-openai-financials/；Fortune 2026-06-16 https://fortune.com/2026/06/16/openai-financials-leaked-losses-revenue-profit/")
+WSJ_SBC_SRC = ("WSJ 2025-12-30『OpenAI Is Paying Employees More Than Any Major Tech Startup in History』（OpenAI 向投資人提供的財務預測；Equilar 分析），"
+               "經 The Decoder https://the-decoder.com/openais-stock-compensation-averages-1-5-million-per-employee-dwarfing-every-tech-startup-in-history/ 、"
+               "Fortune 2026-02-18 https://fortune.com/2026/02/18/openai-chatgpt-creator-record-million-dollar-equity-compensation-ai-tech-talent-war-career-retention-sam-altman-millionaire-staff/ 轉述")
+FT_HC_SRC = ("FT 2026-03-21（兩位知情人士；招募計畫），經 Engadget https://www.engadget.com/ai/openai-reportedly-plans-to-double-its-workforce-to-8000-employees-161028377.html 轉述")
+
+
+def p4_rows(R: Recorder):
+    """v0.6-P4（S4）新增列：r6 P4-2 人數、每人成本、股權報酬的公開來源（SRC_OAI；擷取日 2026-10-07）、
+    2025 銷售／管理費用（v0.5 opexExComputePctRevenue 2025 的拆分來源）、P4 假設（Inputs）與 E6 定義常數。不改 v0.5 葉節點的去處。"""
+    S, I = R.src, R.inp
+    ex = "（擷取 2026-10-07）"
+    for metric, val, scope, use in (
+        ("銷售費用（sales and marketing）：FY2025", 5.73, "FY2025 經查核財報（GAAP 費用列；是否含股權報酬原文未交代，本模型假設含）", "P4 V4：2025 銷售費用（v0.5 opexExComputePctRevenue 2025 的拆分來源）"),
+        ("管理費用（general and administrative）：FY2025", 1.57, "FY2025 經查核財報（GAAP 費用列；是否含股權報酬原文未交代，本模型假設含）", "P4 V4：2025 管理費用（同上）"),
+        ("營業損失（loss from operations）：FY2025", 20.92, "FY2025 經查核財報；＝營收 −（營業成本＋研發＋銷售＋管理）", "P4 Checks：費用各列與營業損失對帳"),
+    ):
+        S("r6/P4/外流 2025 財報（S4 搜尋）", metric, vlit=val, unit="$B", scope=scope, date="2026-06-15", tag="Interested-party",
+          source=LEAK_SRC, use=use, note="S4 公開來源搜尋" + ex + "；與 SRC_OAI_002、003、087、098 同一份外流財報")
+    for metric, val, unit, scope, use in (
+        ("員工人數：2025（約）", 4000, "人", "2025 年員工約 4,000 人（每人股權報酬的分母；視為年均）", "P4 V4：人數 2025 值"),
+        ("平均每人股權報酬：2025", 1.5, "$M/人/年", "2025 年平均每人股權報酬約 $1.5M（投資人財務預測）", "P4 V4：每人股權報酬 2025 值"),
+        ("股權報酬占營收比：2025（投資人預測）", 0.462, "比例", "2025 年股權報酬約為營收的 46.2%（投資人財務預測）", "P4 Checks 對照"),
+        ("股權報酬年增額：至 2030（投資人預測）", 3, "$B/年", "股權報酬預期至 2030 年每年增加約 $3B（投資人財務預測）", "P4 對照列（不回饋基準）"),
+    ):
+        S("r6/P4/WSJ 股權報酬（S4 搜尋）", metric, vlit=val, unit=unit, scope=scope, date="2025-12-30", tag="Interested-party",
+          source=WSJ_SBC_SRC, use=use, note="S4 公開來源搜尋" + ex + "；原文 WSJ 付費牆，數值經兩家轉述一致")
+    for metric, val, scope, use in (
+        ("員工人數：2026-03（約）", 4500, "2026-03 員工約 4,500 人", "P4 Checks 對照（人數成長路徑）"),
+        ("員工人數目標：2026 年底（約）", 8000, "2026 年底目標約 8,000 人（公司招募計畫；只作對照，不回饋基準）", "P4 Checks 對照（人數成長路徑）"),
+    ):
+        S("r6/P4/FT 人數（S4 搜尋）", metric, vlit=val, unit="人", scope=scope, date="2026-03-21", tag="Interested-party",
+          source=FT_HC_SRC, use=use, note="S4 公開來源搜尋" + ex + "；原文 FT 付費牆")
+    lag = I("r6/P4-1/自建 GW", "自建 GW 投產落後年數", unit="年", vlit=1, tag="Assumed", decision="v0.5 算力MW 第 11 列",
+            status="P4 新增（S4 預設：自建 GW 計入供給）", note="v0.5：自建 GW＝累計自有資本支出（至前一年）÷ 每 GW 資本支出；區間 1–2 年（Assumed）", meta=False)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 1, 2
+    for y, v, lo, hi in ((2026, 0.55, 0.3, 0.8), (2027, 0.30, 0.1, 0.5), (2028, 0.20, 0.05, 0.35), (2029, 0.15, 0, 0.3), (2030, 0.10, 0, 0.25)):
+        I("r6/P4-2/人數成長", "員工人數年增率（年均人數）", index=str(y), unit="比例", vlit=v, tag="Assumed", decision="V4",
+          status="P4 新增（V4；S4 預設：成長路徑用 Inputs）",
+          note=("2026：FT 2026-03 約 4,500、年底目標約 8,000（SRC_OAI）隱含年均約 +56%，取 0.55；" if y == 2026 else "")
+               + "Assumed；不以公司目標反推（共同規則第 4 節）", meta=False)
+        R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = lo, hi
+    I("r6/P4-2/每人成本", "每人年成本（不含股權報酬）年變動率", index="2026 起", unit="比例", vlit=0.03, tag="Assumed", decision="V4",
+      status="P4 新增（V4）", note="2025 值由財報推得（Derived：非算力營運費用不含股權報酬 ÷ 人數）；之後每年變動率 0.03（0–0.08；薪資與非人事費用成長，Assumed）", meta=False)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 0, 0.08
+    I("r6/P4-2/股權報酬", "每人股權報酬年變動率", index="2026 起", unit="比例", vlit=0, tag="Assumed", decision="V4",
+      status="P4 新增（V4）", note="2025 值 $1.5M（SRC_OAI，WSJ）；之後每人不變（0；−0.2–0.2，Assumed）；WSJ『每年約 +$3B』只作對照", meta=False)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = -0.2, 0.2
+    I("r5/E6/P4 定義常數", "單位換算：$ → $B 的除數（定義常數）", unit="$／$B", vlit=1000000000, tag="Decision", decision="E6",
+      status="P4 新增（E6）", note="來源：定義常數；區間不適用（低＝高）；E6：公式內不得含常數。用途：TK $/M token × M tok/GW/年 → $B/GW/年", meta=False)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 1000000000, 1000000000
+    return lag
+
+
+def p5_rows(R: Recorder):
+    """v0.6-P5（S5）新增 Inputs：融資輪到位年、Amazon 條件式開關與到位年（S5 預設：不計入基準，列情境）。不改 v0.5 葉節點的去處。"""
+    I = R.inp
+    I("r6/P5-1/融資", "2026-03 融資輪無條件部分的現金到位年", unit="年", vlit=2026, tag="Decision", decision="S7",
+      status="P5 新增（S7）", note="v0.5 資金第 10 列：無條件部分全額計入 2026 股權流入；SoftBank 三期的實際分期未揭露（區間上限 2027）", meta=False)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 2026, 2027
+    I("r6/P5-1/融資", "計入 Amazon 條件式 $35B（1＝是；0＝否）", unit="開關", vlit=0, tag="Decision", decision="S7",
+      status="P5 新增（S5 預設：不計入基準，列情境）", note="v0.5 輸入第 7 列（base 不計入）；Funding 第四節另列計入情境，不受本開關影響", meta=False)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 0, 1
+    I("r6/P5-1/融資", "Amazon 條件式 $35B 到位年", unit="年", vlit=2026, tag="Assumed", decision="S7",
+      status="P5 新增（S5）", note="條件為 IPO 或 AGI 里程碑（SRC_OAI_082）；v0.5 計入時與無條件部分同在 2026；區間 2026–2027（OpenAI 2026-06 已機密遞交 S-1 草稿，上市時點未定）", meta=False)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 2026, 2027
 
 
 def coverage_report(R: Recorder):
