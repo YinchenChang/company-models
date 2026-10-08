@@ -172,6 +172,18 @@ cmp('加權目標價', V+'加權目標價', [p.call.blended]);
     cmpMix('焦點 季度',QT+'焦點｜季度',[qv.focus.label]); cmpMix('焦點 差異原因',QT+'焦點｜差異原因',[qv.rsnLine(qv.fi)||'無（差距皆在 '+pctQ(qv.tol)+' 以內）']);
     for(const nm of ['營收','調整後 EBITDA','調整後營業利益','CapEx（毛額）','車隊折舊']) cmpMix('核對 '+nm,QT+'核對｜'+nm,qv.sums.map(()=>0));
     qv.key.forEach((m,i)=>cmpT('文字 驗證點 '+m.label,SM+'驗證｜'+m.label+'｜句',qv.keyLines[i])); } }
+// W2：每 MW 經濟性（Excel「每MW經濟性」頁逐列；數值 1e-6 相對容忍、文字逐字、空白格不比）與「輸入與假設」每 MW 建置成本、GPU 經濟壽命
+{ const PW=perMwQ(d,q);
+  if(PW){ for(const [sec,rs] of Object.entries(PW)) for(const [lab,,hs] of rs){ const k='每MW經濟性|'+lab, x=X[k];
+      if(!x){ if(hs.some(h=>typeof h==='number')) rows.push(['每MW '+lab,'MISSING XL KEY '+k]); continue; }
+      const ok=hs.every((h,i)=>h==null?(x[i]==null||x[i]===''):typeof h==='number'?typeof x[i]==='number'&&Math.abs(h-x[i])<=1e-6*Math.max(1,Math.abs(h)):(x[i]??'')===h);
+      rows.push([ok?'OK ':'XX ','每MW '+sec+' '+lab,JSON.stringify(hs.map(h=>typeof h==='number'?+h.toFixed(4):h)),JSON.stringify(x.slice(0,5).map(v=>typeof v==='number'?+v.toFixed(4):v))]); }
+    cmp('每 MW 建置成本','輸入|每 MW 建置成本',q.a.costMW); cmp('GPU 經濟壽命','輸入|GPU 經濟壽命（年）',[q.gpuLife]);
+    if(!AKX){ const SN=pmwSensQ(q,VAL_DEFAULTS);  // 敏感度：Excel 為建置時快照（預設錨定），HTML 即時計算同一組設定
+      for(const sk of ['low','base','high']){ const nm=SCENARIOS[sk].label.split(' ')[0], b0=SN.rows[sk].base;
+        for(const [k,cn] of SN.cases){ const key='每MW經濟性|敏感度｜'+nm+'｜'+cn, x=X[key], h=SN.rows[sk][k];
+          if(h==null){ rows.push([x===undefined?'OK ':'XX ','敏感度 '+nm+' '+cn+'（不適用）','',JSON.stringify(x)]); continue; }
+          cmp('敏感度 '+nm+' '+cn,key,[h[0],h[1],h[0]-b0[0],h[1]-b0[1]]); } } } } }
 { const G=evAnchorGrid(d,q,VAL_DEFAULTS); G.mults.forEach((m,i)=>{ cmp('矩陣腿 '+m+'x', V+'錨定×倍數｜EV/EBITDA 腿｜'+m.toFixed(1)+'x', G.leg[i]); cmp('矩陣目標 '+m+'x', V+'錨定×倍數｜加權目標價｜'+m.toFixed(1)+'x', G.tgt[i]); }); }
 for(const r of rows) console.log(r.join(' | '));
 // HTML P&L table FY26 display check

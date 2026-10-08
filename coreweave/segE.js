@@ -273,6 +273,42 @@ function QuarterTabQ({ d, p, st }) {
   ]);
 }
 
+// W2：「資金模型 → 運營活動 → 每 MW 經濟性」（只在 methodology.perMw 使用新方法時顯示）。數字取自 perMwQ（與 Excel「每MW經濟性」頁同列名）。
+function PerMwTabQ({ d, st, o }) {
+  let P = (0, v.useMemo)(() => perMwQ(d, st), [d, st]), SN = (0, v.useMemo)(() => pmwSensQ(st, o), [st, o]);
+  if (!P) return elQ(`p`, { className: `text-sm text-muted` }, `company.json 未設定 fleet（世代組合）：每 MW 經濟性不適用。`);
+  let th = (x, k) => elQ(`th`, { key: k ?? x, style: { ...xstyQ.th, whiteSpace: `nowrap` } }, x),
+    thL = x => elQ(`th`, { key: x, style: xstyQ.thL }, x),
+    td = (x, k) => elQ(`td`, { key: k, style: xstyQ.td }, x),
+    tdL = (x, k) => elQ(`td`, { key: k, style: xstyQ.tdL }, x),
+    fmt = (x, u) => x == null ? `` : typeof x === `string` ? x : u === `%` ? hA(x * 100, 1) : u === `MW` || u === `顆/MW` ? Y(x, 0) : u === `倍` ? `${Y(x, 2)}x` : u === `US$/GPU-hr` ? `$${Y(x, 2)}` : Y(x, u === `US$bn` ? 3 : 2),
+    tbl = rows => elQ(`div`, { style: xstyQ.wrap }, elQ(`table`, { style: { ...xstyQ.table, minWidth: 820 } }, [
+      elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [thL(`項目`), th(`單位`), ...PERIODS.map((p, k) => th(p, k))])),
+      elQ(`tbody`, { key: `b` }, rows.map(([a, u, xs], k) => elQ(`tr`, { key: k }, [tdL(a, `a`), td(u, `u`), ...xs.map((x, j) => td(fmt(x, u), j))])))])),
+    S = P.sum, g = k => S.find(r => r[0] === k)[2], F = PERIODS.length - 1,
+    M = { capex: { tokenomics: `Tokenomics（IF_CapexIT × 新增世代）`, legacy: `舊方法（每 MW 34）` }, cost: { bottomUp: `由下而上（Tokenomics × MW＋管銷率）`, ebitdaPct: `舊方法（EBITDA 率線性路徑）` }, revenue: { gpuHr: `GPU 小時價格 × GPU 數`, legacy: `備案：每 MW 年收入為輸入（GPU 小時長約價不足兩個獨立來源）` } },
+    tkv = COMPANY_DATA.tkSnap ? COMPANY_DATA.tkSnap.source : {};
+  return elQ(`div`, { className: `space-y-3` }, [
+    elQ(hdrQ, { key: `h`, title: `每 MW 經濟性（每平均在役 MW、年化；${MWBASISQ === `facility` ? `設施` : `IT 關鍵電力`}口徑）`,
+      tip: `資本支出：${M.capex[PMWQ.capex]}；營運成本：${M.cost[PMWQ.cost]}；收入：${M.revenue[PMWQ.revenue]}。Tokenomics ${tkv.version || ``}（commit ${(tkv.commit || ``).slice(0, 7)}），主值取基準成本情境。` }),
+    TK_MISSQ.length ? elQ(`p`, { key: `w`, className: `text-sm`, style: { color: `#9f1239` } }, `Tokenomics 名稱缺漏 ${TK_MISSQ.length} 項（${TK_MISSQ.join(`、`)}），相關成本為暫代值（待 Tokenomics v5.26）。`) : null,
+    elQ(`p`, { key: `k`, className: `text-sm leading-relaxed` }, `${PERIODS[F]} 每 MW：年收入 $${Y(g(`每 MW 年收入（算力＋服務）`)[F], 1)}m − 現金成本（含租金）$${Y(g(`現金成本合計（含租金）`)[F], 1)}m ＝ EBITDA $${Y(g(`EBITDA`)[F], 1)}m；扣 D&A $${Y(g(`D&A（模型車隊折舊）`)[F], 1)}m 與利息 $${Y(g(`利息`)[F], 1)}m 後稅前 ${mA(g(`稅前`)[F], 1)}m。`),
+    elQ(`div`, { key: `t` }, tbl(S)),
+    elQ(accQ, { key: `a1`, title: `世代組合與在役結構（MW）`, sum: GENQ.map(x => x.split(` `)[0]).join(`／`) }, tbl(P.fleet)),
+    elQ(accQ, { key: `a2`, title: `由下而上營運成本（租金前）`, sum: PMWQ.cost === `bottomUp` ? `模型採用` : `對照` }, tbl(P.bu)),
+    elQ(accQ, { key: `a3`, title: `每 MW 收入對照（隱含 GPU 小時價格、持有成本、同業與市場價格）`, sum: PMWQ.revenue === `gpuHr` ? `GPU 小時價格` : `備案 legacy` }, tbl(P.rev)),
+    elQ(accQ, { key: `a4`, title: `每 MW 資本支出對照`, sum: PMWQ.capex === `tokenomics` ? `Tokenomics` : `舊方法` }, tbl(P.cap)),
+    elQ(accQ, { key: `a5`, title: `最近一季實際對照（不強制平衡）`, sum: `` }, tbl(P.q2)),
+    elQ(accQ, { key: `a6`, title: `敏感度（加權目標價 US$／融資缺口 US$bn；三情境）`, sum: `Tokenomics 低／高成本、GPU 小時價格、Rubin Ultra 版、管銷率` },
+      elQ(`div`, { style: xstyQ.wrap }, elQ(`table`, { style: { ...xstyQ.table, minWidth: 820 } }, [
+        elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [thL(`設定`), ...[`low`, `base`, `high`].map(k => th(SCENARIOS[k].label.split(` `)[0], k))])),
+        elQ(`tbody`, { key: `b` }, SN.cases.map(([k, n]) => elQ(`tr`, { key: k }, [tdL(n, `a`), ...[`low`, `base`, `high`].map(sk => {
+          let x = SN.rows[sk][k], b = SN.rows[sk].base;
+          return td(x == null ? `不適用` : `$${Y(x[0], 1)}${k === `base` ? `` : `（${x[0] >= b[0] ? `+` : `−`}${Y(Math.abs(x[0] - b[0]), 1)}）`}／$${Y(x[1], 1)}bn`, sk)
+        })])))])))
+  ]);
+}
+
 var SUMCSSQ = `
 @media print {
   @page { size: 1280px 720px; margin: 0; }
@@ -385,7 +421,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
       elQ(StatQ, { key: 3, label: `或打平所需每 MW 建置成本`, value: `$${Y(beCost, 1)}m`, note: `目前 $${Y(cost30, 0)}m（${beCost >= cost30 ? `+` : `−`}${hA(Math.abs(beCost / cost30 - 1) * 100, 0)}）` })
     ]),
     elQ(`p`, { key: `n`, style: { fontSize: 15.5, color: `var(--color-muted)`, marginTop: `auto`, lineHeight: 1.55 } },
-      `EBITDA 率由 Q2 實際 ${hA(e.ebStart * 100, 0)} 線性爬升至 FY30 ${hA(e.ebSteady * 100, 0)}；由下而上（每 MW 現金成本約 $3.2–3.6m）估計上緣約 67–71%。`)
+      PMWQ.cost === `bottomUp` ? `EBITDA 率由下而上推導（Tokenomics 電費、維護 × 在役 MW＋管銷率、扣租金）：${PERIODS[0]} ${hA(d.years[0].ebM * 100, 0)} → ${PERIODS[4]} ${hA(d.years[4].ebM * 100, 0)}。` : `EBITDA 率由 Q2 實際 ${hA(e.ebStart * 100, 0)} 線性爬升至 FY30 ${hA(e.ebSteady * 100, 0)}；由下而上（每 MW 現金成本約 $3.2–3.6m）估計上緣約 67–71%。`)
   ]);
 
   // 4｜融資
@@ -513,7 +549,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
         elQ(`div`, { key: `h`, style: { fontSize: 20, fontWeight: 700, marginBottom: 10 } }, `會改變結論的觀察值`),
         elQ(`ul`, { key: `u`, style: { fontSize: 18, paddingLeft: 24, margin: 0, listStyle: `disc` } }, [
           li(`新簽約的每 MW 單價：若持續高於 $${rv && Number.isFinite(rv.R) ? Y(rv.rev30 * rv.R, 1) : `—`}m（反向 DCF 門檻），單位經濟翻正`, 1),
-          li(`調整後營業利益率與 EBITDA 率路徑：模型假設 ${hA(e.ebStart * 100, 0)} → ${hA(e.ebSteady * 100, 0)}`, 2),
+          li(`調整後營業利益率與 EBITDA 率路徑：模型假設 ${hA(ebPathQ(e, d)[0] * 100, 0)} → ${hA(ebPathQ(e, d)[1] * 100, 0)}`, 2),
           li(`新債利率：模型 ${rateLo === rateHi ? Y(rateLo, 1) : `${Y(rateLo, 1)}–${Y(rateHi, 1)}`}%；利差擴大會壓縮債務容量`, 3),
           li(`D&A／營收：GPU 經濟壽命（模型 ${e.gpuLife} 年）是否被延長或縮短`, 4)
         ])

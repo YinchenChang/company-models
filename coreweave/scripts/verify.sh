@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 一次跑完建置與核對：季度層檢查 → Tokenomics 快照 --check（W1）→ 建 HTML → 建 Excel → 重算 → fix_outline → fix_datatable → verify_ooxml → 快照值＝Excel 分頁值（W1）→ 離線開啟檢查 → 三情境 xlx＋cmp31 → FY27 錨定 cmp31 → 季度層測試（v4.4）→ 期間滾動測試 → 目標價變動拆解工具測試。
+# 一次跑完建置與核對：季度層檢查 → Tokenomics 快照 --check（W1）→ 建 HTML → 建 Excel → 重算 → 反向 DCF 與每 MW 敏感度快照（W2）→ fix_outline → fix_datatable → verify_ooxml → 快照值＝Excel 分頁值（W1）→ 離線開啟檢查 → 三情境 xlx＋cmp31 → FY27 錨定 cmp31 → 季度層測試（v4.4）→ 期間滾動測試 → 目標價變動拆解工具測試。
 # 任何一項失敗即以非零代碼結束。產物放在 repo 根目錄的 out/（不納入版控）。
 # 用法：scripts/verify.sh [--vs-dist]
 #   --vs-dist  另與 dist/ 內現行成品比對：crawl.py 畫面文字與 xl_diff.py --by-label（值與公式）皆須 0 差異（純結構修改的驗收）。
@@ -84,6 +84,15 @@ if (( rc == 3 )); then  # 反解結果有變動：rv_snap.json 已更新，重�
 fi
 if (( rc == 0 )); then ok "反向 DCF：Excel 求解，rv_snap.json 與 Excel 一致"; else bad "反向 DCF 求解（代碼 $rc）"; finish; fi
 
+step "3c. 每 MW 敏感度快照：以 Excel 求值（scripts/permw_sens.py；W2）"
+set +e; python3 scripts/permw_sens.py "$XLSX"; rc=$?; set -e
+if (( rc == 3 )); then  # 快照有變動：permw_sens.json 已更新，重建 Excel 後再求一次須無變動
+  echo "permw_sens.json 已更新：重建 Excel"
+  python3 build_xlsx.py "$XLSX" && python3 scripts/recalc.py "$XLSX" 120 >/dev/null || { bad "重建 Excel（敏感度快照更新後）"; finish; }
+  set +e; python3 scripts/permw_sens.py "$XLSX"; rc=$?; set -e
+fi
+if (( rc == 0 )); then ok "每 MW 敏感度快照：Excel 求值，permw_sens.json 與 Excel 一致"; else bad "每 MW 敏感度快照（代碼 $rc）"; finish; fi
+
 step "4. fix_outline"
 if python3 fix_outline.py "$XLSX"; then ok "fix_outline"; else bad "fix_outline"; finish; fi
 
@@ -124,6 +133,10 @@ else bad "test_rolling（見 $OUT/test_rolling.log）"; tail -30 "$OUT/test_roll
 step "8c. 目標價變動拆解工具測試（scripts/attrib.py：(a)＝(1＋WACC)^(月數÷12)，WACC 讀 Excel、月數讀 calendar_q；四項相加＝總變動）"
 if python3 scripts/test_attrib.py "$XLSX" > "$OUT/test_attrib.log" 2>&1; then ok "test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）"; tail -1 "$OUT/test_attrib.log"
 else bad "test_attrib（見 $OUT/test_attrib.log）"; tail -20 "$OUT/test_attrib.log"; fi
+
+step "8d. 每 MW 改寫測試（暫存副本：MW 設施口徑換算、GPU 小時價格路線；W2）"
+if python3 scripts/test_permw.py > "$OUT/test_permw.log" 2>&1; then ok "test_permw：設施口徑換算與 GPU 小時價格路線"; tail -1 "$OUT/test_permw.log"
+else bad "test_permw（見 $OUT/test_permw.log）"; tail -20 "$OUT/test_permw.log"; fi
 
 if (( VS_DIST )); then
   step "9. 與 dist/ 成品比對"

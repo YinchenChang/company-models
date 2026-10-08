@@ -463,7 +463,7 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
 var RSN_TYPES = [`觀點`, `拆法`, `已知限制`, `未歸類`],
   PM_TOL = COMPANY_DATA.methodology.profitMarginTolPt ?? null, // v4.4 第 5 輪：利潤類附原因門檻（利潤率百分點，比例表示；0.02＝2pt）
   ANN_RSN_KEYS = [[`營收`, `rev`], [`EBITDA`, `ebitda`], [`CapEx`, `capex`], [`淨負債`, `nd`]],
-  VAR_RSN = (COMPANY_DATA.varianceReasons || {}).list || [];
+  VAR_RSN = ((COMPANY_DATA.varianceReasons || {}).list || []).filter(x => !x.perMw || Object.entries(x.perMw).every(([k, v]) => PMWQ[k] === v)); // W2：perMw 條件只在方法相符時適用
 function cfgPathQ(s, root) { // 以「a.b.0」路徑讀值（company.json 或指定物件）
   return String(s).split(`.`).reduce((x, k) => x == null ? x : x[k], root || COMPANY_DATA)
 }

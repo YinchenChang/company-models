@@ -152,6 +152,7 @@ ROLL_FIELDS = [
     ('期初餘額', 'defaults.mwYearEnd', '各年底主動電力（首期期初＝前一財年末；GPU 汰換批次）'),
     ('期初餘額', 'defaults.rpoOpen', '期初 RPO'),
     ('期初餘額', 'defaults.rpoPendingAdd', '尚未入 RPO 的新增承諾'),
+    ('期初餘額', 'fleet.openMix', '期初在役機隊的 MW 與世代占比（W2 世代組合起點）'),
 ]
 
 

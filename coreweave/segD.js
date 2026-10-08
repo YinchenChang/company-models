@@ -340,7 +340,7 @@ function zM() {
                 }),
                 (0, $.jsx)(accQ, {
                   title: `C｜利潤率（EBITDA 單一來源）`,
-                  sum: `EBITDA ${hA(e.ebStart*100,0)}→${hA(e.ebSteady*100,0)}`,
+                  sum: `EBITDA ${hA(ebPathQ(e, d)[0]*100,0)}→${hA(ebPathQ(e, d)[1]*100,0)}`,
                   children: [(0, $.jsx)(LM, {
                   label: `起始 EBITDA 率（FY26）`,
                   hint: `${hA(e.ebStart*100,1)} · Q2 實際 Adj. EBITDA 率 58.6%`,
@@ -354,9 +354,9 @@ function zM() {
                 }),
 (0, $.jsxs)(LM, {
                   label: `穩態 EBITDA 率（FY30）`,
-                  hint: `${hA(e.ebSteady*100,1)} · 線性爬升；敏感度 59%／70%`,
+                  hint: `${hA(ebPathQ(e, d)[1]*100,1)} · ${PMWQ.cost === `bottomUp` ? `由下而上（改數值＝FY30 目標，差額線性分攤）` : `線性爬升`}；敏感度 59%／70%`,
                   children: [(0, $.jsx)(IM, {
-                    value: e.ebSteady * 100,
+                    value: ebPathQ(e, d)[1] * 100,
                     onChange: e => w({
                       ebSteady: e / 100
                     }),
@@ -1186,7 +1186,7 @@ function zM() {
                     children: e.detail
                   })]
                 }, e.id))]
-              }), n === 13 && (0, $.jsx)(QuarterTabQ, { d: d, p: f, st: e }), n === 12 && (0, $.jsxs)(`div`, {
+              }), n === 13 && (0, $.jsx)(QuarterTabQ, { d: d, p: f, st: e }), n === 14 && (0, $.jsx)(PerMwTabQ, { d: d, st: e, o: o }), n === 12 && (0, $.jsxs)(`div`, {
                 className: `space-y-3`,
                 children: [(0, $.jsx)(hdrQ, {
                   title: `版本紀錄（基準情境目標價變化與原因）`,

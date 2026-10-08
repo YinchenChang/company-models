@@ -5,7 +5,9 @@
   "updateDate": "2026-09-25",
   "priceDate": "2026-09-24",
   "sourceOrderNote": "時序先法說（8/11）、後 10-Q（8/12）、再 8-K（9/17 可轉債＋ATM）。入帳數字聽 10-Q；全年指引聽法說；事實打架聽 10-Q。Q2 新增 500 MW（6 月單月 300 MW）當觀察，不年化進基準。",
-  "consensusFile": "data/consensus_crwv_20260925.json"
+  "consensusFile": "data/consensus_crwv_20260925.json",
+  "mwBasis": "IT",
+  "mwBasisNote": "CoreWeave 的 MW（active／contracted power）視為 IT 關鍵電力 [Assumed]：公司文件未定義；房東（Core Scientific、Galaxy）以 critical IT 計算對 CoreWeave 的容量；2024 年底 GPU 密度約 694 顆／MW 接近 Tokenomics Hopper 每 IT MW 718 顆（W1 第 6a 步，data/permw_inputs_20261007.json → mwBasis）。改為 facility 時 Tokenomics 每 MW 值 ÷ IF_FacilityGW"
  },
  "calendar": {
   "fiscalYearEndMonth": 12,
@@ -39,7 +41,8 @@
   "defaults.rpoOpen": "FY26Q2",
   "defaults.rpoPendingAdd": "FY26Q2",
   "defaults.eqCapShares": "FY26Q2",
-  "defaults.mwYearEnd": "FY26Q2"
+  "defaults.mwYearEnd": "FY26Q2",
+  "fleet.openMix": "FY26Q2"
  },
  "ytdActual": {
   "throughQuarter": "FY26Q2",
@@ -347,6 +350,10 @@
   "h1Revenue": 4.653,
   "costRev": 0.879,
   "techInfra": 1.507,
+  "sm": 0.06,
+  "smSbc": 0.012,
+  "ga": 0.178,
+  "gaSbc": 0.084,
   "opInc": -0.049,
   "interest": 0.64,
   "h1Interest": 1.176,
@@ -355,6 +362,7 @@
   "epsDiluted": -1.14,
   "sbc": 0.165,
   "da": 1.393,
+  "sbcCostTi": 0.069,
   "adjEbitda": 1.51,
   "adjOpInc": 0.128,
   "rpo": 103.7,
@@ -400,6 +408,9 @@
   "vieExposure": 0.108,
   "rouObtainedH1": 8.359,
   "leaseCashH1": 0.748,
+  "opLeaseCost": 0.5,
+  "varLeaseCost": 0.15,
+  "finLeaseCost": 0.017,
   "custA": 0.36,
   "custB": 0.26,
   "custC": 0.1,
@@ -852,6 +863,12 @@
    "unsignedRevShareMax": 0.5,
    "siteRentGapMax": 10,
    "rentVsBenchMin": 0.8
+  },
+  "perMw": {
+   "_note": "每 MW 方法開關（W2）：capex＝tokenomics（Σ 新增世代占比 × IF_CapexIT）｜legacy（scenarios.capexTemplate.costMW）；cost＝bottomUp（Tokenomics 電費、IT 維護、人員軟體、稅險 × 平均在役 MW＋管銷率）｜ebitdaPct（defaults.ebStart→ebSteady 線性）；revenue＝gpuHr（pricing.gpuHr × 每 MW GPU 數 × 8,760）｜legacy（defaults.m.revMW）。全為舊方法時與 v4.5 完全相同。收入採備案 legacy（chat 端 2026-10-07：W1 查不到 GB200／GB300／VR200 兩個獨立長約價來源，VR200 完全沒有）。",
+   "capex": "tokenomics",
+   "cost": "bottomUp",
+   "revenue": "legacy"
   }
  },
  "peers": {
@@ -1214,8 +1231,41 @@
   }
  },
  "varianceReasons": {
-  "_note": "差異原因（已決定事項 2）：差距超過 methodology.consensusGapTol 的項目必須有原因。「拆法」由程式依條件判定（單季差距超過門檻、所屬期間合計在門檻內）；其餘寫在這裡。{路徑:格式} 由模型數字帶入。",
+  "_note": "差異原因（已決定事項 2）：差距超過 methodology.consensusGapTol 的項目必須有原因。「拆法」由程式依條件判定（單季差距超過門檻、所屬期間合計在門檻內）；其餘寫在這裡。{路徑:格式} 由模型數字帶入。 W2：可加 perMw 條件（例如 {\"cost\": \"bottomUp\"}），只在 methodology.perMw 相符時適用；有條件的原因排在前面、優先於同鍵的一般原因。",
   "list": [
+   {
+    "scope": "annual",
+    "period": "*",
+    "metric": "rev",
+    "vs": "consensus",
+    "type": "觀點",
+    "perMw": {
+     "revenue": "gpuHr"
+    },
+    "text": "營收依 GPU 小時合約價推導（company.json → pricing.gpuHr × 每 MW GPU 數 × 8,760 × 利用率），不以公司 ARR 指引校準；營收差距 {gap.rev:gap}"
+   },
+   {
+    "scope": "annual",
+    "period": "*",
+    "metric": "ebitda",
+    "vs": "consensus",
+    "type": "觀點",
+    "perMw": {
+     "cost": "bottomUp"
+    },
+    "text": "EBITDA 率 {m.ebM:%1} 對共識 {c.ebM:%1}：模型改為由下而上（Tokenomics 電費與維護 × 平均在役 MW＋管銷率，再扣租金），不含爬坡期閒置產能與未揭露成本；營收差距 {gap.rev:gap}"
+   },
+   {
+    "scope": "annual",
+    "period": "FY26",
+    "metric": "capex",
+    "vs": "consensus",
+    "type": "觀點",
+    "perMw": {
+     "capex": "tokenomics"
+    },
+    "text": "CapEx 依新增 MW 計算：新增 {y.mwNew:0} MW × Tokenomics 每 MW ${y.costMW:0}m（IF_CapexIT × 新增世代，含次年預建）；共識口徑未揭露"
+   },
    {
     "scope": "quarter",
     "period": "*",
@@ -1327,6 +1377,152 @@
    "IF_StaffSW",
    "IF_TaxIns",
    "IF_OpexGW"
+  ]
+ },
+ "fleet": {
+  "_note": "世代組合（W2；公司專屬）：世代名稱與 Tokenomics 快照的世代同名。期初在役機隊（最新已申報季末）依世代占比；各期新增 MW（含汰換補回）依 newMix；汰換 MW（各年新增批次在第 gpuLife 年）由最舊世代先出。推導各期期末與平均在役 MW 的世代結構，供每 MW 資本支出、營運成本、收入與參考線加權。",
+  "generations": [
+   "Hopper H100",
+   "GB200 NVL72",
+   "GB300 NVL72",
+   "VR200 NVL72",
+   "Rubin Ultra（MGX NVL 單架，72 GPU）"
+  ],
+  "openMix": {
+   "asOf": "2026-06-30",
+   "activeMW": 1500,
+   "mix": {
+    "Hopper H100": 0.272667,
+    "GB200 NVL72": 0.293667,
+    "GB300 NVL72": 0.433666
+   },
+   "tag": "[Assumed]",
+   "source": "W1 第 6b 步（coreweave/data/permw_inputs_20261007.json → fleetMix.openMix）：依年份分層——2024 年底前 360 MW＝Hopper；2025 年新增 490 MW＝GB200 70%／GB300 20%／H200 10%；2026 上半年新增 650 MW＝GB300 85%／GB200 15%。MW 錨點 [Verified]、各層占比 [Assumed]；W1 回報 27／29／43% 為四捨五入（區間 Hopper 24–31%、GB200 20–42%、GB300 30–53%）"
+  },
+  "newMix": [
+   {
+    "GB300 NVL72": 0.8,
+    "GB200 NVL72": 0.2
+   },
+   {
+    "GB300 NVL72": 0.5,
+    "VR200 NVL72": 0.5
+   },
+   {
+    "VR200 NVL72": 1
+   },
+   {
+    "VR200 NVL72": 1
+   },
+   {
+    "VR200 NVL72": 1
+   }
+  ],
+  "newMixNote": "工作單 W2 預設 [Assumed]：2H26 GB300 80%／GB200 20%；FY27 GB300 50%／VR200 50%；FY28–FY30 VR200 100%。W1 第 6b 步：GB300 為 2026 主力、Vera Rubin Q2 2026 才完成首套驗證、Meta 2026-04-09 擴約含首批 Vera Rubin，方向一致",
+  "newMixAlt": {
+   "label": "Rubin Ultra 版（FY29–FY30 新增 100% Rubin Ultra）",
+   "mix": [
+    {
+     "GB300 NVL72": 0.8,
+     "GB200 NVL72": 0.2
+    },
+    {
+     "GB300 NVL72": 0.5,
+     "VR200 NVL72": 0.5
+    },
+    {
+     "VR200 NVL72": 1
+    },
+    {
+     "Rubin Ultra（MGX NVL 單架，72 GPU）": 1
+    },
+    {
+     "Rubin Ultra（MGX NVL 單架，72 GPU）": 1
+    }
+   ],
+   "tag": "[Assumed]（只作敏感度）"
+  }
+ },
+ "costs": {
+  "_note": "由下而上營運成本的公司口徑（W2）：管銷率＝（銷售行銷 − SBC ＋ 一般管理 − SBC）÷ 營收，取最近一季實際（latestQuarter），各期持平 [Derived]；銷售行銷與一般管理內的 D&A 視為 0 [Assumed]。W1 第 6d 步：Q2 2026 扣 SBC 5.51%、GAAP 含 SBC 9.24%（敏感度）、1H26 扣 SBC 6.15%。",
+  "sgaBasis": "exSbc"
+ },
+ "pricing": {
+  "_note": "GPU 小時價格（W2，公司專屬）：gpuHr＝合約價，{世代: {base, low, high, source, date, tag}}；W1 第 6c 步找不到 GB200／GB300／VR200 長約價的兩個獨立來源（VR200 完全沒有），故留空、收入採備案 legacy（每 MW 年收入為輸入），GPU 小時路線顯示「不適用」。peerRevPerMw、marketRefs 只作對照列，不入損益；不以 CoreWeave 自己的 ARR、營收指引或 RPO 反推價格。",
+  "gpuHr": {},
+  "peerRevPerMw": [
+   {
+    "label": "IREN–Microsoft 每 MW 年收入（GB300，5 年合約）",
+    "value": 9.7,
+    "unit": "US$m/MW",
+    "tag": "[Derived]",
+    "source": "IREN Secures $9.7bn AI Cloud Contract with Microsoft（IREN 新聞稿）",
+    "date": "2025-11-03",
+    "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-97bn-ai-cloud-contract-microsoft",
+    "note": "$9.7bn ÷ 5 年 ÷ 200 MW critical IT；同業合約（非 CoreWeave），含 20% 預付"
+   }
+  ],
+  "marketRefs": [
+   {
+    "gen": "Hopper H100",
+    "label": "H100 Silicon Data 租金指數",
+    "value": 2.82,
+    "basis": "市場現行租金指數（非長約）",
+    "tag": "[Verified]",
+    "source": "Silicon Data H100 Index 頁面（含 B200、B300 指數）",
+    "date": "2026-10-06",
+    "url": "https://www.silicondata.com/products/silicon-index/h100"
+   },
+   {
+    "gen": "Hopper H100",
+    "label": "H100 CoreWeave 隨需牌價",
+    "value": 6.155,
+    "basis": "隨需牌價（長約最多 −60%）",
+    "tag": "[Interested-party]",
+    "source": "CoreWeave Pricing（官網價目，頁面無日期）",
+    "date": "2026-10-07",
+    "url": "https://www.coreweave.com/pricing"
+   },
+   {
+    "gen": "GB200 NVL72",
+    "label": "GB200 CoreWeave 隨需牌價",
+    "value": 10.5,
+    "basis": "隨需牌價（長約最多 −60%；與 Tokenomics L1_GPUhr_GB200_vsCW 同一底層來源）",
+    "tag": "[Interested-party]",
+    "source": "CoreWeave Pricing（官網價目，頁面無日期）",
+    "date": "2026-10-07",
+    "url": "https://www.coreweave.com/pricing"
+   },
+   {
+    "gen": "GB200 NVL72",
+    "label": "B200 Silicon Data 租金指數（GB200 類比）",
+    "value": 5.87,
+    "basis": "市場指數；HGX B200 類比，區間 4.08–6.11",
+    "tag": "[Analogy]",
+    "source": "Silicon Data H100 Index 頁面（含 B200、B300 指數）",
+    "date": "2026-10-06",
+    "url": "https://www.silicondata.com/products/silicon-index/h100"
+   },
+   {
+    "gen": "GB300 NVL72",
+    "label": "B300 Silicon Data 租金指數（GB300 類比）",
+    "value": 6.82,
+    "basis": "市場指數；HGX B300 類比，區間 6.82–7.85",
+    "tag": "[Analogy]",
+    "source": "Silicon Data H100 Index 頁面（含 B200、B300 指數）",
+    "date": "2026-10-06",
+    "url": "https://www.silicondata.com/products/silicon-index/h100"
+   },
+   {
+    "gen": "GB300 NVL72",
+    "label": "B300 Nebius 隨需牌價（GB300 類比）",
+    "value": 7.85,
+    "basis": "隨需牌價（10/1 起 9.50）",
+    "tag": "[Analogy]",
+    "source": "Nebius NVIDIA GPU Pricing（官網價目）",
+    "date": "2026-10-07",
+    "url": "https://nebius.com/prices"
+   }
   ]
  }
 }

@@ -17,6 +17,9 @@ sys.path.insert(0, H); import calendar_q  # v4.5：期間與日期由 company.js
 _co = calendar_q.load(H)  # 公司資料單一來源
 _co.pop('asOf', None)  # 滾動檢查的季度標記只在建置時檢查（calendar_q），不注入 HTML
 _co['consensus'] = _json.load(open(os.path.join(H, _co['meta']['consensusFile']), encoding='utf-8'))  # v4.3：市場共識資料檔（只讀）併入注入資料，不另設全域變數
+if _co.get('tokenomics'):  # W2：Tokenomics 快照（版本固定）內嵌給 HTML 引擎；JS 不寫死任何 Tokenomics 數字
+    _tk = _json.load(open(os.path.join(H, _co['tokenomics']['snapshotFile']), encoding='utf-8'))
+    _co['tkSnap'] = {'source': {k: _tk['source'][k] for k in ('version', 'commit', 'file', 'extractedAt')}, 'items': _tk['items']}
 _g = _co['consensus']['companyGuidance']['2026Q3']  # Q3 營收指引以 company.json 為準；與共識檔不一致即停止建置（Excel 建置同一檢查）
 assert (_g['revenueLow'], _g['revenueHigh']) == (_co['callFacts']['nextQRevLo'], _co['callFacts']['nextQRevHi']), 'Q3 營收指引：company.json 與共識檔不一致'
 assert abs(_co['ytdActual']['adjEbitda'] - _co['ytdActual']['adjEbitdaMeta']['q1'] - _co['ytdActual']['adjEbitdaMeta']['q2']) < 1e-9, '1H 調整後 EBITDA ≠ Q1＋Q2'
