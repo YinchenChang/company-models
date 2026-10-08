@@ -1,6 +1,8 @@
-# Alphabet 收支模型原始碼包（MAG 共用引擎；v0.1b′ 自 Amazon v0.1b r2 移植）
+# Alphabet 收支模型原始碼包 v0.1（MAG 共用引擎；自 Amazon v0.1 引擎移植）
 
-**MAG v0.1b′（2026-10-09）**：本資料夾的引擎複製自 `amazon/`（分支 `claude/amazon-v0.1`，Amazon v0.1b r2），是 Amazon、Alphabet、Microsoft 三家共用的「MAG 引擎」，公司差異全部由 `company.json` 驅動（移植說明見 Amazon v0.1b 報告第 0.5 與 6 節；Alphabet 的移植報告 `docs/reports/20261009_alphabet_v0.1b2_移植.md`）。相對 Oracle v0.2 新增：
+**v0.1（2026-10-09）**：成品 `dist/20261009_Alphabet收支模型_v0_1.html／.xlsx`；交接檔 `docs/handoff/20261009_Alphabet收支模型_交接檔_v0_1.md`；最終報告 `docs/reports/20261008_alphabet_v0.1.md`。基準目標價 $150.52（讀法 1）／$218.18（讀法 2，自用 AI 價值中性；主值待 Andy 決定），三情境皆賣出；對外比例無揭露是最大不確定（10% → $108.23、50% → $180.54）。引擎檔與 `amazon@6ac9745` 逐檔相同（`company.json`、`data/`、文件與 `scripts/fields_doc.py` 的公司欄位說明除外）。
+
+**MAG 共用引擎**：本資料夾的引擎是 Amazon、Alphabet、Microsoft 三家共用的「MAG 引擎」（來源 `amazon/`），公司差異全部由 `company.json` 驅動（移植步驟見 `docs/reports/20261008_amazon_v0.1b_模型.md`「移植說明」）。相對 Oracle v0.2 新增：
 - **對外 AI 雲端**（`pricing`）：每 MW 年收入＝Σ 在役世代占比 × `TK_HoldEcon_<世代>` × 晶片係數 × k（k＝長約占比 × k_長約＋(1 − 占比) × k_現貨；價格軸低／基準／高與容量軸分離，3 × 3 目標價矩陣由 `scripts/rv_solve.py` 以 Excel 求解）；AI 雲端 EBITDA 率＝1 − Tokenomics 加權每 MW 營運成本 ÷ 每 MW 年收入（`defaults.ebitdaBasis`＝tk）。Excel「Tokenomics_取數」頁與 `TK_` 具名範圍（`scripts/check_tokenomics_tab.py`）。
 - **非 AI 事業 N 線**（`defaults.legacyBiz.lines`，kind＝growth／cloudResidual／explicit）：各線 EBITDA 率（m0→mLT）、其他攤銷（oa）、資本支出強度（cx）、同業倍數組（peer）；雲端分部的非 AI 部分＝分部首期估計 − 對外 AI 雲端模型值（殘差）。
 - **資本支出與 D&A 分池**（`capexModel`）：AI＝新增對外 MW ÷ 對外比例 × Tokenomics 每 MW 成本（IT＋自建 × 機房）＋汰換（IT）；非 AI＝各線營收 × cx；D&A 分 AI（IT／機房）與非 AI 兩池；對帳列（指引隱含 MW vs 路徑）。
