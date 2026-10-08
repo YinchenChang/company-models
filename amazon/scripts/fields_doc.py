@@ -163,6 +163,7 @@ F = [
  ('scenarios.mwPath.contracted.base', '基準情境：同上', 'MW 清單', M), ('scenarios.mwPath.contracted.high', '積極情境：同上', 'MW 清單', M),
  ('scenarios.mwPath.pace.low', '保守情境：併網速度（每年新增已連網 MW；已連網＝MIN(合約上限, 前期＋速度×期間長度)；v0.1b）', 'MW／年', C),
  ('scenarios.mwPath.pace.base', '基準情境：同上', 'MW／年', C), ('scenarios.mwPath.pace.high', '積極情境：同上', 'MW／年', C),
+ ('scenarios.mwPath.calibrate', '併網速度校準（MAG v0.1b r2 C10）：{scenario, decimals}；該情境速度由 scripts/calib_pace.js 以首期資本支出指引中點解出（全年公式值＝指引，對帳落差 0），同時寫入 scenarios.mw31 與 defaults.mw31；省略＝不校準', '物件', M),
  ('scenarios.mwPath.note', '已連網 MW 路徑的說明（來源與口徑）', '文字', M),
  ('scenarios.descriptions', '三情境的一句說明（Excel A 區；v0.1b）', '物件（文字）', M),
  ('scenarios.billableRatio.mode', '可計費 MW 的算法：ratio＝已連網 × 比例；converge＝期初以最新季實際營收年化 ÷ 每 MW 年收入校準，之後向已連網收斂（v0.1b）', '代碼', C),

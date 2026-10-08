@@ -58,6 +58,8 @@ if python3 scripts/fields_doc.py --check; then ok "README 欄位說明與 compan
 
 step "0c. EBITDAR 率校準（scripts/calib_ebitdar.js：defaults.ebitdarAdj＝基準情境租金 ÷ OCI 營收；Oracle v0.1c）"
 if node scripts/calib_ebitdar.js; then ok "EBITDAR 校準：基準情境起點／穩態 EBITDA 率不變"; else bad "EBITDAR 校準（執行 node scripts/calib_ebitdar.js --write）"; fi
+step "0e. 併網速度校準（scripts/calib_pace.js：基準情境首期資本支出公式值＝指引中點；MAG v0.1b r2 C10）"
+if node scripts/calib_pace.js; then ok "併網速度校準：首期資本支出＝指引、對帳落差 0"; else bad "併網速度校準（執行 node scripts/calib_pace.js --write）"; fi
 
 step "0d. Tokenomics 快照可重現（tools/tokenomics/import_tokenomics.py --check；MAG v0.1b，沿用 CoreWeave W1）"
 TK_SNAP="$(python3 -c "import json; print(json.load(open('company.json', encoding='utf-8')).get('tokenomics', {}).get('snapshotFile', ''))")"

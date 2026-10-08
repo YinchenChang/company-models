@@ -816,7 +816,7 @@ function runFunding(e) {
     detail: `公式＝(本期新增 MW×(1−λ)＋次期新增 MW×λ)×每 MW 成本。${PERIOD_FY[0] - 1} 年底 ${e.mwYearEnd[PERIOD_FY[0] - 1]} MW → ${PERIODS[0]} 年底 ${t.accepted[0]} MW、λ ${(e.lambda*100).toFixed(0)}%、每 MW $${e.a.costMW[0]}m（${TXQ.costMwNote}）。五期（首期為模型部分）合計 ${CX.reduce((e,t)=>e+t,0).toFixed(1)}。指引口徑：${TXQ.capexGuideSource}。`
   }), CXM && CALL_FACTS.capexLo != null && (() => { // MAG v0.1b：對帳列——指引 ÷ 每 MW 全成本＝隱含 AI 建置 MW，對照 MW 路徑（對照表 r1 第 5 節第 6 條）
     const g = (CALL_FACTS.capexLo + CALL_FACTS.capexHi) / 2, imp = (g - CXNF[0] - REF[0]) / (CMW[0] * (e.capexScale ?? 1) / 1e3), pth = (MN[0] * (1 - e.lambda) + MX[0] * e.lambda) / XS;
-    return _({ id: `capex-recon`, ok: Math.abs(imp / pth - 1) <= .2, severity: `watch`,
+    return _({ id: `capex-recon`, ok: Math.abs(imp / pth - 1) <= .2, severity: `watch`, imp, pth, // MAG v0.1b r2：imp／pth 供 scripts/calib_pace.js 讀取（C10）
       title: `對帳：${PERIODS[0]} 資本支出指引隱含 AI 建置 ${Y(imp, 0)} MW vs MW 路徑 ${Y(pth, 0)} MW（${hA((imp / pth - 1) * 100, 0)}）`,
       detail: `隱含＝(指引 ${Y(g, 1)} − 非 AI ${Y(CXNF[0], 1)} − 汰換 ${Y(REF[0], 1)}) ÷ 每 MW 成本 $${Y(CMW[0] * (e.capexScale ?? 1), 1)}m；路徑＝(本期新增 ${Y(MN[0], 0)}×(1−λ)＋次期新增 ${Y(MX[0], 0)}×λ) ÷ 對外比例 ${hA(XS * 100, 0)}（對外當量 ${Y(imp * XS, 0)} vs ${Y(pth * XS, 0)} MW）。落差表示指引含 MW 路徑以外的支出（未上線容量的預付與在建、記憶體漲價、網路與土地），或 MW 路徑偏低；首期以指引為準（差額歸 AI 成長型）。` })
   })(), _({

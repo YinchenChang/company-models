@@ -487,14 +487,14 @@
  },
  "scenarios": {
   "labels": {
-   "low": "保守 已交付＋已公開在建",
-   "base": "基準 依 2025 新增電力速度",
-   "high": "積極 依 2025Q4 單季速度"
+   "low": "保守 第三方可辨識站點",
+   "base": "基準 依資本支出指引",
+   "high": "積極 依公司容量目標"
   },
   "descriptions": {
    "low": "對外 AI MW-IT 只計 Epoch AI 追蹤站點的已交付＋在建（三站 1,422 → 2028 預測 3,448，+2,026 × 對外 80%），每年 +720、上限 3,700",
-   "base": "依 2025 年新增電力 3.9 GW（設施）÷ PUE 1.2 × AI 占新增 50% × 對外 80%＝每年 +1,300 MW-IT",
-   "high": "依 2025Q4 單季新增 1.2 GW 年化 4.8 GW ÷ 1.2 × 50% × 80%＝每年 +1,600 MW-IT（公司目標 2027 年底容量為 2025 年兩倍；總容量未揭露，無法直接換算）"
+   "base": "對外 AI MW 新增速度＝近端資本支出隱含的建置量：2026 全年指引 $220bn −（非 AI 公式值＋GPU 汰換）÷ 每 MW 全成本（Tokenomics IT＋設施）× 對外 80%，依 λ 遞延上線 → 每年 +3,173.5 MW-IT（scripts/calib_pace.js 解，對帳落差＝0）；之後各年資本支出＝MW 路徑 × 每 MW 成本（同一套數字）[Derived]",
+   "high": "公司目標：2027 年底電力容量為 2025 年兩倍（2026–2027 合計新增＝2025 年底總容量）。總容量未揭露，以 Morgan Stanley 2026 +6 GW、2027 +8 GW 對照隱含約 14 GW（設施，全部負載）→ 每年 +7 GW × AI 占新增 80%（推估區間 60%–80% 上緣）÷ PUE 1.2 × 對外 80%＝每年 +3,733 MW-IT [Derived；總容量為賣方對照，非公司揭露]"
   },
   "mwPath": {
    "connectedStart": null,
@@ -521,12 +521,16 @@
      99999
     ]
    },
+   "calibrate": {
+    "scenario": "base",
+    "decimals": 1
+   },
    "pace": {
     "low": 720,
-    "base": 1300,
-    "high": 1600
+    "base": 3173.5,
+    "high": 3733
    },
-   "note": "對外 AI MW-IT（在役）：評價日 2,080（v0.1a：在役 AI 2,600 × 對外 80%，第三方估計，事實總帳 mw.ai.ext.2026q2）[Derived／Assumed]；各期期末＝MIN(上限, 前期＋速度 × 期間長度)，首期自評價日起算（connectedStart＝null）。"
+   "note": "對外 AI MW-IT（在役）：評價日 2,080（v0.1a：在役 AI 2,600 × 對外 80%，第三方估計，事實總帳 mw.ai.ext.2026q2）[Derived／Assumed]；各期期末＝MIN(上限, 前期＋速度 × 期間長度)，首期自評價日起算（connectedStart＝null）。MAG v0.1b r2（C10）：基準速度由 calibrate 設定以資本支出指引解出（scripts/calib_pace.js；verify 檢查）；保守＝第三方可辨識站點速度、積極＝公司容量目標換算。"
   },
   "billableRatio": {
    "mode": "ratio",
@@ -542,8 +546,8 @@
   },
   "mw31": {
    "low": 0,
-   "base": 1300,
-   "high": 1600
+   "base": 3173.5,
+   "high": 3733
   },
   "delayMonths": {
    "low": 0,
@@ -598,7 +602,7 @@
    "2024": 360,
    "2025": 1440
   },
-  "mw31": 1300,
+  "mw31": 3173.5,
   "capexFloorFY0": 220,
   "gpuLife": 6,
   "refreshSteady": true,
