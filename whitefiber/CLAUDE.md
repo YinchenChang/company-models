@@ -1,9 +1,9 @@
-# Oracle 收支模型 — Claude Code 工作守則
+# WhiteFiber 收支模型 — Claude Code 工作守則
 
 （本檔不寫版本號；目前版本見 `docs/handoff/` 內交接檔檔名與 `vlog.py`。）
 
 ## 專案是什麼
-Oracle（ORCL）資金與評價模型，核心命題「現金牛＋客戶出資能否撐住 AI 擴張、不再發股、維持投資級」（CRWV「Backlog 不是現金」、Nebius「預付款」之後的第三個對照組）。由 `nebius/` @ `642d144`（CRWV v4.5＋Nebius v0.1b）複製而來，本資料夾各自完整可建置。同一套引擎輸出兩個成品，數字必須完全一致：
+WhiteFiber（WYFI）資金與評價模型，核心命題「長約託管（NC-1 對 Nscale 10 年約）能否成為可融資的現金流底座、支應 GPU 雲與託管擴張而不反覆稀釋」（CRWV「Backlog 不是現金」、Nebius「預付款」、Oracle「現金牛＋客戶出資」之後的第四個對照組）。由 `oracle/` @ `e4540c3`（Oracle v0.2 分支＝CRWV v4.5＋Nebius v0.1b＋Oracle v0.1–v0.2）複製而來，本資料夾各自完整可建置；金額單位 US$m（`company.json` → `meta.unit`）。同一套引擎輸出兩個成品，數字必須完全一致：
 - HTML（互動版，`build_html_portable.py` 產生）
 - Excel（全部活公式，`build_xlsx.py` 產生）
 業務背景、目前結果與待辦見 `docs/handoff/` 內的交接檔（資料夾內只保留最新版）；技術細節見 `README.md`。工作流程與範圍以 repo 根目錄 `README.md` 與 `docs/workorders/` 的工作單為準（衝突時優先於本檔）。以下「環境」「待辦」以外的守則條文沿用 CRWV 時期（以 CoreWeave 為例）。
@@ -27,7 +27,7 @@ Oracle（ORCL）資金與評價模型，核心命題「現金牛＋客戶出資�
 - 先讀交接檔與 README，再動手；純結構修改的驗收標準是「數字與畫面與前一版完全相同」。
 - 每次修改後必跑 `scripts/verify.sh`，全數通過才可提交。
 - 交付的 HTML 必須是「單一檔案、離線、本機雙擊即可開啟」（已決定事項 11）：所有 JS、CSS、字型、圖片、資料在建置時內嵌；不得有任何網路請求（CDN、Google Fonts、外部圖片、fetch／XHR、外部 import），也不得讀取旁邊的檔案。`verify.sh` 的「離線開啟檢查」（`scripts/check_offline.py`）必須通過。改到數字的修改，要在回報中列出受影響的關鍵數字（三情境目標價等）前後對照。
-- 版本號：**只有 `dist/` 成品（HTML 或 Excel）改變時才升版**；純工具修改（建置／核對腳本、文件、setup script 等，`dist/` 不變）不升版、不新增 VLOG。升版時 `vlog.py`（Excel 唯一來源）與 `tail.js` 的 VLOG（HTML）**兩處都要**新增一列；成品命名 `更新日_<meta.company>收支模型_v版本號`（Oracle：`更新日_Oracle收支模型_v版本號`），放 `dist/`，並移除舊版成品；交接檔同樣以新版取代舊版（`docs/handoff/` 只留一個檔）。
+- 版本號：**只有 `dist/` 成品（HTML 或 Excel）改變時才升版**；純工具修改（建置／核對腳本、文件、setup script 等，`dist/` 不變）不升版、不新增 VLOG。升版時 `vlog.py`（Excel 唯一來源）與 `tail.js` 的 VLOG（HTML）**兩處都要**新增一列；成品命名 `更新日_<meta.company>收支模型_v版本號`（WhiteFiber：`更新日_WhiteFiber收支模型_v版本號`），放 `dist/`，並移除舊版成品；交接檔同樣以新版取代舊版（`docs/handoff/` 只留一個檔）。
 - 同時更新交接檔（`docs/handoff/`，只保留最新版）與 README。
 - 一個任務一個分支、一個 PR；PR 說明寫：改了什麼、驗收結果、需 Andy 決定的事項（任務完成時與報告檔「目前狀態」同步更新）。
 - 任務回報：依下節「每輪回報規則」。報告檔另須保存 `scripts/verify.sh` 完整輸出、關鍵數字前後對照（三情境目標價等；未改數字時註明「無變動」並列出現值）。
@@ -61,14 +61,14 @@ Andy 不熟程式，他透過 Claude 聊天端（讀 Gmail 裡的 GitHub 通知�
 7. Excel 同一工作表、同一區段內的 A 欄列名稱不可重複：`xl_diff.py --by-label`（`verify.sh --vs-dist` 使用）以「區段＋列名稱」配對新增列造成的位移，重複時直接報錯、不自行配對。
 8. 同業 Comps 與評等門檻只放在 `company.json`（`peers`、`methodology.rating`）；segB／segC／build_xlsx 不再寫任何同業數字或門檻數字。含門檻的畫面文字以門檻值組字（HTML `pctQ`／`multTxt`，Excel `_PC`／`_MT`），cmp31 以標籤為鍵的列（例如「賣出門檻價（現價 × (1 − 15%)）」）標籤也由門檻值產生。
 
-## 待辦（Oracle；依序，每項一張工作單、一個 PR）
-CRWV 時期的待辦（環境移植、區間、設定集中、季度層、期間滾動已完成；5a 精簡、5b 只讀檢視器、折舊修正、短名稱改名未做）不在 Oracle 範圍內：依 repo 根目錄 README，CRWV 未完成的待辦（5a 精簡、5b 只讀檢視器、折舊修正、機率加權目標價、GPU 批次與續約價格衰退）Oracle 也先不做。
-1. **FY27Q2 季度更新**（季末 2026-11-30；財報約 2026-12 中；步驟見交接檔「待辦與季度更新」）：填 `quarterly.actuals`、10-Q 後滾動評價日至 2026-11-30、更新 `ytdActual`、`latestQuarter`、`asOf` 全部欄位；期初可計費 MW 依 Q2 OCI × 4 重新校準；未起租租賃依 10-Q 更新；`node scripts/calib_ebitdar.js --write`（以未延誤排程校準）；延誤月數與 delayLink 依最新進度檢討；升版 v0.3（v0.2 已用於延誤與租賃槓桿）。
-2. ~~租賃調整後槓桿~~（v0.2 完成：(債務＋租賃負債) ÷ (EBITDA＋租金) ≤ 4.5×，另含建設延誤模組）。待決：是否改用 S&P 全額口徑（含全部未起租承諾；FY27 約 5.8–6.2×，見 v0.2 報告）。
-2b. **「輸入與假設」D 區重複表頭「項目」**（v0.1 起即違反勿改 7）：該頁 A 欄任何變動都會使 `verify.sh --vs-dist` 無法以列名稱配對，v0.2 因此新列都放在其他工作表、兩格上限輸入沿用舊名稱。需一次性處理（例：純結構版改名後以一次性比對方式驗收），方法待 chat 端決定。
-3. OpenAI 對手方：`openai/` 模型的年度算力支出路徑完成後，與 Oracle OpenAI 相關容量連動對照。
-4. 市場共識與同業 Comps 更新（共識檔放 `data/`，改 `meta.consensusFile`）。
-5. CRWV 未完成待辦（範圍外，待 Andy 另開）：續約價格衰退（公司稱續約 +20%）、GPU 批次、折舊修正、機率加權目標價、5a 精簡、5b 只讀檢視器。
+## 待辦（WhiteFiber；依序，每項一張工作單、一個 PR）
+CRWV 未完成的待辦（5a 精簡、5b 只讀檢視器、折舊修正、機率加權目標價、GPU 批次與續約價格衰退）依 repo 根目錄 README，WhiteFiber 也先不做。
+1. **FY26Q3 季度更新**（季末 2026-09-30；財報約 2026-11 中；步驟見交接檔「待辦與季度更新」）：填 `quarterly.actuals`、10-Q 後滾動評價日至 2026-09-30（首期縮為 Q4，0.25 年）、更新 `ytdActual`、`latestQuarter`、`asOf` 全部欄位；期初可計費雲端 MW 依 Q3 經常性雲端營收 × 4 重新校準；託管站點依實際起租更新（NC-1 第一期 8 月底全額計費）；NC-1 專案貸款若已完成，金額、利率、攤還改為實際條件；`node scripts/calib_ebitdar.js --write`；延誤月數依最新進度檢討；升版 v0.2。
+2. **Nscale 對手方信用**：目前未建模（只有違約敏感度）；Nscale 本身是 neocloud，可考慮以 Nscale 融資狀況設定違約機率或部分履約情境。
+3. **託管同業倍數與 beta**：託管同業 NTM EV/EBITDA 只 2 家（DLR、EQIX），個股 beta 不可靠（預設 2.5）；資料可得時更新（`peers.software`、`valuation.capm.beta`）。
+4. **共識**：EBITDA、CapEx、淨負債共識未取得；共識檔放 `data/`，改 `meta.consensusFile`。
+5. v0.1b 審查列為已知限制、本版不做：託管站點逐列明細只在 Excel（HTML 只有彙總列）、敏感度只在 HTML（龍捲風）、`texts.labelMap` 用語替換、GPU 租賃負債未計入 leaseAdj 槓桿。
+6. CRWV 未完成待辦（範圍外，待 Andy 另開）：續約價格衰退、GPU 批次、折舊修正、機率加權目標價、5a 精簡、5b 只讀檢視器。
 
 ## 已決定事項（不再列為待決）
 前三條是工作原則，適用所有後續工作與回報（2026-09-26，Andy 決定）。
