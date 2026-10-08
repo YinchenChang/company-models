@@ -28,9 +28,10 @@ for ln in run('--values'):
     m = re.match(r'^(\S+) 第 (\d+) 列 新版缺少此列：(.*)$', ln.strip())
     if m: renames.append((m.group(1), m.group(3).strip()))
 ren_lines = []
-_fixed = {o: n for o, n in R.get('renames', [])}  # W4：規則檔可直接指定列改名（舊 → 新；改名不依尾碼時）
-for o, n in _fixed.items(): ren_lines.append(f"列 {o} => {n}")
-renames = [(sh, o) for sh, o in renames if o not in _fixed]
+_nz = lambda v: re.sub(r'v\d\.\d', 'vX', v)  # 與 xl_diff.norm 相同的版本號正規化
+_fixed = {_nz(o): n for o, n in R.get('renames', [])}  # W4：規則檔可直接指定列改名（舊 → 新；改名不依尾碼時）
+for o, n in R.get('renames', []): ren_lines.append(f"列 {o} => {n}")
+renames = [(sh, o) for sh, o in renames if not any(f.startswith(_nz(o).strip()) for f in _fixed)]  # xl_diff 輸出的列名稱可能截斷：以開頭比對
 if renames:
     added = [l.strip() for l in run('--values') if re.match(r'^  \S+ 第 \d+ 列 ', l)]
     for sh, o in renames:

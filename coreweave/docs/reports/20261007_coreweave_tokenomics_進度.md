@@ -1,9 +1,9 @@
 # CoreWeave × Tokenomics 改造進度（接手用；W1–W3 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：W0–W3（v4.6，main 已合併）。**W4（PR #27，進行中）**：第 0–3 步（分支與快照 v5.27、證據補充、tkAnchor 雙引擎實作、Q2 驗證拆解）；新方法 verify.sh 22 項全過；舊方法回歸對 v4.6 成品 0 差異（25 項全過）。
-- 下一步：W4 第 4 步敏感度（permw_sens 快照已含 k、長約占比六組）→ 第 5 步升版 v4.7（VLOG 兩處、dist、交接檔、README、`scripts/expect/v4_7_rules.json` → make_expect → `--vs-dist`）與變動拆解（`python3 scripts/attrib_w4.py --v46 <v4.6 成品> --json out/w4/attrib_w4.json`）→ 第 6 步對照報告 → 第 7 步回報。
-- 未解問題（W4）：(1) **長約占比口徑主導結果**：依工作單「RPO 涵蓋的產能 ÷ 在役產能」，FY28 起 RPO 不足以涵蓋新產能，未涵蓋部分以現貨倍數 1.76 計價 → FY30 k＝1.34；若新簽約全視為長約（k＝0.76），基準加權目標價 $98.02 → $5.25。需 Andy 決定。(2) 第二筆獨立供應商的長約價找不到（IREN–NVIDIA 為同一供應商；Nebius、Nscale 合約未揭露 MW 或金額）。(3) 舊未解：CoreWeave「active power」口徑（預設 IT）；Excel 實機開啟待 Andy。
+- 已完成：W0–W3（v4.6，已合併）。**W4 全部完成**（PR #27）：v4.7 成品 `dist/20261008_CoreWeave收支模型_v4_7.{html,xlsx}`、交接檔 v4.7、對照報告 `docs/reports/20261008_coreweave_v4.7_收入錨定.{xlsx,md}`。新方法 verify（--vs-dist 對 v4.7 成品）全過；升版驗收對 v4.6 成品（EXPECT）25 項全過；舊方法回歸（revenue=legacy）對 v4.6 成品 0 差異。
+- 下一步：chat 端審查 PR #27；**Andy 決定長約占比口徑**（建議：新簽約視為長約，另設隨需占比；目前維持工作單公式）；合併前 Andy 以真正的 Excel 開啟 v4.7。
+- 未解問題（W4）：(1) 長約占比口徑主導結果（基準 $98.02；新簽約全視為長約 $5.25；−20pt $201.31）；(2) 第二家供應商長約價、VR200 長約價找不到；(3) Tokenomics 成本情境與收入同向（高成本 → 高目標價），k 是否隨情境重算待決；(4) 終值占 EV 144%；(5) 舊未解：active power 口徑（預設 IT）、Excel 實機開啟。
 
 ## 工作單總覽
 | 工作單 | 分支 | PR | 狀態 |
@@ -12,7 +12,7 @@
 | W1 Tokenomics 取數層 | `claude/coreweave-w1-tokenomics`（疊加於 W0 分支） | #6 | 完成，待審 |
 | W2 每 MW 改寫 | `claude/coreweave-w2-permw`（疊加於 W1 分支） | #9 | 完成，待審 |
 | W3 v4.6 成品與對照 | `claude/coreweave-w3-v4.6`（疊加於 W2 分支） | #18 | 已合併 |
-| W4 收入 Tokenomics 錨定（v4.7） | `claude/coreweave-w4-revenue`（自 main f373885） | #27 | 進行中 |
+| W4 收入 Tokenomics 錨定（v4.7） | `claude/coreweave-w4-revenue`（自 main f373885） | #27 | 完成，待審 |
 
 <!-- 各工作單在下方新增自己的段落：「## Wx」＋步驟紀錄表（步驟｜狀態｜commit｜備註） -->
 
@@ -410,9 +410,19 @@ chat 端追加（優先於工作單，2026-10-07）：第 0 步把 Tokenomics �
 | 步驟 | 狀態 | commit | 備註 |
 |---|---|---|---|
 | 0 開分支、draft PR #27、Tokenomics 版本 | 完成 | 0d00e96 | 自 origin/main f373885；Tokenomics master `862bdd4`，`model/CURRENT`＝`20261008_Tokenomics_v5.27.xlsx`（v5.26 → v5.27）。重抓快照 `data/tokenomics_snapshot_v5.27.json`：原 25 名數值與儲存格位置與 v5.26 **完全相同**；新增 `IF_RevGWFleet`（上限檢查）。刪 v5.26 快照（舊方法回歸自 git 歷史取回） |
-| 1 證據補充 | 完成 | （本 commit） | 見下方「W4 第 1 步證據表」；`company.json` → `pricing.anchorMultiple`（evidence、contractMix、notFound） |
-| 2 實作 tkAnchor | 完成（新方法 verify 22 項全過） | （本 commit） | Excel：輸入頁「定價倍數 k」三格＋TK 收入上限區塊；「每MW經濟性」新增「每 MW 收入：Tokenomics 錨 × 定價倍數 k（W4）」與「k 證據表」；B 區每 MW 年收入改引用；檢查頁「收入上限」；JS：`anchorRevQ`、perMwQ `tk`／`kev`、pmwSensQ 六組、檢查卡；cmp31 三情境各 472 項、FY27 錨定 433 項全 OK。另修 JS 既有缺陷：segB 無槓桿 NOL 虧損只加回 80%（Excel 為 100%；v4.6 前未觸發，W4 數字下 FY30 UFCF 差 0.41）。舊方法回歸 `scripts/verify_legacy.sh` 基準改為 v4.6（revenue=legacy、其餘 v4.6 設定、快照取 git 歷史 v5.26、dist 取 f373885）：25 項全過，畫面文字、Excel 值與公式對 v4.6 成品 **0 差異**（新增列 44） |
-| 3 Q2 驗證（不校準） | 完成 | （本 commit） | `scripts/q2_check_w4.py`：模型首期 7.638 對 Q2 年化 8.240（−0.602，−7.3%）＝(i) 爬坡分母 +0.091、(ii) 利用率 0、(iii) 定價倍數 −0.737（模型 k 0.760 vs Q2 隱含 0.838）、(iv) 世代組合 +0.072、(v) 其他 −0.028；相加＝總差距。Excel「每MW經濟性」最近一季實際對照新增 5 列（Q2 每 MW 收入 ÷ 在役／÷ 計費 MW、Q2 錨、Q2 隱含 k 未調整 0.752） |
+| 1 證據補充 | 完成 | 686991d | 見下方「W4 第 1 步證據表」；`company.json` → `pricing.anchorMultiple`（evidence、contractMix、notFound） |
+| 2 實作 tkAnchor | 完成（新方法 verify 22 項全過） | 686991d | Excel：輸入頁「定價倍數 k」三格＋TK 收入上限區塊；「每MW經濟性」新增「每 MW 收入：Tokenomics 錨 × 定價倍數 k（W4）」與「k 證據表」；B 區每 MW 年收入改引用；檢查頁「收入上限」；JS：`anchorRevQ`、perMwQ `tk`／`kev`、pmwSensQ 六組、檢查卡；cmp31 三情境各 472 項、FY27 錨定 433 項全 OK。另修 JS 既有缺陷：segB 無槓桿 NOL 虧損只加回 80%（Excel 為 100%；v4.6 前未觸發，W4 數字下 FY30 UFCF 差 0.41）。舊方法回歸 `scripts/verify_legacy.sh` 基準改為 v4.6（revenue=legacy、其餘 v4.6 設定、快照取 git 歷史 v5.26、dist 取 f373885）：25 項全過，畫面文字、Excel 值與公式對 v4.6 成品 **0 差異**（新增列 44） |
+| 3 Q2 驗證（不校準） | 完成 | 686991d | `scripts/q2_check_w4.py`：模型首期 7.638 對 Q2 年化 8.240（−0.602，−7.3%）＝(i) 爬坡分母 +0.091、(ii) 利用率 0、(iii) 定價倍數 −0.737（模型 k 0.760 vs Q2 隱含 0.838）、(iv) 世代組合 +0.072、(v) 其他 −0.028；相加＝總差距。Excel「每MW經濟性」最近一季實際對照新增 5 列（Q2 每 MW 收入 ÷ 在役／÷ 計費 MW、Q2 錨、Q2 隱含 k 未調整 0.752） |
+| 4 敏感度 | 完成 | （本 commit） | `permw_sens.json` 新增 k_長約 0.70／1.00、k_現貨 1.50／2.30、長約占比 −20pt、長約占比 100% 六組（HTML 即時、cmp31 逐格）；基準：$59.24／$236.10、$54.16／$188.00、$201.31、$5.25；Tokenomics 低／高 $0.21／$605.66；Rubin Ultra 版 $104.23 |
+| 5 升版 v4.7 | 完成 | （本 commit） | VLOG 兩處、dist 換 v4.7（移除 v4.6）、交接檔 v4.7（2k、2j、第 5 節）、README v4.7 段落與工具表；`scripts/expect/v4_7_rules.json` → `make_expect.py`（1,022 格＋4 列改名，未歸類 0；營運成本列不在清單）→ `EXPECT=… verify.sh --vs-dist` 對 v4.6 成品 25 項全過；`scripts/attrib_w4.py`：(d) ① 錨（k＝1）+30.16／+15.46／+8.82、② 套用 k +17.09／+52.88／+103.09、③ 0，相加＝總變動 |
+| 6 對照報告 | 完成 | （本 commit） | `scripts/compare_w4.py` → `docs/reports/20261008_coreweave_v4.7_收入錨定.xlsx`（摘要、每MW_前後、錨與k、證據表、Q2驗證、敏感度、變動拆解；LibreOffice 重算 255 公式 0 錯誤，檢查格皆「通過」）＋同名 md |
+| 7 整體 verify 與回報 | 完成 | （本 commit） | 見報告 md 第 10 節；PR 留言「[CRWV 回報] W4｜完成｜2026-10-08」 |
+
+### W4 關鍵數字（v4.6 → v4.7）
+加權目標價：保守 $43.99 → $91.24、基準 $29.68 → $98.02、積極 $19.95 → $131.86（皆由賣出轉中立）；融資缺口 32.7／81.6／157.9 → 30.3／67.5／118.1。基準每 MW 年收入（100% 計費）11.2／11.5／11.5／11.0／10.5 → 8.42／8.79／10.13／12.70／16.47；錨 11.07–12.31；k 0.76、0.76、0.85、1.05、1.34；長約占比 100%、100%、91%、71%、42%；上限檢查最高 42%（門檻 50%）。
+
+### W4 已套用的預設
+見 `docs/reports/20261008_coreweave_v4.7_收入錨定.md` 第 7 節（長約占比逐期公式、第二筆長約不改基準、證據倍數口徑、k 不隨成本情境、上限檢查分子、Q2 計費比例／利用率／服務／世代組合假設、Tokenomics v5.27、舊方法回歸基準、JS NOL 修正、摘要每 MW 句、差異原因）。
 
 ### W4 第 1 步證據表（倍數＝價格 ÷ Tokenomics v5.27 基準同世代持有成本；Excel 以 TK_ 名稱計算）
 | 證據 | 世代 | 價格 | Tokenomics | 倍數 | 用途 | 合約／期間 | 來源（日期） | 標記 |
