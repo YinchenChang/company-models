@@ -357,6 +357,8 @@ MWBASIS = CO['meta'].get('mwBasis', 'IT')
 _TKX = (_jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), CO['tokenomics']['snapshotFile']), encoding='utf-8'))
         if CO.get('tokenomics') else {'items': {}, 'source': {'generations': []}})
 _TKGC = {g['name']: g['code'] for g in _TKX['source']['generations']}
+import kspec as _kspec
+KSPEC = _kspec.resolve(CO, _TKX['items']) if CO.get('tokenomics') else {}  # W6 r1：k 基準與區間＝證據價格 ÷ 目前快照（錨改變時 k 跟著重算）
 tk_has = lambda n: n in _TKX['items'] and not _TKX['items'][n].get('missing')
 TK_PH = ['IF_MaintIT', 'IF_StaffSW', 'IF_TaxIns', 'IF_DeprLifeIT']  # 可暫代的名稱（待 Tokenomics v5.26）
 TK_MISS = [n for n in (['IF_DeprLifeIT'] if PMW['capex'] == 'tokenomics' else []) + (['IF_MaintIT', 'IF_StaffSW', 'IF_TaxIns'] if PMW['cost'] == 'bottomUp' else []) if not tk_has(n)]
@@ -365,6 +367,19 @@ if PMW['capex'] != 'legacy' or PMW['cost'] != 'ebitdaPct' or PMW['revenue'] != '
     for _n_ in ['IF_CapexIT', 'IF_CapexTotal', 'IF_PowerCost', 'IF_GPUsPerGW', 'IF_FacilityGW', 'IF_HoldEcon', 'IF_GPUhrEcon']:
         assert tk_has(_n_), f'Tokenomics 快照缺少必要名稱 {_n_}（不可暫代）'
     assert set(GEN) <= set(_TKGC), f'fleet.generations 須與 Tokenomics 世代同名：{set(GEN) - set(_TKGC)}'
+MAGE = PMW.get('maint', 'flat') == 'age' and PMW['cost'] == 'bottomUp'  # W6：IT 維護依機齡兩段（flat＝IF_MaintIT 等值費率）
+if MAGE:
+    for _n_ in ['IF_MaintITWarr', 'IF_MaintITPost', 'IF_WarrantyYrs']:
+        assert tk_has(_n_), f'methodology.perMw.maint=age：Tokenomics 快照缺少 {_n_}（v5.31 起提供）'
+    _VT = FL['openMix'].get('vintages') or []
+    assert _VT, 'methodology.perMw.maint=age：company.json 需要 fleet.openMix.vintages（期初機齡層）'
+    assert abs(sum(v['mw'] for v in _VT) - FL['openMix']['activeMW']) < 1e-6, 'fleet.openMix.vintages：各層 MW 合計 ≠ activeMW'
+    for _g_ in GEN:
+        _a_ = sum(v['mw'] * v['mix'].get(_g_, 0) for v in _VT); _b_ = FL['openMix']['activeMW'] * FL['openMix']['mix'].get(_g_, 0)
+        assert abs(_a_ - _b_) < 0.01, f'fleet.openMix.vintages：{_g_} 合計 {_a_:.3f} MW ≠ activeMW × mix {_b_:.3f} MW'
+    for v in _VT: assert abs(sum(v['mix'].values()) - 1) < 1e-9, f"fleet.openMix.vintages：{v['label']} 世代占比合計 ≠ 100%"
+    _ay_, _am_ = map(int, FL['openMix']['asOf'].split('-')[:2])
+    VAGE = [((_ay_ - int(v['inService'][:4])) * 12 + _am_ - int(v['inService'][5:7])) / 12 for v in _VT]  # 評價日時機齡（年＝月數 ÷ 12；HTML vintQ 同算式）
 AMQ = (CO.get('pricing') or {}).get('anchorMultiple')  # W4：Tokenomics 錨的公司因素（定價倍數 k、隨需占比、證據表）
 CA = CO.get('companyAdjust') if AMQ else None  # W5：公司實況驗證與公司調整（既有合約 k、新約價格調整、營運成本倍數；證據與文字）
 if PMW['revenue'] == 'tkAnchor':
@@ -390,6 +405,16 @@ if FL:
     FLX['open'] = {}
     for g in GEN:
         FLX['open'][g] = gi(r, f"期初在役占比｜{g}", "%", FL['openMix']['mix'].get(g, 0), FL['openMix']['tag'] + "；" + (FL['openMix']['source'] if g == GEN[0] else "同上"), PCT); r += 1
+    if MAGE:  # W6：期初機齡層（IT 維護依機齡兩段的起點）
+        FLX['vint'] = []
+        for k, v in enumerate(FL['openMix']['vintages']):
+            d_ = {'mw': gi(r, f"期初機齡層 MW｜{v['label']}", "MW", v['mw'], FL['openMix']['vintageNote'] if k == 0 else "同上", NUM0)}; r += 1
+            d_['age'] = gi(r, f"期初機齡層機齡（{FL['openMix']['asOf']} 時）｜{v['label']}", "年", VAGE[k],
+                           f"＝評價日 − 投入使用月（{v['inService']}，新增期間中點）的月數 ÷ 12 [Assumed]", '0.00'); r += 1
+            d_['sh'] = {}
+            for g in GEN:
+                d_['sh'][g] = gi(r, f"期初機齡層占比｜{v['label']}｜{g}", "%", v['mix'].get(g, 0), "W1 第 6b 步年份分層 [Assumed]" if g == GEN[0] else "同上", PCT); r += 1
+            FLX['vint'].append(d_)
     r = phdr(r, "新增 MW 的世代占比")
     for kind, mixes, note in (("基準", FL['newMix'], FL['newMixNote']), ("Rubin Ultra 版", FL['newMixAlt']['mix'], FL['newMixAlt']['tag'])):
         FLX[kind] = r
@@ -434,6 +459,12 @@ if FL:
         ("人員軟體", lambda g, rr: _tkc('IF_StaffSW', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g)))),
         ("稅險×IT占比", lambda g, rr: (_tkc('IF_TaxIns', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g))) + f"*C{FLX['tkCap'] + GEN.index(g)}/D{FLX['tkCap'] + GEN.index(g)}") if tk_has('IF_TaxIns') else "")],
         "US$m／公司 MW／年。電費＝IF_PowerCost（已含平均用電比與 PUE）；IT 維護 IF_MaintIT、人員軟體 IF_StaffSW、稅險 IF_TaxIns × IT 資本占總資本比（v5.26 前空白：IT 維護暫代 C 區『維護成本』、人員軟體與稅險暫代 0）")
+    if MAGE:  # W6：IT 維護依機齡兩段（Tokenomics v5.31）
+        FLX['tkMaint'] = _tkblock("TK IT 維護機齡兩段（保固期內、保固期滿）", [
+            ("保固期內", lambda g, rr: _tkc('IF_MaintITWarr', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g)))),
+            ("保固期滿", lambda g, rr: _tkc('IF_MaintITPost', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g))))],
+            "US$m／公司 MW／年。IF_MaintITWarr＝IT 資本 × 保固期內費率、IF_MaintITPost＝IT 資本 × 期滿後費率（Tokenomics v5.31；不得與 IF_MaintIT 等值費率重複計入）")
+        WARR = gi(r, "IT 原廠保固年限（IF_WarrantyYrs）", "年", "=TK_WarrantyYrs", "Tokenomics IF_WarrantyYrs（單值；保固期內費率適用的年數）", '0.00', font=GREEN); r += 1
     FLX['tkRev'] = _tkblock("TK 收入參考（GPU 數、GPU 小時持有成本、經濟持有成本、GPU 小時合約價）", [
         ("GPU／MW", lambda g, rr: _tkc('IF_GPUsPerGW', g, sel=False).replace('{conv}', str(FLX['tkCap'] + GEN.index(g))) + "/1000"),
         ("GPU 時成本", lambda g, rr: _tkc('IF_GPUhrEcon', g, conv=False)),
@@ -444,9 +475,15 @@ if FL:
     if AMQ:
         r = phdr(r, "定價倍數 k（W4；Tokenomics 錨的公司因素）")
         _kl, _ks, _od = AMQ['long'], AMQ['spot'], AMQ['onDemandShare']
-        AMX['kL'] = gi(r, "定價倍數 k_長約（市場長約價 ÷ Tokenomics 同世代持有成本）", "倍", _kl['base'],
+        def _kf(side):  # W6 r1：基準為證據 ref 時寫成活公式（價格 ÷ TK_ 同世代基準值）
+            sp = KSPEC.get(side, {}).get('base')
+            if isinstance(sp, dict) and 'ref' in sp:
+                e_ = next(x for x in AMQ['evidence'] if x['label'] == sp['ref'])
+                return f"={e_['price']}/TK_{re.sub(r'^(IF|L1)_', '', e_['tkName'])}_{_TKGC[e_['gen']]}"
+            return AMQ[side]['base']
+        AMX['kL'] = gi(r, "定價倍數 k_長約（市場長約價 ÷ Tokenomics 同世代持有成本）", "倍", _kf('long'),
                        f"company.json → pricing.anchorMultiple.long（基準成本情境的值；其他成本情境以基準證據世代的成本比例重算）；區間 {_n(_kl['low'])}–{_n(_kl['high'])}、三筆長約中位數 {_n(_kl['sensMedian'])} {_kl['tag']}；證據見『每MW經濟性』k 證據表（不以公司營收、ARR、RPO 金額反推）", '0.00'); r += 1
-        AMX['kS'] = gi(r, "定價倍數 k_現貨（市場現貨價 ÷ Tokenomics 同世代持有成本）", "倍", _ks['base'],
+        AMX['kS'] = gi(r, "定價倍數 k_現貨（市場現貨價 ÷ Tokenomics 同世代持有成本）", "倍", _kf('spot'),
                        f"company.json → pricing.anchorMultiple.spot（基準成本情境的值）；區間 {_n(_ks['low'])}–{_n(_ks['high'])} {_ks['tag']}", '0.00'); r += 1
         AMX['od'] = gi(r, "隨需占比（占在役計費產能）", "%", _od['base'],
                        "k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約；CRWV 先簽多年期合約再建產能，RPO 未覆蓋的新增產能也按長約價（W4 r2）。公司未揭露隨需比例，敏感度 " + "／".join(f"{x * 100:g}%" for x in _od['sens']) + f" {_od['tag']}；不得以 Q2 隱含 k 反推", PCT); r += 1
@@ -3185,12 +3222,52 @@ if FL:
                 for j in range(_NG): c.value = c.value.replace(f'{{END_{j}}}', str(_en + j))
     MIXR = lambda i: f"{COLS[i]}{_mx}:{COLS[i]}{_mx + _NG - 1}"   # 平均在役占比（第 i 期）
     TKR = lambda blk, col: f"{_I}${col}${FLX[blk]}:${col}${FLX[blk] + _NG - 1}"
+    WRR = None
+    if MAGE:  # ---- W6：機齡與保固（IT 維護依機齡兩段；HTML maintAgeQ 同算式） ----
+        r = section(ws, r, "機齡與保固（W6：IT 維護依機齡兩段；保固期內 MW × IF_MaintITWarr＋保固期滿 MW × IF_MaintITPost）", level=2, collapsed=True)
+        mrow("機齡｜期間起點（距期初，年）", "年", lambda i: "=0" if i == 0 else f"={COLS[i-1]}{r}+{_L(i-1)}", '0.00', BLACK, f"時間以 {FL['openMix']['asOf']}（首期期初＝評價日）起算的年數")
+        _W6_t0 = PM["機齡｜期間起點（距期初，年）"]
+        mrow("機齡｜期間終點（距期初，年）", "年", lambda i: f"={COLS[i]}{_W6_t0}+{_L(i)}", '0.00')
+        _W6_t1 = PM["機齡｜期間終點（距期初，年）"]
+        mrow("機齡｜IT 原廠保固年限（IF_WarrantyYrs）", "年", lambda i: f"={WARR}", '0.00', GREEN)
+        _W6_wy = PM["機齡｜IT 原廠保固年限（IF_WarrantyYrs）"]
+        _W6_fr = lambda i, x: f"MAX(0,MIN(1,({x}-{COLS[i]}{_W6_t0})/{_L(i)}))"
+        _W6_vf = r
+        for k, v in enumerate(FL['openMix']['vintages']):
+            mrow(f"機齡｜保固期內比例｜期初層 {v['label']}", "%", lambda i, k=k: "=" + _W6_fr(i, f"{COLS[i]}{_W6_wy}-{FLX['vint'][k]['age']}"), PCT, BLACK,
+                 "＝到期前占該期的比例；期初層保固到期＝保固年限 − 評價日時機齡" if k == 0 else None)
+        _W6_cf = r
+        for m in range(5):
+            mrow(f"機齡｜保固期內比例｜{PERIODS[m]} 新增", "%", lambda i, m=m: "=0" if i < m else "=1" if i == m else "=" + _W6_fr(i, f"({COLS[m]}{_W6_t0}+{COLS[m]}{_W6_t1})/2+{COLS[i]}{_W6_wy}"), PCT, BLACK,
+                 "各期新增 MW（含汰換補回）於該期中點投入、到期＝中點＋保固年限；當期新增只計平均在役的一半（與平均在役 MW 一致）" if m == 0 else None)
+        _W6_wr = r
+        def _W6_wf(i, j):
+            g = GEN[j]
+            t = [f"{FLX['vint'][k]['mw']}*{FLX['vint'][k]['sh'][g]}*{COLS[i]}{_W6_vf + k}" for k in range(len(FLX['vint']))]
+            t += [f"{_I}{COLS[m]}{FLX['adopt'] + j}*({COLS[m]}{_ad}+{COLS[m]}{_rt})*{COLS[i]}{_W6_cf + m}" for m in range(i)]
+            t += [f"0.5*{_I}{COLS[i]}{FLX['adopt'] + j}*({COLS[i]}{_ad}+{COLS[i]}{_rt})"]
+            return f"=MIN({COLS[i]}{_av + j}," + "+".join(t) + ")"
+        for j, g in enumerate(GEN):
+            mrow(f"保固期內平均在役 MW｜{g}", "MW", lambda i, j=j: _W6_wf(i, j), NUM0, BLACK, "＝MIN(平均在役, Σ 期初層 MW × 占比 × 比例＋Σ 前期新增 × 比例＋½ × 當期新增)" if j == 0 else None)
+        _W6_pr = r
+        for j, g in enumerate(GEN):
+            mrow(f"保固期滿平均在役 MW｜{g}", "MW", lambda i, j=j: f"={COLS[i]}{_av + j}-{COLS[i]}{_W6_wr + j}", NUM0)
+        mrow("保固期內占比（平均在役 MW）", "%", lambda i: f"=SUM({COLS[i]}{_W6_wr}:{COLS[i]}{_W6_wr + _NG - 1})/MAX({COLS[i]}{_AT},1E-9)", PCT)
+        WRR = lambda i, x="": f"{x}{COLS[i]}{_W6_wr}:{COLS[i]}{_W6_wr + _NG - 1}"
+        PRR = lambda i, x="": f"{x}{COLS[i]}{_W6_pr}:{COLS[i]}{_W6_pr + _NG - 1}"
+        MAGEF = lambda i, part=None, x="": ("(" + "+".join(([f"SUMPRODUCT({WRR(i, x)},{TKR('tkMaint', 'C')})"] if part in (None, 'w') else []) + ([f"SUMPRODUCT({PRR(i, x)},{TKR('tkMaint', 'D')})"] if part in (None, 'p') else []))
+                                            + f")/MAX({x}{COLS[i]}{_AT},1E-9)")
     # ---- 由下而上營運成本 ----
     r = section(ws, r, "由下而上營運成本（租金前；US$bn，模型期）" + ("——模型採用" if PMW['cost'] == 'bottomUp' else "——對照（模型採用 EBITDA 率路徑）"), level=2, collapsed=True)
     _OSC = (f"*{CSX['opexSc']}" if 'opexSc' in CSX else "")  # W5：營運成本倍數（基準 1）
     mrow("每 MW 電費（世代加權）", "US$m/MW", lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkOp', 'C')})" + _OSC, '0.000', BLACK, "Tokenomics IF_PowerCost（每 IT GW 年電費，已含平均用電比與 PUE）")
-    mrow("每 MW IT 維護（世代加權）", "US$m/MW", (lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkOp', 'D')})" + _OSC) if tk_has('IF_MaintIT') else (lambda i: f"={_I}{COLS[i]}${IN['維護成本']}"), '0.000', BLACK,
-         "Tokenomics IF_MaintIT" if tk_has('IF_MaintIT') else "暫代值：C 區『維護成本』（CRWV 現值；待 Tokenomics v5.26 IF_MaintIT）")
+    mrow("每 MW IT 維護（世代加權）", "US$m/MW", (lambda i: "=" + MAGEF(i) + _OSC) if MAGE else (lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkOp', 'D')})" + _OSC) if tk_has('IF_MaintIT') else (lambda i: f"={_I}{COLS[i]}${IN['維護成本']}"), '0.000', BLACK,
+         "W6：依機齡兩段＝（Σ 保固期內 MW × IF_MaintITWarr＋Σ 保固期滿 MW × IF_MaintITPost）÷ 平均在役 MW" if MAGE else "Tokenomics IF_MaintIT" if tk_has('IF_MaintIT') else "暫代值：C 區『維護成本』（CRWV 現值；待 Tokenomics v5.26 IF_MaintIT）")
+    if MAGE:
+        mrow("每 MW IT 維護｜保固期內部分（IF_MaintITWarr）", "US$m/MW", lambda i: "=" + MAGEF(i, 'w') + _OSC, '0.000')
+        mrow("每 MW IT 維護｜保固期滿部分（IF_MaintITPost）", "US$m/MW", lambda i: "=" + MAGEF(i, 'p') + _OSC, '0.000')
+        mrow("每 MW IT 維護｜等值費率 IF_MaintIT（對照，不入損益）", "US$m/MW", lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkOp', 'D')})", '0.000', BLACK,
+             "Tokenomics v5.31 壽命期等值費率（Σ 平均在役占比 × IF_MaintIT）；v4.7 以前的口徑，只作對照")
     mrow("每 MW 人員、軟體、水與耗材", "US$m/MW", (lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkOp', 'E')})" + _OSC) if tk_has('IF_StaffSW') else (lambda i: "=0"), '0.000', BLACK,
          "Tokenomics IF_StaffSW" if tk_has('IF_StaffSW') else "暫代值 0（待 Tokenomics v5.26 IF_StaffSW）")
     mrow("每 MW 財產稅與保險（只算 IT 部分）", "US$m/MW", (lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkOp', 'F')})" + _OSC) if tk_has('IF_TaxIns') else (lambda i: "=0"), '0.000', BLACK,
@@ -3304,7 +3381,7 @@ if FL:
         mrow("上限檢查｜各期結果", "", (lambda i: f'=IF({COLS[i]}{PM["上限檢查｜CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收"]}>{_gq(CK["revCapShareMax"])},"警示","通過")') if _hasRF else (lambda i: "不適用"), NUM, BOLD)
         # k 證據表（市場價格 ÷ Tokenomics 同世代持有成本；成本取基準、不隨成本情境）
         r = section(ws, r, "定價倍數 k 證據表（市場價格 ÷ Tokenomics 同世代持有成本；用途：long＝k_長約基準、spot＝k_現貨基準、range＝支持區間、list＝只列不用）", level=2, collapsed=True)
-        for j, h in enumerate(["證據", "單位", "價格", "Tokenomics 同世代", "倍數", "用途", ""]):
+        for j, h in enumerate(["證據", "單位", "價格", "Tokenomics 同世代", "倍數", "用途", "v5.27 倍數（v4.7）" if any('multipleV527' in x for x in AMQ['evidence']) else ""]):
             c = ws.cell(row=r, column=1 + j, value=h or None); c.font = HEAD; c.fill = FILL_HEAD
         ws.cell(row=r, column=9, value="Tokenomics＝IF_GPUhrEcon（US$/GPU-hr）或 IF_HoldEcon（US$m／IT MW／年），基準成本情境；世代｜合約型態｜期間｜來源（文件日期）標記｜說明").font = SMALL
         r += 1
@@ -3316,6 +3393,8 @@ if FL:
             c = ws.cell(row=r, column=4, value=f"={_k}" if tk_has(e_['tkName']) else "不適用"); c.font = GREEN; c.number_format = '0.000'; c.border = BOX
             c = ws.cell(row=r, column=5, value=f"=C{r}/D{r}" if tk_has(e_['tkName']) else "不適用"); c.font = BOLD; c.number_format = '0.00'; c.border = BOX
             ws.cell(row=r, column=6, value=e_['use']).font = BLACK
+            if e_.get('multipleV527') is not None:  # W6 r1：前一版 Tokenomics（v5.27）下的倍數，並列對照（價格不變、錨改變）
+                c = ws.cell(row=r, column=7, value=e_['multipleV527']); c.font = BLUE; c.number_format = '0.00'; c.border = BOX
             ws.cell(row=r, column=9, value=f"{e_['gen']}｜{e_['contract']}｜{e_['term']}｜{e_['source']}（{e_['date']}）{e_['tag']}｜{e_['note']}" + (f"｜{e_['url']}" if e_['url'] else "")).font = SMALL
             PM[f"k 證據｜{e_['label']}"] = r; r += 1
         for cm in AMQ.get('contractMix', []):
@@ -3510,7 +3589,7 @@ if CA and FL and PM and PMW['revenue'] == 'tkAnchor':
     _row('odShare', "%", AMQ['onDemandShare']['base'], "不適用", f"={_pc('隨需占比（輸入）')}", [PCT, PCT, PCT, PCT, '@'])
     _MX0 = f"{_P}{MIXR(0)}"
     _row('power', "US$m/MW", f"=SUMPRODUCT({_MX0},{TKR('tkOp', 'C')})", "不適用", f"={_pc('每 MW 電費（世代加權）')}")
-    _row('maint', "US$m/MW", f"=SUMPRODUCT({_MX0},{TKR('tkOp', 'D')})", "不適用", f"={_pc('每 MW IT 維護（世代加權）')}")
+    _row('maint', "US$m/MW", ("=" + MAGEF(0, None, _P)) if MAGE else f"=SUMPRODUCT({_MX0},{TKR('tkOp', 'D')})", "不適用", f"={_pc('每 MW IT 維護（世代加權）')}")
     _row('staff', "US$m/MW", f"=SUMPRODUCT({_MX0},{TKR('tkOp', 'E')})", "不適用", f"={_pc('每 MW 人員、軟體、水與耗材')}")
     _row('taxIns', "US$m/MW", f"=SUMPRODUCT({_MX0},{TKR('tkOp', 'F')})", "不適用", f"={_pc('每 MW 財產稅與保險（只算 IT 部分）')}")
     _c4 = "+".join(f"C{CV[_PR[k]['label']]}" for k in ('power', 'maint', 'staff', 'taxIns'))
@@ -3526,8 +3605,14 @@ if CA and FL and PM and PMW['revenue'] == 'tkAnchor':
     # 敏感度輸入（與情境無關：Q2 季末世代、首期新增世代（基準組合）、基準成本情境；HTML cvSensQ 同算式；scripts/permw_sens.py 讀本區）
     r = section(ws, r, "敏感度輸入（公司實際比率；Q2 季末世代與首期新增世代、基準成本情境；scripts/permw_sens.py 讀取）", level=2)
     _cv = lambda g, j: f"{_I}$F${FLX['tkCap'] + j}"
-    _tb = "+".join(f"{FLX['open'][g]}*(TK_PowerCost_{_TKGC[g]}+TK_MaintIT_{_TKGC[g]}+TK_StaffSW_{_TKGC[g]}+TK_TaxIns_{_TKGC[g]}*TK_CapexIT_{_TKGC[g]}/TK_CapexTotal_{_TKGC[g]})*{_cv(g, j)}" for j, g in enumerate(GEN))
-    cvrow("敏感度輸入｜Q2 季末世代 Tokenomics 營運成本合計（基準成本情境）", "US$m/MW", [f"={_tb}"], '0.000', ["Σ 季末在役占比 ×（IF_PowerCost＋IF_MaintIT＋IF_StaffSW＋IF_TaxIns × IT 資本占比），基準成本情境"])
+    if MAGE:  # W6：Q2 季末 IT 維護依機齡兩段（期初機齡層 W − 機齡 > 0 為保固期內）
+        _q2w = {g: "(" + "+".join(f"{FLX['vint'][k]['mw']}*{FLX['vint'][k]['sh'][g]}*IF({WARR}-{FLX['vint'][k]['age']}>0,1,0)" for k in range(len(FLX['vint']))) + ")" for g in GEN}
+        cvrow("敏感度輸入｜Q2 季末保固期內占比（期初機齡層）", "%", ["=(" + "+".join(_q2w[g] for g in GEN) + f")/{OPENMW}"], PCT, ["Σ 期初機齡層 MW（評價日仍在保固期內者）÷ 期初在役 MW"])
+        _tb = "+".join(f"{FLX['open'][g]}*(TK_PowerCost_{_TKGC[g]}+TK_StaffSW_{_TKGC[g]}+TK_TaxIns_{_TKGC[g]}*TK_CapexIT_{_TKGC[g]}/TK_CapexTotal_{_TKGC[g]})*{_cv(g, j)}"
+                       f"+({_q2w[g]}*TK_MaintITWarr_{_TKGC[g]}+({OPENMW}*{FLX['open'][g]}-{_q2w[g]})*TK_MaintITPost_{_TKGC[g]})/{OPENMW}*{_cv(g, j)}" for j, g in enumerate(GEN))
+    else:
+        _tb = "+".join(f"{FLX['open'][g]}*(TK_PowerCost_{_TKGC[g]}+TK_MaintIT_{_TKGC[g]}+TK_StaffSW_{_TKGC[g]}+TK_TaxIns_{_TKGC[g]}*TK_CapexIT_{_TKGC[g]}/TK_CapexTotal_{_TKGC[g]})*{_cv(g, j)}" for j, g in enumerate(GEN))
+    cvrow("敏感度輸入｜Q2 季末世代 Tokenomics 營運成本合計（基準成本情境）", "US$m/MW", [f"={_tb}"], '0.000', ["Σ 季末在役占比 ×（IF_PowerCost＋IF_StaffSW＋IF_TaxIns × IT 資本占比）＋ IT 維護依機齡兩段（季末保固期內 MW × IF_MaintITWarr＋其餘 × IF_MaintITPost）÷ 季末在役 MW，基準成本情境" if MAGE else "Σ 季末在役占比 ×（IF_PowerCost＋IF_MaintIT＋IF_StaffSW＋IF_TaxIns × IT 資本占比），基準成本情境"])
     cvrow("敏感度輸入｜營運成本倍數＝Q2 實際 ÷ Q2 季末世代 Tokenomics 合計", "倍", [f"=D{CV[_PR['opexBundle']['label']]}/C{r - 1}"], '0.000', ["敏感度「營運成本＝Q2 實際比率」把輸入頁『由下而上營運成本倍數』設為本值"], bold=True)
     _cx = "+".join(f"{_I}$C${FLX['基準'] + j}*TK_CapexIT_{_TKGC[g]}*{_cv(g, j)}" for j, g in enumerate(GEN))
     cvrow("敏感度輸入｜首期新增世代 Tokenomics IT 資本（基準成本情境）", "US$m/MW", [f"={_cx}"], '0.000', ["Σ 首期新增占比（基準組合）× IF_CapexIT，基準成本情境"])

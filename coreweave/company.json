@@ -580,7 +580,7 @@
   "scenario": "base",
   "lambda": 0.35,
   "mwYearEnd": {
-   "2023": 100,
+   "2023": 70,
    "2024": 360,
    "2025": 850
   },
@@ -867,10 +867,11 @@
    "revCapShareMax": 0.5
   },
   "perMw": {
-   "_note": "每 MW 方法開關（W2）：capex＝tokenomics（Σ 新增世代占比 × IF_CapexIT）｜legacy（scenarios.capexTemplate.costMW）；cost＝bottomUp（Tokenomics 電費、IT 維護、人員軟體、稅險 × 平均在役 MW＋管銷率）｜ebitdaPct（defaults.ebStart→ebSteady 線性）；revenue＝tkAnchor（W4：Σ 平均在役占比 × IF_HoldEcon × 定價倍數 k，k＝長約占比 × k_長約＋（1 − 長約占比）× k_現貨；pricing.anchorMultiple）｜gpuHr（pricing.gpuHr × 每 MW GPU 數 × 8,760）｜legacy（defaults.m.revMW）。全為舊方法時與 v4.5 完全相同。收入採備案 legacy（chat 端 2026-10-07：W1 查不到 GB200／GB300／VR200 兩個獨立長約價來源，VR200 完全沒有）。 W4（2026-10-08，已決定事項 14）：收入改為 tkAnchor；gpuHr 與 legacy 降為對照。",
+   "_note": "每 MW 方法開關（W2）：capex＝tokenomics（Σ 新增世代占比 × IF_CapexIT）｜legacy（scenarios.capexTemplate.costMW）；cost＝bottomUp（Tokenomics 電費、IT 維護、人員軟體、稅險 × 平均在役 MW＋管銷率）｜ebitdaPct（defaults.ebStart→ebSteady 線性）；revenue＝tkAnchor（W4：Σ 平均在役占比 × IF_HoldEcon × 定價倍數 k，k＝長約占比 × k_長約＋（1 − 長約占比）× k_現貨；pricing.anchorMultiple）｜gpuHr（pricing.gpuHr × 每 MW GPU 數 × 8,760）｜legacy（defaults.m.revMW）。全為舊方法時與 v4.5 完全相同。收入採備案 legacy（chat 端 2026-10-07：W1 查不到 GB200／GB300／VR200 兩個獨立長約價來源，VR200 完全沒有）。 W4（2026-10-08，已決定事項 14）：收入改為 tkAnchor；gpuHr 與 legacy 降為對照。 W6：maint＝age（每期 IT 維護＝Σ 世代［保固期內平均在役 MW × IF_MaintITWarr＋保固期滿 × IF_MaintITPost］，機齡由 fleet.openMix.vintages 與各期新增 MW 推得，保固年限 IF_WarrantyYrs）｜flat（Σ 平均在役占比 × IF_MaintIT 壽命期等值費率；v4.7 前）。",
    "capex": "tokenomics",
    "cost": "bottomUp",
-   "revenue": "tkAnchor"
+   "revenue": "tkAnchor",
+   "maint": "age"
   }
  },
  "peers": {
@@ -1342,16 +1343,16 @@
   "cashTaxNote": "H1 現金稅約 0.1bn",
   "sourceLine": "Q2 2026 10-Q + 法說 + 9/17 8-K · 口徑分層",
   "mwYearEndNotes": {
-   "2023": "由 2023 CapEx 約 3.1bn ÷ 約 $30m/MW 推估 [Assumed]",
+   "2023": "10-K FY2025 Item 1 Business〈Overview〉：「As of December 31, 2023, we operated 10 data centers with approximately 70 MW of active power.」；同文件 Item 7 MD&A〈Securing Sufficient Power Capacity〉：「As of December 31, 2023, we had 10 data centers supported by 70 MW of active power」[Verified]（W6 r1：原 100 MW 為 2023 CapEx 推估，改用原文）",
    "2024": "S-1：2024 年底 >360 MW [Verified]",
    "2025": "Q4 2025 法說：年底 >850 MW、43 座資料中心 [Verified]"
   }
  },
  "tokenomics": {
-  "_note": "算力相關的產業與物理層資料改引用 Tokenomics（YinchenChang/Tokenomics）：只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱，經版本固定的快照檔讀入；模型主值一律取「基準」成本情境，低成本／高成本只作敏感度。Tokenomics 每 GW＝IT 關鍵電力。Excel「Tokenomics_取數」分頁建具名範圍（TK_），每 MW 資本支出、營運成本與對照列引用之（W2）；v5.26 起 W2 暫代的 IT 維護、人員軟體、稅險、折舊年限改用正式值（W3）。 W4：快照換 v5.27（原 25 名數值與位置與 v5.26 相同），新增 IF_RevGWFleet（收入上限檢查）。",
-  "snapshotFile": "data/tokenomics_snapshot_v5.27.json",
-  "version": "v5.27",
-  "commit": "862bdd46d199ab5047b77dcba17fb356d9a1d562",
+  "_note": "算力相關的產業與物理層資料改引用 Tokenomics（YinchenChang/Tokenomics）：只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱，經版本固定的快照檔讀入；模型主值一律取「基準」成本情境，低成本／高成本只作敏感度。Tokenomics 每 GW＝IT 關鍵電力。Excel「Tokenomics_取數」分頁建具名範圍（TK_），每 MW 資本支出、營運成本與對照列引用之（W2）；v5.26 起 W2 暫代的 IT 維護、人員軟體、稅險、折舊年限改用正式值（W3）。 W4：快照換 v5.27（原 25 名數值與位置與 v5.26 相同），新增 IF_RevGWFleet（收入上限檢查）。 W6：快照換 v5.31（GB300 機架價格 5.0→4.3 $M：IF_CapexIT GB300 37.45→32.24；IT 維護改為保固期內／期滿後兩段，IF_MaintIT 改為壽命期等值費率 3%→1.57%），新增 IF_MaintITWarr、IF_MaintITPost、IF_WarrantyYrs（每期 IT 維護依機齡兩段；IF_MaintIT 只作對照）。",
+  "snapshotFile": "data/tokenomics_snapshot_v5.31.json",
+  "version": "v5.31",
+  "commit": "f16f161a28b5d43e00e89aa019e4d3e10fae4e3d",
   "names": [
    "IF_RacksPerGW",
    "IF_GPUsPerGW",
@@ -1378,7 +1379,10 @@
    "IF_StaffSW",
    "IF_TaxIns",
    "IF_OpexGW",
-   "IF_RevGWFleet"
+   "IF_RevGWFleet",
+   "IF_MaintITWarr",
+   "IF_MaintITPost",
+   "IF_WarrantyYrs"
   ],
   "optional": []
  },
@@ -1400,7 +1404,45 @@
     "GB300 NVL72": 0.433666
    },
    "tag": "[Assumed]",
-   "source": "W1 第 6b 步（coreweave/data/permw_inputs_20261007.json → fleetMix.openMix）：依年份分層——2024 年底前 360 MW＝Hopper；2025 年新增 490 MW＝GB200 70%／GB300 20%／H200 10%；2026 上半年新增 650 MW＝GB300 85%／GB200 15%。MW 錨點 [Verified]、各層占比 [Assumed]；W1 回報 27／29／43% 為四捨五入（區間 Hopper 24–31%、GB200 20–42%、GB300 30–53%）"
+   "source": "W1 第 6b 步（coreweave/data/permw_inputs_20261007.json → fleetMix.openMix）：依年份分層——2024 年底前 360 MW＝Hopper；2025 年新增 490 MW＝GB200 70%／GB300 20%／H200 10%；2026 上半年新增 650 MW＝GB300 85%／GB200 15%。MW 錨點 [Verified]、各層占比 [Assumed]；W1 回報 27／29／43% 為四捨五入（區間 Hopper 24–31%、GB200 20–42%、GB300 30–53%）",
+   "vintages": [
+    {
+     "label": "2023 年新增",
+     "mw": 70,
+     "inService": "2023-06",
+     "mix": {
+      "Hopper H100": 1
+     }
+    },
+    {
+     "label": "2024 年新增",
+     "mw": 290,
+     "inService": "2024-06",
+     "mix": {
+      "Hopper H100": 1
+     }
+    },
+    {
+     "label": "2025 年新增",
+     "mw": 490,
+     "inService": "2025-06",
+     "mix": {
+      "GB200 NVL72": 0.7,
+      "GB300 NVL72": 0.2,
+      "Hopper H100": 0.1
+     }
+    },
+    {
+     "label": "2026 上半年新增",
+     "mw": 650,
+     "inService": "2026-03",
+     "mix": {
+      "GB300 NVL72": 0.85,
+      "GB200 NVL72": 0.15
+     }
+    }
+   ],
+   "vintageNote": "W6：期初機齡層（IT 維護依機齡兩段）。MW＝W1 年份分層（2024 年底前 360 MW 依 defaults.mwYearEnd 拆為 2023 年 70、2024 年 290（W6 r1：2023 年底 70 MW 依 10-K 原文）；2025 年新增 490；2026 上半年新增 650）[Verified 錨點]；各層世代占比同 W1 第 6b 步 [Assumed]；投入使用月＝新增期間中點（全年層 6 月底、上半年層 3 月底）[Assumed]。保固期內＝投入使用後 IF_WarrantyYrs 年內；各期新增 MW 的投入使用＝該期中點。各層 MW 合計須＝activeMW、各世代合計須＝activeMW × mix（建置時檢查）"
   },
   "newMix": [
    {
@@ -1530,20 +1572,44 @@
   "anchorMultiple": {
    "_note": "W4 r2（已決定事項 14）：每 MW 年收入（100% 計費時數）＝ Σ 平均在役占比 × IF_HoldEcon（目前成本情境）× k；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約。CRWV 先簽多年期合約再建產能（10-K 加權平均約 5 年），RPO 未覆蓋的新增產能也按長約價出售；RPO 覆蓋率只作對照列。k 以『市場價格 ÷ 同成本情境的 Tokenomics 持有成本』計：輸入值為基準成本情境，其他情境以基準證據世代的成本比例重算（價格是事實，不隨 Tokenomics 成本情境變）。不以 CoreWeave 的營收、ARR 或 RPO 金額反推 k 或隨需占比。",
    "long": {
-    "base": 0.76,
-    "low": 0.7,
-    "high": 1.0,
+    "base": {
+     "ref": "IREN–Microsoft GB300 五年約"
+    },
+    "low": {
+     "priceEq": 8.9073,
+     "gen": "GB300 NVL72",
+     "tkName": "IF_HoldEcon"
+    },
+    "high": {
+     "priceEq": 12.7247,
+     "gen": "GB300 NVL72",
+     "tkName": "IF_HoldEcon"
+    },
     "tag": "[Analogy]",
-    "note": "基準＝IREN–Microsoft GB300 五年約（evidence 第 1 筆，0.762 取兩位；唯一已證實的可比長約）；區間 0.70–1.00；三筆長約中位數 0.89（IREN–Microsoft 0.76、IREN–NVIDIA 0.89、Oracle–OpenAI 1.05〔未證實〕）列為敏感度（sensMedian），基準用哪個待 Andy 決定",
-    "sensMedian": 0.89,
+    "note": "W6 r1：k 依目前快照重算（價格是事實，k＝價格 ÷ 同世代 Tokenomics 持有成本，錨改變時 k 跟著改）。基準＝IREN–Microsoft GB300 五年約 9.70 ÷ IF_HoldEcon｜GB300（v5.27 0.762、v5.31 0.891）；區間端點為 W4 的 0.70–1.00 × v5.27 錨 12.725 換成固定價格 8.907／12.725 US$m/MW/年 [Derived]；中位數＝三筆長約（IREN–Microsoft、IREN–NVIDIA、Oracle–OpenAI〔未證實〕）倍數的中位數",
+    "sensMedian": {
+     "median": [
+      "IREN–Microsoft GB300 五年約",
+      "IREN–NVIDIA 氣冷 Blackwell 五年約（GB300 類比）",
+      "Oracle–OpenAI 約 $300bn／4.5 GW（未經證實）"
+     ]
+    },
     "refEvidence": "IREN–Microsoft GB300 五年約"
    },
    "spot": {
-    "base": 1.76,
-    "low": 1.5,
-    "high": 2.3,
+    "base": {
+     "ref": "H100 Silicon Data 現貨指數"
+    },
+    "low": {
+     "priceEq": 2.4075,
+     "gen": "Hopper H100",
+     "tkName": "IF_GPUhrEcon"
+    },
+    "high": {
+     "ref": "B300 Silicon Data 現貨指數（GB300 類比）"
+    },
     "tag": "[Analogy]",
-    "note": "基準＝H100 Silicon Data 現貨指數 ÷ IF_GPUhrEcon（1.757）；上緣＝B300 指數（GB300 類比，2.29）；下緣 1.5（工作單 W4 預設）",
+    "note": "W6 r1：基準＝H100 Silicon Data 現貨指數 2.82 ÷ IF_GPUhrEcon｜H100（v5.27 1.757、v5.31 1.828）；上緣＝B300 指數 ÷ IF_GPUhrEcon｜GB300；下緣＝W4 預設 1.5 × v5.27 H100 成本 1.605 換成固定價格 2.408 US$/GPU-hr [Derived]",
     "refEvidence": "H100 Silicon Data 現貨指數"
    },
    "longShare": {
@@ -1598,7 +1664,8 @@
      "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-97bn-ai-cloud-contract-microsoft",
      "date": "2025-11-03",
      "retrieved": "2026-10-08",
-     "note": "$9.7bn ÷ 5 年 ÷ 200 MW critical IT；含 20% 預付；W1 換算 ≈ $2.27/GPU-hr（487 顆/MW）"
+     "note": "$9.7bn ÷ 5 年 ÷ 200 MW critical IT；含 20% 預付；W1 換算 ≈ $2.27/GPU-hr（487 顆/MW）",
+     "multipleV527": 0.7622941729959212
     },
     {
      "label": "IREN–NVIDIA 氣冷 Blackwell 五年約（GB300 類比）",
@@ -1614,7 +1681,8 @@
      "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-34bn-ai-cloud-contract-nvidia",
      "date": "2026-05-07",
      "retrieved": "2026-10-08",
-     "note": "$3.4bn ÷ 5 年 ÷ 約 60 MW（Childress；MW 口徑未註明，視為 IT）；氣冷 Blackwell（非 NVL72）以 GB300 類比；與第 1 筆同一供應商，只支持區間；三筆長約中位數＝本筆 0.89（敏感度）"
+     "note": "$3.4bn ÷ 5 年 ÷ 約 60 MW（Childress；MW 口徑未註明，視為 IT）；氣冷 Blackwell（非 NVL72）以 GB300 類比；與第 1 筆同一供應商，只支持區間；三筆長約中位數＝本筆 0.89（敏感度）",
+     "multipleV527": 0.8906267899549253
     },
     {
      "label": "Oracle–OpenAI 約 $300bn／4.5 GW（未經證實）",
@@ -1630,7 +1698,8 @@
      "url": "https://www.theregister.com/2025/09/11/openai_reportedly_on_the_hook/",
      "date": "2025-09-11",
      "retrieved": "2026-10-08",
-     "note": "$300bn ÷ 5 ÷ 4,500 MW；金額未經當事方證實、MW 口徑不明（若為設施口徑，每 IT MW 再 × 1.2）、Oracle 自有廠房；只列不用；納入三筆長約中位數的敏感度"
+     "note": "$300bn ÷ 5 ÷ 4,500 MW；金額未經當事方證實、MW 口徑不明（若為設施口徑，每 IT MW 再 × 1.2）、Oracle 自有廠房；只列不用；納入三筆長約中位數的敏感度",
+     "multipleV527": 1.0478008462427442
     },
     {
      "label": "H100 Silicon Data 現貨指數",
@@ -1646,7 +1715,8 @@
      "url": "https://www.silicondata.com/products/silicon-index/h100",
      "date": "2026-10-06",
      "retrieved": "2026-10-08",
-     "note": "價格 [Verified]；倍數 [Derived]"
+     "note": "價格 [Verified]；倍數 [Derived]",
+     "multipleV527": 1.7569773191392963
     },
     {
      "label": "B300 Silicon Data 現貨指數（GB300 類比）",
@@ -1662,7 +1732,8 @@
      "url": "https://www.silicondata.com/products/silicon-index/h100",
      "date": "2026-10-06",
      "retrieved": "2026-10-08",
-     "note": "HGX B300 對 GB300 NVL72 類比；k_現貨上緣"
+     "note": "HGX B300 對 GB300 NVL72 類比；k_現貨上緣",
+     "multipleV527": 2.286522303210439
     },
     {
      "label": "B200 Ornn 成交指數（GB200 類比）",
@@ -1678,7 +1749,8 @@
      "url": "",
      "date": "2026-04-13",
      "retrieved": "2026-10-08",
-     "note": "HGX B200 對 GB200 NVL72 類比；落在 k_現貨區間內"
+     "note": "HGX B200 對 GB200 NVL72 類比；落在 k_現貨區間內",
+     "multipleV527": 1.9554710603734917
     },
     {
      "label": "B200 Silicon Data 現貨指數（GB200 類比）",
@@ -1694,7 +1766,8 @@
      "url": "https://www.silicondata.com/products/silicon-index/h100",
      "date": "2026-10-06",
      "retrieved": "2026-10-08",
-     "note": "高於 k_現貨區間上緣；HGX B200 每 GPU 小時成本低於 GB200 NVL72 的機架攤提，類比偏高，只列"
+     "note": "高於 k_現貨區間上緣；HGX B200 每 GPU 小時成本低於 GB200 NVL72 的機架攤提，類比偏高，只列",
+     "multipleV527": 2.813386059900097
     },
     {
      "label": "B300 Nebius 隨需牌價（GB300 類比）",
@@ -1710,7 +1783,8 @@
      "url": "https://nebius.com/prices",
      "date": "2026-10-07",
      "retrieved": "2026-10-08",
-     "note": "牌價非成交價（10/1 起 9.50）；只列不用"
+     "note": "牌價非成交價（10/1 起 9.50）；只列不用",
+     "multipleV527": 2.6318475190911945
     },
     {
      "label": "GB200 CoreWeave 隨需牌價",
@@ -1726,7 +1800,8 @@
      "url": "https://www.coreweave.com/pricing",
      "date": "2026-10-07",
      "retrieved": "2026-10-08",
-     "note": "牌價非成交價（長約最多 −60%）；只列不用"
+     "note": "牌價非成交價（長約最多 −60%）；只列不用",
+     "multipleV527": 5.032462287725897
     },
     {
      "label": "H100 CoreWeave 隨需牌價",
@@ -1742,7 +1817,8 @@
      "url": "https://www.coreweave.com/pricing",
      "date": "2026-10-07",
      "retrieved": "2026-10-08",
-     "note": "牌價非成交價；只列不用"
+     "note": "牌價非成交價；只列不用",
+     "multipleV527": 3.8348210635824005
     },
     {
      "label": "CoreWeave Q3 短天期合約（3–6 個月，公司新聞稿）",
@@ -1758,7 +1834,8 @@
      "url": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Continues-to-Contract-New-Compute-Capacity-at-Higher-Prices/default.aspx",
      "date": "2026-09-16",
      "retrieved": "2026-10-08",
-     "note": "公司定義：年化營收 ÷ 服務該叢集所需電力；世代與 MW 口徑未揭露（以 GB300 類比）；短約，只用於隨需敏感度（W5）"
+     "note": "公司定義：年化營收 ÷ 服務該叢集所需電力；世代與 MW 口徑未揭露（以 GB300 類比）；短約，只用於隨需敏感度（W5）",
+     "multipleV527": 3.143481125756376
     }
    ],
    "notFound": [
@@ -1900,12 +1977,12 @@
     "key": "maint",
     "label": "IT 維護（每 MW 年）",
     "unit": "US$m/MW",
-    "tkName": "IF_MaintIT（約 IT 資本 3%／年，在役世代加權）",
+    "tkName": "IF_MaintITWarr／IF_MaintITPost（v5.31；依機齡兩段：保固期內 MW × 保固期內值＋期滿 MW × 期滿值，保固 IF_WarrantyYrs 3 年；在役世代加權）",
     "actual": "未單獨揭露（不存在於 10-Q 列項）；CRWV 伺服器保固條款找不到（10-K、10-Q、S-1 未見）",
     "tag": "[Verified]",
-    "mechanism": "技術與基礎設施費用含「維護運算基礎設施的人員」（10-K）；OEM 標準保固（例：Supermicro GPU 系統人工 3 年、零件 1 年）只是廠商通則，不是 CRWV 合約證據 → 保固機制未證實",
-    "adjust": "無；保固期內維護較低的可能性以「營運成本＝Q2 實際比率」敏感度呈現",
-    "rule": "3",
+    "mechanism": "W6：Tokenomics v5.31 已把保固期內／期滿兩段做進來（保固 3 年依 OEM 條款：HPE 3 年、Supermicro 人工 3 年；Tokenomics SRC_DC_015／016），CRWV 端依期初機齡層與各期新增 MW 推算機齡（Q2 季末 93% 在保固期內）；CRWV 自己的保固條款仍找不到。單項無法量測，併入下方「營運成本合計」驗證",
+    "adjust": "無（Tokenomics 依機齡兩段即主值；IF_MaintIT 等值費率只作對照）",
+    "rule": "—",
     "evidence": [
      "crwvTiPolicy",
      "smcWarranty"
@@ -1946,8 +2023,8 @@
     "tkName": "上列四項 Tokenomics 值合計（模型首期）",
     "actual": "Q2 2026：營收成本＋技術與基礎設施 − D&A − SBC − 營業租賃成本（含變動租賃＝轉付房東的水電），年化 ÷ Q2 平均在役 MW",
     "tag": "[Derived]",
-    "mechanism": "找不到可證實的機制：可能原因（未證實）——多數機隊仍在 OEM 保固期（CRWV 條款找不到）、Q2 平均在役 MW 含 6 月才上線的 300 MW（爬坡期用電低）、單項未揭露；Q2 實際另含研發",
-    "adjust": "無（Tokenomics 為基準）；敏感度＝營運成本倍數 Q2 實際 ÷ 模型首期",
+    "mechanism": "W6：IT 維護改依機齡兩段（Tokenomics v5.31）後，模型首期與 Q2 實際差距 −35%（v4.7）→ +2%（≤ 10%）：原差距主要來自 v4.7 把保固期內的機隊也按滿載維護費率計算。Q2 實際另含研發（Q2 $117m），模型未另計",
+    "adjust": "無（差距 ≤ 10%，規則 1）；敏感度仍保留「營運成本＝Q2 實際比率」",
     "rule": "3",
     "evidence": [
      "crwvCostRevPolicy",
@@ -1978,7 +2055,7 @@
     "tkName": "IF_CapexIT（新增世代加權，模型首期）",
     "actual": "1H26 資本支出 16.139 ÷ 新增主動電力 650 MW（850 → 1,500）；另列技術設備毛額增加 ÷ 新增 MW",
     "tag": "[Derived]",
-    "mechanism": "找不到可證實的機制：可能原因（未證實）——MW 口徑（主動電力若為設施口徑，換成 IT MW 後差距縮小約 1/6）、議價（未揭露）、Tokenomics IT 單價偏高；預建（1H 支出含 2H 上線的 MW）只會使實際偏高，方向相反",
+    "mechanism": "找不到可證實的機制。W6：Tokenomics v5.31 GB300 機架價格 5.0 → 4.3 $M（IF_CapexIT GB300 37.45 → 32.24）後，差距 −29% → −19%，仍 > 10%；可能原因（未證實）——MW 口徑（10-K、10-Q 未定義 active power；若為設施口徑，換成 IT MW 後差距縮小約 1/6）、議價（未揭露）；預建（1H 支出含 2H 上線的 MW）只會使實際偏高，方向相反",
     "adjust": "無（Tokenomics 為基準）；敏感度＝每 MW 建置成本倍數 1H26 實際 ÷ 模型首期",
     "rule": "3",
     "evidence": [
@@ -2147,10 +2224,10 @@
   ],
   "q2Notes": {
    "Q2 對帳｜每 MW 年收入（算力＋服務）": "模型首期：既有合約 MW 按 Q2 實現單價（k_既有），新增 MW 按市場長約 k；分母都是平均在役 MW（含爬坡中尚未計費的 MW）",
-   "Q2 對帳｜每 MW 營運成本（租金前、不含管銷；Q2 含變動租賃）": "差距 > 10% 且找不到可證實的機制（單項未揭露、保固條款找不到）：依規則 3 以 Tokenomics 為基準，Q2 實際比率列為敏感度，需要 Andy 決定；Q2 實際另含研發（Q2 $117m）",
+   "Q2 對帳｜每 MW 營運成本（租金前、不含管銷；Q2 含變動租賃）": "W6：IT 維護依機齡兩段（Q2 季末 93% 機隊在 3 年保固期內）後差距 ≤ 10%（規則 1）；Q2 實際另含研發（Q2 $117m），模型未另計",
    "Q2 對帳｜每 MW 固定租金": "Q2 營業租賃成本年化（固定租金）對模型在帳＋表外現金租金；變動租賃（水電、共同區域維護、保全）歸入營運成本",
    "Q2 對帳｜每 MW 管銷（扣 SBC）": "模型管銷率＝Q2 實際（扣 SBC）× 營收；每 MW 差距只來自每 MW 營收差距",
-   "Q2 對帳｜每 MW EBITDA（Q2＝調整後 EBITDA）": "差距主要來自營運成本（Tokenomics 滿載穩態 vs Q2 實際）；Q2 調整後 EBITDA＝營收 − 現金成本（扣 D&A、SBC），與模型 EBITDA 同口徑",
+   "Q2 對帳｜每 MW EBITDA（Q2＝調整後 EBITDA）": "W6 後收入、營運成本、租金、管銷都在 ±3% 內；Q2 調整後 EBITDA＝營收 − 現金成本（扣 D&A、SBC），與模型 EBITDA 同口徑",
    "Q2 對帳｜EBITDA 率（差距＝百分點）": "同上；模型首期為 2H 模型值"
   }
  }
