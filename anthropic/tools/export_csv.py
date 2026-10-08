@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""匯出 SRC_OAI、Inputs、TK_Link、Checks → data/export/*.csv，並檢查 CHK_Errors（CI governance job 用）。
+"""匯出 SRC_ANT、Inputs、TK_Link、OAI_Link、Checks → data/export/*.csv，並檢查 CHK_Errors（CI governance job 用）。
 值由 engine（pycel）重算 model/CURRENT 指向的活頁簿；不寫回 Excel。CHK_Errors ≠ 0 時以非零狀態結束。"""
 import argparse
 import csv
@@ -10,7 +10,7 @@ REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 from engine import Engine  # noqa: E402
 
-SHEETS = {"SRC_OAI": "X", "Inputs": "M", "TK_Link": "X", "Checks": "F"}
+SHEETS = {"SRC_ANT": "AB", "Inputs": "N", "TK_Link": "X", "OAI_Link": "K", "Checks": "F"}
 
 
 def main():

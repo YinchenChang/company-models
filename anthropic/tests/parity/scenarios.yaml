@@ -1,0 +1,77 @@
+# Parity 情境檔（CLAUDE.md 第 3 節）。每個情境：改寫輸入 → LibreOffice 重算（基準）→ 與 engine 比對全部公式格。
+# 輸入一律以具名範圍設定（SRC_ANT_nnn、INP_nnn、TK_*）。v0.1-A2：Demand、Revenue、Checks 由情境驅動。
+# expect_err：該情境必須讓這些檢查轉 ERR（保證檢查有牙齒）；expect_warn：CHK_Warnings ≥ 1。
+workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
+  sheets: [README, SRC_ANT, TK_Link, OAI_Link, Inputs, Demand, Revenue, Checks, _Defaults]
+  formula_cells: 2931             # A2：SRC_ANT 379×4 檢查欄＋11 Derived 公式、Inputs 101×2、Demand、Revenue（含價格事件表 38 列）、Checks C01–C46
+  defined_names: 829
+  src_rows: 379                   # A1 376＋A2 新增 3（SRC_ANT_377–379）
+  src_named: 330                  # 有值欄的列才有 SRC_ANT_nnn 名稱（另有 _Lo／_Hi／_Date）
+  inp_rows: 101
+  tk_values: 63                   # 與 OpenAI v0.6 同一組（TK_IF_／TK_SRC_／TK_L1_）
+  tk_nonnv: 18                    # TK_NNV_*（TPU v7、Trainium3、MI455X × 6；讀表，非具名）
+  oai_names: 21                   # OAI_ 17 個逐年名稱＋4 個中繼資料
+  tk_pending: 0
+
+scenarios:
+  - id: base
+    description: 基準（不改任何輸入）
+    inputs: {}
+  - id: a_elasticity_high
+    description: API 任務數價格彈性 −0.7 → −1.05（區間下緣；2027 起 token 與營收改變）
+    inputs: {"INP_096": -1.05}
+  - id: b_partner_fee_high
+    description: 雲端平台抽成率 0.16 → 0.30（Inputs 上緣，BofA 推得）；2026 起抽成與淨額改變，總額不變
+    inputs: {"INP_100": 0.3}
+  - id: c_channel_share_up
+    description: 雲端通路占 API 營收 ＋15 個百分點（通路分成情境）
+    inputs: {"INP_099": 0.15}
+  - id: d_plan_mix_max
+    description: 2026 起 Pro 占個人付費 0.70 → 0.55（方案組合：Max 占比上升；2026 API 倒推值隨之下降、2027 起訂閱上升）
+    inputs: {"INP_023": 0.55}
+  - id: e_task_growth_low
+    description: 2027 API 任務數成長 0.45 → 0.225（任務成長情境）
+    inputs: {"INP_092": 0.225}
+  - id: f_price_decline_steep
+    description: 2027 起牌價年變動 −15% → −35%（價格與彈性共同作用）
+    inputs: {"INP_098": -0.35}
+  - id: g_consumer_share_high
+    description: 消費者訂閱占 2025 營收 15% → 20%（SRC Analogy 上緣）：個人訂閱 0.92 > 訂閱合計 0.789，席位轉負（倒推檢查應 ERR）
+    inputs: {"SRC_ANT_063": 0.2}
+    expect_err: [a2_backsolve]
+  - id: h_api_mix_broken
+    description: 2026 起 API Haiku 占比 0.15 → 0.6，使 Haiku＋Sonnet > 1（組合檢查應 ERR）
+    inputs: {"INP_079": 0.6}
+    expect_err: [a2_mix]
+  - id: i_cap_out_of_range
+    description: 容量上限佔位 1 → 1.2（∉ (0,1]，檢查應 ERR）
+    inputs: {"INP_016": 1.2}
+    expect_err: [a2_cap]
+  - id: j_cap_08
+    description: 容量上限佔位 1 → 0.8（截頂列改變；A3 接手前的結構測試）。佔位值的區間定為 1–1（Decision），故 Inputs 區間檢查應 ERR
+    inputs: {"INP_016": 0.8}
+    expect_err: [inp_order]
+  - id: k_runrate_alt
+    description: 2026-07 年化營收 65 → 79.5（YipitData 第三方估計）：2026 半校準基準與 API 倒推改變
+    inputs: {"SRC_ANT_023": 79.5}
+  - id: l_opus55_price
+    description: Opus 5.5 輸入牌價 4 → 3：2026 頂層加權牌價與 2027 起價格路徑改變
+    inputs: {"SRC_ANT_111": 3}
+  - id: m_tk_nonnv_broken
+    description: TPU v7 產出比基準 0.8 → 1.2（高於高值 1.1；NonNV 快照順序檢查應 ERR）
+    inputs: {"TK_NNV_TPUv7_Out": 1.2}
+    expect_err: [tk_nnv_order]
+  - id: n_event_date_broken
+    description: Opus 5.5 公告日改為早於 Opus 5（價格事件順序檢查應 ERR；2026 加權牌價改變）
+    inputs: {"SRC_ANT_111_Date": 46100}
+    expect_err: [a2_evorder]
+  - id: o_rev2025_alt
+    description: 2025 認列營收 4.6 → 4.59（另一來源）：其他營收殘差與 2025 總額改變，校準差仍為 0
+    inputs: {"SRC_ANT_001": 4.59}
+  - id: p_runrate_warn
+    description: 2026-07 年化營收 65 → 30：半校準總額遠低於里程碑推估（> 25% → WARN，不 ERR）
+    inputs: {"SRC_ANT_023": 30}
+    expect_warn: true
+  - id: q_code_tokens
+    description: 程式代理每任務 token 200K → 500K（區間上緣；只改 token，不改營收）
+    inputs: {"INP_068": 500}

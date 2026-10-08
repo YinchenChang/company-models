@@ -29,7 +29,7 @@ CHAINS = {
     "low": ["price_claude35_haiku_cut", "price_haiku45", "price_haiku55"],
 }
 FMT = {"$B": "#,##0.000", "T": "#,##0", "M": "#,##0.000", "比例": "0.0%", "比例/年": "0.0%", "$/M": "0.000", "$/月": "0.00", "倍": "0.000",
-       "日期": "yyyy-mm-dd", "任務/日": "0.00", "K tok/任務": "#,##0.0", "十億任務": "#,##0.00", "$B/年": "#,##0.000"}
+       "日期": "0", "任務/日": "0.00", "K tok/任務": "#,##0.0", "十億任務": "#,##0.00", "$B/年": "#,##0.000"}
 TOK = re.compile(r"«(?:(D|R):)?([A-Za-z0-9_]+)(?:@(p|[D-I]))?»")
 
 
@@ -257,7 +257,7 @@ def build(ctx):
                 put(R.ws, f"B{rr}", f"{tz} {ioz}：{D.src(key)['metric']}", F_CALC)
                 put(R.ws, f"C{rr}", "比例", F_CALC)
                 put(R.ws, f"M{rr}", f"={S(key)}", fmt="0.000")
-                put(R.ws, f"N{rr}", f"={S(key)}_Date", fmt="yyyy-mm-dd")
+                put(R.ws, f"N{rr}", f"={S(key)}_Date", fmt="0")
                 put(R.ws, f"O{rr}", f"=M{rr}" if j == 0 else f"=M{rr}-M{rr - 1}", fmt="0.000")
                 for i, c in enumerate(YC):
                     yst, yen = R.rows["yst"], R.rows["yen"]
@@ -319,8 +319,8 @@ def build(ctx):
                "Σ 付費方案（Pro、Max、席位）人數 × 每日任務 × 類別占比 × 該類每任務 token")
     for c_, cz in CATS:
         Dm.add(f"ct_{c_}_free", f"Free token：{cz}", "T", lambda i, c, c_=c_: f"=«u_free»*«tasks_free»*{share('free', c_)}*«k_{c_}»*{days}/{b2t}", "")
-    Dm.add("catchk", "檢查：類別合計 − 方案合計（應為 0）", "T",
-           lambda i, c: "=" + "+".join(f"«ct_{c_}_paid»+«ct_{c_}_free»" for c_, _ in CATS) + "-«tok_sub»", "")
+    Dm.add("catchk", "檢查：（類別合計 − 方案合計）÷ 方案合計（應為 0）", "比例",
+           lambda i, c: "=((" + "+".join(f"«ct_{c_}_paid»+«ct_{c_}_free»" for c_, _ in CATS) + ")-«tok_sub»)/«tok_sub»", "以相對差表示，避免大數相減的浮點雜訊")
     Dm.add("code_share", "程式代理占訂閱、席位與 Free token（D4：Claude Code 不另立營收線）", "比例",
            lambda i, c: "=(«ct_code_paid»+«ct_code_free»)/«tok_sub»", "Claude Code 營收落在 Max、Team Premium 訂閱與 API 用量")
 
@@ -427,7 +427,7 @@ def checks(ctx):
         ("a2_toksplit", "token 層級拆分合計 vs 拆分前總量（違反年數）",
          f"=SUMPRODUCT(--(ABS({yr(Dm, 'tok_all')}-{yr(Dm, 'tok_chk')})>0.000000001*{yr(Dm, 'tok_chk')}))", 0, "eq", "付費＋免費（層級）＝訂閱、席位、Free＋API 計費 token"),
         ("a2_catchk", "任務類別合計 vs 方案合計（違反年數）",
-         f"=SUMPRODUCT(--(ABS({yr(Dm, 'catchk')})>0.000000001*{yr(Dm, 'tok_sub')}))", 0, "eq", ""),
+         f"=SUMPRODUCT(--(ABS({yr(Dm, 'catchk')})>0.000000001))", 0, "eq", "相對差"),
         ("a2_mix", "組合占比 ∉ [0,1] 或餘項 < 0 的違反數（方案、席位、API 層級、任務類別、層級組合）", "=" + "+".join(viol(a, b) for a, b in pairs), 0, "eq",
          "Inputs 只設兩項、第三項＝1 − 其餘"),
         ("a2_backsolve", "2025 倒推：個人付費 ≤0、席位 ≤0、Free <0、API token ≤0 的違反數",
