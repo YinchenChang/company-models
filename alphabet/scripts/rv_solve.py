@@ -41,15 +41,30 @@ with Workbook(xlsx) as wb:
     Rt = solve(lambda x: run(rev=x), .5, 4, True, 'tgt')
     caps, ebs = [.7, .8, .9, 1, 1.1], [.35, .47, .59, .7]  # v0.1b：可觀察 neocloud 區間（與 segA reverseDcf 相同）
     grid = [[solve(lambda x: run(cap=cp, eb=s, rev=x), .5, 4, True) for s in ebs] for cp in caps]
+    # MAG v0.1b：容量軸（情境選擇）× 價格軸（價格軸選擇）3 × 3 加權目標價（與 HTML grid33Q 相同；其餘輸入維持目前值）
+    g33 = None
+    try:
+        c_sc, c_ax = wb.cell(IN, '情境選擇（', prefix=True), wb.cell(IN, '價格軸選擇（', prefix=True)
+    except KeyError:
+        c_sc = c_ax = None
+    if c_ax:
+        run(); sc0, ax0 = wb.get(c_sc), wb.get(c_ax)
+        g33 = []
+        for s_ in (1, 2, 3):
+            wb.set(c_sc, s_); row = []
+            for a_ in (1, 2, 3):
+                wb.set(c_ax, a_); row.append(wb.get(o_tgt))
+            g33.append(row)
+        wb.set(c_sc, sc0); wb.set(c_ax, ax0)
     run()  # 還原輸入（不存檔）
     rev30 = wb.get(wb.cell(IN, '每 MW 年收入', col='G')) * base_in['rev'] * 1e3
     util30 = wb.get(wb.cell(IN, '利用率', col='G'))
     cost30 = wb.get(wb.cell(IN, '每 MW 建置成本', col='G')) * base_in['cap']
 
 res = {'price': P, 'baseDcf': base['dcf'], 'baseTgt': base['tgt'], 'R': R, 'C': C, 'Eb': Eb, 'Rt': Rt,
-       'caps': caps, 'ebs': ebs, 'grid': grid, 'rev30': rev30, 'util30': util30, 'cost30': cost30, 'eb30': base_in['eb']}
+       'caps': caps, 'ebs': ebs, 'grid': grid, **({'g33': g33} if g33 else {}), 'rev30': rev30, 'util30': util30, 'cost30': cost30, 'eb30': base_in['eb']}
 num = lambda x: int(x) if isinstance(x, float) and x.is_integer() else x   # 與 JSON.stringify 相同：整數不帶 .0
-res = {k: ([[num(y) for y in r] for r in v] if k == 'grid' else [num(y) for y in v] if isinstance(v, list) else num(v)) for k, v in res.items()}
+res = {k: ([[num(y) for y in r] for r in v] if k in ('grid', 'g33') else [num(y) for y in v] if isinstance(v, list) else num(v)) for k, v in res.items()}
 txt = json.dumps(res, separators=(',', ':'), ensure_ascii=False)
 old = open(out, encoding='utf-8').read() if os.path.exists(out) else None
 _f = lambda x: "無解" if x is None else f"{x:.4f}"

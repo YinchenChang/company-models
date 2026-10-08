@@ -77,7 +77,7 @@ co['quarterly']['actuals'][QK] = ACT
 json.dump(co, open(os.path.join(d, 'company.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 X = build_and_compare(d, '測試 A')
 H = html_quarterly(d)
-cons = json.load(open(os.path.join(d, co['meta']['consensusFile']), encoding='utf-8'))['quarterlyEstimates'][QK]
+cons = (json.load(open(os.path.join(d, co['meta']['consensusFile']), encoding='utf-8')).get('quarterlyEstimates') or {}).get(QK) or {}  # MAG v0.1b：無季度共識時為空（較共識＝不適用）
 G = co['quarterly'].get('guidance', {}).get(QK, {})  # v0.1b：公司未給季度指引時為空（差距與位置皆為不適用）
 # 獨立計算（Python）：模型值取 Excel「季度追蹤」焦點列（Q3），共識讀共識檔、指引讀 company.json、實際數為上面的假設值
 exp = {}
@@ -85,7 +85,7 @@ for m in co['quarterly']['metrics']:
     k = m['key']; u = m['unit']; row = X[f"季度追蹤|焦點｜{m['label']}"]
     model = row[0]
     a = ACT['adjEbitda'] / ACT['revenue'] if k == 'ebitdaMargin' else ACT.get(k)
-    c = {'revenue': cons['revenue'], 'adjEbitda': cons['ebitda'], 'ebitdaMargin': cons['ebitda'] / cons['revenue']}.get(k)
+    c = ({'revenue': cons.get('revenue'), 'adjEbitda': cons.get('ebitda'), 'ebitdaMargin': cons['ebitda'] / cons['revenue'] if cons.get('ebitda') and cons.get('revenue') else None}).get(k)
     g = G.get(k)
     kind = m.get('gap') or ('pt' if u == '%' else 'ratio')  # v4.4 第 4 輪：營收、CapEx＝比例；利潤類與 MW＝差額；EBITDA 率＝百分點
     rel = (lambda x, y: x / y - 1) if kind == 'ratio' else (lambda x, y: x - y)
@@ -102,7 +102,7 @@ for m in co['quarterly']['metrics']:
     if exp[k]['posA'] and hq['posA'] != exp[k]['posA']:
         FAIL.append(f'測試 A {m["label"]} 指引位置：HTML {hq["posA"]} ≠ {exp[k]["posA"]}')
 fmt = lambda x: ('−' if x < 0 else '+') + f'{abs(x) * 100:,.1f}%'
-want = f"｜實際 ${RTX}（較模型 {fmt(exp['revenue']['am'])}、較共識 {fmt(exp['revenue']['ac'])}" + (f"、{exp['revenue']['posA']}" if exp['revenue']['posA'] else "") + "）"
+want = f"｜實際 ${RTX}（較模型 {fmt(exp['revenue']['am'])}" + (f"、較共識 {fmt(exp['revenue']['ac'])}" if exp['revenue']['ac'] is not None else "") + (f"、{exp['revenue']['posA']}" if exp['revenue']['posA'] else "") + "）"
 if want not in H['keyLines'][0]:
     FAIL.append(f'測試 A 驗證點句缺少「{want}」：{H["keyLines"][0]}')
 summ, txt, errs = page_text(os.path.join(d, 'out', 't.html'))

@@ -4,14 +4,12 @@
   "current": "20261008_Tokenomics_v5.27.xlsx",
   "version": "v5.27",
   "commit": "ca78a8f42af36caa1af2cc6234d8e322f0415769",
-  "extractedAt": "2026-10-08",
+  "extractedAt": "2026-10-09",
   "repo": "YinchenChang/Tokenomics",
   "recalculated": false,
   "optional": [
-   "IF_NonNVOutRatio",
-   "IF_NonNVHoldRatio",
-   "IF_GPUhrEcon_TPU",
-   "IF_PUE"
+   "IF_NonNVRatio",
+   "IF_NonNVCostRatio"
   ],
   "generations": [
    {
@@ -38,186 +36,186 @@
   "note": "主值取「基準」成本情境；低成本／高成本只作敏感度。每 GW＝IT 關鍵電力（Tokenomics Interface 第 1 列）。"
  },
  "items": {
-  "IF_RacksPerGW": {
+  "IF_HoldEcon": {
    "sheet": "Interface",
-   "ref": "Interface!C6:Q6",
-   "label": "每 GW 機架數",
-   "unit": "架",
+   "ref": "Interface!C13:Q13",
+   "label": "每 GW 年持有成本 — 經濟口徑",
+   "unit": "$B/年",
    "kind": "gen_cost",
    "values": {
     "Hopper H100": {
-     "低成本": 22439,
-     "基準": 22439,
-     "高成本": 22439
+     "低成本": 7.0000433103819,
+     "基準": 10.0957952959174,
+     "高成本": 17.4059720636914
     },
     "GB200 NVL72": {
-     "低成本": 6969,
-     "基準": 6969,
-     "高成本": 6969
+     "低成本": 6.81316695089878,
+     "基準": 9.17098191725462,
+     "高成本": 14.9200285257983
     },
     "GB300 NVL72": {
-     "低成本": 6764,
-     "基準": 6764,
-     "高成本": 6764
+     "低成本": 8.70747076237914,
+     "基準": 12.7247463559608,
+     "高成本": 23.87186935202
     },
     "VR200 NVL72": {
-     "低成本": 4052,
-     "基準": 4052,
-     "高成本": 4052
+     "低成本": 9.83668060375303,
+     "基準": 12.7620157762701,
+     "高成本": 20.6780894215396
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": 2705,
-     "基準": 2705,
-     "高成本": 2705
+     "低成本": 10.4522416094636,
+     "基準": 16.0694566753819,
+     "高成本": 29.454615058956
     }
    },
    "cells": {
     "Hopper H100": {
-     "低成本": "Interface!C6",
-     "基準": "Interface!D6",
-     "高成本": "Interface!E6"
+     "低成本": "Interface!C13",
+     "基準": "Interface!D13",
+     "高成本": "Interface!E13"
     },
     "GB200 NVL72": {
-     "低成本": "Interface!F6",
-     "基準": "Interface!G6",
-     "高成本": "Interface!H6"
+     "低成本": "Interface!F13",
+     "基準": "Interface!G13",
+     "高成本": "Interface!H13"
     },
     "GB300 NVL72": {
-     "低成本": "Interface!I6",
-     "基準": "Interface!J6",
-     "高成本": "Interface!K6"
+     "低成本": "Interface!I13",
+     "基準": "Interface!J13",
+     "高成本": "Interface!K13"
     },
     "VR200 NVL72": {
-     "低成本": "Interface!L6",
-     "基準": "Interface!M6",
-     "高成本": "Interface!N6"
+     "低成本": "Interface!L13",
+     "基準": "Interface!M13",
+     "高成本": "Interface!N13"
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": "Interface!O6",
-     "基準": "Interface!P6",
-     "高成本": "Interface!Q6"
+     "低成本": "Interface!O13",
+     "基準": "Interface!P13",
+     "高成本": "Interface!Q13"
     }
    }
   },
-  "IF_GPUsPerGW": {
+  "IF_HoldAcct": {
    "sheet": "Interface",
-   "ref": "Interface!C7:Q7",
-   "label": "每 GW GPU 數",
-   "unit": "顆",
+   "ref": "Interface!C12:Q12",
+   "label": "每 GW 年持有成本 — 會計口徑",
+   "unit": "$B/年",
    "kind": "gen_cost",
    "values": {
     "Hopper H100": {
-     "低成本": 718048,
-     "基準": 718048,
-     "高成本": 718048
+     "低成本": 5.39897242953333,
+     "基準": 7.49682782333333,
+     "高成本": 12.9492728665333
     },
     "GB200 NVL72": {
-     "低成本": 501768,
-     "基準": 501768,
-     "高成本": 501768
+     "低成本": 5.25086571253333,
+     "基準": 6.79199475666667,
+     "高成本": 11.0210522445333
     },
     "GB300 NVL72": {
-     "低成本": 487008,
-     "基準": 487008,
-     "高成本": 487008
+     "低成本": 6.75217448853333,
+     "基準": 9.50044464,
+     "高成本": 17.9645422405333
     },
     "VR200 NVL72": {
-     "低成本": 291744,
-     "基準": 291744,
-     "高成本": 291744
+     "低成本": 7.64711680693333,
+     "基準": 9.52884898666667,
+     "高成本": 15.4872887429333
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": 194760,
-     "基準": 194760,
-     "高成本": 194760
+     "低成本": 8.13497262733334,
+     "基準": 12.0495669666667,
+     "高成本": 22.2947956173333
     }
    },
    "cells": {
     "Hopper H100": {
-     "低成本": "Interface!C7",
-     "基準": "Interface!D7",
-     "高成本": "Interface!E7"
+     "低成本": "Interface!C12",
+     "基準": "Interface!D12",
+     "高成本": "Interface!E12"
     },
     "GB200 NVL72": {
-     "低成本": "Interface!F7",
-     "基準": "Interface!G7",
-     "高成本": "Interface!H7"
+     "低成本": "Interface!F12",
+     "基準": "Interface!G12",
+     "高成本": "Interface!H12"
     },
     "GB300 NVL72": {
-     "低成本": "Interface!I7",
-     "基準": "Interface!J7",
-     "高成本": "Interface!K7"
+     "低成本": "Interface!I12",
+     "基準": "Interface!J12",
+     "高成本": "Interface!K12"
     },
     "VR200 NVL72": {
-     "低成本": "Interface!L7",
-     "基準": "Interface!M7",
-     "高成本": "Interface!N7"
+     "低成本": "Interface!L12",
+     "基準": "Interface!M12",
+     "高成本": "Interface!N12"
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": "Interface!O7",
-     "基準": "Interface!P7",
-     "高成本": "Interface!Q7"
+     "低成本": "Interface!O12",
+     "基準": "Interface!P12",
+     "高成本": "Interface!Q12"
     }
    }
   },
-  "IF_FacilityGW": {
+  "IF_GPUhrEcon": {
    "sheet": "Interface",
-   "ref": "Interface!C8:Q8",
-   "label": "每 IT GW 對應設施電力",
-   "unit": "GW",
+   "ref": "Interface!C14:Q14",
+   "label": "每 GPU 小時持有成本 — 經濟",
+   "unit": "$/GPU-hr",
    "kind": "gen_cost",
    "values": {
     "Hopper H100": {
-     "低成本": 1.1,
-     "基準": 1.2,
-     "高成本": 1.3
+     "低成本": 1.11286669150028,
+     "基準": 1.60502925637165,
+     "高成本": 2.76720095633376
     },
     "GB200 NVL72": {
-     "低成本": 1.1,
-     "基準": 1.2,
-     "高成本": 1.3
+     "低成本": 1.55003663914234,
+     "基準": 2.08645378736555,
+     "高成本": 3.39439662035368
     },
     "GB300 NVL72": {
-     "低成本": 1.1,
-     "基準": 1.2,
-     "高成本": 1.3
+     "低成本": 2.04104144426194,
+     "基準": 2.98269559427618,
+     "高成本": 5.59559440727497
     },
     "VR200 NVL72": {
-     "低成本": 1.1,
-     "基準": 1.2,
-     "高成本": 1.3
+     "低成本": 3.84895231682799,
+     "基準": 4.99359409623699,
+     "高成本": 8.09104040200768
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": 1.1,
-     "基準": 1.2,
-     "高成本": 1.3
+     "低成本": 6.12640309057557,
+     "基準": 9.41883786448199,
+     "高成本": 17.2643200828347
     }
    },
    "cells": {
     "Hopper H100": {
-     "低成本": "Interface!C8",
-     "基準": "Interface!D8",
-     "高成本": "Interface!E8"
+     "低成本": "Interface!C14",
+     "基準": "Interface!D14",
+     "高成本": "Interface!E14"
     },
     "GB200 NVL72": {
-     "低成本": "Interface!F8",
-     "基準": "Interface!G8",
-     "高成本": "Interface!H8"
+     "低成本": "Interface!F14",
+     "基準": "Interface!G14",
+     "高成本": "Interface!H14"
     },
     "GB300 NVL72": {
-     "低成本": "Interface!I8",
-     "基準": "Interface!J8",
-     "高成本": "Interface!K8"
+     "低成本": "Interface!I14",
+     "基準": "Interface!J14",
+     "高成本": "Interface!K14"
     },
     "VR200 NVL72": {
-     "低成本": "Interface!L8",
-     "基準": "Interface!M8",
-     "高成本": "Interface!N8"
+     "低成本": "Interface!L14",
+     "基準": "Interface!M14",
+     "高成本": "Interface!N14"
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": "Interface!O8",
-     "基準": "Interface!P8",
-     "高成本": "Interface!Q8"
+     "低成本": "Interface!O14",
+     "基準": "Interface!P14",
+     "高成本": "Interface!Q14"
     }
    }
   },
@@ -404,258 +402,29 @@
     }
    }
   },
-  "IF_HoldAcct": {
-   "sheet": "Interface",
-   "ref": "Interface!C12:Q12",
-   "label": "每 GW 年持有成本 — 會計口徑",
-   "unit": "$B/年",
-   "kind": "gen_cost",
-   "values": {
-    "Hopper H100": {
-     "低成本": 5.39897242953333,
-     "基準": 7.49682782333333,
-     "高成本": 12.9492728665333
-    },
-    "GB200 NVL72": {
-     "低成本": 5.25086571253333,
-     "基準": 6.79199475666667,
-     "高成本": 11.0210522445333
-    },
-    "GB300 NVL72": {
-     "低成本": 6.75217448853333,
-     "基準": 9.50044464,
-     "高成本": 17.9645422405333
-    },
-    "VR200 NVL72": {
-     "低成本": 7.64711680693333,
-     "基準": 9.52884898666667,
-     "高成本": 15.4872887429333
-    },
-    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": 8.13497262733334,
-     "基準": 12.0495669666667,
-     "高成本": 22.2947956173333
-    }
-   },
-   "cells": {
-    "Hopper H100": {
-     "低成本": "Interface!C12",
-     "基準": "Interface!D12",
-     "高成本": "Interface!E12"
-    },
-    "GB200 NVL72": {
-     "低成本": "Interface!F12",
-     "基準": "Interface!G12",
-     "高成本": "Interface!H12"
-    },
-    "GB300 NVL72": {
-     "低成本": "Interface!I12",
-     "基準": "Interface!J12",
-     "高成本": "Interface!K12"
-    },
-    "VR200 NVL72": {
-     "低成本": "Interface!L12",
-     "基準": "Interface!M12",
-     "高成本": "Interface!N12"
-    },
-    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": "Interface!O12",
-     "基準": "Interface!P12",
-     "高成本": "Interface!Q12"
-    }
-   }
-  },
-  "IF_HoldEcon": {
-   "sheet": "Interface",
-   "ref": "Interface!C13:Q13",
-   "label": "每 GW 年持有成本 — 經濟口徑",
-   "unit": "$B/年",
-   "kind": "gen_cost",
-   "values": {
-    "Hopper H100": {
-     "低成本": 7.0000433103819,
-     "基準": 10.0957952959174,
-     "高成本": 17.4059720636914
-    },
-    "GB200 NVL72": {
-     "低成本": 6.81316695089878,
-     "基準": 9.17098191725462,
-     "高成本": 14.9200285257983
-    },
-    "GB300 NVL72": {
-     "低成本": 8.70747076237914,
-     "基準": 12.7247463559608,
-     "高成本": 23.87186935202
-    },
-    "VR200 NVL72": {
-     "低成本": 9.83668060375303,
-     "基準": 12.7620157762701,
-     "高成本": 20.6780894215396
-    },
-    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": 10.4522416094636,
-     "基準": 16.0694566753819,
-     "高成本": 29.454615058956
-    }
-   },
-   "cells": {
-    "Hopper H100": {
-     "低成本": "Interface!C13",
-     "基準": "Interface!D13",
-     "高成本": "Interface!E13"
-    },
-    "GB200 NVL72": {
-     "低成本": "Interface!F13",
-     "基準": "Interface!G13",
-     "高成本": "Interface!H13"
-    },
-    "GB300 NVL72": {
-     "低成本": "Interface!I13",
-     "基準": "Interface!J13",
-     "高成本": "Interface!K13"
-    },
-    "VR200 NVL72": {
-     "低成本": "Interface!L13",
-     "基準": "Interface!M13",
-     "高成本": "Interface!N13"
-    },
-    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": "Interface!O13",
-     "基準": "Interface!P13",
-     "高成本": "Interface!Q13"
-    }
-   }
-  },
-  "IF_GPUhrEcon": {
-   "sheet": "Interface",
-   "ref": "Interface!C14:Q14",
-   "label": "每 GPU 小時持有成本 — 經濟",
-   "unit": "$/GPU-hr",
-   "kind": "gen_cost",
-   "values": {
-    "Hopper H100": {
-     "低成本": 1.11286669150028,
-     "基準": 1.60502925637165,
-     "高成本": 2.76720095633376
-    },
-    "GB200 NVL72": {
-     "低成本": 1.55003663914234,
-     "基準": 2.08645378736555,
-     "高成本": 3.39439662035368
-    },
-    "GB300 NVL72": {
-     "低成本": 2.04104144426194,
-     "基準": 2.98269559427618,
-     "高成本": 5.59559440727497
-    },
-    "VR200 NVL72": {
-     "低成本": 3.84895231682799,
-     "基準": 4.99359409623699,
-     "高成本": 8.09104040200768
-    },
-    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": 6.12640309057557,
-     "基準": 9.41883786448199,
-     "高成本": 17.2643200828347
-    }
-   },
-   "cells": {
-    "Hopper H100": {
-     "低成本": "Interface!C14",
-     "基準": "Interface!D14",
-     "高成本": "Interface!E14"
-    },
-    "GB200 NVL72": {
-     "低成本": "Interface!F14",
-     "基準": "Interface!G14",
-     "高成本": "Interface!H14"
-    },
-    "GB300 NVL72": {
-     "低成本": "Interface!I14",
-     "基準": "Interface!J14",
-     "高成本": "Interface!K14"
-    },
-    "VR200 NVL72": {
-     "低成本": "Interface!L14",
-     "基準": "Interface!M14",
-     "高成本": "Interface!N14"
-    },
-    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": "Interface!O14",
-     "基準": "Interface!P14",
-     "高成本": "Interface!Q14"
-    }
-   }
-  },
-  "IF_PowerCost": {
-   "sheet": "Interface",
-   "ref": "Interface!C15:Q15",
-   "label": "其中：每 GW 年電費",
-   "unit": "$B/年",
-   "kind": "gen_cost",
-   "values": {
-    "Hopper H100": {
-     "低成本": 0.404712,
-     "基準": 0.672768,
-     "高成本": 1.02492
-    },
-    "GB200 NVL72": {
-     "低成本": 0.404712,
-     "基準": 0.672768,
-     "高成本": 1.02492
-    },
-    "GB300 NVL72": {
-     "低成本": 0.404712,
-     "基準": 0.672768,
-     "高成本": 1.02492
-    },
-    "VR200 NVL72": {
-     "低成本": 0.404712,
-     "基準": 0.672768,
-     "高成本": 1.02492
-    },
-    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": 0.404712,
-     "基準": 0.672768,
-     "高成本": 1.02492
-    }
-   },
-   "cells": {
-    "Hopper H100": {
-     "低成本": "Interface!C15",
-     "基準": "Interface!D15",
-     "高成本": "Interface!E15"
-    },
-    "GB200 NVL72": {
-     "低成本": "Interface!F15",
-     "基準": "Interface!G15",
-     "高成本": "Interface!H15"
-    },
-    "GB300 NVL72": {
-     "低成本": "Interface!I15",
-     "基準": "Interface!J15",
-     "高成本": "Interface!K15"
-    },
-    "VR200 NVL72": {
-     "低成本": "Interface!L15",
-     "基準": "Interface!M15",
-     "高成本": "Interface!N15"
-    },
-    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": "Interface!O15",
-     "基準": "Interface!P15",
-     "高成本": "Interface!Q15"
-    }
-   }
-  },
-  "IF_Util": {
-   "sheet": "Interface",
-   "ref": "Interface!C48",
-   "label": "基準利用率（第 0 層；下游可覆寫）",
-   "unit": "%",
+  "L1_FacCapexMW": {
+   "sheet": "L1",
+   "ref": "L1!D10",
+   "label": "每 MW IT 廠房資本支出",
+   "unit": "$M/MW",
+   "condition": "基準成本情境；與世代無關",
    "kind": "single",
-   "values": 0.6,
-   "cell": "Interface!C48"
+   "values": 12.67,
+   "cell": "L1!D10",
+   "range": {
+    "低": 10.212,
+    "高": 16.186,
+    "def": "成本角落情境（低成本／高成本欄）",
+    "cells": {
+     "低": "L1!E10",
+     "高": "L1!F10"
+    }
+   },
+   "external": {
+    "srcId": "SRC_DC_003",
+    "外部低": 12.091,
+    "外部高": 12.43
+   }
   },
   "IF_DeprLifeIT": {
    "sheet": "Interface",
@@ -840,64 +609,64 @@
     }
    }
   },
-  "IF_AvgDraw": {
+  "IF_OpexGW": {
    "sheet": "Interface",
-   "ref": "Interface!C222:Q222",
-   "label": "平均用電 ÷ 配電設計功率",
-   "unit": "%",
+   "ref": "Interface!C228:Q228",
+   "label": "每 GW 營運費用小計（不含折舊；含電費）",
+   "unit": "$B/年",
    "kind": "gen_cost",
    "values": {
     "Hopper H100": {
-     "低成本": 0.7,
-     "基準": 0.8,
-     "高成本": 0.9
+     "低成本": 1.3211941962,
+     "基準": 2.27737549,
+     "高成本": 3.6068536832
     },
     "GB200 NVL72": {
-     "低成本": 0.7,
-     "基準": 0.8,
-     "高成本": 0.9
+     "低成本": 1.3032339792,
+     "基準": 2.15504909,
+     "高成本": 3.2962678112
     },
     "GB300 NVL72": {
-     "低成本": 0.7,
-     "基準": 0.8,
-     "高成本": 0.9
+     "低成本": 1.4852907552,
+     "基準": 2.62511064,
+     "高成本": 4.4146823072
     },
     "VR200 NVL72": {
-     "低成本": 0.7,
-     "基準": 0.8,
-     "高成本": 0.9
+     "低成本": 1.5938162736,
+     "基準": 2.63004032,
+     "高成本": 4.0156616096
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": 0.7,
-     "基準": 0.8,
-     "高成本": 0.9
+     "低成本": 1.652976294,
+     "基準": 3.0675203,
+     "高成本": 5.112172784
     }
    },
    "cells": {
     "Hopper H100": {
-     "低成本": "Interface!C222",
-     "基準": "Interface!D222",
-     "高成本": "Interface!E222"
+     "低成本": "Interface!C228",
+     "基準": "Interface!D228",
+     "高成本": "Interface!E228"
     },
     "GB200 NVL72": {
-     "低成本": "Interface!F222",
-     "基準": "Interface!G222",
-     "高成本": "Interface!H222"
+     "低成本": "Interface!F228",
+     "基準": "Interface!G228",
+     "高成本": "Interface!H228"
     },
     "GB300 NVL72": {
-     "低成本": "Interface!I222",
-     "基準": "Interface!J222",
-     "高成本": "Interface!K222"
+     "低成本": "Interface!I228",
+     "基準": "Interface!J228",
+     "高成本": "Interface!K228"
     },
     "VR200 NVL72": {
-     "低成本": "Interface!L222",
-     "基準": "Interface!M222",
-     "高成本": "Interface!N222"
+     "低成本": "Interface!L228",
+     "基準": "Interface!M228",
+     "高成本": "Interface!N228"
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": "Interface!O222",
-     "基準": "Interface!P222",
-     "高成本": "Interface!Q222"
+     "低成本": "Interface!O228",
+     "基準": "Interface!P228",
+     "高成本": "Interface!Q228"
     }
    }
   },
@@ -959,6 +728,67 @@
      "低成本": "Interface!O223",
      "基準": "Interface!P223",
      "高成本": "Interface!Q223"
+    }
+   }
+  },
+  "IF_PowerCost": {
+   "sheet": "Interface",
+   "ref": "Interface!C15:Q15",
+   "label": "其中：每 GW 年電費",
+   "unit": "$B/年",
+   "kind": "gen_cost",
+   "values": {
+    "Hopper H100": {
+     "低成本": 0.404712,
+     "基準": 0.672768,
+     "高成本": 1.02492
+    },
+    "GB200 NVL72": {
+     "低成本": 0.404712,
+     "基準": 0.672768,
+     "高成本": 1.02492
+    },
+    "GB300 NVL72": {
+     "低成本": 0.404712,
+     "基準": 0.672768,
+     "高成本": 1.02492
+    },
+    "VR200 NVL72": {
+     "低成本": 0.404712,
+     "基準": 0.672768,
+     "高成本": 1.02492
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 0.404712,
+     "基準": 0.672768,
+     "高成本": 1.02492
+    }
+   },
+   "cells": {
+    "Hopper H100": {
+     "低成本": "Interface!C15",
+     "基準": "Interface!D15",
+     "高成本": "Interface!E15"
+    },
+    "GB200 NVL72": {
+     "低成本": "Interface!F15",
+     "基準": "Interface!G15",
+     "高成本": "Interface!H15"
+    },
+    "GB300 NVL72": {
+     "低成本": "Interface!I15",
+     "基準": "Interface!J15",
+     "高成本": "Interface!K15"
+    },
+    "VR200 NVL72": {
+     "低成本": "Interface!L15",
+     "基準": "Interface!M15",
+     "高成本": "Interface!N15"
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": "Interface!O15",
+     "基準": "Interface!P15",
+     "高成本": "Interface!Q15"
     }
    }
   },
@@ -1206,66 +1036,258 @@
     }
    }
   },
-  "IF_OpexGW": {
+  "IF_AvgDraw": {
    "sheet": "Interface",
-   "ref": "Interface!C228:Q228",
-   "label": "每 GW 營運費用小計（不含折舊；含電費）",
-   "unit": "$B/年",
+   "ref": "Interface!C222:Q222",
+   "label": "平均用電 ÷ 配電設計功率",
+   "unit": "%",
    "kind": "gen_cost",
    "values": {
     "Hopper H100": {
-     "低成本": 1.3211941962,
-     "基準": 2.27737549,
-     "高成本": 3.6068536832
+     "低成本": 0.7,
+     "基準": 0.8,
+     "高成本": 0.9
     },
     "GB200 NVL72": {
-     "低成本": 1.3032339792,
-     "基準": 2.15504909,
-     "高成本": 3.2962678112
+     "低成本": 0.7,
+     "基準": 0.8,
+     "高成本": 0.9
     },
     "GB300 NVL72": {
-     "低成本": 1.4852907552,
-     "基準": 2.62511064,
-     "高成本": 4.4146823072
+     "低成本": 0.7,
+     "基準": 0.8,
+     "高成本": 0.9
     },
     "VR200 NVL72": {
-     "低成本": 1.5938162736,
-     "基準": 2.63004032,
-     "高成本": 4.0156616096
+     "低成本": 0.7,
+     "基準": 0.8,
+     "高成本": 0.9
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": 1.652976294,
-     "基準": 3.0675203,
-     "高成本": 5.112172784
+     "低成本": 0.7,
+     "基準": 0.8,
+     "高成本": 0.9
     }
    },
    "cells": {
     "Hopper H100": {
-     "低成本": "Interface!C228",
-     "基準": "Interface!D228",
-     "高成本": "Interface!E228"
+     "低成本": "Interface!C222",
+     "基準": "Interface!D222",
+     "高成本": "Interface!E222"
     },
     "GB200 NVL72": {
-     "低成本": "Interface!F228",
-     "基準": "Interface!G228",
-     "高成本": "Interface!H228"
+     "低成本": "Interface!F222",
+     "基準": "Interface!G222",
+     "高成本": "Interface!H222"
     },
     "GB300 NVL72": {
-     "低成本": "Interface!I228",
-     "基準": "Interface!J228",
-     "高成本": "Interface!K228"
+     "低成本": "Interface!I222",
+     "基準": "Interface!J222",
+     "高成本": "Interface!K222"
     },
     "VR200 NVL72": {
-     "低成本": "Interface!L228",
-     "基準": "Interface!M228",
-     "高成本": "Interface!N228"
+     "低成本": "Interface!L222",
+     "基準": "Interface!M222",
+     "高成本": "Interface!N222"
     },
     "Rubin Ultra（MGX NVL 單架，72 GPU）": {
-     "低成本": "Interface!O228",
-     "基準": "Interface!P228",
-     "高成本": "Interface!Q228"
+     "低成本": "Interface!O222",
+     "基準": "Interface!P222",
+     "高成本": "Interface!Q222"
     }
    }
+  },
+  "IF_FacilityGW": {
+   "sheet": "Interface",
+   "ref": "Interface!C8:Q8",
+   "label": "每 IT GW 對應設施電力",
+   "unit": "GW",
+   "kind": "gen_cost",
+   "values": {
+    "Hopper H100": {
+     "低成本": 1.1,
+     "基準": 1.2,
+     "高成本": 1.3
+    },
+    "GB200 NVL72": {
+     "低成本": 1.1,
+     "基準": 1.2,
+     "高成本": 1.3
+    },
+    "GB300 NVL72": {
+     "低成本": 1.1,
+     "基準": 1.2,
+     "高成本": 1.3
+    },
+    "VR200 NVL72": {
+     "低成本": 1.1,
+     "基準": 1.2,
+     "高成本": 1.3
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 1.1,
+     "基準": 1.2,
+     "高成本": 1.3
+    }
+   },
+   "cells": {
+    "Hopper H100": {
+     "低成本": "Interface!C8",
+     "基準": "Interface!D8",
+     "高成本": "Interface!E8"
+    },
+    "GB200 NVL72": {
+     "低成本": "Interface!F8",
+     "基準": "Interface!G8",
+     "高成本": "Interface!H8"
+    },
+    "GB300 NVL72": {
+     "低成本": "Interface!I8",
+     "基準": "Interface!J8",
+     "高成本": "Interface!K8"
+    },
+    "VR200 NVL72": {
+     "低成本": "Interface!L8",
+     "基準": "Interface!M8",
+     "高成本": "Interface!N8"
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": "Interface!O8",
+     "基準": "Interface!P8",
+     "高成本": "Interface!Q8"
+    }
+   }
+  },
+  "IF_GPUsPerGW": {
+   "sheet": "Interface",
+   "ref": "Interface!C7:Q7",
+   "label": "每 GW GPU 數",
+   "unit": "顆",
+   "kind": "gen_cost",
+   "values": {
+    "Hopper H100": {
+     "低成本": 718048,
+     "基準": 718048,
+     "高成本": 718048
+    },
+    "GB200 NVL72": {
+     "低成本": 501768,
+     "基準": 501768,
+     "高成本": 501768
+    },
+    "GB300 NVL72": {
+     "低成本": 487008,
+     "基準": 487008,
+     "高成本": 487008
+    },
+    "VR200 NVL72": {
+     "低成本": 291744,
+     "基準": 291744,
+     "高成本": 291744
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 194760,
+     "基準": 194760,
+     "高成本": 194760
+    }
+   },
+   "cells": {
+    "Hopper H100": {
+     "低成本": "Interface!C7",
+     "基準": "Interface!D7",
+     "高成本": "Interface!E7"
+    },
+    "GB200 NVL72": {
+     "低成本": "Interface!F7",
+     "基準": "Interface!G7",
+     "高成本": "Interface!H7"
+    },
+    "GB300 NVL72": {
+     "低成本": "Interface!I7",
+     "基準": "Interface!J7",
+     "高成本": "Interface!K7"
+    },
+    "VR200 NVL72": {
+     "低成本": "Interface!L7",
+     "基準": "Interface!M7",
+     "高成本": "Interface!N7"
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": "Interface!O7",
+     "基準": "Interface!P7",
+     "高成本": "Interface!Q7"
+    }
+   }
+  },
+  "IF_RacksPerGW": {
+   "sheet": "Interface",
+   "ref": "Interface!C6:Q6",
+   "label": "每 GW 機架數",
+   "unit": "架",
+   "kind": "gen_cost",
+   "values": {
+    "Hopper H100": {
+     "低成本": 22439,
+     "基準": 22439,
+     "高成本": 22439
+    },
+    "GB200 NVL72": {
+     "低成本": 6969,
+     "基準": 6969,
+     "高成本": 6969
+    },
+    "GB300 NVL72": {
+     "低成本": 6764,
+     "基準": 6764,
+     "高成本": 6764
+    },
+    "VR200 NVL72": {
+     "低成本": 4052,
+     "基準": 4052,
+     "高成本": 4052
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 2705,
+     "基準": 2705,
+     "高成本": 2705
+    }
+   },
+   "cells": {
+    "Hopper H100": {
+     "低成本": "Interface!C6",
+     "基準": "Interface!D6",
+     "高成本": "Interface!E6"
+    },
+    "GB200 NVL72": {
+     "低成本": "Interface!F6",
+     "基準": "Interface!G6",
+     "高成本": "Interface!H6"
+    },
+    "GB300 NVL72": {
+     "低成本": "Interface!I6",
+     "基準": "Interface!J6",
+     "高成本": "Interface!K6"
+    },
+    "VR200 NVL72": {
+     "低成本": "Interface!L6",
+     "基準": "Interface!M6",
+     "高成本": "Interface!N6"
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": "Interface!O6",
+     "基準": "Interface!P6",
+     "高成本": "Interface!Q6"
+    }
+   }
+  },
+  "IF_Util": {
+   "sheet": "Interface",
+   "ref": "Interface!C48",
+   "label": "基準利用率（第 0 層；下游可覆寫）",
+   "unit": "%",
+   "kind": "single",
+   "values": 0.6,
+   "cell": "Interface!C48"
   },
   "IF_RevGWFleet": {
    "sheet": "Interface",
@@ -1328,107 +1350,196 @@
     }
    }
   },
-  "L1_FacCapexMW": {
+  "L1_GPUhr_Hopper": {
    "sheet": "L1",
-   "ref": "L1!D10",
-   "label": "每 MW IT 廠房資本支出",
-   "unit": "$M/MW",
-   "condition": "基準成本情境；與世代無關",
+   "ref": "L1!D15",
+   "label": "每 GPU 小時持有成本 — 經濟（Hopper）",
+   "unit": "$/GPU-hr",
+   "condition": "100% 時數；不含利潤",
    "kind": "single",
-   "values": 12.67,
-   "cell": "L1!D10",
+   "values": 1.60502925637165,
+   "cell": "L1!D15",
    "range": {
-    "低": 10.212,
-    "高": 16.186,
+    "低": 1.11286669150028,
+    "高": 2.76720095633376,
     "def": "成本角落情境（低成本／高成本欄）",
     "cells": {
-     "低": "L1!E10",
-     "高": "L1!F10"
+     "低": "L1!E15",
+     "高": "L1!F15"
     }
-   },
-   "external": {
-    "srcId": "SRC_DC_003",
-    "外部低": 12.091,
-    "外部高": 12.43
    }
   },
-  "L1_GPUhr_GB200_vsCW": {
+  "L1_GPUhr_GB200": {
    "sheet": "L1",
-   "ref": "L1!D30",
-   "label": "每 GPU 小時持有成本 — 經濟（GB200）對 CoreWeave 隨需牌價",
+   "ref": "L1!D16",
+   "label": "每 GPU 小時持有成本 — 經濟（GB200）",
    "unit": "$/GPU-hr",
    "condition": "100% 時數；不含利潤",
    "kind": "single",
    "values": 2.08645378736555,
-   "cell": "L1!D30",
+   "cell": "L1!D16",
    "range": {
     "低": 1.55003663914234,
     "高": 3.39439662035368,
     "def": "成本角落情境（低成本／高成本欄）",
     "cells": {
-     "低": "L1!E30",
-     "高": "L1!F30"
+     "低": "L1!E16",
+     "高": "L1!F16"
     }
    },
    "external": {
-    "srcId": "SRC_PRC_001",
-    "外部低": 10.5,
-    "外部高": 10.5
+    "srcId": "SRC_DC_012",
+    "外部低": 2.21,
+    "外部高": 2.21
    }
   },
-  "L1_GPUhr_GB300_vsBE": {
+  "L1_GPUhr_GB300": {
    "sheet": "L1",
-   "ref": "L1!D31",
-   "label": "每 GPU 小時持有成本 — 經濟（GB300）對新雲損益兩平租金",
+   "ref": "L1!D17",
+   "label": "每 GPU 小時持有成本 — 經濟（GB300）",
    "unit": "$/GPU-hr",
    "condition": "100% 時數；不含利潤",
    "kind": "single",
    "values": 2.98269559427618,
-   "cell": "L1!D31",
+   "cell": "L1!D17",
    "range": {
     "低": 2.04104144426194,
     "高": 5.59559440727497,
     "def": "成本角落情境（低成本／高成本欄）",
     "cells": {
-     "低": "L1!E31",
-     "高": "L1!F31"
+     "低": "L1!E17",
+     "高": "L1!F17"
     }
    },
    "external": {
-    "srcId": "SRC_PRC_002",
-    "外部低": 3.57,
-    "外部高": 3.57
+    "srcId": "SRC_DC_013",
+    "外部低": 2.65,
+    "外部高": 2.65
    }
   },
-  "L1_RevGW_Fleet_VR200": {
+  "L1_GPUhr_VR200": {
    "sheet": "L1",
-   "ref": "L1!D29",
-   "label": "1 GW 參考機隊付費營收（理想上限，VR200）",
-   "unit": "$B/GW/年",
-   "condition": "OpenAI 有效單價、基準成本、基準利用率",
+   "ref": "L1!D18",
+   "label": "每 GPU 小時持有成本 — 經濟（VR200）",
+   "unit": "$/GPU-hr",
+   "condition": "100% 時數；不含利潤",
    "kind": "single",
-   "values": 48.7237019639935,
-   "cell": "L1!D29",
+   "values": 4.99359409623699,
+   "cell": "L1!D18",
    "range": {
-    "低": 32.4824679759956,
-    "高": 64.9649359519913,
-    "def": "利用率 40–80%（Sens_Rev 情境值；J6 區間）",
+    "低": 3.84895231682799,
+    "高": 8.09104040200768,
+    "def": "成本角落情境（低成本／高成本欄）",
     "cells": {
-     "低": "L1!E29",
-     "高": "L1!F29"
+     "低": "L1!E18",
+     "高": "L1!F18"
     }
    }
   },
-  "IF_NonNVOutRatio": {
+  "L1_HoldEconGW_Hopper": {
+   "sheet": "L1",
+   "ref": "L1!D11",
+   "label": "每 GW 年經濟持有成本（Hopper）",
+   "unit": "$B/GW/年",
+   "condition": "資本回收年金（WACC 10%）＋營運費用",
+   "kind": "single",
+   "values": 10.0957952959174,
+   "cell": "L1!D11",
+   "range": {
+    "低": 7.0000433103819,
+    "高": 17.4059720636914,
+    "def": "成本角落情境（低成本／高成本欄）",
+    "cells": {
+     "低": "L1!E11",
+     "高": "L1!F11"
+    }
+   }
+  },
+  "L1_HoldEconGW_GB200": {
+   "sheet": "L1",
+   "ref": "L1!D12",
+   "label": "每 GW 年經濟持有成本（GB200）",
+   "unit": "$B/GW/年",
+   "condition": "資本回收年金（WACC 10%）＋營運費用",
+   "kind": "single",
+   "values": 9.17098191725462,
+   "cell": "L1!D12",
+   "range": {
+    "低": 6.81316695089878,
+    "高": 14.9200285257983,
+    "def": "成本角落情境（低成本／高成本欄）",
+    "cells": {
+     "低": "L1!E12",
+     "高": "L1!F12"
+    }
+   }
+  },
+  "L1_HoldEconGW_GB300": {
+   "sheet": "L1",
+   "ref": "L1!D13",
+   "label": "每 GW 年經濟持有成本（GB300）",
+   "unit": "$B/GW/年",
+   "condition": "資本回收年金（WACC 10%）＋營運費用",
+   "kind": "single",
+   "values": 12.7247463559608,
+   "cell": "L1!D13",
+   "range": {
+    "低": 8.70747076237914,
+    "高": 23.87186935202,
+    "def": "成本角落情境（低成本／高成本欄）",
+    "cells": {
+     "低": "L1!E13",
+     "高": "L1!F13"
+    }
+   }
+  },
+  "L1_HoldEconGW_VR200": {
+   "sheet": "L1",
+   "ref": "L1!D14",
+   "label": "每 GW 年經濟持有成本（VR200）",
+   "unit": "$B/GW/年",
+   "condition": "資本回收年金（WACC 10%）＋營運費用",
+   "kind": "single",
+   "values": 12.7620157762701,
+   "cell": "L1!D14",
+   "range": {
+    "低": 9.83668060375303,
+    "高": 20.6780894215396,
+    "def": "成本角落情境（低成本／高成本欄）",
+    "cells": {
+     "低": "L1!E14",
+     "高": "L1!F14"
+    }
+   }
+  },
+  "L1_NvContentGW_VR200": {
+   "sheet": "L1",
+   "ref": "L1!D9",
+   "label": "每 GW NVIDIA 內容（機架，VR200）",
+   "unit": "$B/GW",
+   "condition": "基準功率情境",
+   "kind": "single",
+   "values": 34.0368,
+   "cell": "L1!D9",
+   "range": {
+    "低": 31.6056,
+    "高": 36.8732,
+    "def": "成本角落情境（低成本／高成本欄）",
+    "cells": {
+     "低": "L1!E9",
+     "高": "L1!F9"
+    }
+   },
+   "external": {
+    "srcId": "SRC_DC_011",
+    "外部低": 35,
+    "外部高": 35
+   }
+  },
+  "IF_NonNVRatio": {
    "missing": true
   },
-  "IF_NonNVHoldRatio": {
-   "missing": true
-  },
-  "IF_GPUhrEcon_TPU": {
-   "missing": true
-  },
-  "IF_PUE": {
+  "IF_NonNVCostRatio": {
    "missing": true
   }
  }

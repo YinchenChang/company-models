@@ -1,32 +1,36 @@
-# Alphabet（MAG v0.1a）引用的 Tokenomics 名稱（只限 IF_（不含 IF_Hdr*）與 L1_；工具：tools/tokenomics/import_tokenomics.py）
-# 行尾 optional＝Tokenomics 尚未提供時快照記為 missing、不中斷（見 docs/reports/20261008_alphabet_v0.1a_資料.md「資料缺口」）。
-IF_RacksPerGW # 每 GW 機架數
-IF_GPUsPerGW # 每 GW GPU 數（MW ↔ GPU 數換算；k 證據的長約 GPU 數換 MW）
-IF_FacilityGW # 每 IT GW 對應設施電力（IT ↔ 設施口徑換算）
+# Alphabet（MAG v0.1b′；名稱清單沿用 Amazon v0.1b 共用引擎）引用的 Tokenomics 名稱（只限 IF_（不含 IF_Hdr*）與 L1_；工具：tools/tokenomics/import_tokenomics.py）
+# 行尾 optional＝Tokenomics 尚未提供時快照記為 missing、不中斷，並列入資料缺口。
+IF_HoldEcon # 每 GW 年持有成本 — 經濟口徑（每 MW 年收入錨：Σ世代占比 × IF_HoldEcon/1000 × k）
+IF_HoldAcct # 每 GW 年持有成本 — 會計口徑（對照）
+IF_GPUhrEcon # 每 GPU 小時持有成本 — 經濟（k 的分母）
 IF_CapexIT # 每 GW 資本支出 — IT 設備
 IF_CapexFacility # 每 GW 資本支出 — 廠房（機房成本）
 IF_CapexTotal # 每 GW 資本支出 — 合計
-IF_HoldAcct # 每 GW 年持有成本 — 會計口徑
-IF_HoldEcon # 每 GW 年持有成本 — 經濟口徑（每 MW 年收入錨）
-IF_GPUhrEcon # 每 GPU 小時持有成本 — 經濟（k 的分母）
-IF_PowerCost # 其中：每 GW 年電費
-IF_Util # 基準利用率（token 口徑；MW-year 計價不乘，契約第 3 條）
+L1_FacCapexMW # 每 MW IT 廠房資本支出（機房成本，L1）
 IF_DeprLifeIT # IT 折舊年限
 IF_DeprIT # IT 年折舊
 IF_DeprFac # 廠房年折舊
-IF_AvgDraw # 平均用電 ÷ 配電設計功率（年用電量 ↔ 設計 MW）
+IF_OpexGW # 營運費用小計，不含折舊
 IF_PowerPrice # 電價 $/kWh
+IF_PowerCost # 每 GW 年電費
 IF_MaintIT # IT 維護
 IF_MaintFac # 廠房維護
 IF_StaffSW # 人員、軟體、水與耗材
 IF_TaxIns # 財產稅與保險
-IF_OpexGW # 營運費用小計（不含折舊）
-IF_RevGWFleet # 客戶每 GW 付費 token 營收（理想上限；只作上限檢查）
-L1_FacCapexMW # 每 MW IT 廠房資本支出
-L1_GPUhr_GB200_vsCW # GB200 每 GPU 小時持有成本（對 CoreWeave 隨需牌價）
-L1_GPUhr_GB300_vsBE # GB300 每 GPU 小時持有成本（對新雲損益兩平租金）
-L1_RevGW_Fleet_VR200 # 1 GW 參考機隊付費營收（理想上限，VR200）
-IF_NonNVOutRatio optional # 自研晶片（TPU）對同代 NVIDIA 的每 GW 產出比（v5.27 尚無具名範圍）
-IF_NonNVHoldRatio optional # 自研晶片（TPU）對同代 NVIDIA 的每 GW 持有成本比（v5.27 尚無具名範圍）
-IF_GPUhrEcon_TPU optional # TPU 每晶片小時持有成本（k 的 TPU 分母；v5.27 尚無）
-IF_PUE optional # PUE（設施 ÷ IT；v5.27 只有 IF_FacilityGW）
+IF_AvgDraw # 平均用電 ÷ 配電設計功率
+IF_FacilityGW # 每 IT GW 對應設施電力（MW 口徑換算）
+IF_GPUsPerGW # 每 GW GPU 數（GPU 數 ↔ MW 換算）
+IF_RacksPerGW # 每 GW 機架數
+IF_Util # 基準利用率（token 服務口徑；收入端不乘，只作對照）
+IF_RevGWFleet # 1 GW 參考機隊付費營收（理論上限，對照）
+L1_GPUhr_Hopper # Hopper 每 GPU 小時持有成本（L1，含區間）
+L1_GPUhr_GB200 # GB200 每 GPU 小時持有成本（L1，含區間）
+L1_GPUhr_GB300 # GB300 每 GPU 小時持有成本（L1，含區間）
+L1_GPUhr_VR200 # VR200 每 GPU 小時持有成本（L1，含區間）
+L1_HoldEconGW_Hopper # Hopper 每 GW 年經濟持有成本（L1）
+L1_HoldEconGW_GB200 # GB200 每 GW 年經濟持有成本（L1）
+L1_HoldEconGW_GB300 # GB300 每 GW 年經濟持有成本（L1）
+L1_HoldEconGW_VR200 # VR200 每 GW 年經濟持有成本（L1）
+L1_NvContentGW_VR200 # VR200 每 GW 的 NVIDIA 內容價值（NonNV 換算的近似參考）
+IF_NonNVRatio optional # 非 NVIDIA（Trainium 等）世代相對 VR 的等值比例 — Tokenomics 有 NonNV 頁但無 IF_ 介面名稱
+IF_NonNVCostRatio optional # 同上，成本比例（若 Tokenomics 日後以此名稱提供）

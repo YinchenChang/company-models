@@ -58,6 +58,19 @@ if python3 scripts/fields_doc.py --check; then ok "README 欄位說明與 compan
 
 step "0c. EBITDAR 率校準（scripts/calib_ebitdar.js：defaults.ebitdarAdj＝基準情境租金 ÷ OCI 營收；Oracle v0.1c）"
 if node scripts/calib_ebitdar.js; then ok "EBITDAR 校準：基準情境起點／穩態 EBITDA 率不變"; else bad "EBITDAR 校準（執行 node scripts/calib_ebitdar.js --write）"; fi
+step "0e. 併網速度校準（scripts/calib_pace.js：基準情境首期資本支出公式值＝指引中點；MAG v0.1b r2 C10）"
+if node scripts/calib_pace.js; then ok "併網速度校準：首期資本支出＝指引、對帳落差 0"; else bad "併網速度校準（執行 node scripts/calib_pace.js --write）"; fi
+
+step "0d. Tokenomics 快照可重現（tools/tokenomics/import_tokenomics.py --check；MAG v0.1b，沿用 CoreWeave W1）"
+TK_SNAP="$(python3 -c "import json; print(json.load(open('company.json', encoding='utf-8')).get('tokenomics', {}).get('snapshotFile', ''))")"
+if [[ -z "$TK_SNAP" ]]; then ok "Tokenomics 快照：company.json 無 tokenomics 區段（不適用）"
+else
+  set +e; r=$(python3 "$ROOT/../tools/tokenomics/import_tokenomics.py" --check "$TK_SNAP" ${TOKENOMICS_DIR:+--tokenomics "$TOKENOMICS_DIR"} 2>&1); rc=$?; set -e
+  echo "$r" | grep -v '^警告：Tokenomics 尚無名稱' || true
+  if (( rc != 0 )); then bad "Tokenomics 快照 --check"
+  elif grep -q '略過 --check' <<<"$r"; then ok "Tokenomics 快照 --check：找不到 Tokenomics clone，略過（警告）"
+  else ok "Tokenomics 快照 --check：$(grep -- '--check 通過' <<<"$r" | sed 's/^--check 通過：//')"; fi
+fi
 
 step "1. 建 HTML（v$VER · $DATE）"
 if python3 build_html_portable.py "$VER" "$HTML" "$DATE" docs/template_v3_3.html; then ok "建 HTML"; else bad "建 HTML"; finish; fi
@@ -86,6 +99,11 @@ if python3 fix_datatable.py "$XLSX"; then ok "fix_datatable"; else bad "fix_data
 step "5. verify_ooxml"
 if python3 verify_ooxml.py "$XLSX"; then ok "verify_ooxml：OOXML OK"; else bad "verify_ooxml"; fi
 
+step "5d. 快照值＝Excel「Tokenomics_取數」分頁值（scripts/check_tokenomics_tab.py）"
+if [[ -n "$TK_SNAP" ]]; then
+  if r=$(python3 scripts/check_tokenomics_tab.py "$XLSX"); then echo "$r"; ok "$r"; else echo "$r"; bad "快照值＝Excel 分頁值"; fi
+else ok "Tokenomics_取數：不適用（無 tokenomics 區段）"; fi
+
 step "5c. 離線開啟檢查（已決定事項 11：單一檔案、無網路請求、console 無錯誤、關鍵數字正常顯示）"
 if python3 scripts/check_offline.py "$HTML" "$XLSX"; then ok "離線開啟：新建 HTML"; else bad "離線開啟：新建 HTML"; fi
 if python3 scripts/check_offline.py "$DIST_HTML" "$DIST_XLSX"; then ok "離線開啟：dist/ 成品"; else bad "離線開啟：dist/ 成品"; fi
@@ -108,6 +126,10 @@ else bad "test_quarterly（見 $OUT/test_quarterly.log）"; tail -20 "$OUT/test_
 step "8b. 期間滾動測試（暫存副本：日曆推算 6 種情況、滾動後第一屏無過期日期與期間字樣；v4.5）"
 if python3 scripts/test_rolling.py > "$OUT/test_rolling.log" 2>&1; then ok "test_rolling：日曆推算與滾動後第一屏"; tail -3 "$OUT/test_rolling.log"
 else bad "test_rolling（見 $OUT/test_rolling.log）"; tail -30 "$OUT/test_rolling.log"; fi
+
+step "8d. MAG 共用引擎機制測試（暫存副本：C8 (a)–(f)＋回購非零時 HTML 與 Excel 一致；MAG v0.1b）"
+if python3 scripts/test_mag_mechanisms.py > "$OUT/test_mag_mechanisms.log" 2>&1; then ok "test_mag_mechanisms：C8 (a)–(f)＋回購非零 一致"; tail -2 "$OUT/test_mag_mechanisms.log"
+else bad "test_mag_mechanisms（見 $OUT/test_mag_mechanisms.log）"; tail -20 "$OUT/test_mag_mechanisms.log"; fi
 
 step "8c. 目標價變動拆解工具測試（scripts/attrib.py：(a)＝(1＋WACC)^(月數÷12)，WACC 讀 Excel、月數讀 calendar_q；四項相加＝總變動）"
 if python3 scripts/test_attrib.py "$XLSX" > "$OUT/test_attrib.log" 2>&1; then ok "test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）"; tail -1 "$OUT/test_attrib.log"

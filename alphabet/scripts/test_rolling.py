@@ -16,13 +16,16 @@ fails = []
 
 # ---------- B. 日曆推算 ----------
 base = json.load(open(os.path.join(ROOT, 'company.json'), encoding='utf-8'))
-CASES = [  # (說明, 日曆覆寫, 期待：首期長度, 評價日, 年初至今標籤, 期間第一格)
-    ('12 月財年 Q1 已申報', dict(fiscalYearEndMonth=12, latestQuarterFiled='FY27Q1'), 0.75, '2027-03-31', '1Q27', 'FY27'),
-    ('12 月財年 Q2 已申報', dict(fiscalYearEndMonth=12, latestQuarterFiled='FY26Q2'), 0.5, '2026-06-30', '1H26', 'FY26'),
-    ('12 月財年 Q3 已申報', dict(fiscalYearEndMonth=12, latestQuarterFiled='FY26Q3'), 0.25, '2026-09-30', '9M26', 'FY26'),
-    ('12 月財年 Q4 已申報', dict(fiscalYearEndMonth=12, latestQuarterFiled='FY26Q4'), 1, '2026-12-31', None, 'FY27'),
-    ('5 月財年 Q1 已申報（Oracle 型）', dict(fiscalYearEndMonth=5, latestQuarterFiled='FY27Q1'), 0.75, '2026-08-31', '1Q27', 'FY27'),
-    ('無已申報季度（OpenAI 型）', dict(fiscalYearEndMonth=12, latestQuarterFiled=None, firstModelFY='FY26'), 1, '2025-12-31', None, 'FY26'),
+CASES = [  # (說明, 日曆覆寫, 期待：首期長度, 評價日, 年初至今標籤, 期間第一格)；MAG v0.1b：periodLabel＝FY（財年標籤）或 year（日曆年標籤）
+    ('12 月財年 Q1 已申報', dict(fiscalYearEndMonth=12, latestQuarterFiled='FY27Q1', periodLabel='FY'), 0.75, '2027-03-31', '1Q27', 'FY27'),
+    ('12 月財年 Q2 已申報', dict(fiscalYearEndMonth=12, latestQuarterFiled='FY26Q2', periodLabel='FY'), 0.5, '2026-06-30', '1H26', 'FY26'),
+    ('12 月財年 Q3 已申報', dict(fiscalYearEndMonth=12, latestQuarterFiled='FY26Q3', periodLabel='FY'), 0.25, '2026-09-30', '9M26', 'FY26'),
+    ('12 月財年 Q4 已申報', dict(fiscalYearEndMonth=12, latestQuarterFiled='FY26Q4', periodLabel='FY'), 1, '2026-12-31', None, 'FY27'),
+    ('5 月財年 Q1 已申報（Oracle 型）', dict(fiscalYearEndMonth=5, latestQuarterFiled='FY27Q1', periodLabel='FY'), 0.75, '2026-08-31', '1Q27', 'FY27'),
+    ('無已申報季度（OpenAI 型）', dict(fiscalYearEndMonth=12, latestQuarterFiled=None, firstModelFY='FY26', periodLabel='FY'), 1, '2025-12-31', None, 'FY26'),
+    ('日曆年標籤 Q2 已申報（Amazon、Alphabet 型）', dict(fiscalYearEndMonth=12, latestQuarterFiled='2026Q2', periodLabel='year'), 0.5, '2026-06-30', '1H26', '2026'),
+    ('日曆年標籤 Q4 已申報', dict(fiscalYearEndMonth=12, latestQuarterFiled='2026Q4', periodLabel='year'), 1, '2026-12-31', None, '2027'),
+    ('6 月財年 Q4 已申報（Microsoft 型）', dict(fiscalYearEndMonth=6, latestQuarterFiled='FY26Q4', periodLabel='FY'), 1, '2026-06-30', None, 'FY27'),
 ]
 for name, cal, stub, vd, ytd, p0 in CASES:
     for hz in ('firstFullYearEnd', 'valuationPlus12m'):
@@ -43,7 +46,7 @@ shutil.copytree(ROOT, d, ignore=shutil.ignore_patterns('out', 'dist', '.git', '_
 co = json.load(open(os.path.join(d, 'company.json'), encoding='utf-8'))
 old = calendar_q.derive(co)
 fy, q = calendar_q._parse_q(co['calendar']['latestQuarterFiled'])
-nq = f'FY{(fy + (q == 4)) % 100:02d}Q{q % 4 + 1}'
+nq = calendar_q.q_key(fy + (q == 4), q % 4 + 1, calendar_q.label_style(co['calendar']))  # MAG v0.1b：與 latestQuarterFiled 同格式
 co['calendar']['latestQuarterFiled'] = co['calendar']['latestQuarterReported'] = nq
 new = calendar_q.derive(co)
 co['ytdActual'].update(throughQuarter=nq, months=new['ytdMonths'], label=co['ytdActual']['label'].replace(old['ytdLabel'], new['ytdLabel'] or ''))

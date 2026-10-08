@@ -229,5 +229,50 @@
    "consensus": 201.748,
    "note": "共識落在指引區間內（偏上緣）"
   }
- }
+ },
+ "_v01b2Note": "MAG v0.1b′（2026-10-09，Alphabet 建置代理）：為對齊 MAG 共用引擎（amazon/ 共識檔結構）新增 companyGuidance、annualEstimatesAlt、quarterlyEstimates（只有說明）、notFound 四個鍵；其中數字全部搬自本檔既有欄位（guidanceVsConsensus.capex2026、annualEstimates.crossCheck 的 S&P 與 Yahoo 兩筆），未新增或修改任何數字；原欄位保留不動。",
+ "annualEstimatesAlt": {
+  "note": "EPS 口徑與 MarketScreener 不同：12.15 推測排除權益證券利益（頁面標示 EPS），2028 起需付費",
+  "sp": {
+   "source": "S&P Global（經 StockAnalysis.com）",
+   "url": "https://stockanalysis.com/stocks/googl/forecast/",
+   "retrieved": "2026-10-08",
+   "tag": "Interested-party",
+   "2026": {
+    "revenue": 498.74,
+    "revenueLow": 489.8,
+    "revenueHigh": 519.8,
+    "eps": 12.15,
+    "epsLow": 11.5,
+    "epsHigh": 13.47
+   },
+   "2027": {
+    "revenue": 614.95,
+    "eps": 15.17
+   },
+   "2028": {
+    "revenue": null,
+    "note": "不適用：付費內容"
+   }
+  }
+ },
+ "quarterlyEstimates": {
+  "note": "季度共識只有 Yahoo Finance 營收與 EPS（2026Q3 營收 127.3、2026Q4 141.54；見 annualEstimates.crossCheck），季度 EBITDA／營業利益找不到 → 季度層較共識不適用（MAG 共用引擎需營收與 EBITDA 齊備）",
+  "tag": "Interested-party"
+ },
+ "companyGuidance": {
+  "2026": {
+   "capexLow": 195.0,
+   "capexHigh": 205.0
+  },
+  "source": "2026Q2 法說（2026-07-22；二手逐字稿）：2026 資本支出 195–205B；公司不給營收或營業利益指引",
+  "url": "https://www.benzinga.com/news/26/09/61834150",
+  "tag": "Interested-party",
+  "tagNote": "公司指引屬利害關係人（管理層）預估；資本支出只見於法說（事實總帳 guid.capex.2026.jul）。共識資本支出 201.7 落在指引區間內"
+ },
+ "notFound": [
+  "季度 EBITDA 與營業利益共識（Yahoo 只有營收與 EPS；MarketScreener 季度頁未取得）",
+  "S&P 2028 年度營收與 EPS（StockAnalysis 付費內容）",
+  "第二個獨立的年度營收／EBITDA 共識供應商（StockAnalysis、MarketScreener、Yahoo 視為同一或高度重疊底層）"
+ ]
 }
