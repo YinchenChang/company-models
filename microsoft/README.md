@@ -689,6 +689,32 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `oracle.openai` | Oracle–OpenAI 合約年額、隱含每 MW、OpenAI 計畫算力支出（只作對照）；格式同上 | 物件 | 物件（contractAnnual、contractPerMw、computePlan2026to2030） | 必改 |
 | `oracle.events` | Oracle 評價日後事件（Project Jupiter 不可抗力通知）；格式同上 | 物件 | 物件（jupiterForceMajeure） | 必改 |
 
+### `mag`：Microsoft 資料草稿（MAG v0.1a；引擎尚未讀取）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `mag._readme` | Microsoft 資料草稿區段的說明（MAG v0.1a 產出；引擎尚未讀取，v0.1b′ 依 mapTo 搬入 MAG 共用引擎欄位） | 文字 | Microsoft 資料草稿（MAG v0.1a 產… | 必改 |
+| `mag.files` | Microsoft 事實總帳、k 證據、共識、Tokenomics 快照與名稱清單的路徑 | 物件（路徑） | 物件（facts、kEvidence、consensus、tokenomicsSnapshot、tokenomicsNames） | 必改 |
+| `mag.calendar` | 財年（6 月）、最新已申報季、期間標籤 FY27–FY31、評價錨定年草稿；每欄 value＋unit＋ref（總帳 id）＋mapTo | 物件 | 物件（fiscalYearEndMonth、latestQuarterFiled、periodLabels、valuationAnchor） | 必改 |
+| `mag.segments` | FY27 新分部（Agents and Infra、Devices and Consumer）近 8 季營收與營業利益、舊三分部年度對照、分部 D&A 說明草稿；格式同上 | 物件 | 物件（agentsInfra、devicesConsumer、oldThree、daAllocNote） | 必改 |
+| `mag.lines` | FY27 新產品別（Azure、M365 cloud、授權、Industry solutions、Frontier、搜尋與廣告、XBOX、Windows）近 8 季營收與近四季年增草稿；格式同上 | 物件 | 物件（azure、m365cloud、licensing、industry、frontier、searchads、xbox、windows） | 必改 |
+| `mag.cloud` | Azure 最新季年化、成長率、Microsoft Cloud 毛利率草稿；格式同上 | 物件 | 物件（azureAnnualized、azureGrowthQ、msCloudGM） | 必改 |
+| `mag.pl` | FY24–FY26 營收、營業利益、D&A、SBC、利息、稅率、淨利、OpenAI 損益草稿；格式同上 | 物件 | 物件（rev、oi、da、sbc、intExp、etr、ni、openaiGain） | 必改 |
+| `mag.cashflow` | FY24–FY26 營運現金流、現金資本支出、含融資租賃資本支出（季）、融資租賃、短期資產占比、FCF、回購、股利草稿；格式同上 | 物件 | 物件（ocf、capexCash、capexInclFLq、finLeaseQ、shortLivedShare、fcf、buyback、dividends） | 必改 |
+| `mag.balance` | FY26 末現金及短期投資、權益投資、PP&E、伺服器成本、應付資本支出草稿；格式同上 | 物件 | 物件（cashSti、equityInv、ppeNet、ppeServersGross、capexInAP） | 必改 |
+| `mag.debt` | 債券面額、帳面、公允價值、到期梯、逐檔明細、商業本票草稿；格式同上 | 物件 | 物件（faceTotal、carrying、maturities、notes、cp、fairValue） | 必改 |
+| `mag.leases` | 營業／融資租賃負債、未起租 329.1B 與各季路徑、租賃成本、到期、改分類說明、建設與採購承諾草稿；格式同上 | 物件 | 物件（opLiab、finLiab、notCommenced、notCommencedPath、opCost、finCost、maturitiesFin、maturitiesOp、reclassNote、construction、purchase） | 必改 |
+| `mag.rpo` | 商用與全公司 RPO、12 個月比例、OpenAI 占比草稿；格式同上 | 物件 | 物件（commercial、total、share12m、openaiShare） | 必改 |
+| `mag.shares` | 流通股、稀釋股、每股股利、回購授權與計畫內回購草稿；格式同上 | 物件 | 物件（outstanding、cover、dilutedW、dpsQ、dpsFY、buybackAuthRemaining、buybackProgramFY26） | 必改 |
+| `mag.guidance` | FY27 Q1 指引、FY27 全年方向、CY2026 資本支出、稅率、Azure 成長指引草稿（全部 [Interested-party]）；格式同上 | 物件 | 物件（fy27q1Rev、fy27q1Capex、fy27CapexDir、cy26Capex、fy27OpmChange、fy27Etr、azureGrowthQ1） | 必改 |
+| `mag.mw` | 期初 AI 在役 MW 區間、對外占比、世代組合、neocloud 租用 MW、新增速度、公司目標、總容量對照草稿；格式同上 | 物件 | 物件（aiOpenIT、externalShare、genMix、leasedOpen、addPace、targets、totalFleet） | 必改 |
+| `mag.kFactor` | k_長約、k_現貨、長約占比、加權 k（低／基準／高）草稿；格式同上 | 物件 | 物件（kLong、kSpot、longShare、kBlended） | 必改 |
+| `mag.neocloud` | 已揭露 neocloud 合約（Nebius、IREN、Nscale、Lambda、CoreWeave）與年租金草稿；格式同上 | 物件 | 物件（contracts、annualRent） | 必改 |
+| `mag.related` | OpenAI 持股、估值、營收、Azure 承諾、營收分成；Anthropic 承諾、投資、估值；OpenAI 模型 Azure 路徑（對照）草稿；格式同上 | 物件 | 物件（openaiStake、openaiValuation、openaiStakeValue、openaiRevenue、openaiAzureCommit、openaiRevShare、openaiFunding、anthropicAzureCommit、anthropicInvest、anthropicValuation、openaiModelAzure） | 必改 |
+| `mag.split` | AI／非 AI 雲端拆分試算（對外 AI 雲端收入、非 AI 殘差、上限檢查、影子收入）草稿；格式同上 | 物件 | 物件（aiCloudRev、nonAIResidual、capCheck、shadow） | 必改 |
+| `mag.valuation` | beta、無風險利率、債務成本、ERP、同業倍數中位數、AI 雲端倍數、現價草稿；格式同上 | 物件 | 物件（beta、rf、kdPretax、erp、peerMedian、aiCloudMultiple、price、ntmEvEbitdaMSFT） | 必改 |
+| `mag.consensus` | 共識目標價、營收、資本支出摘要（全檔 data/consensus_msft_20261008.json）草稿；格式同上 | 物件 | 物件（priceTarget、revenue、capex） | 必改 |
+
 ## v4.0 架構：公司資料單一來源
 - **company.json**：所有公司原始輸入（HTML 引擎與 Excel 共用）。換公司時先改這個檔；衍生值（情境 Billable 比率、Q3 新增 RPO 權重、債務合計與平均利率）留在 segA 開頭由程式推導。
 - HTML：`build_html_portable.py` 把 company.json 注入為 `COMPANY_DATA`，segA 開頭讀取。Excel：`build_xlsx.py` 開頭讀同一檔（75 項輸入，百分點欄位以 `PCT_()` 轉成比例）。

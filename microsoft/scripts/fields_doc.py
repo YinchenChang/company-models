@@ -301,6 +301,28 @@ F = [
  ('oracle.perMw', 'Oracle 每 MW 年收入三情境（沿用 Nebius 的 Tokenomics 推導）、EBITDA 率、伺服器壽命草稿；格式同上', '物件', M),
  ('oracle.openai', 'Oracle–OpenAI 合約年額、隱含每 MW、OpenAI 計畫算力支出（只作對照）；格式同上', '物件', M),
  ('oracle.events', 'Oracle 評價日後事件（Project Jupiter 不可抗力通知）；格式同上', '物件', M),
+ # MAG v0.1a：Microsoft 資料草稿（引擎尚未讀取；v0.1b′ 依各欄 mapTo 搬入 MAG 共用引擎）
+ ('mag._readme', 'Microsoft 資料草稿區段的說明（MAG v0.1a 產出；引擎尚未讀取，v0.1b′ 依 mapTo 搬入 MAG 共用引擎欄位）', '文字', M),
+ ('mag.files', 'Microsoft 事實總帳、k 證據、共識、Tokenomics 快照與名稱清單的路徑', '物件（路徑）', M),
+ ('mag.calendar', '財年（6 月）、最新已申報季、期間標籤 FY27–FY31、評價錨定年草稿；每欄 value＋unit＋ref（總帳 id）＋mapTo', '物件', M),
+ ('mag.segments', 'FY27 新分部（Agents and Infra、Devices and Consumer）近 8 季營收與營業利益、舊三分部年度對照、分部 D&A 說明草稿；格式同上', '物件', M),
+ ('mag.lines', 'FY27 新產品別（Azure、M365 cloud、授權、Industry solutions、Frontier、搜尋與廣告、XBOX、Windows）近 8 季營收與近四季年增草稿；格式同上', '物件', M),
+ ('mag.cloud', 'Azure 最新季年化、成長率、Microsoft Cloud 毛利率草稿；格式同上', '物件', M),
+ ('mag.pl', 'FY24–FY26 營收、營業利益、D&A、SBC、利息、稅率、淨利、OpenAI 損益草稿；格式同上', '物件', M),
+ ('mag.cashflow', 'FY24–FY26 營運現金流、現金資本支出、含融資租賃資本支出（季）、融資租賃、短期資產占比、FCF、回購、股利草稿；格式同上', '物件', M),
+ ('mag.balance', 'FY26 末現金及短期投資、權益投資、PP&E、伺服器成本、應付資本支出草稿；格式同上', '物件', M),
+ ('mag.debt', '債券面額、帳面、公允價值、到期梯、逐檔明細、商業本票草稿；格式同上', '物件', M),
+ ('mag.leases', '營業／融資租賃負債、未起租 329.1B 與各季路徑、租賃成本、到期、改分類說明、建設與採購承諾草稿；格式同上', '物件', M),
+ ('mag.rpo', '商用與全公司 RPO、12 個月比例、OpenAI 占比草稿；格式同上', '物件', M),
+ ('mag.shares', '流通股、稀釋股、每股股利、回購授權與計畫內回購草稿；格式同上', '物件', M),
+ ('mag.guidance', 'FY27 Q1 指引、FY27 全年方向、CY2026 資本支出、稅率、Azure 成長指引草稿（全部 [Interested-party]）；格式同上', '物件', M),
+ ('mag.mw', '期初 AI 在役 MW 區間、對外占比、世代組合、neocloud 租用 MW、新增速度、公司目標、總容量對照草稿；格式同上', '物件', M),
+ ('mag.kFactor', 'k_長約、k_現貨、長約占比、加權 k（低／基準／高）草稿；格式同上', '物件', M),
+ ('mag.neocloud', '已揭露 neocloud 合約（Nebius、IREN、Nscale、Lambda、CoreWeave）與年租金草稿；格式同上', '物件', M),
+ ('mag.related', 'OpenAI 持股、估值、營收、Azure 承諾、營收分成；Anthropic 承諾、投資、估值；OpenAI 模型 Azure 路徑（對照）草稿；格式同上', '物件', M),
+ ('mag.split', 'AI／非 AI 雲端拆分試算（對外 AI 雲端收入、非 AI 殘差、上限檢查、影子收入）草稿；格式同上', '物件', M),
+ ('mag.valuation', 'beta、無風險利率、債務成本、ERP、同業倍數中位數、AI 雲端倍數、現價草稿；格式同上', '物件', M),
+ ('mag.consensus', '共識目標價、營收、資本支出摘要（全檔 data/consensus_msft_20261008.json）草稿；格式同上', '物件', M),
 ]
 LQ = {
  'filed': ('申報日', '日期'), 'periodEnd': ('季末日', '日期'), 'revenue': ('當季營收', 'US$bn'), 'yoy': ('當季營收年增率', '比例'),
@@ -386,7 +408,7 @@ SECT = [('meta', '基本資料'), ('calendar', '期間與日期（v4.5）'), ('a
         ('rpo', '已簽約未認列營收（RPO）'), ('leases', '租約'), ('debt', '既有債務'), ('latestQuarter', '最新一季財報數字（10-Q）'),
         ('callFacts', '法說會與期後事項'), ('scenarios', '三個擴張情境'), ('legacy', '舊版對照值'),
         ('defaults', '預設假設（畫面上可調的輸入）'), ('valuation', '評價參數'), ('methodology', '評價方法與評等門檻'), ('peers', '同業比較（Comps）'),
-        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('oracle', 'Oracle 資料草稿（v0.1a；v0.1b 逐步搬入，只留後續步驟用或只作對照的欄位）')]
+        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('oracle', 'Oracle 資料草稿（v0.1a；v0.1b 逐步搬入，只留後續步驟用或只作對照的欄位）'), ('mag', 'Microsoft 資料草稿（MAG v0.1a；引擎尚未讀取）')]
 out, shown = ['**填表慣例**',
                '- 金額單位是**十億美元（US$bn）**，例如 4.653 代表 46.53 億美元；另有標示的例外：每股（US$）、每 MW 建置成本（百萬美元／MW，US$m/MW）、股數（十億股，bn）。',
                '- 「比例」寫成小數（0.25＝25%）；標示「%」的欄位寫成百分點（25＝25%）。兩種寫法沿用既有程式，不可混用。',
