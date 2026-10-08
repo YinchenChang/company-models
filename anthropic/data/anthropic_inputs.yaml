@@ -1,0 +1,19 @@
+# Inputs 唯一來源（Anthropic v0.1）。一列一個（參數 × 索引）；INP_nnn 由 builder/id_registry.json 依 key 發出、固定不重用。
+# 欄位：key、name（參數）、index（索引）、unit、value／lo／hi、tag（Assumed／Analogy／Decision）、basis（依據）、range_why（區間理由）、note（用途）。
+# Analogy／Assumed 一律給區間；Decision 為定義常數或開關（低＝高＝值）。不以公司自己的目標或預測反推（共同規則第 4 節）。
+rows:
+# ── 0. 定義常數與年度（Decision；E6：公式不得內含常數）
+- {key: year_2025, name: 模型年度, index: 第 1 年, unit: 年, value: 2025, lo: 2025, hi: 2025, tag: Decision, basis: 曆年制；2025 為實際校準年（規格 D1、D14）, range_why: 定義值, note: Demand／Revenue 第 6 列年度}
+- {key: year_2026, name: 模型年度, index: 第 2 年, unit: 年, value: 2026, lo: 2026, hi: 2026, tag: Decision, basis: 2026 為半校準年（規格 D15 r1）, range_why: 定義值, note: ""}
+- {key: year_2027, name: 模型年度, index: 第 3 年, unit: 年, value: 2027, lo: 2027, hi: 2027, tag: Decision, basis: 曆年制, range_why: 定義值, note: ""}
+- {key: year_2028, name: 模型年度, index: 第 4 年, unit: 年, value: 2028, lo: 2028, hi: 2028, tag: Decision, basis: 曆年制, range_why: 定義值, note: ""}
+- {key: year_2029, name: 模型年度, index: 第 5 年, unit: 年, value: 2029, lo: 2029, hi: 2029, tag: Decision, basis: 曆年制, range_why: 定義值, note: ""}
+- {key: year_2030, name: 模型年度, index: 第 6 年, unit: 年, value: 2030, lo: 2030, hi: 2030, tag: Decision, basis: 曆年制, range_why: 定義值, note: ""}
+- {key: days_per_year, name: 每年天數（定義常數）, index: —, unit: 天, value: 365, lo: 365, hi: 365, tag: Decision, basis: 定義常數, range_why: 不適用, note: 每日任務 × 天數 → 年 token}
+- {key: months_per_year, name: 每年月數（定義常數）, index: —, unit: 月, value: 12, lo: 12, hi: 12, tag: Decision, basis: 定義常數, range_why: 不適用, note: 月費 × 12 → 年營收}
+- {key: h2_months, name: 下半年月數（定義常數）, index: —, unit: 月, value: 6, lo: 6, hi: 6, tag: Decision, basis: 定義常數；規格 D15 r1「下半年＝最新年化營收 ÷ 2」＝年化 × 6 ÷ 12, range_why: 不適用, note: 2026 半校準}
+- {key: fy_start_month, name: 年度起始月（定義常數）, index: —, unit: 月, value: 1, lo: 1, hi: 1, tag: Decision, basis: 曆年制, range_why: 不適用, note: DATE(年度, 起始月, 起始日) → 年初日序列值}
+- {key: fy_start_day, name: 年度起始日（定義常數）, index: —, unit: 日, value: 1, lo: 1, hi: 1, tag: Decision, basis: 曆年制, range_why: 不適用, note: 同上}
+- {key: m_to_b, name: 單位換算：$M → $B 的除數（定義常數）, index: —, unit: $M／$B, value: 1000, lo: 1000, hi: 1000, tag: Decision, basis: 定義常數, range_why: 不適用, note: 人數（M）× 月費 × 12＝$M；T token × $/M token＝$M}
+- {key: b_to_t, name: 單位換算：B token → T token 的除數（定義常數）, index: —, unit: B／T, value: 1000, lo: 1000, hi: 1000, tag: Decision, basis: 定義常數, range_why: 不適用, note: 人數（M）× 任務 × 每任務 K token＝B token}
+- {key: spacex_term_months, name: SpaceX 月費合約期間（月）, index: —, unit: 月, value: 36, lo: 36, hi: 36, tag: Decision, basis: SRC_ANT_227 期間「2026-05 至 2029-05」＝36 個月（定義值）, range_why: 由揭露期間換算，不另設區間, note: SRC_ANT_230（Derived）＝月費 × 本列}

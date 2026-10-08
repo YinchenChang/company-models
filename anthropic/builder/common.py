@@ -66,3 +66,26 @@ def lo_recalc(xlsx: Path, outdir: Path) -> Path:
     if not out.exists():
         raise RuntimeError(f"LibreOffice 重算失敗：{r.stdout}\n{r.stderr}")
     return out
+
+
+def nm(wb, name, ref):
+    """新增活頁簿層級具名範圍。"""
+    from openpyxl.workbook.defined_name import DefinedName
+    wb.defined_names[name] = DefinedName(name, attr_text=ref)
+
+
+def e6_violations(ws, min_row=5):
+    """E6：公式不得內含常數（恆等式 1−比例、1＋成長率、年數 +1 除外）。回傳違反的儲存格清單（與 tests/parity/test_builder.py 同一規則）。"""
+    import re
+    bad = []
+    for row in ws.iter_rows(min_row=min_row):
+        for c in row:
+            if isinstance(c.value, str) and c.value.startswith("="):
+                f = re.sub(r"'?[A-Za-z_]+'?!\$?[A-Z]{1,3}\$?\d+(:\$?[A-Z]{1,3}\$?\d+)?", "", c.value)
+                f = re.sub(r"\$?\b[A-Z]{1,3}\$?\d+\b", "", f)
+                f = re.sub(r"\b[A-Za-z_][A-Za-z_0-9]*\b", "", f)
+                f = re.sub(r'"[^"]*"', "", f)
+                f = f.replace("(1-", "(").replace("+1)", ")").replace("(1+", "(")
+                if re.search(r"\d", f):
+                    bad.append(f"{ws.title}!{c.coordinate}")
+    return bad

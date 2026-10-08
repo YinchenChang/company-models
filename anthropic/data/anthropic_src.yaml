@@ -6394,6 +6394,57 @@ rows:
   party: Anthropic（投資人資料；募資誘因）
   basis: null
   note: 原文：77% in 2028；含免費用戶 75%（The Decoder）
+- id: SRC_ANT_377
+  key: rev_2025_growth_reported
+  group: A
+  metric: 2025 年營收年增率（報導）
+  value: 10.88
+  lo: null
+  hi: null
+  unit: 比例（年增）
+  period: 2025
+  source: Reuters〈Anthropic's IPO prospectus shows sweeping AI vision, surging costs〉（經 Fortune 轉述）
+  url: https://fortune.com/2026/09/29/anthropic-leaked-ipo-prospectus-losses-growth-ai-end-humanity/
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（外流機密招股書草稿；IPO 募資誘因）
+  basis: 總額
+  note: A2 新增（只增不重用）：原文 'Revenue rose 1,088% in 2025'（同 SRC_ANT_001 原文）；KuCoin 標題同值。供 SRC_ANT_003（Derived）以公式推導
+- id: SRC_ANT_378
+  key: cost_charity_match_share_employee_exp_q1_2026
+  group: E
+  metric: 員工捐股配捐費用占員工費用總額比例（2026 Q1）
+  value: 0.1
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2026-Q1
+  source: Crypto Briefing〈Anthropic's charitable stock-matching program racks up over $660 million in expenses〉
+  url: https://cryptobriefing.com/anthropic-charitable-stock-matching-660-million/
+  doc_date: 2026-10-05
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic 揭露（來源文件未標明）；二手媒體
+  basis: null
+  note: A2 新增（只增不重用）：原文 'about 10% of total employee expenses'（同 SRC_ANT_296 原文）。供 SRC_ANT_297（Derived）以公式推導
+- id: SRC_ANT_379
+  key: cmp_gw_2027_vs_2026_multiple_nyt
+  group: D
+  metric: 2027 年底相對 2026 年底可用算力倍數（NYT「roughly double」）
+  value: 2
+  lo: null
+  hi: null
+  unit: 倍
+  period: 2027-12
+  source: Newsquawk 引 New York Times〈Anthropic reportedly plans to have 5GW worth of compute by the end of 2026〉
+  url: https://www.newsquawk.com/headlines/anthropic-reportedly-plans-to-have-5gw-worth-of-compute-by-the-end-of-2026-reports-nyt
+  doc_date: 2026-09-18
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人簡報，募資／IPO 誘因）／NYT 知情人士
+  basis: 未明
+  note: A2 新增（只增不重用）：原文「roughly double…by the end of the next year」（同 SRC_ANT_267 原文）。供 SRC_ANT_268（Derived）以公式推導
 not_found:
 - item: 2024 年認列營收（直接揭露值）
   tried: Reuters／Fortune／PYMNTS／Khaleej Times 招股書報導；查詢 "Anthropic 2024 revenue prospectus"

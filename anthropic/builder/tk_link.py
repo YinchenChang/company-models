@@ -1,4 +1,4 @@
-"""Tokenomics 快照讀取（工作單 P1-3；補充 1 第 1 點；S1＝v0.6-P1.1）。
+"""Tokenomics 快照讀取（沿用 OpenAI v0.6 的 63 名；Anthropic A2 加讀 NonNV 表，規格 D6）。
 
 - 值取自 Tokenomics master 的 model/CURRENT，逐名讀出寫入 TK_Link；不用 Excel 外部連結。
 - 列序：P1 原 37 名（列位不變）→ SRC_DEM_010–013（＋013 低／高）→ Block 6（IF_Alloc* 7 名）→ S1 新增（r6 下游需要）→ S4 新增（IF_CapexTotal）。
@@ -86,3 +86,36 @@ def read_snapshot(tk_dir: Path):
     hdr_cost = [wb["Interface"].cell(5, k).value for k in range(3, 18)]
     return dict(file=current, version=f"v{m.group(1)}" if m else "?", sha=sha, rows=rows, pending=pending,
                 hdr_gen=hdr_gen, hdr_cost=hdr_cost)
+
+
+# ── Anthropic A2（規格 D6、D6 r1）：NonNV 表不是具名範圍，以列標籤＋欄標題讀表 ──
+NONNV_SHEET = "NonNV"
+NONNV_FAMILIES = [("TPUv7", "Google TPU v7 Ironwood"), ("Trn3", "AWS Trainium3"), ("MI455X", "AMD MI455X（Helios）")]
+NONNV_COLS = [("Out", "產出比 基準"), ("OutLo", "產出比 低"), ("OutHi", "產出比 高"),
+              ("Hold", "持有比 基準"), ("HoldLo", "持有比 低"), ("HoldHi", "持有比 高")]
+NONNV_STATUS = "讀表（非具名）"
+
+
+def nonnv_lookup(wb, label: str, hdr: str):
+    """在 NonNV 頁找 A 欄＝label 的列、第 4 列標題＝hdr 的欄；回傳 (值, 儲存格位址)；找不到回傳 (None, None)。"""
+    ws = wb[NONNV_SHEET]
+    col = next((c for c in range(1, ws.max_column + 1) if ws.cell(4, c).value == hdr), None)
+    row = next((r for r in range(5, ws.max_row + 1) if ws.cell(r, 1).value == label), None)
+    if col is None or row is None:
+        return None, None
+    return ws.cell(row, col).value, ws.cell(row, col).coordinate
+
+
+def read_nonnv(tk_dir: Path):
+    tk_dir = Path(tk_dir)
+    current = (tk_dir / "model" / "CURRENT").read_text(encoding="utf-8").strip()
+    wb = openpyxl.load_workbook(tk_dir / "model" / current, data_only=True)
+    rows = []
+    for fam, label in NONNV_FAMILIES:
+        for suf, hdr in NONNV_COLS:
+            v, addr = nonnv_lookup(wb, label, hdr)
+            if v is None:
+                raise RuntimeError(f"Tokenomics NonNV 找不到：{label}／{hdr}")
+            rows.append(dict(name=f"{NONNV_SHEET}!{label}!{hdr}", our=f"TK_NNV_{fam}_{suf}", label=f"{label}：{hdr}（相對 VR200；NonNV!{addr}）",
+                             unit="倍", values=[v], status=NONNV_STATUS))
+    return rows
