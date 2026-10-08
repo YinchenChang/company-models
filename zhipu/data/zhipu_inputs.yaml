@@ -144,7 +144,7 @@ items:
 - {key: cp_out_share, name: Coding Plan token 中輸出 token 占比, index: 全期, unit: 比例, value: 0.03, lo: 0.01, hi: 0.08, tag: Analogy, basis: 工作單 Z3b F1（Analogy 0.03，0.01–0.08）：程式碼代理以讀取上下文為主、輸出（含工具呼叫）占比低；API 按量計費沿用 out_share（0.15）, range: 0.01～0.08（工作單）}
 # ── Z4 融資（D16r、D17、D18、D20；工作單 Z4 判斷類預設）
 - {key: min_cash_months, name: 最低現金：次年（算力成本＋非算力成本不含股權報酬）的月數, index: 2026 起, unit: 月, value: 6, lo: 3, hi: 12, tag: Assumed, basis: 規格 D17（基準 6 個月；同 OpenAI／CRWV S7 以比例表示規模差異）；2030 無次年，以 2030 當年代替, range: 3～12 個月（D17）}
-- {key: other_inc_future, name: 其他收益（政府補助、利息收入等）：2H26 起每年, index: 2H26 起, unit: RMB 億／年, value: 0, lo: 0, hi: 0.83, tag: Decision, basis: 規格 D20：未來補助＝0（Decision）；1H26 其他收入 0.41 億主要為上市後存款利息（SRC_ZP_203），保守不外推；高端＝1H26 年化（只作情境）, range: 0～1H26 年化 0.83}
+- {key: other_inc_future, name: 其他收益（政府補助、利息收入等）：2H26 起每年, index: 2H26 起, unit: RMB 億／年, value: 0, lo: 0, hi: 0.83, tag: Decision, basis: 規格 D20：未來補助＝0（Decision）；r2 P4：招股章程顯示政府補助沖減相關開支（已含在費用淨額），其他收入主要是利息收入；1H26 其他收入 0.41 億主要為上市後存款利息（SRC_ZP_203），保守不外推；高端＝1H26 年化（只作情境）, range: 0～1H26 年化 0.83}
 - {key: bank_rate, name: 銀行借款年利率, index: 2H26 起, unit: 比例／年, value: 0.03, lo: 0.025, hi: 0.045, tag: Analogy, basis: 工作單 Z4『利息以財報利率計入』；利率與到期未揭露（Z1 not_found）；財報財務成本含匯兌損失與租賃利息，不能直接推利率 → 以中國一年期 LPR 約 3.0% 為 Analogy；2025、1H26 用財報財務成本實際值, range: 2.5%～4.5%（LPR 至 LPR＋150bp）}
 - {key: bank_repay_sw, name: 銀行借款到期處理開關（0＝續借；1＝流動部分 2027、非流動部分 2028 償還）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 工作單 Z4 預設：到期續借（Decision）；替代＝到期償還（列情境）, range: 開關}
 - {key: cb_conv_sw, name: 可換股債券處理開關（0＝視為債務、到期現金償還；1＝轉股、不償還）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 規格 D16r：基準＝債務、2027-09-16 到期以現金償還（現價 HK$696 低於換股價 HK$892.50，較保守）；轉股情境另列（Funding 第五節，不受本開關影響）, range: 開關}
