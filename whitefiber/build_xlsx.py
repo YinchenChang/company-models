@@ -454,7 +454,7 @@ PP_SH = gi(r, "有預付的合約比例", "%", PPD['shareOfDeals'], "覆蓋比�
 PP_CV = gi(r, "預付占相關資本支出比", "%", PPD['capexCover'], CO['texts']['prepayCoverNote'], PCT); r += 1
 PP_N = gi(r, "預付認列年數", "年", PPD['recogYears'], "依(期初合約負債＋本期累積利息)直線認列為營收（非現金）[Assumed]；完整說明見 company.json → defaults.prepay.note", NUM1); r += 1
 PP_CL0 = gi(r, "«VMD» 合約負債（客戶預付餘額）", "US$bn", PPD['openBalance'], CO['texts']['prepayOpenNote']); r += 1
-PP_FR = gi(r, "預付隱含利率（重大財務組成）", "%", PPD.get('financingRate', 0), "合約負債以此利率累積非現金利息，認列時轉營收（自營運現金扣除）、利息進損益不進現金；預設＝稅前債務成本，替代 0%", PCT); r += 1
+PP_FR = gi(r, "預付隱含利率（重大財務組成）", "%", PPD.get('financingRate', 0), f"合約負債以此利率累積非現金利息，認列時轉營收（自營運現金扣除）、利息進損益不進現金；敏感度 {PPD.get('financingSens', 0):.1%}（company.json → defaults.prepay.note）", PCT); r += 1
 r = phdr(r)
 r = prow(r, "客戶預付占毛 CapEx", "%", [f"={PP_SH}*{PP_CV}"] * 5, PCT, "＝有預付的合約比例 × 預付占相關資本支出比；乘成長型 CapEx 得預付流入", BLACK)
 r = prow(r, "在帳現金租金（季報到期表）", "US$bn", CO['leases']['onBalanceCash'], NUM, f"營業＋融資租賃未折現付款；«LASTYR» 後尚有 {CO['leases']['afterFY30']} [Verified]")

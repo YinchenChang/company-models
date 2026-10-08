@@ -677,7 +677,8 @@
    "openBalance": 0.14311,
    "financingRate": 0.0,
    "coverRefresh": false,
-   "note": "暫定（步驟 5 定案）"
+   "note": "客戶出資（v0.1b 步驟 5）：預付流入＝(雲端 GPU 自購成長型 CapEx＋託管建置 CapEx〔colo.coverPrepay〕) × 有預付的合約比例 100% × 覆蓋比 21.1%（1H26 客戶預付流入 72.6 ÷ 資本支出 344.7 [Derived]；10-Q 未分託管與雲端；敏感度 ±5pt）。期初合約負債＝10-Q 遞延營收 143.110（流動 17.909＋非流動 125.201；雲端與資料中心客戶預付，未分拆）[Interested-party]。認列 8 年＝143.110 ÷ 流動部分 17.909（[Derived]；NC-1 為 10 年約、雲端 3–5 年）。重大財務組成：10-Q 未揭露（不存在／未揭露）→ 隱含利率 0；敏感度以稅前債務成本 9.5% 計。巴黎合約 12 個月服務費預付已含在覆蓋比口徑內，不另列。",
+   "financingSens": 0.095
   },
   "convIssue": {
    "coupon": 0.05,
@@ -1579,8 +1580,8 @@
   "rvRevNote": "WhiteFiber 對照：新簽雲端長約隱含 14.8–20.3、Q2 經常性年化 ÷ 冰島 5.5 MW＝8.37（上限）",
   "rvCostNote": "Tokenomics IF_CapexIT 37.45–37.59 US$m/MW-IT（GPU；機房另計）",
   "priceNote": "續約價格衰退未建模（CRWV 尚未做）：雲端合約到期後以 Tokenomics 每 MW 續作（已知限制）",
-  "prepayCoverNote": "WhiteFiber：1H26 客戶預付 72.6 ÷ 資本支出 344.7＝21.1% [Derived]",
-  "prepayOpenNote": "遞延營收（合約負債）143.1，流動 17.9（10-Q）；未分託管與雲端",
+  "prepayCoverNote": "WhiteFiber：1H26 客戶預付 72.6 ÷ 資本支出 344.7＝21.1%（含託管；10-Q 未分拆）[Derived]；敏感度 ±5pt",
+  "prepayOpenNote": "遞延營收（合約負債）143.110：流動 17.909、非流動 125.201（10-Q）；未分託管與雲端；認列 8 年＝143.110 ÷ 17.909 [Derived]",
   "ytdEquityNote": "1H26 未發行普通股；2031 可轉債淨額 222.1、零履約價買權 120.0",
   "prepayRiskNote": "10-Q 未揭露預付是否含重大財務組成；若客戶違約或合約提前終止，預付款的處理季報未揭露（Initial Customer 終止時以終止費結算）。",
   "consistencyTitle": "新聞稿／法說 vs 季報 vs 期後公告：一致、未量化、含糊",

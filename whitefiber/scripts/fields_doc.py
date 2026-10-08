@@ -222,6 +222,7 @@ F = [
  ('defaults.prepay.recogYears', '預付在合約期內的認列年數：依(期初合約負債＋本期累積利息)直線認列為營收（非現金）', '年', C),
  ('defaults.prepay.coverRefresh', '客戶出資覆蓋比是否也適用 GPU 汰換 CapEx（true＝預付流入＝(成長型＋汰換)× 覆蓋比；Oracle v0.1c）', '是／否', C),
  ('defaults.prepay.financingRate', '預付重大財務組成的隱含利率：合約負債以此利率累積非現金利息（期初餘額＋本期流入一半），認列時轉營收；0＝不計財務組成（Oracle v0.1b）', '比例', C),
+ ('defaults.prepay.financingSens', '重大財務組成的敏感度利率（financingRate 為 0 時龍捲風改測此利率；WhiteFiber v0.1b）', '比例', C),
  ('defaults.prepay.openBalance', '期初合約負債（客戶預付餘額；列入滾動檢查）', 'US$bn', M),
  ('defaults.prepay.note', '預付款區塊的說明（來源與口徑）', '文字', M),
  ('defaults.convIssue.coupon', '瀑布新發可轉債的票息（v0.1b）', '比例', C),

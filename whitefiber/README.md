@@ -507,8 +507,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.prepay.recogYears` | 預付在合約期內的認列年數：依(期初合約負債＋本期累積利息)直線認列為營收（非現金） | 年 | 8 | 檢查 |
 | `defaults.prepay.coverRefresh` | 客戶出資覆蓋比是否也適用 GPU 汰換 CapEx（true＝預付流入＝(成長型＋汰換)× 覆蓋比；Oracle v0.1c） | 是／否 | 否 | 檢查 |
 | `defaults.prepay.financingRate` | 預付重大財務組成的隱含利率：合約負債以此利率累積非現金利息（期初餘額＋本期流入一半），認列時轉營收；0＝不計財務組成（Oracle v0.1b） | 比例 | 0 | 檢查 |
+| `defaults.prepay.financingSens` | 重大財務組成的敏感度利率（financingRate 為 0 時龍捲風改測此利率；WhiteFiber v0.1b） | 比例 | 0.095 | 檢查 |
 | `defaults.prepay.openBalance` | 期初合約負債（客戶預付餘額；列入滾動檢查） | US$bn | 0.14311 | 必改 |
-| `defaults.prepay.note` | 預付款區塊的說明（來源與口徑） | 文字 | 暫定（步驟 5 定案） | 必改 |
+| `defaults.prepay.note` | 預付款區塊的說明（來源與口徑） | 文字 | 客戶出資（v0.1b 步驟 5）：預付流入＝(雲端 … | 必改 |
 | `defaults.convIssue.coupon` | 瀑布新發可轉債的票息（v0.1b） | 比例 | 0.05 | 檢查 |
 | `defaults.convIssue.premium` | 瀑布新發可轉債的轉換溢價（轉換價＝發行參考價 ×（1＋此值）；只用於潛在股數揭露） | 比例 | 0.25 | 檢查 |
 | `defaults.convIssue.note` | 可轉債步驟的說明（來源與口徑） | 文字 | 瀑布可轉債：票息 5.00%、轉換溢價 25%（20… | 必改 |
@@ -686,7 +687,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.rvCostNote` | 反向 DCF 每 MW 建置成本列的對照說明（v0.1b） | 文字 | Tokenomics IF_CapexIT 37.4… | 必改 |
 | `texts.priceNote` | 定價（續約價、新約價）的公司說法與讀法（v0.1b） | 文字 | 續約價格衰退未建模（CRWV 尚未做）：雲端合約到期… | 必改 |
 | `texts.prepayCoverNote` | 客戶預付覆蓋比的來源（v0.1b） | 文字 | WhiteFiber：1H26 客戶預付 72.6 … | 必改 |
-| `texts.prepayOpenNote` | 期初合約負債的口徑（v0.1b） | 文字 | 遞延營收（合約負債）143.1，流動 17.9（10… | 必改 |
+| `texts.prepayOpenNote` | 期初合約負債的口徑（v0.1b） | 文字 | 遞延營收（合約負債）143.110：流動 17.90… | 必改 |
 | `texts.ytdEquityNote` | 年初至今股權募資的組成（v0.1b） | 文字 | 1H26 未發行普通股；2031 可轉債淨額 222… | 必改 |
 | `texts.prepayRiskNote` | 客戶預付的風險與會計說明（v0.1b） | 文字 | 10-Q 未揭露預付是否含重大財務組成；若客戶違約或… | 必改 |
 | `texts.consistencyTitle` | 「公司說法 vs 季報」對照表的標題（v0.1b） | 文字 | 新聞稿／法說 vs 季報 vs 期後公告：一致、未量… | 必改 |

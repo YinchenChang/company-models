@@ -1018,8 +1018,8 @@ function sensitivities(e, v) {
     e.delayLink = 0
   }, e => {
     e.delayLink = 1
-  }), r(`預付重大財務組成`, hA((e.prepay.financingRate ?? 0) * 100, 2), `0%`, null, e => {
-    e.prepay = { ...e.prepay, financingRate: 0 }
+  }), r(`預付重大財務組成`, hA((e.prepay.financingRate ?? 0) * 100, 2), hA(((e.prepay.financingRate ?? 0) > 0 ? 0 : e.prepay.financingSens ?? 0) * 100, 2), null, t => { // WhiteFiber v0.1b：利率 0 時改測 financingSens
+    t.prepay = { ...t.prepay, financingRate: (e.prepay.financingRate ?? 0) > 0 ? 0 : e.prepay.financingSens ?? 0 }
   }), r(`新債利率`, `+300bps`, `−300bps`, e => {
     e.m.rate = e.m.rate.map(e => e + 3)
   }, e => {
