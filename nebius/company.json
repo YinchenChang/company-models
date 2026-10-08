@@ -631,7 +631,7 @@
   "linkSites": true,
   "linkLeaseTail": true,
   "useAvgMw": true,
-  "billableOpen": 134,
+  "billableOpen": 165,
   "cds": null,
   "cdsBid": null,
   "cdsAsk": null,
@@ -663,11 +663,11 @@
     100
    ],
    "revMW": [
-    0.0174,
-    0.0174,
-    0.0174,
-    0.0174,
-    0.0174
+    0.0141591394,
+    0.0150466722,
+    0.0179703341,
+    0.0192057711,
+    0.0198748171
    ],
    "aiShare": [
     100,
@@ -882,7 +882,12 @@
    "leaseVsCommitMin": 0.8,
    "unsignedRevShareMax": 0.5,
    "siteRentGapMax": 10,
-   "rentVsBenchMin": 0.8
+   "rentVsBenchMin": 0.8,
+   "revCapShareMax": 0.5
+  },
+  "perMw": {
+   "_note": "每 MW 收入方法開關（v0.2a，已決定事項 14）：tkAnchor＝Σ 平均在役世代占比 × IF_HoldEcon × 定價倍數 k（pricing.anchorMultiple；容量情境與價格情境分離）；legacy＝scenarios.revMW（v0.2 三情境 11.62／17.40／24.20，路徑 A 成本加成與路徑 B 市場價 50/50 平均，隨容量情境同向；已停用，只作對照與回歸驗收）。",
+   "revenue": "tkAnchor"
   }
  },
  "peers": {

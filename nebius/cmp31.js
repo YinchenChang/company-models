@@ -30,6 +30,14 @@ cmp('未售', S+'未售產能（浪費）', H('unsold'));
 cmp('isRev', S+'損益用算力收入（模型期＝RPO 轉換＋新簽約）', H('isRev'));
 cmp('營收−MW×單價×利用率', S+'核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間', y.map(e=>e.isRev-e.capacity)); // v0.1b：MW 驅動時為 0
 cmp('每MW年收入', '輸入|每 MW 年收入', d.m.revMW);
+if (PMW_REVQ === 'tkAnchor') { // v0.2a：Tokenomics 錨 × k（Excel「每MW收入_錨定」各容量情境；HTML tkAnchorQ）
+  for (const k of ['low', 'base', 'high']) { const A = tkAnchorQ(k), lb = COMPANY_DATA.scenarios.labels[k] + '｜', W = '每MW收入_錨定|' + lb;
+    cmp('錨 ' + k, W + '錨：每 MW 經濟持有成本（IF_HoldEcon，在役世代加權）', A.anchor.map(x => x * 1e3));
+    cmp('長約占比 ' + k, W + '長約占比（MIN(1, 長約 MW ÷ 平均在役 MW)）', A.ls);
+    cmp('k ' + k, W + '定價倍數 k（長約占比 × k_長約＋（1 − 長約占比）× k_現貨）', A.k);
+    cmp('錨×k ' + k, W + '每 MW 年收入（錨 × k，100% 計費時數）', A.rev.map(x => x * 1e3));
+    cmp('上限比 ' + k, W + '上限檢查｜每 MW 收入 ÷ 客戶付費 token 營收', A.capRatio); }
+}
 cmp('信用損失', S+'信用損失（期初 RPO 部分）', H('loss'));
 cmp('RPO現金', S+'RPO 現金（可支應資本用途）', H('rpoCash'));
 cmp('新簽約現金', S+'新簽約現金', H('newCash'));

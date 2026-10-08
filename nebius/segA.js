@@ -18,7 +18,8 @@ var PERIODS = COMPANY_DATA.periods,
   CALL_FACTS = COMPANY_DATA.callFacts,
   SC_MWP = COMPANY_DATA.scenarios.mwPath, // v0.1b：已連網 MW＝MIN(合約上限, 前期＋併網速度×期間長度)；首期期末三情境共用
   SC_ACC = Object.fromEntries([`low`, `base`, `high`].map(k => [k, PERIOD_YEARS.reduce((a, L, i) => (a.push(Math.min(SC_MWP.contracted[k][i], i === 0 ? SC_MWP.connectedStart : a[i - 1] + SC_MWP.pace[k] * L)), a), [])])),
-  SC_REV = COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境（Tokenomics 正向推導三情境）
+  PMW_REVQ = ((COMPANY_DATA.methodology || {}).perMw || {}).revenue || `legacy`, // v0.2a：每 MW 收入方法（tkAnchor＝Tokenomics 錨 × k；legacy＝scenarios.revMW）
+  SC_REV = PMW_REVQ === `tkAnchor` ? Object.fromEntries([`low`, `base`, `high`].map(k => [k, tkAnchorQ(k).rev])) : COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境；v0.2a：tkAnchor 時＝錨 × k（價格軸基準），容量情境與價格脫鉤
   SC_BR = COMPANY_DATA.scenarios.billableRatio.ratio,
   SC_RAMP = COMPANY_DATA.scenarios.billableRatio.ramp, // v0.1c：首期營收校準的爬坡係數（可計費 MW 逐步收斂到已連網 × 在役比例）
   BO_RUNRATE = COMPANY_DATA.latestQuarter.revenue * 4, // v0.1c：最新季營收年化（已實現實際數），用於校準期初可計費 MW
@@ -66,6 +67,25 @@ var PERIODS = COMPANY_DATA.periods,
   DEFAULTS = Object.fromEntries(Object.entries(structuredClone(COMPANY_DATA.defaults)).flatMap(([k, v]) => k === `intCal` ? [[k, v], [`a`, structuredClone(SCENARIOS.base.a)]] : [[k, v]])),
   Qk = DEFAULTS; // 模板函式庫片段（mid1–mid3）仍以 Qk 引用預設值，保留別名
 DEFAULTS.cvCap = SCENARIOS[COMPANY_DATA.defaults.scenario].cvCap; // v0.1b：預設情境的可轉債年上限
+PMW_REVQ === `tkAnchor` && (DEFAULTS.m.revMW = [...SC_REV[COMPANY_DATA.defaults.scenario]], DEFAULTS.billableOpen = SCENARIOS[COMPANY_DATA.defaults.scenario].bo); // v0.2a：預設輸入＝預設情境的錨定值（company.json 存同值，build_xlsx 檢查）
+function tkAnchorQ(sc, o = {}) { // v0.2a：每 MW 年收入＝Tokenomics 錨 × 定價倍數 k（Excel「每MW收入_錨定」同列同算式；tkanchor.py 為建置時參考）
+  // 期末在役 MW＝已連網 × 在役比例；平均在役世代占比 × IF_HoldEcon（成本情境）÷ 1000＝錨；長約占比＝MIN(1, 已揭露長約 MW ÷ 平均在役 MW)；k＝長約占比 × k_長約＋（1 − 長約占比）× k_現貨
+  let AM = COMPANY_DATA.pricing.anchorMultiple, FL = COMPANY_DATA.fleet, G = FL.generations, TK = COMPANY_DATA.tkSnap, P = COMPANY_DATA.scenarios.mwPath,
+    br = COMPANY_DATA.scenarios.billableRatio.ratio, px = o.px || `base`, cs = o.tkCase || `基準`, lsk = o.ls || `mw`, nm = o.newMix || FL.newMix,
+    kL = o.kLong ?? AM.long[px], kS = o.kSpot ?? AM.spot[px], acc = [], R = { start: [], end: [], add: [], avg: [], anchor: [], longMw: [], ls: [], k: [], rev: [], capRef: [], capRatio: [], share: {}, kL, kS },
+    prevT = COMPANY_DATA.priceCheck.inServiceMw, prev = {};
+  G.forEach(g => { prev[g] = prevT * (FL.openMix.mix[g] || 0); R.share[g] = [] });
+  for (let t = 0; t < 5; t++) {
+    acc.push(Math.min(P.contracted[sc][t], t === 0 ? P.connectedStart : acc[t - 1] + P.pace[sc] * PERIOD_YEARS[t]));
+    let end = acc[t] * br[t], add = Math.max(0, end - prevT), cur = {}, tot = prevT + end, A = 0, cap = 0;
+    G.forEach(g => { cur[g] = prev[g] + add * (nm[t][g] || 0); let sh = (prev[g] + cur[g]) / tot; R.share[g].push(sh); A += sh * TK.IF_HoldEcon[g][cs]; cap += sh * TK.IF_RevGWFleet[g][cs] });
+    A /= 1e3; cap /= 1e3;
+    let avg = tot / 2, lm = AM.longShare.contracts.reduce((a, c) => a + (c.start <= t ? c[lsk] : 0), 0), s = Math.min(1, lm / avg), k = s * kL + (1 - s) * kS;
+    R.start.push(prevT); R.end.push(end); R.add.push(add); R.avg.push(avg); R.anchor.push(A); R.longMw.push(lm); R.ls.push(s); R.k.push(k); R.rev.push(A * k); R.capRef.push(cap); R.capRatio.push(A * k / cap);
+    prev = cur; prevT = end
+  }
+  return R
+}
 function siteBenchQ(e) {
   let t = e.filter(e => !e.residual && e.contract && e.years && e.planned);
   return t.reduce((e, t) => e + t.contract / t.years, 0) / Math.max(t.reduce((e, t) => e + t.planned, 0), 1) * 1e3
@@ -501,9 +521,21 @@ function runFunding(e) {
     id: `call-util`,
     ok: t.util[0] <= 100,
     severity: `watch`,
-    title: `利用率 ${t.util[0]}%：每 MW 年收入已含可計費利用率`,
-    detail: `每 MW 年收入取 Tokenomics 正向推導（路徑 B 已乘可計費利用率 80／85／90%），所以利用率欄預設 100%、不重複扣除；欄位保留供壓力測試。目前每 MW 年收入 $${Y(t.revMW[0] * 1e3 * (e.revScale ?? 1), 2)}m/MW-IT。`
+    title: PMW_REVQ === `tkAnchor` ? `利用率 ${t.util[0]}%：按 MW-year 計價，不乘 Tokenomics IF_Util` : `利用率 ${t.util[0]}%：每 MW 年收入已含可計費利用率`,
+    detail: PMW_REVQ === `tkAnchor` ? `每 MW 年收入＝Tokenomics 錨（IF_HoldEcon，100% 計費時數的打平租金）× 定價倍數 k；按 MW-year 計價，收入取決於簽約率與爬坡（可計費 MW），不再乘技術利用率 IF_Util（下游資料契約第 3 條，重複扣減禁止），所以利用率欄 100%；欄位保留供壓力測試。目前每 MW 年收入 $${Y(t.revMW[0] * 1e3 * (e.revScale ?? 1), 2)}m/MW-IT。`
+      : `每 MW 年收入取 Tokenomics 正向推導（路徑 B 已乘可計費利用率 80／85／90%），所以利用率欄預設 100%、不重複扣除；欄位保留供壓力測試。目前每 MW 年收入 $${Y(t.revMW[0] * 1e3 * (e.revScale ?? 1), 2)}m/MW-IT。`
   });
+  if (PMW_REVQ === `tkAnchor`) { // v0.2a：收入上限檢查（Excel「檢查_連動」同一列；門檻 company.json → methodology.checks.revCapShareMax）
+    let sc = [`low`, `base`, `high`].includes(e.scenario) ? e.scenario : `base`, A = tkAnchorQ(sc),
+      rq = A.capRef.map((c, r) => t.revMW[r] * (e.revScale ?? 1) * (t.util[r] / 100) / c), mx = Math.max(...rq), th = CHECK_TH.revCapShareMax;
+    _({
+      id: `rev-cap`,
+      ok: mx <= th,
+      severity: mx <= th ? `ok` : `watch`,
+      title: `收入上限：每 MW 計費收入 ÷ 客戶付費 token 營收 最高 ${Math.round(mx * 100)}%（門檻 ${Math.round(th * 100)}%）`,
+      detail: `neocloud 拿走客戶 token 營收的比例＝每 MW 計費收入 ÷ Tokenomics IF_RevGWFleet（客戶每 MW 付費 token 營收的理想上限，依在役世代加權）。各期：${PERIODS.map((n, r) => `${n} ${Math.round(rq[r] * 100)}%`).join(`、`)}。超過門檻代表單價相對客戶端 token 經濟性偏高（Hopper 世代的 token 營收低，早期比例偏高）；只警示，不改數字。`
+    })
+  }
   for (let e = 0; e < 5; e++) t.billable[e] - t.accepted[e] > .5 && _({
     id: `billable-${e}`,
     ok: !1,
