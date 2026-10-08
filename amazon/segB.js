@@ -49,7 +49,7 @@ function forwardPL(e, t) {
       lg = e.years[c].legacyRev || 0, // v0.1b（Oracle）：非 AI 事業營收
       d = l + u + lg,
       f = c === 0 ? uM(HIST_PL[3].revenue + d, r) : uM(d, r),
-      EB = (l + u) * e.years[c].ebM + (e.years[c].otherEbitda || 0) + (e.years[c].legacyEbitda || 0) - (e.years[c].delayPen || 0), // v0.2：減延誤罰則 // v0.1b：加其他事業 EBITDA；Oracle：EBITDA 率只套算力＋服務，非 AI 事業另計
+      EB = (l + u) * e.years[c].ebM + (e.years[c].otherEbitda || 0) + (e.years[c].legacyEbitda || 0) - (e.years[c].delayPen || 0) + (t.read2 ? e.years[c].shadowEb1 || 0 : 0), // MAG v0.1b r3（C16）：讀法 2 加自用 AI 影子 EBITDA（k＝1）； // v0.2：減延誤罰則 // v0.1b：加其他事業 EBITDA；Oracle：EBITDA 率只套算力＋服務，非 AI 事業另計
       lgO = e.years[c].legacyOa || 0, // MAG v0.1b：非 AI 事業其他攤銷（影音內容、營業租賃資產等；進 D&A，現金上視為等額支出，UFCF 不加回）
       p = EB - e.years[c].daFleet - lgO,
       m = e.years[c].interest,
@@ -219,6 +219,13 @@ function pctQ(x) { // 門檻的百分比文字（取絕對值，正負號由呈�
   return `${multTxt(Math.round(Math.abs(x) * 1e6) / 1e4)}%`
 }
 
+// MAG v0.1b r3（對照表 r1 C16）：讀法 2（自用 AI 價值中性）——同一組評價輸入（股數、淨負債、可轉債分類、倍數沿用讀法 1），EBITDA 加自用 AI 影子 EBITDA（k＝1），
+// 影子收入進評價（DCF 的 EBIT、稅、UFCF、終值與 EV/EBITDA 錨定年 AI 雲端 EBITDA）；只有對外 AI 的超額報酬影響目標價。Excel「評價_DCF與目標價」讀法 2 區同式。
+function read2Q(e, p) {
+  const i = { ...p.v, read2: !0 }, a = forwardPL(e, i), o = dcfValue(a, i), c = evEbitdaLeg(a, i), d = Math.max(0, c),
+    WD = o.invalid ? 0 : BLEND_W.dcf, tp = (o.invalid ? 0 : WD * o.perShareT) + (1 - WD) * d;
+  return { tp, dcfT: o.perShareT, ev: d, diff: tp - p.call.blended, shadow: e.years.map(y => y.shadowEb1 || 0) }
+}
 function blendCall(e) {
   let {
     spot: t,
@@ -419,7 +426,7 @@ function targetRange(d, st, o, base) {
   let P = o.price, th = P * (1 + SELL_TH), pt = base.call.blended,
     sc = [`low`, `base`, `high`].map(k => {
       let s2 = scnQ(st, k), d2 = runFunding(s2), p2 = runValuation(d2, s2, o);
-      return { sc: k, name: SCENARIOS[k].label.split(` `)[0], tgt: p2.call.blended, call: p2.call.call, gap: p2.call.blended - th }
+      return { sc: k, name: SCENARIOS[k].label.split(` `)[0], tgt: p2.call.blended, call: p2.call.call, gap: p2.call.blended - th, tgt2: COMPANY_DATA.capexModel && COMPANY_DATA.capexModel.mode === `tk` ? read2Q(d2, p2).tp : p2.call.blended } // MAG v0.1b r3（C16）：讀法 2
     }),
     A = [Math.min(sc[0].tgt, sc[2].tgt), Math.max(sc[0].tgt, sc[2].tgt)],
     mLo = Math.min(...RANGE_MULTS), mHi = Math.max(...RANGE_MULTS),
@@ -580,7 +587,13 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
       (bp <= .05 ? `無回購計畫（減少回購步驟不適用）` : bcut.length ? `回購被迫減少：${bcut.map(x => `${x[0]} $${Y(x[1], 1)}`).join(`、`)}bn` : `回購未被迫減少`) +
       `；五期新債 $${Y(ndS, 1)}bn、股權 $${Y(eqS, 1)}bn。`;
   let AQ = aiRoicQ(d, st || DEFAULTS, o), thesisLine = AQ ? `主命題（AI 資本支出有沒有賺到資金成本）：${PERIODS[AQ.ry]} 對外 AI ROIC ${Y(AQ.roic[AQ.ry] * 100, 1)}% vs WACC ${Y(AQ.wacc * 100, 1)}%（${AQ.spread[AQ.ry] < 0 ? `−` : `+`}${Y(Math.abs(AQ.spread[AQ.ry]) * 100, 1)}pt）；打平 k ${Y(AQ.breakevenK, 2)}（目前 ${Y(AQ.k, 2)}）；全 AI（含影子收入）${Y(AQ.roicSh[AQ.ry] * 100, 1)}%。` : ``; // MAG v0.1b
-  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, adjLine, delayLine, junk: jk, fcfLine, thesisLine, aiRoic: AQ }
+  // MAG v0.1b r3（對照表 r1 C16、C23）：兩種讀法並列＋差額；對外比例（無揭露）±20pt 目標價
+  let CMq = COMPANY_DATA.capexModel, TK = CMq && CMq.mode === `tk`, R2 = TK ? read2Q(d, p) : null, S0q = st || DEFAULTS,
+    read2Line = R2 ? `兩種讀法（自用 AI）：讀法 1（影子收入不進評價）$${Y(p.call.blended, 2)}；讀法 2（自用 AI 價值中性：自用 MW 以 k＝1 計影子收入並進評價）$${Y(R2.tp, 2)}；差額 ${R2.diff < 0 ? `−` : `+`}$${Y(Math.abs(R2.diff), 2)}。主值取哪一個是 Andy 的判斷（待決）。` : ``,
+    XSq = TK ? S0q.extShare ?? CMq.extShare : null,
+    xsTp = TK ? [XSq - .2, Math.min(1, XSq + .2)].map(x => { const s2 = { ...S0q, extShare: x }, d2 = runFunding(s2); return { x, tp: runValuation(d2, s2, o).call.blended } }) : null,
+    extLine = TK ? `對外比例無揭露（目前 ${Math.round(XSq * 100)}%，[Assumed]），是最大不確定：${xsTp.map(z => `${Math.round(z.x * 100)}% → $${Y(z.tp, 2)}`).join(`、`)}（基準 $${Y(p.call.blended, 2)}）。` : ``;
+  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, adjLine, delayLine, junk: jk, fcfLine, thesisLine, read2Line, read2: R2, extLine, xsTp, aiRoic: AQ }
 }
 
 // v4.4：差異原因的共用工具（年度共識對照與季度層共用）。類型固定為四種（已決定事項 2）；原因文字中的 {路徑:格式} 由模型數字帶入。

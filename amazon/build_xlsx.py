@@ -2174,6 +2174,51 @@ ws.cell(row=t0 + 2, column=9,
         value="期前融資瀑布：缺口先由額度與資產層新債支應，殘差以股權募足；估值不再扣缺口本金").font = SMALL
 TGT = f"C{t0+2}"
 UPS = f"C{t0+4}"
+# MAG v0.1b r3（對照表 r1 C16）：讀法 2（自用 AI 價值中性）——自用 AI MW 以 k＝1 計影子收入並進評價；同一組股數、淨負債、可轉債分類與倍數（HTML segB read2Q 同式）
+r += 1
+r = section(ws, r, "讀法 2｜自用 AI 價值中性（自用 MW 以 k＝1 計影子收入進評價；讀法 1＝影子收入不進評價，主值不變）")
+_R2 = bool(CXM and PRC)
+vrow("讀法 2｜自用 AI 影子 EBITDA（k＝1）", "US$bn",
+     lambda i: (f"='運營_產能與收入'!{COLS[i]}{CAP['isrev']}*(1/{KSEL}-(1-{inref('EBITDA 率', i)}))*(1/{EXTS}-1)" if _R2 else "=0"), NUM, BLACK,
+     "＝對外 AI 營收 ÷ k ×(1 ÷ 對外比例 − 1) − 同口徑營運成本：自用 AI 剛好回收 Tokenomics 持有成本（不創造也不毀損價值）")
+sh2_v = VR["讀法 2｜自用 AI 影子 EBITDA（k＝1）"]
+vrow("讀法 2｜EBIT", "US$bn", lambda i: f"={PL}{COLS[i]}{ebit_v}+{COLS[i]}{sh2_v}", NUM, BLACK)
+eb2_v = VR["讀法 2｜EBIT"]
+vrow("讀法 2｜無槓桿 NOL 期初", "US$bn", lambda i: f"={NOL0}", NUM, BLACK)
+nb2 = VR["讀法 2｜無槓桿 NOL 期初"]
+vrow("讀法 2｜本期動用（無槓桿）", "US$bn", lambda i: f"=MIN({COLS[i]}{nb2},MAX(0,{COLS[i]}{eb2_v})*{NOLU})", NUM, BLACK)
+nu2 = VR["讀法 2｜本期動用（無槓桿）"]
+vrow("讀法 2｜無槓桿 NOL 期末", "US$bn", lambda i: f"={COLS[i]}{nb2}-{COLS[i]}{nu2}+MAX(0,-{COLS[i]}{eb2_v})", NUM, BLACK)
+ne2 = VR["讀法 2｜無槓桿 NOL 期末"]
+for i in range(1, 5):
+    ws.cell(row=nb2, column=3 + i, value=f"={COLS[i-1]}{ne2}")
+vrow("讀法 2｜無槓桿所得稅", "US$bn", lambda i: f"=MAX(0,{COLS[i]}{eb2_v}-{COLS[i]}{nu2})*{TAX}", NUM, BLACK)
+tx2 = VR["讀法 2｜無槓桿所得稅"]
+vrow("讀法 2｜UFCF", "US$bn", lambda i: f"={COLS[i]}{ufcf_v}+{COLS[i]}{sh2_v}-({COLS[i]}{tx2}-{COLS[i]}{utax_v})", NUM, BLACK, "＝讀法 1 UFCF＋影子 EBITDA − 稅差", True)
+uf2 = VR["讀法 2｜UFCF"]
+vrow("讀法 2｜UFCF 現值", "US$bn", lambda i: f"={COLS[i]}{uf2}*{COLS[i]}{df_v}", NUM, BLACK)
+pv2 = VR["讀法 2｜UFCF 現值"]
+R2C = {}
+def r2c(name, f, fmt=NUM, note=None, bold=False):
+    global r
+    ws.cell(row=r, column=1, value=name).font = BOLD if bold else BLACK
+    c = ws.cell(row=r, column=3, value=f); c.number_format = fmt; c.font = BOLD if bold else BLACK
+    if note: ws.cell(row=r, column=9, value=note).font = SMALL
+    R2C[name] = f"C{r}"; r += 1
+r2c("讀法 2｜五期 UFCF 現值合計", f"=SUM(C{pv2}:G{pv2})")
+r2c("讀法 2｜終值基準 FCF", (f"=C{d0+1}-G{ufcf_v}+G{uf2}" if V.get('tvBasis') == 'ufcf' else f"=C{d0+1}+G{sh2_v}*(1-{TAX})"), NUM, "＝讀法 1 終值基準＋末期影子現金流差")
+r2c("讀法 2｜DCF 失效？", f"=IF(OR({WACC}<={GG},{R2C['讀法 2｜終值基準 FCF']}<=0),1,0)", NUM0)
+r2c("讀法 2｜終值現值", f"=IF({R2C['讀法 2｜DCF 失效？']}=1,0,{R2C['讀法 2｜終值基準 FCF']}*(1+{GG})/({WACC}-{GG}))*G{df_v}")
+r2c("讀法 2｜企業價值 EV", f"={R2C['讀法 2｜五期 UFCF 現值合計']}+{R2C['讀法 2｜終值現值']}")
+_S2 = f"({R2C['讀法 2｜企業價值 EV']}+C{d0+9})"
+r2c("讀法 2｜d1", f"=IF(OR({_S2}<=0,§NDX§<=0),0,(LN({_S2}/§NDX§)+({RF}+{SIGMA}^2/2)*{OPTT})/({SIGMA}*SQRT({OPTT})))", '0.000')
+r2c("讀法 2｜DCF 每股（評價日）", (f"=IF({R2C['讀法 2｜DCF 失效？']}=1,0,IF({DMODE}=2,IF({_S2}<=0,0,IF(§NDX§<=0,{_S2},{_S2}*NORMSDIST({R2C['讀法 2｜d1']})-§NDX§*EXP(-{RF}*{OPTT})*NORMSDIST({R2C['讀法 2｜d1']}-{SIGMA}*SQRT({OPTT})))/C{d0+10}),"
+                              f"MAX(0,({R2C['讀法 2｜企業價值 EV']}-§NDX§+C{d0+9})/C{d0+10})))"), USD, "與讀法 1 同股數、同淨負債")
+r2c("讀法 2｜DCF 每股（推到目標價時點）", f"={R2C['讀法 2｜DCF 每股（評價日）']}*(1+{WACC})^{CAL_TT}", USD)
+r2c("讀法 2｜EV/EBITDA 每股（融資後）", f"=MAX(0,(C{m0+2}+INDEX($D${sh2_v}:$G${sh2_v},1,{EVY})*{EVEBITDA}-C{m0+3})/C{m0+4})*C{m0+5}", USD, "錨定年 AI 雲端 EBITDA 加影子 EBITDA × AI 雲端倍數")
+r2c("讀法 2｜加權目標價", f"={R2C['讀法 2｜DCF 每股（推到目標價時點）']}*IF({R2C['讀法 2｜DCF 失效？']}=1,0,{WDCF})+{R2C['讀法 2｜EV/EBITDA 每股（融資後）']}*IF({R2C['讀法 2｜DCF 失效？']}=1,1,1-{WDCF})", USD, "只有對外 AI 的超額報酬影響目標價（對照表 r1 C16）", True)
+r2c("讀法 2 − 讀法 1（目標價差額）", f"={R2C['讀法 2｜加權目標價']}-{TGT}", USD, "主值取哪一個是 Andy 的判斷（待決）", True)
+TGT2 = R2C['讀法 2｜加權目標價']
 # v0.1b：可轉債稀釋（若轉換法，兩輪；與 HTML segB runValuation 同一算法）
 # 第一輪判斷價＝現價；第二輪判斷價＝MIN(現價, 第一輪加權目標價)。評價（DCF 股數與淨負債、錨定年末淨負債與股數）依第二輪分類。
 r += 1
@@ -2257,11 +2302,18 @@ rows_rg += [
     ("目標價區間｜方法區間（下緣／上緣）", [f"=MIN({_EVM(f'C{R0+9}')},{_EVM(f'D{R0+9}')})", f"=MAX({_EVM(f'C{R0+9}')},{_EVM(f'D{R0+9}')})"], USD),
     ("目標價區間｜100% EV/EBITDA 目標價（價位／評等代碼）", [f"={EVE_ADJ}", f"={_code(EVE_ADJ)}", f"={_CALL(f'D{R0+11}')}"], USD),
     ("目標價區間｜未截斷 DCF 每股", [f"=(C{d0+6}+C{d0+9})/C{d0+10}"], USD),
-]
+] + ([(f"讀法 2｜{DT_NM[k]}（加權目標價／讀法 2 − 讀法 1）", [(rv.get('r2s') or [0, 0, 0])[j], f"=C§R§-{_IW}D{DT_H+1+j}"], USD) for j, k in enumerate(DT_SC)]  # MAG v0.1b r3（C16）：三情境讀法 2（建置時快照：scripts/rv_solve.py「r2s」）
+     + [(f"對外比例敏感度｜{lb_}（對外比例／加權目標價）", [round(x_, 6), (rv.get('xs') or [0, 0])[j]], USD) for j, (lb_, x_) in enumerate((("−20pt", CXM['extShare'] - 0.2), ("＋20pt", min(1, CXM['extShare'] + 0.2))))]  # C23：快照「xs」（基準 MW 速度不重解）
+     if CXM and 'TGT2' in globals() else [])
+RGR = {}
 for nm, fs, fmt in rows_rg:
     ws.cell(row=r, column=1, value=nm).font = BLACK
+    RGR[nm] = r
     for j, f in enumerate(fs):
-        c = ws.cell(row=r, column=3 + j, value=f); c.number_format = fmt; c.font = BLACK
+        if isinstance(f, str): f = f.replace("§R§", str(r))
+        c = ws.cell(row=r, column=3 + j, value=f); c.number_format = fmt; c.font = BLUE if not (isinstance(f, str) and f.startswith('=')) else BLACK
+        if nm.startswith("對外比例敏感度") and j == 0: c.number_format = PCT
+    if nm.startswith(("讀法 2｜", "對外比例敏感度")): ws.cell(row=r, column=9, value="快照（verify.sh 步驟 3b 以 LibreOffice 重算求得；scripts/rv_solve.py；HTML 即時計算，cmp31 比對）").font = SMALL
     r += 1
 if PRC:  # MAG v0.1b：容量軸 × 價格軸 3 × 3 加權目標價（建置時以 LibreOffice 求解的快照：scripts/rv_solve.py → rv_snap.json「g33」；HTML grid33Q 即時計算，cmp31 比對）
     _G33 = rv.get('g33') or [[0] * 3] * 3
@@ -3664,6 +3716,12 @@ _AL = lambda c: f"'資產負債_新債與新股'!{c}{NB['調整後槓桿（(總�
 srow("結論｜調整後槓桿句", "", [(f'="調整後槓桿（(債務＋租賃負債) ÷ (EBITDA＋租金)）路徑 "&' + '&"／"&'.join(f'TEXT({_AL(c)},"0.0")' for c in COLS)
                           + f'&"×；上限 "&{_MT(LEV)}&"×，"&IF(MAX({_ALR})>{LEV}+1E-9,CHOOSE(MATCH(MAX({_ALR}),{_ALR},0),{_PLB})&" 超過 "&TEXT(MAX({_ALR})-{LEV},"0.0")&"×：需股權或失去投資級。",'
                           f'"最小空間 "&TEXT({LEV}-MAX({_ALR}),"0.0")&"×（"&CHOOSE(MATCH(MAX({_ALR}),{_ALR},0),{_PLB})&"）。")')], bold=True)
+if CXM and 'TGT2' in globals():  # MAG v0.1b r3（C16、C23）：兩種讀法並列＋差額；對外比例 ±20pt
+    _T2 = f"'評價_DCF與目標價'!{TGT2}"; _T1q = f"'評價_DCF與目標價'!{TGT}"
+    srow("結論｜兩種讀法句", "", [(f'="兩種讀法（自用 AI）：讀法 1（影子收入不進評價）$"&TEXT({_T1q},"0.00")&"；讀法 2（自用 AI 價值中性：自用 MW 以 k＝1 計影子收入並進評價）$"&TEXT({_T2},"0.00")&"；差額 "&IF({_T2}-{_T1q}<0,"−","+")&"$"&TEXT(ABS({_T2}-{_T1q}),"0.00")&"。主值取哪一個是 Andy 的判斷（待決）。"')], bold=True)
+    _XR = [RGR[f"對外比例敏感度｜{lb_}（對外比例／加權目標價）"] for lb_ in ("−20pt", "＋20pt")]
+    _XC = lambda j_: f"'評價_DCF與目標價'!C{_XR[j_]}"; _XD = lambda j_: f"'評價_DCF與目標價'!D{_XR[j_]}"
+    srow("結論｜對外比例句", "", [(f'="對外比例無揭露（目前 "&TEXT({EXTS}*100,"0")&"%，[Assumed]），是最大不確定："&TEXT({_XC(0)}*100,"0")&"% → $"&TEXT({_XD(0)},"0.00")&"、"&TEXT({_XC(1)}*100,"0")&"% → $"&TEXT({_XD(1)},"0.00")&"（基準 $"&TEXT({_T1q},"0.00")&"）。"')], bold=True)
 if CXM:  # MAG v0.1b：主命題句（AI ROIC vs WACC、打平 k、含影子收入）
     _AW = "'AI增量報酬'!"; _RYC = COLS[CXM.get('roicYear', 3)]
     _ar_ = lambda k_: f"{_AW}{_RYC}{AIROIC[k_]}"

@@ -56,13 +56,28 @@ with Workbook(xlsx) as wb:
                 wb.set(c_ax, a_); row.append(wb.get(o_tgt))
             g33.append(row)
         wb.set(c_sc, sc0); wb.set(c_ax, ax0)
+    # MAG v0.1b r3（對照表 r1 C16、C23）：三情境讀法 2 目標價；對外比例 ±20pt 目標價（其餘輸入維持目前值；基準 MW 速度不重解，與 HTML 相同）
+    r2s = xs = None
+    try:
+        o_t2 = wb.cell(VA, '讀法 2｜加權目標價'); c_xs = wb.cell(IN, '對外 AI MW 占 AI 總 MW 比例')
+    except KeyError:
+        o_t2 = c_xs = None
+    if o_t2 and c_sc:
+        run(); sc0 = wb.get(c_sc); r2s = []
+        for s_ in (1, 2, 3):
+            wb.set(c_sc, s_); r2s.append(wb.get(o_t2))
+        wb.set(c_sc, sc0)
+        x0 = wb.get(c_xs); xs = []
+        for x_ in (x0 - 0.2, min(1, x0 + 0.2)):
+            wb.set(c_xs, x_); xs.append(wb.get(o_tgt))
+        wb.set(c_xs, x0)
     run()  # 還原輸入（不存檔）
     rev30 = wb.get(wb.cell(IN, '每 MW 年收入', col='G')) * base_in['rev'] * 1e3
     util30 = wb.get(wb.cell(IN, '利用率', col='G'))
     cost30 = wb.get(wb.cell(IN, '每 MW 建置成本', col='G')) * base_in['cap']
 
 res = {'price': P, 'baseDcf': base['dcf'], 'baseTgt': base['tgt'], 'R': R, 'C': C, 'Eb': Eb, 'Rt': Rt,
-       'caps': caps, 'ebs': ebs, 'grid': grid, **({'g33': g33} if g33 else {}), 'rev30': rev30, 'util30': util30, 'cost30': cost30, 'eb30': base_in['eb']}
+       'caps': caps, 'ebs': ebs, 'grid': grid, **({'g33': g33} if g33 else {}), **({'r2s': r2s, 'xs': xs} if r2s else {}), 'rev30': rev30, 'util30': util30, 'cost30': cost30, 'eb30': base_in['eb']}
 num = lambda x: int(x) if isinstance(x, float) and x.is_integer() else x   # 與 JSON.stringify 相同：整數不帶 .0
 res = {k: ([[num(y) for y in r] for r in v] if k in ('grid', 'g33') else [num(y) for y in v] if isinstance(v, list) else num(v)) for k, v in res.items()}
 txt = json.dumps(res, separators=(',', ':'), ensure_ascii=False)

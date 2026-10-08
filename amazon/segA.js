@@ -609,6 +609,7 @@ function runFunding(e) {
         aiRevQ: AIR[r],
         cashTax: tx,
         ebM: ebM,
+        shadowEb1: CXM && t.price ? ((f + nR) / Math.max(t.price[r].k, 1e-9) - (f + nR) * (1 - ebM)) * (1 / XS - 1) : 0, // MAG v0.1b r3（對照表 r1 C16）：讀法 2——自用 AI MW（對外 ×(1 ÷ 對外比例 − 1)）以 k＝1 計影子收入，減同口徑營運成本（模型期金額）
         cashMargin: cm,
         totRev: totRev,
         ebitdaPL: totRev * ebM + ob + lgE - pen,

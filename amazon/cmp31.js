@@ -174,13 +174,13 @@ cmp('其他事業EBITDA', F+T('Ⓒ2 其他事業 EBITDA（«STUB» 起）'), H('
 cmp('PV股權', V+'新股募得現金（現值）', [p.d.pvEquityRaised]);
 cmp('融資後股數', V+'融資後股數（含瀑布新股）', [p.d.postShares]);
 cmp('EV/EBITDA融資後', V+'EV/EBITDA 每股（融資後）', [p.peAdj]);
-cmp('加權目標價', V+'加權目標價', [p.call.blended]);
+cmp('加權目標價', V+'加權目標價', [p.call.blended]); if(COMPANY_DATA.capexModel&&COMPANY_DATA.capexModel.mode==='tk'){ const R2=read2Q(d,p), f2=forwardPL(d,{...p.v,read2:true}); cmp('讀法2 影子EBITDA', V+'讀法 2｜自用 AI 影子 EBITDA（k＝1）', R2.shadow); cmp('讀法2 UFCF', V+'讀法 2｜UFCF', f2.map(x=>x.ufcf)); cmp('讀法2 DCF', V+'讀法 2｜DCF 每股（推到目標價時點）', [R2.dcfT]); cmp('讀法2 EV腿', V+'讀法 2｜EV/EBITDA 每股（融資後）', [R2.ev]); cmp('讀法2 目標價', V+'讀法 2｜加權目標價', [R2.tp]); cmp('讀法2 差額', V+'讀法 2 − 讀法 1（目標價差額）', [R2.diff]); } // MAG v0.1b r3（C16）
 // v4.1：目標價區間（情境區間、方法區間、100% EV/EBITDA 目標價）與判斷句、DCF 權重說明（文字逐字比對）
 { const R=targetRange(d,q,VAL_DEFAULTS,p), RG='評價_DCF與目標價|目標價區間｜', CODE={買進:1,中立:0,賣出:-1};
   cmp('區間 點位', RG+'點位（目前輸入的加權目標價）', [R.pt]);
   cmp('區間 點位評等', RG+'點位評等代碼（1＝買進、0＝中立、−1＝賣出）', [CODE[p.call.call]]);
   cmp('區間 賣出門檻', RG+'賣出門檻價（現價 × (1 − '+pctQ(SELL_TH)+')）', [R.th]);
-  R.scen.forEach(s=>cmp('區間 情境 '+s.sc, RG+SCENARIOS[s.sc].label+'（加權目標價／評等代碼／距賣出門檻）', [s.tgt, CODE[s.call], s.gap]));
+  R.scen.forEach(s=>cmp('區間 情境 '+s.sc, RG+SCENARIOS[s.sc].label+'（加權目標價／評等代碼／距賣出門檻）', [s.tgt, CODE[s.call], s.gap])); if(SC==='base'&&!AKX) R.scen.forEach(s=>cmp('讀法2 情境 '+s.sc, '評價_DCF與目標價|讀法 2｜'+SCENARIOS[s.sc].label+'（加權目標價／讀法 2 − 讀法 1）', [s.tgt2, s.tgt2-s.tgt])); // MAG v0.1b r3（C16）
   cmp('情境區間 A', RG+'情境區間（下緣／上緣）', R.A);
   cmp('方法區間倍數', RG+'方法區間倍數（下端／上端）', R.mults);
   cmp('方法區間 B', RG+'方法區間（下緣／上緣）', R.B);
@@ -212,6 +212,7 @@ cmp('加權目標價', V+'加權目標價', [p.call.blended]);
   cmp('摘要 點位',SM+'結論｜點位（加權目標價）',[R.pt]); cmp('摘要 空間',SM+'結論｜空間',[cv.up]); cmp('摘要 點位−門檻',SM+'結論｜點位 − 賣出門檻',[cv.gapTh]);
   cmpT('文字 摘要評等',SM+'結論｜評等',p.call.call); cmpT('文字 摘要結論句',SM+'結論｜結論句',cv.head); cmpT('文字 摘要情境判斷句',SM+'結論｜情境判斷句',R.judge);
   cmpT('文字 共識判斷句',SM+'差異｜判斷句',cv.judge); cmpT('文字 投資級句',SM+'結論｜投資級句',cv.igLine); cmpT('文字 延誤句',SM+'結論｜延誤句',cv.delayLine); cmpT('文字 調整後槓桿句',SM+'結論｜調整後槓桿句',cv.adjLine); cmpT('文字 隱含倍數句',SM+'隱含｜隱含倍數句',cv.implied); cmpT('文字 FCF句',SM+'結論｜股東回饋與 FCF 句',cv.fcfLine); // MAG v0.1b
+  if(cv.read2Line){ cmpT('文字 兩種讀法句',SM+'結論｜兩種讀法句',cv.read2Line); if(SC==='base'&&!AKX){ cmpT('文字 對外比例句',SM+'結論｜對外比例句',cv.extLine); } if(SC==='base'&&!AKX) cmp('對外比例 −20pt','評價_DCF與目標價|對外比例敏感度｜−20pt（對外比例／加權目標價）',[cv.xsTp[0].x,cv.xsTp[0].tp]); if(SC==='base'&&!AKX) cmp('對外比例 ＋20pt','評價_DCF與目標價|對外比例敏感度｜＋20pt（對外比例／加權目標價）',[cv.xsTp[1].x,cv.xsTp[1].tp]); } // MAG v0.1b r3（C16、C23）
   if(cv.aiRoic){ cmpT('文字 主命題句',SM+'結論｜主命題句',cv.thesisLine); const A=cv.aiRoic, AW='AI增量報酬|'; // MAG v0.1b：AI 增量報酬
     [['rev','對外 AI 雲端營收（年化）'],['ebitda','AI 雲端 EBITDA（年化）'],['opex','AI 營運成本（年化）'],['da','AI 折舊（年化）'],['mwEff','有效在役對外 MW（＝營收 ÷ 每 MW 年收入）'],['mwRent','租用對外 MW（平均）'],['ownShare','自有對外占自有 AI MW 比例'],['facRentMW','每 MW 機房年租金（Tokenomics 機房成本 × 資本回收係數）'],['rentFac','機房租金（自有對外 MW ×(1 − 自建比例)）'],['rentExt','租用對外 MW 租金'],['ebitdaNet','對外 AI EBITDA（扣租金）'],['daExt','對外 AI 折舊（年化，按對外比例分攤）'],['nopat','對外 AI NOPAT（年化）'],['icExt','對外 AI 平均投入資本（按對外比例分攤）'],['icBeg','AI 投入資本（期初）'],['icEnd','AI 投入資本（期末）'],['roic','對外 AI ROIC（主值）'],['spread','對外 AI ROIC − WACC'],['shRev','影子收入（自用 AI MW × 每 MW 年收入，年化）'],['roicSh','全 AI ROIC（含影子收入，對照）']].forEach(([k,l])=>cmp('AIROIC '+k, AW+l, A[k]));
     cmp('打平k', AW+T(`打平 k（使 ${PERIODS[A.ry]} 對外 AI ROIC＝WACC）`), [A.breakevenK]);
