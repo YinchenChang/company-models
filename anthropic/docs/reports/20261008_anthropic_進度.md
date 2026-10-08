@@ -1,8 +1,8 @@
 # Anthropic v0.1 分段建置進度（接手用；A1–A5 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：A0（`aa925dd`）；A1（`8d955cf`）；A2 步驟 1（`aa06cb2`）、2（`52d8dd5`）、3 Inputs 草稿 101 列（本 commit）。
-- 下一步：A2 步驟 4–5：`builder/a2.py` 建 Demand 與 Revenue（兩頁互相引用：API 2025／2026 token 由 Revenue 營收倒推；Demand 的價格反應底數取 Revenue 組合有效單價），一起 commit。
+- 已完成：A0（`aa925dd`）；A1（`8d955cf`）；A2 步驟 1（`aa06cb2`）、2（`52d8dd5`）、3（`7609b7c`）、4–6 Demand、Revenue、Checks（本 commit；`builder/a2.py`）。
+- 下一步：A2 步驟 7：tests（parity 情境 ≥8、test_builder：E6、ID、OAI_Link 隔離）與 `.github/workflows/anthropic-parity.yml`。
 - 未解問題：無。
 
 ## 段落總覽
@@ -22,10 +22,10 @@
 |---|---|---|---|
 | 1 builder 骨架（README、SRC_ANT、TK_Link、OAI_Link、Inputs、Checks；registry） | 完成 | `aa06cb2` | SRC_ANT 379 列（新增 377–379 供 Derived 公式化）；Derived 12 列：11 公式、1 保留報導值；TK 63 名＋NonNV 18 格；OAI_Link 17 名；CHK_Errors＝0 |
 | 2 TK_Link NonNV（D6）＋ check_tk_snapshot | 完成 | `52d8dd5` | TK_NNV_{TPUv7,Trn3,MI455X}_{Out,OutLo,OutHi,Hold,HoldLo,HoldHi} 18 格；check_tk_snapshot：OK 81（63＋18） |
-| 3 Inputs 草稿 | 完成 | 見 git log「A2 步驟 3」 | 101 列：定義常數 14、開關 4、訂閱 11、人數成長 15、使用量 29、API 23、通路與其他 3（Analogy 多引 OpenAI v0.6 INP 編號） |
-| 4 Demand | 未開始 | | |
-| 5 Revenue | 未開始 | | |
-| 6 Checks | 未開始 | | |
+| 3 Inputs 草稿 | 完成 | `7609b7c` | 101 列：定義常數 14、開關 4、訂閱 11、人數成長 15、使用量 29、API 23、通路與其他 3（Analogy 多引 OpenAI v0.6 INP 編號） |
+| 4 Demand | 完成 | 見 git log「A2 步驟 4–6」 | 兩頁互相引用，4–6 同一 commit（builder/a2.py 的 build／checks） |
+| 5 Revenue | 完成 | 同上 | 2025 總額 4.60（校準差 0）；2026 48.73（半校準）；2030 總額 214.9、淨額 196.8 |
+| 6 Checks | 完成 | 同上 | C01–C46；CHK_Errors＝0、CHK_Warnings＝0（2026 對里程碑推估 −17.4%，未超 25%） |
 | 7 測試與 CI | 未開始 | | |
 | 8 報告、CHANGELOG、PR 留言 | 未開始 | | |
 
