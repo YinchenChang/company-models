@@ -63,7 +63,7 @@ Tokenomics 版本：`model/CURRENT`＝`20261007_Tokenomics_v5.24.xlsx`，master 
 - **管銷率＝（60 − 12 ＋ 178 − 84）÷ 2,575 ＝ 142 ÷ 2,575 ＝ 5.51% [Derived]**；假設：銷售行銷與一般管理內的 D&A＝0 [Assumed]。區間 5.51%（扣 SBC）～9.24%（GAAP 含 SBC）；1H26 扣 SBC 為 6.15%。
 
 **6e 站點電價**：找不到（CoreWeave 與房東 Applied Digital、Core Scientific、Galaxy 公告皆未揭露電價或電費負擔方）；電價以 Tokenomics 為準。
-| 7 整體 verify 與回報 | 完成 | （本 commit） | `verify.sh --vs-dist` 23 項全過；PR 留言「[CRWV 回報] W1｜完成｜2026-10-07」 |
+| 7 整體 verify 與回報 | 完成 | fcf0865 | `verify.sh --vs-dist` 23 項全過；PR 留言「[CRWV 回報] W1｜完成｜2026-10-07」 |
 
 ### W1 已套用的預設（問題｜採用的預設｜替代選項｜對結果的影響）
 | 問題 | 預設 | 替代 | 影響 |
@@ -367,7 +367,7 @@ chat 端追加（優先於工作單，2026-10-07）：第 0 步把 Tokenomics �
 
 | 4 前後對照 Excel | 完成 | （本 commit） | `docs/reports/20261007_coreweave_v4.6_前後對照.xlsx`（摘要＋Q2 實際對帳、每MW_前後〔三情境 × FY26–30，IT 與設施口徑〕、參數對照、變動拆解、Tokenomics參考線、已知限制）；`scripts/compare_gather.py` 檢查舊方法副本與 v4.5 成品 5,439 個共有數值格相同；`scripts/build_compare.py`；LibreOffice 重算 601 個公式 0 錯誤；拆解檢查格三情境「通過」 |
 | 5 報告 md | 完成 | （本 commit） | `docs/reports/20261007_coreweave_v4.6_前後對照.md`（結論三句、關鍵數字、拆解、Q2 對帳、W2 暫代 vs v5.26、已套用預設、未解問題、verify 輸出） |
-| 7 整體 verify 與回報 | 完成 | （本 commit） | 新方法 `verify.sh` 22 項全過；`--vs-dist`（對 v4.5，EXPECT）25 項全過；`verify_legacy.sh` 25 項全過；PR 留言「[CRWV 回報] W3｜完成｜2026-10-08」、PR 改 ready |
+| 7 整體 verify 與回報 | 完成 | fcf0865 | 新方法 `verify.sh` 22 項全過；`--vs-dist`（對 v4.5，EXPECT）25 項全過；`verify_legacy.sh` 25 項全過；PR 留言「[CRWV 回報] W3｜完成｜2026-10-08」、PR 改 ready |
 ### W3 第 0′ 步：v5.26 正式值取代 W2 暫代值（基準情境）
 
 核對 Tokenomics 值（$B/GW/年＝US$m/MW/年，基準）：GB300 IT 維護 1.1234、人員軟體 0.325、稅險 0.2506；VR200 IT 維護 1.1276、稅險 0.2513（與 chat 端核對值相同）；Hopper 0.8253／0.325／0.2009、GB200 0.7205／0.325／0.1834；IF_DeprLifeIT 基準各世代 6 年（高成本 4 年）→ 加權取整 6，與暫代值相同。
@@ -413,10 +413,10 @@ chat 端追加（優先於工作單，2026-10-07）：第 0 步把 Tokenomics �
 | 1 證據補充 | 完成 | 686991d | 見下方「W4 第 1 步證據表」；`company.json` → `pricing.anchorMultiple`（evidence、contractMix、notFound） |
 | 2 實作 tkAnchor | 完成（新方法 verify 22 項全過） | 686991d | Excel：輸入頁「定價倍數 k」三格＋TK 收入上限區塊；「每MW經濟性」新增「每 MW 收入：Tokenomics 錨 × 定價倍數 k（W4）」與「k 證據表」；B 區每 MW 年收入改引用；檢查頁「收入上限」；JS：`anchorRevQ`、perMwQ `tk`／`kev`、pmwSensQ 六組、檢查卡；cmp31 三情境各 472 項、FY27 錨定 433 項全 OK。另修 JS 既有缺陷：segB 無槓桿 NOL 虧損只加回 80%（Excel 為 100%；v4.6 前未觸發，W4 數字下 FY30 UFCF 差 0.41）。舊方法回歸 `scripts/verify_legacy.sh` 基準改為 v4.6（revenue=legacy、其餘 v4.6 設定、快照取 git 歷史 v5.26、dist 取 f373885）：25 項全過，畫面文字、Excel 值與公式對 v4.6 成品 **0 差異**（新增列 44） |
 | 3 Q2 驗證（不校準） | 完成 | 686991d | `scripts/q2_check_w4.py`：模型首期 7.638 對 Q2 年化 8.240（−0.602，−7.3%）＝(i) 爬坡分母 +0.091、(ii) 利用率 0、(iii) 定價倍數 −0.737（模型 k 0.760 vs Q2 隱含 0.838）、(iv) 世代組合 +0.072、(v) 其他 −0.028；相加＝總差距。Excel「每MW經濟性」最近一季實際對照新增 5 列（Q2 每 MW 收入 ÷ 在役／÷ 計費 MW、Q2 錨、Q2 隱含 k 未調整 0.752） |
-| 4 敏感度 | 完成 | （本 commit） | `permw_sens.json` 新增 k_長約 0.70／1.00、k_現貨 1.50／2.30、長約占比 −20pt、長約占比 100% 六組（HTML 即時、cmp31 逐格）；基準：$59.24／$236.10、$54.16／$188.00、$201.31、$5.25；Tokenomics 低／高 $0.21／$605.66；Rubin Ultra 版 $104.23 |
-| 5 升版 v4.7 | 完成 | （本 commit） | VLOG 兩處、dist 換 v4.7（移除 v4.6）、交接檔 v4.7（2k、2j、第 5 節）、README v4.7 段落與工具表；`scripts/expect/v4_7_rules.json` → `make_expect.py`（1,022 格＋4 列改名，未歸類 0；營運成本列不在清單）→ `EXPECT=… verify.sh --vs-dist` 對 v4.6 成品 25 項全過；`scripts/attrib_w4.py`：(d) ① 錨（k＝1）+30.16／+15.46／+8.82、② 套用 k +17.09／+52.88／+103.09、③ 0，相加＝總變動 |
-| 6 對照報告 | 完成 | （本 commit） | `scripts/compare_w4.py` → `docs/reports/20261008_coreweave_v4.7_收入錨定.xlsx`（摘要、每MW_前後、錨與k、證據表、Q2驗證、敏感度、變動拆解；LibreOffice 重算 255 公式 0 錯誤，檢查格皆「通過」）＋同名 md |
-| 7 整體 verify 與回報 | 完成 | （本 commit） | 見報告 md 第 10 節；PR 留言「[CRWV 回報] W4｜完成｜2026-10-08」 |
+| 4 敏感度 | 完成 | fcf0865 | `permw_sens.json` 新增 k_長約 0.70／1.00、k_現貨 1.50／2.30、長約占比 −20pt、長約占比 100% 六組（HTML 即時、cmp31 逐格）；基準：$59.24／$236.10、$54.16／$188.00、$201.31、$5.25；Tokenomics 低／高 $0.21／$605.66；Rubin Ultra 版 $104.23 |
+| 5 升版 v4.7 | 完成 | fcf0865 | VLOG 兩處、dist 換 v4.7（移除 v4.6）、交接檔 v4.7（2k、2j、第 5 節）、README v4.7 段落與工具表；`scripts/expect/v4_7_rules.json` → `make_expect.py`（1,022 格＋4 列改名，未歸類 0；營運成本列不在清單）→ `EXPECT=… verify.sh --vs-dist` 對 v4.6 成品 25 項全過；`scripts/attrib_w4.py`：(d) ① 錨（k＝1）+30.16／+15.46／+8.82、② 套用 k +17.09／+52.88／+103.09、③ 0，相加＝總變動 |
+| 6 對照報告 | 完成 | fcf0865 | `scripts/compare_w4.py` → `docs/reports/20261008_coreweave_v4.7_收入錨定.xlsx`（摘要、每MW_前後、錨與k、證據表、Q2驗證、敏感度、變動拆解；LibreOffice 重算 255 公式 0 錯誤，檢查格皆「通過」）＋同名 md |
+| 7 整體 verify 與回報 | 完成 | fcf0865 | 見報告 md 第 10 節；PR 留言「[CRWV 回報] W4｜完成｜2026-10-08」 |
 
 ### W4 關鍵數字（v4.6 → v4.7）
 加權目標價：保守 $43.99 → $91.24、基準 $29.68 → $98.02、積極 $19.95 → $131.86（皆由賣出轉中立）；融資缺口 32.7／81.6／157.9 → 30.3／67.5／118.1。基準每 MW 年收入（100% 計費）11.2／11.5／11.5／11.0／10.5 → 8.42／8.79／10.13／12.70／16.47；錨 11.07–12.31；k 0.76、0.76、0.85、1.05、1.34；長約占比 100%、100%、91%、71%、42%；上限檢查最高 42%（門檻 50%）。
