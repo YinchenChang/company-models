@@ -25,3 +25,10 @@
 - 工具：`tools/sensitivity.py`（engine 重算 14 個驅動的區間端點）；`tools/make_report_tables.py --stage A4`（④A1–A4 預設彙總、⑤敏感度）；`builder/a2.py` 列鍵記號支援 F、X；`build.py` 加 Reverse 隔離掃描。
 - 結果：累計外部資金需求 2026–2030＝0（無缺口年；只靠已到位融資的現金谷底 2028 年 $80.2B）；2030 年底現金 218.4；每 VR 等值 GW 差額不變（−6.5／−5.2／−2.9／＋5.1／＋11.2）。OpenAI v0.6：累計 442.8。反向（管理層舊目標、同一支出）累計 25.2。
 - Tokenomics：CURRENT 仍為 v5.26（master 前進到 `70d859e`，只新增文件）；check_tk_snapshot OK 89。
+
+## v0.1 成品（A5，2026-10-08；Excel `model/20261008_Anthropic_v0.1.xlsx` 未改動）
+- commit：`5d08b70`（產生器、測試、dist、截圖、CI）、`210faf0`（命題與驅動對照表）、`82e88e7`（交接檔、根目錄 README）；成品報告提交見 PR #22 完成留言。
+- `tools/build_html.py` 改寫為 Anthropic 版（9 節：結論、每 VR 等值 GW、營收結構與 run-rate 里程碑、算力與逐家合約對帳、現金與融資（含 S1–S7、回流對照）、三個關鍵驅動與「要成立必須」、與 OpenAI v0.6 並排、Andy 待審 5 項、資料與版本）；取位支援「頁!列 ID:欄」；`tools/html_scenarios.yaml` 20 個情境（含 TK NonNV 區間）；`tools/screenshot_html.py` 預設檔名改 v0.1。
+- 成品：`dist/20261008_Anthropic收支模型_v0_1.html`（818 個可追溯數字、無外部資源）、`dist/20261008_Anthropic收支模型_v0_1.xlsx`（＝現行模型）；截圖 `docs/reports/img/20261008_v0.1_成品_*.png`。
+- 測試：新增 `tests/test_html.py`（HTML＝engine 重算、無外部引用、dist xlsx＝現行模型、文字主張、單一驅動不產生外部資金需求）；`.github/workflows/anthropic-parity.yml` governance 加 HTML 測試一步。
+- 文件：`docs/plan/20261008_Anthropic_命題與驅動對照表.md`；交接檔更新為 v0.1 完成；報告 `docs/reports/20261008_v0.1_成品.md`。
