@@ -53,13 +53,13 @@ function forwardPL(e, t) {
       v = e.years[c].daFleet,
       y = e.years[c].cashCapex,
       b = t.wcPctOfRevGrowth * Math.max(0, d - r),
-      tb2 = Math.max(0, p - Math.min(N2, p * NOL_USE)),
+      tb2 = Math.max(0, p - Math.min(N2, Math.max(0, p) * NOL_USE)), // W4：無槓桿 NOL——虧損全額加回、只以正的 EBIT 動用（與 Excel『評價_DCF與目標價』無槓桿 NOL 相同；原寫法只加回 80%，v4.6 前未觸發）
       x = p - tb2 * t.tax + v - y - b,
       S = e.years[c].revenue,
       w = e.years[c].newRev,
       T = e.years[c].capacity > 0 ? e.years[c].unsold / e.years[c].capacity : 0,
       E = p + v;
-    return N2 -= Math.min(N2, p * NOL_USE), r = c === 0 ? HIST_PL[3].revenue + d : d, {
+    return p < 0 ? N2 += -p : N2 -= Math.min(N2, p * NOL_USE), r = c === 0 ? HIST_PL[3].revenue + d : d, {
       fyRevenue: c === 0 ? HIST_PL[3].revenue + d : d,
       fyOpInc: c === 0 ? HIST_PL[3].opInc + p : p,
       fyNi: c === 0 ? HIST_PL[3].ni + h : h,

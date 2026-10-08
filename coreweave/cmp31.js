@@ -175,7 +175,7 @@ cmp('加權目標價', V+'加權目標價', [p.call.blended]);
     qv.key.forEach((m,i)=>cmpT('文字 驗證點 '+m.label,SM+'驗證｜'+m.label+'｜句',qv.keyLines[i])); } }
 // W2：每 MW 經濟性（Excel「每MW經濟性」頁逐列；數值 1e-6 相對容忍、文字逐字、空白格不比）與「輸入與假設」每 MW 建置成本、GPU 經濟壽命
 { const PW=perMwQ(d,q);
-  if(PW){ for(const [sec,rs] of Object.entries(PW)) for(const [lab,,hs] of rs){ const k='每MW經濟性|'+lab, x=X[k];
+  if(PW){ for(const [sec,rs] of Object.entries(PW)) for(const [lab,,hs] of (rs||[])){ const k=(sec==='cv'||sec==='q2r'?'公司實況驗證|':'每MW經濟性|')+lab, x=X[k]; // W5：cv／q2r 區在「公司實況驗證」頁
       if(!x){ if(hs.some(h=>typeof h==='number')) rows.push(['每MW '+lab,'MISSING XL KEY '+k]); continue; }
       const ok=hs.every((h,i)=>h==null?(x[i]==null||x[i]===''):typeof h==='number'?typeof x[i]==='number'&&Math.abs(h-x[i])<=1e-6*Math.max(1,Math.abs(h)):(x[i]??'')===h);
       rows.push([ok?'OK ':'XX ','每MW '+sec+' '+lab,JSON.stringify(hs.map(h=>typeof h==='number'?+h.toFixed(4):h)),JSON.stringify(x.slice(0,5).map(v=>typeof v==='number'?+v.toFixed(4):v))]); }

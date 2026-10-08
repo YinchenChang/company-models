@@ -159,6 +159,7 @@ F = [
  ('methodology.rating.tvShareWarn', '終值占企業價值超過此值時提出警示（融資說明、檢查頁）', '比例', K),
  ('methodology.checks.capexPerMwBand', '檢查頁：模型期 CapEx 強度（每 MW 百萬美元）的合理區間下端與上端（5a）', 'US$m/MW 清單', C),
  ('methodology.checks.leaseVsCommitMin', '檢查頁：表外租金路徑 ÷ 已承諾租約至少要達到的倍數（5a）', '倍', C),
+ ('methodology.checks.revCapShareMax', '檢查頁：CRWV 每 MW 計費收入 ÷ Tokenomics 客戶付費 token 營收（IF_RevGWFleet）的上限，超過即警示（W4）', '比例', C),
  ('methodology.checks.unsignedRevShareMax', '檢查頁：後段年度依賴未簽約收入的比例上限（5a）', '比例', C),
  ('methodology.checks.siteRentGapMax', '檢查頁：站點租賃五期租金可能低估的金額上限（5a）', 'US$bn', C),
  ('methodology.checks.rentVsBenchMin', '檢查頁：模型每 MW 年租金至少要達到「市場基準 × 第三方占比」的比例（5a）', '比例', C),
@@ -200,7 +201,7 @@ F = [
  ('methodology.perMw._note', '每 MW 方法開關的說明（不進程式；W2）', '文字', K),
  ('methodology.perMw.capex', '每 MW 資本支出方法（W2）：tokenomics＝Σ 新增世代占比 × IF_CapexIT；legacy＝scenarios.capexTemplate.costMW', '代碼', C),
  ('methodology.perMw.cost', '營運成本方法（W2）：bottomUp＝Tokenomics 電費、IT 維護、人員軟體、稅險 × 平均在役 MW＋管銷率；ebitdaPct＝起始→穩態 EBITDA 率線性', '代碼', C),
- ('methodology.perMw.revenue', '每 MW 收入方法（W2）：gpuHr＝pricing.gpuHr × 每 MW GPU 數 × 8,760；legacy＝defaults.m.revMW（備案）', '代碼', C),
+ ('methodology.perMw.revenue', '每 MW 收入方法（W2／W4）：tkAnchor＝Σ 平均在役占比 × IF_HoldEcon × 定價倍數 k（pricing.anchorMultiple；W4 預設）；gpuHr＝pricing.gpuHr × 每 MW GPU 數 × 8,760；legacy＝defaults.m.revMW（對照）', '代碼', C),
  ('fleet._note', '世代組合的說明（不進程式；W2）', '文字', K),
  ('fleet.generations', '世代清單（與 Tokenomics 快照世代同名；順序＝由舊到新，汰換由最舊世代先出）', '文字清單', C),
  ('fleet.openMix.asOf', '期初在役機隊的日期（最新已申報季末）', '日期', M),
@@ -215,6 +216,62 @@ F = [
  ('fleet.newMixAlt.tag', '替代路徑的標記', '文字', C),
  ('pricing._note', 'GPU 小時價格與對照價格的說明（不進程式；W2）', '文字', K),
  ('pricing.gpuHr', 'GPU 小時合約價，{世代: {base, low, high, source, date, tag}}（US$/GPU-hr）；空白＝不適用（revenue=gpuHr 時必填所有在役世代）', '物件', M),
+ ('pricing.anchorMultiple._note', 'Tokenomics 錨的公司因素說明（不進程式；W4）', '文字', K),
+ ('pricing.anchorMultiple.long.base', '定價倍數 k_長約 基準（市場長約價 ÷ Tokenomics 同世代持有成本；W4）', '倍', C),
+ ('pricing.anchorMultiple.long.low', 'k_長約 區間下緣（敏感度）', '倍', C),
+ ('pricing.anchorMultiple.long.high', 'k_長約 區間上緣（敏感度）', '倍', C),
+ ('pricing.anchorMultiple.long.tag', 'k_長約 的資料標記', '文字', K),
+ ('pricing.anchorMultiple.long.note', 'k_長約 基準與區間的依據', '文字', K),
+ ('pricing.anchorMultiple.spot.base', '定價倍數 k_現貨 基準（市場現貨價 ÷ Tokenomics 同世代持有成本；W4）', '倍', C),
+ ('pricing.anchorMultiple.spot.low', 'k_現貨 區間下緣（敏感度）', '倍', C),
+ ('pricing.anchorMultiple.spot.high', 'k_現貨 區間上緣（敏感度）', '倍', C),
+ ('pricing.anchorMultiple.spot.tag', 'k_現貨 的資料標記', '文字', K),
+ ('pricing.anchorMultiple.spot.note', 'k_現貨 基準與區間的依據', '文字', K),
+ ('pricing.anchorMultiple.longShare.method', 'RPO 覆蓋率對照列的算法（rpoCover＝RPO 涵蓋的產能 ÷ 在役計費產能；r2 起只作對照、不驅動）', '代碼', C),
+ ('pricing.anchorMultiple.longShare.tag', 'RPO 覆蓋率對照列的資料標記', '文字', K),
+ ('pricing.anchorMultiple.longShare.formula', 'RPO 覆蓋率對照列算式說明（不進程式）', '文字', K),
+ ('pricing.anchorMultiple.long.sensMedian', 'k_長約 三筆長約中位數（敏感度；W4 r2）', '倍', C),
+ ('pricing.anchorMultiple.long.refEvidence', 'k_長約 的基準證據（evidence.label；成本情境重算時用其世代的 Tokenomics 成本比例）', '文字', C),
+ ('pricing.anchorMultiple.spot.refEvidence', 'k_現貨 的基準證據（evidence.label；成本情境重算時用其世代的 Tokenomics 成本比例）', '文字', C),
+ ('pricing.anchorMultiple.onDemandShare.base', '隨需（現貨）占在役計費產能比例，基準（W4 r2；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約）', '比例', C),
+ ('pricing.anchorMultiple.onDemandShare.sens', '隨需占比敏感度', '清單', C),
+ ('pricing.anchorMultiple.onDemandShare.tag', '隨需占比的資料標記', '文字', K),
+ ('pricing.anchorMultiple.onDemandShare.note', '隨需占比依據', '文字', K),
+ ('pricing.anchorMultiple.contractMix', '公司合約組合事實（label、value、unit、tag、source、url、date、retrieved；只列，不入公式）', '清單', M),
+ ('pricing.anchorMultiple.evidence', 'k 證據表：label、gen、price、unit、tkName（IF_GPUhrEcon／IF_HoldEcon）、contract、term、use（long／spot／range／list）、tag、source、url、date、retrieved、note；倍數在 Excel 以 TK_ 名稱計算', '清單', M),
+ ('pricing.anchorMultiple.notFound', '找不到的資料（試過的來源；W4）', '清單', K),
+ ('companyAdjust._note', '公司實況驗證與公司調整的說明（不進程式；W5，已決定事項 15）', '文字', K),
+ ('companyAdjust.gapTol', '驗證門檻：差距 ≤ 此值直接用 Tokenomics 值（規則 1）；超過時須有證據的機制才調整（W5）', '比例', K),
+ ('companyAdjust.existingK.on', '既有合約 k 開關（1＝最新季末在役 MW 按 Q2 實現單價 ÷ Q2 錨；0＝全部按 k_新約）', '代碼', C),
+ ('companyAdjust.existingK.tag', '既有合約 k 的資料標記', '文字', K),
+ ('companyAdjust.existingK.formula', '既有合約 k 的算式說明（不進程式）', '文字', K),
+ ('companyAdjust.existingK.appliesTo', '既有合約 k 適用的 MW 說明（不進程式）', '文字', K),
+ ('companyAdjust.existingK.reverts', '何時回到 k_新約（不進程式）', '文字', K),
+ ('companyAdjust.existingK.assumptions', 'Q2 計費比例、利用率、服務收入的假設說明（不進程式）', '文字', K),
+ ('companyAdjust.existingK.evidence', '既有合約 k 的證據 id（companyAdjust.evidence）', '清單', M),
+ ('companyAdjust.newK.adjBase', '新約價格調整基準（相對 k_長約；只作用於長約部分）', '比例', C),
+ ('companyAdjust.newK.adjSens', '新約價格調整敏感度（公司說法）', '比例', M),
+ ('companyAdjust.newK.tag', '新約價格調整的資料標記', '文字', K),
+ ('companyAdjust.newK.note', '新約 k 的說明（不進程式）', '文字', M),
+ ('companyAdjust.newK.evidence', '新約 k 的證據 id', '清單', M),
+ ('companyAdjust.spotCw.evidenceLabel', '公司短天期合約證據（pricing.anchorMultiple.evidence 的 label；隨需敏感度用其倍數）', '文字', M),
+ ('companyAdjust.spotCw.od', '公司短天期敏感度的隨需占比', '比例', C),
+ ('companyAdjust.spotCw.tag', '公司短天期證據的標記', '文字', K),
+ ('companyAdjust.opexScale.base', '由下而上營運成本倍數基準（1＝Tokenomics 值；敏感度改為 Q2 實際比率）', '倍', K),
+ ('companyAdjust.opexScale.tag', '營運成本倍數的資料標記', '文字', K),
+ ('companyAdjust.opexScale.note', '營運成本倍數的說明', '文字', K),
+ ('companyAdjust.capexActual.mwStart', '年初至今期初主動電力（前一財年末；期間標籤取日曆的年初至今標籤）', 'MW', M),
+ ('companyAdjust.capexActual.mwEnd', '年初至今期末主動電力（最新已申報季末）', 'MW', M),
+ ('companyAdjust.capexActual.techEquip', '技術設備 PP&E 毛額 [期初, 期末]', 'US$bn', M),
+ ('companyAdjust.capexActual.dcEquip', '資料中心設備與租賃改良 PP&E 毛額 [期初, 期末]（只列）', 'US$bn', M),
+ ('companyAdjust.capexActual.cip', '在建工程 [期初, 期末]（只列）', 'US$bn', M),
+ ('companyAdjust.capexActual.tag', '資本支出驗證資料的標記', '文字', K),
+ ('companyAdjust.capexActual.note', '資本支出驗證資料的來源說明', '文字', M),
+ ('companyAdjust.capexActual.evidence', '資本支出驗證的證據 id', '清單', M),
+ ('companyAdjust.params', '驗證表逐列文字：key、label、unit、tkName、actual、tag、mechanism、adjust、rule（1／3／4a）、evidence（數值列由 Excel「公司實況驗證」頁與 HTML 以同一算式產生）', '清單', M),
+ ('companyAdjust.evidence', '證據清單：id、text、source、url、date、retrieved、tag', '清單', M),
+ ('companyAdjust.notFound', '找不到的資料（試過的來源；W5）', '清單', M),
+ ('companyAdjust.q2Notes', 'Q2 逐項對帳各列的差異說明（鍵＝列名稱）', '物件（文字）', M),
  ('pricing.peerRevPerMw', '同業每 MW 年收入對照列（label、value、unit、tag、source、date、url、note；不入損益）', '清單', M),
  ('pricing.marketRefs', '各世代市場 GPU 小時價格對照列（gen、label、value、basis、tag、source、date、url；不入損益）', '清單', M),
  ('costs._note', '由下而上營運成本的公司口徑說明（不進程式；W2）', '文字', K),
@@ -290,6 +347,8 @@ def fmt(v):
 
 
 # 覆蓋檢查：company.json 每個欄位都要有說明
+OPT_TOP = {'companyAdjust'}  # W5：選用區段（舊方法回歸副本會移除）；company.json 沒有時不列
+F = [x for x in F if x[0].split('.')[0] not in OPT_TOP or x[0].split('.')[0] in CO]
 doc = {p for p, *_ in F} | {f'latestQuarter.{k}' for k in LQ} | {f'callFacts.{k}' for k in CF}
 def leaves(o, p=''):
     if isinstance(o, dict):
@@ -307,7 +366,7 @@ SECT = [('meta', '基本資料'), ('calendar', '期間與日期（v4.5）'), ('a
         ('callFacts', '法說會與期後事項'), ('scenarios', '三個擴張情境'), ('legacy', '舊版對照值'),
         ('defaults', '預設假設（畫面上可調的輸入）'), ('valuation', '評價參數'), ('methodology', '評價方法與評等門檻'), ('peers', '同業比較（Comps）'),
         ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'),
-        ('tokenomics', 'Tokenomics 取數層（W1；快照檔、版本與引用名稱）'), ('fleet', '世代組合（W2；公司專屬）'), ('pricing', 'GPU 小時價格與對照價格（W2）'), ('costs', '由下而上營運成本口徑（W2）')]
+        ('tokenomics', 'Tokenomics 取數層（W1；快照檔、版本與引用名稱）'), ('fleet', '世代組合（W2；公司專屬）'), ('pricing', 'GPU 小時價格與對照價格（W2）'), ('companyAdjust', '公司實況驗證與公司調整（W5）'), ('costs', '由下而上營運成本口徑（W2）')]
 out, shown = ['**填表慣例**',
                '- 金額單位是**十億美元（US$bn）**，例如 4.653 代表 46.53 億美元；另有標示的例外：每股（US$）、每 MW 建置成本（百萬美元／MW，US$m/MW）、股數（十億股，bn）。',
                '- 「比例」寫成小數（0.25＝25%）；標示「%」的欄位寫成百分點（25＝25%）。兩種寫法沿用既有程式，不可混用。',
@@ -316,6 +375,7 @@ out, shown = ['**填表慣例**',
                '- 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。',
                f"- 下表的「目前數值」是 {CO['meta']['company']} {VER} 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。"], set()
 for top, title in SECT:
+    if top in OPT_TOP and top not in CO: continue
     out.append(f'\n### `{top}`：{title}\n')
     if top in ('latestQuarter', 'callFacts'):
         acc = 'LATEST_Q.' if top == 'latestQuarter' else 'CALL_FACTS.'

@@ -1,10 +1,10 @@
 {
  "source": {
-  "file": "20261007_Tokenomics_v5.26.xlsx",
-  "current": "20261007_Tokenomics_v5.26.xlsx",
-  "version": "v5.26",
-  "commit": "40746846c1bc892eb1e092a0d372f1ed514c9354",
-  "extractedAt": "2026-10-07",
+  "file": "20261008_Tokenomics_v5.27.xlsx",
+  "current": "20261008_Tokenomics_v5.27.xlsx",
+  "version": "v5.27",
+  "commit": "862bdd46d199ab5047b77dcba17fb356d9a1d562",
+  "extractedAt": "2026-10-08",
   "repo": "YinchenChang/Tokenomics",
   "recalculated": false,
   "optional": [],
@@ -1350,6 +1350,67 @@
      "低成本": "Interface!O228",
      "基準": "Interface!P228",
      "高成本": "Interface!Q228"
+    }
+   }
+  },
+  "IF_RevGWFleet": {
+   "sheet": "Interface",
+   "ref": "Interface!C143:Q143",
+   "label": "付費服務營收合計（層級組合）— OpenAI 有效單價（理想上限）",
+   "unit": "$B/年",
+   "kind": "gen_cost",
+   "values": {
+    "Hopper H100": {
+     "低成本": 4.00488774987164,
+     "基準": 4.00488774987164,
+     "高成本": 4.00488774987164
+    },
+    "GB200 NVL72": {
+     "低成本": 20.1746158611128,
+     "基準": 20.1746158611128,
+     "高成本": 20.1746158611128
+    },
+    "GB300 NVL72": {
+     "低成本": 26.2652356996766,
+     "基準": 26.2652356996766,
+     "高成本": 26.2652356996766
+    },
+    "VR200 NVL72": {
+     "低成本": 48.7237019639935,
+     "基準": 48.7237019639935,
+     "高成本": 48.7237019639935
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 68.9276257152094,
+     "基準": 68.9276257152094,
+     "高成本": 68.9276257152094
+    }
+   },
+   "cells": {
+    "Hopper H100": {
+     "低成本": "Interface!C143",
+     "基準": "Interface!D143",
+     "高成本": "Interface!E143"
+    },
+    "GB200 NVL72": {
+     "低成本": "Interface!F143",
+     "基準": "Interface!G143",
+     "高成本": "Interface!H143"
+    },
+    "GB300 NVL72": {
+     "低成本": "Interface!I143",
+     "基準": "Interface!J143",
+     "高成本": "Interface!K143"
+    },
+    "VR200 NVL72": {
+     "低成本": "Interface!L143",
+     "基準": "Interface!M143",
+     "高成本": "Interface!N143"
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": "Interface!O143",
+     "基準": "Interface!P143",
+     "高成本": "Interface!Q143"
     }
    }
   }
