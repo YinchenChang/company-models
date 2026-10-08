@@ -170,6 +170,8 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - name: 檢查頁（CHK_Errors 必須為 0）並匯出 SRC_OAI／Inputs／TK_Link／Checks CSV
         run: python tools/export_csv.py --out data/export | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: HTML 一頁摘要：數字與 Excel 一致（engine 逐一比對）、無外部引用、dist xlsx＝現行模型（S6）
+        run: python -m pytest tests/test_html.py -v --tb=short -p no:cacheprovider -W ignore::DeprecationWarning
       - name: 上傳匯出 CSV
         uses: actions/upload-artifact@v4
         with:

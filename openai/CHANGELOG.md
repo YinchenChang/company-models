@@ -2,6 +2,14 @@
 
 每次同步記錄：Excel 版本、工作包、commit 與變動摘要。
 
+## 成品 v0.6（S6：HTML 一頁摘要、命題與驅動對照表、交接檔；Excel 不變）
+
+- Excel 仍為 `20261008_OpenAI_v0.6.xlsx`（本段不改模型；parity 107 項全過）。複製到 `dist/20261008_OpenAI收支模型_v0_6.xlsx`（與 `model/CURRENT` 位元組相同）。
+- 新增 HTML 一頁摘要 `dist/20261008_OpenAI收支模型_v0_6.html`（單一檔案、離線可開、內嵌 CSS 與 SVG、系統字型、無外部 URL）：①命題結論 ②每 VR 等值 GW 營收 vs 全成本 ③營收結構與管理層目標 ④算力需求 vs 供給 ⑤現金與外部資金需求（Amazon 情境並列）、或有負債 ⑥三個關鍵驅動與敏感度 ⑦最該審的 5 項預設 ⑧資料與版本。374 個數字皆帶 Excel 位置（title、圖下小字）。
+- 產生器 `tools/build_html.py`（LibreOffice 重算後以具名範圍或「頁!列 ID」取值；HTML 不含計算）；敏感度情境 `tools/html_scenarios.yaml`（值取自 Inputs 低／高欄與倍數列，15 個情境）；截圖工具 `tools/screenshot_html.py`（1280／390 × 淺／深色，攔截外部請求、檢查水平捲動）。
+- 新增 `tests/test_html.py`（HTML 374 個數字與 engine 逐一比對、無外部引用、dist xlsx＝現行模型、文字主張）並納入 CI governance job。
+- 新增 `docs/plan/20261008_OpenAI_命題與驅動對照表.md`；交接檔更新為 v0.6 完成狀態。報告：`docs/reports/20261008_v0.6_成品.md`。PR #20。
+
 ## 20261008_OpenAI_v0.6.xlsx — v0.6（v0.6-P5；S5：融資、檢查與反向模式）
 
 - **v0.6 完成**。TK_Link 快照改取 Tokenomics master `3dd1216`（CURRENT＝`20261007_Tokenomics_v5.26.xlsx`，SHA-256 `abb8592c…224ed0d`）；63 名數值不變；v5.26 新增 DC_Cost 名稱不引用。

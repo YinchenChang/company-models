@@ -1,0 +1,38 @@
+# HTML 一頁摘要第 ⑥ 節的敏感度情境（S6；沿用 v0.6 完成報告「三個最關鍵的驅動變數與敏感度」的設定）。
+# 只定義「改哪些輸入格」，不含任何數值參數：值一律取自 Excel 的 Inputs（低／高欄或倍數列）。
+# 覆寫寫法（鍵＝INP_nnn 具名範圍）：
+#   lo / hi        → 該 Inputs 列的「低」「高」欄
+#   {mul: INP_xxx} → 該格基準值 × INP_xxx 的值（Inputs 的情境倍數列）
+#   0              → 關閉（只用於自有資本支出歸零）
+# 計算一律由 Excel 執行：build_html.py 以 LibreOffice 重算；tests/test_html.py 以 engine（pycel）重算比對。
+groups:
+  api_task_hi: {label: "API 任務數成長 2027–30 ×高情境倍數", set: {INP_034: {mul: INP_039}, INP_035: {mul: INP_039}, INP_036: {mul: INP_039}, INP_037: {mul: INP_039}}}
+  api_task_lo: {label: "API 任務數成長 2027–30 ×低情境倍數", set: {INP_034: {mul: INP_038}, INP_035: {mul: INP_038}, INP_036: {mul: INP_038}, INP_037: {mul: INP_038}}}
+  elast_strong: {label: "價格彈性（任務）取低欄", set: {INP_048: lo}}
+  elast_weak: {label: "價格彈性（任務）取高欄", set: {INP_048: hi}}
+  capex_lo: {label: "自有資本支出 ×低情境倍數", set: {INP_187: {mul: INP_192}, INP_188: {mul: INP_192}, INP_189: {mul: INP_192}, INP_190: {mul: INP_192}, INP_191: {mul: INP_192}}}
+  capex_hi: {label: "自有資本支出 ×高情境倍數", set: {INP_187: {mul: INP_193}, INP_188: {mul: INP_193}, INP_189: {mul: INP_193}, INP_190: {mul: INP_193}, INP_191: {mul: INP_193}}}
+  capex_zero: {label: "自有資本支出歸零", set: {INP_187: 0, INP_188: 0, INP_189: 0, INP_190: 0, INP_191: 0}}
+  hc_lo: {label: "員工人數成長取低欄", set: {INP_263: lo, INP_264: lo, INP_265: lo, INP_266: lo, INP_267: lo}}
+  hc_hi: {label: "員工人數成長取高欄", set: {INP_263: hi, INP_264: hi, INP_265: hi, INP_266: hi, INP_267: hi}}
+  price_lo: {label: "合約價取低欄", set: {INP_229: lo}}
+  price_hi: {label: "合約價取高欄", set: {INP_229: hi}}
+  ads_hi: {label: "廣告曝光與每人收入取高欄", set: {INP_125: hi, INP_126: hi, INP_127: hi, INP_128: hi, INP_129: hi, INP_131: hi, INP_132: hi, INP_133: hi, INP_134: hi, INP_135: hi}}
+
+# 情境＝群組的組合（依序套用）
+scenarios:
+  base: []
+  api_task_hi: [api_task_hi]
+  api_task_lo: [api_task_lo]
+  elast_strong: [elast_strong]
+  elast_weak: [elast_weak]
+  capex_lo: [capex_lo]
+  capex_hi: [capex_hi]
+  capex_zero: [capex_zero]
+  hc_lo: [hc_lo]
+  hc_hi: [hc_hi]
+  price_lo: [price_lo]
+  price_hi: [price_hi]
+  favorable: [api_task_hi, elast_strong, ads_hi, capex_lo, hc_lo, price_lo]
+  favorable_capex0: [api_task_hi, elast_strong, ads_hi, capex_zero, hc_lo, price_lo]
+  unfavorable: [api_task_lo, elast_weak, capex_hi, hc_hi, price_hi]
