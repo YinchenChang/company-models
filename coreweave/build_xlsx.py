@@ -2038,7 +2038,7 @@ r += 1
 _rows = [
     ("FY30 每 MW 年收入（US$m）", rv["rev30"], rv["rev30"] * rv["R"], rv["R"] - 1, "期末 ARR 指引隱含約 $10.0–10.5m；7 月新約漲價約 25%"),
     ("每 MW 建置成本（US$m）", rv["cost30"], rv["cost30"] * rv["C"], rv["C"] - 1, "FY26 指引隱含約 $32–37m"),
-    ("穩態 EBITDA 率（FY30）", rv["eb30"], rv["Eb"] if rv["Eb"] is not None else "無解（>99%）", rv["Eb"] - rv["eb30"] if rv["Eb"] is not None else "—", "Q2 實際 59%；由下而上上緣約 67–71%（變動為百分點）；區間 30–99% 內無解時顯示「無解」"),
+    ("穩態 EBITDA 率（FY30）", rv["eb30"], rv["Eb"] if rv["Eb"] is not None else "無解（>99%）", rv["Eb"] - rv["eb30"] if rv["Eb"] is not None else "—", "Q2 實際 59%；由下而上上緣約 67–71%（變動為百分點）" + ("；區間 30–99% 內無解" if rv["Eb"] is None else "")),
     ("（對照）加權目標價＝現價所需每 MW 年收入", rv["rev30"], rv["rev30"] * rv["Rt"], rv["Rt"] - 1, "含 EV/EBITDA 6x（FY29 錨定） 腿；非純反向 DCF"),
 ]
 RV_R0 = r  # v4.3：單一槓桿快照第一列（「摘要」頁引用）
