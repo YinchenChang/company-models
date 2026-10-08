@@ -1,0 +1,72 @@
+{
+  "_readme": "CRWV 市場共識資料檔。由 Andy 於聊天端查證後提供，Claude Code 只能讀取、不得自行增補或修改數字。單位：金額 US$bn（每股為 US$），日期為擷取日。",
+  "company": "CoreWeave",
+  "ticker": "CRWV",
+  "asOf": "2026-09-25",
+  "tagLegend": {
+    "Verified": "可公開查證的事實（例如公司實際公布數字、收盤價）",
+    "Interested-party": "賣方分析師預估：有利益關係（投行業務、承銷、偏多傾向），數字本身是意見而非事實；『共識是多少』可查證，但共識內容屬利害關係人觀點"
+  },
+  "sourceIndependence": "StockAnalysis.com 與 MarketScreener 的營收預估完全相同（12.882／26.376），兩者皆引用 S&P Global／Capital IQ，屬同一來源的兩個呈現，不是獨立交叉驗證。獨立來源僅有 LSEG（CNBC 引用，日期較舊）。",
+  "priceReference": {
+    "close": 90.13, "date": "2026-09-24",
+    "source": "StockAnalysis.com", "url": "https://stockanalysis.com/stocks/crwv/forecast/", "tag": "Verified",
+    "note": "模型目前使用 2026-09-21 收盤 $85.43；是否更新現價由 Andy 決定"
+  },
+  "priceTarget": {
+    "mean": 140.81, "median": 140.0, "low": 39.0, "high": 317.0, "analysts": 40,
+    "consensusRating": "Buy",
+    "source": "S&P Global Market Intelligence（經 StockAnalysis.com）", "url": "https://stockanalysis.com/stocks/crwv/forecast/",
+    "retrieved": "2026-09-25", "tag": "Interested-party",
+    "crossCheck": {"mean": 140.95, "analysts": 40, "consensusRating": "Outperform", "source": "MarketScreener（同為 S&P／FactSet 資料，非獨立）", "url": "https://www.marketscreener.com/quote/stock/COREWEAVE-INC-188480815/finances/", "retrieved": "2026-09-25"}
+  },
+  "ratings": {
+    "month": "2026-09", "strongBuy": 21, "buy": 7, "hold": 9, "sell": 1, "strongSell": 2, "total": 40,
+    "source": "S&P Global Market Intelligence（經 StockAnalysis.com）", "url": "https://stockanalysis.com/stocks/crwv/forecast/",
+    "retrieved": "2026-09-25", "tag": "Interested-party"
+  },
+  "recentActions": [
+    {"date": "2026-09-25", "firm": "Rothschild & Co Redburn", "rating": "Sell（首次評等）", "target": null, "note": "S&P 資料未列目標價；二手報導稱 $54，未經一手確認，不採用"},
+    {"date": "2026-09-24", "firm": "J.P. Morgan", "rating": "Buy", "target": 125.0, "note": "$120 → $125"},
+    {"date": "2026-09-22", "firm": "UBS", "rating": "Buy（首次評等）", "target": 120.0},
+    {"date": "2026-09-22", "firm": "Evercore ISI", "rating": "Buy（維持）", "target": null, "note": "S&P 資料未列；二手報導稱 $150，未經一手確認，不採用"},
+    {"date": "2026-09-20", "firm": "Freedom Capital Markets", "rating": "Buy（維持）", "target": 151.0}
+  ],
+  "recentActionsMeta": {"source": "TipRanks（經 StockAnalysis.com）", "url": "https://stockanalysis.com/stocks/crwv/forecast/", "retrieved": "2026-09-25", "tag": "Interested-party"},
+  "annualEstimates": {
+    "definition": "EBITDA 為公司調整後 EBITDA 口徑（MarketScreener 的 2026 Q2 EBITDA 1.510 與公司公布的調整後 EBITDA $1.51bn 相同）；EPS 為 GAAP 口徑；淨負債不含租賃負債（口徑未揭露，比較時留意）",
+    "source": "MarketScreener（S&P Capital IQ／FactSet 共識）", "url": "https://www.marketscreener.com/quote/stock/COREWEAVE-INC-188480815/finances/",
+    "retrieved": "2026-09-25", "tag": "Interested-party",
+    "FY26": {"revenue": 12.882, "ebitda": 7.574, "ebitdaMargin": 0.588, "ebit": 1.063, "interest": 2.965, "netIncome": -2.786, "epsGaap": -5.074, "capex": 35.953, "fcf": -28.831, "netDebt": 46.442},
+    "FY27": {"revenue": 26.376, "ebitda": 16.656, "ebitdaMargin": 0.632, "ebit": 4.119, "interest": 5.220, "netIncome": -2.526, "epsGaap": -4.186, "capex": 46.476, "fcf": -33.741, "netDebt": 74.707},
+    "FY28": {"revenue": 42.550, "ebitda": 28.857, "ebitdaMargin": 0.678, "ebit": 8.418, "interest": 7.361, "netIncome": -1.559, "epsGaap": -2.177, "capex": 50.129, "fcf": -25.222, "netDebt": 96.039}
+  },
+  "annualEstimatesAlt": {
+    "note": "S&P 經 StockAnalysis 的 EPS 為 non-GAAP 調整後口徑，與上表 GAAP EPS 不同，不可混用",
+    "source": "S&P Global Market Intelligence（經 StockAnalysis.com）", "url": "https://stockanalysis.com/stocks/crwv/forecast/", "retrieved": "2026-09-25", "tag": "Interested-party",
+    "FY26": {"revenue": 12.88, "revenueLow": 12.4, "revenueHigh": 13.2, "epsAdjusted": -3.95, "epsAdjustedLow": -4.81, "epsAdjustedHigh": -1.33, "analysts": 38},
+    "FY27": {"revenue": 26.39, "epsAdjusted": -1.82}
+  },
+  "quarterlyEstimates": {
+    "source": "MarketScreener（S&P Capital IQ／FactSet 共識）", "url": "https://www.marketscreener.com/quote/stock/COREWEAVE-INC-188480815/finances/", "retrieved": "2026-09-25", "tag": "Interested-party",
+    "2026Q3": {"revenue": 3.541, "ebitda": 2.047, "ebit": 0.2408, "netIncome": -0.8388},
+    "2026Q4": {"revenue": 4.706, "ebitda": 2.897, "ebit": 0.6805, "netIncome": -0.5706},
+    "note": "Q3 財報預計 11/9：公司 Q3 營收指引 3.45–3.6（Verified，8/11 財報）；共識 3.541 位於指引區間上半部"
+  },
+  "companyGuidance": {
+    "FY26": {"revenueLow": 12.4, "revenueHigh": 13.2, "adjOpIncomeLow": 0.96, "adjOpIncomeHigh": 1.15, "capexLow": 35.0, "capexHigh": 39.0},
+    "2026Q3": {"revenueLow": 3.45, "revenueHigh": 3.6},
+    "source": "CNBC 報導 2026-08-11 Q2 財報", "url": "https://www.cnbc.com/2026/08/11/coreweave-crwv-q2-earnings-report-2026.html", "tag": "Interested-party",
+    "tagNote": "公司指引屬利害關係人（管理層）預估；數字本身為公司正式公布，可查證"
+  },
+  "independentCrossCheck": {
+    "provider": "LSEG", "FY26RevenuePreQ2": 12.63, "2026Q3RevenuePreQ2": 3.43, "date": "2026-08-11",
+    "source": "CNBC", "url": "https://www.cnbc.com/2026/08/11/coreweave-crwv-q2-earnings-report-2026.html", "tag": "Interested-party",
+    "note": "Q2 財報前的 LSEG 共識，日期較舊，僅供確認 S&P 數字量級合理"
+  },
+  "notFound": [
+    "FY29–FY30 共識：公開來源只到 FY28，無法取得（不是不存在，而是免費來源未提供）",
+    "EBITDA 共識的高低區間：未公開",
+    "目標價的時間分布（多少目標價是 Q2 財報後更新）：未公開"
+  ]
+}
