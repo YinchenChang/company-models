@@ -174,7 +174,8 @@ function aiOpenQ(e, XS) {
     W = f => PRICING.chips.reduce((a, c) => a + c.mixOpen * TKV[f][c.tk], 0),
     it = mw * W(`IF_CapexIT`) / 1e3, fac = mw * sb * W(`IF_CapexFacility`) / 1e3, facLife = W(`IF_CapexFacility`) / W(`IF_DeprFac`),
     da0 = it / e.gpuLife + fac / facLife, n0 = e.ppeOpen - it - fac;
-  return { mw, it, fac, facLife, da0, n0, nLife: n0 / Math.max(CM.segDaRunRate - da0, 1e-9) }
+  const nLife = CM.nonAiLife ?? 10; // MAG v0.1b r3（對照表 r1 C17）：非 AI 折舊年限＝預設年限（不再以分部 D&A 反解，避免 AI 期初 D&A > 合併 D&A 時退化）
+  return { mw, it, fac, facLife, da0, n0, nLife, daRecon: CM.segDaRunRate - da0 - n0 / nLife } // daRecon＝最新季分部 D&A 年化 −（AI 期初 D&A＋非 AI 期初 ÷ 年限）：對帳殘差（示警，不回填）
 }
 
 function siteBenchQ(e) {
@@ -831,8 +832,12 @@ function runFunding(e) {
     ok: !0,
     severity: `watch`,
     title: CXM ? `D&A 分池：${PERIODS[4]} AI ${o[4].daAi.toFixed(1)}＋非 AI ${o[4].daNonAi.toFixed(1)}＋其他攤銷 ${o[4].legacyOa.toFixed(1)}bn` : `D&A 改由車隊推算：${PERIODS[4]} ${o[4].daFleet.toFixed(1)}bn（壽命 ${e.gpuLife} 年）`,
-    detail: CXM ? `AI：IT 依 GPU 壽命 ${e.gpuLife} 年、機房依 ${Y(AP0.facLife, 1)} 年（期初毛額估計 IT ${Y(AP0.it, 1)}、機房 ${Y(AP0.fac, 1)}）；非 AI：期初基礎 ${Y(AP0.n0, 1)}、折舊年限 ${Y(AP0.nLife, 1)} 年（以最新季分部 D&A 年化 ${Y(COMPANY_DATA.capexModel.segDaRunRate, 1)} 校準）；其他攤銷依各線占營收比（C5）。季報 D&A ${Y(LATEST_Q.da, 3)}／季。` : `D&A＝(期初毛 PP&E＋本期成長型 CapEx×½)÷壽命。期初 PP&E 基礎 ${e.ppeOpen}（${TXQ.ppeOpenNote}）；季報 D&A ${Y(LATEST_Q.da, 3)}／季。CapEx 隨 MW 增加，折舊跟著增加。`
-  }), _({
+    detail: CXM ? `AI：IT 依 GPU 壽命 ${e.gpuLife} 年、機房依 ${Y(AP0.facLife, 1)} 年（期初毛額估計 IT ${Y(AP0.it, 1)}、機房 ${Y(AP0.fac, 1)}）；非 AI：期初基礎 ${Y(AP0.n0, 1)}、折舊年限 ${Y(AP0.nLife, 1)} 年（預設年限；最新季分部 D&A 年化 ${Y(COMPANY_DATA.capexModel.segDaRunRate, 1)} 只作對帳，C17）；其他攤銷依各線占營收比（C5）。季報 D&A ${Y(LATEST_Q.da, 3)}／季。` : `D&A＝(期初毛 PP&E＋本期成長型 CapEx×½)÷壽命。期初 PP&E 基礎 ${e.ppeOpen}（${TXQ.ppeOpenNote}）；季報 D&A ${Y(LATEST_Q.da, 3)}／季。CapEx 隨 MW 增加，折舊跟著增加。`
+  }), CXM && (() => { const R = AP0.daRecon, B = COMPANY_DATA.capexModel.segDaRunRate, tol = CHECK_TH.daReconTol ?? .1; // MAG v0.1b r3（C17）：D&A 對帳殘差
+    return _({ id: `da-recon`, ok: Math.abs(R) <= tol * B, severity: `watch`, resid: R,
+      title: `D&A 對帳：最新季分部 D&A 年化 ${Y(B, 1)} vs AI 期初 ${Y(AP0.da0, 1)}＋非 AI ${Y(AP0.n0 / AP0.nLife, 1)}（殘差 ${Y(R, 1)}，${hA(R / B * 100, 0)}）`,
+      detail: `非 AI 折舊＝非 AI 期初基礎 ${Y(AP0.n0, 1)} ÷ 預設年限 ${Y(AP0.nLife, 0)} 年（capexModel.nonAiLife，區間 ${(COMPANY_DATA.capexModel.nonAiLifeRange || []).join('–')} 年 [Assumed]）＋新增非 AI 資本支出同年限；AI 期初折舊依 Tokenomics。殘差不回填（容許 ±${hA(tol * 100, 0)}）：正值＝模型 D&A 低於公司實際（年限偏長或 AI 期初估計偏低）。` })
+  })(), _({
     id: `gpu-refresh`,
     ok: !0,
     severity: `watch`,

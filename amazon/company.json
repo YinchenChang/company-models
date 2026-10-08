@@ -1164,7 +1164,8 @@
    "unsignedRevShareMax": 0.5,
    "siteRentGapMax": 10,
    "rentVsBenchMin": 0.8,
-   "c15Tol": 0.05
+   "c15Tol": 0.05,
+   "daReconTol": 0.1
   }
  },
  "peers": {
@@ -3467,6 +3468,12 @@
   "segDaRunRate": 55.476,
   "segDaRunRateNote": "最新季（2026Q2）分部 D&A（不動產與設備）北美 4.500＋國際 1.293＋AWS 8.076＝13.869 × 4（10-Q 附註分部資訊；[Derived]）：校準非 AI 折舊年限",
   "guideNote": "2026 指引約 220（法說二手逐字稿）；公司未給 2027 指引 → 次期起由 MW 推導（對照共識 2027 275.1、2028 292.9）",
+  "nonAiLife": 10,
+  "nonAiLifeRange": [
+   8,
+   15
+  ],
+  "nonAiLifeNote": "非 AI 折舊年限預設 10 年（區間 8–15 年）[Assumed]；r2 以分部 D&A 反解為 8.3 年（MAG 對照表 r1 C17 改為預設年限，差額列對帳殘差）",
   "aiNetShare": 0.75,
   "aiNetShareNote": "期初 AI PP&E 淨額 ÷ 毛額 75%（在役機隊平均約 1.5 年、IT 壽命 6 年；[Assumed]，區間 60%–90%）：AI 增量 ROIC 的期初投入資本",
   "roicYear": 3,

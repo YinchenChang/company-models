@@ -626,6 +626,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.checks.siteRentGapMax` | 檢查頁：站點租賃五期租金可能低估的金額上限（5a） | US$bn | 10 | 檢查 |
 | `methodology.checks.rentVsBenchMin` | 檢查頁：模型每 MW 年租金至少要達到「市場基準 × 第三方占比」的比例（5a） | 比例 | 0.8 | 檢查 |
 | `methodology.checks.c15Tol` | 檢查頁：一致性檢查（C15）乾淨稅前 ROIC 與 IF_HoldEcon 隱含報酬的容許差（比例，0.05＝5 個百分點；MAG v0.1b r2） | 比例 | 0.05 | 檢查 |
+| `methodology.checks.daReconTol` | 檢查頁：D&A 對帳殘差容許比例（占最新季分部 D&A 年化；MAG v0.1b r3 C17） | 比例 | 0.1 | 檢查 |
 
 ### `peers`：同業比較（Comps）
 
@@ -769,9 +770,12 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `capexModel.extShareNote` | 對外比例的依據 | 文字 | 對外 AI MW 占 AI 總 MW 比例 80%（… | 必改 |
 | `capexModel.selfBuild` | 自建機房比例（機房資本支出＝此比例 × TK_CapexFacility） | 比例 | 0.8 | 檢查 |
 | `capexModel.selfBuildNote` | 自建比例的依據 | 文字 | 自建機房比例 80%（第三方託管約占運算力 1/5，… | 必改 |
-| `capexModel.segDaRunRate` | 最新季分部 D&A 年化（校準非 AI 折舊年限） | US$bn | 55.476 | 必改 |
+| `capexModel.segDaRunRate` | 最新季分部 D&A 年化（D&A 對帳基準；MAG v0.1b r3 C17 起不再反解非 AI 年限） | US$bn | 55.476 | 必改 |
 | `capexModel.segDaRunRateNote` | 分部 D&A 年化的來源 | 文字 | 最新季（2026Q2）分部 D&A（不動產與設備）北… | 必改 |
 | `capexModel.guideNote` | 資本支出指引期數與對照 | 文字 | 2026 指引約 220（法說二手逐字稿）；公司未給… | 必改 |
+| `capexModel.nonAiLife` | 非 AI 折舊年限（預設 10 年；MAG v0.1b r3 C17） | 年 | 10 | 檢查 |
+| `capexModel.nonAiLifeRange` | 非 AI 折舊年限區間（敏感度） | 年 清單 | 8、15 | 檢查 |
+| `capexModel.nonAiLifeNote` | 非 AI 折舊年限的依據 | 文字 | 非 AI 折舊年限預設 10 年（區間 8–15 年… | 必改 |
 | `capexModel.aiNetShare` | 期初 AI PP&E 淨額 ÷ 毛額（AI 增量 ROIC 的期初投入資本；MAG v0.1b） | 比例 | 0.75 | 檢查 |
 | `capexModel.aiNetShareNote` | 上欄依據 | 文字 | 期初 AI PP&E 淨額 ÷ 毛額 75%（在役機… | 必改 |
 | `capexModel.roicYear` | 打平 k 的錨定期（0–4；3＝模型第 4 期） | 整數 | 3 | 可沿用 |

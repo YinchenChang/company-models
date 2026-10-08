@@ -620,7 +620,7 @@ r = prow(r, "期初毛 PP&E", "US$bn", [f"={PPE0}"] + ["=0"] * 4, NUM, "之後�
 for i in range(1, 5):
     ws.cell(row=IN["期初毛 PP&E"], column=3 + i, value=f"={COLS[i-1]}{IN['期初毛 PP&E']}+§INSVC{COLS[i-1]}§")  # v0.2：前期投入使用的成長型 CapEx（延誤 0＝前期成長型）
 if CXM:  # MAG v0.1b：D&A 分池（HTML segA aiOpenQ／DAI／DAN 同式）
-    r = section(ws, r, "D&A 分池（AI：IT 依 GPU 壽命、機房依機房壽命；非 AI：期初＝PP&E − AI 估計，壽命以分部 D&A 校準；汰換不增加基礎）", level=2)
+    r = section(ws, r, "D&A 分池（AI：IT 依 GPU 壽命、機房依機房壽命；非 AI：期初＝PP&E − AI 估計，預設年限；汰換不增加基礎）", level=2)
     _W = lambda nm: "+".join(f"{ch['mixOpen']}*TK_{nm}_{ch['tk']}" for ch in PRC['chips'])
     AIMW0 = gi(r, "評價日 AI 總 MW（對外 ÷ 對外比例）", "MW", f"={MW0}/{EXTS}", "＝評價日在役對外 AI MW ÷ 對外比例 [Derived]", NUM0, font=BLACK); r += 1
     AIIT0 = gi(r, "AI 期初 IT 毛額（估計）", "US$bn", f"={AIMW0}*({_W('CapexIT')})/1000", "＝AI 總 MW × Σ 期初世代占比 × TK_CapexIT [Derived]", font=BLACK); r += 1
@@ -629,7 +629,8 @@ if CXM:  # MAG v0.1b：D&A 分池（HTML segA aiOpenQ／DAI／DAN 同式）
     AIDA0 = gi(r, "AI 期初 D&A（年化）", "US$bn", f"={AIIT0}/{LIFE}+{AIFC0}/{FACL}", "＝IT 毛額 ÷ GPU 壽命＋機房毛額 ÷ 機房年限", font=BLACK); r += 1
     NAP0 = gi(r, "非 AI 期初基礎", "US$bn", f"={PPE0}-{AIIT0}-{AIFC0}", "＝評價日 PP&E 淨額 − AI 期初估計 [Derived]", font=BLACK); r += 1
     AINET = gi(r, "期初 AI 淨額 ÷ 毛額（AI 投入資本起點）", "%", CXM.get('aiNetShare', 1), CXM.get('aiNetShareNote', ''), PCT); r += 1
-    NAL = gi(r, "非 AI 折舊年限（校準）", "年", f"={NAP0}/MAX(1E-9,{SEGDA}-{AIDA0})", "＝非 AI 期初基礎 ÷ (分部 D&A 年化 − AI 期初 D&A)，使首期非 AI D&A 等於最新季年化 [Derived]", NUM1, font=BLACK); r += 1
+    NAL = gi(r, "非 AI 折舊年限", "年", CXM.get('nonAiLife', 10), CXM.get('nonAiLifeNote', '預設 10 年 [Assumed]') + "（MAG 對照表 r1 C17：不再以分部 D&A 反解）", NUM1); r += 1
+    DARC = gi(r, "D&A 對帳殘差（分部 D&A 年化 − AI 期初 D&A − 非 AI 期初 ÷ 年限）", "US$bn", f"={SEGDA}-{AIDA0}-{NAP0}/{NAL}", "不回填：正值＝模型 D&A 低於公司實際（年限偏長或 AI 期初估計偏低）；檢查頁示警（C17）", font=BLACK); r += 1
     r = phdr(r)
     _AIS = lambda i: f"(§INSVC{COLS[i]}§-{COLS[i]}{IN['非 AI 資本支出（模型期）']})"  # 本期投入使用的 AI 成長型（延誤 0＝AI 成長型）
     _ITS = lambda i: f"{COLS[i]}{IN['每 MW IT 成本']}/{COLS[i]}{IN['每 MW 建置成本']}"
@@ -2721,7 +2722,11 @@ checks = [
      f"IF_HoldEcon 隱含 {_n(CO['tokenomics']['holdEconWacc'] * 100)}% ±{_n(CK.get('c15Tol', 0.05) * 100)}pt",
      f"=IF(ABS(B{{r}}-'AI增量報酬'!{C15HUR})<={_n(CK.get('c15Tol', 0.05))},\"通過\",\"觀察\")", PCT,
      f'="模型稅後 "&TEXT(\'AI增量報酬\'!{_RYC0}{AIROIC["對外 AI ROIC（主值）"]}*100,"0.0")&"%；差距與逐項拆解見「AI增量報酬」C15 區（各項加總＝總差距）"'),
-] if CXM and 'C15CL' in globals() else []) + [
+] if CXM and 'C15CL' in globals() else []) + ([  # MAG v0.1b r3（C17）：D&A 對帳殘差
+    ("D&A 對帳殘差（分部 D&A 年化 − 模型期初 D&A）", f"={DARC}", f"±{_n(CK.get('daReconTol', 0.1) * 100)}% × 分部 D&A 年化",
+     f"=IF(ABS(B{{r}})<={_n(CK.get('daReconTol', 0.1))}*{SEGDA},\"通過\",\"觀察\")", NUM,
+     f'="分部 D&A 年化 "&TEXT({SEGDA},"0.0")&"；AI 期初 "&TEXT({AIDA0},"0.0")&"＋非 AI "&TEXT({NAP0}/{NAL},"0.0")&"（年限 "&TEXT({NAL},"0")&" 年）；殘差不回填（C17）"'),
+] if CXM else []) + [
     ("CapEx 強度（模型期合計）", None, f"${_n(CK['capexPerMwBand'][0])}–{_n(CK['capexPerMwBand'][1])}m/MW",
      "=IF(AND(B{r}>=" + _n(CK['capexPerMwBand'][0]) + ",B{r}<=" + _n(CK['capexPerMwBand'][1]) + "),\"通過\",\"觀察\")", NUM0,
      "Tokenomics IF_CapexTotal 低／高成本情境（GB300 38.8–67.1 US$m/MW-IT）"),
