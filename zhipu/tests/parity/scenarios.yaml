@@ -156,3 +156,9 @@ scenarios:
   - id: ao_mincash_out
     description: 最低現金 24 個月（超出區間 3–12；C06 應轉 ERR）
     inputs: {"INP_124": 24}
+  - id: ap_min_gm_02
+    description: Z5b V1：供應商最低毛利 0→0.2（上緣）；2H26 起每 GW 租價下限＝持有成本 × 1.2，算力成本上升、差額惡化、外部資金需求提前
+    inputs: {"INP_136": 0.2}
+  - id: aq_owned_opex_amort
+    description: Z5b V2：1 GW 資料中心開＋其他自有資本支出 30 億／年；投產後自有算力營運費用（TK IF_OpexGW）計入算力成本，Cost 第十節攤提口徑與現金口徑分開
+    inputs: {"INP_112": 1, "INP_111": 30}

@@ -371,9 +371,9 @@ def build(wb, D, Z):
     X.add("總股本（2026-09-16 配售後）", "股", {"D": f"={S('shares_total_post_placing2')}"}, "SRC_ZP_563（含非上市股份，同價計）", key="v_sh")
     X.add("市值（港幣）＝股價 × 股數 ÷ 10^8", "HKD 億", {"D": f"=D«X.v_px»*D«X.v_sh»/{I('div_yuan_yi')}"}, "對照：行情頁 3,396.48（SRC_ZP_571）", key="v_mc_hkd")
     X.add("市值（人民幣）", "RMB 億", {"D": f"=D«X.v_mc_hkd»*{fxh}"}, "× HKD/CNY", key="v_mc", name="RVS_MktCap", name_col="D")
-    X.add("淨現金（估計，Derived）＝2026-06-30 現金＋2H26 配售與可換股債券淨額 − 銀行借款 − 可換股債券本金", "RMB 億",
-          {"D": f"={S('cash_end_1h26')}+{fnd('pl1', 'L')}+{fnd('pl2', 'L')}+{fnd('cb', 'L')}-{S('bank_loans_1h26')}-{S('cb_principal')}*{I('cb_redeem')}"},
-          "chat 端補充：含 2026-07、09 新資金；未扣 2026-07 起的營運消耗（使 EV 偏低、隱含營收偏低）", key="v_nc", name="RVS_NetCash", name_col="D")
+    X.add("淨現金（估計，Derived）＝2026-06-30 現金＋2H26 配售與可換股債券淨額 − 2026-07 配售款已動用 − 銀行借款 − 可換股債券本金", "RMB 億",
+          {"D": f"={S('cash_end_1h26')}+{fnd('pl1', 'L')}+{fnd('pl2', 'L')}+{fnd('cb', 'L')}-{fnd('u_pl1_used', 'L')}-{S('bank_loans_1h26')}-{S('cb_principal')}*{I('cb_redeem')}"},
+          "chat 端補充：含 2026-07、09 新資金；Z5b V3：扣 2026-07 配售款截至 2026-08-31 已動用（Funding 第七節，SRC_ZP_540 × HKD/CNY）", key="v_nc", name="RVS_NetCash", name_col="D")
     X.add("對照：模型 2026 年底淨現金（期末現金 − 銀行借款 − 可換股債券本金）", "RMB 億",
           {"D": f"={fnd('end', 'E')}-{fnd('loan_end', 'E')}-{S('cb_principal')}*{I('cb_redeem')}"}, "含 2H26 模型營運消耗與中科加禾", key="v_nc_m")
     X.add("企業價值 EV＝市值 − 淨現金", "RMB 億", {"D": "=D«X.v_mc»-D«X.v_nc»"}, "", key="v_ev", name="RVS_EV", name_col="D")

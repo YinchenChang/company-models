@@ -122,7 +122,7 @@ def sheet_readme(wb, D, snap, oai, date, summary):
                      "API 牌價：人民幣元／百萬 token；token：兆（T）；Coding Plan 訂閱者：萬人；智譜清言用戶：百萬人。OAI_Link 為美元（$B），不換算、不參與計算。"),
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構，重建時保留 Excel 內已改過的藍字（隱藏頁 _Defaults）。公式不含常數（E6）：單位換算、天數、月數為 Inputs 的定義常數。"),
         ("SRC_ZP", f"{summary['src']} 列（SRC_ZP_001–{summary['src']:03d}，Z1 發出、穩定不改號）；有數值者具名 SRC_ZP_nnn，有低／高者另具名 _Lo／_Hi。來源四欄為 CC 初評（builder/source_rules.py）。"),
-        ("TK_Link", f"Tokenomics {snap['version']}（{snap['file']}），master 提交 {snap['sha'][:7]}，讀取日 {date}；{summary['tk_ok']} 個具名範圍（OpenAI v0.6 的 63 名＋智譜 Z3b 的逐 token 類型單位成本 9 名）＋{summary['tk_table']} 列以列標籤讀表（狀態『{TABLE_NOTE}』，只供對照）。"),
+        ("TK_Link", f"Tokenomics {snap['version']}（{snap['file']}），master 提交 {snap['sha'][:7]}，讀取日 {date}；{summary['tk_ok']} 個具名範圍（OpenAI v0.6 的 63 名＋智譜 Z3b 的逐 token 類型單位成本 9 名＋Z5b 的 IF_OpexGW、IF_DeprLifeIT）＋{summary['tk_table']} 列以列標籤讀表（狀態『{TABLE_NOTE}』，只供對照）。"),
         ("OAI_Link", f"OpenAI v0.6 Excel（{oai['file']}，{oai['ref']}；SHA-256 {oai['sha'][:16]}…）的命題輸出逐年值（美元）；只被 Checks 與 HTML 引用（規格 D26）。"),
         ("Inputs", f"{summary['inp']} 列（INP_001 起，依 data/zhipu_inputs.yaml 的鍵發號）；每列附標記、依據、區間理由；Analogy／Assumed 一律給區間。"),
         ("Demand", "需求：①API 按量計費 token（2025、1H26＝營收 ÷ 有效單價倒推；2H26 起任務數 × 每任務 token × 價格反應）②GLM Coding Plan 訂閱者（方案別）× 每訂閱者 token ③智譜清言（免費）用戶 × 任務 × 每任務 token；"

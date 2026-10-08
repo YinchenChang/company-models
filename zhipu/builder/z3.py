@@ -201,7 +201,8 @@ def build(wb, D, Z, snap):
         C.add(f"卡時租價：{FAM_ZH[f]}", "元／卡／時", rf, rnote[f] + "；2025 以 2026 觀察值計（2025 租價找不到）", key=f"rent_{f}")
     for f in FAM:
         C.add(f"每 GW 年價格：{FAM_ZH[f]}", "RMB 億／GW／年",
-              {c: f"={c}«C.rent_{f}»*{c}«C.n_{f}»*{I('hours_year')}/{I('div_yuan_yi')}" for c in ALL}, "", key=f"p_{f}")
+              lambda c, f=f: f"={c}«C.po_{f}»" if c in ("D", "K") else f"=MAX({c}«C.po_{f}»,{c}«C.fl_{f}»)",
+              "Z5b V1：2H26 起＝MAX（觀察租價換算，供應商持有成本 ×（1＋最低毛利））（第十四節）；2025、1H26＝觀察值", key=f"p_{f}")
     C.add("每 GW 年價格：組合後（Σ 占比 × 各族價格）", "RMB 億／GW／年", {c: "=" + "+".join(f"{c}«C.s_{f}»*{c}«C.p_{f}»" for f in FAM) for c in ALL},
           "供給 GW 換算與 2H26 起算力成本用", key="p", name="CMP_PricePerGW")
     C.add("對照：組合後每 GW 年價格（美元）", "$B／GW／年", {c: f"={c}«C.p»/{fx}/{bn}" for c in ALL}, "÷ USD/CNY ÷ 10（億→十億）；OpenAI v0.6 合約價 12（INP_229，8–20）", key="p_usd")
@@ -356,6 +357,33 @@ def build(wb, D, Z, snap):
         C.add(f"C 2030 供給 VR 等值 GW（{zh}）", "GW",
               {"I": f"=I«C.{k}_sup»*(I«C.s_hop»*I«C.vr_hop»+I«C.s_h20»*I«C.vr_h20»+I«C.s_dom»*I«C.vr_hop»*I«C.{k}_r»)"}, "", key=f"{k}_vr")
 
+    # 十四、Z5b：每 GW 租價下限（V1）與自有算力營運費用、攤提（V2）
+    C.section("十四、Z5b 修正：每 GW 租價下限＝供應商持有成本 ×（1＋最低毛利）（V1）；自有算力營運費用與資本支出攤提（V2；TK IF_OpexGW、IF_DeprLifeIT）")
+    for f in FAM:
+        C.add(f"觀察租價換算每 GW 年價格（未設下限）：{FAM_ZH[f]}", "RMB 億／GW／年",
+              {c: f"={c}«C.rent_{f}»*{c}«C.n_{f}»*{I('hours_year')}/{I('div_yuan_yi')}" for c in ALL}, "卡時租價 × 每 GW 卡數 × 每年小時 ÷ 10^8（Z5b 前的每 GW 價格）", key=f"po_{f}")
+    hrc = {"hop": None, "h20": I("hold_ratio_h20"), "dom": I("hold_ratio_dom")}
+    for f in FAM:
+        C.add(f"供應商每 GW 年持有成本：{FAM_ZH[f]}", "RMB 億／GW／年",
+              {c: f"=SUMIFS(TK_IF_HoldEcon,TK_HdrGen,{kh},TK_HdrCost,{kc})*{fx}*{bn}" + (f"*{hrc[f]}" if hrc[f] else "") for c in ALL},
+              "TK IF_HoldEcon（Hopper 基準欄，經濟口徑）× 持有比（Inputs；Hopper＝1）× USD/CNY × 10；Cost 第二節引用", key=f"hd_{f}")
+    for f in FAM:
+        C.add(f"每 GW 年價格下限：{FAM_ZH[f]}", "RMB 億／GW／年", {c: f"={c}«C.hd_{f}»*(1+{I('min_gm')})" for c in ALL},
+              "供應商持有成本 ×（1＋最低毛利，Inputs 基準 0）", key=f"fl_{f}")
+    C.add("組合後每 GW 年價格（未設下限；對照）", "RMB 億／GW／年", {c: "=" + "+".join(f"{c}«C.s_{f}»*{c}«C.po_{f}»" for f in FAM) for c in ALL},
+          "Z5b 前口徑", key="po")
+    C.add("下限生效的晶片族數（2H26 起）", "族", {c: "=" + "+".join(f"({c}«C.fl_{f}»>{c}«C.po_{f}»)" for f in FAM) for c in ("L",) + tuple(LATE)},
+          "0＝觀察租價全部高於下限", key="fl_n")
+    C.add("自有算力每 GW 年營運費用（不含折舊；含電費）", "RMB 億／GW／年",
+          {c: f"=SUMIFS(TK_IF_OpexGW,TK_HdrGen,{kh},TK_HdrCost,{kc})*{I('hold_ratio_dom')}*{fx}*{bn}" for c in LATE},
+          "TK IF_OpexGW（Hopper 基準欄，$B/GW/年）× 國產持有比 × USD/CNY × 10（Z5b V2）", key="opx_gw")
+    C.add("自有算力營運費用＝自有 GW × 每 GW 營運費用", "RMB 億", {c: f"={c}«C.own»*{c}«C.opx_gw»" for c in LATE},
+          "投產後（自有 GW＞0）計入算力成本（現金）", key="own_opx", name="CMP_OwnedOpex")
+    C.add("IT 折舊年限（攤提用）", "年", {c: f"=SUMIFS(TK_IF_DeprLifeIT,TK_HdrGen,{kh},TK_HdrCost,{kc})" for c in LATE}, "TK IF_DeprLifeIT（Hopper 基準欄）", key="life")
+    C.add("自有資本支出攤提＝已投產累計自有資本支出 ÷ 折舊年限", "RMB 億",
+          {c: f"=SUMPRODUCT(($F$6:$I$6<{c}$6)*($F$«C.cpx»:$I$«C.cpx»))/{c}«C.life»" for c in LATE},
+          "只用於 Cost 第十節攤提口徑並列；現金口徑（命題、Funding）仍以資本支出實付計", key="amort", name="CMP_OwnedAmort")
+
     # ══════════════════════════════════ Cost ══════════════════════════════════
     K = Sheet(wb, "Cost", "K",
               "Cost — 成本與命題表：算力成本（2025、1H26＝算力服務費實付；之後＝租用 GW × 每 GW 價格＋自有資本支出）、供應商持有成本與雲端毛利、本地化部署交付成本、非算力成本、股權報酬、每 VR 等值 GW 命題表（人民幣與美元）",
@@ -378,9 +406,9 @@ def build(wb, D, Z, snap):
         return f"={cmp_('rent_gw', c)}*{per(c, cmp_('p', c))}"
     K.add("算力服務費（租用）", "RMB 億", rentpay, "2H26 起＝租用 GW × 每 GW 年價格 × 期間比例", key="rentpay", name="COST_ComputeRent")
     K.add("自有資本支出（現金）", "RMB 億", {c: f"={cmp_('cpx', c)}" for c in LATE}, "Compute 第八節（D11r：基準 0）", key="own")
-    K.add("算力成本（現金口徑）＝租用＋自有資本支出", "RMB 億",
-          lambda c: f"={c}«K.rentpay»+{c}«K.own»" if c in LATE else ("=K«K.cc»+L«K.cc»" if c == "E" else f"={c}«K.rentpay»"),
-          "命題輸出基準", key="cc", name="COST_Compute")
+    K.add("算力成本（現金口徑）＝租用＋自有資本支出＋自有營運費用", "RMB 億",
+          lambda c: f"={c}«K.rentpay»+{c}«K.own»+{c}«K.own_opx»" if c in LATE else ("=K«K.cc»+L«K.cc»" if c == "E" else f"={c}«K.rentpay»"),
+          "命題輸出基準；Z5b V2：2027 起＋自有算力營運費用（第十節）", key="cc", name="COST_Compute")
     for key_, zh, g in (("cc_inf", "推論", "infcap"), ("cc_rd", "研發", "rd"), ("cc_idle", "閒置", "idle")):
         K.add(f"算力成本拆分：{zh}", "RMB 億",
               lambda c, g=g, key_=key_: f"=K«K.{key_}»+L«K.{key_}»" if c == "E" else
@@ -388,17 +416,16 @@ def build(wb, D, Z, snap):
               "依 GW 占比拆分（校準期：推論＝推論算力支出、研發＝研發算力支出）；供給為 0 時顯示 0", key=key_, name={"cc_inf": "COST_InfCompute", "cc_rd": "COST_RDCompute"}.get(key_))
     K.add("檢查：算力成本 −（實付推論＋研發）", "RMB 億", {c: f"={c}«K.cc»-{c}«K.inf_fee»-{c}«K.rd_fee»" for c in cal}, "2025、1H26 應為 0（Checks）", key="ck_fee")
 
-    K.section("二、供應商持有成本與雲端毛利（D10：持有成本＝租用 GW × TK IF_HoldEcon（Hopper）× 持有比 × 匯率；差額＝雲端毛利，只作參考）")
+    K.section("二、供應商持有成本與供應商推算毛利（D10：持有成本＝租用 GW × TK IF_HoldEcon（Hopper）× 持有比 × 匯率；差額＝供應商推算毛利，只作參考；Z5b V1：2H26 起不得為負）")
     hr = {"hop": None, "h20": I("hold_ratio_h20"), "dom": I("hold_ratio_dom")}
     for f in FAM:
-        base_h = f"SUMIFS(TK_IF_HoldEcon,TK_HdrGen,Compute!{kh},TK_HdrCost,Compute!{kc})*{fx}*{bn}"
-        K.add(f"每 GW 年持有成本：{FAM_ZH[f]}", "RMB 億／GW／年", {c: f"={base_h}" + (f"*{hr[f]}" if hr[f] else "") for c in ALL},
-              "TK IF_HoldEcon（Hopper 基準欄，經濟口徑，$B/GW/年）× 持有比（Inputs；Hopper＝1）× USD/CNY × 10", key=f"h_{f}")
+        K.add(f"每 GW 年持有成本：{FAM_ZH[f]}", "RMB 億／GW／年", {c: f"={cmp_('hd_' + f, c)}" for c in ALL},
+              "Compute 第十四節（TK IF_HoldEcon（Hopper 基準欄，經濟口徑）× 持有比 × USD/CNY × 10）；亦為 2H26 起每 GW 租價下限（Z5b V1）", key=f"h_{f}")
     K.add("每 GW 年持有成本：組合後", "RMB 億／GW／年", {c: "=" + "+".join(f"{cmp_('s_' + f, c)}*{c}«K.h_{f}»" for f in FAM) for c in ALL}, "", key="hw", name="COST_HoldW")
     K.add("供應商持有成本＝租用 GW × 持有成本 × 期間比例", "RMB 億",
           lambda c: "=K«K.sh»+L«K.sh»" if c == "E" else f"={cmp_('rent_gw', c)}*{per(c, f'{c}«K.hw»')}", "", key="sh", name="COST_SupplierHold")
-    K.add("雲端毛利＝算力服務費 − 供應商持有成本", "RMB 億", {c: f"={c}«K.rentpay»-{c}«K.sh»" for c in ALL}, "", key="gm", name="COST_CloudGM")
-    K.add("雲端毛利率", "比例", {c: f"=IF({c}«K.rentpay»,{c}«K.gm»/{c}«K.rentpay»,{c}«K.rentpay»)" for c in ALL}, "租用為 0（全自有）時顯示 0", key="gmp", name="COST_CloudGMPct")
+    K.add("供應商推算毛利＝算力服務費 − 供應商持有成本", "RMB 億", {c: f"={c}«K.rentpay»-{c}«K.sh»" for c in ALL}, "", key="gm", name="COST_CloudGM")
+    K.add("供應商推算毛利率", "比例", {c: f"=IF({c}«K.rentpay»,{c}«K.gm»/{c}«K.rentpay»,{c}«K.rentpay»)" for c in ALL}, "租用為 0（全自有）時顯示 0", key="gmp", name="COST_CloudGMPct")
 
     K.section("三、本地化部署交付成本（D4：不耗智譜算力；2025、1H26＝財報推算；2H26 起＝本地化營收 × 1H26 成本率）")
     K.add("本地化部署銷售成本（推算）", "RMB 億", sv("cogs_onprem_fy25", "cogs_onprem_1h26"), "SRC_ZP_198、196（Derived）", key="op_src")
@@ -514,6 +541,17 @@ def build(wb, D, Z, snap):
     K.add("每實體 GW：全成本（美元）", "$B／GW／年", {c: f"={c}«K.ph_full»/{fx}/{bn}" for c in YC}, "", key="ph_full_u", name="COST_PropFull_Phys_USD")
     K.add("每實體 GW：差額（美元）", "$B／GW／年", {c: f"={c}«K.ph_gap»/{fx}/{bn}" for c in YC}, "", key="ph_gap_u", name="COST_PropGap_Phys_USD")
 
+    K.section("十、Z5b V2：自有算力營運費用（現金，已含於算力成本）與攤提口徑並列（自有資本支出依 TK IF_DeprLifeIT 攤提；只並列，命題與 Funding 仍以現金口徑）")
+    K.add("自有算力營運費用（現金）", "RMB 億", {c: f"={cmp_('own_opx', c)}" for c in LATE}, "Compute 第十四節；投產後計入", key="own_opx")
+    K.add("自有資本支出攤提", "RMB 億", {c: f"={cmp_('amort', c)}" for c in LATE}, "Compute 第十四節", key="amort")
+    K.add("算力成本（攤提口徑）＝租用＋自有營運費用＋攤提", "RMB 億",
+          lambda c: f"={c}«K.rentpay»+{c}«K.own_opx»+{c}«K.amort»" if c in LATE else (f"={c}«K.cc»" if c in YC or c in HC else None),
+          "2025、2026 同現金口徑", key="cc_am")
+    K.add("全成本（攤提口徑）", "RMB 億", {c: f"={c}«K.full»-{c}«K.cc»+{c}«K.cc_am»" for c in YC}, "", key="full_am", name="COST_FullAmort")
+    K.add("每 VR 等值 GW：差額（攤提口徑）", "RMB 億／GW／年", {c: f"=IF({c}«K.den»,({c}«K.rev»-{c}«K.full_am»)/{c}«K.den»,{c}«K.den»)" for c in YC},
+          "1 GW 資料中心情境下，一次性資本支出不進『每 GW 年』", key="p_gap_am", name="COST_PropGap_VR_Amort")
+    K.add("覆蓋率（攤提口徑）", "倍", {c: f"={c}«K.rev»/{c}«K.full_am»" for c in YC}, "", key="cov_am", name="COST_Coverage_Amort")
+
     for S_, w in ((C, 62), (K, 62)):
         ws = S_.ws
         ws.column_dimensions["A"].width = 7
@@ -557,7 +595,9 @@ def checks(D, Z):
         ("對照：Coding Plan token GW ÷ 支出換算推論 GW（1H26）", "=Compute!K«C.r4_mult»", None, "info", "R4"),
         ("對照：組合後每 GW 年價格 1H26（RMB 億）", "=Compute!K«C.p»", None, "info", "D9r"),
         ("對照：研發 GW 1H26（殘差）÷ 扣除法研發算力費換算 GW", "=Compute!K«C.rd»/Compute!K«C.rd_a»", None, "info", "D12 獨立對照"),
-        ("對照：雲端毛利率 2025（供應商）", "=Cost!D«K.gmp»", None, "info", ""),
+        ("對照：雲端毛利率 2025（供應商）", "=Cost!D«K.gmp»", None, "info", "Z5b 起顯示名為『供應商推算毛利率』"),
+        ("Cost：2H26 起供應商推算毛利 < 0 的期數（Z5b V1：租價下限）", "=" + "+".join(f"(Cost!{c}«K.gm»<-0.00000001)" for c in ("L",) + tuple(LATE)), 0, "eq",
+         "每 GW 租價 ≥ 供應商持有成本 ×（1＋最低毛利）"),
         ("預覽：2026 供給 GW", "=INDEX(CMP_SupplyGW,1,2)", None, "info", ""),
         ("預覽：2030 供給 GW", "=INDEX(CMP_SupplyGW,1,6)", None, "info", ""),
         ("預覽：2030 每 VR 等值 GW 差額（RMB 億）", "=INDEX(COST_PropGap_VR,1,6)", None, "info", "命題"),

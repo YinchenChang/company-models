@@ -156,3 +156,5 @@ items:
 # ── Z4 反向模式（D22、D22r；工作單 Z4 判斷類預設）
 - {key: cons_g_late, name: 反向模式：2029–2030 目標營收年增率（共識只到 FY2028）, index: 2029–2030, unit: 比例／年, value: 0, lo: 0, hi: 0.25, tag: Assumed, basis: 共識只到 FY2028（SRC_ZP_582–584 等）；基準持平於 FY2028 平均（較保守）；高端＝大和 2029 年 475 億 ÷ 共識 FY2028 379 億 − 1（SRC_ZP_610，單一券商）, range: 0～+25%}
 - {key: peer_mult_range, name: 同業 EV／年化營收倍數 ÷ MiniMax 推導值（市值隱含營收用）, index: —, unit: 倍, value: 1, lo: 0.5, hi: 2, tag: Analogy, basis: 規格 D22r：以 MiniMax（00100.HK）當前 EV ÷ 年化營收（1H26 × 2；Reverse 頁由 SRC_ZP_596、601、603 與匯率推導）為 Analogy；區間：MiniMax 52 週低點約為現值 0.8 倍、國證國際 SOTP 給 API 業務 2027 年 80 倍 PS（約 2 倍）, range: 0.5～2.0}
+# ── Z5b（獨立查核後修正，2026-10-08）
+- {key: min_gm, name: 供應商最低毛利（每 GW 租價下限＝供應商持有成本 ×（1＋本值），2H26 起）, index: 2H26 起, unit: 比例, value: 0, lo: 0, hi: 0.2, tag: Assumed, basis: 工作單 Z5b V1：供應商不可長期賠本出租；基準 0＝租價不低於持有成本（經濟口徑）, range: 0～0.2（工作單）}

@@ -745,7 +745,8 @@
 "zkjh_cash": "INP_132",
 "days_jul_aug": "INP_133",
 "cons_g_late": "INP_134",
-"peer_mult_range": "INP_135"
+"peer_mult_range": "INP_135",
+"min_gm": "INP_136"
 },
 "retired_INP": [
 "INP_072"
@@ -841,7 +842,8 @@
 "預覽：市值隱含營收（RMB 億）": "C89",
 "預覽：正向營收首次達到市值隱含營收的年度": "C90",
 "對照：MiniMax EV ÷ 年化營收": "C91",
-"對照：2030 累計外部資金需求：智譜（$B）− OpenAI v0.6（$B）": "C92"
+"對照：2030 累計外部資金需求：智譜（$B）− OpenAI v0.6（$B）": "C92",
+"Cost：2H26 起供應商推算毛利 < 0 的期數（Z5b V1：租價下限）": "C93"
 },
 "retired_CHK": [
 "C42"
