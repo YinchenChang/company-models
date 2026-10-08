@@ -1,0 +1,43 @@
+# Microsoft 引用的 Tokenomics 名稱（只限 IF_（不含 IF_Hdr*）與 L1_；工具：tools/tokenomics/import_tokenomics.py）
+# 行尾 optional＝Tokenomics 尚未提供時快照記為 missing、不中斷。
+IF_RacksPerGW # 每 GW 機架數
+IF_GPUsPerGW # 每 GW GPU 數（GPU-hr 價格 ↔ MW 換算）
+IF_FacilityGW # 每 IT GW 對應設施電力（MW 口徑換算）
+IF_CapexIT # 每 GW 資本支出 — IT 設備
+IF_CapexFacility # 每 GW 資本支出 — 機房（廠房）
+IF_CapexTotal # 每 GW 資本支出 — 合計
+IF_HoldAcct # 每 GW 年持有成本 — 會計口徑
+IF_HoldEcon # 每 GW 年持有成本 — 經濟口徑（每 MW 收入錨）
+IF_GPUhrEcon # 每 GPU 小時持有成本 — 經濟（k 的分母）
+IF_PowerCost # 每 GW 年電費
+IF_Util # 基準利用率（只作對照；收入端不乘，契約第 3 條）
+IF_DeprLifeIT # IT 折舊年限
+IF_DeprIT # IT 年折舊
+IF_DeprFac # 廠房年折舊
+IF_AvgDraw # 平均用電 ÷ 配電設計功率
+IF_PowerPrice # 電價 $/kWh
+IF_MaintIT # IT 維護
+IF_MaintFac # 廠房維護
+IF_StaffSW # 人員、軟體、水與耗材
+IF_TaxIns # 財產稅與保險
+IF_OpexGW # 營運費用小計（不含折舊）
+IF_RevGWFleet # 客戶每 GW 付費 token 營收（理想上限；上限檢查）
+L1_FacCapexMW # 每 MW IT 機房資本支出
+L1_CapexGW_Hopper # 每 GW 資本支出 — Hopper
+L1_CapexGW_GB200 # 每 GW 資本支出 — GB200
+L1_CapexGW_GB300 # 每 GW 資本支出 — GB300
+L1_CapexGW_VR200 # 每 GW 資本支出 — VR200
+L1_HoldEconGW_Hopper # 每 GW 年經濟持有成本 — Hopper
+L1_HoldEconGW_GB200 # 每 GW 年經濟持有成本 — GB200
+L1_HoldEconGW_GB300 # 每 GW 年經濟持有成本 — GB300
+L1_HoldEconGW_VR200 # 每 GW 年經濟持有成本 — VR200
+L1_GPUhr_Hopper # 每 GPU 小時持有成本 — Hopper（H100／H200 共用）
+L1_GPUhr_GB200 # 每 GPU 小時持有成本 — GB200
+L1_GPUhr_GB300 # 每 GPU 小時持有成本 — GB300
+L1_GPUhr_VR200 # 每 GPU 小時持有成本 — VR200
+L1_GPUhr_GB200_vsCW # GB200 對 CoreWeave 隨需牌價
+L1_GPUhr_GB300_vsBE # GB300 對新雲損益兩平租金
+L1_RevGW_Fleet_VR200 # 1 GW 參考機隊付費營收（VR200）
+IF_NonNVRatio optional # 自研晶片（TPU／Trainium／Maia）換 VR 等值的比例（Tokenomics 尚未提供具名範圍）
+IF_NonNV_Maia optional # Maia 200 對 VR200 的等值比例（Tokenomics 尚未提供）
+IF_PUE optional # PUE（Tokenomics 以 IF_FacilityGW 表示；獨立名稱尚未提供）

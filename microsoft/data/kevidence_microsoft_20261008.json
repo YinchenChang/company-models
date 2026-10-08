@@ -1,0 +1,479 @@
+{
+ "_readme": "Microsoft k 的證據表（MAG v0.1a 步驟 3）。k＝市場價格 ÷ 同世代 Tokenomics IF_GPUhrEcon（GPU-hr 價格）或 ÷ IF_HoldEcon（長約 $M/MW-年）。Tokenomics 快照：data/tokenomics_snapshot_v5.27.json（20261008_Tokenomics_v5.27.xlsx，master ca78a8f）。H100／H200 以 Tokenomics「Hopper H100」欄代表（Tokenomics 無 H200 欄）。不以 Microsoft 的 Azure／Intelligent Cloud 營收、RPO 或 AI run-rate 反推 k。",
+ "asOf": "2026-10-08",
+ "tokenomics": {
+  "file": "20261008_Tokenomics_v5.27.xlsx",
+  "commit": "ca78a8f42af36caa1af2cc6234d8e322f0415769",
+  "IF_GPUhrEcon": {
+   "Hopper": 1.60502925637165,
+   "GB200": 2.08645378736555,
+   "GB300": 2.98269559427618,
+   "VR200": 4.99359409623699
+  },
+  "IF_HoldEcon_perMW": {
+   "Hopper": 10.0957952959174,
+   "GB200": 9.17098191725462,
+   "GB300": 12.7247463559608,
+   "VR200": 12.7620157762701
+  }
+ },
+ "rows": [
+  {
+   "id": "az.h100.od",
+   "generation": "H100",
+   "tkGen": "Hopper",
+   "layer": "隨需",
+   "priceUSDperGPUhr": 12.29,
+   "raw": {
+    "sku": "Standard_ND96isr_H100_v5",
+    "region": "eastus",
+    "price": 98.32,
+    "unit": "USD/VM-hr",
+    "gpusPerVM": 8,
+    "hoursInTerm": 1
+   },
+   "formula": "98.32 ÷ 1 小時 ÷ 8 GPU",
+   "source": "Azure Retail Prices API（Standard_ND96isr_H100_v5，eastus，Linux）",
+   "url": "https://prices.azure.com/api/retail/prices?$filter=armSkuName eq 'Standard_ND96isr_H100_v5'",
+   "date": "2023-12-01 生效",
+   "retrieved": "2026-10-08",
+   "tag": "[Interested-party]",
+   "IF_GPUhrEcon": 1.605,
+   "k": 7.657,
+   "side": "Microsoft 賣價（牌價）",
+   "note": "公開牌價（List），大客戶以 EA／MACC 折扣成交，實際成交價未揭露（不存在）；只作上限參考，不作 k 基準"
+  },
+  {
+   "id": "az.h100.r1",
+   "generation": "H100",
+   "tkGen": "Hopper",
+   "layer": "預留 1 年",
+   "priceUSDperGPUhr": 7.8656,
+   "raw": {
+    "sku": "Standard_ND96isr_H100_v5",
+    "region": "eastus",
+    "price": 551221.0,
+    "unit": "USD/VM（1 年總額）",
+    "gpusPerVM": 8,
+    "hoursInTerm": 8760
+   },
+   "formula": "551,221.0 ÷ 8,760 小時 ÷ 8 GPU",
+   "source": "Azure Retail Prices API（Standard_ND96isr_H100_v5，eastus，Linux）",
+   "url": "https://prices.azure.com/api/retail/prices?$filter=armSkuName eq 'Standard_ND96isr_H100_v5'",
+   "date": "2023-12-01 生效",
+   "retrieved": "2026-10-08",
+   "tag": "[Interested-party]",
+   "IF_GPUhrEcon": 1.605,
+   "k": 4.901,
+   "side": "Microsoft 賣價（牌價）",
+   "note": "公開牌價（List），大客戶以 EA／MACC 折扣成交，實際成交價未揭露（不存在）；只作上限參考，不作 k 基準"
+  },
+  {
+   "id": "az.h100.r3",
+   "generation": "H100",
+   "tkGen": "Hopper",
+   "layer": "預留 3 年",
+   "priceUSDperGPUhr": 5.3953,
+   "raw": {
+    "sku": "Standard_ND96isr_H100_v5",
+    "region": "eastus",
+    "price": 1134310.0,
+    "unit": "USD/VM（3 年總額）",
+    "gpusPerVM": 8,
+    "hoursInTerm": 26280
+   },
+   "formula": "1,134,310.0 ÷ 26,280 小時 ÷ 8 GPU",
+   "source": "Azure Retail Prices API（Standard_ND96isr_H100_v5，eastus，Linux）",
+   "url": "https://prices.azure.com/api/retail/prices?$filter=armSkuName eq 'Standard_ND96isr_H100_v5'",
+   "date": "2023-12-01 生效",
+   "retrieved": "2026-10-08",
+   "tag": "[Interested-party]",
+   "IF_GPUhrEcon": 1.605,
+   "k": 3.362,
+   "side": "Microsoft 賣價（牌價）",
+   "note": "公開牌價（List），大客戶以 EA／MACC 折扣成交，實際成交價未揭露（不存在）；只作上限參考，不作 k 基準"
+  },
+  {
+   "id": "az.h100.r5",
+   "generation": "H100",
+   "tkGen": "Hopper",
+   "layer": "預留 5 年",
+   "priceUSDperGPUhr": 4.916,
+   "raw": {
+    "sku": "Standard_ND96isr_H100_v5",
+    "region": "eastus",
+    "price": 1722566.0,
+    "unit": "USD/VM（5 年總額）",
+    "gpusPerVM": 8,
+    "hoursInTerm": 43800
+   },
+   "formula": "1,722,566.0 ÷ 43,800 小時 ÷ 8 GPU",
+   "source": "Azure Retail Prices API（Standard_ND96isr_H100_v5，eastus，Linux）",
+   "url": "https://prices.azure.com/api/retail/prices?$filter=armSkuName eq 'Standard_ND96isr_H100_v5'",
+   "date": "2023-12-01 生效",
+   "retrieved": "2026-10-08",
+   "tag": "[Interested-party]",
+   "IF_GPUhrEcon": 1.605,
+   "k": 3.063,
+   "side": "Microsoft 賣價（牌價）",
+   "note": "公開牌價（List），大客戶以 EA／MACC 折扣成交，實際成交價未揭露（不存在）；只作上限參考，不作 k 基準"
+  },
+  {
+   "id": "az.h100.spot",
+   "generation": "H100",
+   "tkGen": "Hopper",
+   "layer": "Spot（可中斷）",
+   "priceUSDperGPUhr": 2.2712,
+   "raw": {
+    "sku": "Standard_ND96isr_H100_v5",
+    "region": "eastus",
+    "price": 18.169536,
+    "unit": "USD/VM-hr",
+    "gpusPerVM": 8,
+    "hoursInTerm": 1
+   },
+   "formula": "18.169536 ÷ 1 小時 ÷ 8 GPU",
+   "source": "Azure Retail Prices API（Standard_ND96isr_H100_v5，eastus，Linux）",
+   "url": "https://prices.azure.com/api/retail/prices?$filter=armSkuName eq 'Standard_ND96isr_H100_v5'",
+   "date": "2026-01-01 生效",
+   "retrieved": "2026-10-08",
+   "tag": "[Interested-party]",
+   "IF_GPUhrEcon": 1.605,
+   "k": 1.415,
+   "side": "Microsoft 賣價（牌價）",
+   "note": "公開牌價（List），大客戶以 EA／MACC 折扣成交，實際成交價未揭露（不存在）；只作上限參考，不作 k 基準"
+  },
+  {
+   "id": "az.h200.od",
+   "generation": "H200",
+   "tkGen": "Hopper",
+   "layer": "隨需",
+   "priceUSDperGPUhr": 10.6,
+   "raw": {
+    "sku": "Standard_ND96isr_H200_v5",
+    "region": "eastus2",
+    "price": 84.8,
+    "unit": "USD/VM-hr",
+    "gpusPerVM": 8,
+    "hoursInTerm": 1
+   },
+   "formula": "84.8 ÷ 1 小時 ÷ 8 GPU",
+   "source": "Azure Retail Prices API（Standard_ND96isr_H200_v5，eastus2，Linux）",
+   "url": "https://prices.azure.com/api/retail/prices?$filter=armSkuName eq 'Standard_ND96isr_H200_v5'",
+   "date": "2025-04-01 生效",
+   "retrieved": "2026-10-08",
+   "tag": "[Interested-party]",
+   "IF_GPUhrEcon": 1.605,
+   "k": 6.604,
+   "side": "Microsoft 賣價（牌價）",
+   "note": "公開牌價（List），大客戶以 EA／MACC 折扣成交，實際成交價未揭露（不存在）；只作上限參考，不作 k 基準"
+  },
+  {
+   "id": "az.h200.r1",
+   "generation": "H200",
+   "tkGen": "Hopper",
+   "layer": "預留 1 年",
+   "priceUSDperGPUhr": 5.8152,
+   "raw": {
+    "sku": "Standard_ND96isr_H200_v5",
+    "region": "eastus2",
+    "price": 407526.0,
+    "unit": "USD/VM（1 年總額）",
+    "gpusPerVM": 8,
+    "hoursInTerm": 8760
+   },
+   "formula": "407,526.0 ÷ 8,760 小時 ÷ 8 GPU",
+   "source": "Azure Retail Prices API（Standard_ND96isr_H200_v5，eastus2，Linux）",
+   "url": "https://prices.azure.com/api/retail/prices?$filter=armSkuName eq 'Standard_ND96isr_H200_v5'",
+   "date": "2026-08-01 生效",
+   "retrieved": "2026-10-08",
+   "tag": "[Interested-party]",
+   "IF_GPUhrEcon": 1.605,
+   "k": 3.623,
+   "side": "Microsoft 賣價（牌價）",
+   "note": "公開牌價（List），大客戶以 EA／MACC 折扣成交，實際成交價未揭露（不存在）；只作上限參考，不作 k 基準"
+  },
+  {
+   "id": "az.h200.r3",
+   "generation": "H200",
+   "tkGen": "Hopper",
+   "layer": "預留 3 年",
+   "priceUSDperGPUhr": 5.2777,
+   "raw": {
+    "sku": "Standard_ND96isr_H200_v5",
+    "region": "eastus2",
+    "price": 1109592.0,
+    "unit": "USD/VM（3 年總額）",
+    "gpusPerVM": 8,
+    "hoursInTerm": 26280
+   },
+   "formula": "1,109,592.0 ÷ 26,280 小時 ÷ 8 GPU",
+   "source": "Azure Retail Prices API（Standard_ND96isr_H200_v5，eastus2，Linux）",
+   "url": "https://prices.azure.com/api/retail/prices?$filter=armSkuName eq 'Standard_ND96isr_H200_v5'",
+   "date": "2026-08-01 生效",
+   "retrieved": "2026-10-08",
+   "tag": "[Interested-party]",
+   "IF_GPUhrEcon": 1.605,
+   "k": 3.288,
+   "side": "Microsoft 賣價（牌價）",
+   "note": "公開牌價（List），大客戶以 EA／MACC 折扣成交，實際成交價未揭露（不存在）；只作上限參考，不作 k 基準"
+  },
+  {
+   "id": "az.gb200.od",
+   "generation": "GB200",
+   "tkGen": "GB200",
+   "layer": "隨需",
+   "priceUSDperGPUhr": 27.04,
+   "raw": {
+    "sku": "Standard_ND128isr_NDR_GB200_v6",
+    "region": "westus3",
+    "price": 108.16,
+    "unit": "USD/VM-hr",
+    "gpusPerVM": 4,
+    "hoursInTerm": 1
+   },
+   "formula": "108.16 ÷ 1 小時 ÷ 4 GPU",
+   "source": "Azure Retail Prices API（Standard_ND128isr_NDR_GB200_v6，westus3，Linux）",
+   "url": "https://prices.azure.com/api/retail/prices?$filter=armSkuName eq 'Standard_ND128isr_NDR_GB200_v6'",
+   "date": "2025-04-01 生效",
+   "retrieved": "2026-10-08",
+   "tag": "[Interested-party]",
+   "IF_GPUhrEcon": 2.0865,
+   "k": 12.96,
+   "side": "Microsoft 賣價（牌價）",
+   "note": "公開牌價（List），大客戶以 EA／MACC 折扣成交，實際成交價未揭露（不存在）；只作上限參考，不作 k 基準"
+  },
+  {
+   "id": "az.gb200.r1",
+   "generation": "GB200",
+   "tkGen": "GB200",
+   "layer": "預留 1 年",
+   "priceUSDperGPUhr": 17.3056,
+   "raw": {
+    "sku": "Standard_ND128isr_NDR_GB200_v6",
+    "region": "westus3",
+    "price": 606388.0,
+    "unit": "USD/VM（1 年總額）",
+    "gpusPerVM": 4,
+    "hoursInTerm": 8760
+   },
+   "formula": "606,388.0 ÷ 8,760 小時 ÷ 4 GPU",
+   "source": "Azure Retail Prices API（Standard_ND128isr_NDR_GB200_v6，westus3，Linux）",
+   "url": "https://prices.azure.com/api/retail/prices?$filter=armSkuName eq 'Standard_ND128isr_NDR_GB200_v6'",
+   "date": "2025-04-01 生效",
+   "retrieved": "2026-10-08",
+   "tag": "[Interested-party]",
+   "IF_GPUhrEcon": 2.0865,
+   "k": 8.294,
+   "side": "Microsoft 賣價（牌價）",
+   "note": "公開牌價（List），大客戶以 EA／MACC 折扣成交，實際成交價未揭露（不存在）；只作上限參考，不作 k 基準"
+  },
+  {
+   "id": "az.gb200.r3",
+   "generation": "GB200",
+   "tkGen": "GB200",
+   "layer": "預留 3 年",
+   "priceUSDperGPUhr": 11.8976,
+   "raw": {
+    "sku": "Standard_ND128isr_NDR_GB200_v6",
+    "region": "westus3",
+    "price": 1250676.0,
+    "unit": "USD/VM（3 年總額）",
+    "gpusPerVM": 4,
+    "hoursInTerm": 26280
+   },
+   "formula": "1,250,676.0 ÷ 26,280 小時 ÷ 4 GPU",
+   "source": "Azure Retail Prices API（Standard_ND128isr_NDR_GB200_v6，westus3，Linux）",
+   "url": "https://prices.azure.com/api/retail/prices?$filter=armSkuName eq 'Standard_ND128isr_NDR_GB200_v6'",
+   "date": "2025-04-01 生效",
+   "retrieved": "2026-10-08",
+   "tag": "[Interested-party]",
+   "IF_GPUhrEcon": 2.0865,
+   "k": 5.702,
+   "side": "Microsoft 賣價（牌價）",
+   "note": "公開牌價（List），大客戶以 EA／MACC 折扣成交，實際成交價未揭露（不存在）；只作上限參考，不作 k 基準"
+  },
+  {
+   "id": "lc.iren",
+   "generation": "GB300",
+   "tkGen": "GB300",
+   "layer": "長約（5 年）",
+   "priceUSDmPerMWyr": 9.7,
+   "raw": {
+    "tcvUSDm": 9700,
+    "years": 5,
+    "mwIT": 200
+   },
+   "formula": "9,700 ÷ 5 年 ÷ 200 MW-IT",
+   "source": "IREN 新聞稿：IREN Secures $9.7bn AI Cloud Contract with Microsoft",
+   "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-97bn-ai-cloud-contract-microsoft",
+   "date": "2025-11-03",
+   "retrieved": "2026-10-08",
+   "tag": "[Derived]",
+   "IF_HoldEcon_perMW": 12.725,
+   "IF_GPUhrEcon": 2.9827,
+   "k": 0.762,
+   "side": "Microsoft 買價（neocloud 長約）",
+   "note": "200 MW critical IT（Childress, TX）、GB300、20% 預付；與 nebius/coreweave 的 k_長約 0.76 同一筆"
+  },
+  {
+   "id": "lc.nebius",
+   "generation": "GB300",
+   "tkGen": "GB300",
+   "layer": "長約（5 年）",
+   "priceUSDmPerMWyr": 16.948,
+   "raw": {
+    "tcvUSDm": 17400,
+    "years": 5,
+    "mwIT": 205.33543596819766
+   },
+   "formula": "17,400 ÷ 5 年 ÷ 205 MW-IT",
+   "source": "Nebius 6-K 2025-09-08（TCV、年期）＋DCD／Bloomberg（GPU 數 >100,000 GB300）",
+   "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465925088312/tm2525580d1_6k.htm",
+   "date": "2025-09-08",
+   "retrieved": "2026-10-08",
+   "tag": "[Derived]",
+   "IF_HoldEcon_perMW": 12.725,
+   "IF_GPUhrEcon": 2.9827,
+   "k": 1.332,
+   "side": "Microsoft 買價（neocloud 長約）",
+   "note": "MW 未揭露：以「more than 100,000 GB300」÷ IF_GPUsPerGW GB300 487,008 ＝ 205 MW-IT（GPU 數為下限 → k 為上限）；TCV 上限 19.4B 時 k＝1.48；GPU 數來源 Bloomberg 知情人士（二手，DCD 2025-10-02）"
+  },
+  {
+   "id": "lc.nscale",
+   "generation": "GB300",
+   "tkGen": "GB300",
+   "layer": "長約（年期未揭露，假設 5 年）",
+   "priceUSDmPerMWyr": 11.201,
+   "raw": {
+    "tcvUSDm": 23000,
+    "years": 5,
+    "mwIT": 410.6708719363953
+   },
+   "formula": "23,000 ÷ 5 年 ÷ 411 MW-IT",
+   "source": "Nscale 新聞稿 2025-10-15（約 200,000 GB300）＋金額 $23B（Introl 轉述 SiliconANGLE；單一二手）",
+   "url": "https://nscale.com/press-releases/nscale-microsoft-2025",
+   "date": "2025-10-15",
+   "retrieved": "2026-10-08",
+   "tag": "[Assumed]",
+   "IF_HoldEcon_perMW": 12.725,
+   "IF_GPUhrEcon": 2.9827,
+   "k": 0.88,
+   "side": "Microsoft 買價（neocloud 長約）",
+   "note": "金額與年期皆非一手：TCV 23B 為二手、年期 5 年為假設（區間 4–6 年 → k 0.73–1.10）；MW＝200,000 ÷ 487,008 × 1,000＝411；Texas 站點 104k 顆／~240 MW（設施或 IT 未註明）"
+  },
+  {
+   "id": "lc.anthropic",
+   "generation": "GB300／VR200",
+   "tkGen": "VR200",
+   "layer": "長約（年期未揭露）",
+   "priceUSDmPerMWyr": [
+    5.0,
+    9.0
+   ],
+   "raw": {
+    "tcvUSDm": 30000,
+    "years": "未揭露（假設 4–6）",
+    "mw": "up to 1,000（IT／設施未註明）"
+   },
+   "formula": "30,000 ÷ 4–6 年 ÷ 1,000 MW＝5.0–7.5 $M/MW-年（若 1 GW 為設施口徑，IT 833 MW → 6.0–9.0）",
+   "source": "Anthropic：Microsoft, NVIDIA and Anthropic announce strategic partnerships",
+   "url": "https://www.anthropic.com/news/microsoft-nvidia-anthropic-announce-strategic-partnerships",
+   "date": "2025-11-18",
+   "retrieved": "2026-10-08",
+   "tag": "[Assumed]",
+   "IF_HoldEcon_perMW": 12.762,
+   "IF_GPUhrEcon": 4.9936,
+   "k": [
+    0.392,
+    0.705
+   ],
+   "side": "Microsoft 賣價（雲端長約）",
+   "note": "Grace Blackwell 與 Vera Rubin 系統；金額為承諾上限、年期未揭露 → k 區間 0.39–0.71（[Assumed]）；k 錨取 VR200（GB300 12.72 幾乎相同）"
+  },
+  {
+   "id": "lc.openai",
+   "generation": "未揭露",
+   "tkGen": null,
+   "layer": "長約（年期、GW 未揭露）",
+   "priceUSDmPerMWyr": null,
+   "raw": {
+    "tcvUSDm": 250000,
+    "years": "未揭露",
+    "mw": "未揭露"
+   },
+   "formula": "無法換算（缺 MW 與年期）",
+   "source": "Form 10-Q FY26 Q1 附註（OpenAI 新協議：增量 $250B Azure 服務）",
+   "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312525256321/msft-20250930.htm",
+   "date": "2025-10-29",
+   "retrieved": "2026-10-08",
+   "tag": "[Interested-party]",
+   "IF_HoldEcon_perMW": null,
+   "IF_GPUhrEcon": null,
+   "k": null,
+   "side": "Microsoft 賣價（雲端長約）",
+   "note": "找不到 GW 與年期的一手揭露；不以 OpenAI 模型的 Azure GW 路徑反推（循環）；列為缺口"
+  },
+  {
+   "id": "ref.crwv_nbis",
+   "generation": "GB300／H100",
+   "tkGen": null,
+   "layer": "對照：nebius／coreweave k",
+   "priceUSDperGPUhr": null,
+   "raw": {},
+   "formula": "沿用",
+   "source": "nebius/docs/workorders/20261008_nebius_v0.2a_每MW收入Tokenomics錨定.md（已套用預設 1）",
+   "url": "https://github.com/YinchenChang/company-models/blob/main/nebius/docs/workorders/20261008_nebius_v0.2a_%E6%AF%8FMW%E6%94%B6%E5%85%A5Tokenomics%E9%8C%A8%E5%AE%9A.md",
+   "date": "2026-10-08",
+   "retrieved": "2026-10-08",
+   "tag": "[Analogy]",
+   "IF_GPUhrEcon": null,
+   "k": {
+    "長約": 0.76,
+    "長約區間": [
+     0.7,
+     1.0
+    ],
+    "現貨": 1.76,
+    "現貨區間": [
+     1.5,
+     2.3
+    ]
+   },
+   "side": "—",
+   "note": "k_長約＝IREN–Microsoft；k_現貨＝H100／B300 現貨指數（W4）"
+  }
+ ],
+ "recommendation": {
+  "k_long": {
+   "base": 0.76,
+   "range": [
+    0.45,
+    1.0
+   ],
+   "basis": "IREN–Microsoft 0.76（一手 MW）；Nscale 約 0.88（金額二手、年期假設 5 年；4–6 年 0.73–1.10）；Anthropic–Azure 0.39–0.71（年期假設）；Nebius ≤1.33（GPU 數為下限）"
+  },
+  "k_spot": {
+   "base": 1.76,
+   "range": [
+    1.5,
+    2.3
+   ],
+   "basis": "沿用 nebius／coreweave 的現貨指數口徑；Azure 公開牌價隨需 k 6.6–13.0、預留 1–3 年 3.3–8.3 只作上限（大客戶折扣價未揭露）"
+  },
+  "longShare": {
+   "base": 0.7,
+   "range": [
+    0.45,
+    1.0
+   ],
+   "basis": "[Assumed]：OpenAI 約占商用 RPO 45%（FY26Q2）＋Anthropic $30B 等大型長約；其餘企業客戶以隨需／預留計價"
+  },
+  "k_blended": {
+   "low": 0.76,
+   "base": 1.06,
+   "high": 1.31
+  },
+  "vsPeers": "nebius／coreweave：k_長約 0.76（0.70–1.00）、k_現貨 1.76（1.5–2.3）；Microsoft 採同一基準值，長約區間下緣放寬到 0.45（Anthropic 隱含）"
+ }
+}
