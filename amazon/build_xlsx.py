@@ -24,11 +24,12 @@ _g3 = CONS['companyGuidance'].get(CO['quarterly']['quarters'][0]['key']) or {}  
 assert (_g3.get('revenueLow'), _g3.get('revenueHigh')) == (CO['callFacts']['nextQRevLo'], CO['callFacts']['nextQRevHi']), 'Q3 營收指引：company.json 與共識檔不一致'
 assert abs(CO['ytdActual']['adjEbitda'] - sum(v for k, v in CO['ytdActual']['adjEbitdaMeta'].items() if re.fullmatch(r'q\d', k))) < 1e-9, '年初至今調整後 EBITDA ≠ 各季合計'
 D, V, M = CO['defaults'], CO['valuation'], CO['defaults']['m']
+PRC = CO.get('pricing')  # MAG v0.1b：對外 AI 雲端定價（Tokenomics × k）；有此區段時每 MW 年收入為公式（輸入與假設 B0）
 # v0.1b：開啟時的預設輸入（defaults.m）必須等於預設情境的已連網 MW、可計費 MW 與每 MW 年收入（HTML 開啟時用 defaults，Excel 用情境公式）
 def _conn(k, mp=CO['scenarios']['mwPath']):
     a = []
     for i, L in enumerate(CO['periodYears']):
-        a.append(min(mp['contracted'][k][i], mp['connectedStart'] if i == 0 else a[i - 1] + mp['pace'][k] * L))
+        a.append(min(mp['contracted'][k][i], (mp['connectedStart'] if mp['connectedStart'] is not None else D['billableOpen'] + mp['pace'][k] * L) if i == 0 else a[i - 1] + mp['pace'][k] * L))  # MAG v0.1b：null＝首期自評價日起算
     return a
 _dsc = D['scenario']
 assert all(abs(x - y) < 1e-6 for x, y in zip(_conn(_dsc), M['accepted'])), f"defaults.m.accepted ≠ {_dsc} 情境已連網 MW {_conn(_dsc)}"
@@ -37,7 +38,7 @@ _bopen = lambda k: int(_BRC['openAnnualRevenue'] / CO['scenarios']['revMW'][k][0
 assert D['billableOpen'] == _bopen(_dsc), f"defaults.billableOpen ≠ {_dsc} 情境校準值 {_bopen(_dsc)}"
 assert M['billable'] == ([int(_bopen(_dsc) + (x - _bopen(_dsc)) * b + 0.5) for x, b in zip(_conn(_dsc), _BRC['ratio'])] if _CONV else
                          [int(x * b + 0.5) for x, b in zip(_conn(_dsc), _BRC['ratio'])]), "defaults.m.billable ≠ 情境可計費 MW（四捨五入）"
-assert M['revMW'] == CO['scenarios']['revMW'][_dsc], "defaults.m.revMW ≠ scenarios.revMW（預設情境）"
+assert PRC or M['revMW'] == CO['scenarios']['revMW'][_dsc], "defaults.m.revMW ≠ scenarios.revMW（預設情境）"
 PCT_ = lambda xs: [x / 100 for x in xs]  # HTML 以百分點存、Excel 以比例存
 TXQ = CO['texts']  # v0.1b（Oracle）：公司特有說明文字
 P3 = CO['periods'][:3]  # v0.1b：共識對照的三個年度（模型前三期）
@@ -189,7 +190,7 @@ guide = [
     ("", None),
     ("■ 營收主軸：MW × 每 MW 年收入 × 利用率", None),
     ("  已連網 MW（情境路徑，口徑不明者 ÷ PUE 1.2 換成 MW-IT）→ 在役 MW（× 在役比例）→ 平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度＝營收。", None),
-    ("  每 MW 年收入取 Tokenomics 正向推導的三情境值（data/permw_tokenomics_20261007.json），不用公司 ACV（只作對照）；利用率預設 100%，因推導值已含可計費利用率。", None),
+    ("  每 MW 年收入＝Σ 在役世代占比 × Tokenomics 持有成本（IF_HoldEcon）× 晶片係數 × k（輸入與假設 B0；k 依價格軸）；不以公司營收、RPO 或 run-rate 反推；按 MW-year 計價，利用率 100%（收入端不乘 IF_Util）。", None),
     ("  RPO 排程（季報桶分攤）只作對照：排程 > 容量的部分顯示為『產能瓶頸』旗標。", None),
     ("", None),
     ("■ 收入之後的折扣", None),
@@ -268,7 +269,7 @@ r = section(ws, r, "A｜情境與規模（管理層擴張力道）")
 ws.cell(row=r, column=1, value=f"情境選擇（1＝{CO['scenarios']['labels']['low']}、2＝{CO['scenarios']['labels']['base']}、3＝{CO['scenarios']['labels']['high']}）").font = BOLD
 c = ws.cell(row=r, column=3, value=2); c.font = BLUE; c.number_format = NUM0; c.border = BOX; c.fill = FILL_KEY
 ws.cell(row=r, column=4, value=f'=CHOOSE(C{r},"{CO["scenarios"]["labels"]["low"]}","{CO["scenarios"]["labels"]["base"]}","{CO["scenarios"]["labels"]["high"]}")').font = BOLD
-ws.cell(row=r, column=9, value="三情境改變擴張力道（已連網 MW 路徑）與每 MW 年收入（Tokenomics 正向推導三情境值）；其餘假設相同（對照表 r1 第 4 節第 1 條）").font = SMALL
+ws.cell(row=r, column=9, value="三情境只改容量軸（對外 AI MW 路徑；世代組合隨新增 MW 改變每 MW 年收入）；價格軸另見 B0（對照表 r1 第 5 節第 1 條）").font = SMALL
 SEL = f"'輸入與假設'!$C${r}"; r += 1
 r = section(ws, r, "情境路徑明細（已連網 MW、在役比例、表外租金基準）", level=2)
 for j, h in enumerate(["已連網 MW 路徑", "單位"] + PERIODS + ["", f"{CAL['nextFYLabel']} 新增 MW"]):
@@ -277,7 +278,11 @@ for j, h in enumerate(["已連網 MW 路徑", "單位"] + PERIODS + ["", f"{CAL[
 r += 1
 sc_rows = {}
 MWP = CO['scenarios']['mwPath']  # v0.1b：已連網 MW＝MIN(合約上限, 前期＋併網速度×期間長度)；首期期末三情境共用
-CONN0 = gi(r, "首期期末已連網 MW（三情境共用）", "MW", MWP['connectedStart'], "首期期末＝評價日已連網＋首期剩餘季度依最新季交付速度；推導與來源見 company.json → scenarios.mwPath.note [Derived]", NUM0); r += 1
+if MWP['connectedStart'] is not None:
+    CONN0 = gi(r, "首期期末已連網 MW（三情境共用）", "MW", MWP['connectedStart'], "首期期末＝評價日已連網＋首期剩餘季度依最新季交付速度；推導與來源見 company.json → scenarios.mwPath.note [Derived]", NUM0); r += 1
+else:  # MAG v0.1b：首期期末＝評價日在役 MW＋速度 × 首期長度（三情境各自）
+    CONN0 = None
+    OPEN0 = gi(r, "評價日在役 MW（期初計費，三情境共用）", "MW", D['billableOpen'], "company.json → defaults.billableOpen；來源見 scenarios.mwPath.note（第三方估計，不以營收校準）[Derived／Assumed]", NUM0); r += 1
 _SCN = [(nm, k, CO['scenarios']['descriptions'][k]) for nm, k in (("保守", "low"), ("基準", "base"), ("積極", "high"))]  # v0.1b：情境說明讀 company.json
 for nm, k, note in _SCN:
     lb = CO['scenarios']['labels'][k]
@@ -287,13 +292,13 @@ for nm, k, note in _SCN:
     ws.cell(row=r, column=2, value="MW").font = SMALL
     for i in range(5):
         L = COLS[i]
-        f = f"=MIN({L}{_cr},{CONN0})" if i == 0 else f"=MIN({L}{_cr},{COLS[i-1]}{r}+{_pc}*§LEN{L}§)"
+        f = (f"=MIN({L}{_cr},{CONN0})" if CONN0 else f"=MIN({L}{_cr},{OPEN0}+{_pc}*§LEN{L}§)") if i == 0 else f"=MIN({L}{_cr},{COLS[i-1]}{r}+{_pc}*§LEN{L}§)"
         c = ws.cell(row=r, column=3 + i, value=f); c.font = BLACK; c.number_format = NUM0; c.border = BOX
     c = ws.cell(row=r, column=9, value=CO['scenarios']['mw31'][k]); c.font = BLUE; c.number_format = NUM0; c.border = BOX
     ws.cell(row=r, column=10, value=note + f"；I 欄＝{CAL['nextFYLabel']} 新增 MW").font = SMALL
     sc_rows[nm] = r
     r += 1
-for nm, k, _ in _SCN:
+for nm, k, _ in ([] if PRC else _SCN):  # MAG v0.1b：pricing 時每 MW 年收入為公式（B0），不列三情境常數
     row_line(ws, r, f"每 MW 年收入｜{CO['scenarios']['labels'][k]}", "US$bn/MW", CO['scenarios']['revMW'][k], '0.0000', BLUE,
              "Tokenomics 正向推導三情境（data/permw_tokenomics_20261007.json）；不用公司 ACV [Derived]")
     sc_rows['rev_' + nm] = r; r += 1
@@ -321,6 +326,8 @@ MWY = {}  # 5a：各年底主動電力（company.json → defaults.mwYearEnd，�
 MWY[MW_Y0] = MW_YE25 = gi(r, f"{CAL['prevFYE']} 主動電力", "MW", D['mwYearEnd'][str(MW_Y0)], CO['texts']['mwYearEndNotes'][str(MW_Y0)], NUM0); r += 1
 MW0 = gi(r, "«VMD» Billable MW", "MW", (f"=CHOOSE({SEL},'輸入與假設'!$C${sc_rows['b0_保守']},'輸入與假設'!$C${sc_rows['b0_基準']},'輸入與假設'!$C${sc_rows['b0_積極']})" if _CONV else D['billableOpen']),
          "＝依 A 區情境選擇器（以實際營收校準）" if _CONV else "季末在役 MW 未揭露 [Derived]", NUM0, font=BLACK if _CONV else None); r += 1
+if not _CONV and CONN0 is None:  # MAG v0.1b：與 A 區同一格
+    ws.cell(row=int(MW0.split('$')[-1]), column=3, value=f"={OPEN0}").font = GREEN
 AVGON = gi(r, "收入用平均在役 MW（1=是）", "", int(D['useAvgMw']), "0＝用期末存量全期化；建議 1", NUM0); r += 1
 REVDRV = gi(r, "營收驅動（mw＝MW × 每 MW 年收入；rpo＝RPO 排程）", "", D['revenueDriver'], "mw：新產能簽約率固定 100%，營收＝容量上限；RPO 只作對照與產能瓶頸旗標（company.json → defaults.revenueDriver）", "@"); r += 1
 REVSC = gi(r, "每 MW 年收入倍數（整體）", "%", D['revScale'], "反向 DCF 與壓力測試用；預設 100%。以『目標搜尋』調整此格即可反解市價隱含單價", PCT); r += 1
@@ -336,16 +343,63 @@ for i in range(5):
     L = COLS[i]
     ws.cell(row=_acc, column=3 + i, value=f"=CHOOSE({SEL},{L}{sc_rows['保守']},{L}{sc_rows['基準']},{L}{sc_rows['積極']})")
     ws.cell(row=_bil, column=3 + i, value=(f"=ROUND({MW0}+({L}{_acc}-{MW0})*{L}{BR_ROW},0)" if _CONV else f"=ROUND({L}{_acc}*{L}{BR_ROW},0)"))
-r = prow(r, "利用率", "%", PCT_(M['util']), PCT, "100%：每 MW 年收入已含可計費利用率（路徑 B 80／85／90%），不重複扣除 [Derived]")
-r = prow(r, "每 MW 年收入", "US$bn/MW", [0] * 5, '0.0000', "＝依 A 區情境選擇器（Tokenomics 正向推導三情境）", BLACK)
+r = prow(r, "利用率", "%", PCT_(M['util']), PCT, "100%：按 MW-year 計價，收入端不乘 IF_Util（Tokenomics 下游契約第 3 條）")
+r = prow(r, "每 MW 年收入", "US$bn/MW", [0] * 5, '0.0000', "＝依 A 區情境選擇器", BLACK)
 for i in range(5):
     L = COLS[i]
-    ws.cell(row=IN["每 MW 年收入"], column=3 + i, value=f"=CHOOSE({SEL},{L}{sc_rows['rev_保守']},{L}{sc_rows['rev_基準']},{L}{sc_rows['rev_積極']})")
+    if not PRC:  # MAG v0.1b：pricing 時於 B0 改寫為公式
+        ws.cell(row=IN["每 MW 年收入"], column=3 + i, value=f"=CHOOSE({SEL},{L}{sc_rows['rev_保守']},{L}{sc_rows['rev_基準']},{L}{sc_rows['rev_積極']})")
 r = prow(r, "新產能簽約率", "%", PCT_(M['fill']), PCT, "MW 驅動：100%（RPO 只作對照）")
 r = prow(r, "客戶違約率", "%", PCT_(M['defaultP']), PCT, "前三大客戶約 59% 營收的定價，非預測 [Assumed]")
 r = prow(r, "回收率", "%", PCT_(M['recovery']), PCT, "[Assumed]")
 r = prow(r, "非算力服務營收", "US$bn", D['services'], NUM, "預設 0：AI cloud 軟體已含在每 MW 年收入；其他事業另列 [Assumed]")
 r = prow(r, "其他事業 EBITDA", "US$bn", D['otherEbitda'], NUM, D['otherEbitdaNote'])
+# MAG v0.1b：B0｜對外 AI 雲端定價（company.json → pricing；HTML segA revPathQ 同式）
+if PRC:
+    r = section(ws, r, "B0｜對外 AI 雲端定價：每 MW 年收入＝Σ 在役世代占比 × Tokenomics 持有成本 × 晶片係數 × k（收入端不乘 IF_Util）", level=2)
+    _AXL = PRC['axisLabels']
+    ws.cell(row=r, column=1, value=f"價格軸選擇（1＝{_AXL['low']}、2＝{_AXL['base']}、3＝{_AXL['high']}）").font = BOLD
+    c = ws.cell(row=r, column=3, value=['low', 'base', 'high'].index(PRC['axis']) + 1); c.font = BLUE; c.number_format = NUM0; c.border = BOX; c.fill = FILL_KEY
+    ws.cell(row=r, column=4, value=f'=CHOOSE(C{r},"{_AXL["low"]}","{_AXL["base"]}","{_AXL["high"]}")').font = BOLD
+    ws.cell(row=r, column=9, value="價格軸與容量軸（A 區情境）分離；三容量情境預設都用基準 k，3 × 3 目標價矩陣見「評價_DCF與目標價」（對照表 r1 第 5 節第 1 條）").font = SMALL
+    PSEL = f"'輸入與假設'!$C${r}"; r += 1
+    for j, h in enumerate(["k 組成（價格軸）", "單位", "低", "基準", "高"]):
+        cc = ws.cell(row=r, column=1 + j, value=h); cc.font = HEAD; cc.fill = FILL_HEAD
+    r += 1
+    _KR = {}
+    for key, nm, unit, fm in (("kLong", "k｜長約", "倍", '0.000'), ("kSpot", "k｜現貨", "倍", '0.000'), ("longShare", "長約占比", "%", PCT)):
+        row_line(ws, r, nm, unit, [PRC[key][a] for a in ('low', 'base', 'high')], fm, BLUE, PRC['kNote'][key]); IN[nm] = _KR[key] = r; r += 1
+    row_line(ws, r, "混合 k", "倍", [f"={c_}{_KR['longShare']}*{c_}{_KR['kLong']}+(1-{c_}{_KR['longShare']})*{c_}{_KR['kSpot']}" for c_ in "CDE"], '0.000', BLACK,
+             "＝長約占比 × k_長約＋(1 − 長約占比) × k_現貨"); IN["混合 k"] = _KMIX = r; r += 1
+    KSEL = gi(r, "採用 k（依價格軸）", "倍", f"=CHOOSE({PSEL},C{_KMIX},D{_KMIX},E{_KMIX})", "＝依上方價格軸選擇", '0.000', True, font=BLACK); r += 1
+    CFAC = gi(r, "自研晶片持有成本係數", "倍", PRC['customFactor'], PRC['customNote'], '0.00'); r += 1
+    CAPW = gi(r, "上限檢查門檻（每 MW 年收入 ÷ 參考付費營收）", "%", PRC['capWarn'], PRC['capWarnNote'], PCT); r += 1
+    r = phdr(r)
+    _GR = []
+    for ch in PRC['chips']:
+        _lb = ch['label']; _tk = ch['tk']
+        _he = gi(r, f"世代｜{_lb}｜每 MW 年持有成本", "US$m/MW", f"=TK_HoldEcon_{_tk}" + (f"*{CFAC}" if ch['custom'] else ""),
+                 f"Tokenomics IF_HoldEcon（{_tk}）" + ("× 自研晶片係數（對照表 r1 C2）" if ch['custom'] else "") + "；US$B/GW＝US$m/MW", '0.000', font=BLACK); r += 1
+        _op = gi(r, f"世代｜{_lb}｜每 MW 年營運成本", "US$m/MW", f"=TK_OpexGW_{_tk}", f"Tokenomics IF_OpexGW（{_tk}；不含折舊，含電費）", '0.000', font=BLACK); r += 1
+        _rf = gi(r, f"世代｜{_lb}｜每 MW 參考付費營收", "US$m/MW", f"=TK_RevGWFleet_{_tk}", f"Tokenomics IF_RevGWFleet（{_tk}；理論上限，只作檢查）", '0.000', font=BLACK); r += 1
+        _o0 = gi(r, f"世代｜{_lb}｜期初在役占比", "%", ch['mixOpen'], PRC['mixNote'] if ch is PRC['chips'][0] else "見第一個世代的說明 [Assumed]", PCT); r += 1
+        _ad = r; r = prow(r, f"世代｜{_lb}｜新增 MW 占比", "%", ch['mixAdds'], PCT, "各期新增在役 MW 的世代組合 [Assumed]")
+        _gm = r
+        r = prow(r, f"世代｜{_lb}｜在役 MW", "MW",
+                 [f"={_o0}*{MW0}+MAX(0,C{IN['Accepted MW（期末主動電力）']}-{MW0})*C{_ad}"] +
+                 [f"={COLS[i-1]}{_gm}+MAX(0,{COLS[i]}{IN['Accepted MW（期末主動電力）']}-{COLS[i-1]}{IN['Accepted MW（期末主動電力）']})*{COLS[i]}{_ad}" for i in range(1, 5)],
+                 NUM0, "＝前期＋本期新增 × 新增占比（首期＝評價日在役 × 期初占比＋新增）", BLACK)
+        _GR.append((_gm, _he, _op, _rf))
+    _sp = lambda col, i: "(" + "+".join(f"{COLS[i]}{g[0]}*{g[col]}" for g in _GR) + f")/MAX(1E-9,{COLS[i]}{IN['在役 MW 合計（世代加總）']})"
+    r = prow(r, "在役 MW 合計（世代加總）", "MW", ["=" + "+".join(f"{COLS[i]}{g[0]}" for g in _GR) for i in range(5)], NUM0, "應＝Accepted MW（核對見檢查頁）", BLACK)
+    r = prow(r, "加權每 MW 年持有成本", "US$m/MW", [f"={_sp(1, i)}" for i in range(5)], '0.000', "＝Σ 世代在役 MW × 持有成本 ÷ 合計", BLACK)
+    r = prow(r, "加權每 MW 年營運成本", "US$m/MW", [f"={_sp(2, i)}" for i in range(5)], '0.000', "＝Σ 世代在役 MW × 營運成本 ÷ 合計（AI 雲端 EBITDA 率的成本端）", BLACK)
+    r = prow(r, "加權每 MW 參考付費營收", "US$m/MW", [f"={_sp(3, i)}" for i in range(5)], '0.000', "＝Σ 世代在役 MW × IF_RevGWFleet ÷ 合計", BLACK)
+    r = prow(r, "每 MW 年收入 ÷ 參考付費營收", "%", [f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/MAX(1E-9,{COLS[i]}{IN['加權每 MW 參考付費營收']})" for i in range(5)], PCT,
+             "上限檢查：> 門檻時示警（hyperscaler 拿走客戶 token 營收的比例偏高）", BLACK)
+    for i in range(5):
+        ws.cell(row=IN["每 MW 年收入"], column=3 + i, value=f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/1000")
+    ws.cell(row=IN["每 MW 年收入"], column=9, value="＝加權每 MW 年持有成本 × 採用 k ÷ 1000（B0；Tokenomics × k，不以公司營收反推）")
 # v0.1b（Oracle）：B2｜非 AI 事業（company.json → defaults.legacyBiz；與 HTML segA legacyQ 同一算法）
 LGB = D.get('legacyBiz') or {'lines': [], 'ebitdaMargin': [0] * 5}
 r = section(ws, r, "B2｜非 AI 事業（各線全年營收＝上一財年 ×(1＋年增率)，年增率自起點線性收斂到長期值；«P0» 模型期＝全年 − «YTD» 實際）", level=2)
@@ -2034,6 +2088,15 @@ for nm, fs, fmt in rows_rg:
     for j, f in enumerate(fs):
         c = ws.cell(row=r, column=3 + j, value=f); c.number_format = fmt; c.font = BLACK
     r += 1
+if PRC:  # MAG v0.1b：容量軸 × 價格軸 3 × 3 加權目標價（建置時以 LibreOffice 求解的快照：scripts/rv_solve.py → rv_snap.json「g33」；HTML grid33Q 即時計算，cmp31 比對）
+    _G33 = rv.get('g33') or [[0] * 3] * 3
+    for j, k in enumerate(DT_SC):
+        ws.cell(row=r, column=1, value=f"3×3｜{DT_NM[k]}（價格軸 低／基準／高）").font = BLACK
+        for a_ in range(3):
+            c = ws.cell(row=r, column=3 + a_, value=_G33[j][a_]); c.number_format = USD; c.font = BLUE; c.border = BOX
+        if j == 0:
+            ws.cell(row=r, column=9, value=f"快照（verify.sh 步驟 3b 重算）：列＝容量情境（A 區）、欄＝價格軸（B0：{PRC['axisLabels']['low']}／{PRC['axisLabels']['base']}／{PRC['axisLabels']['high']}）；其餘輸入為預設值").font = SMALL
+        r += 1
 for rr in (R0 + 5, R0 + 6, R0 + 7):
     ws.cell(row=rr, column=4).number_format = NUM0
 ws.cell(row=R0 + 11, column=4).number_format = NUM0
@@ -2375,6 +2438,12 @@ checks = [
     ("«P0» 營收 vs 指引", f"='各期收支'!C{FRR['memo_rev']}", REV_GUIDE_TXT,
      "=\"不適用\"" if _RVLO is None else ("=IF(B{r}>=" + _RVLO + ",\"通過\",\"觀察\")") if _RVHI is None else ("=IF(AND(B{r}>=" + _RVLO + ",B{r}<=" + _RVHI + "),\"通過\",\"觀察\")"), NUM,
      f"«YTD» 實際 {CO['ytdActual']['revenue']}＋«STUB» 模型（算力＋非算力服務）"),
+] + ([  # MAG v0.1b：每 MW 年收入上限檢查（Tokenomics 參考付費營收）
+    ("每 MW 年收入 ÷ 參考付費營收（五期最高）", f"=MAX('輸入與假設'!C{IN['每 MW 年收入 ÷ 參考付費營收']}:G{IN['每 MW 年收入 ÷ 參考付費營收']})", f"≤{_n(PRC['capWarn'] * 100)}%",
+     "=IF(B{r}<=" + _n(PRC['capWarn']) + ",\"通過\",\"示警\")", PCT, PRC['capWarnNote']),
+    ("世代在役 MW 合計 − Accepted MW（«PL»）", f"='輸入與假設'!G{IN['在役 MW 合計（世代加總）']}-'輸入與假設'!G{IN['Accepted MW（期末主動電力）']}", "=0",
+     "=IF(ABS(B{r})<0.5,\"通過\",\"不一致\")", NUM0, "新增占比合計須為 100%、期初占比合計須為 100%"),
+] if PRC else []) + [
     ("CapEx 強度（模型期合計）", None, f"${_n(CK['capexPerMwBand'][0])}–{_n(CK['capexPerMwBand'][1])}m/MW",
      "=IF(AND(B{r}>=" + _n(CK['capexPerMwBand'][0]) + ",B{r}<=" + _n(CK['capexPerMwBand'][1]) + "),\"通過\",\"觀察\")", NUM0,
      "Tokenomics IF_CapexTotal 低／高成本情境（GB300 38.8–67.1 US$m/MW-IT）"),
@@ -3375,6 +3444,73 @@ srow("驗證｜目標價（平均／中位數／最低／最高）", "US$", [f"=
      f"{CONS['priceTarget']['analysts']} 家；{CONS['priceTarget']['source']}，擷取 {CONS['priceTarget']['retrieved']} [Interested-party]")
 ws.cell(row=r + 1, column=1, value="來源獨立性：" + CONS['sourceIndependence']).font = SMALL
 ws.cell(row=r + 2, column=1, value=f"共識來源：{CONS['annualEstimates']['source']}、{CONS['priceTarget']['source']}；擷取 {CONS['annualEstimates']['retrieved']}。逐筆來源、日期與標記見『輸入與假設』I 區。").font = SMALL
+
+# MAG v0.1b（沿用 CoreWeave W1，2026-10-07）：Tokenomics 取數分頁。值取自 company.json → tokenomics.snapshotFile 的版本固定快照（tools/tokenomics/import_tokenomics.py 產生），
+# 藍字輸入格；每個名稱的「基準」值格另建具名範圍 TK_<名稱去掉 IF_／L1_>_<世代代碼>（單值名稱不加世代），供每 MW 年收入、營運成本與資本支出公式引用。
+from openpyxl.workbook.defined_name import DefinedName as _DN
+TK = CO.get('tokenomics')
+if TK:
+    _TKS = _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), TK['snapshotFile']), encoding='utf-8'))
+    _src = _TKS['source']
+    assert _src['commit'] == TK['commit'] and _src['version'] == TK['version'], 'company.json → tokenomics 的版本／commit 與快照檔不一致'
+    assert list(_TKS['items']) == TK['names'], 'company.json → tokenomics.names 與快照檔名稱不一致'
+    ws = wb.create_sheet("Tokenomics_取數")
+    for _col, _w in zip("ABCDEFGHIJ", (26, 24, 44, 12, 30, 13, 13, 13, 24, 22)):
+        ws.column_dimensions[_col].width = _w
+    ws["A1"] = "Tokenomics 取數（算力相關的產業與物理層資料）"; ws["A1"].font = TITLE
+    _GC = {g['name']: g['code'] for g in _src['generations']}
+    ws["A2"] = (f"來源：{_src['repo']} {_src['file']}（{_src['version']}，commit {_src['commit'][:7]}，擷取 {_src['extractedAt']}）。"
+                "只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱；模型主值取「基準」，低／高只作敏感度；Tokenomics 每 GW＝IT 關鍵電力。")
+    ws["A2"].font = SMALL
+    ws["A3"] = "值為快照的藍字輸入格（勿手改；更新方式見 repo 根目錄 README「共用工具：Tokenomics 取數」）；「輸入與假設」B0（每 MW 年收入、營運成本）與 D 區（每 MW 資本支出）以 TK_ 名稱引用。"
+    ws["A3"].font = SMALL
+    r = 4
+    for j, h in enumerate(["具名範圍（基準）", "名稱", "中文標籤", "單位", "世代", "低成本", "基準", "高成本", "Tokenomics 位置", "版本與 commit"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    _ver = f"{_src['version']} · {_src['commit'][:7]}"
+    _short = lambda n: re.sub(r'^(IF|L1)_', '', n)
+    def _tkrow(key, name, lab, unit, gen, vals, loc, fmt):
+        global r
+        ws.cell(row=r, column=1, value=key).font = BLACK
+        ws.cell(row=r, column=2, value=name).font = BLACK
+        ws.cell(row=r, column=3, value=lab).font = BLACK
+        ws.cell(row=r, column=4, value=unit).font = SMALL
+        ws.cell(row=r, column=5, value=gen).font = BLACK
+        for j, v in enumerate(vals):
+            c = ws.cell(row=r, column=6 + j, value=v); c.border = BOX
+            if isinstance(v, (int, float)): c.font = BLUE; c.number_format = fmt
+            else: c.font = SMALL
+        ws.cell(row=r, column=9, value=loc).font = SMALL
+        ws.cell(row=r, column=10, value=_ver).font = SMALL
+        r += 1
+    def _fmt(unit, vals):
+        nums = [abs(v) for v in vals if isinstance(v, (int, float))]
+        if unit in ('%',): return '0.0%'
+        if unit in ('顆', '架'): return NUM0
+        if nums and max(nums) >= 1000: return NUM0
+        return '#,##0.0000;(#,##0.0000);-'
+    for _nm, _it in _TKS['items'].items():
+        if _it.get('missing'):
+            _tkrow(f"TK_{_short(_nm)}", _nm, "（Tokenomics 尚無此名稱）", "", "", ["", "", ""],
+                   f"{_src['version']} 無此名稱（列為 optional，資料缺口已回報）；未建具名範圍", NUM)
+            continue
+        if _it['kind'] == 'gen_cost':
+            for _g, _v3 in _it['values'].items():
+                _vals = [_v3['低成本'], _v3['基準'], _v3['高成本']]
+                _key = f"TK_{_short(_nm)}_{_GC[_g]}"
+                _tkrow(_key, _nm, _it['label'], _it['unit'], _g, _vals,
+                       f"{_it['cells'][_g]['低成本']}:{_it['cells'][_g]['高成本'].split('!')[1]}", _fmt(_it['unit'], _vals))
+                wb.defined_names[_key] = _DN(_key, attr_text=f"'Tokenomics_取數'!$G${r - 1}")
+        elif _it['kind'] == 'single':
+            _rg = _it.get('range') or {}
+            _vals = [_rg.get('低', ''), _it['values'], _rg.get('高', '')] if _rg else ["", _it['values'], ""]
+            _loc = _it['cell'] + (f"（低／高＝{_rg['cells']['低'].split('!')[1]}／{_rg['cells']['高'].split('!')[1]}；{_rg.get('def') or ''}）" if _rg else "")
+            _key = f"TK_{_short(_nm)}"
+            _tkrow(_key, _nm, _it['label'], _it['unit'], "—", _vals, _loc, _fmt(_it['unit'], _vals))
+            wb.defined_names[_key] = _DN(_key, attr_text=f"'Tokenomics_取數'!$G${r - 1}")
+        else:
+            raise SystemExit(f'Tokenomics_取數：不支援的快照型態 {_it["kind"]}（{_nm}）')
 
 for s in wb.worksheets:
     s.sheet_view.showGridLines = False

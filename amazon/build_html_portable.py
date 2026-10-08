@@ -15,7 +15,8 @@ seg = lambda n: open(os.path.join(H, n), encoding='utf-8').read()
 import json as _json
 sys.path.insert(0, H); import calendar_q  # v4.5：期間與日期由 company.json → calendar 推算（與 Excel 共用）
 _co = calendar_q.load(H)  # 公司資料單一來源
-_co.pop('asOf', None)  # 滾動檢查的季度標記只在建置時檢查（calendar_q），不注入 HTML
+_co.pop('asOf', None)
+_co['tk'] = calendar_q.tk_base(H, _co)  # MAG v0.1b：Tokenomics 快照基準值（每 MW 年收入、營運成本；與 Excel TK_ 具名範圍同一快照）  # 滾動檢查的季度標記只在建置時檢查（calendar_q），不注入 HTML
 _co['consensus'] = calendar_q.norm_consensus(_json.load(open(os.path.join(H, _co['meta']['consensusFile']), encoding='utf-8')), _co['periods'])  # MAG v0.1b：年度鍵依模型期間標籤取用（不改數字）  # v4.3：市場共識資料檔（只讀）併入注入資料，不另設全域變數
 _g = _co['consensus']['companyGuidance'].get(_co['quarterly']['quarters'][0]['key']) or {}  # Q3 營收指引以 company.json 為準；與共識檔不一致即停止建置（Excel 建置同一檢查；v0.1b：公司未給季度指引時兩邊皆為空）
 assert (_g.get('revenueLow'), _g.get('revenueHigh')) == (_co['callFacts']['nextQRevLo'], _co['callFacts']['nextQRevHi']), 'Q3 營收指引：company.json 與共識檔不一致'

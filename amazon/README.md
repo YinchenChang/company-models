@@ -399,17 +399,14 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.labels.low` | 保守情境名稱（空格前的文字會當作情境簡稱） | 文字 | 保守 已交付＋已公開在建 | 必改 |
 | `scenarios.labels.base` | 基準情境名稱 | 文字 | 基準 依 2025 新增電力速度 | 必改 |
 | `scenarios.labels.high` | 積極情境名稱 | 文字 | 積極 依 2025Q4 單季速度 | 必改 |
-| `scenarios.mwPath.connectedStart` | 首期期末已連網 MW（三情境共用；v0.1b） | MW | 2730 | 必改 |
+| `scenarios.mwPath.connectedStart` | 首期期末已連網 MW（三情境共用；v0.1b）；null＝首期自評價日在役 MW（defaults.billableOpen）依各情境速度起算（MAG v0.1b） | MW 或 null | None | 必改 |
 | `scenarios.mwPath.contracted.low` | 保守情境：五期（首期模型部分＋4 個完整財年；目前為 2026 下半年、2027、2028、2029、2030）各期末的合約 MW 上限（已連網不得超過；v0.1b） | MW 清單 | 3700、3700、3700、3700、3700 | 必改 |
 | `scenarios.mwPath.contracted.base` | 基準情境：同上 | MW 清單 | 99999、99999、99999、99999、99999 | 必改 |
 | `scenarios.mwPath.contracted.high` | 積極情境：同上 | MW 清單 | 99999、99999、99999、99999、99999 | 必改 |
 | `scenarios.mwPath.pace.low` | 保守情境：併網速度（每年新增已連網 MW；已連網＝MIN(合約上限, 前期＋速度×期間長度)；v0.1b） | MW／年 | 720 | 檢查 |
 | `scenarios.mwPath.pace.base` | 基準情境：同上 | MW／年 | 1300 | 檢查 |
 | `scenarios.mwPath.pace.high` | 積極情境：同上 | MW／年 | 1600 | 檢查 |
-| `scenarios.mwPath.note` | 已連網 MW 路徑的說明（來源與口徑） | 文字 | 步驟 1 暫用 Oracle 口徑（首期期末三情境共… | 必改 |
-| `scenarios.revMW.low` | 保守情境：每 MW 年收入，各期（Tokenomics 正向推導；不得用公司 ACV；v0.1b） | US$bn/MW 清單 | 0.00985455、0.00985455、0.00985455、0.00985455、0.00985455 | 必改 |
-| `scenarios.revMW.base` | 基準情境：同上 | US$bn/MW 清單 | 0.00985455、0.00985455、0.00985455、0.00985455、0.00985455 | 必改 |
-| `scenarios.revMW.high` | 積極情境：同上 | US$bn/MW 清單 | 0.00985455、0.00985455、0.00985455、0.00985455、0.00985455 | 必改 |
+| `scenarios.mwPath.note` | 已連網 MW 路徑的說明（來源與口徑） | 文字 | 對外 AI MW-IT（在役）：評價日 2,080（… | 必改 |
 | `scenarios.descriptions` | 三情境的一句說明（Excel A 區；v0.1b） | 物件（文字） | 物件（low、base、high） | 必改 |
 | `scenarios.billableRatio.mode` | 可計費 MW 的算法：ratio＝已連網 × 比例；converge＝期初以最新季實際營收年化 ÷ 每 MW 年收入校準，之後向已連網收斂（v0.1b） | 代碼 | ratio | 檢查 |
 | `scenarios.billableRatio.openAnnualRevenue` | converge 模式的校準營收：最新季實際營收（AI 雲端 等 MW 驅動部分）× 4（v0.1b）；ratio 模式不用，填 null（MAG：不以雲端營收校準 MW） | US$bn | None | 必改 |
@@ -481,9 +478,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.ppeOpen` | 最新季末固定資產毛額 | US$bn | 446.046 | 必改 |
 | `defaults.jvCommit` | 已承諾的 JV 出資餘額，各期 | US$bn 清單 | 21.3、0、0、0、0 | 必改 |
 | `defaults.intCal` | 第一期利息校準值（讓模型利息對上公司季度指引） | US$bn | 0 | 必改 |
-| `defaults.rpoOpen` | 最新季末 RPO | US$bn | 496 | 必改 |
+| `defaults.rpoOpen` | 最新季末 RPO | US$bn | 0 | 必改 |
 | `defaults.rpoPendingAdd` | 季末後新簽、尚未進 RPO 的承諾 | US$bn | 0 | 必改 |
-| `defaults.rp` | RPO 在模型期內認列的比例（百分點；應與 rpo.scheduledShare 一致） | % | 70.3125 | 必改 |
+| `defaults.rp` | RPO 在模型期內認列的比例（百分點；應與 rpo.scheduledShare 一致） | % | 0 | 必改 |
 | `defaults.cash` | 最新季末現金（第一期期初現金） | US$bn | 122.988 | 必改 |
 | `defaults.includeDebt` | 是否依到期表攤還既有債務（true＝是；false＝假設全數再融資） | 是／否 | 是 | 可沿用 |
 | `defaults.includeAtm` | 是否計入期後股權／可轉債募資 | 是／否 | 是 | 可沿用 |
@@ -517,7 +514,6 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.m.accepted` | 已驗收 MW 的預設路徑（實際依所選情境覆寫） | MW 清單 | 2730、4030、5330、6630、7930 | 檢查 |
 | `defaults.m.billable` | 可計費 MW 的預設路徑（實際依情境與爬坡比例覆寫） | MW 清單 | 2730、4030、5330、6630、7930 | 檢查 |
 | `defaults.m.util` | 利用率，各期 | % 清單 | 100、100、100、100、100 | 檢查 |
-| `defaults.m.revMW` | 每 MW 年收入，各期 | US$bn/MW 清單 | 0.00985455、0.00985455、0.00985455、0.00985455、0.00985455 | 必改 |
 | `defaults.m.aiShare` | AI 占比，各期（目前只做範圍檢查，未參與計算） | % 清單 | 100、100、100、100、100 | 可沿用 |
 | `defaults.m.fill` | 新產能簽約率：未被既有 RPO 占用的產能能賣出的比例 | % 清單 | 100、100、100、100、100 | 檢查 |
 | `defaults.m.power` | 電價（overlay 開啟時才用） | $/MWh 清單 | 60、62、64、66、68 | 檢查 |
@@ -642,7 +638,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.guideLine` | 公司年度指引的一句摘要（損益頁、檢查與來源頁；v0.1b） | 文字 | 2026 公司指引：現金資本支出約 $220B（法說… | 必改 |
 | `texts.taxNote` | 稅率的來源說明（v0.1b） | 文字 | 2023–2025 有效稅率平均（19.0%／13.… | 必改 |
 | `texts.revMwCompare` | 每 MW 年收入的公司對照值說明（只作對照；v0.1b） | 文字 | Amazon 對照值：OpenAI Trainium… | 必改 |
-| `texts.rpoNote` | RPO 桶的說明（桶界、後段假設、口徑；v0.1b） | 文字 | 加權剩餘 6.4 年、未分桶揭露（線性分攤 [Der… | 必改 |
+| `texts.rpoNote` | RPO 桶的說明（桶界、後段假設、口徑；v0.1b） | 文字 | RPO 496B（加權剩餘 6.4 年、未分桶揭露）… | 必改 |
 | `texts.leaseNote` | 租賃結構的一句說明（自有或租賃為主；v0.1b） | 文字 | Amazon 機房與物流設施以自建為主、兼有租賃（第… | 必改 |
 | `texts.offBalanceLeaseTerm` | 未起租租賃的起租時程與期限（季報揭露；v0.1b） | 文字 | 起租時程與租期未揭露；逐年付款 2026H2 4.0… | 必改 |
 | `texts.leaseLiabNote` | 租賃負債的折現率與期限說明（v0.1b） | 文字 | 10-Q 附註 3；營業租賃加權平均折現率 3.9%… | 必改 |
@@ -660,7 +656,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.otherRevNote` | 非算力服務／其他事業營收的說明（v0.1b） | 文字 | 非算力服務預設 0（各分部另列） | 必改 |
 | `texts.rvRevNote` | 反向 DCF 每 MW 年收入列的對照說明（v0.1b） | 文字 | Amazon 對照：OpenAI Trainium … | 必改 |
 | `texts.rvCostNote` | 反向 DCF 每 MW 建置成本列的對照說明（v0.1b） | 文字 | Tokenomics 每 MW 全成本（IT＋自建機… | 必改 |
-| `texts.priceNote` | 定價（續約價、新約價）的公司說法與讀法（v0.1b） | 文字 | 每 MW 年收入＝Tokenomics 持有成本 ×… | 必改 |
+| `texts.priceNote` | 定價（續約價、新約價）的公司說法與讀法（v0.1b） | 文字 | 每 MW 年收入＝Tokenomics 持有成本（世… | 必改 |
 | `texts.prepayCoverNote` | 客戶預付覆蓋比的來源（v0.1b） | 文字 | 不適用（無客戶預付） | 必改 |
 | `texts.prepayOpenNote` | 期初合約負債的口徑（v0.1b） | 文字 | 不適用（無客戶預付） | 必改 |
 | `texts.ytdEquityNote` | 年初至今股權募資的組成（v0.1b） | 文字 | 不適用（未發行股權） | 必改 |
@@ -676,6 +672,46 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.ebitdaPathLine` | EBITDA 率輸入下方的一行說明（MAG v0.1b） | 文字 | 損益與資金共用；AI 雲端 EBITDA 率由 To… | 必改 |
 | `texts.legacyMarginNote` | 非 AI 事業 EBITDA 率的推導說明（v0.1b） | 文字 | 分部 EBITDA 率＝(分部營業利益＋分部 D&A… | 必改 |
 | `texts.mwYearEndNotes` | 各年底主動電力的來源說明，以年份為鍵（Excel「輸入與假設」說明欄；5a） | 物件（文字） | 物件（2025、2023、2024） | 必改 |
+
+### `tokenomics`：Tokenomics 快照（MAG v0.1b；沿用 CoreWeave W1）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `tokenomics._note` | Tokenomics 引用規則說明（只引用 IF_／L1_，主值取基準） | 文字 | 算力相關的產業與物理層資料只引用 Tokenomic… | 可沿用 |
+| `tokenomics.snapshotFile` | Tokenomics 版本固定快照檔路徑（tools/tokenomics/import_tokenomics.py 產生） | 路徑 | data/tokenomics_snapshot_v… | 必改 |
+| `tokenomics.version` | 快照的 Tokenomics 版本（須與快照檔一致） | 文字 | v5.27 | 必改 |
+| `tokenomics.commit` | 快照的 Tokenomics master commit（須與快照檔一致） | 文字 | ca78a8f42af36caa1af2cc6234… | 必改 |
+| `tokenomics.names` | 快照名稱清單（須與快照檔一致；Excel「Tokenomics_取數」逐名稱建 TK_ 具名範圍） | 清單 | IF_HoldEcon、IF_HoldAcct、IF_GPUhrEcon、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、L1_FacCapexMW、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_OpexGW、IF_PowerPrice、IF_PowerCost、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_AvgDraw、IF_FacilityGW、IF_GPUsPerGW、IF_RacksPerGW、IF_Util、IF_RevGWFleet、L1_GPUhr_Hopper、L1_GPUhr_GB200、L1_GPUhr_GB300、L1_GPUhr_VR200、L1_HoldEconGW_Hopper、L1_HoldEconGW_GB200、L1_HoldEconGW_GB300、L1_HoldEconGW_VR200、L1_NvContentGW_VR200、IF_NonNVRatio、IF_NonNVCostRatio | 必改 |
+| `tokenomics.optional` | Tokenomics 尚未提供、記為 missing 的名稱（資料缺口） | 清單 | IF_NonNVRatio、IF_NonNVCostRatio | 必改 |
+
+### `pricing`：對外 AI 雲端定價（MAG v0.1b）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `pricing._note` | 每 MW 年收入的推導口徑（Tokenomics 持有成本 × 晶片係數 × k；收入端不乘 IF_Util） | 文字 | 對外 AI 雲端每 MW 年收入＝Σ 在役世代占比 … | 可沿用 |
+| `pricing.axis` | 預設價格軸（low／base／high；三容量情境共用，3 × 3 矩陣另列） | 文字 | base | 檢查 |
+| `pricing.axisLabels.low` | 價格軸低的名稱（Excel 選擇器與矩陣） | 文字 | 低 長約下緣 | 檢查 |
+| `pricing.axisLabels.base` | 價格軸基準的名稱 | 文字 | 基準 C1 混合 | 檢查 |
+| `pricing.axisLabels.high` | 價格軸高的名稱 | 文字 | 高 現貨改用 AWS 牌價 | 檢查 |
+| `pricing.kLong.low` | 長約 k（價格軸低；長約區間下緣） | 倍 | 0.55 | 必改 |
+| `pricing.kLong.base` | 長約 k（基準；長約證據換算 ÷ IF_GPUhrEcon 或 IF_HoldEcon） | 倍 | 0.75 | 必改 |
+| `pricing.kLong.high` | 長約 k（價格軸高） | 倍 | 0.75 | 必改 |
+| `pricing.kSpot.low` | 現貨 k（價格軸低） | 倍 | 1.76 | 檢查 |
+| `pricing.kSpot.base` | 現貨 k（基準；三家一律 1.76＝Nebius／CRWV 市場現貨指數，對照表 r1 C1） | 倍 | 1.76 | 可沿用 |
+| `pricing.kSpot.high` | 現貨 k（價格軸高＝公司公開牌價換算） | 倍 | 4.29 | 必改 |
+| `pricing.longShare.low` | 長約占比（價格軸低） | 比例 | 0.8 | 必改 |
+| `pricing.longShare.base` | 長約占比（基準） | 比例 | 0.8 | 必改 |
+| `pricing.longShare.high` | 長約占比（價格軸高） | 比例 | 0.8 | 必改 |
+| `pricing.kNote.kLong` | 長約 k 的證據與來源 | 文字 | 長約 k：OpenAI Trainium 0.70（… | 必改 |
+| `pricing.kNote.kSpot` | 現貨 k 的證據與來源 | 文字 | 現貨 k：基準 1.76＝與 Nebius／CRWV… | 必改 |
+| `pricing.kNote.longShare` | 長約占比的依據 | 文字 | 長約占比 80%（Anthropic Trainiu… | 必改 |
+| `pricing.customFactor` | 自研晶片持有成本係數（同期 NVIDIA 世代 IF_HoldEcon × 此值；對照表 r1 C2 基準 1.0） | 倍 | 1 | 檢查 |
+| `pricing.customFactorSens` | 自研晶片係數的敏感度值（0.7） | 倍 | 0.7 | 檢查 |
+| `pricing.customNote` | 自研晶片對應世代與缺口說明 | 文字 | 自研晶片（Trainium）每 MW 錨＝同期 NV… | 必改 |
+| `pricing.chips` | 世代清單：[{key, label, tk＝Tokenomics 世代代碼（H100／GB200／GB300／VR200／RU）, custom＝自研（乘 customFactor）, mixOpen＝評價日在役占比（合計 100%）, mixAdds＝各期新增 MW 占比（每期合計 100%）}] | 清單（物件） | 6 筆 | 必改 |
+| `pricing.mixNote` | 世代組合的依據 | 文字 | 期初在役（評價日）：Trainium2 55%、Ho… | 必改 |
+| `pricing.capWarn` | 上限檢查門檻：每 MW 年收入 ÷ 參考付費營收（IF_RevGWFleet） | 比例 | 0.5 | 可沿用 |
+| `pricing.capWarnNote` | 上限檢查的說明 | 文字 | 上限檢查：每 MW 年收入 ÷（Σ 世代占比 × I… | 可沿用 |
 
 ### `mag`：MAG（Amazon）資料草稿（v0.1a；引擎尚未讀取，v0.1b 依 mapTo 搬入）
 

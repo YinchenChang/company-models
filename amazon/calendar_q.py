@@ -226,10 +226,31 @@ def apply(co):
     if cal['latestQuarterFiled']:  # 沒有已申報季度（未上市公司）時，期初餘額由 Andy 另行設定，不做季度比對
         bad = check_roll_fields(co, cal['latestQuarterFiled'])
         assert not bad, '滾動檢查未通過（首期一次性金額與期初餘額須依最新已申報季度更新，見交接檔每季更新流程）：\n  ' + '\n  '.join(bad)
+    mp = (co.get('scenarios') or {}).get('mwPath') or {}
+    if mp and mp.get('connectedStart', 0) is None:  # MAG v0.1b：首期自評價日起算時，預設情境的 MW 路徑隨首期長度改變——建置時重算 defaults.m（HTML segA 同一規則）
+        D, k = co['defaults'], co['defaults']['scenario']; a = []
+        for i, L in enumerate(cal['periodYears']):
+            a.append(min(mp['contracted'][k][i], (D['billableOpen'] if i == 0 else a[-1]) + mp['pace'][k] * L))
+        br = co['scenarios']['billableRatio']['ratio']
+        D['m']['accepted'] = a; D['m']['billable'] = [int(x * b + 0.5) for x, b in zip(a, br)]
     co['cal'] = cal
     co['periods'], co['periodYears'] = cal['periods'], cal['periodYears']
     co['valuation']['optT'] = cal['tEnd'][-1]
     return co
+
+
+def tk_base(root, co):
+    """Tokenomics 快照的基準值（MAG v0.1b；HTML 引擎用，Excel 以 TK_ 具名範圍引用同一快照）：{名稱: {世代代碼: 基準值}}；單值名稱為數值；missing 名稱略過。
+    company.json 無 tokenomics 區段時回傳 {}。"""
+    tk = co.get('tokenomics')
+    if not tk: return {}
+    snap = json.load(open(os.path.join(root, tk['snapshotFile']), encoding='utf-8'))
+    gc = {g['name']: g['code'] for g in snap['source']['generations']}
+    out = {}
+    for n, it in snap['items'].items():
+        if it.get('missing'): continue
+        out[n] = {gc[g]: v['基準'] for g, v in it['values'].items()} if it['kind'] == 'gen_cost' else it['values']
+    return out
 
 
 def norm_consensus(cons, periods):
@@ -258,7 +279,10 @@ def norm_consensus(cons, periods):
 
 
 if __name__ == '__main__':
-    if '--consensus' in sys.argv:  # MAG v0.1b：印出正規化後的共識資料（load_engine.js 用）
+    if '--tk' in sys.argv:  # MAG v0.1b：印出 Tokenomics 快照基準值（load_engine.js 用）
+        a = [x for x in sys.argv[1:] if x != '--tk']; _r = a[0] if a else os.path.dirname(os.path.abspath(__file__))
+        print(json.dumps(tk_base(_r, json.load(open(os.path.join(_r, 'company.json'), encoding='utf-8'))), ensure_ascii=False))
+    elif '--consensus' in sys.argv:  # MAG v0.1b：印出正規化後的共識資料（load_engine.js 用）
         a = [x for x in sys.argv[1:] if x != '--consensus']; _r = a[0] if a else os.path.dirname(os.path.abspath(__file__))
         _co = load(_r)
         print(json.dumps(norm_consensus(json.load(open(os.path.join(_r, _co['meta']['consensusFile']), encoding='utf-8')), _co['periods']), ensure_ascii=False))

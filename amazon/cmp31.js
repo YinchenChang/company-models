@@ -30,6 +30,14 @@ cmp('未售', S+'未售產能（浪費）', H('unsold'));
 cmp('isRev', S+'損益用算力收入（模型期＝RPO 轉換＋新簽約）', H('isRev'));
 cmp('營收−MW×單價×利用率', S+'核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間', y.map(e=>e.isRev-e.capacity)); // v0.1b：MW 驅動時為 0
 cmp('每MW年收入', '輸入|每 MW 年收入', d.m.revMW);
+if(PRICING){ // MAG v0.1b：B0 對外 AI 雲端定價（Tokenomics × k）
+  const PR=d.m.price; cmp('採用k', '輸入|採用 k（依價格軸）', [PR[0].k]); cmp('混合k三軸', '輸入|混合 k', [0,1,2].map(kAxQ));
+  PRICING.chips.forEach((c,j)=>cmp('世代MW '+c.key, `輸入|世代｜${c.label}｜在役 MW`, PR.map(x=>x.gens[j])));
+  cmp('世代MW合計', '輸入|在役 MW 合計（世代加總）', PR.map(x=>x.tot)); cmp('加權持有成本', '輸入|加權每 MW 年持有成本', PR.map(x=>x.hold));
+  cmp('加權營運成本', '輸入|加權每 MW 年營運成本', PR.map(x=>x.opex)); cmp('加權參考營收', '輸入|加權每 MW 參考付費營收', PR.map(x=>x.ref));
+  cmp('上限比', '輸入|每 MW 年收入 ÷ 參考付費營收', PR.map(x=>x.capRatio));
+  if(SC==='base'&&!AKX){ const G=grid33Q(q,VAL_DEFAULTS); [`low`,`base`,`high`].forEach((k,j)=>cmp('3x3 '+k, `評價_DCF與目標價|3×3｜${SCENARIOS[k].label}（價格軸 低／基準／高）`, G[j])); }
+}
 cmp('非 AI 事業營收', '輸入|非 AI 事業營收（模型期）', H('legacyRev')); cmp('非 AI 事業EBITDA', '輸入|非 AI 事業 EBITDA（模型期）', H('legacyEbitda')); // v0.1b（Oracle）
 d.lg.lines.forEach(x=>{ cmp('傳統 '+x.key+' 全年', `輸入|非 AI 事業｜${x.label}｜全年營收`, x.annual); cmp('傳統 '+x.key+' 模型期', `輸入|非 AI 事業｜${x.label}｜模型期營收`, x.rev); });
 cmp('現金稅', F+T('⑦ 現金稅（«STUB» 起）'), H('cashTax')); cmp('股利', F+'⑧ 股利（普通股＋特別股）', y.map((e,i)=>i===0?e.fyDividend:e.dividend)); cmp('債務上限', F+'債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）', H('debtCap')); // v0.1b cmp('來源 傳統EBITDA', F+T('Ⓒ3 非 AI 事業 EBITDA（«STUB» 起）'), H('legacyEbitda'));

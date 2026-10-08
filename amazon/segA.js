@@ -17,8 +17,25 @@ var PERIODS = COMPANY_DATA.periods,
   LATEST_Q = COMPANY_DATA.latestQuarter,
   CALL_FACTS = COMPANY_DATA.callFacts,
   SC_MWP = COMPANY_DATA.scenarios.mwPath, // v0.1b：已連網 MW＝MIN(合約上限, 前期＋併網速度×期間長度)；首期期末三情境共用
-  SC_ACC = Object.fromEntries([`low`, `base`, `high`].map(k => [k, PERIOD_YEARS.reduce((a, L, i) => (a.push(Math.min(SC_MWP.contracted[k][i], i === 0 ? SC_MWP.connectedStart : a[i - 1] + SC_MWP.pace[k] * L)), a), [])])),
-  SC_REV = COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境（Tokenomics 正向推導三情境）
+  SC_ACC = Object.fromEntries([`low`, `base`, `high`].map(k => [k, PERIOD_YEARS.reduce((a, L, i) => (a.push(Math.min(SC_MWP.contracted[k][i], i === 0 ? (SC_MWP.connectedStart ?? COMPANY_DATA.defaults.billableOpen + SC_MWP.pace[k] * L) : a[i - 1] + SC_MWP.pace[k] * L)), a), [])])), // MAG v0.1b：connectedStart＝null 時首期自評價日（期初計費 MW）起算
+  PRICING = COMPANY_DATA.pricing || null, // MAG v0.1b：對外 AI 雲端定價（company.json → pricing；Tokenomics × k）
+  TKV = COMPANY_DATA.tk || {}, // MAG v0.1b：Tokenomics 快照基準值 {名稱: {世代代碼: 值} 或單值}（建置時由 calendar_q.tk_base 注入）
+  K_AX = [`low`, `base`, `high`],
+  kAxQ = ax => { const a = K_AX[ax] ?? ax, p = PRICING; return p.longShare[a] * p.kLong[a] + (1 - p.longShare[a]) * p.kSpot[a] }, // 混合 k＝長約占比 × k_長約＋(1 − 長約占比) × k_現貨
+  // MAG v0.1b：每 MW 年收入路徑。各世代在役 MW＝期初 × 期初占比＋Σ 本期新增（MAX(0, 期末 − 前期末)）× 新增占比；
+  // 每 MW 年收入＝Σ 世代占比 × TK_HoldEcon × 晶片係數（自研 × customFactor）÷ 1000 × k；營運成本（TK_OpexGW）與參考付費營收（TK_RevGWFleet）同權重、不乘係數。Excel 同式。
+  revPathQ = (acc, open, ax, cf) => {
+    const k = kAxQ(ax), G = PRICING.chips.map(c => ({ ...c, he: TKV.IF_HoldEcon[c.tk] * (c.custom ? cf ?? PRICING.customFactor : 1), op: TKV.IF_OpexGW[c.tk], rf: TKV.IF_RevGWFleet[c.tk] }));
+    let mw = G.map(c => c.mixOpen * open), prev = open;
+    return acc.map((x, r) => {
+      const add = Math.max(0, x - prev); prev = x;
+      mw = mw.map((m, j) => m + add * G[j].mixAdds[r]);
+      const T = mw.reduce((a, b) => a + b, 0), W = f => mw.reduce((a, m, j) => a + m * G[j][f], 0) / Math.max(T, 1e-9);
+      const hold = W(`he`), opex = W(`op`), ref = W(`rf`);
+      return { k, gens: [...mw], tot: T, hold, opex, ref, rev: hold * k / 1e3, opexMW: opex / 1e3, capRatio: hold * k / Math.max(ref, 1e-9) }
+    })
+  },
+  SC_REV = PRICING ? Object.fromEntries(K_AX.map(k => [k, revPathQ(SC_ACC[k], COMPANY_DATA.defaults.billableOpen, K_AX.indexOf(PRICING.axis)).map(x => x.rev)])) : COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境；MAG v0.1b：由 pricing 推得（容量軸改變世代組合）
   SC_BR = COMPANY_DATA.scenarios.billableRatio.ratio,
   SC_BRM = COMPANY_DATA.scenarios.billableRatio.mode || `ratio`, // v0.1b（Oracle）：converge＝期初可計費 MW 以最新季實際營收年化 ÷ 每 MW 年收入校準，之後向已連網 MW 收斂
   SC_BOPEN = k => SC_BRM === `converge` ? Math.round(COMPANY_DATA.scenarios.billableRatio.openAnnualRevenue / SC_REV[k][0]) : COMPANY_DATA.defaults.billableOpen,
@@ -77,6 +94,8 @@ var PERIODS = COMPANY_DATA.periods,
   DEFAULTS = Object.fromEntries(Object.entries(structuredClone(COMPANY_DATA.defaults)).flatMap(([k, v]) => k === `intCal` ? [[k, v], [`a`, structuredClone(SCENARIOS.base.a)]] : [[k, v]])),
   Qk = DEFAULTS; // 模板函式庫片段（mid1–mid3）仍以 Qk 引用預設值，保留別名
 DEFAULTS.cvCap = SCENARIOS[COMPANY_DATA.defaults.scenario].cvCap; // v0.1b：預設情境的可轉債年上限
+if (SC_MWP.connectedStart == null) DEFAULTS.m.accepted = [...SCENARIOS[COMPANY_DATA.defaults.scenario].acc], DEFAULTS.m.billable = [...SCENARIOS[COMPANY_DATA.defaults.scenario].bil]; // MAG v0.1b：首期自評價日起算——預設 MW 路徑隨日曆（與 calendar_q.apply 同一規則）
+if (PRICING) DEFAULTS.priceLink = !0, DEFAULTS.kAxis = K_AX.indexOf(PRICING.axis), DEFAULTS.customFactor = PRICING.customFactor, DEFAULTS.m.revMW = [...SC_REV[COMPANY_DATA.defaults.scenario]]; // MAG v0.1b：價格軸（0 低、1 基準、2 高）與自研晶片係數；priceLink 時每 MW 年收入由 MW 路徑與 k 推得
 DEFAULTS.delayMonths = SCENARIOS[COMPANY_DATA.defaults.scenario].delay; // v0.2：預設情境的建設延誤月數
 DEFAULTS.delayLink = UL.delayLink ?? 0; // v0.2：未起租租約起租隨延誤後移的比例（company.json → leases.uncommenced.delayLink）
 DEFAULTS.ulTerm = UL.termYears; // v0.2：未起租租約租期（延誤平移與租賃負債用；租期敏感度同時改 a.newLease 與此值）
@@ -179,6 +198,10 @@ function nA(e) {
   e.revenueDriver === `mw` && (t.fill = t.fill.map(() => 100)); // v0.1b：MW 驅動——營收＝容量上限（平均在役 MW × 每 MW 年收入 × 利用率），RPO 只作對照
   e.linkSites && (t.accepted[0] = Math.max(t.accepted[0], n.accepted), t.billable[0] = Math.max(t.billable[0], n.billable));
   for (let e = 0; e < 5; e++) t.accepted[e] = Math.max(0, t.accepted[e]), e > 0 && (t.accepted[e] = Math.max(t.accepted[e], t.accepted[e - 1])), t.billable[e] = Math.min(Math.max(0, t.billable[e]), t.accepted[e]), t.util[e] = Math.min(100, Math.max(0, t.util[e])), t.aiShare[e] = Math.min(100, Math.max(0, t.aiShare[e])), t.fill[e] = Math.min(100, Math.max(0, t.fill[e])), t.defaultP[e] = Math.min(100, Math.max(0, t.defaultP[e])), t.recovery[e] = Math.min(100, Math.max(0, t.recovery[e]));
+  if (PRICING && e.priceLink) { // MAG v0.1b：每 MW 年收入與營運成本由（單調化後的）在役 MW 路徑 × 世代組合 × k 推得（Excel「輸入與假設」B0 同式）
+    const R = revPathQ(t.accepted, e.billableOpen, e.kAxis, e.customFactor);
+    t.revMW = R.map(x => x.rev), t.opexMW = R.map(x => x.opexMW), t.price = R
+  }
   return t
 }
 
@@ -550,7 +573,13 @@ function runFunding(e) {
     ok: o.every(y => Math.abs(y.isRev - y.capacity) < 1e-9) || e.revenueDriver !== `mw`,
     severity: `ok`,
     title: `營收＝平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度`,
-    detail: `${e.revenueDriver === `mw` ? `MW 驅動` : `RPO 驅動`}：五期算力營收 ${o.map(y => Y(y.isRev, 2)).join(`／`)}；容量上限 ${o.map(y => Y(y.capacity, 2)).join(`／`)}。每 MW 年收入 ${t.revMW.map(x => Y(x * 1e3, 2)).join(`／`)} US$m/MW-IT（Tokenomics 正向推導；${TXQ.revMwCompare}）。`
+    detail: `${e.revenueDriver === `mw` ? `MW 驅動` : `RPO 驅動`}：五期算力營收 ${o.map(y => Y(y.isRev, 2)).join(`／`)}；容量上限 ${o.map(y => Y(y.capacity, 2)).join(`／`)}。每 MW 年收入 ${t.revMW.map(x => Y(x * 1e3, 2)).join(`／`)} US$m/MW-IT（${PRICING && e.priceLink ? `Tokenomics 持有成本 × k ${Y(t.price[0].k, 3)}` : `Tokenomics 正向推導`}；${TXQ.revMwCompare}）。`
+  }), PRICING && e.priceLink && _({ // MAG v0.1b：上限檢查——每 MW 年收入 ÷ 參考付費營收（IF_RevGWFleet）> 門檻時示警
+    id: `cap-ratio`,
+    ok: t.price.every(x => x.capRatio <= PRICING.capWarn),
+    severity: t.price.every(x => x.capRatio <= PRICING.capWarn) ? `ok` : `watch`,
+    title: `每 MW 年收入 ÷ Tokenomics 參考付費營收：最高 ${hA(Math.max(...t.price.map(x => x.capRatio)) * 100, 1)}（門檻 ${hA(PRICING.capWarn * 100, 0)}）`,
+    detail: `五期 ${t.price.map(x => hA(x.capRatio * 100, 1)).join(`／`)}；參考付費營收＝Σ 世代占比 × IF_RevGWFleet（1 GW 參考機隊付費營收，理論上限）。超過門檻表示 hyperscaler 每 MW 收入占客戶 token 營收的比例偏高（${PRICING.capWarnNote}）。`
   }), _({
     id: `rpo-weights`,
     ok: Math.abs(RPO_BUCKET_W.reduce((e, t) => e + t, 0) - RPO_SCHEDULED_SHARE) < 1e-6,
@@ -613,7 +642,7 @@ function runFunding(e) {
     ok: t.util[0] <= 100,
     severity: `watch`,
     title: `利用率 ${t.util[0]}%：每 MW 年收入已含可計費利用率`,
-    detail: `每 MW 年收入取 Tokenomics 正向推導（路徑 B 已乘可計費利用率 80／85／90%），所以利用率欄預設 100%、不重複扣除；欄位保留供壓力測試。目前每 MW 年收入 $${Y(t.revMW[0] * 1e3 * (e.revScale ?? 1), 2)}m/MW-IT。`
+    detail: `每 MW 年收入＝Tokenomics 持有成本 × k，按 MW-year 計價，所以利用率欄預設 100%（收入端不乘 IF_Util）；欄位保留供壓力測試。目前每 MW 年收入 $${Y(t.revMW[0] * 1e3 * (e.revScale ?? 1), 2)}m/MW-IT。`
   });
   for (let e = 0; e < 5; e++) t.billable[e] - t.accepted[e] > .5 && _({
     id: `billable-${e}`,
@@ -984,9 +1013,9 @@ function sensitivities(e, v) {
   }, e => {
     e.m.billable = e.m.billable.map(e => e * 1.15)
   }), r(`每 MW 年收入`, `−15%`, `+15%`, e => {
-    e.m.revMW = e.m.revMW.map(e => e * .85)
+    e.revScale = (e.revScale ?? 1) * .85 // MAG v0.1b：priceLink 時每 MW 年收入由 k 推得，敏感度改乘倍數（等價）
   }, e => {
-    e.m.revMW = e.m.revMW.map(e => e * 1.15)
+    e.revScale = (e.revScale ?? 1) * 1.15
   }), e.revenueDriver !== `mw` && r(`新產能簽約率`, `−20pt`, `+20pt`, e => {
     e.m.fill = e.m.fill.map(e => Math.max(0, e - 20))
   }, e => {

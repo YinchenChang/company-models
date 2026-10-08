@@ -343,6 +343,12 @@ function scnQ(e, sc) {
   };
 }
 
+// MAG v0.1b：容量軸（三情境 MW 路徑）× 價格軸（k 低／基準／高）3 × 3 加權目標價；其餘手動調整保留（Excel 為 rv_solve 快照，cmp31 比對）
+function grid33Q(st, o) {
+  if (!PRICING) return null;
+  return K_AX.map(sc => [0, 1, 2].map(ax => { const s2 = { ...scnQ(st, sc), kAxis: ax }; return runValuation(runFunding(s2), s2, o).call.blended }))
+}
+
 // v4.1：目標價區間。點位＝目前輸入的加權目標價（評等仍依點位）；
 // 情境區間＝保守與積極情境的加權目標價（保留手動調整）；方法區間＝目前輸入、EV/EBITDA 倍數換成 methodology.rangeMultiples 兩端。
 // 判斷句與 DCF 權重說明在此產生（HTML 各頁共用；Excel 以文字公式產生同一字串，cmp31 逐字比對）。

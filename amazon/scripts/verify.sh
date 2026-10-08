@@ -59,6 +59,17 @@ if python3 scripts/fields_doc.py --check; then ok "README 欄位說明與 compan
 step "0c. EBITDAR 率校準（scripts/calib_ebitdar.js：defaults.ebitdarAdj＝基準情境租金 ÷ OCI 營收；Oracle v0.1c）"
 if node scripts/calib_ebitdar.js; then ok "EBITDAR 校準：基準情境起點／穩態 EBITDA 率不變"; else bad "EBITDAR 校準（執行 node scripts/calib_ebitdar.js --write）"; fi
 
+step "0d. Tokenomics 快照可重現（tools/tokenomics/import_tokenomics.py --check；MAG v0.1b，沿用 CoreWeave W1）"
+TK_SNAP="$(python3 -c "import json; print(json.load(open('company.json', encoding='utf-8')).get('tokenomics', {}).get('snapshotFile', ''))")"
+if [[ -z "$TK_SNAP" ]]; then ok "Tokenomics 快照：company.json 無 tokenomics 區段（不適用）"
+else
+  set +e; r=$(python3 "$ROOT/../tools/tokenomics/import_tokenomics.py" --check "$TK_SNAP" ${TOKENOMICS_DIR:+--tokenomics "$TOKENOMICS_DIR"} 2>&1); rc=$?; set -e
+  echo "$r" | grep -v '^警告：Tokenomics 尚無名稱' || true
+  if (( rc != 0 )); then bad "Tokenomics 快照 --check"
+  elif grep -q '略過 --check' <<<"$r"; then ok "Tokenomics 快照 --check：找不到 Tokenomics clone，略過（警告）"
+  else ok "Tokenomics 快照 --check：$(grep -- '--check 通過' <<<"$r" | sed 's/^--check 通過：//')"; fi
+fi
+
 step "1. 建 HTML（v$VER · $DATE）"
 if python3 build_html_portable.py "$VER" "$HTML" "$DATE" docs/template_v3_3.html; then ok "建 HTML"; else bad "建 HTML"; finish; fi
 
@@ -85,6 +96,11 @@ if python3 fix_datatable.py "$XLSX"; then ok "fix_datatable"; else bad "fix_data
 
 step "5. verify_ooxml"
 if python3 verify_ooxml.py "$XLSX"; then ok "verify_ooxml：OOXML OK"; else bad "verify_ooxml"; fi
+
+step "5d. 快照值＝Excel「Tokenomics_取數」分頁值（scripts/check_tokenomics_tab.py）"
+if [[ -n "$TK_SNAP" ]]; then
+  if r=$(python3 scripts/check_tokenomics_tab.py "$XLSX"); then echo "$r"; ok "$r"; else echo "$r"; bad "快照值＝Excel 分頁值"; fi
+else ok "Tokenomics_取數：不適用（無 tokenomics 區段）"; fi
 
 step "5c. 離線開啟檢查（已決定事項 11：單一檔案、無網路請求、console 無錯誤、關鍵數字正常顯示）"
 if python3 scripts/check_offline.py "$HTML" "$XLSX"; then ok "離線開啟：新建 HTML"; else bad "離線開啟：新建 HTML"; fi
