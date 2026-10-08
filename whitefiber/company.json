@@ -1,0 +1,1941 @@
+{
+ "meta": {
+  "company": "WhiteFiber",
+  "ticker": "WYFI",
+  "updateDate": "2026-10-08",
+  "priceDate": "2026-10-07",
+  "sourceOrderNote": "時序先 2026 Q2 財報新聞稿與法說（2026-08-12；新聞稿未以 8-K 提交，用 PR Newswire 轉載；法說只有 MarketBeat 二手摘要），再 10-Q（2026-08-12，核閱、未查核）與 FY2025 10-K（經查核）；期後 8-K：2032 可轉債與 2031 交換（2026-08-21）、NC-2／3 買賣協議（2026-08-17）、9 月公司簡報。入帳數字聽 10-Q／10-K；公司未給正式財務指引（只有目標，不作輸入）。期初可計費雲端 MW 以 Q2 經常性雲端營收（扣除終止費 12.3）年化校準，不以公司目標反推。",
+  "consensusFile": "data/consensus_wyfi_20261008.json",
+  "factsFile": "data/whitefiber_facts_20261008.json",
+  "unit": "m"
+ },
+ "calendar": {
+  "fiscalYearEndMonth": 12,
+  "latestQuarterFiled": "FY26Q2",
+  "latestQuarterReported": "FY26Q2",
+  "firstModelFY": null,
+  "modelYears": 4,
+  "targetHorizon": "valuationPlus12m"
+ },
+ "asOf": {
+  "_note": "滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（清單見 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗。",
+  "defaults.capexFloorFY0": "FY26Q2",
+  "leases.onBalanceCash[0]": "FY26Q2",
+  "leases.operatingPayments[0]": "FY26Q2",
+  "leases.financePayments[0]": "FY26Q2",
+  "debt.amortization[0]": "FY26Q2",
+  "defaults.jvCommit[0]": "FY26Q2",
+  "scenarios.capexTemplate.div[0]": "FY26Q2",
+  "defaults.intCal": "FY26Q2",
+  "defaults.services[0]": "FY26Q2",
+  "defaults.atm": "FY26Q2",
+  "leases.uncommenced": "FY26Q2",
+  "rpo.bucketWeights[0]": "FY26Q2",
+  "defaults.cash": "FY26Q2",
+  "debt.instruments": "FY26Q2",
+  "debt.convertible": "FY26Q2",
+  "valuation.netDebt": "FY26Q2",
+  "valuation.shares": "FY26Q2",
+  "defaults.ppeOpen": "FY26Q2",
+  "defaults.billableOpen": "FY26Q2",
+  "defaults.rpoOpen": "FY26Q2",
+  "defaults.rpoPendingAdd": "FY26Q2",
+  "defaults.eqCapShares": "FY26Q2",
+  "defaults.mwYearEnd": "FY26Q2",
+  "defaults.prepay.openBalance": "FY26Q2",
+  "debt.convertibles": "FY26Q2",
+  "defaults.otherEbitda[0]": "FY26Q2",
+  "valuation.holdings": "FY26Q2",
+  "valuation.debtLike": "FY26Q2",
+  "defaults.legacyBiz": "FY26Q2",
+  "defaults.dividend.preferred[0]": "FY26Q2",
+  "valuation.postEvents": "FY26Q2",
+  "debt.extraCost": "FY26Q2",
+  "defaults.colo": "FY26Q2",
+  "scenarios.projectFinance": "FY26Q2"
+ },
+ "ytdActual": {
+  "throughQuarter": "FY26Q2",
+  "months": 6,
+  "label": "1H26 實際（10-Q）",
+  "cash1231": 114.441,
+  "revenue": 50.762,
+  "capex": 344.712,
+  "capexCore": 0.0,
+  "cashCapex": 344.712,
+  "interest": 8.011,
+  "leasePaid": 13.044,
+  "debtRepaid": 12.599,
+  "borrow": 304.526,
+  "equity": 0.0,
+  "cappedCall": 120.0,
+  "jv": 0.0,
+  "cfo": 89.105,
+  "prepay": 72.6,
+  "da": 13.008,
+  "sbc": 11.017,
+  "opInc": -20.275,
+  "ni": -27.018,
+  "eps": -0.7,
+  "ngEps": -0.41,
+  "adjEbitda": 8.536,
+  "adjEbitdaMeta": {
+   "q1": 3.001,
+   "q2": 5.535,
+   "tag": "Interested-party",
+   "sources": [
+    {
+     "quarter": "Q1",
+     "name": "2026 Q1 10-Q（MD&A 非 GAAP 調節表）",
+     "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0002042022&type=10-Q"
+    },
+    {
+     "quarter": "Q2",
+     "name": "2026 Q2 10-Q（MD&A 非 GAAP 調節表，2026-08-12）",
+     "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026088026/ea0300877-10q_whitefiber.htm"
+    }
+   ],
+   "crossCheck": "調整後 EBITDA（公司定義）＝EBITDA＋減損＋處分損益＋SBC；Q2 含終止費 12.3、GPU 租賃終止成本約 4.0（二手）、呆帳 2.2 等一次性項目，扣除後經常性約 −0.565 [Derived]",
+   "note": "Q1 3.001＋Q2 5.535＝8.536（含一次性；首期實際照 10-Q，對照表與審查留言第 3 條）",
+   "usage": "只用於「與市場的差異」的 FY26 調整後 EBITDA 比較；模型損益與評價不使用"
+  },
+  "jvSplit": {
+   "jv": 0.0,
+   "strategic": 0.0
+  },
+  "notes": {
+   "cash1231": "上一財年底（2025-12-31）現金及約當現金 114,441（10-K 經查核；含受限 118,298）[Verified]",
+   "cfo": "10-Q 營運現金流 89,105；含遞延營收增加 63,608（客戶預付流入 72.6）[Interested-party（10-Q 核閱數）]",
+   "cashCapex": "10-Q 購置 PP&E 與設備訂金 344,712（PP&E 增加主要為 NC-1 開發 322.5）[Interested-party]",
+   "capex": "應計口徑未揭露，以現金口徑代替；1H26 PP&E 增加幾乎全為託管（NC-1 322.5、MTL-3 購置 18.2 與改良 4.7、MTL-1 1.9，合計 347.3 ≥ 現金資本支出），雲端 GPU 資本支出記 0（capexCore）[Derived]",
+   "jv": "不適用（無 JV）；出售 126 台 H200 伺服器收入 26,082 進調節 [Interested-party]",
+   "borrow": "第三方定期借款 53,308＋關係人（Bit Digital DDTL）29,100＋2031 可轉債淨額 222,118＝304,526 [Interested-party]",
+   "debtRepaid": "融資租賃償還 12,599（MTL-3 購入前）[Interested-party]",
+   "cappedCall": "零履約價買權 120,000（2026-01，2031 年收回 5,905,511 股；權益分類）[Interested-party]",
+   "equity": "1H26 未發行普通股 [Interested-party]",
+   "interest": "10-Q 利息費用：第三方 6,573＋關係人 1,438＝8,011 [Interested-party]",
+   "leasePaid": "營業租賃成本 13,044（10-Q；已含在 CFO 內，僅供對照）",
+   "revenue": "雲端 40,573（含 Q2 終止費 12.3）＋託管 9,500＋其他 689＝50,762 [Interested-party]",
+   "opInc": "營收 50,762 − 營業成本 20,441 − D&A 13,008 − 減損 5,006 − G&A 32,582＝−20,275 [Derived]",
+   "ni": "淨損 27,018（10-Q）[Interested-party]",
+   "prepay": "客戶預付流入（雲端＋資料中心）72.6；已含在 CFO 內，僅供對照 [Interested-party]",
+   "da": "折舊與攤銷 13,008（Q1 6,441＋Q2 6,567）[Interested-party]",
+   "sbc": "股份基礎給付 11,017（Q1 7,346＋Q2 3,671）[Interested-party]",
+   "eps": "1H26 淨損 −27.018 ÷ 加權股數約 38.7m＝−0.70 [Derived]（Q2 GAAP −0.39）",
+   "ngEps": "(淨損 −27.018＋SBC 11.017)÷ 約 38.7m＝−0.41 [Derived]",
+   "dividends": "不發股利 [Interested-party]"
+  },
+  "dividends": 0.0
+ },
+ "historicalPL": [
+  {
+   "year": "FY23",
+   "revenue": null,
+   "opInc": null,
+   "ni": null,
+   "eps": null,
+   "ngEps": null,
+   "shares": null,
+   "tag": "不適用"
+  },
+  {
+   "year": "FY24",
+   "revenue": 47.639,
+   "opInc": 0.628,
+   "ni": 1.37,
+   "eps": null,
+   "ngEps": null,
+   "shares": null,
+   "tag": "Verified"
+  },
+  {
+   "year": "FY25",
+   "revenue": 79.164,
+   "opInc": -26.821,
+   "ni": -24.683,
+   "eps": null,
+   "ngEps": null,
+   "shares": null,
+   "tag": "Verified"
+  },
+  {
+   "year": "1H26",
+   "revenue": 50.762,
+   "opInc": -20.275,
+   "ni": -27.018,
+   "eps": -0.7,
+   "ngEps": -0.41,
+   "shares": 38.7,
+   "tag": "Interested-party"
+  }
+ ],
+ "rpo": {
+  "scheduledShare": 1.0,
+  "bucketWeights": [
+   0.2878,
+   0.575599,
+   0.136601,
+   0.0,
+   0.0
+  ],
+  "bucketLabels": [
+   "≤12 個月",
+   "13–36 個月",
+   "37–60 個月",
+   "其後"
+  ],
+  "split": [
+   0.5755,
+   0.4245,
+   0.0,
+   0.0
+  ],
+  "within36m": 1.0,
+  "colo": {
+   "2026H2": 36.053,
+   "2027": 93.465,
+   "2028": 94.835,
+   "2029": 95.285,
+   "2030": 94.021,
+   "after": 519.236,
+   "total": 932.895
+  }
+ },
+ "leases": {
+  "onBalanceCash": [
+   3.268,
+   4.28,
+   2.465,
+   2.304,
+   2.358
+  ],
+  "afterFY30": 5.76,
+  "facts": {
+   "onBal": 20.435,
+   "notCommenced": 20.296,
+   "singleCap": 0.0,
+   "share": 1.0
+  },
+  "operatingPayments": [
+   3.268,
+   4.28,
+   2.465,
+   2.304,
+   2.358,
+   5.76
+  ],
+  "financePayments": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "liability": {
+   "discRate": 0.083,
+   "tailYears": 3,
+   "note": "租賃負債（每期末）＝剩餘租金現值。折現率＝10-Q 營業租賃加權平均折現率 8.3%（lease.opLiab.2026Q2）[Interested-party]；在帳租約＝10-Q 到期表各期現金（期中付款）＋模型期後尾端 5.76 平均分 3 年（以 2029–2030 年租約約 2.3／年推得 [Derived]）；未起租雪梨租約只計已起租部分。"
+  },
+  "uncommenced": {
+   "startQ": 1,
+   "quarters": 1,
+   "termYears": 4.916667,
+   "delayLink": 0.5,
+   "delayLinkNote": "雪梨第三方機房租約（2026 Q4 起租、59 個月）起租時點隨建設延誤月數後移的比例：0.5（工作單 v0.1b 步驟 7 預設；替代 0／1 列敏感度）[Assumed]。",
+   "termSens": [
+    4,
+    6
+   ],
+   "note": "10-Q 附註 19：雪梨機房租約（2026-07-30 簽約、由 WhiteFiber, Inc. 保證）每月 AUD 0.488（約 USD 0.344）× 59 個月＝約 20.3（[Derived]），2026 Q4 起租（評價日後第 2 季 → startQ 1）、一次起租、59 個月直線付租。巴黎、安大略（Baseten）、加拿大（Prime Intellect VR200）第三方機房租金 10-Q 未揭露（資料缺口），不建模。"
+  }
+ },
+ "debt": {
+  "amortization": [
+   5.373,
+   90.747,
+   6.247,
+   20.959,
+   0.0
+  ],
+  "amortAfterFY30": 0.0,
+  "instruments": [
+   [
+    "Bit Digital DDTL（含 B. Riley 持有票據）",
+    "擔保（NC-1 Topco 股權）",
+    "2027-03",
+    0.095,
+    80.0,
+    "已動用 80（6/30 50＋7/27、7/31 共 30）；票面 9.5%（NC-1 完工且 ≥80% 出租後 8.0%）；另有 1.1× MOIC，以 debt.extraCost 加付計入融資成本；到期假設 2027-03（可動用期 9 個月，由 NC-1 專案融資或再融資償還）[Interested-party／Assumed]"
+   ],
+   [
+    "Landsbankinn 冰島擔保定期貸款",
+    "擔保（冰島子公司股權與 GPU）",
+    "2028-06",
+    0.0792,
+    18.0,
+    "SOFR＋4.25%（6/30 票面 7.92%、有效 10.64%）；2 年、季攤還（流動 9.0）[Interested-party]"
+   ],
+   [
+    "RBC 聯貸（Enovum，不可循環）",
+    "擔保（MTL-2／MTL-3 不動產）",
+    "2029-07",
+    0.055,
+    26.2,
+    "2026-07-15 動用 CAD 36.8（10-Q 換算 USD 26.2；匯率依 10-Q 附註 19）並全額再融資 RBC 17.339；首次動用起 3 年、15 年攤還季付；利率 CORRA＋2.45%＋CSA，以 5.5% 計 [Interested-party／Assumed 區間 5.0–6.5%]"
+   ]
+  ],
+  "convertible": {
+   "principal": 0.0,
+   "coupon": 0.0
+  },
+  "convertibles": [
+   [
+    "4.50% 2031 可轉債（交換後剩餘）",
+    31.85,
+    0.045,
+    "2031-02",
+    1.0,
+    25.91,
+    "原始 230（2026-01）；2026-08 以現金約 118.5＋約 6.3M 股交換 198.15，剩 31.85；轉換價 25.91（38.5981 股／千元）；2029-02 起可賣回／可贖回 [Interested-party]"
+   ],
+   [
+    "5.00% 2032 可轉債（2026-08）",
+    310.0,
+    0.05,
+    "2032-09",
+    1.0,
+    33.84,
+    "310（含超額配售 40）；轉換價 33.84（29.5530 股／千元，9.161M 股）；2030-09-06 起可賣回／可贖回；無上限買權（8-K 與新聞稿未提）；淨收入 298.5 [Interested-party 8-K]"
+   ]
+  ],
+  "convertibleBridge": {
+   "exchangedAccreted": 215.489,
+   "newIssuesAccreted": 366.2,
+   "note": "6/30 債務本金 315.339（DDTL 30＋B. Riley 20＋冰島 18＋RBC 17.339＋2031 可轉債 230）− 期後減少 215.489（2031 交換 198.15、RBC 再融資 17.339）＋期後新增 366.2（2032 可轉債 310、DDTL 追加 30、RBC 聯貸 26.2）＝466.05（期後結構，與 valuation.postEvents 一致）[Derived]"
+  },
+  "extraCost": [
+   [
+    "DDTL 1.1× MOIC 到期加付",
+    [
+     0.0,
+     1.9,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "MOIC：到期時貸方累計收款至少為本金 1.1 倍＝8.0；評價日後至假設到期 2027-03 的票息約 6.1（50 × 9.5% × 0.75 年＋30 × 9.5% × 約 0.67 年）→ 到期加付約 1.9，列為 FY27 融資成本（非經常利息；審查留言第 2 條）[Derived]；WACC 稅前債務成本仍 9.5%"
+   ]
+  ]
+ },
+ "latestQuarter": {
+  "filed": "2026-08-12",
+  "periodEnd": "2026-06-30",
+  "revenue": 28.839,
+  "yoy": 0.5453,
+  "h1Revenue": 50.762,
+  "costRev": 11.71,
+  "techInfra": null,
+  "opInc": -9.255,
+  "interest": 6.016,
+  "h1Interest": 8.011,
+  "ni": -14.976,
+  "h1Ni": -27.018,
+  "epsDiluted": -0.39,
+  "sbc": 3.671,
+  "da": 6.567,
+  "adjEbitda": 5.535,
+  "adjOpInc": null,
+  "rpo": 75.146,
+  "backlog": null,
+  "rpo24m": null,
+  "rpo25to48": null,
+  "rpo49to78": null,
+  "cash": 56.056,
+  "restricted": 4.313,
+  "marketable": 0.0,
+  "availability": 20.0,
+  "debtPrincipal": 315.339,
+  "recourseNet": null,
+  "nonRecourseNet": null,
+  "ddtlOut": 50.0,
+  "notesOut": 230.0,
+  "sharesA": null,
+  "sharesB": null,
+  "sharesOut": 38.841201,
+  "basicWaso": 38.662914,
+  "capexQ2": 175.544,
+  "capexH1": 344.712,
+  "cashCapexH1": 344.712,
+  "cfoH1": 89.105,
+  "cashInterestH1": 0.032,
+  "capInterestH1": null,
+  "deferredTotal": 143.11,
+  "deferredIn": 63.559,
+  "ppe": 651.085,
+  "cip": 484.588,
+  "rouOp": null,
+  "opLeaseLiab": 15.376,
+  "finLeaseLiab": 0.0,
+  "onBalanceUndiscounted": 20.435,
+  "offBalanceLease": 20.296,
+  "singleSiteCap": 0.0,
+  "singleSiteMw": null,
+  "constructionCostMw": null,
+  "equipCommitLo": null,
+  "equipCommitHi": null,
+  "jvCommit": 0.0,
+  "jvPaidH1": 0.0,
+  "vieExposure": null,
+  "rouObtainedH1": null,
+  "leaseCashH1": null,
+  "custA": 0.63,
+  "custB": 0.0,
+  "custC": 0.0,
+  "debtIssuedH1": 304.526,
+  "debtRepaidH1": 12.599,
+  "equityH1": 0.0
+ },
+ "callFacts": {
+  "activeGw": null,
+  "activeAddQ2": null,
+  "juneAddMw": null,
+  "contractedGw": null,
+  "contractedGwQ2": null,
+  "poweredLandGw": null,
+  "yeActiveGw": null,
+  "gw2030": null,
+  "dataCenters": null,
+  "capexLo": null,
+  "capexHi": null,
+  "nextQCapexLo": null,
+  "nextQCapexHi": null,
+  "nextQIntLo": null,
+  "nextQIntHi": null,
+  "revLo": null,
+  "revHi": null,
+  "nextQRevLo": null,
+  "nextQRevHi": null,
+  "adjOpLo": null,
+  "adjOpHi": null,
+  "nextQAdjOpLo": null,
+  "nextQAdjOpHi": null,
+  "arrLo": null,
+  "arrHi": null,
+  "postQNewCommit": null,
+  "priceUp": null,
+  "marginStep": null,
+  "backlogStarted": null,
+  "inferenceArr": null,
+  "otherArr": null,
+  "convert": 310.0,
+  "convertNet": 298.5,
+  "convertCoupon": 0.05,
+  "convertPx": 33.84,
+  "atmShares": null,
+  "price0917": null,
+  "tier34Active": null,
+  "tier34Contracted": null,
+  "cdsMid": null,
+  "cdsBidAsk": null,
+  "cdsRange": null,
+  "cdsPeak": null,
+  "cdsPeakDate": null,
+  "cdsLow": null,
+  "cdsLowDate": null,
+  "availability": 20.0,
+  "price0918": null,
+  "priceLast": 16.83,
+  "priceDate": "2026-10-07",
+  "postQShortDated": "期後（2026-07～08）：2032 可轉債 310（5.00%，轉換價 33.84，淨收入 298.5）與 2031 可轉債交換（現金約 118.5＋約 6.3M 股換回 198.15，剩 31.85）、DDTL 追加動用 30（累計 80）、RBC 聯貸動用 CAD 36.8 並再融資 RBC 17.339；NC-2／3 買賣協議（60.0，最多 198 毛 MW）；NC-1 與巴黎專案融資仍未完成",
+  "ttmRev": 94.503,
+  "ttmOpInc": -39.975,
+  "ttmDa": 27.478,
+  "ttmOpLease": 15.376,
+  "mktCapLast": 759.364,
+  "nextEarn": "2026-11（Q3 2026 財報；Yahoo 估 11-12）"
+ },
+ "scenarios": {
+  "labels": {
+   "low": "保守 只有已簽約",
+   "base": "基準 加 NC-1 下一批",
+   "high": "積極 NC-2／3 與 Krambu"
+  },
+  "descriptions": {
+   "low": "雲端只計已簽約 GPU 合約（不含尚無客戶的雪梨 2.5 MW）、合約到期以 Tokenomics 每 MW 續作；託管只有 NC-1 40 MW 與 MTL 現有站點；NC-1 專案融資未完成；延誤 6 個月",
+   "base": "雲端加雪梨 2.5 MW 與每年新增 3 MW-IT（2026 年新簽約約 8.6 MW-IT 的四分之一強）；託管加 NC-1 下一批 45 毛 MW（÷1.35 約 33 MW-IT）；NC-1 專案融資完成；延誤 3 個月",
+   "high": "雲端每年新增 6 MW-IT；託管再加 NC-2／3（60 毛 MW 起，2027 Q3）、NC-1 擴至長期毛容量、Krambu 100 MW（二手、口徑不明）；NC-1 專案融資完成；延誤 0"
+  },
+  "mwPath": {
+   "connectedStart": 14.574,
+   "contracted": {
+    "low": [
+     12.074,
+     14.048,
+     14.048,
+     14.048,
+     14.048
+    ],
+    "base": [
+     14.574,
+     16.548,
+     19.548,
+     22.548,
+     25.548
+    ],
+    "high": [
+     14.574,
+     16.548,
+     22.548,
+     28.548,
+     34.548
+    ]
+   },
+   "pace": {
+    "low": 100,
+    "base": 100,
+    "high": 100
+   },
+   "note": "雲端已連網 MW-IT（期末）＝MIN(情境路徑, 前期＋併網速度 × 期間長度)；併網速度設 100（不受限），路徑由合約 GPU 數換算 [Derived]：首期期末（FY26 年底）＝冰島第三方機房 5.5（10-Q）＋Baseten 1,392 顆 B300 2.858（2026-11）＋巴黎 1.84（GPU 數未揭露：年額 >32 ÷ Tokenomics 基準 17.40，[Derived] 下限）＋雪梨 2.5（2026 Q4 起租）＋128 顆 B300 0.263＋Prime GB200 216 顆 0.43＋冰島 B300 576 顆 1.183＝14.574；FY27 加 Prime VR200 576 顆 1.974（2027 Q2）＝16.548。每顆 GPU IT kW 取 Tokenomics v5.26（B300／B200 以 GB300／GB200 近似）。保守不含雪梨（尚無客戶合約）；基準自 FY28 每年 +3、積極 +6 MW-IT（2026 年新簽約約 8.6 MW-IT 的約 35%／70%，[Assumed]）。"
+  },
+  "revMW": {
+   "low": [
+    11.62,
+    11.62,
+    11.62,
+    11.62,
+    11.62
+   ],
+   "base": [
+    17.4,
+    17.4,
+    17.4,
+    17.4,
+    17.4
+   ],
+   "high": [
+    24.2,
+    24.2,
+    24.2,
+    24.2,
+    24.2
+   ]
+  },
+  "billableRatio": {
+   "mode": "converge",
+   "ratio": [
+    0.7,
+    0.85,
+    0.9,
+    0.9,
+    0.9
+   ],
+   "openAnnualRevenue": 46.024,
+   "roundDp": 2,
+   "note": "期初可計費 MW＝2026 Q2 經常性雲端營收 11.506（23.806 扣終止費 12.3）× 4＝46.02 ÷ 各情境每 MW 年收入（保守 3.96／基準 2.65／積極 1.9 MW-IT），是對齊已實現實際數的校準，不是以公司目標反推（評價日已連網 5.5 MW 中實際計費當量較低：舊世代 H100 機隊單價低於 Tokenomics）。各期末可計費 MW＝期初校準值＋(已連網 − 期初校準值)× 收斂比例 70%／85%／90%／90%／90%（新合約 2026-07 至 2027 Q2 陸續起算，首期 70% [Assumed]）；小數 2 位（roundDp）。"
+  },
+  "mw31": {
+   "low": 0,
+   "base": 0,
+   "high": 0
+  },
+  "delayMonths": {
+   "low": 6,
+   "base": 3,
+   "high": 0,
+   "note": "建設延誤月數：計費 MW＝原可計費路徑往後平移此月數；GPU 成長型資本支出照原時程（閒置資本）。保守 6／基準 3／積極 0 [Assumed]（對照表 r1 第 4 節第 6 條；依據：NC-1 計費較合約目標晚約 3–4 個月、MTL-2 曾暫停、巴黎由 7 月延至 9 月底、NC-1 專案融資延後）；敏感度 0／12 個月。"
+  },
+  "convCap": {
+   "low": 75.9,
+   "base": 75.9,
+   "high": 75.9
+  },
+  "capexTemplate": {
+   "costMW": [
+    37.45,
+    37.59,
+    37.59,
+    37.59,
+    37.59
+   ],
+   "div": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "projectFinance": {
+   "low": 0.0,
+   "base": 307.125,
+   "high": 307.125,
+   "period": 1,
+   "rate": 0.085,
+   "amortYears": 10,
+   "note": "NC-1 專案貸款（v0.1b 步驟 6；v0.1c 依審查留言改為排程貸款）：10-Q 稱與貸款團獨家協商、未完成（原預期 2026 Q1）。NC-1 第一期（Nscale 40 MW-IT）建置已於 2026 下半年完成並全額計費；基準與積極假設融資於 FY27 完成、FY27 期初一次動用：金額＝NC-1 累計建置成本約 472.5（2025 年約 150＋1H26 開發 322.5，[Derived]）× 貸款比率 65%（[Assumed] 60–70%）＝307.1；保守不完成（0）。利率 8.5%（[Assumed]：SOFR＋利差類比 8–9% 取中點；冰島 GPU 貸款 SOFR＋4.25%＝7.92%、有效 10.64%），動用次期起 10 年直線攤還（[Assumed]，對應 Nscale 10 年約）。利息併入存量利息、攤還併入排程還本、餘額計入總債務（受債務上限計算）；不再是瀑布的已承諾額度。NC-1 下一批與擴建的專案融資不建模（由瀑布支應）。"
+  }
+ },
+ "legacy": {
+  "capexV14": [
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "interestV14": [
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "defaults": {
+  "scenario": "base",
+  "revenueDriver": "mw",
+  "lambda": 0.35,
+  "mwYearEnd": {
+   "2025": 5.5
+  },
+  "mw31": 0,
+  "capexFloorFY0": 0,
+  "gpuLife": 5,
+  "refreshSteady": true,
+  "refreshNote": "v0.1c：已連網 MW 不再增加的期間（觸頂後）及終值年，汰換 CapEx＝期間平均已連網 MW × 每 MW GPU 資本支出（IF_CapexIT，只含 IT）÷ GPU 經濟壽命 × 期間長度；建築與電力屬租賃不計；取代批次汰換（mwYearEnd 批次落在模型期之後）。false＝模板口徑（只有批次汰換）。",
+  "revScale": 1,
+  "capexScale": 1,
+  "ebStart": -0.1149,
+  "ebSteady": 0.47,
+  "ebitdaBasis": "ebitdar",
+  "ebitdarAdj": [
+   0.072418,
+   0.017013
+  ],
+  "ebitdarNote": "雲端 EBITDA＝EBITDAR 率 × 雲端營收 − 租金（機房租金與 GPU 租金皆為固定成本）。EBITDAR 率＝EBITDA 率（ebStart／ebSteady，指基準情境、自有 GPU 口徑）＋ebitdarAdj（基準情境機房租金〔在帳＋表外〕÷ 雲端營收，[起點, 穩態]），使基準情境未扣 GPU 租金的 EBITDA 率維持 −11.49%／47%；GPU 租金（新增 GPU 的租賃部分）不併入校準、直接扣 EBITDA（同業 EBITDA 率以自有 GPU 計；WhiteFiber v0.1b 步驟 4）。保守與積極用同一 EBITDAR 率，因而承擔固定租金。ebitdarAdj 由 scripts/calib_ebitdar.js 自基準情境（延誤 0）校準（verify.sh 檢查）[Derived]。",
+  "services": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "otherEbitda": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "otherEbitdaNote": "不適用（其他營收＝設備銷售型租賃利息，每季約 0.3，未建模；託管另列於託管分部）",
+  "legacyBiz": {
+   "lines": [],
+   "ebitdaMargin": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "note": "不適用（WhiteFiber 無傳統事業；第二分部＝託管，見託管分部，v0.1b 步驟 3）"
+  },
+  "cashTaxRate": 0.21,
+  "dividend": {
+   "perShareQ": 0.0,
+   "sharesBase": 45.119652,
+   "preferred": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "note": "不發股利（對照表預設 7）；特別股不適用"
+  },
+  "debtBacklog": 0.5,
+  "delayPenalty": 0,
+  "delayPenaltyNote": "延誤罰則或服務抵減＝延誤期間「應計費而未計費」營收的此比例（營業費用）；預設 0：合約條款未揭露 [Assumed]；客戶預付不因延誤退還（預設；退款風險列已知限制）。",
+  "debtCapBasis": "ebitda",
+  "debtEbitdaMax": 5.0,
+  "ctrTerm": 3,
+  "minCash": 30.0,
+  "eqPx": 16.83,
+  "eqDisc": 0.1,
+  "eqCapPct": 0.1,
+  "eqCapShares": 45.119652,
+  "junkRate": 0.12,
+  "ppeOpen": 111.6,
+  "jvCommit": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "intCal": 0.0,
+  "rpoOpen": 75.146,
+  "rpoPendingAdd": 0.0,
+  "rp": 100,
+  "cash": 56.056,
+  "includeDebt": true,
+  "includeAtm": true,
+  "atm": 0.0,
+  "prepay": {
+   "shareOfDeals": 1.0,
+   "capexCover": 0.21,
+   "recogYears": 8,
+   "openBalance": 143.11,
+   "financingRate": 0.0,
+   "coverRefresh": false,
+   "note": "客戶出資（v0.1b 步驟 5）：預付流入＝(雲端 GPU 自購成長型 CapEx＋託管建置 CapEx〔colo.coverPrepay〕) × 有預付的合約比例 100% × 覆蓋比 21.1%（1H26 客戶預付流入 72.6 ÷ 資本支出 344.7 [Derived]；10-Q 未分託管與雲端；敏感度 ±5pt）。期初合約負債＝10-Q 遞延營收 143.110（流動 17.909＋非流動 125.201；雲端與資料中心客戶預付，未分拆）[Interested-party]。認列 8 年＝143.110 ÷ 流動部分 17.909（[Derived]；NC-1 為 10 年約、雲端 3–5 年）。重大財務組成：10-Q 未揭露（不存在／未揭露）→ 隱含利率 0；敏感度以稅前債務成本 9.5% 計。巴黎合約 12 個月服務費預付已含在覆蓋比口徑內，不另列。",
+   "financingSens": 0.095
+  },
+  "convIssue": {
+   "coupon": 0.05,
+   "premium": 0.25,
+   "note": "瀑布可轉債：票息 5.00%、轉換溢價 25%（2032 可轉債條款，8-K 2026-08-21）[Interested-party]；每年上限＝現市值 10%（scenarios.convCap）"
+  },
+  "overlay": false,
+  "cdsLink": false,
+  "cdsBaseBp": 450,
+  "cdsPassThrough": 0.4,
+  "linkSites": true,
+  "linkLeaseTail": true,
+  "useAvgMw": true,
+  "billableOpen": 2.65,
+  "cds": null,
+  "cdsBid": null,
+  "cdsAsk": null,
+  "cdsLo": null,
+  "cdsHi": null,
+  "cdsDate": "不適用（WYFI 無可引用的 CDS 報價）",
+  "useFacility": true,
+  "facility": 20.0,
+  "m": {
+   "accepted": [
+    14.574,
+    16.548,
+    19.548,
+    22.548,
+    25.548
+   ],
+   "billable": [
+    11.0,
+    14.46,
+    17.86,
+    20.56,
+    23.26
+   ],
+   "util": [
+    100,
+    100,
+    100,
+    100,
+    100
+   ],
+   "revMW": [
+    17.4,
+    17.4,
+    17.4,
+    17.4,
+    17.4
+   ],
+   "aiShare": [
+    100,
+    100,
+    100,
+    100,
+    100
+   ],
+   "fill": [
+    100,
+    100,
+    100,
+    100,
+    100
+   ],
+   "power": [
+    60,
+    62,
+    64,
+    66,
+    68
+   ],
+   "pue": [
+    1.3,
+    1.3,
+    1.3,
+    1.3,
+    1.3
+   ],
+   "maint": [
+    0.15,
+    0.15,
+    0.16,
+    0.16,
+    0.17
+   ],
+   "defaultP": [
+    0.5,
+    1,
+    1.5,
+    2,
+    2.5
+   ],
+   "recovery": [
+    50,
+    50,
+    50,
+    50,
+    50
+   ],
+   "rate": [
+    9.5,
+    9.5,
+    9.5,
+    9.5,
+    9.5
+   ]
+  },
+  "terminal": {
+   "residual": 25,
+   "rerent": 75,
+   "margin": 40,
+   "residualLeaseYears": 12
+  },
+  "sites": [
+   {
+    "id": "iceland",
+    "name": "冰島 Blönduós（第三方機房）",
+    "operator": "承租容量（雲端）",
+    "planned": 5.5,
+    "energized": 5.5,
+    "accepted": 5.5,
+    "billable": 0,
+    "status": "10-Q：已簽 5.5 MW-IT（6 毛 MW）；目前雲端營收主要來自冰島 [Interested-party]",
+    "next": "B300 576 顆（2026-12）",
+    "date": "營運中",
+    "confidence": "高"
+   },
+   {
+    "id": "ontario",
+    "name": "安大略第三方機房（Baseten）",
+    "operator": "第三方機房、WhiteFiber GPU",
+    "planned": 2.858,
+    "energized": 0,
+    "accepted": 0,
+    "billable": 0,
+    "status": "1,392 顆 B300 依 Tokenomics 換算 2.858 MW-IT；MW 未揭露 [Derived]",
+    "next": "起算",
+    "date": "2026-11",
+    "confidence": "中"
+   },
+   {
+    "id": "paris",
+    "name": "巴黎第三方機房",
+    "operator": "第三方機房、專案層級融資（未完成）",
+    "planned": 1.84,
+    "energized": 0,
+    "accepted": 0,
+    "billable": 0,
+    "status": "GPU 數與 MW 未揭露；年額 >32 ÷ 17.40 推得 1.84 MW-IT [Derived]",
+    "next": "起算",
+    "date": "2026-09-30",
+    "confidence": "低"
+   },
+   {
+    "id": "sydney",
+    "name": "雪梨第三方機房",
+    "operator": "承租（WhiteFiber, Inc. 保證）",
+    "planned": 2.5,
+    "energized": 0,
+    "accepted": 0,
+    "billable": 0,
+    "status": "10-Q：2.5 MW-IT、59 個月租約；客戶未揭露 [Interested-party]",
+    "next": "起租",
+    "date": "2026 Q4",
+    "confidence": "中"
+   },
+   {
+    "id": "canada_vr",
+    "name": "加拿大（Prime Intellect VR200）",
+    "operator": "第三方機房",
+    "planned": 1.974,
+    "energized": 0,
+    "accepted": 0,
+    "billable": 0,
+    "status": "576 顆 VR200 依 Tokenomics 換算 1.974 MW-IT [Derived]",
+    "next": "起算",
+    "date": "2027 Q2",
+    "confidence": "中"
+   }
+  ],
+  "colo": {
+   "sites": [
+    {
+     "key": "nc1a",
+     "label": "NC-1 第一期 A（Nscale 20 MW）",
+     "mw": 20,
+     "start": 0.0833,
+     "rent": 1.886,
+     "esc": 0.03,
+     "capex": 0.0,
+     "capexStart": 0,
+     "capexEnd": 0,
+     "scen": [
+      1,
+      1,
+      1
+     ],
+     "delay": 0,
+     "signed": 1,
+     "note": "Nscale 10 年約 865／40 MW-IT／年調 3%：第 1 年等值 1.886 US$m/MW-IT·年（865 ÷ (40 × Σ1.03^t) [Derived]；NRC 未揭露，若 NRC>0 第 1 年更低）；2026 Q3 開始計費，前 20 MW 以 2026-08-01 起算（評價日後 0.083 年）[Interested-party／Assumed]；建置已完成（6/30 在建工程 484.6 含於託管期初 PP&E）"
+    },
+    {
+     "key": "nc1b",
+     "label": "NC-1 第一期 B（Nscale 20 MW）",
+     "mw": 20,
+     "start": 0.1667,
+     "rent": 1.886,
+     "esc": 0.03,
+     "capex": 0.0,
+     "capexStart": 0,
+     "capexEnd": 0,
+     "scen": [
+      1,
+      1,
+      1
+     ],
+     "delay": 0,
+     "signed": 1,
+     "note": "同上；後 20 MW 於 8 月底全額計費（2026-09-01 起算，評價日後 0.167 年）[Interested-party]"
+    },
+    {
+     "key": "mtl3",
+     "label": "MTL-3（Cerebras 5 MW）",
+     "mw": 5,
+     "start": -0.6667,
+     "rent": 2.35,
+     "esc": 0.0,
+     "capex": 0.0,
+     "capexStart": 0,
+     "capexEnd": 0,
+     "scen": [
+      1,
+      1,
+      1
+     ],
+     "delay": 0,
+     "signed": 1,
+     "note": "Cerebras 5 年約、每月 CAD 1.4（約 USD 0.979）＝11.75／年 ÷ 5 MW-IT＝2.35；2025-11 起計費；年調未揭露，取 0 [Interested-party]"
+    },
+    {
+     "key": "mtl1",
+     "label": "MTL-1（3 MW，14 家客戶）",
+     "mw": 3,
+     "start": -5.5,
+     "rent": 2.38,
+     "esc": 0.0,
+     "capex": 0.0,
+     "capexStart": 0,
+     "capexEnd": 0,
+     "scen": [
+      1,
+      1,
+      1
+     ],
+     "delay": 0,
+     "signed": 1,
+     "note": "100% 已簽約、平均合約約 2.5 年；每 MW 2.38＝(Q2 託管營收 4.726 − MTL-3 2.94) × 4 ÷ 3 [Derived]；到期以同價續約 [Assumed]"
+    },
+    {
+     "key": "mtl2",
+     "label": "MTL-2（3 MW-IT，2026 年底）",
+     "mw": 3,
+     "start": 0.5,
+     "rent": 1.85,
+     "esc": 0.03,
+     "capex": 23.6,
+     "capexStart": 0,
+     "capexEnd": 0.5,
+     "scen": [
+      0,
+      1,
+      1
+     ],
+     "delay": 1,
+     "signed": 0,
+     "note": "5 毛／3 IT；2026 Q3 啟動初期施工、目標 2026 年底完工；建置估 23.6（10-Q）；客戶未定 → 租金取可比區間中點 1.85 [Analogy]；保守情境不納入（未簽約）"
+    },
+    {
+     "key": "nc1next",
+     "label": "NC-1 下一批（45 毛 MW ÷ 1.35）",
+     "mw": 33.33,
+     "start": 1.5,
+     "rent": 1.85,
+     "esc": 0.03,
+     "capex": 383.295,
+     "capexStart": 0.5,
+     "capexEnd": 1.5,
+     "scen": [
+      0,
+      1,
+      1
+     ],
+     "delay": 1,
+     "signed": 0,
+     "note": "Duke 容量協議下一批 45 毛 MW（÷1.35＝33.33 MW-IT；Nscale 有優先權）；2028-01 起租（評價日後 1.5 年，對照表「2027–28 起租」）；租金 1.85（可比區間中點 [Analogy]）；建置 11.5／MW-IT（區間 9.0–13.5 [Analogy]）於 2027 年支出"
+    },
+    {
+     "key": "nc23",
+     "label": "NC-2／3（60 毛 MW 起 ÷ 1.35）",
+     "mw": 44.44,
+     "start": 1.25,
+     "rent": 1.85,
+     "esc": 0.03,
+     "capex": 571.06,
+     "capexStart": 0.375,
+     "capexEnd": 1.25,
+     "scen": [
+      0,
+      0,
+      1
+     ],
+     "delay": 1,
+     "signed": 0,
+     "note": "北卡 Yadkin County 兩處（買賣協議 60.0，2026 Q4 交割、2027 Q3 RFS；60 毛 MW 起、最多 198）；44.44 MW-IT；租金 1.85 [Analogy]；資本支出＝土地 60.0＋建置 11.5／MW-IT；只放積極（審查留言第 6 條）"
+    },
+    {
+     "key": "nc1x1",
+     "label": "NC-1 擴建 A（＋100 毛 MW）",
+     "mw": 74.07,
+     "start": 2.5,
+     "rent": 1.85,
+     "esc": 0.03,
+     "capex": 851.805,
+     "capexStart": 1.5,
+     "capexEnd": 2.5,
+     "scen": [
+      0,
+      0,
+      1
+     ],
+     "delay": 1,
+     "signed": 0,
+     "note": "NC-1 長期毛容量約 200（10-Q）／約 300（法說）：積極情境擴至約 300 毛 MW 的第一段（＋100 毛，2029-01 起租）[Interested-party 目標／Assumed 時程]；只放積極"
+    },
+    {
+     "key": "nc1x2",
+     "label": "NC-1 擴建 B（＋101 毛 MW，至約 300 毛）",
+     "mw": 74.81,
+     "start": 3.5,
+     "rent": 1.85,
+     "esc": 0.03,
+     "capex": 860.315,
+     "capexStart": 2.5,
+     "capexEnd": 3.5,
+     "scen": [
+      0,
+      0,
+      1
+     ],
+     "delay": 1,
+     "signed": 0,
+     "note": "同上第二段（＋101 毛，2030-01 起租）；只放積極"
+    },
+    {
+     "key": "krambu",
+     "label": "Krambu（100 MW，口徑不明）",
+     "mw": 74.07,
+     "start": 1.5,
+     "rent": 1.85,
+     "esc": 0.03,
+     "capex": 851.805,
+     "capexStart": 0.5,
+     "capexEnd": 1.5,
+     "scen": [
+      0,
+      0,
+      1
+     ],
+     "delay": 1,
+     "signed": 0,
+     "note": "法說二手摘要：Krambu 100 MW 液冷託管獨家使用權（2027 起）；10-Q 與簡報未提、條件與價格未揭露、口徑不明 → 以 100 毛 MW ÷1.35、自建同口徑（租金 1.85、建置 11.5／MW-IT）建模 [Assumed]；只放積極並標註（審查留言第 6 條）"
+    }
+   ],
+   "margin": [
+    0.522,
+    0.554,
+    0.586,
+    0.618,
+    0.65
+   ],
+   "marginNote": "託管分部 EBITDA 率（審查留言第 5 條）：起點＝Q2 託管分部毛利 3.005 ÷ 分部營收 4.752＝63.2%（10-Q 附註 16；站點層級）扣分攤 G&A：經常性現金 G&A（14.811 − SBC 3.671 − 呆帳 2.2＝8.94／季）依 Q2 經常性營收占比 28.6% 分攤＝2.555／季，以 2H26 託管營收規模（NC-1 全額計費約 23.6／季）換算為 10.8pt → 起點 52.2% [Derived]；穩態取 [Analogy] 區間中點 65%（區間 55%–80%：APLD Polaris Forge 1 年化 NOI 約 500 ÷ 年營收約 733＝68%〔[Interested-party] APLD FY26Q1 新聞稿〕、Galaxy Helios 租約層級調整後 EBITDA 率 90%+（不含總部費用，[Interested-party] Galaxy 2026 Q2 簡報）、WhiteFiber Q2 站點層級 63%；扣總部費用後取 55%–80%），線性走向 FY30。",
+   "ppeOpen": 556.3,
+   "life": 20,
+   "coverPrepay": true,
+   "rpoColo": [
+    36.053,
+    93.465,
+    94.835,
+    95.285,
+    94.021
+   ],
+   "note": "託管分部（v0.1b 步驟 3；另建 MW 驅動區塊，營收與 EBITDA 經由第二分部〔模板「傳統事業」〕列進入損益、營運來源與分部 EV/EBITDA）：各站點營收＝IT MW × 第一年租金（US$m/MW-IT·年）×(1＋年調)^(期中點 − 起租) × 期間內在租年數；未簽約站點的起租時點隨建設延誤月數後移（delay＝1）；建置 CapEx 在建置起訖期間平均分攤（不隨延誤後移），進類現金流量與託管 PP&E；建物 D&A＝(期初託管 PP&E＋本期建置 × ½) ÷ 年限 × 期間長度，與 GPU 折舊分列。轉嫁電費以淨額處理（Nscale 合約 TCV 不含電費，不計入營收與成本；對照表 r1 第 4 節第 4 條）。期初託管 PP&E＝10-Q 託管設備帳面淨額（含 NC-1 在建）556.3；建物折舊 20 年（區間 15–30：10-K 30 年 vs 10-Q 20–25 年）[Assumed]。客戶預付覆蓋比同樣適用於託管建置 CapEx（coverPrepay；1H26 預付 72.6 ÷ 資本支出 344.7 的口徑含託管）。"
+  },
+  "gpuLease": {
+   "share": 0.5,
+   "rentFactor": 0.260436,
+   "note": "雲端新增 GPU 的取得方式（v0.1b 步驟 4）：10-Q 只揭露 GPU 伺服器租賃為變動租金（Q2 5.6，含一次性終止金額）與自有雲端設備帳面 95.8，未揭露自購／租賃比例 → 對照表預設 5：新增 GPU（成長型與汰換）50% 租賃／50% 自購 [Assumed，敏感度 0%／100%]。自購部分走資本支出與 GPU 折舊；租賃部分不計資本支出，改為固定租金＝(期初累計租賃設備＋本期新增 × ½) × 年租金係數 × 期間長度，租金扣 EBITDA（EBITDAR 機制，calib_ebitdar 重校）。年租金係數＝9.5%、5 年年金因子 0.260436（r ÷ (1 − (1＋r)^−n)；r 取 DDTL 9.5%、n＝GPU 壽命 5 年）[Derived]；租約到期以同租金續租（汰換的租賃部分由續租承擔，不另增租賃設備）。既有機隊的變動租金已含在 EBITDA 率內。"
+  }
+ },
+ "valuation": {
+  "price": 16.83,
+  "shares": 33.060039,
+  "atmSharesInValuation": 0,
+  "netDebt": 29.283,
+  "holdings": [],
+  "holdingsDiscount": 0.3,
+  "debtLike": [],
+  "tax": 0.21,
+  "nol": 0.0,
+  "nolUsePct": 0.8,
+  "wcPctOfRevGrowth": 0.02,
+  "wacc": null,
+  "capm": {
+   "beta": 2.5,
+   "erp": 0.05,
+   "kdPretax": 0.095,
+   "betaSens": [
+    1.5,
+    3.5
+   ],
+   "note": "WACC＝E/(D+E)×(rf＋β×ERP)＋D/(D+E)×kd×(1−稅率)；E＝現價 × 期後流通股數（季末 38.841201m＋期後事件股數 6.278451m＝45.119652m）、D＝期後債務本金（季末 315.339＋期後事件＝466.05，含可轉債）；β 2.5（[Analogy]：個股 beta 三來源 0.84–4.77 不可靠，取 NBIS 1.46 與 CIFR 3.45 之間偏保守；敏感度 1.5／3.5）、rf＝valuation.rf（10 年美債 2026-10-06）、ERP 5%、kd 9.5%（DDTL 純債票面；審查留言第 2 條：WACC 仍用 9.5%，MOIC 加付只進融資成本）。valuation.wacc 為 null 時採 CAPM；填數字即手動覆蓋。"
+  },
+  "g": 0.03,
+  "sbc": 22.034,
+  "maintRatio": 0.8,
+  "tvBasis": "ufcf",
+  "evEbitda": 6,
+  "legacyEvEbitda": null,
+  "evYear": 3,
+  "dcfMode": "zero",
+  "sigma": 0.5,
+  "rf": 0.0527,
+  "legacyEvEbitdaNote": "託管分部 EV/EBITDA：null＝採 peers.software（託管同業）NTM 中位數 20.75×（DLR 20.4、EQIX 21.1，只 2 家，樣本不足；審查留言第 4 條，15× 列敏感度）；填數字即手動覆蓋。分部加總：EV＝託管 EBITDA × 此倍數＋雲端 EBITDA × valuation.evEbitda（6×，錨定 valuation.evYear＝FY29）。",
+  "postEvents": [
+   [
+    "2032 可轉債發行（淨收入）",
+    "2026-08-21",
+    298.5,
+    0.0,
+    310.0,
+    0.0,
+    "面額 310（含超額配售 40）、淨收入 298.5（8-K）[Interested-party]"
+   ],
+   [
+    "2031 可轉債交換",
+    "2026-08-21",
+    -118.5,
+    0.0,
+    -198.15,
+    6.278451,
+    "現金約 118.5（含應計利息）＋股數：13D/A 交換後 45.119652m − 6/30 38.841201m＝6.278451m [Derived]；面額 198.15 換回，剩 31.85"
+   ],
+   [
+    "DDTL 追加動用",
+    "2026-07-27／07-31",
+    29.1,
+    30.0,
+    0.0,
+    0.0,
+    "動用 30.0（10-Q 附註 19），扣 3% OID 後現金約 29.1 [Derived]"
+   ],
+   [
+    "RBC 聯貸動用並再融資 RBC",
+    "2026-07-15",
+    8.861,
+    8.861,
+    0.0,
+    0.0,
+    "動用 CAD 36.8＝USD 26.2（10-Q 附註 19 換算；2026-07-15）− 償還 RBC 17.339 [Interested-party／Derived]"
+   ]
+  ]
+ },
+ "methodology": {
+  "blendWeights": {
+   "dcf": 0.45,
+   "pe": 0.55
+  },
+  "rangeMultiples": [
+   5,
+   6
+  ],
+  "rating": {
+   "buyUpsideMin": 0.25,
+   "buyTvShareMax": 0.9,
+   "sellUpsideMax": -0.15,
+   "equityRaiseMaxMult": 1.5,
+   "sellUpsideMaxIfEquityOver": -0.08,
+   "sellMarginAlert": 0.05,
+   "tvShareWarn": 0.85
+  },
+  "consensusGapTol": 0.05,
+  "profitMarginTolPt": 0.02,
+  "checks": {
+   "capexPerMwBand": [
+    28,
+    51
+   ],
+   "leaseVsCommitMin": 0.8,
+   "unsignedRevShareMax": 0.5,
+   "siteRentGapMax": 10,
+   "rentVsBenchMin": 0.8,
+   "cmpTol": 0.0001
+  },
+  "debtCapSens": [
+   4,
+   6
+  ],
+  "mw31Sens": [
+   6,
+   0
+  ]
+ },
+ "peers": {
+  "priceDate": "2026-10-07",
+  "priceSource": "S&P Global via stockanalysis.com（CRWV、NBIS）；APLD、CORZ 為 v0.1a 市值與 EV；IREN 未更新",
+  "list": [
+   {
+    "ticker": "CRWV",
+    "name": "CoreWeave",
+    "labelHtml": "CRWV",
+    "roleHtml": "Neocloud 直接對標（租賃型）",
+    "labelXlsx": "CRWV CoreWeave",
+    "mkt": 49110.0,
+    "netDebt": 46030.0,
+    "rev": 7590.0,
+    "opl": 16540.0,
+    "opInc": -231.0,
+    "da": 3991.0,
+    "asOf": "TTM 至 Q2（6/30，10-Q）；市值與 EV 2026-10-07",
+    "noteHtml": "CRWV（US$bn）：市值 49.11、EV 95.14（StockAnalysis，2026-10-07 盤中）→ 淨負債 46.03 [Derived]；TTM 營收 7.59、GAAP 營業損失 −0.231＋D&A 3.991（Q2 2026 10-Q）。以租約取得機房，營業＋融資租賃負債 16.54",
+    "noteXlsx": "CRWV 市值與 EV 2026-10-07；TTM 至 Q2；租賃負債 16.54"
+   },
+   {
+    "ticker": "NBIS",
+    "name": "Nebius Group",
+    "labelHtml": "NBIS",
+    "roleHtml": "Neocloud（自有站點＋客戶預付）",
+    "labelXlsx": "NBIS Nebius",
+    "mkt": 68490.0,
+    "netDebt": 2150.0,
+    "rev": 1360.0,
+    "opl": 1625.3,
+    "opInc": -612.0,
+    "da": 418.0,
+    "asOf": "營收 TTM 至 Q2；營業損益與 D&A 為 FY2025（20-F）；市值與 EV 2026-10-06",
+    "noteHtml": "NBIS（US$bn）：市值 68.49、EV 70.64（StockAnalysis，2026-10-06 收盤）→ 淨負債 2.15 [Derived]；TTM 營收 1.36；GAAP 營業損失 −0.612＋D&A 0.418 取 FY2025 20-F（季報 6-K 未 XBRL 標註）；營業租賃負債 1.625",
+    "noteXlsx": "NBIS 市值與 EV 2026-10-06；EBITDA 用 FY2025"
+   },
+   {
+    "ticker": "IREN",
+    "name": "IREN Limited",
+    "labelHtml": "IREN",
+    "roleHtml": "Neocloud／自建電力",
+    "labelXlsx": "IREN",
+    "mkt": 18610.0,
+    "netDebt": 1700.0,
+    "rev": 707.0,
+    "opl": 3.0,
+    "opInc": -1047.0,
+    "da": 418.0,
+    "asOf": "FY26 10-K（6/30）；未更新，日期 2026-09-21",
+    "noteHtml": "GAAP 營業損失 −1.047＋D&A 0.418（US$bn）。自有電廠、營業租賃負債僅 0.003bn",
+    "noteXlsx": "自有電廠、營業租賃負債僅 3m；FY26 合約 ARR 4,000m"
+   },
+   {
+    "ticker": "APLD",
+    "name": "Applied Digital",
+    "labelHtml": "APLD",
+    "roleHtml": "HPC 託管（Polaris Forge）",
+    "labelXlsx": "APLD Applied Digital",
+    "mkt": 6940.0,
+    "netDebt": 7870.0,
+    "rev": 611.3,
+    "opl": 66.0,
+    "opInc": -236.0,
+    "da": 67.0,
+    "asOf": "市值 6.94、EV 14.81（2026-10-07 收盤，v0.1a val.peer.apld）；營收與損益 FY26 10-K（5/31，未更新）",
+    "noteHtml": "APLD（US$bn）：市值 6.94、EV 14.81（2026-10-07）→ 淨負債 7.87 [Derived]；營收與 GAAP 營業損失 −0.236＋D&A 0.067 取 FY26 10-K（未更新）",
+    "noteXlsx": "APLD 市值與 EV 2026-10-07；損益 FY26 10-K"
+   },
+   {
+    "ticker": "CORZ",
+    "name": "Core Scientific",
+    "labelHtml": "CORZ",
+    "roleHtml": "HPC 託管（高密度）",
+    "labelXlsx": "CORZ Core Scientific",
+    "mkt": 5750.0,
+    "netDebt": 3680.0,
+    "rev": 440.3,
+    "opl": 109.0,
+    "opInc": -561.0,
+    "da": 63.0,
+    "asOf": "市值 5.75、EV 9.43（2026-09-04 收盤，頁面未更新；v0.1a val.peer.corz）；損益 TTM 至 Q2（未更新）",
+    "noteHtml": "CORZ（US$bn）：市值 5.75、EV 9.43（2026-09-04，頁面未更新）→ 淨負債 3.68 [Derived]；GAAP 營業損失 −0.561＋D&A 0.063（TTM 至 Q2，未更新）",
+    "noteXlsx": "CORZ 市值與 EV 2026-09-04（未更新）"
+   }
+  ],
+  "textHtml": {
+   "headerTip": "AI 基礎設施同業（Neocloud 與 HPC 託管）。市值：CRWV 2026-10-07、NBIS 2026-10-06、APLD 2026-10-07、CORZ 2026-09-04、IREN 2026-09-21（未更新）；EV＝市值＋（有息負債 − 非受限現金）。EV/Sales 為主要比較倍數：同業 GAAP EBITDA 多為負，EV/EBITDA 僅列為參考。「含租賃」欄把營業租賃負債加進 EV。託管同業（DLR、EQIX）的 NTM EV/EBITDA 用於託管分部倍數（評價頁）。",
+   "readingTip": "WYFI 規模遠小於同業（市值約 759m）；雲端與託管兩個分部合併呈現，倍數不可直接與純 neocloud 或純託管同業比較；前瞻倍數見本模型 FY28E 列。",
+   "caveat": "口徑與限制：市值日期不一致（見上），負債與現金為各公司最新申報；APLD、CORZ、IREN 的營收與損益未更新（StockAnalysis 被環境代理阻擋）。此表為市場比較用，不進入目標價。"
+  },
+  "textXlsx": {
+   "subtitle": "EV＝市值＋（有息負債−非受限現金）；含租賃＝EV＋營業租賃負債。EV/EBITDA 僅供參考（GAAP EBITDA 為負者顯示 n/m）。此表不進入目標價。與 HTML Comps 分頁同一組數字",
+   "notes": [
+    "讀法：WYFI 同時有雲端（短約）與託管（10 年長約）；倍數不可直接與純 neocloud 或純託管同業比較；",
+    "CRWV 以租約取得機房，加入營業租賃負債後倍數上升；WYFI 雲端以第三方機房承租為主、託管站點自有。",
+    "前瞻：見下方 WYFI 模型列。此表為市場比較用，不進入目標價。"
+   ]
+  },
+  "software": [
+   {
+    "ticker": "DLR",
+    "name": "Digital Realty",
+    "ntmEvEbitda": 20.4,
+    "ref": "val.peer.dlr"
+   },
+   {
+    "ticker": "EQIX",
+    "name": "Equinix",
+    "ntmEvEbitda": 21.1,
+    "ref": "val.peer.eqix"
+   }
+  ],
+  "softwareNote": "託管（資料中心）同業 NTM EV/EBITDA：EV ÷ 共識 EBITDA 依日曆時間加權（NTM＝0.25 × 2026＋0.75 × 2027，[Derived]）；只取得 DLR、EQIX 兩家（APLD、CORZ、IREN、CIFR 無可用 NTM EBITDA 或為負，資料缺口），樣本不足；中位數用於託管分部倍數，15× 列敏感度。"
+ },
+ "quarterly": {
+  "_note": "季度層（v4.4）：由年度模型拆分，只用於追蹤，不影響目標價與任何年度數字。WhiteFiber 無季度共識與季度指引：對應欄位顯示「不適用」。",
+  "quarters": [
+   {
+    "key": "FY26Q3",
+    "label": "Q3 2026",
+    "period": 0,
+    "reportNote": "預計 2026-11"
+   },
+   {
+    "key": "FY26Q4",
+    "label": "Q4 2026",
+    "period": 0
+   },
+   {
+    "key": "FY27Q1",
+    "label": "Q1 2027",
+    "period": 1
+   },
+   {
+    "key": "FY27Q2",
+    "label": "Q2 2027",
+    "period": 1
+   },
+   {
+    "key": "FY27Q3",
+    "label": "Q3 2027",
+    "period": 1
+   },
+   {
+    "key": "FY27Q4",
+    "label": "Q4 2027",
+    "period": 1
+   }
+  ],
+  "periodNames": [
+   "2H26",
+   "FY27"
+  ],
+  "focus": "FY26Q3",
+  "keyMetrics": [
+   "revenue",
+   "adjEbitda",
+   "capex"
+  ],
+  "driver": {
+   "type": "mw",
+   "endStart": 5.5,
+   "endStartNote": "評價日（2026-06-30）雲端已連網 MW-IT：冰島 5.5（10-Q；亞特蘭大與加拿大 MW 未揭露，下限）[Interested-party]"
+  },
+  "revenueSplit": [
+   "anchor",
+   "driverAvg"
+  ],
+  "revenueAnchor": {
+   "value": 16.539,
+   "label": "Q2 2026 經常性營收（扣除終止費 12.3）",
+   "tag": "Derived"
+  },
+  "metrics": [
+   {
+    "key": "revenue",
+    "label": "營收",
+    "unit": "US$m",
+    "consensus": "revenue",
+    "gap": "ratio"
+   },
+   {
+    "key": "adjEbitda",
+    "label": "調整後 EBITDA",
+    "unit": "US$m",
+    "consensus": "ebitda",
+    "gap": "diff",
+    "marginOf": "revenue"
+   },
+   {
+    "key": "ebitdaMargin",
+    "label": "EBITDA 率",
+    "unit": "%",
+    "consensus": "derived",
+    "gap": "pt"
+   },
+   {
+    "key": "adjOpInc",
+    "label": "調整後營業利益",
+    "unit": "US$m",
+    "gap": "diff",
+    "marginOf": "revenue"
+   },
+   {
+    "key": "capex",
+    "label": "CapEx（毛額）",
+    "unit": "US$m",
+    "gap": "ratio"
+   },
+   {
+    "key": "mw",
+    "label": "季末雲端已連網 MW-IT",
+    "unit": "MW",
+    "actualLabel": "季末雲端 MW（口徑不明）",
+    "gap": "diff"
+   }
+  ],
+  "guidance": {},
+  "guidanceMeta": {
+   "source": "公司未給季度指引（只有目標：NC-1 2026-08 底全額計費、2026 年底約 70 毛 MW）",
+   "tag": "Interested-party"
+  },
+  "periodGuidance": {},
+  "periodGuidanceNote": "公司未給全年指引（不適用）",
+  "consistency": [],
+  "actuals": {
+   "FY26Q3": {
+    "revenue": null,
+    "adjEbitda": null,
+    "adjOpInc": null,
+    "capex": null,
+    "mw": null,
+    "source": null,
+    "date": null,
+    "tag": null
+   },
+   "FY26Q4": {
+    "revenue": null,
+    "adjEbitda": null,
+    "adjOpInc": null,
+    "capex": null,
+    "mw": null,
+    "source": null,
+    "date": null,
+    "tag": null
+   },
+   "FY27Q1": {
+    "revenue": null,
+    "adjEbitda": null,
+    "adjOpInc": null,
+    "capex": null,
+    "mw": null,
+    "source": null,
+    "date": null,
+    "tag": null
+   },
+   "FY27Q2": {
+    "revenue": null,
+    "adjEbitda": null,
+    "adjOpInc": null,
+    "capex": null,
+    "mw": null,
+    "source": null,
+    "date": null,
+    "tag": null
+   },
+   "FY27Q3": {
+    "revenue": null,
+    "adjEbitda": null,
+    "adjOpInc": null,
+    "capex": null,
+    "mw": null,
+    "source": null,
+    "date": null,
+    "tag": null
+   },
+   "FY27Q4": {
+    "revenue": null,
+    "adjEbitda": null,
+    "adjOpInc": null,
+    "capex": null,
+    "mw": null,
+    "source": null,
+    "date": null,
+    "tag": null
+   }
+  },
+  "capexSplit": "guidanceAnchor",
+  "guidanceText": {}
+ },
+ "varianceReasons": {
+  "_note": "差異原因（已決定事項 2）：差距超過 methodology.consensusGapTol 的項目必須有原因。「拆法」由程式依條件判定；其餘寫在這裡。{路徑:格式} 由模型數字帶入。",
+  "list": [
+   {
+    "scope": "quarter",
+    "period": "*",
+    "metric": "revenue",
+    "vs": "*",
+    "type": "觀點",
+    "text": "雲端營收＝在役 MW × 每 MW 年收入（Tokenomics 正向推導），期初可計費 MW 以 Q2 經常性雲端營收年化校準；託管營收照已簽約合約排程；共識未揭露 MW 與單價假設"
+   },
+   {
+    "scope": "quarter",
+    "period": "*",
+    "metric": "adjEbitda",
+    "vs": "*",
+    "type": "觀點",
+    "text": "模型 EBITDA 率 {q.ebitdaMargin:%1}（雲端起點以扣一次性後的經常性數字校準）"
+   },
+   {
+    "scope": "quarter",
+    "period": "*",
+    "metric": "adjOpInc",
+    "vs": "*",
+    "type": "已知限制",
+    "text": "模型折舊 {q.da:2} 以校準後期初 PP&E 與成長型 CapEx 計，未扣 SBC；與公司口徑不同"
+   },
+   {
+    "scope": "quarter",
+    "period": "*",
+    "metric": "capex",
+    "vs": "*",
+    "type": "觀點",
+    "text": "雲端 CapEx 依新增已連網 MW × 每 MW GPU 成本（Tokenomics IF_CapexIT）；託管 CapEx 依站點建置排程"
+   },
+   {
+    "scope": "annual",
+    "period": "*",
+    "metric": "rev",
+    "vs": "consensus",
+    "type": "觀點",
+    "text": "營收＝雲端（在役 MW × 每 MW 年收入，Tokenomics 正向推導；年底已連網 {y.accepted:1} MW-IT）＋託管（已簽約合約排程與擴建）；共識未揭露 MW 與單價假設"
+   },
+   {
+    "scope": "annual",
+    "period": "*",
+    "metric": "ebitda",
+    "vs": "consensus",
+    "type": "觀點",
+    "text": "營收差距 {gap.rev:gap}；EBITDA 率 {m.ebM:%1}（雲端 EBITDA 率由 {in.ebStart:%0} 走向穩態 {in.ebSteady:%0}）"
+   },
+   {
+    "scope": "annual",
+    "period": "*",
+    "metric": "capex",
+    "vs": "consensus",
+    "type": "觀點",
+    "text": "CapEx 依新增 MW 計算：雲端新增 {y.mwNew:1} MW × 每 MW ${y.costMW:0}m（GPU）＋託管建置"
+   },
+   {
+    "scope": "annual",
+    "period": "*",
+    "metric": "nd",
+    "vs": "consensus",
+    "type": "觀點",
+    "text": "淨負債隨 CapEx、客戶預付與融資瀑布而定（模型 CapEx 差距 {gap.capex:gap}）"
+   }
+  ]
+ },
+ "texts": {
+  "fy0EquityNote": "«P0»＝«YTD» 未發行普通股（0）＋«STUB» 期後股權 0（2031 可轉債交換發行約 6.3M 股為以股換債，列於期後事件）",
+  "cashTaxNote": "«YTD» 現金稅未單獨揭露；1H26 有效稅率 −1.3%（加拿大、日本遞延稅資產全額備抵）",
+  "sourceLine": "2026 Q2 10-Q（2026-08-12）＋財報新聞稿與法說（二手摘要）＋期後 8-K（2026-08 可轉債與交換）· 口徑分層",
+  "mwYearEndNotes": {
+   "2025": "2025 年底雲端已連網 MW-IT：冰島第三方機房 5.5（10-Q；亞特蘭大 2026-02 起承租、加拿大 MW 未揭露）[Interested-party]"
+  },
+  "thesis": "長約託管能否成為可融資的現金流底座，撐住雲端 GPU 擴張而不反覆稀釋",
+  "guideLine": "公司未給正式營收或 EBITDA 指引；目標（不作輸入）：雲端合約全部到位後年化 > $200M、2026 年底約 70 毛 MW 上線、NC-1 2026-08 底全額計費 [Interested-party]",
+  "taxNote": "美國聯邦法定 21%（開曼控股；美國子公司 21%＋州稅、加拿大約 26.5%；1H26 有效稅率 −1.3%）",
+  "revMwCompare": "WhiteFiber 對照值：新簽 B300／VR200 長約隱含 14.8–20.3（平均 18.2）、Q2 經常性雲端年化 ÷ 冰島 5.5 MW＝8.37（上限），只作對照",
+  "rpoNote": "雲端 RPO 75.1：2026 下半年 21.6、2027 43.3、2028 10.3（不含 7–8 月簽約的 Baseten、Prime VR200、冰島 B300 與巴黎）；託管 RPO 932.9 另列於託管分部；只作對照",
+  "leaseNote": "WhiteFiber 雲端以第三方機房承租（冰島、亞特蘭大、雪梨等），託管站點自有（MTL-2／3、NC-1）；GPU 伺服器租賃為變動租金（未資本化）",
+  "offBalanceLeaseTerm": "雪梨機房 2026 Q4 起租、59 個月、每月約 USD 0.344",
+  "leaseLiabNote": "10-Q 附註；加權平均折現率 8.3%、剩餘 8.9 年",
+  "capexGuideSource": "公司未給資本支出指引（不適用）",
+  "prepayCheck": "公司：雲端與資料中心客戶預付（1H26 流入 72.6；巴黎合約 12 個月服務費預付）；遞延營收 143.1（流動 17.9），未分託管與雲端 [Interested-party]。1H26 預付 ÷ 資本支出＝21.1% [Derived]。",
+  "mwFacts": "公司簡報（2026-09）：MW 為毛容量；IT 另列 MTL-1 3、MTL-2 3、MTL-3 5、NC-1 40；雲端站點多為第三方機房（冰島 5.5 IT、雪梨 2.5 IT，安大略、巴黎、亞特蘭大未揭露）[Interested-party]。",
+  "ebStartSource": "2026 Q2 經常性雲端 EBITDA 率（扣終止費 12.3、GPU 租賃終止成本約 4.0、呆帳 2.2；扣託管分部 EBITDA 與其他營收後 ÷ 經常性雲端營收 11.506）",
+  "costMwNote": "Tokenomics IF_CapexIT（GB300 37.45、VR200 37.59 US$m/MW-IT；只含 IT／GPU，雲端機房以第三方承租取得）[Derived]",
+  "ppeOpenNote": "雲端 GPU：以 Q2 D&A 6.567 扣託管在役資產折舊約 0.99（託管設備＋建物＋租賃改良毛額 78.9 ÷ 20 年 ÷ 4）後 × 4 × 壽命 5 年校準＝111.6（10-Q 雲端設備毛額 121.0）[Derived]",
+  "facilityName": "Bit Digital DDTL 未動用額度 20（額度 100、已動用 80；可增至 150 未承諾，不計）",
+  "newDebtRateNote": "瀑布新債（資產層／專案債）利率 9.5%（DDTL 純債票面，v0.1a 預設；冰島 7.92%–10.64% 區間）[Interested-party／Assumed]",
+  "concentration": {
+   "title": "客戶集中：最大客戶占 1H26 營收 63%；NC-1 唯一承租人為 Nscale",
+   "detail": "10-Q：最大客戶占 1H26 營收 63%（含終止費，推測為已終止的 Initial Customer）；FY2025 Initial Customer 70.7%。NC-1 40 MW 由 Nscale 承租 10 年（$865M；Nscale 為英國 AI 雲業者，本身無公開信評），託管 RPO 932.9 主要來自 Nscale。信用損失欄的違約率是對此集中度的定價，不是預測；Nscale 違約時託管營收歸零的目標價見報告敏感度。"
+  },
+  "sharesNote": "未歸屬 RSU 0.124m 股；零履約價買權 5.905511m 股自稀釋股數排除（2031 年收回，經濟上已買回；審查留言第 1 條預設，替代：計入）；期後交換股 6.278m 見期後事件",
+  "netDebtNote": "不含租賃與可轉債（其他借款 − 現金）；評價日 6/30 加期後事件（2032 可轉債淨收入、2031 交換現金、DDTL 追加、RBC 聯貸）",
+  "otherRevNote": "非算力服務預設 0（其他營收＝設備銷售型租賃利息，每季約 0.3，未建模；託管另列）",
+  "rvRevNote": "WhiteFiber 對照：新簽雲端長約隱含 14.8–20.3、Q2 經常性年化 ÷ 冰島 5.5 MW＝8.37（上限）",
+  "rvCostNote": "Tokenomics IF_CapexIT 37.45–37.59 US$m/MW-IT（GPU；機房另計）",
+  "priceNote": "續約價格衰退未建模（CRWV 尚未做）：雲端合約到期後以 Tokenomics 每 MW 續作（已知限制）",
+  "prepayCoverNote": "WhiteFiber：1H26 客戶預付 72.6 ÷ 資本支出 344.7＝21.1%（含託管；10-Q 未分拆）[Derived]；敏感度 ±5pt",
+  "prepayOpenNote": "遞延營收（合約負債）143.110：流動 17.909、非流動 125.201（10-Q）；未分託管與雲端；認列 8 年＝143.110 ÷ 17.909 [Derived]",
+  "ytdEquityNote": "1H26 未發行普通股；2031 可轉債淨額 222.1、零履約價買權 120.0",
+  "prepayRiskNote": "10-Q 未揭露預付是否含重大財務組成；若客戶違約或合約提前終止，預付款的處理季報未揭露（Initial Customer 終止時以終止費結算）。",
+  "consistencyTitle": "新聞稿／法說 vs 季報 vs 期後公告：一致、未量化、含糊",
+  "callVsFiling": [
+   [
+    "RPO",
+    "未強調",
+    "RPO 1,008.0：託管 932.9（主要 Nscale）、雲端 75.1",
+    "雲端 RPO 只作對照；託管營收照合約排程，RPO 年度分布核對"
+   ],
+   [
+    "期初現金",
+    "未提",
+    "現金 56.056；受限 4.313",
+    "期初 56.056（受限不計）＋期後事件淨額 218.0"
+   ],
+   [
+    "資本支出",
+    "未給指引；改建成本 8–10／毛 MW",
+    "1H26 344.7（NC-1 開發 322.5）",
+    "雲端由 MW 推導；託管依站點建置排程"
+   ],
+   [
+    "客戶出資",
+    "巴黎 12 個月預付",
+    "預付流入 72.6；遞延營收 143.1",
+    "覆蓋比 21.1%（1H26 實際）；步驟 5 建模"
+   ],
+   [
+    "在帳租賃",
+    "未量化",
+    "營業租賃負債 15.376；未折現 20.4",
+    "聽季報到期表"
+   ],
+   [
+    "表外租賃",
+    "未提",
+    "雪梨未起租約 USD 20.3（59 個月）",
+    "2026 Q4 起租"
+   ],
+   [
+    "債務",
+    "2032 可轉債 310、交換 2031 可轉債",
+    "6/30：定期借款 85.3＋2031 可轉債 230",
+    "期後結構建模（審查留言第 1 條）"
+   ],
+   [
+    "利息",
+    "未給指引",
+    "Q2 利息費用 6.016",
+    "存量利息＝逐檔票面；DDTL MOIC 加付另列"
+   ],
+   [
+    "股利",
+    "不發",
+    "無",
+    "不適用"
+   ],
+   [
+    "產能",
+    "2026 年底約 70 毛 MW；NC-1 8 月底全額計費",
+    "IT：MTL-1 3、MTL-3 5、NC-1 40",
+    "雲端 MW 由合約 GPU 數換算；毛→IT ÷1.35"
+   ],
+   [
+    "定價",
+    "年化 > $200M 目標",
+    "無",
+    "不用公司目標；雲端每 MW 取 Tokenomics 11.62／17.40／24.20"
+   ],
+   [
+    "客戶集中",
+    "20+ 客戶（含未計費）",
+    "7 家；最大客戶 63%",
+    "違約率 0.5→2.5%、回收 50%"
+   ],
+   [
+    "信評",
+    "無",
+    "非申報項目",
+    "不適用（非投資級；債務上限 5.0× EBITDA）"
+   ],
+   [
+    "5Y CDS",
+    "未提",
+    "非申報項目",
+    "不適用（無可引用報價）"
+   ],
+   [
+    "未動用額度",
+    "DDTL 可增至 150",
+    "DDTL 已動用 80／額度 100",
+    "瀑布第一順位計入未動用 20"
+   ]
+  ],
+  "commitments": [
+   [
+    "定期借款（期後：DDTL 80、冰島 18、RBC 聯貸 26.2）",
+    "0.12",
+    "DDTL 2027-03（假設）、冰島季攤還至 2028、RBC 3 年",
+    "是",
+    "排程還本（由瀑布再融資）"
+   ],
+   [
+    "可轉債（2031 剩 31.85、2032 310）",
+    "0.34",
+    "2031-02、2032-09（2029-02、2030-09 可賣回）",
+    "是",
+    "可轉債模組（價外：到期還本）"
+   ],
+   [
+    "在帳營業租賃（未折現）",
+    "0.02",
+    "2026 下半年 3.3／之後每年 2.3–4.3",
+    "是（PV 15.4）",
+    "在帳現金租金（固定）"
+   ],
+   [
+    "已簽約未起租租賃（雪梨）",
+    "0.02",
+    "2026 Q4 起租、59 個月",
+    "否",
+    "表外現金租金"
+   ],
+   [
+    "NC-1 專案融資",
+    "未完成",
+    "與貸款團獨家協商中",
+    "否",
+    "基準／積極假設完成（步驟 6）"
+   ],
+   [
+    "Bit Digital DDTL 未動用",
+    "0.02",
+    "額度 100、已動用 80",
+    "否（額度）",
+    "瀑布第一順位"
+   ]
+  ],
+  "consistency": [
+   [
+    "Q2 營收含一次性",
+    "新聞稿 28.8（+54%）",
+    "10-Q：雲端 23.8 含終止費 12.3（季後修訂 15.7）",
+    "首期校準用經常性 11.506；1H26 實際照 10-Q"
+   ],
+   [
+    "NC-1 計費時點",
+    "8 月底全額計費",
+    "合約目標 2026-04-30／05-30",
+    "延後約 3–4 個月 → 延誤預設保守 6／基準 3"
+   ],
+   [
+    "雲端年化 > $200M",
+    "法說目標",
+    "新簽長約年額合計約 146",
+    "不作輸入"
+   ],
+   [
+    "客戶數",
+    "20+",
+    "7 家",
+    "口徑不同，兩者並列"
+   ],
+   [
+    "建物折舊年限",
+    "無",
+    "10-K 30 年 vs 10-Q 20–25 年",
+    "預設 20 年（區間 15–30）"
+   ],
+   [
+    "NC-1 專案融資",
+    "原預期 2026 Q1",
+    "仍在協商",
+    "保守情境不完成"
+   ],
+   [
+    "Bit Digital 持股",
+    "無",
+    "10-Q 69.6% → 13D/A 59.9%",
+    "採 59.9%（交換後）"
+   ],
+   [
+    "FCF",
+    "未給",
+    "1H26 CFO 89.1（含預付 72.6）、資本支出 344.7",
+    "五期 UFCF 由模型推得"
+   ]
+  ],
+  "sources": [
+   [
+    "Interested-party",
+    "2026 Q2 10-Q（2026-08-12，核閱、未查核）：營收 28.839（雲端 23.806 含終止費 12.3、託管 4.726、其他 0.307）；毛利（不含 D&A）17.129；D&A 6.567；減損 5.006；G&A 14.811；利息 6.016；淨損 14.976；調整後 EBITDA 5.535（扣一次性約 −0.565）。"
+   ],
+   [
+    "Interested-party",
+    "資產負債（2026-06-30）：現金 56.056、受限 4.313；PP&E 淨額 651.085（在建 484.6）；遞延營收 143.110；定期借款本金 85.339＋2031 可轉債 230；營業租賃負債 15.376；RPO 1,008.0（託管 932.9、雲端 75.1）。"
+   ],
+   [
+    "Interested-party",
+    "現金流（1H26）：CFO 89.105（客戶預付 72.6）；資本支出 344.712；出售 H200 26.1；2031 可轉債淨額 222.1、零履約價買權 −120.0。"
+   ],
+   [
+    "Interested-party",
+    "期後 8-K：2032 可轉債 310（5.00%、轉換價 33.84、淨收入 298.5）與 2031 交換（現金約 118.5＋約 6.3M 股換 198.15）；DDTL 追加 30；RBC 聯貸 CAD 36.8；NC-2／3 買賣協議 60.0。"
+   ],
+   [
+    "Verified",
+    "FY2025 10-K（經查核）：營收 79.164（雲端 68.754、託管 8.914、其他 1.497）；淨損 24.683；CFO 45.655；資本支出 268.403。"
+   ],
+   [
+    "Interested-party",
+    "合約：Nscale NC-1 865／10 年／40 MW-IT／年調 3%；Cerebras MTL-3 5 MW；Baseten 165.2（1,392 顆 B300）、Prime Intellect 108.2（576 顆 VR200）、冰島 B300 87.5、巴黎 >160（GPU 數未揭露）。"
+   ],
+   [
+    "Derived",
+    "每 MW 年收入（Tokenomics v5.26 正向推導，與 v5.24 相同）：保守 11.62／基準 17.40／積極 24.20 US$m/MW-IT·年；每 MW IT 建置成本 IF_CapexIT 37.45（GB300）／37.59（VR200）。WhiteFiber 合約隱含單價只作對照。"
+   ],
+   [
+    "Verified",
+    "現價 16.83（2026-10-07 收盤，Yahoo／Benzinga）；市值 759.4（交換後 45.12M 股，[Derived]）。"
+   ]
+  ],
+  "headerCards": [
+   [
+    "產能",
+    "雲端 MW-IT 由合約 GPU 數換算 · 冰島 5.5 · NC-1 40 MW-IT（Nscale）"
+   ],
+   [
+    "合約",
+    "Nscale 865／10 年 · 新簽雲端 >540（Baseten、Prime、冰島、巴黎）"
+   ],
+   [
+    "融資",
+    "2032 可轉債 310 · DDTL 80 · NC-1 專案融資未完成"
+   ]
+  ],
+  "legacyMarginNote": "不適用（WhiteFiber 無傳統事業；託管分部 EBITDA 率見託管分部）",
+  "labelMap": [
+   [
+    "需失去投資級才能融資的金額",
+    "超出可融資上限、需高息債的金額"
+   ],
+   [
+    "需股權或失去投資級",
+    "需股權或高息債"
+   ],
+   [
+    "債務上限（投資級：",
+    "債務上限（"
+   ],
+   [
+    "距投資級上限",
+    "距債務上限"
+   ],
+   [
+    "投資級上限",
+    "債務上限"
+   ],
+   [
+    "投資級句",
+    "融資上限句"
+   ],
+   [
+    "投資級融資瀑布",
+    "融資瀑布"
+   ],
+   [
+    "投資級",
+    "可融資"
+   ],
+   [
+    "OCI",
+    "雲端"
+   ],
+   [
+    "傳統事業",
+    "託管"
+   ],
+   [
+    "軟體同業",
+    "託管同業"
+   ]
+  ],
+  "revMwContracts": [
+   [
+    "Baseten（1,392 顆 B300，3 年）",
+    19.27,
+    "TCV 165.2 ÷ 3 ÷ 2.858 MW-IT（$4.52／GPU·時）"
+   ],
+   [
+    "Prime Intellect（576 顆 VR200，3 年）",
+    18.27,
+    "TCV 108.2 ÷ 3 ÷ 1.974 MW-IT（$7.15）"
+   ],
+   [
+    "冰島 B300（576 顆，5 年）",
+    14.8,
+    "TCV 87.5 ÷ 5 ÷ 1.183 MW-IT（$3.47；另有營收分成）"
+   ],
+   [
+    "128 顆 B300（3 年）",
+    20.29,
+    "TCV 16.0 ÷ 3 ÷ 0.263 MW-IT（$4.76）"
+   ],
+   [
+    "B200 384 顆（2 年）",
+    11.83,
+    "TCV 18.1 ÷ 2 ÷ 0.765 MW-IT"
+   ],
+   [
+    "Prime GB200 216 顆（1 年）",
+    15.8,
+    "TCV 6.8 ÷ 0.43 MW-IT"
+   ],
+   [
+    "H100 2,048 顆（2 年；8 卡／台 [Assumed]）",
+    8.8,
+    "TCV 50.2 ÷ 2 ÷ 2.852 MW-IT（舊世代）"
+   ],
+   [
+    "新簽 B300／VR200 長約平均（前四筆）",
+    18.16,
+    "Baseten、Prime VR200、冰島 B300、128 顆 B300 簡單平均 [Derived]"
+   ],
+   [
+    "Q2 經常性雲端年化 ÷ 冰島 5.5 MW（上限）",
+    8.37,
+    "46.02 ÷ 5.5；亞特蘭大與加拿大 MW 未揭露，分母偏小"
+   ]
+  ],
+  "revMwContractsNote": "合約隱含每 MW-IT 年營收 [Derived]：TCV ÷ 年數 ÷（GPU 數 × 每顆 IT kW ÷ 1000），每顆 IT kW 取 Tokenomics v5.26（B300／B200 以 GB300／GB200 近似，HGX 氣冷機實際約低 0–12%，使隱含單價略為低估）；只作對照與敏感度，不作輸入（共同規則第 4 節）",
+  "mwBasis": {
+   "title": "MW 口徑：雲端 MW-IT 由合約 GPU 數換算；託管站點 IT／毛容量分列",
+   "detail": "模型以 MW-IT 為主口徑（Tokenomics 每 MW 單價為 IT）。雲端站點多為第三方機房、公司未揭露 MW：由合約 GPU 數 × 每顆 IT kW（Tokenomics v5.26）換算（[Derived]；巴黎 GPU 數未揭露，以年額 ÷ 17.40 推得）。託管：公司簡報 MW 為毛容量，IT 另列；未揭露 IT 者以毛 ÷ 1.35（NC-1 第一期 54 毛／40 IT）換算。"
+  },
+  "scenarioTip": "三個情境依對照表 r1 第 4 節第 1 條與審查留言第 6 條：保守＝只有已簽約（雲端合約 GPU、NC-1 40 MW、MTL 現有站點；NC-1 專案融資未完成）；基準＝加雪梨 2.5 MW 與雲端每年 3 MW-IT、NC-1 下一批 45 毛 MW，NC-1 專案融資完成；積極＝雲端每年 6 MW-IT、再加 NC-2／3、NC-1 擴建與 Krambu 100 MW。每 MW 年收入隨情境取 Tokenomics 正向推導三情境值。切換情境只會改寫已連網／可計費 MW、每 MW 年收入、FY31 預建、託管站點與延誤月數；你手動調整的其他數字會保留，按頁首「重設」才回到預設值。",
+  "siteTip": "具名雲端站點可編輯。公司多數雲端站點為第三方機房、不揭露 MW；下列 MW 由合約 GPU 數換算（[Derived]）。最後一列是殘差＝年度已連網 MW − 具名加總。託管站點見託管分部。",
+  "headline": "託管長約能撐住雲端擴張嗎",
+  "subhead": "Nscale 10 年長約與客戶預付是融資底座；雲端 GPU 擴張仍要靠可轉債與專案融資"
+ }
+}

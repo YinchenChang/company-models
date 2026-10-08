@@ -1,12 +1,12 @@
-# CoreWeave 收支模型 — Claude Code 工作守則
+# Nebius 收支模型 — Claude Code 工作守則
 
 （本檔不寫版本號；目前版本見 `docs/handoff/` 內交接檔檔名與 `vlog.py`。）
 
 ## 專案是什麼
-CRWV 資金與評價模型，核心論點「Backlog 不是現金」。同一套引擎輸出兩個成品，數字必須完全一致：
+Nebius（NBIS）資金與評價模型，核心命題「預付款是否讓 backlog 真的變成現金」（CRWV「Backlog 不是現金」的對照組）。由 CRWV 模型 v4.5（`YinchenChang/crwv-model` @ `01b13ad`）複製而來，本資料夾各自完整可建置。同一套引擎輸出兩個成品，數字必須完全一致：
 - HTML（互動版，`build_html_portable.py` 產生）
 - Excel（全部活公式，`build_xlsx.py` 產生）
-此 repo 是日後 Nebius、Oracle、OpenAI 模型的模板。業務背景、目前結果與待辦見 `docs/handoff/` 內的交接檔（資料夾內只保留最新版）；技術細節見 `README.md`。
+業務背景、目前結果與待辦見 `docs/handoff/` 內的交接檔（資料夾內只保留最新版）；技術細節見 `README.md`。工作流程與範圍以 repo 根目錄 `README.md` 與 `docs/workorders/` 的工作單為準（衝突時優先於本檔）。
 
 ## 目錄
 - `company.json`：公司原始輸入的**唯一來源**（HTML 與 Excel 共用）。換公司先改這裡。
@@ -15,8 +15,7 @@ CRWV 資金與評價模型，核心論點「Backlog 不是現金」。同一套�
 - `cmp31.js`＋`xlx.py`（HTML vs Excel 數值）、`crawl.py`（畫面文字）、`xl_diff.py`（Excel 逐格）：核對工具。
 - `dist/`：交付成品（HTML、xlsx）。`docs/handoff/`：交接檔（只保留最新版；升版時新增新版並移除舊版，供 Project 的 GitHub 同步勾選整個資料夾）；`docs/`：建置用模板 `template_v3_3.html`；`docs/reports/`：各任務的完整回報。
 
-## 第一個任務（環境移植，完成前不要做其他改版）
-原始碼原本在另一個沙盒執行，有寫死的路徑，需先移植：
+## 環境（CRWV 時期的第一個任務「環境移植」已完成；第 0 步的工具檢查每次開工仍適用）
 0. 先檢查工具：`soffice --version`、`python3 -c "import openpyxl, playwright"`、Playwright 的 Chromium 能否啟動。雲端環境的 setup script 有 5 分鐘上限，可能沒裝完（紀錄在 `/tmp/crwv_setup.log`；v3 起只預裝 Python 套件）；缺什麼就在工作階段內補裝：`apt-get install -y --no-install-recommends libreoffice-calc-nogui`、`pip install --break-system-packages openpyxl pypdf playwright`、`python3 -m playwright install chromium`；Chromium 若因缺系統函式庫無法啟動，執行 `python3 -m playwright install-deps chromium`。回報時列出實際補裝了哪些。
 1. 把 `/home/claude/...` 與 `/mnt/...` 的寫死路徑改為相對於 repo 根目錄（`build_xlsx.py` 的輸出、`fix_outline.py` 的 outline.json、`xlx.py` 的暫存檔、`build_html_portable.py` 的模板參數）。
 2. 原本的 Excel 重算用沙盒內建的 `recalc.py`（此處沒有）：用 LibreOffice headless 自寫 `scripts/recalc.py`，功能＝開啟、全部重算、存檔，並回報公式錯誤數（#REF!、#DIV/0!、#VALUE!、#NAME?、#N/A）。
@@ -27,7 +26,7 @@ CRWV 資金與評價模型，核心論點「Backlog 不是現金」。同一套�
 - 先讀交接檔與 README，再動手；純結構修改的驗收標準是「數字與畫面與前一版完全相同」。
 - 每次修改後必跑 `scripts/verify.sh`，全數通過才可提交。
 - 交付的 HTML 必須是「單一檔案、離線、本機雙擊即可開啟」（已決定事項 11）：所有 JS、CSS、字型、圖片、資料在建置時內嵌；不得有任何網路請求（CDN、Google Fonts、外部圖片、fetch／XHR、外部 import），也不得讀取旁邊的檔案。`verify.sh` 的「離線開啟檢查」（`scripts/check_offline.py`）必須通過。改到數字的修改，要在回報中列出受影響的關鍵數字（三情境目標價等）前後對照。
-- 版本號：**只有 `dist/` 成品（HTML 或 Excel）改變時才升版**；純工具修改（建置／核對腳本、文件、setup script 等，`dist/` 不變）不升版、不新增 VLOG。升版時 `vlog.py`（Excel 唯一來源）與 `tail.js` 的 VLOG（HTML）**兩處都要**新增一列；成品命名 `更新日_CoreWeave收支模型_v版本號`，放 `dist/`，並移除舊版成品；交接檔同樣以新版取代舊版（`docs/handoff/` 只留一個檔）。
+- 版本號：**只有 `dist/` 成品（HTML 或 Excel）改變時才升版**；純工具修改（建置／核對腳本、文件、setup script 等，`dist/` 不變）不升版、不新增 VLOG。升版時 `vlog.py`（Excel 唯一來源）與 `tail.js` 的 VLOG（HTML）**兩處都要**新增一列；成品命名 `更新日_<company.json → meta.company>收支模型_v版本號`（目前 `20261007_Nebius收支模型_v0_2`），放 `dist/`，並移除舊版成品；交接檔同樣以新版取代舊版（`docs/handoff/` 只留一個檔）。
 - 同時更新交接檔（`docs/handoff/`，只保留最新版）與 README。
 - 一個任務一個分支、一個 PR；PR 說明寫：改了什麼、驗收結果、需 Andy 決定的事項（任務完成時與報告檔「目前狀態」同步更新）。
 - 任務回報：依下節「每輪回報規則」。報告檔另須保存 `scripts/verify.sh` 完整輸出、關鍵數字前後對照（三情境目標價等；未改數字時註明「無變動」並列出現值）。
@@ -40,7 +39,7 @@ Andy 不熟程式，他透過 Claude 聊天端（讀 Gmail 裡的 GitHub 通知�
       - 檔案最上方是「目前狀態」：完成到哪裡、下一步、需要 Andy 做的事；每輪覆寫。
       - 下方是「輪次紀錄」：依時間追加，寫本輪做了什麼、驗證結果、提交編號。
    b. 在 PR 留一則留言，內容就是本輪紀錄。第一行固定為：
-      `[CRWV 回報] 任務名稱｜第 N 輪｜YYYY-MM-DD`
+      `[Nebius 回報] 任務名稱｜第 N 輪｜YYYY-MM-DD`（分段工作單用 `[Nebius 回報] v0.1x｜完成／停止｜YYYY-MM-DD`）
    c. commit 並 push。
 3. 寫法：用非工程師看得懂的中文，先寫結論，技術細節放後面。
    PR 留言只貼 verify.sh 的結果摘要（例如「12 項全部通過」），完整輸出放在報告檔。
@@ -61,22 +60,18 @@ Andy 不熟程式，他透過 Claude 聊天端（讀 Gmail 裡的 GitHub 通知�
 7. Excel 同一工作表、同一區段內的 A 欄列名稱不可重複：`xl_diff.py --by-label`（`verify.sh --vs-dist` 使用）以「區段＋列名稱」配對新增列造成的位移，重複時直接報錯、不自行配對。
 8. 同業 Comps 與評等門檻只放在 `company.json`（`peers`、`methodology.rating`）；segB／segC／build_xlsx 不再寫任何同業數字或門檻數字。含門檻的畫面文字以門檻值組字（HTML `pctQ`／`multTxt`，Excel `_PC`／`_MT`），cmp31 以標籤為鍵的列（例如「賣出門檻價（現價 × (1 − 15%)）」）標籤也由門檻值產生。
 
-## 待辦（依序；每項一個 PR）
-1. 環境移植（上節）。
-2. ~~目標價改為區間呈現（取代單點 45/55 加權）~~（v4.1 完成）。
-3. ~~同業 Comps 與評等門檻移入 company.json、README 欄位說明~~（v4.2 完成）；~~一頁摘要＋市場共識對照~~（v4.3 完成）。共識數據一律由 Andy 在聊天中查證後提供資料檔（`data/`，路徑寫在 `meta.consensusFile`），逐筆含來源、日期與標記（[Verified]／[Interested-party]…）；**不要自行杜撰或補數字**。
-4. ~~季度層（Q3 財報 11/9 前完成）~~（v4.4 完成；Q3 財報後填 `quarterly.actuals`、焦點季改為下一季）。
-5. 全面精簡＋可移植性總檢查，依已決定事項 8 拆成兩個 PR：
-   - **5a-1**（PR #8，v4.5；獨立 PR，2026-09-26 Andy 同意「一個任務一個 PR」的例外；目標 11/9 前合併）：期間滾動（已決定事項 10）＋反向 DCF 改由建置時的 Python 求解＋目標價時點改為「評價日＋12 個月」（先以現行口徑實作並驗證數字不變，再切換並列前後對照）＋一頁摘要與各分頁第一屏的日期與期間文字自動產生（離線檢查比對）。
-   - **5a**（PR #9，合併時版本號取下一號；原 PR #6 已於 2026-09-26 合併，只含文件與工具修改）：Excel 與建置端的精簡（含 Excel 規範：色彩慣例、具名範圍、分頁合併、說明文字精簡）、可移植性（寫死的公司特有內容移入 company.json）；反向 DCF 改由建置時的 Python 求解後寫入 Excel，不再依賴 JS 快照；非區間型指引（年增率 %、利潤率區間、文字型如「low teens」）的差距與原因判定實作在 Excel（或建置時 Python），不寫在 JS；ATM 額度改為「股數（3,500 萬股，2026-09-17 公告，Verified）× 發行參考價」的活公式、股數放 company.json（會改數字，列前後對照）。期間滾動（已決定事項 10）在 B 階段一併設計與實作。精簡判斷以 Excel 內容為準；分頁合併須在 5b 前完成。HTML 在 5a 期間只做維持運作所需的最小修改，不移動 HTML 內的寫死內容（5b 取代）。
-   - **合併順序**（2026-09-26，Andy 決定；#10 已合併）：PR #11（輸入改名＋指引欄位 nextQ*／postQ*＋mwYearEnd＋README 欄位表自動化＋公式寫死數字移入 company.json，自 #9 拆出，0 差異、不升版）→ Q3 季度層（11/9 財報）→ 年度滾動（10-Q 後另開 PR，只含滾動）→ PR #9（5a）。
-   - **5b**（新 PR，升 v5.0）：HTML 改為通用檢視器。建置時以 LibreOffice 重算 Excel，依具名範圍匯出三情境、FY27 錨定與主要敏感度表為 JSON；HTML 只讀取、顯示、切換。核對改為「Excel 值 → JSON → HTML 顯示」逐項一致，取代 cmp31 雙引擎比對。驗收另含已決定事項 11 的三項離線條件（網路請求 0、console 無錯誤、關鍵數字正常顯示），匯出的 JSON 須於建置時內嵌進 HTML。
-6. 修正模型折舊高於實際（Q3 模型車隊 D&A 2.16 對 Q2 實際 1.393；交接檔「FY26 下半年車隊 D&A 略高於實際走勢」）。
-7. 其餘短名稱輔助函式改名（讀懂用途後才改）。
+## 待辦（Nebius；依序，每項一張工作單、一個 PR）
+CRWV 時期的待辦（環境移植、區間、設定集中、季度層、期間滾動已完成；5a 精簡、5b 只讀檢視器、折舊修正、短名稱改名未做）不在 Nebius 範圍內：依 repo 根目錄 README，CRWV 未完成的待辦（5a 精簡、5b 只讀檢視器、折舊修正、機率加權目標價、GPU 批次與續約價格衰退）Nebius 也先不做。
+1. **Q3 2026 季度更新**（6-K 預計 2026-11；步驟見交接檔「待辦與季度更新」）：填 `quarterly.actuals`、滾動評價日至 2026-09-30、更新 `ytdActual`、`latestQuarter`、`asOf` 全部欄位；期初可計費 MW 依新一季營收 × 4 重新校準（`defaults.billableOpen` 隨之更新）；`priceCheck`（簡報的實現單價對照）同步更新；升版 v0.3（v0.2 已用於標題與簡報改版）。
+2. 若 Q3 揭露季末 active／connected MW：改以實際 MW 取代內插與校準，重估「實現單價 vs 正向推導單價」差距與爬坡係數。
+3. 市場共識與同業 Comps 更新（共識檔放 `data/`，改 `meta.consensusFile`；同業市值與淨負債仍為 2026-09-21）。
+4. 另估 Nebius 的 WACC 與 EV/EBITDA 倍數（目前沿用 CRWV 模板 11%／6x；Nebius 淨現金、槓桿較低）。
+5. ClickHouse 持股比例一手揭露後更新 `valuation.holdings`。
+6. CRWV 未完成待辦（範圍外，待 Andy 另開）：續約價格衰退（預付款優勢可能高估）、GPU 批次、折舊修正、機率加權目標價、5a 精簡、5b 只讀檢視器。
 
 ## 已決定事項（不再列為待決）
 前三條是工作原則，適用所有後續工作與回報（2026-09-26，Andy 決定）。
-1. **可移植**：本 repo 的主要目的是可用於其他個股的框架（下一步 Nebius、Oracle、OpenAI），不只是 CoreWeave 模型。公司特有的內容（數字、指標清單、拆分依據、指引項目、說明文字）一律放 `company.json`，程式只寫通用邏輯；公司沒有某類資料（例如沒有 MW、沒有指引或共識）時，對應欄位顯示「不適用」，不可出錯。每輪回報加一段「可移植性」：這次新增了哪些公司特有內容、放在哪裡、換公司時要改什麼；只適用 CoreWeave、無法設定的部分列為待決事項。
+1. **可移植**：本 repo 的主要目的是可用於其他個股的框架（下一步 Nebius、Oracle、OpenAI），不只是 CoreWeave 模型（本資料夾即其 Nebius 版）。公司特有的內容（數字、指標清單、拆分依據、指引項目、說明文字）一律放 `company.json`，程式只寫通用邏輯；公司沒有某類資料（例如沒有 MW、沒有指引或共識）時，對應欄位顯示「不適用」，不可出錯。每輪回報加一段「可移植性」：這次新增了哪些公司特有內容、放在哪裡、換公司時要改什麼；只適用 CoreWeave、無法設定的部分列為待決事項。
 2. **差異要能解釋**：與共識或公司指引不同沒有問題，但每一個差異都必須能解釋。差距超過 5% 的項目附「差異原因」並標明類型：觀點（刻意的不同假設，寫出依據）／拆法（季度分配方法造成，年度或 2H 合計不受影響）／已知限制（模型已知的偏差）。類型與原因放 `company.json` 或依條件產生，不寫死；無法歸類的差異列為待決事項。
 3. **精簡**：讀者是人，吸收量有限；呈現的內容必須是核心、關鍵、必要的，在不減損模型能力的前提下盡量精簡。主畫面（一頁摘要、各分頁第一屏）只放結論與關鍵數字；方法、推導、明細放附錄或次層（預設收合）。新增畫面內容前先問「讀者少了它會不會做錯判斷」，不會就放次層或不放。說明以一句為原則，數字優先於文字。回報與 PR 留言同樣適用：結論先行，Andy 要做的事放最前面。
 4. LibreOffice Calc 維持在工作階段內補裝（`apt-get install -y --no-install-recommends libreoffice-calc-nogui`），不改由環境預裝。

@@ -1,0 +1,46 @@
+# Z4 敏感度情境（tools/sensitivity_z4.py）。輸入鍵＝Inputs 具名範圍（INP_nnn）；值取 Inputs 低／高欄或工作單指定。
+# group：driver＝三個關鍵驅動；chat＝chat 端指定並列；fund＝融資預設；other＝其他已套用預設
+scenarios:
+  - {id: base, label: 基準, group: base, inputs: {}}
+  # 三個關鍵驅動（依 2030 差額擺幅排序）
+  - {id: px_m25, label: 每 GW 價格每年 −25%（INP_100 下緣）, group: driver, inputs: {INP_100: -0.25}}
+  - {id: px_0, label: 每 GW 價格不變（INP_100 上緣 0）, group: driver, inputs: {INP_100: 0}}
+  - {id: util_hi, label: Coding Plan 額度使用率 0.4（INP_060 上緣）, group: driver, inputs: {INP_060: 0.4}}
+  - {id: util_lo, label: Coding Plan 額度使用率 0.05（INP_060 下緣）, group: driver, inputs: {INP_060: 0.05}}
+  - {id: rd_05, label: 研發占比線性降至 2030＝0.5（INP_120＝1）, group: driver, inputs: {INP_120: 1}}
+  - {id: rd_03, label: 研發占比線性降至 2030＝0.3（INP_120＝1、INP_110＝0.3）, group: driver, inputs: {INP_120: 1, INP_110: 0.3}}
+  - {id: rd_px, label: 研發占比降至 0.5 ＋ 每 GW 價格 −25%（兩組合併）, group: chat, inputs: {INP_120: 1, INP_100: -0.25}}
+  # 其他重要預設
+  - {id: cpout_hi, label: Coding Plan 輸出占比 0.08, group: other, inputs: {INP_123: 0.08}}
+  - {id: cpout_lo, label: Coding Plan 輸出占比 0.01, group: other, inputs: {INP_123: 0.01}}
+  - {id: apiout_lo, label: API 輸出占比 0.05, group: other, inputs: {INP_029: 0.05}}
+  - {id: apiout_hi, label: API 輸出占比 0.3, group: other, inputs: {INP_029: 0.3}}
+  - {id: inffee_lo, label: 推論算力費占 API 銷售成本 0.22, group: other, inputs: {INP_102: 0.22}}
+  - {id: task_lo, label: 2H26 任務數成長 +130%（INP_038 下緣）, group: other, inputs: {INP_038: 1.3}}
+  - {id: task_hi, label: 2H26 任務數成長 +300%（INP_038 上緣）, group: other, inputs: {INP_038: 3.0}}
+  - {id: eta_conv, label: η 線性收斂至 2030＝1（INP_105＝1）, group: other, inputs: {INP_105: 1}}
+  - {id: hc_hi, label: 員工人數年增 30%（INP_117 上緣）, group: other, inputs: {INP_117: 0.3}}
+  - {id: dc1gw, label: 1 GW 國產資料中心（INP_112＝1，2028 投產）, group: other, inputs: {INP_112: 1}}
+  - {id: capex50, label: 其他自有算力資本支出 50 億／年（INP_111 上緣）, group: other, inputs: {INP_111: 50}}
+  # 融資預設（Z4）
+  - {id: cb_conv, label: 可換股債券轉股（INP_128＝1）, group: fund, inputs: {INP_128: 1}}
+  - {id: bank_repay, label: 銀行借款到期償還（INP_127＝1）, group: fund, inputs: {INP_127: 1}}
+  - {id: mincash12, label: 最低現金 12 個月（INP_124 上緣）, group: fund, inputs: {INP_124: 12}}
+  - {id: oth_hi, label: 其他收益延續 1H26 年化 0.83 億（INP_125 上緣）, group: fund, inputs: {INP_125: 0.83}}
+  - {id: rate_hi, label: 銀行利率 4.5%（INP_126 上緣）, group: fund, inputs: {INP_126: 0.045}}
+  - {id: zkjh_hi, label: 中科加禾對價 5 億（INP_132 上緣）, group: fund, inputs: {INP_132: 5}}
+  - {id: capexnc_hi, label: 非算力資本支出 1.5 億／年（INP_131 上緣）, group: fund, inputs: {INP_131: 1.5}}
+  - {id: cons_g_hi, label: 反向：2029–30 目標年增 25%（INP_134 上緣）, group: fund, inputs: {INP_134: 0.25}}
+  - {id: only_pl1, label: 只計 IPO＋2026-07 配售（不含 2026-09 配售與可換股債券；回答「2026-07 配售後現金可撐到哪一年」）, group: fund, inputs: {SRC_ZP_544: 0, SRC_ZP_547: 0, SRC_ZP_545: 0}}
+  - {id: ipo_only, label: 只計 IPO（不含 2026-07、09 配售與可換股債券）, group: fund, inputs: {SRC_ZP_536: 0, SRC_ZP_544: 0, SRC_ZP_547: 0, SRC_ZP_545: 0}}
+  - {id: stress, label: 壓力組合：η 收斂＋1 GW 資料中心＋每 GW 價格不變＋員工年增 30%, group: other, inputs: {INP_105: 1, INP_112: 1, INP_100: 0, INP_117: 0.3}}
+flips:
+  - {id: f_px, label: 2030 差額轉正所需每 GW 價格年變動率, key: INP_100, lo: -0.5, hi: 0, target: gap30}
+  - {id: f_rd, label: 2030 差額轉正所需研發占比 2030 目標（開關＝1）, key: INP_110, lo: 0.2, hi: 0.7, target: gap30, fixed: {INP_120: 1}}
+  - {id: f_util, label: 2030 差額轉正所需 Coding Plan 額度使用率, key: INP_060, lo: 0.15, hi: 0.6, target: gap30}
+  - {id: f_task, label: 2030 差額轉正所需 2H26 任務數成長, key: INP_038, lo: 2.24, hi: 6, target: gap30}
+  - {id: f_eta_ext, label: 出現外部資金需求所需每 GW 價格年變動率（η 收斂情境下）, key: INP_100, lo: -0.25, hi: 0.5, target: cum30, fixed: {INP_105: 1}}
+  - {id: f_capex_ext, label: 出現外部資金需求所需其他自有算力資本支出（億／年，2027 起）, key: INP_111, lo: 0, hi: 300, target: cum30}
+  - {id: f_px_ext, label: 出現外部資金需求（2030 前）所需每 GW 價格年變動率, key: INP_100, lo: -0.1, hi: 0, target: cum30}
+  - {id: f_util_ext, label: 出現外部資金需求（2030 前）所需 Coding Plan 額度使用率, key: INP_060, lo: 0.05, hi: 0.15, target: cum30}
+  - {id: f_cpout_ext, label: 出現外部資金需求（2030 前）所需 Coding Plan 輸出占比, key: INP_123, lo: 0.01, hi: 0.03, target: cum30}

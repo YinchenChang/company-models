@@ -1,0 +1,3872 @@
+items:
+- key: rev_total_fy22
+  group: A
+  metric: 營收總額
+  value: 0.5741
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「收入 57,409 100.0」；千元值 57,409；RMB 千元÷100,000 換算成億
+- key: rev_total_fy23
+  group: A
+  metric: 營收總額
+  value: 1.2454
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「收入 57,409 100.0」；千元值 124,538；RMB 千元÷100,000 換算成億
+- key: rev_total_fy24
+  group: A
+  metric: 營收總額
+  value: 3.1241
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「收入 57,409 100.0」；千元值 312,414；RMB 千元÷100,000 換算成億
+- key: rev_total_1h24
+  group: A
+  metric: 營收總額
+  value: 0.4491
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「收入 57,409 100.0」；千元值 44,909；RMB 千元÷100,000 換算成億
+- key: rev_total_1h25
+  group: A
+  metric: 營收總額
+  value: 1.9088
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「收入 57,409 100.0」；千元值 190,877；RMB 千元÷100,000 換算成億
+- key: rev_onprem_fy22
+  group: A
+  metric: 本地化部署收入（舊分部）
+  value: 0.5482
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「本地化部署 54,815 95.5%」；千元值 54,815；RMB 千元÷100,000 換算成億；占比 95.5/90.4/84.5/59.7/84.8%
+- key: rev_onprem_fy23
+  group: A
+  metric: 本地化部署收入（舊分部）
+  value: 1.1261
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「本地化部署 54,815 95.5%」；千元值 112,614；RMB 千元÷100,000 換算成億；占比 95.5/90.4/84.5/59.7/84.8%
+- key: rev_onprem_fy24
+  group: A
+  metric: 本地化部署收入（舊分部）
+  value: 2.6393
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「本地化部署 54,815 95.5%」；千元值 263,930；RMB 千元÷100,000 換算成億；占比 95.5/90.4/84.5/59.7/84.8%
+- key: rev_onprem_1h24
+  group: A
+  metric: 本地化部署收入（舊分部）
+  value: 0.2681
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「本地化部署 54,815 95.5%」；千元值 26,806；RMB 千元÷100,000 換算成億；占比 95.5/90.4/84.5/59.7/84.8%
+- key: rev_onprem_1h25
+  group: A
+  metric: 本地化部署收入（舊分部）
+  value: 1.6178
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「本地化部署 54,815 95.5%」；千元值 161,777；RMB 千元÷100,000 換算成億；占比 95.5/90.4/84.5/59.7/84.8%
+- key: rev_cloud_fy22
+  group: A
+  metric: 雲端部署收入（舊分部；＝開放平台及API）
+  value: 0.0259
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「雲端部署 2,594 4.5%」；千元值 2,594；RMB 千元÷100,000 換算成億；占比 4.5/9.6/15.5/40.3/15.2%；2025 起新分類下雲端部署＝開放平台及 API
+- key: rev_cloud_fy23
+  group: A
+  metric: 雲端部署收入（舊分部；＝開放平台及API）
+  value: 0.1192
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「雲端部署 2,594 4.5%」；千元值 11,924；RMB 千元÷100,000 換算成億；占比 4.5/9.6/15.5/40.3/15.2%；2025 起新分類下雲端部署＝開放平台及 API
+- key: rev_cloud_fy24
+  group: A
+  metric: 雲端部署收入（舊分部；＝開放平台及API）
+  value: 0.4848
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「雲端部署 2,594 4.5%」；千元值 48,484；RMB 千元÷100,000 換算成億；占比 4.5/9.6/15.5/40.3/15.2%；2025 起新分類下雲端部署＝開放平台及 API
+- key: rev_cloud_1h24
+  group: A
+  metric: 雲端部署收入（舊分部；＝開放平台及API）
+  value: 0.181
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「雲端部署 2,594 4.5%」；千元值 18,103；RMB 千元÷100,000 換算成億；占比 4.5/9.6/15.5/40.3/15.2%；2025 起新分類下雲端部署＝開放平台及 API
+- key: rev_cloud_1h25
+  group: A
+  metric: 雲端部署收入（舊分部；＝開放平台及API）
+  value: 0.291
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「雲端部署 2,594 4.5%」；千元值 29,100；RMB 千元÷100,000 換算成億；占比 4.5/9.6/15.5/40.3/15.2%；2025 起新分類下雲端部署＝開放平台及 API
+- key: cogs_fy22
+  group: A
+  metric: 銷售成本（營業成本）
+  value: 0.2605
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「營業成本 (26,049)」；千元值 26,049；RMB 千元÷100,000 換算成億
+- key: cogs_fy23
+  group: A
+  metric: 銷售成本（營業成本）
+  value: 0.4406
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「營業成本 (26,049)」；千元值 44,056；RMB 千元÷100,000 換算成億
+- key: cogs_fy24
+  group: A
+  metric: 銷售成本（營業成本）
+  value: 1.3653
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「營業成本 (26,049)」；千元值 136,525；RMB 千元÷100,000 換算成億
+- key: cogs_1h24
+  group: A
+  metric: 銷售成本（營業成本）
+  value: 0.2295
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「營業成本 (26,049)」；千元值 22,950；RMB 千元÷100,000 換算成億
+- key: cogs_1h25
+  group: A
+  metric: 銷售成本（營業成本）
+  value: 0.9545
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「營業成本 (26,049)」；千元值 95,453；RMB 千元÷100,000 換算成億
+- key: cogs_compute_fy22
+  group: A
+  metric: 銷售成本中計算服務費
+  value: 0.0
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「計算服務費 — — 11,996」；千元值 0；RMB 千元÷100,000 換算成億；2022 原文為「—」（記 0）；此為銷售成本內，不含研發中的算力服務費
+- key: cogs_compute_fy23
+  group: A
+  metric: 銷售成本中計算服務費
+  value: 0.12
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「計算服務費 — — 11,996」；千元值 11,996；RMB 千元÷100,000 換算成億；2022 原文為「—」（記 0）；此為銷售成本內，不含研發中的算力服務費
+- key: cogs_compute_fy24
+  group: A
+  metric: 銷售成本中計算服務費
+  value: 0.3017
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「計算服務費 — — 11,996」；千元值 30,173；RMB 千元÷100,000 換算成億；2022 原文為「—」（記 0）；此為銷售成本內，不含研發中的算力服務費
+- key: cogs_compute_1h24
+  group: A
+  metric: 銷售成本中計算服務費
+  value: 0.0845
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「計算服務費 — — 11,996」；千元值 8,451；RMB 千元÷100,000 換算成億；2022 原文為「—」（記 0）；此為銷售成本內，不含研發中的算力服務費
+- key: cogs_compute_1h25
+  group: A
+  metric: 銷售成本中計算服務費
+  value: 0.3584
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「計算服務費 — — 11,996」；千元值 35,845；RMB 千元÷100,000 換算成億；2022 原文為「—」（記 0）；此為銷售成本內，不含研發中的算力服務費
+- key: cogs_staff_fy22
+  group: A
+  metric: 銷售成本中工資成本
+  value: 0.1643
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「工資成本 16,434」；千元值 16,434；RMB 千元÷100,000 換算成億；招股章程概要營業成本明細
+- key: cogs_staff_fy23
+  group: A
+  metric: 銷售成本中工資成本
+  value: 0.1537
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「工資成本 16,434」；千元值 15,375；RMB 千元÷100,000 換算成億；招股章程概要營業成本明細
+- key: cogs_staff_fy24
+  group: A
+  metric: 銷售成本中工資成本
+  value: 0.7426
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「工資成本 16,434」；千元值 74,262；RMB 千元÷100,000 換算成億；招股章程概要營業成本明細
+- key: cogs_staff_1h24
+  group: A
+  metric: 銷售成本中工資成本
+  value: 0.1083
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「工資成本 16,434」；千元值 10,832；RMB 千元÷100,000 換算成億；招股章程概要營業成本明細
+- key: cogs_staff_1h25
+  group: A
+  metric: 銷售成本中工資成本
+  value: 0.3763
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「工資成本 16,434」；千元值 37,628；RMB 千元÷100,000 換算成億；招股章程概要營業成本明細
+- key: gp_total_fy22
+  group: A
+  metric: 毛利
+  value: 0.3136
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「毛利 31,360 54.6」；千元值 31,360；RMB 千元÷100,000 換算成億；毛利率 54.6/64.6/56.3/48.9/50.0%
+- key: gp_total_fy23
+  group: A
+  metric: 毛利
+  value: 0.8048
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「毛利 31,360 54.6」；千元值 80,482；RMB 千元÷100,000 換算成億；毛利率 54.6/64.6/56.3/48.9/50.0%
+- key: gp_total_fy24
+  group: A
+  metric: 毛利
+  value: 1.7589
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「毛利 31,360 54.6」；千元值 175,889；RMB 千元÷100,000 換算成億；毛利率 54.6/64.6/56.3/48.9/50.0%
+- key: gp_total_1h24
+  group: A
+  metric: 毛利
+  value: 0.2196
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「毛利 31,360 54.6」；千元值 21,959；RMB 千元÷100,000 換算成億；毛利率 54.6/64.6/56.3/48.9/50.0%
+- key: gp_total_1h25
+  group: A
+  metric: 毛利
+  value: 0.9542
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「毛利 31,360 54.6」；千元值 95,424；RMB 千元÷100,000 換算成億；毛利率 54.6/64.6/56.3/48.9/50.0%
+- key: gp_onprem_fy22
+  group: A
+  metric: 本地化部署毛利
+  value: 0.2939
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「本地化部署 29,386 53.6%」；千元值 29,386；RMB 千元÷100,000 換算成億；毛利率 53.6/68.2/66.0/62.6/59.1%
+- key: gp_onprem_fy23
+  group: A
+  metric: 本地化部署毛利
+  value: 0.7678
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「本地化部署 29,386 53.6%」；千元值 76,781；RMB 千元÷100,000 換算成億；毛利率 53.6/68.2/66.0/62.6/59.1%
+- key: gp_onprem_fy24
+  group: A
+  metric: 本地化部署毛利
+  value: 1.7426
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「本地化部署 29,386 53.6%」；千元值 174,256；RMB 千元÷100,000 換算成億；毛利率 53.6/68.2/66.0/62.6/59.1%
+- key: gp_onprem_1h24
+  group: A
+  metric: 本地化部署毛利
+  value: 0.1678
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「本地化部署 29,386 53.6%」；千元值 16,776；RMB 千元÷100,000 換算成億；毛利率 53.6/68.2/66.0/62.6/59.1%
+- key: gp_onprem_1h25
+  group: A
+  metric: 本地化部署毛利
+  value: 0.9554
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「本地化部署 29,386 53.6%」；千元值 95,540；RMB 千元÷100,000 換算成億；毛利率 53.6/68.2/66.0/62.6/59.1%
+- key: gp_cloud_fy22
+  group: A
+  metric: 雲端部署毛利
+  value: 0.0197
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「雲端部署 1,974 76.1%」；千元值 1,974；RMB 千元÷100,000 換算成億；毛利率 76.1/31.0/3.4/28.6/(0.4)%
+- key: gp_cloud_fy23
+  group: A
+  metric: 雲端部署毛利
+  value: 0.037
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「雲端部署 1,974 76.1%」；千元值 3,701；RMB 千元÷100,000 換算成億；毛利率 76.1/31.0/3.4/28.6/(0.4)%
+- key: gp_cloud_fy24
+  group: A
+  metric: 雲端部署毛利
+  value: 0.0163
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「雲端部署 1,974 76.1%」；千元值 1,633；RMB 千元÷100,000 換算成億；毛利率 76.1/31.0/3.4/28.6/(0.4)%
+- key: gp_cloud_1h24
+  group: A
+  metric: 雲端部署毛利
+  value: 0.0518
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「雲端部署 1,974 76.1%」；千元值 5,183；RMB 千元÷100,000 換算成億；毛利率 76.1/31.0/3.4/28.6/(0.4)%
+- key: gp_cloud_1h25
+  group: A
+  metric: 雲端部署毛利
+  value: -0.0012
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「雲端部署 1,974 76.1%」；千元值 -116；RMB 千元÷100,000 換算成億；毛利率 76.1/31.0/3.4/28.6/(0.4)%
+- key: rd_fy22
+  group: A
+  metric: 研發開支
+  value: 0.8438
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「研發開支 (84,377)」；千元值 84,377；RMB 千元÷100,000 換算成億；全數費用化
+- key: rd_fy23
+  group: A
+  metric: 研發開支
+  value: 5.2888
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「研發開支 (84,377)」；千元值 528,884；RMB 千元÷100,000 換算成億；全數費用化
+- key: rd_fy24
+  group: A
+  metric: 研發開支
+  value: 21.9544
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「研發開支 (84,377)」；千元值 2,195,436；RMB 千元÷100,000 換算成億；全數費用化
+- key: rd_1h24
+  group: A
+  metric: 研發開支
+  value: 8.5922
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「研發開支 (84,377)」；千元值 859,217；RMB 千元÷100,000 換算成億；全數費用化
+- key: rd_1h25
+  group: A
+  metric: 研發開支
+  value: 15.9466
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「研發開支 (84,377)」；千元值 1,594,661；RMB 千元÷100,000 換算成億；全數費用化
+- key: sm_fy22
+  group: A
+  metric: 銷售及營銷開支
+  value: 0.1514
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「銷售及營銷開支」；千元值 15,139；RMB 千元÷100,000 換算成億
+- key: sm_fy23
+  group: A
+  metric: 銷售及營銷開支
+  value: 1.012
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「銷售及營銷開支」；千元值 101,198；RMB 千元÷100,000 換算成億
+- key: sm_fy24
+  group: A
+  metric: 銷售及營銷開支
+  value: 3.8748
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「銷售及營銷開支」；千元值 387,475；RMB 千元÷100,000 換算成億
+- key: sm_1h24
+  group: A
+  metric: 銷售及營銷開支
+  value: 1.4419
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「銷售及營銷開支」；千元值 144,194；RMB 千元÷100,000 換算成億
+- key: sm_1h25
+  group: A
+  metric: 銷售及營銷開支
+  value: 2.0857
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「銷售及營銷開支」；千元值 208,570；RMB 千元÷100,000 換算成億
+- key: ga_fy22
+  group: A
+  metric: 一般及行政開支
+  value: 0.3232
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「一般及行政開支」；千元值 32,316；RMB 千元÷100,000 換算成億
+- key: ga_fy23
+  group: A
+  metric: 一般及行政開支
+  value: 0.663
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「一般及行政開支」；千元值 66,302；RMB 千元÷100,000 換算成億
+- key: ga_fy24
+  group: A
+  metric: 一般及行政開支
+  value: 1.336
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「一般及行政開支」；千元值 133,603；RMB 千元÷100,000 換算成億
+- key: ga_1h24
+  group: A
+  metric: 一般及行政開支
+  value: 0.5145
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「一般及行政開支」；千元值 51,452；RMB 千元÷100,000 換算成億
+- key: ga_1h25
+  group: A
+  metric: 一般及行政開支
+  value: 1.8517
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「一般及行政開支」；千元值 185,165；RMB 千元÷100,000 換算成億
+- key: other_inc_fy22
+  group: A
+  metric: 其他收入
+  value: 0.0178
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「其他收入」；千元值 1,784；RMB 千元÷100,000 換算成億；未拆政府補助
+- key: other_inc_fy23
+  group: A
+  metric: 其他收入
+  value: 0.0997
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「其他收入」；千元值 9,965；RMB 千元÷100,000 換算成億；未拆政府補助
+- key: other_inc_fy24
+  group: A
+  metric: 其他收入
+  value: 0.1928
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「其他收入」；千元值 19,281；RMB 千元÷100,000 換算成億；未拆政府補助
+- key: other_inc_1h24
+  group: A
+  metric: 其他收入
+  value: 0.0417
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「其他收入」；千元值 4,174；RMB 千元÷100,000 換算成億；未拆政府補助
+- key: other_inc_1h25
+  group: A
+  metric: 其他收入
+  value: 0.0461
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「其他收入」；千元值 4,614；RMB 千元÷100,000 換算成億；未拆政府補助
+- key: fin_cost_fy22
+  group: A
+  metric: 融資成本
+  value: 0.0569
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「融資成本」；千元值 5,694；RMB 千元÷100,000 換算成億
+- key: fin_cost_fy23
+  group: A
+  metric: 融資成本
+  value: 0.2633
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「融資成本」；千元值 26,332；RMB 千元÷100,000 換算成億
+- key: fin_cost_fy24
+  group: A
+  metric: 融資成本
+  value: 0.3832
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「融資成本」；千元值 38,321；RMB 千元÷100,000 換算成億
+- key: fin_cost_1h24
+  group: A
+  metric: 融資成本
+  value: 0.1221
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「融資成本」；千元值 12,212；RMB 千元÷100,000 換算成億
+- key: fin_cost_1h25
+  group: A
+  metric: 融資成本
+  value: 0.5327
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「融資成本」；千元值 53,270；RMB 千元÷100,000 換算成億
+- key: sbc_fy22
+  group: A
+  metric: 以權益結算股權報酬總額
+  value: 0.0102
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「以權益結算以股份為基礎的薪酬開支」；千元值 1,024；RMB 千元÷100,000 換算成億
+- key: sbc_fy23
+  group: A
+  metric: 以權益結算股權報酬總額
+  value: 0.055
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「以權益結算以股份為基礎的薪酬開支」；千元值 5,502；RMB 千元÷100,000 換算成億
+- key: sbc_fy24
+  group: A
+  metric: 以權益結算股權報酬總額
+  value: 0.2358
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「以權益結算以股份為基礎的薪酬開支」；千元值 23,579；RMB 千元÷100,000 換算成億
+- key: sbc_1h24
+  group: A
+  metric: 以權益結算股權報酬總額
+  value: 0.0422
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「以權益結算以股份為基礎的薪酬開支」；千元值 4,217；RMB 千元÷100,000 換算成億
+- key: sbc_1h25
+  group: A
+  metric: 以權益結算股權報酬總額
+  value: 1.5885
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「以權益結算以股份為基礎的薪酬開支」；千元值 158,852；RMB 千元÷100,000 換算成億
+- key: net_loss_fy22
+  group: A
+  metric: 年／期內虧損
+  value: 1.4365
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「年內虧損」；千元值 143,650；RMB 千元÷100,000 換算成億；值以正數記虧損
+- key: net_loss_fy23
+  group: A
+  metric: 年／期內虧損
+  value: 7.8796
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「年內虧損」；千元值 787,957；RMB 千元÷100,000 換算成億；值以正數記虧損
+- key: net_loss_fy24
+  group: A
+  metric: 年／期內虧損
+  value: 29.5801
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「年內虧損」；千元值 2,958,007；RMB 千元÷100,000 換算成億；值以正數記虧損
+- key: net_loss_1h24
+  group: A
+  metric: 年／期內虧損
+  value: 12.3555
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「年內虧損」；千元值 1,235,551；RMB 千元÷100,000 換算成億；值以正數記虧損
+- key: net_loss_1h25
+  group: A
+  metric: 年／期內虧損
+  value: 23.5785
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「年內虧損」；千元值 2,357,852；RMB 千元÷100,000 換算成億；值以正數記虧損
+- key: adj_loss_fy22
+  group: A
+  metric: 經調整淨虧損（非IFRS）
+  value: 0.9742
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「經調整年╱期內淨虧損」；千元值 97,417；RMB 千元÷100,000 換算成億；值以正數記虧損
+- key: adj_loss_fy23
+  group: A
+  metric: 經調整淨虧損（非IFRS）
+  value: 6.2098
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「經調整年╱期內淨虧損」；千元值 620,984；RMB 千元÷100,000 換算成億；值以正數記虧損
+- key: adj_loss_fy24
+  group: A
+  metric: 經調整淨虧損（非IFRS）
+  value: 24.6557
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「經調整年╱期內淨虧損」；千元值 2,465,569；RMB 千元÷100,000 換算成億；值以正數記虧損
+- key: adj_loss_1h24
+  group: A
+  metric: 經調整淨虧損（非IFRS）
+  value: 10.3016
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「經調整年╱期內淨虧損」；千元值 1,030,160；RMB 千元÷100,000 換算成億；值以正數記虧損
+- key: adj_loss_1h25
+  group: A
+  metric: 經調整淨虧損（非IFRS）
+  value: 17.5197
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「經調整年╱期內淨虧損」；千元值 1,751,974；RMB 千元÷100,000 換算成億；值以正數記虧損
+- key: ocf_fy22
+  group: A
+  metric: 經營活動所用現金淨額
+  value: -0.6825
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「經營活動所用現金淨額」；千元值 -68,246；RMB 千元÷100,000 換算成億；負值＝流出
+- key: ocf_fy23
+  group: A
+  metric: 經營活動所用現金淨額
+  value: -6.4802
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「經營活動所用現金淨額」；千元值 -648,017；RMB 千元÷100,000 換算成億；負值＝流出
+- key: ocf_fy24
+  group: A
+  metric: 經營活動所用現金淨額
+  value: -22.4492
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「經營活動所用現金淨額」；千元值 -2,244,919；RMB 千元÷100,000 換算成億；負值＝流出
+- key: ocf_1h24
+  group: A
+  metric: 經營活動所用現金淨額
+  value: -9.9468
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「經營活動所用現金淨額」；千元值 -994,678；RMB 千元÷100,000 換算成億；負值＝流出
+- key: ocf_1h25
+  group: A
+  metric: 經營活動所用現金淨額
+  value: -13.2715
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「經營活動所用現金淨額」；千元值 -1,327,150；RMB 千元÷100,000 換算成億；負值＝流出
+- key: icf_fy22
+  group: A
+  metric: 投資活動所得／（所用）現金淨額
+  value: 0.3292
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「投資活動所得╱」；千元值 32,921；RMB 千元÷100,000 換算成億；非純資本支出（含理財產品）
+- key: icf_fy23
+  group: A
+  metric: 投資活動所得／（所用）現金淨額
+  value: -7.8496
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「投資活動所得╱」；千元值 -784,965；RMB 千元÷100,000 換算成億；非純資本支出（含理財產品）
+- key: icf_fy24
+  group: A
+  metric: 投資活動所得／（所用）現金淨額
+  value: -0.4856
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「投資活動所得╱」；千元值 -48,559；RMB 千元÷100,000 換算成億；非純資本支出（含理財產品）
+- key: icf_1h24
+  group: A
+  metric: 投資活動所得／（所用）現金淨額
+  value: -1.3878
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「投資活動所得╱」；千元值 -138,775；RMB 千元÷100,000 換算成億；非純資本支出（含理財產品）
+- key: icf_1h25
+  group: A
+  metric: 投資活動所得／（所用）現金淨額
+  value: -5.5637
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「投資活動所得╱」；千元值 -556,373；RMB 千元÷100,000 換算成億；非純資本支出（含理財產品）
+- key: cash_end_fy22
+  group: A
+  metric: 年／期末現金及現金等價物
+  value: 2.1893
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「年╱期末現金及現金等價物」；千元值 218,928；RMB 千元÷100,000 換算成億
+- key: cash_end_fy23
+  group: A
+  metric: 年／期末現金及現金等價物
+  value: 12.4917
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「年╱期末現金及現金等價物」；千元值 1,249,175；RMB 千元÷100,000 換算成億
+- key: cash_end_fy24
+  group: A
+  metric: 年／期末現金及現金等價物
+  value: 22.6816
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「年╱期末現金及現金等價物」；千元值 2,268,164；RMB 千元÷100,000 換算成億
+- key: cash_end_1h24
+  group: A
+  metric: 年／期末現金及現金等價物
+  value: 9.3207
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「年╱期末現金及現金等價物」；千元值 932,066；RMB 千元÷100,000 換算成億
+- key: cash_end_1h25
+  group: A
+  metric: 年／期末現金及現金等價物
+  value: 25.5197
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「年╱期末現金及現金等價物」；千元值 2,551,970；RMB 千元÷100,000 換算成億
+- key: gm_total_fy22
+  group: A
+  metric: 整體毛利率
+  value: 54.6
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「毛利 31,360 54.6」表內毛利率欄
+- key: gm_total_fy23
+  group: A
+  metric: 整體毛利率
+  value: 64.6
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「毛利 31,360 54.6」表內毛利率欄
+- key: gm_total_fy24
+  group: A
+  metric: 整體毛利率
+  value: 56.3
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「毛利 31,360 54.6」表內毛利率欄
+- key: gm_total_1h24
+  group: A
+  metric: 整體毛利率
+  value: 48.9
+  lo: null
+  hi: null
+  unit: '%'
+  period: 1H2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 會計師報告（1H2024 比較期通常為未經審計已審閱；招股章程概要轉載）
+  note: 原文「毛利 31,360 54.6」表內毛利率欄
+- key: gm_total_1h25
+  group: A
+  metric: 整體毛利率
+  value: 50.0
+  lo: null
+  hi: null
+  unit: '%'
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（會計師報告，招股章程概要轉載）
+  note: 原文「毛利 31,360 54.6」表內毛利率欄
+- key: cash_burn_m_fy22
+  group: A
+  metric: 平均每月現金消耗率
+  value: 0.03
+  lo: null
+  hi: null
+  unit: RMB 億／月
+  period: FY2022
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：IPO 招股，誘因為發行定價
+  basis: 管理層口徑（招股章程）
+  note: 原文 average monthly cash burn RMB3.0 million；含經營現金流、購置設備、理財淨額、租賃付款；百萬÷100 換算成億
+- key: cash_burn_m_fy23
+  group: A
+  metric: 平均每月現金消耗率
+  value: 1.059
+  lo: null
+  hi: null
+  unit: RMB 億／月
+  period: FY2023
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：IPO 招股，誘因為發行定價
+  basis: 管理層口徑（招股章程）
+  note: 原文 average monthly cash burn RMB105.9 million；含經營現金流、購置設備、理財淨額、租賃付款；百萬÷100 換算成億
+- key: cash_burn_m_fy24
+  group: A
+  metric: 平均每月現金消耗率
+  value: 1.945
+  lo: null
+  hi: null
+  unit: RMB 億／月
+  period: FY2024
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：IPO 招股，誘因為發行定價
+  basis: 管理層口徑（招股章程）
+  note: 原文 average monthly cash burn RMB194.5 million；含經營現金流、購置設備、理財淨額、租賃付款；百萬÷100 換算成億
+- key: cash_burn_m_1h25
+  group: A
+  metric: 平均每月現金消耗率
+  value: 3.273
+  lo: null
+  hi: null
+  unit: RMB 億／月
+  period: 1H2025
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：IPO 招股，誘因為發行定價
+  basis: 管理層口徑（招股章程）
+  note: 原文 average monthly cash burn RMB327.3 million；含經營現金流、購置設備、理財淨額、租賃付款；百萬÷100 換算成億
+- key: liquidity_2510
+  group: A
+  metric: 現金＋FVPL 短期投資＋可用承諾銀行授信合計
+  value: 89.431
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: '2025-10-31'
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：IPO 招股，營運資金說明
+  basis: 管理層口徑（招股章程營運資金充足性）
+  note: 原文「available committed bank facilities of RMB8,943.1 million in aggregate」；三項合計，未拆授信額
+- key: rd_staff_1h25
+  group: E
+  metric: 研發團隊人數
+  value: 657
+  lo: null
+  hi: null
+  unit: 人
+  period: '2025-06-30'
+  source: 智譜招股章程（概要節）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000018_c.pdf
+  doc_date: '2025-12-30'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 管理層口徑
+  note: 原文「一支由657名成員組成的研發團隊」
+- key: rev_api_fy25
+  group: A
+  metric: 開放平台及 API 收入（新分類）
+  value: 1.9038
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Open Platform and API」；千元值 190,379；RMB 千元÷100,000 換算成億；2025 占營收 26.3%；新分類下＝雲端部署
+- key: rev_api_fy24
+  group: A
+  metric: 開放平台及 API 收入（新分類）
+  value: 0.4848
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Open Platform and API」；千元值 48,484；RMB 千元÷100,000 換算成億；2025 占營收 26.3%；新分類下＝雲端部署
+- key: rev_agent_fy25
+  group: A
+  metric: 企業級智能體收入（新分類）
+  value: 1.6569
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Enterprise-level Agents」；千元值 165,687；RMB 千元÷100,000 換算成億；屬本地化部署分部
+- key: rev_agent_fy24
+  group: A
+  metric: 企業級智能體收入（新分類）
+  value: 0.4749
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Enterprise-level Agents」；千元值 47,492；RMB 千元÷100,000 換算成億；屬本地化部署分部
+- key: rev_gpllm_fy25
+  group: A
+  metric: 企業級通用大模型收入（新分類）
+  value: 3.6572
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Enterprise-level General-purpose Large Models」；千元值 365,724；RMB 千元÷100,000 換算成億；屬本地化部署分部
+- key: rev_gpllm_fy24
+  group: A
+  metric: 企業級通用大模型收入（新分類）
+  value: 2.145
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Enterprise-level General-purpose Large Models」；千元值 214,502；RMB 千元÷100,000 換算成億；屬本地化部署分部
+- key: rev_techsvc_fy25
+  group: A
+  metric: 技術服務及其他收入（新分類）
+  value: 0.0254
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Technical Services and Others」；千元值 2,544；RMB 千元÷100,000 換算成億
+- key: rev_techsvc_fy24
+  group: A
+  metric: 技術服務及其他收入（新分類）
+  value: 0.0194
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Technical Services and Others」；千元值 1,936；RMB 千元÷100,000 換算成億
+- key: rev_total_fy25
+  group: A
+  metric: 營收總額
+  value: 7.2433
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「total revenue reached RMB724.3 million」，同比 +131.9%；千元 724,334；RMB 千元÷100,000 換算成億
+- key: rev_onprem_fy25
+  group: A
+  metric: 本地化部署收入（分部）
+  value: 5.3396
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 分部附註 on-premise deployment 533,955 千元（＝智能體＋通用大模型＋技術服務）；RMB 千元÷100,000 換算成億
+- key: rev_cloud_fy25
+  group: A
+  metric: 雲端部署收入（分部）
+  value: 1.9038
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 分部附註 cloud-based deployment 190,379 千元＝開放平台及 API；RMB 千元÷100,000 換算成億
+- key: cogs_fy25
+  group: A
+  metric: 銷售成本
+  value: 4.2768
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Cost of revenue」；千元值 427,678；RMB 千元÷100,000 換算成億；原文「primarily attributable to the rise in computing service fees」，未揭露金額
+- key: gp_total_fy25
+  group: A
+  metric: 毛利
+  value: 2.9666
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Gross profit」；千元值 296,656；RMB 千元÷100,000 換算成億；毛利率 41.0%（2024：56.3%）
+- key: gm_total_fy25
+  group: A
+  metric: 整體毛利率
+  value: 41.0
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文 gross margin 41.0%（2024 56.3%）
+- key: gp_onprem_fy25
+  group: A
+  metric: 本地化部署毛利（分部）
+  value: 2.6066
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「On-premise gross profit」；千元值 260,656；RMB 千元÷100,000 換算成億
+- key: gp_onprem_fy24_ann
+  group: A
+  metric: 本地化部署毛利（分部）
+  value: 1.7426
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「On-premise gross profit」；千元值 174,256；RMB 千元÷100,000 換算成億
+- key: gp_cloud_fy25
+  group: A
+  metric: 雲端部署毛利（分部）
+  value: 0.36
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Cloud-based gross profit」；千元值 36,000；RMB 千元÷100,000 換算成億；毛利率 18.9%（2024 3.3%）
+- key: gp_cloud_fy24_ann
+  group: A
+  metric: 雲端部署毛利（分部）
+  value: 0.0163
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Cloud-based gross profit」；千元值 1,633；RMB 千元÷100,000 換算成億；毛利率 18.9%（2024 3.3%）
+- key: gp_api_fy25
+  group: A
+  metric: 開放平台及 API 毛利
+  value: 0.36
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 公告以百萬元揭露 RMB36.0 million，毛利率 18.9%；百萬÷100 換算成億
+- key: gp_api_fy24
+  group: A
+  metric: 開放平台及 API 毛利
+  value: 0.016
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 公告以百萬元揭露 RMB1.6 million，毛利率 3.3%；百萬÷100 換算成億
+- key: gp_agent_fy25
+  group: A
+  metric: 企業級智能體毛利
+  value: 0.867
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 公告以百萬元揭露 RMB86.7 million，毛利率 52.3%；百萬÷100 換算成億
+- key: gp_agent_fy24
+  group: A
+  metric: 企業級智能體毛利
+  value: 0.234
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 公告以百萬元揭露 RMB23.4 million，毛利率 49.3%；百萬÷100 換算成億
+- key: gp_gpllm_fy25
+  group: A
+  metric: 企業級通用大模型毛利
+  value: 1.717
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 公告以百萬元揭露 RMB171.7 million，毛利率 47.0%；百萬÷100 換算成億
+- key: gp_gpllm_fy24
+  group: A
+  metric: 企業級通用大模型毛利
+  value: 1.492
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 公告以百萬元揭露 RMB149.2 million，毛利率 69.6%；百萬÷100 換算成億
+- key: gp_techsvc_fy25
+  group: A
+  metric: 技術服務及其他毛利
+  value: 0.023
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 公告以百萬元揭露 RMB2.3 million，毛利率 92.0%；百萬÷100 換算成億
+- key: gp_techsvc_fy24
+  group: A
+  metric: 技術服務及其他毛利
+  value: 0.017
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 公告以百萬元揭露 RMB1.7 million，毛利率 89.5%；百萬÷100 換算成億
+- key: gp_cloud_fy24_b
+  group: A
+  metric: 雲端部署毛利率
+  value: 3.3
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 年度業績公告 3.3%；招股章程為 3.4%（1,633/48,484＝3.37%，四捨五入差異）
+- key: rd_fy25
+  group: A
+  metric: 研發開支
+  value: 31.8044
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「R&D」；千元值 3,180,443；RMB 千元÷100,000 換算成億；原文稱員工成本（含股權報酬）與第三方算力服務費增加，未揭露組成金額
+- key: sm_fy25
+  group: A
+  metric: 銷售及營銷開支
+  value: 3.9087
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Selling and marketing」；千元值 390,869；RMB 千元÷100,000 換算成億
+- key: ga_fy25
+  group: A
+  metric: 一般及行政開支
+  value: 5.0536
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「General and administration」；千元值 505,357；RMB 千元÷100,000 換算成億
+- key: sbc_fy25
+  group: A
+  metric: 以權益結算股權報酬總額
+  value: 5.5827
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「equity-settled share-based compensation」；千元值 558,265；RMB 千元÷100,000 換算成億
+- key: other_inc_fy25
+  group: A
+  metric: 其他收入
+  value: 0.1484
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「decreased from RMB19.3 million…to RMB14.8 million」；千元值 14,839；RMB 千元÷100,000 換算成億；未拆政府補助
+- key: fin_cost_fy25
+  group: A
+  metric: 財務成本
+  value: 0.7431
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Finance costs」；千元值 74,315；RMB 千元÷100,000 換算成億；公告稱由匯兌淨收益轉為淨損失
+- key: net_loss_fy25
+  group: A
+  metric: 年內虧損
+  value: 47.1817
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Loss for the year」；千元值 4,718,167；RMB 千元÷100,000 換算成億；歸母 4,698,203；值以正數記虧損
+- key: adj_loss_fy25
+  group: A
+  metric: 經調整淨虧損（非IFRS）
+  value: 31.8197
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Adjusted net loss」；千元值 3,181,972；RMB 千元÷100,000 換算成億；加回股權報酬、投資人金融工具賬面值變動 937,362、上市開支 40,568
+- key: fv_investor_instr_fy25
+  group: A
+  metric: 投資人金融工具賬面值變動（調整項）
+  value: 9.3736
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「changes in carrying amount of financial instruments issued to investors」；千元值 937,362；RMB 千元÷100,000 換算成億
+- key: fv_investor_instr_fy24
+  group: A
+  metric: 投資人金融工具賬面值變動（調整項）
+  value: 4.6886
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「changes in carrying amount of financial instruments issued to investors」；千元值 468,859；RMB 千元÷100,000 換算成億
+- key: capex_fy25
+  group: A
+  metric: 資本開支
+  value: 0.747
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「capital expenditure in 2025 was approximately RMB74.7 million」；公告稱由租賃轉為採購服務；百萬÷100
+- key: capex_fy24
+  group: A
+  metric: 資本開支
+  value: 4.623
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 年度業績公告比較數 RMB462.3 million；百萬÷100
+- key: cash_end_fy25
+  group: A
+  metric: 年末現金及現金等價物
+  value: 22.5915
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Cash and cash equivalents」；千元值 2,259,147；RMB 千元÷100,000 換算成億；2024 值與招股章程 2,268,164 不一致，見 cash_end_fy24（招股章程）
+- key: cash_end_fy24_b
+  group: A
+  metric: 年末現金及現金等價物
+  value: 22.6922
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Cash and cash equivalents」；千元值 2,269,222；RMB 千元÷100,000 換算成億；2024 值與招股章程 2,268,164 不一致，見 cash_end_fy24（招股章程）；與招股章程 2,268,164 差 1,058 千元，原因未明（可能重分類）
+- key: time_dep_fy25
+  group: A
+  metric: 定期存款（流動）
+  value: 1.0859
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: time deposits current 108,593 千元；RMB 千元÷100,000 換算成億
+- key: time_dep_fy24
+  group: A
+  metric: 定期存款（非流動）
+  value: 1.0534
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: time deposits non-current 105,343 千元；RMB 千元÷100,000 換算成億
+- key: bank_loans_fy25
+  group: A
+  metric: 銀行貸款合計
+  value: 6.8945
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「All relevant borrowings are interest-bearing」；千元值 689,452；RMB 千元÷100,000 換算成億；2025 流動 604,836＋非流動 84,616；2024 全為流動；利率、到期未揭露；主要為人民幣、無抵押
+- key: bank_loans_fy24
+  group: A
+  metric: 銀行貸款合計
+  value: 1.3725
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「All relevant borrowings are interest-bearing」；千元值 137,246；RMB 千元÷100,000 換算成億；2025 流動 604,836＋非流動 84,616；2024 全為流動；利率、到期未揭露；主要為人民幣、無抵押
+- key: lease_liab_fy25
+  group: A
+  metric: 租賃負債
+  value: 5.4514
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Lease liabilities」；千元值 545,143；RMB 千元÷100,000 換算成億
+- key: lease_liab_fy24
+  group: A
+  metric: 租賃負債
+  value: 6.7127
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「Lease liabilities」；千元值 671,268；RMB 千元÷100,000 換算成億
+- key: conv_bonds_fy24
+  group: A
+  metric: 可轉換債券
+  value: 1.3216
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「convertible bonds」；千元值 132,158；RMB 千元÷100,000 換算成億；2025 年末為零
+- key: payable_compute_fy25
+  group: A
+  metric: 應付算力服務費（資產負債表）
+  value: 7.2735
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「payables for computing service fees」；千元值 727,348；RMB 千元÷100,000 換算成億；可作算力採購規模旁證
+- key: payable_compute_fy24
+  group: A
+  metric: 應付算力服務費（資產負債表）
+  value: 2.6947
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「payables for computing service fees」；千元值 269,467；RMB 千元÷100,000 換算成億；可作算力採購規模旁證
+- key: employees_fy25
+  group: E
+  metric: 全職員工人數
+  value: 1094
+  lo: null
+  hi: null
+  unit: 人
+  period: '2025-12-31'
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「the Company had 1,094 permanent employees」
+- key: remun_fy25
+  group: E
+  metric: 薪酬總額（含股權報酬）
+  value: 13.634
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「RMB1,363.4 million during the Reporting Period」；百萬÷100
+- key: comp_per_head_fy25
+  group: E
+  metric: 人均薪酬（含股權報酬）
+  value: 0.01246
+  lo: null
+  hi: null
+  unit: RMB 億／人
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: Derived
+  note: 1,363.4 百萬÷期末人數 1,094＝約 RMB 124.6 萬／人；以期末人數計（無平均人數）
+- key: esop_fy25
+  group: E
+  metric: 員工激勵計畫
+  value: null
+  lo: null
+  hi: null
+  unit: ''
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: 原文「adopted the employee incentive scheme and established an employee shareholding platform」；條款未揭露
+- key: api_price_fy25
+  group: A
+  metric: API 呼叫價格較上年底上升
+  value: 83
+  lo: null
+  hi: null
+  unit: '%'
+  period: 2026Q1（公告時點）
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售誘因
+  basis: 管理層口徑
+  note: 原文「an 83% increase in API call pricing compared to the end of last year」
+- key: codingplan_class_fy25
+  group: A
+  metric: GLM Coding Plan 收入歸屬
+  value: null
+  lo: null
+  hi: null
+  unit: ''
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: Derived
+  note: 公告於開放平台及 API 毛利段提及「programming subscription packages」；未單列收入。判定歸入開放平台及 API（雲端）
+- key: codingplan_paying_fy25
+  group: A
+  metric: Coding Plan 付費開發者
+  value: 242000
+  lo: 242000
+  hi: null
+  unit: 人
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售誘因
+  basis: 管理層口徑
+  note: 原文 over 242,000 paying Coding Plan developers（下限值）
+- key: rev_api_1h26
+  group: A
+  metric: 開放平台及 API 收入
+  value: 8.2518
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文「Open Platform and API」；千元值 825,176；RMB 千元÷100,000 換算成億；1H26 占 86.5%（1H25 15.2%）；＝雲端部署分部
+- key: rev_api_1h25
+  group: A
+  metric: 開放平台及 API 收入
+  value: 0.291
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文「Open Platform and API」；千元值 29,100；RMB 千元÷100,000 換算成億；1H26 占 86.5%（1H25 15.2%）；＝雲端部署分部
+- key: rev_agent_1h26
+  group: A
+  metric: 企業級智能體收入
+  value: 0.5556
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文「Enterprise-level Agents」；千元值 55,561；RMB 千元÷100,000 換算成億
+- key: rev_agent_1h25
+  group: A
+  metric: 企業級智能體收入
+  value: 0.1374
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文「Enterprise-level Agents」；千元值 13,739；RMB 千元÷100,000 換算成億
+- key: rev_gpllm_1h26
+  group: A
+  metric: 企業級通用大模型收入
+  value: 0.6704
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文「Enterprise-level General-purpose Large Models」；千元值 67,037；RMB 千元÷100,000 換算成億
+- key: rev_gpllm_1h25
+  group: A
+  metric: 企業級通用大模型收入
+  value: 1.4755
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文「Enterprise-level General-purpose Large Models」；千元值 147,555；RMB 千元÷100,000 換算成億
+- key: rev_techsvc_1h26
+  group: A
+  metric: 技術服務及其他收入
+  value: 0.0612
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文「Technical Services and Others」；千元值 6,118；RMB 千元÷100,000 換算成億
+- key: rev_techsvc_1h25
+  group: A
+  metric: 技術服務及其他收入
+  value: 0.0048
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文「Technical Services and Others」；千元值 483；RMB 千元÷100,000 換算成億
+- key: rev_total_1h26
+  group: A
+  metric: 營收總額
+  value: 9.5389
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文 revenue 953,892 千元（1H25 190,877），+399.7%；RMB 千元÷100,000 換算成億
+- key: rev_onprem_1h26
+  group: A
+  metric: 本地化部署收入（分部）
+  value: 1.2872
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: on-premise deployment 128,716 千元（1H25 161,777），占 13.5%；RMB 千元÷100,000 換算成億
+- key: rev_cloud_1h26
+  group: A
+  metric: 雲端部署收入（分部）
+  value: 8.2518
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: cloud-based deployment 825,176 千元＝開放平台及 API；RMB 千元÷100,000 換算成億
+- key: rev_onprem_1h26_b
+  group: A
+  metric: 本地化部署相關收入（媒體）
+  value: 0.6704
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 鉅亨號〈智譜上半年業績暴漲 造血能力驗證〉
+  url: https://hao.cnyes.com/post/265529
+  doc_date: '2026-09-01'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體（鉅亨號）轉述
+  basis: 媒體轉述
+  note: 原文「本地化部署相關收入6,704萬元」；與公告分部 1.287 億矛盾：媒體只計企業級通用大模型
+- key: rev_onprem_1h26_c
+  group: A
+  metric: 本地化部署收入（券商）
+  value: 1.3
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 國信證券〈26H1財報點評〉（格隆匯轉載）
+  url: https://m.gelonghui.com/news/5306647
+  doc_date: '2026-09-04'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 國信證券：券商研究，交易誘因
+  basis: 券商口徑
+  note: 原文 本地化部署收入 1.30 億元、毛利率 37.9%；與公告 128,716 千元一致（四捨五入）
+- key: cogs_1h26
+  group: A
+  metric: 銷售成本
+  value: 7.0228
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文「primarily attributable to the increase in computing service fees」；千元 702,281；算力服務費金額未揭露；RMB 千元÷100,000 換算成億
+- key: cogs_1h25_i
+  group: A
+  metric: 銷售成本（中期公告比較數）
+  value: 0.9545
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 千元 95,453，與招股章程一致；RMB 千元÷100,000 換算成億
+- key: gp_total_1h26
+  group: A
+  metric: 毛利
+  value: 2.5161
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: gross profit 251,611 千元；毛利率 26.4%（1H25 50.0%）；RMB 千元÷100,000 換算成億
+- key: gm_total_1h26
+  group: A
+  metric: 整體毛利率
+  value: 26.4
+  lo: null
+  hi: null
+  unit: '%'
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文 gross margin 26.4%（1H25 50.0%）
+- key: gp_api_1h26
+  group: A
+  metric: 開放平台及 API 毛利
+  value: 2.0287
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 千元 202,871；毛利率 24.6%；RMB 千元÷100,000 換算成億
+- key: gp_api_1h25
+  group: A
+  metric: 開放平台及 API 毛利
+  value: -0.0012
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 千元 -116；毛利率 -0.4%；RMB 千元÷100,000 換算成億
+- key: gp_agent_1h26
+  group: A
+  metric: 企業級智能體毛利
+  value: 0.198
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 千元 19,796；毛利率 35.6%；RMB 千元÷100,000 換算成億
+- key: gp_agent_1h25
+  group: A
+  metric: 企業級智能體毛利
+  value: 0.0888
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 千元 8,880；毛利率 64.6%；RMB 千元÷100,000 換算成億
+- key: gp_gpllm_1h26
+  group: A
+  metric: 企業級通用大模型毛利
+  value: 0.2837
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 千元 28,368；毛利率 42.3%；RMB 千元÷100,000 換算成億
+- key: gp_gpllm_1h25
+  group: A
+  metric: 企業級通用大模型毛利
+  value: 0.8634
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 千元 86,342；毛利率 58.5%；RMB 千元÷100,000 換算成億
+- key: gp_techsvc_1h26
+  group: A
+  metric: 技術服務及其他毛利
+  value: 0.0058
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 千元 576；毛利率 9.4%；RMB 千元÷100,000 換算成億
+- key: gp_techsvc_1h25
+  group: A
+  metric: 技術服務及其他毛利
+  value: 0.0032
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 千元 318；毛利率 65.8%；RMB 千元÷100,000 換算成億
+- key: gp_onprem_1h26
+  group: A
+  metric: 本地化部署毛利（分部）
+  value: 0.4874
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: segment gross profit on-premise 48,740（1H25 95,540）；毛利率 37.9%；RMB 千元÷100,000 換算成億
+- key: cogs_api_1h26
+  group: A
+  metric: 開放平台及 API 銷售成本（推算）
+  value: 6.223
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: Derived
+  note: 收入 825,176－毛利 202,871＝622,305 千元；公告未直接列分部成本
+- key: cogs_onprem_1h26
+  group: A
+  metric: 本地化部署銷售成本（推算）
+  value: 0.7998
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: Derived
+  note: 128,716－48,740＝79,976 千元；公告未直接列分部成本
+- key: cogs_api_fy25
+  group: A
+  metric: 開放平台及 API 銷售成本（推算）
+  value: 1.5438
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: Derived
+  note: 190,379－36,000＝154,379 千元
+- key: cogs_onprem_fy25
+  group: A
+  metric: 本地化部署銷售成本（推算）
+  value: 2.733
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2025
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: Derived
+  note: 533,955－260,656＝273,299 千元
+- key: rd_1h26
+  group: A
+  metric: 研發開支
+  value: 21.3117
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文「continued increase in research and development investment in model training」；千元 2,131,171，+33.6%；組成未揭露；RMB 千元÷100,000 換算成億
+- key: sm_1h26
+  group: A
+  metric: 銷售及營銷開支
+  value: 1.7767
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 千元 177,666，−14.8%；RMB 千元÷100,000 換算成億
+- key: ga_1h26
+  group: A
+  metric: 一般及行政開支
+  value: 1.0335
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 千元 103,346，−44.2%；RMB 千元÷100,000 換算成億
+- key: sbc_1h26
+  group: A
+  metric: 以權益結算股權報酬
+  value: 0.8576
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文「equity-settled share-based compensation」；千元值 85,764；RMB 千元÷100,000 換算成億；1H25 比較數 158,852 與招股章程同
+- key: other_inc_1h26
+  group: A
+  metric: 其他收入
+  value: 0.4144
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 千元 41,436；公告歸因上市後銀行存款增加帶來利息收入；未提政府補助；RMB 千元÷100,000 換算成億
+- key: fin_cost_1h26
+  group: A
+  metric: 財務成本
+  value: 0.9593
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文「net foreign exchange losses and the increase in interest expenses on bank loans」；千元 95,925；RMB 千元÷100,000 換算成億
+- key: net_loss_1h26
+  group: A
+  metric: 期內虧損
+  value: 20.7199
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: loss for the period 2,071,992 千元（1H25 2,357,852）；正數記虧損；RMB 千元÷100,000 換算成億
+- key: adj_loss_1h26
+  group: A
+  metric: 經調整淨虧損（非IFRS）
+  value: 19.6414
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 加回 SBC 85,764、投資人工具變動 22,090；千元 1,964,138（1H25 1,751,974）；RMB 千元÷100,000 換算成億
+- key: net_loss_1h25_b
+  group: A
+  metric: 期內淨虧損（媒體引部落客）
+  value: 17.51
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 36氪轉載〈市值水晶〉
+  url: https://www.36kr.com/p/3611675144253960
+  doc_date: '2025-12-26'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: 媒體轉述
+  note: 媒體稱淨虧損 17.51 億；實為經調整淨虧損（招股章程 17.52 億），與期內虧損 23.58 億矛盾
+- key: net_loss_1h25_c
+  group: A
+  metric: 淨利潤（券商）
+  value: -23.51
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 國信證券〈垂類AI應用專題：智譜〉
+  url: https://pdf.dfcfw.com/pdf/H3_AP202601071816825157_1.pdf
+  doc_date: '2026-01-07'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 國信證券：券商研究，交易誘因
+  basis: 券商口徑
+  note: 原文「净利润为-23.51亿元」；與招股章程期內虧損 23.58 億不一致（可能為歸母）
+- key: capex_1h26
+  group: A
+  metric: 資本開支
+  value: 3.906
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文 increased from RMB53.7 million to RMB390.6 million（+627.4%），主因收購北京紅鑽；百萬÷100
+- key: capex_1h25
+  group: A
+  metric: 資本開支
+  value: 0.537
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 中期公告比較數 RMB53.7 million；百萬÷100
+- key: cash_end_1h26
+  group: A
+  metric: 期末現金及現金等價物
+  value: 39.9372
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: '2026-06-30'
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 千元 3,993,722（2025 年末 2,259,147）；RMB 千元÷100,000 換算成億
+- key: time_dep_1h26
+  group: A
+  metric: 定期存款
+  value: 0.0
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: '2026-06-30'
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: time deposits nil（2025 年末 108,593 千元）
+- key: bank_loans_1h26
+  group: A
+  metric: 銀行貸款合計
+  value: 22.2479
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: '2026-06-30'
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 流動 789,831＋非流動 1,434,958 千元；原文「interest-bearing, denominated primarily in RMB and unsecured」；利率、到期未揭露；RMB 千元÷100,000 換算成億
+- key: bank_loans_cur_1h26
+  group: A
+  metric: 銀行貸款（流動，一年內到期）
+  value: 7.8983
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: '2026-06-30'
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: current 789,831 千元；RMB 千元÷100,000 換算成億
+- key: bank_loans_ncur_1h26
+  group: A
+  metric: 銀行貸款（非流動）
+  value: 14.3496
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: '2026-06-30'
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: non-current 1,434,958 千元；RMB 千元÷100,000 換算成億
+- key: bank_loans_cur_fy25
+  group: A
+  metric: 銀行貸款（流動）
+  value: 6.0484
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: '2025-12-31'
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: current 604,836 千元；RMB 千元÷100,000 換算成億
+- key: bank_loans_ncur_fy25
+  group: A
+  metric: 銀行貸款（非流動）
+  value: 0.8462
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: '2025-12-31'
+  source: 智譜 2025 年度業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf
+  doc_date: '2026-03-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 經審計（KPMG；年度業績公告）
+  note: non-current 84,616 千元；RMB 千元÷100,000 換算成億
+- key: payable_compute_1h26
+  group: A
+  metric: 應付算力服務費
+  value: 14.2742
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: '2026-06-30'
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: payables for computing service fees 1,427,415 千元；RMB 千元÷100,000 換算成億
+- key: prepay_compute_1h26
+  group: A
+  metric: 預付算力服務費及其他
+  value: 12.4374
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: '2026-06-30'
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: prepayments for computing service fee and others 1,243,736（2025 年末 116,295）；RMB 千元÷100,000 換算成億
+- key: prepay_compute_fy25
+  group: A
+  metric: 預付算力服務費及其他
+  value: 1.1629
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: '2025-12-31'
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 中期公告比較數 116,295 千元；RMB 千元÷100,000 換算成億
+- key: deferred_inc_1h26
+  group: A
+  metric: 遞延收益（非流動）
+  value: 1.7299
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: '2026-06-30'
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: non-current deferred income 172,991 千元；性質未說明（可能含政府補助，未證實）；RMB 千元÷100,000 換算成億
+- key: employees_1h26
+  group: E
+  metric: 全職員工人數
+  value: 981
+  lo: null
+  hi: null
+  unit: 人
+  period: '2026-06-30'
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文「the Group had 981 permanent employees」
+- key: employees_1h25
+  group: E
+  metric: 全職員工人數
+  value: 883
+  lo: null
+  hi: null
+  unit: 人
+  period: '2025-06-30'
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 中期公告比較數 883；鈦媒體亦稱 883 人、研發 657 人（74.4%）
+- key: remun_1h26
+  group: E
+  metric: 薪酬總額（含股權報酬）
+  value: 4.821
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 原文「total remuneration costs (including share-based payments) of RMB482.1 million」
+- key: remun_1h25
+  group: E
+  metric: 薪酬總額（含股權報酬）
+  value: 4.996
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Verified
+  party: null
+  basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
+  note: 中期公告比較數 RMB499.6 million
+- key: comp_per_head_1h26
+  group: E
+  metric: 人均半年薪酬（含股權報酬）
+  value: 0.00491
+  lo: null
+  hi: null
+  unit: RMB 億／人／半年
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: Derived
+  note: 482.1 百萬÷期末 981 人＝約 49.1 萬元／人／半年
+- key: api_price_1h26
+  group: A
+  metric: API 平均售價上升
+  value: 101
+  lo: null
+  hi: null
+  unit: '%'
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售誘因
+  basis: 管理層口徑
+  note: 原文「the average API selling price increased by approximately 101%」；比較基準未明
+- key: codingplan_class_1h26
+  group: A
+  metric: GLM Coding Plan 收入歸屬
+  value: null
+  lo: null
+  hi: null
+  unit: ''
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: Derived
+  note: 未單列。雲端分部＝開放平台及 API（825,176），本地化＝其餘三線合計；Coding Plan 為雲端訂閱，故在開放平台及 API 內
+- key: domestic_chip_1h26
+  group: E
+  metric: 國產晶片推論集群規模
+  value: 100000
+  lo: 100000
+  hi: null
+  unit: 顆（下限）
+  period: 1H2026
+  source: 智譜（Z.AI）2026 中期業績公告
+  url: https://ea-cdn.eurolandir.com/press-releases-attachments/4174939/HKEX-EPS_20260831_12308928_0.PDF
+  doc_date: '2026-08-31'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 智譜：上市後股價、配售誘因
+  basis: 管理層口徑
+  note: 原文「across a cluster of over 100,000 domestic chips」
+- key: rd_compute_fy22
+  group: A
+  metric: 研發開支中算力服務費（含模型訓練及雲端部署服務）
+  value: 0.15
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 36氪轉載〈市值水晶〉（王浩然）
+  url: https://www.36kr.com/p/3611675144253960
+  doc_date: '2025-12-26'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: 媒體轉述（招股章程）
+  note: 原文「从2022年的0.15亿元」；原始招股章程財務資料節未能讀取
+- key: rd_compute_1h25
+  group: A
+  metric: 研發開支中算力服務費（含模型訓練及雲端部署服務）
+  value: 11.45
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 36氪轉載〈市值水晶〉（王浩然）
+  url: https://www.36kr.com/p/3611675144253960
+  doc_date: '2025-12-26'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: 媒體轉述（招股章程）
+  note: 原文「到2025年上半年的11.45亿」；原始招股章程財務資料節未能讀取
+- key: rd_compute_fy24
+  group: A
+  metric: 研發開支中算力服務費
+  value: 15.52
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 華爾街見聞
+  url: https://wallstreetcn.com/articles/3761769
+  doc_date: '2025-12-20'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: 媒體轉述（招股章程）
+  note: 原文 2024年算力服務費 15.52億元，「同期收入的5倍左右」；原始財務資料節未能讀取
+- key: rd_compute_fy24_b
+  group: A
+  metric: 研發開支中算力服務費
+  value: 15.53
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 每日經濟新聞
+  url: https://www.nbd.com.cn/articles/2025-12-21/4189232.html
+  doc_date: '2025-12-21'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: 媒體轉述（招股章程）
+  note: 15.53 億元，占研發逾 70%；與華爾街見聞 15.52 億差 0.01（四捨五入）
+- key: rd_compute_share_1h25
+  group: A
+  metric: 算力服務費占研發開支比重
+  value: 70
+  lo: 70
+  hi: null
+  unit: '%（下限）'
+  period: 1H2025
+  source: 每日經濟新聞
+  url: https://www.nbd.com.cn/articles/2025-12-21/4189232.html
+  doc_date: '2025-12-21'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: 媒體轉述（招股章程）
+  note: 原文「仍维持在七成以上」
+- key: rd_staff_cost_fy22
+  group: E
+  metric: 研發人員工資成本
+  value: 0.42
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2022
+  source: 36氪轉載〈市值水晶〉（王浩然）
+  url: https://www.36kr.com/p/3611675144253960
+  doc_date: '2025-12-26'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: 媒體轉述（招股章程）
+  note: 原文「研发人员的工资成本分别为0.42亿、1.37亿、3.24亿元…2.66亿元」
+- key: rd_staff_cost_fy23
+  group: E
+  metric: 研發人員工資成本
+  value: 1.37
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 36氪轉載〈市值水晶〉（王浩然）
+  url: https://www.36kr.com/p/3611675144253960
+  doc_date: '2025-12-26'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: 媒體轉述（招股章程）
+  note: 原文「研发人员的工资成本分别为0.42亿、1.37亿、3.24亿元…2.66亿元」
+- key: rd_staff_cost_fy24
+  group: E
+  metric: 研發人員工資成本
+  value: 3.24
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: FY2024
+  source: 36氪轉載〈市值水晶〉（王浩然）
+  url: https://www.36kr.com/p/3611675144253960
+  doc_date: '2025-12-26'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: 媒體轉述（招股章程）
+  note: 原文「研发人员的工资成本分别为0.42亿、1.37亿、3.24亿元…2.66亿元」
+- key: rd_staff_cost_1h25
+  group: E
+  metric: 研發人員工資成本
+  value: 2.66
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 1H2025
+  source: 36氪轉載〈市值水晶〉（王浩然）
+  url: https://www.36kr.com/p/3611675144253960
+  doc_date: '2025-12-26'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: 媒體轉述（招股章程）
+  note: 原文「研发人员的工资成本分别为0.42亿、1.37亿、3.24亿元…2.66亿元」
+- key: rd_staff_share_fy24
+  group: E
+  metric: 工資成本占研發開支比重
+  value: 14.8
+  lo: null
+  hi: null
+  unit: '%'
+  period: FY2024
+  source: 鈦媒體（山上）
+  url: https://www.tmtpost.com/7815849.html
+  doc_date: '2025-12-21'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: 媒體轉述（招股章程）
+  note: 原文 2024 年工資成本占研發 14.8%（3.24/21.95 吻合）
+- key: rd_staff_pct_1h25
+  group: E
+  metric: 研發人員占員工比重
+  value: 74.4
+  lo: null
+  hi: null
+  unit: '%'
+  period: '2025-06-30'
+  source: 鈦媒體（山上）
+  url: https://www.tmtpost.com/7815849.html
+  doc_date: '2025-12-21'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: 媒體轉述
+  basis: 媒體轉述（招股章程）
+  note: 原文 員工 883 人、研發 657 人，占 74.4%（證券日報稱 74%）
+not_found:
+- item: 研發開支組成（算力服務費、人工、股權報酬）FY2023、FY2025、1H2026 金額
+  tried: 招股章程中文／英文版（WebFetch 僅讀到概要至第 25 頁）、PHIP 會計師報告（已下架 404）、2025 年度業績公告、2026 中期業績公告；查詢詞「智谱 研发 算力服务费 2023」「computing service fees research and development」
+  judgment: FY2023 可能在招股章程財務資料節（未能讀取）；FY2025、1H2026 公告未揭露，年報／中期報告全文未找到
+- item: FY2025、1H2026 經營活動現金流
+  tried: 年度業績公告、中期業績公告（無現金流量表）；搜尋 2025 年報、2026 中期報告 PDF
+  judgment: 找不到（年報／中期報告全文未定位；公告未揭露）
+- item: 政府補助金額（各期）
+  tried: 招股章程概要、年度及中期業績公告；查詢「智谱 政府补助」
+  judgment: 可能未在公告揭露；其他收入未拆。1H2026 非流動遞延收益 1.73 億性質未說明
+- item: 銀行借款利率與到期明細
+  tried: 年度、中期公告（僅流動／非流動拆分）、招股章程概要
+  judgment: 可能在年報附註／會計師報告；公告未揭露
+- item: FY2022–FY2023 資本開支（購置物業廠房設備）
+  tried: 招股章程概要（僅投資活動淨額）
+  judgment: 在招股章程財務資料節，未能讀取
+- item: FY2022–FY2024 員工總數、研發人數時間序列
+  tried: 招股章程概要、媒體
+  judgment: 可能在招股章程業務／僱員節，未能讀取；僅得 2025-06-30（883／657）、2025-12-31（1,094）、2026-06-30（981）
+- item: GLM Coding Plan 單列收入
+  tried: 年度、中期公告；媒體
+  judgment: 未揭露（公司未單列）；只能判定歸屬開放平台及 API
+- item: 受限制現金
+  tried: 年度、中期公告
+  judgment: 公告未提及，可能不存在或未重大
+- item: FY2022–FY2023 新分類（四條業務線）收入
+  tried: 招股章程（只有本地化／雲端兩分部）
+  judgment: 新分類自 2025 年度起，2024 為最早比較期；FY22–23 可能不存在
+- item: 股權激勵計畫條款（授予量、行權價）
+  tried: 年度、中期公告
+  judgment: 可能在招股章程法定及一般資料附錄（未能讀取）

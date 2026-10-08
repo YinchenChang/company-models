@@ -1,11 +1,11 @@
 {
  "meta": {
-  "company": "CoreWeave",
-  "ticker": "CRWV",
-  "updateDate": "2026-09-25",
-  "priceDate": "2026-09-24",
-  "sourceOrderNote": "時序先法說（8/11）、後 10-Q（8/12）、再 8-K（9/17 可轉債＋ATM）。入帳數字聽 10-Q；全年指引聽法說；事實打架聽 10-Q。Q2 新增 500 MW（6 月單月 300 MW）當觀察，不年化進基準。",
-  "consensusFile": "data/consensus_crwv_20260925.json"
+  "company": "Nebius",
+  "ticker": "NBIS",
+  "updateDate": "2026-10-07",
+  "priceDate": "2026-10-06",
+  "sourceOrderNote": "時序先 Q2 6-K 財報與股東信（8/12），再期後 6-K（7/10 資產擔保融資、8 月可轉債與以股換債）。入帳數字聽 6-K 財報（未經查核）與經查核 20-F；指引聽股東信；法說會只有二手轉述者標明。Q1／Q2 季末 active MW 未揭露，不以營收反推。",
+  "consensusFile": "data/consensus_nbis_20261007.json"
  },
  "calendar": {
   "fiscalYearEndMonth": 12,
@@ -39,156 +39,161 @@
   "defaults.rpoOpen": "FY26Q2",
   "defaults.rpoPendingAdd": "FY26Q2",
   "defaults.eqCapShares": "FY26Q2",
-  "defaults.mwYearEnd": "FY26Q2"
+  "defaults.mwYearEnd": "FY26Q2",
+  "defaults.prepay.openBalance": "FY26Q2",
+  "debt.convertibles": "FY26Q2",
+  "defaults.otherEbitda[0]": "FY26Q2",
+  "valuation.holdings": "FY26Q2",
+  "valuation.debtLike": "FY26Q2"
  },
  "ytdActual": {
   "throughQuarter": "FY26Q2",
   "months": 6,
-  "label": "1H26 實際（10-Q）",
-  "cash1231": 3.127,
-  "revenue": 4.653,
-  "capex": 16.139,
-  "cashCapex": 14.117,
-  "interest": 1.176,
-  "leasePaid": 0.748,
-  "debtRepaid": 5.219,
-  "borrow": 16.747,
-  "equity": 2.982,
-  "cappedCall": 0.492,
-  "jv": 0.688,
-  "cfo": 3.663,
-  "prepay": 1.365,
-  "da": 2.54,
-  "sbc": 0.318,
-  "opInc": -0.193,
-  "ni": -1.366,
-  "eps": -2.53,
-  "ngEps": -1.94,
-  "adjEbitda": 2.667,
+  "label": "1H26 實際（6-K）",
+  "cash1231": 3.6781,
+  "revenue": 0.9813,
+  "capex": 8.1303,
+  "cashCapex": 8.1303,
+  "interest": 0.1828,
+  "leasePaid": 0.0,
+  "debtRepaid": 0.0,
+  "borrow": 4.3375,
+  "equity": 4.8111,
+  "cappedCall": 0.0,
+  "jv": 0.2516,
+  "cfo": 4.5041,
+  "prepay": 4.552,
+  "da": 0.4717,
+  "sbc": 0.1378,
+  "opInc": -0.3039,
+  "ni": 0.4308,
+  "eps": 1.6,
+  "ngEps": 2.11,
+  "adjEbitda": 0.3657,
   "adjEbitdaMeta": {
-   "q1": 1.157,
-   "q2": 1.51,
-   "tag": "Verified",
+   "q1": 0.1295,
+   "q2": 0.2362,
+   "tag": "Interested-party",
    "sources": [
     {
      "quarter": "Q1",
-     "name": "Futurum Q1 FY2026 財報摘要",
-     "url": "https://futurumgroup.com/insights/coreweave-q1-fy-2026-capacity-constraints-amid-accelerating-ai-demand/"
+     "name": "Q1 2026 6-K 附件 99.1 財報新聞稿（2026-05-13）",
+     "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926059872/tm2614392d1_ex99-1.htm"
     },
     {
      "quarter": "Q2",
-     "name": "Investing.com Q2 2026 財報報導",
-     "url": "https://www.investing.com/news/company-news/coreweave-q2-2026-slides-revenue-doubles-backlog-surges-246-93CH-4852949"
+     "name": "Q2 2026 6-K 附件 99.1 財報新聞稿（2026-08-12）",
+     "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926094568/tm2622968d1_ex99-1.htm"
     }
    ],
-   "crossCheck": "MarketScreener 季度表同列 1,157／1,510，一致",
-   "note": "公司公布之實際數，引用自財報報導轉述，非公司新聞稿原文",
+   "crossCheck": "MarketScreener 未列 Q1／Q2 實際調整後 EBITDA；以公司新聞稿為準",
+   "note": "公司自述非 GAAP 數字（未經查核）；Q2 含 AI cloud 285.7 與非核心事業 −49.5",
    "usage": "只用於「與市場的差異」的 FY26 調整後 EBITDA 比較；模型 GAAP 損益與評價不使用"
   },
   "jvSplit": {
-   "jv": 0.55,
-   "strategic": 0.138
+   "jv": 0.0,
+   "strategic": 0.2516
   },
   "notes": {
-   "cash1231": "10-Q 比較期資產負債表 [Verified]",
-   "cfo": "已含已付利息 0.806 與租賃付款 0.748 [Verified]",
-   "cashCapex": "現金流量表投資活動 [Verified]",
-   "capex": "PP&E 增加＋融資租賃−CIP 變動；與全年指引同口徑 [Verified]",
-   "jv": "JV 0.550＋策略投資 0.138 [Verified]",
-   "borrow": "融資活動流入 [Verified]",
-   "debtRepaid": "融資活動流出 [Verified]",
-   "cappedCall": "Q2 4.0bn 可轉債的 capped call [Verified]",
-   "equity": "NVIDIA 2.0 @$87.20、4 月 1.0 @$109 [Verified]",
-   "interest": "損益表；現金 0.806、資本化 0.176 [Verified]",
-   "leasePaid": "已含在 CFO 內，僅供對照 [Verified]",
-   "revenue": "Q1 2.078＋Q2 2.575 [Verified]",
-   "opInc": "[Verified]",
-   "ni": "[Verified]",
-   "prepay": "已含在 CFO 內，僅供對照 [Verified]",
-   "da": "現金流量表 [Verified]",
-   "sbc": "現金流量表 [Verified]",
-   "eps": "淨損 −1.366 ÷ 加權股數約 0.539 [Verified]",
-   "ngEps": "(−1.366＋0.318)÷0.539 [Derived]"
+   "cash1231": "20-F 經查核資產負債表 3,678.1 [Verified]",
+   "cfo": "Q1 2,258.0＋Q2 2,246.1；含遞延營收增加 4,395.0（客戶預付）[Interested-party]",
+   "cashCapex": "Q1 2,472.9＋Q2 5,657.4（購置不動產設備與無形資產）[Interested-party]",
+   "capex": "應計口徑未揭露，以現金口徑代替（與現金購置同值）[Interested-party]",
+   "jv": "收購子公司淨額 251.6（Tavily、ClarifAI、Eigen AI）列為策略投資 [Interested-party]",
+   "borrow": "2026-03 可轉債總價款 4,337.5 [Interested-party]",
+   "debtRepaid": "上半年未見還款（可轉債以轉換方式減少，非現金）[Derived]",
+   "cappedCall": "未見 capped call 揭露（不適用）",
+   "equity": "ATM 淨額 2,811.1＋NVIDIA 預付認股權證 2,000.0 [Interested-party]",
+   "interest": "Q1 63.7＋Q2 119.1（含可轉債攤銷等非現金）[Interested-party]",
+   "leasePaid": "上半年租賃現金支付未揭露（不適用，以 0 列示）；已含在 CFO 內，僅供對照",
+   "revenue": "Q1 399.0＋Q2 582.3 [Interested-party]",
+   "opInc": "Q1 −128.0＋Q2 −175.9 [Interested-party]",
+   "ni": "續營部門 Q1 621.2（含 ClickHouse 重估利益 780.6）＋Q2 −190.4 [Interested-party]",
+   "prepay": "遞延營收增加 4,397.7＋自期初遞延營收認列 154.3 [Derived]；已含在 CFO 內，僅供對照",
+   "da": "Q1 212.0＋Q2 259.7 [Interested-party]",
+   "sbc": "Q1 35.3＋Q2 102.5（含 Eigen AI 收購相關 74.9）[Interested-party]",
+   "eps": "淨損益 430.8 ÷ 加權股數約 0.2693bn（Q1 258.3m、Q2 280.4m 平均）[Derived]",
+   "ngEps": "(430.8＋137.8)÷0.2693bn [Derived]"
   }
  },
  "historicalPL": [
   {
    "year": "FY23",
-   "revenue": 0.229,
-   "opInc": -0.014,
-   "ni": -0.594,
-   "eps": -3.09,
-   "ngEps": -3.02,
-   "shares": 0.192,
+   "revenue": 0.0098,
+   "opInc": -0.2857,
+   "ni": -0.299,
+   "eps": -0.81,
+   "ngEps": -0.73,
+   "shares": 0.3708,
    "tag": "Verified"
   },
   {
    "year": "FY24",
-   "revenue": 1.915,
-   "opInc": 0.324,
-   "ni": -0.863,
-   "eps": -4.3,
-   "ngEps": -3.82,
-   "shares": 0.218,
+   "revenue": 0.0915,
+   "opInc": -0.3996,
+   "ni": -0.352,
+   "eps": -1.25,
+   "ngEps": -1.06,
+   "shares": 0.281,
    "tag": "Verified"
   },
   {
    "year": "FY25",
-   "revenue": 5.131,
-   "opInc": -0.046,
-   "ni": -1.167,
-   "eps": -2.81,
-   "ngEps": -1.23,
-   "shares": 0.435,
+   "revenue": 0.5298,
+   "opInc": -0.6117,
+   "ni": 0.0098,
+   "eps": 0.04,
+   "ngEps": 0.38,
+   "shares": 0.2425,
    "tag": "Verified"
   },
   {
    "year": "1H26",
-   "revenue": 4.653,
-   "opInc": -0.193,
-   "ni": -1.366,
-   "eps": -2.53,
-   "ngEps": -1.94,
-   "shares": 0.539,
-   "tag": "Verified"
+   "revenue": 0.9813,
+   "opInc": -0.3039,
+   "ni": 0.4308,
+   "eps": 1.6,
+   "ngEps": 2.11,
+   "shares": 0.2693,
+   "tag": "Interested-party"
   }
  ],
  "rpo": {
-  "scheduledShare": 0.84,
+  "scheduledShare": 0.82,
   "bucketWeights": [
-   0.1025,
-   0.205,
+   0.09,
+   0.18,
+   0.19,
    0.2,
-   0.195,
-   0.1375
+   0.16
   ]
  },
  "leases": {
   "onBalanceCash": [
-   1.04,
-   2.339,
-   2.306,
-   2.373,
-   2.289
+   0.0916,
+   0.2352,
+   0.2342,
+   0.2414,
+   0.2427
   ],
-  "afterFY30": 19.023,
+  "afterFY30": 1.13,
   "facts": {
-   "onBal": 29.37,
-   "notCommenced": 35.5,
-   "singleCap": 14.7,
-   "share": 0.85
+   "onBal": 2.1751,
+   "notCommenced": 12.0541,
+   "singleCap": 0.0,
+   "share": 0.25
   },
   "operatingPayments": [
-   1.028,
-   2.116,
-   2.306,
-   2.373,
-   2.289,
-   19.023
+   0.0916,
+   0.2352,
+   0.2342,
+   0.2414,
+   0.2427,
+   1.13
   ],
   "financePayments": [
-   0.012,
-   0.223,
+   0.0,
+   0.0,
    0.0,
    0.0,
    0.0,
@@ -197,419 +202,428 @@
  },
  "debt": {
   "amortization": [
-   4.413,
-   6.184,
-   4.416,
-   2.421,
-   3.221
+   0.0467,
+   0.0,
+   0.0,
+   0.0,
+   0.0
   ],
-  "amortAfterFY30": 14.896,
+  "amortAfterFY30": 0.0,
   "instruments": [
    [
-    "DDTL 1.0",
+    "其他借款（流動）",
     "追索",
-    "2028-03",
-    0.15,
-    1.3,
-    "資產層、隨客戶付款攤還"
-   ],
-   [
-    "DDTL 2.0",
-    "追索",
-    "2030-08",
-    0.11,
-    3.19,
-    ""
-   ],
-   [
-    "DDTL 2.1",
-    "追索",
-    "2031-03",
-    0.09,
-    3,
-    ""
-   ],
-   [
-    "DDTL 3.0",
-    "追索",
-    "2030-08",
-    0.09,
-    2.215,
-    ""
-   ],
-   [
-    "DDTL 5.0",
-    "追索",
-    "2031-11",
-    0.09,
-    1.101,
-    "SOFR+4.50%；額度 3.1"
-   ],
-   [
-    "2030 Senior Notes",
-    "追索",
-    "2030-06",
-    0.1,
-    2,
-    "到期一次還本"
-   ],
-   [
-    "2031 9.00% Senior Notes",
-    "追索",
-    "2031-02",
-    0.1,
-    1.75,
-    ""
-   ],
-   [
-    "2031 9.75% Senior Notes",
-    "追索",
-    "2031-10",
-    0.1,
-    2.75,
-    "2026-04 發行"
-   ],
-   [
-    "2032 9.625% Senior Notes",
-    "追索",
-    "2032-07",
-    0.1,
-    1.25,
-    "2026-06 發行"
-   ],
-   [
-    "2032 EUR Senior Notes（€2.0bn）",
-    "追索",
-    "2032-07",
-    0.09,
-    2.279,
-    "票面 8.50%；已換匯換利避險"
-   ],
-   [
-    "2031 可轉債",
-    "追索",
-    "2031-12",
-    0.02,
-    2.588,
-    ""
-   ],
-   [
-    "2032 可轉債",
-    "追索",
-    "2032-10",
-    0.02,
-    4,
-    "票面 1.75%"
-   ],
-   [
-    "OEM 與軟體授權融資",
-    "追索",
-    "2026-12～2030-07",
-    0.11,
-    4.22,
-    "短期部分加權 9%"
-   ],
-   [
-    "Magnetar Loan",
-    "追索",
-    "2029-01",
-    0.12,
-    0.189,
-    ""
-   ],
-   [
-    "DDTL 4.0",
-    "非追索",
-    "2032-03",
-    0.07,
-    2.837,
-    "SOFR+2.25%；額度 8.5，可動用至 2027-06"
-   ],
-   [
-    "OEM 融資（非追索）",
-    "非追索",
-    "2026-08～2028-08",
-    0.09,
-    0.882,
-    ""
+    "2026-12",
+    0.0,
+    0.0467,
+    "資產負債表 Debt, current；附註未逐項拆解 [Interested-party]"
    ]
   ],
   "convertible": {
-   "principal": 3.7,
-   "coupon": 0.02875
+   "principal": 0.0,
+   "coupon": 0.0
+  },
+  "convertibles": [
+   [
+    "2.00% 2029（2025-06）",
+    0.0875,
+    0.02,
+    "2029-06",
+    1.2,
+    51.45,
+    "2025-06 發行；原始 500 已轉換 12.5、以股換債 400 → 87.5；轉換率 19.4363 股／$1,000 [Verified 20-F／Interested-party 2026-08]"
+   ],
+   [
+    "3.00% 2031（2025-06）",
+    0.0875,
+    0.03,
+    "2031-06",
+    1.25,
+    51.45,
+    "同上；原始 500 → 87.5 [Verified／Interested-party]"
+   ],
+   [
+    "1.00% 2030（2025-09）",
+    1.58125,
+    0.01,
+    "2030-09",
+    1.15,
+    138.75,
+    "基本 1,375＋超額配售 206.25；轉換率 7.2072 [Verified 20-F]"
+   ],
+   [
+    "2.75% 2032（2025-09）",
+    1.58125,
+    0.0275,
+    "2032-09",
+    1.15,
+    138.75,
+    "同上 [Verified 20-F]"
+   ],
+   [
+    "1.25% 2031（2026-03）",
+    2.5875,
+    0.0125,
+    "2031-03",
+    1.2,
+    183.22,
+    "轉換率 5.4579 [Interested-party Q2 6-K]"
+   ],
+   [
+    "2.625% 2033（2026-03）",
+    1.75,
+    0.02625,
+    "2033-03",
+    1.2,
+    180.31,
+    "轉換率 5.546 [Interested-party Q2 6-K]"
+   ],
+   [
+    "0.50% 2030（2026-08）",
+    3.45,
+    0.005,
+    "2030-02",
+    1.1,
+    313.46,
+    "2026-08-24 交割；轉換率 3.1902；有效轉換價（含累積）約 $344.81 [Interested-party]"
+   ],
+   [
+    "4.50% 2034（2026-08）",
+    2.3,
+    0.045,
+    "2034-02",
+    1.25,
+    324.65,
+    "2026-08-24 交割；轉換率 3.0802；有效轉換價約 $405.82 [Interested-party]"
+   ]
+  ],
+  "convertibleBridge": {
+   "exchangedAccreted": 0.98,
+   "newIssuesAccreted": 6.67,
+   "note": "季報本金 10.0885（可轉債到期本金 10.0418＋其他 0.0467）− 2026-08 以股換債的 2029／2031 舊債到期本金（400×1.2＋400×1.25＝0.98）＋ 2026-08 新發兩檔到期本金（3,450×1.1＋2,300×1.25＝6.67）≈ 八檔清單到期本金合計＋其他借款；差額 0.006 為季報合計與逐檔計算的四捨五入差 [Derived]"
   }
  },
  "latestQuarter": {
   "filed": "2026-08-12",
   "periodEnd": "2026-06-30",
-  "revenue": 2.575,
-  "yoy": 1.12,
-  "h1Revenue": 4.653,
-  "costRev": 0.879,
-  "techInfra": 1.507,
-  "opInc": -0.049,
-  "interest": 0.64,
-  "h1Interest": 1.176,
-  "ni": -0.626,
-  "h1Ni": -1.366,
-  "epsDiluted": -1.14,
-  "sbc": 0.165,
-  "da": 1.393,
-  "adjEbitda": 1.51,
-  "adjOpInc": 0.128,
-  "rpo": 103.7,
-  "backlog": 104.2,
-  "rpo24m": 0.41,
-  "rpo25to48": 0.39,
-  "rpo49to78": 0.2,
-  "cash": 5.524,
-  "restricted": 1.38,
-  "marketable": 0.015,
-  "availability": 10.014,
-  "debtPrincipal": 35.551,
-  "recourseNet": 31.405,
-  "nonRecourseNet": 3.663,
-  "ddtlOut": 13.6,
-  "notesOut": 16.6,
-  "sharesA": 0.45887169,
-  "sharesB": 0.092664912,
-  "sharesOut": 0.551536602,
-  "basicWaso": 0.551,
-  "capexQ2": 9.352,
-  "capexH1": 16.139,
-  "cashCapexH1": 14.117,
-  "cfoH1": 3.663,
-  "cashInterestH1": 0.806,
-  "capInterestH1": 0.176,
-  "deferredTotal": 9.692,
-  "deferredIn": 1.365,
-  "ppe": 46.736,
-  "cip": 11.9,
-  "rouOp": 16.595,
-  "opLeaseLiab": 16.319,
-  "finLeaseLiab": 0.221,
-  "onBalanceUndiscounted": 29.37,
-  "offBalanceLease": 35.5,
-  "singleSiteCap": 14.7,
-  "singleSiteMw": 393,
-  "constructionCostMw": 355,
-  "equipCommitLo": 0.5,
-  "equipCommitHi": 1.2,
-  "jvCommit": 1.7,
-  "jvPaidH1": 0.55,
-  "vieExposure": 0.108,
-  "rouObtainedH1": 8.359,
-  "leaseCashH1": 0.748,
-  "custA": 0.36,
-  "custB": 0.26,
-  "custC": 0.1,
-  "debtIssuedH1": 16.747,
-  "debtRepaidH1": 5.219,
-  "equityH1": 2.982
+  "revenue": 0.5823,
+  "yoy": 4.54,
+  "h1Revenue": 0.9813,
+  "costRev": 0.1336,
+  "techInfra": null,
+  "opInc": -0.1759,
+  "interest": 0.1191,
+  "h1Interest": 0.1828,
+  "ni": -0.1904,
+  "h1Ni": 0.4308,
+  "epsDiluted": null,
+  "sbc": 0.1025,
+  "da": 0.2597,
+  "adjEbitda": 0.2362,
+  "adjOpInc": null,
+  "rpo": 37.4906,
+  "backlog": null,
+  "rpo24m": 0.36,
+  "rpo25to48": 0.4,
+  "rpo49to78": 0.24,
+  "cash": 8.0421,
+  "restricted": 1.056,
+  "marketable": 0.0,
+  "availability": 0.0,
+  "debtPrincipal": 10.0885,
+  "recourseNet": null,
+  "nonRecourseNet": null,
+  "ddtlOut": 0.0,
+  "notesOut": 10.0418,
+  "sharesA": 0.2384,
+  "sharesB": 0.033455,
+  "sharesOut": 0.271855,
+  "basicWaso": 0.280382,
+  "capexQ2": 5.6574,
+  "capexH1": 8.1303,
+  "cashCapexH1": 8.1303,
+  "cfoH1": 4.5041,
+  "cashInterestH1": null,
+  "capInterestH1": null,
+  "deferredTotal": 5.9752,
+  "deferredIn": 4.395,
+  "ppe": 14.1495,
+  "cip": 7.8364,
+  "rouOp": null,
+  "opLeaseLiab": 1.6253,
+  "finLeaseLiab": 0.0,
+  "onBalanceUndiscounted": 2.1751,
+  "offBalanceLease": 12.0541,
+  "singleSiteCap": 0.0,
+  "singleSiteMw": null,
+  "constructionCostMw": null,
+  "equipCommitLo": null,
+  "equipCommitHi": null,
+  "jvCommit": 0.0,
+  "jvPaidH1": 0.0,
+  "vieExposure": null,
+  "rouObtainedH1": null,
+  "leaseCashH1": null,
+  "custA": 0.24,
+  "custB": 0.21,
+  "custC": 0.14,
+  "debtIssuedH1": 4.3375,
+  "debtRepaidH1": 0.0,
+  "equityH1": 4.8111
  },
  "callFacts": {
-  "activeGw": 1.5,
-  "activeAddQ2": 500,
-  "juneAddMw": 300,
-  "contractedGw": 4.2,
-  "contractedGwQ2": 3.7,
-  "poweredLandGw": 1.5,
-  "yeActiveGw": 1.85,
-  "gw2030": 8,
-  "dataCenters": 51,
-  "capexLo": 35,
-  "capexHi": 39,
-  "nextQCapexLo": 11.5,
-  "nextQCapexHi": 13.5,
-  "nextQIntLo": 0.86,
-  "nextQIntHi": 0.94,
-  "revLo": 12.4,
-  "revHi": 13.2,
-  "nextQRevLo": 3.45,
-  "nextQRevHi": 3.6,
-  "adjOpLo": 0.96,
-  "adjOpHi": 1.15,
-  "nextQAdjOpLo": 0.2,
-  "nextQAdjOpHi": 0.26,
-  "arrLo": 18.5,
-  "arrHi": 19.5,
-  "postQNewCommit": 25,
-  "priceUp": 0.25,
-  "marginStep": "5–10 pt",
-  "backlogStarted": 0.5,
-  "inferenceArr": 0.25,
-  "otherArr": 0.4,
-  "convert": 3.7,
-  "convertNet": 3.6,
-  "convertCoupon": 0.02875,
-  "convertPx": 97.85,
-  "atmShares": 35,
-  "price0917": 79.88,
-  "tier34Active": 0.25,
-  "tier34Contracted": 0.74,
-  "cdsMid": 720,
-  "cdsBidAsk": "690 / 750",
-  "cdsRange": "680–855",
-  "cdsPeak": 855,
-  "cdsPeakDate": "2026-07-28",
-  "cdsLow": 452,
-  "cdsLowDate": "2026-06",
-  "availability": 10.014,
-  "price0918": 80.2,
-  "priceLast": 90.13,
-  "priceDate": "2026-09-24",
-  "postQShortDated": "2026-09-16 公告：6/30 後持續以更高價格簽約，Q3 已簽短天期客戶合約",
-  "ttmRev": 7.59,
-  "ttmOpInc": -0.231,
-  "ttmDa": 3.991,
-  "ttmOpLease": 1.377,
-  "mktCapLast": 47.12,
-  "nextEarn": "2026-11 (10-Q 期限 11/16)"
+  "activeGw": null,
+  "activeAddQ2": null,
+  "juneAddMw": null,
+  "contractedGw": 3.5,
+  "contractedGwQ2": null,
+  "poweredLandGw": null,
+  "yeActiveGw": 0.9,
+  "gw2030": null,
+  "dataCenters": 16,
+  "capexLo": 20,
+  "capexHi": 25,
+  "nextQCapexLo": null,
+  "nextQCapexHi": null,
+  "nextQIntLo": null,
+  "nextQIntHi": null,
+  "revLo": 3.0,
+  "revHi": 3.4,
+  "nextQRevLo": null,
+  "nextQRevHi": null,
+  "adjOpLo": null,
+  "adjOpHi": null,
+  "nextQAdjOpLo": null,
+  "nextQAdjOpHi": null,
+  "arrLo": 7.0,
+  "arrHi": 9.0,
+  "postQNewCommit": null,
+  "priceUp": null,
+  "marginStep": null,
+  "backlogStarted": null,
+  "inferenceArr": null,
+  "otherArr": null,
+  "convert": 5.75,
+  "convertNet": 5.68,
+  "convertCoupon": 0.021,
+  "convertPx": 313.46,
+  "atmShares": 25,
+  "price0917": null,
+  "tier34Active": null,
+  "tier34Contracted": null,
+  "cdsMid": null,
+  "cdsBidAsk": null,
+  "cdsRange": null,
+  "cdsPeak": null,
+  "cdsPeakDate": null,
+  "cdsLow": null,
+  "cdsLowDate": null,
+  "availability": 0.775,
+  "price0918": null,
+  "priceLast": 249.87,
+  "priceDate": "2026-10-06",
+  "postQShortDated": "2026-07-10 資產擔保定期貸款 $775M（SOFR＋2.50%，2030-10 到期）；2026-08 新發可轉債 $5.75B（0.50% 2030、4.50% 2034）並以約 1,580 萬股交換 $800M 舊債",
+  "ttmRev": 1.36,
+  "ttmOpInc": -0.612,
+  "ttmDa": 0.418,
+  "ttmOpLease": null,
+  "mktCapLast": 63.81,
+  "nextEarn": "2026-11（Q3 財報 6-K）"
  },
  "scenarios": {
   "labels": {
-   "low": "保守 4.2 GW",
-   "base": "基準 5.6 GW",
-   "high": "積極 8 GW"
+   "low": "保守 已簽約 3.5 GW",
+   "base": "基準 合約 5 GW",
+   "high": "積極 每年 >1 GW"
   },
-  "accepted": {
+  "mwPath": {
+   "connectedStart": 750,
+   "contracted": {
+    "low": [
+     2917,
+     2917,
+     2917,
+     2917,
+     2917
+    ],
+    "base": [
+     4167,
+     4167,
+     4167,
+     4167,
+     4167
+    ],
+    "high": [
+     4167,
+     5000,
+     5833,
+     6667,
+     7500
+    ]
+   },
+   "pace": {
+    "low": 580,
+    "base": 580,
+    "high": 833
+   },
+   "note": "已連網 MW-IT（期末）＝MIN(合約 MW-IT 上限, 前期已連網＋併網速度×期間長度)；首期期末＝2026 年底 connected 目標中點 900 MW ÷ PUE 1.2＝750（三情境共用）。合約上限：保守＝已簽約 >3.5 GW ÷1.2＝2,917；基準＝2026 年底 5 GW 目標 ÷1.2＝4,167；積極＝5 GW＋2027 起每年 >1 GW ÷1.2。併網速度：保守／基準＝歷史觀察 2026 年 170→750 MW-IT（+580／年，[Derived]）；積極＝每年 >1 GW 部署 ÷1.2＝833 MW-IT／年 [Interested-party]。"
+  },
+  "revMW": {
    "low": [
-    1850,
-    3100,
-    3800,
-    4200,
-    4200
+    0.01162,
+    0.01162,
+    0.01162,
+    0.01162,
+    0.01162
    ],
    "base": [
-    1850,
-    3100,
-    4000,
-    4800,
-    5600
+    0.0174,
+    0.0174,
+    0.0174,
+    0.0174,
+    0.0174
    ],
    "high": [
-    1850,
-    3100,
-    4600,
-    6300,
-    8000
+    0.0242,
+    0.0242,
+    0.0242,
+    0.0242,
+    0.0242
    ]
   },
   "billableRatio": {
-   "billable": [
-    1700,
-    2900,
-    4300,
-    5900,
-    7500
+   "ratio": [
+    0.75,
+    0.85,
+    0.9,
+    0.9,
+    0.9
    ],
-   "accepted": [
-    1850,
-    3100,
-    4600,
-    6300,
-    8000
-   ]
+   "ramp": [
+    0.6,
+    0.8,
+    1,
+    1,
+    1
+   ],
+   "note": "v0.1c 首期營收校準：期初可計費 MW＝最新季營收 × 4 ÷ 首期每 MW 年收入（對齊 6/30 已實現年化營收 2.329，[Interested-party] 6-K；不是以公司預測或 ACV 反推）；各期期末可計費 MW＝已連網 × 在役比例 × 爬坡係數，爬坡係數 60%／80%／100%（首期末、FY27 末、FY28 起）使可計費 MW 逐步收斂到已連網 × 在役比例 [Assumed]；60% 為能讓基準 FY26 營收落入公司指引 3.0–3.4 的保守值（基準 3.04）。"
   },
   "leaseHighPath": [
-   0.3,
-   1.6,
-   3,
-   4,
-   4.6
+   0.05,
+   0.5,
+   1.0,
+   1.0,
+   1.0
   ],
-  "leaseRampFloorMw": 1500,
+  "leaseRampFloorMw": 0,
   "mw31": {
    "low": 0,
-   "base": 500,
-   "high": 1000
+   "base": 580,
+   "high": 833
+  },
+  "convCap": {
+   "low": 0,
+   "base": 5,
+   "high": 10
   },
   "capexTemplate": {
    "costMW": [
-    34,
-    34,
-    34,
-    34,
-    34
-   ],
-   "customerFund": [
-    0.08,
-    0.08,
-    0.08,
-    0.08,
-    0.08
+    50.12,
+    50.26,
+    50.26,
+    50.26,
+    50.26
    ],
    "div": [
-    0.1,
-    0.4,
-    0.3,
-    0.2,
-    0.2
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
    ]
   }
  },
  "legacy": {
   "capexV14": [
-   21,
-   45,
-   50,
-   50,
-   45
-  ],
-  "interestV14": [
-   1.8,
-   2.7,
-   2.3,
-   2,
-   1.8
-  ]
- },
- "defaults": {
-  "scenario": "base",
-  "lambda": 0.35,
-  "mwYearEnd": {
-   "2023": 100,
-   "2024": 360,
-   "2025": 850
-  },
-  "mw31": 500,
-  "capexFloorFY0": 35,
-  "gpuLife": 6,
-  "revScale": 1,
-  "capexScale": 1,
-  "ebStart": 0.59,
-  "ebSteady": 0.65,
-  "services": [
-   0.3,
-   1,
-   1.8,
-   2.8,
-   3.8
-  ],
-  "debtBacklog": 1,
-  "ctrTerm": 5,
-  "minCash": 2,
-  "eqPx": 90.13,
-  "eqDisc": 0.1,
-  "eqCapPct": 0.2,
-  "eqCapShares": 0.5865,
-  "junkRate": 0.12,
-  "ppeOpen": 46.736,
-  "jvCommit": [
-   1.15,
+   0,
    0,
    0,
    0,
    0
   ],
-  "intCal": 0.35,
-  "rpoOpen": 103.7,
-  "rpoPendingAdd": 25,
-  "rp": 84,
-  "cash": 5.5,
+  "interestV14": [
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "defaults": {
+  "scenario": "base",
+  "revenueDriver": "mw",
+  "lambda": 0.35,
+  "mwYearEnd": {
+   "2025": 170
+  },
+  "mw31": 580,
+  "capexFloorFY0": 20,
+  "gpuLife": 5,
+  "revScale": 1,
+  "capexScale": 1,
+  "ebStart": 0.497,
+  "ebSteady": 0.47,
+  "services": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "otherEbitda": [
+   -0.094,
+   -0.141,
+   -0.094,
+   -0.047,
+   0
+  ],
+  "otherEbitdaNote": "其他事業（Avride＋TripleTen）EBITDA：上半年 −0.094 × 2＝−0.188／年，各期＝−0.188 × 期間長度 × 線性遞減（首期 100%、FY27 75%、FY28 50%、FY29 25%、FY30 0%）；假設處分或自給 [Derived／Assumed]",
+  "debtBacklog": 0.5,
+  "ctrTerm": 3,
+  "minCash": 2,
+  "eqPx": 249.87,
+  "eqDisc": 0.1,
+  "eqCapPct": 0.2,
+  "eqCapShares": 0.3088,
+  "junkRate": 0.12,
+  "ppeOpen": 14.1495,
+  "jvCommit": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "intCal": 0.0,
+  "rpoOpen": 37.4906,
+  "rpoPendingAdd": 0.0,
+  "rp": 82,
+  "cash": 8.0421,
   "includeDebt": true,
   "includeAtm": true,
-  "atm": 6.2,
+  "atm": 5.68,
+  "prepay": {
+   "shareOfDeals": 0.7,
+   "capexCover": 0.55,
+   "recogYears": 3,
+   "openBalance": 5.9752,
+   "note": "預付款（v0.1b）：預付流入＝成長型 CapEx × 有預付的合約比例 × 預付占相關資本支出比（股東信：約 70% 合約含預付、覆蓋 50–60% 相關資本支出，取中點 55% [Interested-party]）；合約負債期初＝季報遞延營收 5,975.2（2026-06-30 [Interested-party]）；預付自下一期起依認列年數直線認列為營收（公司：1–5 年內認列，取中點 3 年）；認列部分為非現金營收，自營運現金扣除。"
+  },
+  "convIssue": {
+   "coupon": 0.021,
+   "premium": 0.45,
+   "note": "融資瀑布的可轉債步驟（v0.1b）：資產擔保融資用罄後、ATM 股權之前；每年上限隨情境（scenarios.convCap：保守 0＝不新發、基準 5、積極 10 US$bn／年，[Assumed]，參考 2026 年實際發行約 10bn：2026-03 4.34、2026-08 5.75）；票息取 2026 年兩次發行四檔加權約 2.1% [Derived]；轉換溢價 40–57.5% 取 45% [Derived]，新發行時轉換價高於現價，評價時以債務處理。"
+  },
   "overlay": false,
   "cdsLink": false,
   "cdsBaseBp": 450,
@@ -617,43 +631,43 @@
   "linkSites": true,
   "linkLeaseTail": true,
   "useAvgMw": true,
-  "billableOpen": 1350,
-  "cds": 720,
-  "cdsBid": 690,
-  "cdsAsk": 750,
-  "cdsLo": 680,
-  "cdsHi": 855,
-  "cdsDate": "2026-09（User-provided 報價）",
+  "billableOpen": 134,
+  "cds": null,
+  "cdsBid": null,
+  "cdsAsk": null,
+  "cdsLo": null,
+  "cdsHi": null,
+  "cdsDate": "不適用（NBIS 無 CDS 報價資料）",
   "useFacility": true,
-  "facility": 10,
+  "facility": 0.775,
   "m": {
    "accepted": [
-    1850,
-    3100,
-    4000,
-    4800,
-    5600
+    750,
+    1330,
+    1910,
+    2490,
+    3070
    ],
    "billable": [
-    1700,
-    2900,
-    3739,
-    4495,
-    5250
+    338,
+    904,
+    1719,
+    2241,
+    2763
    ],
    "util": [
-    95,
-    95,
-    94,
-    93,
-    92
+    100,
+    100,
+    100,
+    100,
+    100
    ],
    "revMW": [
-    0.0112,
-    0.0115,
-    0.0115,
-    0.011,
-    0.0105
+    0.0174,
+    0.0174,
+    0.0174,
+    0.0174,
+    0.0174
    ],
    "aiShare": [
     100,
@@ -665,9 +679,9 @@
    "fill": [
     100,
     100,
-    90,
-    85,
-    80
+    100,
+    100,
+    100
    ],
    "power": [
     60,
@@ -677,9 +691,9 @@
     68
    ],
    "pue": [
-    1.25,
-    1.24,
-    1.22,
+    1.2,
+    1.2,
+    1.2,
     1.2,
     1.2
    ],
@@ -705,117 +719,134 @@
     50
    ],
    "rate": [
-    9,
-    9,
-    9,
-    9,
-    9
+    6.5,
+    6.5,
+    6.5,
+    6.5,
+    6.5
    ]
   },
   "terminal": {
    "residual": 25,
    "rerent": 75,
    "margin": 40,
-   "residualLeaseYears": 12
+   "residualLeaseYears": 9
   },
   "sites": [
    {
-    "id": "helios",
-    "name": "Helios, Dickens County, Texas",
-    "operator": "Galaxy Digital（15 年租約）",
-    "planned": 526,
-    "contract": 15,
-    "years": 15,
-    "energized": 133,
-    "accepted": 133,
-    "billable": 133,
-    "status": "Phase I 133 MW critical IT 於 Q2 起租（Galaxy 2026-07-06 公告，$1.4bn 專案融資、80% LTC）；Phase II 260 MW 施工中。10-Q「單一站點 393 MW 未交付、租金上限 $14.7bn／16 年」推定為此站；133（已交付）＋393（10-Q 未交付）＝526 MW critical IT 為目前可對帳的契約規模；場址潛能 1.6 GW 不列入",
-    "next": "Phase II 首批資料廳",
-    "date": "2026 下半年起分期",
-    "confidence": "中"
-   },
-   {
-    "id": "polaris",
-    "name": "Polaris Forge 1, Ellendale, ND",
-    "operator": "Applied Digital（15 年租約）",
-    "planned": 400,
-    "energized": 150,
-    "accepted": 150,
-    "billable": 150,
-    "status": "三份租約合計 400 MW（初始 250＋第三棟 150），約 $11bn／15 年（APLD 2025-08-29）。100 MW 2025Q4 起租、150 MW 2026 年中、150 MW 2027。v1.4 誤植為 550 MW，已更正",
-    "contract": 11,
-    "years": 15,
-    "next": "第二／三棟交付",
-    "date": "2026–2027",
-    "confidence": "中"
-   },
-   {
-    "id": "core-scientific",
-    "name": "Core Scientific 多站（Denton／Muskogee／Dalton 等）",
-    "operator": "Core Scientific（收購案 2025-10 終止，租約續存）",
-    "planned": 590,
-    "contract": 10.2,
-    "years": 12,
-    "energized": 420,
-    "accepted": 420,
-    "billable": 400,
-    "status": "約 590 MW 契約容量分多站交付（已交付比例為估計）。CORZ 2026-07 與 AMD 簽 530 MW→2.5 GW 合作，房東產能開始分流給其他客戶",
-    "next": "餘量交付",
-    "date": "2026–2027",
-    "confidence": "中"
-   },
-   {
-    "id": "kenilworth",
-    "name": "Kenilworth (NEST), New Jersey",
-    "operator": "CoreWeave 自建（改建 NEST11）",
-    "planned": 100,
+    "id": "lappeenranta",
+    "name": "Lappeenranta, Finland",
+    "operator": "Nebius 自建（自有）",
+    "planned": 258,
     "energized": 0,
     "accepted": 0,
     "billable": 0,
-    "status": "法說：首座自建站預計今年稍晚上線；規模未揭露",
-    "next": "首期通電",
-    "date": "2026 年底",
-    "confidence": "低"
+    "status": "Q1 股東信：滿載 310 MW（口徑不明，÷1.2 換 IT 約 258 MW）、2027 可用 [Interested-party]",
+    "next": "一期上線",
+    "date": "2027",
+    "confidence": "中"
    },
    {
-    "id": "lancaster",
-    "name": "Lancaster, Pennsylvania",
-    "operator": "CoreWeave 自建／Blue Owl JV（$4bn）",
-    "planned": 300,
+    "id": "missouri",
+    "name": "Independence, Missouri",
+    "operator": "Nebius 自建（greenfield）",
+    "planned": 1000,
     "energized": 0,
     "accepted": 0,
     "billable": 0,
-    "status": "公告投資最高 $6bn、100 MW 起可擴至 300 MW。10-Q 已承諾 JV 出資 $1.7bn（兩案）",
-    "next": "一期完工",
+    "status": "最高 1.2 GW（÷1.2 換 IT 約 1,000 MW）；預計 2027 營運 [Interested-party]",
+    "next": "首期上線",
+    "date": "2027",
+    "confidence": "中"
+   },
+   {
+    "id": "pennsylvania",
+    "name": "Pennsylvania",
+    "operator": "Nebius 自建（自有）",
+    "planned": 1000,
+    "energized": 0,
+    "accepted": 0,
+    "billable": 0,
+    "status": "最高 1.2 GW 電力與土地（÷1.2 換 IT 約 1,000 MW）；2027 起分期 [Interested-party]",
+    "next": "首期",
     "date": "2027 起",
     "confidence": "低"
    },
    {
-    "id": "indonesia",
-    "name": "Indonesia（三站）",
-    "operator": "合作開發",
-    "planned": 360,
+    "id": "vineland",
+    "name": "Vineland, New Jersey",
+    "operator": "build-to-suit（Microsoft 專用）",
+    "planned": 0,
     "energized": 0,
     "accepted": 0,
     "billable": 0,
-    "status": "法說：APAC 首站 360 MW，約 18 個月後開始上線",
-    "next": "首站上線",
-    "date": "2028",
+    "status": "Microsoft 5 年合約（TCV 約 $17.4B）；Q2 股東信：已交付全部 tranche；MW 未揭露",
+    "next": "—",
+    "date": "2026",
+    "confidence": "中"
+   },
+   {
+    "id": "alabama",
+    "name": "Alabama",
+    "operator": "Nebius 自建",
+    "planned": 0,
+    "energized": 0,
+    "accepted": 0,
+    "billable": 0,
+    "status": "施工中、預計 2027 營運；MW 未揭露",
+    "next": "首期",
+    "date": "2027",
     "confidence": "低"
+   },
+   {
+    "id": "mantsala",
+    "name": "Mäntsälä, Finland",
+    "operator": "Nebius 自建（既有）",
+    "planned": 0,
+    "energized": 0,
+    "accepted": 0,
+    "billable": 0,
+    "status": "既有自有站點；MW 未揭露",
+    "next": "—",
+    "date": "既有",
+    "confidence": "中"
    }
   ]
  },
  "valuation": {
-  "price": 90.13,
-  "shares": 0.587,
-  "netDebt": 30,
-  "tax": 0.21,
-  "nol": 4,
-  "nolUsePct": 0.8,
+  "price": 249.87,
+  "shares": 0.3193,
+  "atmSharesInValuation": 0,
+  "netDebt": -13.6754,
+  "holdings": [
+   [
+    "ClickHouse 持股",
+    15.0,
+    0.25,
+    "ClickHouse 2025 年估值 US$15bn × 持股約 25%（持股比例為二手資料 [Assumed]；帳面 1.5177）"
+   ],
+   [
+    "Toloka 持股",
+    0.0865,
+    1.0,
+    "帳面價值（6/30 季報）[Verified]"
+   ]
+  ],
+  "holdingsDiscount": 0.3,
+  "debtLike": [
+   [
+    "Avride SAFE 負債",
+    0.1781,
+    "6/30 季報 SAFE 負債 [Verified]"
+   ]
+  ],
+  "tax": 0.258,
+  "nol": 0.8,
+  "nolUsePct": 0.5,
   "wcPctOfRevGrowth": 0.02,
   "wacc": 0.11,
   "g": 0.03,
-  "sbc": 0.7,
+  "sbc": 0.13,
   "maintRatio": 0.8,
   "evEbitda": 6,
   "evYear": 3,
@@ -845,8 +876,8 @@
   "profitMarginTolPt": 0.02,
   "checks": {
    "capexPerMwBand": [
-    20,
-    45
+    38,
+    68
    ],
    "leaseVsCommitMin": 0.8,
    "unsignedRevShareMax": 0.5,
@@ -859,20 +890,20 @@
   "priceSource": "S&P Global via stockanalysis.com",
   "list": [
    {
-    "ticker": "NBIS",
-    "name": "Nebius Group",
-    "labelHtml": "NBIS",
-    "roleHtml": "Neocloud 直接對標",
-    "labelXlsx": "NBIS Nebius",
-    "mkt": 63.81,
-    "netDebt": 2.16,
-    "rev": 1.36,
-    "opl": 0.0,
-    "opInc": -0.612,
-    "da": 0.418,
-    "asOf": "EBITDA：FY25 20-F",
-    "noteHtml": "GAAP 營業損失 −0.612＋D&A 0.418（FY2025；季報 6-K 未 XBRL 標註，無法算 TTM）。營收為 TTM 1.36",
-    "noteXlsx": "季報未 XBRL 標註，EBITDA 用 FY2025；營收為 TTM。前瞻 EV/Sales 約 9.3x（由 9/18 forward PS 8.46 推算 [Derived]）"
+    "ticker": "CRWV",
+    "name": "CoreWeave",
+    "labelHtml": "CRWV",
+    "roleHtml": "Neocloud 直接對標（租賃型）",
+    "labelXlsx": "CRWV CoreWeave",
+    "mkt": 47.12,
+    "netDebt": 30.012,
+    "rev": 7.59,
+    "opl": 16.54,
+    "opInc": -0.231,
+    "da": 3.991,
+    "asOf": "TTM 至 Q2（6/30，10-Q）",
+    "noteHtml": "CRWV Q2 2026 10-Q（2026-08-12）：本金 35.551 − 現金 5.524 − 有價證券 0.015；TTM 營收 7.59、GAAP 營業損失 −0.231＋D&A 3.991；市值 47.12（2026-09-21 收盤，S&P via stockanalysis）。以租約取得機房，營業＋融資租賃負債 16.54",
+    "noteXlsx": "CRWV Q2 10-Q；以租約取得機房（租賃負債 16.54）；市值 9/21"
    },
    {
     "ticker": "IREN",
@@ -886,7 +917,7 @@
     "opl": 0.003,
     "opInc": -1.047,
     "da": 0.418,
-    "asOf": "FY26 10-K（6/30）",
+    "asOf": "FY26 10-K（6/30）；未更新，日期 2026-09-21",
     "noteHtml": "GAAP 營業損失 −1.047＋D&A 0.418。自有電廠、營業租賃負債僅 0.003bn",
     "noteXlsx": "自有電廠、營業租賃負債僅 0.003bn；FY26 合約 ARR 4.0bn"
    },
@@ -902,7 +933,7 @@
     "opl": 0.066,
     "opInc": -0.236,
     "da": 0.067,
-    "asOf": "FY26 10-K（5/31）",
+    "asOf": "FY26 10-K（5/31）；未更新，日期 2026-09-21",
     "noteHtml": "GAAP 營業損失 −0.236＋D&A 0.067。租約多未起租，EBITDA 尚未反映 36bn 合約",
     "noteXlsx": "租約多未起租，營收尚未反映約 36bn 合約"
    },
@@ -918,22 +949,22 @@
     "opl": 0.109,
     "opInc": -0.561,
     "da": 0.063,
-    "asOf": "TTM 至 Q2（6/30）",
+    "asOf": "TTM 至 Q2（6/30）；未更新，日期 2026-09-21",
     "noteHtml": "GAAP 營業損失 −0.561＋D&A 0.063。託管轉型期",
     "noteXlsx": "託管轉型期"
    }
   ],
   "textHtml": {
-   "headerTip": "市值為 2026-09-21 收盤（S&P Global via stockanalysis.com）；EV＝市值＋（有息負債 − 非受限現金），負債與現金取各公司最新申報。EV/Sales 為主要比較倍數：同業 GAAP EBITDA 皆為負，EV/EBITDA 無法比較，僅列為參考。「含租賃」欄把營業租賃負債加進 EV——CRWV 以租約取得機房，同業多為自有，這一欄讓兩種資本結構可以對齊比較。刻意不列 MSFT／AMZN／GOOGL：淨現金、EBITDA 為正，與槓桿型 neocloud 不可比。",
-   "readingTip": "這個折價有三個來源，不能全部解讀為便宜：(1) 分母時點不同——同業仍在爬坡，TTM 營收遠小於已簽約規模（APLD 合約租約約 36bn、IREN 合約 ARR 4.0bn），TTM 倍數因此偏高；CRWV 營收已放量，倍數自然較低。(2) 資本結構——CRWV 用租約取得機房，若把營業租賃負債 16.3bn 加進 EV，倍數升至約 12x；同業多為自有資產，加與不加差別很小。(3) 客戶集中與融資需求——前三大客戶占 72% 營收、五期仍需外部資金。若要看前瞻：NBIS 前瞻 EV/Sales 約 9.3x（由 9/18 forward PS 8.46 依 9/21 市值推算 [Derived]），CRWV 模型 FY27E 約 3x，差距仍約 3 倍。",
-   "caveat": "口徑與限制：市值為 2026-09-21 收盤，負債與現金為各公司最新申報（IREN FY26 10-K 6/30、APLD FY26 10-K 5/31、CORZ 與 CRWV Q2 10-Q 6/30；NBIS 為來源揭露值）——市值即時、資產負債表季末，日期不一致是所有 EV 計算的共同限制，未作 pro forma 調整（CRWV 的 9/17 可轉債 3.7bn 亦未計入）。營收為各自 TTM／最近會計年度（APLD 年度結束於 5/31）。EV/EBITDA 列為參考：同業 GAAP EBITDA 皆為負，只有 CRWV 可計算。此表為市場比較用，不進入目標價（目標價仍為 DCF 45%＋EV/EBITDA 55%）。"
+   "headerTip": "市值為 2026-09-21 收盤（S&P Global via stockanalysis.com）；EV＝市值＋（有息負債 − 非受限現金），負債與現金取各公司最新申報。EV/Sales 為主要比較倍數：同業 GAAP EBITDA 多為負，EV/EBITDA 僅列為參考。「含租賃」欄把營業租賃負債加進 EV——CRWV 以租約取得機房，NBIS 與其他同業多為自有，這一欄讓兩種資本結構可以對齊比較。",
+   "readingTip": "NBIS 的 TTM 倍數遠高於同業，主因分母時點：NBIS 營收仍在爬坡（TTM 1.36 對 2026 指引 3.0–3.4、年底 ARR 指引 7–9），TTM 倍數因此偏高；前瞻倍數見本模型 FY27E 列。CRWV 營收已放量，倍數自然較低；把租賃負債加進 EV 後 CRWV 倍數上升。",
+   "caveat": "口徑與限制：市值為 2026-09-21 收盤，負債與現金為各公司最新申報（CRWV 與 CORZ Q2 6/30、IREN FY26 10-K 6/30、APLD FY26 10-K 5/31）——市值即時、資產負債表季末，日期不一致是所有 EV 計算的共同限制。同業數字未更新（日期 2026-09-21）。NBIS 列為來源揭露值（季報 6-K 未 XBRL 標註，EBITDA 用 FY2025）。此表為市場比較用，不進入目標價（目標價仍為 DCF 45%＋EV/EBITDA 55%）。"
   },
   "textXlsx": {
-   "subtitle": "EV＝市值＋（有息負債−非受限現金）；含租賃＝EV＋營業租賃負債。EV/EBITDA 僅供參考（同業 GAAP EBITDA 皆為負，顯示 n/m）。此表不進入目標價。與 HTML Comps 分頁同一組數字",
+   "subtitle": "EV＝市值＋（有息負債−非受限現金）；含租賃＝EV＋營業租賃負債。EV/EBITDA 僅供參考（GAAP EBITDA 為負者顯示 n/m）。此表不進入目標價。與 HTML Comps 分頁同一組數字",
    "notes": [
-    "讀法：CRWV 的 TTM EV/Sales 約為同業中位數的四成。折價來源有三，不能全部解讀為便宜：(1) 同業仍在爬坡，TTM 營收遠小於已簽約規模，TTM 倍數偏高；",
-    "(2) CRWV 用租約取得機房，加入營業租賃負債後倍數升至約 12x，同業加與不加差別很小；(3) 客戶集中（前三大 72%）與五期外部資金需求。",
-    "前瞻：NBIS 前瞻 EV/Sales 約 9.3x（由 9/18 forward PS 推算 [Derived]），CRWV 模型 FY27E 約 3x。此表為市場比較用，不進入目標價（DCF 45%＋EV/EBITDA 55%）。"
+    "讀法：NBIS 的 TTM EV/Sales 遠高於同業，主因營收仍在爬坡（TTM 1.36 對 2026 指引 3.0–3.4），TTM 倍數偏高；",
+    "CRWV 以租約取得機房，加入營業租賃負債後倍數上升；NBIS 自有占合約電力 >75%，加與不加差別小。",
+    "前瞻：見下方 NBIS 模型 FY27E 列。此表為市場比較用，不進入目標價（DCF 45%＋EV/EBITDA 55%）。"
    ]
   }
  },
@@ -944,7 +975,7 @@
     "key": "2026Q3",
     "label": "Q3'26",
     "period": 0,
-    "reportNote": "預計 11/9"
+    "reportNote": "預計 11 月"
    },
    {
     "key": "2026Q4",
@@ -979,22 +1010,22 @@
   "focus": "2026Q3",
   "keyMetrics": [
    "revenue",
-   "adjOpInc",
+   "adjEbitda",
    "capex"
   ],
   "driver": {
    "type": "mw",
-   "endStart": 1500,
-   "endStartNote": "6/30 公司公布 active power 約 1.5 GW（callFacts.activeGw）[Verified]"
+   "endStart": 460,
+   "endStartNote": "6/30 已連網 MW-IT 未揭露：以 2025 年底 active 170 MW 與 2026 年底 connected 目標中點 900 MW÷1.2＝750 MW-IT 線性內插 [Derived]"
   },
   "revenueSplit": [
    "anchor",
    "driverAvg"
   ],
   "revenueAnchor": {
-   "value": 2.575,
+   "value": 0.5823,
    "label": "Q2'26 實際營收",
-   "tag": "Verified"
+   "tag": "Interested-party"
   },
   "metrics": [
    {
@@ -1036,76 +1067,37 @@
    },
    {
     "key": "mw",
-    "label": "季末 Accepted MW",
+    "label": "季末已連網 MW-IT",
     "unit": "MW",
-    "actualLabel": "季末 active power",
+    "actualLabel": "季末 connected power（IT）",
     "gap": "diff"
    }
   ],
-  "guidance": {
-   "2026Q3": {
-    "revenue": [
-     3.45,
-     3.6
-    ],
-    "adjOpInc": [
-     0.2,
-     0.26
-    ],
-    "capex": [
-     11.5,
-     13.5
-    ]
-   }
-  },
+  "guidance": {},
   "guidanceMeta": {
-   "source": "CNBC 報導 2026-08-11 Q2 財報",
+   "source": "Q2 2026 股東信（6-K 附件 99.2，2026-08-12）：未提供 Q3 單季指引",
    "tag": "Interested-party"
   },
   "periodGuidance": {
    "0": {
     "revenue": {
      "range": [
-      12.4,
-      13.2
+      3.0,
+      3.4
      ],
-     "less": 4.653
+     "less": 0.9813
     },
     "capex": {
      "range": [
-      35,
-      39
+      20,
+      25
      ],
-     "less": 16.139
+     "less": 8.1303
     }
    }
   },
   "periodGuidanceNote": "全年指引 − 1H 實際＝下半年隱含指引 [Derived]；只用於判斷季度差距是否為「拆法」",
   "consistency": [
-   [
-    "quarterly.guidance.2026Q3.revenue.0",
-    "callFacts.nextQRevLo"
-   ],
-   [
-    "quarterly.guidance.2026Q3.revenue.1",
-    "callFacts.nextQRevHi"
-   ],
-   [
-    "quarterly.guidance.2026Q3.adjOpInc.0",
-    "callFacts.nextQAdjOpLo"
-   ],
-   [
-    "quarterly.guidance.2026Q3.adjOpInc.1",
-    "callFacts.nextQAdjOpHi"
-   ],
-   [
-    "quarterly.guidance.2026Q3.capex.0",
-    "callFacts.nextQCapexLo"
-   ],
-   [
-    "quarterly.guidance.2026Q3.capex.1",
-    "callFacts.nextQCapexHi"
-   ],
    [
     "quarterly.periodGuidance.0.revenue.range.0",
     "callFacts.revLo"
@@ -1133,11 +1125,6 @@
    [
     "quarterly.revenueAnchor.value",
     "latestQuarter.revenue"
-   ],
-   [
-    "quarterly.driver.endStart",
-    "callFacts.activeGw",
-    "1000"
    ]
   ],
   "actuals": {
@@ -1203,15 +1190,7 @@
    }
   },
   "capexSplit": "guidanceAnchor",
-  "guidanceText": {
-   "2026Q4": {
-    "adjOpInc": {
-     "text": "調整後營業利益率 low teens",
-     "source": "Q2 法說 2026-08-11",
-     "tag": "Interested-party"
-    }
-   }
-  }
+  "guidanceText": {}
  },
  "varianceReasons": {
   "_note": "差異原因（已決定事項 2）：差距超過 methodology.consensusGapTol 的項目必須有原因。「拆法」由程式依條件判定（單季差距超過門檻、所屬期間合計在門檻內）；其餘寫在這裡。{路徑:格式} 由模型數字帶入。",
@@ -1219,46 +1198,54 @@
    {
     "scope": "quarter",
     "period": "*",
+    "metric": "revenue",
+    "vs": "*",
+    "type": "觀點",
+    "text": "每 MW 年收入採 Tokenomics 正向推導的新約值（GB300／VR200）；期初可計費 MW 以最新季實際營收年化校準，可計費 MW 依爬坡係數逐步收斂到已連網 MW（v0.1c）；共識未揭露 MW 與單價假設"
+   },
+   {
+    "scope": "quarter",
+    "period": "*",
+    "metric": "adjEbitda",
+    "vs": "*",
+    "type": "觀點",
+    "text": "模型 EBITDA 率 {q.ebitdaMargin:%1}；季度共識 EBITDA {c.ebitda:2}、營收 {c.revenue:2}（口徑未揭露）"
+   },
+   {
+    "scope": "quarter",
+    "period": "*",
     "metric": "adjOpInc",
-    "vs": "guidance",
+    "vs": "*",
     "type": "已知限制",
-    "text": "對照指引隱含折舊 {c.ebitda-g.adjOpInc:2}（＝共識 EBITDA {c.ebitda:2} − 指引中點 {g.adjOpInc:2}，Derived），模型折舊 {q.da:2}；缺口 {q.adjOpInc-g.adjOpInc:s2} ≈ 折舊 {c.ebitda-g.adjOpInc-q.da:s2} ＋ EBITDA {q.adjEbitda-c.ebitda:s2}；待辦 6 修正折舊"
+    "text": "模型車隊折舊 {q.da:2} 以期初毛 PP&E（含尚未啟用資產）計，高於實際走勢（同 CRWV 模板待辦 6，不在本次範圍）"
    },
    {
-    "scope": "annual",
-    "period": "FY27",
-    "metric": "ebitda",
-    "vs": "consensus",
-    "type": "觀點",
-    "text": "EBITDA 率 {m.ebM:%1} 對共識 {c.ebM:%1}：模型由 {in.ebStart:%0} 線性爬升至 FY30 穩態 {in.ebSteady:%0}；營收差距 {gap.rev:gap}"
-   },
-   {
-    "scope": "annual",
-    "period": "FY27",
+    "scope": "quarter",
+    "period": "*",
     "metric": "capex",
-    "vs": "consensus",
+    "vs": "*",
     "type": "觀點",
-    "text": "CapEx 依新增 MW 計算：新增 {y.mwNew:0} MW × 每 MW ${y.costMW:0}m（含次年預建）；共識口徑未揭露"
+    "text": "CapEx 依新增已連網 MW × 每 MW 建置成本（Tokenomics IF_CapexTotal）計算；共識口徑未揭露"
    },
    {
     "scope": "annual",
-    "period": "FY28",
+    "period": "*",
     "metric": "rev",
     "vs": "consensus",
     "type": "觀點",
-    "text": "營收由模型 MW 路徑決定：FY28 年底 Accepted {y.accepted:0} MW（目前情境）；共識未揭露 MW 假設"
+    "text": "營收＝可計費 MW × 每 MW 年收入（Tokenomics 正向推導）；首期以最新季實際營收年化校準期初可計費 MW，可計費 MW 依爬坡係數（60%／80%／100%）收斂到已連網 MW（v0.1c）；年底已連網 {y.accepted:0} MW（目前情境）；共識未揭露 MW 假設"
    },
    {
     "scope": "annual",
-    "period": "FY28",
+    "period": "*",
     "metric": "ebitda",
     "vs": "consensus",
     "type": "觀點",
-    "text": "營收差距 {gap.rev:gap}，加上 EBITDA 率 {m.ebM:%1} 對共識 {c.ebM:%1}"
+    "text": "營收差距 {gap.rev:gap}；EBITDA 率 {m.ebM:%1} 對共識 {c.ebM:%1}（模型由 {in.ebStart:%0} 走向穩態 {in.ebSteady:%0}，取可觀察 neocloud 區間）"
    },
    {
     "scope": "annual",
-    "period": "FY28",
+    "period": "*",
     "metric": "capex",
     "vs": "consensus",
     "type": "觀點",
@@ -1270,462 +1257,36 @@
     "metric": "nd",
     "vs": "consensus",
     "type": "觀點",
-    "text": "淨負債隨 CapEx 與融資需求而定（模型 CapEx 差距 {gap.capex:gap}）；共識淨負債不含租賃、口徑未揭露"
+    "text": "淨負債隨 CapEx、客戶預付與融資需求而定（模型 CapEx 差距 {gap.capex:gap}）；共識淨負債口徑未揭露"
    }
   ]
  },
- "texts": {
-  "fy0EquityNote": "«P0»＝«YTD» 私募股權 2.982＋«STUB» 可轉債淨現金 3.2＋ATM 上限 3.0",
-  "cashTaxNote": "H1 現金稅約 0.1bn",
-  "sourceLine": "Q2 2026 10-Q + 法說 + 9/17 8-K · 口徑分層",
-  "mwYearEndNotes": {
-   "2023": "由 2023 CapEx 約 3.1bn ÷ 約 $30m/MW 推估 [Assumed]",
-   "2024": "S-1：2024 年底 >360 MW [Verified]",
-   "2025": "Q4 2025 法說：年底 >850 MW、43 座資料中心 [Verified]"
-  }
+ "priceCheck": {
+  "inServiceMw": 366,
+  "inServiceNote": "最新季末在役 MW 未揭露：以 2025 年底 active 170 MW 與首期末在役 563 MW 線性內插（[Derived]，v0.1c 報告第 3 節）；實現單價＝最新一季營收 × 4 ÷ 此值",
+  "acv": [20, 25],
+  "acvNote": "公司 Q2 股東信新約 ACV（US$m／MW·年）[Interested-party]，MW 口徑未定義；只作對照，不作輸入"
  },
-
+ "texts": {
+  "fy0EquityNote": "«P0»＝«YTD» 股權 4.811（ATM 淨 2.811＋NVIDIA 預付認股權證 2.0）＋«STUB» 期後可轉債淨現金 5.68（2026-08）",
+  "cashTaxNote": "H1 現金稅未單獨揭露（不適用）",
+  "sourceLine": "Q2 2026 6-K（財報＋股東信）+ 期後 6-K（7/10 資產擔保融資、8 月可轉債）· 口徑分層",
+  "mwYearEndNotes": {
+   "2025": "Q4 2025 股東信與 20-F：active power 約 170 MW（IT 口徑）[Interested-party]"
+  },
+  "thesis": "預付款能否讓 backlog 變成現金",
+  "title": "預付款，能把 Backlog 變成現金嗎？",
+  "subtitle": "客戶預付只覆蓋約 {prepayPct} 的資本支出；剩下 {gap} 缺口仍靠資產擔保債、可轉債與新股——現價要成立，每 MW 年收入得是模型的 {rvMult} 倍",
+  "headerTag": "MW × 每 MW · 預付優先"
+ },
  "nebius": {
-  "_readme": "Nebius 公司專屬資料草稿（v0.1a 產出；引擎尚未讀取）。每欄 value＋unit＋ref（指回 data/nebius_facts_20261007.json 的 id）＋mapTo（v0.1b 應搬到的既有欄位路徑，或「新欄位」）。金額單位依引擎慣例為 US$bn（另註明者除外）。CRWV 欄位維持不動，v0.1b 改寫時依 mapTo 搬移。",
+  "_readme": "Nebius 資料草稿（v0.1a 產出；v0.1b 步驟 1 已把可對應既有欄位的資料搬入 meta、ytdActual、latestQuarter、callFacts、debt、valuation 等）。本區只保留引擎尚未使用、後續步驟（預付款、融資瀑布、可轉債稀釋、其他事業與持股、每 MW 三情境）會用的欄位；每欄 value＋unit＋ref（data/nebius_facts_20261007.json 的 id）。",
   "files": {
    "facts": "data/nebius_facts_20261007.json",
    "perMw": "data/permw_tokenomics_20261007.json",
    "consensus": "data/consensus_nbis_20261007.json"
   },
-  "meta": {
-   "company": {
-    "value": "Nebius Group",
-    "unit": "文字",
-    "ref": "sh.out.q2_26",
-    "mapTo": "meta.company"
-   },
-   "ticker": {
-    "value": "NBIS",
-    "unit": "文字",
-    "ref": "sh.out.q2_26",
-    "mapTo": "meta.ticker"
-   },
-   "priceClose": {
-    "value": 249.87,
-    "unit": "US$",
-    "ref": "mkt.price.close",
-    "mapTo": "valuation.price",
-    "note": "2026-10-06 收盤"
-   },
-   "priceDate": {
-    "value": "2026-10-06",
-    "unit": "日期",
-    "ref": "mkt.price.close",
-    "mapTo": "meta.priceDate"
-   },
-   "consensusFile": {
-    "value": "data/consensus_nbis_20261007.json",
-    "unit": "路徑",
-    "ref": "mkt.pt.sp",
-    "mapTo": "meta.consensusFile"
-   },
-   "fiscalYearEndMonth": {
-    "value": 12,
-    "unit": "月",
-    "ref": "is.rev.fy25",
-    "mapTo": "calendar.fiscalYearEndMonth"
-   },
-   "latestQuarterFiled": {
-    "value": "FY26Q2",
-    "unit": "文字",
-    "ref": "is.rev.q2_26",
-    "mapTo": "calendar.latestQuarterFiled",
-    "note": "6-K 2026-08-12（外國私人發行人無 10-Q；以 6-K 附件 99.2 季報為已申報口徑）"
-   }
-  },
-  "latestQuarter": {
-   "revenue": {
-    "value": 0.5823,
-    "unit": "US$bn",
-    "ref": "is.rev.q2_26",
-    "mapTo": "latestQuarter.revenue"
-   },
-   "h1Revenue": {
-    "value": 0.9813,
-    "unit": "US$bn",
-    "ref": "is.rev.h1_26",
-    "mapTo": "latestQuarter.h1Revenue"
-   },
-   "aiCloudRevenue": {
-    "value": 0.5749,
-    "unit": "US$bn",
-    "ref": "is.revAI.q2_26",
-    "mapTo": "新欄位"
-   },
-   "adjEbitda": {
-    "value": 0.2362,
-    "unit": "US$bn",
-    "ref": "is.ebitda.q2_26",
-    "mapTo": "latestQuarter.adjEbitda"
-   },
-   "adjEbitdaAiCloud": {
-    "value": 0.2857,
-    "unit": "US$bn",
-    "ref": "is.ebitdaAI.q2_26",
-    "mapTo": "新欄位"
-   },
-   "opInc": {
-    "value": -0.1759,
-    "unit": "US$bn",
-    "ref": "is.ebit.q2_26",
-    "mapTo": "latestQuarter.opInc"
-   },
-   "ni": {
-    "value": -0.1904,
-    "unit": "US$bn",
-    "ref": "is.ni.q2_26",
-    "mapTo": "latestQuarter.ni"
-   },
-   "da": {
-    "value": 0.2597,
-    "unit": "US$bn",
-    "ref": "is.da.q2_26",
-    "mapTo": "latestQuarter.da"
-   },
-   "sbc": {
-    "value": 0.1025,
-    "unit": "US$bn",
-    "ref": "is.sbc.q2_26",
-    "mapTo": "latestQuarter.sbc"
-   },
-   "interest": {
-    "value": 0.1191,
-    "unit": "US$bn",
-    "ref": "is.intExp.q2_26",
-    "mapTo": "latestQuarter.interest"
-   },
-   "capexQ2": {
-    "value": 5.6574,
-    "unit": "US$bn",
-    "ref": "cf.capexCash.q2_26",
-    "mapTo": "latestQuarter.capexQ2",
-    "note": "現金口徑（應計口徑未揭露）"
-   },
-   "cashCapexH1": {
-    "value": 8.1303,
-    "unit": "US$bn",
-    "ref": [
-     "cf.capexCash.q1_26",
-     "cf.capexCash.q2_26"
-    ],
-    "mapTo": "latestQuarter.cashCapexH1",
-    "note": "[Derived] Q1＋Q2"
-   },
-   "cfoH1": {
-    "value": 4.5041,
-    "unit": "US$bn",
-    "ref": [
-     "cf.cfo.q1_26",
-     "cf.cfo.q2_26"
-    ],
-    "mapTo": "latestQuarter.cfoH1",
-    "note": "[Derived] Q1＋Q2"
-   },
-   "cash": {
-    "value": 8.0421,
-    "unit": "US$bn",
-    "ref": "bs.cash.q2_26",
-    "mapTo": "latestQuarter.cash"
-   },
-   "restricted": {
-    "value": 1.056,
-    "unit": "US$bn",
-    "ref": "bs.restrCash.q2_26",
-    "mapTo": "latestQuarter.restricted"
-   },
-   "deferredTotal": {
-    "value": 5.9752,
-    "unit": "US$bn",
-    "ref": "bs.defRev.q2_26",
-    "mapTo": "latestQuarter.deferredTotal"
-   },
-   "deferredInH1": {
-    "value": 4.395,
-    "unit": "US$bn",
-    "ref": "pp.cfoDriver.h1",
-    "mapTo": "latestQuarter.deferredIn"
-   },
-   "rpo": {
-    "value": 37.4906,
-    "unit": "US$bn",
-    "ref": "bs.rpo.q2_26",
-    "mapTo": "latestQuarter.rpo"
-   },
-   "rpo24m": {
-    "value": 0.36,
-    "unit": "比例",
-    "ref": "bs.rpo.q2_26",
-    "mapTo": "latestQuarter.rpo24m"
-   },
-   "rpo25to48": {
-    "value": 0.4,
-    "unit": "比例",
-    "ref": "bs.rpo.q2_26",
-    "mapTo": "latestQuarter.rpo25to48"
-   },
-   "ppeNet": {
-    "value": 13.0452,
-    "unit": "US$bn",
-    "ref": "bs.ppe.q2_26",
-    "mapTo": "latestQuarter.ppe",
-    "note": "注意：CRWV 欄位 ppe 為毛額；Nebius 毛額 14.1495（附註 7）"
-   },
-   "opLeaseLiab": {
-    "value": 1.6253,
-    "unit": "US$bn",
-    "ref": "bs.leaseLiab.q2_26",
-    "mapTo": "latestQuarter.opLeaseLiab"
-   },
-   "offBalanceLease": {
-    "value": 12.0541,
-    "unit": "US$bn",
-    "ref": "bs.leaseNotCommenced.q2_26",
-    "mapTo": "leases.facts.notCommenced"
-   },
-   "sharesOut": {
-    "value": 0.271855,
-    "unit": "bn 股",
-    "ref": "sh.out.q2_26",
-    "mapTo": "latestQuarter.sharesOut",
-    "note": "不含 NVIDIA 預付認股權證 0.021066bn 股與 2026-08 以股換債約 0.0158bn 股"
-   },
-   "basicWaso": {
-    "value": 0.280382,
-    "unit": "bn 股",
-    "ref": "sh.basicW.q2_26",
-    "mapTo": "latestQuarter.basicWaso"
-   },
-   "equityH1": {
-    "value": 2.8111,
-    "unit": "US$bn",
-    "ref": "cf.cff.q2_26",
-    "mapTo": "latestQuarter.equityH1",
-    "note": "ATM 出售庫藏股 2,846.7−發行成本 35.6（另 NVIDIA 預付認股權證 2.0 列於 equity.nvidiaPfw）"
-   },
-   "custA": {
-    "value": 0.24,
-    "unit": "比例",
-    "ref": "ct.concentration.h1",
-    "mapTo": "latestQuarter.custA"
-   },
-   "custB": {
-    "value": 0.21,
-    "unit": "比例",
-    "ref": "ct.concentration.h1",
-    "mapTo": "latestQuarter.custB"
-   },
-   "custC": {
-    "value": 0.14,
-    "unit": "比例",
-    "ref": "ct.concentration.h1",
-    "mapTo": "latestQuarter.custC"
-   }
-  },
-  "ytdActual": {
-   "revenue": {
-    "value": 0.9813,
-    "unit": "US$bn",
-    "ref": "is.rev.h1_26",
-    "mapTo": "ytdActual.revenue"
-   },
-   "cashCapex": {
-    "value": 8.1303,
-    "unit": "US$bn",
-    "ref": [
-     "cf.capexCash.q1_26",
-     "cf.capexCash.q2_26"
-    ],
-    "mapTo": "ytdActual.cashCapex"
-   },
-   "cfo": {
-    "value": 4.5041,
-    "unit": "US$bn",
-    "ref": [
-     "cf.cfo.q1_26",
-     "cf.cfo.q2_26"
-    ],
-    "mapTo": "ytdActual.cfo"
-   },
-   "prepay": {
-    "value": 4.552,
-    "unit": "US$bn",
-    "ref": "pp.cashH1.derived",
-    "mapTo": "ytdActual.prepay",
-    "note": "[Derived] 遞延營收增加＋期初遞延認列"
-   },
-   "adjEbitda": {
-    "value": 0.3657,
-    "unit": "US$bn",
-    "ref": [
-     "is.ebitda.q1_26",
-     "is.ebitda.q2_26"
-    ],
-    "mapTo": "ytdActual.adjEbitda"
-   },
-   "da": {
-    "value": 0.4717,
-    "unit": "US$bn",
-    "ref": [
-     "is.da.q1_26",
-     "is.da.q2_26"
-    ],
-    "mapTo": "ytdActual.da"
-   },
-   "sbc": {
-    "value": 0.1378,
-    "unit": "US$bn",
-    "ref": [
-     "is.sbc.q1_26",
-     "is.sbc.q2_26"
-    ],
-    "mapTo": "ytdActual.sbc"
-   },
-   "opInc": {
-    "value": -0.3039,
-    "unit": "US$bn",
-    "ref": [
-     "is.ebit.q1_26",
-     "is.ebit.q2_26"
-    ],
-    "mapTo": "ytdActual.opInc"
-   },
-   "interest": {
-    "value": 0.1828,
-    "unit": "US$bn",
-    "ref": [
-     "is.intExp.q1_26",
-     "is.intExp.q2_26"
-    ],
-    "mapTo": "ytdActual.interest"
-   },
-   "cash1231": {
-    "value": 3.6781,
-    "unit": "US$bn",
-    "ref": "bs.cash.fy25",
-    "mapTo": "ytdActual.cash1231"
-   },
-   "borrow": {
-    "value": 4.3375,
-    "unit": "US$bn",
-    "ref": "cf.cff.q1_26",
-    "mapTo": "ytdActual.borrow",
-    "note": "2026-03 可轉債總價款 4,337.5"
-   },
-   "equity": {
-    "value": 4.8111,
-    "unit": "US$bn",
-    "ref": [
-     "cf.cff.q2_26",
-     "nvda.pfw"
-    ],
-    "mapTo": "ytdActual.equity",
-    "note": "ATM 淨 2,811.1＋NVIDIA 預付認股權證 2,000"
-   },
-   "cappedCall": {
-    "value": 0.0,
-    "unit": "US$bn",
-    "ref": "cv.cappedCall",
-    "mapTo": "ytdActual.cappedCall",
-    "note": "未見 capped call"
-   }
-  },
   "debt": {
-   "convertibles": {
-    "value": [
-     [
-      "2.00% 2029（2025-06）",
-      0.0875,
-      0.02,
-      "2029-06",
-      1.2,
-      51.45
-     ],
-     [
-      "3.00% 2031（2025-06）",
-      0.0875,
-      0.03,
-      "2031-06",
-      1.25,
-      51.45
-     ],
-     [
-      "1.00% 2030（2025-09）",
-      1.58125,
-      0.01,
-      "2030-09",
-      1.15,
-      138.75
-     ],
-     [
-      "2.75% 2032（2025-09）",
-      1.58125,
-      0.0275,
-      "2032-09",
-      1.15,
-      138.75
-     ],
-     [
-      "1.25% 2031（2026-03）",
-      2.5875,
-      0.0125,
-      "2031-03",
-      1.2,
-      183.22
-     ],
-     [
-      "2.625% 2033（2026-03）",
-      1.75,
-      0.02625,
-      "2033-03",
-      1.2,
-      180.31
-     ],
-     [
-      "0.50% 2030（2026-08）",
-      3.45,
-      0.005,
-      "2030-02",
-      1.1,
-      313.46
-     ],
-     [
-      "4.50% 2034（2026-08）",
-      2.3,
-      0.045,
-      "2034-02",
-      1.25,
-      324.65
-     ]
-    ],
-    "unit": "清單：[名稱, 原始本金 US$bn, 票息, 到期, 到期累積倍數, 初始轉換價 US$]",
-    "ref": [
-     "cv.jun29.orig",
-     "cv.jun31.orig",
-     "cv.sep30.orig",
-     "cv.sep32.orig",
-     "cv.mar31.orig",
-     "cv.mar33.orig",
-     "cv.aug30.orig",
-     "cv.aug34.orig",
-     "cv.aug.exchange"
-    ],
-    "mapTo": "debt.convertible（CRWV 只有單筆期後可轉債欄位；Nebius 需新增多檔清單）＋新欄位",
-    "note": "2026-08-24 交割後；2029、2031 舊債已各交換 $400M（剩 $87.5M）。評價日 6/30 時點的本金另見 convertiblesAt0630"
-   },
-   "convertiblesAt0630": {
-    "value": [
-     10.0418,
-     8.499
-    ],
-    "unit": "[到期累積本金, 帳面值] US$bn",
-    "ref": "cv.total.q2_26",
-    "mapTo": "debt.instruments"
-   },
    "abf": {
     "value": [
      "資產擔保定期貸款",
@@ -1737,21 +1298,9 @@
     "ref": "abf.amount",
     "mapTo": "debt.instruments",
     "note": "2026-07-10 簽約（評價日後）；攤還時程未揭露"
-   },
-   "otherCurrent": {
-    "value": 0.0467,
-    "unit": "US$bn",
-    "ref": "debt.other.q2_26",
-    "mapTo": "debt.instruments"
    }
   },
   "equity": {
-   "atmShareCap": {
-    "value": 25.0,
-    "unit": "m 股",
-    "ref": "atm.size",
-    "mapTo": "callFacts.atmShares"
-   },
    "atmRemaining": {
     "value": 12.271,
     "unit": "m 股",
@@ -1790,44 +1339,6 @@
    }
   },
   "guidance": {
-   "revLo": {
-    "value": 3.0,
-    "unit": "US$bn",
-    "ref": "g.rev26",
-    "mapTo": "callFacts.revLo"
-   },
-   "revHi": {
-    "value": 3.4,
-    "unit": "US$bn",
-    "ref": "g.rev26",
-    "mapTo": "callFacts.revHi"
-   },
-   "arrLo": {
-    "value": 7.0,
-    "unit": "US$bn",
-    "ref": "g.arr26",
-    "mapTo": "callFacts.arrLo"
-   },
-   "arrHi": {
-    "value": 9.0,
-    "unit": "US$bn",
-    "ref": "g.arr26",
-    "mapTo": "callFacts.arrHi"
-   },
-   "capexLo": {
-    "value": 20.0,
-    "unit": "US$bn",
-    "ref": "g.capex26",
-    "mapTo": "callFacts.capexLo",
-    "note": "二手轉述"
-   },
-   "capexHi": {
-    "value": 25.0,
-    "unit": "US$bn",
-    "ref": "g.capex26",
-    "mapTo": "callFacts.capexHi",
-    "note": "二手轉述"
-   },
    "adjEbitdaMargin": {
     "value": 0.4,
     "unit": "比例",

@@ -76,7 +76,7 @@ json.dump(co, open(os.path.join(d, 'company.json'), 'w', encoding='utf-8'), ensu
 X = build_and_compare(d, '測試 A')
 H = html_quarterly(d)
 cons = json.load(open(os.path.join(d, co['meta']['consensusFile']), encoding='utf-8'))['quarterlyEstimates']['2026Q3']
-G = co['quarterly']['guidance']['2026Q3']
+G = co['quarterly'].get('guidance', {}).get('2026Q3', {})  # v0.1b：公司未給季度指引時為空（差距與位置皆為不適用）
 # 獨立計算（Python）：模型值取 Excel「季度追蹤」焦點列（Q3），共識讀共識檔、指引讀 company.json、實際數為上面的假設值
 exp = {}
 for m in co['quarterly']['metrics']:
@@ -100,7 +100,7 @@ for m in co['quarterly']['metrics']:
     if exp[k]['posA'] and hq['posA'] != exp[k]['posA']:
         FAIL.append(f'測試 A {m["label"]} 指引位置：HTML {hq["posA"]} ≠ {exp[k]["posA"]}')
 fmt = lambda x: ('−' if x < 0 else '+') + f'{abs(x) * 100:,.1f}%'
-want = f"｜實際 $3.50bn（較模型 {fmt(exp['revenue']['am'])}、較共識 {fmt(exp['revenue']['ac'])}、{exp['revenue']['posA']}）"
+want = f"｜實際 $3.50bn（較模型 {fmt(exp['revenue']['am'])}、較共識 {fmt(exp['revenue']['ac'])}" + (f"、{exp['revenue']['posA']}" if exp['revenue']['posA'] else "") + "）"
 if want not in H['keyLines'][0]:
     FAIL.append(f'測試 A 驗證點句缺少「{want}」：{H["keyLines"][0]}')
 summ, txt, errs = page_text(os.path.join(d, 'out', 't.html'))

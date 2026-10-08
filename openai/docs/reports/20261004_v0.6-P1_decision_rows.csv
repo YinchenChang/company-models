@@ -1,0 +1,36 @@
+﻿ID,參數,索引,值,原決策,v0.5 路徑
+INP_001,基準年,—,2025,—,tokenRevenue.meta.baseYear
+INP_002,校準年（第 1 個）,—,2025,—,tokenRevenue.meta.calibrationYears.0
+INP_003,校準年（第 2 個）,—,2026,—,tokenRevenue.meta.calibrationYears.1
+INP_004,彈性起算年,—,2027,—,tokenRevenue.meta.elasticityFromYear
+INP_005,模型年度,第 1 年,2025,D10→FY2030,tokenRevenue.meta.years.0
+INP_006,模型年度,第 2 年,2026,D10→FY2030,tokenRevenue.meta.years.1
+INP_007,模型年度,第 3 年,2027,D10→FY2030,tokenRevenue.meta.years.2
+INP_008,模型年度,第 4 年,2028,D10→FY2030,tokenRevenue.meta.years.3
+INP_009,模型年度,第 5 年,2029,D10→FY2030,tokenRevenue.meta.years.4
+INP_010,模型年度,第 6 年,2030,D10→FY2030,tokenRevenue.meta.years.5
+INP_012,T4 遷移幅度（占公司計畫）— 低,—,0.0,T4,tokenRevenue.subscription.migration.planFraction
+INP_013,T4 遷移幅度（占公司計畫）— 基準,—,0.3,T4,tokenRevenue.subscription.migration.planFraction
+INP_014,T4 遷移幅度（占公司計畫）— 高,—,0.8,T4,tokenRevenue.subscription.migration.planFraction
+INP_050,價格基準（開關）,—,tierRole,N3a,tokenRevenue.api.priceBasis
+INP_137,情境 low：價格彈性：任務數,—,-0.35,D11,tokenRevenue.scenarios.low.elasticity.tasks
+INP_138,情境 low：價格彈性：每任務 token,—,-0.15,D11,tokenRevenue.scenarios.low.elasticity.tokensPerTask
+INP_139,情境 low：每任務 token 年增率,—,0.25,D11,tokenRevenue.scenarios.low.tokensPerTaskGrowth
+INP_140,情境 low：牌價年變動率 top 層,—,-0.45,D11,tokenRevenue.scenarios.low.listPriceAnnualChange.top
+INP_141,情境 low：牌價年變動率 mid 層,—,-0.6,D11,tokenRevenue.scenarios.low.listPriceAnnualChange.mid
+INP_142,情境 low：牌價年變動率 low 層,—,-0.6,D11,tokenRevenue.scenarios.low.listPriceAnnualChange.low
+INP_143,情境 base：價格彈性：任務數,—,-0.7,D11,tokenRevenue.scenarios.base.elasticity.tasks
+INP_144,情境 base：價格彈性：每任務 token,—,-0.3,D11,tokenRevenue.scenarios.base.elasticity.tokensPerTask
+INP_145,情境 base：每任務 token 年增率,—,0.15,D11,tokenRevenue.scenarios.base.tokensPerTaskGrowth
+INP_146,情境 base：牌價年變動率 top 層,—,-0.3,D11,tokenRevenue.scenarios.base.listPriceAnnualChange.top
+INP_147,情境 base：牌價年變動率 mid 層,—,-0.4,D11,tokenRevenue.scenarios.base.listPriceAnnualChange.mid
+INP_148,情境 base：牌價年變動率 low 層,—,-0.4,D11,tokenRevenue.scenarios.base.listPriceAnnualChange.low
+INP_149,情境 high：價格彈性：任務數,—,-1.05,D11,tokenRevenue.scenarios.high.elasticity.tasks
+INP_150,情境 high：價格彈性：每任務 token,—,-0.45,D11,tokenRevenue.scenarios.high.elasticity.tokensPerTask
+INP_151,情境 high：每任務 token 年增率,—,0.1,D11,tokenRevenue.scenarios.high.tokensPerTaskGrowth
+INP_152,情境 high：牌價年變動率 top 層,—,-0.3,D11,tokenRevenue.scenarios.high.listPriceAnnualChange.top
+INP_153,情境 high：牌價年變動率 mid 層,—,-0.4,D11,tokenRevenue.scenarios.high.listPriceAnnualChange.mid
+INP_154,情境 high：牌價年變動率 low 層,—,-0.4,D11,tokenRevenue.scenarios.high.listPriceAnnualChange.low
+INP_181,未揭露時程合約的攤提方式,—,ramp,N4(b),spending.unscheduledProfile
+INP_238,每年分鐘數（定義常數）,—,525600,E6,r3.E8a.每年分鐘數
+INP_239,單位換算：B token → T token 的除數（定義常數）,—,1000,E6,r3.E8a.單位換算

@@ -10,7 +10,7 @@ function uM(e, t) {
 function dM(e) {
   return Math.max(0, -e)
 }
-var fM = .035;
+var fM = COMPANY_DATA.valuation.atmSharesInValuation ?? 0; // v0.1b：評價股數中「期後股權發行上限」的股數（ATM 關閉時扣回；CRWV 0.035、Nebius 0）
 
 function shareCount(e, t) {
   let n = e.includeAtm ? 0 : fM;
@@ -39,7 +39,7 @@ function forwardPL(e, t) {
       u = e.years[c].servicesRev,
       d = l + u,
       f = c === 0 ? uM(HIST_PL[3].revenue + d, r) : uM(d, r),
-      EB = d * e.years[c].ebM,
+      EB = d * e.years[c].ebM + (e.years[c].otherEbitda || 0), // v0.1b：加其他事業 EBITDA
       p = EB - e.years[c].daFleet,
       m = e.years[c].interest,
       pt = p - m,
@@ -54,7 +54,7 @@ function forwardPL(e, t) {
       y = e.years[c].cashCapex,
       b = t.wcPctOfRevGrowth * Math.max(0, d - r),
       tb2 = Math.max(0, p - Math.min(N2, p * NOL_USE)),
-      x = p - tb2 * t.tax + v - y - b,
+      x = p - tb2 * t.tax + v - y - b - (e.years[c].prepayRecog || 0), // v0.1b：預付認列為非現金營收，自 UFCF 扣除（預付流入已在現金 CapEx 抵減）
       S = e.years[c].revenue,
       w = e.years[c].newRev,
       T = e.years[c].capacity > 0 ? e.years[c].unsold / e.years[c].capacity : 0,
@@ -113,8 +113,11 @@ function dcfValue(e, t) {
     i = r.reduce((e, t) => e + t, 0),
     c = e[e.length - 1],
     l = c.opInc * (1 - t.tax) + c.da - c.da * t.maintRatio,
-    bad = t.wacc <= t.g ? `WACC ≤ 永續成長率，Gordon 終值無定義` : l <= 0 ? `常態化 FCF ≤ 0，終值無經濟意義` : ``,
-    a = bad ? 0 : l * (1 + t.g) / (t.wacc - t.g),
+    // v0.2 第 2 輪：失效只限 WACC ≤ g（方法本身無定義）。常態化 FCF ≤ 0 時終值以 0 計、DCF 照常 0 截斷（或選擇權）並保留權重——
+    // 舊口徑把它判為失效、權重改給 EV/EBITDA 100%，造成「利潤率更低、目標價反而更高」的跳躍（附錄敏感度穩態 EBITDA 率 35% 得 $73.6 > 基準 $61.7）
+    bad = t.wacc <= t.g ? `WACC ≤ 永續成長率，Gordon 終值無定義` : ``,
+    tv0 = !bad && l <= 0,
+    a = bad || tv0 ? 0 : l * (1 + t.g) / (t.wacc - t.g),
     o = a / (1 + t.wacc) ** CALQ.tEnd[CALQ.tEnd.length - 1],
     s = i + o,
     u = s - t.netDebt,
@@ -126,6 +129,7 @@ function dcfValue(e, t) {
   return {
     invalid: !!bad,
     invalidReason: bad,
+    tvZero: tv0, // v0.2 第 2 輪：常態化 FCF ≤ 0，終值以 0 計
     zeroPerShare: zr,
     optPerShare: op,
     pvFcf: i,
@@ -158,8 +162,7 @@ var EVG_MULTS = [3.4, 4.5, 5, 6, 7];
 function evAnchorGrid(d, st, o) {
   let base = runValuation(d, st, o);
   let leg = EVG_MULTS.map(m => [1, 2, 3, 4].map(k => {
-    let y = d.years[k];
-    return Math.max(0, (base.fwd[k].ebitda * m - (y.totalDebtEnd - y.cum)) / base.fwd[k].shares / Math.pow(1 + o.wacc, k - CALQ.evOffset))
+    return Math.max(0, (base.fwd[k].ebitda * m - base.v.fund.ndY[k]) / base.fwd[k].shares / Math.pow(1 + o.wacc, k - CALQ.evOffset))
   }));
   let DI = base.d.invalid, wd = DI ? 0 : BLEND_W.dcf, dcf = DI ? 0 : base.d.perShareT;
   return {
@@ -177,7 +180,7 @@ var BLEND_W = COMPANY_DATA.methodology.blendWeights,
     capex: `已扣五期 Cash CapEx；終值用常態化 FCF（D&A×維持比率）`,
     hole: `不扣缺口：新債視為公允價值、價值中性；新股募得現金折現後加回，股數同步增加`,
     shares: `含 ATM ＋ 瀑布新股`,
-    netDebt: `6/30 本金 35.55 − 現金 5.54 = 30.0`
+    netDebt: `評價日本金 ${Y(LATEST_Q.debtPrincipal, 2)} − 現金 ${Y(LATEST_Q.cash + LATEST_Q.marketable, 2)}（另含期後調整）`
   }, {
     method: `EV/EBITDA（錨定年度，可選 FY27–FY30）`,
     capex: `EBITDA 未扣 CapEx`,
@@ -241,36 +244,57 @@ function wM(e) {
   return t.length ? t.length % 2 ? t[n] : (t[n - 1] + t[n]) / 2 : NaN
 }
 
+function ndAdjQ(n) { // v0.1b：淨負債調整項＝類債項目合計 − Σ 持股估值 × 持股比例 ×（1 − 持股折價）
+  return (n.debtLike || []).reduce((a, x) => a + x[1], 0) - (n.holdings || []).reduce((a, h) => a + h[1] * h[2], 0) * (1 - (n.holdingsDiscount ?? 0))
+}
+
 function runValuation(e, t, n) {
-  let r = shareCount(t, n),
+  // v0.1b：可轉債稀釋（八檔，若轉換法）。第一輪判斷價＝現價；第二輪判斷價＝MIN(現價, 第一輪加權目標價)（「以較保守者」），
+  // 評價（股數、淨負債、錨定年末淨負債）依第二輪分類。融資現金流（票息、到期還本）依 runFunding 的分類（判斷價＝發行參考價）。
+  let r0 = shareCount(t, n),
     Y2 = e.years,
-    i = {
-      ...n,
-      shares: r,
-      fund: {
-        eq: Y2.map(e => e.equity || 0),
-        sh: e.totals.newShares || 0,
-        sh27: Y2[1].cumNewShares || 0,
-        nd27: Y2[1].totalDebtEnd - Y2[1].cum,
-        shY: Y2.map(e => e.cumNewShares || 0),
-        ndY: Y2.map(e => e.totalDebtEnd - e.cum)
-      }
+    CF = e.cvFund || CVN.map(() => !1),
+    adj = ndAdjQ(n), // 淨負債調整項（v0.1b：類債 − 持股 ×（1 − 折價））
+    mk = cv => {
+      let sh = r0 + CVN.reduce((a, c, j) => a + (cv[j] ? c.S : 0), 0),
+        mDebt = CVN.reduce((a, c, j) => a + (cv[j] ? 0 : c.M), 0),
+        mAdj = CVN.reduce((a, c, j) => a + c.M * ((CF[j] ? 1 : 0) - (cv[j] ? 1 : 0)), 0) + adj, // 錨定年末淨負債：融資分類與評價分類不同的部分＋調整項
+        i = {
+          ...n,
+          shares: sh,
+          netDebt: n.netDebt + mDebt + adj,
+          fund: {
+            eq: Y2.map(e => e.equity || 0),
+            sh: e.totals.newShares || 0,
+            sh27: Y2[1].cumNewShares || 0,
+            nd27: Y2[1].totalDebtEnd - Y2[1].cum + mAdj,
+            shY: Y2.map(e => e.cumNewShares || 0),
+            ndY: Y2.map(e => e.totalDebtEnd - e.cum + mAdj)
+          }
+        },
+        a = forwardPL(e, i),
+        o = dcfValue(a, i),
+        c = evEbitdaLeg(a, i),
+        d = Math.max(0, c),
+        f = blendCall({
+          spot: i.price,
+          dcfPx: o.perShareT,
+          pePx: d,
+          eqTotal: e.totals.equity || 0,
+          newSh: e.totals.newShares || 0,
+          tvShare: o.tvShare,
+          mktCap: i.price * r0,
+          shares0: sh,
+          dcfInvalid: o.invalid
+        });
+      return { i, a, o, c, d, f, sh, mDebt, mAdj }
     },
-    a = forwardPL(e, i),
-    o = dcfValue(a, i),
-    c = evEbitdaLeg(a, i),
-    d = Math.max(0, c),
-    f = blendCall({
-      spot: i.price,
-      dcfPx: o.perShareT,
-      pePx: d,
-      eqTotal: e.totals.equity || 0,
-      newSh: e.totals.newShares || 0,
-      tvShare: o.tvShare,
-      mktCap: i.price * r,
-      shares0: r,
-      dcfInvalid: o.invalid
-    });
+    cv1 = n.cvFix || cvConvQ(n.price), // cvFix：固定分類（方法區間只換倍數、不重新分類，與 Excel 相同）
+    R1 = mk(cv1),
+    px2 = n.cvFix ? NaN : Math.min(n.price, R1.f.blended),
+    cv2 = n.cvFix || cvConvQ(px2),
+    R = mk(cv2),
+    { i, a, o, c, d, f } = R;
   return {
     v: i,
     fwd: a,
@@ -280,12 +304,14 @@ function runValuation(e, t, n) {
     hole: e.totals.equity || 0,
     fullHole: e.totals.equity || 0,
     nd27: i.fund.nd27,
-    sh27: r * 1.01 + i.fund.sh27,
+    sh27: R.sh * 1.01 + i.fund.sh27,
     evK: Math.min(4, Math.max(1, Math.round(i.evYear ?? 1))),
     ndA: i.fund.ndY[Math.min(4, Math.max(1, Math.round(i.evYear ?? 1)))],
     shA: a[Math.min(4, Math.max(1, Math.round(i.evYear ?? 1)))].shares,
     call: f,
-    shares: r
+    shares: R.sh,
+    shares0: r0,
+    cv: { cv1, cv2, px2, tp1: R1.f.blended, sh1: R1.sh, sh2: R.sh, m1: R1.mDebt, m2: R.mDebt, cvFund: CF } // v0.1b：可轉債分類（第一輪／第二輪）
   }
 }
 
@@ -296,7 +322,9 @@ function scnQ(e, sc) {
     scenario: sc,
     a: { ...structuredClone(e.a), newLease: [...SCENARIOS[sc].a.newLease] },
     mw31: SCENARIOS[sc].mw31,
-    m: { ...e.m, accepted: [...SCENARIOS[sc].acc], billable: [...SCENARIOS[sc].bil] }
+    cvCap: SCENARIOS[sc].cvCap,
+    billableOpen: SCENARIOS[sc].bo, // v0.1c
+    m: { ...e.m, accepted: [...SCENARIOS[sc].acc], billable: [...SCENARIOS[sc].bil], revMW: [...SCENARIOS[sc].rev] }
   };
 }
 
@@ -317,7 +345,7 @@ function targetRange(d, st, o, base) {
     }),
     A = [Math.min(sc[0].tgt, sc[2].tgt), Math.max(sc[0].tgt, sc[2].tgt)],
     mLo = Math.min(...RANGE_MULTS), mHi = Math.max(...RANGE_MULTS),
-    bm = [mLo, mHi].map(m => runValuation(d, st, { ...o, evEbitda: m }).call.blended),
+    bm = [mLo, mHi].map(m => runValuation(d, st, { ...o, evEbitda: m, cvFix: base.cv.cv2 }).call.blended),
     B = [Math.min(...bm), Math.max(...bm)],
     m = o.evEbitda, eq = (a, b) => Math.abs(a - b) < 1e-9,
     wd = base.call.weights.dcf, we = base.call.weights.pe,
@@ -380,31 +408,31 @@ function EM(e, t, n) {
     ok: l,
     severity: `ok`,
     title: `ATM／可轉債與股數`,
-    detail: n.includeAtm ? `含 ATM 上限 35m 股，評價股數 ${e.shares.toFixed(3)}bn（7/31 流通 0.5515bn）。2033 可轉債潛在 37.8m 股（轉換價 $97.85，capped call 至 $199.70）未計入。` : `ATM 關閉，股數由 ${VAL_DEFAULTS.shares.toFixed(3)} 扣回 35m 股為 ${e.shares.toFixed(3)}bn，缺口同步擴大。`
+    detail: `評價股數 ${e.shares.toFixed(4)}bn（季末流通 ${Y(LATEST_Q.sharesOut, 4)}bn＋NVIDIA 預付認股權證＋以股換債＋RSU 與選擇權庫藏股法）。${n.includeAtm ? `期後股權／可轉債淨現金計入首期來源。` : `期後股權／可轉債關閉，缺口同步擴大。`}`
   }, {
     id: `val-rev-guide`,
-    ok: (HIST_PL[3].revenue + e.fwd[0].revenue) >= 12.4 - .05,
-    severity: (HIST_PL[3].revenue + e.fwd[0].revenue) >= 12.4 ? `ok` : `watch`,
-    title: `2026 營收指引 $12.4–13.2bn`,
-    detail: `法說上修全年 12.4–13.2、Q3 3.45–3.6。本模型 1H 實際 4.653 + 2H26 IS ${e.fwd[0].revenue.toFixed(2)} = ${(HIST_PL[3].revenue+e.fwd[0].revenue).toFixed(2)}bn。調整後營業利益指引 0.96–1.15；模型 2H26 GAAP 營業利益 ${e.fwd[0].opInc.toFixed(2)}（未加回 SBC）。`
+    ok: (HIST_PL[3].revenue + e.fwd[0].revenue) >= CALL_FACTS.revLo - .05 && (HIST_PL[3].revenue + e.fwd[0].revenue) <= CALL_FACTS.revHi + .05,
+    severity: (HIST_PL[3].revenue + e.fwd[0].revenue) >= CALL_FACTS.revLo && (HIST_PL[3].revenue + e.fwd[0].revenue) <= CALL_FACTS.revHi ? `ok` : `watch`,
+    title: `${PERIOD_FY[0]} 營收指引 $${CALL_FACTS.revLo}–${CALL_FACTS.revHi}bn`,
+    detail: `股東信全年營收指引 ${CALL_FACTS.revLo}–${CALL_FACTS.revHi}、年底 ARR ${CALL_FACTS.arrLo}–${CALL_FACTS.arrHi}。本模型年初至今實際 ${Y(HIST_PL[3].revenue, 3)} + 模型期 ${e.fwd[0].revenue.toFixed(2)} = ${(HIST_PL[3].revenue+e.fwd[0].revenue).toFixed(2)}bn；營收由 MW × 每 MW 年收入驅動，不回推指引，差距見「市場共識」分頁的差異原因。`
   }, {
     id: `val-plug`,
     ok: r.plugRatio <= .2,
     severity: r.plugRatio > .2 ? `watch` : `ok`,
     title: `IS 與資金模型同一組營收`,
-    detail: `FY27 算力營收 ${r.gpu.toFixed(1)} = 期初 RPO 轉換 ${r.fundingRev.toFixed(1)} + 新簽約 ${r.inYear.toFixed(1)}；未售產能占容量 ${(r.plugRatio*100).toFixed(0)}%。非算力服務 ${r.services.toFixed(1)} 單列。新簽約收入取決於「新產能簽約率」，是 Assumed；超過 20% 未售會標示。`
+    detail: `${PERIODS[1]} 算力營收 ${r.gpu.toFixed(1)}（＝平均在役 MW × 每 MW 年收入）；其中期初 RPO 可涵蓋 ${r.fundingRev.toFixed(1)}、其餘 ${r.inYear.toFixed(1)}；未售產能占容量 ${(r.plugRatio*100).toFixed(0)}%。非算力服務 ${r.services.toFixed(1)} 單列。`
   }, {
     id: `dcf-validity`,
     ok: !e.d.invalid,
     severity: e.d.invalid ? `watch` : `ok`,
     title: e.d.invalid ? `DCF 失效：${e.d.invalidReason}` : `DCF 有效（WACC − g ＝ ${((e.v.wacc - e.v.g)*100).toFixed(1)}%，常態化 FCF ${e.d.normFcf.toFixed(1)}）`,
-    detail: `失效只定義為數學上的失效：WACC ≤ g，或常態化 FCF ≤ 0。股權價值為負不算失效——那是有效的經濟結論（企業價值低於淨負債）。目前下限方式：${e.v.dcfMode === `option` ? `選擇權（Merton，σ ${(e.v.sigma*100).toFixed(0)}%）` : `0 截斷`}；0 截斷 $${e.d.zeroPerShare.toFixed(1)}、選擇權 $${e.d.optPerShare.toFixed(1)}。失效時 DCF 權重歸零、EV/EBITDA 權重 100%。`
+    detail: `失效只定義為數學上的失效：WACC ≤ g（v0.2：常態化 FCF ≤ 0 時終值以 0 計、DCF 照常截斷並保留權重，不再判為失效）。股權價值為負不算失效——那是有效的經濟結論（企業價值低於淨負債）。目前下限方式：${e.v.dcfMode === `option` ? `選擇權（Merton，σ ${(e.v.sigma*100).toFixed(0)}%）` : `0 截斷`}；0 截斷 $${e.d.zeroPerShare.toFixed(1)}、選擇權 $${e.d.optPerShare.toFixed(1)}。失效時 DCF 權重歸零、EV/EBITDA 權重 100%。`
   }, {
     id: `val-double`,
     ok: !0,
     severity: `ok`,
     title: `舉債與股權的分工（期前融資瀑布）`,
-    detail: `v1.9 以前假設缺口 100% 舉債且無上限：透支利息是借款的利息，扣 NTM 缺口是借款的本金（即 FY27 末增加的淨負債），兩者是同一筆借款的利息與本金，並非重複計費。v2.0 的差別在於新債受 債務／backlog 上限約束，超出部分改以股權按現價折價募集：股權沒有利息、也不增加淨負債，但增加股數。在全額舉債的設定下（上限放到極大），v2.0 的基準目標價約 $17，與 v1.9 的 $19.5 一致。`
+    detail: `新債受 債務／backlog 上限約束，超出部分改以股權按現價折價募集：股權沒有利息、也不增加淨負債，但增加股數；新債的利息與本金都進入現金流與淨負債，兩者不重複計費。`
   }]
 }
 
@@ -622,45 +650,60 @@ function quarterlyView(d, p, st) { // d＝runFunding、p＝runValuation、st＝�
 // v4.3：共識資料逐筆清單（HTML「市場共識」分頁與 Excel「輸入與假設」I 區同一組列；標籤即 Excel A 欄，cmp31 以標籤逐列比對數值、擷取日期、標記）。
 // vals 為數值陣列（年度列＝FY26–FY28、季度列＝Q3／Q4、區間列＝低／高）；文字值放 text。不增補、不改任何數字；資料檔沒有的欄位顯示「未列」。
 function consensusItems() {
-  let C = CONSENSUS, it = [],
+  // v0.1b：依共識檔實際有的欄位列出（換公司時欄位不同：對照目標價可為多筆、EPS 可為 GAAP 或一般口徑、公司指引項目不同）；Excel cons_items() 同一規則
+  let C = CONSENSUS, it = [], num = x => typeof x === `number`,
     add = (sec, label, vals, unit, dp, m, extra) => it.push({ sec, label: `共識｜${label}`, vals, unit, dp, src: m.source, url: m.url || ``, date: m.retrieved || m.date || `未列`, tag: m.tag || ``, note: ``, text: ``, ...(extra || {}) }),
-    PR = C.priceReference, PT = C.priceTarget, XC = PT.crossCheck, RA = C.ratings, AE = C.annualEstimates, AL = C.annualEstimatesAlt,
-    QE = C.quarterlyEstimates, CG = C.companyGuidance, IC = C.independentCrossCheck, RM = C.recentActionsMeta, S1 = `價格與目標價`;
+    PR = C.priceReference, PT = C.priceTarget, XCS = PT.crossCheck == null ? [] : Array.isArray(PT.crossCheck) ? PT.crossCheck : [PT.crossCheck], RA = C.ratings, AE = C.annualEstimates, AL = C.annualEstimatesAlt,
+    QE = C.quarterlyEstimates, CG = C.companyGuidance || {}, IC = C.independentCrossCheck, RM = C.recentActionsMeta, S1 = `價格與目標價`;
   add(S1, `現價參考（收盤）`, [PR.close], `US$`, 2, { ...PR, retrieved: PR.date }, { note: `收盤日 ${PR.date}` });
-  [[`平均`, PT.mean], [`中位數`, PT.median], [`最低`, PT.low], [`最高`, PT.high]].forEach(([a, x]) => add(S1, `目標價｜${a}`, [x], `US$`, 2, PT));
+  [[`平均`, PT.mean], [`中位數`, PT.median], [`最低`, PT.low], [`最高`, PT.high]].filter(([, x]) => num(x)).forEach(([a, x]) => add(S1, `目標價｜${a}`, [x], `US$`, 2, PT));
   add(S1, `目標價｜分析師家數`, [PT.analysts], `家`, 0, PT);
   add(S1, `目標價｜共識評等`, [], ``, 0, PT, { text: PT.consensusRating });
-  let XM = { ...XC, tag: PT.tag };
-  add(S1, `目標價｜MarketScreener 對照平均`, [XC.mean], `US$`, 2, XM);
-  add(S1, `目標價｜MarketScreener 對照家數`, [XC.analysts], `家`, 0, XM);
-  add(S1, `目標價｜MarketScreener 對照評等`, [], ``, 0, XM, { text: XC.consensusRating });
+  XCS.forEach(XC => {
+    let XM = { ...XC, tag: PT.tag }, nm = XC.source.split(`（`)[0].trim();
+    add(S1, `目標價｜${nm} 對照平均`, [XC.mean], `US$`, 2, XM, { note: XC.note || `` });
+    num(XC.analysts) && add(S1, `目標價｜${nm} 對照家數`, [XC.analysts], `家`, 0, XM);
+    XC.consensusRating && add(S1, `目標價｜${nm} 對照評等`, [], ``, 0, XM, { text: XC.consensusRating });
+  });
   [[`強力買進`, RA.strongBuy], [`買進`, RA.buy], [`持有`, RA.hold], [`賣出`, RA.sell], [`強力賣出`, RA.strongSell], [`合計`, RA.total]]
     .forEach(([a, x]) => add(`評等分布（${RA.month}）`, `評等分布｜${a}`, [x], `家`, 0, RA));
   let SA = `年度共識（FY26／FY27／FY28）`, YR = [`FY26`, `FY27`, `FY28`];
   [[`營收`, `revenue`, `US$bn`, 3], [`調整後 EBITDA`, `ebitda`, `US$bn`, 3], [`EBITDA 率`, `ebitdaMargin`, `%`, 1], [`EBIT`, `ebit`, `US$bn`, 3], [`利息費用`, `interest`, `US$bn`, 3],
-   [`淨利`, `netIncome`, `US$bn`, 3], [`GAAP EPS`, `epsGaap`, `US$`, 3], [`CapEx`, `capex`, `US$bn`, 3], [`自由現金流`, `fcf`, `US$bn`, 3], [`淨負債`, `netDebt`, `US$bn`, 3]]
+   [`淨利`, `netIncome`, `US$bn`, 3], [`GAAP EPS`, `epsGaap`, `US$`, 3], [`EPS`, `eps`, `US$`, 3], [`CapEx`, `capex`, `US$bn`, 3], [`自由現金流`, `fcf`, `US$bn`, 3], [`淨負債`, `netDebt`, `US$bn`, 3]]
+    .filter(([, k]) => YR.every(y => AE[y] && num(AE[y][k])))
     .forEach(([a, k, u, dp]) => add(SA, `年度｜${a}`, YR.map(y => AE[y][k]), u, dp, AE));
-  add(SA, `年度｜口徑說明`, [], ``, 0, AE, { text: AE.definition });
-  let SB = `S&P 對照（經 StockAnalysis.com；FY26／FY27）`;
-  add(SB, `S&P 對照｜營收`, [AL.FY26.revenue, AL.FY27.revenue], `US$bn`, 2, AL);
-  add(SB, `S&P 對照｜FY26 營收區間（低／高）`, [AL.FY26.revenueLow, AL.FY26.revenueHigh], `US$bn`, 2, AL);
-  add(SB, `S&P 對照｜調整後 EPS`, [AL.FY26.epsAdjusted, AL.FY27.epsAdjusted], `US$`, 2, AL);
-  add(SB, `S&P 對照｜FY26 調整後 EPS 區間（低／高）`, [AL.FY26.epsAdjustedLow, AL.FY26.epsAdjustedHigh], `US$`, 2, AL);
-  add(SB, `S&P 對照｜FY26 分析師家數`, [AL.FY26.analysts], `家`, 0, AL, { note: AL.note });
+  AE.definition && add(SA, `年度｜口徑說明`, [], ``, 0, AE, { text: AE.definition });
+  if (AL) {
+    let SB = `S&P 對照（經 StockAnalysis.com）`, Y2 = [`FY26`, `FY27`].filter(y => AL[y] && num(AL[y].revenue)), F6 = AL.FY26 || {},
+      ek = num(F6.epsAdjusted) ? `epsAdjusted` : `eps`, en = ek === `epsAdjusted` ? `調整後 EPS` : `EPS`, Ye = [`FY26`, `FY27`].filter(y => AL[y] && num(AL[y][ek]));
+    Y2.length && add(SB, `S&P 對照｜營收（${Y2.join(`／`)}）`, Y2.map(y => AL[y].revenue), `US$bn`, 2, AL);
+    num(F6.revenueLow) && add(SB, `S&P 對照｜FY26 營收區間（低／高）`, [F6.revenueLow, F6.revenueHigh], `US$bn`, 2, AL);
+    Ye.length && add(SB, `S&P 對照｜${en}（${Ye.join(`／`)}）`, Ye.map(y => AL[y][ek]), `US$`, 2, AL);
+    num(F6[ek + `Low`]) && add(SB, `S&P 對照｜FY26 ${en} 區間（低／高）`, [F6[ek + `Low`], F6[ek + `High`]], `US$`, 2, AL);
+    num(F6.analysts) && add(SB, `S&P 對照｜FY26 分析師家數`, [F6.analysts], `家`, 0, AL);
+    AL.note && it.length && it[it.length - 1].sec === SB && (it[it.length - 1].note = AL.note);
+  }
   let QK = Object.keys(QE || {}).filter(k => /^\d{4}Q\d$/.test(k)), SQ = `季度共識（${QK.join(`／`)}）`; // v4.4：季度依共識檔實際列出的季別（沒有季度共識時不列）
   if (QK.length) {
     [[`營收`, `revenue`], [`EBITDA`, `ebitda`], [`EBIT`, `ebit`], [`淨利`, `netIncome`]]
       .forEach(([a, k]) => add(SQ, `季度｜${a}`, QK.map(q => QE[q][k]), `US$bn`, 3, QE));
     add(SQ, `季度｜說明`, [], ``, 0, QE, { text: QE.note });
   }
-  let SG = `公司指引（管理層預估）`, GM = { ...CG, tag: CG.tag };
-  add(SG, `公司指引｜FY26 營收（低／高）`, [CG.FY26.revenueLow, CG.FY26.revenueHigh], `US$bn`, 2, GM);
-  add(SG, `公司指引｜FY26 調整後營業利益（低／高）`, [CG.FY26.adjOpIncomeLow, CG.FY26.adjOpIncomeHigh], `US$bn`, 2, GM);
-  add(SG, `公司指引｜FY26 CapEx（低／高）`, [CG.FY26.capexLow, CG.FY26.capexHigh], `US$bn`, 2, GM);
-  add(SG, `公司指引｜Q3 營收（低／高）`, [CG[`2026Q3`].revenueLow, CG[`2026Q3`].revenueHigh], `US$bn`, 2, GM, { note: CG.tagNote });
-  let SL = `獨立對照（${IC.provider}）`, LM = { ...IC, source: `${IC.provider}（經 ${IC.source}）` };
-  add(SL, `${IC.provider} 對照｜FY26 營收（Q2 前）`, [IC.FY26RevenuePreQ2], `US$bn`, 2, LM);
-  add(SL, `${IC.provider} 對照｜Q3 營收（Q2 前）`, [IC[`2026Q3RevenuePreQ2`]], `US$bn`, 2, LM, { note: IC.note });
+  let SG = `公司指引（管理層預估）`, GM = { ...CG, tag: CG.tag }, G6 = CG.FY26 || {};
+  [[`FY26 營收（低／高）`, [`revenueLow`, `revenueHigh`], `US$bn`, 2], [`FY26 調整後營業利益（低／高）`, [`adjOpIncomeLow`, `adjOpIncomeHigh`], `US$bn`, 2],
+   [`FY26 CapEx（低／高）`, [`capexLow`, `capexHigh`], `US$bn`, 2], [`FY26 年底 ARR（低／高）`, [`arrYearEndLow`, `arrYearEndHigh`], `US$bn`, 2],
+   [`FY26 調整後 EBITDA 率`, [`adjEbitdaMargin`], `%`, 1], [`FY26 年底合約電力`, [`contractedPowerGW`], `GW`, 1],
+   [`FY26 年底已連網電力（低／高）`, [`connectedPowerGWLow`, `connectedPowerGWHigh`], `GW`, 1], [`FY26 客戶預付（下限）`, [`prepaymentsMin`], `US$bn`, 2]]
+    .filter(([, ks]) => ks.every(k => num(G6[k])))
+    .forEach(([a, ks, u, dp]) => add(SG, `公司指引｜${a}`, ks.map(k => G6[k]), u, dp, GM));
+  CALL_FACTS.nextQRevLo != null && add(SG, `公司指引｜Q3 營收（低／高）`, [CALL_FACTS.nextQRevLo, CALL_FACTS.nextQRevHi], `US$bn`, 2, GM, { note: CG.tagNote }); // 以 company.json 為準（建置時已檢查與共識檔一致）
+  if (it.length && it[it.length - 1].sec === SG && !it[it.length - 1].note) it[it.length - 1].note = CG.tagNote || ``;
+  if (IC) {
+    let SL = `獨立對照（${IC.provider}）`, LM = { ...IC, source: `${IC.provider}（經 ${IC.source}）` },
+      ICL = { FY26RevenuePreQ2: [`FY26 營收（Q2 前）`, `US$bn`, 2], [`2026Q3RevenuePreQ2`]: [`Q3 營收（Q2 前）`, `US$bn`, 2], [`2026Q2RevenuePre`]: [`Q2 營收（財報前）`, `US$bn`, 2], [`2026Q2EpsPre`]: [`Q2 EPS（財報前）`, `US$`, 2], analysts: [`家數`, `家`, 0] },
+      ks = Object.keys(IC).filter(k => num(IC[k]));
+    ks.forEach((k, i) => { let [a, u, dp] = ICL[k] || [k, ``, 2]; add(SL, `${IC.provider} 對照｜${a}`, [IC[k]], u, dp, LM, i === ks.length - 1 ? { note: IC.note || `` } : {}) });
+  }
   C.recentActions.forEach(x => add(`最新分析師動作`, `分析師動作｜${x.date} ${x.firm}`, x.target == null ? [] : [x.target], `US$`, 0, RM,
     { text: x.target == null ? `目標價未列` : ``, note: `${x.rating}${x.note ? `；${x.note}` : ``}` }));
   add(`來源與限制`, `來源獨立性`, [], ``, 0, { source: `資料檔說明`, retrieved: C.asOf }, { text: C.sourceIndependence });
@@ -670,9 +713,9 @@ function consensusItems() {
 
 // v4.3：「來源」頁引用句（同業市值讀 company.json → peers／callFacts；目標價讀共識資料檔）。Excel「來源」頁以同一規則組字。
 function consSourceTxtQ() {
-  let PE = COMPANY_DATA.peers, PT = CONSENSUS.priceTarget, XC = PT.crossCheck;
+  let PE = COMPANY_DATA.peers, PT = CONSENSUS.priceTarget, XC = [].concat(PT.crossCheck || [])[0];
   return {
-    peers: `市值（${PE.priceDate} 收盤，${PE.priceSource}）：CRWV 現價 $${Y(CALL_FACTS.priceLast, 2)}（${CALL_FACTS.priceDate} 收盤）、市值 ${Y(CALL_FACTS.mktCapLast, 2)}bn（${PE.priceDate}）、流通 ${Y(LATEST_Q.sharesOut * 1e3, 2)}m；` +
+    peers: `市值（${PE.priceDate} 收盤，${PE.priceSource}）：${COMPANY_DATA.meta.ticker} 現價 $${Y(CALL_FACTS.priceLast, 2)}（${CALL_FACTS.priceDate} 收盤）、市值 ${Y(CALL_FACTS.mktCapLast, 2)}bn（${PE.priceDate}）、流通 ${Y(LATEST_Q.sharesOut * 1e3, 2)}m；` +
       `${PE.list.map(p => `${p.ticker} ${Y(p.mkt, 2)}`).join(`；`)}。淨負債取各公司最新申報：${PE.list.map(p => `${p.ticker} ${Y(p.netDebt, 2)}`).join(`、`)}。`,
     targets: `賣方目標價（${PT.source}，擷取 ${PT.retrieved}）：平均 $${Y(PT.mean, 2)}、中位數 $${Y(PT.median, 2)}、區間 $${Y(PT.low, 2)}–$${Y(PT.high, 2)}（${PT.analysts} 家）；共識評等 ${PT.consensusRating}。` +
       `對照 ${XC.source}：平均 $${Y(XC.mean, 2)}（${XC.analysts} 家，${XC.consensusRating}）。數字為賣方意見；逐筆來源與日期見「損益與評價 → 市場共識」。`

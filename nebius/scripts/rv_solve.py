@@ -39,7 +39,7 @@ with Workbook(xlsx) as wb:
     C = solve(lambda x: run(cap=x), .1, 1.5, False)
     Eb = solve(lambda x: run(eb=x), .3, .99, True)
     Rt = solve(lambda x: run(rev=x), .5, 4, True, 'tgt')
-    caps, ebs = [.7, .8, .9, 1, 1.1], [.59, .65, .7, .75]
+    caps, ebs = [.7, .8, .9, 1, 1.1], [.35, .47, .59, .7]  # v0.1b：可觀察 neocloud 區間（與 segA reverseDcf 相同）
     grid = [[solve(lambda x: run(cap=cp, eb=s, rev=x), .5, 4, True) for s in ebs] for cp in caps]
     run()  # 還原輸入（不存檔）
     rev30 = wb.get(wb.cell(IN, '每 MW 年收入', col='G')) * base_in['rev'] * 1e3

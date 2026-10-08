@@ -1,0 +1,48 @@
+# Anthropic v0.1 分段建置：共同規則（2026-10-08，chat 端）
+
+適用於 A1–A5 各張工作單。開工前必讀：本檔、該張工作單、規格 `docs/plan/20261008_Anthropic_v0.1_規格.md`、repo 根目錄 `README.md`、`anthropic/CLAUDE.md`、進度檔 `docs/reports/20261008_anthropic_進度.md`。
+衝突時的優先順序：**該張工作單 > 本檔 > 規格 > repo 根目錄 README > anthropic/CLAUDE.md**。
+參考實作：OpenAI v0.6（`git show origin/claude/openai-s6-release:openai/<路徑>`；或 `git worktree add /tmp/oai origin/claude/openai-s6-release`）。可以照抄改寫其 builder（`build.py`、`p2.py`–`p5.py`）、測試、工具；不得改動 `openai/`。
+
+## 1. 分段與續接
+- 單一分支 `claude/anthropic-v0.1`、單一 PR（base `main`）。**每完成一個步驟就 commit 並 push，同時覆寫進度檔**；任何時候中斷，下一個代理都能從進度檔接手。
+- 察覺額度或時間快用完：立即停止新工作，先 commit、更新進度檔（做到哪、下一步），push 後結束。
+- 推送前 `git fetch origin main`；淺層 clone 推送若遇 HTTP 413，先 fetch 再推。GitHub GraphQL 不可用，PR 操作一律用 REST（`gh api`）。
+
+## 2. 分支、PR、合併
+- **代理不得合併、不得 force push、不得改 `main`、不得刪除分支或歷史。** 合併由 chat 端審查後執行。
+- 只改 `anthropic/` 與 `.github/workflows/anthropic-*.yml`、repo 根目錄 README 的 Anthropic 一列。
+
+## 3. 進度檔（必做）
+- 最上方「目前狀態」每次 push 前覆寫：**已完成**（含 commit）／**下一步**（具體到下一個代理可直接動手）／**未解問題**。
+- 各段一節：步驟紀錄表（步驟｜狀態｜commit｜備註）＋已套用的預設表。
+
+## 4. 資料紀律
+- 每筆數字：數值、低、高、單位、期間、來源（文件名＋網址）、文件日期、擷取日、標記（Verified／Interested-party／Analogy／Assumed／Derived／Decision）、利害方與誘因（Interested-party 必填）。Analogy／Assumed 一律給區間。
+- 分層：公司財務原始數據→`SRC_ANT`；算力物理→只取 Tokenomics（`TK_Link`），不重算；假設→`Inputs`；Tokenomics 沒有的算力資料→「Tokenomics 缺口」。
+- **不得杜撰數字**；「找不到」與「不存在」分開寫，寫明試過哪些來源。報導互相矛盾時全部登錄（各一列），以 Inputs 或 Decision 選用並說明。
+- SemiAnalysis（含 InferenceX）不可單獨引用，須第二個獨立來源。
+- **不以公司自己的目標或預測反推參數**；正向由 Tokenomics、物理產能與可觀察市場資料推導，公司數字只作對照列。規格 D8（η 以 2025 推論支出校準）與 D14（2025 營收校準）不在此限。
+- 公式不含常數（E6）；穩定 ID 只增不重用；Excel 優先。
+
+## 5. 判斷類事項
+- 依序：該張工作單的預設 → 規格第 3 節 D1–D20 → 最保守且最常見的口徑。
+- 每一項在報告「已套用的預設」列出：問題｜採用的預設｜替代選項｜對結果的影響方向（能量化就量化，例如對 2030 每 VR 等值 GW 差額的影響）。
+- 不新增規格未列的機制；想到的列入報告「建議後續」。
+
+## 6. 停止條件（只有這些才停下；其餘照預設做完）
+1. `YinchenChang/company-models` 無法推送，或 Tokenomics 無法讀取。
+2. 同一項 parity 或重算錯誤經三次實質不同的修正仍失敗，且原因是工具或模板結構限制。
+3. 要讓模型成立，必須改動 Tokenomics（列入「Tokenomics 缺口」即可，除非缺口使該段核心輸出無法計算）。
+4. 需要改 `main`、force push、刪除分支或歷史。
+停下時：commit 並 push 現況、進度檔「未解問題」寫明卡在哪與建議，在 PR 留言（第一行 `[Anthropic 回報] An｜停止｜YYYY-MM-DD`），然後結束。
+
+## 7. 驗收與回報（A2 起每段）
+- `python3 -m pytest tests -q` 全過；LibreOffice 重算錯誤 0；`CHK_Errors`＝0；`tools/check_tk_snapshot.py` 結果寫入報告。
+- 報告與對照 Excel 依 CLAUDE.md 第 5 節；PR 留言第一行 `[Anthropic 回報] An｜完成｜YYYY-MM-DD`；`CHANGELOG.md` 新增一節。
+- 全部文件與回報用繁體中文；非工程師看得懂，結論先行。
+
+## 8. 環境
+- `pip install --break-system-packages -r requirements-dev.txt`；LibreOffice Calc（`soffice`）。
+- Tokenomics：`GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://github.com/YinchenChang/tokenomics <路徑>`（唯讀）；只用 master 的 `model/CURRENT`（本版 v5.26，master `3dd1216`）。
+- OpenAI v0.6 Excel：`git show origin/claude/openai-s6-release:openai/model/20261008_OpenAI_v0.6.xlsx > <路徑>`（若 PR #20 已合併，改取 `main`）；記錄 SHA-256。

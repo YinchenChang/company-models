@@ -1,0 +1,1872 @@
+# Z1-M 智譜（02513.HK）融資、股本、市值、併購、管理層目標、分析師共識、同業估值
+# 擷取日 2026-10-08；格式依 docs/workorders/20261008_zhipu_Z1_資料蒐集.md
+# 金額原幣別照錄，不換匯。Derived 列的計算式寫在 note。
+items:
+
+# ---------------- F1 上市前各輪（媒體轉述招股章程／報導） ----------------
+- key: preipo_valuation_post_b6
+  group: F
+  metric: 上市前最後一輪（B6，2025-05）投後估值
+  value: 243.77
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2025-05
+  source: 智東西（轉述招股章程）
+  url: https://zhidx.com/p/522919.html
+  doc_date: 2025-12
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 招股章程口徑（媒體轉述，未直接開啟招股章程原文）
+  note: "原文「在今年5月B6輪融資後，智譜投後估值達到243.77億元」；財聯社作243.8億元"
+- key: preipo_total_raised
+  group: F
+  metric: 上市前累計融資額
+  value: 83
+  lo: 83
+  hi: 83.6
+  unit: RMB 億
+  period: 2019–2025
+  source: 財聯社
+  url: https://m.cls.cn/detail/2235451
+  doc_date: 2025-12
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: "原文「智譜融資8輪，累計籌資超83億元，IPO前估值已達243.8億元」"
+- key: preipo_total_raised_b
+  group: F
+  metric: 上市前累計融資額（另一說）
+  value: 83.6
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2019–2025
+  source: 新浪財經（證券時報）
+  url: https://finance.sina.com.cn/stock/marketresearch/2026-01-08/doc-inhfqcat5441095.shtml
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: 同文同時寫「超83億元」與約83.6億元；與財聯社「超83億」不衝突（下限 vs 點值）
+- key: round_seed_2019
+  group: F
+  metric: 成立／天使輪金額（中科創星等）
+  value: 0.40
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2019
+  source: 新浪財經（證券時報）
+  url: https://finance.sina.com.cn/stock/marketresearch/2026-01-08/doc-inhfqcat5441095.shtml
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: 中科創星投4,000萬元，投後3.75億元；投資人含華控技術轉移
+- key: round_seed_2019_postval
+  group: F
+  metric: 2019 輪投後估值
+  value: 3.75
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2019
+  source: 新浪財經（證券時報）
+  url: https://finance.sina.com.cn/stock/marketresearch/2026-01-08/doc-inhfqcat5441095.shtml
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: 同上文；投後估值 3.75 億元
+- key: round_a_2021
+  group: F
+  metric: A 輪金額
+  value: 1.52
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2021-04
+  source: 新浪財經（證券時報）
+  url: https://finance.sina.com.cn/stock/marketresearch/2026-01-08/doc-inhfqcat5441095.shtml
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: 達晨財智、華控基金、將門創投（凌雲光亦列）；投後 8.5 億元。量子位稱「A輪過億元」
+- key: round_a_2021_postval
+  group: F
+  metric: A 輪投後估值
+  value: 8.5
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2021-04
+  source: 新浪財經（證券時報）
+  url: https://finance.sina.com.cn/stock/marketresearch/2026-01-08/doc-inhfqcat5441095.shtml
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: A 輪投後估值 8.5 億元
+- key: round_b1_2021
+  group: F
+  metric: B1 輪金額（君聯、啟明）
+  value: 2.1
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2021-12前後
+  source: 新浪財經（證券時報）
+  url: https://finance.sina.com.cn/stock/marketresearch/2026-01-08/doc-inhfqcat5441095.shtml
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: 「近2.1億元」，投後 21.1 億元；日期僅寫 2021-09 後約 3 個月
+- key: round_b1_2021_postval
+  group: F
+  metric: B1 輪投後估值
+  value: 21.1
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2021-12前後
+  source: 新浪財經（證券時報）
+  url: https://finance.sina.com.cn/stock/marketresearch/2026-01-08/doc-inhfqcat5441095.shtml
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: B1 投後 21.1 億元
+- key: round_b2_meituan
+  group: F
+  metric: B2 輪美團領投金額
+  value: 3.0
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2022–2023（未載明）
+  source: 新浪財經（證券時報）
+  url: https://finance.sina.com.cn/stock/marketresearch/2026-01-08/doc-inhfqcat5441095.shtml
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: 「美團領投3億元」，達晨跟投；投後估值未載
+- key: round_ant_cum
+  group: F
+  metric: 螞蟻（上海飛玡／雲玡）跨輪累計投資
+  value: 6.0
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2022–2025（跨輪）
+  source: 新浪財經（證券時報）
+  url: https://finance.sina.com.cn/stock/marketresearch/2026-01-08/doc-inhfqcat5441095.shtml
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: 螞蟻經上海飛玡、雲玡累計約 6 億元
+- key: round_b4_tencent
+  group: F
+  metric: B4 輪騰訊領投金額
+  value: 2.0
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2023（未載明）
+  source: 新浪財經（證券時報）
+  url: https://finance.sina.com.cn/stock/marketresearch/2026-01-08/doc-inhfqcat5441095.shtml
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: 騰訊領投 2 億元；順為（小米系）同輪 1.5 億元
+- key: round_b4_shunwei
+  group: F
+  metric: B4 輪順為資本（小米系）金額
+  value: 1.5
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2023（未載明）
+  source: 新浪財經（證券時報）
+  url: https://finance.sina.com.cn/stock/marketresearch/2026-01-08/doc-inhfqcat5441095.shtml
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: 順為資本同輪 1.5 億元
+- key: round_2023_cum
+  group: F
+  metric: 2023 年累計融資
+  value: null
+  lo: 25
+  hi: null
+  unit: RMB 億
+  period: FY2023
+  source: 投資界
+  url: https://news.pedaily.cn/202310/523903.shtml
+  doc_date: 2023-10-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 智譜（公司對外披露融資額）；誘因：募資與招募聲量
+  basis: 公司自述（媒體報導）
+  note: "「今年已累計獲得超25億人民幣融資」；投資人含美團、螞蟻、阿里、騰訊、小米、金山、順為、紅杉、高瓴"
+- key: round_2024_prosperity7
+  group: F
+  metric: 2024 年中一輪（Prosperity7 參與）規模
+  value: 400
+  lo: null
+  hi: null
+  unit: USD 百萬
+  period: 2024-05
+  source: Gulf News（轉 Bloomberg）
+  url: https://gulfnews.com/business/markets/aramco-owned-saudi-fund-joins-400-million-financing-for-china-ai-firm-zhipu-1.1717156143388
+  doc_date: 2024-05-31
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Bloomberg 引述知情人士（媒體名：Bloomberg／Gulf News）
+  basis: 知情人士
+  note: "標題「joins $400 million financing」；估值約 US$3bn（知情人士）；P7 個別金額未披露"
+- key: round_2024_prosperity7_val
+  group: F
+  metric: 2024 年中一輪估值
+  value: 3
+  lo: null
+  hi: null
+  unit: USD 十億
+  period: 2024-05
+  source: Gulf News（轉 Bloomberg）
+  url: https://gulfnews.com/business/markets/aramco-owned-saudi-fund-joins-400-million-financing-for-china-ai-firm-zhipu-1.1717156143388
+  doc_date: 2024-05-31
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Bloomberg 引述知情人士
+  basis: 知情人士
+  note: "「valued the Beijing-based startup at about $3 billion」"
+- key: round_2024_09_zgc_preval
+  group: F
+  metric: 2024-09 中關村科學城領投輪投前估值
+  value: 200
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2024-09
+  source: 量子位
+  url: https://www.qbitai.com/2024/12/233513.html
+  doc_date: 2024-12-17
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 媒體報導（量子位）；資訊源可能為公司或投資方
+  basis: 媒體報導
+  note: "「中關村科學城領投…投前200億估值」；金額界面稱「數十億元」"
+- key: round_2024_12
+  group: F
+  metric: 2024-12 輪金額（多家戰投與國資，君聯跟投）
+  value: 30
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2024-12
+  source: 量子位
+  url: https://www.qbitai.com/2024/12/233513.html
+  doc_date: 2024-12-17
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 媒體報導；資訊源可能為公司
+  basis: 媒體報導
+  note: "「已最新完成一輪30億人民幣融資」；投資人未具名"
+- key: round_2025_03_hangzhou
+  group: F
+  metric: 2025-03 杭州城投產業基金、上城資本等
+  value: null
+  lo: 10
+  hi: null
+  unit: RMB 億
+  period: 2025-03-03
+  source: 界面新聞
+  url: https://m.jiemian.com/article/12418121.html
+  doc_date: 2025-03-03
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 媒體報導；知情人士稱部分非新錢
+  basis: 媒體報導
+  note: "「超10億元人民幣」；界面另稱兩筆3月交易部分屬2024-12輪"
+- key: round_2025_03_huafa
+  group: F
+  metric: 2025-03 珠海華發集團戰略投資
+  value: 5
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2025-03-13
+  source: 界面新聞
+  url: https://m.jiemian.com/article/12464980.html
+  doc_date: 2025-03
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 華發集團（國資投資方宣傳誘因）
+  basis: 媒體報導
+  note: "「金額為5億元人民幣」；新浪轉述招股章程亦列華發 5 億元"
+- key: round_2025_03_chengdu
+  group: F
+  metric: 2025-03 成都高新區（新經濟創投）
+  value: 3
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2025-03-19
+  source: Reuters（老虎轉載）
+  url: https://www.itiger.com/hans/news/2520094057
+  doc_date: 2025-03-19
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 地方政府基金（宣傳誘因）
+  basis: 媒體報導
+  note: "「300 million yuan ($41.5 million)」；招股章程轉述亦列成都高新 3 億元"
+- key: round_2025_07_shanghai
+  group: F
+  metric: 2025-07 浦東創投、張江集團戰略投資
+  value: 10
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2025-07-02
+  source: DealStreetAsia
+  url: https://www.dealstreetasia.com/?p=447792
+  doc_date: 2025-07-03
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 上海國資（宣傳誘因）
+  basis: 媒體報導
+  note: "「1 billion yuan」；媒體估值約 US$5.6b（推估，不登錄為值）"
+- key: round_last_b6_total
+  group: F
+  metric: 上市前最後一輪合計（中關村科學城、大興、杭州城創、華發、成都高新、上城領航）
+  value: null
+  lo: 20
+  hi: null
+  unit: RMB 億
+  period: 2024-12～2025
+  source: 新浪財經（證券時報）
+  url: https://finance.sina.com.cn/stock/marketresearch/2026-01-08/doc-inhfqcat5441095.shtml
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: 「超20億元」；國資來自北京、珠海、成都、杭州；與量子位「30億」口徑不同
+
+# ---------------- F2 IPO（2026-01-08） ----------------
+- key: ipo_price
+  group: F
+  metric: IPO 發售價
+  value: 116.20
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-01-08
+  source: 智譜 2026-09-13 配售及可換股債券公告（過往 12 個月集資）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: "「按每股H股116.20港元發行37,419,500股新H股」"
+- key: ipo_shares
+  group: F
+  metric: IPO 發行股數（不含超額配股）
+  value: 37419500
+  lo: null
+  hi: null
+  unit: 股
+  period: 2026-01-08
+  source: 智譜 2026-09-13 公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: 香港公開發售回撥後 7,483,900 股、國際 29,935,600 股（新浪）
+- key: ipo_gross
+  group: F
+  metric: IPO 募資總額（不含超額配股）
+  value: 4348.1
+  lo: null
+  hi: null
+  unit: HKD 百萬
+  period: 2026-01-08
+  source: 新浪財經（轉述配發結果公告）
+  url: https://finance.sina.cn/2026-01-08/detail-inhfqtyr6689758.d.html
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述配發結果
+  note: 所得款項總額 4,348.1 百萬港元；116.20×37,419,500＝4,348.1 吻合
+- key: ipo_listing_exp
+  group: F
+  metric: IPO 估計上市開支
+  value: 174.7
+  lo: null
+  hi: null
+  unit: HKD 百萬
+  period: 2026-01-08
+  source: 新浪財經（轉述配發結果公告）
+  url: https://finance.sina.cn/2026-01-08/detail-inhfqtyr6689758.d.html
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述配發結果
+  note: 扣除估計上市開支 174.7 百萬港元
+- key: ipo_net
+  group: F
+  metric: IPO 所得款項淨額（不含超額配股）
+  value: 4173.4
+  lo: null
+  hi: null
+  unit: HKD 百萬
+  period: 2026-01-08
+  source: 新浪財經（轉述配發結果公告）；證券時報同值
+  url: https://finance.sina.cn/2026-01-08/detail-inhfqtyr6689758.d.html
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述配發結果
+  note: 淨額 4,173.4 百萬港元；證券時報「全球發售淨籌資約41.73億港元」
+- key: ipo_overallot_shares
+  group: F
+  metric: 超額配股權行使股數
+  value: 5612900
+  lo: null
+  hi: null
+  unit: 股
+  period: 2026-02-04
+  source: 新浪財經（轉述配發結果）＋ 2026-06 月報表股數勾稽
+  url: https://finance.sina.cn/2026-01-08/detail-inhfqtyr6689758.d.html
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述；與 FF301 勾稽
+  note: 440,230,190＋5,612,900＝445,843,090，與 FF301 總股數吻合
+- key: ipo_overallot_shares_b
+  group: F
+  metric: 超額配股權行使股數（公告另一數字）
+  value: 5623900
+  lo: null
+  hi: null
+  unit: 股
+  period: 2026-02-04
+  source: 智譜 2026-09-13 公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告（經 WebFetch 讀取）
+  note: "「超額配股權獲悉數行使…發行額外5,623,900股H股」；與股數勾稽差 11,000 股，疑誤植或讀取誤差"
+- key: ipo_net_incl_overallot
+  group: F
+  metric: IPO 淨額（含超額配股權）
+  value: 4896.2
+  lo: null
+  hi: null
+  unit: HKD 百萬
+  period: 2026-01～02
+  source: 智譜 2026-09-13 公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: "「全球發售（包括超額配股權獲行使）的所得款項淨額總額約為4,896.2百萬港元」；截至 2026-08-31 已悉數動用"
+- key: ipo_cornerstone_total
+  group: F
+  metric: 基石投資者認購總額（11 家）
+  value: 29.8
+  lo: null
+  hi: null
+  unit: HKD 億
+  period: 2026-01
+  source: 鉅亨網
+  url: https://news.cnyes.com/news/id/6292807
+  doc_date: 2025-12-30
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: 「合共認購29.8億港元」約占發售 70%；JSC、JinYi、高毅、泰康人壽、廣發基金等；個別金額未載
+- key: ipo_hk_oversub
+  group: F
+  metric: 香港公開發售超額認購倍數
+  value: 1159.46
+  lo: null
+  hi: null
+  unit: 倍
+  period: 2026-01
+  source: 中國日報網
+  url: https://cn.chinadaily.com.cn/a/202601/08/WS695f5b9da310942cc499a93e.html
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述配發結果
+  note: 公開發售 1,159.46 倍；國際發售 15.28 倍
+- key: ipo_proceeds_use_rd
+  group: F
+  metric: IPO 用途：通用大模型研發占比
+  value: 70
+  lo: null
+  hi: null
+  unit: "%"
+  period: 2026-01
+  source: 澎湃新聞
+  url: https://www.thepaper.cn/newsDetail_forward_32280640
+  doc_date: 2025-12-30
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: 研發 70%、MaaS 平台 10%、合作夥伴與戰投 10%、營運資金 10%
+- key: ipo_shares_post
+  group: F
+  metric: 上市後已發行股份總數（超額配股前）
+  value: 440230190
+  lo: null
+  hi: null
+  unit: 股
+  period: 2026-01-08
+  source: 新浪財經（轉述配發結果公告）
+  url: https://finance.sina.cn/2026-01-08/detail-inhfqtyr6689758.d.html
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述配發結果
+  note: 上市後已發行 440,230,190 股
+- key: ipo_offer_mktcap
+  group: F
+  metric: 按發售價計算市值
+  value: 511.5
+  lo: null
+  hi: null
+  unit: HKD 億
+  period: 2026-01-08
+  source: 鉅亨網（511 億）；Derived＝116.20×440,230,190
+  url: https://news.cnyes.com/news/id/6292807
+  doc_date: 2025-12-30
+  retrieved: 2026-10-08
+  tag: Derived
+  party: null
+  basis: 計算
+  note: 媒體「發行市值達511億」；計算值 511.55 億港元
+- key: ipo_day1_open_mktcap
+  group: F
+  metric: 上市首日開盤市值（線索 528 億）
+  value: 528.3
+  lo: null
+  hi: null
+  unit: HKD 億
+  period: 2026-01-08
+  source: Derived＝開盤價 120.00×440,230,190；開盤價見證券時報
+  url: https://www.stcn.com/article/detail/3580246.html
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Derived
+  party: null
+  basis: 計算
+  note: "開盤「報120港元/股」；線索 528 億即開盤市值，非收盤"
+- key: ipo_day1_close
+  group: F
+  metric: 上市首日收盤價
+  value: 131.50
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-01-08
+  source: 證券時報
+  url: https://www.stcn.com/article/detail/3580246.html
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 市場數據
+  note: "「收報131.5港元/股」，漲 13.17%；盤中低 116.10"
+- key: ipo_day1_close_mktcap
+  group: F
+  metric: 上市首日收盤市值
+  value: 578.9
+  lo: null
+  hi: null
+  unit: HKD 億
+  period: 2026-01-08
+  source: 證券時報
+  url: https://www.stcn.com/article/detail/3580246.html
+  doc_date: 2026-01-08
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 市場數據
+  note: "「總市值達578.9億港元」；131.5×440,230,190＝578.9 吻合"
+- key: ipo_day1_close_mktcap_b
+  group: F
+  metric: 上市首日收盤市值（另一說）
+  value: 586
+  lo: null
+  hi: null
+  unit: HKD 億
+  period: 2026-01-08
+  source: 每日經濟新聞
+  url: https://www.mrjjxw.com/articles/2026-06-22/4432957.html
+  doc_date: 2026-06-22
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 市場數據（媒體）
+  note: 「市值約586億港元」；與 578.9 差異未說明，以證券時報為主
+
+# ---------------- F3 2026-07 第一次配售 ----------------
+- key: placing1_price
+  group: F
+  metric: 2026-07 配售價
+  value: 1588.00
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-07-09
+  source: 智譜 2026-09-13 公告（過往 12 個月集資）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: "「按配售價每股H股1,588.00港元配發及發行合共19,780,000股新H股」"
+- key: placing1_shares
+  group: F
+  metric: 2026-07 配售股數
+  value: 19780000
+  lo: null
+  hi: null
+  unit: 股
+  period: 2026-07-13
+  source: 智譜翌日披露報表 FF305（2026-07-14）
+  url: https://pdf.dfcfw.com/pdf/H2_AN202607141826942427_1.pdf
+  doc_date: 2026-07-14
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告（東方財富鏡像）
+  note: 總股數 445,843,090→465,623,090；H 股 221,314,605→241,094,605
+- key: placing1_discount
+  group: F
+  metric: 2026-07 配售價較前收盤折讓
+  value: 12.99
+  lo: null
+  hi: null
+  unit: "%"
+  period: 2026-07-08
+  source: 中國金融信息網
+  url: https://www.cnfin.com/gs-lb/detail/20260709/4437824_1.html
+  doc_date: 2026-07-09
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述公告
+  note: 較 7-08 收盤 1,825 港元折讓約 12.99%
+- key: placing1_gross
+  group: F
+  metric: 2026-07 配售所得款項總額
+  value: 31411
+  lo: null
+  hi: null
+  unit: HKD 百萬
+  period: 2026-07-13
+  source: 觀點網（轉述完成公告）
+  url: https://www.guandian.hk/article/20260713/573061.html
+  doc_date: 2026-07-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述公告
+  note: "「約314.11億港元」；1,588×19,780,000＝31,410.6 吻合"
+- key: placing1_net
+  group: F
+  metric: 2026-07 配售所得款項淨額
+  value: 31374.95
+  lo: null
+  hi: null
+  unit: HKD 百萬
+  period: 2026-07-13
+  source: 智譜 2026-09-13 公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: 淨額約 31,374.95 百萬港元；觀點網「約313.75億港元」一致；幣別為港幣
+- key: placing1_net_b
+  group: F
+  metric: 2026-07 配售總額（線索：媒體稱人民幣 272.31 億）
+  value: null
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2026-07
+  source: 未核得（見 not_found）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公告只有港幣
+  note: 公告總額 314.11 億、淨額 313.75 億，均為港幣；272.31 億無原文可核，不登錄數值
+- key: placing1_usd_media
+  group: F
+  metric: 2026-07 配售規模（媒體美元口徑）
+  value: 4
+  lo: null
+  hi: null
+  unit: USD 十億
+  period: 2026-07-08
+  source: The Standard（term sheet）
+  url: https://www.thestandard.com.hk/finance/article/336723/Chinas-Zhipu-AI-launches-US4-billion-Hong-Kong-shares-offering-term-sheet-shows
+  doc_date: 2026-07-08
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 媒體引述 term sheet（承銷方資料）
+  basis: 媒體
+  note: "「around US$4 billion(HK$31.2 billion)」；價格區間 1,588–1,698"
+- key: placing1_use_rd
+  group: F
+  metric: 2026-07 配售用途：AI 研發（含模型、人才、算力）
+  value: 55
+  lo: null
+  hi: null
+  unit: "%"
+  period: 2026-07
+  source: 觀點網（轉述完成公告）
+  url: https://www.guandian.hk/article/20260713/573061.html
+  doc_date: 2026-07-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述公告
+  note: 研發 55%、業務擴張／戰投／併購 15%、資本結構與營運資金 30%；預計 2027 年底前用畢
+- key: placing1_utilised_0831
+  group: F
+  metric: 2026-07 配售款截至 2026-08-31 已動用
+  value: 10954.80
+  lo: null
+  hi: null
+  unit: HKD 百萬
+  period: 2026-08-31
+  source: 智譜 2026-09-13 公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: 已動用約 10,954.80 百萬港元（34.92%），未動用約 20,420.15 百萬港元
+
+# ---------------- F4 2026-09 第二次配售＋可換股債券 ----------------
+- key: placing2_price
+  group: F
+  metric: 2026-09 配售價
+  value: 714.00
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-09-12
+  source: 智譜 2026-09-13 公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: 較 9-11 收盤 793.00 港元折讓約 9.96%；較 5 日均價 891.90 折讓 19.95%
+- key: placing2_shares
+  group: F
+  metric: 2026-09 配售股數
+  value: 21965000
+  lo: null
+  hi: null
+  unit: 股
+  period: 2026-09-16
+  source: 智譜 2026-09-13 公告；騰訊新聞（完成公告轉述）
+  url: https://news.qq.com/rain/a/20260918A09O8G00?id=20260918A09O8G00&path=a&app=news&suid=&redirect_pc=1
+  doc_date: 2026-09-18
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告（媒體轉述完成）
+  note: 「2196.5萬股新H股」，2026-09-16 完成，占擴大後約 4.50%
+- key: placing2_gross
+  group: F
+  metric: 2026-09 配售所得款項總額
+  value: 15683.01
+  lo: null
+  hi: null
+  unit: HKD 百萬
+  period: 2026-09-16
+  source: 智譜 2026-09-13 公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: 總額約 15,683.01 百萬港元；714×21,965,000 吻合
+- key: placing2_net
+  group: F
+  metric: 2026-09 配售所得款項淨額
+  value: 15664.13
+  lo: null
+  hi: null
+  unit: HKD 百萬
+  period: 2026-09-16
+  source: 智譜 2026-09-13 公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: 淨額約 15,664.13 百萬港元；完成公告「約156.64億港元」一致
+- key: cb_principal
+  group: F
+  metric: 2027 年到期美元結算零息可換股債券本金
+  value: 201.4
+  lo: null
+  hi: null
+  unit: RMB 億
+  period: 2026-09-18 發行
+  source: 智譜 2026-09-13 公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: "「本金總額為人民幣201.4億元的債券」；人民幣計價、美元結算；發行價 100.5%"
+- key: cb_gross_usd
+  group: F
+  metric: 可換股債券所得款項總額
+  value: 3015.64
+  lo: null
+  hi: null
+  unit: USD 百萬
+  period: 2026-09-18
+  source: 智譜 2026-09-13 公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: 約 3,015.64 百萬美元（約 23,648.44 百萬港元）
+- key: cb_net_usd
+  group: F
+  metric: 可換股債券所得款項淨額
+  value: 3010.77
+  lo: null
+  hi: null
+  unit: USD 百萬
+  period: 2026-09-18
+  source: 智譜 2026-09-13 公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: 約 3,010.77 百萬美元（約 23,610.24 百萬港元）
+- key: cb_conv_price
+  group: F
+  metric: 可換股債券初始換股價
+  value: 892.50
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-09-12
+  source: 智譜 2026-09-13 公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: 較 793 溢價 12.55%；換股期自 2027-07-01；到期 2027-09-16；票息 0
+- key: cb_conv_shares
+  group: F
+  metric: 可換股債券初始換股股數
+  value: 26365026
+  lo: null
+  hi: null
+  unit: 股
+  period: 2026-09
+  source: 智譜 2026-09-13 公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: 約占配售及轉換後 5.36%；全面攤薄總股數 513,953,116
+- key: placing2_cb_use_rd
+  group: F
+  metric: 2026-09 配售＋可轉債用途：GLM 研發、訓練推論、算力基建、人才
+  value: 60
+  lo: null
+  hi: null
+  unit: "%"
+  period: 2026-09
+  source: 智譜 2026-09-13 公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: 60% 研發與算力、15% 擴張／戰投／併購、25% 資本結構與營運資金；2028-06-30 前用畢
+- key: placing2_cb_total_hkd
+  group: F
+  metric: 2026-09 配售＋可轉債合計集資
+  value: 393.31
+  lo: null
+  hi: null
+  unit: HKD 億
+  period: 2026-09
+  source: 香港01
+  url: https://global.hk01.com/财经快讯/60389638/7月解禁抽水逾310亿后-智谱火速再配股兼发债-合共筹393亿
+  doc_date: 2026-09-14
+  retrieved: 2026-10-08
+  tag: Derived
+  party: null
+  basis: 媒體加總（總額口徑）
+  note: 「約393.31億港元」＝156.83＋236.48；公司電話會稱「約50億美元」
+
+# ---------------- F5 銀行借款 ----------------
+- key: bank_loans_1h26
+  group: F
+  metric: 銀行貸款總額
+  value: 2224.8
+  lo: null
+  hi: null
+  unit: RMB 百萬
+  period: 2026-06-30
+  source: 智譜 2026 中期業績公告
+  url: https://www.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101540_c.pdf
+  doc_date: 2026-08-31
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 未經審計（已審閱）
+  note: "「銀行貸款總額為人民幣2,224.8百萬元」；帶息、主要人民幣、無擔保"
+- key: bank_loans_fy25
+  group: F
+  metric: 銀行貸款總額
+  value: 689.5
+  lo: null
+  hi: null
+  unit: RMB 百萬
+  period: 2025-12-31
+  source: 智譜 2026 中期業績公告
+  url: https://www.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101540_c.pdf
+  doc_date: 2026-08-31
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 經審計（比較數）
+  note: 2025-12-31 為人民幣 689.5 百萬元
+- key: gearing_1h26
+  group: F
+  metric: 資本負債比率（銀行貸款＋租賃負債）÷權益
+  value: 58.8
+  lo: null
+  hi: null
+  unit: "%"
+  period: 2026-06-30
+  source: 智譜 2026 中期業績公告
+  url: https://www.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101540_c.pdf
+  doc_date: 2026-08-31
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 未經審計（已審閱）
+  note: 權益 2026-06-30 人民幣 4,429.6 百萬元（2025 年末 -8,111.0）
+
+# ---------------- F6 併購 ----------------
+- key: ma_hongzuan_consideration
+  group: F
+  metric: 收購北京紅鑽 100% 總代價（上限）
+  value: 360.52
+  lo: null
+  hi: null
+  unit: RMB 百萬
+  period: 2026-04-14
+  source: 智譜 2026 中期業績公告；投資界
+  url: https://www.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101540_c.pdf
+  doc_date: 2026-08-31
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: "「以不超過人民幣360.52百萬元的總代價收購北京紅鑽的100%股權」；現金"
+- key: ma_hongzuan_equity_cash
+  group: F
+  metric: 北京紅鑽：股權現金對價（另承接債務約 2.789 億元）
+  value: 81.62
+  lo: null
+  hi: null
+  unit: RMB 百萬
+  period: 2026-04-14
+  source: 投資界
+  url: https://news.pedaily.cn/202604/562789.shtml
+  doc_date: 2026-04-14
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述公告
+  note: 股權 8,162 萬元＋債務安排約 2.789 億元；標的為海淀鑽石大廈（約 2.27 萬平方米），自用辦公
+- key: capex_1h26_hongzuan
+  group: F
+  metric: 資本支出（含紅鑽物業）
+  value: 390.6
+  lo: null
+  hi: null
+  unit: RMB 百萬
+  period: 1H2026
+  source: 智譜 2026 中期業績公告
+  url: https://www.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101540_c.pdf
+  doc_date: 2026-08-31
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 未經審計（已審閱）
+  note: "1H25 53.7→1H26 390.6 百萬元，「主要由於…收購北京紅鑽」；即 D11 的 3.91 億主要非算力"
+- key: ma_zkjh_stake
+  group: F
+  metric: 收購中科加禾持股比例
+  value: 60
+  lo: null
+  hi: null
+  unit: "%"
+  period: 2026-07-21
+  source: 投資界（引企查查）
+  url: https://news.pedaily.cn/202607/566757.shtml
+  doc_date: 2026-07-23
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 媒體引工商登記（非公司公告）
+  basis: 工商登記
+  note: "「持股約60%」；創始人崔慧敏降至 11%；交易金額「未獲得披露」"
+- key: ma_zkjh_consideration
+  group: F
+  metric: 收購中科加禾對價
+  value: null
+  lo: null
+  hi: null
+  unit: RMB
+  period: 2026-07-21
+  source: 21世紀經濟報道
+  url: https://www.sfccn.com/2026/7-21/2OMDE1MjBfMjE4NjM2OQ.html
+  doc_date: 2026-07-21
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 媒體報導
+  basis: 媒體
+  note: 只稱「數億元人民幣」；2.92 億未核得（見 not_found）；標的為異構算力軟體棧／編譯
+
+# ---------------- F7 股本與股東 ----------------
+- key: shares_total_0630
+  group: F
+  metric: 已發行股份總數
+  value: 445843090
+  lo: null
+  hi: null
+  unit: 股
+  period: 2026-06-30
+  source: 智譜 FF301 月報表（2026-06）
+  url: https://pdf.dfcfw.com/pdf/H2_AN202607071826772191_1.pdf
+  doc_date: 2026-07-07
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告（東方財富鏡像）
+  note: H 股 221,314,605＋非上市股份 224,528,485；面值 RMB 0.1
+- key: shares_h_0630
+  group: F
+  metric: H 股數
+  value: 221314605
+  lo: null
+  hi: null
+  unit: 股
+  period: 2026-06-30
+  source: 智譜 FF301 月報表（2026-06）
+  url: https://pdf.dfcfw.com/pdf/H2_AN202607071826772191_1.pdf
+  doc_date: 2026-07-07
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: 含 IPO 新股 43,032,400 與全流通轉換股（推算 178,282,205，Derived）
+- key: shares_unlisted
+  group: F
+  metric: 非上市股份數
+  value: 224528485
+  lo: null
+  hi: null
+  unit: 股
+  period: 2026-09-13
+  source: 智譜 2026-09-13 公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: 占 465,623,090 股的 48.22%
+- key: shares_total_post_placing2
+  group: F
+  metric: 2026-09 配售完成後已發行股份總數
+  value: 487588090
+  lo: null
+  hi: null
+  unit: 股
+  period: 2026-09-16
+  source: 智譜 2026-09-13 公告（股權架構表「緊隨配售完成後」）
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: H 股 263,059,605（Derived）＋非上市 224,528,485；全面攤薄（含可轉債）513,953,116
+- key: holder_founder_group_pct
+  group: F
+  metric: 最大股東集團（北京鏈湃、劉德兵、唐杰等）持股
+  value: 28.57
+  lo: null
+  hi: null
+  unit: "%"
+  period: 2026-09-13
+  source: 智譜 2026-09-13 公告
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: 非上市 123,042,373（26.43%）＋H 股 10,001,857（2.15%）；配售後 27.28%
+- key: holder_founder_group_preipo
+  group: F
+  metric: 控股股東一致行動集團持股（上市前）
+  value: 33.03
+  lo: null
+  hi: null
+  unit: "%"
+  period: 2025-12
+  source: 智東西（轉述招股章程）
+  url: https://zhidx.com/p/522919.html
+  doc_date: 2025-12
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: 北京鏈湃、劉德兵、唐杰、李涓子、許斌、張海峰、慧惠、智登合計約 33.03%
+- key: holder_junlian_preipo
+  group: F
+  metric: 君聯資本持股（上市前）
+  value: 6.73
+  lo: null
+  hi: null
+  unit: "%"
+  period: 2025-12
+  source: 財聯社
+  url: https://m.cls.cn/detail/2235451
+  doc_date: 2025-12
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: 慧惠 9.8%、北京鏈湃 8.45%、智登 6.75%、君聯 6.73%、美團 4.27%、啟明 2.49%
+- key: holder_meituan_preipo
+  group: F
+  metric: 美團持股（上市前）
+  value: 4.27
+  lo: null
+  hi: null
+  unit: "%"
+  period: 2025-12
+  source: 財聯社
+  url: https://m.cls.cn/detail/2235451
+  doc_date: 2025-12
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 媒體轉述招股章程
+  note: 美團 4.27%；阿里、騰訊、小米持股比例未取得
+- key: lockup_2027_01
+  group: F
+  metric: 2027-01-08 解禁（創辦人、早期投資人）占總股本
+  value: null
+  lo: 40
+  hi: null
+  unit: "%"
+  period: 2027-01-08
+  source: 每日經濟新聞
+  url: https://www.mrjjxw.com/articles/2026-06-22/4432957.html
+  doc_date: 2026-06-22
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 媒體估算
+  basis: 媒體
+  note: 「接近總股本40%」；2026-07-08 解禁約 2,568 萬股（基石 1,199 萬＋部分上市前股）
+
+# ---------------- F8 股價與市值 ----------------
+- key: price_20261007
+  group: F
+  metric: 收盤價
+  value: 696.00
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-10-07
+  source: 老虎證券行情頁
+  url: https://www.itiger.com/hans/stock/02513/news
+  doc_date: 2026-10-07
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 市場數據
+  note: 696.00，跌 2.73%；前收 715.50（10-06）
+- key: price_20261002
+  group: F
+  metric: 收盤價（Investing 頁）
+  value: 626.50
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-10-02/03
+  source: Investing.com
+  url: https://www.investing.com/equities/knowledge-atlas-tech-joint-stock
+  doc_date: 2026-10-03
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 市場數據
+  note: 頁面寫 626.50；市值 291.71B 以過時股數 465.62M 計算
+- key: mktcap_20261007
+  group: F
+  metric: 總市值
+  value: 3396.48
+  lo: null
+  hi: null
+  unit: HKD 億
+  period: 2026-10-07
+  source: 老虎證券行情頁
+  url: https://www.itiger.com/hans/stock/02513/news
+  doc_date: 2026-10-07
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 市場數據
+  note: 頁面「3,396.48億」，未註幣別（港股報價，推定港幣）
+- key: mktcap_20261007_b
+  group: F
+  metric: 總市值（按公告股數計算）
+  value: 3393.61
+  lo: null
+  hi: null
+  unit: HKD 億
+  period: 2026-10-07
+  source: Derived＝696.00×487,588,090
+  url: https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0913/2026091300026_c.pdf
+  doc_date: 2026-10-07
+  retrieved: 2026-10-08
+  tag: Derived
+  party: null
+  basis: 計算（含非上市股份，H 股＋非上市同價）
+  note: 與老虎差 2.9 億，可能老虎股數口徑不同；H 股市值＝696×263,059,605
+- key: hi_52w
+  group: F
+  metric: 52 週最高（盤中）
+  value: 2980.00
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-06-22
+  source: 老虎證券行情頁；每日經濟新聞
+  url: https://www.mrjjxw.com/articles/2026-06-22/4432957.html
+  doc_date: 2026-06-22
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 市場數據
+  note: 6-22 盤中 2,980，市值約 1.3 萬億港元；6-11 低點 1,061
+- key: lo_52w
+  group: F
+  metric: 52 週最低（上市首日盤中）
+  value: 116.10
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-01-08
+  source: 老虎證券行情頁；Investing.com
+  url: https://www.investing.com/equities/knowledge-atlas-tech-joint-stock
+  doc_date: 2026-10-03
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 市場數據
+  note: 52 週區間 116.10–2,980.00
+- key: price_20260721
+  group: F
+  metric: 收購中科加禾當日股價
+  value: 1232
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-07-21
+  source: 華爾街見聞
+  url: https://wallstreetcn.com/articles/3777553
+  doc_date: 2026-07-21
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 市場數據（午後報價）
+  note: "「報1232港元/股」，單日漲 38.35%；7-17 跌 28.49%、7-20 跌 19.56%"
+
+# ---------------- G1 管理層目標（Interested-party） ----------------
+- key: mgmt_arr_guidance_ye26
+  group: G
+  metric: 管理層年末 ARR 指引
+  value: 3.0
+  lo: null
+  hi: null
+  unit: USD 十億
+  period: 2026-12
+  source: 證券日報（同花順轉載）—投資人電話會
+  url: https://stock.10jqka.com.cn/20260916/c679973930.shtml
+  doc_date: 2026-09-16
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 智譜（剛完成配售與可轉債；上市後股價、2027-07 起換股）
+  basis: 管理層口徑
+  note: "「年末ARR指引由24億美元上調至30億美元」；當時 ARR 18 億美元"
+- key: mgmt_arr_guidance_prior
+  group: G
+  metric: 管理層年末 ARR 指引（上調前）
+  value: 2.4
+  lo: null
+  hi: null
+  unit: USD 十億
+  period: 2026-12
+  source: 證券日報（同花順轉載）
+  url: https://stock.10jqka.com.cn/20260916/c679973930.shtml
+  doc_date: 2026-09-16
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 智譜
+  basis: 管理層口徑
+  note: 先前指引 24 億美元（招商證券國際亦稱「預期年底年化收入24億美元」）
+- key: mgmt_arr_current_0916
+  group: G
+  metric: 全公司 ARR（管理層）
+  value: 1.8
+  lo: null
+  hi: null
+  unit: USD 十億
+  period: 2026-09
+  source: 證券日報（同花順轉載）
+  url: https://stock.10jqka.com.cn/20260916/c679973930.shtml
+  doc_date: 2026-09-16
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 智譜
+  basis: 管理層口徑（ARR 定義未揭露）
+  note: 全公司 ARR 18 億美元；8 月 API 月收入年化約 16 億美元（財聯社）
+- key: mgmt_arr_aug_api
+  group: G
+  metric: 8 月收入年化 ARR（管理層）
+  value: 1.6
+  lo: null
+  hi: 2.0
+  unit: USD 十億
+  period: 2026-08
+  source: 財聯社（中期業績會）
+  url: https://m.cls.cn/detail/2470120
+  doc_date: 2026-08-31
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 智譜
+  basis: 管理層口徑
+  note: 8 月月收入年化約 16 億美元；週收入×52 激進口徑超 20 億美元
+- key: mgmt_inference_cost_cut
+  group: G
+  metric: 年初至今每 token 推論成本降幅（管理層）
+  value: 80
+  lo: null
+  hi: null
+  unit: "%"
+  period: 2026-01～08
+  source: 財聯社（中期業績會）
+  url: https://m.cls.cn/detail/2470120
+  doc_date: 2026-08-31
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 智譜
+  basis: 管理層口徑
+  note: 「10萬級國產晶片」部署使單 token 推論成本下降約 80%（轉述）
+- key: mgmt_profit_target
+  group: G
+  metric: 管理層獲利時點量化目標
+  value: null
+  lo: null
+  hi: null
+  unit: 年
+  period: null
+  source: 智譜 2026 中期業績公告「未來展望」
+  url: https://www.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101540_c.pdf
+  doc_date: 2026-08-31
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 智譜
+  basis: 質化
+  note: 展望無獲利或毛利目標；僅稱「毛利率有望企穩回升」（企業智能體分部）
+
+# ---------------- G2 分析師（Interested-party） ----------------
+- key: cons_rev_fy26
+  group: G
+  metric: 共識營收 FY2026
+  value: 6048
+  lo: null
+  hi: null
+  unit: RMB 百萬
+  period: FY2026
+  source: Simply Wall St（共識，23 位分析師）
+  url: https://simplywall.st/stocks/hk/software/shsc-2513/zai-shares/future
+  doc_date: 2026-10-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 券商（承銷、交易誘因；中金、國泰君安為 2026-09 配售承銷）
+  basis: 共識
+  note: FY2026 營收 6,048 百萬元；淨利 -4,594
+- key: cons_rev_fy27
+  group: G
+  metric: 共識營收 FY2027
+  value: 18013
+  lo: null
+  hi: null
+  unit: RMB 百萬
+  period: FY2027
+  source: Simply Wall St（共識，23 位）
+  url: https://simplywall.st/stocks/hk/software/shsc-2513/zai-shares/future
+  doc_date: 2026-10-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 券商（承銷、交易誘因）
+  basis: 共識
+  note: FY2027 營收 18,013；淨利 -4,072
+- key: cons_rev_fy28
+  group: G
+  metric: 共識營收 FY2028
+  value: 37900
+  lo: null
+  hi: null
+  unit: RMB 百萬
+  period: FY2028
+  source: Simply Wall St（共識，21 位）
+  url: https://simplywall.st/stocks/hk/software/shsc-2513/zai-shares/future
+  doc_date: 2026-10-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 券商（承銷、交易誘因）
+  basis: 共識
+  note: FY2028 營收 37,900；淨利 -882
+- key: cons_ni_fy26
+  group: G
+  metric: 共識淨利 FY2026
+  value: -4594
+  lo: null
+  hi: null
+  unit: RMB 百萬
+  period: FY2026
+  source: Simply Wall St
+  url: https://simplywall.st/stocks/hk/software/shsc-2513/zai-shares/future
+  doc_date: 2026-10-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 券商（承銷、交易誘因）
+  basis: 共識
+  note: FY2027 -4,072、FY2028 -882
+- key: cons_rev_fy26_b
+  group: G
+  metric: 共識營收 FY2026（2026-09 初）
+  value: 6.1
+  lo: null
+  hi: null
+  unit: RMB 十億
+  period: FY2026
+  source: Simply Wall St（Webull 轉載，20 位）
+  url: https://www.webull.com/news/15528566565184512
+  doc_date: 2026-09-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 券商（承銷、交易誘因）
+  basis: 共識
+  note: "「CN¥6.1b」，前值 CN¥4.0b"
+- key: cons_tp_avg
+  group: G
+  metric: 共識平均目標價
+  value: 1567.30
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-10-03
+  source: Investing.com（24 位：19 買入、4 持有、1 賣出）
+  url: https://www.investing.com/equities/knowledge-atlas-tech-joint-stock
+  doc_date: 2026-10-03
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 券商（承銷、交易誘因）
+  basis: 共識
+  note: 平均 12 個月目標價 1,567.30 港元，評級共識「買入」
+- key: cons_tp_avg_b
+  group: G
+  metric: 共識目標價（Simply Wall St，以 CN¥ 標示）
+  value: 1427
+  lo: 549
+  hi: 1928
+  unit: CNY／股（頁面標示）
+  period: 2026-09-06
+  source: Simply Wall St（Webull 轉載）
+  url: https://www.webull.com/news/15528566565184512
+  doc_date: 2026-09-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 券商
+  basis: 共識
+  note: "頁面以「CN¥1,427」標示（區間 549–1,928）；幣別疑為平台換算，與 Investing 港幣口徑不可直比"
+- key: broker_gs_tp
+  group: G
+  metric: 高盛目標價（中性→買入）
+  value: 1560
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-10-05
+  source: 財聯社（東方財富轉載）
+  url: https://finance.eastmoney.com/a/202610053888577065.html
+  doc_date: 2026-10-05
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 高盛（交易誘因）
+  basis: 券商
+  note: "「從中性上調至買入 目標價為1560港元」；上漲空間 149%"
+- key: broker_cmsi_tp
+  group: G
+  metric: 招商證券國際目標價（增持）
+  value: 1600
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-09-02
+  source: 同花順（轉財聞，AI 生成稿）
+  url: https://stock.10jqka.com.cn/20260902/c679525880.shtml
+  doc_date: 2026-09-02
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 招商證券國際（交易誘因）
+  basis: 券商
+  note: 由 1,282 升至 1,600；稱最快 2028 年盈虧平衡
+- key: broker_guosen_rev
+  group: G
+  metric: 國信證券營收預測 FY2026／27／28
+  value: 62
+  lo: null
+  hi: null
+  unit: RMB 億（FY2026）
+  period: FY2026–FY2028
+  source: 格隆匯（國信證券 26H1 點評）
+  url: https://m.gelonghui.com/news/5306647
+  doc_date: 2026-09-04
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 國信證券（交易誘因）
+  basis: 券商
+  note: 營收 62／155／344 億元；歸母淨利 -36／-30／5 億元；優於大市；2026 PS 約 82 倍
+- key: broker_guozheng_rev
+  group: G
+  metric: 國證國際營收預測 FY2026／27／28
+  value: 42
+  lo: null
+  hi: null
+  unit: RMB 億（FY2026）
+  period: FY2026–FY2028
+  source: 格隆匯（國證國際首次覆蓋）
+  url: https://m.gelonghui.com/news/5270015
+  doc_date: 2026-07-15
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 國證國際（交易誘因）
+  basis: 券商
+  note: 42／114／251 億元；經調整淨虧 37／29／2 億；目標價 2,043 港元；SOTP（API 2027 年 80 倍 PS）
+- key: broker_daiwa_tp
+  group: G
+  metric: 大和目標價（首次買入）
+  value: 1500
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-08-12
+  source: 同花順
+  url: https://stock.10jqka.com.cn/20260812/c678896247.shtml
+  doc_date: 2026-08-12
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 大和（交易誘因）
+  basis: 券商
+  note: 營收由 2025 年 7.24 億升至 2029 年 475 億元人民幣（CAGR 185%）
+- key: broker_jpm_tp
+  group: G
+  metric: 摩根大通目標價（增持）
+  value: 2000
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-07-08
+  source: 格隆匯
+  url: https://m.gelonghui.com/news/5264523
+  doc_date: 2026-07-08
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 摩根大通（交易誘因）
+  basis: 券商
+  note: 由 1,800 升至 2,000；文中年份由上下文推定 2026
+
+# ---------------- G3 同業：MiniMax（00100.HK） ----------------
+- key: peer_mmx_price_20261007
+  group: G
+  metric: MiniMax 股價
+  value: 236.00
+  lo: null
+  hi: null
+  unit: HKD／股
+  period: 2026-10-07 13:56
+  source: 老虎證券行情頁
+  url: https://www.itiger.com/hant/stock/00100/news
+  doc_date: 2026-10-07
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 市場數據（盤中，非收盤）
+  note: 52 週高 1,330、低 186.20
+- key: peer_mmx_mktcap
+  group: G
+  metric: MiniMax 總市值
+  value: 830.72
+  lo: null
+  hi: null
+  unit: HKD 億
+  period: 2026-10-07
+  source: 老虎證券行情頁
+  url: https://www.itiger.com/hant/stock/00100/news
+  doc_date: 2026-10-07
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 市場數據
+  note: 236×352,480,183（A＋B 類）＝831.9 億，Derived 勾稽相符
+- key: peer_mmx_shares
+  group: G
+  metric: MiniMax 已發行股份（A 類 271,377,649＋B 類 81,102,534）
+  value: 352480183
+  lo: null
+  hi: null
+  unit: 股
+  period: 2026-09-30
+  source: MiniMax FF301 月報表
+  url: https://pdf.dfcfw.com/pdf/H2_AN202610021830089929_1.pdf
+  doc_date: 2026-10-02
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 公司公告
+  note: 合計為 Derived（A＋B）；B 類不上市
+- key: peer_mmx_rev_fy25
+  group: G
+  metric: MiniMax 營收 FY2025
+  value: 79.0
+  lo: null
+  hi: null
+  unit: USD 百萬
+  period: FY2025
+  source: MiniMax 2025 全年業績新聞稿
+  url: https://www.minimax.io/news/minimax-global-announces-full-year-2025-financial-results
+  doc_date: 2026-03-02
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 經審計（業績公告）
+  note: "「Total revenue increased by 158.9%…to US$79.0 million」；毛利率 25.4%"
+- key: peer_mmx_nl_fy25
+  group: G
+  metric: MiniMax 年度虧損 FY2025（IFRS）
+  value: -1871.6
+  lo: null
+  hi: null
+  unit: USD 百萬
+  period: FY2025
+  source: MiniMax 2025 全年業績新聞稿
+  url: https://www.minimax.io/news/minimax-global-announces-full-year-2025-financial-results
+  doc_date: 2026-03-02
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 經審計（業績公告）
+  note: 年度虧損 1,871.6 百萬美元（含優先股公允值變動）；經調整淨虧 250.9
+- key: peer_mmx_adjnl_fy25
+  group: G
+  metric: MiniMax 經調整淨虧損 FY2025
+  value: -250.9
+  lo: null
+  hi: null
+  unit: USD 百萬
+  period: FY2025
+  source: MiniMax 2025 全年業績新聞稿
+  url: https://www.minimax.io/news/minimax-global-announces-full-year-2025-financial-results
+  doc_date: 2026-03-02
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 非 IFRS
+  note: "「Adjusted net loss was US$250.9 million」；年末現金類 1,050.3 百萬美元"
+- key: peer_mmx_rev_1h26
+  group: G
+  metric: MiniMax 營收 1H2026
+  value: 116.57
+  lo: null
+  hi: null
+  unit: USD 百萬
+  period: 1H2026
+  source: 老虎（轉 MiniMax 中期業績）
+  url: https://www.itiger.com/news/1169167557
+  doc_date: 2026-08-26
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 未經審計（媒體轉述）
+  note: 「revenue climbing 283.10%…to US$116.57 million」
+- key: peer_mmx_nl_1h26
+  group: G
+  metric: MiniMax 期間虧損 1H2026
+  value: -357.99
+  lo: null
+  hi: null
+  unit: USD 百萬
+  period: 1H2026
+  source: 老虎（轉 MiniMax 中期業績）
+  url: https://www.itiger.com/news/1169167557
+  doc_date: 2026-08-26
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 未經審計
+  note: 期間虧損 357.99 百萬美元；經調整淨虧 293.03
+- key: peer_mmx_cash_1h26
+  group: G
+  metric: MiniMax 現金、等價物及短期投資
+  value: 1320
+  lo: null
+  hi: null
+  unit: USD 百萬
+  period: 2026-06-30
+  source: 老虎（轉 MiniMax 中期業績）
+  url: https://www.itiger.com/news/1169167557
+  doc_date: 2026-08-26
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 未經審計
+  note: 「US$1.32 billion as of 30 June 2026」；EV 計算需匯率（模型 Inputs）
+- key: peer_mmx_ev_rev
+  group: G
+  metric: MiniMax EV／營收（TTM）
+  value: null
+  lo: null
+  hi: null
+  unit: 倍
+  period: 2026-10-07
+  source: Derived（待模型以 INP 匯率計算）
+  url: https://www.itiger.com/hant/stock/00100/news
+  doc_date: 2026-10-07
+  retrieved: 2026-10-08
+  tag: Derived
+  party: null
+  basis: 計算
+  note: 規則禁自行換匯；公式＝(830.72億HKD÷HKD/USD−13.2億USD)÷TTM營收（2H25＋1H26，2H25 需推算）
+
+not_found:
+- item: 2026-07 配售「人民幣 272.31 億」說法
+  tried: "WebSearch「智谱 配售 272.31亿」「\"272.31\" 智谱 人民币」；HKEX 2026-09-13 公告；觀點網、同花順、香港01"
+  judgment: 找不到。公告與媒體一致為港幣：總額 314.11 億、淨額 313.75 億。272.31 億可能是港幣淨額換算人民幣，或其他口徑，原文未見
+- item: 中科加禾收購對價「約 2.92 億」
+  tried: "WebSearch「智谱 中科加禾 60%股权 2.92亿」「\"中科加禾\" 智谱 \"2.92亿\"」；澎湃、21世紀、川觀、華爾街見聞、投資界、鉅亨；中期業績公告（WebFetch 讀取到的部分）"
+  judgment: 找不到。媒體只寫「數億元」，投資界稱「未獲得披露」；未達須予公佈交易門檻，可能未發公告。中期公告後段被截斷，期後事項附註未讀到
+- item: 2026-07 第一次配售原始公告 PDF（HKEXnews 2026-07-09）
+  tried: WebSearch HKEX 標題；用 FF305（東方財富鏡像）與 2026-09-13 公告的追溯段落代替
+  judgment: 找不到直接網址；數字已由 09-13 公告與 FF305 交叉核對
+- item: IPO 招股章程原文（上市前各輪每股成本、投後估值表、基石個別金額）
+  tried: WebSearch「智谱 招股书 首次公开发售前投资 每股成本 投后估值」；新浪、智東西、量子位、財聯社轉述
+  judgment: 找不到原文網址（HKEX 搜尋頁需 JS，curl 被 proxy 擋）；各輪只有媒體轉述，B3、B5、B6 金額與多數輪次投後估值缺
+- item: 阿里、騰訊、小米、紅杉、高瓴、Prosperity7 上市前與上市後持股比例
+  tried: 財聯社、智東西、新浪（招股章程轉述）；HKEX 權益披露未查
+  judgment: 找不到（媒體只列美團 4.27%、君聯 6.73% 等）；需讀招股章程「主要股東」或 DI 披露
+- item: Prosperity7 個別投資金額
+  tried: Gulf News／Bloomberg、Verdict、EqualOcean
+  judgment: 可能不存在（未揭露）；只知其參與約 4 億美元的一輪
+- item: 銀行借款利率、到期、未動用授信額度
+  tried: 2026 中期業績公告（兩次 WebFetch 定向詢問）
+  judgment: 找不到（公告正文未列）；可能在中期報告全文附註，或未揭露
+- item: 全流通（H 股全流通）轉換股數的原文
+  tried: WebSearch「智譜 全流通 轉換為H股」
+  judgment: 找不到原文；由 FF301 H 股 221,314,605 減 IPO 新股 43,032,400 推算 178,282,205（Derived，未登錄為 item）
+- item: 管理層營收、毛利率、獲利時點、算力投入的量化目標
+  tried: 2026 中期業績公告未來展望；財聯社業績會報導；證券日報 9-16 電話會
+  judgment: 量化目標可能不存在。只有 ARR 指引（年末 30 億美元）；獲利時點、毛利率、算力投入無量化說法
+- item: 分析師共識的來源券商名單與 FY2026–28 共識的機構版（Bloomberg／LSEG）
+  tried: Investing、Simply Wall St、MarketScreener（無結果）、Futu（需 JS）
+  judgment: 找不到機構版；聚合平台未列券商名單
+- item: MiniMax EV／營收倍數
+  tried: 老虎、Investing（未嘗試）、媒體
+  judgment: 找不到現成值；需在模型以匯率自行計算（Derived）
+- item: 海外對照（OpenAI、Anthropic 估值倍數）
+  tried: 未嘗試（選做；OpenAI 已有 OAI_Link）
+  judgment: 未查

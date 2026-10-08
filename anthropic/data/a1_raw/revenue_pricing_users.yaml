@@ -1,0 +1,2975 @@
+# A1-R 營收、價格、用戶（規格第 4 節 A、B、C）
+# retrieved: 2026-10-08；所有列皆有實際開啟之網址與原文摘錄
+rows:
+# ===== A. 營收：認列營收（招股書外流，經 Reuters） =====
+- key: rev_2025_recognized
+  group: A
+  metric: 2025 年認列營收
+  value: 4.6
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025
+  source: Reuters〈Anthropic's IPO prospectus shows sweeping AI vision, surging costs〉（經 Fortune 轉述）
+  url: https://fortune.com/2026/09/29/anthropic-leaked-ipo-prospectus-losses-growth-ai-end-humanity/
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（外流機密招股書草稿；IPO 募資誘因）
+  basis: 總額
+  note: "原文：'bringing in $4.6 billion in revenue'；'Revenue rose 1,088% in 2025'。雲端市集銷售以總額認列（見 rev_recognition_gross）"
+- key: rev_2025_recognized_b
+  group: A
+  metric: 2025 年認列營收
+  value: 4.59
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025
+  source: KuCoin 快訊〈Anthropic fiscal year 2025 revenue surges 1,088% to $4.59 billion〉
+  url: https://www.kucoin.com/news/flash/anthropic-2025-fiscal-year-revenue-surges-1088-to-4-59-billion
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（外流招股書；IPO 募資誘因）
+  basis: 總額
+  note: "標題：'revenue surges 1,088% to $4.59 billion'。與 4.6（Reuters 'nearly $4.6 billion'）一致，為更精確值；僅見標題"
+- key: rev_2024_recognized_derived
+  group: A
+  metric: 2024 年認列營收（由 2025 年成長率反推）
+  value: 0.386
+  lo: 0.38
+  hi: 0.39
+  unit: $B/年
+  period: 2024
+  source: 由 rev_2025_recognized（$4.59B、+1,088%）推算
+  url: https://www.kucoin.com/news/flash/anthropic-2025-fiscal-year-revenue-surges-1088-to-4-59-billion
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Derived
+  party: null
+  basis: 總額
+  note: "4.59/(1+10.88)=0.386。報導未直接給 2024 營收數字；Reuters 稱 2025 年 '12-fold'，4.6/12≈0.38 一致"
+- key: rev_2026_q1
+  group: A
+  metric: 2026 Q1 認列營收
+  value: 4.73
+  lo: null
+  hi: null
+  unit: $B/季
+  period: 2026-Q1
+  source: Bloomberg（經 Axios 轉述）〈Anthropic's revenue run rate reportedly surpasses $65 billion pre-IPO〉
+  url: https://www.axios.com/2026/08/17/anthropic-revenue-run-rate-ipo-openai
+  doc_date: 2026-08-17
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（Bloomberg 取得之內部文件；IPO 前募資誘因）
+  basis: 總額
+  note: "原文：'more than double Q1 revenue of $4.73 billion'。招股書外流（Fortune 9/29）亦引同值"
+- key: rev_2026_q2
+  group: A
+  metric: 2026 Q2 認列營收（初步）
+  value: 11.5
+  lo: null
+  hi: null
+  unit: $B/季
+  period: 2026-Q2
+  source: Bloomberg（經 Axios 轉述）
+  url: https://www.axios.com/2026/08/17/anthropic-revenue-run-rate-ipo-openai
+  doc_date: 2026-08-17
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（Bloomberg 取得之文件；IPO 前誘因）
+  basis: 總額
+  note: "原文：'more than $11.5 billion in preliminary revenue in the second quarter'；'more than 14 times' 去年同季；初步數字可能修正"
+- key: rev_2025_q2
+  group: A
+  metric: 2025 Q2 認列營收
+  value: 0.787
+  lo: null
+  hi: null
+  unit: $B/季
+  period: 2025-Q2
+  source: The Next Web〈Anthropic's quarterly revenue passed $11.5bn, up more than 14-fold〉（引 Bloomberg 2026-08-14）
+  url: https://thenextweb.com/news/anthropic-q2-2026-revenue-11-5-billion-operating-income
+  doc_date: 2026-08-15
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（Bloomberg 取得之文件）
+  basis: 總額
+  note: "原文：去年同季 '$787mn'；Q2 2026 'exceeded $11.5bn'；'positive adjusted operating income'"
+- key: rev_2026_h1_derived
+  group: A
+  metric: 2026 上半年認列營收（Q1+Q2 加總）
+  value: 16.2
+  lo: null
+  hi: null
+  unit: $B/半年
+  period: 2026-H1
+  source: 由 rev_2026_q1 + rev_2026_q2 推算
+  url: https://www.pymnts.com/news/artificial-intelligence/2026/anthropic-prospectus-shows-what-2-trillion-dollar-ai-company-costs-run/
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Derived
+  party: null
+  basis: 總額
+  note: "4.73+11.5≈16.2；PYMNTS 列 '$4.73 billion in Q1 2026 and $11.5 billion in Q2 2026'，未直接給 H1 合計"
+# ===== A. 年化營收（run-rate）里程碑 =====
+- key: rev_runrate_2024_12
+  group: A
+  metric: 年化營收（run-rate）
+  value: 1.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2024-12
+  source: Anthropic 新聞稿〈Anthropic raises Series F at US$183B post-money valuation〉
+  url: https://www.anthropic.com/news/anthropic-raises-series-f-at-usd183b-post-money-valuation
+  doc_date: 2025-09-02
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: 未明
+  note: "原文：2025 年初 'run-rate revenue had grown to approximately $1 billion'"
+- key: rev_runrate_2024_12_b
+  group: A
+  metric: 年化營收（run-rate）
+  value: 1.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2024-12
+  source: Reuters 獨家（2025-05-30，經 WizCase 轉述）
+  url: https://www.wizcase.com/?p=2882381
+  doc_date: 2025-06-03
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（知情人士；募資誘因）
+  basis: 未明
+  note: "原文：'around $1 billion in December 2024'"
+- key: rev_runrate_2025_03_early
+  group: A
+  metric: 年化營收（run-rate）
+  value: 1.4
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025-03（月初）
+  source: The Information（經 Seeking Alpha 轉述）
+  url: https://seekingalpha.com/news/4419473-anthropic-reaches-1_4b-in-annualized-revenue-report
+  doc_date: 2025-03-11
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（知情人士；募資誘因）
+  basis: 未明
+  note: "原文：'an annualized revenue of $1.4B as of earlier this month'；'around $1B at the end of 2024'"
+- key: rev_runrate_2025_03
+  group: A
+  metric: 年化營收（run-rate）
+  value: 2.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025-03（月底）
+  source: Reuters 獨家（2025-05-30，經 WizCase 轉述）
+  url: https://www.wizcase.com/?p=2882381
+  doc_date: 2025-06-03
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（知情人士；募資誘因）
+  basis: 未明
+  note: "原文：'hit $2 billion by the end of March'。與 The Information 3 月初 $1.4B 相差大，月內跳升或口徑不同"
+- key: rev_runrate_2025_05
+  group: A
+  metric: 年化營收（run-rate）
+  value: 3.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025-05
+  source: Reuters 獨家〈Anthropic hits $3 billion in annualized revenue on business demand for AI〉（經 WizCase 轉述）
+  url: https://www.wizcase.com/?p=2882381
+  doc_date: 2025-06-03
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（知情人士；募資誘因）
+  basis: 未明
+  note: "原文：'its $3 billion milestone in May'"
+- key: rev_runrate_2025_07
+  group: A
+  metric: 年化營收（run-rate）
+  value: 4.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025-07（月初）
+  source: The Information（經 Seeking Alpha 轉述）
+  url: https://seekingalpha.com/news/4464440-anthropic-reaches-4b-in-annualized-revenue-report
+  doc_date: 2025-07-01
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（知情人士；募資誘因）
+  basis: 未明
+  note: "原文：'an annualized revenue rate of $4B'，'four times higher than the beginning of the year'"
+- key: rev_runrate_2025_07_b
+  group: A
+  metric: 年化營收（run-rate）
+  value: 4.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025-07
+  source: Bloomberg〈Anthropic's Revenue Run Rate Tops $9 Billion as VCs Pile In〉
+  url: https://www.bloomberg.com/news/articles/2026-01-21/anthropic-s-revenue-run-rate-tops-9-billion-as-vcs-pile-in
+  doc_date: 2026-01-21
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（知情人士；募資誘因）
+  basis: 未明
+  note: "原文：'was $4 billion in July of last year'"
+- key: rev_runrate_2025_08
+  group: A
+  metric: 年化營收（run-rate）
+  value: 5.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025-08
+  source: Anthropic 新聞稿〈Anthropic raises Series F at US$183B post-money valuation〉
+  url: https://www.anthropic.com/news/anthropic-raises-series-f-at-usd183b-post-money-valuation
+  doc_date: 2025-09-02
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: 未明
+  note: "原文：'By August 2025…our run-rate revenue reached over $5 billion'（下限值）"
+- key: rev_runrate_2025_10
+  group: A
+  metric: 年化營收（run-rate）
+  value: 7.0
+  lo: null
+  hi: 7.0
+  unit: $B/年
+  period: 2025-10
+  source: Reuters 獨家〈Anthropic aims to nearly triple annualized revenue in 2026, sources say〉
+  url: https://finance.yahoo.com/news/exclusive-anthropic-aims-nearly-triple-170234463.html
+  doc_date: 2025-10-15
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（公司向 Reuters 表示；募資誘因）
+  basis: 未明
+  note: "原文：'annual revenue run rate is approaching $7 billion this month'（接近，未達）"
+- key: rev_runrate_2025_12
+  group: A
+  metric: 年化營收（run-rate）
+  value: 9.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025-12
+  source: Anthropic 新聞稿〈Google and Broadcom partnership〉
+  url: https://www.anthropic.com/news/google-broadcom-partnership-compute
+  doc_date: 2026-04-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資、市場地位誘因）
+  basis: 未明
+  note: "原文：'up from approximately $9 billion at the end of 2025'"
+- key: rev_runrate_2025_12_b
+  group: A
+  metric: 年化營收（run-rate）
+  value: 9.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025-12
+  source: Bloomberg〈Anthropic's Revenue Run Rate Tops $9 Billion as VCs Pile In〉
+  url: https://www.bloomberg.com/news/articles/2026-01-21/anthropic-s-revenue-run-rate-tops-9-billion-as-vcs-pile-in
+  doc_date: 2026-01-21
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（知情人士；募資誘因）
+  basis: 未明
+  note: "原文：'hit over $9 billion at the end of 2025'（下限）"
+- key: rev_runrate_2026_02
+  group: A
+  metric: 年化營收（run-rate）
+  value: 14.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2026-02
+  source: Anthropic 新聞稿〈Anthropic raises $30 billion Series G at $380 billion post-money valuation〉
+  url: https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation
+  doc_date: 2026-02-12
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: 未明
+  note: "原文：'Today, our run-rate revenue is $14 billion'，'growing over 10x annually'"
+- key: rev_runrate_2026_03
+  group: A
+  metric: 年化營收（run-rate）
+  value: 19.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2026-03（月初）
+  source: Bloomberg〈Anthropic Nears $20 Billion Revenue Run Rate Amid Pentagon Feud〉
+  url: https://news.bgov.com/artificial-intelligence/anthropic-nears-20-billion-revenue-run-rate-amid-pentagon-feud
+  doc_date: 2026-03-03
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（知情人士；募資誘因）
+  basis: 未明
+  note: "原文：'surpassed $19 billion in run-rate revenue'；'roughly $14 billion a few weeks ago'"
+- key: rev_runrate_2026_04
+  group: A
+  metric: 年化營收（run-rate）
+  value: 30.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2026-04
+  source: Anthropic 新聞稿〈Google and Broadcom partnership〉
+  url: https://www.anthropic.com/news/google-broadcom-partnership-compute
+  doc_date: 2026-04-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資、市場地位誘因）
+  basis: 未明
+  note: "原文：'Our run-rate revenue has now surpassed $30 billion'（下限）"
+- key: rev_runrate_2026_05
+  group: A
+  metric: 年化營收（run-rate）
+  value: 47.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2026-05
+  source: Anthropic 新聞稿〈Series H〉
+  url: https://www.anthropic.com/news/series-h
+  doc_date: 2026-05-28
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: 未明
+  note: "原文：'our run-rate revenue crossed $47 billion earlier this month'"
+- key: rev_runrate_2026_07
+  group: A
+  metric: 年化營收（run-rate）
+  value: 65.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2026-07（月底）
+  source: Bloomberg（經 TechCrunch 轉述）〈Anthropic's annualized revenue surges to $65B〉
+  url: https://techcrunch.com/2026/08/17/anthropics-annualized-revenue-surges-to-65b/
+  doc_date: 2026-08-17
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（告知投資人；IPO 誘因）
+  basis: 未明
+  note: "原文：'surpassed $65 billion' at the end of July；'$47 billion in May'。截至 2026-10-08 未見更新的 run-rate"
+- key: rev_runrate_2026_07_b
+  group: A
+  metric: 年化營收（run-rate）
+  value: 65.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2026-07
+  source: AI Magazine〈How Anthropic's Revenue Run Rate Topped US$65bn〉（引 Reuters 知情人士）
+  url: https://aimagazine.com/news/how-anthropics-revenue-run-rate-topped-us-65bn
+  doc_date: 2026-08-18
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（知情人士；IPO 誘因）
+  basis: 未明
+  note: "原文：'US$65bn annual revenue run rate, reached by the end of July'；投資人預期年底 $100–120bn（FT）"
+# ===== A. 營收結構、通路、毛利率、集中度 =====
+- key: rev_mix_2025_subscription
+  group: A
+  metric: 2025 訂閱營收
+  value: 0.789
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025
+  source: Reuters〈Anthropic IPO prospectus lays bare deep dependence on Big Tech partners〉（經 Khaleej Times 轉載）
+  url: https://www.khaleejtimes.com/business/anthropic-ipo-prospectus-lays-bare-deep-dependence-on-big-tech-partners?amp=1
+  doc_date: 2026-09-30
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（外流招股書；IPO 誘因）
+  basis: 總額
+  note: "原文：'Subscription revenue came to $789 million'；約占 2025 營收 17%（推算）"
+- key: rev_mix_2025_consumption
+  group: A
+  metric: 2025 用量計價（API／token）營收
+  value: 3.8
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025
+  source: Reuters（經 Khaleej Times 轉載）
+  url: https://www.khaleejtimes.com/business/anthropic-ipo-prospectus-lays-bare-deep-dependence-on-big-tech-partners?amp=1
+  doc_date: 2026-09-30
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（外流招股書；IPO 誘因）
+  basis: 總額
+  note: "原文：consumption-based revenue 'about $3.8 billion'，預期仍為 'the substantial majority'；約 83%（推算）"
+- key: rev_mix_2025_cloud_partner_share
+  group: A
+  metric: 經 Amazon／Google 雲端通路之營收占比
+  value: 0.47
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2025
+  source: Reuters（經 Khaleej Times 轉載）
+  url: https://www.khaleejtimes.com/business/anthropic-ipo-prospectus-lays-bare-deep-dependence-on-big-tech-partners?amp=1
+  doc_date: 2026-09-30
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（外流招股書；IPO 誘因）
+  basis: 總額
+  note: "原文：'routed 47% of its sales…through cloud partners Amazon and Alphabet's Google'；未含 Microsoft"
+- key: rev_mix_2024_cloud_partner_share
+  group: A
+  metric: 經 Amazon／Google 雲端通路之營收占比
+  value: 0.32
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2024
+  source: Reuters（經 Khaleej Times 轉載）
+  url: https://www.khaleejtimes.com/business/anthropic-ipo-prospectus-lays-bare-deep-dependence-on-big-tech-partners?amp=1
+  doc_date: 2026-09-30
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（外流招股書；IPO 誘因）
+  basis: 總額
+  note: "原文：share 'rose from 11% in 2023 to 32% in 2024'"
+- key: rev_mix_2023_cloud_partner_share
+  group: A
+  metric: 經 Amazon／Google 雲端通路之營收占比
+  value: 0.11
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2023
+  source: Reuters（經 Khaleej Times 轉載）
+  url: https://www.khaleejtimes.com/business/anthropic-ipo-prospectus-lays-bare-deep-dependence-on-big-tech-partners?amp=1
+  doc_date: 2026-09-30
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（外流招股書；IPO 誘因）
+  basis: 總額
+  note: "原文：'from 11% in 2023'"
+- key: rev_recognition_gross
+  group: A
+  metric: 雲端市集銷售之營收認列口徑
+  value: null
+  lo: null
+  hi: null
+  unit: 定性
+  period: 2025
+  source: Reuters（經 Khaleej Times 轉載）
+  url: https://www.khaleejtimes.com/business/anthropic-ipo-prospectus-lays-bare-deep-dependence-on-big-tech-partners?amp=1
+  doc_date: 2026-09-30
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（外流招股書；IPO 誘因）
+  basis: 總額
+  note: "總額認列：'books the full value of marketplace contracts as revenue and records the platforms' cut as a marketing cost'；自稱 'principal'"
+- key: rev_partner_fee_2025
+  group: A
+  metric: 2025 付給雲端平台之通路費
+  value: 0.351
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025
+  source: Reuters 分析（經 Khaleej Times 轉載）
+  url: https://www.khaleejtimes.com/business/anthropic-ipo-prospectus-lays-bare-deep-dependence-on-big-tech-partners?amp=1
+  doc_date: 2026-09-30
+  retrieved: 2026-10-08
+  tag: Derived
+  party: null
+  basis: 總額
+  note: "原文：'roughly $351 million back to the platforms in distribution fees'；Reuters 依招股書計算"
+- key: rev_partner_fee_rate_2025
+  group: A
+  metric: 雲端通路抽成率（每 $1 通路營收）
+  value: 0.16
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2025
+  source: Reuters 分析（經 Khaleej Times 轉載）
+  url: https://www.khaleejtimes.com/business/anthropic-ipo-prospectus-lays-bare-deep-dependence-on-big-tech-partners?amp=1
+  doc_date: 2026-09-30
+  retrieved: 2026-10-08
+  tag: Derived
+  party: null
+  basis: 總額
+  note: "原文：'some 16 cents for every dollar of those sales'。0.351/(4.59×0.47)≈0.16 一致"
+- key: rev_partner_fee_2025_b
+  group: A
+  metric: 2025 付給超大雲端之金額（券商估計）
+  value: 1.9
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025
+  source: Forbes〈OpenAI And Anthropic Count Revenue Differently〉（引 Bank of America 2026-03 估計）
+  url: https://www.forbes.com/sites/josipamajic/2026/03/25/openai-and-anthropic-count-revenue-differently-and-investors-are-looking-into-it/
+  doc_date: 2026-03-25
+  retrieved: 2026-10-08
+  tag: Analogy
+  party: null
+  basis: 總額
+  note: "原文：'up to $6.4 billion in 2026…up from $1.9 billion in 2025'。與招股書 $351M 矛盾（BofA 口徑可能含算力租金），以招股書為準"
+- key: rev_partner_fee_2026_est
+  group: A
+  metric: 2026 付給超大雲端之金額（券商估計）
+  value: 6.4
+  lo: null
+  hi: 6.4
+  unit: $B/年
+  period: 2026
+  source: Forbes（引 Bank of America）
+  url: https://www.forbes.com/sites/josipamajic/2026/03/25/openai-and-anthropic-count-revenue-differently-and-investors-are-looking-into-it/
+  doc_date: 2026-03-25
+  retrieved: 2026-10-08
+  tag: Analogy
+  party: null
+  basis: 總額
+  note: "原文：'could pay hyperscale cloud providers up to $6.4 billion in 2026'"
+- key: rev_runrate_gross_dispute_2026_04
+  group: A
+  metric: OpenAI 估計之 Anthropic「淨額」run-rate
+  value: 22.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2026-04
+  source: Implicator〈OpenAI CRO tells staff Anthropic inflates run rate by $8 billion〉（OpenAI CRO 內部備忘錄，The Verge／CNBC 取得）
+  url: https://www.implicator.ai/openai-cro-tells-staff-anthropic-inflates-run-rate-by-8-billion/
+  doc_date: 2026-04-13
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: OpenAI（競爭對手；貶低對手誘因）
+  basis: 淨額
+  note: "原文：'Their stated run rate is inflated'；OpenAI 估 'true' run rate 約 $22B（對比公布的 $30B，差 $8B）"
+- key: rev_enterprise_share_2025_10
+  group: A
+  metric: 企業與商業客戶占營收比例
+  value: 0.80
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2025-10
+  source: Reuters 獨家〈Anthropic aims to nearly triple annualized revenue in 2026〉
+  url: https://finance.yahoo.com/news/exclusive-anthropic-aims-nearly-triple-170234463.html
+  doc_date: 2025-10-15
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資誘因）
+  basis: 未明
+  note: "原文：business and enterprise customers 'account for about 80% of its revenue'"
+- key: rev_us_share_2025
+  group: A
+  metric: 美國占營收比例
+  value: 0.65
+  lo: 0.6
+  hi: 0.67
+  unit: 比例
+  period: 2025
+  source: Reuters（經 Khaleej Times 轉載）
+  url: https://www.khaleejtimes.com/business/anthropic-ipo-prospectus-lays-bare-deep-dependence-on-big-tech-partners?amp=1
+  doc_date: 2026-09-30
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（外流招股書）
+  basis: 總額
+  note: "原文：'The US accounted for nearly two-thirds of total sales'；value 為近似"
+- key: rev_concentration_top2_2025
+  group: A
+  metric: 前兩大客戶占 2025 營收比例
+  value: 0.24
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2025
+  source: Reuters（經 Khaleej Times 轉載）
+  url: https://www.khaleejtimes.com/business/anthropic-ipo-prospectus-lays-bare-deep-dependence-on-big-tech-partners?amp=1
+  doc_date: 2026-09-30
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（外流招股書）
+  basis: 總額
+  note: "原文：'Two unnamed customers each generated 12% of revenue last year'（12%+12%）"
+- key: rev_concentration_top2_2025_b
+  group: A
+  metric: 前兩大客戶身分（媒體指稱）
+  value: 0.24
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2025
+  source: Crypto Briefing〈Anthropic's IPO filing reveals Amazon and Google account for a quarter of its revenue〉
+  url: https://cryptobriefing.com/anthropic-ipo-amazon-google-revenue/
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（外流招股書；媒體推論）
+  basis: 總額
+  note: "原文：Amazon、Google 'each contributing about 12% of total sales'。與 Reuters「未具名」矛盾；OfficeChai 則推測為 Cursor／GitHub Copilot"
+- key: rev_concentration_cursor_copilot_2025
+  group: A
+  metric: Cursor＋GitHub Copilot 合計貢獻之年化營收
+  value: 1.2
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025-07
+  source: VentureBeat〈Anthropic revenue tied to two customers as AI pricing war threatens margins〉
+  url: https://venturebeat.com/ai/anthropic-revenue-tied-to-two-customers-as-ai-pricing-war-threatens-margins
+  doc_date: 2025-08-08
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（知情人士）
+  basis: 未明
+  note: "原文：'approximately $1.2 billion of the company's $4 billion revenue milestone'（run-rate 口徑，約 30%）"
+- key: rev_microsoft_spend_2025
+  group: A
+  metric: Microsoft 每年向 Anthropic 支付金額（客戶身分）
+  value: 0.5
+  lo: null
+  hi: 0.5
+  unit: $B/年
+  period: 2025
+  source: The Decoder（引 The Information）〈Despite OpenAI partnership, Microsoft is one of Anthropic's biggest customers〉
+  url: https://the-decoder.com/despite-openai-partnership-microsoft-is-one-of-anthropics-biggest-customers/
+  doc_date: null
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic／Microsoft（知情人士）
+  basis: 未明
+  note: "原文：'nearly $500 million a year'；頁面無發布日期（內文提及 Microsoft 'last November' 投資，推測為 2025-12 至 2026 年初）"
+- key: gm_2025_projected_initial
+  group: A
+  metric: 2025 毛利率（原預測）
+  value: 0.50
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2025
+  source: Forbes（引 The Information）
+  url: https://www.forbes.com/sites/josipamajic/2026/03/25/openai-and-anthropic-count-revenue-differently-and-investors-are-looking-into-it/
+  doc_date: 2026-03-25
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人預測文件）
+  basis: 未明
+  note: "原文：'gross margin projections: 50% for 2025 and 77% by 2028, per The Information'"
+- key: gm_2025_revised
+  group: A
+  metric: 2025 毛利率（下修後，付費企業與開發者）
+  value: 0.40
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2025
+  source: The Information〈Anthropic Lowers Gross Margin Projection as Revenue Skyrockets〉
+  url: https://www.theinformation.com/articles/anthropic-lowers-profit-margin-projection-revenue-skyrockets
+  doc_date: 2026-01-21
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人簡報）
+  basis: 未明
+  note: "原文：'projected it would generate a 40% gross profit margin from selling AI'，比先前低 10 個百分點"
+- key: gm_2025_incl_free
+  group: A
+  metric: 2025 毛利率（含免費用戶推論成本）
+  value: 0.38
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2025
+  source: 華爾街見聞（經 Longbridge 轉載，引 The Information）
+  url: https://longbridge.com/en/news/273327693
+  doc_date: 2026-01-22
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人簡報）
+  basis: 未明
+  note: "原文：including free users margin 'would further drop to about 38%'"
+- key: cost_inference_overrun_2025
+  group: A
+  metric: 2025 推論成本超出原預測幅度
+  value: 0.23
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2025
+  source: 華爾街見聞（經 Longbridge 轉載，引 The Information）
+  url: https://longbridge.com/en/news/273327693
+  doc_date: 2026-01-22
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人簡報）
+  basis: 未明
+  note: "原文：inference costs '23% higher than expected'；推論成本金額未揭露"
+- key: cost_training_2025
+  group: A
+  metric: 2025 訓練成本（預測）
+  value: 4.1
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025
+  source: 華爾街見聞（經 Longbridge 轉載，引 The Information）
+  url: https://longbridge.com/en/news/273327693
+  doc_date: 2026-01-22
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人簡報）
+  basis: 未明
+  note: "原文：'training costs to be about $4.1 billion in 2025'"
+- key: rev_2025_projected_info
+  group: A
+  metric: 2025 營收（公司 2025-12 預測）
+  value: 4.5
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025
+  source: 華爾街見聞（經 Longbridge 轉載，引 The Information）
+  url: https://longbridge.com/en/news/273327693
+  doc_date: 2026-01-22
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人簡報）
+  basis: 未明
+  note: "原文：'expects its revenue to reach $4.5 billion in 2025'；與招股書 $4.59B 一致"
+- key: rev_2025_recognized_c
+  group: A
+  metric: 2025 營收（媒體引述 Amodei 達沃斯說法）
+  value: 10.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025
+  source: WebProNews〈Anthropic Slashes 2025 Margin Forecast to 40% Amid AI Cost Surge〉
+  url: https://www.webpronews.com/anthropic-slashes-2025-margin-forecast-to-40-amid-ai-cost-surge/
+  doc_date: 2026-01-22
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（執行長公開談話；市場地位誘因）
+  basis: 未明
+  note: "原文：2025 'about $10 billion'（引 Amodei 於 WEF）。與招股書 $4.6B 矛盾，應為 run-rate 誤植；不採用"
+- key: gm_2026_pre_share
+  group: A
+  metric: 毛利率（未扣通路分潤前）
+  value: 0.80
+  lo: 0.80
+  hi: null
+  unit: 比例
+  period: 2026-Q3
+  source: Reuters（引 FT）〈Anthropic tells investors it will be profitable for second straight quarter〉（The Star 轉載）
+  url: https://www.thestar.com.my/tech/tech-news/2026/09/14/anthropic-tells-investors-it-will-be-profitable-for-second-straight-quarter-ft-reports
+  doc_date: 2026-09-13
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（告知投資人；IPO 誘因）
+  basis: 總額
+  note: "原文：'gross margins are above 80% before accounting for revenue shared with distribution partners'（下限）"
+- key: gm_2026_pitchbook
+  group: A
+  metric: 2026 毛利率（分析師估計）
+  value: 0.44
+  lo: 0.40
+  hi: 0.50
+  unit: 比例
+  period: 2026
+  source: PitchBook〈Anthropic's gross margin is the most important number in tech〉（Yahoo Finance 轉載）
+  url: https://finance.yahoo.com/markets/stocks/articles/anthropics-gross-margin-most-important-070500338.html
+  doc_date: 2026-06-10
+  retrieved: 2026-10-08
+  tag: Analogy
+  party: null
+  basis: 未明
+  note: "原文：'on track for gross margins of roughly 44%'；估值隱含 '40% to 50% gross margins'"
+- key: cost_compute_per_rev_2026_q1
+  group: A
+  metric: 每 $1 營收之算力支出
+  value: 0.71
+  lo: null
+  hi: null
+  unit: $/每$營收
+  period: 2026-Q1
+  source: PYMNTS〈Anthropic On Track for First Operating Profit as Revenue Surges〉（引 WSJ）
+  url: https://www.pymnts.com/?p=3752527
+  doc_date: 2026-05-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（WSJ 取得之投資人預測）
+  basis: 未明
+  note: "原文：'spent 71 cents on compute for every dollar of revenue'；Q2 預期 '56 cents'"
+- key: cost_compute_per_rev_2026_q2
+  group: A
+  metric: 每 $1 營收之算力支出（預測）
+  value: 0.56
+  lo: null
+  hi: null
+  unit: $/每$營收
+  period: 2026-Q2
+  source: PYMNTS（引 WSJ）
+  url: https://www.pymnts.com/?p=3752527
+  doc_date: 2026-05-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人預測）
+  basis: 未明
+  note: "原文：'That ratio is expected to fall to 56 cents in the current quarter'"
+- key: rev_2026_q1_b
+  group: A
+  metric: 2026 Q1 認列營收
+  value: 4.8
+  lo: null
+  hi: null
+  unit: $B/季
+  period: 2026-Q1
+  source: PYMNTS（引 WSJ）
+  url: https://www.pymnts.com/?p=3752527
+  doc_date: 2026-05-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人預測文件）
+  basis: 總額
+  note: "原文：'up 130% from $4.8 billion in the first quarter'。與 Bloomberg $4.73B 小幅差異（四捨五入）"
+- key: rev_2026_q2_projected
+  group: A
+  metric: 2026 Q2 營收（季前預測）
+  value: 10.9
+  lo: null
+  hi: null
+  unit: $B/季
+  period: 2026-Q2
+  source: PYMNTS（引 WSJ）
+  url: https://www.pymnts.com/?p=3752527
+  doc_date: 2026-05-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人預測）
+  basis: 總額
+  note: "原文：'projects $10.9 billion in revenue for the June quarter'；營業利益預測 '$559 million'；實際 >$11.5B"
+# ===== B. 價格：API 牌價 =====
+- key: price_claude3_opus_in
+  group: B
+  metric: API 牌價 Claude 3 Opus 輸入（上市 2024-03-04）
+  value: 15
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2024-03-04'
+  source: Anthropic〈Introducing the next generation of Claude〉
+  url: https://www.anthropic.com/news/claude-3-family
+  doc_date: '2024-03-04'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 價格表：'$15 | $75'
+- key: price_claude3_opus_out
+  group: B
+  metric: API 牌價 Claude 3 Opus 輸出（上市 2024-03-04）
+  value: 75
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2024-03-04'
+  source: Anthropic〈Introducing the next generation of Claude〉
+  url: https://www.anthropic.com/news/claude-3-family
+  doc_date: '2024-03-04'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 價格表：'$15 | $75'
+- key: price_claude3_sonnet_in
+  group: B
+  metric: API 牌價 Claude 3 Sonnet 輸入（上市 2024-03-04）
+  value: 3
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2024-03-04'
+  source: Anthropic〈Introducing the next generation of Claude〉
+  url: https://www.anthropic.com/news/claude-3-family
+  doc_date: '2024-03-04'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 價格表：'$3 | $15'
+- key: price_claude3_sonnet_out
+  group: B
+  metric: API 牌價 Claude 3 Sonnet 輸出（上市 2024-03-04）
+  value: 15
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2024-03-04'
+  source: Anthropic〈Introducing the next generation of Claude〉
+  url: https://www.anthropic.com/news/claude-3-family
+  doc_date: '2024-03-04'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 價格表：'$3 | $15'
+- key: price_claude3_haiku_in
+  group: B
+  metric: API 牌價 Claude 3 Haiku 輸入（上市 2024-03-04）
+  value: 0.25
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2024-03-04'
+  source: Anthropic〈Introducing the next generation of Claude〉
+  url: https://www.anthropic.com/news/claude-3-family
+  doc_date: '2024-03-04'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 價格表：'$0.25 | $1.25'
+- key: price_claude3_haiku_out
+  group: B
+  metric: API 牌價 Claude 3 Haiku 輸出（上市 2024-03-04）
+  value: 1.25
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2024-03-04'
+  source: Anthropic〈Introducing the next generation of Claude〉
+  url: https://www.anthropic.com/news/claude-3-family
+  doc_date: '2024-03-04'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 價格表：'$0.25 | $1.25'
+- key: price_claude35_sonnet_in
+  group: B
+  metric: API 牌價 Claude 3.5 Sonnet 輸入（上市 2024-06-20）
+  value: 3
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2024-06-20'
+  source: Anthropic〈Introducing Claude 3.5 Sonnet〉
+  url: https://www.anthropic.com/news/claude-3-5-sonnet
+  doc_date: '2024-06-21'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'$3 per million input tokens and $15 per million output tokens'；2024-10-22 新版同價
+- key: price_claude35_sonnet_out
+  group: B
+  metric: API 牌價 Claude 3.5 Sonnet 輸出（上市 2024-06-20）
+  value: 15
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2024-06-20'
+  source: Anthropic〈Introducing Claude 3.5 Sonnet〉
+  url: https://www.anthropic.com/news/claude-3-5-sonnet
+  doc_date: '2024-06-21'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'$3 per million input tokens and $15 per million output tokens'；2024-10-22 新版同價
+- key: price_claude35_haiku_launch_in
+  group: B
+  metric: API 牌價 Claude 3.5 Haiku（上市價） 輸入（上市 2024-11-04）
+  value: 1
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2024-11-04'
+  source: TechCrunch〈Anthropic hikes the price of its Haiku model〉
+  url: https://techcrunch.com/2024/11/04/anthropic-hikes-the-price-of-its-haiku-model
+  doc_date: '2024-11-04'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（牌價經第三方轉述）
+  basis: null
+  note: 原文：'starts at $1 per million input tokens…and $5 per million output tokens'；為 3 Haiku 的 4 倍
+- key: price_claude35_haiku_launch_out
+  group: B
+  metric: API 牌價 Claude 3.5 Haiku（上市價） 輸出（上市 2024-11-04）
+  value: 5
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2024-11-04'
+  source: TechCrunch〈Anthropic hikes the price of its Haiku model〉
+  url: https://techcrunch.com/2024/11/04/anthropic-hikes-the-price-of-its-haiku-model
+  doc_date: '2024-11-04'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（牌價經第三方轉述）
+  basis: null
+  note: 原文：'starts at $1 per million input tokens…and $5 per million output tokens'；為 3 Haiku 的 4 倍
+- key: price_claude35_haiku_cut_in
+  group: B
+  metric: API 牌價 Claude 3.5 Haiku（2024-12 降價後） 輸入（上市 2024-12-03）
+  value: 0.8
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2024-12-03'
+  source: Anthropic〈Introducing computer use, a new Claude 3.5 Sonnet, and Claude 3.5 Haiku〉（2024-12-03 更新）
+  url: https://www.anthropic.com/news/3-5-models-and-computer-use
+  doc_date: '2024-12-03'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'now priced at $0.80 MTok input / $4 MTok output'
+- key: price_claude35_haiku_cut_out
+  group: B
+  metric: API 牌價 Claude 3.5 Haiku（2024-12 降價後） 輸出（上市 2024-12-03）
+  value: 4
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2024-12-03'
+  source: Anthropic〈Introducing computer use, a new Claude 3.5 Sonnet, and Claude 3.5 Haiku〉（2024-12-03 更新）
+  url: https://www.anthropic.com/news/3-5-models-and-computer-use
+  doc_date: '2024-12-03'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'now priced at $0.80 MTok input / $4 MTok output'
+- key: price_claude37_sonnet_in
+  group: B
+  metric: API 牌價 Claude 3.7 Sonnet 輸入（上市 2025-02-24）
+  value: 3
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2025-02-24'
+  source: Anthropic〈Claude 3.7 Sonnet and Claude Code〉
+  url: https://www.anthropic.com/news/claude-3-7-sonnet
+  doc_date: '2025-02-24'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'$3 per million input tokens and $15 per million output tokens—which includes thinking tokens'
+- key: price_claude37_sonnet_out
+  group: B
+  metric: API 牌價 Claude 3.7 Sonnet 輸出（上市 2025-02-24）
+  value: 15
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2025-02-24'
+  source: Anthropic〈Claude 3.7 Sonnet and Claude Code〉
+  url: https://www.anthropic.com/news/claude-3-7-sonnet
+  doc_date: '2025-02-24'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'$3 per million input tokens and $15 per million output tokens—which includes thinking tokens'
+- key: price_opus4_in
+  group: B
+  metric: API 牌價 Claude Opus 4 輸入（上市 2025-05-22）
+  value: 15
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2025-05-22'
+  source: Anthropic〈Introducing Claude 4〉
+  url: https://www.anthropic.com/news/claude-4
+  doc_date: '2025-05-22'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Opus 4 at $15/$75 per million tokens'
+- key: price_opus4_out
+  group: B
+  metric: API 牌價 Claude Opus 4 輸出（上市 2025-05-22）
+  value: 75
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2025-05-22'
+  source: Anthropic〈Introducing Claude 4〉
+  url: https://www.anthropic.com/news/claude-4
+  doc_date: '2025-05-22'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Opus 4 at $15/$75 per million tokens'
+- key: price_sonnet4_in
+  group: B
+  metric: API 牌價 Claude Sonnet 4 輸入（上市 2025-05-22）
+  value: 3
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2025-05-22'
+  source: Anthropic〈Introducing Claude 4〉
+  url: https://www.anthropic.com/news/claude-4
+  doc_date: '2025-05-22'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Sonnet 4 at $3/$15'
+- key: price_sonnet4_out
+  group: B
+  metric: API 牌價 Claude Sonnet 4 輸出（上市 2025-05-22）
+  value: 15
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2025-05-22'
+  source: Anthropic〈Introducing Claude 4〉
+  url: https://www.anthropic.com/news/claude-4
+  doc_date: '2025-05-22'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Sonnet 4 at $3/$15'
+- key: price_opus41_in
+  group: B
+  metric: API 牌價 Claude Opus 4.1 輸入（上市 2025-08-05）
+  value: 15
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2025-08-05'
+  source: Anthropic〈Claude Opus 4.1〉
+  url: https://www.anthropic.com/news/claude-opus-4-1
+  doc_date: '2025-08-05'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing is the same as Opus 4'（即 $15/$75）
+- key: price_opus41_out
+  group: B
+  metric: API 牌價 Claude Opus 4.1 輸出（上市 2025-08-05）
+  value: 75
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2025-08-05'
+  source: Anthropic〈Claude Opus 4.1〉
+  url: https://www.anthropic.com/news/claude-opus-4-1
+  doc_date: '2025-08-05'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing is the same as Opus 4'（即 $15/$75）
+- key: price_sonnet45_in
+  group: B
+  metric: API 牌價 Claude Sonnet 4.5 輸入（上市 2025-09-29）
+  value: 3
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2025-09-29'
+  source: Anthropic〈Introducing Claude Sonnet 4.5〉
+  url: https://www.anthropic.com/news/claude-sonnet-4-5
+  doc_date: '2025-09-29'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing remains the same as Claude Sonnet 4, at $3/$15 per million tokens'
+- key: price_sonnet45_out
+  group: B
+  metric: API 牌價 Claude Sonnet 4.5 輸出（上市 2025-09-29）
+  value: 15
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2025-09-29'
+  source: Anthropic〈Introducing Claude Sonnet 4.5〉
+  url: https://www.anthropic.com/news/claude-sonnet-4-5
+  doc_date: '2025-09-29'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing remains the same as Claude Sonnet 4, at $3/$15 per million tokens'
+- key: price_haiku45_in
+  group: B
+  metric: API 牌價 Claude Haiku 4.5 輸入（上市 2025-10-15）
+  value: 1
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2025-10-15'
+  source: Anthropic〈Introducing Claude Haiku 4.5〉
+  url: https://www.anthropic.com/news/claude-haiku-4-5
+  doc_date: '2025-10-15'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing is now $1/$5 per million input and output tokens'
+- key: price_haiku45_out
+  group: B
+  metric: API 牌價 Claude Haiku 4.5 輸出（上市 2025-10-15）
+  value: 5
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2025-10-15'
+  source: Anthropic〈Introducing Claude Haiku 4.5〉
+  url: https://www.anthropic.com/news/claude-haiku-4-5
+  doc_date: '2025-10-15'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing is now $1/$5 per million input and output tokens'
+- key: price_opus45_in
+  group: B
+  metric: API 牌價 Claude Opus 4.5 輸入（上市 2025-11-24）
+  value: 5
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2025-11-24'
+  source: Anthropic〈Introducing Claude Opus 4.5〉
+  url: https://www.anthropic.com/news/claude-opus-4-5
+  doc_date: '2025-11-24'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing is now $5/$25 per million tokens'；較 Opus 4.1（$15/$75）降 67%
+- key: price_opus45_out
+  group: B
+  metric: API 牌價 Claude Opus 4.5 輸出（上市 2025-11-24）
+  value: 25
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2025-11-24'
+  source: Anthropic〈Introducing Claude Opus 4.5〉
+  url: https://www.anthropic.com/news/claude-opus-4-5
+  doc_date: '2025-11-24'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing is now $5/$25 per million tokens'；較 Opus 4.1（$15/$75）降 67%
+- key: price_opus46_in
+  group: B
+  metric: API 牌價 Claude Opus 4.6 輸入（上市 2026-02-05）
+  value: 5
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-02-05'
+  source: Anthropic〈Introducing Claude Opus 4.6〉
+  url: https://www.anthropic.com/news/claude-opus-4-6
+  doc_date: '2026-02-05'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing remains the same at $5/$25 per million tokens'
+- key: price_opus46_out
+  group: B
+  metric: API 牌價 Claude Opus 4.6 輸出（上市 2026-02-05）
+  value: 25
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-02-05'
+  source: Anthropic〈Introducing Claude Opus 4.6〉
+  url: https://www.anthropic.com/news/claude-opus-4-6
+  doc_date: '2026-02-05'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing remains the same at $5/$25 per million tokens'
+- key: price_sonnet46_in
+  group: B
+  metric: API 牌價 Claude Sonnet 4.6 輸入（上市 2026-02-17）
+  value: 3
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-02-17'
+  source: Anthropic〈Introducing Claude Sonnet 4.6〉
+  url: https://www.anthropic.com/news/claude-sonnet-4-6
+  doc_date: '2026-02-17'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing remains the same as Sonnet 4.5, starting at $3/$15'
+- key: price_sonnet46_out
+  group: B
+  metric: API 牌價 Claude Sonnet 4.6 輸出（上市 2026-02-17）
+  value: 15
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-02-17'
+  source: Anthropic〈Introducing Claude Sonnet 4.6〉
+  url: https://www.anthropic.com/news/claude-sonnet-4-6
+  doc_date: '2026-02-17'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing remains the same as Sonnet 4.5, starting at $3/$15'
+- key: price_mythos_preview_in
+  group: B
+  metric: API 牌價 Claude Mythos Preview（限 Project Glasswing 夥伴） 輸入（上市 2026-04-07）
+  value: 25
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-04-07'
+  source: Pasquale Pillitteri〈Claude Mythos Preview is Official〉
+  url: https://pasqualepillitteri.it/en/news/759/claude-mythos-preview-official-project-glasswing-12-partners
+  doc_date: '2026-04-07'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（牌價經第三方轉述）
+  basis: null
+  note: 原文：'$25 per million input tokens and $125 per million output tokens'（預覽期後；限 12 家夥伴）；官方頁僅稱 Fable 5 價 'less than half'
+- key: price_mythos_preview_out
+  group: B
+  metric: API 牌價 Claude Mythos Preview（限 Project Glasswing 夥伴） 輸出（上市 2026-04-07）
+  value: 125
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-04-07'
+  source: Pasquale Pillitteri〈Claude Mythos Preview is Official〉
+  url: https://pasqualepillitteri.it/en/news/759/claude-mythos-preview-official-project-glasswing-12-partners
+  doc_date: '2026-04-07'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（牌價經第三方轉述）
+  basis: null
+  note: 原文：'$25 per million input tokens and $125 per million output tokens'（預覽期後；限 12 家夥伴）；官方頁僅稱 Fable 5 價 'less than half'
+- key: price_opus47_in
+  group: B
+  metric: API 牌價 Claude Opus 4.7 輸入（上市 2026-04-16）
+  value: 5
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-04-16'
+  source: Anthropic〈Introducing Claude Opus 4.7〉
+  url: https://www.anthropic.com/news/claude-opus-4-7
+  doc_date: '2026-04-16'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing remains the same as Opus 4.6'；新 tokenizer 同輸入約 1.0–1.35× token
+- key: price_opus47_out
+  group: B
+  metric: API 牌價 Claude Opus 4.7 輸出（上市 2026-04-16）
+  value: 25
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-04-16'
+  source: Anthropic〈Introducing Claude Opus 4.7〉
+  url: https://www.anthropic.com/news/claude-opus-4-7
+  doc_date: '2026-04-16'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing remains the same as Opus 4.6'；新 tokenizer 同輸入約 1.0–1.35× token
+- key: price_opus48_in
+  group: B
+  metric: API 牌價 Claude Opus 4.8 輸入（上市 2026-05-28）
+  value: 5
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-05-28'
+  source: Anthropic〈Introducing Claude Opus 4.8〉
+  url: https://www.anthropic.com/news/claude-opus-4-8
+  doc_date: '2026-05-28'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: '原文：''unchanged from Opus 4.7: $5 per million input tokens and $25'''
+- key: price_opus48_out
+  group: B
+  metric: API 牌價 Claude Opus 4.8 輸出（上市 2026-05-28）
+  value: 25
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-05-28'
+  source: Anthropic〈Introducing Claude Opus 4.8〉
+  url: https://www.anthropic.com/news/claude-opus-4-8
+  doc_date: '2026-05-28'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: '原文：''unchanged from Opus 4.7: $5 per million input tokens and $25'''
+- key: price_fable5_in
+  group: B
+  metric: API 牌價 Claude Fable 5 輸入（上市 2026-06-09）
+  value: 10
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-06-09'
+  source: Anthropic〈Claude Fable 5 and Mythos 5〉
+  url: https://www.anthropic.com/news/claude-fable-5-mythos-5
+  doc_date: '2026-06-09'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'$10 per million input tokens and $50 per million output tokens'；2026-06-12 暫停、07-01 恢復
+- key: price_fable5_out
+  group: B
+  metric: API 牌價 Claude Fable 5 輸出（上市 2026-06-09）
+  value: 50
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-06-09'
+  source: Anthropic〈Claude Fable 5 and Mythos 5〉
+  url: https://www.anthropic.com/news/claude-fable-5-mythos-5
+  doc_date: '2026-06-09'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'$10 per million input tokens and $50 per million output tokens'；2026-06-12 暫停、07-01 恢復
+- key: price_mythos5_in
+  group: B
+  metric: API 牌價 Claude Mythos 5（限 Glasswing） 輸入（上市 2026-06-09）
+  value: 10
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-06-09'
+  source: Anthropic〈Claude Fable 5 and Mythos 5〉
+  url: https://www.anthropic.com/news/claude-fable-5-mythos-5
+  doc_date: '2026-06-09'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing for both models is $10…and $50'；'less than half the price of Claude Mythos Preview'
+- key: price_mythos5_out
+  group: B
+  metric: API 牌價 Claude Mythos 5（限 Glasswing） 輸出（上市 2026-06-09）
+  value: 50
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-06-09'
+  source: Anthropic〈Claude Fable 5 and Mythos 5〉
+  url: https://www.anthropic.com/news/claude-fable-5-mythos-5
+  doc_date: '2026-06-09'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing for both models is $10…and $50'；'less than half the price of Claude Mythos Preview'
+- key: price_sonnet5_in
+  group: B
+  metric: API 牌價 Claude Sonnet 5 輸入（上市 2026-06-30）
+  value: 2
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-06-30'
+  source: Anthropic〈Introducing Claude Sonnet 5〉
+  url: https://www.anthropic.com/news/claude-sonnet-5
+  doc_date: '2026-06-30'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'introductory pricing of $2…and $10…is now permanent'；原定 9/1 起 $3/$15 取消
+- key: price_sonnet5_out
+  group: B
+  metric: API 牌價 Claude Sonnet 5 輸出（上市 2026-06-30）
+  value: 10
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-06-30'
+  source: Anthropic〈Introducing Claude Sonnet 5〉
+  url: https://www.anthropic.com/news/claude-sonnet-5
+  doc_date: '2026-06-30'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'introductory pricing of $2…and $10…is now permanent'；原定 9/1 起 $3/$15 取消
+- key: price_opus5_in
+  group: B
+  metric: API 牌價 Claude Opus 5 輸入（上市 2026-07-24）
+  value: 5
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-07-24'
+  source: Anthropic〈Introducing Claude Opus 5〉
+  url: https://www.anthropic.com/news/claude-opus-5
+  doc_date: '2026-07-24'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'priced at $5 per million input tokens and $25 per million output tokens'
+- key: price_opus5_out
+  group: B
+  metric: API 牌價 Claude Opus 5 輸出（上市 2026-07-24）
+  value: 25
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-07-24'
+  source: Anthropic〈Introducing Claude Opus 5〉
+  url: https://www.anthropic.com/news/claude-opus-5
+  doc_date: '2026-07-24'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'priced at $5 per million input tokens and $25 per million output tokens'
+- key: price_fable51_in
+  group: B
+  metric: API 牌價 Claude Fable 5.1 輸入（上市 2026-09-01）
+  value: 10
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-09-01'
+  source: Anthropic〈Claude Fable〉產品頁
+  url: https://www.anthropic.com/claude/fable
+  doc_date: '2026-09-01'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'$10 per million input tokens and $50'；快取讀取 '$0.25…75% less than Fable 5'
+- key: price_fable51_out
+  group: B
+  metric: API 牌價 Claude Fable 5.1 輸出（上市 2026-09-01）
+  value: 50
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-09-01'
+  source: Anthropic〈Claude Fable〉產品頁
+  url: https://www.anthropic.com/claude/fable
+  doc_date: '2026-09-01'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'$10 per million input tokens and $50'；快取讀取 '$0.25…75% less than Fable 5'
+- key: price_opus55_in
+  group: B
+  metric: API 牌價 Claude Opus 5.5 輸入（上市 2026-09-22）
+  value: 4
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-09-22'
+  source: Anthropic〈Introducing Claude Opus 5.5〉
+  url: https://www.anthropic.com/claude-opus-5-5
+  doc_date: '2026-09-22'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Input and output tokens are $4 and $20 per million, 20% less than Opus 5'
+- key: price_opus55_out
+  group: B
+  metric: API 牌價 Claude Opus 5.5 輸出（上市 2026-09-22）
+  value: 20
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-09-22'
+  source: Anthropic〈Introducing Claude Opus 5.5〉
+  url: https://www.anthropic.com/claude-opus-5-5
+  doc_date: '2026-09-22'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Input and output tokens are $4 and $20 per million, 20% less than Opus 5'
+- key: price_sonnet55_in
+  group: B
+  metric: API 牌價 Claude Sonnet 5.5 輸入（上市 2026-09-28）
+  value: 2
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-09-28'
+  source: Anthropic〈Introducing Claude Sonnet 5.5〉
+  url: https://www.anthropic.com/claude-sonnet-5-5
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'$2 per million input tokens, $10 per million output tokens'
+- key: price_sonnet55_out
+  group: B
+  metric: API 牌價 Claude Sonnet 5.5 輸出（上市 2026-09-28）
+  value: 10
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-09-28'
+  source: Anthropic〈Introducing Claude Sonnet 5.5〉
+  url: https://www.anthropic.com/claude-sonnet-5-5
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'$2 per million input tokens, $10 per million output tokens'
+- key: price_haiku55_in
+  group: B
+  metric: API 牌價 Claude Haiku 5.5（提示 ≤100k） 輸入（上市 2026-10-07）
+  value: 0.1
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-10-07'
+  source: Anthropic〈Introducing Claude Haiku 5.5〉
+  url: https://www.anthropic.com/claude-haiku-5-5
+  doc_date: '2026-10-07'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 價格表：input '$0.10 / $0.50'、output '$0.50 / $2.50'（≤100k／>100k）；較 Haiku 4.5 低 90%
+- key: price_haiku55_out
+  group: B
+  metric: API 牌價 Claude Haiku 5.5（提示 ≤100k） 輸出（上市 2026-10-07）
+  value: 0.5
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-10-07'
+  source: Anthropic〈Introducing Claude Haiku 5.5〉
+  url: https://www.anthropic.com/claude-haiku-5-5
+  doc_date: '2026-10-07'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 價格表：input '$0.10 / $0.50'、output '$0.50 / $2.50'（≤100k／>100k）；較 Haiku 4.5 低 90%
+- key: price_opus46_longctx_in
+  group: B
+  metric: API 牌價 Opus 4.6 長上下文（>200k）輸入
+  value: 10
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-02-05'
+  source: Anthropic〈Introducing Claude Opus 4.6〉
+  url: https://www.anthropic.com/news/claude-opus-4-6
+  doc_date: '2026-02-05'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'prompts exceeding 200k tokens ($10/$37.50 per million input/output tokens)'；即輸入 2×、輸出 1.5×
+- key: price_opus46_longctx_out
+  group: B
+  metric: API 牌價 Opus 4.6 長上下文（>200k）輸出
+  value: 37.5
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-02-05'
+  source: Anthropic〈Introducing Claude Opus 4.6〉
+  url: https://www.anthropic.com/news/claude-opus-4-6
+  doc_date: '2026-02-05'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'$10/$37.50 per million input/output tokens'，僅 Claude Platform
+- key: price_us_only_multiplier
+  group: B
+  metric: 美國境內推論（US-only inference）加價倍數
+  value: 1.1
+  lo: null
+  hi: null
+  unit: 倍
+  period: '2026-02-05'
+  source: Anthropic〈Introducing Claude Opus 4.6〉
+  url: https://www.anthropic.com/news/claude-opus-4-6
+  doc_date: '2026-02-05'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：US-only inference priced at '1.1×' token pricing；Fable 5.1 頁亦同
+- key: price_opus48_fast_in
+  group: B
+  metric: API 牌價 Opus 4.8 fast mode 輸入
+  value: 10
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-05-28'
+  source: Anthropic〈Introducing Claude Opus 4.8〉
+  url: https://www.anthropic.com/news/claude-opus-4-8
+  doc_date: '2026-05-28'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Pricing for fast mode is $10 per million input tokens and $50'（2× 標準價）
+- key: price_opus48_fast_out
+  group: B
+  metric: API 牌價 Opus 4.8 fast mode 輸出
+  value: 50
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-05-28'
+  source: Anthropic〈Introducing Claude Opus 4.8〉
+  url: https://www.anthropic.com/news/claude-opus-4-8
+  doc_date: '2026-05-28'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'…and $50 per million output tokens'
+- key: price_opus5_fast_multiplier
+  group: B
+  metric: Opus 5 fast mode 加價倍數
+  value: 2
+  lo: null
+  hi: null
+  unit: 倍
+  period: '2026-07-24'
+  source: Anthropic〈Introducing Claude Opus 5〉
+  url: https://www.anthropic.com/news/claude-opus-5
+  doc_date: '2026-07-24'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'fast mode is available at twice Opus 5's base price'
+- key: price_opus55_fast_in
+  group: B
+  metric: API 牌價 Opus 5.5 fast mode 輸入
+  value: 8
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-09-22'
+  source: Anthropic〈Introducing Claude Opus 5.5〉
+  url: https://www.anthropic.com/claude-opus-5-5
+  doc_date: '2026-09-22'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'It costs $8 per million input tokens and $40 per million output tokens'
+- key: price_opus55_fast_out
+  group: B
+  metric: API 牌價 Opus 5.5 fast mode 輸出
+  value: 40
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-09-22'
+  source: Anthropic〈Introducing Claude Opus 5.5〉
+  url: https://www.anthropic.com/claude-opus-5-5
+  doc_date: '2026-09-22'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'$40 per million output tokens'
+- key: price_opus55_cache_read
+  group: B
+  metric: API 牌價 Opus 5.5 快取讀取
+  value: 0.2
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-09-22'
+  source: Anthropic〈Introducing Claude Opus 5.5〉
+  url: https://www.anthropic.com/claude-opus-5-5
+  doc_date: '2026-09-22'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Cache reads…are $0.20 per million tokens'（=0.05× 輸入，低於舊 0.1× 慣例）
+- key: price_fable51_cache_read
+  group: B
+  metric: API 牌價 Fable 5.1 快取讀取
+  value: 0.25
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-09-01'
+  source: Anthropic〈Claude Fable〉產品頁
+  url: https://www.anthropic.com/claude/fable
+  doc_date: '2026-09-01'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'Cache reads now cost $0.25 per million tokens, 75% less than Fable 5'
+- key: price_sonnet55_cache_read_launch
+  group: B
+  metric: API 牌價 Sonnet 5.5 快取讀取（上市時）
+  value: 0.2
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-09-28'
+  source: Anthropic〈Introducing Claude Sonnet 5.5〉
+  url: https://www.anthropic.com/claude-sonnet-5-5
+  doc_date: '2026-09-28'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 原文：'$0.20 per million tokens for cache reads'
+- key: price_sonnet55_cache_read_cut
+  group: B
+  metric: API 牌價 Sonnet 5.5 快取讀取（2026-10-07 降價後）
+  value: 0.1
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-10-07'
+  source: Anthropic〈Introducing Claude Haiku 5.5〉
+  url: https://www.anthropic.com/claude-haiku-5-5
+  doc_date: '2026-10-07'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: '原文：''Cache reads now cost 50% less: $0.10 per million tokens rather than $0.20''（指 Sonnet 5.5）'
+- key: price_sonnet55_cache_write
+  group: B
+  metric: API 牌價 Sonnet 5.5 快取寫入
+  value: 2.5
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-10-07'
+  source: Anthropic〈Introducing Claude Haiku 5.5〉價格表
+  url: https://www.anthropic.com/claude-haiku-5-5
+  doc_date: '2026-10-07'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 價格表 Sonnet 5.5 cache writes '$2.50'（=1.25× 輸入）
+- key: price_haiku55_longctx_in
+  group: B
+  metric: API 牌價 Haiku 5.5 輸入（提示 >100k）
+  value: 0.5
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-10-07'
+  source: Anthropic〈Introducing Claude Haiku 5.5〉價格表
+  url: https://www.anthropic.com/claude-haiku-5-5
+  doc_date: '2026-10-07'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 價格表：input '$0.10 / $0.50'（>100k 為 5×）
+- key: price_haiku55_longctx_out
+  group: B
+  metric: API 牌價 Haiku 5.5 輸出（提示 >100k）
+  value: 2.5
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-10-07'
+  source: Anthropic〈Introducing Claude Haiku 5.5〉價格表
+  url: https://www.anthropic.com/claude-haiku-5-5
+  doc_date: '2026-10-07'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 價格表：output '$0.50 / $2.50'
+- key: price_haiku55_cache_read
+  group: B
+  metric: API 牌價 Haiku 5.5 快取讀取（≤100k）
+  value: 0.01
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-10-07'
+  source: Anthropic〈Introducing Claude Haiku 5.5〉價格表
+  url: https://www.anthropic.com/claude-haiku-5-5
+  doc_date: '2026-10-07'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 價格表：cache reads '$0.01 / $0.05'；cache writes '$0.125 / $0.625'
+- key: price_haiku45_cache_write
+  group: B
+  metric: API 牌價 Haiku 4.5 快取寫入
+  value: 1.25
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-10-07'
+  source: Anthropic〈Introducing Claude Haiku 5.5〉價格表
+  url: https://www.anthropic.com/claude-haiku-5-5
+  doc_date: '2026-10-07'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 價格表 Haiku 4.5：cache writes '$1.25'、reads '$0.10'（=1.25×／0.1× 輸入）
+- key: price_haiku45_cache_read
+  group: B
+  metric: API 牌價 Haiku 4.5 快取讀取
+  value: 0.1
+  lo: null
+  hi: null
+  unit: $/百萬token
+  period: '2026-10-07'
+  source: Anthropic〈Introducing Claude Haiku 5.5〉價格表
+  url: https://www.anthropic.com/claude-haiku-5-5
+  doc_date: '2026-10-07'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（官方牌價；市場地位誘因）
+  basis: null
+  note: 價格表 Haiku 4.5 cache reads '$0.10'
+- key: price_cache_write_5m_mult
+  group: B
+  metric: 快取寫入倍數（5 分鐘 TTL）
+  value: 1.25
+  lo: null
+  hi: null
+  unit: 倍（相對輸入價）
+  period: 2026-04
+  source: 'Morph〈Anthropic API Pricing: The Real Cost of Claude for Coding Agents〉（稱已對照 platform.claude.com）'
+  url: https://www.morphllm.com/anthropic-claude-api-pricing
+  doc_date: '2026-04-05'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文：5-minute cache write '1.25x base input'；官方定價頁本次無法開啟
+- key: price_cache_write_1h_mult
+  group: B
+  metric: 快取寫入倍數（1 小時 TTL）
+  value: 2.0
+  lo: null
+  hi: null
+  unit: 倍（相對輸入價）
+  period: 2026-04
+  source: Morph（同上）
+  url: https://www.morphllm.com/anthropic-claude-api-pricing
+  doc_date: '2026-04-05'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文：1-hour cache write '2x base input'
+- key: price_cache_read_mult
+  group: B
+  metric: 快取讀取倍數
+  value: 0.1
+  lo: null
+  hi: null
+  unit: 倍（相對輸入價）
+  period: 2026-04
+  source: Morph（同上）
+  url: https://www.morphllm.com/anthropic-claude-api-pricing
+  doc_date: '2026-04-05'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文：Cache read '0.1x base input'。2026-09 起 Opus 5.5／Sonnet 5.5 降至 0.05×
+- key: price_batch_discount
+  group: B
+  metric: Batch API 折扣
+  value: 0.5
+  lo: null
+  hi: null
+  unit: 比例（折扣）
+  period: 2026-04
+  source: Morph（同上）
+  url: https://www.morphllm.com/anthropic-claude-api-pricing
+  doc_date: '2026-04-05'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文：'50% off standard'，'half price on both input and output tokens'
+- key: price_batch_discount_b
+  group: B
+  metric: Batch API 折扣
+  value: 0.5
+  lo: null
+  hi: null
+  unit: 比例（折扣）
+  period: 2026-05
+  source: Finout〈Claude Pricing in 2026〉
+  url: https://finout.io/blog/claude-pricing-in-2026-for-individuals-organizations-and-developers
+  doc_date: '2026-06-01'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文：'Batch processing = 50% off all token rates'；cache '5-min = 1.25×…1-hr = 2×'、hits '0.10×'
+- key: price_1m_context_no_surcharge
+  group: B
+  metric: Opus 4.6／Sonnet 4.6 1M 上下文 GA 後加價
+  value: 0
+  lo: null
+  hi: null
+  unit: 加價比例
+  period: 2026-04
+  source: Morph（同上）
+  url: https://www.morphllm.com/anthropic-claude-api-pricing
+  doc_date: '2026-04-05'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文：1M context GA 'at standard pricing, no surcharge'。與 Opus 4.6 上市頁 >200k 加價（$10/$37.50）矛盾，推測其後取消
+# ===== A/B/C. Claude Code、訂閱方案、價格事件、用戶 =====
+- key: cc_runrate_2025_08
+  group: A
+  metric: Claude Code 年化營收（run-rate）
+  value: 0.5
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025-08
+  source: Anthropic 新聞稿〈Series F〉
+  url: https://www.anthropic.com/news/anthropic-raises-series-f-at-usd183b-post-money-valuation
+  doc_date: '2025-09-02'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文：Claude Code 'already generating over $500 million in run-rate revenue'；用量 3 個月成長 >10x（下限）
+- key: cc_runrate_2025_10
+  group: A
+  metric: Claude Code 年化營收（run-rate）
+  value: 1.0
+  lo: null
+  hi: 1.0
+  unit: $B/年
+  period: 2025-10
+  source: Reuters 獨家〈Anthropic aims to nearly triple annualized revenue in 2026〉
+  url: https://finance.yahoo.com/news/exclusive-anthropic-aims-nearly-triple-170234463.html
+  doc_date: '2025-10-15'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文：Claude Code 'nearly $1 billion' annualized revenue run rate（接近）
+- key: cc_runrate_2025_12
+  group: A
+  metric: Claude Code 年化營收（run-rate）
+  value: 1.0
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025-11/12
+  source: Anthropic 新聞稿〈Anthropic acquires Bun as Claude Code reaches $1B milestone〉
+  url: https://www.anthropic.com/news/anthropic-acquires-bun-as-claude-code-reaches-usd1b-milestone
+  doc_date: '2025-12-03'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文：'it reached $1 billion in run-rate revenue'（公開上市約 6 個月後）
+- key: cc_runrate_2026_02
+  group: A
+  metric: Claude Code 年化營收（run-rate）
+  value: 2.5
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2026-02
+  source: Anthropic 新聞稿〈Series G〉
+  url: https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation
+  doc_date: '2026-02-12'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文：'Claude Code's run-rate revenue has grown to over $2.5 billion'；年初以來翻倍以上
+- key: cc_enterprise_share_2026_02
+  group: A
+  metric: 企業用戶占 Claude Code 營收比例
+  value: 0.5
+  lo: 0.5
+  hi: null
+  unit: 比例
+  period: 2026-02
+  source: Anthropic 新聞稿〈Series G〉
+  url: https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation
+  doc_date: '2026-02-12'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文：'enterprise use has grown to represent over half of all Claude Code revenue'（下限）
+- key: cc_runrate_2026_05
+  group: A
+  metric: Claude Code 年化營收（第三方估計）
+  value: 8.0
+  lo: 5.0
+  hi: 10.0
+  unit: $B/年
+  period: 2026-05
+  source: FourWeekMBA〈Claude Code Scaled from $1B to $8B Annualized Run-Rate in Six Months〉（稱引 Sacra）
+  url: https://fourweekmba.com/ai-claude-code-run-rate-agentic-layer/
+  doc_date: 2026-05
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文：'Run-rate reaches approximately $8 billion'（2026-05）。Sacra 頁面本身未見此數；無一手來源，僅供參考
+- key: rev_mix_api_share_sacra
+  group: A
+  metric: API（按 token 計價）占營收比例（第三方估計）
+  value: 0.725
+  lo: 0.7
+  hi: 0.75
+  unit: 比例
+  period: '2026'
+  source: Sacra〈Anthropic revenue, valuation & funding〉
+  url: https://sacra.com/c/anthropic/
+  doc_date: 2026-08
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文：API 'Approximately 70–75%'；訂閱 '10–15%'。招股書 2025 用量計價約 83%、訂閱 17%
+- key: rev_mix_subscription_share_sacra
+  group: A
+  metric: 訂閱占營收比例（第三方估計）
+  value: 0.125
+  lo: 0.1
+  hi: 0.15
+  unit: 比例
+  period: '2026'
+  source: Sacra
+  url: https://sacra.com/c/anthropic/
+  doc_date: 2026-08
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文：subscriptions '10–15% of total revenue'
+- key: rev_mix_consumer_share_2025_jaipuria
+  group: A
+  metric: 消費者訂閱占營收比例（分析師估計）
+  value: 0.15
+  lo: 0.1
+  hi: 0.2
+  unit: 比例
+  period: '2025'
+  source: SaaStr〈Anthropic May Never Catch OpenAI. But It's Already 40% as Big.〉（引 Tanay Jaipuria）
+  url: https://www.saastr.com/anthropic-may-never-catch-openai-but-its-already-40-as-big/
+  doc_date: '2025-07-11'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 約 15% 消費者訂閱、85% API（分析師估計，無日期）
+- key: plan_pro_monthly
+  group: B
+  metric: Claude Pro 月付
+  value: 20
+  lo: null
+  hi: null
+  unit: $/月
+  period: 2026-09
+  source: 'Suprmind〈Claude AI Pricing: Pro & Max Subscription Plans〉'
+  url: https://suprmind.ai/hub/claude/pricing/
+  doc_date: 2026-09
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（牌價經第三方轉述；官方定價頁本次無法開啟）
+  basis: null
+  note: 原文：'Pro is $20/month, or $17/month billed annually ($200 up front)'
+- key: plan_pro_annual
+  group: B
+  metric: Claude Pro 年付（月均）
+  value: 17
+  lo: null
+  hi: null
+  unit: $/月
+  period: 2026-09
+  source: Suprmind（同上）
+  url: https://suprmind.ai/hub/claude/pricing/
+  doc_date: 2026-09
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（牌價經第三方轉述；官方定價頁本次無法開啟）
+  basis: null
+  note: 原文：'$17/month billed annually ($200 up front)'；VantagePoint 2026-08 亦同
+- key: plan_max5x
+  group: B
+  metric: Claude Max 5x 月付
+  value: 100
+  lo: null
+  hi: null
+  unit: $/月
+  period: 2026-09
+  source: Suprmind（同上）
+  url: https://suprmind.ai/hub/claude/pricing/
+  doc_date: 2026-09
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（牌價經第三方轉述；官方定價頁本次無法開啟）
+  basis: null
+  note: 原文：'Max 5x jumps to $100/month'；Max 僅月付
+- key: plan_max20x
+  group: B
+  metric: Claude Max 20x 月付
+  value: 200
+  lo: null
+  hi: null
+  unit: $/月
+  period: 2026-09
+  source: Suprmind（同上）
+  url: https://suprmind.ai/hub/claude/pricing/
+  doc_date: 2026-09
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（牌價經第三方轉述；官方定價頁本次無法開啟）
+  basis: null
+  note: 原文：'Max 20x costs $200/month'
+- key: plan_max_launch
+  group: B
+  metric: Claude Max 方案上市（5x $100／20x $200）
+  value: 100
+  lo: null
+  hi: null
+  unit: $/月
+  period: 2025-04
+  source: GIGAZINE〈Anthropic launches Claude Max plan〉
+  url: https://gigazine.net/gsc_news/en/20250410-anthropic-claude-max-plan
+  doc_date: '2025-04-10'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（牌價經第三方轉述；官方定價頁本次無法開啟）
+  basis: null
+  note: 標題：'5x the usage caps of Pro for $100/month and 20x the caps for $200/month'
+- key: plan_team_standard_annual
+  group: B
+  metric: Team 標準席位（年付，月均）
+  value: 20
+  lo: null
+  hi: null
+  unit: $/席/月
+  period: 2026-10
+  source: 'Tygart Media〈Claude Team Pricing: Standard vs Premium Seats (2026)〉'
+  url: https://tygartmedia.com/claude-team-pricing-2026-standard-premium-seats/
+  doc_date: '2026-10-05'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（牌價經第三方轉述；官方定價頁本次無法開啟）
+  basis: null
+  note: 原文：'$25…on monthly billing, or $20…on annual billing'；最少 2 席
+- key: plan_team_standard_monthly
+  group: B
+  metric: Team 標準席位（月付）
+  value: 25
+  lo: null
+  hi: null
+  unit: $/席/月
+  period: 2026-10
+  source: Tygart Media（同上）
+  url: https://tygartmedia.com/claude-team-pricing-2026-standard-premium-seats/
+  doc_date: '2026-10-05'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（牌價經第三方轉述；官方定價頁本次無法開啟）
+  basis: null
+  note: 原文：'Standard seats cost $25 per seat per month on monthly billing'
+- key: plan_team_premium_annual
+  group: B
+  metric: Team Premium 席位（年付，月均）
+  value: 100
+  lo: null
+  hi: null
+  unit: $/席/月
+  period: 2026-10
+  source: Tygart Media（同上）
+  url: https://tygartmedia.com/claude-team-pricing-2026-standard-premium-seats/
+  doc_date: '2026-10-05'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（牌價經第三方轉述；官方定價頁本次無法開啟）
+  basis: null
+  note: 原文：'$125…monthly billing, or $100…annual billing'
+- key: plan_team_premium_monthly
+  group: B
+  metric: Team Premium 席位（月付）
+  value: 125
+  lo: null
+  hi: null
+  unit: $/席/月
+  period: 2026-10
+  source: Tygart Media（同上）
+  url: https://tygartmedia.com/claude-team-pricing-2026-standard-premium-seats/
+  doc_date: '2026-10-05'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（牌價經第三方轉述；官方定價頁本次無法開啟）
+  basis: null
+  note: 原文：'Premium seats cost $125 per seat per month on monthly billing'
+- key: plan_team_standard_annual_b
+  group: B
+  metric: Team 標準席位（年付，月均）— 舊報導值
+  value: 25
+  lo: null
+  hi: null
+  unit: $/席/月
+  period: 2026-05
+  source: Finout〈Claude Pricing in 2026〉
+  url: https://finout.io/blog/claude-pricing-in-2026-for-individuals-organizations-and-developers
+  doc_date: '2026-06-01'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（牌價經第三方轉述；官方定價頁本次無法開啟）
+  basis: null
+  note: 原文：'$25/user/mo (annual)' or '$30/mo billed monthly'；Premium '$150/user/mo'；最少 5 人。與 2026-09 後 $20/$25、$100/$125 矛盾，推測 2026 年中調降
+- key: plan_team_min_seats_change
+  group: B
+  metric: Team 最低席位數（2026-09 起）
+  value: 2
+  lo: null
+  hi: null
+  unit: 席
+  period: 2026-09
+  source: Justin McKelvey〈Claude Team Plan (2026)〉
+  url: https://justinmckelvey.com/blog/claude-team-plan
+  doc_date: '2026-09-29'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（牌價經第三方轉述；官方定價頁本次無法開啟）
+  basis: null
+  note: 原文：原 'Claude Team was $25 a seat and required five of them'；2026-09 改 2 席起、標準 $20 年付
+- key: plan_enterprise_seat_2026
+  group: B
+  metric: Enterprise 席位基本費（另按 API 牌價計用量）
+  value: 20
+  lo: null
+  hi: null
+  unit: $/席/月
+  period: 2026-02
+  source: The Register〈Anthropic ejects bundled tokens from Enterprise seats〉
+  url: https://www.theregister.com/2026/04/16/anthropic_ejects_bundled_tokens_enterprise/
+  doc_date: '2026-04-16'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（經媒體轉述）
+  basis: null
+  note: 原文：'a single $20-per-employee monthly fee'；'Every token gets billed at standard API rates on top'；自 2025-11 續約起改用量制
+- key: plan_enterprise_seat_legacy
+  group: B
+  metric: Enterprise 席位價（舊制，第三方指稱）
+  value: 60
+  lo: 40
+  hi: 60
+  unit: $/席/月
+  period: '2025'
+  source: Redress Compliance〈Claude Enterprise Licensing Guide 2026〉
+  url: https://redresscompliance.com/anthropic-claude-enterprise-licensing-guide-2026
+  doc_date: '2025-07-07'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文：'Claude Enterprise…priced at $60 per user per month'；未引一手來源
+- key: plan_event_2026_04_thirdparty
+  group: B
+  metric: 價格事件：Pro／Max 不得用於第三方 agent 工具
+  value: null
+  lo: null
+  hi: null
+  unit: 定性
+  period: '2026-04-04'
+  source: Dapta〈Anthropic Kills Claude's All-You-Can-Eat Pricing Plan〉（引 TechCrunch 2026-04-04）
+  url: https://dapta.ai/blog-posts/ai-news-week-14-anthropic-claude-pricing/
+  doc_date: '2026-04-08'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（經媒體轉述）
+  basis: null
+  note: 原文：'can no longer use their flat-rate monthly plans to power third-party agent frameworks'；補償一個月訂閱額度
+- key: plan_event_2026_05_limits
+  group: B
+  metric: 價格事件：五小時用量上限永久加倍
+  value: 2
+  lo: null
+  hi: null
+  unit: 倍
+  period: '2026-05-06'
+  source: Suprmind（同上）
+  url: https://suprmind.ai/hub/claude/pricing/
+  doc_date: 2026-09
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（牌價經第三方轉述；官方定價頁本次無法開啟）
+  basis: null
+  note: 原文：'permanently doubled the five-hour session limits for Pro, Max, Team, and seat-based Enterprise'；週上限另於 5/13–7/13 促銷 +50%
+- key: plan_event_2026_06_fable_included
+  group: B
+  metric: 價格事件：Fable 5 於訂閱方案免費至 6/22，其後需 usage credits
+  value: null
+  lo: null
+  hi: null
+  unit: 定性
+  period: '2026-06-09'
+  source: Anthropic〈Claude Fable 5 and Mythos 5〉
+  url: https://www.anthropic.com/news/claude-fable-5-mythos-5
+  doc_date: '2026-06-09'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文：'through June 22, Fable 5 is included on Pro, Max, Team, and seat-based Enterprise plans at no extra cost'
+- key: price_event_opus45_cut
+  group: B
+  metric: 價格事件：Opus 4.5 降價（$15/$75 → $5/$25）
+  value: -0.667
+  lo: null
+  hi: null
+  unit: 變動比例
+  period: '2025-11-24'
+  source: Anthropic〈Introducing Claude Opus 4.5〉
+  url: https://www.anthropic.com/news/claude-opus-4-5
+  doc_date: '2025-11-24'
+  retrieved: '2026-10-08'
+  tag: Derived
+  party: null
+  basis: null
+  note: 原文：'Pricing is now $5/$25 per million tokens'；對比 Opus 4.1 $15/$75，降 67%（推算）
+- key: price_event_opus55_cut
+  group: B
+  metric: 價格事件：Opus 5.5 降價 20%（$5/$25 → $4/$20）
+  value: -0.2
+  lo: null
+  hi: null
+  unit: 變動比例
+  period: '2026-09-22'
+  source: Anthropic〈Introducing Claude Opus 5.5〉
+  url: https://www.anthropic.com/claude-opus-5-5
+  doc_date: '2026-09-22'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文：'$4 and $20 per million, 20% less than Opus 5'
+- key: price_event_haiku55_cut
+  group: B
+  metric: 價格事件：Haiku 5.5 較 Haiku 4.5 降 90%（≤100k）
+  value: -0.9
+  lo: null
+  hi: null
+  unit: 變動比例
+  period: '2026-10-07'
+  source: Anthropic〈Introducing Claude Haiku 5.5〉
+  url: https://www.anthropic.com/claude-haiku-5-5
+  doc_date: '2026-10-07'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 表列 $0.10/$0.50 對 $1/$5；>100k 降 50%；平均每任務約 -75%
+- key: price_event_sonnet5_permanent
+  group: B
+  metric: 價格事件：Sonnet 5 促銷價轉為永久（$3/$15 取消）
+  value: -0.333
+  lo: null
+  hi: null
+  unit: 變動比例
+  period: 2026-08
+  source: Anthropic〈Introducing Claude Sonnet 5〉（2026-08-10 更新）
+  url: https://www.anthropic.com/news/claude-sonnet-5
+  doc_date: '2026-08-10'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文：'introductory pricing…is now permanent'；'$3 input / $15 output…no longer applies'
+- key: users_business_customers_2025_08
+  group: C
+  metric: 企業（商業）客戶數
+  value: 300000
+  lo: null
+  hi: null
+  unit: 家
+  period: 2025-08
+  source: Anthropic 新聞稿〈Series F〉
+  url: https://www.anthropic.com/news/anthropic-raises-series-f-at-usd183b-post-money-valuation
+  doc_date: '2025-09-02'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文：'Anthropic now serves over 300,000 business customers'（下限）
+- key: users_business_customers_2025_10
+  group: C
+  metric: 企業（商業）客戶數
+  value: 300000
+  lo: null
+  hi: null
+  unit: 家
+  period: 2025-10
+  source: Reuters 獨家
+  url: https://finance.yahoo.com/news/exclusive-anthropic-aims-nearly-triple-170234463.html
+  doc_date: '2025-10-15'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文：'more than 300,000 business and enterprise customers'
+- key: users_large_accounts_growth_2025_08
+  group: C
+  metric: 年化 >$100k 大客戶數年增倍數
+  value: 7
+  lo: null
+  hi: null
+  unit: 倍（年增）
+  period: 2025-08
+  source: Anthropic 新聞稿〈Series F〉
+  url: https://www.anthropic.com/news/anthropic-raises-series-f-at-usd183b-post-money-valuation
+  doc_date: '2025-09-02'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文：large accounts（>$100,000 run-rate）'has grown nearly 7x in the past year'；絕對數未揭露
+- key: users_large_accounts_growth_2026_02
+  group: C
+  metric: 年化 >$100k 大客戶數年增倍數
+  value: 7
+  lo: null
+  hi: null
+  unit: 倍（年增）
+  period: 2026-02
+  source: Anthropic 新聞稿〈Series G〉
+  url: https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation
+  doc_date: '2026-02-12'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文：customers spending over $100,000 'has grown 7x in the past year'；絕對數未揭露
+- key: users_1m_customers_2026_02
+  group: C
+  metric: 年化 >$1M 客戶數
+  value: 500
+  lo: null
+  hi: null
+  unit: 家
+  period: 2026-02
+  source: Anthropic 新聞稿〈Series G〉
+  url: https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation
+  doc_date: '2026-02-12'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文：'Two years ago, a dozen customers spent over $1 million'；今日 'exceeds 500'
+- key: users_1m_customers_2024_02
+  group: C
+  metric: 年化 >$1M 客戶數
+  value: 12
+  lo: null
+  hi: null
+  unit: 家
+  period: 2024-02
+  source: Anthropic 新聞稿〈Series G〉
+  url: https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation
+  doc_date: '2026-02-12'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文：'Two years ago, a dozen customers spent over $1 million with us on an annualized basis'
+- key: users_1m_customers_2026_04
+  group: C
+  metric: 年化 >$1M 客戶數
+  value: 1000
+  lo: null
+  hi: null
+  unit: 家
+  period: 2026-04
+  source: Anthropic 新聞稿〈Google and Broadcom partnership〉
+  url: https://www.anthropic.com/news/google-broadcom-partnership-compute
+  doc_date: '2026-04-06'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文：'Today that number exceeds 1,000, doubling in less than two months'
+- key: users_bedrock_customers_2026_04
+  group: C
+  metric: 在 Amazon Bedrock 使用 Claude 的客戶數
+  value: 100000
+  lo: null
+  hi: null
+  unit: 家
+  period: 2026-04
+  source: Anthropic 新聞稿〈Anthropic and Amazon compute〉
+  url: https://www.anthropic.com/news/anthropic-amazon-compute
+  doc_date: '2026-04-20'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文：'over 100,000 customers now run Claude on Amazon Bedrock'
+- key: users_paid_consumer_growth_2026_03
+  group: C
+  metric: 消費者付費訂閱數成長（年初至今）
+  value: 2
+  lo: 2
+  hi: null
+  unit: 倍
+  period: 2026-03
+  source: TechCrunch〈Anthropic's Claude popularity with paying consumers is skyrocketing〉
+  url: https://techcrunch.com/2026/03/28/anthropics-claude-popularity-with-paying-consumers-is-skyrocketing/
+  doc_date: '2026-03-28'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（募資、招募、市場地位誘因）
+  basis: null
+  note: 原文（發言人）：'Claude paid subscriptions have more than doubled this year'；絕對數未揭露
+- key: users_consumer_total_est_2026_03
+  group: C
+  metric: Claude 消費者用戶數（業界估計）
+  value: null
+  lo: 18
+  hi: 30
+  unit: 百萬人
+  period: 2026-03
+  source: TechCrunch（同上）
+  url: https://techcrunch.com/2026/03/28/anthropics-claude-popularity-with-paying-consumers-is-skyrocketing/
+  doc_date: '2026-03-28'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文：estimates 'from 18 million to 30 million'；Anthropic 未揭露
+- key: users_mau_app_2026_q2
+  group: C
+  metric: Claude App 月活（MAU）
+  value: 56
+  lo: 45
+  hi: 67
+  unit: 百萬人
+  period: 2026-Q2
+  source: Mobile World Live〈ChatGPT hits 1B user mark in record time〉（引 Sensor Tower）
+  url: https://www.mobileworldlive.com/ai-cloud/chatgpt-hits-1b-user-mark-in-record-time/
+  doc_date: '2026-06-03'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文：'56 million MAUs'、'640% year-on-year'；僅行動 App，不含網頁與 API
+- key: users_web_visits_2026_05
+  group: C
+  metric: claude.ai 月訪問量
+  value: 952.5
+  lo: 850
+  hi: 1050
+  unit: 百萬次
+  period: 2026-05
+  source: FourWeekMBA〈Claude.ai Hits 952 Million Monthly Visits〉（引 Similarweb）
+  url: https://fourweekmba.com/claude-ai-952-million-visits-856-percent-growth-fable-5/
+  doc_date: '2026-06-09'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文：'952.5M' monthly visits May 2026；4 月 823.5M；年增 '+856%'；訪問量≠用戶數
+- key: users_mau_web_2025
+  group: C
+  metric: Claude 月活（MAU，2025 年中估計）
+  value: 18.9
+  lo: 15
+  hi: 25
+  unit: 百萬人
+  period: '2025'
+  source: SaaStr（同上）
+  url: https://www.saastr.com/anthropic-may-never-catch-openai-but-its-already-40-as-big/
+  doc_date: '2025-07-11'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文：'18.9 million monthly active users and 2.9 million mobile app users'；未註來源
+- key: users_deal_deloitte
+  group: C
+  metric: 企業席位大單：Deloitte
+  value: 470000
+  lo: null
+  hi: null
+  unit: 人
+  period: '2025-10-06'
+  source: Anthropic 新聞稿〈Deloitte and Anthropic partnership〉
+  url: https://www.anthropic.com/news/deloitte-anthropic-partnership
+  doc_date: '2025-10-06'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic／Deloitte（雙方宣傳誘因）
+  basis: null
+  note: 原文：Claude 'available to more than 470,000 Deloitte people'；為可用人數，非付費席位
+- key: users_deal_cognizant
+  group: C
+  metric: 企業席位大單：Cognizant
+  value: 350000
+  lo: null
+  hi: 350000
+  unit: 人
+  period: '2025-11-04'
+  source: Anthropic 新聞稿〈Cognizant partnership〉
+  url: https://www.anthropic.com/news/cognizant-partnership
+  doc_date: '2025-11-04'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic／Cognizant（雙方宣傳誘因）
+  basis: null
+  note: 原文：'up to 350,000 employees globally'（上限）
+- key: users_deal_cognizant_trained_2026_07
+  group: C
+  metric: Cognizant 完成 Claude 訓練人數
+  value: 30000
+  lo: null
+  hi: null
+  unit: 人
+  period: '2026-07-27'
+  source: Cognizant 新聞稿〈Cognizant and Anthropic expand partnership〉
+  url: https://news.cognizant.com/2026-07-27-Cognizant-and-Anthropic-expand-partnership-to-embed-Claude-in-Cognizants-industry-platforms,-helping-clients-close-the-gap-between-AI-promise-and-business-outcomes
+  doc_date: '2026-07-27'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Cognizant（合作方宣傳誘因）
+  basis: null
+  note: 原文：'more than 30,000 Cognizant associates have completed Claude training'；目標 '350,000+'
+- key: users_deal_accenture
+  group: C
+  metric: 企業席位大單：Accenture（受訓人數）
+  value: 30000
+  lo: null
+  hi: null
+  unit: 人
+  period: '2025-12-09'
+  source: Anthropic 新聞稿〈Accenture partnership〉
+  url: https://www.anthropic.com/news/anthropic-accenture-partnership
+  doc_date: '2025-12-09'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic／Accenture
+  basis: null
+  note: 原文：'Approximately 30,000 Accenture professionals will receive training on Claude'；非席位數
+- key: users_deal_tcs
+  group: C
+  metric: 企業席位大單：TCS
+  value: 50000
+  lo: null
+  hi: null
+  unit: 人
+  period: '2026-06-11'
+  source: People Matters〈TCS to roll out Anthropic's Claude to 50,000 employees〉
+  url: https://www.peoplematters.in/news/skilling/tcs-to-roll-out-anthropics-claude-to-50000-employees-under-global-ai-partnership-50247
+  doc_date: '2026-06-11'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: TCS／Anthropic（宣傳誘因）
+  basis: null
+  note: 原文：'50,000 TCS employees gain enterprise-wide access to Anthropic's Claude models'
+- key: users_deal_telus
+  group: C
+  metric: 企業部署：TELUS
+  value: 57000
+  lo: null
+  hi: null
+  unit: 人
+  period: 2026-04
+  source: Horses for Sources〈How Anthropic is devouring IT services〉
+  url: https://www.horsesforsources.com/anthropic-is-devouring-it-services_041326/
+  doc_date: '2026-04-13'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic／TELUS（經分析機構轉述）
+  basis: null
+  note: 原文：'TELUS deployed Claude to 57,000 employees'；無日期
+- key: users_deal_barclays
+  group: C
+  metric: 企業部署：Barclays 採用人數
+  value: 16000
+  lo: null
+  hi: null
+  unit: 人
+  period: '2026-10-01'
+  source: Anthropic〈Barclays scales Claude〉
+  url: https://www.anthropic.com/news/barclays-scales-claude
+  doc_date: '2026-10-01'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic／Barclays
+  basis: null
+  note: 原文：'More than 16,000 colleagues have adopted the assistant'
+- key: users_openrouter_share_2026_09
+  group: C
+  metric: OpenRouter 文字請求份額：Anthropic
+  value: 0.025
+  lo: 0.02
+  hi: 0.04
+  unit: 比例
+  period: 2026-09-28 週
+  source: OpenRouter Rankings
+  url: https://openrouter.ai/rankings
+  doc_date: '2026-10-08'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 頁面：Anthropic '2.5%'（DeepSeek 21.8%、Google 21.5%、OpenAI 18.2%）；OpenRouter 偏開源／長尾開發者，嚴重低估 Anthropic
+- key: users_enterprise_llm_share_2025
+  group: C
+  metric: 企業 LLM API 使用份額（Menlo Ventures 調查）
+  value: 0.32
+  lo: 0.25
+  hi: 0.4
+  unit: 比例
+  period: 2025-07
+  source: VentureBeat（引 Menlo Ventures 2025 年中報告）
+  url: https://venturebeat.com/ai/anthropic-revenue-tied-to-two-customers-as-ai-pricing-war-threatens-margins
+  doc_date: '2025-08-08'
+  retrieved: '2026-10-08'
+  tag: Analogy
+  party: null
+  basis: null
+  note: 原文：Anthropic '32% of overall enterprise large language model usage'，OpenAI 25%、Google 20%
+- key: rev_receivables_2025
+  group: A
+  metric: 2025 年底應收帳款（客戶未付帳單）
+  value: 0.909
+  lo: null
+  hi: null
+  unit: $B
+  period: '2025-12-31'
+  source: Reuters（經 Khaleej Times 轉載）
+  url: https://www.khaleejtimes.com/business/anthropic-ipo-prospectus-lays-bare-deep-dependence-on-big-tech-partners?amp=1
+  doc_date: '2026-09-30'
+  retrieved: '2026-10-08'
+  tag: Interested-party
+  party: Anthropic（外流招股書）
+  basis: 總額
+  note: 原文：60% of the '$909 million in customer bills outstanding' 由第三方收款（2024 年 42%）
+
+not_found:
+- item: 2024 年認列營收（直接揭露值）
+  tried: Reuters／Fortune／PYMNTS／Khaleej Times 招股書報導；查詢 "Anthropic 2024 revenue prospectus"
+  verdict: 找不到
+  note: 報導僅給 2025 年成長率（+1,088%／12 倍），2024 值以 rev_2024_recognized_derived 推算
+- item: 2025 實際毛利率與營業成本（招股書口徑）
+  tried: Fortune 損益表報導、PYMNTS、Digital Applied、Reuters 轉載；查詢 "Anthropic prospectus gross margin cost of revenue"
+  verdict: 找不到
+  note: 招股書草稿應有，但外流報導未引用；僅有 2025-12 公司預測 40%（The Information）與 2026-09 「扣分潤前 >80%」
+- item: 2025 推論成本金額
+  tried: The Information（付費牆）、華爾街見聞、WebProNews；查詢 "Anthropic inference cost 2025 billion"
+  verdict: 可能未揭露
+  note: 僅知超支 23%；招股書報導只給算力與基礎設施支出 $7.33B（含訓練，屬 A1-F／A1-C 範圍）
+- item: 各雲端夥伴（AWS／Google／Microsoft）合約分潤比例
+  tried: Forbes、Reuters 招股書報導、Redmond Mag（Foundry GA）；查詢 "Anthropic revenue share Bedrock percentage"
+  verdict: 可能未揭露
+  note: 只有 Reuters 依招股書推算之平均 16%（$351M）；Microsoft Foundry 未見任何比例
+- item: Claude Code 2026-02 以後的官方 run-rate
+  tried: Anthropic Series H、Google/Broadcom、Amazon 新聞稿；查詢 "Claude Code run-rate billion 2026"
+  verdict: 可能未揭露
+  note: 僅 FourWeekMBA 稱 2026-05 約 $8B（引 Sacra，Sacra 頁未見），列為 Analogy
+- item: 年化 >$100k 大客戶絕對數
+  tried: Series F／G 新聞稿、Reuters
+  verdict: 可能未揭露
+  note: 公司只給年增倍數（約 7x）
+- item: 2025-10 以後的企業客戶總數
+  tried: Anthropic 新聞稿（Series G／H、Google/Broadcom、Amazon）、Reuters 招股書報導
+  verdict: 找不到
+- item: 消費者付費訂閱絕對數
+  tried: TechCrunch 2026-03、eMarketer、Tech Buzz；查詢 "Claude million paid subscribers"
+  verdict: 可能未揭露
+  note: Anthropic 明言不揭露，只說年初至 3 月翻倍以上
+- item: 公司官方 MAU／WAU
+  tried: Anthropic 新聞稿、TechCrunch、Similarweb 部落格；查詢 "Claude weekly active users million"
+  verdict: 可能未揭露
+  note: 只有 Sensor Tower（App 56M MAU）、Similarweb（訪問量）等第三方
+- item: Anthropic token 處理量
+  tried: Anthropic 新聞稿、Madrona、OpenRouter；查詢 "Anthropic tokens per day trillion"
+  verdict: 可能未揭露
+- item: 2026-07 之後的 run-rate（8–10 月）
+  tried: CNBC、TechCrunch、Axios、Fortune、FT 轉述；查詢 "Anthropic run-rate September 2026"
+  verdict: 找不到
+  note: 最新為 2026-07 底 >$65B；投資人預期年底 $100–120B（FT）
+- item: 官方定價頁（platform／docs.claude.com pricing、claude.com/pricing）原文
+  tried: WebFetch 與 curl 皆被權限或代理擋下
+  verdict: 找不到
+  note: 本次無法開啟；快取倍數與批次折扣改用第三方（Morph、Finout，稱已對照官方頁）並標 Analogy；各模型輸入／輸出價則以 anthropic.com 發表文為準
+- item: Opus 4.6 fast mode 價格、Mythos 5.1 價格
+  tried: anthropic.com 發表文、claudefa.st、hassannazir.dev
+  verdict: 找不到
+  note: Mythos 5.1 僅限 trusted-access，claudefa.st 稱 $10/$50 但無一手來源
+- item: Enterprise 大單之席位價格與合約金額（Deloitte、Cognizant 等）
+  tried: Anthropic 新聞稿、Cognizant 新聞稿、Horses for Sources
+  verdict: 可能未揭露
