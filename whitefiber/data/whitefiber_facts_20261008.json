@@ -3910,6 +3910,640 @@
     "tag": "[Derived]",
     "note": "調整後 EBITDA 率＝5.535 ÷ 28.839；經常性＝−0.565 ÷ 16.539；IREN 35%（FY26，IREN 2026-08-27 新聞稿）、CRWV 59%（Q2 2026）沿用 permw_tokenomics_20261007.json pathA 註記；毛利不含 D&A，與 EBITDA 率口徑不同"
    }
+  ],
+  "6_評價輸入": [
+   {
+    "id": "val.beta.etoro",
+    "item": "WYFI beta",
+    "value": 4.76,
+    "unit": "倍",
+    "period": "截至 2026-10-07",
+    "source": "eToro 市場頁",
+    "url": "https://www.etoro.com/sv/markets/wyfi",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "基準指數與期間未揭露；上市約 14 個月（2025-08-08）"
+   },
+   {
+    "id": "val.beta.fffinstill",
+    "item": "WYFI beta（52 週）",
+    "value": 4.77,
+    "unit": "倍",
+    "period": "52 週",
+    "source": "FFFinstill 風險估值頁",
+    "url": "https://fffinstill.com/stock/WYFI/risk-valuation",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "年化波動 98.3%；基準未揭露；與 eToro 幾乎相同，可能同法計算，不算獨立"
+   },
+   {
+    "id": "val.beta.snowball",
+    "item": "WYFI beta",
+    "value": 0.84,
+    "unit": "倍",
+    "period": "未揭露",
+    "source": "Snowball Analytics",
+    "url": "https://snowball-analytics.com/public/asset/WYFI.US.USD",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "期間與基準未揭露；與上兩者差距 5 倍以上 → 個股 beta 不可靠（見矛盾 C8）；Yahoo 5 年月 beta 顯示「--」（歷史不足）"
+   },
+   {
+    "id": "val.beta.peers",
+    "item": "同業 beta 對照",
+    "value": {
+     "NBIS": 1.46,
+     "ORCL": 1.77,
+     "CIFR": 3.45
+    },
+    "unit": "倍",
+    "period": "2026-09～10",
+    "source": "NBIS／ORCL：oracle_facts_20261007.json（StockAnalysis）；CIFR：TipRanks 統計頁",
+    "url": "https://www.tipranks.com/stocks/cifr/statistics",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "CIFR 頁面更新 2026-09-01"
+   },
+   {
+    "id": "val.beta.default",
+    "item": "v0.1b 預設 beta",
+    "value": {
+     "value": 2.5,
+     "low": 1.5,
+     "high": 3.5
+    },
+    "unit": "倍",
+    "period": "2026-10",
+    "source": "預設（本報告）",
+    "url": "https://www.etoro.com/sv/markets/wyfi",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Analogy]",
+    "note": "個股 beta 0.84–4.77 不可靠；取同業 NBIS 1.46 與 CIFR 3.45 之間偏保守 2.5（WACC 偏高）；4.77 會使股權成本約 29% 不合理，列敏感度上緣 3.5"
+   },
+   {
+    "id": "val.ust10",
+    "item": "美國 10 年期公債殖利率",
+    "value": 0.0527,
+    "unit": "比率",
+    "period": "2026-10-06",
+    "source": "U.S. Treasury Daily Treasury Yield Curve（經 YCharts）",
+    "url": "https://ycharts.com/indicators/10_year_treasury_rate",
+    "docDate": "2026-10-06",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "10/05 5.31%、10/02 5.28%；與 oracle_facts val.ust10.treasury 相同"
+   },
+   {
+    "id": "val.erp",
+    "item": "股權風險溢酬",
+    "value": 0.05,
+    "unit": "比率",
+    "period": "—",
+    "source": "跨模型一致（oracle_facts val.erp）",
+    "url": "https://ycharts.com/indicators/10_year_treasury_rate",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-08",
+    "tag": "[Assumed]",
+    "note": "區間 4.5–6%"
+   },
+   {
+    "id": "val.capm.ke",
+    "item": "CAPM 股權成本（預設 beta 2.5）",
+    "value": 0.1777,
+    "unit": "比率",
+    "period": "2026-10-06",
+    "source": "由 val.ust10、val.beta.default、val.erp 計算",
+    "url": "https://ycharts.com/indicators/10_year_treasury_rate",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "5.27% ＋ 2.5 × 5%＝17.77%；beta 1.5／3.5 → 12.8%／22.8%"
+   },
+   {
+    "id": "val.kd.cv31",
+    "item": "債務成本：2031 可轉債有效利率",
+    "value": 0.0537,
+    "unit": "比率",
+    "period": "2026-06-30",
+    "source": "Form 10-Q 2026 Q2（季末 2026-06-30；10-Q 核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026088026/ea0300877-10q_whitefiber.htm",
+    "docDate": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "10-Q 核閱數；票面 4.5%"
+   },
+   {
+    "id": "val.kd.cv32",
+    "item": "債務成本：2032 可轉債票面",
+    "value": 0.05,
+    "unit": "比率",
+    "period": "2026-08-21",
+    "source": "Form 8-K（2032 可轉債發行與 2031 票據交換，Item 1.01／8.01）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026092599/ea0302925-8k_white.htm",
+    "docDate": "2026-08-21",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "含發行成本 11.5（310 − 298.5）攤 6 年約 +0.6% → 約 5.6% [Derived]；可轉債票面低估純債成本（含轉換選擇權價值）"
+   },
+   {
+    "id": "val.kd.ddtl",
+    "item": "債務成本：Bit Digital DDTL",
+    "value": 0.095,
+    "unit": "比率",
+    "period": "2026-05-20 起",
+    "source": "Form 8-K 附件 10.1：Delayed Draw Term Loan Facility and Security Agreement（Bit Digital Capital）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026061575/ea029228001ex10-1.htm",
+    "docDate": "2026-05-27",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "完工出租後降至 8.0%；另 3% OID 與 1.1× MOIC → 短天期有效 50.6%"
+   },
+   {
+    "id": "val.kd.iceland",
+    "item": "債務成本：冰島定期貸款",
+    "value": 0.0792,
+    "unit": "比率",
+    "period": "2026-06-30",
+    "source": "Form 10-Q 2026 Q2（季末 2026-06-30；10-Q 核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026088026/ea0300877-10q_whitefiber.htm",
+    "docDate": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "10-Q 核閱數；SOFR＋4.25%，有效 10.64%"
+   },
+   {
+    "id": "val.kd.default",
+    "item": "v0.1b 預設稅前債務成本（邊際純債）",
+    "value": {
+     "value": 0.095,
+     "low": 0.079,
+     "high": 0.106
+    },
+    "unit": "比率",
+    "period": "2026-10",
+    "source": "Form 8-K 附件 10.1：Delayed Draw Term Loan Facility and Security Agreement（Bit Digital Capital）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026061575/ea029228001ex10-1.htm",
+    "docDate": "2026-05-27",
+    "retrieved": "2026-10-08",
+    "tag": "[Analogy]",
+    "note": "取 DDTL 9.5%（關係人純債、無轉換權）；區間＝冰島票面 7.92%–冰島有效 10.64%；不用可轉債票面（含選擇權價值，低估）"
+   },
+   {
+    "id": "val.tax",
+    "item": "法定稅率參考",
+    "value": "開曼控股；美國子公司 21%＋州稅、加拿大約 26.5%；1H26 有效稅率 −1.3%",
+    "unit": "文字",
+    "period": "2026",
+    "source": "Form 10-Q 2026 Q2（季末 2026-06-30；10-Q 核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026088026/ea0300877-10q_whitefiber.htm",
+    "docDate": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "10-Q 核閱數；加拿大、日本 DTA 全額備抵"
+   },
+   {
+    "id": "val.peer.dlr",
+    "item": "資料中心同業：Digital Realty（DLR）",
+    "value": {
+     "price": 180.47,
+     "ev": 86198,
+     "ebitda2026": 3841,
+     "ebitda2027": 4349,
+     "ntmEbitda": 4222,
+     "evEbitdaNTM": 20.4,
+     "evEbitda2026": 22.4
+    },
+    "unit": "物件（US$；USD M；倍）",
+    "period": "2026-10-07 收盤",
+    "source": "MarketScreener 估值頁（德文版；共識 EBITDA）",
+    "url": "https://de.marketscreener.com/kurs/aktie/DIGITAL-REALTY-TRUST-INC-12320/bewertung/",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "NTM EBITDA＝0.25 × 2026 ＋ 0.75 × 2027（評價日 2026-10 起 12 個月）；EV ÷ NTM＝86,198 ÷ 4,222"
+   },
+   {
+    "id": "val.peer.eqix",
+    "item": "資料中心同業：Equinix（EQIX）",
+    "value": {
+     "price": 1012.33,
+     "ev": 121482,
+     "ebitda2026": 5286,
+     "ebitda2027": 5930,
+     "ntmEbitda": 5769,
+     "evEbitdaNTM": 21.1,
+     "evEbitda2026": 23.0
+    },
+    "unit": "物件（US$；USD M；倍）",
+    "period": "約 2026-10-02",
+    "source": "MarketScreener 估值頁（英文版）",
+    "url": "https://uk.marketscreener.com/quote/stock/EQUINIX-INC-20565916/valuation/",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "NTM 計法同 DLR；參考價日期頁面未標（即時估價 1,029.79 @ 2026-10-02）"
+   },
+   {
+    "id": "val.peer.apld",
+    "item": "HPC 託管同業：Applied Digital（APLD）",
+    "value": {
+     "price": 23.81,
+     "mktCap": 6940,
+     "ev": 14810,
+     "evSalesFY27": 17.8,
+     "evSalesFY28": 10.3,
+     "evEbitdaNTM": null
+    },
+    "unit": "物件",
+    "period": "2026-10-07 收盤",
+    "source": "MarketScreener（西文版）",
+    "url": "https://es.marketscreener.com/cotizacion/accion/APPLIED-DIGITAL-CORPORATI-120787468/",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "NTM EBITDA 共識未取得（找不到，非不存在）；財年 5 月"
+   },
+   {
+    "id": "val.peer.corz",
+    "item": "HPC 託管同業：Core Scientific（CORZ）",
+    "value": {
+     "price": 17.89,
+     "mktCap": 5750,
+     "ev": 9430,
+     "sales2026": 672,
+     "sales2027": 1150,
+     "evSales2026": 14.0,
+     "evSales2027": 11.1,
+     "evEbitdaNTM": null
+    },
+    "unit": "物件",
+    "period": "2026-09-04 收盤（頁面未更新）",
+    "source": "MarketScreener",
+    "url": "https://www.marketscreener.com/quote/stock/CORE-SCIENTIFIC-INC-164769189/",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "資料停在 9/04；Alpha Spread 顯示現價 15.82、市值 5.1B（日期未標）；EBITDA 共識未取得"
+   },
+   {
+    "id": "val.peer.iren",
+    "item": "neocloud 同業：IREN",
+    "value": {
+     "price": 41.28,
+     "mktCap": 16270,
+     "ebitdaFY27": 1876,
+     "ebitdaFY28": 5824,
+     "salesFY27": 2802,
+     "ntmEbitda": 2863,
+     "ev": null
+    },
+    "unit": "物件",
+    "period": "2026-10-06 收盤",
+    "source": "Simply Wall St（股價、市值，S&P）＋ MarketScreener（荷文版，EBITDA 共識）",
+    "url": "https://be.marketscreener.com/koers/aandeel/IREN-LIMITED-129472358/financien/",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "EV 未取得 → EV/EBITDA 不適用；市值 ÷ NTM EBITDA＝5.7×（只作參考，不含淨負債）；NTM＝0.75 × FY27（6 月）＋ 0.25 × FY28"
+   },
+   {
+    "id": "val.peer.cifr",
+    "item": "HPC 託管同業：Cipher（CIFR）",
+    "value": {
+     "mktCap": 6300,
+     "cash": 4060,
+     "debt": 5590,
+     "evDerived": 7830,
+     "evEbitdaTTM": -13.2,
+     "beta": 3.45
+    },
+    "unit": "物件",
+    "period": "2026-09-01",
+    "source": "TipRanks 統計頁",
+    "url": "https://www.tipranks.com/stocks/cifr/statistics",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "頁面 EV 顯示錯誤（$11.58K）；EV [Derived]＝6,300 − 4,060 ＋ 5,590；EBITDA 為負 → 倍數無意義"
+   },
+   {
+    "id": "val.peer.crwv",
+    "item": "neocloud 同業：CoreWeave（CRWV）",
+    "value": {
+     "price": 89.05,
+     "mktCap": 49110,
+     "ev": 95140,
+     "evEbitdaTTM": 25.25
+    },
+    "unit": "物件",
+    "period": "2026-10-07 盤中",
+    "source": "oracle_facts_20261007.json val.peer.crwv（StockAnalysis）",
+    "url": "https://stockanalysis.com/stocks/crwv/statistics/",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "沿用既有資料（本次 StockAnalysis 被環境代理阻擋，無法更新）"
+   },
+   {
+    "id": "val.peer.nbis",
+    "item": "neocloud 同業：Nebius（NBIS）",
+    "value": {
+     "price": 249.87,
+     "mktCap": 68490,
+     "ev": 70640,
+     "beta": 1.46
+    },
+    "unit": "物件",
+    "period": "2026-10-06 收盤",
+    "source": "oracle_facts_20261007.json val.peer.nbis（StockAnalysis）",
+    "url": "https://stockanalysis.com/stocks/nbis/statistics/",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "沿用既有資料；TTM EBITDA 過小，倍數無意義"
+   },
+   {
+    "id": "val.peer.coloDefault",
+    "item": "v0.1b 預設託管分部 EV/EBITDA",
+    "value": {
+     "value": 20.7,
+     "low": 15.0,
+     "high": 21.1
+    },
+    "unit": "倍",
+    "period": "2026-10",
+    "source": "由 val.peer.dlr、val.peer.eqix 計算",
+    "url": "https://de.marketscreener.com/kurs/aktie/DIGITAL-REALTY-TRUST-INC-12320/bewertung/",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "DLR 20.4 與 EQIX 21.1 的中位 20.75（四捨五入 20.7）；只有 2 家可得 NTM 倍數（APLD、CORZ、IREN、CIFR 無可用 NTM EBITDA 或為負，列資料缺口）；WhiteFiber 規模小、單一承租人、非 REIT → 下緣 15× 列敏感度"
+   },
+   {
+    "id": "val.peer.cloudDefault",
+    "item": "v0.1b 預設雲端分部 EV/EBITDA",
+    "value": 6.0,
+    "unit": "倍",
+    "period": "—",
+    "source": "跨模型一致（對照表 r1 第 4 節預設 8）",
+    "url": "https://www.tipranks.com/stocks/cifr/statistics",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Assumed]",
+    "note": "區間 5–8×"
+   }
+  ],
+  "7_市場共識": [
+   {
+    "id": "mkt.price.close",
+    "item": "WYFI 收盤價",
+    "value": 16.83,
+    "unit": "US$",
+    "period": "2026-10-07",
+    "source": "Yahoo Finance 報價頁",
+    "url": "https://finance.yahoo.com/quote/wyfi",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "前一日 17.33（10/06）；Benzinga 同為 16.83"
+   },
+   {
+    "id": "mkt.mktcap",
+    "item": "市值（交換後股數）",
+    "value": 759.4,
+    "unit": "USD M",
+    "period": "2026-10-07",
+    "source": "由 mkt.price.close × sh.out.postExchange 計算",
+    "url": "https://finance.yahoo.com/quote/wyfi",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "16.83 × 45.120；Yahoo 顯示 653.8（仍用 38.85M 舊股數）、eToro 673.2、indmoney 678.3"
+   },
+   {
+    "id": "mkt.52w",
+    "item": "52 週區間",
+    "value": {
+     "low": 10.51,
+     "high": 46.87
+    },
+    "unit": "US$",
+    "period": "至 2026-10-07",
+    "source": "Yahoo Finance",
+    "url": "https://finance.yahoo.com/quote/wyfi",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": ""
+   },
+   {
+    "id": "cons.pt.marketbeat",
+    "item": "共識目標價（MarketBeat）",
+    "value": {
+     "mean": 38.0,
+     "low": 32.0,
+     "high": 50.0,
+     "analysts": 11,
+     "rating": "Moderate Buy",
+     "buy": 9,
+     "hold": 1,
+     "sell": 1
+    },
+    "unit": "物件（US$）",
+    "period": "頁面更新 2026-09-03 後",
+    "source": "MarketBeat 預測頁（自行彙整）",
+    "url": "https://www.marketbeat.com/stocks/NASDAQ/WYFI/forecast",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "賣方意見；過去 12 個月"
+   },
+   {
+    "id": "cons.pt.investing",
+    "item": "共識目標價（Investing.com）",
+    "value": {
+     "mean": 40.5,
+     "low": 32.0,
+     "high": 50.0,
+     "analysts": 10,
+     "rating": "Strong Buy",
+     "buy": 9,
+     "hold": 1,
+     "sell": 0
+    },
+    "unit": "物件（US$）",
+    "period": "近 3 個月",
+    "source": "Investing.com 共識頁",
+    "url": "https://www.investing.com/equities/whitefiber-consensus-estimates",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "頁面現價 19.86（9/21，未更新）"
+   },
+   {
+    "id": "cons.pt.yahoo",
+    "item": "1 年目標價（Yahoo）",
+    "value": 40.45,
+    "unit": "US$",
+    "period": "2026-10-07",
+    "source": "Yahoo Finance（LSEG 系）",
+    "url": "https://finance.yahoo.com/quote/wyfi",
+    "docDate": "2026-10-07",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": ""
+   },
+   {
+    "id": "cons.pt.sws",
+    "item": "共識目標價（Simply Wall St，S&P）",
+    "value": {
+     "mean": 40.89,
+     "analysts": 8
+    },
+    "unit": "物件（US$）",
+    "period": "2026-08-20 更新",
+    "source": "Simply Wall St（S&P Global Market Intelligence）",
+    "url": "https://simplywall.st/stocks/us/software/nasdaq-wyfi/whitefiber/future",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "由 38.11 上調 7.3%"
+   },
+   {
+    "id": "cons.est.sws",
+    "item": "營收與淨利共識（S&P 經 Simply Wall St）",
+    "value": {
+     "FY2026": {
+      "revenue": 137,
+      "netIncome": -43,
+      "cfo": 92,
+      "fcf": -556,
+      "analysts": 10
+     },
+     "FY2027": {
+      "revenue": 296,
+      "netIncome": 3,
+      "cfo": 90,
+      "fcf": -484,
+      "analysts": 10
+     },
+     "FY2028": {
+      "revenue": 530,
+      "netIncome": 56,
+      "cfo": 222,
+      "fcf": -848,
+      "analysts": 3
+     }
+    },
+    "unit": "物件（USD M）",
+    "period": "2026-10-07",
+    "source": "Simply Wall St（S&P Global Market Intelligence）",
+    "url": "https://simplywall.st/stocks/us/software/nasdaq-wyfi/whitefiber/future",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "涵蓋 12 位分析師、10 位提交預估；FY2028 僅 3 位"
+   },
+   {
+    "id": "cons.est.tickflow",
+    "item": "營收與 EPS 共識（Tickflow）",
+    "value": {
+     "FY2026": {
+      "revenue": 138,
+      "low": 123,
+      "high": 150,
+      "analysts": 7,
+      "eps": -0.63,
+      "epsAnalysts": 4
+     },
+     "FY2027Qsum": {
+      "revenue": 261,
+      "analysts": 3
+     },
+     "FY2028Qsum": {
+      "revenue": 381,
+      "analysts": 2
+     },
+     "ptMean": 32.33,
+     "ptAnalysts": 10
+    },
+    "unit": "物件（USD M；US$）",
+    "period": "2026-10-07",
+    "source": "Tickflow 預測頁（資料來源未具名）",
+    "url": "https://tickflow.io/stock/WYFI/forecast",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "2027、2028 為季度預估加總（[Derived]）；目標價區間頁面自相矛盾（20–50 vs 個別 13–45）"
+   },
+   {
+    "id": "cons.ebitda",
+    "item": "EBITDA 共識",
+    "value": null,
+    "unit": "USD M",
+    "period": "—",
+    "source": "試過：Simply Wall St、Tickflow、vcpscanner、Investing、MarketBeat、Benzinga（StockAnalysis 被環境阻擋）",
+    "url": "https://simplywall.st/stocks/us/software/nasdaq-wyfi/whitefiber/future",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": "找不到（非不存在）"
+   },
+   {
+    "id": "cons.actions",
+    "item": "近期分析師動作",
+    "value": [
+     {
+      "date": "2026-09-03",
+      "firm": "HC Wainwright",
+      "rating": "Buy",
+      "pt": 37
+     },
+     {
+      "date": "2026-08-14",
+      "firm": "Barclays",
+      "rating": "Equal Weight",
+      "pt": 32
+     },
+     {
+      "date": "2026-08-13",
+      "firm": "Needham",
+      "rating": "Buy",
+      "pt": 41
+     },
+     {
+      "date": "2026-08-13",
+      "firm": "Cantor Fitzgerald",
+      "rating": "Overweight（升）",
+      "pt": 36
+     },
+     {
+      "date": "2026-08-12",
+      "firm": "BTIG",
+      "rating": "Buy",
+      "pt": 50
+     },
+     {
+      "date": "2025-12-16",
+      "firm": "Compass Point",
+      "rating": "Buy",
+      "pt": 32
+     }
+    ],
+    "unit": "列表",
+    "period": "2025-12～2026-09",
+    "source": "MarketBeat 預測頁",
+    "url": "https://www.marketbeat.com/stocks/NASDAQ/WYFI/forecast",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Interested-party]",
+    "note": ""
+   }
   ]
  }
 }
