@@ -3832,6 +3832,84 @@
     "tag": "[Interested-party]",
     "note": "10-Q 核閱數"
    }
+  ],
+  "5_每MW對照": [
+   {
+    "id": "pm.a.recurringAnnual",
+    "item": "(a) Q2 經常性雲端營收年化",
+    "value": 46.02,
+    "unit": "USD M／年",
+    "period": "2026Q2",
+    "source": "Form 10-Q 2026 Q2（季末 2026-06-30；10-Q 核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026088026/ea0300877-10q_whitefiber.htm",
+    "docDate": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "11.506 × 4"
+   },
+   {
+    "id": "pm.a.perMW",
+    "item": "(a) 經常性雲端營收年化 ÷ 可辨識在役雲端 MW-IT",
+    "value": 8.37,
+    "unit": "USD M／MW-IT·年（上限）",
+    "period": "2026Q2",
+    "source": "Form 10-Q 2026 Q2（季末 2026-06-30；10-Q 核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026088026/ea0300877-10q_whitefiber.htm",
+    "docDate": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "46.02 ÷ 5.5（冰島已簽 5.5 MW IT；亞特蘭大與加拿大 MW 未揭露，分母偏小 → 本值為上限）；只作對照"
+   },
+   {
+    "id": "pm.b.contracts",
+    "item": "(b) 雲端合約隱含每 MW-IT 年營收",
+    "value": {
+     "baseten": 19.27,
+     "primeVR200": 18.27,
+     "icelandB300": 14.8,
+     "b300_128": 20.29,
+     "b200_384": 11.83,
+     "primeGB200": 15.8,
+     "h100_2048": 8.8,
+     "initialH100": 17.53,
+     "initialB200": 16.22,
+     "tkScenarios": [
+      11.62,
+      17.4,
+      24.2
+     ]
+    },
+    "unit": "USD M／MW-IT·年",
+    "period": "2026",
+    "source": "Form 10-Q 2026 Q2（季末 2026-06-30；10-Q 核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026088026/ea0300877-10q_whitefiber.htm",
+    "docDate": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "見群組 3；新簽 B300／VR200 長約 14.8–20.3 落在 Tokenomics 保守–基準之間偏基準；只作對照與敏感度"
+   },
+   {
+    "id": "pm.c.margins",
+    "item": "(c) 毛利率與 EBITDA 率對照",
+    "value": {
+     "gmReported": 0.594,
+     "gmRecurring": 0.534,
+     "cloudGmRecurring": 0.479,
+     "coloGm": 0.632,
+     "adjEbitdaMarginReported": 0.192,
+     "adjEbitdaMarginRecurring": -0.034,
+     "irenEbitda": 0.35,
+     "crwvEbitda": 0.59
+    },
+    "unit": "比率",
+    "period": "2026Q2",
+    "source": "Form 10-Q 2026 Q2（季末 2026-06-30；10-Q 核閱數）",
+    "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390026088026/ea0300877-10q_whitefiber.htm",
+    "docDate": "2026-08-12",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "調整後 EBITDA 率＝5.535 ÷ 28.839；經常性＝−0.565 ÷ 16.539；IREN 35%（FY26，IREN 2026-08-27 新聞稿）、CRWV 59%（Q2 2026）沿用 permw_tokenomics_20261007.json pathA 註記；毛利不含 D&A，與 EBITDA 率口徑不同"
+   }
   ]
  }
 }
