@@ -164,16 +164,20 @@ def _get_path(co, path):
     return x
 
 
+OPT_TOP = {'companyAdjust'}  # 選用的 company.json 區段（W5 公司實況驗證；舊方法回歸副本會移除）
+
+
 def check_roll_fields(co, quarter):
     """company.json → asOf 須逐項列出 ROLL_FIELDS，且季度＝最新已申報季度；回傳問題清單（空＝通過）。"""
     tags, bad = co.get('asOf') or {}, []
     for kind, path, label in ROLL_FIELDS:
+        if path.split('.')[0] in OPT_TOP and path.split('.')[0] not in co: continue  # W5：選用區段（公司沒有此區段時不檢查）
         try: _get_path(co, path)
         except (KeyError, IndexError, TypeError): bad.append(f'{kind}「{label}」：company.json 找不到 {path}'); continue
         q = tags.get(path)
         if q is None: bad.append(f'{kind}「{label}」：asOf 缺 {path}')
         elif q != quarter: bad.append(f'{kind}「{label}」：asOf 為 {q}，應為 {quarter}（{path} 尚未依最新已申報季度更新）')
-    extra = sorted(k for k in tags if not k.startswith('_') and k not in {p for _, p, _ in ROLL_FIELDS})
+    extra = sorted(k for k in tags if not k.startswith('_') and k not in {p for _, p, _ in ROLL_FIELDS} and not (k.split('.')[0] in OPT_TOP and k.split('.')[0] not in co))
     if extra: bad.append(f'asOf 有清單以外的項目：{extra}')
     return bad
 

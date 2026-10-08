@@ -45,6 +45,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | scripts/verify_legacy.sh | 舊方法回歸驗收：副本改 `methodology.perMw` 後跑 `verify.sh --vs-dist`，畫面文字、Excel 值與公式須與前一版成品 0 差異（新增列、新增工作表不計）；結果在 `out/verify_legacy.log`。`LEGACY_BASE`＝v4.6（預設，W4 起：只把收入改回 legacy、Tokenomics 快照取 git 歷史 v5.26，對 v4.6 成品，`LEGACY_DIST_REF` 預設 f373885）｜v4.5（全部舊方法，對 v4.5 成品，預設 9af51ca） |
 | scripts/attrib_w4.py | W4：v4.6 → v4.7 目標價變動拆解（(d) ① 錨取代舊輸入〔k＝1〕→ ② 套用 k → ③ 上限檢查；另列融資缺口；檢查相加＝總變動） |
 | scripts/q2_check_w4.py | W4：Q2 驗證拆解（模型首期每 MW 收入對 Q2 年化：爬坡分母、利用率、定價倍數、世代組合、其他；相加＝總差距；只作驗證、不校準 k） |
+| scripts/attrib_w5.py | W5：v4.6 → v4.7（W4＋W5）變動拆解：W4 的 ①②③ 後加 ④ 公司調整（④-1 既有合約 k；④-2–④-5 驗證後未調整＝0）；檢查相加＝總變動 |
+| scripts/compare_w5.py | W5：v4.6／v4.7 W4／v4.7 W5 三版對照 Excel（摘要、每MW_三版、公司實況驗證、敏感度、變動拆解） |
 | scripts/compare_w4.py | W4：v4.6 → v4.7 收入錨定對照 Excel（摘要、每MW_前後、錨與k、證據表、Q2驗證、敏感度、變動拆解） |
 | scripts/attrib_permw.py | W3：v4.5 → v4.6 目標價變動拆解（(d) 方法變更逐項依序／單獨切換；數值取自 Excel；三情境；檢查相加＝總變動） |
 | scripts/make_expect.py | W3：升版預期差異清單產生器（規則檔 `scripts/expect/*_rules.json`；未歸類的差異即失敗） |
@@ -169,6 +171,14 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **升版驗收**：`DATE=2026-10-08 EXPECT=scripts/expect/v4_7_vs_v4_6.txt scripts/verify.sh --vs-dist`（對 v4.6 成品；清單由 `scripts/make_expect.py` 依 `scripts/expect/v4_7_rules.json` 產生，規則檔新增 `renames`〔指定列改名〕；營運成本列〔電費、IT 維護、人員軟體、稅險、租金〕不在清單＝須 0 差異）。舊方法組合（revenue=legacy）對 v4.6 成品 0 差異：`scripts/verify_legacy.sh`。
 - **JS 修正**：segB 無槓桿 NOL 的虧損改為全額加回（原只加回 80%，與 Excel 不一致；v4.6 前未觸發）。
 - **報告**：`docs/reports/20261008_coreweave_v4.7_收入錨定.{xlsx,md}`。
+
+## v4.7 公司實況驗證（W5；2026-10-08；已決定事項 15；覆寫 v4.7）
+- **規則**：每個取自 Tokenomics 的參數對 CRWV 已申報實際數逐項對照（`company.json` → `companyAdjust`）：差距 ≤ `gapTol`（10%）用 Tokenomics 值；> 10% 且有證據的機制 → 公司調整；> 10% 找不到機制 → Tokenomics 為基準、公司實際為敏感度。不以營收或 EBITDA 總數倒推係數。
+- **公司調整（唯一一項）**：既有合約 k——`k_t＝既有占比_t × k_既有＋（1 − 既有占比_t）× k_新約`；既有合約 MW＝最新季末在役（`fleet.openMix.activeMW`）逐期扣汰換（最舊世代先出）；`k_既有＝（Q2 每在役 MW 年收入 − 服務）÷（計費比例 × 利用率 × Q2 錨）`，Q2 錨隨目前成本情境；`k_新約＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約 ×（1＋新約價格調整）`。輸入頁「定價倍數 k」區新增「既有合約 k 開關」「新約價格調整」；C 區新增「由下而上營運成本倍數」（基準 1）。
+- **新頁「公司實況驗證」**：參數驗證（Tokenomics 值｜CRWV 實際｜差距｜採用值｜規則＋機制、證據、調整說明）、敏感度輸入、Q2 逐項對帳、證據與找不到清單；HTML「每 MW 經濟性 → 公司實況驗證」同列（cmp31 比對）。Q2 營運成本改為含變動租賃（轉付房東的水電），固定租金對固定租金。
+- **敏感度**新增 6 組：既有合約 k 不套用（＝W4）、新約 +25%、隨需 10% × CRWV 短天期 k、營運成本＝Q2 實際比率、每 MW 建置成本＝年初至今實際比率、兩者皆實際（`scripts/permw_sens.py` 讀「公司實況驗證」頁敏感度輸入列）。
+- **工具**：`scripts/attrib_w5.py`（W4 的 ①②③ 後加 ④ 公司調整逐項）、`scripts/compare_w5.py`（三版對照 Excel）；`verify_legacy.sh` 的 v4.6 副本移除 `companyAdjust`；`calendar_q.ROLL_FIELDS` 新增 `companyAdjust.capexActual`（選用區段，沒有時不檢查）。
+- **報告**：`docs/reports/20261008_coreweave_v4.7_公司實況驗證.{xlsx,md}`。
 
 ## company.json 欄位說明（換公司填表指引）
 換成 Nebius、Oracle、OpenAI 等公司時，照這一節逐欄填寫 `company.json`；HTML 與 Excel 都從這個檔讀資料，改完執行 `scripts/verify.sh`。

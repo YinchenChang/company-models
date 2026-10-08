@@ -347,6 +347,8 @@ def fmt(v):
 
 
 # 覆蓋檢查：company.json 每個欄位都要有說明
+OPT_TOP = {'companyAdjust'}  # W5：選用區段（舊方法回歸副本會移除）；company.json 沒有時不列
+F = [x for x in F if x[0].split('.')[0] not in OPT_TOP or x[0].split('.')[0] in CO]
 doc = {p for p, *_ in F} | {f'latestQuarter.{k}' for k in LQ} | {f'callFacts.{k}' for k in CF}
 def leaves(o, p=''):
     if isinstance(o, dict):
@@ -373,6 +375,7 @@ out, shown = ['**填表慣例**',
                '- 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。',
                f"- 下表的「目前數值」是 {CO['meta']['company']} {VER} 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。"], set()
 for top, title in SECT:
+    if top in OPT_TOP and top not in CO: continue
     out.append(f'\n### `{top}`：{title}\n')
     if top in ('latestQuarter', 'callFacts'):
         acc = 'LATEST_Q.' if top == 'latestQuarter' else 'CALL_FACTS.'
