@@ -1,6 +1,6 @@
-# Oracle 收支模型 v0.1 原始碼包
+# Oracle 收支模型 v0.2 原始碼包
 
-Oracle（ORCL）收支與評價模型；由 `nebius/` @ `642d144`（CRWV v4.5＋Nebius v0.1b）複製建立。下方各節為模板沿革與技術說明（以 CoreWeave 為例），引擎與工具仍適用；Oracle 新增的結構（OCI 以 MW × 每 MW 收入、首期以 Q1 OCI 校準可計費 MW、傳統事業四線、客戶出資與預付重大財務組成、股利、投資級融資瀑布、強制轉換特別股、未起租租賃排程、CAPM WACC、分部 EV/EBITDA；v0.1c：EBITDAR 率 − 固定租金、MW 觸頂後穩態 GPU 汰換、終值以末期 UFCF 為基準）見交接檔 `docs/handoff/20261008_Oracle收支模型_交接檔_v0_1.md` 與下方「company.json 欄位說明」。成品名稱＝`更新日_<meta.company>收支模型_v版本`（目前 `dist/20261008_Oracle收支模型_v0_1.html`／`.xlsx`）。`scripts/calib_ebitdar.js`：EBITDAR 率校準（`defaults.ebitdarAdj`；verify.sh 第 0c 項）。
+Oracle（ORCL）收支與評價模型；由 `nebius/` @ `642d144`（CRWV v4.5＋Nebius v0.1b）複製建立。下方各節為模板沿革與技術說明（以 CoreWeave 為例），引擎與工具仍適用；Oracle 新增的結構（OCI 以 MW × 每 MW 收入、首期以 Q1 OCI 校準可計費 MW、傳統事業四線、客戶出資與預付重大財務組成、股利、投資級融資瀑布、強制轉換特別股、未起租租賃排程、CAPM WACC、分部 EV/EBITDA；v0.1c：EBITDAR 率 − 固定租金、MW 觸頂後穩態 GPU 汰換、終值以末期 UFCF 為基準）見交接檔 `docs/handoff/20261008_Oracle收支模型_交接檔_v0_2.md` 與下方「company.json 欄位說明」；v0.2 新增建設延誤模組（計費 MW 平移、GPU 資本支出照原時程與閒置資本、租約起租連動、延誤罰則；Excel「運營_產能與收入」（E）區）與租賃負債／租賃調整後槓桿（投資級上限 ≤ 4.5×；「各期收支」租賃負債區、「資產負債_新債與新股」槓桿列）。成品名稱＝`更新日_<meta.company>收支模型_v版本`（目前 `dist/20261008_Oracle收支模型_v0_2.html`／`.xlsx`）。升版驗收的預期差異清單在 `scripts/expect/`（v0.2：`v0_2_vs_v0_1.txt`；延誤 0 不變性：`v0_2_delay0_vs_v0_1.txt`）。`scripts/calib_ebitdar.js`：EBITDAR 率校準（`defaults.ebitdarAdj`；verify.sh 第 0c 項）。
 
 HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo 根目錄；建置產物寫到 `out/`（不納入版控），交付成品放 `dist/`。HTML 的函式庫模板為 `docs/template_v3_3.html`。
 
@@ -138,7 +138,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY27 第 2–4 季、FY28、FY29、FY30、FY31，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 Oracle v0.1 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 Oracle v0.2 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 

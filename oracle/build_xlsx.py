@@ -491,8 +491,8 @@ FAC = gi(r, "未動用信用額度", "US$bn", D['facility'], f"{TXQ['facilityNam
 FACON = gi(r, "瀑布可動用未動用額度（1=是）", "", int(D['useFacility']), "瀑布第一順位；已承諾額度，不受 債務／backlog 上限限制", NUM0); r += 1
 DEBTON = gi(r, "債務排程攤還（1=開）", "", int(D['includeDebt']), "季報到期表；關閉＝假設全額再融資", NUM0); r += 1
 KBL = gi(r, "債務／backlog 上限", "x", D['debtBacklog'], "資產擔保融資容量：總債務 ≤ 此倍數 × backlog；評價日實際約 0.27x，預設 0.5x [Assumed]", '0.00', True); r += 1
-DCB = gi(r, "債務上限基準（leaseAdj＝(債務＋租賃負債) ÷ (EBITDA＋租金)；ebitda＝總債務 ÷ EBITDA；backlog＝債務 ÷ backlog）", "", D.get('debtCapBasis', 'backlog'), "Oracle v0.2：投資級上限以租賃調整後槓桿（S&P 口徑近似）計；租賃負債見『各期收支』（company.json → defaults.debtCapBasis）", "@"); r += 1
-LEV = gi(r, "投資級上限（leaseAdj：調整後槓桿；ebitda：總債務 ÷ EBITDA）", "x", D.get('debtEbitdaMax', 0), "S&P BBB- 降評門檻：調整後槓桿持續 >4.5×（事實總帳 rating.sp；[Interested-party] 二手轉述）；敏感度 4.0×／5.0×；超過部分走股權再走高息債", '0.00', True); r += 1
+DCB = gi(r, "債務上限基準（ebitda＝總債務 ÷ EBITDA；backlog＝債務 ÷ backlog）", "", D.get('debtCapBasis', 'backlog'), "v0.2：另有 leaseAdj＝(債務＋租賃負債) ÷ (EBITDA＋租金)（租賃調整後槓桿，S&P 口徑近似；租賃負債見『各期收支』）。A 欄名稱沿用 v0.1（本頁 D 區既有重複表頭，改 A 欄會使 --vs-dist 無法配對）；company.json → defaults.debtCapBasis", "@"); r += 1
+LEV = gi(r, "投資級上限（總債務 ÷ 當期 EBITDA）", "x", D.get('debtEbitdaMax', 0), "v0.2：基準為 leaseAdj 時本格＝調整後槓桿 (債務＋租賃負債) ÷ (EBITDA＋租金) 的上限。S&P BBB- 降評門檻：調整後槓桿持續 >4.5×（事實總帳 rating.sp；[Interested-party] 二手轉述）；敏感度 4.0×／5.0×；超過部分走股權再走高息債", '0.00', True); r += 1
 TERM = gi(r, "新簽合約年期", "年", D['ctrTerm'], "backlog 上限模式用：新簽約以此年期補入 backlog [Assumed]", NUM0); r += 1
 DVB = D.get('dividend') or {'perShareQ': 0, 'sharesBase': 0, 'preferred': [0] * 5}
 DPS = gi(r, "普通股股利（每股每季）", "US$", DVB['perShareQ'], "每季 $0.50 [Interested-party]；不回購（company.json → defaults.dividend）", USD); r += 1
