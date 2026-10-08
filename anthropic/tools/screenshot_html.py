@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""HTML 一頁摘要的版面截圖（S6）：桌面 1280 寬、手機 390 寬 × 淺色、深色，整頁截圖。
+"""HTML 一頁摘要的版面截圖（A5）：桌面 1280 寬、手機 390 寬 × 淺色、深色，整頁截圖。
 離線檢查：攔截所有網路請求，任何非 file: 請求都記錄並以非零狀態結束；同時檢查水平捲動。
 用法：python3 tools/screenshot_html.py dist/<檔名>.html --out docs/reports/img"""
 import argparse
@@ -13,7 +13,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("html", type=Path)
     ap.add_argument("--out", type=Path, required=True)
-    ap.add_argument("--prefix", default="20261008_v0.6_成品")
+    ap.add_argument("--prefix", default="20261008_v0.1_成品")
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
     url = a.html.resolve().as_uri()
