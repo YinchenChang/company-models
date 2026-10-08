@@ -239,6 +239,9 @@ F = [
  ('fleet.openMix', '期初在役機隊世代占比（asOf、mix、range、來源、標記）；期初在役 MW 取 priceCheck.inServiceMw', '物件', M),
  ('fleet.newMix', '各期新增在役 MW 的世代占比（五期，每期一個 {世代: 占比}，合計 100%）', '清單', C),
  ('fleet.newMixNote', '新增世代占比的依據與區間', '文字', C),
+ ('companyCheck._note', '公司實況驗證區段的說明（已決定事項 15；v0.2a 第 2 輪；不進程式）', '文字', K),
+ ('companyCheck.threshold', '差距門檻（超過即須找有證據的機制）', '比例', K),
+ ('companyCheck.rows', '逐參數對照：param、Tokenomics 值（tk、tkv）、公司實際（actual、actv、單位、來源、網址）、差距 gap、機制 mech、公司調整 adj、採用值 adopted、標記；Excel「公司實況驗證」分頁讀此清單', '清單', M),
  ('tokenomics._note', 'Tokenomics 取數層的說明（不進程式；v0.2a，比照 CoreWeave W1）', '文字', K),
  ('tokenomics.snapshotFile', 'Tokenomics 快照檔路徑（tools/tokenomics/import_tokenomics.py 產生；Excel「Tokenomics_取數」分頁讀此檔）', '路徑', K),
  ('tokenomics.version', '快照的 Tokenomics 版本（model/CURRENT 的版本號）', '文字', K),
@@ -341,7 +344,7 @@ SECT = [('meta', '基本資料'), ('calendar', '期間與日期（v4.5）'), ('a
         ('rpo', '已簽約未認列營收（RPO）'), ('leases', '租約'), ('debt', '既有債務'), ('latestQuarter', '最新一季財報數字（10-Q）'),
         ('callFacts', '法說會與期後事項'), ('scenarios', '三個擴張情境'), ('legacy', '舊版對照值'),
         ('defaults', '預設假設（畫面上可調的輸入）'), ('valuation', '評價參數'), ('methodology', '評價方法與評等門檻'), ('peers', '同業比較（Comps）'),
-        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('priceCheck', '單價對照（v0.2；只用於簡報，不進入計算）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('tokenomics', 'Tokenomics 取數層（v0.2a；快照檔、版本與引用名稱）'), ('pricing', '每 MW 收入的公司因素：定價倍數 k、長約占比、證據表（v0.2a）'), ('fleet', '世代組合（v0.2a；收入錨加權）'), ('nebius', 'Nebius 資料草稿（v0.1a；引擎尚未讀取）')]
+        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('priceCheck', '單價對照（v0.2；只用於簡報，不進入計算）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('tokenomics', 'Tokenomics 取數層（v0.2a；快照檔、版本與引用名稱）'), ('pricing', '每 MW 收入的公司因素：定價倍數 k、長約占比、證據表（v0.2a）'), ('fleet', '世代組合（v0.2a；收入錨加權）'), ('companyCheck', '公司實況驗證（已決定事項 15；v0.2a 第 2 輪）'), ('nebius', 'Nebius 資料草稿（v0.1a；引擎尚未讀取）')]
 out, shown = ['**填表慣例**',
                '- 金額單位是**十億美元（US$bn）**，例如 4.653 代表 46.53 億美元；另有標示的例外：每股（US$）、每 MW 建置成本（百萬美元／MW，US$m/MW）、股數（十億股，bn）。',
                '- 「比例」寫成小數（0.25＝25%）；標示「%」的欄位寫成百分點（25＝25%）。兩種寫法沿用既有程式，不可混用。',

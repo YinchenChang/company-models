@@ -662,6 +662,14 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `fleet.newMix` | 各期新增在役 MW 的世代占比（五期，每期一個 {世代: 占比}，合計 100%） | 清單 | 5 筆 | 檢查 |
 | `fleet.newMixNote` | 新增世代占比的依據與區間 | 文字 | [Assumed]：2H26 GB300 100%（… | 檢查 |
 
+### `companyCheck`：公司實況驗證（已決定事項 15；v0.2a 第 2 輪）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `companyCheck._note` | 公司實況驗證區段的說明（已決定事項 15；v0.2a 第 2 輪；不進程式） | 文字 | 公司實況驗證（已決定事項 15；v0.2a 第 2 … | 可沿用 |
+| `companyCheck.threshold` | 差距門檻（超過即須找有證據的機制） | 比例 | 0.1 | 可沿用 |
+| `companyCheck.rows` | 逐參數對照：param、Tokenomics 值（tk、tkv）、公司實際（actual、actv、單位、來源、網址）、差距 gap、機制 mech、公司調整 adj、採用值 adopted、標記；Excel「公司實況驗證」分頁讀此清單 | 清單 | 7 筆 | 必改 |
+
 ### `nebius`：Nebius 資料草稿（v0.1a；引擎尚未讀取）
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |

@@ -45,7 +45,7 @@ export VER=0.2 DATE=2026-10-07
 # README 欄位表的「目前數值」隨 company.json 改變：副本內重新產生（只為通過 0b，不影響比對）
 (cd "$DST/nebius" && python3 scripts/fields_doc.py --write >/dev/null)
 set +e
-LEGACY= "$DST/nebius/scripts/verify.sh" --vs-dist > "$ROOT/out/verify_legacy.log" 2>&1; rc=$?
+LEGACY= EXPECT=scripts/expect/legacy_vs_v0_2.txt "$DST/nebius/scripts/verify.sh" --vs-dist > "$ROOT/out/verify_legacy.log" 2>&1; rc=$?
 set -e
 tail -30 "$ROOT/out/verify_legacy.log"
 exit $rc

@@ -835,6 +835,30 @@ if PMW_REV == 'tkAnchor':
     ws.cell(row=r, column=9, value=("類型：觀點／已知限制。差距幾乎全部來自 (i) 爬坡分母——6/30 在役約 366 MW（內插）中只有約 165 MW 依 Q2 營收計費（Microsoft 全部 tranche 於第二季下半季才交付、"
                                     "其他新容量第二季下半季上線），模型把差距歸為爬坡而非低價；Q2 隱含 k（÷ 在役）約 0.56 只列不用。季末在役 MW 公司未揭露（資料缺口），Q3 揭露後重估。")).font = SMALL
     AR['q2_reason'] = r; r += 2
+    # v0.2a 第 2 輪：公司實況驗證（已決定事項 15；company.json → companyCheck）
+    CC = CO['companyCheck']
+    ws = wb.create_sheet("公司實況驗證")
+    for _col, _w in zip("ABCDEFGHIJ", (30, 40, 11, 44, 11, 10, 60, 50, 22, 14)):
+        ws.column_dimensions[_col].width = _w
+    ws["A1"] = "公司實況驗證（Tokenomics 參數 vs Nebius 已申報實際數）"; ws["A1"].font = TITLE
+    ws["A2"] = CC['_note']; ws["A2"].font = SMALL
+    ws["A3"] = f"規則：差距 > {CC['threshold']:.0%} 時需有證據的機制才做公司調整；找不到機制則維持 Tokenomics／現行值，公司實際列為敏感度。"; ws["A3"].font = SMALL
+    r = 4
+    for j, h in enumerate(["參數", "Tokenomics 值（名稱）", "Tokenomics", "Nebius 實際（數值、期間）", "實際", "差距", "差距原因（機制與證據）", "公司調整（何時回到 Tokenomics 值）", "採用值", "標記"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    for x in CC['rows']:
+        ws.cell(row=r, column=1, value=f"驗證｜{x['param']}").font = BLACK
+        ws.cell(row=r, column=2, value=x['tk']).font = SMALL
+        c = ws.cell(row=r, column=3, value=x['tkv']); c.font = BLUE; c.border = BOX; c.number_format = PCT if x['unit'] == '%' else '0.00'
+        ws.cell(row=r, column=4, value=f"{x['actual']}（{x['src']}）").font = SMALL
+        c = ws.cell(row=r, column=5, value=x['actv'] if x['actv'] is not None else "找不到"); c.font = BLUE; c.border = BOX; c.number_format = PCT if x['unit'] == '%' else '0.00'
+        c = ws.cell(row=r, column=6, value=f"=IF(ISNUMBER(E{r}),E{r}/C{r}-1,\"不適用\")"); c.border = BOX; c.number_format = '+0%;-0%;0%'
+        ws.cell(row=r, column=7, value=x['mech']).font = SMALL
+        ws.cell(row=r, column=8, value=x['adj']).font = SMALL
+        ws.cell(row=r, column=9, value=x['adopted']).font = BLACK
+        ws.cell(row=r, column=10, value=x['tag']).font = SMALL
+        AR['cc_' + x['param']] = r; r += 1
     ws = _wi  # 還原（下方 IN_ref 等不依賴 ws）
 
 # =====================================================================
@@ -2469,11 +2493,12 @@ ws.cell(row=_r, column=2, value=f"='運營_站點'!G{RENT_PER}").number_format =
 _share_x = SHARE.replace('$C$', "'運營_站點'!$C$")  # 另存變數：f-string 內重用引號需 Python 3.12+
 ws.cell(row=_r, column=4, value=f"=IF(B{_r}>={BENCH}*{_share_x}*{_n(CK['rentVsBenchMin'])},\"通過\",\"觀察\")")
 _r = _find("EBITDA 單一來源（FY27 損益 EBITDA÷營收 − 輸入 EBITDA 率）")
-ws.cell(row=_r, column=2, value=f"='損益'!D{ebitda_v}/'損益'!D{rev_v}-'輸入與假設'!D{IN['EBITDA 率']}").number_format = '0.0000'
+_OEB = f"'輸入與假設'!D{IN['其他事業 EBITDA（Avride＋TripleTen）']}"  # v0.2a 第 2 輪：損益 EBITDA 自 v0.1b 起含其他事業 EBITDA，兩列核對須扣除（原公式漏扣，v0.2 成品因此顯示「不一致」）
+ws.cell(row=_r, column=2, value=f"=('損益'!D{ebitda_v}-{_OEB})/'損益'!D{rev_v}-'輸入與假設'!D{IN['EBITDA 率']}").number_format = '0.0000'
 _r = _find("現金 EBITDA ＋ 信用調整 − 損益 EBITDA（FY27）")
 ws.cell(row=_r, column=2, value=(f"=('運營_產能與收入'!D{CAP['rpocash']}+'運營_產能與收入'!D{CAP['newcash']}+'輸入與假設'!D{IN['非算力服務現金']}-'各期收支'!D{FR['　租金合計']})"
     f"+('運營_產能與收入'!D{CAP['loss']}+'運營_產能與收入'!D{CAP['newrev']}*'輸入與假設'!D{IN['客戶違約率']}*(1-'輸入與假設'!D{IN['回收率']}))*'運營_產能與收入'!D{CAP['cm']}"
-    f"-'損益'!D{ebitda_v}")).number_format = NUM
+    f"-('損益'!D{ebitda_v}-{_OEB})")).number_format = NUM
 _r = _find("DCF 有效性（1＝失效）")
 ws.cell(row=_r, column=2, value=f"='評價_DCF與目標價'!{DCF_BAD}")
 _r = _find("期末現金 ≥ 最低現金（期前融資）")
@@ -3528,12 +3553,12 @@ for s in wb.worksheets:
     if s.title not in ("導覽", "來源", "摘要"):
         s.freeze_panes = "C5"
 
-_order = ["導覽", "摘要", "輸入與假設", "各期收支", "季度追蹤", "運營_產能與收入", "運營_站點"] + (["每MW收入_錨定"] if AR else []) + ["資產負債_既有債務", "資產負債_新債與新股",
+_order = ["導覽", "摘要", "輸入與假設", "各期收支", "季度追蹤", "運營_產能與收入", "運營_站點"] + (["每MW收入_錨定", "公司實況驗證"] if AR else []) + ["資產負債_既有債務", "資產負債_新債與新股",
           "資產負債_租賃承諾", "損益", "評價_DCF與目標價", "評價_反向DCF", "評價_可比公司", "檢查_連動", "檢查_版本紀錄", "來源"] + (["Tokenomics_取數"] if TK else [])
 wb._sheets = [wb[n] for n in _order] + [w for w in wb.worksheets if w.title not in _order]
 _tab = {"摘要": "C00000", "輸入與假設": "1F3864", "各期收支": "0F6B4C", "季度追蹤": "0F6B4C", "運營_產能與收入": "0F5C61", "運營_站點": "0F5C61",
         "資產負債_既有債務": "5B5778", "資產負債_新債與新股": "5B5778", "資產負債_租賃承諾": "5B5778",
-        "損益": "C4A35A", "評價_DCF與目標價": "9F1239", "評價_可比公司": "9F1239", "評價_反向DCF": "9F1239", "檢查_連動": "808080", "檢查_版本紀錄": "808080", "來源": "808080", **({"Tokenomics_取數": "808080"} if TK else {}), **({"每MW收入_錨定": "0F5C61"} if AR else {})}
+        "損益": "C4A35A", "評價_DCF與目標價": "9F1239", "評價_可比公司": "9F1239", "評價_反向DCF": "9F1239", "檢查_連動": "808080", "檢查_版本紀錄": "808080", "來源": "808080", **({"Tokenomics_取數": "808080"} if TK else {}), **({"每MW收入_錨定": "0F5C61", "公司實況驗證": "0F5C61"} if AR else {})}
 for _n, _c in _tab.items():
     wb[_n].sheet_properties.tabColor = _c
 for _ws in wb.worksheets:
