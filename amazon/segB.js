@@ -260,8 +260,9 @@ function wM(e) {
   return t.length ? t.length % 2 ? t[n] : (t[n - 1] + t[n]) / 2 : NaN
 }
 
+function holdValQ(n) { return (n.holdings || []).reduce((a, h) => a + h[1] * h[2] * (1 - (h[4] ? 0 : n.holdingsDiscount ?? 0)), 0) } // MAG v0.1b：持股價值（分部加總項）
 function ndAdjQ(n) { // v0.1b：淨負債調整項＝類債項目合計 − Σ 持股估值 × 持股比例 ×（1 − 持股折價）
-  return (n.debtLike || []).reduce((a, x) => a + x[1], 0) - (n.holdings || []).reduce((a, h) => a + h[1] * h[2], 0) * (1 - (n.holdingsDiscount ?? 0))
+  return (n.debtLike || []).reduce((a, x) => a + x[1], 0) - holdValQ(n) // MAG v0.1b：持股清單第 5 格＝上市（不折價）
 }
 
 function runValuation(e, t, n) {

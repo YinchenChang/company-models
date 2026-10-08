@@ -700,15 +700,17 @@ PX = gi(r, f"現價（{CO['meta']['priceDate']} 收盤）", "US$", V['price'], f
 SH = gi(r, "股數（含 ATM 上限）", "bn", V['shares'], f"季末流通 {CO['latestQuarter']['sharesOut']}＋{TXQ['sharesNote']} [Derived]", '0.0000'); r += 1
 ND = gi(r, "淨負債（不含可轉債）", "US$bn", V['netDebt'], f"其他借款 − 現金（含期後股權／可轉債募得淨額）；可轉債依稀釋判斷另計（見『評價_DCF與目標價』可轉債區）[Derived]"); r += 1
 _HV = []  # v0.1b：持股（估值 × 持股比例 ×（1 − 折價））與類債項目 → 淨負債調整項
+HDISC = gi(r, "持股折價（流動性、少數股權）", "%", V['holdingsDiscount'], "非上市少數股權折價 [Assumed]；上市持股不折價；敏感度見報告（0%／40%）", PCT); r += 1
 for _h in V['holdings']:
     _a = gi(r, f"{_h[0]}｜估值（100%）", "US$bn", _h[1], _h[3]); r += 1
     _b = gi(r, f"{_h[0]}｜持股比例", "%", _h[2], "", PCT); r += 1
-    _HV.append(f"{_a}*{_b}")
-HDISC = gi(r, "持股折價（流動性、少數股權）", "%", V['holdingsDiscount'], "非上市少數股權折價 [Assumed]；敏感度見報告（20%／40%）", PCT); r += 1
+    _l = gi(r, f"{_h[0]}｜上市（1＝不折價）", "", 1 if (len(_h) > 4 and _h[4]) else 0, "MAG v0.1b：上市持股以市值計、不折價（C8 c）", NUM0); r += 1
+    _HV.append(f"{_a}*{_b}*(1-IF({_l}=1,0,{HDISC}))")
+HOLDV = gi(r, "持股價值（分部加總項）", "US$bn", f"={'+'.join(_HV) or '0'}", V.get('holdingsNote', "Σ 估值 × 比例 ×（1 − 折價）"), font=BLACK); r += 1
 _DL = []
 for _x in V['debtLike']:
     _DL.append(gi(r, f"類債：{_x[0]}", "US$bn", _x[1], _x[2])); r += 1
-ADJ = gi(r, "淨負債調整項（類債 − 持股 ×（1 − 折價））", "US$bn", f"={'+'.join(_DL) or '0'}-({'+'.join(_HV) or '0'})*(1-{HDISC})",
+ADJ = gi(r, "淨負債調整項（類債 − 持股 ×（1 − 折價））", "US$bn", f"={'+'.join(_DL) or '0'}-{HOLDV}",
          "正值＝增加淨負債；評價淨負債與錨定年末淨負債同加"); r += 1
 TAX = gi(r, "稅率", "%", V['tax'], TXQ['taxNote'] + " [Interested-party]", PCT); r += 1
 _CP = V['capm']  # v0.1b（Oracle）：WACC 以 CAPM 計算（company.json → valuation.capm）；valuation.wacc 非 null 時為手動覆蓋
@@ -2691,6 +2693,37 @@ ws.cell(row=_find("«P2» 起收入是否依賴未簽約"), column=2,
 ws.cell(row=_find("損益營收＝資金營收"), column=2,
         value=f"='損益'!D{VR['算力收入']}-'運營_產能與收入'!D{CAP['isrev']}").number_format = NUM
 
+RL = CO.get('related')  # MAG v0.1b：關聯方並排（只讀、不連動；對照表 r1 D5）
+if RL:
+    r += 1
+    ws.cell(row=r, column=1, value="關聯方並排（US$bn／年；只讀，不回饋計算）：合約年化與兩家模型快照；對手方集中度＝合約年化 ÷ 對外 AI 雲端收入（年化）").font = BOLD; r += 1
+    for j, h in enumerate(["項目", "單位"] + PERIODS):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    _RLC = []
+    for _c in RL['contracts']:
+        ws.cell(row=r, column=1, value=f"關聯方｜合約｜{_c['name']}").font = BLACK
+        for i in range(5):
+            c = ws.cell(row=r, column=3 + i, value=(_c['annual'] if PYEAR[i] >= _c['startFY'] else 0)); c.font = BLUE; c.number_format = NUM; c.border = BOX
+        ws.cell(row=r, column=9, value=_c['note']).font = SMALL; _RLC.append(r); r += 1
+    ws.cell(row=r, column=1, value="關聯方｜合約年化合計").font = BOLD
+    for i in range(5):
+        c = ws.cell(row=r, column=3 + i, value="=" + "+".join(f"{COLS[i]}{x}" for x in _RLC)); c.number_format = NUM; c.border = BOX
+    _RLT = r; r += 1
+    ws.cell(row=r, column=1, value="關聯方｜對外 AI 雲端收入（年化）").font = BLACK
+    for i in range(5):
+        c = ws.cell(row=r, column=3 + i, value=f"='運營_產能與收入'!{COLS[i]}{CAP['isrev']}/'輸入與假設'!{COLS[i]}{IN['模型期長度（年）']}"); c.number_format = NUM; c.border = BOX; c.font = GREEN
+    _RLA = r; r += 1
+    ws.cell(row=r, column=1, value="關聯方｜對手方集中度（合約年化 ÷ AI 雲端收入）").font = BOLD
+    for i in range(5):
+        c = ws.cell(row=r, column=3 + i, value=f"={COLS[i]}{_RLT}/MAX(1E-9,{COLS[i]}{_RLA})"); c.number_format = PCT; c.border = BOX
+    ws.cell(row=r, column=9, value=RL.get('rpoShareNote', '')).font = SMALL; r += 1
+    for _c in RL['snapshots']:
+        ws.cell(row=r, column=1, value=f"關聯方｜快照｜{_c['name']}").font = BLACK
+        for i, p in enumerate(PERIODS):
+            v_ = _c['series'].get(p)
+            c = ws.cell(row=r, column=3 + i, value=v_ if v_ is not None else "—"); c.font = BLUE; c.number_format = NUM; c.border = BOX
+        ws.cell(row=r, column=9, value=_c['note']).font = SMALL; r += 1
 r += 1
 ws.cell(row=r, column=1, value="關鍵輸出（快照；「模型期」＝2026-07-01～2030，與 HTML 頂部 KPI 同口徑）").font = BOLD
 r += 1

@@ -148,6 +148,13 @@ function legacyQ(e, X) {
   return { lines, rev, ebitda, oa: sumQ(`oa`), margin: rev.map((v, r) => ebitda[r] / Math.max(v, 1e-9)), annual: sumQ(`annual`) }
 }
 
+// MAG v0.1b：關聯方並排（related.contracts：年化 × 是否已起始；snapshots：依期間標籤取值）；ai＝對外 AI 雲端收入年化（模型期 ÷ 期間長度）
+function relatedQ(o) {
+  const RL = COMPANY_DATA.related, ai = o.map((y, r) => y.isRev / PERIOD_YEARS[r]),
+    rows = RL.contracts.map(c => PERIOD_FY.map(fy => fy >= c.startFY ? c.annual : 0)),
+    tot = PERIOD_YEARS.map((L, r) => rows.reduce((a, x) => a + x[r], 0));
+  return { ai, rows, tot, ratio: tot.map((x, r) => x / Math.max(ai[r], 1e-9)), snap: RL.snapshots.map(c => PERIODS.map(p => c.series[p] ?? null)) }
+}
 // MAG v0.1b：租用算力排程（leases.rentedCompute：[{name, start＝YYYY-MM 起租, years, annualRent（US$bn／年）, mw, use}]）：各期租金＝年租金 × 期間內在租月數 ÷ 12（Excel 同式，月數由建置時推算）
 var LEASE_OIE = !!COMPANY_DATA.leases.operatingInEbitda,
   monQ = s => { const [y, m] = s.split(`-`).map(Number); return y * 12 + m - 1 },
@@ -665,6 +672,11 @@ function runFunding(e) {
     return _({ id: `ai-runrate`, ok: mdl >= rr, severity: `watch`,
       title: `公司 AI run-rate >${Y(rr, 0)}B vs 模型評價日年化 ${Y(mdl, 1)}B（${hA((mdl / rr - 1) * 100, 1)}）`,
       detail: `模型＝評價日在役 ${Y(e.billableOpen, 0)} MW × 首期每 MW 年收入 ${Y(r0 * 1e3, 2)}m。要對上公司說法：對外 MW 需 ${Y(rr / r0, 0)}（k 不變），或 k 需 ${Y((t.price ? t.price[0].k : 1) * rr / mdl, 3)}（MW 不變）。${CALL_FACTS.aiRunRateNote || ``}` })
+  })(), COMPANY_DATA.related && (() => { // MAG v0.1b：關聯方——合約年化與兩家模型快照並排（只讀、不連動）；對手方集中度＝合約年化 ÷ 對外 AI 雲端收入（年化）
+    const R = relatedQ(o);
+    return _({ id: `related`, ok: !0, severity: `watch`,
+      title: `對手方集中度：OpenAI＋Anthropic 合約年化 ${PERIODS[2]} $${Y(R.tot[2], 1)}bn ÷ 對外 AI 雲端收入 $${Y(R.ai[2], 1)}bn＝${hA(R.ratio[2] * 100, 0)}（RPO 上限約 ${hA(COMPANY_DATA.related.rpoShareMax * 100, 0)}）`,
+      detail: `${COMPANY_DATA.related.contracts.map((c, j) => `${c.name} ${R.rows[j].map(x => Y(x, 1)).join(`／`)}`).join(`；`)}；模型快照：${COMPANY_DATA.related.snapshots.map((c, j) => `${c.name} ${R.snap[j].map(x => x == null ? `—` : Y(x, 1)).join(`／`)}`).join(`；`)}（US$bn／年，${PERIODS.join(`／`)}；只讀，不回饋計算）。` })
   })(), _({
     id: `rpo-weights`,
     ok: Math.abs(RPO_BUCKET_W.reduce((e, t) => e + t, 0) - RPO_SCHEDULED_SHARE) < 1e-6,

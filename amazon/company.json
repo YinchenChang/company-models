@@ -936,13 +936,15 @@
     "Anthropic（Series H 投後估值）",
     965.0,
     0.18,
-    "持股比例一手不存在：Fortune 15%–19%、帳列 ÷ 投後 19.7%、Crypto Briefing 21%（無法查證）→ 18% [Assumed]；估值 965B（2026-05／06 Series H，[Interested-party]）"
+    "持股比例一手不存在：Fortune 15%–19%、帳列 ÷ 投後 19.7%、Crypto Briefing 21%（無法查證）→ 18% [Assumed]；估值 965B（2026-05／06 Series H，[Interested-party]）",
+    false
    ],
    [
     "OpenAI（投後估值推估）",
     840.0,
     0.0595,
-    "投入 50.0B ÷ 投後 840B（投前 730B＋該輪）＝5.95% [Derived]"
+    "投入 50.0B ÷ 投後 840B（投前 730B＋該輪）＝5.95% [Derived]",
+    false
    ]
   ],
   "holdingsDiscount": 0.2,
@@ -972,7 +974,8 @@
   "dcfMode": "zero",
   "sigma": 0.5,
   "rf": 0.0528,
-  "legacyEvEbitdaNote": "非 AI 分部 EV/EBITDA：null＝採同業 NTM 中位數；步驟 10 改為各分部各自同業倍數。"
+  "legacyEvEbitdaNote": "非 AI 分部 EV/EBITDA：null＝採同業 NTM 中位數；步驟 10 改為各分部各自同業倍數。",
+  "holdingsNote": "持股清單：[名稱, 估值（100%，US$bn）, 持股比例, 說明, 上市（true＝不折價）]；價值＝Σ 估值 × 比例 ×（1 − 折價；上市持股不折價），自淨負債扣除（分部加總項）。流動性折價 20%（0%–40%，[Assumed]；對照表 r1 第 5 節第 9 條、C8 c）"
  },
  "methodology": {
   "blendWeights": {
@@ -3301,5 +3304,55 @@
   "segDaRunRate": 55.476,
   "segDaRunRateNote": "最新季（2026Q2）分部 D&A（不動產與設備）北美 4.500＋國際 1.293＋AWS 8.076＝13.869 × 4（10-Q 附註分部資訊；[Derived]）：校準非 AI 折舊年限",
   "guideNote": "2026 指引約 220（法說二手逐字稿）；公司未給 2027 指引 → 次期起由 MW 推導（對照共識 2027 275.1、2028 292.9）"
+ },
+ "related": {
+  "_note": "關聯方：OpenAI／Anthropic 模型快照與合約並排，只讀、不回饋計算（對照表 r1 D5、第 5 節第 11 條）；對手方集中度＝合約年化 ÷ 模型對外 AI 雲端收入",
+  "contracts": [
+   {
+    "name": "OpenAI（NVIDIA，$38B／7 年）",
+    "annual": 5.428571,
+    "startFY": 2026,
+    "note": "2025-11 公告；2026 年底前部署（事實總帳 contract.openai.nv）[Interested-party]；年化＝總額 ÷ 年數 [Derived]"
+   },
+   {
+    "name": "OpenAI（擴大，$100B／8 年，含約 2 GW Trainium）",
+    "annual": 12.5,
+    "startFY": 2027,
+    "note": "事實總帳 contract.openai.trn；2027 起 [Interested-party]"
+   },
+   {
+    "name": "Anthropic（>$100B／10 年，至多 5 GW）",
+    "annual": 10.0,
+    "startFY": 2026,
+    "note": "10-Q 附註 2（下限）；事實總帳 contract.anthropic [Interested-party]"
+   }
+  ],
+  "snapshots": [
+   {
+    "name": "anthropic/ 模型：Anthropic 付 AWS",
+    "series": {
+     "2026": 5.789,
+     "2027": 11.579,
+     "2028": 11.579,
+     "2029": 11.579,
+     "2030": 11.579
+    },
+    "note": "anthropic/ v0.1（main）成品快照；AWS 占既有雲端約 48%（只讀，不連動）"
+   },
+   {
+    "name": "openai/ 模型：OpenAI 付 AWS（NVIDIA＋Trainium）",
+    "series": {
+     "2025": 1.357,
+     "2026": 5.492,
+     "2027": 9.627,
+     "2028": 13.762,
+     "2029": 17.897,
+     "2030": 22.032
+    },
+    "note": "openai/ v0.6（main）成品快照（只讀，不連動）"
+   }
+  ],
+  "rpoShareMax": 0.48,
+  "rpoShareNote": "OpenAI＋Anthropic 雲端承諾 ≥238B ÷ RPO 496B，上限約 48%（一手比例不存在；事實總帳 rel.rpoShare）"
  }
 }

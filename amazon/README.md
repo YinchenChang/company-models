@@ -551,6 +551,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
+| `valuation.holdingsNote` | 持股清單格式與估值口徑（MAG v0.1b，C8 c） | 文字 | 持股清單：[名稱, 估值（100%，US$bn）, … | 必改 |
 | `valuation.price` | 現價 | US$ | 259.92 | 必改 |
 | `valuation.shares` | 評價股數（含期後股權發行上限） | bn 股 | 11.0303 | 必改 |
 | `valuation.atmSharesInValuation` | 評價股數中「期後股權發行上限」的股數：期後股權／可轉債開關關閉時由評價股數扣回（v0.1b；CRWV 0.035、無此項的公司填 0） | bn 股 | 0 | 必改 |
@@ -745,6 +746,16 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `capexModel.segDaRunRate` | 最新季分部 D&A 年化（校準非 AI 折舊年限） | US$bn | 55.476 | 必改 |
 | `capexModel.segDaRunRateNote` | 分部 D&A 年化的來源 | 文字 | 最新季（2026Q2）分部 D&A（不動產與設備）北… | 必改 |
 | `capexModel.guideNote` | 資本支出指引期數與對照 | 文字 | 2026 指引約 220（法說二手逐字稿）；公司未給… | 必改 |
+
+### `related`：關聯方並排與對手方集中度（MAG v0.1b）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `related._note` | 關聯方並排口徑（只讀、不連動；D5） | 文字 | 關聯方：OpenAI／Anthropic 模型快照與… | 必改 |
+| `related.contracts` | 關聯方合約：[{name, annual（年化 US$bn）, startFY（起始財年）, note}]；年化 ÷ 對外 AI 雲端收入＝對手方集中度 | 清單（物件） | 3 筆 | 必改 |
+| `related.snapshots` | 關聯方模型快照：[{name, series（以期間標籤為鍵，US$bn／年）, note}]（其他資料夾成品只讀） | 清單（物件） | 2 筆 | 必改 |
+| `related.rpoShareMax` | 關聯方承諾占 RPO 上限（對照） | 比例 | 0.48 | 必改 |
+| `related.rpoShareNote` | 上欄的推導 | 文字 | OpenAI＋Anthropic 雲端承諾 ≥238… | 必改 |
 
 ### `mag`：MAG（Amazon）資料草稿（v0.1a；引擎尚未讀取，v0.1b 依 mapTo 搬入）
 

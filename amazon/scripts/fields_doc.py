@@ -42,6 +42,10 @@ F = [
  ('defaults.buyback.annual', '回購基準年額（近四季實際；瀑布第二步「減少回購」的計畫值；MAG v0.1b）', 'US$bn', M), ('defaults.buyback.floorShare', '回購可減到計畫的比例下限（0＝可全數取消）', '比例', C),
  ('defaults.buyback.note', '回購基準的來源', '文字', M), ('defaults.sbcRate', '股權報酬（SBC）占營收：非現金費用，營運現金加回（MAG v0.1b）', '比例', C), ('defaults.sbcNote', 'SBC 加回的口徑說明', '文字', M),
  ('ytdActual.buyback', '年初至今回購（MAG v0.1b）', 'US$bn', M),
+ ('valuation.holdingsNote', '持股清單格式與估值口徑（MAG v0.1b，C8 c）', '文字', M),
+ ('related._note', '關聯方並排口徑（只讀、不連動；D5）', '文字', M), ('related.contracts', '關聯方合約：[{name, annual（年化 US$bn）, startFY（起始財年）, note}]；年化 ÷ 對外 AI 雲端收入＝對手方集中度', '清單（物件）', M),
+ ('related.snapshots', '關聯方模型快照：[{name, series（以期間標籤為鍵，US$bn／年）, note}]（其他資料夾成品只讀）', '清單（物件）', M),
+ ('related.rpoShareMax', '關聯方承諾占 RPO 上限（對照）', '比例', M), ('related.rpoShareNote', '上欄的推導', '文字', M),
  ('meta.company', '公司名稱', '文字', M), ('meta.ticker', '股票代號', '文字', M),
  ('meta.updateDate', '資料更新日', '日期', M), ('meta.priceDate', '股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格）', '日期', M),
  ('meta.consensusFile', '市場共識資料檔路徑（v4.3；只讀，由使用者查證後提供；建置時併入 HTML、Excel 讀同一檔）', '路徑', M),
@@ -425,7 +429,7 @@ SECT = [('meta', '基本資料'), ('calendar', '期間與日期（v4.5）'), ('a
         ('rpo', '已簽約未認列營收（RPO）'), ('leases', '租約'), ('debt', '既有債務'), ('latestQuarter', '最新一季財報數字（10-Q）'),
         ('callFacts', '法說會與期後事項'), ('scenarios', '三個擴張情境'), ('legacy', '舊版對照值'),
         ('defaults', '預設假設（畫面上可調的輸入）'), ('valuation', '評價參數'), ('methodology', '評價方法與評等門檻'), ('peers', '同業比較（Comps）'),
-        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('tokenomics', 'Tokenomics 快照（MAG v0.1b；沿用 CoreWeave W1）'), ('pricing', '對外 AI 雲端定價（MAG v0.1b）'), ('capexModel', '資本支出與 D&A 分池（MAG v0.1b）'), ('mag', 'MAG（Amazon）資料草稿（v0.1a；引擎尚未讀取，v0.1b 依 mapTo 搬入）')]
+        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('tokenomics', 'Tokenomics 快照（MAG v0.1b；沿用 CoreWeave W1）'), ('pricing', '對外 AI 雲端定價（MAG v0.1b）'), ('capexModel', '資本支出與 D&A 分池（MAG v0.1b）'), ('related', '關聯方並排與對手方集中度（MAG v0.1b）'), ('mag', 'MAG（Amazon）資料草稿（v0.1a；引擎尚未讀取，v0.1b 依 mapTo 搬入）')]
 out, shown = ['**填表慣例**',
                '- 金額單位是**十億美元（US$bn）**，例如 4.653 代表 46.53 億美元；另有標示的例外：每股（US$）、每 MW 建置成本（百萬美元／MW，US$m/MW）、股數（十億股，bn）。',
                '- 「比例」寫成小數（0.25＝25%）；標示「%」的欄位寫成百分點（25＝25%）。兩種寫法沿用既有程式，不可混用。',
