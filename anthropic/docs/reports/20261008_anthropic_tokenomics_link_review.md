@@ -1,7 +1,7 @@
 # Anthropic｜Tokenomics 連接審視（v5.29；只審視回報，不改模型）
 
 - 分支：`claude/anthropic-tk-link-review`（base `main` @ `75327ef`）
-- 最新提交 SHA：見文末「提交紀錄」
+- 最新提交 SHA：報告內容提交 `9d0828c`（本行回填 SHA 的提交見文末「提交紀錄」）
 - 報告路徑：`anthropic/docs/reports/20261008_anthropic_tokenomics_link_review.md`
 - 依據：共用工作單 `docs/workorders/20261008_tokenomics_link_review.md`、本公司工作單 `anthropic/docs/workorders/20261008_anthropic_tokenomics_link_review.md`；Tokenomics 下游契約 v0.1；Tokenomics v5.29 報告與 CHANGELOG。
 - 對照的 Tokenomics：唯讀 checkout master `a5061d9`，`model/CURRENT`＝`20261008_Tokenomics_v5.29.xlsx`（前提成立，`IFW_`、`IFC_` 名稱存在）。
@@ -197,4 +197,5 @@ L1_ScaleServe optional
 6. **非 NVIDIA 舊世代比例與每 GW 年租用價**：TPU v6e／Trainium2 以新世代比例代理、每 GW 年合約價用 OpenAI 的 Analogy 12 $B——是否走 G2 補進 Tokenomics。
 
 ## 提交紀錄
-- 本報告提交：見 PR（分支 `claude/anthropic-tk-link-review`）。
+- `9d0828c`：本報告（內容）。其後一個提交只回填本節與開頭的 SHA。
+- 原檔：`https://raw.githubusercontent.com/YinchenChang/company-models/9d0828c/anthropic/docs/reports/20261008_anthropic_tokenomics_link_review.md`
