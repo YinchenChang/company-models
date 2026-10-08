@@ -212,6 +212,9 @@ cmp('加權目標價', V+'加權目標價', [p.call.blended]);
   cmp('摘要 點位',SM+'結論｜點位（加權目標價）',[R.pt]); cmp('摘要 空間',SM+'結論｜空間',[cv.up]); cmp('摘要 點位−門檻',SM+'結論｜點位 − 賣出門檻',[cv.gapTh]);
   cmpT('文字 摘要評等',SM+'結論｜評等',p.call.call); cmpT('文字 摘要結論句',SM+'結論｜結論句',cv.head); cmpT('文字 摘要情境判斷句',SM+'結論｜情境判斷句',R.judge);
   cmpT('文字 共識判斷句',SM+'差異｜判斷句',cv.judge); cmpT('文字 投資級句',SM+'結論｜投資級句',cv.igLine); cmpT('文字 延誤句',SM+'結論｜延誤句',cv.delayLine); cmpT('文字 調整後槓桿句',SM+'結論｜調整後槓桿句',cv.adjLine); cmpT('文字 隱含倍數句',SM+'隱含｜隱含倍數句',cv.implied); cmpT('文字 FCF句',SM+'結論｜股東回饋與 FCF 句',cv.fcfLine); // MAG v0.1b
+  if(cv.aiRoic){ cmpT('文字 主命題句',SM+'結論｜主命題句',cv.thesisLine); const A=cv.aiRoic, AW='AI增量報酬|'; // MAG v0.1b：AI 增量報酬
+    [['rev','對外 AI 雲端營收（年化）'],['ebitda','AI 雲端 EBITDA（年化）'],['opex','AI 營運成本（年化）'],['da','AI 折舊（年化）'],['nopat','AI NOPAT（年化）'],['icBeg','AI 投入資本（期初）'],['icEnd','AI 投入資本（期末）'],['roic','AI ROIC'],['spread','AI ROIC − WACC'],['shRev','影子收入（自用 AI MW × 每 MW 年收入，年化）'],['roicSh','AI ROIC（含影子收入，對照）']].forEach(([k,l])=>cmp('AIROIC '+k, AW+l, A[k]));
+    cmp('打平k', AW+T(`打平 k（使 ${PERIODS[A.ry]} AI ROIC＝WACC）`), [A.breakevenK]); }
   // v4.4：年度差異原因（類型＋原因逐字；Excel 每個設定組合一列，未超過門檻時為空白）與原因摘要句
   cmpT('文字 差異原因摘要',SM+'差異｜差異原因摘要',cv.rsnSum);
   for(const k of Object.keys(X).filter(k=>k.startsWith(SM+'差異原因｜'))){ const [,yr,nm]=k.split('｜'), h=cv.rsn.find(x=>x.yr===yr&&x.name===nm), x=X[k];

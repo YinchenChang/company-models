@@ -133,6 +133,7 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
     elQ(`p`, { key: `j`, style: { ...sm, fontSize: 11.5, margin: `3px 0 0` } }, TR.judge),
     cv.igLine ? elQ(`p`, { key: `ig`, style: { fontSize: 12.5, fontWeight: 600, margin: `3px 0 0` } }, cv.igLine) : null,
     elQ(`p`, { key: `al`, style: { fontSize: 12.5, fontWeight: 600, margin: `3px 0 0` } }, cv.adjLine), // v0.2
+    cv.thesisLine ? elQ(`p`, { key: `thesis`, style: { fontSize: 13, fontWeight: 700, margin: `3px 0 0` } }, cv.thesisLine) : null, // MAG v0.1b：主命題答案
     cv.fcfLine ? elQ(`p`, { key: `fcf`, style: { fontSize: 12.5, fontWeight: 600, margin: `3px 0 0` } }, cv.fcfLine) : null, // MAG v0.1b：股東回饋與 FCF
     elQ(`p`, { key: `dl`, style: { fontSize: 12.5, margin: `3px 0 0` } }, cv.delayLine) // v0.2
   ]);

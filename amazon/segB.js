@@ -260,6 +260,24 @@ function wM(e) {
   return t.length ? t.length % 2 ? t[n] : (t[n - 1] + t[n]) / 2 : NaN
 }
 
+// MAG v0.1b：AI 增量報酬（主命題）。各期（年化＝模型期 ÷ 期間長度）：AI 雲端 EBITDA＝對外 AI 雲端營收 × AI EBITDA 率；NOPAT＝(EBITDA − AI 折舊)×(1 − 稅率)；
+// 投入資本：期初＝AI 期初毛額（IT＋機房）× 淨額比；期末＝期初＋AI 成長型＋汰換 − AI 折舊；ROIC＝NOPAT 年化 ÷ 平均投入資本；打平 k（錨定期）＝k ×(WACC × 平均投入資本 ÷ (1 − 稅率)＋營運成本＋折舊) ÷ 營收（AI EBITDA 對 k 線性，其他不變）。
+// 影子收入（只作對照）：自用 AI MW（＝對外 ×(1 ÷ 對外比例 − 1)）× 每 MW 年收入，減同口徑營運成本，與對外合併後的 ROIC。Excel「AI增量報酬」同式。
+function aiRoicQ(d, st, o) {
+  const CM = COMPANY_DATA.capexModel; if (!CM || CM.mode !== `tk`) return null;
+  const Y = d.years, XS = st.extShare ?? CM.extShare, A0 = aiOpenQ(st, XS), tax = o.tax, k = d.m.price ? d.m.price[0].k : 1, ry = CM.roicYear ?? 3;
+  let ic = (A0.it + A0.fac) * (CM.aiNetShare ?? 1), out = { icBeg: [], icEnd: [], ebitda: [], da: [], opex: [], rev: [], nopat: [], roic: [], spread: [], shRev: [], shEbitda: [], roicSh: [] };
+  Y.forEach((y, r) => {
+    const L = PERIOD_YEARS[r], rev = y.isRev / L, eb = y.isRev * y.ebM / L, da = y.daAi / L, opx = rev - eb, b = ic, e = b + y.capexAi + y.refresh - y.daAi, avg = (b + e) / 2,
+      np = (eb - da) * (1 - tax), sr = rev * (1 / XS - 1), se = sr * y.ebM;
+    ic = e;
+    out.icBeg.push(b), out.icEnd.push(e), out.ebitda.push(eb), out.da.push(da), out.opex.push(opx), out.rev.push(rev), out.nopat.push(np), out.roic.push(np / avg), out.spread.push(np / avg - o.wacc),
+      out.shRev.push(sr), out.shEbitda.push(se), out.roicSh.push((eb + se - da) * (1 - tax) / avg)
+  });
+  const avgY = (out.icBeg[ry] + out.icEnd[ry]) / 2;
+  out.k = k, out.ry = ry, out.breakevenK = k * (o.wacc * avgY / (1 - tax) + out.opex[ry] + out.da[ry]) / Math.max(out.rev[ry], 1e-9), out.wacc = o.wacc;
+  return out
+}
 function holdValQ(n) { return (n.holdings || []).reduce((a, h) => a + h[1] * h[2] * (1 - (h[4] ? 0 : n.holdingsDiscount ?? 0)), 0) } // MAG v0.1b：持股價值（分部加總項）
 function ndAdjQ(n) { // v0.1b：淨負債調整項＝類債項目合計 − Σ 持股估值 × 持股比例 ×（1 − 持股折價）
   return (n.debtLike || []).reduce((a, x) => a + x[1], 0) - holdValQ(n) // MAG v0.1b：持股清單第 5 格＝上市（不折價）
@@ -525,7 +543,8 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
     fcfLine = `股東回饋與 FCF：FCF ${fn < 0 ? `五期皆為正` : `首次為負 ${PERIODS[fn]}（−$${Y(-Yd[fn].fcf, 1)}bn）`}；` +
       (bp <= .05 ? `無回購計畫（減少回購步驟不適用）` : bcut.length ? `回購被迫減少：${bcut.map(x => `${x[0]} $${Y(x[1], 1)}`).join(`、`)}bn` : `回購未被迫減少`) +
       `；五期新債 $${Y(ndS, 1)}bn、股權 $${Y(eqS, 1)}bn。`;
-  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, adjLine, delayLine, junk: jk, fcfLine }
+  let AQ = aiRoicQ(d, st || DEFAULTS, o), thesisLine = AQ ? `主命題（AI 資本支出有沒有賺到資金成本）：${PERIODS[AQ.ry]} AI ROIC ${Y(AQ.roic[AQ.ry] * 100, 1)}% vs WACC ${Y(AQ.wacc * 100, 1)}%（${AQ.spread[AQ.ry] < 0 ? `−` : `+`}${Y(Math.abs(AQ.spread[AQ.ry]) * 100, 1)}pt）；打平 k ${Y(AQ.breakevenK, 2)}（目前 ${Y(AQ.k, 2)}）；含影子收入 ${Y(AQ.roicSh[AQ.ry] * 100, 1)}%。` : ``; // MAG v0.1b
+  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, adjLine, delayLine, junk: jk, fcfLine, thesisLine, aiRoic: AQ }
 }
 
 // v4.4：差異原因的共用工具（年度共識對照與季度層共用）。類型固定為四種（已決定事項 2）；原因文字中的 {路徑:格式} 由模型數字帶入。

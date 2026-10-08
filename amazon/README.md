@@ -746,6 +746,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `capexModel.segDaRunRate` | 最新季分部 D&A 年化（校準非 AI 折舊年限） | US$bn | 55.476 | 必改 |
 | `capexModel.segDaRunRateNote` | 分部 D&A 年化的來源 | 文字 | 最新季（2026Q2）分部 D&A（不動產與設備）北… | 必改 |
 | `capexModel.guideNote` | 資本支出指引期數與對照 | 文字 | 2026 指引約 220（法說二手逐字稿）；公司未給… | 必改 |
+| `capexModel.aiNetShare` | 期初 AI PP&E 淨額 ÷ 毛額（AI 增量 ROIC 的期初投入資本；MAG v0.1b） | 比例 | 0.75 | 檢查 |
+| `capexModel.aiNetShareNote` | 上欄依據 | 文字 | 期初 AI PP&E 淨額 ÷ 毛額 75%（在役機… | 必改 |
+| `capexModel.roicYear` | 打平 k 的錨定期（0–4；3＝模型第 4 期） | 整數 | 3 | 可沿用 |
+| `capexModel.roicYearNote` | 上欄說明 | 文字 | 打平 k 的錨定期（模型第 4 期＝2029；工作單… | 可沿用 |
 
 ### `related`：關聯方並排與對手方集中度（MAG v0.1b）
 
