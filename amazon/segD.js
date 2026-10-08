@@ -90,10 +90,10 @@ function zM() {
           })]
         }), (0, $.jsx)(`h1`, {
           className: `max-w-3xl font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl`,
-          children: `Backlog 不是現金`
+          children: (COMPANY_DATA.texts.thesis || `Backlog 不是現金`).split(`：`)[0] // MAG v0.1c：標題讀 company.json → texts.thesis（冒號前）
         }), (0, $.jsx)(`p`, {
           className: `max-w-3xl font-display text-lg font-medium leading-snug text-accent-fg md:text-xl`,
-          children: `每 MW 賺的錢付不起 GPU 的資本成本——蓋得愈多，愈要靠外部資金`
+          children: (COMPANY_DATA.texts.thesis || ``).split(`：`).slice(1).join(`：`) || `每 MW 賺的錢付不起 GPU 的資本成本——蓋得愈多，愈要靠外部資金` // 副標＝texts.thesis 冒號後
         }), (0, $.jsxs)(`p`, {
           className: `max-w-3xl text-sm leading-relaxed text-pretty text-accent-soft`,
           children: [e.scenario === `custom` ? `自訂情境` : SCENARIOS[e.scenario]?.label, `：${PERIODS[0]}–${PERIODS[PERIODS.length - 1].slice(2)} 融資前缺口 `, (0, $.jsxs)(`span`, {

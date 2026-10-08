@@ -124,20 +124,21 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
       elQ(`span`, { key: `p`, style: { fontSize: 26, fontWeight: 700, fontVariantNumeric: `tabular-nums` } }, `$${Y(TR.pt, 1)}`),
       elQ(`span`, { key: `u`, style: { fontSize: 15, color: `var(--color-muted)` } }, `現價 $${Y(o.price, 2)} · 空間 ${cv.up >= 0 ? `+` : `−`}${hA(Math.abs(cv.up) * 100, 0)}`)
     ]),
+    cv.thesisLine ? elQ(`p`, { key: `g`, style: { fontSize: 12, lineHeight: 1.35, margin: `2px 0 0` } }, `情境區間 $${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}；${TR.bLabel.replace(`（目前情境，`, `（`)} $${Y(TR.B[0], 1)}–$${Y(TR.B[1], 1)}；賣出門檻（現價 −${pctQ(SELL_TH)}）$${Y(TR.th, 1)}`) : // MAG v0.1c：有主命題時區間改為一行（騰出第一屏給主命題與兩種讀法）
     elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 8, marginTop: 6 } }, [
       [`情境區間`, `$${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}`], [TR.bLabel.replace(`（目前情境，`, `（`), `$${Y(TR.B[0], 1)}–$${Y(TR.B[1], 1)}`], [`賣出門檻（現價 −${pctQ(SELL_TH)}）`, `$${Y(TR.th, 1)}`]
     ].map(([a, b]) => elQ(`div`, { key: a, style: { background: `var(--color-card)`, borderRadius: 8, padding: `6px 10px` } }, [
       elQ(`div`, { key: `a`, style: { fontSize: 12, color: `var(--color-muted)` } }, a),
       elQ(`div`, { key: `b`, style: { fontSize: 18, fontWeight: 700, fontVariantNumeric: `tabular-nums` } }, b)]))),
-    elQ(`p`, { key: `h`, style: { fontSize: 13.5, lineHeight: 1.45, margin: `6px 0 0` } }, cv.head),
-    elQ(`p`, { key: `j`, style: { ...sm, fontSize: 11.5, margin: `3px 0 0` } }, TR.judge),
-    cv.igLine ? elQ(`p`, { key: `ig`, style: { fontSize: 12.5, fontWeight: 600, margin: `3px 0 0` } }, cv.igLine) : null,
-    elQ(`p`, { key: `al`, style: { fontSize: 12.5, fontWeight: 600, margin: `3px 0 0` } }, cv.adjLine), // v0.2
-    cv.thesisLine ? elQ(`p`, { key: `thesis`, style: { fontSize: 13, fontWeight: 700, margin: `3px 0 0` } }, cv.thesisLine) : null, // MAG v0.1b：主命題答案
-    cv.read2Line ? elQ(`p`, { key: `read2`, style: { fontSize: 13, fontWeight: 700, margin: `3px 0 0` } }, cv.read2Line) : null, // MAG v0.1b r3（C16）：兩種讀法並列
-    cv.extLine ? elQ(`p`, { key: `extsh`, style: { fontSize: 13, margin: `3px 0 0` } }, cv.extLine) : null, // MAG v0.1b r3（C23）：對外比例是最大不確定
-    cv.fcfLine ? elQ(`p`, { key: `fcf`, style: { fontSize: 12.5, fontWeight: 600, margin: `3px 0 0` } }, cv.fcfLine) : null, // MAG v0.1b：股東回饋與 FCF
-    elQ(`p`, { key: `dl`, style: { fontSize: 12.5, margin: `3px 0 0` } }, cv.delayLine) // v0.2
+    cv.thesisLine ? null : elQ(`p`, { key: `h`, style: { fontSize: 13.5, lineHeight: 1.45, margin: `6px 0 0` } }, cv.head),
+    ...(cv.thesisLine ? [ // MAG v0.1c：有主命題時第一屏只放主命題、兩種讀法、對外比例、FCF（精簡：區間判斷、投資級與延誤句移到第 4 塊）
+      elQ(`p`, { key: `thesis`, style: { fontSize: 12, fontWeight: 700, lineHeight: 1.35, margin: `3px 0 0` } }, cv.thesisLine), // MAG v0.1b：主命題答案
+      cv.read2Line ? elQ(`p`, { key: `read2`, style: { fontSize: 12, fontWeight: 700, lineHeight: 1.35, margin: `3px 0 0` } }, cv.read2Line) : null, // MAG v0.1b r3（C16）：兩種讀法並列
+      cv.extLine ? elQ(`p`, { key: `extsh`, style: { fontSize: 12, lineHeight: 1.35, margin: `3px 0 0` } }, cv.extLine) : null] : [ // MAG v0.1b r3（C23）：對外比例是最大不確定；FCF 句移到第 4 塊
+      elQ(`p`, { key: `j`, style: { ...sm, fontSize: 11.5, margin: `3px 0 0` } }, TR.judge),
+      cv.igLine ? elQ(`p`, { key: `ig`, style: { fontSize: 12.5, fontWeight: 600, margin: `3px 0 0` } }, cv.igLine) : null,
+      elQ(`p`, { key: `al`, style: { fontSize: 12.5, fontWeight: 600, margin: `3px 0 0` } }, cv.adjLine), // v0.2
+      elQ(`p`, { key: `dl`, style: { fontSize: 12.5, margin: `3px 0 0` } }, cv.delayLine)]) // v0.2
   ]);
   let b2 = box(`b2`, `2｜與市場的差異（模型：${scLabel} vs 共識）`, [
     elQ(`table`, { key: `t`, style: { borderCollapse: `collapse`, width: `100%`, fontSize: 12, fontVariantNumeric: `tabular-nums` } }, [
@@ -169,7 +170,9 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
     ...(qv ? [elQ(`div`, { key: `q`, style: { fontSize: 13, fontWeight: 600 } }, [`${qv.focus.label} 財報${qv.focus.reportNote ? `（${qv.focus.reportNote}）` : ``}：模型｜共識｜指引`, QE ? elQ(TagQ, { key: `t`, t: QE.tag }) : null]),
       ...qv.keyLines.map((t, i) => elQ(`div`, { key: `k${i}`, style: { fontSize: 12, lineHeight: 1.35, marginTop: 2 } }, t))] : []),
     elQ(`p`, { key: `r`, style: { fontSize: 12.5, lineHeight: 1.4, margin: `4px 0 0` } }, [
-      `評等分布（${RA.month}，${RA.total} 家）：${RL.map(([a, b]) => `${a} ${b}`).join(`／`)}；目標價平均 $${Y(PT.mean, 2)}、中位數 $${Y(PT.median, 2)}、區間 $${Y(PT.low, 0)}–$${Y(PT.high, 0)}（${PT.analysts} 家）`, elQ(TagQ, { key: `t`, t: PT.tag })])
+      `評等分布（${RA.month}，${RA.total} 家）：${RL.map(([a, b]) => `${a} ${b}`).join(`／`)}；目標價平均 $${Y(PT.mean, 2)}、中位數 $${Y(PT.median, 2)}、區間 $${Y(PT.low, 0)}–$${Y(PT.high, 0)}（${PT.analysts} 家）`, elQ(TagQ, { key: `t`, t: PT.tag })]),
+    ...(cv.thesisLine ? [elQ(`p`, { key: `al`, style: { fontSize: 12, lineHeight: 1.4, margin: `4px 0 0` } }, cv.adjLine), // MAG v0.1c：投資級與槓桿句移到第 4 塊
+      cv.fcfLine ? elQ(`p`, { key: `fcf`, style: { fontSize: 12, fontWeight: 600, lineHeight: 1.4, margin: `3px 0 0` } }, cv.fcfLine) : null] : []) // MAG v0.1b：股東回饋與 FCF
   ]);
   return [
     elQ(`div`, { key: `g`, style: { flex: 1, minHeight: 0, display: `grid`, gridTemplateColumns: `1fr 1.22fr`, gridTemplateRows: `1fr 1fr`, gap: 8 } }, [b1, b2, b3, b4]),
@@ -441,11 +444,11 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
       elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [elQ(`th`, { key: `x`, style: { textAlign: `left`, padding: `6px 12px`, borderBottom: `2px solid var(--color-ink)` } }, ``),
         ...scen.map(s => elQ(`th`, { key: s.sc, style: { textAlign: `right`, padding: `6px 12px`, borderBottom: `2px solid var(--color-ink)`, color: s.sc === e.scenario ? `var(--color-accent)` : `var(--color-fg)` } }, s.label))])),
       elQ(`tbody`, { key: `b` }, rowsQ.map(([lab, fn], i) => elQ(`tr`, { key: lab, style: { background: i >= 7 ? `var(--color-surface)` : `transparent`, fontWeight: i === 7 ? 700 : 400 } }, [
-        elQ(`td`, { key: `l`, style: { padding: `6px 12px`, borderBottom: `1px solid var(--color-border)` } }, lab),
-        ...scen.map(s => elQ(`td`, { key: s.sc, style: { padding: `6px 12px`, textAlign: `right`, borderBottom: `1px solid var(--color-border)`, color: i === 9 ? (s.call === `賣出` ? `var(--color-bad)` : s.call === `買進` ? `var(--color-ok)` : `var(--color-watch)`) : `inherit` } }, fn(s)))
+        elQ(`td`, { key: `l`, style: { padding: `4px 12px`, borderBottom: `1px solid var(--color-border)` } }, lab),
+        ...scen.map(s => elQ(`td`, { key: s.sc, style: { padding: `4px 12px`, textAlign: `right`, borderBottom: `1px solid var(--color-border)`, color: i === 9 ? (s.call === `賣出` ? `var(--color-bad)` : s.call === `買進` ? `var(--color-ok)` : `var(--color-watch)`) : `inherit` } }, fn(s)))
       ])))
     ]),
-    elQ(`p`, { key: `j`, style: { fontSize: 16, lineHeight: 1.5, margin: `16px 0 0` } },
+    elQ(`p`, { key: `j`, style: { fontSize: 14, lineHeight: 1.4, margin: `10px 0 0` } }, // MAG v0.1c：縮小字級避免與頁尾重疊
       `情境區間（保守與積極情境）$${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}。${TR.judge}`),
     elQ(`p`, { key: `n`, style: { fontSize: 14, color: `var(--color-muted)`, marginTop: `auto`, lineHeight: 1.5 } },
       `加權目標價＝DCF ${hA((f.call.weights?.dcf ?? .45) * 100, 0)}＋EV/EBITDA 分部加總（${PERIOD_LABELS[o.evYear ?? 1]}：AI 雲端 ${Y(o.evEbitda, 1)}x＋非 AI 事業 ${Y(f.v.legacyEvEbitda ?? o.evEbitda, 1)}x）${hA((f.call.weights?.pe ?? .55) * 100, 0)}；WACC ${hA(o.wacc * 100, 1)}（CAPM：rf ${hA(o.rf * 100, 2)}＋β ${Y(CAPM_Q(o).beta, 2)} × ERP ${hA(o.capm.erp * 100, 1)}；稅前 kd ${hA(o.capm.kdPretax * 100, 2)}）。DCF 股權價值為負時以 0 截斷；選擇權模式以 Merton（σ ${hA(o.sigma * 100, 0)}）估計有限責任下的股權價值。`)
@@ -486,7 +489,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
     let tmax = Math.max(...eg.tgt.flat()), l29 = k6 >= 0 ? eg.leg[k6][ky] : NaN;
     S(`評價方法`, `結論方向不變，但幅度取決於錨定年度與倍數：${Number.isFinite(l29) ? `${PERIOD_LABELS[o.evYear ?? 1]} × AI 雲端 ${multTxt(o.evEbitda)}x 時 EV/EBITDA 腿為 $${Y(l29, 1)}，${l29 >= .95 * P ? `約等於` : l29 > P ? `高於` : `低於`}現價` : `見下表`}`, [
       elQ(EvGridQ, { key: `g`, st: e, o: o, g: eg, big: !0 }),
-      elQ(`div`, { key: `n`, style: { marginTop: 22, fontSize: 17, lineHeight: 1.6 } }, [
+      elQ(`div`, { key: `n`, style: { marginTop: 14, fontSize: 15, lineHeight: 1.45 } }, [ // MAG v0.1c：縮小字級避免與頁尾重疊
         elQ(`div`, { key: 1 }, `• 矩陣內加權目標價最高 $${Y(tmax, 1)}，${tmax < P ? `仍低於現價，賣出方向在所有組合下成立` : `部分組合高於現價，結論對方法選擇敏感`}。`),
         elQ(`div`, { key: 2 }, hits.length ? `• 但 EV/EBITDA 腿單獨達到現價 95% 以上的組合：${hits.join('、')}——市場大致以穩態倍數上緣定價 ${PERIODS[1]} 以後的 EBITDA。` : `• EV/EBITDA 腿在所有組合下都低於現價的 95%。`),
         elQ(`div`, { key: 3 }, `• 結論對方法的依賴：(a) DCF 腿（權重 ${hA(eg.wd * 100, 0)}）取 $${Y(eg.dcf, 1)}；(b) AI 雲端 ${multTxt(o.evEbitda)}x 為可觀察 neocloud 穩態倍數上緣、非 AI 事業 ${multTxt(Math.round((eg.legM ?? o.legacyEvEbitda ?? o.evEbitda) * 10) / 10)}x 為各分部同業 NTM 中位數（區間 ${multTxt(Math.min(...COMPANY_DATA.peers.software.map(x => x.ntmEvEbitda)))}–${multTxt(Math.max(...COMPANY_DATA.peers.software.map(x => x.ntmEvEbitda)))}x）。`)
