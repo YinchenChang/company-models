@@ -13,3 +13,4 @@
 ## 3. 模型狀態
 - A0 完成（2026-10-08）：骨架（engine、tools、tests 基礎沿用 OpenAI v0.6）、規格 r0、共同規則、A1–A5 工作單。
 - Tokenomics 快照：v5.26（master `3dd1216`），與 OpenAI v0.6 相同。
+- A2 完成（2026-10-08，v0.1-A2）：`model/20261008_Anthropic_v0.1.xlsx`（README、SRC_ANT、TK_Link、OAI_Link、Inputs、Demand、Revenue、Checks）；2025 營收 4.60（校準）、2026 48.73（半校準）、2030 總額 214.9／淨額 196.8（$B）。報告 `docs/reports/20261008_v0.1-A2.md`（含「給 A3 的交接」）。
