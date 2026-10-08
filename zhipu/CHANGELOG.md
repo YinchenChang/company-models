@@ -14,7 +14,7 @@
 - 工具：engine／tools 名稱改智譜；`check_tk_snapshot.py` 支援讀表列；`make_report_tables.py` 改為產生本模型對照 Excel。
 
 ## v0.1-Z3（2026-10-08，建置代理）— Excel `model/20261008_Zhipu_v0.1.xlsx`（Z2 版移 `model/archive/20261008_Zhipu_v0.1-Z2.xlsx`）
-- commit：aada6aa（第 0 步：chat 端審查改動 R1 INP_038 1.3→2.24、R2 INP_069 1→0）、34451f8（步驟 1–3：Compute、Cost、Checks）、本節報告 commit。
+- commit：aada6aa（第 0 步：chat 端審查改動 R1 INP_038 1.3→2.24、R2 INP_069 1→0）、34451f8（步驟 1–3：Compute、Cost、Checks）、fc9e969（步驟 4：parity、報告）。
 - 新頁：Compute（G01–G130：晶片族 Hopper／H20／國產每 GW 產能與組合、token 換算 GW、算力服務費→供給 GW、η 2025 49.05／1H26 38.35、研發 GW 殘差、容量上限、VR 等值、10 萬國產晶片對照、R4 對帳、敏感度）、Cost（K01–K65：算力成本、供應商持有成本與雲端毛利、本地化交付成本、非算力成本、股權報酬、命題表 RMB 億與 $B、TK 單位成本參考）。
 - Inputs ＋46（INP_074–120）；INP_072（容量佔位）退役；Revenue 容量上限列改引用 Compute；Checks C43–C67（C42 退役）。
 - 命題：每 VR 等值 GW 差額（含股權報酬）−17,949／−6,310／−2,447／+599／+2,961／+4,859 RMB 億（−266／−94／−36／+9／+44／+72 $B）；2025 全成本對財報差距 0。
