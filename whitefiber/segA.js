@@ -239,7 +239,7 @@ function aA(e, t) {
     debtPay: i,
     implied: a,
     end: t.totals.end,
-    ok: Math.abs(a - t.totals.end) < .05
+    ok: Math.abs(a - t.totals.end) < .05 * UFQ
   }
 }
 
@@ -357,11 +357,13 @@ function runFunding(e) {
     LG = legacyQ(e), // v0.1b（Oracle）：傳統事業營收與 EBITDA
     CVF = cvConvQ(e.eqPx), // v0.1b：融資現金流的可轉債分類（判斷價＝股權發行參考價，預設＝現價）
     CVP = PERIOD_YEARS.map((L, n) => cvFlowQ(CVF, e.includeDebt, n, L)),
+    PFQ = (pf => ({ a: (pf[e.scenario || `base`] ?? 0) * (e.noProjectFinance ? 0 : 1), p: pf.period ?? 1, rate: pf.rate ?? 0, n: pf.amortYears || 1 }))(COMPANY_DATA.scenarios.projectFinance || {}), // WhiteFiber v0.1c：NC-1 專案貸款（排程）：p 期期初一次動用 a，自有利率，次期起按 n 年直線攤還
+    PFS = PERIOD_YEARS.reduce((acc, L, r) => { let b = r ? acc[r - 1].end : 0, d = r === PFQ.p ? PFQ.a : 0, am = r > PFQ.p ? Math.min(b, PFQ.a / PFQ.n * L) : 0, en = b + d - am; acc.push({ beg: b, draw: d, amort: am, end: en, int: PFQ.rate * (b + d + en) / 2 * L }); return acc }, []), // 利息＝利率 ×(期初＋動用＋期末)÷2 × 期間長度（動用當期全期計息）
     PB = [],
     IX = DEBT_AMORT.map((t, n) => {
       let r = n === 0 ? DBT_P : PB[n - 1][1],
         i = r - t;
-      return PB.push([r, i]), (r + i) / 2 * DBT_R * PERIOD_YEARS[n] + CONV_I * PERIOD_YEARS[n] + CVP[n].int + (n === 0 ? e.intCal : 0) + XCOST_Q[n] // WhiteFiber v0.1b：額外融資成本（MOIC 加付）
+      return PB.push([r, i]), (r + i) / 2 * DBT_R * PERIOD_YEARS[n] + CONV_I * PERIOD_YEARS[n] + CVP[n].int + (n === 0 ? e.intCal : 0) + XCOST_Q[n] + PFS[n].int // WhiteFiber v0.1b：額外融資成本（MOIC 加付）；v0.1c：NC-1 專案貸款利息
     }),
     WF = {
       Jn: 0,
@@ -374,9 +376,7 @@ function runFunding(e) {
       cl: e.prepay.openBalance, // v0.1b：合約負債（客戶預付餘額）期初
       Cn: 0 // v0.1b：瀑布新發可轉債餘額
     },
-    PFQ = { a: ((COMPANY_DATA.scenarios.projectFinance || {})[e.scenario || `base`]) ?? 0, p: (COMPANY_DATA.scenarios.projectFinance || {}).period ?? 1 }, // WhiteFiber v0.1b：情境專案融資（NC-1）：自該期起成為已承諾額度
     o = PERIODS.map((n, r) => {
-      if (r === PFQ.p && !e.noProjectFinance) WF.fr += PFQ.a;
       let L = PERIOD_YEARS[r],
         o = e.rpoOpen * (RPO_BUCKET_W[r] / RPO_SCHEDULED_SHARE) * i + e.rpoPendingAdd * RPO_Q3ADD_W[r] * i,
         s = o,
@@ -416,7 +416,8 @@ function runFunding(e) {
         C = t.accepted[r] * 8760 * t.pue[r] * t.power[r] / 1e9 * UFQ * L,
         w = t.accepted[r] * t.maint[r] / 1e3 * UFQ * L,
         T = e.overlay ? C + w : 0,
-        O = (e.includeDebt ? DEBT_AMORT[r] : 0) + CVP[r].amort, // v0.1b：含債務處理可轉債的到期還本（到期累積本金）
+        O = (e.includeDebt ? DEBT_AMORT[r] : 0) + CVP[r].amort + PFS[r].amort, // v0.1b：含債務處理可轉債的到期還本（到期累積本金）；v0.1c：含 NC-1 專案貸款攤還
+        pfD = PFS[r].draw, // WhiteFiber v0.1c：NC-1 專案貸款動用（融資來源；期初到位，先於瀑布）
         k = (r === 0 && e.includeAtm ? e.atm : 0) + (r === 0 ? PE_Q.cash : 0), // WhiteFiber v0.1b：期後事件現金淨額列於首期股權／可轉債（融資）
         lgR = LG.rev[r], lgE = LG.ebitda[r], // v0.1b（Oracle）：傳統事業營收與 EBITDA（EBITDA 視為現金，稅另列）
         tx = (e.cashTaxRate ?? 0) * Math.max(0, totRev * ebM + ob + lgE - pen - DAF[r] - LG.da[r] - IX[r]), // WhiteFiber v0.1b：扣託管建物 D&A // v0.1b：現金稅＝稅率 × MAX(0, 損益 EBITDA − 車隊 D&A − 存量利息)（不含瀑布新債利息，避免循環；偏保守）
@@ -429,12 +430,12 @@ function runFunding(e) {
         wRJ = (e.junkRate + (e.cdsLink ? Math.max(0, e.cds - e.cdsBaseBp) / 1e4 * e.cdsPassThrough : 0)) * L,
         wRC = e.convIssue.coupon * L, // v0.1b：瀑布可轉債票息 × 期間長度
         wI0 = wRL * WF.Dn + wRJ * WF.Jn + wRC * WF.Cn,
-        wPre = a + A + k - j0 - wI0,
+        wPre = a + A + k + pfD - j0 - wI0,
         wX = Math.max(0, e.minCash - wPre),
         wB = WF.B - o - nR + e.ctrTerm * Math.max(0, nR / L - WF.pnr),
-        wEx = (e.includeDebt ? PB[r][1] : DBT_P) + CONV_P + CVP[r].end, // 5a：評價日後新發可轉債本金讀 company.json → debt.convertible；v0.1b：加債務處理可轉債餘額
+        wEx = (e.includeDebt ? PB[r][1] : DBT_P) + CONV_P + CVP[r].end + PFS[r].end, // v0.1c：含 NC-1 專案貸款期末餘額； 5a：評價日後新發可轉債本金讀 company.json → debt.convertible；v0.1b：加債務處理可轉債餘額
         wCapB = e.debtCapBasis === `leaseAdj` ? e.debtEbitdaMax * (totRev * ebM + ob + lgE - pen + S) / L - LLON[r] - LLUL[r] : e.debtCapBasis === `ebitda` ? e.debtEbitdaMax * (totRev * ebM + ob + lgE - pen) / L : e.debtBacklog * wB, // v0.2：leaseAdj＝(總債務＋租賃負債) ≤ 倍數 ×(EBITDA＋租金)（年化） // v0.1b（Oracle）：債務上限＝倍數 × 當期 EBITDA（年化）；模板＝債務／backlog
-        wCap = wCapB - (wEx + WF.Dn + WF.Cn),
+        wCap = wCapB - (wEx - PFS[r].end + WF.Dn + WF.Cn), // WhiteFiber v0.1c：NC-1 專案貸款以 NC-1 合約現金流與資產獨立核貸（專案層級），不占公司層級可融資上限（仍計入總債務與淨負債）
         wCapD = Math.max(0, wCap, WF.fr),
         wD = Math.min(wCapD, wX / (1 - wRL)),
         wRem = Math.max(0, wX + wRL * wD - wD),
@@ -448,7 +449,7 @@ function runFunding(e) {
         wSh = wEq / (e.eqPx * (1 - e.eqDisc)),
         D = IX[r] + E,
         j = j0 + E,
-        F = wD + wC + wEq + wJ,
+        F = wD + wC + wEq + wJ + pfD,
         M = A + k + F,
         N = M - j,
         ee = A - (j - O),
@@ -457,6 +458,7 @@ function runFunding(e) {
         wCn0 = WF.Cn,
         wPc = WF.pc + A + k - j0;
       return a += N, WF.fr -= Math.min(WF.fr, wD), WF.Dn += wD, WF.Jn += wJ, WF.pc = wPc, WF.B = wB, WF.pnr = nR / L, WF.sh += wSh, WF.cl = clE, WF.Cn += wC, {
+        pfBeg: PFS[r].beg, pfDraw: pfD, pfAmort: PFS[r].amort, pfEnd: PFS[r].end, pfInt: PFS[r].int, // WhiteFiber v0.1c：NC-1 專案貸款
         convNew: wC,
         convCap: wCapC,
         convBeg: wCn0,
@@ -726,12 +728,12 @@ function runFunding(e) {
     ok: Math.abs(o[4].cum - (e.cash + o.reduce((e, t) => e + t.gap, 0))) < .01 * UFQ && Math.abs(o[4].cum - (e.cash + o.reduce((e, t) => e + t.operatingGap + t.atm + t.facility - t.debtPay, 0))) < .01 * UFQ,
     severity: `ok`,
     title: `現金恆等式（期前融資瀑布）`,
-    detail: `期末 ${o[4].cum.toFixed(1)} = 評價日現金 ${e.cash} + 營運缺口 ${o.reduce((e,t)=>e+t.operatingGap,0).toFixed(1)} + 期後股權／可轉債 ${o.reduce((e,t)=>e+t.atm,0).toFixed(1)} + 瀑布新債 ${o.reduce((e,t)=>e+t.newDebt,0).toFixed(1)} + 瀑布可轉債 ${o.reduce((e,t)=>e+t.convNew,0).toFixed(1)} + 瀑布股權 ${o.reduce((e,t)=>e+t.equity,0).toFixed(1)} + 高息債 ${o.reduce((e,t)=>e+t.junk,0).toFixed(1)} − 排程還本 ${o.reduce((e,t)=>e+t.debtPay,0).toFixed(1)}。每期期末現金不低於最低現金 ${e.minCash}${UNQ}——缺口在發生前一期就先融好。`
+    detail: `期末 ${o[4].cum.toFixed(1)} = 評價日現金 ${e.cash} + 營運缺口 ${o.reduce((e,t)=>e+t.operatingGap,0).toFixed(1)} + 期後股權／可轉債 ${o.reduce((e,t)=>e+t.atm,0).toFixed(1)} + 瀑布新債 ${o.reduce((e,t)=>e+t.newDebt,0).toFixed(1)} + 瀑布可轉債 ${o.reduce((e,t)=>e+t.convNew,0).toFixed(1)} + 瀑布股權 ${o.reduce((e,t)=>e+t.equity,0).toFixed(1)} + 高息債 ${o.reduce((e,t)=>e+t.junk,0).toFixed(1)} + 專案貸款 ${o.reduce((e,t)=>e+t.pfDraw,0).toFixed(1)} − 排程還本 ${o.reduce((e,t)=>e+t.debtPay,0).toFixed(1)}。每期期末現金不低於最低現金 ${e.minCash}${UNQ}——缺口在發生前一期就先融好。`
   }), _({
     id: `waterfall`,
     ok: !0,
     severity: `watch`,
-    title: `融資瀑布：新債 ${o.reduce((e,t)=>e+t.newDebt,0).toFixed(DUQ(1))}${UNQ}、可轉債 ${o.reduce((e,t)=>e+t.convNew,0).toFixed(DUQ(1))}${UNQ}、股權 ${o.reduce((e,t)=>e+t.equity,0).toFixed(DUQ(1))}${UNQ}（新股 ${o.reduce((e,t)=>e+t.newShares,0).toFixed(DUQ(2))}${UNQ} 股）、高息債 ${o.reduce((e,t)=>e+t.junk,0).toFixed(DUQ(1))}${UNQ}`,
+    title: `融資瀑布：${o.some(t => t.pfDraw > 0) ? `NC-1 專案貸款 ${o.reduce((e,t)=>e+t.pfDraw,0).toFixed(DUQ(1))}${UNQ}（排程）、` : ``}新債 ${o.reduce((e,t)=>e+t.newDebt,0).toFixed(DUQ(1))}${UNQ}、可轉債 ${o.reduce((e,t)=>e+t.convNew,0).toFixed(DUQ(1))}${UNQ}、股權 ${o.reduce((e,t)=>e+t.equity,0).toFixed(DUQ(1))}${UNQ}（新股 ${o.reduce((e,t)=>e+t.newShares,0).toFixed(DUQ(2))}${UNQ} 股）、高息債 ${o.reduce((e,t)=>e+t.junk,0).toFixed(DUQ(1))}${UNQ}`,
     detail: `順序：客戶預付（營運來源）→ 現金（高於最低現金 ${e.minCash}${UNQ} 的部分）→ ${e.useFacility ? `未動用額度（${TXQ.facilityName}）→ ` : ``}新債（${e.debtCapBasis === `leaseAdj` ? `(總債務＋租賃負債) ≤ ${multTxt(e.debtEbitdaMax)}×(EBITDA＋租金)（投資級上限，租賃調整後槓桿）` : e.debtCapBasis === `ebitda` ? `總債務 ≤ ${multTxt(e.debtEbitdaMax)}× 當期 EBITDA（投資級上限）` : `總債務 ≤ ${e.debtBacklog}× backlog`}）→ ${(e.cvCap ?? 0) > 0 ? `可轉債（每年上限 ${Y(e.cvCap ?? 0, DUQ(1))}${UNQ}、票息 ${hA(e.convIssue.coupon * 100, 1)}）→ ` : ``}股權（發行價＝$${e.eqPx}×(1−${(e.eqDisc*100).toFixed(0)}%)，每年上限＝現市值 ${e.eqCapPct>=9?`無上限`:(e.eqCapPct*100).toFixed(0)+`%`}）→ 超出部分以高息債 ${(e.junkRate*100).toFixed(0)}% 補足${e.debtCapBasis === `ebitda` || e.debtCapBasis === `leaseAdj` ? `（＝需失去投資級才能融資的金額）` : ``}。股利 ${Y(o.reduce((a, t) => a + t.dividend, 0), DUQ(1))}${UNQ} 列為用途。${(q => q.length ? `本情境股權需求落在 ${q.join(`、`)}。` : `本情境不需股權。`)(o.filter(t => t.equity > .05 * UFQ).map(t => t.year))}`
   }), _({
     id: `ebitda-link`,

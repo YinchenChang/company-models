@@ -563,10 +563,12 @@ ATM = gi(r, "股權／可轉債金額", UB, D['atm'], "評價日後已完成的�
 ATMON = gi(r, "計入股權／可轉債（1=是）", "", int(D['includeAtm']), f"關閉則首期少 {D['atm']}{UN} 來源", NUM0); r += 1
 FAC = gi(r, "未動用信用額度", UB, D['facility'], f"{TXQ['facilityName']} [Interested-party]"); r += 1
 FACON = gi(r, "瀑布可動用未動用額度（1=是）", "", int(D['useFacility']), "瀑布第一順位；已承諾額度，不受 債務／backlog 上限限制", NUM0); r += 1
-_PFC = CO['scenarios'].get('projectFinance') or {'low': 0, 'base': 0, 'high': 0, 'period': 1}  # WhiteFiber v0.1b：情境專案融資（自該期起成為已承諾額度）
-_PFR = {k: gi(r + j, f"專案融資額度｜{CO['scenarios']['labels'][k]}", UB, _PFC[k], "company.json → scenarios.projectFinance（依據見 note）[Assumed]") for j, k in enumerate(("low", "base", "high"))}; r += 3
-PFSEL = gi(r, "專案融資額度（目前情境）", UB, f"=CHOOSE({SEL},{_PFR['low']},{_PFR['base']},{_PFR['high']})", "＝依 A 區情境選擇器；加入未動用額度（瀑布第一順位，不受債務上限限制）", font=BLACK); r += 1
-PFP = gi(r, "專案融資可動用期別（0＝«P0»）", "", _PFC['period'], "自該期期初起可動用", NUM0); r += 1
+_PFC = CO['scenarios'].get('projectFinance') or {'low': 0, 'base': 0, 'high': 0, 'period': 1, 'rate': 0, 'amortYears': 1}  # WhiteFiber v0.1c：NC-1 專案貸款（排程貸款：動用期期初一次動用、自有利率、次期起直線攤還）
+_PFR = {k: gi(r + j, f"NC-1 專案貸款金額｜{CO['scenarios']['labels'][k]}", UB, _PFC[k], "company.json → scenarios.projectFinance（＝NC-1 累計建置 × 貸款比率；0＝未完成；依據見 note）[Assumed]") for j, k in enumerate(("low", "base", "high"))}; r += 3
+PFSEL = gi(r, "NC-1 專案貸款金額（目前情境）", UB, f"=CHOOSE({SEL},{_PFR['low']},{_PFR['base']},{_PFR['high']})", "＝依 A 區情境選擇器；動用期期初一次動用（不再是瀑布的已承諾額度）", font=BLACK); r += 1
+PFP = gi(r, "NC-1 專案貸款動用期別（0＝«P0»）", "", _PFC['period'], "該期期初一次動用（NC-1 第一期建置已完成；融資完成時點 [Assumed]）", NUM0); r += 1
+PFRATE = gi(r, "NC-1 專案貸款利率", "%", _PFC.get('rate', 0), "SOFR＋利差類比 8–9% 取中點 [Assumed]（冰島 GPU 貸款 SOFR＋4.25%＝7.92%）", PCT); r += 1
+PFN = gi(r, "NC-1 專案貸款攤還年數", "年", _PFC.get('amortYears', 1), "動用次期起直線攤還；對應 Nscale 10 年約 [Assumed]", NUM0); r += 1
 DEBTON = gi(r, "債務排程攤還（1=開）", "", int(D['includeDebt']), "季報到期表；關閉＝假設全額再融資", NUM0); r += 1
 KBL = gi(r, "債務／backlog 上限", "x", D['debtBacklog'], "資產擔保融資容量（debtCapBasis＝backlog 時使用）：總債務 ≤ 此倍數 × backlog [Assumed]", '0.00', True); r += 1
 DCB = gi(r, "債務上限基準（ebitda＝總債務 ÷ EBITDA；backlog＝債務 ÷ backlog）", "", D.get('debtCapBasis', 'backlog'), "v0.2：另有 leaseAdj＝(債務＋租賃負債) ÷ (EBITDA＋租金)（租賃調整後槓桿，S&P 口徑近似；租賃負債見『各期收支』）。A 欄名稱沿用 v0.1（本頁 D 區既有重複表頭，改 A 欄會使 --vs-dist 無法配對）；company.json → defaults.debtCapBasis", "@"); r += 1
@@ -1149,6 +1151,8 @@ frow("Ⓕ «YTDL» 實際借款（融資）", UB,
      lambda i: (f"={H_BORROW}" if i == 0 else "=0"), NUM, GREEN,
      f"季報：«YTDA» 借款 {YA['borrow']}（2026-03 可轉債）")
 borrow_row = FR["Ⓕ «YTDL» 實際借款（融資）"]
+frow("Ⓕ2 NC-1 專案貸款動用（融資）", UB, lambda i: "=0", NUM, GREEN, "排程貸款：動用期期初一次到位，先於瀑布（見『資產負債_既有債務』NC-1 專案貸款；WhiteFiber v0.1c）")
+pfd_row = FR["Ⓕ2 NC-1 專案貸款動用（融資）"]
 frow("Ⓖ 瀑布：新債（額度＋資產層）", UB, lambda i: "=0", NUM, BLACK, "見下方「期前融資瀑布」")
 fac_row = FR["Ⓖ 瀑布：新債（額度＋資產層）"]
 frow("Ⓖ2 瀑布：可轉債", UB, lambda i: "=0", NUM, BLACK, "資產擔保融資用罄後、股權之前；每年不超過可轉債上限（v0.1b）")
@@ -1158,7 +1162,7 @@ eqr_row = FR["Ⓗ 瀑布：股權募資"]
 frow("Ⓘ 瀑布：高息債（股權上限溢出）", UB, lambda i: "=0", NUM, BLACK, "股權超過每年上限的部分；不受 backlog 上限約束")
 jr_row = FR["Ⓘ 瀑布：高息債（股權上限溢出）"]
 frow("總來源（含融資）", UB,
-     lambda i: f"={COLS[i]}{srcop_row}+{COLS[i]}{atm_row}+{COLS[i]}{borrow_row}+{COLS[i]}{fac_row}+{COLS[i]}{cvr_row}+{COLS[i]}{eqr_row}+{COLS[i]}{jr_row}",
+     lambda i: f"={COLS[i]}{srcop_row}+{COLS[i]}{atm_row}+{COLS[i]}{borrow_row}+{COLS[i]}{pfd_row}+{COLS[i]}{fac_row}+{COLS[i]}{cvr_row}+{COLS[i]}{eqr_row}+{COLS[i]}{jr_row}",
      NUM, BLACK, bold=True)
 src_row = FR["總來源（含融資）"]
 
@@ -1237,7 +1241,7 @@ frow("高息債利率 × 期間長度", "%",
      lambda i: f"=({JRATE}+IF({CDSON}=1,MAX(0,{CDS}-{CDSB})/10000*{CDSP},0))*'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']}", '0.00%', BLACK)
 rj_row = FR["高息債利率 × 期間長度"]
 frow("融資前現金（扣既有新債利息）", UB,
-     lambda i: (f"={COLS[i]}{beg_cash}+{COLS[i]}{srcop_row}+{COLS[i]}{atm_row}+{COLS[i]}{borrow_row}+{COLS[i]}{plug_row}"
+     lambda i: (f"={COLS[i]}{beg_cash}+{COLS[i]}{srcop_row}+{COLS[i]}{atm_row}+{COLS[i]}{borrow_row}+{COLS[i]}{pfd_row}+{COLS[i]}{plug_row}"
                 f"-{COLS[i]}{wu_row}-{COLS[i]}{rl_row}*{COLS[i]}{dn_beg}-{COLS[i]}{rj_row}*{COLS[i]}{jn_beg}-{COLS[i]}{rc_row}*{COLS[i]}{cn_beg}"), NUM, BLACK)
 pre_row = FR["融資前現金（扣既有新債利息）"]
 frow("融資需求（補足至最低現金）", UB, lambda i: f"=MAX(0,{MINC}-{COLS[i]}{pre_row})", NUM, BLACK, bold=True)
@@ -1257,18 +1261,18 @@ bl_end = FR["期末 backlog"]
 for i in range(1, 5):
     ws.cell(row=bl_beg, column=3 + i, value=f"={COLS[i-1]}{bl_end}")
 frow("既有債務＋期後可轉債（期末）", UB,
-     lambda i: "=0", NUM, BLACK, f"＝(依到期表遞減的既有本金，若關閉攤還則維持 {_n(LQ_DEBT)})＋期後新發可轉債 {_n(CONV_PR)}")
+     lambda i: "=0", NUM, BLACK, f"＝(依到期表遞減的既有本金，若關閉攤還則維持 {_n(LQ_DEBT)})＋期後新發可轉債 {_n(CONV_PR)}＋NC-1 專案貸款期末餘額（v0.1c）")
 ex_row = FR["既有債務＋期後可轉債（期末）"]
 frow("債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）", UB,
      lambda i: (f'=IF({DCB}="leaseAdj",{LEV}*(§EBPL_{COLS[i]}§+{COLS[i]}{FR["　租金合計"]})/\'運營_產能與收入\'!{COLS[i]}{CR["模型期長度（年）"]}-{COLS[i]}{LL_row},'
                 f'IF({DCB}="ebitda",{LEV}*§EBPL_{COLS[i]}§/\'運營_產能與收入\'!{COLS[i]}{CR["模型期長度（年）"]},{KBL}*{COLS[i]}{bl_end}))'), NUM, BLACK,
      "leaseAdj：總債務 ≤ 倍數 ×(損益 EBITDA＋租金)（年化）− 租賃負債（v0.2）；ebitda：總債務 ≤ 倍數 × 損益 EBITDA（年化）；backlog：總債務 ≤ 倍數 × 期末 backlog（模板）")
 cap_row = FR["債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）"]
-frow("未動用額度（期初）", UB, lambda i: (f"=IF({FACON}=1,{FAC},0)+IF({PFP}=0,{PFSEL},0)" if i == 0 else "=0"), NUM, BLACK, "＝前期期末未動用＋本期起可動用的專案融資額度（WhiteFiber v0.1b）")
+frow("未動用額度（期初）", UB, lambda i: (f"=IF({FACON}=1,{FAC},0)" if i == 0 else "=0"), NUM, BLACK, "＝前期期末未動用（NC-1 專案貸款改為排程貸款，不在額度內；WhiteFiber v0.1c）")
 fr_beg = FR["未動用額度（期初）"]
 frow("新債可借上限", UB,
      lambda i: f"=MAX(0,{COLS[i]}{cap_row}-({COLS[i]}{ex_row}+{COLS[i]}{dn_beg}+{COLS[i]}{cn_beg}),{COLS[i]}{fr_beg})", NUM, BLACK,
-     "＝MAX(上限 − 既有債務 − 期初新債 − 期初瀑布可轉債, 未動用額度)")
+     "＝MAX(上限 −（既有債務 − NC-1 專案貸款）− 期初新債 − 期初瀑布可轉債, 未動用額度)；專案貸款以 NC-1 合約現金流與資產獨立核貸，不占公司層級上限（v0.1c）")
 capd_row = FR["新債可借上限"]
 frow("新債舉借", UB,
      lambda i: f"=MIN({COLS[i]}{capd_row},{COLS[i]}{need_row}/(1-{COLS[i]}{rl_row}))", NUM, BLACK,
@@ -1328,7 +1332,7 @@ for i in range(1, 5):
     ws.cell(row=dn_beg, column=3 + i, value=f"={COLS[i-1]}{dn_end}")
     ws.cell(row=jn_beg, column=3 + i, value=f"={COLS[i-1]}{jn_end}")
     ws.cell(row=cn_beg, column=3 + i, value=f"={COLS[i-1]}{cn_end}")
-    ws.cell(row=fr_beg, column=3 + i, value=f"={COLS[i-1]}{fr_end}+IF({PFP}={i},{PFSEL},0)")
+    ws.cell(row=fr_beg, column=3 + i, value=f"={COLS[i-1]}{fr_end}")
 for i in range(5):
     ws.cell(row=newint_row, column=3 + i, value=f"={COLS[i]}{ni_row}")
     ws.cell(row=fac_row, column=3 + i, value=f"={COLS[i]}{nd_row}")
@@ -1356,8 +1360,8 @@ b3c = r; r += 1
 ws.cell(row=r, column=1, value="＋ «YTD» 其他／受限現金調節").font = BLACK
 ws.cell(row=r, column=3, value=f"=SUM(C{plug_row}:G{plug_row})").number_format = NUM
 b3d = r; r += 1
-ws.cell(row=r, column=1, value="＋ 瀑布新債＋可轉債＋股權＋高息債合計").font = BLACK
-ws.cell(row=r, column=3, value=f"=SUM(C{fac_row}:G{fac_row})+SUM(C{cvr_row}:G{cvr_row})+SUM(C{eqr_row}:G{eqr_row})+SUM(C{jr_row}:G{jr_row})").number_format = NUM
+ws.cell(row=r, column=1, value="＋ 瀑布新債＋可轉債＋股權＋高息債＋NC-1 專案貸款合計").font = BLACK
+ws.cell(row=r, column=3, value=f"=SUM(C{fac_row}:G{fac_row})+SUM(C{cvr_row}:G{cvr_row})+SUM(C{eqr_row}:G{eqr_row})+SUM(C{jr_row}:G{jr_row})+SUM(C{pfd_row}:G{pfd_row})").number_format = NUM
 b4 = r; r += 1
 ws.cell(row=r, column=1, value="− 排程還本合計").font = BLACK
 ws.cell(row=r, column=3, value=f"=-SUM(C{debt_row}:G{debt_row})").number_format = NUM
@@ -1649,13 +1653,30 @@ for _xc in CO['debt'].get('extraCost', []):
     _XCR.append(DR[f"額外融資成本｜{_xc[0]}"])
 drow("存量利息合計（連回輸入頁）", UB,
      lambda i: f"={COLS[i]}{DR['存量債務利息']}+{COLS[i]}{DR['期後新發可轉債利息']}+{COLS[i]}{DR['可轉債票息（債務處理）']}+{COLS[i]}{DR['FY26 新增借款利息校準']}" + "".join(f"+{COLS[i]}{x}" for x in _XCR),
-     NUM, BLACK, "＝存量債務利息＋期後新發可轉債利息＋可轉債票息＋首期校準＋額外融資成本", bold=True)
+     NUM, BLACK, "＝存量債務利息＋期後新發可轉債利息＋可轉債票息＋首期校準＋額外融資成本＋NC-1 專案貸款利息（v0.1c）", bold=True)
 DEBT_TOTAL_ROW = DR["存量利息合計（連回輸入頁）"]
 _wsf = wb["各期收支"]
+# WhiteFiber v0.1c：NC-1 專案貸款（排程貸款；與 HTML segA PFS 同一算法）。利息併入存量利息、攤還併入 ⑤ 排程還本、期末餘額併入既有債務、動用列於 Ⓕ2
+r += 1
+r = section(ws, r, "NC-1 專案貸款（排程：動用期期初一次動用 × 自有利率 × 次期起直線攤還；WhiteFiber v0.1c）")
+r = period_header(ws, r)
+drow("專案貸款期初餘額", UB, lambda i: "=0", NUM, BLACK)
+drow("專案貸款動用", UB, lambda i: f"=IF({PFP}={i},{PFSEL},0)", NUM, BLACK, "＝NC-1 專案貸款金額（『輸入與假設』E 區），於動用期期初一次到位")
+drow("專案貸款攤還", UB, lambda i: f"=IF({PFP}<{i},MIN({COLS[i]}{DR['專案貸款期初餘額']},{PFSEL}/{PFN}*{inref('模型期長度（年）', i)}),0)", NUM, BLACK, "＝金額 ÷ 攤還年數 × 期間長度（動用次期起；不超過期初餘額）")
+drow("專案貸款期末餘額", UB, lambda i: f"={COLS[i]}{DR['專案貸款期初餘額']}+{COLS[i]}{DR['專案貸款動用']}-{COLS[i]}{DR['專案貸款攤還']}", NUM, BLACK, bold=True)
+drow("專案貸款利息", UB, lambda i: f"={PFRATE}*({COLS[i]}{DR['專案貸款期初餘額']}+{COLS[i]}{DR['專案貸款動用']}+{COLS[i]}{DR['專案貸款期末餘額']})/2*{inref('模型期長度（年）', i)}", NUM, BLACK,
+     "＝利率 ×(期初＋動用＋期末)÷ 2 × 期間長度（動用當期全期計息）；併入存量利息合計")
+for i in range(1, 5):
+    ws.cell(row=DR["專案貸款期初餘額"], column=3 + i, value=f"={COLS[i-1]}{DR['專案貸款期末餘額']}")
 for i in range(5):
-    _wsf.cell(row=ex_row, column=3 + i, value=f"=IF({DEBTON}=1,'資產負債_既有債務'!{COLS[i]}{DR['期末本金']},'資產負債_既有債務'!$E${tot_r})+{CONV_PR_CELL}+'資產負債_既有債務'!{COLS[i]}{DR['可轉債期末餘額（債務處理）']}")
-    _c = _wsf.cell(row=debt_row, column=3 + i); _c.value = f"{_c.value}+'資產負債_既有債務'!{COLS[i]}{DR['可轉債到期還本（債務處理）']}"
+    _c = ws.cell(row=DEBT_TOTAL_ROW, column=3 + i); _c.value = f"{_c.value}+{COLS[i]}{DR['專案貸款利息']}"
+    _wsf.cell(row=pfd_row, column=3 + i, value=f"='資產負債_既有債務'!{COLS[i]}{DR['專案貸款動用']}")
+for i in range(5):
+    _wsf.cell(row=ex_row, column=3 + i, value=f"=IF({DEBTON}=1,'資產負債_既有債務'!{COLS[i]}{DR['期末本金']},'資產負債_既有債務'!$E${tot_r})+{CONV_PR_CELL}+'資產負債_既有債務'!{COLS[i]}{DR['可轉債期末餘額（債務處理）']}+'資產負債_既有債務'!{COLS[i]}{DR['專案貸款期末餘額']}")
+    _c = _wsf.cell(row=debt_row, column=3 + i); _c.value = f"{_c.value}+'資產負債_既有債務'!{COLS[i]}{DR['可轉債到期還本（債務處理）']}+'資產負債_既有債務'!{COLS[i]}{DR['專案貸款攤還']}"
+    _wsf.cell(row=capd_row, column=3 + i, value=f"=MAX(0,{COLS[i]}{cap_row}-({COLS[i]}{ex_row}-'資產負債_既有債務'!{COLS[i]}{DR['專案貸款期末餘額']}+{COLS[i]}{dn_beg}+{COLS[i]}{cn_beg}),{COLS[i]}{fr_beg})")  # v0.1c：NC-1 專案貸款專案層級核貸，不占公司層級上限
 CV_AM_ROW = DR['可轉債到期還本（債務處理）']; CV_END_ROW = DR['可轉債期末餘額（債務處理）']
+PF_DRAW_ROW, PF_AM_ROW, PF_END_ROW = DR['專案貸款動用'], DR['專案貸款攤還'], DR['專案貸款期末餘額']  # WhiteFiber v0.1c
 wsin = wb["輸入與假設"]
 for i in range(5):
     wsin.cell(row=DEBT_INT_ROW, column=3 + i, value=f"='資產負債_既有債務'!{COLS[i]}{DEBT_TOTAL_ROW}")
@@ -2304,6 +2325,7 @@ brow("＋ 瀑布：新債（額度＋資產層）", UB, lambda i: f"={F_}{COLS[i
 brow("＋ 瀑布：可轉債", UB, lambda i: f"={F_}{COLS[i]}{cv_row}")
 brow("＋ 瀑布：高息債", UB, lambda i: f"={F_}{COLS[i]}{jd_row}")
 brow("＋ 瀑布：股權募資", UB, lambda i: f"={F_}{COLS[i]}{eq_row}")
+brow("＋ NC-1 專案貸款動用", UB, lambda i: f"={F_}{COLS[i]}{pfd_row}")  # WhiteFiber v0.1c
 brow("− 新融資利息（新債＋可轉債＋高息債）", UB, lambda i: f"=-{F_}{COLS[i]}{ni_row}")
 brow("期末現金", UB, lambda i: f"=SUM({COLS[i]}{BR['期初現金']}:{COLS[i]}{BR['− 新融資利息（新債＋可轉債＋高息債）']})", NUM,
      "應等於『各期收支』期末累積現金（見下列驗算）", bold=True)
@@ -2312,7 +2334,8 @@ r = section(ws, r, "債務")
 brow("既有債務期初（季報本金）", UB, lambda i: (f"='資產負債_既有債務'!$E${tot_r}+SUMPRODUCT((1-{CV_F})*{CV_M})" if i == 0 else f"={COLS[i-1]}{{r}}"), NUM,
      "«P0»＝其他借款＋債務處理可轉債到期本金（轉股處理者不列）")
 brow("− 排程還本（模型期）", UB, lambda i: f"=-IF({DEBTON}=1,{I_}{COLS[i]}${IN['排程還本（季報到期表）']},0)-'資產負債_既有債務'!{COLS[i]}{CV_AM_ROW}")
-brow("既有債務期末", UB, lambda i: f"={F_}{COLS[i]}{ex_row}-{_n(CONV_PR)}", NUM, "＝依到期表遞減（關閉攤還時維持期初）")
+brow("＋ NC-1 專案貸款動用 − 攤還", UB, lambda i: f"='資產負債_既有債務'!{COLS[i]}{PF_DRAW_ROW}-'資產負債_既有債務'!{COLS[i]}{PF_AM_ROW}", NUM, "排程貸款（WhiteFiber v0.1c）")
+brow("既有債務期末", UB, lambda i: f"={F_}{COLS[i]}{ex_row}-{_n(CONV_PR)}", NUM, "＝依到期表遞減（關閉攤還時維持期初）；含 NC-1 專案貸款餘額")
 for i in range(1, 5):
     ws.cell(row=BR["既有債務期初（季報本金）"], column=3 + i, value=f"={COLS[i-1]}{BR['既有債務期末']}")
 brow("＋ 期後新發可轉債", UB, lambda i: f"={_n(CONV_PR)}")

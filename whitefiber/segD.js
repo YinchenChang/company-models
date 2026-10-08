@@ -99,10 +99,10 @@ function zM() {
           children: [e.scenario === `custom` ? `自訂情境` : SCENARIOS[e.scenario]?.label, `：${PERIODS[0]}–${PERIODS[PERIODS.length - 1].slice(2)} 融資前缺口 `, (0, $.jsxs)(`span`, {
             className: `font-medium text-accent-fg`,
             children: [mA(Math.max(0, -d.totals.preFinEnd)), `${UNQ}`]
-          }), `，加上新融資本身的利息 `, mA(d.years.reduce((e, t) => e + t.newDebtInt, 0)), `${UNQ}，由新債 `, mA(d.totals.newDebt), `${UNQ}、可轉債 `, mA(d.totals.convNew), `${UNQ}、股權 `, mA(d.totals.equity), `${UNQ}（新股 `, Y(d.totals.newShares, 2), `${UNQ} 股）`, d.totals.junk > .05 * UFQ ? `、高息債 ${mA(d.totals.junk)}${UNQ}` : ``, ` 補足。每 MW 年 EBITDA 約 `, (0, $.jsxs)(`span`, {
+          }), `，加上新融資本身的利息 `, mA(d.years.reduce((e, t) => e + t.newDebtInt, 0)), `${UNQ}，由${d.years.some(t => t.pfDraw > 0) ? ` NC-1 專案貸款 ${mA(d.years.reduce((a, t) => a + t.pfDraw, 0))}${UNQ}、` : ``}新債 `, mA(d.totals.newDebt), `${UNQ}、可轉債 `, mA(d.totals.convNew), `${UNQ}、股權 `, mA(d.totals.equity), `${UNQ}（新股 `, Y(d.totals.newShares, 2), `${UNQ} 股）`, d.totals.junk > .05 * UFQ ? `、高息債 ${mA(d.totals.junk)}${UNQ}` : ``, ` 補足。${PERIODS[4]} 雲端每 MW 年 EBITDA（GPU 租金前、機房租金後，與全額 GPU 資本回收同口徑）約 `, (0, $.jsxs)(`span`, {
             className: `font-medium text-accent-fg`,
-            children: [`$`, Y(d.m.revMW[4] * (e.revScale ?? 1) * 1e3 / UFQ * d.m.util[4] / 100 * d.years[4].ebM, 1), `m`]
-          }), `，回收一個 MW 的 GPU（$`, Y(e.a.costMW[4] * (e.capexScale ?? 1), 0), `m、`, e.gpuLife, ` 年、WACC `, hA(o.wacc * 100, 0), `）每年需要 `, (0, $.jsxs)(`span`, {
+            children: [`$`, Y(d.m.revMW[4] * (e.revScale ?? 1) * 1e3 / UFQ * d.m.util[4] / 100 * (d.years[4].ebM + d.years[4].gpuRent / Math.max(d.years[4].totRev, .01 * UFQ)), 1), `m`]
+          }), `，回收一個 MW 的 GPU 全額（$`, Y(e.a.costMW[4] * (e.capexScale ?? 1), 0), `m、`, e.gpuLife, ` 年、WACC `, hA(o.wacc * 100, 0), `）每年需要 `, (0, $.jsxs)(`span`, {
             className: `font-medium text-accent-fg`,
             children: [`$`, Y(e.a.costMW[4] * (e.capexScale ?? 1) * o.wacc / (1 - Math.pow(1 + o.wacc, -e.gpuLife)), 1), `m`]
           }), `。目標價 `, (0, $.jsxs)(`span`, {
@@ -782,7 +782,7 @@ function zM() {
                     [`② 表外現金租金（未起租）`, e.a.newLease, (e, t) => E(`newLease`, e, t), void 0, void 0, `對應季報已簽約未起租租賃 ${Y(LATEST_Q.offBalanceLease, DUQ(1))}${UNQ}（${TXQ.offBalanceLeaseTerm}）的現金支付路徑 [Derived]。`],
                     [`　表外租金（延誤連動後）`, d.years.map(e => e.offLease), void 0, void 0, `calc`, `上列原排程中 ${pctQ(e.delayLink ?? 0)} 的起租隨建設延誤 ${multTxt(e.delayMonths ?? 0)} 個月後移（開發商交付晚），其餘照原時程；租金合計用此列（v0.2）。`],
                     [`② 在帳現金租金（季報固定）`, [...LEASE_CASH_ON_BAL], void 0, void 0, void 0, `季報到期表：${LEASE_CASH_ON_BAL.map(x => Y(x, 2)).join(`／`)}，之後尚有 ${Y(LEASE_AFTER_FY30, 2)}。`],
-                    [`③ 存量債務利息（既有債務推算）`, d.years.map(e => e.intStock), void 0, void 0, `calc`, `＝平均本金（依到期表遞減）× 加權有效利率 ${hA(DBT_R * 100, 1)} × 期間長度 ＋ 期後新發可轉債利息 ＋ 首期校準 ${e.intCal}。明細見「既有債務」分頁。`],
+                    [`③ 存量債務利息（既有債務推算）`, d.years.map(e => e.intStock), void 0, void 0, `calc`, `含 NC-1 專案貸款利息（v0.1c）。＝平均本金（依到期表遞減）× 加權有效利率 ${hA(DBT_R * 100, 1)} × 期間長度 ＋ 期後新發可轉債利息 ＋ 首期校準 ${e.intCal}。明細見「既有債務」分頁。`],
                     [`　對照：v1.4 手動值`, d.years.map(e => e.intOld), void 0, void 0, void 0, `CRWV 模板舊版手動值（本公司不適用，0）。`],
                     [`③ 新債利息（瀑布，計算）`, d.years.map(e => e.newDebtInt), void 0, void 0, `calc`, `＝新債利率 × 期間長度 × (期初新債餘額 ＋ 本期舉借)。期前融資：本期舉借在期初到位，當期全額計息。`],
                     [`④ JV 已承諾餘額`, d.years.map(e => e.jvC), void 0, void 0, void 0, `季報未揭露 JV 出資承諾（不適用）。`],
@@ -831,6 +831,7 @@ function zM() {
                     [`營運來源合計`, d.years.map((e, t) => t === 0 ? e.fySourcesOp : e.sourcesOp), void 0, void 0, `tot`],
                     [`Ⓔ 股權／可轉債（融資）`, d.years.map((e, t) => t === 0 ? e.fyEquity : e.atm), void 0, void 0, void 0, `${PERIODS[0]}＝年初至今股權 ${Y(ACTUAL_1H.equity, 3)}（${TXQ.ytdEquityNote}）＋期後 ${Y(e.atm, 2)}。`],
                     [`Ⓕ 年初至今實際借款（融資）`, d.years.map((e, t) => t === 0 ? e.fyBorrow : 0), void 0, void 0, void 0, `季報：年初至今借款 ${Y(ACTUAL_1H.borrow, 3)}。`],
+                    [`Ⓕ2 NC-1 專案貸款動用（融資）`, d.years.map(e => e.pfDraw), void 0, void 0, void 0, `排程貸款：動用期期初一次到位，先於瀑布；利息併入③、攤還併入⑤（見資產負債→既有債務；WhiteFiber v0.1c）。`],
                     [`Ⓖ 瀑布：新債（額度＋資產層）`, d.years.map(e => e.newDebt), void 0, void 0, void 0, `先用未動用額度，再用資產層新債；總債務不得超過 債務／backlog 上限。`],
                     [`Ⓖ2 瀑布：可轉債`, d.years.map(e => e.convNew), void 0, void 0, void 0, `資產擔保融資用罄後、股權之前；每年上限 ${Y(e.cvCap ?? 0, DUQ(1))}${UNQ}（隨情境）、票息 ${hA(e.convIssue.coupon * 100, 1)}。`],
                     [`Ⓗ 瀑布：股權募資`, d.years.map(e => e.equity), void 0, void 0, void 0, `債務與可轉債用罄後的殘差，按現價折價發行；每年不超過股權吸收上限。`],
@@ -1261,12 +1262,14 @@ function zM() {
                     [`＋ 瀑布：可轉債`, d.years.map(e => e.convNew)],
                     [`＋ 瀑布：高息債`, d.years.map(e => e.junk)],
                     [`＋ 瀑布：股權募資`, d.years.map(e => e.equity)],
+                    [`＋ NC-1 專案貸款動用`, d.years.map(e => e.pfDraw)],
                     [`− 新融資利息（新債＋可轉債＋高息債）`, d.years.map(e => -e.newDebtInt)],
                     [`期末現金`, d.years.map(e => e.cum), void 0, void 0, `tot`, `期前融資使期末現金不低於最低現金。`],
                     [`債務`, null],
                     [`既有債務期初（季報本金）`, d.years.map((t, n) => n === 0 ? (e.includeDebt ? DBT_P : DBT_P) : d.years[n - 1].existDebtEnd - CONV_P)],
-                    [`− 排程還本`, d.years.map(e => -e.debtPay)],
-                    [`既有債務期末`, d.years.map(e => e.existDebtEnd - CONV_P), void 0, void 0, `calc`],
+                    [`− 排程還本`, d.years.map(e => -(e.debtPay - e.pfAmort))],
+                    [`＋ NC-1 專案貸款動用 − 攤還`, d.years.map(e => e.pfDraw - e.pfAmort), void 0, void 0, void 0, `排程貸款（WhiteFiber v0.1c）。`],
+                    [`既有債務期末`, d.years.map(e => e.existDebtEnd - CONV_P), void 0, void 0, `calc`, `含 NC-1 專案貸款餘額。`],
                     [`＋ 期後新發可轉債`, d.years.map(() => CONV_P)],
                     [`＋ 瀑布新債餘額`, d.years.map(e => e.newDebtEnd)],
                     [`＋ 瀑布可轉債餘額`, d.years.map(e => e.convEnd)],
@@ -1352,7 +1355,13 @@ function zM() {
                     [`可轉債票息（債務處理）`, d.years.map(e => e.cvInt)],
                     [`存量債務利息（含可轉債與首期校準）`, d.years.map(e => e.intStock), void 0, void 0, `tot`, `＝其他借款平均本金 × ${hA(DBT_R * 100, 1)} × 期間長度 ＋ 債務處理可轉債票息（原始本金 × 票息；到期當期計半期）＋ 首期校準 ${Y(DEFAULTS.intCal, 2)}。價內可轉債以若轉換法計，不計利息。`],
                     [`對照：v1.4 手動值`, d.years.map(e => e.intOld)],
-                    [`瀑布新債利息（計算）`, d.years.map(e => e.newDebtInt), void 0, void 0, `calc`, `新債利率 × 新債餘額（含本期舉借）。`]
+                    [`瀑布新債利息（計算）`, d.years.map(e => e.newDebtInt), void 0, void 0, `calc`, `新債利率 × 新債餘額（含本期舉借）。`],
+                    [`NC-1 專案貸款（排程；WhiteFiber v0.1c）`, null],
+                    [`專案貸款期初餘額`, d.years.map(e => e.pfBeg)],
+                    [`專案貸款動用`, d.years.map(e => e.pfDraw), void 0, void 0, void 0, `＝NC-1 專案貸款金額（company.json → scenarios.projectFinance），於動用期期初一次到位。`],
+                    [`專案貸款攤還`, d.years.map(e => e.pfAmort), void 0, void 0, void 0, `＝金額 ÷ ${(COMPANY_DATA.scenarios.projectFinance || {}).amortYears ?? 1} 年 × 期間長度（動用次期起）；併入⑤ 排程還本。`],
+                    [`專案貸款期末餘額`, d.years.map(e => e.pfEnd), void 0, void 0, `tot`, `計入總債務與淨負債；以 NC-1 合約現金流與資產獨立核貸，不占公司層級可融資上限。`],
+                    [`專案貸款利息`, d.years.map(e => e.pfInt), void 0, void 0, void 0, `＝${hA(((COMPANY_DATA.scenarios.projectFinance || {}).rate ?? 0) * 100, 1)} ×(期初＋動用＋期末)÷ 2 × 期間長度；併入存量利息。`]
                   ]
                 })]
               }), n === 9 && (0, $.jsxs)(`div`, {

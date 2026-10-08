@@ -93,6 +93,8 @@ cmp('累計新股', F+'累計新股', H('cumNewShares'));
 cmp('總債務', F+'期末總債務（既有＋可轉債＋新債＋高息債）', H('totalDebtEnd'));
 cmp('租金合計', F+'　租金合計', H('lease'));
 cmp('排程還本(FY26含1H)', F+'⑤ 排程還本（季報到期表）', y.map((e,i)=>i===0?e.fyDebtPay:e.debtPay));
+[['期初餘額','pfBeg'],['動用','pfDraw'],['攤還','pfAmort'],['期末餘額','pfEnd'],['利息','pfInt']].forEach(([l,k])=>cmp('NC-1專案貸款'+l,'債務明細|專案貸款'+l,H(k))); cmp('NC-1專案貸款動用(來源)', F+'Ⓕ2 NC-1 專案貸款動用（融資）', H('pfDraw')); // WhiteFiber v0.1c：NC-1 專案貸款（排程）
+cmp('既有債務＋可轉債＋專案貸款(期末)', F+'既有債務＋期後可轉債（期末）', H('existDebtEnd'));
 cmp('客戶預付', F+T('Ⓓ 客戶預付（«STUB» 起）'), H('external'));
 cmp('預付認列', F+'　預付認列（非現金營收）', H('prepayRecog')); cmp('預付利息累積', F+'　合約負債利息累積（重大財務組成，非現金）', H('prepayAccr')); cmp('損益 預付利息', V+'預付財務組成利息（非現金）', f.map(e=>e.prepayAccr)); cmp('合約負債期末', F+'　合約負債期末', H('clEnd')); cmp('合約負債期初', F+'　合約負債期初（客戶預付餘額）', H('clBeg')); // v0.1b
 cmp('營運來源合計', F+'營運來源合計', y.map((e,i)=>i===0?e.fySourcesOp:e.sourcesOp));
@@ -130,7 +132,7 @@ cmp('UFCF', V+'UFCF', f.map(e=>e.ufcf));
 cmp('UFCF現值', V+'UFCF 現值', p.d.pv);
 cmp('DCF每股', V+'DCF 每股', [p.d.invalid?0:p.d.perShare]); // v0.1b：DCF 失效時 HTML 為 NaN、Excel 為 0（與反向 DCF 同一口徑）
 const NB='資產負債_新債與新股|';
-cmp('BS 期末現金', NB+'期末現金', H('cum'));
+cmp('BS 期末現金', NB+'期末現金', H('cum')); cmp('BS 專案貸款動用', NB+'＋ NC-1 專案貸款動用', H('pfDraw')); cmp('BS 專案貸款淨變動', NB+'＋ NC-1 專案貸款動用 − 攤還', y.map(e=>e.pfDraw-e.pfAmort)); // WhiteFiber v0.1c
 cmp('BS 營運收支淨額', NB+'營運收支淨額（含期後股權／可轉債，不含瀑布）', H('preFinGap'));
 cmp('BS 總債務', NB+'總債務', H('totalDebtEnd'));
 cmp('BS 淨負債', NB+'淨負債（總債務 − 期末現金）', y.map(e=>e.totalDebtEnd-e.cum));

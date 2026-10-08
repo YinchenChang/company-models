@@ -325,7 +325,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
   let callTone = f.call.call === `買進` ? `var(--color-ok)` : f.call.call === `賣出` ? `var(--color-bad)` : `var(--color-watch)`;
 
   // 單位經濟（與頁首摘要同一公式）
-  let rev30 = d.m.revMW[4] * (e.revScale ?? 1) * 1e3 / UFQ, util30 = d.m.util[4] / 100, eb30 = y[4].ebM;
+  let rev30 = d.m.revMW[4] * (e.revScale ?? 1) * 1e3 / UFQ, util30 = d.m.util[4] / 100, eb30 = y[4].ebM + y[4].gpuRent / Math.max(y[4].totRev, .01 * UFQ); // WhiteFiber v0.1c：GPU 租金前（機房租金後）EBITDA 率，與全額 GPU 資本回收同口徑（審查留言 v0.1b 第 3 條）
   let ebMW = rev30 * util30 * eb30, cost30 = e.a.costMW[4] * (e.capexScale ?? 1);
   let crf = o.wacc / (1 - Math.pow(1 + o.wacc, -e.gpuLife)), recov = cost30 * crf;
   let beRev = recov / (util30 * eb30), beCost = ebMW / crf;
@@ -356,7 +356,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
       `${TR.judge}${TR.bLabel} $${Y(TR.B[0], 1)}–$${Y(TR.B[1], 1)}：${TR.pos}；評等依點位。`),
     elQ(`div`, { key: `r`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 18, marginTop: 22 } }, [
       [`收入受產能約束`, `排程 RPO $${Y(b.scheduled, DUQ(1))}${UNQ}，五期可實現 $${Y(b.collected, DUQ(1))}${UNQ}；模型期毛 CapEx $${Y(T.gross, DUQ(0))}${UNQ}。`],
-      [ebMW < recov ? `單位經濟為負` : `單位經濟為正`, `FY30 每 MW 年 EBITDA $${Y(ebMW, 1)}m，${ebMW < recov ? `低於` : `高於`} GPU 年化資本回收 $${Y(recov, 1)}m。`],
+      [ebMW < recov ? `單位經濟為負` : `單位經濟為正`, `${PERIODS[4]} 雲端每 MW 年 EBITDA（GPU 租金前）$${Y(ebMW, 1)}m，${ebMW < recov ? `低於` : `高於`}全額 GPU 年化資本回收 $${Y(recov, 1)}m。`],
       [`依賴外部資金`, `融資前缺口 $${Y(T.preFinEnd < 0 ? -T.preFinEnd : 0, DUQ(1))}${UNQ}，FY30 總債務 $${Y(y[4].totalDebtEnd, DUQ(0))}${UNQ}。`]
     ].map(([a, c]) => elQ(`div`, { key: a, style: { borderTop: `3px solid var(--color-accent)`, paddingTop: 12 } }, [
       elQ(`div`, { key: `a`, style: { fontSize: 18, fontWeight: 700 } }, a),
@@ -379,9 +379,9 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
 
   // 3｜單位經濟
   let mx3 = Math.max(ebMW, recov) * 1.1;
-  S(`單位經濟`, `FY30 每 MW 每年 EBITDA $${Y(ebMW, 1)}m，${ebMW < recov ? `低於` : `高於`} GPU 年化資本回收 $${Y(recov, 1)}m`, [
-    elQ(BarQ, { key: 1, label: `每 MW 年 EBITDA`, sub: `$${Y(rev30, 1)}m 年收入 × ${hA(util30 * 100, 0)} 利用率 × ${hA(eb30 * 100, 0)} EBITDA 率`, val: ebMW, max: mx3, color: `var(--color-accent)`, fmt: x => `$${Y(x, 1)}m` }),
-    elQ(BarQ, { key: 2, label: `GPU 年化資本回收`, sub: `$${Y(cost30, 0)}m 建置成本 × 回收係數 ${Y(crf, 3)}（WACC ${hA(o.wacc * 100, 0)}、${e.gpuLife} 年）`, val: recov, max: mx3, color: `var(--color-bad)`, fmt: x => `$${Y(x, 1)}m` }),
+  S(`單位經濟`, `${PERIODS[4]} 雲端每 MW 每年 EBITDA（GPU 租金前）$${Y(ebMW, 1)}m，${ebMW < recov ? `低於` : `高於`}全額 GPU 年化資本回收 $${Y(recov, 1)}m`, [
+    elQ(BarQ, { key: 1, label: `每 MW 年 EBITDA（GPU 租金前）`, sub: `$${Y(rev30, 1)}m 年收入 × ${hA(util30 * 100, 0)} 利用率 × ${hA(eb30 * 100, 0)} EBITDA 率（GPU 租金前、機房租金後；同口徑：自購 ${hA((1 - ((e.gpuLease || {}).share ?? 0)) * 100, 0)} 部分 EBITDA 與資本回收同比例縮小，結論相同）`, val: ebMW, max: mx3, color: `var(--color-accent)`, fmt: x => `$${Y(x, 1)}m` }),
+    elQ(BarQ, { key: 2, label: `全額 GPU 年化資本回收`, sub: `$${Y(cost30, 0)}m 建置成本 × 回收係數 ${Y(crf, 3)}（WACC ${hA(o.wacc * 100, 0)}、${e.gpuLife} 年）`, val: recov, max: mx3, color: `var(--color-bad)`, fmt: x => `$${Y(x, 1)}m` }),
     elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 18, marginTop: 30 } }, [
       elQ(StatQ, { key: 1, label: `每 MW 每年差額`, value: `${ebMW - recov < 0 ? `−` : `+`}$${Y(Math.abs(ebMW - recov), 1)}m`, tone: ebMW < recov ? `var(--color-bad)` : `var(--color-ok)`, note: `擴張本身${ebMW < recov ? `不創造` : `創造`}價值` }),
       elQ(StatQ, { key: 2, label: `打平所需每 MW 年收入`, value: `$${Y(beRev, 1)}m`, note: `目前 $${Y(rev30, 1)}m（${beRev >= rev30 ? `+` : `−`}${hA(Math.abs(beRev / rev30 - 1) * 100, 0)}）` }),
@@ -394,7 +394,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
   // 4｜融資
   let mx4 = Math.max(...y.map(t => t.newDebt + t.convNew + t.equity + t.junk), .1 * UFQ);
   let nfi = y.reduce((a, t) => a + t.newDebtInt, 0);
-  S(`融資`, `融資前缺口 $${Y(-Math.min(0, T.preFinEnd), DUQ(1))}${UNQ}：新債 $${Y(T.newDebt, DUQ(1))}${UNQ}、可轉債 $${Y(T.convNew, DUQ(1))}${UNQ}、股權 $${Y(T.equity, DUQ(1))}${UNQ}、高息債 $${Y(T.junk, DUQ(1))}${UNQ}`, [
+  S(`融資`, `融資前缺口 $${Y(-Math.min(0, T.preFinEnd), DUQ(1))}${UNQ}：${y.some(t => t.pfDraw > 0) ? `NC-1 專案貸款 $${Y(y.reduce((a, t) => a + t.pfDraw, 0), DUQ(1))}${UNQ}、` : ``}新債 $${Y(T.newDebt, DUQ(1))}${UNQ}、可轉債 $${Y(T.convNew, DUQ(1))}${UNQ}、股權 $${Y(T.equity, DUQ(1))}${UNQ}、高息債 $${Y(T.junk, DUQ(1))}${UNQ}`, [
     elQ(`div`, { key: `c`, style: { display: `grid`, gridTemplateColumns: `repeat(5, 1fr)`, gap: 28, alignItems: `end`, height: 320, padding: `0 20px` } }, y.map(t => {
       let tot = t.newDebt + t.convNew + t.equity + t.junk, H = 260;
       return elQ(`div`, { key: t.year, style: { display: `flex`, flexDirection: `column`, alignItems: `center`, justifyContent: `flex-end`, height: `100%` } }, [

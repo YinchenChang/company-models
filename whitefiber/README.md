@@ -400,11 +400,13 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `scenarios.billableRatio.roundDp` | 可計費 MW 的小數位數（WhiteFiber v0.1b；小型公司 MW 為個位數取 2；Oracle 0） | 整數 | 2 | 檢查 |
-| `scenarios.projectFinance.low` | 情境專案融資額度｜保守（自 period 期起成為已承諾額度，瀑布第一順位、不受債務上限限制；WhiteFiber v0.1b） | US$m | 0 | 必改 |
-| `scenarios.projectFinance.base` | 情境專案融資額度｜基準 | US$m | 307.125 | 必改 |
-| `scenarios.projectFinance.high` | 情境專案融資額度｜積極 | US$m | 307.125 | 必改 |
-| `scenarios.projectFinance.period` | 專案融資可動用的期別（0＝首期） | 整數 | 1 | 必改 |
-| `scenarios.projectFinance.note` | 專案融資的依據與假設（金額＝建置成本 × 貸款比率、時點、利率） | 文字 | NC-1 專案融資（v0.1b 步驟 6）：10-Q… | 必改 |
+| `scenarios.projectFinance.low` | NC-1 專案貸款金額｜保守（排程貸款：period 期期初一次動用、自有利率、次期起直線攤還；0＝未完成；WhiteFiber v0.1b，v0.1c 改排程） | US$m | 0 | 必改 |
+| `scenarios.projectFinance.base` | NC-1 專案貸款金額｜基準 | US$m | 307.125 | 必改 |
+| `scenarios.projectFinance.high` | NC-1 專案貸款金額｜積極 | US$m | 307.125 | 必改 |
+| `scenarios.projectFinance.period` | 專案貸款動用的期別（0＝首期；該期期初一次動用） | 整數 | 1 | 必改 |
+| `scenarios.projectFinance.rate` | 專案貸款利率（v0.1c） | 比例 | 0.085 | 檢查 |
+| `scenarios.projectFinance.amortYears` | 專案貸款直線攤還年數（動用次期起；v0.1c） | 年 | 10 | 檢查 |
+| `scenarios.projectFinance.note` | 專案融資的依據與假設（金額＝建置成本 × 貸款比率、時點、利率） | 文字 | NC-1 專案貸款（v0.1b 步驟 6；v0.1c… | 必改 |
 | `scenarios.labels.low` | 保守情境名稱（空格前的文字會當作情境簡稱） | 文字 | 保守 只有已簽約 | 必改 |
 | `scenarios.labels.base` | 基準情境名稱 | 文字 | 基準 加 NC-1 下一批 | 必改 |
 | `scenarios.labels.high` | 積極情境名稱 | 文字 | 積極 NC-2／3 與 Krambu | 必改 |
