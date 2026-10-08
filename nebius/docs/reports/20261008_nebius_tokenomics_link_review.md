@@ -1,7 +1,7 @@
 # Nebius｜Tokenomics 連接審視（v5.29；2026-10-08）
 
 - 分支：`claude/nebius-tk-link-review`
-- 最新提交 SHA：見 PR 頁面（本檔所在提交；以 `git log -1 -- nebius/docs/reports/20261008_nebius_tokenomics_link_review.md` 查得）
+- 最新提交 SHA：內容提交 `399c773`（其後只有補記本行的提交；最新者見 PR 頁面）
 - 報告路徑：`nebius/docs/reports/20261008_nebius_tokenomics_link_review.md`
 - 依據：共用工作單 `docs/workorders/20261008_tokenomics_link_review.md`、`nebius/docs/workorders/20261008_nebius_tokenomics_link_review.md`；Tokenomics 下游資料契約 v0.1（`docs/plan/Tokenomics_downstream_contract.md`）。
 - 審視對象：company-models main `75327ef` 的 Nebius 模型（成品 v0.2，`dist/20261007_Nebius收支模型_v0_2.*`）；另評估進行中的 v0.2a 分支（`claude/nebius-v0.2a-tkanchor` `43b1f9c`，PR #30，draft、未合併）在 v5.29 下需要的調整。
