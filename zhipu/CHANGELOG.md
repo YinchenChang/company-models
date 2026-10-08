@@ -39,3 +39,12 @@
 - `dist/20261008_智譜收支模型_v0_1.html`：11 節（命題與兩種讀法＋四個翻轉點、每 GW、營收與共識、算力、現金與外部資金、敏感度、主要風險／與實際觀察的落差、市值對照、與 OpenAI v0.6 並排（美元）、最該審的 5 項預設、資料與版本）；686 個數字皆讀自 LibreOffice 重算後的 Excel（19 個情境），附 Excel 位置；單一檔案、無外部資源、圖表內嵌 SVG。
 - `dist/20261008_智譜收支模型_v0_1.xlsx`＝model 複本；`tools/build_html.py` 改寫為智譜（Inputs 欄位 F／G／H、OAI_Link F–K 欄位移、半年欄 K／L、翻轉點取自敏感度 JSON）；`tools/html_scenarios.yaml`；`tests/test_html.py`（6 項）。
 - `docs/plan/20261008_Zhipu_命題與驅動對照表.md`；交接檔改為 v0.1 完成狀態（未解問題、v0.2 建議）；根目錄 README 智譜列「v0.1」。
+
+## v0.1 r2（Z5b，2026-10-08，建置代理；獨立查核後修正 V1–V9）— Excel `model/20261008_Zhipu_v0.1.xlsx`（Z4 版移 `model/archive/20261008_Zhipu_v0.1-Z4.xlsx`）
+- commit：d10b940（V1–V3 Excel）、8c0ea1e（V4–V9 HTML、報告、成品）、本節 commit（parity 期望值、CHANGELOG、README）。
+- V1：2H26 起每 GW 租價＝MAX（觀察租價, 供應商持有成本 ×（1＋最低毛利 INP_136，Assumed 0，0–0.2））；Compute 第十四節 G161–G171；Cost K15／K16 改名「供應商推算毛利（率）」；Checks C93。
+- V2：TK_Link ＋IF_OpexGW、IF_DeprLifeIT；自有算力投產後營運費用計入算力成本（Compute G172–G173、Cost K74）；攤提口徑並列（Compute G174–G175、Cost K75–K79：`COST_FullAmort`、`COST_PropGap_VR_Amort`、`COST_Coverage_Amort`）。
+- V3：Reverse X42 淨現金扣 2026-07 配售款已動用（Funding F52）。
+- 命題 1：2030 每 VR 等值 GW 差額 −231 → −2,275 RMB 億（−$33.8B），覆蓋率 0.96 → 0.72，2028 年後不再收斂；命題 2：累計外部資金需求 2030 0 → 18.9 億（首次缺口年 2030）。翻轉點只剩研發占比 ≤0.572。
+- V4–V9：翻轉點重算（`tools/sensitivity_r2.yaml` → `docs/reports/20261008_v0.1-r2_敏感度.json`）；HTML 措辭（命題 2 可信度低、ARR 與支出落差對稱）、晶片同口徑、OpenAI 並排加註；`docs/reports/20261008_v0.1.md` 標頭與口徑欄；成品重出；報告 `docs/reports/20261008_v0.1-r2_查核修正.md`。
+- parity：44 情境（＋ap_min_gm_02、aq_owned_opex_amort）；workbook_expectations 更新（公式格 4,810、具名範圍 1,111、Inputs 135、TK 74）。

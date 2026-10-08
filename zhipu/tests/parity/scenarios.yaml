@@ -2,12 +2,12 @@
 # 輸入以具名範圍設定（SRC_ZP_nnn、INP_nnn、TK_*；多格名稱用 NAME[k]）。v0.1-Z2：Demand、Revenue、Checks；v0.1-Z3：Compute、Cost。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
   sheets: [README, SRC_ZP, TK_Link, OAI_Link, Inputs, Demand, Revenue, Compute, Cost, Funding, Reverse, Checks, _Defaults]
-  formula_cells: 4671             # Z4：＋Funding、Reverse、Checks C68–C92、Cost 第九節（每實體 GW）
-  defined_names: 1103             # Z3b 1,020 ＋ SRC 6 ＋ INP_124–135 ＋ OAI 3 ＋ FND_／RVS_ 56 ＋ COST_*_Phys 6
+  formula_cells: 4810             # Z5b：＋Compute 第十四節（租價下限、自有營運費用、攤提）、Cost 第十節、Checks C93（Z4 4,671）
+  defined_names: 1111             # Z4 1,103 ＋ Z5b：INP_136、TK_IF_OpexGW、TK_IF_DeprLifeIT、CMP_OwnedOpex／Amort、COST_FullAmort、COST_PropGap_VR_Amort、COST_Coverage_Amort
   src_rows: 610                   # SRC_ZP 筆數（Z1 604＋Z4 由 note 拆出 6 列：SRC_ZP_605–610）
   src_named: 661                  # SRC_ZP_nnn（有數值 576）＋_Lo（46）＋_Hi（39）
-  inp_rows: 134                   # data/zhipu_inputs.yaml（Z4：＋INP_124–135）
-  tk_values: 72                   # OpenAI v0.6 的 63 名 ＋ Z3b IF_CostPre／Cache／Dec_* 9 名
+  inp_rows: 135                   # data/zhipu_inputs.yaml（Z4：＋INP_124–135；Z5b：＋INP_136 最低毛利）
+  tk_values: 74                   # OpenAI v0.6 的 63 名 ＋ Z3b IF_CostPre／Cache／Dec_* 9 名 ＋ Z5b IF_OpexGW、IF_DeprLifeIT
   tk_table: 7                     # TK_RD_（以列標籤讀表；只供對照）
   oai_named: 21                   # OAI_ 17 個輸出列（Z4＋FND_CashEnd、FND_Committed、RVS_ExtNeedCum）＋4 個中繼
   tk_pending: 0
