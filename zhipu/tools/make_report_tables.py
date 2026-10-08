@@ -33,7 +33,8 @@ KEY_NAMES = [
 ]
 KEY_NAMES_Z3 = [
     ("CMP_SupplyGW", "供給 GW（租用＋自有）", "GW"), ("CMP_InfGW_Eff", "有效推論 GW（未截頂）", "GW"), ("CMP_InfGW", "推論 GW（截頂後）", "GW"),
-    ("CMP_RDGW", "研發 GW（殘差）", "GW"), ("CMP_DemandGW", "總需求 GW", "GW"), ("CMP_TokGW", "推論 GW（token 換算）", "GW"),
+    ("CMP_RDGW", "研發 GW（殘差）", "GW"), ("CMP_DemandGW", "總需求 GW", "GW"), ("CMP_TokGW", "推論 GW（token 換算；Z3b 類型加權）", "GW"),
+    ("CMP_TokGW_Old", "對照：舊法 token 換算 GW（參考組合產能）", "GW"),
     ("CMP_Eta", "η（逐年）", "倍"), ("CMP_RDShare", "研發占非閒置供給比例", "比例"), ("CMP_CapFactor", "容量上限係數", "倍"),
     ("CMP_VReqFactor", "機隊 VR 等值係數", "倍"), ("CMP_Supply_VReq", "供給 VR 等值 GW（命題分母）", "GW"),
     ("CMP_Share_Hopper", "晶片族占比：Hopper", "比例"), ("CMP_Share_H20", "晶片族占比：H20", "比例"), ("CMP_Share_Domestic", "晶片族占比：國產", "比例"),
@@ -166,7 +167,7 @@ def main():
             ws.append([lab, ""] + _vals(wbv, names[n]) + ["", "", "", "", n])
         ws.append([])
     head(ws, ["對照（只列差距，不反推）", "單位", "值", "", "", "", "", "", "具名範圍"])
-    extra = (("CMP_Eta2025", "η 2025", "倍"), ("CMP_Eta1H26", "η 1H26", "倍"), ("CMP_ChipGW", "10 萬國產晶片換算 IT GW", "GW"),
+    extra = (("CMP_Eta2025", "η 2025", "倍"), ("CMP_Eta1H26", "η 1H26", "倍"), ("CMP_EtaOld", "舊法 η 2025（Z3）", "倍"), ("CMP_ChipGW", "10 萬國產晶片換算 IT GW", "GW"),
              ("CMP_ChipGWGap", "模型 2H26 國產供給 GW ÷ 換算 GW − 1", "比例"), ("CMP_SpendGW", "2025 支出換算推論 GW", "GW"),
              ("CMP_R4Mult", "2025 Coding Plan token GW ÷ 支出換算推論 GW", "倍"), ("COST_Recon", "2025 全成本 − 財報費用合計", "RMB 億")) if z3 else ()
     for n, lab, unit in extra + (("REV_ARRGapMaaS", "模型 2H26 年化雲端營收 ÷ MaaS ARR − 1", "比例"), ("REV_ARRGapTotal", "模型 2H26 年化總營收 ÷ 全業務 ARR − 1", "比例"),

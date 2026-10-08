@@ -19,3 +19,9 @@
 - Inputs ＋46（INP_074–120）；INP_072（容量佔位）退役；Revenue 容量上限列改引用 Compute；Checks C43–C67（C42 退役）。
 - 命題：每 VR 等值 GW 差額（含股權報酬）−17,949／−6,310／−2,447／+599／+2,961／+4,859 RMB 億（−266／−94／−36／+9／+44／+72 $B）；2025 全成本對財報差距 0。
 - parity 情境 33（＋12）；報告 `docs/reports/20261008_v0.1-Z3.md`＋`_對照.xlsx`；`tools/make_report_tables.py` 加 `--seg z3`。
+
+## v0.1-Z3b（2026-10-08，建置代理；η≫1 處理）— Excel `model/20261008_Zhipu_v0.1.xlsx`（Z3 版移 `model/archive/20261008_Zhipu_v0.1-Z3.xlsx`）
+- commit：1a9e3f3（F1–F3）、bf2e702（F5）、本節報告 commit。
+- F1：token 換算推論 GW 改依 token 類型（新鮮 prefill／快取命中／decode）× TK `IF_CostPre／Cache／Dec_*` ÷ `IF_HoldEcon` ÷ `IF_Util`；TK_Link ＋9 名；Inputs ＋3（INP_121–123）。F2：η 2025 49.05→12.44、1H26 38.35→9.46，η>1 基準沿用 1H26、收斂至 1 列情境。F3：舊法保留對照列。F4：供給機制列為 chat 端確認預設。F5：CI pytest 加 `-p no:warnings`。
+- 命題：每 VR 等值 GW 差額 −17,949／−6,503／−3,439／−1,618／−747／−231 RMB 億（−266／−96／−51／−24／−11／−3.4 $B）；2030 前無轉正年；覆蓋率 2030 0.96。
+- parity 35 情境；pytest 88 passed；CHK_Errors＝0；TK 快照 OK 79。報告 `docs/reports/20261008_v0.1-Z3b.md`＋`_對照.xlsx`。
