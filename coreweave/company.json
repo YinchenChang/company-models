@@ -862,13 +862,14 @@
    "leaseVsCommitMin": 0.8,
    "unsignedRevShareMax": 0.5,
    "siteRentGapMax": 10,
-   "rentVsBenchMin": 0.8
+   "rentVsBenchMin": 0.8,
+   "revCapShareMax": 0.5
   },
   "perMw": {
-   "_note": "每 MW 方法開關（W2）：capex＝tokenomics（Σ 新增世代占比 × IF_CapexIT）｜legacy（scenarios.capexTemplate.costMW）；cost＝bottomUp（Tokenomics 電費、IT 維護、人員軟體、稅險 × 平均在役 MW＋管銷率）｜ebitdaPct（defaults.ebStart→ebSteady 線性）；revenue＝gpuHr（pricing.gpuHr × 每 MW GPU 數 × 8,760）｜legacy（defaults.m.revMW）。全為舊方法時與 v4.5 完全相同。收入採備案 legacy（chat 端 2026-10-07：W1 查不到 GB200／GB300／VR200 兩個獨立長約價來源，VR200 完全沒有）。",
+   "_note": "每 MW 方法開關（W2）：capex＝tokenomics（Σ 新增世代占比 × IF_CapexIT）｜legacy（scenarios.capexTemplate.costMW）；cost＝bottomUp（Tokenomics 電費、IT 維護、人員軟體、稅險 × 平均在役 MW＋管銷率）｜ebitdaPct（defaults.ebStart→ebSteady 線性）；revenue＝tkAnchor（W4：Σ 平均在役占比 × IF_HoldEcon × 定價倍數 k，k＝長約占比 × k_長約＋（1 − 長約占比）× k_現貨；pricing.anchorMultiple）｜gpuHr（pricing.gpuHr × 每 MW GPU 數 × 8,760）｜legacy（defaults.m.revMW）。全為舊方法時與 v4.5 完全相同。收入採備案 legacy（chat 端 2026-10-07：W1 查不到 GB200／GB300／VR200 兩個獨立長約價來源，VR200 完全沒有）。 W4（2026-10-08，已決定事項 14）：收入改為 tkAnchor；gpuHr 與 legacy 降為對照。",
    "capex": "tokenomics",
    "cost": "bottomUp",
-   "revenue": "legacy"
+   "revenue": "tkAnchor"
   }
  },
  "peers": {
@@ -1247,6 +1248,17 @@
    {
     "scope": "annual",
     "period": "*",
+    "metric": "rev",
+    "vs": "consensus",
+    "type": "觀點",
+    "perMw": {
+     "revenue": "tkAnchor"
+    },
+    "text": "營收依 Tokenomics 錨推導：在役世代 IF_HoldEcon（WACC 10% 打平租金）× 定價倍數 k（長約／現貨依 RPO 涵蓋的產能加權，證據為市場長約價與現貨指數），不以公司 ARR 指引或 Q2 營收校準；營收差距 {gap.rev:gap}"
+   },
+   {
+    "scope": "annual",
+    "period": "*",
     "metric": "ebitda",
     "vs": "consensus",
     "type": "觀點",
@@ -1335,10 +1347,10 @@
   }
  },
  "tokenomics": {
-  "_note": "算力相關的產業與物理層資料改引用 Tokenomics（YinchenChang/Tokenomics）：只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱，經版本固定的快照檔讀入；模型主值一律取「基準」成本情境，低成本／高成本只作敏感度。Tokenomics 每 GW＝IT 關鍵電力。Excel「Tokenomics_取數」分頁建具名範圍（TK_），每 MW 資本支出、營運成本與對照列引用之（W2）；v5.26 起 W2 暫代的 IT 維護、人員軟體、稅險、折舊年限改用正式值（W3）。",
-  "snapshotFile": "data/tokenomics_snapshot_v5.26.json",
-  "version": "v5.26",
-  "commit": "40746846c1bc892eb1e092a0d372f1ed514c9354",
+  "_note": "算力相關的產業與物理層資料改引用 Tokenomics（YinchenChang/Tokenomics）：只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱，經版本固定的快照檔讀入；模型主值一律取「基準」成本情境，低成本／高成本只作敏感度。Tokenomics 每 GW＝IT 關鍵電力。Excel「Tokenomics_取數」分頁建具名範圍（TK_），每 MW 資本支出、營運成本與對照列引用之（W2）；v5.26 起 W2 暫代的 IT 維護、人員軟體、稅險、折舊年限改用正式值（W3）。 W4：快照換 v5.27（原 25 名數值與位置與 v5.26 相同），新增 IF_RevGWFleet（收入上限檢查）。",
+  "snapshotFile": "data/tokenomics_snapshot_v5.27.json",
+  "version": "v5.27",
+  "commit": "862bdd46d199ab5047b77dcba17fb356d9a1d562",
   "names": [
    "IF_RacksPerGW",
    "IF_GPUsPerGW",
@@ -1364,7 +1376,8 @@
    "IF_MaintFac",
    "IF_StaffSW",
    "IF_TaxIns",
-   "IF_OpexGW"
+   "IF_OpexGW",
+   "IF_RevGWFleet"
   ],
   "optional": []
  },
@@ -1437,7 +1450,7 @@
   "sgaBasis": "exSbc"
  },
  "pricing": {
-  "_note": "GPU 小時價格（W2，公司專屬）：gpuHr＝合約價，{世代: {base, low, high, source, date, tag}}；W1 第 6c 步找不到 GB200／GB300／VR200 長約價的兩個獨立來源（VR200 完全沒有），故留空、收入採備案 legacy（每 MW 年收入為輸入），GPU 小時路線顯示「不適用」。peerRevPerMw、marketRefs 只作對照列，不入損益；不以 CoreWeave 自己的 ARR、營收指引或 RPO 反推價格。",
+  "_note": "GPU 小時價格（W2，公司專屬）：gpuHr＝合約價，{世代: {base, low, high, source, date, tag}}；W1 第 6c 步找不到 GB200／GB300／VR200 長約價的兩個獨立來源（VR200 完全沒有），故留空、收入採備案 legacy（每 MW 年收入為輸入），GPU 小時路線顯示「不適用」。peerRevPerMw、marketRefs 只作對照列，不入損益；不以 CoreWeave 自己的 ARR、營收指引或 RPO 反推價格。 W4：anchorMultiple＝Tokenomics 錨的公司因素（定價倍數 k）與證據表。",
   "gpuHr": {},
   "peerRevPerMw": [
    {
@@ -1512,6 +1525,230 @@
     "date": "2026-10-07",
     "url": "https://nebius.com/prices"
    }
-  ]
+  ],
+  "anchorMultiple": {
+   "_note": "W4（已決定事項 14）：每 MW 年收入（100% 計費時數）＝ Σ 平均在役占比 × IF_HoldEcon（目前成本情境）× k；k＝長約占比 × k_長約＋（1 − 長約占比）× k_現貨。k_長約、k_現貨以『市場價格 ÷ Tokenomics 同世代持有成本（IF_GPUhrEcon 或 IF_HoldEcon）』為證據（evidence；倍數在 Excel 以 TK_ 名稱計算）；不以 CoreWeave 的營收、ARR 或 RPO 金額反推 k。長約占比＝RPO 涵蓋的產能 ÷ 在役計費產能（longShare.formula）。合約期內 k 固定；續約價格衰退、壽命期係數 L 不做。",
+   "long": {
+    "base": 0.76,
+    "low": 0.7,
+    "high": 1.0,
+    "tag": "[Analogy]",
+    "note": "基準＝IREN–Microsoft GB300 五年約（evidence 第 1 筆，0.762 取兩位）；區間 0.70–1.00（工作單 W4 預設）。第 2 筆 IREN–NVIDIA（0.89）與第 1 筆同一供應商、世代與 MW 口徑為類比，只用來支持區間、不改基準"
+   },
+   "spot": {
+    "base": 1.76,
+    "low": 1.5,
+    "high": 2.3,
+    "tag": "[Analogy]",
+    "note": "基準＝H100 Silicon Data 現貨指數 ÷ IF_GPUhrEcon（1.757）；上緣＝B300 指數（GB300 類比，2.29）；下緣 1.5（工作單 W4 預設）"
+   },
+   "longShare": {
+    "method": "rpoCover",
+    "adj": 0,
+    "sensLowPt": -0.2,
+    "tag": "[Derived]",
+    "formula": "長約占比_t ＝ MIN(1, MAX(0, 排程 RPO_t ÷（平均計費 MW_t × 錨_t × k_長約 × 利用率_t × 期間長度_t）＋ 調整))：把模型期認列的 RPO 金額以長約價換成 MW，除以在役計費產能；未被 RPO 涵蓋的產能以現貨倍數計價",
+    "sens": "敏感度：調整 −20pt（較多現貨）、100%（新簽約全視為長約，k＝k_長約）"
+   },
+   "contractMix": [
+    {
+     "label": "已承諾合約加權平均年期",
+     "value": 5,
+     "unit": "年",
+     "tag": "[Verified]",
+     "source": "CoreWeave Form 10-K FY2025：「As of December 31, 2025, our committed contracts had a weighted-average contract duration of approximately five years.」",
+     "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm",
+     "date": "2026-02-26",
+     "retrieved": "2026-10-08"
+    },
+    {
+     "label": "收入以多年期已承諾合約為主（未給百分比）",
+     "value": null,
+     "unit": "",
+     "tag": "[Interested-party]",
+     "source": "CoreWeave Form S-1：「The vast majority of our revenue today is from multi-year committed contracts」；另有 pay-as-you-go 隨需",
+     "url": "https://www.sec.gov/Archives/edgar/data/1769628/000119312525044231/d899798ds1.htm",
+     "date": "2025-03-03",
+     "retrieved": "2026-10-08"
+    },
+    {
+     "label": "長約與隨需收入比例（百分比）",
+     "value": null,
+     "unit": "",
+     "tag": "找不到",
+     "source": "試過：10-K FY2025、S-1、Q2 2026 新聞稿與網路搜尋；公司未揭露長約／隨需收入或產能比例（找不到，不代表不存在）",
+     "url": "",
+     "date": "",
+     "retrieved": "2026-10-08"
+    }
+   ],
+   "evidence": [
+    {
+     "label": "IREN–Microsoft GB300 五年約",
+     "gen": "GB300 NVL72",
+     "price": 9.7,
+     "unit": "US$m/MW/年",
+     "tkName": "IF_HoldEcon",
+     "contract": "長約（hyperscaler）",
+     "term": "5 年",
+     "use": "long",
+     "tag": "[Derived]",
+     "source": "IREN Secures $9.7bn AI Cloud Contract with Microsoft（IREN 新聞稿）",
+     "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-97bn-ai-cloud-contract-microsoft",
+     "date": "2025-11-03",
+     "retrieved": "2026-10-08",
+     "note": "$9.7bn ÷ 5 年 ÷ 200 MW critical IT；含 20% 預付；W1 換算 ≈ $2.27/GPU-hr（487 顆/MW）"
+    },
+    {
+     "label": "IREN–NVIDIA 氣冷 Blackwell 五年約（GB300 類比）",
+     "gen": "GB300 NVL72",
+     "price": 11.333,
+     "unit": "US$m/MW/年",
+     "tkName": "IF_HoldEcon",
+     "contract": "長約（晶片商客戶）",
+     "term": "5 年",
+     "use": "range",
+     "tag": "[Analogy]",
+     "source": "IREN Secures $3.4bn AI Cloud Contract with NVIDIA（IREN 新聞稿）",
+     "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-34bn-ai-cloud-contract-nvidia",
+     "date": "2026-05-07",
+     "retrieved": "2026-10-08",
+     "note": "$3.4bn ÷ 5 年 ÷ 約 60 MW（Childress；MW 口徑未註明，視為 IT）；氣冷 Blackwell（非 NVL72）以 GB300 類比；與第 1 筆同一供應商，只支持區間"
+    },
+    {
+     "label": "Oracle–OpenAI 約 $300bn／4.5 GW（未經證實）",
+     "gen": "GB300 NVL72",
+     "price": 13.333,
+     "unit": "US$m/MW/年",
+     "tkName": "IF_HoldEcon",
+     "contract": "長約（hyperscaler 對實驗室）",
+     "term": "約 5 年（2027 起）",
+     "use": "list",
+     "tag": "[Analogy]",
+     "source": "The Register 轉述 WSJ（2025-09-11）：OpenAI 五年支付 Oracle $300bn；4.5 GW 為 2025-07 Stargate 擴充",
+     "url": "https://www.theregister.com/2025/09/11/openai_reportedly_on_the_hook/",
+     "date": "2025-09-11",
+     "retrieved": "2026-10-08",
+     "note": "$300bn ÷ 5 ÷ 4,500 MW；金額未經當事方證實、MW 口徑不明（若為設施口徑，每 IT MW 再 × 1.2）、Oracle 自有廠房；只列不用"
+    },
+    {
+     "label": "H100 Silicon Data 現貨指數",
+     "gen": "Hopper H100",
+     "price": 2.82,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "現貨（市場租金指數）",
+     "term": "隨需／短期",
+     "use": "spot",
+     "tag": "[Verified]",
+     "source": "Silicon Data H100 Index 頁面",
+     "url": "https://www.silicondata.com/products/silicon-index/h100",
+     "date": "2026-10-06",
+     "retrieved": "2026-10-08",
+     "note": "價格 [Verified]；倍數 [Derived]"
+    },
+    {
+     "label": "B300 Silicon Data 現貨指數（GB300 類比）",
+     "gen": "GB300 NVL72",
+     "price": 6.82,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "現貨（市場租金指數）",
+     "term": "隨需／短期",
+     "use": "range",
+     "tag": "[Analogy]",
+     "source": "Silicon Data H100 Index 頁面（含 B200、B300 指數）",
+     "url": "https://www.silicondata.com/products/silicon-index/h100",
+     "date": "2026-10-06",
+     "retrieved": "2026-10-08",
+     "note": "HGX B300 對 GB300 NVL72 類比；k_現貨上緣"
+    },
+    {
+     "label": "B200 Ornn 成交指數（GB200 類比）",
+     "gen": "GB200 NVL72",
+     "price": 4.08,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "現貨（市場成交指數）",
+     "term": "隨需／短期",
+     "use": "range",
+     "tag": "[Analogy]",
+     "source": "Ornn（經 WSJ 轉述；W1 第 6c 步）",
+     "url": "",
+     "date": "2026-04-13",
+     "retrieved": "2026-10-08",
+     "note": "HGX B200 對 GB200 NVL72 類比；落在 k_現貨區間內"
+    },
+    {
+     "label": "B200 Silicon Data 現貨指數（GB200 類比）",
+     "gen": "GB200 NVL72",
+     "price": 5.87,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "現貨（市場租金指數）",
+     "term": "隨需／短期",
+     "use": "list",
+     "tag": "[Analogy]",
+     "source": "Silicon Data H100 Index 頁面（含 B200、B300 指數）",
+     "url": "https://www.silicondata.com/products/silicon-index/h100",
+     "date": "2026-10-06",
+     "retrieved": "2026-10-08",
+     "note": "高於 k_現貨區間上緣；HGX B200 每 GPU 小時成本低於 GB200 NVL72 的機架攤提，類比偏高，只列"
+    },
+    {
+     "label": "B300 Nebius 隨需牌價（GB300 類比）",
+     "gen": "GB300 NVL72",
+     "price": 7.85,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "隨需牌價",
+     "term": "隨需",
+     "use": "list",
+     "tag": "[Interested-party]",
+     "source": "Nebius NVIDIA GPU Pricing（官網價目）",
+     "url": "https://nebius.com/prices",
+     "date": "2026-10-07",
+     "retrieved": "2026-10-08",
+     "note": "牌價非成交價（10/1 起 9.50）；只列不用"
+    },
+    {
+     "label": "GB200 CoreWeave 隨需牌價",
+     "gen": "GB200 NVL72",
+     "price": 10.5,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "隨需牌價",
+     "term": "隨需",
+     "use": "list",
+     "tag": "[Interested-party]",
+     "source": "CoreWeave Pricing（官網價目）",
+     "url": "https://www.coreweave.com/pricing",
+     "date": "2026-10-07",
+     "retrieved": "2026-10-08",
+     "note": "牌價非成交價（長約最多 −60%）；只列不用"
+    },
+    {
+     "label": "H100 CoreWeave 隨需牌價",
+     "gen": "Hopper H100",
+     "price": 6.155,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "隨需牌價",
+     "term": "隨需",
+     "use": "list",
+     "tag": "[Interested-party]",
+     "source": "CoreWeave Pricing（官網價目）",
+     "url": "https://www.coreweave.com/pricing",
+     "date": "2026-10-07",
+     "retrieved": "2026-10-08",
+     "note": "牌價非成交價；只列不用"
+    }
+   ],
+   "notFound": [
+    "VR200 NVL72 長約或多年期合約的每 GPU 小時／每 MW 價格：Nebius–Meta（2026-03-16，$12bn 專屬產能、Vera Rubin、五年）與 Nebius–Microsoft（2025-09-08，$17.4–19.4bn、五年）都未揭露 MW 或 GPU 數，無法換算（找不到）",
+    "GB200 NVL72 長約價：找不到可換算的揭露（Nscale–Microsoft 約 20 萬顆 GB300 未揭露金額，FT 估約 $14bn 屬估計，不用）",
+    "其他 neocloud 對 hyperscaler／實驗室的長約（獨立於 IREN 的供應商）：上列 Nebius、Nscale 皆缺 MW 或金額；Oracle–OpenAI 金額未經證實、只列"
+   ]
+  }
  }
 }

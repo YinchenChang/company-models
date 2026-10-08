@@ -365,6 +365,10 @@ if PMW['capex'] != 'legacy' or PMW['cost'] != 'ebitdaPct' or PMW['revenue'] != '
     for _n_ in ['IF_CapexIT', 'IF_CapexTotal', 'IF_PowerCost', 'IF_GPUsPerGW', 'IF_FacilityGW', 'IF_HoldEcon', 'IF_GPUhrEcon']:
         assert tk_has(_n_), f'Tokenomics 快照缺少必要名稱 {_n_}（不可暫代）'
     assert set(GEN) <= set(_TKGC), f'fleet.generations 須與 Tokenomics 世代同名：{set(GEN) - set(_TKGC)}'
+AMQ = (CO.get('pricing') or {}).get('anchorMultiple')  # W4：Tokenomics 錨的公司因素（定價倍數 k、長約占比、證據表）
+if PMW['revenue'] == 'tkAnchor':
+    assert AMQ and all(k in AMQ for k in ('long', 'spot', 'longShare', 'evidence')), 'revenue=tkAnchor：company.json 需要 pricing.anchorMultiple（long、spot、longShare、evidence）'
+    assert not [e for e in AMQ['evidence'] if e['use'] in ('long', 'spot', 'range') and not tk_has(e['tkName'])], 'revenue=tkAnchor：證據表引用的 Tokenomics 名稱不在快照'
 if PMW['revenue'] == 'gpuHr':
     _P = (CO.get('pricing') or {}).get('gpuHr') or {}
     assert all(_P.get(g, {}).get('base') is not None for g in GEN if any(m.get(g) for m in FL['newMix']) or FL['openMix']['mix'].get(g)), \
@@ -435,6 +439,19 @@ if FL:
         ("持有成本", lambda g, rr: _tkc('IF_HoldEcon', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g)))),
         ("合約價", lambda g, rr: (lambda P: f"=CHOOSE({PXSEL},{P['low'] if P.get('low') is not None else P['base']},{P['base']},{P['high'] if P.get('high') is not None else P['base']})" if P and P.get('base') is not None else "")(((CO.get('pricing') or {}).get('gpuHr') or {}).get(g)))],
         "GPU／MW＝IF_GPUsPerGW ÷ 1000 × MW 換算（顆）；GPU 時成本＝IF_GPUhrEcon（US$/GPU-hr，100% 時數、不含利潤）；持有成本＝IF_HoldEcon（US$m／MW／年，含廠房資本回收）；合約價＝company.json → pricing.gpuHr（空白＝不適用）")
+    AMX = {}  # W4：定價倍數 k（公司因素；只在 company.json 有 pricing.anchorMultiple 時建列；收入方法 tkAnchor 時進入模型）
+    if AMQ:
+        r = phdr(r, "定價倍數 k（W4；Tokenomics 錨的公司因素）")
+        _kl, _ks, _ls = AMQ['long'], AMQ['spot'], AMQ['longShare']
+        AMX['kL'] = gi(r, "定價倍數 k_長約（市場長約價 ÷ Tokenomics 同世代持有成本）", "倍", _kl['base'],
+                       f"company.json → pricing.anchorMultiple.long；區間 {_n(_kl['low'])}–{_n(_kl['high'])} {_kl['tag']}；證據見『每MW經濟性』k 證據表（不以公司營收、ARR、RPO 金額反推）", '0.00'); r += 1
+        AMX['kS'] = gi(r, "定價倍數 k_現貨（市場現貨價 ÷ Tokenomics 同世代持有成本）", "倍", _ks['base'],
+                       f"company.json → pricing.anchorMultiple.spot；區間 {_n(_ks['low'])}–{_n(_ks['high'])} {_ks['tag']}", '0.00'); r += 1
+        AMX['adj'] = gi(r, "長約占比調整（百分點；0＝RPO 涵蓋估計）", "%", _ls.get('adj', 0),
+                        "長約占比＝MIN(1, MAX(0, RPO 涵蓋的產能 ÷ 在役計費產能 ＋ 本格))；敏感度用 [Derived]", PCT); r += 1
+        FLX['tkCapRev'] = _tkblock("TK 收入上限（客戶每 GW 付費 token 營收）", [
+            ("token 營收", lambda g, rr: _tkc('IF_RevGWFleet', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g))))],
+            "US$m／公司 MW／年＝IF_RevGWFleet（OpenAI 有效單價、層級組合的理想上限；× MW 換算）。收入上限檢查：CRWV 每 MW 計費收入 ÷ 本欄（快照沒有此名稱時空白＝不適用）")
     r += 1
 
 # ---------------- C 利潤率 ----------------
@@ -2151,6 +2168,12 @@ if TK_MISS and (PMW['capex'] != 'legacy' or PMW['cost'] != 'ebitdaPct' or PMW['r
     checks.append((f"Tokenomics 名稱缺漏 {len(TK_MISS)} 項，成本為暫代值", f"={len(TK_MISS)}", "0 項",
                    "=IF(B{r}=0,\"通過\",\"警告\")", NUM0, f"{'、'.join(TK_MISS)} 尚未在 Tokenomics {CO['tokenomics']['version']} 提供（待 v5.26）；暫代：IT 維護＝C 區維護成本、人員軟體與稅險＝0、GPU 經濟壽命＝{D['gpuLife']} 年"))
 
+REVCAP_CHECK = "收入上限：CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收（各期最高）"  # W4：只在 revenue=tkAnchor 且快照有 IF_RevGWFleet 時建列（B 欄在『每MW經濟性』頁建好後回填）
+if PMW['revenue'] == 'tkAnchor' and tk_has('IF_RevGWFleet'):
+    checks.append((REVCAP_CHECK, None, f"≤{_n(CK['revCapShareMax'] * 100)}%",
+                   "=IF(B{r}<=" + _n(CK['revCapShareMax']) + ",\"通過\",\"警示\")", PCT,
+                   "neocloud 拿走客戶 token 營收的比例（Tokenomics IF_RevGWFleet，在役世代加權）；超過門檻＝CRWV 單價相對客戶端 token 經濟性偏高，明細見『每MW經濟性』"))
+
 for nm, bf, std, rf, fmt, note in checks:
     ws.cell(row=r, column=1, value=nm).font = BLACK
     if bf:
@@ -3177,10 +3200,11 @@ if FL:
          "＝由下而上 EBITDA 率＋（穩態輸入 − 由下而上 FY30）× 期數 ÷ 4（穩態輸入預設＝由下而上 FY30，差額 0）" if PMW['cost'] == 'bottomUp' else "舊方法：起始→穩態線性（由下而上只作對照）")
     BU_EB = PM["由下而上 EBITDA 率"]
     # ---- 每 MW 收入對照 ----
-    r = section(ws, r, "每 MW 收入對照（收入方法：" + ("GPU 小時價格" if PMW['revenue'] == 'gpuHr' else "備案 legacy——每 MW 年收入為輸入，以下為對照列，不入損益") + "）", level=2, collapsed=True)
+    r = section(ws, r, "每 MW 收入對照（收入方法：" + {'gpuHr': "GPU 小時價格", 'tkAnchor': "Tokenomics 錨 × 定價倍數 k（下一區）——以下為對照列"}.get(PMW['revenue'], "備案 legacy——每 MW 年收入為輸入，以下為對照列，不入損益") + "）", level=2, collapsed=True)
     mrow("每 MW 年收入（模型採用，100% 計費時數）", "US$m/MW", lambda i: f"={inref('每 MW 年收入', i)}*{REVSC}*1000", NUM, GREEN, "＝B 區『每 MW 年收入』× 倍數；收入端另乘利用率")
     mrow("每 MW 年收入（計費後＝× 利用率）", "US$m/MW", lambda i: f"={COLS[i]}{PM['每 MW 年收入（模型採用，100% 計費時數）']}*{inref('利用率', i)}", NUM)
-    mrow("每 MW 年收入（v4.5 舊值，對照）", "US$m/MW", lambda i: M['revMW'][i] * 1000, NUM, BLUE, "company.json → defaults.m.revMW（舊方法以期末 ARR 指引回推，只作對照）")
+    mrow("每 MW 年收入（v4.6 舊輸入 m.revMW，對照）" if PMW['revenue'] == 'tkAnchor' else "每 MW 年收入（v4.5 舊值，對照）", "US$m/MW", lambda i: M['revMW'][i] * 1000, NUM, BLUE, "company.json → defaults.m.revMW（舊方法以期末 ARR 指引回推，只作對照）")
+    _OLDREV = "每 MW 年收入（v4.6 舊輸入 m.revMW，對照）" if PMW['revenue'] == 'tkAnchor' else "每 MW 年收入（v4.5 舊值，對照）"
     mrow("期末 ARR 指引 ÷ 年底主動電力（公司數字，只作對照）", "US$m/MW", lambda i: f"=({CO['callFacts']['arrLo']}+{CO['callFacts']['arrHi']})/2/{CO['callFacts']['yeActiveGw']}" if i == 0 else None, NUM, BLACK,
          f"法說：期末 ARR {CO['callFacts']['arrLo']}–{CO['callFacts']['arrHi']} ÷ 年底 {CO['callFacts']['yeActiveGw']} GW [Derived]；公司數字不作參數（共同規則第 4 節）")
     mrow("每 MW GPU 數（世代加權）", "顆/MW", lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkRev', 'C')})", NUM1, BLACK, "Tokenomics IF_GPUsPerGW ÷ 1000（× MW 換算）")
@@ -3204,6 +3228,76 @@ if FL:
         mrow(f"同業｜{_pr['label']}", _pr['unit'], lambda i, v=_pr['value']: v, NUM, BLUE, f"{_pr['source']}（{_pr['date']}）{_pr['tag']}；{_pr.get('note', '')}")
     for _mr in (CO.get('pricing') or {}).get('marketRefs', []):
         mrow(f"市場價格｜{_mr['label']}", "US$/GPU-hr", lambda i, v=_mr['value']: v if i == 0 else None, USD, BLUE, f"{_mr['gen']}；{_mr['basis']}；{_mr['source']}（{_mr['date']}）{_mr['tag']}")
+    # ---- W4：每 MW 收入＝Tokenomics 錨 × 定價倍數 k（company.json → pricing.anchorMultiple）----
+    _gq = lambda x: f'{x:g}'
+    if AMQ:
+        _TKON = PMW['revenue'] == 'tkAnchor'
+        r = section(ws, r, "每 MW 收入：Tokenomics 錨 × 定價倍數 k（W4）" + ("——模型採用" if _TKON else "——對照（模型採用其他收入方法）"), level=2, collapsed=True)
+        _avgB = lambda i: f"{_C}{COLS[i]}{CAP['avg']}"
+        mrow("錨｜每 MW 經濟持有成本（IF_HoldEcon，在役世代加權）", "US$m/MW", lambda i: f"={COLS[i]}{PM['每 MW 經濟持有成本（不賠錢下限）']}", NUM, BLACK,
+             "＝Σ 平均在役占比 × IF_HoldEcon（目前 Tokenomics 成本情境；WACC 10% 下的打平租金，100% 時數，含廠房資本回收）")
+        mrow("錨｜排程 RPO（模型期）", "US$bn", lambda i: f"={_C}{COLS[i]}{CAP['sch']}", NUM, GREEN, "『運營_產能與收入』排程 RPO（期初 RPO＋Q3 新增 × 桶權重 × 認列比例）；只用來估長約占比，不用來反推 k")
+        mrow("錨｜平均計費 MW", "MW", lambda i: f"={_avgB(i)}", NUM0, GREEN, "『運營_產能與收入』平均在役（Billable）MW；收入端的分母")
+        mrow("錨｜利用率", "%", lambda i: f"={inref('利用率', i)}", PCT, GREEN)
+        mrow("長約價產能收入（平均計費 MW × 錨 × k_長約 × 利用率 × 期間長度）", "US$bn",
+             lambda i: f"={COLS[i]}{PM['錨｜平均計費 MW']}*{COLS[i]}{PM['錨｜每 MW 經濟持有成本（IF_HoldEcon，在役世代加權）']}/1000*{AMX['kL']}*{COLS[i]}{PM['錨｜利用率']}*{_L(i)}", NUM, BLACK,
+             "在役計費產能全部以長約價計的收入（US$bn）")
+        mrow("RPO 涵蓋的產能 ÷ 在役計費產能（未截斷）", "%", lambda i: f"={COLS[i]}{PM['錨｜排程 RPO（模型期）']}/MAX(1E-9,{COLS[i]}{PM['長約價產能收入（平均計費 MW × 錨 × k_長約 × 利用率 × 期間長度）']})", PCT, BLACK,
+             "＝排程 RPO ÷ 長約價產能收入：RPO 金額以長約價換成 MW 後占在役計費 MW 的比例 [Derived]")
+        mrow("長約占比（截斷於 0–100%，含調整）", "%", lambda i: f"=MIN(1,MAX(0,{COLS[i]}{PM['RPO 涵蓋的產能 ÷ 在役計費產能（未截斷）']}+{AMX['adj']}))", PCT, BOLD,
+             "＝MIN(1, MAX(0, 上列＋輸入頁『長約占比調整』))；未被 RPO 涵蓋的產能以現貨倍數計價 [Derived]")
+        mrow("k_長約（輸入）", "倍", lambda i: f"={AMX['kL']}", '0.00', GREEN, "輸入頁 B 區後『定價倍數 k』；證據見下方 k 證據表")
+        mrow("k_現貨（輸入）", "倍", lambda i: f"={AMX['kS']}", '0.00', GREEN)
+        mrow("定價倍數 k（長約占比 × k_長約 ＋（1 − 長約占比）× k_現貨）", "倍",
+             lambda i: f"={COLS[i]}{PM['長約占比（截斷於 0–100%，含調整）']}*{COLS[i]}{PM['k_長約（輸入）']}+(1-{COLS[i]}{PM['長約占比（截斷於 0–100%，含調整）']})*{COLS[i]}{PM['k_現貨（輸入）']}", '0.000', BOLD)
+        mrow("Tokenomics 錨 × k：每 MW 年收入（100% 計費時數）", "US$m/MW",
+             lambda i: f"={COLS[i]}{PM['錨｜每 MW 經濟持有成本（IF_HoldEcon，在役世代加權）']}*{COLS[i]}{PM['定價倍數 k（長約占比 × k_長約 ＋（1 − 長約占比）× k_現貨）']}", NUM, BOLD,
+             ("模型採用：輸入頁 B 區『每 MW 年收入』＝本列 ÷ 1000（收入端另乘利用率與爬坡分母）" if _TKON else "對照（模型未採用）"))
+        mrow("錨 × k 相對 v4.6 舊輸入 m.revMW", "%", lambda i: f"={COLS[i]}{PM['Tokenomics 錨 × k：每 MW 年收入（100% 計費時數）']}/MAX(1E-9,{COLS[i]}{PM[_OLDREV]})-1", PCT, BLACK)
+        _hasRF = tk_has('IF_RevGWFleet')
+        mrow("上限檢查｜客戶每 MW 付費 token 營收（IF_RevGWFleet，在役世代加權）", "US$m/MW",
+             (lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkCapRev', 'C')})") if _hasRF else (lambda i: "不適用"), NUM, BLACK,
+             "Tokenomics 客戶端（OpenAI 有效單價、層級組合）每 GW 付費 token 營收的理想上限，依在役世代加權" + ("" if _hasRF else "；快照無 IF_RevGWFleet → 不適用"))
+        mrow("上限檢查｜CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收", "%",
+             (lambda i: f"={COLS[i]}{PM['每 MW 年收入（計費後＝× 利用率）']}/MAX(1E-9,{COLS[i]}{PM['上限檢查｜客戶每 MW 付費 token 營收（IF_RevGWFleet，在役世代加權）']})") if _hasRF else (lambda i: "不適用"), PCT, BOLD,
+             f"＝neocloud 拿走客戶 token 營收的比例；> {_gq(CK['revCapShareMax'] * 100)}%（company.json → methodology.checks.revCapShareMax）時『檢查_連動』警示")
+        mrow("上限檢查｜各期結果", "", (lambda i: f'=IF({COLS[i]}{PM["上限檢查｜CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收"]}>{_gq(CK["revCapShareMax"])},"警示","通過")') if _hasRF else (lambda i: "不適用"), NUM, BOLD)
+        # k 證據表（市場價格 ÷ Tokenomics 同世代持有成本；成本取基準、不隨成本情境）
+        r = section(ws, r, "定價倍數 k 證據表（市場價格 ÷ Tokenomics 同世代持有成本；用途：long＝k_長約基準、spot＝k_現貨基準、range＝支持區間、list＝只列不用）", level=2, collapsed=True)
+        for j, h in enumerate(["證據", "單位", "價格", "Tokenomics 同世代", "倍數", "用途", ""]):
+            c = ws.cell(row=r, column=1 + j, value=h or None); c.font = HEAD; c.fill = FILL_HEAD
+        ws.cell(row=r, column=9, value="Tokenomics＝IF_GPUhrEcon（US$/GPU-hr）或 IF_HoldEcon（US$m／IT MW／年），基準成本情境；世代｜合約型態｜期間｜來源（文件日期）標記｜說明").font = SMALL
+        r += 1
+        for e_ in AMQ['evidence']:
+            ws.cell(row=r, column=1, value=f"k 證據｜{e_['label']}").font = BLACK
+            ws.cell(row=r, column=2, value=e_['unit']).font = SMALL
+            c = ws.cell(row=r, column=3, value=e_['price']); c.font = BLUE; c.number_format = '0.000'; c.border = BOX
+            _k = f"TK_{re.sub(r'^(IF|L1)_', '', e_['tkName'])}_{_TKGC[e_['gen']]}"
+            c = ws.cell(row=r, column=4, value=f"={_k}" if tk_has(e_['tkName']) else "不適用"); c.font = GREEN; c.number_format = '0.000'; c.border = BOX
+            c = ws.cell(row=r, column=5, value=f"=C{r}/D{r}" if tk_has(e_['tkName']) else "不適用"); c.font = BOLD; c.number_format = '0.00'; c.border = BOX
+            ws.cell(row=r, column=6, value=e_['use']).font = BLACK
+            ws.cell(row=r, column=9, value=f"{e_['gen']}｜{e_['contract']}｜{e_['term']}｜{e_['source']}（{e_['date']}）{e_['tag']}｜{e_['note']}" + (f"｜{e_['url']}" if e_['url'] else "")).font = SMALL
+            PM[f"k 證據｜{e_['label']}"] = r; r += 1
+        for cm in AMQ.get('contractMix', []):
+            ws.cell(row=r, column=1, value=f"合約組合｜{cm['label']}").font = BLACK
+            ws.cell(row=r, column=2, value=cm['unit'] or None).font = SMALL
+            c = ws.cell(row=r, column=3, value=cm['value'] if cm['value'] is not None else cm['tag']); c.font = BLUE; c.border = BOX
+            ws.cell(row=r, column=9, value=f"{cm['source']}" + (f"（{cm['date']}）" if cm['date'] else "") + f" {cm['tag']}" + (f"｜{cm['url']}" if cm['url'] else "")).font = SMALL
+            r += 1
+        for j_, nf in enumerate(AMQ.get('notFound', [])):
+            ws.cell(row=r, column=1, value=f"找不到｜第 {j_ + 1} 項").font = BLACK
+            ws.cell(row=r, column=9, value=nf).font = SMALL; r += 1
+        if _TKON and _hasRF:  # 檢查_連動：收入上限（各期最高）
+            _wc = wb["檢查_連動"]
+            for rr in range(4, _wc.max_row + 1):
+                if _wc.cell(row=rr, column=1).value == REVCAP_CHECK:
+                    _rc = PM['上限檢查｜CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收']
+                    c = _wc.cell(row=rr, column=2, value=f"=MAX('每MW經濟性'!C{_rc}:G{_rc})"); c.number_format = PCT; c.font = BLACK
+        if _TKON:  # B 區「每 MW 年收入」改為 Tokenomics 錨 × k（US$bn/MW；舊輸入見上方對照列）
+            _wi = wb["輸入與假設"]
+            for i in range(5):
+                c = _wi.cell(row=IN["每 MW 年收入"], column=3 + i, value=f"='每MW經濟性'!{COLS[i]}{PM['Tokenomics 錨 × k：每 MW 年收入（100% 計費時數）']}/1000"); c.font = GREEN
+            _wi.cell(row=IN["每 MW 年收入"], column=9, value="W4 Tokenomics 錨：＝『每MW經濟性』Σ 平均在役占比 × IF_HoldEcon × 定價倍數 k（100% 計費時數；利用率在收入端另乘）").font = SMALL
     # ---- 每 MW 資本支出對照 ----
     r = section(ws, r, "每 MW 資本支出對照（US$m／MW；新增 MW 的世代加權）", level=2, collapsed=True)
     mrow("每 MW 建置成本（模型採用）", "US$m/MW", lambda i: f"={inref('每 MW 建置成本', i)}", NUM1, GREEN)
@@ -3223,6 +3317,13 @@ if FL:
          "可能原因：爬坡期閒置產能（分母含尚未計費的 MW）、未揭露的成本項、D&A 未依列別揭露；v5.26 前人員軟體與稅險暫代 0")
     mrow("最近一季每 MW 年租金（營業＋變動，年化）", "US$m/MW", lambda i: f"=({CSX['opLeaseCost']}+{CSX['varLeaseCost']})*4/C{PM['最近一季平均在役 MW']}*1000" if i == 0 else None, '0.000')
     mrow("模型每 MW 年租金", "US$m/MW", lambda i: f"={COLS[i]}{PM['租金合計']}/{COLS[i]}{_AT}/{_L(i)}*1000", '0.000')
+    if AMQ and PMW['revenue'] == 'tkAnchor':  # W4：Q2 收入對照（只作驗證，不校準 k；拆解見 W4 報告）
+        mrow("最近一季每 MW 年收入（營收 × 4 ÷ 平均在役 MW）", "US$m/MW", lambda i: f"={CSX['revenue']}*4/C{PM['最近一季平均在役 MW']}*1000" if i == 0 else None, '0.000', BLACK, "10-Q 營收年化 ÷ 平均在役 MW（含爬坡中尚未計費的 MW）")
+        mrow("最近一季計費比例（季末 Billable ÷ 季末在役 MW，假設）", "%", lambda i: f"={MW0}/{OPENMW}" if i == 0 else None, PCT, BLACK, "輸入頁 B 區季末 Billable MW ÷ 世代組合期初在役 MW [Assumed]；用於換算每計費 MW")
+        mrow("最近一季每 MW 年收入（÷ 平均計費 MW）", "US$m/MW", lambda i: f"=C{PM['最近一季每 MW 年收入（營收 × 4 ÷ 平均在役 MW）']}/C{PM['最近一季計費比例（季末 Billable ÷ 季末在役 MW，假設）']}" if i == 0 else None, '0.000')
+        mrow("最近一季錨（季末在役世代 × IF_HoldEcon）", "US$m/MW", lambda i: ("=" + "+".join(f"{FLX['open'][g]}*{_I}$E${FLX['tkRev'] + j}" for j, g in enumerate(GEN))) if i == 0 else None, '0.000', BLACK, "世代組合期初占比（季末）× Tokenomics IF_HoldEcon（目前成本情境）")
+        mrow("最近一季隱含 k（年化營收 ÷ 平均在役 MW ÷ 錨，未調整）", "倍", lambda i: f"=C{PM['最近一季每 MW 年收入（營收 × 4 ÷ 平均在役 MW）']}/C{PM['最近一季錨（季末在役世代 × IF_HoldEcon）']}" if i == 0 else None, '0.000', BOLD,
+             "只作驗證：不以此值校準 k（已決定事項 14）；含爬坡分母、服務收入、舊世代舊約價格")
     # ---- 敏感度（建置時快照；scripts/permw_sens.py 以 Excel 依各設定重算後寫入 permw_sens.json）----
     _SP = _osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), 'permw_sens.json')
     _SN = _jco.load(open(_SP, encoding='utf-8')) if _osrv.path.exists(_SP) else None

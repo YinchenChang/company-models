@@ -1,9 +1,9 @@
 # CoreWeave × Tokenomics 改造進度（接手用；W1–W3 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：W0、W1（PR #6，待審）；W2（PR #9，待審）；**W3 全部完成**（PR #18：Tokenomics 快照 v5.26、v4.6 成品 dist/20261008_CoreWeave收支模型_v4_6、升版驗收、變動拆解、前後對照 Excel＋md）。W2 原紀錄：**W2 全部完成**（PR #9，疊加於 W1 分支）：每 MW 資本支出（Tokenomics）、由下而上營運成本、收入備案（legacy）＋對照列、世代組合、每MW經濟性彙總表、敏感度快照；新方法 `verify.sh` 22 項全過；舊方法 `scripts/verify_legacy.sh`（--vs-dist）25 項全過、與 v4.5 成品 0 差異。
-- 下一步：chat 端審查 PR #18（W0 #5 → W1 #6 → W2 #9 → W3 #18 依序合併；W2 合併後把 #18 base 改回 main）；合併前 Andy 以真正的 Excel 開啟 v4.6 檢查。
-- 未解問題：(1) ~~Tokenomics v5.26 暫代值~~（W3 第 0′ 步已解決）；(2) GB200／GB300／VR200 長約 GPU 小時價格不足兩個獨立來源 → 收入採備案 legacy；(3) CoreWeave「active power」口徑定義未找到（預設 IT）；(4) ~~由下而上 EBITDA 率 70–74% 高於 Q2~~：v5.26 後 57–60%，FY26 57.8% vs Q2 58.6%，但收入（+1.81／MW）、營運成本（+1.21）、租金（−0.48）三項抵銷（對帳見 `docs/reports/20261007_coreweave_v4.6_前後對照.md` 第 3 節）；(5) Excel 實機開啟待 Andy。
+- 已完成：W0–W3（v4.6，main 已合併）。**W4（PR #27，進行中）**：第 0–3 步（分支與快照 v5.27、證據補充、tkAnchor 雙引擎實作、Q2 驗證拆解）；新方法 verify.sh 22 項全過；舊方法回歸對 v4.6 成品 0 差異（25 項全過）。
+- 下一步：W4 第 4 步敏感度（permw_sens 快照已含 k、長約占比六組）→ 第 5 步升版 v4.7（VLOG 兩處、dist、交接檔、README、`scripts/expect/v4_7_rules.json` → make_expect → `--vs-dist`）與變動拆解（`python3 scripts/attrib_w4.py --v46 <v4.6 成品> --json out/w4/attrib_w4.json`）→ 第 6 步對照報告 → 第 7 步回報。
+- 未解問題（W4）：(1) **長約占比口徑主導結果**：依工作單「RPO 涵蓋的產能 ÷ 在役產能」，FY28 起 RPO 不足以涵蓋新產能，未涵蓋部分以現貨倍數 1.76 計價 → FY30 k＝1.34；若新簽約全視為長約（k＝0.76），基準加權目標價 $98.02 → $5.25。需 Andy 決定。(2) 第二筆獨立供應商的長約價找不到（IREN–NVIDIA 為同一供應商；Nebius、Nscale 合約未揭露 MW 或金額）。(3) 舊未解：CoreWeave「active power」口徑（預設 IT）；Excel 實機開啟待 Andy。
 
 ## 工作單總覽
 | 工作單 | 分支 | PR | 狀態 |
@@ -11,7 +11,8 @@
 | W0 遷移 | `claude/coreweave-w0-migrate` | | chat 端完成 |
 | W1 Tokenomics 取數層 | `claude/coreweave-w1-tokenomics`（疊加於 W0 分支） | #6 | 完成，待審 |
 | W2 每 MW 改寫 | `claude/coreweave-w2-permw`（疊加於 W1 分支） | #9 | 完成，待審 |
-| W3 v4.6 成品與對照 | `claude/coreweave-w3-v4.6`（疊加於 W2 分支） | #18 | 完成，待審 |
+| W3 v4.6 成品與對照 | `claude/coreweave-w3-v4.6`（疊加於 W2 分支） | #18 | 已合併 |
+| W4 收入 Tokenomics 錨定（v4.7） | `claude/coreweave-w4-revenue`（自 main f373885） | #27 | 進行中 |
 
 <!-- 各工作單在下方新增自己的段落：「## Wx」＋步驟紀錄表（步驟｜狀態｜commit｜備註） -->
 
@@ -400,3 +401,33 @@ chat 端追加（優先於工作單，2026-10-07）：第 0 步把 Tokenomics �
 
 ### W3 關鍵數字（v4.5 → v4.6）
 加權目標價：保守 $69.74 → $43.99、基準 $45.50 → $29.68、積極 $30.95 → $19.95（皆賣出）；融資缺口 19.7／61.7／126.2 → 32.7／81.6／157.9；基準累計新股 FY30 0.171 → 0.261bn 股。拆解（依序）：① −16.57／−7.62／−9.13、③ −9.18／−8.21／−1.88，②④⑤ 0。
+
+
+## W4 每 MW 收入以 Tokenomics 為錨（v4.7）
+
+工作單 r1（`docs/workorders/20261008_coreweave_W4_收入Tokenomics錨定.md`）。每 MW 年收入（100% 計費時數）＝Σ 平均在役占比 × `IF_HoldEcon`（TK_ 名稱，目前成本情境）× k；k＝長約占比 × k_長約＋（1 − 長約占比）× k_現貨；長約占比＝MIN(1, MAX(0, 排程 RPO ÷（平均計費 MW × 錨 × k_長約 × 利用率 × 期間長度）＋調整))。
+
+| 步驟 | 狀態 | commit | 備註 |
+|---|---|---|---|
+| 0 開分支、draft PR #27、Tokenomics 版本 | 完成 | 0d00e96 | 自 origin/main f373885；Tokenomics master `862bdd4`，`model/CURRENT`＝`20261008_Tokenomics_v5.27.xlsx`（v5.26 → v5.27）。重抓快照 `data/tokenomics_snapshot_v5.27.json`：原 25 名數值與儲存格位置與 v5.26 **完全相同**；新增 `IF_RevGWFleet`（上限檢查）。刪 v5.26 快照（舊方法回歸自 git 歷史取回） |
+| 1 證據補充 | 完成 | （本 commit） | 見下方「W4 第 1 步證據表」；`company.json` → `pricing.anchorMultiple`（evidence、contractMix、notFound） |
+| 2 實作 tkAnchor | 完成（新方法 verify 22 項全過） | （本 commit） | Excel：輸入頁「定價倍數 k」三格＋TK 收入上限區塊；「每MW經濟性」新增「每 MW 收入：Tokenomics 錨 × 定價倍數 k（W4）」與「k 證據表」；B 區每 MW 年收入改引用；檢查頁「收入上限」；JS：`anchorRevQ`、perMwQ `tk`／`kev`、pmwSensQ 六組、檢查卡；cmp31 三情境各 472 項、FY27 錨定 433 項全 OK。另修 JS 既有缺陷：segB 無槓桿 NOL 虧損只加回 80%（Excel 為 100%；v4.6 前未觸發，W4 數字下 FY30 UFCF 差 0.41）。舊方法回歸 `scripts/verify_legacy.sh` 基準改為 v4.6（revenue=legacy、其餘 v4.6 設定、快照取 git 歷史 v5.26、dist 取 f373885）：25 項全過，畫面文字、Excel 值與公式對 v4.6 成品 **0 差異**（新增列 44） |
+| 3 Q2 驗證（不校準） | 完成 | （本 commit） | `scripts/q2_check_w4.py`：模型首期 7.638 對 Q2 年化 8.240（−0.602，−7.3%）＝(i) 爬坡分母 +0.091、(ii) 利用率 0、(iii) 定價倍數 −0.737（模型 k 0.760 vs Q2 隱含 0.838）、(iv) 世代組合 +0.072、(v) 其他 −0.028；相加＝總差距。Excel「每MW經濟性」最近一季實際對照新增 5 列（Q2 每 MW 收入 ÷ 在役／÷ 計費 MW、Q2 錨、Q2 隱含 k 未調整 0.752） |
+
+### W4 第 1 步證據表（倍數＝價格 ÷ Tokenomics v5.27 基準同世代持有成本；Excel 以 TK_ 名稱計算）
+| 證據 | 世代 | 價格 | Tokenomics | 倍數 | 用途 | 合約／期間 | 來源（日期） | 標記 |
+|---|---|---|---|---|---|---|---|---|
+| IREN–Microsoft 五年約 | GB300 | 9.70 US$m/MW/年 | IF_HoldEcon 12.725 | 0.76 | k_長約基準 | 長約 5 年 | IREN 新聞稿（2025-11-03） | [Derived] |
+| IREN–NVIDIA 氣冷 Blackwell 五年約 | GB300 類比 | 11.33 US$m/MW/年（$3.4bn ÷ 5 ÷ 60 MW） | IF_HoldEcon 12.725 | 0.89 | 支持區間 | 長約 5 年 | IREN 新聞稿（2026-05-07） | [Analogy] |
+| Oracle–OpenAI（未經證實） | GB300 類比 | 13.33 US$m/MW/年（$300bn ÷ 5 ÷ 4.5 GW） | IF_HoldEcon 12.725 | 1.05 | 只列 | 約 5 年 | The Register 轉述 WSJ（2025-09-11） | [Analogy] |
+| H100 Silicon Data 指數 | H100 | 2.82 US$/GPU-hr | IF_GPUhrEcon 1.605 | 1.76 | k_現貨基準 | 現貨 | Silicon Data（2026-10-06） | [Verified] |
+| B300 Silicon Data 指數 | GB300 類比 | 6.82 | 2.983 | 2.29 | 支持區間（上緣） | 現貨 | Silicon Data（2026-10-06） | [Analogy] |
+| B200 Ornn 成交指數 | GB200 類比 | 4.08 | 2.086 | 1.96 | 支持區間 | 現貨 | Ornn 經 WSJ（2026-04-13） | [Analogy] |
+| B200 Silicon Data 指數 | GB200 類比 | 5.87 | 2.086 | 2.81 | 只列（高於區間） | 現貨 | Silicon Data（2026-10-06） | [Analogy] |
+| B300 Nebius 隨需牌價 | GB300 類比 | 7.85 | 2.983 | 2.63 | 只列 | 牌價 | Nebius 價目（2026-10-07） | [Interested-party] |
+| GB200 CoreWeave 隨需牌價 | GB200 | 10.50 | 2.086 | 5.03 | 只列 | 牌價 | CoreWeave 價目（2026-10-07） | [Interested-party] |
+| H100 CoreWeave 隨需牌價 | H100 | 6.155 | 1.605 | 3.83 | 只列 | 牌價 | CoreWeave 價目（2026-10-07） | [Interested-party] |
+
+- 最終預設：k_長約 0.76（0.70–1.00）、k_現貨 1.76（1.5–2.3），皆 [Analogy]；第二筆長約（IREN–NVIDIA 0.89）與第一筆同一供應商，依保守原則只支持區間、不改基準。
+- CRWV 合約組合：已承諾合約加權平均年期約 5 年（10-K FY2025 [Verified]）；「絕大多數收入來自多年期已承諾合約」（S-1，未給百分比 [Interested-party]）；長約／隨需比例 **找不到**（試過 10-K FY2025、S-1、Q2 新聞稿與搜尋）。
+- 找不到：VR200 長約價（Nebius–Meta $12bn Vera Rubin、Nebius–Microsoft $17.4–19.4bn 皆未揭露 MW 或 GPU 數）；GB200 長約價；獨立於 IREN 的第二家供應商長約（Nscale–Microsoft 未揭露金額，FT 估計不用）。未使用 SemiAnalysis。

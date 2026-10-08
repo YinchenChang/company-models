@@ -287,7 +287,7 @@ function PerMwTabQ({ d, st, o }) {
       elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [thL(`項目`), th(`單位`), ...PERIODS.map((p, k) => th(p, k))])),
       elQ(`tbody`, { key: `b` }, rows.map(([a, u, xs], k) => elQ(`tr`, { key: k }, [tdL(a, `a`), td(u, `u`), ...xs.map((x, j) => td(fmt(x, u), j))])))])),
     S = P.sum, g = k => S.find(r => r[0] === k)[2], F = PERIODS.length - 1,
-    M = { capex: { tokenomics: `Tokenomics（IF_CapexIT × 新增世代）`, legacy: `舊方法（每 MW 34）` }, cost: { bottomUp: `由下而上（Tokenomics × MW＋管銷率）`, ebitdaPct: `舊方法（EBITDA 率線性路徑）` }, revenue: { gpuHr: `GPU 小時價格 × GPU 數`, legacy: `備案：每 MW 年收入為輸入（GPU 小時長約價不足兩個獨立來源）` } },
+    M = { capex: { tokenomics: `Tokenomics（IF_CapexIT × 新增世代）`, legacy: `舊方法（每 MW 34）` }, cost: { bottomUp: `由下而上（Tokenomics × MW＋管銷率）`, ebitdaPct: `舊方法（EBITDA 率線性路徑）` }, revenue: { tkAnchor: `Tokenomics 錨（IF_HoldEcon × 在役世代）× 定價倍數 k`, gpuHr: `GPU 小時價格 × GPU 數`, legacy: `備案：每 MW 年收入為輸入（GPU 小時長約價不足兩個獨立來源）` } },
     tkv = COMPANY_DATA.tkSnap ? COMPANY_DATA.tkSnap.source : {};
   return elQ(`div`, { className: `space-y-3` }, [
     elQ(hdrQ, { key: `h`, title: `每 MW 經濟性（每平均在役 MW、年化；${MWBASISQ === `facility` ? `設施` : `IT 關鍵電力`}口徑）`,
@@ -297,10 +297,15 @@ function PerMwTabQ({ d, st, o }) {
     elQ(accQ, { key: `t`, title: `每 MW 經濟性彙總表（${PERIODS[0]}–${PERIODS[F]}；IT 與設施口徑）`, sum: `${S.length} 列` }, tbl(S)), // W3：彙總表放次層（預設收合）
     elQ(accQ, { key: `a1`, title: `世代組合與在役結構（MW）`, sum: GENQ.map(x => x.split(` `)[0]).join(`／`) }, tbl(P.fleet)),
     elQ(accQ, { key: `a2`, title: `由下而上營運成本（租金前）`, sum: PMWQ.cost === `bottomUp` ? `模型採用` : `對照` }, tbl(P.bu)),
-    elQ(accQ, { key: `a3`, title: `每 MW 收入對照（隱含 GPU 小時價格、持有成本、同業與市場價格）`, sum: PMWQ.revenue === `gpuHr` ? `GPU 小時價格` : `備案 legacy` }, tbl(P.rev)),
+    PMWQ.revenue === `tkAnchor` && P.tk ? elQ(accQ, { key: `a3t`, title: `每 MW 收入：Tokenomics 錨 × 定價倍數 k（長約占比、上限檢查）`, sum: `模型採用` }, tbl(P.tk)) : null, // W4
+    PMWQ.revenue === `tkAnchor` && P.kev ? elQ(accQ, { key: `a3k`, title: `定價倍數 k 證據表（價格／Tokenomics 同世代／倍數／用途）`, sum: `${AMQ.evidence.length} 筆` },
+      elQ(`div`, { style: xstyQ.wrap }, elQ(`table`, { style: { ...xstyQ.table, minWidth: 820 } }, [
+        elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [thL(`證據`), th(`單位`), th(`價格`), th(`Tokenomics 同世代`), th(`倍數`), th(`用途`)])),
+        elQ(`tbody`, { key: `b` }, P.kev.map(([a, u, xs], k) => elQ(`tr`, { key: k }, [tdL(a, `a`), td(u, `u`), ...xs.slice(0, 4).map((x, j) => td(x == null ? `` : typeof x === `string` ? x : Y(x, j === 2 ? 2 : 3), j))])))]))) : null,
+    elQ(accQ, { key: `a3`, title: `每 MW 收入對照（隱含 GPU 小時價格、持有成本、同業與市場價格）`, sum: { gpuHr: `GPU 小時價格`, tkAnchor: `對照` }[PMWQ.revenue] || `備案 legacy` }, tbl(P.rev)),
     elQ(accQ, { key: `a4`, title: `每 MW 資本支出對照`, sum: PMWQ.capex === `tokenomics` ? `Tokenomics` : `舊方法` }, tbl(P.cap)),
     elQ(accQ, { key: `a5`, title: `最近一季實際對照（不強制平衡）`, sum: `` }, tbl(P.q2)),
-    elQ(accQ, { key: `a6`, title: `敏感度（加權目標價 US$／融資缺口 US$bn；三情境）`, sum: `Tokenomics 低／高成本、GPU 小時價格、Rubin Ultra 版、管銷率` },
+    elQ(accQ, { key: `a6`, title: `敏感度（加權目標價 US$／融資缺口 US$bn；三情境）`, sum: `Tokenomics 低／高成本、GPU 小時價格、Rubin Ultra 版、管銷率${PMWQ.revenue === `tkAnchor` ? `、定價倍數 k、長約占比` : ``}` },
       elQ(`div`, { style: xstyQ.wrap }, elQ(`table`, { style: { ...xstyQ.table, minWidth: 820 } }, [
         elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [thL(`設定`), ...[`low`, `base`, `high`].map(k => th(SCENARIOS[k].label.split(` `)[0], k))])),
         elQ(`tbody`, { key: `b` }, SN.cases.map(([k, n]) => elQ(`tr`, { key: k }, [tdL(n, `a`), ...[`low`, `base`, `high`].map(sk => {

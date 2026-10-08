@@ -540,13 +540,14 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.rating.tvShareWarn` | 終值占企業價值超過此值時提出警示（融資說明、檢查頁） | 比例 | 0.85 | 可沿用 |
 | `methodology.checks.capexPerMwBand` | 檢查頁：模型期 CapEx 強度（每 MW 百萬美元）的合理區間下端與上端（5a） | US$m/MW 清單 | 20、45 | 檢查 |
 | `methodology.checks.leaseVsCommitMin` | 檢查頁：表外租金路徑 ÷ 已承諾租約至少要達到的倍數（5a） | 倍 | 0.8 | 檢查 |
+| `methodology.checks.revCapShareMax` | 檢查頁：CRWV 每 MW 計費收入 ÷ Tokenomics 客戶付費 token 營收（IF_RevGWFleet）的上限，超過即警示（W4） | 比例 | 0.5 | 檢查 |
 | `methodology.checks.unsignedRevShareMax` | 檢查頁：後段年度依賴未簽約收入的比例上限（5a） | 比例 | 0.5 | 檢查 |
 | `methodology.checks.siteRentGapMax` | 檢查頁：站點租賃五期租金可能低估的金額上限（5a） | US$bn | 10 | 檢查 |
 | `methodology.checks.rentVsBenchMin` | 檢查頁：模型每 MW 年租金至少要達到「市場基準 × 第三方占比」的比例（5a） | 比例 | 0.8 | 檢查 |
 | `methodology.perMw._note` | 每 MW 方法開關的說明（不進程式；W2） | 文字 | 每 MW 方法開關（W2）：capex＝tokeno… | 可沿用 |
 | `methodology.perMw.capex` | 每 MW 資本支出方法（W2）：tokenomics＝Σ 新增世代占比 × IF_CapexIT；legacy＝scenarios.capexTemplate.costMW | 代碼 | tokenomics | 檢查 |
 | `methodology.perMw.cost` | 營運成本方法（W2）：bottomUp＝Tokenomics 電費、IT 維護、人員軟體、稅險 × 平均在役 MW＋管銷率；ebitdaPct＝起始→穩態 EBITDA 率線性 | 代碼 | bottomUp | 檢查 |
-| `methodology.perMw.revenue` | 每 MW 收入方法（W2）：gpuHr＝pricing.gpuHr × 每 MW GPU 數 × 8,760；legacy＝defaults.m.revMW（備案） | 代碼 | legacy | 檢查 |
+| `methodology.perMw.revenue` | 每 MW 收入方法（W2／W4）：tkAnchor＝Σ 平均在役占比 × IF_HoldEcon × 定價倍數 k（pricing.anchorMultiple；W4 預設）；gpuHr＝pricing.gpuHr × 每 MW GPU 數 × 8,760；legacy＝defaults.m.revMW（對照） | 代碼 | tkAnchor | 檢查 |
 
 ### `peers`：同業比較（Comps）
 
@@ -588,7 +589,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `varianceReasons._note` | 差異原因的說明文字（不進程式） | 文字 | 差異原因（已決定事項 2）：差距超過 methodo… | 可沿用 |
-| `varianceReasons.list` | 差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗；perMw（W2，選填）＝只在 methodology.perMw 相符時適用的條件，排在前面者優先 | 清單 | 10 筆 | 檢查 |
+| `varianceReasons.list` | 差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗；perMw（W2，選填）＝只在 methodology.perMw 相符時適用的條件，排在前面者優先 | 清單 | 11 筆 | 檢查 |
 
 ### `texts`：公司特有的說明文字（v4.5；隨資料更新）
 
@@ -605,9 +606,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `tokenomics._note` | Tokenomics 取數層的說明（不進程式；W1） | 文字 | 算力相關的產業與物理層資料改引用 Tokenomic… | 可沿用 |
 | `tokenomics.snapshotFile` | Tokenomics 快照檔路徑（tools/tokenomics/import_tokenomics.py 產生；Excel「Tokenomics_取數」分頁讀此檔；W1） | 路徑 | data/tokenomics_snapshot_v… | 可沿用 |
-| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v5.26 | 可沿用 |
-| `tokenomics.commit` | 快照的 Tokenomics commit SHA | 文字 | 40746846c1bc892eb1e092a0d3… | 可沿用 |
-| `tokenomics.names` | 引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW | 檢查 |
+| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v5.27 | 可沿用 |
+| `tokenomics.commit` | 快照的 Tokenomics commit SHA | 文字 | 862bdd46d199ab5047b77dcba1… | 可沿用 |
+| `tokenomics.names` | 引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW、IF_RevGWFleet | 檢查 |
 | `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（v5.25 預計新增） | 清單 |  | 檢查 |
 
 ### `fleet`：世代組合（W2；公司專屬）
@@ -633,6 +634,26 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `pricing._note` | GPU 小時價格與對照價格的說明（不進程式；W2） | 文字 | GPU 小時價格（W2，公司專屬）：gpuHr＝合約… | 可沿用 |
 | `pricing.gpuHr` | GPU 小時合約價，{世代: {base, low, high, source, date, tag}}（US$/GPU-hr）；空白＝不適用（revenue=gpuHr 時必填所有在役世代） | 物件 | 物件（） | 必改 |
+| `pricing.anchorMultiple._note` | Tokenomics 錨的公司因素說明（不進程式；W4） | 文字 | W4（已決定事項 14）：每 MW 年收入（100%… | 可沿用 |
+| `pricing.anchorMultiple.long.base` | 定價倍數 k_長約 基準（市場長約價 ÷ Tokenomics 同世代持有成本；W4） | 倍 | 0.76 | 檢查 |
+| `pricing.anchorMultiple.long.low` | k_長約 區間下緣（敏感度） | 倍 | 0.7 | 檢查 |
+| `pricing.anchorMultiple.long.high` | k_長約 區間上緣（敏感度） | 倍 | 1 | 檢查 |
+| `pricing.anchorMultiple.long.tag` | k_長約 的資料標記 | 文字 | [Analogy] | 可沿用 |
+| `pricing.anchorMultiple.long.note` | k_長約 基準與區間的依據 | 文字 | 基準＝IREN–Microsoft GB300 五年… | 可沿用 |
+| `pricing.anchorMultiple.spot.base` | 定價倍數 k_現貨 基準（市場現貨價 ÷ Tokenomics 同世代持有成本；W4） | 倍 | 1.76 | 檢查 |
+| `pricing.anchorMultiple.spot.low` | k_現貨 區間下緣（敏感度） | 倍 | 1.5 | 檢查 |
+| `pricing.anchorMultiple.spot.high` | k_現貨 區間上緣（敏感度） | 倍 | 2.3 | 檢查 |
+| `pricing.anchorMultiple.spot.tag` | k_現貨 的資料標記 | 文字 | [Analogy] | 可沿用 |
+| `pricing.anchorMultiple.spot.note` | k_現貨 基準與區間的依據 | 文字 | 基準＝H100 Silicon Data 現貨指數 … | 可沿用 |
+| `pricing.anchorMultiple.longShare.method` | 長約占比估計方法（rpoCover＝RPO 涵蓋的產能 ÷ 在役計費產能） | 代碼 | rpoCover | 檢查 |
+| `pricing.anchorMultiple.longShare.adj` | 長約占比調整（百分點，加在 RPO 涵蓋估計上；預設 0） | 比例 | 0 | 檢查 |
+| `pricing.anchorMultiple.longShare.sensLowPt` | 長約占比敏感度的下調幅度（百分點） | 比例 | -0.2 | 檢查 |
+| `pricing.anchorMultiple.longShare.tag` | 長約占比的資料標記 | 文字 | [Derived] | 可沿用 |
+| `pricing.anchorMultiple.longShare.formula` | 長約占比算式說明（不進程式） | 文字 | 長約占比_t ＝ MIN(1, MAX(0, 排程 … | 可沿用 |
+| `pricing.anchorMultiple.longShare.sens` | 長約占比敏感度說明（不進程式） | 文字 | 敏感度：調整 −20pt（較多現貨）、100%（新簽… | 可沿用 |
+| `pricing.anchorMultiple.contractMix` | 公司合約組合事實（label、value、unit、tag、source、url、date、retrieved；只列，不入公式） | 清單 | 3 筆 | 必改 |
+| `pricing.anchorMultiple.evidence` | k 證據表：label、gen、price、unit、tkName（IF_GPUhrEcon／IF_HoldEcon）、contract、term、use（long／spot／range／list）、tag、source、url、date、retrieved、note；倍數在 Excel 以 TK_ 名稱計算 | 清單 | 10 筆 | 必改 |
+| `pricing.anchorMultiple.notFound` | 找不到的資料（試過的來源；W4） | 清單 | VR200 NVL72 長約或多年期合約的每 GPU…、GB200 NVL72 長約價：找不到可換算的揭露（…、其他 neocloud 對 hyperscaler／… | 可沿用 |
 | `pricing.peerRevPerMw` | 同業每 MW 年收入對照列（label、value、unit、tag、source、date、url、note；不入損益） | 清單 | 1 筆 | 必改 |
 | `pricing.marketRefs` | 各世代市場 GPU 小時價格對照列（gen、label、value、basis、tag、source、date、url；不入損益） | 清單 | 6 筆 | 必改 |
 

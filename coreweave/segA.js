@@ -58,6 +58,7 @@ var PMWQ = Object.assign({ capex: `legacy`, cost: `ebitdaPct`, revenue: `legacy`
   TKSQ = (COMPANY_DATA.tkSnap || {}).items || {},
   MWBASISQ = COMPANY_DATA.meta.mwBasis || `IT`,
   PRICINGQ = COMPANY_DATA.pricing || {},
+  AMQ = (COMPANY_DATA.pricing || {}).anchorMultiple || null, // W4：Tokenomics 錨的公司因素（定價倍數 k、長約占比、證據表）
   COSTSQ = COMPANY_DATA.costs || {},
   TK_PHQ = [`IF_MaintIT`, `IF_StaffSW`, `IF_TaxIns`, `IF_DeprLifeIT`], // 可用暫代值的名稱（待 Tokenomics v5.26）；其餘名稱缺少時建置失敗
   COSTMW_LEGQ = [...COMPANY_DATA.scenarios.capexTemplate.costMW]; // v4.5 舊值（對照列）
@@ -97,6 +98,7 @@ if (PMWQ.capex === `tokenomics`) { // 建置成本與壽命改為 Tokenomics 推
   DEFAULTS.a.costMW = [...c];
   DEFAULTS.gpuLife = lifeTkQ()
 }
+AMQ && Object.assign(DEFAULTS, { kLong: AMQ.long.base, kSpot: AMQ.spot.base, lsAdj: AMQ.longShare.adj || 0 }); // W4：定價倍數 k 與長約占比調整（敏感度以 e 覆寫）
 PMWQ.cost === `bottomUp` && (DEFAULTS.ebSteady = null); // 由下而上：穩態 EBITDA 率預設＝由下而上的 FY30 值（null）；輸入數值時視為 FY30 目標，差額線性分攤
 
 function ebPathQ(e, d) { return PMWQ.cost === `bottomUp` ? [d.years[0].ebM, d.years[4].ebM] : [e.ebStart, e.ebSteady] } // W2：畫面上的 EBITDA 率起點／FY30（由下而上時取模型路徑）
@@ -118,6 +120,19 @@ function gpuPerMwQ(mx) { return wMixQ(mx, g => tkMwQ(`IF_GPUsPerGW`, g) / 1e3) }
 function revGpuQ(e, F) { // 每 MW 年收入（US$bn/MW，100% 計費時數；利用率在收入端另乘）＝Σ 平均在役占比 × 每 MW GPU 數 × GPU 小時合約價 × 8,760 ÷ 10⁹
   let P = PRICINGQ.gpuHr || {}, k = (e && e.pxCase) || `base`;
   return F.mix.map(mx => wMixQ(mx, g => P[g] && P[g][k] != null ? tkMwQ(`IF_GPUsPerGW`, g) / 1e3 * P[g][k] * 8760 / 1e9 : NaN))
+}
+function anchorRevQ(e, F, t) { // W4：每 MW 年收入＝Tokenomics 錨（Σ 平均在役占比 × IF_HoldEcon）× 定價倍數 k（Excel「每MW經濟性」W4 區同列同算式）
+  // k＝長約占比 × k_長約＋（1 − 長約占比）× k_現貨；長約占比＝MIN(1, MAX(0, 排程 RPO ÷（平均計費 MW × 錨 × k_長約 × 利用率 × 期間長度）＋調整))
+  let cs = e.tkCase || `基準`, i = e.rp / 100, kL = e.kLong ?? AMQ.long.base, kS = e.kSpot ?? AMQ.spot.base, adj = e.lsAdj ?? 0,
+    R = { anchor: [], sched: [], avgB: [], util: [], longCap: [], cover: [], share: [], kL: [], kS: [], k: [], rev: [] };
+  for (let r = 0; r < 5; r++) {
+    let L = PERIOD_YEARS[r], A = wMixQ(F.mix[r], g => tkMwQ(`IF_HoldEcon`, g, cs)),
+      o = e.rpoOpen * (RPO_BUCKET_W[r] / RPO_SCHEDULED_SHARE) * i + e.rpoPendingAdd * RPO_Q3ADD_W[r] * i,
+      c = r === 0 ? e.billableOpen : t.billable[r - 1], l = e.useAvgMw ? (c + t.billable[r]) / 2 : t.billable[r],
+      lc = l * A / 1e3 * kL * (t.util[r] / 100) * L, cv = o / Math.max(1e-9, lc), sh = Math.min(1, Math.max(0, cv + adj)), k = sh * kL + (1 - sh) * kS;
+    R.anchor.push(A), R.sched.push(o), R.avgB.push(l), R.util.push(t.util[r] / 100), R.longCap.push(lc), R.cover.push(cv), R.share.push(sh), R.kL.push(kL), R.kS.push(kS), R.k.push(k), R.rev.push(A * k)
+  }
+  return R
 }
 function siteBenchQ(e) {
   let t = e.filter(e => !e.residual && e.contract && e.years && e.planned);
@@ -372,7 +387,7 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
     ],
     rev = [
       [`每 MW 年收入（模型採用，100% 計費時數）`, `US$m/MW`, revIn], [`每 MW 年收入（計費後＝× 利用率）`, `US$m/MW`, I5.map(i => revIn[i] * d.m.util[i] / 100)],
-      [`每 MW 年收入（v4.5 舊值，對照）`, `US$m/MW`, COMPANY_DATA.defaults.m.revMW.map(x => x * 1e3)],
+      [PMWQ.revenue === `tkAnchor` ? `每 MW 年收入（v4.6 舊輸入 m.revMW，對照）` : `每 MW 年收入（v4.5 舊值，對照）`, `US$m/MW`, COMPANY_DATA.defaults.m.revMW.map(x => x * 1e3)],
       [`期末 ARR 指引 ÷ 年底主動電力（公司數字，只作對照）`, `US$m/MW`, [(CALL_FACTS.arrLo + CALL_FACTS.arrHi) / 2 / CALL_FACTS.yeActiveGw, ...NA]],
       [`每 MW GPU 數（世代加權）`, `顆/MW`, gpu], [`GPU 小時價格路線：每 MW 年收入`, `US$m/MW`, gpuRev],
       [`隱含每 GPU 小時價格（反算對照，不是輸入）`, `US$/GPU-hr`, imp], [`每 GPU 小時經濟持有成本（GPU 數加權）`, `US$/GPU-hr`, gEcon],
@@ -391,15 +406,49 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
       [`最近一季每 MW 現金營運成本（年化，不含管銷）`, `US$m/MW`, [qPM, ...NA]], [`模型由下而上每 MW 現金營運成本（不含管銷）`, `US$m/MW`, buPM],
       [`差距（模型 ${PERIODS[0]} − 實際）`, `US$m/MW`, [buPM[0] - qPM, ...NA]],
       [`最近一季每 MW 年租金（營業＋變動，年化）`, `US$m/MW`, [(lq.opLeaseCost + lq.varLeaseCost) * 4 / qMW * 1e3, ...NA]],
-      [`模型每 MW 年租金`, `US$m/MW`, I5.map(i => pm(y[i].lease, i))]
+      [`模型每 MW 年租金`, `US$m/MW`, I5.map(i => pm(y[i].lease, i))],
+      ...(AMQ && PMWQ.revenue === `tkAnchor` ? (() => { // W4：Q2 收入對照（只作驗證，不校準 k）
+        let qr = lq.revenue * 4 / qMW * 1e3, br = e.billableOpen / oMW, qa = GENQ.reduce((a, g) => a + (FLEETQ.openMix.mix[g] || 0) * tkMwQ(`IF_HoldEcon`, g, cs), 0);
+        return [[`最近一季每 MW 年收入（營收 × 4 ÷ 平均在役 MW）`, `US$m/MW`, [qr, ...NA]], [`最近一季計費比例（季末 Billable ÷ 季末在役 MW，假設）`, `%`, [br, ...NA]],
+          [`最近一季每 MW 年收入（÷ 平均計費 MW）`, `US$m/MW`, [qr / br, ...NA]], [`最近一季錨（季末在役世代 × IF_HoldEcon）`, `US$m/MW`, [qa, ...NA]],
+          [`最近一季隱含 k（年化營收 ÷ 平均在役 MW ÷ 錨，未調整）`, `倍`, [qr / qa, ...NA]]]
+      })() : [])
     ];
-  return { sum, fleet, bu, rev, cap, q2 }
+  let tk = null, kev = null;
+  if (AMQ) { // W4：Tokenomics 錨 × k（Excel「每MW經濟性」W4 區）與 k 證據表
+    let A = anchorRevQ(e, F, d.m), old = COMPANY_DATA.defaults.m.revMW.map(x => x * 1e3), hasRF = tkHasQ(`IF_RevGWFleet`),
+      rf = hasRF ? mx.map(m => wMixQ(m, g => tkMwQ(`IF_RevGWFleet`, g, cs))) : I5.map(() => `不適用`),
+      ratio = hasRF ? I5.map(i => revIn[i] * d.m.util[i] / 100 / Math.max(1e-9, rf[i])) : I5.map(() => `不適用`),
+      th = CHECK_TH.revCapShareMax;
+    tk = [
+      [`錨｜每 MW 經濟持有成本（IF_HoldEcon，在役世代加權）`, `US$m/MW`, A.anchor], [`錨｜排程 RPO（模型期）`, `US$bn`, A.sched],
+      [`錨｜平均計費 MW`, `MW`, A.avgB], [`錨｜利用率`, `%`, A.util],
+      [`長約價產能收入（平均計費 MW × 錨 × k_長約 × 利用率 × 期間長度）`, `US$bn`, A.longCap],
+      [`RPO 涵蓋的產能 ÷ 在役計費產能（未截斷）`, `%`, A.cover], [`長約占比（截斷於 0–100%，含調整）`, `%`, A.share],
+      [`k_長約（輸入）`, `倍`, A.kL], [`k_現貨（輸入）`, `倍`, A.kS],
+      [`定價倍數 k（長約占比 × k_長約 ＋（1 − 長約占比）× k_現貨）`, `倍`, A.k],
+      [`Tokenomics 錨 × k：每 MW 年收入（100% 計費時數）`, `US$m/MW`, A.rev],
+      [`錨 × k 相對 v4.6 舊輸入 m.revMW`, `%`, I5.map(i => A.rev[i] / Math.max(1e-9, old[i]) - 1)],
+      [`上限檢查｜客戶每 MW 付費 token 營收（IF_RevGWFleet，在役世代加權）`, `US$m/MW`, rf],
+      [`上限檢查｜CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收`, `%`, ratio],
+      [`上限檢查｜各期結果`, ``, hasRF ? ratio.map(x => x > th ? `警示` : `通過`) : I5.map(() => `不適用`)]
+    ];
+    kev = [
+      ...AMQ.evidence.map(x => { let v = tkQ(x.tkName, x.gen); return [`k 證據｜${x.label}`, x.unit, v == null ? [x.price, `不適用`, `不適用`, x.use, null] : [x.price, v, x.price / v, x.use, null]] }),
+      ...(AMQ.contractMix || []).map(x => [`合約組合｜${x.label}`, x.unit, [x.value ?? x.tag, null, null, null, null]])
+    ]
+  }
+  return { sum, fleet, bu, rev, cap, q2, tk, kev }
 }
 
 function pmwSensQ(e, v) { // W2：每 MW 敏感度（與 scripts/permw_sens.py 同一組設定；Excel 為建置時快照，cmp31 逐格比對）
   let C = [[`base`, `基準（目前輸入）`, {}], [`tkLow`, `Tokenomics 低成本`, { tkCase: `低成本` }], [`tkHigh`, `Tokenomics 高成本`, { tkCase: `高成本` }],
     [`pxLow`, `GPU 小時價格 低`, PMWQ.revenue === `gpuHr` ? { pxCase: `low` } : null], [`pxHigh`, `GPU 小時價格 高`, PMWQ.revenue === `gpuHr` ? { pxCase: `high` } : null],
-    [`mixRU`, `世代組合 Rubin Ultra 版`, { mixAlt: !0 }], [`sgaGaap`, `管銷率 GAAP（含 SBC）`, PMWQ.cost === `bottomUp` ? { sgaBasis: `gaap` } : null]],
+    [`mixRU`, `世代組合 Rubin Ultra 版`, { mixAlt: !0 }], [`sgaGaap`, `管銷率 GAAP（含 SBC）`, PMWQ.cost === `bottomUp` ? { sgaBasis: `gaap` } : null],
+    ...(PMWQ.revenue === `tkAnchor` ? [ // W4：定價倍數 k 與長約占比（與 scripts/permw_sens.py 同一組設定）
+      [`kLongLo`, `k_長約 ${Y(AMQ.long.low, 2)}`, { kLong: AMQ.long.low }], [`kLongHi`, `k_長約 ${Y(AMQ.long.high, 2)}`, { kLong: AMQ.long.high }],
+      [`kSpotLo`, `k_現貨 ${Y(AMQ.spot.low, 2)}`, { kSpot: AMQ.spot.low }], [`kSpotHi`, `k_現貨 ${Y(AMQ.spot.high, 2)}`, { kSpot: AMQ.spot.high }],
+      [`lsLow`, `長約占比 ${Math.round(AMQ.longShare.sensLowPt * 100)}pt`, { lsAdj: AMQ.longShare.sensLowPt }], [`lsAll`, `長約占比 100%（新簽約全視為長約）`, { lsAdj: 1 }]] : [])],
     rows = Object.fromEntries([`low`, `base`, `high`].map(sk => [sk, Object.fromEntries(C.map(([k, , ch]) => {
       if (!ch) return [k, null];
       let s2 = { ...scnQ(e, sk), ...ch }, d2 = runFunding(s2), p2 = runValuation(d2, s2, v);
@@ -429,6 +478,7 @@ function runFunding(e) {
     CX = CXG.map((e, t) => e + REF[t]),
     FQ = fleetQ(e, t.accepted), // W2：世代組合（legacy 組合只作對照，不影響任何數字）
     _gh = PMWQ.revenue === `gpuHr` && (t.revMW = revGpuQ(e, FQ)),
+    _ta = PMWQ.revenue === `tkAnchor` && (t.revMW = anchorRevQ(e, FQ, t).rev.map(x => x / 1e3)), // W4：Tokenomics 錨 × k（US$bn/MW，100% 計費時數）
     BUQ = FQ ? PERIODS.map((n, r) => buCostQ(e, t, FQ, r, revPassQ(e, t, r), LEASE_CASH_ON_BAL[r] + e.a.newLease[r])) : null,
     PPE = [],
     DAF = CXG.map((t, n) => {
@@ -639,6 +689,17 @@ function runFunding(e) {
     title: `Tokenomics 名稱缺漏 ${TK_MISSQ.length} 項，成本為暫代值`,
     detail: `${TK_MISSQ.join(`、`)} 尚未在 Tokenomics ${(COMPANY_DATA.tkSnap || { source: {} }).source.version || ``} 提供（待 v5.26）。暫代：IT 維護＝輸入頁「維護成本」（CRWV 現值）、人員軟體與稅險＝0、GPU 經濟壽命＝${COMPANY_DATA.defaults.gpuLife} 年。Tokenomics 補齊後重抓快照即自動改用正式值。`
   });
+  if (PMWQ.revenue === `tkAnchor` && FQ && tkHasQ(`IF_RevGWFleet`)) { // W4：收入上限檢查（Excel「檢查_連動」同一列；門檻 company.json → methodology.checks.revCapShareMax）
+    let rq = PERIODS.map((n, r) => t.revMW[r] * (e.revScale ?? 1) * 1e3 * t.util[r] / 100 / Math.max(1e-9, wMixQ(FQ.mix[r], g => tkMwQ(`IF_RevGWFleet`, g, e.tkCase || `基準`)))),
+      mx = Math.max(...rq), th = CHECK_TH.revCapShareMax;
+    _({
+      id: `rev-cap`,
+      ok: mx <= th,
+      severity: mx <= th ? `ok` : `watch`,
+      title: `收入上限：CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收 最高 ${hA(mx * 100, 0)}（門檻 ${hA(th * 100, 0)}）`,
+      detail: `neocloud 拿走客戶 token 營收的比例＝每 MW 計費收入 ÷ Tokenomics IF_RevGWFleet（OpenAI 有效單價、層級組合的理想上限，依在役世代加權）。各期：${PERIODS.map((n, r) => `${n} ${hA(rq[r] * 100, 0)}`).join(`、`)}。超過門檻代表 CRWV 單價相對客戶端 token 經濟性偏高。`
+    })
+  }
   let v = o[0].gross,
     y = v >= CALL_FACTS.capexLo - LATEST_Q.capexH1 - .5 && v <= CALL_FACTS.capexHi - LATEST_Q.capexH1 + .5;
   _({
@@ -1009,9 +1070,9 @@ function sensitivities(e, v) {
   }, e => {
     e.m.billable = e.m.billable.map(e => e * 1.15)
   }), r(`每 MW 年收入`, `−15%`, `+15%`, e => {
-    PMWQ.revenue === `gpuHr` ? e.revScale = (e.revScale ?? 1) * .85 : e.m.revMW = e.m.revMW.map(e => e * .85) // W2：GPU 小時路線的 revMW 由價格推導，改用整體倍數
+    PMWQ.revenue !== `legacy` ? e.revScale = (e.revScale ?? 1) * .85 : e.m.revMW = e.m.revMW.map(e => e * .85) // W2：GPU 小時路線的 revMW 由價格推導，改用整體倍數
   }, e => {
-    PMWQ.revenue === `gpuHr` ? e.revScale = (e.revScale ?? 1) * 1.15 : e.m.revMW = e.m.revMW.map(e => e * 1.15)
+    PMWQ.revenue !== `legacy` ? e.revScale = (e.revScale ?? 1) * 1.15 : e.m.revMW = e.m.revMW.map(e => e * 1.15)
   }), r(`新產能簽約率`, `−20pt`, `+20pt`, e => {
     e.m.fill = e.m.fill.map(e => Math.max(0, e - 20))
   }, e => {

@@ -20,6 +20,11 @@ CASES = [('base', '基準（目前輸入）', {}),
          ('pxHigh', 'GPU 小時價格 高', {'GPU 小時價格情境（1＝低、2＝基準、3＝高）': 3} if PMW['revenue'] == 'gpuHr' else None),
          ('mixRU', '世代組合 Rubin Ultra 版', {'世代組合敏感度（0＝基準、1＝Rubin Ultra 版）': 1}),
          ('sgaGaap', '管銷率 GAAP（含 SBC）', {'管銷率口徑（1＝扣 SBC、2＝GAAP 含 SBC）': 2} if PMW['cost'] == 'bottomUp' else None)]
+if PMW['revenue'] == 'tkAnchor':  # W4：定價倍數 k 與長約占比（與 HTML pmwSensQ 同一組設定、同一名稱）
+    _AM = CO['pricing']['anchorMultiple']; _KL, _KS, _LS = '定價倍數 k_長約（市場長約價 ÷ Tokenomics 同世代持有成本）', '定價倍數 k_現貨（市場現貨價 ÷ Tokenomics 同世代持有成本）', '長約占比調整（百分點；0＝RPO 涵蓋估計）'
+    CASES += [('kLongLo', f"k_長約 {_AM['long']['low']:.2f}", {_KL: _AM['long']['low']}), ('kLongHi', f"k_長約 {_AM['long']['high']:.2f}", {_KL: _AM['long']['high']}),
+              ('kSpotLo', f"k_現貨 {_AM['spot']['low']:.2f}", {_KS: _AM['spot']['low']}), ('kSpotHi', f"k_現貨 {_AM['spot']['high']:.2f}", {_KS: _AM['spot']['high']}),
+              ('lsLow', f"長約占比 {round(_AM['longShare']['sensLowPt'] * 100)}pt", {_LS: _AM['longShare']['sensLowPt']}), ('lsAll', '長約占比 100%（新簽約全視為長約）', {_LS: 1})]
 if not CO.get('fleet'):
     print('permw_sens：company.json 無 fleet，不適用'); sys.exit(0)
 with Workbook(xlsx) as wb:
