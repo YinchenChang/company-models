@@ -5,7 +5,7 @@
 #   --vs-dist  另與 dist/ 內現行成品比對：crawl.py 畫面文字與 xl_diff.py --by-label（值與公式）皆須 0 差異（純結構修改的驗收）。
 #              新增列、常數改為引用輸入格、文字改為活公式會另列清單，不計為差異（規則見 xl_diff.py 開頭）。
 # 版本號與更新日：預設取 vlog.py 最後一列與 dist/ 成品檔名的日期；可用環境變數 VER、DATE 覆寫。
-# EXPECT＝預期差異清單（v4.5）：傳給 xl_diff.py --expect（升版時對舊版成品做 --vs-dist，列出預期變動的格子，其餘須 0 差異）。
+# EXPECT＝預期差異清單（v4.5 起）：傳給 xl_diff.py --expect（升版時對舊版成品做 --vs-dist，列出預期變動的格子，其餘須 0 差異）；W3 起有 EXPECT 時 crawl 畫面文字差異只要求無頁面錯誤、無缺頁（明細存 out/crawl_upgrade_diff.txt）。
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT="$ROOT/out"
@@ -153,7 +153,21 @@ for k in diff[:5]:
     print('  ', k); print('\n'.join(list(difflib.unified_diff((pa.get(k) or '').splitlines(), (pb.get(k) or '').splitlines(), lineterm='', n=0))[:12]))
 sys.exit(1 if diff or b['errors'] or not pa else 0)
 EOF
-  then ok "crawl 畫面文字 0 差異"; else bad "crawl 畫面文字"; fi
+  then ok "crawl 畫面文字 0 差異"
+  elif [[ -n "${EXPECT:-}" ]]; then  # W3：升版驗收（有 EXPECT 清單）時，數字改變使畫面文字必然不同：只要求頁面無錯誤，差異頁另存 out/crawl_upgrade_diff.txt 供人工檢視
+    if python3 - "$OUT/crawl_dist.json" "$OUT/crawl_new.json" "$OUT/crawl_upgrade_diff.txt" <<'EOF2'
+import sys, json, difflib
+a, b = (json.load(open(p)) for p in sys.argv[1:3])
+pa, pb = a['pages'], b['pages']
+diff = [k for k in sorted(set(pa) | set(pb)) if pa.get(k) != pb.get(k)]
+with open(sys.argv[3], 'w') as f:
+    for k in diff:
+        f.write(f'== {k}\n' + '\n'.join(difflib.unified_diff((pa.get(k) or '').splitlines(), (pb.get(k) or '').splitlines(), lineterm='', n=0)) + '\n')
+print(f'升版驗收：畫面文字差異 {len(diff)} 頁（新增頁 {len(set(pb) - set(pa))}、缺少頁 {len(set(pa) - set(pb))}），明細 {sys.argv[3]}')
+sys.exit(1 if b['errors'] or set(pa) - set(pb) else 0)
+EOF2
+    then ok "crawl 畫面文字：升版預期差異（頁面無錯誤、無缺頁；明細見 out/crawl_upgrade_diff.txt）"; else bad "crawl 畫面文字（頁面錯誤或缺頁）"; fi
+  else bad "crawl 畫面文字"; fi
   # v4.2：--by-label——列數或 A 欄不同的工作表以「區段＋列名稱」配對（新增列另列清單；列名稱重複即報錯），其餘逐格
   r=$(python3 xl_diff.py "$DIST_XLSX" "$XLSX" --values --by-label ${EXPECT:+--expect=$EXPECT} || true); echo "$r"
   if [[ "$(head -1 <<<"$r")" == "0 differences" ]]; then ok "xl_diff --values --by-label 0 差異"; else bad "xl_diff --values --by-label"; fi

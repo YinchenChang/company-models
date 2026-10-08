@@ -298,6 +298,17 @@ function buCostQ(e, t, F, r, rev, S) { // W2：由下而上營運成本（租金
   return { mw: M, pwMW: pw, mtMW: mt, stMW: st, txMW: tx, sgaPct: sp, power: pw * k, maint: mt * k, staff: st * k, tax: tx * k, sga, cash, rev, rent: S, ebr: 1 - cash / R, eb: 1 - cash / R - S / R }
 }
 
+// W3（v4.6）：一頁摘要「每 MW 一句」——首個完整財年的每 MW 年收入、現金成本（含租金）、EBITDA，與 Tokenomics 經濟持有成本的關係。
+// 數字取自 perMwQ（與 Excel「每MW經濟性」頁同列；Excel「摘要」→「結論｜每 MW 經濟性句」同一句，cmp31 逐字比對）；只在每 MW 使用新方法時顯示。
+function pmLineQ(d, e) {
+  if (!PMW_ONQ || !FLEETQ) return null;
+  let P = perMwQ(d, e);
+  if (!P) return null;
+  let g = (sec, k) => P[sec].find(r => r[0] === k)[2][1], R = g(`rev`, `每 MW 年收入 ÷ 經濟持有成本`);
+  return `每 MW（${PERIODS[1]}）：年收入 $${Y(g(`sum`, `每 MW 年收入（算力＋服務）`), 1)}m、現金成本 $${Y(g(`sum`, `現金成本合計（含租金）`), 1)}m（含租金 $${Y(g(`sum`, `租金`), 1)}m）、EBITDA $${Y(g(`sum`, `EBITDA`), 1)}m；`
+    + `計費單價為 Tokenomics 經濟持有成本（含廠房資本回收的打平線）$${Y(g(`rev`, `每 MW 經濟持有成本（不賠錢下限）`), 1)}m 的 ${Y(R, 2)} 倍${R < 1 ? `，未回收全部持有成本` : ``}。`
+}
+
 function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」頁同列名、同算式；cmp31 逐列比對）。回傳 { 區段: [[列名, 單位, 5 期值, 說明]] }
   let F = d.fleet;
   if (!F) return null;

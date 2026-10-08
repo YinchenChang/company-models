@@ -1335,10 +1335,10 @@
   }
  },
  "tokenomics": {
-  "_note": "算力相關的產業與物理層資料改引用 Tokenomics（YinchenChang/Tokenomics）：只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱，經版本固定的快照檔讀入；模型主值一律取「基準」成本情境，低成本／高成本只作敏感度。Tokenomics 每 GW＝IT 關鍵電力。W1 只建取數層（Excel「Tokenomics_取數」分頁），既有公式尚未引用。",
-  "snapshotFile": "data/tokenomics_snapshot_v5.24.json",
-  "version": "v5.24",
-  "commit": "098873a3c6855d1ef5e3414d5a0f12e39b2644ed",
+  "_note": "算力相關的產業與物理層資料改引用 Tokenomics（YinchenChang/Tokenomics）：只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱，經版本固定的快照檔讀入；模型主值一律取「基準」成本情境，低成本／高成本只作敏感度。Tokenomics 每 GW＝IT 關鍵電力。Excel「Tokenomics_取數」分頁建具名範圍（TK_），每 MW 資本支出、營運成本與對照列引用之（W2）；v5.26 起 W2 暫代的 IT 維護、人員軟體、稅險、折舊年限改用正式值（W3）。",
+  "snapshotFile": "data/tokenomics_snapshot_v5.26.json",
+  "version": "v5.26",
+  "commit": "40746846c1bc892eb1e092a0d372f1ed514c9354",
   "names": [
    "IF_RacksPerGW",
    "IF_GPUsPerGW",
@@ -1366,18 +1366,7 @@
    "IF_TaxIns",
    "IF_OpexGW"
   ],
-  "optional": [
-   "IF_DeprLifeIT",
-   "IF_DeprIT",
-   "IF_DeprFac",
-   "IF_AvgDraw",
-   "IF_PowerPrice",
-   "IF_MaintIT",
-   "IF_MaintFac",
-   "IF_StaffSW",
-   "IF_TaxIns",
-   "IF_OpexGW"
-  ]
+  "optional": []
  },
  "fleet": {
   "_note": "世代組合（W2；公司專屬）：世代名稱與 Tokenomics 快照的世代同名。期初在役機隊（最新已申報季末）依世代占比；各期新增 MW（含汰換補回）依 newMix；汰換 MW（各年新增批次在第 gpuLife 年）由最舊世代先出。推導各期期末與平均在役 MW 的世代結構，供每 MW 資本支出、營運成本、收入與參考線加權。",

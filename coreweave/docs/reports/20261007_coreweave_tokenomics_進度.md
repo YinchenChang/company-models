@@ -1,9 +1,9 @@
 # CoreWeave × Tokenomics 改造進度（接手用；W1–W3 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：W0、W1（PR #6，待審）；**W2 全部完成**（PR #9，疊加於 W1 分支）：每 MW 資本支出（Tokenomics）、由下而上營運成本、收入備案（legacy）＋對照列、世代組合、每MW經濟性彙總表、敏感度快照；新方法 `verify.sh` 22 項全過；舊方法 `scripts/verify_legacy.sh`（--vs-dist）25 項全過、與 v4.5 成品 0 差異。
-- 下一步：W3（`claude/coreweave-w3-v4.6`，疊加於 W2 分支，除非已合併）：v4.6 成品與前後對照報告；直接讀 Excel「每MW經濟性」彙總表；v4.5 側用 `scripts/verify_legacy.sh` 的副本（out/legacy_copy）或 dist/ 成品。
-- 未解問題：(1) Tokenomics v5.26 尚未建置：`IF_MaintIT`、`IF_StaffSW`、`IF_TaxIns`、`IF_DeprLifeIT` 以暫代值（檢查頁警告）；建置後只需重抓快照、改 company.json `tokenomics`、verify；(2) GB200／GB300／VR200 長約 GPU 小時價格不足兩個獨立來源 → 收入採備案 legacy；(3) CoreWeave「active power」口徑定義未找到（預設 IT）；(4) 由下而上 EBITDA 率 70–74% 高於 Q2 實際 58.6%（收入每 MW 10.0 vs 8.2、租金每 MW 1.6 vs 2.1；人員軟體與稅險暫代 0），需 Andy 決定是否進 v4.6。
+- 已完成：W0、W1（PR #6，待審）；W2（PR #9，待審）；**W3 全部完成**（PR #18：Tokenomics 快照 v5.26、v4.6 成品 dist/20261008_CoreWeave收支模型_v4_6、升版驗收、變動拆解、前後對照 Excel＋md）。W2 原紀錄：**W2 全部完成**（PR #9，疊加於 W1 分支）：每 MW 資本支出（Tokenomics）、由下而上營運成本、收入備案（legacy）＋對照列、世代組合、每MW經濟性彙總表、敏感度快照；新方法 `verify.sh` 22 項全過；舊方法 `scripts/verify_legacy.sh`（--vs-dist）25 項全過、與 v4.5 成品 0 差異。
+- 下一步：chat 端審查 PR #18（W0 #5 → W1 #6 → W2 #9 → W3 #18 依序合併；W2 合併後把 #18 base 改回 main）；合併前 Andy 以真正的 Excel 開啟 v4.6 檢查。
+- 未解問題：(1) ~~Tokenomics v5.26 暫代值~~（W3 第 0′ 步已解決）；(2) GB200／GB300／VR200 長約 GPU 小時價格不足兩個獨立來源 → 收入採備案 legacy；(3) CoreWeave「active power」口徑定義未找到（預設 IT）；(4) ~~由下而上 EBITDA 率 70–74% 高於 Q2~~：v5.26 後 57–60%，FY26 57.8% vs Q2 58.6%，但收入（+1.81／MW）、營運成本（+1.21）、租金（−0.48）三項抵銷（對帳見 `docs/reports/20261007_coreweave_v4.6_前後對照.md` 第 3 節）；(5) Excel 實機開啟待 Andy。
 
 ## 工作單總覽
 | 工作單 | 分支 | PR | 狀態 |
@@ -11,7 +11,7 @@
 | W0 遷移 | `claude/coreweave-w0-migrate` | | chat 端完成 |
 | W1 Tokenomics 取數層 | `claude/coreweave-w1-tokenomics`（疊加於 W0 分支） | #6 | 完成，待審 |
 | W2 每 MW 改寫 | `claude/coreweave-w2-permw`（疊加於 W1 分支） | #9 | 完成，待審 |
-| W3 v4.6 成品與對照 | `claude/coreweave-w3-v4.6` | | 未開始 |
+| W3 v4.6 成品與對照 | `claude/coreweave-w3-v4.6`（疊加於 W2 分支） | #18 | 完成，待審 |
 
 <!-- 各工作單在下方新增自己的段落：「## Wx」＋步驟紀錄表（步驟｜狀態｜commit｜備註） -->
 
@@ -349,3 +349,54 @@ verify.sh：全部通過（22 項）
 EXIT 0
 ```
 </details>
+
+
+## W3 v4.6 成品與前後對照
+
+chat 端追加（優先於工作單，2026-10-07）：第 0 步把 Tokenomics 快照換成 v5.26（master `4074684`，`model/CURRENT`＝`20261007_Tokenomics_v5.26.xlsx`），補齊 W2 暫代的 `IF_MaintIT`、`IF_StaffSW`、`IF_TaxIns`、`IF_DeprLifeIT`；報告須含 FY26 每 MW 對 Q2 2026 實際的逐項對帳。
+
+| 步驟 | 狀態 | commit | 備註 |
+|---|---|---|---|
+| 0 開分支、draft PR #18、進度檔 W3 段落 | 完成 | df61c82 | W0 #5、W1 #6、W2 #9 皆未合併：自 `origin/claude/coreweave-w2-permw` 9af51ca 開分支，PR base＝W2 分支 |
+| 0′ Tokenomics 快照換 v5.26（chat 端追加） | 完成 | b32828a | 唯讀副本 `git fetch origin master` → `4074684`；`import_tokenomics.py` 重抓 `data/tokenomics_snapshot_v5.26.json`（25 名、missing 0），刪 v5.24 快照；名稱清單移除 optional；company.json `tokenomics`（v5.26、commit 4074684、optional 空）；`fields_doc.py --write`。原 15 名數值與儲存格位置與 v5.24 完全相同。檢查頁「名稱缺漏」警告消失。新方法 `verify.sh` 22 項全過；舊方法 `verify_legacy.sh` 25 項全過（與 v4.5 成品 0 差異） |
+| 1 升版 v4.6 | 完成 | b10381e | `vlog.py`、`tail.js` VLOG 新增 v4.6（10-08；含 (a)–(d) 拆解）；`dist/20261008_CoreWeave收支模型_v4_6.{html,xlsx}`，移除 v4.5；交接檔換成 `docs/handoff/20261008_CoreWeave收支模型_交接檔_v4_6.md`（新增 2i v4.6、2j Tokenomics 連結：快照版本、引用名稱、升版步驟）；README v4.6 段落與工具表 |
+| 2 升版驗收 | 完成 | b10381e | `DATE=2026-10-08 EXPECT=scripts/expect/v4_6_vs_v4_5.txt scripts/verify.sh --vs-dist`（對 v4.5 成品）25 項全過：預期差異 687 格＋5 列改名（`scripts/make_expect.py` 依 `scripts/expect/v4_6_rules.json` 產生，未歸類 0），其餘 0 差異；畫面文字為升版預期差異（無頁面錯誤、無缺頁）。舊方法組合 `verify_legacy.sh` 對 v4.5 成品 25 項全過、0 差異（副本 dist/ 改取 git 歷史的 v4.5 成品） |
+| 3 目標價變動拆解 | 完成 | b10381e | `scripts/attrib_permw.py`：三情境 (a)(b)(c)＝0，(d) ① 每 MW 資本支出／② 折舊年限／③ 營運成本／④ 收入／⑤ MW 口徑依序與單獨切換；各步相加＝總變動（誤差 < 0.01）；結果 `out/w3/attrib_permw.json` → 對照 Excel「變動拆解」 |
+| 6 HTML／Excel 成品畫面 | 完成 | b10381e | 一頁摘要「結論」加一句每 MW（HTML `pmLineQ`＝Excel「摘要」→「結論｜每 MW 經濟性句」，cmp31 逐字比對；舊方法不顯示）；「每 MW 經濟性」分頁彙總表放次層（預設收合）。新方法 `verify.sh` 22 項全過（cmp31 三情境各 427 項、FY27 錨定 406 項） |
+
+| 4 前後對照 Excel | 完成 | （本 commit） | `docs/reports/20261007_coreweave_v4.6_前後對照.xlsx`（摘要＋Q2 實際對帳、每MW_前後〔三情境 × FY26–30，IT 與設施口徑〕、參數對照、變動拆解、Tokenomics參考線、已知限制）；`scripts/compare_gather.py` 檢查舊方法副本與 v4.5 成品 5,439 個共有數值格相同；`scripts/build_compare.py`；LibreOffice 重算 601 個公式 0 錯誤；拆解檢查格三情境「通過」 |
+| 5 報告 md | 完成 | （本 commit） | `docs/reports/20261007_coreweave_v4.6_前後對照.md`（結論三句、關鍵數字、拆解、Q2 對帳、W2 暫代 vs v5.26、已套用預設、未解問題、verify 輸出） |
+| 7 整體 verify 與回報 | 完成 | （本 commit） | 新方法 `verify.sh` 22 項全過；`--vs-dist`（對 v4.5，EXPECT）25 項全過；`verify_legacy.sh` 25 項全過；PR 留言「[CRWV 回報] W3｜完成｜2026-10-08」、PR 改 ready |
+### W3 第 0′ 步：v5.26 正式值取代 W2 暫代值（基準情境）
+
+核對 Tokenomics 值（$B/GW/年＝US$m/MW/年，基準）：GB300 IT 維護 1.1234、人員軟體 0.325、稅險 0.2506；VR200 IT 維護 1.1276、稅險 0.2513（與 chat 端核對值相同）；Hopper 0.8253／0.325／0.2009、GB200 0.7205／0.325／0.1834；IF_DeprLifeIT 基準各世代 6 年（高成本 4 年）→ 加權取整 6，與暫代值相同。
+稅險口徑：各世代 IF_TaxIns × IF_CapexIT ÷ IF_CapexTotal（只算 CRWV 擁有的 IT 部分；GB300 0.2506 × 37.45 ÷ 50.12＝0.187），人員軟體全額（0.325）——W2 公式已如此實作，未改。
+
+| 每 MW（US$m／MW／年，基準） | FY26（2H） | FY27 | FY28 | FY29 | FY30 |
+|---|---|---|---|---|---|
+| 年收入 | 10.05 | 10.56 | 10.33 | 9.63 | 8.65 |
+| 電費 | 0.67 | 0.67 | 0.67 | 0.67 | 0.67 |
+| IT 維護（W2 暫代 → v5.26） | 0.15 → 0.94 | 0.15 → 0.99 | 0.16 → 1.03 | 0.16 → 1.05 | 0.17 → 1.08 |
+| 人員軟體（0 → v5.26） | 0 → 0.33 | 0 → 0.33 | 0 → 0.33 | 0 → 0.33 | 0 → 0.33 |
+| 稅險（IT 部分；0 → v5.26） | 0 → 0.16 | 0 → 0.17 | 0 → 0.17 | 0 → 0.18 | 0 → 0.18 |
+| 管銷 | 0.55 | 0.58 | 0.57 | 0.53 | 0.48 |
+| 租金 | 1.60 | 1.59 | 1.33 | 1.16 | 1.00 |
+| 現金成本合計（含租金） | 2.98 → 4.24 | 3.00 → 4.33 | 2.73 → 4.10 | 2.53 → 3.92 | 2.32 → 3.73 |
+| EBITDA | 7.07 → 5.80 | 7.56 → 6.23 | 7.60 → 6.23 | 7.10 → 5.71 | 6.33 → 4.92 |
+| EBITDA 率 | 70.4% → 57.8% | 71.6% → 59.0% | 73.5% → 60.3% | 73.7% → 59.3% | 73.2% → 56.9% |
+
+| 情境 | v4.5 加權目標價 | W2 暫代 | v5.26 正式 | 融資缺口 v4.5／W2／v5.26（US$bn） |
+|---|---|---|---|---|
+| 保守 4.2 GW | $69.74 | $106.92 | $43.99 | 19.7／12.3／32.7 |
+| 基準 5.6 GW | $45.50 | $66.70 | $29.68 | 61.7／59.1／81.6 |
+| 積極 8 GW | $30.95 | $44.18 | $19.95 | 126.2／130.6／157.9 |
+
+讀法：v5.26 補上 IT 維護（約 1.0／MW，暫代 0.15 的 6–7 倍）、人員軟體 0.33、稅險 0.16–0.18 後，每 MW 現金成本增加約 1.3–1.4，EBITDA 率由 70–74% 降到 57–60%（Q2 實際 Adj. EBITDA 率 58.6%）；三情境目標價都低於 v4.5。
+
+**verify 工具修正（不影響成品數字）**：(1) `xlx.py`：LibreOffice 把「輸入與假設」H 區模擬運算表轉成 MULTIPLE.OPERATIONS，批次重算非基準情境時部分格殘留運算表代入的中間值（v5.26 積極情境實測：D&A 車隊 FY27–28 取到基準情境值，cmp31 74 項不一致；以 UNO 逐格重算與移除運算表兩種方式確認 Excel 公式本身正確）。改為：未改錨定年度時，運算表輸出（三情境加權目標價與評等，與情境選擇無關）以來源檔快取值取代後再重算。(2) `cmp31.js`：DCF 失效（常態化 FCF ≤ 0）時 HTML 每股為 NaN（畫面顯示「失效」）、Excel 採用值為 0，比對時視為 0（v5.26 積極情境首次觸發；基準情境 DCF 0 截斷後也為 0）。
+
+### W3 已套用的預設
+見 `docs/reports/20261007_coreweave_v4.6_前後對照.md` 第 5 節（成品更新日 10-08、② 折舊年限獨立一步、(c)＝0、預期差異清單以規則產生、升版時畫面文字只查錯誤與缺頁、舊方法回歸改取 git 歷史 v4.5、LibreOffice 運算表凍結、DCF 失效比對、每 MW 句 FY27、持有成本倍數口徑、v4.5 每 MW 欄來源、Q2 對帳 D&A／SBC 口徑）。
+
+### W3 關鍵數字（v4.5 → v4.6）
+加權目標價：保守 $69.74 → $43.99、基準 $45.50 → $29.68、積極 $30.95 → $19.95（皆賣出）；融資缺口 19.7／61.7／126.2 → 32.7／81.6／157.9；基準累計新股 FY30 0.171 → 0.261bn 股。拆解（依序）：① −16.57／−7.62／−9.13、③ −9.18／−8.21／−1.88，②④⑤ 0。

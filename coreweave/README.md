@@ -1,4 +1,4 @@
-# CoreWeave 收支模型 v4.5 原始碼包
+# CoreWeave 收支模型 v4.6 原始碼包
 
 HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo 根目錄；建置產物寫到 `out/`（不納入版控），交付成品放 `dist/`。HTML 的函式庫模板為 `docs/template_v3_3.html`。
 
@@ -42,7 +42,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | scripts/check_tokenomics_tab.py | W1：「快照值＝Excel 分頁值」檢查：`python3 scripts/check_tokenomics_tab.py 檔案.xlsx`。Excel「Tokenomics_取數」分頁每個名稱 × 世代的低成本／基準／高成本＝`company.json` → `tokenomics.snapshotFile` 快照值；每個「基準」格有具名範圍 `TK_<名稱去掉 IF_／L1_>_<世代代碼>`（H100、GB200、GB300、VR200、RU；單值名稱不加世代）；W2 起其他工作表可引用 TK_ 名稱（只核對引用的名稱都存在），本分頁值仍須＝快照值。verify.sh 步驟 5d；步驟 0c 另以 `../tools/tokenomics/import_tokenomics.py --check` 確認快照可由 Tokenomics 重現（找不到 clone 時警告略過；`TOKENOMICS_DIR` 可指定） |
 | scripts/permw_sens.py | W2：每 MW 敏感度的建置時快照。以 LibreOffice（UNO）開啟建好的 Excel，依序切換情境選擇與敏感度輸入（Tokenomics 低／高成本、GPU 小時價格低／高、世代組合 Rubin Ultra 版、管銷率 GAAP），讀加權目標價與融資缺口，寫入 `permw_sens.json`（有變動時代碼 3，verify.sh 步驟 3c 重建 Excel）；Excel「每MW經濟性」頁「敏感度」區讀此檔，並以「快照狀態」格比對目前輸入（不一致＝快照已過期） |
 | scripts/test_permw.py | W2：暫存副本測試（verify.sh 步驟 8d）——A：`meta.mwBasis`＝facility 時 Tokenomics 每 MW 值 ÷ IF_FacilityGW；B：`revenue`＝gpuHr（虛構價格，只在副本）時每 MW 年收入＝Σ 占比 × GPU 數 × 價格 × 8,760，Python 獨立計算一致；兩者 cmp31 基準全部一致 |
-| scripts/verify_legacy.sh | W2：舊方法回歸驗收。副本把 `methodology.perMw` 改為 legacy／ebitdaPct／legacy 後跑 `verify.sh --vs-dist`，畫面文字、Excel 值與公式須與 dist/ v4.5 成品 0 差異（新增列、新增工作表不計）；結果在 `out/verify_legacy.log` |
+| scripts/verify_legacy.sh | W2：舊方法回歸驗收。副本把 `methodology.perMw` 改為 legacy／ebitdaPct／legacy 後跑 `verify.sh --vs-dist`，畫面文字、Excel 值與公式須與 dist/ v4.5 成品 0 差異（新增列、新增工作表不計）；結果在 `out/verify_legacy.log`；v4.6 起副本的 dist/ 換成 git 歷史中的 v4.5 成品（`LEGACY_DIST_REF`，預設 9af51ca），版本紀錄截到 v4.5 |
+| scripts/attrib_permw.py | W3：v4.5 → v4.6 目標價變動拆解（(d) 方法變更逐項依序／單獨切換；數值取自 Excel；三情境；檢查相加＝總變動） |
+| scripts/make_expect.py | W3：升版預期差異清單產生器（規則檔 `scripts/expect/*_rules.json`；未歸類的差異即失敗） |
+| scripts/compare_gather.py、scripts/build_compare.py | W3：前後對照取數（三檔 × 三情境，xlx.py）與對照 Excel 產生 |
 | scripts/check_quarterly.js | v4.4：季度加總＝年度（三情境）、`quarterly.consistency` 一致性、超過門檻的差距都有原因；`build_html_portable.py` 建置時呼叫，verify.sh 步驟 0 |
 | scripts/test_quarterly.py | v4.4：暫存副本測試——(A) 假設 Q3 實際數，Python 獨立計算差距並與 HTML、Excel 比對；(B) 可移植性（無 MW、無季度指引與共識）。verify.sh 步驟 8 |
 | scripts/cloud_setup.sh | 雲端環境 setup script（只裝 Python 套件；LibreOffice Calc 於工作階段內補裝，見 CLAUDE.md） |
@@ -135,11 +138,20 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **方法開關**（`company.json` → `methodology.perMw`，建置時決定公式）：`capex`＝tokenomics（每 MW 建置成本＝Σ 新增世代占比 × `IF_CapexIT`，不含廠房）｜legacy；`cost`＝bottomUp（電費 `IF_PowerCost`、IT 維護 `IF_MaintIT`、人員軟體 `IF_StaffSW`、稅險 `IF_TaxIns` × IT 資本占比，依平均在役世代加權 × 平均在役 MW；公司管銷＝營收 × 管銷率）｜ebitdaPct；`revenue`＝gpuHr（`pricing.gpuHr` × 每 MW GPU 數 × 8,760）｜legacy。全為舊方法時畫面與 Excel 與 v4.5 完全相同（`scripts/verify_legacy.sh`）。目前預設：tokenomics／bottomUp／legacy（收入採備案：W1 查不到 GB200／GB300／VR200 兩個獨立長約價來源）。
 - **世代組合**（`fleet`）：期初在役（最新季末）MW 與世代占比、各期新增 MW 的世代占比（`newMix`；`newMixAlt`＝Rubin Ultra 版敏感度）。汰換批次（各年新增 MW 在第 `gpuLife` 年）由最舊世代先出、以當期新增世代補回。Excel「輸入與假設」B 區後「世代組合」子區（含 Tokenomics 引用值：列＝世代、欄＝項目，經 `TK_` 具名範圍，`OFFSET` 依「Tokenomics 成本情境」取低／基準／高）；期初／期末／平均在役結構在「每MW經濟性」頁。
 - **EBITDA 率（bottomUp）**：由下而上 EBITDAR 率＝1 −（現金營運成本 ÷ 營收）；EBITDA 率＝EBITDAR 率 − 租金 ÷ 營收（租金只扣一次）。C 區「穩態 EBITDA 率」預設＝由下而上 FY30（公式），改成數值即為 FY30 目標、差額線性分攤到各期（反向 DCF、敏感度 59%／70% 沿用此格）。電力／維護 overlay 自動停用。
-- **Tokenomics 名稱缺漏**（v5.26 前）：`IF_MaintIT`→C 區「維護成本」、`IF_StaffSW`／`IF_TaxIns`→0、`IF_DeprLifeIT`→`defaults.gpuLife`；「檢查_連動」與 HTML 連動檢查顯示「Tokenomics 名稱缺漏 N 項，成本為暫代值」，重抓含這些名稱的快照後自動改用正式值並消失（不需改程式）。
+- **Tokenomics 名稱缺漏**（v5.26 前；v4.6 起快照為 v5.26，已無缺漏，機制保留）：`IF_MaintIT`→C 區「維護成本」、`IF_StaffSW`／`IF_TaxIns`→0、`IF_DeprLifeIT`→`defaults.gpuLife`；「檢查_連動」與 HTML 連動檢查顯示「Tokenomics 名稱缺漏 N 項，成本為暫代值」，重抓含這些名稱的快照後自動改用正式值並消失（不需改程式）。
 - **MW 口徑**（`meta.mwBasis`）：IT（預設）｜facility（Tokenomics 每 MW 值 ÷ `IF_FacilityGW`，基準；`scripts/test_permw.py` 測試 A）。
 - **對照列**（不入損益）：每 MW 經濟持有成本（`IF_HoldEcon`，在役世代加權；含廠房資本回收）、隱含每 GPU 小時價格（＝每 MW 年收入 ÷（每 MW GPU 數 × 8,760）；revMW 為 100% 計費時數的值，利用率在收入端另乘）與 `IF_GPUhrEcon` 倍數、同業每 MW 收入（`pricing.peerRevPerMw`）、各世代市場價格（`pricing.marketRefs`）、v4.5 舊值、期末 ARR ÷ MW、最近一季實際每 MW 現金營運成本。
 - **每 MW 經濟性彙總**（Excel「每MW經濟性」頁最上方；HTML「資金模型 → 運營活動 → 每 MW 經濟性」，只在使用新方法時顯示）：每平均在役 MW、年化（US$m／MW／年）的收入、電費、IT 維護、人員軟體、稅險、管銷、租金、現金成本、EBITDA、D&A、利息、稅前，另列 IT 與設施兩種 MW 口徑。cmp31 逐列比對；敏感度為建置時快照（`scripts/permw_sens.py`）。
 - **差異原因**：`varianceReasons.list` 可加 `perMw` 條件，只在方法相符時適用（排在前面者優先）。
+
+## v4.6 成品與前後對照（W3；2026-10-08）
+- **成品**：`dist/20261008_CoreWeave收支模型_v4_6.{html,xlsx}`；Tokenomics 快照 v5.26（`data/tokenomics_snapshot_v5.26.json`，commit 4074684）。每 MW 方法：tokenomics／bottomUp／legacy、MW 口徑 IT。
+- **畫面**：一頁摘要「1｜結論」加一句每 MW（首個完整財年：年收入、現金成本〔含租金〕、EBITDA、與 Tokenomics 經濟持有成本的倍數；HTML `pmLineQ`＝Excel「摘要」→「結論｜每 MW 經濟性句」，cmp31 逐字比對；舊方法組合不顯示）；「每 MW 經濟性」分頁的彙總表放次層（預設收合）。
+- **升版驗收**：`DATE=… EXPECT=scripts/expect/v4_6_vs_v4_5.txt scripts/verify.sh --vs-dist`（對 v4.5 成品）。預期差異清單由 `scripts/make_expect.py` 依 `scripts/expect/v4_6_rules.json` 產生：下游工作表整張允許變動；「輸入與假設」只允許每 MW 方法直接改動的列；同業頁只允許 CRWV 列；其他工作表與列須 0 差異（未歸類即失敗）。有 `EXPECT` 時畫面文字（crawl）只要求無頁面錯誤、無缺頁，差異明細存 `out/crawl_upgrade_diff.txt`。舊方法組合對 v4.5 成品仍須 0 差異（`scripts/verify_legacy.sh`；v4.6 起副本的 dist/ 換成 git 歷史中的 v4.5 成品）。
+- **目標價變動拆解**：`scripts/attrib_permw.py --v45 v4.5.xlsx`：(a)(b)(c)＝0、(d) 依 ① 每 MW 資本支出 → ② 折舊年限 → ③ 營運成本由下而上 → ④ 收入 → ⑤ MW 口徑逐項切換，另列單獨切換；檢查各步相加＝總變動（< 0.01 美元／股）。
+- **前後對照報告**：`scripts/compare_gather.py`（三檔 × 三情境取數；檢查舊方法副本與 v4.5 成品 5,439 個共有數值格相同）→ `scripts/build_compare.py` → `docs/reports/20261007_coreweave_v4.6_前後對照.xlsx`（摘要含 Q2 2026 實際對帳、每MW_前後、參數對照、變動拆解、Tokenomics參考線、已知限制）與同名 `.md`。
+- **verify 工具修正**：`xlx.py` 切換情境前把模擬運算表輸出換成來源檔的快取值（LibreOffice 批次重算時運算表會使非基準情境的部分格殘留中間值；改錨定年度時保留運算表）；`cmp31.js` DCF 失效時 HTML 的 NaN 與 Excel 的 0 視為一致。
+- **Tokenomics 升版時**：見交接檔「Tokenomics 連結」（重抓快照 → verify → 升版）。
 
 ## company.json 欄位說明（換公司填表指引）
 換成 Nebius、Oracle、OpenAI 等公司時，照這一節逐欄填寫 `company.json`；HTML 與 Excel 都從這個檔讀資料，改完執行 `scripts/verify.sh`。
@@ -150,7 +162,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY26 下半年、FY27、FY28、FY29、FY30，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 CoreWeave v4.5 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 CoreWeave v4.6 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -593,10 +605,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `tokenomics._note` | Tokenomics 取數層的說明（不進程式；W1） | 文字 | 算力相關的產業與物理層資料改引用 Tokenomic… | 可沿用 |
 | `tokenomics.snapshotFile` | Tokenomics 快照檔路徑（tools/tokenomics/import_tokenomics.py 產生；Excel「Tokenomics_取數」分頁讀此檔；W1） | 路徑 | data/tokenomics_snapshot_v… | 可沿用 |
-| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v5.24 | 可沿用 |
-| `tokenomics.commit` | 快照的 Tokenomics commit SHA | 文字 | 098873a3c6855d1ef5e3414d5a… | 可沿用 |
+| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v5.26 | 可沿用 |
+| `tokenomics.commit` | 快照的 Tokenomics commit SHA | 文字 | 40746846c1bc892eb1e092a0d3… | 可沿用 |
 | `tokenomics.names` | 引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW | 檢查 |
-| `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（v5.25 預計新增） | 清單 | IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW | 檢查 |
+| `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（v5.25 預計新增） | 清單 |  | 檢查 |
 
 ### `fleet`：世代組合（W2；公司專屬）
 

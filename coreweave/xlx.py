@@ -5,6 +5,19 @@ src, sel, out = sys.argv[1], int(sys.argv[2]), sys.argv[3]
 ak = int(sys.argv[4]) if len(sys.argv) > 4 else None  # 選填：EV/EBITDA 錨定年度
 os.makedirs(os.path.join(ROOT,'out'),exist_ok=True); p=os.path.join(ROOT,'out',f'xl17_{sel}_{ak or 1}.xlsx'); shutil.copy(src,p)
 wb=load_workbook(p); ws=wb['輸入與假設']
+# W3（2026-10-07）：模擬運算表（H 區情境區間）改為靜態值再重算。LibreOffice 把運算表轉成 MULTIPLE.OPERATIONS，批次重算時
+# 非基準情境的部分格會殘留運算表代入時的中間值（v5.26 積極情境實測：D&A 車隊 FY27–FY28 取到基準情境值，cmp31 74 項不一致）。
+# 運算表輸出（保守／基準／積極三情境的加權目標價與評等）與「情境選擇」無關，直接沿用來源檔（基準情境重算後、cmp31 已核對）的快取值；
+# 其餘格照常由 LibreOffice 重算。真正的 Excel 會另外計算運算表，不受影響。
+from openpyxl.worksheet.formula import DataTableFormula
+from openpyxl.utils import range_boundaries
+_cv = load_workbook(src, data_only=True)['輸入與假設']
+for _row in (list(ws.iter_rows()) if not ak else []):  # 改錨定年度時運算表輸出會變：保留運算表（verify 只在基準情境改錨定）
+    for _c in _row:
+        if isinstance(_c.value, DataTableFormula):
+            c1, r1, c2, r2 = range_boundaries(_c.value.ref)
+            for rr in range(r1, r2 + 1):
+                for cc in range(c1, c2 + 1): ws.cell(row=rr, column=cc, value=_cv.cell(row=rr, column=cc).value)
 for r in range(1,ws.max_row+1):
     v=ws.cell(row=r,column=1).value
     if v and str(v).startswith('情境選擇'): ws.cell(row=r,column=3,value=sel)
