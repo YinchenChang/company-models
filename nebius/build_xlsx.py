@@ -34,8 +34,18 @@ _dsc = D['scenario']
 assert all(abs(x - y) < 1e-6 for x, y in zip(_conn(_dsc), M['accepted'])), f"defaults.m.accepted ≠ {_dsc} 情境已連網 MW {_conn(_dsc)}"
 assert M['billable'] == [int(x * b * f + 0.5) for x, b, f in zip(_conn(_dsc), CO['scenarios']['billableRatio']['ratio'], CO['scenarios']['billableRatio']['ramp'])], "defaults.m.billable ≠ 已連網 × 在役比例 × 爬坡係數（四捨五入）"
 # v0.1c：期初可計費 MW＝最新季營收 × 4 ÷ 首期每 MW 年收入（對齊已實現營收）；defaults.billableOpen 須等於預設情境的校準值
-assert D['billableOpen'] == int(CO['latestQuarter']['revenue'] * 4 / CO['scenarios']['revMW'][_dsc][0] + 0.5), "defaults.billableOpen ≠ 最新季營收 × 4 ÷ 首期每 MW 年收入（預設情境）"
-assert M['revMW'] == CO['scenarios']['revMW'][_dsc], "defaults.m.revMW ≠ scenarios.revMW（預設情境）"
+PMW_REV = (CO.get('methodology', {}).get('perMw') or {}).get('revenue', 'legacy')  # v0.2a：每 MW 收入方法（tkAnchor＝Tokenomics 錨 × k；legacy＝scenarios.revMW）
+if PMW_REV == 'tkAnchor':  # v0.2a：預設情境的錨定值（tkanchor.py，與 Excel「每MW收入_錨定」及 HTML tkAnchorQ 同一算式）；不一致時執行 scripts/tkanchor_sync.py --write
+    import tkanchor as _tka
+    _, TKX = _tka.load(CO)
+    TKA = {k: _tka.compute(CO, TKX, k, CO['periodYears']) for k in ('low', 'base', 'high')}
+    _REV0 = {k: TKA[k]['rev'] for k in TKA}
+    assert all(abs(x - y) < 1e-9 for x, y in zip(M['revMW'], _REV0[_dsc])), "defaults.m.revMW ≠ 預設情境錨定值（執行 python3 scripts/tkanchor_sync.py --write）"
+else:
+    assert PMW_REV == 'legacy', f'methodology.perMw.revenue 不支援：{PMW_REV}'
+    _REV0 = CO['scenarios']['revMW']
+    assert M['revMW'] == CO['scenarios']['revMW'][_dsc], "defaults.m.revMW ≠ scenarios.revMW（預設情境）"
+assert D['billableOpen'] == int(CO['latestQuarter']['revenue'] * 4 / _REV0[_dsc][0] + 0.5), "defaults.billableOpen ≠ 最新季營收 × 4 ÷ 首期每 MW 年收入（預設情境）"
 PCT_ = lambda xs: [x / 100 for x in xs]  # HTML 以百分點存、Excel 以比例存
   # 版本紀錄單一來源：vlog.py（HTML 端為 tail.js 的 VLOG）
 # -*- coding: utf-8 -*-
@@ -184,7 +194,8 @@ guide = [
     ("", None),
     ("■ 營收主軸：MW × 每 MW 年收入 × 利用率", None),
     ("  已連網 MW（情境路徑，口徑不明者 ÷ PUE 1.2 換成 MW-IT）→ 在役 MW（× 在役比例）→ 平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度＝營收。", None),
-    ("  每 MW 年收入取 Tokenomics 正向推導的三情境值（data/permw_tokenomics_20261007.json），不用公司 ACV（只作對照）；利用率預設 100%，因推導值已含可計費利用率。", None),
+    (("  每 MW 年收入＝Tokenomics 錨（IF_HoldEcon，在役世代加權的打平租金）× 定價倍數 k（市場價格證據；『每MW收入_錨定』），不用公司 ACV（只作對照）；按 MW-year 計價、不乘 IF_Util，利用率預設 100%。容量情境與價格情境分離。" if PMW_REV == 'tkAnchor'
+      else "  每 MW 年收入取 Tokenomics 正向推導的三情境值（data/permw_tokenomics_20261007.json），不用公司 ACV（只作對照）；利用率預設 100%，因推導值已含可計費利用率。"), None),
     ("  RPO 排程（季報桶分攤）只作對照：排程 > 容量的部分顯示為『產能瓶頸』旗標，並作為資產擔保融資容量的 backlog。", None),
     ("", None),
     ("■ 收入之後的折扣", None),
@@ -263,8 +274,17 @@ r = section(ws, r, "A｜情境與規模（管理層擴張力道）")
 ws.cell(row=r, column=1, value=f"情境選擇（1＝{CO['scenarios']['labels']['low']}、2＝{CO['scenarios']['labels']['base']}、3＝{CO['scenarios']['labels']['high']}）").font = BOLD
 c = ws.cell(row=r, column=3, value=2); c.font = BLUE; c.number_format = NUM0; c.border = BOX; c.fill = FILL_KEY
 ws.cell(row=r, column=4, value=f'=CHOOSE(C{r},"{CO["scenarios"]["labels"]["low"]}","{CO["scenarios"]["labels"]["base"]}","{CO["scenarios"]["labels"]["high"]}")').font = BOLD
-ws.cell(row=r, column=9, value="三情境改變擴張力道（已連網 MW 路徑）與每 MW 年收入（Tokenomics 正向推導三情境值）；其餘假設相同（對照表 r1 第 4 節第 1 條）").font = SMALL
+ws.cell(row=r, column=9, value=("三情境只改擴張力道（已連網 MW 路徑）；每 MW 年收入由同列 E–G 欄價格情境（定價倍數 k）決定，兩條軸分離（v0.2a）" if PMW_REV == 'tkAnchor' else
+                                "三情境改變擴張力道（已連網 MW 路徑）與每 MW 年收入（Tokenomics 正向推導三情境值）；其餘假設相同（對照表 r1 第 4 節第 1 條）")).font = SMALL
 SEL = f"'輸入與假設'!$C${r}"; r += 1
+PXSEL = None
+if PMW_REV == 'tkAnchor':  # v0.2a：價格軸（定價倍數 k 低／基準／高），與容量情境分離；放在情境選擇同一列的 E–G 欄（不新增列，避免下方列位移）
+    _r0 = r - 1
+    ws.cell(row=_r0, column=5, value="價格情境（1 低／2 基準／3 高）").font = BOLD
+    c = ws.cell(row=_r0, column=6, value=2); c.font = BLUE; c.number_format = NUM0; c.border = BOX; c.fill = FILL_KEY
+    ws.cell(row=_r0, column=7, value=f'=CHOOSE(F{_r0},"價格低","價格基準","價格高")').font = BOLD
+    ws.cell(row=_r0, column=9, value=ws.cell(row=_r0, column=9).value + "。E–G 欄＝價格情境選擇（定價倍數 k 低／基準／高；k_長約 與 k_現貨 同時取低／基準／高，見『每MW收入_錨定』A 區），三個容量情境預設都用基準")
+    PXSEL = f"'輸入與假設'!$F${_r0}"
 r = section(ws, r, "情境路徑明細（已連網 MW、在役比例、表外租金基準）", level=2)
 for j, h in enumerate(["已連網 MW 路徑", "單位"] + PERIODS + ["", "FY31 新增 MW"]):
     if h:
@@ -291,8 +311,12 @@ for nm, k, note in _SCN:
     sc_rows[nm] = r
     r += 1
 for nm, k, _ in _SCN:
-    row_line(ws, r, f"每 MW 年收入｜{CO['scenarios']['labels'][k]}", "US$bn/MW", CO['scenarios']['revMW'][k], '0.0000', BLUE,
-             "Tokenomics 正向推導三情境（data/permw_tokenomics_20261007.json）；不用公司 ACV [Derived]")
+    if PMW_REV == 'tkAnchor':  # v0.2a：＝『每MW收入_錨定』錨 × k ÷ 1000（公式於該分頁建立後填入）
+        row_line(ws, r, f"每 MW 年收入｜{CO['scenarios']['labels'][k]}", "US$bn/MW", [0] * 5, '0.0000', GREEN,
+                 "＝『每MW收入_錨定』Tokenomics 錨（IF_HoldEcon，在役世代加權）× 定價倍數 k（目前價格情境）÷ 1000 [Derived]；v0.2 舊值見該頁對照列")
+    else:
+        row_line(ws, r, f"每 MW 年收入｜{CO['scenarios']['labels'][k]}", "US$bn/MW", CO['scenarios']['revMW'][k], '0.0000', BLUE,
+                 "Tokenomics 正向推導三情境（data/permw_tokenomics_20261007.json）；不用公司 ACV [Derived]")
     sc_rows['rev_' + nm] = r; r += 1
 row_line(ws, r, "在役／已連網比例", "%", CO['scenarios']['billableRatio']['ratio'], PCT, BLUE,
          "三情境共用；新連網產能自驗收到可計費需數季 [Assumed]")
@@ -331,8 +355,9 @@ for i in range(5):
     L = COLS[i]
     ws.cell(row=_acc, column=3 + i, value=f"=CHOOSE({SEL},{L}{sc_rows['保守']},{L}{sc_rows['基準']},{L}{sc_rows['積極']})")
     ws.cell(row=_bil, column=3 + i, value=f"=ROUND({L}{_acc}*{L}{BR_ROW}*{L}{RAMP_ROW},0)")
-r = prow(r, "利用率", "%", PCT_(M['util']), PCT, "100%：每 MW 年收入已含可計費利用率（路徑 B 80／85／90%），不重複扣除 [Derived]")
-r = prow(r, "每 MW 年收入", "US$bn/MW", [0] * 5, '0.0000', "＝依 A 區情境選擇器（Tokenomics 正向推導三情境）", BLACK)
+r = prow(r, "利用率", "%", PCT_(M['util']), PCT, "100%：按 MW-year 計價，收入取決於簽約率與爬坡（可計費 MW），不再乘 Tokenomics IF_Util（下游資料契約第 3 條；重複扣減禁止）[Derived]" if PMW_REV == 'tkAnchor'
+         else "100%：每 MW 年收入已含可計費利用率（路徑 B 80／85／90%），不重複扣除 [Derived]")
+r = prow(r, "每 MW 年收入", "US$bn/MW", [0] * 5, '0.0000', "＝依 A 區情境選擇器（Tokenomics 錨 × 定價倍數 k；『每MW收入_錨定』）" if PMW_REV == 'tkAnchor' else "＝依 A 區情境選擇器（Tokenomics 正向推導三情境）", BLACK)
 for i in range(5):
     L = COLS[i]
     ws.cell(row=IN["每 MW 年收入"], column=3 + i, value=f"=CHOOSE({SEL},{L}{sc_rows['rev_保守']},{L}{sc_rows['rev_基準']},{L}{sc_rows['rev_積極']})")
@@ -570,6 +595,271 @@ IN_ref = {k: f"'輸入與假設'!{{col}}${v}" for k, v in IN.items()}
 def inref(name, i):
     return f"'輸入與假設'!{COLS[i]}${IN[name]}"
 
+
+# =====================================================================
+# 2b. 每MW收入_錨定（v0.2a；已決定事項 14、下游資料契約第 4 條）
+# 每 MW 年收入（100% 計費時數）＝ Σ 平均在役世代占比 × IF_HoldEcon（基準成本情境，TK_ 具名範圍）× 定價倍數 k；
+# k＝隨需占比 × k_現貨 ＋（1 − 隨需占比）× k_長約（第 2 輪，比照 CoreWeave W4 r2）。容量情境（A 區）與價格情境（PXSEL）分離。與 HTML tkAnchorQ()、tkanchor.py 同算式。
+# =====================================================================
+AR = {}  # 列號：鍵 → 列
+if PMW_REV == 'tkAnchor':
+    AM, FLT = CO['pricing']['anchorMultiple'], CO['fleet']
+    GEN = FLT['generations']
+    _GCX = {g['name']: g['code'] for g in _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), CO['tokenomics']['snapshotFile']), encoding='utf-8'))['source']['generations']}
+    _wi = ws  # 輸入與假設
+    ws = wb.create_sheet("每MW收入_錨定")
+    ws.column_dimensions["A"].width = 58
+    ws.column_dimensions["B"].width = 11
+    for c in COLS:
+        ws.column_dimensions[c].width = 12
+    ws.column_dimensions["H"].width = 4
+    ws.column_dimensions["I"].width = 90
+    ws["A1"] = "每 MW 收入 — Tokenomics 錨 × 定價倍數 k（v0.2a）"; ws["A1"].font = TITLE
+    ws["A2"] = ("每 MW 年收入（100% 計費時數）＝ Σ 平均在役世代占比 × IF_HoldEcon（WACC 10% 打平租金）× k；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約（新增產能按長約價；長約占比只作對照）。"
+                "按 MW-year 計價：利用率不另扣（IF_Util 不進收入），爬坡與簽約率在『輸入與假設』B 區。k 只取市場價格證據，不以 Nebius 營收、ARR、RPO、ACV 反推。")
+    ws["A2"].font = SMALL
+    ws["A3"] = "容量情境（輸入與假設 A 區情境選擇）只改 MW 路徑；價格情境（A 區價格情境選擇）只改 k。Q2 實績只作驗證（D 區），不校準 k。"
+    ws["A3"].font = SMALL
+    r = 4
+
+    def arow(key, name, unit, vals, fmt=NUM, font=BLACK, note=None):
+        row_line(ws, r, name, unit, vals, fmt, font, note)
+        AR[key] = r
+
+    def aphdr(first="項目"):
+        global r
+        for j, h in enumerate([first, "單位"] + PERIODS):
+            c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+        c = ws.cell(row=r, column=9, value="說明／來源"); c.font = HEAD; c.fill = FILL_HEAD
+        r += 1
+
+    _MF = '0.000'
+    r = section(ws, r, "A｜價格軸：定價倍數 k（低、基準、高 依序在 C、D、E 欄；藍字可改）")
+    for j, h in enumerate(["項目", "單位", "低", "基準", "高"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    c = ws.cell(row=r, column=9, value="說明／來源"); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    for key, nm, it in (("kL3", "k_長約（多年期專用容量合約）", AM['long']), ("kS3", "k_現貨（非長約客戶：預留與隨需）", AM['spot'])):
+        ws.cell(row=r, column=1, value=nm).font = BLACK
+        ws.cell(row=r, column=2, value="倍").font = SMALL
+        for j, v in enumerate((it['low'], it['base'], it['high'])):
+            c = ws.cell(row=r, column=3 + j, value=v); c.font = BLUE; c.number_format = '0.00'; c.border = BOX
+        ws.cell(row=r, column=9, value=f"{it['note']} {it['tag']}").font = SMALL
+        AR[key] = r; r += 1
+    for key, src, nm in (("kL", "kL3", "k_長約（目前價格情境）"), ("kS", "kS3", "k_現貨（目前價格情境）")):
+        ws.cell(row=r, column=1, value=nm).font = BOLD
+        ws.cell(row=r, column=2, value="倍").font = SMALL
+        c = ws.cell(row=r, column=3, value=f"=CHOOSE({PXSEL},C{AR[src]},D{AR[src]},E{AR[src]})"); c.font = BLACK; c.number_format = '0.00'; c.border = BOX
+        ws.cell(row=r, column=9, value="＝依『輸入與假設』A 區價格情境選擇（1 低／2 基準／3 高）").font = SMALL
+        AR[key] = r; r += 1
+    ws.cell(row=r, column=1, value="隨需占比（新增產能按長約價；第 2 輪）").font = BOLD
+    ws.cell(row=r, column=2, value="%").font = SMALL
+    c = ws.cell(row=r, column=3, value=AM['onDemandShare']['base']); c.font = BLUE; c.number_format = PCT; c.border = BOX
+    ws.cell(row=r, column=9, value=AM['onDemandShare']['note'] + f"；敏感度 {'／'.join(f'{x:.0%}' for x in AM['onDemandShare']['sens'])} 見 G2 區").font = SMALL
+    AR['od'] = r; r += 1
+    ws.cell(row=r, column=1, value="Nebius 自身合約 k（Microsoft；只列為敏感度）").font = BLACK
+    ws.cell(row=r, column=2, value="倍").font = SMALL
+    for j, v in enumerate(AM['long']['nebiusContract']['values']):
+        c = ws.cell(row=r, column=3 + j, value=v); c.font = BLUE; c.number_format = '0.00'; c.border = BOX
+    ws.cell(row=r, column=9, value="C／D／E＝" + "／".join(AM['long']['nebiusContract']['labels']) + "。" + AM['long']['nebiusContract']['note'] + " " + AM['long']['nebiusContract']['tag']).font = SMALL
+    AR['kNb'] = r; r += 1
+    ws.cell(row=r, column=1, value="長約的指定解讀（下游資料契約第 4 條）").font = BLACK
+    ws.cell(row=r, column=9, value=AM['long']['interpretation']).font = SMALL
+    r += 2
+
+    r = section(ws, r, "B｜Tokenomics 錨與世代組合（Tokenomics_取數 的 TK_ 名稱，基準成本情境）")
+    for j, h in enumerate(["世代", "單位", "IF_HoldEcon", "IF_RevGWFleet", "期初占比"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    c = ws.cell(row=r, column=9, value="說明／來源"); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    for g in GEN:
+        ws.cell(row=r, column=1, value=f"世代｜{g}").font = BLACK
+        ws.cell(row=r, column=2, value="US$m/MW").font = SMALL
+        c = ws.cell(row=r, column=3, value=f"=TK_HoldEcon_{_GCX[g]}"); c.font = GREEN; c.number_format = _MF; c.border = BOX
+        c = ws.cell(row=r, column=4, value=f"=TK_RevGWFleet_{_GCX[g]}"); c.font = GREEN; c.number_format = _MF; c.border = BOX
+        c = ws.cell(row=r, column=5, value=FLT['openMix']['mix'].get(g, 0)); c.font = BLUE; c.number_format = PCT; c.border = BOX
+        rg = FLT['openMix']['range'].get(g)
+        ws.cell(row=r, column=9, value=("Tokenomics 無 H200 欄，以 Hopper H100 欄代表；" if g.startswith('Hopper') else "") +
+                (f"期初占比區間 {rg[0]:.0%}–{rg[1]:.0%} " if rg else "") + f"{FLT['openMix']['tag']}；IF_HoldEcon＝每 MW 年經濟持有成本（WACC 10%）、IF_RevGWFleet＝客戶每 MW 付費 token 營收（理想上限）").font = SMALL
+        AR['gen_' + g] = r; r += 1
+    ws.cell(row=r, column=1, value="期初占比合計").font = BLACK
+    c = ws.cell(row=r, column=5, value=f"=SUM(E{AR['gen_' + GEN[0]]}:E{AR['gen_' + GEN[-1]]})"); c.number_format = PCT; c.border = BOX
+    ws.cell(row=r, column=9, value=FLT['openMix']['source']).font = SMALL
+    AR['mixSum'] = r; r += 1
+    OPEN = gi_ = None
+    ws.cell(row=r, column=1, value="期初在役 MW（最新季末）").font = BLACK
+    ws.cell(row=r, column=2, value="MW").font = SMALL
+    c = ws.cell(row=r, column=3, value=CO['priceCheck']['inServiceMw']); c.font = BLUE; c.number_format = NUM0; c.border = BOX
+    ws.cell(row=r, column=9, value=CO['priceCheck']['inServiceNote'] + "（company.json → priceCheck.inServiceMw）").font = SMALL
+    AR['open'] = r; OPEN = f"$C${r}"; r += 2
+    aphdr("新增在役 MW 的世代占比")
+    for g in GEN:
+        arow('nm_' + g, f"新增占比｜{g}", "%", [FLT['newMix'][i].get(g, 0) for i in range(5)], PCT, BLUE, FLT['newMixNote'] if g == GEN[0] else None); r += 1
+    arow('idx', "期別序號（長約起始期比對用）", "", [0, 1, 2, 3, 4], NUM0, BLACK, "0＝首期"); r += 2
+
+    r = section(ws, r, "C｜已揭露多年期合約（長約占比用；只換算 MW 占比，不用來推 k）")
+    for j, h in enumerate(["合約", "單位", "MW（基準）", "起始期序號", "MW 下緣", "MW 上緣"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    c = ws.cell(row=r, column=9, value="換算依據／來源"); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    _c0 = r
+    for ct in AM['longShare']['contracts']:
+        ws.cell(row=r, column=1, value=f"合約｜{ct['label']}").font = BLACK
+        ws.cell(row=r, column=2, value="MW").font = SMALL
+        for j, v in enumerate((ct['mw'], ct['start'], ct['lo'], ct['hi'])):
+            c = ws.cell(row=r, column=3 + j, value=v); c.font = BLUE; c.number_format = NUM0; c.border = BOX
+        ws.cell(row=r, column=9, value=f"{ct['basis']}；{ct['source']} {ct['tag']}").font = SMALL
+        r += 1
+    _c1 = r - 1
+    CT_MW, CT_ST = f"$C${_c0}:$C${_c1}", f"$D${_c0}:$D${_c1}"
+    ws.cell(row=r, column=1, value="算式").font = BLACK
+    ws.cell(row=r, column=9, value=AM['longShare']['formula'] + " " + AM['longShare']['tag']).font = SMALL
+    r += 2
+
+    # 每個容量情境一段
+    _SCX = [("保守", "low"), ("基準", "base"), ("積極", "high")]
+    for nm, k in _SCX:
+        lb = CO['scenarios']['labels'][k]
+        r = section(ws, r, f"容量情境｜{lb}", level=2)
+        aphdr()
+        P = f"{lb}｜"
+        arow(P + 'end', P + "期末在役 MW（已連網 × 在役比例）", "MW", [f"='輸入與假設'!{L}{sc_rows[nm]}*'輸入與假設'!{L}{BR_ROW}" for L in COLS], NUM0, GREEN); r += 1
+        arow(P + 'start', P + "期初在役 MW", "MW", [f"={OPEN}"] + [f"={COLS[i - 1]}{AR[P + 'end']}" for i in range(1, 5)], NUM0); r += 1
+        arow(P + 'add', P + "新增在役 MW", "MW", [f"=MAX(0,{L}{AR[P + 'end']}-{L}{AR[P + 'start']})" for L in COLS], NUM0); r += 1
+        for g in GEN:
+            gr = AR['gen_' + g]
+            arow(P + 'g_' + g, P + f"期末 MW｜{g}", "MW",
+                 [f"={OPEN}*$E${gr}+C{AR[P + 'add']}*C{AR['nm_' + g]}"] +
+                 [f"={COLS[i - 1]}{r}+{COLS[i]}{AR[P + 'add']}*{COLS[i]}{AR['nm_' + g]}" for i in range(1, 5)], NUM0); r += 1
+        for g in GEN:
+            gr = AR['gen_' + g]
+            prv = lambda i: f"{OPEN}*$E${gr}" if i == 0 else f"{COLS[i - 1]}{AR[P + 'g_' + g]}"
+            arow(P + 's_' + g, P + f"平均在役占比｜{g}", "%",
+                 [f"=({prv(i)}+{COLS[i]}{AR[P + 'g_' + g]})/({COLS[i]}{AR[P + 'start']}+{COLS[i]}{AR[P + 'end']})" for i in range(5)], PCT); r += 1
+        arow(P + 'anchor', P + "錨：每 MW 經濟持有成本（IF_HoldEcon，在役世代加權）", "US$m/MW",
+             ["=" + "+".join(f"{L}{AR[P + 's_' + g]}*$C${AR['gen_' + g]}" for g in GEN) for L in COLS], _MF, BOLD,
+             "WACC 10% 下的打平租金（100% 計費時數）" if nm == "保守" else None); r += 1
+        arow(P + 'avg', P + "平均在役 MW", "MW", [f"=({L}{AR[P + 'start']}+{L}{AR[P + 'end']})/2" for L in COLS], NUM0); r += 1
+        arow(P + 'lm', P + "已揭露長約 MW（起始期 ≤ 本期）", "MW", [f'=SUMIF({CT_ST},"<="&{L}${AR["idx"]},{CT_MW})' for L in COLS], NUM0); r += 1
+        arow(P + 'ls', P + "長約占比（對照，不驅動 k；MIN(1, 長約 MW ÷ 平均在役 MW)）", "%", [f"=MIN(1,{L}{AR[P + 'lm']}/{L}{AR[P + 'avg']})" for L in COLS], PCT); r += 1
+        arow(P + 'k', P + "定價倍數 k（隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約）", "倍",
+             [f"=$C${AR['od']}*$C${AR['kS']}+(1-$C${AR['od']})*$C${AR['kL']}" for L in COLS], _MF, BOLD); r += 1
+        arow(P + 'rev', P + "每 MW 年收入（錨 × k，100% 計費時數）", "US$m/MW", [f"={L}{AR[P + 'anchor']}*{L}{AR[P + 'k']}" for L in COLS], _MF, BOLD,
+             "→『輸入與假設』A 區「每 MW 年收入｜" + lb + "」（÷ 1000）"); r += 1
+        arow(P + 'cap', P + "上限檢查｜客戶每 MW 付費 token 營收（IF_RevGWFleet，在役世代加權）", "US$m/MW",
+             ["=" + "+".join(f"{L}{AR[P + 's_' + g]}*$D${AR['gen_' + g]}" for g in GEN) for L in COLS], _MF); r += 1
+        arow(P + 'capR', P + "上限檢查｜每 MW 收入 ÷ 客戶付費 token 營收", "%", [f"={L}{AR[P + 'rev']}/{L}{AR[P + 'cap']}" for L in COLS], PCT,
+             note=f"neocloud 拿走客戶 token 營收的比例；> {CO['methodology']['checks']['revCapShareMax']:.0%} 時『檢查_連動』警示（門檻 methodology.checks.revCapShareMax）"); r += 1
+        r += 1
+        for i, L in enumerate(COLS):  # 輸入與假設 A 區：每 MW 年收入｜情境（US$bn/MW）
+            c = _wi.cell(row=sc_rows['rev_' + nm], column=3 + i, value=f"='每MW收入_錨定'!{L}{AR[P + 'rev']}/1000"); c.font = GREEN
+
+    r = section(ws, r, "目前容量情境（依『輸入與假設』A 區情境選擇）")
+    aphdr()
+    for key, nmx, unit, fmt in (("anchor", "錨（IF_HoldEcon 加權）", "US$m/MW", _MF), ("ls", "長約占比", "%", PCT), ("k", "定價倍數 k", "倍", _MF),
+                                ("rev", "每 MW 年收入（錨 × k）", "US$m/MW", _MF), ("capR", "上限檢查｜每 MW 收入 ÷ 客戶付費 token 營收", "%", PCT)):
+        arow('cur_' + key, f"目前情境｜{nmx}", unit,
+             [f"=CHOOSE({SEL}," + ",".join(f"{L}{AR[CO['scenarios']['labels'][k] + '｜' + key]}" for _, k in _SCX) + ")" for L in COLS], fmt, BOLD if key == 'rev' else BLACK); r += 1
+    arow('cur_capMax', "目前情境｜上限檢查最高值（五期）", "%", [f"=MAX(C{AR['cur_capR']}:G{AR['cur_capR']})", "", "", "", ""], PCT); r += 2
+
+    r = section(ws, r, "D｜k 證據表（倍數＝市場價格 ÷ 同世代 Tokenomics 基準持有成本；use：long／spot＝驅動基準、range＝只支持區間、list＝只列）")
+    for j, h in enumerate(["證據", "單位", "價格", "Tokenomics", "倍數 k", "用途"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    c = ws.cell(row=r, column=9, value="合約型態／期間／來源／日期／標記"); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    _USE = {'long': '長約基準', 'spot': '現貨基準', 'range': '區間', 'list': '只列'}
+    for ev in AM['evidence']:
+        ws.cell(row=r, column=1, value=f"證據｜{ev['label']}").font = BLACK
+        ws.cell(row=r, column=2, value=ev['unit']).font = SMALL
+        c = ws.cell(row=r, column=3, value=ev['price']); c.font = BLUE; c.number_format = _MF; c.border = BOX
+        c = ws.cell(row=r, column=4, value=f"=TK_{re.sub(r'^(IF|L1)_', '', ev['tkName'])}_{_GCX[ev['gen']]}"); c.font = GREEN; c.number_format = '0.0000'; c.border = BOX
+        c = ws.cell(row=r, column=5, value=f"=C{r}/D{r}"); c.font = BLACK; c.number_format = '0.000'; c.border = BOX
+        ws.cell(row=r, column=6, value=_USE[ev['use']]).font = BLACK
+        ws.cell(row=r, column=9, value=f"{ev['gen']}；{ev['contract']}，{ev['term']}；{ev['source']}（{ev['date']}，擷取 {ev['retrieved']}）{ev['tag']}；{ev['note']}").font = SMALL
+        AR['ev_' + ev['label']] = r; r += 1
+    for x in AM['contractMix']:
+        ws.cell(row=r, column=1, value=f"合約組合｜{x['label']}").font = BLACK
+        ws.cell(row=r, column=2, value=x['unit']).font = SMALL
+        c = ws.cell(row=r, column=3, value=x['value'] if x['value'] is not None else "找不到"); c.font = BLUE if x['value'] is not None else SMALL; c.border = BOX
+        ws.cell(row=r, column=9, value=f"{x['source']} {x['tag']}").font = SMALL
+        r += 1
+    for t in AM['notFound']:
+        ws.cell(row=r, column=1, value="找不到").font = SMALL
+        ws.cell(row=r, column=9, value=t).font = SMALL
+        r += 1
+    r += 1
+
+    r = section(ws, r, "E｜對照列（不驅動）")
+    aphdr()
+    for nm, k in _SCX:
+        arow('old_' + k, f"對照｜v0.2 舊值（scenarios.revMW，隨容量情境同向）｜{CO['scenarios']['labels'][k]}", "US$m/MW", [x * 1e3 for x in CO['scenarios']['revMW'][k]], _MF, BLUE,
+             "v0.1a 路徑 A 成本加成與路徑 B 市場價 50/50 平均（已停用：下游資料契約第 4 條、X14 (j)）" if k == 'low' else None); r += 1
+    arow('cmp_old', "對照｜錨 × k 相對 v0.2 舊值（目前情境）", "%",
+         [f"={L}{AR['cur_rev']}/CHOOSE({SEL}," + ",".join(f"{L}{AR['old_' + k]}" for _, k in _SCX) + ")-1" for L in COLS], PCT); r += 1
+    arow('cmp_cost', "對照｜成本加成路徑：錨 ×（1＋15%）÷（1 − 8%）（只作 ROIC 檢查）", "US$m/MW", [f"={L}{AR['cur_anchor']}*(1+0.15)/(1-0.08)" for L in COLS], _MF, BLACK,
+         "v0.1a 路徑 A 基準（經濟利潤加成 15%、公司層級費用 8% [Assumed]）；契約第 4 條：只作 ROIC 與資金缺口檢查，不作收入輸入"); r += 1
+    arow('cmp_acv', "對照｜公司新約 ACV（下緣、上緣）", "US$m/MW", [CO['priceCheck']['acv'][0], CO['priceCheck']['acv'][1], "", "", ""], _MF, BLUE, CO['priceCheck']['acvNote']); r += 1
+    r += 1
+    r = section(ws, r, "F｜Q2 驗證（不是校準；只列，不回頭改 k）：FY26 模型每 MW 年收入 vs 最新季實現")
+    for j, h in enumerate(["項目", "單位", "數值"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    c = ws.cell(row=r, column=9, value="算式／說明"); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    _q = {}
+    def qrow(key, name, unit, f, fmt=_MF, note=None, bold=False):
+        global r
+        ws.cell(row=r, column=1, value=name).font = BOLD if bold else BLACK
+        ws.cell(row=r, column=2, value=unit).font = SMALL
+        c = ws.cell(row=r, column=3, value=f); c.font = BOLD if bold else BLACK; c.number_format = fmt; c.border = BOX
+        if note: ws.cell(row=r, column=9, value=note).font = SMALL
+        _q[key] = f"$C${r}"; AR['q2_' + key] = r; r += 1
+    qrow('ann', "Q2｜年化營收（最新季 × 4）", "US$bn", f"={QREV}*4", NUM, "已實現實際數 [Interested-party]")
+    qrow('svc', "Q2｜季末在役 MW（內插）", "MW", f"={OPEN}", NUM0, CO['priceCheck']['inServiceNote'])
+    qrow('bo', "Q2｜期初可計費 MW（模型校準值）", "MW", f"={MW0}", NUM0, "＝最新季營收 × 4 ÷ 首期每 MW 年收入（輸入與假設 B 區；已實現狀態對齊，非推價格）")
+    qrow('rSvc', "Q2 實現每 MW 年收入（÷ 在役 MW）", "US$m/MW", f"={_q['ann']}/{_q['svc']}*1000", note="工作單「約 6.4」")
+    qrow('rBo', "Q2 實現每 MW 年收入（÷ 計費 MW）", "US$m/MW", f"={_q['ann']}/{_q['bo']}*1000", note="與模型首期每 MW 年收入只差期初可計費 MW 的四捨五入")
+    qrow('a0', "Q2｜期初錨（季末世代組合 × IF_HoldEcon）", "US$m/MW", "=" + "+".join(f"$E${AR['gen_' + g]}*$C${AR['gen_' + g]}" for g in GEN))
+    qrow('kSvc', "Q2 隱含 k（÷ 在役 MW ÷ 期初錨；只列，不用）", "倍", f"={_q['rSvc']}/{_q['a0']}", '0.000', "不得用來校準 k（已決定事項 14）")
+    qrow('kBo', "Q2 隱含 k（÷ 計費 MW ÷ 期初錨；只列，不用）", "倍", f"={_q['rBo']}/{_q['a0']}", '0.000')
+    qrow('mRev', "模型 FY26 每 MW 年收入（目前情境，錨 × k）", "US$m/MW", f"=C{AR['cur_rev']}", bold=True)
+    qrow('mA', "模型 FY26 錨（平均在役世代）", "US$m/MW", f"=C{AR['cur_anchor']}")
+    qrow('mK', "模型 FY26 定價倍數 k", "倍", f"=C{AR['cur_k']}", '0.000')
+    qrow('gap', "總差距（模型 − Q2 實現 ÷ 在役）", "US$m/MW", f"={_q['mRev']}-{_q['rSvc']}", bold=True)
+    qrow('gapPct', "總差距 ÷ Q2 實現（÷ 在役）", "%", f"={_q['gap']}/{_q['rSvc']}", PCT)
+    qrow('i', "(i) 爬坡分母：計費 MW 對在役 MW", "US$m/MW", f"={_q['rBo']}-{_q['rSvc']}", note="＝Q2 年化 ÷ 計費 MW − Q2 年化 ÷ 在役 MW")
+    qrow('ii', "(ii) 定價倍數 k：模型 k 對 Q2 隱含 k（÷ 計費）", "US$m/MW", f"=({_q['mK']}-{_q['kBo']})*{_q['a0']}", note="＝（模型 k − Q2 隱含 k）× 期初錨；模型 k 不因此調整")
+    qrow('iii', "(iii) 世代組合：FY26 平均在役世代對季末世代", "US$m/MW", f"=({_q['mA']}-{_q['a0']})*{_q['mK']}", note="＝（FY26 錨 − 期初錨）× 模型 k")
+    qrow('iv', "(iv) 其他（殘差）", "US$m/MW", f"={_q['gap']}-{_q['i']}-{_q['ii']}-{_q['iii']}", note="依定義為 0（(i)–(iii) 已涵蓋）；Q2 營收含非 AI cloud 收入等差異併入 (ii)")
+    qrow('sum', "核對：(i)＋(ii)＋(iii)＋(iv) − 總差距", "US$m/MW", f"={_q['i']}+{_q['ii']}+{_q['iii']}+{_q['iv']}-{_q['gap']}", '0.000000', "應為 0（誤差 < 0.01）")
+    ws.cell(row=r, column=1, value="差異原因（已決定事項 2）").font = BOLD
+    ws.cell(row=r, column=9, value=(f"類型：觀點／已知限制。差距幾乎全部來自 (i) 爬坡分母——6/30 在役約 {CO['priceCheck']['inServiceMw']} MW（內插）中只有約 {D['billableOpen']} MW 依 Q2 營收計費（Microsoft 全部 tranche 於第二季下半季才交付、"
+                                    "其他新容量第二季下半季上線），模型把差距歸為爬坡而非低價；Q2 隱含 k（÷ 在役）約 0.56 只列不用。季末在役 MW 公司未揭露（資料缺口），Q3 揭露後重估。")).font = SMALL
+    AR['q2_reason'] = r; r += 2
+    # v0.2a 第 2 輪：公司實況驗證（已決定事項 15；company.json → companyCheck）
+    CC = CO['companyCheck']
+    ws = wb.create_sheet("公司實況驗證")
+    for _col, _w in zip("ABCDEFGHIJ", (30, 40, 11, 44, 11, 10, 60, 50, 22, 14)):
+        ws.column_dimensions[_col].width = _w
+    ws["A1"] = "公司實況驗證（Tokenomics 參數 vs Nebius 已申報實際數）"; ws["A1"].font = TITLE
+    ws["A2"] = CC['_note']; ws["A2"].font = SMALL
+    ws["A3"] = f"規則：差距 > {CC['threshold']:.0%} 時需有證據的機制才做公司調整；找不到機制則維持 Tokenomics／現行值，公司實際列為敏感度。"; ws["A3"].font = SMALL
+    r = 4
+    for j, h in enumerate(["參數", "Tokenomics 值（名稱）", "Tokenomics", "Nebius 實際（數值、期間）", "實際", "差距", "差距原因（機制與證據）", "公司調整（何時回到 Tokenomics 值）", "採用值", "標記"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    for x in CC['rows']:
+        ws.cell(row=r, column=1, value=f"驗證｜{x['param']}").font = BLACK
+        ws.cell(row=r, column=2, value=x['tk']).font = SMALL
+        c = ws.cell(row=r, column=3, value=x['tkv']); c.font = BLUE; c.border = BOX; c.number_format = PCT if x['unit'] == '%' else '0.00'
+        ws.cell(row=r, column=4, value=f"{x['actual']}（{x['src']}）").font = SMALL
+        c = ws.cell(row=r, column=5, value=x['actv'] if x['actv'] is not None else "找不到"); c.font = BLUE; c.border = BOX; c.number_format = PCT if x['unit'] == '%' else '0.00'
+        c = ws.cell(row=r, column=6, value=f"=IF(ISNUMBER(E{r}),E{r}/C{r}-1,\"不適用\")"); c.border = BOX; c.number_format = '+0%;-0%;0%'
+        ws.cell(row=r, column=7, value=x['mech']).font = SMALL
+        ws.cell(row=r, column=8, value=x['adj']).font = SMALL
+        ws.cell(row=r, column=9, value=x['adopted']).font = BLACK
+        ws.cell(row=r, column=10, value=x['tag']).font = SMALL
+        AR['cc_' + x['param']] = r; r += 1
+    ws = _wi  # 還原（下方 IN_ref 等不依賴 ws）
 
 # =====================================================================
 # 3. 產能與收入
@@ -2038,19 +2328,21 @@ for j, h in enumerate(["單一槓桿（其他不變）", "目前", "市價隱含
     if h:
         c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
 r += 1
+_rvm = lambda a, x: "無解" if x is None else a * x  # v0.2a 第 2 輪：反向 DCF 在搜尋區間內無解時（rv_snap 為 null）顯示「無解」
+_rvd = lambda x, b: "—" if x is None else x - b
 _rows = [
-    ("FY30 每 MW 年收入（US$m）", rv["rev30"], rv["rev30"] * rv["R"], rv["R"] - 1, "期末 ARR 指引隱含約 $10.0–10.5m；7 月新約漲價約 25%"),
-    ("每 MW 建置成本（US$m）", rv["cost30"], rv["cost30"] * rv["C"], rv["C"] - 1, "FY26 指引隱含約 $32–37m"),
-    ("穩態 EBITDA 率（FY30）", rv["eb30"], rv["Eb"], rv["Eb"] - rv["eb30"], "可觀察 neocloud 區間 IREN 約 35%、CRWV 約 59%（變動為百分點）"),
-    ("（對照）加權目標價＝現價所需每 MW 年收入", rv["rev30"], rv["rev30"] * rv["Rt"], rv["Rt"] - 1, "含 EV/EBITDA 6x（FY29 錨定） 腿；非純反向 DCF"),
+    ("FY30 每 MW 年收入（US$m）", rv["rev30"], _rvm(rv["rev30"], rv["R"]), _rvd(rv["R"], 1), "期末 ARR 指引隱含約 $10.0–10.5m；7 月新約漲價約 25%"),
+    ("每 MW 建置成本（US$m）", rv["cost30"], _rvm(rv["cost30"], rv["C"]), _rvd(rv["C"], 1), "FY26 指引隱含約 $32–37m"),
+    ("穩態 EBITDA 率（FY30）", rv["eb30"], _rvm(1, rv["Eb"]), _rvd(rv["Eb"], rv["eb30"]), "可觀察 neocloud 區間 IREN 約 35%、CRWV 約 59%（變動為百分點）"),
+    ("（對照）加權目標價＝現價所需每 MW 年收入", rv["rev30"], _rvm(rv["rev30"], rv["Rt"]), _rvd(rv["Rt"], 1), "含 EV/EBITDA 6x（FY29 錨定） 腿；非純反向 DCF"),
 ]
 RV_R0 = r  # v4.3：單一槓桿快照第一列（「摘要」頁引用）
 for k, (nm, a, b, d, note) in enumerate(_rows):
     ws.cell(row=r, column=1, value=nm).font = BLACK
     fm = PCT if k == 2 else NUM1
     for col, v in [(2, a), (3, b)]:
-        c = ws.cell(row=r, column=col, value=round(v, 4)); c.number_format = fm; c.border = BOX
-    c = ws.cell(row=r, column=4, value=round(d, 4)); c.number_format = PCT; c.border = BOX
+        c = ws.cell(row=r, column=col, value=round(v, 4) if isinstance(v, (int, float)) else v); c.number_format = fm; c.border = BOX
+    c = ws.cell(row=r, column=4, value=round(d, 4) if isinstance(d, (int, float)) else d); c.number_format = PCT; c.border = BOX
     ws.cell(row=r, column=7, value=note).font = SMALL
     r += 1
 r += 1
@@ -2170,6 +2462,10 @@ checks = [
     ("營收＝在役 MW × 每 MW × 利用率（五期差額）", f"=SUM('運營_產能與收入'!C{CR['核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間']}:G{CR['核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間']})", "=0",
      "=IF(ABS(B{r})<0.000001,\"通過\",\"不一致\")", NUM, "MW 驅動：營收＝平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度"),
 ]
+if AR:  # v0.2a：收入上限檢查列放在清單最後（前面各列有依位置補公式的程式，不可插在中間）
+    checks += [("收入上限：每 MW 收入 ÷ 客戶付費 token 營收（最高）", f"='每MW收入_錨定'!C{AR['cur_capMax']}", f"≤{_n(CK['revCapShareMax'] * 100)}%",
+     "=IF(B{r}<=" + _n(CK['revCapShareMax']) + ",\"通過\",\"警示\")", PCT,
+     "neocloud 拿走客戶 token 營收的比例＝每 MW 年收入 ÷ Tokenomics IF_RevGWFleet（在役世代加權；理想上限）；只警示、不改數字（v0.2a）")]
 for nm, bf, std, rf, fmt, note in checks:
     ws.cell(row=r, column=1, value=nm).font = BLACK
     if bf:
@@ -2197,11 +2493,12 @@ ws.cell(row=_r, column=2, value=f"='運營_站點'!G{RENT_PER}").number_format =
 _share_x = SHARE.replace('$C$', "'運營_站點'!$C$")  # 另存變數：f-string 內重用引號需 Python 3.12+
 ws.cell(row=_r, column=4, value=f"=IF(B{_r}>={BENCH}*{_share_x}*{_n(CK['rentVsBenchMin'])},\"通過\",\"觀察\")")
 _r = _find("EBITDA 單一來源（FY27 損益 EBITDA÷營收 − 輸入 EBITDA 率）")
-ws.cell(row=_r, column=2, value=f"='損益'!D{ebitda_v}/'損益'!D{rev_v}-'輸入與假設'!D{IN['EBITDA 率']}").number_format = '0.0000'
+_OEB = f"'輸入與假設'!D{IN['其他事業 EBITDA（Avride＋TripleTen）']}"  # v0.2a 第 2 輪：損益 EBITDA 自 v0.1b 起含其他事業 EBITDA，兩列核對須扣除（原公式漏扣，v0.2 成品因此顯示「不一致」）
+ws.cell(row=_r, column=2, value=f"=('損益'!D{ebitda_v}-{_OEB})/'損益'!D{rev_v}-'輸入與假設'!D{IN['EBITDA 率']}").number_format = '0.0000'
 _r = _find("現金 EBITDA ＋ 信用調整 − 損益 EBITDA（FY27）")
 ws.cell(row=_r, column=2, value=(f"=('運營_產能與收入'!D{CAP['rpocash']}+'運營_產能與收入'!D{CAP['newcash']}+'輸入與假設'!D{IN['非算力服務現金']}-'各期收支'!D{FR['　租金合計']})"
     f"+('運營_產能與收入'!D{CAP['loss']}+'運營_產能與收入'!D{CAP['newrev']}*'輸入與假設'!D{IN['客戶違約率']}*(1-'輸入與假設'!D{IN['回收率']}))*'運營_產能與收入'!D{CAP['cm']}"
-    f"-'損益'!D{ebitda_v}")).number_format = NUM
+    f"-('損益'!D{ebitda_v}-{_OEB})")).number_format = NUM
 _r = _find("DCF 有效性（1＝失效）")
 ws.cell(row=_r, column=2, value=f"='評價_DCF與目標價'!{DCF_BAD}")
 _r = _find("期末現金 ≥ 最低現金（期前融資）")
@@ -2286,7 +2583,9 @@ src = [
      "2027 起每年部署 >1 GW；70% 合約含預付、覆蓋 50–60% 相關資本支出；2026 預付 >$9B；Q2 新約 ACV $20–25M/MW（只作對照）；回收期 1 年 10 個月（只作對照）。"),
     ("Interested-party", "法說會（二手轉述）：2026 資本支出 $20–25B（Q1 由 $16–20B 上調、Q2 重申）。"),
     ("Verified", "FY2025 20-F（經查核）：營收 0.530、營業損益 −0.612、續營淨損益 0.010、D&A 0.418、2025 年底現金 3.678；歷年損益 FY23–FY25 取自 20-F XBRL（SEC companyfacts）。"),
-    ("Derived", "每 MW 年收入（Tokenomics v5.24 正向推導）：保守 11.62／基準 17.40／積極 24.20 US$m/MW-IT·年（路徑 A 成本加成與路徑 B 市場價格平均）；"
+    ("Derived", (f"每 MW 年收入＝Tokenomics {CO['tokenomics']['version']}（{CO['tokenomics']['currentFile']}，合併 {CO['tokenomics']['mergeCommit']}；官方快照 {CO['tokenomics']['snapshotFile']}）IF_HoldEcon 在役世代加權 × 定價倍數 k"
+                 f"（k_長約 {CO['pricing']['anchorMultiple']['long']['base']}：IREN–Microsoft 長約；k_現貨 {CO['pricing']['anchorMultiple']['spot']['base']}：H100 現貨指數；長約占比依 Microsoft、Meta 合約 MW）；"
+                 if PMW_REV == 'tkAnchor' else "每 MW 年收入（Tokenomics v5.24 正向推導）：保守 11.62／基準 17.40／積極 24.20 US$m/MW-IT·年（路徑 A 成本加成與路徑 B 市場價格平均）；") +
      "每 MW 建置成本 IF_CapexTotal 50.12（GB300）／50.26（VR200）；RPO 桶內線性分攤 36／40／24 → 五期 9／18／19／20／16%。"),
     ("Assumed", "已連網 MW 路徑（歷史併網速度 +580 MW-IT／年；保守上限 2,917、基準上限 4,167、積極每年 +833）；在役比例 75%→90%；EBITDA 率 49.7%→47%（可觀察 neocloud 區間）；"
      "違約率 0.5→2.5%；新債利率 6.5%；債務／backlog 0.5x；最低現金 2.0；股權折價 10%；終值維持性 CapEx 占 D&A 80%。"),
@@ -3119,17 +3418,147 @@ srow("驗證｜目標價（平均／中位數／最低／最高）", "US$", [f"=
 ws.cell(row=r + 1, column=1, value="來源獨立性：" + CONS['sourceIndependence']).font = SMALL
 ws.cell(row=r + 2, column=1, value=f"共識來源：{CONS['annualEstimates']['source']}、{CONS['priceTarget']['source']}；擷取 {CONS['annualEstimates']['retrieved']}。逐筆來源、日期與標記見『輸入與假設』I 區。").font = SMALL
 
+# v0.2a 步驟 5：「每MW收入_錨定」G 區——3 × 3 容量 × 價格矩陣與每 MW 收入敏感度（建置時快照：scripts/tk_sens.js 以 HTML 引擎計算，
+# 該引擎與本 Excel 經 cmp31 逐項一致；改輸入後快照不會自動更新，過期檢查列會顯示「快照已過期」）
+if AR:
+    _TS = _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), 'tk_sens.json'), encoding='utf-8'))
+    assert _TS.get('method') == 'tkAnchor', 'tk_sens.json 不是 tkAnchor 快照（先執行 node scripts/tk_sens.js）'
+    ws = wb['每MW收入_錨定']
+    r = ws.max_row + 2
+    _K3 = ['low', 'base', 'high']; _PXN = {'low': '價格低', 'base': '價格基準', 'high': '價格高'}
+    r = section(ws, r, "G｜3 × 3 容量 × 價格：加權目標價（US$／股；快照）與五期股權募資（US$bn）")
+    for j, h in enumerate(["容量情境 ＼ 價格情境", "單位", "價格低", "價格基準", "價格高"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    c = ws.cell(row=r, column=9, value="說明"); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    _m0 = r
+    for k in _K3:
+        ws.cell(row=r, column=1, value=f"矩陣｜加權目標價｜{CO['scenarios']['labels'][k]}").font = BLACK
+        ws.cell(row=r, column=2, value="US$").font = SMALL
+        for j, px in enumerate(_K3):
+            c = ws.cell(row=r, column=3 + j, value=_TS['matrix'][k][px]['tgt']); c.font = BLACK; c.number_format = USD; c.border = BOX
+        if k == 'low':
+            ws.cell(row=r, column=9, value=(f"價格低＝k_長約 {CO['pricing']['anchorMultiple']['long']['low']:.2f}、k_現貨 {CO['pricing']['anchorMultiple']['spot']['low']:.2f}；"
+                                            f"基準＝{CO['pricing']['anchorMultiple']['long']['base']:.2f}、{CO['pricing']['anchorMultiple']['spot']['base']:.2f}；"
+                                            f"高＝{CO['pricing']['anchorMultiple']['long']['high']:.2f}、{CO['pricing']['anchorMultiple']['spot']['high']:.2f}")).font = SMALL
+        r += 1
+    for k in _K3:
+        ws.cell(row=r, column=1, value=f"矩陣｜五期股權募資｜{CO['scenarios']['labels'][k]}").font = BLACK
+        ws.cell(row=r, column=2, value="US$bn").font = SMALL
+        for j, px in enumerate(_K3):
+            c = ws.cell(row=r, column=3 + j, value=_TS['matrix'][k][px]['eq']); c.font = BLACK; c.number_format = NUM; c.border = BOX
+        r += 1
+    for k in _K3:
+        ws.cell(row=r, column=1, value=f"矩陣｜融資前缺口｜{CO['scenarios']['labels'][k]}").font = BLACK
+        ws.cell(row=r, column=2, value="US$bn").font = SMALL
+        for j, px in enumerate(_K3):
+            c = ws.cell(row=r, column=3 + j, value=_TS['matrix'][k][px]['gap']); c.font = BLACK; c.number_format = NUM; c.border = BOX
+        r += 1
+    ws.cell(row=r, column=1, value="快照檢查：目前情境 × 目前價格情境的快照 − 即時加權目標價").font = BOLD
+    ws.cell(row=r, column=2, value="US$").font = SMALL
+    c = ws.cell(row=r, column=3, value=f"=INDEX(C{_m0}:E{_m0 + 2},{SEL},{PXSEL})-'評價_DCF與目標價'!{TGT}"); c.number_format = '0.0000'; c.border = BOX
+    ws.cell(row=r, column=4, value=f'=IF(ABS(C{r})<0.01,"通過","快照已過期")').font = BOLD
+    ws.cell(row=r, column=9, value="改了任何輸入後快照不會自動更新；重建（node scripts/tk_sens.js → build_xlsx.py）即更新").font = SMALL
+    AR['snapChk'] = r; r += 2
+    r = section(ws, r, "G2｜每 MW 收入敏感度（價格基準；加權目標價 US$／股與五期股權募資 US$bn；快照）")
+    for j, h in enumerate(["變動", "單位", "保守", "基準", "積極", "保守 募資", "基準 募資", "積極 募資"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    ws.cell(row=r, column=1, value="敏感度｜基準（目前輸入）").font = BOLD
+    ws.cell(row=r, column=2, value="US$").font = SMALL
+    for j, k in enumerate(_K3):
+        c = ws.cell(row=r, column=3 + j, value=_TS['matrix'][k]['base']['tgt']); c.number_format = USD; c.border = BOX
+        c = ws.cell(row=r, column=6 + j, value=_TS['matrix'][k]['base']['eq']); c.number_format = NUM; c.border = BOX
+    r += 1
+    for x in _TS['sens']:
+        ws.cell(row=r, column=1, value=f"敏感度｜{x['label']}").font = BLACK
+        ws.cell(row=r, column=2, value="US$").font = SMALL
+        for j, k in enumerate(_K3):
+            c = ws.cell(row=r, column=3 + j, value=x['res'][k]['tgt']); c.number_format = USD; c.border = BOX
+            c = ws.cell(row=r, column=6 + j, value=x['res'][k]['eq']); c.number_format = NUM; c.border = BOX
+        r += 1
+    ws.cell(row=r, column=1, value=("Tokenomics 低／高成本：錨（IF_HoldEcon）與每 MW 建置成本（IF_CapexTotal 比例）同時改變，k 以證據世代的成本比例重算（k＝市場價格 ÷ 同情境持有成本；價格是事實），"
+                                    "所以收入大致不隨成本情境改變、成本改變。Nebius–Microsoft 合約 k 需假設容量（條款未揭露 MW／GPU 數），只列敏感度。首期末爬坡 50–80% 為 [Assumed] 區間（預設 60%）。")).font = SMALL
+    r += 1
+
+# v0.2a（2026-10-08，比照 CoreWeave W1）：Tokenomics 取數分頁。值取自 company.json → tokenomics.snapshotFile 的版本固定快照（tools/tokenomics/import_tokenomics.py 產生），
+# 藍字輸入格；每個名稱的「基準」值格另建具名範圍 TK_<名稱去掉 IF_／L1_>_<世代代碼>（單值名稱不加世代），供每 MW 收入錨定（v0.2a 步驟 3）公式引用。
+from openpyxl.workbook.defined_name import DefinedName as _DN
+TK = CO.get('tokenomics')
+if TK:
+    _TKS = _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), TK['snapshotFile']), encoding='utf-8'))
+    _src = _TKS['source']
+    assert _src['commit'] == TK['commit'] and _src['version'] == TK['version'], 'company.json → tokenomics 的版本／commit 與快照檔不一致'
+    assert list(_TKS['items']) == TK['names'], 'company.json → tokenomics.names 與快照檔名稱不一致'
+    ws = wb.create_sheet("Tokenomics_取數")
+    for _col, _w in zip("ABCDEFGHIJ", (26, 24, 44, 12, 30, 13, 13, 13, 24, 22)):
+        ws.column_dimensions[_col].width = _w
+    ws["A1"] = "Tokenomics 取數（算力相關的產業與物理層資料）"; ws["A1"].font = TITLE
+    _GC = {g['name']: g['code'] for g in _src['generations']}
+    ws["A2"] = (f"來源：{_src['repo']} {_src['file']}（{_src['version']}，commit {_src['commit'][:7]}，擷取 {_src['extractedAt']}）。"
+                "只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱；模型主值取「基準」，低／高只作敏感度；Tokenomics 每 GW＝IT 關鍵電力。")
+    ws["A2"].font = SMALL
+    ws["A3"] = ("每 MW 收入錨定（IF_HoldEcon）與上限檢查（IF_RevGWFleet）引用本分頁的 TK_ 具名範圍；" if CO.get("methodology", {}).get("perMw", {}).get("revenue") == "tkAnchor" else "本分頁只顯示、未被公式引用（收入採 legacy）；") + "值為快照的藍字輸入格，更新方式見 repo 根目錄 README「共用工具：Tokenomics 取數」。"
+    ws["A3"].font = SMALL
+    r = 4
+    for j, h in enumerate(["具名範圍（基準）", "名稱", "中文標籤", "單位", "世代", "低成本", "基準", "高成本", "Tokenomics 位置", "版本與 commit"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    _ver = f"{_src['version']} · {_src['commit'][:7]}"
+    _short = lambda n: re.sub(r'^(IF|L1)_', '', n)
+    def _tkrow(key, name, lab, unit, gen, vals, loc, fmt):
+        global r
+        ws.cell(row=r, column=1, value=key).font = BLACK
+        ws.cell(row=r, column=2, value=name).font = BLACK
+        ws.cell(row=r, column=3, value=lab).font = BLACK
+        ws.cell(row=r, column=4, value=unit).font = SMALL
+        ws.cell(row=r, column=5, value=gen).font = BLACK
+        for j, v in enumerate(vals):
+            c = ws.cell(row=r, column=6 + j, value=v); c.border = BOX
+            if isinstance(v, (int, float)): c.font = BLUE; c.number_format = fmt
+            else: c.font = SMALL
+        ws.cell(row=r, column=9, value=loc).font = SMALL
+        ws.cell(row=r, column=10, value=_ver).font = SMALL
+        r += 1
+    def _fmt(unit, vals):
+        nums = [abs(v) for v in vals if isinstance(v, (int, float))]
+        if unit in ('%',): return '0.0%'
+        if unit in ('顆', '架'): return NUM0
+        if nums and max(nums) >= 1000: return NUM0
+        return '#,##0.0000;(#,##0.0000);-'
+    for _nm, _it in _TKS['items'].items():
+        if _it.get('missing'):
+            _tkrow(f"TK_{_short(_nm)}", _nm, "（Tokenomics 尚無此名稱）", "", "", ["", "", ""],
+                   f"{_src['version']} 無此名稱（列為 optional；Tokenomics v5.25 預計新增）；未建具名範圍", NUM)
+            continue
+        if _it['kind'] == 'gen_cost':
+            for _g, _v3 in _it['values'].items():
+                _vals = [_v3['低成本'], _v3['基準'], _v3['高成本']]
+                _key = f"TK_{_short(_nm)}_{_GC[_g]}"
+                _tkrow(_key, _nm, _it['label'], _it['unit'], _g, _vals,
+                       f"{_it['cells'][_g]['低成本']}:{_it['cells'][_g]['高成本'].split('!')[1]}", _fmt(_it['unit'], _vals))
+                wb.defined_names[_key] = _DN(_key, attr_text=f"'Tokenomics_取數'!$G${r - 1}")
+        elif _it['kind'] == 'single':
+            _rg = _it.get('range') or {}
+            _vals = [_rg.get('低', ''), _it['values'], _rg.get('高', '')] if _rg else ["", _it['values'], ""]
+            _loc = _it['cell'] + (f"（低／高＝{_rg['cells']['低'].split('!')[1]}／{_rg['cells']['高'].split('!')[1]}；{_rg.get('def') or ''}）" if _rg else "")
+            _key = f"TK_{_short(_nm)}"
+            _tkrow(_key, _nm, _it['label'], _it['unit'], "—", _vals, _loc, _fmt(_it['unit'], _vals))
+            wb.defined_names[_key] = _DN(_key, attr_text=f"'Tokenomics_取數'!$G${r - 1}")
+        else:
+            raise SystemExit(f'Tokenomics_取數：不支援的快照型態 {_it["kind"]}（{_nm}）')
+
 for s in wb.worksheets:
     s.sheet_view.showGridLines = False
     if s.title not in ("導覽", "來源", "摘要"):
         s.freeze_panes = "C5"
 
-_order = ["導覽", "摘要", "輸入與假設", "各期收支", "季度追蹤", "運營_產能與收入", "運營_站點", "資產負債_既有債務", "資產負債_新債與新股",
-          "資產負債_租賃承諾", "損益", "評價_DCF與目標價", "評價_反向DCF", "評價_可比公司", "檢查_連動", "檢查_版本紀錄", "來源"]
+_order = ["導覽", "摘要", "輸入與假設", "各期收支", "季度追蹤", "運營_產能與收入", "運營_站點"] + (["每MW收入_錨定", "公司實況驗證"] if AR else []) + ["資產負債_既有債務", "資產負債_新債與新股",
+          "資產負債_租賃承諾", "損益", "評價_DCF與目標價", "評價_反向DCF", "評價_可比公司", "檢查_連動", "檢查_版本紀錄", "來源"] + (["Tokenomics_取數"] if TK else [])
 wb._sheets = [wb[n] for n in _order] + [w for w in wb.worksheets if w.title not in _order]
 _tab = {"摘要": "C00000", "輸入與假設": "1F3864", "各期收支": "0F6B4C", "季度追蹤": "0F6B4C", "運營_產能與收入": "0F5C61", "運營_站點": "0F5C61",
         "資產負債_既有債務": "5B5778", "資產負債_新債與新股": "5B5778", "資產負債_租賃承諾": "5B5778",
-        "損益": "C4A35A", "評價_DCF與目標價": "9F1239", "評價_可比公司": "9F1239", "評價_反向DCF": "9F1239", "檢查_連動": "808080", "檢查_版本紀錄": "808080", "來源": "808080"}
+        "損益": "C4A35A", "評價_DCF與目標價": "9F1239", "評價_可比公司": "9F1239", "評價_反向DCF": "9F1239", "檢查_連動": "808080", "檢查_版本紀錄": "808080", "來源": "808080", **({"Tokenomics_取數": "808080"} if TK else {}), **({"每MW收入_錨定": "0F5C61", "公司實況驗證": "0F5C61"} if AR else {})}
 for _n, _c in _tab.items():
     wb[_n].sheet_properties.tabColor = _c
 for _ws in wb.worksheets:

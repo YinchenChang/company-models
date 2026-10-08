@@ -1,0 +1,6 @@
+# legacy（methodology.perMw.revenue＝legacy）對 v0.2 成品的預期差異（xl_diff.py --expect；scripts/verify_legacy.sh 使用）
+# v0.2a 第 2 輪：「檢查_連動」兩列核對公式補扣其他事業 EBITDA（v0.1b 起損益 EBITDA 含 Avride＋TripleTen，原公式漏扣，v0.2 顯示「不一致」）；只改這兩列的檢查值與狀態，其他數字不變。
+檢查_連動!B15 核對公式補扣其他事業 EBITDA（v0.2：−0.0130 不一致 → 0）
+檢查_連動!D15 狀態：不一致 → 通過
+檢查_連動!B16 核對公式補扣其他事業 EBITDA（v0.2：0.141 不一致 → 0）
+檢查_連動!D16 狀態：不一致 → 通過

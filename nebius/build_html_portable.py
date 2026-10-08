@@ -16,6 +16,8 @@ import json as _json
 sys.path.insert(0, H); import calendar_q  # v4.5：期間與日期由 company.json → calendar 推算（與 Excel 共用）
 _co = calendar_q.load(H)  # 公司資料單一來源
 _co.pop('asOf', None)  # 滾動檢查的季度標記只在建置時檢查（calendar_q），不注入 HTML
+if _co.get('tokenomics'):  # v0.2a：Tokenomics 快照值（{名稱: {世代: {成本情境: 值}}}）注入，供 HTML 引擎 tkAnchorQ() 計算每 MW 收入錨
+    _co['tkSnap'] = {n: it['values'] for n, it in _json.load(open(os.path.join(H, _co['tokenomics']['snapshotFile']), encoding='utf-8'))['items'].items() if not it.get('missing')}
 _co['consensus'] = _json.load(open(os.path.join(H, _co['meta']['consensusFile']), encoding='utf-8'))  # v4.3：市場共識資料檔（只讀）併入注入資料，不另設全域變數
 _g = _co['consensus']['companyGuidance'].get('2026Q3') or {}  # Q3 營收指引以 company.json 為準；與共識檔不一致即停止建置（Excel 建置同一檢查；v0.1b：公司未給季度指引時兩邊皆為空）
 assert (_g.get('revenueLow'), _g.get('revenueHigh')) == (_co['callFacts']['nextQRevLo'], _co['callFacts']['nextQRevHi']), 'Q3 營收指引：company.json 與共識檔不一致'
