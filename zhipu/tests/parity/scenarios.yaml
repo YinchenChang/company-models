@@ -36,8 +36,8 @@ scenarios:
     description: 本地化成長：2027 起年增率 0%→+20%（區間上緣）；②③④與總額上升，雲端 token 不變（D4）
     inputs: {"INP_070": 0.2}
   - id: d_onprem_flat_2h26
-    description: 本地化 2H26 延續係數 1→0（2H26＝2H25 持平）；2026 起本地化營收下降
-    inputs: {"INP_069": 0}
+    description: 本地化 2H26 延續係數 0→1（R2 後基準為持平；改為逐線延續上半年同比）；2026 起本地化營收上升
+    inputs: {"INP_069": 1}
   - id: e_cp_mix_pro
     description: Coding Plan 組合：Lite 0.6→0.4、Pro 0.3→0.45（Max 0.15）；加權月價、訂閱營收、每訂閱者 token 上升；1H26 按量計費倒推值下降
     inputs: {"INP_055": 0.4, "INP_056": 0.45}
@@ -69,7 +69,7 @@ scenarios:
     description: TK 讀表列：GLM-5.3 國際站輸出價 4.4→6.0（TK_RD_CapIn_GLM53[3]）；只影響對照列，不影響營收
     inputs: {"TK_RD_CapIn_GLM53[3]": 6.0}
   - id: n_task_growth_high
-    description: 2H26 任務數成長 +130%→+300%（區間上緣）；2H26 起 API token、營收、ARR 對照連動
+    description: 2H26 任務數成長 +224%→+300%（區間上緣；R1 後基準 2.24）；2H26 起 API token、營收、ARR 對照連動
     inputs: {"INP_038": 3.0}
   - id: o_cp_util_high
     description: Coding Plan 額度使用率 0.15→0.4（區間上緣）；Coding Plan token 與 DEM_Tok_* 上升，營收不變

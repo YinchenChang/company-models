@@ -44,7 +44,7 @@ items:
 - {key: px_chg_luna, name: API 牌價年變動率：Luna, index: 2027 起, unit: 比例／年, value: -0.2, lo: -0.4, hi: 0.2, tag: Assumed, basis: 同上；Analogy：OpenAI v0.6 INP_023 low 層 −40%, range: −40%～+20%（工作單）}
 # ── API 需求（D15）
 - {key: tpt_base, name: API 基準每任務 token（層級正規化）, index: —, unit: K tok／任務, value: 20, lo: 5, hi: 50, tag: Assumed, basis: OpenAI v0.6 INP_031（10，5–30）為 Analogy；智譜 API 以程式碼代理為主，每任務上下文較長；只影響任務數與每任務 token 的水準拆分，不影響營收與 token 總量, range: 5～50}
-- {key: g_task_2h26, name: API 任務數成長率（不含價格）：2H26 對 1H26, index: 2H2026, unit: 比例／半年, value: 1.3, lo: 0.5, hi: 3.0, tag: Assumed, basis: 實際值參考（Demand 對照列 D33）：1H26 ÷ 2H25 開放平台及 API 實際營收 5.1 倍，除以模型組合有效單價 1.58 倍，量約 3.2 倍（＋224%）；取放緩至＋130%（保守）；不使用公司『較年初 40 倍』與 ARR 說法（D14r）, range: 0.5（成長快速放緩）～3.0（約延續 2H25→1H26 動能）}
+- {key: g_task_2h26, name: API 任務數成長率（不含價格）：2H26 對 1H26, index: 2H2026, unit: 比例／半年, value: 2.24, lo: 1.3, hi: 3.0, tag: Derived, basis: 經審計／審閱的實際動能延續（chat 端審查改動 R1，2026-10-08）：Demand 對照列 D33＝1H26 ÷ 2H25 開放平台及 API 實際營收 5.1 倍，除以模型組合有效單價 1.58 倍，實際量約 3.2 倍（＋224%）；2H26 延續此實際動能。1H26 為實際值，延續實際動能是正向推導；ARR、『較年初 40 倍』等公司說法仍只作對照（D14r）, range: 1.3（放緩至原 Z2 預設）～3.0（略高於實際動能）}
 - {key: g_tpt_2h26, name: API 每任務 token 成長率（不含價格）：2H26 對 1H26, index: 2H2026, unit: 比例／半年, value: 0.1, lo: 0, hi: 0.3, tag: Assumed, basis: OpenAI v0.6 INP_041（2026 年 +20%）的半年約當, range: 0～0.3}
 - {key: g_task_2027, name: API 任務數成長率（不含價格）, index: '2027', unit: 比例／年, value: 0.8, lo: 0.4, hi: 1.6, tag: Assumed, basis: OpenAI v0.6 INP_034（2027 +45%）為 Analogy；智譜基期小、2026 成長極快，取較高值；年對年（2026 全年基數）, range: 基準 ×0.5～×2}
 - {key: g_task_2028, name: API 任務數成長率（不含價格）, index: '2028', unit: 比例／年, value: 0.5, lo: 0.25, hi: 1.0, tag: Assumed, basis: OpenAI v0.6 INP_035（+35%）；同上, range: 基準 ×0.5～×2}
@@ -78,7 +78,7 @@ items:
 - {key: qy_ktok_task, name: 智譜清言每任務 token, index: —, unit: K tok／任務, value: 3, lo: 1, hi: 10, tag: Analogy, basis: OpenAI v0.6 INP_112–113（Free 2–2.94 K）, range: 1～10}
 - {key: qy_sol_share, name: 智譜清言 token：Sol 占比, index: —, unit: 比例, value: 0.3, lo: 0.1, hi: 0.6, tag: Assumed, basis: 免費 C 端多以輕量模型服務, range: 0.1～0.6}
 # ── 本地化部署（D4；不耗智譜算力）
-- {key: onprem_k_2h26, name: 本地化部署 2H26 同比延續係數（2H26＝2H25 ×（1＋係數 × 1H26 同比））, index: 2H2026, unit: 比例, value: 1.0, lo: 0, hi: 1.0, tag: Assumed, basis: 工作單 Z2：2026 依 1H26 實際，各業務線分開（企業級通用大模型 1H 同比 −54.6%）；1＝下半年延續上半年各線同比，0＝下半年持平於 2H25, range: 0～1}
+- {key: onprem_k_2h26, name: 本地化部署 2H26 同比延續係數（2H26＝2H25 ×（1＋係數 × 1H26 同比））, index: 2H2026, unit: 比例, value: 0, lo: 0, hi: 1.0, tag: Assumed, basis: chat 端審查改動 R2（2026-10-08）：2H26 持平於 2H25（係數 0）。分部整體 1H26 同比 −20%，逐線延續（係數 1）會使 2026 本地化 +63%，與分部趨勢相反；專案制收入集中下半年，持平較中性；1＝下半年延續上半年各線同比, range: 0（持平）～1（逐線延續上半年同比）}
 - {key: onprem_g, name: 本地化部署營收年增率, index: 2027 起, unit: 比例／年, value: 0, lo: -0.2, hi: 0.2, tag: Assumed, basis: 工作單 Z2 預設（0%，−20%～+20%）, range: 工作單}
 # ── 其他
 - {key: ads_rev, name: 廣告營收, index: 全期, unit: RMB 億, value: 0, lo: 0, hi: 0, tag: Decision, basis: 規格 D3：無廣告業務揭露, range: 無業務}

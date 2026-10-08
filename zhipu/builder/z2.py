@@ -442,7 +442,7 @@ def checks(D, Z, summary, snap, e6, oref):
         ("對照：模型組合有效單價 1H26 對 2025 變動", "=Revenue!K«V.asp_1h»", None, "info", "公司稱平均售價較年初 +101%（實現售價口徑）；報告討論"),
         ("對照：模型組合有效單價 2H26 對 2025 變動", "=Revenue!L«V.asp_2h»", None, "info", "公司稱較 2025 年底 +83%（截至 2026-03）"),
         ("對照：模型 2H26 ÷ 1H26 API token", "=Demand!L«D.vol_ratio»", None, "info", "公司稱 MaaS 呼叫量較年初 40 倍以上（時點對時點，口徑不同）"),
-        ("對照：2H25→1H26 實際隱含量成長（倍）", "=DEM_ImpliedVolGrowth", None, "info", "Inputs 2H26 任務數成長 1.3（＋130%）的參考"),
+        ("對照：2H25→1H26 實際隱含量成長（倍）", "=DEM_ImpliedVolGrowth", None, "info", "Inputs 2H26 任務數成長（R1：延續此實際動能 2.24）的依據"),
         ("對照：2025 未校準差距（RMB 億）", "=REV_GapUncal2025", None, "info", "日均 4.2T 全數按有效單價計的假想營收 − 年報"),
         ("對照：2025 計費比例（按量計費 token ÷ 揭露日均 × 365）", "=DEM_ApiBilledRatio2025", None, "info", ""),
         ("對照：模型 2026 總額 − 分析師共識（RMB 億）", "=Revenue!E«V.cons_gap»", None, "info", "共識 60.48 億（Interested-party）"),
