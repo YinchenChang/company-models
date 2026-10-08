@@ -1,7 +1,7 @@
 # Oracle｜Tokenomics 連接審視（v5.29；2026-10-08）
 
 - 分支：`claude/oracle-tk-link-review`（自 main `75327ef` 開）
-- 最新提交 SHA：見 PR 說明（本檔內容提交後才產生雜湊）
+- 最新提交 SHA：報告內容提交 `afe706f`（其後只補本行）
 - 報告檔：`oracle/docs/reports/20261008_oracle_tokenomics_link_review.md`
 - 依據：共用工作單 `docs/workorders/20261008_tokenomics_link_review.md`、`oracle/docs/workorders/20261008_oracle_tokenomics_link_review.md`；Tokenomics 下游資料契約 v0.1（`docs/plan/Tokenomics_downstream_contract.md`）。
 - 對照的 Tokenomics：master `a5061d9`，`model/CURRENT`＝`20261008_Tokenomics_v5.29.xlsx`（前提成立，第 4 節已做）。
