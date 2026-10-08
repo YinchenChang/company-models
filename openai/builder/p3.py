@@ -1,4 +1,4 @@
-"""v0.6-P3（工作單 S3）：算力頁 Compute 與 Revenue 第八節（容量上限 V1a）。
+"""v0.6-P3（工作單 S3）：算力頁 Compute 與 Revenue 第八節（容量上限 V1a）；v0.6-P4（S4）加第十三節自建 GW（計入供給）。
 
 機制：r6 第 P3 節 1–7 點、V1、V2、V8、V11；v0.5「算力MW」頁的供給（S2、N4(b)）與容量上限（V1a）結構。
 產能一律取 TK_Link（IF_TokGW_* 世代 × 層級、IF_Util）；本模型不重算算力物理量。
@@ -181,8 +181,8 @@ def build_p3(wb, R, S, I, inp_row, P2, snap):
     C.add("小計：揭露 GW 的合約", "GW", lambda i, c: "=" + "+".join(f"{c}{C.rows['sup_' + k]}" for k in disc), None, "Oracle、AWS Trainium、Cerebras", key="sup_disc")
     C.add("小計：未揭露 GW（付款 ÷ 合約價）", "GW", lambda i, c: "=" + "+".join(f"{c}{C.rows['sup_' + k]}" for k in und), None,
           "Microsoft Azure、AWS（Nvidia）、CoreWeave；與合約價成反比（敏感度 A）", key="sup_und")
-    C.add("合約供給 GW 合計", "GW", lambda i, c: f"={c}{C.rows['sup_disc']}+{c}{C.rows['sup_und']}", None,
-          "只計合約（工作單：不自動假設新增合約；自建 GW 不計入，見報告預設）", name="CMP_SupplyGW", key="sup")
+    C.add("供給 GW 合計（合約＋自建）", "GW", lambda i, c: f"={c}{C.rows['sup_disc']}+{c}{C.rows['sup_und']}+{c}{{OWN}}", None,
+          "合約（不自動假設新增合約）＋自建 GW（S4 預設：自有資本支出自投產年起計入供給與命題分母；見第十三節）", name="CMP_SupplyGW", key="sup")
     C.add("對照：2025 實際年均算力 − 合約供給", "GW", only25(f"=D{C.rows['t_avg']}-D{C.rows['sup']}"), None, "只列差距", key="sup_gap25")
 
     # ═════ 十、容量上限 ═════
@@ -230,8 +230,8 @@ def build_p3(wb, R, S, I, inp_row, P2, snap):
         C.add(f"A η（2025；合約價{zh}）", "倍", only25(f"=D{C.rows['gw_tok']}/(D{C.rows['e_spend']}/D{C.rows[k + '_p']})"), None, "", key=f"{k}_eta")
         C.add(f"A 有效推論 GW（合約價{zh}）", "GW", lambda i, c, k=k: f"={c}{C.rows['gw_tok']}/$D${C.rows[k + '_eta']}", None, "η 沿用", key=f"{k}_eff")
         C.add(f"A 合約供給 GW（合約價{zh}）", "GW",
-              lambda i, c, k=k: f"={c}{C.rows['sup_disc']}+{c}{C.rows['sup_und']}*{price}/$D${C.rows[k + '_p']}", None,
-              "揭露 GW 不變；未揭露者與合約價成反比", key=f"{k}_sup")
+              lambda i, c, k=k: f"={c}{C.rows['sup_disc']}+{c}{C.rows['sup_und']}*{price}/$D${C.rows[k + '_p']}+{c}{{OWN}}", None,
+              "揭露 GW 不變；未揭露者與合約價成反比；自建 GW 不隨合約價變動（S4）", key=f"{k}_sup")
         C.add(f"A 容量上限係數（合約價{zh}）", "倍", lambda i, c, k=k: coef(c, C.rows[k + "_eff"], C.rows[k + "_sup"]), None, "", key=f"{k}_cap")
         sens[k] = k
     for tag, zh, f in (("keep", "沿用（基準）", lambda i, c: f"={e25}"),
@@ -263,6 +263,27 @@ def build_p3(wb, R, S, I, inp_row, P2, snap):
             if grp == "D":
                 C.add(f"D 機隊 VR 等值係數（{zh}）", "倍", lambda i, c, G=G: f"={c}{C.rows['vrf']}+{c}{C.rows['s_custom']}*({G}-{custom})", None, "", key=f"{k}_vrf")
 
+    # ═════ 十三、自建 GW（P4；S4） ═════
+    C.section("十三、自建 GW（P4；S4 預設：自有資本支出自投產年起計入供給與命題分母；v0.5 算力MW 第 11 列）")
+    rl, rc = C.rows["g_lab"], C.rows["g_cost"]
+    lag = I("自建 GW 投產落後年數")
+    C.add("自有資本支出（毛額）", "$B", lambda i, c: f"={yidx('自有資本支出', YEARS[i])}", None, "Inputs（v0.5 ownedCapex；Assumed，低／高情境倍數 0.6／1.5）", key="own_capex")
+    rcx = C.rows["own_capex"]
+    C.add("累計自有資本支出（至 年 − 投產落後年數）", "$B",
+          lambda i, c: f"=SUMPRODUCT(($D$6:$I$6<={c}$6-{lag})*($D${rcx}:$I${rcx}))", None,
+          "v0.5：累計至前一年（落後 1 年；Inputs）；毛額（合作方出資部分仍形成 GW）", key="own_cum")
+    C.add("每 GW 資本支出（VR200 基準；TK IF_CapexTotal）", "$B/GW",
+          lambda i, c: f"=SUMIFS(TK_IF_CapexTotal,TK_HdrGen,$G${rl},TK_HdrCost,$G${rc})", None,
+          "TK IF_CapexTotal（IT 設備＋廠房）VR200 基準欄（v0.5 用 Tokenomics DC_Cost 43.2）", key="own_cpg")
+    C.add("自建 GW", "GW", lambda i, c: f"={c}{C.rows['own_cum']}/{c}{C.rows['own_cpg']}", None,
+          "累計自有資本支出 ÷ 每 GW 資本支出（v0.5 同式）", name="CMP_Supply_Owned", key="own")
+    C.add("合約供給 GW（不含自建）", "GW", lambda i, c: f"={c}{C.rows['sup_disc']}+{c}{C.rows['sup_und']}", None,
+          "揭露＋未揭露（S3 的合約供給；供應商持有成本的 GW）", name="CMP_SupplyContractGW", key="sup_con")
+    for r_ in (C.rows["sup"], *[C.rows[f"A_{t}_sup"] for t in ("lo", "base", "hi")]):
+        for i in range(6):
+            cell = C.ws[f"{YC[i]}{r_}"]
+            cell.value = cell.value.replace("{OWN}", str(C.rows["own"]))
+
     for c, w in (("A", 7), ("B", 58), ("C", 12)):
         C.ws.column_dimensions[c].width = w
     for c in YC:
@@ -291,4 +312,4 @@ def build_p3(wb, R, S, I, inp_row, P2, snap):
     V.add("截頂後淨額", "$B", lambda i, c: f"={c}{gr}-{c}{msr}", None, "估值與命題用（容量受限時）", name="REV_NetCapped", key="net_c")
     V.add("截頂減少的總額（未截頂 − 截頂後）", "$B", lambda i, c: f"={c}{V.rows['gross']}-{c}{gr}", None, "", key="cut")
     V.add("容量截頂旗標（Compute）", "旗標", lambda i, c: f"=Compute!{c}{C.rows['flag']}", None, "1＝需求超過可用 GW", key="flag")
-    return dict(C=C, V=V, contracts=[k for k, *_ in contracts])
+    return dict(C=C, V=V, contracts=[k for k, *_ in contracts], contracts_full=contracts, prof=prof, k2=k2, tk_gens=tk_gens, base_cost=base_cost)

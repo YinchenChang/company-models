@@ -1,0 +1,234 @@
+{
+ "_readme": "WYFI 市場共識資料檔。由 v0.1a 建置代理依工作單（docs/workorders/20261008_whitefiber_v0.1a_資料蒐集.md 步驟 7）以網路讀取取得；數字為擷取當時值，逐筆附來源。單位：金額 US$M（每股為 US$），日期為擷取日。年度標籤＝日曆年（WhiteFiber 財年＝12 月）。WhiteFiber 2025-08 上市、分析師約 10–12 家，FY2028 只有 2–3 家，照實記錄。本環境代理阻擋 StockAnalysis.com，無法取得 S&P 經 StockAnalysis 的呈現；S&P 系改用 Simply Wall St。chat 端審查後方可供模型使用；模型端只讀，不得自行增補或修改數字。",
+ "company": "WhiteFiber",
+ "ticker": "WYFI",
+ "asOf": "2026-10-08",
+ "fiscalYearEnd": "12 月（日曆年）；最新已公布季 2026 Q2（季末 2026-06-30）；下次財報約 2026-11-12（Yahoo 估）",
+ "unit": "US$M（每股 US$）",
+ "tagLegend": {
+  "Verified": "可公開查證的事實（收盤價等）",
+  "Interested-party": "賣方分析師預估：有利益關係（承銷：B. Riley、Needham 為 IPO 主辦；Barclays 為 2032 可轉債主辦），數字是意見而非事實"
+ },
+ "sourceIndependence": "Simply Wall St 的預估來自 S&P Global Market Intelligence；MarketBeat 目標價與評等為自行彙整（獨立於 S&P）；Investing.com 自行彙整；Yahoo 1 年目標價屬 LSEG 系；Tickflow 未具名來源。目標價四個呈現（MarketBeat 38.00、Investing 40.50、Yahoo 40.45、S&P 40.89）可視為至少三個獨立來源；營收預估只有 S&P（Simply Wall St）與 Tickflow 兩個呈現，FY2026 一致（137 vs 138），FY2027–28 差距大（296 vs 約 261；530 vs 約 381，Tickflow 為季度預估加總、家數 2–3），不算一致。",
+ "priceReference": {
+  "close": 16.83,
+  "date": "2026-10-07",
+  "source": "Yahoo Finance 報價頁",
+  "url": "https://finance.yahoo.com/quote/wyfi",
+  "tag": "Verified",
+  "crossCheck": {
+   "close": 16.83,
+   "date": "2026-10-07",
+   "source": "Benzinga",
+   "url": "https://www.benzinga.com/stock/WYFI"
+  },
+  "previousClose": 17.33,
+  "range52w": [
+   10.51,
+   46.87
+  ],
+  "sharesOutstanding": 45.119652,
+  "sharesSource": "Bit Digital 13D/A（2026-08-25）：10-Q 股數＋交換發行股",
+  "marketCap": 759.4,
+  "marketCapNote": "[Derived] 16.83 × 45.12M；Yahoo 顯示 653.8 為舊股數 38.85M"
+ },
+ "priceTarget": {
+  "mean": 38.0,
+  "low": 32.0,
+  "high": 50.0,
+  "analysts": 11,
+  "consensusRating": "Moderate Buy",
+  "source": "MarketBeat（自行彙整）",
+  "url": "https://www.marketbeat.com/stocks/NASDAQ/WYFI/forecast",
+  "retrieved": "2026-10-08",
+  "pageUpdated": "2026-09-03",
+  "tag": "Interested-party",
+  "crossCheck": [
+   {
+    "mean": 40.5,
+    "low": 32.0,
+    "high": 50.0,
+    "analysts": 10,
+    "consensusRating": "Strong Buy",
+    "source": "Investing.com",
+    "url": "https://www.investing.com/equities/whitefiber-consensus-estimates",
+    "retrieved": "2026-10-08"
+   },
+   {
+    "mean": 40.45,
+    "source": "Yahoo Finance（1y Target Est）",
+    "url": "https://finance.yahoo.com/quote/wyfi",
+    "retrieved": "2026-10-07"
+   },
+   {
+    "mean": 40.89,
+    "analysts": 8,
+    "source": "Simply Wall St（S&P Global Market Intelligence）",
+    "url": "https://simplywall.st/stocks/us/software/nasdaq-wyfi/whitefiber/future",
+    "retrieved": "2026-10-08",
+    "note": "2026-08-20 更新"
+   },
+   {
+    "mean": 35.92,
+    "source": "Benzinga",
+    "url": "https://www.benzinga.com/stock/WYFI",
+    "retrieved": "2026-10-08"
+   },
+   {
+    "mean": 32.33,
+    "analysts": 10,
+    "source": "Tickflow（來源未具名）",
+    "url": "https://tickflow.io/stock/WYFI/forecast",
+    "retrieved": "2026-10-08",
+    "note": "頁面目標價區間自相矛盾，只列參考"
+   }
+  ],
+  "note": "以 MarketBeat（最保守、含 Sell 1 家）為主；平均 38.0 為現價 16.83 的 2.26 倍；多數目標價設於 2026-08 財報與可轉債前後，股價其後由約 27 跌至 17"
+ },
+ "ratings": {
+  "strongBuy": 0,
+  "buy": 9,
+  "hold": 1,
+  "sell": 1,
+  "total": 11,
+  "source": "MarketBeat",
+  "url": "https://www.marketbeat.com/stocks/NASDAQ/WYFI/forecast",
+  "retrieved": "2026-10-08",
+  "tag": "Interested-party",
+  "crossCheck": {
+   "buy": 9,
+   "hold": 1,
+   "sell": 0,
+   "total": 10,
+   "source": "Investing.com（近 3 個月）",
+   "url": "https://www.investing.com/equities/whitefiber-consensus-estimates"
+  }
+ },
+ "recentActions": [
+  {
+   "date": "2026-09-03",
+   "firm": "HC Wainwright（Mike Colonnese）",
+   "rating": "Buy（維持）",
+   "target": 37.0
+  },
+  {
+   "date": "2026-08-14",
+   "firm": "Barclays（Raimo Lenschow）",
+   "rating": "Equal Weight",
+   "target": 32.0
+  },
+  {
+   "date": "2026-08-13",
+   "firm": "Needham（John Todaro）",
+   "rating": "Buy",
+   "target": 41.0
+  },
+  {
+   "date": "2026-08-13",
+   "firm": "Cantor Fitzgerald（Brett Knoblauch）",
+   "rating": "Overweight（由 Neutral 升）",
+   "target": 36.0
+  },
+  {
+   "date": "2026-08-12",
+   "firm": "BTIG（Gregory Lewis）",
+   "rating": "Buy（維持）",
+   "target": 50.0
+  },
+  {
+   "date": "2026-08-12",
+   "firm": "Weiss Ratings",
+   "rating": "Sell (D-)（降）",
+   "target": null
+  }
+ ],
+ "recentActionsMeta": {
+  "source": "MarketBeat",
+  "url": "https://www.marketbeat.com/stocks/NASDAQ/WYFI/forecast",
+  "retrieved": "2026-10-08",
+  "tag": "Interested-party"
+ },
+ "annualEstimates": {
+  "definition": "營收＝GAAP 總營收；淨利＝GAAP；EBITDA 共識未取得（找不到，非不存在）",
+  "source": "Simply Wall St（S&P Global Market Intelligence）",
+  "url": "https://simplywall.st/stocks/us/software/nasdaq-wyfi/whitefiber/future",
+  "retrieved": "2026-10-08",
+  "tag": "Interested-party",
+  "FY2025": {
+   "revenue": 79.164,
+   "adjEbitda": 17.295,
+   "netIncome": -24.683,
+   "note": "實際數（10-K）"
+  },
+  "FY2026": {
+   "revenue": 137,
+   "ebitda": null,
+   "netIncome": -43,
+   "cfo": 92,
+   "fcf": -556,
+   "analysts": 10
+  },
+  "FY2027": {
+   "revenue": 296,
+   "ebitda": null,
+   "netIncome": 3,
+   "cfo": 90,
+   "fcf": -484,
+   "analysts": 10
+  },
+  "FY2028": {
+   "revenue": 530,
+   "ebitda": null,
+   "netIncome": 56,
+   "cfo": 222,
+   "fcf": -848,
+   "analysts": 3
+  }
+ },
+ "annualEstimatesAlt": {
+  "source": "Tickflow（來源未具名）",
+  "url": "https://tickflow.io/stock/WYFI/forecast",
+  "retrieved": "2026-10-08",
+  "tag": "Interested-party",
+  "FY2026": {
+   "revenue": 138,
+   "revenueLow": 123,
+   "revenueHigh": 150,
+   "revenueAnalysts": 7,
+   "eps": -0.63,
+   "epsLow": -0.92,
+   "epsHigh": -0.33,
+   "epsAnalysts": 4
+  },
+  "FY2027": {
+   "revenueQuarterSum": 261,
+   "revenueAnalysts": 3,
+   "epsQuarterSum": 0.72
+  },
+  "FY2028": {
+   "revenueQuarterSum": 381,
+   "revenueAnalysts": 2,
+   "epsQuarterSum": 1.92
+  },
+  "note": "FY2027／28 為頁面季度預估加總（[Derived]），各季家數 1–3；與 S&P 差距大，只列參考"
+ },
+ "impliedH2": {
+  "FY2026revenueH2": 86.2,
+  "formula": "S&P FY2026 137 − 1H26 實際 50.762",
+  "note": "隱含 2H26 營收約 86（Q3–Q4 平均約 43／季），需要 NC-1 全額計費（約 21／季）＋巴黎、Baseten 部分上線",
+  "tag": "Interested-party"
+ },
+ "companyGuidance": {
+  "note": "無正式營收或 EBITDA 指引；只有目標：雲端合約全部到位後年化 > 200（法說）、2026 年底約 70 MW 毛容量上線、NC-1 2026-08 底全額計費",
+  "source": "2026 Q2 法說（MarketBeat 二手摘要）、10-Q",
+  "url": "https://www.marketbeat.com/instant-alerts/whitefiber-q2-earnings-call-highlights-2026-08-12/",
+  "tag": "Interested-party"
+ },
+ "notFound": [
+  "EBITDA 共識（各年）——試過 Simply Wall St、Tickflow、vcpscanner、Investing.com、MarketBeat、Benzinga；StockAnalysis 被環境代理阻擋——找不到，非不存在",
+  "S&P 經 StockAnalysis 的目標價分布（環境阻擋）",
+  "FY2029 以後共識",
+  "季度共識（2026 Q3）的獨立第二來源",
+  "目標價的時間分布（多數設於 2026-08 可轉債前）"
+ ]
+}

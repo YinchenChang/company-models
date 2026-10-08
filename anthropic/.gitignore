@@ -1,0 +1,8 @@
+build_out/
+engine-cache/
+tests/parity/_results*.json
+junit.xml
+data/export/
+tokenomics-master/
+__pycache__/
+*.pyc

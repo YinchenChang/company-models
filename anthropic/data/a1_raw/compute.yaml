@@ -1,0 +1,1509 @@
+# A1-C 算力合約與算力支出（規格第 4 節 D）；retrieved 2026-10-08
+rows:
+# ---------- Google Cloud TPU（2025-10）----------
+- key: cmp_google_tpu_2025_chips
+  group: D
+  metric: Google Cloud TPU 合約－TPU 數量上限
+  value: 1000000
+  lo: null
+  hi: null
+  unit: 顆 TPU（上限）
+  period: 2025-10（合約簽署）
+  source: Anthropic 新聞稿〈Expanding our use of Google Cloud TPUs and Services〉
+  url: https://www.anthropic.com/news/expanding-our-use-of-google-cloud-tpus-and-services
+  doc_date: 2025-10-23
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資、市場地位誘因）
+  basis: null
+  note: 原文「up to one million TPUs」；未揭露 TPU 世代
+- key: cmp_google_tpu_2025_gw
+  group: D
+  metric: Google Cloud TPU 合約－2026 上線容量
+  value: null
+  lo: 1.0
+  hi: null
+  unit: GW
+  period: 2026
+  source: Anthropic 新聞稿〈Expanding our use of Google Cloud TPUs and Services〉
+  url: https://www.anthropic.com/news/expanding-our-use-of-google-cloud-tpus-and-services
+  doc_date: 2025-10-23
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資、市場地位誘因）
+  basis: 未明
+  note: 原文「well over a gigawatt of capacity online in 2026」；只給下限，未說 IT 或設施口徑
+- key: cmp_google_tpu_2025_usd
+  group: D
+  metric: Google Cloud TPU 合約－金額
+  value: null
+  lo: 10
+  hi: null
+  unit: $B（合約總額）
+  period: 2025-10（合約簽署）
+  source: Anthropic 新聞稿〈Expanding our use of Google Cloud TPUs and Services〉
+  url: https://www.anthropic.com/news/expanding-our-use-of-google-cloud-tpus-and-services
+  doc_date: 2025-10-23
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資、市場地位誘因）
+  basis: 總額
+  note: 原文「tens of billions of dollars」；lo=10 為字面最低解讀，未給期間
+- key: cmp_chipmix_platforms_2025
+  group: D
+  metric: 晶片組合－三平台（定性）
+  value: null
+  lo: null
+  hi: null
+  unit: 定性
+  period: 2025-10
+  source: Anthropic 新聞稿〈Expanding our use of Google Cloud TPUs and Services〉
+  url: https://www.anthropic.com/news/expanding-our-use-of-google-cloud-tpus-and-services
+  doc_date: 2025-10-23
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（市場地位誘因）
+  basis: null
+  note: 原文「three chip platforms–Google's TPUs, Amazon's Trainium, and NVIDIA's GPUs」；未給各平台占比
+# ---------- Google／Broadcom 多 GW（2026-04）----------
+- key: cmp_google_broadcom_2026_gw
+  group: D
+  metric: Google／Broadcom 次世代 TPU 合約－容量（公司自述）
+  value: null
+  lo: 2.0
+  hi: null
+  unit: GW
+  period: 2027 起
+  source: Anthropic 新聞稿〈Google and Broadcom partnership for compute〉
+  url: https://www.anthropic.com/news/google-broadcom-partnership-compute
+  doc_date: 2026-04-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資、市場地位誘因）
+  basis: 未明
+  note: 原文「multiple gigawatts of next-generation TPU capacity…online starting in 2027」；lo=2 為「multiple」字面最低
+- key: cmp_google_broadcom_2026_gw_b
+  group: D
+  metric: Google／Broadcom 次世代 TPU 合約－容量（Broadcom 8-K）
+  value: 3.5
+  lo: null
+  hi: null
+  unit: GW
+  period: 2027 起
+  source: Broadcom Form 8-K（2026-04-06），Boardroom Alpha 轉載
+  url: https://www.boardroomalpha.com/sec/avgo-8-k-2026-04-06-0001193125-26-144028
+  doc_date: 2026-04-06
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 未明
+  note: 原文「beginning in 2027, will access through Broadcom approximately 3.5 gigawatts」；監管文件；與後來 Anthropic 稱 5 GW 不一致（見 _c）
+- key: cmp_google_broadcom_2026_gw_c
+  group: D
+  metric: Google／Broadcom TPU 合約－容量（Anthropic 2026-05 自述）
+  value: 5.0
+  lo: null
+  hi: null
+  unit: GW
+  period: 2027 起
+  source: Anthropic 新聞稿〈Higher usage limits and a SpaceX compute deal〉
+  url: https://www.anthropic.com/news/higher-limits-spacex
+  doc_date: 2026-05-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資、市場地位誘因）
+  basis: 未明
+  note: 回顧既有合約稱 Google 與 Broadcom「5 GW agreement…online in 2027」；與 8-K 3.5 GW 差 1.5 GW，可能含 2026 年 1 GW 或其後擴大，未說明
+- key: cmp_google_broadcom_2026_condition
+  group: D
+  metric: Google／Broadcom TPU 合約－使用條件
+  value: null
+  lo: null
+  hi: null
+  unit: 定性
+  period: 2027 起
+  source: Broadcom Form 8-K（The Register 引述）
+  url: https://www.theregister.com/2026/04/07/broadcom_google_chip_deal_anthropic_customer/
+  doc_date: 2026-04-07
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: null
+  note: 8-K「consumption of such expanded AI compute capacity by Anthropic is dependent on」其商業成功；並與營運及財務夥伴洽談
+- key: cmp_google_broadcom_supply_term
+  group: D
+  metric: Broadcom 供應 Google TPU 長約期間（非 Anthropic 合約期）
+  value: 2031
+  lo: null
+  hi: null
+  unit: 年（到期上限）
+  period: 2026–2031
+  source: Tom's Hardware〈Broadcom to supply Anthropic with 3.5 gigawatts of Google TPU capacity from 2027〉
+  url: https://www.tomshardware.com/tech-industry/broadcom-expands-anthropic-deal-to-3-5gw-of-google-tpu-capacity-from-2027
+  doc_date: 2026-04-07
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: null
+  note: Broadcom 對 Google 供應未來 TPU 世代「through 2031」；8-K 中 2031 屬 Google 協議，非 Anthropic 用量期間
+- key: cmp_google_tpu_2026_gw_ref
+  group: D
+  metric: Google TPU 2026 上線容量（媒體轉述）
+  value: 1.0
+  lo: null
+  hi: null
+  unit: GW
+  period: 2026
+  source: Tom's Hardware（同上）
+  url: https://www.tomshardware.com/tech-industry/broadcom-expands-anthropic-deal-to-3-5gw-of-google-tpu-capacity-from-2027
+  doc_date: 2026-04-07
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic／Google（媒體轉述公司說法）
+  basis: 未明
+  note: 原文 3.5 GW 為「in addition to the 1 GW already coming online in 2026」；與 2025-10「well over a gigawatt」口徑相近
+- key: cmp_broadcom_rev_from_anthropic_mizuho
+  group: D
+  metric: Broadcom 來自 Anthropic 的 AI 營收估計（Mizuho）
+  value: null
+  lo: 21
+  hi: 42
+  unit: $B/年（2026=21、2027=42）
+  period: 2026–2027
+  source: Tom's Hardware 引述 Mizuho 分析師
+  url: https://www.tomshardware.com/tech-industry/broadcom-expands-anthropic-deal-to-3-5gw-of-google-tpu-capacity-from-2027
+  doc_date: 2026-04-07
+  retrieved: 2026-10-08
+  tag: Analogy
+  party: null
+  basis: 總額
+  note: Mizuho 估 Broadcom AI 營收來自 Anthropic「$21 billion for 2026 and $42 billion for 2027」；屬供應鏈側估計，非 Anthropic 支出
+- key: cmp_google_cloud_200b
+  group: D
+  metric: Google Cloud 五年支出承諾
+  value: 200
+  lo: null
+  hi: null
+  unit: $B（五年總額）
+  period: 約 2026–2031（起點未明）
+  source: The Standard（Reuters 轉 The Information）〈Anthropic commits to spending US$200 billion on Google's cloud and chips〉
+  url: https://www.thestandard.com.hk/finance/article/331210/Anthropic-commits-to-spending-US200-billion-on-Googles-cloud-and-chips-the-Information-reports
+  doc_date: 2026-05-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic／知情人士（The Information；Reuters 未能證實）
+  basis: 總額
+  note: 原文「committed to spend US$200 billion…with Google Cloud over five years」；約占 Google 揭露積壓訂單 40% 以上
+- key: cmp_broadcom_order_10b_2025
+  group: D
+  metric: Anthropic 經 Broadcom 訂購 Google TPU（Ironwood）－首筆訂單
+  value: 10
+  lo: null
+  hi: null
+  unit: $B（訂單總額）
+  period: 2025（簽約年）
+  source: DCD／SDxCentral〈Broadcom bulges with Anthropic AI orders〉（Broadcom FY25Q4 法說，Hock Tan）
+  url: https://www.datacenterdynamics.com/en/news/broadcom-bulges-with-anthropic-ai-orders/
+  doc_date: 2025-12-15
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Broadcom（供應商，AI 營收宣傳誘因）
+  basis: 總額
+  note: Tan 稱 Anthropic 即先前未具名的 $10B 客製晶片客戶，買 Ironwood TPU；「It's a real system sale」
+- key: cmp_broadcom_order_11b_2025
+  group: D
+  metric: Anthropic 經 Broadcom 追加訂單
+  value: 11
+  lo: null
+  hi: null
+  unit: $B（訂單總額）
+  period: 2026（交貨）
+  source: DCD／SDxCentral〈Broadcom bulges with Anthropic AI orders〉
+  url: https://www.datacenterdynamics.com/en/news/broadcom-bulges-with-anthropic-ai-orders/
+  doc_date: 2025-12-15
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Broadcom（供應商，AI 營收宣傳誘因）
+  basis: 總額
+  note: 追加 $11B「scheduled for delivery later next year」（2026）；與 Google Cloud TPU 合約關係未說明，可能同一批算力的硬體端
+# ---------- AWS／Amazon ----------
+- key: cmp_aws_rainier_trn2_2025_10
+  group: D
+  metric: Project Rainier 已安裝 Trainium2 數量
+  value: 500000
+  lo: null
+  hi: null
+  unit: 顆 Trainium2（約）
+  period: 2025-10
+  source: Converge Digest〈AWS activates Project Rainier data center campus〉（轉述 AWS 公告）
+  url: https://convergedigest.com/aws-activates-project-rainier-data-center-campus/
+  doc_date: 2025-10-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Amazon（雲端業務宣傳誘因）
+  basis: null
+  note: 原文「nearly 500,000 Trainium2 chips」分布七棟建築；New Carlisle, Indiana
+- key: cmp_aws_rainier_trn2_target_2025
+  group: D
+  metric: Project Rainier Trainium2 目標（2025 年底）
+  value: null
+  lo: 1000000
+  hi: null
+  unit: 顆 Trainium2
+  period: 2025-12
+  source: Converge Digest（同上）
+  url: https://convergedigest.com/aws-activates-project-rainier-data-center-campus/
+  doc_date: 2025-10-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Amazon（雲端業務宣傳誘因）
+  basis: null
+  note: 原文「expected to exceed one million Trainium2 chips by the end of 2025」；指 Anthropic 使用的 Trainium2 總量
+- key: cmp_aws_rainier_site_gw
+  group: D
+  metric: New Carlisle（Indiana）園區電力上限
+  value: 2.2
+  lo: null
+  hi: null
+  unit: GW
+  period: 完工後
+  source: Converge Digest（同上）
+  url: https://convergedigest.com/aws-activates-project-rainier-data-center-campus/
+  doc_date: 2025-10-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Amazon（雲端業務宣傳誘因）
+  basis: 設施
+  note: 原文「up to 2.2 gigawatts (GW) of electricity」；為用電（設施）口徑；園區投資「$11 billion project」
+- key: cmp_aws_rainier_site_capex
+  group: D
+  metric: New Carlisle 園區投資額（AWS 出資）
+  value: 11
+  lo: null
+  hi: null
+  unit: $B
+  period: 2024–2025
+  source: Converge Digest（同上）
+  url: https://convergedigest.com/aws-activates-project-rainier-data-center-campus/
+  doc_date: 2025-10-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Amazon（雲端業務宣傳誘因）
+  basis: 總額
+  note: 原文「The $11 billion project」；AWS 資本支出，非 Anthropic 支付
+- key: cmp_aws_rainier_epoch_it_mw
+  group: D
+  metric: New Carlisle 園區 IT 電力（第三方衛星估計，現況）
+  value: 910
+  lo: null
+  hi: 1037
+  unit: MW
+  period: 2026-10
+  source: Epoch AI Data Centers Directory〈Anthropic-Amazon New Carlisle〉
+  url: https://epoch.ai/data/ai-data-centers/directory/anthropic-amazon-new-carlisle
+  doc_date: 2026-10-05
+  retrieved: 2026-10-08
+  tag: Analogy
+  party: null
+  basis: IT
+  note: 原文「910 MW of IT power」；預估 2026-10 達 1,037 MW、2028-03 達「1,925 MW IT power」；晶片約 1,045k Trainium2
+- key: cmp_aws_rainier_epoch_it_mw_2028
+  group: D
+  metric: New Carlisle 園區 IT 電力（第三方估計，2028Q1）
+  value: 1925
+  lo: null
+  hi: null
+  unit: MW
+  period: 2028-03
+  source: Epoch AI Data Centers Directory
+  url: https://epoch.ai/data/ai-data-centers/directory/anthropic-amazon-new-carlisle
+  doc_date: 2026-10-05
+  retrieved: 2026-10-08
+  tag: Analogy
+  party: null
+  basis: IT
+  note: Buildings 19-32 完工後「1,925 MW IT」，資本支出估 $72.9B；空氣許可顯示設施電力可達 2.3 GW
+- key: cmp_aws_2026_gw_cap
+  group: D
+  metric: Amazon 擴大算力協議－容量上限
+  value: null
+  lo: null
+  hi: 5.0
+  unit: GW
+  period: 2026–2036
+  source: Anthropic 新聞稿〈Anthropic and Amazon expand compute collaboration〉
+  url: https://www.anthropic.com/news/anthropic-amazon-compute
+  doc_date: 2026-04-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資、市場地位誘因）
+  basis: 未明
+  note: 原文「up to 5 gigawatts (GW) of capacity」；涵蓋 Trainium2 至 Trainium4
+- key: cmp_aws_2026_usd
+  group: D
+  metric: Amazon 擴大算力協議－十年支出承諾
+  value: null
+  lo: 100
+  hi: null
+  unit: $B（十年總額）
+  period: 2026–2036
+  source: Anthropic 新聞稿〈Anthropic and Amazon expand compute collaboration〉
+  url: https://www.anthropic.com/news/anthropic-amazon-compute
+  doc_date: 2026-04-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資、市場地位誘因）
+  basis: 總額
+  note: 原文「more than $100 billion over the next ten years」；下限值
+- key: cmp_aws_2026_gw_ye2026
+  group: D
+  metric: Amazon 新增 Trainium2／3 容量（2026 年底前）
+  value: 1.0
+  lo: null
+  hi: null
+  unit: GW（約）
+  period: 2026-12
+  source: Anthropic 新聞稿〈Anthropic and Amazon expand compute collaboration〉
+  url: https://www.anthropic.com/news/anthropic-amazon-compute
+  doc_date: 2026-04-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資、市場地位誘因）
+  basis: 未明
+  note: 原文「nearly 1GW total of Trainium2 and Trainium3 capacity coming online by the end of 2026」；Trn2 於 2026Q2 上線、Trn3 年內稍後
+- key: cmp_aws_trn2_inuse_2026_04
+  group: D
+  metric: 使用中 Trainium2 數量
+  value: null
+  lo: 1000000
+  hi: null
+  unit: 顆 Trainium2
+  period: 2026-04
+  source: Anthropic 新聞稿〈Anthropic and Amazon expand compute collaboration〉
+  url: https://www.anthropic.com/news/anthropic-amazon-compute
+  doc_date: 2026-04-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（市場地位誘因）
+  basis: null
+  note: 原文「we currently use over one million Trainium2 chips to train and serve Claude」
+- key: cmp_aws_primary_training_partner
+  group: D
+  metric: 晶片組合－Amazon 為主要雲端與訓練夥伴（定性）
+  value: null
+  lo: null
+  hi: null
+  unit: 定性
+  period: 2026-04
+  source: Anthropic 新聞稿〈Google and Broadcom partnership for compute〉
+  url: https://www.anthropic.com/news/google-broadcom-partnership-compute
+  doc_date: 2026-04-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（市場地位誘因）
+  basis: null
+  note: 原文「Amazon remains our primary cloud provider and training partner」；未給比例
+- key: cmp_aws_2026_gw_b
+  group: D
+  metric: AWS 合約容量與金額（媒體彙整）
+  value: 5.0
+  lo: null
+  hi: null
+  unit: GW
+  period: 十年
+  source: AI Weekly 摘要 The Information〈Anthropic has locked in 14.8 GW of compute worth up to $517B〉
+  url: https://aiweekly.co/alerts/the-information-anthropic-has-locked-in-148-gw-of-compute-worth-up-to-517b
+  doc_date: 2026-09-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: The Information／知情人士
+  basis: 未明
+  note: 表列 AWS「$100B over 10 years」「5 GW (Trainium3)」；把上限當定量，且只標 Trainium3，與公司 Trn2–Trn4 說法不一
+# ---------- Microsoft Azure／NVIDIA（2025-11）----------
+- key: cmp_msft_azure_30b
+  group: D
+  metric: Microsoft Azure 算力採購承諾
+  value: 30
+  lo: null
+  hi: null
+  unit: $B（總額）
+  period: 2025-11 簽署（期間未揭露）
+  source: Anthropic 新聞稿〈Microsoft, NVIDIA and Anthropic announce strategic partnerships〉
+  url: https://www.anthropic.com/news/microsoft-nvidia-anthropic-announce-strategic-partnerships
+  doc_date: 2025-11-18
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic／Microsoft／NVIDIA（募資與雲端業務宣傳誘因）
+  basis: 總額
+  note: 原文「committed to purchase $30 billion of Azure compute capacity」；同時 Microsoft 投資至多 $5B、NVIDIA 至多 $10B
+- key: cmp_msft_nvda_1gw
+  group: D
+  metric: NVIDIA 系統算力容量（Azure 合約附帶）
+  value: null
+  lo: null
+  hi: 1.0
+  unit: GW
+  period: 2025-11 起（時程未揭露）
+  source: Anthropic 新聞稿〈Microsoft, NVIDIA and Anthropic announce strategic partnerships〉
+  url: https://www.anthropic.com/news/microsoft-nvidia-anthropic-announce-strategic-partnerships
+  doc_date: 2025-11-18
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic／NVIDIA（募資與晶片銷售誘因）
+  basis: 未明
+  note: 原文「up to one gigawatt of compute capacity with NVIDIA Grace Blackwell and Vera Rubin systems」
+- key: cmp_msft_azure_prospectus
+  group: D
+  metric: Microsoft 合約承諾（招股書草稿）
+  value: 31.4
+  lo: null
+  hi: null
+  unit: $B（總額）
+  period: 2026-11 至 2033-05
+  source: InvestmentNews（轉述 Reuters 取得之保密招股書草稿）
+  url: https://www.investmentnews.com/equities/anthropics-landmark-ipo-filing-shows-12-fold-revenue-jump-518b-compute-bill/268391
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（招股書，IPO 誘因；尚未公開於 EDGAR）
+  basis: 總額
+  note: 原文「$31.4 billion due between November 2026 and May 2033」；比 2025-11 公告 $30B 多 $1.4B
+# ---------- Fluidstack 自建（2025-11）----------
+- key: cmp_fluidstack_50b
+  group: D
+  metric: 美國 AI 基礎設施投資（與 Fluidstack 自建）
+  value: 50
+  lo: null
+  hi: null
+  unit: $B（總額）
+  period: 2026 起陸續上線
+  source: Anthropic 新聞稿〈Anthropic invests $50 billion in American AI infrastructure〉
+  url: https://www.anthropic.com/news/anthropic-invests-50-billion-in-american-ai-infrastructure
+  doc_date: 2025-11-12
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（募資、政策形象誘因）
+  basis: 總額
+  note: 原文「$50 billion investment in American computing infrastructure」，德州、紐約，「throughout 2026」上線；未給 GW
+- key: cmp_fluidstack_sites_dcd
+  group: D
+  metric: Fluidstack 首批站點推測（德州、紐約）容量
+  value: null
+  lo: 168
+  hi: 360
+  unit: MW（單站）
+  period: 2026
+  source: DCD〈Anthropic plans $50bn US data center spend, starting with Fluidstack sites in Texas and New York〉
+  url: https://www.datacenterdynamics.com/en/news/anthropic-plans-50bn-us-data-center-spend-starting-with-fluidstack-sites-in-texas-and-new-york/
+  doc_date: 2025-11-12
+  retrieved: 2026-10-08
+  tag: Analogy
+  party: null
+  basis: 未明
+  note: DCD 推測德州「could be」Abernathy 168MW 或 Cipher 244MW、紐約「likely」Lake Mariner 360MW；未經確認
+- key: cmp_hut8_riverbend_mw
+  group: D
+  metric: Hut 8 River Bend（Louisiana）租約容量（經 Fluidstack）
+  value: 245
+  lo: null
+  hi: null
+  unit: MW
+  period: 15 年；2027Q2 起交付
+  source: DCD〈Hut 8 signs 245MW capacity deal with Fluidstack as part of multi-gigawatt partnership with Anthropic〉
+  url: https://www.datacenterdynamics.com/en/news/hut-8-signs-245mw-capacity-deal-with-fluidstack-as-part-of-multi-gigawatt-partnership-with-anthropic
+  doc_date: 2025-12-17
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Hut 8（房東，業務宣傳誘因）
+  basis: 未明
+  note: 「15-year, 245MW lease with Fluidstack」，總值「$7 billion」，含選擇權可達 $17.7B；Google 擔保；2027Q2 完工
+- key: cmp_hut8_riverbend_usd
+  group: D
+  metric: Hut 8 River Bend 租約總值
+  value: 7.0
+  lo: null
+  hi: 17.7
+  unit: $B（15 年；hi 含全部續約選擇權）
+  period: 2027–2042
+  source: DCD（同上）
+  url: https://www.datacenterdynamics.com/en/news/hut-8-signs-245mw-capacity-deal-with-fluidstack-as-part-of-multi-gigawatt-partnership-with-anthropic
+  doc_date: 2025-12-17
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Hut 8（房東，業務宣傳誘因）
+  basis: 總額
+  note: 「triple net (NNN) deal valued at $7 billion」；屬 Fluidstack 承租、Anthropic 為最終用戶，可能已含於 $50B 內
+- key: cmp_hut8_anthropic_upto_gw
+  group: D
+  metric: Hut 8 為 Anthropic 開發容量上限
+  value: null
+  lo: 0.245
+  hi: 2.295
+  unit: GW
+  period: 2027 起
+  source: DCD（同上）
+  url: https://www.datacenterdynamics.com/en/news/hut-8-signs-245mw-capacity-deal-with-fluidstack-as-part-of-multi-gigawatt-partnership-with-anthropic
+  doc_date: 2025-12-17
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Hut 8（業務宣傳誘因）
+  basis: 未明
+  note: 「at least 245MW and up to 2.295GW of AI data center infrastructure for Anthropic」；另 Fluidstack 有至多 1GW IT ROFO
+# ---------- TeraWulf Kentucky（2026-07）----------
+- key: cmp_terawulf_ky_mw
+  group: D
+  metric: TeraWulf Hawesville（Kentucky）租約容量（Anthropic 直接承租）
+  value: 401
+  lo: null
+  hi: null
+  unit: MW
+  period: 20 年；2027H2 初交付、2028 初全數
+  source: TeraWulf 新聞稿〈TeraWulf Reports Second Quarter 2026 Results〉
+  url: https://investors.terawulf.com/news-events/press-releases/detail/144
+  doc_date: 2026-08-05
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: TeraWulf（房東，業務宣傳誘因）
+  basis: IT
+  note: 原文「20-year data center lease with Anthropic for approximately 401 MW of critical IT capacity」
+- key: cmp_terawulf_ky_usd
+  group: D
+  metric: TeraWulf Hawesville 租約合約收入
+  value: 19
+  lo: null
+  hi: null
+  unit: $B（20 年總額）
+  period: 2027–2047
+  source: TeraWulf 新聞稿〈TeraWulf Reports Second Quarter 2026 Results〉
+  url: https://investors.terawulf.com/news-events/press-releases/detail/144
+  doc_date: 2026-08-05
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: TeraWulf（房東，業務宣傳誘因）
+  basis: 總額
+  note: 原文「approximately $19 billion of contracted revenue over the initial term」；屬機房租賃（不含晶片）
+# ---------- Riot Rockdale（2026-08）----------
+- key: cmp_riot_rockdale_mw
+  group: D
+  metric: Riot Rockdale（Texas）租約容量
+  value: 191
+  lo: 96
+  hi: null
+  unit: MW
+  period: 20 年；96MW 於 2027-12、全數 2028-06
+  source: DCD〈Riot Platforms agrees 191MW 20-year lease agreement with Anthropic worth $9.1bn – report〉
+  url: https://www.datacenterdynamics.com/en/news/riot-platforms-agrees-191mw-20-year-lease-agreement-with-anthropic-worth-91bn-report/
+  doc_date: 2026-08-11
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Riot（房東）；客戶身分由 Bloomberg 引述知情人士
+  basis: 未明
+  note: 「20-year, $9.1 billion deal to lease 191MW」；Riot 只稱「leading frontier AI labs」，Anthropic 為 Bloomberg 指認
+- key: cmp_riot_rockdale_usd
+  group: D
+  metric: Riot Rockdale 租約總值
+  value: 9.1
+  lo: null
+  hi: 16.5
+  unit: $B（20 年；hi 含兩次五年續約）
+  period: 2027–2047
+  source: DCD（同上）
+  url: https://www.datacenterdynamics.com/en/news/riot-platforms-agrees-191mw-20-year-lease-agreement-with-anthropic-worth-91bn-report/
+  doc_date: 2026-08-11
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Riot（房東）／Bloomberg 知情人士
+  basis: 總額
+  note: 含續約選擇權「potential total is $16.5bn」
+# ---------- Nscale（2026-08）----------
+- key: cmp_nscale_usd
+  group: D
+  metric: Nscale Monarch（West Virginia）算力合約金額
+  value: 45
+  lo: null
+  hi: null
+  unit: $B（六年總額）
+  period: 六年；2027 年底起上線
+  source: DCD〈Anthropic signs $45bn compute capacity agreement with Nscale – report〉（引 Bloomberg）
+  url: https://www.datacenterdynamics.com/en/news/anthropic-signs-45bn-compute-capacity-agreement-with-nscale-report/
+  doc_date: 2026-08-27
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Bloomberg 知情人士（未經公司確認）
+  basis: 總額
+  note: 「$45 billion AI cloud capacity agreement」「for a period of six years」；含 Vera Rubin 晶片（算力服務，非單純機房）
+- key: cmp_nscale_mw
+  group: D
+  metric: Nscale Monarch 容量
+  value: 460
+  lo: null
+  hi: null
+  unit: MW
+  period: 2027 年底起
+  source: DCD（同上）
+  url: https://www.datacenterdynamics.com/en/news/anthropic-signs-45bn-compute-capacity-agreement-with-nscale-report/
+  doc_date: 2026-08-27
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Bloomberg 知情人士
+  basis: 未明
+  note: 「lease 460MW of capacity」「Nvidia Vera Rubin AI chips…online late next year」；園區另有 Microsoft 1.35GW
+# ---------- Lambda／Hut 8 Beacon Point（2026-09）----------
+- key: cmp_lambda_usd
+  group: D
+  metric: Lambda 雲端算力合約金額
+  value: 35
+  lo: null
+  hi: null
+  unit: $B（多年總額）
+  period: 多年（期間未揭露）
+  source: VKTR〈Anthropic signs $35 billion cloud deal with Nvidia-backed Lambda〉（WSJ 首報）
+  url: https://www.vktr.com/ai-market/anthropic-signs-35-billion-cloud-deal-with-nvidia-backed-lambda/
+  doc_date: 2026-09-01
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: WSJ 知情人士
+  basis: 總額
+  note: 「a $35 billion cloud-computing agreement with Lambda」；NVIDIA 晶片；站點為 Hut 8 Nueces County, Texas
+- key: cmp_lambda_mw
+  group: D
+  metric: Lambda 合約站點容量
+  value: 350
+  lo: null
+  hi: null
+  unit: MW
+  period: 未揭露
+  source: VKTR（同上）
+  url: https://www.vktr.com/ai-market/anthropic-signs-35-billion-cloud-deal-with-nvidia-backed-lambda/
+  doc_date: 2026-09-01
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: WSJ／FT 報導
+  basis: 未明
+  note: 「a 350-megawatt Texas data center where NVIDIA holds the lease」；Beacon Point 園區總計 1GW
+# ---------- SpaceX／xAI Colossus（2026-05）----------
+- key: cmp_spacex_colossus1_mw
+  group: D
+  metric: SpaceX Colossus 1 算力容量（公司自述）
+  value: null
+  lo: 300
+  hi: null
+  unit: MW
+  period: 2026-05（一個月內上線）
+  source: Anthropic 新聞稿〈Higher usage limits and a SpaceX compute deal〉
+  url: https://www.anthropic.com/news/higher-limits-spacex
+  doc_date: 2026-05-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（市場地位、用量額度宣傳誘因）
+  basis: 未明
+  note: 原文「more than 300 megawatts of new capacity」「all of the compute capacity at their Colossus 1」
+- key: cmp_spacex_colossus1_gpus
+  group: D
+  metric: SpaceX Colossus 1 GPU 數量
+  value: null
+  lo: 220000
+  hi: null
+  unit: 顆 NVIDIA GPU
+  period: 2026-05
+  source: Anthropic 新聞稿〈Higher usage limits and a SpaceX compute deal〉
+  url: https://www.anthropic.com/news/higher-limits-spacex
+  doc_date: 2026-05-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（市場地位誘因）
+  basis: null
+  note: 原文「over 220,000 NVIDIA GPUs」；未給型號
+- key: cmp_spacex_monthly_fee
+  group: D
+  metric: SpaceX 算力月費（SpaceX IPO 申報）
+  value: 1.25
+  lo: null
+  hi: null
+  unit: $B/月
+  period: 2026-05 至 2029-05
+  source: Reuters（Yahoo Finance 轉載）〈Anthropic nears first quarterly profit, agrees to pay SpaceX $1.25 billion monthly〉
+  url: https://finance.yahoo.com/sectors/technology/articles/anthropic-nears-first-quarterly-profit-000422401.html
+  doc_date: 2026-05-20
+  retrieved: 2026-10-08
+  tag: Verified
+  party: null
+  basis: 總額
+  note: SpaceX IPO 申報「$1.25 billion per month through May 2029」，含 Colossus 與 Colossus II；任一方「90 days' notice」可終止；5–6 月爬坡期費用較低
+- key: cmp_spacex_term_musk
+  group: D
+  metric: SpaceX 租約期間（Musk 說法）
+  value: 180
+  lo: null
+  hi: null
+  unit: 天（初始期）
+  period: 2026-05 起
+  source: AI Weekly〈SpaceX S-1 contradicts Musk on Anthropic deal〉（引 TechCrunch）
+  url: https://aiweekly.co/alerts/spacex-s-1-contradicts-musk-on-anthropic-deal
+  doc_date: 2026-05-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Elon Musk／SpaceX（議價與 IPO 敘事誘因）
+  basis: null
+  note: Musk 在 X「180-day lease with 90 day notice mutual cancellation」；與 S-1「through May 2029」矛盾，實際可隨時 90 天退出
+- key: cmp_spacex_total_prospectus
+  group: D
+  metric: SpaceX／xAI 算力支出上限（Anthropic 招股書草稿）
+  value: null
+  lo: null
+  hi: 84.5
+  unit: $B（至 2029 總額上限）
+  period: 2026–2029
+  source: Business Day（Reuters, Echo Wang & Sabrina Valle）〈Anthropic plans $518bn AI infrastructure spend, 80% non-cancellable〉
+  url: https://www.businessday.co.za/world/international-companies/2026-09-29-anthropic-plans-518bn-ai-infrastructure-spend-80-non-cancellable/
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（招股書，IPO 誘因）
+  basis: 總額
+  note: 「up to $84.5bn for Nvidia-based computing capacity through 2029」「largely cancellable with a 90-day notice」；約為 5 月 $1.25B×36≈$45B 的兩倍，顯示已擴大
+- key: cmp_spacex_total_b
+  group: D
+  metric: SpaceX 合約總值（媒體以月費推算）
+  value: 45
+  lo: null
+  hi: null
+  unit: $B（三年）
+  period: 2026-05 至 2029-05
+  source: AI Weekly 摘要 The Information（14.8 GW／$517B）
+  url: https://aiweekly.co/alerts/the-information-anthropic-has-locked-in-148-gw-of-compute-worth-up-to-517b
+  doc_date: 2026-09-06
+  retrieved: 2026-10-08
+  tag: Derived
+  party: null
+  basis: 總額
+  note: 表列 SpaceX「$45B (~$1.25B/mo)」；為月費×36 推算，與招股書 $84.5B 上限矛盾
+# ---------- AMD（2026-07）----------
+- key: cmp_amd_gw
+  group: D
+  metric: AMD Instinct MI450（MI455X／Helios）部署容量
+  value: null
+  lo: null
+  hi: 2.0
+  unit: GW
+  period: 首 1 GW 於 2027H1 起
+  source: AMD 新聞稿〈AMD and Anthropic Announce Strategic Partnership to Deploy up to 2 Gigawatts of AMD Instinct MI450 Series GPUs〉
+  url: https://newsroom.amd.com/news/amd-anthropic-strategic-partnership/
+  doc_date: 2026-07-22
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: AMD（晶片銷售與股價誘因）
+  basis: 未明
+  note: 原文「deploy up to 2 gigawatts…first gigawatt beginning in the first half of 2027」；AMD 另投資 Anthropic 至多 $5B
+- key: cmp_amd_usd_prospectus
+  group: D
+  metric: AMD 算力供應金額（招股書草稿）
+  value: null
+  lo: 20
+  hi: null
+  unit: $B（總額）
+  period: 2027 起（期間未揭露）
+  source: Business Day（Reuters）（同上）
+  url: https://www.businessday.co.za/world/international-companies/2026-09-29-anthropic-plans-518bn-ai-infrastructure-spend-80-non-cancellable/
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（招股書，IPO 誘因）
+  basis: 總額
+  note: 「AI computing capacity expected to exceed $20bn」；2 GW 若以 $20B 計僅約 $10B/GW，可能只含首期或算力租賃費
+# ---------- CoreWeave／Akamai（2026-04／05）----------
+- key: cmp_coreweave_2026
+  group: D
+  metric: CoreWeave 多年算力合約（金額、容量未揭露）
+  value: null
+  lo: null
+  hi: null
+  unit: 定性
+  period: 2026 下半年起上線；多年
+  source: CoreWeave 新聞稿〈CoreWeave Announces Multi-Year Agreement With Anthropic〉
+  url: https://coreweave.com/news/coreweave-announces-multi-year-agreement-with-anthropic
+  doc_date: 2026-04-10
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: CoreWeave（業務宣傳誘因）
+  basis: null
+  note: 原文「multi-year agreement」「bring compute online starting later this year」；未揭露金額、MW、晶片
+- key: cmp_akamai_usd
+  group: D
+  metric: Akamai 雲端算力合約金額
+  value: 1.8
+  lo: null
+  hi: null
+  unit: $B（七年總額）
+  period: 2026–2033
+  source: Yahoo Finance（Forbes, Janakiram MSV）〈Akamai lands $1.8 billion…〉
+  url: https://finance.yahoo.com/sectors/technology/articles/akamai-lands-1-8-billion-022427922.html
+  doc_date: 2026-05-08
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Akamai（Q1 財報揭露未具名客戶）；Bloomberg 知情人士指認 Anthropic
+  basis: 總額
+  note: 「committed $1.8 billion over seven years」；NVIDIA RTX PRO 6000 Blackwell；兩家公司未證實
+- key: cmp_google_tpu_2025_gen
+  group: D
+  metric: Google Cloud TPU 合約－晶片世代
+  value: null
+  lo: null
+  hi: null
+  unit: 定性（TPU 第七代 Ironwood）
+  period: 2025-10
+  source: Google Cloud 新聞稿〈Anthropic to Expand Use of Google Cloud TPUs and Services〉
+  url: https://www.googlecloudpresscorner.com/2025-10-23-Anthropic-to-Expand-Use-of-Google-Cloud-TPUs-and-Services
+  doc_date: 2025-10-23
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Google（雲端業務宣傳誘因）
+  basis: null
+  note: Kurian 提及「our seventh generation TPU, Ironwood」；「up to one million TPU chips」「well over a gigawatt…in 2026」
+# ---------- Volta Infra（Norway, 2026-08）----------
+- key: cmp_volta_usd
+  group: D
+  metric: Volta Infra（Bitdeer, Norway Tydal）算力合約金額
+  value: 10
+  lo: null
+  hi: null
+  unit: $B（六年總額）
+  period: 六年；分兩期至 2027-03 交付
+  source: The Paypers〈Anthropic signs USD 10 billion computing deal with Volta Infra〉（引 Bloomberg）
+  url: https://thepaypers.com/fintech/news/anthropic-signs-usd-10-billion-computing-deal-with-volta-infra
+  doc_date: 2026-08-05
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Bloomberg 知情人士（Volta 稱未具名 AI 實驗室；Anthropic 未評論）
+  basis: 總額
+  note: 「a USD ten billion, six-year computing agreement」；站點在挪威（首個非美國專屬站點）
+- key: cmp_volta_mw
+  group: D
+  metric: Volta Infra 容量
+  value: 133
+  lo: null
+  hi: null
+  unit: MW
+  period: 至 2027-03
+  source: The Decoder〈Anthropic locks in $10 billion of compute from Volta〉
+  url: https://the-decoder.com/anthropic-locks-in-10-billion-of-compute-from-volta-a-cloud-startup-that-didnt-exist-six-months-ago/
+  doc_date: 2026-08-05
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Volta（業務宣傳）／Bloomberg
+  basis: 未明
+  note: 「Volta puts the capacity at 133 megawatts」「Nvidia's latest Vera Rubin chips」；doc_date 依同日 Bloomberg 報導推定
+# ---------- Google 擔保自建站點 ----------
+- key: cmp_nexus_hubbard_mw
+  group: D
+  metric: Nexus Hubbard（Texas）園區首期容量（Anthropic 承租、Google 擔保）
+  value: 500
+  lo: null
+  hi: 7700
+  unit: MW（hi＝遠期擴建）
+  period: 2026 年內首期；遠期可擴至約 7.7 GW
+  source: DCD〈Google to provide financial backing for multi-billion dollar Anthropic data center in Texas – report〉（引 FT）
+  url: https://www.datacenterdynamics.com/en/news/google-to-provide-financial-backing-for-multi-billion-dollar-anthropic-data-center-in-texas-report/
+  doc_date: 2026-03-30
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: FT 知情人士
+  basis: 未明
+  note: 「aimed to offer 500MW of capacity later this year」「expanded to around 7.7GW」；Anthropic 2026-03 簽租約；融資最高 $5bn
+- key: cmp_nexus_hubbard_financing
+  group: D
+  metric: Nexus Hubbard 園區融資規模
+  value: 15
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026-08
+  source: Global Data Center Hub〈Morgan Stanley leads $15 billion financing talks for Anthropic's Texas campus〉（WSJ 首報）
+  url: https://www.globaldatacenterhub.com/p/morgan-stanley-leads-15-billion-financing
+  doc_date: 2026-08-03
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: WSJ 知情人士
+  basis: 總額
+  note: 「roughly $15 billion, consisting of a $14 billion bridge loan」；自建燃氣電廠「1.6 gigawatts」；Google 擔保租金與電費義務、取約 20% 股權
+- key: cmp_barber_lake_epoch
+  group: D
+  metric: Cipher Barber Lake（Texas）IT 電力（第三方歸屬 Anthropic）
+  value: 207
+  lo: 168
+  hi: null
+  unit: MW
+  period: 168MW 2026-12；207MW 2027-04（預估）
+  source: Epoch AI Data Centers Directory〈Anthropic Barber Lake〉
+  url: https://epoch.ai/data/ai-data-centers/directory/anthropic-barber-lake
+  doc_date: 2026-10-05
+  retrieved: 2026-10-08
+  tag: Analogy
+  party: null
+  basis: IT
+  note: 「207 MW of IT power」；Google TPU v7 約 123.8k 顆；Fluidstack 承租、Google 擔保，Epoch 推定最終用戶為 Anthropic
+# ---------- 合計與招股書 ----------
+- key: cmp_total_commit_517b
+  group: D
+  metric: 2025-10 起 11 個月算力合約總額（媒體彙整）
+  value: null
+  lo: null
+  hi: 517
+  unit: $B（主要在未來十年）
+  period: 2025-10 至 2026-08 簽署
+  source: DCD〈Anthropic signed $517bn in compute agreements in past 11 months〉（引 The Information）
+  url: https://www.datacenterdynamics.com/en/news/anthropic-signed-517bn-in-compute-agreements-in-past-11-months/
+  doc_date: 2026-09-07
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: The Information（彙整公開與知情人士報導）
+  basis: 總額
+  note: 「some $517 billion in compute capacity leases in the past 11 months」；含上限值與重複計算可能
+- key: cmp_total_gw_148
+  group: D
+  metric: 2025-10 起新簽算力容量（媒體彙整）
+  value: null
+  lo: 14.8
+  hi: null
+  unit: GW
+  period: 2025-10 至 2026-08 簽署
+  source: Dealroom 摘要 The Information〈How Anthropic clinched $517 billion in compute deals in 11 months〉
+  url: https://dealroom.co/news/info-iclajk-how-anthropic-clinched-517-billion-in-compute-deals-in-11-months/
+  doc_date: 2026-09-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: The Information
+  basis: 未明
+  note: 「at least 14.8 GW…plus 1–2 GW secured earlier」；並稱容量「may never fully come online」；各合約 GW 多為上限且口徑混雜
+- key: cmp_total_gw_b_overcentral
+  group: D
+  metric: 總算力容量（含既有）
+  value: null
+  lo: 16
+  hi: 17
+  unit: GW
+  period: 2026-09
+  source: Overcentral〈Anthropic signs $517 billion in compute deals after warning rivals〉
+  url: https://overcentral.com/en/anthropic-compute-deals-80192/
+  doc_date: 2026-09-07
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 二手轉述 The Information（未具名來源）
+  basis: 未明
+  note: 「bringing total capacity to 16-17 gigawatts」；為合約容量加總，非已上線
+- key: cmp_server_rent_thru2029_180b
+  group: D
+  metric: 先前向投資人說明的伺服器租用支出（至 2029）
+  value: 180
+  lo: null
+  hi: null
+  unit: $B（累計至 2029）
+  period: 至 2029
+  source: DCD〈Anthropic signed $517bn in compute agreements in past 11 months〉
+  url: https://www.datacenterdynamics.com/en/news/anthropic-signed-517bn-in-compute-agreements-in-past-11-months/
+  doc_date: 2026-09-07
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人簡報，募資誘因）／The Information
+  basis: 總額
+  note: 「previously told investors it was expecting to spend around $180bn on renting servers through 2029」
+- key: cmp_prospectus_total_518b
+  group: D
+  metric: 雲端、算力與基礎設施承諾總額（招股書草稿）
+  value: 518
+  lo: null
+  hi: null
+  unit: $B（約十年）
+  period: 2026–2036
+  source: Business Day（Reuters）〈Anthropic plans $518bn AI infrastructure spend, 80% non-cancellable〉
+  url: https://www.businessday.co.za/world/international-companies/2026-09-29-anthropic-plans-518bn-ai-infrastructure-spend-80-non-cancellable/
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（保密招股書草稿，IPO 誘因；Reuters 取得）
+  basis: 總額
+  note: 「at least $518bn over a decade…with six partners」；Google 111.1＋Amazon 110＋Microsoft 31.4＋Broadcom 161.2＋xAI 84.5＋AMD 20＝518.2
+- key: cmp_prospectus_noncancel_share
+  group: D
+  metric: 承諾中不可取消或無論用量皆須支付之比例
+  value: 0.80
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2026–2036
+  source: Business Day（Reuters）（同上）
+  url: https://www.businessday.co.za/world/international-companies/2026-09-29-anthropic-plans-518bn-ai-infrastructure-spend-80-non-cancellable/
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（招股書草稿）
+  basis: null
+  note: 約 80%「non-cancellable or requires payment regardless of usage」；xAI 部分可 90 天取消
+- key: cmp_prospectus_google
+  group: D
+  metric: Google 承諾（招股書草稿）
+  value: null
+  lo: 111.1
+  hi: null
+  unit: $B（總額）
+  period: 2026-04 至 2033-07
+  source: InvestmentNews（轉述 Reuters）
+  url: https://www.investmentnews.com/equities/anthropics-landmark-ipo-filing-shows-12-fold-revenue-jump-518b-compute-bill/268391
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（招股書草稿，IPO 誘因）
+  basis: 總額
+  note: 「at least $111.1 billion…between April 2026 and July 2033」；短缺須補差額；與 The Information 稱 Google $200B／5 年矛盾（差額可能列在 Broadcom 租賃）
+- key: cmp_prospectus_amazon
+  group: D
+  metric: Amazon 承諾（招股書草稿）
+  value: 110
+  lo: null
+  hi: null
+  unit: $B（總額）
+  period: 2026-05 至 2036-04
+  source: InvestmentNews（轉述 Reuters）
+  url: https://www.investmentnews.com/equities/anthropics-landmark-ipo-filing-shows-12-fold-revenue-jump-518b-compute-bill/268391
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（招股書草稿，IPO 誘因）
+  basis: 總額
+  note: 「$110 billion due between May 2026 and April 2036」；與 2026-04 新聞稿「more than $100 billion over ten years」一致
+- key: cmp_prospectus_broadcom
+  group: D
+  metric: Broadcom 相關設備租賃義務（招股書草稿）
+  value: 161.2
+  lo: null
+  hi: null
+  unit: $B（總額）
+  period: 未揭露（TPU 容量 2027 起）
+  source: Business Day（Reuters）（同上）
+  url: https://www.businessday.co.za/world/international-companies/2026-09-29-anthropic-plans-518bn-ai-infrastructure-spend-80-non-cancellable/
+  doc_date: 2026-09-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（招股書草稿）
+  basis: 總額
+  note: 「about $161.2bn in equipment lease obligations, largely non-cancellable」；對應 Google/Broadcom TPU（3.5–5 GW）
+- key: cmp_broadcom_tpu_lease_125b
+  group: D
+  metric: Broadcom TPU 算力五年租賃承諾
+  value: 125.2
+  lo: null
+  hi: null
+  unit: $B（五年總額）
+  period: 五年（容量 2027 起）
+  source: The Star（Reuters Exclusive）〈Broadcom to lend Anthropic up to $42 billion to lease its chips, filing says〉
+  url: https://www.thestar.com.my/tech/tech-news/2026/10/01/exclusive-broadcom-to-lend-anthropic-up-to-42-billion-to-lease-its-chips-filing-says
+  doc_date: 2026-10-01
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（招股書，IPO 誘因）
+  basis: 總額
+  note: 可轉債「could finance about a third of the $125.2 billion commitment」；為 $161.2B 中的五年 TPU 租賃部分（推定）
+- key: cmp_broadcom_financing_42b
+  group: D
+  metric: Broadcom 提供之租賃融資（可轉換票據）上限
+  value: null
+  lo: null
+  hi: 42
+  unit: $B
+  period: IPO 後
+  source: The Star（Reuters Exclusive）（同上）
+  url: https://www.thestar.com.my/tech/tech-news/2026/10/01/exclusive-broadcom-to-lend-anthropic-up-to-42-billion-to-lease-its-chips-filing-says
+  doc_date: 2026-10-01
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（招股書）／Broadcom（供應商融資誘因）
+  basis: 總額
+  note: 「lend Anthropic up to $42 billion to finance infrastructure spending」；可轉股；屬融資（F 組）但影響算力支出現金流
+# ---------- 算力支出：實際與預測 ----------
+- key: cmp_spend_2025_actual_prospectus
+  group: D
+  metric: 2025 算力與基礎設施支出（實際，招股書草稿）
+  value: 7.33
+  lo: null
+  hi: null
+  unit: $B
+  period: 2025
+  source: Investing.com UK（Charles-Henry Monchau）〈What Anthropic's leaked prospectus reveals〉（引 Reuters）
+  url: https://uk.investing.com/analysis/what-anthropics-leaked-prospectus-reveals-ahead-of-its-ipo-200628581
+  doc_date: 2026-10-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（招股書草稿，IPO 誘因）
+  basis: 總額
+  note: 「Compute and infrastructure spending tripled to $7.33bn, more than half of total operating costs of $12.65bn」；未分推論／訓練
+- key: cmp_spend_2025_training_proj
+  group: D
+  metric: 2025 訓練成本（2025 年底預測）
+  value: 4.1
+  lo: null
+  hi: null
+  unit: $B
+  period: 2025
+  source: Tiger Brokers（Deep News，引 The Information）〈Revenue Soars as Anthropic Lowers Gross Margin Forecast〉
+  url: https://www.itiger.com/news/1154519858
+  doc_date: 2026-01-22
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人預測）／The Information
+  basis: 總額
+  note: 「projected its 2025 AI model training costs to be around $4.1 billion」，較夏季預測高約 5%
+- key: cmp_spend_2025_inference_overrun
+  group: D
+  metric: 2025 推論成本超出原預測幅度
+  value: 0.23
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2025
+  source: Tiger Brokers（Deep News，引 The Information）（同上）
+  url: https://www.itiger.com/news/1154519858
+  doc_date: 2026-01-22
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人預測）／The Information
+  basis: null
+  note: 「inference costs exceeded initial projections by 23%」；2025 毛利率預測下修至 40%（含免費用戶約 38%）；未給推論成本金額
+- key: cmp_spend_2025_derived_inference
+  group: D
+  metric: 2025 推論等非訓練算力支出（推導）
+  value: 3.2
+  lo: null
+  hi: null
+  unit: $B
+  period: 2025
+  source: 推導：招股書 2025 算力 $7.33B − The Information 2025 訓練預測 $4.1B
+  url: https://uk.investing.com/analysis/what-anthropics-leaked-prospectus-reveals-ahead-of-its-ipo-200628581
+  doc_date: 2026-10-06
+  retrieved: 2026-10-08
+  tag: Derived
+  party: null
+  basis: 總額
+  note: 7.33−4.1≈3.2；兩來源口徑可能不同（招股書營業費用科目 vs 管理層預測），僅供量級參考
+- key: cmp_aws_spend_2024_zitron
+  group: D
+  metric: 2024 支付 AWS 金額（外流帳單）
+  value: 1.359
+  lo: null
+  hi: null
+  unit: $B
+  period: 2024
+  source: Ed Zitron〈This Is How Much Anthropic and Cursor Spend On Amazon Web Services〉
+  url: https://www.wheresyoured.at/costs/
+  doc_date: 2025-10-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 匿名知情來源（Zitron 為 AI 泡沫論者）
+  basis: 淨額
+  note: 「final cash paid to Amazon after any discounts or credits」；2024 月度 $52.9M→$176.1M；不含 Google Cloud
+- key: cmp_aws_spend_2025_9m_zitron
+  group: D
+  metric: 2025 年 1–9 月支付 AWS 金額（外流帳單）
+  value: 2.66
+  lo: null
+  hi: null
+  unit: $B
+  period: 2025-01 至 2025-09
+  source: Ed Zitron（同上）
+  url: https://www.wheresyoured.at/costs/
+  doc_date: 2025-10-20
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 匿名知情來源（Zitron 為 AI 泡沫論者）
+  basis: 淨額
+  note: 月度 2025-01 $188.5M、2025-09 $518.9M；合計「$2.66 billion」
+- key: cmp_spend_2026_training_proj
+  group: D
+  metric: 2026 訓練成本（預測）
+  value: 12
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026
+  source: Yahoo Finance（GuruFocus，引 The Information）〈Anthropic Quietly Raises the Ceiling〉
+  url: https://finance.yahoo.com/news/anthropic-quietly-raises-ceiling-121501064.html
+  doc_date: 2026-01-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人預測，募資誘因）／The Information
+  basis: 總額
+  note: 「In 2026 alone, it expects to spend about $12 billion training models」；Anthropic 未評論
+- key: cmp_spend_2026_inference_proj
+  group: D
+  metric: 2026 推論（模型運行）成本（預測）
+  value: 7
+  lo: null
+  hi: null
+  unit: $B
+  period: 2026
+  source: Yahoo Finance（GuruFocus，引 The Information）（同上）
+  url: https://finance.yahoo.com/news/anthropic-quietly-raises-ceiling-121501064.html
+  doc_date: 2026-01-29
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人預測）／The Information
+  basis: 總額
+  note: 「another $7 billion running them」；2026-01 預測，早於營收暴增；與 SpaceX 單一合約 $1.25B/月 相比明顯偏低，應已過時
+- key: cmp_spend_training_2029_proj
+  group: D
+  metric: 訓練成本至 2029（預測）
+  value: null
+  lo: 100
+  hi: null
+  unit: $B
+  period: 2029（年度或累計未明）
+  source: MarketScreener（Reuters 轉 The Information）〈Anthropic's AI model training costs to exceed $100 billion by 2029〉
+  url: https://www.marketscreener.com/news/anthropic-s-ai-model-training-costs-to-exceed-100-billion-by-2029-the-information-ce7e5bd9d989fe27
+  doc_date: 2026-01-27
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人預測）／The Information
+  basis: 總額
+  note: 標題「training costs to exceed $100 billion by 2029」；內文付費牆，年度或累計不明
+- key: cmp_spend_training_2029_proj_b
+  group: D
+  metric: 訓練成本至 2029（另一來源）
+  value: null
+  lo: null
+  hi: 100
+  unit: $B（至 2029）
+  period: 至 2029
+  source: Tiger Brokers（Stock News，引 The Information）〈Anthropic projected to spend over $80 billion on cloud services by 2029〉
+  url: https://www.itiger.com/news/1164355668
+  doc_date: 2026-02-18
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人預測）／The Information
+  basis: 總額
+  note: 「spending on model training alone could reach as high as $100 billion」；與 _a「exceed」方向相反（上限 vs 下限）
+- key: cmp_spend_training_peak_2028_wsj
+  group: D
+  metric: 訓練成本高峰（預測）
+  value: 30
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2028
+  source: SaaStr（Jason Lemkin，引 WSJ 公開之機密財務文件）
+  url: https://www.saastr.com/anthropic-just-passed-openai-in-revenue-while-spending-4x-less-to-train-their-models/
+  doc_date: 2026-04-07
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（外流財務文件）／WSJ
+  basis: 總額
+  note: 「Anthropic's training costs peak at around $30 billion」（2028，由上下文推定）；與「2029 前 >$100B」可並存（累計）但與年度解讀矛盾
+- key: cmp_spend_cloud_thru2029_80b
+  group: D
+  metric: 至 2029 支付 Amazon、Google、Microsoft 運行模型（推論）費用
+  value: null
+  lo: 80
+  hi: null
+  unit: $B（累計至 2029）
+  period: 2026–2029
+  source: DCD〈Anthropic cloud spend expected to reach $80bn through 2029〉（引 The Information）
+  url: https://www.datacenterdynamics.com/en/news/anthropic-cloud-spend-expected-to-reach-80bn-through-2029/
+  doc_date: 2026-02-18
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人預測）／The Information
+  basis: 總額
+  note: 「projecting its cloud spend will reach $80 billion for the period through 2029」；不含訓練；早於 4 月後大量新合約
+- key: cmp_dario_commit_scale
+  group: D
+  metric: 算力承諾規模（CEO 定性）
+  value: null
+  lo: null
+  hi: null
+  unit: 定性（「hundreds of billions」）
+  period: 2026-02
+  source: DCD〈Anthropic CEO on AI data center spend – If you are off by a couple years, it can be ruinous〉（Dwarkesh Podcast）
+  url: https://www.datacenterdynamics.com/en/news/anthropic-ceo-the-way-you-buy-these-data-centers-if-youre-off-by-a-couple-years-can-be-ruinous/
+  doc_date: 2026-02-13
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic CEO（募資、審慎形象誘因）
+  basis: null
+  note: Amodei 稱實際承諾為「hundreds of billions, not trillions」；強調買早兩年「can be ruinous」
+# ---------- 總 GW 目標（逐年）----------
+- key: cmp_gw_ye_2026_measuredai
+  group: D
+  metric: 年底算力容量估計 2025–2028（第三方）
+  value: 5.0
+  lo: 1.4
+  hi: 15
+  unit: GW（2025=1.4、2026=5.0、2027=9.5、2028>15）
+  period: 2025–2028 年底
+  source: Measured AI（Corey Trinetti）〈Anthropic's 15+ GW Data Center Build〉
+  url: https://measuredai.substack.com/p/anthropic-data-centers
+  doc_date: 2026-08-31
+  retrieved: 2026-10-08
+  tag: Analogy
+  party: null
+  basis: 未明
+  note: 第三方逐站加總；value=2026；15 個園區合計約「7.9 GW of critical IT」，其餘為未分配容量；未經公司確認
+- key: cmp_gw_target_2027_cryptobriefing
+  group: D
+  metric: 年底算力容量目標（媒體）
+  value: 10
+  lo: 9.5
+  hi: null
+  unit: GW（2026 年底約 5、2027 年底約 9.5–10）
+  period: 2027-12
+  source: Crypto Briefing〈Anthropic targets ~9.5 GW of compute capacity by end-2027〉
+  url: https://cryptobriefing.com/anthropic-10-gw-compute-capacity-2027/
+  doc_date: 2026-09-18
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 未具名來源（編輯部，未引公司）
+  basis: 未明
+  note: 「roughly 10 gigawatts…by the end of 2027」「roughly 5 GW by the end of 2026」；來源不明，數字與 Measured AI 相同，可能互引
+- key: cmp_gw_target_nyt
+  group: D
+  metric: 年底可用算力目標（向投資人說明）
+  value: 5
+  lo: null
+  hi: null
+  unit: GW（2026 年底約 5；2027 年底約再倍增≈10）
+  period: 2026-12
+  source: Newsquawk 引 New York Times〈Anthropic reportedly plans to have 5GW worth of compute by the end of 2026〉
+  url: https://www.newsquawk.com/headlines/anthropic-reportedly-plans-to-have-5gw-worth-of-compute-by-the-end-of-2026-reports-nyt
+  doc_date: 2026-09-18
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: Anthropic（投資人簡報，募資／IPO 誘因）／NYT 知情人士
+  basis: 未明
+  note: 「told investors…roughly five gigawatts' worth of compute available…by the end of the year」「roughly double…by the end of the next year」
+- key: cmp_gw_target_nyt_2027
+  group: D
+  metric: 2027 年底可用算力目標（推導自 NYT「倍增」）
+  value: 10
+  lo: null
+  hi: null
+  unit: GW
+  period: 2027-12
+  source: Newsquawk 引 New York Times（同上）
+  url: https://www.newsquawk.com/headlines/anthropic-reportedly-plans-to-have-5gw-worth-of-compute-by-the-end-of-2026-reports-nyt
+  doc_date: 2026-09-18
+  retrieved: 2026-10-08
+  tag: Derived
+  party: null
+  basis: 未明
+  note: 5 GW ×「roughly double」≈10 GW；與 Crypto Briefing／Measured AI 的 9.5–10 GW 一致
+- key: cmp_gw_ye_2025_fourweek
+  group: D
+  metric: 2025 年底可用算力（媒體轉述投資人資料）
+  value: 1.4
+  lo: null
+  hi: null
+  unit: GW
+  period: 2025-12
+  source: FourWeekMBA〈Anthropic and the Gigawatt Threshold〉
+  url: https://fourweekmba.com/ai-anthropic-gigawatt-threshold-compute-unit-of-account/
+  doc_date: null
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: 媒體轉述投資人討論（未經公司確認）
+  basis: 未明
+  note: 「~1.4 GW of compute availability」（2025 年底），標明「expectations, not delivered capacity」；與 Measured AI 2025=1.4 GW 一致；頁面未見發布日期（約 2026-09）
+- key: cmp_amzn_goog_11gw_info
+  group: D
+  metric: Amazon＋Google 合約容量與金額（媒體彙整）
+  value: 11
+  lo: null
+  hi: null
+  unit: GW（金額 >$300B，約十年）
+  period: 約十年
+  source: Dealroom 摘要 The Information（同上）
+  url: https://dealroom.co/news/info-iclajk-how-anthropic-clinched-517-billion-in-compute-deals-in-11-months/
+  doc_date: 2026-09-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: The Information
+  basis: 未明
+  note: 「Amazon and Google account for 11 GW costing more than $300B over roughly 10 years」；≈ AWS 5 GW＋Google/Broadcom 5 GW＋2026 Google 1 GW
+- key: cmp_lambda_nscale_80b_info
+  group: D
+  metric: Lambda＋Nscale 合約（媒體彙整）
+  value: 80
+  lo: null
+  hi: null
+  unit: $B（六年）
+  period: 六年
+  source: Dealroom 摘要 The Information（同上）
+  url: https://dealroom.co/news/info-iclajk-how-anthropic-clinched-517-billion-in-compute-deals-in-11-months/
+  doc_date: 2026-09-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: The Information
+  basis: 總額
+  note: 「$80B for at least 460 MW over six years」＝Nscale $45B＋Lambda $35B；容量只計 Nscale 460MW，漏 Lambda 350MW
+- key: cmp_msft_1gw_info
+  group: D
+  metric: Microsoft Azure／NVIDIA 合約（媒體彙整）
+  value: null
+  lo: 30
+  hi: null
+  unit: $B（約 1 GW）
+  period: 未揭露
+  source: Dealroom 摘要 The Information（同上）
+  url: https://dealroom.co/news/info-iclajk-how-anthropic-clinched-517-billion-in-compute-deals-in-11-months/
+  doc_date: 2026-09-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: The Information
+  basis: 總額
+  note: 「At least $30B for about 1 GW of Azure/Nvidia capacity」；隱含約 $30B/GW
+- key: cmp_google_broadcom_200b_info
+  group: D
+  metric: Google／Broadcom 合約（媒體彙整）
+  value: 200
+  lo: null
+  hi: null
+  unit: $B（五年，5 GW）
+  period: 五年
+  source: AI Weekly 摘要 The Information
+  url: https://aiweekly.co/alerts/the-information-anthropic-has-locked-in-148-gw-of-compute-worth-up-to-517b
+  doc_date: 2026-09-06
+  retrieved: 2026-10-08
+  tag: Interested-party
+  party: The Information
+  basis: 總額
+  note: 表列「Google/Broadcom $200B over 5 years」「5 GW」；與招股書 Google 111.1＋Broadcom 161.2＝272.3 不一致
+not_found:
+- item: 晶片組合占比（TPU／Trainium／GPU 各占算力或支出比例）
+  tried: anthropic.com/news（Google、Amazon、Broadcom、SpaceX 各稿）、Data Center Frontier、招股書草稿報導（Reuters／InvestmentNews／Implicator）；查詢詞「Anthropic share of compute TPU Trainium GPU percentage」
+  verdict: 可能未揭露
+- item: 招股書草稿中各年度（2026–2036）付款排程
+  tried: Reuters（Business Day 轉載）、InvestmentNews、Implicator、Investing.com、BigGo；招股書尚未公開於 EDGAR
+  verdict: 可能未揭露
+- item: 2027–2030 逐年算力（訓練＋推論）支出預測
+  tried: The Information（經 DCD、Tiger、MarketScreener 轉述，原文付費牆）、WSJ 外流文件（SaaStr 轉述）、Dow Jones（Tiger）
+  verdict: 找不到
+- item: 2025 推論成本實際金額
+  tried: 招股書草稿報導（只給算力與基礎設施合計 $7.33B）、The Information（只給超支 23%）、Ed Zitron AWS 帳單（只到 2025-09、不含 Google）
+  verdict: 找不到
+- item: 2025-10 Google Cloud TPU 合約期間與年度金額
+  tried: Anthropic 與 Google Cloud 新聞稿、CNBC（403 無法開啟）、DCD
+  verdict: 可能未揭露
+- item: 各大合約 GW 為 IT 或設施口徑（Google、Broadcom、Amazon、Microsoft/NVIDIA、AMD）
+  tried: 各公司新聞稿與 Broadcom 8-K；只有 TeraWulf 明示 critical IT、New Carlisle 2.2 GW 為用電
+  verdict: 可能未揭露
+- item: CoreWeave 合約金額、MW、晶片
+  tried: CoreWeave 新聞稿、HPCwire、Measured AI（稱與 Akamai 合計約 250MW，屬推估）
+  verdict: 可能未揭露
+- item: Fluidstack $50B 計畫的 GW 總量與確定站點
+  tried: Anthropic 新聞稿、Fluidstack 新聞稿標題、DCD（只推測 Abernathy、Cipher、Lake Mariner）
+  verdict: 可能未揭露
+- item: Trainium3 晶片數量與 Project Rainier 後續站點規模
+  tried: Anthropic〈Anthropic and Amazon expand compute collaboration〉、Converge Digest、Epoch AI；aboutamazon.com 需授權無法開啟
+  verdict: 找不到
+- item: Microsoft／NVIDIA 1 GW 上線時程與 Azure 合約期間（2025-11 公告時）
+  tried: Anthropic 新聞稿；blogs.microsoft.com 需授權無法開啟；後由招股書報導補到 2026-11 至 2033-05
+  verdict: 可能未揭露
+- item: SpaceX／xAI 合約對應 GW 或 GPU 總數（Colossus II 部分）
+  tried: Anthropic 新聞稿（只給 Colossus 1 >300MW、>220k GPU）、SpaceX S-1 報導、AIbase（Reuters）
+  verdict: 可能未揭露
