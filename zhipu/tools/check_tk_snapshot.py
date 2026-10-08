@@ -15,7 +15,9 @@ import openpyxl
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
+sys.path.insert(0, str(REPO / "builder"))
 from engine import current_model_path  # noqa: E402
+from tk_link import TABLE_NOTE, read_table_rows  # noqa: E402
 
 
 def tk_values(tk_dir: Path):
@@ -32,7 +34,8 @@ def tk_values(tk_dir: Path):
         c2 = ci(m.group(5)) if m.group(5) else c1
         r2 = int(m.group(6)) if m.group(6) else r1
         out[n] = [ws.cell(r, c).value for r in range(r1, r2 + 1) for c in range(c1, c2 + 1)]
-    return cur, out
+    table = {t["name"]: t for t in read_table_rows(wb)}       # 智譜 Z2：以列標籤讀表的列
+    return cur, out, table
 
 
 def main():
@@ -41,7 +44,7 @@ def main():
     ap.add_argument("--model", type=Path)
     ap.add_argument("--md", type=Path)
     a = ap.parse_args()
-    cur, tk = tk_values(a.tk_dir)
+    cur, tk, table = tk_values(a.tk_dir)
     wb = openpyxl.load_workbook(a.model or current_model_path(), data_only=False)
     ws = wb["TK_Link"]
     snap_file, snap_ver = ws["B3"].value, ws["B4"].value
@@ -52,18 +55,28 @@ def main():
             continue
         status, n = ws.cell(r, 6).value, ws.cell(r, 5).value or 0
         snap = [ws.cell(r, 10 + k).value for k in range(n)]
-        if status != "OK":
+        if status == TABLE_NOTE:                                 # 讀表列：以同一列標籤規則重讀比對
+            key = str(ws.cell(r, 2).value)[3:]
+            t = table.get(key)
+            if not t or t["status"] != TABLE_NOTE:
+                rows.append((key, "MISSING", "列標籤在 Tokenomics 現行版找不到"))
+                bad += 1
+                continue
+            name, cand = key, t["values"]
+        else:
+            name, cand = name, tk.get(name)
+        if status not in ("OK", TABLE_NOTE):
             rows.append((name, "MISSING" if name not in tk else "NOW_AVAILABLE", status))
             if name in tk:
                 bad += 1
             continue
-        if name not in tk:
+        if cand is None:
             rows.append((name, "MISSING", "Tokenomics 現行版無此名稱"))
             bad += 1
             continue
-        same = len(tk[name]) == len(snap) and all(
+        same = len(cand) == len(snap) and all(
             (x == y) or (isinstance(x, (int, float)) and isinstance(y, (int, float)) and abs(x - y) <= 1e-9 * max(abs(x), abs(y), 1e-300))
-            for x, y in zip(tk[name], snap))
+            for x, y in zip(cand, snap))
         rows.append((name, "OK" if same else "DIFF", ""))
         bad += 0 if same else 1
     from collections import Counter

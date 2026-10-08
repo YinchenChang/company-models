@@ -1,6 +1,6 @@
 """Excel 優先（沿用 Tokenomics v5.7 精神）：藍字輸入由 Excel 擁有，只在仍為舊預設值時才寫入新預設。
 
-隱藏頁 _Defaults 記錄「上一次 builder 寫入的預設值」。重建時，對每個輸入格（SRC_OAI C–E、Inputs E–G）：
+隱藏頁 _Defaults 記錄「上一次 builder 寫入的預設值」。重建時，對每個輸入格（SRC_ZP D–F、Inputs F–H）：
   Excel 值 ＝ 舊預設 → 改寫為新預設（builder 的更新生效）；
   Excel 值 ≠ 舊預設 → 保留 Excel 值並記入 restore_log（Excel 值保留數）。
 TK_Link 的值由 builder 從 Tokenomics 快照重寫（更新快照＝本模型的修補版），不在此保護。
@@ -10,18 +10,20 @@ from __future__ import annotations
 import openpyxl
 
 SHEET = "_Defaults"
+SRC_SHEET = "SRC_ZP"
+INPUT_COLS = {SRC_SHEET: ("D", "E", "F"), "Inputs": ("F", "G", "H")}   # 值、低、高
 
 
 def read_defaults(path):
     wb = openpyxl.load_workbook(path)
     cur = {}
-    for sh in ("SRC_OAI", "Inputs"):
+    for sh in (SRC_SHEET, "Inputs"):
         ws = wb[sh]
         for row in ws.iter_rows(min_row=5):
             rid = row[0].value
             if not rid:
                 continue
-            for col in ("C", "D", "E") if sh == "SRC_OAI" else ("E", "F", "G"):
+            for col in INPUT_COLS[sh]:
                 cur[(sh, rid, col)] = ws[f"{col}{row[0].row}"].value
     old = {}
     if SHEET in wb.sheetnames:

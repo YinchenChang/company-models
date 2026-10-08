@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""HTML 一頁摘要產生器（S6）：LibreOffice 重算 → 以具名範圍或「頁!列 ID」取值 → 單一靜態 HTML。
+"""HTML 一頁摘要產生器（自 OpenAI v0.6 S6 複製；Z5 改寫內容，Z2 只改名稱）：LibreOffice 重算 → 以具名範圍或「頁!列 ID」取值 → 單一靜態 HTML。
 
 - 計算一律由 Excel 執行：基準與敏感度情境都是「改寫 Inputs → LibreOffice 重算」後讀值；
   本程式只做取值、格式化與排版（含 SVG 幾何），不做任何模型計算。
@@ -47,7 +47,7 @@ class Locator:
         for ws in wb:
             for r in range(1, ws.max_row + 1):
                 v = ws.cell(r, 1).value
-                if isinstance(v, str) and re.fullmatch(r"[A-Z]{1,3}\d{1,3}|C\d{2,3}|INP_\d{3}|SRC_OAI_\d{3}", v):
+                if isinstance(v, str) and re.fullmatch(r"[A-Z]{1,3}\d{1,3}|C\d{2,3}|INP_\d{3}|SRC_ZP_\d{3}", v):
                     self.rowid.setdefault((ws.title, v), r)
                     self.rowid_of[(ws.title, r)] = v
         self.inputs = wb["Inputs"]
@@ -428,8 +428,8 @@ def build(outdir: Path) -> tuple[Path, Path, Values]:
 
     stamp = model.name.split("_")[0]
     ver = re.search(r"_v([\d.]+)\.xlsx$", model.name).group(1)
-    html_path = outdir / f"{stamp}_OpenAI收支模型_v{ver.replace('.', '_')}.html"
-    xlsx_path = outdir / f"{stamp}_OpenAI收支模型_v{ver.replace('.', '_')}.xlsx"
+    html_path = outdir / f"{stamp}_智譜收支模型_v{ver.replace('.', '_')}.html"
+    xlsx_path = outdir / f"{stamp}_智譜收支模型_v{ver.replace('.', '_')}.xlsx"
     page = render(V, model, ver, stamp)
     outdir.mkdir(parents=True, exist_ok=True)
     html_path.write_text(page, encoding="utf-8")
@@ -439,7 +439,7 @@ def build(outdir: Path) -> tuple[Path, Path, Values]:
 
 
 def latest_src_date(model: Path) -> str:
-    ws = openpyxl.load_workbook(model, read_only=True)["SRC_OAI"]
+    ws = openpyxl.load_workbook(model, read_only=True)["SRC_ZP"]
     ds = []
     for row in ws.iter_rows(min_row=5, values_only=True):
         d = row[8]
@@ -461,12 +461,12 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 
     S = []
     # ── 標頭 ──
-    S.append(f"""<header><h1>OpenAI 收支模型 v{ver}｜一頁摘要</h1>
+    S.append(f"""<header><h1>智譜收支模型 v{ver}｜一頁摘要</h1>
 <div class="meta">{date_disp}｜Excel <code>{html.escape(model.name)}</code>｜Tokenomics {html.escape(str(tk_ver))}（<code>{html.escape(str(tk_sha))[:7]}</code>）｜單位 $B（十億美元），曆年制｜數字游標停留可見 Excel 位置；手機上圖表可左右滑動</div></header>""")
 
     # ── ① 命題與結論 ──
     S.append(f"""<section id="s1"><h2><span class="no">①</span>命題與一句話結論</h2>
-<p class="note">命題：OpenAI 每 VR 等值 GW 的年營收，能否覆蓋每 GW 年全成本？若不能，缺口要多少外部資金、由誰補？</p>
+<p class="note">命題：智譜每 VR 等值 GW 的年營收，能否覆蓋每 GW 年全成本？若不能，缺口要多少外部資金、由誰補？</p>
 <p class="lead">不能。基準下 2025–2030 每一年每 VR 等值 GW 營收都低於全成本（2030 年 {n("COST_PropRev_VR", Y)} 對 {n("COST_PropFull_VR", Y)} $B/GW/年，覆蓋率 {n("COST_Coverage", Y, "pct0")}）；
 2026-03 輪已到位的 ${n("FND_Committed", 2026, "f0")}B 撐不過 {n("Funding!F24", gap_first, "yr")} 年，2027–2030 累計需外部資金 ${n("FND_ExtNeedCum", Y, "f0")}B（峰值 {n("Funding!F27", peak, "yr")} 年 ${n("FND_ExtNeed", peak, "f0")}B）。</p>
 <div class="kpis">
@@ -567,11 +567,11 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <dl>
 <dt>Excel</dt><dd><code>{html.escape(model.name)}</code>（v{ver}；唯一計算引擎；本頁同資料夾附 xlsx）</dd>
 <dt>Tokenomics</dt><dd>{html.escape(str(tk_ver))}（<code>{html.escape(str(tk_file))}</code>），master <code>{html.escape(str(tk_sha))}</code>，讀取日 {html.escape(str(tk_date))}</dd>
-<dt>資料日期</dt><dd>SRC_OAI 最新文件日期 {latest_src_date(model)}；模型日期 {date_disp}</dd>
+<dt>資料日期</dt><dd>SRC_ZP 最新文件日期 {latest_src_date(model)}；模型日期 {date_disp}</dd>
 <dt>檢查</dt><dd>CHK_Errors＝{n("CHK_Errors", None, "f0")}（Checks C01–C130）</dd>
 <dt>期間與單位</dt><dd>FY2025–FY2030 曆年制，2025 為實際校準年；$B；GW＝IT 關鍵電力；VR 等值＝以 VR200 Sol 層級每 GW 產能換算</dd>
 </dl>
-<p class="note"><span class="tag">Verified</span>已查核原文 <span class="tag">Interested-party</span>公司或利害關係方說法 <span class="tag">Analogy</span>類比推估（附區間） <span class="tag">Assumed</span>假設（附區間） <span class="tag">Derived</span>由其他數字推得 <span class="tag">Decision</span>建模決定。公司原始數據在 SRC_OAI、算力物理取自 Tokenomics（TK_Link）、假設在 Inputs。</p>
+<p class="note"><span class="tag">Verified</span>已查核原文 <span class="tag">Interested-party</span>公司或利害關係方說法 <span class="tag">Analogy</span>類比推估（附區間） <span class="tag">Assumed</span>假設（附區間） <span class="tag">Derived</span>由其他數字推得 <span class="tag">Decision</span>建模決定。公司原始數據在 SRC_ZP、算力物理取自 Tokenomics（TK_Link）、假設在 Inputs。</p>
 <p class="note">本頁所有數字皆讀自 LibreOffice 重算後的 Excel（具名範圍或頁＋列 ID），HTML 不含計算；敏感度情境定義見 <code>tools/html_scenarios.yaml</code>。</p>
 </section>""")
 
@@ -582,13 +582,13 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>OpenAI 收支模型 v{ver}</title>
+<title>智譜收支模型 v{ver}</title>
 <style>{CSS}</style>
 </head>
 <body>
 <main>
 {body}
-<footer>OpenAI 收支模型 v{ver}｜產生器 tools/build_html.py｜{date_disp}</footer>
+<footer>智譜收支模型 v{ver}｜產生器 tools/build_html.py｜{date_disp}</footer>
 </main>
 </body>
 </html>

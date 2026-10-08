@@ -1,4 +1,4 @@
-"""Tokenomics 快照讀取（工作單 P1-3；補充 1 第 1 點；S1＝v0.6-P1.1）。
+"""Tokenomics 快照讀取（沿用 OpenAI v0.6 的 63 名；智譜 Z2 另以列標籤讀 Cap_In／Price_Frontier 的 GLM 列與中國合格前緣）。
 
 - 值取自 Tokenomics master 的 model/CURRENT，逐名讀出寫入 TK_Link；不用 Excel 外部連結。
 - 列序：P1 原 37 名（列位不變）→ SRC_DEM_010–013（＋013 低／高）→ Block 6（IF_Alloc* 7 名）→ S1 新增（r6 下游需要）→ S4 新增（IF_CapexTotal）。
@@ -30,6 +30,42 @@ EXTRA_NAMES = ["L1_Ans3", "L1_Ans3_Lo", "L1_Ans3_Hi"]
 # S4 新增（工程類；P4 自建 GW 需要每 GW 資本支出；列於最後，既有列位不變）
 S4_NAMES = ["IF_CapexTotal"]
 PENDING_NOTE = "待 Tokenomics 提供"
+TABLE_NOTE = "讀表（非具名）"
+
+# 智譜 Z2 步驟 2：以列標籤讀表（Tokenomics 無具名範圍者）；只供 Revenue 對照列與 Checks，不作驅動。
+# (本模型名稱, 頁, 表頭判定(欄A值, 欄B值或 None), 列標籤（欄 A 完全相符）, 起始欄, 欄數, 說明, 單位)
+TABLE_ROWS = [
+    ("RD_CapIn_GLM53", "Cap_In", ("模型", "廠商"), "GLM-5.3", "E", 5, "Cap_In F 表 GLM-5.3：新鮮輸入、快取輸入、輸出（國際站 $/M）、尖峰離峰、能力指數", "$/M；指數"),
+    ("RD_CapIn_GLM53Flash", "Cap_In", ("模型", "廠商"), "GLM-5.3-Flash", "E", 5, "Cap_In F 表 GLM-5.3-Flash：同上", "$/M；指數"),
+    ("RD_PF_GLM53_Mix", "Price_Frontier", ("模型", "國別"), "GLM-5.3", "H", 3, "Price_Frontier A 表 GLM-5.3：參考請求混合單價（Luna、Sol、Astra 參考請求）", "$/M"),
+    ("RD_PF_GLM53Flash_Mix", "Price_Frontier", ("模型", "國別"), "GLM-5.3-Flash", "H", 3, "Price_Frontier A 表 GLM-5.3-Flash：同上", "$/M"),
+    ("RD_PF_ChinaFront", "Price_Frontier", ("項目", "單位"), "中國廠商 合格者最低 混合單價", "C", 3, "Price_Frontier B 表：中國合格前緣混合單價（Luna、Sol、Astra；無合格者為文字）", "$/M"),
+    ("RD_PF_ChinaFrontModel", "Price_Frontier", ("項目", "單位"), "中國廠商 合格者最低 模型", "C", 3, "Price_Frontier B 表：中國合格前緣模型名（Luna、Sol、Astra）", "文字"),
+    ("RD_PF_ChinaVsOAI", "Price_Frontier", ("項目", "單位"), "中國合格者最低 ÷ OpenAI 層級模型", "C", 3, "Price_Frontier B 表：中國合格前緣 ÷ OpenAI 層級模型（Luna、Sol、Astra）", "x"),
+]
+
+
+def read_table_rows(wb):
+    """依列標籤讀 TABLE_ROWS；找不到標籤時該列狀態為 MISSING（值留空）。"""
+    from openpyxl.utils import column_index_from_string as ci
+    out = []
+    for name, sheet, hdr, label, c0, n, desc, unit in TABLE_ROWS:
+        ws = wb[sheet]
+        start = None
+        for r in range(1, ws.max_row + 1):
+            if ws.cell(r, 1).value == hdr[0] and (hdr[1] is None or ws.cell(r, 2).value == hdr[1]):
+                start = r
+                break
+        row = None
+        if start:
+            for r in range(start + 1, ws.max_row + 1):
+                if str(ws.cell(r, 1).value).strip() == label:
+                    row = r
+                    break
+        vals = [ws.cell(row, ci(c0) + k).value for k in range(n)] if row else []
+        out.append(dict(name=name, kind="RD", label=f"{desc}（{sheet}!{c0}{row}，標籤『{label}』）", unit=unit, values=vals,
+                        status=TABLE_NOTE if row else "MISSING", sheet=sheet, row=row))
+    return out
 
 
 def _split(attr: str):
@@ -85,4 +121,4 @@ def read_snapshot(tk_dir: Path):
     hdr_gen = [wb["Interface"].cell(4, k).value for k in range(3, 18)]
     hdr_cost = [wb["Interface"].cell(5, k).value for k in range(3, 18)]
     return dict(file=current, version=f"v{m.group(1)}" if m else "?", sha=sha, rows=rows, pending=pending,
-                hdr_gen=hdr_gen, hdr_cost=hdr_cost)
+                hdr_gen=hdr_gen, hdr_cost=hdr_cost, table=read_table_rows(wb))

@@ -1,4 +1,4 @@
-"""OpenAI 收支模型公式引擎：以 pycel 直接載入 Excel 活頁簿並重算。
+"""智譜收支模型公式引擎：以 pycel 直接載入 Excel 活頁簿並重算。
 
 規則（CLAUDE.md 第 1、2 節）：
 - 不手抄任何公式；所有數值都由活頁簿內的公式計算。
@@ -43,7 +43,7 @@ _patch_pycel_defined_names()
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 MODEL_DIR = REPO_ROOT / "model"
-MODEL_NAME_RE = re.compile(r"^\d{8}_OpenAI_v\d+(\.\d+)?\.xlsx$")
+MODEL_NAME_RE = re.compile(r"^\d{8}_Zhipu_v\d+(\.\d+)?\.xlsx$")
 _REF_RE = re.compile(
     r"^(?:'(?P<q>(?:[^']|'')+)'|(?P<u>[^!']+))!"
     r"\$?(?P<c1>[A-Z]+)\$?(?P<r1>\d+)(?::\$?(?P<c2>[A-Z]+)\$?(?P<r2>\d+))?$"
@@ -55,7 +55,7 @@ def current_model_path(model_dir: Path = MODEL_DIR) -> Path:
     files = sorted(p for p in model_dir.glob("*.xlsx") if MODEL_NAME_RE.match(p.name))
     if len(files) != 1:
         raise RuntimeError(
-            f"model/ 必須恰有一份現行 xlsx（YYYYMMDD_OpenAI_vN.xlsx），實際為 {[p.name for p in files]}"
+            f"model/ 必須恰有一份現行 xlsx（YYYYMMDD_Zhipu_vN.xlsx），實際為 {[p.name for p in files]}"
         )
     return files[0]
 
