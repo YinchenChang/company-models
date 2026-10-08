@@ -82,7 +82,7 @@ def test_inputs_tags_and_ranges():
 
 
 def test_e6_no_constants_in_calc_sheets(wb):
-    """E6：Demand、Revenue 的公式不得內含常數（恆等式 1−比例、1＋成長率除外；單位換算、天數、月數在 Inputs）。"""
+    """E6：Demand、Revenue、Compute、Cost 的公式不得內含常數（恆等式 1−比例、1＋成長率除外；單位換算、天數、月數在 Inputs）。"""
     for s in build.CALC_SHEETS:
         if s in wb.sheetnames:
             assert build.e6_violations(wb[s]) == [], s
@@ -116,14 +116,35 @@ def test_onprem_not_in_demand(wb):
 def test_no_external_links_and_allowed_names(wb):
     """不使用 Excel 外部連結；計算頁引用的具名範圍只限 TK_／SRC_ZP_／INP_ 與本模型 DEM_／REV_ 名稱。"""
     names = set(wb.defined_names.keys())
-    for s in ("Demand", "Revenue"):
+    for s in ("Demand", "Revenue", "Compute", "Cost"):
         for row in wb[s].iter_rows():
             for c in row:
                 if isinstance(c.value, str) and c.value.startswith("="):
                     assert "[" not in c.value, c.coordinate
                     for tok in re.findall(r"\b[A-Za-z_][A-Za-z0-9_]*\b", c.value):
                         if tok in names:
-                            assert tok.startswith(("TK_", "SRC_ZP_", "INP_", "DEM_", "REV_")), (s, c.coordinate, tok)
+                            assert tok.startswith(("TK_", "SRC_ZP_", "INP_", "DEM_", "REV_", "CMP_", "COST_")), (s, c.coordinate, tok)
+
+
+def test_z3_structure(wb):
+    """Z3：Compute、Cost 存在且位於 Revenue 與 Checks 之間；Revenue 容量上限列引用 Compute（不再是 Inputs 佔位）；
+    命題具名範圍與 OpenAI 同名；Compute／Cost 不引用 OAI_；Demand 不引用 Compute／Cost（無循環）。"""
+    order = wb.sheetnames
+    assert order.index("Revenue") < order.index("Compute") < order.index("Cost") < order.index("Checks")
+    names = set(wb.defined_names.keys())
+    for n in ("CMP_InfGW_Eff", "CMP_RDGW", "CMP_DemandGW", "CMP_SupplyGW", "CMP_InfAvailGW", "CMP_CapFactor", "CMP_Supply_VReq", "CMP_Eta",
+              "COST_Compute", "COST_OnPremDelivery", "COST_NonCompExSBC", "COST_SBC", "COST_FullCash", "COST_PropRev_VR", "COST_PropFull_VR",
+              "COST_PropGap_VR", "COST_PropGap_VR_Cloud", "COST_Coverage", "COST_CloudGM", "COST_PropGap_VR_USD"):
+        assert n in names, n
+    attr = wb.defined_names["REV_CapFactor"].attr_text
+    ws = wb[attr.split("!")[0]]
+    row = int(attr.split("$")[-1])
+    for col in "DFGHI":
+        assert ws[f"{col}{row}"].value.startswith("=Compute!"), col
+    for row in wb["Demand"].iter_rows():
+        for c in row:
+            if isinstance(c.value, str) and c.value.startswith("="):
+                assert "Compute!" not in c.value and "Cost!" not in c.value, c.coordinate
 
 
 def test_tk_table_rows_not_drivers(wb):

@@ -82,5 +82,59 @@ items:
 - {key: onprem_g, name: 本地化部署營收年增率, index: 2027 起, unit: 比例／年, value: 0, lo: -0.2, hi: 0.2, tag: Assumed, basis: 工作單 Z2 預設（0%，−20%～+20%）, range: 工作單}
 # ── 其他
 - {key: ads_rev, name: 廣告營收, index: 全期, unit: RMB 億, value: 0, lo: 0, hi: 0, tag: Decision, basis: 規格 D3：無廣告業務揭露, range: 無業務}
-- {key: cap_placeholder, name: 容量上限係數（佔位；Z3 接 Compute 後取代）, index: 全期, unit: 比例, value: 1, lo: 1, hi: 1, tag: Decision, basis: 工作單 Z2 第 5 步：先以 1 佔位，只回乘雲端營收, range: 佔位}
 - {key: arr_warn, name: ARR 對照 WARN 門檻（模型年化 ÷ 公司 ARR − 1 的絕對值）, index: —, unit: 比例, value: 0.25, lo: 0.25, hi: 0.25, tag: Decision, basis: 規格 D14r（WARN >25%）, range: 規格}
+# ── Z3 算力與成本：定義常數（E6）
+- {key: mul_t_m, name: 單位換算：兆 token → 百萬 token 的乘數（定義常數）, index: —, unit: —, value: 1000000, lo: 1000000, hi: 1000000, tag: Decision, basis: 10^12 ÷ 10^6（同 OpenAI v0.6『單位換算：T token → M token』）, range: 定義}
+- {key: kw_per_gw, name: 單位換算：每 GW 的 kW 數（定義常數）, index: —, unit: kW／GW, value: 1000000, lo: 1000000, hi: 1000000, tag: Decision, basis: 定義, range: 定義}
+- {key: hours_year, name: 每年小時數（定義常數）, index: —, unit: 小時, value: 8760, lo: 8760, hi: 8760, tag: Decision, basis: 365 × 24（同 Tokenomics 的 8,760）, range: 定義}
+- {key: div_yuan_yi, name: 單位換算：元 → 億元 的除數（定義常數）, index: —, unit: —, value: 100000000, lo: 100000000, hi: 100000000, tag: Decision, basis: 定義, range: 定義}
+- {key: div_usd_b, name: 單位換算：美元 → 十億美元 的除數（定義常數）, index: —, unit: —, value: 1000000000, lo: 1000000000, hi: 1000000000, tag: Decision, basis: TK $/M × M tok → $，再 ÷ 10^9 成 $B（同 OpenAI v0.6『單位換算：$ → $B 的除數』）, range: 定義}
+- {key: eta_warn_lo, name: η 合理範圍下限（Checks WARN 門檻）, index: —, unit: 倍, value: 0.1, lo: 0.1, hi: 0.1, tag: Decision, basis: 工作單 Z3 第 3 步『η 合理範圍 WARN』；OpenAI v0.6 S3 工作單以 0.1–0.5 為合理範圍, range: 定義}
+- {key: eta_warn_hi, name: η 合理範圍上限（Checks WARN 門檻）, index: —, unit: 倍, value: 1, lo: 1, hi: 1, tag: Decision, basis: η＝token 換算 GW ÷ 支出換算 GW；＞1 表示模型 token 量超過以 Tokenomics 產能與實付算力費買得到的量（物理上不可能，口徑必有一端偏差）, range: 定義}
+- {key: chip_gap_warn, name: 國產晶片 GW 對照差距門檻（Checks WARN）, index: —, unit: 比例, value: 0.5, lo: 0.5, hi: 0.5, tag: Decision, basis: 工作單 Z3 第 3 步：國產晶片 GW 對照差距 >50% WARN, range: 工作單}
+# ── Z3 晶片族產能（D6、D7；Tokenomics 缺口：國產晶片與 H20 無 TK 欄，以 Hopper × 比例暫代）
+- {key: h20_ratio, name: H20 每 GW 產出 ÷ Hopper（H100）每 GW 產出, index: 全期, unit: 倍, value: 0.34, lo: 0.26, hi: 0.42, tag: Analogy, basis: SRC_ZP_490（DatabaseMart 工程估計 Llama2-70B 推論吞吐 H20÷H100 0.26–0.42，中點 0.34）；規格 D6：H20 算力約 H100 的 15%（SRC_ZP_489）但記憶體頻寬較高，decode 比例遠高於 0.15；SemiAnalysis『快 20%』單一源不用（SRC_ZP_491）；以每卡比代每 GW 比（每卡 IT 功耗差異見 kw_h20，屬 Tokenomics 缺口）, range: SRC 區間}
+- {key: dom_ratio, name: 國產晶片（昇騰等）每 GW 產出 ÷ Hopper 每 GW 產出（國產產出比）, index: 全期, unit: 倍, value: 0.6, lo: 0.4, hi: 0.9, tag: Analogy, basis: 規格 D6（基準 0.6，0.4–0.9）；昇騰 910C 推論約 H100 的 60%（SRC_ZP_480，0.6–0.8）；公司『同硬體端到端效能提升 3 倍』（SRC_ZP_455，Interested-party）只說明區間上緣；Tokenomics 無昇騰列（缺口）, range: 規格 D6}
+- {key: share_dom_2025, name: 國產晶片占算力 GW 比例, index: '2025', unit: 比例, value: 0.3, lo: 0.1, hi: 0.5, tag: Assumed, basis: 規格 D7：2025 以 Hopper 為主、國產漸增；2025-01 列入實體清單（SRC_ZP_459）；公司未揭露晶片組合, range: 0.1～0.5}
+- {key: share_dom_2026, name: 國產晶片占算力 GW 比例, index: '2026', unit: 比例, value: 0.6, lo: 0.4, hi: 0.8, tag: Assumed, basis: 規格 D7：2026 公司稱『10 萬級國產晶片用於推論』（SRC_ZP_452，Interested-party）；國產成為推論主力, range: 0.4～0.8}
+- {key: share_dom_2027, name: 國產晶片占算力 GW 比例, index: '2027', unit: 比例, value: 0.75, lo: 0.5, hi: 0.9, tag: Assumed, basis: 無新 NVIDIA 採購（D7 Decision），既有 Hopper／H20 隨折舊與租約到期退出, range: 0.5～0.9}
+- {key: share_dom_2028, name: 國產晶片占算力 GW 比例, index: '2028', unit: 比例, value: 0.85, lo: 0.6, hi: 0.95, tag: Assumed, basis: 同上, range: 0.6～0.95}
+- {key: share_dom_2029, name: 國產晶片占算力 GW 比例, index: '2029', unit: 比例, value: 0.9, lo: 0.7, hi: 1.0, tag: Assumed, basis: 同上, range: 0.7～1.0}
+- {key: share_dom_2030, name: 國產晶片占算力 GW 比例, index: '2030', unit: 比例, value: 0.95, lo: 0.75, hi: 1.0, tag: Assumed, basis: 同上, range: 0.75～1.0}
+- {key: share_h20_2025, name: H20 占算力 GW 比例, index: '2025', unit: 比例, value: 0.2, lo: 0.1, hi: 0.4, tag: Assumed, basis: H20 為 2024–2025 中國可合法採購的 NVIDIA 推論卡；租價最活躍（SRC_ZP_462–464）；Hopper（H800／A800）＝1 − 國產 − H20, range: 0.1～0.4}
+- {key: share_h20_2026, name: H20 占算力 GW 比例, index: '2026', unit: 比例, value: 0.15, lo: 0.05, hi: 0.3, tag: Assumed, basis: 無新 NVIDIA 採購（D7）；既有租用延續, range: 0.05～0.3}
+- {key: share_h20_2027, name: H20 占算力 GW 比例, index: '2027', unit: 比例, value: 0.1, lo: 0, hi: 0.2, tag: Assumed, basis: 同上, range: 0～0.2}
+- {key: share_h20_2028, name: H20 占算力 GW 比例, index: '2028', unit: 比例, value: 0.05, lo: 0, hi: 0.15, tag: Assumed, basis: 同上, range: 0～0.15}
+- {key: share_h20_2029, name: H20 占算力 GW 比例, index: '2029', unit: 比例, value: 0.05, lo: 0, hi: 0.1, tag: Assumed, basis: 同上, range: 0～0.1}
+- {key: share_h20_2030, name: H20 占算力 GW 比例, index: '2030', unit: 比例, value: 0, lo: 0, hi: 0.1, tag: Assumed, basis: 同上, range: 0～0.1}
+# ── Z3 每 GW 價格（D9、D9r：卡時租價 × 每 GW 卡數 × 小時）
+- {key: kw_hopper, name: 每卡 IT 功耗（含主機、網路）：Hopper（H800／H100）, index: 全期, unit: kW／卡, value: 1.393, lo: 1.2, hi: 1.6, tag: Analogy, basis: Tokenomics v5.26 DC_Cost『GPU 數（設施）』Hopper H100 每 GW 718,048 顆 → 10^6 kW ÷ 718,048＝1.393 kW（IT 關鍵電力口徑；非具名範圍，Tokenomics 缺口）；DGX H100 10.2 kW／8 GPU（TK SRC_HW_001）, range: 1.2（只計伺服器）～1.6（含較高網路與儲存負載）}
+- {key: kw_h20, name: 每卡 IT 功耗（含主機、網路）：H20, index: 全期, unit: kW／卡, value: 1.09, lo: 0.9, hi: 1.393, tag: Analogy, basis: Hopper 每卡 1.393 kW − H100 晶片 0.7 kW（TK Spec_Rack『GPU 功率 W/封裝』700）＋ H20 晶片約 0.4 kW（NVIDIA H20 規格 TDP 400 W；模型內建知識，待核）, range: 0.9～1.393（與 Hopper 同）}
+- {key: kw_dom, name: 每卡 IT 功耗（含主機、網路）：國產（昇騰 910B／910C）, index: 全期, unit: kW／卡, value: 1.0, lo: 0.65, hi: 1.4, tag: Analogy, basis: 工作單：Hopper 依 TK 機架規格換算——Hopper 每卡 1.393 kW − H100 晶片 0.7 kW ＋ 910C 晶片 0.31–0.35 kW（SRC_ZP_481）≈ 1.0 kW；CloudMatrix 384 系統功耗（SRC_ZP_483，約 1.46 kW／NPU）只有 SemiAnalysis 單一來源，不入模型, range: 0.65（Hopper 每卡 × 晶片功耗比 0.33／0.7）～1.4（與 Hopper 每卡同）}
+- {key: dom_card_mult, name: 國產卡時租價倍數（910B 租價 → 推論集群實際卡別）, index: 全期, unit: 倍, value: 1.5, lo: 1.0, hi: 2.0, tag: Assumed, basis: 規格 D9r：910C 租價找不到 → 以 910B 租價 × 效能比；910C 為雙晶粒封裝，約當兩顆 910B（倍數 2）；10 萬級集群的 910B／910C 組合未揭露，取中點, range: 1.0（全為 910B）～2.0（全為 910C）}
+- {key: px_gw_chg, name: 每 GW 算力價格年變動率（2H26 起）, index: 2H26 起, unit: 比例／年, value: -0.1, lo: -0.25, hi: 0, tag: Assumed, basis: 工作單 Z3 預設（−10%／年；−25%～0%）；2H26 以半年 −5% 計（÷ 半年數）, range: 工作單}
+- {key: pue, name: PUE（設施電力 ÷ IT 電力）, index: —, unit: 倍, value: 1.3, lo: 1.15, hi: 1.5, tag: Analogy, basis: 工作單 Z3 預設（中國資料中心 1.3，1.15–1.5）；用於『1 GW 國產算力資料中心』（SRC_ZP_458，口徑未明，視為設施口徑）換算 IT GW, range: 工作單}
+# ── Z3 算力服務費拆分（D8r、D10r）
+- {key: inf_fee_share, name: 開放平台及 API 銷售成本中的算力服務費占比（推論算力支出）, index: 2025、1H26, unit: 比例, value: 1.0, lo: 0.22, hi: 1.0, tag: Derived, basis: 規格 D8r：2025 推論算力支出＝開放平台及 API 銷售成本（SRC_ZP_197，1.5438 億）視同全數算力費（上限）；下限＝FY2024 銷售成本中算力費占比 0.3017 ÷ 1.3653＝0.22（SRC_ZP_023、018）；1H26 同法（SRC_ZP_195）, range: D8r 下限～上限}
+- {key: rd_compute_share, name: 研發開支（扣股權報酬）中的算力服務費占比, index: 2025、1H26, unit: 比例, value: 0.707, lo: 0.6, hi: 0.8, tag: Analogy, basis: 規格 D10r：FY2024 研發算力費 15.52 億（SRC_ZP_232，媒體轉述招股章程）÷ 研發開支 21.95 億（SRC_ZP_048）＝0.707；FY2025、1H26 未揭露；1H25 媒體稱 ≥70%（SRC_ZP_234）, range: 規格 D10r（60–80%）}
+- {key: sbc_rd_share, name: 股權報酬中歸研發開支的比例, index: 2025、1H26, unit: 比例, value: 0.744, lo: 0.5, hi: 0.9, tag: Analogy, basis: 研發人員占員工 74.4%（SRC_ZP_240，2025-06-30）；股權報酬依功能別拆分未揭露, range: 0.5～0.9}
+# ── Z3 η 路徑（D8）
+- {key: eta_sw, name: η 逐年路徑開關（0＝沿用最新實際值；1＝線性回升至目標）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 規格 D8：基準沿用（r1 起以 1H26 為最新實際點，D14）；情境線性回升至 2030＝1（同 OpenAI v0.6 INP_258）, range: 開關}
+- {key: eta_target, name: η 回升情境：目標值, index: —, unit: 倍, value: 1, lo: 1, hi: 1, tag: Decision, basis: 規格 D8（同 OpenAI v0.6 INP_259）, range: 定義}
+- {key: eta_target_year, name: η 回升情境：目標年, index: —, unit: 年, value: 2030, lo: 2030, hi: 2030, tag: Decision, basis: 規格 D8（同 OpenAI v0.6 INP_260）, range: 定義}
+# ── Z3 供給（2H26 起：依需求配置；容量上限）
+- {key: idle, name: 閒置保留比例, index: 2H26 起, unit: 比例, value: 0.1, lo: 0.05, hi: 0.2, tag: Analogy, basis: OpenAI v0.6 INP_232（0.1；v0.5 computeMW.idleReserve，OpenAI 無區間）；工作單：沿用 OpenAI 同名 Inputs 的值；區間為本模型補, range: 0.05～0.2（本模型補）}
+- {key: min_train, name: 訓練最低占比, index: 2H26 起, unit: 比例, value: 0.3, lo: 0.2, hi: 0.4, tag: Analogy, basis: OpenAI v0.6 INP_233（0.3；v0.5 computeMW.minTrainingShare，V1a 容量上限，OpenAI 無區間）；區間為本模型補, range: 0.2～0.4（本模型補）}
+- {key: rd_share_sw, name: 研發占比路徑開關（0＝沿用 1H26 實際值；1＝線性移至 2030 目標）, index: 2H26 起, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 2H26 起供給依需求配置（規格未定；見報告已套用的預設）：供給＝有效推論 GW ÷（(1−閒置)×(1−研發占比)）；基準沿用最新實際值（1H26：研發算力費 ÷ 算力費合計），與 η 沿用 1H26 同一原則，且研發算力較多＝較保守, range: 開關}
+- {key: rd_share_2030, name: 研發 GW 占非閒置供給比例：2030 目標（開關＝1 時自 1H26 實際值線性移動）, index: '2030', unit: 比例, value: 0.5, lo: 0.3, hi: 0.7, tag: Analogy, basis: OpenAI v0.6 2030 研發 GW 6.11 ÷（供給 13.01 ×（1−0.1））＝0.52；只在開關＝1 時使用, range: 0.3（＝訓練最低占比）～0.7（≈1H26 實際）}
+# ── Z3 自有算力（D11、D11r）
+- {key: owned_capex, name: 其他自有算力資本支出（2027 起每年）, index: 2027 起, unit: RMB 億／年, value: 0, lo: 0, hi: 50, tag: Assumed, basis: 規格 D11r：自有算力資本支出基準＝0（Decision；1H26 資本開支 3.906 億為北京紅鑽辦公樓，非算力）；高端為情境, range: 0～50（情境）}
+- {key: dc1gw_sw, name: 情境開關：1 GW 國產算力資料中心（0＝基準不計）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 規格 D11r：公司 2026-07 稱 1 GW 國產算力資料中心（SRC_ZP_458，口徑、地點、持有方式未揭露）→ 只列情境，基準關, range: 開關}
+- {key: dc1gw_year, name: 1 GW 資料中心情境：投產年（資本支出計入前一年）, index: —, unit: 年, value: 2028, lo: 2027, hi: 2030, tag: Assumed, basis: 無揭露時程, range: 2027～2030}
+- {key: hold_ratio_h20, name: H20 每 GW 持有成本 ÷ Hopper 每 GW 持有成本, index: 全期, unit: 倍, value: 0.6, lo: 0.4, hi: 0.8, tag: Analogy, basis: 規格 D6『持有比同法』；H20 單卡售價低於 H100，每 GW 卡數較多（kw_h20）；Tokenomics 無 H20 欄（缺口）, range: 0.4～0.8}
+- {key: hold_ratio_dom, name: 國產晶片每 GW 持有成本（與資本支出）÷ Hopper, index: 全期, unit: 倍, value: 0.6, lo: 0.4, hi: 0.9, tag: Analogy, basis: 規格 D6、D11（國產持有比；Analogy）；昇騰卡價未查得；Tokenomics 無昇騰列（缺口）, range: 0.4～0.9}
+# ── Z3 非算力成本（D13）
+- {key: hc_g_2h26, name: 員工人數成長率：2H26 平均對 1H26 平均, index: 2H2026, unit: 比例／半年, value: 0, lo: -0.1, hi: 0.15, tag: Assumed, basis: 員工 2025-12-31 1,094 人 → 2026-06-30 981 人（SRC_ZP_162、222）下降；營收快速成長；取持平, range: −10%～+15%}
+- {key: hc_g, name: 員工人數年增率（年均人數）, index: 2027 起, unit: 比例／年, value: 0.1, lo: 0, hi: 0.3, tag: Assumed, basis: OpenAI v0.6 INP_264–267（2027 +30% 遞減至 2030 +10%）為 Analogy；智譜 2025→1H26 人數下降，取較低值, range: 0～0.3}
+- {key: pp_g, name: 每人年成本（不含股權報酬）年變動率, index: 2H26 起, unit: 比例／年, value: 0.03, lo: 0, hi: 0.08, tag: Analogy, basis: OpenAI v0.6 INP_268（0.03，0–0.08）；2H26 以半年計（÷ 半年數）, range: 同 OpenAI}
+- {key: sbc_pp_g, name: 每人股權報酬年變動率, index: 2H26 起, unit: 比例／年, value: 0, lo: -0.2, hi: 0.2, tag: Analogy, basis: OpenAI v0.6 INP_269（0，−0.2～0.2）；基期＝1H26 年化（上市後；2025 含上市前一次性授予 5.58 億）, range: 同 OpenAI}

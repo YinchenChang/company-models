@@ -27,7 +27,7 @@ IO = ("in", "cache", "out")
 IO_ZH = {"in": "輸入", "cache": "快取命中輸入", "out": "輸出"}
 SEGS = ("agent", "gpllm", "techsvc")
 SEG_ZH = {"agent": "②企業級智能體", "gpllm": "③企業級通用大模型", "techsvc": "④技術服務及其他（含 C 端）"}
-PH = re.compile(r"«([DV])\.([A-Za-z0-9_]+)»")
+PH = re.compile(r"«([DVCK])\.([A-Za-z0-9_]+)»")
 
 
 def nm(wb, name, ref):
@@ -77,7 +77,7 @@ class Sheet:
 
 
 def fill(wb, Z):
-    rows = {"D": Z["D"].rows, "V": Z["V"].rows}
+    rows = {k: Z[k].rows for k in ("D", "V", "C", "K") if k in Z}
     for ws in wb.worksheets:
         for row in ws.iter_rows():
             for c in row:
@@ -214,7 +214,7 @@ def build(wb, D, tk_cells):
               "Revenue — 營收：①開放平台及 API（按量計費＋Coding Plan 子列）②企業級智能體 ③企業級通用大模型 ④技術服務及其他；總額＝淨額；雲端 vs 本地化、企業 vs 個人",
               "API 牌價：2025＝GLM-4.7／GLM-4.5-Air 牌價；1H26＝GLM-4.7→GLM-5→GLM-5.1 依發布日天數加權；2H26＝GLM-5.2／5.3（Sol）、GLM-4.5-Air→GLM-5.3-Flash（Luna）；"
               "2027 起 ×（1＋年變動率）。輸入價依長上下文占比混合兩檔。有效單價＝［(1−輸出占比)×(快取命中×快取價＋(1−快取命中)×輸入價)＋輸出占比×輸出價］×(1−折扣與免費額度)。",
-              "金額 RMB 億；牌價 元／百萬 token；Coding Plan 價格 元／月。②③④＝本地化部署分部（不耗智譜算力，D4、D2r）。容量上限暫以 Inputs 佔位 1（Z3 接 Compute），只回乘雲端營收。")
+              "金額 RMB 億；牌價 元／百萬 token；Coding Plan 價格 元／月。②③④＝本地化部署分部（不耗智譜算力，D4、D2r）。容量上限係數取自 Compute（Z3），只回乘雲端營收。")
     V.years(D)
     s_long = I("long_ctx_share")
     V.section("一、價格期間權重（由發布日推得的天數；Inputs Derived）")
@@ -333,7 +333,9 @@ def build(wb, D, tk_cells):
     V.add("營收總額（①＋本地化＋廣告）", "RMB 億", lambda c: f"={c}«V.api»+{c}«V.onprem»+{c}«V.ads»", "未截頂", key="gross", name="REV_Gross", name_h="REV_Gross_H")
     V.add("營收淨額（＝總額；無雲端夥伴分成，D5）", "RMB 億", lambda c: f"={c}«V.gross»", "REV_PartnerShare 不建", key="net", name="REV_Net")
     V.add("雲端營收（①；跑在智譜算力上）", "RMB 億", lambda c: f"={c}«V.api»", "規格 r1：②③④屬本地化部署分部；C 端收入在④內", key="cloud", name="REV_Cloud")
-    V.add("容量上限係數（佔位 1；Z3 接 Compute）", "比例", {c: f"={I('cap_placeholder')}" for c in YC}, "Inputs Decision 佔位", key="cap", name="REV_CapFactor")
+    V.add("容量上限係數（Compute）", "比例",
+          {**{c: f"=Compute!{c}«C.cap»" for c in YC if c != "E"}, "E": "=(K«V.cloud»+L«V.cloud»*Compute!L«C.cap»)/E«V.cloud»"},
+          "Compute CMP_CapFactor（1＝未受限；Z3 取代 Z2 的佔位 1）；2026＝1H26 實際不截頂、2H26 依 Compute 係數，以雲端營收加權", key="cap", name="REV_CapFactor")
     V.add("營收總額（截頂後）＝雲端 × 係數＋本地化＋廣告", "RMB 億", {c: f"={c}«V.cloud»*{c}«V.cap»+{c}«V.onprem»+{c}«V.ads»" for c in YC},
           "容量上限只回乘雲端營收（工作單 Z2 第 5 步）", key="gross_c", name="REV_GrossCapped")
     V.add("營收淨額（截頂後）", "RMB 億", {c: f"={c}«V.gross_c»" for c in YC}, "", key="net_c", name="REV_NetCapped")
@@ -451,7 +453,6 @@ def checks(D, Z, summary, snap, e6, oref):
         ("對照：OpenAI v0.6 2030 每 VR 等值 GW 差額（$B/GW）", "=INDEX(OAI_COST_PropGap_VR,1,6)", None, "info", "OAI_Link；只並排（Z5 HTML）"),
         ("預覽：2030 營收總額（截頂後，RMB 億）", "=INDEX(REV_GrossCapped,1,6)", None, "info", ""),
         ("預覽：2030 token 合計（T）", "=INDEX(DEM_Tok_Total,1,6)", None, "info", "供 Z3"),
-        ("容量上限係數佔位值（Z3 接 Compute 前恆為 1）", f"={I('cap_placeholder')}", None, "info", ""),
     ]
     return rows
 

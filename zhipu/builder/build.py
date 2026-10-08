@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""產生智譜收支模型 Excel（v0.1-Z2：README、SRC_ZP、TK_Link、OAI_Link、Inputs、Demand、Revenue、Checks）。
+"""產生智譜收支模型 Excel（v0.1-Z3：README、SRC_ZP、TK_Link、OAI_Link、Inputs、Demand、Revenue、Compute、Cost、Checks）。
 
 用法（在 zhipu/ 內）：
   python3 builder/build.py --tk-dir <Tokenomics checkout> --oai-xlsx <OpenAI v0.6 xlsx> --out model/20261008_Zhipu_v0.1.xlsx \
@@ -33,8 +33,9 @@ from common import F_BOLD, F_CALC, F_IN, F_NOTE, header, lo_recalc, put, title  
 from oai_link import read_oai  # noqa: E402
 from tk_link import PENDING_NOTE, TABLE_NOTE, read_snapshot  # noqa: E402
 import z2  # noqa: E402
+import z3  # noqa: E402
 
-VERSION = "v0.1-Z2"
+VERSION = "v0.1-Z3"
 SRC_YAML = ROOT / "data" / "zhipu_src.yaml"
 INP_YAML = ROOT / "data" / "zhipu_inputs.yaml"
 REGISTRY_PATH = HERE / "id_registry.json"
@@ -114,8 +115,8 @@ def sheet_readme(wb, D, snap, oai, date, summary):
     title(ws, f"智譜（智譜華章，02513.HK）收支模型 {VERSION}（{date}）",
           "命題（規格 D1，與 OpenAI v0.6 同一句）：智譜每 VR 等值 GW 的年營收能否覆蓋每 GW 年全成本；若不能，缺口要多少外部資金、由誰以什麼條件提供。FY2025–FY2030，曆年制。")
     lines = [
-        ("本版範圍", "v0.1-Z2：SRC_ZP（公司財務原始數據）、TK_Link（Tokenomics 快照）、OAI_Link（OpenAI v0.6 命題輸出快照）、Inputs（假設）、Demand（需求與 token）、Revenue（營收）、Checks。"
-                     "Compute、Cost（Z3）與 Funding、Reverse（Z4）尚未建立；容量上限係數暫以 1 佔位（只回乘雲端營收）。"),
+        ("本版範圍", "v0.1-Z3：SRC_ZP（公司財務原始數據）、TK_Link（Tokenomics 快照）、OAI_Link（OpenAI v0.6 命題輸出快照）、Inputs（假設）、Demand（需求與 token）、Revenue（營收）、"
+                     "Compute（算力）、Cost（成本與命題表）、Checks。Funding、Reverse（Z4）尚未建立。"),
         ("幣別與單位", "公司金額一律人民幣億元（RMB 億），與財報一致。港幣、美元數據以 Inputs 匯率（USD/CNY、HKD/CNY，2026-09-28 中間價；定義常數，區間 ±5%）換算後才進計算頁。"
                      "API 牌價：人民幣元／百萬 token；token：兆（T）；Coding Plan 訂閱者：萬人；智譜清言用戶：百萬人。OAI_Link 為美元（$B），不換算、不參與計算。"),
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構，重建時保留 Excel 內已改過的藍字（隱藏頁 _Defaults）。公式不含常數（E6）：單位換算、天數、月數為 Inputs 的定義常數。"),
@@ -127,7 +128,13 @@ def sheet_readme(wb, D, snap, oai, date, summary):
                    "輸出 DEM_Tok_*（層級 Sol／Luna × 付費／免費）。本地化部署不耗智譜算力，不進 Demand（D4）。"),
         ("Revenue", "營收：①開放平台及 API（按量計費：層級 × 輸入／快取／輸出 × 有效價；Coding Plan 子列：方案別訂閱）②企業級智能體 ③企業級通用大模型 ④技術服務及其他（②③④＝本地化部署分部，規格 D2r）；"
                     "廣告＝0（D3）；總額＝淨額（D5）；雲端 vs 本地化、企業 vs 個人彙總；2025 與 1H26 對財報校準差距＝0；公司說法（ARR、平均售價 +101%、呼叫量 40 倍）只列對照。"),
-        ("Checks", "C01 起；CHK_Errors 必須為 0。WARN（ARR 對照）與 INFO 不計入。"),
+        ("Compute", "晶片族（Hopper＝TK Hopper H100 欄；H20、國產＝Hopper × Inputs 比例，Tokenomics 缺口）× 層級（Sol／Luna）每 GW 年產能 → token 換算推論 GW；"
+                    "2025、1H26 算力服務費（推論＝API 銷售成本、研發＝研發開支扣股權報酬 × 占比）÷ 每 GW 價格（卡時租價 × 每 GW 卡數 × 小時）→ 供給 GW 與 η；"
+                    "2H26 起有效推論 GW＝token GW ÷ η，供給依需求配置；研發 GW＝殘差；容量上限係數回乘雲端營收；VR 等值 GW；10 萬國產晶片對照；R4 對帳；敏感度。"),
+        ("Cost", "算力成本（2025、1H26＝算力服務費實付；之後＝租用 GW × 每 GW 價格＋自有資本支出，基準 0）、供應商持有成本與雲端毛利、本地化部署交付成本、"
+                 "非算力成本（2025、1H26＝財報殘差；之後人數 × 每人成本）、股權報酬；命題表：每 VR 等值 GW 的營收、成本、差額、雲端口徑差額、覆蓋率（人民幣億與美元 $B）。"
+                 "2025 與 1H26 全成本對財報費用合計差距＝0。"),
+        ("Checks", "C01 起；CHK_Errors 必須為 0。WARN（ARR、η 合理範圍、國產晶片 GW 對照）與 INFO 不計入。"),
         ("標記", "Verified／Interested-party／Analogy／Assumed／Derived／Decision（Analogy、Assumed 一律附區間）。"),
         ("分層", "公司財務原始數據→SRC_ZP；AI 技術與算力→TK_Link（取自 Tokenomics）；假設→Inputs；OpenAI 對照→OAI_Link（不進計算）。"),
     ]
@@ -264,7 +271,7 @@ def sheet_oai(wb, oai, date):
 def sheet_checks(wb, D, rows):
     """rows：(label, formula, expected, kind, note)；kind＝eq／tol／tolr（四捨五入容差）／warn／info。"""
     ws = wb.create_sheet("Checks")
-    title(ws, "Checks — v0.1-Z2 檢查（公式；結果 ERR 的格數＝CHK_Errors，必須為 0）",
+    title(ws, f"Checks — {VERSION} 檢查（公式；結果 ERR 的格數＝CHK_Errors，必須為 0）",
           "OK／ERR：比對期望值；WARN：超出門檻只提示（不計入 CHK_Errors）；INFO：只列示。編號（C##）由 builder/id_registry.json 固定，新檢查取下一號，退役號碼不重用。期望值為 builder 寫入的常數。")
     header(ws, 4, ["編號", "檢查項", "值（公式）", "期望", "結果", "說明"])
     reg = D.reg
@@ -289,7 +296,7 @@ def sheet_checks(wb, D, rows):
         put(ws, f"A{n}", ids[i], F_CALC)
         put(ws, f"B{n}", lab, F_CALC)
         put(ws, f"C{n}", f, F_CALC)
-        if exp is not None:
+        if exp is not None and kind not in ("warnrng", "warnabs"):
             put(ws, f"D{n}", exp, F_CALC)
         if kind == "eq":
             put(ws, f"E{n}", f'=IF(C{n}=D{n},"OK","ERR")')
@@ -299,6 +306,13 @@ def sheet_checks(wb, D, rows):
             put(ws, f"E{n}", f'=IF(ISNUMBER(C{n}),IF(ABS(C{n}-D{n})<=0.0005,"OK","ERR"),"ERR")')
         elif kind == "warn":
             put(ws, f"E{n}", f'=IF(ISNUMBER(C{n}),IF(ABS(C{n})>{D.I("arr_warn")},"WARN","OK"),"WARN")')
+        elif kind == "warnrng":     # exp＝(下限 Inputs 鍵, 上限 Inputs 鍵)
+            lo_, hi_ = D.I(exp[0]), D.I(exp[1])
+            put(ws, f"D{n}", f"{lo_}～{hi_}", F_CALC)
+            put(ws, f"E{n}", f'=IF(ISNUMBER(C{n}),IF(AND(C{n}>={lo_},C{n}<={hi_}),"OK","WARN"),"WARN")')
+        elif kind == "warnabs":     # exp＝門檻 Inputs 鍵
+            put(ws, f"D{n}", f"={D.I(exp)}")
+            put(ws, f"E{n}", f'=IF(ISNUMBER(C{n}),IF(ABS(C{n})>{D.I(exp)},"WARN","OK"),"WARN")')
         else:
             put(ws, f"E{n}", "INFO")
         put(ws, f"F{n}", note, F_NOTE)
@@ -383,11 +397,12 @@ def main():
     sheet_oai(wb, oai, a.date)
     sheet_inputs(wb, D, final)
     Z = z2.build(wb, D, tk_cells)
+    Z.update(z3.build(wb, D, Z, snap))
     z2.fill(wb, Z)
     # 結構掃描（結果寫入 Checks 作為常數；test_builder 另行逐格驗證）
     e6 = sum(len(e6_violations(wb[s])) for s in CALC_SHEETS if s in wb.sheetnames)
     oref = len(oai_refs(wb))
-    rows = z2.checks(D, Z, summary, snap, e6, oref)
+    rows = z2.checks(D, Z, summary, snap, e6, oref) + z3.checks(D, Z)
     sheet_checks(wb, D, rows)
     z2.fill(wb, Z)
     D.save_registry()
