@@ -1,15 +1,15 @@
 # WhiteFiber v0.1 分段建置進度（接手用；三張工作單共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：**v0.1a 全部完成**：步驟 0（cfdc8c0）、1（5923076）、2–3（dfbbb79）、4（dc02b7d）、5（c74f2be）、6–7（857e793）、8a（c130c77）、8b 資料報告與 PR 回報（369dad1）。產出：`data/whitefiber_facts_20261008.json`（303 筆）、`data/consensus_wyfi_20261008.json`、`data/permw_tokenomics_20261008.json`、company.json `whitefiber` 區段、`docs/reports/20261008_whitefiber_v0.1a_資料.md`。verify.sh 19 項、`--vs-dist` 22 項全過。
-- 下一步（v0.1b 起點，詳見資料報告第 2 節）：(1) 步驟 1 欄位搬移：依 `company.json → whitefiber.*.mapTo` 換 meta（WhiteFiber／WYFI）、calendar（12 月財年、FY26Q2、首期 0.5 年）、ytdActual（1H26）、historicalPL、latestQuarter、debt（可轉債 cv31 剩 31.85＋cv32 310、DDTL、冰島、RBC 聯貸；建議以期後資本結構建模並寫明）、leases、rpo、valuation（16.83、45.12M 股）、peers、quarterly、meta.consensusFile＝data/consensus_wyfi_20261008.json；刪 oracle 區段與 Oracle／CRWV 資料檔。(2) 雲端 MW 主軸：期初可計費 MW 以經常性雲端年化 46.0（扣終止費）÷ 每 MW 校準。(3) 新建託管分部（NC-1、MTL-1／3 照合約；擴建用租金 1.85、建置 11.5／MW-IT、建物 20 年）。(4) 預付期初 143.1。(5) 評價：beta 2.5、kd 9.5%、託管 20.7×／雲端 6×。
-- 未解問題（給 chat 端）：(a) 託管同業 NTM EV/EBITDA 只取得 DLR、EQIX 兩家（未達「至少 4 家」；APLD／CORZ／IREN／CIFR 無可用 NTM EBITDA，StockAnalysis 被環境代理阻擋）；(b) 個股 beta 0.84–4.77 不可靠，預設 2.5；(c) 2032 可轉債與 DDTL 追加屬期後事件，v0.1b 是否以期後結構建模待定（建議是）；(d) 一次性 GPU 租賃成本 4.0 只見於二手法說摘要；(e) EBITDA 共識找不到。
+- 已完成：v0.1a 全部（見下方 v0.1a 段落）；v0.1b 步驟 0（基線 verify.sh 19 項全過；審查留言 6 項列入 v0.1b 待辦）。
+- 下一步：v0.1b 步驟 1 欄位搬移與換名（company.json 換 WhiteFiber、刪 oracle 區段與 Oracle 資料檔、共識檔單位與年度鍵正規化、畫面文字 OCI／傳統事業 → 雲端／託管）。
+- 未解問題：(a) 託管同業 NTM 只 2 家；(b) 個股 beta 不可靠（預設 2.5）；(c) EBITDA 共識找不到。
 
 ## 工作單總覽
 | 工作單 | 分支 | PR | 狀態 |
 |---|---|---|---|
-| v0.1a 資料蒐集 | `claude/whitefiber-v0.1` | #23（draft） | 完成（待 chat 端審查） |
-| v0.1b 模型改寫 | `claude/whitefiber-v0.1` | 同一 PR | 未開始 |
+| v0.1a 資料蒐集 | `claude/whitefiber-v0.1` | #23（draft） | 完成（chat 端審查通過） |
+| v0.1b 模型改寫 | `claude/whitefiber-v0.1` | 同一 PR | 進行中 |
 | v0.1c 驗證與成品 | `claude/whitefiber-v0.1` | 同一 PR | 未開始 |
 
 <!-- 各工作單在下方新增自己的段落：「## v0.1x」＋步驟紀錄表（步驟｜狀態｜commit｜備註） -->
@@ -46,3 +46,13 @@
 | 9 | 市值股數 | 交換後 45.12M | 38.85M | 市值 759 vs 654 |
 | 10 | 共識主來源 | 目標價 MarketBeat、營收 S&P | Investing／Yahoo | 目標價平均差約 6% |
 | 11 | Tokenomics v5.26 | I7:N15 未變 → 沿用 | 重算 | 無 |
+
+## v0.1b 模型改寫
+
+- 分支：`claude/whitefiber-v0.1`（接續 5822b7f）；PR #23。
+- chat 端 v0.1a 審查交代（PR #23 留言，與工作單同等效力）：(1) 期後資本結構（pro forma）：2032 可轉債 310、2031 交換（剩 31.85、+6.3M 股、現金 −118.5）、DDTL 累計 80、RBC 聯貸 CAD 36.8，以「期後事件」列逐筆記錄（ROLL_FIELDS／asOf），零履約價買權 5,905,511 股預設自稀釋股數排除；(2) DDTL 1.1× MOIC 以額外利息計入融資成本，WACC 稅前債務成本仍 9.5%；(3) 雲端 EBITDA 率起點以扣一次性後的經常性數字校準、線性走向穩態 47%，另列含一次性起點的目標價差；(4) 託管倍數 20.7×（DLR、EQIX，只 2 家），15× 列龍捲風與報告；(5) 託管 EBITDA 率起點＝Q2 託管毛利率扣分攤 G&A，穩態取 [Analogy] 中點；(6) NC-2／3 與 Krambu 只放積極情境，基準只放 NC-1 下一批 45 毛 MW。
+
+### 步驟紀錄
+| 步驟 | 狀態 | commit | 備註 |
+|---|---|---|---|
+| 0 進度檔 v0.1b 段落 | 完成 | （本 commit） | 基線 verify.sh 19 項全過（2 分 36 秒；首次背景執行 fix_datatable 偶發失敗一次，重跑通過）；三情境目標價（仍為 Oracle v0.2 引擎與資料）不記錄 |
