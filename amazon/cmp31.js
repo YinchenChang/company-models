@@ -61,6 +61,13 @@ cmp('全年CapEx公式', '輸入|全年毛 CapEx（公式）', H('capexFull'));
 cmp('成長型', '輸入|成長型 CapEx（模型期）', H('capexGrowth'));
 cmp('汰換', '輸入|GPU 汰換 CapEx', H('refresh'));
 cmp('D&A車隊', '輸入|D&A（車隊折舊）', H('daFleet'));
+if(COMPANY_DATA.capexModel&&COMPANY_DATA.capexModel.mode==='tk'){ // MAG v0.1b：AI／非 AI 資本支出與 D&A 分池
+  cmp('每MW建置成本', '輸入|每 MW 建置成本', H('costMW')); cmp('每MW IT成本', '輸入|每 MW IT 成本', H('costIT'));
+  cmp('非AI CapEx全年', '輸入|非 AI 資本支出（全年）', H('capexNonAiFull')); cmp('非AI CapEx模型期', '輸入|非 AI 資本支出（模型期）', H('capexNonAi')); cmp('AI成長型', '輸入|AI 成長型 CapEx（模型期）', H('capexAi'));
+  const A0=aiOpenQ(q, q.extShare??COMPANY_DATA.capexModel.extShare); cmp('AI期初IT', '輸入|AI 期初 IT 毛額（估計）', [A0.it]); cmp('AI期初機房', '輸入|AI 期初機房毛額（估計）', [A0.fac]); cmp('機房年限', '輸入|機房折舊年限', [A0.facLife]); cmp('非AI年限', '輸入|非 AI 折舊年限（校準）', [A0.nLife]);
+  { const g=(CALL_FACTS.capexLo+CALL_FACTS.capexHi)/2; cmp('對帳 隱含MW', `連動檢查|${PERIODS[0]} 對帳：指引隱含 AI 建置 MW`, [(g-y[0].capexNonAiFull-y[0].refresh)/(y[0].costMW*(q.capexScale??1)/1e3)]); cmp('MW公式全年', `連動檢查|${PERIODS[0]} 全年 CapEx（MW 公式）`, [y[0].capexFormulaFY]); }
+  cmp('AI IT期初', '輸入|AI IT 期初基礎', H('aiItBeg')); cmp('AI機房期初', '輸入|AI 機房期初基礎', H('aiFacBeg')); cmp('AI D&A', '輸入|AI D&A', H('daAi')); cmp('非AI期初', '輸入|非 AI 期初基礎（各期）', H('nonAiBeg')); cmp('非AI D&A', '輸入|非 AI D&A', H('daNonAi'));
+}
 // v0.2：建設延誤（計費 MW 平移、GPU 資本支出照原時程、折舊自投入使用起算、閒置資本）
 cmp('期末時點', S+'期末時點（評價日起，年）', PERIOD_T); cmp('計費MW延誤後', S+'Billable MW（延誤後，計費用）', H('billDelayed'));
 cmp('期初在役MW', S+'期初在役 MW', y.map((e,i)=>i===0?q.billableOpen:y[i-1].billDelayed));

@@ -591,7 +591,7 @@ function quarterlyView(d, p, st) { // d＝runFunding、p＝runValuation、st＝�
       R = f[P].revenue, how = (C.revenueSplit || [])[pers.indexOf(P)] || `equal`;
     ix.forEach((i, j) => {
       if (drv) endAcc[i] = a0 + (a1 - a0) * (j + 1) / k, avgBil[i] = b0 + (b1 - b0) * (2 * j + 1) / (2 * k);
-      da[i] = (y[P].ppeBeg + y[P].capexInSvc * (2 * j + 1) / (2 * k)) / st.gpuLife * L / k;
+      da[i] = COMPANY_DATA.capexModel?.mode === `tk` ? y[P].daFleet / k : (y[P].ppeBeg + y[P].capexInSvc * (2 * j + 1) / (2 * k)) / st.gpuLife * L / k; // MAG v0.1b：D&A 分池時季度＝期間 D&A 平均分配
     });
     if (how === `anchor` && C.revenueAnchor) {
       let A = C.revenueAnchor.value, g = (R - k * A) / (k * (k + 1) / 2);

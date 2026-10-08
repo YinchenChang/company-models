@@ -633,7 +633,8 @@
      "gLT": 0.06,
      "m0": 0.077788,
      "mLT": 0.062567,
-     "oa": 0.019192
+     "oa": 0.019192,
+     "cx": 0.0591
     },
     {
      "key": "intlRetail",
@@ -646,7 +647,8 @@
      "gLT": 0.06,
      "m0": 0.008649,
      "mLT": -0.009757,
-     "oa": 0.015216
+     "oa": 0.015216,
+     "cx": 0.0591
     },
     {
      "key": "ads",
@@ -659,7 +661,8 @@
      "gLT": 0.1,
      "m0": 0.5,
      "mLT": null,
-     "oa": 0.018092
+     "oa": 0.018092,
+     "cx": 0.0591
     },
     {
      "key": "subs",
@@ -672,7 +675,8 @@
      "gLT": 0.08,
      "m0": 0.1,
      "mLT": null,
-     "oa": 0.018092
+     "oa": 0.018092,
+     "cx": 0.0591
     },
     {
      "key": "awsNonAi",
@@ -689,7 +693,8 @@
      "aiMwPrevTTM": 570.0,
      "gLT": 0.08,
      "mLT": null,
-     "oa": 0.095083
+     "oa": 0.095083,
+     "cx": 0.2
     }
    ],
    "note": "各線：growth＝全年營收＝上一財年 ×(1＋年增率)，年增率自近四季對前四季年增率（g0，[Derived]）線性收斂到長期值（gLT，[Assumed]，區間 ±3 個百分點）；cloudResidual（雲端分部的非 AI 部分）＝雲端分部首期估計〔年初至今實際＋去年同期 ×(1＋近四季年增率)〕− 對外 AI 雲端模型值（年初至今以期初 MW 平均 × 首期每 MW 年收入估計），之後年增率由推估的近四季非 AI 年增率〔(雲端近四季 − AI 近四季估計) ÷ (前四季 − AI 前四季估計) − 1〕收斂到 gLT（預設 8%，5%–12%，[Assumed]）；EBITDA 率＝(雲端分部 EBITDA − AI 雲端 EBITDA 估計) ÷ 非 AI 雲端營收（[Derived]，固定）。EBITDA 率（m0→mLT 線性收斂）＝(分部營業利益＋分部 D&A × 合併 D&A ÷ 分部 D&A 合計) ÷ 營收（對照表 r1 C5，[Derived]）；m0＝近四季、mLT＝2023–2025 平均（對照表第 5 節第 5 條）。oa＝其他攤銷（影音內容、營業租賃資產等，C5 放大部分）占營收比：進損益 D&A、自營運現金扣除（視為等額現金支出）。C5 放大倍數 1.5118（近四季合併 D&A 75.200 ÷ 分部 49.741）；替代（按營收分攤）列敏感度。peer＝評價時套用的同業倍數組（valuation.segmentMultiples）。",
@@ -705,7 +710,8 @@
      0.2
     ],
     "note": "分部營業利益只揭露北美、國際、AWS；廣告與訂閱營收依營收類別揭露（不分地區），按北美／國際營收比例分攤（近四季北美 72.3%）[Assumed]；廣告 EBITDA 率 50%（40%–60%）、訂閱 10%（0%–20%）[Assumed]（無公司揭露；數位廣告同業 META、GOOGL EBITDA 率 50%–60%，訂閱影音同業 NFLX 約 30% 但 Amazon 訂閱含 Prime 物流權益），零售＝分部 EBITDA − 分攤的廣告與訂閱 EBITDA（殘差，[Derived]）；零售長期 EBITDA 率＝分部 2023–2025 平均扣同一分攤（以近四季營收加權）。廣告、訂閱 EBITDA 率五期固定。"
-   }
+   },
+   "cxNote": "cx＝非 AI 資本支出占全年營收比：零售、廣告、訂閱＝北美＋國際 PP&E 淨增加 ÷ 北美＋國際營收的 2023–2025 平均 5.91%（4.48%／5.84%／7.40%；10-K 分部資產附註 [Derived]，含分攤的技術基礎設施，可能偏高）；AWS 非 AI 雲端 20%（15%–27%，[Assumed]；上緣＝2023 年 AWS PP&E 淨增加 ÷ AWS 營收 27.4%，當年已含部分 AI）"
   },
   "cashTaxRate": 0.1736,
   "dividend": {
@@ -1410,8 +1416,8 @@
   "prepayCheck": "不適用（Amazon 無客戶預付融資）。",
   "mwFacts": "公司：2025 年新增電力 3.9 GW、2025Q4 單季 1.2 GW（口徑不明，推定設施）；2027 年底容量為 2025 年兩倍（總容量未揭露）。第三方：Epoch AI 追蹤三站 1,422 MW-IT（Trainium2，Anthropic），2028 預測 3,448 [Interested-party／第三方]。",
   "ebStartSource": "AI 雲端 EBITDA 率＝1 − Tokenomics 加權每 MW 營運成本 ÷ 每 MW 年收入",
-  "costMwNote": "Tokenomics IF_CapexIT（GB300 37.45、VR200 37.59 US$m/MW-IT）＋自建比例 80% × 機房 L1_FacCapexMW 12.67 [Derived]",
-  "ppeOpenNote": "評價日 PP&E 淨額 446.0（10-Q；含 AWS 263.8）[Interested-party]",
+  "costMwNote": "每 MW 成本＝Σ 新增世代占比 × (TK_CapexIT＋自建比例 80% × TK_CapexFacility)（Tokenomics v5.27；US$m/MW-IT）",
+  "ppeOpenNote": "評價日 PP&E 淨額 446.0（10-Q；含 AWS 263.8）[Interested-party]；D&A 分池：AI 期初毛額估計（評價日 AI 總 MW × Tokenomics 每 MW 成本）＋非 AI（其餘，壽命以最新季分部 D&A 年化校準）",
   "facilityName": "循環信用額度 20B，未動用",
   "newDebtRateNote": "瀑布新債利率取 2026-03 美元票據有效利率區間中點約 5.0% [Derived]；最長天期 2066 有效利率 6.33%",
   "concentration": {
@@ -3269,5 +3275,16 @@
   "mixNote": "期初在役（評價日）：Trainium2 55%、Hopper／GB200／GB300 各 15%（v0.1a，[Assumed]）。新增 MW：自研與 NVIDIA 各半（Trainium3 2026 年初出貨且「接近全數認購」；NVIDIA 2026 部署 >100 萬顆、2026-08 追加 200 萬顆於 2027–2028 交付）；NVIDIA 部分 2026 為 GB300、2027 GB300／VR200 各半、2028 起 VR200 [Assumed]。在役占比＝各世代累計 MW ÷ 對外 AI MW（不建模退役後的世代替換）。",
   "capWarn": 0.5,
   "capWarnNote": "上限檢查：每 MW 年收入 ÷（Σ 世代占比 × IF_RevGWFleet／1000）> 50% 時示警（工作單 v0.1b 第 2 步）"
+ },
+ "capexModel": {
+  "mode": "tk",
+  "_note": "資本支出（MAG v0.1b，對照表 r1 第 5 節第 6 條、D3）：首期＝MAX(全年 AI 成長型＋非 AI, 公司指引) − 年初至今實際（指引高於公式的差額歸 AI 成長型，保守）；之後＝新增對外 AI MW ÷ 對外比例 × 每 MW 成本（Σ 新增世代占比 × (TK_CapexIT＋自建比例 × TK_CapexFacility)）＋GPU 汰換（只換 IT；壽命 defaults.gpuLife＝TK_DeprLifeIT 6 年）＋非 AI 資本支出（各線全年營收 × legacyBiz.lines.cx）。指引為現金資本支出淨額（購置 − 出售及獎勵），不含以融資租賃取得的 PP&E（2026 上半年 2.1B，另列對照）。",
+  "extShare": 0.8,
+  "extShareNote": "對外 AI MW 占 AI 總 MW 比例 80%（70%–90%，[Assumed]；v0.1a mw.ai.extShare）：自用 AI（Alexa+、Rufus、內部模型）同樣需要資本支出，影子收入只作對照",
+  "selfBuild": 0.8,
+  "selfBuildNote": "自建機房比例 80%（第三方託管約占運算力 1/5，2024，Bloomberg 內部文件轉述 [Interested-party]）；租用部分不計機房資本支出（租金由未起租租賃承擔）",
+  "segDaRunRate": 55.476,
+  "segDaRunRateNote": "最新季（2026Q2）分部 D&A（不動產與設備）北美 4.500＋國際 1.293＋AWS 8.076＝13.869 × 4（10-Q 附註分部資訊；[Derived]）：校準非 AI 折舊年限",
+  "guideNote": "2026 指引約 220（法說二手逐字稿）；公司未給 2027 指引 → 次期起由 MW 推導（對照共識 2027 275.1、2028 292.9）"
  }
 }

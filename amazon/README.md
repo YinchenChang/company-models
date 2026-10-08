@@ -438,6 +438,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
+| `defaults.legacyBiz.cxNote` | 各線資本支出強度（cx）的依據 | 文字 | cx＝非 AI 資本支出占全年營收比：零售、廣告、訂… | 必改 |
 | `defaults.scenario` | 開啟時的預設情境（low／base／high） | 文字 | base | 檢查 |
 | `defaults.revenueDriver` | 營收驅動：mw＝平均在役 MW × 每 MW 年收入 × 利用率（新產能簽約率固定 100%，RPO 只作對照）；rpo＝CRWV 模板的 RPO 排程＋新簽約（v0.1b） | 代碼 | mw | 檢查 |
 | `defaults.lambda` | 提前支出比例：次年才上線的 MW，其建置支出落在前一年的比例 | 比例 | 0.35 | 檢查 |
@@ -456,7 +457,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.ebitdarNote` | EBITDAR 口徑的說明文字 | 文字 | 不適用（ebitdaBasis＝tk：AI 雲端 E… | 可沿用 |
 | `defaults.services` | 非算力服務營收（軟體、儲存等），各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
 | `defaults.otherEbitda` | 其他事業 EBITDA（負值＝燒錢），各期；同時進入損益 EBITDA 與營運來源（v0.1b） | US$bn 清單 | 0、0、0、0、0 | 必改 |
-| `defaults.legacyBiz.lines` | 非 AI 事業各線（N ≤ 6），一線一列：key、label、kind（growth＝上一財年 ×(1＋年增率)；cloudResidual＝雲端分部 − 對外 AI 雲端；explicit＝各期營收直接輸入 rev；未分攤公司層費用用 explicit＋rev 全 0＋ebitda 負值陣列）、peer（評價同業倍數組，valuation.segmentMultiples 的鍵）、fyBase、ytd、g0、gLT、m0／mLT（EBITDA 率起點／長期，線性收斂；mLT 空白＝固定）、oa（其他攤銷占營收）；cloudResidual 另有 priorStub、g4q、ttm、prevTTM、ebitdaTTM、aiMwTTM、aiMwPrevTTM（MAG v0.1b；Oracle v0.1b 起） | 清單（物件） | 5 筆 | 必改 |
+| `defaults.legacyBiz.lines` | 非 AI 事業各線（N ≤ 6），一線一列：key、label、kind（growth＝上一財年 ×(1＋年增率)；cloudResidual＝雲端分部 − 對外 AI 雲端；explicit＝各期營收直接輸入 rev；未分攤公司層費用用 explicit＋rev 全 0＋ebitda 負值陣列）、peer（評價同業倍數組，valuation.segmentMultiples 的鍵）、fyBase、ytd、g0、gLT、m0／mLT（EBITDA 率起點／長期，線性收斂；mLT 空白＝固定）、oa（其他攤銷占營收）、cx（非 AI 資本支出占全年營收，capexModel.mode＝tk 時使用）；cloudResidual 另有 priorStub、g4q、ttm、prevTTM、ebitdaTTM、aiMwTTM、aiMwPrevTTM（MAG v0.1b；Oracle v0.1b 起） | 清單（物件） | 5 筆 | 必改 |
 | `defaults.legacyBiz.split.adsMargin` | 廣告 EBITDA 率（分部未揭露，[Assumed]；MAG v0.1b） | 比例 | 0.5 | 檢查 |
 | `defaults.legacyBiz.split.adsMarginRange` | 廣告 EBITDA 率區間（敏感度） | 比例清單 | 0.4、0.6 | 檢查 |
 | `defaults.legacyBiz.split.subsMargin` | 訂閱 EBITDA 率（[Assumed]） | 比例 | 0.1 | 檢查 |
@@ -652,7 +653,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.prepayCheck` | 客戶預付的公司說法與推得覆蓋比（檢查頁；v0.1b） | 文字 | 不適用（Amazon 無客戶預付融資）。 | 必改 |
 | `texts.mwFacts` | 產能（MW）相關的公司揭露摘要（檢查頁；v0.1b） | 文字 | 公司：2025 年新增電力 3.9 GW、2025Q… | 必改 |
 | `texts.ebStartSource` | 起始 EBITDA 率的來源或推導方式（v0.1b） | 文字 | AI 雲端 EBITDA 率＝1 − Tokenom… | 必改 |
-| `texts.costMwNote` | 每 MW 建置成本的來源與口徑（v0.1b） | 文字 | Tokenomics IF_CapexIT（GB30… | 必改 |
+| `texts.costMwNote` | 每 MW 建置成本的來源與口徑（v0.1b） | 文字 | 每 MW 成本＝Σ 新增世代占比 × (TK_Cap… | 必改 |
 | `texts.ppeOpenNote` | 期初 PP&E 基礎的來源或校準方式（v0.1b） | 文字 | 評價日 PP&E 淨額 446.0（10-Q；含 A… | 必改 |
 | `texts.facilityName` | 未動用額度的名稱與條件（v0.1b） | 文字 | 循環信用額度 20B，未動用 | 必改 |
 | `texts.newDebtRateNote` | 瀑布新債利率的來源（v0.1b） | 文字 | 瀑布新債利率取 2026-03 美元票據有效利率區間… | 必改 |
@@ -718,6 +719,20 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `pricing.mixNote` | 世代組合的依據 | 文字 | 期初在役（評價日）：Trainium2 55%、Ho… | 必改 |
 | `pricing.capWarn` | 上限檢查門檻：每 MW 年收入 ÷ 參考付費營收（IF_RevGWFleet） | 比例 | 0.5 | 可沿用 |
 | `pricing.capWarnNote` | 上限檢查的說明 | 文字 | 上限檢查：每 MW 年收入 ÷（Σ 世代占比 × I… | 可沿用 |
+
+### `capexModel`：資本支出與 D&A 分池（MAG v0.1b）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `capexModel.mode` | 資本支出模式：tk＝AI MW × Tokenomics 每 MW 成本＋汰換（只換 IT）＋非 AI（各線營收 × cx），D&A 分 AI／非 AI 兩池；未設＝模板（scenarios.capexTemplate.costMW） | 文字 | tk | 可沿用 |
+| `capexModel._note` | 資本支出口徑說明 | 文字 | 資本支出（MAG v0.1b，對照表 r1 第 5 … | 必改 |
+| `capexModel.extShare` | 對外 AI MW 占 AI 總 MW 比例（新增 AI 總 MW＝新增對外 ÷ 此值） | 比例 | 0.8 | 檢查 |
+| `capexModel.extShareNote` | 對外比例的依據 | 文字 | 對外 AI MW 占 AI 總 MW 比例 80%（… | 必改 |
+| `capexModel.selfBuild` | 自建機房比例（機房資本支出＝此比例 × TK_CapexFacility） | 比例 | 0.8 | 檢查 |
+| `capexModel.selfBuildNote` | 自建比例的依據 | 文字 | 自建機房比例 80%（第三方託管約占運算力 1/5，… | 必改 |
+| `capexModel.segDaRunRate` | 最新季分部 D&A 年化（校準非 AI 折舊年限） | US$bn | 55.476 | 必改 |
+| `capexModel.segDaRunRateNote` | 分部 D&A 年化的來源 | 文字 | 最新季（2026Q2）分部 D&A（不動產與設備）北… | 必改 |
+| `capexModel.guideNote` | 資本支出指引期數與對照 | 文字 | 2026 指引約 220（法說二手逐字稿）；公司未給… | 必改 |
 
 ### `mag`：MAG（Amazon）資料草稿（v0.1a；引擎尚未讀取，v0.1b 依 mapTo 搬入）
 

@@ -403,7 +403,7 @@ if PRC:
 # v0.1b（Oracle）：B2｜非 AI 事業（company.json → defaults.legacyBiz；與 HTML segA legacyQ 同一算法）；MAG v0.1b：N 線（kind）、各線 EBITDA 率與其他攤銷
 LGB = D.get('legacyBiz') or {'lines': []}
 r = section(ws, r, "B2｜非 AI 事業（N 線：growth＝上一財年 ×(1＋年增率)；cloudResidual＝雲端分部 − 對外 AI 雲端；explicit＝直接輸入；«P0» 模型期＝全年 − «YTD» 實際）", level=2)
-_LGM, _LGC, _LGE, _LGO = [], [], [], []  # 各線模型期營收、首期核對、EBITDA、其他攤銷列
+_LGM, _LGC, _LGE, _LGO, _LGX = [], [], [], [], []  # 各線模型期營收、首期核對、EBITDA、其他攤銷列、(全年營收列, 資本支出強度格)
 LGL = {}  # 各線列號（評價分部加總用）
 _TKB = D.get('ebitdaBasis') == 'tk'
 if any(x.get('kind') == 'cloudResidual' for x in LGB['lines']):
@@ -443,6 +443,7 @@ for _x in LGB['lines']:
         _gl = gi(r, _p + "長期年增率", "%", _x['gLT'], "長期值 [Assumed]（區間見 company.json → defaults.legacyBiz.note）", PCT); r += 1
     _ml = gi(r, _p + "長期 EBITDA 率", "%", (f"={_m0}" if _x.get('mLT') is None else _x['mLT']), ("＝起始（固定）" if _x.get('mLT') is None else "2023–2025 平均 [Derived]"), PCT, font=BLACK if _x.get('mLT') is None else None); r += 1
     _oa = gi(r, _p + "其他攤銷占營收", "%", _x.get('oa', 0), "影音內容、營業租賃資產等攤銷（C5 放大部分）÷ 營收：進損益 D&A、自營運現金扣除 [Derived]", PCT); r += 1
+    _cxr = gi(r, _p + "資本支出強度（占全年營收）", "%", _x.get('cx', 0), "非 AI 資本支出＝全年營收 × 此比例（company.json → legacyBiz.lines.cx；說明見 legacyBiz.cxNote）", PCT); r += 1
     if _k == 'explicit':
         _ar = r; r = prow(r, _p + "全年營收", "US$bn", [f"=C{_er}+{_yt}"] + [f"={COLS[i]}{_er}" for i in range(1, 5)], NUM, "«P0»＝模型期＋«YTD»", BLACK)
         _mr = _er
@@ -464,7 +465,7 @@ for _x in LGB['lines']:
         r = prow(r, _p + "EBITDA", "US$bn", [f"={COLS[i]}{_mr}*{COLS[i]}{_mmr}" for i in range(5)], NUM, "＝模型期營收 × EBITDA 率", BLACK)
     _oor = r
     r = prow(r, _p + "其他攤銷", "US$bn", [f"={COLS[i]}{_mr}*{_oa}" for i in range(5)], NUM, "＝模型期營收 × 其他攤銷占營收", BLACK)
-    _LGM.append(_mr); _LGE.append(_eer); _LGO.append(_oor); _LGC.append(f"{_yt}+C{_mr}-C{_ar}")
+    _LGM.append(_mr); _LGE.append(_eer); _LGO.append(_oor); _LGC.append(f"{_yt}+C{_mr}-C{_ar}"); _LGX.append((_ar, _cxr))
     LGL[_x['key']] = {'rev': _mr, 'ebitda': _eer, 'peer': _x.get('peer'), 'label': _nm, 'kind': _k, 'g0': _g0 if _k != 'explicit' else None, 'g4': _g4 if _k == 'cloudResidual' else None}
 _sumr = lambda rows, i: ("=" + "+".join(f"{COLS[i]}{m}" for m in rows)) if rows else "=0"
 r = prow(r, "非 AI 事業營收（模型期）", "US$bn", [_sumr(_LGM, i) for i in range(5)], NUM, "各線合計（下游引用此列）", BLACK)
@@ -507,13 +508,23 @@ MW31 = gi(r, f"{CAL['nextFYLabel']} 新增 MW（{PERIODS[4]} 預建用）", "MW"
           f"=CHOOSE({SEL},I{sc_rows['保守']},I{sc_rows['基準']},I{sc_rows['積極']})",
           "隨情境：保守 0／基準 500／積極 1,000 [Assumed]", NUM0); r += 1
 FLOOR = gi(r, "«P0» CapEx 下限（已承諾）", "US$bn", D['capexFloorFY0'], f"全年指引下緣（{TXQ['capexGuideSource']}）：當年支出多已下單"); r += 1
-LIFE = gi(r, "GPU 經濟壽命（年）", "年", D['gpuLife'], "公司伺服器與網通設備耐用年限 6 年（10-K）；Tokenomics 6 年 [Interested-party]", NUM0); r += 1
+LIFE = gi(r, "GPU 經濟壽命（年）", "年", D['gpuLife'], "公司伺服器與網通設備耐用年限 6 年（10-K）；Tokenomics IF_DeprLifeIT 6 年 [Interested-party]", NUM0); r += 1
+CXM = CO.get('capexModel') if (CO.get('capexModel') or {}).get('mode') == 'tk' and PRC else None  # MAG v0.1b：資本支出由 Tokenomics 每 MW 成本推導（AI／非 AI 分池）
+if CXM:
+    EXTS = gi(r, "對外 AI MW 占 AI 總 MW 比例", "%", CXM['extShare'], CXM['extShareNote'], PCT); r += 1
+    SELFB = gi(r, "自建機房比例", "%", CXM['selfBuild'], CXM['selfBuildNote'], PCT); r += 1
+    SEGDA = gi(r, "分部 D&A 年化（最新季 × 4）", "US$bn", CXM['segDaRunRate'], CXM['segDaRunRateNote']); r += 1
 for _y in sorted(int(y) for y in D['mwYearEnd'] if int(y) != MW_Y0):
     MWY[_y] = gi(r, f"{_y} 年底主動電力", "MW", D['mwYearEnd'][str(_y)], CO['texts']['mwYearEndNotes'][str(_y)], NUM0); r += 1
 PPE0 = gi(r, "«VMD» 期初 PP&E 基礎", "US$bn", D['ppeOpen'], TXQ['ppeOpenNote']); r += 1
 CAPSC = gi(r, "每 MW 建置成本倍數（整體）", "%", D['capexScale'], "同時影響 CapEx、汰換與車隊折舊；反向 DCF 用；預設 100%", PCT); r += 1
 r = phdr(r)
 r = prow(r, "每 MW 建置成本", "US$m/MW", CO['scenarios']['capexTemplate']['costMW'], NUM1, TXQ['costMwNote'])
+if CXM:  # MAG v0.1b：Σ 新增世代占比 × (TK_CapexIT＋自建比例 × TK_CapexFacility)；IT 部分另列（汰換只換 IT）
+    _ADD = lambda ch, i: f"{COLS[i]}{IN[f'世代｜{ch["label"]}｜新增 MW 占比']}"
+    for i in range(5):
+        c = ws.cell(row=IN["每 MW 建置成本"], column=3 + i, value="=" + "+".join(f"{_ADD(ch, i)}*(TK_CapexIT_{ch['tk']}+{SELFB}*TK_CapexFacility_{ch['tk']})" for ch in PRC['chips'])); c.font = BLACK
+    r = prow(r, "每 MW IT 成本", "US$m/MW", ["=" + "+".join(f"{_ADD(ch, i)}*TK_CapexIT_{ch['tk']}" for ch in PRC['chips']) for i in range(5)], NUM1, "＝Σ 新增世代占比 × TK_CapexIT（GPU 汰換只換 IT）", BLACK)
 PPD = D['prepay']  # v0.1b：預付款區塊輸入
 PP_SH = gi(r, "有預付的合約比例", "%", PPD['shareOfDeals'], "覆蓋比已是整體口徑時為 100%（company.json → defaults.prepay）", PCT); r += 1
 PP_CV = gi(r, "預付占相關資本支出比", "%", PPD['capexCover'], CO['texts']['prepayCoverNote'], PCT); r += 1
@@ -546,11 +557,20 @@ r = prow(r, "期初主動電力", "MW", [f"={MW_YE25}"] + [f"={COLS[i-1]}{accr}"
 r = prow(r, "本期新增 MW", "MW", [f"={COLS[i]}{accr}-{COLS[i]}{r-1}" for i in range(5)], NUM0, None, BLACK)
 r = prow(r, "次期新增 MW", "MW", [f"={COLS[i+1]}{accr}-{COLS[i]}{accr}" for i in range(4)] + [f"={MW31}"], NUM0, None, BLACK)
 r = prow(r, "全年毛 CapEx（公式）", "US$bn",
-         [f"=({COLS[i]}{r-2}*(1-{LAMBDA})+{COLS[i]}{r-1}*{LAMBDA})*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000" for i in range(5)],
-         NUM, "＝(本期新增×(1−λ)＋次期新增×λ)×每 MW 成本", BLACK)
-r = prow(r, "成長型 CapEx（模型期）", "US$bn",
-         [f"=MAX({COLS[0]}{r-1},{FLOOR})-§H_CAPEX§"] + [f"={COLS[i]}{r-1}" for i in range(1, 5)], NUM,
-         f"«P0»＝MAX(全年公式, 下限) − «YTD» 已認列 {YA['capex']}", BLACK)
+         [f"=({COLS[i]}{r-2}*(1-{LAMBDA})+{COLS[i]}{r-1}*{LAMBDA})" + (f"/{EXTS}" if CXM else "") + f"*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000" for i in range(5)],
+         NUM, "＝(本期新增×(1−λ)＋次期新增×λ)" + ("÷ 對外比例（AI 總 MW）" if CXM else "") + "×每 MW 成本" + ("（AI 成長型，全年）" if CXM else ""), BLACK)
+if CXM:  # MAG v0.1b：非 AI 資本支出＝Σ 各線全年營收 × 資本支出強度；首期模型部分＝全年 × 模型期月數 ÷ 12
+    r = prow(r, "非 AI 資本支出（全年）", "US$bn", [("=" + "+".join(f"{COLS[i]}{a}*{c}" for a, c in _LGX)) if _LGX else "=0" for i in range(5)], NUM, "＝Σ 非 AI 事業各線全年營收 × 資本支出強度", BLACK)
+    r = prow(r, "非 AI 資本支出（模型期）", "US$bn", [f"=C{r-1}*{_n(CAL['stubMonths'] / 12)}"] + [f"={COLS[i]}{r-1}" for i in range(1, 5)], NUM, "«P0»＝全年 × 模型期月數 ÷ 12", BLACK)
+    r = prow(r, "成長型 CapEx（模型期）", "US$bn",
+             [f"=MAX(C{IN['全年毛 CapEx（公式）']}+C{IN['非 AI 資本支出（全年）']},{FLOOR})-§H_CAPEX§"] + [f"={COLS[i]}{IN['全年毛 CapEx（公式）']}+{COLS[i]}{IN['非 AI 資本支出（模型期）']}" for i in range(1, 5)], NUM,
+             f"«P0»＝MAX(全年 AI 成長型＋非 AI, 指引下限) − «YTD» 已認列 {YA['capex']}；之後＝AI 成長型＋非 AI", BLACK)
+    r = prow(r, "AI 成長型 CapEx（模型期）", "US$bn", [f"={COLS[i]}{IN['成長型 CapEx（模型期）']}-{COLS[i]}{IN['非 AI 資本支出（模型期）']}" for i in range(5)], NUM,
+             "＝成長型 − 非 AI（指引高於公式的差額歸 AI，保守）", BLACK)
+else:
+    r = prow(r, "成長型 CapEx（模型期）", "US$bn",
+             [f"=MAX({COLS[0]}{r-1},{FLOOR})-§H_CAPEX§"] + [f"={COLS[i]}{r-1}" for i in range(1, 5)], NUM,
+             f"«P0»＝MAX(全年公式, 下限) − «YTD» 已認列 {YA['capex']}", BLACK)
 def _vintage(i):
     ys, x = sorted(MWY), "0"
     for y in reversed(ys):
@@ -558,11 +578,10 @@ def _vintage(i):
     return x
 if D.get('refreshSteady'):  # v0.1c（Oracle）：觸頂後及終值年改為穩態汰換
     r = prow(r, "批次汰換 CapEx", "US$bn",
-             [f"={_vintage(i)}"
-              f"*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000" for i in range(5)], NUM,
+             [f"={_vintage(i)}" + (f"/{EXTS}*{COLS[i]}{IN['每 MW IT 成本']}" if CXM else f"*{COLS[i]}{IN['每 MW 建置成本']}") + f"*{CAPSC}/1000" for i in range(5)], NUM,
              "＝(本年 − 壽命) 那年新增的 MW × 每 MW 成本；取代已折舊完的設備（批次落在模型期之後則為 0）", BLACK)
     r = prow(r, "穩態汰換 CapEx", "US$bn",
-             [f"=({COLS[i]}{IN['期初主動電力']}+{COLS[i]}{accr})/2*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000/{LIFE}*{COLS[i]}{IN['模型期長度（年）']}" for i in range(5)], NUM,
+             [f"=({COLS[i]}{IN['期初主動電力']}+{COLS[i]}{accr})/2" + (f"/{EXTS}*{COLS[i]}{IN['每 MW IT 成本']}" if CXM else f"*{COLS[i]}{IN['每 MW 建置成本']}") + f"*{CAPSC}/1000/{LIFE}*{COLS[i]}{IN['模型期長度（年）']}" for i in range(5)], NUM,
              "＝期間平均已連網 MW × 每 MW GPU 資本支出（只含 IT；建築與電力屬租賃不計）÷ GPU 經濟壽命 × 期間長度", BLACK)
     r = prow(r, "穩態汰換旗標（1＝已連網 MW 不再增加或終值年）", "",
              [f"=IF({COLS[i]}{IN['本期新增 MW']}<=0,1,0)" for i in range(4)] + ["=1"], NUM0,
@@ -578,12 +597,33 @@ else:
 r = prow(r, "期初毛 PP&E", "US$bn", [f"={PPE0}"] + ["=0"] * 4, NUM, "之後＝前期期初＋前期成長型 CapEx（汰換不增加基礎）", BLACK)
 for i in range(1, 5):
     ws.cell(row=IN["期初毛 PP&E"], column=3 + i, value=f"={COLS[i-1]}{IN['期初毛 PP&E']}+§INSVC{COLS[i-1]}§")  # v0.2：前期投入使用的成長型 CapEx（延誤 0＝前期成長型）
+if CXM:  # MAG v0.1b：D&A 分池（HTML segA aiOpenQ／DAI／DAN 同式）
+    r = section(ws, r, "D&A 分池（AI：IT 依 GPU 壽命、機房依機房壽命；非 AI：期初＝PP&E − AI 估計，壽命以分部 D&A 校準；汰換不增加基礎）", level=2)
+    _W = lambda nm: "+".join(f"{ch['mixOpen']}*TK_{nm}_{ch['tk']}" for ch in PRC['chips'])
+    AIMW0 = gi(r, "評價日 AI 總 MW（對外 ÷ 對外比例）", "MW", f"={MW0}/{EXTS}", "＝評價日在役對外 AI MW ÷ 對外比例 [Derived]", NUM0, font=BLACK); r += 1
+    AIIT0 = gi(r, "AI 期初 IT 毛額（估計）", "US$bn", f"={AIMW0}*({_W('CapexIT')})/1000", "＝AI 總 MW × Σ 期初世代占比 × TK_CapexIT [Derived]", font=BLACK); r += 1
+    AIFC0 = gi(r, "AI 期初機房毛額（估計）", "US$bn", f"={AIMW0}*{SELFB}*({_W('CapexFacility')})/1000", "＝AI 總 MW × 自建比例 × Σ 期初世代占比 × TK_CapexFacility [Derived]", font=BLACK); r += 1
+    FACL = gi(r, "機房折舊年限", "年", f"=({_W('CapexFacility')})/({_W('DeprFac')})", "＝TK_CapexFacility ÷ TK_DeprFac（Tokenomics；土地不折舊）", NUM1, font=BLACK); r += 1
+    AIDA0 = gi(r, "AI 期初 D&A（年化）", "US$bn", f"={AIIT0}/{LIFE}+{AIFC0}/{FACL}", "＝IT 毛額 ÷ GPU 壽命＋機房毛額 ÷ 機房年限", font=BLACK); r += 1
+    NAP0 = gi(r, "非 AI 期初基礎", "US$bn", f"={PPE0}-{AIIT0}-{AIFC0}", "＝評價日 PP&E 淨額 − AI 期初估計 [Derived]", font=BLACK); r += 1
+    NAL = gi(r, "非 AI 折舊年限（校準）", "年", f"={NAP0}/MAX(1E-9,{SEGDA}-{AIDA0})", "＝非 AI 期初基礎 ÷ (分部 D&A 年化 − AI 期初 D&A)，使首期非 AI D&A 等於最新季年化 [Derived]", NUM1, font=BLACK); r += 1
+    r = phdr(r)
+    _AIS = lambda i: f"(§INSVC{COLS[i]}§-{COLS[i]}{IN['非 AI 資本支出（模型期）']})"  # 本期投入使用的 AI 成長型（延誤 0＝AI 成長型）
+    _ITS = lambda i: f"{COLS[i]}{IN['每 MW IT 成本']}/{COLS[i]}{IN['每 MW 建置成本']}"
+    r = prow(r, "AI IT 期初基礎", "US$bn", [f"={AIIT0}"] + [f"={COLS[i-1]}{r}+{_AIS(i-1)}*{_ITS(i-1)}" for i in range(1, 5)], NUM, "＝前期＋前期投入使用的 AI 成長型 × IT 占比", BLACK)
+    r = prow(r, "AI 機房期初基礎", "US$bn", [f"={AIFC0}"] + [f"={COLS[i-1]}{r}+{_AIS(i-1)}*(1-{_ITS(i-1)})" for i in range(1, 5)], NUM, "＝前期＋前期投入使用的 AI 成長型 × 機房占比", BLACK)
+    r = prow(r, "AI D&A", "US$bn", [f"=(({COLS[i]}{IN['AI IT 期初基礎']}+0.5*{_AIS(i)}*{_ITS(i)})/{LIFE}+({COLS[i]}{IN['AI 機房期初基礎']}+0.5*{_AIS(i)}*(1-{_ITS(i)}))/{FACL})*{COLS[i]}{IN['模型期長度（年）']}" for i in range(5)], NUM,
+             "＝[(IT 期初＋本期 IT × ½) ÷ GPU 壽命＋(機房期初＋本期機房 × ½) ÷ 機房年限] × 期間長度", BLACK)
+    r = prow(r, "非 AI 期初基礎（各期）", "US$bn", [f"={NAP0}"] + [f"={COLS[i-1]}{r}+{COLS[i-1]}{IN['非 AI 資本支出（模型期）']}" for i in range(1, 5)], NUM, "＝前期＋前期非 AI 資本支出", BLACK)
+    r = prow(r, "非 AI D&A", "US$bn", [f"=({COLS[i]}{IN['非 AI 期初基礎（各期）']}+0.5*{COLS[i]}{IN['非 AI 資本支出（模型期）']})/{NAL}*{COLS[i]}{IN['模型期長度（年）']}" for i in range(5)], NUM,
+             "＝(期初＋本期 × ½) ÷ 非 AI 折舊年限 × 期間長度", BLACK)
 r = section(ws, r, "CapEx 與折舊（結果；下游引用）", level=2)
 r = prow(r, "毛 CapEx（模型期，下游引用此列）", "US$bn",
          [f"={COLS[i]}{IN['成長型 CapEx（模型期）']}+{COLS[i]}{IN['GPU 汰換 CapEx']}" for i in range(5)], NUM, "＝成長型＋汰換", BLACK, key="毛 CapEx")
 r = prow(r, "D&A（車隊折舊）", "US$bn",
-         [f"=({COLS[i]}{IN['期初毛 PP&E']}+0.5*§INSVC{COLS[i]}§)/{LIFE}*{COLS[i]}{IN['模型期長度（年）']}" for i in range(5)],  # v0.2：本期投入使用的成長型 CapEx
-         NUM, "＝(期初毛 PP&E＋本期成長型×½)÷壽命×期間長度", BLACK, key="D&A（車隊）")
+         ([f"={COLS[i]}{IN['AI D&A']}+{COLS[i]}{IN['非 AI D&A']}" for i in range(5)] if CXM else
+          [f"=({COLS[i]}{IN['期初毛 PP&E']}+0.5*§INSVC{COLS[i]}§)/{LIFE}*{COLS[i]}{IN['模型期長度（年）']}" for i in range(5)]),  # v0.2：本期投入使用的成長型 CapEx
+         NUM, ("＝AI D&A＋非 AI D&A（D&A 分池；不含其他攤銷）" if CXM else "＝(期初毛 PP&E＋本期成長型×½)÷壽命×期間長度"), BLACK, key="D&A（車隊）")
 for k in ("毛 CapEx", "D&A（車隊）"):
     for i in range(5):
         ws.cell(row=IN[k], column=3 + i).font = Font(name="Arial", size=10, bold=True)
@@ -992,7 +1032,7 @@ crow("延誤罰則（營業費用）", "US$bn", lambda i: f"={PEN}*{COLS[i]}{CR[
      "＝罰則比例 × 應計費而未計費營收；扣 EBITDA、營運來源、稅基與債務上限。客戶預付不因延誤退還（已知限制）")
 PEN_ROW = CR["延誤罰則（營業費用）"]
 _wsi = wb["輸入與假設"]
-for _nm in ("期初毛 PP&E", "D&A（車隊）"):
+for _nm in ("期初毛 PP&E", "D&A（車隊）") + (("AI IT 期初基礎", "AI 機房期初基礎", "AI D&A") if CXM else ()):  # MAG v0.1b：D&A 分池同樣引用本期投入使用的成長型
     for _i in range(5):
         _c = _wsi.cell(row=IN[_nm], column=3 + _i)
         for _k in COLS:
@@ -2506,7 +2546,11 @@ checks = [
     ("公司 AI run-rate 驗證（模型評價日年化）", f"={MW0}*{AIREV0}", f"≥{_n(CFq['aiRunRate'])}（公司說法）",
      "=IF(B{r}>=" + _n(CFq['aiRunRate']) + ",\"通過\",\"觀察\")", NUM,
      f'="要對上公司說法：對外 MW 需 "&TEXT({_n(CFq["aiRunRate"])}/{AIREV0},"#,##0")&"（k 不變），或 k 需 "&TEXT({KSEL}*{_n(CFq["aiRunRate"])}/({MW0}*{AIREV0}),"0.000")&"（MW 不變）；只作驗證（對照表 r1 C3）"'),
-] if CFq.get('aiRunRate') is not None and 'AIREV0' in globals() else []) + [
+] if CFq.get('aiRunRate') is not None and 'AIREV0' in globals() else []) + ([  # MAG v0.1b：對帳列（指引 ÷ 每 MW 全成本＝隱含 AI 建置 MW vs MW 路徑）
+    (f"{PERIODS[0]} 對帳：指引隱含 AI 建置 MW", f"=(({_CXLO}+{_CXHI})/2-'輸入與假設'!C{IN['非 AI 資本支出（全年）']}-'輸入與假設'!C{IN['GPU 汰換 CapEx']})/('輸入與假設'!C{IN['每 MW 建置成本']}*{CAPSC}/1000)",
+     "MW 路徑 ±20%", f"=IF(ABS(B{{r}}/(('輸入與假設'!C{IN['本期新增 MW']}*(1-{LAMBDA})+'輸入與假設'!C{IN['次期新增 MW']}*{LAMBDA})/{EXTS})-1)<=0.2,\"通過\",\"觀察\")", NUM0,
+     f'="MW 路徑（AI 總 MW 當量）"&TEXT((\'輸入與假設\'!C{IN["本期新增 MW"]}*(1-{LAMBDA})+\'輸入與假設\'!C{IN["次期新增 MW"]}*{LAMBDA})/{EXTS},"#,##0")&"；落差＝指引含 MW 路徑以外的支出或路徑偏低（首期以指引為準）"'),
+] if CXM and CFq.get('capexLo') is not None else []) + [
     ("CapEx 強度（模型期合計）", None, f"${_n(CK['capexPerMwBand'][0])}–{_n(CK['capexPerMwBand'][1])}m/MW",
      "=IF(AND(B{r}>=" + _n(CK['capexPerMwBand'][0]) + ",B{r}<=" + _n(CK['capexPerMwBand'][1]) + "),\"通過\",\"觀察\")", NUM0,
      "Tokenomics IF_CapexTotal 低／高成本情境（GB300 38.8–67.1 US$m/MW-IT）"),
@@ -2572,7 +2616,7 @@ def _find(label):
 _r = _find(f"債務明細合計 = 季報本金 {_n(LQ_DEBT)} − 以股換債 ＋ 期後新發")
 ws.cell(row=_r, column=2, value=f"='資產負債_既有債務'!E{tot_r}+SUMPRODUCT({CV_M}*(1-{CV_MAND}))").number_format = NUM
 _r = _find(f"{PERIODS[0]} 全年 CapEx（MW 公式）")
-ws.cell(row=_r, column=2, value=f"='輸入與假設'!C{IN['全年毛 CapEx（公式）']}").number_format = NUM
+ws.cell(row=_r, column=2, value=f"='輸入與假設'!C{IN['全年毛 CapEx（公式）']}" + (f"+'輸入與假設'!C{IN['非 AI 資本支出（全年）']}" if CXM else "")).number_format = NUM  # MAG v0.1b：AI 成長型＋非 AI
 _r = _find(f"JV 已承諾餘額於 {_YR0} 年內履行")
 ws.cell(row=_r, column=2, value=f"=SUM('輸入與假設'!C{IN['JV 已承諾餘額出資']}:G{IN['JV 已承諾餘額出資']})").number_format = NUM
 _r = _find("模型每 MW 年租金（«PL»）")
@@ -3035,8 +3079,11 @@ if QC:
     else:
         qrow("EBITDA 率（模型）", "%", lambda j, c: f"={'CDEFGH'[PERS.index(POS_[j][0])]}{_E}/{'CDEFGH'[PERS.index(POS_[j][0])]}{_S}", PCT, "期內常數")
     qrow("調整後 EBITDA（模型）", "US$bn", lambda j, c: f"={c}{_RV_}*{c}{QT['EBITDA 率（模型）']}", NUM)
-    qrow("車隊折舊（模型）", "US$bn", lambda j, c: (f"=({IA('期初毛 PP&E', POS_[j][0])}+'運營_產能與收入'!{COLS[POS_[j][0]]}${CAP['insvc']}*{2 * POS_[j][1] + 1}/{2 * POS_[j][2]})"
-                                                  f"/{LIFE}*{IA('模型期長度（年）', POS_[j][0])}/{POS_[j][2]}"), NUM, "依期內平均 PP&E（與年度車隊折舊公式相同）")
+    if CXM:  # MAG v0.1b：D&A 分池時季度＝期間 D&A 平均分配
+        qrow("車隊折舊（模型）", "US$bn", lambda j, c: f"={IA('D&A（車隊）', POS_[j][0])}/{POS_[j][2]}", NUM, "＝期間 D&A（AI＋非 AI 分池）÷ 期內季數")
+    else:
+        qrow("車隊折舊（模型）", "US$bn", lambda j, c: (f"=({IA('期初毛 PP&E', POS_[j][0])}+'運營_產能與收入'!{COLS[POS_[j][0]]}${CAP['insvc']}*{2 * POS_[j][1] + 1}/{2 * POS_[j][2]})"
+                                                      f"/{LIFE}*{IA('模型期長度（年）', POS_[j][0])}/{POS_[j][2]}"), NUM, "依期內平均 PP&E（與年度車隊折舊公式相同）")
     qrow("其他攤銷（模型）", "US$bn", lambda j, c: f"={IA('非 AI 事業其他攤銷（模型期）', POS_[j][0])}*{c}{_RV_}/MAX(1E-9,{'CDEFGH'[PERS.index(POS_[j][0])]}{_S})", NUM, "＝期間非 AI 事業其他攤銷 × 季營收占比（MAG v0.1b）")
     qrow("調整後營業利益（模型）", "US$bn", lambda j, c: f"={c}{QT['調整後 EBITDA（模型）']}-{c}{QT['車隊折舊（模型）']}-{c}{QT['其他攤銷（模型）']}", NUM, "＝調整後 EBITDA − 車隊折舊 − 其他攤銷（未扣 SBC）")
     # 指引（J 區；數字區間與文字）——CapEx 指引錨定需先有指引列
