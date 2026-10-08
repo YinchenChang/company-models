@@ -175,7 +175,7 @@ Azure 牌價為公開 List（Azure Retail Prices API），大客戶以 EA／MACC
 7. `meta.consensusFile` 改指 `data/consensus_msft_20261008.json` 後刪除 `consensus_orcl_20261007.json`、`consensus_crwv_20260925.json`（後者也是 oracle 副本留下）；`oracle` 區段與 `oracle.files` 指向已刪檔，v0.1b′ 換成 MAG 引擎時一併移除。
 8. OpenAI 營收分成至 2030、上限約 38（二手）：只列對照；OpenAI 模型（v0.6，未合併）Azure 路徑 2030 約 5.95 GW ≈ 71／年，可與「從 OpenAI 收到的雲端收入」並排。
 
-## 11. verify.sh（2026-10-08，引擎未動；另  通過：41 名、missing 3）
+## 11. verify.sh（2026-10-08，引擎未動；另 `tools/tokenomics/import_tokenomics.py --check` 通過：41 名、missing 3）
 
 ```
 PASS  check_quarterly：季度加總＝年度、差異原因齊全
