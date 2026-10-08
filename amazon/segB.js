@@ -65,7 +65,7 @@ function forwardPL(e, t) {
       v = e.years[c].daFleet + lgO,
       vF = e.years[c].daFleet,
       y = e.years[c].cashCapex,
-      b = t.wcPctOfRevGrowth * Math.max(0, d - r),
+      b = c === 0 && e.years[0].wcStub != null ? -e.years[0].wcStub : t.wcPctOfRevGrowth * Math.max(0, d - r), // MAG v0.1b r2（C14）：首期＝上一年度同期實際（defaults.wcStub，流入為正）；之後年度沿用營收增量比例
       tb2 = Math.max(0, p - Math.min(N2, p * NOL_USE)),
       x = p - tb2 * t.tax + vF - y - b - (e.years[c].prepayRecog || 0), // v0.1b：預付認列為非現金營收，自 UFCF 扣除（預付流入已在現金 CapEx 抵減）
       S = e.years[c].revenue,

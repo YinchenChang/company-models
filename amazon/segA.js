@@ -473,7 +473,8 @@ function runFunding(e) {
         dvC = e.dividend ? 4 * e.dividend.perShareQ * L * dvSh : 0, // 普通股股利＝每股（每季 × 4）× 期間長度 × 期初股數
         dvP = e.dividend ? e.dividend.preferred[r] : 0, // 特別股股利（強制轉換前；company.json → defaults.dividend.preferred）
         sbcC = (e.sbcRate ?? 0) * (totRev + lgR), // MAG v0.1b：股權報酬（非現金）加回營運現金＝SBC 占營收 × 模型期總營收
-        A = g + nC + svcCash + ob + lgE - lgO - pen + v - pr + sbcC, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
+        wcS = r === 0 ? e.wcStub ?? 0 : 0, // MAG v0.1b r2（C14）：首期剩餘季度營運資金變動＝上一年度同期實際（流入為正；company.json → defaults.wcStub）
+        A = g + nC + svcCash + ob + lgE - lgO - pen + v - pr + sbcC + wcS, // v0.1b：預付認列的營收已在預付時收現，自營運來源扣除（不重複計入）
         j0 = _ + S + IX[r] + e.jvCommit[r] + e.a.div[r] + T + O + tx + dvC + dvP,
         wRL = uA(e, r) / 100 * L,
         wRJ = (e.junkRate + (e.cdsLink ? Math.max(0, e.cds - e.cdsBaseBp) / 1e4 * e.cdsPassThrough : 0)) * L,
@@ -613,7 +614,7 @@ function runFunding(e) {
         leaseLiabOn: LLON[r], leaseLiabUl: LLUL[r], leaseLiab: LLON[r] + LLUL[r], ebitdarAnn: (totRev * ebM + ob + lgE - pen + S) / L, // v0.2：租賃負債與 EBITDAR（年化）
         adjLev: (wEx + WF.Dn + WF.Cn + WF.Jn + LLON[r] + LLUL[r]) / Math.max((totRev * ebM + ob + lgE - pen + S) / L, .01), // v0.2：調整後槓桿（期末）
         otherEbitda: ob,
-        rentedCompute: RENTC[r], sbcCash: sbcC, onBalLeaseAll: b0, offLeaseAll: x0, // MAG v0.1b
+        rentedCompute: RENTC[r], sbcCash: sbcC, wcStub: r === 0 ? e.wcStub ?? null : null, onBalLeaseAll: b0, offLeaseAll: x0, // MAG v0.1b
         cashEbitda: g + nC + svcCash + ob + lgE - lgO - pen - S,
         creditAdj: (m + nR * (t.defaultP[r] / 100) * p) * cm,
         atm: k,

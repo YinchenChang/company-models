@@ -178,7 +178,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、leases.uncommenced、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles、defaults.otherEbitda[0]、valuation.holdings、valuation.debtLike、defaults.legacyBiz、defaults.dividend.preferred[0]） | 必改 |
+| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、defaults.wcStub、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、leases.uncommenced、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles、defaults.otherEbitda[0]、valuation.holdings、valuation.debtLike、defaults.legacyBiz、defaults.dividend.preferred[0]） | 必改 |
 
 ### `ytdActual`：年初至今實際數（10-Q；v4.5 前為 actual1H）
 
@@ -463,6 +463,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.buyback.note` | 回購基準的來源 | 文字 | 回購基準＝近四季實際年額（Amazon 2023 年… | 必改 |
 | `defaults.sbcRate` | 股權報酬（SBC）占營收：非現金費用，營運現金加回（MAG v0.1b） | 比例 | 0.024899 | 檢查 |
 | `defaults.sbcNote` | SBC 加回的口徑說明 | 文字 | 股權報酬（SBC）為非現金費用：分部營業利益已扣除，… | 必改 |
+| `defaults.wcStub` | 首期剩餘季度營運資金變動（US$bn，流入為正）＝上一年度同期實際（10-Q／10-K 現金流量表「營運資產與負債變動」合計：上一財年全年 − 上一財年同期年初至今）；資金模型加入首期營運來源、DCF 首期營運資金變動＝−此值；null＝沿用營收增量比例（MAG v0.1b r2 C14）；每季滾動更新 | US$bn | 1.947 | 檢查 |
+| `defaults.wcStubNote` | 首期營運資金的來源與算式 | 文字 | 首期剩餘季度（2026 下半年）營運資金變動＝上一年… | 必改 |
 | `defaults.scenario` | 開啟時的預設情境（low／base／high） | 文字 | base | 檢查 |
 | `defaults.revenueDriver` | 營收驅動：mw＝平均在役 MW × 每 MW 年收入 × 利用率（新產能簽約率固定 100%，RPO 只作對照）；rpo＝CRWV 模板的 RPO 排程＋新簽約（v0.1b） | 代碼 | mw | 檢查 |
 | `defaults.lambda` | 提前支出比例：次年才上線的 MW，其建置支出落在前一年的比例 | 比例 | 0.35 | 檢查 |

@@ -19,6 +19,7 @@
  "asOf": {
   "_note": "滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（清單見 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗。",
   "defaults.capexFloorFY0": "2026Q2",
+  "defaults.wcStub": "2026Q2",
   "leases.onBalanceCash[0]": "2026Q2",
   "leases.operatingPayments[0]": "2026Q2",
   "leases.financePayments[0]": "2026Q2",
@@ -928,7 +929,9 @@
    "note": "回購基準＝近四季實際年額（Amazon 2023 年以來無買回；授權餘額 6.1B；10-Q 附註 6，事實總帳 sh.buyback.2026h1）→ 0（瀑布「減少回購」步驟不適用）；floorShare＝回購可減到計畫的比例下限（0＝可全數取消；對照表 r1 第 5 節第 8 條）[Interested-party]"
   },
   "sbcRate": 0.024899,
-  "sbcNote": "股權報酬（SBC）為非現金費用：分部營業利益已扣除，營運現金加回＝SBC 占營收 × 模型期總營收；近四季 SBC 19.314 ÷ 營收 775.680＝2.49%（現金流量表；[Derived]）。股數稀釋沿用模板每年 1%（EBITDA 已扣 SBC，評價略重複計入，偏保守）"
+  "sbcNote": "股權報酬（SBC）為非現金費用：分部營業利益已扣除，營運現金加回＝SBC 占營收 × 模型期總營收；近四季 SBC 19.314 ÷ 營收 775.680＝2.49%（現金流量表；[Derived]）。股數稀釋沿用模板每年 1%（EBITDA 已扣 SBC，評價略重複計入，偏保守）",
+  "wcStub": 1.947,
+  "wcStubNote": "首期剩餘季度（2026 下半年）營運資金變動＝上一年度同期實際：2025 全年「營運資產與負債變動」合計 −19.969（10-K）− 2025 上半年 −21.916（2026Q2 10-Q 比較欄）＝+1.947（流入）[Derived]；之後年度沿用營收增量比例（MAG 對照表 r1 C14；已實現的季節模式，非預測）"
  },
  "valuation": {
   "price": 259.92,

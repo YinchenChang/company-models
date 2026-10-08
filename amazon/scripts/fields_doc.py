@@ -40,7 +40,7 @@ F = [
  ('leases.uncommenced.opShare', '未起租租賃的營業部分比例（operatingInEbitda 時不自現金扣除；C8 f）', '比例', C), ('leases.uncommenced.opShareNote', '營業部分比例的依據', '文字', M),
  ('leases.rentedCompute', '租用算力排程：[{name, start（YYYY-MM）, years, annualRent（US$bn／年）, mw, use}]；租金計入營運成本（自其他事業 EBITDA 扣除；C8 d）', '清單（物件）', M), ('leases.rentedComputeNote', '租用算力的揭露與口徑', '文字', M),
  ('defaults.buyback.annual', '回購基準年額（近四季實際；瀑布第二步「減少回購」的計畫值；MAG v0.1b）', 'US$bn', M), ('defaults.buyback.floorShare', '回購可減到計畫的比例下限（0＝可全數取消）', '比例', C),
- ('defaults.buyback.note', '回購基準的來源', '文字', M), ('defaults.sbcRate', '股權報酬（SBC）占營收：非現金費用，營運現金加回（MAG v0.1b）', '比例', C), ('defaults.sbcNote', 'SBC 加回的口徑說明', '文字', M),
+ ('defaults.buyback.note', '回購基準的來源', '文字', M), ('defaults.sbcRate', '股權報酬（SBC）占營收：非現金費用，營運現金加回（MAG v0.1b）', '比例', C), ('defaults.sbcNote', 'SBC 加回的口徑說明', '文字', M), ('defaults.wcStub', '首期剩餘季度營運資金變動（US$bn，流入為正）＝上一年度同期實際（10-Q／10-K 現金流量表「營運資產與負債變動」合計：上一財年全年 − 上一財年同期年初至今）；資金模型加入首期營運來源、DCF 首期營運資金變動＝−此值；null＝沿用營收增量比例（MAG v0.1b r2 C14）；每季滾動更新', 'US$bn', C), ('defaults.wcStubNote', '首期營運資金的來源與算式', '文字', M),
  ('ytdActual.buyback', '年初至今回購（MAG v0.1b）', 'US$bn', M),
  ('valuation.holdingsNote', '持股清單格式與估值口徑（MAG v0.1b，C8 c）', '文字', M),
  ('related._note', '關聯方並排口徑（只讀、不連動；D5）', '文字', M), ('related.contracts', '關聯方合約：[{name, annual（年化 US$bn）, startFY（起始財年）, note}]；年化 ÷ 對外 AI 雲端收入＝對手方集中度', '清單（物件）', M),

@@ -151,6 +151,7 @@ def fill(s, tk):
 ROLL_FIELDS = [
     # (分類, 路徑, 說明)
     ('首期一次性金額', 'defaults.capexFloorFY0', '毛 CapEx：首期＝全年下限 − 年初至今實際認列'),
+    ('首期一次性金額', 'defaults.wcStub', '首期剩餘季度營運資金變動＝上一年度同期實際（MAG v0.1b r2 C14）'),
     ('首期一次性金額', 'leases.onBalanceCash[0]', '在帳租金現金（首期）'),
     ('首期一次性金額', 'leases.operatingPayments[0]', '營業租賃付款（首期；到期表）'),
     ('首期一次性金額', 'leases.financePayments[0]', '融資租賃付款（首期；到期表）'),

@@ -6353,6 +6353,45 @@
     "retrieved": "2026-10-08",
     "tag": "[Interested-party]",
     "note": "10-Q 附註分部資訊（Total depreciation and amortization expense, by segment）"
+   },
+   {
+    "id": "cf.wcChg.fy2025",
+    "item": "營運資產與負債變動合計（存貨、應收、其他資產、應付、應計、遞延收入）",
+    "value": -19969,
+    "unit": "USD M",
+    "period": "FY2025",
+    "source": "2025 10-K 合併現金流量表",
+    "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm",
+    "docDate": "2026-02-06",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "−3,002−7,333−15,632＋11,231−5,019−214"
+   },
+   {
+    "id": "cf.wcChg.6m2025",
+    "item": "營運資產與負債變動合計（2025 上半年）",
+    "value": -21916,
+    "unit": "USD M",
+    "period": "2025H1",
+    "source": "2026Q2 10-Q 合併現金流量表（六個月比較欄）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/amzn-20260630.htm",
+    "docDate": "2026-07-31",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "−5,276＋122−6,373−1,985−9,013＋609；交叉：近十二月（至 2026-06）−30,015 − 2026 上半年 −31,962＝+1,947"
+   },
+   {
+    "id": "cf.wcChg.2h2025",
+    "item": "營運資產與負債變動合計（2025 下半年）",
+    "value": 1947,
+    "unit": "USD M",
+    "period": "2025H2",
+    "source": "本報告換算（10-K 全年 − 10-Q 上半年）",
+    "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/amzn-20260630.htm",
+    "docDate": "2026-07-31",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "＝−19,969 −（−21,916）；首期剩餘季度營運資金（defaults.wcStub，MAG 對照表 r1 C14）"
    }
   ],
   "2_AI容量": [

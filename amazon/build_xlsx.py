@@ -369,6 +369,7 @@ r = prow(r, "租用算力租金（營運成本）", "US$bn", [("=" + "+".join(f"
          CO['leases'].get('rentedComputeNote', "租用算力租金") if not _RTR else "＝Σ 年租金 × 在租年數（扣 EBITDA 與營運現金；不是資本支出）", BLACK)
 r = prow(r, "其他事業 EBITDA", "US$bn", [f"={COLS[i]}{IN['其他事業 EBITDA（輸入）']}-{COLS[i]}{IN['租用算力租金（營運成本）']}" for i in range(5)], NUM, "＝輸入 − 租用算力租金（下游引用此列）", BLACK)
 SBCR = gi(r, "股權報酬占營收（SBC，非現金加回）", "%", D.get('sbcRate', 0), D.get('sbcNote', '不加回'), '0.00%'); r += 1
+WCS = gi(r, "«P0» 剩餘季度營運資金變動（上年同期實際，流入為正）", "US$bn", D.get('wcStub'), D.get('wcStubNote', '空白＝沿用營收增量比例'), NUM); r += 1  # MAG v0.1b r2（C14）
 # MAG v0.1b：B0｜對外 AI 雲端定價（company.json → pricing；HTML segA revPathQ 同式）
 if PRC:
     r = section(ws, r, "B0｜對外 AI 雲端定價：每 MW 年收入＝Σ 在役世代占比 × Tokenomics 持有成本 × 晶片係數 × k（收入端不乘 IF_Util）", level=2)
@@ -1235,13 +1236,15 @@ frow("Ⓒ4 減：延誤罰則（營業費用）", "US$bn", lambda i: f"=-'運營
      "建設延誤期間應計費而未計費營收 × 罰則比例（預設 0；v0.2）")
 frow("Ⓒ5 加回：股權報酬（非現金）", "US$bn", lambda i: f"={SBCR}*('運營_產能與收入'!{COLS[i]}{CAP['totrev']}+{inref('非 AI 事業營收（模型期）', i)})", NUM, BLACK,
      "＝SBC 占營收 × 模型期總營收（分部營業利益已扣 SBC；«YTD» 已含在實際 CFO；MAG v0.1b）")
+frow("Ⓒ6 首期營運資金變動（上年同期實際）", "US$bn", lambda i: (f"=IF(ISBLANK({WCS}),0,{WCS})" if i == 0 else "=0"), NUM, BLACK,
+     "«P0» 剩餘季度＝上一年度同期實際（流入為正；10-Q／10-K 現金流量表 [Derived]）；之後年度資金模型不計營運資金（MAG v0.1b r2 C14）")
 frow("Ⓓ 客戶預付（«STUB» 起）", "US$bn",
      lambda i: f"={COLS[i]}{FR['　客戶預付金額（抵減，«STUB» 起）']}", NUM, BLACK)
 frow("Ⓓ2 減：預付認列（非現金營收）", "US$bn", lambda i: f"=-{COLS[i]}{pr_row}", NUM, BLACK,
      "營收中由合約負債轉入的部分已在預付時收現，不重複計入服務現金（v0.1b）")
 frow("營運來源合計", "US$bn",
      lambda i: (f"={COLS[i]}{FR['Ⓐ0 «YTDL» 實際營運現金流（CFO）']}+{COLS[i]}{FR['Ⓐ RPO 現金（«STUB» 起）']}+"
-                f"{COLS[i]}{FR['Ⓑ 新簽約現金']}+{COLS[i]}{FR['Ⓒ 非算力服務現金']}+{COLS[i]}{FR['Ⓒ2 其他事業 EBITDA（«STUB» 起）']}+{COLS[i]}{FR['Ⓒ3 非 AI 事業 EBITDA（«STUB» 起）']}+{COLS[i]}{FR['Ⓒ4 減：延誤罰則（營業費用）']}+{COLS[i]}{FR['Ⓒ5 加回：股權報酬（非現金）']}+{COLS[i]}{FR['Ⓓ 客戶預付（«STUB» 起）']}+"
+                f"{COLS[i]}{FR['Ⓑ 新簽約現金']}+{COLS[i]}{FR['Ⓒ 非算力服務現金']}+{COLS[i]}{FR['Ⓒ2 其他事業 EBITDA（«STUB» 起）']}+{COLS[i]}{FR['Ⓒ3 非 AI 事業 EBITDA（«STUB» 起）']}+{COLS[i]}{FR['Ⓒ4 減：延誤罰則（營業費用）']}+{COLS[i]}{FR['Ⓒ5 加回：股權報酬（非現金）']}+{COLS[i]}{FR['Ⓒ6 首期營運資金變動（上年同期實際）']}+{COLS[i]}{FR['Ⓓ 客戶預付（«STUB» 起）']}+"
                 f"{COLS[i]}{FR['Ⓓ2 減：預付認列（非現金營收）']}"),
      NUM, BLACK, bold=True)
 srcop_row = FR["營運來源合計"]
@@ -2017,7 +2020,7 @@ vrow("預付認列（非現金營收，扣除）", "US$bn", lambda i: f"='各期
      "營收中由合約負債轉入的部分已在預付時收現（預付流入已自現金 CapEx 抵減），UFCF 扣除以免重複（v0.1b）")
 prr_v = VR["預付認列（非現金營收，扣除）"]
 vrow("營運資金變動", "US$bn",
-     lambda i: f"={WCP}*MAX(0,{PL}{COLS[i]}{rev_v}-{COLS[i]}{base_v})", NUM, BLACK, f"營收增量的 {_n(V['wcPctOfRevGrowth'] * 100)}%")
+     lambda i: (f"=IF(ISBLANK({WCS}),{WCP}*MAX(0,{PL}{COLS[i]}{rev_v}-{COLS[i]}{base_v}),-{WCS})" if i == 0 else f"={WCP}*MAX(0,{PL}{COLS[i]}{rev_v}-{COLS[i]}{base_v})"), NUM, BLACK, f"«P0»＝−上年同期實際（輸入非空白時；MAG v0.1b r2 C14）；之後＝營收增量的 {_n(V['wcPctOfRevGrowth'] * 100)}%")
 wc_v = VR["營運資金變動"]
 vrow("無槓桿 NOL 期初", "US$bn", lambda i: f"={NOL0}", NUM, BLACK,
      "DCF 用無槓桿稅（利息不可抵稅，否則稅盾被計兩次：一次在 UFCF、一次在 WACC）")
