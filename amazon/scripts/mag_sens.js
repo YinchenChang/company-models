@@ -26,9 +26,9 @@ const rows = [
   ['廣告 EBITDA 率 40%', s => (s.legacyBiz.lines.filter(x => x.peer === `ads`).forEach(x => x.m0 = .4), s)], ['廣告 EBITDA 率 60%', s => (s.legacyBiz.lines.filter(x => x.peer === `ads`).forEach(x => x.m0 = .6), s)],
 ];
 const orows = [
-  ['AI 雲端倍數 10×（非 AI 雲端沿用）', o => (o.evEbitda = 10, o)], ['AI 雲端倍數 15×（非 AI 雲端沿用）', o => (o.evEbitda = 15, o)],
+  ...[10, 15].map(m => [`AI 雲端倍數 ${m}×` + (SEGM_Q && SEGM_Q.cloud && SEGM_Q.cloud.useAi ? `（非 AI 雲端沿用）` : `（非 AI 雲端仍用同業 ${segMultQ('cloud', VAL_DEFAULTS).toFixed(1)}×）`), o => (o.evEbitda = m, o)]), // MAG v0.1b r2：C12 後非 AI 雲端不再沿用 AI 倍數
   ['流動性折價 0%', o => (o.holdingsDiscount = 0, o)], ['流動性折價 40%', o => (o.holdingsDiscount = .4, o)],
-  ['β 0.78（Alpha Spread）', o => (o.wacc = CAPM_Q(o, COMPANY_DATA.valuation.capm.betaSens[0]).wacc, o)],
+  ...COMPANY_DATA.valuation.capm.betaSens.map(b => [`β ${b}（獨立來源區間）`, o => (o.wacc = CAPM_Q(o, b).wacc, o)]), // MAG v0.1b r2（C13）
 ];
 const out = rows.map(([n, f]) => [n, evalQ(f)]).concat(orows.map(([n, f]) => [n, evalQ(s => s, f)]));
 // 非 AI 雲端單獨改倍數（AI 雲端維持 6×）：以手動覆蓋非 AI 加權倍數模擬
