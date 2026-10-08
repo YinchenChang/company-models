@@ -165,7 +165,7 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
     ...(qv ? [elQ(`div`, { key: `q`, style: { fontSize: 13, fontWeight: 600 } }, [`${qv.focus.label} 財報${qv.focus.reportNote ? `（${qv.focus.reportNote}）` : ``}：模型｜共識｜指引`, QE ? elQ(TagQ, { key: `t`, t: QE.tag }) : null]),
       ...qv.keyLines.map((t, i) => elQ(`div`, { key: `k${i}`, style: { fontSize: 12, lineHeight: 1.35, marginTop: 2 } }, t))] : []),
     elQ(`p`, { key: `r`, style: { fontSize: 12.5, lineHeight: 1.4, margin: `4px 0 0` } }, [
-      `評等分布（${RA.month}，${RA.total} 家）：${RL.map(([a, b]) => `${a} ${b}`).join(`／`)}；目標價平均 $${Y(PT.mean, 2)}、中位數 $${Y(PT.median, 2)}、區間 $${Y(PT.low, 0)}–$${Y(PT.high, 0)}（${PT.analysts} 家）`, elQ(TagQ, { key: `t`, t: PT.tag })])
+      `評等分布（${RA.month}，${RA.total} 家）：${RL.map(([a, b]) => `${a} ${b}`).join(`／`)}；目標價平均 $${Y(PT.mean, 2)}${PT.median == null ? `` : `、中位數 $${Y(PT.median, 2)}`}、區間 $${Y(PT.low, 0)}–$${Y(PT.high, 0)}（${PT.analysts} 家）`, elQ(TagQ, { key: `t`, t: PT.tag })])
   ]);
   return [
     elQ(`div`, { key: `g`, style: { flex: 1, minHeight: 0, display: `grid`, gridTemplateColumns: `1fr 1.22fr`, gridTemplateRows: `1fr 1fr`, gap: 8 } }, [b1, b2, b3, b4]),
@@ -407,7 +407,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
       ]);
     })),
     elQ(`div`, { key: `l`, style: { display: `flex`, gap: 26, fontSize: 15, marginTop: 36, paddingLeft: 20 } }, [
-      [`新債（總債務 ≤ ${Y(e.debtBacklog, 1)}× backlog）`, `var(--color-accent)`],
+      [e.debtCapBasis === `ebitda` ? `新債（額度＋總債務 ≤ ${multTxt(e.debtEbitdaMax)}× EBITDA）` : e.debtCapBasis === `leaseAdj` ? `新債（調整後槓桿 ≤ ${multTxt(e.debtEbitdaMax)}×）` : `新債（總債務 ≤ ${Y(e.debtBacklog, 1)}× backlog）`, `var(--color-accent)`], // WhiteFiber v0.1b：依上限基準
       [`可轉債（每年 ≤ ${Y(e.cvCap ?? 0, 1)}bn）`, `var(--color-ok)`],
       [`股權（$${Y(e.eqPx, 2)} 折價 ${hA(e.eqDisc * 100, 0)}，每年上限${e.eqCapPct >= 9 ? `：無` : `＝現市值 ${hA(e.eqCapPct * 100, 0)}`}）`, `var(--color-watch)`],
       [`高息債 ${hA(e.junkRate * 100, 0)}`, `var(--color-bad)`]

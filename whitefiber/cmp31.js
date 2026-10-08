@@ -75,7 +75,7 @@ cmp('延誤罰則', S+'延誤罰則（營業費用）', H('delayPen')); cmp('來
 // v0.2：租賃負債與調整後槓桿
 cmp('在帳租賃負債', F+'在帳租賃負債（期末）', H('leaseLiabOn')); cmp('未起租租賃負債', F+'未起租租約已起租部分的租賃負債（期末）', H('leaseLiabUl')); cmp('租賃負債合計', F+'租賃負債合計（期末）', H('leaseLiab'));
 cmp('BS 租賃負債', NB0+'租賃負債（期末）', H('leaseLiab')); cmp('BS EBITDAR', NB0+'EBITDAR（年化＝(EBITDA＋租金) ÷ 期間長度）', H('ebitdarAnn'));
-cmp('BS 調整後槓桿', NB0+'調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）', H('adjLev')); cmp('BS 距上限空間', NB0+'距投資級上限的空間（上限 − 調整後槓桿）', y.map(e=>q.debtEbitdaMax-e.adjLev));
+cmp('BS 總債務÷EBITDA', NB0+'總債務 ÷ EBITDA（年化）', H('lev')); cmp('BS 調整後槓桿', NB0+'調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）', H('adjLev')); cmp('BS 距上限空間', NB0+'距投資級上限的空間（上限 − 調整後槓桿）', y.map(e=>q.debtEbitdaMax-e.adjLev));
 cmp('連動比例', S+'未起租租約起租連動比例（delayLink）', [q.delayLink]); cmp('罰則比例', S+'延誤罰則（應計費而未計費營收的 %）', [q.delayPenalty]);
 cmp('表外租金', '輸入|表外現金租金（未起租）', q.a.newLease);
 cmp('存量利息', '輸入|存量債務利息（下游引用此列）', H('intStock'));

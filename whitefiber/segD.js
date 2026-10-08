@@ -90,10 +90,10 @@ function zM() {
           })]
         }), (0, $.jsx)(`h1`, {
           className: `max-w-3xl font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl`,
-          children: `Backlog 不是現金`
+          children: TXQ.headline ?? `Backlog 不是現金` // WhiteFiber v0.1b：標題讀 company.json → texts.headline
         }), (0, $.jsx)(`p`, {
           className: `max-w-3xl font-display text-lg font-medium leading-snug text-accent-fg md:text-xl`,
-          children: `每 MW 賺的錢付不起 GPU 的資本成本——蓋得愈多，愈要靠外部資金`
+          children: TXQ.subhead ?? `每 MW 賺的錢付不起 GPU 的資本成本——蓋得愈多，愈要靠外部資金`
         }), (0, $.jsxs)(`p`, {
           className: `max-w-3xl text-sm leading-relaxed text-pretty text-accent-soft`,
           children: [e.scenario === `custom` ? `自訂情境` : SCENARIOS[e.scenario]?.label, `：${PERIODS[0]}–${PERIODS[PERIODS.length - 1].slice(2)} 融資前缺口 `, (0, $.jsxs)(`span`, {
@@ -777,13 +777,13 @@ function zM() {
                       [`　傳統事業 D&A（建物）`, d.years.map(e => e.daColo), void 0, void 0, `calc`, `＝(期初託管 PP&E＋本期建置 × ½) ÷ ${e.colo.life} 年 × 期間長度；與 GPU 車隊折舊分列，併入損益 D&A。`]] : []),
                     [`① 毛 CapEx（模型期）`, d.years.map(e => e.gross), void 0, void 0, `tot`, d.lg.colo && d.lg.colo.on ? `＝成長型＋汰換＋傳統事業建置。` : `＝成長型＋汰換。含 OEM 融資的非現金部分。`],
                     [`　閒置資本（已支出未產生收入，期末）`, d.years.map(e => e.idleCap), void 0, void 0, `calc`, `GPU 成長型資本支出照原併網時程（已採購、交貨等電），計費延後 ${multTxt(e.delayMonths ?? 0)} 個月：＝原時程累計 − 已投入使用累計；折舊自投入使用時點起算（v0.2）。`],
-                    [`　對照：v1.4 手動值`, d.years.map(e => e.capexOld), void 0, void 0, void 0, `CRWV 模板舊版手動值（Oracle 不適用，0）。`],
+                    [`　對照：v1.4 手動值`, d.years.map(e => e.capexOld), void 0, void 0, void 0, `CRWV 模板舊版手動值（本公司不適用，0）。`],
                     [`　客戶預付率`, e.a.customerFund.map(e => e * 100), (e, t) => E(`customerFund`, e, t / 100), void 0, void 0, `＝有預付的合約比例 × 預付占資本支出比（${TXQ.prepayCoverNote}）。只降當期外部融資需求、形成合約負債，不降專案總成本。`, `%`],
                     [`② 表外現金租金（未起租）`, e.a.newLease, (e, t) => E(`newLease`, e, t), void 0, void 0, `對應季報已簽約未起租租賃 ${Y(LATEST_Q.offBalanceLease, 1)}bn（${TXQ.offBalanceLeaseTerm}）的現金支付路徑 [Derived]。`],
                     [`　表外租金（延誤連動後）`, d.years.map(e => e.offLease), void 0, void 0, `calc`, `上列原排程中 ${pctQ(e.delayLink ?? 0)} 的起租隨建設延誤 ${multTxt(e.delayMonths ?? 0)} 個月後移（開發商交付晚），其餘照原時程；租金合計用此列（v0.2）。`],
                     [`② 在帳現金租金（季報固定）`, [...LEASE_CASH_ON_BAL], void 0, void 0, void 0, `季報到期表：${LEASE_CASH_ON_BAL.map(x => Y(x, 2)).join(`／`)}，之後尚有 ${Y(LEASE_AFTER_FY30, 2)}。`],
                     [`③ 存量債務利息（既有債務推算）`, d.years.map(e => e.intStock), void 0, void 0, `calc`, `＝平均本金（依到期表遞減）× 加權有效利率 ${hA(DBT_R * 100, 1)} × 期間長度 ＋ 期後新發可轉債利息 ＋ 首期校準 ${e.intCal}。明細見「既有債務」分頁。`],
-                    [`　對照：v1.4 手動值`, d.years.map(e => e.intOld), void 0, void 0, void 0, `CRWV 模板舊版手動值（Oracle 不適用，0）。`],
+                    [`　對照：v1.4 手動值`, d.years.map(e => e.intOld), void 0, void 0, void 0, `CRWV 模板舊版手動值（本公司不適用，0）。`],
                     [`③ 新債利息（瀑布，計算）`, d.years.map(e => e.newDebtInt), void 0, void 0, `calc`, `＝新債利率 × 期間長度 × (期初新債餘額 ＋ 本期舉借)。期前融資：本期舉借在期初到位，當期全額計息。`],
                     [`④ JV 已承諾餘額`, d.years.map(e => e.jvC), void 0, void 0, void 0, `季報未揭露 JV 出資承諾（不適用）。`],
                     [`④ JV 後續增資＋策略投資`, e.a.div, (e, t) => E(`div`, e, t), void 0, void 0, `收購與策略投資，未揭露計畫 [Assumed]。年初至今 ${Y(ACTUAL_1H.jv, 3)}。`],

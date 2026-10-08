@@ -2330,6 +2330,8 @@ brow("EBITDAR（年化＝(EBITDA＋租金) ÷ 期間長度）", "US$bn", lambda 
 brow("調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）", "x", lambda i: f"=({COLS[i]}{BR['總債務']}+{COLS[i]}{BR['租賃負債（期末）']})/MAX(0.01,{COLS[i]}{BR['EBITDAR（年化＝(EBITDA＋租金) ÷ 期間長度）']})", '0.00x',
      "S&P 降評門檻 >4.5×（[Interested-party] 二手轉述）；S&P 自身口徑另含全部未起租承諾與無條件採購義務，較本列高（見報告）", bold=True)
 brow("距投資級上限的空間（上限 − 調整後槓桿）", "x", lambda i: f"={LEV}-{COLS[i]}{BR['調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）']}", '0.00x', "負值＝超過上限：需股權或失去投資級")
+brow("總債務 ÷ EBITDA（年化）", "x", lambda i: f"={COLS[i]}{BR['總債務']}/MAX(0.01,{COLS[i]}{BR['EBITDAR（年化＝(EBITDA＋租金) ÷ 期間長度）']}-'各期收支'!{COLS[i]}{FR['　租金合計']}/'運營_產能與收入'!{COLS[i]}{CR['模型期長度（年）']})", '0.00x',
+     "債務上限基準為 ebitda 時的槓桿（總債務含可轉債；EBITDA 為負或極小時以 0.01 為下限）；WhiteFiber v0.1b")
 NB = dict(BR)
 
 # =====================================================================
@@ -2395,7 +2397,7 @@ for k, (nm, a, b, d, note) in enumerate(_rows):
 r += 1
 r = section(ws, r, "快照：收入與成本的綜合影響——要值現價，«PL» 每 MW 年收入需要多少（US$m）", span=7)
 c = ws.cell(row=r, column=1, value="建置成本 ＼ 穩態 EBITDA 率"); c.font = HEAD; c.fill = FILL_HEAD
-ws.cell(row=r, column=9, value="矩陣保留 OCI EBITDA 率維度：傳統事業（約 54% EBITDA 率、軟體同業倍數）不隨此表變動，表內只測算力業務的單位經濟").font = SMALL
+ws.cell(row=r, column=9, value=f"矩陣保留 OCI EBITDA 率維度：傳統事業（EBITDA 率 {CLB['margin'][0]:.1%}→{CLB['margin'][-1]:.1%}、託管同業倍數）不隨此表變動" if CLB else "矩陣保留 OCI EBITDA 率維度：傳統事業（約 54% EBITDA 率、軟體同業倍數）不隨此表變動，表內只測算力業務的單位經濟").font = SMALL
 for j, e in enumerate(rv["ebs"]):
     c = ws.cell(row=r, column=2 + j, value=e); c.font = HEAD; c.fill = FILL_HEAD; c.number_format = '0%'
 r += 1
@@ -3352,9 +3354,14 @@ _IDR = f"'運營_產能與收入'!$C${CAP['idle']}:$G${CAP['idle']}"  # v0.2：�
 _PLB = ",".join(f'"{x}"' for x in PERIODS)
 _ALR = f"'資產負債_新債與新股'!$C${NB['調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）']}:$G${NB['調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）']}"  # v0.2：調整後槓桿句
 _AL = lambda c: f"'資產負債_新債與新股'!{c}{NB['調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）']}"
-srow("結論｜調整後槓桿句", "", [(f'="調整後槓桿（(債務＋租賃負債) ÷ (EBITDA＋租金)）路徑 "&' + '&"／"&'.join(f'TEXT({_AL(c)},"0.0")' for c in COLS)
+_LVR = f"'資產負債_新債與新股'!$C${NB['總債務 ÷ EBITDA（年化）']}:$G${NB['總債務 ÷ EBITDA（年化）']}"  # WhiteFiber v0.1b：上限基準為 ebitda 時改列總債務 ÷ EBITDA
+_LV = lambda c: f"'資產負債_新債與新股'!{c}{NB['總債務 ÷ EBITDA（年化）']}"
+srow("結論｜調整後槓桿句", "", [(f'=IF({DCB}="leaseAdj","調整後槓桿（(債務＋租賃負債) ÷ (EBITDA＋租金)）路徑 "&' + '&"／"&'.join(f'TEXT({_AL(c)},"0.0")' for c in COLS)
                           + f'&"×；上限 "&{_MT(LEV)}&"×，"&IF(MAX({_ALR})>{LEV}+1E-9,CHOOSE(MATCH(MAX({_ALR}),{_ALR},0),{_PLB})&" 超過 "&TEXT(MAX({_ALR})-{LEV},"0.0")&"×：需股權或失去投資級。",'
-                          f'"最小空間 "&TEXT({LEV}-MAX({_ALR}),"0.0")&"×（"&CHOOSE(MATCH(MAX({_ALR}),{_ALR},0),{_PLB})&"）。")')], bold=True)
+                          f'"最小空間 "&TEXT({LEV}-MAX({_ALR}),"0.0")&"×（"&CHOOSE(MATCH(MAX({_ALR}),{_ALR},0),{_PLB})&"）。"),'
+                          f'"總債務 ÷ EBITDA（年化）路徑 "&' + '&"／"&'.join(f'TEXT({_LV(c)},"0.0")' for c in COLS)
+                          + f'&"×；上限 "&{_MT(LEV)}&"×，"&IF(MAX({_LVR})>{LEV}+1E-9,CHOOSE(MATCH(MAX({_LVR}),{_LVR},0),{_PLB})&" 最高超過 "&TEXT(MAX({_LVR})-{LEV},"0.0")&"×：超過期間新債只能動用已承諾額度，其餘靠可轉債、股權或高息債。",'
+                          f'"最小空間 "&TEXT({LEV}-MAX({_LVR}),"0.0")&"×（"&CHOOSE(MATCH(MAX({_LVR}),{_LVR},0),{_PLB})&"）。"))')], bold=True)
 srow("結論｜延誤句", "", [(f'=IF({DLY}>0,"建設延誤 "&{_MT(DLY)}&" 個月（GPU 資本支出照原時程）：閒置資本（已支出、尚未產生收入）峰值 $"&TEXT(MAX({_IDR}),"0.0")'
                          f'&"bn（"&CHOOSE(MATCH(MAX({_IDR}),{_IDR},0),{_PLB})&" 末）。","建設延誤：本情境 0 個月（無閒置資本）。")')])
 

@@ -73,7 +73,8 @@ var PERIODS = COMPANY_DATA.periods,
   CHECK_TH = COMPANY_DATA.methodology.checks, // 5a：連動檢查門檻（Excel「檢查_連動」同一來源）
   W36 = PERIOD_YEARS.map((L, i) => Math.max(0, Math.min(L, 3 - PERIOD_YEARS.slice(0, i).reduce((a, b) => a + b, 0))) / L), // v0.1b：評價日起 36 個月落在各期的比例（RPO 對照）
   TXQ = COMPANY_DATA.texts,
-  DCSENS_Q = COMPANY_DATA.methodology.debtCapSens || [3.5, 4.5], // WhiteFiber v0.1b：債務上限敏感度兩端 // v0.1b（Oracle）：公司特有說明文字
+  DCSENS_Q = COMPANY_DATA.methodology.debtCapSens || [3.5, 4.5], // WhiteFiber v0.1b：債務上限敏感度兩端
+  MW31S_Q = COMPANY_DATA.methodology.mw31Sens || [1000, 0], // WhiteFiber v0.1b：模型期後一年新增 MW 敏感度兩端 // v0.1b（Oracle）：公司特有說明文字
   REV_GUIDE_TXT = CALL_FACTS.revLo == null ? `不適用（公司未給指引）` : CALL_FACTS.revHi == null ? `≥${CALL_FACTS.revLo}` : `${CALL_FACTS.revLo}–${CALL_FACTS.revHi}`, // v0.1b：營收指引只有下限時寫「≥」；WhiteFiber v0.1b：無指引時寫「不適用」
   HAS_CX_G = CALL_FACTS.capexLo != null, // WhiteFiber v0.1b：公司未給資本支出指引時，相關檢查不比對
   CAPEX_GUIDE_TXT = HAS_CX_G ? `${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}` : `不適用（公司未給指引）`,
@@ -548,7 +549,8 @@ function runFunding(e) {
         ebitdaPL: totRev * ebM + ob + lgE - pen,
         capUndelayed: u0, lostRev: lost, delayPen: pen, // v0.2
         leaseLiabOn: LLON[r], leaseLiabUl: LLUL[r], leaseLiab: LLON[r] + LLUL[r], ebitdarAnn: (totRev * ebM + ob + lgE - pen + S) / L, // v0.2：租賃負債與 EBITDAR（年化）
-        adjLev: (wEx + WF.Dn + WF.Cn + WF.Jn + LLON[r] + LLUL[r]) / Math.max((totRev * ebM + ob + lgE - pen + S) / L, .01), // v0.2：調整後槓桿（期末）
+        adjLev: (wEx + WF.Dn + WF.Cn + WF.Jn + LLON[r] + LLUL[r]) / Math.max((totRev * ebM + ob + lgE - pen + S) / L, .01),
+        lev: (wEx + WF.Dn + WF.Cn + WF.Jn) / Math.max((totRev * ebM + ob + lgE - pen) / L, .01), // WhiteFiber v0.1b：總債務 ÷ 年化 EBITDA（上限基準 ebitda 時的槓桿句） // v0.2：調整後槓桿（期末）
         otherEbitda: ob,
         cashEbitda: g + nC + svcCash + ob + lgE - pen - S,
         creditAdj: (m + nR * (t.defaultP[r] / 100) * p) * cm,
@@ -1005,10 +1007,10 @@ function sensitivities(e, v) {
     e.gpuLife = 4
   }, e => {
     e.gpuLife = 6
-  }), r(`FY31 新增 MW`, `1,000`, `0`, e => { // v0.1b：公司 2027 起每年部署 >1 GW
-    e.mw31 = 1000
+  }), r(`FY31 新增 MW`, `${Y(MW31S_Q[0], 0)}`, `${Y(MW31S_Q[1], 0)}`, e => { // WhiteFiber v0.1b：兩端讀 methodology.mw31Sens（Oracle 1,000／0）
+    e.mw31 = MW31S_Q[0]
   }, e => {
-    e.mw31 = 0
+    e.mw31 = MW31S_Q[1]
   }), r(`未起租租期`, `${UL.termSens[0]} 年`, `${UL.termSens[1]} 年`, e => { // v0.1b（Oracle）：租期越短年租越高（租金含在 EBITDA 率內，現金中性）
     e.a.newLease = ulPath(UL.termSens[0]), e.ulTerm = UL.termSens[0]
   }, e => {
@@ -1067,7 +1069,19 @@ function sensitivities(e, v) {
     e.evEbitda = 5
   }, e => {
     e.evEbitda = 7
-  }), n.sort((e, t) => Math.abs(t.high - t.low) - Math.abs(e.high - e.low)), n
+  }), (e.colo && e.colo.sites) && (r(`傳統事業 EV/EBITDA 倍數`, `15x`, `${multTxt(Math.max(...(COMPANY_DATA.peers.software || []).map(x => x.ntmEvEbitda)))}x`, null, null, v => { // WhiteFiber v0.1b：託管倍數 15×（審查留言第 4 條）／同業上緣
+    v.legacyEvEbitda = 15
+  }, v => {
+    v.legacyEvEbitda = Math.max(...(COMPANY_DATA.peers.software || []).map(x => x.ntmEvEbitda))
+  }), r(`傳統事業租金（未簽約站點）`, `1.45`, `2.35`, t => { // [Analogy] 區間兩端（US$m/MW-IT·年）
+    t.colo = { ...t.colo, sites: t.colo.sites.map(x => x.signed ? x : { ...x, rent: 1.45 }) }
+  }, t => {
+    t.colo = { ...t.colo, sites: t.colo.sites.map(x => x.signed ? x : { ...x, rent: 2.35 }) }
+  }), r(`傳統事業建置成本（未簽約站點）`, `13.5`, `9.0`, t => { // [Analogy] 區間兩端（US$m/MW-IT；以 11.5 為基準等比縮放建置總額）
+    t.colo = { ...t.colo, sites: t.colo.sites.map(x => x.signed ? x : { ...x, capex: x.capex * 13.5 / 11.5 }) }
+  }, t => {
+    t.colo = { ...t.colo, sites: t.colo.sites.map(x => x.signed ? x : { ...x, capex: x.capex * 9 / 11.5 }) }
+  })), n.sort((e, t) => Math.abs(t.high - t.low) - Math.abs(e.high - e.low)), n
 }
 
 function Y(e, t = 1) {
