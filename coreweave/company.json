@@ -867,10 +867,11 @@
    "revCapShareMax": 0.5
   },
   "perMw": {
-   "_note": "每 MW 方法開關（W2）：capex＝tokenomics（Σ 新增世代占比 × IF_CapexIT）｜legacy（scenarios.capexTemplate.costMW）；cost＝bottomUp（Tokenomics 電費、IT 維護、人員軟體、稅險 × 平均在役 MW＋管銷率）｜ebitdaPct（defaults.ebStart→ebSteady 線性）；revenue＝tkAnchor（W4：Σ 平均在役占比 × IF_HoldEcon × 定價倍數 k，k＝長約占比 × k_長約＋（1 − 長約占比）× k_現貨；pricing.anchorMultiple）｜gpuHr（pricing.gpuHr × 每 MW GPU 數 × 8,760）｜legacy（defaults.m.revMW）。全為舊方法時與 v4.5 完全相同。收入採備案 legacy（chat 端 2026-10-07：W1 查不到 GB200／GB300／VR200 兩個獨立長約價來源，VR200 完全沒有）。 W4（2026-10-08，已決定事項 14）：收入改為 tkAnchor；gpuHr 與 legacy 降為對照。",
+   "_note": "每 MW 方法開關（W2）：capex＝tokenomics（Σ 新增世代占比 × IF_CapexIT）｜legacy（scenarios.capexTemplate.costMW）；cost＝bottomUp（Tokenomics 電費、IT 維護、人員軟體、稅險 × 平均在役 MW＋管銷率）｜ebitdaPct（defaults.ebStart→ebSteady 線性）；revenue＝tkAnchor（W4：Σ 平均在役占比 × IF_HoldEcon × 定價倍數 k，k＝長約占比 × k_長約＋（1 − 長約占比）× k_現貨；pricing.anchorMultiple）｜gpuHr（pricing.gpuHr × 每 MW GPU 數 × 8,760）｜legacy（defaults.m.revMW）。全為舊方法時與 v4.5 完全相同。收入採備案 legacy（chat 端 2026-10-07：W1 查不到 GB200／GB300／VR200 兩個獨立長約價來源，VR200 完全沒有）。 W4（2026-10-08，已決定事項 14）：收入改為 tkAnchor；gpuHr 與 legacy 降為對照。 W6：maint＝age（每期 IT 維護＝Σ 世代［保固期內平均在役 MW × IF_MaintITWarr＋保固期滿 × IF_MaintITPost］，機齡由 fleet.openMix.vintages 與各期新增 MW 推得，保固年限 IF_WarrantyYrs）｜flat（Σ 平均在役占比 × IF_MaintIT 壽命期等值費率；v4.7 前）。",
    "capex": "tokenomics",
    "cost": "bottomUp",
-   "revenue": "tkAnchor"
+   "revenue": "tkAnchor",
+   "maint": "age"
   }
  },
  "peers": {
@@ -1403,7 +1404,45 @@
     "GB300 NVL72": 0.433666
    },
    "tag": "[Assumed]",
-   "source": "W1 第 6b 步（coreweave/data/permw_inputs_20261007.json → fleetMix.openMix）：依年份分層——2024 年底前 360 MW＝Hopper；2025 年新增 490 MW＝GB200 70%／GB300 20%／H200 10%；2026 上半年新增 650 MW＝GB300 85%／GB200 15%。MW 錨點 [Verified]、各層占比 [Assumed]；W1 回報 27／29／43% 為四捨五入（區間 Hopper 24–31%、GB200 20–42%、GB300 30–53%）"
+   "source": "W1 第 6b 步（coreweave/data/permw_inputs_20261007.json → fleetMix.openMix）：依年份分層——2024 年底前 360 MW＝Hopper；2025 年新增 490 MW＝GB200 70%／GB300 20%／H200 10%；2026 上半年新增 650 MW＝GB300 85%／GB200 15%。MW 錨點 [Verified]、各層占比 [Assumed]；W1 回報 27／29／43% 為四捨五入（區間 Hopper 24–31%、GB200 20–42%、GB300 30–53%）",
+   "vintages": [
+    {
+     "label": "2023 年新增",
+     "mw": 100,
+     "inService": "2023-06",
+     "mix": {
+      "Hopper H100": 1
+     }
+    },
+    {
+     "label": "2024 年新增",
+     "mw": 260,
+     "inService": "2024-06",
+     "mix": {
+      "Hopper H100": 1
+     }
+    },
+    {
+     "label": "2025 年新增",
+     "mw": 490,
+     "inService": "2025-06",
+     "mix": {
+      "GB200 NVL72": 0.7,
+      "GB300 NVL72": 0.2,
+      "Hopper H100": 0.1
+     }
+    },
+    {
+     "label": "2026 上半年新增",
+     "mw": 650,
+     "inService": "2026-03",
+     "mix": {
+      "GB300 NVL72": 0.85,
+      "GB200 NVL72": 0.15
+     }
+    }
+   ],
+   "vintageNote": "W6：期初機齡層（IT 維護依機齡兩段）。MW＝W1 年份分層（2024 年底前 360 MW 依 defaults.mwYearEnd 拆為 2023 年 100、2024 年 260；2025 年新增 490；2026 上半年新增 650）[Verified 錨點]；各層世代占比同 W1 第 6b 步 [Assumed]；投入使用月＝新增期間中點（全年層 6 月底、上半年層 3 月底）[Assumed]。保固期內＝投入使用後 IF_WarrantyYrs 年內；各期新增 MW 的投入使用＝該期中點。各層 MW 合計須＝activeMW、各世代合計須＝activeMW × mix（建置時檢查）"
   },
   "newMix": [
    {
@@ -1903,12 +1942,12 @@
     "key": "maint",
     "label": "IT 維護（每 MW 年）",
     "unit": "US$m/MW",
-    "tkName": "IF_MaintIT（約 IT 資本 3%／年，在役世代加權）",
+    "tkName": "IF_MaintITWarr／IF_MaintITPost（v5.31；依機齡兩段：保固期內 MW × 保固期內值＋期滿 MW × 期滿值，保固 IF_WarrantyYrs 3 年；在役世代加權）",
     "actual": "未單獨揭露（不存在於 10-Q 列項）；CRWV 伺服器保固條款找不到（10-K、10-Q、S-1 未見）",
     "tag": "[Verified]",
-    "mechanism": "技術與基礎設施費用含「維護運算基礎設施的人員」（10-K）；OEM 標準保固（例：Supermicro GPU 系統人工 3 年、零件 1 年）只是廠商通則，不是 CRWV 合約證據 → 保固機制未證實",
-    "adjust": "無；保固期內維護較低的可能性以「營運成本＝Q2 實際比率」敏感度呈現",
-    "rule": "3",
+    "mechanism": "W6：Tokenomics v5.31 已把保固期內／期滿兩段做進來（保固 3 年依 OEM 條款：HPE 3 年、Supermicro 人工 3 年；Tokenomics SRC_DC_015／016），CRWV 端依期初機齡層與各期新增 MW 推算機齡（Q2 季末 93% 在保固期內）；CRWV 自己的保固條款仍找不到。單項無法量測，併入下方「營運成本合計」驗證",
+    "adjust": "無（Tokenomics 依機齡兩段即主值；IF_MaintIT 等值費率只作對照）",
+    "rule": "—",
     "evidence": [
      "crwvTiPolicy",
      "smcWarranty"
@@ -1949,8 +1988,8 @@
     "tkName": "上列四項 Tokenomics 值合計（模型首期）",
     "actual": "Q2 2026：營收成本＋技術與基礎設施 − D&A − SBC − 營業租賃成本（含變動租賃＝轉付房東的水電），年化 ÷ Q2 平均在役 MW",
     "tag": "[Derived]",
-    "mechanism": "找不到可證實的機制：可能原因（未證實）——多數機隊仍在 OEM 保固期（CRWV 條款找不到）、Q2 平均在役 MW 含 6 月才上線的 300 MW（爬坡期用電低）、單項未揭露；Q2 實際另含研發",
-    "adjust": "無（Tokenomics 為基準）；敏感度＝營運成本倍數 Q2 實際 ÷ 模型首期",
+    "mechanism": "W6：IT 維護改依機齡兩段（Tokenomics v5.31）後，模型首期與 Q2 實際差距 −35%（v4.7）→ +2%（≤ 10%）：原差距主要來自 v4.7 把保固期內的機隊也按滿載維護費率計算。Q2 實際另含研發（Q2 $117m），模型未另計",
+    "adjust": "無（差距 ≤ 10%，規則 1）；敏感度仍保留「營運成本＝Q2 實際比率」",
     "rule": "3",
     "evidence": [
      "crwvCostRevPolicy",
@@ -1981,7 +2020,7 @@
     "tkName": "IF_CapexIT（新增世代加權，模型首期）",
     "actual": "1H26 資本支出 16.139 ÷ 新增主動電力 650 MW（850 → 1,500）；另列技術設備毛額增加 ÷ 新增 MW",
     "tag": "[Derived]",
-    "mechanism": "找不到可證實的機制：可能原因（未證實）——MW 口徑（主動電力若為設施口徑，換成 IT MW 後差距縮小約 1/6）、議價（未揭露）、Tokenomics IT 單價偏高；預建（1H 支出含 2H 上線的 MW）只會使實際偏高，方向相反",
+    "mechanism": "找不到可證實的機制。W6：Tokenomics v5.31 GB300 機架價格 5.0 → 4.3 $M（IF_CapexIT GB300 37.45 → 32.24）後，差距 −29% → −19%，仍 > 10%；可能原因（未證實）——MW 口徑（10-K、10-Q 未定義 active power；若為設施口徑，換成 IT MW 後差距縮小約 1/6）、議價（未揭露）；預建（1H 支出含 2H 上線的 MW）只會使實際偏高，方向相反",
     "adjust": "無（Tokenomics 為基準）；敏感度＝每 MW 建置成本倍數 1H26 實際 ÷ 模型首期",
     "rule": "3",
     "evidence": [
@@ -2150,10 +2189,10 @@
   ],
   "q2Notes": {
    "Q2 對帳｜每 MW 年收入（算力＋服務）": "模型首期：既有合約 MW 按 Q2 實現單價（k_既有），新增 MW 按市場長約 k；分母都是平均在役 MW（含爬坡中尚未計費的 MW）",
-   "Q2 對帳｜每 MW 營運成本（租金前、不含管銷；Q2 含變動租賃）": "差距 > 10% 且找不到可證實的機制（單項未揭露、保固條款找不到）：依規則 3 以 Tokenomics 為基準，Q2 實際比率列為敏感度，需要 Andy 決定；Q2 實際另含研發（Q2 $117m）",
+   "Q2 對帳｜每 MW 營運成本（租金前、不含管銷；Q2 含變動租賃）": "W6：IT 維護依機齡兩段（Q2 季末 93% 機隊在 3 年保固期內）後差距 ≤ 10%（規則 1）；Q2 實際另含研發（Q2 $117m），模型未另計",
    "Q2 對帳｜每 MW 固定租金": "Q2 營業租賃成本年化（固定租金）對模型在帳＋表外現金租金；變動租賃（水電、共同區域維護、保全）歸入營運成本",
    "Q2 對帳｜每 MW 管銷（扣 SBC）": "模型管銷率＝Q2 實際（扣 SBC）× 營收；每 MW 差距只來自每 MW 營收差距",
-   "Q2 對帳｜每 MW EBITDA（Q2＝調整後 EBITDA）": "差距主要來自營運成本（Tokenomics 滿載穩態 vs Q2 實際）；Q2 調整後 EBITDA＝營收 − 現金成本（扣 D&A、SBC），與模型 EBITDA 同口徑",
+   "Q2 對帳｜每 MW EBITDA（Q2＝調整後 EBITDA）": "W6 後收入、營運成本、租金、管銷都在 ±3% 內；Q2 調整後 EBITDA＝營收 − 現金成本（扣 D&A、SBC），與模型 EBITDA 同口徑",
    "Q2 對帳｜EBITDA 率（差距＝百分點）": "同上；模型首期為 2H 模型值"
   }
  }

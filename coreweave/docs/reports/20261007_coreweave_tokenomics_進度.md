@@ -1,8 +1,8 @@
 # CoreWeave × Tokenomics 改造進度（接手用；W1–W3 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：W0–W5（v4.7，已合併）；**W6 進行中**（PR #48，分支 `claude/coreweave-w6-v4.8`）：第 0、1 步完成（快照 v5.31）。
-- 下一步：W6 第 2 步——IT 維護依機齡兩段（`fleet.openMix.vintages` 期初機齡層；Excel「輸入與假設」TK IT 維護兩段＋保固年限、「每MW經濟性」機齡與保固區；JS `maintAgeQ`；cmp31 新增列；`methodology.perMw.maint`＝age｜flat，舊方法回歸設 flat）。
+- 已完成：W0–W5（v4.7，已合併）；**W6 進行中**（PR #48，分支 `claude/coreweave-w6-v4.8`）：第 0–4 步完成（快照 v5.31、IT 維護依機齡兩段、公司實況驗證重跑、MW 口徑查證＝無原文定義、維持 IT）。
+- 下一步：W6 第 5 步——升版 v4.8（VLOG 兩處、dist、交接檔、README）；`scripts/expect/v4_8_rules.json` → `make_expect.py`（對 v4.7 成品）→ `EXPECT=… verify.sh --vs-dist`；`verify_legacy.sh`（對 v4.6）；`scripts/attrib_w6.py --v47 dist v4.7`；第 6 步 `scripts/compare_w6.py`＋報告 md。
 - 未解問題（W6）：見 W6 段落。
 
 ## 工作單總覽
@@ -525,3 +525,18 @@ Tokenomics：master `f16f161`（PR #36 合併），`model/CURRENT`＝`20261008_T
 | IF_OpexGW | GB300 2.63 → 1.98；其他世代 −17% 到 −23%（只對照） |
 | L1_GPUhr_GB200_vsCW／L1_GPUhr_GB300_vsBE | 2.086 → 2.008／2.983 → 2.552 |
 | 不變 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexFacility、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintFac、IF_StaffSW、IF_RevGWFleet |
+| 2 IT 維護依機齡兩段（Excel＋JS） | 完成 | （本 commit） | `methodology.perMw.maint`＝age；`fleet.openMix.vintages`（2023 年 100／2024 年 260／2025 年 490／2026 上半年 650 MW，投入使用＝期間中點）；Excel「輸入與假設」期初機齡層、TK IT 維護兩段、保固年限（TK_WarrantyYrs）；「每MW經濟性」新增「機齡與保固」區（期間起訖、各層／各期新增的保固期內比例、各世代保固期內／期滿平均在役 MW）與 IT 維護兩部分、等值費率對照列；「公司實況驗證」IT 維護 Tokenomics 值改依機齡、Q2 季末營運成本合計改依機齡（新增「Q2 季末保固期內占比」）；JS `vintQ`／`maintAgeQ`／`q2WarrQ`；cmp31 三情境各 555 項（+27）、FY27 錨定 501 項；舊方法回歸 `verify_legacy.sh` 設 maint=flat |
+| 3 公司實況驗證重跑 | 完成 | （本 commit） | 營運成本合計 Tokenomics 1.326 對 Q2 1.357：+2.3%（v4.7 −35%）→ 規則 1；每 MW 資本支出 30.59 對 1H26 24.83：−18.8%（v4.7 −28.6%）→ 仍 > 10%，規則 3；k_既有 0.911 對 k_長約 0.76（+19.9%，規則 4a；錨下降使 k_既有上升、既有合約收入不變）；租金、折舊年限一致。company.json 參數說明（maint、opexBundle、capex、q2Notes）改寫 |
+| 4 MW 口徑查證 | 完成（未改） | — | EDGAR 10-K FY2025（crwv-20251231.htm）全文 curl 讀取＋WebFetch 第二次讀取：「active power」6 次、「contracted power」2 次，皆只有數字、無定義；「critical IT」只出現在資訊系統語境；10-Q Q2 2026 全文：「active power」0 次；EDGAR 全文檢索（efts）經代理 403；網路搜尋無公司原文定義 → 維持 `meta.mwBasis`＝IT。另發現：10-K 寫 2023 年底約 70 MW（模型 `defaults.mwYearEnd` 2023＝100），列未解問題 |
+
+#### W6 第 2 步：IT 維護逐年值（US$m／平均在役 MW／年；v4.7＝等值費率 IF_MaintIT v5.27）
+| 情境 | 項目 | FY26（2H） | FY27 | FY28 | FY29 | FY30 |
+|---|---|---|---|---|---|---|
+| 基準 | v4.7 IT 維護 | 0.94 | 0.99 | 1.03 | 1.05 | 1.08 |
+| 基準 | v4.8 IT 維護（依機齡） | 0.185 | 0.216 | 0.275 | 0.388 | 0.503 |
+| 基準 | 　保固期內部分 | 0.136 | 0.139 | 0.138 | 0.122 | 0.105 |
+| 基準 | 　保固期滿部分 | 0.049 | 0.077 | 0.138 | 0.266 | 0.398 |
+| 基準 | 保固期內占比 | 94.0% | 90.7% | 83.0% | 68.8% | 56.8% |
+| 基準 | 對照：等值費率 IF_MaintIT v5.31 | 0.452 | 0.479 | 0.505 | 0.524 | 0.540 |
+| 保守 | v4.8 IT 維護 | 0.185 | 0.216 | 0.278 | 0.409 | 0.578 |
+| 積極 | v4.8 IT 維護 | 0.185 | 0.216 | 0.269 | 0.350 | 0.417 |

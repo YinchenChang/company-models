@@ -575,6 +575,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.perMw.capex` | 每 MW 資本支出方法（W2）：tokenomics＝Σ 新增世代占比 × IF_CapexIT；legacy＝scenarios.capexTemplate.costMW | 代碼 | tokenomics | 檢查 |
 | `methodology.perMw.cost` | 營運成本方法（W2）：bottomUp＝Tokenomics 電費、IT 維護、人員軟體、稅險 × 平均在役 MW＋管銷率；ebitdaPct＝起始→穩態 EBITDA 率線性 | 代碼 | bottomUp | 檢查 |
 | `methodology.perMw.revenue` | 每 MW 收入方法（W2／W4）：tkAnchor＝Σ 平均在役占比 × IF_HoldEcon × 定價倍數 k（pricing.anchorMultiple；W4 預設）；gpuHr＝pricing.gpuHr × 每 MW GPU 數 × 8,760；legacy＝defaults.m.revMW（對照） | 代碼 | tkAnchor | 檢查 |
+| `methodology.perMw.maint` | IT 維護方法（W6）：age＝依機齡兩段（Σ 世代［保固期內平均在役 MW × IF_MaintITWarr＋保固期滿 × IF_MaintITPost］，機齡由 fleet.openMix.vintages 與各期新增 MW 推得、保固年限 IF_WarrantyYrs；需 Tokenomics v5.31 起）；flat＝Σ 平均在役占比 × IF_MaintIT 等值費率（v4.7 前；未填＝flat） | 代碼 | age | 檢查 |
 
 ### `peers`：同業比較（Comps）
 
@@ -649,6 +650,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `fleet.openMix.mix` | 期初在役 MW 的世代占比，{世代: 比例}，合計 1 | 物件（比例） | 物件（Hopper H100、GB200 NVL72、GB300 NVL72） | 必改 |
 | `fleet.openMix.tag` | 期初世代占比的來源標記 | 文字 | [Assumed] | 必改 |
 | `fleet.openMix.source` | 期初世代占比的來源與方法 | 文字 | W1 第 6b 步（coreweave/data/p… | 必改 |
+| `fleet.openMix.vintages` | 期初機齡層（W6；maint＝age 時必填）：[{label, mw, inService（投入使用月 YYYY-MM）, mix {世代: 比例}}]；各層 MW 合計＝activeMW、各世代合計＝activeMW × mix（建置時檢查）；隨 openMix 列入滾動檢查 | 清單 | 4 筆 | 必改 |
+| `fleet.openMix.vintageNote` | 期初機齡層的來源與方法 | 文字 | W6：期初機齡層（IT 維護依機齡兩段）。MW＝W1… | 必改 |
 | `fleet.newMix` | 五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期新增 MW（含汰換補回）的世代占比，每期 {世代: 比例}，合計 1 | 清單 | 5 筆 | 檢查 |
 | `fleet.newMixNote` | 新增世代占比的依據 | 文字 | 工作單 W2 預設 [Assumed]：2H26 G… | 檢查 |
 | `fleet.newMixAlt.label` | 世代組合敏感度（替代路徑）的名稱 | 文字 | Rubin Ultra 版（FY29–FY30 新增… | 檢查 |

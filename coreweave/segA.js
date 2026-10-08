@@ -129,6 +129,35 @@ function fleetQ(e, acc) { // 世代組合：期初（最新季末）在役機隊
   let tot = avg.map(a => a.reduce((x, y) => x + y, 0));
   return { start, end, avg, tot, add, ret, nm: NM, endTot: end.map(a => a.reduce((x, y) => x + y, 0)), mix: avg.map((a, n) => a.map(x => x / Math.max(tot[n], 1e-9))) }
 }
+var MAGEQ = PMWQ.maint === `age` && PMWQ.cost === `bottomUp`; // W6：IT 維護依機齡兩段（methodology.perMw.maint；flat＝IF_MaintIT 等值費率）
+function vintQ() { // W6：期初機齡層（fleet.openMix.vintages）：MW、評價日時機齡（年＝月數 ÷ 12）、世代占比（Excel「輸入與假設」世代組合區同列）
+  let O = FLEETQ.openMix, [ay, am] = O.asOf.split(`-`).map(Number);
+  return (O.vintages || []).map(v => { let [y, m] = v.inService.split(`-`).map(Number); return { label: v.label, mw: v.mw, age: ((ay - y) * 12 + am - m) / 12, mix: GENQ.map(g => v.mix[g] || 0) } })
+}
+function q2WarrQ() { // W6：最近一季季末（評價日）在役 MW 中仍在保固期內者（依世代；期初機齡層 W − 機齡 > 0）
+  let W = tkQ(`IF_WarrantyYrs`), V = vintQ();
+  return GENQ.map((g, j) => V.reduce((s, v) => s + (W - v.age > 0 ? v.mw * v.mix[j] : 0), 0))
+}
+function maintAgeQ(F, cs) { // W6：每期 IT 維護＝Σ 世代［保固期內平均在役 MW × IF_MaintITWarr＋保固期滿 × IF_MaintITPost］÷ 平均在役 MW（Excel「每MW經濟性」機齡與保固區同列同算式）
+  // 時間以首期期初（評價日）起算的年數；期初層保固到期＝W − 機齡；各期新增 MW 於該期中點投入、到期＝中點＋W；保固期內比例＝到期前占該期的比例（0–1）
+  // 當期新增 MW 只計平均在役的一半（與平均在役 MW＝(期初＋期末)/2 一致）；保固期內 MW 不超過該世代平均在役 MW
+  let W = tkQ(`IF_WarrantyYrs`), V = vintQ(), L = PERIOD_YEARS, t0 = [], t1 = [], a = 0;
+  for (let n = 0; n < 5; n++) t0.push(a), a += L[n], t1.push(a);
+  let fr = (x, n) => Math.min(1, Math.max(0, (x - t0[n]) / L[n])),
+    vf = V.map(v => t0.map((_, n) => fr(W - v.age, n))),
+    cf = t0.map((_, m) => t0.map((_, n) => n < m ? 0 : n === m ? 1 : fr((t0[m] + t1[m]) / 2 + W, n))),
+    nw = F.nm.map((mx, m) => mx.map(x => x * (F.add[m] + F.ret[m]))),
+    tv = (n, g) => tkMwQ(n, g, cs), R = { W, V, t0, t1, vf, cf, warr: [], post: [], wPart: [], pPart: [], share: [] };
+  for (let n = 0; n < 5; n++) {
+    let w = GENQ.map((g, j) => { let x = V.reduce((s, v, k) => s + v.mw * v.mix[j] * vf[k][n], 0); for (let m = 0; m < n; m++) x += nw[m][j] * cf[m][n]; return Math.min(x + .5 * nw[n][j], F.avg[n][j]) }),
+      p = GENQ.map((g, j) => F.avg[n][j] - w[j]), M = Math.max(F.tot[n], 1e-9);
+    R.warr.push(w), R.post.push(p), R.share.push(w.reduce((x, y) => x + y, 0) / M),
+    R.wPart.push(GENQ.reduce((s, g, j) => s + (w[j] ? w[j] * tv(`IF_MaintITWarr`, g) : 0), 0) / M),
+    R.pPart.push(GENQ.reduce((s, g, j) => s + (p[j] ? p[j] * tv(`IF_MaintITPost`, g) : 0), 0) / M)
+  }
+  R.rate = R.wPart.map((x, n) => x + R.pPart[n]);
+  return R
+}
 function gpuPerMwQ(mx) { return wMixQ(mx, g => tkMwQ(`IF_GPUsPerGW`, g) / 1e3) } // 每公司 MW GPU 數（依世代加權）
 function revGpuQ(e, F) { // 每 MW 年收入（US$bn/MW，100% 計費時數；利用率在收入端另乘）＝Σ 平均在役占比 × 每 MW GPU 數 × GPU 小時合約價 × 8,760 ÷ 10⁹
   let P = PRICINGQ.gpuHr || {}, k = (e && e.pxCase) || `base`;
@@ -324,7 +353,7 @@ function revPassQ(e, t, r) { // W2：與 runFunding 同一組收入算式（由�
 function buCostQ(e, t, F, r, rev, S) { // W2：由下而上營運成本（租金前；US$bn）——電費、IT 維護、人員軟體、稅險依平均在役世代加權 × 平均在役 MW；管銷＝營收 × 管銷率
   let L = PERIOD_YEARS[r], M = F.tot[r], mx = F.mix[r], cs = e.tkCase || `基準`,
     pw = wMixQ(mx, g => tkMwQ(`IF_PowerCost`, g, cs)),
-    mt = tkHasQ(`IF_MaintIT`) ? wMixQ(mx, g => tkMwQ(`IF_MaintIT`, g, cs)) : t.maint[r],
+    mt = MAGEQ ? maintAgeQ(F, cs).rate[r] : tkHasQ(`IF_MaintIT`) ? wMixQ(mx, g => tkMwQ(`IF_MaintIT`, g, cs)) : t.maint[r], // W6：依機齡兩段
     st = tkHasQ(`IF_StaffSW`) ? wMixQ(mx, g => tkMwQ(`IF_StaffSW`, g, cs)) : 0,
     tx = tkHasQ(`IF_TaxIns`) ? wMixQ(mx, g => tkMwQ(`IF_TaxIns`, g, cs) * tkQ(`IF_CapexIT`, g, cs) / tkQ(`IF_CapexTotal`, g, cs)) : 0,
     k = M / 1e3 * L, R = Math.max(rev, .01), sp = sgaPctQ(e), sga = rev * sp;
@@ -348,7 +377,7 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
   let F = d.fleet;
   if (!F) return null;
   let y = d.years, L = PERIOD_YEARS, cs = e.tkCase || `基準`, I5 = [0, 1, 2, 3, 4], G = GENQ, NG = G.length,
-    M = F.tot, mx = F.mix, nm = F.nm,
+    M = F.tot, mx = F.mix, nm = F.nm, MA = MAGEQ ? maintAgeQ(F, cs) : null, OZ = CAQ ? (e.opexScale ?? CAQ.opexScale.base) : 1, // W6
     pm = (x, i) => x / Math.max(1e-9, M[i]) / L[i] * 1e3,
     fac = mx.map(m => wMixQ(m, g => tkQ(`IF_FacilityGW`, g))),
     itMw = I5.map(i => MWBASISQ === `facility` ? M[i] / fac[i] : M[i]),
@@ -395,10 +424,19 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
       [`期末在役 MW 合計`, `MW`, F.endTot],
       ...G.map((g, j) => [`平均在役 MW｜${g}`, `MW`, F.avg.map(a => a[j])]),
       [`平均在役 MW 合計`, `MW`, M],
-      ...G.map((g, j) => [`平均在役占比｜${g}`, `%`, mx.map(a => a[j])])
+      ...G.map((g, j) => [`平均在役占比｜${g}`, `%`, mx.map(a => a[j])]),
+      ...(MA ? [ // W6：機齡與保固（Excel「每MW經濟性」機齡與保固區）
+        [`機齡｜期間起點（距期初，年）`, `年`, MA.t0], [`機齡｜期間終點（距期初，年）`, `年`, MA.t1], [`機齡｜IT 原廠保固年限（IF_WarrantyYrs）`, `年`, I5.map(() => MA.W)],
+        ...MA.V.map((v, k) => [`機齡｜保固期內比例｜期初層 ${v.label}`, `%`, MA.vf[k]]),
+        ...I5.map(m => [`機齡｜保固期內比例｜${PERIODS[m]} 新增`, `%`, MA.cf[m]]),
+        ...G.map((g, j) => [`保固期內平均在役 MW｜${g}`, `MW`, MA.warr.map(a => a[j])]),
+        ...G.map((g, j) => [`保固期滿平均在役 MW｜${g}`, `MW`, MA.post.map(a => a[j])]),
+        [`保固期內占比（平均在役 MW）`, `%`, MA.share]] : [])
     ],
     bu = [
       [`每 MW 電費（世代加權）`, `US$m/MW`, buM(`pwMW`)], [`每 MW IT 維護（世代加權）`, `US$m/MW`, buM(`mtMW`)],
+      ...(MA ? [[`每 MW IT 維護｜保固期內部分（IF_MaintITWarr）`, `US$m/MW`, MA.wPart.map(x => x * OZ)], [`每 MW IT 維護｜保固期滿部分（IF_MaintITPost）`, `US$m/MW`, MA.pPart.map(x => x * OZ)],
+        [`每 MW IT 維護｜等值費率 IF_MaintIT（對照，不入損益）`, `US$m/MW`, mx.map(m => wMixQ(m, g => tkMwQ(`IF_MaintIT`, g, cs)))]] : []), // W6
       [`每 MW 人員、軟體、水與耗材`, `US$m/MW`, buM(`stMW`)], [`每 MW 財產稅與保險（只算 IT 部分）`, `US$m/MW`, buM(`txMW`)],
       [`電費（金額）`, `US$bn`, buM(`power`)], [`IT 維護（金額）`, `US$bn`, buM(`maint`)], [`人員、軟體、水與耗材（金額）`, `US$bn`, buM(`staff`)], [`財產稅與保險（金額）`, `US$bn`, buM(`tax`)],
       [`模型期總營收（算力＋服務）`, `US$bn`, buM(`rev`)], [`管銷率`, `%`, buM(`sgaPct`)], [`公司管銷與其他（金額）`, `US$bn`, buM(`sga`)],
@@ -471,7 +509,8 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
   let cv = null, q2r = null;
   if (CAQ && AMQ && tk && PMWQ.revenue === `tkAnchor`) { // W5：公司實況驗證（Excel「公司實況驗證」頁同列名、同算式；欄＝Tokenomics 值、CRWV 實際、差距、採用值、處理規則）
     let A = anchorRevQ(e, F, d.m), m0 = mx[0], tw = n => wMixQ(m0, g => tkMwQ(n, g, cs)),
-      tPw = tw(`IF_PowerCost`), tMt = tw(`IF_MaintIT`), tSt = tw(`IF_StaffSW`), tTx = wMixQ(m0, g => tkMwQ(`IF_TaxIns`, g, cs) * tkQ(`IF_CapexIT`, g, cs) / tkQ(`IF_CapexTotal`, g, cs)),
+      tPw = tw(`IF_PowerCost`), tMt = MA ? MA.rate[0] : tw(`IF_MaintIT`), // W6：依機齡兩段（模型首期）
+      tSt = tw(`IF_StaffSW`), tTx = wMixQ(m0, g => tkMwQ(`IF_TaxIns`, g, cs) * tkQ(`IF_CapexIT`, g, cs) / tkQ(`IF_CapexTotal`, g, cs)),
       qAct = (lq.costRev + lq.techInfra - lq.da - lq.sbcCostTi - lq.opLeaseCost) * 4 / qMW * 1e3, qRent = lq.opLeaseCost * 4 / qMW * 1e3,
       CX = CAQ.capexActual, dMW = CX.mwEnd - CX.mwStart, cxAct = lq.capexH1 / dMW * 1e3, cxTech = (CX.techEquip[1] - CX.techEquip[0]) / dMW * 1e3,
       lifeTk = GENQ.reduce((a, g) => a + (FLEETQ.openMix.mix[g] || 0) * tkQ(`IF_DeprLifeIT`, g), 0), P = CAQ.params, tol = CAQ.gapTol,
@@ -491,6 +530,7 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
       [`每 MW 資本支出｜技術設備毛額增加 ÷ 新增 MW（對照）`, `US$m/MW`, [capIT[0], cxTech, gp(capIT[0], cxTech), null, null]],
       row(`life`, L0.life, `年`, lifeTk, P.find(z => z.key === `life`).actualValue, e.gpuLife),
       ...(() => { let Z = cvSensQ(); return [
+        ...(MAGEQ ? [[`敏感度輸入｜Q2 季末保固期內占比（期初機齡層）`, `%`, [Z.q2s, null, null, null, null]]] : []), // W6
         [`敏感度輸入｜Q2 季末世代 Tokenomics 營運成本合計（基準成本情境）`, `US$m/MW`, [Z.tb, null, null, null, null]],
         [`敏感度輸入｜營運成本倍數＝Q2 實際 ÷ Q2 季末世代 Tokenomics 合計`, `倍`, [Z.opex, null, null, null, null]],
         [`敏感度輸入｜首期新增世代 Tokenomics IT 資本（基準成本情境）`, `US$m/MW`, [Z.cxTk, null, null, null, null]],
@@ -512,10 +552,13 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
 
 function cvSensQ() { // W5：公司實況敏感度的輸入值（與情境無關：Q2 季末世代與首期新增世代、基準成本情境；Excel「公司實況驗證」頁敏感度輸入列同算式）
   let lq = LATEST_Q, O = FLEETQ.openMix, qMW = O.activeMW - CALL_FACTS.activeAddQ2 / 2, CX = CAQ.capexActual,
-    om = g => O.mix[g] || 0, tb = GENQ.reduce((a, g) => a + om(g) * (tkMwQ(`IF_PowerCost`, g) + tkMwQ(`IF_MaintIT`, g) + tkMwQ(`IF_StaffSW`, g) + tkMwQ(`IF_TaxIns`, g) * tkQ(`IF_CapexIT`, g) / tkQ(`IF_CapexTotal`, g)), 0),
+    om = g => O.mix[g] || 0, QW = MAGEQ ? q2WarrQ() : null, // W6：Q2 季末 IT 維護依機齡兩段（保固期內 MW × IF_MaintITWarr＋其餘 × IF_MaintITPost）
+    mq = (g, j) => QW ? (QW[j] * tkMwQ(`IF_MaintITWarr`, g) + (O.activeMW * om(g) - QW[j]) * tkMwQ(`IF_MaintITPost`, g)) / O.activeMW : om(g) * tkMwQ(`IF_MaintIT`, g),
+    tb = GENQ.reduce((a, g, j) => a + om(g) * (tkMwQ(`IF_PowerCost`, g) + tkMwQ(`IF_StaffSW`, g) + tkMwQ(`IF_TaxIns`, g) * tkQ(`IF_CapexIT`, g) / tkQ(`IF_CapexTotal`, g)) + (om(g) ? mq(g, j) : 0), 0),
+    q2s = QW ? QW.reduce((x, y) => x + y, 0) / O.activeMW : null,
     qAct = (lq.costRev + lq.techInfra - lq.da - lq.sbcCostTi - lq.opLeaseCost) * 4 / qMW * 1e3, cxAct = lq.capexH1 / (CX.mwEnd - CX.mwStart) * 1e3,
     cxTk = wMixQ(newMixQ(null)[0], g => tkMwQ(`IF_CapexIT`, g)), ev = AMQ.evidence.find(x => x.label === CAQ.spotCw.evidenceLabel);
-  return { opex: qAct / tb, capex: cxAct / cxTk, kcw: ev.price / tkQ(ev.tkName, ev.gen), tb, cxTk }
+  return { opex: qAct / tb, capex: cxAct / cxTk, kcw: ev.price / tkQ(ev.tkName, ev.gen), tb, cxTk, q2s }
 }
 function pmwSensQ(e, v) { // W2：每 MW 敏感度（與 scripts/permw_sens.py 同一組設定；Excel 為建置時快照，cmp31 逐格比對）
   let C = [[`base`, `基準（目前輸入）`, {}], [`tkLow`, `Tokenomics 低成本`, { tkCase: `低成本` }], [`tkHigh`, `Tokenomics 高成本`, { tkCase: `高成本` }],
