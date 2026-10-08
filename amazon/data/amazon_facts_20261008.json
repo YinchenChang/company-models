@@ -7480,7 +7480,46 @@
     "docDate": "2026-10",
     "retrieved": "2026-10-08",
     "tag": "[Analogy]",
-    "note": "疑為產業／調整後 beta；與 1.46 差距大，列為敏感度下緣"
+    "note": "口徑未說明；r2 起不計入 β 平均（C13 要求寫明期間／頻率），只作對照"
+   },
+   {
+    "id": "val.beta.gurufocus",
+    "item": "Beta（3 年）",
+    "value": 1.567,
+    "unit": "倍",
+    "period": "2026-10-03",
+    "source": "GuruFocus AMZN Beta",
+    "url": "https://www.gurufocus.com/term/beta/AMZN",
+    "docDate": "2026-10-03",
+    "retrieved": "2026-10-08",
+    "tag": "[Verified]",
+    "note": "頁面寫明 3 年報酬期間（頻率、基準指數未寫明）；與 StockAnalysis 5 年月資料不同資料商、不同期間 → 獨立來源（C13）"
+   },
+   {
+    "id": "val.beta.marketbeat",
+    "item": "Beta（口徑未說明）",
+    "value": 1.45,
+    "unit": "倍",
+    "period": "2026-10-08",
+    "source": "MarketBeat AMZN",
+    "url": "https://www.marketbeat.com/stocks/NASDAQ/AMZN/",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Analogy]",
+    "note": "口徑未說明，不計入平均，只作對照"
+   },
+   {
+    "id": "val.beta.base",
+    "item": "Beta 基準（獨立來源平均）",
+    "value": 1.5135,
+    "unit": "倍",
+    "period": "2026-10-08",
+    "source": "本報告換算（StockAnalysis 5 年月 1.46、GuruFocus 3 年 1.567 平均）",
+    "url": "https://www.gurufocus.com/term/beta/AMZN",
+    "docDate": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "tag": "[Derived]",
+    "note": "MAG 對照表 r1 C13；敏感度 1.46–1.567"
    },
    {
     "id": "val.erp",

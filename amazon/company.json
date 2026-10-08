@@ -955,14 +955,33 @@
   "wcPctOfRevGrowth": 0.0,
   "wacc": null,
   "capm": {
-   "beta": 1.46,
+   "beta": 1.5135,
+   "betaSources": [
+    {
+     "vendor": "StockAnalysis（Yahoo Finance 同值，推測同源，合算 1 個）",
+     "value": 1.46,
+     "period": "5 年",
+     "frequency": "月",
+     "asOf": "2026-10-08",
+     "ref": "val.beta.sa"
+    },
+    {
+     "vendor": "GuruFocus",
+     "value": 1.567,
+     "period": "3 年",
+     "frequency": "頁面未寫明",
+     "asOf": "2026-10-03",
+     "ref": "val.beta.gurufocus"
+    }
+   ],
    "erp": 0.05,
    "kdPretax": 0.0633,
    "betaSens": [
-    0.78,
-    1.2
+    1.46,
+    1.567
    ],
-   "note": "WACC＝E/(D+E)×(rf＋β×ERP)＋D/(D+E)×kd×(1−稅率)；E＝現價 × 流通股數（latestQuarter.sharesOut）、D＝評價日債務面額（latestQuarter.debtPrincipal）；β 1.46（StockAnalysis／Yahoo 5 年，疑同源；Alpha Spread 0.78 作敏感度下緣）、rf 5.28%（10 年美債 2026-10-07）、ERP 5%、kd 6.33%（2026-07 新發 2066 票據有效利率）；稅率 17.36%（2023–2025 有效稅率平均）。valuation.wacc 為 null 時採 CAPM。"
+   "note": "WACC＝E/(D+E)×(rf＋β×ERP)＋D/(D+E)×kd×(1−稅率)；E＝現價 × 流通股數（latestQuarter.sharesOut）、D＝評價日債務面額（latestQuarter.debtPrincipal）；β 1.5135（獨立來源平均，見 betaNote）、rf 5.28%（10 年美債 2026-10-07）、ERP 5%、kd 6.33%（2026-07 新發 2066 票據有效利率）；稅率 17.36%（2023–2025 有效稅率平均）。valuation.wacc 為 null 時採 CAPM。",
+   "betaNote": "β＝獨立來源平均（MAG 對照表 r1 C13）：StockAnalysis 5 年月 1.46（Yahoo 同值，推測同源，只算 1 個）、GuruFocus 3 年 1.567 → 1.5135；敏感度＝獨立來源區間 1.46–1.567。Alpha Spread 0.78 口徑未說明、MarketBeat 1.45 口徑未說明，不計入（列事實總帳對照）[Derived]"
   },
   "g": 0.03,
   "sbc": 19.314,

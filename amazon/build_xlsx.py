@@ -716,7 +716,7 @@ ADJ = gi(r, "淨負債調整項（類債 − 持股 ×（1 − 折價））", "U
 TAX = gi(r, "稅率", "%", V['tax'], TXQ['taxNote'] + " [Interested-party]", PCT); r += 1
 _CP = V['capm']  # v0.1b（Oracle）：WACC 以 CAPM 計算（company.json → valuation.capm）；valuation.wacc 非 null 時為手動覆蓋
 RF = gi(r, "無風險利率", "%", V['rf'], "10 年期美債（CAPM 與選擇權法共用）[Verified]", PCT); r += 1
-BETA = gi(r, "CAPM：β", "x", _CP['beta'], "5 年月報酬 β（StockAnalysis／Yahoo，同值）；敏感度 1.2／1.5 見報告 [Verified]", '0.00'); r += 1
+BETA = gi(r, "CAPM：β", "x", _CP['beta'], _CP.get('betaNote', '[Verified]'), '0.00'); r += 1
 ERP = gi(r, "CAPM：股權風險溢酬", "%", _CP['erp'], "[Assumed]（區間 4.5%–6%）", PCT); r += 1
 KE = gi(r, "股權成本 ke＝rf＋β × ERP", "%", f"={RF}+{BETA}*{ERP}", "CAPM", PCT); r += 1
 KD = gi(r, "稅前債務成本 kd", "%", _CP['kdPretax'], "2046 票據殖利率（市場邊際成本）[Verified]", PCT); r += 1

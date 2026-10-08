@@ -575,11 +575,13 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `valuation.tax` | 稅率 | 比例 | 0.1736 | 檢查 |
 | `valuation.nol` | 期初可扣抵虧損（NOL） | US$bn | 0 | 必改 |
 | `valuation.wacc` | 加權平均資金成本 WACC 手動覆蓋（null＝採 CAPM） | 比例或 null | None | 檢查 |
-| `valuation.capm.beta` | CAPM β | 倍 | 1.46 | 檢查 |
+| `valuation.capm.beta` | CAPM β | 倍 | 1.5135 | 檢查 |
 | `valuation.capm.erp` | CAPM 股權風險溢酬 | 比例 | 0.05 | 檢查 |
 | `valuation.capm.kdPretax` | 稅前債務成本（市場邊際） | 比例 | 0.0633 | 檢查 |
-| `valuation.capm.betaSens` | β 敏感度（報告用） | 倍 清單 | 0.78、1.2 | 檢查 |
+| `valuation.capm.betaSens` | β 敏感度（報告用） | 倍 清單 | 1.46、1.567 | 檢查 |
 | `valuation.capm.note` | WACC 公式與來源說明 | 文字 | WACC＝E/(D+E)×(rf＋β×ERP)＋D/… | 必改 |
+| `valuation.capm.betaSources` | β 獨立來源清單：[{vendor, value, period, frequency, asOf, ref}]；beta＝平均、betaSens＝[最小, 最大]（MAG 對照表 r1 C13；報告用） | 清單（物件） | 2 筆 | 必改 |
+| `valuation.capm.betaNote` | β 來源與平均說明（Excel β 列備註） | 文字 | β＝獨立來源平均（MAG 對照表 r1 C13）：S… | 必改 |
 | `valuation.nolUsePct` | NOL 每年可抵用上限占應稅所得的比例（美國 80%；依公司稅籍調整；5a） | 比例 | 0.8 | 檢查 |
 | `valuation.wcPctOfRevGrowth` | 營運資金變動占營收增量的比例（DCF 自由現金流；5a） | 比例 | 0 | 檢查 |
 | `valuation.g` | 永續成長率 | 比例 | 0.03 | 檢查 |

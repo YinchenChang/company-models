@@ -270,7 +270,7 @@ F = [
  ('valuation.atmSharesInValuation', '評價股數中「期後股權發行上限」的股數：期後股權／可轉債開關關閉時由評價股數扣回（v0.1b；CRWV 0.035、無此項的公司填 0）', 'bn 股', M),
  ('valuation.netDebt', '淨負債（不含可轉債：其他借款 − 現金，含期後已入帳的股權／可轉債募得淨額；可轉債依 debt.convertibles 另計）', 'US$bn', M), ('valuation.holdings', '持股清單，一筆一列：[名稱, 估值（100%，US$bn）, 持股比例, 備註]；價值＝估值 × 持股比例 ×（1 − holdingsDiscount），自淨負債扣除', '清單', M), ('valuation.holdingsDiscount', '持股折價（流動性、少數股權）', '比例', M), ('valuation.debtLike', '類債項目，一筆一列：[名稱, 金額（US$bn）, 備註]；加入淨負債', '清單', M), ('valuation.tax', '稅率', '比例', C),
  ('valuation.nol', '期初可扣抵虧損（NOL）', 'US$bn', M), ('valuation.wacc', '加權平均資金成本 WACC 手動覆蓋（null＝採 CAPM）', '比例或 null', C),
- ('valuation.capm.beta', 'CAPM β', '倍', C), ('valuation.capm.erp', 'CAPM 股權風險溢酬', '比例', C), ('valuation.capm.kdPretax', '稅前債務成本（市場邊際）', '比例', C), ('valuation.capm.betaSens', 'β 敏感度（報告用）', '倍 清單', C), ('valuation.capm.note', 'WACC 公式與來源說明', '文字', M),
+ ('valuation.capm.beta', 'CAPM β', '倍', C), ('valuation.capm.erp', 'CAPM 股權風險溢酬', '比例', C), ('valuation.capm.kdPretax', '稅前債務成本（市場邊際）', '比例', C), ('valuation.capm.betaSens', 'β 敏感度（報告用）', '倍 清單', C), ('valuation.capm.note', 'WACC 公式與來源說明', '文字', M), ('valuation.capm.betaSources', 'β 獨立來源清單：[{vendor, value, period, frequency, asOf, ref}]；beta＝平均、betaSens＝[最小, 最大]（MAG 對照表 r1 C13；報告用）', '清單（物件）', M), ('valuation.capm.betaNote', 'β 來源與平均說明（Excel β 列備註）', '文字', M),
  ('valuation.nolUsePct', 'NOL 每年可抵用上限占應稅所得的比例（美國 80%；依公司稅籍調整；5a）', '比例', C),
  ('valuation.wcPctOfRevGrowth', '營運資金變動占營收增量的比例（DCF 自由現金流；5a）', '比例', C),
  ('valuation.g', '永續成長率', '比例', C), ('valuation.sbc', '年度股份基礎薪酬', 'US$bn', M),
