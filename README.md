@@ -13,7 +13,8 @@
 | `anthropic/` | Anthropic（未上市） | `openai/`（v0.6，`claude/openai-s6-release` @ `e91df57`）的架構與工具鏈 | v0.1（成品：`anthropic/dist/20261008_Anthropic收支模型_v0_1.html`／`.xlsx`；PR #22 待合併） |
 | `whitefiber/` | WhiteFiber（WYFI） | `oracle/` @ `e4540c3`（Oracle v0.2 分支） | v0.1 |
 | `markets/` | 市場層（AI 半導體）：每 GW 晶片內容橋接表等，見 `markets/README.md` | 新建（AI 半導體 Project） | chip_bridge v0.1 |
-| `skhynix/` | SK 海力士（000660.KS） | 新樣板（AI 半導體 Project；記憶體公司） | v0.1 |
+| `skhynix/` | SK 海力士（000660.KS） | 記憶體樣板 `tools/memory_model`（AI 半導體 Project） | v0.2 |
+| `micron/` | 美光（MU） | 記憶體樣板 v0.2（複製測試） | v0.1 |
 
 規則：
 - 事實來源與分層：算力相關的產業與物理層資料取自 Tokenomics（`YinchenChang/Tokenomics` 的 Interface／L1／SRC，X8）；公司專屬資料放各公司的 `company.json` 與 `data/`。

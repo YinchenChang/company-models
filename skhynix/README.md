@@ -6,13 +6,13 @@ AI 半導體樣板的第一家公司（之後複製到美光、三星）。
 
 | 檔案 | 內容 |
 |---|---|
-| `build_skhynix.py` | 建檔程式（openpyxl 寫公式；所有輸入在 In 頁，具名範圍＝鍵） |
-| `dist/20261008_SK海力士模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `company.py` | 設定檔（只放參數）；結構在 `tools/memory_model/build.py`（記憶體樣板）與 `markets/memory/market.py`（共用市場層） |
+| `dist/20261008_SK海力士模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 
 ## 建置
 
 ```
-python3 skhynix/build_skhynix.py raw.xlsx
+python3 tools/memory_model/build.py skhynix/company.py raw.xlsx
 soffice --headless --convert-to xlsx --outdir skhynix/dist raw.xlsx
 ```
 
@@ -26,7 +26,15 @@ README（命題、驅動 → 推導、驗收清單）、In（輸入、標記、�
 - 公司數字：SEC 424B4（2026-07）、6-K 半年報（2026-08-18）、公司法說。
 - SemiAnalysis 未使用。參數不由共識回推；共識只在 Recon 頁事後對照。
 
-## v0.1 結果摘要（基準值）
+## v0.2 變更（2026-10-08，因美光複製測試而改樣板）
+
+1. 一般 DRAM、NAND 年均價變動改由共用季價路徑（`Path` 頁）依會計年度平均算出，不再逐年手填。
+2. 新增情境 C（2028 回到 2025 年價格水準）。
+3. HBM 市場、加速器數量層移到 `markets/memory/market.py`。
+
+與 v0.1 回歸比對（營業利益）：2027 A 442.2 → 438.7（−0.8%）；2028 A 480.3 → 480.0；2027 B 424.1 → 428.3（+1.0%）；2028 B 224.4 → 245.2（+9.3%）。差異全部來自年均價改由季度路徑平均：2028 B 一般 DRAM −50% → −46.8%、NAND −65% → −59.5%。2026 數字不變。
+
+## v0.1 結果摘要（基準值；v0.2 見上）
 
 | | 2026E | 2027E A | 2028E A | 2027E B | 2028E B |
 |---|---|---|---|---|---|
@@ -38,6 +46,6 @@ README（命題、驅動 → 推導、驗收清單）、In（輸入、標記、�
 ## 已知簡化與待辦
 
 1. 2025 年成本拆分為示意；營運資金未計；股數用期末。
-2. HBM 市場暫放本活頁簿；複製到美光時移到 `markets/hbm/`（樣板驗收第 7 項）。
+2. HBM 市場已移到 `markets/memory/`（v0.2）。
 3. HBM 毛利率無法由公開資料分離（公司不揭露）。
-4. 情境 B 的 2028 價格仍約為 2025 年均價的 2.7 倍；完整回到谷底的情境未建。
+4. 情境 C 已建（v0.2）。
