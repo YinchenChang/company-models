@@ -25,3 +25,11 @@
 - F1：token 換算推論 GW 改依 token 類型（新鮮 prefill／快取命中／decode）× TK `IF_CostPre／Cache／Dec_*` ÷ `IF_HoldEcon` ÷ `IF_Util`；TK_Link ＋9 名；Inputs ＋3（INP_121–123）。F2：η 2025 49.05→12.44、1H26 38.35→9.46，η>1 基準沿用 1H26、收斂至 1 列情境。F3：舊法保留對照列。F4：供給機制列為 chat 端確認預設。F5：CI pytest 加 `-p no:warnings`。
 - 命題：每 VR 等值 GW 差額 −17,949／−6,503／−3,439／−1,618／−747／−231 RMB 億（−266／−96／−51／−24／−11／−3.4 $B）；2030 前無轉正年；覆蓋率 2030 0.96。
 - parity 35 情境；pytest 88 passed；CHK_Errors＝0；TK 快照 OK 79。報告 `docs/reports/20261008_v0.1-Z3b.md`＋`_對照.xlsx`。
+
+## v0.1（Z4，2026-10-08，建置代理）— Excel `model/20261008_Zhipu_v0.1.xlsx`（Z3b 版移 `model/archive/20261008_Zhipu_v0.1-Z3b.xlsx`）
+- commit：1c020e5（Funding、Reverse、Checks C68–C92、parity ＋8、`tools/sensitivity_z4.py`）、3a60b39（Cost 第九節每實體 GW、Funding 第十節美元口徑、除以 0 防護）、本節報告 commit。
+- 新頁：Funding（F01–F74：自由現金流、投資活動、已到位融資（IPO 42.07、2026-07 配售 269.58、2026-09 配售 134.59、可換股債券 202.92 RMB 億）、最低現金與外部資金需求、可轉債轉股情境、或有、配售用途對照、回流對照、2025／1H26 現金對帳、美元口徑）、Reverse（X01–X62：管理層目標不存在、共識 3 筆平均、所需倍數、反向資金、市值隱含營收）。
+- Inputs ＋12（INP_124–135）；SRC_ZP ＋6（SRC_ZP_605–610，由既有 note 拆出數值）；OAI_Link ＋3 列；Cost ＋第九節（`COST_PropGap_Phys(_USD)`）。
+- 命題 2：累計外部資金需求 2026–2030 全為 0；年底現金 624.2／382.7／352.4／330.8／321.2 RMB 億（可轉債轉股 624.2／584.1／553.8／532.2／522.6）；命題 1 不變（2030 −231 RMB 億／VR 等值 GW；每實體 GW −12.96，−$0.19B）。
+- 反向：共識 2028 平均 324.7 億＝正向 2.47 倍；市值隱含營收 62.7 億（MiniMax 39.8 倍），正向 2027 達到。
+- 驗收：pytest（見報告）；CHK_Errors＝0；TK 快照 OK 79（Tokenomics master 70d859e，CURRENT 仍 v5.26）。報告 `docs/reports/20261008_v0.1.md`＋`_對照.xlsx`＋`_敏感度.json`。
