@@ -1,7 +1,7 @@
 # 智譜：Tokenomics 連接審視（v5.29）＋ CI 失敗診斷
 
 - 分支：`claude/zhipu-tk-link-review`（底稿 main `75327ef`）
-- 最新提交 SHA：見 PR 頁首（本報告內容提交後另以一次提交補記，見文末「提交紀錄」）
+- 最新提交 SHA：報告內容提交 `dafad92`（其後只補記本行與文末提交紀錄）
 - 報告檔：`zhipu/docs/reports/20261008_zhipu_tokenomics_link_review.md`
 - 依據：`docs/workorders/20261008_tokenomics_link_review.md`（共用）、`zhipu/docs/workorders/20261008_zhipu_tokenomics_link_review.md`；Tokenomics 下游契約 v0.1（`docs/plan/Tokenomics_downstream_contract.md`）。
 - 對照對象：Tokenomics master `a5061d9`，`model/CURRENT`＝`20261008_Tokenomics_v5.29.xlsx`（v5.29 已合併，第 4 節前提成立）。
@@ -222,4 +222,4 @@ L1_GapProduct
 8. **Coding Plan token 組成**是否改取 Tokenomics `IF_TaskTok*`（Coding agent 任務）取代 INP_122／123？
 
 ## 提交紀錄
-- 內容提交：見 PR（只新增本報告）；未改 company.json（本模型無此檔）、builder、Excel、data。
+- 內容提交：`dafad92`（只新增本報告）；SHA 補記提交隨後；未改 company.json（本模型無此檔）、builder、Excel、data。
