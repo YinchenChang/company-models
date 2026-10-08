@@ -217,55 +217,55 @@
     18
    ],
    "note": "10-K 附註 13：尚未起租租賃 329.1B（主要為資料中心；FY27–FY33 起租、租期 1–20 年；逐年時程與營業／融資拆分未揭露）。模型：平均分 16 季（FY27–FY30）起租、每筆 15 年直線付租 [Assumed]；敏感度 12／18 年。一年內序列 106→155→197→329（每季新增 40–130）。",
-   "opShare": 0.25,
-   "cashShareLabel": "未起租：自現金扣除比例（營業租賃部分）",
-   "opShareNote": "本家口徑（MAG v0.1b′ 已套用預設）：資本支出採公司口徑（含融資租賃取得的資產），未起租租約中將列融資租賃的部分起租時已計入資本支出，不再自現金扣租金；營業租賃部分的租金是 AI 機房成本、不在 Tokenomics 營運成本內，須自現金扣除。opShare 欄＝不另扣現金的比例＝預期列融資租賃的比例 25%（公司稱 FY27 起更多資料中心租約列營業租賃；在帳負債融資占 75% 是改分類前的結構；[Assumed]，區間 0%–75%）"
+   "opShare": 0.75,
+   "cashShareLabel": null,
+   "opShareNote": "三家統一定義（MAG 對照表 r1 C21）：未起租租約中預期列為營業租賃的比例（租金入 EBITDA 的部分；不另自現金扣除；1 − opShare＝融資部分，自現金扣除）。Microsoft：75%（公司稱 FY27 起更多資料中心租約改列營業租賃；在帳負債營業占 25% 是改分類前的結構；[Assumed]，區間 25%–100%）。注意：本家資本支出採含融資租賃口徑，融資部分起租時也進資本支出（與自現金扣除的融資租金重複，偏保守）；營業部分的機房租金依 C22 計入對外 AI 營運成本（只進 AI 增量報酬）"
   },
   "operatingInEbitda": true,
   "operatingInEbitdaNote": "分部營業利益已扣在帳營業租賃成本（FY26 6.968）→ 在帳營業租賃現金不再自現金扣除；在帳融資租賃本息仍為現金支出（過去以融資租賃取得、尚未付清的資產）；未起租部分見 uncommenced.opShareNote（對照表 r1 C8 f）",
   "rentedCompute": [
    {
-    "name": "CoreWeave（自用 50%）",
+    "name": "CoreWeave",
     "start": "2025-07",
     "years": 5,
-    "annualRent": 1.719,
-    "mw": 350,
-    "use": "internal"
+    "annualRent": 2.985,
+    "mw": 700,
+    "use": "自用 50%／對外 50%"
    },
    {
-    "name": "Nebius（自用 50%）",
+    "name": "Nebius",
     "start": "2025-11",
     "years": 5,
-    "annualRent": 1.74,
-    "mw": 102.5,
-    "use": "internal"
+    "annualRent": 3.022,
+    "mw": 205,
+    "use": "自用 50%／對外 50%"
    },
    {
-    "name": "IREN（自用 50%）",
+    "name": "IREN",
     "start": "2026-06",
     "years": 5,
-    "annualRent": 0.97,
-    "mw": 100,
-    "use": "internal"
+    "annualRent": 1.685,
+    "mw": 200,
+    "use": "自用 50%／對外 50%"
    },
    {
-    "name": "Nscale（自用 50%）",
+    "name": "Nscale",
     "start": "2026-10",
     "years": 5,
-    "annualRent": 2.3,
-    "mw": 205.5,
-    "use": "internal"
+    "annualRent": 3.994,
+    "mw": 411,
+    "use": "自用 50%／對外 50%"
    },
    {
-    "name": "Lambda（自用 50%）",
+    "name": "Lambda",
     "start": "2026-01",
     "years": 5,
-    "annualRent": 0.25,
-    "mw": 27.5,
-    "use": "internal"
+    "annualRent": 0.434,
+    "mw": 55,
+    "use": "自用 50%／對外 50%"
    }
   ],
-  "rentedComputeNote": "租用算力（向 neocloud 租 GPU；對照表 r1 第 5 節第 7 條、C8 d）：租金計入營運成本（扣 EBITDA 與營運現金，不是資本支出）；用途無揭露 → 對外／自用各半。本表只列自用 50% 的租金：對外 50% 的在役容量（期初約 550 MW-IT）已併入期初對外計費 MW（defaults.billableOpen 3,250），其收入＝MW × 每 MW 年收入、成本以 Tokenomics 持有成本（營運成本＋折舊）代表，不再另扣租金（避免重複計算）。年租金（全額）：CoreWeave 3.438（2025 實際推估；起訖與年期未揭露，假設 FY26 起 5 年）、Nebius 3.48（17.4 ÷ 5 年）、IREN 1.94（9.7 ÷ 5 年）、Nscale 4.6（金額未揭露，二手 23 ÷ 5 年，[Interested-party 二手／Assumed]）、Lambda 0.5（multibillion，[Assumed]）；起租月依對手方公告推估。分部 EBITDA 率的起點已加回 FY26 neocloud 租金約 6.3（[Assumed]），避免與本表重複扣。"
+  "rentedComputeNote": "租用算力（向 neocloud 租 GPU；對照表 r1 第 5 節第 7 條、C8 d、C20）：租金計入營運成本（扣 EBITDA 與營運現金，不是資本支出）；用途無揭露 → 對外／自用各半。年租金（全額）：CoreWeave 3.438（2025 實際推估；起訖未揭露，假設 FY26 起 5 年）、Nebius 3.48（17.4 ÷ 5 年）、IREN 1.94（9.7 ÷ 5 年）、Nscale 4.6（金額未揭露，二手 23 ÷ 5 年，[Interested-party 二手／Assumed]）、Lambda 0.5（multibillion，[Assumed]）。本表每筆＝自用 50% 全額＋對外 50% 扣 Tokenomics 營運成本後的淨額（對外 MW 的營運成本已在 AI 雲端 EBITDA 內）＝全額 × 0.868（[Derived]）；對外 50% 的 MW 列 capexModel.rentedExt（收入照算、不計資本支出與折舊）。分部 EBITDA 率的起點已加回 FY26 neocloud 租金約 6.3（[Assumed]），避免與本表重複扣。"
  },
  "debt": {
   "amortization": [
@@ -565,7 +565,7 @@
    },
    "pace": {
     "low": 650,
-    "base": 2294.1,
+    "base": 2376,
     "high": 2400
    },
    "note": "對外 AI MW-IT（在役）：評價日 3,250（v0.1a：自有在役 AI 4,500 × 對外 60%＋neocloud 租用 1,100 × 50%；三法交叉估計，事實總帳 split.extMW）[Derived／Assumed]；各期期末＝MIN(上限, 前期＋速度 × 期間長度)，首期自評價日起算（connectedStart＝null）。MAG r1 C10：基準速度由 calibrate 設定以資本支出指引解出（scripts/calib_pace.js；verify 檢查）；保守＝第三方可辨識站點速度、積極＝公司容量目標換算。"
@@ -584,7 +584,7 @@
   },
   "mw31": {
    "low": 0,
-   "base": 2294.1,
+   "base": 2376,
    "high": 2400
   },
   "delayMonths": {
@@ -640,9 +640,10 @@
    "2025": 1630,
    "2026": 3250
   },
-  "mw31": 2294.1,
+  "mw31": 2376,
   "capexFloorFY0": 204.2,
   "gpuLife": 6,
+  "gpuLifeNote": "Tokenomics IF_DeprLifeIT 6 年（tk.IF_DeprLifeIT）；10-K 伺服器與網路設備 2–6 年（事實總帳 pl.usefulLife.servers）[Verified]",
   "refreshSteady": true,
   "refreshNote": "v0.1c：已連網 MW 不再增加的期間（觸頂後）及終值年，汰換 CapEx＝期間平均已連網 MW × 每 MW GPU 資本支出（IF_CapexIT，只含 IT）÷ GPU 經濟壽命 × 期間長度；建築與電力屬租賃不計；取代批次汰換（mwYearEnd 批次落在模型期之後）。false＝模板口徑（只有批次汰換）。",
   "revScale": 1,
@@ -779,6 +780,8 @@
   "cashTaxRate": 0.2,
   "dividend": {
    "perShareQ": 0.98,
+   "growth": 0.08,
+   "growthNote": "每股股利年增 8%（2026-09-15 宣告 0.98，較前季 +8%；FY25→FY26 +9.6%）[Interested-party]",
    "sharesBase": 7.427,
    "preferred": [
     0.0,
@@ -787,7 +790,7 @@
     0.0,
     0.0
    ],
-   "note": "每季 0.98（2026-09-15 宣告，+8%；事實總帳 sh.dpsQ.fy27q1）[Interested-party]；引擎每股股利五期固定（不建模每年調升；近三年約 +9%／年，影響方向：股利現金低估）"
+   "note": "每季 0.98（2026-09-15 宣告，+8%；事實總帳 sh.dpsQ.fy27q1）[Interested-party]；第 n 期 ×(1＋8%)^n（defaults.dividend.growth）"
   },
   "debtBacklog": 0.5,
   "delayPenalty": 0,
@@ -1017,6 +1020,7 @@
     1.1,
     1.1741
    ],
+   "kdNote": "Moody's Aaa 公司債殖利率 6.26%（2026-10-06）類比；MSFT 個別長債殖利率找不到 [Analogy]",
    "note": "WACC＝E/(D+E)×(rf＋β×ERP)＋D/(D+E)×kd×(1−稅率)；E＝現價 × 流通股數（latestQuarter.sharesOut）、D＝評價日債務面額（latestQuarter.debtPrincipal）；β 1.137（獨立來源平均，見 betaNote）、rf 5.28%（10 年美債 2026-10-07）、ERP 5%、kd 6.26%（Moody's Aaa 公司債殖利率類比；MSFT 個別長債殖利率找不到）；稅率 20%（FY27 指引）。valuation.wacc 為 null 時採 CAPM。",
    "betaNote": "β＝獨立來源平均（MAG 對照表 r1 C13）：StockAnalysis 5 年月 1.10（Yahoo 同值，推測同源，只算 1 個）、GuruFocus 3 年 1.1741 → 1.137；敏感度＝獨立來源區間 1.10–1.174 [Derived]"
   },
@@ -1070,27 +1074,46 @@
    },
    "ads": {
     "label": "數位廣告",
-    "source": "amazon/data/amazon_facts_20261008.json（只讀複製；Microsoft v0.1a 未蒐集廣告同業）",
+    "source": "data/peers_ads_20261009.json",
     "peers": [
      {
       "ticker": "META",
       "name": "Meta",
       "ntmEvEbitda": 10.79,
-      "ref": "amazon 總帳 val.peer.ads.meta"
+      "ref": "val.peer.ads.meta"
      },
      {
-      "ticker": "GOOGL",
-      "name": "Alphabet",
-      "ntmEvEbitda": 14.68,
-      "ref": "amazon 總帳 val.peer.ads.googl"
+      "ticker": "PINS",
+      "name": "Pinterest",
+      "ntmEvEbitda": 6.91,
+      "ref": "val.peer.ads.pins"
      },
      {
       "ticker": "TTD",
       "name": "The Trade Desk",
-      "ntmEvEbitda": 6.68,
-      "ref": "amazon 總帳 val.peerTTM.ads.ttd（TTM，非 NTM）"
+      "ntmEvEbitda": 6.53,
+      "ref": "val.peer.ads.ttd"
+     },
+     {
+      "ticker": "APP",
+      "name": "AppLovin",
+      "ntmEvEbitda": 11.38,
+      "ref": "val.peer.ads.app"
+     },
+     {
+      "ticker": "RDDT",
+      "name": "Reddit",
+      "ntmEvEbitda": 13.63,
+      "ref": "val.peer.ads.rddt"
+     },
+     {
+      "ticker": "SNAP",
+      "name": "Snap",
+      "ntmEvEbitda": 7.43,
+      "ref": "val.peer.ads.snap"
      }
-    ]
+    ],
+    "note": "共用數字廣告同業組 META、PINS、TTD、APP、RDDT、SNAP（MAG 對照表 r1 C18；不含 AMZN、GOOGL、MSFT；data/peers_ads_20261009.json，三家共用）；中位數 9.11× [Derived]"
    },
    "devGaming": {
     "label": "遊戲與 PC／裝置",
@@ -1189,7 +1212,7 @@
     "note": "共用非 AI 雲端同業組 ORCL、IBM、SAP、CRM、NOW、AKAM、EQIX、DOCN（MAG 對照表 r1 C12；data/peers_cloud_20261008.json，三家共用）；中位數 13.82× [Derived]"
    }
   },
-  "segmentMultiplesNote": "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家）：企業軟體 ORCL、SAP、CRM、ADBE、NOW（NTM，不含 MSFT 本身）；數位廣告 META、GOOGL、TTD（自 Amazon 總帳只讀複製）；遊戲與 PC TTWO、NTDOY、NTES、HPQ、DELL、Lenovo（TTM，NTM 找不到）；非 AI 雲端＝共用同業組 8 家中位數（C12，data/peers_cloud_20261008.json 自 amazon/ 複製）；AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）"
+  "segmentMultiplesNote": "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家）：企業軟體 ORCL、SAP、CRM、ADBE、NOW（NTM，不含 MSFT 本身）；數位廣告共用同業組 META、PINS、TTD、APP、RDDT、SNAP（C18，data/peers_ads_20261009.json 自 amazon/ 複製）；遊戲與 PC TTWO、NTDOY、NTES、HPQ、DELL、Lenovo（TTM，NTM 找不到）；非 AI 雲端＝共用同業組 8 家中位數（C12，data/peers_cloud_20261008.json 自 amazon/ 複製）；AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）"
  },
  "methodology": {
   "blendWeights": {
@@ -1220,7 +1243,8 @@
    "unsignedRevShareMax": 0.5,
    "siteRentGapMax": 10,
    "rentVsBenchMin": 0.8,
-   "c15Tol": 0.05
+   "c15Tol": 0.05,
+   "daReconTol": 0.1
   }
  },
  "peers": {
@@ -2002,12 +2026,30 @@
   "mode": "tk",
   "_note": "資本支出（MAG v0.1b，對照表 r1 第 5 節第 6 條、D3）：首期＝MAX(全年 AI 成長型＋非 AI, 公司指引) − 年初至今實際（0）；之後＝新增對外 AI MW ÷ 對外比例 × 每 MW 成本（Σ 新增世代占比 × (TK_CapexIT＋自建比例 × TK_CapexFacility)）＋GPU 汰換（只換 IT；壽命 6 年）＋非 AI 資本支出（各線全年營收 × legacyBiz.lines.cx）。口徑＝公司口徑（含以融資租賃取得的資產；FY26 145.3，其中融資租賃 28.1）：融資租賃取得的資產在取得時視同現金支出（偏保守；之後的融資租賃本息只計在帳部分）。",
   "extShare": 0.6,
-  "extShareNote": "對外 AI MW 占 AI 總 MW 比例 60%（50%–75%，[Assumed]；v0.1a mw.ai.externalShare）：自用 AI（M365／GitHub Copilot、MAI）同樣需要資本支出，影子收入只作對照。注意：期初對外計費 MW 3,250 含 neocloud 租用對外 550 → 期初 AI 毛 PP&E 估計（3,250 ÷ 60% × 每 MW 成本）高估約 917 MW 的設備（只在 PP&E 兩池間重分配，總 PP&E 與期初 D&A 校準不變；AI 投入資本偏高 → AI ROIC 偏低）",
+  "extShareNote": "對外 AI MW 占 AI 總 MW 比例 60%（50%–75%，[Assumed]；v0.1a mw.ai.externalShare）：自用 AI（M365／GitHub Copilot、MAI）同樣需要資本支出，影子收入只作對照。期初對外計費 MW 3,250 含 neocloud 租用對外 550：依 C20 列 capexModel.rentedExt，自有 AI MW＝3,250 ÷ 60% − 550＝4,867（v0.1a 自有 4,500 加上自有部分的自用；差額來自對外比例套在含租用的總數上）",
   "selfBuild": 0.6,
   "selfBuildNote": "機房自建比例 60%（自建＋融資租賃；[Assumed] 40%–80%）：公司口徑資本支出含融資租賃取得的機房；營業租賃部分（約 40%）不計機房資本支出，租金由未起租租賃的營業部分承擔（leases.uncommenced）。未起租 329.1B 遠大於在帳租賃，顯示租用機房占比上升",
   "segDaRunRate": 44.088,
   "segDaRunRateNote": "最新季（FY26Q4）折舊、攤銷及其他 11.022 × 4（現金流量表；分部 D&A 不揭露，以合併數代替；含無形資產攤銷約 1.2／季）[Derived]：校準非 AI 折舊年限",
   "guideNote": "FY27 公司未給金額（只說「年增」）；以曆年 2026 約 175 − FY26 下半年實際 72.9＝FY27 上半年 102.1，下半年＝上半年 → 204.2 [Derived]（FY27Q1 指引 >50 吻合；共識 FY27 現金口徑 192.8）",
+  "rentedExt": {
+   "open": 550,
+   "path": [
+    756,
+    756,
+    756,
+    756,
+    756
+   ],
+   "rentMW": 6.54,
+   "note": "租用的對外 AI MW（MAG 對照表 r1 C20）：期初 550＝neocloud 在役 1,100 × 對外 50%（v0.1a nc.mwLeased.open）；FY27 起加 Nscale 對外 205.5 → 756，之後到期假設以相同條件續約（[Assumed]）。收入照算（含在對外計費 MW 內）、不計資本支出、投入資本與折舊；每 MW 年租金＝已揭露合約全額年租金 13.96 ÷ 1,571 MW＝8.88 扣 Tokenomics 營運成本 2.34（已在 AI EBITDA 內）＝淨額 [Derived]"
+  },
+  "nonAiLife": 10,
+  "nonAiLifeRange": [
+   8,
+   15
+  ],
+  "nonAiLifeNote": "非 AI 折舊年限預設 10 年（區間 8–15 年）[Assumed]；FY27 起資料中心與辦公建物耐用年限 15 → 25 年、伺服器 2–6 年（10-K、法說）；差額列 D&A 對帳殘差（MAG 對照表 r1 C17）",
   "aiNetShare": 0.8,
   "aiNetShareNote": "期初 AI PP&E 淨額 ÷ 毛額 80%（在役機隊約 FY24 末 0.9、FY25 末 2.3、FY26 末 4.5 GW-IT → 平均約 1.2 年、IT 壽命 6 年；[Assumed]，區間 65%–90%）：AI 增量 ROIC 的期初投入資本",
   "roicYear": 2,

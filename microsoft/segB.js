@@ -49,7 +49,7 @@ function forwardPL(e, t) {
       lg = e.years[c].legacyRev || 0, // v0.1b（Oracle）：非 AI 事業營收
       d = l + u + lg,
       f = c === 0 ? uM(HIST_PL[3].revenue + d, r) : uM(d, r),
-      EB = (l + u) * e.years[c].ebM + (e.years[c].otherEbitda || 0) + (e.years[c].legacyEbitda || 0) - (e.years[c].delayPen || 0), // v0.2：減延誤罰則 // v0.1b：加其他事業 EBITDA；Oracle：EBITDA 率只套算力＋服務，非 AI 事業另計
+      EB = (l + u) * e.years[c].ebM + (e.years[c].otherEbitda || 0) + (e.years[c].legacyEbitda || 0) - (e.years[c].delayPen || 0) + (t.read2 ? e.years[c].shadowEb1 || 0 : 0), // MAG v0.1b r3（C16）：讀法 2 加自用 AI 影子 EBITDA（k＝1）； // v0.2：減延誤罰則 // v0.1b：加其他事業 EBITDA；Oracle：EBITDA 率只套算力＋服務，非 AI 事業另計
       lgO = e.years[c].legacyOa || 0, // MAG v0.1b：非 AI 事業其他攤銷（影音內容、營業租賃資產等；進 D&A，現金上視為等額支出，UFCF 不加回）
       p = EB - e.years[c].daFleet - lgO,
       m = e.years[c].interest,
@@ -219,6 +219,13 @@ function pctQ(x) { // 門檻的百分比文字（取絕對值，正負號由呈�
   return `${multTxt(Math.round(Math.abs(x) * 1e6) / 1e4)}%`
 }
 
+// MAG v0.1b r3（對照表 r1 C16）：讀法 2（自用 AI 價值中性）——同一組評價輸入（股數、淨負債、可轉債分類、倍數沿用讀法 1），EBITDA 加自用 AI 影子 EBITDA（k＝1），
+// 影子收入進評價（DCF 的 EBIT、稅、UFCF、終值與 EV/EBITDA 錨定年 AI 雲端 EBITDA）；只有對外 AI 的超額報酬影響目標價。Excel「評價_DCF與目標價」讀法 2 區同式。
+function read2Q(e, p) {
+  const i = { ...p.v, read2: !0 }, a = forwardPL(e, i), o = dcfValue(a, i), c = evEbitdaLeg(a, i), d = Math.max(0, c),
+    WD = o.invalid ? 0 : BLEND_W.dcf, tp = (o.invalid ? 0 : WD * o.perShareT) + (1 - WD) * d;
+  return { tp, dcfT: o.perShareT, ev: d, diff: tp - p.call.blended, shadow: e.years.map(y => y.shadowEb1 || 0) }
+}
 function blendCall(e) {
   let {
     spot: t,
@@ -271,32 +278,44 @@ function wM(e) {
 // 打平 k（錨定期，對外口徑）＝k ×(WACC × 平均投入資本 × 對外比例 ÷ (1 − 稅率)＋營運成本＋折舊 × 對外比例) ÷ 營收（AI EBITDA 對 k 線性，其他不變）。Excel「AI增量報酬」同式。
 function aiRoicQ(d, st, o) {
   const CM = COMPANY_DATA.capexModel; if (!CM || CM.mode !== `tk`) return null;
-  const Y = d.years, XS = st.extShare ?? CM.extShare, A0 = aiOpenQ(st, XS), tax = o.tax, k = d.m.price ? d.m.price[0].k : 1, ry = CM.roicYear ?? 3;
-  let ic = (A0.it + A0.fac) * (CM.aiNetShare ?? 1), out = { xs: XS, icBeg: [], icEnd: [], ebitda: [], da: [], daExt: [], icExt: [], opex: [], rev: [], nopat: [], roic: [], spread: [], shRev: [], shEbitda: [], roicSh: [] };
+  const Y = d.years, XS = st.extShare ?? CM.extShare, A0 = aiOpenQ(st, XS), tax = o.tax, P = d.m.price, k = P ? P[0].k : 1, ry = CM.roicYear ?? 3,
+    sb = st.selfBuild ?? CM.selfBuild, RX = rentedExtQ(), FR = r => P ? facRentMWQ(P[r], A0.facLife) : 0;
+  let ic = (A0.it + A0.fac) * (CM.aiNetShare ?? 1), out = { xs: XS, icBeg: [], icEnd: [], ebitda: [], da: [], daExt: [], icExt: [], opex: [], rev: [], nopat: [], roic: [], spread: [], shRev: [], shEbitda: [], roicSh: [],
+    mwEff: [], mwRent: [], ownShare: [], facRentMW: [], rentFac: [], rentExt: [], ebitdaNet: [] };
   Y.forEach((y, r) => {
     const L = PERIOD_YEARS[r], rev = y.isRev / L, eb = y.isRev * y.ebM / L, da = y.daAi / L, opx = rev - eb, b = ic, e = b + y.capexAi + y.refresh - y.daAi, avg = (b + e) / 2,
-      np = (eb - da * XS) * (1 - tax), sr = rev * (1 / XS - 1), se = sr * y.ebM;
+      mwE = P ? rev / Math.max(P[r].hold * P[r].k / 1e3, 1e-12) : 0, Ra = ((r ? RX.path[r - 1] : RX.open) + RX.path[r]) / 2, own = Math.max(0, mwE - Ra), tot = Math.max(1e-9, mwE / XS - Ra),
+      so = P ? own / tot : XS, fr = FR(r), rf = (1 - sb) * own * fr, rx = Ra * RX.rentMW / 1e3, ebx = eb - rf - rx,
+      np = (ebx - da * so) * (1 - tax), sr = rev * (1 / XS - 1), se = sr * y.ebM, rfAll = (1 - sb) * tot * fr;
     ic = e;
-    out.icBeg.push(b), out.icEnd.push(e), out.ebitda.push(eb), out.da.push(da), out.daExt.push(da * XS), out.icExt.push(avg * XS), out.opex.push(opx), out.rev.push(rev), out.nopat.push(np), out.roic.push(np / Math.max(1e-9, avg * XS)), out.spread.push(np / Math.max(1e-9, avg * XS) - o.wacc),
-      out.shRev.push(sr), out.shEbitda.push(se), out.roicSh.push((eb + se - da) * (1 - tax) / Math.max(1e-9, avg))
+    out.icBeg.push(b), out.icEnd.push(e), out.ebitda.push(eb), out.da.push(da), out.daExt.push(da * so), out.icExt.push(avg * so), out.opex.push(opx), out.rev.push(rev), out.nopat.push(np),
+      out.roic.push(np / Math.max(1e-9, avg * so)), out.spread.push(np / Math.max(1e-9, avg * so) - o.wacc),
+      out.mwEff.push(mwE), out.mwRent.push(Ra), out.ownShare.push(so), out.facRentMW.push(fr), out.rentFac.push(rf), out.rentExt.push(rx), out.ebitdaNet.push(ebx),
+      out.shRev.push(sr), out.shEbitda.push(se), out.roicSh.push((eb + se - rfAll - rx - da) * (1 - tax) / Math.max(1e-9, avg))
   });
-  out.k = k, out.ry = ry, out.breakevenK = k * (o.wacc * out.icExt[ry] / (1 - tax) + out.opex[ry] + out.daExt[ry]) / Math.max(out.rev[ry], 1e-9), out.wacc = o.wacc;
+  out.k = k, out.ry = ry, out.breakevenK = k * (o.wacc * out.icExt[ry] / (1 - tax) + out.opex[ry] + out.rentFac[ry] + out.rentExt[ry] + out.daExt[ry]) / Math.max(out.rev[ry], 1e-9), out.wacc = o.wacc;
   out.c15 = c15Q(d, st, out, A0, tax);
   return out
 }
+// MAG v0.1b r3（對照表 r1 C20、C22）：租用對外 MW（capexModel.rentedExt：期初 open、各期末 path、每 MW 年租金 rentMW）——收入照算、投入資本與折舊不計、租金計入對外 AI 營運成本；
+// 機房租用部分（1 − 自建比例）的租金＝在役世代加權 TK_CapexFacility × 資本回收係數（tokenomics.holdEconWacc、機房年限）——出租方打平租金 [Derived]。
+// 兩項租金只進 AI 增量報酬（ROIC、打平 k、C15）：資金模型與評價的租金現金已在租賃（leases）與租用算力（rentedCompute）內，不重複扣。
+function rentedExtQ() { const R = (COMPANY_DATA.capexModel || {}).rentedExt || {}, o = R.open || 0; return { open: o, path: R.path || PERIOD_YEARS.map(() => o), rentMW: R.rentMW || 0 } }
+function facRentMWQ(pr, facLife) { const w = (COMPANY_DATA.tokenomics || {}).holdEconWacc ?? .1, crf = w / (1 - Math.pow(1 + w, -facLife));
+  return PRICING.chips.reduce((a, c, j) => a + pr.gens[j] * TKV.IF_CapexFacility[c.tk], 0) / Math.max(pr.tot, 1e-9) / 1e3 * crf }
 // MAG v0.1b r2（對照表 r1 C15）：一致性檢查——錨定期對外 AI ROIC 依序改成「k＝1、Tokenomics 成本、無爬坡延遲、無稅」，與 IF_HoldEcon 隱含報酬（Tokenomics WACC，tokenomics.holdEconWacc）比較；
-// 各步差額依序相加＝總差距（序列拆解，順序固定）：稅 → k＝1（含自研晶片係數）→ 營運成本來源 → 汰換 → 爬坡／閒置（投入資本與折舊改為在役 MW 的穩態，淨額比 ½）→ 機房（自建比例 → 1）→ 會計口徑殘差（平均淨帳面 vs 年金）。Excel「AI增量報酬」同式。
+// 各步差額依序相加＝總差距（序列拆解，順序固定）：稅 → k＝1（含自研晶片係數）→ 營運成本來源 → 汰換 → 爬坡／閒置（自有對外 MW 穩態，淨額比 ½）→ 機房與租用（全部自有、自建 100%、無租金；r3 C20／C22）→ 會計口徑殘差（平均淨帳面 vs 年金）。Excel「AI增量報酬」同式。
 function c15Q(d, st, A, A0, tax) {
   const TKH = COMPANY_DATA.tokenomics && COMPANY_DATA.tokenomics.holdEconWacc, P = d.m.price; if (TKH == null || !P) return null;
-  const ry = A.ry, XS = A.xs, pr = P[ry], CM = COMPANY_DATA.capexModel, sb = st.selfBuild ?? CM.selfBuild, life = st.gpuLife,
+  const ry = A.ry, pr = P[ry], CM = COMPANY_DATA.capexModel, sb = st.selfBuild ?? CM.selfBuild, life = st.gpuLife,
     W = f => PRICING.chips.reduce((a, c, j) => a + pr.gens[j] * TKV[f][c.tk], 0) / Math.max(pr.tot, 1e-9) / 1e3,
-    rev = A.rev[ry], eb = A.ebitda[ry], opx = A.opex[ry], da = A.daExt[ry], ic = A.icExt[ry],
-    mw = rev / Math.max(pr.hold * pr.k / 1e3, 1e-12), rev1 = mw * W(`IF_HoldEcon`), opTK = mw * W(`IF_OpexGW`),
-    cR = XS * (d.years.slice(0, ry).reduce((a, y) => a + y.refresh, 0) + d.years[ry].refresh / 2), dR = cR / life,
-    cIT = W(`IF_CapexIT`), cF = W(`IF_CapexFacility`), ss = b => ({ ic: mw * (cIT + b * cF) * .5, da: mw * (cIT / life + b * cF / A0.facLife) }),
-    s5 = ss(sb), s6 = ss(1),
-    R = [A.roic[ry], (eb - da) / ic, (rev1 - opx - da) / ic, (rev1 - opTK - da) / ic, (rev1 - opTK - (da - dR)) / Math.max(1e-9, ic - cR), (rev1 - opTK - s5.da) / s5.ic, (rev1 - opTK - s6.da) / s6.ic],
-    lb = [`稅（稅後 → 稅前）`, `k＝1（含自研晶片係數）`, `營運成本來源（模型 → Tokenomics IF_OpexGW）`, `汰換（自投入資本與折舊移除累計汰換）`, `爬坡／閒置（投入資本與折舊改為在役 MW 穩態，淨額比 ½）`, `機房（自建比例 → 100%）`];
+    so = A.ownShare[ry], eb = A.ebitdaNet[ry], opx = A.opex[ry], rent = A.rentFac[ry] + A.rentExt[ry], da = A.daExt[ry], ic = A.icExt[ry],
+    mw = A.mwEff[ry], own = Math.max(0, mw - A.mwRent[ry]), rev1 = mw * W(`IF_HoldEcon`), opTK = mw * W(`IF_OpexGW`),
+    cR = so * (d.years.slice(0, ry).reduce((a, y) => a + y.refresh, 0) + d.years[ry].refresh / 2), dR = cR / life,
+    cIT = W(`IF_CapexIT`), cF = W(`IF_CapexFacility`), ss = (m, b) => ({ ic: m * (cIT + b * cF) * .5, da: m * (cIT / life + b * cF / A0.facLife) }),
+    s5 = ss(own, sb), s6 = ss(mw, 1),
+    R = [A.roic[ry], (eb - da) / ic, (rev1 - opx - rent - da) / ic, (rev1 - opTK - rent - da) / ic, (rev1 - opTK - rent - (da - dR)) / Math.max(1e-9, ic - cR), (rev1 - opTK - rent - s5.da) / Math.max(1e-9, s5.ic), (rev1 - opTK - s6.da) / s6.ic],
+    lb = [`稅（稅後 → 稅前）`, `k＝1（含自研晶片係數）`, `營運成本來源（模型 → Tokenomics IF_OpexGW）`, `汰換（自投入資本與折舊移除累計汰換）`, `爬坡／閒置（投入資本與折舊改為自有在役 MW 穩態，淨額比 ½）`, `機房與租用（全部自有、自建 100%、無租金）`];
   const items = lb.map((l, i) => [l, R[i + 1] - R[i]]); items.push([`會計口徑殘差（平均淨帳面 vs ${Math.round(TKH * 100)}% 年金）`, TKH - R[6]]);
   return { ry, hurdle: TKH, model: R[0], clean: R[6], gap: TKH - R[0], items, stages: R, mw, rev1, opTK, cR, dR, ss5: s5, ss6: s6 }
 }
@@ -407,7 +426,7 @@ function targetRange(d, st, o, base) {
   let P = o.price, th = P * (1 + SELL_TH), pt = base.call.blended,
     sc = [`low`, `base`, `high`].map(k => {
       let s2 = scnQ(st, k), d2 = runFunding(s2), p2 = runValuation(d2, s2, o);
-      return { sc: k, name: SCENARIOS[k].label.split(` `)[0], tgt: p2.call.blended, call: p2.call.call, gap: p2.call.blended - th }
+      return { sc: k, name: SCENARIOS[k].label.split(` `)[0], tgt: p2.call.blended, call: p2.call.call, gap: p2.call.blended - th, tgt2: COMPANY_DATA.capexModel && COMPANY_DATA.capexModel.mode === `tk` ? read2Q(d2, p2).tp : p2.call.blended } // MAG v0.1b r3（C16）：讀法 2
     }),
     A = [Math.min(sc[0].tgt, sc[2].tgt), Math.max(sc[0].tgt, sc[2].tgt)],
     mLo = Math.min(...RANGE_MULTS), mHi = Math.max(...RANGE_MULTS),
@@ -568,7 +587,13 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
       (bp <= .05 ? `無回購計畫（減少回購步驟不適用）` : bcut.length ? `回購被迫減少：${bcut.map(x => `${x[0]} $${Y(x[1], 1)}`).join(`、`)}bn` : `回購未被迫減少`) +
       `；五期新債 $${Y(ndS, 1)}bn、股權 $${Y(eqS, 1)}bn。`;
   let AQ = aiRoicQ(d, st || DEFAULTS, o), thesisLine = AQ ? `主命題（AI 資本支出有沒有賺到資金成本）：${PERIODS[AQ.ry]} 對外 AI ROIC ${Y(AQ.roic[AQ.ry] * 100, 1)}% vs WACC ${Y(AQ.wacc * 100, 1)}%（${AQ.spread[AQ.ry] < 0 ? `−` : `+`}${Y(Math.abs(AQ.spread[AQ.ry]) * 100, 1)}pt）；打平 k ${Y(AQ.breakevenK, 2)}（目前 ${Y(AQ.k, 2)}）；全 AI（含影子收入）${Y(AQ.roicSh[AQ.ry] * 100, 1)}%。` : ``; // MAG v0.1b
-  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, adjLine, delayLine, junk: jk, fcfLine, thesisLine, aiRoic: AQ }
+  // MAG v0.1b r3（對照表 r1 C16、C23）：兩種讀法並列＋差額；對外比例（無揭露）±20pt 目標價
+  let CMq = COMPANY_DATA.capexModel, TK = CMq && CMq.mode === `tk`, R2 = TK ? read2Q(d, p) : null, S0q = st || DEFAULTS,
+    read2Line = R2 ? `兩種讀法（自用 AI）：讀法 1（影子收入不進評價）$${Y(p.call.blended, 2)}；讀法 2（自用 AI 價值中性：自用 MW 以 k＝1 計影子收入並進評價）$${Y(R2.tp, 2)}；差額 ${R2.diff < 0 ? `−` : `+`}$${Y(Math.abs(R2.diff), 2)}。主值取哪一個是 Andy 的判斷（待決）。` : ``,
+    XSq = TK ? S0q.extShare ?? CMq.extShare : null,
+    xsTp = TK ? [XSq - .2, Math.min(1, XSq + .2)].map(x => { const s2 = { ...S0q, extShare: x }, d2 = runFunding(s2); return { x, tp: runValuation(d2, s2, o).call.blended } }) : null,
+    extLine = TK ? `對外比例無揭露（目前 ${Math.round(XSq * 100)}%，[Assumed]），是最大不確定：${xsTp.map(z => `${Math.round(z.x * 100)}% → $${Y(z.tp, 2)}`).join(`、`)}（基準 $${Y(p.call.blended, 2)}）。` : ``;
+  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, adjLine, delayLine, junk: jk, fcfLine, thesisLine, read2Line, read2: R2, extLine, xsTp, aiRoic: AQ }
 }
 
 // v4.4：差異原因的共用工具（年度共識對照與季度層共用）。類型固定為四種（已決定事項 2）；原因文字中的 {路徑:格式} 由模型數字帶入。
@@ -775,7 +800,7 @@ function consensusItems() {
     [[`營收`, `revenue`], [`EBITDA`, `ebitda`], [`EBIT`, `ebit`], [`非 GAAP 營業利益`, `ebitNonGaap`], [`淨利`, `netIncome`]]
       .filter(([, k]) => QK.every(q => num(QE[q][k])))
       .forEach(([a, k]) => add(SQ, `季度｜${a}`, QK.map(q => QE[q][k]), `US$bn`, 3, QE));
-    add(SQ, `季度｜說明`, [], ``, 0, QE, { text: QE.note });
+    add(SQ, `季度｜說明`, [], ``, 0, QE, { text: QE.note || `` });
   }
   let SG = `公司指引（管理層預估）`, GM = { ...CG, tag: CG.tag }, G6 = CG[YR[0]] || {};
   [[`營收（低／高）`, [`revenueLow`, `revenueHigh`], `US$bn`, 2], [`營收（下限）`, [`revenueMin`], `US$bn`, 2], [`調整後營業利益（低／高）`, [`adjOpIncomeLow`, `adjOpIncomeHigh`], `US$bn`, 2],
@@ -797,7 +822,7 @@ function consensusItems() {
   (C.recentActions || []).forEach(x => add(`最新分析師動作`, `分析師動作｜${x.date} ${x.firm}`, x.target == null ? [] : [x.target], `US$`, 0, RM,
     { text: x.target == null ? `目標價未列` : ``, note: `${x.rating}${x.note ? `；${x.note}` : ``}` }));
   add(`來源與限制`, `來源獨立性`, [], ``, 0, { source: `資料檔說明`, retrieved: C.asOf }, { text: C.sourceIndependence });
-  C.notFound.forEach((t, i) => add(`來源與限制`, `未取得｜${i + 1}`, [], ``, 0, { source: `資料檔說明`, retrieved: C.asOf }, { text: t }));
+  (C.notFound || []).forEach((t, i) => add(`來源與限制`, `未取得｜${i + 1}`, [], ``, 0, { source: `資料檔說明`, retrieved: C.asOf }, { text: t }));
   return it
 }
 

@@ -1,9 +1,16 @@
 # Microsoft v0.1 進度檔（接手用）
 
 ## 目前狀態（每次 push 前覆寫）
-- **已完成：v0.1b′ 全部步驟**（引擎與工具自 `origin/claude/amazon-v0.1` @ `59f4d5f`〔Amazon v0.1b r2 完成版〕複製，收尾前再 fetch：Amazon 分支無新 commit，**不需在 v0.1c 前重新同步**；`company.json` 填入 Microsoft 資料與 C1–C15；verify.sh 23 項全過；報告 `docs/reports/20261008_microsoft_v0.1b2_移植.md`；PR #33 已留言）。基準：三情境目標價 393.65／365.96／363.81（現價 529.76）；FY29 對外 AI ROIC 11.2% vs WACC 10.9%、打平 k 1.05（目前 1.06）。
-- **下一步（v0.1c）**：升版 v0.1（`vlog.py`、`tail.js` VLOG）、`dist/` 換 Microsoft 成品並移除 Oracle 成品、交接檔改 Microsoft、根目錄 README 一列、修報告第 7 節末的畫面小瑕疵；FY27Q1（2026-10-28）公布後另出 v0.2 滾動（C7）。若 Amazon 引擎再變：`python3 scripts/port_company_json.py …` 重產後 `node scripts/calib_pace.js --write`、`python3 scripts/fields_doc.py --write`、verify。
-- **未解問題（待 chat 端判斷）**：見報告第 10 節（對外比例、AI run-rate 落差、期初 AI 毛 PP&E 含租用高估、FY27 資本支出換算、opShare 語意與 Amazon 相反、Tokenomics NonNV 缺口、Anthropic 持股、6× 倍數）。
+- **已完成**：v0.1b′；v0.1b r3 同步（引擎檔與 amazon@`6ac9745` 逐檔相同，company.json、data/、文件、`scripts/fields_doc.py` 的 mag 說明、`scripts/port_company_json.py` 除外；C16–C23 的本家參數；verify.sh 23 項全過）。
+- **下一步**：v0.1c 步驟 1–6（VLOG 重設 v0.1、dist/ 換 Microsoft 成品、--vs-dist、截圖、交接檔、最終報告與重點 Excel、根目錄 README、PR ready）。
+- **未解問題**：見最終報告「需 Andy 決定」。
+
+## v0.1b r3 同步（2026-10-09；對照表 r1 第 9 節 C16–C23）
+| 步驟 | 內容 | commit |
+|---|---|---|
+| 引擎同步 | 自 amazon@6ac9745 複製 r3 引擎檔（segA、segB、segD、segE、build_xlsx.py、cmp31.js、rv_solve.py、mag_sens.js、test_mag_mechanisms.py、fields_doc.py〔mag 說明換回本家〕、tail.js、vlog.py）；`data/peers_ads_20261009.json` 只讀複製（C18） | （本次） |
+| company.json | C20 `capexModel.rentedExt`（期初 550、FY27 起 756、每 MW 淨租金 6.55）；C21 opShare 0.25 → 0.75（統一為營業租賃比例）、cashShareLabel null；rentedCompute 改每筆＝自用 50% 全額＋對外 50% 淨額；C17 nonAiLife 10；daReconTol；kdNote；gpuLifeNote；股利年增 8%；廣告同業 6 家；基準速度重解 2,376 MW-IT／年 | （本次） |
+| 結果 | 讀法 1：385.73／357.24／356.78；讀法 2：410.44／426.15／426.13；FY29 對外 AI ROIC 10.1% vs WACC 10.9%、打平 k 1.084；verify.sh 23 項全過 | — |
 
 ## v0.1b′ 移植（2026-10-09）
 工作單：`mag/docs/workorders/20261008_mag_v0.1b2_移植.md`（對照表 r1 第 7、8 節 C1–C15 優先）；引擎來源：`origin/claude/amazon-v0.1` @ `59f4d5f`（Amazon 進度檔已寫「v0.1b r2 完成」，C10–C15 已含在內）。

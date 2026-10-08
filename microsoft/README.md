@@ -149,7 +149,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY27、FY28、FY29、FY30、FY31，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 Microsoft v0.2 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 Microsoft v0.1 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -235,9 +235,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `leases.operatingInEbitda` | 分部 EBITDA 是否已扣營業租賃成本（true＝在帳只扣融資租賃現金、未起租只扣融資部分；MAG v0.1b，C8 f） | 是／否 | 是 | 檢查 |
 | `leases.operatingInEbitdaNote` | 上欄的依據 | 文字 | 分部營業利益已扣在帳營業租賃成本（FY26 6.96… | 必改 |
-| `leases.uncommenced.cashShareLabel` | Excel「自現金扣除比例」列的列名（選填；預設「未起租：自現金扣除比例（融資部分）」；本家為營業租賃部分，MAG v0.1b′） | 文字 | 未起租：自現金扣除比例（營業租賃部分） | 可沿用 |
-| `leases.uncommenced.opShare` | 未起租租賃的營業部分比例（operatingInEbitda 時不自現金扣除；C8 f） | 比例 | 0.25 | 檢查 |
-| `leases.uncommenced.opShareNote` | 營業部分比例的依據 | 文字 | 本家口徑（MAG v0.1b′ 已套用預設）：資本支… | 必改 |
+| `leases.uncommenced.cashShareLabel` | Excel「自現金扣除比例」列的列名（選填；預設「未起租：自現金扣除比例（融資部分）」；MAG v0.1b′） | 文字 | None | 可沿用 |
+| `leases.uncommenced.opShare` | 未起租租約中預期列為營業租賃的比例（租金入 EBITDA 的部分；operatingInEbitda 時不另自現金扣除；1 − opShare＝融資部分，自現金扣除）——三家統一定義（MAG 對照表 r1 C21） | 比例 | 0.75 | 檢查 |
+| `leases.uncommenced.opShareNote` | 營業部分比例的依據 | 文字 | 三家統一定義（MAG 對照表 r1 C21）：未起租… | 必改 |
 | `leases.rentedCompute` | 租用算力排程：[{name, start（YYYY-MM）, years, annualRent（US$bn／年）, mw, use}]；租金計入營運成本（自其他事業 EBITDA 扣除；C8 d） | 清單（物件） | 5 筆 | 必改 |
 | `leases.rentedComputeNote` | 租用算力的揭露與口徑 | 文字 | 租用算力（向 neocloud 租 GPU；對照表 … | 必改 |
 | `leases.onBalanceCash` | 已入帳租約在五期（首期模型部分＋4 個完整財年；目前為 FY27、FY28、FY29、FY30、FY31）各期的現金租金 | US$bn 清單 | 13.203、11.628、9.814、9.182、8.859 | 必改 |
@@ -425,7 +425,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.mwPath.contracted.base` | 基準情境：同上 | MW 清單 | 99999、99999、99999、99999、99999 | 必改 |
 | `scenarios.mwPath.contracted.high` | 積極情境：同上 | MW 清單 | 99999、99999、99999、99999、99999 | 必改 |
 | `scenarios.mwPath.pace.low` | 保守情境：併網速度（每年新增已連網 MW；已連網＝MIN(合約上限, 前期＋速度×期間長度)；v0.1b） | MW／年 | 650 | 檢查 |
-| `scenarios.mwPath.pace.base` | 基準情境：同上 | MW／年 | 2294.1 | 檢查 |
+| `scenarios.mwPath.pace.base` | 基準情境：同上 | MW／年 | 2376 | 檢查 |
 | `scenarios.mwPath.pace.high` | 積極情境：同上 | MW／年 | 2400 | 檢查 |
 | `scenarios.mwPath.calibrate` | 併網速度校準（MAG v0.1b r2 C10）：{scenario, decimals}；該情境速度由 scripts/calib_pace.js 以首期資本支出指引中點解出（全年公式值＝指引，對帳落差 0），同時寫入 scenarios.mw31 與 defaults.mw31；省略＝不校準 | 物件 | 物件（scenario、decimals） | 必改 |
 | `scenarios.mwPath.note` | 已連網 MW 路徑的說明（來源與口徑） | 文字 | 對外 AI MW-IT（在役）：評價日 3,250（… | 必改 |
@@ -435,7 +435,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.billableRatio.note` | 可計費 MW 校準與收斂比例的說明（v0.1b） | 文字 | 對外 AI MW 依 MW-year 計價：已連網即… | 必改 |
 | `scenarios.billableRatio.ratio` | 各期比例：ratio 模式＝在役 ÷ 已連網；converge 模式＝期初校準值向已連網收斂的比例（三情境共用；v0.1b） | 比例清單 | 1、1、1、1、1 | 檢查 |
 | `scenarios.mw31.low` | 保守情境：模型期後一年（FY31）新增的 MW，用於 FY30 的預建支出 | MW | 0 | 檢查 |
-| `scenarios.mw31.base` | 基準情境：同上 | MW | 2294.1 | 檢查 |
+| `scenarios.mw31.base` | 基準情境：同上 | MW | 2376 | 檢查 |
 | `scenarios.mw31.high` | 積極情境：同上 | MW | 2400 | 檢查 |
 | `scenarios.convCap.low` | 保守情境：融資瀑布可轉債步驟每年新發行上限（0＝不新發；v0.1b） | US$bn／年 | 0 | 檢查 |
 | `scenarios.convCap.base` | 基準情境：同上 | US$bn／年 | 0 | 檢查 |
@@ -470,9 +470,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.revenueDriver` | 營收驅動：mw＝平均在役 MW × 每 MW 年收入 × 利用率（新產能簽約率固定 100%，RPO 只作對照）；rpo＝CRWV 模板的 RPO 排程＋新簽約（v0.1b） | 代碼 | mw | 檢查 |
 | `defaults.lambda` | 提前支出比例：次年才上線的 MW，其建置支出落在前一年的比例 | 比例 | 0.35 | 檢查 |
 | `defaults.mwYearEnd` | 各年底主動電力，以年份為鍵（例如 "2025": 850）：首期期初取首期前一財年末；GPU 汰換批次＝各年新增 MW（5a；列入滾動檢查） | MW 物件 | 物件（2024、2025、2026） | 必改 |
-| `defaults.mw31` | 模型期後一年新增 MW 的預設值（情境切換時改用 scenarios.mw31） | MW | 2294.1 | 檢查 |
+| `defaults.mw31` | 模型期後一年新增 MW 的預設值（情境切換時改用 scenarios.mw31） | MW | 2376 | 檢查 |
 | `defaults.capexFloorFY0` | 首期所屬財年的全年資本支出下限（已下單的承諾，取公司指引下緣；首期＝下限 − 年初至今實際認列） | US$bn | 204.2 | 必改 |
 | `defaults.gpuLife` | GPU 經濟壽命（決定汰換時點與折舊） | 年 | 6 | 檢查 |
+| `defaults.gpuLifeNote` | GPU 經濟壽命的來源（Excel 列備註；MAG v0.1b r3 C19） | 文字 | Tokenomics IF_DeprLifeIT 6… | 必改 |
 | `defaults.refreshSteady` | 穩態汰換：true＝已連網 MW 不再增加的期間（觸頂後）及終值年，汰換 CapEx＝平均已連網 MW × 每 MW 建置成本 ÷ GPU 壽命 × 期間長度；false＝只有批次汰換（Oracle v0.1c） | 是／否 | 是 | 檢查 |
 | `defaults.refreshNote` | 穩態汰換的說明文字 | 文字 | v0.1c：已連網 MW 不再增加的期間（觸頂後）及… | 可沿用 |
 | `defaults.revScale` | 每 MW 年收入整體倍數（反向 DCF 與壓力測試用，1＝不調整） | 倍 | 1 | 可沿用 |
@@ -496,6 +497,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.debtCapBasis` | 瀑布新債的上限基準：leaseAdj＝(總債務＋租賃負債) ≤ 倍數 ×(EBITDA＋租金)（年化；S&P 口徑近似的投資級上限，v0.2）；ebitda＝總債務 ≤ 倍數 × 當期 EBITDA（v0.1b）；backlog＝模板的債務／backlog | 代碼 | leaseAdj | 檢查 |
 | `defaults.debtEbitdaMax` | 投資級上限倍數：leaseAdj＝調整後槓桿上限（S&P BBB- 降評門檻 4.5×，v0.2）；ebitda＝總債務 ÷ 當期 EBITDA 上限 | 倍 | 3 | 檢查 |
 | `defaults.dividend.perShareQ` | 普通股每股每季股利（Oracle v0.1b；不發股利的公司刪除 dividend 區段） | US$ | 0.98 | 必改 |
+| `defaults.dividend.growth` | 普通股每股股利年成長率（第 n 期 ×(1＋g)^n；預設 0；MAG v0.1b r3 C19） | 比例 | 0.08 | 檢查 |
+| `defaults.dividend.growthNote` | 股利成長率的來源 | 文字 | 每股股利年增 8%（2026-09-15 宣告 0.… | 必改 |
 | `defaults.dividend.sharesBase` | 股利的基礎股數（最新流通股；另加前期累計瀑布新股與已強制轉換特別股） | bn 股 | 7.427 | 必改 |
 | `defaults.dividend.preferred` | 特別股股利，各期 | US$bn 清單 | 0、0、0、0、0 | 必改 |
 | `defaults.dividend.note` | 股利的來源與推導說明 | 文字 | 每季 0.98（2026-09-15 宣告，+8%；… | 必改 |
@@ -583,6 +586,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `valuation.capm.kdPretax` | 稅前債務成本（市場邊際） | 比例 | 0.0626 | 檢查 |
 | `valuation.capm.betaSens` | β 敏感度（報告用） | 倍 清單 | 1.1、1.1741 | 檢查 |
 | `valuation.capm.note` | WACC 公式與來源說明 | 文字 | WACC＝E/(D+E)×(rf＋β×ERP)＋D/… | 必改 |
+| `valuation.capm.kdNote` | 稅前債務成本的來源（Excel kd 列備註；MAG v0.1b r3 C19） | 文字 | Moody's Aaa 公司債殖利率 6.26%（2… | 必改 |
 | `valuation.capm.betaSources` | β 獨立來源清單：[{vendor, value, period, frequency, asOf, ref}]；beta＝平均、betaSens＝[最小, 最大]（MAG 對照表 r1 C13；報告用） | 清單（物件） | 2 筆 | 必改 |
 | `valuation.capm.betaNote` | β 來源與平均說明（Excel β 列備註） | 文字 | β＝獨立來源平均（MAG 對照表 r1 C13）：S… | 必改 |
 | `valuation.nolUsePct` | NOL 每年可抵用上限占應稅所得的比例（美國 80%；依公司稅籍調整；5a） | 比例 | 0.8 | 檢查 |
@@ -621,6 +625,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.checks.siteRentGapMax` | 檢查頁：站點租賃五期租金可能低估的金額上限（5a） | US$bn | 10 | 檢查 |
 | `methodology.checks.rentVsBenchMin` | 檢查頁：模型每 MW 年租金至少要達到「市場基準 × 第三方占比」的比例（5a） | 比例 | 0.8 | 檢查 |
 | `methodology.checks.c15Tol` | 檢查頁：一致性檢查（C15）乾淨稅前 ROIC 與 IF_HoldEcon 隱含報酬的容許差（比例，0.05＝5 個百分點；MAG v0.1b r2） | 比例 | 0.05 | 檢查 |
+| `methodology.checks.daReconTol` | 檢查頁：D&A 對帳殘差容許比例（占最新季分部 D&A 年化；MAG v0.1b r3 C17） | 比例 | 0.1 | 檢查 |
 
 ### `peers`：同業比較（Comps）
 
@@ -764,9 +769,16 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `capexModel.extShareNote` | 對外比例的依據 | 文字 | 對外 AI MW 占 AI 總 MW 比例 60%（… | 必改 |
 | `capexModel.selfBuild` | 自建機房比例（機房資本支出＝此比例 × TK_CapexFacility） | 比例 | 0.6 | 檢查 |
 | `capexModel.selfBuildNote` | 自建比例的依據 | 文字 | 機房自建比例 60%（自建＋融資租賃；[Assume… | 必改 |
-| `capexModel.segDaRunRate` | 最新季分部 D&A 年化（校準非 AI 折舊年限） | US$bn | 44.088 | 必改 |
+| `capexModel.segDaRunRate` | 最新季分部 D&A 年化（D&A 對帳基準；MAG v0.1b r3 C17 起不再反解非 AI 年限） | US$bn | 44.088 | 必改 |
 | `capexModel.segDaRunRateNote` | 分部 D&A 年化的來源 | 文字 | 最新季（FY26Q4）折舊、攤銷及其他 11.022… | 必改 |
 | `capexModel.guideNote` | 資本支出指引期數與對照 | 文字 | FY27 公司未給金額（只說「年增」）；以曆年 20… | 必改 |
+| `capexModel.rentedExt.open` | 評價日租用的對外 AI MW（neocloud 等；收入照算、投入資本與折舊不計、租金只進 AI 增量報酬；MAG v0.1b r3 C20） | MW | 550 | 檢查 |
+| `capexModel.rentedExt.path` | 各期末租用的對外 AI MW（新增不需資本支出） | MW 清單 | 756、756、756、756、756 | 檢查 |
+| `capexModel.rentedExt.rentMW` | 租用對外 MW 每 MW 年租金（US$m/MW-年） | US$m | 6.54 | 檢查 |
+| `capexModel.rentedExt.note` | 租用對外 MW 的來源 | 文字 | 租用的對外 AI MW（MAG 對照表 r1 C20… | 必改 |
+| `capexModel.nonAiLife` | 非 AI 折舊年限（預設 10 年；MAG v0.1b r3 C17） | 年 | 10 | 檢查 |
+| `capexModel.nonAiLifeRange` | 非 AI 折舊年限區間（敏感度） | 年 清單 | 8、15 | 檢查 |
+| `capexModel.nonAiLifeNote` | 非 AI 折舊年限的依據 | 文字 | 非 AI 折舊年限預設 10 年（區間 8–15 年… | 必改 |
 | `capexModel.aiNetShare` | 期初 AI PP&E 淨額 ÷ 毛額（AI 增量 ROIC 的期初投入資本；MAG v0.1b） | 比例 | 0.8 | 檢查 |
 | `capexModel.aiNetShareNote` | 上欄依據 | 文字 | 期初 AI PP&E 淨額 ÷ 毛額 80%（在役機… | 必改 |
 | `capexModel.roicYear` | 打平 k 的錨定期（0–4；3＝模型第 4 期） | 整數 | 2 | 可沿用 |
