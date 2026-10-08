@@ -1,0 +1,233 @@
+{
+ "_readme": "GOOGL 市場共識資料檔。由 MAG v0.1a 建置代理依工作單（mag/docs/workorders/20261008_mag_v0.1a_資料蒐集.md 步驟 8）以網路讀取取得；數字為擷取當時值，逐筆附來源。單位：金額 US$bn（每股為 US$），日期為擷取日。年度標籤為日曆年（Alphabet 財年＝日曆年）。chat 端審查後方可供模型使用；模型端只讀，不得自行增補或修改數字。",
+ "company": "Alphabet",
+ "ticker": "GOOGL",
+ "asOf": "2026-10-08",
+ "fiscalYearEnd": "12 月；最新已公布季 2026Q2（季末 2026-06-30）；2026Q3 財報預計 2026-10 下旬",
+ "tagLegend": {
+  "Verified": "可公開查證的事實（例如公司實際公布數字、收盤價）",
+  "Interested-party": "賣方分析師預估：有利益關係（投行業務、承銷——Alphabet 2026-06 股權募資與 2026-08 發債的承銷商包含多家覆蓋券商——偏多傾向），數字本身是意見而非事實"
+ },
+ "sourceIndependence": "StockAnalysis.com 的目標價、評等、營收與 EPS 引用 S&P Global Market Intelligence；MarketScreener 的年度預估一般屬 S&P Capital IQ 系；Yahoo Finance 分析頁 2026／2027 營收 498.69／615.04 與 MarketScreener 498.690／615.038 完全相同、與 StockAnalysis 498.74／614.95 略異，三者視為同一或高度重疊的底層來源，不算獨立交叉驗證。MarketBeat 目標價與評等為自行彙整（獨立於 S&P），可作目標價的獨立交叉；Yahoo 目標價 429.47 與 S&P 完全相同，推測同源。",
+ "priceReference": {
+  "close": 350.5,
+  "date": "2026-10-07",
+  "source": "StockAnalysis.com（歷史股價）",
+  "url": "https://stockanalysis.com/stocks/googl/history/",
+  "tag": "Verified",
+  "crossCheck": {
+   "close": 350.5,
+   "date": "2026-10-07",
+   "source": "Yahoo Finance",
+   "url": "https://finance.yahoo.com/quote/GOOGL/"
+  },
+  "note": "2026-10-08 盤前約 348（非收盤，不採用）；10/06 收盤 347.68；2026-06 增資價：A 股 355.1982、C 股 351.8018、Berkshire 351.81／348.20"
+ },
+ "priceTarget": {
+  "mean": 429.47,
+  "median": 430.0,
+  "low": 340.0,
+  "high": 515.0,
+  "analysts": 61,
+  "consensusRating": "Strong Buy",
+  "source": "S&P Global Market Intelligence（經 StockAnalysis.com）",
+  "url": "https://stockanalysis.com/stocks/googl/forecast/",
+  "retrieved": "2026-10-08",
+  "tag": "Interested-party",
+  "crossCheck": [
+   {
+    "mean": 425.72,
+    "low": 310.0,
+    "high": 515.0,
+    "analysts": 55,
+    "consensusRating": "Buy",
+    "source": "MarketBeat（自行彙整，獨立於 S&P）",
+    "url": "https://www.marketbeat.com/stocks/NASDAQ/GOOGL/forecast/",
+    "retrieved": "2026-10-08",
+    "pageUpdated": "2026-10-06"
+   },
+   {
+    "mean": 429.47,
+    "source": "Yahoo Finance（1y Target Est；與 S&P 同值，推測同源）",
+    "url": "https://finance.yahoo.com/quote/GOOGL/",
+    "retrieved": "2026-10-08"
+   }
+  ],
+  "note": "目標價平均 429.47 為現價 350.50 的 1.23 倍"
+ },
+ "ratings": {
+  "month": "2026-10",
+  "strongBuy": 43,
+  "buy": 13,
+  "hold": 5,
+  "sell": 0,
+  "strongSell": 0,
+  "total": 61,
+  "source": "S&P Global Market Intelligence（經 StockAnalysis.com）",
+  "url": "https://stockanalysis.com/stocks/googl/forecast/",
+  "retrieved": "2026-10-08",
+  "tag": "Interested-party",
+  "crossCheck": {
+   "strongBuy": 5,
+   "buy": 46,
+   "hold": 4,
+   "sell": 0,
+   "total": 55,
+   "source": "MarketBeat",
+   "url": "https://www.marketbeat.com/stocks/NASDAQ/GOOGL/forecast/",
+   "retrieved": "2026-10-08"
+  }
+ },
+ "recentActions": [
+  {
+   "date": "2026-10-07",
+   "firm": "Yorkville Ives & Co（Daniel Ives）",
+   "rating": "Buy（首次評等）",
+   "target": 400.0
+  },
+  {
+   "date": "2026-10-07",
+   "firm": "Morgan Stanley（Brian Nowak）",
+   "rating": "Buy（維持）",
+   "target": 400.0
+  },
+  {
+   "date": "2026-10-06",
+   "firm": "Guggenheim",
+   "rating": "Buy（維持）",
+   "target": 450.0
+  },
+  {
+   "date": "2026-10-06",
+   "firm": "Wells Fargo（Ken Gawrelski）",
+   "rating": "Buy（重申）",
+   "target": 417.0
+  },
+  {
+   "date": "2026-10-03",
+   "firm": "Cantor Fitzgerald（Deepak Mathivanan）",
+   "rating": "Buy（重申）",
+   "target": 420.0
+  }
+ ],
+ "recentActionsMeta": {
+  "source": "TipRanks（經 StockAnalysis.com）",
+  "url": "https://stockanalysis.com/stocks/googl/forecast/",
+  "retrieved": "2026-10-08",
+  "tag": "Interested-party",
+  "note": "Wells Fargo 由 411 調升至 417"
+ },
+ "annualEstimates": {
+  "definition": "營收、EBITDA、EBIT（＝GAAP 營業利益，2025 實際 129.039 與公司相同）、淨利與 EPS（含權益證券未實現利益：2026 淨利 254.9／EPS 20.63 含上半年 135.9 的權益證券利益，故高於 2027）、資本支出（購置不動產與設備）、FCF、淨負債（負值＝淨現金）。EBITDA 口徑＝營業利益＋折舊＋SBC：2025 實際 175.128＝129.039＋21.136（折舊）＋24.953（SBC），兩者相加恰為 46.089（[Derived] 推得；MarketScreener 未說明）→ v0.1b 若以 EBITDA 率比較，需扣回 SBC 或改用營業利益＋折舊。",
+  "source": "MarketScreener（S&P Capital IQ 系共識）",
+  "url": "https://www.marketscreener.com/quote/stock/ALPHABET-INC-24203373/finances/",
+  "retrieved": "2026-10-08",
+  "tag": "Interested-party",
+  "2025": {
+   "revenue": 402.836,
+   "ebitda": 175.128,
+   "ebit": 129.039,
+   "netIncome": 132.17,
+   "eps": 10.81,
+   "dps": 0.83,
+   "capex": 91.447,
+   "fcf": 73.266,
+   "netDebt": -80.296,
+   "note": "實際數（FCF 73.266 為 MarketScreener 口徑，公司定義 FCF＝164.713 − 91.447＝73.266 相同）"
+  },
+  "2026": {
+   "revenue": 498.69,
+   "ebitda": 233.431,
+   "ebit": 171.681,
+   "netIncome": 254.864,
+   "eps": 20.63,
+   "dps": 0.8727,
+   "capex": 201.748,
+   "fcf": 8.448,
+   "netDebt": -131.323
+  },
+  "2027": {
+   "revenue": 615.038,
+   "ebitda": 298.668,
+   "ebit": 216.996,
+   "netIncome": 187.475,
+   "eps": 14.95,
+   "dps": 0.9153,
+   "capex": 300.979,
+   "fcf": -36.658,
+   "netDebt": -79.012
+  },
+  "2028": {
+   "revenue": 734.199,
+   "ebitda": 382.826,
+   "ebit": 263.325,
+   "netIncome": 223.329,
+   "eps": 17.89,
+   "dps": 0.9546,
+   "capex": 339.451,
+   "fcf": 6.759,
+   "netDebt": -56.291
+  },
+  "crossCheck": [
+   {
+    "source": "S&P Global（經 StockAnalysis.com）",
+    "url": "https://stockanalysis.com/stocks/googl/forecast/",
+    "retrieved": "2026-10-08",
+    "2026": {
+     "revenue": 498.74,
+     "revenueLow": 489.8,
+     "revenueHigh": 519.8,
+     "eps": 12.15,
+     "epsLow": 11.5,
+     "epsHigh": 13.47
+    },
+    "2027": {
+     "revenue": 614.95,
+     "eps": 15.17
+    },
+    "note": "EPS 口徑與 MarketScreener 不同：12.15 推測排除權益證券利益（頁面標示 EPS），2028 起需付費"
+   },
+   {
+    "source": "Yahoo Finance 分析頁（供應商未標示；營收與 MarketScreener 完全相同）",
+    "url": "https://finance.yahoo.com/quote/GOOGL/analysis/",
+    "retrieved": "2026-10-08",
+    "2026": {
+     "revenue": 498.69,
+     "revenueLow": 489.82,
+     "revenueHigh": 519.82,
+     "analysts": 52,
+     "eps": 20.63
+    },
+    "2027": {
+     "revenue": 615.04,
+     "revenueLow": 545.05,
+     "revenueHigh": 674.43,
+     "analysts": 51,
+     "eps": 14.95
+    },
+    "quarters": {
+     "2026Q3": {
+      "revenue": 127.3,
+      "eps": 3.03,
+      "analysts": 39
+     },
+     "2026Q4": {
+      "revenue": 141.54,
+      "eps": 3.35,
+      "analysts": 36
+     }
+    }
+   }
+  ]
+ },
+ "guidanceVsConsensus": {
+  "capex2026": {
+   "guidance": [
+    195.0,
+    205.0
+   ],
+   "consensus": 201.748,
+   "note": "共識落在指引區間內（偏上緣）"
+  }
+ }
+}
