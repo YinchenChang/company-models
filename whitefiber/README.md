@@ -442,6 +442,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
+| `defaults.gpuLease.share` | 新增 GPU（成長型與汰換）以租賃取得的比例；租賃部分不計資本支出、改計固定租金（WhiteFiber v0.1b） | 比例 | 0.5 | 檢查 |
+| `defaults.gpuLease.rentFactor` | GPU 年租金係數（年租金 ÷ 設備成本；年金因子） | 比例 | 0.260436 | 檢查 |
+| `defaults.gpuLease.note` | GPU 取得方式的依據與推導 | 文字 | 雲端新增 GPU 的取得方式（v0.1b 步驟 4）… | 必改 |
 | `defaults.colo.sites` | 第二分部（託管）MW 驅動站點：key、label、mw（IT MW）、start（起租，評價日起年數）、rent（第一年租金 US$m/MW-IT·年）、esc（年調）、capex（剩餘建置 US$bn）、capexStart／capexEnd（建置起訖年數）、scen（[保守, 基準, 積極] 1＝納入）、delay（1＝起租隨延誤後移）、signed（1＝已簽約）、note（WhiteFiber v0.1b） | 清單 | 10 筆 | 必改 |
 | `defaults.colo.margin` | 託管分部 EBITDA 率（五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）；有站點時取代 legacyBiz.ebitdaMargin） | 比例清單 | 0.522、0.554、0.586、0.618、0.65 | 檢查 |
 | `defaults.colo.marginNote` | 託管 EBITDA 率的推導（起點＝站點毛利率扣分攤 G&A；穩態＝[Analogy] 區間中點） | 文字 | 託管分部 EBITDA 率（審查留言第 5 條）：起… | 必改 |
@@ -465,7 +468,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.ebSteady` | 最後一期（穩態）EBITDA 率；中間各期線性內插 | 比例 | 0.47 | 檢查 |
 | `defaults.ebitdaBasis` | EBITDA 口徑：ebitdar＝EBITDA＝EBITDAR 率 × 營收 − 租金（租金為固定成本，EBITDAR 率三情境共用）；其他值＝三情境共用 EBITDA 率（模板）（Oracle v0.1c） | 代碼 | ebitdar | 檢查 |
 | `defaults.ebitdarAdj` | EBITDAR 率校準：基準情境 [首期, 末期] 租金 ÷ OCI 營收；EBITDAR 率＝ebStart／ebSteady＋此值（scripts/calib_ebitdar.js --write 產生，verify.sh 檢查） | 比例清單 | 0.072418、0.017013 | 必改 |
-| `defaults.ebitdarNote` | EBITDAR 口徑的說明文字 | 文字 | v0.1c：OCI EBITDA＝EBITDAR 率… | 可沿用 |
+| `defaults.ebitdarNote` | EBITDAR 口徑的說明文字 | 文字 | 雲端 EBITDA＝EBITDAR 率 × 雲端營收… | 可沿用 |
 | `defaults.services` | 非算力服務營收（軟體、儲存等），各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
 | `defaults.otherEbitda` | 其他事業 EBITDA（負值＝燒錢），各期；同時進入損益 EBITDA 與營運來源（v0.1b） | US$bn 清單 | 0、0、0、0、0 | 必改 |
 | `defaults.legacyBiz.lines` | 傳統事業各線，一線一列：key、label、fyBase 上一財年實際營收（US$bn）、ytd 年初至今實際營收、g0 起始年增率、gLT 長期年增率（自首期線性收斂到末期）（Oracle v0.1b） | 清單 |  | 必改 |

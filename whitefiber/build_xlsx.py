@@ -444,6 +444,9 @@ for _y in sorted(int(y) for y in D['mwYearEnd'] if int(y) != MW_Y0):
     MWY[_y] = gi(r, f"{_y} 年底主動電力", "MW", D['mwYearEnd'][str(_y)], CO['texts']['mwYearEndNotes'][str(_y)], NUM0); r += 1
 PPE0 = gi(r, "«VMD» 期初 PP&E 基礎", "US$bn", D['ppeOpen'], TXQ['ppeOpenNote']); r += 1
 CAPSC = gi(r, "每 MW 建置成本倍數（整體）", "%", D['capexScale'], "同時影響 CapEx、汰換與車隊折舊；反向 DCF 用；預設 100%", PCT); r += 1
+_GL = D.get('gpuLease') or {'share': 0, 'rentFactor': 0}  # WhiteFiber v0.1b：新增 GPU 的租賃比例與年租金係數（與 HTML segA 同一算法）
+GLS = gi(r, "GPU 租賃比例（新增 GPU）", "%", _GL['share'], "新增 GPU（成長型與汰換）以租賃取得的比例；租賃部分不計資本支出、改計固定租金（company.json → defaults.gpuLease）[Assumed]", PCT); r += 1
+GLF = gi(r, "GPU 年租金係數（年租金 ÷ 設備成本）", "%", _GL['rentFactor'], "年金因子 r ÷ (1 − (1＋r)^−n)，r 9.5%、n 5 年 [Derived]", PCT); r += 1
 r = phdr(r)
 r = prow(r, "每 MW 建置成本", "US$m/MW", CO['scenarios']['capexTemplate']['costMW'], NUM1, TXQ['costMwNote'])
 PPD = D['prepay']  # v0.1b：預付款區塊輸入
@@ -480,8 +483,11 @@ r = prow(r, "次期新增 MW", "MW", [f"={COLS[i+1]}{accr}-{COLS[i]}{accr}" for 
 r = prow(r, "全年毛 CapEx（公式）", "US$bn",
          [f"=({COLS[i]}{r-2}*(1-{LAMBDA})+{COLS[i]}{r-1}*{LAMBDA})*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000" for i in range(5)],
          NUM, "＝(本期新增×(1−λ)＋次期新增×λ)×每 MW 成本", BLACK)
-r = prow(r, "成長型 CapEx（模型期）", "US$bn",
+r = prow(r, "GPU 成長型投資（自購＋租賃）", "US$bn",
          [f"=MAX({COLS[0]}{r-1},{FLOOR})-§H_CAPEXC§"] + [f"={COLS[i]}{r-1}" for i in range(1, 5)], NUM,
+         "WhiteFiber v0.1b：新增 GPU 的總投資；自購部分＝下一列，租賃部分改計租金（GPU 租賃列）", BLACK)
+r = prow(r, "成長型 CapEx（模型期）", "US$bn",
+         [f"={COLS[i]}{r-1}*(1-{GLS})" for i in range(5)], NUM,
          f"«P0»＝MAX(全年公式, 下限) − «YTD» 已認列（第一分部 GPU 部分 {YA.get('capexCore', YA['capex'])}；WhiteFiber：«YTD» 資本支出幾乎全為託管，見 G 區）", BLACK)
 def _vintage(i):
     ys, x = sorted(MWY), "0"
@@ -500,13 +506,18 @@ if D.get('refreshSteady'):  # v0.1c（Oracle）：觸頂後及終值年改為穩
              [f"=IF({COLS[i]}{IN['本期新增 MW']}<=0,1,0)" for i in range(4)] + ["=1"], NUM0,
              "觸頂後（本期新增 MW ≤ 0）及終值年（«PL»）採穩態汰換，其餘採批次汰換", BLACK)
     r = prow(r, "GPU 汰換 CapEx", "US$bn",
-             [f"=IF({COLS[i]}{r-1}=1,{COLS[i]}{r-2},{COLS[i]}{r-3})" for i in range(5)], NUM,
-             "＝旗標為 1 時取穩態汰換，否則取批次汰換；汰換不增加折舊基礎", BLACK)
+             [f"=IF({COLS[i]}{r-1}=1,{COLS[i]}{r-2},{COLS[i]}{r-3})*(1-{GLS})" for i in range(5)], NUM,
+             "＝旗標為 1 時取穩態汰換，否則取批次汰換；只計自購部分（×(1 − GPU 租賃比例)；租賃部分由續租承擔）；汰換不增加折舊基礎", BLACK)
 else:
     r = prow(r, "GPU 汰換 CapEx", "US$bn",
              [f"={_vintage(i)}"
-              f"*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000" for i in range(5)], NUM,
-             "＝(本年 − 壽命) 那年新增的 MW × 每 MW 成本；取代已折舊完的設備", BLACK)
+              f"*{COLS[i]}{IN['每 MW 建置成本']}*{CAPSC}/1000*(1-{GLS})" for i in range(5)], NUM,
+             "＝(本年 − 壽命) 那年新增的 MW × 每 MW 成本 ×(1 − GPU 租賃比例)；取代已折舊完的設備", BLACK)
+r = prow(r, "GPU 租賃｜本期新增租賃設備", "US$bn", [f"={COLS[i]}{IN['GPU 成長型投資（自購＋租賃）']}*{GLS}" for i in range(5)], NUM, "＝GPU 成長型投資 × 租賃比例（WhiteFiber v0.1b）", BLACK)
+r = prow(r, "GPU 租賃｜期初累計租賃設備", "US$bn", ["=0"] + [f"={COLS[i-1]}{r}+{COLS[i-1]}{r-1}" for i in range(1, 5)], NUM, "＝前期期初＋前期新增（租約到期以同租金續租）", BLACK)
+for i in range(1, 5): ws.cell(row=r - 1, column=3 + i, value=f"={COLS[i-1]}{r-1}+{COLS[i-1]}{r-2}")
+r = prow(r, "GPU 租金（租賃設備）", "US$bn", [f"=({COLS[i]}{r-1}+0.5*{COLS[i]}{r-2})*{GLF}*{COLS[i]}{IN['模型期長度（年）']}" for i in range(5)], NUM,
+         "＝(期初累計＋本期新增 × ½) × 年租金係數 × 期間長度；固定租金，進租金合計（扣 EBITDA）", BLACK)
 r = prow(r, "期初毛 PP&E", "US$bn", [f"={PPE0}"] + ["=0"] * 4, NUM, "之後＝前期期初＋前期成長型 CapEx（汰換不增加基礎）", BLACK)
 for i in range(1, 5):
     ws.cell(row=IN["期初毛 PP&E"], column=3 + i, value=f"={COLS[i-1]}{IN['期初毛 PP&E']}+§INSVC{COLS[i-1]}§")  # v0.2：前期投入使用的成長型 CapEx（延誤 0＝前期成長型）
@@ -584,8 +595,8 @@ r += 1
 # ---------------- F 評價 ----------------
 r = section(ws, r, "F｜評價（價格、股數、折現、倍數、權重）")
 PX = gi(r, f"現價（{CO['meta']['priceDate']} 收盤）", "US$", V['price'], f"{CONS['priceReference']['source']}（{CONS['priceReference']['url']}）[Verified]", USD); r += 1
-SH = gi(r, "股數（含 ATM 上限）", "bn", f"={_n(V['shares'])}+{PE_SH}", f"季末流通 {CO['latestQuarter']['sharesOut']}＋{TXQ['sharesNote']}＋期後事件股數（E 區）[Derived]", '0.0000', font=BLACK); r += 1
-ND = gi(r, "淨負債（不含可轉債）", "US$bn", f"={_n(V['netDebt'])}+{PE_OD}-{PE_CASH}", f"評價日其他借款 − 現金 {_n(V['netDebt'])}＋期後事件（其他借款 − 現金，E 區）；可轉債依稀釋判斷另計（見『評價_DCF與目標價』可轉債區）[Derived]", font=BLACK); r += 1
+SH = gi(r, "股數（含 ATM 上限）", "bn", f"={V['shares']!r}+{PE_SH}", f"季末流通 {CO['latestQuarter']['sharesOut']}＋{TXQ['sharesNote']}＋期後事件股數（E 區）[Derived]", '0.0000', font=BLACK); r += 1
+ND = gi(r, "淨負債（不含可轉債）", "US$bn", f"={V['netDebt']!r}+{PE_OD}-{PE_CASH}", f"評價日其他借款 − 現金 {_n(V['netDebt'])}＋期後事件（其他借款 − 現金，E 區）；可轉債依稀釋判斷另計（見『評價_DCF與目標價』可轉債區）[Derived]", font=BLACK); r += 1
 _HV = []  # v0.1b：持股（估值 × 持股比例 ×（1 − 折價））與類債項目 → 淨負債調整項
 for _h in V['holdings']:
     _a = gi(r, f"{_h[0]}｜估值（100%）", "US$bn", _h[1], _h[3]); r += 1
@@ -604,8 +615,8 @@ BETA = gi(r, "CAPM：β", "x", _CP['beta'], f"company.json → valuation.capm.be
 ERP = gi(r, "CAPM：股權風險溢酬", "%", _CP['erp'], "[Assumed]（區間 4.5%–6%）", PCT); r += 1
 KE = gi(r, "股權成本 ke＝rf＋β × ERP", "%", f"={RF}+{BETA}*{ERP}", "CAPM", PCT); r += 1
 KD = gi(r, "稅前債務成本 kd", "%", _CP['kdPretax'], "company.json → valuation.capm.kdPretax（來源見 capm.note）", PCT); r += 1
-CE = gi(r, "股權市值 E（現價 × 季末流通股數）", "US$bn", f"={PX}*({_n(CO['latestQuarter']['sharesOut'])}+{PE_SH})", f"季末流通 {CO['latestQuarter']['sharesOut']}bn 股＋期後事件股數（E 區）", NUM); r += 1
-CD = gi(r, "債務 D（評價日債務本金）", "US$bn", f"={_n(CO['latestQuarter']['debtPrincipal'])}+{PE_OD}+{PE_CV}", "季末債務本金＋期後事件（其他借款＋可轉債，E 區）；強制轉換特別股視為股權，不計入 [Interested-party／Derived]", NUM, font=BLACK); r += 1
+CE = gi(r, "股權市值 E（現價 × 季末流通股數）", "US$bn", f"={PX}*({CO['latestQuarter']['sharesOut']!r}+{PE_SH})", f"季末流通 {CO['latestQuarter']['sharesOut']}bn 股＋期後事件股數（E 區）", NUM); r += 1
+CD = gi(r, "債務 D（評價日債務本金）", "US$bn", f"={CO['latestQuarter']['debtPrincipal']!r}+{PE_OD}+{PE_CV}", "季末債務本金＋期後事件（其他借款＋可轉債，E 區）；強制轉換特別股視為股權，不計入 [Interested-party／Derived]", NUM, font=BLACK); r += 1
 WCAPM = gi(r, "WACC（CAPM）＝E/(D+E) × ke＋D/(D+E) × kd ×(1 − 稅率)", "%", f"={CE}/({CD}+{CE})*{KE}+{CD}/({CD}+{CE})*{KD}*(1-{TAX})", "[Derived]", PCT); r += 1
 WOV = gi(r, "WACC 手動覆蓋（空白＝採 CAPM）", "%", V['wacc'], "company.json → valuation.wacc（null＝空白）", PCT); r += 1
 WACC = gi(r, "WACC", "%", f"=IF(ISBLANK({WOV}),{WCAPM},{WOV})", "＝手動覆蓋，空白時採 CAPM", PCT); r += 1
@@ -1032,8 +1043,9 @@ frow("② 在帳現金租金（備忘，«YTD» 已含在 CFO）", "US$bn",
      f"見『租賃與承諾』頁；«LASTYR» 後尚有 {CO['leases']['afterFY30']}。«P0» 欄僅 «STUB»：«YTD» 租金 {CO['ytdActual']['leasePaid']} 已含在實際 CFO 內")
 frow("② 表外現金租金（未起租）", "US$bn", lambda i: f"='運營_產能與收入'!{COLS[i]}{CAP['uld']}", NUM, GREEN,  # v0.2：延誤連動後
      f"已簽約未起租租賃 {CO['latestQuarter']['offBalanceLease']} 的現金路徑")
+frow("② GPU 租金（租賃設備）", "US$bn", lambda i: f"={inref('GPU 租金（租賃設備）', i)}", NUM, GREEN, "新增 GPU 租賃部分的固定租金（『輸入與假設』D 區；WhiteFiber v0.1b）")
 frow("　租金合計", "US$bn",
-     lambda i: f"={COLS[i]}{FR['② 在帳現金租金（備忘，«YTD» 已含在 CFO）']}+{COLS[i]}{FR['② 表外現金租金（未起租）']}", NUM, BLACK,
+     lambda i: f"={COLS[i]}{FR['② 在帳現金租金（備忘，«YTD» 已含在 CFO）']}+{COLS[i]}{FR['② 表外現金租金（未起租）']}+{COLS[i]}{FR['② GPU 租金（租賃設備）']}", NUM, BLACK,
      "租金已含在 EBITDA 率內（GAAP 營業租賃費用屬營業費用）：營運來源以 EBITDA 率＋租金÷營收計（租前），此列再扣，淨效果中性")
 _wsc = wb["運營_產能與收入"]; _wsi = wb["輸入與假設"]
 for i in range(5):
@@ -1623,7 +1635,7 @@ drow("FY26 新增借款利息校準", "US$bn", lambda i: (f"={_n(D['intCal'])}" 
      "讓首期模型利息對上公司季度利息指引的校準值（company.json → defaults.intCal）；無指引時為 0")
 _XCR = []  # WhiteFiber v0.1b：債務額外融資成本（company.json → debt.extraCost，例如 DDTL 1.1× MOIC 到期加付）
 for _xc in CO['debt'].get('extraCost', []):
-    drow(f"額外融資成本｜{_xc[0]}", "US$bn", lambda i, _xc=_xc: f"={_n(_xc[1][i])}", NUM, BLUE, _xc[2])
+    drow(f"額外融資成本｜{_xc[0]}", "US$bn", lambda i, _xc=_xc: f"={_xc[1][i]!r}", NUM, BLUE, _xc[2])
     _XCR.append(DR[f"額外融資成本｜{_xc[0]}"])
 drow("存量利息合計（連回輸入頁）", "US$bn",
      lambda i: f"={COLS[i]}{DR['存量債務利息']}+{COLS[i]}{DR['期後新發可轉債利息']}+{COLS[i]}{DR['可轉債票息（債務處理）']}+{COLS[i]}{DR['FY26 新增借款利息校準']}" + "".join(f"+{COLS[i]}{x}" for x in _XCR),

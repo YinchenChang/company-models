@@ -10,10 +10,11 @@ q.scenario = SC; q.a = structuredClone(SCENARIOS[SC].a); q.mw31 = SCENARIOS[SC].
  q.billableOpen = SCENARIOS[SC].bOpen;
 q.m.accepted = [...SCENARIOS[SC].acc]; q.m.billable = [...SCENARIOS[SC].bil]; q.m.revMW = [...SCENARIOS[SC].rev];
 const y = runFunding(q).years, n = y.length - 1;
-const adj = [y[0].lease / y[0].totRev, y[n].lease / y[n].totRev].map(x => +x.toFixed(6));
+const rentX = t => t.lease - (t.gpuRent || 0); // WhiteFiber v0.1b：只以機房租金（在帳＋表外）校準；GPU 租金是取得 GPU 的成本（同業 EBITDA 率以自有 GPU 計），不併入校準、直接扣 EBITDA
+const adj = [rentX(y[0]) / y[0].totRev, rentX(y[n]) / y[n].totRev].map(x => +x.toFixed(6));
 const cur = DEFAULTS.ebitdarAdj || [];
-const ebm = [y[0].ebM, y[n].ebM];
-console.log(`基準情境 租金÷OCI 營收：起點 ${(adj[0]*100).toFixed(4)}%、穩態 ${(adj[1]*100).toFixed(4)}%（company.json：${cur.map(x => (x*100).toFixed(4) + '%').join('／')}）；基準 EBITDA 率 起點 ${(ebm[0]*100).toFixed(4)}%、穩態 ${(ebm[1]*100).toFixed(4)}%`);
+const ebm = [y[0].ebM + (y[0].gpuRent || 0) / y[0].totRev, y[n].ebM + (y[n].gpuRent || 0) / y[n].totRev]; // 加回 GPU 租金後應回到 ebStart／ebSteady
+console.log(`基準情境 租金÷OCI 營收：起點 ${(adj[0]*100).toFixed(4)}%、穩態 ${(adj[1]*100).toFixed(4)}%（company.json：${cur.map(x => (x*100).toFixed(4) + '%').join('／')}）；基準 EBITDA 率（加回 GPU 租金）起點 ${(ebm[0]*100).toFixed(4)}%、穩態 ${(ebm[1]*100).toFixed(4)}%`);
 const same = cur.length === 2 && adj.every((x, i) => Math.abs(x - cur[i]) <= 1e-6);
 if (process.argv.includes('--write')) {
   if (same) { console.log('無變動'); process.exit(0); }

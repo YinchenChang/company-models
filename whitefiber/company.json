@@ -602,7 +602,7 @@
    0.072418,
    0.017013
   ],
-  "ebitdarNote": "v0.1c：OCI EBITDA＝EBITDAR 率 × OCI 營收 − 租金（租金為合約性固定成本）。EBITDAR 率＝EBITDA 率（ebStart／ebSteady，指基準情境）＋ebitdarAdj（基準情境租金 ÷ OCI 營收，[起點, 穩態]），使基準情境起點與穩態 EBITDA 率維持 65.2%／47%；保守與積極用同一 EBITDAR 率，因而承擔固定租金。ebitdarAdj 由 scripts/calib_ebitdar.js 自基準情境校準（verify.sh 檢查）[Derived]。ebitdaBasis 填其他值＝模板口徑（三情境共用 EBITDA 率）。",
+  "ebitdarNote": "雲端 EBITDA＝EBITDAR 率 × 雲端營收 − 租金（機房租金與 GPU 租金皆為固定成本）。EBITDAR 率＝EBITDA 率（ebStart／ebSteady，指基準情境、自有 GPU 口徑）＋ebitdarAdj（基準情境機房租金〔在帳＋表外〕÷ 雲端營收，[起點, 穩態]），使基準情境未扣 GPU 租金的 EBITDA 率維持 −11.49%／47%；GPU 租金（新增 GPU 的租賃部分）不併入校準、直接扣 EBITDA（同業 EBITDA 率以自有 GPU 計；WhiteFiber v0.1b 步驟 4）。保守與積極用同一 EBITDAR 率，因而承擔固定租金。ebitdarAdj 由 scripts/calib_ebitdar.js 自基準情境（延誤 0）校準（verify.sh 檢查）[Derived]。",
   "services": [
    0.0,
    0.0,
@@ -1071,6 +1071,11 @@
     0.094021
    ],
    "note": "託管分部（v0.1b 步驟 3；另建 MW 驅動區塊，營收與 EBITDA 經由第二分部〔模板「傳統事業」〕列進入損益、營運來源與分部 EV/EBITDA）：各站點營收＝IT MW × 第一年租金（US$m/MW-IT·年）×(1＋年調)^(期中點 − 起租) × 期間內在租年數；未簽約站點的起租時點隨建設延誤月數後移（delay＝1）；建置 CapEx 在建置起訖期間平均分攤（不隨延誤後移），進類現金流量與託管 PP&E；建物 D&A＝(期初託管 PP&E＋本期建置 × ½) ÷ 年限 × 期間長度，與 GPU 折舊分列。轉嫁電費以淨額處理（Nscale 合約 TCV 不含電費，不計入營收與成本；對照表 r1 第 4 節第 4 條）。期初託管 PP&E＝10-Q 託管設備帳面淨額（含 NC-1 在建）556.3；建物折舊 20 年（區間 15–30：10-K 30 年 vs 10-Q 20–25 年）[Assumed]。客戶預付覆蓋比同樣適用於託管建置 CapEx（coverPrepay；1H26 預付 72.6 ÷ 資本支出 344.7 的口徑含託管）。"
+  },
+  "gpuLease": {
+   "share": 0.5,
+   "rentFactor": 0.260436,
+   "note": "雲端新增 GPU 的取得方式（v0.1b 步驟 4）：10-Q 只揭露 GPU 伺服器租賃為變動租金（Q2 5.6，含一次性終止金額）與自有雲端設備帳面 95.8，未揭露自購／租賃比例 → 對照表預設 5：新增 GPU（成長型與汰換）50% 租賃／50% 自購 [Assumed，敏感度 0%／100%]。自購部分走資本支出與 GPU 折舊；租賃部分不計資本支出，改為固定租金＝(期初累計租賃設備＋本期新增 × ½) × 年租金係數 × 期間長度，租金扣 EBITDA（EBITDAR 機制，calib_ebitdar 重校）。年租金係數＝9.5%、5 年年金因子 0.260436（r ÷ (1 − (1＋r)^−n)；r 取 DDTL 9.5%、n＝GPU 壽命 5 年）[Derived]；租約到期以同租金續租（汰換的租賃部分由續租承擔，不另增租賃設備）。既有機隊的變動租金已含在 EBITDA 率內。"
   }
  },
  "valuation": {

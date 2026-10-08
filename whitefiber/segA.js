@@ -325,8 +325,12 @@ function runFunding(e) {
     // v0.1c（Oracle）：穩態汰換——已連網 MW 不再增加的期間（觸頂後）及終值年，汰換 CapEx＝期間平均已連網 MW × 每 MW GPU 資本支出 ÷ GPU 經濟壽命 × 期間長度（建築與電力屬租賃不計）；取代批次汰換
     RFF = PERIOD_FY.map((t, n) => !!e.refreshSteady && (n === 4 || MN[n] <= 0)),
     RFS = PERIOD_FY.map((t, n) => (MB[n] + t_acc(n)) / 2 * e.a.costMW[n] * (e.capexScale ?? 1) / 1e3 / e.gpuLife * PERIOD_YEARS[n]),
-    REF = RFV.map((x, n) => RFF[n] ? RFS[n] : x),
-    CXG = CXF.map((t, n) => n === 0 ? Math.max(t, e.capexFloorFY0 ?? 0) - (ACTUAL_1H.capexCore ?? ACTUAL_1H.capex) : t), // WhiteFiber v0.1b：首期只扣第一分部（雲端 GPU）的年初至今認列
+    GLS = (e.gpuLease || {}).share ?? 0, GLF = (e.gpuLease || {}).rentFactor ?? 0, // WhiteFiber v0.1b：新增 GPU 的租賃比例與年租金係數（defaults.gpuLease）
+    REF = RFV.map((x, n) => (RFF[n] ? RFS[n] : x) * (1 - GLS)), // 汰換：只計自購部分（租賃部分由續租承擔）
+    CXGT = CXF.map((t, n) => n === 0 ? Math.max(t, e.capexFloorFY0 ?? 0) - (ACTUAL_1H.capexCore ?? ACTUAL_1H.capex) : t), // WhiteFiber v0.1b：首期只扣第一分部（雲端 GPU）的年初至今認列；GPU 成長型投資（自購＋租賃）
+    CXG = CXGT.map(x => x * (1 - GLS)), // 成長型 CapEx（自購）
+    GLN = CXGT.map(x => x * GLS), GLB = GLN.reduce((a, x, i) => (a.push(i ? a[i - 1] + GLN[i - 1] : 0), a), []), // 租賃設備：本期新增、期初累計
+    GLR = PERIOD_YEARS.map((L, i) => (GLB[i] + .5 * GLN[i]) * GLF * L), // GPU 租金（固定）
     CX = CXG.map((e, t) => e + REF[t]),
     DM = e.delayMonths ?? 0, // v0.2：建設延誤月數
     BD = shiftQ(t.billable, e.billableOpen, DM), // v0.2：計費用可計費 MW（原路徑平移延誤月數）
@@ -383,7 +387,7 @@ function runFunding(e) {
         c0 = r === 0 ? e.billableOpen : t.billable[r - 1], u0 = (e.useAvgMw ? (c0 + t.billable[r]) / 2 : t.billable[r]) * t.revMW[r] * (e.revScale ?? 1) * (t.util[r] / 100) * L, // v0.2：未延誤的容量上限（對照）
         lost = DM > 0 ? Math.max(0, u0 - u) : 0, // v0.2：應計費而未計費營收（延誤造成）
         pen = (e.delayPenalty ?? 0) * lost, // v0.2：延誤罰則／服務抵減（營業費用：扣 EBITDA、營運來源、稅基、債務上限）
-        S = b + x,
+        S = b + x + GLR[r], // WhiteFiber v0.1b：加 GPU 租金（租賃設備）
         svc = e.services[r],
         totRev = f + nR + svc,
         // v0.1c（Oracle）：ebitdaBasis＝ebitdar 時，EBITDA＝EBITDAR 率 × 營收 − 租金（租金為固定成本）；EBITDAR 率＝EBITDA 率＋基準情境租金÷OCI 營收（defaults.ebitdarAdj，校準於基準情境起點與穩態）
@@ -524,6 +528,7 @@ function runFunding(e) {
         avgAccepted: (MB[r] + t.accepted[r]) / 2,
         ebitdarM: eR,
         ppeBeg: PPE[r],
+        gpuInvest: CXGT[r], gpuLeaseNew: GLN[r], gpuLeaseBeg: GLB[r], gpuRent: GLR[r], // WhiteFiber v0.1b
         daFleet: DAF[r] + LG.da[r], daGpu: DAF[r], daColo: LG.da[r], coloCapex: LG.capex[r], coloRev: LG.colo.rev[r], coloSigned: LG.colo.signedRev[r], coloPpe: LG.colo.ppe[r], // WhiteFiber v0.1b：D&A＝GPU 車隊＋託管建物
         capexOld: CX_OLD[r],
         intOld: INT_OLD[r],

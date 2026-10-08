@@ -36,6 +36,8 @@ cmp('營收−MW×單價×利用率', S+'核對：算力收入 − 平均在役 
 cmp('每MW年收入', '輸入|每 MW 年收入', d.m.revMW);
 (COMPANY_DATA.texts.revMwContracts||[]).forEach(x=>cmp('合約隱含 '+x[0], S+'對照｜合約隱含每 MW｜'+x[0], [x[1], d.m.revMW[0]*1e3*(q.revScale??1), x[1]/(d.m.revMW[0]*1e3*(q.revScale??1))])); // WhiteFiber v0.1b：合約隱含每 MW 對照列
 cmp('傳統事業營收', '輸入|傳統事業營收（模型期）', H('legacyRev')); cmp('傳統事業EBITDA', '輸入|傳統事業 EBITDA（模型期）', H('legacyEbitda')); // v0.1b（Oracle）
+cmp('GPU投資(自購＋租賃)', '輸入|GPU 成長型投資（自購＋租賃）', H('gpuInvest')); cmp('GPU租賃新增', '輸入|GPU 租賃｜本期新增租賃設備', H('gpuLeaseNew')); // WhiteFiber v0.1b：GPU 租賃
+cmp('GPU租賃期初累計', '輸入|GPU 租賃｜期初累計租賃設備', H('gpuLeaseBeg')); cmp('GPU租金', '輸入|GPU 租金（租賃設備）', H('gpuRent')); cmp('GPU租金(收支)', F+'② GPU 租金（租賃設備）', H('gpuRent'));
 if(d.lg.colo&&d.lg.colo.on){ const CL=d.lg.colo; // WhiteFiber v0.1b：託管站點（MW 驅動；逐站點營收、建置 CapEx 與合計、PP&E、建物 D&A、RPO 對照）
   CL.sites.forEach(x=>{ cmp('託管 '+x.key+' 營收', '輸入|託管｜'+x.label+'｜營收（模型期）', x.rev); cmp('託管 '+x.key+' CapEx', '輸入|託管｜'+x.label+'｜建置 CapEx（模型期）', x.capex); });
   cmp('託管營收合計', '輸入|託管營收（站點合計）', CL.rev); cmp('託管CapEx合計', '輸入|託管建置 CapEx（站點合計）', CL.capex);
