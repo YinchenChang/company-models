@@ -565,7 +565,7 @@
    },
    "pace": {
     "low": 650,
-    "base": 2325.9,
+    "base": 2511.7,
     "high": 2400
    },
    "note": "對外 AI MW-IT（在役）：評價日 3,250（v0.1a：自有在役 AI 4,500 × 對外 60%＋neocloud 租用 1,100 × 50%；三法交叉估計，事實總帳 split.extMW）[Derived／Assumed]；各期期末＝MIN(上限, 前期＋速度 × 期間長度)，首期自評價日起算（connectedStart＝null）。MAG r1 C10：基準速度由 calibrate 設定以資本支出指引解出（scripts/calib_pace.js；verify 檢查）；保守＝第三方可辨識站點速度、積極＝公司容量目標換算。"
@@ -584,7 +584,7 @@
   },
   "mw31": {
    "low": 0,
-   "base": 2325.9,
+   "base": 2511.7,
    "high": 2400
   },
   "delayMonths": {
@@ -640,7 +640,7 @@
    "2025": 1630,
    "2026": 3250
   },
-  "mw31": 2325.9,
+  "mw31": 2511.7,
   "capexFloorFY0": 204.2,
   "gpuLife": 6,
   "gpuLifeNote": "Tokenomics IF_DeprLifeIT 6 年（tk.IF_DeprLifeIT）；10-K 伺服器與網路設備 2–6 年（事實總帳 pl.usefulLife.servers）[Verified]",
@@ -1256,7 +1256,9 @@
    "siteRentGapMax": 10,
    "rentVsBenchMin": 0.8,
    "c15Tol": 0.05,
-   "daReconTol": 0.1
+   "daReconTol": 0.1,
+   "capUtilWarn": 0.5,
+   "capProdMax": 1.0
   }
  },
  "peers": {
@@ -1886,10 +1888,10 @@
   "ebitdaPathLine": "損益與資金共用；AI 雲端 EBITDA 率由 Tokenomics 營運成本推得"
  },
  "tokenomics": {
-  "_note": "算力相關的產業與物理層資料只引用 Tokenomics（YinchenChang/Tokenomics）的 IF_（不含 IF_Hdr*）與 L1_ 名稱，經版本固定的快照檔讀入（tools/tokenomics/import_tokenomics.py）；模型主值取「基準」成本情境。Excel「Tokenomics_取數」分頁建具名範圍 TK_<名稱>_<世代>，每 MW 年收入、營運成本與資本支出列引用之。Tokenomics 每 GW＝IT 關鍵電力。",
-  "snapshotFile": "data/tokenomics_snapshot_v5.27.json",
-  "version": "v5.27",
-  "commit": "ca78a8f42af36caa1af2cc6234d8e322f0415769",
+  "_note": "算力相關的產業與物理層資料只引用 Tokenomics（YinchenChang/Tokenomics）的 IF_（不含 IF_Hdr*）、IFW_（四層瀑布，上限檢查用）、IFC_（用途欄）與 L1_ 名稱，經版本固定的快照檔讀入（tools/tokenomics/import_tokenomics.py）；模型主值取「基準」成本情境。Excel「Tokenomics_取數」分頁建具名範圍 TK_<名稱>_<世代>，每 MW 年收入、營運成本與資本支出列引用之。Tokenomics 每 GW＝IT 關鍵電力。",
+  "snapshotFile": "data/tokenomics_snapshot_v5.31.json",
+  "version": "v5.31",
+  "commit": "f16f161a28b5d43e00e89aa019e4d3e10fae4e3d",
   "names": [
    "IF_HoldEcon",
    "IF_HoldAcct",
@@ -1923,6 +1925,11 @@
    "L1_HoldEconGW_GB300",
    "L1_HoldEconGW_VR200",
    "L1_NvContentGW_VR200",
+   "IFW_RevGWFleet_100",
+   "IFW_RevGWFleet_Util",
+   "IFW_RevGWFleet_Prod",
+   "IFW_RevGWFleet_Life",
+   "IFC_Use",
    "IF_NonNVRatio",
    "IF_NonNVCostRatio",
    "IF_NonNV_Maia"
