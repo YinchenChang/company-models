@@ -1,9 +1,9 @@
-# Oracle 收支模型 — Claude Code 工作守則
+# Microsoft 收支模型（MAG 共用引擎）— Claude Code 工作守則
 
 （本檔不寫版本號；目前版本見 `docs/handoff/` 內交接檔檔名與 `vlog.py`。）
 
 ## 專案是什麼
-Oracle（ORCL）資金與評價模型，核心命題「現金牛＋客戶出資能否撐住 AI 擴張、不再發股、維持投資級」（CRWV「Backlog 不是現金」、Nebius「預付款」之後的第三個對照組）。由 `nebius/` @ `642d144`（CRWV v4.5＋Nebius v0.1b）複製而來，本資料夾各自完整可建置。同一套引擎輸出兩個成品，數字必須完全一致：
+Microsoft（MSFT）資金與評價模型，MAG（Amazon、Alphabet、Microsoft）三家共用引擎（來源資料夾 `amazon/`，引擎檔三家逐檔相同）；核心命題「AI 資本支出有沒有賺到資金成本」（對外 AI 雲端 ROIC vs WACC、打平 k vs 證據 k），副命題「FCF 何時轉負、回購是否被迫減少、是否需舉債」；Microsoft 的對照角色是「對手方集中（OpenAI）、租用 neocloud 與自建並行」。財年結束於 6/30。由 `oracle/` v0.2 改寫（Oracle 由 `nebius/` @ `642d144`〔CRWV v4.5＋Nebius v0.1b〕複製），本資料夾各自完整可建置。同一套引擎輸出兩個成品，數字必須完全一致：
 - HTML（互動版，`build_html_portable.py` 產生）
 - Excel（全部活公式，`build_xlsx.py` 產生）
 業務背景、目前結果與待辦見 `docs/handoff/` 內的交接檔（資料夾內只保留最新版）；技術細節見 `README.md`。工作流程與範圍以 repo 根目錄 `README.md` 與 `docs/workorders/` 的工作單為準（衝突時優先於本檔）。以下「環境」「待辦」以外的守則條文沿用 CRWV 時期（以 CoreWeave 為例）。
