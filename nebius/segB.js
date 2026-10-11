@@ -328,6 +328,33 @@ function scnQ(e, sc) {
   };
 }
 
+// v0.2a：容量情境 sc × 每 MW 收入變體 o（價格情境 px、k_長約／k_現貨、長約占比 ls、Tokenomics 成本情境 tkCase〔錨與每 MW 建置成本同動；k＝價格 ÷ 同情境成本，依證據世代重算〕、首期末爬坡 ramp0）
+// 每 MW 年收入改變時，期初可計費 MW 依「最新季營收 × 4 ÷ 首期每 MW 年收入」自動重算（與 Excel 活公式相同）。供 3 × 3 矩陣與敏感度（scripts/tk_sens.js、簡報）共用。
+function tkScnQ(e, sc, o = {}) {
+  let s = scnQ(e, sc), rev = tkAnchorQ(sc, o).rev, cs = o.tkCase || `基準`;
+  s.m = { ...s.m, revMW: rev }; s.billableOpen = Math.round(BO_RUNRATE / rev[0]);
+  if (cs !== `基準`) { // 每 MW 建置成本同動：首期 GB300、其後 VR200 的 IF_CapexTotal 比例（與 scenarios.capexTemplate.costMW 同世代）
+    let TK = COMPANY_DATA.tkSnap.IF_CapexTotal, g = i => i === 0 ? `GB300 NVL72` : `VR200 NVL72`;
+    s.a = { ...s.a, costMW: s.a.costMW.map((x, i) => x * TK[g(i)][cs] / TK[g(i)][`基準`]) }
+  }
+  if (o.ramp0 != null) s.m.billable = s.m.billable.map((x, i) => i === 0 ? Math.round(SCENARIOS[sc].acc[0] * SC_BR[0] * o.ramp0) : x);
+  return s
+}
+function tkSensQ(e, v, onlyMatrix) { // v0.2a：3 × 3 容量 × 價格矩陣與每 MW 收入敏感度（目標價 tgt、五期股權募資 eq、融資前缺口 gap）
+  let K = [`low`, `base`, `high`], AM = COMPANY_DATA.pricing.anchorMultiple, run = (sc, o) => fA(tkScnQ(e, sc, o), null, v),
+    NB = AM.long.nebiusContract,
+    C = [[`kLongLo`, `k_長約 ${AM.long.low.toFixed(2)}`, { kLong: AM.long.low }], [`kLongMed`, `k_長約 ${AM.long.sensMedian.toFixed(2)}（三筆長約中位數）`, { kLong: AM.long.sensMedian }],
+      [`kLongHi`, `k_長約 ${AM.long.high.toFixed(2)}`, { kLong: AM.long.high }],
+      ...NB.values.map((x, j) => [`kNb${j + 1}`, `k_長約 ${x.toFixed(2)}（Nebius–Microsoft：${NB.labels[j]}）`, { kLong: x }]),
+      ...AM.onDemandShare.sens.map((x, j) => [`od${j + 1}`, `隨需占比 ${Math.round(x * 100)}%（k_現貨 ${AM.spot.base.toFixed(2)}）`, { od: x }]),
+      [`tkLow`, `Tokenomics 低成本（錨與建置成本同動；k 依證據重算）`, { tkCase: `低成本` }], [`tkHigh`, `Tokenomics 高成本（錨與建置成本同動；k 依證據重算）`, { tkCase: `高成本` }],
+      [`ramp50`, `首期末爬坡 50%`, { ramp0: .5 }], [`ramp80`, `首期末爬坡 80%`, { ramp0: .8 }]];
+  return {
+    matrix: Object.fromEntries(K.map(sc => [sc, Object.fromEntries(K.map(px => [px, run(sc, { px })]))])),
+    sens: onlyMatrix ? [] : C.map(([key, label, o]) => ({ key, label, res: Object.fromEntries(K.map(sc => [sc, run(sc, o)])) }))
+  }
+}
+
 // v4.1：目標價區間。點位＝目前輸入的加權目標價（評等仍依點位）；
 // 情境區間＝保守與積極情境的加權目標價（保留手動調整）；方法區間＝目前輸入、EV/EBITDA 倍數換成 methodology.rangeMultiples 兩端。
 // 判斷句與 DCF 權重說明在此產生（HTML 各頁共用；Excel 以文字公式產生同一字串，cmp31 逐字比對）。

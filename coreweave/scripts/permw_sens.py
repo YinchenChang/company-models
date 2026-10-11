@@ -20,9 +20,26 @@ CASES = [('base', '基準（目前輸入）', {}),
          ('pxHigh', 'GPU 小時價格 高', {'GPU 小時價格情境（1＝低、2＝基準、3＝高）': 3} if PMW['revenue'] == 'gpuHr' else None),
          ('mixRU', '世代組合 Rubin Ultra 版', {'世代組合敏感度（0＝基準、1＝Rubin Ultra 版）': 1}),
          ('sgaGaap', '管銷率 GAAP（含 SBC）', {'管銷率口徑（1＝扣 SBC、2＝GAAP 含 SBC）': 2} if PMW['cost'] == 'bottomUp' else None)]
+if PMW['revenue'] == 'tkAnchor':  # W4 r2：定價倍數 k 與隨需占比（與 HTML pmwSensQ 同一組設定、同一名稱）
+    _AM = CO['pricing']['anchorMultiple']; _KL, _OD = '定價倍數 k_長約（市場長約價 ÷ Tokenomics 同世代持有成本）', '隨需占比（占在役計費產能）'
+    CASES += [('kLongLo', f"k_長約 {_AM['long']['low']:.2f}", {_KL: _AM['long']['low']}), ('kLongMed', f"k_長約 {_AM['long']['sensMedian']:.2f}（三筆長約中位數）", {_KL: _AM['long']['sensMedian']}),
+              ('kLongHi', f"k_長約 {_AM['long']['high']:.2f}", {_KL: _AM['long']['high']})]
+    CASES += [(f'od{j + 1}', f"隨需占比 {round(x * 100)}%（k_現貨 {_AM['spot']['base']:.2f}）", {_OD: x}) for j, x in enumerate(_AM['onDemandShare']['sens'])]
 if not CO.get('fleet'):
     print('permw_sens：company.json 無 fleet，不適用'); sys.exit(0)
+_CA = CO.get('companyAdjust') if PMW['revenue'] == 'tkAnchor' else None
+sys.path.insert(0, ROOT); import calendar_q as _cq; _YTDL = _cq.derive(CO)['ytdLabel']  # W5：年初至今標籤（滾動後自動更新）
 with Workbook(xlsx) as wb:
+    if _CA:  # W5：公司實況驗證的敏感度（輸入值讀 Excel「公司實況驗證」頁敏感度輸入列；與 HTML pmwSensQ／cvSensQ 同一組設定、同一名稱）
+        _CV = '公司實況驗證'; _g = lambda lab: wb.get(wb.cell(_CV, lab))
+        _z, _zc, _kc = _g('敏感度輸入｜營運成本倍數＝Q2 實際 ÷ Q2 季末世代 Tokenomics 合計'), _g(f"敏感度輸入｜每 MW 建置成本倍數＝{_YTDL} 實際 ÷ 首期新增世代 Tokenomics"), _g('敏感度輸入｜CRWV 短天期 k（短天期合約價 ÷ 同世代 Tokenomics，基準）')
+        _OX, _CXS, _KS = '由下而上營運成本倍數（1＝Tokenomics 值）', '每 MW 建置成本倍數（整體）', '定價倍數 k_現貨（市場現貨價 ÷ Tokenomics 同世代持有成本）'
+        CASES += [('kExOff', '既有合約 k 不套用（全部按 k_新約）', {'既有合約 k 開關（1＝套用、0＝不套用）': 0}),
+                  ('kNewUp', f"新約價格 +{round(_CA['newK']['adjSens'] * 100)}%（公司說法，只作用於長約）", {'新約價格調整（相對 k_長約；只作用於長約部分）': _CA['newK']['adjSens']}),
+                  ('spotCw', f"隨需 {round(_CA['spotCw']['od'] * 100)}% × CRWV 短天期 k {_kc:.2f}", {_OD: _CA['spotCw']['od'], _KS: _kc}),
+                  ('opexQ2', f"營運成本＝Q2 實際比率（× {_z:.2f}）", {_OX: _z}),
+                  ('capexQ2', f"每 MW 建置成本＝{_YTDL} 實際比率（× {_zc:.2f}）", {_CXS: _zc}),
+                  ('actBoth', '營運成本與建置成本皆用公司實際比率', {_OX: _z, _CXS: _zc})]
     c_sel = wb.cell(IN, '情境選擇', prefix=True)
     o_tgt, o_pfc = wb.cell(VA, '加權目標價'), wb.cell(FR, '融資前累積現金', col='G')
     cells = {k: wb.cell(IN, k) for _, _, ch in CASES if ch for k in ch}

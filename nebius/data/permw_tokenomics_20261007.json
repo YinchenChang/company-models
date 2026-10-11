@@ -1,4 +1,5 @@
 {
+ "_supersededBy": "已被快照取代（v0.2a，2026-10-08）：Tokenomics 取數改由官方快照 data/tokenomics_snapshot_v5.27.json（tools/tokenomics/import_tokenomics.py；Excel「Tokenomics_取數」分頁的 TK_ 具名範圍）提供；本檔保留作 v0.1a 歷史紀錄，不再被模型讀取。原工作表直接引用（Interface、Inputs、DC_Cost 三張工作表的儲存格位置）已改寫為 IF_／TK_ 名稱（下游資料契約第 2 條）；數值未改（v5.24 → v5.27 Interface 逐格不變）。",
  "_readme": "Nebius 每 MW 年收入的正向推導（v0.1a 步驟 6）。輸入只取 Tokenomics（YinchenChang/Tokenomics master 098873a，model/20261007_Tokenomics_v5.24.xlsx，Interface 具名範圍 IF_*）與可觀察市場價格；未使用 Nebius 的 ACV、營收指引或回收期作為輸入（只在 comparisons 對照）。金額單位：USD M／MW·年；MW-IT＝IT 關鍵負載，MW-fac＝設施電力（＝IT × PUE）。",
  "asOf": "2026-10-07",
  "tokenomics": {
@@ -6,27 +7,27 @@
   "commit": "098873a",
   "file": "model/20261007_Tokenomics_v5.24.xlsx",
   "cells": {
-   "IF_GPUsPerGW": "Interface!C7:Q7",
-   "IF_FacilityGW": "Interface!C8:Q8（PUE）",
-   "IF_CapexIT": "Interface!C9:Q9",
-   "IF_CapexFacility": "Interface!C10:Q10",
-   "IF_CapexTotal": "Interface!C11:Q11",
-   "IF_HoldAcct": "Interface!C12:Q12",
-   "IF_HoldEcon": "Interface!C13:Q13",
-   "IF_GPUhrEcon": "Interface!C14:Q14（100% 利用率）",
-   "IF_PowerCost": "Interface!C15:Q15",
-   "IF_Util": "Interface!C48（60%）",
+   "IF_GPUsPerGW": "IF_GPUsPerGW（全部世代 × 成本情境；Excel 具名範圍 TK_GPUsPerGW_<世代>）",
+   "IF_FacilityGW": "IF_FacilityGW（全部世代 × 成本情境；Excel 具名範圍 TK_FacilityGW_<世代>）（PUE）",
+   "IF_CapexIT": "IF_CapexIT（全部世代 × 成本情境；Excel 具名範圍 TK_CapexIT_<世代>）",
+   "IF_CapexFacility": "IF_CapexFacility（全部世代 × 成本情境；Excel 具名範圍 TK_CapexFacility_<世代>）",
+   "IF_CapexTotal": "IF_CapexTotal（全部世代 × 成本情境；Excel 具名範圍 TK_CapexTotal_<世代>）",
+   "IF_HoldAcct": "IF_HoldAcct（全部世代 × 成本情境；Excel 具名範圍 TK_HoldAcct_<世代>）",
+   "IF_HoldEcon": "IF_HoldEcon（全部世代 × 成本情境；Excel 具名範圍 TK_HoldEcon_<世代>）",
+   "IF_GPUhrEcon": "IF_GPUhrEcon（全部世代 × 成本情境；Excel 具名範圍 TK_GPUhrEcon_<世代>）（100% 利用率）",
+   "IF_PowerCost": "IF_PowerCost（全部世代 × 成本情境；Excel 具名範圍 TK_PowerCost_<世代>）",
+   "IF_Util": "TK_Util（IF_Util，60%）",
    "欄位": "I/J/K＝GB300 低／基準／高成本；L/M/N＝VR200 低／基準／高成本",
-   "GPU 壽命": "Inputs!D23:F23（IT 折舊年限 6／6／4 年；非 IF_ 名稱，僅供參考，已內含於 IF_HoldEcon 的資本回收係數 DC_Cost!52）",
-   "WACC": "Inputs!D28:F28（8%／10%／13%；經濟口徑）",
-   "DC 營運費用": "DC_Cost!I48:N48（不含折舊；非 IF_，僅用於隱含 EBITDA 率檢核）"
+   "GPU 壽命": "IF_DeprLifeIT（IT 折舊年限 6／6／4 年；v5.26 起為正式 IF_ 名稱，TK_DeprLifeIT_<世代>；已內含於 IF_HoldEcon 的資本回收）",
+   "WACC": "WACC 8%／10%／13%（經濟口徑；Tokenomics 無 IF_ 名稱，內含於 IF_HoldEcon，不直接引用）",
+   "DC 營運費用": "IF_OpexGW（不含折舊；v5.26 起為正式 IF_ 名稱，TK_OpexGW_<世代>；僅用於隱含 EBITDA 率檢核）"
   },
   "note": "IF_HoldEcon＝IT 資本回收（WACC、IT 壽命年金）＋廠房資本回收＋電費＋維護＋人員軟體＋稅保；不含公司層級 SG&A 與研發。每 GW 單位 $B 等同每 MW 單位 $M。",
   "rows": [
    {
     "gen": "GB300",
     "costCase": "低成本",
-    "cell": "Interface!I7:I15",
+    "cell": "TK_GPUsPerGW_GB300～TK_PowerCost_GB300（GB300，低成本）",
     "gpusPerMWit": 487.0,
     "pue": 1.1,
     "capexITperMWit": 28.55,
@@ -42,7 +43,7 @@
    {
     "gen": "GB300",
     "costCase": "基準",
-    "cell": "Interface!J7:J15",
+    "cell": "TK_GPUsPerGW_GB300～TK_PowerCost_GB300（GB300，基準）",
     "gpusPerMWit": 487.0,
     "pue": 1.2,
     "capexITperMWit": 37.45,
@@ -58,7 +59,7 @@
    {
     "gen": "GB300",
     "costCase": "高成本",
-    "cell": "Interface!K7:K15",
+    "cell": "TK_GPUsPerGW_GB300～TK_PowerCost_GB300（GB300，高成本）",
     "gpusPerMWit": 487.0,
     "pue": 1.3,
     "capexITperMWit": 50.95,
@@ -74,7 +75,7 @@
    {
     "gen": "VR200",
     "costCase": "低成本",
-    "cell": "Interface!L7:L15",
+    "cell": "TK_GPUsPerGW_VR200～TK_PowerCost_VR200（VR200，低成本）",
     "gpusPerMWit": 291.7,
     "pue": 1.1,
     "capexITperMWit": 33.27,
@@ -90,7 +91,7 @@
    {
     "gen": "VR200",
     "costCase": "基準",
-    "cell": "Interface!M7:M15",
+    "cell": "TK_GPUsPerGW_VR200～TK_PowerCost_VR200（VR200，基準）",
     "gpusPerMWit": 291.7,
     "pue": 1.2,
     "capexITperMWit": 37.59,
@@ -106,7 +107,7 @@
    {
     "gen": "VR200",
     "costCase": "高成本",
-    "cell": "Interface!N7:N15",
+    "cell": "TK_GPUsPerGW_VR200～TK_PowerCost_VR200（VR200，高成本）",
     "gpusPerMWit": 291.7,
     "pue": 1.3,
     "capexITperMWit": 42.64,
@@ -388,7 +389,7 @@
      "gpusPerMWit": 291.7,
      "util": 0.85,
      "revPerMWitYr": 18.95,
-     "formula": "GB300 價 5.21 × 經濟成本比 1.674（Interface!M14 ÷ J14）× 291.7 × 8,760 × 0.85"
+     "formula": "GB300 價 5.21 × 經濟成本比 1.674（TK_GPUhrEcon_VR200（基準） ÷ TK_GPUhrEcon_GB300（基準））× 291.7 × 8,760 × 0.85"
     },
     {
      "scenario": "積極",
@@ -396,7 +397,7 @@
      "gpusPerMWit": 291.7,
      "util": 0.9,
      "revPerMWitYr": 30.11,
-     "formula": "GB300 價 7.82 × 經濟成本比 1.674（Interface!M14 ÷ J14）× 291.7 × 8,760 × 0.9"
+     "formula": "GB300 價 7.82 × 經濟成本比 1.674（TK_GPUhrEcon_VR200（基準） ÷ TK_GPUhrEcon_GB300（基準））× 291.7 × 8,760 × 0.9"
     }
    ]
   }
@@ -445,7 +446,7 @@
    "tag": "[Derived]"
   }
  },
- "scenarioDefinition": "保守＝路徑 A（k＝0、o＝6%）與路徑 B（IREN–Microsoft 長約）的平均；基準＝路徑 A（k＝15%、o＝8%）與路徑 B（spot 價、85%）的平均；積極＝路徑 A（k＝30%、o＝10%）與路徑 B（24 個月預留、90%）的平均。均以 GB300 基準成本情境、每 MW-IT 計；設施口徑除以 PUE 1.2（Interface!J8）。",
+ "scenarioDefinition": "保守＝路徑 A（k＝0、o＝6%）與路徑 B（IREN–Microsoft 長約）的平均；基準＝路徑 A（k＝15%、o＝8%）與路徑 B（spot 價、85%）的平均；積極＝路徑 A（k＝30%、o＝10%）與路徑 B（24 個月預留、90%）的平均。均以 GB300 基準成本情境、每 MW-IT 計；設施口徑除以 PUE 1.2（TK_FacilityGW_GB300（基準））。",
  "comparisons": [
   {
    "item": "Nebius Q2 四筆大單 ACV 每 MW（公司說法）",
@@ -505,7 +506,7 @@
  "gapDecomposition": {
   "target": "Nebius ACV 20–25 對 CRWV 10.95（約 1.8–2.3 倍）",
   "a_MW口徑": {
-   "quant": "若 Nebius 以設施 MW、CRWV 以 IT MW 計，換成同口徑後 Nebius 每 MW-IT 再 ×1.1–1.3（PUE，Interface!I8:K8），差距擴大而非縮小；若兩者同為 IT 口徑則無影響。",
+   "quant": "若 Nebius 以設施 MW、CRWV 以 IT MW 計，換成同口徑後 Nebius 每 MW-IT 再 ×1.1–1.3（PUE，TK_FacilityGW_GB300（低成本）～TK_FacilityGW_GB300（高成本）），差距擴大而非縮小；若兩者同為 IT 口徑則無影響。",
    "factor": [
     1.0,
     1.3
@@ -513,7 +514,7 @@
    "status": "方向已知、幅度取決於公司未揭露的口徑"
   },
   "b_世代": {
-   "quant": "Tokenomics 每 MW-IT 經濟持有成本（基準）：H100 10.1、GB200 9.17、GB300 12.72、VR200 12.76（Interface!D13、G13、J13、M13）。成本加成下，新世代對 CRWV 機隊（H100／H200／GB200 混合）每 MW 收入約高 26.04%–38.75%。",
+   "quant": "Tokenomics 每 MW-IT 經濟持有成本（基準）：H100 10.1、GB200 9.17、GB300 12.72、VR200 12.76（TK_HoldEcon_H100（基準）、TK_HoldEcon_GB200（基準）、TK_HoldEcon_GB300（基準）、TK_HoldEcon_VR200（基準））。成本加成下，新世代對 CRWV 機隊（H100／H200／GB200 混合）每 MW 收入約高 26.04%–38.75%。",
    "factor": [
     1.26,
     1.39
@@ -534,7 +535,7 @@
    "status": "缺輸入：GPU 租價時間序列"
   },
   "e_ACV含預付或非GPU服務": {
-   "quant": "股東信註 (2)：ACV 以營收認列口徑、不含預付款 → 預付不重複計入（若註腳對應正確）。ACV 含儲存、網路、軟體（全端雲）；Tokenomics IT 資本支出已含儲存與管理 $500/GPU（DC_Cost!J22），但非 GPU 服務的營收占比公司未揭露。",
+   "quant": "股東信註 (2)：ACV 以營收認列口徑、不含預付款 → 預付不重複計入（若註腳對應正確）。ACV 含儲存、網路、軟體（全端雲）；Tokenomics IT 資本支出已含儲存與管理 $500/GPU（Tokenomics 內部計算格，無 IF_ 名稱；只作說明），但非 GPU 服務的營收占比公司未揭露。",
    "factor": null,
    "status": "缺輸入：非 GPU 服務營收占比"
   },

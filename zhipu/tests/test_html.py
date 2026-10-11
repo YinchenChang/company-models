@@ -151,7 +151,7 @@ def test_required_sections(page):
     for h in ("命題與一句話結論（兩種讀法）", "主要風險／與實際觀察的落差", "市值對照", "與 OpenAI v0.6 並排（美元）", "2028 年後不再收斂", "可信度低", "僅供參考"):
         assert h in page, f"缺少：{h}"
     assert "優於 OpenAI" not in page, "第①節不得出現『優於 OpenAI』之類讀法（Z5b V7）"
-    for sid in ("SRC_ZP_540", "SRC_ZP_458", "SRC_ZP_219", "SRC_ZP_220", "Compute G129"):
+    for sid in ("SRC_ZP_540", "SRC_ZP_458", "SRC_ZP_810", "SRC_ZP_219", "SRC_ZP_220", "Compute G129"):
         assert sid in page, f"主要風險一節缺少來源 {sid}"
 
 
@@ -164,7 +164,7 @@ def test_dist_xlsx_is_current_model():
 
 
 def test_narrative_claims(engine, loc):
-    """HTML 文字中的定性主張（Z5b r2）。"""
+    """HTML 文字中的定性主張（r2：招股章程 P1 後）。"""
     gap = engine.get_name("COST_PropGap_VR")
     assert all(g < 0 for g in gap), "『2025–2030 每一年都還沒覆蓋全成本』不成立"
     assert gap[5] < gap[4] and all(g < 0 for g in gap[3:]), "『2028 年後不再收斂』不成立"
@@ -173,9 +173,14 @@ def test_narrative_claims(engine, loc):
     assert engine.get_name("CHK_Errors") == 0
     g30 = lambda sc: _scenario_values(engine, loc, sc, [("COST_PropGap_VR", 2030)])[("COST_PropGap_VR", 2030)]  # noqa: E731
     c30 = lambda sc: _scenario_values(engine, loc, sc, [("FND_ExtNeedCum", 2030)])[("FND_ExtNeedCum", 2030)]  # noqa: E731
-    for sc in ("flip_rd", "flip_util"):
+    for sc in ("flip_rdfee", "flip_util"):
         assert abs(g30(sc)) < 1, f"{sc}：2030 差額不≈0"
-    for sc in ("flip_rd_ext", "flip_task_ext", "flip_mgm_ext"):
+    for sc in ("flip_rdfee_ext", "flip_inffee_ext", "flip_mgm_ext"):
         assert abs(c30(sc)) < 1, f"{sc}：2030 累計外部資金需求不≈0"
     assert abs(g30("px_m25") - gap[5]) < 1e-6, "『每 GW 價格降 25% 時 2030 差額與基準相同（租價下限）』不成立"
     assert g30("task_hi") < 0, "『2H26 任務數成長取高仍不轉正』不成立"
+    assert abs(g30("eta_old") - gap[5]) < 1e-6, "『η 新舊兩法的命題結果相同』不成立"
+    eta = engine.get_name("CMP_Eta1H26")
+    assert 1 < eta < 9, "『η 已由約 9.5 降到約 3.9（仍 >1）』不成立"
+    ratio = engine.get_name("COST_PropRev_VR_USD")[5] / engine.get_name("OAI_COST_PropRev_VR")[5]
+    assert 7 < ratio < 13, f"『智譜每 VR 等值 GW 營收約為 OpenAI 的 10 倍』不成立（{ratio:.1f}）"

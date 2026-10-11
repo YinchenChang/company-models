@@ -56,7 +56,7 @@ def test_workbook_expectations(model):
 def test_row_counts_match_report(model):
     """SRC_ZP 筆數、Inputs 筆數、TK 待合併數：與報告所列一致（期望值在 scenarios.yaml，報告引用同一數字）。"""
     eng = new_engine(model)
-    ids = [r[0] for r in eng.get("SRC_ZP", "A5:B800") if r[0] != ""]
+    ids = [r[0] for r in eng.get("SRC_ZP", "A5:B2000") if r[0] != ""]
     assert len(ids) == EXPECT["src_rows"] and len(set(ids)) == len(ids)
     inp = [r[0] for r in eng.get("Inputs", "A5:B600") if r[0] != ""]
     assert len(inp) == EXPECT["inp_rows"] and len(set(inp)) == len(inp)
