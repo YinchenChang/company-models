@@ -36,8 +36,8 @@ def main(path):
             if k not in rows: errs.append(f'{nm}：missing 名稱沒有列')
             if k in wb.defined_names: errs.append(f'{k}：missing 名稱不應建具名範圍')
             continue
-        if it['kind'] == 'by_name':  # MAG v0.2：IFC_ 用途欄——A 欄＝名稱（IFC_Use）、B 欄＝所取名稱、G 欄＝用途文字；無具名範圍
-            got = {ws.cell(r, 2).value: ws.cell(r, 7).value for r in range(5, ws.max_row + 1) if ws.cell(r, 1).value == nm}
+        if it['kind'] == 'by_name':  # MAG v0.2：IFC_ 用途欄——A 欄＝「IFC_Use｜所取名稱」、B 欄＝所取名稱、G 欄＝用途文字；無具名範圍
+            got = {ws.cell(r, 2).value: ws.cell(r, 7).value for r in range(5, ws.max_row + 1) if ws.cell(r, 1).value == f'{nm}｜{ws.cell(r, 2).value}'}
             for n2 in SNAP['items']:
                 if n2 in it['values']:
                     n_val += 1

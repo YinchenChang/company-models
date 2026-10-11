@@ -3952,7 +3952,7 @@ if TK:
         elif _it['kind'] == 'by_name':  # MAG v0.2：IFC_ 用途欄——只列本快照所取名稱的用途（文字，不建具名範圍，不進公式）
             for _n2 in _TKS['items']:
                 if _n2 in _it['values']:
-                    _tkrow(_nm, _n2, _it['label'] + "（用途限制）", "", "—", ["", _it['values'][_n2], ""], _it['ref'], NUM)
+                    _tkrow(f"{_nm}｜{_n2}", _n2, _it['label'] + "（用途限制）", "", "—", ["", _it['values'][_n2], ""], _it['ref'], NUM)
                     ws.cell(row=r - 1, column=7).font = SMALL
         else:
             raise SystemExit(f'Tokenomics_取數：不支援的快照型態 {_it["kind"]}（{_nm}）')

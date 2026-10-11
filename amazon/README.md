@@ -1,6 +1,6 @@
-# Amazon 收支模型原始碼包 v0.1（MAG 共用引擎；由 Oracle v0.2 改寫）
+# Amazon 收支模型原始碼包 v0.2（MAG 共用引擎；由 Oracle v0.2 改寫）
 
-**v0.1（2026-10-09）**：成品 `dist/20261009_Amazon收支模型_v0_1.html／.xlsx`；交接檔 `docs/handoff/20261009_Amazon收支模型_交接檔_v0_1.md`；最終報告 `docs/reports/20261008_amazon_v0.1.md`。基準目標價 $198.28（讀法 1）／$215.83（讀法 2，自用 AI 價值中性；主值待 Andy 決定），三情境皆賣出；對外比例無揭露是最大不確定（60% → $168.80、100% → $213.68）。
+**v0.2（2026-10-11）**：接 Tokenomics v5.31（master `f16f161`）；上限檢查改四層瀑布（`IFW_RevGWFleet_Util` 示警 50%、`_Prod` 硬上限 100%）；C10 重解 3,628.8 MW／年。成品 `dist/20261011_Amazon收支模型_v0_2.html／.xlsx`；交接檔 `docs/handoff/20261011_Amazon收支模型_交接檔_v0_2.md`；報告 `docs/reports/20261011_amazon_v0.2.md`。基準目標價 $199.27（讀法 1）／$217.62（讀法 2），三情境皆賣出。
 
 **MAG v0.1b（2026-10-08）**：本資料夾的引擎是 Amazon、Alphabet、Microsoft 三家共用的「MAG 引擎」，公司差異全部由 `company.json` 驅動（移植步驟見 `docs/reports/20261008_amazon_v0.1b_模型.md`「移植說明」）。相對 Oracle v0.2 新增：
 - **對外 AI 雲端**（`pricing`）：每 MW 年收入＝Σ 在役世代占比 × `TK_HoldEcon_<世代>` × 晶片係數 × k（k＝長約占比 × k_長約＋(1 − 占比) × k_現貨；價格軸低／基準／高與容量軸分離，3 × 3 目標價矩陣由 `scripts/rv_solve.py` 以 Excel 求解）；AI 雲端 EBITDA 率＝1 − Tokenomics 加權每 MW 營運成本 ÷ 每 MW 年收入（`defaults.ebitdaBasis`＝tk）。Excel「Tokenomics_取數」頁與 `TK_` 具名範圍（`scripts/check_tokenomics_tab.py`）。
@@ -151,7 +151,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：2026 下半年、2027、2028、2029、2030，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 Amazon v0.1 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 Amazon v0.2 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
