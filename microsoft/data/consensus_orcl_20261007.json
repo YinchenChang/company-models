@@ -1,0 +1,86 @@
+{
+  "_readme": "ORCL 市場共識資料檔。由 v0.1a 建置代理依工作單（docs/workorders/20261007_oracle_v0.1a_資料蒐集.md 步驟 8）以網路讀取取得；數字為擷取當時值，逐筆附來源。單位：金額 US$bn（每股為 US$），日期為擷取日。年度標籤為 Oracle 財年（FY27＝2026-06-01 至 2027-05-31；FY28＝2027/6–2028/5；FY29＝2028/6–2029/5）。chat 端審查後方可供模型使用；模型端只讀，不得自行增補或修改數字。",
+  "company": "Oracle",
+  "ticker": "ORCL",
+  "asOf": "2026-10-07",
+  "fiscalYearEnd": "5 月；FY27＝2026-06-01 至 2027-05-31；最新已公布季 FY27Q1（季末 2026-08-31）",
+  "tagLegend": {
+    "Verified": "可公開查證的事實（例如公司實際公布數字、收盤價）",
+    "Interested-party": "賣方分析師預估：有利益關係（投行業務、承銷、偏多傾向），數字本身是意見而非事實；『共識是多少』可查證，但共識內容屬利害關係人觀點"
+  },
+  "sourceIndependence": "StockAnalysis.com 的目標價、評等、FY27 營收與 EPS 引用 S&P Global Market Intelligence；MarketScreener 的年度與季度預估一般亦屬 S&P Capital IQ 系（與 CRWV、NBIS 共識檔同一判斷），FY27 營收 90.45 對 90.449 幾乎相同，視為同一底層來源的兩個呈現，不算獨立交叉驗證。Yahoo Finance 的營收與 EPS 預估來自 LSEG（獨立於 S&P），FY27 營收 90.48、FY28 131.45 與 MarketScreener 90.449／131.711 一致，可作 FY27–FY28 營收的獨立交叉。MarketBeat 目標價與評等為自行彙整（獨立於 S&P），可作目標價的獨立交叉；Yahoo 目標價 237.97 與 S&P 完全相同，推測同源，不算獨立。",
+  "priceReference": {
+    "close": 144.77, "date": "2026-10-06",
+    "source": "StockAnalysis.com（歷史股價）", "url": "https://stockanalysis.com/stocks/orcl/history/", "tag": "Verified",
+    "crossCheck": {"close": 144.77, "date": "2026-10-06", "source": "Yahoo Finance", "url": "https://finance.yahoo.com/quote/ORCL/"},
+    "note": "2026-10-07 盤中約 143.1–143.2（非收盤，不採用）；52 週低點 121.50（2026-07-17，Webull 轉述）"
+  },
+  "priceTarget": {
+    "mean": 237.97, "median": 240.0, "low": 110.0, "high": 400.0, "analysts": 43,
+    "consensusRating": "Buy",
+    "source": "S&P Global Market Intelligence（經 StockAnalysis.com）", "url": "https://stockanalysis.com/stocks/orcl/forecast/",
+    "retrieved": "2026-10-07", "tag": "Interested-party",
+    "crossCheck": [
+      {"mean": 251.72, "low": 110.0, "high": 400.0, "analysts": 47, "consensusRating": "Moderate Buy", "source": "MarketBeat（自行彙整，獨立於 S&P）", "url": "https://www.marketbeat.com/stocks/NYSE/ORCL/forecast/", "retrieved": "2026-10-07", "pageUpdated": "2026-10-02"},
+      {"mean": 237.97, "source": "Yahoo Finance（1y Target Est；與 S&P 同值，推測同源）", "url": "https://finance.yahoo.com/quote/ORCL/", "retrieved": "2026-10-07"}
+    ],
+    "note": "目標價平均 237.97 為現價 144.77 的 1.64 倍；多數目標價可能在 2026 年中股價下跌前設定，時間分布未公開"
+  },
+  "ratings": {
+    "month": "2026-10", "strongBuy": 28, "buy": 7, "hold": 7, "sell": 0, "strongSell": 1, "total": 43,
+    "source": "S&P Global Market Intelligence（經 StockAnalysis.com）", "url": "https://stockanalysis.com/stocks/orcl/forecast/", "retrieved": "2026-10-07", "tag": "Interested-party",
+    "crossCheck": {"strongBuy": 1, "buy": 36, "hold": 9, "sell": 1, "total": 47, "source": "MarketBeat", "url": "https://www.marketbeat.com/stocks/NYSE/ORCL/forecast/", "retrieved": "2026-10-07"}
+  },
+  "recentActions": [
+    {"date": "2026-10-07", "firm": "Yorkville Ives & Co（Daniel Ives）", "rating": "Hold（首次評等）", "target": 155.0},
+    {"date": "2026-09-25", "firm": "Bernstein（Mark Moerdler）", "rating": "Buy（維持）", "target": 325.0},
+    {"date": "2026-09-25", "firm": "Stifel Nicolaus（Brad Reback）", "rating": "Buy（維持）", "target": 200.0},
+    {"date": "2026-09-24", "firm": "Evercore ISI（Kirk Materne）", "rating": "Buy（維持）", "target": null},
+    {"date": "2026-09-24", "firm": "William Blair（Sebastien Naji）", "rating": "Buy（維持）", "target": null}
+  ],
+  "recentActionsMeta": {"source": "TipRanks（經 StockAnalysis.com）", "url": "https://stockanalysis.com/stocks/orcl/forecast/", "retrieved": "2026-10-07", "tag": "Interested-party", "note": "S&P 頁面未列的目標價記為 null，不以二手報導補值"},
+  "annualEstimates": {
+    "definition": "EBIT 為非 GAAP 營業利益口徑（MarketScreener FY26 實際 EBIT 28.926 與公司非 GAAP 營業利益 28.926 相同）；EBITDA＝非 GAAP 營業利益＋折舊（FY26 36.549＝28.926＋7.623）；EPS 為 GAAP 口徑（FY26 實際 5.83＝GAAP 稀釋 EPS）；淨負債是否含租賃負債未揭露（FY26 實際 97.647 ≈ 帳面借款 129.541 − 現金及有價證券 31.894，即不含租賃）。",
+    "source": "MarketScreener（S&P Capital IQ 系共識）", "url": "https://www.marketscreener.com/quote/stock/ORACLE-CORPORATION-13620698/finances/",
+    "retrieved": "2026-10-07", "tag": "Interested-party",
+    "FY26": {"revenue": 67.357, "ebitda": 36.549, "ebitdaMargin": 0.5426, "ebitNonGaap": 28.926, "netIncome": 16.984, "epsGaap": 5.83, "capex": 55.663, "fcf": -23.686, "netDebt": 97.647, "dps": 2.0, "note": "實際數"},
+    "FY27": {"revenue": 90.449, "ebitda": 51.664, "ebitdaMargin": 0.5712, "ebitNonGaap": 36.309, "interestPaid": 6.207, "netIncome": 20.397, "epsGaap": 6.643, "capex": 93.961, "fcf": -37.32, "netDebt": 117.047, "dps": 1.995},
+    "FY28": {"revenue": 131.711, "ebitda": 74.642, "ebitdaMargin": 0.5667, "ebitNonGaap": 49.476, "interestPaid": 7.401, "netIncome": 29.077, "epsGaap": 9.144, "capex": 100.962, "fcf": -32.56, "netDebt": 147.351, "dps": 2.074},
+    "FY29": {"revenue": 183.569, "ebitda": 107.543, "ebitdaMargin": 0.5858, "ebitNonGaap": 69.462, "interestPaid": 8.051, "netIncome": 44.339, "epsGaap": 13.43, "capex": 84.848, "fcf": 6.154, "netDebt": 146.812, "dps": 2.179}
+  },
+  "annualEstimatesAlt": {
+    "note": "S&P 經 StockAnalysis 免費只提供 FY27 營收與 EPS（EPS 為 non-GAAP 調整後口徑，與上表 GAAP EPS 不同，不可混用）；FY28、FY29 需付費。LSEG 經 Yahoo 提供 FY27–FY28（獨立來源）。",
+    "sp": {"source": "S&P Global Market Intelligence（經 StockAnalysis.com）", "url": "https://stockanalysis.com/stocks/orcl/forecast/", "retrieved": "2026-10-07", "tag": "Interested-party",
+           "FY27": {"revenue": 90.45, "epsAdjusted": 8.14}, "FY28": {"revenue": null, "note": "不適用：付費內容"}, "FY29": {"revenue": null, "note": "不適用：付費內容"}},
+    "lseg": {"source": "LSEG（經 Yahoo Finance Analysis）", "url": "https://finance.yahoo.com/quote/ORCL/analysis/", "retrieved": "2026-10-07", "tag": "Interested-party",
+             "FY27": {"revenue": 90.48, "revenueLow": 89.1, "revenueHigh": 91.69, "revenueAnalysts": 38, "epsAdjusted": 8.14, "epsLow": 8.07, "epsHigh": 8.37, "epsAnalysts": 37},
+             "FY28": {"revenue": 131.45, "revenueLow": 107.66, "revenueHigh": 139.64, "revenueAnalysts": 39, "epsAdjusted": 11.0, "epsLow": 9.0, "epsHigh": 13.3, "epsAnalysts": 39},
+             "note": "Yahoo 頁面標「GAAP」，但前一年 EPS 列 7.63＝公司非 GAAP，故判讀為調整後口徑"}
+  },
+  "quarterlyEstimates": {
+    "source": "MarketScreener（S&P Capital IQ 系共識）", "url": "https://www.marketscreener.com/quote/stock/ORACLE-CORPORATION-13620698/finances/", "retrieved": "2026-10-07", "tag": "Interested-party",
+    "FY27Q2": {"revenue": 21.322, "ebitda": 12.359, "ebitNonGaap": 8.536, "netIncome": 4.762, "epsGaap": 1.57},
+    "FY27Q3": {"revenue": 23.38, "ebitda": 13.515, "ebitNonGaap": 9.23, "netIncome": 5.105, "epsGaap": 1.68},
+    "note": "Q2 FY27（季末 2026-11-30）共識營收 21.322 ＝ 去年同季 16.058 × 1.328，落在公司指引年增 30%–34%（20.875–21.518）區間內"
+  },
+  "companyGuidance": {
+    "FY27Q2": {"revenueGrowthLow": 0.30, "revenueGrowthHigh": 0.34, "cloudGrowthLow": 0.65, "cloudGrowthHigh": 0.71, "epsNonGaapLow": 1.85, "epsNonGaapHigh": 1.93},
+    "FY27": {"revenueMin": 90.0, "epsNonGaap": 8.10, "capexLow": 90.0, "capexHigh": 95.0, "netCashCapexMax": 70.0, "capitalMarketsFunding": 40.0},
+    "source": "Q1 FY27 財報新聞稿（8-K 附件 99.1）；資本支出與淨現金資本支出為法說會口述（二手逐字稿），融資額為 Q4 FY26 新聞稿與簡報",
+    "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526387905/orcl-ex99_1.htm",
+    "tag": "Interested-party",
+    "tagNote": "公司指引屬利害關係人（管理層）預估；營收與 EPS 為新聞稿正式文字；FY27 資本支出 90–95 只見於法說（見事實總帳 guide.fy27.capex）"
+  },
+  "independentCrossCheck": {
+    "provider": "LSEG（經 Yahoo Finance）",
+    "FY27Revenue": 90.48, "FY28Revenue": 131.45, "FY27EpsAdjusted": 8.14, "FY28EpsAdjusted": 11.0,
+    "date": "2026-10-07", "source": "Yahoo Finance Analysis", "url": "https://finance.yahoo.com/quote/ORCL/analysis/", "tag": "Interested-party",
+    "note": "與 MarketScreener（S&P 系）FY27 90.449、FY28 131.711 差異 <0.3%，兩個獨立供應商一致"
+  },
+  "notFound": [
+    "FY29 營收與 EBITDA 的第二個獨立來源（S&P 經 StockAnalysis 需付費；LSEG 經 Yahoo 只到 FY28）——「找不到」，非不存在",
+    "FY30 以後共識：公開來源只到 FY29",
+    "EBITDA 共識的高低區間：未公開",
+    "目標價的時間分布（多少目標價是 Q1 FY27 財報後更新）：未公開"
+  ]
+}

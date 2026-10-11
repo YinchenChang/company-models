@@ -1,0 +1,647 @@
+{
+ "_readme": "Nebius 每 MW 年收入的正向推導（v0.1a 步驟 6）。輸入只取 Tokenomics（YinchenChang/Tokenomics master 098873a，model/20261007_Tokenomics_v5.24.xlsx，Interface 具名範圍 IF_*）與可觀察市場價格；未使用 Nebius 的 ACV、營收指引或回收期作為輸入（只在 comparisons 對照）。金額單位：USD M／MW·年；MW-IT＝IT 關鍵負載，MW-fac＝設施電力（＝IT × PUE）。 【Oracle v0.1a 註記（2026-10-07）】本檔為 nebius/data 同名檔的副本：沿用 Nebius v0.1a 推導，跨模型一致。已確認 Tokenomics master bdb0de7（2026-10-07 20:53）的 model/CURRENT 仍為 20261007_Tokenomics_v5.24.xlsx（v5.25 只有工作單），故不重算三情境。Oracle 專屬對照列見 oracle 區段（只作對照，不作輸入；未以 Oracle 的 RPO、OCI 目標或營收指引反推每 MW 參數）。",
+ "asOf": "2026-10-07",
+ "tokenomics": {
+  "repo": "YinchenChang/Tokenomics",
+  "commit": "098873a",
+  "file": "model/20261007_Tokenomics_v5.24.xlsx",
+  "cells": {
+   "IF_GPUsPerGW": "Interface!C7:Q7",
+   "IF_FacilityGW": "Interface!C8:Q8（PUE）",
+   "IF_CapexIT": "Interface!C9:Q9",
+   "IF_CapexFacility": "Interface!C10:Q10",
+   "IF_CapexTotal": "Interface!C11:Q11",
+   "IF_HoldAcct": "Interface!C12:Q12",
+   "IF_HoldEcon": "Interface!C13:Q13",
+   "IF_GPUhrEcon": "Interface!C14:Q14（100% 利用率）",
+   "IF_PowerCost": "Interface!C15:Q15",
+   "IF_Util": "Interface!C48（60%）",
+   "欄位": "I/J/K＝GB300 低／基準／高成本；L/M/N＝VR200 低／基準／高成本",
+   "GPU 壽命": "Inputs!D23:F23（IT 折舊年限 6／6／4 年；非 IF_ 名稱，僅供參考，已內含於 IF_HoldEcon 的資本回收係數 DC_Cost!52）",
+   "WACC": "Inputs!D28:F28（8%／10%／13%；經濟口徑）",
+   "DC 營運費用": "DC_Cost!I48:N48（不含折舊；非 IF_，僅用於隱含 EBITDA 率檢核）"
+  },
+  "note": "IF_HoldEcon＝IT 資本回收（WACC、IT 壽命年金）＋廠房資本回收＋電費＋維護＋人員軟體＋稅保；不含公司層級 SG&A 與研發。每 GW 單位 $B 等同每 MW 單位 $M。",
+  "rows": [
+   {
+    "gen": "GB300",
+    "costCase": "低成本",
+    "cell": "Interface!I7:I15",
+    "gpusPerMWit": 487.0,
+    "pue": 1.1,
+    "capexITperMWit": 28.55,
+    "capexTotalPerMWit": 38.77,
+    "holdAcctPerMWit": 6.75,
+    "holdEconPerMWit": 8.71,
+    "gpuHrEcon100": 2.04,
+    "powerCostPerMWit": 0.4,
+    "dcOpexPerMWit": 1.49,
+    "itLifeYears": 6,
+    "wacc": 0.08
+   },
+   {
+    "gen": "GB300",
+    "costCase": "基準",
+    "cell": "Interface!J7:J15",
+    "gpusPerMWit": 487.0,
+    "pue": 1.2,
+    "capexITperMWit": 37.45,
+    "capexTotalPerMWit": 50.12,
+    "holdAcctPerMWit": 9.5,
+    "holdEconPerMWit": 12.72,
+    "gpuHrEcon100": 2.98,
+    "powerCostPerMWit": 0.67,
+    "dcOpexPerMWit": 2.63,
+    "itLifeYears": 6,
+    "wacc": 0.1
+   },
+   {
+    "gen": "GB300",
+    "costCase": "高成本",
+    "cell": "Interface!K7:K15",
+    "gpusPerMWit": 487.0,
+    "pue": 1.3,
+    "capexITperMWit": 50.95,
+    "capexTotalPerMWit": 67.14,
+    "holdAcctPerMWit": 17.96,
+    "holdEconPerMWit": 23.87,
+    "gpuHrEcon100": 5.6,
+    "powerCostPerMWit": 1.02,
+    "dcOpexPerMWit": 4.41,
+    "itLifeYears": 4,
+    "wacc": 0.13
+   },
+   {
+    "gen": "VR200",
+    "costCase": "低成本",
+    "cell": "Interface!L7:L15",
+    "gpusPerMWit": 291.7,
+    "pue": 1.1,
+    "capexITperMWit": 33.27,
+    "capexTotalPerMWit": 43.49,
+    "holdAcctPerMWit": 7.65,
+    "holdEconPerMWit": 9.84,
+    "gpuHrEcon100": 3.85,
+    "powerCostPerMWit": 0.4,
+    "dcOpexPerMWit": 1.59,
+    "itLifeYears": 6,
+    "wacc": 0.08
+   },
+   {
+    "gen": "VR200",
+    "costCase": "基準",
+    "cell": "Interface!M7:M15",
+    "gpusPerMWit": 291.7,
+    "pue": 1.2,
+    "capexITperMWit": 37.59,
+    "capexTotalPerMWit": 50.26,
+    "holdAcctPerMWit": 9.53,
+    "holdEconPerMWit": 12.76,
+    "gpuHrEcon100": 4.99,
+    "powerCostPerMWit": 0.67,
+    "dcOpexPerMWit": 2.63,
+    "itLifeYears": 6,
+    "wacc": 0.1
+   },
+   {
+    "gen": "VR200",
+    "costCase": "高成本",
+    "cell": "Interface!N7:N15",
+    "gpusPerMWit": 291.7,
+    "pue": 1.3,
+    "capexITperMWit": 42.64,
+    "capexTotalPerMWit": 58.82,
+    "holdAcctPerMWit": 15.49,
+    "holdEconPerMWit": 20.68,
+    "gpuHrEcon100": 8.09,
+    "powerCostPerMWit": 1.02,
+    "dcOpexPerMWit": 4.02,
+    "itLifeYears": 4,
+    "wacc": 0.13
+   }
+  ]
+ },
+ "pathA": {
+  "method": "成本加成：每 MW-IT 年收入＝IF_HoldEcon ×（1＋k）÷（1−o）。o＝公司層級費用占營收（SG&A＋研發，不含 SBC），k＝超過 WACC 的經濟利潤加成。",
+  "assumptions": {
+   "overhead_o": {
+    "保守": 0.06,
+    "基準": 0.08,
+    "積極": 0.1
+   },
+   "markup_k": {
+    "保守": 0.0,
+    "基準": 0.15,
+    "積極": 0.3
+   },
+   "tag": "[Assumed]",
+   "basis": "o：neocloud 公司層級費用率無乾淨的獨立揭露，取 6–10% 區間；k：0%＝只賺 WACC（不賠錢下限），15%／30% 為加成。可觀察 EBITDA 率不能直接換算加成（EBITDA 率同時受租賃／自建結構影響）：IREN FY26 調整後 EBITDA 率 35%（FY25 54%，IREN 2026-08-27 新聞稿）、CRWV Q2 2026 59%（company.json），本路徑在基準加成下的隱含 EBITDA 率見 impliedEbitdaMarginAtBase，用於檢核加成是否高於可觀察水準。"
+  },
+  "rows": [
+   {
+    "gen": "GB300",
+    "costCase": "低成本",
+    "holdEcon": 8.71,
+    "floorIT": 8.71,
+    "floorITwithOverhead": 9.46,
+    "floorFacility": 8.6,
+    "markup_保守_IT": 9.26,
+    "markup_保守_Fac": 8.42,
+    "markup_基準_IT": 10.88,
+    "markup_基準_Fac": 9.89,
+    "markup_積極_IT": 12.58,
+    "markup_積極_Fac": 11.43,
+    "impliedEbitdaMarginAtBase": 0.784,
+    "floorPerGPUhr_at85": 2.61
+   },
+   {
+    "gen": "GB300",
+    "costCase": "基準",
+    "holdEcon": 12.72,
+    "floorIT": 12.72,
+    "floorITwithOverhead": 13.83,
+    "floorFacility": 11.53,
+    "markup_保守_IT": 13.54,
+    "markup_保守_Fac": 11.28,
+    "markup_基準_IT": 15.91,
+    "markup_基準_Fac": 13.25,
+    "markup_積極_IT": 18.38,
+    "markup_積極_Fac": 15.32,
+    "impliedEbitdaMarginAtBase": 0.755,
+    "floorPerGPUhr_at85": 3.81
+   },
+   {
+    "gen": "GB300",
+    "costCase": "高成本",
+    "holdEcon": 23.87,
+    "floorIT": 23.87,
+    "floorITwithOverhead": 25.95,
+    "floorFacility": 19.96,
+    "markup_保守_IT": 25.4,
+    "markup_保守_Fac": 19.54,
+    "markup_基準_IT": 29.84,
+    "markup_基準_Fac": 22.95,
+    "markup_積極_IT": 34.48,
+    "markup_積極_Fac": 26.52,
+    "impliedEbitdaMarginAtBase": 0.772,
+    "floorPerGPUhr_at85": 7.16
+   },
+   {
+    "gen": "VR200",
+    "costCase": "低成本",
+    "holdEcon": 9.84,
+    "floorIT": 9.84,
+    "floorITwithOverhead": 10.69,
+    "floorFacility": 9.72,
+    "markup_保守_IT": 10.46,
+    "markup_保守_Fac": 9.51,
+    "markup_基準_IT": 12.3,
+    "markup_基準_Fac": 11.18,
+    "markup_積極_IT": 14.21,
+    "markup_積極_Fac": 12.92,
+    "impliedEbitdaMarginAtBase": 0.79,
+    "floorPerGPUhr_at85": 4.92
+   },
+   {
+    "gen": "VR200",
+    "costCase": "基準",
+    "holdEcon": 12.76,
+    "floorIT": 12.76,
+    "floorITwithOverhead": 13.87,
+    "floorFacility": 11.56,
+    "markup_保守_IT": 13.58,
+    "markup_保守_Fac": 11.31,
+    "markup_基準_IT": 15.95,
+    "markup_基準_Fac": 13.29,
+    "markup_積極_IT": 18.43,
+    "markup_積極_Fac": 15.36,
+    "impliedEbitdaMarginAtBase": 0.755,
+    "floorPerGPUhr_at85": 6.39
+   },
+   {
+    "gen": "VR200",
+    "costCase": "高成本",
+    "holdEcon": 20.68,
+    "floorIT": 20.68,
+    "floorITwithOverhead": 22.48,
+    "floorFacility": 17.29,
+    "markup_保守_IT": 22.0,
+    "markup_保守_Fac": 16.92,
+    "markup_基準_IT": 25.85,
+    "markup_基準_Fac": 19.88,
+    "markup_積極_IT": 29.87,
+    "markup_積極_Fac": 22.98,
+    "impliedEbitdaMarginAtBase": 0.765,
+    "floorPerGPUhr_at85": 10.35
+   }
+  ]
+ },
+ "pathB": {
+  "method": "市場價格：每 MW-IT 年收入＝GPU 小時租價 × 每 MW-IT GPU 數（IF_GPUsPerGW ÷ 1000）× 8,760 × 可計費利用率；保守端改用非 Nebius 的可觀察大單成交（IREN–Microsoft）。",
+  "priceObservations": [
+   {
+    "id": "pB.gb300.verda.od",
+    "gen": "GB300",
+    "type": "隨需（on-demand）",
+    "usdPerGPUhr": 10.42,
+    "source": "Verda 官網定價頁",
+    "url": "https://verda.com/pricing",
+    "date": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "公開牌價；同頁 2 年期預留最多折 25%"
+   },
+   {
+    "id": "pB.gb300.verda.res24",
+    "gen": "GB300",
+    "type": "24 個月預留",
+    "usdPerGPUhr": 7.82,
+    "source": "Verda 官網定價頁（隨需 10.42 × (1−25%)）",
+    "url": "https://verda.com/pricing",
+    "date": "2026-10-07",
+    "tag": "[Derived]",
+    "note": "公式：10.42 × 0.75＝7.82；GetDeploying 彙整同供應商 24 個月預留為 7.89（2026-10-07 快照），兩者為同一底層來源，不算獨立"
+   },
+   {
+    "id": "pB.gb300.verda.spot",
+    "gen": "GB300",
+    "type": "spot",
+    "usdPerGPUhr": 5.21,
+    "source": "Verda 官網定價頁",
+    "url": "https://verda.com/pricing",
+    "date": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "短期、可中斷"
+   },
+   {
+    "id": "pB.gb300.oracle.od",
+    "gen": "GB300",
+    "type": "隨需（牌價）",
+    "usdPerGPUhr": 18.0,
+    "source": "GetDeploying 彙整（Oracle Cloud 牌價）",
+    "url": "https://getdeploying.com/reference/cloud-gpu/nvidia-gb300",
+    "date": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "超大型雲牌價，非成交價；標示未確認有貨"
+   },
+   {
+    "id": "pB.gb200.coreweave.od",
+    "gen": "GB200",
+    "type": "隨需（牌價）",
+    "usdPerGPUhr": 10.5,
+    "source": "GetDeploying 彙整（CoreWeave 牌價）",
+    "url": "https://getdeploying.com/reference/cloud-gpu/nvidia-gb200",
+    "date": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "GB200，作為 GB300 的下緣參考"
+   },
+   {
+    "id": "pB.gb200.aws.res36",
+    "gen": "GB200",
+    "type": "36 個月以上預留",
+    "usdPerGPUhr": 10.58,
+    "source": "GetDeploying 彙整（AWS）",
+    "url": "https://getdeploying.com/reference/cloud-gpu/nvidia-gb200",
+    "date": "2026-10-07",
+    "tag": "[Verified]",
+    "note": "超大型雲長約牌價"
+   },
+   {
+    "id": "pB.gb200.azure.res36",
+    "gen": "GB200",
+    "type": "36 個月預留",
+    "usdPerGPUhr": 11.9,
+    "source": "GetDeploying 彙整（Azure）",
+    "url": "https://getdeploying.com/reference/cloud-gpu/nvidia-gb200",
+    "date": "2026-10-07",
+    "tag": "[Verified]",
+    "note": ""
+   }
+  ],
+  "contractObservation": {
+   "id": "pB.gb300.iren_msft",
+   "gen": "GB300",
+   "type": "5 年專用容量合約（含 20% 預付）",
+   "tcvUSDm": 9700,
+   "years": 5,
+   "mwIT": 200,
+   "source": "IREN 新聞稿 2025-11-03：IREN Secures $9.7bn AI Cloud Contract with Microsoft",
+   "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-97bn-ai-cloud-contract-microsoft",
+   "date": "2025-11-03",
+   "tag": "[Interested-party]",
+   "note": "IREN 自述（動機：展示合約規模）；200 MW critical IT load；GPU 設備資本支出約 $5.8B（Dell）",
+   "perMWitYr": 9.7,
+   "impliedPerGPUhr_at100": 2.27
+  },
+  "utilization": {
+   "values": {
+    "保守": 0.8,
+    "基準": 0.85,
+    "積極": 0.9
+   },
+   "tag": "[Assumed]",
+   "basis": "可計費利用率；Tokenomics 基準 60%（IF_Util）為推論服務的 token 層利用率，與 GPU 出租的可計費率不同，故不沿用"
+  },
+  "independence": "Verda 官網與 GetDeploying 的 Verda 數字為同一底層來源；Oracle、CoreWeave、AWS、Azure 為各自牌價；IREN 為獨立公司的合約揭露。SemiAnalysis／InferenceX 未使用。",
+  "rows": [
+   {
+    "scenario": "保守",
+    "basis": "IREN–Microsoft 長約隱含（take-or-pay，不再乘利用率）",
+    "priceUSDperGPUhr": null,
+    "gpusPerMWit": 487.0,
+    "util": null,
+    "revPerMWitYr": 9.7,
+    "revPerMWfacYr": 8.08,
+    "formula": "IREN TCV 9,700 ÷ 5 年 ÷ 200 MW"
+   },
+   {
+    "scenario": "基準",
+    "basis": "Verda GB300 spot 5.21",
+    "priceUSDperGPUhr": 5.21,
+    "gpusPerMWit": 487.0,
+    "util": 0.85,
+    "revPerMWitYr": 18.89,
+    "revPerMWfacYr": 15.74,
+    "formula": "5.21 × 487.0 GPU/MW × 8,760 × 0.85 ÷ 1e6"
+   },
+   {
+    "scenario": "積極",
+    "basis": "Verda GB300 24 個月預留 7.82",
+    "priceUSDperGPUhr": 7.82,
+    "gpusPerMWit": 487.0,
+    "util": 0.9,
+    "revPerMWitYr": 30.03,
+    "revPerMWfacYr": 25.02,
+    "formula": "7.82 × 487.0 GPU/MW × 8,760 × 0.9 ÷ 1e6"
+   }
+  ],
+  "sensitivity_onDemand": {
+   "basis": "Verda GB300 隨需 10.42、85%",
+   "revPerMWitYr": 37.79
+  },
+  "vr200": {
+   "tag": "[Analogy]",
+   "basis": "VR200 尚無公開租價；以 Tokenomics 每 GPU 小時經濟成本比（VR200 ÷ GB300）把 GB300 價格換成 VR200 價格；結果與 GB300 每 MW 收入相近，因兩代每 MW 經濟成本幾乎相同（12.72 對 12.76）。",
+   "rows": [
+    {
+     "scenario": "基準",
+     "priceUSDperGPUhr": 8.72,
+     "gpusPerMWit": 291.7,
+     "util": 0.85,
+     "revPerMWitYr": 18.95,
+     "formula": "GB300 價 5.21 × 經濟成本比 1.674（Interface!M14 ÷ J14）× 291.7 × 8,760 × 0.85"
+    },
+    {
+     "scenario": "積極",
+     "priceUSDperGPUhr": 13.09,
+     "gpusPerMWit": 291.7,
+     "util": 0.9,
+     "revPerMWitYr": 30.11,
+     "formula": "GB300 價 7.82 × 經濟成本比 1.674（Interface!M14 ÷ J14）× 291.7 × 8,760 × 0.9"
+    }
+   ]
+  }
+ },
+ "scenarios": {
+  "保守": {
+   "revPerMWitYr": 11.62,
+   "rangeIT": [
+    9.7,
+    13.54
+   ],
+   "revPerMWfacYr": 9.68,
+   "rangeFac": [
+    8.08,
+    11.28
+   ],
+   "formula": "(路徑 A 保守 13.54 ＋ 路徑 B 保守 9.7) ÷ 2；設施口徑 ÷ PUE 1.2",
+   "tag": "[Derived]"
+  },
+  "基準": {
+   "revPerMWitYr": 17.4,
+   "rangeIT": [
+    15.91,
+    18.89
+   ],
+   "revPerMWfacYr": 14.5,
+   "rangeFac": [
+    13.26,
+    15.74
+   ],
+   "formula": "(路徑 A 基準 15.91 ＋ 路徑 B 基準 18.89) ÷ 2；設施口徑 ÷ PUE 1.2",
+   "tag": "[Derived]"
+  },
+  "積極": {
+   "revPerMWitYr": 24.2,
+   "rangeIT": [
+    18.38,
+    30.03
+   ],
+   "revPerMWfacYr": 20.17,
+   "rangeFac": [
+    15.32,
+    25.03
+   ],
+   "formula": "(路徑 A 積極 18.38 ＋ 路徑 B 積極 30.03) ÷ 2；設施口徑 ÷ PUE 1.2",
+   "tag": "[Derived]"
+  }
+ },
+ "scenarioDefinition": "保守＝路徑 A（k＝0、o＝6%）與路徑 B（IREN–Microsoft 長約）的平均；基準＝路徑 A（k＝15%、o＝8%）與路徑 B（spot 價、85%）的平均；積極＝路徑 A（k＝30%、o＝10%）與路徑 B（24 個月預留、90%）的平均。均以 GB300 基準成本情境、每 MW-IT 計；設施口徑除以 PUE 1.2（Interface!J8）。",
+ "comparisons": [
+  {
+   "item": "Nebius Q2 四筆大單 ACV 每 MW（公司說法）",
+   "value": "20–25",
+   "unit": "USD M／MW·年",
+   "mwBasis": "口徑不明",
+   "ref": "ct.q2.acvPerMW",
+   "tag": "[Interested-party]",
+   "use": "只作對照"
+  },
+  {
+   "item": "Nebius 2026 基準 ACV 每 MW（公司圖示）",
+   "value": 12,
+   "unit": "USD M／MW·年",
+   "mwBasis": "口徑不明",
+   "ref": "ct.acvPerMW.base26",
+   "tag": "[Interested-party]",
+   "use": "只作對照"
+  },
+  {
+   "item": "Nebius 短期容量合約價格機會",
+   "value": "40–50",
+   "unit": "USD M／MW·年",
+   "mwBasis": "口徑不明",
+   "ref": "ct.acvPerMW.shortTerm",
+   "tag": "[Interested-party]",
+   "use": "只作對照"
+  },
+  {
+   "item": "CRWV 每 MW 年營收（機隊平均）",
+   "value": 10.95,
+   "unit": "USD M／MW·年",
+   "mwBasis": "CRWV active power（IT）",
+   "tag": "[Derived]",
+   "use": "只作對照",
+   "formula": "CRWV 1H26 營收 $4.653bn（company.json → ytdActual.revenue，10-Q）× 2 ÷ 2025 年底 active MW 850（company.json → defaults.mwYearEnd.2025，Q4 2025 法說 >850 MW）＝$10.95M；交接檔 v4.5 第 6 節記「年收入約 $10.9m」。CRWV 模型各期輸入 defaults.m.revMW＝0.0112、0.0115、0.0115、0.011、0.0105（US$bn/MW）"
+  },
+  {
+   "item": "IREN–Microsoft 5 年 GB300 合約",
+   "value": 9.7,
+   "unit": "USD M／MW-IT·年",
+   "mwBasis": "IT（critical IT load）",
+   "tag": "[Derived]",
+   "use": "路徑 B 保守端輸入（非 Nebius 的可觀察成交）",
+   "formula": "9,700 ÷ 5 ÷ 200"
+  },
+  {
+   "item": "IREN 稱近期合約每 MW IT 收入",
+   "value": ">20（洽談中接近 25）",
+   "unit": "USD M／MW-IT·年",
+   "mwBasis": "IT",
+   "tag": "[Interested-party]",
+   "use": "只作對照（IREN 自述，2026-08-27 FY26 財報新聞稿）",
+   "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-reports-fy26-results"
+  }
+ ],
+ "gapDecomposition": {
+  "target": "Nebius ACV 20–25 對 CRWV 10.95（約 1.8–2.3 倍）",
+  "a_MW口徑": {
+   "quant": "若 Nebius 以設施 MW、CRWV 以 IT MW 計，換成同口徑後 Nebius 每 MW-IT 再 ×1.1–1.3（PUE，Interface!I8:K8），差距擴大而非縮小；若兩者同為 IT 口徑則無影響。",
+   "factor": [
+    1.0,
+    1.3
+   ],
+   "status": "方向已知、幅度取決於公司未揭露的口徑"
+  },
+  "b_世代": {
+   "quant": "Tokenomics 每 MW-IT 經濟持有成本（基準）：H100 10.1、GB200 9.17、GB300 12.72、VR200 12.76（Interface!D13、G13、J13、M13）。成本加成下，新世代對 CRWV 機隊（H100／H200／GB200 混合）每 MW 收入約高 26.04%–38.75%。",
+   "factor": [
+    1.26,
+    1.39
+   ],
+   "status": "已量化（成本加成口徑）"
+  },
+  "c_新約邊際vs機隊平均": {
+   "quant": "公司圖示：2026 基準 $12M → Q2 新約 >$20M（+67% 以上）；公司稱舊世代 GPU 價格 Q2 較 Q1 高 >30%。兩者皆公司說法，只能說明 ACV 是邊際價、非機隊平均；Nebius 機隊平均每 MW 營收因 active MW 季末數未揭露而無法計算。",
+   "factor": [
+    1.3,
+    1.7
+   ],
+   "status": "部分量化（公司說法），缺 Nebius 季末 active MW"
+  },
+  "d_簽約時點": {
+   "quant": "IREN–Microsoft（2025-11）長約 $9.7M／MW-IT；2026-10 GB300 公開預留牌價推得 $28M（85% 利用率）。缺 GB300 成交價時間序列（Ornn、Silicon Data、SemiAnalysis 指數需付費；SemiAnalysis 亦不可單獨引用），無法分離「時點」與「客戶類型」效果。",
+   "factor": null,
+   "status": "缺輸入：GPU 租價時間序列"
+  },
+  "e_ACV含預付或非GPU服務": {
+   "quant": "股東信註 (2)：ACV 以營收認列口徑、不含預付款 → 預付不重複計入（若註腳對應正確）。ACV 含儲存、網路、軟體（全端雲）；Tokenomics IT 資本支出已含儲存與管理 $500/GPU（DC_Cost!J22），但非 GPU 服務的營收占比公司未揭露。",
+   "factor": null,
+   "status": "缺輸入：非 GPU 服務營收占比"
+  },
+  "f_客戶組合": {
+   "quant": "超大型雲長約（IREN–Microsoft 9.7）對 AI 實驗室／中型客戶（Nebius Q2 大單：Reflection、Cohere、量化交易）定價差可達 2 倍；CRWV 營收 >60% 來自 Microsoft、OpenAI 等大客戶（company.json latestQuarter custA／custB＝36%／26%）。",
+   "factor": [
+    1.5,
+    2.3
+   ],
+   "status": "方向已知、粗估（以 IREN 長約對公開預留牌價推得值之比為上限）"
+  },
+  "summary": "差距主要可由 (b) 世代（+26%～+39%）與 (f) 客戶組合／(c) 邊際定價解釋；(a) 若有影響則使差距擴大；(d)(e) 缺輸入無法量化。"
+ },
+ "oracle": {
+  "tokenomicsCheck": {
+   "repo": "YinchenChang/Tokenomics",
+   "masterCommit": "bdb0de7",
+   "current": "20261007_Tokenomics_v5.24.xlsx",
+   "checked": "2026-10-07",
+   "result": "未更新，沿用"
+  },
+  "scenariosUsed": {
+   "保守": 11.62,
+   "基準": 17.4,
+   "積極": 24.2,
+   "unit": "USD M／MW-IT·年",
+   "note": "與 Nebius 相同；設施口徑 9.68／14.50／20.17"
+  },
+  "comparisons": [
+   {
+    "item": "(a1) OCI 年化 ÷ 期末累計新增 MW",
+    "value": 14.42,
+    "unit": "USD M／MW·年",
+    "mwBasis": "口徑不明",
+    "ref": "pm.a1",
+    "tag": "[Derived]",
+    "use": "只作對照",
+    "formula": "7,388 × 4 ÷ 2,050；分母只含 FY26 以來新增（高估），Q1 新產能季中上線（低估）；OCI 含非 AI 業務"
+   },
+   {
+    "item": "(a2) CPU＆GPU 營收年化 ÷ 期末累計新增 MW",
+    "value": 12.68,
+    "unit": "USD M／MW·年",
+    "mwBasis": "口徑不明",
+    "ref": "pm.a2",
+    "tag": "[Derived]",
+    "use": "只作對照",
+    "formula": "6,500 × 4 ÷ 2,050"
+   },
+   {
+    "item": "(a3) CPU＆GPU 營收年化 ÷ 季內平均新增 MW",
+    "value": 16.0,
+    "unit": "USD M／MW·年（若為設施口徑，MW-IT 為 19.2）",
+    "mwBasis": "口徑不明",
+    "ref": "pm.a3",
+    "tag": "[Derived]",
+    "use": "只作對照（落在基準 17.40 附近）",
+    "formula": "26,000 ÷ (1,200 ＋ 850 ÷ 2)"
+   },
+   {
+    "item": "Oracle–OpenAI 合約隱含",
+    "value": 13.33,
+    "unit": "USD M／MW·年",
+    "mwBasis": "口徑不明",
+    "ref": "oai.k.perMW",
+    "tag": "[Derived]",
+    "use": "只作對照（介於保守與基準之間）",
+    "formula": "300,000 ÷ 5 ÷ 4,500（WSJ 報導值）"
+   },
+   {
+    "item": "(b) 毛利：公司 30–40%（分析師日） vs The Information 約 14%（2025-08 季） vs neocloud EBITDA 率 IREN 35%／CRWV 59%",
+    "value": {
+     "company": [
+      0.3,
+      0.4
+     ],
+     "theInformation": 0.139,
+     "iren": 0.35,
+     "crwv": 0.59,
+     "defaultSteadyEbitda": 0.47
+    },
+    "unit": "比率",
+    "ref": [
+     "pm.gm.company",
+     "pm.gm.theinfo",
+     "pm.ebitda.iren",
+     "pm.ebitda.crwv",
+     "pm.ebitda.mid"
+    ],
+    "tag": "混合",
+    "use": "EBITDA 率穩態取 47%（對照表預設 5）；公司毛利說法與外部報導只作對照。注意毛利 ≠ EBITDA 率：毛利已扣折舊（Oracle 營業成本含折舊），EBITDA 率未扣，兩者不可直接比較"
+   },
+   {
+    "item": "(c) 續約價：Oracle +20% vs Tokenomics CTL_PriceLife（基準 1.0＝不跌價；區間 0.3–1.0；類比 0.42–0.70）",
+    "value": {
+     "oracle": 1.2,
+     "tkBase": 1.0,
+     "tkRange": [
+      0.3,
+      1.0
+     ]
+    },
+    "unit": "倍",
+    "ref": "pm.renewal.vs.tk",
+    "tag": "[Interested-party]",
+    "use": "只作對照；Tokenomics 基準本身不跌價，與 Oracle 說法的衝突在區間與類比證據；GPU 批次與續約價格衰退不做（CRWV 待辦）"
+   }
+  ]
+ }
+}
