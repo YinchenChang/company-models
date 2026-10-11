@@ -1,0 +1,317 @@
+{
+ "_readme": "共用非 AI 雲端同業組（MAG 對照表 r1 第 8 節 C12）。Amazon 代理蒐集；Alphabet、Microsoft 直接複製本檔（只讀，不改數字）。每筆 NTM EV/EBITDA＝EV（StockAnalysis，2026-10-07 收盤）÷ NTM EBITDA（MarketScreener 共識 FY1／FY2 時間加權）；中位數＝非 AI 雲端倍數。",
+ "asOf": "2026-10-07",
+ "retrieved": "2026-10-08",
+ "group": "cloud",
+ "label": "非 AI 雲端",
+ "peers": [
+  {
+   "ticker": "ORCL",
+   "name": "Oracle",
+   "ntmEvEbitda": 9.49,
+   "ev": {
+    "value": 567.27,
+    "unit": "USD bn",
+    "source": "StockAnalysis 統計頁",
+    "url": "https://stockanalysis.com/stocks/orcl/statistics/",
+    "asOf": "2026-10-07",
+    "note": "2026-10-07 收盤"
+   },
+   "ntmEbitda": {
+    "value": 59.785,
+    "unit": "USD bn",
+    "source": "MarketScreener 共識",
+    "url": "https://www.marketscreener.com/quote/stock/ORACLE-CORPORATION-13620698/finances/",
+    "pageQuoteDate": "2026-10-06",
+    "fy1": {
+     "label": "FY5/2027E",
+     "fyEnd": "2027-05-31",
+     "value": 51664,
+     "unit": "USD M"
+    },
+    "fy2": {
+     "label": "FY5/2028E",
+     "value": 74642,
+     "unit": "USD M"
+    },
+    "weightFy1": 0.6466,
+    "method": "NTM＝w×FY1＋(1−w)×FY2，w＝(FY1 結束日 − 2026-10-07) 天數 ÷ 365"
+   },
+   "retrieved": "2026-10-08",
+   "tag": "[Derived]",
+   "note": "EV 與 EBITDA 來自不同供應商（MarketScreener EBITDA 為共識口徑，可能為調整後）"
+  },
+  {
+   "ticker": "IBM",
+   "name": "IBM",
+   "ntmEvEbitda": 12.51,
+   "ev": {
+    "value": 264.89,
+    "unit": "USD bn",
+    "source": "StockAnalysis 統計頁",
+    "url": "https://stockanalysis.com/stocks/ibm/statistics/",
+    "asOf": "2026-10-07",
+    "note": "2026-10-07 收盤"
+   },
+   "ntmEbitda": {
+    "value": 21.166,
+    "unit": "USD bn",
+    "source": "MarketScreener 共識",
+    "url": "https://www.marketscreener.com/quote/stock/IBM-4828/finances/",
+    "pageQuoteDate": "2026-10-08",
+    "fy1": {
+     "label": "2026E",
+     "fyEnd": "2026-12-31",
+     "value": 20153,
+     "unit": "USD M"
+    },
+    "fy2": {
+     "label": "2027E",
+     "value": 21474,
+     "unit": "USD M"
+    },
+    "weightFy1": 0.2329,
+    "method": "NTM＝w×FY1＋(1−w)×FY2，w＝(FY1 結束日 − 2026-10-07) 天數 ÷ 365"
+   },
+   "retrieved": "2026-10-08",
+   "tag": "[Derived]",
+   "note": "EV 與 EBITDA 來自不同供應商（MarketScreener EBITDA 為共識口徑，可能為調整後）"
+  },
+  {
+   "ticker": "SAP",
+   "name": "SAP",
+   "ntmEvEbitda": 15.13,
+   "ev": {
+    "value": 215.37,
+    "unit": "EUR bn",
+    "source": "StockAnalysis 統計頁",
+    "url": "https://stockanalysis.com/quote/etr/SAP/statistics/",
+    "asOf": "2026-10-07",
+    "note": "2026-10-07 收盤（XETRA，EUR，與 EBITDA 同幣別）"
+   },
+   "ntmEbitda": {
+    "value": 14.233,
+    "unit": "EUR bn",
+    "source": "MarketScreener 共識",
+    "url": "https://www.marketscreener.com/quote/stock/SAP-SE-68813/finances/",
+    "pageQuoteDate": "2026-10-08",
+    "fy1": {
+     "label": "2026E",
+     "fyEnd": "2026-12-31",
+     "value": 12772,
+     "unit": "EUR M"
+    },
+    "fy2": {
+     "label": "2027E",
+     "value": 14676,
+     "unit": "EUR M"
+    },
+    "weightFy1": 0.2329,
+    "method": "NTM＝w×FY1＋(1−w)×FY2，w＝(FY1 結束日 − 2026-10-07) 天數 ÷ 365"
+   },
+   "retrieved": "2026-10-08",
+   "tag": "[Derived]",
+   "note": "EV 與 EBITDA 來自不同供應商（MarketScreener EBITDA 為共識口徑，可能為調整後）"
+  },
+  {
+   "ticker": "CRM",
+   "name": "Salesforce",
+   "ntmEvEbitda": 10.81,
+   "ev": {
+    "value": 214.92,
+    "unit": "USD bn",
+    "source": "StockAnalysis 統計頁",
+    "url": "https://stockanalysis.com/stocks/crm/statistics/",
+    "asOf": "2026-10-07",
+    "note": "2026-10-07 收盤"
+   },
+   "ntmEbitda": {
+    "value": 19.891,
+    "unit": "USD bn",
+    "source": "MarketScreener 共識",
+    "url": "https://www.marketscreener.com/quote/stock/SALESFORCE-INC-12180/finances/",
+    "pageQuoteDate": "2026-10-07",
+    "fy1": {
+     "label": "FY1/2027E",
+     "fyEnd": "2027-01-31",
+     "value": 18870,
+     "unit": "USD M"
+    },
+    "fy2": {
+     "label": "FY1/2028E",
+     "value": 20366,
+     "unit": "USD M"
+    },
+    "weightFy1": 0.3178,
+    "method": "NTM＝w×FY1＋(1−w)×FY2，w＝(FY1 結束日 − 2026-10-07) 天數 ÷ 365"
+   },
+   "retrieved": "2026-10-08",
+   "tag": "[Derived]",
+   "note": "EV 與 EBITDA 來自不同供應商（MarketScreener EBITDA 為共識口徑，可能為調整後）"
+  },
+  {
+   "ticker": "NOW",
+   "name": "ServiceNow",
+   "ntmEvEbitda": 20.63,
+   "ev": {
+    "value": 144.79,
+    "unit": "USD bn",
+    "source": "StockAnalysis 統計頁",
+    "url": "https://stockanalysis.com/stocks/now/statistics/",
+    "asOf": "2026-10-07",
+    "note": "2026-10-07 收盤"
+   },
+   "ntmEbitda": {
+    "value": 7.02,
+    "unit": "USD bn",
+    "source": "MarketScreener 共識",
+    "url": "https://www.marketscreener.com/quote/stock/SERVICENOW-INC-10912979/finances/",
+    "pageQuoteDate": "2026-10-02",
+    "fy1": {
+     "label": "2026E",
+     "fyEnd": "2026-12-31",
+     "value": 6060,
+     "unit": "USD M"
+    },
+    "fy2": {
+     "label": "2027E",
+     "value": 7311,
+     "unit": "USD M"
+    },
+    "weightFy1": 0.2329,
+    "method": "NTM＝w×FY1＋(1−w)×FY2，w＝(FY1 結束日 − 2026-10-07) 天數 ÷ 365"
+   },
+   "retrieved": "2026-10-08",
+   "tag": "[Derived]",
+   "note": "EV 與 EBITDA 來自不同供應商（MarketScreener EBITDA 為共識口徑，可能為調整後）"
+  },
+  {
+   "ticker": "AKAM",
+   "name": "Akamai",
+   "ntmEvEbitda": 9.7,
+   "ev": {
+    "value": 19.48,
+    "unit": "USD bn",
+    "source": "StockAnalysis 統計頁",
+    "url": "https://stockanalysis.com/stocks/akam/statistics/",
+    "asOf": "2026-10-07",
+    "note": "2026-10-07 收盤"
+   },
+   "ntmEbitda": {
+    "value": 2.008,
+    "unit": "USD bn",
+    "source": "MarketScreener 共識",
+    "url": "https://www.marketscreener.com/quote/stock/AKAMAI-TECHNOLOGIES-INC-8303/finances/",
+    "pageQuoteDate": "2026-10-02",
+    "fy1": {
+     "label": "2026E",
+     "fyEnd": "2026-12-31",
+     "value": 1747,
+     "unit": "USD M"
+    },
+    "fy2": {
+     "label": "2027E",
+     "value": 2087,
+     "unit": "USD M"
+    },
+    "weightFy1": 0.2329,
+    "method": "NTM＝w×FY1＋(1−w)×FY2，w＝(FY1 結束日 − 2026-10-07) 天數 ÷ 365"
+   },
+   "retrieved": "2026-10-08",
+   "tag": "[Derived]",
+   "note": "EV 與 EBITDA 來自不同供應商（MarketScreener EBITDA 為共識口徑，可能為調整後）"
+  },
+  {
+   "ticker": "EQIX",
+   "name": "Equinix",
+   "ntmEvEbitda": 21.2,
+   "ev": {
+    "value": 122.31,
+    "unit": "USD bn",
+    "source": "StockAnalysis 統計頁",
+    "url": "https://stockanalysis.com/stocks/eqix/statistics/",
+    "asOf": "2026-10-07",
+    "note": "2026-10-07 收盤"
+   },
+   "ntmEbitda": {
+    "value": 5.769,
+    "unit": "USD bn",
+    "source": "MarketScreener 共識",
+    "url": "https://www.marketscreener.com/quote/stock/EQUINIX-INC-20565916/finances/",
+    "pageQuoteDate": "2026-10-06",
+    "fy1": {
+     "label": "2026E",
+     "fyEnd": "2026-12-31",
+     "value": 5283,
+     "unit": "USD M"
+    },
+    "fy2": {
+     "label": "2027E",
+     "value": 5916,
+     "unit": "USD M"
+    },
+    "weightFy1": 0.2329,
+    "method": "NTM＝w×FY1＋(1−w)×FY2，w＝(FY1 結束日 − 2026-10-07) 天數 ÷ 365"
+   },
+   "retrieved": "2026-10-08",
+   "tag": "[Derived]",
+   "note": "EV 與 EBITDA 來自不同供應商（MarketScreener EBITDA 為共識口徑，可能為調整後）"
+  },
+  {
+   "ticker": "DOCN",
+   "name": "DigitalOcean",
+   "ntmEvEbitda": 24.49,
+   "ev": {
+    "value": 16.33,
+    "unit": "USD bn",
+    "source": "StockAnalysis 統計頁",
+    "url": "https://stockanalysis.com/stocks/docn/statistics/",
+    "asOf": "2026-10-07",
+    "note": "2026-10-07 收盤"
+   },
+   "ntmEbitda": {
+    "value": 0.667,
+    "unit": "USD bn",
+    "source": "MarketScreener 共識",
+    "url": "https://www.marketscreener.com/quote/stock/DIGITALOCEAN-HOLDINGS-INC-120405757/finances/",
+    "pageQuoteDate": "2026-10-02",
+    "fy1": {
+     "label": "2026E",
+     "fyEnd": "2026-12-31",
+     "value": 459.6,
+     "unit": "USD M"
+    },
+    "fy2": {
+     "label": "2027E",
+     "value": 729.6,
+     "unit": "USD M"
+    },
+    "weightFy1": 0.2329,
+    "method": "NTM＝w×FY1＋(1−w)×FY2，w＝(FY1 結束日 − 2026-10-07) 天數 ÷ 365"
+   },
+   "retrieved": "2026-10-08",
+   "tag": "[Derived]",
+   "note": "EV 與 EBITDA 來自不同供應商（MarketScreener EBITDA 為共識口徑，可能為調整後）"
+  }
+ ],
+ "gaps": [],
+ "median": {
+  "value": 13.82,
+  "n": 8,
+  "tag": "[Derived]",
+  "note": "8 家中位數（偶數取中間兩家平均）"
+ },
+ "ttmCheck": {
+  "note": "StockAnalysis TTM EV/EBITDA 對照（非用於模型）",
+  "values": {
+   "ORCL": 16.47,
+   "IBM": 16.08,
+   "SAP": 17.9,
+   "CRM": 16.73,
+   "NOW": 49.8,
+   "AKAM": 18.08,
+   "EQIX": 27.35,
+   "DOCN": 51.68
+  }
+ }
+}

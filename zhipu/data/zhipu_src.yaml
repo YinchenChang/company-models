@@ -2699,7 +2699,7 @@ items:
   tag: Verified
   party: null
   basis: 經審計（KPMG；年度業績公告）
-  note: 年度業績公告比較數 RMB462.3 million；百萬÷100
+  note: 年度業績公告比較數 RMB462.3 million；百萬÷100；【r2 P2 口徑差異】公告「資本開支」＝物業及設備添置（含使用權資產 3.37 億）＋無形資產添置，屬權責口徑；現金資本開支 1.33 億見 SRC_ZP_889
 - id: SRC_ZP_151
   team: Z1-F
   key: cash_end_fy25
@@ -3779,7 +3779,7 @@ items:
   tag: Verified
   party: null
   basis: 未經審計（中期業績公告；是否經核數師審閱公告未見明載）
-  note: 中期公告比較數 RMB53.7 million；百萬÷100
+  note: 中期公告比較數 RMB53.7 million；百萬÷100；【r2 P2 口徑差異】公告「資本開支」含使用權資產添置 0.34 億；現金資本開支 0.24 億見 SRC_ZP_891
 - id: SRC_ZP_211
   team: Z1-F
   key: cash_end_1h26
@@ -4139,7 +4139,7 @@ items:
   tag: Interested-party
   party: 媒體轉述
   basis: 媒體轉述（招股章程）
-  note: 原文「从2022年的0.15亿元」；原始招股章程財務資料節未能讀取
+  note: 原文「从2022年的0.15亿元」；原始招股章程財務資料節未能讀取；【r2 P2 口徑更正】原文「含雲端部署」不正確：研發項下算力費（招股章程第 255、267 頁，SRC_ZP_611）不含營業成本中的雲端部署算力
 - id: SRC_ZP_231
   team: Z1-F
   key: rd_compute_1h25
@@ -4157,7 +4157,7 @@ items:
   tag: Interested-party
   party: 媒體轉述
   basis: 媒體轉述（招股章程）
-  note: 原文「到2025年上半年的11.45亿」；原始招股章程財務資料節未能讀取
+  note: 原文「到2025年上半年的11.45亿」；原始招股章程財務資料節未能讀取；【r2 P2 口徑更正】同 SRC_ZP_230；一手值見 SRC_ZP_615，三科目合計見 SRC_ZP_742
 - id: SRC_ZP_232
   team: Z1-F
   key: rd_compute_fy24
@@ -7793,7 +7793,7 @@ items:
   tag: Interested-party
   party: 媒體轉述
   basis: null
-  note: 原文「向最大客戶A銷售了2.42億元，但卻向客戶採購了2.47億元」；客戶兼供應商（D19 回流對照）
+  note: 原文「向最大客戶A銷售了2.42億元，但卻向客戶採購了2.47億元」；客戶兼供應商（D19 回流對照）；【r2 P2 引用更正】招股章程會計師報告：銷售 24.2 百萬元、採購 24.7 百萬元（僅 FY2024＋1H25），媒體值差 10 倍；模型改引用 SRC_ZP_785、786
 - id: SRC_ZP_434
   team: Z1-R
   key: qy_mau_q1_26
@@ -8063,7 +8063,7 @@ items:
   tag: Interested-party
   party: 媒體轉述
   basis: null
-  note: 原文「2024年，智譜的算力服務費達到15.52億元，這已然是同期收入的5倍左右」；轉述 PHIP
+  note: 原文「2024年，智譜的算力服務費達到15.52億元，這已然是同期收入的5倍左右」；轉述 PHIP；【r2 P2 口徑更正】15.52 億實為研發項下算力費（SRC_ZP_613）；三科目合計 15.96 億見 SRC_ZP_740
 - id: SRC_ZP_449
   team: Z1-R
   key: cmp_fee_total_fy24_b
@@ -8081,7 +8081,7 @@ items:
   tag: Interested-party
   party: 媒體轉述
   basis: null
-  note: 原文「2024年，智譜算力服務費用為15.53億元，佔研發開支的比重超過70%」；與 15.52 差 0.01（四捨五入）
+  note: 原文「2024年，智譜算力服務費用為15.53億元，佔研發開支的比重超過70%」；與 15.52 差 0.01（四捨五入）；【r2 P2 口徑更正】同 SRC_ZP_448；研發項下見 SRC_ZP_613、三科目合計見 SRC_ZP_740
 - id: SRC_ZP_450
   team: Z1-R
   key: cmp_fee_total_1h25
@@ -8099,7 +8099,7 @@ items:
   tag: Interested-party
   party: 媒體轉述
   basis: null
-  note: 原文「算力服務費（包括模型訓練以及通過雲端部署為客戶提供服務）從2022年的0.15億元到2025年上半年的11.45億」
+  note: 原文「算力服務費（包括模型訓練以及通過雲端部署為客戶提供服務）從2022年的0.15億元到2025年上半年的11.45億」；【r2 P2 口徑更正】11.45 億為研發項下算力費（SRC_ZP_615），不含營業成本；三科目合計 12.02 億見 SRC_ZP_742
 - id: SRC_ZP_451
   team: Z1-R
   key: cmp_fee_total_fy22
@@ -8117,7 +8117,7 @@ items:
   tag: Interested-party
   party: 媒體轉述
   basis: null
-  note: 同上「2022年的0.15億元」
+  note: 同上「2022年的0.15億元」；【r2 P2 口徑更正】0.15 億為研發項下（SRC_ZP_611）；三科目合計見 SRC_ZP_738
 - id: SRC_ZP_452
   team: Z1-R
   key: cmp_chips_domestic_100k
@@ -10889,7 +10889,7 @@ items:
   tag: Interested-party
   party: 媒體轉述
   basis: null
-  note: Z4 由 SRC_ZP_433 的 note 拆出數值列（同一原文「向客戶採購了2.47億元」）；D19 回流對照
+  note: Z4 由 SRC_ZP_433 的 note 拆出數值列（同一原文「向客戶採購了2.47億元」）；D19 回流對照；【r2 P2 引用更正】同 SRC_ZP_433；模型改引用 SRC_ZP_786（採購 0.247 億）
 - id: SRC_ZP_606
   team: Z4
   key: broker_guosen_rev_fy27

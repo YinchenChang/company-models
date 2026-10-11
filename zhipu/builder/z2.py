@@ -204,9 +204,9 @@ def build(wb, D, tk_cells):
            key="impl_vol", name="DEM_ImpliedVolGrowth", name_col="K")
     Dm.add("模型 2H26 ÷ 1H26 API 按量計費 token", "倍", {"L": "=L«D.api_tok»/K«D.api_tok»"}, "對照：公司稱 MaaS token 呼叫量『較年初 40 倍以上』（SRC_ZP_410；基期為年初時點，口徑不同）", key="vol_ratio")
     Dm.add("公司說法：MaaS token 呼叫量較年初倍數", "倍", {"K": f"={S('tok_maas_growth_ytd')}"}, "Interested-party；只對照，不反推（D14r）", key="vol_claim")
-    Dm.add("模型 2025 token 合計 ÷ 天數", "T／日", {"D": f"=D«D.tok_all»/{I('days_year')}"}, "對照：招股章程 2025-11 日均 4.2T（SRC_ZP_413；口徑可能含全部雲端與免費）", key="daily25")
-    Dm.add("公司揭露：2025-11 日均 token", "T／日", {"D": f"={S('tok_daily_nov25')}"}, "Interested-party", key="daily_src")
-    Dm.add("2025 計費比例＝API 按量計費 token ÷（日均 4.2T × 365）", "比例", {"D": f"=D«D.api_tok»/({S('tok_daily_nov25')}*{I('days_year')})"},
+    Dm.add("模型 2025 token 合計 ÷ 天數", "T／日", {"D": f"=D«D.tok_all»/{I('days_year')}"}, "對照：招股章程 2025-11 日均 4.2T（SRC_ZP_991，招股章程第 32 頁；r2 P2 改引用一手列；口徑可能含全部雲端與免費）", key="daily25")
+    Dm.add("公司揭露：2025-11 日均 token", "T／日", {"D": f"={S('tok_daily_nov25_p')}"}, "Interested-party（SRC_ZP_991，招股章程月度點）", key="daily_src")
+    Dm.add("2025 計費比例＝API 按量計費 token ÷（日均 4.2T × 365）", "比例", {"D": f"=D«D.api_tok»/({S('tok_daily_nov25_p')}*{I('days_year')})"},
            "類比 OpenAI v0.6 DEM_ApiBilledRatio2025：揭露量多為免費、Coding Plan 與折扣流量", key="billed", name="DEM_ApiBilledRatio2025", name_col="D")
 
     # ═════════════════════ Revenue ═════════════════════
@@ -354,7 +354,7 @@ def build(wb, D, tk_cells):
     V.add("1H26 校準差距：營收總額（模型 − 中期公告）", "RMB 億", {"K": f"=K«V.gross»-{S('rev_total_1h26')}"},
           "公告以千元四捨五入至億元四位小數：四線合計 9.53892 vs 總額 9.5389", key="g1h", name="REV_Gap1H26", name_col="K")
     V.add("2025 未校準 ①：日均 4.2T × 365 × 組合有效單價 ÷ 100 ＋ Coding Plan", "RMB 億",
-          {"D": f"={S('tok_daily_nov25')}*{I('days_year')}*D«V.p»/{divrev}+D«V.cp»"}, "自下而上口徑（假設揭露 token 全數按有效單價計費）", key="unc25")
+          {"D": f"={S('tok_daily_nov25_p')}*{I('days_year')}*D«V.p»/{divrev}+D«V.cp»"}, "自下而上口徑（假設揭露 token 全數按有效單價計費）", key="unc25")
     V.add("2025 未校準差距：未校準 − 年報 ①", "RMB 億", {"D": f"=D«V.unc25»-{S('rev_api_fy25')}"}, "差距大＝揭露量多為免費、Coding Plan 或年末時點", key="uncgap25", name="REV_GapUncal2025", name_col="D")
     V.add("模型組合有效單價變動：1H26 對 2025", "比例", {"K": "=(K«V.p»-D«V.p»)/D«V.p»"}, "對照：公司稱 API 平均售價較年初 +101%（SRC_ZP_347）", key="asp_1h")
     V.add("模型組合有效單價變動：2H26 對 2025", "比例", {"L": "=(L«V.p»-D«V.p»)/D«V.p»"}, "對照：較 2025 年底 +83%（SRC_ZP_346，截至 2026-03）", key="asp_2h")
@@ -405,10 +405,10 @@ def checks(D, Z, summary, snap, e6, oref):
     entsum = "+".join(f"ABS(Revenue!{c}«V.sumchk»)" for c in cols8)
     rows = [
         # ── 資料表
-        ("SRC_ZP 列數", f"=SUMPRODUCT(--(LEN({preserve_src()}!$A$5:$A$800)>0))", n_src, "eq", "Z1 資料報告所列 604 筆（SRC_ZP_001–604）"),
-        ("SRC_ZP 無數值列數（日期、事件、找不到數值的說明列）", f"=SUM({preserve_src()}!$U$5:$U$800)", n_empty, "eq", "值、低、高皆空的列數；與 yaml 一致（列被誤刪或誤填時轉 ERR）"),
-        ("SRC_ZP 缺出處列數", f"=SUM({preserve_src()}!$V$5:$V$800)", 0, "eq", ""),
-        ("SRC_ZP 區間順序異常列數（低 ≤ 值 ≤ 高）", f"=SUM({preserve_src()}!$W$5:$W$800)", 0, "eq", ""),
+        ("SRC_ZP 列數", f"=SUMPRODUCT(--(LEN({preserve_src()}!$A$5:$A$2000)>0))", n_src, "eq", "Z1 604 筆（SRC_ZP_001–604）＋ Z4 補 6 筆＋招股章程 Z1-P 444 筆（SRC_ZP_611–1054）"),
+        ("SRC_ZP 無數值列數（日期、事件、找不到數值的說明列）", f"=SUM({preserve_src()}!$U$5:$U$2000)", n_empty, "eq", "值、低、高皆空的列數；與 yaml 一致（列被誤刪或誤填時轉 ERR）"),
+        ("SRC_ZP 缺出處列數", f"=SUM({preserve_src()}!$V$5:$V$2000)", 0, "eq", ""),
+        ("SRC_ZP 區間順序異常列數（低 ≤ 值 ≤ 高）", f"=SUM({preserve_src()}!$W$5:$W$2000)", 0, "eq", ""),
         ("Inputs 列數", "=SUMPRODUCT(--(LEN(Inputs!$A$5:$A$600)>0))", n_inp, "eq", "data/zhipu_inputs.yaml"),
         ("Inputs 區間順序異常列數", "=SUM(Inputs!$L$5:$L$600)", 0, "eq", "低 ≤ 值 ≤ 高"),
         ("Inputs Analogy／Assumed 缺區間列數", "=SUM(Inputs!$M$5:$M$600)", 0, "eq", "共同規則第 4 節：Analogy／Assumed 一律給區間"),

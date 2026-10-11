@@ -58,6 +58,8 @@ var PMWQ = Object.assign({ capex: `legacy`, cost: `ebitdaPct`, revenue: `legacy`
   TKSQ = (COMPANY_DATA.tkSnap || {}).items || {},
   MWBASISQ = COMPANY_DATA.meta.mwBasis || `IT`,
   PRICINGQ = COMPANY_DATA.pricing || {},
+  AMQ = (COMPANY_DATA.pricing || {}).anchorMultiple || null, // W4：Tokenomics 錨的公司因素（定價倍數 k、隨需占比、證據表）
+  CAQ = COMPANY_DATA.companyAdjust || null, // W5：公司實況驗證與公司調整（既有合約 k、新約價格調整、營運成本倍數；證據與文字）
   COSTSQ = COMPANY_DATA.costs || {},
   TK_PHQ = [`IF_MaintIT`, `IF_StaffSW`, `IF_TaxIns`, `IF_DeprLifeIT`], // 可用暫代值的名稱（待 Tokenomics v5.26）；其餘名稱缺少時建置失敗
   COSTMW_LEGQ = [...COMPANY_DATA.scenarios.capexTemplate.costMW]; // v4.5 舊值（對照列）
@@ -97,6 +99,28 @@ if (PMWQ.capex === `tokenomics`) { // 建置成本與壽命改為 Tokenomics 推
   DEFAULTS.a.costMW = [...c];
   DEFAULTS.gpuLife = lifeTkQ()
 }
+function kSpecQ(sp) { // W6 r1：k 規格 → 倍數（價格 ÷ 目前快照基準值；kspec.py 同算式）：數字｜{ref}｜{priceEq, gen, tkName}｜{median: [label]}
+  if (typeof sp === `number`) return sp;
+  let ev = l => AMQ.evidence.find(x => x.label === l), m = x => x.price / tkQ(x.tkName, x.gen, `基準`);
+  if (sp.ref) return m(ev(sp.ref));
+  if (sp.priceEq != null) return sp.priceEq / tkQ(sp.tkName, sp.gen, `基準`);
+  if (sp.median) { let a = sp.median.map(l => m(ev(l))).sort((x, y) => x - y), n = a.length; return n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2 }
+  throw new Error(`pricing.anchorMultiple：無法辨識的 k 規格`)
+}
+AMQ && [`long`, `spot`].forEach(sd => [`base`, `low`, `high`, `sensMedian`].forEach(k => AMQ[sd][k] != null && (AMQ[sd][k] = kSpecQ(AMQ[sd][k])))); // W6 r1：錨改變時 k 跟著重算
+AMQ && Object.assign(DEFAULTS, { kLong: AMQ.long.base, kSpot: AMQ.spot.base, odShare: AMQ.onDemandShare.base }); // W4 r2：定價倍數 k 與隨需占比（敏感度以 e 覆寫）
+CAQ && Object.assign(DEFAULTS, { kExOn: CAQ.existingK.on, kNewAdj: CAQ.newK.adjBase, opexScale: CAQ.opexScale.base }); // W5：既有合約 k 開關、新約價格調整、營運成本倍數（敏感度以 e 覆寫）
+function exFleetQ(F) { // W5：既有合約 MW＝最新季末在役（fleet.openMix.activeMW）逐期扣汰換（汰換由最舊世代先出；Excel「每MW經濟性」W4 區同列）
+  let s = FLEETQ.openMix.activeMW, st = [], en = [];
+  for (let n = 0; n < 5; n++) { let x = Math.max(0, s - F.ret[n]); st.push(s), en.push(x), s = x }
+  return { st, en, avg: st.map((x, n) => (x + en[n]) / 2) }
+}
+function kExQ(e, t, cs) { // W5：k_既有＝Q2 實現單價 ÷ Q2 錨＝（Q2 每在役 MW 年收入 − 服務）÷（計費比例 × 利用率 × 季末在役世代 × IF_HoldEcon）
+  let lq = LATEST_Q, oMW = FLEETQ.openMix.activeMW, qMW = oMW - CALL_FACTS.activeAddQ2 / 2,
+    rq = lq.revenue * 4 / qMW * 1e3, oq = e.services[0] / PERIOD_YEARS[0] / qMW * 1e3, bq = e.billableOpen / oMW, uq = t.util[0] / 100,
+    aq = GENQ.reduce((a, g) => a + (FLEETQ.openMix.mix[g] || 0) * tkMwQ(`IF_HoldEcon`, g, cs), 0);
+  return { rq, oq, bq, uq, aq, k: (rq - oq) / (bq * uq * aq) }
+}
 PMWQ.cost === `bottomUp` && (DEFAULTS.ebSteady = null); // 由下而上：穩態 EBITDA 率預設＝由下而上的 FY30 值（null）；輸入數值時視為 FY30 目標，差額線性分攤
 
 function ebPathQ(e, d) { return PMWQ.cost === `bottomUp` ? [d.years[0].ebM, d.years[4].ebM] : [e.ebStart, e.ebSteady] } // W2：畫面上的 EBITDA 率起點／FY30（由下而上時取模型路徑）
@@ -114,10 +138,57 @@ function fleetQ(e, acc) { // 世代組合：期初（最新季末）在役機隊
   let tot = avg.map(a => a.reduce((x, y) => x + y, 0));
   return { start, end, avg, tot, add, ret, nm: NM, endTot: end.map(a => a.reduce((x, y) => x + y, 0)), mix: avg.map((a, n) => a.map(x => x / Math.max(tot[n], 1e-9))) }
 }
+var MAGEQ = PMWQ.maint === `age` && PMWQ.cost === `bottomUp`; // W6：IT 維護依機齡兩段（methodology.perMw.maint；flat＝IF_MaintIT 等值費率）
+function vintQ() { // W6：期初機齡層（fleet.openMix.vintages）：MW、評價日時機齡（年＝月數 ÷ 12）、世代占比（Excel「輸入與假設」世代組合區同列）
+  let O = FLEETQ.openMix, [ay, am] = O.asOf.split(`-`).map(Number);
+  return (O.vintages || []).map(v => { let [y, m] = v.inService.split(`-`).map(Number); return { label: v.label, mw: v.mw, age: ((ay - y) * 12 + am - m) / 12, mix: GENQ.map(g => v.mix[g] || 0) } })
+}
+function q2WarrQ() { // W6：最近一季季末（評價日）在役 MW 中仍在保固期內者（依世代；期初機齡層 W − 機齡 > 0）
+  let W = tkQ(`IF_WarrantyYrs`), V = vintQ();
+  return GENQ.map((g, j) => V.reduce((s, v) => s + (W - v.age > 0 ? v.mw * v.mix[j] : 0), 0))
+}
+function maintAgeQ(F, cs) { // W6：每期 IT 維護＝Σ 世代［保固期內平均在役 MW × IF_MaintITWarr＋保固期滿 × IF_MaintITPost］÷ 平均在役 MW（Excel「每MW經濟性」機齡與保固區同列同算式）
+  // 時間以首期期初（評價日）起算的年數；期初層保固到期＝W − 機齡；各期新增 MW 於該期中點投入、到期＝中點＋W；保固期內比例＝到期前占該期的比例（0–1）
+  // 當期新增 MW 只計平均在役的一半（與平均在役 MW＝(期初＋期末)/2 一致）；保固期內 MW 不超過該世代平均在役 MW
+  let W = tkQ(`IF_WarrantyYrs`), V = vintQ(), L = PERIOD_YEARS, t0 = [], t1 = [], a = 0;
+  for (let n = 0; n < 5; n++) t0.push(a), a += L[n], t1.push(a);
+  let fr = (x, n) => Math.min(1, Math.max(0, (x - t0[n]) / L[n])),
+    vf = V.map(v => t0.map((_, n) => fr(W - v.age, n))),
+    cf = t0.map((_, m) => t0.map((_, n) => n < m ? 0 : n === m ? 1 : fr((t0[m] + t1[m]) / 2 + W, n))),
+    nw = F.nm.map((mx, m) => mx.map(x => x * (F.add[m] + F.ret[m]))),
+    tv = (n, g) => tkMwQ(n, g, cs), R = { W, V, t0, t1, vf, cf, warr: [], post: [], wPart: [], pPart: [], share: [] };
+  for (let n = 0; n < 5; n++) {
+    let w = GENQ.map((g, j) => { let x = V.reduce((s, v, k) => s + v.mw * v.mix[j] * vf[k][n], 0); for (let m = 0; m < n; m++) x += nw[m][j] * cf[m][n]; return Math.min(x + .5 * nw[n][j], F.avg[n][j]) }),
+      p = GENQ.map((g, j) => F.avg[n][j] - w[j]), M = Math.max(F.tot[n], 1e-9);
+    R.warr.push(w), R.post.push(p), R.share.push(w.reduce((x, y) => x + y, 0) / M),
+    R.wPart.push(GENQ.reduce((s, g, j) => s + (w[j] ? w[j] * tv(`IF_MaintITWarr`, g) : 0), 0) / M),
+    R.pPart.push(GENQ.reduce((s, g, j) => s + (p[j] ? p[j] * tv(`IF_MaintITPost`, g) : 0), 0) / M)
+  }
+  R.rate = R.wPart.map((x, n) => x + R.pPart[n]);
+  return R
+}
 function gpuPerMwQ(mx) { return wMixQ(mx, g => tkMwQ(`IF_GPUsPerGW`, g) / 1e3) } // 每公司 MW GPU 數（依世代加權）
 function revGpuQ(e, F) { // 每 MW 年收入（US$bn/MW，100% 計費時數；利用率在收入端另乘）＝Σ 平均在役占比 × 每 MW GPU 數 × GPU 小時合約價 × 8,760 ÷ 10⁹
   let P = PRICINGQ.gpuHr || {}, k = (e && e.pxCase) || `base`;
   return F.mix.map(mx => wMixQ(mx, g => P[g] && P[g][k] != null ? tkMwQ(`IF_GPUsPerGW`, g) / 1e3 * P[g][k] * 8760 / 1e9 : NaN))
+}
+function anchorRevQ(e, F, t) { // W4 r2：每 MW 年收入＝Tokenomics 錨（Σ 平均在役占比 × IF_HoldEcon）× 定價倍數 k（Excel「每MW經濟性」W4 區同列同算式）
+  // k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約；k_長約、k_現貨 為基準成本情境的值，其他情境以基準證據世代的成本比例重算（價格是事實）；RPO 覆蓋率只作對照
+  let cs = e.tkCase || `基準`, i = e.rp / 100, ref = side => AMQ.evidence.find(x => x.label === AMQ[side].refEvidence),
+    rr = x => tkQ(x.tkName, x.gen, `基準`) / tkQ(x.tkName, x.gen, cs), rL = ref(`long`), rS = ref(`spot`),
+    kL0 = e.kLong ?? AMQ.long.base, kS0 = e.kSpot ?? AMQ.spot.base, kL = kL0 * rr(rL), kS = kS0 * rr(rS), od = e.odShare ?? AMQ.onDemandShare.base,
+    R = { anchor: [], sched: [], avgB: [], util: [], longCap: [], cover: [], kL: [], kS: [], od: [], k: [], rev: [], kN: [], exS: [] },
+    W5 = !!CAQ, X = W5 ? exFleetQ(F) : null, KE = W5 ? kExQ(e, t, cs) : null, on = W5 ? (e.kExOn ?? CAQ.existingK.on) : 0, adj = W5 ? (e.kNewAdj ?? CAQ.newK.adjBase) : 0;
+  R.ex = X, R.ke = KE, R.adj = adj, R.on = on;
+  for (let r = 0; r < 5; r++) {
+    let L = PERIOD_YEARS[r], A = wMixQ(F.mix[r], g => tkMwQ(`IF_HoldEcon`, g, cs)),
+      o = e.rpoOpen * (RPO_BUCKET_W[r] / RPO_SCHEDULED_SHARE) * i + e.rpoPendingAdd * RPO_Q3ADD_W[r] * i,
+      c = r === 0 ? e.billableOpen : t.billable[r - 1], l = e.useAvgMw ? (c + t.billable[r]) / 2 : t.billable[r],
+      lc = l * A / 1e3 * kL0 * (t.util[r] / 100) * L, kN = od * kS + (1 - od) * kL * (1 + adj), // W5：新約 k（新約價格調整只作用於長約部分）
+      xs = W5 ? on * X.avg[r] / Math.max(1e-9, F.tot[r]) : 0, k = W5 ? xs * KE.k + (1 - xs) * kN : od * kS + (1 - od) * kL; // W5：k＝既有占比 × k_既有＋（1 − 既有占比）× k_新約
+    R.anchor.push(A), R.sched.push(o), R.avgB.push(l), R.util.push(t.util[r] / 100), R.longCap.push(lc), R.cover.push(o / Math.max(1e-9, lc)), R.kL.push(kL), R.kS.push(kS), R.od.push(od), R.k.push(k), R.rev.push(A * k), R.kN.push(kN), R.exS.push(xs)
+  }
+  return R
 }
 function siteBenchQ(e) {
   let t = e.filter(e => !e.residual && e.contract && e.years && e.planned);
@@ -291,10 +362,12 @@ function revPassQ(e, t, r) { // W2：與 runFunding 同一組收入算式（由�
 function buCostQ(e, t, F, r, rev, S) { // W2：由下而上營運成本（租金前；US$bn）——電費、IT 維護、人員軟體、稅險依平均在役世代加權 × 平均在役 MW；管銷＝營收 × 管銷率
   let L = PERIOD_YEARS[r], M = F.tot[r], mx = F.mix[r], cs = e.tkCase || `基準`,
     pw = wMixQ(mx, g => tkMwQ(`IF_PowerCost`, g, cs)),
-    mt = tkHasQ(`IF_MaintIT`) ? wMixQ(mx, g => tkMwQ(`IF_MaintIT`, g, cs)) : t.maint[r],
+    mt = MAGEQ ? maintAgeQ(F, cs).rate[r] : tkHasQ(`IF_MaintIT`) ? wMixQ(mx, g => tkMwQ(`IF_MaintIT`, g, cs)) : t.maint[r], // W6：依機齡兩段
     st = tkHasQ(`IF_StaffSW`) ? wMixQ(mx, g => tkMwQ(`IF_StaffSW`, g, cs)) : 0,
     tx = tkHasQ(`IF_TaxIns`) ? wMixQ(mx, g => tkMwQ(`IF_TaxIns`, g, cs) * tkQ(`IF_CapexIT`, g, cs) / tkQ(`IF_CapexTotal`, g, cs)) : 0,
-    k = M / 1e3 * L, R = Math.max(rev, .01), sp = sgaPctQ(e), sga = rev * sp, cash = (pw + mt + st + tx) * k + sga;
+    k = M / 1e3 * L, R = Math.max(rev, .01), sp = sgaPctQ(e), sga = rev * sp;
+  if (CAQ) { let z = e.opexScale ?? CAQ.opexScale.base; pw *= z, mt *= z, st *= z, tx *= z } // W5：營運成本倍數（基準 1；公司實況敏感度）
+  let cash = (pw + mt + st + tx) * k + sga;
   return { mw: M, pwMW: pw, mtMW: mt, stMW: st, txMW: tx, sgaPct: sp, power: pw * k, maint: mt * k, staff: st * k, tax: tx * k, sga, cash, rev, rent: S, ebr: 1 - cash / R, eb: 1 - cash / R - S / R }
 }
 
@@ -313,7 +386,7 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
   let F = d.fleet;
   if (!F) return null;
   let y = d.years, L = PERIOD_YEARS, cs = e.tkCase || `基準`, I5 = [0, 1, 2, 3, 4], G = GENQ, NG = G.length,
-    M = F.tot, mx = F.mix, nm = F.nm,
+    M = F.tot, mx = F.mix, nm = F.nm, MA = MAGEQ ? maintAgeQ(F, cs) : null, OZ = CAQ ? (e.opexScale ?? CAQ.opexScale.base) : 1, // W6
     pm = (x, i) => x / Math.max(1e-9, M[i]) / L[i] * 1e3,
     fac = mx.map(m => wMixQ(m, g => tkQ(`IF_FacilityGW`, g))),
     itMw = I5.map(i => MWBASISQ === `facility` ? M[i] / fac[i] : M[i]),
@@ -360,10 +433,19 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
       [`期末在役 MW 合計`, `MW`, F.endTot],
       ...G.map((g, j) => [`平均在役 MW｜${g}`, `MW`, F.avg.map(a => a[j])]),
       [`平均在役 MW 合計`, `MW`, M],
-      ...G.map((g, j) => [`平均在役占比｜${g}`, `%`, mx.map(a => a[j])])
+      ...G.map((g, j) => [`平均在役占比｜${g}`, `%`, mx.map(a => a[j])]),
+      ...(MA ? [ // W6：機齡與保固（Excel「每MW經濟性」機齡與保固區）
+        [`機齡｜期間起點（距期初，年）`, `年`, MA.t0], [`機齡｜期間終點（距期初，年）`, `年`, MA.t1], [`機齡｜IT 原廠保固年限（IF_WarrantyYrs）`, `年`, I5.map(() => MA.W)],
+        ...MA.V.map((v, k) => [`機齡｜保固期內比例｜期初層 ${v.label}`, `%`, MA.vf[k]]),
+        ...I5.map(m => [`機齡｜保固期內比例｜${PERIODS[m]} 新增`, `%`, MA.cf[m]]),
+        ...G.map((g, j) => [`保固期內平均在役 MW｜${g}`, `MW`, MA.warr.map(a => a[j])]),
+        ...G.map((g, j) => [`保固期滿平均在役 MW｜${g}`, `MW`, MA.post.map(a => a[j])]),
+        [`保固期內占比（平均在役 MW）`, `%`, MA.share]] : [])
     ],
     bu = [
       [`每 MW 電費（世代加權）`, `US$m/MW`, buM(`pwMW`)], [`每 MW IT 維護（世代加權）`, `US$m/MW`, buM(`mtMW`)],
+      ...(MA ? [[`每 MW IT 維護｜保固期內部分（IF_MaintITWarr）`, `US$m/MW`, MA.wPart.map(x => x * OZ)], [`每 MW IT 維護｜保固期滿部分（IF_MaintITPost）`, `US$m/MW`, MA.pPart.map(x => x * OZ)],
+        [`每 MW IT 維護｜等值費率 IF_MaintIT（對照，不入損益）`, `US$m/MW`, mx.map(m => wMixQ(m, g => tkMwQ(`IF_MaintIT`, g, cs)))]] : []), // W6
       [`每 MW 人員、軟體、水與耗材`, `US$m/MW`, buM(`stMW`)], [`每 MW 財產稅與保險（只算 IT 部分）`, `US$m/MW`, buM(`txMW`)],
       [`電費（金額）`, `US$bn`, buM(`power`)], [`IT 維護（金額）`, `US$bn`, buM(`maint`)], [`人員、軟體、水與耗材（金額）`, `US$bn`, buM(`staff`)], [`財產稅與保險（金額）`, `US$bn`, buM(`tax`)],
       [`模型期總營收（算力＋服務）`, `US$bn`, buM(`rev`)], [`管銷率`, `%`, buM(`sgaPct`)], [`公司管銷與其他（金額）`, `US$bn`, buM(`sga`)],
@@ -372,7 +454,7 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
     ],
     rev = [
       [`每 MW 年收入（模型採用，100% 計費時數）`, `US$m/MW`, revIn], [`每 MW 年收入（計費後＝× 利用率）`, `US$m/MW`, I5.map(i => revIn[i] * d.m.util[i] / 100)],
-      [`每 MW 年收入（v4.5 舊值，對照）`, `US$m/MW`, COMPANY_DATA.defaults.m.revMW.map(x => x * 1e3)],
+      [PMWQ.revenue === `tkAnchor` ? `每 MW 年收入（v4.6 舊輸入 m.revMW，對照）` : `每 MW 年收入（v4.5 舊值，對照）`, `US$m/MW`, COMPANY_DATA.defaults.m.revMW.map(x => x * 1e3)],
       [`期末 ARR 指引 ÷ 年底主動電力（公司數字，只作對照）`, `US$m/MW`, [(CALL_FACTS.arrLo + CALL_FACTS.arrHi) / 2 / CALL_FACTS.yeActiveGw, ...NA]],
       [`每 MW GPU 數（世代加權）`, `顆/MW`, gpu], [`GPU 小時價格路線：每 MW 年收入`, `US$m/MW`, gpuRev],
       [`隱含每 GPU 小時價格（反算對照，不是輸入）`, `US$/GPU-hr`, imp], [`每 GPU 小時經濟持有成本（GPU 數加權）`, `US$/GPU-hr`, gEcon],
@@ -391,15 +473,115 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
       [`最近一季每 MW 現金營運成本（年化，不含管銷）`, `US$m/MW`, [qPM, ...NA]], [`模型由下而上每 MW 現金營運成本（不含管銷）`, `US$m/MW`, buPM],
       [`差距（模型 ${PERIODS[0]} − 實際）`, `US$m/MW`, [buPM[0] - qPM, ...NA]],
       [`最近一季每 MW 年租金（營業＋變動，年化）`, `US$m/MW`, [(lq.opLeaseCost + lq.varLeaseCost) * 4 / qMW * 1e3, ...NA]],
-      [`模型每 MW 年租金`, `US$m/MW`, I5.map(i => pm(y[i].lease, i))]
+      [`模型每 MW 年租金`, `US$m/MW`, I5.map(i => pm(y[i].lease, i))],
+      ...(AMQ && PMWQ.revenue === `tkAnchor` ? (() => { // W4：Q2 收入對照（只作驗證，不校準 k）
+        let qr = lq.revenue * 4 / qMW * 1e3, br = e.billableOpen / oMW, qa = GENQ.reduce((a, g) => a + (FLEETQ.openMix.mix[g] || 0) * tkMwQ(`IF_HoldEcon`, g, cs), 0);
+        return [[`最近一季每 MW 年收入（營收 × 4 ÷ 平均在役 MW）`, `US$m/MW`, [qr, ...NA]], [`最近一季計費比例（季末 Billable ÷ 季末在役 MW，假設）`, `%`, [br, ...NA]],
+          [`最近一季每 MW 年收入（÷ 平均計費 MW）`, `US$m/MW`, [qr / br, ...NA]], [`最近一季錨（季末在役世代 × IF_HoldEcon）`, `US$m/MW`, [qa, ...NA]],
+          [`最近一季隱含 k（年化營收 ÷ 平均在役 MW ÷ 錨，未調整）`, `倍`, [qr / qa, ...NA]]]
+      })() : [])
     ];
-  return { sum, fleet, bu, rev, cap, q2 }
+  let tk = null, kev = null;
+  if (AMQ) { // W4：Tokenomics 錨 × k（Excel「每MW經濟性」W4 區）與 k 證據表
+    let A = anchorRevQ(e, F, d.m), old = COMPANY_DATA.defaults.m.revMW.map(x => x * 1e3), hasRF = tkHasQ(`IF_RevGWFleet`),
+      rf = hasRF ? mx.map(m => wMixQ(m, g => tkMwQ(`IF_RevGWFleet`, g, cs))) : I5.map(() => `不適用`),
+      ratio = hasRF ? I5.map(i => revIn[i] * d.m.util[i] / 100 / Math.max(1e-9, rf[i])) : I5.map(() => `不適用`),
+      th = CHECK_TH.revCapShareMax;
+    tk = [
+      [`錨｜每 MW 經濟持有成本（IF_HoldEcon，在役世代加權）`, `US$m/MW`, A.anchor], [`錨｜排程 RPO（模型期）`, `US$bn`, A.sched],
+      [`錨｜平均計費 MW`, `MW`, A.avgB], [`錨｜利用率`, `%`, A.util],
+      [`長約價產能收入（平均計費 MW × 錨 × k_長約 × 利用率 × 期間長度）`, `US$bn`, A.longCap],
+      [`RPO 涵蓋的產能 ÷ 在役計費產能（對照，不驅動）`, `%`, A.cover],
+      [`k_長約（依目前成本情境重算）`, `倍`, A.kL], [`k_現貨（依目前成本情境重算）`, `倍`, A.kS], [`隨需占比（輸入）`, `%`, A.od],
+      ...(CAQ ? [ // W5：既有合約（最新季末在役）以 Q2 實現單價為 k_既有；新增與汰換補回的 MW 按 k_新約
+        [`新約價格調整（輸入；只作用於長約部分）`, `%`, I5.map(() => A.adj)],
+        [`k_新約（隨需占比 × k_現貨 ＋（1 − 隨需占比）× k_長約 ×（1＋新約價格調整））`, `倍`, A.kN],
+        [`既有合約 MW｜期初（最新季末在役，逐期扣汰換）`, `MW`, A.ex.st], [`既有合約 MW｜期末`, `MW`, A.ex.en],
+        [`既有合約占比（平均既有 MW ÷ 平均在役 MW × 開關）`, `%`, A.exS],
+        [`k_既有｜Q2 每 MW 年收入（營收 × 4 ÷ Q2 平均在役 MW）`, `US$m/MW`, [A.ke.rq, ...NA]], [`k_既有｜Q2 服務收入（首期服務年化 ÷ Q2 平均在役 MW）`, `US$m/MW`, [A.ke.oq, ...NA]],
+        [`k_既有｜Q2 計費比例（季末 Billable ÷ 季末在役，假設）`, `%`, [A.ke.bq, ...NA]], [`k_既有｜Q2 利用率（＝首期利用率，假設）`, `%`, [A.ke.uq, ...NA]],
+        [`k_既有｜Q2 錨（季末在役世代 × IF_HoldEcon，目前成本情境）`, `US$m/MW`, [A.ke.aq, ...NA]],
+        [`k_既有（Q2 實現單價 ÷ Q2 錨；合約期內固定）`, `倍`, I5.map(() => A.ke.k)], [`既有合約 k 開關（1＝套用、0＝不套用）`, ``, I5.map(() => A.on)],
+        [`定價倍數 k（既有占比 × k_既有 ＋（1 − 既有占比）× k_新約）`, `倍`, A.k]] :
+        [[`定價倍數 k（隨需占比 × k_現貨 ＋（1 − 隨需占比）× k_長約）`, `倍`, A.k]]),
+      [`Tokenomics 錨 × k：每 MW 年收入（100% 計費時數）`, `US$m/MW`, A.rev],
+      [`錨 × k 相對 v4.6 舊輸入 m.revMW`, `%`, I5.map(i => A.rev[i] / Math.max(1e-9, old[i]) - 1)],
+      [`上限檢查｜客戶每 MW 付費 token 營收（IF_RevGWFleet，在役世代加權）`, `US$m/MW`, rf],
+      [`上限檢查｜CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收`, `%`, ratio],
+      [`上限檢查｜各期結果`, ``, hasRF ? ratio.map(x => x > th ? `警示` : `通過`) : I5.map(() => `不適用`)]
+    ];
+    kev = [
+      ...AMQ.evidence.map(x => { let v = tkQ(x.tkName, x.gen); return [`k 證據｜${x.label}`, x.unit, v == null ? [x.price, `不適用`, `不適用`, x.use, x.multipleV527 ?? null] : [x.price, v, x.price / v, x.use, x.multipleV527 ?? null]] }), // W6 r1：第 5 欄＝v5.27 倍數
+      ...(AMQ.contractMix || []).map(x => [`合約組合｜${x.label}`, x.unit, [x.value ?? x.tag, null, null, null, null]])
+    ]
+  }
+  let cv = null, q2r = null;
+  if (CAQ && AMQ && tk && PMWQ.revenue === `tkAnchor`) { // W5：公司實況驗證（Excel「公司實況驗證」頁同列名、同算式；欄＝Tokenomics 值、CRWV 實際、差距、採用值、處理規則）
+    let A = anchorRevQ(e, F, d.m), m0 = mx[0], tw = n => wMixQ(m0, g => tkMwQ(n, g, cs)),
+      tPw = tw(`IF_PowerCost`), tMt = MA ? MA.rate[0] : tw(`IF_MaintIT`), // W6：依機齡兩段（模型首期）
+      tSt = tw(`IF_StaffSW`), tTx = wMixQ(m0, g => tkMwQ(`IF_TaxIns`, g, cs) * tkQ(`IF_CapexIT`, g, cs) / tkQ(`IF_CapexTotal`, g, cs)),
+      qAct = (lq.costRev + lq.techInfra - lq.da - lq.sbcCostTi - lq.opLeaseCost) * 4 / qMW * 1e3, qRent = lq.opLeaseCost * 4 / qMW * 1e3,
+      CX = CAQ.capexActual, dMW = CX.mwEnd - CX.mwStart, cxAct = lq.capexH1 / dMW * 1e3, cxTech = (CX.techEquip[1] - CX.techEquip[0]) / dMW * 1e3,
+      lifeTk = GENQ.reduce((a, g) => a + (FLEETQ.openMix.mix[g] || 0) * tkQ(`IF_DeprLifeIT`, g), 0), P = CAQ.params, tol = CAQ.gapTol,
+      gp = (x, y) => typeof x === `number` && typeof y === `number` ? y / Math.max(1e-9, x) - 1 : `不適用`,
+      rl = (key, g) => { let q = P.find(z => z.key === key).rule; return q === `4a` || typeof g !== `number` ? q : Math.abs(g) <= tol ? `1` : q },
+      row = (key, lab, u, c, dv, f) => { let g = gp(c, dv); return [lab, u, [c, dv, g, f, rl(key, g)]] },
+      L0 = P.reduce((o, z) => (o[z.key] = z.label, o), {}), NAx = `不適用`, rp = x => pm(x, 0);
+    cv = [
+      row(`kExist`, L0.kExist, `倍`, A.kL[0], A.ke.k, A.on ? A.ke.k : A.kN[0]),
+      row(`kNew`, L0.kNew, `倍`, A.kL[0], NAx, A.kN[0]),
+      row(`odShare`, L0.odShare, `%`, AMQ.onDemandShare.base, NAx, A.od[0]),
+      row(`power`, L0.power, `US$m/MW`, tPw, NAx, y[0].bu.pwMW), row(`maint`, L0.maint, `US$m/MW`, tMt, NAx, y[0].bu.mtMW),
+      row(`staff`, L0.staff, `US$m/MW`, tSt, NAx, y[0].bu.stMW), row(`taxIns`, L0.taxIns, `US$m/MW`, tTx, NAx, y[0].bu.txMW),
+      row(`opexBundle`, L0.opexBundle, `US$m/MW`, tPw + tMt + tSt + tTx, qAct, buPM[0]),
+      row(`rent`, L0.rent, `US$m/MW`, rp(y[0].lease), qRent, rp(y[0].lease)),
+      row(`capex`, L0.capex, `US$m/MW`, capIT[0], cxAct, e.a.costMW[0] * (e.capexScale ?? 1)),
+      [`每 MW 資本支出｜技術設備毛額增加 ÷ 新增 MW（對照）`, `US$m/MW`, [capIT[0], cxTech, gp(capIT[0], cxTech), null, null]],
+      row(`life`, L0.life, `年`, lifeTk, P.find(z => z.key === `life`).actualValue, e.gpuLife),
+      ...(() => { let Z = cvSensQ(); return [
+        ...(MAGEQ ? [[`敏感度輸入｜Q2 季末保固期內占比（期初機齡層）`, `%`, [Z.q2s, null, null, null, null]]] : []), // W6
+        [`敏感度輸入｜Q2 季末世代 Tokenomics 營運成本合計（基準成本情境）`, `US$m/MW`, [Z.tb, null, null, null, null]],
+        [`敏感度輸入｜營運成本倍數＝Q2 實際 ÷ Q2 季末世代 Tokenomics 合計`, `倍`, [Z.opex, null, null, null, null]],
+        [`敏感度輸入｜首期新增世代 Tokenomics IT 資本（基準成本情境）`, `US$m/MW`, [Z.cxTk, null, null, null, null]],
+        [`敏感度輸入｜每 MW 建置成本倍數＝${CALQ.ytdLabel} 實際 ÷ 首期新增世代 Tokenomics`, `倍`, [Z.capex, null, null, null, null]],
+        [`敏感度輸入｜CRWV 短天期 k（短天期合約價 ÷ 同世代 Tokenomics，基準）`, `倍`, [Z.kcw, null, null, null, null]]] })()
+    ];
+    let qSga = (lq.sm - lq.smSbc + lq.ga - lq.gaSbc) * 4 / qMW * 1e3, qEb = lq.adjEbitda * 4 / qMW * 1e3, r2 = (lab, u, c, dv) => [lab, u, [c, dv, gp(c, dv), null, null]];
+    q2r = [
+      r2(`Q2 對帳｜每 MW 年收入（算力＋服務）`, `US$m/MW`, rp(y[0].totRev), A.ke.rq),
+      r2(`Q2 對帳｜每 MW 營運成本（租金前、不含管銷；Q2 含變動租賃）`, `US$m/MW`, buPM[0], qAct),
+      r2(`Q2 對帳｜每 MW 固定租金`, `US$m/MW`, rp(y[0].lease), qRent),
+      r2(`Q2 對帳｜每 MW 管銷（扣 SBC）`, `US$m/MW`, rp(y[0].bu.sga), qSga),
+      r2(`Q2 對帳｜每 MW EBITDA（Q2＝調整後 EBITDA）`, `US$m/MW`, rp(y[0].ebitdaPL), qEb),
+      [`Q2 對帳｜EBITDA 率（差距＝百分點）`, `%`, [y[0].ebM, lq.adjEbitda / lq.revenue, y[0].ebM - lq.adjEbitda / lq.revenue, null, null]]
+    ]
+  }
+  return { sum, fleet, bu, rev, cap, q2, tk, kev, cv, q2r }
 }
 
+function cvSensQ() { // W5：公司實況敏感度的輸入值（與情境無關：Q2 季末世代與首期新增世代、基準成本情境；Excel「公司實況驗證」頁敏感度輸入列同算式）
+  let lq = LATEST_Q, O = FLEETQ.openMix, qMW = O.activeMW - CALL_FACTS.activeAddQ2 / 2, CX = CAQ.capexActual,
+    om = g => O.mix[g] || 0, QW = MAGEQ ? q2WarrQ() : null, // W6：Q2 季末 IT 維護依機齡兩段（保固期內 MW × IF_MaintITWarr＋其餘 × IF_MaintITPost）
+    mq = (g, j) => QW ? (QW[j] * tkMwQ(`IF_MaintITWarr`, g) + (O.activeMW * om(g) - QW[j]) * tkMwQ(`IF_MaintITPost`, g)) / O.activeMW : om(g) * tkMwQ(`IF_MaintIT`, g),
+    tb = GENQ.reduce((a, g, j) => a + om(g) * (tkMwQ(`IF_PowerCost`, g) + tkMwQ(`IF_StaffSW`, g) + tkMwQ(`IF_TaxIns`, g) * tkQ(`IF_CapexIT`, g) / tkQ(`IF_CapexTotal`, g)) + (om(g) ? mq(g, j) : 0), 0),
+    q2s = QW ? QW.reduce((x, y) => x + y, 0) / O.activeMW : null,
+    qAct = (lq.costRev + lq.techInfra - lq.da - lq.sbcCostTi - lq.opLeaseCost) * 4 / qMW * 1e3, cxAct = lq.capexH1 / (CX.mwEnd - CX.mwStart) * 1e3,
+    cxTk = wMixQ(newMixQ(null)[0], g => tkMwQ(`IF_CapexIT`, g)), ev = AMQ.evidence.find(x => x.label === CAQ.spotCw.evidenceLabel);
+  return { opex: qAct / tb, capex: cxAct / cxTk, kcw: ev.price / tkQ(ev.tkName, ev.gen), tb, cxTk, q2s }
+}
 function pmwSensQ(e, v) { // W2：每 MW 敏感度（與 scripts/permw_sens.py 同一組設定；Excel 為建置時快照，cmp31 逐格比對）
   let C = [[`base`, `基準（目前輸入）`, {}], [`tkLow`, `Tokenomics 低成本`, { tkCase: `低成本` }], [`tkHigh`, `Tokenomics 高成本`, { tkCase: `高成本` }],
     [`pxLow`, `GPU 小時價格 低`, PMWQ.revenue === `gpuHr` ? { pxCase: `low` } : null], [`pxHigh`, `GPU 小時價格 高`, PMWQ.revenue === `gpuHr` ? { pxCase: `high` } : null],
-    [`mixRU`, `世代組合 Rubin Ultra 版`, { mixAlt: !0 }], [`sgaGaap`, `管銷率 GAAP（含 SBC）`, PMWQ.cost === `bottomUp` ? { sgaBasis: `gaap` } : null]],
+    [`mixRU`, `世代組合 Rubin Ultra 版`, { mixAlt: !0 }], [`sgaGaap`, `管銷率 GAAP（含 SBC）`, PMWQ.cost === `bottomUp` ? { sgaBasis: `gaap` } : null],
+    ...(PMWQ.revenue === `tkAnchor` ? [ // W4 r2：定價倍數 k 與隨需占比（與 scripts/permw_sens.py 同一組設定）
+      [`kLongLo`, `k_長約 ${Y(AMQ.long.low, 2)}`, { kLong: AMQ.long.low }], [`kLongMed`, `k_長約 ${Y(AMQ.long.sensMedian, 2)}（三筆長約中位數）`, { kLong: AMQ.long.sensMedian }],
+      [`kLongHi`, `k_長約 ${Y(AMQ.long.high, 2)}`, { kLong: AMQ.long.high }],
+      ...AMQ.onDemandShare.sens.map((x, j) => [`od${j + 1}`, `隨需占比 ${Math.round(x * 100)}%（k_現貨 ${Y(AMQ.spot.base, 2)}）`, { odShare: x }])]: []),
+    ...(PMWQ.revenue === `tkAnchor` && CAQ ? (() => { let Z = cvSensQ(); return [ // W5：公司實況驗證的敏感度（與 scripts/permw_sens.py 同一組設定）
+      [`kExOff`, `既有合約 k 不套用（全部按 k_新約）`, { kExOn: 0 }], [`kNewUp`, `新約價格 +${Math.round(CAQ.newK.adjSens * 100)}%（公司說法，只作用於長約）`, { kNewAdj: CAQ.newK.adjSens }],
+      [`spotCw`, `隨需 ${Math.round(CAQ.spotCw.od * 100)}% × CRWV 短天期 k ${Y(Z.kcw, 2)}`, { odShare: CAQ.spotCw.od, kSpot: Z.kcw }],
+      [`opexQ2`, `營運成本＝Q2 實際比率（× ${Y(Z.opex, 2)}）`, { opexScale: Z.opex }], [`capexQ2`, `每 MW 建置成本＝${CALQ.ytdLabel} 實際比率（× ${Y(Z.capex, 2)}）`, { capexScale: Z.capex }],
+      [`actBoth`, `營運成本與建置成本皆用公司實際比率`, { opexScale: Z.opex, capexScale: Z.capex }]] })() : [])],
     rows = Object.fromEntries([`low`, `base`, `high`].map(sk => [sk, Object.fromEntries(C.map(([k, , ch]) => {
       if (!ch) return [k, null];
       let s2 = { ...scnQ(e, sk), ...ch }, d2 = runFunding(s2), p2 = runValuation(d2, s2, v);
@@ -429,6 +611,7 @@ function runFunding(e) {
     CX = CXG.map((e, t) => e + REF[t]),
     FQ = fleetQ(e, t.accepted), // W2：世代組合（legacy 組合只作對照，不影響任何數字）
     _gh = PMWQ.revenue === `gpuHr` && (t.revMW = revGpuQ(e, FQ)),
+    _ta = PMWQ.revenue === `tkAnchor` && (t.revMW = anchorRevQ(e, FQ, t).rev.map(x => x / 1e3)), // W4：Tokenomics 錨 × k（US$bn/MW，100% 計費時數）
     BUQ = FQ ? PERIODS.map((n, r) => buCostQ(e, t, FQ, r, revPassQ(e, t, r), LEASE_CASH_ON_BAL[r] + e.a.newLease[r])) : null,
     PPE = [],
     DAF = CXG.map((t, n) => {
@@ -639,6 +822,17 @@ function runFunding(e) {
     title: `Tokenomics 名稱缺漏 ${TK_MISSQ.length} 項，成本為暫代值`,
     detail: `${TK_MISSQ.join(`、`)} 尚未在 Tokenomics ${(COMPANY_DATA.tkSnap || { source: {} }).source.version || ``} 提供（待 v5.26）。暫代：IT 維護＝輸入頁「維護成本」（CRWV 現值）、人員軟體與稅險＝0、GPU 經濟壽命＝${COMPANY_DATA.defaults.gpuLife} 年。Tokenomics 補齊後重抓快照即自動改用正式值。`
   });
+  if (PMWQ.revenue === `tkAnchor` && FQ && tkHasQ(`IF_RevGWFleet`)) { // W4：收入上限檢查（Excel「檢查_連動」同一列；門檻 company.json → methodology.checks.revCapShareMax）
+    let rq = PERIODS.map((n, r) => t.revMW[r] * (e.revScale ?? 1) * 1e3 * t.util[r] / 100 / Math.max(1e-9, wMixQ(FQ.mix[r], g => tkMwQ(`IF_RevGWFleet`, g, e.tkCase || `基準`)))),
+      mx = Math.max(...rq), th = CHECK_TH.revCapShareMax;
+    _({
+      id: `rev-cap`,
+      ok: mx <= th,
+      severity: mx <= th ? `ok` : `watch`,
+      title: `收入上限：CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收 最高 ${hA(mx * 100, 0)}（門檻 ${hA(th * 100, 0)}）`,
+      detail: `neocloud 拿走客戶 token 營收的比例＝每 MW 計費收入 ÷ Tokenomics IF_RevGWFleet（OpenAI 有效單價、層級組合的理想上限，依在役世代加權）。各期：${PERIODS.map((n, r) => `${n} ${hA(rq[r] * 100, 0)}`).join(`、`)}。超過門檻代表 CRWV 單價相對客戶端 token 經濟性偏高。`
+    })
+  }
   let v = o[0].gross,
     y = v >= CALL_FACTS.capexLo - LATEST_Q.capexH1 - .5 && v <= CALL_FACTS.capexHi - LATEST_Q.capexH1 + .5;
   _({
@@ -1009,9 +1203,9 @@ function sensitivities(e, v) {
   }, e => {
     e.m.billable = e.m.billable.map(e => e * 1.15)
   }), r(`每 MW 年收入`, `−15%`, `+15%`, e => {
-    PMWQ.revenue === `gpuHr` ? e.revScale = (e.revScale ?? 1) * .85 : e.m.revMW = e.m.revMW.map(e => e * .85) // W2：GPU 小時路線的 revMW 由價格推導，改用整體倍數
+    PMWQ.revenue !== `legacy` ? e.revScale = (e.revScale ?? 1) * .85 : e.m.revMW = e.m.revMW.map(e => e * .85) // W2：GPU 小時路線的 revMW 由價格推導，改用整體倍數
   }, e => {
-    PMWQ.revenue === `gpuHr` ? e.revScale = (e.revScale ?? 1) * 1.15 : e.m.revMW = e.m.revMW.map(e => e * 1.15)
+    PMWQ.revenue !== `legacy` ? e.revScale = (e.revScale ?? 1) * 1.15 : e.m.revMW = e.m.revMW.map(e => e * 1.15)
   }), r(`新產能簽約率`, `−20pt`, `+20pt`, e => {
     e.m.fill = e.m.fill.map(e => Math.max(0, e - 20))
   }, e => {
