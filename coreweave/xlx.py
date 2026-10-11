@@ -12,12 +12,34 @@ wb=load_workbook(p); ws=wb['輸入與假設']
 from openpyxl.worksheet.formula import DataTableFormula
 from openpyxl.utils import range_boundaries
 _cv = load_workbook(src, data_only=True)['輸入與假設']
-for _row in (list(ws.iter_rows()) if not ak else []):  # 改錨定年度時運算表輸出會變：保留運算表（verify 只在基準情境改錨定）
-    for _c in _row:
-        if isinstance(_c.value, DataTableFormula):
-            c1, r1, c2, r2 = range_boundaries(_c.value.ref)
-            for rr in range(r1, r2 + 1):
-                for cc in range(c1, c2 + 1): ws.cell(row=rr, column=cc, value=_cv.cell(row=rr, column=cc).value)
+def _setin(w, sel_, ak_):
+    for r_ in range(1, w.max_row + 1):
+        v_ = w.cell(row=r_, column=1).value
+        if v_ and str(v_).startswith('情境選擇'): w.cell(row=r_, column=3, value=sel_)
+        if ak_ and v_ and str(v_).startswith('EV/EBITDA 錨定年度'): w.cell(row=r_, column=3, value=ak_)
+# 運算表範圍：Excel 格式（DataTableFormula）或 LibreOffice 存檔後的 =TABLE(…)／=MULTIPLE.OPERATIONS(…) 公式（未跑 fix_datatable 的檔）
+_dts = [range_boundaries(_c.value.ref) for _row in ws.iter_rows() for _c in _row if isinstance(_c.value, DataTableFormula)]
+_tc = [(_c.row, _c.column) for _row in ws.iter_rows() for _c in _row if isinstance(_c.value, str) and _c.value.upper().startswith(('=TABLE(', '=MULTIPLE.OPERATIONS('))]
+if _tc: _dts.append((min(c for _, c in _tc), min(r for r, _ in _tc), max(c for _, c in _tc), max(r for r, _ in _tc)))
+# W4 r2：LibreOffice 的 MULTIPLE.OPERATIONS 會讓其他格殘留代入值（v4.6 積極情境 D&A、v4.7 累計新股 FY29–30），運算表輸出本身也可能錯。
+# 改為逐一情境另存副本（移除運算表、設定情境與錨定）重算，取「公式列」（運算表上一列）的值作為各列輸出——與 Excel 運算表的定義相同；
+# 再把主檔的運算表換成這些靜態值後重算。真正的 Excel 會自行計算運算表（成品設 fullCalcOnLoad），不受影響。
+_static = {}
+for (c1, r1, c2, r2) in _dts:
+    for rr in range(r1, r2 + 1):
+        s_ = ws.cell(row=rr, column=c1 - 1).value; q = os.path.join(ROOT, 'out', f'xl17_dt_{s_}_{ak or 0}.xlsx')
+        w2 = load_workbook(src); w2s = w2['輸入與假設']
+        for rr2 in range(r1, r2 + 1):
+            for cc in range(c1, c2 + 1): w2s.cell(row=rr2, column=cc, value=None)
+        _setin(w2s, s_, ak); w2.save(q)
+        r_ = subprocess.run(['python3', os.path.join(ROOT, 'scripts', 'recalc.py'), q, '120'], capture_output=True, text=True)
+        if r_.returncode: sys.exit('recalc 失敗（運算表情境）：' + r_.stdout + r_.stderr)
+        v2 = load_workbook(q, data_only=True)['輸入與假設']
+        for cc in range(c1, c2 + 1): _static[(rr, cc)] = v2.cell(row=r1 - 1, column=cc).value
+        os.remove(q)
+for (c1, r1, c2, r2) in _dts:
+    for rr in range(r1, r2 + 1):
+        for cc in range(c1, c2 + 1): ws.cell(row=rr, column=cc, value=_static[(rr, cc)])
 for r in range(1,ws.max_row+1):
     v=ws.cell(row=r,column=1).value
     if v and str(v).startswith('情境選擇'): ws.cell(row=r,column=3,value=sel)

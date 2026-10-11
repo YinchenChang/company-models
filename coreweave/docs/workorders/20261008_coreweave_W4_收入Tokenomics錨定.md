@@ -1,6 +1,12 @@
-# 工作單 CoreWeave W4｜每 MW 收入改以 Tokenomics 為錨＋公司因素（2026-10-08，r1，chat 端）
+# 工作單 CoreWeave W4｜每 MW 收入改以 Tokenomics 為錨＋公司因素（2026-10-08，r2，chat 端）
 
 - r1 修訂（取代 r0「Q2 實績校準／GPU 小時長約價」）：Andy 2026-10-08「每 MW 收入要跟 Tokenomics 連動並校準；CoreWeave 可以有自己的調整，但要基於 Tokenomics，再加上公司層面的因素」「你直接做掉」。r0 的選項 A（以 Q2 實績調參數）屬「擬合公司數字」，不採用；選項 B（`gpuHr`）的價格不以 Tokenomics 為錨，降為對照。見 `coreweave/CLAUDE.md` 已決定事項 14。
+- r2 修訂（2026-10-08，chat 端審查 PR #27 後；取代 r1 第 2 點的長約占比與 k 固定兩處）：
+  1. **長約占比口徑改正（r1 第 2 點的設計錯誤，chat 端負責）**：新增產能不是現貨。CRWV 的商業模式是先簽多年期合約再建產能（10-K：已承諾合約加權平均約 5 年），所以 RPO 未覆蓋的新增產能也按長約價出售。改為 `k_t ＝ 隨需占比 × k_現貨 ＋（1 − 隨需占比）× k_長約`；`pricing.anchorMultiple.onDemandShare` 基準 0%、敏感度 10%／20%（[Assumed]，公司未揭露隨需比例；不得用 Q2 隱含 k 反推）。RPO 覆蓋率保留為對照列（不驅動）。
+  2. **k 隨 Tokenomics 成本情境重算**：證據是市場價格（事實），k＝價格 ÷ 同成本情境的 `IF_HoldEcon`／`IF_GPUhrEcon`。低／高成本敏感度下 k 以該情境的成本重算（輸入值為基準情境；以基準證據世代的成本比例換算），收入大致不隨成本情境變、成本變；高成本使目標價下降。
+  3. k_長約 基準維持 0.76（唯一已證實的可比長約）；證據表與敏感度另列「三筆長約中位數 0.89」（IREN–Microsoft 0.76、IREN–NVIDIA 0.89、Oracle–OpenAI 1.05〔未證實〕），基準取哪個由 Andy 決定。
+  4. 報告「已知限制」寫明終值占 EV 比重與 DCF 失效，並列 EV/EBITDA 腿單獨的目標價。
+  - 不升 v4.8：v4.7 尚未合併，直接覆寫 v4.7。
 - 前置：W3（v4.6）已合併（main `6410860`）。必讀：共同規則、W2／W3 PR 回報、W3 報告第 5 節（Q2 對帳）、`coreweave/CLAUDE.md` 已決定事項 12、13、14。
 - 分支：從最新 main 開 `claude/coreweave-w4-revenue`；PR 標題「CoreWeave v4.7：每 MW 收入以 Tokenomics 為錨」。
 
