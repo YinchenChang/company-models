@@ -147,6 +147,7 @@ F = [
  ('valuation.sigma', '企業價值波動率（選擇權法用）', '比例', C), ('valuation.rf', '無風險利率（選擇權法用）', '比例', C),
  ('methodology.blendWeights.dcf', '加權目標價中 DCF 的權重', '比例', K),
  ('methodology.blendWeights.pe', '加權目標價中 EV/EBITDA 的權重（兩者合計 1）', '比例', K),
+ ('methodology.dcfInvalid', 'DCF 失效（WACC ≤ g 或常態化 FCF ≤ 0）時的權重口徑（W7，已決定事項 16）：zero＝DCF 腿以 0 計入原權重（與 0 截斷同口徑；v4.9 起）；exclude＝DCF 權重歸零、EV/EBITDA 100%（v4.8 前；未填＝zero）', '代碼', K),
  ('methodology.rangeMultiples', '方法區間的 EV/EBITDA 倍數下端與上端', '倍 清單', C),
  ('methodology.consensusGapTol', '與市場共識比較的判斷句門檻：營收、EBITDA、CapEx 差距絕對值超過此比例即視為分歧（v4.3）', '比例', K),
  ('methodology.profitMarginTolPt', '利潤類（調整後 EBITDA、調整後營業利益）須附差異原因的門檻：利潤率差超過此百分點（寫成比例，0.02＝2pt）；營收、CapEx、淨負債、MW 仍用 consensusGapTol 的比例門檻；不影響分歧判斷句（v4.4）', '比例', K),

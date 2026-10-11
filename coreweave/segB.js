@@ -161,7 +161,7 @@ function evAnchorGrid(d, st, o) {
     let y = d.years[k];
     return Math.max(0, (base.fwd[k].ebitda * m - (y.totalDebtEnd - y.cum)) / base.fwd[k].shares / Math.pow(1 + o.wacc, k - CALQ.evOffset))
   }));
-  let DI = base.d.invalid, wd = DI ? 0 : BLEND_W.dcf, dcf = DI ? 0 : base.d.perShareT;
+  let DI = base.d.invalid, wd = DI && DCF_INV_EXCL ? 0 : BLEND_W.dcf, dcf = DI ? 0 : base.d.perShareT; // W7：失效時 DCF 腿以 0 計入原權重（exclude＝舊口徑）
   return {
     mults: EVG_MULTS,
     years: [1, 2, 3, 4].map(k => d.years[k].year),
@@ -172,6 +172,8 @@ function evAnchorGrid(d, st, o) {
   }
 }
 var BLEND_W = COMPANY_DATA.methodology.blendWeights,
+  // W7（已決定事項 16）：DCF 失效時的權重口徑。zero（預設）＝DCF 腿以 0 計入原權重，與 0 截斷同口徑；exclude＝權重歸零、EV/EBITDA 100%（v4.8 前）
+  DCF_INV_EXCL = (COMPANY_DATA.methodology.dcfInvalid || `zero`) === `exclude`,
   bM = [{
     method: `DCF（融資後每股）`,
     capex: `已扣五期 Cash CapEx；終值用常態化 FCF（D&A×維持比率）`,
@@ -207,10 +209,10 @@ function blendCall(e) {
     mktCap: M,
     shares0: S0,
     dcfInvalid: DI
-  } = e, WD = DI ? 0 : BLEND_W.dcf, WE = 1 - WD, s = (DI ? 0 : WD * n) + WE * i, c = s / Math.max(t, .01) - 1, u = a <= .01, B = a > RATE_TH.equityRaiseMaxMult * M, d = [];
+  } = e, WD = DI && DCF_INV_EXCL ? 0 : BLEND_W.dcf, WE = 1 - WD, s = (DI ? 0 : WD * n) + WE * i, c = s / Math.max(t, .01) - 1, u = a <= .01, B = a > RATE_TH.equityRaiseMaxMult * M, d = [];
   u ? d.push(`融資狀態：五期缺口可全由債務（額度＋資產層新債，受 債務／backlog 上限約束）支應，不需新股。`) : d.push(`融資狀態：五期需股權募資 ${a.toFixed(0)}bn（約現市值 ${(a/Math.max(M,1)).toFixed(1)} 倍），新發行 ${q.toFixed(2)}bn 股，原股東最終持股約 ${(S0/(S0+q)*100).toFixed(0)}%。股權在需要前一期募足（期前融資），不再以缺口本金扣減估值。`), B && d.push(`股權募資超過現市值 ${multTxt(RATE_TH.equityRaiseMaxMult)} 倍：市場吸收能力存疑，禁止買進。`), o > RATE_TH.tvShareWarn && d.push(`終值占企業價值過高，DCF 對 WACC／永續成長／維持性 CapEx 比率極敏感。`);
   let f = rateCall(c, o, B);
-  DI && d.unshift(`DCF 失效，已排除於目標價（權重改為 EV/EBITDA 100%）。`);
+  DI && d.unshift(DCF_INV_EXCL ? `DCF 失效，已排除於目標價（權重改為 EV/EBITDA 100%）。` : `DCF 失效，以 0 計入（權重 ${hA(WD * 100, 0)} 不變，與 0 截斷同口徑）。`);
   return {
     blended: s,
     upside: c,
@@ -331,7 +333,7 @@ function targetRange(d, st, o, base) {
       ? `情境區間上緣 $${Y(A[1], 1)} 低於現價 $${Y(P, 2)}` + (notSell.length ? `，但${notSell.join(`、`)}情境未達賣出門檻 $${Y(th, 1)}` : `：賣出在三個擴張情境下都成立`)
       : `情境區間上緣 $${Y(A[1], 1)} 不低於現價 $${Y(P, 2)}：賣出並非在三個擴張情境下都成立`) + `。` +
       sc.filter(s => Math.abs(s.gap) < MARGIN_ALERT * P).map(s => `${s.name}情境 $${Y(s.tgt, 1)}，${s.gap < 0 ? `距賣出門檻` : `高於賣出門檻`} $${Y(th, 1)} 僅 $${Y(Math.abs(s.gap), 1)}。`).join(``),
-    note = base.d.invalid ? `DCF 失效，已以 EV/EBITDA 100% 計。`
+    note = base.d.invalid ? (DCF_INV_EXCL ? `DCF 失效，已以 EV/EBITDA 100% 計。` : `DCF：失效（以 0 計入）。DCF 腿以 $0 計入 ${hA(wd * 100, 0)} 權重，與股權為負時的 0 截斷同口徑；若不計 DCF，目標價為 $${Y(ev100, 1)}（${ev100Call}）。`)
       : o.dcfMode !== `option` && raw < 0 ? `DCF 為 $0 仍計 ${hA(wd * 100, 0)} 權重的原因：DCF 沒有失效，而是算出的股權價值為負（每股約 ${mA(raw, 1)}），代表自由現金流折現後的企業價值不足以償還淨負債。EV/EBITDA 沒有扣除 GPU 汰換與擴張支出，保留 DCF 權重，是為了讓目標價反映「EBITDA 付不起資本成本」。若不計 DCF，目標價為 $${Y(ev100, 1)}（${ev100Call}）；${hA(wd * 100, 0)}／${hA(we * 100, 0)} 為判斷值。`
       : ``;
   return {
@@ -398,7 +400,7 @@ function EM(e, t, n) {
     ok: !e.d.invalid,
     severity: e.d.invalid ? `watch` : `ok`,
     title: e.d.invalid ? `DCF 失效：${e.d.invalidReason}` : `DCF 有效（WACC − g ＝ ${((e.v.wacc - e.v.g)*100).toFixed(1)}%，常態化 FCF ${e.d.normFcf.toFixed(1)}）`,
-    detail: `失效只定義為數學上的失效：WACC ≤ g，或常態化 FCF ≤ 0。股權價值為負不算失效——那是有效的經濟結論（企業價值低於淨負債）。目前下限方式：${e.v.dcfMode === `option` ? `選擇權（Merton，σ ${(e.v.sigma*100).toFixed(0)}%）` : `0 截斷`}；0 截斷 $${e.d.zeroPerShare.toFixed(1)}、選擇權 $${e.d.optPerShare.toFixed(1)}。失效時 DCF 權重歸零、EV/EBITDA 權重 100%。`
+    detail: `失效只定義為數學上的失效：WACC ≤ g，或常態化 FCF ≤ 0。股權價值為負不算失效——那是有效的經濟結論（企業價值低於淨負債）。目前下限方式：${e.v.dcfMode === `option` ? `選擇權（Merton，σ ${(e.v.sigma*100).toFixed(0)}%）` : `0 截斷`}；0 截斷 $${e.d.zeroPerShare.toFixed(1)}、選擇權 $${e.d.optPerShare.toFixed(1)}。${DCF_INV_EXCL ? `失效時 DCF 權重歸零、EV/EBITDA 權重 100%。` : `失效時 DCF 腿以 0 計入原權重（與 0 截斷同口徑）。`}`
   }, {
     id: `val-double`,
     ok: !0,
@@ -448,7 +450,7 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
     rel = x => { let r = Math.round(x * 10) / 10; return r > mHi ? `高於` : r < mHi ? `低於` : `等於` },
     implied = `共識平均目標價 $${Y(PT.mean, 2)} 隱含 ${YN} EV/EBITDA ${Y(impTgt, 1)}x，${rel(impTgt)}模型方法區間上緣 ${multTxt(mHi)}x；現價 $${Y(o.price, 2)} 隱含 ${Y(impPx, 1)}x。`,
     up = TR.pt / o.price - 1, gapTh = TR.pt - TR.th,
-    head = `${p.call.call}：點位 $${Y(TR.pt, 1)}，較現價 $${Y(o.price, 2)} ${up >= 0 ? `高` : `低`} ${hA(Math.abs(up) * 100, 0)}；情境區間 $${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}，方法區間 $${Y(TR.B[0], 1)}–$${Y(TR.B[1], 1)}；點位${gapTh < 0 ? `低於` : `高於`}賣出門檻 $${Y(TR.th, 1)} 達 $${Y(Math.abs(gapTh), 1)}。`;
+    head = `${p.call.call}：點位 $${Y(TR.pt, 1)}，較現價 $${Y(o.price, 2)} ${up >= 0 ? `高` : `低`} ${hA(Math.abs(up) * 100, 0)}；情境區間 $${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}，方法區間 $${Y(TR.B[0], 1)}–$${Y(TR.B[1], 1)}；點位${gapTh < 0 ? `低於` : `高於`}賣出門檻 $${Y(TR.th, 1)} 達 $${Y(Math.abs(gapTh), 1)}。` + (p.d.invalid && !DCF_INV_EXCL ? `DCF：失效（以 0 計入）。` : ``);
   // v4.4：差距超過門檻的項目附差異原因（已決定事項 2）；原因與類型讀 company.json → varianceReasons，找不到即為「未歸類」
   let rsn = rows.flatMap((r, i) => ANN_RSN_KEYS.filter(([, k]) => k === `ebitda` && PM_TOL != null ? Math.abs(r.gap.ebM) > PM_TOL : Math.abs(r.gap[k]) > CONS_TOL).map(([n, k]) => {
       let c = findRsnQ(`annual`, r.yr, k, `consensus`),

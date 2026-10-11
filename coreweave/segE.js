@@ -352,7 +352,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
       nd: dd.totals.newDebt, eq: dd.totals.equity, jk: dd.totals.junk,
       debt30: dd.years[4].totalDebtEnd,
       rev30: pp.fwd[4].fyRevenue, eb30: pp.fwd[4].fyEbitda,
-      dcf: pp.d.invalid ? NaN : pp.d.perShareT, ev: pp.peAdj,
+      dcf: pp.d.invalid ? NaN : pp.d.perShareT, bad: pp.d.invalid, ev: pp.peAdj,
       tgt: pp.call.blended, opt: po.call.blended, call: pp.call.call
     };
   }), [e, o]);
@@ -469,7 +469,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
     [`新債／股權／高息債（$bn）`, s => `${Y(s.nd, 1)}／${Y(s.eq, 1)}／${Y(s.jk, 1)}`],
     [`FY30 總債務（$bn）`, s => Y(s.debt30, 1)],
     [`FY30 營收／EBITDA（$bn）`, s => `${Y(s.rev30, 1)}／${Y(s.eb30, 1)}`],
-    [`DCF 腿／EV/EBITDA 腿（每股）`, s => `$${Y(s.dcf, 1)}／$${Y(s.ev, 1)}`],
+    [`DCF 腿／EV/EBITDA 腿（每股）`, s => `${s.bad && !DCF_INV_EXCL ? `失效（以 0 計入）` : `$${Y(s.dcf, 1)}`}／$${Y(s.ev, 1)}`],
     [`加權目標價（0 截斷）`, s => `$${Y(s.tgt, 1)}`],
     [`加權目標價（選擇權模式）`, s => `$${Y(s.opt, 1)}`],
     [`結論`, s => s.call]

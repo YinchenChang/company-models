@@ -2,7 +2,7 @@
 
 ## 目前狀態（每次 push 前覆寫）
 - 已完成：W0–W6（v4.8，已合併 main 676a6c4）；**W7 進行中**（PR 見下表）：DCF 失效時以 0 計入原權重（已決定事項 16(1)）。
-- 下一步：W7 第 1 步——Excel 與 JS 雙引擎改權重口徑（`methodology.dcfInvalid`＝zero｜exclude；舊方法回歸用 exclude）。
+- 下一步：W7 第 2 步——升版 v4.9（VLOG 兩處、dist、交接檔、README、`scripts/expect/v4_9_rules.json`），再跑 verify 三組。
 - 未解問題：(1) 每 MW 資本支出仍比 1H26 實際高 19%（Q3 10-Q 後再比）；(2) 長約 k 只有 GB300 證據；(3) CRWV 保固條款、active power 定義仍找不到；(4) Excel 實機開啟待 Andy。
 
 ## 工作單總覽
@@ -15,7 +15,7 @@
 | W4 收入 Tokenomics 錨定（v4.7） | `claude/coreweave-w4-revenue`（自 main f373885） | #27 | 完成，待審 |
 | W5 公司實況驗證（覆寫 v4.7） | 同 W4 分支 | #27 | 已合併 |
 | W6 接 Tokenomics v5.31（v4.8） | `claude/coreweave-w6-v4.8`（自 main 8671a11） | #48 | 已合併 |
-| W7 DCF 失效權重（v4.9） | `claude/coreweave-w7-v4.9`（自 main b1e444c） | （開 PR 後填） | 進行中 |
+| W7 DCF 失效權重（v4.9） | `claude/coreweave-w7-v4.9`（自 main b1e444c） | #50 | 進行中 |
 
 <!-- 各工作單在下方新增自己的段落：「## Wx」＋步驟紀錄表（步驟｜狀態｜commit｜備註） -->
 
@@ -566,3 +566,4 @@ Tokenomics：master `f16f161`（PR #36 合併），`model/CURRENT`＝`20261008_T
 | 步驟 | 狀態 | commit | 備註 |
 |---|---|---|---|
 | 0 開分支、draft PR、進度檔 W7 段落 | 完成 | （本 commit） | 自 origin/main b1e444c；環境：soffice 24.2.7、openpyxl、playwright 可用（未補裝） |
+| 1 雙引擎改權重口徑 | 完成 | （本 commit） | `methodology.dcfInvalid`＝zero（新，預設）｜exclude（v4.8 前；`verify_legacy.sh` 副本設 exclude）。JS：`segB.js` `DCF_INV_EXCL`（blendCall、evAnchorGrid、說明文字）、segC／segE 顯示「失效（以 0 計入）」；Excel：`build_xlsx.py` `_WD_E`／`_WE_E`（加權目標價、方法區間、錨定×倍數矩陣）、DCF 權重說明、摘要結論句（失效時加「DCF：失效（以 0 計入）。」）；`scripts/attrib.py` 依該版 Excel 判定口徑。`verify.sh`（不比對 dist）22 項全過、cmp31 三情境各 555 項。對 v4.8 成品的值差異只有 2 格：每MW經濟性 敏感度｜保守｜Tokenomics 高成本 $18.06 → $9.93（差基準 −24.64 → −32.77）；三情境目標價不變。單調性：敏感度 58 項方向檢查 v4.8／v4.9 皆 0 不符；建置成本倍數 0.70–1.90 掃描（JS 引擎）新口徑三情境目標價皆單調遞減，舊口徑保守、基準在失效交界跳升（16.03 → 27.20、13.19 → 22.39） |

@@ -647,6 +647,7 @@ from openpyxl.worksheet.datavalidation import DataValidation as _DV
 _dv = _DV(type="whole", operator="between", formula1="1", formula2="4", allow_blank=False, showErrorMessage=True, error="請輸入 1–4", errorTitle="錨定年度")
 ws.add_data_validation(_dv); _dv.add(EVY.split("!")[1].replace("$", ""))
 WDCF = gi(r, "權重：DCF", "%", CO['methodology']['blendWeights']['dcf'], "", PCT); r += 1
+DCF_INV_EXCL = CO['methodology'].get('dcfInvalid', 'zero') == 'exclude'  # W7：DCF 失效時的權重口徑（建置時選公式；Excel 內不設切換格）
 WEVE = gi(r, "權重：EV/EBITDA", "%", CO['methodology']['blendWeights']['pe'], "", PCT); r += 1
 RM_LO = gi(r, "方法區間倍數：下端", "x", min(CO['methodology']['rangeMultiples']), "v4.1 方法區間：目前輸入、EV/EBITDA 倍數換成兩端；6x 為穩態倍數上緣 [Assumed]", MULT); r += 1
 RM_HI = gi(r, "方法區間倍數：上端", "x", max(CO['methodology']['rangeMultiples']), "", MULT); r += 1
@@ -1700,7 +1701,7 @@ dcf_lines = [
     ("終值占 EV 比重", None, PCT, f'="超過 "&{_PC(RT_TVW)}&" 表示結論由終值假設決定，不由現金流決定"'),
     ("新股募得現金（現值）", None, NUM, "期初到位，折現期數 0／0.5／1.5／2.5／3.5 年"),
     ("融資後股數（含瀑布新股）", None, '0.000', None),
-    ("DCF 失效？（WACC ≤ g 或常態化 FCF ≤ 0）", None, NUM0, "1＝失效：DCF 權重歸零、EV/EBITDA 100%。股權為負不算失效"),
+    ("DCF 失效？（WACC ≤ g 或常態化 FCF ≤ 0）", None, NUM0, "1＝失效：DCF 權重歸零、EV/EBITDA 100%。股權為負不算失效" if DCF_INV_EXCL else "1＝失效：DCF 腿以 0 計入原權重（與 0 截斷同口徑）。股權為負不算失效"),
     ("DCF 每股：0 截斷", None, USD, None),
     ("DCF 每股：選擇權（Merton）", None, USD, "Black-Scholes：S＝企業價值＋新股現值、K＝淨負債"),
     ("　d1", None, '0.000', None),
@@ -1730,11 +1731,14 @@ ws.cell(row=d0 + 14, column=3, value=f"=IF({_S}<=0,0,(LN({_S}/{ND})+({RF}+{SIGMA
 ws.cell(row=d0 + 15, column=3, value=f"=C{d0+14}-{SIGMA}*SQRT({OPTT})").number_format = '0.000'
 ws.cell(row=d0 + 13, column=3, value=(f"=IF({_S}<=0,0,({_S}*NORMSDIST(C{d0+14})-{ND}*EXP(-{RF}*{OPTT})*NORMSDIST(C{d0+15}))/C{d0+10})")).number_format = USD
 ws.cell(row=d0 + 7, column=3, value=f"=IF(C{d0+11}=1,0,IF({DMODE}=2,C{d0+13},C{d0+12}))").number_format = USD
-ws.cell(row=d0 + 7, column=9, value="採用值：失效時為 0 且權重歸零；否則依「DCF 下限方式」取 0 截斷或選擇權").font = SMALL
+ws.cell(row=d0 + 7, column=9, value="採用值：失效時為 0 且權重歸零；否則依「DCF 下限方式」取 0 截斷或選擇權" if DCF_INV_EXCL else "採用值：失效時為 0（權重不變）；否則依「DCF 下限方式」取 0 截斷或選擇權").font = SMALL
 ws.cell(row=d0 + 7, column=3).font = BOLD
 ws.cell(row=d0 + 8, column=3, value=f"=C{d0+3}/C{d0+4}").number_format = PCT
 DCF_PS = f"C{d0+7}"
 DCF_BAD = f"C{d0+11}"
+# W7（已決定事項 16）：DCF 失效時的有效權重。zero（預設）＝DCF 腿（失效時採用值為 0）以原權重計入，與 0 截斷同口徑；exclude＝權重歸零、EV/EBITDA 100%（v4.8 前，舊方法回歸用）
+_WD_E = f"IF({DCF_BAD}=1,0,{WDCF})" if DCF_INV_EXCL else WDCF
+_WE_E = f"IF({DCF_BAD}=1,1,1-{WDCF})" if DCF_INV_EXCL else f"(1-{WDCF})"
 
 r += 1
 r = section(ws, r, "倍數法（錨定年度，預設 FY29；«EVDISCS»）")
@@ -1774,8 +1778,8 @@ ws.cell(row=r, column=9, value="＝DCF 每股 ×（1＋WACC）^（評價日至�
 DCF_T = f"C{r}"; r += 1
 t0 = r
 tgt = [
-    ("DCF 每股 × 有效權重", f"={DCF_T}*IF({DCF_BAD}=1,0,{WDCF})", USD),
-    ("EV/EBITDA（融資後）× 有效權重", f"={EVE_ADJ}*IF({DCF_BAD}=1,1,1-{WDCF})", USD),
+    ("DCF 每股 × 有效權重", f"={DCF_T}*{_WD_E}", USD),
+    ("EV/EBITDA（融資後）× 有效權重", f"={EVE_ADJ}*{_WE_E}", USD),
     ("加權目標價", None, USD),
     ("現價", f"={PX}", USD),
     ("潛在空間", None, PCT),
@@ -1797,7 +1801,7 @@ TGT = f"C{t0+2}"
 UPS = f"C{t0+4}"
 NOTE_R = r  # v4.1：DCF 權重說明（公式在目標價區間段建好後寫入）
 ws.cell(row=r, column=1, value="DCF 權重說明").font = BLACK
-ws.cell(row=r, column=9, value="只在 DCF 被 0 截斷時顯示；DCF 失效時改為一句；DCF 為正時空白（與 HTML 同一字串）").font = SMALL
+ws.cell(row=r, column=9, value="只在 DCF 被 0 截斷或失效時顯示；DCF 為正時空白（與 HTML 同一字串）" if not DCF_INV_EXCL else "只在 DCF 被 0 截斷時顯示；DCF 失效時改為一句；DCF 為正時空白（與 HTML 同一字串）").font = SMALL
 r += 1
 
 # v4.1：目標價區間（點位＝目前輸入的加權目標價，評等仍依點位）
@@ -1820,7 +1824,7 @@ def _code(px):  # 評等代碼：1＝買進、0＝中立、−1＝賣出（與 H
             f"IF(OR({c}<={RT_SELL},AND($C${R0+2}>{RT_EQ},{c}<={RT_SELL2})),-1,0))")
 _CALL = lambda cell: f'CHOOSE({cell}+2,"賣出","中立","買進")'
 _T1 = lambda x: f'TEXT({x},"0.0")'
-_EVM = lambda m: (f"{DCF_T}*IF({DCF_BAD}=1,0,{WDCF})+MAX(0,(C{m0+1}*{m}-C{m0+3})/C{m0+4})*C{m0+5}*IF({DCF_BAD}=1,1,1-{WDCF})")
+_EVM = lambda m: (f"{DCF_T}*{_WD_E}+MAX(0,(C{m0+1}*{m}-C{m0+3})/C{m0+4})*C{m0+5}*{_WE_E}")
 rows_rg = [
     ("目標價區間｜點位（目前輸入的加權目標價）", [f"={TGT}"], USD),
     ("目標價區間｜終值占 EV（評等用）", [f"=C{d0+3}/MAX(ABS(C{d0+4}),1)*IF(C{d0+4}=0,1,SIGN(C{d0+4}))"], PCT),
@@ -1874,8 +1878,11 @@ for nm, f in text_rg:
     ws.cell(row=r, column=3, value=f).font = BLACK
     r += 1
 _RAW = f"C{R0+12}"
+# W7：DCF 失效時的說明（與 HTML targetRange 的 note 同一字串）
+_INV_NOTE = ('"DCF 失效，已以 EV/EBITDA 100% 計。"' if DCF_INV_EXCL else
+             f'"DCF：失效（以 0 計入）。DCF 腿以 $0 計入 "&TEXT({WDCF},"0%")&" 權重，與股權為負時的 0 截斷同口徑；若不計 DCF，目標價為 $"&{_T1(EVE_ADJ)}&"（"&{_CALL(f"D{R0+11}")}&"）。"')
 ws.cell(row=NOTE_R, column=3, value=(
-    f'=IF({DCF_BAD}=1,"DCF 失效，已以 EV/EBITDA 100% 計。",IF(AND({DMODE}<>2,{_RAW}<0),'
+    f'=IF({DCF_BAD}=1,{_INV_NOTE},IF(AND({DMODE}<>2,{_RAW}<0),'
     f'"DCF 為 $0 仍計 "&TEXT({WDCF},"0%")&" 權重的原因：DCF 沒有失效，而是算出的股權價值為負（每股約 −$"&{_T1(f"ABS({_RAW})")}&"），'
     f'代表自由現金流折現後的企業價值不足以償還淨負債。EV/EBITDA 沒有扣除 GPU 汰換與擴張支出，保留 DCF 權重，是為了讓目標價反映「EBITDA 付不起資本成本」。'
     f'若不計 DCF，目標價為 $"&{_T1(EVE_ADJ)}&"（"&{_CALL(f"D{R0+11}")}&"）；"&TEXT({WDCF},"0%")&"／"&TEXT(1-{WDCF},"0%")&" 為判斷值。",""))')).font = BLACK
@@ -1902,7 +1909,7 @@ for kind in ("EV/EBITDA 腿", "加權目標價"):
                      f"/INDEX({_SHR},1,{k}))/(1+{WACC})^({k}-{OFF})")
             else:
                 leg_row = LEG0 + (r - g0)
-                f = f"={DCF_T}*IF({DCF_BAD}=1,0,{WDCF})+{get_column_letter(col)}{leg_row}*IF({DCF_BAD}=1,1,1-{WDCF})"
+                f = f"={DCF_T}*{_WD_E}+{get_column_letter(col)}{leg_row}*{_WE_E}"
             c = ws.cell(row=r, column=col, value=f); c.number_format = USD; c.font = BLACK
         r += 1
     rng = f"C{g0}:F{r-1}"
@@ -3038,7 +3045,8 @@ _s = lambda k: SM["結論｜" + k]
 srow("結論｜結論句", "", [(f'=C{_s("評等")}&"：點位 $"&TEXT(C{_s("點位（加權目標價）")},"0.0")&"，較現價 $"&TEXT(C{_s("現價")},"0.00")&" "'
                          f'&IF(C{_s("空間")}>=0,"高","低")&" "&TEXT(ABS(C{_s("空間")})*100,"0")&"%；情境區間 $"&TEXT(C{_s("情境區間（下緣／上緣）")},"0.0")&"–$"&TEXT(D{_s("情境區間（下緣／上緣）")},"0.0")'
                          f'&"，方法區間 $"&TEXT(C{_s("方法區間（下緣／上緣）")},"0.0")&"–$"&TEXT(D{_s("方法區間（下緣／上緣）")},"0.0")'
-                         f'&"；點位"&IF(C{_s("點位 − 賣出門檻")}<0,"低於","高於")&"賣出門檻 $"&TEXT(C{_s("賣出門檻價")},"0.0")&" 達 $"&TEXT(ABS(C{_s("點位 − 賣出門檻")}),"0.0")&"。"')],
+                         f'&"；點位"&IF(C{_s("點位 − 賣出門檻")}<0,"低於","高於")&"賣出門檻 $"&TEXT(C{_s("賣出門檻價")},"0.0")&" 達 $"&TEXT(ABS(C{_s("點位 − 賣出門檻")}),"0.0")&"。"'
+                         + ("" if DCF_INV_EXCL else f'&IF({VQ}{DCF_BAD}=1,"DCF：失效（以 0 計入）。","")'))],
      bold=True)
 srow("結論｜情境判斷句", "", [f"={VQ}C{TRROW['目標價區間｜判斷句']}"])
 # W3（v4.6）：每 MW 一句（首個完整財年；與 HTML 一頁摘要 pmLineQ 同一句）。只在每 MW 使用新方法時建列；公式在「每MW經濟性」頁建好後回填
