@@ -1,4 +1,4 @@
-# CoreWeave 收支模型 v4.7 原始碼包
+# CoreWeave 收支模型 v4.8 原始碼包
 
 HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo 根目錄；建置產物寫到 `out/`（不納入版控），交付成品放 `dist/`。HTML 的函式庫模板為 `docs/template_v3_3.html`。
 
@@ -49,6 +49,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | scripts/compare_w5.py | W5：v4.6／v4.7 W4／v4.7 W5 三版對照 Excel（摘要、每MW_三版、公司實況驗證、敏感度、變動拆解） |
 | scripts/compare_w4.py | W4：v4.6 → v4.7 收入錨定對照 Excel（摘要、每MW_前後、錨與k、證據表、Q2驗證、敏感度、變動拆解） |
 | scripts/attrib_permw.py | W3：v4.5 → v4.6 目標價變動拆解（(d) 方法變更逐項依序／單獨切換；數值取自 Excel；三情境；檢查相加＝總變動） |
+| scripts/attrib_w6.py | W6：v4.7 → v4.8 目標價變動拆解（先重現 v4.7；(b) 2023 年底 MW → (c) ① GB300 機架價格 → ②a 收入錨下降〔k 舊數字〕→ ②b k 隨錨重算 → (d) ③ IT 維護依機齡兩段 → ④ MW 口徑；混合快照自 git 歷史 v5.27；檢查相加＝總變動） |
+| scripts/compare_w6.py | W6：v4.7 → v4.8 對照 Excel（摘要、每MW_前後〔三情境〕、IT維護機齡、兩版公司實況驗證、Tokenomics 前後值、敏感度、變動拆解） |
 | scripts/make_expect.py | W3：升版預期差異清單產生器（規則檔 `scripts/expect/*_rules.json`；未歸類的差異即失敗） |
 | scripts/compare_gather.py、scripts/build_compare.py | W3：前後對照取數（三檔 × 三情境，xlx.py）與對照 Excel 產生 |
 | scripts/check_quarterly.js | v4.4：季度加總＝年度（三情境）、`quarterly.consistency` 一致性、超過門檻的差距都有原因；`build_html_portable.py` 建置時呼叫，verify.sh 步驟 0 |
@@ -180,6 +182,15 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **工具**：`scripts/attrib_w5.py`（W4 的 ①②③ 後加 ④ 公司調整逐項）、`scripts/compare_w5.py`（三版對照 Excel）；`verify_legacy.sh` 的 v4.6 副本移除 `companyAdjust`；`calendar_q.ROLL_FIELDS` 新增 `companyAdjust.capexActual`（選用區段，沒有時不檢查）。
 - **報告**：`docs/reports/20261008_coreweave_v4.7_公司實況驗證.{xlsx,md}`。
 
+## v4.8 接 Tokenomics v5.31（W6；2026-10-09）
+- **快照**：`data/tokenomics_snapshot_v5.31.json`（GB300 機架價格 5.0 → 4.3 $M；IT 維護改為保固期內／期滿兩段）；名稱清單新增 `IF_MaintITWarr`、`IF_MaintITPost`、`IF_WarrantyYrs`。
+- **IT 維護依機齡兩段**（`methodology.perMw.maint`＝age｜flat）：每期 IT 維護＝Σ 世代［保固期內平均在役 MW × `IF_MaintITWarr`＋保固期滿 × `IF_MaintITPost`］÷ 平均在役 MW。時間以首期期初（評價日）起算；期初機齡層（`fleet.openMix.vintages`：MW、投入使用月、世代占比；建置時檢查合計＝`activeMW` 與 `mix`）的保固到期＝`IF_WarrantyYrs` − 評價日時機齡；各期新增 MW（含汰換補回）於該期中點投入、到期＝中點＋保固年限；保固期內比例＝到期前占該期的比例；當期新增只計一半（與平均在役 MW 一致）；保固期內 MW 不超過該世代平均在役 MW。Excel：「輸入與假設」世代組合區（期初機齡層、TK IT 維護機齡兩段、保固年限）、「每MW經濟性」「機齡與保固」區與 IT 維護兩部分、等值費率對照列；「公司實況驗證」IT 維護與 Q2 季末營運成本合計改依機齡（新增「Q2 季末保固期內占比」）。HTML `vintQ`／`maintAgeQ`／`q2WarrQ`（cmp31 比對）。
+- **換公司**：填 `fleet.openMix.vintages`（沒有機齡資料時 `maint` 設 flat）；Tokenomics 須為 v5.31 起。
+- **k 隨錨重算（r1）**：`pricing.anchorMultiple.long／spot` 的 base、low、high、sensMedian 可寫成規格——`{ref: 證據 label}`（＝該筆價格 ÷ 同世代 Tokenomics 基準值）、`{priceEq, gen, tkName}`（固定價格）、`{median: [label]}`——建置時依目前快照推算（`kspec.py`；HTML `kSpecQ`；敏感度快照 `permw_sens.py` 同規則）。Excel 輸入格 k_長約／k_現貨 為活公式；k 證據表並列 `evidence[].multipleV527`（前一版倍數）。
+- **2023 年底主動電力**：100 → 70 MW（10-K FY2025 原文）；期初機齡層 2023 年 70／2024 年 290。`verify_legacy.sh` 的 v4.6 副本取回 v4.6 的 `mwYearEnd` 與說明。
+- **工具**：`scripts/attrib_w6.py`、`scripts/compare_w6.py`；`verify_legacy.sh` 的 v4.6 副本設 maint=flat；升版清單 `scripts/expect/v4_8_rules.json` → `v4_8_vs_v4_7.txt`。
+- **報告**：`docs/reports/20261009_coreweave_v4.8_Tokenomics_v5.31.{xlsx,md}`。
+
 ## company.json 欄位說明（換公司填表指引）
 換成 Nebius、Oracle、OpenAI 等公司時，照這一節逐欄填寫 `company.json`；HTML 與 Excel 都從這個檔讀資料，改完執行 `scripts/verify.sh`。
 
@@ -189,7 +200,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY26 下半年、FY27、FY28、FY29、FY30，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 CoreWeave v4.7 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 CoreWeave v4.8 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -575,6 +586,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.perMw.capex` | 每 MW 資本支出方法（W2）：tokenomics＝Σ 新增世代占比 × IF_CapexIT；legacy＝scenarios.capexTemplate.costMW | 代碼 | tokenomics | 檢查 |
 | `methodology.perMw.cost` | 營運成本方法（W2）：bottomUp＝Tokenomics 電費、IT 維護、人員軟體、稅險 × 平均在役 MW＋管銷率；ebitdaPct＝起始→穩態 EBITDA 率線性 | 代碼 | bottomUp | 檢查 |
 | `methodology.perMw.revenue` | 每 MW 收入方法（W2／W4）：tkAnchor＝Σ 平均在役占比 × IF_HoldEcon × 定價倍數 k（pricing.anchorMultiple；W4 預設）；gpuHr＝pricing.gpuHr × 每 MW GPU 數 × 8,760；legacy＝defaults.m.revMW（對照） | 代碼 | tkAnchor | 檢查 |
+| `methodology.perMw.maint` | IT 維護方法（W6）：age＝依機齡兩段（Σ 世代［保固期內平均在役 MW × IF_MaintITWarr＋保固期滿 × IF_MaintITPost］，機齡由 fleet.openMix.vintages 與各期新增 MW 推得、保固年限 IF_WarrantyYrs；需 Tokenomics v5.31 起）；flat＝Σ 平均在役占比 × IF_MaintIT 等值費率（v4.7 前；未填＝flat） | 代碼 | age | 檢查 |
 
 ### `peers`：同業比較（Comps）
 
@@ -633,9 +645,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `tokenomics._note` | Tokenomics 取數層的說明（不進程式；W1） | 文字 | 算力相關的產業與物理層資料改引用 Tokenomic… | 可沿用 |
 | `tokenomics.snapshotFile` | Tokenomics 快照檔路徑（tools/tokenomics/import_tokenomics.py 產生；Excel「Tokenomics_取數」分頁讀此檔；W1） | 路徑 | data/tokenomics_snapshot_v… | 可沿用 |
-| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v5.27 | 可沿用 |
-| `tokenomics.commit` | 快照的 Tokenomics commit SHA | 文字 | 862bdd46d199ab5047b77dcba1… | 可沿用 |
-| `tokenomics.names` | 引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW、IF_RevGWFleet | 檢查 |
+| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v5.31 | 可沿用 |
+| `tokenomics.commit` | 快照的 Tokenomics commit SHA | 文字 | f16f161a28b5d43e00e89aa019… | 可沿用 |
+| `tokenomics.names` | 引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW、IF_RevGWFleet、IF_MaintITWarr、IF_MaintITPost、IF_WarrantyYrs | 檢查 |
 | `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（v5.25 預計新增） | 清單 |  | 檢查 |
 
 ### `fleet`：世代組合（W2；公司專屬）
@@ -649,6 +661,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `fleet.openMix.mix` | 期初在役 MW 的世代占比，{世代: 比例}，合計 1 | 物件（比例） | 物件（Hopper H100、GB200 NVL72、GB300 NVL72） | 必改 |
 | `fleet.openMix.tag` | 期初世代占比的來源標記 | 文字 | [Assumed] | 必改 |
 | `fleet.openMix.source` | 期初世代占比的來源與方法 | 文字 | W1 第 6b 步（coreweave/data/p… | 必改 |
+| `fleet.openMix.vintages` | 期初機齡層（W6；maint＝age 時必填）：[{label, mw, inService（投入使用月 YYYY-MM）, mix {世代: 比例}}]；各層 MW 合計＝activeMW、各世代合計＝activeMW × mix（建置時檢查）；隨 openMix 列入滾動檢查 | 清單 | 4 筆 | 必改 |
+| `fleet.openMix.vintageNote` | 期初機齡層的來源與方法 | 文字 | W6：期初機齡層（IT 維護依機齡兩段）。MW＝W1… | 必改 |
 | `fleet.newMix` | 五期（首期模型部分＋4 個完整財年；目前為 FY26 下半年、FY27、FY28、FY29、FY30）各期新增 MW（含汰換補回）的世代占比，每期 {世代: 比例}，合計 1 | 清單 | 5 筆 | 檢查 |
 | `fleet.newMixNote` | 新增世代占比的依據 | 文字 | 工作單 W2 預設 [Assumed]：2H26 G… | 檢查 |
 | `fleet.newMixAlt.label` | 世代組合敏感度（替代路徑）的名稱 | 文字 | Rubin Ultra 版（FY29–FY30 新增… | 檢查 |
@@ -662,20 +676,20 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `pricing._note` | GPU 小時價格與對照價格的說明（不進程式；W2） | 文字 | GPU 小時價格（W2，公司專屬）：gpuHr＝合約… | 可沿用 |
 | `pricing.gpuHr` | GPU 小時合約價，{世代: {base, low, high, source, date, tag}}（US$/GPU-hr）；空白＝不適用（revenue=gpuHr 時必填所有在役世代） | 物件 | 物件（） | 必改 |
 | `pricing.anchorMultiple._note` | Tokenomics 錨的公司因素說明（不進程式；W4） | 文字 | W4 r2（已決定事項 14）：每 MW 年收入（1… | 可沿用 |
-| `pricing.anchorMultiple.long.base` | 定價倍數 k_長約 基準（市場長約價 ÷ Tokenomics 同世代持有成本；W4） | 倍 | 0.76 | 檢查 |
-| `pricing.anchorMultiple.long.low` | k_長約 區間下緣（敏感度） | 倍 | 0.7 | 檢查 |
-| `pricing.anchorMultiple.long.high` | k_長約 區間上緣（敏感度） | 倍 | 1 | 檢查 |
+| `pricing.anchorMultiple.long.base` | 定價倍數 k_長約 基準（市場長約價 ÷ Tokenomics 同世代持有成本；W4）。W6 r1 起可寫成規格，建置時依目前快照推算（kspec.py）：數字｜{ref: 證據 label}｜{priceEq, gen, tkName}｜{median: [證據 label]} | 倍或規格 | 物件（ref） | 檢查 |
+| `pricing.anchorMultiple.long.low` | k_長約 區間下緣（敏感度；規格同 base） | 倍或規格 | 物件（priceEq、gen、tkName） | 檢查 |
+| `pricing.anchorMultiple.long.high` | k_長約 區間上緣（敏感度；規格同 base） | 倍或規格 | 物件（priceEq、gen、tkName） | 檢查 |
 | `pricing.anchorMultiple.long.tag` | k_長約 的資料標記 | 文字 | [Analogy] | 可沿用 |
-| `pricing.anchorMultiple.long.note` | k_長約 基準與區間的依據 | 文字 | 基準＝IREN–Microsoft GB300 五年… | 可沿用 |
-| `pricing.anchorMultiple.spot.base` | 定價倍數 k_現貨 基準（市場現貨價 ÷ Tokenomics 同世代持有成本；W4） | 倍 | 1.76 | 檢查 |
-| `pricing.anchorMultiple.spot.low` | k_現貨 區間下緣（敏感度） | 倍 | 1.5 | 檢查 |
-| `pricing.anchorMultiple.spot.high` | k_現貨 區間上緣（敏感度） | 倍 | 2.3 | 檢查 |
+| `pricing.anchorMultiple.long.note` | k_長約 基準與區間的依據 | 文字 | W6 r1：k 依目前快照重算（價格是事實，k＝價格… | 可沿用 |
+| `pricing.anchorMultiple.spot.base` | 定價倍數 k_現貨 基準（市場現貨價 ÷ Tokenomics 同世代持有成本；W4；規格同 long.base） | 倍或規格 | 物件（ref） | 檢查 |
+| `pricing.anchorMultiple.spot.low` | k_現貨 區間下緣（敏感度；規格同 long.base） | 倍或規格 | 物件（priceEq、gen、tkName） | 檢查 |
+| `pricing.anchorMultiple.spot.high` | k_現貨 區間上緣（敏感度；規格同 long.base） | 倍或規格 | 物件（ref） | 檢查 |
 | `pricing.anchorMultiple.spot.tag` | k_現貨 的資料標記 | 文字 | [Analogy] | 可沿用 |
-| `pricing.anchorMultiple.spot.note` | k_現貨 基準與區間的依據 | 文字 | 基準＝H100 Silicon Data 現貨指數 … | 可沿用 |
+| `pricing.anchorMultiple.spot.note` | k_現貨 基準與區間的依據 | 文字 | W6 r1：基準＝H100 Silicon Data… | 可沿用 |
 | `pricing.anchorMultiple.longShare.method` | RPO 覆蓋率對照列的算法（rpoCover＝RPO 涵蓋的產能 ÷ 在役計費產能；r2 起只作對照、不驅動） | 代碼 | rpoCover | 檢查 |
 | `pricing.anchorMultiple.longShare.tag` | RPO 覆蓋率對照列的資料標記 | 文字 | [Derived] | 可沿用 |
 | `pricing.anchorMultiple.longShare.formula` | RPO 覆蓋率對照列算式說明（不進程式） | 文字 | 對照列（不驅動）：RPO 涵蓋的產能 ÷ 在役計費產… | 可沿用 |
-| `pricing.anchorMultiple.long.sensMedian` | k_長約 三筆長約中位數（敏感度；W4 r2） | 倍 | 0.89 | 檢查 |
+| `pricing.anchorMultiple.long.sensMedian` | k_長約 三筆長約中位數（敏感度；W4 r2；W6 r1 起為 {median: [證據 label]}） | 倍或規格 | 物件（median） | 檢查 |
 | `pricing.anchorMultiple.long.refEvidence` | k_長約 的基準證據（evidence.label；成本情境重算時用其世代的 Tokenomics 成本比例） | 文字 | IREN–Microsoft GB300 五年約 | 檢查 |
 | `pricing.anchorMultiple.spot.refEvidence` | k_現貨 的基準證據（evidence.label；成本情境重算時用其世代的 Tokenomics 成本比例） | 文字 | H100 Silicon Data 現貨指數 | 檢查 |
 | `pricing.anchorMultiple.onDemandShare.base` | 隨需（現貨）占在役計費產能比例，基準（W4 r2；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約） | 比例 | 0 | 檢查 |
