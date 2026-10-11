@@ -427,7 +427,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.mwPath.contracted.base` | 基準情境：同上 | MW 清單 | 99999、99999、99999、99999、99999 | 必改 |
 | `scenarios.mwPath.contracted.high` | 積極情境：同上 | MW 清單 | 99999、99999、99999、99999、99999 | 必改 |
 | `scenarios.mwPath.pace.low` | 保守情境：併網速度（每年新增已連網 MW；已連網＝MIN(合約上限, 前期＋速度×期間長度)；v0.1b） | MW／年 | 720 | 檢查 |
-| `scenarios.mwPath.pace.base` | 基準情境：同上 | MW／年 | 3173.5 | 檢查 |
+| `scenarios.mwPath.pace.base` | 基準情境：同上 | MW／年 | 3628.8 | 檢查 |
 | `scenarios.mwPath.pace.high` | 積極情境：同上 | MW／年 | 3733 | 檢查 |
 | `scenarios.mwPath.calibrate` | 併網速度校準（MAG v0.1b r2 C10）：{scenario, decimals}；該情境速度由 scripts/calib_pace.js 以首期資本支出指引中點解出（全年公式值＝指引，對帳落差 0），同時寫入 scenarios.mw31 與 defaults.mw31；省略＝不校準 | 物件 | 物件（scenario、decimals） | 必改 |
 | `scenarios.mwPath.note` | 已連網 MW 路徑的說明（來源與口徑） | 文字 | 對外 AI MW-IT（在役）：評價日 2,080（… | 必改 |
@@ -437,7 +437,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.billableRatio.note` | 可計費 MW 校準與收斂比例的說明（v0.1b） | 文字 | 對外 AI MW 依 MW-year 計價：已連網即… | 必改 |
 | `scenarios.billableRatio.ratio` | 各期比例：ratio 模式＝在役 ÷ 已連網；converge 模式＝期初校準值向已連網收斂的比例（三情境共用；v0.1b） | 比例清單 | 1、1、1、1、1 | 檢查 |
 | `scenarios.mw31.low` | 保守情境：模型期後一年（FY31）新增的 MW，用於 FY30 的預建支出 | MW | 0 | 檢查 |
-| `scenarios.mw31.base` | 基準情境：同上 | MW | 3173.5 | 檢查 |
+| `scenarios.mw31.base` | 基準情境：同上 | MW | 3628.8 | 檢查 |
 | `scenarios.mw31.high` | 積極情境：同上 | MW | 3733 | 檢查 |
 | `scenarios.convCap.low` | 保守情境：融資瀑布可轉債步驟每年新發行上限（0＝不新發；v0.1b） | US$bn／年 | 0 | 檢查 |
 | `scenarios.convCap.base` | 基準情境：同上 | US$bn／年 | 0 | 檢查 |
@@ -472,7 +472,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.revenueDriver` | 營收驅動：mw＝平均在役 MW × 每 MW 年收入 × 利用率（新產能簽約率固定 100%，RPO 只作對照）；rpo＝CRWV 模板的 RPO 排程＋新簽約（v0.1b） | 代碼 | mw | 檢查 |
 | `defaults.lambda` | 提前支出比例：次年才上線的 MW，其建置支出落在前一年的比例 | 比例 | 0.35 | 檢查 |
 | `defaults.mwYearEnd` | 各年底主動電力，以年份為鍵（例如 "2025": 850）：首期期初取首期前一財年末；GPU 汰換批次＝各年新增 MW（5a；列入滾動檢查） | MW 物件 | 物件（2023、2024、2025） | 必改 |
-| `defaults.mw31` | 模型期後一年新增 MW 的預設值（情境切換時改用 scenarios.mw31） | MW | 3173.5 | 檢查 |
+| `defaults.mw31` | 模型期後一年新增 MW 的預設值（情境切換時改用 scenarios.mw31） | MW | 3628.8 | 檢查 |
 | `defaults.capexFloorFY0` | 首期所屬財年的全年資本支出下限（已下單的承諾，取公司指引下緣；首期＝下限 − 年初至今實際認列） | US$bn | 220 | 必改 |
 | `defaults.gpuLife` | GPU 經濟壽命（決定汰換時點與折舊） | 年 | 6 | 檢查 |
 | `defaults.gpuLifeNote` | GPU 經濟壽命的來源（Excel 列備註；MAG v0.1b r3 C19） | 文字 | Tokenomics IF_DeprLifeIT 6… | 必改 |
@@ -630,6 +630,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.checks.rentVsBenchMin` | 檢查頁：模型每 MW 年租金至少要達到「市場基準 × 第三方占比」的比例（5a） | 比例 | 0.8 | 檢查 |
 | `methodology.checks.c15Tol` | 檢查頁：一致性檢查（C15）乾淨稅前 ROIC 與 IF_HoldEcon 隱含報酬的容許差（比例，0.05＝5 個百分點；MAG v0.1b r2） | 比例 | 0.05 | 檢查 |
 | `methodology.checks.daReconTol` | 檢查頁：D&A 對帳殘差容許比例（占最新季分部 D&A 年化；MAG v0.1b r3 C17） | 比例 | 0.1 | 檢查 |
+| `methodology.checks.capUtilWarn` | 上限檢查：每 MW 年收入 ÷ Tokenomics IFW_RevGWFleet_Util（利用率層）的示警門檻（MAG v0.2；缺省用 pricing.capWarn） | 比例 | 0.5 | 檢查 |
+| `methodology.checks.capProdMax` | 上限檢查：每 MW 年收入 ÷ IFW_RevGWFleet_Prod（生產折減層）的硬上限（超過即檢查頁標紅；MAG v0.2） | 比例 | 1 | 檢查 |
 
 ### `peers`：同業比較（Comps）
 
@@ -727,9 +729,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `tokenomics._note` | Tokenomics 引用規則說明（只引用 IF_／L1_，主值取基準） | 文字 | 算力相關的產業與物理層資料只引用 Tokenomic… | 可沿用 |
 | `tokenomics.snapshotFile` | Tokenomics 版本固定快照檔路徑（tools/tokenomics/import_tokenomics.py 產生） | 路徑 | data/tokenomics_snapshot_v… | 必改 |
-| `tokenomics.version` | 快照的 Tokenomics 版本（須與快照檔一致） | 文字 | v5.27 | 必改 |
-| `tokenomics.commit` | 快照的 Tokenomics master commit（須與快照檔一致） | 文字 | ca78a8f42af36caa1af2cc6234… | 必改 |
-| `tokenomics.names` | 快照名稱清單（須與快照檔一致；Excel「Tokenomics_取數」逐名稱建 TK_ 具名範圍） | 清單 | IF_HoldEcon、IF_HoldAcct、IF_GPUhrEcon、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、L1_FacCapexMW、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_OpexGW、IF_PowerPrice、IF_PowerCost、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_AvgDraw、IF_FacilityGW、IF_GPUsPerGW、IF_RacksPerGW、IF_Util、IF_RevGWFleet、L1_GPUhr_Hopper、L1_GPUhr_GB200、L1_GPUhr_GB300、L1_GPUhr_VR200、L1_HoldEconGW_Hopper、L1_HoldEconGW_GB200、L1_HoldEconGW_GB300、L1_HoldEconGW_VR200、L1_NvContentGW_VR200、IF_NonNVRatio、IF_NonNVCostRatio | 必改 |
+| `tokenomics.version` | 快照的 Tokenomics 版本（須與快照檔一致） | 文字 | v5.31 | 必改 |
+| `tokenomics.commit` | 快照的 Tokenomics master commit（須與快照檔一致） | 文字 | f16f161a28b5d43e00e89aa019… | 必改 |
+| `tokenomics.names` | 快照名稱清單（須與快照檔一致；Excel「Tokenomics_取數」逐名稱建 TK_ 具名範圍） | 清單 | IF_HoldEcon、IF_HoldAcct、IF_GPUhrEcon、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、L1_FacCapexMW、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_OpexGW、IF_PowerPrice、IF_PowerCost、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_AvgDraw、IF_FacilityGW、IF_GPUsPerGW、IF_RacksPerGW、IF_Util、IF_RevGWFleet、L1_GPUhr_Hopper、L1_GPUhr_GB200、L1_GPUhr_GB300、L1_GPUhr_VR200、L1_HoldEconGW_Hopper、L1_HoldEconGW_GB200、L1_HoldEconGW_GB300、L1_HoldEconGW_VR200、L1_NvContentGW_VR200、IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、IF_NonNVRatio、IF_NonNVCostRatio | 必改 |
 | `tokenomics.optional` | Tokenomics 尚未提供、記為 missing 的名稱（資料缺口） | 清單 | IF_NonNVRatio、IF_NonNVCostRatio | 必改 |
 | `tokenomics.holdEconWacc` | IF_HoldEcon 資本回收年金的折現率（Tokenomics「WACC（經濟口徑）」；只用於一致性檢查，MAG v0.1b r2 C15） | 比例 | 0.1 | 檢查 |
 | `tokenomics.holdEconWaccNote` | 上列的來源 | 文字 | IF_HoldEcon 的資本回收年金折現率：Tok… | 必改 |

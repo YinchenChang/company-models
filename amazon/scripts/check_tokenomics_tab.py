@@ -36,6 +36,13 @@ def main(path):
             if k not in rows: errs.append(f'{nm}：missing 名稱沒有列')
             if k in wb.defined_names: errs.append(f'{k}：missing 名稱不應建具名範圍')
             continue
+        if it['kind'] == 'by_name':  # MAG v0.2：IFC_ 用途欄——A 欄＝名稱（IFC_Use）、B 欄＝所取名稱、G 欄＝用途文字；無具名範圍
+            got = {ws.cell(r, 2).value: ws.cell(r, 7).value for r in range(5, ws.max_row + 1) if ws.cell(r, 1).value == nm}
+            for n2 in SNAP['items']:
+                if n2 in it['values']:
+                    n_val += 1
+                    if got.get(n2) != it['values'][n2]: errs.append(f'{nm}｜{n2}：快照 {it["values"][n2]!r} ≠ Excel {got.get(n2)!r}')
+            continue
         if it['kind'] == 'gen_cost':
             exp = [(f'TK_{short(nm)}_{gc[g]}', [v['低成本'], v['基準'], v['高成本']], g) for g, v in it['values'].items()]
         else:
