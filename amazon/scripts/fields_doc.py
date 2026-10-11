@@ -306,6 +306,7 @@ F = [
  ('methodology.checks.rentVsBenchMin', '檢查頁：模型每 MW 年租金至少要達到「市場基準 × 第三方占比」的比例（5a）', '比例', C),
  ('methodology.checks.c15Tol', '檢查頁：一致性檢查（C15）乾淨稅前 ROIC 與 IF_HoldEcon 隱含報酬的容許差（比例，0.05＝5 個百分點；MAG v0.1b r2）', '比例', C),
  ('methodology.checks.daReconTol', '檢查頁：D&A 對帳殘差容許比例（占最新季分部 D&A 年化；MAG v0.1b r3 C17）', '比例', C),
+ ('methodology.checks.capUtilWarn', '上限檢查：每 MW 年收入 ÷ Tokenomics IFW_RevGWFleet_Util（利用率層）的示警門檻（MAG v0.2；缺省用 pricing.capWarn）', '比例', C), ('methodology.checks.capProdMax', '上限檢查：每 MW 年收入 ÷ IFW_RevGWFleet_Prod（生產折減層）的硬上限（超過即檢查頁標紅；MAG v0.2）', '比例', C),
  ('peers.priceDate', '同業市值的收盤日', '日期', M), ('peers.priceSource', '同業市值來源', '文字', M),
  ('peers.list', '同業，一家一列（HTML Comps 分頁與 Excel「可比公司」頁共用）。欄位：ticker 代號、name 公司名、labelHtml／labelXlsx 兩邊顯示的名稱、roleHtml 定位說明（HTML）、mkt 市值、netDebt 淨負債、rev 近十二個月營收、opl 營業租賃負債、opInc GAAP 營業損益、da 折舊攤銷（以上 US$bn）、asOf 資料期、noteHtml／noteXlsx 兩邊的備註。EV＝市值＋淨負債、EBITDA＝營業損益＋折舊攤銷，由程式計算', '清單', M),
  ('peers.software', '軟體同業 NTM EV/EBITDA，一家一列（ticker、name、ntmEvEbitda、ref＝事實總帳 id）；中位數為非 AI 事業倍數', '清單', M),

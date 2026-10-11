@@ -25,14 +25,14 @@ var PERIODS = COMPANY_DATA.periods,
   // MAG v0.1b：每 MW 年收入路徑。各世代在役 MW＝期初 × 期初占比＋Σ 本期新增（MAX(0, 期末 − 前期末)）× 新增占比；
   // 每 MW 年收入＝Σ 世代占比 × TK_HoldEcon × 晶片係數（自研 × customFactor）÷ 1000 × k；營運成本（TK_OpexGW）與參考付費營收（TK_RevGWFleet）同權重、不乘係數。Excel 同式。
   revPathQ = (acc, open, ax, cf) => {
-    const k = kAxQ(ax), G = PRICING.chips.map(c => ({ ...c, he: TKV.IF_HoldEcon[c.tk] * (c.custom ? cf ?? PRICING.customFactor : 1), op: TKV.IF_OpexGW[c.tk], rf: TKV.IF_RevGWFleet[c.tk] }));
+    const k = kAxQ(ax), G = PRICING.chips.map(c => ({ ...c, he: TKV.IF_HoldEcon[c.tk] * (c.custom ? cf ?? PRICING.customFactor : 1), op: TKV.IF_OpexGW[c.tk], rf: (TKV.IFW_RevGWFleet_Util || TKV.IF_RevGWFleet)[c.tk], rp: (TKV.IFW_RevGWFleet_Prod || {})[c.tk] ?? NaN })); // MAG v0.2：上限檢查改用四層瀑布（利用率層＝IFW_RevGWFleet_Util，舊快照退回 IF_RevGWFleet；生產折減層＝IFW_RevGWFleet_Prod）
     let mw = G.map(c => c.mixOpen * open), prev = open;
     return acc.map((x, r) => {
       const add = Math.max(0, x - prev); prev = x;
       mw = mw.map((m, j) => m + add * G[j].mixAdds[r]);
       const T = mw.reduce((a, b) => a + b, 0), W = f => mw.reduce((a, m, j) => a + m * G[j][f], 0) / Math.max(T, 1e-9);
-      const hold = W(`he`), opex = W(`op`), ref = W(`rf`);
-      return { k, gens: [...mw], tot: T, hold, opex, ref, rev: hold * k / 1e3, opexMW: opex / 1e3, capRatio: hold * k / Math.max(ref, 1e-9) }
+      const hold = W(`he`), opex = W(`op`), ref = W(`rf`), refP = W(`rp`);
+      return { k, gens: [...mw], tot: T, hold, opex, ref, refP, rev: hold * k / 1e3, opexMW: opex / 1e3, capRatio: hold * k / Math.max(ref, 1e-9), capRatioP: hold * k / Math.max(refP, 1e-9) }
     })
   },
   SC_REV = PRICING ? Object.fromEntries(K_AX.map(k => [k, revPathQ(SC_ACC[k], COMPANY_DATA.defaults.billableOpen, K_AX.indexOf(PRICING.axis)).map(x => x.rev)])) : COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境；MAG v0.1b：由 pricing 推得（容量軸改變世代組合）
@@ -659,13 +659,15 @@ function runFunding(e) {
     severity: `ok`,
     title: `營收＝平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度`,
     detail: `${e.revenueDriver === `mw` ? `MW 驅動` : `RPO 驅動`}：五期算力營收 ${o.map(y => Y(y.isRev, 2)).join(`／`)}；容量上限 ${o.map(y => Y(y.capacity, 2)).join(`／`)}。每 MW 年收入 ${t.revMW.map(x => Y(x * 1e3, 2)).join(`／`)} US$m/MW-IT（${PRICING && e.priceLink ? `Tokenomics 持有成本 × k ${Y(t.price[0].k, 3)}` : `Tokenomics 正向推導`}；${TXQ.revMwCompare}）。`
-  }), PRICING && e.priceLink && _({ // MAG v0.1b：上限檢查——每 MW 年收入 ÷ 參考付費營收（IF_RevGWFleet）> 門檻時示警
-    id: `cap-ratio`,
-    ok: t.price.every(x => x.capRatio <= PRICING.capWarn),
-    severity: t.price.every(x => x.capRatio <= PRICING.capWarn) ? `ok` : `watch`,
-    title: `每 MW 年收入 ÷ Tokenomics 參考付費營收：最高 ${hA(Math.max(...t.price.map(x => x.capRatio)) * 100, 1)}（門檻 ${hA(PRICING.capWarn * 100, 0)}）`,
-    detail: `五期 ${t.price.map(x => hA(x.capRatio * 100, 1)).join(`／`)}；參考付費營收＝Σ 世代占比 × IF_RevGWFleet（1 GW 參考機隊付費營收，理論上限）。超過門檻表示 hyperscaler 每 MW 收入占客戶 token 營收的比例偏高（${PRICING.capWarnNote}）。`
-  }), LG.lines.filter(x => x.kind === `cloudResidual`).forEach(x => _({ // MAG v0.1b：非 AI 雲端殘差的合理性（殘差為正、推估年增率介於 0 與雲端分部年增率之間）
+  }), PRICING && e.priceLink && (() => { // MAG v0.2：上限檢查改用 Tokenomics 四層瀑布（下游契約第 2 條第 2 項）——每 MW 年收入 ÷ 在役世代加權 IFW_RevGWFleet_Util（示警門檻）與 _Prod（硬上限）；四層皆標「上限，不得作預測」，只作檢查、不作收入輸入
+    const CK = CHECK_TH, wU = CK.capUtilWarn ?? PRICING.capWarn, mP = CK.capProdMax ?? 1, U = t.price.map(x => x.capRatio), Pp = t.price.map(x => x.capRatioP), hasP = Pp.every(Number.isFinite);
+    _({ id: `cap-ratio`, ok: U.every(x => x <= wU), severity: U.every(x => x <= wU) ? `ok` : `watch`,
+      title: `每 MW 年收入 ÷ Tokenomics 參考付費營收（利用率層）：最高 ${hA(Math.max(...U) * 100, 1)}（示警門檻 ${hA(wU * 100, 0)}）`,
+      detail: `五期 ${U.map(x => hA(x * 100, 1)).join(`／`)}；參考付費營收＝Σ 在役世代占比 × IFW_RevGWFleet_Util（1 GW 參考機隊付費營收 × 利用率；Tokenomics 標「上限，不得作預測」，本模型不作收入輸入）。超過門檻表示 hyperscaler 每 MW 收入占客戶 token 營收的比例偏高（${PRICING.capWarnNote}）。` });
+    hasP && _({ id: `cap-ratio-prod`, ok: Pp.every(x => x <= mP), severity: Pp.every(x => x <= mP) ? `ok` : `bad`,
+      title: `每 MW 年收入 ÷ Tokenomics 參考付費營收（生產折減層）：最高 ${hA(Math.max(...Pp) * 100, 1)}（硬上限 ${hA(mP * 100, 0)}）`,
+      detail: `五期 ${Pp.map(x => hA(x * 100, 1)).join(`／`)}；＝Σ 在役世代占比 × IFW_RevGWFleet_Prod（利用率層 × 生產折減）。超過 ${hA(mP * 100, 0)} 表示每 MW 收入高於客戶在生產條件下可產生的 token 營收（硬上限；報告須寫明）。` });
+  })(), LG.lines.filter(x => x.kind === `cloudResidual`).forEach(x => _({ // MAG v0.1b：非 AI 雲端殘差的合理性（殘差為正、推估年增率介於 0 與雲端分部年增率之間）
     id: `residual-${x.key}`,
     ok: x.rev[0] > 0 && x.g0 >= 0 && x.g0 <= (B_LINE(x.key).g4q ?? 1),
     severity: x.rev[0] > 0 && x.g0 >= 0 && x.g0 <= (B_LINE(x.key).g4q ?? 1) ? `ok` : `watch`,
@@ -1165,7 +1167,7 @@ function sensitivities(e, v) {
 }
 
 function Y(e, t = 1) {
-  return Number.isFinite(e) ? e.toLocaleString(`zh-TW`, {
+  return Number.isFinite(e) ? Number(e.toPrecision(15)).toLocaleString(`zh-TW`, { // MAG v0.2：先取 15 位有效數字（與 Excel TEXT 相同），避免 61.844999… 與 61.845 的進位差
     minimumFractionDigits: t,
     maximumFractionDigits: t
   }) : `—`

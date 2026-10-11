@@ -2,7 +2,7 @@
  "meta": {
   "company": "Microsoft",
   "ticker": "MSFT",
-  "updateDate": "2026-10-09",
+  "updateDate": "2026-10-11",
   "priceDate": "2026-10-07",
   "sourceOrderNote": "時序先 FY26 10-K（2026-07-29，經查核）與 FY26Q4 財報新聞稿／法說（2026-07-29），再 2026-09-02 8-K（FY27 分部重編與 Azure 絕對金額，[Interested-party]）。入帳數字聽 10-K；指引聽法說與 8-K。AI 在役 MW 公司未揭露（只揭露新增 GW），期初對外 AI MW 取第三方與公司增量三法交叉估計，不以 Azure 營收、RPO 或 AI run-rate 反推。FY27Q1 財報預計 2026-10-28（本版未納入，對照表 C7）。",
   "consensusFile": "data/consensus_msft_20261008.json"
@@ -228,7 +228,7 @@
     "name": "CoreWeave",
     "start": "2025-07",
     "years": 10,
-    "annualRent": 2.985,
+    "annualRent": 3.073,
     "mw": 700,
     "use": "自用 50%／對外 50%"
    },
@@ -236,7 +236,7 @@
     "name": "Nebius",
     "start": "2025-11",
     "years": 10,
-    "annualRent": 3.022,
+    "annualRent": 3.111,
     "mw": 205,
     "use": "自用 50%／對外 50%"
    },
@@ -244,7 +244,7 @@
     "name": "IREN",
     "start": "2026-06",
     "years": 10,
-    "annualRent": 1.685,
+    "annualRent": 1.734,
     "mw": 200,
     "use": "自用 50%／對外 50%"
    },
@@ -252,7 +252,7 @@
     "name": "Nscale",
     "start": "2026-10",
     "years": 10,
-    "annualRent": 3.994,
+    "annualRent": 4.112,
     "mw": 411,
     "use": "自用 50%／對外 50%"
    },
@@ -260,12 +260,12 @@
     "name": "Lambda",
     "start": "2026-01",
     "years": 10,
-    "annualRent": 0.434,
+    "annualRent": 0.447,
     "mw": 55,
     "use": "自用 50%／對外 50%"
    }
   ],
-  "rentedComputeNote": "租用算力（向 neocloud 租 GPU；對照表 r1 第 5 節第 7 條、C8 d、C20）：租金計入營運成本（扣 EBITDA 與營運現金，不是資本支出）；用途無揭露 → 對外／自用各半。年租金（全額）：CoreWeave 3.438（2025 實際推估；起訖未揭露，假設 FY26 起 5 年）、Nebius 3.48（17.4 ÷ 5 年）、IREN 1.94（9.7 ÷ 5 年）、Nscale 4.6（金額未揭露，二手 23 ÷ 5 年，[Interested-party 二手／Assumed]）、Lambda 0.5（multibillion，[Assumed]）。年期：合約 5 年＋假設續約 5 年（years 10，與 rentedExt 的續約假設一致；查核 a）。本表每筆＝自用 50% 全額＋對外 50% 扣 Tokenomics 營運成本後的淨額（對外 MW 的營運成本已在 AI 雲端 EBITDA 內）＝全額 × 0.868（[Derived]）；對外 50% 的 MW 列 capexModel.rentedExt（收入照算、不計資本支出與折舊）。分部 EBITDA 率的起點已加回 FY26 neocloud 租金約 6.3（[Assumed]），避免與本表重複扣。"
+  "rentedComputeNote": "租用算力（向 neocloud 租 GPU；對照表 r1 第 5 節第 7 條、C8 d、C20）：租金計入營運成本（扣 EBITDA 與營運現金，不是資本支出）；用途無揭露 → 對外／自用各半。年租金（全額）：CoreWeave 3.438（2025 實際推估；起訖未揭露，假設 FY26 起 5 年）、Nebius 3.48（17.4 ÷ 5 年）、IREN 1.94（9.7 ÷ 5 年）、Nscale 4.6（金額未揭露，二手 23 ÷ 5 年，[Interested-party 二手／Assumed]）、Lambda 0.5（multibillion，[Assumed]）。年期：合約 5 年＋假設續約 5 年（years 10，與 rentedExt 的續約假設一致；查核 a）。本表每筆＝自用 50% 全額＋對外 50% 扣 Tokenomics 營運成本後的淨額（對外 MW 的營運成本已在 AI 雲端 EBITDA 內）＝全額 × 0.894（[Derived]）；對外 50% 的 MW 列 capexModel.rentedExt（收入照算、不計資本支出與折舊）。分部 EBITDA 率的起點已加回 FY26 neocloud 租金約 6.3（[Assumed]），避免與本表重複扣。"
  },
  "debt": {
   "amortization": [
@@ -565,7 +565,7 @@
    },
    "pace": {
     "low": 650,
-    "base": 2325.9,
+    "base": 2511.7,
     "high": 2400
    },
    "note": "對外 AI MW-IT（在役）：評價日 3,250（v0.1a：自有在役 AI 4,500 × 對外 60%＋neocloud 租用 1,100 × 50%；三法交叉估計，事實總帳 split.extMW）[Derived／Assumed]；各期期末＝MIN(上限, 前期＋速度 × 期間長度)，首期自評價日起算（connectedStart＝null）。MAG r1 C10：基準速度由 calibrate 設定以資本支出指引解出（scripts/calib_pace.js；verify 檢查）；保守＝第三方可辨識站點速度、積極＝公司容量目標換算。"
@@ -584,7 +584,7 @@
   },
   "mw31": {
    "low": 0,
-   "base": 2325.9,
+   "base": 2511.7,
    "high": 2400
   },
   "delayMonths": {
@@ -640,7 +640,7 @@
    "2025": 1630,
    "2026": 3250
   },
-  "mw31": 2325.9,
+  "mw31": 2511.7,
   "capexFloorFY0": 204.2,
   "gpuLife": 6,
   "gpuLifeNote": "Tokenomics IF_DeprLifeIT 6 年（tk.IF_DeprLifeIT）；10-K 伺服器與網路設備 2–6 年（事實總帳 pl.usefulLife.servers）[Verified]",
@@ -1256,7 +1256,9 @@
    "siteRentGapMax": 10,
    "rentVsBenchMin": 0.8,
    "c15Tol": 0.05,
-   "daReconTol": 0.1
+   "daReconTol": 0.1,
+   "capUtilWarn": 0.5,
+   "capProdMax": 1.0
   }
  },
  "peers": {
@@ -1886,10 +1888,10 @@
   "ebitdaPathLine": "損益與資金共用；AI 雲端 EBITDA 率由 Tokenomics 營運成本推得"
  },
  "tokenomics": {
-  "_note": "算力相關的產業與物理層資料只引用 Tokenomics（YinchenChang/Tokenomics）的 IF_（不含 IF_Hdr*）與 L1_ 名稱，經版本固定的快照檔讀入（tools/tokenomics/import_tokenomics.py）；模型主值取「基準」成本情境。Excel「Tokenomics_取數」分頁建具名範圍 TK_<名稱>_<世代>，每 MW 年收入、營運成本與資本支出列引用之。Tokenomics 每 GW＝IT 關鍵電力。",
-  "snapshotFile": "data/tokenomics_snapshot_v5.27.json",
-  "version": "v5.27",
-  "commit": "ca78a8f42af36caa1af2cc6234d8e322f0415769",
+  "_note": "算力相關的產業與物理層資料只引用 Tokenomics（YinchenChang/Tokenomics）的 IF_（不含 IF_Hdr*）、IFW_（四層瀑布，上限檢查用）、IFC_（用途欄）與 L1_ 名稱，經版本固定的快照檔讀入（tools/tokenomics/import_tokenomics.py）；模型主值取「基準」成本情境。Excel「Tokenomics_取數」分頁建具名範圍 TK_<名稱>_<世代>，每 MW 年收入、營運成本與資本支出列引用之。Tokenomics 每 GW＝IT 關鍵電力。",
+  "snapshotFile": "data/tokenomics_snapshot_v5.31.json",
+  "version": "v5.31",
+  "commit": "f16f161a28b5d43e00e89aa019e4d3e10fae4e3d",
   "names": [
    "IF_HoldEcon",
    "IF_HoldAcct",
@@ -1923,6 +1925,11 @@
    "L1_HoldEconGW_GB300",
    "L1_HoldEconGW_VR200",
    "L1_NvContentGW_VR200",
+   "IFW_RevGWFleet_100",
+   "IFW_RevGWFleet_Util",
+   "IFW_RevGWFleet_Prod",
+   "IFW_RevGWFleet_Life",
+   "IFC_Use",
    "IF_NonNVRatio",
    "IF_NonNVCostRatio",
    "IF_NonNV_Maia"
@@ -2063,8 +2070,8 @@
     756,
     756
    ],
-   "rentMW": 6.54,
-   "note": "租用的對外 AI MW（MAG 對照表 r1 C20）：期初 550＝neocloud 在役 1,100 × 對外 50%（v0.1a nc.mwLeased.open）；FY27 起加 Nscale 對外 205.5 → 756，之後到期假設以相同條件續約（[Assumed]）。收入照算（含在對外計費 MW 內）、不計資本支出、投入資本與折舊；每 MW 年租金＝已揭露合約全額年租金 13.96 ÷ 1,571 MW＝8.88 扣 Tokenomics 營運成本 2.34（已在 AI EBITDA 內）＝淨額 [Derived]"
+   "rentMW": 7.0,
+   "note": "租用的對外 AI MW（MAG 對照表 r1 C20）：期初 550＝neocloud 在役 1,100 × 對外 50%（v0.1a nc.mwLeased.open）；FY27 起加 Nscale 對外 205.5 → 756，之後到期假設以相同條件續約（[Assumed]）。收入照算（含在對外計費 MW 內）、不計資本支出、投入資本與折舊；每 MW 年租金＝已揭露合約全額年租金 13.96 ÷ 1,571 MW＝8.88 扣 Tokenomics 營運成本 1.89（期初世代加權 IF_OpexGW，已在 AI EBITDA 內）＝淨額 [Derived]"
   },
   "nonAiLife": 10,
   "nonAiLifeRange": [
