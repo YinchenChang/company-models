@@ -34,3 +34,8 @@ L1_HoldEconGW_VR200 # VR200 每 GW 年經濟持有成本（L1）
 L1_NvContentGW_VR200 # VR200 每 GW 的 NVIDIA 內容價值（NonNV 換算的近似參考）
 IF_NonNVRatio optional # 非 NVIDIA（Trainium 等）世代相對 VR 的等值比例 — Tokenomics 有 NonNV 頁但無 IF_ 介面名稱
 IF_NonNVCostRatio optional # 同上，成本比例（若 Tokenomics 日後以此名稱提供）
+IFW_RevGWFleet_100 # 1 GW 參考機隊付費營收：100% 層（上限，不得作預測）
+IFW_RevGWFleet_Util # 同上：利用率層（上限檢查：每 MW 年收入 ÷ 此層 > 50% 示警）
+IFW_RevGWFleet_Prod # 同上：生產折減層（硬上限：每 MW 年收入 ÷ 此層 > 100% 標紅）
+IFW_RevGWFleet_Life # 同上：壽命期價格與變現層
+IFC_Use # Interface 用途欄（檢查所取名稱的用途限制）

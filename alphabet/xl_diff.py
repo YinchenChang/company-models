@@ -55,10 +55,16 @@ def keys(ws, new=False):
             k = (sec, ROW_RENAME.get(lab, lab) if new else lab)
         seen.setdefault(k, []).append(r)
         out[k] = r
+    rowv = lambda r: tuple(ws.cell(r, j).value for j in range(2, min(ws.max_column, 12) + 1))
     for k, rs in seen.items():
         if len(rs) > 1:
+            if k[1] in HDR_DUP and len({rowv(r) for r in rs}) == 1:  # MAG v0.2：重複的表頭列（例如各子區的「項目」，內容相同）依出現順序配對
+                del out[k]
+                for i_, r_ in enumerate(rs): out[(k[0], f'{k[1]}#{i_ + 1}')] = r_
+                continue
             errs.append(f'{ws.title}：列名稱重複「{k[1]}」（區段「{k[0][:30]}」；第 {"、".join(map(str, rs))} 列）')
     return out, errs
+HDR_DUP = {'項目'}  # 允許重複的表頭列名稱（內容須完全相同；依出現順序配對）
 
 
 wa, wb = openpyxl.load_workbook(a, data_only=vals), openpyxl.load_workbook(b, data_only=vals)
