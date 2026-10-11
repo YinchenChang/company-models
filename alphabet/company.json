@@ -541,8 +541,8 @@
    },
    "pace": {
     "low": 850,
-    "base": 1069.4,
-    "high": 1604.1
+    "base": 1246.1,
+    "high": 1869.1
    },
    "note": "對外 AI MW-IT（在役）：評價日 1,901（v0.1a：Epoch AI 晶片功耗 3,841 MW TDP × IT/TDP 1.65 × 對外 30%，事實總帳 mw.ext.it.2026q2）[Derived／Assumed]；各期期末＝MIN(上限, 前期＋速度 × 期間長度)，首期自評價日起算（connectedStart＝null）。MAG v0.1b r2（C10）：基準速度由 calibrate 設定以資本支出指引解出（scripts/calib_pace.js；verify 檢查）；積極＝1.5 × 基準（scripts 外以基準解出值換算，見 descriptions.high）。"
   },
@@ -560,8 +560,8 @@
   },
   "mw31": {
    "low": 0,
-   "base": 1069.4,
-   "high": 1604.1
+   "base": 1246.1,
+   "high": 1869.1
   },
   "delayMonths": {
    "low": 0,
@@ -616,7 +616,7 @@
    "2024": 643,
    "2025": 1462
   },
-  "mw31": 1069.4,
+  "mw31": 1246.1,
   "capexFloorFY0": 200,
   "gpuLife": 6,
   "gpuLifeNote": "Tokenomics IF_DeprLifeIT 6 年；Alphabet 10-K 2025：伺服器與網通設備一般依 6 年折舊 [Verified]",
@@ -786,10 +786,10 @@
      ],
      "ebitda": [
       -12.689,
-      -28.849,
-      -33.336,
-      -37.465,
-      -40.87
+      -28.95,
+      -33.596,
+      -37.874,
+      -41.389
      ],
      "m0": 0,
      "mLT": null,
@@ -1267,7 +1267,9 @@
    "siteRentGapMax": 10,
    "rentVsBenchMin": 0.8,
    "c15Tol": 0.05,
-   "daReconTol": 0.1
+   "daReconTol": 0.1,
+   "capUtilWarn": 0.5,
+   "capProdMax": 1.0
   }
  },
  "peers": {
@@ -1703,7 +1705,7 @@
   "prepayCheck": "不適用（Alphabet 無客戶預付融資）。",
   "mwFacts": "公司：未揭露 MW／GW；「serving 容量每 6 個月倍增」（內部簡報轉述）。第三方：Epoch AI 2025 年底 Google 擁有 TPU 614 萬顆（2,223 MW TDP）＋NVIDIA 82 萬顆（730 MW）→ AI 在役 IT 4.1–5.6 GW；Google 2026 環境報告 2025 資料中心用電 42.4 TWh（平均 4.84 GW 設施，全部工作負載）[第三方／Interested-party]。",
   "ebStartSource": "AI 雲端 EBITDA 率＝1 − Tokenomics 加權每 MW 營運成本 ÷ 每 MW 年收入",
-  "costMwNote": "每 MW 成本＝Σ 新增世代占比 × (TK_CapexIT＋自建比例 85% × TK_CapexFacility)（Tokenomics v5.27；US$m/MW-IT；TPU 以同期 NVIDIA 世代代理，C2）",
+  "costMwNote": "每 MW 成本＝Σ 新增世代占比 × (TK_CapexIT＋自建比例 85% × TK_CapexFacility)（Tokenomics v5.31；US$m/MW-IT；TPU 以同期 NVIDIA 世代代理，C2）",
   "ppeOpenNote": "評價日 PP&E 淨額 321.2（10-Q；技術基礎設施在役原值 247.2、尚未啟用 122.8）[Interested-party]；D&A 分池：AI 期初毛額估計（評價日 AI 總 MW × Tokenomics 每 MW 成本）＋非 AI（其餘，壽命以最新季折舊年化校準）",
   "facilityName": "信用額度 11.7B（已動用 1.3B）；商業本票額度 25B 未動用",
   "newDebtRateNote": "瀑布新債利率取 2026-08 美元票據 2066 發行殖利率 6.527%（T＋130bp）上下的 2026 新債加權票面約 4.8%（美元）[Derived]",
@@ -1715,7 +1717,7 @@
   "netDebtNote": "不含租賃與強制轉換特別股（債務面額 101.1 − 現金 55.9 − 債權類有價證券 99.5；有價權益證券改列持股；不含期後發債 25.0B）",
   "otherRevNote": "非算力服務預設 0（各分部另列）",
   "rvRevNote": "Alphabet 對照：Anthropic–Google Cloud 合約隱含 10.0–15.3 US$m/MW-年",
-  "rvCostNote": "Tokenomics 每 MW 全成本（IT＋自建 85% 機房）約 $48.3m/MW-IT",
+  "rvCostNote": "Tokenomics 每 MW 全成本（IT＋自建 85% 機房）2026 約 $43.0m → 2028 起 $48.4m/MW-IT（v5.31；新增世代由 Ironwood／GB300 轉向下一代／VR200）",
   "priceNote": "每 MW 年收入＝Tokenomics 持有成本（世代加權；TPU 以同期 NVIDIA 世代代理）× k；價格軸低／基準／高見 pricing；不建模續約價格",
   "prepayCoverNote": "不適用（無客戶預付）",
   "prepayOpenNote": "不適用（無客戶預付）",
@@ -2864,10 +2866,10 @@
   }
  },
  "tokenomics": {
-  "_note": "算力相關的產業與物理層資料只引用 Tokenomics（YinchenChang/Tokenomics）的 IF_（不含 IF_Hdr*）與 L1_ 名稱，經版本固定的快照檔讀入（tools/tokenomics/import_tokenomics.py）；模型主值取「基準」成本情境。Excel「Tokenomics_取數」分頁建具名範圍 TK_<名稱>_<世代>，每 MW 年收入、營運成本與資本支出列引用之。Tokenomics 每 GW＝IT 關鍵電力。",
-  "snapshotFile": "data/tokenomics_snapshot_v5.27.json",
-  "version": "v5.27",
-  "commit": "ca78a8f42af36caa1af2cc6234d8e322f0415769",
+  "_note": "算力相關的產業與物理層資料只引用 Tokenomics（YinchenChang/Tokenomics）的 IF_（不含 IF_Hdr*）、IFW_（四層瀑布，上限檢查用）、IFC_（用途欄）與 L1_ 名稱，經版本固定的快照檔讀入（tools/tokenomics/import_tokenomics.py）；模型主值取「基準」成本情境。Excel「Tokenomics_取數」分頁建具名範圍 TK_<名稱>_<世代>，每 MW 年收入、營運成本與資本支出列引用之。Tokenomics 每 GW＝IT 關鍵電力。",
+  "snapshotFile": "data/tokenomics_snapshot_v5.31.json",
+  "version": "v5.31",
+  "commit": "f16f161a28b5d43e00e89aa019e4d3e10fae4e3d",
   "names": [
    "IF_HoldEcon",
    "IF_HoldAcct",
@@ -2901,6 +2903,11 @@
    "L1_HoldEconGW_GB300",
    "L1_HoldEconGW_VR200",
    "L1_NvContentGW_VR200",
+   "IFW_RevGWFleet_100",
+   "IFW_RevGWFleet_Util",
+   "IFW_RevGWFleet_Prod",
+   "IFW_RevGWFleet_Life",
+   "IFC_Use",
    "IF_NonNVRatio",
    "IF_NonNVCostRatio"
   ],
