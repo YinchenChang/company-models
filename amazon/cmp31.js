@@ -34,9 +34,9 @@ if(PRICING){ // MAG v0.1b：B0 對外 AI 雲端定價（Tokenomics × k）
   const PR=d.m.price; cmp('採用k', '輸入|採用 k（依價格軸）', [PR[0].k]); cmp('混合k三軸', '輸入|混合 k', [0,1,2].map(kAxQ));
   PRICING.chips.forEach((c,j)=>cmp('世代MW '+c.key, `輸入|世代｜${c.label}｜在役 MW`, PR.map(x=>x.gens[j])));
   cmp('世代MW合計', '輸入|在役 MW 合計（世代加總）', PR.map(x=>x.tot)); cmp('加權持有成本', '輸入|加權每 MW 年持有成本', PR.map(x=>x.hold));
-  cmp('加權營運成本', '輸入|加權每 MW 年營運成本', PR.map(x=>x.opex)); cmp('加權參考營收', '輸入|加權每 MW 參考付費營收', PR.map(x=>x.ref));
-  cmp('上限比', '輸入|每 MW 年收入 ÷ 參考付費營收', PR.map(x=>x.capRatio));
-  cmp('上限檢查(檢查頁)', '連動檢查|每 MW 年收入 ÷ 參考付費營收（五期最高）', [Math.max(...PR.map(x=>x.capRatio))]); cmp('世代MW核對', T('連動檢查|世代在役 MW 合計 − Accepted MW（«PL»）'), [PR[4].tot-d.m.accepted[4]]);
+  cmp('加權營運成本', '輸入|加權每 MW 年營運成本', PR.map(x=>x.opex)); cmp('加權參考營收', '輸入|加權每 MW 參考付費營收（利用率層）', PR.map(x=>x.ref)); if(PR.every(x=>Number.isFinite(x.refP))){ cmp('加權參考營收P', '輸入|加權每 MW 參考付費營收（生產折減層）', PR.map(x=>x.refP)); cmp('上限比P', '輸入|每 MW 年收入 ÷ 參考付費營收（生產折減層）', PR.map(x=>x.capRatioP)); cmp('上限檢查P(檢查頁)', '連動檢查|每 MW 年收入 ÷ 參考付費營收（生產折減層，五期最高）', [Math.max(...PR.map(x=>x.capRatioP))]); } // MAG v0.2
+  cmp('上限比', '輸入|每 MW 年收入 ÷ 參考付費營收（利用率層）', PR.map(x=>x.capRatio));
+  cmp('上限檢查(檢查頁)', '連動檢查|每 MW 年收入 ÷ 參考付費營收（利用率層，五期最高）', [Math.max(...PR.map(x=>x.capRatio))]); cmp('世代MW核對', T('連動檢查|世代在役 MW 合計 − Accepted MW（«PL»）'), [PR[4].tot-d.m.accepted[4]]);
   if(SC==='base'&&!AKX){ const G=grid33Q(q,VAL_DEFAULTS); [`low`,`base`,`high`].forEach((k,j)=>cmp('3x3 '+k, `評價_DCF與目標價|3×3｜${SCENARIOS[k].label}（價格軸 低／基準／高）`, G[j])); }
 }
 cmp('非 AI 事業營收', '輸入|非 AI 事業營收（模型期）', H('legacyRev')); cmp('非 AI 事業EBITDA', '輸入|非 AI 事業 EBITDA（模型期）', H('legacyEbitda')); // v0.1b（Oracle）

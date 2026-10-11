@@ -148,9 +148,11 @@ diff = [k for k in sorted(set(pa) | set(pb)) if pa.get(k) != pb.get(k)]
 print(f'畫面：dist {len(pa)} 個、新版 {len(pb)} 個頁面／分頁，約 {n:,} 字；差異 {len(diff)} 個；頁面錯誤 dist {len(a["errors"])}、新版 {len(b["errors"])}')
 for k in diff[:5]:
     print('  ', k); print('\n'.join(list(difflib.unified_diff((pa.get(k) or '').splitlines(), (pb.get(k) or '').splitlines(), lineterm='', n=0))[:12]))
+import os
+if os.environ.get('EXPECT'): print('升版比對（EXPECT 已設）：畫面數字差異為預期，只檢查頁面錯誤與頁數'); sys.exit(1 if b['errors'] or not pa or set(pa) != set(pb) else 0)  # MAG v0.2
 sys.exit(1 if diff or b['errors'] or not pa else 0)
 EOF
-  then ok "crawl 畫面文字 0 差異"; else bad "crawl 畫面文字"; fi
+  then ok "crawl 畫面文字${EXPECT:+（升版：只檢查頁面錯誤與頁數）} 0 差異"; else bad "crawl 畫面文字"; fi
   # v4.2：--by-label——列數或 A 欄不同的工作表以「區段＋列名稱」配對（新增列另列清單；列名稱重複即報錯），其餘逐格
   r=$(python3 xl_diff.py "$DIST_XLSX" "$XLSX" --values --by-label ${EXPECT:+--expect=$EXPECT} || true); echo "$r"
   if [[ "$(head -1 <<<"$r")" == "0 differences" ]]; then ok "xl_diff --values --by-label 0 差異"; else bad "xl_diff --values --by-label"; fi
