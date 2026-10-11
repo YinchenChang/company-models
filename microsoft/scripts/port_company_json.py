@@ -16,12 +16,13 @@ r3 = lambda x: round(x, 3)
 r6 = lambda x: round(x, 6)
 Q = 'FY26Q4'
 RENT_FULL, RENT_MW = 3.438 + 3.48 + 1.94 + 4.6 + 0.5, 700 + 205 + 200 + 411 + 55  # neocloud 全額年租金、MW
-OPEX_MW = 2.34  # 期初世代加權 IF_OpexGW（Hopper 20%／GB200 45%／GB300 35%；US$m/MW）
+_OPX = {g: x['基準'] for g, x in json.load(open(sys.argv[3], encoding='utf-8'))['items']['IF_OpexGW']['values'].items()}
+OPEX_MW = round(0.2 * _OPX['Hopper H100'] + 0.45 * _OPX['GB200 NVL72'] + 0.35 * _OPX['GB300 NVL72'], 3)  # 期初世代加權 IF_OpexGW（Hopper 20%／GB200 45%／GB300 35%；US$m/MW；讀快照，v0.2 起不寫死）
 RENT_GROSS = RENT_FULL / RENT_MW * 1000  # US$m/MW·年
 RCF = 0.5 + 0.5 * (RENT_GROSS - OPEX_MW) / RENT_GROSS
 
 # ---------- meta / calendar ----------
-C['meta'] = {"company": "Microsoft", "ticker": "MSFT", "updateDate": "2026-10-09", "priceDate": "2026-10-07",
+C['meta'] = {"company": "Microsoft", "ticker": "MSFT", "updateDate": "2026-10-11", "priceDate": "2026-10-07",
   "sourceOrderNote": "時序先 FY26 10-K（2026-07-29，經查核）與 FY26Q4 財報新聞稿／法說（2026-07-29），再 2026-09-02 8-K（FY27 分部重編與 Azure 絕對金額，[Interested-party]）。入帳數字聽 10-K；指引聽法說與 8-K。AI 在役 MW 公司未揭露（只揭露新增 GW），期初對外 AI MW 取第三方與公司增量三法交叉估計，不以 Azure 營收、RPO 或 AI run-rate 反推。FY27Q1 財報預計 2026-10-28（本版未納入，對照表 C7）。",
   "consensusFile": "data/consensus_msft_20261008.json"}
 C['calendar'] = {"fiscalYearEndMonth": 6, "latestQuarterFiled": Q, "latestQuarterReported": Q, "firstModelFY": None,
@@ -244,7 +245,7 @@ CM.update({"_note": "資本支出（MAG v0.1b，對照表 r1 第 5 節第 6 條�
   "guideNote": "FY27 公司未給金額（只說「年增」）；以曆年 2026 約 175 − FY26 下半年實際 72.9＝FY27 上半年 102.1，下半年＝上半年 → 204.2 [Derived]（FY27Q1 指引 >50 吻合；共識 FY27 現金口徑 192.8）",
   "aiNetShare": 0.8, "aiNetShareNote": "期初 AI PP&E 淨額 ÷ 毛額 80%（在役機隊約 FY24 末 0.9、FY25 末 2.3、FY26 末 4.5 GW-IT → 平均約 1.2 年、IT 壽命 6 年；[Assumed]，區間 65%–90%）：AI 增量 ROIC 的期初投入資本",
   "rentedExt": {"open": 550, "path": [756, 756, 756, 756, 756], "rentMW": round(RENT_GROSS - OPEX_MW, 2),
-    "note": "租用的對外 AI MW（MAG 對照表 r1 C20）：期初 550＝neocloud 在役 1,100 × 對外 50%（v0.1a nc.mwLeased.open）；FY27 起加 Nscale 對外 205.5 → 756，之後到期假設以相同條件續約（[Assumed]）。收入照算（含在對外計費 MW 內）、不計資本支出、投入資本與折舊；每 MW 年租金＝已揭露合約全額年租金 " + f"{RENT_FULL:.2f}" + " ÷ " + f"{RENT_MW:,}" + " MW＝" + f"{RENT_GROSS:.2f}" + " 扣 Tokenomics 營運成本 2.34（已在 AI EBITDA 內）＝淨額 [Derived]"},
+    "note": "租用的對外 AI MW（MAG 對照表 r1 C20）：期初 550＝neocloud 在役 1,100 × 對外 50%（v0.1a nc.mwLeased.open）；FY27 起加 Nscale 對外 205.5 → 756，之後到期假設以相同條件續約（[Assumed]）。收入照算（含在對外計費 MW 內）、不計資本支出、投入資本與折舊；每 MW 年租金＝已揭露合約全額年租金 " + f"{RENT_FULL:.2f}" + " ÷ " + f"{RENT_MW:,}" + " MW＝" + f"{RENT_GROSS:.2f}" + " 扣 Tokenomics 營運成本 " + f"{OPEX_MW:.2f}" + "（期初世代加權 IF_OpexGW，已在 AI EBITDA 內）＝淨額 [Derived]"},
   "nonAiLife": 10, "nonAiLifeRange": [8, 15], "nonAiLifeNote": "非 AI 折舊年限預設 10 年（區間 8–15 年）[Assumed]；FY27 起資料中心與辦公建物耐用年限 15 → 25 年、伺服器 2–6 年（10-K、法說）；差額列 D&A 對帳殘差（MAG 對照表 r1 C17）",
   "roicYear": 2, "roicYearNote": "打平 k 的錨定期（模型第 3 期＝FY29，截至 2029-06；對照表 r1 第 5 節第 10 條）"})
 C['capexModel'] = CM
