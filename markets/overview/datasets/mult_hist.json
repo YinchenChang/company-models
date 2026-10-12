@@ -1,0 +1,415 @@
+[
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2016,
+"source": "companiesmarketcap",
+"multiple": 1.31
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2017,
+"source": "companiesmarketcap",
+"multiple": 1.59
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2018,
+"source": "companiesmarketcap",
+"multiple": 0.8832
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2019,
+"source": "companiesmarketcap",
+"multiple": 1.34
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2020,
+"source": "companiesmarketcap",
+"multiple": 1.56
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2021,
+"source": "companiesmarketcap",
+"multiple": 1.45
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2022,
+"source": "companiesmarketcap",
+"multiple": 0.81
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2023,
+"source": "companiesmarketcap",
+"multiple": 1.87
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2024,
+"source": "companiesmarketcap",
+"multiple": 1.62
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2025,
+"source": "companiesmarketcap",
+"multiple": 3.86
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2016,
+"source": "marketcapof（2016–24）",
+"multiple": 1.35
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2017,
+"source": "marketcapof（2016–24）",
+"multiple": 1.6
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2018,
+"source": "marketcapof（2016–24）",
+"multiple": 0.9
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2019,
+"source": "marketcapof（2016–24）",
+"multiple": 1.34
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2020,
+"source": "marketcapof（2016–24）",
+"multiple": 1.56
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2021,
+"source": "marketcapof（2016–24）",
+"multiple": 1.45
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2022,
+"source": "marketcapof（2016–24）",
+"multiple": 0.82
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2023,
+"source": "marketcapof（2016–24）",
+"multiple": 1.83
+},
+{
+"company": "SK 海力士",
+"metric": "P/B",
+"year": 2024,
+"source": "marketcapof（2016–24）",
+"multiple": 1.62
+},
+{
+"company": "三星電子",
+"metric": "P/B",
+"year": 2016,
+"source": "companiesmarketcap",
+"multiple": 1.27
+},
+{
+"company": "三星電子",
+"metric": "P/B",
+"year": 2017,
+"source": "companiesmarketcap",
+"multiple": 1.59
+},
+{
+"company": "三星電子",
+"metric": "P/B",
+"year": 2018,
+"source": "companiesmarketcap",
+"multiple": 1.04
+},
+{
+"company": "三星電子",
+"metric": "P/B",
+"year": 2019,
+"source": "companiesmarketcap",
+"multiple": 1.41
+},
+{
+"company": "三星電子",
+"metric": "P/B",
+"year": 2020,
+"source": "companiesmarketcap",
+"multiple": 1.97
+},
+{
+"company": "三星電子",
+"metric": "P/B",
+"year": 2021,
+"source": "companiesmarketcap",
+"multiple": 1.73
+},
+{
+"company": "三星電子",
+"metric": "P/B",
+"year": 2022,
+"source": "companiesmarketcap",
+"multiple": 1.04
+},
+{
+"company": "三星電子",
+"metric": "P/B",
+"year": 2023,
+"source": "companiesmarketcap",
+"multiple": 1.43
+},
+{
+"company": "三星電子",
+"metric": "P/B",
+"year": 2024,
+"source": "companiesmarketcap",
+"multiple": 0.8865
+},
+{
+"company": "三星電子",
+"metric": "P/B",
+"year": 2025,
+"source": "companiesmarketcap",
+"multiple": 1.96
+},
+{
+"company": "美光",
+"metric": "P/B",
+"year": 2016,
+"source": "macrotrends（會計年度 8 月底）",
+"multiple": 1.29
+},
+{
+"company": "美光",
+"metric": "P/B",
+"year": 2017,
+"source": "macrotrends（會計年度 8 月底）",
+"multiple": 1.78
+},
+{
+"company": "美光",
+"metric": "P/B",
+"year": 2018,
+"source": "macrotrends（會計年度 8 月底）",
+"multiple": 1.79
+},
+{
+"company": "美光",
+"metric": "P/B",
+"year": 2019,
+"source": "macrotrends（會計年度 8 月底）",
+"multiple": 1.33
+},
+{
+"company": "美光",
+"metric": "P/B",
+"year": 2020,
+"source": "macrotrends（會計年度 8 月底）",
+"multiple": 1.27
+},
+{
+"company": "美光",
+"metric": "P/B",
+"year": 2021,
+"source": "macrotrends（會計年度 8 月底）",
+"multiple": 1.83
+},
+{
+"company": "美光",
+"metric": "P/B",
+"year": 2022,
+"source": "macrotrends（會計年度 8 月底）",
+"multiple": 1.22
+},
+{
+"company": "美光",
+"metric": "P/B",
+"year": 2023,
+"source": "macrotrends（會計年度 8 月底）",
+"multiple": 1.72
+},
+{
+"company": "美光",
+"metric": "P/B",
+"year": 2024,
+"source": "macrotrends（會計年度 8 月底）",
+"multiple": 2.35
+},
+{
+"company": "美光",
+"metric": "P/B",
+"year": 2025,
+"source": "macrotrends（會計年度 8 月底）",
+"multiple": 2.46
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2016,
+"source": "FullRatio",
+"multiple": 14.5
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2017,
+"source": "FullRatio",
+"multiple": 17.71
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2018,
+"source": "FullRatio",
+"multiple": 16.13
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2019,
+"source": "FullRatio",
+"multiple": 25.62
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2020,
+"source": "FullRatio",
+"multiple": 31.11
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2021,
+"source": "FullRatio",
+"multiple": 29.18
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2022,
+"source": "FullRatio",
+"multiple": 11.94
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2023,
+"source": "FullRatio",
+"multiple": 19.46
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2024,
+"source": "FullRatio",
+"multiple": 28.72
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2025,
+"source": "FullRatio",
+"multiple": 29.03
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2016,
+"source": "companiesmarketcap",
+"multiple": 11.6
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2017,
+"source": "companiesmarketcap",
+"multiple": 14.8
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2018,
+"source": "companiesmarketcap",
+"multiple": 14.2
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2019,
+"source": "companiesmarketcap",
+"multiple": 23.5
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2020,
+"source": "companiesmarketcap",
+"multiple": 28.3
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2021,
+"source": "companiesmarketcap",
+"multiple": 27.2
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2022,
+"source": "companiesmarketcap",
+"multiple": 11.2
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2023,
+"source": "companiesmarketcap",
+"multiple": 19.3
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2024,
+"source": "companiesmarketcap",
+"multiple": 28.8
+},
+{
+"company": "台積電",
+"metric": "P/E",
+"year": 2025,
+"source": "companiesmarketcap",
+"multiple": 28.3
+}
+]

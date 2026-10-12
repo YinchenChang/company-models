@@ -1,0 +1,592 @@
+<style>
+/* 版面：頂部標題＋分頁；每頁先答案、後圖表。色彩全部取 dashboard 主題 token。 */
+.ai { --ai-accent: var(--color-fg); display: grid; gap: var(--cds-gap-lg); font-family: var(--font-anthropic-sans); max-width: 78rem; margin-inline: auto; }
+.ai h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; text-wrap: balance; }
+.ai h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; text-wrap: balance; }
+.ai h3 { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); margin: 0; }
+.ai p { margin: 0; line-height: 1.6; max-width: 70ch; }
+.ai .muted { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.ai .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ai .ai-head { display: grid; gap: var(--cds-gap-sm); }
+.ai .ai-tabs { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs); border-bottom: 1px solid var(--color-border-line); }
+.ai .ai-tabs button { font: inherit; background: none; border: 0; border-bottom: 2px solid transparent; color: var(--color-fg-muted); padding: var(--cds-pad-sm) var(--cds-pad-md); cursor: pointer; }
+.ai .ai-tabs button[aria-selected="true"] { color: var(--color-fg); border-bottom-color: var(--color-fg); }
+.ai .ai-tabs button:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 2px; }
+.ai .page { display: grid; gap: var(--cds-gap-lg); }
+.ai .q { display: grid; gap: var(--cds-gap-xs); }
+.ai .q .eyebrow { font-size: var(--cds-font-size-caption); letter-spacing: .06em; color: var(--color-fg-muted); }
+.ai .grid { display: grid; gap: var(--cds-gap-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+.ai .grid3 { display: grid; gap: var(--cds-gap-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); }
+.ai .card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: grid; gap: var(--cds-gap-sm); align-content: start; min-width: 0; }
+.ai .answer { display: grid; gap: var(--cds-gap-sm); align-content: start; }
+.ai .answer .verdict { font-family: var(--font-anthropic-serif); font-size: var(--cds-font-size-heading); line-height: 1.35; text-wrap: balance; }
+.ai .answer button { justify-self: start; font: inherit; font-size: var(--cds-font-size-caption); background: none; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-xs) var(--cds-pad-sm); color: var(--color-fg); cursor: pointer; }
+.ai .chart { position: relative; min-height: 15rem; min-width: 0; }
+.ai .chart.tall { min-height: 19rem; }
+.ai .chart svg { display: block; overflow: visible; }
+.ai .tw { overflow-x: auto; }
+.ai table { border-collapse: collapse; width: 100%; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+.ai th, .ai td { text-align: right; padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+.ai th:first-child, .ai td:first-child { text-align: left; }
+.ai th { color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); }
+.ai .neg { color: var(--color-bad); }
+.ai .pos { color: var(--color-ok); }
+.ai .legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm) var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.ai .legend i { display: inline-block; width: .7rem; height: .7rem; border-radius: 2px; margin-right: .35rem; vertical-align: -1px; }
+.ai .tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); white-space: nowrap; z-index: 2; }
+.ai .tip .t { color: var(--cds-text-secondary); }
+.ai .tick text { fill: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.ai .rule-list { margin: 0; padding-left: 1.2rem; display: grid; gap: var(--cds-gap-xs); line-height: 1.6; }
+.ai .src a { color: inherit; }
+.ai [data-dash-source-state=empty] { color: transparent; }
+.ai [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+.ai .failed { display: flex; align-items: center; justify-content: center; gap: .4rem; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); min-height: inherit; }
+.ai .failed::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+</style>
+
+<div class="ai">
+  <header class="ai-head">
+    <h1 id="title">AI 半導體價值鏈</h1>
+    <p class="muted">每 GW 算力支出分到哪裡，以及記憶體、網通、晶圓代工三個區塊各自的核心問題。數字來自 company-models 的模型成品（橋接表 v0.1、記憶體樣板 v0.3、網通 v0.1、台積電 v0.1）；股價為 2026-10-07／08 收盤。點任一數字可看來源。</p>
+  </header>
+
+  <nav class="ai-tabs" role="tablist" aria-label="區塊">
+    <button role="tab" id="tab-overview" data-page="overview" aria-selected="true">總覽</button>
+    <button role="tab" id="tab-memory" data-page="memory" aria-selected="false">記憶體</button>
+    <button role="tab" id="tab-network" data-page="network" aria-selected="false">網通</button>
+    <button role="tab" id="tab-foundry" data-page="foundry" aria-selected="false">晶圓代工</button>
+    <button role="tab" id="tab-method" data-page="method" aria-selected="false">估值規則與來源</button>
+  </nav>
+
+  <!-- 總覽 -->
+  <section class="page" id="overview" data-page-id="overview">
+    <div class="card" id="card-bridge">
+      <h2>每 GW 的錢怎麼分</h2>
+      <p class="muted">每 GW（IT 關鍵電力）資本支出，十億美元；取數 Tokenomics v5.27。VR200 2027 是 HBM 漲價由 NVIDIA 吸收的情境。</p>
+      <div class="legend" id="lg-bridge" data-source="bridge_group"></div>
+      <div class="chart" id="ch-bridge" data-source="bridge_group"></div>
+    </div>
+
+    <div class="grid3">
+      <div class="card answer" id="ans-memory">
+        <span class="muted">記憶體</span>
+        <h3>循環見頂後，淨值撐不撐得住股價？</h3>
+        <p class="verdict">以見頂年的歷史倍數計，撐不住。</p>
+        <p>見頂年取 10 年 P/B 的 25 分位，乘 2027 年底淨值：SK 海力士 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=SK 海力士 見頂" data-fmt="spct">—</b>、三星 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=三星電子 見頂" data-fmt="spct">—</b>、美光 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=美光 見頂" data-fmt="spct">—</b>。現價等於 2027 年底淨值的 <span class="num" data-source="valuation" data-field="px_multiple" data-where="key=SK 海力士 見頂" data-fmt="x">—</span>、<span class="num" data-source="valuation" data-field="px_multiple" data-where="key=三星電子 見頂" data-fmt="x">—</span>、<span class="num" data-source="valuation" data-field="px_multiple" data-where="key=美光 見頂" data-fmt="x">—</span>。</p>
+        <button type="button" data-goto="memory">看記憶體</button>
+      </div>
+      <div class="card answer" id="ans-network">
+        <span class="muted">網通</span>
+        <h3>錢流向哪裡，誰守得住份額？</h3>
+        <p class="verdict">流向 scale-out；NVIDIA 與 Broadcom 拿一半。</p>
+        <p>2027 年 AI 網通 <b class="num" data-source="net_kpi" data-field="total" data-where="year=2027" data-fmt="usdb">—</b>，占 AI IT 支出 <span class="num" data-source="net_kpi" data-field="net_of_it" data-where="year=2027" data-fmt="pct1">—</span>；scale-out 占 <span class="num" data-source="net_kpi" data-field="so_share" data-where="year=2027" data-fmt="pct0">—</span>，NVIDIA＋Broadcom 合計 <b class="num" data-source="net_kpi" data-field="nvda_avgo_share" data-where="year=2027" data-fmt="pct0">—</b>。CPO 到 2029 年只占光學的 <span class="num" data-source="cpo_share" data-field="cpo_share" data-where="year=2029" data-fmt="pct1">—</span>，可插拔仍是主體。</p>
+        <button type="button" data-goto="network">看網通</button>
+      </div>
+      <div class="card answer" id="ans-foundry">
+        <span class="muted">晶圓代工</span>
+        <h3>AI 成長有多少變成台積電的 EPS？</h3>
+        <p class="verdict">2027 年 EPS 成長約四分之一，現價接近中位倍數下緣。</p>
+        <p>AI 占營收由 2026 年 <span class="num" data-source="tsmc_pl" data-field="ai_share" data-where="key=2026" data-fmt="pct0">—</span> 升到 2027 年 <span class="num" data-source="tsmc_pl" data-field="ai_share" data-where="key=2027 A" data-fmt="pct0">—</span>；2027 EPS NT$<b class="num" data-source="tsmc_pl" data-field="eps" data-where="key=2027 A" data-fmt="n1">—</b>，年增 <span class="num" data-source="eps_growth" data-field="growth" data-row="0" data-fmt="pct0">—</span>。以 10 年中位 P/E <span class="num" data-source="valuation" data-field="multiple" data-where="key=台積電 中段" data-fmt="x">—</span> 計，對現價 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=台積電 中段" data-fmt="spct">—</b>。2027 年先卡住的是 HBM（缺口 <span class="num" data-source="tsmc_cowos" data-field="hbm_gap" data-where="year=2027" data-fmt="pct0">—</span>），CoWoS 用到 <span class="num" data-source="tsmc_cowos" data-field="util" data-where="year=2027" data-fmt="pct0">—</span>。</p>
+        <button type="button" data-goto="foundry">看晶圓代工</button>
+      </div>
+    </div>
+
+    <div class="card" id="card-val-all">
+      <h2>四家公司，同一把尺</h2>
+      <p class="muted">合理倍數取 10 年（2016–2025 年底）區間的分位，依循環位置：見頂年 25 分位、中段中位數、谷底 75 分位。點是隱含股價相對現價；台積電以 25／75 分位為區間。</p>
+      <div class="legend" id="lg-val"></div>
+      <div class="chart" id="ch-val-all" data-source="valuation"></div>
+    </div>
+  </section>
+
+  <!-- 記憶體 -->
+  <section class="page" id="memory" data-page-id="memory" hidden>
+    <div class="q">
+      <span class="eyebrow">核心問題</span>
+      <h2>循環見頂後，淨值撐不撐得住股價？</h2>
+      <p>盈餘主要來自一般 DRAM 的合約價，HBM 只占 2026 年記憶體營收的 <span class="num" data-source="mem_y" data-field="hbm_share" data-where="key=SK 海力士 2026" data-fmt="pct0">—</span>（SK 海力士）、<span class="num" data-source="mem_y" data-field="hbm_share" data-where="key=三星電子 2026" data-fmt="pct0">—</span>（三星）、<span class="num" data-source="mem_y" data-field="hbm_share" data-where="key=美光 2026" data-fmt="pct0">—</span>（美光）。所以看的是價格路徑走完之後，累積了多少淨值。</p>
+    </div>
+    <div class="grid">
+      <div class="card" id="card-path">
+        <h2>一般 DRAM 合約價指數</h2>
+        <p class="muted">2025Q1＝1，季資料。A：2027–28 高檔持平；B：2027Q2 見頂、2028 回落約一半；C：2028 回到 2025 年水準。</p>
+        <div class="legend" id="lg-path"></div>
+        <div class="chart" id="ch-path" data-source="mem_path"></div>
+      </div>
+      <div class="card" id="card-hbm">
+        <h2>HBM 市場</h2>
+        <p class="muted">十億美元。需求＝加速器顆數 × 每顆容量；出貨取需求與供給較小者；2027 年重新議價後分情境。</p>
+        <div class="legend" id="lg-hbm"></div>
+        <div class="chart" id="ch-hbm" data-source="hbm_mkt"></div>
+      </div>
+    </div>
+    <div class="card" id="card-op">
+      <h2>記憶體營業利益</h2>
+      <p class="muted">十億美元（韓元以 1,420 換算）；三家同一個縱軸。美光為會計年度（9 月起）。</p>
+      <div class="legend" id="lg-op"></div>
+      <div class="grid3" id="ch-op" data-source="mem_y"></div>
+    </div>
+    <div class="card" id="card-val-mem">
+      <h2>依規則的隱含股價</h2>
+      <p class="muted">美光 P/B 受大量買回壓低淨值影響，倍數偏高；改用日曆年底的倍數，見頂情境為 <span class="num" data-source="valuation_alt" data-field="vs_px" data-row="0" data-fmt="spct">—</span>。</p>
+      <div class="tw">
+        <table id="tb-val-mem" data-source="valuation" data-row-key="key">
+          <thead><tr><th data-field="company">公司</th><th data-field="case">循環位置</th><th data-field="multiple">P/B</th><th data-field="basis_label">淨值基準</th><th data-field="basis">每股淨值</th><th data-field="implied_px">隱含股價</th><th data-field="px">現價</th><th data-field="vs_px">相對現價</th><th data-field="px_multiple">現價 ÷ 淨值</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 網通 -->
+  <section class="page" id="network" data-page-id="network" hidden>
+    <div class="q">
+      <span class="eyebrow">核心問題</span>
+      <h2>錢流向哪裡，誰守得住份額？</h2>
+      <p>網通市場＝加速器顆數 × 每顆網通內容，六個元件。2026 年 <span class="num" data-source="net_kpi" data-field="total" data-where="year=2026" data-fmt="usdb">—</span>、2027 年 <span class="num" data-source="net_kpi" data-field="total" data-where="year=2027" data-fmt="usdb">—</span>；scale-up 只占 <span class="num" data-source="net_kpi" data-field="su_share" data-where="year=2027" data-fmt="pct0">—</span>。</p>
+    </div>
+    <div class="card" id="card-net">
+      <h2>AI 網通市場，依元件</h2>
+      <p class="muted">十億美元。</p>
+      <div class="legend" id="lg-net"></div>
+      <div class="chart tall" id="ch-net" data-source="net_comp"></div>
+    </div>
+    <div class="grid">
+      <div class="card" id="card-optics">
+        <h2>光學：可插拔與 CPO</h2>
+        <p class="muted">十億美元。CPO 在 Rubin Ultra 之後才放量。</p>
+        <div class="legend" id="lg-optics"></div>
+        <div class="chart" id="ch-optics" data-source="net_kpi"></div>
+      </div>
+      <div class="card" id="card-recon">
+        <h2>2026 年對帳</h2>
+        <p class="muted">本模型由下而上歸屬 vs 公司揭露或第三方。</p>
+        <div class="tw">
+          <table>
+            <thead><tr><th>項目</th><th>本模型</th><th>對照</th><th>來源</th></tr></thead>
+            <tbody>
+              <tr><td>NVIDIA 網通營收</td><td class="num" data-source="net_kpi" data-field="nvda" data-where="year=2026" data-fmt="usdb">—</td><td class="num" data-source="net_kpi" data-field="nvda_ref" data-where="year=2026" data-fmt="usdb">—</td><td>公司揭露（年化）</td></tr>
+              <tr><td>Broadcom 網通</td><td class="num" data-source="net_kpi" data-field="avgo" data-where="year=2026" data-fmt="usdb">—</td><td class="num" data-source="net_kpi" data-field="avgo_ref" data-where="year=2026" data-fmt="usdb">—</td><td>公司揭露推算</td></tr>
+              <tr><td>AI 叢集光學</td><td class="num" data-source="net_kpi" data-field="optics" data-where="year=2026" data-fmt="usdb">—</td><td class="num" data-source="net_kpi" data-field="optics_ref" data-where="year=2026" data-fmt="usdb">—</td><td>LightCounting</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="muted">網通占 AI IT 支出：2026 年 <span class="num" data-source="net_kpi" data-field="net_of_it" data-where="year=2026" data-fmt="pct1">—</span>、2028 年 <span class="num" data-source="net_kpi" data-field="net_of_it" data-where="year=2028" data-fmt="pct1">—</span>。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 晶圓代工 -->
+  <section class="page" id="foundry" data-page-id="foundry" hidden>
+    <div class="q">
+      <span class="eyebrow">核心問題</span>
+      <h2>AI 成長有多少變成台積電的 EPS？</h2>
+      <p>AI 營收＝加速器顆數 × 每顆台積電內容 × 價格調升 ×（1＋其他 AI）。2026 年 AI 相關營收 <span class="num" data-source="tsmc_pl" data-field="ai_rev" data-where="key=2026" data-fmt="usdb">—</span>，占 <span class="num" data-source="tsmc_pl" data-field="ai_share" data-where="key=2026" data-fmt="pct0">—</span>；毛利率由漲價與 N2、海外廠稀釋互相抵銷。</p>
+    </div>
+    <div class="grid">
+      <div class="card" id="card-cowos">
+        <h2>CoWoS 需求與產能</h2>
+        <p class="muted">千片／年；產能含委外 10%。2027 年 HBM 缺口 <span class="num" data-source="tsmc_cowos" data-field="hbm_gap" data-where="year=2027" data-fmt="pct0">—</span> 大於 CoWoS 剩餘空間，所以 HBM 先卡。</p>
+        <div class="legend" id="lg-cowos"></div>
+        <div class="chart" id="ch-cowos" data-source="tsmc_cowos"></div>
+      </div>
+      <div class="card" id="card-mix">
+        <h2>營收組成</h2>
+        <p class="muted">十億美元；2028 年分三個情境（加速器數量 × 1.0／0.8／0.6）。</p>
+        <div class="legend" id="lg-mix"></div>
+        <div class="chart" id="ch-mix" data-source="tsmc_pl"></div>
+      </div>
+    </div>
+    <div class="card" id="card-pl">
+      <h2>損益與估值</h2>
+      <div class="tw">
+        <table id="tb-pl" data-source="tsmc_pl" data-row-key="key">
+          <thead><tr><th data-field="key">年度／情境</th><th data-field="rev">營收（$B）</th><th data-field="ai_rev">AI（$B）</th><th data-field="ai_share">AI 占比</th><th data-field="gm">毛利率</th><th data-field="eps">EPS（NT$）</th><th data-field="pe_now">現價 P/E</th><th data-field="capex">資本支出（$B）</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="muted">10 年 P/E 25／50／75 分位 <span class="num" data-source="valuation" data-field="p25" data-where="key=台積電 中段" data-fmt="x">—</span>／<span class="num" data-source="valuation" data-field="p50" data-where="key=台積電 中段" data-fmt="x">—</span>／<span class="num" data-source="valuation" data-field="p75" data-where="key=台積電 中段" data-fmt="x">—</span>，乘 2027 EPS 得 NT$<span class="num" data-source="valuation" data-field="implied_px" data-where="key=台積電 低" data-fmt="n0">—</span>／<span class="num" data-source="valuation" data-field="implied_px" data-where="key=台積電 中段" data-fmt="n0">—</span>／<span class="num" data-source="valuation" data-field="implied_px" data-where="key=台積電 高" data-fmt="n0">—</span>，現價 NT$<span class="num" data-source="valuation" data-field="px" data-where="key=台積電 中段" data-fmt="n0">—</span>。</p>
+    </div>
+  </section>
+
+  <!-- 估值規則與來源 -->
+  <section class="page" id="method" data-page-id="method" hidden>
+    <div class="card">
+      <h2>估值規則</h2>
+      <ul class="rule-list">
+        <li>合理倍數＝該公司 10 年（2016–2025 年底）倍數的分位：見頂年 25 分位、中段中位數、谷底 75 分位。記憶體用 P/B，台積電用 P/E。</li>
+        <li>循環位置的歸類：記憶體 2027 年為見頂年（三個情境共用），2028 年情境 C 為谷底；台積電 2027 年為中段。這是套用規則時的判斷，可以改。</li>
+        <li>兩個來源時，各分位取兩者平均；三星只有一個完整來源，中位數以 GuruFocus（1.44）核對。</li>
+        <li>美光的歷史倍數以會計年度（8 月底）為主；日曆年底的分位較高，列為對照。</li>
+      </ul>
+    </div>
+    <div class="card" id="card-hist">
+      <h2>10 年倍數分布與現價位置</h2>
+      <p class="muted">每點一個年底；直線為 25／50／75 分位；菱形為現價 ÷ 2027 年底淨值（台積電為 ÷ 2027 EPS）。</p>
+      <div class="chart tall" id="ch-hist" data-source="mult_hist valuation"></div>
+    </div>
+    <div class="card src">
+      <h2>來源</h2>
+      <ul class="rule-list">
+        <li>模型：repo YinchenChang/company-models，markets/chip_bridge、markets/memory、tools/memory_model、skhynix、samsung、micron、markets/network、tsmc 各資料夾的 dist/*.xlsx。</li>
+        <li>倍數：<a href="https://companiesmarketcap.com/sk-hynix/pb-ratio/">companiesmarketcap（SK 海力士）</a>、<a href="https://marketcapof.com/stocks/000660.ks/pb-ratio/">marketcapof</a>、<a href="https://companiesmarketcap.com/samsung/pb-ratio/">companiesmarketcap（三星）</a>、<a href="https://www.gurufocus.com/term/pb-ratio/BUE:SMSN%20LI">GuruFocus</a>、<a href="https://www.macrotrends.net/stocks/charts/MU/micron-technology/price-book">macrotrends（美光）</a>、<a href="https://companiesmarketcap.com/micron-technology/pb-ratio/">companiesmarketcap（美光）</a>、<a href="https://fullratio.com/stocks/nyse-tsm/pe-ratio">FullRatio（台積電）</a>、<a href="https://companiesmarketcap.com/tsmc/pe-ratio/">companiesmarketcap（台積電）</a>。皆為彙整網站，非公司揭露。</li>
+        <li>限制：每片 CoWoS 封裝數、每顆台積電內容、網通機架外拆分為推導或類比值；記憶體價格路徑為情境假設，不是預測。</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  // ---------- 共用：格式、取列、提示框 ----------
+  const F = {
+    spct: (v) => (v > 0 ? '+' : v < 0 ? '−' : '') + d3.format('.0%')(Math.abs(v)),
+    pct0: d3.format('.0%'), pct1: d3.format('.1%'),
+    x: (v) => d3.format('.2~f')(v) + 'x',
+    n0: d3.format(',.0f'), n1: d3.format(',.1f'),
+    usdb: (v) => '$' + d3.format(',.0f')(v) + 'B',
+  };
+  const fmtBasis = (r) => r.ccy === 'USD' ? '$' + d3.format(',.0f')(r.basis) : d3.format(',.0f')(r.basis);
+  const fmtPx = (v, ccy) => (ccy === 'USD' ? '$' : '') + d3.format(',.0f')(v);
+  const rowsOf = (id) => { const d = dash.data(id); return d.status === 'ok' ? d.data : null; };
+  const parseWhere = (s) => Object.fromEntries(s.split('&').map((p) => p.split('=').map(decodeURIComponent)));
+  const color = (i) => dash.colors[i % dash.colors.length];
+  const SC = { A: 0, B: 1, C: 2 };
+
+  function legend(id, items) {
+    const el = document.getElementById(id); if (!el) return;
+    el.replaceChildren(...items.map(([name, c]) => { const s = document.createElement('span'); const i = document.createElement('i'); i.style.background = c; s.append(i, document.createTextNode(name)); return s; }));
+  }
+  function tipFor(box) {
+    let t = box.querySelector(':scope > .tip');
+    if (!t) { t = document.createElement('div'); t.className = 'tip'; t.hidden = true; box.append(t); }
+    return {
+      show(ev, title, lines) {
+        t.replaceChildren();
+        const h = document.createElement('div'); h.className = 't'; h.textContent = title; t.append(h);
+        lines.forEach(([c, name, val]) => { const d = document.createElement('div'); if (c) { const i = document.createElement('i'); i.style.cssText = `display:inline-block;width:.6rem;height:.6rem;border-radius:2px;margin-right:.35rem;background:${c}`; d.append(i); } d.append(document.createTextNode(`${name}  ${val}`)); t.append(d); });
+        t.hidden = false;
+        const b = box.getBoundingClientRect(), [mx, my] = d3.pointer(ev, box);
+        const w = t.offsetWidth, hgt = t.offsetHeight;
+        t.style.left = Math.max(0, Math.min(b.width - w, mx + 12)) + 'px';
+        t.style.top = Math.max(0, my - hgt - 8) + 'px';
+      },
+      hide() { t.hidden = true; },
+    };
+  }
+  function failed(el, ids) {
+    const bad = ids.some((id) => dash.data(id).status === 'error');
+    el.replaceChildren();
+    if (bad) { const d = document.createElement('div'); d.className = 'failed'; d.textContent = 'Failed to load'; el.append(d); }
+    else el.classList.add('dash-skeleton');
+  }
+  function textWidth(svg, strings) {
+    const t = svg.append('text').attr('class', 'tick').style('font-size', 'var(--cds-font-size-caption)');
+    let w = 0; strings.forEach((s) => { t.text(s); w = Math.max(w, t.node().getComputedTextLength()); });
+    t.remove(); return w;
+  }
+  function frame(el, h) {
+    el.classList.remove('dash-skeleton');
+    const W = Math.max(280, el.clientWidth);
+    d3.select(el).selectAll('svg').remove();
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${h}`).attr('height', h);
+    return { svg, W, H: h };
+  }
+  function yAxis(g, y, x0, x1, fmt) {
+    g.append('g').attr('class', 'tick').attr('transform', `translate(${x0},0)`).call(d3.axisLeft(y).ticks(5).tickSize(-(x1 - x0)).tickFormat(fmt))
+      .attr('font-size', null).attr('font-family', null)
+      .call((a) => a.select('.domain').remove())
+      .call((a) => a.selectAll('line').attr('stroke', 'var(--cds-chart-grid)'));
+  }
+  function xAxis(g, x, h) {
+    g.append('g').attr('class', 'tick').attr('transform', `translate(0,${h})`).call(d3.axisBottom(x).tickSize(0).tickPadding(6))
+      .attr('font-size', null).attr('font-family', null)
+      .call((a) => a.select('.domain').attr('stroke', 'var(--cds-chart-axis)'));
+  }
+
+  // ---------- 圖：折線（類別 x） ----------
+  function lineChart(el, { labels, series, fmt, tickEvery = 1, h = 240, yMin, yMax }) {
+    const { svg, W } = frame(el, h);
+    const all = series.flatMap((s) => s.values.filter((v) => v != null));
+    const y0 = yMin ?? Math.min(0, d3.min(all));
+    const y = d3.scaleLinear([y0, (yMax ?? d3.max(all)) * 1.08], [h - 26, 8]).nice();
+    const left = textWidth(svg, y.ticks(5).map(fmt)) + 10;
+    const endW = textWidth(svg, series.map((s) => s.name)) + 8;
+    const x = d3.scalePoint(labels, [left + 4, W - endW - 6]);
+    yAxis(svg, y, left, W - endW - 2, fmt);
+    const xa = svg.append('g').attr('class', 'tick').attr('transform', `translate(0,${h - 26})`)
+      .call(d3.axisBottom(x).tickSize(0).tickPadding(6).tickValues(labels.filter((_, i) => i % tickEvery === 0)))
+      .attr('font-size', null).attr('font-family', null);
+    xa.select('.domain').attr('stroke', 'var(--cds-chart-axis)');
+    const line = d3.line().defined((d) => d != null).x((_, i) => x(labels[i])).y((d) => y(d));
+    series.forEach((s) => {
+      svg.append('path').attr('d', line(s.values)).attr('fill', 'none').attr('stroke', s.color).attr('stroke-width', 2).attr('stroke-linecap', 'round').attr('stroke-linejoin', 'round');
+    });
+    // 終點標籤（避免重疊：依值排序後逐一下推）
+    const ends = series.map((s) => { let i = s.values.length - 1; while (s.values[i] == null) i--; return { s, i, yy: y(s.values[i]) }; }).sort((a, b) => a.yy - b.yy);
+    ends.forEach((e, k) => { if (k && e.yy - ends[k - 1].yy < 13) e.yy = ends[k - 1].yy + 13; });
+    ends.forEach((e) => svg.append('text').attr('x', x(labels[e.i]) + 6).attr('y', e.yy + 4).attr('fill', e.s.color).style('font-size', 'var(--cds-font-size-caption)').text(e.s.name));
+    // 提示
+    const tip = tipFor(el);
+    const dot = svg.append('g');
+    svg.append('rect').attr('x', left).attr('y', 0).attr('width', W - left).attr('height', h - 26).attr('fill', 'transparent')
+      .on('mousemove', (ev) => {
+        const [mx] = d3.pointer(ev); const i = d3.minIndex(labels, (l) => Math.abs(x(l) - mx));
+        dot.selectAll('*').remove();
+        series.forEach((s) => { if (s.values[i] != null) dot.append('circle').attr('cx', x(labels[i])).attr('cy', y(s.values[i])).attr('r', 3.5).attr('fill', s.color); });
+        tip.show(ev, labels[i], series.filter((s) => s.values[i] != null).map((s) => [s.color, s.name, fmt(s.values[i])]));
+      })
+      .on('mouseleave', () => { dot.selectAll('*').remove(); tip.hide(); });
+  }
+
+  // ---------- 圖：長條（分組或堆疊，可疊一條線） ----------
+  function barChart(el, { labels, series, fmt, stacked = false, h = 240, line, topLabel }) {
+    const { svg, W } = frame(el, h);
+    const n = labels.length;
+    const tot = labels.map((_, i) => stacked ? d3.sum(series, (s) => s.values[i] || 0) : d3.max(series, (s) => s.values[i] || 0));
+    const ymax = d3.max([...tot, ...(line ? line.values : [])]) * 1.12;
+    const y = d3.scaleLinear([0, ymax], [h - 26, 10]).nice();
+    const left = textWidth(svg, y.ticks(5).map(fmt)) + 10;
+    const x = d3.scaleBand(labels, [left + 4, W - 6]).padding(0.28);
+    yAxis(svg, y, left, W - 6, fmt);
+    xAxis(svg, x, h - 26);
+    const inner = stacked ? null : d3.scaleBand(series.map((s) => s.name), [0, x.bandwidth()]).padding(0.12);
+    const tip = tipFor(el);
+    labels.forEach((l, i) => {
+      let acc = 0;
+      series.forEach((s) => {
+        const v = s.values[i]; if (v == null) return;
+        const bw = stacked ? Math.min(x.bandwidth(), 64) : Math.min(inner.bandwidth(), 32);
+        const bx = stacked ? x(l) + (x.bandwidth() - bw) / 2 : x(l) + inner(s.name) + (inner.bandwidth() - bw) / 2;
+        const y1 = stacked ? y(acc + v) : y(v), y2 = stacked ? y(acc) : y(0);
+        svg.append('rect').attr('x', bx).attr('y', y1).attr('width', bw).attr('height', Math.max(0, y2 - y1)).attr('fill', s.color).attr('rx', stacked ? 1 : 3)
+          .on('mousemove', (ev) => tip.show(ev, l, series.filter((t) => t.values[i] != null).map((t) => [t.color, t.name, fmt(t.values[i])]).concat(line && line.values[i] != null ? [[null, line.name, fmt(line.values[i])]] : [])))
+          .on('mouseleave', () => tip.hide());
+        acc += v;
+      });
+      if (topLabel && topLabel[i] != null) svg.append('text').attr('x', x(l) + x.bandwidth() / 2).attr('y', y(tot[i]) - 5).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').text(topLabel[i]);
+    });
+    if (line) {
+      const lp = d3.line().defined((d) => d != null).x((_, i) => x(labels[i]) + x.bandwidth() / 2).y((d) => y(d));
+      svg.append('path').attr('d', lp(line.values)).attr('fill', 'none').attr('stroke', line.color).attr('stroke-width', 2).attr('stroke-dasharray', '5 4');
+      line.values.forEach((v, i) => v != null && svg.append('circle').attr('cx', x(labels[i]) + x.bandwidth() / 2).attr('cy', y(v)).attr('r', 3).attr('fill', line.color));
+    }
+  }
+
+  // ---------- 圖：100% 水平堆疊（橋接表） ----------
+  function hstack(el, groups, cols) {
+    const h = cols.length * 54 + 30;
+    const { svg, W } = frame(el, h);
+    const left = textWidth(svg, cols.map((c) => c.label)) + 12;
+    const right = textWidth(svg, cols.map((c) => c.totalLabel)) + 10;
+    const x = d3.scaleLinear([0, 1], [left, W - right]);
+    const tip = tipFor(el);
+    cols.forEach((c, j) => {
+      const yy = 10 + j * 54; let acc = 0;
+      svg.append('text').attr('x', left - 8).attr('y', yy + 20).attr('text-anchor', 'end').attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)').text(c.label);
+      groups.forEach((g, i) => {
+        const v = g.share[j];
+        svg.append('rect').attr('x', x(acc)).attr('y', yy + 4).attr('width', Math.max(0, x(acc + v) - x(acc) - 1)).attr('height', 26).attr('fill', color(i))
+          .on('mousemove', (ev) => tip.show(ev, `${c.label}｜${g.group}`, [[color(i), '金額', '$' + d3.format('.2f')(g.value[j]) + 'B／GW'], [null, '占比', F.pct1(v)]]))
+          .on('mouseleave', () => tip.hide());
+        if (x(acc + v) - x(acc) > 34) svg.append('text').attr('x', x(acc) + 4).attr('y', yy + 21).attr('fill', 'var(--color-bg)').style('font-size', 'var(--cds-font-size-caption)').style('pointer-events', 'none').text(d3.format('.0%')(v));
+        acc += v;
+      });
+      svg.append('text').attr('x', W - right + 6).attr('y', yy + 21).attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').text(c.totalLabel);
+    });
+  }
+
+  // ---------- 圖：估值點圖（相對現價） ----------
+  const CASE_COLOR = { '見頂': 2, '中段': 0, '谷底': 1, '低': 2, '高': 1 };
+  function dotPlot(el, rows) {
+    const cos = [...new Set(rows.map((r) => r.company))];
+    const h = cos.length * 44 + 36;
+    const { svg, W } = frame(el, h);
+    const left = textWidth(svg, cos) + 14;
+    const ext = d3.extent([0, ...rows.map((r) => r.vs_px)]);
+    const x = d3.scaleLinear([Math.min(-0.8, ext[0]), Math.max(0.6, ext[1])], [left, W - 12]).nice();
+    svg.append('g').attr('class', 'tick').attr('transform', `translate(0,${h - 22})`).call(d3.axisBottom(x).ticks(6).tickSize(-(h - 30)).tickFormat(F.spct))
+      .attr('font-size', null).attr('font-family', null).call((a) => a.select('.domain').remove()).call((a) => a.selectAll('line').attr('stroke', 'var(--cds-chart-grid)'));
+    svg.append('line').attr('x1', x(0)).attr('x2', x(0)).attr('y1', 4).attr('y2', h - 22).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-width', 1.5);
+    svg.append('text').attr('x', x(0) + 4).attr('y', 12).attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').text('現價');
+    const tip = tipFor(el);
+    cos.forEach((c, j) => {
+      const yy = 24 + j * 44, rs = rows.filter((r) => r.company === c);
+      svg.append('text').attr('x', left - 10).attr('y', yy + 4).attr('text-anchor', 'end').attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)').text(c);
+      const e = d3.extent(rs, (r) => r.vs_px);
+      svg.append('line').attr('x1', x(e[0])).attr('x2', x(e[1])).attr('y1', yy).attr('y2', yy).attr('stroke', 'var(--cds-chart-muted)').attr('stroke-width', 2);
+      rs.forEach((r) => svg.append('circle').attr('cx', x(r.vs_px)).attr('cy', yy).attr('r', 6).attr('fill', color(CASE_COLOR[r.case]))
+        .on('mousemove', (ev) => tip.show(ev, `${c}｜${r.position}`, [[color(CASE_COLOR[r.case]), `${r.metric} ${F.x(r.multiple)} × ${r.basis_label}`, ''], [null, '隱含股價', fmtPx(r.implied_px, r.ccy)], [null, '相對現價', F.spct(r.vs_px)]]))
+        .on('mouseleave', () => tip.hide()));
+    });
+  }
+
+  // ---------- 圖：倍數分布條 ----------
+  function strip(el, hist, val) {
+    const cos = [...new Set(hist.map((r) => r.company))];
+    const rowH = 58, h = cos.length * rowH + 10;
+    const { svg, W } = frame(el, h);
+    const left = textWidth(svg, cos.map((c) => c + '（P/B）')) + 14;
+    const tip = tipFor(el);
+    cos.forEach((c, j) => {
+      const hs = hist.filter((r) => r.company === c), v = val.find((r) => r.company === c && (r.case === '中段'));
+      const yy = 22 + j * rowH;
+      const x = d3.scaleLinear([0, Math.max(d3.max(hs, (r) => r.multiple), v.px_multiple) * 1.1], [left, W - 14]).nice();
+      svg.append('text').attr('x', left - 10).attr('y', yy + 4).attr('text-anchor', 'end').attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)').text(`${c}（${v.metric}）`);
+      svg.append('g').attr('class', 'tick').attr('transform', `translate(0,${yy + 16})`).call(d3.axisBottom(x).ticks(5).tickSize(3).tickFormat((t) => d3.format('~f')(t) + 'x'))
+        .attr('font-size', null).attr('font-family', null).call((a) => a.select('.domain').attr('stroke', 'var(--cds-chart-axis)'));
+      ['p25', 'p50', 'p75'].forEach((k) => svg.append('line').attr('x1', x(v[k])).attr('x2', x(v[k])).attr('y1', yy - 12).attr('y2', yy + 12).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-width', k === 'p50' ? 2 : 1)
+        .on('mousemove', (ev) => tip.show(ev, c, [[null, { p25: '25 分位', p50: '中位數', p75: '75 分位' }[k], F.x(v[k])]])).on('mouseleave', () => tip.hide()));
+      const srcs = [...new Set(hs.map((r) => r.source))];
+      hs.forEach((r) => svg.append('circle').attr('cx', x(r.multiple)).attr('cy', yy + (srcs.indexOf(r.source) ? 5 : -5)).attr('r', 3.5).attr('fill', 'var(--cds-chart-muted)')
+        .on('mousemove', (ev) => tip.show(ev, `${c} ${r.year} 年底`, [[null, r.source, F.x(r.multiple)]])).on('mouseleave', () => tip.hide()));
+      const px = x(v.px_multiple);
+      svg.append('path').attr('d', d3.symbol(d3.symbolDiamond, 90)()).attr('transform', `translate(${px},${yy})`).attr('fill', 'var(--cds-chart-status-critical)')
+        .on('mousemove', (ev) => tip.show(ev, c, [[null, `現價 ÷ ${v.basis_label}`, F.x(v.px_multiple)]])).on('mouseleave', () => tip.hide());
+    });
+  }
+
+  // ---------- 計算 ----------
+  dash.calc('bridge_group', {
+    inputs: ['bridge'], title: '橋接表分組', description: '把 12 個項目併成 7 組，並算每組占每 GW 總支出的比例。',
+    fn: (bridge) => {
+      const G = { '廠房（機房、電力、冷卻）': '廠房', 'NVIDIA GPU 毛利': 'NVIDIA GPU 毛利', '台積電（晶圓＋CoWoS）': '台積電', 'HBM': 'HBM', 'LPDDR': '其他記憶體', 'NAND／SSD': '其他記憶體', '網通（交換、光、銅）': '網通', '網卡／DPU': '網通' };
+      const cols = ['gb300', 'vr200_2026', 'vr200_2027'];
+      const tot = Object.fromEntries(cols.map((c) => [c, bridge.reduce((s, r) => s + r[c], 0)]));
+      const out = {};
+      bridge.forEach((r) => { const g = G[r.item] || 'CPU、機架與其他'; out[g] = out[g] || { group: g }; cols.forEach((c) => { out[g][c] = (out[g][c] || 0) + r[c]; }); });
+      return Object.values(out).map((o) => ({ ...o, ...Object.fromEntries(cols.map((c) => [c + '_share', o[c] / tot[c]])), ...Object.fromEntries(cols.map((c) => [c + '_total', tot[c]])) }));
+    },
+  });
+  dash.calc('cpo_share', { inputs: ['net_kpi'], title: 'CPO 占光學', description: 'CPO 金額 ÷ 光學金額，逐年。', fn: (net_kpi) => net_kpi.map((r) => ({ year: r.year, cpo_share: r.cpo / r.optics })) });
+  dash.calc('eps_growth', { inputs: ['tsmc_pl'], title: '台積電 2027 EPS 年增', description: '2027 A 的 EPS ÷ 2026 EPS − 1。', fn: (tsmc_pl) => [{ growth: tsmc_pl.find((r) => r.key === '2027 A').eps / tsmc_pl.find((r) => r.key === '2026').eps - 1 }] });
+  dash.calc('valuation_alt', {
+    inputs: ['valuation', 'mult_hist'], title: '美光日曆年底倍數對照', description: '美光日曆年底 P/B 的 25 分位 × FY2027 年底每股淨值 ÷ 現價 − 1。',
+    fn: (valuation, mult_hist) => {
+      const v = mult_hist.filter((r) => r.company === '美光' && r.source.startsWith('companiesmarketcap')).map((r) => r.multiple).sort((a, b) => a - b);
+      const q = (p) => { const i = (v.length - 1) * p, lo = Math.floor(i); return v[lo] + (v[Math.ceil(i)] - v[lo]) * (i - lo); };
+      const r = valuation.find((x) => x.key === '美光 見頂');
+      return [{ p25: q(0.25), vs_px: (q(0.25) * r.basis) / r.px - 1 }];
+    },
+  });
+
+  // ---------- 繪製 ----------
+  function fillMarks() {
+    document.querySelectorAll('.ai [data-source][data-field]:not(th)').forEach((el) => {
+      if (el.closest('table[data-row-key]')) return;
+      const rs = rowsOf(el.dataset.source);
+      if (!rs) { el.textContent = '—'; return; }
+      let row = null;
+      if (el.dataset.where) { const w = parseWhere(el.dataset.where); row = rs.find((r) => Object.entries(w).every(([k, v]) => String(r[k]) === v)); }
+      else if (el.dataset.row != null) row = rs[+el.dataset.row];
+      const v = row ? row[el.dataset.field] : null;
+      el.textContent = v == null ? '—' : (F[el.dataset.fmt] || String)(v);
+      if (el.dataset.fmt === 'spct' && v != null) el.classList.toggle('neg', v < 0), el.classList.toggle('pos', v > 0);
+    });
+  }
+
+  function drawOverview() {
+    const el = document.getElementById('ch-bridge'), g = rowsOf('bridge_group');
+    if (!g) failed(el, ['bridge']); else {
+      const order = ['廠房', 'NVIDIA GPU 毛利', '台積電', 'HBM', '其他記憶體', '網通', 'CPU、機架與其他'];
+      const gs = order.map((n) => g.find((r) => r.group === n)).filter(Boolean);
+      legend('lg-bridge', gs.map((r, i) => [r.group, color(i)]));
+      const cols = [['gb300', 'GB300'], ['vr200_2026', 'VR200 2026'], ['vr200_2027', 'VR200 2027']];
+      hstack(el, gs.map((r) => ({ group: r.group, share: cols.map(([c]) => r[c + '_share']), value: cols.map(([c]) => r[c]) })),
+        cols.map(([c, label]) => ({ label, totalLabel: '$' + d3.format('.1f')(gs[0][c + '_total']) + 'B' })));
+    }
+    const ev = document.getElementById('ch-val-all'), v = rowsOf('valuation');
+    legend('lg-val', [['見頂（25 分位）', color(2)], ['中段（中位數）', color(0)], ['谷底（75 分位）', color(1)]]);
+    if (!v) failed(ev, ['valuation']); else dotPlot(ev, v);
+  }
+
+  function drawMemory() {
+    const p = rowsOf('mem_path'), ep = document.getElementById('ch-path');
+    legend('lg-path', [['A', color(0)], ['B', color(1)], ['C', color(2)]]);
+    if (!p) failed(ep, ['mem_path']); else lineChart(ep, { labels: p.map((r) => r.quarter), tickEvery: 4, fmt: (v) => d3.format('.1f')(v), series: ['A', 'B', 'C'].map((s) => ({ name: s, color: color(SC[s]), values: p.map((r) => r['dram_' + s]) })) });
+    const hm = rowsOf('hbm_mkt'), eh = document.getElementById('ch-hbm');
+    legend('lg-hbm', [['A', color(0)], ['B', color(1)], ['C', color(2)]]);
+    if (!hm) failed(eh, ['hbm_mkt']); else barChart(eh, { labels: hm.map((r) => String(r.year)), fmt: (v) => '$' + d3.format(',.0f')(v), series: ['A', 'B', 'C'].map((s) => ({ name: s, color: color(SC[s]), values: hm.map((r) => r['mkt_' + s]) })) });
+    const y = rowsOf('mem_y'), eo = document.getElementById('ch-op');
+    legend('lg-op', [['A', color(0)], ['B', color(1)], ['C', color(2)]]);
+    if (!y) failed(eo, ['mem_y']); else {
+      eo.replaceChildren();
+      const yrs = [2025, 2026, 2027, 2028, 2029], ymax = d3.max(y, (r) => r.op_usd_b);
+      ['SK 海力士', '三星電子', '美光'].forEach((co) => {
+        const wrap = document.createElement('div'); wrap.style.minWidth = '0';
+        const t = document.createElement('div'); t.className = 'muted'; t.textContent = co; wrap.append(t);
+        const box = document.createElement('div'); box.className = 'chart'; box.style.minHeight = '12rem'; wrap.append(box); eo.append(wrap);
+        const get = (yr, sc) => { const r = y.find((r) => r.company === co && r.year === yr && (yr <= 2026 || r.scenario === sc)); return r ? r.op_usd_b : null; };
+        lineChart(box, { h: 190, labels: yrs.map(String), fmt: (v) => '$' + d3.format(',.0f')(v), yMin: 0, yMax: ymax,
+          series: ['C', 'B', 'A'].map((s) => ({ name: s, color: color(SC[s]), values: yrs.map((yr) => get(yr, s)) })) });
+      });
+    }
+    const tb = document.getElementById('tb-val-mem'), v = rowsOf('valuation'), body = tb.querySelector('tbody');
+    body.replaceChildren();
+    if (v) v.filter((r) => r.metric === 'P/B').forEach((r) => {
+      const tr = document.createElement('tr'); tr.dataset.key = r.key;
+      [r.company, r.case, F.x(r.multiple), r.basis_label, fmtBasis(r), fmtPx(r.implied_px, r.ccy), fmtPx(r.px, r.ccy), F.spct(r.vs_px), F.x(r.px_multiple)].forEach((s, i) => {
+        const td = document.createElement('td'); td.textContent = s; if (i === 7) td.className = r.vs_px < 0 ? 'neg' : 'pos'; tr.append(td);
+      });
+      body.append(tr);
+    });
+  }
+
+  const NET_NAMES = { 'scale-up 交換晶片': 'scale-up 交換晶片', 'scale-up 互連與交換匣其他（銅背板、線纜、電路板、機構）': 'scale-up 互連與交換匣', 'scale-out 交換器': 'scale-out 交換器', 'scale-out 光模組': 'scale-out 光模組', 'scale-out 銅纜（DAC／AEC）': 'scale-out 銅纜', '網卡／DPU（SuperNIC）': '網卡／DPU' };
+  function drawNetwork() {
+    const c = rowsOf('net_comp'), en = document.getElementById('ch-net');
+    if (!c) failed(en, ['net_comp']); else {
+      const yrs = ['2026', '2027', '2028', '2029'];
+      legend('lg-net', c.map((r, i) => [NET_NAMES[r.component] || r.component, color(i)]));
+      barChart(en, { h: 290, stacked: true, labels: yrs, fmt: (v) => '$' + d3.format(',.0f')(v), series: c.map((r, i) => ({ name: NET_NAMES[r.component] || r.component, color: color(i), values: yrs.map((y) => r['y' + y]) })),
+        topLabel: yrs.map((y) => '$' + d3.format(',.0f')(d3.sum(c, (r) => r['y' + y])) + 'B') });
+    }
+    const k = rowsOf('net_kpi'), eo = document.getElementById('ch-optics');
+    legend('lg-optics', [['可插拔', color(3)], ['CPO', color(2)]]);
+    if (!k) failed(eo, ['net_kpi']); else barChart(eo, { stacked: true, labels: k.map((r) => String(r.year)), fmt: (v) => '$' + d3.format(',.0f')(v), series: [{ name: '可插拔', color: color(3), values: k.map((r) => r.pluggable) }, { name: 'CPO', color: color(2), values: k.map((r) => r.cpo) }] });
+  }
+
+  function drawFoundry() {
+    const c = rowsOf('tsmc_cowos'), ec = document.getElementById('ch-cowos');
+    legend('lg-cowos', [['需求', color(0)], ['其中 NVIDIA', color(4)], ['可用產能', color(2)]]);
+    if (!c) failed(ec, ['tsmc_cowos']); else barChart(ec, { labels: c.map((r) => String(r.year)), fmt: (v) => d3.format(',.0f')(v),
+      series: [{ name: '需求', color: color(0), values: c.map((r) => r.demand) }, { name: '其中 NVIDIA', color: color(4), values: c.map((r) => r.nvidia) }],
+      line: { name: '可用產能', color: color(2), values: c.map((r) => r.capacity) }, topLabel: c.map((r) => '用到 ' + d3.format('.0%')(r.util)) });
+    const p = rowsOf('tsmc_pl'), em = document.getElementById('ch-mix');
+    const keys = ['2026', '2027 A', '2028 A', '2028 B', '2028 C', '2029 A', '2029 B'];
+    legend('lg-mix', [['AI 相關', color(0)], ['非 AI', 'var(--cds-chart-muted)']]);
+    if (!p) failed(em, ['tsmc_pl']); else {
+      const rs = keys.map((kk) => p.find((r) => r.key === kk)).filter(Boolean);
+      barChart(em, { stacked: true, labels: rs.map((r) => r.key), fmt: (v) => '$' + d3.format(',.0f')(v), series: [{ name: 'AI 相關', color: color(0), values: rs.map((r) => r.ai_rev) }, { name: '非 AI', color: 'var(--cds-chart-muted)', values: rs.map((r) => r.non_ai_rev) }], topLabel: rs.map((r) => d3.format('.0%')(r.ai_share)) });
+    }
+    const body = document.querySelector('#tb-pl tbody'); body.replaceChildren();
+    if (p) p.forEach((r) => {
+      const tr = document.createElement('tr'); tr.dataset.key = r.key;
+      [r.key, F.n1(r.rev), F.n1(r.ai_rev), F.pct0(r.ai_share), F.pct0(r.gm), F.n1(r.eps), d3.format('.1f')(r.pe_now) + 'x', F.n0(r.capex)].forEach((s) => { const td = document.createElement('td'); td.textContent = s; tr.append(td); });
+      body.append(tr);
+    });
+  }
+
+  function drawMethod() {
+    const h = rowsOf('mult_hist'), v = rowsOf('valuation'), el = document.getElementById('ch-hist');
+    if (!h || !v) failed(el, ['mult_hist', 'valuation']); else strip(el, h, v);
+  }
+
+  // ---------- 分頁 ----------
+  const DRAW = { overview: drawOverview, memory: drawMemory, network: drawNetwork, foundry: drawFoundry, method: drawMethod };
+  let current = 'overview';
+  function show(id, link = true) {
+    if (!DRAW[id]) return;
+    current = id;
+    document.querySelectorAll('.ai [data-page-id]').forEach((s) => { s.hidden = s.dataset.pageId !== id; });
+    document.querySelectorAll('.ai-tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.page === id)));
+    if (link) dash.setLink(id);
+    DRAW[id]();
+  }
+  document.querySelector('.ai-tabs').addEventListener('click', (e) => { const b = e.target.closest('button[data-page]'); if (b) show(b.dataset.page); });
+  document.querySelectorAll('.ai [data-goto]').forEach((b) => b.addEventListener('click', () => { show(b.dataset.goto); document.getElementById('title').scrollIntoView(); }));
+  const start = location.hash.slice(1);
+  if (DRAW[start]) current = start;
+  dash.onData(() => { fillMarks(); show(current, false); });
+})();
+</script>
