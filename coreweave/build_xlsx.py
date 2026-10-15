@@ -428,7 +428,7 @@ if FL:
     # Tokenomics 引用值（列＝世代、欄＝項目；經 W1「Tokenomics_取數」具名範圍；OFFSET 依成本情境取低／基準／高欄；換成公司 MW 口徑）
     def _tkc(n, g, conv=True, sel=True):
         if not tk_has(n): return ""
-        k = f"TK_{re.sub(r'^(IF|L1)_', '', n)}_{_TKGC[g]}"
+        k = f"TK_{re.sub(r'^(IFW|IF|L1)_', '', n)}_{_TKGC[g]}"
         x = f"OFFSET({k},0,{TKSEL}-2)" if sel else k
         return f"={x}*{COLS[3]}{{conv}}" if conv else f"={x}"
     def _tkblock(title, cols, unit_note):
@@ -3672,7 +3672,8 @@ if TK:
         c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
     r += 1
     _ver = f"{_src['version']} · {_src['commit'][:7]}"
-    _short = lambda n: re.sub(r'^(IF|L1)_', '', n)
+    _short = lambda n: re.sub(r'^(IFW|IF|L1)_', '', n)  # W9：IFW_ 四層瀑布名稱同樣去前綴（TK_RevGWFleet_Prod_GB300）
+    _USE = (_TKS['items'].get('IFC_Use') or {}).get('values') or {}  # W9：IFC_Use 用途文字（顯示於 IFW_ 四層列旁）
     def _tkrow(key, name, lab, unit, gen, vals, loc, fmt):
         global r
         ws.cell(row=r, column=1, value=key).font = BLACK
@@ -3703,7 +3704,7 @@ if TK:
                 _vals = [_v3['低成本'], _v3['基準'], _v3['高成本']]
                 _key = f"TK_{_short(_nm)}_{_GC[_g]}"
                 _tkrow(_key, _nm, _it['label'], _it['unit'], _g, _vals,
-                       f"{_it['cells'][_g]['低成本']}:{_it['cells'][_g]['高成本'].split('!')[1]}", _fmt(_it['unit'], _vals))
+                       f"{_it['cells'][_g]['低成本']}:{_it['cells'][_g]['高成本'].split('!')[1]}" + (f"｜用途（IFC_Use）：{_USE[_nm]}" if _nm.startswith('IFW_') and _nm in _USE else ""), _fmt(_it['unit'], _vals))
                 wb.defined_names[_key] = _DN(_key, attr_text=f"'Tokenomics_取數'!$G${r - 1}")
         elif _it['kind'] == 'single':
             _rg = _it.get('range') or {}
@@ -3712,6 +3713,8 @@ if TK:
             _key = f"TK_{_short(_nm)}"
             _tkrow(_key, _nm, _it['label'], _it['unit'], "—", _vals, _loc, _fmt(_it['unit'], _vals))
             wb.defined_names[_key] = _DN(_key, attr_text=f"'Tokenomics_取數'!$G${r - 1}")
+        elif _it['kind'] == 'by_name':  # W9：IFC_Use 等整欄用途／信心欄（{IF_／IFW_ 名稱: 文字}）：不建列，用途文字顯示在 IFW_ 四層列旁與『每MW經濟性』上限檢查列
+            continue
         else:
             raise SystemExit(f'Tokenomics_取數：不支援的快照型態 {_it["kind"]}（{_nm}）')
 

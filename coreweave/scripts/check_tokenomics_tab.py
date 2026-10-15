@@ -27,7 +27,7 @@ def main(path):
     ws = wb[SHEET]
     rows = {ws.cell(r, 1).value: r for r in range(5, ws.max_row + 1) if ws.cell(r, 1).value}
     gc = {g['name']: g['code'] for g in SNAP['source']['generations']}
-    short = lambda n: re.sub(r'^(IF|L1)_', '', n)
+    short = lambda n: re.sub(r'^(IFW|IF|L1)_', '', n)
     errs, n_val, n_name = [], 0, 0
     expect_names = set()
     for nm, it in SNAP['items'].items():
@@ -35,6 +35,8 @@ def main(path):
             k = f'TK_{short(nm)}'
             if k not in rows: errs.append(f'{nm}：missing 名稱沒有列')
             if k in wb.defined_names: errs.append(f'{k}：missing 名稱不應建具名範圍')
+            continue
+        if it['kind'] == 'by_name':  # W9：IFC_Use 等整欄用途欄不建列（用途文字顯示在 IFW_ 四層列旁）
             continue
         if it['kind'] == 'gen_cost':
             exp = [(f'TK_{short(nm)}_{gc[g]}', [v['低成本'], v['基準'], v['高成本']], g) for g, v in it['values'].items()]
