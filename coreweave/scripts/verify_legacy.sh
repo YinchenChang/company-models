@@ -24,6 +24,7 @@ git -C "$ROOT" show "$REF:coreweave/company.json" > "$DST/ref_company.json"
 python3 - "$DST/coreweave/company.json" "$BASE" "$DST/ref_company.json" <<'PY'
 import json, sys
 p, base, refp = sys.argv[1:4]; co = json.load(open(p, encoding='utf-8')); ref = json.load(open(refp, encoding='utf-8'))
+co['methodology']['dcfInvalid'] = 'exclude'   # W7：DCF 失效時以 0 計入權重只在新版使用；舊方法回歸用舊口徑（權重歸零、EV/EBITDA 100%）
 if base == 'v4.6':
     co['methodology']['perMw']['revenue'] = 'legacy'
     co['defaults']['mwYearEnd'] = ref['defaults']['mwYearEnd']; co['texts']['mwYearEndNotes'] = ref['texts']['mwYearEndNotes']  # W6 r1：2023 年底 70 MW（10-K 原文）屬新版實際數更新；舊方法回歸用 v4.6 的值

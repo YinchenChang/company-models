@@ -63,7 +63,9 @@ def legs(x, s, grow=1.0):
     v = x[s]; T = (1 + x['wacc']) ** x['targetT']
     dcf = 0.0 if v['dcfBad'] else max(0.0, v['dcfRaw'] * grow) * T
     ev = max(0.0, v['evRaw'] * grow)
-    wd = 0.0 if v['dcfBad'] else x['wdcf']
+    # W7：DCF 失效時的權重口徑由該版 Excel 判定——exclude（v4.8 前）時加權目標價＝EV/EBITDA 腿（權重歸零）；zero（v4.9 起）時 DCF 腿以 0 計入原權重
+    excl = v['dcfBad'] and v['ev'] > 0 and abs(v['blendXl'] - v['ev']) < 1e-9
+    wd = 0.0 if excl else x['wdcf']
     return {'dcf': dcf, 'ev': ev, 'blend': wd * dcf + (1 - wd) * ev}
 
 

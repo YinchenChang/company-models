@@ -211,7 +211,7 @@ function AM({
             })
           }), (0, $.jsxs)(`p`, {
             className: `text-xs text-muted`,
-            children: [`DCF 失效只在 WACC ≤ g 或常態化 FCF ≤ 0 時成立，此時自動排除、權重改為 EV/EBITDA 100%。`, (0, $.jsx)(tipQ, {
+            children: [DCF_INV_EXCL ? `DCF 失效只在 WACC ≤ g 或常態化 FCF ≤ 0 時成立，此時自動排除、權重改為 EV/EBITDA 100%。` : `DCF 失效只在 WACC ≤ g 或常態化 FCF ≤ 0 時成立，此時 DCF 腿以 0 計入原權重（與 0 截斷同口徑）。`, (0, $.jsx)(tipQ, {
               t: `0 截斷：股權價值＝MAX(0, 企業價值 − 淨負債 ＋ 新股現值)÷融資後股數，反映有限責任，但忽略翻身的可能。選擇權（Merton）：把股權視為以企業價值為標的、淨負債為履約價的買權（Black-Scholes，期間 4.5 年、無風險利率 4%），在 0 附近連續，並保留時間價值；代價是多一個波動率假設。注意選擇權法同樣會提高股權為正的情境（例如保守情境），因為它包含時間價值。`,
               w: 440
             })]
@@ -634,7 +634,7 @@ function AM({
               v: Y(c.postShares, 3)
             }), (0, $.jsx)(jM, {
               k: `DCF 每股（${c.invalid ? `失效` : n.dcfMode === `option` ? `選擇權` : `0 截斷`}）`,
-              v: c.invalid ? `失效：${c.invalidReason}` : `$${Y(c.perShare,1)}（原始 $${Y(c.perShareRaw,1)}；0 截斷 $${Y(c.zeroPerShare,1)}；選擇權 $${Y(c.optPerShare,1)}）；推到 ${CALQ.targetDate} $${Y(c.perShareT,1)}`
+              v: c.invalid ? `失效${DCF_INV_EXCL ? `` : `（以 0 計入）`}：${c.invalidReason}` : `$${Y(c.perShare,1)}（原始 $${Y(c.perShareRaw,1)}；0 截斷 $${Y(c.zeroPerShare,1)}；選擇權 $${Y(c.optPerShare,1)}）；推到 ${CALQ.targetDate} $${Y(c.perShareT,1)}`
             })]
           }), (0, $.jsx)(`h3`, {
             className: `mt-5 text-sm font-medium`,
@@ -780,7 +780,7 @@ function AM({
             children: [`加權目標價 `, (0, $.jsxs)(`span`, {
               className: `font-semibold tabular-nums`,
               children: [`$`, Y(m.blended, 0)]
-            }), c.invalid ? `＝ EV/EBITDA（融資後）$${Y(f, 0)} × 100%（DCF 失效已排除）` : `＝ DCF $${Y(c.perShareT, 0)}（${n.dcfMode === `option` ? `選擇權` : `0 截斷`}，推到 ${CALQ.targetDate}）× ${hA(m.weights.dcf * 100, 0)} ＋ EV/EBITDA（融資後）$${Y(f, 0)} × ${hA(m.weights.pe * 100, 0)}`, `。相對現價 $`, Y(n.price, 2), ` 為`, ` `, (0, $.jsx)(`span`, {
+            }), c.invalid && DCF_INV_EXCL ? `＝ EV/EBITDA（融資後）$${Y(f, 0)} × 100%（DCF 失效已排除）` : c.invalid ? `＝ DCF $0（失效，以 0 計入）× ${hA(m.weights.dcf * 100, 0)} ＋ EV/EBITDA（融資後）$${Y(f, 0)} × ${hA(m.weights.pe * 100, 0)}` : `＝ DCF $${Y(c.perShareT, 0)}（${n.dcfMode === `option` ? `選擇權` : `0 截斷`}，推到 ${CALQ.targetDate}）× ${hA(m.weights.dcf * 100, 0)} ＋ EV/EBITDA（融資後）$${Y(f, 0)} × ${hA(m.weights.pe * 100, 0)}`, `。相對現價 $`, Y(n.price, 2), ` 為`, ` `, (0, $.jsx)(`span`, {
               className: m.upside >= 0 ? `text-ok` : `text-bad`,
               children: hA(m.upside * 100, 0)
             }), `。五期需股權 `, Y(p, 0), `bn。`]

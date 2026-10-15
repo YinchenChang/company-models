@@ -840,6 +840,7 @@
    "dcf": 0.45,
    "pe": 0.55
   },
+  "dcfInvalid": "zero",
   "rangeMultiples": [
    5,
    6

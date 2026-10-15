@@ -1,4 +1,4 @@
-# CoreWeave 收支模型 v4.8 原始碼包
+# CoreWeave 收支模型 v4.9 原始碼包
 
 HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo 根目錄；建置產物寫到 `out/`（不納入版控），交付成品放 `dist/`。HTML 的函式庫模板為 `docs/template_v3_3.html`。
 
@@ -87,7 +87,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **情境區間（A）**：保守與積極情境的加權目標價，取 min／max（保守情境擴張最少、目標價最高）。HTML 以 `scnQ`（v4.1 自 segE 移到 segB）換情境、保留其餘手動調整；Excel 以「輸入與假設」底部 H 區的模擬運算表計算（輸入格＝情境選擇；Excel 規定輸入格與運算表須在同一工作表）。
 - **方法區間（B）**：目前輸入，EV/EBITDA 倍數換成 `company.json` → `methodology.rangeMultiples`（預設 5、6）；Excel 輸入在 F 區「方法區間倍數：下端／上端」。
 - **判斷句**：情境區間上緣與現價比較，並依三情境實際評等說明賣出是否在三個情境下都成立；任一情境與賣出門檻（現價 × 85%）的距離小於現價 5% 時揭露該距離。
-- **DCF 權重說明**：只在 DCF 被 0 截斷時顯示；DCF 失效時改為一句；DCF 為正或選擇權模式時不顯示。
+- **DCF 權重說明**：只在 DCF 被 0 截斷時顯示；DCF 失效時改為一句（v4.9 起：「DCF：失效（以 0 計入）」＋不計 DCF 時的目標價）；DCF 為正或選擇權模式時不顯示。
 - 字串在 `targetRange()` 產生，HTML 各頁共用；Excel 以文字公式（`TEXT(x,"0.0")` 等）產生同一字串，cmp31 逐字比對。
 - 模擬運算表的建置鏈：build_xlsx 以 openpyxl 寫入 `t="dataTable"` → LibreOffice 能正確計算，但存檔時改寫成 `TABLE(公式列,輸入格,輸入值)` → `fix_datatable.py` 還原為單一 `dataTable` 公式（只放在區塊左上格）。本環境沒有 Microsoft Excel，結構依 ECMA-376；Excel 實機開檔由 Andy 於合併前確認（v4.2：2026-09-25 確認正常）。
 
@@ -191,6 +191,12 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **工具**：`scripts/attrib_w6.py`、`scripts/compare_w6.py`；`verify_legacy.sh` 的 v4.6 副本設 maint=flat；升版清單 `scripts/expect/v4_8_rules.json` → `v4_8_vs_v4_7.txt`。
 - **報告**：`docs/reports/20261009_coreweave_v4.8_Tokenomics_v5.31.{xlsx,md}`。
 
+## v4.9 DCF 失效時以 0 計入權重（W7；2026-10-11）
+- **口徑**（已決定事項 16(1)；`methodology.dcfInvalid`＝zero｜exclude，未填＝zero）：zero＝DCF 失效（WACC ≤ g 或常態化 FCF ≤ 0）時 DCF 腿採用值 $0、權重仍為 `blendWeights.dcf`（與 0 截斷同口徑）；exclude＝v4.8 前的權重歸零、EV/EBITDA 100%。
+- **實作**：Excel 由建置時依口徑產生有效權重公式（`build_xlsx.py` `_WD_E`／`_WE_E`：加權目標價、方法區間、錨定×倍數矩陣；Excel 內不設切換格）；HTML `segB.js` `DCF_INV_EXCL`（`blendCall`、`evAnchorGrid`）。失效時的畫面字樣：評價頁 DCF 權重說明與計算式、DCF 每股列「失效（以 0 計入）」、一頁摘要結論句末加「DCF：失效（以 0 計入）。」（Excel「摘要」結論句同字串）、總結頁三情境表。`scripts/attrib.py` 依該版 Excel 判定口徑（加權＝EV/EBITDA 腿即為 exclude）。
+- **舊方法回歸**：`verify_legacy.sh` 的副本設 `dcfInvalid`＝exclude。升版清單 `scripts/expect/v4_9_rules.json` → `v4_9_vs_v4_8.txt`。
+- **報告**：`docs/reports/20261011_coreweave_v4.9_DCF權重.md`。
+
 ## company.json 欄位說明（換公司填表指引）
 換成 Nebius、Oracle、OpenAI 等公司時，照這一節逐欄填寫 `company.json`；HTML 與 Excel 都從這個檔讀資料，改完執行 `scripts/verify.sh`。
 
@@ -200,7 +206,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY26 下半年、FY27、FY28、FY29、FY30，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 CoreWeave v4.8 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 CoreWeave v4.9 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -566,6 +572,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `methodology.blendWeights.dcf` | 加權目標價中 DCF 的權重 | 比例 | 0.45 | 可沿用 |
 | `methodology.blendWeights.pe` | 加權目標價中 EV/EBITDA 的權重（兩者合計 1） | 比例 | 0.55 | 可沿用 |
+| `methodology.dcfInvalid` | DCF 失效（WACC ≤ g 或常態化 FCF ≤ 0）時的權重口徑（W7，已決定事項 16）：zero＝DCF 腿以 0 計入原權重（與 0 截斷同口徑；v4.9 起）；exclude＝DCF 權重歸零、EV/EBITDA 100%（v4.8 前；未填＝zero） | 代碼 | zero | 可沿用 |
 | `methodology.rangeMultiples` | 方法區間的 EV/EBITDA 倍數下端與上端 | 倍 清單 | 5、6 | 檢查 |
 | `methodology.consensusGapTol` | 與市場共識比較的判斷句門檻：營收、EBITDA、CapEx 差距絕對值超過此比例即視為分歧（v4.3） | 比例 | 0.05 | 可沿用 |
 | `methodology.profitMarginTolPt` | 利潤類（調整後 EBITDA、調整後營業利益）須附差異原因的門檻：利潤率差超過此百分點（寫成比例，0.02＝2pt）；營收、CapEx、淨負債、MW 仍用 consensusGapTol 的比例門檻；不影響分歧判斷句（v4.4） | 比例 | 0.02 | 可沿用 |
