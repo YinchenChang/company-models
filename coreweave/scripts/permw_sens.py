@@ -28,6 +28,24 @@ if PMW['revenue'] == 'tkAnchor':  # W4 r2：定價倍數 k 與隨需占比（與
     CASES += [('kLongLo', f"k_長約 {_AM['long']['low']:.2f}", {_KL: _AM['long']['low']}), ('kLongMed', f"k_長約 {_AM['long']['sensMedian']:.2f}（三筆長約中位數）", {_KL: _AM['long']['sensMedian']}),
               ('kLongHi', f"k_長約 {_AM['long']['high']:.2f}", {_KL: _AM['long']['high']})]
     CASES += [(f'od{j + 1}', f"隨需占比 {round(x * 100)}%（k_現貨 {_AM['spot']['base']:.2f}）", {_OD: x}) for j, x in enumerate(_AM['onDemandShare']['sens'])]
+_GI = (CO.get('pricing') or {}).get('genIndex') if PMW['revenue'] == 'tkAnchor' else None
+_VRC = []
+if _GI:  # W9：VR200 世代指數 5 列（與 HTML vrSensQ 同一組設定、同一名稱；指數由快照與 company.json 算出，不寫死）
+    _TKI = json.load(open(os.path.join(ROOT, CO['tokenomics']['snapshotFile']), encoding='utf-8'))
+    _gens = _TKI['source']['generations']; _it = _TKI['items']
+    _ovc = next((g['code'] for g in _gens if g['code'] in _GI), None); _ovg = next((g['name'] for g in _gens if g['code'] == _ovc), None)
+    _rfc = next(g['code'] for g in _gens if g['name'] == _GI['refGen'])
+    _q = _GI.get('qName')
+    if _ovc and _q and all(x in _it and not _it[x].get('missing') for x in (_q, _q + '_Lo', _q + '_Hi')):
+        _conv = (lambda g: 1 / _it['IF_FacilityGW']['values'][g]['基準']) if CO['meta'].get('mwBasis') == 'facility' else (lambda g: 1)
+        _hv = lambda g: _it['IF_HoldEcon']['values'][g]['基準'] * _conv(g)
+        q, ql, qh = _it[_q]['values'], _it[_q + '_Lo']['values'], _it[_q + '_Hi']['values']; gap = _GI['gapYears']['base']; dc = _GI['lifeDeclinePerYear']
+        m = _hv(_ovg) / _hv(_GI['refGen']) / q  # (1＋回本門檻)^間隔
+        _L = [(ql * m, 'q 低端、價格路徑同基準'), (1, f'收入持平（等於 {_rfc}）'), (m * q, '跟成本走（基準）'), (q * (1 - dc) ** gap, f'q 基準、世代間只按壽命內降價 −{round(dc * 100)}%／年'), (qh * m, 'q 高端、價格路徑同基準')]
+        _OV = f'{_ovc} 世代指數覆寫（0＝跟成本走）'
+        for j, (ix, lb) in enumerate(_L):
+            imp = (ix / q) ** (1 / gap) - 1
+            _VRC.append((f'vrIdx{j + 1}', f"{_ovc} 指數 {ix:.2f}｜{lb}｜隱含年價格 {'−' if imp < 0 else '+'}{abs(imp) * 100:.1f}%", {_OV: 0 if j == 2 else ix}))
 if not CO.get('fleet'):
     print('permw_sens：company.json 無 fleet，不適用'); sys.exit(0)
 _CA = CO.get('companyAdjust') if PMW['revenue'] == 'tkAnchor' else None
@@ -43,6 +61,7 @@ with Workbook(xlsx) as wb:
                   ('opexQ2', f"營運成本＝Q2 實際比率（× {_z:.2f}）", {_OX: _z}),
                   ('capexQ2', f"每 MW 建置成本＝{_YTDL} 實際比率（× {_zc:.2f}）", {_CXS: _zc}),
                   ('actBoth', '營運成本與建置成本皆用公司實際比率', {_OX: _z, _CXS: _zc})]
+    CASES += _VRC  # W9：VR200 世代指數 5 列（排在最後，與 HTML pmwSensQ 同序）
     c_sel = wb.cell(IN, '情境選擇', prefix=True)
     o_tgt, o_pfc = wb.cell(VA, '加權目標價'), wb.cell(FR, '融資前累積現金', col='G')
     cells = {k: wb.cell(IN, k) for _, _, ch in CASES if ch for k in ch}
