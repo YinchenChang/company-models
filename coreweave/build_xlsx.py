@@ -495,10 +495,30 @@ if FL:
                               "W5：最新季末在役 MW 按 k_既有（Q2 實現單價 ÷ Q2 錨，合約期內固定；該批汰換後回到 k_新約）；0＝全部按 k_新約（W4）。" + CA['existingK']['tag'], NUM0); r += 1
             AMX['kNewAdj'] = gi(r, "新約價格調整（相對 k_長約；只作用於長約部分）", "%", CA['newK']['adjBase'],
                                 f"W5：基準 0（市場長約證據）；敏感度 +{CA['newK']['adjSens'] * 100:g}%（公司說法「7 月各 SKU 漲價約 25%」，轉述 {CA['newK']['tag']}）", PCT); r += 1
+        GI = (CO.get('pricing') or {}).get('genIndex')  # W9：世代指數（每 MW 年收入｜g ＝ p_ref × idx_g）
+        if GI:
+            _GREF = GEN.index(GI['refGen'])
+            _OVC = next((g_['code'] for g_ in _TKX['source']['generations'] if g_['code'] in GI), None)  # 可覆寫指數的世代代碼（例：VR200）
+            _RFC = _TKGC[GI['refGen']]
+            _OVG = next((g_['name'] for g_ in _TKX['source']['generations'] if g_['code'] == _OVC), None)
+            _GQN = GI.get('qName')
+            _hasQ = bool(_OVC and _GQN and all(tk_has(_GQN + x_) for x_ in ('', '_Lo', '_Hi')))
+            if _OVC:
+                _gp = GI['gapYears']
+                AMX['gOv'] = gi(r, f"{_OVC} 世代指數覆寫（0＝跟成本走）", "倍", GI.get(_OVC) or 0,
+                                f"W9：company.json → pricing.genIndex.{_OVC}（空白＝0＝跟成本走：指數＝IF_HoldEcon｜{_OVC} ÷ IF_HoldEcon｜{_RFC}）。日後有 {_OVC} 長約價時，覆寫值＝{_OVC} 每 MW 長約價 ÷ 參考價 p_ref（證據入 pricing.anchorMultiple.evidence，已決定事項 16(3)）；其他世代不開覆寫", '0.000'); r += 1
+                if _hasQ:
+                    AMX['gap'] = gi(r, f"上市間隔 {_RFC}→{_OVC}（年）", "年", _gp['base'],
+                                    f"W9：{_gp['base']}（{_gp['low']}–{_gp['high']}）{_gp['tag']}；{_gp['source']}；{_gp['note']}", '0.00'); r += 1
         FLX['tkCapRev'] = _tkblock("TK 收入上限（客戶每 GW 付費 token 營收）", [
             ("token 營收", lambda g, rr: _tkc('IF_RevGWFleet', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g))))] +
             [(f"四層｜_{L_}", (lambda g, rr, L_=L_: _tkc(f'IFW_RevGWFleet_{L_}', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g))))) for L_ in REVCAP_LAYERS],
             "US$m／公司 MW／年；× MW 換算。C 欄＝IF_RevGWFleet（OpenAI 有效單價、層級組合的理想上限；＝_Util 層，對照）；D–G 欄＝四層瀑布 IFW_RevGWFleet_100／_Util／_Prod／_Life（W9，Tokenomics 契約第 2 條：四層一起取）。收入上限檢查：CRWV 每 MW 計費收入 ÷ 比較層（company.json → methodology.checks.revCapLayer）（快照沒有此名稱時空白＝不適用）")
+        if GI:
+            FLX['genIdx'] = _tkblock("TK 世代指數（W9；相對參考世代）", [
+                ("預設指數（跟成本走）", lambda g, rr: f"=E{FLX['tkRev'] + GEN.index(g)}/E{FLX['tkRev'] + _GREF}"),
+                ("採用指數", lambda g, rr: (f"=IF({AMX['gOv']}>0,{AMX['gOv']},C{rr})" if _OVC and _TKGC[g] == _OVC else f"=C{rr}"))],
+                f"相對 {GI['refGen']}：預設＝持有成本（上方『TK 收入參考』E 欄，含 MW 換算）÷ 參考世代持有成本（目前 Tokenomics 成本情境）；採用＝{_OVC or '—'} 有覆寫值（> 0）時用覆寫值，其餘世代只用預設（參考世代恆為 1）。每 MW 年收入｜g ＝ 參考價 p_ref × 採用指數")
     r += 1
 
 # ---------------- C 利潤率 ----------------
@@ -3379,9 +3399,15 @@ if FL:
             mrow("定價倍數 k（隨需占比 × k_現貨 ＋（1 − 隨需占比）× k_長約）", "倍",
                  lambda i: f"={COLS[i]}{PM['隨需占比（輸入）']}*{COLS[i]}{PM['k_現貨（依目前成本情境重算）']}+(1-{COLS[i]}{PM['隨需占比（輸入）']})*{COLS[i]}{PM['k_長約（依目前成本情境重算）']}", '0.000', BOLD)
             _KROW = "定價倍數 k（隨需占比 × k_現貨 ＋（1 − 隨需占比）× k_長約）"
+        if GI:  # W9：q × p 結構——參考價 p_ref ＝ k × 參考世代持有成本；每 MW 年收入 ＝ p_ref × Σ 平均在役占比 × 世代指數（預設與『錨 × k』恆等）
+            mrow("參考價 p_ref（定價倍數 k × 參考世代 IF_HoldEcon，US$m/MW）", "US$m/MW", lambda i: f"={COLS[i]}{PM[_KROW]}*{_I}$E${FLX['tkRev'] + _GREF}", NUM, BLACK,
+                 f"＝定價倍數 k × IF_HoldEcon｜{GI['refGen']}（目前成本情境；基準 ≈ k_長約 × 持有成本＝市場長約價）")
+            mrow("世代指數加權（Σ 平均在役占比 × 世代指數）", "倍", lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('genIdx', 'D')})", '0.0000', BLACK,
+                 "世代指數＝輸入頁『TK 世代指數』採用指數（預設跟成本走）")
         mrow("Tokenomics 錨 × k：每 MW 年收入（100% 計費時數）", "US$m/MW",
-             lambda i: f"={COLS[i]}{PM['錨｜每 MW 經濟持有成本（IF_HoldEcon，在役世代加權）']}*{COLS[i]}{PM[_KROW]}", NUM, BOLD,
-             ("模型採用：輸入頁 B 區『每 MW 年收入』＝本列 ÷ 1000（收入端另乘利用率與爬坡分母）" if _TKON else "對照（模型未採用）"))
+             (lambda i: f"={COLS[i]}{PM['參考價 p_ref（定價倍數 k × 參考世代 IF_HoldEcon，US$m/MW）']}*{COLS[i]}{PM['世代指數加權（Σ 平均在役占比 × 世代指數）']}") if GI else
+             (lambda i: f"={COLS[i]}{PM['錨｜每 MW 經濟持有成本（IF_HoldEcon，在役世代加權）']}*{COLS[i]}{PM[_KROW]}"), NUM, BOLD,
+             ("模型採用：輸入頁 B 區『每 MW 年收入』＝本列 ÷ 1000（收入端另乘利用率與爬坡分母）；" if _TKON else "對照（模型未採用）；") + ("＝參考價 p_ref × 世代指數加權（W9；預設下與 W4 的『錨 × k』恆等）" if GI else ""))
         mrow("錨 × k 相對 v4.6 舊輸入 m.revMW", "%", lambda i: f"={COLS[i]}{PM['Tokenomics 錨 × k：每 MW 年收入（100% 計費時數）']}/MAX(1E-9,{COLS[i]}{PM[_OLDREV]})-1", PCT, BLACK)
         _hasRF = tk_has('IF_RevGWFleet')
         mrow("上限檢查｜客戶每 MW 付費 token 營收（IF_RevGWFleet，在役世代加權）", "US$m/MW",
@@ -3406,6 +3432,23 @@ if FL:
              (lambda i: f"={COLS[i]}{PM[_CAPR[REVCAP_LAYER]]}") if _hasL else ((lambda i: f"={COLS[i]}{PM['每 MW 年收入（計費後＝× 利用率）']}/MAX(1E-9,{COLS[i]}{PM['上限檢查｜客戶每 MW 付費 token 營收（IF_RevGWFleet，在役世代加權）']})") if _hasRF else (lambda i: "不適用")), PCT, BOLD,
              f"＝neocloud 拿走客戶 token 營收的比例，取比較層 _{REVCAP_LAYER}（company.json → methodology.checks.revCapLayer）；> {_gq(CK['revCapShareMax'] * 100)}%（company.json → methodology.checks.revCapShareMax）時『檢查_連動』警示。_Prod 已扣 SLO 下的產能折減，是四層中最接近可實際售出 token 的一層")
         mrow("上限檢查｜各期結果", "", (lambda i: f'=IF({COLS[i]}{PM["上限檢查｜CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收"]}>{_gq(CK["revCapShareMax"])},"警示","通過")') if (_hasL or _hasRF) else (lambda i: "不適用"), NUM, BOLD)
+        if GI and _hasQ:  # W9：世代指數判讀（各期同值；VR200 對參考世代的產出比 q、上市間隔、隱含年價格變化與兩個門檻；活公式）
+            r = section(ws, r, f"{_OVC} 世代指數判讀（W9；q、上市間隔、隱含年價格變化、收入持平與回本門檻）", level=2, collapsed=True)
+            _lq, _ll, _lh = f"世代指數判讀｜q（{_OVC} 對 {_RFC} 每 MW token 產出比，基準）", "世代指數判讀｜q 低端", "世代指數判讀｜q 高端"
+            _lg, _lx = f"世代指數判讀｜上市間隔 {_RFC}→{_OVC}（年）", f"世代指數判讀｜{_OVC} 世代指數（採用，相對 {_RFC}）"
+            _li, _lf, _lb = "世代指數判讀｜隱含年價格變化＝(指數 ÷ q)^(1 ÷ 間隔) − 1", "世代指數判讀｜收入持平門檻＝(1 ÷ q)^(1 ÷ 間隔) − 1", f"世代指數判讀｜回本門檻＝(IF_HoldEcon｜{_OVC} ÷ IF_HoldEcon｜{_RFC} ÷ q)^(1 ÷ 間隔) − 1"
+            _qk = lambda sfx: "TK_" + re.sub(r'^(IFW|IF|L1)_', '', _GQN) + sfx
+            mrow(_lq, "倍", lambda i: f"={_qk('')}", '0.000', BLACK, f"Tokenomics {_GQN}：{_OVC} 對 {_RFC} 每 MW（每 GW）token 總產出比（基準）；低／高端見下兩列（{_GQN}_Lo／_Hi）")
+            mrow(_ll, "倍", lambda i: f"={_qk('_Lo')}", '0.000', BLACK, "Sens_Perf 效率 × 0.5 的比值（Tokenomics 區間）")
+            mrow(_lh, "倍", lambda i: f"={_qk('_Hi')}", '0.000', BLACK, "Sens_Perf 效率 × 1.5 的比值（Tokenomics 區間）")
+            mrow(_lg, "年", lambda i: f"={AMX['gap']}", '0.00', GREEN, f"輸入頁（company.json → pricing.genIndex.gapYears）{_gp['tag']}；v4.12 改取 Tokenomics 名稱")
+            mrow(_lx, "倍", lambda i: f"={_I}$D${FLX['genIdx'] + GEN.index(_OVG)}", '0.000', GREEN, "輸入頁『TK 世代指數』採用指數（預設＝跟成本走）")
+            mrow(_li, "%", lambda i: f"=({COLS[i]}{PM[_lx]}/{COLS[i]}{PM[_lq]})^(1/{COLS[i]}{PM[_lg]})-1", PCT, BOLD, "指數隱含的每年價格變化：每 MW 收入指數 ÷ 產出比 q＝每單位產出的價格相對 GB300 的倍數，折成年率")
+            mrow(_lf, "%", lambda i: f"=(1/{COLS[i]}{PM[_lq]})^(1/{COLS[i]}{PM[_lg]})-1", PCT, BLACK, f"每年價格下跌到此幅度時，{_OVC} 每 MW 收入恰等於 {_RFC}（Tokenomics 回覆約 −32%／年）")
+            mrow(_lb, "%", lambda i: f"=({_I}$E${FLX['tkRev'] + GEN.index(_OVG)}/{_I}$E${FLX['tkRev'] + _GREF}/{COLS[i]}{PM[_lq]})^(1/{COLS[i]}{PM[_lg]})-1", PCT, BLACK,
+                 f"每年價格下跌到此幅度時，{_OVC} 每 MW 持有成本（含資本回收）恰被收入回收（Tokenomics 回覆約 −25%／年）。基準下隱含年價格變化＝本列，定義上相等（指數＝持有成本比）")
+            mrow("世代指數判讀｜判讀", "", lambda i: (f'=IF(ROUND(C{PM[_li]}-C{PM[_lb]},9)>=0,"{_OVC} 回本餘裕不低於 {_RFC}",IF(ROUND(C{PM[_li]}-C{PM[_lf]},9)>=0,"每 MW 收入高於 {_RFC}，但回本餘裕較低","每 MW 收入低於 {_RFC}"))' if i == 0 else None), NUM, BOLD,
+                 "依條件產生：隱含 ≥ 回本門檻→回本餘裕不低於；介於兩門檻之間→收入高但回本餘裕較低；< 收入持平門檻→收入低於")
         # k 證據表（市場價格 ÷ Tokenomics 同世代持有成本；成本取基準、不隨成本情境）
         r = section(ws, r, "定價倍數 k 證據表（市場價格 ÷ Tokenomics 同世代持有成本；用途：long＝k_長約基準、spot＝k_現貨基準、range＝支持區間、list＝只列不用）", level=2, collapsed=True)
         for j, h in enumerate(["證據", "單位", "價格", "Tokenomics 同世代", "倍數", "用途", "v5.27 倍數（v4.7）" if any('multipleV527' in x for x in AMQ['evidence']) else ""]):

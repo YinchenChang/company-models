@@ -1,0 +1,33 @@
+{
+ "title": "v4.11（W9：VR200 世代指數 q × p、收入上限四層、Tokenomics 快照 v5.36）對 v4.10 成品的預期差異清單",
+ "downstream": {
+  "Tokenomics_取數": "快照版本與 commit 字樣（J 欄「版本 · commit」與第 2 列來源說明；原 29 名取數值不變）",
+  "檢查_版本紀錄": "新增 v4.11 版本紀錄列"
+ },
+ "inputRows": {
+  "輸入與假設": {
+   "TK 收入上限": "收入上限區塊新增 D–G 欄（四層瀑布 IFW_RevGWFleet_100／_Util／_Prod／_Life）與說明文字；原 C 欄 IF_RevGWFleet 不變"
+  },
+  "每MW經濟性": {
+   "Tokenomics 錨 × k：每 MW 年收入": "公式改為 參考價 p_ref × 世代指數加權（預設下數值與舊式『錨 × k』恆等）與說明文字",
+   "上限檢查｜CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收": "上限檢查比較層 _Util → _Prod（只影響檢查比例）",
+   "上限檢查｜各期結果": "上限檢查結果隨比較層改變（FY26 通過 → 警示）"
+  },
+  "檢查_連動": {
+   "收入上限": "收入上限檢查列：比較層 _Util → _Prod（最高比例與結果文字）"
+  },
+  "資產負債_新債與新股": {
+   "　驗算：與各期收支期末現金差異": "驗算差異的浮點誤差（≤ 1e-14，收入乘法順序改變；非數值差異）"
+  }
+ },
+ "renames": [
+  [
+   "來源：YinchenChang/Tokenomics 20261014_Tokenomics_v5.35.xlsx（v5.35，commit 9dff7f5，擷取 2026-10-15）。只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱；模型主值取「基準」，低／高只作敏感度；Tokenomics 每 GW＝IT 關鍵電力。",
+   "來源：YinchenChang/Tokenomics 20261015_Tokenomics_v5.36.xlsx（v5.36，commit 63db13a，擷取 2026-10-15）。只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱；模型主值取「基準」，低／高只作敏感度；Tokenomics 每 GW＝IT 關鍵電力。"
+  ],
+  [
+   "收入上限：CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收（各期最高）",
+   "收入上限：CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收（比較層 _Prod，各期最高）"
+  ]
+ ]
+}

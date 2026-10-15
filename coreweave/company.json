@@ -1862,6 +1862,21 @@
     "tag": "[Assumed]",
     "note": "隨需（現貨）占在役計費產能的比例；公司未揭露（S-1：絕大多數收入來自多年期已承諾合約）。基準 0%、敏感度 10%／20%；不得用 Q2 隱含 k 反推"
    }
+  },
+  "genIndex": {
+   "_note": "世代指數（W9，v4.11）：每 MW 年收入｜世代 g ＝ 參考價 p_ref × 指數 idx_g；p_ref ＝ 定價倍數 k × IF_HoldEcon｜參考世代（目前成本情境）。idx_g 預設（空白）＝跟成本走：IF_HoldEcon｜g ÷ IF_HoldEcon｜參考世代，所以預設下與 W4 的「錨 × k」恆等（數值 0 差異）。VR200 可覆寫：日後有 VR200 長約價時，覆寫值＝VR200 每 MW 長約價 ÷ p_ref（證據入 anchorMultiple.evidence，已決定事項 16(3)）；其他世代不開覆寫（參考世代恆為 1）。判讀列（q、上市間隔、隱含年價格變化、收入持平門檻、回本門檻）與 5 列敏感度讀本區與 Tokenomics 名稱 qName／qName_Lo／qName_Hi。",
+   "refGen": "GB300 NVL72",
+   "VR200": null,
+   "qName": "L1_TokMW_Gen_ratio_VR200",
+   "gapYears": {
+    "base": 1.18,
+    "low": 1.11,
+    "high": 1.24,
+    "tag": "[Analogy]",
+    "source": "Tokenomics 世代價格 A 段查證（docs/reports/20261015_世代價格A_查證.md，PR #49）",
+    "note": "GB300→VR200 上市間隔（年）。本版唯一的固定值；v4.12 待 Tokenomics B 段合併後改取 Tokenomics 名稱（L1_GenPxThr_*）。"
+   },
+   "lifeDeclinePerYear": 0.1
   }
  },
  "companyAdjust": {

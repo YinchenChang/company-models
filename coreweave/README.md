@@ -1,4 +1,4 @@
-# CoreWeave 收支模型 v4.10 原始碼包
+# CoreWeave 收支模型 v4.11 原始碼包
 
 HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo 根目錄；建置產物寫到 `out/`（不納入版控），交付成品放 `dist/`。HTML 的函式庫模板為 `docs/template_v3_3.html`。
 
@@ -203,6 +203,16 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **升版清單**：`scripts/expect/v4_10_rules.json` → `v4_10_vs_v4_9.txt`。
 - **報告**：`docs/reports/20261015_coreweave_v4.10_Tokenomics_v5.35.md`。
 
+## v4.11 VR200 世代指數（q × p）與收入上限四層（W9；2026-10-15）
+- **快照**：`data/tokenomics_snapshot_v5.36.json`（Tokenomics master `63db13a779cf511504ee7b13bc752cd4623ddda1`，`model/CURRENT`＝`20261015_Tokenomics_v5.36.xlsx`）；原 29 個名稱 365 個數值與 v5.35 逐值相同；名稱清單新增 8 個：`IFW_RevGWFleet_100／_Util／_Prod／_Life`（四層瀑布）、`IFC_Use`（用途限制，顯示在 Excel「Tokenomics_取數」四層列旁）、`L1_TokMW_Gen_ratio_VR200` 與 `_Lo`／`_Hi`（VR200 對 GB300 每 MW token 產出比 q）。`IF_RevGWFleet` 保留（＝`_Util` 層，逐值相同）。`import_tokenomics.py` 的 `by_name` 型態（IFC_ 整欄）在 Excel 取數頁不建列；`TK_` 具名範圍去掉 `IFW_` 前綴（例：`TK_RevGWFleet_Prod_GB300`）。
+- **收入上限四層（B3）**：「每MW經濟性」W4 區每層一列「客戶每 MW 付費 token 營收｜_100／_Util／_Prod／_Life」與一列「CRWV 每 MW 計費收入 ÷ 該層」；門檻（`methodology.checks.revCapShareMax`＝50%）的比較層由 `methodology.checks.revCapLayer` 指定（v4.11＝`Prod`；省略＝`Util`，即 W4 原做法）。「檢查_連動」收入上限列與 HTML 連動檢查讀比較層各期最高。只影響檢查結果，不改任何收入、成本、目標價。
+- **收入 q × p 結構（B2）**：每 MW 年收入｜g ＝ 參考價 p_ref × 世代指數 idx_g；p_ref ＝ 定價倍數 k × `IF_HoldEcon`｜參考世代（`pricing.genIndex.refGen`，GB300）；idx_g 預設＝`IF_HoldEcon`｜g ÷ `IF_HoldEcon`｜參考世代（跟成本走），可覆寫世代（鍵＝Tokenomics 世代代碼，目前 `VR200`）有覆寫值（> 0）時用覆寫值。預設下與 v4.10 的「錨 × k」恆等，數值 0 差異。Excel：輸入頁「定價倍數 k」區新增「VR200 世代指數覆寫（0＝跟成本走）」「上市間隔 GB300→VR200（年）」，「TK 世代指數」區塊（預設指數、採用指數），「每MW經濟性」新增「參考價 p_ref」「世代指數加權」列。HTML：`segA.js` `genIdxQ`、`anchorRevQ`。
+- **VR200 判讀列**（「每MW經濟性」次層，預設收合；HTML「每 MW 經濟性 → VR200 世代指數判讀」）：q（基準／低／高）、上市間隔（`pricing.genIndex.gapYears`，**v4.11 的唯一固定值**；v4.12 待 Tokenomics B 段合併後改取 `L1_GenPxThr_*` 名稱）、VR200 世代指數、隱含年價格變化、收入持平門檻、回本門檻（皆活公式，不寫死）、判讀文字（依條件產生）。
+- **敏感度**：既有每 MW 敏感度表（`scripts/permw_sens.py` 建置時快照＋HTML `vrSensQ` 即時；「快照已過期」檢查沿用）新增 5 列 VR200 指數（q 低端 × 回本價格路徑、1.00、跟成本走、q × (1 − 10%)^間隔、q 高端 × 回本價格路徑；指數值由快照與 `company.json` 算出，列名帶隱含年價格變化）。
+- **可移植性**：新增 `company.json` → `pricing.genIndex`（`refGen`、可覆寫世代鍵〔`VR200`〕、`qName`、`gapYears`、`lifeDeclinePerYear`）與 `methodology.checks.revCapLayer`。換公司：`refGen` 改為該公司的參考世代；沒有可覆寫世代或 Tokenomics 沒有對應 q 名稱時，省略該世代鍵／`qName`——判讀列與指數敏感度即不產生，其餘（p_ref × 世代指數）照常；`pricing.genIndex` 整個省略＝仍用 W4 的「錨 × k」。
+- **升版清單**：`scripts/expect/v4_11_rules.json` → `v4_11_vs_v4_10.txt`（輸入頁只允許四層欄位、收入列公式、上限檢查比較層，其餘須 0 差異）。
+- **報告**：`docs/reports/20261015_coreweave_v4.11_世代指數與收入上限.md`。
+
 ## company.json 欄位說明（換公司填表指引）
 換成 Nebius、Oracle、OpenAI 等公司時，照這一節逐欄填寫 `company.json`；HTML 與 Excel 都從這個檔讀資料，改完執行 `scripts/verify.sh`。
 
@@ -212,7 +222,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY26 下半年、FY27、FY28、FY29、FY30，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 CoreWeave v4.10 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 CoreWeave v4.11 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -713,6 +723,12 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `pricing.anchorMultiple.contractMix` | 公司合約組合事實（label、value、unit、tag、source、url、date、retrieved；只列，不入公式） | 清單 | 3 筆 | 必改 |
 | `pricing.anchorMultiple.evidence` | k 證據表：label、gen、price、unit、tkName（IF_GPUhrEcon／IF_HoldEcon）、contract、term、use（long／spot／range／list）、tag、source、url、date、retrieved、note；倍數在 Excel 以 TK_ 名稱計算 | 清單 | 11 筆 | 必改 |
 | `pricing.anchorMultiple.notFound` | 找不到的資料（試過的來源；W4） | 清單 | VR200 NVL72 長約或多年期合約的每 GPU…、GB200 NVL72 長約價：找不到可換算的揭露（…、其他 neocloud 對 hyperscaler／… | 可沿用 |
+| `pricing.genIndex._note` | 世代指數（q × p 結構）的說明（不進程式；W9） | 文字 | 世代指數（W9，v4.11）：每 MW 年收入｜世代… | 可沿用 |
+| `pricing.genIndex.refGen` | 參考世代（Tokenomics 世代全名）：參考價 p_ref ＝ 定價倍數 k × IF_HoldEcon｜參考世代；各世代指數相對它（W9） | 文字 | GB300 NVL72 | 必改 |
+| `pricing.genIndex.VR200` | 可覆寫世代（鍵＝Tokenomics 世代代碼，目前 VR200）的世代指數覆寫值；null＝跟成本走（指數＝IF_HoldEcon｜g ÷ IF_HoldEcon｜參考世代）。日後有該世代長約價時，填 該世代每 MW 長約價 ÷ p_ref，證據入 anchorMultiple.evidence（已決定事項 16(3)；W9） | 倍或 null | None | 必改 |
+| `pricing.genIndex.qName` | 該世代對參考世代每 MW token 產出比 q 的 Tokenomics 名稱（單值，基準；另取 _Lo／_Hi 為低／高端）；快照缺任一名稱時判讀列與指數敏感度不產生（W9） | 名稱 | L1_TokMW_Gen_ratio_VR200 | 必改 |
+| `pricing.genIndex.gapYears` | 參考世代 → 可覆寫世代的上市間隔（年），{base, low, high, tag, source, note}。v4.11 為固定值（Tokenomics 世代價格 A 段查證）；待 Tokenomics B 段合併後改取 Tokenomics 名稱（v4.12；W9） | 物件 | 物件（base、low、high、tag、source、note） | 必改 |
+| `pricing.genIndex.lifeDeclinePerYear` | 指數敏感度第 4 列：世代間只按壽命內降價的年降幅（Tokenomics g；W9） | 比例 | 0.1 | 檢查 |
 | `pricing.peerRevPerMw` | 同業每 MW 年收入對照列（label、value、unit、tag、source、date、url、note；不入損益） | 清單 | 1 筆 | 必改 |
 | `pricing.marketRefs` | 各世代市場 GPU 小時價格對照列（gen、label、value、basis、tag、source、date、url；不入損益） | 清單 | 6 筆 | 必改 |
 
