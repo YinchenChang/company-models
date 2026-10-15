@@ -43,6 +43,7 @@ var PERIODS = COMPANY_DATA.periods,
   CONV_P = COMPANY_DATA.debt.convertible.principal,
   CONV_I = CONV_P * COMPANY_DATA.debt.convertible.coupon,
   CHECK_TH = COMPANY_DATA.methodology.checks, // 5a：連動檢查門檻（Excel「檢查_連動」同一來源）
+  REVCAP_LAYERS_Q = [`100`, `Util`, `Prod`, `Life`], REVCAP_LAYER_Q = CHECK_TH.revCapLayer || `Util`, // W9：Tokenomics IFW_RevGWFleet_* 四層瀑布；比較層讀 company.json → methodology.checks.revCapLayer（預設 Util＝W4 原做法）
   CX_OLD = COMPANY_DATA.legacy.capexV14,
   INT_OLD = COMPANY_DATA.legacy.interestV14,
   LEASE_FACTS = COMPANY_DATA.leases.facts,
@@ -485,7 +486,11 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
   if (AMQ) { // W4：Tokenomics 錨 × k（Excel「每MW經濟性」W4 區）與 k 證據表
     let A = anchorRevQ(e, F, d.m), old = COMPANY_DATA.defaults.m.revMW.map(x => x * 1e3), hasRF = tkHasQ(`IF_RevGWFleet`),
       rf = hasRF ? mx.map(m => wMixQ(m, g => tkMwQ(`IF_RevGWFleet`, g, cs))) : I5.map(() => `不適用`),
-      ratio = hasRF ? I5.map(i => revIn[i] * d.m.util[i] / 100 / Math.max(1e-9, rf[i])) : I5.map(() => `不適用`),
+      ratio0 = hasRF ? I5.map(i => revIn[i] * d.m.util[i] / 100 / Math.max(1e-9, rf[i])) : I5.map(() => `不適用`),
+      hasL = REVCAP_LAYERS_Q.every(L => tkHasQ(`IFW_RevGWFleet_${L}`)), // W9：四層瀑布（Excel 同列同算式）
+      layV = Object.fromEntries(REVCAP_LAYERS_Q.map(L => [L, hasL ? mx.map(m => wMixQ(m, g => tkMwQ(`IFW_RevGWFleet_${L}`, g, cs))) : I5.map(() => `不適用`)])),
+      layR = Object.fromEntries(REVCAP_LAYERS_Q.map(L => [L, hasL ? I5.map(i => revIn[i] * d.m.util[i] / 100 / Math.max(1e-9, layV[L][i])) : I5.map(() => `不適用`)])),
+      ratio = hasL ? layR[REVCAP_LAYER_Q] : ratio0,
       th = CHECK_TH.revCapShareMax;
     tk = [
       [`錨｜每 MW 經濟持有成本（IF_HoldEcon，在役世代加權）`, `US$m/MW`, A.anchor], [`錨｜排程 RPO（模型期）`, `US$bn`, A.sched],
@@ -507,8 +512,10 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
       [`Tokenomics 錨 × k：每 MW 年收入（100% 計費時數）`, `US$m/MW`, A.rev],
       [`錨 × k 相對 v4.6 舊輸入 m.revMW`, `%`, I5.map(i => A.rev[i] / Math.max(1e-9, old[i]) - 1)],
       [`上限檢查｜客戶每 MW 付費 token 營收（IF_RevGWFleet，在役世代加權）`, `US$m/MW`, rf],
+      ...REVCAP_LAYERS_Q.map(L => [`上限檢查｜四層｜客戶每 MW 付費 token 營收｜_${L}（IFW_RevGWFleet_${L}，在役世代加權）`, `US$m/MW`, layV[L]]),
+      ...REVCAP_LAYERS_Q.map(L => [`上限檢查｜四層｜CRWV 每 MW 計費收入 ÷ _${L}`, `%`, layR[L]]),
       [`上限檢查｜CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收`, `%`, ratio],
-      [`上限檢查｜各期結果`, ``, hasRF ? ratio.map(x => x > th ? `警示` : `通過`) : I5.map(() => `不適用`)]
+      [`上限檢查｜各期結果`, ``, hasL || hasRF ? ratio.map(x => x > th ? `警示` : `通過`) : I5.map(() => `不適用`)]
     ];
     kev = [
       ...AMQ.evidence.map(x => { let v = tkQ(x.tkName, x.gen); return [`k 證據｜${x.label}`, x.unit, v == null ? [x.price, `不適用`, `不適用`, x.use, x.multipleV527 ?? null] : [x.price, v, x.price / v, x.use, x.multipleV527 ?? null]] }), // W6 r1：第 5 欄＝v5.27 倍數
@@ -822,15 +829,16 @@ function runFunding(e) {
     title: `Tokenomics 名稱缺漏 ${TK_MISSQ.length} 項，成本為暫代值`,
     detail: `${TK_MISSQ.join(`、`)} 尚未在 Tokenomics ${(COMPANY_DATA.tkSnap || { source: {} }).source.version || ``} 提供（待 v5.26）。暫代：IT 維護＝輸入頁「維護成本」（CRWV 現值）、人員軟體與稅險＝0、GPU 經濟壽命＝${COMPANY_DATA.defaults.gpuLife} 年。Tokenomics 補齊後重抓快照即自動改用正式值。`
   });
-  if (PMWQ.revenue === `tkAnchor` && FQ && tkHasQ(`IF_RevGWFleet`)) { // W4：收入上限檢查（Excel「檢查_連動」同一列；門檻 company.json → methodology.checks.revCapShareMax）
-    let rq = PERIODS.map((n, r) => t.revMW[r] * (e.revScale ?? 1) * 1e3 * t.util[r] / 100 / Math.max(1e-9, wMixQ(FQ.mix[r], g => tkMwQ(`IF_RevGWFleet`, g, e.tkCase || `基準`)))),
-      mx = Math.max(...rq), th = CHECK_TH.revCapShareMax;
+  if (PMWQ.revenue === `tkAnchor` && FQ && tkHasQ(`IF_RevGWFleet`)) { // W4：收入上限檢查（Excel「檢查_連動」同一列；門檻 company.json → methodology.checks.revCapShareMax；W9：比較層 revCapLayer）
+    let hasL = REVCAP_LAYERS_Q.every(L => tkHasQ(`IFW_RevGWFleet_${L}`)), capName = hasL ? `IFW_RevGWFleet_${REVCAP_LAYER_Q}` : `IF_RevGWFleet`,
+      rq = PERIODS.map((n, r) => t.revMW[r] * (e.revScale ?? 1) * 1e3 * t.util[r] / 100 / Math.max(1e-9, wMixQ(FQ.mix[r], g => tkMwQ(capName, g, e.tkCase || `基準`)))),
+      mx = Math.max(...rq), th = CHECK_TH.revCapShareMax, lyr = hasL ? REVCAP_LAYER_Q : `Util`;
     _({
       id: `rev-cap`,
       ok: mx <= th,
       severity: mx <= th ? `ok` : `watch`,
-      title: `收入上限：CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收 最高 ${hA(mx * 100, 0)}（門檻 ${hA(th * 100, 0)}）`,
-      detail: `neocloud 拿走客戶 token 營收的比例＝每 MW 計費收入 ÷ Tokenomics IF_RevGWFleet（OpenAI 有效單價、層級組合的理想上限，依在役世代加權）。各期：${PERIODS.map((n, r) => `${n} ${hA(rq[r] * 100, 0)}`).join(`、`)}。超過門檻代表 CRWV 單價相對客戶端 token 經濟性偏高。`
+      title: `收入上限：CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收（比較層 _${lyr}） 最高 ${hA(mx * 100, 0)}（門檻 ${hA(th * 100, 0)}）`,
+      detail: `neocloud 拿走客戶 token 營收的比例＝每 MW 計費收入 ÷ Tokenomics ${capName}（OpenAI 有效單價、層級組合的理想上限，依在役世代加權；四層瀑布取 _${lyr} 為比較層，明細見每 MW 經濟性）。各期：${PERIODS.map((n, r) => `${n} ${hA(rq[r] * 100, 0)}`).join(`、`)}。超過門檻代表 CRWV 單價相對客戶端 token 經濟性偏高。`
     })
   }
   let v = o[0].gross,

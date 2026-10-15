@@ -161,6 +161,7 @@ F = [
  ('methodology.checks.capexPerMwBand', '檢查頁：模型期 CapEx 強度（每 MW 百萬美元）的合理區間下端與上端（5a）', 'US$m/MW 清單', C),
  ('methodology.checks.leaseVsCommitMin', '檢查頁：表外租金路徑 ÷ 已承諾租約至少要達到的倍數（5a）', '倍', C),
  ('methodology.checks.revCapShareMax', '檢查頁：CRWV 每 MW 計費收入 ÷ Tokenomics 客戶付費 token 營收（IF_RevGWFleet）的上限，超過即警示（W4）', '比例', C),
+ ('methodology.checks.revCapLayer', '檢查頁：收入上限檢查的比較層（Tokenomics 四層瀑布 IFW_RevGWFleet_ 之後的層名：100｜Util｜Prod｜Life；W9；省略＝Util）', '文字', C),
  ('methodology.checks.unsignedRevShareMax', '檢查頁：後段年度依賴未簽約收入的比例上限（5a）', '比例', C),
  ('methodology.checks.siteRentGapMax', '檢查頁：站點租賃五期租金可能低估的金額上限（5a）', 'US$bn', C),
  ('methodology.checks.rentVsBenchMin', '檢查頁：模型每 MW 年租金至少要達到「市場基準 × 第三方占比」的比例（5a）', '比例', C),

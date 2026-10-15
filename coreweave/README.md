@@ -592,6 +592,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.checks.capexPerMwBand` | 檢查頁：模型期 CapEx 強度（每 MW 百萬美元）的合理區間下端與上端（5a） | US$m/MW 清單 | 20、45 | 檢查 |
 | `methodology.checks.leaseVsCommitMin` | 檢查頁：表外租金路徑 ÷ 已承諾租約至少要達到的倍數（5a） | 倍 | 0.8 | 檢查 |
 | `methodology.checks.revCapShareMax` | 檢查頁：CRWV 每 MW 計費收入 ÷ Tokenomics 客戶付費 token 營收（IF_RevGWFleet）的上限，超過即警示（W4） | 比例 | 0.5 | 檢查 |
+| `methodology.checks.revCapLayer` | 檢查頁：收入上限檢查的比較層（Tokenomics 四層瀑布 IFW_RevGWFleet_ 之後的層名：100｜Util｜Prod｜Life；W9；省略＝Util） | 文字 | Prod | 檢查 |
 | `methodology.checks.unsignedRevShareMax` | 檢查頁：後段年度依賴未簽約收入的比例上限（5a） | 比例 | 0.5 | 檢查 |
 | `methodology.checks.siteRentGapMax` | 檢查頁：站點租賃五期租金可能低估的金額上限（5a） | US$bn | 10 | 檢查 |
 | `methodology.checks.rentVsBenchMin` | 檢查頁：模型每 MW 年租金至少要達到「市場基準 × 第三方占比」的比例（5a） | 比例 | 0.8 | 檢查 |
@@ -658,9 +659,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `tokenomics._note` | Tokenomics 取數層的說明（不進程式；W1） | 文字 | 算力相關的產業與物理層資料改引用 Tokenomic… | 可沿用 |
 | `tokenomics.snapshotFile` | Tokenomics 快照檔路徑（tools/tokenomics/import_tokenomics.py 產生；Excel「Tokenomics_取數」分頁讀此檔；W1） | 路徑 | data/tokenomics_snapshot_v… | 可沿用 |
-| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v5.35 | 可沿用 |
-| `tokenomics.commit` | 快照的 Tokenomics commit SHA | 文字 | 9dff7f548c8557e46179dd9c9a… | 可沿用 |
-| `tokenomics.names` | 引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW、IF_RevGWFleet、IF_MaintITWarr、IF_MaintITPost、IF_WarrantyYrs | 檢查 |
+| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v5.36 | 可沿用 |
+| `tokenomics.commit` | 快照的 Tokenomics commit SHA | 文字 | 63db13a779cf511504ee7b13bc… | 可沿用 |
+| `tokenomics.names` | 引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW、IF_RevGWFleet、IF_MaintITWarr、IF_MaintITPost、IF_WarrantyYrs、IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、L1_TokMW_Gen_ratio_VR200、L1_TokMW_Gen_ratio_VR200_Lo、L1_TokMW_Gen_ratio_VR200_Hi | 檢查 |
 | `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（v5.25 預計新增） | 清單 |  | 檢查 |
 
 ### `fleet`：世代組合（W2；公司專屬）

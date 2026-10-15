@@ -380,6 +380,9 @@ if MAGE:
     for v in _VT: assert abs(sum(v['mix'].values()) - 1) < 1e-9, f"fleet.openMix.vintages：{v['label']} 世代占比合計 ≠ 100%"
     _ay_, _am_ = map(int, FL['openMix']['asOf'].split('-')[:2])
     VAGE = [((_ay_ - int(v['inService'][:4])) * 12 + _am_ - int(v['inService'][5:7])) / 12 for v in _VT]  # 評價日時機齡（年＝月數 ÷ 12；HTML vintQ 同算式）
+REVCAP_LAYERS = ['100', 'Util', 'Prod', 'Life']  # W9：Tokenomics IFW_RevGWFleet_* 四層瀑布（契約第 2 條：一起取）；比較層由 company.json → methodology.checks.revCapLayer 指定（預設 Util＝W4 原做法）
+REVCAP_LAYER = (CO.get('methodology', {}).get('checks') or {}).get('revCapLayer', 'Util')
+assert REVCAP_LAYER in REVCAP_LAYERS, f'methodology.checks.revCapLayer 只接受 {REVCAP_LAYERS}'
 AMQ = (CO.get('pricing') or {}).get('anchorMultiple')  # W4：Tokenomics 錨的公司因素（定價倍數 k、隨需占比、證據表）
 CA = CO.get('companyAdjust') if AMQ else None  # W5：公司實況驗證與公司調整（既有合約 k、新約價格調整、營運成本倍數；證據與文字）
 if PMW['revenue'] == 'tkAnchor':
@@ -493,8 +496,9 @@ if FL:
             AMX['kNewAdj'] = gi(r, "新約價格調整（相對 k_長約；只作用於長約部分）", "%", CA['newK']['adjBase'],
                                 f"W5：基準 0（市場長約證據）；敏感度 +{CA['newK']['adjSens'] * 100:g}%（公司說法「7 月各 SKU 漲價約 25%」，轉述 {CA['newK']['tag']}）", PCT); r += 1
         FLX['tkCapRev'] = _tkblock("TK 收入上限（客戶每 GW 付費 token 營收）", [
-            ("token 營收", lambda g, rr: _tkc('IF_RevGWFleet', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g))))],
-            "US$m／公司 MW／年＝IF_RevGWFleet（OpenAI 有效單價、層級組合的理想上限；× MW 換算）。收入上限檢查：CRWV 每 MW 計費收入 ÷ 本欄（快照沒有此名稱時空白＝不適用）")
+            ("token 營收", lambda g, rr: _tkc('IF_RevGWFleet', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g))))] +
+            [(f"四層｜_{L_}", (lambda g, rr, L_=L_: _tkc(f'IFW_RevGWFleet_{L_}', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g))))) for L_ in REVCAP_LAYERS],
+            "US$m／公司 MW／年；× MW 換算。C 欄＝IF_RevGWFleet（OpenAI 有效單價、層級組合的理想上限；＝_Util 層，對照）；D–G 欄＝四層瀑布 IFW_RevGWFleet_100／_Util／_Prod／_Life（W9，Tokenomics 契約第 2 條：四層一起取）。收入上限檢查：CRWV 每 MW 計費收入 ÷ 比較層（company.json → methodology.checks.revCapLayer）（快照沒有此名稱時空白＝不適用）")
     r += 1
 
 # ---------------- C 利潤率 ----------------
@@ -2220,11 +2224,11 @@ if TK_MISS and (PMW['capex'] != 'legacy' or PMW['cost'] != 'ebitdaPct' or PMW['r
     checks.append((f"Tokenomics 名稱缺漏 {len(TK_MISS)} 項，成本為暫代值", f"={len(TK_MISS)}", "0 項",
                    "=IF(B{r}=0,\"通過\",\"警告\")", NUM0, f"{'、'.join(TK_MISS)} 尚未在 Tokenomics {CO['tokenomics']['version']} 提供（待 v5.26）；暫代：IT 維護＝C 區維護成本、人員軟體與稅險＝0、GPU 經濟壽命＝{D['gpuLife']} 年"))
 
-REVCAP_CHECK = "收入上限：CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收（各期最高）"  # W4：只在 revenue=tkAnchor 且快照有 IF_RevGWFleet 時建列（B 欄在『每MW經濟性』頁建好後回填）
+REVCAP_CHECK = f"收入上限：CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收（比較層 _{REVCAP_LAYER}，各期最高）"  # W4：只在 revenue=tkAnchor 且快照有 IF_RevGWFleet 時建列（B 欄在『每MW經濟性』頁建好後回填）
 if PMW['revenue'] == 'tkAnchor' and tk_has('IF_RevGWFleet'):
     checks.append((REVCAP_CHECK, None, f"≤{_n(CK['revCapShareMax'] * 100)}%",
                    "=IF(B{r}<=" + _n(CK['revCapShareMax']) + ",\"通過\",\"警示\")", PCT,
-                   "neocloud 拿走客戶 token 營收的比例（Tokenomics IF_RevGWFleet，在役世代加權）；超過門檻＝CRWV 單價相對客戶端 token 經濟性偏高，明細見『每MW經濟性』"))
+                   f"neocloud 拿走客戶 token 營收的比例（Tokenomics 四層瀑布 IFW_RevGWFleet_*，比較層 _{REVCAP_LAYER}，在役世代加權）；超過門檻＝CRWV 單價相對客戶端 token 經濟性偏高；四層明細見『每MW經濟性』"))
 
 for nm, bf, std, rf, fmt, note in checks:
     ws.cell(row=r, column=1, value=nm).font = BLACK
@@ -3383,10 +3387,25 @@ if FL:
         mrow("上限檢查｜客戶每 MW 付費 token 營收（IF_RevGWFleet，在役世代加權）", "US$m/MW",
              (lambda i: f"=SUMPRODUCT({MIXR(i)},{TKR('tkCapRev', 'C')})") if _hasRF else (lambda i: "不適用"), NUM, BLACK,
              "Tokenomics 客戶端（OpenAI 有效單價、層級組合）每 GW 付費 token 營收的理想上限，依在役世代加權" + ("" if _hasRF else "；快照無 IF_RevGWFleet → 不適用"))
+        # W9：四層瀑布（契約第 2 條：不得只取單一層）。每層一列「客戶每 MW 付費 token 營收」與一列「CRWV 每 MW 計費收入 ÷ 該層」；門檻比較層＝company.json → methodology.checks.revCapLayer
+        _USEQ = (_TKX['items'].get('IFC_Use') or {}).get('values') or {}
+        _hasL = all(tk_has(f'IFW_RevGWFleet_{L_}') for L_ in REVCAP_LAYERS)
+        _CAPL = {}
+        _CAPC = {L_: chr(ord('D') + k_) for k_, L_ in enumerate(REVCAP_LAYERS)}  # 區塊欄：C＝IF_RevGWFleet（對照）、D–G＝四層
+        for L_ in REVCAP_LAYERS:
+            _lb = f"上限檢查｜四層｜客戶每 MW 付費 token 營收｜_{L_}（IFW_RevGWFleet_{L_}，在役世代加權）"; _CAPL[L_] = _lb
+            _lbl = (_TKX['items'].get(f'IFW_RevGWFleet_{L_}') or {}).get('label', '').split('｜')[-1]
+            mrow(_lb, "US$m/MW", (lambda i, L_=L_: f"=SUMPRODUCT({MIXR(i)},{TKR('tkCapRev', _CAPC[L_])})") if _hasL else (lambda i: "不適用"), NUM, BLACK,
+                 f"Tokenomics IFW_RevGWFleet_{L_}（{_lbl}）依在役世代加權；用途限制（IFC_Use）：{_USEQ.get(f'IFW_RevGWFleet_{L_}', '—')}" + ("" if _hasL else "；快照無 IFW_RevGWFleet_* → 不適用"))
+        _CAPR = {}
+        for L_ in REVCAP_LAYERS:
+            _lb = f"上限檢查｜四層｜CRWV 每 MW 計費收入 ÷ _{L_}"; _CAPR[L_] = _lb
+            mrow(_lb, "%", (lambda i, L_=L_: f"={COLS[i]}{PM['每 MW 年收入（計費後＝× 利用率）']}/MAX(1E-9,{COLS[i]}{PM[_CAPL[L_]]})") if _hasL else (lambda i: "不適用"), PCT, BLACK,
+                 f"＝CRWV 每 MW 計費收入 ÷ _{L_} 層" + ("（比較層，門檻判定用）" if L_ == REVCAP_LAYER else ""))
         mrow("上限檢查｜CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收", "%",
-             (lambda i: f"={COLS[i]}{PM['每 MW 年收入（計費後＝× 利用率）']}/MAX(1E-9,{COLS[i]}{PM['上限檢查｜客戶每 MW 付費 token 營收（IF_RevGWFleet，在役世代加權）']})") if _hasRF else (lambda i: "不適用"), PCT, BOLD,
-             f"＝neocloud 拿走客戶 token 營收的比例；> {_gq(CK['revCapShareMax'] * 100)}%（company.json → methodology.checks.revCapShareMax）時『檢查_連動』警示")
-        mrow("上限檢查｜各期結果", "", (lambda i: f'=IF({COLS[i]}{PM["上限檢查｜CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收"]}>{_gq(CK["revCapShareMax"])},"警示","通過")') if _hasRF else (lambda i: "不適用"), NUM, BOLD)
+             (lambda i: f"={COLS[i]}{PM[_CAPR[REVCAP_LAYER]]}") if _hasL else ((lambda i: f"={COLS[i]}{PM['每 MW 年收入（計費後＝× 利用率）']}/MAX(1E-9,{COLS[i]}{PM['上限檢查｜客戶每 MW 付費 token 營收（IF_RevGWFleet，在役世代加權）']})") if _hasRF else (lambda i: "不適用")), PCT, BOLD,
+             f"＝neocloud 拿走客戶 token 營收的比例，取比較層 _{REVCAP_LAYER}（company.json → methodology.checks.revCapLayer）；> {_gq(CK['revCapShareMax'] * 100)}%（company.json → methodology.checks.revCapShareMax）時『檢查_連動』警示。_Prod 已扣 SLO 下的產能折減，是四層中最接近可實際售出 token 的一層")
+        mrow("上限檢查｜各期結果", "", (lambda i: f'=IF({COLS[i]}{PM["上限檢查｜CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收"]}>{_gq(CK["revCapShareMax"])},"警示","通過")') if (_hasL or _hasRF) else (lambda i: "不適用"), NUM, BOLD)
         # k 證據表（市場價格 ÷ Tokenomics 同世代持有成本；成本取基準、不隨成本情境）
         r = section(ws, r, "定價倍數 k 證據表（市場價格 ÷ Tokenomics 同世代持有成本；用途：long＝k_長約基準、spot＝k_現貨基準、range＝支持區間、list＝只列不用）", level=2, collapsed=True)
         for j, h in enumerate(["證據", "單位", "價格", "Tokenomics 同世代", "倍數", "用途", "v5.27 倍數（v4.7）" if any('multipleV527' in x for x in AMQ['evidence']) else ""]):

@@ -865,7 +865,8 @@
    "unsignedRevShareMax": 0.5,
    "siteRentGapMax": 10,
    "rentVsBenchMin": 0.8,
-   "revCapShareMax": 0.5
+   "revCapShareMax": 0.5,
+   "revCapLayer": "Prod"
   },
   "perMw": {
    "_note": "每 MW 方法開關（W2）：capex＝tokenomics（Σ 新增世代占比 × IF_CapexIT）｜legacy（scenarios.capexTemplate.costMW）；cost＝bottomUp（Tokenomics 電費、IT 維護、人員軟體、稅險 × 平均在役 MW＋管銷率）｜ebitdaPct（defaults.ebStart→ebSteady 線性）；revenue＝tkAnchor（W4：Σ 平均在役占比 × IF_HoldEcon × 定價倍數 k，k＝長約占比 × k_長約＋（1 − 長約占比）× k_現貨；pricing.anchorMultiple）｜gpuHr（pricing.gpuHr × 每 MW GPU 數 × 8,760）｜legacy（defaults.m.revMW）。全為舊方法時與 v4.5 完全相同。收入採備案 legacy（chat 端 2026-10-07：W1 查不到 GB200／GB300／VR200 兩個獨立長約價來源，VR200 完全沒有）。 W4（2026-10-08，已決定事項 14）：收入改為 tkAnchor；gpuHr 與 legacy 降為對照。 W6：maint＝age（每期 IT 維護＝Σ 世代［保固期內平均在役 MW × IF_MaintITWarr＋保固期滿 × IF_MaintITPost］，機齡由 fleet.openMix.vintages 與各期新增 MW 推得，保固年限 IF_WarrantyYrs）｜flat（Σ 平均在役占比 × IF_MaintIT 壽命期等值費率；v4.7 前）。",
