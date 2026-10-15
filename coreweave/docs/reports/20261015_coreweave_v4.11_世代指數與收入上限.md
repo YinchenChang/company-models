@@ -54,7 +54,7 @@
 ## 4. verify 三組
 | 組 | 指令 | 結果 |
 |---|---|---|
-| (1) 升版 | `EXPECT=scripts/expect/v4_11_vs_v4_10.txt scripts/verify.sh --vs-dist`（對 v4.10 成品） | 全部通過 25 項；xl_diff 值與公式 0 差異（預期差異 160／161 格＋新增列 68）；crawl 只有「版本紀錄」與「連動檢查」2 頁有差異；cmp31 三情境各 588 項、FY27 錨定 519 項 OK |
+| (1) 升版 | `EXPECT=scripts/expect/v4_11_vs_v4_10.txt scripts/verify.sh --vs-dist`（對 v4.10 成品） | 全部通過 25 項；xl_diff 值與公式 0 差異（預期差異 160／161 格＋新增列 67）；crawl 只有「版本紀錄」與「連動檢查」2 頁有差異；cmp31 三情境各 588 項、FY27 錨定 519 項 OK |
 | (2) 新方法 | `scripts/verify.sh --vs-dist`（對 v4.11 成品） | 全部通過 25 項；crawl、xl_diff 值與公式皆 0 差異 |
 | (3) 舊方法回歸 | `scripts/verify_legacy.sh`（對 v4.6） | 全部通過 25 項，0 差異（新增列 62 不計） |
 | 取數重現 | `TOKENOMICS_DIR=/home/claude/tk import_tokenomics.py --check data/tokenomics_snapshot_v5.36.json` | 通過：37 個名稱（missing 0），相對誤差 ≤ 1e-9 |
