@@ -1,4 +1,4 @@
-# Nebius 收支模型 v0.3 原始碼包
+# Nebius 收支模型 v0.4 原始碼包
 
 Nebius（NBIS）收支與評價模型；由 CRWV 模型 v4.5 模板（`YinchenChang/crwv-model` @ `01b13ad`）建立。下方「v3.5」至「v4.5」各節為模板沿革與技術說明（以 CoreWeave 為例），引擎與工具仍適用；Nebius 新增的結構（MW × 每 MW 收入主軸、首期營收校準、預付款、融資瀑布的可轉債步驟、可轉債八檔稀釋、其他事業與持股）、v0.3 的每 MW 收入 Tokenomics 錨定（見下方「v0.3」節）見交接檔 `docs/handoff/20261008_Nebius收支模型_交接檔_v0_3.md` 與 `company.json` 欄位說明。成品名稱＝`更新日_<meta.company>收支模型_v版本`（目前 `dist/20261008_Nebius收支模型_v0_3.html`／`.xlsx`）。主標題「預付款，能把 Backlog 變成現金嗎？」與副標題（佔位符由模型現值帶入）放 `company.json` → `texts.title`／`texts.subtitle`（v0.2）。
 
@@ -48,7 +48,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | scripts/attrib_tkanchor.js | v0.3：v0.2 → v0.3 目標價 (d) 方法變更再拆：① 錨取代舊推導（k＝1）→ ② 套用 k → ③ 情境軸分離 → ④ 上限檢查 |
 | scripts/check_tokenomics_tab.py | v0.3：Excel「Tokenomics_取數」分頁值＝快照值、TK_ 具名範圍指向正確（verify.sh 步驟 5d；自 CoreWeave W1 複製） |
 | scripts/verify_legacy.sh | v0.3：舊方法回歸——副本把 `methodology.perMw.revenue` 改 legacy（預設輸入、副標、差異原因、更新日還原為 v0.2），對 v0.2 成品（git `6760147`）跑 `--vs-dist` 須 0 差異；`LEGACY=1 scripts/verify.sh` 一併執行 |
-| data/tokenomics_names.txt、data/tokenomics_snapshot_v5.27.json | v0.3：Tokenomics 取數名稱清單與官方快照（`tools/tokenomics/import_tokenomics.py`；verify.sh 步驟 0c 以 `--check` 重現，需 `TOKENOMICS_DIR=<Tokenomics clone>`，找不到 clone 時以警告略過） |
+| data/tokenomics_names.txt、data/tokenomics_snapshot_v18.0.json | v0.3：Tokenomics 取數名稱清單與官方快照（`tools/tokenomics/import_tokenomics.py`；verify.sh 步驟 0c 以 `--check` 重現，需 `TOKENOMICS_DIR=<Tokenomics clone>`，找不到 clone 時以警告略過） |
 | scripts/expect/ | 升版驗收的預期差異清單：`EXPECT`（Excel，xl_diff.py --expect）與 `CRAWL_EXPECT`（畫面文字，v0.2：「頁面 X」整頁允許不同、「行 正規式」符合的行允許不同），用法 `EXPECT=… CRAWL_EXPECT=… scripts/verify.sh --vs-dist` |
 | scripts/check_quarterly.js | v4.4：季度加總＝年度（三情境）、`quarterly.consistency` 一致性、超過門檻的差距都有原因；`build_html_portable.py` 建置時呼叫，verify.sh 步驟 0 |
 | scripts/test_quarterly.py | v4.4：暫存副本測試——(A) 假設 Q3 實際數，Python 獨立計算差距並與 HTML、Excel 比對；(B) 可移植性（無 MW、無季度指引與共識）。verify.sh 步驟 8 |
@@ -60,8 +60,16 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **按 MW-year 計價**：收入取決於簽約率（MW 驅動 100%）與爬坡（可計費 MW），不乘 Tokenomics `IF_Util`（重複扣減禁止）；利用率欄 100%。
 - **Excel**：新分頁「公司實況驗證」（第 2 輪）、「每MW收入_錨定」（A 價格軸、B 世代與 TK_ 值、C 已揭露合約、三個容量情境的錨 → k → 錨 × k、上限檢查、D 證據表、E 對照列、F Q2 驗證、G 3 × 3 與敏感度快照）；「Tokenomics_取數」分頁（110 個 TK_ 名稱）；「檢查_連動」收入上限列。
 - **HTML**：segA `tkAnchorQ()`、segB `tkScnQ()`／`tkSensQ()`；總結簡報新增第 7 頁「容量 × 價格」。
-- **Tokenomics 版本**：v5.27（`model/CURRENT`＝`20261008_Tokenomics_v5.27.xlsx`，master 合併 `19d667f`；快照 commit `ca78a8f`）。v5.29 合併後另開工作單重取（`L1_HoldEconMW_*`、`L1_TokMW_Gen_ratio_*`、`IFW_` 四層瀑布、`IFC_Use`）。
+- **Tokenomics 版本**：v0.3 取 v5.27（`19d667f`）；v0.4 起取 v18.0（見下節）。
 - **驗收**：`TOKENOMICS_DIR=<clone> LEGACY=1 scripts/verify.sh`（25 項，含 legacy 對 v0.2：只有「檢查_連動」兩列修正的 4 格不同，清單 `scripts/expect/legacy_vs_v0_2.txt`）；升版對 v0.2：`DATE=2026-10-08 EXPECT=scripts/expect/v0_3_vs_v0_2.txt CRAWL_EXPECT=scripts/expect/v0_3_vs_v0_2_crawl.txt scripts/verify.sh --vs-dist`（需以 v0.2 成品為 dist）。
+
+## v0.4 Tokenomics 同步 v18.0（工作單 v0.4a）
+- **快照**：`model/CURRENT`＝`20261021_Tokenomics_v18.0.xlsx`（master 合併 `868e2cc`）；`data/tokenomics_snapshot_v18.0.json`（38 個名稱，新增 `IFW_RevGWFleet_*` 四層、`IFC_Use`、`L1_HoldEconMW_*`、`L1_TokMW_Gen_ratio_VR200`〔_Lo／_Hi〕）；v5.27 快照移除。
+- **k 隨成本重算**：k＝證據價格 ÷ 目前快照的同世代成本（證據價格不變）。規格寫在 `company.json` → `pricing.anchorMultiple`（number｜ref｜priceEq｜median｜tcv），由 `kspec.py`（Python）與 `segA.js kSpecApplyQ`（JS）求解；Excel「每MW收入_錨定」為活公式。k_長約 0.76 → 0.89、k_現貨 1.76 → 1.83。
+- **建置成本**：`methodology.perMw.capex = tokenomics` 時，每 MW 建置成本＝Σ 新增世代占比 × `TK_CapexTotal_<世代>`（HTML `capexTkQ()`；舊寫死值留作對照列）。
+- **收入上限檢查四層**：比較層 `methodology.checks.revCapLayer`（預設 `Prod`），門檻 50%；`IFW_RevGWFleet_100／_Util／_Prod／_Life` 並列。
+- **目標價拆解**：`node scripts/attrib_tk18.js <v5.27 快照路徑>`（① 新快照 → ② k 重算 → ③ 建置成本 → ④ 上限檢查 0）；結果見交接檔 §4。
+- **驗收**：`TOKENOMICS_DIR=<clone> DATE=2026-10-21 EXPECT=scripts/expect/v0_4_vs_v0_3.txt CRAWL_EXPECT=scripts/expect/v0_4_vs_v0_3_crawl.txt LEGACY=1 scripts/verify.sh --vs-dist`（需以 v0.3 成品為 dist）；`xl_diff.py` 同區段同名列改以「第 n 個」配對。
 
 ## Excel 產生流程（scripts/verify.sh 步驟 2–7 即為此流程）
 1. `python3 build_xlsx.py`（輸出到 `out/`）
@@ -156,7 +164,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY26 下半年、FY27、FY28、FY29、FY30，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 Nebius v0.3 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 Nebius v0.4 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -164,7 +172,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `meta.company` | 公司名稱 | 文字 | Nebius | 必改 |
 | `meta.ticker` | 股票代號 | 文字 | NBIS | 必改 |
-| `meta.updateDate` | 資料更新日 | 日期 | 2026-10-08 | 必改 |
+| `meta.updateDate` | 資料更新日 | 日期 | 2026-10-21 | 必改 |
 | `meta.priceDate` | 股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格） | 日期 | 2026-10-06 | 必改 |
 | `meta.consensusFile` | 市場共識資料檔路徑（v4.3；只讀，由使用者查證後提供；建置時併入 HTML、Excel 讀同一檔） | 路徑 | data/consensus_nbis_202610… | 必改 |
 | `meta.sourceOrderNote` | 資料來源的先後與衝突時的取捨原則（畫面說明文字） | 文字 | 時序先 Q2 6-K 財報與股東信（8/12），再期… | 必改 |

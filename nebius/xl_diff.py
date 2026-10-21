@@ -55,9 +55,12 @@ def keys(ws, new=False):
             k = (sec, ROW_RENAME.get(lab, lab) if new else lab)
         seen.setdefault(k, []).append(r)
         out[k] = r
+    # v0.4a：同一區段內同名的列（各表頭列「項目」等，v0.3 起就有）改以「第 n 個」配對（同區段內的出現順序），不再報錯；
+    #   只有一個的列維持原鍵。兩檔重複個數不同時，多出的列列為新增列／缺少列。
     for k, rs in seen.items():
         if len(rs) > 1:
-            errs.append(f'{ws.title}：列名稱重複「{k[1]}」（區段「{k[0][:30]}」；第 {"、".join(map(str, rs))} 列）')
+            for i, r in enumerate(rs, 1): out[(k[0], f'{k[1]}〔第{i}個〕')] = r
+            out.pop(k, None)
     return out, errs
 
 

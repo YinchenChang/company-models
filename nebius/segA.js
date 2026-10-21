@@ -631,7 +631,7 @@ function runFunding(e) {
     ok: o[0].capexFull >= CALL_FACTS.capexLo && o[0].capexFull <= CALL_FACTS.capexHi,
     severity: o[0].capexFull >= CALL_FACTS.capexLo && o[0].capexFull <= CALL_FACTS.capexHi ? `ok` : `watch`,
     title: `毛 CapEx 由 MW 推導：${PERIODS[0]} 全年 ${o[0].capexFull.toFixed(1)}（指引 ${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}）`,
-    detail: `公式＝(本期新增 MW×(1−λ)＋次期新增 MW×λ)×每 MW 成本。${PERIOD_FY[0] - 1} 年底 ${e.mwYearEnd[PERIOD_FY[0] - 1]} MW → ${PERIODS[0]} 年底 ${t.accepted[0]} MW、λ ${(e.lambda*100).toFixed(0)}%、每 MW $${e.a.costMW[0]}m（Tokenomics IF_CapexTotal：IT＋機房，自有站點）。五期（首期為模型部分）合計 ${CX.reduce((e,t)=>e+t,0).toFixed(1)}。指引只有法說會二手轉述，且口徑（現金或應計）未定義。`
+    detail: `公式＝(本期新增 MW×(1−λ)＋次期新增 MW×λ)×每 MW 成本。${PERIOD_FY[0] - 1} 年底 ${e.mwYearEnd[PERIOD_FY[0] - 1]} MW → ${PERIODS[0]} 年底 ${t.accepted[0]} MW、λ ${(e.lambda*100).toFixed(0)}%、每 MW $${(+e.a.costMW[0]).toFixed(2)}m（Tokenomics IF_CapexTotal：IT＋機房，自有站點）。五期（首期為模型部分）合計 ${CX.reduce((e,t)=>e+t,0).toFixed(1)}。指引只有法說會二手轉述，且口徑（現金或應計）未定義。`
   }), _({
     id: `fleet-da`,
     ok: !0,
