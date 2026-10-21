@@ -495,6 +495,7 @@ if FL:
                               "W5：最新季末在役 MW 按 k_既有（Q2 實現單價 ÷ Q2 錨，合約期內固定；該批汰換後回到 k_新約）；0＝全部按 k_新約（W4）。" + CA['existingK']['tag'], NUM0); r += 1
             AMX['kNewAdj'] = gi(r, "新約價格調整（相對 k_長約；只作用於長約部分）", "%", CA['newK']['adjBase'],
                                 f"W5：基準 0（市場長約證據）；敏感度 +{CA['newK']['adjSens'] * 100:g}%（公司說法「7 月各 SKU 漲價約 25%」，轉述 {CA['newK']['tag']}）", PCT); r += 1
+        _hasThr = False  # W10：世代門檻名稱是否齊全（檢查_連動用；GI 區塊內重算）
         GI = (CO.get('pricing') or {}).get('genIndex')  # W9：世代指數（每 MW 年收入｜g ＝ p_ref × idx_g）
         if GI:
             _GREF = GEN.index(GI['refGen'])
@@ -503,13 +504,17 @@ if FL:
             _OVG = next((g_['name'] for g_ in _TKX['source']['generations'] if g_['code'] == _OVC), None)
             _GQN = GI.get('qName')
             _hasQ = bool(_OVC and _GQN and all(tk_has(_GQN + x_) for x_ in ('', '_Lo', '_Hi')))
+            _THN = [GI.get('thrRevName'), GI.get('thrPayName')]  # W10：世代門檻的 Tokenomics 名稱（收入持平、回本；各含 _Lo／_Hi）
+            _hasThr = bool(_hasQ and all(n_ and all(tk_has(n_ + x_) for x_ in ('', '_Lo', '_Hi')) for n_ in _THN))
             if _OVC:
-                _gp = GI['gapYears']
                 AMX['gOv'] = gi(r, f"{_OVC} 世代指數覆寫（0＝跟成本走）", "倍", GI.get(_OVC) or 0,
                                 f"W9：company.json → pricing.genIndex.{_OVC}（空白＝0＝跟成本走：指數＝IF_HoldEcon｜{_OVC} ÷ IF_HoldEcon｜{_RFC}）。日後有 {_OVC} 長約價時，覆寫值＝{_OVC} 每 MW 長約價 ÷ 參考價 p_ref（證據入 pricing.anchorMultiple.evidence，已決定事項 16(3)）；其他世代不開覆寫", '0.000'); r += 1
-                if _hasQ:
-                    AMX['gap'] = gi(r, f"上市間隔 {_RFC}→{_OVC}（年）", "年", _gp['base'],
-                                    f"W9：{_gp['base']}（{_gp['low']}–{_gp['high']}）{_gp['tag']}；{_gp['source']}；{_gp['note']}", '0.00'); r += 1
+                if _hasQ:  # W10：上市間隔改為推導值（不再是固定輸入）＝ln(1 ÷ q) ÷ ln(1 + 收入持平門檻)，兩者皆 L1_ 名稱的基準欄
+                    _qn_, _tn_ = "TK_" + re.sub(r'^(IFW|IF|L1)_', '', _GQN), "TK_" + re.sub(r'^(IFW|IF|L1)_', '', _THN[0]) if _hasThr else None
+                    AMX['gap'] = gi(r, f"上市間隔 {_RFC}→{_OVC}（年）", "年",
+                                    f'=IFERROR(LN(1/{_qn_})/LN(1+{_tn_}),"不適用")' if _hasThr else "不適用",
+                                    "W10 [Derived]：＝ln(1 ÷ q) ÷ ln(1 + 收入持平門檻)（兩者皆 Tokenomics L1_ 名稱的基準欄）。等於 Tokenomics CAP_GenGap_VR200（1.18；1.11–1.24）；CAP_ 不在契約允許前綴（只限 IF_／IFW_／IFC_／L1_／SRC_），故由 L1_ 名稱反推"
+                                    + ("" if _hasThr else "；快照沒有世代門檻名稱 → 不適用"), '0.00', font=BLACK); r += 1
         FLX['tkCapRev'] = _tkblock("TK 收入上限（客戶每 GW 付費 token 營收）", [
             ("token 營收", lambda g, rr: _tkc('IF_RevGWFleet', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g))))] +
             [(f"四層｜_{L_}", (lambda g, rr, L_=L_: _tkc(f'IFW_RevGWFleet_{L_}', g).replace('{conv}', str(FLX['tkCap'] + GEN.index(g))))) for L_ in REVCAP_LAYERS],
@@ -2250,6 +2255,12 @@ if PMW['revenue'] == 'tkAnchor' and tk_has('IF_RevGWFleet'):
                    "=IF(B{r}<=" + _n(CK['revCapShareMax']) + ",\"通過\",\"警示\")", PCT,
                    f"neocloud 拿走客戶 token 營收的比例（Tokenomics 四層瀑布 IFW_RevGWFleet_*，比較層 _{REVCAP_LAYER}，在役世代加權）；超過門檻＝CRWV 單價相對客戶端 token 經濟性偏高；四層明細見『每MW經濟性』"))
 
+GENTHR_CHECK = "世代門檻核對：Tokenomics 與 CRWV 自算門檻的最大差距（百分點）"  # W10：判讀區『核對差距』回填 B 欄；差距 > genThrGapMax 警示
+if PMW['revenue'] == 'tkAnchor' and globals().get('_hasThr'):
+    checks.append((GENTHR_CHECK, None, f"≤{_n(CK['genThrGapMax'] * 100)} 個百分點",
+                   "=IF(B{r}<=" + _n(CK['genThrGapMax']) + ",\"通過\",\"警示\")", '0.00%',
+                   "Tokenomics L1_GenPxThr_*（收入持平、回本門檻）與 CRWV 以自身公式算回的門檻比較（W9 公式保留為核對）；明細見『每MW經濟性』世代指數判讀"))
+
 for nm, bf, std, rf, fmt, note in checks:
     ws.cell(row=r, column=1, value=nm).font = BLACK
     if bf:
@@ -3436,19 +3447,31 @@ if FL:
             r = section(ws, r, f"{_OVC} 世代指數判讀（W9；q、上市間隔、隱含年價格變化、收入持平與回本門檻）", level=2, collapsed=True)
             _lq, _ll, _lh = f"世代指數判讀｜q（{_OVC} 對 {_RFC} 每 MW token 產出比，基準）", "世代指數判讀｜q 低端", "世代指數判讀｜q 高端"
             _lg, _lx = f"世代指數判讀｜上市間隔 {_RFC}→{_OVC}（年）", f"世代指數判讀｜{_OVC} 世代指數（採用，相對 {_RFC}）"
-            _li, _lf, _lb = "世代指數判讀｜隱含年價格變化＝(指數 ÷ q)^(1 ÷ 間隔) − 1", "世代指數判讀｜收入持平門檻＝(1 ÷ q)^(1 ÷ 間隔) − 1", f"世代指數判讀｜回本門檻＝(IF_HoldEcon｜{_OVC} ÷ IF_HoldEcon｜{_RFC} ÷ q)^(1 ÷ 間隔) − 1"
+            _li, _lf, _lb = "世代指數判讀｜隱含年價格變化＝(指數 ÷ q)^(1 ÷ 間隔) − 1", f"世代指數判讀｜收入持平門檻（Tokenomics {_THN[0]}）", f"世代指數判讀｜回本門檻（Tokenomics {_THN[1]}）"
+            _lfl = lambda sf_, sl_: f"世代指數判讀｜收入持平門檻{sl_}（Tokenomics {_THN[0]}{sf_}）"
+            _lbl_ = lambda sf_, sl_: f"世代指數判讀｜回本門檻{sl_}（Tokenomics {_THN[1]}{sf_}）"
+            _lc1, _lc2 = "核對｜世代指數判讀｜收入持平門檻＝(1 ÷ q)^(1 ÷ 間隔) − 1", f"核對｜世代指數判讀｜回本門檻＝(IF_HoldEcon｜{_OVC} ÷ IF_HoldEcon｜{_RFC} ÷ q)^(1 ÷ 間隔) − 1"
+            _ld = "世代指數判讀｜核對差距（Tokenomics 與 CRWV 自算，較大者）"
             _qk = lambda sfx: "TK_" + re.sub(r'^(IFW|IF|L1)_', '', _GQN) + sfx
             mrow(_lq, "倍", lambda i: f"={_qk('')}", '0.000', BLACK, f"Tokenomics {_GQN}：{_OVC} 對 {_RFC} 每 MW（每 GW）token 總產出比（基準）；低／高端見下兩列（{_GQN}_Lo／_Hi）")
             mrow(_ll, "倍", lambda i: f"={_qk('_Lo')}", '0.000', BLACK, "Sens_Perf 效率 × 0.5 的比值（Tokenomics 區間）")
             mrow(_lh, "倍", lambda i: f"={_qk('_Hi')}", '0.000', BLACK, "Sens_Perf 效率 × 1.5 的比值（Tokenomics 區間）")
-            mrow(_lg, "年", lambda i: f"={AMX['gap']}", '0.00', GREEN, f"輸入頁（company.json → pricing.genIndex.gapYears）{_gp['tag']}；v4.12 改取 Tokenomics 名稱")
+            mrow(_lg, "年", lambda i: f"={AMX['gap']}", '0.00', GREEN, "輸入頁（上市間隔，W10 [Derived]）：＝ln(1 ÷ q) ÷ ln(1 + 收入持平門檻)，等於 Tokenomics CAP_GenGap_VR200；CAP_ 不在契約允許前綴，故由 L1_ 名稱反推" + ("" if _hasThr else "；快照沒有世代門檻名稱 → 不適用"))
             mrow(_lx, "倍", lambda i: f"={_I}$D${FLX['genIdx'] + GEN.index(_OVG)}", '0.000', GREEN, "輸入頁『TK 世代指數』採用指數（預設＝跟成本走）")
-            mrow(_li, "%", lambda i: f"=({COLS[i]}{PM[_lx]}/{COLS[i]}{PM[_lq]})^(1/{COLS[i]}{PM[_lg]})-1", PCT, BOLD, "指數隱含的每年價格變化：每 MW 收入指數 ÷ 產出比 q＝每單位產出的價格相對 GB300 的倍數，折成年率")
-            mrow(_lf, "%", lambda i: f"=(1/{COLS[i]}{PM[_lq]})^(1/{COLS[i]}{PM[_lg]})-1", PCT, BLACK, f"每年價格下跌到此幅度時，{_OVC} 每 MW 收入恰等於 {_RFC}（Tokenomics 回覆約 −32%／年）")
-            mrow(_lb, "%", lambda i: f"=({_I}$E${FLX['tkRev'] + GEN.index(_OVG)}/{_I}$E${FLX['tkRev'] + _GREF}/{COLS[i]}{PM[_lq]})^(1/{COLS[i]}{PM[_lg]})-1", PCT, BLACK,
-                 f"每年價格下跌到此幅度時，{_OVC} 每 MW 持有成本（含資本回收）恰被收入回收（Tokenomics 回覆約 −25%／年）。基準下隱含年價格變化＝本列，定義上相等（指數＝持有成本比）")
-            mrow("世代指數判讀｜判讀", "", lambda i: (f'=IF(ROUND(C{PM[_li]}-C{PM[_lb]},9)>=0,"{_OVC} 回本餘裕不低於 {_RFC}",IF(ROUND(C{PM[_li]}-C{PM[_lf]},9)>=0,"每 MW 收入高於 {_RFC}，但回本餘裕較低","每 MW 收入低於 {_RFC}"))' if i == 0 else None), NUM, BOLD,
-                 "依條件產生：隱含 ≥ 回本門檻→回本餘裕不低於；介於兩門檻之間→收入高但回本餘裕較低；< 收入持平門檻→收入低於")
+            _na = lambda f_: (f_ if _hasThr else (lambda i: "不適用"))
+            mrow(_li, "%", _na(lambda i: f"=({COLS[i]}{PM[_lx]}/{COLS[i]}{PM[_lq]})^(1/{COLS[i]}{PM[_lg]})-1"), PCT, BOLD, "指數隱含的每年價格變化：每 MW 收入指數 ÷ 產出比 q＝每單位產出的價格相對 GB300 的倍數，折成年率（間隔為推導值）")
+            _tkn = lambda n_: "TK_" + re.sub(r'^(IFW|IF|L1)_', '', n_)
+            for _labf_, _nm_, _why_ in ((_lfl, _THN[0], f"每年價格下跌到此幅度時，{_OVC} 每 MW 收入恰等於 {_RFC}"), (_lbl_, _THN[1], f"每年價格下跌到此幅度時，{_OVC} 每 MW 持有成本（含資本回收）恰被收入回收。基準下隱含年價格變化＝本列，定義上相等（指數＝持有成本比）")):
+                for _sf_, _sl_ in (('', ''), ('_Lo', ' 低端'), ('_Hi', ' 高端')):
+                    mrow(_labf_(_sf_, _sl_), "%", _na(lambda i, n_=_nm_, f_=_sf_: f"={_tkn(n_ + f_)}"), PCT, BOLD if not _sf_ else BLACK,
+                         f"Tokenomics {_nm_ + _sf_}（W10）：{_why_}" + ("" if _sf_ else "；低／高端為 Tokenomics 區間（q 與上市間隔的低高端組合）"))
+            mrow(_lc1, "%", _na(lambda i: f"=(1/{COLS[i]}{PM[_lq]})^(1/{COLS[i]}{PM[_lg]})-1"), PCT, BLACK, "W9 的 CRWV 自算公式（保留為核對）；上市間隔為推導值，收入持平門檻定義上與 Tokenomics 值相同")
+            mrow(_lc2, "%", _na(lambda i: f"=({_I}$E${FLX['tkRev'] + GEN.index(_OVG)}/{_I}$E${FLX['tkRev'] + _GREF}/{COLS[i]}{PM[_lq]})^(1/{COLS[i]}{PM[_lg]})-1"), PCT, BLACK,
+                 "W9 的 CRWV 自算公式（保留為核對）：(IF_HoldEcon｜VR200 ÷ IF_HoldEcon｜GB300 ÷ q)^(1 ÷ 間隔) − 1；與 Tokenomics 回本門檻獨立算出，兩者差距 > 0.5 個百分點時『檢查_連動』警示")
+            mrow(_ld, "百分點", _na(lambda i: f"=MAX(ABS({COLS[i]}{PM[_lf]}-{COLS[i]}{PM[_lc1]}),ABS({COLS[i]}{PM[_lb]}-{COLS[i]}{PM[_lc2]}))"), '0.0000%', BLACK,
+                 f"＝Tokenomics 門檻與 CRWV 自算值差距的絕對值（兩個門檻取較大者）；> {_gq(CK['genThrGapMax'] * 100)} 個百分點（company.json → methodology.checks.genThrGapMax）時『檢查_連動』警示")
+            mrow("世代指數判讀｜判讀", "", (lambda i: (f'=IF(ROUND(C{PM[_li]}-C{PM[_lb]},9)>=0,"{_OVC} 回本餘裕不低於 {_RFC}",IF(ROUND(C{PM[_li]}-C{PM[_lf]},9)>=0,"每 MW 收入高於 {_RFC}，但回本餘裕較低","每 MW 收入低於 {_RFC}"))' if i == 0 else None)) if _hasThr else (lambda i: "不適用" if i == 0 else None), NUM, BOLD,
+                 "依條件產生（比較 Tokenomics 兩個門檻）：隱含 ≥ 回本門檻→回本餘裕不低於；介於兩門檻之間→收入高但回本餘裕較低；< 收入持平門檻→收入低於")
         # k 證據表（市場價格 ÷ Tokenomics 同世代持有成本；成本取基準、不隨成本情境）
         r = section(ws, r, "定價倍數 k 證據表（市場價格 ÷ Tokenomics 同世代持有成本；用途：long＝k_長約基準、spot＝k_現貨基準、range＝支持區間、list＝只列不用）", level=2, collapsed=True)
         for j, h in enumerate(["證據", "單位", "價格", "Tokenomics 同世代", "倍數", "用途", "v5.27 倍數（v4.7）" if any('multipleV527' in x for x in AMQ['evidence']) else ""]):
@@ -3482,6 +3505,11 @@ if FL:
                 if _wc.cell(row=rr, column=1).value == REVCAP_CHECK:
                     _rc = PM['上限檢查｜CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收']
                     c = _wc.cell(row=rr, column=2, value=f"=MAX('每MW經濟性'!C{_rc}:G{_rc})"); c.number_format = PCT; c.font = BLACK
+        if _TKON and GI and _hasThr:  # W10：檢查_連動：世代門檻核對
+            _wc = wb["檢查_連動"]
+            for rr in range(4, _wc.max_row + 1):
+                if _wc.cell(row=rr, column=1).value == GENTHR_CHECK:
+                    c = _wc.cell(row=rr, column=2, value=f"='每MW經濟性'!C{PM[_ld]}"); c.number_format = '0.00%'; c.font = BLACK
         if _TKON:  # B 區「每 MW 年收入」改為 Tokenomics 錨 × k（US$bn/MW；舊輸入見上方對照列）
             _wi = wb["輸入與假設"]
             for i in range(5):
