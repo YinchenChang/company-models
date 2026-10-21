@@ -1,9 +1,9 @@
 # Anthropic v0.1 分段建置進度（接手用；A1–A5 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：v0.1（A0–A5）；v0.1.1（S-1 草稿更新 U1–U8；PR #56）；**v0.1.2 步驟 1、3（2026-10-21）**：TK 快照 v5.26 → v18.0（master `868e2cc`）重建 TK_Link（68＋14 對照名稱）；Cost 第二十一節與 Checks C124–C126 對照 L1_RevGW_PQ_VR200；模型 `model/20261021_Anthropic_v0.1.2.xlsx`（CURRENT 已更新）。
-- 下一步（v0.1.2）：步驟 2 語意核對結論寫入報告；步驟 4 pytest 分檔（parity 期望值已更新：formula_cells 5878、defined_names 1146、tk_values 82，新增情境 ha、hb）；步驟 5 HTML／dist；步驟 6 報告＋對照 Excel；步驟 7 CHANGELOG、交接檔、PR 留言與標題。
-- 未解問題：(1) GitHub Actions 因帳號付款／用量上限未啟動（本地 pytest 為準）；(2) CHK_Warnings＝2（C89 AMD；C116 自建資本支出口徑）；(3) D22 低估 5–10；(4) 2026-06-30 現金、付款排程、股權報酬（待公開版 S-1）；(5) 只計已簽合約；(6) OpenAI v0.6 仍用 TK v5.26，與本模型快照版本不同（OAI_Link 說明已更正）。
+- 已完成：v0.1（A0–A5）；v0.1.1（PR #56）；**v0.1.2（2026-10-21）全部步驟**：TK v5.26 → v18.0（master `868e2cc`）、語意核對、對照列、重算、pytest 109 項全過、HTML／dist、報告＋對照 Excel、CHANGELOG、交接檔。報告 `docs/reports/20261021_v0.1.2.md`。
+- 下一步：chat 端審查 PR #56（v0.1.1＋v0.1.2）並合併（代理不合併）；Andy 確認後刪除 `dist/_待刪除/`；OpenAI 模型同步 TK v18.0。
+- 未解問題：(1) GitHub Actions 因帳號付款／用量上限未啟動（本地 pytest 為準）；(2) CHK_Warnings＝2（C89、C116）；(3) D22 低估 5–10；(4) 2026-06-30 現金等待公開版 S-1；(5) 只計已簽合約；(6) OpenAI v0.6 仍用 TK v5.26；(7) 待 Andy：η 是否回升、是否改 `_Prod` 層。
 
 ## 段落總覽
 | 段 | 工作單 | 狀態 |
