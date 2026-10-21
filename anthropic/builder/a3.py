@@ -244,7 +244,7 @@ def build(ctx):
     C.add("flag", "缺口旗標（1＝有效推論超過可用 GW；固定年後）", "旗標", lambda i, c: f"=(«eff»>«avail»)*({c}$6>{capfix})", "不自動假設新增合約", name="CMP_CapFlag")
     C.add("ident", "檢查：推論（截頂後）＋研發＋閒置 − 供給", "GW", lambda i, c: "=«infcap»+«rd»+«idle»-«sup»", "各年應為 0（2025：說明書算力＝推論＋訓練）")
     C.add("rd_share", "研發占供給", "比例", lambda i, c: "=«rd»/«sup»", "")
-    C.add("tk_rd", "對照：TK IF_AllocRDGW（研發 GW·年；Tokenomics 計畫當量，訓練世代 VR200）", "GW", lambda i, c: "=TK_IF_AllocRDGW", "D12 並列；口徑為單一前沿實驗室的物理下限")
+    C.add("tk_rd", "對照：TK IF_AllocRDGW（研發 GW·年；Tokenomics 計畫當量；v8.0 起按 2025 研發世代組合加權，非單一 VR200）", "GW", lambda i, c: "=TK_IF_AllocRDGW", "D12 並列；口徑為單一前沿實驗室的物理下限；TK 契約 v12–v13：此值是區間（批次口徑倍數 RNG_*），非點值；只對照，不回饋")
 
     C.section("十二、VR 等值換算（命題分母；各族 Sol 產能比）")
     C.add("vrf", "機隊 VR 等值係數＝Σ 組合占比 × 各族 VR 等值係數", "倍", lambda i, c: "=" + "+".join(f"«s_{f}»*«vrf_{f}»" for f, *_ in FAMS), "", name="CMP_VReqFactor")

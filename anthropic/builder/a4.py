@@ -198,6 +198,28 @@ def build(ctx):
     K.add("n_cov", "覆蓋率（含新協議）＝營收淨額 ÷ 全成本（含股權報酬）", "倍", lambda i, c: "=«n_rev»/(«n_cc»+«ncx»+«sbc»)", "", name="COST_Coverage_Neg")
     K.add("n_fcf", "自由現金流（含新協議）", "$B", lambda i, c: "=«n_rev»-«n_cc»-«ncx»", "Funding 情境 S8")
 
+    K.section("二十一、v0.1.2 對照：Tokenomics v18.0 的 L1_RevGW_PQ_VR200（VR200 每 GW 營收 P × Q；只對照，不回饋任何計算；列放在本節，使既有列編號不變）")
+    K.add("pq_base", "TK：VR200 每 GW 營收 P × Q — 第一年（m＝L1_M，2026 Q2 年化；基準）", "$B/GW/年", only26("=TK_L1_RevGW_PQ_VR200"),
+          "TK L1_RevGW_PQ_VR200；Q 取實際利用率、P 取需求面有效單價；契約 v18.0：token 帳未閉合，本列是模型產能推算的 Q × 需求面 P", name="COST_TKPQ", name_cols="E")
+    K.add("pq_lo", "TK：同上，低（實際利用率 0.30）", "$B/GW/年", only26("=TK_L1_RevGW_PQ_VR200_Lo"), "")
+    K.add("pq_hi", "TK：同上，高（實際利用率 0.65）", "$B/GW/年", only26("=TK_L1_RevGW_PQ_VR200_Hi"), "")
+    K.add("pq_fy", "TK：同上，m 改用 FY2026（L1_M_FY2026）", "$B/GW/年", only26("=TK_L1_RevGW_PQ_VR200_FY"), "")
+    K.add("pq_life", "TK：壽命期年均（第一年 × L1_LTotalDisc；假設 m 不變）", "$B/GW/年", only26("=TK_L1_RevGW_PQ_VR200_Life"), "")
+    K.add("pq_led", "TK：token 帳未閉合倍數（模型付費 token ÷ 需求面付費 token；2026 Q2）", "倍", only26("=TK_L1_TokLedger_2026Q2"),
+          "契約 v18.0：若誤差全在模型產能側，實際營收約為 P × Q 列 ÷ 本倍數", name="COST_TKTokLedger", name_cols="E")
+    K.add("pq_rev_paid", "本模型：營收總額 ÷ 付費推論 VR 等值 GW（有效推論，截頂後；與 TK P × Q 最接近的口徑）", "$B/GW/年",
+          lambda i, c: "=«R:gross»/(«C:eff_paid»*«C:cap»*«C:vrf»)", "分母只含付費 token 的 η 有效 GW × VR 等值係數；免費 token 占的 GW 不計入")
+    K.add("pq_rev_inf", "本模型：營收總額 ÷ 推論 VR 等值 GW（付費＋免費）", "$B/GW/年", lambda i, c: "=«R:gross»/«C:vr_inf»", "")
+    K.add("pq_rev_sup", "本模型：營收總額 ÷ 供給 VR 等值 GW", "$B/GW/年", lambda i, c: "=«R:gross»/«p_den»", "含閒置與研發 GW")
+    K.add("pq_rev_net", "本模型：營收淨額 ÷ 供給 VR 等值 GW（命題 1 的分子口徑；COST_PropRev_VR）", "$B/GW/年", lambda i, c: "=«p_rev_vr»", "")
+    K.add("pq_r_paid", "TK P × Q ÷ 本模型每付費推論 VR 等值 GW 營收總額（2026）", "倍", only26("=«pq_base»/«pq_rev_paid»"), "1＝兩邊一致", name="COST_TKPQRatio", name_cols="E")
+    K.add("pq_r_net", "TK P × Q ÷ 本模型每供給 VR 等值 GW 營收淨額（2026）", "倍", only26("=«pq_base»/«pq_rev_net»"), "口徑差大：供給含閒置、研發；僅供參考")
+    K.add("pq_r_adj", "（TK P × Q ÷ 帳未閉合倍數）÷ 本模型每付費推論 VR 等值 GW 營收總額（2026）", "倍", only26("=«pq_base»/«pq_led»/«pq_rev_paid»"),
+          "契約 v18.0 的讀法：實際營收約為 P × Q 列 ÷ 帳未閉合倍數；此列為 1 表示模型與該讀法一致")
+    K.add("pq_q_model", "本模型：每付費推論 VR 等值 GW 的付費 token（M tok／年）", "M tok/GW/年", lambda i, c: "=«C:tok_paid»/(«C:eff_paid»*«C:cap»*«C:vrf»)", "Q 的模型端對應（η 校準後的有效 GW）")
+    K.add("pq_q_tk", "TK：VR200 每 GW 付費 token 實際產出 Q（M tok／年；L1_TokGW_PaidPQ_VR200）", "M tok/GW/年", only26("=TK_L1_TokGW_PaidPQ_VR200"), "實際利用率 0.45（低 0.30、高 0.65）")
+    K.add("pq_q_ratio", "本模型 Q ÷ TK Q（2026）", "倍", only26("=«pq_q_model»/«pq_q_tk»"), "對照 TK 的帳未閉合倍數 L1_TokLedger_2026Q2")
+
     # ═════════════════════ Funding ═════════════════════
     F = Sheet(wb, "Funding", "F", "F", years,
               "Funding — 融資：自由現金流、已到位融資、最低現金與外部資金需求、條件式與 IPO 情境、敏感度情境、或有負債、回流對照（D18）",
@@ -459,6 +481,10 @@ def checks(ctx):
         ("b1_u6_gap30", "U6：含談判中 $150B 的 2030 每 VR 等值 GW 差額（$B/GW/年）", "=INDEX(COST_PropGap_VR_Neg,1,6)", None, "info", "基準 a3_gap30"),
         ("b1_u6_cum", "U6：含談判中 $150B 的 2030 累計外部資金需求（$B）", f"={d(F, 's8_cum', 'I')}", None, "info", "基準 a4_cum30"),
         ("b1_u7_nc", "U7：2026 上半年淨損中非現金費用（不進現金流；$B）", f"={d(F, 'nc26', 'E')}", None, "info", "D21 同一處理"),
+        # ── v0.1.2：Tokenomics v18.0 對照（只對照）
+        ("c2_tkpq", "v0.1.2：TK L1_RevGW_PQ_VR200（VR200 每 GW 營收 P × Q，2026 第一年；$B/GW/年）", "=COST_TKPQ", None, "info", "只對照，不回饋計算"),
+        ("c2_tkpq_r", "v0.1.2：TK P × Q ÷ 本模型 2026 每付費推論 VR 等值 GW 營收總額", "=COST_TKPQRatio", None, "info", "1＝一致；Cost 第二十一節"),
+        ("c2_tkled", "v0.1.2：TK token 帳未閉合倍數（L1_TokLedger_2026Q2）", "=COST_TKTokLedger", None, "info", "契約 v18.0：約 6.26"),
         ("a4_oai_cum", "OpenAI 並排：2030 累計外部資金需求 Anthropic − OpenAI（$B）", f"={d(F, 'cum', 'I')}-INDEX(OAI_FND_ExtNeedCum,1,6)", None, "info", "OAI_Link（D20）"),
         ("a4_oai_cash", "OpenAI 並排：2030 年底現金 Anthropic − OpenAI（$B）", f"={d(F, 'end', 'I')}-INDEX(OAI_FND_CashEnd,1,6)", None, "info", ""),
     ]
