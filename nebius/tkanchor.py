@@ -17,6 +17,7 @@ PX = {'low': 'low', 'base': 'base', 'high': 'high'}
 def load(co=None):
     co = co or json.load(open(os.path.join(HERE, 'company.json'), encoding='utf-8'))
     tk = json.load(open(os.path.join(HERE, co['tokenomics']['snapshotFile']), encoding='utf-8'))['items']
+    import sys; sys.path.insert(0, HERE); import kspec; kspec.resolve(co, tk)  # v0.4a：k 規格（證據價格 ÷ 目前快照）→ 數字
     return co, tk
 
 

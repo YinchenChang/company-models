@@ -606,6 +606,17 @@ if PMW_REV == 'tkAnchor':
     AM, FLT = CO['pricing']['anchorMultiple'], CO['fleet']
     GEN = FLT['generations']
     _GCX = {g['name']: g['code'] for g in _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), CO['tokenomics']['snapshotFile']), encoding='utf-8'))['source']['generations']}
+    import kspec as _kspec  # v0.4a（自 CoreWeave W6 r1）：k 的基準／區間／Nebius 自身合約＝證據價格 ÷ 目前快照；解成數字（AM 原地換成數字），規格留在 KSPEC 供 Excel 寫活公式
+    KSPEC = _kspec.resolve(CO, _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), CO['tokenomics']['snapshotFile']), encoding='utf-8'))['items'])
+
+    def _kf(sp, num):  # 規格 → Excel 公式字串（數字規格＝固定倍數，回傳 None 由呼叫端寫數字）
+        if not isinstance(sp, dict): return None
+        _ev = {x['label']: x for x in AM['evidence']}
+        _tn = lambda e_: f"TK_{re.sub(r'^(IF|L1)_', '', e_['tkName'])}_{_GCX[e_['gen']]}"
+        if 'ref' in sp: return f"={_ev[sp['ref']]['price']}/{_tn(_ev[sp['ref']])}"
+        if 'priceEq' in sp: return f"={sp['priceEq']}/{_tn(sp)}"
+        if 'tcv' in sp: return f"={sp['tcv']}/{sp['years']}/{sp['mw']}/{_tn(sp)}"
+        return None  # median 等無單一公式（sensMedian 只用於 HTML 敏感度與快照）
     _wi = ws  # 輸入與假設
     ws = wb.create_sheet("每MW收入_錨定")
     ws.column_dimensions["A"].width = 58
@@ -642,8 +653,9 @@ if PMW_REV == 'tkAnchor':
     for key, nm, it in (("kL3", "k_長約（多年期專用容量合約）", AM['long']), ("kS3", "k_現貨（非長約客戶：預留與隨需）", AM['spot'])):
         ws.cell(row=r, column=1, value=nm).font = BLACK
         ws.cell(row=r, column=2, value="倍").font = SMALL
-        for j, v in enumerate((it['low'], it['base'], it['high'])):
-            c = ws.cell(row=r, column=3 + j, value=v); c.font = BLUE; c.number_format = '0.00'; c.border = BOX
+        for j, (kk, v) in enumerate((('low', it['low']), ('base', it['base']), ('high', it['high']))):
+            _f = _kf(KSPEC.get('long' if key == 'kL3' else 'spot', {}).get(kk), v)  # v0.4a：證據價格 ÷ TK_ 同世代成本（活公式）；固定倍數才寫數字
+            c = ws.cell(row=r, column=3 + j, value=_f if _f else v); c.font = GREEN if _f else BLUE; c.number_format = '0.00'; c.border = BOX
         ws.cell(row=r, column=9, value=f"{it['note']} {it['tag']}").font = SMALL
         AR[key] = r; r += 1
     for key, src, nm in (("kL", "kL3", "k_長約（目前價格情境）"), ("kS", "kS3", "k_現貨（目前價格情境）")):
@@ -660,7 +672,8 @@ if PMW_REV == 'tkAnchor':
     ws.cell(row=r, column=1, value="Nebius 自身合約 k（Microsoft；只列為敏感度）").font = BLACK
     ws.cell(row=r, column=2, value="倍").font = SMALL
     for j, v in enumerate(AM['long']['nebiusContract']['values']):
-        c = ws.cell(row=r, column=3 + j, value=v); c.font = BLUE; c.number_format = '0.00'; c.border = BOX
+        _f = _kf(AM['long']['nebiusContract']['specs'][j], v)  # v0.4a：TCV ÷ 年期 ÷ 容量 ÷ TK_ 持有成本（活公式）
+        c = ws.cell(row=r, column=3 + j, value=_f if _f else v); c.font = GREEN if _f else BLUE; c.number_format = '0.00'; c.border = BOX
     ws.cell(row=r, column=9, value="C／D／E＝" + "／".join(AM['long']['nebiusContract']['labels']) + "。" + AM['long']['nebiusContract']['note'] + " " + AM['long']['nebiusContract']['tag']).font = SMALL
     AR['kNb'] = r; r += 1
     ws.cell(row=r, column=1, value="長約的指定解讀（下游資料契約第 4 條）").font = BLACK
@@ -3496,7 +3509,7 @@ if TK:
     ws["A1"] = "Tokenomics 取數（算力相關的產業與物理層資料）"; ws["A1"].font = TITLE
     _GC = {g['name']: g['code'] for g in _src['generations']}
     ws["A2"] = (f"來源：{_src['repo']} {_src['file']}（{_src['version']}，commit {_src['commit'][:7]}，擷取 {_src['extractedAt']}）。"
-                "只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱；模型主值取「基準」，低／高只作敏感度；Tokenomics 每 GW＝IT 關鍵電力。")
+                "只引用 IF_（不含 IF_Hdr*）、IFW_、IFC_ 與 L1_ 名稱；模型主值取「基準」，低／高只作敏感度；Tokenomics 每 GW＝IT 關鍵電力。")
     ws["A2"].font = SMALL
     ws["A3"] = ("每 MW 收入錨定（IF_HoldEcon）與上限檢查（IF_RevGWFleet）引用本分頁的 TK_ 具名範圍；" if CO.get("methodology", {}).get("perMw", {}).get("revenue") == "tkAnchor" else "本分頁只顯示、未被公式引用（收入採 legacy）；") + "值為快照的藍字輸入格，更新方式見 repo 根目錄 README「共用工具：Tokenomics 取數」。"
     ws["A3"].font = SMALL
@@ -3505,7 +3518,8 @@ if TK:
         c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
     r += 1
     _ver = f"{_src['version']} · {_src['commit'][:7]}"
-    _short = lambda n: re.sub(r'^(IF|L1)_', '', n)
+    _short = lambda n: re.sub(r'^(IFW|IF|L1)_', '', n)  # v0.4a（自 CoreWeave W9）：IFW_ 四層瀑布名稱同樣去前綴（TK_RevGWFleet_Prod_GB300）
+    _USE = (_TKS['items'].get('IFC_Use') or {}).get('values') or {}  # v0.4a：IFC_Use 用途文字（顯示於 IFW_ 四層列旁）
     def _tkrow(key, name, lab, unit, gen, vals, loc, fmt):
         global r
         ws.cell(row=r, column=1, value=key).font = BLACK
@@ -3536,7 +3550,7 @@ if TK:
                 _vals = [_v3['低成本'], _v3['基準'], _v3['高成本']]
                 _key = f"TK_{_short(_nm)}_{_GC[_g]}"
                 _tkrow(_key, _nm, _it['label'], _it['unit'], _g, _vals,
-                       f"{_it['cells'][_g]['低成本']}:{_it['cells'][_g]['高成本'].split('!')[1]}", _fmt(_it['unit'], _vals))
+                       f"{_it['cells'][_g]['低成本']}:{_it['cells'][_g]['高成本'].split('!')[1]}" + (f"｜用途（IFC_Use）：{_USE[_nm]}" if _nm.startswith('IFW_') and _nm in _USE else ""), _fmt(_it['unit'], _vals))
                 wb.defined_names[_key] = _DN(_key, attr_text=f"'Tokenomics_取數'!$G${r - 1}")
         elif _it['kind'] == 'single':
             _rg = _it.get('range') or {}
@@ -3545,6 +3559,8 @@ if TK:
             _key = f"TK_{_short(_nm)}"
             _tkrow(_key, _nm, _it['label'], _it['unit'], "—", _vals, _loc, _fmt(_it['unit'], _vals))
             wb.defined_names[_key] = _DN(_key, attr_text=f"'Tokenomics_取數'!$G${r - 1}")
+        elif _it['kind'] == 'by_name':  # v0.4a（自 CoreWeave W9）：IFC_Use 等整欄用途／信心欄（{IF_／IFW_ 名稱: 文字}）：不建列，用途文字顯示在 IFW_ 四層列旁
+            continue
         else:
             raise SystemExit(f'Tokenomics_取數：不支援的快照型態 {_it["kind"]}（{_nm}）')
 

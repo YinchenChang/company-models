@@ -1,5 +1,5 @@
 # Nebius 引用的 Tokenomics 名稱（只限 IF_（不含 IF_Hdr*）與 L1_；工具：tools/tokenomics/import_tokenomics.py）
-# 行尾 optional＝Tokenomics 尚未提供時快照記為 missing、不中斷（v5.26 起全部名稱皆已提供，無 optional）。
+# 行尾 optional＝Tokenomics 尚未提供時快照記為 missing、不中斷（v5.26 起全部名稱皆已提供；v0.4a 新增名稱依 CoreWeave W9 用 optional 寫法）。
 IF_RacksPerGW # 每 GW 機架數（每 MW GPU 數的核對）
 IF_GPUsPerGW # 每 GW GPU 數
 IF_FacilityGW # 每 IT GW 對應設施電力（MW 口徑換算）
@@ -26,3 +26,16 @@ IF_StaffSW # 人員、軟體、水與耗材（v5.26）
 IF_TaxIns # 財產稅與保險（v5.26）
 IF_OpexGW # 營運費用小計，不含折舊（v5.26）
 IF_RevGWFleet # 客戶每 GW 付費 token 營收（層級組合，理想上限；W4 上限檢查）
+# v0.4a 新增（Tokenomics v18.0；比照 CoreWeave W9，optional 寫法）
+IFW_RevGWFleet_100 optional # 客戶每 GW 付費 token 營收｜四層瀑布：理論上限（100% 利用；上限檢查）
+IFW_RevGWFleet_Util optional # 四層｜扣技術利用率（＝IF_RevGWFleet；對照）
+IFW_RevGWFleet_Prod optional # 四層｜再扣 SLO 下產能折減（上限檢查比較層）
+IFW_RevGWFleet_Life optional # 四層｜壽命期等值（上限檢查）
+IFC_Use optional # 上列各名稱的用途限制（「上限，不得作預測」；顯示於四層列旁）
+L1_HoldEconMW_Hopper optional # Hopper 每 MW 經濟持有成本（L1；對照 IF_HoldEcon）
+L1_HoldEconMW_GB200 optional # GB200 每 MW 經濟持有成本（L1；對照）
+L1_HoldEconMW_GB300 optional # GB300 每 MW 經濟持有成本（L1；對照）
+L1_HoldEconMW_VR200 optional # VR200 每 MW 經濟持有成本（L1；對照）
+L1_TokMW_Gen_ratio_VR200 optional # VR200 對 GB300 每 MW token 產出比 q（基準；判讀）
+L1_TokMW_Gen_ratio_VR200_Lo optional # q 低端
+L1_TokMW_Gen_ratio_VR200_Hi optional # q 高端

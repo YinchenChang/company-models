@@ -1,4 +1,4 @@
-# v0.2a（2026-10-08，自 CoreWeave W1 複製）：「快照值＝Excel 分頁值」檢查（verify.sh 步驟 5d）。
+# v0.2a（2026-10-08，自 CoreWeave W1 複製；v0.4a 同步 W9：IFW_ 去前綴、by_name 略過）：「快照值＝Excel 分頁值」檢查（verify.sh 步驟 5d）。
 # 用法：python3 scripts/check_tokenomics_tab.py 檔案.xlsx
 # 檢查：(1) Excel「Tokenomics_取數」分頁每個名稱 × 世代的低成本／基準／高成本值＝company.json → tokenomics.snapshotFile 快照值（相對誤差 1e-9）；
 #       (2) 每個非 missing 名稱的「基準」格都有具名範圍 TK_<名稱去掉 IF_／L1_>[_<世代代碼>]，且指向該格；
@@ -27,7 +27,7 @@ def main(path):
     ws = wb[SHEET]
     rows = {ws.cell(r, 1).value: r for r in range(5, ws.max_row + 1) if ws.cell(r, 1).value}
     gc = {g['name']: g['code'] for g in SNAP['source']['generations']}
-    short = lambda n: re.sub(r'^(IF|L1)_', '', n)
+    short = lambda n: re.sub(r'^(IFW|IF|L1)_', '', n)
     errs, n_val, n_name = [], 0, 0
     expect_names = set()
     for nm, it in SNAP['items'].items():
@@ -35,6 +35,8 @@ def main(path):
             k = f'TK_{short(nm)}'
             if k not in rows: errs.append(f'{nm}：missing 名稱沒有列')
             if k in wb.defined_names: errs.append(f'{k}：missing 名稱不應建具名範圍')
+            continue
+        if it['kind'] == 'by_name':  # v0.4a（自 CoreWeave W9）：IFC_Use 等整欄用途欄不建列（用途文字顯示在 IFW_ 四層列旁）
             continue
         if it['kind'] == 'gen_cost':
             exp = [(f'TK_{short(nm)}_{gc[g]}', [v['低成本'], v['基準'], v['高成本']], g) for g, v in it['values'].items()]

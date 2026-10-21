@@ -18,6 +18,7 @@ var PERIODS = COMPANY_DATA.periods,
   CALL_FACTS = COMPANY_DATA.callFacts,
   SC_MWP = COMPANY_DATA.scenarios.mwPath, // v0.1b：已連網 MW＝MIN(合約上限, 前期＋併網速度×期間長度)；首期期末三情境共用
   SC_ACC = Object.fromEntries([`low`, `base`, `high`].map(k => [k, PERIOD_YEARS.reduce((a, L, i) => (a.push(Math.min(SC_MWP.contracted[k][i], i === 0 ? SC_MWP.connectedStart : a[i - 1] + SC_MWP.pace[k] * L)), a), [])])),
+  KSPEC_DONE = kSpecApplyQ(), // v0.4a（自 CoreWeave W6 r1）：k 規格（證據價格 ÷ 目前快照）在引用前解成數字（錨改變時 k 跟著重算；kspec.py 同算式）
   PMW_REVQ = ((COMPANY_DATA.methodology || {}).perMw || {}).revenue || `legacy`, // v0.2a：每 MW 收入方法（tkAnchor＝Tokenomics 錨 × k；legacy＝scenarios.revMW）
   REVSRCQ = PMW_REVQ === `tkAnchor` ? `Tokenomics 錨 × 定價倍數 k` : `Tokenomics 正向推導`, // v0.2a：畫面文字的每 MW 收入來源（legacy 時與 v0.2 相同）
   SC_REV = PMW_REVQ === `tkAnchor` ? Object.fromEntries([`low`, `base`, `high`].map(k => [k, tkAnchorQ(k).rev])) : COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境；v0.2a：tkAnchor 時＝錨 × k（價格軸基準），容量情境與價格脫鉤
@@ -69,6 +70,20 @@ var PERIODS = COMPANY_DATA.periods,
   Qk = DEFAULTS; // 模板函式庫片段（mid1–mid3）仍以 Qk 引用預設值，保留別名
 DEFAULTS.cvCap = SCENARIOS[COMPANY_DATA.defaults.scenario].cvCap; // v0.1b：預設情境的可轉債年上限
 PMW_REVQ === `tkAnchor` && (DEFAULTS.m.revMW = [...SC_REV[COMPANY_DATA.defaults.scenario]], DEFAULTS.billableOpen = SCENARIOS[COMPANY_DATA.defaults.scenario].bo); // v0.2a：預設輸入＝預設情境的錨定值（company.json 存同值，build_xlsx 檢查）
+function kSpecApplyQ() { // v0.4a：k 規格 → 倍數（價格 ÷ 目前快照基準值；kspec.py 同算式）：數字｜{ref}｜{priceEq, gen, tkName}｜{median: [label]}；Nebius 自身合約 specs 逐項 {ref}｜{tcv, years, mw, gen, tkName}
+  let AM = COMPANY_DATA.pricing.anchorMultiple, TK = COMPANY_DATA.tkSnap, tk = (n, g) => TK[n][g][`基準`], ev = l => AM.evidence.find(x => x.label === l), m = x => x.price / tk(x.tkName, x.gen);
+  let val = sp => {
+    if (typeof sp === `number`) return sp;
+    if (sp.ref) return m(ev(sp.ref));
+    if (sp.priceEq != null) return sp.priceEq / tk(sp.tkName, sp.gen);
+    if (sp.median) { let a = sp.median.map(l => m(ev(l))).sort((x, y) => x - y), n = a.length; return n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2 }
+    if (sp.tcv != null) return sp.tcv / sp.years / sp.mw / tk(sp.tkName, sp.gen);
+    throw new Error(`pricing.anchorMultiple：無法辨識的 k 規格`)
+  };
+  [`long`, `spot`].forEach(sd => [`base`, `low`, `high`, `sensMedian`].forEach(k => AM[sd][k] != null && (AM[sd][k] = val(AM[sd][k]))));
+  let nb = AM.long.nebiusContract; nb && nb.specs && (nb.values = nb.specs.map(val));
+  return true
+}
 function tkAnchorQ(sc, o = {}) { // v0.2a：每 MW 年收入＝Tokenomics 錨 × 定價倍數 k（Excel「每MW收入_錨定」同列同算式；tkanchor.py 為建置時參考）
   // 期末在役 MW＝已連網 × 在役比例；平均在役世代占比 × IF_HoldEcon（成本情境）÷ 1000＝錨；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約（第 2 輪）；長約占比＝MIN(1, 已揭露長約 MW ÷ 平均在役 MW) 只作對照
   let AM = COMPANY_DATA.pricing.anchorMultiple, FL = COMPANY_DATA.fleet, G = FL.generations, TK = COMPANY_DATA.tkSnap, P = COMPANY_DATA.scenarios.mwPath,
