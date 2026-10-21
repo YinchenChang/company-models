@@ -1,4 +1,4 @@
-# Nebius 收支模型 v0.3 原始碼包
+# Nebius 收支模型 v0.4 原始碼包
 
 Nebius（NBIS）收支與評價模型；由 CRWV 模型 v4.5 模板（`YinchenChang/crwv-model` @ `01b13ad`）建立。下方「v3.5」至「v4.5」各節為模板沿革與技術說明（以 CoreWeave 為例），引擎與工具仍適用；Nebius 新增的結構（MW × 每 MW 收入主軸、首期營收校準、預付款、融資瀑布的可轉債步驟、可轉債八檔稀釋、其他事業與持股）、v0.3 的每 MW 收入 Tokenomics 錨定（見下方「v0.3」節）見交接檔 `docs/handoff/20261008_Nebius收支模型_交接檔_v0_3.md` 與 `company.json` 欄位說明。成品名稱＝`更新日_<meta.company>收支模型_v版本`（目前 `dist/20261008_Nebius收支模型_v0_3.html`／`.xlsx`）。主標題「預付款，能把 Backlog 變成現金嗎？」與副標題（佔位符由模型現值帶入）放 `company.json` → `texts.title`／`texts.subtitle`（v0.2）。
 
@@ -48,7 +48,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | scripts/attrib_tkanchor.js | v0.3：v0.2 → v0.3 目標價 (d) 方法變更再拆：① 錨取代舊推導（k＝1）→ ② 套用 k → ③ 情境軸分離 → ④ 上限檢查 |
 | scripts/check_tokenomics_tab.py | v0.3：Excel「Tokenomics_取數」分頁值＝快照值、TK_ 具名範圍指向正確（verify.sh 步驟 5d；自 CoreWeave W1 複製） |
 | scripts/verify_legacy.sh | v0.3：舊方法回歸——副本把 `methodology.perMw.revenue` 改 legacy（預設輸入、副標、差異原因、更新日還原為 v0.2），對 v0.2 成品（git `6760147`）跑 `--vs-dist` 須 0 差異；`LEGACY=1 scripts/verify.sh` 一併執行 |
-| data/tokenomics_names.txt、data/tokenomics_snapshot_v5.27.json | v0.3：Tokenomics 取數名稱清單與官方快照（`tools/tokenomics/import_tokenomics.py`；verify.sh 步驟 0c 以 `--check` 重現，需 `TOKENOMICS_DIR=<Tokenomics clone>`，找不到 clone 時以警告略過） |
+| data/tokenomics_names.txt、data/tokenomics_snapshot_v18.0.json | v0.3：Tokenomics 取數名稱清單與官方快照（`tools/tokenomics/import_tokenomics.py`；verify.sh 步驟 0c 以 `--check` 重現，需 `TOKENOMICS_DIR=<Tokenomics clone>`，找不到 clone 時以警告略過） |
 | scripts/expect/ | 升版驗收的預期差異清單：`EXPECT`（Excel，xl_diff.py --expect）與 `CRAWL_EXPECT`（畫面文字，v0.2：「頁面 X」整頁允許不同、「行 正規式」符合的行允許不同），用法 `EXPECT=… CRAWL_EXPECT=… scripts/verify.sh --vs-dist` |
 | scripts/check_quarterly.js | v4.4：季度加總＝年度（三情境）、`quarterly.consistency` 一致性、超過門檻的差距都有原因；`build_html_portable.py` 建置時呼叫，verify.sh 步驟 0 |
 | scripts/test_quarterly.py | v4.4：暫存副本測試——(A) 假設 Q3 實際數，Python 獨立計算差距並與 HTML、Excel 比對；(B) 可移植性（無 MW、無季度指引與共識）。verify.sh 步驟 8 |
@@ -60,8 +60,16 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **按 MW-year 計價**：收入取決於簽約率（MW 驅動 100%）與爬坡（可計費 MW），不乘 Tokenomics `IF_Util`（重複扣減禁止）；利用率欄 100%。
 - **Excel**：新分頁「公司實況驗證」（第 2 輪）、「每MW收入_錨定」（A 價格軸、B 世代與 TK_ 值、C 已揭露合約、三個容量情境的錨 → k → 錨 × k、上限檢查、D 證據表、E 對照列、F Q2 驗證、G 3 × 3 與敏感度快照）；「Tokenomics_取數」分頁（110 個 TK_ 名稱）；「檢查_連動」收入上限列。
 - **HTML**：segA `tkAnchorQ()`、segB `tkScnQ()`／`tkSensQ()`；總結簡報新增第 7 頁「容量 × 價格」。
-- **Tokenomics 版本**：v5.27（`model/CURRENT`＝`20261008_Tokenomics_v5.27.xlsx`，master 合併 `19d667f`；快照 commit `ca78a8f`）。v5.29 合併後另開工作單重取（`L1_HoldEconMW_*`、`L1_TokMW_Gen_ratio_*`、`IFW_` 四層瀑布、`IFC_Use`）。
+- **Tokenomics 版本**：v0.3 取 v5.27（`19d667f`）；v0.4 起取 v18.0（見下節）。
 - **驗收**：`TOKENOMICS_DIR=<clone> LEGACY=1 scripts/verify.sh`（25 項，含 legacy 對 v0.2：只有「檢查_連動」兩列修正的 4 格不同，清單 `scripts/expect/legacy_vs_v0_2.txt`）；升版對 v0.2：`DATE=2026-10-08 EXPECT=scripts/expect/v0_3_vs_v0_2.txt CRAWL_EXPECT=scripts/expect/v0_3_vs_v0_2_crawl.txt scripts/verify.sh --vs-dist`（需以 v0.2 成品為 dist）。
+
+## v0.4 Tokenomics 同步 v18.0（工作單 v0.4a）
+- **快照**：`model/CURRENT`＝`20261021_Tokenomics_v18.0.xlsx`（master 合併 `868e2cc`）；`data/tokenomics_snapshot_v18.0.json`（38 個名稱，新增 `IFW_RevGWFleet_*` 四層、`IFC_Use`、`L1_HoldEconMW_*`、`L1_TokMW_Gen_ratio_VR200`〔_Lo／_Hi〕）；v5.27 快照移除。
+- **k 隨成本重算**：k＝證據價格 ÷ 目前快照的同世代成本（證據價格不變）。規格寫在 `company.json` → `pricing.anchorMultiple`（number｜ref｜priceEq｜median｜tcv），由 `kspec.py`（Python）與 `segA.js kSpecApplyQ`（JS）求解；Excel「每MW收入_錨定」為活公式。k_長約 0.76 → 0.89、k_現貨 1.76 → 1.83。
+- **建置成本**：`methodology.perMw.capex = tokenomics` 時，每 MW 建置成本＝Σ 新增世代占比 × `TK_CapexTotal_<世代>`（HTML `capexTkQ()`；舊寫死值留作對照列）。
+- **收入上限檢查四層**：比較層 `methodology.checks.revCapLayer`（預設 `Prod`），門檻 50%；`IFW_RevGWFleet_100／_Util／_Prod／_Life` 並列。
+- **目標價拆解**：`node scripts/attrib_tk18.js <v5.27 快照路徑>`（① 新快照 → ② k 重算 → ③ 建置成本 → ④ 上限檢查 0）；結果見交接檔 §4。
+- **驗收**：`TOKENOMICS_DIR=<clone> DATE=2026-10-21 EXPECT=scripts/expect/v0_4_vs_v0_3.txt CRAWL_EXPECT=scripts/expect/v0_4_vs_v0_3_crawl.txt LEGACY=1 scripts/verify.sh --vs-dist`（需以 v0.3 成品為 dist）；`xl_diff.py` 同區段同名列改以「第 n 個」配對。
 
 ## Excel 產生流程（scripts/verify.sh 步驟 2–7 即為此流程）
 1. `python3 build_xlsx.py`（輸出到 `out/`）
@@ -156,7 +164,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY26 下半年、FY27、FY28、FY29、FY30，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 Nebius v0.3 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 Nebius v0.4 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -164,7 +172,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `meta.company` | 公司名稱 | 文字 | Nebius | 必改 |
 | `meta.ticker` | 股票代號 | 文字 | NBIS | 必改 |
-| `meta.updateDate` | 資料更新日 | 日期 | 2026-10-08 | 必改 |
+| `meta.updateDate` | 資料更新日 | 日期 | 2026-10-21 | 必改 |
 | `meta.priceDate` | 股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格） | 日期 | 2026-10-06 | 必改 |
 | `meta.consensusFile` | 市場共識資料檔路徑（v4.3；只讀，由使用者查證後提供；建置時併入 HTML、Excel 讀同一檔） | 路徑 | data/consensus_nbis_202610… | 必改 |
 | `meta.sourceOrderNote` | 資料來源的先後與衝突時的取捨原則（畫面說明文字） | 文字 | 時序先 Q2 6-K 財報與股東信（8/12），再期… | 必改 |
@@ -423,7 +431,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.convCap.low` | 保守情境：融資瀑布可轉債步驟每年新發行上限（0＝不新發；v0.1b） | US$bn／年 | 0 | 檢查 |
 | `scenarios.convCap.base` | 基準情境：同上 | US$bn／年 | 5 | 檢查 |
 | `scenarios.convCap.high` | 積極情境：同上 | US$bn／年 | 10 | 檢查 |
-| `scenarios.capexTemplate.costMW` | 每 MW 建置成本（GPU＋網路＋機房內裝），各期 | US$m/MW 清單 | 50.12、50.26、50.26、50.26、50.26 | 檢查 |
+| `scenarios.capexTemplate.costMW` | 每 MW 建置成本（GPU＋網路＋機房內裝），各期；v0.4a 起 methodology.perMw.capex＝tokenomics 時只作對照（v0.3 舊值），模型採用 Tokenomics IF_CapexTotal 推導值 | US$m/MW 清單 | 50.12、50.26、50.26、50.26、50.26 | 檢查 |
 | `scenarios.capexTemplate.div` | JV 後續增資與策略投資，各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
 
 ### `legacy`：舊版對照值
@@ -484,7 +492,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.linkSites` | 具名站點的 MW 是否連動第一期產能下限 | 是／否 | 是 | 可沿用 |
 | `defaults.linkLeaseTail` | 舊模板遺留開關，目前程式未使用 | 是／否 | 是 | 可沿用 |
 | `defaults.useAvgMw` | 收入以平均在役 MW 計（true）或期末存量計（false） | 是／否 | 是 | 可沿用 |
-| `defaults.billableOpen` | 最新季末可計費 MW（第一期期初；v0.1c 起＝最新季營收 × 4 ÷ 預設情境首期每 MW 年收入，建置時檢查） | MW | 264 | 必改 |
+| `defaults.billableOpen` | 最新季末可計費 MW（第一期期初；v0.1c 起＝最新季營收 × 4 ÷ 預設情境首期每 MW 年收入，建置時檢查） | MW | 253 | 必改 |
 | `defaults.cds` | 信用違約交換（CDS）中價 | bps | None | 必改 |
 | `defaults.cdsBid` | CDS 買價 | bps | None | 必改 |
 | `defaults.cdsAsk` | CDS 賣價 | bps | None | 必改 |
@@ -496,7 +504,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.m.accepted` | 已驗收 MW 的預設路徑（實際依所選情境覆寫） | MW 清單 | 750、1330、1910、2490、3070 | 檢查 |
 | `defaults.m.billable` | 可計費 MW 的預設路徑（實際依情境與爬坡比例覆寫） | MW 清單 | 338、904、1719、2241、2763 | 檢查 |
 | `defaults.m.util` | 利用率，各期 | % 清單 | 100、100、100、100、100 | 檢查 |
-| `defaults.m.revMW` | 每 MW 年收入，各期 | US$bn/MW 清單 | 0.0088252、0.0092118、0.00940676、0.00948875、0.00953265 | 必改 |
+| `defaults.m.revMW` | 每 MW 年收入，各期 | US$bn/MW 清單 | 0.00919255、0.00962184、0.0100189、0.0102641、0.0103953 | 必改 |
 | `defaults.m.aiShare` | AI 占比，各期（目前只做範圍檢查，未參與計算） | % 清單 | 100、100、100、100、100 | 可沿用 |
 | `defaults.m.fill` | 新產能簽約率：未被既有 RPO 占用的產能能賣出的比例 | % 清單 | 100、100、100、100、100 | 檢查 |
 | `defaults.m.power` | 電價（overlay 開啟時才用） | $/MWh 清單 | 60、62、64、66、68 | 檢查 |
@@ -555,8 +563,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.checks.capexPerMwBand` | 檢查頁：模型期 CapEx 強度（每 MW 百萬美元）的合理區間下端與上端（5a） | US$m/MW 清單 | 38、68 | 檢查 |
 | `methodology.checks.leaseVsCommitMin` | 檢查頁：表外租金路徑 ÷ 已承諾租約至少要達到的倍數（5a） | 倍 | 0.8 | 檢查 |
 | `methodology.checks.revCapShareMax` | 檢查頁：每 MW 年收入 ÷ Tokenomics 客戶每 MW 付費 token 營收（IF_RevGWFleet）的上限；超過即警示（v0.2a） | 比例 | 0.5 | 檢查 |
+| `methodology.checks.revCapLayer` | 收入上限檢查的比較層（v0.4a，自 CoreWeave W9）：Tokenomics 四層瀑布 IFW_RevGWFleet_100／_Util／_Prod／_Life 擇一；門檻 revCapShareMax 比較此層（_Prod 已扣 SLO 下產能折減，最接近可實際售出 token）；四層一起取、逐層列示（下游資料契約第 2 條）；未設＝Util（v0.3 原做法） | 代碼 | Prod | 檢查 |
 | `methodology.perMw._note` | 每 MW 收入方法開關的說明（不進程式；v0.2a） | 文字 | 每 MW 收入方法開關（v0.2a，已決定事項 14… | 可沿用 |
 | `methodology.perMw.revenue` | 每 MW 收入方法（v0.2a）：tkAnchor＝Tokenomics 錨（IF_HoldEcon，在役世代加權）× 定價倍數 k（pricing.anchorMultiple）；legacy＝scenarios.revMW（v0.2，回歸驗收用） | 代碼 | tkAnchor | 檢查 |
+| `methodology.perMw.capex` | 每 MW 建置成本方法（v0.4a）：tokenomics＝Σ 新增世代占比（fleet.newMix）× IF_CapexTotal｜世代（Excel 活公式引用 TK_CapexTotal_*；需 revenue＝tkAnchor）；legacy 或未設＝scenarios.capexTemplate.costMW（v0.3 寫死值，回歸驗收用） | 代碼 | tokenomics | 檢查 |
 | `methodology.checks.unsignedRevShareMax` | 檢查頁：後段年度依賴未簽約收入的比例上限（5a） | 比例 | 0.5 | 檢查 |
 | `methodology.checks.siteRentGapMax` | 檢查頁：站點租賃五期租金可能低估的金額上限（5a） | US$bn | 10 | 檢查 |
 | `methodology.checks.rentVsBenchMin` | 檢查頁：模型每 MW 年租金至少要達到「市場基準 × 第三方占比」的比例（5a） | 比例 | 0.8 | 檢查 |
@@ -631,12 +641,12 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `tokenomics._note` | Tokenomics 取數層的說明（不進程式；v0.2a，比照 CoreWeave W1） | 文字 | 算力相關的產業與物理層資料改引用 Tokenomic… | 可沿用 |
 | `tokenomics.snapshotFile` | Tokenomics 快照檔路徑（tools/tokenomics/import_tokenomics.py 產生；Excel「Tokenomics_取數」分頁讀此檔） | 路徑 | data/tokenomics_snapshot_v… | 可沿用 |
-| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v5.27 | 可沿用 |
-| `tokenomics.commit` | 快照的 Tokenomics commit SHA（取數時 clone 的 HEAD） | 文字 | ca78a8f42af36caa1af2cc6234… | 可沿用 |
-| `tokenomics.mergeCommit` | 該版 xlsx 合併進 Tokenomics master 的雜湊（下游資料契約第 5 條） | 文字 | 19d667f | 可沿用 |
-| `tokenomics.currentFile` | 取數時 Tokenomics model/CURRENT 的檔名 | 文字 | 20261008_Tokenomics_v5.27.… | 可沿用 |
-| `tokenomics.names` | 引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW、IF_RevGWFleet | 檢查 |
-| `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（目前無） | 清單 |  | 檢查 |
+| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v18.0 | 可沿用 |
+| `tokenomics.commit` | 快照的 Tokenomics commit SHA（取數時 clone 的 HEAD） | 文字 | 868e2cc552621fcf3a513ecd3a… | 可沿用 |
+| `tokenomics.mergeCommit` | 該版 xlsx 合併進 Tokenomics master 的雜湊（下游資料契約第 5 條） | 文字 | 868e2cc | 可沿用 |
+| `tokenomics.currentFile` | 取數時 Tokenomics model/CURRENT 的檔名 | 文字 | 20261021_Tokenomics_v18.0.… | 可沿用 |
+| `tokenomics.names` | 引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW、IF_RevGWFleet、IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、L1_HoldEconMW_Hopper、L1_HoldEconMW_GB200、L1_HoldEconMW_GB300、L1_HoldEconMW_VR200、L1_TokMW_Gen_ratio_VR200、L1_TokMW_Gen_ratio_VR200_Lo、L1_TokMW_Gen_ratio_VR200_Hi | 檢查 |
+| `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（目前無） | 清單 | IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、L1_HoldEconMW_Hopper、L1_HoldEconMW_GB200、L1_HoldEconMW_GB300、L1_HoldEconMW_VR200、L1_TokMW_Gen_ratio_VR200、L1_TokMW_Gen_ratio_VR200_Lo、L1_TokMW_Gen_ratio_VR200_Hi | 檢查 |
 
 ### `pricing`：每 MW 收入的公司因素：定價倍數 k、長約占比、證據表（v0.2a）
 
@@ -644,8 +654,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `pricing._note` | 每 MW 收入公司因素區段的說明（不進程式；v0.2a） | 文字 | v0.2a：每 MW 收入的公司因素（定價倍數 k）… | 可沿用 |
 | `pricing.anchorMultiple._note` | 定價倍數 k 的口徑說明（已決定事項 14、下游資料契約第 4 條；不進程式） | 文字 | v0.2a 第 2 輪（已決定事項 14、15，比照… | 可沿用 |
-| `pricing.anchorMultiple.long` | k_長約：base／low／high（價格軸低／基準／高）、證據來源 refEvidence、契約第 4 條指定解讀 interpretation、三筆長約中位數 sensMedian、Nebius 自身合約換算 nebiusContract（只列敏感度）、標記 | 物件（倍數） | 物件（base、low、high、tag、refEvidence、sensMedian、nebiusContract、note、interpretation） | 檢查 |
-| `pricing.anchorMultiple.spot` | k_現貨：base／low／high、refEvidence、標記（非長約客戶的價格倍數） | 物件（倍數） | 物件（base、low、high、tag、refEvidence、note） | 檢查 |
+| `pricing.anchorMultiple.long` | k_長約：base／low／high（價格軸低／基準／高）、證據來源 refEvidence、契約第 4 條指定解讀 interpretation、三筆長約中位數 sensMedian、Nebius 自身合約換算 nebiusContract（只列敏感度）、標記。v0.4a 起 base／low／high／sensMedian 為規格，建置時由證據價格 ÷ 目前快照同世代成本推算（kspec.py；HTML 端 segA.js kSpecApplyQ）：數字（固定倍數）｜{ref: 證據 label}｜{priceEq, gen, tkName}（端點換成固定價格）｜{median: [label…]}；nebiusContract.specs 逐項 {ref}｜{tcv(US$m), years, mw, gen, tkName}，建置時解出 values | 物件（倍數） | 物件（base、low、high、tag、refEvidence、sensMedian、nebiusContract、note、interpretation） | 檢查 |
+| `pricing.anchorMultiple.spot` | k_現貨：base／low／high、refEvidence、標記（非長約客戶的價格倍數）；v0.4a 起 base／low／high 為規格（同 k_長約：{ref}｜{priceEq, gen, tkName}｜數字） | 物件（倍數） | 物件（base、low、high、tag、refEvidence、note） | 檢查 |
 | `pricing.anchorMultiple.onDemandShare` | 隨需占比（第 2 輪，比照 CoreWeave W4 r2）：base（基準 0＝新增產能按長約價）、sens（敏感度清單）、標記與說明；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約 | 物件（比例） | 物件（base、sens、tag、note） | 檢查 |
 | `pricing.anchorMultiple.longShare` | 長約占比（第 2 輪起只作對照列，不驅動 k）的算法：contracts＝已揭露多年期合約（label、start＝起始模型期 0–4、mw 基準／lo／hi、換算依據、來源、標記）；占比＝MIN(1, 合約 MW ÷ 平均在役 MW) | 物件 | 物件（method、tag、formula、contracts、note） | 必改 |
 | `pricing.anchorMultiple.contractMix` | 合約組合的揭露（只作對照；找不到者寫明試過的來源） | 清單 | 3 筆 | 必改 |

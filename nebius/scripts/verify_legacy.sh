@@ -22,6 +22,7 @@ co['texts'] = ref['texts']; co['varianceReasons'] = ref['varianceReasons']; co['
 sc = co['defaults']['scenario']; rev = co['scenarios']['revMW'][sc]
 bo = int(co['latestQuarter']['revenue'] * 4 / rev[0] + 0.5)
 co['methodology']['perMw']['revenue'] = 'legacy'
+co['methodology']['perMw']['capex'] = 'legacy'  # v0.4a：每 MW 建置成本也還原為 v0.2 的寫死值（非 tokenomics 即用 scenarios.capexTemplate.costMW）
 co['defaults']['m']['revMW'] = rev; co['defaults']['billableOpen'] = bo
 open(p, 'w', encoding='utf-8').write(json.dumps(co, indent=1, ensure_ascii=False) + '\n')
 PY

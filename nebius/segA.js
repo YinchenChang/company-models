@@ -18,7 +18,10 @@ var PERIODS = COMPANY_DATA.periods,
   CALL_FACTS = COMPANY_DATA.callFacts,
   SC_MWP = COMPANY_DATA.scenarios.mwPath, // v0.1b：已連網 MW＝MIN(合約上限, 前期＋併網速度×期間長度)；首期期末三情境共用
   SC_ACC = Object.fromEntries([`low`, `base`, `high`].map(k => [k, PERIOD_YEARS.reduce((a, L, i) => (a.push(Math.min(SC_MWP.contracted[k][i], i === 0 ? SC_MWP.connectedStart : a[i - 1] + SC_MWP.pace[k] * L)), a), [])])),
+  KSPEC_DONE = kSpecApplyQ(), // v0.4a（自 CoreWeave W6 r1）：k 規格（證據價格 ÷ 目前快照）在引用前解成數字（錨改變時 k 跟著重算；kspec.py 同算式）
   PMW_REVQ = ((COMPANY_DATA.methodology || {}).perMw || {}).revenue || `legacy`, // v0.2a：每 MW 收入方法（tkAnchor＝Tokenomics 錨 × k；legacy＝scenarios.revMW）
+  REVCAP_LAYERS_Q = [`100`, `Util`, `Prod`, `Life`], REVCAP_LAYER_Q = COMPANY_DATA.methodology.checks.revCapLayer || `Util`, // v0.4a（自 CoreWeave W9）：Tokenomics IFW_RevGWFleet_* 四層瀑布；比較層讀 company.json → methodology.checks.revCapLayer（未設＝Util）
+  PMW_CAPEXQ = ((COMPANY_DATA.methodology || {}).perMw || {}).capex || `legacy`, // v0.4a：每 MW 建置成本方法（tokenomics＝Σ 新增世代占比 × IF_CapexTotal；legacy＝scenarios.capexTemplate.costMW）
   REVSRCQ = PMW_REVQ === `tkAnchor` ? `Tokenomics 錨 × 定價倍數 k` : `Tokenomics 正向推導`, // v0.2a：畫面文字的每 MW 收入來源（legacy 時與 v0.2 相同）
   SC_REV = PMW_REVQ === `tkAnchor` ? Object.fromEntries([`low`, `base`, `high`].map(k => [k, tkAnchorQ(k).rev])) : COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境；v0.2a：tkAnchor 時＝錨 × k（價格軸基準），容量情境與價格脫鉤
   SC_BR = COMPANY_DATA.scenarios.billableRatio.ratio,
@@ -29,7 +32,7 @@ var PERIODS = COMPANY_DATA.periods,
   scA = e => {
     let T = COMPANY_DATA.scenarios.capexTemplate, F = COMPANY_DATA.scenarios.leaseRampFloorMw;
     return {
-      costMW: [...T.costMW],
+      costMW: PMW_CAPEXQ === `tokenomics` ? capexTkQ(null) : [...T.costMW], // v0.4a：每 MW 建置成本＝Σ 新增世代占比 × IF_CapexTotal（Tokenomics；舊值 T.costMW 只作 legacy／對照）
       customerFund: PERIOD_YEARS.map(() => COMPANY_DATA.defaults.prepay.shareOfDeals * COMPANY_DATA.defaults.prepay.capexCover), // v0.1b：預付比率＝有預付的合約比例 × 預付占相關資本支出比
       newLease: SC_LEASE_HI.map((t, n) => t * Math.max(0, SC_ACC[e][n] - F) / (SC_ACC.high[n] - F)),
       div: [...T.div]
@@ -69,21 +72,39 @@ var PERIODS = COMPANY_DATA.periods,
   Qk = DEFAULTS; // 模板函式庫片段（mid1–mid3）仍以 Qk 引用預設值，保留別名
 DEFAULTS.cvCap = SCENARIOS[COMPANY_DATA.defaults.scenario].cvCap; // v0.1b：預設情境的可轉債年上限
 PMW_REVQ === `tkAnchor` && (DEFAULTS.m.revMW = [...SC_REV[COMPANY_DATA.defaults.scenario]], DEFAULTS.billableOpen = SCENARIOS[COMPANY_DATA.defaults.scenario].bo); // v0.2a：預設輸入＝預設情境的錨定值（company.json 存同值，build_xlsx 檢查）
+function kSpecApplyQ() { // v0.4a：k 規格 → 倍數（價格 ÷ 目前快照基準值；kspec.py 同算式）：數字｜{ref}｜{priceEq, gen, tkName}｜{median: [label]}；Nebius 自身合約 specs 逐項 {ref}｜{tcv, years, mw, gen, tkName}
+  let AM = COMPANY_DATA.pricing.anchorMultiple, TK = COMPANY_DATA.tkSnap, tk = (n, g) => TK[n][g][`基準`], ev = l => AM.evidence.find(x => x.label === l), m = x => x.price / tk(x.tkName, x.gen);
+  let val = sp => {
+    if (typeof sp === `number`) return sp;
+    if (sp.ref) return m(ev(sp.ref));
+    if (sp.priceEq != null) return sp.priceEq / tk(sp.tkName, sp.gen);
+    if (sp.median) { let a = sp.median.map(l => m(ev(l))).sort((x, y) => x - y), n = a.length; return n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2 }
+    if (sp.tcv != null) return sp.tcv / sp.years / sp.mw / tk(sp.tkName, sp.gen);
+    throw new Error(`pricing.anchorMultiple：無法辨識的 k 規格`)
+  };
+  [`long`, `spot`].forEach(sd => [`base`, `low`, `high`, `sensMedian`].forEach(k => AM[sd][k] != null && (AM[sd][k] = val(AM[sd][k]))));
+  let nb = AM.long.nebiusContract; nb && nb.specs && (nb.values = nb.specs.map(val));
+  return true
+}
+function capexTkQ(e) { // v0.4a（自 CoreWeave W2 capexTkQ）：每 MW 建置成本（US$m/MW）＝Σ 新增世代占比 × IF_CapexTotal｜世代（IT 設備＋廠房；Nebius 自建；e.tkCase＝Tokenomics 成本情境，e.newMix＝世代組合替代）
+  let cs = (e && e.tkCase) || `基準`, FL = COMPANY_DATA.fleet, nm = (e && e.newMix) || FL.newMix, TK = COMPANY_DATA.tkSnap.IF_CapexTotal;
+  return nm.map(mx => FL.generations.reduce((a, g) => a + (mx[g] || 0) * TK[g][cs], 0))
+}
 function tkAnchorQ(sc, o = {}) { // v0.2a：每 MW 年收入＝Tokenomics 錨 × 定價倍數 k（Excel「每MW收入_錨定」同列同算式；tkanchor.py 為建置時參考）
   // 期末在役 MW＝已連網 × 在役比例；平均在役世代占比 × IF_HoldEcon（成本情境）÷ 1000＝錨；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約（第 2 輪）；長約占比＝MIN(1, 已揭露長約 MW ÷ 平均在役 MW) 只作對照
   let AM = COMPANY_DATA.pricing.anchorMultiple, FL = COMPANY_DATA.fleet, G = FL.generations, TK = COMPANY_DATA.tkSnap, P = COMPANY_DATA.scenarios.mwPath,
     br = COMPANY_DATA.scenarios.billableRatio.ratio, px = o.px || `base`, cs = o.tkCase || `基準`, lsk = o.ls || `mw`, nm = o.newMix || FL.newMix,
     ref = side => AM.evidence.find(x => x.label === AM[side].refEvidence), rr = x => cs === `基準` ? 1 : TK[x.tkName][x.gen][`基準`] / TK[x.tkName][x.gen][cs], // k＝價格 ÷ 同成本情境持有成本：非基準成本情境以證據世代的成本比例重算（價格是事實；比照 CoreWeave W4 r2）
-    kL = (o.kLong ?? AM.long[px]) * rr(ref(`long`)), kS = (o.kSpot ?? AM.spot[px]) * rr(ref(`spot`)), od = o.od ?? AM.onDemandShare.base, acc = [], R = { start: [], end: [], add: [], avg: [], anchor: [], longMw: [], ls: [], k: [], rev: [], capRef: [], capRatio: [], share: {}, kL, kS, od },
+    kL = (o.kLong ?? AM.long[px]) * rr(ref(`long`)), kS = (o.kSpot ?? AM.spot[px]) * rr(ref(`spot`)), od = o.od ?? AM.onDemandShare.base, acc = [], R = { start: [], end: [], add: [], avg: [], anchor: [], longMw: [], ls: [], k: [], rev: [], capRef: [], capRatio: [], capLay: Object.fromEntries(REVCAP_LAYERS_Q.map(L => [L, []])), capRL: Object.fromEntries(REVCAP_LAYERS_Q.map(L => [L, []])), share: {}, kL, kS, od },
     prevT = COMPANY_DATA.priceCheck.inServiceMw, prev = {};
   G.forEach(g => { prev[g] = prevT * (FL.openMix.mix[g] || 0); R.share[g] = [] });
   for (let t = 0; t < 5; t++) {
     acc.push(Math.min(P.contracted[sc][t], t === 0 ? P.connectedStart : acc[t - 1] + P.pace[sc] * PERIOD_YEARS[t]));
-    let end = acc[t] * br[t], add = Math.max(0, end - prevT), cur = {}, tot = prevT + end, A = 0, cap = 0;
-    G.forEach(g => { cur[g] = prev[g] + add * (nm[t][g] || 0); let sh = (prev[g] + cur[g]) / tot; R.share[g].push(sh); A += sh * TK.IF_HoldEcon[g][cs]; cap += sh * TK.IF_RevGWFleet[g][cs] });
-    A /= 1e3; cap /= 1e3;
+    let end = acc[t] * br[t], add = Math.max(0, end - prevT), cur = {}, tot = prevT + end, A = 0, cap = 0, lay = Object.fromEntries(REVCAP_LAYERS_Q.map(L => [L, 0]));
+    G.forEach(g => { cur[g] = prev[g] + add * (nm[t][g] || 0); let sh = (prev[g] + cur[g]) / tot; R.share[g].push(sh); A += sh * TK.IF_HoldEcon[g][cs]; cap += sh * TK.IF_RevGWFleet[g][cs]; REVCAP_LAYERS_Q.forEach(L => lay[L] += sh * TK[`IFW_RevGWFleet_${L}`][g][cs]) });
+    A /= 1e3; cap /= 1e3; REVCAP_LAYERS_Q.forEach(L => lay[L] /= 1e3);
     let avg = tot / 2, lm = AM.longShare.contracts.reduce((a, c) => a + (c.start <= t ? c[lsk] : 0), 0), s = Math.min(1, lm / avg), k = od * kS + (1 - od) * kL; // 第 2 輪（W4 r2）：k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約；長約占比 s 只作對照
-    R.start.push(prevT); R.end.push(end); R.add.push(add); R.avg.push(avg); R.anchor.push(A); R.longMw.push(lm); R.ls.push(s); R.k.push(k); R.rev.push(A * k); R.capRef.push(cap); R.capRatio.push(A * k / cap);
+    R.start.push(prevT); R.end.push(end); R.add.push(add); R.avg.push(avg); R.anchor.push(A); R.longMw.push(lm); R.ls.push(s); R.k.push(k); R.rev.push(A * k); R.capRef.push(cap); REVCAP_LAYERS_Q.forEach(L => { R.capLay[L].push(lay[L]); R.capRL[L].push(A * k / lay[L]) }); R.capRatio.push(A * k / lay[REVCAP_LAYER_Q]); // v0.4a：capRatio 取比較層（四層明細在 capLay／capRL；capRef＝IF_RevGWFleet 對照）
     prev = cur; prevT = end
   }
   return R
@@ -529,13 +550,13 @@ function runFunding(e) {
   });
   if (PMW_REVQ === `tkAnchor`) { // v0.2a：收入上限檢查（Excel「檢查_連動」同一列；門檻 company.json → methodology.checks.revCapShareMax）
     let sc = [`low`, `base`, `high`].includes(e.scenario) ? e.scenario : `base`, A = tkAnchorQ(sc),
-      rq = A.capRef.map((c, r) => t.revMW[r] * (e.revScale ?? 1) * (t.util[r] / 100) / c), mx = Math.max(...rq), th = CHECK_TH.revCapShareMax;
+      rq = A.capLay[REVCAP_LAYER_Q].map((c, r) => t.revMW[r] * (e.revScale ?? 1) * (t.util[r] / 100) / c), mx = Math.max(...rq), th = CHECK_TH.revCapShareMax;
     _({
       id: `rev-cap`,
       ok: mx <= th,
       severity: mx <= th ? `ok` : `watch`,
-      title: `收入上限：每 MW 計費收入 ÷ 客戶付費 token 營收 最高 ${Math.round(mx * 100)}%（門檻 ${Math.round(th * 100)}%）`,
-      detail: `neocloud 拿走客戶 token 營收的比例＝每 MW 計費收入 ÷ Tokenomics IF_RevGWFleet（客戶每 MW 付費 token 營收的理想上限，依在役世代加權）。各期：${PERIODS.map((n, r) => `${n} ${Math.round(rq[r] * 100)}%`).join(`、`)}。超過門檻代表單價相對客戶端 token 經濟性偏高（Hopper 世代的 token 營收低，早期比例偏高）；只警示，不改數字。`
+      title: `收入上限：每 MW 計費收入 ÷ 客戶付費 token 營收（比較層 _${REVCAP_LAYER_Q}） 最高 ${Math.round(mx * 100)}%（門檻 ${Math.round(th * 100)}%）`,
+      detail: `neocloud 拿走客戶 token 營收的比例＝每 MW 計費收入 ÷ Tokenomics IFW_RevGWFleet_${REVCAP_LAYER_Q}（四層瀑布的比較層：_Prod 已扣 SLO 下的產能折減，最接近可實際售出 token；客戶每 MW 付費 token 營收的上限，依在役世代加權）。四層（FY26）：${REVCAP_LAYERS_Q.map(L => `_${L} ${Math.round(t.revMW[0] * (e.revScale ?? 1) * (t.util[0] / 100) / A.capLay[L][0] * 100)}%`).join(`、`)}。各期：${PERIODS.map((n, r) => `${n} ${Math.round(rq[r] * 100)}%`).join(`、`)}。超過門檻代表單價相對客戶端 token 經濟性偏高（Hopper 世代的 token 營收低，早期比例偏高）；只警示，不改數字。`
     })
   }
   for (let e = 0; e < 5; e++) t.billable[e] - t.accepted[e] > .5 && _({
@@ -610,7 +631,7 @@ function runFunding(e) {
     ok: o[0].capexFull >= CALL_FACTS.capexLo && o[0].capexFull <= CALL_FACTS.capexHi,
     severity: o[0].capexFull >= CALL_FACTS.capexLo && o[0].capexFull <= CALL_FACTS.capexHi ? `ok` : `watch`,
     title: `毛 CapEx 由 MW 推導：${PERIODS[0]} 全年 ${o[0].capexFull.toFixed(1)}（指引 ${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}）`,
-    detail: `公式＝(本期新增 MW×(1−λ)＋次期新增 MW×λ)×每 MW 成本。${PERIOD_FY[0] - 1} 年底 ${e.mwYearEnd[PERIOD_FY[0] - 1]} MW → ${PERIODS[0]} 年底 ${t.accepted[0]} MW、λ ${(e.lambda*100).toFixed(0)}%、每 MW $${e.a.costMW[0]}m（Tokenomics IF_CapexTotal：IT＋機房，自有站點）。五期（首期為模型部分）合計 ${CX.reduce((e,t)=>e+t,0).toFixed(1)}。指引只有法說會二手轉述，且口徑（現金或應計）未定義。`
+    detail: `公式＝(本期新增 MW×(1−λ)＋次期新增 MW×λ)×每 MW 成本。${PERIOD_FY[0] - 1} 年底 ${e.mwYearEnd[PERIOD_FY[0] - 1]} MW → ${PERIODS[0]} 年底 ${t.accepted[0]} MW、λ ${(e.lambda*100).toFixed(0)}%、每 MW $${(+e.a.costMW[0]).toFixed(2)}m（Tokenomics IF_CapexTotal：IT＋機房，自有站點）。五期（首期為模型部分）合計 ${CX.reduce((e,t)=>e+t,0).toFixed(1)}。指引只有法說會二手轉述，且口徑（現金或應計）未定義。`
   }), _({
     id: `fleet-da`,
     ok: !0,

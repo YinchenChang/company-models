@@ -767,7 +767,7 @@ function zM() {
                 }), (0, $.jsx)(BM, {
                   rows: [
                     [`支出（可編輯輸入；FY26 欄為 2H 模型值）`, null],
-                    [`　每 MW 建置成本`, e.a.costMW, (e, t) => E(`costMW`, e, t), 1, void 0, `Tokenomics IF_CapexTotal（GB300 50.12、VR200 50.26 US$m/MW-IT；IT＋機房，自有站點為主）[Derived]。全年指引只有法說會轉述，不用來回推。`, `US$m/MW`],
+                    [`　每 MW 建置成本`, e.a.costMW, (e, t) => E(`costMW`, e, t), 1, void 0, (PMW_CAPEXQ === `tokenomics` ? `Σ 新增世代占比 × Tokenomics IF_CapexTotal（${COMPANY_DATA.tokenomics.version}：GB300 ${Y(COMPANY_DATA.tkSnap.IF_CapexTotal[`GB300 NVL72`][`基準`], 2)}、VR200 ${Y(COMPANY_DATA.tkSnap.IF_CapexTotal[`VR200 NVL72`][`基準`], 2)} US$m/MW-IT；IT＋機房，自有站點為主）[Derived]。全年指引只有法說會轉述，不用來回推。` : `Tokenomics IF_CapexTotal（GB300 50.12、VR200 50.26 US$m/MW-IT；IT＋機房，自有站點為主）[Derived]。全年指引只有法說會轉述，不用來回推。`), `US$m/MW`],
                     [`　本期新增 MW`, d.years.map(e => e.mwNew), void 0, void 0, `calc`, `＝期末 Accepted − 期初。FY26 期初為 2025 年底 850 MW。`, `MW`],
                     [`　次期新增 MW`, d.years.map(e => e.mwNext), void 0, void 0, `calc`, `下一期新增量；FY30 欄取左欄「FY31 新增 MW」。`, `MW`],
                     [`　全年毛 CapEx（公式）`, d.years.map(e => e.capexFull), void 0, void 0, `calc`, `＝(本期新增×(1−λ)＋次期新增×λ)×每 MW 成本。${PERIODS[0]} 對照公司全年指引 ${CALL_FACTS.capexLo}–${CALL_FACTS.capexHi}（法說會轉述）。`],
