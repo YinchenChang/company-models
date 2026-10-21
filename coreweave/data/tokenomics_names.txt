@@ -37,3 +37,9 @@ IFC_Use # 上列各名稱的用途限制（「上限，不得作預測」；W9 �
 L1_TokMW_Gen_ratio_VR200 # VR200 對 GB300 每 MW token 產出比 q（基準；W9）
 L1_TokMW_Gen_ratio_VR200_Lo # q 低端（W9）
 L1_TokMW_Gen_ratio_VR200_Hi # q 高端（W9）
+L1_GenPxThr_Rev_VR200 # VR200 世代收入持平門檻（年價格變化；基準；W10）
+L1_GenPxThr_Rev_VR200_Lo # 收入持平門檻 低端（W10）
+L1_GenPxThr_Rev_VR200_Hi # 收入持平門檻 高端（W10）
+L1_GenPxThr_Pay_VR200 # VR200 世代回本門檻（年價格變化；基準；W10）
+L1_GenPxThr_Pay_VR200_Lo # 回本門檻 低端（W10）
+L1_GenPxThr_Pay_VR200_Hi # 回本門檻 高端（W10）
