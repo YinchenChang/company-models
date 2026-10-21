@@ -645,8 +645,8 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
     pq_html = "".join(f"<tr><td>{lab}</td><td>{n(ref, 2026, f)}</td></tr>" for lab, ref, f in pq_rows)
     S.append(f"""<section id="s1b"><h2><span class="no">①之二</span>v{ver} 更新了什麼：Tokenomics {tk_ver}</h2>
 <p class="lead">Tokenomics 由 v5.26 升到 {tk_ver} 後，命題結論不變：2026–2028 仍為負、2029 起轉正，累計外部資金需求仍為 {n("FND_ExtNeedCum", Y, "f0")}。
-變動集中在 η：TK 每 GW 年產能（IF_TokGW_*）上升約 1.3–1.6 倍（v9.0 快取命中進產能、v10.2 每用戶速度 SLO 改量測值），η 由 {n("CMP_Eta", 2025, "f3", "v011")} 降到 {n("CMP_Eta", 2025, "f3")}，把整體上升吸收掉，所以供給 VR 等值 GW 2030 只由 {n("CMP_Supply_VReq", Y, "f2", "v011")} 變為 {n("CMP_Supply_VReq", Y, "f2")}，2026–2030 各年每 VR 等值 GW 差額變動不超過 0.1（2025 年分母只有約 0.06 VR 等值 GW，該年數字本來就極端）。
-公式沒有改；只更正兩處過時的說明文字，見報告「語意核對」。</p>
+變動集中在 η：TK 每 GW 年產能（IF_TokGW_*）上升約 1.3–1.8 倍（v9.0 快取命中進產能、v10.2 每用戶速度 SLO 改量測值），η 由 {n("CMP_Eta", 2025, "f3", "v011")} 降到 {n("CMP_Eta", 2025, "f3")}，把整體上升吸收掉，所以供給 VR 等值 GW 2030 只由 {n("CMP_Supply_VReq", Y, "f2", "v011")} 變為 {n("CMP_Supply_VReq", Y, "f2")}，2026–2030 各年每 VR 等值 GW 差額變動不超過 0.1（2025 年分母只有約 0.06 VR 等值 GW，該年數字本來就極端）。
+公式沒有改；只更正五處過時的說明文字，見報告「語意核對」。</p>
 <div class="tw"><table><thead><tr><th>輸出</th>{"".join(f"<th>{l}</th>" for l, _s in tk_cols)}</tr></thead><tbody>
 {"".join(tk_rows)}
 </tbody></table></div>
