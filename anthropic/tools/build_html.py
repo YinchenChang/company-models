@@ -607,7 +607,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
     upd_rows += [upd("覆蓋率 2030", "COST_Coverage", Y, "pct0"), upd("累計外部資金需求 2026–2030 $B", "FND_ExtNeedCum", Y, "f1", True),
                  upd("只靠已到位融資的現金谷底 $B", "FND_CashNoExtTrough", None, "f1")]
     S.append(f"""<section id="s1b"><h2><span class="no">①之二</span>v{ver} 更新了什麼</h2>
-<p class="lead">草擬 S-1（WSJ 2026-10-21 轉述）與 Q3 投資人簡報進來後，命題結論不變：2026–2028 仍為負、2029 起轉正，累計外部資金需求仍為 {n("FND_ExtNeedCum", Y, "f0")}。2026 營收由 {n("REV_GrossCapped", 2026, "f1", "v010")} 上修到 {n("REV_GrossCapped", 2026, "f1")}（U1），2026 年每 VR 等值 GW 差額由 {n("COST_PropGap_VR", 2026, "sf2", "v010")} 收斂到 {n("COST_PropGap_VR", 2026, "sf2")}；Nscale＋Lambda 改錨定『最高 $86B』（U2）使 2027 起算力付款與供給 GW 變大，2028 年差額由 {n("COST_PropGap_VR", 2028, "sf2", "only_u1")} 變為 {n("COST_PropGap_VR", 2028, "sf2")}。其餘更新項（U3–U5、U7）只做對照，不改任何基準數字；談判中的 $150B（U6）只是情境，基準仍只計已簽合約。</p>
+<p class="lead">草擬 S-1（WSJ 2026-10-21 轉述）與 Q3 投資人簡報進來後，命題結論不變：2026–2028 仍為負、2029 起轉正，累計外部資金需求仍為 {n("FND_ExtNeedCum", Y, "f0")}。2026 營收由 {n("REV_GrossCapped", 2026, "f1", "v010")} 上修到 {n("REV_GrossCapped", 2026, "f1")}（U1），2026 年每 VR 等值 GW 差額由 {n("COST_PropGap_VR", 2026, "sf2", "v010")} 收斂到 {n("COST_PropGap_VR", 2026, "sf2")}；Nscale＋Lambda 改錨定『最高 $86B』（U2）使 2027 起算力付款與供給 GW 變大，2028 年差額由只加 U1 時的 {n("COST_PropGap_VR", 2028, "sf2", "only_u1")} 變為 {n("COST_PropGap_VR", 2028, "sf2")}（v0.1 為 {n("COST_PropGap_VR", 2028, "sf2", "v010")}）。其餘更新項（U3–U5、U7）只做對照，不改任何基準數字；談判中的 $150B（U6）只是情境，基準仍只計已簽合約。</p>
 <div class="tw"><table><thead><tr><th>輸出</th>{"".join(f"<th>{l}</th>" for l, _s in cols)}</tr></thead><tbody>
 {"".join(upd_rows)}
 </tbody></table></div>
@@ -818,7 +818,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <li><b>每 GW 年合約價 12（D9）對 VR 世代偏低</b>：雲端毛利率 2027–2030 為 {n("COST_CloudGMPct", 2027, "pct0")} 至 {n("COST_CloudGMPct", Y, "pct0")}；取 20 時 2027 差額 {n("COST_PropGap_VR", 2027, "sf1", "price_hi")}、現金谷底 {n("FND_CashNoExtTrough", None, "f1", "price_hi")}。</li>
 <li><b>2026 已到位 $100B 的組成與避免重複（A4-2～6）、逐家錨定招股書（A4-15）</b>：Series G 不計時谷底約少 {n("Funding!F12", 2026, "f0")}；逐家錨定（S4）谷底 {n("Funding!F64", 2028, "f1")}，仍無缺口。</li>
 </ol>
-<p class="note">A1–A4 共 75 項建置預設與規格 D1–D23 的全表：<code>{report}</code> 第 ④ 節、<code>docs/reports/{stamp}_v{ver}_對照.xlsx</code> 第 ④ 頁。</p>
+<p class="note">A1–A4 共 75 項建置預設與規格 D1–D23 的全表：<code>docs/reports/20261008_v0.1.md</code> 第 ④ 節、<code>docs/reports/20261008_v0.1_對照.xlsx</code> 第 ④ 頁；v0.1.1 新增預設（U1–U8）見 <code>{report}</code>。</p>
 {V.src("COST_D22Under", "COST_PropGap_VR_D22", "COST_CloudGMPct")}
 </section>""")
 
