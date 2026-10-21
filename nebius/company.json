@@ -886,8 +886,9 @@
    "revCapShareMax": 0.5
   },
   "perMw": {
-   "_note": "每 MW 收入方法開關（v0.2a，已決定事項 14）：tkAnchor＝Σ 平均在役世代占比 × IF_HoldEcon × 定價倍數 k（pricing.anchorMultiple；容量情境與價格情境分離）；legacy＝scenarios.revMW（v0.2 三情境 11.62／17.40／24.20，路徑 A 成本加成與路徑 B 市場價 50/50 平均，隨容量情境同向；已停用，只作對照與回歸驗收）。",
-   "revenue": "tkAnchor"
+   "_note": "每 MW 收入方法開關（v0.2a，已決定事項 14）：tkAnchor＝Σ 平均在役世代占比 × IF_HoldEcon × 定價倍數 k（pricing.anchorMultiple；容量情境與價格情境分離）；legacy＝scenarios.revMW（v0.2 三情境 11.62／17.40／24.20，路徑 A 成本加成與路徑 B 市場價 50/50 平均，隨容量情境同向；已停用，只作對照與回歸驗收）。 v0.4a：capex＝tokenomics 時，每 MW 建置成本＝Σ 新增世代占比（fleet.newMix）× IF_CapexTotal｜世代（含廠房，Nebius 自建；Excel 活公式引用 TK_CapexTotal_<世代>）；legacy＝scenarios.capexTemplate.costMW（v0.3 寫死 50.12／50.26，保留作對照與回歸）。",
+   "revenue": "tkAnchor",
+   "capex": "tokenomics"
   }
  },
  "peers": {

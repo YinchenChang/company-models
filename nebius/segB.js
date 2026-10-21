@@ -333,7 +333,8 @@ function scnQ(e, sc) {
 function tkScnQ(e, sc, o = {}) {
   let s = scnQ(e, sc), rev = tkAnchorQ(sc, o).rev, cs = o.tkCase || `基準`;
   s.m = { ...s.m, revMW: rev }; s.billableOpen = Math.round(BO_RUNRATE / rev[0]);
-  if (cs !== `基準`) { // 每 MW 建置成本同動：首期 GB300、其後 VR200 的 IF_CapexTotal 比例（與 scenarios.capexTemplate.costMW 同世代）
+  if (PMW_CAPEXQ === `tokenomics` && (cs !== `基準` || o.newMix)) s.a = { ...s.a, costMW: capexTkQ({ tkCase: cs, newMix: o.newMix }) }; // v0.4a：建置成本＝Σ 新增世代占比 × IF_CapexTotal，成本情境／世代組合改變時重算
+  else if (cs !== `基準`) { // 每 MW 建置成本同動：首期 GB300、其後 VR200 的 IF_CapexTotal 比例（與 scenarios.capexTemplate.costMW 同世代）
     let TK = COMPANY_DATA.tkSnap.IF_CapexTotal, g = i => i === 0 ? `GB300 NVL72` : `VR200 NVL72`;
     s.a = { ...s.a, costMW: s.a.costMW.map((x, i) => x * TK[g(i)][cs] / TK[g(i)][`基準`]) }
   }

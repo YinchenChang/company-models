@@ -20,6 +20,7 @@ var PERIODS = COMPANY_DATA.periods,
   SC_ACC = Object.fromEntries([`low`, `base`, `high`].map(k => [k, PERIOD_YEARS.reduce((a, L, i) => (a.push(Math.min(SC_MWP.contracted[k][i], i === 0 ? SC_MWP.connectedStart : a[i - 1] + SC_MWP.pace[k] * L)), a), [])])),
   KSPEC_DONE = kSpecApplyQ(), // v0.4a（自 CoreWeave W6 r1）：k 規格（證據價格 ÷ 目前快照）在引用前解成數字（錨改變時 k 跟著重算；kspec.py 同算式）
   PMW_REVQ = ((COMPANY_DATA.methodology || {}).perMw || {}).revenue || `legacy`, // v0.2a：每 MW 收入方法（tkAnchor＝Tokenomics 錨 × k；legacy＝scenarios.revMW）
+  PMW_CAPEXQ = ((COMPANY_DATA.methodology || {}).perMw || {}).capex || `legacy`, // v0.4a：每 MW 建置成本方法（tokenomics＝Σ 新增世代占比 × IF_CapexTotal；legacy＝scenarios.capexTemplate.costMW）
   REVSRCQ = PMW_REVQ === `tkAnchor` ? `Tokenomics 錨 × 定價倍數 k` : `Tokenomics 正向推導`, // v0.2a：畫面文字的每 MW 收入來源（legacy 時與 v0.2 相同）
   SC_REV = PMW_REVQ === `tkAnchor` ? Object.fromEntries([`low`, `base`, `high`].map(k => [k, tkAnchorQ(k).rev])) : COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境；v0.2a：tkAnchor 時＝錨 × k（價格軸基準），容量情境與價格脫鉤
   SC_BR = COMPANY_DATA.scenarios.billableRatio.ratio,
@@ -30,7 +31,7 @@ var PERIODS = COMPANY_DATA.periods,
   scA = e => {
     let T = COMPANY_DATA.scenarios.capexTemplate, F = COMPANY_DATA.scenarios.leaseRampFloorMw;
     return {
-      costMW: [...T.costMW],
+      costMW: PMW_CAPEXQ === `tokenomics` ? capexTkQ(null) : [...T.costMW], // v0.4a：每 MW 建置成本＝Σ 新增世代占比 × IF_CapexTotal（Tokenomics；舊值 T.costMW 只作 legacy／對照）
       customerFund: PERIOD_YEARS.map(() => COMPANY_DATA.defaults.prepay.shareOfDeals * COMPANY_DATA.defaults.prepay.capexCover), // v0.1b：預付比率＝有預付的合約比例 × 預付占相關資本支出比
       newLease: SC_LEASE_HI.map((t, n) => t * Math.max(0, SC_ACC[e][n] - F) / (SC_ACC.high[n] - F)),
       div: [...T.div]
@@ -83,6 +84,10 @@ function kSpecApplyQ() { // v0.4a：k 規格 → 倍數（價格 ÷ 目前快照
   [`long`, `spot`].forEach(sd => [`base`, `low`, `high`, `sensMedian`].forEach(k => AM[sd][k] != null && (AM[sd][k] = val(AM[sd][k]))));
   let nb = AM.long.nebiusContract; nb && nb.specs && (nb.values = nb.specs.map(val));
   return true
+}
+function capexTkQ(e) { // v0.4a（自 CoreWeave W2 capexTkQ）：每 MW 建置成本（US$m/MW）＝Σ 新增世代占比 × IF_CapexTotal｜世代（IT 設備＋廠房；Nebius 自建；e.tkCase＝Tokenomics 成本情境，e.newMix＝世代組合替代）
+  let cs = (e && e.tkCase) || `基準`, FL = COMPANY_DATA.fleet, nm = (e && e.newMix) || FL.newMix, TK = COMPANY_DATA.tkSnap.IF_CapexTotal;
+  return nm.map(mx => FL.generations.reduce((a, g) => a + (mx[g] || 0) * TK[g][cs], 0))
 }
 function tkAnchorQ(sc, o = {}) { // v0.2a：每 MW 年收入＝Tokenomics 錨 × 定價倍數 k（Excel「每MW收入_錨定」同列同算式；tkanchor.py 為建置時參考）
   // 期末在役 MW＝已連網 × 在役比例；平均在役世代占比 × IF_HoldEcon（成本情境）÷ 1000＝錨；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約（第 2 輪）；長約占比＝MIN(1, 已揭露長約 MW ÷ 平均在役 MW) 只作對照

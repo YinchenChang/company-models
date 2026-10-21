@@ -423,7 +423,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.convCap.low` | 保守情境：融資瀑布可轉債步驟每年新發行上限（0＝不新發；v0.1b） | US$bn／年 | 0 | 檢查 |
 | `scenarios.convCap.base` | 基準情境：同上 | US$bn／年 | 5 | 檢查 |
 | `scenarios.convCap.high` | 積極情境：同上 | US$bn／年 | 10 | 檢查 |
-| `scenarios.capexTemplate.costMW` | 每 MW 建置成本（GPU＋網路＋機房內裝），各期 | US$m/MW 清單 | 50.12、50.26、50.26、50.26、50.26 | 檢查 |
+| `scenarios.capexTemplate.costMW` | 每 MW 建置成本（GPU＋網路＋機房內裝），各期；v0.4a 起 methodology.perMw.capex＝tokenomics 時只作對照（v0.3 舊值），模型採用 Tokenomics IF_CapexTotal 推導值 | US$m/MW 清單 | 50.12、50.26、50.26、50.26、50.26 | 檢查 |
 | `scenarios.capexTemplate.div` | JV 後續增資與策略投資，各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
 
 ### `legacy`：舊版對照值
@@ -557,6 +557,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.checks.revCapShareMax` | 檢查頁：每 MW 年收入 ÷ Tokenomics 客戶每 MW 付費 token 營收（IF_RevGWFleet）的上限；超過即警示（v0.2a） | 比例 | 0.5 | 檢查 |
 | `methodology.perMw._note` | 每 MW 收入方法開關的說明（不進程式；v0.2a） | 文字 | 每 MW 收入方法開關（v0.2a，已決定事項 14… | 可沿用 |
 | `methodology.perMw.revenue` | 每 MW 收入方法（v0.2a）：tkAnchor＝Tokenomics 錨（IF_HoldEcon，在役世代加權）× 定價倍數 k（pricing.anchorMultiple）；legacy＝scenarios.revMW（v0.2，回歸驗收用） | 代碼 | tkAnchor | 檢查 |
+| `methodology.perMw.capex` | 每 MW 建置成本方法（v0.4a）：tokenomics＝Σ 新增世代占比（fleet.newMix）× IF_CapexTotal｜世代（Excel 活公式引用 TK_CapexTotal_*；需 revenue＝tkAnchor）；legacy 或未設＝scenarios.capexTemplate.costMW（v0.3 寫死值，回歸驗收用） | 代碼 | tokenomics | 檢查 |
 | `methodology.checks.unsignedRevShareMax` | 檢查頁：後段年度依賴未簽約收入的比例上限（5a） | 比例 | 0.5 | 檢查 |
 | `methodology.checks.siteRentGapMax` | 檢查頁：站點租賃五期租金可能低估的金額上限（5a） | US$bn | 10 | 檢查 |
 | `methodology.checks.rentVsBenchMin` | 檢查頁：模型每 MW 年租金至少要達到「市場基準 × 第三方占比」的比例（5a） | 比例 | 0.8 | 檢查 |

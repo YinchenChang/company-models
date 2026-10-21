@@ -8,6 +8,8 @@ import json as _jco
 import re
 import calendar_q as _calq  # v4.5：期間與日期由 company.json → calendar 推算（與 HTML 共用）
 CO = _calq.load(_osrv.path.dirname(_osrv.path.abspath(__file__)))  # 公司資料單一來源（與 HTML 共用）
+import kspec as _kspec  # v0.4a（自 CoreWeave W6 r1）：k 的基準／區間／Nebius 自身合約＝證據價格 ÷ 目前快照；CO 原地換成數字，規格留在 KSPEC 供 Excel 寫活公式（須在其他讀取 k 的程式之前）
+KSPEC = _kspec.resolve(CO, _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), CO['tokenomics']['snapshotFile']), encoding='utf-8'))['items']) if CO.get('tokenomics') else {}
 CAL = CO['cal']
 PYEAR = [2000 + int(p[2:]) for p in CO['periods']]  # 5a：各期財年年份由日曆推算
 MW_Y0 = PYEAR[0] - 1  # 首期前一財年（期初主動電力）
@@ -398,7 +400,14 @@ for _y in sorted(int(y) for y in D['mwYearEnd'] if int(y) != MW_Y0):
 PPE0 = gi(r, "6/30 毛 PP&E", "US$bn", D['ppeOpen'], f"季報毛額（含尚未啟用資產 {CO['latestQuarter']['cip']}）[Interested-party]"); r += 1
 CAPSC = gi(r, "每 MW 建置成本倍數（整體）", "%", D['capexScale'], "同時影響 CapEx、汰換與車隊折舊；反向 DCF 用；預設 100%", PCT); r += 1
 r = phdr(r)
-r = prow(r, "每 MW 建置成本", "US$m/MW", CO['scenarios']['capexTemplate']['costMW'], NUM1, "Tokenomics IF_CapexTotal（IT＋機房）：GB300 50.12、VR200 50.26 [Derived]")
+PMW_CAPEX = (CO.get('methodology', {}).get('perMw') or {}).get('capex', 'legacy')  # v0.4a：每 MW 建置成本方法（tokenomics＝Σ 新增世代占比 × TK_CapexTotal_<世代> 活公式；legacy＝company.json 寫死值）
+assert PMW_CAPEX in ('legacy', 'tokenomics') and (PMW_CAPEX == 'legacy' or PMW_REV == 'tkAnchor'), 'methodology.perMw.capex＝tokenomics 需要 revenue＝tkAnchor（世代組合在『每MW收入_錨定』）'
+r = prow(r, "每 MW 建置成本", "US$m/MW", CO['scenarios']['capexTemplate']['costMW'], NUM1,
+         ("Σ 新增世代占比（『每MW收入_錨定』B 區）× Tokenomics IF_CapexTotal｜世代（TK_CapexTotal_*；IT 設備＋廠房，Nebius 自建）[Derived]" if PMW_CAPEX == 'tokenomics' else
+          "Tokenomics IF_CapexTotal（IT＋機房）：GB300 50.12、VR200 50.26 [Derived]"), font=GREEN if PMW_CAPEX == 'tokenomics' else BLUE)
+if PMW_CAPEX == 'tokenomics':
+    r = prow(r, "每 MW 建置成本（v0.3 舊值，對照）", "US$m/MW", CO['scenarios']['capexTemplate']['costMW'], NUM1,
+             "v0.3 寫死值（Tokenomics v5.27：GB300 50.12、VR200 50.26；FY27 起全取 VR200，未依新增組合加權）；v0.4a 起只作對照，不入模型 [Derived]")
 PPD = D['prepay']  # v0.1b：預付款區塊輸入
 PP_SH = gi(r, "有預付的合約比例", "%", PPD['shareOfDeals'], "股東信：約 70% 合約含客戶預付 [Interested-party]", PCT); r += 1
 PP_CV = gi(r, "預付占相關資本支出比", "%", PPD['capexCover'], "股東信：預付覆蓋相關資本支出 50–60%，取中點 [Interested-party]", PCT); r += 1
@@ -606,9 +615,6 @@ if PMW_REV == 'tkAnchor':
     AM, FLT = CO['pricing']['anchorMultiple'], CO['fleet']
     GEN = FLT['generations']
     _GCX = {g['name']: g['code'] for g in _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), CO['tokenomics']['snapshotFile']), encoding='utf-8'))['source']['generations']}
-    import kspec as _kspec  # v0.4a（自 CoreWeave W6 r1）：k 的基準／區間／Nebius 自身合約＝證據價格 ÷ 目前快照；解成數字（AM 原地換成數字），規格留在 KSPEC 供 Excel 寫活公式
-    KSPEC = _kspec.resolve(CO, _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), CO['tokenomics']['snapshotFile']), encoding='utf-8'))['items'])
-
     def _kf(sp, num):  # 規格 → Excel 公式字串（數字規格＝固定倍數，回傳 None 由呼叫端寫數字）
         if not isinstance(sp, dict): return None
         _ev = {x['label']: x for x in AM['evidence']}
@@ -767,6 +773,9 @@ if PMW_REV == 'tkAnchor':
         for i, L in enumerate(COLS):  # 輸入與假設 A 區：每 MW 年收入｜情境（US$bn/MW）
             c = _wi.cell(row=sc_rows['rev_' + nm], column=3 + i, value=f"='每MW收入_錨定'!{L}{AR[P + 'rev']}/1000"); c.font = GREEN
 
+    if PMW_CAPEX == 'tokenomics':  # v0.4a：輸入與假設 D 區「每 MW 建置成本」＝Σ 新增世代占比 × TK_CapexTotal_<世代>（活公式；與 HTML capexTkQ 同算式）
+        for i, L in enumerate(COLS):
+            c = _wi.cell(row=IN['每 MW 建置成本'], column=3 + i, value="=" + "+".join(f"'每MW收入_錨定'!{L}{AR['nm_' + g]}*TK_CapexTotal_{_GCX[g]}" for g in GEN)); c.font = GREEN
     r = section(ws, r, "目前容量情境（依『輸入與假設』A 區情境選擇）")
     aphdr()
     for key, nmx, unit, fmt in (("anchor", "錨（IF_HoldEcon 加權）", "US$m/MW", _MF), ("ls", "長約占比", "%", PCT), ("k", "定價倍數 k", "倍", _MF),
