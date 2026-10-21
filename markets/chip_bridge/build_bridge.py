@@ -8,23 +8,23 @@ wb = openpyxl.Workbook()
 
 # ---------------- In：輸入 ----------------
 ws = wb.active; ws.title = "In"
-ws["A1"] = "In — 輸入（藍字）。基準欄＝E（GB300）、H（VR200）。Tokenomics 列取自 v5.27（model/20261008_Tokenomics_v5.27.xlsx，SHA-256 50f678b4…7ba7）"
+ws["A1"] = "In — 輸入（藍字）。基準欄＝E（GB300）、H（VR200）。Tokenomics 列取自 v19.0（model/20261022_Tokenomics_v19.0.xlsx，SHA-256 d1728705…b9d8）"
 hdr = ["鍵", "項目", "單位", "GB300 低", "GB300 基準", "GB300 高", "VR200 低", "VR200 基準", "VR200 高", "標記", "來源／說明"]
 for j, h in enumerate(hdr, 1):
     c = ws.cell(3, j, h); c.font = BOLD; c.fill = HDR
 rows = [
- ("sec","A. Tokenomics v5.27（算力收支；只讀不改）"),
- ("rack","機架單價","$M/架",4.0,5.0,6.5,7.8,8.4,9.1,"TK","Spec_Rack E11:F13（非 Interface 具名範圍；已提修改申請 R1）"),
+ ("sec","A. Tokenomics v19.0（算力收支；只讀不改）"),
+ ("rack","機架單價","$M/架",4.0,4.3,5.0,7.8,8.4,9.1,"TK","Spec_Rack E11:F13（非 Interface 具名範圍；已提修改申請 R1）"),
  ("racks","每 GW 機架數","架",6764,6764,6764,4052,4052,4052,"TK","IF_RacksPerGW"),
  ("gpus","每 GW GPU 數","顆",487008,487008,487008,291744,291744,291744,"TK","IF_GPUsPerGW"),
  ("so","Scale-out 網路 ÷ 機架價格","%",0.05,0.10,0.15,0.05,0.10,0.15,"TK","Inputs D13:F13（Analogy；非 Interface，R1）"),
  ("stor","儲存與管理","$/GPU",300,500,800,300,500,800,"TK","Inputs D14:F14（Assumed；非 Interface，R1）"),
- ("capit","每 GW 資本支出 — IT 設備","$B",28.5549024,37.445504,50.9505064,33.2734032,37.586352,42.6375752,"TK","IF_CapexIT"),
+ ("capit","每 GW 資本支出 — IT 設備","$B",28.5549024,32.237224,39.2826064,33.2734032,37.586352,42.6375752,"TK","IF_CapexIT"),
  ("capfac","每 GW 資本支出 — 廠房","$B",10.212,12.67,16.186,10.212,12.67,16.186,"TK","IF_CapexFacility"),
- ("captot","每 GW 資本支出 — 合計","$B",38.7669024,50.115504,67.1365064,43.4854032,50.256352,58.8235752,"TK","IF_CapexTotal"),
+ ("captot","每 GW 資本支出 — 合計","$B",38.7669024,44.907224,55.4686064,43.4854032,50.256352,58.8235752,"TK","IF_CapexTotal"),
  ("sec","B. 機架內構件（本專案蒐集；每數字盡量兩來源）"),
  ("gpu_n","每架 GPU 封裝數","顆",72,72,72,72,72,72,"Verified","NVIDIA 規格頁"),
- ("gpu_p","GPU 模組售價（NVIDIA 對買方）","$K/顆",40,47,50,50,55,60,"Interested-party","GB300：Data Gravity 採購單 72 模組約 $3.4M（Wing VC 2026-08）；Epoch B200 $30–40K。VR200：Morgan Stanley $55K（內文；標題 $50K，Tom's Hardware 2026-05-21）"),
+ ("gpu_p","GPU 模組售價（NVIDIA 對買方）","$K/顆",37.6,40.4,47,50,55,60,"Interested-party／Derived","GB300（v0.2 改）：Data Gravity 採購單 72 模組約 $3.4M、整架約 $5.0M（Wing VC 2026-08；＝Tokenomics v5.31 起的機架高值）→ 模組占整架 67.7%；依 Tokenomics 低／基準 4.0／4.3 等比例換算為 37.6／40.4，高 47 為採購單原值。v0.1 用 47 配 $5.0M 機架；Tokenomics 基準改 4.3 後若不換算，機架殘差為 −5.9%（構件超過售價）；Epoch B200 $30–40K。VR200：Morgan Stanley $55K（內文；標題 $50K，Tom's Hardware 2026-05-21）"),
  ("hbm_gb","HBM 容量","GB/顆",288,288,288,288,288,288,"Verified","NVIDIA：GB300 20 TB、VR200 20.7 TB ÷ 72"),
  ("hbm_p","HBM 單價（2026 合約）","$/GB",12,15.5,17,15.6,16.7,17.2,"Derived","GB300 HBM3E：Epoch $14–17/GB；Silicon Analysts B300 約 $4,900/顆（=$17/GB）。VR200 HBM4：首爾經濟日報 12 層 36GB 約 $600（=$16.7/GB，2026-10-01）；UBS 每顆 $4,943（=$17.2/GB，2026-08-10）"),
  ("hbm_p27","HBM4 單價（2027 合約情境）","$/GB",None,None,None,30,36,37,"Interested-party","首爾經濟日報 約 $1,300/36GB（2027）；TrendForce 2027 ASP +121%（2026-09-29）；UBS +79%（低）"),
@@ -249,10 +249,10 @@ for col in "BCDEFGHIJKLM": se.column_dimensions[col].width = 13
 # ---------------- README ----------------
 rd = wb.create_sheet("README", 0)
 lines = [
- ("每 GW 晶片內容橋接表（AI 半導體專案 步驟 0）v0.1　2026-10-08", True),
+ ("每 GW 晶片內容橋接表（AI 半導體專案 步驟 0）v0.2　2026-10-22", True),
  ("模型命題：買方每投入 1 GW 的資料中心資本支出，晶片內容（運算、HBM、非 HBM 記憶體、網通晶片、代工）各分到多少，作為後續 HBM、網通、台積電模型的共同分母。", False),
  ("", False),
- ("取數：Tokenomics v5.27（repo YinchenChang/Tokenomics，model/20261008_Tokenomics_v5.27.xlsx，SHA-256 50f678b4c78e9bfd3d5b7152c465148f3372d1ab33dfe5a18d7b089e1f207ba7）。具名範圍：IF_RacksPerGW、IF_GPUsPerGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal；機架單價、scale-out 比率、儲存 $/GPU 不在 Interface，暫讀 Spec_Rack／Inputs 原格（修改申請 R1）。", False),
+ ("取數：Tokenomics v19.0（repo YinchenChang/Tokenomics，model/20261022_Tokenomics_v19.0.xlsx，SHA-256 d1728705daaf19bfdfa7657b667f3617ac57d67a4c8e55404ac66522b970b9d8）。具名範圍：IF_RacksPerGW、IF_GPUsPerGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal；機架單價、scale-out 比率、儲存 $/GPU 不在 Interface，暫讀 Spec_Rack／Inputs 原格（修改申請 R1）。", False),
  ("範圍：NVIDIA GB300 NVL72、VR200 NVL72 各一個代表性 1 GW；不含 ASIC 與世代組合（屬步驟 1 加速器數量層）。", False),
  ("", False),
  ("驅動因子 → 推導量（頁：輸入 → 推導 → 因果方向）", True),
@@ -284,7 +284,7 @@ rq.column_dimensions["A"].width = 6; rq.column_dimensions["B"].width = 26; rq.co
 # ---------------- Sources ----------------
 so = wb.create_sheet("Sources")
 srcs = [
- ("Tokenomics v5.27", "https://github.com/YinchenChang/Tokenomics/blob/master/model/20261008_Tokenomics_v5.27.xlsx"),
+ ("Tokenomics v19.0", "https://github.com/YinchenChang/Tokenomics/blob/master/model/20261022_Tokenomics_v19.0.xlsx"),
  ("Wing VC / Data Gravity, How Much Does an NVIDIA NVL72 Cost?（2026-08）", "https://www.wing.vc/content/how-much-does-an-nvidia-nvl72-cost"),
  ("Tom's Hardware（Morgan Stanley VR200 $7.8M、Rubin $55K、Vera $5K、記憶體約 $2M，2026-05-21）", "https://www.tomshardware.com/tech-industry/artificial-intelligence/nvidias-memory-costs-soar-485-percent-latest-ai-systems-now-cost-usd7-8-million-to-build-memory-now-comprises-25-percent-of-the-total-cost-rubin-gpus-a-mere-usd50-000-apiece"),
  ("Epoch AI, B200 cost breakdown（2025-12-10）", "https://epoch.ai/data-insights/b200-cost-breakdown"),

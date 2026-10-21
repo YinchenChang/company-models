@@ -144,7 +144,7 @@ def write(wb, hdr, Font):
     mr[0] += 1
     M.cell(mr[0], 1, "對帳（樣板驗收 2）").font = BOLD; mr[0] += 1
     put("由下而上：NVIDIA 裝載 HBM × 單價（2026）", "$B", [None, f"=(D{MK['pb_bw']}+D{MK['pb_rb']}+D{MK['pb_ru']}+D{MK['pb_hp']})/1000*hbm_p26"], key="bu", fmt="0.0")
-    put("由上而下：NVIDIA 資料中心營收 × 每顆 HBM ÷ 每顆 NVIDIA 內容（2026）", "$B", [None, "=nv_dc26*nv_hbm/nv_content"], key="td", fmt="0.0", note="橋接表 v0.1；與顆數預測獨立")
+    put("由上而下：NVIDIA 資料中心營收 × 每顆 HBM ÷ 每顆 NVIDIA 內容（2026）", "$B", [None, "=nv_dc26*nv_hbm/nv_content"], key="td", fmt="0.0", note="橋接表 v0.2；與顆數預測獨立")
     put("  差距", "%", [None, f"=D{MK['bu']}/D{MK['td']}-1"], fmt="0%")
     put("由營收推得 NVIDIA 顆數 vs 顆數預測", "百萬顆", [None, "=nv_dc26/nv_content", "=u_bw_26+u_rb_26+u_hp_26"], fmt="0.0", note="D＝營收推得；E＝顆數預測（2026）")
     put("已發布：SK 海力士自估 2026／BofA 2026／BofA 2027", "$B", [None, "=pub26_lo", "=pub26_hi", "=pub27"], key="pub", fmt="0.0")
@@ -155,10 +155,10 @@ def write(wb, hdr, Font):
     return {"path": ref, "mk": MK}
 
 def ref_inputs(sec, inp):
-    sec("M4. 對帳用（橋接表 v0.1、已發布）")
+    sec("M4. 對帳用（橋接表 v0.2、已發布）")
     inp("nv_dc26", "NVIDIA 資料中心營收 2026（約 FY27）", "$B", 340, 374, 400, "Verified／Assumed", "FY27 Q1 75.2、Q2 89.0（8-K）；Q3 指引總營收 108（資料中心取 100）；Q4 Assumed 110")
-    inp("nv_content", "每顆 GPU 的 NVIDIA 內容（GB300）", "$K", 45, 51.6, 58, "Derived", "markets/chip_bridge v0.1")
-    inp("nv_hbm", "每顆 GPU HBM 金額（GB300）", "$K", 3.5, 4.46, 4.9, "Derived", "markets/chip_bridge v0.1")
+    inp("nv_content", "每顆 GPU 的 NVIDIA 內容（GB300）", "$K", 38, 42.8, 48, "Derived", "markets/chip_bridge v0.2（Tokenomics v19.0：GB300 機架基準價 $4.3M；v0.1 為 51.6）")
+    inp("nv_hbm", "每顆 GPU HBM 金額（GB300）", "$K", 3.5, 4.46, 4.9, "Derived", "markets/chip_bridge v0.2（與 v0.1 相同）")
     inp("pub26_lo", "已發布 2026 HBM 市場（SK 海力士自估）", "$B", None, 54.6, None, "Interested-party", "Motley Fool／글로벌이코노믹 2026-09")
     inp("pub26_hi", "已發布 2026 HBM 市場（BofA）", "$B", None, 77.4, None, "Interested-party", "BofA 2026-08-07")
     inp("pub27", "已發布 2027 HBM 市場（BofA）", "$B", None, 152.8, None, "Interested-party", "BofA；JPMorgan 2027–28 為 160–282")

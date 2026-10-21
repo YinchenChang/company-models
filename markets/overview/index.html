@@ -47,7 +47,7 @@
 <div class="ai">
   <header class="ai-head">
     <h1 id="title">AI 半導體價值鏈</h1>
-    <p class="muted">每 GW 算力支出分到哪裡，以及記憶體、網通、晶圓代工三個區塊各自的核心問題。數字來自 company-models 的模型成品（橋接表 v0.1、記憶體樣板 v0.3、網通 v0.1、台積電 v0.1）；股價為 2026-10-07／08 收盤。點任一數字可看來源。</p>
+    <p class="muted">每 GW 算力支出分到哪裡，以及記憶體、網通、晶圓代工三個區塊各自的核心問題。數字來自 company-models 的模型成品（Tokenomics v19.0；橋接表 v0.2、記憶體樣板 v0.3、網通 v0.2、台積電 v0.1.1）；股價為 2026-10-07／08 收盤。點任一數字可看來源。</p>
   </header>
 
   <nav class="ai-tabs" role="tablist" aria-label="區塊">
@@ -62,7 +62,7 @@
   <section class="page" id="overview" data-page-id="overview">
     <div class="card" id="card-bridge">
       <h2>每 GW 的錢怎麼分</h2>
-      <p class="muted">每 GW（IT 關鍵電力）資本支出，十億美元；取數 Tokenomics v5.27。VR200 2027 是 HBM 漲價由 NVIDIA 吸收的情境。</p>
+      <p class="muted">每 GW（IT 關鍵電力）資本支出，十億美元；取數 Tokenomics v19.0（GB300 機架基準價 $4.3M）。VR200 2027 是 HBM 漲價由 NVIDIA 吸收的情境。</p>
       <div class="legend" id="lg-bridge" data-source="bridge_group"></div>
       <div class="chart" id="ch-bridge" data-source="bridge_group"></div>
     </div>
@@ -71,8 +71,8 @@
       <div class="card answer" id="ans-memory">
         <span class="muted">記憶體</span>
         <h3>循環見頂後，淨值撐不撐得住股價？</h3>
-        <p class="verdict">以見頂年的歷史倍數計，撐不住。</p>
-        <p>見頂年取 10 年 P/B 的 25 分位，乘 2027 年底淨值：SK 海力士 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=SK 海力士 見頂" data-fmt="spct">—</b>、三星 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=三星電子 見頂" data-fmt="spct">—</b>、美光 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=美光 見頂" data-fmt="spct">—</b>。現價等於 2027 年底淨值的 <span class="num" data-source="valuation" data-field="px_multiple" data-where="key=SK 海力士 見頂" data-fmt="x">—</span>、<span class="num" data-source="valuation" data-field="px_multiple" data-where="key=三星電子 見頂" data-fmt="x">—</span>、<span class="num" data-source="valuation" data-field="px_multiple" data-where="key=美光 見頂" data-fmt="x">—</span>。</p>
+        <p class="verdict">以見頂年的歷史 P/B 計，撐不住；這把尺假設 ROE 回到過去水準。</p>
+        <p>見頂年取 10 年 P/B 的 25 分位，乘 2027 年底淨值：SK 海力士 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=SK 海力士 見頂" data-fmt="spct">—</b>、三星 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=三星電子 見頂" data-fmt="spct">—</b>、美光 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=美光 見頂" data-fmt="spct">—</b>。現價等於 2027 年底淨值的 <span class="num" data-source="valuation" data-field="px_multiple" data-where="key=SK 海力士 見頂" data-fmt="x">—</span>、<span class="num" data-source="valuation" data-field="px_multiple" data-where="key=三星電子 見頂" data-fmt="x">—</span>、<span class="num" data-source="valuation" data-field="px_multiple" data-where="key=美光 見頂" data-fmt="x">—</span>。對照：美光改用 P/E（見頂 25 分位 × FY2027 EPS）為 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=美光（P/E） 見頂" data-fmt="spct">—</b>，把買回加回淨值為 <span class="num" data-source="valuation" data-field="vs_px" data-where="key=美光（買回加回 P/B） 見頂" data-fmt="spct">—</span>：兩把尺的差距來自 FY2027 ROE <span class="num" data-source="mem_y" data-field="roe" data-where="key=美光 2027 A" data-fmt="pct0">—</span>，遠高於歷史。</p>
         <button type="button" data-goto="memory">看記憶體</button>
       </div>
       <div class="card answer" id="ans-network">
@@ -93,7 +93,7 @@
 
     <div class="card" id="card-val-all">
       <h2>四家公司，同一把尺</h2>
-      <p class="muted">合理倍數取 10 年（2016–2025 年底）區間的分位，依循環位置：見頂年 25 分位、中段中位數、谷底 75 分位。點是隱含股價相對現價；台積電以 25／75 分位為區間。</p>
+      <p class="muted">合理倍數取 10 年（2016–2025 年底）區間的分位，依循環位置：見頂年 25 分位、中段中位數、谷底 75 分位。點是隱含股價相對現價；台積電以 25／75 分位為區間。美光另列 P/E 與買回加回 P/B 兩種對照。</p>
       <div class="legend" id="lg-val"></div>
       <div class="chart" id="ch-val-all" data-source="valuation"></div>
     </div>
@@ -128,10 +128,10 @@
     </div>
     <div class="card" id="card-val-mem">
       <h2>依規則的隱含股價</h2>
-      <p class="muted">美光 P/B 受大量買回壓低淨值影響，倍數偏高；改用日曆年底的倍數，見頂情境為 <span class="num" data-source="valuation_alt" data-field="vs_px" data-row="0" data-fmt="spct">—</span>。</p>
+      <p class="muted">美光另列兩種對照。P/E：歷史 P/E 由 SEC 10-K 權益與淨利換算（虧損年不計）。買回加回 P/B：歷史與預測的淨值都加回庫藏股與模型買回，倍數與基準同一口徑。買回只解釋美光 P/B 落差的一小部分；主因是 FY2027 ROE <span class="num" data-source="mem_y" data-field="roe" data-where="key=美光 2027 A" data-fmt="pct0">—</span>，而 10 年歷史最高為 <span class="num" data-source="mu_roe_max" data-field="roe_max" data-row="0" data-fmt="pct0">—</span>（FY<span class="num" data-source="mu_roe_max" data-field="fy" data-row="0">—</span>）。</p>
       <div class="tw">
         <table id="tb-val-mem" data-source="valuation" data-row-key="key">
-          <thead><tr><th data-field="company">公司</th><th data-field="case">循環位置</th><th data-field="multiple">P/B</th><th data-field="basis_label">淨值基準</th><th data-field="basis">每股淨值</th><th data-field="implied_px">隱含股價</th><th data-field="px">現價</th><th data-field="vs_px">相對現價</th><th data-field="px_multiple">現價 ÷ 淨值</th></tr></thead>
+          <thead><tr><th data-field="company">公司</th><th data-field="case">循環位置</th><th data-field="multiple">倍數</th><th data-field="basis_label">基準</th><th data-field="basis">每股基準</th><th data-field="implied_px">隱含股價</th><th data-field="px">現價</th><th data-field="vs_px">相對現價</th><th data-field="px_multiple">現價 ÷ 基準</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -217,7 +217,8 @@
         <li>合理倍數＝該公司 10 年（2016–2025 年底）倍數的分位：見頂年 25 分位、中段中位數、谷底 75 分位。記憶體用 P/B，台積電用 P/E。</li>
         <li>循環位置的歸類：記憶體 2027 年為見頂年（三個情境共用），2028 年情境 C 為谷底；台積電 2027 年為中段。這是套用規則時的判斷，可以改。</li>
         <li>兩個來源時，各分位取兩者平均；三星只有一個完整來源，中位數以 GuruFocus（1.44）核對。</li>
-        <li>美光的歷史倍數以會計年度（8 月底）為主；日曆年底的分位較高，列為對照。</li>
+        <li>美光的歷史倍數以會計年度（8 月底）為主。另列兩種對照（Andy 2026-10-22）：P/E＝P/B × 權益 ÷ 歸屬淨利（SEC 10-K；FY2016、FY2023 虧損不計，FY2024 136x 保留）；買回加回 P/B＝市值 ÷（權益＋庫藏股），預測年再加回模型買回（FY2026 年底庫藏股未公布，用 FY2025 的 $7.85B，偏低）。</li>
+        <li>限制：P/B 分位來自 ROE 0–44% 的十年，用在 ROE 50–90% 的年度會低估；P/E 分位在見頂年取低分位，等於假設市場仍把高峰盈餘當一次性。兩者是不同的問題：P/B 問「淨值撐不撐得住」，P/E 問「高峰盈餘值多少」。</li>
       </ul>
     </div>
     <div class="card" id="card-hist">
@@ -229,7 +230,7 @@
       <h2>來源</h2>
       <ul class="rule-list">
         <li>模型：repo YinchenChang/company-models，markets/chip_bridge、markets/memory、tools/memory_model、skhynix、samsung、micron、markets/network、tsmc 各資料夾的 dist/*.xlsx。</li>
-        <li>倍數：<a href="https://companiesmarketcap.com/sk-hynix/pb-ratio/">companiesmarketcap（SK 海力士）</a>、<a href="https://marketcapof.com/stocks/000660.ks/pb-ratio/">marketcapof</a>、<a href="https://companiesmarketcap.com/samsung/pb-ratio/">companiesmarketcap（三星）</a>、<a href="https://www.gurufocus.com/term/pb-ratio/BUE:SMSN%20LI">GuruFocus</a>、<a href="https://www.macrotrends.net/stocks/charts/MU/micron-technology/price-book">macrotrends（美光）</a>、<a href="https://companiesmarketcap.com/micron-technology/pb-ratio/">companiesmarketcap（美光）</a>、<a href="https://fullratio.com/stocks/nyse-tsm/pe-ratio">FullRatio（台積電）</a>、<a href="https://companiesmarketcap.com/tsmc/pe-ratio/">companiesmarketcap（台積電）</a>。皆為彙整網站，非公司揭露。</li>
+        <li>倍數：<a href="https://companiesmarketcap.com/sk-hynix/pb-ratio/">companiesmarketcap（SK 海力士）</a>、<a href="https://marketcapof.com/stocks/000660.ks/pb-ratio/">marketcapof</a>、<a href="https://companiesmarketcap.com/samsung/pb-ratio/">companiesmarketcap（三星）</a>、<a href="https://www.gurufocus.com/term/pb-ratio/BUE:SMSN%20LI">GuruFocus</a>、<a href="https://www.macrotrends.net/stocks/charts/MU/micron-technology/price-book">macrotrends（美光）</a>、<a href="https://companiesmarketcap.com/micron-technology/pb-ratio/">companiesmarketcap（美光）</a>、<a href="https://fullratio.com/stocks/nyse-tsm/pe-ratio">FullRatio（台積電）</a>、<a href="https://companiesmarketcap.com/tsmc/pe-ratio/">companiesmarketcap（台積電）</a>。皆為彙整網站，非公司揭露。美光權益、庫藏股、淨利：<a href="https://data.sec.gov/api/xbrl/companyconcept/CIK0000723125/us-gaap/StockholdersEquity.json">SEC XBRL（10-K）</a>。</li>
         <li>限制：每片 CoWoS 封裝數、每顆台積電內容、網通機架外拆分為推導或類比值；記憶體價格路徑為情境假設，不是預測。</li>
       </ul>
     </div>
@@ -426,13 +427,14 @@
     const cos = [...new Set(hist.map((r) => r.company))];
     const rowH = 58, h = cos.length * rowH + 10;
     const { svg, W } = frame(el, h);
-    const left = textWidth(svg, cos.map((c) => c + '（P/B）')) + 14;
+    const lab = (c, m) => (c.includes('（') ? c : `${c}（${m}）`);
+    const left = textWidth(svg, cos.map((c) => lab(c, 'P/B'))) + 14;
     const tip = tipFor(el);
     cos.forEach((c, j) => {
       const hs = hist.filter((r) => r.company === c), v = val.find((r) => r.company === c && (r.case === '中段'));
       const yy = 22 + j * rowH;
       const x = d3.scaleLinear([0, Math.max(d3.max(hs, (r) => r.multiple), v.px_multiple) * 1.1], [left, W - 14]).nice();
-      svg.append('text').attr('x', left - 10).attr('y', yy + 4).attr('text-anchor', 'end').attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)').text(`${c}（${v.metric}）`);
+      svg.append('text').attr('x', left - 10).attr('y', yy + 4).attr('text-anchor', 'end').attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)').text(lab(c, v.metric));
       svg.append('g').attr('class', 'tick').attr('transform', `translate(0,${yy + 16})`).call(d3.axisBottom(x).ticks(5).tickSize(3).tickFormat((t) => d3.format('~f')(t) + 'x'))
         .attr('font-size', null).attr('font-family', null).call((a) => a.select('.domain').attr('stroke', 'var(--cds-chart-axis)'));
       ['p25', 'p50', 'p75'].forEach((k) => svg.append('line').attr('x1', x(v[k])).attr('x2', x(v[k])).attr('y1', yy - 12).attr('y2', yy + 12).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-width', k === 'p50' ? 2 : 1)
@@ -458,17 +460,9 @@
       return Object.values(out).map((o) => ({ ...o, ...Object.fromEntries(cols.map((c) => [c + '_share', o[c] / tot[c]])), ...Object.fromEntries(cols.map((c) => [c + '_total', tot[c]])) }));
     },
   });
+  dash.calc('mu_roe_max', { inputs: ['mu_hist'], title: '美光 10 年最高 ROE', description: 'FY2016–2025 歸屬淨利 ÷ 年底權益的最大值。', fn: (mu_hist) => { const r = mu_hist.reduce((a, b) => (b.roe > a.roe ? b : a)); return [{ fy: r.fy, roe_max: r.roe }]; } });
   dash.calc('cpo_share', { inputs: ['net_kpi'], title: 'CPO 占光學', description: 'CPO 金額 ÷ 光學金額，逐年。', fn: (net_kpi) => net_kpi.map((r) => ({ year: r.year, cpo_share: r.cpo / r.optics })) });
   dash.calc('eps_growth', { inputs: ['tsmc_pl'], title: '台積電 2027 EPS 年增', description: '2027 A 的 EPS ÷ 2026 EPS − 1。', fn: (tsmc_pl) => [{ growth: tsmc_pl.find((r) => r.key === '2027 A').eps / tsmc_pl.find((r) => r.key === '2026').eps - 1 }] });
-  dash.calc('valuation_alt', {
-    inputs: ['valuation', 'mult_hist'], title: '美光日曆年底倍數對照', description: '美光日曆年底 P/B 的 25 分位 × FY2027 年底每股淨值 ÷ 現價 − 1。',
-    fn: (valuation, mult_hist) => {
-      const v = mult_hist.filter((r) => r.company === '美光' && r.source.startsWith('companiesmarketcap')).map((r) => r.multiple).sort((a, b) => a - b);
-      const q = (p) => { const i = (v.length - 1) * p, lo = Math.floor(i); return v[lo] + (v[Math.ceil(i)] - v[lo]) * (i - lo); };
-      const r = valuation.find((x) => x.key === '美光 見頂');
-      return [{ p25: q(0.25), vs_px: (q(0.25) * r.basis) / r.px - 1 }];
-    },
-  });
 
   // ---------- 繪製 ----------
   function fillMarks() {
@@ -523,7 +517,7 @@
     }
     const tb = document.getElementById('tb-val-mem'), v = rowsOf('valuation'), body = tb.querySelector('tbody');
     body.replaceChildren();
-    if (v) v.filter((r) => r.metric === 'P/B').forEach((r) => {
+    if (v) v.filter((r) => r.company !== '台積電').forEach((r) => {
       const tr = document.createElement('tr'); tr.dataset.key = r.key;
       [r.company, r.case, F.x(r.multiple), r.basis_label, fmtBasis(r), fmtPx(r.implied_px, r.ccy), fmtPx(r.px, r.ccy), F.spct(r.vs_px), F.x(r.px_multiple)].forEach((s, i) => {
         const td = document.createElement('td'); td.textContent = s; if (i === 7) td.className = r.vs_px < 0 ? 'neg' : 'pos'; tr.append(td);

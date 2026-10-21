@@ -1,0 +1,102 @@
+[
+{
+"fy": 2016,
+"pb": 1.29,
+"equity": 12.08,
+"treasury": 1.029,
+"net_income": -0.276,
+"roe": -0.023,
+"pe": null,
+"pb_adj": 1.189
+},
+{
+"fy": 2017,
+"pb": 1.78,
+"equity": 18.621,
+"treasury": 0.067,
+"net_income": 5.089,
+"roe": 0.273,
+"pe": 6.51,
+"pb_adj": 1.774
+},
+{
+"fy": 2018,
+"pb": 1.79,
+"equity": 32.294,
+"treasury": 0.429,
+"net_income": 14.135,
+"roe": 0.438,
+"pe": 4.09,
+"pb_adj": 1.767
+},
+{
+"fy": 2019,
+"pb": 1.33,
+"equity": 35.881,
+"treasury": 3.221,
+"net_income": 6.313,
+"roe": 0.176,
+"pe": 7.56,
+"pb_adj": 1.22
+},
+{
+"fy": 2020,
+"pb": 1.27,
+"equity": 38.996,
+"treasury": 3.495,
+"net_income": 2.687,
+"roe": 0.069,
+"pe": 18.43,
+"pb_adj": 1.166
+},
+{
+"fy": 2021,
+"pb": 1.83,
+"equity": 43.933,
+"treasury": 4.695,
+"net_income": 5.861,
+"roe": 0.133,
+"pe": 13.72,
+"pb_adj": 1.653
+},
+{
+"fy": 2022,
+"pb": 1.22,
+"equity": 49.907,
+"treasury": 7.127,
+"net_income": 8.687,
+"roe": 0.174,
+"pe": 7.01,
+"pb_adj": 1.068
+},
+{
+"fy": 2023,
+"pb": 1.72,
+"equity": 44.12,
+"treasury": 7.552,
+"net_income": -5.833,
+"roe": -0.132,
+"pe": null,
+"pb_adj": 1.469
+},
+{
+"fy": 2024,
+"pb": 2.35,
+"equity": 45.131,
+"treasury": 7.852,
+"net_income": 0.778,
+"roe": 0.017,
+"pe": 136.32,
+"pb_adj": 2.002
+},
+{
+"fy": 2025,
+"pb": 2.46,
+"equity": 54.165,
+"treasury": 7.852,
+"net_income": 8.539,
+"roe": 0.158,
+"pe": 15.6,
+"pb_adj": 2.149
+}
+]

@@ -1,7 +1,7 @@
 # SK 海力士設定檔（樣板 v0.2）。只放參數；結構在 tools/memory_model/build.py 與 markets/memory/market.py
 S = "sec"
 CONFIG = {
- "name": "SK 海力士", "version": "v0.3", "date": "2026-10-08",
+ "name": "SK 海力士", "version": "v0.3.1", "date": "2026-10-22",
  "unit": "兆韓元", "ccy_per_usdB": "fx/1000", "share_scale": 1000000,
  "base_fy": 2026, "fy_offset": 0, "fy_label": "{}", "fy_desc": "日曆年（K-IFRS 合併）",
  "thesis": "SK 海力士的盈餘由兩條價格線決定——每季議價的一般 DRAM 與年約鎖價的 HBM；股價取決於這個循環在哪一年見頂，以及見頂時累積了多少淨值。",
@@ -123,6 +123,6 @@ CONFIG = {
   ("Citi 2027 見頂", "https://www.tipranks.com/news/memory-prices-will-peak-next-year-warns-citi-as-it-cuts-micron-mu-price-target-by-18"),
   ("Bernstein 2028", "https://www.notebookcheck.net/DRAM-crisis-Analysts-expect-drastic-price-drop-in-2028.1337992.0.html"),
  ],
- "readme_extra": ["v0.3：預測延長到 2029（三情境各加 2029 年走法）；前兩年數字與 v0.2 相同。", "v0.2 相對 v0.1：(1) 一般 DRAM、NAND 年均價變動改由共用季價路徑（Path）依會計年度平均算出，不再逐年手填；(2) 新增情境 C；(3) HBM 市場移到共用市場層 markets/memory。",
+ "readme_extra": ["v0.3.1：Tokenomics v19.0 同步。只有對帳頁的「每顆 GPU 的 NVIDIA 內容」由 51.6 改 42.8 千美元（橋接表 v0.2：GB300 機架基準價 $4.3M）；損益、淨值、估值與 v0.3 相同。", "v0.3：預測延長到 2029（三情境各加 2029 年走法）；前兩年數字與 v0.2 相同。", "v0.2 相對 v0.1：(1) 一般 DRAM、NAND 年均價變動改由共用季價路徑（Path）依會計年度平均算出，不再逐年手填；(2) 新增情境 C；(3) HBM 市場移到共用市場層 markets/memory。",
                   "已知簡化：營運資金未計；股數用期末；HBM 毛利率無法由公開資料分離。"],
 }

@@ -10,7 +10,7 @@ DA = [2.030, 2.079, 2.094, 2.149, 2.212, 2.286, 2.364, 2.641]
 LAB = ["FQ1-25", "FQ2-25", "FQ3-25", "FQ4-25", "FQ1-26", "FQ2-26", "FQ3-26", "FQ4-26"]
 COL = "BCDEFGHI"
 CONFIG = {
- "name": "美光", "version": "v0.2", "date": "2026-10-08",
+ "name": "美光", "version": "v0.2.1", "date": "2026-10-22",
  "unit": "十億美元", "ccy_per_usdB": "1", "share_scale": 1000,
  "base_fy": 2026, "fy_offset": 1, "fy_label": "FY{}", "fy_desc": "會計年度約 9 月初結束；FY27 ≈ 2026Q4–2027Q3（日曆季對齊為近似，實際差約 1 個月）",
  "thesis": "美光的盈餘由一般 DRAM 與 NAND 的合約價循環決定，HBM 份額約與其 DRAM 份額相當（約兩成）；股價取決於循環見頂的年度與見頂時累積的淨值，以及「超額現金 100% 回饋」把淨值轉成買回的速度。",
@@ -107,6 +107,6 @@ CONFIG = {
   ("Yahoo Finance 共識", "https://finance.yahoo.com/quote/MU/analysis/"),
   ("Macrotrends P/B", "https://www.macrotrends.net/stocks/charts/MU/micron-technology/price-book"),
  ],
- "readme_extra": ["v0.2：預測延長到 FY2029，情境 C 的谷底（FY28–29）已可見；前兩年與 v0.1 相同。", "複製測試：本檔只換參數（設定檔 micron/company.py）；樣板結構不變。為了美光而改的樣板結構（會計年度、幣別、季價路徑）已先回頭改進樣板 v0.2，SK 海力士 v0.2 同步重建。",
+ "readme_extra": ["v0.2.1：Tokenomics v19.0 同步。只有對帳頁的「每顆 GPU 的 NVIDIA 內容」由 51.6 改 42.8 千美元（橋接表 v0.2：GB300 機架基準價 $4.3M）；損益、淨值、估值與 v0.2 相同。", "v0.2：預測延長到 FY2029，情境 C 的谷底（FY28–29）已可見；前兩年與 v0.1 相同。", "複製測試：本檔只換參數（設定檔 micron/company.py）；樣板結構不變。為了美光而改的樣板結構（會計年度、幣別、季價路徑）已先回頭改進樣板 v0.2，SK 海力士 v0.2 同步重建。",
                   "已知簡化：會計年度與日曆季對齊差約 1 個月；HBM 營收美光未揭露（由市場 × 市占推得）；FQ4-26 為 14 週。"],
 }

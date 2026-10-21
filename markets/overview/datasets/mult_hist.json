@@ -411,5 +411,131 @@
 "year": 2025,
 "source": "companiesmarketcap",
 "multiple": 28.3
+},
+{
+"company": "美光（P/E）",
+"metric": "P/E",
+"year": 2017,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 6.51
+},
+{
+"company": "美光（P/E）",
+"metric": "P/E",
+"year": 2018,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 4.09
+},
+{
+"company": "美光（P/E）",
+"metric": "P/E",
+"year": 2019,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 7.56
+},
+{
+"company": "美光（P/E）",
+"metric": "P/E",
+"year": 2020,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 18.43
+},
+{
+"company": "美光（P/E）",
+"metric": "P/E",
+"year": 2021,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 13.72
+},
+{
+"company": "美光（P/E）",
+"metric": "P/E",
+"year": 2022,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 7.01
+},
+{
+"company": "美光（P/E）",
+"metric": "P/E",
+"year": 2024,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 136.32
+},
+{
+"company": "美光（P/E）",
+"metric": "P/E",
+"year": 2025,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 15.6
+},
+{
+"company": "美光（買回加回 P/B）",
+"metric": "P/B",
+"year": 2016,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 1.189
+},
+{
+"company": "美光（買回加回 P/B）",
+"metric": "P/B",
+"year": 2017,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 1.774
+},
+{
+"company": "美光（買回加回 P/B）",
+"metric": "P/B",
+"year": 2018,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 1.767
+},
+{
+"company": "美光（買回加回 P/B）",
+"metric": "P/B",
+"year": 2019,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 1.22
+},
+{
+"company": "美光（買回加回 P/B）",
+"metric": "P/B",
+"year": 2020,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 1.166
+},
+{
+"company": "美光（買回加回 P/B）",
+"metric": "P/B",
+"year": 2021,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 1.653
+},
+{
+"company": "美光（買回加回 P/B）",
+"metric": "P/B",
+"year": 2022,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 1.068
+},
+{
+"company": "美光（買回加回 P/B）",
+"metric": "P/B",
+"year": 2023,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 1.469
+},
+{
+"company": "美光（買回加回 P/B）",
+"metric": "P/B",
+"year": 2024,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 2.002
+},
+{
+"company": "美光（買回加回 P/B）",
+"metric": "P/B",
+"year": 2025,
+"source": "SEC 10-K＋macrotrends",
+"multiple": 2.149
 }
 ]
