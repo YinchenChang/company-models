@@ -34,8 +34,8 @@ from common import F_BOLD, F_CALC, F_IN, F_NOTE, e6_violations, header, lo_recal
 from oai_link import read_oai  # noqa: E402
 from tk_link import NONNV_STATUS, PENDING_NOTE, read_nonnv, read_snapshot  # noqa: E402
 
-VERSION = "v0.1"
-STAGE = "v0.1"
+VERSION = "v0.1.1"
+STAGE = "v0.1.1"
 REGISTRY_PATH = HERE / "id_registry.json"
 SRC_YAML = ROOT / "data" / "anthropic_src.yaml"
 INP_YAML = ROOT / "data" / "anthropic_inputs.yaml"
@@ -64,6 +64,9 @@ DERIVED = {
     "cost_compute_to_rev_2025": "={SRC:cost_compute_2025}/{SRC:rev_2025_recognized}",
     "cost_employee_q1_2026_derived": "={SRC:cost_charity_match_q1_2026}/{SRC:cost_charity_match_share_employee_exp_q1_2026}",
     "strat_amzn_funded_cum_2026h1": "={SRC:strat_amzn_notes_cum_2025}+{SRC:strat_amzn_2026_series_g}+{SRC:strat_amzn_2026_series_h}",
+    # v0.1.1（工作單 20261021 U4）：Q3 隱含算力支出＝Q3 營收 ÷ 每 $1 算力支出的營收；前三季＝上半年 ＋ Q3 隱含
+    "cmp_s1_spend_2026_q3_derived": "={SRC:rev_2026_q3}/{SRC:rev_per_compute_2026_q3}",
+    "cmp_s1_spend_2026_9m_derived": "={SRC:cmp_s1_spend_2026_h1}+{SRC:cmp_s1_spend_2026_q3_derived}",
 }
 
 
@@ -176,6 +179,8 @@ def sheet_readme(ctx, summary):
     lines = [
         ("本版範圍", f"{STAGE}：SRC_ANT、TK_Link（含 NonNV 讀表）、OAI_Link、Inputs、Demand（需求與 token 量）、Revenue（訂閱方案別、API 層級別、通路分成、淨額、容量上限）、Compute（加速器族、逐合約供給 GW、η、推論與研發 GW、容量上限、VR 等值）、"
                     "Cost（逐合約實付、自建資本支出、供應商持有成本、非算力成本、股權報酬、命題表；A4 補逐家對帳與敏感度）、Funding（命題 2）、Reverse（管理層目標反解，只作對照）、Checks。"),
+        ("v0.1.1 更新", "依 WSJ 轉述的草擬 S-1（2026-10-20）與 Q3 投資人簡報（2026-10-14）：新增 SRC_ANT_380–409；U1 2026 營收基準＝上半年實際＋Q3 實際＋Q4（Q3 持平）；U2 Nscale＋Lambda 兩約合計錨定『最高 86』；"
+                        "U3 逐家與三口徑承諾對照；U4 2026 算力支出對照（不校準）；U5 D22 加 Q3 11%；U6 談判中 $150B 情境（Cost 第十九節、Funding S8）；U7 上半年非現金費用列示。Inputs 回歸開關 u1_switch、u2_switch＝0 可還原 v0.1。"),
         ("Compute", "加速器族 × 世代（NVIDIA Hopper／GB200／GB300／VR200；TPU v6e／v7；Trainium2／3；AMD MI455X）每 GW 年產能＝TK IF_TokGW_* ×（NonNV 產出比）；供給 GW 只由算力合約加總（D10 r1；機房租約只列對照）；"
                     "η＝2025 token 換算推論 GW ÷ 2025 推論支出換算 GW（D8）；研發 GW＝供給 ×（1 − 閒置）− 推論（D12）；容量上限 2025、2026 固定 1；VR 等值＝各族 Sol 產能比。"),
         ("Cost", "算力成本（現金）＝逐合約實付＋自建資本支出（D10、D11）；供應商持有成本＝GW × TK IF_HoldEcon × 持有比、雲端毛利；非算力成本 2025＝說明書營業費用 − 算力 − 平台抽成（D13、D5 r1），之後人數 × 每人成本；"
@@ -184,12 +189,12 @@ def sheet_readme(ctx, summary):
                     "條件式（Amazon 15、Google 30、NVIDIA 10、AMD 5）與 IPO 約 100 只列情境；或有負債只列示；情境 S1–S7（IPO、條件式、逐家錨定招股書、機房租金、D22、合併）；回流對照（D18）。"),
         ("Reverse", "管理層營收目標（2026 18、2027 55、2028 70、2029 148；2030 無目標取正向）→ 只靠 API／只靠訂閱／兩線等比例的所需倍數 → 反向資金（同一支出）；只被 Checks 引用（D19）。"),
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有，重建時保留已改過的值）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構（data/*.yaml → SRC_ANT／Inputs；Tokenomics → TK_Link；OpenAI → OAI_Link）。"),
-        ("SRC_ANT", f"{summary['src']} 列：公司財務原始數據（A1 蒐集 376 列＋A2 新增 3 列供 Derived 列公式化）。標記 Derived 的 12 列：11 列改為公式、1 列（Reuters 自行計算後公布的通路費）保留報導值。"),
+        ("SRC_ANT", f"{summary['src']} 列：公司財務原始數據（A1 蒐集 376 列＋A2 新增 3 列供 Derived 列公式化＋v0.1.1 新增 30 列〔草擬 S-1 經 WSJ 轉述、Q3 投資人簡報〕）。標記 Derived 的 14 列：13 列改為公式、1 列（Reuters 自行計算後公布的通路費）保留報導值。"),
         ("TK_Link", f"Tokenomics {sn['version']}（{sn['file']}），master 提交 {sn['sha'][:7]}；{summary['tk_ok']} 個具名範圍（OpenAI v0.6 同一組 63 名＋A2 新增任務 token 5 名）＋ 讀表（非具名）{summary['tk_nnv']} 格：NonNV 18 格（規格 D6）與 PUE 3 格（A3；Tokenomics Inputs 頁）。"),
         ("OAI_Link", f"OpenAI v0.6 命題輸出快照（{oa['file']}；SHA-256 {oa['sha256'][:12]}…）；只被 Checks 引用（規格 D20）。"),
         ("Inputs", f"{summary['inp']} 列：假設（值、低、高、標記、依據、區間理由）；定義常數（年度、天數、單位換算）也在此（E6：公式不含常數）。"),
         ("Demand", "個人方案（Free／Pro／Max 5x／Max 20x）人數、企業席位（Team 標準／Premium、Enterprise）、任務類別（對話、程式代理、其他代理）× 每任務 token × 層級組合；API：2025 由 API 營收 ÷ 有效單價倒推、2026 由半校準總額倒推、2027 起任務成長 × 每任務 token 成長 × 價格彈性；輸出 DEM_Tok_*（層級 × 付費／免費）。"),
-        ("Revenue", "API 牌價（價格事件依公告日天數加權）、有效單價（快取、批次、議價折扣）、訂閱方案別、API 層級別、其他、廣告（＝0，D3）、總額、雲端通路平台抽成（D5 r1）、淨額、個人 vs 企業；2025 校準（D14）、2026 半校準（D15 r1）、容量上限係數（＝Compute CMP_CapFactor；2025、2026 固定 1）。"),
+        ("Revenue", "API 牌價（價格事件依公告日天數加權）、有效單價（快取、批次、議價折扣）、訂閱方案別、API 層級別、其他、廣告（＝0，D3）、總額、雲端通路平台抽成（D5 r1）、淨額、個人 vs 企業；2025 校準（D14）、2026 半校準（D15 r2，v0.1.1）、容量上限係數（＝Compute CMP_CapFactor；2025、2026 固定 1）。"),
         ("Checks", "C01 起；ERR 格數＝CHK_Errors（必須 0）；WARN 格數＝CHK_Warnings（只提示）。"),
         ("層級對應", "Haiku→低層（Tokenomics Luna）、Sonnet→中層（Sol）、Opus→頂層（Astra）；具名範圍沿用 OpenAI 的 Top／Mid／Low。"),
         ("標記", "Verified／Interested-party／Analogy／Assumed／Derived／Decision（Analogy、Assumed 一律附區間）。"),
@@ -347,7 +352,7 @@ def base_checks(ctx, n_src, n_inp):
     fams = sorted({x.split("_")[2] for x in nnv})
     order = "+".join(f"(TK_NNV_{f}_{a}Lo>TK_NNV_{f}_{a})+(TK_NNV_{f}_{a}>TK_NNV_{f}_{a}Hi)" for f in fams for a in ("Out", "Hold"))
     rows = [
-        ("src_rows", "SRC_ANT 列數", "=SUMPRODUCT(--(LEN(SRC_ANT!$A$5:$A$600)>0))", n_src, "eq", "A1 376 列＋A2 新增 3 列（SRC_ANT_377–379）"),
+        ("src_rows", "SRC_ANT 列數", "=SUMPRODUCT(--(LEN(SRC_ANT!$A$5:$A$600)>0))", n_src, "eq", "A1 376 列＋A2 新增 3 列（SRC_ANT_377–379）＋v0.1.1 新增 30 列（SRC_ANT_380–409）"),
         ("src_missing", "SRC_ANT 缺值列數", "=SUM(SRC_ANT!$X$5:$X$600)", 0, "eq", "值、低、高皆空且非定性／文字／日期列"),
         ("src_nosource", "SRC_ANT 缺出處或網址列數", "=SUM(SRC_ANT!$Y$5:$Y$600)", 0, "eq", ""),
         ("src_order", "SRC_ANT 區間順序異常列數", "=SUM(SRC_ANT!$Z$5:$Z$600)", 0, "eq", "低 ≤ 值 ≤ 高"),

@@ -21,6 +21,11 @@ rows:
 - {key: elasticity_start_year, name: 價格彈性起算年, index: —, unit: 年, value: 2027, lo: 2027, hi: 2027, tag: Decision, basis: 2025 校準年、2026 半校準年（D14、D15 r1）不套彈性；同 OpenAI v0.6 INP_004, range_why: 定義值, note: Demand API 第三節}
 - {key: ads_revenue, name: 廣告營收（D3）, index: —, unit: $B/年, value: 0, lo: 0, hi: 0, tag: Decision, basis: 規格 D3：Anthropic 公開承諾 Claude 不放廣告，不設驅動, range_why: 公司公開立場；若反轉再加驅動, note: Revenue 第八節}
 - {key: runrate_warn_threshold, name: 2026 年營收對里程碑推估差距的 WARN 門檻, index: —, unit: 比例, value: 0.25, lo: 0.25, hi: 0.25, tag: Decision, basis: 工作單 A2 第 6 步：2026 run-rate 對照差距 >25% 立 WARN（規格 D15）, range_why: 工作單定值, note: Checks}
+# ── 1b. v0.1.1（工作單 20261021）：回歸開關與新門檻
+- {key: u1_switch, name: U1 D15 r2 半校準開關（1＝2026 營收基準＝上半年實際＋Q3 實際＋Q4；0＝v0.1 的 r1＝Q1＋Q2＋2026-07 年化 × 6／12）, index: —, unit: 開關, value: 1, lo: 0, hi: 1, tag: Decision, basis: 工作單 20261021 U1；規格 D15 r2（S-1 草稿與 Q3 投資人簡報已給上半年與 Q3 實際）, range_why: 開關, note: 設 0 可逐位元重現 v0.1 的 2026 基準（回歸測試）}
+- {key: q4_growth, name: U1 2026 Q4 營收相對 Q3 的成長率（0＝持平，保守）, index: 2026, unit: 比例, value: 0, lo: 0, hi: 0.45, tag: Decision, basis: 工作單 U1 預設：Q4＝Q3 持平（保守；Decision）；替代 Q4＝Q3 ×（Q3／Q2）＝＋44.8%（16.8／11.6 − 1）即區間上緣；替代『最新年化 ÷ 4』在 Q3 年化口徑下亦等於持平, range_why: 下緣＝持平；上緣＝Q3 季增幅（Q3／Q2 − 1）延續一季, note: Revenue 營收總額基準（2026）}
+- {key: u2_switch, name: U2 Nscale＋Lambda 錨定 WSJ『最高 $86B』開關（1＝兩約合計 86，依既有 GW 比例分攤、皆為金額型；0＝v0.1 各自公告值 45／35，Lambda 為 GW 型）, index: —, unit: 開關, value: 1, lo: 0, hi: 1, tag: Decision, basis: 工作單 20261021 U2；SRC_ANT 的 cmp_s1_nscale_lambda_86, range_why: 開關, note: 設 0 可重現 v0.1 的兩約口徑}
+- {key: spend_warn_threshold, name: U4 2026 算力支出對照（報導 vs 模型）差距的 WARN 門檻, index: —, unit: 比例, value: 0.25, lo: 0.25, hi: 0.25, tag: Decision, basis: 工作單 20261021 U4：差距 >25% 立 WARN（沿用 D15 與共同規則的 25%）, range_why: 門檻, note: Checks}
 # ── 2. 訂閱：年付占比、方案組合、轉換率（Assumed／Analogy）
 - {key: pro_annual_share, name: Pro 年付占比, index: —, unit: 比例, value: 0.3, lo: 0.1, hi: 0.5, tag: Assumed, basis: 工作單 A2 判斷類預設（年付占比 0.3）；Pro 年付月均 $17（SRC_ANT_142）vs 月付 $20（SRC_ANT_141）, range_why: 工作單預設區間 0.1–0.5, note: Pro 實收月費＝月付 ×（1−占比）＋年付月均 × 占比}
 - {key: team_annual_share, name: Team 年付占比（標準與 Premium 席位）, index: —, unit: 比例, value: 0.3, lo: 0.1, hi: 0.5, tag: Assumed, basis: 同 Pro 年付占比（工作單預設）；Team 年付 $20／$100 vs 月付 $25／$125（SRC_ANT_146–149）, range_why: 同上, note: ""}
@@ -152,6 +157,7 @@ rows:
 - {key: nscale_end, name: 合約結束年：Nscale Monarch, index: —, unit: 年, value: 2033, lo: 2033, hi: 2033, tag: Decision, basis: 同上（六年）, range_why: 揭露期間, note: ""}
 - {key: lambda_start, name: 合約起始年：Lambda（$35B，多年；350 MW）, index: —, unit: 年, value: 2027, lo: 2027, hi: 2028, tag: Assumed, basis: SRC_ANT_223、224 期間未揭露；工作單預設「公告（2026-09）後次季起」→ 首個完整爬坡年 2027, range_why: 1 年延後, note: ""}
 - {key: lambda_term, name: 合約期間（年）：Lambda, index: —, unit: 年, value: 6, lo: 4, hi: 8, tag: Assumed, basis: 「多年」未揭露；比照同期 Nscale 六年, range_why: 常見租期, note: 結束年＝起始 ＋ 期間 − 1}
+- {key: lambda_end, name: 合約結束年：Lambda（U2；WSJ『至 2034』）, index: —, unit: 年, value: 2034, lo: 2034, hi: 2034, tag: Decision, basis: Implicator 轉述草擬 S-1：'through 2033 and 2034, respectively'（Nscale 2033、Lambda 2034）；SRC_ANT 的 cmp_s1_nscale_lambda_86, range_why: 揭露值, note: 只在 U2 開關＝1 時使用（Lambda 轉金額型，期間＝起始年至本列）；開關＝0 時沿用 lambda_term}
 - {key: volta_start, name: 合約起始年：Volta Infra（$10B／六年；133 MW）, index: —, unit: 年, value: 2027, lo: 2027, hi: 2027, tag: Decision, basis: SRC_ANT_236 分兩期至 2027-03 交付, range_why: 揭露期間, note: ""}
 - {key: volta_end, name: 合約結束年：Volta Infra, index: —, unit: 年, value: 2032, lo: 2032, hi: 2032, tag: Decision, basis: 同上（六年）, range_why: 揭露期間, note: ""}
 - {key: akamai_start, name: 合約起始年：Akamai（$1.8B／七年）, index: —, unit: 年, value: 2026, lo: 2026, hi: 2026, tag: Decision, basis: SRC_ANT_234 2026–2033, range_why: 揭露期間, note: ""}
@@ -187,3 +193,6 @@ rows:
 - {key: lease_term_riot, name: 租約期間（年）：Riot Rockdale, index: —, unit: 年, value: 20, lo: 20, hi: 20, tag: Decision, basis: SRC_ANT_219、220「20-year，$9.1 billion」, range_why: 揭露值, note: ""}
 - {key: lease_term_hut8, name: 租約期間（年）：Hut 8 River Bend, index: —, unit: 年, value: 15, lo: 15, hi: 15, tag: Decision, basis: SRC_ANT_214、215「15-year」「$7 billion」, range_why: 揭露值, note: 經 Fluidstack 承租，可能已含於自建 $50B（重複計算風險見報告）}
 - {key: partner_warn_threshold, name: 逐家合約總額（模型）對招股書逐家金額差距的 WARN 門檻, index: —, unit: 比例, value: 0.25, lo: 0.25, hi: 0.25, tag: Decision, basis: chat 端 A3 審查：任一合作方 |模型 ÷ 招股書 − 1| > 25% 立 WARN, range_why: 門檻, note: Checks}
+# ── 10. v0.1.1：談判中 $150B 情境（U6；基準仍只計已簽合約）
+- {key: neg_start_year, name: U6 談判中新協議起始年（情境）, index: —, unit: 年, value: 2028, lo: 2027, hi: 2029, tag: Assumed, basis: 工作單 U6：『2028 起爬坡（沿用 A3 爬坡預設）』；談判中協議未簽、無日期, range_why: ±1 年, note: Cost 第十六節情境；不進基準}
+- {key: neg_term_years, name: U6 談判中新協議付款期間（年）, index: —, unit: 年, value: 7, lo: 5, hi: 10, tag: Assumed, basis: 工作單 U6 預設 7 年（5–10）；對照已揭露雲端義務『未來 7–10 年』（SRC_ANT 的 cmp_s1_cloud_total_450）, range_why: 工作單區間, note: GW＝金額 ÷ 期間 ÷ 合約價（D10）}

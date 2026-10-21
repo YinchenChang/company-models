@@ -21,6 +21,9 @@ groups:
   nnv_hi: {label: "NonNV 產出比（TPU、Trainium、AMD）取 TK 高", set: {TK_NNV_TPUv7_Out: hi, TK_NNV_Trn3_Out: hi, TK_NNV_MI455X_Out: hi}}
   hc_hi: {label: "員工人數年增率 2026–30 取高欄", set: {INP_156: hi, INP_157: hi, INP_158: hi, INP_159: hi, INP_160: hi}}
   fee_hi: {label: "雲端平台抽成率取高欄", set: {INP_100: hi}}
+  # v0.1.1：關閉單項更新，用於「更新前後」分解（INP_180＝U1 開關、INP_182＝U2 開關；0＝回到 v0.1 的算法）
+  u1_off: {label: "U1 關閉（2026 營收回到 v0.1：上半年 Q1＋Q2 ＋ 下半年持平於 2026-07 年化）", set: {INP_180: 0}}
+  u2_off: {label: "U2 關閉（Nscale、Lambda 回到各自公告值）", set: {INP_182: 0}}
 
 # 情境＝群組的組合（依序套用）
 scenarios:
@@ -43,4 +46,7 @@ scenarios:
   combo2: [api_task_lo, price_hi]
   combo3: [elast_weak, price_hi, ramp_lo]
   combo4: [api_task_lo, elast_weak, price_hi, ramp_lo]
+  v010: [u1_off, u2_off]
+  only_u1: [u2_off]
+  only_u2: [u1_off]
   combo5: [api_task_lo, elast_weak, price_hi, ramp_lo, tok_lo, hc_hi, fee_hi]

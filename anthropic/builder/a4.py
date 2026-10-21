@@ -19,9 +19,15 @@ from common import put
 FMT.update({"開關": "0", "混合": "#,##0.00"})
 
 # 招股書六家合作方 → 本模型合約鍵（Cost 第十一節 tot_*／pay_*）；SRC 鍵與欄（與 a3.PARTNERS 同）
-PARTNER_MAP = [("Google", "google", "cmp_prospectus_google", "_Lo"), ("Amazon", "aws", "cmp_prospectus_amazon", ""),
-               ("Microsoft", "azure", "cmp_msft_azure_prospectus", ""), ("Broadcom", "broadcom", "cmp_prospectus_broadcom", ""),
-               ("xAI／SpaceX", "spacex", "cmp_spacex_total_prospectus", "_Hi"), ("AMD", "amd", "cmp_amd_usd_prospectus", "_Lo")]
+# v0.1.1 U3：逐家對照改用草擬 S-1（WSJ 轉述）數字；SpaceX、AMD 不在 WSJ 轉述的逐家清單內，沿用 v0.1 的招股書（Reuters 轉述）列；Nscale＋Lambda 合計 86 按 MW 比例分攤到兩約。
+# 欄：名稱、合約鍵（Cost 第十一節 tot_*／pay_*）、對照金額樣板（{SRC:key}、{INP:key}、«Cost 列鍵»）
+PARTNER_MAP = [("Google", "google", "{SRC:cmp_s1_google_111}"), ("Amazon", "aws", "{SRC:cmp_s1_aws_110}"),
+               ("Microsoft", "azure", "{SRC:cmp_s1_msft_31}"), ("Broadcom", "broadcom", "{SRC:cmp_s1_broadcom_160}_Lo"),
+               ("xAI／SpaceX", "spacex", "{SRC:cmp_spacex_total_prospectus}_Hi"), ("AMD", "amd", "{SRC:cmp_amd_usd_prospectus}_Lo")]
+# Nscale、Lambda 兩約合計 86 按 MW 分攤的對照列：列放在 Cost 第十七節之後（附加在表尾，使既有列編號不變）
+PARTNER_X = [("Nscale（兩約合計 86 按 MW 分攤）", "nscale", "{SRC:cmp_s1_nscale_lambda_86}*«u2_share_n@$»"),
+             ("Lambda（兩約合計 86 按 MW 分攤）", "lambda", "{SRC:cmp_s1_nscale_lambda_86}*«u2_share_l@$»")]
+PARTNER_ALL = PARTNER_MAP + PARTNER_X
 NVDA_FAMILY = ("azure", "spacex", "nscale", "lambda", "volta", "akamai")     # 以 NVIDIA 晶片為主的合約（D18 間接對照）
 LEASE_RENT = [("terawulf", "TeraWulf Hawesville（KY；20 年 $19B；Anthropic 直接承租）", "cmp_terawulf_ky_usd", "lease_term_terawulf"),
               ("riot", "Riot Rockdale（TX；20 年 $9.1B）", "cmp_riot_rockdale_usd", "lease_term_riot"),
@@ -51,27 +57,31 @@ def build(ctx):
     cash25 = S("cash_2025_12_31")
     C, K = ctx.P["a3"]["C"], ctx.P["a3"]["K"]
     kr = K.rows
-    from a3 import CT, FAM  # noqa: E402  （合約族與型別）
+    from a3 import CT, FAM, U2  # noqa: E402  （合約族與型別）
     only25 = lambda f: [f] + [None] * 5  # noqa: E731
     only26 = lambda f: [None, f] + [None] * 4  # noqa: E731
 
     # ═════════════════════ Cost 頁補充（A4；chat 端 A3 審查 1、2、4） ═════════════════════
-    K.section("十二、逐家合約總額對帳（chat 端 A3 審查：模型 ÷ 招股書逐家 − 1；任一家 |差距| > 門檻 → Checks WARN）")
-    for zh, ck, sk, suf in PARTNER_MAP:
-        K.add(f"pg_{ck}", f"模型 ÷ 招股書 − 1：{zh}（模型＝第十一節合約總額）", "比例", only25(f"=(«tot_{ck}@$»-{S(sk)}{suf})/({S(sk)}{suf})"), "")
-    K.add("pg_max", "逐家 |差距| 最大值", "比例", only25("=MAX(" + ",".join(f"ABS(«pg_{ck}@$»)" for _z, ck, _s, _f in PARTNER_MAP) + ")"),
-          "> 門檻（Inputs 0.25）→ WARN；合計對得上（−3%）是因為各家誤差互相抵銷", name="COST_PartnerGapMax", name_cols="D")
+    K.section("十二、逐家合約總額對帳（U3：模型 ÷ 草擬 S-1〔WSJ 轉述〕逐家 − 1；SpaceX、AMD 沿用 v0.1 的招股書列；任一家 |差距| > 門檻 → Checks WARN）")
+    for zh, ck, ex in PARTNER_MAP:
+        e = D.fill(ex)
+        K.add(f"pg_{ck}", f"模型 ÷ S-1 草稿 − 1：{zh}（模型＝第十一節合約總額）", "比例", only25(f"=(«tot_{ck}@$»-({e}))/({e})"), "")
+    K.add("pg_max", "逐家 |差距| 最大值", "比例", only25("=MAX(" + ",".join(f"ABS(«pg_{ck}@$»)" for _z, ck, _e in PARTNER_ALL) + ")"),
+          "> 門檻（Inputs 0.25）→ WARN；合計對得上是因為各家誤差互相抵銷", name="COST_PartnerGapMax", name_cols="D")
 
     K.section("十三、敏感度：逐家合約錨定招股書金額（基準不變：GW × 合約價，D10）。付款按同一時程等比例縮放；金額型、GW 型、月費型合約的 GW 隨付款同比例（D10：GW＝金額 ÷ 合約價），Broadcom（雙揭露）GW 不變")
-    scaled = [ck for _z, ck, _s, _f in PARTNER_MAP if CT[ck][3] in ("amt", "gw", "monthly")]
-    for zh, ck, sk, suf in PARTNER_MAP:
-        K.add(f"an_k_{ck}", f"錨定係數：{zh}＝招股書 ÷ 模型合約總額", "倍", only25(f"={S(sk)}{suf}/«tot_{ck}@$»"), "")
+    u2 = I("u2_switch")
+    scaled = [ck for _z, ck, _e in PARTNER_ALL if CT[ck][3] in ("amt", "gw", "monthly") and ck not in U2]
+    for zh, ck, ex in PARTNER_MAP:
+        K.add(f"an_k_{ck}", f"錨定係數：{zh}＝S-1 草稿（或招股書）金額 ÷ 模型合約總額", "倍", only25(f"=({D.fill(ex)})/«tot_{ck}@$»"), "")
     K.add("an_cc", "算力成本（現金；錨定招股書）", "$B",
-          lambda i, c: "=«cc»+" + "+".join(f"«pay_{ck}»*(«an_k_{ck}@$»-«C:vr_unit@$»)" for _z, ck, _s, _f in PARTNER_MAP), "", name="COST_ComputeAnchor")
+          lambda i, c: "=«cc»+" + "+".join(f"«pay_{ck}»*(«an_k_{ck}@$»-«C:vr_unit@$»)" for _z, ck, _e in PARTNER_ALL), "", name="COST_ComputeAnchor")
     K.add("an_dcc", "差：錨定 − 基準（算力成本）", "$B", lambda i, c: "=«an_cc»-«cc»", "")
-    K.add("an_sup", "供給 GW（錨定）", "GW", lambda i, c: "=«C:sup»+" + "+".join(f"«C:sup_{ck}»*(«an_k_{ck}@$»-«C:vr_unit@$»)" for ck in scaled), "")
+    K.add("an_sup", "供給 GW（錨定）", "GW", lambda i, c: "=«C:sup»+" + "+".join(f"«C:sup_{ck}»*(«an_k_{ck}@$»-«C:vr_unit@$»)" for ck in scaled)
+          + f"+{u2}*(" + "+".join(f"«C:sup_{ck}»*(«an_k_{ck}@$»-«C:vr_unit@$»)" for ck in U2) + ")", "Nscale、Lambda 僅在 U2 開關 1（金額型）時隨付款縮放")
     K.add("an_vr", "供給 VR 等值 GW（錨定）", "GW",
-          lambda i, c: "=«C:vr_sup»+" + "+".join(f"«C:sup_{ck}»*(«an_k_{ck}@$»-«C:vr_unit@$»)*«C:vrf_{CT[ck][2]}»" for ck in scaled), "")
+          lambda i, c: "=«C:vr_sup»+" + "+".join(f"«C:sup_{ck}»*(«an_k_{ck}@$»-«C:vr_unit@$»)*«C:vrf_{CT[ck][2]}»" for ck in scaled)
+          + f"+{u2}*(" + "+".join(f"«C:sup_{ck}»*(«an_k_{ck}@$»-«C:vr_unit@$»)*«C:vrf_{CT[ck][2]}»" for ck in U2) + ")", "")
     K.add("an_cap", "容量上限係數（錨定）", "倍",
           lambda i, c: f"=IF({c}$6<={capfix},«C:vr_unit@$»,MIN(«an_sup»*(1-{idle})*(1-{mintr}),«C:eff»)/«C:eff»)", "有效推論 GW 不變（η 以 2025 校準，2025 不受影響）")
     K.add("an_rev", "營收淨額（錨定；截頂後）", "$B", lambda i, c: "=«R:net»*«an_cap»", "")
@@ -102,6 +112,91 @@ def build(ctx):
     K.add("d22_gap_vr", "每 VR 等值 GW 差額（含股權報酬；D22 低估補足）", "$B/GW/年", lambda i, c: "=«p_gap_vr»" if i == 0 else "=«p_gap_vr»-«d22_dncx»/«p_den»", "",
           name="COST_PropGap_VR_D22")
     K.add("d22_dgap", "差：D22 補足 − 基準", "$B/GW/年", lambda i, c: "=«d22_gap_vr»-«p_gap_vr»", "")
+
+    # ═════════════════════ Cost 頁補充（v0.1.1；工作單 20261021 U3–U6） ═════════════════════
+    K.section("十六、U2 Nscale＋Lambda 兩約錨定『最高 $86B』：按既有揭露 MW 比例分攤（開關 u2_switch＝1；金額型：付款＝金額 ÷ 期間，GW＝付款 ÷ 合約價）")
+    from a3 import U2, U2_TOTAL  # noqa: E402
+    mwn, mwl = D.fill(U2["nscale"]["mw"]), D.fill(U2["lambda"]["mw"])
+    K.add("u2_share_n", "U2：Nscale 占兩約合計的比例＝Nscale MW ÷（Nscale MW ＋ Lambda MW）", "比例", only25(f"={mwn}/({mwn}+{mwl})"),
+          "依兩約既有揭露 MW 比例分攤『最高 86』（工作單 U2）；MW 為 SRC 觀測值（460、350）")
+    K.add("u2_share_l", "U2：Lambda 占兩約合計的比例", "比例", only25("=(1-«u2_share_n@$»)"), "")
+    K.add("u2_T_n", "U2：Nscale 錨定總額＝86 × 比例", "$B", only25(f"={D.fill(U2_TOTAL)}*«u2_share_n@$»"), "SRC：Nscale＋Lambda 合計最高 $86B（草擬 S-1，WSJ 轉述）")
+    K.add("u2_T_l", "U2：Lambda 錨定總額＝86 × 比例", "$B", only25(f"={D.fill(U2_TOTAL)}*«u2_share_l@$»"), "")
+    for zh, ck, ex in PARTNER_X:
+        e = D.fill(ex)
+        K.add(f"pg_{ck}", f"模型 ÷ S-1 草稿 − 1：{zh}（模型＝第十一節合約總額）", "比例", only25(f"=(«tot_{ck}@$»-({e}))/({e})"), "逐家對帳補列（U3）")
+        K.add(f"an_k_{ck}", f"錨定係數：{zh}＝S-1 草稿金額 ÷ 模型合約總額", "倍", only25(f"=({e})/«tot_{ck}@$»"), "敏感度（錨定）用")
+
+    K.section("十七、U3 承諾總額三口徑並列（草擬 S-1，WSJ 轉述）：雲端付款義務約 450、已鎖定 >600（含 Broadcom 租賃）、含談判中約 750；|差距| > 門檻 → Checks WARN")
+    K.add("u3_cloud", "模型：雲端付款義務口徑＝全部新合約加總 − Broadcom 租賃（Cost 第十一節）", "$B", only25("=«tot_all@$»-«tot_broadcom@$»"),
+          "雲端算力合約（Google、AWS、Azure、SpaceX、AMD、Nscale、Lambda、Volta、Akamai）；不含 Broadcom 設備租賃、Fluidstack 自建、機房租約")
+    K.add("u3_cloud_rep", "報導：雲端運算付款義務（約；未來 7–10 年，多數不可取消）", "$B", only25(f"={S('cmp_s1_cloud_total_450')}"), "SRC（Interested-party）")
+    K.add("u3_cloud_gap", "模型 ÷ 報導 − 1（雲端付款義務口徑）", "比例", only25("=(«u3_cloud@$»-«u3_cloud_rep@$»)/«u3_cloud_rep@$»"), "", name="COST_CommitGapCloud", name_cols="D")
+    K.add("u3_locked", "模型：已鎖定口徑＝全部新合約加總（含 Broadcom 租賃）", "$B", only25("=«tot_all@$»"), "")
+    K.add("u3_locked_rep", "報導：已鎖定承諾（>600；下限）", "$B", only25(f"={S('cmp_s1_locked_600')}"), "SRC（Interested-party）；已含雲端 450 ＋ Broadcom >160 之類")
+    K.add("u3_locked_gap", "模型 ÷ 報導 − 1（已鎖定口徑）", "比例", only25("=(«u3_locked@$»-«u3_locked_rep@$»)/«u3_locked_rep@$»"), "", name="COST_CommitGapLocked", name_cols="D")
+    K.add("u3_all", "模型：含談判中口徑＝已鎖定口徑 ＋ 談判中新協議（U6 情境金額）", "$B", only25("=«u3_locked@$»+«n_amt@$»"), "")
+    K.add("u3_all_rep", "報導：全數成交後的潛在承諾總額（約）", "$B", only25(f"={S('cmp_s1_total_750')}"), "SRC（Interested-party）")
+    K.add("u3_all_gap", "模型 ÷ 報導 − 1（含談判中口徑）", "比例", only25("=(«u3_all@$»-«u3_all_rep@$»)/«u3_all_rep@$»"), "", name="COST_CommitGapAll", name_cols="D")
+    K.add("u3_big4", "報導逐家可辨識：Google＋AWS＋Microsoft＋Nscale/Lambda 合計", "$B",
+          only25(f"={S('cmp_s1_google_111')}+{S('cmp_s1_aws_110')}+{S('cmp_s1_msft_31')}+{S('cmp_s1_nscale_lambda_86')}"), "111＋110＋31＋86")
+    K.add("u3_resid_rep", "報導隱含：雲端義務 450 − 逐家可辨識合計＝其他雲端義務（報導未點名）", "$B", only25("=«u3_cloud_rep@$»-«u3_big4@$»"),
+          "Derived 殘差：可能含 SpaceX／xAI、AMD、Volta、Akamai 等（推論，報導未列）")
+    K.add("u3_resid_model", "模型：SpaceX＋AMD＋Volta＋Akamai 合約總額", "$B", only25("=«tot_spacex@$»+«tot_amd@$»+«tot_volta@$»+«tot_akamai@$»"), "")
+    K.add("u3_resid_gap", "模型 ÷ 報導隱含殘差 − 1", "比例", only25("=(«u3_resid_model@$»-«u3_resid_rep@$»)/«u3_resid_rep@$»"), "只對照")
+    K.add("u3_bcm_rep", "報導隱含：已鎖定 − 雲端義務＝Broadcom 及其他非雲端義務", "$B", only25("=«u3_locked_rep@$»-«u3_cloud_rep@$»"), "對照報導 Broadcom >160（SRC）")
+
+    K.section("十八、U4 2026 算力支出對照（報導 vs 模型；不校準）：上半年實際近 9、Q3 隱含＝Q3 營收 ÷ 1.70；差距 > 門檻 → WARN")
+    K.add("u4_h1", "報導：2026 上半年算力與基礎設施支出（近 9）", "$B", only26(f"={S('cmp_s1_spend_2026_h1')}"), "SRC（Interested-party；口徑未明）")
+    K.add("u4_q3", "報導隱含：2026 Q3＝Q3 營收 ÷ 每 $1 算力支出的營收", "$B", only26(f"={S('cmp_s1_spend_2026_q3_derived')}"), "SRC Derived（公式）")
+    K.add("u4_q4", "外推：2026 Q4＝Q3 營收 ×（1＋Q4 成長，Inputs，U1 同一假設）÷ 同一比率", "$B",
+          only26(f"={S('rev_2026_q3')}*(1+{I('q4_growth')})/{S('rev_per_compute_2026_q3')}"), "假設算力占營收比持平")
+    K.add("u4_fy", "報導口徑外推：2026 全年算力與基礎設施支出＝上半年＋Q3＋Q4", "$B", only26("=«u4_h1»+«u4_q3»+«u4_q4»"), "")
+    K.add("u4_pay", "模型：2026 合約實付", "$B", only26("=«pay»"), "COST_ContractPay")
+    K.add("u4_cc", "模型：2026 算力成本（含自建資本支出）", "$B", only26("=«cc»"), "COST_Compute")
+    K.add("u4_own", "　其中自建資本支出（Fluidstack 均攤）", "$B", only26("=«own»"),
+          "是否與報導的『算力與基礎設施支出』同口徑未明：報導像損益費用（對照 1.70 營收比），自建資本支出是現金資本支出，折舊才進損益 → 以合約實付為主對照")
+    K.add("u4_gap_pay", "模型合約實付 ÷ 報導外推全年 − 1（|差距| > 門檻 → WARN）", "比例", only26("=(«u4_pay»-«u4_fy»)/«u4_fy»"), "", name="COST_SpendGap2026Pay", name_cols="E")
+    K.add("u4_gap_cc", "模型算力成本（含自建）÷ 報導外推全年 − 1（|差距| > 門檻 → WARN）", "比例", only26("=(«u4_cc»-«u4_fy»)/«u4_fy»"), "", name="COST_SpendGap2026Cc", name_cols="E")
+    K.add("u4_h1m", "對照：模型 2026 合約實付 × 上半年月數 ÷ 12 ÷ 報導上半年 − 1", "比例", only26(f"=(«pay»*{I('h2_months')}/{months}-«u4_h1»)/«u4_h1»"),
+          "年內爬坡，上半年應低於全年一半（同第二節 h1_26m）")
+
+    K.section("十九、U5 D22 對照加 Q3：調整後營業利益率 11%；隱含非算力成本（承 v0.1 A4-17 的 Q2 版）")
+    K.add("u5_q3m", "報導：2026 Q3 調整後營業利益率", "比例", only26(f"={S('adj_opmargin_2026_q3')}"), "SRC（Interested-party；第二個獲利季）", name="COST_AdjOIMRep2026Q3", name_cols="E")
+    K.add("u5_q2m", "報導：2026 Q2（預測 0.559 ÷ 10.9；v0.1 對照）", "比例", only26("=«adj_rep»"), "")
+    K.add("u5_gapm", "模型 2026 全年調整後營業利益率 − Q3 報導（百分點）", "比例", only26("=«adj_oim»-«u5_q3m»"), "全年 vs 單季；只對照、不校準", name="COST_AdjOIMGapQ3", name_cols="E")
+    K.add("u5_comp", "報導隱含：Q3 算力占營收＝Q3 隱含算力支出 ÷ Q3 營收", "比例", only26(f"={S('cmp_s1_spend_2026_q3_derived')}/{S('rev_2026_q3')}"), "＝1 ÷ 1.70")
+    K.add("u5_nc", "報導隱含：Q3 非算力費用（含平台抽成，不含股權報酬）＝Q3 營收 ×（1 − 算力占比 − 調整後營業利益率）", "$B",
+          only26(f"={S('rev_2026_q3')}*(1-«u5_comp»-«u5_q3m»)"), "")
+    K.add("u5_ann", "年化（× 季數）", "$B", only26(f"=«u5_nc»*{qpy}"), "Q3 單季年化；2026 上半年營收較低，年化偏高 → 另列營收比例法")
+    K.add("u5_under", "隱含低估（Q3 年化法）＝年化 − 模型 2026 非算力（不含股權報酬）＋平台抽成", "$B", only26("=«u5_ann»-«d22_model»"),
+          "正＝模型 2026 非算力成本偏低；對照 v0.1 的 Q2 版 COST_D22Under", name="COST_D22UnderQ3", name_cols="E")
+    K.add("u5_ratio", "報導隱含 Q3 非算力費用占營收", "比例", only26(f"=«u5_nc»/{S('rev_2026_q3')}"), "")
+    K.add("u5_mratio", "模型 2026 非算力（不含股權報酬）＋平台抽成 占營收總額", "比例", only26("=«d22_model»/«R:gross»"), "")
+    K.add("u5_under2", "隱含低估（營收比例法）＝（報導比例 − 模型比例）× 模型 2026 營收總額", "$B", only26("=(«u5_ratio»-«u5_mratio»)*«R:gross»"),
+          "避免單季年化高估全年（2026 營收逐季上升）；與 Q3 年化法形成區間", name="COST_D22UnderQ3Ratio", name_cols="E")
+
+    K.section("二十、U6 情境：談判中新算力協議（最高約 $150B；基準仍只計已簽合約，D16 精神）。GW＝金額 ÷ 期間 ÷ 合約價（VR200 族），起始年起沿用 A3 爬坡")
+    r_, k2 = I("ramp_years"), I("arith_k2")
+    K.add("n_amt", "談判中新協議金額（最高約；SRC）", "$B", only25(f"={S('cmp_s1_negotiating_150')}"), "未簽約；全數成交＝已鎖定 >600 ＋ 本列 ≈ 750")
+    K.add("n_s", "起始年（Inputs，Assumed）", "年", only25(f"={I('neg_start_year')}"), "")
+    K.add("n_t", "付款期間（年；Inputs，Assumed 7，5–10）", "年", only25(f"={I('neg_term_years')}"), "")
+    K.add("n_w", "Σ 爬坡權重＝（2n − r ＋ 1）÷ 2", "倍", only25(f"=(({'«n_t@$»'}+{'«n_t@$»'})-{r_}+1)/{k2}"), "需期間 ≥ 爬坡年數（Checks）")
+    K.add("n_pay", "新協議付款（情境）", "$B",
+          lambda i, c: f"=«n_amt@$»/«n_w@$»*MIN({r_},{c}$6-«n_s@$»+1)/{r_}*({c}$6>=«n_s@$»)*({c}$6<«n_s@$»+«n_t@$»)", "金額 ÷ Σ 權重 × 當年權重（同金額型合約）",
+          name="COST_NegPay")
+    K.add("n_gw", "新增供給 GW（情境）＝付款 ÷ VR200 族合約價", "GW", lambda i, c: "=«n_pay»/«C:price_vr200»", "D10：GW＝金額 ÷ 合約價；2028 起新簽 → VR200 世代（Decision）", name="CMP_NegGW")
+    K.add("n_sup", "供給 GW（含新協議）", "GW", lambda i, c: "=«C:sup»+«n_gw»", "")
+    K.add("n_vr", "供給 VR 等值 GW（含新協議）", "GW", lambda i, c: "=«C:vr_sup»+«n_gw»*«C:vrf_vr200»", "")
+    K.add("n_cap", "容量上限係數（含新協議）", "倍",
+          lambda i, c: f"=IF({c}$6<={capfix},«C:vr_unit@$»,MIN(«n_sup»*(1-{idle})*(1-{mintr}),«C:eff»)/«C:eff»)", "有效推論 GW 不變；基準容量未受限時，新增供給不增加營收")
+    K.add("n_rev", "營收淨額（含新協議；截頂後）", "$B", lambda i, c: "=«R:net»*«n_cap»", "")
+    K.add("n_cc", "算力成本（含新協議）", "$B", lambda i, c: "=«cc»+«n_pay»", "", name="COST_ComputeNeg")
+    K.add("n_gap_b", "差額（含股權報酬；含新協議）", "$B", lambda i, c: "=«n_rev»-«n_cc»-«ncx»-«sbc»", "")
+    K.add("n_gap_vr", "每 VR 等值 GW 差額（含股權報酬；含新協議）", "$B/GW/年", lambda i, c: "=«n_gap_b»/«n_vr»", "", name="COST_PropGap_VR_Neg")
+    K.add("n_dgap", "差：含新協議 − 基準（每 VR 等值 GW 差額）", "$B/GW/年", lambda i, c: "=«n_gap_vr»-«p_gap_vr»", "")
+    K.add("n_cov", "覆蓋率（含新協議）＝營收淨額 ÷ 全成本（含股權報酬）", "倍", lambda i, c: "=«n_rev»/(«n_cc»+«ncx»+«sbc»)", "", name="COST_Coverage_Neg")
+    K.add("n_fcf", "自由現金流（含新協議）", "$B", lambda i, c: "=«n_rev»-«n_cc»-«ncx»", "Funding 情境 S8")
 
     # ═════════════════════ Funding ═════════════════════
     F = Sheet(wb, "Funding", "F", "F", years,
@@ -184,7 +279,7 @@ def build(ctx):
           name="FND_CashNoExtTrough", name_cols="D")
     F.add("s_noext_first", "只靠已到位融資：首次低於最低現金年", "年", only25('=IF(COUNT(«noext_y@R»),MIN(«noext_y@R»),"無")'), "")
 
-    F.section("五、情境（同一規則；基準開關不影響情境列）：S1 IPO、S2 條件式、S3 全部、S4 逐家錨定招股書、S5 機房租金、S6 D22 非算力補足、S7 S4＋S5＋S6 合併")
+    F.section("五、情境（同一規則；基準開關不影響情境列）：S1 IPO、S2 條件式、S3 全部、S4 逐家錨定招股書／S-1 草稿、S5 機房租金、S6 D22 非算力補足、S7 S4＋S5＋S6 合併、S8 談判中新協議（U6）")
     mn = "«min»"
     waterfall(F, "s1", "S1：＋IPO 約 $100B", "«fcf»", lambda i, c: "«committed»+«c_ipo»", cash25, mn, dict(cum="FND_ExtNeedCumIPO", end="FND_CashEndIPO"))
     waterfall(F, "s2", "S2：＋條件式（Amazon、Google、NVIDIA、AMD）", "«fcf»", lambda i, c: "«committed»+«c_amzn»+«c_googl»+«c_nvda»+«c_amd»", cash25, mn,
@@ -236,6 +331,18 @@ def build(ctx):
           ["=" + "+".join(f"«rt_{k}@D»" for k in tk), "=" + "+".join(f"«rt_{k}@E»" for k in tk), "=" + "+".join(f"«rt_{k}@F»" for k in tk),
            "=" + "+".join(f"«rt_{k}@G»" for k in tk if k != "nvda"), "=«rt_tot@D»/«rt_tot@G»", "=(«rt_tot@D»+«rt_tot@E»)/«rt_tot@F»"],
           "已到位策略投資 ÷ 對同一方 2026–2030 付款", name="FND_RoundTrip", name_cols="DI")
+
+    F.section("八、v0.1.1：U7 2026 上半年非現金費用列示（列放在本節，使既有列編號不變）")
+    F.add("nc26", "U7（v0.1.1）：2026 上半年淨損中約 72 為可轉換票據等融資工具重估的非現金費用（不進現金流；只列示）", "$B", only26(f"={S('fin_noncash_2026_h1_s1')}"),
+          "SRC（草擬 S-1，WSJ 轉述；Interested-party）；與 D21 同一處理：Funding 一律用現金口徑")
+    F.add("nl26", "對照：2026 上半年淨損（草擬 S-1）", "$B", only26(f"={S('fin_netloss_2026_h1_s1')}"), "SRC")
+    F.add("nl26r", "　淨損扣除非現金費用後的餘額（含股權報酬等；現金性約數）", "$B", only26("=«nl26»-«nc26»"), "只列示；模型 2026 全年自由現金流見上列 E 欄")
+    F.add("nl26s", "　非現金費用占淨損", "比例", only26("=«nc26»/«nl26»"), "")
+
+    F.section("九、情境 S8：談判中新協議約 $150B 全數成交（U6；列放在本節，使既有列編號不變）。同一規則：基準股權流入、營收不因新增供給增加")
+    waterfall(F, "s8", "S8：談判中新協議約 $150B 全數成交（U6）", "«K:n_fcf»", lambda i, c: "«eq»", cash25, "«min»", dict(cum="FND_ExtNeedCumNeg", end="FND_CashEndNeg"),
+              "Cost 第二十節（新增付款；營收不因新增供給增加）")
+
 
     # ═════════════════════ Reverse ═════════════════════
     X = Sheet(wb, "Reverse", "X", "X", years,
@@ -300,7 +407,7 @@ def build(ctx):
 
 def checks(ctx):
     D = ctx.D
-    I = D.I
+    I, S = D.I, D.S
     F, X, K = ctx.P["a4"]["F"], ctx.P["a4"]["X"], ctx.P["a3"]["K"]
     yr = lambda sh, key, a="D": f"{sh.name}!${a}${sh.rows[key]}:$I${sh.rows[key]}"  # noqa: E731
     mx = lambda sh, key, a="D": f"=MAX(MAX({yr(sh, key, a)}),-MIN({yr(sh, key, a)}))"  # noqa: E731
@@ -313,7 +420,7 @@ def checks(ctx):
         ("a4_cum", "累計外部資金需求 2030 − Σ 當年需求", f"={d(F, 'cum', 'I')}-SUM({yr(F, 'ext', 'E')})", 0, "tol", ""),
         ("a4_rvs_iso", "Reverse 被基準頁引用的公式格數（builder 掃描）", ctx.scan["rvs_refs"], 0, "eq", "D19：只作對照、不回饋；tests 每次重驗（test_reverse_not_fed_back）"),
         ("a4_partner", "逐家合約總額：模型 ÷ 招股書 − 1 的最大 |差距|（WARN）", "=COST_PartnerGapMax", I("partner_warn_threshold"), "warn",
-         "chat 端 A3 審查：AMD 模型 77.8 vs 20、SpaceX 45 vs 84.5、Broadcom 125.2 vs 161.2；基準不改（D10），見 Cost 第十三節錨定敏感度"),
+         "U3：逐家改對照草擬 S-1（WSJ 轉述）；AMD 模型 77.8 vs 20、SpaceX 45 vs 84.5（沿用 v0.1 招股書列）、Broadcom 125.2 vs 160；基準不改（D10），見 Cost 第十三節錨定敏感度"),
         ("a4_committed", "結果：2026 已到位融資（$B）", f"={d(F, 'committed', 'E')}", None, "info", "Series G 30＋Amazon G 5＋Series H 65"),
         ("a4_first", "結果：首次缺口年", "=FND_FirstGapYear", None, "info", "命題 2"),
         ("a4_peak", "結果：單年外部資金需求峰值（$B）", "=FND_ExtNeedPeak", None, "info", ""),
@@ -328,6 +435,30 @@ def checks(ctx):
         ("a4_raised", "對照：已知各輪加總 − 招股書私募累計下限 $125B", f"={d(F, 'raised', 'E')}-{d(F, 'raised')}", None, "info", "不含 2023 年以前各輪"),
         ("a4_rvs_cum30", "Reverse：2030 反向累計外部資金需求（$B）", "=INDEX(RVS_ExtNeedCum,1,6)", None, "info", "管理層目標營收＋同一支出"),
         ("a4_rvs_m29", "Reverse：2029 兩線等比例所需倍數", "=INDEX(RVS_MultProp,1,5)", None, "info", "< 1＝管理層目標低於正向"),
+        # ── v0.1.1（工作單 20261021）
+        ("b1_u1_target", "U1：2026 營收基準（上半年實際＋Q3 實際＋Q4；開關 0＝v0.1）（$B）", "=INDEX(REV_Target,1,2)", None, "info", "D15 r2；基準 16.3＋16.8＋16.8＝49.9"),
+        ("b1_u1_q12", "U1 對照：Q1＋Q2 實際（4.73＋11.6）− 草擬 S-1 上半年 16.3（$B；四捨五入差）",
+         f"={S('rev_2026_q1')}+{S('rev_2026_q2_actual')}-{S('rev_2026_h1_s1')}", None, "info", "兩份來源互相核對：差 0.03 屬進位"),
+        ("b1_u1_q2diff", "U1 對照：Q2 實際 11.6（Implicator）− Euronews 11.5（$B）", f"={S('rev_2026_q2_actual')}-{S('rev_2026_q2_euronews')}", None, "info", "兩個報導值並列登錄，校準採 11.6"),
+        ("b1_u2_sum", "U2：Nscale＋Lambda 模型合約總額 − 草擬 S-1『最高 86』（開關 1 時應為 0；$B）",
+         f"={I('u2_switch')}*(Cost!$D${K.rows['tot_nscale']}+Cost!$D${K.rows['tot_lambda']}-{S('cmp_s1_nscale_lambda_86')})",
+         0, "tol", "工作單 U2：兩約合計錨定 86"),
+        ("b1_u2_gwn", "U2：Nscale 模型峰值 GW ÷ 揭露 460 MW", "=CMP_U2GWRatio_Nscale", None, "info", "D10：GW 由金額回推並與揭露對照（不校準）"),
+        ("b1_u2_gwl", "U2：Lambda 模型峰值 GW ÷ 揭露 350 MW", "=CMP_U2GWRatio_Lambda", None, "info", ""),
+        ("b1_u3_cloud", "U3：模型 ÷ 報導 − 1：雲端付款義務口徑（約 450；|差距| > 25% → WARN）", "=COST_CommitGapCloud", I("commit_warn_threshold"), "warn", "模型＝全部新合約 − Broadcom 租賃"),
+        ("b1_u3_locked", "U3：模型 ÷ 報導 − 1：已鎖定口徑（>600；WARN）", "=COST_CommitGapLocked", I("commit_warn_threshold"), "warn", "模型＝全部新合約（含 Broadcom）"),
+        ("b1_u3_all", "U3：模型 ÷ 報導 − 1：含談判中口徑（約 750；WARN）", "=COST_CommitGapAll", I("commit_warn_threshold"), "warn", "模型＝已鎖定口徑 ＋ 談判中 150"),
+        ("b1_u4_pay", "U4：2026 模型合約實付 ÷ 報導外推全年算力支出 − 1（|差距| > 25% → WARN；不校準）", "=COST_SpendGap2026Pay", I("spend_warn_threshold"), "warn",
+         "報導：上半年近 9＋Q3 隱含（營收 ÷ 1.70）＋Q4 同 Q3"),
+        ("b1_u4_cc", "U4：2026 模型算力成本（含自建資本支出）÷ 報導外推全年 − 1（WARN）", "=COST_SpendGap2026Cc", I("spend_warn_threshold"), "warn",
+         "自建資本支出 16.7 是現金資本支出，與報導『算力與基礎設施支出』是否同口徑未明"),
+        ("b1_u5_m", "U5：模型 2026 全年調整後營業利益率 − Q3 報導 11%（百分點）", "=COST_AdjOIMGapQ3", None, "info", "D22 對照，不校準"),
+        ("b1_u5_under", "U5：2026 非算力成本隱含低估（Q3 年化法，$B；v0.1 Q2 版見 a4_d22）", "=COST_D22UnderQ3", None, "info", "承 v0.1 A4-17"),
+        ("b1_u5_under2", "U5：2026 非算力成本隱含低估（營收比例法，$B）", "=COST_D22UnderQ3Ratio", None, "info", "與年化法形成區間"),
+        ("b1_u6_term", "U6：談判中協議付款期間 < 爬坡年數（Σ 權重公式需 n ≥ r）", f"=IF({I('neg_term_years')}<{I('ramp_years')},1,0)", 0, "eq", ""),
+        ("b1_u6_gap30", "U6：含談判中 $150B 的 2030 每 VR 等值 GW 差額（$B/GW/年）", "=INDEX(COST_PropGap_VR_Neg,1,6)", None, "info", "基準 a3_gap30"),
+        ("b1_u6_cum", "U6：含談判中 $150B 的 2030 累計外部資金需求（$B）", f"={d(F, 's8_cum', 'I')}", None, "info", "基準 a4_cum30"),
+        ("b1_u7_nc", "U7：2026 上半年淨損中非現金費用（不進現金流；$B）", f"={d(F, 'nc26', 'E')}", None, "info", "D21 同一處理"),
         ("a4_oai_cum", "OpenAI 並排：2030 累計外部資金需求 Anthropic − OpenAI（$B）", f"={d(F, 'cum', 'I')}-INDEX(OAI_FND_ExtNeedCum,1,6)", None, "info", "OAI_Link（D20）"),
         ("a4_oai_cash", "OpenAI 並排：2030 年底現金 Anthropic − OpenAI（$B）", f"={d(F, 'end', 'I')}-INDEX(OAI_FND_CashEnd,1,6)", None, "info", ""),
     ]
