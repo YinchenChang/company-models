@@ -10,7 +10,7 @@
 | `oracle/` | Oracle（ORCL） | `nebius/` @ `642d144`（CRWV v4.5＋Nebius v0.1b） | v0.1 |
 | `minimax/` | MiniMax（00100.HK） | 比照 `openai/` v0.6 結構（MW 主軸、TK v5.24）；獨立的 Python→Excel 產生器 | v0.1 |
 | `zhipu/` | 智譜（智譜華章，02513.HK） | `openai/` v0.6（`claude/openai-s6-release` @ `e91df57`）的架構；骨架經 Anthropic A0 | v0.1（r2） |
-| `anthropic/` | Anthropic（未上市） | `openai/`（v0.6，`claude/openai-s6-release` @ `e91df57`）的架構與工具鏈 | v0.1（成品：`anthropic/dist/20261008_Anthropic收支模型_v0_1.html`／`.xlsx`；PR #22 待合併） |
+| `anthropic/` | Anthropic（未上市） | `openai/`（v0.6，`claude/openai-s6-release` @ `e91df57`）的架構與工具鏈 | v0.1.1（成品：`anthropic/dist/20261021_Anthropic收支模型_v0_1_1.html`／`.xlsx`） |
 | `whitefiber/` | WhiteFiber（WYFI） | `oracle/` @ `e4540c3`（Oracle v0.2 分支） | v0.1 |
 | `amazon/` | Amazon（AMZN） | `oracle/`（v0.2）→ MAG 共用引擎（Amazon v0.1b；共用文件見 `mag/`） | v0.2（Tokenomics v5.31） |
 | `alphabet/` | Alphabet（GOOGL） | `oracle/`（v0.2）→ 套用 Amazon 引擎（amazon@`41f9a54`，v0.2） | v0.2 |
