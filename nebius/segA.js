@@ -20,6 +20,7 @@ var PERIODS = COMPANY_DATA.periods,
   SC_ACC = Object.fromEntries([`low`, `base`, `high`].map(k => [k, PERIOD_YEARS.reduce((a, L, i) => (a.push(Math.min(SC_MWP.contracted[k][i], i === 0 ? SC_MWP.connectedStart : a[i - 1] + SC_MWP.pace[k] * L)), a), [])])),
   KSPEC_DONE = kSpecApplyQ(), // v0.4a（自 CoreWeave W6 r1）：k 規格（證據價格 ÷ 目前快照）在引用前解成數字（錨改變時 k 跟著重算；kspec.py 同算式）
   PMW_REVQ = ((COMPANY_DATA.methodology || {}).perMw || {}).revenue || `legacy`, // v0.2a：每 MW 收入方法（tkAnchor＝Tokenomics 錨 × k；legacy＝scenarios.revMW）
+  REVCAP_LAYERS_Q = [`100`, `Util`, `Prod`, `Life`], REVCAP_LAYER_Q = COMPANY_DATA.methodology.checks.revCapLayer || `Util`, // v0.4a（自 CoreWeave W9）：Tokenomics IFW_RevGWFleet_* 四層瀑布；比較層讀 company.json → methodology.checks.revCapLayer（未設＝Util）
   PMW_CAPEXQ = ((COMPANY_DATA.methodology || {}).perMw || {}).capex || `legacy`, // v0.4a：每 MW 建置成本方法（tokenomics＝Σ 新增世代占比 × IF_CapexTotal；legacy＝scenarios.capexTemplate.costMW）
   REVSRCQ = PMW_REVQ === `tkAnchor` ? `Tokenomics 錨 × 定價倍數 k` : `Tokenomics 正向推導`, // v0.2a：畫面文字的每 MW 收入來源（legacy 時與 v0.2 相同）
   SC_REV = PMW_REVQ === `tkAnchor` ? Object.fromEntries([`low`, `base`, `high`].map(k => [k, tkAnchorQ(k).rev])) : COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境；v0.2a：tkAnchor 時＝錨 × k（價格軸基準），容量情境與價格脫鉤
@@ -94,16 +95,16 @@ function tkAnchorQ(sc, o = {}) { // v0.2a：每 MW 年收入＝Tokenomics 錨 ×
   let AM = COMPANY_DATA.pricing.anchorMultiple, FL = COMPANY_DATA.fleet, G = FL.generations, TK = COMPANY_DATA.tkSnap, P = COMPANY_DATA.scenarios.mwPath,
     br = COMPANY_DATA.scenarios.billableRatio.ratio, px = o.px || `base`, cs = o.tkCase || `基準`, lsk = o.ls || `mw`, nm = o.newMix || FL.newMix,
     ref = side => AM.evidence.find(x => x.label === AM[side].refEvidence), rr = x => cs === `基準` ? 1 : TK[x.tkName][x.gen][`基準`] / TK[x.tkName][x.gen][cs], // k＝價格 ÷ 同成本情境持有成本：非基準成本情境以證據世代的成本比例重算（價格是事實；比照 CoreWeave W4 r2）
-    kL = (o.kLong ?? AM.long[px]) * rr(ref(`long`)), kS = (o.kSpot ?? AM.spot[px]) * rr(ref(`spot`)), od = o.od ?? AM.onDemandShare.base, acc = [], R = { start: [], end: [], add: [], avg: [], anchor: [], longMw: [], ls: [], k: [], rev: [], capRef: [], capRatio: [], share: {}, kL, kS, od },
+    kL = (o.kLong ?? AM.long[px]) * rr(ref(`long`)), kS = (o.kSpot ?? AM.spot[px]) * rr(ref(`spot`)), od = o.od ?? AM.onDemandShare.base, acc = [], R = { start: [], end: [], add: [], avg: [], anchor: [], longMw: [], ls: [], k: [], rev: [], capRef: [], capRatio: [], capLay: Object.fromEntries(REVCAP_LAYERS_Q.map(L => [L, []])), capRL: Object.fromEntries(REVCAP_LAYERS_Q.map(L => [L, []])), share: {}, kL, kS, od },
     prevT = COMPANY_DATA.priceCheck.inServiceMw, prev = {};
   G.forEach(g => { prev[g] = prevT * (FL.openMix.mix[g] || 0); R.share[g] = [] });
   for (let t = 0; t < 5; t++) {
     acc.push(Math.min(P.contracted[sc][t], t === 0 ? P.connectedStart : acc[t - 1] + P.pace[sc] * PERIOD_YEARS[t]));
-    let end = acc[t] * br[t], add = Math.max(0, end - prevT), cur = {}, tot = prevT + end, A = 0, cap = 0;
-    G.forEach(g => { cur[g] = prev[g] + add * (nm[t][g] || 0); let sh = (prev[g] + cur[g]) / tot; R.share[g].push(sh); A += sh * TK.IF_HoldEcon[g][cs]; cap += sh * TK.IF_RevGWFleet[g][cs] });
-    A /= 1e3; cap /= 1e3;
+    let end = acc[t] * br[t], add = Math.max(0, end - prevT), cur = {}, tot = prevT + end, A = 0, cap = 0, lay = Object.fromEntries(REVCAP_LAYERS_Q.map(L => [L, 0]));
+    G.forEach(g => { cur[g] = prev[g] + add * (nm[t][g] || 0); let sh = (prev[g] + cur[g]) / tot; R.share[g].push(sh); A += sh * TK.IF_HoldEcon[g][cs]; cap += sh * TK.IF_RevGWFleet[g][cs]; REVCAP_LAYERS_Q.forEach(L => lay[L] += sh * TK[`IFW_RevGWFleet_${L}`][g][cs]) });
+    A /= 1e3; cap /= 1e3; REVCAP_LAYERS_Q.forEach(L => lay[L] /= 1e3);
     let avg = tot / 2, lm = AM.longShare.contracts.reduce((a, c) => a + (c.start <= t ? c[lsk] : 0), 0), s = Math.min(1, lm / avg), k = od * kS + (1 - od) * kL; // 第 2 輪（W4 r2）：k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約；長約占比 s 只作對照
-    R.start.push(prevT); R.end.push(end); R.add.push(add); R.avg.push(avg); R.anchor.push(A); R.longMw.push(lm); R.ls.push(s); R.k.push(k); R.rev.push(A * k); R.capRef.push(cap); R.capRatio.push(A * k / cap);
+    R.start.push(prevT); R.end.push(end); R.add.push(add); R.avg.push(avg); R.anchor.push(A); R.longMw.push(lm); R.ls.push(s); R.k.push(k); R.rev.push(A * k); R.capRef.push(cap); REVCAP_LAYERS_Q.forEach(L => { R.capLay[L].push(lay[L]); R.capRL[L].push(A * k / lay[L]) }); R.capRatio.push(A * k / lay[REVCAP_LAYER_Q]); // v0.4a：capRatio 取比較層（四層明細在 capLay／capRL；capRef＝IF_RevGWFleet 對照）
     prev = cur; prevT = end
   }
   return R
@@ -549,13 +550,13 @@ function runFunding(e) {
   });
   if (PMW_REVQ === `tkAnchor`) { // v0.2a：收入上限檢查（Excel「檢查_連動」同一列；門檻 company.json → methodology.checks.revCapShareMax）
     let sc = [`low`, `base`, `high`].includes(e.scenario) ? e.scenario : `base`, A = tkAnchorQ(sc),
-      rq = A.capRef.map((c, r) => t.revMW[r] * (e.revScale ?? 1) * (t.util[r] / 100) / c), mx = Math.max(...rq), th = CHECK_TH.revCapShareMax;
+      rq = A.capLay[REVCAP_LAYER_Q].map((c, r) => t.revMW[r] * (e.revScale ?? 1) * (t.util[r] / 100) / c), mx = Math.max(...rq), th = CHECK_TH.revCapShareMax;
     _({
       id: `rev-cap`,
       ok: mx <= th,
       severity: mx <= th ? `ok` : `watch`,
-      title: `收入上限：每 MW 計費收入 ÷ 客戶付費 token 營收 最高 ${Math.round(mx * 100)}%（門檻 ${Math.round(th * 100)}%）`,
-      detail: `neocloud 拿走客戶 token 營收的比例＝每 MW 計費收入 ÷ Tokenomics IF_RevGWFleet（客戶每 MW 付費 token 營收的理想上限，依在役世代加權）。各期：${PERIODS.map((n, r) => `${n} ${Math.round(rq[r] * 100)}%`).join(`、`)}。超過門檻代表單價相對客戶端 token 經濟性偏高（Hopper 世代的 token 營收低，早期比例偏高）；只警示，不改數字。`
+      title: `收入上限：每 MW 計費收入 ÷ 客戶付費 token 營收（比較層 _${REVCAP_LAYER_Q}） 最高 ${Math.round(mx * 100)}%（門檻 ${Math.round(th * 100)}%）`,
+      detail: `neocloud 拿走客戶 token 營收的比例＝每 MW 計費收入 ÷ Tokenomics IFW_RevGWFleet_${REVCAP_LAYER_Q}（四層瀑布的比較層：_Prod 已扣 SLO 下的產能折減，最接近可實際售出 token；客戶每 MW 付費 token 營收的上限，依在役世代加權）。四層（FY26）：${REVCAP_LAYERS_Q.map(L => `_${L} ${Math.round(t.revMW[0] * (e.revScale ?? 1) * (t.util[0] / 100) / A.capLay[L][0] * 100)}%`).join(`、`)}。各期：${PERIODS.map((n, r) => `${n} ${Math.round(rq[r] * 100)}%`).join(`、`)}。超過門檻代表單價相對客戶端 token 經濟性偏高（Hopper 世代的 token 營收低，早期比例偏高）；只警示，不改數字。`
     })
   }
   for (let e = 0; e < 5; e++) t.billable[e] - t.accepted[e] > .5 && _({

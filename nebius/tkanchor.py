@@ -42,8 +42,10 @@ def compute(co, tk, sc, years, px='base', tkCase='基準', ls='mw', kLong=None, 
     odv = AM['onDemandShare']['base'] if od is None else od
     he = {g: tk['IF_HoldEcon']['values'][g][tkCase] for g in G}
     rf = {g: tk['IF_RevGWFleet']['values'][g][tkCase] for g in G}
+    LAYERS = ['100', 'Util', 'Prod', 'Life']; LAY = (co.get('methodology', {}).get('checks') or {}).get('revCapLayer', 'Util')  # v0.4a：四層瀑布（比較層 revCapLayer）
+    lv = {L: {g: tk[f'IFW_RevGWFleet_{L}']['values'][g][tkCase] for g in G} for L in LAYERS}
     R = {k: [] for k in ('start', 'end', 'add', 'avg', 'anchor', 'longMw', 'ls', 'k', 'rev', 'capRef', 'capRatio')}
-    R['share'] = {g: [] for g in G}; R['kL'] = kL; R['kS'] = kS
+    R['share'] = {g: [] for g in G}; R['kL'] = kL; R['kS'] = kS; R['capLay'] = {L: [] for L in LAYERS}; R['capRL'] = {L: [] for L in LAYERS}
     for t in range(5):
         add = max(0.0, end[t] - prevT)
         cur = {g: prev[g] + add * nm[t].get(g, 0) for g in G}
@@ -55,8 +57,10 @@ def compute(co, tk, sc, years, px='base', tkCase='基準', ls='mw', kLong=None, 
         s = min(1.0, lm / avg)
         k = odv * kS + (1 - odv) * kL  # 第 2 輪（W4 r2）：隨需占比；長約占比 s 只作對照
         cap = sum(sh[g] * rf[g] for g in G) / 1000
+        lay = {L: sum(sh[g] * lv[L][g] for g in G) / 1000 for L in LAYERS}
+        for L in LAYERS: R['capLay'][L].append(lay[L]); R['capRL'][L].append(A * k / lay[L])
         for key, v in (('start', prevT), ('end', end[t]), ('add', add), ('avg', avg), ('anchor', A), ('longMw', lm), ('ls', s), ('k', k),
-                       ('rev', A * k), ('capRef', cap), ('capRatio', A * k / cap)):
+                       ('rev', A * k), ('capRef', cap), ('capRatio', A * k / lay[LAY])):
             R[key].append(v)
         for g in G: R['share'][g].append(sh[g])
         prev, prevT = cur, end[t]

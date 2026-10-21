@@ -36,7 +36,10 @@ if (PMW_REVQ === 'tkAnchor') { // v0.2a：Tokenomics 錨 × k（Excel「每MW收
     cmp('長約占比 ' + k, W + '長約占比（對照，不驅動 k；MIN(1, 長約 MW ÷ 平均在役 MW)）', A.ls);
     cmp('k ' + k, W + '定價倍數 k（隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約）', A.k);
     cmp('錨×k ' + k, W + '每 MW 年收入（錨 × k，100% 計費時數）', A.rev.map(x => x * 1e3));
-    cmp('上限比 ' + k, W + '上限檢查｜每 MW 收入 ÷ 客戶付費 token 營收', A.capRatio); }
+    cmp('上限比 ' + k, W + '上限檢查｜每 MW 收入 ÷ 客戶付費 token 營收', A.capRatio); // v0.4a：比較層（revCapLayer）
+    for (const L of REVCAP_LAYERS_Q) { // v0.4a：四層瀑布每層一列（客戶每 MW 付費 token 營收、Nebius 每 MW 計費收入 ÷ 該層）
+      cmp('四層 token 營收 _' + L + ' ' + k, W + `上限檢查｜四層｜客戶每 MW 付費 token 營收｜_${L}（IFW_RevGWFleet_${L}，在役世代加權）`, A.capLay[L].map(x => x * 1e3));
+      cmp('四層比例 _' + L + ' ' + k, W + `上限檢查｜四層｜Nebius 每 MW 計費收入 ÷ _${L}`, A.capRL[L]); } }
   if (!AKX) { const TS = tkSensQ(DEFAULTS, VAL_DEFAULTS), lb = COMPANY_DATA.scenarios.labels[SC], K3 = ['low', 'base', 'high']; // v0.2a 步驟 5：快照＝引擎即時（tk_sens.json 未過期；快照為預設錨定年度，FY27 錨定測試不比）
     cmp('矩陣目標價 ' + SC, '每MW收入_錨定|矩陣｜加權目標價｜' + lb, K3.map(p => TS.matrix[SC][p].tgt));
     cmp('矩陣募資 ' + SC, '每MW收入_錨定|矩陣｜五期股權募資｜' + lb, K3.map(p => TS.matrix[SC][p].eq));

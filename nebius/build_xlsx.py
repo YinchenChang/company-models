@@ -10,6 +10,9 @@ import calendar_q as _calq  # v4.5：期間與日期由 company.json → calenda
 CO = _calq.load(_osrv.path.dirname(_osrv.path.abspath(__file__)))  # 公司資料單一來源（與 HTML 共用）
 import kspec as _kspec  # v0.4a（自 CoreWeave W6 r1）：k 的基準／區間／Nebius 自身合約＝證據價格 ÷ 目前快照；CO 原地換成數字，規格留在 KSPEC 供 Excel 寫活公式（須在其他讀取 k 的程式之前）
 KSPEC = _kspec.resolve(CO, _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), CO['tokenomics']['snapshotFile']), encoding='utf-8'))['items']) if CO.get('tokenomics') else {}
+REVCAP_LAYERS = ['100', 'Util', 'Prod', 'Life']  # v0.4a（自 CoreWeave W9）：Tokenomics IFW_RevGWFleet_* 四層瀑布（契約第 2 條：一起取）；比較層由 company.json → methodology.checks.revCapLayer 指定（預設 Util＝v0.3 原做法）
+REVCAP_LAYER = (CO.get('methodology', {}).get('checks') or {}).get('revCapLayer', 'Util')
+assert REVCAP_LAYER in REVCAP_LAYERS, f'methodology.checks.revCapLayer 只接受 {REVCAP_LAYERS}'
 CAL = CO['cal']
 PYEAR = [2000 + int(p[2:]) for p in CO['periods']]  # 5a：各期財年年份由日曆推算
 MW_Y0 = PYEAR[0] - 1  # 首期前一財年（期初主動電力）
@@ -716,6 +719,26 @@ if PMW_REV == 'tkAnchor':
         arow('nm_' + g, f"新增占比｜{g}", "%", [FLT['newMix'][i].get(g, 0) for i in range(5)], PCT, BLUE, FLT['newMixNote'] if g == GEN[0] else None); r += 1
     arow('idx', "期別序號（長約起始期比對用）", "", [0, 1, 2, 3, 4], NUM0, BLACK, "0＝首期"); r += 2
 
+    _TKI = _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), CO['tokenomics']['snapshotFile']), encoding='utf-8'))['items']
+    _USEQ = (_TKI.get('IFC_Use') or {}).get('values') or {}
+    _hasL = all(f'IFW_RevGWFleet_{L_}' in _TKI and not _TKI[f'IFW_RevGWFleet_{L_}'].get('missing') for L_ in REVCAP_LAYERS)
+    if _hasL:  # v0.4a（自 CoreWeave W9，契約第 2 條：四層一起取）：上限檢查用四層瀑布，各世代 × 層
+        r = section(ws, r, "B2｜上限檢查用四層瀑布（IFW_RevGWFleet_*，各世代；基準成本情境）")
+        for j, h in enumerate(["世代", "單位"] + [f"_{L_}" for L_ in REVCAP_LAYERS]):
+            c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+        c = ws.cell(row=r, column=9, value="說明／來源"); c.font = HEAD; c.fill = FILL_HEAD
+        r += 1
+        for g in GEN:
+            ws.cell(row=r, column=1, value=f"四層｜{g}").font = BLACK
+            ws.cell(row=r, column=2, value="US$m/MW").font = SMALL
+            for j, L_ in enumerate(REVCAP_LAYERS):
+                c = ws.cell(row=r, column=3 + j, value=f"=TK_RevGWFleet_{L_}_{_GCX[g]}"); c.font = GREEN; c.number_format = _MF; c.border = BOX
+            if g == GEN[0]:
+                ws.cell(row=r, column=9, value="四層＝_100 理論上限（100% 利用）→ _Util 扣技術利用率（＝IF_RevGWFleet）→ _Prod 再扣 SLO 下產能折減（門檻比較層）→ _Life 壽命期等值；用途限制（IFC_Use）：" +
+                        "；".join(sorted(set(_USEQ.get(f'IFW_RevGWFleet_{L_}', '—') for L_ in REVCAP_LAYERS)))).font = SMALL
+            AR['lay_' + g] = r; r += 1
+        r += 1
+
     r = section(ws, r, "C｜已揭露多年期合約（長約占比用；只換算 MW 占比，不用來推 k）")
     for j, h in enumerate(["合約", "單位", "MW（基準）", "起始期序號", "MW 下緣", "MW 上緣"]):
         c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
@@ -767,8 +790,16 @@ if PMW_REV == 'tkAnchor':
              "→『輸入與假設』A 區「每 MW 年收入｜" + lb + "」（÷ 1000）"); r += 1
         arow(P + 'cap', P + "上限檢查｜客戶每 MW 付費 token 營收（IF_RevGWFleet，在役世代加權）", "US$m/MW",
              ["=" + "+".join(f"{L}{AR[P + 's_' + g]}*$D${AR['gen_' + g]}" for g in GEN) for L in COLS], _MF); r += 1
-        arow(P + 'capR', P + "上限檢查｜每 MW 收入 ÷ 客戶付費 token 營收", "%", [f"={L}{AR[P + 'rev']}/{L}{AR[P + 'cap']}" for L in COLS], PCT,
-             note=f"neocloud 拿走客戶 token 營收的比例；> {CO['methodology']['checks']['revCapShareMax']:.0%} 時『檢查_連動』警示（門檻 methodology.checks.revCapShareMax）"); r += 1
+        if _hasL:  # v0.4a：四層。每層一列「客戶每 MW 付費 token 營收」與一列「Nebius 每 MW 計費收入 ÷ 該層」；門檻比較層＝company.json → methodology.checks.revCapLayer
+            for L_ in REVCAP_LAYERS:
+                arow(P + 'capL_' + L_, P + f"上限檢查｜四層｜客戶每 MW 付費 token 營收｜_{L_}（IFW_RevGWFleet_{L_}，在役世代加權）", "US$m/MW",
+                     ["=" + "+".join(f"{L}{AR[P + 's_' + g]}*${chr(ord('C') + REVCAP_LAYERS.index(L_))}${AR['lay_' + g]}" for g in GEN) for L in COLS], _MF); r += 1
+            for L_ in REVCAP_LAYERS:
+                arow(P + 'capRL_' + L_, P + f"上限檢查｜四層｜Nebius 每 MW 計費收入 ÷ _{L_}", "%", [f"={L}{AR[P + 'rev']}/{L}{AR[P + 'capL_' + L_]}" for L in COLS], PCT,
+                     note="＝Nebius 每 MW 年收入（100% 計費時數）÷ 該層" + ("（比較層，門檻判定用）" if L_ == REVCAP_LAYER else "")); r += 1
+        arow(P + 'capR', P + "上限檢查｜每 MW 收入 ÷ 客戶付費 token 營收", "%",
+             [f"={L}{AR[P + 'capRL_' + REVCAP_LAYER]}" for L in COLS] if _hasL else [f"={L}{AR[P + 'rev']}/{L}{AR[P + 'cap']}" for L in COLS], PCT,
+             note=f"neocloud 拿走客戶 token 營收的比例" + (f"，取比較層 _{REVCAP_LAYER}（methodology.checks.revCapLayer；_Prod 已扣 SLO 下的產能折減，最接近可實際售出 token）" if _hasL else "（IF_RevGWFleet）") + f"；> {CO['methodology']['checks']['revCapShareMax']:.0%} 時『檢查_連動』警示（門檻 methodology.checks.revCapShareMax）"); r += 1
         r += 1
         for i, L in enumerate(COLS):  # 輸入與假設 A 區：每 MW 年收入｜情境（US$bn/MW）
             c = _wi.cell(row=sc_rows['rev_' + nm], column=3 + i, value=f"='每MW收入_錨定'!{L}{AR[P + 'rev']}/1000"); c.font = GREEN
@@ -779,7 +810,9 @@ if PMW_REV == 'tkAnchor':
     r = section(ws, r, "目前容量情境（依『輸入與假設』A 區情境選擇）")
     aphdr()
     for key, nmx, unit, fmt in (("anchor", "錨（IF_HoldEcon 加權）", "US$m/MW", _MF), ("ls", "長約占比", "%", PCT), ("k", "定價倍數 k", "倍", _MF),
-                                ("rev", "每 MW 年收入（錨 × k）", "US$m/MW", _MF), ("capR", "上限檢查｜每 MW 收入 ÷ 客戶付費 token 營收", "%", PCT)):
+                                ("rev", "每 MW 年收入（錨 × k）", "US$m/MW", _MF)) + \
+            (tuple((f"capRL_{L_}", f"上限檢查｜四層｜Nebius 每 MW 計費收入 ÷ _{L_}", "%", PCT) for L_ in REVCAP_LAYERS) if _hasL else ()) + \
+            (("capR", "上限檢查｜每 MW 收入 ÷ 客戶付費 token 營收", "%", PCT),):
         arow('cur_' + key, f"目前情境｜{nmx}", unit,
              [f"=CHOOSE({SEL}," + ",".join(f"{L}{AR[CO['scenarios']['labels'][k] + '｜' + key]}" for _, k in _SCX) + ")" for L in COLS], fmt, BOLD if key == 'rev' else BLACK); r += 1
     arow('cur_capMax', "目前情境｜上限檢查最高值（五期）", "%", [f"=MAX(C{AR['cur_capR']}:G{AR['cur_capR']})", "", "", "", ""], PCT); r += 2
@@ -2487,7 +2520,8 @@ checks = [
 if AR:  # v0.2a：收入上限檢查列放在清單最後（前面各列有依位置補公式的程式，不可插在中間）
     checks += [("收入上限：每 MW 收入 ÷ 客戶付費 token 營收（最高）", f"='每MW收入_錨定'!C{AR['cur_capMax']}", f"≤{_n(CK['revCapShareMax'] * 100)}%",
      "=IF(B{r}<=" + _n(CK['revCapShareMax']) + ",\"通過\",\"警示\")", PCT,
-     "neocloud 拿走客戶 token 營收的比例＝每 MW 年收入 ÷ Tokenomics IF_RevGWFleet（在役世代加權；理想上限）；只警示、不改數字（v0.2a）")]
+     (f"neocloud 拿走客戶 token 營收的比例＝每 MW 年收入 ÷ Tokenomics 四層瀑布比較層 _{REVCAP_LAYER}（IFW_RevGWFleet_{REVCAP_LAYER}，在役世代加權；company.json → methodology.checks.revCapLayer）；> {_n(CK['revCapShareMax'] * 100)}% 警示；只警示、不改數字（v0.2a；v0.4a 改四層）" if _hasL else
+      "neocloud 拿走客戶 token 營收的比例＝每 MW 年收入 ÷ Tokenomics IF_RevGWFleet（在役世代加權；理想上限）；只警示、不改數字（v0.2a）"))]
 for nm, bf, std, rf, fmt, note in checks:
     ws.cell(row=r, column=1, value=nm).font = BLACK
     if bf:
@@ -3520,7 +3554,7 @@ if TK:
     ws["A2"] = (f"來源：{_src['repo']} {_src['file']}（{_src['version']}，commit {_src['commit'][:7]}，擷取 {_src['extractedAt']}）。"
                 "只引用 IF_（不含 IF_Hdr*）、IFW_、IFC_ 與 L1_ 名稱；模型主值取「基準」，低／高只作敏感度；Tokenomics 每 GW＝IT 關鍵電力。")
     ws["A2"].font = SMALL
-    ws["A3"] = ("每 MW 收入錨定（IF_HoldEcon）與上限檢查（IF_RevGWFleet）引用本分頁的 TK_ 具名範圍；" if CO.get("methodology", {}).get("perMw", {}).get("revenue") == "tkAnchor" else "本分頁只顯示、未被公式引用（收入採 legacy）；") + "值為快照的藍字輸入格，更新方式見 repo 根目錄 README「共用工具：Tokenomics 取數」。"
+    ws["A3"] = ("每 MW 收入錨定（IF_HoldEcon）、建置成本（IF_CapexTotal）與上限檢查（IF_RevGWFleet、IFW_RevGWFleet_* 四層）引用本分頁的 TK_ 具名範圍；" if CO.get("methodology", {}).get("perMw", {}).get("revenue") == "tkAnchor" else "本分頁只顯示、未被公式引用（收入採 legacy）；") + "值為快照的藍字輸入格，更新方式見 repo 根目錄 README「共用工具：Tokenomics 取數」。"
     ws["A3"].font = SMALL
     r = 4
     for j, h in enumerate(["具名範圍（基準）", "名稱", "中文標籤", "單位", "世代", "低成本", "基準", "高成本", "Tokenomics 位置", "版本與 commit"]):

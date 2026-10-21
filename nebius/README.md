@@ -555,6 +555,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.checks.capexPerMwBand` | 檢查頁：模型期 CapEx 強度（每 MW 百萬美元）的合理區間下端與上端（5a） | US$m/MW 清單 | 38、68 | 檢查 |
 | `methodology.checks.leaseVsCommitMin` | 檢查頁：表外租金路徑 ÷ 已承諾租約至少要達到的倍數（5a） | 倍 | 0.8 | 檢查 |
 | `methodology.checks.revCapShareMax` | 檢查頁：每 MW 年收入 ÷ Tokenomics 客戶每 MW 付費 token 營收（IF_RevGWFleet）的上限；超過即警示（v0.2a） | 比例 | 0.5 | 檢查 |
+| `methodology.checks.revCapLayer` | 收入上限檢查的比較層（v0.4a，自 CoreWeave W9）：Tokenomics 四層瀑布 IFW_RevGWFleet_100／_Util／_Prod／_Life 擇一；門檻 revCapShareMax 比較此層（_Prod 已扣 SLO 下產能折減，最接近可實際售出 token）；四層一起取、逐層列示（下游資料契約第 2 條）；未設＝Util（v0.3 原做法） | 代碼 | Prod | 檢查 |
 | `methodology.perMw._note` | 每 MW 收入方法開關的說明（不進程式；v0.2a） | 文字 | 每 MW 收入方法開關（v0.2a，已決定事項 14… | 可沿用 |
 | `methodology.perMw.revenue` | 每 MW 收入方法（v0.2a）：tkAnchor＝Tokenomics 錨（IF_HoldEcon，在役世代加權）× 定價倍數 k（pricing.anchorMultiple）；legacy＝scenarios.revMW（v0.2，回歸驗收用） | 代碼 | tkAnchor | 檢查 |
 | `methodology.perMw.capex` | 每 MW 建置成本方法（v0.4a）：tokenomics＝Σ 新增世代占比（fleet.newMix）× IF_CapexTotal｜世代（Excel 活公式引用 TK_CapexTotal_*；需 revenue＝tkAnchor）；legacy 或未設＝scenarios.capexTemplate.costMW（v0.3 寫死值，回歸驗收用） | 代碼 | tokenomics | 檢查 |
