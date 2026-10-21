@@ -672,6 +672,19 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.legacyMarginNote` | 傳統事業 EBITDA 率的推導說明（v0.1b） | 文字 | FY26 合併 EBITDA 率＝非 GAAP 營業… | 必改 |
 | `texts.mwYearEndNotes` | 各年底主動電力的來源說明，以年份為鍵（Excel「輸入與假設」說明欄；5a） | 物件（文字） | 物件（2026） | 必改 |
 
+### `tokenomics`：Tokenomics 取數層（Oracle v0.3；快照檔、版本與引用名稱）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `tokenomics._note` | Tokenomics 取數層的說明（不進程式；Oracle v0.3，比照 Nebius v0.2a／CoreWeave W1） | 文字 | 算力相關的產業與物理層資料改引用 Tokenomic… | 可沿用 |
+| `tokenomics.snapshotFile` | Tokenomics 快照檔路徑（tools/tokenomics/import_tokenomics.py 產生；Excel「Tokenomics_取數」分頁讀此檔） | 路徑 | data/tokenomics_snapshot_v… | 可沿用 |
+| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v19.0 | 可沿用 |
+| `tokenomics.commit` | 快照的 Tokenomics commit SHA（取數時 clone 的 HEAD） | 文字 | ad33e280adc8a0e3dd1bca8f70… | 可沿用 |
+| `tokenomics.mergeCommit` | 該版 xlsx 合併進 Tokenomics master 的雜湊（下游資料契約第 5 條） | 文字 | ad33e28 | 可沿用 |
+| `tokenomics.currentFile` | 取數時 Tokenomics model/CURRENT 的檔名 | 文字 | 20261022_Tokenomics_v19.0.… | 可沿用 |
+| `tokenomics.names` | 引用的 Tokenomics 名稱（IF_、IFW_、IFC_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW、IF_RevGWFleet、IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、L1_HoldEconMW_Hopper、L1_HoldEconMW_GB200、L1_HoldEconMW_GB300、L1_HoldEconMW_VR200、L1_TokMW_Gen_ratio_VR200、L1_TokMW_Gen_ratio_VR200_Lo、L1_TokMW_Gen_ratio_VR200_Hi、L1_RevGW_PQ_VR200、L1_RevGW_PQ_VR200_Lo、L1_RevGW_PQ_VR200_Hi | 檢查 |
+| `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（v19.0 全數已提供） | 清單 | IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、L1_HoldEconMW_Hopper、L1_HoldEconMW_GB200、L1_HoldEconMW_GB300、L1_HoldEconMW_VR200、L1_TokMW_Gen_ratio_VR200、L1_TokMW_Gen_ratio_VR200_Lo、L1_TokMW_Gen_ratio_VR200_Hi、L1_RevGW_PQ_VR200、L1_RevGW_PQ_VR200_Lo、L1_RevGW_PQ_VR200_Hi | 檢查 |
+
 ### `oracle`：Oracle 資料草稿（v0.1a；v0.1b 逐步搬入，只留後續步驟用或只作對照的欄位）
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
