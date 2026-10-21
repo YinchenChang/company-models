@@ -3,7 +3,9 @@
 2026-10-21｜工作單 W10（`docs/workorders/20261021_coreweave_W10_Tokenomics_v18.0.md`）｜PR #58｜成品：`dist/20261021_CoreWeave收支模型_v4_12.{html,xlsx}`
 
 ## 目前狀態
-@@STATUS@@
+- 完成：步驟 1（快照換 v18.0）、步驟 2（世代門檻改取 Tokenomics、上市間隔改推導值、核對列與檢查頁警示、敏感度重算）、升版 v4.12（VLOG 兩處、`dist/` 換 v4.12 並移除 v4.11、交接檔、README、升版清單）；verify 三組全過。
+- 下一步：chat 端審查 PR #58 後合併。Tokenomics 新增 `L1_GenGap_*` 別名（或修訂契約）後，把推導間隔換成名稱取數。
+- 需要 Andy 做的事：合併前用真正的 Excel 開啟 `dist/20261021_CoreWeave收支模型_v4_12.xlsx`（見文末）。
 
 ## 結論
 1. **三情境目標價、融資缺口、每 MW 收入與成本各期值：0 差異。** 保守 $42.70、基準 $31.99、積極 $14.72（皆賣出）；融資前缺口 32.1／79.3／151.8；拆解 (a)(b)(c)(d) 皆 0。快照換 v18.0 不改任何成本，收入跟成本走，所以目標價不變（升版驗收 `xl_diff` 值與公式對 v4.11 成品的差異全部落在預期清單，評價、各期收支、摘要頁 0 差異）。
@@ -88,7 +90,15 @@ CRWV 每 MW 計費收入 ÷ 該層：
 - 賣出門檻價 $76.6：第 5 列（q 高端）保守情境 $98.6 高於門檻（舊 $87.5）；基準 $75.1 逼近但仍低於門檻（舊 $60.8）。也就是 VR200 指數介於 1.33（第 4 列，保守 $66.9）與 1.55 之間時，保守情境的賣出結論開始不成立。舊報告寫「約 1.4」，新 q 下門檻落點在 1.33–1.55 之間。
 
 ## 5. verify 三組
-@@VERIFY@@
+| 組 | 指令 | 結果 |
+|---|---|---|
+| (1) 升版 | `EXPECT=scripts/expect/v4_12_vs_v4_11.txt scripts/verify.sh --vs-dist`（對 v4.11 成品） | 全部通過 25 項；xl_diff 值與公式 0 差異（預期差異 412／306 格＋新增列 15）；crawl 只有「版本紀錄」「連動檢查」「每 MW 經濟性」3 頁有差異（無頁面錯誤、無缺頁）；cmp31 三情境各 595 項、FY27 錨定 526 項 OK |
+| (2) 新方法 | `scripts/verify.sh --vs-dist`（對 v4.12 成品） | 全部通過 25 項；crawl、xl_diff 值與公式皆 0 差異；cmp31 三情境各 595 項、FY27 526 項 OK |
+| (3) 舊方法回歸 | `scripts/verify_legacy.sh`（對 v4.6） | 全部通過 25 項，0 差異（新增列 62 不計；cmp31 三情境各 453 項、FY27 432 項 OK） |
+| 取數重現 | `TOKENOMICS_DIR=/home/claude/tk import_tokenomics.py --check data/tokenomics_snapshot_v18.0.json` | 通過：43 個名稱（missing 0），相對誤差 ≤ 1e-9 |
+
+EXPECT 清單（`scripts/expect/v4_12_rules.json`）只含：版本與快照 commit 字樣、取數頁（整張，沿用 v4.11 做法）、收入上限區塊（輸入頁 TK 收入上限 D–G 欄與 C 欄、「每MW經濟性」上限檢查列）、VR200 判讀列（含 18 個列改名：W9 自算列加「核對｜」前綴、敏感度 15 列新指數）、上市間隔說明文字、檢查頁收入上限列、VLOG 新列。三情境目標價、融資缺口、每 MW 收入與成本各期值皆不在清單內，均為 0 差異。
+- 第一次 (1) 的 verify 中「README 欄位說明」曾失敗一項，原因是 verify 啟動後才重寫 README 欄位表（時序造成）；之後的完整重跑（含本表三組）皆通過。
 
 ## 6. 做了什麼
 - 步驟 1（`27b1068`）：`data/tokenomics_names.txt` 新增 6 名；產生 `tokenomics_snapshot_v18.0.json`；`git rm` v5.36 快照；`company.json` → `tokenomics`（snapshotFile、version v18.0、commit 868e2cc…、names、_note）。
