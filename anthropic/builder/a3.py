@@ -114,7 +114,8 @@ def build(ctx):
     for g in GENS:
         for t, tz, _T in TIERS:
             C.add(f"tok_{g}_{t}", f"參數：每 GW 總產出 {GEN_ZH[g]}：{tz}（100% 利用率）", "M tok/GW/年",
-                  only25(f"=SUMIFS(TK_IF_TokGW_{TK_TIER[t]},TK_HdrGen,«lab_{g}@$»,TK_HdrCost,«lab_cost@$»)"), f"TK IF_TokGW_{TK_TIER[t]}")
+                  only25(f"=SUMIFS(TK_IF_TokGW_{TK_TIER[t]},TK_HdrGen,«lab_{g}@$»,TK_HdrCost,«lab_cost@$»)"),
+                  f"TK IF_TokGW_{TK_TIER[t]}（100% 層；v9.0 起 prefill 只計新鮮輸入、快取輸入仍算已服務 token，與 Demand 的『新鮮＋快取＋decode』同口徑；TK 契約 §2：不得直接當生產環境產能，本模型以 η 在 2025 校準吸收）")
 
     C.section("二、加速器族參數（各年同值；NonNV 比例相對 VR200，D6；持有比 D9）")
     for f, fz, base, nnv, _N in FAMS:
@@ -334,7 +335,7 @@ def build(ctx):
     for f, fz, base, _n, _N in FAMS:
         for tag, lab in (("base", "«C:lab_cost@$»"), ("lo", "«lab_lo@$»"), ("hi", "«lab_hi@$»")):
             K.add(f"hold_{f}_{tag}", f"參數：每 GW 年持有成本（{ {'base': '基準', 'lo': '低成本', 'hi': '高成本'}[tag] }）：{fz.split('（')[0]}", "$B/GW/年",
-                  only25(f"=SUMIFS(TK_IF_HoldEcon,TK_HdrGen,«C:lab_{base}@$»,TK_HdrCost,{lab})*«C:hold_{f}@D»"), "TK IF_HoldEcon（基準世代）× 持有比")
+                  only25(f"=SUMIFS(TK_IF_HoldEcon,TK_HdrGen,«C:lab_{base}@$»,TK_HdrCost,{lab})*«C:hold_{f}@D»"), "TK IF_HoldEcon（基準世代；壽命期等值，已含 IT 維護 IF_MaintIT，v5.31 起；本模型不另加維護）× 持有比")
 
     K.section("二、算力成本（現金口徑）＝逐合約實付＋自建資本支出（D10、D11）")
     ramp_s = lambda s, e: f"((({e}-{s}+1)+({e}-{s}+1)-{r_}+1)/{k2})"  # noqa: E731  Σ 權重＝（2n − r ＋ 1）÷ 2
@@ -460,7 +461,7 @@ def build(ctx):
     for nm_, zh, key in (("IF_FullCostDefault_Sol", "下游預設 IF_FullCostDefault_Sol；基準", "tk_def"), ("IF_FullCost_Sol", "IF_FullCost_Sol；並列", "tk_full")):
         K.add(key, f"TK 參考：每 VR200 GW 年全成本（{zh}）", "$B/GW/年",
               lambda i, c, nm_=nm_: f"=SUMIFS(TK_{nm_},TK_HdrGen,«C:lab_vr200@$»,TK_HdrCost,«C:lab_cost@$»)*«C:tok_vr200_mid@$»*TK_IF_Util/{d2b}",
-              "TK $/M（VR200 Sol 基準欄）× 每 GW 年產出（Sol）× 基準利用率 ÷ 10⁹")
+              "TK $/M（VR200 Sol 基準欄）× 每 GW 年產出（Sol）× 基準利用率 ÷ 10⁹；只作參考。v6.0 起 TK 攤提溢價（IF_AmortBU）的分母為付費 token，本列以全部 token 產能乘，屬上緣")
     K.add("tk_gap", "差距：每 VR 等值 GW 算力成本（現金）− TK 參考（下游預設）", "$B/GW/年", lambda i, c: "=«p_cc_vr»-«tk_def»", "")
 
     K.section("九、D22 對照：2026 Q2 首次調整後營業利益（說明書／報導；不校準）")

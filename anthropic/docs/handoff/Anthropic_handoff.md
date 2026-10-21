@@ -12,17 +12,19 @@
 - 規格 `docs/plan/20261008_Anthropic_v0.1_規格.md`（r1）；共同規則與 A1–A5 工作單 `docs/workorders/20261008_anthropic_*`。
 - 成品：`dist/`；Drive `02-算力收支/Anthropic/`（chat 端放置）。
 
-## 3. 模型狀態：**v0.1.1**（2026-10-21；v0.1 於 2026-10-08 完成，A0–A5）
+## 3. 模型狀態：**v0.1.2**（2026-10-21；Tokenomics 快照更新至 v18.0；v0.1 於 2026-10-08 完成，A0–A5）
 | 項目 | 現況 |
 |---|---|
-| Excel | `model/20261021_Anthropic_v0.1.1.xlsx`（`model/CURRENT`）；v0.1 在 `model/archive/`；成品副本 `dist/20261021_Anthropic收支模型_v0_1_1.xlsx`（位元組相同，測試檢查）；舊成品在 `dist/_待刪除/` |
-| HTML 一頁摘要 | `dist/20261021_Anthropic收支模型_v0_1_1.html`（產生器 `tools/build_html.py`；情境 `tools/html_scenarios.yaml` 23 個；測試 `tests/test_html.py`）；新增「①之二 v0.1.1 更新了什麼」 |
-| 報告 | `docs/reports/20261021_v0.1.1.md`、`20261021_v0.1.1_對照.xlsx`；v0.1 報告仍有效 |
-| Tokenomics | v5.26，master `70d859e`；68 名＋NonNV 18 格＋PUE 3 格 |
+| Excel | `model/20261021_Anthropic_v0.1.2.xlsx`（`model/CURRENT`）；v0.1、v0.1.1 在 `model/archive/`；成品副本 `dist/20261021_Anthropic收支模型_v0_1_2.xlsx`（位元組相同，測試檢查）；舊成品在 `dist/_待刪除/` |
+| HTML 一頁摘要 | `dist/20261021_Anthropic收支模型_v0_1_2.html`（產生器 `tools/build_html.py`；情境 `tools/html_scenarios.yaml` 26 個；測試 `tests/test_html.py`）；「①之二」改為 v0.1.2（TK v18.0）更新，v0.1.1 摘要收在其中的折疊區 |
+| 報告 | `docs/reports/20261021_v0.1.2.md`、`20261021_v0.1.2_對照.xlsx`；v0.1.1、v0.1 報告仍有效 |
+| Tokenomics | **v18.0**，master `868e2cc`（`20261021_Tokenomics_v18.0.xlsx`，SHA-256 `e654876e…`）；82 名（含 14 個只對照的 v18.0 名稱）＋NonNV 18 格＋PUE 3 格。OpenAI v0.6 仍用 v5.26，並排時 TK 版本不同 |
 | OpenAI 對照 | `OAI_Link`：`20261008_OpenAI_v0.6.xlsx`（SHA-256 `34fc34a7…`，`e91df57`），17 名 |
-| 規模 | 13 頁；SRC_ANT 409；Inputs 182；具名範圍 1,129；公式格 5,834；Checks C01–C123（CHK_Errors＝0、CHK_Warnings＝2：C89 逐家對帳、C116 U4 含自建的 2026 算力成本 +47%）；parity 情境 40 |
+| 規模 | 13 頁；SRC_ANT 409；Inputs 182；具名範圍 1,146；公式格 5,878；Checks C01–C126（CHK_Errors＝0、CHK_Warnings＝2：C89 逐家對帳、C116 U4 含自建的 2026 算力成本 +47%）；parity 情境 40 |
 
 **主要結果（基準）**：每 VR 等值 GW 差額 2026–2030 −5.4／−4.9／−2.6／＋5.2／＋11.2；覆蓋率 2030 1.80；2026 營收 49.9；累計外部資金需求 **0**；現金谷底 2028 年 84.2。談判中 $150B（U6，情境）全數成交：2030 差額 ＋6.7、累計外部資金仍 0。回歸開關 INP_180／INP_182＝0 即回到 v0.1 輸出。
+
+**v0.1.2 變動摘要**：TK v5.26 → v18.0，公式未改；η 0.888→0.527；每 VR 等值 GW 差額 2026–2030 −5.37／−4.89／−2.63／＋5.17／＋11.14，其餘結論不變；Cost 第二十一節對照 L1_RevGW_PQ_VR200。
 
 **v0.1.1 變動摘要**：U1 2026 營收（Q4＝Q3 持平）；U2 Nscale＋Lambda 錨定 86；U3–U5、U7 只對照；U6 情境；U8 資料缺口（2026-06-30 現金）。列編號穩定（新列附加在頁尾）。
 
@@ -38,6 +40,7 @@ D1 命題與命名同 OpenAI；D2 營收線方案別＋API 層級別；D3 廣告
 4. **只計已簽合約**（v0.1 第 1 項）：使 2029–2030 轉正；新增合約機制需 Andy 決定。
 5. **2026 非算力成本低估**（A4-17／D22）：Q3 年化法約 10.2、營收比例法約 5.0（v0.1 Q2 版 6.9）。
 6. **Fluidstack 自建 16.7 與報導「算力與基礎設施支出」是否同口徑**（C116 WARN）。
+7. **v0.1.2 待 Andy**：OpenAI 模型何時同步 TK v18.0；η（0.527）是否隨年回升（Inputs 開關，基準 0）；是否改用 TK `_Prod` 層（差異可忽略，建議不改）。見 `docs/reports/20261021_v0.1.2.md` ⑤。
 7. v0.1 其餘：API 任務數成長、合約價 12、已到位 $100B 組成。
 
 ## 6. 待辦（backlog；不在 v0.1 範圍，需 Andy 或 chat 端決定）

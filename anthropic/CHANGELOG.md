@@ -39,3 +39,10 @@
 - U1 2026 半年校準 D15 r2（H1 實際＋Q3 實際＋Q4＝Q3）：2026 營收 48.73→49.90。U2 Nscale＋Lambda 錨定 86（MW 比例分攤）。U3 逐家改對照 S-1、總額三口徑。U4 2026 算力支出對照（C116 WARN）。U5 D22 加 Q3 11%。U6 談判中 $150B 情境（Cost 第二十節、Funding S8）。U7 非現金 72 列示。U8 資料缺口。開關 INP_180／INP_182＝0 時輸出回到 v0.1。
 - 結果：差額 2026–2030 −5.4／−4.9／−2.6／＋5.2／＋11.2；覆蓋率 2030 1.80；累計外部資金需求 0；現金谷底 84.2。CHK_Errors 0、CHK_Warnings 2（C89、C116）。
 - 檔案：新增列皆附加在各頁尾，既有列編號不變。`engine/core.py` 檔名規則允許三段版號。`tools/build_html.py` 新增「①之二 v0.1.1 更新了什麼」，`tools/html_scenarios.yaml` 新增 3 情境（v010、only_u1、only_u2）。parity 新增 6 情境。報告 `docs/reports/20261021_v0.1.1.md` 與 `_對照.xlsx`。
+
+## v0.1.2 Tokenomics 快照 v5.26 → v18.0（2026-10-21；Excel `model/20261021_Anthropic_v0.1.2.xlsx`；v0.1.1 移至 `model/archive/`）
+- Tokenomics：master `868e2cc`，`20261021_Tokenomics_v18.0.xlsx`（SHA-256 `e654876e…`）；TK_Link 重讀同一份 68 名＋NonNV 18＋PUE 3，新增 14 個 v18.0 對照名稱（`L1_RevGW_PQ_VR200` 系列、`L1_TokGW_PaidPQ_VR200` 系列、`L1_TokLedger_2026Q2`、`L1_M`；只對照）。check_tk_snapshot：OK 103。
+- 公式未改。η 0.888→0.527；供給 VR 等值 GW 2030 8.044→8.067；每 VR 等值 GW 差額 2026–2030 −5.446／−4.921／−2.648／＋5.185／＋11.172 → −5.365／−4.888／−2.633／＋5.166／＋11.139；覆蓋率 2030 1.804、累計外部資金需求 0、現金谷底 84.23 不變。
+- 新增：Cost 第二十一節 K240–K255（TK P × Q 對照）、Checks C124–C126（info）、具名 `COST_TKPQ`／`COST_TKPQRatio`／`COST_TKTokLedger`；TK_Link C3 記錄 TK 檔案 SHA-256。說明文字更正 5 處（見報告③）。
+- 測試：parity 情境 +2（ha、hb）；HTML 情境 +3（v011、only_tokgw、only_hold），v010／only_u1／only_u2 改為同時把 TK 回到 v5.26（spec `prev`）；期望值 formula_cells 5878、defined_names 1146、tk_values 82。
+- 成品 `dist/20261021_Anthropic收支模型_v0_1_2.html／.xlsx`；v0.1.1 成品移至 `dist/_待刪除/`。報告 `docs/reports/20261021_v0.1.2.md`＋`_對照.xlsx`。
