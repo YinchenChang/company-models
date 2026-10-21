@@ -68,6 +68,8 @@ var PMWQ = Object.assign({ capex: `legacy`, cost: `ebitdaPct`, revenue: `legacy`
   TK_PHQ = [`IF_MaintIT`, `IF_StaffSW`, `IF_TaxIns`, `IF_DeprLifeIT`], // 可用暫代值的名稱（待 Tokenomics v5.26）；其餘名稱缺少時建置失敗
   COSTMW_LEGQ = [...COMPANY_DATA.scenarios.capexTemplate.costMW]; // v4.5 舊值（對照列）
 function tkHasQ(n) { let it = TKSQ[n]; return !!it && !it.missing }
+function genThrOkQ() { return !!(GIQ && GIQ.thrRevName && GIQ.thrPayName && [GIQ.thrRevName, GIQ.thrPayName].every(n => [``, `_Lo`, `_Hi`].every(x => tkHasQ(n + x)))) } // W10：世代門檻名稱齊全（缺任一個時上市間隔與門檻顯示不適用）
+function genGapQ() { return genThrOkQ() ? Math.log(1 / tkQ(GIQ.qName)) / Math.log(1 + tkQ(GIQ.thrRevName)) : null } // W10：上市間隔（年）＝ln(1 ÷ q) ÷ ln(1 + 收入持平門檻)，[Derived]；等於 Tokenomics CAP_GenGap_VR200（CAP_ 不在契約允許前綴，由 L1_ 名稱反推）
 function tkQ(n, g, cs) { // Tokenomics 快照值：成本情境 cs＝低成本／基準／高成本（單值名稱的低／高取 range）
   let it = TKSQ[n]; cs = cs || `基準`;
   if (!it || it.missing) return null;
@@ -534,16 +536,21 @@ function perMwQ(d, e) { // W2：每 MW 經濟性（與 Excel「每MW經濟性」
     ]
   }
   let gx = null;
-  if (AMQ && GIQ && GI_OVN && tkHasQ(GIQ.qName) && tkHasQ(GIQ.qName + `_Lo`) && tkHasQ(GIQ.qName + `_Hi`)) { // W9：VR200 世代指數判讀（Excel「每MW經濟性」判讀區同列名、同算式；各期同值）
-    let GS = COMPANY_DATA.tkSnap.source.generations, RFC = GS.find(x => x.name === GIQ.refGen).code, OVC = GI_OVC, X = genIdxQ(e, cs), gap = GIQ.gapYears.base,
-      q = tkQ(GIQ.qName), ql = tkQ(GIQ.qName + `_Lo`), qh = tkQ(GIQ.qName + `_Hi`), hv = tkMwQ(`IF_HoldEcon`, GI_OVN, cs) / X.hr, ix = X.idx[GI_OVN],
-      imp = (ix / q) ** (1 / gap) - 1, flat = (1 / q) ** (1 / gap) - 1, be = (hv / q) ** (1 / gap) - 1, all = x => I5.map(() => x);
+  if (AMQ && GIQ && GI_OVN && tkHasQ(GIQ.qName) && tkHasQ(GIQ.qName + `_Lo`) && tkHasQ(GIQ.qName + `_Hi`)) { // W9：VR200 世代指數判讀（Excel「每MW經濟性」判讀區同列名、同算式；各期同值）；W10：門檻取 Tokenomics 名稱、間隔為推導值
+    let GS = COMPANY_DATA.tkSnap.source.generations, RFC = GS.find(x => x.name === GIQ.refGen).code, OVC = GI_OVC, X = genIdxQ(e, cs), thr = genThrOkQ(), gap = genGapQ(),
+      q = tkQ(GIQ.qName), ql = tkQ(GIQ.qName + `_Lo`), qh = tkQ(GIQ.qName + `_Hi`), hv = tkMwQ(`IF_HoldEcon`, GI_OVN, cs) / X.hr, ix = X.idx[GI_OVN], all = x => I5.map(() => x),
+      imp = thr ? (ix / q) ** (1 / gap) - 1 : null, flat = thr ? (1 / q) ** (1 / gap) - 1 : null, be = thr ? (hv / q) ** (1 / gap) - 1 : null,
+      tr = thr ? tkQ(GIQ.thrRevName) : null, tp = thr ? tkQ(GIQ.thrPayName) : null, NZ = `不適用`, P = (n, sf) => tkQ(n + sf),
+      lf = (sf, sl) => `世代指數判讀｜收入持平門檻${sl}（Tokenomics ${GIQ.thrRevName}${sf}）`, lb = (sf, sl) => `世代指數判讀｜回本門檻${sl}（Tokenomics ${GIQ.thrPayName}${sf}）`;
     gx = [
       [`世代指數判讀｜q（${OVC} 對 ${RFC} 每 MW token 產出比，基準）`, `倍`, all(q)], [`世代指數判讀｜q 低端`, `倍`, all(ql)], [`世代指數判讀｜q 高端`, `倍`, all(qh)],
-      [`世代指數判讀｜上市間隔 ${RFC}→${OVC}（年）`, `年`, all(gap)], [`世代指數判讀｜${OVC} 世代指數（採用，相對 ${RFC}）`, `倍`, all(ix)],
-      [`世代指數判讀｜隱含年價格變化＝(指數 ÷ q)^(1 ÷ 間隔) − 1`, `%`, all(imp)], [`世代指數判讀｜收入持平門檻＝(1 ÷ q)^(1 ÷ 間隔) − 1`, `%`, all(flat)],
-      [`世代指數判讀｜回本門檻＝(IF_HoldEcon｜${OVC} ÷ IF_HoldEcon｜${RFC} ÷ q)^(1 ÷ 間隔) − 1`, `%`, all(be)],
-      [`世代指數判讀｜判讀`, ``, [imp >= be - 1e-9 ? `${OVC} 回本餘裕不低於 ${RFC}` : imp >= flat - 1e-9 ? `每 MW 收入高於 ${RFC}，但回本餘裕較低` : `每 MW 收入低於 ${RFC}`, ...NA]]
+      [`世代指數判讀｜上市間隔 ${RFC}→${OVC}（年）`, `年`, thr ? all(gap) : all(NZ)], [`世代指數判讀｜${OVC} 世代指數（採用，相對 ${RFC}）`, `倍`, all(ix)],
+      [`世代指數判讀｜隱含年價格變化＝(指數 ÷ q)^(1 ÷ 間隔) − 1`, `%`, thr ? all(imp) : all(NZ)],
+      ...[[lf, GIQ.thrRevName], [lb, GIQ.thrPayName]].flatMap(([L, n]) => [[``, ``], [`_Lo`, ` 低端`], [`_Hi`, ` 高端`]].map(([sf, sl]) => [L(sf, sl), `%`, thr ? all(P(n, sf)) : all(NZ)])),
+      [`核對｜世代指數判讀｜收入持平門檻＝(1 ÷ q)^(1 ÷ 間隔) − 1`, `%`, thr ? all(flat) : all(NZ)],
+      [`核對｜世代指數判讀｜回本門檻＝(IF_HoldEcon｜${OVC} ÷ IF_HoldEcon｜${RFC} ÷ q)^(1 ÷ 間隔) − 1`, `%`, thr ? all(be) : all(NZ)],
+      [`世代指數判讀｜核對差距（Tokenomics 與 CRWV 自算，較大者）`, `百分點`, thr ? all(Math.max(Math.abs(tr - flat), Math.abs(tp - be))) : all(NZ)],
+      [`世代指數判讀｜判讀`, ``, [!thr ? NZ : imp >= tp - 1e-9 ? `${OVC} 回本餘裕不低於 ${RFC}` : imp >= tr - 1e-9 ? `每 MW 收入高於 ${RFC}，但回本餘裕較低` : `每 MW 收入低於 ${RFC}`, ...NA]]
     ]
   }
   let cv = null, q2r = null;
@@ -601,8 +608,8 @@ function cvSensQ() { // W5：公司實況敏感度的輸入值（與情境無關
   return { opex: qAct / tb, capex: cxAct / cxTk, kcw: ev.price / tkQ(ev.tkName, ev.gen), tb, cxTk, q2s }
 }
 function vrSensQ() { // W9：VR200 世代指數 5 列敏感度（與 scripts/permw_sens.py 同一組設定；指數由快照與 company.json 算出，不寫死）
-  if (!(PMWQ.revenue === `tkAnchor` && AMQ && GIQ && GI_OVN && tkHasQ(GIQ.qName) && tkHasQ(GIQ.qName + `_Lo`) && tkHasQ(GIQ.qName + `_Hi`))) return [];
-  let GS = COMPANY_DATA.tkSnap.source.generations, RFC = GS.find(x => x.name === GIQ.refGen).code, X = genIdxQ({ genIdxOv: 0 }, `基準`), gap = GIQ.gapYears.base,
+  if (!(PMWQ.revenue === `tkAnchor` && AMQ && GIQ && GI_OVN && tkHasQ(GIQ.qName) && tkHasQ(GIQ.qName + `_Lo`) && tkHasQ(GIQ.qName + `_Hi`) && genThrOkQ())) return []; // W10：間隔為推導值，快照沒有門檻名稱時不產生
+  let GS = COMPANY_DATA.tkSnap.source.generations, RFC = GS.find(x => x.name === GIQ.refGen).code, X = genIdxQ({ genIdxOv: 0 }, `基準`), gap = genGapQ(),
     q = tkQ(GIQ.qName), ql = tkQ(GIQ.qName + `_Lo`), qh = tkQ(GIQ.qName + `_Hi`), m = tkMwQ(`IF_HoldEcon`, GI_OVN, `基準`) / X.hr / q, dc = GIQ.lifeDeclinePerYear, // m＝(1＋回本門檻)^間隔：價格路徑同基準時的指數 ÷ q
     L = [[ql * m, `q 低端、價格路徑同基準`], [1, `收入持平（等於 ${RFC}）`], [m * q, `跟成本走（基準）`], [q * (1 - dc) ** gap, `q 基準、世代間只按壽命內降價 −${Math.round(dc * 100)}%／年`], [qh * m, `q 高端、價格路徑同基準`]];
   return L.map(([ix, lb], j) => { let imp = (ix / q) ** (1 / gap) - 1;
@@ -872,6 +879,18 @@ function runFunding(e) {
       severity: mx <= th ? `ok` : `watch`,
       title: `收入上限：CRWV 每 MW 計費收入 ÷ 客戶付費 token 營收（比較層 _${lyr}） 最高 ${hA(mx * 100, 0)}（門檻 ${hA(th * 100, 0)}）`,
       detail: `neocloud 拿走客戶 token 營收的比例＝每 MW 計費收入 ÷ Tokenomics ${capName}（OpenAI 有效單價、層級組合的理想上限，依在役世代加權；四層瀑布取 _${lyr} 為比較層，明細見每 MW 經濟性）。各期：${PERIODS.map((n, r) => `${n} ${hA(rq[r] * 100, 0)}`).join(`、`)}。超過門檻代表 CRWV 單價相對客戶端 token 經濟性偏高。`
+    })
+  }
+  if (PMWQ.revenue === `tkAnchor` && FQ && GIQ && GI_OVN && tkHasQ(GIQ.qName) && genThrOkQ()) { // W10：世代門檻核對（Excel「檢查_連動」同一列；Tokenomics L1_GenPxThr_* 與 CRWV 自算門檻的差距；門檻 company.json → methodology.checks.genThrGapMax）
+    let GS = COMPANY_DATA.tkSnap.source.generations, RFC = GS.find(x => x.name === GIQ.refGen).code, X = genIdxQ(e, e.tkCase || `基準`), gap = genGapQ(), q = tkQ(GIQ.qName),
+      hv = tkMwQ(`IF_HoldEcon`, GI_OVN, e.tkCase || `基準`) / X.hr, flat = (1 / q) ** (1 / gap) - 1, be = (hv / q) ** (1 / gap) - 1,
+      df = Math.max(Math.abs(tkQ(GIQ.thrRevName) - flat), Math.abs(tkQ(GIQ.thrPayName) - be)), th = CHECK_TH.genThrGapMax;
+    _({
+      id: `gen-thr`,
+      ok: df <= th,
+      severity: df <= th ? `ok` : `watch`,
+      title: `世代門檻核對：Tokenomics 與 CRWV 自算門檻的最大差距（百分點） ${hA(df * 100, 2)}（門檻 ${hA(th * 100, 1)}）`,
+      detail: `Tokenomics ${GIQ.thrRevName}（收入持平）與 ${GIQ.thrPayName}（回本）和 CRWV 以自身公式算回的門檻比較（W9 公式保留為核對；上市間隔為推導值 ${hA(gap, 2)} 年）。明細見每 MW 經濟性的世代指數判讀。`
     })
   }
   let v = o[0].gross,

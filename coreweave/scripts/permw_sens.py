@@ -3,7 +3,7 @@
 # 讀重算後的「加權目標價」與融資缺口（＝MAX(0, −FY30 融資前累積現金)），寫入 permw_sens.json；build_xlsx.py 讀此檔寫入「每MW經濟性」頁「敏感度」區，
 # 並以「快照狀態」格比對目前輸入下的加權目標價（不一致＝快照已過期）。HTML 以同一組設定即時計算（pmwSensQ），cmp31 逐格比對。
 # 用法：python3 scripts/permw_sens.py 檔案.xlsx [輸出 json，預設 repo 根目錄 permw_sens.json]；結果與原檔相同時代碼 0，有變動時寫入並以代碼 3 結束。
-import sys, os, json
+import sys, os, json, math
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from uno_q import Workbook
 
@@ -36,10 +36,11 @@ if _GI:  # W9：VR200 世代指數 5 列（與 HTML vrSensQ 同一組設定、�
     _ovc = next((g['code'] for g in _gens if g['code'] in _GI), None); _ovg = next((g['name'] for g in _gens if g['code'] == _ovc), None)
     _rfc = next(g['code'] for g in _gens if g['name'] == _GI['refGen'])
     _q = _GI.get('qName')
-    if _ovc and _q and all(x in _it and not _it[x].get('missing') for x in (_q, _q + '_Lo', _q + '_Hi')):
+    _thr = [_GI.get('thrRevName'), _GI.get('thrPayName')]  # W10：世代門檻名稱；上市間隔＝ln(1 ÷ q) ÷ ln(1 + 收入持平門檻)（[Derived]），快照沒有門檻名稱時不產生此 5 列
+    if _ovc and _q and all(x in _it and not _it[x].get('missing') for x in (_q, _q + '_Lo', _q + '_Hi')) and all(n and all(n + x in _it and not _it[n + x].get('missing') for x in ('', '_Lo', '_Hi')) for n in _thr):
         _conv = (lambda g: 1 / _it['IF_FacilityGW']['values'][g]['基準']) if CO['meta'].get('mwBasis') == 'facility' else (lambda g: 1)
         _hv = lambda g: _it['IF_HoldEcon']['values'][g]['基準'] * _conv(g)
-        q, ql, qh = _it[_q]['values'], _it[_q + '_Lo']['values'], _it[_q + '_Hi']['values']; gap = _GI['gapYears']['base']; dc = _GI['lifeDeclinePerYear']
+        q, ql, qh = _it[_q]['values'], _it[_q + '_Lo']['values'], _it[_q + '_Hi']['values']; gap = math.log(1 / q) / math.log(1 + _it[_thr[0]]['values']); dc = _GI['lifeDeclinePerYear']
         m = _hv(_ovg) / _hv(_GI['refGen']) / q  # (1＋回本門檻)^間隔
         _L = [(ql * m, 'q 低端、價格路徑同基準'), (1, f'收入持平（等於 {_rfc}）'), (m * q, '跟成本走（基準）'), (q * (1 - dc) ** gap, f'q 基準、世代間只按壽命內降價 −{round(dc * 100)}%／年'), (qh * m, 'q 高端、價格路徑同基準')]
         _OV = f'{_ovc} 世代指數覆寫（0＝跟成本走）'

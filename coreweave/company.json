@@ -866,7 +866,8 @@
    "siteRentGapMax": 10,
    "rentVsBenchMin": 0.8,
    "revCapShareMax": 0.5,
-   "revCapLayer": "Prod"
+   "revCapLayer": "Prod",
+   "genThrGapMax": 0.005
   },
   "perMw": {
    "_note": "每 MW 方法開關（W2）：capex＝tokenomics（Σ 新增世代占比 × IF_CapexIT）｜legacy（scenarios.capexTemplate.costMW）；cost＝bottomUp（Tokenomics 電費、IT 維護、人員軟體、稅險 × 平均在役 MW＋管銷率）｜ebitdaPct（defaults.ebStart→ebSteady 線性）；revenue＝tkAnchor（W4：Σ 平均在役占比 × IF_HoldEcon × 定價倍數 k，k＝長約占比 × k_長約＋（1 − 長約占比）× k_現貨；pricing.anchorMultiple）｜gpuHr（pricing.gpuHr × 每 MW GPU 數 × 8,760）｜legacy（defaults.m.revMW）。全為舊方法時與 v4.5 完全相同。收入採備案 legacy（chat 端 2026-10-07：W1 查不到 GB200／GB300／VR200 兩個獨立長約價來源，VR200 完全沒有）。 W4（2026-10-08，已決定事項 14）：收入改為 tkAnchor；gpuHr 與 legacy 降為對照。 W6：maint＝age（每期 IT 維護＝Σ 世代［保固期內平均在役 MW × IF_MaintITWarr＋保固期滿 × IF_MaintITPost］，機齡由 fleet.openMix.vintages 與各期新增 MW 推得，保固年限 IF_WarrantyYrs）｜flat（Σ 平均在役占比 × IF_MaintIT 壽命期等值費率；v4.7 前）。",
@@ -1870,18 +1871,12 @@
    }
   },
   "genIndex": {
-   "_note": "世代指數（W9，v4.11）：每 MW 年收入｜世代 g ＝ 參考價 p_ref × 指數 idx_g；p_ref ＝ 定價倍數 k × IF_HoldEcon｜參考世代（目前成本情境）。idx_g 預設（空白）＝跟成本走：IF_HoldEcon｜g ÷ IF_HoldEcon｜參考世代，所以預設下與 W4 的「錨 × k」恆等（數值 0 差異）。VR200 可覆寫：日後有 VR200 長約價時，覆寫值＝VR200 每 MW 長約價 ÷ p_ref（證據入 anchorMultiple.evidence，已決定事項 16(3)）；其他世代不開覆寫（參考世代恆為 1）。判讀列（q、上市間隔、隱含年價格變化、收入持平門檻、回本門檻）與 5 列敏感度讀本區與 Tokenomics 名稱 qName／qName_Lo／qName_Hi。",
+   "_note": "世代指數（W9，v4.11）：每 MW 年收入｜世代 g ＝ 參考價 p_ref × 指數 idx_g；p_ref ＝ 定價倍數 k × IF_HoldEcon｜參考世代（目前成本情境）。idx_g 預設（空白）＝跟成本走：IF_HoldEcon｜g ÷ IF_HoldEcon｜參考世代，所以預設下與 W4 的「錨 × k」恆等（數值 0 差異）。VR200 可覆寫：日後有 VR200 長約價時，覆寫值＝VR200 每 MW 長約價 ÷ p_ref（證據入 anchorMultiple.evidence，已決定事項 16(3)）；其他世代不開覆寫（參考世代恆為 1）。判讀列（q、上市間隔、隱含年價格變化、收入持平門檻、回本門檻）與 5 列敏感度讀本區與 Tokenomics 名稱 qName／qName_Lo／qName_Hi。 W10（v4.12）：世代門檻改取 Tokenomics 名稱（thrRevName＝收入持平門檻、thrPayName＝回本門檻，各含 _Lo／_Hi）；上市間隔不再是固定輸入，改為推導值＝ln(1 ÷ q) ÷ ln(1 + 收入持平門檻)（等於 Tokenomics CAP_GenGap_VR200；CAP_ 不在契約允許前綴，故由 L1_ 名稱反推）；W9 自算公式保留為「核對｜」列，與 Tokenomics 門檻差距 > methodology.checks.genThrGapMax 時檢查頁警示。",
    "refGen": "GB300 NVL72",
    "VR200": null,
    "qName": "L1_TokMW_Gen_ratio_VR200",
-   "gapYears": {
-    "base": 1.18,
-    "low": 1.11,
-    "high": 1.24,
-    "tag": "[Analogy]",
-    "source": "Tokenomics 世代價格 A 段查證（docs/reports/20261015_世代價格A_查證.md，PR #49）",
-    "note": "GB300→VR200 上市間隔（年）。本版唯一的固定值；v4.12 待 Tokenomics B 段合併後改取 Tokenomics 名稱（L1_GenPxThr_*）。"
-   },
+   "thrRevName": "L1_GenPxThr_Rev_VR200",
+   "thrPayName": "L1_GenPxThr_Pay_VR200",
    "lifeDeclinePerYear": 0.1
   }
  },
