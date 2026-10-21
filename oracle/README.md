@@ -503,7 +503,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.linkSites` | 具名站點的 MW 是否連動第一期產能下限 | 是／否 | 是 | 可沿用 |
 | `defaults.linkLeaseTail` | 舊模板遺留開關，目前程式未使用 | 是／否 | 是 | 可沿用 |
 | `defaults.useAvgMw` | 收入以平均在役 MW 計（true）或期末存量計（false） | 是／否 | 是 | 可沿用 |
-| `defaults.billableOpen` | 最新季末可計費 MW（第一期期初） | MW | 1698 | 必改 |
+| `defaults.billableOpen` | 最新季末可計費 MW（第一期期初） | MW | 3025 | 必改 |
 | `defaults.cds` | 信用違約交換（CDS）中價 | bps | None | 必改 |
 | `defaults.cdsBid` | CDS 買價 | bps | None | 必改 |
 | `defaults.cdsAsk` | CDS 賣價 | bps | None | 必改 |
@@ -513,9 +513,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.useFacility` | 融資時是否先動用未動用信用額度 | 是／否 | 否 | 可沿用 |
 | `defaults.facility` | 未動用信用額度 | US$bn | 10 | 必改 |
 | `defaults.m.accepted` | 已驗收 MW 的預設路徑（實際依所選情境覆寫） | MW 清單 | 4668、7501、8778、8778、8778 | 檢查 |
-| `defaults.m.billable` | 可計費 MW 的預設路徑（實際依情境與爬坡比例覆寫） | MW 清單 | 3183、6340、7716、8070、8070 | 檢查 |
+| `defaults.m.billable` | 可計費 MW 的預設路徑（實際依情境與爬坡比例覆寫） | MW 清單 | 3847、6606、7915、8203、8203 | 檢查 |
 | `defaults.m.util` | 利用率，各期 | % 清單 | 100、100、100、100、100 | 檢查 |
-| `defaults.m.revMW` | 每 MW 年收入，各期 | US$bn/MW 清單 | 0.0174、0.0174、0.0174、0.0174、0.0174 | 必改 |
+| `defaults.m.revMW` | 每 MW 年收入，各期 | US$bn/MW 清單 | 0.00976952、0.0103103、0.010632、0.0107343、0.0107343 | 必改 |
 | `defaults.m.aiShare` | AI 占比，各期（目前只做範圍檢查，未參與計算） | % 清單 | 100、100、100、100、100 | 可沿用 |
 | `defaults.m.fill` | 新產能簽約率：未被既有 RPO 占用的產能能賣出的比例 | % 清單 | 100、100、100、100、100 | 檢查 |
 | `defaults.m.power` | 電價（overlay 開啟時才用） | $/MWh 清單 | 60、62、64、66、68 | 檢查 |
@@ -584,6 +584,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.checks.unsignedRevShareMax` | 檢查頁：後段年度依賴未簽約收入的比例上限（5a） | 比例 | 0.5 | 檢查 |
 | `methodology.checks.siteRentGapMax` | 檢查頁：站點租賃五期租金可能低估的金額上限（5a） | US$bn | 10 | 檢查 |
 | `methodology.checks.rentVsBenchMin` | 檢查頁：模型每 MW 年租金至少要達到「市場基準 × 第三方占比」的比例（5a） | 比例 | 0.8 | 檢查 |
+| `methodology.checks.revCapShareMax` | 檢查頁：每 MW 年收入 ÷ Tokenomics 客戶每 MW 付費 token 營收（比較層）的上限；超過即警示，只警示不改數字（Oracle v0.3） | 比例 | 0.5 | 檢查 |
+| `methodology.checks.revCapLayer` | 收入上限檢查的比較層（自 CoreWeave W9／Nebius v0.4）：Tokenomics 四層瀑布 IFW_RevGWFleet_100／_Util／_Prod／_Life 擇一；門檻 revCapShareMax 比較此層（_Prod 已扣 SLO 下產能折減，最接近可實際售出 token）；四層一起取、逐層列示（下游資料契約第 2 條）；未設＝Util | 代碼 | Prod | 檢查 |
+| `methodology.perMw._note` | 每 MW 收入方法開關的說明（不進程式；Oracle v0.3） | 文字 | 每 MW 收入方法開關（Oracle v0.3，已決… | 可沿用 |
+| `methodology.perMw.revenue` | 每 MW 收入方法（Oracle v0.3）：tkAnchor＝Tokenomics 錨（IF_HoldEcon，在役世代加權）× 定價倍數 k（pricing.anchorMultiple）；legacy＝scenarios.revMW（v0.2，回歸驗收用） | 代碼 | tkAnchor | 檢查 |
 
 ### `peers`：同業比較（Comps）
 
@@ -684,6 +688,31 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `tokenomics.currentFile` | 取數時 Tokenomics model/CURRENT 的檔名 | 文字 | 20261022_Tokenomics_v19.0.… | 可沿用 |
 | `tokenomics.names` | 引用的 Tokenomics 名稱（IF_、IFW_、IFC_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW、IF_RevGWFleet、IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、L1_HoldEconMW_Hopper、L1_HoldEconMW_GB200、L1_HoldEconMW_GB300、L1_HoldEconMW_VR200、L1_TokMW_Gen_ratio_VR200、L1_TokMW_Gen_ratio_VR200_Lo、L1_TokMW_Gen_ratio_VR200_Hi、L1_RevGW_PQ_VR200、L1_RevGW_PQ_VR200_Lo、L1_RevGW_PQ_VR200_Hi | 檢查 |
 | `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（v19.0 全數已提供） | 清單 | IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、L1_HoldEconMW_Hopper、L1_HoldEconMW_GB200、L1_HoldEconMW_GB300、L1_HoldEconMW_VR200、L1_TokMW_Gen_ratio_VR200、L1_TokMW_Gen_ratio_VR200_Lo、L1_TokMW_Gen_ratio_VR200_Hi、L1_RevGW_PQ_VR200、L1_RevGW_PQ_VR200_Lo、L1_RevGW_PQ_VR200_Hi | 檢查 |
+
+### `pricing`：每 MW 收入的公司因素：定價倍數 k、證據表（Oracle v0.3）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `pricing._note` | 每 MW 收入公司因素區段的說明（不進程式；Oracle v0.3） | 文字 | Oracle v0.3：每 MW 收入的公司因素（定… | 可沿用 |
+| `pricing.anchorMultiple._note` | 定價倍數 k 的口徑說明（已決定事項 14、下游資料契約第 4 條；不進程式） | 文字 | Oracle v0.3（已決定事項 14、15；比照… | 可沿用 |
+| `pricing.anchorMultiple.long` | k_長約：base／low／high（價格軸低／基準／高）、證據來源 refEvidence、契約第 4 條指定解讀 interpretation、三筆長約中位數 sensMedian、Oracle 自身合約換算 ownContract（只列敏感度）、標記。base／low／high／sensMedian 為規格，建置時由證據價格 ÷ 目前快照同世代成本推算（kspec.py；HTML 端 segA.js kSpecApplyQ）：數字（固定倍數）｜{ref: 證據 label}｜{priceEq, gen, tkName}（端點換成固定價格）｜{median: [label…]}；ownContract.specs 逐項 {ref}｜{tcv(US$m), years, mw, gen, tkName}，建置時解出 values | 物件（倍數） | 物件（base、low、high、tag、refEvidence、sensMedian、note、interpretation、ownContract） | 檢查 |
+| `pricing.anchorMultiple.spot` | k_現貨：base／low／high、refEvidence、標記（非長約客戶的價格倍數）；base／low／high 為規格（同 k_長約） | 物件（倍數） | 物件（base、low、high、tag、refEvidence、note） | 檢查 |
+| `pricing.anchorMultiple.onDemandShare` | 隨需（現貨）占比：base（基準 10%，[Assumed]，區間長約 80–100%）、sens（敏感度清單）、標記與說明；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約 | 物件（比例） | 物件（base、sens、tag、note） | 檢查 |
+| `pricing.anchorMultiple.contractMix` | 合約組合的揭露（只作對照；找不到者寫明試過的來源） | 清單 | 1 筆 | 必改 |
+| `pricing.anchorMultiple.notFound` | 找不到的價格證據與試過的來源（「找不到」與「不存在」分開寫） | 清單（文字） | VR200 長約或現貨每 GPU 小時價格：找不到（…、Oracle 自身合約每 GPU 小時價格：不得作為…、第二筆獨立於 IREN 的 neocloud 長約（… | 必改 |
+| `pricing.anchorMultiple.evidence` | k 證據表：每筆 label、gen（Tokenomics 世代名）、price、unit、tkName（IF_HoldEcon 或 IF_GPUhrEcon）、合約型態與期間、use（long／spot＝驅動基準，range＝只支持區間，list＝只列）、來源、日期、標記；倍數＝price ÷ 同世代 Tokenomics 基準值（建置時計算） | 清單 | 11 筆 | 必改 |
+
+### `fleet`：世代組合（Oracle v0.3；收入錨加權）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `fleet._note` | 世代組合區段的說明（不進程式；Oracle v0.3） | 文字 | 世代組合（Oracle v0.3，比照 Nebius… | 可沿用 |
+| `fleet.generations` | 使用的世代（與 Tokenomics 快照世代同名） | 清單 | Hopper H100、GB200 NVL72、GB300 NVL72、VR200 NVL72 | 可沿用 |
+| `fleet.openMw` | 評價日已連網 MW-IT（期初在役 MW，世代權重的起點；只用於世代加權，不進收入的 MW） | MW | 2543 | 必改 |
+| `fleet.openMwNote` | 上一欄的推導與口徑 | 文字 | 評價日（FY27Q1 末）已連網 MW-IT：FY2… | 必改 |
+| `fleet.openMix` | 期初在役機隊世代占比（asOf、mix、range、來源、標記） | 物件 | 物件（asOf、mix、tag、range、source） | 必改 |
+| `fleet.newMix` | 各期新增在役 MW 的世代占比（五期，每期一個 {世代: 占比}，合計 100%） | 清單 | 5 筆 | 檢查 |
+| `fleet.newMixNote` | 新增世代占比的依據與區間 | 文字 | [Assumed]：FY27（2026/6–2027… | 檢查 |
 
 ### `oracle`：Oracle 資料草稿（v0.1a；v0.1b 逐步搬入，只留後續步驟用或只作對照的欄位）
 

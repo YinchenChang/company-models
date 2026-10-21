@@ -343,6 +343,14 @@ function scnQ(e, sc) {
   };
 }
 
+// v0.3：容量情境 sc × 每 MW 收入變體 o（價格情境 px、k_長約／k_現貨、隨需占比 od、Tokenomics 成本情境 tkCase〔錨與每 MW 建置成本同動；k＝價格 ÷ 同情境成本，依證據世代重算〕、新增世代組合 newMix）
+// 每 MW 年收入改變時，期初可計費 MW 依「最新季 OCI 營收 × 4 ÷ 首期每 MW 年收入」自動重算，可計費路徑隨之重算（與 Excel 活公式相同）。供 3 × 3 矩陣、敏感度與拆解（scripts/tk_sens.js、attrib_*.js）共用。
+function tkScnQ(e, sc, o = {}) {
+  let s = scnQ(e, sc), rev = tkAnchorQ(sc, o).rev, bo = Math.round(COMPANY_DATA.scenarios.billableRatio.openAnnualRevenue / rev[0]);
+  s.m = { ...s.m, revMW: rev, billable: SCENARIOS[sc].acc.map((x, t) => Math.round(bo + (x - bo) * SC_BR[t])) }; s.billableOpen = bo;
+  return s
+}
+
 // v4.1：目標價區間。點位＝目前輸入的加權目標價（評等仍依點位）；
 // 情境區間＝保守與積極情境的加權目標價（保留手動調整）；方法區間＝目前輸入、EV/EBITDA 倍數換成 methodology.rangeMultiples 兩端。
 // 判斷句與 DCF 權重說明在此產生（HTML 各頁共用；Excel 以文字公式產生同一字串，cmp31 逐字比對）。

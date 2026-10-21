@@ -30,6 +30,22 @@ cmp('未售', S+'未售產能（浪費）', H('unsold'));
 cmp('isRev', S+'損益用算力收入（模型期＝RPO 轉換＋新簽約）', H('isRev'));
 cmp('營收−MW×單價×利用率', S+'核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間', y.map(e=>e.isRev-e.capacity)); // v0.1b：MW 驅動時為 0
 cmp('每MW年收入', '輸入|每 MW 年收入', d.m.revMW);
+if (PMW_REVQ === 'tkAnchor') { // v0.3：Tokenomics 錨 × k（Excel「每MW收入_錨定」各容量情境；HTML tkAnchorQ）
+  for (const k of ['low', 'base', 'high']) { const A = tkAnchorQ(k), lb = COMPANY_DATA.scenarios.labels[k] + '｜', W = '每MW收入_錨定|' + lb;
+    cmp('期末在役 ' + k, W + '期末在役 MW（＝已連網 MW）', A.end);
+    cmp('新增在役 ' + k, W + '新增在役 MW', A.add);
+    for (const g of COMPANY_DATA.fleet.generations) cmp('平均占比 ' + g + ' ' + k, W + `平均在役占比｜${g}`, A.share[g]);
+    cmp('錨 ' + k, W + '錨：每 MW 經濟持有成本（IF_HoldEcon，在役世代加權）', A.anchor.map(x => x * 1e3));
+    cmp('k ' + k, W + '定價倍數 k（隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約）', A.k);
+    cmp('錨×k ' + k, W + '每 MW 年收入（錨 × k，100% 計費時數）', A.rev.map(x => x * 1e3));
+    cmp('上限比 ' + k, W + '上限檢查｜每 MW 收入 ÷ 客戶付費 token 營收', A.capRatio); // 比較層（revCapLayer）
+    for (const L of REVCAP_LAYERS_Q) { // 四層瀑布每層一列（客戶每 MW 付費 token 營收、Oracle 每 MW 計費收入 ÷ 該層）
+      cmp('四層 token 營收 _' + L + ' ' + k, W + `上限檢查｜四層｜客戶每 MW 付費 token 營收｜_${L}（IFW_RevGWFleet_${L}，在役世代加權）`, A.capLay[L].map(x => x * 1e3));
+      cmp('四層比例 _' + L + ' ' + k, W + `上限檢查｜四層｜Oracle 每 MW 計費收入 ÷ _${L}`, A.capRL[L]); } }
+  { const AM = COMPANY_DATA.pricing.anchorMultiple, A = tkAnchorQ(SC);
+    cmp('k_長約 目前價格情境', '每MW收入_錨定|k_長約（目前價格情境）', [A.kL]); cmp('k_現貨 目前價格情境', '每MW收入_錨定|k_現貨（目前價格情境）', [A.kS]);
+    cmp('Oracle 自身合約 k', '每MW收入_錨定|Oracle 自身合約 k（Oracle–OpenAI；只列為敏感度）', AM.long.ownContract.values); }
+}
 cmp('傳統事業營收', '輸入|傳統事業營收（模型期）', H('legacyRev')); cmp('傳統事業EBITDA', '輸入|傳統事業 EBITDA（模型期）', H('legacyEbitda')); // v0.1b（Oracle）
 d.lg.lines.forEach(x=>{ cmp('傳統 '+x.key+' 全年', `輸入|傳統事業｜${x.label}｜全年營收`, x.annual); cmp('傳統 '+x.key+' 模型期', `輸入|傳統事業｜${x.label}｜模型期營收`, x.rev); });
 cmp('現金稅', F+T('⑦ 現金稅（«STUB» 起）'), H('cashTax')); cmp('股利', F+'⑧ 股利（普通股＋特別股）', y.map((e,i)=>i===0?e.fyDividend:e.dividend)); cmp('債務上限', F+'債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）', H('debtCap')); // v0.1b cmp('來源 傳統EBITDA', F+T('Ⓒ3 傳統事業 EBITDA（«STUB» 起）'), H('legacyEbitda'));
