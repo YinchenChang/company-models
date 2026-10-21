@@ -890,7 +890,7 @@ function runFunding(e) {
       ok: df <= th,
       severity: df <= th ? `ok` : `watch`,
       title: `世代門檻核對：Tokenomics 與 CRWV 自算門檻的最大差距（百分點） ${hA(df * 100, 2)}（門檻 ${hA(th * 100, 1)}）`,
-      detail: `Tokenomics ${GIQ.thrRevName}（收入持平）與 ${GIQ.thrPayName}（回本）和 CRWV 以自身公式算回的門檻比較（W9 公式保留為核對；上市間隔為推導值 ${hA(gap, 2)} 年）。明細見每 MW 經濟性的世代指數判讀。`
+      detail: `Tokenomics ${GIQ.thrRevName}（收入持平）與 ${GIQ.thrPayName}（回本）和 CRWV 以自身公式算回的門檻比較（W9 公式保留為核對；上市間隔為推導值 ${gap.toFixed(2)} 年）。明細見每 MW 經濟性的世代指數判讀。`
     })
   }
   let v = o[0].gross,

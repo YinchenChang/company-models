@@ -19,7 +19,8 @@ _co.pop('asOf', None)  # 滾動檢查的季度標記只在建置時檢查（cale
 _co['consensus'] = _json.load(open(os.path.join(H, _co['meta']['consensusFile']), encoding='utf-8'))  # v4.3：市場共識資料檔（只讀）併入注入資料，不另設全域變數
 if _co.get('tokenomics'):  # W2：Tokenomics 快照（版本固定）內嵌給 HTML 引擎；JS 不寫死任何 Tokenomics 數字
     _tk = _json.load(open(os.path.join(H, _co['tokenomics']['snapshotFile']), encoding='utf-8'))
-    _co['tkSnap'] = {'source': {k: _tk['source'][k] for k in ('version', 'commit', 'file', 'extractedAt')}, 'items': _tk['items']}
+    # W10：source 加 generations（世代名稱與代碼；HTML 的 VR200 判讀列、指數敏感度、世代門檻核對讀它。v4.11 漏帶，瀏覽器版這些內容未顯示；cmp31 走 load_engine.js 的完整 source 所以未察覺）
+    _co['tkSnap'] = {'source': {k: _tk['source'][k] for k in ('version', 'commit', 'file', 'extractedAt', 'generations')}, 'items': _tk['items']}
 _g = _co['consensus']['companyGuidance']['2026Q3']  # Q3 營收指引以 company.json 為準；與共識檔不一致即停止建置（Excel 建置同一檢查）
 assert (_g['revenueLow'], _g['revenueHigh']) == (_co['callFacts']['nextQRevLo'], _co['callFacts']['nextQRevHi']), 'Q3 營收指引：company.json 與共識檔不一致'
 assert abs(_co['ytdActual']['adjEbitda'] - _co['ytdActual']['adjEbitdaMeta']['q1'] - _co['ytdActual']['adjEbitdaMeta']['q2']) < 1e-9, '1H 調整後 EBITDA ≠ Q1＋Q2'

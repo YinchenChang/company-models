@@ -1,4 +1,4 @@
-# CoreWeave 收支模型 v4.11 原始碼包
+# CoreWeave 收支模型 v4.12 原始碼包
 
 HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo 根目錄；建置產物寫到 `out/`（不納入版控），交付成品放 `dist/`。HTML 的函式庫模板為 `docs/template_v3_3.html`。
 
@@ -207,11 +207,20 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **快照**：`data/tokenomics_snapshot_v5.36.json`（Tokenomics master `63db13a779cf511504ee7b13bc752cd4623ddda1`，`model/CURRENT`＝`20261015_Tokenomics_v5.36.xlsx`）；原 29 個名稱 365 個數值與 v5.35 逐值相同；名稱清單新增 8 個：`IFW_RevGWFleet_100／_Util／_Prod／_Life`（四層瀑布）、`IFC_Use`（用途限制，顯示在 Excel「Tokenomics_取數」四層列旁）、`L1_TokMW_Gen_ratio_VR200` 與 `_Lo`／`_Hi`（VR200 對 GB300 每 MW token 產出比 q）。`IF_RevGWFleet` 保留（＝`_Util` 層，逐值相同）。`import_tokenomics.py` 的 `by_name` 型態（IFC_ 整欄）在 Excel 取數頁不建列；`TK_` 具名範圍去掉 `IFW_` 前綴（例：`TK_RevGWFleet_Prod_GB300`）。
 - **收入上限四層（B3）**：「每MW經濟性」W4 區每層一列「客戶每 MW 付費 token 營收｜_100／_Util／_Prod／_Life」與一列「CRWV 每 MW 計費收入 ÷ 該層」；門檻（`methodology.checks.revCapShareMax`＝50%）的比較層由 `methodology.checks.revCapLayer` 指定（v4.11＝`Prod`；省略＝`Util`，即 W4 原做法）。「檢查_連動」收入上限列與 HTML 連動檢查讀比較層各期最高。只影響檢查結果，不改任何收入、成本、目標價。
 - **收入 q × p 結構（B2）**：每 MW 年收入｜g ＝ 參考價 p_ref × 世代指數 idx_g；p_ref ＝ 定價倍數 k × `IF_HoldEcon`｜參考世代（`pricing.genIndex.refGen`，GB300）；idx_g 預設＝`IF_HoldEcon`｜g ÷ `IF_HoldEcon`｜參考世代（跟成本走），可覆寫世代（鍵＝Tokenomics 世代代碼，目前 `VR200`）有覆寫值（> 0）時用覆寫值。預設下與 v4.10 的「錨 × k」恆等，數值 0 差異。Excel：輸入頁「定價倍數 k」區新增「VR200 世代指數覆寫（0＝跟成本走）」「上市間隔 GB300→VR200（年）」，「TK 世代指數」區塊（預設指數、採用指數），「每MW經濟性」新增「參考價 p_ref」「世代指數加權」列。HTML：`segA.js` `genIdxQ`、`anchorRevQ`。
-- **VR200 判讀列**（「每MW經濟性」次層，預設收合；HTML「每 MW 經濟性 → VR200 世代指數判讀」）：q（基準／低／高）、上市間隔（`pricing.genIndex.gapYears`，**v4.11 的唯一固定值**；v4.12 待 Tokenomics B 段合併後改取 `L1_GenPxThr_*` 名稱）、VR200 世代指數、隱含年價格變化、收入持平門檻、回本門檻（皆活公式，不寫死）、判讀文字（依條件產生）。
+- **VR200 判讀列**（「每MW經濟性」次層，預設收合；HTML「每 MW 經濟性 → VR200 世代指數判讀」）：q（基準／低／高）、上市間隔（v4.11 為固定值 `gapYears`；v4.12 起改為推導值，見下節）、VR200 世代指數、隱含年價格變化、收入持平門檻、回本門檻（皆活公式，不寫死）、判讀文字（依條件產生）。
 - **敏感度**：既有每 MW 敏感度表（`scripts/permw_sens.py` 建置時快照＋HTML `vrSensQ` 即時；「快照已過期」檢查沿用）新增 5 列 VR200 指數（q 低端 × 回本價格路徑、1.00、跟成本走、q × (1 − 10%)^間隔、q 高端 × 回本價格路徑；指數值由快照與 `company.json` 算出，列名帶隱含年價格變化）。
 - **可移植性**：新增 `company.json` → `pricing.genIndex`（`refGen`、可覆寫世代鍵〔`VR200`〕、`qName`、`gapYears`、`lifeDeclinePerYear`）與 `methodology.checks.revCapLayer`。換公司：`refGen` 改為該公司的參考世代；沒有可覆寫世代或 Tokenomics 沒有對應 q 名稱時，省略該世代鍵／`qName`——判讀列與指數敏感度即不產生，其餘（p_ref × 世代指數）照常；`pricing.genIndex` 整個省略＝仍用 W4 的「錨 × k」。
 - **升版清單**：`scripts/expect/v4_11_rules.json` → `v4_11_vs_v4_10.txt`（輸入頁只允許四層欄位、收入列公式、上限檢查比較層，其餘須 0 差異）。
 - **報告**：`docs/reports/20261015_coreweave_v4.11_世代指數與收入上限.md`。
+
+## v4.12 Tokenomics 快照換 v18.0、世代門檻取 Tokenomics 名稱（W10；2026-10-21）
+- **快照**：`data/tokenomics_snapshot_v18.0.json`（Tokenomics master `868e2cc552621fcf3a513ecd3a9960bafb318e99`，`model/CURRENT`＝`20261021_Tokenomics_v18.0.xlsx`）；原 37 名中 26 名數值與 v5.36 相同（全部成本、資本支出、折舊、維護、電力、`IF_HoldEcon`、`IF_GPUhrEcon`、`IF_Util`、`IF_WarrantyYrs`），11 名改變（四層上限、VR200 產出比 q、`L1_RevGW_Fleet_VR200`、`L1_GPUhr_GB300_vsBE` 外部對照、`IFC_Use` 範圍列號）；名稱清單新增 6 個：`L1_GenPxThr_Rev_VR200`／`L1_GenPxThr_Pay_VR200` 與各自 `_Lo`／`_Hi`（Excel「Tokenomics_取數」新增 6 個 `TK_GenPxThr_*` 具名範圍）。
+- **世代門檻**：「每MW經濟性」VR200 判讀區的收入持平門檻、回本門檻改讀 Tokenomics 名稱（基準、低端、高端各一列）；W9 的 CRWV 自算公式保留為「核對｜」列；「核對差距」＝兩者差距的較大者，超過 `methodology.checks.genThrGapMax`（0.005＝0.5 個百分點）時「檢查_連動」的「世代門檻核對」列警示（HTML 連動檢查同式）。
+- **上市間隔改為推導值**（[Derived]）：＝ln(1 ÷ q) ÷ ln(1 + 收入持平門檻)（兩者皆 L1_ 名稱的基準欄）＝1.18 年，等於 Tokenomics `CAP_GenGap_VR200`；`CAP_` 不在下游契約第 2 條第 1 項允許的前綴，所以不直接取。`company.json` → `pricing.genIndex.gapYears` 刪除，改為 `thrRevName`／`thrPayName`（Tokenomics 名稱）。快照沒有門檻名稱時（例如舊方法回歸用的 v5.26 快照）間隔與門檻顯示「不適用」，指數敏感度不產生。Excel 輸入頁的上市間隔為活公式；`scripts/permw_sens.py`、HTML 同式。
+- **敏感度**：VR200 指數 5 列以新 q 與推導間隔重算（指數 0.62／1.00／1.12／1.33／1.55）；基準列（跟成本走）仍等於 $42.70／$31.99／$14.72。
+- **可移植性**：新增 `pricing.genIndex.thrRevName`／`thrPayName`、`methodology.checks.genThrGapMax`（欄位說明見下方欄位表）。換公司：沒有對應 Tokenomics 門檻名稱時省略這兩個鍵——間隔、門檻與指數敏感度顯示「不適用」，其餘照常。
+- **升版清單**：`scripts/expect/v4_12_rules.json` → `v4_12_vs_v4_11.txt`。
+- **報告**：`docs/reports/20261021_coreweave_v4.12_Tokenomics_v18.0.md`。
 
 ## company.json 欄位說明（換公司填表指引）
 換成 Nebius、Oracle、OpenAI 等公司時，照這一節逐欄填寫 `company.json`；HTML 與 Excel 都從這個檔讀資料，改完執行 `scripts/verify.sh`。
@@ -222,7 +231,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY26 下半年、FY27、FY28、FY29、FY30，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 CoreWeave v4.11 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 CoreWeave v4.12 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
