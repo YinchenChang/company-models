@@ -537,5 +537,138 @@
 "year": 2025,
 "source": "SEC 10-K＋macrotrends",
 "multiple": 2.149
+},
+{
+"company": "SK 海力士（P/E）",
+"metric": "P/E",
+"year": 2016,
+"source": "companiesmarketcap",
+"multiple": 9.57
+},
+{
+"company": "SK 海力士（P/E）",
+"metric": "P/E",
+"year": 2017,
+"source": "companiesmarketcap",
+"multiple": 4.61
+},
+{
+"company": "SK 海力士（P/E）",
+"metric": "P/E",
+"year": 2018,
+"source": "companiesmarketcap",
+"multiple": 2.54
+},
+{
+"company": "SK 海力士（P/E）",
+"metric": "P/E",
+"year": 2019,
+"source": "companiesmarketcap",
+"multiple": 30.2
+},
+{
+"company": "SK 海力士（P/E）",
+"metric": "P/E",
+"year": 2020,
+"source": "companiesmarketcap",
+"multiple": 16.2
+},
+{
+"company": "SK 海力士（P/E）",
+"metric": "P/E",
+"year": 2021,
+"source": "companiesmarketcap",
+"multiple": 9.01
+},
+{
+"company": "SK 海力士（P/E）",
+"metric": "P/E",
+"year": 2022,
+"source": "companiesmarketcap",
+"multiple": 22.6
+},
+{
+"company": "SK 海力士（P/E）",
+"metric": "P/E",
+"year": 2024,
+"source": "companiesmarketcap",
+"multiple": 5.99
+},
+{
+"company": "SK 海力士（P/E）",
+"metric": "P/E",
+"year": 2025,
+"source": "companiesmarketcap",
+"multiple": 10.5
+},
+{
+"company": "三星電子（P/E）",
+"metric": "P/E",
+"year": 2016,
+"source": "companiesmarketcap",
+"multiple": 9.15
+},
+{
+"company": "三星電子（P/E）",
+"metric": "P/E",
+"year": 2017,
+"source": "companiesmarketcap",
+"multiple": 6.95
+},
+{
+"company": "三星電子（P/E）",
+"metric": "P/E",
+"year": 2018,
+"source": "companiesmarketcap",
+"multiple": 5.06
+},
+{
+"company": "三星電子（P/E）",
+"metric": "P/E",
+"year": 2019,
+"source": "companiesmarketcap",
+"multiple": 15.3
+},
+{
+"company": "三星電子（P/E）",
+"metric": "P/E",
+"year": 2020,
+"source": "companiesmarketcap",
+"multiple": 19.1
+},
+{
+"company": "三星電子（P/E）",
+"metric": "P/E",
+"year": 2021,
+"source": "companiesmarketcap",
+"multiple": 12.5
+},
+{
+"company": "三星電子（P/E）",
+"metric": "P/E",
+"year": 2022,
+"source": "companiesmarketcap",
+"multiple": 6.5
+},
+{
+"company": "三星電子（P/E）",
+"metric": "P/E",
+"year": 2023,
+"source": "companiesmarketcap",
+"multiple": 36.1
+},
+{
+"company": "三星電子（P/E）",
+"metric": "P/E",
+"year": 2024,
+"source": "companiesmarketcap",
+"multiple": 10.6
+},
+{
+"company": "三星電子（P/E）",
+"metric": "P/E",
+"year": 2025,
+"source": "companiesmarketcap",
+"multiple": 18.2
 }
 ]
