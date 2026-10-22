@@ -730,7 +730,6 @@
 "c2_tkpq_r": "C125",
 "c2_tkled": "C126",
 "d1_u2_ck": "C127",
-"d1_u2_bind": "C128",
 "d1_l2_eq": "C129",
 "d1_l_order": "C130",
 "d1_l1_first": "C131",
@@ -741,12 +740,18 @@
 "d1_x_none": "C136",
 "d1_x_half": "C137",
 "d1_x_full": "C138",
-"d1_x_ext": "C139"
+"d1_x_ext": "C139",
+"d1_u2_pgw_n": "C140",
+"d1_u2_pgw_l": "C141",
+"d1_u2_pgw_b": "C142"
 },
 "retired_INP": [
 "INP_067",
 "INP_068",
 "INP_069",
 "INP_016"
+],
+"retired_CHK": [
+"C128"
 ]
 }

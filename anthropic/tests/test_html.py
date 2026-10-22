@@ -167,12 +167,10 @@ def test_narrative_claims(engine):
 
 
 def test_single_driver_never_needs_external_funding(engine, loc):
-    """⑥『任何單一驅動在區間內都不會產生外部資金需求』；v0.1.3 起 combo1（任務數低＋彈性弱）也不會（U2 新法使現金谷底由 84.2 升到 87.0），combo3 會。"""
+    """⑥『任何單一驅動在區間內都不會產生外部資金需求』；組合 combo1 會。"""
     single = [k for k, g in load_scenarios()["scenarios"].items() if len(g) == 1]
     for sc in single:
         v = _scenario_values(engine, loc, sc, [("FND_ExtNeedCum", 2030)])[("FND_ExtNeedCum", 2030)]
         assert v == 0, f"單一驅動 {sc} 產生外部資金需求 {v}"
     v = _scenario_values(engine, loc, "combo1", [("FND_ExtNeedCum", 2030)])[("FND_ExtNeedCum", 2030)]
-    assert v == 0
-    v = _scenario_values(engine, loc, "combo3", [("FND_ExtNeedCum", 2030)])[("FND_ExtNeedCum", 2030)]
     assert v > 0

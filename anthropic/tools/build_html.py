@@ -618,7 +618,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <div class="kpi"><div class="k">累計外部資金需求 2026–2030</div><div class="v">{n("FND_ExtNeedCum", Y, "f0")}</div><div class="s">$B；OpenAI v0.6 同期 <b class="neg">{n("OAI_FND_ExtNeedCum", Y, "f1")}</b></div></div>
 <div class="kpi"><div class="k">只靠已到位融資的現金谷底</div><div class="v">{n("FND_CashNoExtTrough", None, "f1")}</div><div class="s">$B，2028 年；當年最低現金 {n("FND_MinCash", 2028, "f1")}</div></div>
 </div>
-<p class="note">兩個需求驅動同時落在下緣（API 任務數成長取低＋價格彈性取弱端）時，2030 差額轉負（{n("COST_PropGap_VR", Y, "sf1", "combo1")}），但累計外部資金需求仍為 {n("FND_ExtNeedCum", Y, "f1", "combo1")}（v0.1.2 此組合曾出現外部資金需求；v0.1.3 U2 新法降低 Nscale、Lambda 付款後，只靠已到位融資的現金谷底由 84.2 升到 87.0，此組合不再觸及最低現金）；再加合約價 20、爬坡 1 年才出現缺口（{n("FND_ExtNeedCum", Y, "f1", "combo3")}，見 ⑥）。用管理層較舊的營收目標、同一支出，反向累計外部資金需求 {n("RVS_ExtNeedCum", Y, "f1")}（只作對照）。</p>
+<p class="note">翻轉結論需要兩個需求驅動同時落在下緣：API 任務數成長取低＋價格彈性取弱端，2030 差額 {n("COST_PropGap_VR", Y, "sf1", "combo1")}、累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "combo1")}（見 ⑥）。用管理層較舊的營收目標、同一支出，反向累計外部資金需求 {n("RVS_ExtNeedCum", Y, "f1")}（只作對照）。</p>
 </section>""")
 
     # ── ①之二 v0.1.1 更新了什麼 ──
@@ -705,7 +705,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
         f"<td>{n(f'FND_L1_ExtTotal_Exp{k}', None, 'f1')}</td><td>{n(f'FND_L2_ExtTotal_Exp{k}', None, 'f1')}</td><td>{n(f'FND_L3_ExtTotal_Exp{k}', None, 'f1')}</td><td>{n(f'FND_L2_Trough_Exp{k}', None, 'f1')}</td></tr>"
         for k, lab in (("None", "無需求（變現 0）"), ("Half", "部分變現（0.5）"), ("Full", "完全變現（1）")))
     S.append(f"""<section id="s1c"><h2><span class="no">①之三</span>v{ver} A 段更新：U2 新法、資金三層、持續擴張情境</h2>
-<p class="lead">外部驗收報告（v0.1.2）採納後的第一段。U2 改用揭露容量（Nscale {n("SRC_ANT_222", None, "f0")} MW、Lambda {n("SRC_ANT_224", None, "f0")} MW）：Nscale、Lambda 的供給 GW 取自揭露 MW、付款＝MIN(揭露 GW × 合約價, 『最高 86』的年上限)；2030 每 VR 等值 GW 差額由 {n("COST_PropGap_VR", Y, "sf2", "v012")} 變為 {n("COST_PropGap_VR", Y, "sf2")}。Tokenomics 快照改 {tk_ver}，數值與 v18.0 相同。</p>
+<p class="lead">外部驗收報告（v0.1.2）採納後的第一段。U2 新法（chat 端更正公式）：Nscale（{n("SRC_ANT_222", None, "f0")} MW）、Lambda（{n("SRC_ANT_224", None, "f0")} MW）的供給 GW 改取揭露容量，年付款路徑不變（『最高 86』按 MW 比例分攤、依爬坡年度攤提）；因此成本不變、分母（供給 VR 等值 GW）下降，2030 每 VR 等值 GW 差額由 {n("COST_PropGap_VR", Y, "sf2", "v012")} 變為 {n("COST_PropGap_VR", Y, "sf2")}。隱含每 GW 年付款：Nscale {n("COST_U2PayPerGW_Nscale", None, "f1")}、Lambda {n("COST_U2PayPerGW_Lambda", None, "f1")}、兩約合計 {n("COST_U2PayPerGW_Both", None, "f1")} $B/GW/年，高於通用合約價 {n("INP_114", None, "f0")}，表示『最高 86』含揭露 GW 以外的容量或服務，或揭露 MW 低估。Tokenomics 快照改 {tk_ver}，數值與 v18.0 相同。</p>
 <div class="tw"><table><thead><tr><th>輸出</th>{"".join(f"<th>{l}</th>" for l, _s in u2_cols)}</tr></thead><tbody>
 {"".join(u2_rows)}
 </tbody></table></div>
@@ -865,7 +865,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 </tbody></table></div>
 <div class="must"><b>「按目前已到位融資與基準支出路徑，不出現最低現金缺口」要成立，必須：</b>
 <ol><li><b>2029 年後新增算力的支出不超過餘裕</b>（最大的前提；模型只計已簽合約，未建「新簽合約」機制）。若營收不變，2029 年新增算力支出超過 {n("COST_GapCash", 2029, "f1")}、2030 年超過 {n("COST_GapCash", Y, "f1")}（＝當年差額），差額就轉負；新增支出累計超過 {n("FND_Headroom", Y, "f1")}（2030 年現金餘裕；且各年不超過當年餘裕：2028 年 {n("FND_Headroom", 2028, "f1")}、2029 年 {n("FND_Headroom", 2029, "f1")}），才需要外部資金。對照：供給 GW 2028 → 2030 由 {n("CMP_SupplyGW", 2028, "f1")} 降到 {n("CMP_SupplyGW", Y, "f1")}，營收淨額卻由 {n("REV_NetCapped", 2028, "f1")} 增到 {n("REV_NetCapped", Y, "f1")}。</li>
-<li><b>API 需求成長與價格彈性不同時落在下緣</b>：兩者同時取下緣 → 2030 差額 {n("COST_PropGap_VR", Y, "sf1", "combo1")}、累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "combo1")}（尚無缺口）；彈性弱＋合約價 20＋爬坡 1 年 → {n("FND_ExtNeedCum", Y, "f1", "combo3")}；四者全加 → {n("FND_ExtNeedCum", Y, "f1", "combo4")}（首次缺口 {n("FND_FirstGapYear", None, "yt", "combo4")}）。</li>
+<li><b>API 需求成長與價格彈性不同時落在下緣</b>：兩者同時取下緣 → 2030 差額 {n("COST_PropGap_VR", Y, "sf1", "combo1")}、累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "combo1")}；再加合約價 20、爬坡 1 年 → {n("FND_ExtNeedCum", Y, "f1", "combo4")}（首次缺口 {n("FND_FirstGapYear", None, "yt", "combo4")}）。</li>
 <li><b>2026 年的 ${n("FND_Committed", 2026, "f0")}B 已交割</b>（Series G／H 為公司新聞稿與律所公告，多個獨立來源）。</li></ol></div>
 {V.src("REV_NetCapped", "COST_PropGap_VR", "COST_Coverage", "FND_ExtNeedCum", "FND_FirstGapYear", "FND_CashNoExtTrough", "COST_GapCash", "FND_Headroom", "CMP_SupplyGW")}
 </section>""")

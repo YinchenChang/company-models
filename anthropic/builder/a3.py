@@ -360,20 +360,19 @@ def build(ctx):
         else:
             fs = lambda i, c, key=key, fam=fam: f"=«C:sup_{key}»*«C:price_{fam}»"  # noqa: E731
             nt = "GW × 合約價 × 持有比"
-        if key in U2:       # U2：u2_switch＝1 且 u2_method＝1＝新法（MIN(揭露容量 × 合約價, 年上限)）；u2_method＝0＝v0.1.1（年上限）；u2_switch＝0＝v0.1
+        if key in U2:       # U2：u2_switch＝1＝『最高 86』的金額攤提（Cost 第二十二節年付款列；新舊法同一付款路徑）；0＝v0.1
             old_fs = fs
             if key == "nscale":
-                fs = lambda i, c, old_fs=old_fs, key=key, fam=fam: (f"={u2}*({u2m}*MIN(«C:sup_{key}_disc»*«C:price_{fam}»,«u2cap_{key}»)+(1-{u2m})*«u2cap_{key}»)+(1-{u2})*(" + old_fs(i, c)[1:] + ")")  # noqa: E731
+                fs = lambda i, c, old_fs=old_fs, key=key: f"={u2}*«u2cap_{key}»+(1-{u2})*(" + old_fs(i, c)[1:] + ")"  # noqa: E731
             else:
-                fs = lambda i, c, old_fs=old_fs, key=key, fam=fam: (f"={u2}*({u2m}*MIN(«C:sup_{key}_disc»*«C:price_{fam}»,«u2cap_{key}»)+(1-{u2m})*«u2cap_{key}»)"  # noqa: E731
-                                                                  + f"+(1-{u2})*«C:sup_{key}_old»*«C:price_{fam}»")
-            nt = ("U2：新法（u2_method＝1）＝MIN(揭露容量 GW × 合約價, 年上限)；年上限＝『最高 86』×MW 比例 ÷ Σ 爬坡權重 × 當年權重（Cost 第二十二節）；u2_method＝0＝v0.1.1：年上限本身；"
+                fs = lambda i, c, old_fs=old_fs, key=key, fam=fam: f"={u2}*«u2cap_{key}»+(1-{u2})*«C:sup_{key}_old»*«C:price_{fam}»"  # noqa: E731
+            nt = ("U2：u2_switch＝1＝『最高 86』按 MW 比例分攤、÷ Σ 爬坡權重 × 當年權重（Cost 第二十二節；v0.1.1／v0.1.2 的付款路徑，新法 u2_method 不改付款，只改供給 GW）；"
                   f"u2_switch＝0＝v0.1：{nt}")
         K.add(f"pay_{key}", f"合約實付：{zh.split('（')[0]}", "$B", fs, nt, name=f"COST_Pay_{key.capitalize()}")
     K.add("pay", "合約實付合計", "$B", lambda i, c: "=«pay_legacy»+" + "+".join(f"«pay_{k}»" for k in ckeys), "", name="COST_ContractPay")
     K.add("pay_gwtype", "其中：GW 型合約付款（與合約價成正比；敏感度 A）", "$B",
-          lambda i, c: "=" + "+".join((f"(1-{u2}*(1-{u2m}))*«pay_{k}»" if k in U2 else f"«pay_{k}»") for k in ckeys if CT[k][3] == "gw"),
-          "AMD；Nscale、Lambda 在 v0.1 口徑（u2_switch＝0）與 U2 新法（u2_method＝1；未觸及年上限時與合約價成正比）計入，v0.1.1 金額型不計")
+          lambda i, c: "=" + "+".join((f"(1-{u2})*«pay_{k}»" if k in U2 else f"«pay_{k}»") for k in ckeys if CT[k][3] == "gw"),
+          "AMD；Lambda 僅在 U2 開關 0（v0.1 口徑，GW 型）時計入")
     K.add("own", "自建資本支出（Fluidstack）", "$B", lambda i, c: "=«C:own_capex»", "Compute 第五節", name="COST_OwnedCapex")
     K.add("cc", "算力成本（現金口徑）＝合約實付＋自建資本支出", "$B", lambda i, c: "=«pay»+«own»", "命題輸出基準（D10）", name="COST_Compute")
     K.add("gap25", "差距：2025 算力成本 − 說明書實際（應為 0）", "$B", only25("=«cc»-«act25»"), "2025 校準（既有雲端列為餘額）", name="COST_Gap2025", name_cols="D")

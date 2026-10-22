@@ -222,22 +222,22 @@ def build(ctx):
     K.add("pq_q_tk", "TK：VR200 每 GW 付費 token 實際產出 Q（M tok／年；L1_TokGW_PaidPQ_VR200）", "M tok/GW/年", only26("=TK_L1_TokGW_PaidPQ_VR200"), "實際利用率 0.45（低 0.30、高 0.65）")
     K.add("pq_q_ratio", "本模型 Q ÷ TK Q（2026）", "倍", only26("=«pq_q_model»/«pq_q_tk»"), "對照 TK 的帳未閉合倍數 L1_TokLedger_2026Q2")
 
-    K.section("二十二、v0.1.3 U2 新法：Nscale、Lambda 年付款上限＝『最高 86』按 MW 比例 ÷ Σ 爬坡權重 × 當年權重（付款 ＝ MIN(揭露 GW × 合約價, 年上限)；列放在本節，使既有列編號不變）")
+    K.section("二十二、v0.1.3 U2 新法（chat 端更正工作單公式）：Nscale、Lambda 年付款＝『最高 86』按 MW 比例分攤 ÷ Σ 爬坡權重 × 當年權重（v0.1.1／v0.1.2 的付款路徑不變）；u2_method＝1 時供給 GW 改取揭露容量；列放在本節，使既有列編號不變")
     r_, k2 = I("ramp_years"), I("arith_k2")
     for key in U2:
         q = U2[key]
         s_, e_ = D.fill(q["s"]), D.fill(q["e"])
         tk_ = "u2_T_n" if key == "nscale" else "u2_T_l"
-        K.add(f"u2cap_{key}", f"U2 年付款上限：{CT[key][1].split('（')[0]}＝錨定總額 ÷ Σ 爬坡權重 × 當年權重", "$B",
+        K.add(f"u2cap_{key}", f"U2 年付款：{CT[key][1].split('（')[0]}＝錨定總額 ÷ Σ 爬坡權重 × 當年權重", "$B",
               lambda i, c, s_=s_, e_=e_, tk_=tk_: (f"=«{tk_}@$»/((({e_}-{s_}+1)+({e_}-{s_}+1)-{r_}+1)/{k2})*MIN({r_},{c}$6-{s_}+1)/{r_}*({c}$6>={s_})*({c}$6<={e_})"),
-              "v0.1.1 的付款時程（金額型）即此列；新法以它為上限，揭露容量 × 合約價較低時取較低者", name=f"COST_U2Cap_{key.capitalize()}")
-    K.add("u2cap_bind", "U2 新法：年上限實際約束的合約年數（揭露 GW × 合約價 > 年上限）", "年數",
-          lambda i, c: "=" + "+".join(f"(«C:sup_{k}_disc»*«C:price_{CT[k][2]}»>«u2cap_{k}»)" for k in U2), "0＝兩約付款都由揭露容量決定（未被 86 約束）")
-    K.add("u2_pay_chg", "U2 新法 − v0.1.1：Nscale＋Lambda 合約實付差（新法開啟時；$B）", "$B",
-          lambda i, c: "=" + I("u2_switch") + "*" + I("u2_method") + "*(«pay_nscale»+«pay_lambda»-«u2cap_nscale»-«u2cap_lambda»)", "＝新法付款 − 年上限（v0.1.1 付款）；≤ 0")
-    K.add("ck_u2", "U2 新法檢查：付款 − 年上限 的正部分，及付款 − 揭露 GW × 合約價 的正部分（合計；應為 0）", "$B",
-          lambda i, c: "=" + I("u2_switch") + "*" + I("u2_method") + "*(" + "+".join(
-              f"(«pay_{k}»-MIN(«pay_{k}»,«u2cap_{k}»))+(«pay_{k}»-MIN(«pay_{k}»,«C:sup_{k}_disc»*«C:price_{CT[k][2]}»))" for k in U2) + ")", "")
+              "即合約實付（u2_switch＝1）；新舊法付款相同", name=f"COST_U2Cap_{key.capitalize()}")
+    for key, nmz in (("nscale", "Nscale"), ("lambda", "Lambda")):
+        K.add(f"u2gw_{key}", f"隱含每 GW 年付款（{nmz}）＝峰值年付款 ÷ 揭露容量 GW（對照；通用合約價 12 × 持有比）", "$B/GW/年",
+              only25(f"=MAX(«u2cap_{key}@R»)/MAX(«C:sup_{key}_disc@R»)"), "對照用：高於通用合約價 → 金額 86 含揭露 GW 以外的容量或服務", name=f"COST_U2PayPerGW_{nmz}", name_cols="D")
+    K.add("u2gw_both", "隱含每 GW 年付款（兩約合計）＝兩約峰值年付款 ÷ 兩約揭露容量", "$B/GW/年",
+          only25("=(MAX(«u2cap_nscale@R»)+MAX(«u2cap_lambda@R»))/(MAX(«C:sup_nscale_disc@R»)+MAX(«C:sup_lambda_disc@R»))"), "", name="COST_U2PayPerGW_Both", name_cols="D")
+    K.add("ck_u2", "U2 檢查：合約實付 − 年付款列（u2_switch＝1 時；各年絕對差合計；應為 0）", "$B",
+          lambda i, c: "=" + I("u2_switch") + "*(" + "+".join(f"ABS(«pay_{k}»-«u2cap_{k}»)" for k in U2) + ")", "")
 
     K.section("二十三、v0.1.3 持續擴張情境（外部驗收 Priority 3；只作情境，基準仍只計已簽合約）：2029–2030 每年追加算力，變現比例 3 檔（0 無需求／0.5 部分／1 完全）")
     ex_pct, ex_y1, ex_y2 = I("exp_pct"), I("exp_first_year"), I("exp_last_year")
@@ -561,8 +561,10 @@ def checks(ctx):
         ("c2_tkpq_r", "v0.1.2：TK P × Q ÷ 本模型 2026 每付費推論 VR 等值 GW 營收總額", "=COST_TKPQRatio", None, "info", "1＝一致；Cost 第二十一節"),
         ("c2_tkled", "v0.1.2：TK token 帳未閉合倍數（L1_TokLedger_2026Q2）", "=COST_TKTokLedger", None, "info", "契約 v18.0：約 6.26"),
         # ── v0.1.3 A 段
-        ("d1_u2_ck", "v0.1.3 U2 新法：付款超出年上限或揭露容量 × 合約價的金額（各年最大；$B）", f"=MAX(MAX(Cost!$D${K.rows['ck_u2']}:$I${K.rows['ck_u2']}),-MIN(Cost!$D${K.rows['ck_u2']}:$I${K.rows['ck_u2']}))", 0, "tol", "Cost 第二十二節"),
-        ("d1_u2_bind", "v0.1.3 U2 新法：年上限實際約束的合約年數（info）", f"=SUM(Cost!$D${K.rows['u2cap_bind']}:$I${K.rows['u2cap_bind']})", None, "info", "0＝86 沒有約束付款"),
+        ("d1_u2_ck", "v0.1.3 U2 新法：合約實付與『最高 86』年付款列的差（各年最大；$B）", f"=MAX(MAX(Cost!$D${K.rows['ck_u2']}:$I${K.rows['ck_u2']}),-MIN(Cost!$D${K.rows['ck_u2']}:$I${K.rows['ck_u2']}))", 0, "tol", "Cost 第二十二節"),
+        ("d1_u2_pgw_n", "v0.1.3 U2：Nscale 隱含每 GW 年付款（$B/GW/年；對照通用合約價）", "=COST_U2PayPerGW_Nscale", None, "info", "chat 端預期約 15–18"),
+        ("d1_u2_pgw_l", "v0.1.3 U2：Lambda 隱含每 GW 年付款（$B/GW/年）", "=COST_U2PayPerGW_Lambda", None, "info", ""),
+        ("d1_u2_pgw_b", "v0.1.3 U2：兩約合計隱含每 GW 年付款（$B/GW/年）", "=COST_U2PayPerGW_Both", None, "info", ""),
         ("d1_l2_eq", "v0.1.3 資金第 2 層累計外部資金需求 − 基準 FND_ExtNeedCum（2030；$B）", "=FND_L2_ExtTotal-INDEX(FND_ExtNeedCum,1,6)", 0, "tol", "第 2 層即現行基準；Funding 第十節"),
         ("d1_l_order", "v0.1.3 資金三層累計外部資金需求不遞增的違反數（①≥②≥③）", "=(FND_L1_ExtTotal<FND_L2_ExtTotal)+(FND_L2_ExtTotal<FND_L3_ExtTotal)", 0, "eq", "層越多，需補的外部資金越少"),
         ("d1_l1_first", "v0.1.3 營運自由現金流首次轉正年（基準）", "=FND_FCFFirstPos", None, "info", "報告 ① 句使用"),
