@@ -1,14 +1,14 @@
 # Parity 情境檔（CLAUDE.md 第 3 節）。每個情境：改寫輸入 → LibreOffice 重算（基準）→ 與 engine 比對全部公式格。
 # 輸入一律以具名範圍設定（SRC_OAI_nnn、INP_nnn、TK_*）。v0.6-P1 只有檢查頁有公式；v0.6-P2 起 Demand、Revenue 頁的公式也由情境驅動（h 起為 P2 情境）。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
-  sheets: [README, SRC_OAI, TK_Link, TK_PxQ, Inputs, Derived_V9, Demand, Revenue, Compute, Cost, Funding, Reverse, PxQ, Checks, Map_v05, _Defaults]
+  sheets: [README, SRC_OAI, TK_Link, Inputs, Derived_V9, Demand, Revenue, Compute, Cost, Funding, Reverse, PxQ, Checks, Map_v05, _Defaults]
   formula_cells: 3898             # P2：652 → 1260；P3：→ 1989（Compute 頁、Revenue 第八節、Inputs 新列檢查欄、Checks C40–C66）；P4：→ 2629（Cost 頁、Compute 第十三節、Inputs／SRC 新列檢查欄、Checks C67–C90）；v0.6.1：→ 3898（PxQ 頁、Inputs／SRC 新列檢查欄、Checks C131–C154）；P5：→ 3063（Funding 192、Reverse 184、Inputs 新列檢查欄 5、Checks C91–C130 共 53）
-  defined_names: 719              # S1：426；P2：＋16 SRC_OAI＋10 INP＋64 DEM_／REV_；P3：＋6 INP＋35 CMP_＋5 REV_；P4：＋9 SRC_OAI＋9 INP＋1 TK＋2 CMP_＋36 COST_；P5：＋5 INP＋14 FND_＋8 RVS_；v0.6.1：＋3 SRC_OAI＋13 INP＋TK_FileSHA256＋TKQ_ 35（5 meta＋2 表頭＋28 名稱）＋PXQ_ 21（合計 73 個新名稱）
+  defined_names: 709              # S1：426；P2：＋16 SRC_OAI＋10 INP＋64 DEM_／REV_；P3：＋6 INP＋35 CMP_＋5 REV_；P4：＋9 SRC_OAI＋9 INP＋1 TK＋2 CMP_＋36 COST_；P5：＋5 INP＋14 FND_＋8 RVS_；v0.6.1：＋3 SRC_OAI＋13 INP＋TK_FileSHA256＋TK_ 35（5 meta＋2 表頭＋28 名稱）＋PXQ_ 21（合計 73 個新名稱）；v0.6.2：719 − TKQ_ 35 ＋ TK_ 新名稱 25（22 取數名稱＋RNG_ 3）＝ 709
   src_rows: 134                   # SRC_OAI 筆數（與報告一致）；P2：106＋16（價格事件數值與公告日）；P4：＋9（SRC_OAI_129–137：2025 銷售／管理／營業損失、人數、股權報酬）；v0.6.1：＋3（SRC_OAI_138–140：Epoch 16、Brockman 50、Epoch 服務占比 0.5）
   src_named: 132                  # 有數值的列才有 SRC_OAI_nnn 名稱（Business 每席只有低／高；退役 ID 不重用）
   inp_rows: 276                   # P2：233＋10（E8c 事件時點偏移 4、E6 定義常數 6）；P3：＋6（INP_256–261）；P4：＋9（INP_262–270）；P5：＋5（INP_271–275）；v0.6.1：＋13（INP_276–288）
-  tk_values: 63                   # TK_Link 有值的名稱（TK_IF_／TK_SRC_／TK_L1_ 具名範圍；S1 v5.24 快照：37＋25；S4 v5.25：＋IF_CapexTotal；S5 v5.26：數值不變）
-  tk_pending: 0                   # 待 Tokenomics 提供（S1：v5.24 已全部提供）
+  tk_values: 85                   # TK_Link 有值的名稱（TK_IF_／TK_SRC_／TK_L1_ 具名範圍；S1 v5.24 快照：37＋25；S4 v5.25：＋IF_CapexTotal；S5 v5.26：數值不變）；v0.6.2：v19.0 單一快照，＋22（P×Q 取數名稱；RNG_ 3 名不在此計）
+  tk_pending: 2                   # 待 Tokenomics 提供（S1：v5.24 已全部提供）；v0.6.2：IF_PxEffMix_Lo／_Hi（Tokenomics 缺口）
   v05_leaves: 849
   v05_tagged_objects: 121         # chat 端計數；本包以 JSON 實數核對
 
@@ -156,7 +156,7 @@ scenarios:
     inputs: {"INP_287": 1}
   - id: au_serve_share_tkq
     description: P×Q：Tokenomics 服務占比快照 0.41→0.5：Q 與 m×L 連動，比值不變
-    inputs: {"TKQ_IF_ServeShare": 0.5}
+    inputs: {"TK_IF_ServeShare": 0.5}
   - id: av_handoff_mix_broken
     description: P×Q：交接檔 2026 Hopper 占比 0.25→0.35，使組合合計 1.1（預覽基準區塊占比合計檢查 C141 應轉 ERR）
     inputs: {"INP_281": 0.35}
@@ -168,4 +168,4 @@ scenarios:
     inputs: {"SRC_OAI_140": 0.6}
   - id: ay_tkq_revenue_mismatch
     description: P×Q：Tokenomics SRC_DEM_007 快照 13.07→12：營收兩來源不相等（C132 應轉 ERR）
-    inputs: {"TKQ_SRC_DEM_007": 12}
+    inputs: {"TK_SRC_DEM_007": 12}

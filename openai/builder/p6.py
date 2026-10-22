@@ -1,8 +1,8 @@
 """v0.6.1（工作單 20261022）：PxQ 頁 — P×Q 與「實際 m×L ÷ 所需 m×L」回本比值序列。
 
 規格來源：docs/plan/20261022_OpenAI_PxQ回本比值_交接.md 第 2 節（Andy 2026-10-21～22 原話，權威）與工作單第 3 節。
-- 每 GW 參數只取 TK_PxQ（Tokenomics v19.0 快照，具名範圍 TKQ_）；公司層級（GW、世代組合、營收）取本模型的 INP_／SRC_OAI_／CMP_／REV_。
-- 公式只引用 TKQ_、INP_、SRC_OAI_、CMP_、REV_ 與本頁名稱／儲存格；公式內不含常數（E6；恆等式 1−x、年數含頭尾的 +1 除外）。
+- 每 GW 參數只取 TK_Link（Tokenomics v19.0 單一快照，具名範圍 TK_）；公司層級（GW、世代組合、營收）取本模型的 INP_／SRC_OAI_／CMP_／REV_。
+- 公式只引用 TK_、INP_、SRC_OAI_、CMP_、REV_ 與本頁名稱／儲存格；公式內不含常數（E6；恆等式 1−x、年數含頭尾的 +1 除外）。
 - Python 只產生結構；計算由 Excel（LibreOffice）與 engine 執行。比值＝實際 m×L ÷ 所需 m×L＝營收 ÷ 算力成本（Q 與牌價約掉）。
 - 欄 D–H＝五個案例：2025 指數內插、2025 線性內插、2026 低／基準／高 GW。
 """
@@ -30,8 +30,8 @@ class PxQ:
         self.n = 0
         ws = self.ws
         title(ws, "PxQ — P×Q 與回本比值：實際 m×L ÷ 所需 m×L（＝營收 ÷ 算力成本）的年度序列（v0.6.1）",
-              "每 GW 參數只取 TK_PxQ（Tokenomics v19.0 快照，TKQ_）；公司層級（平均上線 GW、世代組合、營收）取本模型。看的不是回本的絕對數字，而是實際 ÷ 所需的比值趨勢（Andy 2026-10-22）。",
-              "m＝付費服務 token 的實收單價 ÷ 有效牌價（有效牌價＝表列 ×（1 − d），d＝TKQ_IF_Disc）；L 取壽命期價格係數（判斷題 1 預設）。比值中 Q 與牌價約掉，Q 只決定 m×L 的水準。"
+              "每 GW 參數只取 TK_Link（Tokenomics v19.0 單一快照，TK_）；公司層級（平均上線 GW、世代組合、營收）取本模型。看的不是回本的絕對數字，而是實際 ÷ 所需的比值趨勢（Andy 2026-10-22）。",
+              "m＝付費服務 token 的實收單價 ÷ 有效牌價（有效牌價＝表列 ×（1 − d），d＝TK_IF_Disc）；L 取壽命期價格係數（判斷題 1 預設）。比值中 Q 與牌價約掉，Q 只決定 m×L 的水準。"
               "欄 D–H＝2025 指數／線性內插、2026 低／基準／高 GW。$B＝十億美元；Q 單位 M tok（百萬 token）／年。")
         header(ws, 5, ["編號", "項目", "單位"] + CASES + ["", "說明"])
         for c, w in (("A", 7), ("B", 58), ("C", 14), ("D", 15), ("E", 15), ("F", 15), ("G", 15), ("H", 15), ("I", 12), ("J", 90)):
@@ -88,18 +88,18 @@ def build_p6(wb, R, S, I, nm, snapq):
     X.add("年度", "年", lambda i, c: f"={y25}" if YI[i] == 0 else f"={y26}", "yr", "INP_005／INP_006（2025 為實際校準年）", name="PXQ_Year")
     X.add("年度序位（年度 − 起始年 + 1；供 INDEX 取 CMP_／REV_ 年度向量）", "序位", lambda i, c: f"={c}{X.rows['yr']}-{y25}+1", "idx", "年數含頭尾的 +1（恆等式）")
     X.add("平均上線 GW", "GW", lambda i, c: [
-        "=(TKQ_SRC_DEM_009-TKQ_SRC_DEM_008)/LN(TKQ_SRC_DEM_009/TKQ_SRC_DEM_008)", "=AVERAGE(TKQ_SRC_DEM_008,TKQ_SRC_DEM_009)",
+        "=(TK_SRC_DEM_009-TK_SRC_DEM_008)/LN(TK_SRC_DEM_009/TK_SRC_DEM_008)", "=AVERAGE(TK_SRC_DEM_008,TK_SRC_DEM_009)",
         f"={gw_lo}", f"={gw_mid}", f"={gw_hi}"][i], "gw",
           "2025：OpenAI 官方端點（2024 年底 0.6、2025 年底 1.9；Interested-party；電力口徑未明）內插——指數＝(端點差)÷ln(端點比)，線性＝端點平均（Derived）；"
           "2026：Inputs 三情境（Assumed；官方未公布）", fmt=NUM3, name="PXQ_GW")
     X.add("營收（基準）", "$B", lambda i, c: f"={s_rev25}" if YI[i] == 0 else f"={s_rev26}", "rev",
-          "2025＝SRC_OAI（13.07，Checks 驗等於 TKQ_SRC_DEM_007）；2026＝管理層目標 36（FT 2026-09-18 七月投資人簡報；利害關係方的管理層目標，非市場傳聞）", fmt=NUM2, name="PXQ_Rev")
+          "2025＝SRC_OAI（13.07，Checks 驗等於 TK_SRC_DEM_007）；2026＝管理層目標 36（FT 2026-09-18 七月投資人簡報；利害關係方的管理層目標，非市場傳聞）", fmt=NUM2, name="PXQ_Rev")
 
     # ═══ 二、世代參數表（TKQ）═══
-    X.section("二、世代參數（每 GW；TK_PxQ 基準成本情境）：欄 D 年持有成本、E 每 GW 付費年產能、F 生產折減（v19.0 讀法）、G 生產折減（一律 IF_ProdDerate）、H 採用（Inputs 開關）")
-    X.hdr(["世代", "TKQ_HdrGen 對照名稱", "持有成本 $B/GW/年", "付費年產能 M tok/GW/年", "折減（v19.0 讀法）", "折減（一律 ProdDerate）", "折減（採用）"], "g_hdr")
+    X.section("二、世代參數（每 GW；TK_Link 基準成本情境）：欄 D 年持有成本、E 每 GW 付費年產能、F 生產折減（v19.0 讀法）、G 生產折減（一律 IF_ProdDerate）、H 採用（Inputs 開關）")
+    X.hdr(["世代", "TK_HdrGen 對照名稱", "持有成本 $B/GW/年", "付費年產能 M tok/GW/年", "折減（v19.0 讀法）", "折減（一律 ProdDerate）", "折減（採用）"], "g_hdr")
     r_cost = X.r
-    put(ws, f"B{r_cost}", "成本情境（對應 TKQ_HdrCost；基準）", F_CALC)
+    put(ws, f"B{r_cost}", "成本情境（對應 TK_HdrCost；基準）", F_CALC)
     put(ws, f"D{r_cost}", snapq["hdr_cost"][1], F_CALC)
     X.rows["costkey"] = r_cost
     X.r += 1
@@ -112,14 +112,14 @@ def build_p6(wb, R, S, I, nm, snapq):
         put(ws, f"B{r}", zh, F_CALC)
         if key != "Custom":
             put(ws, f"C{r}", snapq["hdr_gen"][3 * k], F_CALC)
-            put(ws, f"D{r}", f"=SUMIFS(TKQ_IF_HoldEcon,TKQ_HdrGen,$C{r},TKQ_HdrCost,$D${r_cost})", fmt=NUM3)
-            put(ws, f"E{r}", f"=SUMIFS(TKQ_IF_TokGWPaidMix,TKQ_HdrGen,$C{r},TKQ_HdrCost,$D${r_cost})", fmt=SCI)
+            put(ws, f"D{r}", f"=SUMIFS(TK_IF_HoldEcon,TK_HdrGen,$C{r},TK_HdrCost,$D${r_cost})", fmt=NUM3)
+            put(ws, f"E{r}", f"=SUMIFS(TK_IF_TokGWPaidMix,TK_HdrGen,$C{r},TK_HdrCost,$D${r_cost})", fmt=SCI)
         else:
             put(ws, f"C{r}", "（VR200 × 世代產能係數）", F_CALC)
             put(ws, f"D{r}", f"=D{g['VR200']}*{custom}", fmt=NUM3)
             put(ws, f"E{r}", f"=E{g['VR200']}*{custom}", fmt=SCI)
-        put(ws, f"F{r}", "=TKQ_IF_FleetProdRatio_VR200" if key == "VR200" else "=TKQ_IF_ProdDerate", fmt=NUM3)
-        put(ws, f"G{r}", "=TKQ_IF_ProdDerate", fmt=NUM3)
+        put(ws, f"F{r}", "=TK_IF_FleetProdRatio_VR200" if key == "VR200" else "=TK_IF_ProdDerate", fmt=NUM3)
+        put(ws, f"G{r}", "=TK_IF_ProdDerate", fmt=NUM3)
         put(ws, f"H{r}", f"=(1-{dsw})*F{r}+{dsw}*G{r}", fmt=NUM3)
         put(ws, f"J{r}", {"Custom": "自研晶片：持有成本與產能＝VR200 × 世代產能係數（沿用 v0.6 P4／P3 做法；Analogy，係數區間 0.4–1.0）；折減用 IF_ProdDerate（非 VR200）",
                           "VR200": "v19.0 讀法：VR200 用 IF_FleetProdRatio_VR200（重解 SLO 後的比）；其他世代用 IF_ProdDerate",
@@ -147,18 +147,18 @@ def build_p6(wb, R, S, I, nm, snapq):
             rr[key] = X.add(f"世代占比：{zh}", "比例", lambda i, c, key=key: sh_expr(mix, key, i, c), f"{tag}_sh_{key}", "", fmt=PERC)
         s1, s6 = rr["Hopper"], rr["Custom"]
         X.add("世代占比合計（應＝1）", "比例", lambda i, c: f"=SUM({c}{s1}:{c}{s6})", f"{tag}_shsum", "Checks 驗證", fmt=PERC)
-        X.add("每 GW 年持有成本 h（世代加權）", "$B/GW/年", lambda i, c: f"=SUMPRODUCT({c}{s1}:{c}{s6},$D${g1}:$D${g6})", f"{tag}_h", "h＝Σ 世代占比 × TKQ_IF_HoldEcon（基準欄）", fmt=NUM3, name=f"PXQ_h" if tag == "m" else None)
+        X.add("每 GW 年持有成本 h（世代加權）", "$B/GW/年", lambda i, c: f"=SUMPRODUCT({c}{s1}:{c}{s6},$D${g1}:$D${g6})", f"{tag}_h", "h＝Σ 世代占比 × TK_IF_HoldEcon（基準欄）", fmt=NUM3, name=f"PXQ_h" if tag == "m" else None)
         X.add("算力成本 C＝平均 GW × h", "$B", lambda i, c: f"={c}{X.rows[f'{tag}_gw']}*{c}{X.rows[f'{tag}_h']}", f"{tag}_C", "年度算力成本（機隊持有成本口徑；Andy：『從持有的機隊成本去推算』）", fmt=NUM2, name="PXQ_C" if tag == "m" else None)
         X.add("每 GW 付費年產能（世代加權，已乘生產折減）", "M tok/GW/年",
-              lambda i, c: f"=SUMPRODUCT({c}{s1}:{c}{s6},$E${g1}:$E${g6},${dcol}${g1}:${dcol}${g6})", f"{tag}_cap", "Σ 世代占比 × TKQ_IF_TokGWPaidMix × 生產折減", fmt=SCI)
+              lambda i, c: f"=SUMPRODUCT({c}{s1}:{c}{s6},$E${g1}:$E${g6},${dcol}${g1}:${dcol}${g6})", f"{tag}_cap", "Σ 世代占比 × TK_IF_TokGWPaidMix × 生產折減", fmt=SCI)
         X.add("Q（M tok／年）＝GW × 服務占比 ×（1 − 免費占比）× 每 GW 付費年產能 × 實際利用率", "M tok/年",
-              lambda i, c: f"={c}{X.rows[f'{tag}_gw']}*{serve}*(1-TKQ_IF_FreeShare)*{c}{X.rows[f'{tag}_cap']}*TKQ_IF_UtilActual", f"{tag}_Q",
+              lambda i, c: f"={c}{X.rows[f'{tag}_gw']}*{serve}*(1-TK_IF_FreeShare)*{c}{X.rows[f'{tag}_cap']}*TK_IF_UtilActual", f"{tag}_Q",
               "Andy：『Q 就是真正拿去用作服務的算力，去乘上每單位算力可以產生的 token 數』", fmt=SCI, name="PXQ_Q" if tag == "m" else None)
         X.add("Q（T token／年）", "T tok/年", lambda i, c: f"={c}{X.rows[f'{tag}_Q']}/{mt}", f"{tag}_QT", "顯示用（交接檔『約 6.4×10¹⁵ token』＝6,400 T）", fmt="#,##0")
-        X.add("有效牌價 P_eff（付費層級組合；已含折扣 d）", "$/M tok", lambda i, c: "=TKQ_IF_PxEffMix25" if YI[i] == 0 else "=TKQ_IF_PxEffMix", f"{tag}_P",
+        X.add("有效牌價 P_eff（付費層級組合；已含折扣 d）", "$/M tok", lambda i, c: "=TK_IF_PxEffMix25" if YI[i] == 0 else "=TK_IF_PxEffMix", f"{tag}_P",
               "2025＝IF_PxEffMix25（年度加權）；2026＝IF_PxEffMix（2026 快照）", fmt=NUM3, name="PXQ_Peff" if tag == "m" else None)
         if full:
-            X.add("表列牌價＝P_eff ÷（1 − d）", "$/M tok", lambda i, c: f"={c}{X.rows[f'{tag}_P']}/(1-TKQ_IF_Disc)", f"{tag}_Plist", "d＝TKQ_IF_Disc，不寫死", fmt=NUM3)
+            X.add("表列牌價＝P_eff ÷（1 − d）", "$/M tok", lambda i, c: f"={c}{X.rows[f'{tag}_P']}/(1-TK_IF_Disc)", f"{tag}_Plist", "d＝TK_IF_Disc，不寫死", fmt=NUM3)
         X.add("營收", "$B", lambda i, c: rev_fn(i, c) if rev_fn else f"={c}{X.rows['rev']}", f"{tag}_rev", "", fmt=NUM2)
         X.add("實際 m×L＝營收 ÷（Q × P_eff）", "倍", lambda i, c: f"={c}{X.rows[f'{tag}_rev']}*{usd}/({c}{X.rows[f'{tag}_Q']}*{c}{X.rows[f'{tag}_P']})", f"{tag}_act",
               "m 只看收費業務、跟營收有關跟成本無關", fmt=NUM3, name="PXQ_mL_Actual" if tag == "m" else None)
@@ -167,9 +167,9 @@ def build_p6(wb, R, S, I, nm, snapq):
         X.add("比值＝實際 m×L ÷ 所需 m×L", "倍", lambda i, c: f"={c}{X.rows[f'{tag}_act']}/{c}{X.rows[f'{tag}_req']}", f"{tag}_ratio", "主輸出；＝營收 ÷ 算力成本", fmt=NUM3, name="PXQ_Ratio" if tag == "m" else None)
         if full:
             X.add("恆等式：比值 −（營收 ÷ 算力成本）（應＝0）", "倍", lambda i, c: f"={c}{X.rows[f'{tag}_ratio']}-{c}{X.rows[f'{tag}_rev']}/{c}{X.rows[f'{tag}_C']}", f"{tag}_ident", "Checks 驗證", fmt="0.0E+00", name="PXQ_Identity" if tag == "m" else None)
-            X.add("隱含 m＝實際 m×L ÷ L（L＝2025 機隊，TKQ_IF_LTotalFleetVDisc）", "倍", lambda i, c: f"={c}{X.rows[f'{tag}_act']}/TKQ_IF_LTotalFleetVDisc", f"{tag}_mfleet",
+            X.add("隱含 m＝實際 m×L ÷ L（L＝2025 機隊，TK_IF_LTotalFleetVDisc）", "倍", lambda i, c: f"={c}{X.rows[f'{tag}_act']}/TK_IF_LTotalFleetVDisc", f"{tag}_mfleet",
                   "只作顯示（判斷題 1：L 讀法預設＝壽命期價格係數）", fmt=NUM3)
-            X.add("隱含 m＝實際 m×L ÷ L（L＝新世代，TKQ_IF_LTotalDisc）", "倍", lambda i, c: f"={c}{X.rows[f'{tag}_act']}/TKQ_IF_LTotalDisc", f"{tag}_mnew", "只作顯示", fmt=NUM3)
+            X.add("隱含 m＝實際 m×L ÷ L（L＝新世代，TK_IF_LTotalDisc）", "倍", lambda i, c: f"={c}{X.rows[f'{tag}_act']}/TK_IF_LTotalDisc", f"{tag}_mnew", "只作顯示", fmt=NUM3)
         rg = f"{tag}_ratio"
         sel = f"((1-{sw25})*$D{X.rows[rg]}+{sw25}*$E{X.rows[rg]})"
         for lab, ref, key in (("持平所需 2026 平均 GW（以 2025 指數比值）", f"$D{X.rows[rg]}", "be_exp"), ("持平所需 2026 平均 GW（以 2025 線性比值）", f"$E{X.rows[rg]}", "be_lin"),
@@ -182,7 +182,7 @@ def build_p6(wb, R, S, I, nm, snapq):
                   name={"be_exp": "PXQ_BE_Exp", "be_lin": "PXQ_BE_Lin", "be_sel": "PXQ_BE_Sel"}[key] if tag == "m" else None)
         return rr
 
-    serve_base = "TKQ_IF_ServeShare"
+    serve_base = "TK_IF_ServeShare"
     X.section_marker = None
     block("m", "三、主序列（基準）：世代組合依 Inputs 開關（基準＝OpenAI v0.6 自有 V1 組合）、生產折減依 Inputs 開關（基準＝v19.0 讀法）、服務占比＝Tokenomics",
           "main", "H", serve_base)
@@ -202,7 +202,7 @@ def build_p6(wb, R, S, I, nm, snapq):
     X.add("外部報導算力支出（2025：雲端，Epoch 引媒體；2026：Brockman 證詞）", "$B", lambda i, c: f"={s_ep16}" if YI[i] == 0 else f"={s_bro50}", "x_ext",
           "SRC_OAI（新列；出處網址見該列）", fmt=NUM2, name="PXQ_ExtSpend")
     X.add("倍數＝外部支出 ÷（GW × h）", "倍", lambda i, c: f"={c}{X.rows['x_ext']}/{c}{X.rows['m_C']}", "x_mult", "固定倍數在比值趨勢中約掉，但須逐年用同一口徑", fmt=NUM2, name="PXQ_ExtMultiple")
-    X.add("2025 推論＋訓練支出（TKQ_SRC_DEM_004＋006）", "$B", lambda i, c: "=TKQ_SRC_DEM_004+TKQ_SRC_DEM_006" if YI[i] == 0 else None, "x_it",
+    X.add("2025 推論＋訓練支出（TK_SRC_DEM_004＋006）", "$B", lambda i, c: "=TK_SRC_DEM_004+TK_SRC_DEM_006" if YI[i] == 0 else None, "x_it",
           "Andy：『兩百零四億，很明顯是高估了』——只作對照，不作算力成本", fmt=NUM2)
     X.add("倍數＝（推論＋訓練）÷（GW × h）", "倍", lambda i, c: f"={c}{X.rows['x_it']}/{c}{X.rows['m_C']}" if YI[i] == 0 else None, "x_it_mult", "", fmt=NUM2)
 
