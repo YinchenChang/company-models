@@ -1,0 +1,37 @@
+name: minimax-build
+
+# MiniMax：建置 → LibreOffice 重算 → 敏感度 → HTML → 驗收（錯誤值 0、Checks 合計 0、快照一致、HTML 數字對 Excel）。
+# 2026-10-22 chat 端補上（M1 報告列了此檔，但未進到分支）。驗收以本機為準，CI 為事後對照。
+on:
+  push:
+    paths: ['minimax/**', '.github/workflows/minimax-build.yml']
+  pull_request:
+    paths: ['minimax/**', '.github/workflows/minimax-build.yml']
+
+defaults:
+  run:
+    working-directory: minimax
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: 安裝 LibreOffice Calc 與 openpyxl
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends libreoffice-calc-nogui
+          pip install openpyxl
+      - name: 全流程建置（Excel → 重算 → 敏感度 → HTML）與驗收（HTML 對 Excel、無外部引用、錯誤值 0、Checks 合計 0、快照一致）
+        run: |
+          mkdir -p out
+          bash scripts/build_all.sh 20261022 v0_2
+      - name: 快照對 Tokenomics master（WARN，不擋合併；Tokenomics 為公開 repo）
+        continue-on-error: true
+        run: |
+          GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://github.com/YinchenChang/tokenomics ../../tk
+          python3 scripts/tk_snapshot.py --check --tk-dir ../../tk --snapshot data/$(cat data/tokenomics_snapshot_CURRENT) || echo "::warning::MiniMax 快照與 Tokenomics master 不一致"

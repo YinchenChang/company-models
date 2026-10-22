@@ -9,7 +9,8 @@ from recalc import recalc
 
 OUT = [('R09', 2026, '2026 營收 $M'), ('R09', 2030, '2030 營收 $M'), ('P07', 2030, '2030 毛利率'),
        ('P23', 2030, '2030 覆蓋率（每 MW 營收÷全成本）'), ('P18', 2030, '2030 經調整淨利 $M'),
-       ('F11', 2030, '至 2030 累計需新融資 $M'), ('F19', 2026, '首次需新融資年'), ('V13', 2030, '折現價值÷市值')]
+       ('F11', 2030, '至 2030 累計需新融資 $M'), ('F19', 2026, '首次需新融資年'), ('V13', 2030, '折現價值÷市值'),
+       ('X05', 2026, '2026 回本比值（營收÷持有成本）'), ('X05', 2030, '2030 回本比值')]
 CASES = [
     ('基準', []),
     ('合約價 $8M/MW', ['I02=8']), ('合約價 $20M/MW', ['I02=20']),
@@ -26,6 +27,9 @@ CASES = [
     ('員工數 ×0.8', ['I18=*0.8']), ('員工數 ×1.3', ['I18=*1.3']),
     ('層級：低層占 30%', ['I04=0.3']), ('層級：低層占 90%', ['I04=0.9']),
     ('可轉債全數轉股', ['I23=1']),
+    # v0.2（M3）：D8 單價路徑與 D2 合約價證據
+    ('M3.1 降價：不計入（v0.1 行為）', ['I31=0']), ('M3.1 降價：新價流量 50%', ['I31=0.5']), ('M3.1 降價：下半年全面 −50%', ['I31=1']),
+    ('合約價 $5.5M（H20 證據價）', ['I02=5.5']), ('合約價 $9.2M（H800 證據價）', ['I02=9.2']), ('合約價 $13.4M（H100 證據價）', ['I02=13.4']),
 ]
 
 
@@ -66,9 +70,9 @@ def main(master):
         ws.cell(4 + i, 1, name); ws.cell(4 + i, 2, s)
         for j, v in enumerate(vals):
             x = ws.cell(4 + i, 3 + j, v)
-            x.number_format = '0.0%' if OUT[j][0] in ('P07',) else ('0.00"x"' if OUT[j][0] in ('P23', 'V13') else ('0' if OUT[j][0] == 'F19' else '#,##0'))
+            x.number_format = '0.0%' if OUT[j][0] in ('P07',) else ('0.00"x"' if OUT[j][0] in ('P23', 'V13', 'X05') else ('0' if OUT[j][0] == 'F19' else '#,##0'))
     ws.column_dimensions['A'].width = 34; ws.column_dimensions['B'].width = 40
-    for c in 'CDEFGHIJ': ws.column_dimensions[c].width = 16
+    for c in 'CDEFGHIJKL': ws.column_dimensions[c].width = 16
     wb.save(master)
     json.dump([(n, s, v) for n, s, v in rows], open(os.path.join(ROOT, 'out', 'sensitivity.json'), 'w'), ensure_ascii=False, indent=1)
 

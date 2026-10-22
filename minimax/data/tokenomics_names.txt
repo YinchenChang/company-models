@@ -1,0 +1,14 @@
+# MiniMax 取數名稱（Tokenomics Interface 頁；只讀 model/CURRENT 的具名範圍）
+# 每個名稱整列讀出（15 欄＝5 世代 × 低／基準／高成本情境），模型取基準欄。
+# 產能（100% 層；模型再乘 IF_Util）
+IF_TokGW_Luna
+IF_TokGW_Sol
+IF_Util
+# 持有成本（TK07/TK08 對照；M3 的 P×Q 用全 15 欄；單位 $B/GW/年，換算 $M/MW/年數值相同）
+IF_HoldEcon
+# 全成本（對照）
+IF_FullCost_Luna
+IF_FullCost_Sol
+# 價格參考（Inputs I04 說明文字用）
+IF_PriceRef_Luna
+IF_PriceRef_Sol
