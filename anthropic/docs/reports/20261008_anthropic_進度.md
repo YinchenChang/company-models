@@ -1,7 +1,7 @@
 # Anthropic v0.1 分段建置進度（接手用；A1–A5 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- **v0.1.3 A 段進行中**（分支 `claude/anthropic-v0.1.3`，PR #69 draft）：步驟 1–7 完成（報告 `docs/reports/20261022_v0.1.3-A.md`）。**B 段起點**：η 診斷拆分（不得改 η 值）、Bridge 頁（唯讀）、S-1 替換程序寫入 CLAUDE.md；B 段結束時重產 HTML 與 dist（目前 dist 為 A 段草稿，v0.1.2 成品在 `dist/_待刪除/`）。chat 端已更正 U2 公式（付款路徑不變、只改供給 GW）；待確認：工作單「公告金額比例」與「v0.1.2 路徑不變」的衝突（報告 ⑥）。B 段尚未開始。
+- **v0.1.3 A 段進行中**（分支 `claude/anthropic-v0.1.3`，PR #69 draft）：步驟 1–7 完成（報告 `docs/reports/20261022_v0.1.3-A.md`）。**B 段起點**：η 診斷拆分（不得改 η 值）、Bridge 頁（唯讀）、S-1 替換程序寫入 CLAUDE.md；B 段結束時重產 HTML 與 dist（目前 dist 為 A 段草稿，v0.1.2 成品在 `dist/_待刪除/`）。chat 端已更正 U2 公式（付款路徑不變、只改供給 GW）；待確認：工作單「公告金額比例」與「v0.1.2 路徑不變」的衝突（報告 ⑥）。B 段進行中（2026-10-22）：步驟 1–2 完成（見下方「v0.1.3 B 段」表）。
 
 - 已完成：v0.1（A0–A5）；v0.1.1（PR #56）；**v0.1.2（2026-10-21）全部步驟**：TK v5.26 → v18.0（master `868e2cc`）、語意核對、對照列、重算、pytest 109 項全過、HTML／dist、報告＋對照 Excel、CHANGELOG、交接檔。報告 `docs/reports/20261021_v0.1.2.md`。
 - 下一步：chat 端審查 PR #56（v0.1.1＋v0.1.2）並合併（代理不合併）；Andy 確認後刪除 `dist/_待刪除/`；OpenAI 模型同步 TK v18.0。
@@ -85,3 +85,11 @@
 | 5 HTML 條件式措辭、①之三 | 完成 | 見 git log | `tools/build_html.py`、`tools/html_scenarios.yaml`（新增 `u2_method_old`、`v012`；v011 等情境加關閉 U2 新法）；`tests/test_html.py` 不變 |
 | 6 重建與測試 | 完成 | 見 git log | test_builder 10、test_html 6 全過；pytest 113 項全過（builder 10、html 6、parity 情境 88、其餘 parity 9）；`scenarios.yaml` 預期值 formula_cells 6550、defined_names 1240、inp_rows 190；新增情境 `ha_u2_method_old`、`hb_u2_nscale_mw_up` |
 | 7 報告、對照 Excel、CHANGELOG、PR 留言 | 完成 | 見 git log | `tools/make_report_v013.py` 產生對照 Excel |
+
+
+## v0.1.3 B 段（Bridge 頁、η 拆解、S-1 替換程序、成品）
+A 段已確認完成（進度檔 A 段步驟 1–7 全部「完成」，分支上 12 個 commit，模型 CHK_Errors＝0）。B 段起點模型：`model/20261022_Anthropic_v0.1.3.xlsx`（A 段版）。
+| 步驟 | 狀態 | commit | 備註 |
+|---|---|---|---|
+| 1 Bridge 頁（Cost 之後，唯讀） | 完成 | 見 git log「v0.1.3 B1–B2」 | `builder/a5.py`；110 列；每列來源編號、2025–2030、標記；低／高＝2030 敏感度包絡（合約價 8／20、η 沿用／回升、產出比低／高）或 Inputs 區間（2025）；最後一節與 TK 對照（P × Q、Q、token 帳）。新增 Checks C143–C152；builder 掃描 `bridge_refs`＝0 |
+| 2 η 拆解（EtaDiag 頁，唯讀） | 完成 | 同上 | η（2025）0.5273 ＝ f_P 1.237 × f_U 0.683 × f_W 1.390 × 殘差 0.449；f_P、f_U 有區間，f_W 無區間，輸入輸出組合「無法分離」；並列 TK L1_Gap*（OpenAI 口徑）。TK_Link 尾端 +22 名（IF_UtilActual、L1_TokGW_PaidCap_VR200、L1_Gap* 各含低／高）。重建後既有頁（SRC_ANT、Inputs、Demand、Revenue、Compute、Cost、Funding、Reverse）逐格比對：公式與值差異 0 |

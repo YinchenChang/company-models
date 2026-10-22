@@ -158,3 +158,44 @@ def test_named_outputs_v01(eng):
     for n in ("FND_FirstGapYear", "FND_ExtNeedPeak", "FND_PeakYear", "FND_Contingent", "FND_CommitAfter2030", "COST_PartnerGapMax"):
         assert eng.get_name(n) not in (None, ""), n
     assert eng.get_name("CHK_Errors") == 0
+
+
+# ── v0.1.3 B：Bridge、EtaDiag（唯讀診斷頁）─────────────────────────────────
+def test_bridge_not_fed_back(wb):
+    """Bridge、EtaDiag 只作對照與診斷：除本頁與 Checks 外，任何公式不得引用 Bridge!、EtaDiag! 或 ETA_ 名稱。"""
+    assert "Bridge" in wb.sheetnames and "EtaDiag" in wb.sheetnames
+    assert wb.sheetnames.index("Bridge") == wb.sheetnames.index("Cost") + 1       # 放在 Cost 之後
+    for ws in wb.worksheets:
+        if ws.title in ("Bridge", "EtaDiag", "Checks"):
+            continue
+        for row in ws.iter_rows():
+            for c in row:
+                if isinstance(c.value, str) and c.value.startswith("="):
+                    assert not re.search(r"\b(Bridge|EtaDiag)!|\bETA_", c.value), f"{ws.title}!{c.coordinate} 引用診斷頁：{c.value}"
+
+
+def test_eta_decomposition_does_not_change_eta(eng):
+    """η 拆解只作診斷：η 的值與 v0.1.3 A 段（及 v0.1.2）相同；乘積 × 殘差 ＝ η；殘差為正。"""
+    eta = eng.get_name("CMP_Eta2025")
+    assert abs(eta - 0.52729641508883) < 1e-9
+    assert abs(eng.get_name("ETA_Eta") - eta) < 1e-12
+    prod = eng.get_name("ETA_fP") * eng.get_name("ETA_fU") * eng.get_name("ETA_fW")
+    assert abs(prod - eng.get_name("ETA_Prod")) < 1e-12
+    assert abs(prod * eng.get_name("ETA_Resid") - eta) < 1e-12
+    assert eng.get_name("ETA_Resid") > 0
+    assert 0 < eng.get_name("ETA_fU") < 2 and eng.get_name("ETA_fW") > 0 and eng.get_name("ETA_fP") > 0
+
+
+def test_bridge_ties_to_calc_sheets(eng):
+    """Bridge 逐層列的值與計算頁一致（核對列為 0）；有 Bridge 時 Checks e1_* 全 OK。"""
+    rows = eng.get("Bridge", "A8:I140")
+    byid = {r[0]: r for r in rows if r[0] != ""}
+    for rid, r in byid.items():
+        lab = str(r[1])
+        if lab.startswith("核對"):
+            assert all(abs(x) < 1e-9 for x in r[3:9] if isinstance(x, (int, float))), f"{rid} {lab}"
+    gap = eng.get_name("COST_PropGap_VR")
+    gap_row = next(r for r in byid.values() if str(r[1]).startswith("每 VR 等值 GW：差額（含股權報酬；命題 1）"))
+    assert all(abs(a - b) < 1e-9 for a, b in zip(gap_row[3:9], gap))
+    sup_row = next(r for r in byid.values() if r[1] == "供給 GW 合計")
+    assert all(abs(a - b) < 1e-9 for a, b in zip(sup_row[3:9], eng.get_name("CMP_SupplyGW")))

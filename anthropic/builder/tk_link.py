@@ -34,6 +34,9 @@ A2_NAMES = ["IF_HdrTask", "IF_TaskLen", "IF_TaskTokFresh", "IF_TaskTokCached", "
 # v0.1.2（Tokenomics v18.0 新增；只作對照，不回饋計算）：VR200 每 GW 營收 P × Q（第一年、FY2026 口徑、壽命期年均）、付費 token 實際產出 Q、token 帳未閉合倍數、收入面 m 主口徑
 V18_NAMES = [f"L1_RevGW_PQ_VR200{s}{b}" for s in ("", "_FY", "_Life") for b in ("", "_Lo", "_Hi")] + \
             [f"L1_TokGW_PaidPQ_VR200{b}" for b in ("", "_Lo", "_Hi")] + ["L1_TokLedger_2026Q2", "L1_M"]
+# v0.1.3 B（η 診斷；只對照，不回饋計算）：TK 實際利用率、VR200 每 GW 付費產能（TK 參考層級組合）、落差分解 L1_Gap*（OpenAI 口徑）
+V19B_NAMES = ["IF_UtilActual", "IF_UtilActual_Lo", "IF_UtilActual_Hi", "L1_TokGW_PaidCap_VR200"] + \
+             [f"L1_Gap{g}{b}" for g in ("Prompt", "SpendBasis", "ISL", "Util", "Product", "Unexplained") for b in ("", "_Lo", "_Hi")]
 PENDING_NOTE = "待 Tokenomics 提供"
 
 
@@ -64,6 +67,7 @@ def read_snapshot(tk_dir: Path):
     chosen += [n for n in S4_NAMES if n in names]
     chosen += [n for n in A2_NAMES if n in names]
     chosen += [n for n in V18_NAMES if n in names]
+    chosen += [n for n in V19B_NAMES if n in names]
     rows, seen = [], set()
     for n in chosen:
         if n in seen:
@@ -89,7 +93,7 @@ def read_snapshot(tk_dir: Path):
         rows.append(dict(name=n, kind=n.split("_")[0], label=label, unit=unit, values=vals, status="OK"))
     present = {r["name"] for r in rows}
     # 工作單要求、但 Tokenomics 現行版沒有者：逐名列入、值留空（E1）
-    wanted = SRC_DEM + BLOCK6 + EXTRA_NAMES + S4_NAMES + A2_NAMES + V18_NAMES
+    wanted = SRC_DEM + BLOCK6 + EXTRA_NAMES + S4_NAMES + A2_NAMES + V18_NAMES + V19B_NAMES
     pending = [dict(name=n, kind=n.split("_")[0], label="", unit="", values=[], status=PENDING_NOTE) for n in wanted if n not in present]
     hdr_gen = [wb["Interface"].cell(4, k).value for k in range(3, 18)]
     hdr_cost = [wb["Interface"].cell(5, k).value for k in range(3, 18)]
