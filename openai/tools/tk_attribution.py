@@ -30,6 +30,7 @@ OUTPUTS = {  # 名稱 → 說明；皆為具名範圍（年度向量取 FY2025�
     "COST_Compute": "算力成本（合約實付＋自有）", "COST_ComputeEcon": "算力成本（經濟）", "FND_ExtNeed": "外部資金需求（年）", "FND_ExtNeedCum": "累計外部資金需求",
     "CMP_TokGW": "token 換算 GW（÷η 前）", "CMP_VReqFactor": "機隊 VR 等值係數", "CMP_Supply_VReq": "供給 VR 等值 GW",
     "COST_PropRev_VR": "每 VR 等值 GW 營收 $B", "COST_PropFull_VR": "每 VR 等值 GW 全成本（現金）$B", "COST_Coverage": "營收覆蓋全成本比",
+    "COST_RDCompute": "研發算力成本 $B", "COST_Q3": "Q3 研發占整體成本", "COST_Q3GapTK": "研發算力 − TK L1_Ans3 差距 $B",
     "PXQ_Ratio": "PxQ 比值", "CHK_Errors": "Checks 錯誤數",
 }
 

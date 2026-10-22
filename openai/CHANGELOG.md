@@ -2,6 +2,13 @@
 
 每次同步記錄：Excel 版本、工作包、commit 與變動摘要。
 
+## 20261022_OpenAI_v0.6.2.xlsx — v0.6.2（Tokenomics 同步 v5.26 → v19.0；單一快照）
+
+- `TK_Link` 改取 Tokenomics master `1916a06`（CURRENT＝`20261022_Tokenomics_v19.0.xlsx`，SHA-256 `d1728705…4b8d`）：88 名有值（原 63＋P×Q 取數名稱 22＋`RNG_IF_AllocQ1_Lo／_Hi`、`RNG_StaleFlag`）、2 名待提供（`IF_PxEffMix_Lo／_Hi`）。`TK_PxQ` 頁與 `TKQ_` 名稱退役，`PxQ` 公式改引用 `TK_`；`PxQ` 776 個數值格與 v0.6.1 逐格相同。builder 移除 `--tk-pxq-dir`；`tk_link.read_pxq_snapshot` 移除。
+- **命題結論不變**。TK 變動的影響（對照 Excel ②，LibreOffice 重算 10 變體歸因）：η 2025 0.2795→0.1684；2030 有效推論 GW 5.60→6.84（+22.3%）、研發 GW 8.88→7.64、研發占總需求 61.4%→52.7%；供應商持有成本 2030 −7.5 $B、雲端毛利 2030 2.6（1.6%）→10.1（6.4%）；命題差額（現金）2025 −66.4→−56.9、2030 −10.05→−10.03；累計外部資金需求 442.8 與峰值年 2029 不變；截頂係數仍為 1。全部差異來自 `IF_TokGW_*`（推論／研發 GW、VR 等值係數）與 `IF_HoldEcon`（持有成本、雲端毛利）；`IF_CapexTotal` 無影響。表 2（範圍外變動）＝0。
+- Checks 新增 C155–C163（單一快照版本、名稱數、SHA、研發占比對照與 `IF_AllocQ1` 區間、`RNG_StaleFlag`）；退役 C132–C138。`IF_AllocQ1` 0.636→0.184 的口徑改變與 `L1_Ans3` 1.157→1.907 寫入報告第 5 節；`L1_Ans3` 因 v19.0 無 `IF_` 等義名稱而保留。
+- 測試：`test_pxq_reference_whitelist` 改為 `TK_` 且限 P×Q 取數清單；新增 `test_tk_link_single_snapshot_v19`；`scenarios.yaml` 期望值更新（具名範圍 709、tk_values 85、tk_pending 2）；`test_html` 敘述主張 6–9 成改 5–9 成。parity 113 項、`test_builder` 16 項、`test_html` 5 項全過。`dist/` 重新產生，v0.6.1 成品移 `dist/_待刪除/`。工作單 `docs/workorders/20261022_openai_TK同步v19.md`；PR #62。
+
 ## 20261022_OpenAI_v0.6.1.xlsx — v0.6.1（P×Q 與回本比值序列）
 
 - **v0.6 原有數值一格不變**（表 2＝0）；新增 `PxQ` 頁、`TK_PxQ` 頁（Tokenomics v19.0 第二快照，master `ad33e28`，檔案 SHA-256 `d1728705…4b8d`；具名範圍 `TKQ_`）。`TK_Link` 維持 v5.26（63 名逐格相同）。v0.6 原檔移至 `model/archive/20261008_OpenAI_v0.6.xlsx`。

@@ -20,12 +20,12 @@
 ## 4. 模型狀態：**v0.6 完成**（2026-10-08；S1–S6）
 | 項目 | 現況 |
 |---|---|
-| Excel | `model/20261022_OpenAI_v0.6.1.xlsx`（`model/CURRENT`；v0.6 數值一格不變，新增 PxQ、TK_PxQ 頁）；v0.6 成品副本 `dist/20261022_OpenAI收支模型_v0_6_1.xlsx` |
-| HTML 一頁摘要 | `dist/20261022_OpenAI收支模型_v0_6_1.html`（產生器 `tools/build_html.py`；敏感度情境 `tools/html_scenarios.yaml`；測試 `tests/test_html.py`） |
+| Excel | `model/20261022_OpenAI_v0.6.2.xlsx`（`model/CURRENT`；v0.6.2＝Tokenomics 同步 v19.0，單一快照；TK_PxQ 頁退役；v0.6.1 在 `model/archive/`）；成品副本 `dist/20261022_OpenAI收支模型_v0_6_2.xlsx` |
+| HTML 一頁摘要 | `dist/20261022_OpenAI收支模型_v0_6_2.html`（產生器 `tools/build_html.py`；敏感度情境 `tools/html_scenarios.yaml`；測試 `tests/test_html.py`） |
 | 命題與驅動對照表 | `docs/plan/20261008_OpenAI_命題與驅動對照表.md` |
-| Tokenomics | v5.26，master `3dd1216688e3872fcb80b28c279d8976a07df29b`，CURRENT `20261007_Tokenomics_v5.26.xlsx`（SHA-256 `abb8592c6921738d20d1c870bfb44dbc0afcb6a412dbb429f4bd24013224ed0d`）；63 名，check_tk_snapshot OK 63 |
-| 規模 | SRC_OAI 131；Inputs 263；具名範圍 646；公式格 3,063；Checks C01–C130（CHK_Errors＝0）；parity 107 項 |
-| 頁 | README、SRC_OAI、TK_Link、Inputs、Derived_V9、Demand、Revenue、Compute、Cost、Funding、Reverse、Checks、Map_v05、_Defaults |
+| Tokenomics | **v19.0**，master `1916a06465bb0c7efed21383075f2ae098508e24`，CURRENT `20261022_Tokenomics_v19.0.xlsx`（SHA-256 `d1728705daaf19bfdfa7657b667f3617ac57d67a4c8e55404ac66522b970b9d8`）；單一快照 TK_Link 88 名有值＋2 名待提供（`IF_PxEffMix_Lo／_Hi`），check_tk_snapshot OK 88／MISSING 2；前代 v5.26（`3dd1216`，63 名）見 v0.6.1 |
+| 規模 | SRC_OAI 134；Inputs 276；具名範圍 709；公式格 3,898；Checks 至 C163（CHK_Errors＝0）；parity 113 項（v0.6.2） |
+| 頁 | README、SRC_OAI、TK_Link、Inputs、Derived_V9、Demand、Revenue、Compute、Cost、Funding、Reverse、PxQ、Checks、Map_v05、_Defaults |
 
 **主要結果（基準）**：每 VR 等值 GW 差額（含股權報酬、現金口徑）2025–2030 −66.4／−42.1／−22.3／−16.7／−12.7／−10.1，每年皆為負；2030 營收 8.5 對全成本 18.5 $B/GW/年（覆蓋 46%）。已到位融資 87 撐到 2026 年底；2027–2030 累計外部資金需求 442.8（峰值 2029 年 137.6）；Amazon 條件式計入 407.8；反向模式（管理層目標達成、同一支出）92.7。三個關鍵驅動：API 需求成長（2030 淨營收 92.6–188.3）、自有資本支出（累計 217.8–555.3）、員工人數成長（399.4–509.4）。
 
@@ -88,3 +88,10 @@ v0.6.1 不變條件：`TK_Link`（v5.26，63 名）值與 v0.6 逐格相同；�
 ## 11. 2026-10-22 獨立查核與 TK 同步評估
 - v0.6.1 P×Q 經未參與建置的代理獨立查核：通過（132 值一致；v0.6 既有頁不變）；次要問題已處置（報告「獨立查核」節）。PR #59 待 Andy 指示合併。
 - TK 同步範圍（v5.26 → v19.0）：`docs/plan/20261022_TK同步範圍_v5.26至v19.0.md`（DIFF 30／OK 33；會動數字的只有 `IF_TokGW_*`、`IF_HoldEcon`、`IF_CapexTotal`；建議同步時把 `TK_Link` 與 `TK_PxQ` 合成單一 v19.0 快照）。待 Andy 指示是否發同步工作單。
+
+## 12. v0.6.2 Tokenomics 同步 v19.0（2026-10-22；PR #62，待 chat 端獨立查核後由 Andy 指示合併）
+- TK_Link 改取 Tokenomics master `1916a06`（CURRENT v19.0）單一快照；TK_PxQ／`TKQ_` 退役，`PxQ` 公式引用 `TK_`；`PxQ` 776 個數值格與 v0.6.1 逐格相同。第 9 節「v0.6.1 不變條件」已被取代（TK_Link 現為 v19.0）。
+- **命題結論不變**（每年差額為負；2030 覆蓋 45.7%；累計外部資金需求 442.8、峰值 2029 年 137.6，一格不變）。變動：η 2025 0.2795→0.1684；2030 有效推論 GW +22.3%、研發 GW −14.0%、研發占總需求 61.4%→52.7%；2030 雲端毛利 1.6%→6.4%；命題差額（現金）2025 −66.4→−56.9，2030 −10.05→−10.03。歸因：`IF_TokGW_*` 管推論與研發 GW、命題 2025 前後；`IF_HoldEcon` 管持有成本與雲端毛利；`IF_CapexTotal` 無影響（只動 GB300，自建 GW 讀 VR200）。
+- 報告 `docs/reports/20261022_v0.6.2_TK同步.md`、對照 `_對照.xlsx`；歸因工具 `tools/tk_attribution.py`（LibreOffice 重算變體）、`tools/make_v062_report.py`。
+- 研發算力占比對照：`IF_AllocQ1` 0.636→0.184（區間 0.153–0.191，`RNG_StaleFlag`＝一致）；本模型 2025 為 58.8%，舊「吻合」讀法失效（Tokenomics 口徑改變，非模型改變）。Q3 對照倍數 10.4→6.3。
+- Tokenomics 缺口：Q3 需 `IF_` 等義名稱（目前 `L1_Ans3`）；`IF_PxEffMix_Lo／_Hi`。
