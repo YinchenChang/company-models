@@ -446,7 +446,7 @@ for _y in sorted(int(y) for y in D['mwYearEnd'] if int(y) != MW_Y0):
     MWY[_y] = gi(r, f"{_y} 年底主動電力", "MW", D['mwYearEnd'][str(_y)], CO['texts']['mwYearEndNotes'][str(_y)], NUM0); r += 1
 PPE0 = gi(r, "«VMD» 期初 PP&E 基礎", "US$bn", D['ppeOpen'], TXQ['ppeOpenNote']); r += 1
 CAPSC = gi(r, "每 MW 建置成本倍數（整體）", "%", D['capexScale'], "同時影響 CapEx、汰換與車隊折舊；反向 DCF 用；預設 100%", PCT); r += 1
-r = phdr(r)
+r = phdr(r, first="項目（建置成本）")
 r = prow(r, "每 MW 建置成本", "US$m/MW", CO['scenarios']['capexTemplate']['costMW'], NUM1, TXQ['costMwNote'], font=GREEN if PMW_CAPEX == 'tokenomics' else BLUE)
 PPD = D['prepay']  # v0.1b：預付款區塊輸入
 PP_SH = gi(r, "有預付的合約比例", "%", PPD['shareOfDeals'], "覆蓋比已是整體口徑時為 100%（company.json → defaults.prepay）", PCT); r += 1
@@ -454,7 +454,7 @@ PP_CV = gi(r, "預付占相關資本支出比", "%", PPD['capexCover'], CO['text
 PP_N = gi(r, "預付認列年數", "年", PPD['recogYears'], "依(期初合約負債＋本期累積利息)直線認列為營收（非現金）[Assumed]；完整說明見 company.json → defaults.prepay.note", NUM1); r += 1
 PP_CL0 = gi(r, "«VMD» 合約負債（客戶預付餘額）", "US$bn", PPD['openBalance'], CO['texts']['prepayOpenNote']); r += 1
 PP_FR = gi(r, "預付隱含利率（重大財務組成）", "%", PPD.get('financingRate', 0), "合約負債以此利率累積非現金利息，認列時轉營收（自營運現金扣除）、利息進損益不進現金；預設＝稅前債務成本，替代 0%", PCT); r += 1
-r = phdr(r)
+r = phdr(r, first="項目（預付與租金）")
 r = prow(r, "客戶預付占毛 CapEx", "%", [f"={PP_SH}*{PP_CV}"] * 5, PCT, "＝有預付的合約比例 × 預付占相關資本支出比；乘成長型 CapEx 得預付流入", BLACK)
 r = prow(r, "在帳現金租金（季報到期表）", "US$bn", CO['leases']['onBalanceCash'], NUM, f"營業＋融資租賃未折現付款；«LASTYR» 後尚有 {CO['leases']['afterFY30']} [Verified]")
 _LENR = IN['模型期長度（年）']
@@ -3665,6 +3665,8 @@ srow("差異｜判斷句", "", [(f'=CHOOSE({_F}+1,"{_y0}–{_y2} 營收、EBITDA
                           f'"分歧始於 {_y0}（"&C{_L}&"）"&{_nx("D", _y1)}&{_nx("E", _y2)}&"。",'
                           f'"{_y0} 營收、EBITDA、CapEx 與共識差距在 "&{_T}&" 以內；分歧始於 {_y1}（"&D{_L}&"）"&{_nx("E", _y2)}&"。",'
                           f'"{_y0}–{_y1} 營收、EBITDA、CapEx 與共識差距在 "&{_T}&" 以內；分歧始於 {_y2}（"&E{_L}&"）。")')], bold=True)
+if CO["texts"].get("ebitdaBasisNote"):  # v0.3.1：摘要與損益 FY27 EBITDA 口徑說明（與 HTML 一頁摘要同一句）
+    srow("差異｜EBITDA 口徑說明", "", [CO["texts"]["ebitdaBasisNote"]], NUM, "與 HTML 一頁摘要同一句")
 # v4.4：差距超過門檻的項目附差異原因（已決定事項 2；原因讀 company.json → varianceReasons，與 HTML consensusView 同一組字串）
 _ANK = [("營收", "rev", "營收"), ("EBITDA", "ebitda", "調整後 EBITDA"), ("CapEx", "capex", "CapEx（毛額）"), ("淨負債", "nd", "淨負債")]
 _SMK = {"rev": "營收", "ebitda": "調整後 EBITDA", "ebM": "EBITDA 率", "capex": "CapEx（毛額）", "nd": "淨負債"}

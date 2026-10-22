@@ -143,7 +143,8 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
         ...cv.rows.map(r => td([fmtV(k, r.m[k]), `／`, fmtV(k, r.c[k]), `　`, elQ(`b`, { key: `g`, style: { color: k === `nd` || k === `ebM` ? `var(--color-fg)` : gcol(r.gap[k]) } }, k === `ebitda` || k === `nd` ? dTxtQ(r.dif[k], `US$bn`) : gapTxtQ(r.gap[k], k === `ebM`))]))])))
     ]),
     elQ(`p`, { key: `j`, style: { fontSize: 13, lineHeight: 1.4, margin: `5px 0 0`, fontWeight: 600 } }, cv.judge),
-    cv.rsnSum ? elQ(`p`, { key: `r`, style: { fontSize: 11.5, lineHeight: 1.35, margin: `2px 0 0` } }, cv.rsnSum) : null
+    cv.rsnSum ? elQ(`p`, { key: `r`, style: { fontSize: 11.5, lineHeight: 1.35, margin: `2px 0 0` } }, cv.rsnSum) : null,
+    COMPANY_DATA.texts.ebitdaBasisNote ? elQ(`p`, { key: `eb`, style: { ...sm, fontSize: 11, lineHeight: 1.35, margin: `2px 0 0` } }, COMPANY_DATA.texts.ebitdaBasisNote) : null // v0.3.1：摘要與損益 FY27 EBITDA 口徑說明
   ]);
   let b3 = box(`b3`, `3｜現價隱含什麼`, [
     elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 8 } }, [

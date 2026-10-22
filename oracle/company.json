@@ -1797,6 +1797,8 @@
   ]
  },
  "texts": {
+  "roicWaccNote": "本模型 CAPM 折現率（valuation.wacc；用於 DCF 與此處 GPU 年化資本回收）；每 MW 建置成本與折舊年限讀 Tokenomics 快照（TK_CapexIT_*、TK_DeprLifeIT_GB300）。Tokenomics 錨 IF_HoldEcon 內含 WACC 10%（Tokenomics 打平租金的經濟持有成本，只用來定每 MW 收入的錨），兩者用途不同、不互相取代",
+  "ebitdaBasisNote": "口徑：本表 FY27 調整後 EBITDA＝Q1 實際（10-Q 年初至今）＋Q2–Q4 模型；「損益」頁 FY27 EBITDA 為全年皆用模型的口徑，兩者差額＝Q1 實際與模型 Q1 之差，不影響評價",
   "fy0EquityNote": "«P0»＝«YTD» ATM 淨收入 19.909（141m 股、均價約 $141.84）＋«STUB» 期後股權 0",
   "cashTaxNote": "«YTD» 現金稅未單獨揭露；10-Q 有效稅率 15.1%",
   "sourceLine": "FY27Q1 10-Q（2026-09-11）＋財報新聞稿與法說（2026-09-10）· 口徑分層",
