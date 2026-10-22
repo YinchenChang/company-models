@@ -109,7 +109,7 @@ function zM() {
             className: `font-medium text-accent-fg`,
             children: [`$`, Y(f.call.blended, 1)]
           }), `（情境區間 $${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}），較現價 `, f.call.upside >= 0 ? `+` : ``, hA(f.call.upside * 100, 0), `，結論「`, f.call.call, `」。`, (0, $.jsx)(tipQ, {
-            t: `三個判斷依據：(1) 預付款能否讓 backlog 變成現金——營收由已連網 MW × 每 MW 年收入（Tokenomics 正向推導，不用公司 ACV）驅動，客戶預付在建置前先收現、之後認列為非現金營收；(2) 單位經濟——每 MW 年 EBITDA（每 MW 年收入×利用率×EBITDA 率）是否高於 GPU 的年化資本回收（每 MW 成本×資本回收係數）；(3) 融資——缺口依序由預付、現金、資產擔保融資、可轉債、ATM 股權補足，最後才是高息債；市場願意以多少價格吸收多少新股，是估值最敏感的假設之一（見目標價頁敏感度表）。${PERIODS[0]} 欄為年初至今實際＋模型期。`,
+            t: `三個判斷依據：(1) 預付款能否讓 backlog 變成現金——營收由已連網 MW × 每 MW 年收入（${REVSRCQ}，不用公司 ACV）驅動，客戶預付在建置前先收現、之後認列為非現金營收；(2) 單位經濟——每 MW 年 EBITDA（每 MW 年收入×利用率×EBITDA 率）是否高於 GPU 的年化資本回收（每 MW 成本×資本回收係數）；(3) 融資——缺口依序由預付、現金、資產擔保融資、可轉債、ATM 股權補足，最後才是高息債；市場願意以多少價格吸收多少新股，是估值最敏感的假設之一（見目標價頁敏感度表）。${PERIODS[0]} 欄為年初至今實際＋模型期。`,
             w: 500
           })]
         }), (0, $.jsxs)(`div`, {
@@ -240,7 +240,7 @@ function zM() {
             children: (0, $.jsxs)(Jj, {
               children: [(0, $.jsx)(hdrQ, {
                 title: `管理層情境與全域假設`,
-                tip: `三個情境依對照表 r1 第 4 節第 1 條：保守＝只交付已簽約電力（>3.5 GW，÷1.2 換 MW-IT）；基準＝2026 年底 5 GW 合約目標依歷史併網速度實現；積極＝2027 起每年 >1 GW 部署全數實現。每 MW 年收入隨情境取 Tokenomics 正向推導三情境值（保守／基準／積極）。毛 CapEx 由 MW 公式自動增減；FY31 預建隨情境。切換情境只會改寫已連網／可計費 MW、每 MW 年收入、FY31 預建與表外租金；你手動調整的其他數字會保留，按頁首「重設」才回到預設值。`,
+                tip: `三個情境依對照表 r1 第 4 節第 1 條：保守＝只交付已簽約電力（>3.5 GW，÷1.2 換 MW-IT）；基準＝2026 年底 5 GW 合約目標依歷史併網速度實現；積極＝2027 起每年 >1 GW 部署全數實現。${PMW_REVQ === `tkAnchor` ? `每 MW 年收入＝Tokenomics 錨 × 定價倍數 k（價格軸與容量情境分離；三個容量情境預設都用基準 k，各情境只因新增產能的世代組合略有不同）。` : `每 MW 年收入隨情境取 Tokenomics 正向推導三情境值（保守／基準／積極）。`}毛 CapEx 由 MW 公式自動增減；FY31 預建隨情境。切換情境只會改寫已連網／可計費 MW、每 MW 年收入、FY31 預建與表外租金；你手動調整的其他數字會保留，按頁首「重設」才回到預設值。`,
                 w: 460
               }), (0, $.jsx)(`div`, {
                 className: `mt-3 grid grid-cols-3 gap-1 rounded-lg bg-surface p-1`,
@@ -870,14 +870,14 @@ function zM() {
                 className: `space-y-3`,
                 children: [(0, $.jsx)(hdrQ, {
                   title: `收入／產能輸入`,
-                  tip: `營收 ＝ 平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度（MW 驅動，新產能簽約率 100%）。每 MW 年收入取 Tokenomics 正向推導三情境（11.62／17.40／24.20 US$m/MW-IT），不用公司 ACV（$20–25M 只作對照）。路徑 B 已含可計費利用率，所以利用率預設 100%。RPO 排程只作對照與產能瓶頸旗標。${PERIODS[0]} 欄的 MW 為年底存量、收入為模型期金額。`
+                  tip: `營收 ＝ 平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度（MW 驅動，新產能簽約率 100%）。${PMW_REVQ === `tkAnchor` ? `每 MW 年收入＝Tokenomics 錨（IF_HoldEcon，在役世代加權）× 定價倍數 k（目前 ${(e.m.revMW[0] * 1e3).toFixed(2)} US$m/MW-IT），不用公司 ACV（$20–25M 只作對照）。按 MW-year 計價，不乘 IF_Util，所以利用率預設 100%。` : `每 MW 年收入取 Tokenomics 正向推導三情境（11.62／17.40／24.20 US$m/MW-IT），不用公司 ACV（$20–25M 只作對照）。路徑 B 已含可計費利用率，所以利用率預設 100%。`}RPO 排程只作對照與產能瓶頸旗標。${PERIODS[0]} 欄的 MW 為年底存量、收入為模型期金額。`
                 }), (0, $.jsx)(BM, {
                   rows: [
                     [`Accepted MW（期末主動電力）`, d.m.accepted, (e, t) => D(`accepted`, e, t), void 0, void 0, `YE26 指引 >1,850 MW；2030 目標 ≥8,000 MW。引擎會強制單調不減。`, `MW`],
                     [`Billable MW`, d.m.billable, (e, t) => D(`billable`, e, t), void 0, void 0, `引擎會強制不超過 Accepted。`, `MW`],
                     [`Billable MW（延誤後，計費用）`, d.years.map(e => e.billDelayed), void 0, void 0, `calc`, `＝上列往後平移建設延誤 ${multTxt(e.delayMonths ?? 0)} 個月（以期間長度線性內插；評價日之前取期初校準值）；營收依此列（v0.2）。`, `MW`],
                     [`利用率`, e.m.util, (e, t) => D(`util`, e, t), void 0, void 0, `法說稱「近期產能實質售罄」，本模型不擬合為 100%。`, `%`],
-                    [`每 MW 年收入`, e.m.revMW, (e, t) => D(`revMW`, e, t), 5e-4, void 0, `Tokenomics 正向推導（data/permw_tokenomics_20261007.json）；隨情境：保守 0.01162／基準 0.0174／積極 0.0242 [Derived]。`, `US$bn/MW`],
+                    [`每 MW 年收入`, e.m.revMW, (e, t) => D(`revMW`, e, t), 5e-4, void 0, PMW_REVQ === `tkAnchor` ? `Tokenomics 錨（IF_HoldEcon，在役世代加權，TK_ 快照 ${COMPANY_DATA.tokenomics.version}）× 定價倍數 k（pricing.anchorMultiple）[Derived]。` : `Tokenomics 正向推導（data/permw_tokenomics_20261007.json）；隨情境：保守 0.01162／基準 0.0174／積極 0.0242 [Derived]。`, `US$bn/MW`],
                     [`新產能簽約率`, e.m.fill, (e, t) => D(`fill`, e, t), 1, void 0, `把這欄調成 0，就能看到只靠期初 RPO 的缺口有多大——最重要的壓力測試。`, `%`],
 
                   ]

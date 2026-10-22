@@ -1,0 +1,5 @@
+# legacy（methodology.perMw.revenue＝legacy）對 v0.2 成品的預期差異：無
+# v0.3 B 段：說明文字改寫與壽命引用 Tokenomics（數值不變，6 年）；其餘須 0 差異
+輸入與假設!I21 說明文字：期初可計費 MW 的校準說明改寫（v0.3 B 段，billableRatio.note；數字不變）
+輸入與假設!C105 公式：GPU 經濟壽命改引用 TK_DeprLifeIT_GB300（值仍為 6 年）
+輸入與假設!I105 說明文字：壽命來源說明改為引用 Tokenomics

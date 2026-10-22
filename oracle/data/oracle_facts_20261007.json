@@ -1,4 +1,5 @@
 {
+ "_supersededBy": "已被快照取代（Oracle v0.3，2026-10-22）：Tokenomics 取數改由官方快照 data/tokenomics_snapshot_v19.0.json（tools/tokenomics/import_tokenomics.py；Excel「Tokenomics_取數」分頁的 TK_ 具名範圍）提供；本檔保留作 v0.1a 歷史紀錄（v5.24 手抄值，原值不刪），模型不再讀取。原工作表直接引用（Inputs、DC_Cost、Cap_In）已改寫為 IF_／TK_ 名稱說明；數值未改。",
  "_readme": "Oracle（ORCL）事實總帳。由 v0.1a 建置代理依工作單 `docs/workorders/20261007_oracle_v0.1a_資料蒐集.md` 蒐集；每筆附來源文件、網址、文件日期、擷取日與標記。金額單位除另註明外為百萬美元（USD M）；財年結束於 5/31（FY27＝2026-06-01 至 2027-05-31；FY27Q1 季末 2026-08-31）。標記定義見 tagLegend。SEC 文件以 curl 直接自 EDGAR 取得（附 User-Agent）；法說逐字稿為二手轉錄（The Motley Fool），以 WebFetch 讀取。",
  "tagLegend": {
   "[Verified]": "可公開查證且經獨立查核（10-K 經查核財報與附註；收盤價等市場事實）",
@@ -5890,7 +5891,7 @@
     "docDate": "2026-10-07",
     "retrieved": "2026-10-07",
     "tag": "[Interested-party]",
-    "note": "Tokenomics v5.24 Cap_In!C63 具名範圍 CTL_PriceLife：基準 1＝不跌價（只驅動 _Life 並列輸出，IF_RevGW_* 不受影響）；Gov_Map 區間 0.3–1.0；類比證據 0.42–0.70（H100 租金指數）。Oracle 稱 4 年以上 GPU 續約／轉售 +20%，高於 Tokenomics 區間上緣；方向相反的是區間與類比證據，不是基準值。續約價格衰退 v0.1b 不建模（對照表預設 10）"
+    "note": "Tokenomics v5.24 壽命期價格係數 CTL_PriceLife（Tokenomics 內部名稱，非可取前綴；僅作對照）：基準 1＝不跌價（只驅動 _Life 並列輸出，IF_RevGW_* 不受影響）；Gov_Map 區間 0.3–1.0；類比證據 0.42–0.70（H100 租金指數）。Oracle 稱 4 年以上 GPU 續約／轉售 +20%，高於 Tokenomics 區間上緣；方向相反的是區間與類比證據，不是基準值。續約價格衰退 v0.1b 不建模（對照表預設 10）"
    }
   ],
   "7_評價輸入": [
