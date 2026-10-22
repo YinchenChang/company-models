@@ -11,7 +11,7 @@ F = {
     "sk": ROOT / "skhynix/dist/20261022_SK海力士模型_v0.3.1.xlsx",
     "ss": ROOT / "samsung/dist/20261022_三星電子模型_v0.1.1.xlsx",
     "mu": ROOT / "micron/dist/20261022_美光模型_v0.2.1.xlsx",
-    "tsmc": ROOT / "tsmc/dist/20261022_台積電模型_v0.1.1.xlsx",
+    "tsmc": ROOT / "tsmc/dist/20261022_台積電模型_v0.2.xlsx",
 }
 
 def rows(path, sheet):
