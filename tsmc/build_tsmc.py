@@ -18,8 +18,8 @@ PLAT = {"bw": {y: "GB" for y in YRS}, "rb": {y: "VR" for y in YRS}, "ru": {y: "R
         "amd": {26: "AMD8", 27: "AMDR", 28: "AMDR", 29: "AMDR"}, "tpu": {26: "TPU7", 27: "TPU8", 28: "TPU8", 29: "TPU8"},
         "trn": {y: "TRN" for y in YRS}, "oth": {y: "ASIC" for y in YRS}}
 # 每片 CoWoS 晶圓可封裝的加速器數（良品），台積電內容（千美元／顆）
-PP = {"GB": (14, 2.3, "Derived", "每片封裝數：36Kr 2026 NVIDIA 約 66 萬片 ÷ NVIDIA 約 7.6M 顆 ≈ 11.5（組合）；台積電內容：橋接表 v0.1（Silicon Analysts、Epoch：邏輯＋CoWoS 約 $1.9K，B300 封裝溢價）"),
-      "VR": (8, 2.8, "Derived", "Morgan Stanley 2027 NVIDIA 122.2 萬片 ÷ 約 9.7M 顆 ≈ 7.9（組合）；內容：橋接表 v0.1"),
+PP = {"GB": (14, 2.3, "Derived", "每片封裝數：36Kr 2026 NVIDIA 約 66 萬片 ÷ NVIDIA 約 7.6M 顆 ≈ 11.5（組合）；台積電內容：橋接表 v0.2（台積電內容與 v0.1 相同）（Silicon Analysts、Epoch：邏輯＋CoWoS 約 $1.9K，B300 封裝溢價）"),
+      "VR": (8, 2.8, "Derived", "Morgan Stanley 2027 NVIDIA 122.2 萬片 ÷ 約 9.7M 顆 ≈ 7.9（組合）；內容：橋接表 v0.2（台積電內容與 v0.1 相同）"),
       "RU": (4, 6.0, "Assumed", "4 顆光罩尺寸晶粒＋16 疊 HBM4E"),
       "HP": (29, 1.1, "Analogy", "CoWoS-S 單晶粒；Silicon Analysts H100 邏輯 $300＋封裝 $750"),
       "AMD8": (8.5, 2.0, "Derived／Analogy", "36Kr 2026 AMD 約 9 萬片 ÷ 約 0.75M 顆"),
@@ -240,11 +240,11 @@ srcs = [("台積電 2Q26 新聞稿", "https://pr.tsmc.com/english/news/3326"),
  ("Tom's Hardware／Nikkei 2027 漲價", "https://www.tomshardware.com/tech-industry/semiconductors/tsmc-eyes-price-hikes-of-up-to-25-percent-on-chip-production-services-in-2027-report-claims-plans-to-raise-baseline-prices-by-5-percent-to-10-percent-on-advanced-nodes"),
  ("MarketScreener 共識", "https://in.marketscreener.com/quote/stock/TSMC-TAIWAN-SEMICONDUCTOR-6492349/valuation/"),
  ("GuruFocus P/E", "https://www.gurufocus.com/term/pettm/TSM"),
- ("markets/chip_bridge v0.1、markets/memory（本 repo）", "")]
+ ("markets/chip_bridge v0.2、markets/memory（本 repo）", "")]
 for i, (a, b) in enumerate(srcs, 2): SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 44; SO.column_dimensions["B"].width = 130
 RD = wb.create_sheet("README", 0)
-lines = [("台積電模型 v0.1（AI 半導體 Project 步驟 4）　2026-10-13", True),
+lines = [("台積電模型 v0.1.1（AI 半導體 Project 步驟 4）　2026-10-22（Tokenomics v19.0 同步：數字與 v0.1 相同）", True),
  ("模型命題：台積電在 AI 算力中的意義是供給上限而非分到的金額比例——AI 加速器只占其營收約兩成；2027 年加速器出貨受 HBM 而非 CoWoS 限制，台積電的獲利成長由「AI 顆數 × 每顆內容 × 漲價」與「非 AI 八成的穩定成長」共同決定。", False), ("", False),
  ("驅動因子 → 推導量", True),
  ("CoWoS：加速器顆數（markets/memory）÷ 每片封裝數 → CoWoS 需求；月產能年均 × 12 × (1＋委外) → 可用產能；需求 ÷ 產能 → 是否為瓶頸；與 HBM 缺口比較", False),

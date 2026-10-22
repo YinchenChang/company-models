@@ -6,12 +6,12 @@ import json, pathlib, numpy as np, openpyxl
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 F = {
-    "bridge": ROOT / "markets/chip_bridge/dist/20261008_晶片內容橋接表_v0.1.xlsx",
-    "net": ROOT / "markets/network/dist/20261008_AI網通市場模型_v0.1.xlsx",
-    "sk": ROOT / "skhynix/dist/20261008_SK海力士模型_v0.3.xlsx",
-    "ss": ROOT / "samsung/dist/20261008_三星電子模型_v0.1.xlsx",
-    "mu": ROOT / "micron/dist/20261008_美光模型_v0.2.xlsx",
-    "tsmc": ROOT / "tsmc/dist/20261013_台積電模型_v0.1.xlsx",
+    "bridge": ROOT / "markets/chip_bridge/dist/20261022_晶片內容橋接表_v0.2.xlsx",
+    "net": ROOT / "markets/network/dist/20261022_AI網通市場模型_v0.2.xlsx",
+    "sk": ROOT / "skhynix/dist/20261022_SK海力士模型_v0.3.1.xlsx",
+    "ss": ROOT / "samsung/dist/20261022_三星電子模型_v0.1.1.xlsx",
+    "mu": ROOT / "micron/dist/20261022_美光模型_v0.2.1.xlsx",
+    "tsmc": ROOT / "tsmc/dist/20261022_台積電模型_v0.1.1.xlsx",
 }
 
 def rows(path, sheet):
@@ -121,6 +121,7 @@ for k, ccy, fyl in (("sk", "KRW", "2027"), ("ss", "KRW", "2027"), ("mu", "USD", 
               "hbm_share": {s: round(v, 3) for s, v in g("HBM ÷ 營收").items() if v is not None},
               "bvps": {s: round(v, 2) for s, v in bv.items() if v is not None},
               "eps": {s: round(v, 2) for s, v in eps.items() if v is not None},
+              "roe": {s: round(v, 3) for s, v in g("ROE（期末權益）").items() if v is not None},
               "pb_now_on_2026": round(px / bv["2026"], 2), "pe_2027A": round(px / eps["2027 A"], 1),
               "mult": ps, "mult_src": list(mt["src"].keys()) + ([mt["check"]] if "check" in mt else []),
               "val": {"peak_px": round(peak, 1), "peak_vs": round(peak / px - 1, 3),
@@ -168,6 +169,30 @@ D["tsmc"] = {"px": px,
                      "pe_2027": round(px / eps["2027 A"], 1), "pe_2026": round(px / eps["2026"], 1),
                      "c28_px": round(eps["2028 C"] * ps["p75"]), "c28_vs": round(eps["2028 C"] * ps["p75"] / px - 1, 3)}}
 
+
+# ---------------------------------------------------------------------------
+# 美光替代估值（Andy 2026-10-22「都做」）：(1) P/E；(2) 買回加回的 P/B。
+# 歷史值：SEC 10-K XBRL（Verified）——權益、庫藏股（成本）、歸屬淨利；P/B 為 macrotrends 會計年度底。
+MU_HIST = {  # 會計年度：P/B, 權益 $B, 庫藏股 $B, 淨利 $B
+    2016: (1.29, 12.080, 1.029, -0.276), 2017: (1.78, 18.621, 0.067, 5.089), 2018: (1.79, 32.294, 0.429, 14.135),
+    2019: (1.33, 35.881, 3.221, 6.313), 2020: (1.27, 38.996, 3.495, 2.687), 2021: (1.83, 43.933, 4.695, 5.861),
+    2022: (1.22, 49.907, 7.127, 8.687), 2023: (1.72, 44.120, 7.552, -5.833), 2024: (2.35, 45.131, 7.852, 0.778),
+    2025: (2.46, 54.165, 7.852, 8.539)}
+mu_pe = {y: pb * e / ni for y, (pb, e, t, ni) in MU_HIST.items() if ni > 0}          # 市值 ÷ 淨利＝P/B × 權益 ÷ 淨利
+mu_pba = {y: pb * e / (e + t) for y, (pb, e, t, ni) in MU_HIST.items()}             # 市值 ÷（權益＋庫藏股）
+def q3(v): return {f"p{q}": round(float(np.percentile(list(v), q)), 2) for q in (25, 50, 75)} | {"min": round(min(v), 2), "max": round(max(v), 2)}
+mpe, mpba = q3(mu_pe.values()), q3(mu_pba.values())
+yu = rows(F["mu"], "Y")
+def gy(lbl, s): return yu[lbl][1 + SC.index(s)]
+T_last = MU_HIST[2025][2]  # FY2026 年底庫藏股尚未公布，用 FY2025（偏低）
+def adj_bvps(s, bbs):
+    return (gy("期末權益", s) + T_last + sum(gy("買回", b) for b in bbs)) / gy("期末流通股數", s) * 1000
+mu_px = D["mem"]["mu"]["px"]
+adj27, adj28c = adj_bvps("2027 A", ["2027 A"]), adj_bvps("2028 C", ["2027 C", "2028 C"])
+eps27, eps28c = D["mem"]["mu"]["eps"]["2027 A"], D["mem"]["mu"]["eps"]["2028 C"]
+D["mu_alt"] = {"pe": mpe, "pba": mpba, "pe_hist": {y: round(v, 2) for y, v in mu_pe.items()}, "pba_hist": {y: round(v, 3) for y, v in mu_pba.items()},
+               "adj_bvps": {"FY2027 A": round(adj27, 1), "FY2028 C": round(adj28c, 1)}}
+
 out = pathlib.Path(__file__).with_name("data.json")
 out.write_text(json.dumps(D, ensure_ascii=False, indent=1))
 for k in ("sk", "ss", "mu"):
@@ -192,7 +217,7 @@ for k, nm in CO.items():
         yr, sc = (s, "實績" if s == "2025" else "基準") if " " not in s else s.split(" ")
         my.append({"company": nm, "year": int(yr), "scenario": sc, "key": f"{nm} {s}",
                    "op_usd_b": e["op_usd_b"].get(s), "opm": e["opm"].get(s), "hbm_share": e["hbm_share"].get(s),
-                   "bvps": e["bvps"].get(s), "eps": e["eps"].get(s)})
+                   "bvps": e["bvps"].get(s), "eps": e["eps"].get(s), "roe": e["roe"].get(s)})
 dump("mem_y", my)
 
 dump("mem_path", [{"quarter": qq, **{f"dram_{s}": D["path"]["dram"][s][i] for s in "ABC"},
@@ -224,6 +249,18 @@ for case, pos, mult, ipx, vs in (("中段", "中段 → 中位數", ps["p50"], v
                                  ("高", "75 分位（區間上緣）", ps["p75"], v["hi_px"], v["hi_vs"])):
     val.append(tb | {"key": f"台積電 {case}", "case": case, "position": pos, "multiple": mult, "basis_label": "2027 EPS（A）",
                      "basis": t["eps"]["2027 A"], "implied_px": ipx, "vs_px": vs, "px_multiple": round(t["px"] / t["eps"]["2027 A"], 2)})
+
+for nm, metric, ps, cases in (
+    ("美光（P/E）", "P/E", mpe, [("見頂", "見頂年 → 25 分位", "p25", "FY2027 EPS（A）", eps27), ("中段", "中段 → 中位數", "p50", "FY2027 EPS（A）", eps27),
+                                 ("谷底", "谷底 → 75 分位", "p75", "FY2028 EPS（C）", eps28c)]),
+    ("美光（買回加回 P/B）", "P/B", mpba, [("見頂", "見頂年 → 25 分位", "p25", "FY2027 年底調整每股淨值（A）", adj27), ("中段", "中段 → 中位數", "p50", "FY2027 年底調整每股淨值（A）", adj27),
+                                     ("谷底", "谷底 → 75 分位", "p75", "FY2028 年底調整每股淨值（C）", adj28c)])):
+    for case, pos, k, bl, basis in cases:
+        ip = ps[k] * basis
+        val.append({"company": nm, "metric": metric, "ccy": "USD", "px": mu_px, "p25": ps["p25"], "p50": ps["p50"], "p75": ps["p75"],
+                    "hist_min": ps["min"], "hist_max": ps["max"], "key": f"{nm} {case}", "case": case, "position": pos, "multiple": ps[k],
+                    "basis_label": bl, "basis": round(basis, 2), "implied_px": round(ip, 1), "vs_px": round(ip / mu_px - 1, 3),
+                    "px_multiple": round(mu_px / basis, 2)})
 dump("valuation", val)
 
 mh = []
@@ -231,7 +268,11 @@ for k, nm in list(CO.items()) + [("tsmc", "台積電")]:
     for src, vals in MULT[k]["src"].items():
         for i, x in enumerate(vals):
             mh.append({"company": nm, "metric": MULT[k]["kind"], "year": 2016 + i, "source": src, "multiple": x})
+for y_, v_ in mu_pe.items(): mh.append({"company": "美光（P/E）", "metric": "P/E", "year": y_, "source": "SEC 10-K＋macrotrends", "multiple": round(v_, 2)})
+for y_, v_ in mu_pba.items(): mh.append({"company": "美光（買回加回 P/B）", "metric": "P/B", "year": y_, "source": "SEC 10-K＋macrotrends", "multiple": round(v_, 3)})
 dump("mult_hist", mh)
+dump("mu_hist", [{"fy": y_, "pb": pb, "equity": e, "treasury": t, "net_income": ni, "roe": round(ni / e, 3),
+                  "pe": (round(pb * e / ni, 2) if ni > 0 else None), "pb_adj": round(pb * e / (e + t), 3)} for y_, (pb, e, t, ni) in MU_HIST.items()])
 
 nt = D["net"]
 dump("net_comp", [{"component": lab, **{f"y{y_}": vals[i] for i, y_ in enumerate(nt["years"])}} for lab, vals in nt["comp"]])

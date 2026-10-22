@@ -272,7 +272,7 @@ for i, row in enumerate(fb, 3):
     for j, v in enumerate(row, 1): FB.cell(i, j, v)
 FB.column_dimensions["A"].width = 40; FB.column_dimensions["B"].width = 20
 SO = wb.create_sheet("Sources"); SO["A1"] = "來源"; SO["A1"].font = BOLD
-for i, (a, b) in enumerate(C["sources"] + [("markets/memory/market.py（共用市場層）", "本 repo"), ("markets/chip_bridge v0.1", "本 repo")], 2):
+for i, (a, b) in enumerate(C["sources"] + [("markets/memory/market.py（共用市場層）", "本 repo"), ("markets/chip_bridge v0.2", "本 repo")], 2):
     SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 60; SO.column_dimensions["B"].width = 120
 RD = wb.create_sheet("README", 0)
