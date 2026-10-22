@@ -5,7 +5,7 @@
 | 資料夾 | 內容 | 版本 | 取數 |
 |---|---|---|---|
 | `network/` | AI 網通市場：顆數 × 每顆網通內容（六元件）、CPO 與銅、NVIDIA／Broadcom 對帳；見 `network/README.md` | v0.2（2026-10-22；Tokenomics v19.0） | 橋接表 v0.2、markets/memory |
-| `equipment/` | 半導體設備市場：公司資本支出 × 設備占比（記憶體、代工邏輯）＋ SEMI 其他廠與後段；情境 A／B／C、見頂年度、AI 增量占比、對帳、瓶頸表；見 `equipment/README.md` | v0.1（2026-10-22） | skhynix、micron、samsung、tsmc 的 dist 成品；SEMI 2026-07 |
+| `equipment/` | 半導體設備市場：公司資本支出 × 設備占比（記憶體、代工邏輯）＋ SEMI 其他廠與後段；情境 A／B／C、見頂年度、AI 增量占比、對帳、瓶頸表；見 `equipment/README.md` | v0.1.1（2026-10-22；只改來源文字） | skhynix、micron、samsung、tsmc 的 dist 成品；SEMI 2026-07 |
 | `memory/` | 記憶體共用市場層：季價路徑（情境 A／B／C）、加速器數量層、HBM 市場；見 `memory/README.md` | v0.3（2026-10-08；延長到 2029） | — |
 | `chip_bridge/` | 每 GW 晶片內容橋接表（GB300、VR200；HBM／非 HBM 記憶體分列；VR200 另列 2027 HBM 價吸收／轉嫁） | v0.2（2026-10-22） | Tokenomics v19.0（GB300 機架基準價 4.3、IT capex 32.237 $B/GW；v5.27 為 5.0、37.445） |
 

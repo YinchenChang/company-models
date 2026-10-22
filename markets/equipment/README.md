@@ -1,10 +1,12 @@
-# markets/equipment — 半導體設備市場模型 v0.1
+# markets/equipment — 半導體設備市場模型 v0.1.1
 
 AI 半導體 Project 步驟 5（設備與材料）的設備部分。**設備需求＝為滿足記憶體、代工擴產所需的資本支出 × 設備占比。** 回答核心問題 1（循環在 2027 還是 2028 見頂）；核心問題 2、3 只做瓶頸表；公司份額與毛利留給公司層。
 
-- 建置：`python3 markets/equipment/build_equipment.py raw.xlsx`，再以 LibreOffice headless 重算（`soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`），錯誤格須為 0。成品：`dist/20261022_半導體設備市場模型_v0.1.xlsx`。CI：`.github/workflows/ai-semis-build.yml`（重建、錯誤格 0、逐格比對 dist）。
+- 建置：`python3 markets/equipment/build_equipment.py raw.xlsx`，再以 LibreOffice headless 重算（`soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`），錯誤格須為 0。成品：`dist/20261022_半導體設備市場模型_v0.1.1.xlsx`。CI：`.github/workflows/ai-semis-build.yml`（重建、錯誤格 0、逐格比對 dist）。
 - 頁面：README、In（輸入、標記、兩個來源）、Mkt（SEMI 分項、記憶體、代工邏輯、測試封裝、三情境、摘要）、Recon、Sens、Sources。
 - 取數：skhynix、micron、samsung（只記憶體）、tsmc 的 `dist/*.xlsx`「資本支出」列（三情境相同，建置時檢查）；不修改這些模型。
+
+**v0.1.1（2026-10-22）：** 只改來源文字，數值不變。In 頁與本檔中標為「使用者提供」的來源，改寫為原始來源：Lam 2026 WFE 低 150B → Lam FQ4-26 法說逐字稿（Investing.com）；KLA 2026 低 150B、2027 約 190B → KLA FQ4-26 法說摘要（社群摘要，弱）；Morgan Stanley 202／227 → itiger 二手轉述（2026-07-06）；SEMI 2027 前段 +21.8% → SEMI 新聞稿。重建後與 v0.1 的數值格差異為 0。
 
 ## 結構（v5：以 2025 實績校準）
 
@@ -92,7 +94,7 @@ AI 相關設備（先進邏輯＋DRAM／HBM＋先進封裝）占總增量（相�
 | 2027 晶圓前段（Goldman Sachs） | 218 | 192.8 | −11.6% |
 | 2028 晶圓前段（Goldman Sachs） | 281 | 216.6 | **−22.9%** |
 
-Morgan Stanley 202／227：[itiger 二手轉述（2026-07-06；連結由使用者提供，本環境無法開啟，未直接核對頁面）](https://www.itiger.com/news/2649678863)，內容為 2027 由 191 上修到 202、2028 由 215 上修到 227；上修前 191／215 與 [Investing.com 報導](https://www.investing.com/news/stock-market-news/semicap-stocks-morgan-stanley-raises-wfe-outlook-and-shifts-ratings-4696580)一致。標 Interested-party、二手轉述。B、C 在 2028 的差距是情境設計的結果。
+Morgan Stanley 202／227：[itiger 二手轉述（2026-07-06；本環境無法開啟，未直接核對頁面）](https://www.itiger.com/news/2649678863)，內容為 2027 由 191 上修到 202、2028 由 215 上修到 227；上修前 191／215 與 [Investing.com 報導](https://www.investing.com/news/stock-market-news/semicap-stocks-morgan-stanley-raises-wfe-outlook-and-shifts-ratings-4696580)一致。標 Interested-party、二手轉述。B、C 在 2028 的差距是情境設計的結果。
 
 ### 差距大於 15% 的項目與可能原因
 

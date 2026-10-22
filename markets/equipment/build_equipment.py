@@ -1,4 +1,4 @@
-# 半導體設備市場模型 v0.1（AI 半導體 Project 步驟 5：設備與材料——設備部分）
+# 半導體設備市場模型 v0.1.1（AI 半導體 Project 步驟 5：設備與材料——設備部分）
 # 用法：python3 markets/equipment/build_equipment.py raw.xlsx ；再以 LibreOffice headless 重算
 # 需求＝為滿足記憶體、代工擴產所需的資本支出：資本支出讀自 skhynix／micron／samsung／tsmc 的 dist 成品（不修改那些模型）
 import sys, os, glob
@@ -126,7 +126,7 @@ for nm, k, lvl, g26, g27, g28 in (("DRAM 設備", "dram", 38.8, 0.390, 0.274, 0.
                                 ("代工與邏輯設備", "fd", 78.0, 0.189, 0.181, 0.136), ("晶圓前段設備合計（WFE）", "wfe", 143.9, 0.231, 0.218, 0.141)):
     inp(f"s_{k}_26", f"SEMI {nm} 2026", "$B", None, lvl, None, "Interested-party", SEMI_URL, SEMI_2)
     inp(f"g_{k}_26", f"SEMI {nm} 2026 年增", "%", None, g26, None, "Interested-party", SEMI_URL, SEMI_2)
-    inp(f"g_{k}_27", f"SEMI {nm} 2027 年增", "%", None, g27, None, "Interested-party", SEMI_URL + "（2027 前段 +21.8% 為使用者提供並經搜尋確認；其餘分項年增來自新聞稿摘要）", SEMI_2)
+    inp(f"g_{k}_27", f"SEMI {nm} 2027 年增", "%", None, g27, None, "Interested-party", SEMI_URL + "（2027 前段 +21.8% 與其餘分項年增皆來自 SEMI 新聞稿摘要）", SEMI_2)
     inp(f"g_{k}_28", f"SEMI {nm} 2028 年增", "%", None, g28, None, "Interested-party", SEMI_URL, SEMI_2 + "；DRAM 2028 推得 56.85 vs 報導 56.9、NAND 20.87 vs 20.8（捨入）")
 inp("s_test_26", "SEMI 測試設備 2026", "$B", None, 15.3, None, "Interested-party", SEMI_URL, SEMI_2)
 inp("g_test_26", "SEMI 測試設備 2026 年增", "%", None, 0.310, None, "Interested-party", SEMI_URL, SEMI_2)
@@ -148,11 +148,11 @@ inp("adv_other", "台積電以外代工邏輯中屬先進邏輯的比例", "%", 
 inp("pkg_adv", "組裝與封裝設備中屬先進封裝的比例", "%", 0.35, 0.50, 0.65, "Assumed", "無：KLA 稱 2026 先進封裝製程控制營收約 $1.1B，但整體先進封裝設備金額未找到", "未找到第二來源。台積電資本支出內的先進封裝設備可能與此重疊（見 README 限制）")
 sec("F. 對帳來源值（本模型不得為對上這些數字而調整；2026 前段口徑各家不同，見 Recon）")
 GS_URL = "https://www.gate.com/news/detail/goldman-sachs-significantly-raises-wfe-forecasts-through-2028-can-the-ai-23706576"
-inp("rc_lam26", "Lam Research 2026 WFE（低 150B）", "$B", None, 150, None, "Interested-party", "使用者提供；Citi 研討會 CFO 稱「low-$150B」（https://finance.yahoo.com/technology/ai/articles/lam-research-lifts-2026-wfe-180229282.html）", "Lam 2026-10-21 法說稿另稱「mid-$150B」（https://www.fool.com/earnings/call-transcripts/2026/10/21/lam-research-lrcx-q1-2027-earnings-call-transcript/）；取 150 為下限")
+inp("rc_lam26", "Lam Research 2026 WFE（低 150B）", "$B", None, 150, None, "Interested-party", "Lam FQ4-26 法說逐字稿（https://www.investing.com/news/transcripts/earnings-call-transcript-lam-research-posts-record-q4-2026-results-stock-rebounds-93CH-4821978）；另：Citi 研討會 CFO 稱「low-$150B」（https://finance.yahoo.com/technology/ai/articles/lam-research-lifts-2026-wfe-180229282.html）", "Lam 2026-10-21 法說稿另稱「mid-$150B」（https://www.fool.com/earnings/call-transcripts/2026/10/21/lam-research-lrcx-q1-2027-earnings-call-transcript/）；取 150 為下限")
 inp("rc_lam27", "Lam Research 2027 WFE（>200B，下限；額外對照）", "$B", None, 200, None, "Interested-party", "同上法說稿：2027 預估 >$200B", "使用者未列；額外列示")
-inp("rc_kla26", "KLA 2026 WFE（低 150B；含先進封裝）", "$B", None, 150, None, "Interested-party", "使用者提供；KLA FQ4 2026 法說（摘要：https://finance.biggo.com/news/US_KLAC_2026-07-28）", "社群摘要 https://x.com/TheValueist/status/2082235400190640364（弱）；KLA 2025 約 120 vs SEMI 116.9，口徑含先進封裝")
-inp("rc_kla27", "KLA 2027 規劃（約 190B）", "$B", None, 190, None, "Interested-party", "使用者提供；同上 KLA 法說摘要", "同上社群摘要；一手逐字稿未找到")
-inp("rc_ms27", "Morgan Stanley 2027 WFE", "$B", None, 202, None, "Interested-party", "二手轉述（itiger，2026-07-06；連結由使用者提供：https://www.itiger.com/news/2649678863——「2027 由 191 上修到 202，2028 由 215 上修到 227」；本環境無法開啟該頁，未直接核對）", "上修前版本 191／215 與 Investing.com 報導一致（2026／27／28＝149／191／215；https://www.investing.com/news/stock-market-news/semicap-stocks-morgan-stanley-raises-wfe-outlook-and-shifts-ratings-4696580），故 202／227 為其上修值")
+inp("rc_kla26", "KLA 2026 WFE（低 150B；含先進封裝）", "$B", None, 150, None, "Interested-party", "KLA FQ4-26 法說摘要（社群摘要，弱）https://x.com/TheValueist/status/2082235400190640364；BigGo 摘要：https://finance.biggo.com/news/US_KLAC_2026-07-28", "社群摘要 https://x.com/TheValueist/status/2082235400190640364（弱）；KLA 2025 約 120 vs SEMI 116.9，口徑含先進封裝")
+inp("rc_kla27", "KLA 2027 規劃（約 190B）", "$B", None, 190, None, "Interested-party", "KLA FQ4-26 法說摘要（社群摘要，弱）https://x.com/TheValueist/status/2082235400190640364", "同上社群摘要；一手逐字稿未找到")
+inp("rc_ms27", "Morgan Stanley 2027 WFE", "$B", None, 202, None, "Interested-party", "二手轉述（itiger，2026-07-06：https://www.itiger.com/news/2649678863——「2027 由 191 上修到 202，2028 由 215 上修到 227」；本環境無法開啟該頁，未直接核對）", "上修前版本 191／215 與 Investing.com 報導一致（2026／27／28＝149／191／215；https://www.investing.com/news/stock-market-news/semicap-stocks-morgan-stanley-raises-wfe-outlook-and-shifts-ratings-4696580），故 202／227 為其上修值")
 inp("rc_ms28", "Morgan Stanley 2028 WFE", "$B", None, 227, None, "Interested-party", "同上（itiger，二手轉述）", "同上")
 inp("rc_gs26", "Goldman Sachs 2026 WFE", "$B", None, 150, None, "Interested-party", GS_URL, "https://www.kucoin.com/news/flash/goldman-sachs-upgrades-wfe-forecast-to-1-5-trillion-by-2026-dram-and-foundry-drive-growth（標題單位誤植，內文 150）")
 inp("rc_gs27", "Goldman Sachs 2027 WFE", "$B", None, 218, None, "Interested-party", GS_URL, "同上")
@@ -547,7 +547,7 @@ RECON_TXT = [
 ]
 RD = wb.create_sheet("README", 0)
 RD_LINES = [
- ("半導體設備市場模型 v0.1（AI 半導體 Project 步驟 5：設備與材料——設備部分）　2026-10-22", True),
+ ("半導體設備市場模型 v0.1.1（AI 半導體 Project 步驟 5：設備與材料——設備部分）　2026-10-22", True),
  ("模型命題：設備需求＝為滿足記憶體、代工擴產所需的資本支出 × 設備占比；本模型回答核心問題 1——設備循環在 2027 還是 2028 見頂——並列出核心問題 2、3 的瓶頸表。公司份額與毛利留給公司層，v0.1 不做。", False), ("", False),
  ("驅動因子 → 推導量", True),
  ("In：公司資本支出（讀自 skhynix／micron／samsung／tsmc dist，不修改它們）、設備占資本支出比例（兩個來源給低／高）、SEMI 2026-07 分項、情境係數（Assumed）、AI 分類假設", False),
@@ -561,7 +561,7 @@ RD_LINES = [
  ("限制", True),
  ("(1) 校準依賴其他記憶體廠 2025 獨立估計（長鑫 6.9–12.0 無一手資料、長江存儲為推算、華邦與 SanDisk 未找到）與三星記憶體資本支出假設；校準值低於業界下限 58%，方向與美光「增量多數為建築」一致，但不是證明。2025 年 DRAM／NAND 拆分不準（合計準）。", False),
  ("(2) 其他廠成長率為 Assumed（長鑫、長江存儲、三星晶圓代工、華虹的資本支出指引未找到）。(3) 測試與封裝以 SEMI 為輸入：缺少每顆加速器的測試時間與每條產線鍵合機台數資料。(4) 情境係數為 Assumed，是「若 B／C 則…」的情境。", False),
- ("(5) Morgan Stanley 202／227 為 itiger 二手轉述（連結由使用者提供，環境無法開啟，未直接核對；上修前 191／215 另有 Investing.com 佐證）。(6) 台積電資本支出含先進封裝，與 SEMI 後段可能重疊。代工邏輯是否也有建築比重偏高的問題，待查。", False),
+ ("(5) Morgan Stanley 202／227 為 itiger 二手轉述（2026-07-06，環境無法開啟，未直接核對；上修前 191／215 另有 Investing.com 佐證）。(6) 台積電資本支出含先進封裝，與 SEMI 後段可能重疊。代工邏輯是否也有建築比重偏高的問題，待查。", False),
  ("(7) 時差：資本支出是現金支出，設備營收是出貨認列，兩者約差一到兩季，v0.1 沒有建模（年度金額直接相乘）。(8) 設備占比：美光依公司揭露推導（引文為一手，比例為 Derived；公司原文是「增量」多數為建築，並未給設備占比）；台積電未找到公司揭露，用業界 58–70%（Analogy）。", False), ("", False),
  ("瓶頸表（核心問題 2、3；v0.1 只做表，不入模）", True)]
 for t in RECON_TXT: pass
