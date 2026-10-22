@@ -2,8 +2,10 @@
 
 每次同步記錄：版本、工作包、commit／PR 與變動摘要。
 
-## v0.2-M1 — 流程補齊＋Tokenomics 官方快照取數、同步至 v19.0（2026-10-22；進行中，詳見 `docs/reports/20261022_minimax_M1.md`）
-- 新增 `CLAUDE.md`、`CHANGELOG.md`、進度檔、`data/tokenomics_names.txt`、快照工具、CI（`.github/workflows/minimax-build.yml`）。PR #75。
+## v0.2-M1 — 流程補齊＋Tokenomics 官方快照取數、同步至 v19.0（2026-10-22；PR #75；報告 `docs/reports/20261022_minimax_M1.md`）
+- 新增 `CLAUDE.md`、`CHANGELOG.md`、進度檔、`data/tokenomics_names.txt`、`scripts/tk_snapshot.py`、快照 v5.24／v19.0、`scripts/tk_attribution.py`、`scripts/ci_check.py`、CI `.github/workflows/minimax-build.yml`。`build_xlsx.py` 的 TK 改讀快照；TK_Link 加檔名／提交／SHA-256／讀取日與 IF_HoldEcon 全 15 欄。
+- 以 v5.24 快照建置與 v0.1 逐格相同（2,396 格僅 TK_Link!A2 說明文字不同）。
+- 同步 Tokenomics v19.0（`1916a06`，SHA-256 `d1728705…`）：IF_TokGW_* +34%～+57%、η 2025 3.42→2.25、1H26 0.80→0.52；覆蓋率 2030 0.5085→0.5088、累計需新融資 3,167→3,159 $M。`dist/` 未覆蓋。
 
 ## v0.1 — 首版（2026-10-08；PR #25）
 - `dist/20261008_MiniMax收支模型_v0_1.xlsx／.html`：541 個公式，重算錯誤 0，Checks 合計 0；SRC_MM 77 列、Inputs 29 項。

@@ -8,13 +8,15 @@ MiniMax（00100.HK，上海稀宇科技）收支模型 v0.1（2026-10-08）。�
 - 一鍵建置：`scripts/build_all.sh [日期] [版本]` → `dist/<日期>_MiniMax收支模型_<版本>.xlsx／.html`（需 `libreoffice-calc-nogui`、openpyxl）。
 - 敏感度：`scripts/sensitivity.py`（逐項改寫 Inputs、重算，寫入 Sensitivity 頁快照）。
 - 原始數據與來源：`data/research/financials.md`、`operations.md`（研究代理 2026-10-08 蒐集；一手／二手已標註）。
-- 報告：`docs/reports/20261008_minimax_v0.1.md`。
+- Tokenomics 取數：`scripts/tk_snapshot.py`（讀 `model/CURRENT` 具名範圍）、名稱檔 `data/tokenomics_names.txt`、指標檔 `data/tokenomics_snapshot_CURRENT`；歸因 `scripts/tk_attribution.py`；驗收 `scripts/ci_check.py`；CI `.github/workflows/minimax-build.yml`。
+- 工作規範：`CLAUDE.md`；變更紀錄：`CHANGELOG.md`；進度：`docs/reports/20261022_minimax_進度.md`。
+- 報告：`docs/reports/20261008_minimax_v0.1.md`（v0.1）、`20261022_minimax_M1.md`（v0.2 M1）。
 
 | 頁 | 內容 |
 |---|---|
 | README | 命題、驅動→推導對照、圖例、已套用的預設 |
 | SRC_MM | 公司財務與營運原始數據（77 列；標記、一手／二手、來源） |
-| TK_Link | Tokenomics v5.24 名稱（經 openai v0.6 快照） |
+| TK_Link | Tokenomics 官方快照（`data/tokenomics_snapshot_*.json`；現用 v19.0，含檔名、提交、SHA-256、讀取日）；12 格基準值＋IF_HoldEcon 全 15 欄 |
 | Inputs | 假設 29 項（值、低、高、標記、說明） |
 | Demand | API 實收單價、計費 token |
 | Revenue | 企業端（API）、消費端（產品與收費方式按 9M25 結構示意） |
