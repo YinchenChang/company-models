@@ -13,7 +13,7 @@ IGN = [x for o in sys.argv if o.startswith('--ignore=') for x in o.split('=', 1)
 
 
 def norm(v):
-    if isinstance(v, str): return re.sub(r'v\d\.\d', 'vX', v)
+    if isinstance(v, str): return re.sub(r'v\d+\.\d+', 'vX', v)
     if hasattr(v, 'ref') and not isinstance(v, (int, float)):  # 模擬運算表／陣列公式物件（v4.1）：依屬性比對，不比物件身分
         return f'{type(v).__name__}{sorted((k, str(x)) for k, x in vars(v).items())}'
     return v

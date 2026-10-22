@@ -12,7 +12,15 @@
 | `zhipu/` | 智譜（智譜華章，02513.HK） | `openai/` v0.6（`claude/openai-s6-release` @ `e91df57`）的架構；骨架經 Anthropic A0 | v0.1（r2） |
 | `anthropic/` | Anthropic（未上市） | `openai/`（v0.6，`claude/openai-s6-release` @ `e91df57`）的架構與工具鏈 | v0.1（成品：`anthropic/dist/20261008_Anthropic收支模型_v0_1.html`／`.xlsx`；PR #22 待合併） |
 | `whitefiber/` | WhiteFiber（WYFI） | `oracle/` @ `e4540c3`（Oracle v0.2 分支） | v0.1 |
+| `amazon/` | Amazon（AMZN） | `oracle/`（v0.2）→ MAG 共用引擎（Amazon v0.1b；共用文件見 `mag/`） | v0.2（Tokenomics v5.31） |
+| `alphabet/` | Alphabet（GOOGL） | `oracle/`（v0.2）→ 套用 Amazon 引擎（amazon@`41f9a54`，v0.2） | v0.2 |
+| `microsoft/` | Microsoft（MSFT） | `oracle/`（v0.2）→ 套用 Amazon 引擎（amazon@`41f9a54`，v0.2） | v0.2 |
 | `markets/` | 市場層（AI 半導體）：每 GW 晶片內容橋接表等，見 `markets/README.md` | 新建（AI 半導體 Project） | chip_bridge v0.1 |
+| `skhynix/` | SK 海力士（000660.KS） | 記憶體樣板 `tools/memory_model`（AI 半導體 Project） | v0.3 |
+| `micron/` | 美光（MU） | 記憶體樣板（複製測試） | v0.2 |
+| `samsung/` | 三星電子（005930.KS） | 記憶體樣板（集團公司：只建模記憶體，其餘事業為輸入） | v0.1 |
+| `tsmc/` | 台積電（2330.TW） | 獨立產生器（CoWoS 供需上限＋損益估值；AI 半導體 Project） | v0.1 |
+| `markets/overview/` | AI 半導體總覽儀表板 | 彙整橋接表、記憶體、網通、台積電模型；估值規則 | v0.1 |
 
 規則：
 - 事實來源與分層：算力相關的產業與物理層資料取自 Tokenomics（`YinchenChang/Tokenomics` 的 Interface／L1／SRC，X8）；公司專屬資料放各公司的 `company.json` 與 `data/`。
@@ -23,9 +31,9 @@
 - 成品的 Drive 位置：`02-算力收支/<公司>/`（資料夾 2026-10-07 由錯字「02-算利收支」改名）。
 
 ## 共用工具：Tokenomics 取數（`tools/tokenomics/import_tokenomics.py`）
-- **用途**：把 Tokenomics 的 Interface（`IF_`）與 L1（`L1_`）具名範圍讀成版本固定的快照 JSON（記錄檔名、`model/CURRENT`、commit、擷取日；每個值記名稱、世代、成本情境、單位、工作表!儲存格），供各公司 `company.json` → `tokenomics.snapshotFile` 引用。公司模型只讀快照，不直接讀 Tokenomics。
+- **用途**：把 Tokenomics 的 Interface（`IF_`、四層瀑布 `IFW_`、用途欄 `IFC_`）、L1（`L1_`）與來源（`SRC_`，限 Active）具名範圍讀成版本固定的快照 JSON（記錄檔名、`model/CURRENT`、commit、擷取日；每個值記名稱、世代、成本情境、單位、工作表!儲存格），供各公司 `company.json` → `tokenomics.snapshotFile` 引用。公司模型只讀快照，不直接讀 Tokenomics。
 - **產生快照**：`python3 tools/tokenomics/import_tokenomics.py --tokenomics <Tokenomics 唯讀 clone> --names <公司>/data/tokenomics_names.txt --out <公司>/data/tokenomics_snapshot_v<版本>.json`
   （唯讀 clone：`GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://github.com/YinchenChang/tokenomics <路徑>`；讀 `model/CURRENT` 指向的 xlsx。）
 - **重現檢查**：`python3 tools/tokenomics/import_tokenomics.py --check <快照.json> [--tokenomics <clone>]`：重新讀取快照記錄的同一個 xlsx，任何值差異（相對誤差 > 1e-9）即失敗；找不到 clone 時警告並略過（`TOKENOMICS_DIR` 環境變數可指定路徑）。
-- **名稱規則**：只接受 `IF_`（不含 `IF_Hdr*`）與 `L1_`，其他名稱報錯；不得引用 Inputs、DC_Cost 等內部頁。名稱清單一行一個，行尾 `optional`（或 `--optional`）＝Tokenomics 尚未提供時記為 `{"missing": true}` 並警告。世代 × 成本情境範圍依 `IF_HdrGen`、`IF_HdrCost` 拆成 `{世代: {低成本, 基準, 高成本}}`；模型主值一律取「基準」，低／高只作敏感度。Tokenomics 的「每 GW」＝IT 關鍵電力；公司 MW 口徑不同時在公司端換算。
+- **名稱規則**（Tokenomics 下游資料契約第 2 條第 1 項）：只接受 `IF_`（不含 `IF_Hdr*`）、`IFW_`、`IFC_`、`L1_`、`SRC_`，其他名稱報錯；`IFW_` 須四層（`_100`／`_Util`／`_Prod`／`_Life`）一起取（契約第 2 條第 2 項）；`IFC_Use` 等用途欄存成 {列上的 IF_／IFW_ 名稱: 值}，標「上限，不得作預測」者不得當收入預測；`SRC_` 只取狀態 Active 的紀錄，另存同列的低／高、口徑、日期、出處、來源等級；不得引用 Inputs、DC_Cost 等內部頁。名稱清單一行一個，行尾 `optional`（或 `--optional`）＝Tokenomics 尚未提供時記為 `{"missing": true}` 並警告。世代 × 成本情境範圍依 `IF_HdrGen`、`IF_HdrCost` 拆成 `{世代: {低成本, 基準, 高成本}}`；模型主值一律取「基準」，低／高只作敏感度。Tokenomics 的「每 GW」＝IT 關鍵電力；公司 MW 口徑不同時在公司端換算。
 - 快取值缺漏時自動以 LibreOffice headless 重算暫存副本再讀（`--force-recalc` 可強制；v5.24 實測重算值＝快取值）。

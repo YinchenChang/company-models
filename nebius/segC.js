@@ -234,7 +234,7 @@ function AM({
             children: `損益簡表（類損益表：歷史 ${HIST_PL[0].year}–${HIST_PL[HIST_PL.length - 1].year}＋前瞻五期）` // v4.5：兩端讀 historicalPL（最後一格＝年初至今實際，滾動時隨資料更新）
           }), (0, $.jsx)(`p`, {
             className: `mt-1 text-xs leading-relaxed text-muted`,
-            children: `前瞻算力收入＝平均在役 MW × 每 MW 年收入（Tokenomics 正向推導）；非算力服務預設 0（AI cloud 以外的事業另列為非核心事業現金消耗）。${PERIODS[0]} 欄＝年初至今實際（季報）＋模型期，可直接對照公司全年指引 ${CALL_FACTS.revLo}–${CALL_FACTS.revHi}；${PERIODS[1]} 起為純模型。DCF 只折現評價日之後的現金流。`
+            children: `前瞻算力收入＝平均在役 MW × 每 MW 年收入（${REVSRCQ}）；非算力服務預設 0（AI cloud 以外的事業另列為非核心事業現金消耗）。${PERIODS[0]} 欄＝年初至今實際（季報）＋模型期，可直接對照公司全年指引 ${CALL_FACTS.revLo}–${CALL_FACTS.revHi}；${PERIODS[1]} 起為純模型。DCF 只折現評價日之後的現金流。`
           }), (0, $.jsx)(`div`, {
             className: `mt-3`,
             children: (0, $.jsx)(BM, {

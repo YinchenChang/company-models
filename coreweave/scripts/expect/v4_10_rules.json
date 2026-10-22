@@ -1,0 +1,14 @@
+{
+ "title": "v4.10（W8：Tokenomics 快照換 v5.35，數值 0 差異）對 v4.9 成品的預期差異清單",
+ "downstream": {
+  "Tokenomics_取數": "快照版本與 commit 字樣（J 欄「版本 · commit」與第 2 列來源說明；取數值不變）",
+  "檢查_版本紀錄": "新增 v4.10 版本紀錄列"
+ },
+ "inputRows": {},
+ "renames": [
+  [
+   "來源：YinchenChang/Tokenomics 20261008_Tokenomics_v5.31.xlsx（v5.31，commit f16f161，擷取 2026-10-09）。只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱；模型主值取「基準」，低／高只作敏感度；Tokenomics 每 GW＝IT 關鍵電力。",
+   "來源：YinchenChang/Tokenomics 20261014_Tokenomics_v5.35.xlsx（v5.35，commit 9dff7f5，擷取 2026-10-15）。只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱；模型主值取「基準」，低／高只作敏感度；Tokenomics 每 GW＝IT 關鍵電力。"
+  ]
+ ]
+}

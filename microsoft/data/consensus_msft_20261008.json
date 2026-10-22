@@ -1,0 +1,234 @@
+{
+ "_readme": "MSFT 市場共識資料檔（MAG v0.1a 步驟 8）。以網路讀取取得；數字為擷取當時值，逐筆附來源。單位：金額 US$bn（每股為 US$）。年度標籤為 Microsoft 財年（FY27＝2026-07-01 至 2027-06-30；FY28＝2027/7–2028/6；FY29＝2028/7–2029/6）。chat 端審查後方可供模型使用；模型端只讀，不得自行增補或修改數字。",
+ "company": "Microsoft",
+ "ticker": "MSFT",
+ "asOf": "2026-10-08",
+ "fiscalYearEnd": "6 月；最新已公布 FY26（期末 2026-06-30，10-K 2026-07-29）；FY27Q1（季末 2026-09-30）財報預計 2026-10-28（Yahoo）",
+ "tagLegend": {
+  "Verified": "可公開查證的事實（公司實際公布數字、收盤價）",
+  "Interested-party": "賣方分析師預估：有利益關係；「共識是多少」可查證，但內容屬利害關係人觀點"
+ },
+ "sourceIndependence": "StockAnalysis.com 的目標價、評等、FY27 營收與 EPS 引用 S&P Global Market Intelligence；MarketScreener 年度預估一般屬 S&P Capital IQ 系（與 ORCL、CRWV、NBIS 共識檔同一判斷），FY27 營收 391.271 對 S&P 391.3 一致，視為同一底層來源。Yahoo Finance 營收與 EPS 預估通常來自 LSEG：FY27 391.04（50 家）、FY28 467.31（51 家），與 MarketScreener 391.27／467.96 一致；但 Yahoo FY27 高低值（402.72／380.0）與 S&P 完全相同、分析師數同為 50 → 獨立性存疑，不視為強獨立交叉。MarketBeat 目標價與評等為自行彙整（獨立於 S&P），可作目標價的獨立交叉；Yahoo 目標價 587.63 與 S&P 相同，推測同源。",
+ "priceReference": {
+  "close": 529.76,
+  "date": "2026-10-07",
+  "source": "StockAnalysis.com（統計頁）",
+  "url": "https://stockanalysis.com/stocks/msft/statistics/",
+  "tag": "Verified",
+  "crossCheck": {
+   "close": 529.76,
+   "date": "2026-10-07",
+   "source": "Yahoo Finance",
+   "url": "https://finance.yahoo.com/quote/MSFT/"
+  },
+  "sharesOut": 7430,
+  "mktCapBn": 3930,
+  "evBn": 3990,
+  "note": "市值與 EV 為 StockAnalysis 口徑（EV 含租賃負債；總債務 128.81B）"
+ },
+ "priceTarget": {
+  "mean": 587.63,
+  "median": 586.0,
+  "low": 440.0,
+  "high": 870.0,
+  "analysts": 56,
+  "consensusRating": "Strong Buy",
+  "source": "S&P Global Market Intelligence（經 StockAnalysis.com）",
+  "url": "https://stockanalysis.com/stocks/msft/forecast/",
+  "retrieved": "2026-10-08",
+  "tag": "Interested-party",
+  "crossCheck": [
+   {
+    "mean": 578.73,
+    "low": 440.0,
+    "high": 870.0,
+    "analysts": 48,
+    "consensusRating": "Moderate Buy",
+    "source": "MarketBeat（自行彙整，獨立於 S&P）",
+    "url": "https://www.marketbeat.com/stocks/NASDAQ/MSFT/forecast/",
+    "retrieved": "2026-10-08",
+    "pageUpdated": "2026-10-05"
+   },
+   {
+    "mean": 587.63,
+    "source": "Yahoo Finance（1y Target Est；與 S&P 同值，推測同源）",
+    "url": "https://finance.yahoo.com/quote/MSFT/",
+    "retrieved": "2026-10-08"
+   }
+  ]
+ },
+ "ratings": {
+  "month": "2026-10",
+  "strongBuy": 41,
+  "buy": 14,
+  "hold": 1,
+  "sell": 0,
+  "strongSell": 0,
+  "total": 56,
+  "source": "S&P Global Market Intelligence（經 StockAnalysis.com）",
+  "url": "https://stockanalysis.com/stocks/msft/forecast/",
+  "retrieved": "2026-10-08",
+  "tag": "Interested-party",
+  "crossCheck": {
+   "strongBuy": 0,
+   "buy": 41,
+   "hold": 5,
+   "sell": 2,
+   "total": 48,
+   "source": "MarketBeat",
+   "url": "https://www.marketbeat.com/stocks/NASDAQ/MSFT/forecast/",
+   "retrieved": "2026-10-08"
+  }
+ },
+ "annualEstimates": {
+  "definition": "MarketScreener：EBIT＝GAAP 營業利益（FY26 155.237 與 10-K 相同）；EBITDA FY26 198.685（＝營業利益＋約 43.4 折舊攤銷，口徑較 10-K D&A 39.0 寬）；EPS 為 GAAP 稀釋（FY26 17.95）；CAPEX FY26 115.948＝現金 PP&E 增添（不含融資租賃）→ 預估推定同口徑；淨負債負值＝淨現金（是否含租賃未揭露）。",
+  "source": "MarketScreener（S&P Capital IQ 系共識）",
+  "url": "https://www.marketscreener.com/quote/stock/MICROSOFT-CORPORATION-4835/finances/",
+  "retrieved": "2026-10-08",
+  "tag": "Interested-party",
+  "FY26": {
+   "revenue": 331.839,
+   "ebitda": 198.685,
+   "ebit": 155.237,
+   "netIncome": 133.749,
+   "eps": 17.95,
+   "dps": 3.64,
+   "capex": 115.948,
+   "fcf": 66.987,
+   "netDebt": -36.549,
+   "note": "實際"
+  },
+  "FY27": {
+   "revenue": 391.271,
+   "ebitda": 239.452,
+   "ebit": 182.305,
+   "netIncome": 147.101,
+   "eps": 19.72,
+   "dps": 3.858,
+   "capex": 192.827,
+   "fcf": 32.903,
+   "netDebt": -51.842
+  },
+  "FY28": {
+   "revenue": 467.955,
+   "ebitda": 295.606,
+   "ebit": 217.245,
+   "netIncome": 175.968,
+   "eps": 23.6,
+   "dps": 4.239,
+   "capex": 216.787,
+   "fcf": 43.216,
+   "netDebt": -38.829
+  },
+  "FY29": {
+   "revenue": 569.502,
+   "ebitda": 372.456,
+   "ebit": 262.608,
+   "netIncome": 213.902,
+   "eps": 29.03,
+   "dps": 4.447,
+   "capex": 251.173,
+   "fcf": 89.023,
+   "netDebt": 99.57,
+   "note": "淨負債轉正 99.57（原文如此；與 FCF 轉增矛盾，可能含租賃或回購假設，v0.1b 不採用此欄）"
+  }
+ },
+ "annualEstimatesAlt": {
+  "note": "S&P 經 StockAnalysis 免費只提供 FY27 營收與 EPS（EPS 為 non-GAAP 調整後，排除 OpenAI 損益）；FY28 起需付費。",
+  "sp": {
+   "source": "S&P Global Market Intelligence（經 StockAnalysis.com）",
+   "url": "https://stockanalysis.com/stocks/msft/forecast/",
+   "retrieved": "2026-10-08",
+   "tag": "Interested-party",
+   "FY27": {
+    "revenue": 391.3,
+    "revenueLow": 380.0,
+    "revenueHigh": 402.7,
+    "epsAdjusted": 19.77,
+    "epsLow": 19.21,
+    "epsHigh": 20.7,
+    "analysts": 50
+   }
+  },
+  "lseg": {
+   "source": "Yahoo Finance Analysis（通常為 LSEG；獨立性存疑，見 sourceIndependence）",
+   "url": "https://finance.yahoo.com/quote/MSFT/analysis/",
+   "retrieved": "2026-10-08",
+   "tag": "Interested-party",
+   "FY27": {
+    "revenue": 391.04,
+    "low": 380.0,
+    "high": 402.72,
+    "analysts": 50,
+    "eps": 19.75
+   },
+   "FY28": {
+    "revenue": 467.31,
+    "low": 433.19,
+    "high": 503.0,
+    "analysts": 51,
+    "eps": 23.65
+   }
+  }
+ },
+ "quarterlyEstimates": {
+  "FY27Q1": {
+   "revenue": 90.685,
+   "ebitda": 56.56,
+   "ebit": 43.994,
+   "netIncome": 35.132,
+   "source": "MarketScreener",
+   "url": "https://www.marketscreener.com/quote/stock/MICROSOFT-CORPORATION-4835/finances/"
+  },
+  "FY27Q1_yahoo": {
+   "revenue": 90.66,
+   "eps": 4.72,
+   "analysts": 38,
+   "source": "Yahoo Finance Analysis",
+   "url": "https://finance.yahoo.com/quote/MSFT/analysis/"
+  },
+  "note": "共識 90.7 落在公司指引 89.85–90.95 上半部",
+  "tag": "Interested-party"
+ },
+ "companyGuidance": {
+  "FY27Q1": {
+   "revenueLow": 89.85,
+   "revenueHigh": 90.95,
+   "agentsInfraLow": 75.15,
+   "agentsInfraHigh": 75.75,
+   "devicesConsumerLow": 14.7,
+   "devicesConsumerHigh": 15.2,
+   "cogsLow": 29.6,
+   "cogsHigh": 29.8,
+   "opexLow": 16.8,
+   "opexHigh": 16.9,
+   "etr": 0.2,
+   "capexMin": 50.0,
+   "azureGrowthCcLow": 0.44,
+   "azureGrowthCcHigh": 0.45
+  },
+  "FY27": {
+   "operatingMarginChangeMax": -0.01,
+   "capex": "較 FY26（145.3，含融資租賃）成長",
+   "etr": 0.2
+  },
+  "CY2026": {
+   "capex": 175.0,
+   "note": "租賃改分類後；原約 190"
+  },
+  "source": "8-K 2026-09-02 附件 99.1（FY27 Q1 調整後指引）；FY27 全年為 2026-07-29 法說（Microsoft IR）",
+  "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526380280/d291965dex991.htm",
+  "tag": "Interested-party"
+ },
+ "independentCrossCheck": {
+  "provider": "MarketBeat（目標價）；Yahoo（營收，獨立性存疑）",
+  "note": "目標價 S&P 587.63 vs MarketBeat 578.73（−1.5%）；營收 FY27 三個呈現 391.0–391.3 一致，但可能同源"
+ },
+ "notFound": [
+  "FY28–FY29 營收與 EBITDA 的第二個確定獨立來源（S&P 經 StockAnalysis 需付費；Yahoo 只到 FY28 且疑似同源）——「找不到」",
+  "FY30 以後共識",
+  "資本支出共識的第二來源與口徑（含融資租賃與否）",
+  "EBITDA 共識高低區間",
+  "分部（新 Agents and Infra／Devices and Consumer）共識"
+ ]
+}

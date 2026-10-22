@@ -47,6 +47,11 @@ for item in zin.infolist():
     if item.filename.startswith('xl/worksheets/sheet') and b'TABLE(' in data:
         x, info = fix(data.decode())
         if info: done.append((item.filename, *info)); data = x.encode()
+    if item.filename == 'xl/workbook.xml':  # W4 r2：要求 Excel 開檔時全部重算（LibreOffice 存的運算表與部分相依格快取值可能殘留代入值）
+        w = data.decode()
+        if 'fullCalcOnLoad' not in w:
+            w = re.sub(r'<calcPr\b', '<calcPr fullCalcOnLoad="1"', w, count=1) if '<calcPr' in w else w.replace('</workbook>', '<calcPr fullCalcOnLoad="1"/></workbook>')
+        data = w.encode()
     zout.writestr(item, data)
 zout.close(); zin.close(); shutil.move(tmp, src)
 if not done: sys.exit('找不到 TABLE() 儲存格：模擬運算表遺失（建置或重算有問題）')

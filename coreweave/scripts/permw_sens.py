@@ -3,13 +3,16 @@
 # 讀重算後的「加權目標價」與融資缺口（＝MAX(0, −FY30 融資前累積現金)），寫入 permw_sens.json；build_xlsx.py 讀此檔寫入「每MW經濟性」頁「敏感度」區，
 # 並以「快照狀態」格比對目前輸入下的加權目標價（不一致＝快照已過期）。HTML 以同一組設定即時計算（pmwSensQ），cmp31 逐格比對。
 # 用法：python3 scripts/permw_sens.py 檔案.xlsx [輸出 json，預設 repo 根目錄 permw_sens.json]；結果與原檔相同時代碼 0，有變動時寫入並以代碼 3 結束。
-import sys, os, json
+import sys, os, json, math
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from uno_q import Workbook
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 xlsx = sys.argv[1]; out = sys.argv[2] if len(sys.argv) > 2 else os.path.join(ROOT, 'permw_sens.json')
 CO = json.load(open(os.path.join(ROOT, 'company.json'), encoding='utf-8'))
+if CO.get('tokenomics'):  # W6 r1：k 基準與區間依目前快照推算（與 build_xlsx、HTML 同一規則：kspec.py）
+    sys.path.insert(0, ROOT); import kspec
+    kspec.resolve(CO, json.load(open(os.path.join(ROOT, CO['tokenomics']['snapshotFile']), encoding='utf-8'))['items'])
 PMW = {'capex': 'legacy', 'cost': 'ebitdaPct', 'revenue': 'legacy', **(CO.get('methodology', {}).get('perMw') or {})}
 IN, VA, FR = '輸入與假設', '評價_DCF與目標價', '各期收支'
 # (代碼, 名稱, {輸入列名稱: 值}；None＝本方法不適用)
@@ -20,9 +23,46 @@ CASES = [('base', '基準（目前輸入）', {}),
          ('pxHigh', 'GPU 小時價格 高', {'GPU 小時價格情境（1＝低、2＝基準、3＝高）': 3} if PMW['revenue'] == 'gpuHr' else None),
          ('mixRU', '世代組合 Rubin Ultra 版', {'世代組合敏感度（0＝基準、1＝Rubin Ultra 版）': 1}),
          ('sgaGaap', '管銷率 GAAP（含 SBC）', {'管銷率口徑（1＝扣 SBC、2＝GAAP 含 SBC）': 2} if PMW['cost'] == 'bottomUp' else None)]
+if PMW['revenue'] == 'tkAnchor':  # W4 r2：定價倍數 k 與隨需占比（與 HTML pmwSensQ 同一組設定、同一名稱）
+    _AM = CO['pricing']['anchorMultiple']; _KL, _OD = '定價倍數 k_長約（市場長約價 ÷ Tokenomics 同世代持有成本）', '隨需占比（占在役計費產能）'
+    CASES += [('kLongLo', f"k_長約 {_AM['long']['low']:.2f}", {_KL: _AM['long']['low']}), ('kLongMed', f"k_長約 {_AM['long']['sensMedian']:.2f}（三筆長約中位數）", {_KL: _AM['long']['sensMedian']}),
+              ('kLongHi', f"k_長約 {_AM['long']['high']:.2f}", {_KL: _AM['long']['high']})]
+    CASES += [(f'od{j + 1}', f"隨需占比 {round(x * 100)}%（k_現貨 {_AM['spot']['base']:.2f}）", {_OD: x}) for j, x in enumerate(_AM['onDemandShare']['sens'])]
+_GI = (CO.get('pricing') or {}).get('genIndex') if PMW['revenue'] == 'tkAnchor' else None
+_VRC = []
+if _GI:  # W9：VR200 世代指數 5 列（與 HTML vrSensQ 同一組設定、同一名稱；指數由快照與 company.json 算出，不寫死）
+    _TKI = json.load(open(os.path.join(ROOT, CO['tokenomics']['snapshotFile']), encoding='utf-8'))
+    _gens = _TKI['source']['generations']; _it = _TKI['items']
+    _ovc = next((g['code'] for g in _gens if g['code'] in _GI), None); _ovg = next((g['name'] for g in _gens if g['code'] == _ovc), None)
+    _rfc = next(g['code'] for g in _gens if g['name'] == _GI['refGen'])
+    _q = _GI.get('qName')
+    _thr = [_GI.get('thrRevName'), _GI.get('thrPayName')]  # W10：世代門檻名稱；上市間隔＝ln(1 ÷ q) ÷ ln(1 + 收入持平門檻)（[Derived]），快照沒有門檻名稱時不產生此 5 列
+    if _ovc and _q and all(x in _it and not _it[x].get('missing') for x in (_q, _q + '_Lo', _q + '_Hi')) and all(n and all(n + x in _it and not _it[n + x].get('missing') for x in ('', '_Lo', '_Hi')) for n in _thr):
+        _conv = (lambda g: 1 / _it['IF_FacilityGW']['values'][g]['基準']) if CO['meta'].get('mwBasis') == 'facility' else (lambda g: 1)
+        _hv = lambda g: _it['IF_HoldEcon']['values'][g]['基準'] * _conv(g)
+        q, ql, qh = _it[_q]['values'], _it[_q + '_Lo']['values'], _it[_q + '_Hi']['values']; gap = math.log(1 / q) / math.log(1 + _it[_thr[0]]['values']); dc = _GI['lifeDeclinePerYear']
+        m = _hv(_ovg) / _hv(_GI['refGen']) / q  # (1＋回本門檻)^間隔
+        _L = [(ql * m, 'q 低端、價格路徑同基準'), (1, f'收入持平（等於 {_rfc}）'), (m * q, '跟成本走（基準）'), (q * (1 - dc) ** gap, f'q 基準、世代間只按壽命內降價 −{round(dc * 100)}%／年'), (qh * m, 'q 高端、價格路徑同基準')]
+        _OV = f'{_ovc} 世代指數覆寫（0＝跟成本走）'
+        for j, (ix, lb) in enumerate(_L):
+            imp = (ix / q) ** (1 / gap) - 1
+            _VRC.append((f'vrIdx{j + 1}', f"{_ovc} 指數 {ix:.2f}｜{lb}｜隱含年價格 {'−' if imp < 0 else '+'}{abs(imp) * 100:.1f}%", {_OV: 0 if j == 2 else ix}))
 if not CO.get('fleet'):
     print('permw_sens：company.json 無 fleet，不適用'); sys.exit(0)
+_CA = CO.get('companyAdjust') if PMW['revenue'] == 'tkAnchor' else None
+sys.path.insert(0, ROOT); import calendar_q as _cq; _YTDL = _cq.derive(CO)['ytdLabel']  # W5：年初至今標籤（滾動後自動更新）
 with Workbook(xlsx) as wb:
+    if _CA:  # W5：公司實況驗證的敏感度（輸入值讀 Excel「公司實況驗證」頁敏感度輸入列；與 HTML pmwSensQ／cvSensQ 同一組設定、同一名稱）
+        _CV = '公司實況驗證'; _g = lambda lab: wb.get(wb.cell(_CV, lab))
+        _z, _zc, _kc = _g('敏感度輸入｜營運成本倍數＝Q2 實際 ÷ Q2 季末世代 Tokenomics 合計'), _g(f"敏感度輸入｜每 MW 建置成本倍數＝{_YTDL} 實際 ÷ 首期新增世代 Tokenomics"), _g('敏感度輸入｜CRWV 短天期 k（短天期合約價 ÷ 同世代 Tokenomics，基準）')
+        _OX, _CXS, _KS = '由下而上營運成本倍數（1＝Tokenomics 值）', '每 MW 建置成本倍數（整體）', '定價倍數 k_現貨（市場現貨價 ÷ Tokenomics 同世代持有成本）'
+        CASES += [('kExOff', '既有合約 k 不套用（全部按 k_新約）', {'既有合約 k 開關（1＝套用、0＝不套用）': 0}),
+                  ('kNewUp', f"新約價格 +{round(_CA['newK']['adjSens'] * 100)}%（公司說法，只作用於長約）", {'新約價格調整（相對 k_長約；只作用於長約部分）': _CA['newK']['adjSens']}),
+                  ('spotCw', f"隨需 {round(_CA['spotCw']['od'] * 100)}% × CRWV 短天期 k {_kc:.2f}", {_OD: _CA['spotCw']['od'], _KS: _kc}),
+                  ('opexQ2', f"營運成本＝Q2 實際比率（× {_z:.2f}）", {_OX: _z}),
+                  ('capexQ2', f"每 MW 建置成本＝{_YTDL} 實際比率（× {_zc:.2f}）", {_CXS: _zc}),
+                  ('actBoth', '營運成本與建置成本皆用公司實際比率', {_OX: _z, _CXS: _zc})]
+    CASES += _VRC  # W9：VR200 世代指數 5 列（排在最後，與 HTML pmwSensQ 同序）
     c_sel = wb.cell(IN, '情境選擇', prefix=True)
     o_tgt, o_pfc = wb.cell(VA, '加權目標價'), wb.cell(FR, '融資前累積現金', col='G')
     cells = {k: wb.cell(IN, k) for _, _, ch in CASES if ch for k in ch}

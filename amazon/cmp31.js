@@ -1,0 +1,268 @@
+const fs=require('fs'); require('./load_engine.js')(); // v4.0：引擎資料來自 company.json
+// v4.5：Excel 列名稱中的期間字樣由日曆產生（佔位符 → 目前日曆字樣，與 build_xlsx 相同的 calendar_q.tokens）
+const T=s=>Object.keys(CALQ.tokens).sort((a,b)=>b.length-a.length).reduce((x,k)=>x.split(k).join(CALQ.tokens[k]),s);
+const SC=process.argv[2], AK=+(process.argv[3]||VAL_DEFAULTS.evYear), AKX=process.argv[3]!==undefined; // AK：EV/EBITDA 錨定年度（1＝模型第 2 期…4＝第 5 期；預設 valuation.evYear）
+const X=JSON.parse(fs.readFileSync('xl17_'+({low:1,base:2,high:3}[SC])+(AKX?'_a'+AK:'')+'.json','utf8'));
+VAL_DEFAULTS.evYear=AK;
+const q=structuredClone(DEFAULTS); q.scenario=SC; q.a=structuredClone(SCENARIOS[SC].a); q.mw31=SCENARIOS[SC].mw31; q.cvCap=SCENARIOS[SC].cvCap; q.delayMonths=SCENARIOS[SC].delay; q.billableOpen=SCENARIOS[SC].bOpen; q.m.accepted=[...SCENARIOS[SC].acc]; q.m.billable=[...SCENARIOS[SC].bil]; q.m.revMW=[...SCENARIOS[SC].rev];
+const d=runFunding(q), p=runValuation(d,q,VAL_DEFAULTS), y=d.years, f=p.fwd;
+const H=(k)=>y.map(e=>e[k]);
+const rows=[];
+function cmp(label, xlKey, html, note){
+  const MAP={'產能與收入|':['運營_產能與收入|'],'支出與資金|':['各期收支|'],'損益與評價|':['損益|','評價_DCF與目標價|'],'輸入|':['輸入與假設|'],'債務明細|':['資產負債_既有債務|'],'站點租賃|':['運營_站點|'],'可比公司|':['評價_可比公司|'],'連動檢查|':['檢查_連動|']};
+  let x=X[xlKey]; if(!x){for(const [o,ns] of Object.entries(MAP)){if(xlKey.startsWith(o)){for(const n of ns){const k=n+xlKey.slice(o.length); if(X[k]){x=X[k];break;}}}}}
+  if(!x){rows.push([label,'MISSING XL KEY '+xlKey]);return;}
+  const xv=x.slice(0,html.length).map(v=>typeof v==='number'?v:NaN);
+  const diff=html.map((h,i)=>Math.abs((h??NaN)-(xv[i]??NaN)));
+  const ok=diff.every(d=>d<0.005||(!Number.isFinite(d)&&false));
+  rows.push([ok?'OK ':'XX ',label, html.map(v=>+(+v).toFixed(3)).join('/'), xv.map(v=>+(+v).toFixed(3)).join('/'), note||'']);
+}
+const S='產能與收入|', F='支出與資金|', V='損益與評價|', NB0='資產負債_新債與新股|';
+cmp('Accepted', S+'Accepted MW（已驗收，單調不減）', d.m.accepted);
+cmp('Billable', S+'Billable MW（上限為 Accepted）', d.m.billable);
+cmp('平均在役MW', S+T('平均在役 MW（«P0» 欄為«STUBW»平均）'), H('avgBillable'));
+cmp('容量上限', S+'容量上限（模型期最多能交付的收入）', H('capacity'));
+cmp('排程RPO', S+'排程 RPO（模型期，依季報桶分攤）', H('scheduled'));
+cmp('瓶頸', S+'產能瓶頸（模型期：排程 − 容量）', H('bottleneck'));
+cmp('RPO轉換', S+'期初 RPO 轉換收入（模型期）', H('revenue'));
+cmp('新簽約收入', S+'新簽約收入', H('newRev'));
+cmp('未售', S+'未售產能（浪費）', H('unsold'));
+cmp('isRev', S+'損益用算力收入（模型期＝RPO 轉換＋新簽約）', H('isRev'));
+cmp('營收−MW×單價×利用率', S+'核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間', y.map(e=>e.isRev-e.capacity)); // v0.1b：MW 驅動時為 0
+cmp('每MW年收入', '輸入|每 MW 年收入', d.m.revMW);
+if(PRICING){ // MAG v0.1b：B0 對外 AI 雲端定價（Tokenomics × k）
+  const PR=d.m.price; cmp('採用k', '輸入|採用 k（依價格軸）', [PR[0].k]); cmp('混合k三軸', '輸入|混合 k', [0,1,2].map(kAxQ));
+  PRICING.chips.forEach((c,j)=>cmp('世代MW '+c.key, `輸入|世代｜${c.label}｜在役 MW`, PR.map(x=>x.gens[j])));
+  cmp('世代MW合計', '輸入|在役 MW 合計（世代加總）', PR.map(x=>x.tot)); cmp('加權持有成本', '輸入|加權每 MW 年持有成本', PR.map(x=>x.hold));
+  cmp('加權營運成本', '輸入|加權每 MW 年營運成本', PR.map(x=>x.opex)); cmp('加權參考營收', '輸入|加權每 MW 參考付費營收（利用率層）', PR.map(x=>x.ref)); if(PR.every(x=>Number.isFinite(x.refP))){ cmp('加權參考營收P', '輸入|加權每 MW 參考付費營收（生產折減層）', PR.map(x=>x.refP)); cmp('上限比P', '輸入|每 MW 年收入 ÷ 參考付費營收（生產折減層）', PR.map(x=>x.capRatioP)); cmp('上限檢查P(檢查頁)', '連動檢查|每 MW 年收入 ÷ 參考付費營收（生產折減層，五期最高）', [Math.max(...PR.map(x=>x.capRatioP))]); } // MAG v0.2
+  cmp('上限比', '輸入|每 MW 年收入 ÷ 參考付費營收（利用率層）', PR.map(x=>x.capRatio));
+  cmp('上限檢查(檢查頁)', '連動檢查|每 MW 年收入 ÷ 參考付費營收（利用率層，五期最高）', [Math.max(...PR.map(x=>x.capRatio))]); cmp('世代MW核對', T('連動檢查|世代在役 MW 合計 − Accepted MW（«PL»）'), [PR[4].tot-d.m.accepted[4]]);
+  if(SC==='base'&&!AKX){ const G=grid33Q(q,VAL_DEFAULTS); [`low`,`base`,`high`].forEach((k,j)=>cmp('3x3 '+k, `評價_DCF與目標價|3×3｜${SCENARIOS[k].label}（價格軸 低／基準／高）`, G[j])); }
+}
+cmp('非 AI 事業營收', '輸入|非 AI 事業營收（模型期）', H('legacyRev')); cmp('非 AI 事業EBITDA', '輸入|非 AI 事業 EBITDA（模型期）', H('legacyEbitda')); // v0.1b（Oracle）
+d.lg.lines.forEach(x=>{ cmp('傳統 '+x.key+' 全年', `輸入|非 AI 事業｜${x.label}｜全年營收`, x.annual); cmp('傳統 '+x.key+' 模型期', x.kind==='explicit'?`輸入|非 AI 事業｜${x.label}｜模型期營收（輸入）`:`輸入|非 AI 事業｜${x.label}｜模型期營收`, x.rev);
+  cmp('分部 '+x.key+' EBITDA', `輸入|非 AI 事業｜${x.label}｜EBITDA`, x.ebitda); cmp('分部 '+x.key+' 其他攤銷', `輸入|非 AI 事業｜${x.label}｜其他攤銷`, x.oa); cmp('分部 '+x.key+' EBITDA率', `輸入|非 AI 事業｜${x.label}｜EBITDA 率`, x.m); // MAG v0.1b
+  if(x.kind!=='explicit') cmp('分部 '+x.key+' 起始年增率', `輸入|非 AI 事業｜${x.label}｜起始年增率`, [x.g0]); cmp('分部 '+x.key+' 起始EBITDA率', `輸入|非 AI 事業｜${x.label}｜起始 EBITDA 率`, [x.m0]);
+  if(x.ai){ cmp('非AI雲端 AI YTD', T(`輸入|非 AI 事業｜${x.label}｜AI «YTD» 營收估計`), [x.ai.ytd]); cmp('非AI雲端 AI TTM', `輸入|非 AI 事業｜${x.label}｜AI 近四季營收估計`, [x.ai.ttm]); } });
+cmp('非 AI 事業其他攤銷', '輸入|非 AI 事業其他攤銷（模型期）', H('legacyOa')); cmp('持股價值', '輸入|持股價值（分部加總項）', [holdValQ(VAL_DEFAULTS)]); if(COMPANY_DATA.related){ const RQ=relatedQ(y); cmp('關聯方 AI 年化', '檢查_連動|關聯方｜對外 AI 雲端收入（年化）', RQ.ai); cmp('關聯方 集中度', '檢查_連動|關聯方｜對手方集中度（合約年化 ÷ AI 雲端收入）', RQ.ratio); cmp('關聯方 合約合計', '檢查_連動|關聯方｜合約年化合計', RQ.tot); } // MAG v0.1b
+cmp('回購計畫', F+'回購計畫（基準年額 × 期間長度）', H('buybackPlan')); cmp('回購實際', F+'回購（實際，減少後）', H('buyback')); cmp('回購減少', F+'回購被迫減少', H('buybackCut')); cmp('回購股數', F+'回購股數', H('buybackShares')); cmp('回購(用途)', F+'⑨ 回購（瀑布：現金不足時先減）', y.map((e,i)=>i===0?e.fyBuyback:e.buyback)); cmp('FCF', F+'自由現金流（FCF＝營運現金 − 現金資本支出）', H('fcf')); cmp('SBC加回', F+'Ⓒ5 加回：股權報酬（非現金）', H('sbcCash')); cmp('首期營運資金', F+'Ⓒ6 首期營運資金變動（上年同期實際）', H('wcStub').map(x=>x??0)); // MAG v0.1b
+cmp('在帳租金自現金扣除', '輸入|在帳現金租金（自現金扣除）', H('leaseCashOn')); cmp('租用算力租金', '輸入|租用算力租金（營運成本）', H('rentedCompute')); cmp('其他事業EBITDA(淨)', '輸入|其他事業 EBITDA', H('otherEbitda')); (COMPANY_DATA.leases.rentedCompute||[]).forEach(c=>cmp('租用 '+c.name, `輸入|租用算力｜${c.name}｜在租年數`, RENT_OV(c))); // MAG v0.1b
+if(CALL_FACTS.aiRunRate!=null) cmp('AI runrate 驗證', '連動檢查|公司 AI run-rate 驗證（模型評價日年化）', [q.billableOpen*d.m.revMW[0]*(q.revScale??1)]); d.lg.lines.filter(x=>x.kind==='cloudResidual').forEach(x=>cmp('殘差檢查 '+x.key, T(`連動檢查|${x.label}（殘差）«P0» 模型期營收`), [x.rev[0]])); cmp('AI雲端營收(引自運營)', '輸入|對外 AI 雲端營收（模型期，引自運營頁）', H('aiRevQ')); // MAG v0.1b
+cmp('現金稅', F+T('⑦ 現金稅（«STUB» 起）'), H('cashTax')); cmp('股利', F+'⑧ 股利（普通股＋特別股）', y.map((e,i)=>i===0?e.fyDividend:e.dividend)); cmp('債務上限', F+'債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）', H('debtCap')); // v0.1b cmp('來源 傳統EBITDA', F+T('Ⓒ3 非 AI 事業 EBITDA（«STUB» 起）'), H('legacyEbitda'));
+cmp('36個月營收對照', S+'對照：評價日起 36 個月 MW 驅動營收', H('oci36')); cmp('RPO36 差額', '連動檢查|對照：RPO 36 個月內轉換 − 模型 36 個月 MW 驅動營收', [LATEST_Q.rpo*COMPANY_DATA.rpo.within36m-d.totals.oci36]); // v0.1b
+cmp('期初可計費MW', '輸入|«VMD» Billable MW'.replace('«VMD»',CALQ.valuationMD), [q.billableOpen]); // v0.1b：以實際營收校準
+cmp('信用損失', S+'信用損失（期初 RPO 部分）', H('loss'));
+cmp('RPO現金', S+'RPO 現金（可支應資本用途）', H('rpoCash'));
+cmp('新簽約現金', S+'新簽約現金', H('newCash'));
+cmp('EBITDA率', S+'EBITDA 率（損益與資金共用）', H('ebM'));
+cmp('EBITDAR率', S+'EBITDAR 率（EBITDA 率＋租金÷營收）', H('cashMargin'));
+cmp('模型期總營收', S+'模型期總營收（算力＋服務）', H('totRev'));
+cmp('服務現金', '輸入|非算力服務現金', H('legacy'));
+cmp('FY26全年營收(產能頁)', S+T('«P0» 全年總營收（«YTD» 實際＋模型期算力＋服務＋非 AI 事業）'), [y[0].fyRevenue+y[0].servicesRev]);
+cmp('毛CapEx模型期', '輸入|毛 CapEx（模型期，下游引用此列）', H('gross'));
+cmp('全年CapEx公式', '輸入|全年毛 CapEx（公式）', H('capexFull'));
+cmp('成長型', '輸入|成長型 CapEx（模型期）', H('capexGrowth'));
+cmp('汰換', '輸入|GPU 汰換 CapEx', H('refresh'));
+cmp('D&A車隊', '輸入|D&A（車隊折舊）', H('daFleet'));
+if(COMPANY_DATA.capexModel&&COMPANY_DATA.capexModel.mode==='tk'){ // MAG v0.1b：AI／非 AI 資本支出與 D&A 分池
+  cmp('每MW建置成本', '輸入|每 MW 建置成本', H('costMW')); cmp('每MW IT成本', '輸入|每 MW IT 成本', H('costIT'));
+  cmp('非AI CapEx全年', '輸入|非 AI 資本支出（全年）', H('capexNonAiFull')); cmp('非AI CapEx模型期', '輸入|非 AI 資本支出（模型期）', H('capexNonAi')); cmp('AI成長型', '輸入|AI 成長型 CapEx（模型期）', H('capexAi'));
+  const A0=aiOpenQ(q, q.extShare??COMPANY_DATA.capexModel.extShare); cmp('AI期初IT', '輸入|AI 期初 IT 毛額（估計）', [A0.it]); cmp('AI期初機房', '輸入|AI 期初機房毛額（估計）', [A0.fac]); cmp('機房年限', '輸入|機房折舊年限', [A0.facLife]); cmp('非AI年限', '輸入|非 AI 折舊年限', [A0.nLife]); cmp('D&A對帳殘差', '輸入|D&A 對帳殘差（分部 D&A 年化 − AI 期初 D&A − 非 AI 期初 ÷ 年限）', [A0.daRecon]); cmp('D&A對帳檢查', '連動檢查|D&A 對帳殘差（分部 D&A 年化 − 模型期初 D&A）', [A0.daRecon]); // MAG v0.1b r3（C17）
+  { const g=(CALL_FACTS.capexLo+CALL_FACTS.capexHi)/2; cmp('對帳 隱含MW', `連動檢查|${PERIODS[0]} 對帳：指引隱含 AI 建置 MW`, [(g-y[0].capexNonAiFull-y[0].refresh)/(y[0].costMW*(q.capexScale??1)/1e3)]); cmp('MW公式全年', `連動檢查|${PERIODS[0]} 全年 CapEx（MW 公式）`, [y[0].capexFormulaFY]); }
+  cmp('AI IT期初', '輸入|AI IT 期初基礎', H('aiItBeg')); cmp('AI機房期初', '輸入|AI 機房期初基礎', H('aiFacBeg')); cmp('AI D&A', '輸入|AI D&A', H('daAi')); cmp('非AI期初', '輸入|非 AI 期初基礎（各期）', H('nonAiBeg')); cmp('非AI D&A', '輸入|非 AI D&A', H('daNonAi'));
+}
+// v0.2：建設延誤（計費 MW 平移、GPU 資本支出照原時程、折舊自投入使用起算、閒置資本）
+cmp('期末時點', S+'期末時點（評價日起，年）', PERIOD_T); cmp('計費MW延誤後', S+'Billable MW（延誤後，計費用）', H('billDelayed'));
+cmp('期初在役MW', S+'期初在役 MW', y.map((e,i)=>i===0?q.billableOpen:y[i-1].billDelayed));
+cmp('成長型累計', S+'成長型 CapEx 累計（原時程，評價日起）', H('capexCum')); cmp('已投入使用累計', S+'已投入使用累計（延誤後）', H('capexInSvcCum'));
+cmp('本期投入使用', S+'本期投入使用的成長型 CapEx（折舊基礎）', H('capexInSvc')); cmp('閒置資本', S+'閒置資本（已支出未產生收入，期末）', H('idleCap'));
+cmp('延誤月數', S+'建設延誤月數（目前情境）', [q.delayMonths]);
+cmp('期初毛PP&E', '輸入|期初毛 PP&E', H('ppeBeg'));
+// v0.2：A3 租約起租連動、A4 延誤罰則
+cmp('表外租金(延誤連動後)', S+'表外現金租金（未起租，延誤連動後）', H('offLease')); cmp('表外租金(各期收支)', F+'② 表外現金租金（未起租）', H('offLease'));
+cmp('容量上限(未延誤)', S+'容量上限（未延誤，對照）', H('capUndelayed')); cmp('應計費未計費', S+'應計費而未計費營收（延誤造成）', H('lostRev'));
+cmp('延誤罰則', S+'延誤罰則（營業費用）', H('delayPen')); cmp('來源 延誤罰則', F+'Ⓒ4 減：延誤罰則（營業費用）', y.map(e=>-e.delayPen)); cmp('損益 延誤罰則', V+'延誤罰則（服務抵減，營業費用）', H('delayPen'));
+// v0.2：租賃負債與調整後槓桿
+cmp('在帳租賃負債', F+'在帳租賃負債（期末）', H('leaseLiabOn')); cmp('未起租租賃負債', F+'未起租租約已起租部分的租賃負債（期末）', H('leaseLiabUl')); cmp('租賃負債合計', F+'租賃負債合計（期末）', H('leaseLiab'));
+cmp('BS 租賃負債', NB0+'租賃負債（期末）', H('leaseLiab')); cmp('BS EBITDAR', NB0+'EBITDAR（年化＝(EBITDA＋租金) ÷ 期間長度）', H('ebitdarAnn'));
+cmp('BS 調整後槓桿', NB0+'調整後槓桿（(總債務＋租賃負債) ÷ EBITDAR）', H('adjLev')); cmp('BS 距上限空間', NB0+'距投資級上限的空間（上限 − 調整後槓桿）', y.map(e=>q.debtEbitdaMax-e.adjLev));
+cmp('連動比例', S+'未起租租約起租連動比例（delayLink）', [q.delayLink]); cmp('罰則比例', S+'延誤罰則（應計費而未計費營收的 %）', [q.delayPenalty]);
+cmp('表外租金', '輸入|表外現金租金（未起租）', q.a.newLease);
+cmp('存量利息', '輸入|存量債務利息（下游引用此列）', H('intStock'));
+cmp('JV合計(模型期)', '輸入|JV／策略投資出資', H('div'));
+cmp('新債利息', F+'③ 新債利息（瀑布）', H('newDebtInt'));
+cmp('融資前現金', F+'融資前現金（扣既有新債利息）', H('preCash'));
+cmp('融資需求', F+'融資需求（補足至最低現金）', H('need'));
+cmp('期末backlog', F+'期末 backlog', H('backlogEnd'));
+cmp('新債舉借', F+'新債舉借', H('newDebt'));
+cmp('可轉債發行', F+'可轉債發行', H('convNew')); cmp('可轉債期末', F+'可轉債（瀑布）期末餘額', H('convEnd')); // v0.1b
+cmp('股權募資', F+'股權募資', H('equity'));
+cmp('高息債', F+'高息債舉借（溢出）', H('junk'));
+cmp('融資前累積現金', F+'融資前累積現金', H('preFinCum'));
+cmp('累計新股', F+'累計新股', H('cumNewShares'));
+cmp('總債務', F+'期末總債務（既有＋可轉債＋新債＋高息債）', H('totalDebtEnd'));
+cmp('租金合計', F+'　租金合計', H('lease'));
+cmp('排程還本(FY26含1H)', F+'⑤ 排程還本（季報到期表）', y.map((e,i)=>i===0?e.fyDebtPay:e.debtPay));
+cmp('客戶預付', F+T('Ⓓ 客戶預付（«STUB» 起）'), H('external'));
+cmp('預付認列', F+'　預付認列（非現金營收）', H('prepayRecog')); cmp('預付利息累積', F+'　合約負債利息累積（重大財務組成，非現金）', H('prepayAccr')); cmp('損益 預付利息', V+'預付財務組成利息（非現金）', f.map(e=>e.prepayAccr)); cmp('合約負債期末', F+'　合約負債期末', H('clEnd')); cmp('合約負債期初', F+'　合約負債期初（客戶預付餘額）', H('clBeg')); // v0.1b
+cmp('營運來源合計', F+'營運來源合計', y.map((e,i)=>i===0?e.fySourcesOp:e.sourcesOp));
+cmp('營運缺口', F+'營運缺口（不含融資、不含還本）', y.map((e,i)=>i===0?e.fyOperatingGap:e.operatingGap));
+cmp('期末累積現金', F+'期末累積現金', H('cum'));
+const HTMLuses=y.map((e,i)=>i===0? e.fyUsesCash : e.uses);
+cmp('用途合計(HTML各期結果口徑)', F+'用途合計（現金口徑）', HTMLuses, 'HTML FY26 用認列 CapEx 且再加 1H 利息/租金');
+cmp('JV(FY26含1H)', F+'④ JV／策略投資出資', y.map((e,i)=>i===0?e.fyDiv:e.div));
+cmp('股權/可轉債', F+'Ⓔ 股權／可轉債（融資）', y.map((e,i)=>i===0?e.fyEquity:e.atm));
+cmp('總來源', F+'總來源（含融資）', y.map((e,i)=>i===0?e.fySrcTotal:e.sources));
+cmp('CFO(1H)', F+T('Ⓐ0 «YTDL» 實際營運現金流（CFO）'), y.map((e,i)=>i===0?e.fyCfo:0));
+cmp('CapEx用途', F+T('① CapEx（用途用：«YTD» 現金／«STUB» 毛額）'), y.map((e,i)=>i===0?e.fyCapexUse:e.gross));
+cmp('調節', F+T('　«YTD» 其他／受限現金調節'), y.map((e,i)=>i===0?e.hPlug:0));
+cmp('期初累積現金', F+'　期初累積現金', y.map((e,i)=>i===0?ACTUAL_1H.cash1231:y[i-1].cum));
+cmp('全年總營收', V+'全年總營收', f.map(e=>e.fyRevenue));
+cmp('全年EBIT', V+'全年 GAAP 營業利益', f.map(e=>e.fyOpInc));
+cmp('全年D&A', V+'全年 D&A', f.map(e=>e.fyDa));
+cmp('全年EBITDA', V+'全年 EBITDA', f.map(e=>e.fyEbitda));
+cmp('全年利息', V+'全年利息（含瀑布新債）', y.map((e,i)=>i===0?ACTUAL_1H.interest+e.interest:e.interest));
+cmp('全年淨利', V+'全年淨利', f.map(e=>e.fyNi));
+cmp('全年EPS', V+'全年 GAAP EPS', f.map(e=>e.fyEps));
+cmp('全年EPS加回SBC', V+'全年 EPS（加回 SBC）', f.map(e=>e.fyNgEps));
+// P&L
+cmp('算力收入(損益)', V+'算力收入', f.map(e=>e.gpu));
+cmp('總營收(損益,模型期)', V+'總營收', f.map(e=>e.revenue));
+cmp('EBIT(模型期)', V+'營業利益（EBIT）', f.map(e=>e.opInc));
+cmp('DCF股權', V+'股權價值', [p.d.equity]);
+cmp('稅', V+'所得稅', f.map(e=>e.tax));
+cmp('淨利(模型期)', V+'淨利', f.map(e=>e.ni));
+cmp('D&A', V+'D&A', f.map(e=>e.da));
+cmp('EBITDA', V+'EBITDA', f.map(e=>e.ebitda));
+cmp('EPS(模型期)', V+'每股盈餘（EPS，模型期）', f.map(e=>e.eps));
+cmp('股數', V+'股數（含瀑布新股）', f.map(e=>e.shares));
+cmp('UFCF', V+'UFCF', f.map(e=>e.ufcf));
+cmp('UFCF現值', V+'UFCF 現值', p.d.pv);
+cmp('DCF每股', V+'DCF 每股', [p.d.invalid?0:p.d.perShare]); // v0.1b：DCF 失效時 HTML 為 NaN、Excel 為 0（與反向 DCF 同一口徑）
+const NB='資產負債_新債與新股|';
+cmp('BS 期末現金', NB+'期末現金', H('cum'));
+cmp('BS 營運收支淨額', NB+'營運收支淨額（含期後股權／可轉債，不含瀑布）', H('preFinGap'));
+cmp('BS 總債務', NB+'總債務', H('totalDebtEnd'));
+cmp('BS 淨負債', NB+'淨負債（總債務 − 期末現金）', y.map(e=>e.totalDebtEnd-e.cum));
+cmp('BS 總股數', NB+'總股數（期末）', f.map(e=>e.shares));
+cmp('BS 債務/EBITDA', NB+'總債務 ÷ EBITDA（年化）', y.map((e,t)=>e.totalDebtEnd/Math.max(e.ebitdaPL/PERIOD_YEARS[t],.01)));
+cmp('DCF 0截斷', V+'DCF 每股：0 截斷', [p.d.zeroPerShare]);
+cmp('DCF 選擇權', V+'DCF 每股：選擇權（Merton）', [p.d.optPerShare]);
+cmp('DCF 失效', V+'DCF 失效？（WACC ≤ g 或常態化 FCF ≤ 0）', [p.d.invalid?1:0]);
+// v0.1c（Oracle）：穩態汰換 CapEx、EBITDAR 率、終值基準（末期 UFCF）
+if (DEFAULTS.refreshSteady) { cmp('批次汰換', '輸入|批次汰換 CapEx', H('refreshVintage')); cmp('穩態汰換', '輸入|穩態汰換 CapEx', H('refreshSteadyV')); cmp('汰換旗標', '輸入|穩態汰換旗標（1＝已連網 MW 不再增加或終值年）', H('refreshFlag')); }
+if (DEFAULTS.ebitdaBasis==='ebitdar') { cmp('EBITDAR率路徑', '輸入|EBITDAR 率（路徑）', H('ebitdarM')); cmp('EBITDA率(輸入)', '輸入|EBITDA 率', H('ebM')); }
+if (VAL_DEFAULTS.tvBasis==='ufcf') cmp('終值基準FCF', V+T('終值基準 FCF（«PL» UFCF，含汰換 CapEx）'), [p.d.normFcf]);
+cmp('終值', V+'終值（Gordon）', [p.d.invalid?0:p.d.tv]); cmp('終值現值', V+'終值現值', [p.d.invalid?0:p.d.pvTv]);
+cmp('錨定年EBITDA', V+'錨定年度 EBITDA', [f[p.evK].ebitda]);
+// v0.1b（Oracle）步驟 8：CAPM WACC 與分部加總
+cmp('CAPM ke', '輸入與假設|股權成本 ke＝rf＋β × ERP', [CAPM_Q(VAL_DEFAULTS).ke]); cmp('WACC', '輸入與假設|WACC', [VAL_DEFAULTS.wacc]);
+cmp('WACC（CAPM）', '輸入與假設|WACC（CAPM）＝E/(D+E) × ke＋D/(D+E) × kd ×(1 − 稅率)', [CAPM_Q(VAL_DEFAULTS).wacc]);
+cmp('非 AI 事業倍數', '輸入與假設|非 AI 事業 EV/EBITDA 倍數', [p.v.legacyEvEbitda]); if(SEGM_Q){ cmp('非 AI 加權倍數', '輸入與假設|非 AI 事業加權倍數（錨定年度各線 EBITDA 加權）', [p.v.legacyEvEbitda]); Object.entries(SEGM_Q).forEach(([k,g])=>cmp('分部倍數 '+k, g.useAi?`輸入與假設|分部倍數｜${g.label}`:`輸入與假設|分部倍數｜${g.label}（同業 NTM 中位數）`, [segMultQ(k,VAL_DEFAULTS)])); } // MAG v0.1b
+cmp('錨定年傳統EBITDA', V+'錨定年度非 AI 事業 EBITDA', [f[p.evK].legacyEbitda]);
+cmp('錨定年EV（分部加總）', V+'錨定年度企業價值（倍數 × EBITDA）', [evSotpQ(f[p.evK], VAL_DEFAULTS.evEbitda, p.v)]);
+cmp('錨定年末淨負債', V+'錨定年度末淨負債（總債務 − 現金）', [p.ndA]);
+cmp('錨定年末股數', V+'錨定年度末股數（含瀑布新股）', [p.shA]);
+// v0.1b：可轉債稀釋（分類、股數、淨負債、還本、票息、期末餘額）
+const DB='資產負債_既有債務|';
+cmp('可轉債還本', DB+'可轉債到期還本（債務處理）', H('cvAmort')); cmp('可轉債期末餘額', DB+'可轉債期末餘額（債務處理）', H('cvEnd')); cmp('可轉債票息', DB+'可轉債票息（債務處理）', H('cvInt'));
+cmp('可轉債第一輪目標價', V+'第一輪：加權目標價', [p.cv.tp1]); cmp('第二輪判斷價', V+'第二輪判斷價', [p.cv.px2]);
+cmp('第一輪轉股股數', V+'第一輪：轉股股數', [p.cv.sh1-p.shares0]); cmp('第二輪轉股股數', V+'第二輪：轉股股數', [p.cv.sh2-p.shares0]);
+cmp('評價股數', V+'評價股數（含可轉債轉股）', [p.shares]); cmp('評價淨負債', V+'評價淨負債（含可轉債與調整項）', [p.v.netDebt]);
+cmp('債務處理到期本金', V+'第二輪：債務處理到期本金', [p.cv.m2]);
+cmp('其他事業EBITDA', F+T('Ⓒ2 其他事業 EBITDA（«STUB» 起）'), H('otherEbitda')); cmp('淨負債調整項', '輸入與假設|淨負債調整項（類債 − 持股 ×（1 − 折價））', [ndAdjQ(VAL_DEFAULTS)]); // v0.1b 步驟 6
+cmp('PV股權', V+'新股募得現金（現值）', [p.d.pvEquityRaised]);
+cmp('融資後股數', V+'融資後股數（含瀑布新股）', [p.d.postShares]);
+cmp('EV/EBITDA融資後', V+'EV/EBITDA 每股（融資後）', [p.peAdj]);
+cmp('加權目標價', V+'加權目標價', [p.call.blended]); if(COMPANY_DATA.capexModel&&COMPANY_DATA.capexModel.mode==='tk'){ const R2=read2Q(d,p), f2=forwardPL(d,{...p.v,read2:true}); cmp('讀法2 影子EBITDA', V+'讀法 2｜自用 AI 影子 EBITDA（k＝1）', R2.shadow); cmp('讀法2 UFCF', V+'讀法 2｜UFCF', f2.map(x=>x.ufcf)); cmp('讀法2 DCF', V+'讀法 2｜DCF 每股（推到目標價時點）', [R2.dcfT]); cmp('讀法2 EV腿', V+'讀法 2｜EV/EBITDA 每股（融資後）', [R2.ev]); cmp('讀法2 目標價', V+'讀法 2｜加權目標價', [R2.tp]); cmp('讀法2 差額', V+'讀法 2 − 讀法 1（目標價差額）', [R2.diff]); } // MAG v0.1b r3（C16）
+// v4.1：目標價區間（情境區間、方法區間、100% EV/EBITDA 目標價）與判斷句、DCF 權重說明（文字逐字比對）
+{ const R=targetRange(d,q,VAL_DEFAULTS,p), RG='評價_DCF與目標價|目標價區間｜', CODE={買進:1,中立:0,賣出:-1};
+  cmp('區間 點位', RG+'點位（目前輸入的加權目標價）', [R.pt]);
+  cmp('區間 點位評等', RG+'點位評等代碼（1＝買進、0＝中立、−1＝賣出）', [CODE[p.call.call]]);
+  cmp('區間 賣出門檻', RG+'賣出門檻價（現價 × (1 − '+pctQ(SELL_TH)+')）', [R.th]);
+  R.scen.forEach(s=>cmp('區間 情境 '+s.sc, RG+SCENARIOS[s.sc].label+'（加權目標價／評等代碼／距賣出門檻）', [s.tgt, CODE[s.call], s.gap])); if(SC==='base'&&!AKX) R.scen.forEach(s=>cmp('讀法2 情境 '+s.sc, '評價_DCF與目標價|讀法 2｜'+SCENARIOS[s.sc].label+'（加權目標價／讀法 2 − 讀法 1）', [s.tgt2, s.tgt2-s.tgt])); // MAG v0.1b r3（C16）
+  cmp('情境區間 A', RG+'情境區間（下緣／上緣）', R.A);
+  cmp('方法區間倍數', RG+'方法區間倍數（下端／上端）', R.mults);
+  cmp('方法區間 B', RG+'方法區間（下緣／上緣）', R.B);
+  cmp('100% EV/EBITDA 目標價', RG+'100% EV/EBITDA 目標價（價位／評等代碼）', [R.ev100, CODE[R.ev100Call]]);
+  cmp('未截斷 DCF 每股', RG+'未截斷 DCF 每股', [p.d.perShareRaw]);
+  const cmpT=(label,xlKey,h)=>{ const x=X[xlKey]; if(!x){rows.push([label,'MISSING XL KEY '+xlKey]);return;} rows.push([x[0]===h?'OK ':'XX ',label,JSON.stringify(h),JSON.stringify(x[0])]); };
+  cmpT('文字 點位摘要', RG+'點位摘要', R.head);
+  cmpT('文字 方法區間標籤', RG+'方法區間標籤', R.bLabel);
+  cmpT('文字 點位位置', RG+'點位位置', R.pos);
+  cmpT('文字 判斷句', RG+'判斷句', R.judge);
+  cmpT('文字 DCF 權重說明', '評價_DCF與目標價|DCF 權重說明', R.note); }
+// v4.3：市場共識（I 區逐筆：數值、文字、擷取日期、標記）與一頁摘要（差距、隱含倍數、結論句／判斷句／隱含倍數句／Q3 句逐字）
+{ const R=targetRange(d,q,VAL_DEFAULTS,p), cv=consensusView(d,p,VAL_DEFAULTS,R,q), SM='摘要|';
+  const cmpT=(label,xlKey,h)=>{ const x=X[xlKey]; if(!x){rows.push([label,'MISSING XL KEY '+xlKey]);return;} rows.push([x[0]===h?'OK ':'XX ',label,JSON.stringify(h),JSON.stringify(x[0])]); };
+  for(const it of consensusItems()){ const k='輸入與假設|'+it.label, x=X[k]; if(!x){rows.push(['共識 '+it.label,'MISSING XL KEY '+k]);continue;}
+    const okV=it.vals.length?it.vals.every((z,i)=>typeof x[i]==='number'&&Math.abs(z-x[i])<1e-9):x[0]===it.text;
+    const ok=okV&&x[3]===it.date&&(x[4]??'')===it.tag;
+    rows.push([ok?'OK ':'XX ','共識 '+it.label,JSON.stringify([...it.vals,it.text,it.date,it.tag]),JSON.stringify(x)]); }
+  for(const [n,k] of [['營收','rev'],['調整後 EBITDA','ebitda'],['CapEx（毛額）','capex'],['淨負債','nd']]){
+    cmp('摘要 '+n+' 模型',SM+'差異｜'+n+'｜模型',cv.rows.map(r=>r.m[k])); cmp('摘要 '+n+' 共識',SM+'差異｜'+n+'｜共識',cv.rows.map(r=>r.c[k]));
+    cmp('摘要 '+n+' 差距',SM+'差異｜'+n+'｜差距',cv.rows.map(r=>r.gap[k]));
+    if(k==='ebitda'||k==='nd') cmp('摘要 '+n+' 差距金額',SM+'差異｜'+n+'｜差距（金額）',cv.rows.map(r=>r.dif[k])); }
+  cmp('摘要 EBITDA率 模型',SM+'差異｜EBITDA 率｜模型',cv.rows.map(r=>r.m.ebM)); cmp('摘要 EBITDA率 共識',SM+'差異｜EBITDA 率｜共識',cv.rows.map(r=>r.c.ebM));
+  cmp('摘要 EBITDA率 差距pt',SM+'差異｜EBITDA 率｜差距（百分點）',cv.rows.map(r=>r.gap.ebM));
+  cmp('摘要 分歧起始年',SM+`差異｜分歧起始年（1＝${PERIODS[0]}…3＝${PERIODS[2]}；0＝無）`,[cv.first+1]);
+  cmp('隱含 共識目標價倍數',SM+`隱含｜共識平均目標價隱含 ${PERIODS[2]} EV/EBITDA`,[cv.impTgt]); cmp('隱含 現價倍數',SM+`隱含｜現價隱含 ${PERIODS[2]} EV/EBITDA`,[cv.impPx]);
+  cmp('隱含 模型上緣',SM+'隱含｜模型方法區間上緣',[cv.mHi]);
+  cmp('隱含 共識目標價AI 雲端倍數',SM+`隱含｜共識平均目標價隱含 ${PERIODS[2]} AI 雲端 EV/EBITDA`,[cv.impTgtOci]); cmp('隱含 現價AI 雲端倍數',SM+`隱含｜現價隱含 ${PERIODS[2]} AI 雲端 EV/EBITDA`,[cv.impPxOci]); cmp('隱含 傳統EBITDA',SM+`隱含｜模型 ${PERIODS[2]} 非 AI 事業 EBITDA`,[cv.lgE]);
+  cmp('摘要 點位',SM+'結論｜點位（加權目標價）',[R.pt]); cmp('摘要 空間',SM+'結論｜空間',[cv.up]); cmp('摘要 點位−門檻',SM+'結論｜點位 − 賣出門檻',[cv.gapTh]);
+  cmpT('文字 摘要評等',SM+'結論｜評等',p.call.call); cmpT('文字 摘要結論句',SM+'結論｜結論句',cv.head); cmpT('文字 摘要情境判斷句',SM+'結論｜情境判斷句',R.judge);
+  cmpT('文字 共識判斷句',SM+'差異｜判斷句',cv.judge); cmpT('文字 投資級句',SM+'結論｜投資級句',cv.igLine); cmpT('文字 延誤句',SM+'結論｜延誤句',cv.delayLine); cmpT('文字 調整後槓桿句',SM+'結論｜調整後槓桿句',cv.adjLine); cmpT('文字 隱含倍數句',SM+'隱含｜隱含倍數句',cv.implied); cmpT('文字 FCF句',SM+'結論｜股東回饋與 FCF 句',cv.fcfLine); // MAG v0.1b
+  cmpT('文字 終值占比規則句',SM+'結論｜終值占比規則句',cv.tvLine); if(SC==='base'&&!AKX&&cv.vsens){ cmpT('文字 評價口徑敏感度句',SM+'結論｜評價口徑敏感度句',cv.vsLine); const CD={買進:1,中立:0,賣出:-1}; cv.vsens.rows.forEach(x=>cmp('評價口徑 '+x.label,'評價_DCF與目標價|評價口徑敏感度｜'+x.label+'（加權目標價／評等代碼）',[x.tp,CD[x.call]])); if(cv.vsens.flip) cmp('評等翻轉點','評價_DCF與目標價|評價口徑敏感度｜評等翻轉點（WACC／ERP）',[cv.vsens.flip.wacc,cv.vsens.flip.erp]); } // v0.1 交付前修訂
+  if(cv.read2Line){ cmpT('文字 兩種讀法句',SM+'結論｜兩種讀法句',cv.read2Line); if(SC==='base'&&!AKX){ cmpT('文字 對外比例句',SM+'結論｜對外比例句',cv.extLine); } if(SC==='base'&&!AKX) cmp('對外比例 −20pt','評價_DCF與目標價|對外比例敏感度｜−20pt（對外比例／加權目標價）',[cv.xsTp[0].x,cv.xsTp[0].tp]); if(SC==='base'&&!AKX) cmp('對外比例 ＋20pt','評價_DCF與目標價|對外比例敏感度｜＋20pt（對外比例／加權目標價）',[cv.xsTp[1].x,cv.xsTp[1].tp]); } // MAG v0.1b r3（C16、C23）
+  if(cv.aiRoic){ cmpT('文字 主命題句',SM+'結論｜主命題句',cv.thesisLine); const A=cv.aiRoic, AW='AI增量報酬|'; // MAG v0.1b：AI 增量報酬
+    [['rev','對外 AI 雲端營收（年化）'],['ebitda','AI 雲端 EBITDA（年化）'],['opex','AI 營運成本（年化）'],['da','AI 折舊（年化）'],['mwEff','有效在役對外 MW（＝營收 ÷ 每 MW 年收入）'],['mwRent','租用對外 MW（平均）'],['ownShare','自有對外占自有 AI MW 比例'],['facRentMW','每 MW 機房年租金（Tokenomics 機房成本 × 資本回收係數）'],['rentFac','機房租金（自有對外 MW ×(1 − 自建比例)）'],['rentExt','租用對外 MW 租金'],['ebitdaNet','對外 AI EBITDA（扣租金）'],['daExt','對外 AI 折舊（年化，按對外比例分攤）'],['nopat','對外 AI NOPAT（年化）'],['icExt','對外 AI 平均投入資本（按對外比例分攤）'],['icBeg','AI 投入資本（期初）'],['icEnd','AI 投入資本（期末）'],['roic','對外 AI ROIC（主值）'],['spread','對外 AI ROIC − WACC'],['shRev','影子收入（自用 AI MW × 每 MW 年收入，年化）'],['roicSh','全 AI ROIC（含影子收入，對照）']].forEach(([k,l])=>cmp('AIROIC '+k, AW+l, A[k]));
+    cmp('打平k', AW+T(`打平 k（使 ${PERIODS[A.ry]} 對外 AI ROIC＝WACC）`), [A.breakevenK]);
+    if(A.c15){ const C=A.c15; // MAG v0.1b r2（C15）：一致性檢查與拆解
+      cmp('C15 有效MW', AW+'在役對外 MW（有效，＝營收 ÷ 每 MW 年收入）', [C.mw]); cmp('C15 k1營收', AW+'k＝1 營收（Σ 在役世代 × IF_HoldEcon，不含晶片係數）', [C.rev1]); cmp('C15 TK營運成本', AW+'Tokenomics 營運成本（Σ 在役世代 × IF_OpexGW）', [C.opTK]); cmp('C15 累計汰換', AW+'累計汰換（對外，至錨定期中點）', [C.cR]);
+      ['階段 0｜模型對外 AI ROIC（稅後）','階段 1｜稅前','階段 2｜k＝1（含自研晶片係數）','階段 3｜營運成本改 Tokenomics','階段 4｜移除汰換','階段 5｜穩態（無爬坡／閒置）','階段 6｜全部自有、自建 100%、無租金＝乾淨稅前 ROIC'].forEach((l,i)=>cmp('C15 階段'+i, AW+l, [C.stages[i]]));
+      C.items.forEach(([l,v])=>cmp('C15 '+l, AW+'拆解｜'+l, [v])); cmp('C15 總差距', AW+'總差距（IF_HoldEcon 隱含報酬 − 模型稅後）', [C.gap]);
+      cmp('C15 檢查列', `連動檢查|${PERIODS[C.ry]} 一致性：對外 AI 稅前 ROIC（k＝1、Tokenomics 成本、穩態、無稅）`, [C.clean]); } }
+  // v4.4：年度差異原因（類型＋原因逐字；Excel 每個設定組合一列，未超過門檻時為空白）與原因摘要句
+  cmpT('文字 差異原因摘要',SM+'差異｜差異原因摘要',cv.rsnSum);
+  for(const k of Object.keys(X).filter(k=>k.startsWith(SM+'差異原因｜'))){ const [,yr,nm]=k.split('｜'), h=cv.rsn.find(x=>x.yr===yr&&x.name===nm), x=X[k];
+    rows.push([(x[0]??'')===(h?h.type:'')&&(x[1]??'')===(h?h.text:'')?'OK ':'XX ','差異原因 '+yr+' '+nm,JSON.stringify(h?[h.type,h.text]:['','']),JSON.stringify([x[0],x[1]])]); }
+  cv.rsn.forEach(h=>{ if(!X[SM+'差異原因｜'+h.yr+'｜'+h.name]) rows.push(['XX ','差異原因 '+h.yr+' '+h.name,'HTML 有原因、Excel 無此列（'+h.type+'）','']); });
+  // v4.4：季度層（6 季模型／共識／指引／實際／差距／原因／句；焦點季；期間合計核對；摘要驗證點句）
+  const qv=quarterlyView(d,p,q), QT='季度追蹤|', VSN={consensus:'vs 共識',guidance:'vs 指引中點',actual:'實際 vs 模型'};
+  const cmpMix=(label,key,hs)=>{ const x=X[key]; if(!x){rows.push([label,'MISSING XL KEY '+key]);return;}
+    const ok=hs.every((h,i)=>h==null?typeof x[i]!=='number':typeof h==='number'?typeof x[i]==='number'&&Math.abs(h-x[i])<1e-6:(x[i]??'')===h);
+    rows.push([ok?'OK ':'XX ',label,JSON.stringify(hs.map(h=>typeof h==='number'?+h.toFixed(6):h)),JSON.stringify(x.slice(0,hs.length).map(v=>typeof v==='number'?+v.toFixed(6):v))]); };
+  if(qv){ const n=qv.Qs.length;
+    cmpMix('季度 平均在役MW',QT+'平均在役 MW（Billable，拆分依據）',qv.avgBil); cmpMix('季度 車隊折舊',QT+'車隊折舊（模型）',qv.da);
+    for(const m of qv.rows){ const L=m.label, rq=m.q;
+      cmpMix('季度 '+L+' 模型',QT+L+'（模型）',rq.map(r=>r.model));
+      if(m.consensus) cmpMix('季度 '+L+' 共識',QT+'共識｜'+L+(m.consensus==='derived'?' [Derived]':''),rq.map(r=>r.cons));
+      if(m.consensusSecondary) cmpMix('季度 '+L+' 次要共識',QT+(m.consensusSecondaryLabel||'共識｜'+m.consensusSecondary),rq.map(r=>r.consSec));
+      if(rq.some(r=>r.guide)){ cmpMix('季度 '+L+' 指引低',QT+'指引｜'+L+'（低）',rq.map(r=>r.guide?r.guide[0]:null)); cmpMix('季度 '+L+' 指引高',QT+'指引｜'+L+'（高）',rq.map(r=>r.guide?r.guide[1]:null)); }
+      cmpMix('季度 '+L+' 實際',QT+'實際｜'+(m.actualLabel||L),rq.map(r=>r.actual));
+      for(const [g,t] of [['mc','模型 vs 共識'],['mg','模型 vs 指引中點'],['am','實際 vs 模型'],['ac','實際 vs 共識'],['ag','實際 vs 指引中點']]) cmpMix('季度 '+L+' '+t,QT+'差距｜'+L+'｜'+t,rq.map(r=>r[g]));
+      if(m.marginOf) for(const [g,t] of [['mcP','模型 vs 共識'],['mgP','模型 vs 指引中點'],['amP','實際 vs 模型'],['acP','實際 vs 共識'],['agP','實際 vs 指引中點']]) cmpMix('季度 '+L+' '+t+' 利潤率pt',QT+'差距｜'+L+'｜'+t+'（利潤率 pt）',rq.map(r=>r[g]));
+      if(rq.some(r=>r.gtext)) cmpMix('季度 '+L+' 文字指引',QT+'指引（文字）｜'+L,rq.map(r=>r.gtext?r.gtext.text:''));
+      if(m.kind!=='pt') for(const vs of ['consensus','guidance','actual']) cmpMix('季度 '+L+' 原因 '+vs,QT+'原因｜'+L+'｜'+VSN[vs],rq.map(r=>{ const x=r.rsn.find(z=>z.vs===vs); return x?`${L} ${VSN[vs]} ${x.gtxt}：${x.type}（${x.text}）`:''; }));
+      cmpMix('季度 '+L+' 句',QT+'句｜'+L,rq.map((r,i)=>qv.line(m,i)));
+      const f=rq[qv.fi]; cmpMix('焦點 '+L,QT+'焦點｜'+L,[f.model,f.cons,f.mc,f.guide?f.guide[0]:(f.gtext?f.gtext.text:null),f.guide?f.guide[1]:null,f.mg,f.actual,f.am,f.ac,f.ag,f.mcP,f.mgP,f.amP,f.acP,f.agP]); }
+    cmpMix('季度 差異原因一行',QT+'差異原因（一行）',qv.Qs.map((_,i)=>qv.rsnLine(i)));
+    cmpMix('焦點 季度',QT+'焦點｜季度',[qv.focus.label]); cmpMix('焦點 差異原因',QT+'焦點｜差異原因',[qv.rsnLine(qv.fi)||'無（差距皆在 '+pctQ(qv.tol)+' 以內）']);
+    for(const nm of ['營收','調整後 EBITDA','調整後營業利益','CapEx（毛額）','車隊折舊']) cmpMix('核對 '+nm,QT+'核對｜'+nm,qv.sums.map(()=>0));
+    qv.key.forEach((m,i)=>cmpT('文字 驗證點 '+m.label,SM+'驗證｜'+m.label+'｜句',qv.keyLines[i])); } }
+{ const G=evAnchorGrid(d,q,VAL_DEFAULTS); G.mults.forEach((m,i)=>{ cmp('矩陣腿 '+m+'x', V+'錨定×倍數｜EV/EBITDA 腿｜'+m.toFixed(1)+'x', G.leg[i]); cmp('矩陣目標 '+m+'x', V+'錨定×倍數｜加權目標價｜'+m.toFixed(1)+'x', G.tgt[i]); }); }
+for(const r of rows) console.log(r.join(' | '));
+// HTML P&L table FY26 display check
+console.log('HTML P&L table FY26: 總營收(fy)',f[0].fyRevenue.toFixed(3),'營業利益(fy)',f[0].fyOpInc.toFixed(3),'營利率(2H)',f[0].opM,'EBITDA(2H)',f[0].ebitda.toFixed(3),'淨利率(2H)',f[0].nm.toFixed(3),'EPS(2H)',f[0].eps.toFixed(3));
+console.log('HTML EPS all',f.map(e=>e.eps.toFixed(2)).join('/'),'ngEps',f.map(e=>e.ngEps.toFixed(2)).join('/'),'shares',f.map(e=>e.shares.toFixed(4)).join('/'));
+console.log('ni',f.map(e=>e.ni.toFixed(3)).join('/'),'EBIT',f.map(e=>e.opInc.toFixed(2)).join('/'),'int',f.map(e=>e.interest.toFixed(2)).join('/'),'tax',f.map(e=>e.tax.toFixed(3)).join('/'));
+rows.length=0;
+const CO='評價_可比公司|';
+for(const e of lM){ const key=e.labelXlsx;
+  const xv=X[CO+key]; const ok=Math.abs(e.ev-xv[2])<0.02&&Math.abs(e.ev/e.rev-xv[4])<0.01&&Math.abs((e.ev+(e.opl||0))/e.rev-xv[5])<0.01&&Math.abs(e.ebitda-xv[6])<0.002;
+  rows.push([ok?'OK ':'XX ','comps '+e.ticker,[e.ev.toFixed(2),(e.ev/e.rev).toFixed(2),((e.ev+(e.opl||0))/e.rev).toFixed(2)].join('/'),[xv[2],(+xv[4]).toFixed(2),(+xv[5]).toFixed(2)].join('/')]);}
+const med=X[CO+'同業中位數']; rows.push([Math.abs(wM(lM.map(e=>e.ev/e.rev))-med[4])<0.01?'OK ':'XX ','comps median',wM(lM.map(e=>e.ev/e.rev)).toFixed(2),(+med[4]).toFixed(2)]);
+const cr=X[CO+COMPANY_DATA.meta.ticker+`（TTM 至 ${CALQ.filedQLabel}）`]; const hv=(CALL_FACTS.mktCapLast+VAL_DEFAULTS.netDebt+CVN.reduce((a,c)=>a+(c.mand?0:c.M),0)+ndAdjQ(VAL_DEFAULTS))/CALL_FACTS.ttmRev; rows.push([Math.abs(hv-cr[4])<0.01?'OK ':'XX ','comps '+COMPANY_DATA.meta.ticker+' TTM EV/S',hv.toFixed(3),(+cr[4]).toFixed(3)]);
+const cm=X[CO+T(COMPANY_DATA.meta.ticker+' 模型 «P1»E')]; const hv2=(VAL_DEFAULTS.price*p.shares+p.v.netDebt)/f[1].revenue; rows.push([Math.abs(hv2-cm[4])<0.01?'OK ':'XX ','comps '+COMPANY_DATA.meta.ticker+' FY27E EV/S',hv2.toFixed(3),(+cm[4]).toFixed(3)]);
+for(const r of rows) console.log(r.join(' | '));
+console.log('bench',d.totals.bench, 'X具名', JSON.stringify(X['站點租賃|具名站點合計']));

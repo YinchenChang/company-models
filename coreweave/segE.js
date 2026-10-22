@@ -287,7 +287,7 @@ function PerMwTabQ({ d, st, o }) {
       elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [thL(`項目`), th(`單位`), ...PERIODS.map((p, k) => th(p, k))])),
       elQ(`tbody`, { key: `b` }, rows.map(([a, u, xs], k) => elQ(`tr`, { key: k }, [tdL(a, `a`), td(u, `u`), ...xs.map((x, j) => td(fmt(x, u), j))])))])),
     S = P.sum, g = k => S.find(r => r[0] === k)[2], F = PERIODS.length - 1,
-    M = { capex: { tokenomics: `Tokenomics（IF_CapexIT × 新增世代）`, legacy: `舊方法（每 MW 34）` }, cost: { bottomUp: `由下而上（Tokenomics × MW＋管銷率）`, ebitdaPct: `舊方法（EBITDA 率線性路徑）` }, revenue: { gpuHr: `GPU 小時價格 × GPU 數`, legacy: `備案：每 MW 年收入為輸入（GPU 小時長約價不足兩個獨立來源）` } },
+    M = { capex: { tokenomics: `Tokenomics（IF_CapexIT × 新增世代）`, legacy: `舊方法（每 MW 34）` }, cost: { bottomUp: `由下而上（Tokenomics × MW＋管銷率）`, ebitdaPct: `舊方法（EBITDA 率線性路徑）` }, revenue: { tkAnchor: `Tokenomics 錨（IF_HoldEcon × 在役世代）× 定價倍數 k`, gpuHr: `GPU 小時價格 × GPU 數`, legacy: `備案：每 MW 年收入為輸入（GPU 小時長約價不足兩個獨立來源）` } },
     tkv = COMPANY_DATA.tkSnap ? COMPANY_DATA.tkSnap.source : {};
   return elQ(`div`, { className: `space-y-3` }, [
     elQ(hdrQ, { key: `h`, title: `每 MW 經濟性（每平均在役 MW、年化；${MWBASISQ === `facility` ? `設施` : `IT 關鍵電力`}口徑）`,
@@ -297,10 +297,21 @@ function PerMwTabQ({ d, st, o }) {
     elQ(accQ, { key: `t`, title: `每 MW 經濟性彙總表（${PERIODS[0]}–${PERIODS[F]}；IT 與設施口徑）`, sum: `${S.length} 列` }, tbl(S)), // W3：彙總表放次層（預設收合）
     elQ(accQ, { key: `a1`, title: `世代組合與在役結構（MW）`, sum: GENQ.map(x => x.split(` `)[0]).join(`／`) }, tbl(P.fleet)),
     elQ(accQ, { key: `a2`, title: `由下而上營運成本（租金前）`, sum: PMWQ.cost === `bottomUp` ? `模型採用` : `對照` }, tbl(P.bu)),
-    elQ(accQ, { key: `a3`, title: `每 MW 收入對照（隱含 GPU 小時價格、持有成本、同業與市場價格）`, sum: PMWQ.revenue === `gpuHr` ? `GPU 小時價格` : `備案 legacy` }, tbl(P.rev)),
+    PMWQ.revenue === `tkAnchor` && P.tk ? elQ(accQ, { key: `a3t`, title: `每 MW 收入：Tokenomics 錨 × 定價倍數 k（隨需占比、成本情境重算、上限檢查）`, sum: `模型採用` }, tbl(P.tk)) : null, // W4
+    PMWQ.revenue === `tkAnchor` && P.gx ? elQ(accQ, { key: `a3g`, title: `${GI_OVC} 世代指數判讀（q、上市間隔、隱含年價格變化、收入持平與回本門檻；W9）`, sum: P.gx[P.gx.length - 1][2][0] }, tbl(P.gx)) : null,
+    PMWQ.revenue === `tkAnchor` && P.kev ? elQ(accQ, { key: `a3k`, title: `定價倍數 k 證據表（價格／Tokenomics 同世代／倍數／用途）`, sum: `${AMQ.evidence.length} 筆` },
+      elQ(`div`, { style: xstyQ.wrap }, elQ(`table`, { style: { ...xstyQ.table, minWidth: 820 } }, [
+        elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [thL(`證據`), th(`單位`), th(`價格`), th(`Tokenomics 同世代`), th(`倍數`), th(`用途`), th(`v5.27 倍數（v4.7）`)])),
+        elQ(`tbody`, { key: `b` }, P.kev.map(([a, u, xs], k) => elQ(`tr`, { key: k }, [tdL(a, `a`), td(u, `u`), ...xs.slice(0, 5).map((x, j) => td(x == null ? `` : typeof x === `string` ? x : Y(x, j >= 2 ? 2 : 3), j))])))]))) : null,
+    elQ(accQ, { key: `a3`, title: `每 MW 收入對照（隱含 GPU 小時價格、持有成本、同業與市場價格）`, sum: { gpuHr: `GPU 小時價格`, tkAnchor: `對照` }[PMWQ.revenue] || `備案 legacy` }, tbl(P.rev)),
     elQ(accQ, { key: `a4`, title: `每 MW 資本支出對照`, sum: PMWQ.capex === `tokenomics` ? `Tokenomics` : `舊方法` }, tbl(P.cap)),
     elQ(accQ, { key: `a5`, title: `最近一季實際對照（不強制平衡）`, sum: `` }, tbl(P.q2)),
-    elQ(accQ, { key: `a6`, title: `敏感度（加權目標價 US$／融資缺口 US$bn；三情境）`, sum: `Tokenomics 低／高成本、GPU 小時價格、Rubin Ultra 版、管銷率` },
+    P.cv ? elQ(accQ, { key: `a5v`, title: `公司實況驗證（W5：Tokenomics 值 → CRWV 實際 → 差距 → 採用值；處理規則 1／3／4a）`, sum: `${P.cv.length} 列` }, // W5（Excel「公司實況驗證」頁同列）
+      elQ(`div`, { style: xstyQ.wrap }, elQ(`table`, { style: { ...xstyQ.table, minWidth: 820 } }, [
+        elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [thL(`參數`), th(`單位`), th(`Tokenomics 值`), th(`CRWV 實際`), th(`差距`), th(`採用值`), th(`規則`)])),
+        elQ(`tbody`, { key: `b` }, [...P.cv, ...P.q2r].map(([a, u, xs], k) => elQ(`tr`, { key: k }, [tdL(a, `a`), td(u, `u`),
+          ...xs.map((x, j) => td(x == null ? `` : typeof x === `string` ? x : j === 2 ? (u === `%` ? `${x >= 0 ? `+` : `−`}${Y(Math.abs(x * 100), 1)}pt` : hA(x * 100, 1)) : fmt(x, u), j))])))]))) : null,
+    elQ(accQ, { key: `a6`, title: `敏感度（加權目標價 US$／融資缺口 US$bn；三情境）`, sum: `Tokenomics 低／高成本、GPU 小時價格、Rubin Ultra 版、管銷率${PMWQ.revenue === `tkAnchor` ? `、定價倍數 k、隨需占比${GI_OVC ? `、${GI_OVC} 世代指數` : ``}` : ``}` },
       elQ(`div`, { style: xstyQ.wrap }, elQ(`table`, { style: { ...xstyQ.table, minWidth: 820 } }, [
         elQ(`thead`, { key: `h` }, elQ(`tr`, {}, [thL(`設定`), ...[`low`, `base`, `high`].map(k => th(SCENARIOS[k].label.split(` `)[0], k))])),
         elQ(`tbody`, { key: `b` }, SN.cases.map(([k, n]) => elQ(`tr`, { key: k }, [tdL(n, `a`), ...[`low`, `base`, `high`].map(sk => {
@@ -342,7 +353,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
       nd: dd.totals.newDebt, eq: dd.totals.equity, jk: dd.totals.junk,
       debt30: dd.years[4].totalDebtEnd,
       rev30: pp.fwd[4].fyRevenue, eb30: pp.fwd[4].fyEbitda,
-      dcf: pp.d.invalid ? NaN : pp.d.perShareT, ev: pp.peAdj,
+      dcf: pp.d.invalid ? NaN : pp.d.perShareT, bad: pp.d.invalid, ev: pp.peAdj,
       tgt: pp.call.blended, opt: po.call.blended, call: pp.call.call
     };
   }), [e, o]);
@@ -459,7 +470,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active }) {
     [`新債／股權／高息債（$bn）`, s => `${Y(s.nd, 1)}／${Y(s.eq, 1)}／${Y(s.jk, 1)}`],
     [`FY30 總債務（$bn）`, s => Y(s.debt30, 1)],
     [`FY30 營收／EBITDA（$bn）`, s => `${Y(s.rev30, 1)}／${Y(s.eb30, 1)}`],
-    [`DCF 腿／EV/EBITDA 腿（每股）`, s => `$${Y(s.dcf, 1)}／$${Y(s.ev, 1)}`],
+    [`DCF 腿／EV/EBITDA 腿（每股）`, s => `${s.bad && !DCF_INV_EXCL ? `失效（以 0 計入）` : `$${Y(s.dcf, 1)}`}／$${Y(s.ev, 1)}`],
     [`加權目標價（0 截斷）`, s => `$${Y(s.tgt, 1)}`],
     [`加權目標價（選擇權模式）`, s => `$${Y(s.opt, 1)}`],
     [`結論`, s => s.call]

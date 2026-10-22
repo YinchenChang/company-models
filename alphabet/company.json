@@ -1,0 +1,3142 @@
+{
+ "meta": {
+  "company": "Alphabet",
+  "ticker": "GOOGL",
+  "updateDate": "2026-10-09",
+  "priceDate": "2026-10-07",
+  "sourceOrderNote": "時序先 2026Q2 財報新聞稿與法說（2026-07-22），再 10-Q（2026-07-23，核閱、未查核）與 2025 10-K（2026-02-05，經查核）。入帳數字聽 10-Q／10-K；資本支出指引 195–205B 只見於法說（二手逐字稿）。AI 在役 MW 公司未揭露，期初對外 AI MW 取第三方估計（Epoch AI 晶片功耗 × IT/TDP 換算 × 對外比例 30%），不以 Google Cloud 營收、RPO 反推。",
+  "consensusFile": "data/consensus_googl_20261008.json"
+ },
+ "calendar": {
+  "fiscalYearEndMonth": 12,
+  "latestQuarterFiled": "2026Q2",
+  "latestQuarterReported": "2026Q2",
+  "firstModelFY": null,
+  "modelYears": 4,
+  "targetHorizon": "valuationPlus12m",
+  "periodLabel": "year"
+ },
+ "asOf": {
+  "_note": "滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（清單見 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗。",
+  "defaults.capexFloorFY0": "2026Q2",
+  "defaults.wcStub": "2026Q2",
+  "leases.onBalanceCash[0]": "2026Q2",
+  "leases.operatingPayments[0]": "2026Q2",
+  "leases.financePayments[0]": "2026Q2",
+  "debt.amortization[0]": "2026Q2",
+  "defaults.jvCommit[0]": "2026Q2",
+  "scenarios.capexTemplate.div[0]": "2026Q2",
+  "defaults.intCal": "2026Q2",
+  "defaults.services[0]": "2026Q2",
+  "defaults.atm": "2026Q2",
+  "leases.uncommenced": "2026Q2",
+  "rpo.bucketWeights[0]": "2026Q2",
+  "defaults.cash": "2026Q2",
+  "debt.instruments": "2026Q2",
+  "debt.convertible": "2026Q2",
+  "valuation.netDebt": "2026Q2",
+  "valuation.shares": "2026Q2",
+  "defaults.ppeOpen": "2026Q2",
+  "defaults.billableOpen": "2026Q2",
+  "defaults.rpoOpen": "2026Q2",
+  "defaults.rpoPendingAdd": "2026Q2",
+  "defaults.eqCapShares": "2026Q2",
+  "defaults.mwYearEnd": "2026Q2",
+  "defaults.prepay.openBalance": "2026Q2",
+  "debt.convertibles": "2026Q2",
+  "defaults.otherEbitda[0]": "2026Q2",
+  "valuation.holdings": "2026Q2",
+  "valuation.debtLike": "2026Q2",
+  "defaults.legacyBiz": "2026Q2",
+  "defaults.dividend.preferred[0]": "2026Q2"
+ },
+ "ytdActual": {
+  "throughQuarter": "2026Q2",
+  "months": 6,
+  "label": "1H26 實際（10-Q）",
+  "cash1231": 120.53,
+  "revenue": 229.692,
+  "capex": 80.598,
+  "cashCapex": 80.598,
+  "interest": 1.811,
+  "leasePaid": 2.692,
+  "debtRepaid": 5.253,
+  "borrow": 56.226,
+  "equity": 49.562,
+  "cappedCall": 1.011,
+  "jv": 55.44,
+  "cfo": 84.859,
+  "prepay": 0.0,
+  "da": 13.586,
+  "sbc": 14.708,
+  "opInc": 80.466,
+  "ni": 174.771,
+  "eps": 14.22,
+  "ngEps": 15.44,
+  "adjEbitda": 94.052,
+  "adjEbitdaMeta": {
+   "q1": 46.178,
+   "q2": 47.874,
+   "tag": "Derived",
+   "sources": [
+    {
+     "quarter": "Q1",
+     "name": "2026Q1 財報新聞稿（8-K 附件 99.1）",
+     "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000043/googexhibit991q12026.htm"
+    },
+    {
+     "quarter": "Q2",
+     "name": "2026Q2 財報新聞稿（8-K 附件 99.1，2026-07-22）＋10-Q（2026-07-23）",
+     "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000066/googexhibit991q22026.htm"
+    }
+   ],
+   "crossCheck": "公司不揭露調整後 EBITDA；本列＝GAAP 營業利益＋現金流量表折舊（不動產與設備；無形資產攤銷未另列）。MarketScreener 共識 EBITDA 含加回 SBC（v0.1a 矛盾 5），比較時口徑不同",
+   "note": "Q1 營業利益 39.696＋折舊 6.482；Q2 40.770＋7.104 [Derived]",
+   "usage": "只用於「與市場的差異」的 2026 EBITDA 比較；模型 GAAP 損益與評價不使用"
+  },
+  "jvSplit": {
+   "jv": 0.0,
+   "strategic": 55.44
+  },
+  "notes": {
+   "cash1231": "2025-12-31 現金及約當現金 30,708＋有價證券 96,135 − 有價權益證券 6,313＝120,530（10-K 經查核；模型現金口徑＝現金＋債權類有價證券，有價權益證券改列持股）[Verified／Derived]",
+   "cfo": "10-Q 現金流量表：上半年營運現金流 84,859（Q1 45,790＋Q2 39,069）[Interested-party（10-Q 核閱數）]",
+   "cashCapex": "購置不動產與設備 Q1 35,674＋Q2 44,924＝80,598（公司 FCF 定義；與指引 195–205B 同口徑）[Interested-party]",
+   "capex": "應計口徑未揭露，以現金購置代替；應計未付 PP&E 29,113（10-Q 補充資訊）不在本列 [Interested-party]",
+   "jv": "購買非上市證券 22,051（主要為 Anthropic 條件式出資約 20B）＋收購（Wiz、Intersect）33,697＋其他投資 1,359 − 出售非上市證券 1,667 [Derived]",
+   "borrow": "發債收入淨額 56,226（2026Q1 美元 20B、£5.5B、CHF3.1B；Q2 €9.0B、C$8.5B、¥576.5B）[Interested-party]",
+   "debtRepaid": "償還債務 5,253 [Interested-party]",
+   "cappedCall": "強制轉換特別股的 capped call 權利金 1,011（股東權益變動表）[Interested-party]",
+   "equity": "普通股發行淨額 30,499（承銷 20.5B＋Berkshire 私募 10.0B）＋強制轉換特別股淨額 19,063 [Interested-party]",
+   "interest": "10-Q 利息費用 Q1 533＋Q2 1,278；現金利息未揭露 [Interested-party]",
+   "leasePaid": "營業租賃現金 1,817＋融資租賃利息 35＋本金 840（10-Q 附註 4 補充資訊）；營業租賃已含在 CFO 內，僅供對照",
+   "revenue": "搜尋 123,670＋YouTube 20,938＋聯播網 14,274＋訂閱平台裝置 25,295＋Cloud 44,796＋Other Bets 793＋避險 −74 [Interested-party]",
+   "opInc": "GAAP 營業利益 Q1 39,696＋Q2 40,770 [Interested-party]",
+   "ni": "淨利 Q1 62,578＋Q2 112,193（含權益證券利益 135,946，主要為 SpaceX 上市與 Anthropic 重估，非營業）[Interested-party]",
+   "prepay": "不適用（無客戶預付融資機制）",
+   "da": "現金流量表不動產與設備折舊 Q1 6,482＋Q2 7,104 [Interested-party]",
+   "sbc": "股權報酬費用 14,708（現金流量表）[Interested-party]",
+   "eps": "GAAP 稀釋 EPS Q1 5.11＋Q2 9.11（含權益證券利益）[Interested-party]",
+   "ngEps": "(淨利＋SBC) ÷ 上半年平均稀釋加權股數 12,274m [Derived]（含權益證券利益，與共識不可比）",
+   "dividends": "普通股股利支付 5,231（每季 0.22）[Interested-party]",
+   "buyback": "2026 上半年未買回（10-Q 附註 11；2025H1 28,306）[Interested-party]"
+  },
+  "dividends": 5.231,
+  "buyback": 0.0
+ },
+ "historicalPL": [
+  {
+   "year": "2023",
+   "revenue": 307.394,
+   "opInc": 84.293,
+   "ni": 73.795,
+   "eps": 5.8,
+   "ngEps": 7.57,
+   "shares": 12.722,
+   "tag": "Verified"
+  },
+  {
+   "year": "2024",
+   "revenue": 350.018,
+   "opInc": 112.39,
+   "ni": 100.118,
+   "eps": 8.04,
+   "ngEps": 9.87,
+   "shares": 12.447,
+   "tag": "Verified"
+  },
+  {
+   "year": "2025",
+   "revenue": 402.836,
+   "opInc": 129.039,
+   "ni": 132.17,
+   "eps": 10.81,
+   "ngEps": 12.85,
+   "shares": 12.23,
+   "tag": "Verified"
+  },
+  {
+   "year": "1H26",
+   "revenue": 229.692,
+   "opInc": 80.466,
+   "ni": 174.771,
+   "eps": 14.22,
+   "ngEps": 15.44,
+   "shares": 12.274,
+   "tag": "Interested-party"
+  }
+ ],
+ "rpo": {
+  "scheduledShare": 0.725,
+  "bucketWeights": [
+   0.125,
+   0.25,
+   0.17,
+   0.09,
+   0.09
+  ],
+  "bucketLabels": [
+   "24 個月內略多於 50%（其後未分桶揭露）"
+  ],
+  "split": [
+   1.0
+  ],
+  "within36m": 0.59
+ },
+ "leases": {
+  "onBalanceCash": [
+   2.042,
+   3.885,
+   3.356,
+   2.932,
+   2.331
+  ],
+  "afterFY30": 9.707,
+  "facts": {
+   "onBal": 24.253,
+   "notCommenced": 85.2,
+   "singleCap": 0.0,
+   "share": 1.0
+  },
+  "operatingPayments": [
+   1.836,
+   3.498,
+   2.979,
+   2.576,
+   2.046,
+   8.398
+  ],
+  "financePayments": [
+   0.206,
+   0.387,
+   0.377,
+   0.356,
+   0.285,
+   1.309
+  ],
+  "liability": {
+   "discRate": 0.038,
+   "tailYears": 8,
+   "note": "租賃負債（每期末）＝剩餘租金現值。折現率＝10-Q 2026Q2 營業租賃加權平均折現率 3.8%（融資 3.3%）[Interested-party]；在帳租約＝10-Q 附註 4 到期表各期現金（營業＋融資租賃，期中付款）＋模型期後尾端平均分 8 年（營業租賃加權平均剩餘期限 8.4 年）；未起租租約只計已起租部分。"
+  },
+  "uncommenced": {
+   "startQ": 0,
+   "quarters": 22,
+   "termYears": 15,
+   "delayLink": 0.0,
+   "delayLinkNote": "不適用（Alphabet 未起租租賃不連動建設延誤；延誤月數三情境皆 0）",
+   "termSens": [
+    10,
+    20
+   ],
+   "note": "10-Q 2026Q2 附註 4：尚未起租租賃 85.2B（主要為資料中心；2026–2031 起租、不可取消期 1–26 年；逐年付款未揭露）。模型：平均分 22 季（2026Q3–2031Q4）起租、每筆 15 年直線付租 [Assumed；v0.1a 預設 16]；敏感度 10／20 年。另 2026-06 短期租約不可取消約 5.8B（2026Q3 起租）推定為 SpaceX 算力合約，不重複計入（見 rentedCompute）。",
+   "opShare": 0.874436,
+   "opShareNote": "三家統一定義（MAG 對照表 r1 C21）：未起租租約中預期列為營業租賃的比例（租金入 EBITDA 的部分；不另自現金扣除；1 − opShare＝融資部分，自現金扣除）。Alphabet：取在帳租賃負債的營業占比 18.037 ÷ (18.037＋2.590)＝87.4%（10-Q 附註 4；[Derived]；類型未揭露；未起租預付款 835 預期為融資租賃）",
+   "cashShareLabel": null
+  },
+  "operatingInEbitda": true,
+  "operatingInEbitdaNote": "分部營業利益已扣營業租賃成本 → 在帳營業租賃現金不再自現金扣除；融資租賃本息仍為現金支出（對照表 r1 C8 f）",
+  "rentedCompute": [
+   {
+    "name": "SpaceX（xAI Colossus）雲端服務合約：約 11 萬顆 NVIDIA GPU",
+    "start": "2026-10",
+    "years": 2.75,
+    "annualRent": 11.04,
+    "mw": 219,
+    "use": "internal"
+   }
+  ],
+  "rentedComputeNote": "租用算力：SpaceX FWP（2026-06-05，對手方自述 [Interested-party]）每月 9.2 億、2026-10～2029-06（33 個月）；2026-12-31 後雙方 90 天通知可解約（基準照全期，敏感度 6 個月）；MW 以 GB200 換算 219 MW-IT（H100 153、GB300 226）。用途未揭露（法說：2026Q3 起以第三方容量過渡）→ 列自用（不計對外收入，保守）。租金計入營運成本（扣 EBITDA 與營運現金，不是資本支出；對照表 r1 第 5 節第 7 條、C8 d）"
+ },
+ "debt": {
+  "amortization": [
+   2.0,
+   1.0,
+   2.676,
+   1.764,
+   7.186
+  ],
+  "amortAfterFY30": 86.459,
+  "instruments": [
+   [
+    "2016 美元票據（2.0B）",
+    "無擔保",
+    "2026-08",
+    0.0223,
+    2.0,
+    "10-Q 2026Q2 附註 6：面額 2,000、票面 2.00%、有效利率 2.23%、2026 到期 [Interested-party]"
+   ],
+   [
+    "2020 美元票據（9.0B）",
+    "無擔保",
+    "2040-08",
+    0.0163,
+    9.0,
+    "10-Q 附註 6：面額 9,000、有效利率 0.93%–2.33%（取中點）、到期 2027–2060；到期日取區間中段 [Assumed]"
+   ],
+   [
+    "2025 美元票據（22.5B；含浮動 0.5B）",
+    "無擔保",
+    "2045-05",
+    0.04895,
+    22.5,
+    "10-Q 附註 6：面額 22,500、有效利率 4.00%–5.79%（取中點）、到期 2028–2075；到期日取區間中段 [Assumed]"
+   ],
+   [
+    "2025 歐元票據",
+    "無擔保",
+    "2042-11",
+    0.0354,
+    15.074,
+    "10-Q 附註 6：面額 15,074（含匯率）、有效利率 2.57%–4.51%（取中點）、到期 2028–2064 [Assumed 到期日]"
+   ],
+   [
+    "2026 美元票據（20.0B）",
+    "無擔保",
+    "2041-02",
+    0.048,
+    20.0,
+    "10-Q 附註 6：面額 20,000、加權票面 4.80%、加權年限 15 年（2026Q1 發行）[Interested-party]"
+   ],
+   [
+    "2026 英鎊票據（£5.5B）",
+    "無擔保",
+    "2057-02",
+    0.0531,
+    7.263,
+    "10-Q 附註 6：面額 7,263、加權票面 5.31%、加權年限 31 年 [Interested-party]"
+   ],
+   [
+    "2026 瑞士法郎票據（CHF3.1B）",
+    "無擔保",
+    "2036-02",
+    0.0106,
+    3.772,
+    "10-Q 附註 6：面額 3,772、加權票面 1.06%、加權年限 10 年 [Interested-party]"
+   ],
+   [
+    "2026 歐元票據（€9.0B）",
+    "無擔保",
+    "2039-05",
+    0.039,
+    10.239,
+    "10-Q 附註 6：面額 10,239、加權票面 3.90%、加權年限 13 年 [Interested-party]"
+   ],
+   [
+    "2026 加幣票據（C$8.5B）",
+    "無擔保",
+    "2041-05",
+    0.0435,
+    5.985,
+    "10-Q 附註 6：面額 5,985、加權票面 4.35%、加權年限 15 年 [Interested-party]"
+   ],
+   [
+    "2026 日圓票據（¥576.5B）",
+    "無擔保",
+    "2034-05",
+    0.0265,
+    3.566,
+    "10-Q 附註 6：面額 3,566、加權票面 2.65%、加權年限 8 年 [Interested-party]"
+   ],
+   [
+    "其他長期債（含信用額度動用 1.3B）",
+    "無擔保",
+    "2030-04",
+    0.059,
+    1.686,
+    "10-Q 附註 6：其他長期債 1,686；信用額度動用 1,300 利率 SOFR＋1.5%–2.25%（約 5.9%，[Derived]）、至 2030-04 到期"
+   ]
+  ],
+  "convertible": {
+   "principal": 0.0,
+   "coupon": 0.0
+  },
+  "convertibles": [
+   [
+    "6.25% 強制轉換特別股（A、B 系列，2026-06）",
+    19.25,
+    0.0625,
+    "2029-05",
+    1.0,
+    352.56,
+    "清算價 $19.25B（19.25M 股 × $1,000；385M 存託股）；2029-05-15 強制轉換：A 系列每股轉 2.2520–2.8160 股 A 股、B 系列 2.2740–2.8420 股 C 股 → 43.6–54.6M 股，一律轉股，取稀釋最大 54.6M 股（轉換價下限約 $352.56；8-K 2026-06-05 [Interested-party]）；6.25% 股利列於 defaults.dividend.preferred；權益，不列債務本金；capped call 上限 532.67（A）／527.80（C）未建模",
+    true
+   ]
+  ],
+  "convertibleBridge": {
+   "exchangedAccreted": 0.0,
+   "newIssuesAccreted": 0.0,
+   "note": "無可轉債；債務明細＝10 檔票據＋其他長期債＝面額 101.085（10-Q 附註 6）。評價日後新發 2026-08 美元票據 25.0B 不在評價日本金內，由瀑布在模型期內的新債呈現。強制轉換特別股為權益，不列入對帳。"
+  },
+  "amortizationNote": "10-K 2025 附註 6 未來本金到期表（2025-12-31：2026 2.000、2027 1.000、2028 2.676、2029 1.764、2030 5.500、其後 36.145）；2026 年新發 50.3B 票據到期 2029–2126（逐年未揭露）→ 全數列其後 [Assumed]；其他長期債 1.686（信用額度）列 2030。"
+ },
+ "latestQuarter": {
+  "filed": "2026-07-23",
+  "periodEnd": "2026-06-30",
+  "revenue": 119.796,
+  "yoy": 0.242336,
+  "h1Revenue": 229.692,
+  "costRev": 45.943,
+  "techInfra": null,
+  "opInc": 40.77,
+  "interest": 1.278,
+  "h1Interest": 1.811,
+  "ni": 112.193,
+  "h1Ni": 174.771,
+  "epsDiluted": 9.11,
+  "sbc": 7.957,
+  "da": 7.104,
+  "adjEbitda": 47.874,
+  "adjOpInc": 40.77,
+  "rpo": 519.5,
+  "backlog": null,
+  "rpo24m": null,
+  "rpo25to48": null,
+  "rpo49to78": null,
+  "cash": 55.911,
+  "restricted": 0.0,
+  "marketable": 99.5,
+  "availability": 10.4,
+  "debtPrincipal": 101.085,
+  "recourseNet": null,
+  "nonRecourseNet": null,
+  "ddtlOut": 0.0,
+  "notesOut": 100.164,
+  "sharesA": 5.868,
+  "sharesB": 0.835,
+  "sharesOut": 12.23,
+  "basicWaso": 12.151,
+  "capexQ2": 44.924,
+  "capexH1": 80.598,
+  "cashCapexH1": 80.598,
+  "cfoH1": 84.859,
+  "cashInterestH1": null,
+  "capInterestH1": null,
+  "deferredTotal": 7.154,
+  "deferredIn": 0.0,
+  "ppe": 321.212,
+  "cip": 122.814,
+  "rouOp": 17.694,
+  "opLeaseLiab": 18.037,
+  "finLeaseLiab": 2.59,
+  "onBalanceUndiscounted": 24.253,
+  "offBalanceLease": 85.2,
+  "singleSiteCap": 0.0,
+  "singleSiteMw": null,
+  "constructionCostMw": null,
+  "equipCommitLo": null,
+  "equipCommitHi": null,
+  "jvCommit": 20.0,
+  "jvPaidH1": 55.44,
+  "vieExposure": 21.9,
+  "rouObtainedH1": null,
+  "leaseCashH1": 2.692,
+  "custA": 0.0,
+  "custB": 0.0,
+  "custC": 0.0,
+  "debtIssuedH1": 56.226,
+  "debtRepaidH1": 5.253,
+  "equityH1": 49.562
+ },
+ "callFacts": {
+  "activeGw": null,
+  "activeAddQ2": null,
+  "juneAddMw": null,
+  "contractedGw": null,
+  "contractedGwQ2": null,
+  "poweredLandGw": null,
+  "yeActiveGw": null,
+  "gw2030": null,
+  "dataCenters": null,
+  "capexLo": 195,
+  "capexHi": 205,
+  "nextQCapexLo": null,
+  "nextQCapexHi": null,
+  "nextQIntLo": null,
+  "nextQIntHi": null,
+  "revLo": null,
+  "revHi": null,
+  "nextQRevLo": null,
+  "nextQRevHi": null,
+  "adjOpLo": null,
+  "adjOpHi": null,
+  "nextQAdjOpLo": null,
+  "nextQAdjOpHi": null,
+  "arrLo": null,
+  "arrHi": null,
+  "postQNewCommit": null,
+  "priceUp": null,
+  "marginStep": null,
+  "backlogStarted": null,
+  "inferenceArr": null,
+  "otherArr": null,
+  "convert": 0.0,
+  "convertNet": 0.0,
+  "convertCoupon": null,
+  "convertPx": null,
+  "atmShares": null,
+  "price0917": null,
+  "tier34Active": null,
+  "tier34Contracted": null,
+  "cdsMid": null,
+  "cdsBidAsk": null,
+  "cdsRange": null,
+  "cdsPeak": null,
+  "cdsPeakDate": null,
+  "cdsLow": null,
+  "cdsLowDate": null,
+  "availability": 10.4,
+  "price0918": null,
+  "priceLast": 350.5,
+  "priceDate": "2026-10-07",
+  "postQShortDated": "評價日後：2026-08 美元票據 25.0B（2028–2066，預期 Aa2／AA+）；2026-07 支付 Android 案歐盟罰款與利息 5.2B（已在應計罰款內）；SpaceX 算力租約 2026-10 起租（每月 9.2 億）；Anthropic 剩餘條件式出資 20.0B（至 2030）；GFiber 分拆預計 2026 年底",
+  "ttmRev": 445.866,
+  "ttmOpInc": 147.628,
+  "ttmDa": 25.237,
+  "ttmOpLease": 18.037,
+  "mktCapLast": 4286.615,
+  "nextEarn": "2026-10 下旬（2026Q3 財報）",
+  "aiRunRate": null,
+  "aiRunRateNote": "公司未揭露 AI 營收或 AI run-rate（v0.1a 缺口）→ 不列驗證列（對照表 r1 C3）"
+ },
+ "scenarios": {
+  "labels": {
+   "low": "保守 已交付＋已公開在建",
+   "base": "基準 依資本支出指引",
+   "high": "積極 依 2027 擴張幅度"
+  },
+  "descriptions": {
+   "low": "對外 AI MW-IT 只加已公開在建：Anthropic 於 Google Cloud 的 TPU 由約 0.77 GW 擴到 1.54 GW（anthropic/ 模型供給路徑）＋Google–Blackstone TPU 合資 0.5 GW（2027）＝+1,270，每年 +850、上限 3,171 [Derived／Interested-party]",
+   "base": "對外 AI MW 新增速度＝近端資本支出隱含的建置量：2026 全年指引中點 $200bn −（非 AI 公式值＋GPU 汰換）÷ 每 MW 全成本（Tokenomics IT＋自建 85% × 設施）× 對外 30%，依 λ 遞延上線（scripts/calib_pace.js 解，對帳落差＝0）；之後各年資本支出＝MW 路徑 × 每 MW 成本（同一套數字）[Derived]",
+   "high": "公司無 MW／GW 目標（只有「serving 容量每 6 個月倍增」的內部說法）→ 以 2027 擴張幅度代替：共識資本支出 2027 ÷ 2026＝1.49、Morgan Stanley TPU 產量 2027 ÷ 2026＝1.56，取 1.5 × 基準速度 [Derived；共識與賣方為 Interested-party]"
+  },
+  "mwPath": {
+   "connectedStart": null,
+   "contracted": {
+    "low": [
+     3171,
+     3171,
+     3171,
+     3171,
+     3171
+    ],
+    "base": [
+     99999,
+     99999,
+     99999,
+     99999,
+     99999
+    ],
+    "high": [
+     99999,
+     99999,
+     99999,
+     99999,
+     99999
+    ]
+   },
+   "calibrate": {
+    "scenario": "base",
+    "decimals": 1
+   },
+   "pace": {
+    "low": 850,
+    "base": 1246.1,
+    "high": 1869.1
+   },
+   "note": "對外 AI MW-IT（在役）：評價日 1,901（v0.1a：Epoch AI 晶片功耗 3,841 MW TDP × IT/TDP 1.65 × 對外 30%，事實總帳 mw.ext.it.2026q2）[Derived／Assumed]；各期期末＝MIN(上限, 前期＋速度 × 期間長度)，首期自評價日起算（connectedStart＝null）。MAG v0.1b r2（C10）：基準速度由 calibrate 設定以資本支出指引解出（scripts/calib_pace.js；verify 檢查）；積極＝1.5 × 基準（scripts 外以基準解出值換算，見 descriptions.high）。"
+  },
+  "billableRatio": {
+   "mode": "ratio",
+   "ratio": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "note": "對外 AI MW 依 MW-year 計價：已連網即計費（在役比例 100%）；期初計費 MW＝第三方估計 1,901，不以 Google Cloud 營收校準（Cloud 營收含非 AI 與 Workspace）[Assumed]",
+   "openAnnualRevenue": null
+  },
+  "mw31": {
+   "low": 0,
+   "base": 1246.1,
+   "high": 1869.1
+  },
+  "delayMonths": {
+   "low": 0,
+   "base": 0,
+   "high": 0,
+   "note": "不適用（Alphabet 不建模建設延誤；機制保留，輸入 0）"
+  },
+  "convCap": {
+   "low": 0,
+   "base": 0,
+   "high": 0
+  },
+  "capexTemplate": {
+   "costMW": [
+    48.3,
+    48.3,
+    48.3,
+    48.3,
+    48.3
+   ],
+   "div": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "legacy": {
+  "capexV14": [
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "interestV14": [
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "defaults": {
+  "scenario": "base",
+  "revenueDriver": "mw",
+  "lambda": 0.35,
+  "mwYearEnd": {
+   "2023": 191,
+   "2024": 643,
+   "2025": 1462
+  },
+  "mw31": 1246.1,
+  "capexFloorFY0": 200,
+  "gpuLife": 6,
+  "gpuLifeNote": "Tokenomics IF_DeprLifeIT 6 年；Alphabet 10-K 2025：伺服器與網通設備一般依 6 年折舊 [Verified]",
+  "refreshSteady": true,
+  "refreshNote": "v0.1c：已連網 MW 不再增加的期間（觸頂後）及終值年，汰換 CapEx＝期間平均已連網 MW × 每 MW GPU 資本支出（IF_CapexIT，只含 IT）÷ GPU 經濟壽命 × 期間長度；建築與電力屬租賃不計；取代批次汰換（mwYearEnd 批次落在模型期之後）。false＝模板口徑（只有批次汰換）。",
+  "revScale": 1,
+  "capexScale": 1,
+  "ebStart": 0.765,
+  "ebSteady": 0.765,
+  "ebitdaBasis": "tk",
+  "ebitdarAdj": [
+   0,
+   0
+  ],
+  "ebitdarNote": "不適用（ebitdaBasis＝tk：AI 雲端 EBITDA 率＝1 − Tokenomics 每 MW 營運成本 ÷ 每 MW 年收入；租金另列現金支出，不加回）",
+  "services": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "otherEbitda": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "otherEbitdaNote": "未分攤公司層費用改列 legacyBiz「Alphabet 層級費用」一線（C8 a）；此欄 0",
+  "legacyBiz": {
+   "lines": [
+    {
+     "key": "search",
+     "label": "搜尋與其他",
+     "kind": "growth",
+     "peer": "ads",
+     "fyBase": 224.532,
+     "ytd": 123.596,
+     "g0": 0.168013,
+     "gLT": 0.08,
+     "m0": 0.586717,
+     "mLT": 0.541632,
+     "oa": 0.0,
+     "cx": 0.06,
+     "m0Note": "Google Services 分部 EBITDA − 其他三線（殘差）[Derived]；依賴其他三線的 [Assumed] 利潤率"
+    },
+    {
+     "key": "youtube",
+     "label": "YouTube 廣告",
+     "kind": "growth",
+     "peer": "ads",
+     "fyBase": 40.367,
+     "ytd": 20.938,
+     "g0": 0.117139,
+     "gLT": 0.08,
+     "m0": 0.4,
+     "mLT": 0.354915,
+     "oa": 0.0,
+     "cx": 0.06,
+     "m0Note": "Services 分部未拆線揭露：YouTube 廣告 EBITDA 率 40%（30%–50%）[Assumed]"
+    },
+    {
+     "key": "network",
+     "label": "聯播網",
+     "kind": "growth",
+     "peer": "ads",
+     "fyBase": 29.792,
+     "ytd": 14.274,
+     "g0": -0.021785,
+     "gLT": 0.0,
+     "m0": 0.15,
+     "mLT": 0.104915,
+     "oa": 0.0,
+     "cx": 0.06,
+     "m0Note": "Services 分部未拆線揭露：聯播網 EBITDA 率 15%（10%–25%）[Assumed]"
+    },
+    {
+     "key": "subs",
+     "label": "訂閱、平台與裝置",
+     "kind": "growth",
+     "peer": "subs",
+     "fyBase": 48.03,
+     "ytd": 25.295,
+     "g0": 0.179435,
+     "gLT": 0.1,
+     "m0": 0.2,
+     "mLT": 0.154915,
+     "oa": 0.0,
+     "cx": 0.06,
+     "m0Note": "Services 分部未拆線揭露：訂閱、平台與裝置 EBITDA 率 20%（10%–30%）[Assumed]"
+    },
+    {
+     "key": "cloudNonAi",
+     "label": "Google Cloud 非 AI（含 Workspace）",
+     "kind": "cloudResidual",
+     "peer": "cloud",
+     "ytd": 44.796,
+     "priorStub": 32.821,
+     "g4q": 0.577838,
+     "ttm": 77.617,
+     "prevTTM": 49.192,
+     "ebitdaTTM": 28.708857,
+     "aiMwTTM": 1447.9,
+     "aiMwPrevTTM": 657.3,
+     "gLT": 0.08,
+     "mLT": null,
+     "oa": 0.0,
+     "cx": 0.2
+    },
+    {
+     "key": "otherBets",
+     "label": "Other Bets（Waymo 等）",
+     "kind": "explicit",
+     "peer": "otherBets",
+     "ytd": 0.793,
+     "rev": [
+      0.75,
+      1.6,
+      1.8,
+      2.0,
+      2.2
+     ],
+     "ebitda": [
+      -4.0,
+      -8.0,
+      -8.0,
+      -8.0,
+      -8.0
+     ],
+     "m0": 0,
+     "mLT": null,
+     "oa": 0.0,
+     "cx": 0.06
+    },
+    {
+     "key": "tpuSales",
+     "label": "TPU 系統銷售（硬體）",
+     "kind": "explicit",
+     "peer": "hw",
+     "ytd": 0.0,
+     "rev": [
+      1.0,
+      13.0,
+      13.0,
+      13.0,
+      13.0
+     ],
+     "m0": 0.25,
+     "mLT": null,
+     "oa": 0.0,
+     "cx": 0.0,
+     "m0Note": "TPU 系統銷售利潤率未揭露：25%（15%–35%）[Assumed]"
+    },
+    {
+     "key": "corp",
+     "label": "Alphabet 層級費用（未分攤）",
+     "kind": "explicit",
+     "peer": "ads",
+     "ytd": 0.0,
+     "rev": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "ebitda": [
+      -12.689,
+      -28.95,
+      -33.596,
+      -37.874,
+      -41.389
+     ],
+     "m0": 0,
+     "mLT": null,
+     "oa": 0.0,
+     "cx": 0.0
+    }
+   ],
+   "note": "各線：growth＝全年營收＝上一財年（2025 10-K）×(1＋年增率)，年增率自近四季對前四季年增率（g0，[Derived]）線性收斂到長期值（gLT，[Assumed]：搜尋 8%、YouTube 8%、聯播網 0%、訂閱 10%，區間 ±3 個百分點）；搜尋線年初至今含避險損益 −0.074。cloudResidual（Google Cloud 的非 AI 部分，含 Workspace、Wiz）＝Cloud 首期估計〔年初至今實際＋去年同期 ×(1＋近四季年增率)〕− 對外 AI 雲端模型值（年初至今以期初 MW 平均 × 首期每 MW 年收入估計），之後年增率由推估的近四季非 AI 年增率收斂到 gLT（8%，5%–12%，[Assumed]）；EBITDA 率＝(Cloud EBITDA − AI 雲端 EBITDA 估計) ÷ 非 AI 雲端營收（[Derived]，固定）。EBITDA＝分部營業利益＋分攤折舊：公司不揭露分部 D&A（技術基礎設施依使用量分攤，已含在分部營業利益）→ 近四季折舊 25.237 按營收分攤（5.656% × 各線營收，[Derived]；替代＝依使用量，雲端占比更高）。Google Services 分部 EBITDA 率近四季 47.55%，四線拆分未揭露：聯播網 15%（10%–25%）、訂閱平台裝置 20%（10%–30%）、YouTube 廣告 40%（30%–50%）[Assumed]，搜尋＝分部殘差 58.67%（[Derived]）；長期值（mLT）＝各線起始值 -4.51pt（Services 2023–2025 平均 EBITDA 率 43.04% − 近四季，對照表第 5 節第 5 條）。explicit：Other Bets 營收與 EBITDA 直接輸入（近四季營收 1.507、營業損失 −8.942；模型期營收約持平、EBITDA 每年 −8.0 [Assumed]）；TPU 系統銷售（C8 b；2026Q2 起認列、金額未揭露：2026 下半年 1.0 [Assumed]、2027 起 13.0／年＝Morgan Stanley 50 萬顆約 130 億 [Interested-party，賣方]，EBITDA 率 25%（15%–35%）[Assumed]；不走 MW × 每 MW）；Alphabet 層級費用（C8 a；主要為共用 AI 研發，近四季 −21.541、年增 +74%）＝最新季占營收比 4.83% × 模型期總營收 [Derived／Assumed]。peer＝評價時套用的同業倍數組（valuation.segmentMultiples）。",
+   "split": {
+    "networkMargin": 0.15,
+    "subsMargin": 0.2,
+    "youtubeMargin": 0.4,
+    "marginRange": {
+     "network": [
+      0.1,
+      0.25
+     ],
+     "subs": [
+      0.1,
+      0.3
+     ],
+     "youtube": [
+      0.3,
+      0.5
+     ]
+    },
+    "corpShareOfRevenue": 0.048324,
+    "note": "Google Services 分部營業利益只揭露合計；營收按類別揭露（搜尋、YouTube 廣告、聯播網、訂閱平台裝置）。聯播網（大部分營收付給合作夥伴 TAC）、訂閱平台裝置（含硬體與 YouTube TV 內容成本）、YouTube 廣告（創作者分潤）EBITDA 率 [Assumed]，搜尋＝分部 EBITDA − 其他三線（殘差，[Derived]）。"
+   },
+   "cxNote": "cx＝非 AI 資本支出占全年營收比：Google Services 各線與 Other Bets 6%（4%–10.5%，[Assumed]；上緣＝2023 年合併資本支出 ÷ 營收 10.5%，當年已含大量 TPU）；Google Cloud 非 AI 20%（15%–27%，[Assumed]，比照 Amazon AWS 非 AI）；TPU 系統銷售與 Alphabet 層級費用 0（硬體由客戶出資；費用線無營收）"
+  },
+  "cashTaxRate": 0.168,
+  "dividend": {
+   "perShareQ": 0.22,
+   "sharesBase": 12.23,
+   "preferred": [
+    0.535,
+    1.203,
+    1.203,
+    0.602,
+    0.0
+   ],
+   "note": "普通股股利＝每股每季 $0.22（2026-04 起）× 4 × 期間長度 × 期初股數（基礎 12.230bn＝2026-07-15 流通股＋前期累計瀑布新股＋已強制轉換的特別股）；每股依 growth 5%／年遞增（第 n 期 ×(1＋g)^n）[Interested-party]；特別股股利：6.25% × $19.25B＝1.203／年，每季 2/15、5/15、8/15、11/15 支付至 2029-05-15 轉換（首期 2026-08-15 短期 0.234＋11-15 0.301＝0.535、2029 兩季 0.602，[Derived]；v0.1a mapTo 的 0.937／年誤用首期短期股利，已更正）。",
+   "growth": 0.05,
+   "growthNote": "每季股利 0.20（2024 首次）→ 0.21（2025-04，+5%，10-K）→ 0.22（2026-04，+4.8%）→ 每股年成長 5% [Derived]（對照表 r1 第 5 節第 8 條；MAG v0.1b r3 C19）"
+  },
+  "debtBacklog": 0.5,
+  "delayPenalty": 0,
+  "delayPenaltyNote": "不適用（不建模建設延誤）",
+  "debtCapBasis": "leaseAdj",
+  "debtEbitdaMax": 3.0,
+  "ctrTerm": 3,
+  "minCash": 50,
+  "eqPx": 350.5,
+  "eqDisc": 0.1,
+  "eqCapPct": 0.05,
+  "eqCapShares": 12.23,
+  "junkRate": 0.12,
+  "ppeOpen": 321.212,
+  "jvCommit": [
+   2.222222,
+   4.444444,
+   4.444444,
+   4.444444,
+   4.444444
+  ],
+  "intCal": 0.0,
+  "rpoOpen": 0.0,
+  "rpoPendingAdd": 0.0,
+  "rp": 0.0,
+  "cash": 155.411,
+  "includeDebt": true,
+  "includeAtm": true,
+  "atm": 0.0,
+  "prepay": {
+   "shareOfDeals": 0.0,
+   "capexCover": 0.0,
+   "recogYears": 5,
+   "openBalance": 0.0,
+   "financingRate": 0.0,
+   "note": "不適用（Alphabet 無客戶預付融資；機制保留，輸入 0）",
+   "coverRefresh": false
+  },
+  "convIssue": {
+   "coupon": 0.0,
+   "premium": 0.0,
+   "note": "不適用（瀑布不設可轉債步驟）"
+  },
+  "overlay": false,
+  "cdsLink": false,
+  "cdsBaseBp": 450,
+  "cdsPassThrough": 0.4,
+  "linkSites": true,
+  "linkLeaseTail": true,
+  "useAvgMw": true,
+  "billableOpen": 1901,
+  "cds": null,
+  "cdsBid": null,
+  "cdsAsk": null,
+  "cdsLo": null,
+  "cdsHi": null,
+  "cdsDate": "不適用（GOOGL CDS 無可引用的一手報價）",
+  "useFacility": false,
+  "facility": 10.4,
+  "m": {
+   "accepted": [
+    2400.0,
+    3400.0,
+    4400.0,
+    5400.0,
+    6400.0
+   ],
+   "billable": [
+    2400,
+    3400,
+    4400,
+    5400,
+    6400
+   ],
+   "util": [
+    100,
+    100,
+    100,
+    100,
+    100
+   ],
+   "aiShare": [
+    100,
+    100,
+    100,
+    100,
+    100
+   ],
+   "fill": [
+    100,
+    100,
+    100,
+    100,
+    100
+   ],
+   "power": [
+    60,
+    62,
+    64,
+    66,
+    68
+   ],
+   "pue": [
+    1.2,
+    1.2,
+    1.2,
+    1.2,
+    1.2
+   ],
+   "maint": [
+    0.15,
+    0.15,
+    0.16,
+    0.16,
+    0.17
+   ],
+   "defaultP": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "recovery": [
+    50,
+    50,
+    50,
+    50,
+    50
+   ],
+   "rate": [
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    5.0
+   ]
+  },
+  "terminal": {
+   "residual": 25,
+   "rerent": 75,
+   "margin": 40,
+   "residualLeaseYears": 12
+  },
+  "sites": [
+   {
+    "id": "mesa",
+    "name": "Mesa, AZ",
+    "operator": "Google 自建",
+    "planned": 183,
+    "energized": 183,
+    "accepted": 183,
+    "billable": 183,
+    "status": "Epoch AI 資料中心目錄：IT 電力 183 MW（估計 2026-08-15 營運；事實總帳 mw.site.mesa）[第三方]",
+    "next": "—",
+    "date": "2026",
+    "confidence": "中"
+   }
+  ],
+  "buyback": {
+   "annual": 17.003,
+   "floorShare": 0.0,
+   "note": "回購基準＝近四季實際年額 17.003（2025Q3 11.504＋Q4 5.499＋2026Q1 0＋Q2 0；10-Q 附註 11，事實總帳 bb.paid.4q；對照表 r1 第 5 節第 8 條）；2026 上半年暫停回購、授權餘額 69.5B；floorShare 0＝缺口時可全數取消 [Interested-party]"
+  },
+  "sbcRate": 0.063129,
+  "sbcNote": "股權報酬（SBC）為非現金費用：分部營業利益已扣除，營運現金加回＝SBC 占營收 × 模型期總營收；近四季 SBC 28.147 ÷ 營收 445.866＝6.31%（現金流量表；[Derived]）。股權獎酬代扣稅款（2026 上半年 12.1B，融資活動）由 ATM 增發支應（公司稱 2026 約 30B），兩者都不建模（現金與股數影響大致相抵）。股數稀釋沿用模板每年 1%",
+  "wcStub": 8.49,
+  "wcStubNote": "首期剩餘季度（2026 下半年）營運資金變動＝上一年度同期實際：2025 全年「資產與負債變動」合計 +618（應收 −8,779、所得稅 −3,226、其他資產 −4,542、應付 +907、應計 +12,939、應計分潤 +899、遞延收入 +2,420；10-K）− 2025 上半年 −7,872（2026Q2 10-Q 比較欄：應收 −1,201、存貨 −628、所得稅 −2,434、其他資產 −2,139、應付 −327、應計 −1,779、遞延收入 +636）＝+8.490（流入）[Derived]；之後年度沿用營收增量比例（MAG 對照表 r1 C14；已實現的季節模式，非預測）"
+ },
+ "valuation": {
+  "price": 350.5,
+  "shares": 12.309,
+  "atmSharesInValuation": 0,
+  "netDebt": -54.326,
+  "holdings": [
+   [
+    "Anthropic（Series H 投後估值）",
+    965.0,
+    0.125,
+    "持股比例一手不存在：2025 法院文件約 14%（Fortune、Allocations 轉述）、非上市證券帳面 124.3B ÷ 投後 965B 隱含上限 12.9% → 12.5%（11%–14%）[Assumed]；估值 965B（2026-05 Series H，[Interested-party]）",
+    false
+   ],
+   [
+    "SpaceX（有價權益證券，公允價值）",
+    94.1,
+    1.0,
+    "10-Q 附註 3：短期限售 80.0B（流動有價證券）＋長期限售至 2027Q3 14.1B（其他非流動資產）＝94.1B（2026-06-30 公允價值）[Interested-party]；上市持股不折價",
+    true
+   ],
+   [
+    "其他有價權益證券",
+    7.089,
+    1.0,
+    "有價權益證券 87.063＋14.126 − SpaceX 94.1＝7.089（10-Q 附註 3）[Derived]；上市不折價",
+    true
+   ]
+  ],
+  "holdingsDiscount": 0.2,
+  "debtLike": [
+   [
+    "應計罰款與和解（主要為歐盟罰款）",
+    17.356,
+    "10-Q 2026Q2 應計罰款與和解 17,356（2026-07 已付 Android 案 5.2B）[Interested-party]；現金流出未在模型營運成本內"
+   ],
+   [
+    "非控制權益（含可贖回）",
+    7.1,
+    "10-Q 2026Q2 非控制權益 7,100（Waymo 等子公司少數股權）[Interested-party]"
+   ]
+  ],
+  "tax": 0.168,
+  "nol": 0.0,
+  "nolUsePct": 0.8,
+  "wcPctOfRevGrowth": 0.0,
+  "wacc": null,
+  "capm": {
+   "beta": 1.28845,
+   "betaSources": [
+    {
+     "vendor": "StockAnalysis（Yahoo Finance、MarketBeat 同值，推測同源，合算 1 個）",
+     "value": 1.21,
+     "period": "5 年",
+     "frequency": "月",
+     "asOf": "2026-10-07",
+     "ref": "val.beta.sa"
+    },
+    {
+     "vendor": "GuruFocus",
+     "value": 1.3669,
+     "period": "3 年",
+     "frequency": "頁面未寫明",
+     "asOf": "2026-10-08",
+     "ref": "val.beta.gurufocus"
+    }
+   ],
+   "erp": 0.05,
+   "kdPretax": 0.06527,
+   "betaSens": [
+    1.21,
+    1.3669
+   ],
+   "note": "WACC＝E/(D+E)×(rf＋β×ERP)＋D/(D+E)×kd×(1−稅率)；E＝現價 × 流通股數（latestQuarter.sharesOut）、D＝評價日債務面額（latestQuarter.debtPrincipal）；β 1.288（獨立來源平均，見 betaNote）、rf 5.28%（10 年美債 2026-10-07）、ERP 5%、kd 6.527%（2026-08 新發 2066 票據發行殖利率）；稅率 16.8%（2025 有效稅率，v0.1a 建議）。valuation.wacc 為 null 時採 CAPM。",
+   "betaNote": "β＝獨立來源平均（MAG 對照表 r1 C13）：StockAnalysis 5 年月 1.21（Yahoo、MarketBeat 同值，推測同源，只算 1 個）、GuruFocus 3 年 1.3669（2026-10-08；不同資料商、不同期間）→ 1.288；敏感度＝獨立來源區間 1.21–1.367 [Derived]",
+   "kdNote": "2026-08 新發 6.500% 2066 票據發行殖利率 6.527%（T＋130bp；FWP 2026-08-06）（市場邊際成本）[Verified]"
+  },
+  "g": 0.03,
+  "sbc": 28.147,
+  "maintRatio": 0.8,
+  "tvBasis": "ufcf",
+  "evEbitda": 6,
+  "legacyEvEbitda": null,
+  "evYear": 3,
+  "dcfMode": "zero",
+  "sigma": 0.5,
+  "rf": 0.0528,
+  "legacyEvEbitdaNote": "非 AI 分部 EV/EBITDA：null＝採同業 NTM 中位數；步驟 10 改為各分部各自同業倍數。",
+  "holdingsNote": "持股清單：[名稱, 估值（100%，US$bn）, 持股比例, 說明, 上市（true＝不折價）]；價值＝Σ 估值 × 比例 ×（1 − 折價；上市持股不折價），自淨負債扣除（分部加總項）。流動性折價 20%（0%–40%，[Assumed]；對照表 r1 第 5 節第 9 條、C8 c）。非上市證券其他部分（131.461 − Anthropic 約 124.3 帳面）未列（保守）",
+  "segmentMultiples": {
+   "ads": {
+    "label": "數位廣告",
+    "source": "data/peers_ads_20261009.json",
+    "peers": [
+     {
+      "ticker": "META",
+      "name": "Meta",
+      "ntmEvEbitda": 10.79,
+      "ref": "val.peer.ads.meta"
+     },
+     {
+      "ticker": "PINS",
+      "name": "Pinterest",
+      "ntmEvEbitda": 6.91,
+      "ref": "val.peer.ads.pins"
+     },
+     {
+      "ticker": "TTD",
+      "name": "The Trade Desk",
+      "ntmEvEbitda": 6.53,
+      "ref": "val.peer.ads.ttd"
+     },
+     {
+      "ticker": "APP",
+      "name": "AppLovin",
+      "ntmEvEbitda": 11.38,
+      "ref": "val.peer.ads.app"
+     },
+     {
+      "ticker": "RDDT",
+      "name": "Reddit",
+      "ntmEvEbitda": 13.63,
+      "ref": "val.peer.ads.rddt"
+     },
+     {
+      "ticker": "SNAP",
+      "name": "Snap",
+      "ntmEvEbitda": 7.43,
+      "ref": "val.peer.ads.snap"
+     }
+    ],
+    "note": "共用數字廣告同業組 META、PINS、TTD、APP、RDDT、SNAP（MAG 對照表 r1 C18；不含 AMZN、GOOGL、MSFT；data/peers_ads_20261009.json，三家共用）；中位數 9.11× [Derived]"
+   },
+   "subs": {
+    "label": "訂閱影音",
+    "source": "amazon/data/amazon_facts_20261008.json（val.peer.subs.*，與 Amazon 訂閱組同一組；只讀）",
+    "peers": [
+     {
+      "ticker": "NFLX",
+      "name": "Netflix",
+      "ntmEvEbitda": 15.41,
+      "ref": "val.peer.nflx（Alphabet 事實總帳；Amazon val.peer.subs.nflx 同值）"
+     },
+     {
+      "ticker": "SPOT",
+      "name": "Spotify",
+      "ntmEvEbitda": 31.97,
+      "ref": "amazon/data/amazon_facts_20261008.json val.peerTTM.subs.spot（TTM，非 NTM）"
+     },
+     {
+      "ticker": "DIS",
+      "name": "Disney",
+      "ntmEvEbitda": 10.58,
+      "ref": "amazon/data/amazon_facts_20261008.json val.peerTTM.subs.dis（TTM，非 NTM）"
+     }
+    ]
+   },
+   "cloud": {
+    "label": "非 AI 雲端",
+    "source": "data/peers_cloud_20261008.json（複製自 amazon/data/，只讀）",
+    "peers": [
+     {
+      "ticker": "ORCL",
+      "name": "Oracle",
+      "ntmEvEbitda": 9.49,
+      "ref": "val.peer.cloud.orcl"
+     },
+     {
+      "ticker": "IBM",
+      "name": "IBM",
+      "ntmEvEbitda": 12.51,
+      "ref": "val.peer.cloud.ibm"
+     },
+     {
+      "ticker": "SAP",
+      "name": "SAP",
+      "ntmEvEbitda": 15.13,
+      "ref": "val.peer.cloud.sap"
+     },
+     {
+      "ticker": "CRM",
+      "name": "Salesforce",
+      "ntmEvEbitda": 10.81,
+      "ref": "val.peer.cloud.crm"
+     },
+     {
+      "ticker": "NOW",
+      "name": "ServiceNow",
+      "ntmEvEbitda": 20.63,
+      "ref": "val.peer.cloud.now"
+     },
+     {
+      "ticker": "AKAM",
+      "name": "Akamai",
+      "ntmEvEbitda": 9.7,
+      "ref": "val.peer.cloud.akam"
+     },
+     {
+      "ticker": "EQIX",
+      "name": "Equinix",
+      "ntmEvEbitda": 21.2,
+      "ref": "val.peer.cloud.eqix"
+     },
+     {
+      "ticker": "DOCN",
+      "name": "DigitalOcean",
+      "ntmEvEbitda": 24.49,
+      "ref": "val.peer.cloud.docn"
+     }
+    ],
+    "note": "共用非 AI 雲端同業組 ORCL、IBM、SAP、CRM、NOW、AKAM、EQIX、DOCN（MAG 對照表 r1 C12；data/peers_cloud_20261008.json，三家共用）；中位數 13.82× [Derived]"
+   },
+   "otherBets": {
+    "label": "Other Bets",
+    "useAi": true,
+    "peers": [],
+    "note": "無同業倍數（Waymo 等未上市）→ 沿用 AI 雲端倍數；EBITDA 為負，即虧損 × 倍數（保守；未計 Waymo 募資估值）"
+   },
+   "hw": {
+    "label": "TPU 硬體銷售",
+    "useAi": true,
+    "peers": [],
+    "note": "未蒐集半導體同業倍數 → 沿用 AI 雲端倍數 6× [Assumed]"
+   }
+  },
+  "segmentMultiplesNote": "分部 EV/EBITDA：各非 AI 分部 × 所屬同業組 NTM EV/EBITDA 中位數（legacyBiz.lines.peer；每組至少 3 家）：搜尋、YouTube 廣告、聯播網、Alphabet 層級費用＝數位廣告＝共用同業組 6 家（META、PINS、TTD、APP、RDDT、SNAP；中位數 9.11×；C18，data/peers_ads_20261009.json，複製自 amazon/data/）；訂閱平台裝置＝訂閱影音（NFLX、SPOT、DIS，與 Amazon 同組；中位數 15.41×）；非 AI 雲端＝共用同業組 8 家中位數（C12，data/peers_cloud_20261008.json）；Other Bets、TPU 硬體銷售無同業組 → AI 雲端倍數；AI 雲端 × valuation.evEbitda（6×）；非 AI 事業倍數＝錨定年度各線 EBITDA 加權（valuation.legacyEvEbitda 非 null 時為手動覆蓋）",
+  "ownMultiple": {
+   "value": 14.68,
+   "ev": 4160,
+   "ntmEbitda": 283.47,
+   "ref": "val.googl.ownNtm",
+   "note": "公司自身 NTM EV/EBITDA＝EV 4.16T（StockAnalysis 2026-10-07，事實總帳 val.ev）÷ NTM EBITDA 283.5（MarketScreener 共識 2026E 233.431、2027E 298.668，FY1 權重 0.2329；含加回 SBC）[Derived]；只用於評價口徑敏感度（非 AI 分部改用自身倍數）"
+  }
+ },
+ "methodology": {
+  "blendWeights": {
+   "dcf": 0.45,
+   "pe": 0.55
+  },
+  "rangeMultiples": [
+   5,
+   6
+  ],
+  "rating": {
+   "buyUpsideMin": 0.25,
+   "buyTvShareMax": 0.9,
+   "sellUpsideMax": -0.15,
+   "equityRaiseMaxMult": 1.5,
+   "sellUpsideMaxIfEquityOver": -0.08,
+   "sellMarginAlert": 0.05,
+   "tvShareWarn": 0.85
+  },
+  "consensusGapTol": 0.05,
+  "profitMarginTolPt": 0.02,
+  "checks": {
+   "capexPerMwBand": [
+    28,
+    51
+   ],
+   "leaseVsCommitMin": 0.8,
+   "unsignedRevShareMax": 0.5,
+   "siteRentGapMax": 10,
+   "rentVsBenchMin": 0.8,
+   "c15Tol": 0.05,
+   "daReconTol": 0.1,
+   "capUtilWarn": 0.5,
+   "capProdMax": 1.0
+  }
+ },
+ "peers": {
+  "priceDate": "2026-09-21",
+  "priceSource": "S&P Global via stockanalysis.com",
+  "list": [
+   {
+    "ticker": "CRWV",
+    "name": "CoreWeave",
+    "labelHtml": "CRWV",
+    "roleHtml": "Neocloud 直接對標（租賃型）",
+    "labelXlsx": "CRWV CoreWeave",
+    "mkt": 49.11,
+    "netDebt": 46.03,
+    "rev": 7.59,
+    "opl": 16.54,
+    "opInc": -0.231,
+    "da": 3.991,
+    "asOf": "TTM 至 Q2（6/30，10-Q）；市值與 EV 2026-10-07",
+    "noteHtml": "CRWV：市值 49.11、EV 95.14（StockAnalysis，2026-10-07 盤中）→ 淨負債 46.03 [Derived]；TTM 營收 7.59、GAAP 營業損失 −0.231＋D&A 3.991（Q2 2026 10-Q）。以租約取得機房，營業＋融資租賃負債 16.54",
+    "noteXlsx": "CRWV 市值與 EV 2026-10-07；TTM 至 Q2；租賃負債 16.54"
+   },
+   {
+    "ticker": "NBIS",
+    "name": "Nebius Group",
+    "labelHtml": "NBIS",
+    "roleHtml": "Neocloud（自有站點＋客戶預付）",
+    "labelXlsx": "NBIS Nebius",
+    "mkt": 68.49,
+    "netDebt": 2.15,
+    "rev": 1.36,
+    "opl": 1.6253,
+    "opInc": -0.612,
+    "da": 0.418,
+    "asOf": "營收 TTM 至 Q2；營業損益與 D&A 為 FY2025（20-F）；市值與 EV 2026-10-06",
+    "noteHtml": "NBIS：市值 68.49、EV 70.64（StockAnalysis，2026-10-06 收盤）→ 淨負債 2.15 [Derived]；TTM 營收 1.36；GAAP 營業損失 −0.612＋D&A 0.418 取 FY2025 20-F（季報 6-K 未 XBRL 標註）；營業租賃負債 1.625",
+    "noteXlsx": "NBIS 市值與 EV 2026-10-06；EBITDA 用 FY2025"
+   },
+   {
+    "ticker": "IREN",
+    "name": "IREN Limited",
+    "labelHtml": "IREN",
+    "roleHtml": "Neocloud／自建電力",
+    "labelXlsx": "IREN",
+    "mkt": 18.61,
+    "netDebt": 1.7,
+    "rev": 0.707,
+    "opl": 0.003,
+    "opInc": -1.047,
+    "da": 0.418,
+    "asOf": "FY26 10-K（6/30）；未更新，日期 2026-09-21",
+    "noteHtml": "GAAP 營業損失 −1.047＋D&A 0.418。自有電廠、營業租賃負債僅 0.003bn",
+    "noteXlsx": "自有電廠、營業租賃負債僅 0.003bn；FY26 合約 ARR 4.0bn"
+   },
+   {
+    "ticker": "APLD",
+    "name": "Applied Digital",
+    "labelHtml": "APLD",
+    "roleHtml": "房東（Polaris Forge）",
+    "labelXlsx": "APLD Applied Digital",
+    "mkt": 8.22,
+    "netDebt": 3.37,
+    "rev": 0.6113,
+    "opl": 0.066,
+    "opInc": -0.236,
+    "da": 0.067,
+    "asOf": "FY26 10-K（5/31）；未更新，日期 2026-09-21",
+    "noteHtml": "GAAP 營業損失 −0.236＋D&A 0.067。租約多未起租，EBITDA 尚未反映 36bn 合約",
+    "noteXlsx": "租約多未起租，營收尚未反映約 36bn 合約"
+   },
+   {
+    "ticker": "CORZ",
+    "name": "Core Scientific",
+    "labelHtml": "CORZ",
+    "roleHtml": "房東（高密度託管）",
+    "labelXlsx": "CORZ Core Scientific",
+    "mkt": 5.9,
+    "netDebt": 2.53,
+    "rev": 0.4403,
+    "opl": 0.109,
+    "opInc": -0.561,
+    "da": 0.063,
+    "asOf": "TTM 至 Q2（6/30）；未更新，日期 2026-09-21",
+    "noteHtml": "GAAP 營業損失 −0.561＋D&A 0.063。託管轉型期",
+    "noteXlsx": "託管轉型期"
+   }
+  ],
+  "textHtml": {
+   "headerTip": "AI 基礎設施同業（Neocloud 與房東）。市值：CRWV 2026-10-07、NBIS 2026-10-06，其餘 2026-09-21 收盤（未更新）；EV＝市值＋（有息負債 − 非受限現金）。EV/Sales 為主要比較倍數：同業 GAAP EBITDA 多為負，EV/EBITDA 僅列為參考。「含租賃」欄把營業租賃負債加進 EV。數位廣告同業的 NTM EV/EBITDA 用於非 AI 分部倍數（評價頁）。",
+   "readingTip": "GOOGL 列為整體公司（搜尋＋YouTube＋Cloud），倍數不可直接與純 AI 基礎設施同業比較；前瞻倍數見本模型列。",
+   "caveat": "口徑與限制：市值日期不一致（見上），負債與現金為各公司最新申報——市值即時、資產負債表季末，是所有 EV 計算的共同限制。IREN、APLD、CORZ 數字未更新（日期 2026-09-21）。此表為市場比較用，不進入目標價。"
+  },
+  "textXlsx": {
+   "subtitle": "EV＝市值＋（有息負債−非受限現金）；含租賃＝EV＋營業租賃負債。EV/EBITDA 僅供參考（GAAP EBITDA 為負者顯示 n/m）。此表不進入目標價。與 HTML Comps 分頁同一組數字",
+   "notes": [
+    "讀法：GOOGL 為整體公司（搜尋＋YouTube＋Cloud），倍數不可直接與純 AI 基礎設施同業比較；",
+    "CRWV 以租約取得機房，加入營業租賃負債後倍數上升；GOOGL 以自建為主（另有未起租承諾 85.2B 尚未入表）。",
+    "前瞻：見下方 GOOGL 模型列。此表為市場比較用，不進入目標價。"
+   ]
+  },
+  "software": [
+   {
+    "ticker": "META",
+    "name": "Meta",
+    "ntmEvEbitda": 10.79,
+    "ref": "val.peer.ads.meta"
+   },
+   {
+    "ticker": "PINS",
+    "name": "Pinterest",
+    "ntmEvEbitda": 6.91,
+    "ref": "val.peer.ads.pins"
+   },
+   {
+    "ticker": "TTD",
+    "name": "The Trade Desk",
+    "ntmEvEbitda": 6.53,
+    "ref": "val.peer.ads.ttd"
+   },
+   {
+    "ticker": "APP",
+    "name": "AppLovin",
+    "ntmEvEbitda": 11.38,
+    "ref": "val.peer.ads.app"
+   },
+   {
+    "ticker": "RDDT",
+    "name": "Reddit",
+    "ntmEvEbitda": 13.63,
+    "ref": "val.peer.ads.rddt"
+   },
+   {
+    "ticker": "SNAP",
+    "name": "Snap",
+    "ntmEvEbitda": 7.43,
+    "ref": "val.peer.ads.snap"
+   }
+  ],
+  "softwareNote": "數位廣告共用同業組 6 家 NTM EV/EBITDA（C18；data/peers_ads_20261009.json）；分部倍數見 valuation.segmentMultiples [Derived]"
+ },
+ "quarterly": {
+  "_note": "季度層（v4.4）：由年度模型拆分，只用於追蹤，不影響目標價與任何年度數字。拆分方法由下列設定選擇；缺資料（沒有 MW、沒有共識或指引）時顯示「不適用」。",
+  "quarters": [
+   {
+    "key": "2026Q3",
+    "label": "Q3 2026",
+    "period": 0,
+    "reportNote": "預計 2026-10 下旬"
+   },
+   {
+    "key": "2026Q4",
+    "label": "Q4 2026",
+    "period": 0
+   },
+   {
+    "key": "2027Q1",
+    "label": "Q1 2027",
+    "period": 1
+   },
+   {
+    "key": "2027Q2",
+    "label": "Q2 2027",
+    "period": 1
+   },
+   {
+    "key": "2027Q3",
+    "label": "Q3 2027",
+    "period": 1
+   },
+   {
+    "key": "2027Q4",
+    "label": "Q4 2027",
+    "period": 1
+   }
+  ],
+  "periodNames": [
+   "2H26",
+   "2027"
+  ],
+  "focus": "2026Q3",
+  "keyMetrics": [
+   "revenue",
+   "adjOpInc",
+   "capex"
+  ],
+  "driver": {
+   "type": "mw",
+   "endStart": 1901,
+   "endStartNote": "評價日（2026-06-30）對外 AI MW-IT 未揭露：第三方估計 1,901（Epoch 晶片功耗 × 1.65 × 對外 30%，事實總帳 mw.ext.it.2026q2）[Derived／Assumed]"
+  },
+  "revenueSplit": [
+   "anchor",
+   "driverAvg"
+  ],
+  "revenueAnchor": {
+   "value": 119.796,
+   "label": "2026Q2 實際營收",
+   "tag": "Interested-party"
+  },
+  "metrics": [
+   {
+    "key": "revenue",
+    "label": "營收",
+    "unit": "US$bn",
+    "consensus": "revenue",
+    "gap": "ratio"
+   },
+   {
+    "key": "adjEbitda",
+    "label": "調整後 EBITDA",
+    "unit": "US$bn",
+    "consensus": "ebitda",
+    "gap": "diff",
+    "marginOf": "revenue"
+   },
+   {
+    "key": "ebitdaMargin",
+    "label": "EBITDA 率",
+    "unit": "%",
+    "consensus": "derived",
+    "gap": "pt"
+   },
+   {
+    "key": "adjOpInc",
+    "label": "調整後營業利益",
+    "unit": "US$bn",
+    "consensusSecondary": "ebit",
+    "consensusSecondaryLabel": "共識 EBIT（供應商口徑）",
+    "gap": "diff",
+    "marginOf": "revenue"
+   },
+   {
+    "key": "capex",
+    "label": "CapEx（毛額）",
+    "unit": "US$bn",
+    "gap": "ratio"
+   },
+   {
+    "key": "mw",
+    "label": "季末已連網 MW-IT",
+    "unit": "MW",
+    "actualLabel": "季末對外 AI MW（未揭露）",
+    "gap": "diff"
+   }
+  ],
+  "guidance": {},
+  "guidanceMeta": {
+   "source": "公司不給季度營收或營業利益指引（2026Q2 財報新聞稿與法說）；只給全年資本支出 195–205B [Interested-party]",
+   "tag": "Interested-party"
+  },
+  "periodGuidance": {
+   "0": {
+    "capex": {
+     "range": [
+      195,
+      205
+     ],
+     "less": 80.598
+    }
+   }
+  },
+  "periodGuidanceNote": "2026 全年資本支出指引 195–205（法說二手逐字稿；2026-07 上修）− 上半年實際＝下半年隱含指引 [Derived]；公司未給營收指引；只用於判斷季度差距是否為「拆法」",
+  "consistency": [
+   [
+    "quarterly.periodGuidance.0.capex.range.0",
+    "callFacts.capexLo"
+   ],
+   [
+    "quarterly.periodGuidance.0.capex.range.1",
+    "callFacts.capexHi"
+   ],
+   [
+    "quarterly.periodGuidance.0.capex.less",
+    "ytdActual.capex"
+   ],
+   [
+    "quarterly.revenueAnchor.value",
+    "latestQuarter.revenue"
+   ]
+  ],
+  "actuals": {
+   "2026Q3": {
+    "revenue": null,
+    "adjEbitda": null,
+    "adjOpInc": null,
+    "capex": null,
+    "mw": null,
+    "source": null,
+    "date": null,
+    "tag": null
+   },
+   "2026Q4": {
+    "revenue": null,
+    "adjEbitda": null,
+    "adjOpInc": null,
+    "capex": null,
+    "mw": null,
+    "source": null,
+    "date": null,
+    "tag": null
+   },
+   "2027Q1": {
+    "revenue": null,
+    "adjEbitda": null,
+    "adjOpInc": null,
+    "capex": null,
+    "mw": null,
+    "source": null,
+    "date": null,
+    "tag": null
+   },
+   "2027Q2": {
+    "revenue": null,
+    "adjEbitda": null,
+    "adjOpInc": null,
+    "capex": null,
+    "mw": null,
+    "source": null,
+    "date": null,
+    "tag": null
+   },
+   "2027Q3": {
+    "revenue": null,
+    "adjEbitda": null,
+    "adjOpInc": null,
+    "capex": null,
+    "mw": null,
+    "source": null,
+    "date": null,
+    "tag": null
+   },
+   "2027Q4": {
+    "revenue": null,
+    "adjEbitda": null,
+    "adjOpInc": null,
+    "capex": null,
+    "mw": null,
+    "source": null,
+    "date": null,
+    "tag": null
+   }
+  },
+  "capexSplit": "guidanceAnchor",
+  "guidanceText": {}
+ },
+ "varianceReasons": {
+  "_note": "差異原因（已決定事項 2）：差距超過 methodology.consensusGapTol 的項目必須有原因。「拆法」由程式依條件判定（單季差距超過門檻、所屬期間合計在門檻內）；其餘寫在這裡。{路徑:格式} 由模型數字帶入。",
+  "list": [
+   {
+    "scope": "quarter",
+    "period": "*",
+    "metric": "revenue",
+    "vs": "*",
+    "type": "觀點",
+    "text": "營收＝對外 AI 雲端（在役 MW × 每 MW 年收入，Tokenomics × k）＋各分部依近四季年增率收斂；年度總額線性分到各季，未建模第四季季節性"
+   },
+   {
+    "scope": "quarter",
+    "period": "*",
+    "metric": "adjEbitda",
+    "vs": "*",
+    "type": "觀點",
+    "text": "模型 EBITDA 率 {q.ebitdaMargin:%1}；EBITDA＝分部營業利益＋分攤 D&A 與 AI 雲端 Tokenomics 由下而上營運成本"
+   },
+   {
+    "scope": "quarter",
+    "period": "*",
+    "metric": "adjOpInc",
+    "vs": "*",
+    "type": "觀點",
+    "text": "模型折舊 {q.da:2} 依期初 PP&E 與資本支出推算；營業利益＝EBITDA − 折舊，年度總額線性分到各季"
+   },
+   {
+    "scope": "quarter",
+    "period": "*",
+    "metric": "capex",
+    "vs": "*",
+    "type": "觀點",
+    "text": "首期資本支出＝2026 指引中點 200 − 上半年實際；之後由 MW 推導（Tokenomics 每 MW 成本）"
+   },
+   {
+    "scope": "annual",
+    "period": "*",
+    "metric": "rev",
+    "vs": "consensus",
+    "type": "觀點",
+    "text": "營收＝對外 AI 雲端（年底 {y.accepted:0} MW-IT × 每 MW 年收入，Tokenomics × k）＋搜尋／YouTube／聯播網／訂閱／Cloud 非 AI／TPU 銷售（近四季年增率收斂到長期值）；共識未揭露 MW 與單價假設"
+   },
+   {
+    "scope": "annual",
+    "period": "*",
+    "metric": "ebitda",
+    "vs": "consensus",
+    "type": "觀點",
+    "text": "營收差距 {gap.rev:gap}；EBITDA 率 {m.ebM:%1} 對共識 {c.ebM:%1}（分部 EBITDA＝營業利益＋按營收分攤折舊，近四季收斂到近三年平均；含 Alphabet 層級費用與 Other Bets 虧損；AI 雲端以 Tokenomics 營運成本推得；共識 EBITDA（MarketScreener）含加回 SBC，模型不加回）"
+   },
+   {
+    "scope": "annual",
+    "period": "*",
+    "metric": "capex",
+    "vs": "consensus",
+    "type": "觀點",
+    "text": "CapEx：首期取公司指引中點 200；公司 2027 只說「顯著增加」、無數字 → 依新增 AI MW（{y.mwNew:0} MW-IT 對外）÷ 對外比例 × 每 MW ${y.costMW:0}m＋非 AI 強度推導；基準情境的新增速度由 2026 指引解出（C10），之後各年資本支出＝MW 路徑 × 每 MW 成本；共識 2027 301.0"
+   },
+   {
+    "scope": "annual",
+    "period": "*",
+    "metric": "nd",
+    "vs": "consensus",
+    "type": "觀點",
+    "text": "淨負債隨 CapEx、投資與融資瀑布而定（模型 CapEx 差距 {gap.capex:gap}）；共識淨負債不含租賃"
+   }
+  ]
+ },
+ "texts": {
+  "fy0EquityNote": "«P0»＝«YTD» 股權 49.6（普通股 30.5＋強制轉換特別股 19.1）＋«STUB» 期後股權 0（瀑布另計）",
+  "cashTaxNote": "«YTD» 現金稅未揭露（10-K 2025 全年 21.5）；現金稅率取 2025 有效稅率 16.8%",
+  "sourceLine": "2026Q2 10-Q（2026-07-23）＋財報新聞稿與法說（2026-07-22）· 口徑分層",
+  "mwYearEndNotes": {
+   "2023": "2023 年底對外 AI MW-IT 估 191（Epoch：TPU 287＋NVIDIA 98 MW TDP × 1.65 × 對外 30%，[Derived／Assumed]；只用於 GPU 汰換批次）",
+   "2024": "2024 年底對外 AI MW-IT 估 643（Epoch：TPU 991＋NVIDIA 307 MW TDP × 1.65 × 30%，[Derived／Assumed]）",
+   "2025": "2025 年底對外 AI MW-IT 估 1462（Epoch：TPU 2,223＋NVIDIA 730 MW TDP × 1.65 × 30%＝AI 在役 4,873 × 30%，[Derived／Assumed]）"
+  },
+  "thesis": "AI 資本支出有沒有賺到資金成本：每 MW 收入能否覆蓋每 MW 全成本",
+  "guideLine": "2026 公司指引：資本支出 $195–205B（2026-07 上修自 180–190；初次 175–185）；2027 資本支出「顯著增加」（無數字）；不給營收或營業利益指引 [Interested-party]",
+  "taxNote": "2025 有效稅率 16.8%（2024 16.4%）；2026 上半年 19.1% 含權益證券未實現利益的遞延稅，不作基準（v0.1a 建議）",
+  "revMwCompare": "Alphabet 對照值：Anthropic–Google Cloud ≥111.1B（2026-04～2033-07，容量 1.0–1.54 GW [Assumed]）隱含 10.0–15.3 US$m/MW-年，只作對照",
+  "rpoNote": "RPO 519.5B（Cloud 513.9B；24 個月內略多於 50%，其後未分桶）含 Cloud 非 AI 與 Workspace，只作對照（模型排程歸 0：AI 雲端收入＝MW × 每 MW）",
+  "leaseNote": "Alphabet 資料中心以自建為主、兼有租賃（營業租賃負債 18.0B 對 PP&E 321.2B）；尚未起租租賃 85.2B（主要為資料中心）；另以信用衍生工具擔保第三方資料中心 43.8B（或有負債，不建模）",
+  "offBalanceLeaseTerm": "起租 2026–2031、不可取消期 1–26 年；逐年付款未揭露",
+  "leaseLiabNote": "10-Q 附註 4；營業租賃加權平均折現率 3.8%、剩餘 8.4 年",
+  "capexGuideSource": "法說會（2026-07-22，二手逐字稿 Benzinga／W.Media 同數字）；新聞稿與 10-Q 未列金額 [Interested-party]",
+  "prepayCheck": "不適用（Alphabet 無客戶預付融資）。",
+  "mwFacts": "公司：未揭露 MW／GW；「serving 容量每 6 個月倍增」（內部簡報轉述）。第三方：Epoch AI 2025 年底 Google 擁有 TPU 614 萬顆（2,223 MW TDP）＋NVIDIA 82 萬顆（730 MW）→ AI 在役 IT 4.1–5.6 GW；Google 2026 環境報告 2025 資料中心用電 42.4 TWh（平均 4.84 GW 設施，全部工作負載）[第三方／Interested-party]。",
+  "ebStartSource": "AI 雲端 EBITDA 率＝1 − Tokenomics 加權每 MW 營運成本 ÷ 每 MW 年收入",
+  "costMwNote": "每 MW 成本＝Σ 新增世代占比 × (TK_CapexIT＋自建比例 85% × TK_CapexFacility)（Tokenomics v5.31；US$m/MW-IT；TPU 以同期 NVIDIA 世代代理，C2）",
+  "ppeOpenNote": "評價日 PP&E 淨額 321.2（10-Q；技術基礎設施在役原值 247.2、尚未啟用 122.8）[Interested-party]；D&A 分池：AI 期初毛額估計（評價日 AI 總 MW × Tokenomics 每 MW 成本）＋非 AI（其餘，壽命以最新季折舊年化校準）",
+  "facilityName": "信用額度 11.7B（已動用 1.3B）；商業本票額度 25B 未動用",
+  "newDebtRateNote": "瀑布新債利率取 2026-08 美元票據 2066 發行殖利率 6.527%（T＋130bp）上下的 2026 新債加權票面約 4.8%（美元）[Derived]",
+  "concentration": {
+   "title": "客戶集中：Anthropic 對 Google Cloud 承諾 ≥111.1B，約占 RPO 21%",
+   "detail": "Anthropic 招股書草稿（Reuters 轉述，二手）：對 Google 雲端承諾 ≥111.1B（2026-04～2033-07），約占 RPO 519.5B 的 21%；另經 Broadcom 取得次世代 TPU 3.5 GW（2027 起，可能為硬體銷售／租賃）。Alphabet 同時持有 Anthropic 約 12.5% 股權（持股與關聯方頁），並以信用衍生工具擔保相關第三方機房。"
+  },
+  "sharesNote": "流通股 12.230bn（A 5.868／B 0.835／C 5.527；10-Q 封面 2026-07-15）；評價股數取 Q2 稀釋加權 12.309bn（含 RSU 稀釋）",
+  "netDebtNote": "不含租賃與強制轉換特別股（債務面額 101.1 − 現金 55.9 − 債權類有價證券 99.5；有價權益證券改列持股；不含期後發債 25.0B）",
+  "otherRevNote": "非算力服務預設 0（各分部另列）",
+  "rvRevNote": "Alphabet 對照：Anthropic–Google Cloud 合約隱含 10.0–15.3 US$m/MW-年",
+  "rvCostNote": "Tokenomics 每 MW 全成本（IT＋自建 85% 機房）2026 約 $43.0m → 2028 起 $48.4m/MW-IT（v5.31；新增世代由 Ironwood／GB300 轉向下一代／VR200）",
+  "priceNote": "每 MW 年收入＝Tokenomics 持有成本（世代加權；TPU 以同期 NVIDIA 世代代理）× k；價格軸低／基準／高見 pricing；不建模續約價格",
+  "prepayCoverNote": "不適用（無客戶預付）",
+  "prepayOpenNote": "不適用（無客戶預付）",
+  "ytdEquityNote": "2026-06 股權募資：普通股承銷 20.5B＋Berkshire 私募 10.0B＋6.25% 強制轉換特別股 19.0B（淨）；ATM 40B 用於員工獎酬代扣稅（未建模）",
+  "prepayRiskNote": "不適用（Alphabet 無客戶預付）。",
+  "consistencyTitle": "新聞稿／法說 vs 季報 vs 期後公告：一致、未量化、含糊",
+  "callVsFiling": [
+   [
+    "RPO",
+    "「Cloud 積壓 514B」",
+    "RPO 519.5B（Cloud 513.9B；24 個月內略多於 50%）",
+    "RPO 只作對照；營收由 MW × 每 MW 與各分部驅動"
+   ],
+   [
+    "期初現金",
+    "未提",
+    "現金 55.9、有價證券 186.6（其中有價權益證券 87.1，主要為 SpaceX）",
+    "期初用現金＋債權類有價證券 155.4；有價權益證券列持股"
+   ],
+   [
+    "2026 CapEx",
+    "$195–205B（上修自 180–190）",
+    "上半年購置不動產與設備 80.6",
+    "首期＝指引中點 200 − 80.6；基準 MW 速度由此解出（C10）"
+   ],
+   [
+    "AI 容量",
+    "未揭露 MW；「供不應求」",
+    "未揭露 MW",
+    "第三方估計（Epoch AI）；不以營收反推"
+   ],
+   [
+    "在帳租賃",
+    "未量化",
+    "營業租賃負債 18.0、融資租賃 2.6；未折現 24.3",
+    "聽季報到期表，固定輸入"
+   ],
+   [
+    "表外租賃",
+    "未提金額",
+    "尚未起租 85.2（2026–2031 起租）＋短期 5.8",
+    "平均分 22 季起租、15 年；短期推定為 SpaceX 合約"
+   ],
+   [
+    "債務",
+    "期後發債 25.0B",
+    "長期債面額 101.1（半年內由 49.1 翻倍）",
+    "10 檔＋其他；到期由瀑布再融資"
+   ],
+   [
+    "股權",
+    "「目前不打算再回到股權市場」",
+    "2026-06 股權淨額 49.6；ATM 40B 未用",
+    "首期股權為實際；之後由瀑布決定"
+   ]
+  ],
+  "commitments": [
+   [
+    "長期債（10 檔票據＋其他，評價日）",
+    "101.09",
+    "2026H2 2.0、2027 1.0、2028 2.7、2029 1.8、2030 7.2；其後 86.5（推估）",
+    "是（帳面 100.2）",
+    "排程還本（由瀑布再融資）"
+   ],
+   [
+    "在帳營業＋融資租賃（未折現）",
+    "24.25",
+    "2026H2 2.0／2027 3.9／之後遞減／其後 9.7",
+    "是（PV 20.6）",
+    "在帳現金租金（固定）"
+   ],
+   [
+    "尚未起租租賃（未折現）",
+    "85.20",
+    "2026–2031 起租；逐年付款未揭露",
+    "否",
+    "表外現金租金"
+   ],
+   [
+    "SpaceX 算力租約",
+    "30.36",
+    "2026-10～2029-06，每月 0.92；2026 年底後可 90 天解約",
+    "否",
+    "租用算力（營運成本）"
+   ],
+   [
+    "重大採購承諾",
+    "811.00",
+    "短期 200.7；長期 707.0 多在 2030 前",
+    "否",
+    "已含在 CapEx 與 EBITDA（不另列）"
+   ],
+   [
+    "Anthropic 條件式出資",
+    "20.00",
+    "至 2030",
+    "否",
+    "投資現金流（jvCommit 平均分攤）"
+   ],
+   [
+    "第三方資料中心信用擔保",
+    "43.79",
+    "最長 15 年",
+    "否",
+    "或有負債（不建模）"
+   ]
+  ],
+  "consistency": [
+   [
+    "2026 CapEx $195–205B",
+    "法說二手逐字稿",
+    "上半年 80.6",
+    "只有二手來源；首期依中點"
+   ],
+   [
+    "Cloud 營收 +82%、利潤率 35.6%",
+    "法說",
+    "10-Q 分部 24.8／8.8",
+    "一致"
+   ],
+   [
+    "2027 CapEx「顯著增加」",
+    "法說",
+    "無",
+    "無數字；基準由 MW 推導（共識 301.0 對照）"
+   ],
+   [
+    "FCF",
+    "「持續承壓」",
+    "2026Q2 FCF −5.9（公司定義，首次轉負）",
+    "模型五期 FCF 另列"
+   ]
+  ],
+  "sources": [
+   [
+    "Interested-party",
+    "2026Q2 10-Q（2026-07-23，核閱、未查核）：上半年營收 229.7（搜尋 123.7、YouTube 20.9、聯播網 14.3、訂閱平台裝置 25.3、Cloud 44.8、Other Bets 0.8）；營業利益 80.5；折舊 13.6；SBC 14.7；利息費用 1.8；淨利 174.8（含權益證券利益 135.9）。"
+   ],
+   [
+    "Interested-party",
+    "資產負債（2026-06-30）：現金 55.9、有價證券 186.6（有價權益證券 87.1）；PP&E 淨額 321.2；長期債面額 101.1；營業租賃負債 18.0、融資租賃 2.6；尚未起租租賃 85.2；股東權益 640.5。"
+   ],
+   [
+    "Interested-party",
+    "現金流（上半年）：CFO 84.9；資本支出 80.6；非上市投資與收購 55.4；發債 56.2、償還 5.3；股權 49.6；股利 5.2；無買回。"
+   ],
+   [
+    "Interested-party",
+    "RPO 519.5B（Cloud 513.9B）。2026 指引：資本支出 195–205（法說）；2027「顯著增加」。"
+   ],
+   [
+    "Verified",
+    "2025 10-K（經查核）：營收 402.8、營業利益 129.0、淨利 132.2；折舊 21.1；資本支出 91.4；回購 45.7；股利 10.0。"
+   ]
+  ],
+  "headerCards": [
+   [
+    "產能",
+    "AI 在役 MW 未揭露 · Epoch 估 2025 年底 4.1–5.6 GW（TPU 為主）· 對外比例 30% [Assumed]"
+   ],
+   [
+    "合約",
+    "Anthropic ≥111.1B（Google Cloud）· RPO 519.5B · SpaceX 租入算力 9.2 億／月"
+   ],
+   [
+    "年度指引",
+    "2026 資本支出 195–205 · 2027「顯著增加」· 不給營收指引"
+   ]
+  ],
+  "legacyMarginNote": "分部 EBITDA 率＝(分部營業利益＋折舊按營收分攤) ÷ 營收（Services 四線拆分 [Assumed]、搜尋為殘差；近四季 m0 → 2023–2025 平均 mLT）；Cloud 非 AI＝殘差（Cloud EBITDA − AI 雲端 EBITDA 估計）；含 Alphabet 層級費用與 Other Bets 虧損，[Derived]",
+  "scenarioTip": "三個情境只改容量軸（對外 AI MW 路徑，對照表 r1 第 5 節第 1 條）：保守＝只加已公開在建（Anthropic、Blackstone 合資）；基準＝依 2026 資本支出指引隱含的建置量（C10）；積極＝基準 × 1.5（2027 擴張幅度）。價格軸（k 低／基準／高）另列 3 × 3 矩陣，三容量情境都用基準 k。毛 CapEx 由 MW 公式自動增減。切換情境只改寫 MW 路徑與預建 MW；你手動調整的其他數字會保留，按頁首「重設」才回到預設值。",
+  "ebitdaPathTip": "AI 雲端 EBITDA 率＝1 − Tokenomics 每 MW 營運成本 ÷ 每 MW 年收入（由下而上，[Derived]），不取可比公司區間；租金另列現金支出，不加回。",
+  "ebitdaPathLine": "損益與資金共用；AI 雲端 EBITDA 率由 Tokenomics 營運成本推得"
+ },
+ "mag": {
+  "_readme": "Alphabet MAG 資料草稿（v0.1a 產出；v0.1b′ 已依 mapTo 搬入 MAG 共用引擎欄位，本區段只作對照與敏感度區間）。v0.1b′ 套用 Amazon 的 MAG 共用引擎時，依 mapTo 搬入對應欄位。金額單位 US$bn（每股 US$、MW 為 MW-IT、股數 bn 股）；每欄 value＋unit＋ref（data/alphabet_facts_20261008.json 的 id；k 證據另見 data/kevidence_alphabet_20261008.json）＋mapTo。區間欄位為 {low, base, high}。",
+  "files": {
+   "facts": "data/alphabet_facts_20261008.json",
+   "kEvidence": "data/kevidence_alphabet_20261008.json",
+   "tokenomicsSnapshot": "data/tokenomics_snapshot_v5.27.json",
+   "tokenomicsNames": "data/tokenomics_names.txt",
+   "consensus": "data/consensus_googl_20261008.json"
+  },
+  "calendar": {
+   "latestQuarterFiled": {
+    "value": "2026Q2",
+    "unit": "季",
+    "ref": "rpo.2026q2",
+    "mapTo": "calendar.latestQuarterFiled（日曆年，fiscalYearEndMonth＝12）",
+    "note": "2026Q3 財報約 2026-10 下旬；若建置時已公布，改以 Q3 為首期（對照表 5.12）"
+   },
+   "ytdMonths": {
+    "value": 6,
+    "unit": "月",
+    "ref": "is.rev.total.2026q2",
+    "mapTo": "ytdActual.months；首期＝2026H1 實際＋H2 模型（0.5 年），期間 2026–2030"
+   }
+  },
+  "segments": {
+   "search": {
+    "value": {
+     "last4Q": [
+      56.567,
+      63.073,
+      60.399,
+      63.271
+     ],
+     "ttm": 243.31,
+     "ttmYoY": 0.168,
+     "q2YoY": 0.1676
+    },
+    "unit": "US$bn（2025Q3–2026Q2）",
+    "ref": [
+     "is.rev.search.2025q3",
+     "is.rev.search.2025q4",
+     "is.rev.search.2026q1",
+     "is.rev.search.2026q2"
+    ],
+    "mapTo": "非雲端分部線（D4，最多 6 線）：搜尋與其他；成長率由近四季年增收斂到長期值（對照表 5.5）"
+   },
+   "youtube": {
+    "value": {
+     "last4Q": [
+      10.261,
+      11.383,
+      9.883,
+      11.055
+     ],
+     "ttm": 42.582,
+     "ttmYoY": 0.1171,
+     "q2YoY": 0.1285
+    },
+    "unit": "US$bn（2025Q3–2026Q2）",
+    "ref": [
+     "is.rev.yt.2025q3",
+     "is.rev.yt.2025q4",
+     "is.rev.yt.2026q1",
+     "is.rev.yt.2026q2"
+    ],
+    "mapTo": "非雲端分部線（D4，最多 6 線）：YouTube 廣告；成長率由近四季年增收斂到長期值（對照表 5.5）"
+   },
+   "network": {
+    "value": {
+     "last4Q": [
+      7.354,
+      7.828,
+      6.971,
+      7.303
+     ],
+     "ttm": 29.456,
+     "ttmYoY": -0.0218,
+     "q2YoY": -0.0069
+    },
+    "unit": "US$bn（2025Q3–2026Q2）",
+    "ref": [
+     "is.rev.network.2025q3",
+     "is.rev.network.2025q4",
+     "is.rev.network.2026q1",
+     "is.rev.network.2026q2"
+    ],
+    "mapTo": "非雲端分部線（D4，最多 6 線）：聯播網；成長率由近四季年增收斂到長期值（對照表 5.5）"
+   },
+   "subsPlatformsDevices": {
+    "value": {
+     "last4Q": [
+      12.87,
+      13.578,
+      12.384,
+      12.911
+     ],
+     "ttm": 51.743,
+     "ttmYoY": 0.1794,
+     "q2YoY": 0.1525
+    },
+    "unit": "US$bn（2025Q3–2026Q2）",
+    "ref": [
+     "is.rev.subs.2025q3",
+     "is.rev.subs.2025q4",
+     "is.rev.subs.2026q1",
+     "is.rev.subs.2026q2"
+    ],
+    "mapTo": "非雲端分部線（D4，最多 6 線）：訂閱、平台與裝置；成長率由近四季年增收斂到長期值（對照表 5.5）"
+   },
+   "cloud": {
+    "value": {
+     "last4Q": [
+      15.157,
+      17.664,
+      20.028,
+      24.768
+     ],
+     "ttm": 77.617,
+     "ttmYoY": 0.5778,
+     "q2YoY": 0.818
+    },
+    "unit": "US$bn（2025Q3–2026Q2）",
+    "ref": [
+     "is.rev.cloud.2025q3",
+     "is.rev.cloud.2025q4",
+     "is.rev.cloud.2026q1",
+     "is.rev.cloud.2026q2"
+    ],
+    "mapTo": "雲端分部（拆 AI／非 AI 的對象，見 mag.split）"
+   },
+   "otherBets": {
+    "value": {
+     "last4Q": [
+      0.344,
+      0.37,
+      0.411,
+      0.382
+     ],
+     "ttm": 1.507,
+     "ttmYoY": -0.0646,
+     "q2YoY": 0.0241
+    },
+    "unit": "US$bn（2025Q3–2026Q2）",
+    "ref": [
+     "is.rev.ob.2025q3",
+     "is.rev.ob.2025q4",
+     "is.rev.ob.2026q1",
+     "is.rev.ob.2026q2"
+    ],
+    "mapTo": "非雲端分部線（D4，最多 6 線）：Other Bets；成長率由近四季年增收斂到長期值（對照表 5.5）"
+   }
+  },
+  "segmentOpInc": {
+   "googleServices": {
+    "value": {
+     "last4Q": [
+      33.527,
+      40.132,
+      40.589,
+      39.544
+     ],
+     "ttm": 153.792
+    },
+    "unit": "US$bn",
+    "ref": [
+     "is.ebit.gs.2025q3",
+     "is.ebit.gs.2025q4",
+     "is.ebit.gs.2026q1",
+     "is.ebit.gs.2026q2"
+    ],
+    "mapTo": "分部 EBITDA 率＝營業利益＋分攤 D&A（公司未揭露分部 D&A → 依營收或資產比例分攤並標 [Derived]）；Alphabet 層級費用（共用 AI 研發）列一線、不分攤或依 D6 另議"
+   },
+   "googleCloud": {
+    "value": {
+     "last4Q": [
+      3.594,
+      5.313,
+      6.598,
+      8.814
+     ],
+     "ttm": 24.319
+    },
+    "unit": "US$bn",
+    "ref": [
+     "is.ebit.cloud.2025q3",
+     "is.ebit.cloud.2025q4",
+     "is.ebit.cloud.2026q1",
+     "is.ebit.cloud.2026q2"
+    ],
+    "mapTo": "分部 EBITDA 率＝營業利益＋分攤 D&A（公司未揭露分部 D&A → 依營收或資產比例分攤並標 [Derived]）；Alphabet 層級費用（共用 AI 研發）列一線、不分攤或依 D6 另議"
+   },
+   "otherBets": {
+    "value": {
+     "last4Q": [
+      -1.426,
+      -3.617,
+      -2.1,
+      -1.799
+     ],
+     "ttm": -8.942
+    },
+    "unit": "US$bn",
+    "ref": [
+     "is.ebit.ob.2025q3",
+     "is.ebit.ob.2025q4",
+     "is.ebit.ob.2026q1",
+     "is.ebit.ob.2026q2"
+    ],
+    "mapTo": "分部 EBITDA 率＝營業利益＋分攤 D&A（公司未揭露分部 D&A → 依營收或資產比例分攤並標 [Derived]）；Alphabet 層級費用（共用 AI 研發）列一線、不分攤或依 D6 另議"
+   },
+   "alphabetLevel": {
+    "value": {
+     "last4Q": [
+      -4.467,
+      -5.894,
+      -5.391,
+      -5.789
+     ],
+     "ttm": -21.541
+    },
+    "unit": "US$bn",
+    "ref": [
+     "is.ebit.abc.2025q3",
+     "is.ebit.abc.2025q4",
+     "is.ebit.abc.2026q1",
+     "is.ebit.abc.2026q2"
+    ],
+    "mapTo": "分部 EBITDA 率＝營業利益＋分攤 D&A（公司未揭露分部 D&A → 依營收或資產比例分攤並標 [Derived]）；Alphabet 層級費用（共用 AI 研發）列一線、不分攤或依 D6 另議"
+   },
+   "total": {
+    "value": {
+     "last4Q": [
+      31.228,
+      35.934,
+      39.696,
+      40.77
+     ],
+     "ttm": 147.628
+    },
+    "unit": "US$bn",
+    "ref": [
+     "is.ebit.total.2025q3",
+     "is.ebit.total.2025q4",
+     "is.ebit.total.2026q1",
+     "is.ebit.total.2026q2"
+    ],
+    "mapTo": "分部 EBITDA 率＝營業利益＋分攤 D&A（公司未揭露分部 D&A → 依營收或資產比例分攤並標 [Derived]）；Alphabet 層級費用（共用 AI 研發）列一線、不分攤或依 D6 另議"
+   },
+   "annual": {
+    "value": {
+     "2023": {
+      "gs": 95.858,
+      "cloud": 1.716,
+      "ob": -4.095,
+      "abc": -9.186
+     },
+     "2024": {
+      "gs": 121.263,
+      "cloud": 6.112,
+      "ob": -4.444,
+      "abc": -10.541
+     },
+     "2025": {
+      "gs": 139.404,
+      "cloud": 13.91,
+      "ob": -7.515,
+      "abc": -16.76
+     }
+    },
+    "unit": "US$bn",
+    "ref": [
+     "is.ebit.gs.fy2025",
+     "is.ebit.cloud.fy2025",
+     "is.ebit.ob.fy2025",
+     "is.ebit.abc.fy2025"
+    ],
+    "mapTo": "historicalPL；長期 EBITDA 率收斂到近三年平均（對照表 5.5）"
+   }
+  },
+  "pl": {
+   "da": {
+    "value": {
+     "last4Q": [
+      5.611,
+      6.04,
+      6.482,
+      7.104
+     ],
+     "fy2025": 21.136,
+     "h1_2026": 13.586
+    },
+    "unit": "US$bn",
+    "ref": [
+     "cf.dep.2025q3",
+     "cf.dep.2025q4",
+     "cf.dep.2026q1",
+     "cf.dep.2026q2",
+     "cf.dep.fy2025"
+    ],
+    "mapTo": "D&A（只有折舊；無形資產攤銷未另列，Wiz 後增加）"
+   },
+   "sbc": {
+    "value": {
+     "ttm": 28.147,
+     "fy2025": 24.953
+    },
+    "unit": "US$bn",
+    "ref": [
+     "cf.sbc.2025q3",
+     "cf.sbc.2025q4",
+     "cf.sbc.2026q1",
+     "cf.sbc.2026q2",
+     "cf.sbc.fy2025"
+    ],
+    "mapTo": "對照（EBITDA 口徑：共識 EBITDA 含加回 SBC）"
+   },
+   "interestExpense": {
+    "value": {
+     "last4Q": [
+      0.143,
+      0.298,
+      0.533,
+      1.278
+     ],
+     "fy2025": 0.736
+    },
+    "unit": "US$bn",
+    "ref": [
+     "is.intExp.2025q3",
+     "is.intExp.2025q4",
+     "is.intExp.2026q1",
+     "is.intExp.2026q2",
+     "is.intExp.fy2025"
+    ],
+    "mapTo": "存量利息校準（債務 2026H1 由 49 → 101B 面額）"
+   },
+   "taxRate": {
+    "value": {
+     "fy2025": 0.168,
+     "fy2024": 0.164,
+     "h1_2026": 0.191
+    },
+    "unit": "比例",
+    "ref": [
+     "is.taxRate.fy2025",
+     "is.taxRate.fy2024",
+     "is.taxRate.h1_2026"
+    ],
+    "mapTo": "valuation.taxRate（建議 16.8%；2026H1 19.1% 受未實現利益遞延稅影響）"
+   },
+   "equityGainsH1": {
+    "value": 135.946,
+    "unit": "US$bn",
+    "ref": [
+     "is.eqGain.2026q1",
+     "is.eqGain.2026q2"
+    ],
+    "mapTo": "營業外一次性：不進營運現金與 EBITDA；EPS 對照共識需排除"
+   }
+  },
+  "cashflow": {
+   "cfo": {
+    "value": {
+     "last4Q": [
+      48.414,
+      52.402,
+      45.79,
+      39.069
+     ],
+     "ttm": 185.675,
+     "fy2025": 164.713
+    },
+    "unit": "US$bn",
+    "ref": [
+     "cf.cfo.2025q3",
+     "cf.cfo.2025q4",
+     "cf.cfo.2026q1",
+     "cf.cfo.2026q2",
+     "cf.cfo.fy2025"
+    ],
+    "mapTo": "ytdActual／historicalPL 營運現金流"
+   },
+   "capex": {
+    "value": {
+     "last4Q": [
+      23.953,
+      27.851,
+      35.674,
+      44.924
+     ],
+     "ttm": 132.402,
+     "fy2025": 91.447,
+     "h1_2026": 80.598
+    },
+    "unit": "US$bn",
+    "ref": [
+     "cf.capex.2025q3",
+     "cf.capex.2025q4",
+     "cf.capex.2026q1",
+     "cf.capex.2026q2",
+     "cf.capex.fy2025"
+    ],
+    "mapTo": "ytdActual.capex；首期＝H1 實際 80.6＋H2 指引隱含 119.4（中點）"
+   },
+   "fcf": {
+    "value": {
+     "last4Q": [
+      24.461,
+      24.551,
+      10.116,
+      -5.855
+     ],
+     "ttm": 53.273
+    },
+    "unit": "US$bn",
+    "ref": [
+     "cf.fcf.2025q3",
+     "cf.fcf.2025q4",
+     "cf.fcf.2026q1",
+     "cf.fcf.2026q2"
+    ],
+    "mapTo": "對照（主命題副題：FCF 轉負時點）"
+   },
+   "buybacks": {
+    "value": {
+     "last4Q": [
+      11.504,
+      5.499,
+      0.0,
+      0.0
+     ],
+     "ttm": 17.003,
+     "fy2025": 45.709
+    },
+    "unit": "US$bn",
+    "ref": [
+     "bb.paid.4q",
+     "cf.buyback.fy2025"
+    ],
+    "mapTo": "defaults 回購基準＝近四季實際年額 17.0（對照表 5.8）；2026H1 為 0"
+   },
+   "dividends": {
+    "value": {
+     "ttm": 10.304,
+     "fy2025": 10.049,
+     "dpsQ": 0.22
+    },
+    "unit": "US$bn；每股 US$",
+    "ref": [
+     "div.paid.2026h1",
+     "cf.div.fy2025",
+     "div.dps.2026"
+    ],
+    "mapTo": "股利列＝每股 × 股數，每股依近三年成長率（2024 開始配息：0.60 → 0.83 → 0.88 年化）"
+   },
+   "prefDividend": {
+    "value": 0.937,
+    "unit": "US$bn／年",
+    "ref": "div.pref.q",
+    "mapTo": "強制轉換特別股股利（每季 12.15 × 19.25M 股；2026-08-15 至 2029-05-15）"
+   }
+  },
+  "capexGuidance": {
+   "fy2026": {
+    "value": {
+     "low": 195.0,
+     "high": 205.0,
+     "mid": 200.0
+    },
+    "unit": "US$bn",
+    "ref": "guid.capex.2026.jul",
+    "mapTo": "D3 首期資本支出（實際＋指引中點）；指引歷程 175–185 → 180–190 → 195–205"
+   },
+   "fy2027": {
+    "value": "較 2026 顯著增加（無數字）；共識 301.0",
+    "unit": "文字／US$bn",
+    "ref": [
+     "guid.capex.2027",
+     "mkt.capex.cons"
+    ],
+    "mapTo": "D3 次期：無指引數字 → 以共識 301.0 作對照、MW 推導作主值（工作單未涵蓋時的預設，見報告「已套用的預設」）"
+   },
+   "mix": {
+    "value": {
+     "servers": 0.6,
+     "dcAndNetwork": 0.4
+    },
+    "unit": "比例",
+    "ref": "capex.mix.2026q2",
+    "mapTo": "資本支出拆分：伺服器 60%／機房與網路 40%（對帳列用）"
+   },
+   "consensus": {
+    "value": {
+     "fy2026": 201.748,
+     "fy2027": 300.979,
+     "fy2028": 339.451
+    },
+    "unit": "US$bn",
+    "ref": "mkt.capex.cons",
+    "mapTo": "對帳列與共識對照"
+   }
+  },
+  "balance": {
+   "cashAndSecurities": {
+    "value": 242.474,
+    "unit": "US$bn",
+    "ref": "bs.cashTotal.2026q2",
+    "mapTo": "latestQuarter 現金（含 SpaceX 有價股 80.0 → 淨現金計算需扣除，改列持股）",
+    "note": "現金 55.9＋有價證券 186.6（其中有價權益證券 87.1，主要為 SpaceX）"
+   },
+   "debtFace": {
+    "value": 101.085,
+    "unit": "US$bn",
+    "ref": "debt.face.2026q2",
+    "mapTo": "debt.instruments（分檔見總帳 debt.tranche*）；期後 2026-08 再發 25.0"
+   },
+   "debtPostQ": {
+    "value": 25.0,
+    "unit": "US$bn",
+    "ref": "debt.iss.202608",
+    "mapTo": "首期融資實際（期後）"
+   },
+   "commercialPaper": {
+    "value": 0.0,
+    "unit": "US$bn",
+    "ref": "debt.cp.2026q2",
+    "mapTo": "商業本票額度 25"
+   },
+   "leases": {
+    "value": {
+     "operating": 18.037,
+     "finance": 2.59,
+     "uncommenced": 85.2,
+     "uncommencedYears": "2026–2031 起租；1–26 年",
+     "shortTermNew": 5.8
+    },
+    "unit": "US$bn",
+    "ref": [
+     "lease.opLiab.2026q2",
+     "lease.finLiab.2026q2",
+     "lease.uncommenced.2026q2",
+     "rent.shortLease"
+    ],
+    "mapTo": "leases（未起租排程：2026–2031 平均分攤，期限取中位 15 年 [Assumed]）"
+   },
+   "rpo": {
+    "value": {
+     "total": 519.5,
+     "cloud": 513.9,
+     "within24m": 0.5
+    },
+    "unit": "US$bn；比例",
+    "ref": [
+     "rpo.2026q2",
+     "rpo.cloud.2026q2",
+     "rpo.share24m"
+    ],
+    "mapTo": "rpo（只作對照；不得反推 k）"
+   },
+   "purchaseCommitments": {
+    "value": {
+     "total": 811.0,
+     "shortTerm": 200.7
+    },
+    "unit": "US$bn",
+    "ref": "commit.purchase.2026q2",
+    "mapTo": "對照（供應協議至 2030）"
+   },
+   "backstops": {
+    "value": {
+     "creditDerivatives": 43.785,
+     "guarantees": 7.6
+    },
+    "unit": "US$bn",
+    "ref": [
+     "rent.creditBackstop.2026q2",
+     "rent.finGuarantee.2026q2"
+    ],
+    "mapTo": "或有負債對照（評等與槓桿敏感度）"
+   },
+   "rating": {
+    "value": "Aa2／AA+（穩定）",
+    "unit": "文字",
+    "ref": "debt.rating",
+    "mapTo": "融資瀑布投資級門檻對照"
+   }
+  },
+  "shares": {
+   "outstanding": {
+    "value": 12.23,
+    "unit": "bn 股",
+    "ref": "sh.out.20260715",
+    "mapTo": "latestQuarter.sharesOut"
+   },
+   "dilutedWeightedQ2": {
+    "value": 12.309,
+    "unit": "bn 股",
+    "ref": "sh.dilW.2026q2",
+    "mapTo": "對照"
+   },
+   "mcps": {
+    "value": {
+     "prefShares_m": 19.25,
+     "liquidation": 19.25,
+     "couponRate": 0.0625,
+     "conversionDate": "2029-05-15",
+     "convShares_bn": [
+      0.0436,
+      0.0546
+     ],
+     "cappedCallCap": [
+      532.67,
+      527.8
+     ]
+    },
+    "unit": "物件（US$bn、bn 股、US$）",
+    "ref": "eq.mcps.202606",
+    "mapTo": "強制轉換特別股（比照 Oracle 模組：2029-05 轉股、股權處理）"
+   },
+   "buybackAuthRemaining": {
+    "value": 69.5,
+    "unit": "US$bn",
+    "ref": "bb.auth.remaining.2026q2",
+    "mapTo": "回購上限對照"
+   },
+   "atm": {
+    "value": {
+     "capacity": 40.0,
+     "used": 0.0,
+     "purpose": "員工獎酬代扣稅（2026 約 30）"
+    },
+    "unit": "US$bn",
+    "ref": "eq.atm",
+    "mapTo": "defaults.atm（用途為代扣稅，非資本支出融資）"
+   },
+   "equityRaised2026": {
+    "value": 49.6,
+    "unit": "US$bn",
+    "ref": "eq.total.202606",
+    "mapTo": "ytdActual.equity（普通股 20.5＋Berkshire 10.0＋特別股 19.0，淨額）"
+   }
+  },
+  "ai": {
+   "mwInService": {
+    "value": {
+     "low": 5012,
+     "base": 6338,
+     "high": 7891
+    },
+    "unit": "MW-IT",
+    "ref": "mw.ai.it.2026q2",
+    "mapTo": "scenarios 期初 AI 在役 MW（自用＋對外；D3 第三方為主）"
+   },
+   "extShare": {
+    "value": {
+     "low": 0.25,
+     "base": 0.3,
+     "high": 0.4
+    },
+    "unit": "比例",
+    "ref": "mw.extShare",
+    "mapTo": "對外（計費）比例；自用部分只算影子收入（D2）"
+   },
+   "mwExternal": {
+    "value": {
+     "low": 1253,
+     "base": 1901,
+     "high": 3156
+    },
+    "unit": "MW-IT",
+    "ref": "mw.ext.it.2026q2",
+    "mapTo": "期初對外 AI MW（拆分試算與首期校準）"
+   },
+   "addPerYear": {
+    "value": {
+     "low": 2120,
+     "base": 2498,
+     "high": 2877
+    },
+    "unit": "MW-IT／年",
+    "ref": "mw.ai.add4q.it",
+    "mapTo": "基準情境：過去四季新增速度延續（對照表 5.1）"
+   },
+   "publicPipeline": {
+    "value": {
+     "anthropicGoogleCloud2026": 1000,
+     "blackstoneJV2027": 500
+    },
+    "unit": "MW",
+    "ref": [
+     "mw.anthropic.2026",
+     "mw.blackstone"
+    ],
+    "mapTo": "保守情境：已交付＋已公開在建"
+   },
+   "companyTarget": {
+    "value": "無 MW 目標；「serving 容量每 6 個月倍增」",
+    "unit": "文字",
+    "ref": "mw.company.target",
+    "mapTo": "積極情境：無公司 GW 目標 → 以資本支出指引與共識推導（見報告）"
+   },
+   "tpuShipments": {
+    "value": {
+     "fy2026": 3.2,
+     "fy2027": 5.0,
+     "fy2028": 7.0,
+     "cumulativeOwned2025Q4": 6.14
+    },
+    "unit": "百萬顆",
+    "ref": [
+     "tpu.ship.ms.2026",
+     "tpu.ship.ms.2027",
+     "tpu.ship.ms.2028",
+     "tpu.cum.epoch.2025q4"
+    ],
+    "mapTo": "對照（TPU 量 ↔ MW；Tokenomics 無 TPU 每 GW 晶片數）"
+   },
+   "envCheck": {
+    "value": {
+     "dcElecTWh2025": 42.4,
+     "avgFacilityMW2025": 4840
+    },
+    "unit": "TWh；MW",
+    "ref": [
+     "mw.env.dcElec.2025",
+     "mw.env.avgLoad.2025"
+    ],
+    "mapTo": "交叉檢查（全部工作負載上限）"
+   }
+  },
+  "perMw": {
+   "anchor": {
+    "value": {
+     "GB200": 9.171,
+     "GB300": 12.725,
+     "mix": "50/50",
+     "blended": 10.948
+    },
+    "unit": "US$m/MW-IT·年",
+    "ref": "split.permw.anchor",
+    "mapTo": "每 MW 年收入＝Σ 世代占比 × IF_HoldEcon/1000 × k（對照表 5.2；收入端不乘 IF_Util）"
+   },
+   "k": {
+    "value": {
+     "longTerm": {
+      "base": 0.75,
+      "low": 0.6,
+      "high": 1.0
+     },
+     "spot": {
+      "base": 2.0,
+      "low": 1.5,
+      "high": 3.0
+     },
+     "longShare": {
+      "base": 0.6,
+      "low": 0.4,
+      "high": 0.8
+     },
+     "blendBase": 1.25
+    },
+    "unit": "倍",
+    "ref": "k.recommend",
+    "mapTo": "scenarios.k（價格軸低／基準／高；3 × 3 矩陣）"
+   },
+   "tokenomics": {
+    "value": {
+     "file": "20261008_Tokenomics_v5.27.xlsx",
+     "commit": "ca78a8f",
+     "missing": [
+      "IF_NonNVOutRatio",
+      "IF_NonNVHoldRatio",
+      "IF_GPUhrEcon_TPU",
+      "IF_PUE"
+     ]
+    },
+    "unit": "物件",
+    "ref": "k.recommend",
+    "mapTo": "tokenomics.snapshotFile＝data/tokenomics_snapshot_v5.27.json"
+   }
+  },
+  "split": {
+   "cloudAnnualized": {
+    "value": 99.072,
+    "unit": "US$bn／年",
+    "ref": "split.cloudAnn",
+    "mapTo": "非 AI 雲端＝雲端分部實際 − AI 雲端模型值（D 5.3）"
+   },
+   "aiCloudBase": {
+    "value": 26.015,
+    "unit": "US$bn／年",
+    "ref": "split.aiCloud.base",
+    "mapTo": "首期對外 AI 雲端收入（校準起點）"
+   },
+   "nonAiBase": {
+    "value": 73.057,
+    "unit": "US$bn／年",
+    "ref": "split.nonAi.base",
+    "mapTo": "非 AI 雲端起始值（[Derived]）；年增 +34%（示警門檻見報告）"
+   }
+  },
+  "relatedParties": {
+   "anthropicStake": {
+    "value": {
+     "low": 0.11,
+     "base": 0.125,
+     "high": 0.14
+    },
+    "unit": "比例",
+    "ref": [
+     "rp.anthropic.stake.2025",
+     "rp.anthropic.stake.implied"
+    ],
+    "mapTo": "持股價值＝比例 × 投後估值 ×（1 − 流動性折價 20%）（對照表 5.9）"
+   },
+   "anthropicPostMoney": {
+    "value": 965.0,
+    "unit": "US$bn",
+    "ref": "rp.anthropic.val.seriesH",
+    "mapTo": "同上"
+   },
+   "anthropicCommitment": {
+    "value": {
+     "total": 40.0,
+     "funded": 20.0,
+     "remainingContingent": 20.0
+    },
+    "unit": "US$bn",
+    "ref": [
+     "rp.anthropic.commit",
+     "rent.vieFunding.2026q2"
+    ],
+    "mapTo": "剩餘 20.0 條件式出資列為未來投資現金流（至 2030）"
+   },
+   "anthropicCloudCommit": {
+    "value": {
+     "google": 111.1,
+     "period": "2026-04～2033-07",
+     "rpoShare": 0.216
+    },
+    "unit": "US$bn；比例",
+    "ref": [
+     "rp.anthropic.cloudCommit",
+     "rp.anthropic.rpoShare"
+    ],
+    "mapTo": "對手方集中度（D5）"
+   },
+   "anthropicSpendPath": {
+    "value": {
+     "googleCloudTPU": [
+      7.407,
+      14.81,
+      14.81,
+      14.81,
+      14.81
+     ],
+     "googleBroadcomTPU": [
+      0.0,
+      13.91,
+      27.82,
+      27.82,
+      27.82
+     ]
+    },
+    "unit": "US$bn（2026–2030）",
+    "ref": "rp.anthropic.spendPath",
+    "mapTo": "並排對照，不回饋（D5、對照表 5.11）"
+   },
+   "spacexHolding": {
+    "value": 94.1,
+    "unit": "US$bn",
+    "ref": "rp.spacex.holding.2026q2",
+    "mapTo": "持股分部加總項（上市股，不扣流動性折價；限售期另註）"
+   }
+  },
+  "rentals": {
+   "spacex": {
+    "value": {
+     "monthly": 0.92,
+     "start": "2026-10",
+     "end": "2029-06",
+     "gpus": 110000,
+     "mw": {
+      "low": 153,
+      "base": 219,
+      "high": 226
+     }
+    },
+    "unit": "US$bn／月；MW-IT",
+    "ref": [
+     "rent.spacex",
+     "rent.spacex.mw"
+    ],
+    "mapTo": "租用算力：租金列營運費用、不是資本支出（對照表 5.7）；2026 年底後可 90 天解約 → 情境可設 6–33 個月"
+   }
+  },
+  "valuation": {
+   "beta": {
+    "value": 1.21,
+    "unit": "倍",
+    "ref": [
+     "val.beta.sa",
+     "val.beta.yahoo"
+    ],
+    "mapTo": "valuation.beta（兩個呈現同源）"
+   },
+   "rf": {
+    "value": 0.0528,
+    "unit": "比例",
+    "ref": "val.rf.10y",
+    "mapTo": "valuation.rf（2026-10-07）"
+   },
+   "kdPretax": {
+    "value": 0.06527,
+    "unit": "比例",
+    "ref": "val.kd.2066",
+    "mapTo": "valuation.kd（2066 票據發行殖利率）"
+   },
+   "erp": {
+    "value": 0.05,
+    "unit": "比例",
+    "ref": "val.erp",
+    "mapTo": "valuation.erp"
+   },
+   "price": {
+    "value": 350.5,
+    "unit": "US$",
+    "ref": "mkt.price.close",
+    "mapTo": "valuation.price（2026-10-07 收盤）"
+   },
+   "peerMultiples": {
+    "value": {
+     "ads": {
+      "META": 10.79,
+      "PINS": 6.83,
+      "TTD": 6.68,
+      "median": 6.83
+     },
+     "streaming": {
+      "NFLX": 15.4,
+      "SPOT": 31.97,
+      "ROKU": 35.55,
+      "median": 31.97
+     },
+     "software": 15.02,
+     "aiCloud": 6.0
+    },
+    "unit": "倍（EV/EBITDA；TTD、SPOT、ROKU 為 TTM）",
+    "ref": [
+     "val.peer.meta",
+     "val.peer.pins",
+     "val.peer.ttd",
+     "val.peer.nflx",
+     "val.peer.spot",
+     "val.peer.roku",
+     "val.peer.software.median"
+    ],
+    "mapTo": "peers 與分部 EV/EBITDA（D6；建議搜尋＝廣告 META 10.8 為主、YouTube／訂閱＝NFLX 15.4、非 AI 雲端＝軟體 15.0、AI 雲端 6×）"
+   },
+   "consensusPT": {
+    "value": {
+     "sp": 429.47,
+     "marketbeat": 425.72
+    },
+    "unit": "US$",
+    "ref": [
+     "mkt.pt.sp",
+     "mkt.pt.mb"
+    ],
+    "mapTo": "meta.consensusFile＝data/consensus_googl_20261008.json"
+   }
+  }
+ },
+ "tokenomics": {
+  "_note": "算力相關的產業與物理層資料只引用 Tokenomics（YinchenChang/Tokenomics）的 IF_（不含 IF_Hdr*）、IFW_（四層瀑布，上限檢查用）、IFC_（用途欄）與 L1_ 名稱，經版本固定的快照檔讀入（tools/tokenomics/import_tokenomics.py）；模型主值取「基準」成本情境。Excel「Tokenomics_取數」分頁建具名範圍 TK_<名稱>_<世代>，每 MW 年收入、營運成本與資本支出列引用之。Tokenomics 每 GW＝IT 關鍵電力。",
+  "snapshotFile": "data/tokenomics_snapshot_v5.31.json",
+  "version": "v5.31",
+  "commit": "f16f161a28b5d43e00e89aa019e4d3e10fae4e3d",
+  "names": [
+   "IF_HoldEcon",
+   "IF_HoldAcct",
+   "IF_GPUhrEcon",
+   "IF_CapexIT",
+   "IF_CapexFacility",
+   "IF_CapexTotal",
+   "L1_FacCapexMW",
+   "IF_DeprLifeIT",
+   "IF_DeprIT",
+   "IF_DeprFac",
+   "IF_OpexGW",
+   "IF_PowerPrice",
+   "IF_PowerCost",
+   "IF_MaintIT",
+   "IF_MaintFac",
+   "IF_StaffSW",
+   "IF_TaxIns",
+   "IF_AvgDraw",
+   "IF_FacilityGW",
+   "IF_GPUsPerGW",
+   "IF_RacksPerGW",
+   "IF_Util",
+   "IF_RevGWFleet",
+   "L1_GPUhr_Hopper",
+   "L1_GPUhr_GB200",
+   "L1_GPUhr_GB300",
+   "L1_GPUhr_VR200",
+   "L1_HoldEconGW_Hopper",
+   "L1_HoldEconGW_GB200",
+   "L1_HoldEconGW_GB300",
+   "L1_HoldEconGW_VR200",
+   "L1_NvContentGW_VR200",
+   "IFW_RevGWFleet_100",
+   "IFW_RevGWFleet_Util",
+   "IFW_RevGWFleet_Prod",
+   "IFW_RevGWFleet_Life",
+   "IFC_Use",
+   "IF_NonNVRatio",
+   "IF_NonNVCostRatio"
+  ],
+  "optional": [
+   "IF_NonNVRatio",
+   "IF_NonNVCostRatio"
+  ],
+  "holdEconWacc": 0.1,
+  "holdEconWaccNote": "IF_HoldEcon 的資本回收年金折現率：Tokenomics Inputs!E28「WACC（經濟口徑）」基準 10%（builder v5：L1_HoldEconGW＝資本回收年金（WACC 10%）＋營運費用）；非具名範圍，換 Tokenomics 版本時核對 [Verified]；只用於一致性檢查（對照表 r1 C15）"
+ },
+ "pricing": {
+  "_note": "對外 AI 雲端每 MW 年收入＝Σ 在役世代占比 × TK_HoldEcon_<世代>／1000 × 晶片係數 × k；k＝長約占比 × k_長約＋(1 − 長約占比) × k_現貨。價格軸（低／基準／高）與容量軸（scenarios 三情境 MW 路徑）分離；收入端不乘 IF_Util（MW-year 計價）。k 的證據見 data/kevidence_alphabet_20261008.json；不以公司雲端營收、RPO、AI run-rate 反推（共同規則第 4 節）。",
+  "axis": "base",
+  "axisLabels": {
+   "low": "低 長約下緣",
+   "base": "基準 C1 混合",
+   "high": "高 現貨改用 GCP 牌價"
+  },
+  "kLong": {
+   "low": 0.6,
+   "base": 0.75,
+   "high": 0.75
+  },
+  "kSpot": {
+   "low": 1.76,
+   "base": 1.76,
+   "high": 3.027
+  },
+  "longShare": {
+   "low": 0.6,
+   "base": 0.6,
+   "high": 0.6
+  },
+  "kNote": {
+   "kLong": "長約 k：Anthropic–Google／Broadcom TPU 0.63–0.75、Anthropic–Google Cloud 0.78–1.20（容量 [Assumed]）、IREN–Microsoft 0.76 → 基準 0.75（對照表 r1 C1）；低＝v0.1a 區間下緣 0.6 [Analogy]（kevidence k.lt.*）",
+   "kSpot": "現貨 k：基準 1.76＝與 Nebius／CRWV 同一市場現貨指數（對照表 r1 C1）；高＝GCP 牌價換算：H100（a3-highgpu-8g）3 年預留 4.86 ÷ IF_GPUhrEcon Hopper 1.605＝3.03（牌價最低層；隨需 6.89 為替代，kevidence k.gcp.a3-highgpu-8g.cud3y）",
+   "longShare": "長約占比 60%（40%–80%，[Assumed]；Cloud 積壓以多年期大客戶為主，Anthropic ≥111.1B ≈ 積壓 21%）"
+  },
+  "customFactor": 1.0,
+  "customFactorSens": 0.7,
+  "customCapexFactor": 1.0,
+  "customCapexNote": "自研晶片（TPU）每 MW IT 資本支出係數：預設 1（TPU 的資本支出以同期 NVIDIA 世代 TK_CapexIT 計）；雙邊敏感度時與 customFactor 同乘 0.7（收入錨與資本支出同降）；機房成本不變 [Assumed]",
+  "customNote": "自研晶片（TPU）每 MW 錨＝同期 NVIDIA 世代 IF_HoldEcon × 1.0（對照表 r1 C2：TPU v4／v5e／v5p → Hopper、Trillium（v6e）→ GB200、Ironwood → GB300；Ironwood 之後世代 → VR200 [Assumed]）；敏感度 × 0.7。C2 原文「TPU v6e → Hopper；Trillium → GB200」中 v6e 即 Trillium，本模型以「v6e 之前世代 → Hopper」解讀（見報告已套用的預設）。Tokenomics 無 NonNV 具名範圍（IF_NonNVRatio、IF_NonNVCostRatio 為 missing），已列缺口回報。",
+  "chips": [
+   {
+    "key": "tpuOld",
+    "label": "TPU v4／v5e／v5p",
+    "tk": "H100",
+    "custom": true,
+    "mixOpen": 0.15,
+    "mixAdds": [
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "key": "h100",
+    "label": "Hopper（H100／H200）",
+    "tk": "H100",
+    "custom": false,
+    "mixOpen": 0.1,
+    "mixAdds": [
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "key": "trillium",
+    "label": "TPU Trillium（v6e）",
+    "tk": "GB200",
+    "custom": true,
+    "mixOpen": 0.35,
+    "mixAdds": [
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "key": "gb200",
+    "label": "GB200／B200",
+    "tk": "GB200",
+    "custom": false,
+    "mixOpen": 0.1,
+    "mixAdds": [
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "key": "ironwood",
+    "label": "TPU Ironwood（TPU7x）",
+    "tk": "GB300",
+    "custom": true,
+    "mixOpen": 0.3,
+    "mixAdds": [
+     0.75,
+     0.4,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "key": "gb300",
+    "label": "GB300",
+    "tk": "GB300",
+    "custom": false,
+    "mixOpen": 0,
+    "mixAdds": [
+     0.25,
+     0.1,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "key": "tpuNext",
+    "label": "Ironwood 之後 TPU 世代",
+    "tk": "VR200",
+    "custom": true,
+    "mixOpen": 0,
+    "mixAdds": [
+     0,
+     0.35,
+     0.75,
+     0.75,
+     0.75
+    ]
+   },
+   {
+    "key": "vr200",
+    "label": "Vera Rubin（VR200）",
+    "tk": "VR200",
+    "custom": false,
+    "mixOpen": 0,
+    "mixAdds": [
+     0,
+     0.15,
+     0.25,
+     0.25,
+     0.25
+    ]
+   }
+  ],
+  "mixNote": "期初在役（評價日，對外 MW）：TPU v4／v5 15%、Hopper GPU 10%、Trillium 35%、GB200／B200 10%、Ironwood 30% [Assumed]——依 Epoch 晶片功耗：NVIDIA 約占 21%、2024 年底前 TPU（v5 為主）991 MW、2025 年新增 1,232 MW（Trillium 為主、Q4 起 Ironwood）、2026 上半年 Ironwood 為主；對外客戶（Anthropic 等）以新世代為主。新增 MW：TPU 75%＋NVIDIA 25%（Epoch 2025 年新增功耗 TPU 約 77%）；TPU 2026 為 Ironwood、2027 Ironwood／下一代各半、2028 起下一代；NVIDIA 2026 GB300、2027 GB300／VR200、2028 起 VR200 [Assumed]。在役占比＝各世代累計 MW ÷ 對外 AI MW（不建模退役後的世代替換）。",
+  "capWarn": 0.5,
+  "capWarnNote": "上限檢查：每 MW 年收入 ÷（Σ 世代占比 × IF_RevGWFleet／1000）> 50% 時示警（工作單 v0.1b 第 2 步）"
+ },
+ "capexModel": {
+  "mode": "tk",
+  "_note": "資本支出（MAG v0.1b，對照表 r1 第 5 節第 6 條、D3）：首期＝MAX(全年 AI 成長型＋非 AI, 公司指引) − 年初至今實際（指引高於公式的差額歸 AI 成長型，保守）；之後＝新增對外 AI MW ÷ 對外比例 × 每 MW 成本（Σ 新增世代占比 × (TK_CapexIT＋自建比例 × TK_CapexFacility)）＋GPU 汰換（只換 IT；壽命 defaults.gpuLife＝TK_DeprLifeIT 6 年）＋非 AI 資本支出（各線全年營收 × legacyBiz.lines.cx）。指引為現金購置不動產與設備（公司 FCF 定義），不含以融資租賃取得的資產（2026 上半年 0.9B）。",
+  "extShare": 0.3,
+  "extShareNote": "對外 AI MW 占 AI 總 MW 比例 30%（25%–40%，[Assumed]；v0.1a mw.extShare；C9 敏感度 ±20pt → 10%／50%）：自用 AI（Gemini、搜尋、YouTube、DeepMind 研發）同樣需要資本支出，影子收入只作對照；對外比例無揭露",
+  "selfBuild": 0.85,
+  "selfBuildNote": "自建機房比例 85%（75%–95%，[Assumed]）：營業租賃負債 18.0B 對 PP&E 321.2B，租用占比低；但尚未起租租賃 85.2B（主要為資料中心）顯示租用上升。租用部分不計機房資本支出（租金由未起租租賃承擔）",
+  "segDaRunRate": 28.416,
+  "segDaRunRateNote": "最新季（2026Q2）合併折舊 7.104 × 4（現金流量表；公司不揭露分部 D&A；[Derived]）：D&A 對帳基準（C17）",
+  "guideNote": "2026 指引 195–205（中點 200；法說二手逐字稿）；2027「顯著增加」無數字 → 次期起由 MW 推導（對照共識 2027 301.0、2028 339.5）",
+  "rentedExt": {
+   "open": 0,
+   "path": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rentMW": 0,
+   "note": "Alphabet 無已揭露的租用對外 AI 算力：SpaceX 雲端服務合約（219 MW-IT）用途未揭露，列自用（leases.rentedCompute，租金入營運成本）[Assumed]；MAG 對照表 r1 C20"
+  },
+  "nonAiLife": 10,
+  "nonAiLifeRange": [
+   8,
+   15
+  ],
+  "nonAiLifeNote": "非 AI 折舊年限預設 10 年（區間 8–15 年）[Assumed]；r2 以合併折舊反解時退化（AI 期初折舊 34.0 > 合併折舊年化 28.4，年限 ≈ 7×10¹⁰ 年），MAG 對照表 r1 C17 改為預設年限，差額列 D&A 對帳殘差（10-K：伺服器與網通設備 6 年、資料中心與辦公建築 7–40 年）",
+  "aiNetShare": 0.75,
+  "aiNetShareNote": "期初 AI PP&E 淨額 ÷ 毛額 75%（機隊多為 2024–2026 建置、IT 壽命 6 年；[Assumed]，區間 60%–90%）：AI 增量 ROIC 的期初投入資本",
+  "roicYear": 3,
+  "roicYearNote": "打平 k 的錨定期（模型第 4 期＝2029；工作單 v0.1b 第 9 步）"
+ },
+ "related": {
+  "_note": "關聯方：Anthropic 模型快照與合約並排，只讀、不回饋計算（對照表 r1 D5、第 5 節第 11 條；OpenAI 與 Google 無已揭露雲端合約，openai/ v0.6 未列 Google）；對手方集中度＝合約年化 ÷ 模型對外 AI 雲端收入",
+  "contracts": [
+   {
+    "name": "Anthropic（Google Cloud，≥$111.1B／2026-04～2033-07）",
+    "annual": 15.15,
+    "startFY": 2026,
+    "note": "Anthropic 招股書草稿（Reuters 轉述，二手；事實總帳 rp.anthropic.cloudCommit）[Interested-party]；年化＝總額 ÷ 7.33 年 [Derived]；另 Google／Broadcom 5 GW（The Information 200B／5 年）歸屬不明，不列"
+   }
+  ],
+  "snapshots": [
+   {
+    "name": "anthropic/ 模型：Anthropic 付 Google Cloud（TPU）",
+    "series": {
+     "2026": 7.407,
+     "2027": 14.81,
+     "2028": 14.81,
+     "2029": 14.81,
+     "2030": 14.81
+    },
+    "note": "anthropic/ v0.1（main）成品快照（Cost K32；只讀，不連動）"
+   },
+   {
+    "name": "anthropic/ 模型：Anthropic 付 Google／Broadcom（TPU，含 Broadcom 硬體）",
+    "series": {
+     "2026": 0,
+     "2027": 13.91,
+     "2028": 27.82,
+     "2029": 27.82,
+     "2030": 27.82
+    },
+    "note": "anthropic/ v0.1（main）成品快照（Cost K33；歸屬 Google 比例未知；只讀）"
+   }
+  ],
+  "rpoShareMax": 0.2139,
+  "rpoShareNote": "Anthropic 雲端承諾 ≥111.1B ÷ RPO 519.5B＝21.4%（下限；一手比例不存在；事實總帳 rp.anthropic.rpoShare 以 Cloud 積壓 513.9 計 21.6%）"
+ }
+}

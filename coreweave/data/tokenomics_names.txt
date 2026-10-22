@@ -25,3 +25,21 @@ IF_MaintFac # 廠房維護（v5.26）
 IF_StaffSW # 人員、軟體、水與耗材（v5.26）
 IF_TaxIns # 財產稅與保險（v5.26）
 IF_OpexGW # 營運費用小計，不含折舊（v5.26）
+IF_RevGWFleet # 客戶每 GW 付費 token 營收（層級組合，理想上限；W4 上限檢查）
+IF_MaintITWarr # IT 維護（保固期內；v5.31，W6 依機齡兩段）
+IF_MaintITPost # IT 維護（保固期滿後；v5.31）
+IF_WarrantyYrs # IT 原廠保固年限（v5.31；單值）
+IFW_RevGWFleet_100 # 客戶每 GW 付費 token 營收｜四層瀑布：理論上限（100% 利用；W9 上限檢查）
+IFW_RevGWFleet_Util # 四層｜扣技術利用率（＝IF_RevGWFleet；W9 對照）
+IFW_RevGWFleet_Prod # 四層｜再扣 SLO 下產能折減（W9 上限檢查比較層）
+IFW_RevGWFleet_Life # 四層｜壽命期等值（W9 上限檢查）
+IFC_Use # 上列各名稱的用途限制（「上限，不得作預測」；W9 顯示於四層列旁）
+L1_TokMW_Gen_ratio_VR200 # VR200 對 GB300 每 MW token 產出比 q（基準；W9）
+L1_TokMW_Gen_ratio_VR200_Lo # q 低端（W9）
+L1_TokMW_Gen_ratio_VR200_Hi # q 高端（W9）
+L1_GenPxThr_Rev_VR200 # VR200 世代收入持平門檻（年價格變化；基準；W10）
+L1_GenPxThr_Rev_VR200_Lo # 收入持平門檻 低端（W10）
+L1_GenPxThr_Rev_VR200_Hi # 收入持平門檻 高端（W10）
+L1_GenPxThr_Pay_VR200 # VR200 世代回本門檻（年價格變化；基準；W10）
+L1_GenPxThr_Pay_VR200_Lo # 回本門檻 低端（W10）
+L1_GenPxThr_Pay_VR200_Hi # 回本門檻 高端（W10）

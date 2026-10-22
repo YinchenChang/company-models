@@ -1,0 +1,243 @@
+{
+ "_readme": "共用數字廣告同業組（MAG 對照表 r1 第 9 節 C18；不含 AMZN、GOOGL、MSFT）。Amazon 代理蒐集；Alphabet、Microsoft 直接複製本檔（只讀，不改數字）。每筆 NTM EV/EBITDA＝EV（StockAnalysis）÷ NTM EBITDA（MarketScreener 共識 FY1／FY2 時間加權，基準日 2026-10-07）；中位數＝數位廣告倍數。格式同 peers_cloud_20261008.json。",
+ "asOf": "2026-10-07",
+ "retrieved": "2026-10-09",
+ "group": "ads",
+ "label": "數位廣告",
+ "peers": [
+  {
+   "ticker": "META",
+   "name": "Meta",
+   "ntmEvEbitda": 10.79,
+   "ev": {
+    "value": 1860.0,
+    "unit": "USD bn",
+    "source": "StockAnalysis 統計頁",
+    "url": "https://stockanalysis.com/stocks/meta/statistics/",
+    "asOf": "2026-10-07",
+    "note": "2026-10-07 收盤（v0.1a 事實總帳 val.peer.ads.meta 同一組數字）"
+   },
+   "ntmEbitda": {
+    "value": 172.45,
+    "unit": "USD bn",
+    "source": "MarketScreener 共識",
+    "url": "https://www.marketscreener.com/quote/stock/META-PLATFORMS-INC-10547141/finances/",
+    "pageQuoteDate": "2026-10-07",
+    "fy1": {
+     "label": "2026E",
+     "fyEnd": "2026-12-31",
+     "value": 144533,
+     "unit": "USD M"
+    },
+    "fy2": {
+     "label": "2027E",
+     "value": 180925,
+     "unit": "USD M"
+    },
+    "weightFy1": 0.2329,
+    "method": "NTM＝w×FY1＋(1−w)×FY2，w＝(FY1 結束日 − 2026-10-07) 天數 ÷ 365"
+   },
+   "retrieved": "2026-10-09",
+   "tag": "[Derived]",
+   "note": "EV 與 EBITDA 來自不同供應商（MarketScreener EBITDA 為共識口徑，可能為調整後）"
+  },
+  {
+   "ticker": "PINS",
+   "name": "Pinterest",
+   "ntmEvEbitda": 6.91,
+   "ev": {
+    "value": 11.42,
+    "unit": "USD bn",
+    "source": "StockAnalysis 統計頁",
+    "url": "https://stockanalysis.com/stocks/pins/statistics/",
+    "asOf": "2026-10-08",
+    "note": "2026-10-08 盤中"
+   },
+   "ntmEbitda": {
+    "value": 1.652,
+    "unit": "USD bn",
+    "source": "MarketScreener 共識",
+    "url": "https://www.marketscreener.com/quote/stock/PINTEREST-INC-57086058/finances/",
+    "pageQuoteDate": "2026-10-05",
+    "fy1": {
+     "label": "2026E",
+     "fyEnd": "2026-12-31",
+     "value": 1482,
+     "unit": "USD M"
+    },
+    "fy2": {
+     "label": "2027E",
+     "value": 1704,
+     "unit": "USD M"
+    },
+    "weightFy1": 0.2329,
+    "method": "NTM＝w×FY1＋(1−w)×FY2，w＝(FY1 結束日 − 2026-10-07) 天數 ÷ 365"
+   },
+   "retrieved": "2026-10-09",
+   "tag": "[Derived]",
+   "note": "EV 與 EBITDA 來自不同供應商（MarketScreener EBITDA 為共識口徑，可能為調整後）"
+  },
+  {
+   "ticker": "TTD",
+   "name": "The Trade Desk",
+   "ntmEvEbitda": 6.53,
+   "ev": {
+    "value": 4.73,
+    "unit": "USD bn",
+    "source": "StockAnalysis 統計頁",
+    "url": "https://stockanalysis.com/stocks/ttd/statistics/",
+    "asOf": "2026-10-08",
+    "note": "2026-10-08 盤中"
+   },
+   "ntmEbitda": {
+    "value": 0.725,
+    "unit": "USD bn",
+    "source": "MarketScreener 共識",
+    "url": "https://www.marketscreener.com/quote/stock/THE-TRADE-DESK-INC-31370485/finances/",
+    "pageQuoteDate": "2026-10-07",
+    "fy1": {
+     "label": "2026E",
+     "fyEnd": "2026-12-31",
+     "value": 817.2,
+     "unit": "USD M"
+    },
+    "fy2": {
+     "label": "2027E",
+     "value": 696.4,
+     "unit": "USD M"
+    },
+    "weightFy1": 0.2329,
+    "method": "NTM＝w×FY1＋(1−w)×FY2，w＝(FY1 結束日 − 2026-10-07) 天數 ÷ 365"
+   },
+   "retrieved": "2026-10-09",
+   "tag": "[Derived]",
+   "note": "EV 與 EBITDA 來自不同供應商（MarketScreener EBITDA 為共識口徑，可能為調整後）"
+  },
+  {
+   "ticker": "APP",
+   "name": "AppLovin",
+   "ntmEvEbitda": 11.38,
+   "ev": {
+    "value": 92.97,
+    "unit": "USD bn",
+    "source": "StockAnalysis 統計頁",
+    "url": "https://stockanalysis.com/stocks/app/statistics/",
+    "asOf": "2026-10-08",
+    "note": "2026-10-08 盤中"
+   },
+   "ntmEbitda": {
+    "value": 8.167,
+    "unit": "USD bn",
+    "source": "MarketScreener 共識",
+    "url": "https://in.marketscreener.com/quote/stock/APPLOVIN-CORPORATION-121407289/finances/",
+    "pageQuoteDate": "2026-10-01",
+    "fy1": {
+     "label": "2026E",
+     "fyEnd": "2026-12-31",
+     "value": 6800,
+     "unit": "USD M"
+    },
+    "fy2": {
+     "label": "2027E",
+     "value": 8582,
+     "unit": "USD M"
+    },
+    "weightFy1": 0.2329,
+    "method": "NTM＝w×FY1＋(1−w)×FY2，w＝(FY1 結束日 − 2026-10-07) 天數 ÷ 365"
+   },
+   "retrieved": "2026-10-09",
+   "tag": "[Derived]",
+   "note": "EV 與 EBITDA 來自不同供應商（MarketScreener EBITDA 為共識口徑，可能為調整後）"
+  },
+  {
+   "ticker": "RDDT",
+   "name": "Reddit",
+   "ntmEvEbitda": 13.63,
+   "ev": {
+    "value": 26.62,
+    "unit": "USD bn",
+    "source": "StockAnalysis 統計頁",
+    "url": "https://stockanalysis.com/stocks/rddt/statistics/",
+    "asOf": "2026-10-07",
+    "note": "2026-10-07 收盤"
+   },
+   "ntmEbitda": {
+    "value": 1.953,
+    "unit": "USD bn",
+    "source": "MarketScreener 共識",
+    "url": "https://www.marketscreener.com/quote/stock/REDDIT-INC-167442757/finances/",
+    "pageQuoteDate": "2026-10-02",
+    "fy1": {
+     "label": "2026E",
+     "fyEnd": "2026-12-31",
+     "value": 1514,
+     "unit": "USD M"
+    },
+    "fy2": {
+     "label": "2027E",
+     "value": 2086,
+     "unit": "USD M"
+    },
+    "weightFy1": 0.2329,
+    "method": "NTM＝w×FY1＋(1−w)×FY2，w＝(FY1 結束日 − 2026-10-07) 天數 ÷ 365"
+   },
+   "retrieved": "2026-10-09",
+   "tag": "[Derived]",
+   "note": "EV 與 EBITDA 來自不同供應商（MarketScreener EBITDA 為共識口徑，可能為調整後）"
+  },
+  {
+   "ticker": "SNAP",
+   "name": "Snap",
+   "ntmEvEbitda": 7.43,
+   "ev": {
+    "value": 11.39,
+    "unit": "USD bn",
+    "source": "StockAnalysis 統計頁",
+    "url": "https://stockanalysis.com/stocks/snap/statistics/",
+    "asOf": "2026-10-07",
+    "note": "2026-10-07 收盤"
+   },
+   "ntmEbitda": {
+    "value": 1.534,
+    "unit": "USD bn",
+    "source": "MarketScreener 共識",
+    "url": "https://www.marketscreener.com/quote/stock/SNAP-INC-34091150/finances/",
+    "pageQuoteDate": "2026-09-28",
+    "fy1": {
+     "label": "2026E",
+     "fyEnd": "2026-12-31",
+     "value": 1312,
+     "unit": "USD M"
+    },
+    "fy2": {
+     "label": "2027E",
+     "value": 1601,
+     "unit": "USD M"
+    },
+    "weightFy1": 0.2329,
+    "method": "NTM＝w×FY1＋(1−w)×FY2，w＝(FY1 結束日 − 2026-10-07) 天數 ÷ 365"
+   },
+   "retrieved": "2026-10-09",
+   "tag": "[Derived]",
+   "note": "EV 與 EBITDA 來自不同供應商（MarketScreener EBITDA 為共識口徑，可能為調整後）"
+  }
+ ],
+ "gaps": [],
+ "median": {
+  "value": 9.11,
+  "n": 6,
+  "tag": "[Derived]",
+  "note": "6 家中位數（偶數取中間兩家平均）"
+ },
+ "ttmCheck": {
+  "note": "StockAnalysis TTM EV/EBITDA 對照（非用於模型）；SNAP TTM EBITDA 為負（n/a）",
+  "values": {
+   "META": 16.96,
+   "PINS": 36.09,
+   "TTD": 6.74,
+   "APP": 17.22,
+   "RDDT": 33.21,
+   "SNAP": null
+  }
+ }
+}

@@ -1,0 +1,461 @@
+{
+ "_readme": "Amazon（AWS）k 的證據表（MAG v0.1a）。k＝市場價格 ÷ 同世代 Tokenomics 持有成本（GPU-hr：IF_GPUhrEcon；長約：US$m／MW-年 ÷ IF_HoldEcon）。Tokenomics 快照 data/tokenomics_snapshot_v5.27.json（20261008_Tokenomics_v5.27.xlsx，commit ca78a8f），主值取基準成本情境。價目為 us-east-1、Linux，2026-10-08 擷取。",
+ "asOf": "2026-10-08",
+ "tokenomics": {
+  "IF_GPUhrEcon_base": {
+   "H100": 1.605,
+   "GB200": 2.0865,
+   "GB300": 2.9827,
+   "VR200": 4.9936
+  },
+  "IF_HoldEcon_base_USDmPerMWyr": {
+   "H100": 10.096,
+   "GB200": 9.171,
+   "GB300": 12.725,
+   "VR200": 12.762
+  }
+ },
+ "listPrices": [
+  {
+   "id": "price.p5.od",
+   "instance": "p5.48xlarge",
+   "generation": "H100",
+   "tokenomicsGen": "H100",
+   "tier": "隨需",
+   "priceInstanceHr": 55.04,
+   "gpusPerInstance": 8,
+   "priceGPUhr": 6.88,
+   "IF_GPUhrEcon": 1.605,
+   "k": 4.287,
+   "kRange": {
+    "vsLowCost": 6.182,
+    "vsHighCost": 2.486
+   },
+   "source": "Vantage（AWS 價格 API）",
+   "url": "https://instances.vantage.sh/aws/ec2/p5.48xlarge",
+   "date": "2026-10-08",
+   "tag": "[Verified]（公開價目）",
+   "ref": "facts:price.p5.od",
+   "note": ""
+  },
+  {
+   "id": "price.p5.sp1",
+   "instance": "p5.48xlarge",
+   "generation": "H100",
+   "tokenomicsGen": "H100",
+   "tier": "預留 1 年（EC2 Instance SP，無預付）",
+   "priceInstanceHr": 34.6752,
+   "gpusPerInstance": 8,
+   "priceGPUhr": 4.3344,
+   "IF_GPUhrEcon": 1.605,
+   "k": 2.701,
+   "kRange": {
+    "vsLowCost": 3.895,
+    "vsHighCost": 1.566
+   },
+   "source": "Holori",
+   "url": "https://calculator.holori.com/aws/ec2/p5.48xlarge/us-east-1",
+   "date": "2026-10-08",
+   "tag": "[Verified]（公開價目）",
+   "ref": "facts:price.p5.sp1",
+   "note": ""
+  },
+  {
+   "id": "price.p5.sp3",
+   "instance": "p5.48xlarge",
+   "generation": "H100",
+   "tokenomicsGen": "H100",
+   "tier": "預留 3 年（EC2 Instance SP／RI，無預付）",
+   "priceInstanceHr": 23.7773,
+   "gpusPerInstance": 8,
+   "priceGPUhr": 2.9722,
+   "IF_GPUhrEcon": 1.605,
+   "k": 1.852,
+   "kRange": {
+    "vsLowCost": 2.671,
+    "vsHighCost": 1.074
+   },
+   "source": "Holori；Vantage 3 年 RI 同值",
+   "url": "https://calculator.holori.com/aws/ec2/p5.48xlarge/us-east-1",
+   "date": "2026-10-08",
+   "tag": "[Verified]（公開價目）",
+   "ref": "facts:price.p5.sp3",
+   "note": ""
+  },
+  {
+   "id": "price.p5.cb",
+   "instance": "p5.48xlarge",
+   "generation": "H100",
+   "tokenomicsGen": "H100",
+   "tier": "短期預留（Capacity Block）",
+   "priceInstanceHr": 47.757,
+   "gpusPerInstance": 8,
+   "priceGPUhr": 5.9696,
+   "IF_GPUhrEcon": 1.605,
+   "k": 3.719,
+   "kRange": {
+    "vsLowCost": 5.364,
+    "vsHighCost": 2.157
+   },
+   "source": "AWS 定價頁",
+   "url": "https://aws.amazon.com/ec2/capacityblocks/pricing/",
+   "date": "2026-10-08",
+   "tag": "[Verified]（公開價目）",
+   "ref": "facts:price.p5.cb",
+   "note": "短期（1 天–數月）保留"
+  },
+  {
+   "id": "price.p5.spot",
+   "instance": "p5.48xlarge",
+   "generation": "H100",
+   "tokenomicsGen": "H100",
+   "tier": "現貨（Spot）",
+   "priceInstanceHr": 30.423,
+   "gpusPerInstance": 8,
+   "priceGPUhr": 3.8029,
+   "IF_GPUhrEcon": 1.605,
+   "k": 2.369,
+   "kRange": {
+    "vsLowCost": 3.417,
+    "vsHighCost": 1.374
+   },
+   "source": "Vantage",
+   "url": "https://instances.vantage.sh/aws/ec2/p5.48xlarge",
+   "date": "2026-10-08",
+   "tag": "[Verified]（公開價目）",
+   "ref": "facts:price.p5.spot",
+   "note": "可中斷"
+  },
+  {
+   "id": "price.p5en.od",
+   "instance": "p5en.48xlarge",
+   "generation": "H200",
+   "tokenomicsGen": "H100",
+   "tier": "隨需",
+   "priceInstanceHr": 63.296,
+   "gpusPerInstance": 8,
+   "priceGPUhr": 7.912,
+   "IF_GPUhrEcon": 1.605,
+   "k": 4.93,
+   "kRange": {
+    "vsLowCost": 7.11,
+    "vsHighCost": 2.859
+   },
+   "source": "Vantage／Holori",
+   "url": "https://instances.vantage.sh/aws/ec2/p5en.48xlarge",
+   "date": "2026-10-08",
+   "tag": "[Verified]（公開價目）",
+   "ref": "facts:price.p5en.od",
+   "note": "Tokenomics 無 H200 世代，以 Hopper H100 代理（H200 持有成本較高 → k 偏高）"
+  },
+  {
+   "id": "price.p5en.sp3",
+   "instance": "p5en.48xlarge",
+   "generation": "H200",
+   "tokenomicsGen": "H100",
+   "tier": "預留 3 年（EC2 Instance SP，無預付）",
+   "priceInstanceHr": 27.3439,
+   "gpusPerInstance": 8,
+   "priceGPUhr": 3.418,
+   "IF_GPUhrEcon": 1.605,
+   "k": 2.13,
+   "kRange": {
+    "vsLowCost": 3.071,
+    "vsHighCost": 1.235
+   },
+   "source": "Holori",
+   "url": "https://calculator.holori.com/aws/ec2/p5en.48xlarge/us-east-1",
+   "date": "2026-10-08",
+   "tag": "[Verified]（公開價目）",
+   "ref": "facts:price.p5en.sp3",
+   "note": "同上"
+  },
+  {
+   "id": "price.p6b200.od",
+   "instance": "p6-b200.48xlarge",
+   "generation": "B200（HGX）",
+   "tokenomicsGen": "GB200",
+   "tier": "隨需",
+   "priceInstanceHr": 113.933,
+   "gpusPerInstance": 8,
+   "priceGPUhr": 14.2416,
+   "IF_GPUhrEcon": 2.0865,
+   "k": 6.826,
+   "kRange": {
+    "vsLowCost": 9.188,
+    "vsHighCost": 4.196
+   },
+   "source": "Vantage",
+   "url": "https://instances.vantage.sh/aws/ec2/p6-b200.48xlarge",
+   "date": "2026-10-08",
+   "tag": "[Verified]（公開價目）",
+   "ref": "facts:price.p6b200.od",
+   "note": "Tokenomics 以 GB200 NVL72 代理 HGX B200"
+  },
+  {
+   "id": "price.p6b200.cb",
+   "instance": "p6-b200.48xlarge",
+   "generation": "B200（HGX）",
+   "tokenomicsGen": "GB200",
+   "tier": "短期預留（Capacity Block）",
+   "priceInstanceHr": 113.666,
+   "gpusPerInstance": 8,
+   "priceGPUhr": 14.2082,
+   "IF_GPUhrEcon": 2.0865,
+   "k": 6.81,
+   "kRange": {
+    "vsLowCost": 9.166,
+    "vsHighCost": 4.186
+   },
+   "source": "AWS 定價頁",
+   "url": "https://aws.amazon.com/ec2/capacityblocks/pricing/",
+   "date": "2026-10-08",
+   "tag": "[Verified]（公開價目）",
+   "ref": "facts:price.p6b200.cb",
+   "note": ""
+  },
+  {
+   "id": "price.p6b300.od",
+   "instance": "p6-b300.48xlarge",
+   "generation": "B300（HGX）",
+   "tokenomicsGen": "GB300",
+   "tier": "隨需",
+   "priceInstanceHr": 142.416,
+   "gpusPerInstance": 8,
+   "priceGPUhr": 17.802,
+   "IF_GPUhrEcon": 2.9827,
+   "k": 5.968,
+   "kRange": {
+    "vsLowCost": 8.722,
+    "vsHighCost": 3.181
+   },
+   "source": "Vantage",
+   "url": "https://instances.vantage.sh/aws/ec2/p6-b300.48xlarge",
+   "date": "2026-10-08",
+   "tag": "[Verified]（公開價目）",
+   "ref": "facts:price.p6b300.od",
+   "note": "Tokenomics 以 GB300 NVL72 代理 HGX B300"
+  },
+  {
+   "id": "price.p6b300.cb",
+   "instance": "p6-b300.48xlarge",
+   "generation": "B300（HGX）",
+   "tokenomicsGen": "GB300",
+   "tier": "短期預留（Capacity Block）",
+   "priceInstanceHr": 129.168,
+   "gpusPerInstance": 8,
+   "priceGPUhr": 16.146,
+   "IF_GPUhrEcon": 2.9827,
+   "k": 5.413,
+   "kRange": {
+    "vsLowCost": 7.911,
+    "vsHighCost": 2.885
+   },
+   "source": "AWS 定價頁",
+   "url": "https://aws.amazon.com/ec2/capacityblocks/pricing/",
+   "date": "2026-10-08",
+   "tag": "[Verified]（公開價目）",
+   "ref": "facts:price.p6b300.cb",
+   "note": ""
+  },
+  {
+   "id": "price.gb200.cb",
+   "instance": "u-p6e-gb200x72",
+   "generation": "GB200 NVL72",
+   "tokenomicsGen": "GB200",
+   "tier": "短期預留（Capacity Block）",
+   "priceInstanceHr": 761.904,
+   "gpusPerInstance": 72,
+   "priceGPUhr": 10.582,
+   "IF_GPUhrEcon": 2.0865,
+   "k": 5.072,
+   "kRange": {
+    "vsLowCost": 6.827,
+    "vsHighCost": 3.117
+   },
+   "source": "AWS 定價頁（Dallas Local Zone）",
+   "url": "https://aws.amazon.com/ec2/capacityblocks/pricing/",
+   "date": "2026-10-08",
+   "tag": "[Verified]（公開價目）",
+   "ref": "facts:price.gb200.cb",
+   "note": ""
+  },
+  {
+   "id": "price.trn2.cb",
+   "instance": "trn2.48xlarge",
+   "generation": "Trainium2",
+   "tokenomicsGen": "（缺：NonNV 未提供 IF_ 名稱）",
+   "tier": "短期預留（Capacity Block）",
+   "priceInstanceHr": 35.7608,
+   "gpusPerInstance": 16,
+   "priceGPUhr": 2.2351,
+   "IF_GPUhrEcon": null,
+   "k": null,
+   "kProxy": {
+    "vsHopperX0.7": 1.989,
+    "note": "參考：anthropic/ v0.1 以 Trainium 持有比 0.7 × 同代 NVIDIA；Tokenomics 無具名範圍，不作輸入"
+   },
+   "source": "AWS 定價頁",
+   "url": "https://aws.amazon.com/ec2/capacityblocks/pricing/",
+   "date": "2026-10-08",
+   "tag": "[Verified]（公開價目）",
+   "ref": "facts:price.trn2.cb",
+   "note": "每顆 Trainium2 與每顆 GPU 不等價"
+  }
+ ],
+ "longContracts": [
+  {
+   "id": "k.openai.trn.it",
+   "contract": "OpenAI–AWS 擴大 $100B／8 年 ↔ 約 2 GW Trainium（視為 IT）",
+   "totalUSDm": 100000,
+   "years": 8,
+   "MW": 2000,
+   "mwBasis": "IT（假設）",
+   "tier": "長約",
+   "priceUSDmPerMWyr": 6.25,
+   "tokenomicsGen": "Trainium3 等值＝VR200 × 持有比 0.7（anthropic/ 參考值）",
+   "IF_HoldEcon_USDmPerMWyr": 8.933,
+   "k": 0.7,
+   "tag": "[Assumed]",
+   "source": "10-Q 2026Q2 附註 1；GeekWire 2026-02-27",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/amzn-20260630.htm",
+   "note": "假設 $100B 全數對應 2 GW 且 8 年均攤；金額含「AWS 晶片效能」以外的雲端服務時 k 偏高。openai/ v0.6 同口徑隱含 6.25 $B/GW-yr"
+  },
+  {
+   "id": "k.openai.trn.fac",
+   "contract": "同上，2 GW 視為設施電力（÷1.2 → 1,667 MW-IT）",
+   "totalUSDm": 100000,
+   "years": 8,
+   "MW": 1666.6666666666667,
+   "mwBasis": "設施→IT",
+   "tier": "長約",
+   "priceUSDmPerMWyr": 7.5,
+   "tokenomicsGen": "Trainium3 等值＝VR200 × 0.7",
+   "IF_HoldEcon_USDmPerMWyr": 8.933,
+   "k": 0.84,
+   "tag": "[Assumed]",
+   "source": "同上",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/amzn-20260630.htm",
+   "note": "IF_FacilityGW 基準 1.2"
+  },
+  {
+   "id": "k.anthropic.lb",
+   "contract": "Anthropic–AWS >$100B／10 年 ↔ 最多 5 GW（下限：5 GW 全數、$100B）",
+   "totalUSDm": 100000,
+   "years": 10,
+   "MW": 5000,
+   "mwBasis": "口徑不明",
+   "tier": "長約",
+   "priceUSDmPerMWyr": 2.0,
+   "tokenomicsGen": "Trainium2–4 等值＝VR200 × 0.7",
+   "IF_HoldEcon_USDmPerMWyr": 8.933,
+   "k": 0.224,
+   "tag": "[Assumed]",
+   "source": "10-Q 2026Q2 附註 1；Anthropic 新聞稿 2026-04-20",
+   "url": "https://www.anthropic.com/news/anthropic-amazon-compute",
+   "note": "金額為下限、GW 為上限 → 本列為 k 的下限；爬坡（2026 年底僅近 1 GW）使實際平均 MW 遠低於 5 GW"
+  },
+  {
+   "id": "k.anthropic.mid",
+   "contract": "Anthropic–AWS：平均在役 2.5 GW（[Assumed]：0→5 GW 線性爬坡）",
+   "totalUSDm": 100000,
+   "years": 10,
+   "MW": 2500,
+   "mwBasis": "口徑不明",
+   "tier": "長約",
+   "priceUSDmPerMWyr": 4.0,
+   "tokenomicsGen": "Trainium2–4 等值＝VR200 × 0.7",
+   "IF_HoldEcon_USDmPerMWyr": 8.933,
+   "k": 0.448,
+   "tag": "[Assumed]",
+   "source": "同上",
+   "url": "https://www.anthropic.com/news/anthropic-amazon-compute",
+   "note": "中間情境；anthropic/ v0.1 模型以 $110B 對應約 1.38 GW（每 GW 年 8.4）作對照"
+  },
+  {
+   "id": "k.openai.nv.gpu200k",
+   "contract": "OpenAI–AWS $38B／7 年 NVIDIA GB200／GB300，假設 200,000 顆（「數十萬」）",
+   "totalUSDm": 38000,
+   "years": 7,
+   "GPUs": 200000,
+   "tier": "長約",
+   "priceGPUhr": 3.0985,
+   "tokenomicsGen": "GB200／GB300 各半",
+   "IF_GPUhrEcon": 2.5346,
+   "k": 1.222,
+   "tag": "[Assumed]",
+   "source": "SiliconANGLE 2025-11-03（兩家公司公告）",
+   "url": "https://siliconangle.com/2025/11/03/openai-inks-38b-ai-infrastructure-deal-aws/",
+   "note": "GPU 數只有「hundreds of thousands」→ 列 20 萬／30 萬／50 萬三點；7 年均攤（實際部署 2026 年底前完成，前期偏低）；100% 時數"
+  },
+  {
+   "id": "k.openai.nv.gpu300k",
+   "contract": "OpenAI–AWS $38B／7 年 NVIDIA GB200／GB300，假設 300,000 顆（「數十萬」）",
+   "totalUSDm": 38000,
+   "years": 7,
+   "GPUs": 300000,
+   "tier": "長約",
+   "priceGPUhr": 2.0657,
+   "tokenomicsGen": "GB200／GB300 各半",
+   "IF_GPUhrEcon": 2.5346,
+   "k": 0.815,
+   "tag": "[Assumed]",
+   "source": "SiliconANGLE 2025-11-03（兩家公司公告）",
+   "url": "https://siliconangle.com/2025/11/03/openai-inks-38b-ai-infrastructure-deal-aws/",
+   "note": "GPU 數只有「hundreds of thousands」→ 列 20 萬／30 萬／50 萬三點；7 年均攤（實際部署 2026 年底前完成，前期偏低）；100% 時數"
+  },
+  {
+   "id": "k.openai.nv.gpu500k",
+   "contract": "OpenAI–AWS $38B／7 年 NVIDIA GB200／GB300，假設 500,000 顆（「數十萬」）",
+   "totalUSDm": 38000,
+   "years": 7,
+   "GPUs": 500000,
+   "tier": "長約",
+   "priceGPUhr": 1.2394,
+   "tokenomicsGen": "GB200／GB300 各半",
+   "IF_GPUhrEcon": 2.5346,
+   "k": 0.489,
+   "tag": "[Assumed]",
+   "source": "SiliconANGLE 2025-11-03（兩家公司公告）",
+   "url": "https://siliconangle.com/2025/11/03/openai-inks-38b-ai-infrastructure-deal-aws/",
+   "note": "GPU 數只有「hundreds of thousands」→ 列 20 萬／30 萬／50 萬三點；7 年均攤（實際部署 2026 年底前完成，前期偏低）；100% 時數"
+  }
+ ],
+ "recommendation": {
+  "longContract": {
+   "base": 0.75,
+   "low": 0.55,
+   "high": 1.0,
+   "basis": "OpenAI Trainium 0.70（IT）–0.84（設施）、OpenAI NVIDIA 30 萬顆 0.82（20–50 萬：0.49–1.23）；Anthropic 下限 0.22、平均 2.5 GW 情境 0.45（金額下限 → 偏低）。基準取 OpenAI 兩筆中段 0.75，區間 0.55–1.0"
+  },
+  "spotReserved": {
+   "base": 1.85,
+   "low": 1.85,
+   "high": 4.29,
+   "basis": "3 年預留 H100 1.85、H200 2.13；1 年預留 2.70；Spot 2.37；Capacity Block 3.72（H100）、5.07（GB200 NVL72）、6.81（B200）；隨需 4.29（H100）、6.83（B200）、5.97（B300）。基準取 3 年預留（最接近實際成交、最保守），上限取 H100 隨需"
+  },
+  "mix": {
+   "longShare": {
+    "base": 0.8,
+    "low": 0.7,
+    "high": 0.9
+   },
+   "blendedK": {
+    "base": 0.97,
+    "low": 0.68,
+    "high": 1.987
+   },
+   "basis": "長約占比：Anthropic（Trainium2 三站 1.42 GW-IT 全為長約）＋OpenAI（$38B 與 $100B）占對外 AI 容量多數 → 基準 80%（[Assumed]，70%–90%）"
+  },
+  "compare": {
+   "nebius": 0.76,
+   "coreweave": 1.76,
+   "note": "共同規則與工作單引用值；Amazon 長約基準 0.75 ≈ Nebius；混合 0.97 介於兩者之間"
+  },
+  "warnings": [
+   "Trainium 的 k 依賴 NonNV 持有比（Tokenomics 無 IF_ 名稱；本表借 anthropic/ 參考值 0.7），v0.1b 需等 Tokenomics 補具名範圍或以 Hopper 代理並列敏感度",
+   "長約 k 全部帶 [Assumed]：金額 ↔ MW／GPU 數的對應沒有一手揭露",
+   "未使用 AWS 營收、RPO、AI run-rate 反推 k（共同規則第 4 節）"
+  ]
+ }
+}

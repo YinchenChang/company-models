@@ -1,0 +1,38 @@
+[
+{
+"year": 2026,
+"demand": 1108,
+"nvidia": 615,
+"capacity": 1370,
+"util": 0.809,
+"ms_demand": 1394,
+"hbm_gap": null
+},
+{
+"year": 2027,
+"demand": 2096,
+"nvidia": 1121,
+"capacity": 2178,
+"util": 0.963,
+"ms_demand": 2509,
+"hbm_gap": 0.21
+},
+{
+"year": 2028,
+"demand": 2620,
+"nvidia": 1411,
+"capacity": 3036,
+"util": 0.863,
+"ms_demand": null,
+"hbm_gap": null
+},
+{
+"year": 2029,
+"demand": 3013,
+"nvidia": 1599,
+"capacity": 3828,
+"util": 0.787,
+"ms_demand": null,
+"hbm_gap": null
+}
+]

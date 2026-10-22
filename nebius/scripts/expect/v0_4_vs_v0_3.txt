@@ -1,0 +1,1281 @@
+# v0.4（工作單 v0.4a：Tokenomics 同步 v18.0）對 v0.3 成品的預期差異清單（xl_diff.py --expect；EXPECT=本檔；比對時以 v0.3 成品為 dist）
+# 由 xl_diff.py --values --by-label --all 與公式版輸出逐格產生、依原因分類；只含 TK 同步（快照、k、建置成本、四層上限檢查、期初可計費 MW）及其下游、文字與更新日；其餘須 0 差異。
+# 新增列（四層瀑布、k 敏感度新標籤、Tokenomics_取數新名稱、版本紀錄 v0.4、建置成本舊值對照）不計為差異；k 敏感度列名含 k 值，隨 k 改名（「列 舊 => 新」）。
+列 預付款，能把 Backlog 變成現金嗎？｜Nebius 收支與評價模型 — Excel 版 v0.3（更新 2026-10-08；與 HTML v0.3 同步；市價截至 2026-10-06 收盤） => 預付款，能把 Backlog 變成現金嗎？｜Nebius 收支與評價模型 — Excel 版 v0.4（更新 2026-10-21；與 HTML v0.4 同步；市價截至 2026-10-06 收盤）
+列 敏感度｜k_長約 0.70 => 敏感度｜k_長約 0.82
+列 敏感度｜k_長約 0.89（三筆長約中位數） => 敏感度｜k_長約 1.04（三筆長約中位數）
+列 敏感度｜k_長約 1.00 => 敏感度｜k_長約 1.17
+列 敏感度｜k_長約 0.91（Nebius–Microsoft：Vineland 300 MW 視為 IT） => 敏感度｜k_長約 1.07（Nebius–Microsoft：Vineland 300 MW 視為 IT）
+列 敏感度｜k_長約 1.09（Nebius–Microsoft：Vineland 300 MW 視為設施（÷ PUE 1.2）） => 敏感度｜k_長約 1.28（Nebius–Microsoft：Vineland 300 MW 視為設施（÷ PUE 1.2））
+列 敏感度｜k_長約 1.33（Nebius–Microsoft：約 10 萬顆 GB300（Bloomberg）） => 敏感度｜k_長約 1.56（Nebius–Microsoft：約 10 萬顆 GB300（Bloomberg））
+列 敏感度｜隨需占比 10%（k_現貨 1.76） => 敏感度｜隨需占比 10%（k_現貨 1.83）
+列 敏感度｜隨需占比 20%（k_現貨 1.76） => 敏感度｜隨需占比 20%（k_現貨 1.83）
+列 來源：YinchenChang/Tokenomics 20261008_Tokenomics_v5.27.xlsx（v5.27，commit ca78a8f，擷取 2026-10-08）。只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱；模型主值取「基準」，低／高只作敏感度；Tokenomics 每 GW＝IT 關鍵電力。 => 來源：YinchenChang/Tokenomics 20261021_Tokenomics_v18.0.xlsx（v18.0，commit 868e2cc，擷取 2026-10-21）。只引用 IF_（不含 IF_Hdr*）、IFW_、IFC_ 與 L1_ 名稱；模型主值取「基準」，低／高只作敏感度；Tokenomics 每 GW＝IT 關鍵電力。
+列 每 MW 收入錨定（IF_HoldEcon）與上限檢查（IF_RevGWFleet）引用本分頁的 TK_ 具名範圍；值為快照的藍字輸入格，更新方式見 repo 根目錄 README「共用工具：Tokenomics 取數」。 => 每 MW 收入錨定（IF_HoldEcon）、建置成本（IF_CapexTotal）與上限檢查（IF_RevGWFleet、IFW_RevGWFleet_* 四層）引用本分頁的 TK_ 具名範圍；值為快照的藍字輸入格，更新方式見 repo 根目錄 README「共用工具：Tokenomics 取數」。
+Tokenomics_取數!C95 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!C96 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!C97 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!C98 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!C99 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F105 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F106 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F107 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F108 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F109 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F110 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F111 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F112 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F113 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F114 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F35 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F36 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F37 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F38 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F39 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F40 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F41 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F42 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F43 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F44 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F45 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F46 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F47 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F48 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F49 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F57 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F58 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F59 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F85 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F86 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F87 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F88 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!F89 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G102 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G105 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G106 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G107 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G108 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G109 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G110 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G111 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G112 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G113 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G114 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G22 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G32 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G35 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G36 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G37 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G38 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G39 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G40 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G41 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G42 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G43 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G44 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G45 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G46 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G47 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G48 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G49 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G57 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G58 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G59 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G67 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G85 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G86 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G87 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G88 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!G89 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H102 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H105 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H106 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H107 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H108 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H109 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H110 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H111 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H112 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H113 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H114 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H22 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H32 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H35 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H36 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H37 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H38 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H39 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H40 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H41 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H42 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H43 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H44 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H45 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H46 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H47 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H48 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H49 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H57 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H58 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H59 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H67 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H85 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H86 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H87 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H88 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!H89 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J10 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J100 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J101 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J102 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J103 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J104 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J105 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J106 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J107 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J108 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J109 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J11 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J110 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J111 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J112 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J113 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J114 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J12 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J13 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J14 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J15 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J16 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J17 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J18 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J19 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J20 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J21 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J22 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J23 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J24 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J25 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J26 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J27 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J28 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J29 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J30 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J31 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J32 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J33 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J34 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J35 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J36 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J37 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J38 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J39 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J40 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J41 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J42 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J43 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J44 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J45 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J46 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J47 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J48 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J49 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J5 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J50 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J51 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J52 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J53 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J54 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J55 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J56 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J57 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J58 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J59 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J6 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J60 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J61 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J62 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J63 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J64 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J65 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J66 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J67 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J68 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J69 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J7 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J70 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J71 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J72 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J73 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J74 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J75 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J76 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J77 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J78 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J79 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J8 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J80 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J81 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J82 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J83 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J84 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J85 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J86 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J87 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J88 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J89 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J9 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J90 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J91 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J92 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J93 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J94 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J95 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J96 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J97 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J98 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+Tokenomics_取數!J99 Tokenomics v18.0 同步：快照值、版本與新增名稱（IFW_RevGWFleet_*、L1_HoldEconMW_* 等）
+來源!B14 Tokenomics 版本與來源文字 v5.27 → v18.0
+公司實況驗證!B5 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!B6 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!B7 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!B8 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!B9 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!C5 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!C6 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!C7 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!C8 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!C9 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!D6 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!E6 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!F5 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!F6 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!F7 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!F8 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!F9 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!G9 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!H5 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!H6 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!H9 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!I5 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!I6 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+公司實況驗證!I9 公司實況驗證對照表以 v18.0 重算（步驟 5；靜態表）
+各期收支!C100 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C101 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C19 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C20 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C35 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C38 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C42 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C45 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C46 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C47 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C50 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C57 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C58 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C66 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C74 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C78 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C79 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C82 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C83 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C87 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C92 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C94 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C95 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!C99 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D17 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D34 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D35 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D38 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D40 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D42 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D45 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D46 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D47 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D50 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D51 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D57 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D58 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D64 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D65 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D66 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D67 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D70 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D72 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D76 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D77 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D83 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!D9 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E17 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E34 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E35 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E40 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E42 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E45 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E47 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E50 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E57 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E58 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E60 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E61 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E63 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E67 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E70 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E72 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E76 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E77 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E83 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!E9 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F17 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F34 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F35 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F40 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F42 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F45 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F47 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F50 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F57 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F58 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F59 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F60 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F61 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F63 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F67 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F70 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F72 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F76 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F77 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F83 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!F9 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G17 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G19 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G20 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G34 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G35 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G41 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G42 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G45 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G47 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G50 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G57 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G58 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G59 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G60 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G61 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G63 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G67 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G70 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G73 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G74 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G77 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G80 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G82 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G83 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+各期收支!G9 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C118 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C124 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C125 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C126 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C127 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C128 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C13 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C20 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C22 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C23 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C24 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C25 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C42 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C47 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C52 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C57 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C7 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C83 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C84 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C85 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C9 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C92 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!C93 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D118 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D124 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D125 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D126 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D127 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D128 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D20 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D22 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D23 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D24 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D25 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D42 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D47 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D52 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D57 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D83 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D84 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D85 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D92 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D93 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!D94 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!E124 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!E125 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!E126 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!E127 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!E128 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!E22 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!E27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!E28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!E29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!E30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!E31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!E6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!E7 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!E8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!F124 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!F125 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!F126 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!F127 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!F128 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!F22 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!F27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!F28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!F29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!F30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!F31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!G124 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!G125 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!G126 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!G127 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!G128 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!G22 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!G27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!G28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!G29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!G30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!G31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!H124 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!H125 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!H126 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!H127 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!H128 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!H22 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!H27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!H28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!H29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!H30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!H31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+季度追蹤!M7 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C15 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C17 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C18 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C19 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C22 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C32 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C34 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C35 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C36 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!C8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D13 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D15 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D17 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D18 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D19 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D21 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D22 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D34 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D35 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D36 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!D8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E13 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E15 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E17 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E18 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E19 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E21 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E22 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E34 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E35 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E36 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!E8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F13 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F15 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F17 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F18 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F19 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F21 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F22 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F34 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F35 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F36 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!F8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G13 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G15 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G17 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G18 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G19 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G21 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G22 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G32 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G34 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G35 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G36 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+損益!G8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C13 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C14 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C15 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C19 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C21 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C22 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C24 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C25 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C32 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C34 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C35 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C36 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C38 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C45 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C51 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C52 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C59 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C60 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C62 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C66 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C67 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C68 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C69 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C7 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C70 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C71 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!C9 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D19 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D21 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D22 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D24 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D25 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D36 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D41 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D42 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D44 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D45 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D46 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D48 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D59 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!D62 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!E19 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!E21 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!E22 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!E24 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!E25 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!E26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!E28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!E29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!E31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!E36 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!E59 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+摘要!E62 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B18 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B19 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B21 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B32 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B34 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B36 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B37 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B38 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B40 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B7 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!B9 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+檢查_連動!E26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+每MW收入_錨定!C103 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C11 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C118 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C122 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C123 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C124 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C133 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C137 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C139 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C140 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C145 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C146 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C16 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C17 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C173 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C174 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C18 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C181 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C183 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C184 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C185 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C186 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C187 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C188 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C189 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C19 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C190 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C191 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C192 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C193 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C194 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C195 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C201 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C202 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C203 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C204 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C205 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C206 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C207 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C208 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C209 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C210 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C214 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C223 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C224 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C225 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C226 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C58 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C6 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C62 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C63 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C64 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C7 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C73 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C8 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C88 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C9 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C92 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C93 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!C94 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D103 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D11 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D118 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D122 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D123 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D124 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D133 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D137 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D139 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D140 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D145 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D150 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D151 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D152 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D153 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D154 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D155 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D156 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D157 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D158 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D159 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D16 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D160 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D17 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D173 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D174 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D18 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D19 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D201 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D202 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D203 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D204 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D205 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D206 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D207 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D208 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D209 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D214 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D223 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D224 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D225 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D226 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D58 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D6 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D62 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D63 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D64 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D7 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D73 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D88 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D92 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D93 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!D94 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E103 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E11 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E118 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E122 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E123 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E124 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E133 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E137 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E139 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E140 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E145 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E150 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E151 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E152 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E153 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E154 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E155 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E156 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E157 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E158 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E159 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E160 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E173 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E174 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E201 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E202 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E203 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E204 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E205 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E206 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E207 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E208 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E209 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E214 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E223 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E225 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E226 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E58 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E6 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E62 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E63 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E64 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E7 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E73 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E88 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E92 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E93 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!E94 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F103 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F118 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F122 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F123 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F124 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F133 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F137 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F139 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F140 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F145 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F173 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F174 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F214 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F223 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F225 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F226 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F58 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F62 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F63 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F64 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F73 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F88 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F92 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F93 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!F94 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G103 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G118 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G122 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G123 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G124 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G133 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G137 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G139 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G140 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G145 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G173 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G174 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G214 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G223 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G224 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G225 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G226 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G58 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G62 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G63 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G64 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G73 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G88 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G92 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G93 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!G94 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!H214 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!H223 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!H225 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!H226 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!I103 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!I11 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!I12 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!I133 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!I197 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!I201 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!I6 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!I7 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+每MW收入_錨定!I73 Tokenomics v18.0 同步：錨、k（隨成本重算）、四層上限檢查、k 敏感度與目標價矩陣
+評價_DCF與目標價!C12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C14 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C17 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C19 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C20 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C23 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C25 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C38 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C39 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C41 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C43 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C48 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C49 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C51 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C57 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C61 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C62 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C63 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C64 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C70 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C73 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C75 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C78 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C79 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C80 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C81 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C83 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C84 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C85 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C86 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C89 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!C9 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!D10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!D102 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!D103 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!D104 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!D12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!D14 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!D17 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!D6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!D7 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!D8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!D81 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!D83 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!D9 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!D95 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!D96 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!D97 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E101 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E102 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E103 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E104 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E14 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E17 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E7 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E78 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E79 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E80 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E9 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E94 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E95 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E96 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!E97 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!F10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!F101 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!F102 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!F103 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!F104 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!F12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!F14 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!F17 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!F6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!F7 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!F8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!F9 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!F94 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!F95 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!F96 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!F97 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!G10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!G12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!G14 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!G17 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!G6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!G7 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!G8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_DCF與目標價!G9 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!B18 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!B19 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!B21 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!B25 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!B26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!B27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!C18 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!C21 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!C25 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!C26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!C27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!C28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!C29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!D18 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!D21 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!D25 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!D26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!D27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!D28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!D29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!E25 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!E26 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!E27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!E28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_反向DCF!E29 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_可比公司!E11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_可比公司!F11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_可比公司!G11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_可比公司!H11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+評價_可比公司!I11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!C12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!C13 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!C20 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!C23 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!C24 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!C32 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!C33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!C7 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!C8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!D11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!D27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!D28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!D33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!D6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!D7 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!D8 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!E11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!E27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!E28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!E30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!E31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!E32 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!E33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!E6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!E7 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!F11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!F13 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!F27 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!F28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!F30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!F31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!F32 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!F33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!F6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!F7 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!G10 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!G12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!G13 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!G14 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!G22 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!G23 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!G24 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!G28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!G30 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!G31 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!G32 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!G33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!G6 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+資產負債_新債與新股!G7 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+輸入與假設!C162 更新日 2026-10-08 → 2026-10-21
+輸入與假設!C18 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!C19 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!C20 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!C32 期初可計費 MW 隨首期每 MW 年收入重算（最新季營收 × 4 ÷ 首期每 MW 收入）
+輸入與假設!C42 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!C69 每 MW 建置成本改引用 TK_CapexTotal（步驟 3）；舊值移到對照列
+輸入與假設!C86 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!C87 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!C91 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!C92 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!D18 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!D19 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!D20 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!D201 下游：目標價
+輸入與假設!D202 下游：目標價
+輸入與假設!D203 下游：目標價
+輸入與假設!D204 下游：目標價
+輸入與假設!D42 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!D69 每 MW 建置成本改引用 TK_CapexTotal（步驟 3）；舊值移到對照列
+輸入與假設!D86 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!D87 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!D89 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!D91 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!D92 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!E18 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!E19 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!E20 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!E42 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!E69 每 MW 建置成本改引用 TK_CapexTotal（步驟 3）；舊值移到對照列
+輸入與假設!E86 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!E87 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!E89 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!E91 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!E92 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!F18 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!F19 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!F20 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!F42 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!F69 每 MW 建置成本改引用 TK_CapexTotal（步驟 3）；舊值移到對照列
+輸入與假設!F86 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!F87 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!F89 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!F91 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!F92 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!G18 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!G19 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!G20 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!G42 每 MW 年收入：Tokenomics 錨（v18.0 成本）× 重算後的 k
+輸入與假設!G69 每 MW 建置成本改引用 TK_CapexTotal（步驟 3）；舊值移到對照列
+輸入與假設!G86 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!G87 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!G88 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!G89 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!G91 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!G92 下游：每 MW 建置成本改為 Tokenomics 後的 CapEx 推導
+輸入與假設!I69 每 MW 建置成本改引用 TK_CapexTotal（步驟 3）；舊值移到對照列
+運營_產能與收入!C11 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!C12 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!C14 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!C15 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!C19 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!C20 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!C25 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!C28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!C32 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!C33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!C35 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!C36 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!C37 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!D14 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!D15 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!D19 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!D20 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!D25 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!D28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!D32 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!D33 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!D35 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!D36 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!D37 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!E14 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!E15 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!E21 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!E23 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!E25 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!E28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!E35 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!E36 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!E37 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!E38 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!F14 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!F15 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!F21 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!F23 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!F25 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!F28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!F35 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!F36 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!F37 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!F38 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!G14 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!G15 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!G21 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!G23 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!G25 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!G28 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!G35 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!G36 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!G37 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+運營_產能與收入!G38 下游：Tokenomics v18.0 同步（每 MW 收入、k、建置成本、期初可計費 MW）後的數值與判斷句
+導覽!A1 更新日與版本文字
+每MW收入_錨定!A215 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!C215 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!D215 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!E215 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!F215 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!G215 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!H215 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!A216 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!C216 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!D216 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!E216 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!F216 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!G216 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!H216 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!A217 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!C217 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!D217 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!E217 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!F217 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!G217 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!H217 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!A218 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!C218 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!D218 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!E218 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!F218 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!G218 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!H218 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!A219 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!C219 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!D219 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!E219 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!F219 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!G219 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!H219 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!A220 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!C220 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!D220 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!E220 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!F220 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!G220 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!H220 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!A221 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!C221 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!D221 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!E221 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!F221 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!G221 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!H221 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!A222 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!C222 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!D222 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!E222 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!F222 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!G222 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+每MW收入_錨定!H222 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+Tokenomics_取數!A2 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
+Tokenomics_取數!A3 k 敏感度列：隨 k 重算的列名與目標價（列名含 k 值）
