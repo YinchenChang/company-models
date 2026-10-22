@@ -138,7 +138,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY27 第 2–4 季、FY28、FY29、FY30、FY31，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 Oracle v0.3 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 Oracle v0.3.1 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -147,7 +147,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `meta.company` | 公司名稱 | 文字 | Oracle | 必改 |
 | `meta.ticker` | 股票代號 | 文字 | ORCL | 必改 |
 | `meta.updateDate` | 資料更新日 | 日期 | 2026-10-22 | 必改 |
-| `meta.priceDate` | 股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格） | 日期 | 2026-10-06 | 必改 |
+| `meta.priceDate` | 股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格） | 日期 | 2026-10-21 | 必改 |
 | `meta.consensusFile` | 市場共識資料檔路徑（v4.3；只讀，由使用者查證後提供；建置時併入 HTML、Excel 讀同一檔） | 路徑 | data/consensus_orcl_202610… | 必改 |
 | `meta.sourceOrderNote` | 資料來源的先後與衝突時的取捨原則（畫面說明文字） | 文字 | 時序先 FY27Q1 財報新聞稿與法說（2026-0… | 必改 |
 
@@ -380,8 +380,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `cdsLowDate` | CDS 低點日期 | 日期 | None | 否 |
 | `availability` | 未動用信用額度 | US$bn | 10 | 否 |
 | `price0918` | 9/18 收盤價 | US$ | None | 否 |
-| `priceLast` | 最新收盤價 | US$ | 144.77 | 是 |
-| `priceDate` | 最新收盤價日期 | 日期 | 2026-10-06 | 是 |
+| `priceLast` | 最新收盤價 | US$ | 129.13 | 是 |
+| `priceDate` | 最新收盤價日期 | 日期 | 2026-10-21 | 是 |
 | `postQShortDated` | 期後公告摘要 | 文字 | 2026-09-24 Oracle 對 Projec… | 是 |
 | `ttmRev` | 近十二個月營收 | US$bn | 71.777 | 是 |
 | `ttmOpInc` | 近十二個月 GAAP 營業損益 | US$bn | 23.056 | 是 |
@@ -472,7 +472,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.debtBacklog` | 新債上限：總債務不超過 backlog 的倍數 | 倍 | 0.5 | 檢查 |
 | `defaults.ctrTerm` | 新簽合約的平均年期（決定 backlog 補入量） | 年 | 3 | 檢查 |
 | `defaults.minCash` | 最低現金：每期融資後期末現金不低於此值 | US$bn | 10 | 檢查 |
-| `defaults.eqPx` | 新股發行參考價（預設＝現價） | US$ | 144.77 | 必改 |
+| `defaults.eqPx` | 新股發行參考價（預設＝現價） | US$ | 129.13 | 必改 |
 | `defaults.eqDisc` | 新股發行折價 | 比例 | 0.1 | 檢查 |
 | `defaults.eqCapPct` | 每年股權募資上限（占現市值）；輸入 9 以上視為無上限 | 比例 | 0.05 | 檢查 |
 | `defaults.eqCapShares` | 股權年上限的股數基礎：現市值＝發行參考價 × 此股數（5a；評價日時點，列入滾動檢查） | bn | 3.02374 | 必改 |
@@ -535,7 +535,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `valuation.price` | 現價 | US$ | 144.77 | 必改 |
+| `valuation.price` | 現價 | US$ | 129.13 | 必改 |
 | `valuation.shares` | 評價股數（含期後股權發行上限） | bn 股 | 3.05774 | 必改 |
 | `valuation.atmSharesInValuation` | 評價股數中「期後股權發行上限」的股數：期後股權／可轉債開關關閉時由評價股數扣回（v0.1b；CRWV 0.035、無此項的公司填 0） | bn 股 | 0 | 必改 |
 | `valuation.netDebt` | 淨負債（不含可轉債：其他借款 − 現金，含期後已入帳的股權／可轉債募得淨額；可轉債依 debt.convertibles 另計） | US$bn | 88.827 | 必改 |
@@ -562,7 +562,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `valuation.legacyEvEbitdaNote` | 分部加總說明 | 文字 | 傳統事業（雲端應用＋授權＋硬體＋服務）EV/EBIT… | 必改 |
 | `valuation.dcfMode` | DCF 股權為負時的處理：zero＝0 截斷、option＝選擇權法 | 文字 | zero | 可沿用 |
 | `valuation.sigma` | 企業價值波動率（選擇權法用） | 比例 | 0.5 | 檢查 |
-| `valuation.rf` | 無風險利率（CAPM 與選擇權法用） | 比例 | 0.0527 | 檢查 |
+| `valuation.rf` | 無風險利率（CAPM 與選擇權法用） | 比例 | 0.0512 | 檢查 |
 
 ### `methodology`：評價方法與評等門檻
 
@@ -735,7 +735,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `oracle._readme` | Oracle 資料草稿區段的說明（v0.1a 產出；引擎尚未讀取，v0.1b 依 mapTo 搬入既有欄位或新增） | 文字 | Oracle 資料草稿（v0.1a 產出）。v0.1… | 必改 |
-| `oracle.files` | Oracle 事實總帳、每 MW 推導、共識資料檔的路徑 | 物件（路徑） | 物件（facts、perMw、consensus） | 必改 |
+| `oracle.files` | Oracle 事實總帳、每 MW 推導、共識資料檔的路徑 | 物件（路徑） | 物件（facts、facts2、perMw、consensus） | 必改 |
 | `oracle.debt` | Oracle 債務草稿（逐檔票券、定期貸款、商業本票、到期梯、循環額度、強制轉換特別股、信評）；格式同上 | 物件 | 物件（ratings） | 必改 |
 | `oracle.equity` | Oracle ATM、FY27 融資計畫、股利、買回授權、股價草稿；格式同上 | 物件 | 物件（atmDone、fundingPlanFY27、dividendPerShareQ、buybackAuth、eqPx） | 必改 |
 | `oracle.prepay` | Oracle 客戶出資覆蓋比、預付累計、預付＋自帶硬體合約額草稿；格式同上 | 物件 | 物件（capexCover、cashCum、prepayAndByohContract、q1NewContracts） | 必改 |
