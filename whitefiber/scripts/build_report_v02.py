@@ -113,8 +113,8 @@ for r in range(1, ws.max_row + 1):
 sheet('Q2驗證', ['項目', '單位／其他＝0%', '數值／其他＝10%', '其他＝20%', '其他＝30%'], q2,
       '只作驗證、不校準 k：Q2 實現每 MW 8.37 對模型首期 11.32 的差距＝(iii) 世代組合＋(ii) 價格（H100 24 個月約 k）＋(iv) 爬坡分母＋(i) 其他；(iv)(i) 隨其他占比 n 改變')
 # 7 上限五列
-cap = xrows('每MW收入_錨定', lambda a, r: ('上限檢查' in a and a.startswith('目前情境')) or a.startswith('第五列') or a.startswith('上限檢查｜第五列'), range(2, 7))
-sheet('收入上限_五列', ['項目', '單位／FY26', 'FY27', 'FY28', 'FY29', 'FY30'], cap, '四層（_100／_Util／_Prod／_Life）與每 MW 收入 ÷ 客戶付費 token 營收；第五列＝WhiteFiber 每 MW 收入 ÷ 模型商每 MW 實收營收（P×Q，只作對照，不設門檻）。比較層 _Prod 門檻 50%')
+cap = xrows('每MW收入_錨定', lambda a, r: ('上限檢查' in a and a.startswith('目前情境')) or a.startswith('第五列') or a.startswith('上限檢查｜第五列'), range(2, 8))  # B=單位，C..G=五期
+sheet('收入上限_五列', ['項目', '單位'] + P, cap, '四層（_100／_Util／_Prod／_Life）與每 MW 收入 ÷ 客戶付費 token 營收；第五列＝WhiteFiber 每 MW 收入 ÷ 模型商每 MW 實收營收（P×Q，只作對照，不設門檻）。比較層 _Prod 門檻 50%')
 # 8 3x3
 rows = []
 for m, lab, f in (('tgt', '加權目標價 US$', 1), ('eq', '五期股權募資 US$m', 1), ('gap', '融資前缺口 US$m', 1), ('levMax', '調整後槓桿峰值（倍）', 1), ('sh', '新股數 m 股', 1), ('fy27Rev', '首期營收 US$m', 1)):
