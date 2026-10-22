@@ -457,5 +457,35 @@
    "長約 k 全部帶 [Assumed]：金額 ↔ MW／GPU 數的對應沒有一手揭露",
    "未使用 AWS 營收、RPO、AI run-rate 反推 k（共同規則第 4 節）"
   ]
+ },
+ "kspecInputs": {
+  "spot.h100.index": {
+   "price": 2.82,
+   "unit": "US$/GPU-hr",
+   "gen": "H100",
+   "tkName": "IF_GPUhrEcon",
+   "basis": "Silicon Data H100 Index 頁面（2026-10-06；取數 2026-10-08）"
+  },
+  "price.p5.od": {
+   "price": 6.88,
+   "unit": "US$/GPU-hr",
+   "gen": "H100",
+   "tkName": "IF_GPUhrEcon",
+   "basis": "Vantage（AWS 價格 API）"
+  },
+  "long.base": {
+   "price": 9.5715,
+   "unit": "US$m/MW-年",
+   "gen": "VR200",
+   "tkName": "IF_HoldEcon",
+   "basis": "由 v0.2 判斷倍數 × Tokenomics v5.27 VR200 成本 12.762 換算，不是觀察到的市場價格"
+  },
+  "long.low": {
+   "price": 7.0191,
+   "unit": "US$m/MW-年",
+   "gen": "VR200",
+   "tkName": "IF_HoldEcon",
+   "basis": "由 v0.2 判斷倍數 × Tokenomics v5.27 VR200 成本 12.762 換算，不是觀察到的市場價格"
+  }
  }
 }

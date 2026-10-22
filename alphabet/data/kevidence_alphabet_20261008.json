@@ -512,5 +512,35 @@
   "retrieved": "2026-10-08",
   "note": "v0.2.1 補列：k_現貨基準的證據價格（原 v0.2 固定 1.76＝2.82 ÷ 1.605；MAG 三家共用，與 nebius／coreweave／oracle 同源）。k 由 company.json pricing.kEvidence／kspec 依目前 Tokenomics 快照重算。"
  },
- "kspecNote": "v0.2.1：本檔 tokenomics 欄與各列 IF_GPUhrEcon／IF_HoldEcon 分母為 v5.27 取數時的歷史值（保留作紀錄）；模型的 k 一律由證據價格 ÷ 目前快照同世代成本重算（kspec.py）。"
+ "kspecNote": "v0.2.1：本檔 tokenomics 欄與各列 IF_GPUhrEcon／IF_HoldEcon 分母為 v5.27 取數時的歷史值（保留作紀錄）；模型的 k 一律由證據價格 ÷ 目前快照同世代成本重算（kspec.py）。",
+ "kspecInputs": {
+  "spot.h100.index": {
+   "price": 2.82,
+   "unit": "US$/GPU-hr",
+   "gen": "H100",
+   "tkName": "IF_GPUhrEcon",
+   "basis": "Silicon Data H100 Index 頁面（2026-10-06；取數 2026-10-08）"
+  },
+  "gcp.a3-highgpu-8g.cud3y": {
+   "price": 4.858,
+   "unit": "US$/GPU-hr",
+   "gen": "H100",
+   "tkName": "IF_GPUhrEcon",
+   "basis": "Google Cloud 價目表〈Accelerator-optimized machine family pricing〉"
+  },
+  "long.base": {
+   "price": 9.5715,
+   "unit": "US$m/MW-年",
+   "gen": "VR200",
+   "tkName": "IF_HoldEcon",
+   "basis": "由 v0.2 判斷倍數 × Tokenomics v5.27 VR200 成本 12.762 換算，不是觀察到的市場價格"
+  },
+  "long.low": {
+   "price": 7.6572,
+   "unit": "US$m/MW-年",
+   "gen": "VR200",
+   "tkName": "IF_HoldEcon",
+   "basis": "由 v0.2 判斷倍數 × Tokenomics v5.27 VR200 成本 12.762 換算，不是觀察到的市場價格"
+  }
+ }
 }

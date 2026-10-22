@@ -222,9 +222,8 @@ C['tokenomics']['optional'] = [n for n, v in snap['items'].items() if v.get('mis
 P = copy.deepcopy(A['pricing'])
 P.update({"_note": P['_note'].replace('kevidence_amazon_20261008', 'kevidence_microsoft_20261008'),
   "axisLabels": {"low": "低 長約下緣", "base": "基準 C1 混合", "high": "高 現貨改用 Azure 牌價"},
-  "kLong": {"low": 0.45, "base": 0.76, "high": 0.76}, "kSpot": {"low": 1.76, "base": 1.76, "high": 7.66}, "longShare": {"low": 0.7, "base": 0.7, "high": 0.7},
-  "kNote": {"kLong": "長約 k：IREN–Microsoft 0.76（一手 MW）、Nscale 約 0.88（金額二手）、Anthropic–Azure 0.39–0.71（年期假設）、Nebius ≤1.33 → 基準 0.76；低＝長約區間下緣 0.45（Anthropic 隱含）[Assumed]（kevidence longContracts）",
-            "kSpot": "現貨 k：基準 1.76＝與 Nebius／CRWV 同一市場現貨指數（對照表 r1 C1）；高＝Azure 牌價換算（H100 隨需 12.29 ÷ IF_GPUhrEcon H100 1.605＝7.66，kevidence az.h100.od；與 Amazon 同取隨需層；牌價不是大客戶成交價，只作上限；替代：3 年預留 3.36 → 混合 1.54）",
+  "longShare": {"low": 0.7, "base": 0.7, "high": 0.7},
+  "kNote": {
             "longShare": "長約占比 70%（OpenAI 約占商用 RPO 45%＋Anthropic 等長約；45%–100% [Assumed]）"},
   "customNote": "自研晶片每 MW 錨＝同期 NVIDIA 世代 IF_HoldEcon × 1.0（對照表 r1 C2）：Maia 100 → Hopper（期初未列，部署量不存在）、Maia 200（2026 起量產）→ GB300（v0.1 交付前修訂，查核 b；原 v0.1 誤對 Hopper）；敏感度 × 0.7（收入端單邊與收入＋資本支出雙邊兩版）。Tokenomics 無 NonNV 具名範圍（IF_NonNVRatio、IF_NonNVCostRatio、IF_NonNV_Maia 為 missing），已列缺口回報。",
   "customCapexFactor": 1.0, "customCapexNote": "自研晶片每 MW IT 資本支出係數：預設 1（Maia 200 的資本支出以同期 NVIDIA GB300 的 TK_CapexIT 計）；雙邊敏感度時與 customFactor 同乘 0.7（收入錨與資本支出同降）；機房成本不變 [Assumed]",
@@ -234,6 +233,98 @@ P.update({"_note": P['_note'].replace('kevidence_amazon_20261008', 'kevidence_mi
             {"key": "maia", "label": "Maia 200", "tk": "GB300", "custom": True, "mixOpen": 0, "mixAdds": [0.1, 0.1, 0.1, 0.1, 0.1]},
             {"key": "vr200", "label": "Vera Rubin（VR200）", "tk": "VR200", "custom": False, "mixOpen": 0, "mixAdds": [0.3, 0.7, 0.9, 0.9, 0.9]}],
   "mixNote": "期初在役（評價日 2026-06-30）：Hopper 20%、GB200 45%、GB300 35%（v0.1a mw.genMix.open，[Assumed]；Maia 部署量未揭露，期初不另列）。新增 MW：Maia 200 10%（對應 GB300；「continues to scale」，部署量不存在，[Assumed] 0%–20%）；NVIDIA 部分 FY27 GB300 60%／VR200 30%、FY28 GB300 20%／VR200 70%、FY29 起 VR200 90% [Assumed]（VR200 2026 下半年起出貨）。在役占比＝各世代累計 MW ÷ 對外 AI MW。"})
+# ---------- k 規格（v0.2.1）：證據價格＋世代；k＝證據價格 ÷ 目前快照同世代成本（kspec.py）。與現行 company.json 的 pricing 相同（scripts/check_port_pricing.py 檢查） ----------
+K_SPEC = json.loads(r'''{
+ "kEvidence": [
+  {
+   "id": "spot.h100.index",
+   "label": "H100 Silicon Data 現貨指數",
+   "gen": "H100",
+   "price": 2.82,
+   "unit": "US$/GPU-hr",
+   "tkName": "IF_GPUhrEcon",
+   "tag": "[Verified]（價格）／[Derived]（倍數）",
+   "source": "Silicon Data H100 Index 頁面（2026-10-06；取數 2026-10-08）",
+   "url": "https://www.silicondata.com/products/silicon-index/h100",
+   "date": "2026-10-06",
+   "retrieved": "2026-10-08",
+   "note": "市場現貨指數（觀察價格）；MAG 三家共用",
+   "ref": "data/kevidence_microsoft_20261008.json → spotIndex"
+  },
+  {
+   "id": "az.h100.od",
+   "label": "Azure ND96isr_H100_v5 隨需（每 GPU 小時；牌價）",
+   "gen": "H100",
+   "price": 12.29,
+   "unit": "US$/GPU-hr",
+   "tkName": "IF_GPUhrEcon",
+   "tag": "[Interested-party]（牌價，Microsoft 賣價）",
+   "source": "kevidence rows[az.h100.od]：98.32 ÷ 8 GPU",
+   "url": "",
+   "date": "2026-10-08",
+   "retrieved": "2026-10-08",
+   "ref": "data/kevidence_microsoft_20261008.json → rows[az.h100.od]",
+   "note": "Azure 公開牌價（賣價，非成交價；k_現貨高軸，只作上限）"
+  },
+  {
+   "id": "lc.iren",
+   "label": "IREN–Microsoft GB300 五年約（Microsoft 付給 neocloud 的買價，代理長約賣價）",
+   "gen": "GB300",
+   "price": 9.7,
+   "unit": "US$m/MW-年",
+   "tkName": "IF_HoldEcon",
+   "tag": "[Analogy]（原標 [Derived]）",
+   "source": "kevidence rows[lc.iren]：TCV 9,700 ÷ 5 年 ÷ 200 MW-IT",
+   "url": "",
+   "date": "2026-10-08",
+   "retrieved": "2026-10-08",
+   "ref": "data/kevidence_microsoft_20261008.json → rows[lc.iren]",
+   "note": "Microsoft 付給 neocloud 的買價（IREN 五年約 TCV 9,700 ÷ 5 年 ÷ 200 MW-IT），代理長約賣價；[Analogy]，買價含 neocloud 利潤"
+  },
+  {
+   "id": "long.low",
+   "label": "長約低（判斷倍數 0.45，Anthropic 隱含）",
+   "gen": "VR200",
+   "price": 5.7429,
+   "unit": "US$m/MW-年",
+   "tkName": "IF_HoldEcon",
+   "tag": "[Assumed]／[Derived]（判斷值，非觀察價格）",
+   "source": "v0.2 判斷倍數 0.45 × 12.762",
+   "date": "2026-10-11",
+   "retrieved": "2026-10-22",
+   "note": "由 v0.2 判斷倍數 × Tokenomics v5.27 VR200 成本 12.762 換算，不是觀察到的市場價格",
+   "ref": "data/kevidence_microsoft_20261008.json → kspecInputs[long.low]"
+  }
+ ],
+ "kLong": {
+  "low": {
+   "ref": "long.low"
+  },
+  "base": {
+   "ref": "lc.iren"
+  },
+  "high": {
+   "ref": "lc.iren"
+  }
+ },
+ "kSpot": {
+  "low": {
+   "ref": "spot.h100.index"
+  },
+  "base": {
+   "ref": "spot.h100.index"
+  },
+  "high": {
+   "ref": "az.h100.od"
+  }
+ },
+ "kNote": {
+  "kLong": "長約 k（v0.2.1 起隨目前快照重算）：基準＝IREN–Microsoft GB300 五年約 9.7 US$m/MW-年 ÷ 目前 IF_HoldEcon｜GB300（v5.27 12.725 → 0.762〔v0.2 取 0.76〕；v19.0 10.8864 → 0.891），Nscale 約 0.88、Anthropic–Azure 0.39–0.71、Nebius ≤1.33 為對照；低＝v0.2 的 0.45（Anthropic 隱含 [Assumed]）換成固定價格＝0.45 × 當時 VR200 IF_HoldEcon 12.762 ＝ 5.7429 US$m/MW-年 [Derived] ÷ 目前 VR200 12.2255 → 0.470（kevidence lc.anthropic 的分母世代）。成本分母下降（GB300 −14.4%、VR200 −4.2%），價格不變",
+  "kSpot": "現貨 k（v0.2.1 起隨目前快照重算）：基準＝Silicon Data H100 現貨指數 2.82 US$/GPU-hr ÷ 目前 IF_GPUhrEcon｜H100（v5.27 1.605 → 1.757；v19.0 1.5426 → 1.828），MAG 三家一致（對照表 r1 C1）；高＝Azure 牌價 H100 隨需 12.29 ÷ 目前 IF_GPUhrEcon｜H100（v5.27 7.657 → v19.0 7.967；kevidence az.h100.od；與 Amazon 同取隨需層；牌價不是大客戶成交價，只作上限；替代：3 年預留 5.395）"
+ }
+}''')
+P['kEvidence'] = K_SPEC['kEvidence']; P['kLong'] = K_SPEC['kLong']; P['kSpot'] = K_SPEC['kSpot']
+P['kNote']['kLong'] = K_SPEC['kNote']['kLong']; P['kNote']['kSpot'] = K_SPEC['kNote']['kSpot']
 C['pricing'] = P
 
 # ---------- 資本支出模型 ----------

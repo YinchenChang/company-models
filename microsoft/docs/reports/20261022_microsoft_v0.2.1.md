@@ -8,6 +8,8 @@
 2. **主要驅動是 k 隨成本重算，不是 Tokenomics 本身**：v5.31 → v19.0 所有驅動名稱的值完全不變，單純換快照使目標價變動 0.00；但 v0.2 的 k 是以舊 v5.27 成本固定的倍數，改成「證據價格 ÷ 目前成本」後 k_長約 0.76 → 0.891（IREN–Microsoft GB300 約 9.7 US$m/MW-年 ÷ GB300 持有成本，GB300 成本 12.725 → 10.886，−14.4%）、k_現貨 1.76 → 1.828，混合 k 1.06 → 1.172（+10.6%）；基準 +4.13、積極 +3.39、保守 −5.35。收入端上調 10% 但目標價只動 1%：Azure 首期營收固定，AI 營收增加只是從以 13.8× 估值的 Azure 非 AI 殘差移到以 6× 估值的 AI 雲端（與 v0.2 報告同一機制，方向相反）。
 3. **主命題答案改變：由「差一點沒有」變為「有」**。FY29 基準對外 AI ROIC 9.81% → 13.55%（WACC 10.90%，差 −1.1pt → +2.7pt），打平 k 1.092 不變；目前混合 k 1.172 高於打平 k 約 7%。這個翻轉完全來自 k 的分母更新（價格不變），而且只有基準價格軸如此：k 低軸（0.877）下 ROIC 仍只有 3.7%（見第 2 節），結論取決於 k 落在打平 k 之上，已列入待 Project 判斷。
 
+**補充**：若 k_長約維持 0.76，Microsoft FY29 對外 AI ROIC 為 10.49%，低於 WACC 10.90%（主命題答案取決於 k_長約 0.76 或 0.891）。
+
 ## 2. 前後對照（v0.2 → v0.2.1）
 
 | 項目 | 保守 v0.2 | 保守 v0.2.1 | 基準 v0.2 | 基準 v0.2.1 | 積極 v0.2 | 積極 v0.2.1 |
@@ -145,3 +147,75 @@ verify.sh：全部通過（23 項）
 ```
 
 `--check`：快照 42 個名稱（missing 3）可由 Tokenomics `20261022_Tokenomics_v19.0.xlsx` 重現（相對誤差 ≤ 1e-9）。
+
+## 10. 補充（PR #64 追加；版本仍為 v0.2.1）
+
+- **k 證據價格改為獨立輸入格**：Excel「輸入與假設」B0 新增「k 證據價格」區塊（每個證據價格一格、藍字，旁邊是目前同世代成本與倍數，旁註寫來源與性質）；k｜長約／k｜現貨 公式改引用這些格（`=C<列>/TK_…`，不再把價格寫在公式裡）。HTML 檢查頁新增「k 證據價格 ÷ 目前快照同世代成本」一項同步顯示。價格登錄於 `data/kevidence_*.json` 的 `kspecInputs`，`scripts/check_kevidence.py`（已納入 verify.sh）檢查 company.json 與其逐筆相同、且 kLong／kSpot 皆為 ref。
+- **數字不變**：對本分支原 dist 的 `xl_diff --values` 為 0 差異，三情境目標價與所有數字逐格不變；公式差異僅為新增列與常數改引用輸入格（xl_diff 歸類為「常數改為引用輸入格」，`--expect` 清單為空）。
+- **主命題取決於 k_長約**：若 k_長約維持 0.76，Microsoft FY29 對外 AI ROIC 為 10.49%，低於 WACC 10.90%（主命題答案取決於 k_長約 0.76 或 0.891）。 Microsoft 長約低軸的證據價格 5.7429 也是 v0.2 判斷倍數 0.45 × 12.762 的換算值，不是觀察價格；基準 9.7（IREN）是 neocloud 買價（[Analogy]）。
+- `scripts/port_company_json.py` 的 pricing 區塊已改為現行 kspec 規格（證據價格＋世代），並新增 `scripts/check_port_pricing.py`：重產後的 pricing 與現行 company.json 完全相同（17 個欄位）。
+
+`verify.sh --vs-dist`（對本分支原 dist，`EXPECT=scripts/expect/v0_2_1b_證據價格輸入格.txt`）：
+
+```
+================ 結果 ================
+PASS  check_quarterly：季度加總＝年度、差異原因齊全
+PASS  README 欄位說明與 company.json 一致
+PASS  EBITDAR 校準：基準情境起點／穩態 EBITDA 率不變
+PASS  併網速度校準：首期資本支出＝指引、對帳落差 0
+PASS  Tokenomics 快照 --check：43 個名稱（missing 3）與快照一致（20261022_Tokenomics_v19.0.xlsx，相對誤差 ≤ 1e-09）
+PASS  k 證據價格：k 證據價格 4 筆與 kevidence_microsoft_20261008.json 一致，kLong／kSpot 6 個規格皆為 ref
+PASS  建 HTML
+PASS  建 Excel
+PASS  重算：0 公式錯誤
+PASS  反向 DCF：Excel 求解，rv_snap.json 與 Excel 一致
+PASS  fix_outline
+PASS  fix_datatable
+PASS  verify_ooxml：OOXML OK
+PASS  快照值＝Excel 分頁值：43 個名稱（missing 3）、443 個值、139 個具名範圍一致；其他工作表 69 格公式引用 32 個 TK_ 名稱（v19.0）
+PASS  離線開啟：新建 HTML
+PASS  離線開啟：dist/ 成品
+PASS  cmp31 low：544 項全部 OK
+PASS  cmp31 base：563 項全部 OK
+PASS  cmp31 high：544 項全部 OK
+PASS  cmp31 base_FY27：544 項全部 OK
+PASS  test_quarterly：假設實際數與可移植性測試通過
+PASS  test_rolling：日曆推算與滾動後第一屏
+PASS  test_mag_mechanisms：C8 (a)–(f)＋回購非零 一致
+PASS  test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）
+PASS  crawl 畫面文字（升版：只檢查頁面錯誤與頁數） 0 差異
+PASS  xl_diff --values --by-label 0 差異
+PASS  xl_diff 公式 --by-label 0 差異
+verify.sh：全部通過（27 項）
+```
+
+完整 `verify.sh`（dist 以同版號重建；`TOKENOMICS_DIR=/tmp/tk`，--check 實跑）：
+
+```
+================ 結果 ================
+PASS  check_quarterly：季度加總＝年度、差異原因齊全
+PASS  README 欄位說明與 company.json 一致
+PASS  EBITDAR 校準：基準情境起點／穩態 EBITDA 率不變
+PASS  併網速度校準：首期資本支出＝指引、對帳落差 0
+PASS  Tokenomics 快照 --check：43 個名稱（missing 3）與快照一致（20261022_Tokenomics_v19.0.xlsx，相對誤差 ≤ 1e-09）
+PASS  k 證據價格：k 證據價格 4 筆與 kevidence_microsoft_20261008.json 一致，kLong／kSpot 6 個規格皆為 ref
+PASS  建 HTML
+PASS  建 Excel
+PASS  重算：0 公式錯誤
+PASS  反向 DCF：Excel 求解，rv_snap.json 與 Excel 一致
+PASS  fix_outline
+PASS  fix_datatable
+PASS  verify_ooxml：OOXML OK
+PASS  快照值＝Excel 分頁值：43 個名稱（missing 3）、443 個值、139 個具名範圍一致；其他工作表 69 格公式引用 32 個 TK_ 名稱（v19.0）
+PASS  離線開啟：新建 HTML
+PASS  離線開啟：dist/ 成品
+PASS  cmp31 low：544 項全部 OK
+PASS  cmp31 base：563 項全部 OK
+PASS  cmp31 high：544 項全部 OK
+PASS  cmp31 base_FY27：544 項全部 OK
+PASS  test_quarterly：假設實際數與可移植性測試通過
+PASS  test_rolling：日曆推算與滾動後第一屏
+PASS  test_mag_mechanisms：C8 (a)–(f)＋回購非零 一致
+PASS  test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）
+verify.sh：全部通過（24 項）
+```

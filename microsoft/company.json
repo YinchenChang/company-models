@@ -1958,9 +1958,7 @@
   },
   "kLong": {
    "low": {
-    "priceEq": 5.7429,
-    "gen": "VR200",
-    "tkName": "IF_HoldEcon"
+    "ref": "long.low"
    },
    "base": {
     "ref": "lc.iren"
@@ -1999,25 +1997,12 @@
     "unit": "US$/GPU-hr",
     "tkName": "IF_GPUhrEcon",
     "tag": "[Verified]（價格）／[Derived]（倍數）",
-    "source": "Silicon Data H100 Index 頁面",
+    "source": "Silicon Data H100 Index 頁面（2026-10-06；取數 2026-10-08）",
     "url": "https://www.silicondata.com/products/silicon-index/h100",
     "date": "2026-10-06",
     "retrieved": "2026-10-08",
+    "note": "市場現貨指數（觀察價格）；MAG 三家共用",
     "ref": "data/kevidence_microsoft_20261008.json → spotIndex"
-   },
-   {
-    "id": "lc.iren",
-    "label": "IREN–Microsoft GB300 五年約（Microsoft 付給 neocloud 的買價，代理長約賣價）",
-    "gen": "GB300",
-    "price": 9.7,
-    "unit": "US$m/MW-年",
-    "tkName": "IF_HoldEcon",
-    "tag": "[Analogy]（原標 [Derived]）",
-    "source": "kevidence rows[lc.iren]：TCV 9,700 ÷ 5 年 ÷ 200 MW-IT",
-    "url": "",
-    "date": "2026-10-08",
-    "retrieved": "2026-10-08",
-    "ref": "data/kevidence_microsoft_20261008.json → rows[lc.iren]"
    },
    {
     "id": "az.h100.od",
@@ -2031,7 +2016,37 @@
     "url": "",
     "date": "2026-10-08",
     "retrieved": "2026-10-08",
-    "ref": "data/kevidence_microsoft_20261008.json → rows[az.h100.od]"
+    "ref": "data/kevidence_microsoft_20261008.json → rows[az.h100.od]",
+    "note": "Azure 公開牌價（賣價，非成交價；k_現貨高軸，只作上限）"
+   },
+   {
+    "id": "lc.iren",
+    "label": "IREN–Microsoft GB300 五年約（Microsoft 付給 neocloud 的買價，代理長約賣價）",
+    "gen": "GB300",
+    "price": 9.7,
+    "unit": "US$m/MW-年",
+    "tkName": "IF_HoldEcon",
+    "tag": "[Analogy]（原標 [Derived]）",
+    "source": "kevidence rows[lc.iren]：TCV 9,700 ÷ 5 年 ÷ 200 MW-IT",
+    "url": "",
+    "date": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "ref": "data/kevidence_microsoft_20261008.json → rows[lc.iren]",
+    "note": "Microsoft 付給 neocloud 的買價（IREN 五年約 TCV 9,700 ÷ 5 年 ÷ 200 MW-IT），代理長約賣價；[Analogy]，買價含 neocloud 利潤"
+   },
+   {
+    "id": "long.low",
+    "label": "長約低（判斷倍數 0.45，Anthropic 隱含）",
+    "gen": "VR200",
+    "price": 5.7429,
+    "unit": "US$m/MW-年",
+    "tkName": "IF_HoldEcon",
+    "tag": "[Assumed]／[Derived]（判斷值，非觀察價格）",
+    "source": "v0.2 判斷倍數 0.45 × 12.762",
+    "date": "2026-10-11",
+    "retrieved": "2026-10-22",
+    "note": "由 v0.2 判斷倍數 × Tokenomics v5.27 VR200 成本 12.762 換算，不是觀察到的市場價格",
+    "ref": "data/kevidence_microsoft_20261008.json → kspecInputs[long.low]"
    }
   ],
   "customFactor": 1.0,

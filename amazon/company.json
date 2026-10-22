@@ -3389,19 +3389,13 @@
   },
   "kLong": {
    "low": {
-    "priceEq": 7.0191,
-    "gen": "VR200",
-    "tkName": "IF_HoldEcon"
+    "ref": "long.low"
    },
    "base": {
-    "priceEq": 9.5715,
-    "gen": "VR200",
-    "tkName": "IF_HoldEcon"
+    "ref": "long.base"
    },
    "high": {
-    "priceEq": 9.5715,
-    "gen": "VR200",
-    "tkName": "IF_HoldEcon"
+    "ref": "long.base"
    }
   },
   "kSpot": {
@@ -3434,10 +3428,11 @@
     "unit": "US$/GPU-hr",
     "tkName": "IF_GPUhrEcon",
     "tag": "[Verified]（價格）／[Derived]（倍數）",
-    "source": "Silicon Data H100 Index 頁面",
+    "source": "Silicon Data H100 Index 頁面（2026-10-06；取數 2026-10-08）",
     "url": "https://www.silicondata.com/products/silicon-index/h100",
     "date": "2026-10-06",
     "retrieved": "2026-10-08",
+    "note": "市場現貨指數（觀察價格）；MAG 三家共用",
     "ref": "data/kevidence_amazon_20261008.json → spotIndex"
    },
    {
@@ -3452,7 +3447,36 @@
     "url": "https://instances.vantage.sh/aws/ec2/p5.48xlarge",
     "date": "2026-10-08",
     "retrieved": "2026-10-08",
-    "ref": "data/kevidence_amazon_20261008.json → listPrices[price.p5.od]"
+    "ref": "data/kevidence_amazon_20261008.json → listPrices[price.p5.od]",
+    "note": "AWS 公開牌價（賣價，非成交價；k_現貨高軸）"
+   },
+   {
+    "id": "long.base",
+    "label": "長約基準（判斷倍數 0.75）",
+    "gen": "VR200",
+    "price": 9.5715,
+    "unit": "US$m/MW-年",
+    "tkName": "IF_HoldEcon",
+    "tag": "[Assumed]／[Derived]（判斷值，非觀察價格）",
+    "source": "v0.2 判斷倍數 0.75 × 12.762",
+    "date": "2026-10-11",
+    "retrieved": "2026-10-22",
+    "note": "由 v0.2 判斷倍數 × Tokenomics v5.27 VR200 成本 12.762 換算，不是觀察到的市場價格",
+    "ref": "data/kevidence_amazon_20261008.json → kspecInputs[long.base]"
+   },
+   {
+    "id": "long.low",
+    "label": "長約低（判斷倍數 0.55）",
+    "gen": "VR200",
+    "price": 7.0191,
+    "unit": "US$m/MW-年",
+    "tkName": "IF_HoldEcon",
+    "tag": "[Assumed]／[Derived]（判斷值，非觀察價格）",
+    "source": "v0.2 判斷倍數 0.55 × 12.762",
+    "date": "2026-10-11",
+    "retrieved": "2026-10-22",
+    "note": "由 v0.2 判斷倍數 × Tokenomics v5.27 VR200 成本 12.762 換算，不是觀察到的市場價格",
+    "ref": "data/kevidence_amazon_20261008.json → kspecInputs[long.low]"
    }
   ],
   "customFactor": 1.0,

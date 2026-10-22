@@ -382,16 +382,29 @@ if PRC:
     ws.cell(row=r, column=4, value=f'=CHOOSE(C{r},"{_AXL["low"]}","{_AXL["base"]}","{_AXL["high"]}")').font = BOLD
     ws.cell(row=r, column=9, value="價格軸與容量軸（A 區情境）分離；三容量情境預設都用基準 k，3 × 3 目標價矩陣見「評價_DCF與目標價」（對照表 r1 第 5 節第 1 條）").font = SMALL
     PSEL = f"'輸入與假設'!$C${r}"; r += 1
+    _EVK = {e['id']: e for e in PRC.get('kEvidence', [])}
+    _EVR = {}  # MAG v0.2.1 補充：k 的證據價格各占一格（藍字輸入），k 公式引用這些格；旁註寫來源（data/kevidence_*.json）
+    if _EVK:
+        for j, h in enumerate(["k 證據價格（輸入；k＝價格 ÷ 目前快照同世代成本）", "單位", "價格", "目前同世代成本", "倍數"]):
+            cc = ws.cell(row=r, column=1 + j, value=h); cc.font = HEAD; cc.fill = FILL_HEAD
+        r += 1
+        for e_ in PRC['kEvidence']:
+            _tkn = f"TK_{re.sub(r'^(IF|L1)_', '', e_['tkName'])}_{e_['gen']}"
+            ws.cell(row=r, column=1, value=f"證據價格｜{e_['label']}").font = BLACK
+            ws.cell(row=r, column=2, value=e_['unit']).font = SMALL
+            c = ws.cell(row=r, column=3, value=e_['price']); c.font = BLUE; c.number_format = '0.0000'; c.border = BOX
+            c = ws.cell(row=r, column=4, value=f"={_tkn}"); c.font = GREEN; c.number_format = '0.0000'; c.border = BOX
+            c = ws.cell(row=r, column=5, value=f"=C{r}/D{r}"); c.font = BLACK; c.number_format = '0.000'; c.border = BOX
+            ws.cell(row=r, column=9, value=f"{e_['note']}｜來源：{e_['source']}（{e_['ref']}）{e_['tag']}").font = SMALL
+            _EVR[e_['id']] = r; r += 1
     for j, h in enumerate(["k 組成（價格軸）", "單位", "低", "基準", "高"]):
         cc = ws.cell(row=r, column=1 + j, value=h); cc.font = HEAD; cc.fill = FILL_HEAD
     r += 1
     _KR = {}
-    _GCK = {g['name']: g['code'] for g in _TKSNAP['source']['generations']} if _TKSNAP else {}
-    _EVK = {e['id']: e for e in PRC.get('kEvidence', [])}
-    def _kfx(sp):  # MAG v0.2.1：規格 → Excel 公式（證據價格 ÷ TK_ 同世代成本）；固定倍數回傳 None
+    def _kfx(sp):  # 規格 → Excel 公式（證據價格格 ÷ TK_ 同世代成本）；固定倍數回傳 None
         if not isinstance(sp, dict): return None
-        e_ = _EVK[sp['ref']] if 'ref' in sp else sp
-        return f"={e_.get('price', e_.get('priceEq'))!r}/TK_{re.sub(r'^(IF|L1)_', '', e_['tkName'])}_{e_['gen']}"
+        e_ = _EVK[sp['ref']]
+        return f"=C{_EVR[sp['ref']]}/TK_{re.sub(r'^(IF|L1)_', '', e_['tkName'])}_{e_['gen']}"
     for key, nm, unit, fm in (("kLong", "k｜長約", "倍", '0.000'), ("kSpot", "k｜現貨", "倍", '0.000'), ("longShare", "長約占比", "%", PCT)):
         _vk = []
         for a in ('low', 'base', 'high'):

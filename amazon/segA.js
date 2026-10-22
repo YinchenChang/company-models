@@ -674,6 +674,9 @@ function runFunding(e) {
     hasP && _({ id: `cap-ratio-prod`, ok: Pp.every(x => x <= mP), severity: Pp.every(x => x <= mP) ? `ok` : `bad`,
       title: `每 MW 年收入 ÷ Tokenomics 參考付費營收（生產折減層）：最高 ${hA(Math.max(...Pp) * 100, 1)}（硬上限 ${hA(mP * 100, 0)}）`,
       detail: `五期 ${Pp.map(x => hA(x * 100, 1)).join(`／`)}；＝Σ 在役世代占比 × IFW_RevGWFleet_Prod（利用率層 × 生產折減）。超過 ${hA(mP * 100, 0)} 表示每 MW 收入高於客戶在生產條件下可產生的 token 營收（硬上限；報告須寫明）。` });
+    PRICING.kEvidence && _({ id: `k-evidence`, ok: !0, severity: `ok`, // MAG v0.2.1：k 的證據價格（Excel「輸入與假設」B0 每價一格）與目前快照同世代成本、倍數
+      title: `k 證據價格 ÷ 目前快照同世代成本：採用 k ${Y(t.price[0].k, 3)}（價格軸 ${K_AX[DEFAULTS.kAxis]}）`,
+      detail: PRICING.kEvidence.map(x => `${x.label} ${Y(x.price, 4)} ${x.unit} ÷ ${TKV[x.tkName][x.gen].toFixed(4)} ＝ ${Y(x.price / TKV[x.tkName][x.gen], 3)}（${x.note}）`).join(`；`) + `。k＝證據價格 ÷ 目前快照同世代成本；價格是輸入、成本隨 Tokenomics 版本更新。` });
   })(), LG.lines.filter(x => x.kind === `cloudResidual`).forEach(x => _({ // MAG v0.1b：非 AI 雲端殘差的合理性（殘差為正、推估年增率介於 0 與雲端分部年增率之間）
     id: `residual-${x.key}`,
     ok: x.rev[0] > 0 && x.g0 >= 0 && x.g0 <= (B_LINE(x.key).g4q ?? 1),

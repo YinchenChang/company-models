@@ -31,7 +31,7 @@ F = [
  ('pricing.customFactor', '自研晶片持有成本係數（同期 NVIDIA 世代 IF_HoldEcon × 此值；對照表 r1 C2 基準 1.0）', '倍', C), ('pricing.customFactorSens', '自研晶片係數的敏感度值（0.7）', '倍', C),
  ('pricing.customCapexFactor', '自研晶片每 MW IT 資本支出係數（同期 NVIDIA TK_CapexIT × 此值；預設 1；雙邊晶片係數敏感度用；v0.1 交付前修訂）', '倍', C), ('pricing.customCapexNote', '上列的依據', '文字', M),
  ('pricing.customNote', '自研晶片對應世代與缺口說明', '文字', M),
- ('pricing.kEvidence', 'k 的證據價格清單（v0.2.1）：[{id, label, gen＝Tokenomics 世代代碼, price＝市場價格, unit, tkName＝分母名稱（IF_GPUhrEcon 或 IF_HoldEcon）, 來源欄位}]；kLong／kSpot 的 {ref: id} 取其價格 ÷ 目前快照同世代成本', '清單（物件）', K),
+ ('pricing.kEvidence', 'k 的證據價格清單（v0.2.1）：[{id, label, gen＝Tokenomics 世代代碼, price＝證據價格（Excel B0 每價一格；須與 data/kevidence_*.json 的 kspecInputs 相同，verify 檢查）, unit, tkName＝分母名稱（IF_GPUhrEcon 或 IF_HoldEcon）, note＝旁註（判斷值須寫明不是觀察價格）, source, 其他來源欄位}]；kLong／kSpot 的 {ref: id} 取其價格 ÷ 目前快照同世代成本', '清單（物件）', K),
  ('pricing.chips', '世代清單：[{key, label, tk＝Tokenomics 世代代碼（H100／GB200／GB300／VR200／RU）, custom＝自研（乘 customFactor）, mixOpen＝評價日在役占比（合計 100%）, mixAdds＝各期新增 MW 占比（每期合計 100%）}]', '清單（物件）', M),
  ('pricing.mixNote', '世代組合的依據', '文字', M), ('pricing.capWarn', '上限檢查門檻：每 MW 年收入 ÷ 參考付費營收（IF_RevGWFleet）', '比例', K), ('pricing.capWarnNote', '上限檢查的說明', '文字', K),
  ('capexModel.mode', '資本支出模式：tk＝AI MW × Tokenomics 每 MW 成本＋汰換（只換 IT）＋非 AI（各線營收 × cx），D&A 分 AI／非 AI 兩池；未設＝模板（scenarios.capexTemplate.costMW）', '文字', K),

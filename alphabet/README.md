@@ -750,9 +750,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `pricing.axisLabels.low` | 價格軸低的名稱（Excel 選擇器與矩陣） | 文字 | 低 長約下緣 | 檢查 |
 | `pricing.axisLabels.base` | 價格軸基準的名稱 | 文字 | 基準 C1 混合 | 檢查 |
 | `pricing.axisLabels.high` | 價格軸高的名稱 | 文字 | 高 現貨改用 GCP 牌價 | 檢查 |
-| `pricing.kLong.low` | 長約 k（價格軸低；長約區間下緣）。v0.2.1 起 kLong／kSpot 的 low／base／high 為規格：數字（固定倍數）、{ref: 證據 id}（證據價格 ÷ 目前快照同世代成本）或 {priceEq, gen, tkName}（判斷倍數換成固定價格 ÷ 目前成本） | 倍 | 物件（priceEq、gen、tkName） | 必改 |
-| `pricing.kLong.base` | 長約 k（基準；長約證據換算 ÷ IF_GPUhrEcon 或 IF_HoldEcon） | 倍 | 物件（priceEq、gen、tkName） | 必改 |
-| `pricing.kLong.high` | 長約 k（價格軸高） | 倍 | 物件（priceEq、gen、tkName） | 必改 |
+| `pricing.kLong.low` | 長約 k（價格軸低；長約區間下緣）。v0.2.1 起 kLong／kSpot 的 low／base／high 為規格：數字（固定倍數）、{ref: 證據 id}（證據價格 ÷ 目前快照同世代成本）或 {priceEq, gen, tkName}（判斷倍數換成固定價格 ÷ 目前成本） | 倍 | 物件（ref） | 必改 |
+| `pricing.kLong.base` | 長約 k（基準；長約證據換算 ÷ IF_GPUhrEcon 或 IF_HoldEcon） | 倍 | 物件（ref） | 必改 |
+| `pricing.kLong.high` | 長約 k（價格軸高） | 倍 | 物件（ref） | 必改 |
 | `pricing.kSpot.low` | 現貨 k（價格軸低） | 倍 | 物件（ref） | 檢查 |
 | `pricing.kSpot.base` | 現貨 k（基準；三家一律 1.76＝Nebius／CRWV 市場現貨指數，對照表 r1 C1） | 倍 | 物件（ref） | 可沿用 |
 | `pricing.kSpot.high` | 現貨 k（價格軸高＝公司公開牌價換算） | 倍 | 物件（ref） | 必改 |
@@ -767,7 +767,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `pricing.customCapexFactor` | 自研晶片每 MW IT 資本支出係數（同期 NVIDIA TK_CapexIT × 此值；預設 1；雙邊晶片係數敏感度用；v0.1 交付前修訂） | 倍 | 1 | 檢查 |
 | `pricing.customCapexNote` | 上列的依據 | 文字 | 自研晶片（TPU）每 MW IT 資本支出係數：預設… | 必改 |
 | `pricing.customNote` | 自研晶片對應世代與缺口說明 | 文字 | 自研晶片（TPU）每 MW 錨＝同期 NVIDIA … | 必改 |
-| `pricing.kEvidence` | k 的證據價格清單（v0.2.1）：[{id, label, gen＝Tokenomics 世代代碼, price＝市場價格, unit, tkName＝分母名稱（IF_GPUhrEcon 或 IF_HoldEcon）, 來源欄位}]；kLong／kSpot 的 {ref: id} 取其價格 ÷ 目前快照同世代成本 | 清單（物件） | 2 筆 | 可沿用 |
+| `pricing.kEvidence` | k 的證據價格清單（v0.2.1）：[{id, label, gen＝Tokenomics 世代代碼, price＝證據價格（Excel B0 每價一格；須與 data/kevidence_*.json 的 kspecInputs 相同，verify 檢查）, unit, tkName＝分母名稱（IF_GPUhrEcon 或 IF_HoldEcon）, note＝旁註（判斷值須寫明不是觀察價格）, source, 其他來源欄位}]；kLong／kSpot 的 {ref: id} 取其價格 ÷ 目前快照同世代成本 | 清單（物件） | 4 筆 | 可沿用 |
 | `pricing.chips` | 世代清單：[{key, label, tk＝Tokenomics 世代代碼（H100／GB200／GB300／VR200／RU）, custom＝自研（乘 customFactor）, mixOpen＝評價日在役占比（合計 100%）, mixAdds＝各期新增 MW 占比（每期合計 100%）}] | 清單（物件） | 8 筆 | 必改 |
 | `pricing.mixNote` | 世代組合的依據 | 文字 | 期初在役（評價日，對外 MW）：TPU v4／v5 … | 必改 |
 | `pricing.capWarn` | 上限檢查門檻：每 MW 年收入 ÷ 參考付費營收（IF_RevGWFleet） | 比例 | 0.5 | 可沿用 |

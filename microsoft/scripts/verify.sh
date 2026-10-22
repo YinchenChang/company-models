@@ -72,6 +72,9 @@ else
   else ok "Tokenomics 快照 --check：$(grep -- '--check 通過' <<<"$r" | sed 's/^--check 通過：//')"; fi
 fi
 
+step "0f. k 證據價格與 kevidence 檔一致（scripts/check_kevidence.py；MAG v0.2.1）"
+if r=$(python3 scripts/check_kevidence.py 2>&1); then ok "k 證據價格：$r"; else echo "$r"; bad "k 證據價格與 kevidence 檔不一致"; fi
+
 step "1. 建 HTML（v$VER · $DATE）"
 if python3 build_html_portable.py "$VER" "$HTML" "$DATE" docs/template_v3_3.html; then ok "建 HTML"; else bad "建 HTML"; finish; fi
 
