@@ -670,5 +670,68 @@
 "year": 2025,
 "source": "companiesmarketcap",
 "multiple": 18.2
+},
+{
+"company": "Advantest",
+"metric": "P/E",
+"year": 2017,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 20.51
+},
+{
+"company": "Advantest",
+"metric": "P/E",
+"year": 2018,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 7.42
+},
+{
+"company": "Advantest",
+"metric": "P/E",
+"year": 2019,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 22.8
+},
+{
+"company": "Advantest",
+"metric": "P/E",
+"year": 2020,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 21.84
+},
+{
+"company": "Advantest",
+"metric": "P/E",
+"year": 2021,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 24.25
+},
+{
+"company": "Advantest",
+"metric": "P/E",
+"year": 2022,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 12.16
+},
+{
+"company": "Advantest",
+"metric": "P/E",
+"year": 2023,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 56.8
+},
+{
+"company": "Advantest",
+"metric": "P/E",
+"year": 2024,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 40.66
+},
+{
+"company": "Advantest",
+"metric": "P/E",
+"year": 2025,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 38.12
 }
 ]
