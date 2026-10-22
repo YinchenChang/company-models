@@ -10,9 +10,9 @@
 - **不以公司自己的目標或預測反推參數**；公司數字只作對照列（η 校準與 2025 營收校準除外）。
 
 ## 2. Tokenomics 取數
-- 只經官方快照：`scripts/tk_snapshot.py --tk-dir <Tokenomics checkout> --names data/tokenomics_names.txt --out data/tokenomics_snapshot_<版本>.json`，讀 `model/CURRENT` 的具名範圍；快照含版本、提交、檔名、SHA-256、讀取日。`build_xlsx.py` 讀 `data/tokenomics_snapshot_current.json` 指向的快照（或 `--snapshot` 指定）。
+- 只經官方快照：`scripts/tk_snapshot.py --tk-dir <Tokenomics checkout> --names data/tokenomics_names.txt --out data/tokenomics_snapshot_<版本>.json`，讀 `model/CURRENT` 的具名範圍；快照含版本、提交、檔名、SHA-256、讀取日。`build_xlsx.py` 讀 `data/tokenomics_snapshot_CURRENT`（一行檔名，比照 Tokenomics 的 model/CURRENT）指向的快照（或環境變數 `MM_SNAPSHOT`）（或 `--snapshot` 指定）。
 - 唯讀：不改 Tokenomics、不從未合併分支取值、不使用 Excel 外部連結；公司特有變數不回寫 Tokenomics。
-- 更新快照＝本模型的修補版：重新產生快照 → 建置 → 重算 → 記 CHANGELOG。`scripts/check_tk_snapshot.py` 比對快照與 Tokenomics 現行 `CURRENT`（DIFF／MISSING 只報 WARN）。
+- 更新快照＝本模型的修補版：重新產生快照 → 建置 → 重算 → 記 CHANGELOG。`scripts/tk_snapshot.py --check` 比對快照與 Tokenomics 現行 `CURRENT`（DIFF／MISSING 只報 WARN）。
 - Tokenomics 新版若改了名稱或口徑，以 Tokenomics 為準並在報告標明。
 
 ## 3. 建置與驗收

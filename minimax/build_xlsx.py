@@ -1,6 +1,6 @@
 # MiniMax（00100.HK）收支模型 v0.1 — Excel 產生器
 # 比照 OpenAI 收支模型（company-models/openai，v0.6）的分層與 MW 主軸：
-#   公司財務原始數據 → SRC_MM；算力物理與單位經濟 → TK_Link（Tokenomics v5.24 名稱）；假設 → Inputs（藍字、標記、區間）
+#   公司財務原始數據 → SRC_MM；算力物理與單位經濟 → TK_Link（Tokenomics 官方快照）；假設 → Inputs（藍字、標記、區間）
 #   Demand（token）→ Revenue → Compute（MW）→ PnL（每 MW 營收 vs 每 MW 全成本）→ Funding（缺口與融資）→ Valuation
 # Python 只產生結構與公式；所有數值計算由 Excel（LibreOffice 重算）完成，Python 不寫入任何計算結果。
 # 用法：python3 build_xlsx.py out/檔名.xlsx [--set ID=值 ...]（--set 只供敏感度批次改寫 Inputs，不改預設檔）
@@ -10,7 +10,7 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 
 VERSION = 'v0.1'
-DATE = '2026-10-08'
+DATE = '2026-10-08'   # M1 暫維持，v0.2 版本字串於 M3 更新
 YEARS = [2025, 2026, 2027, 2028, 2029, 2030]
 YCOL = {y: get_column_letter(4 + i) for i, y in enumerate(YEARS)}  # D..I
 
@@ -106,23 +106,58 @@ SRC = [
     ('S077', '人民幣兌美元（換算阿里雲上限用）', '2026', 7.10, 'RMB/$', 'Assumed', '—', '僅說明用'),
 ]
 
-# ───────────────────────── TK_Link：Tokenomics v5.24（經 OpenAI v0.6 快照） ─────────────────────────
-# (ID, Tokenomics 名稱, 世代, 說明, 單位, 值)
-TKSRC = 'Tokenomics v5.24（master bdb0de7，2026-10-07；取自 company-models/openai v0.6 TK_Link 快照，基準成本情境）'
-TK = [
-    ('TK01', 'IF_TokGW_Luna', 'Hopper H100', '每 GW 總產出（100% 利用率）：低層（Luna）', 'M tok/GW/年', 74067251304.9223),
-    ('TK02', 'IF_TokGW_Luna', 'GB200 NVL72', '每 GW 總產出（100% 利用率）：低層（Luna）', 'M tok/GW/年', 362306894085.614),
-    ('TK03', 'IF_TokGW_Sol', 'Hopper H100', '每 GW 總產出（100% 利用率）：中層（Sol）', 'M tok/GW/年', 21490429685.4234),
-    ('TK04', 'IF_TokGW_Sol', 'GB200 NVL72', '每 GW 總產出（100% 利用率）：中層（Sol）', 'M tok/GW/年', 104125401080.667),
-    ('TK05', 'IF_TokGW_Sol', 'VR200 NVL72', '每 GW 總產出（100% 利用率）：中層（Sol；VR 等值換算基準）', 'M tok/GW/年', 237287338734.99),
-    ('TK06', 'IF_Util', '—', '基準利用率（第 0 層；下游可覆寫）', '比例', 0.6),
-    ('TK07', 'IF_HoldEcon', 'Hopper H100', '每 GW 年持有成本（經濟口徑；供應商參考）', '$B/GW/年', 10.0957952959174),
-    ('TK08', 'IF_HoldEcon', 'GB200 NVL72', '每 GW 年持有成本（經濟口徑；供應商參考）', '$B/GW/年', 9.17098191725462),
-    ('TK09', 'IF_FullCost_Luna', 'Hopper H100', '全成本 $/M（基準利用率）：低層', '$/M', 0.192289806873558),
-    ('TK10', 'IF_FullCost_Sol', 'Hopper H100', '全成本 $/M（基準利用率）：中層', '$/M', 0.767139858927169),
-    ('TK11', 'IF_FullCost_Luna', 'GB200 NVL72', '全成本 $/M（基準利用率）：低層', '$/M', 0.0372199275435518),
-    ('TK12', 'IF_FullCost_Sol', 'GB200 NVL72', '全成本 $/M（基準利用率）：中層', '$/M', 0.138898055360943),
+# ───────────────────────── TK_Link：Tokenomics 官方快照（scripts/tk_snapshot.py 產生；本檔不寫死任何 TK 數值） ─────────────────────────
+import json, os
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+
+def _snapshot_path():
+    argv = sys.argv
+    if '--snapshot' in argv:
+        return argv[argv.index('--snapshot') + 1]
+    if os.environ.get('MM_SNAPSHOT'):
+        return os.environ['MM_SNAPSHOT']
+    cur = open(os.path.join(HERE, 'data', 'tokenomics_snapshot_CURRENT'), encoding='utf-8').read().strip()
+    return os.path.join(HERE, 'data', cur)
+
+
+SNAP_PATH = _snapshot_path()
+SNAP = json.load(open(SNAP_PATH, encoding='utf-8'))
+TKV = SNAP['version']
+SNAMES = SNAP['names']
+# 每名稱 15 欄＝5 世代 × (低、基準、高)；基準欄索引：Hopper 1、GB200 4、VR200 10
+BASE = {'Hopper H100': 1, 'GB200 NVL72': 4, 'VR200 NVL72': 10}
+TKSRC = (f"Tokenomics {TKV}｜檔名 {SNAP['file']}｜提交 {SNAP['commit']}｜SHA-256 {SNAP['file_sha256']}｜讀取日 {SNAP['read_date']}"
+         f"（官方快照 {os.path.basename(SNAP_PATH)}，經 scripts/tk_snapshot.py 讀 model/CURRENT 具名範圍；基準成本情境）")
+# (ID, Tokenomics 名稱, 世代, 說明, 單位) → 值取自快照
+_TKSPEC = [
+    ('TK01', 'IF_TokGW_Luna', 'Hopper H100', '每 GW 總產出（100% 利用率）：低層（Luna）', 'M tok/GW/年'),
+    ('TK02', 'IF_TokGW_Luna', 'GB200 NVL72', '每 GW 總產出（100% 利用率）：低層（Luna）', 'M tok/GW/年'),
+    ('TK03', 'IF_TokGW_Sol', 'Hopper H100', '每 GW 總產出（100% 利用率）：中層（Sol）', 'M tok/GW/年'),
+    ('TK04', 'IF_TokGW_Sol', 'GB200 NVL72', '每 GW 總產出（100% 利用率）：中層（Sol）', 'M tok/GW/年'),
+    ('TK05', 'IF_TokGW_Sol', 'VR200 NVL72', '每 GW 總產出（100% 利用率）：中層（Sol；VR 等值換算基準）', 'M tok/GW/年'),
+    ('TK06', 'IF_Util', '—', '基準利用率（第 0 層；下游可覆寫）', '比例'),
+    ('TK07', 'IF_HoldEcon', 'Hopper H100', '每 GW 年持有成本（經濟口徑；供應商參考）', '$B/GW/年'),
+    ('TK08', 'IF_HoldEcon', 'GB200 NVL72', '每 GW 年持有成本（經濟口徑；供應商參考）', '$B/GW/年'),
+    ('TK09', 'IF_FullCost_Luna', 'Hopper H100', '全成本 $/M（基準利用率）：低層', '$/M'),
+    ('TK10', 'IF_FullCost_Sol', 'Hopper H100', '全成本 $/M（基準利用率）：中層', '$/M'),
+    ('TK11', 'IF_FullCost_Luna', 'GB200 NVL72', '全成本 $/M（基準利用率）：低層', '$/M'),
+    ('TK12', 'IF_FullCost_Sol', 'GB200 NVL72', '全成本 $/M（基準利用率）：中層', '$/M'),
 ]
+
+
+def _tkval(name, gen):
+    v = SNAMES[name]['values']
+    if len(v) == 1:
+        return v[0]
+    e = SNAMES[name]
+    i = BASE[gen]
+    assert e['generation'][i] == gen and e['scenario'][i] == '基準', (name, gen, e['generation'][i], e['scenario'][i])
+    return v[i]
+
+
+TK = [t + (_tkval(t[1], t[2]),) for t in _TKSPEC]
+TKX = {t[0]: t[5] for t in TK}   # ID → 值（只供說明文字引用；公式仍引用 TK_Link 儲存格）
 
 # ───────────────────────── Inputs：假設（藍字；Analogy／Assumed 附區間） ─────────────────────────
 # 純量：(ID, 項目, 單位, 值, 低, 高, 標記, 說明)
@@ -130,10 +165,10 @@ TK = [
 INPUTS = [
     ('I01', '港幣兌美元', 'HK$/$', 7.78, 7.75, 7.85, 'Verified', '聯繫匯率區間'),
     ('I02', '每 MW 年合約價（雲端租用、IT 關鍵電力口徑）', '$M/MW/年', 12, 8, 20, 'Analogy',
-     '同 OpenAI 模型 INP_229（$12B/GW/年）；中國 H800／H20 與國產晶片租價可能較低。Tokenomics Hopper 持有成本 10.1（TK07）為下限參考'),
+     '同 OpenAI 模型 INP_229（$12B/GW/年）；中國 H800／H20 與國產晶片租價可能較低。Tokenomics Hopper 持有成本 ' + f"{TKX['TK07']:.1f}" + '（TK07）為下限參考'),
     ('I03', '銷售成本中算力（推論雲端）占比', '比例', 0.90, 0.80, 0.95, 'Assumed', '公司稱銷售成本主要為推論雲端；未揭露金額'),
     ('I04', 'API token 層級組合：低層（Luna）占比（其餘＝中層 Sol）', '比例', 0.6, 0.3, 0.9, 'Analogy',
-     'M2／M3 啟用參數 10B／23B，牌價 $0.30/$1.20 介於 Tokenomics Luna（$0.08）與 Sol（$1.6）之間'),
+     'M2／M3 啟用參數 10B／23B，牌價 $0.30/$1.20 介於 Tokenomics Luna（$' + f"{SNAMES['IF_PriceRef_Luna']['values'][0]:.2f}" + '）與 Sol（$' + f"{SNAMES['IF_PriceRef_Sol']['values'][0]:.1f}" + '）之間'),
     ('I05', '機隊組合：Hopper 級占比（其餘＝Blackwell 級，含國產 ASIC 等值）', '比例',
      {2025: 1.0, 2026: 0.85, 2027: 0.65, 2028: 0.45, 2029: 0.30, 2030: 0.20}, '各年 −0.15', '各年 +0.15', 'Assumed',
      '中國受出口管制，Hopper 級（H800／H20）汰換慢；海外雲可租 Blackwell。V1 比照 OpenAI 時變組合'),
@@ -470,6 +505,16 @@ def build(out):
         for c, v in enumerate(t, 1):
             ws.cell(5 + i, c, v)
         ws.cell(5 + i, 6).font = BLUE; ws.cell(5 + i, 6).number_format = '#,##0.0000'
+    # IF_HoldEcon 全 15 欄（5 世代 × 低／基準／高成本；M3 的 P×Q 用）。$B/GW/年 ＝ $M/MW/年（1 $B/GW ＝ $1M/MW，數值相同）
+    r0 = 5 + len(TK) + 2
+    ws.cell(r0, 1, 'IF_HoldEcon 全 15 欄').font = BOLD
+    ws.cell(r0, 4, '單位 $B/GW/年；換算 $M/MW/年數值相同（1 $B ÷ 1,000 MW ＝ $1M/MW）。本模型不引用 L1_HoldEconMW_*（單位疑義）')
+    he = SNAMES['IF_HoldEcon']
+    for c, h in enumerate(['', '世代', '成本情境', '$B/GW/年（＝$M/MW/年）'], 1):
+        x = ws.cell(r0 + 1, c, h); x.font = BOLD; x.fill = HDR
+    for k, v in enumerate(he['values']):
+        ws.cell(r0 + 2 + k, 2, he['generation'][k]); ws.cell(r0 + 2 + k, 3, he['scenario'][k])
+        x = ws.cell(r0 + 2 + k, 4, v); x.font = BLUE; x.number_format = '#,##0.0000'
     for col, w in zip('ABCDEF', [7, 22, 16, 50, 14, 22]):
         ws.column_dimensions[col].width = w
 

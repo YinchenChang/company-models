@@ -5,6 +5,7 @@ from openpyxl import load_workbook
 
 xl, sens_path, out = sys.argv[1:4]
 wb = load_workbook(xl, data_only=True)
+TKV = wb['TK_Link']['A2'].value.split('｜')[0].replace('Tokenomics ', '')   # 例：v19.0
 V = {}
 for ws in wb.worksheets:
     if ws.title in ('Demand', 'Revenue', 'Compute', 'PnL', 'Funding', 'Valuation'):
@@ -125,7 +126,7 @@ ul{{margin:6px 0;padding-left:20px}}li{{margin:3px 0}}.muted{{color:var(--ink2);
 .two{{display:grid;grid-template-columns:1fr 1fr;gap:12px}}@media (max-width:760px){{.two{{grid-template-columns:1fr}}}}
 </style></head><body><main>
 <h1>MiniMax（00100.HK）收支模型 v0.1</h1>
-<p class="sub">上海稀宇科技｜比照 OpenAI 收支模型（MW 主軸、Tokenomics v5.24）｜FY2025 實際、FY2026 上半年實際＋下半年推估、FY2027–2030 推估｜2026-10-08｜單位 US$M</p>
+<p class="sub">上海稀宇科技｜比照 OpenAI 收支模型（MW 主軸、Tokenomics {TKV}）｜FY2025 實際、FY2026 上半年實際＋下半年推估、FY2027–2030 推估｜2026-10-08｜單位 US$M</p>
 
 <div class="card ans"><b>命題：</b>MiniMax 每 MW 算力的營收，能否覆蓋每 MW 全成本？若不能，缺口何時出現、由誰補？<br>
 <b>答案（基準）：不能。</b>每 MW 營收由 FY2025 的 ${f2(g('P21',2025))}M 升到 FY2030 的 ${f2(g('P21',2030))}M，但每 MW 全成本仍約 ${f1(g('P22',2030))}M，覆蓋率只從 {f2(g('P23',2025))}x 升到 {f2(g('P23',2030))}x。
