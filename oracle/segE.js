@@ -131,6 +131,7 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
       elQ(`div`, { key: `b`, style: { fontSize: 18, fontWeight: 700, fontVariantNumeric: `tabular-nums` } }, b)]))),
     elQ(`p`, { key: `h`, style: { fontSize: 13.5, lineHeight: 1.45, margin: `6px 0 0` } }, cv.head),
     elQ(`p`, { key: `j`, style: { ...sm, fontSize: 11.5, margin: `3px 0 0` } }, TR.judge),
+    cv.pxLine ? elQ(`p`, { key: `px`, style: { ...sm, fontSize: 11.5, margin: `3px 0 0` } }, cv.pxLine) : null, // v0.3.1：價格軸區間（外部驗收採納 4b-ii）
     cv.igLine ? elQ(`p`, { key: `ig`, style: { fontSize: 12.5, fontWeight: 600, margin: `3px 0 0` } }, cv.igLine) : null,
     elQ(`p`, { key: `al`, style: { fontSize: 12.5, fontWeight: 600, margin: `3px 0 0` } }, cv.adjLine), // v0.2
     elQ(`p`, { key: `dl`, style: { fontSize: 12.5, margin: `3px 0 0` } }, cv.delayLine) // v0.2
@@ -143,7 +144,8 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
         ...cv.rows.map(r => td([fmtV(k, r.m[k]), `／`, fmtV(k, r.c[k]), `　`, elQ(`b`, { key: `g`, style: { color: k === `nd` || k === `ebM` ? `var(--color-fg)` : gcol(r.gap[k]) } }, k === `ebitda` || k === `nd` ? dTxtQ(r.dif[k], `US$bn`) : gapTxtQ(r.gap[k], k === `ebM`))]))])))
     ]),
     elQ(`p`, { key: `j`, style: { fontSize: 13, lineHeight: 1.4, margin: `5px 0 0`, fontWeight: 600 } }, cv.judge),
-    cv.rsnSum ? elQ(`p`, { key: `r`, style: { fontSize: 11.5, lineHeight: 1.35, margin: `2px 0 0` } }, cv.rsnSum) : null
+    cv.rsnSum ? elQ(`p`, { key: `r`, style: { fontSize: 11.5, lineHeight: 1.35, margin: `2px 0 0` } }, cv.rsnSum) : null,
+    COMPANY_DATA.texts.ebitdaBasisNote ? elQ(`p`, { key: `eb`, style: { ...sm, fontSize: 11, lineHeight: 1.35, margin: `2px 0 0` } }, COMPANY_DATA.texts.ebitdaBasisNote) : null // v0.3.1：摘要與損益 FY27 EBITDA 口徑說明
   ]);
   let b3 = box(`b3`, `3｜現價隱含什麼`, [
     elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 8 } }, [
@@ -273,6 +275,30 @@ function QuarterTabQ({ d, p, st }) {
     elQ(accQ, { key: `a1`, title: `6 季路徑（模型、共識、指引、實際）`, sum: `${L[0]}–${L[L.length - 1]}` }, path),
     elQ(accQ, { key: `a2`, title: `期間合計核對（季度加總＝年度模型）`, sum: qv.sums.map(s => s.name).join(`／`) }, sums),
     elQ(accQ, { key: `a3`, title: `拆分方法`, sum: `` }, meth.map((t, k) => elQ(`p`, { key: k, className: `text-sm leading-relaxed` }, t)))
+  ]);
+}
+
+// v0.3.1：評價頁次層（預設收合）——3 × 3 容量 × 價格矩陣與每 MW 收入敏感度。數字取自建置快照 COMPANY_DATA.tkSens（scripts/tk_sens.js → tk_sens.json，與 Excel「每MW收入_錨定」G 區同一份）；
+// 過期檢查比照 Excel：目前情境（價格情境＝基準）的快照加權目標價與即時值差 < 0.01 才顯示「通過」，否則「快照已過期」。HTML 不新增計算，只顯示快照。
+function TkMatrixQ({ sc, tgt }) {
+  let TS = COMPANY_DATA.tkSens;
+  if (!TS || !TS.matrix) return null;
+  let K = [`low`, `base`, `high`], LB = COMPANY_DATA.scenarios.labels, PXL = { low: `價格低`, base: `價格基準（${COMPANY_DATA.pricing.anchorMultiple.baseLabel}）`, high: `價格高` },
+    MET = [[`tgt`, `加權目標價`, `US$`, x => `$${Y(x, 1)}`], [`eq`, `五期股權募資`, `US$bn`, x => Y(x, 1)], [`gap`, `融資前缺口`, `US$bn`, x => Y(x, 1)], [`levMax`, `調整後槓桿峰值`, `倍`, x => Y(x, 2)], [`sh`, `新股數`, `bn 股`, x => Y(x, 3)]],
+    th = (x, k) => elQ(`th`, { key: k ?? x, style: xstyQ.th }, x), thL = x => elQ(`th`, { key: x, style: xstyQ.thL }, x),
+    td = (x, k) => elQ(`td`, { key: k, style: xstyQ.td }, x), tdL = (x, k) => elQ(`td`, { key: k, style: xstyQ.tdL }, x),
+    snap = TS.matrix[sc] && TS.matrix[sc].base ? TS.matrix[sc].base.tgt : null,
+    chk = snap == null ? `快照已過期（輸入已改為自訂情境；快照只含三個預設情境）` : Math.abs(snap - tgt) < .01 ? `通過` : `快照已過期（快照 $${Y(snap, 2)}、即時 $${Y(tgt, 2)}；重建 HTML 即更新）`,
+    wrap = (head, body) => elQ(`div`, { style: xstyQ.wrap }, elQ(`table`, { style: { ...xstyQ.table, minWidth: 560 } }, [elQ(`thead`, { key: `h` }, elQ(`tr`, {}, head)), elQ(`tbody`, { key: `b` }, body)])),
+    mtx = wrap([thL(`容量情境 ＼ 價格情境`), th(`單位`), ...K.map(p => th(PXL[p]))],
+      MET.flatMap(([mk, mn, mu, f]) => K.map(k => elQ(`tr`, { key: mk + k }, [tdL(`${mn}｜${LB[k]}`, `a`), td(mu, `u`), ...K.map(p => td(f(TS.matrix[k][p][mk]), p))])))),
+    sens = wrap([thL(`每 MW 收入與校準的敏感度（價格基準＝${COMPANY_DATA.pricing.anchorMultiple.baseLabel}；加權目標價）`), ...K.map(k => th(LB[k].split(` `)[0]))],
+      [elQ(`tr`, { key: `b0` }, [tdL(`基準（目前輸入）`, `a`), ...K.map(k => td(`$${Y(TS.matrix[k].base.tgt, 1)}`, k))]),
+        ...TS.sens.map(x => elQ(`tr`, { key: x.key }, [tdL(x.label, `a`), ...K.map(k => td(`$${Y(x.res[k].tgt, 1)}`, k))]))]);
+  return elQ(`div`, { className: `mt-4 space-y-2` }, [
+    elQ(accQ, { key: `m`, title: `3 × 3 容量 × 價格矩陣（建置快照）`, sum: `快照檢查：${chk.split(`（`)[0]}` }, [
+      mtx, elQ(`p`, { key: `n`, className: `text-xs leading-relaxed text-muted` }, `快照檢查：目前情境 × 價格基準（${COMPANY_DATA.pricing.anchorMultiple.baseLabel}）的快照 − 即時加權目標價 → ${chk}。價格低／基準／高＝k_長約、k_現貨 三組（隨 Tokenomics 快照重算）；容量情境＝合約上限、併網速度、OpenAI 實現率、建設延誤。改了任何輸入後快照不會自動更新，重建（node scripts/tk_sens.js → build_html_portable.py）即更新；與 Excel「每MW收入_錨定」G 區同一份。`)]),
+    elQ(accQ, { key: `s`, title: `每 MW 收入與校準的敏感度（建置快照）`, sum: `${TS.sens.length} 項 × 三情境` }, [sens])
   ]);
 }
 

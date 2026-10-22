@@ -7,7 +7,8 @@ const dir = path.join(__dirname, '..'); require(path.join(dir, 'load_engine.js')
 if (PMW_REVQ !== 'tkAnchor') { fs.writeFileSync(process.argv[2] || path.join(dir, 'tk_sens.json'), JSON.stringify({ method: PMW_REVQ }) + '\n'); console.log('legacy：不產生矩陣'); process.exit(0); }
 const R = tkSensQ(DEFAULTS, VAL_DEFAULTS), rd = x => Math.round(x * 1e6) / 1e6,
   rr = o => ({ tgt: rd(o.tgt), eq: rd(o.eq), gap: rd(o.gap), sh: rd(o.sh), levMax: rd(o.levMax), lev: o.lev.map(rd), cap: o.cap, junk: rd(o.junk), fy27Rev: rd(o.fy27Rev) });
-const out = { method: 'tkAnchor', matrix: Object.fromEntries(Object.entries(R.matrix).map(([s, v]) => [s, Object.fromEntries(Object.entries(v).map(([p, o]) => [p, rr(o)]))])),
+const OCV = COMPANY_DATA.pricing.anchorMultiple.long.ownContract.values; // v0.3.1：價格軸區間（k_長約 低端 0.80 到 Oracle 自身合約）所用的敏感度鍵，HTML／Excel 摘要共用
+const out = { method: 'tkAnchor', axis: { kLo: 0.8, kHi: rd(Math.max(...OCV)), keys: ['kLong080', ...OCV.map((_, j) => 'kOwn' + (j + 1))] }, matrix: Object.fromEntries(Object.entries(R.matrix).map(([s, v]) => [s, Object.fromEntries(Object.entries(v).map(([p, o]) => [p, rr(o)]))])),
   sens: R.sens.map(x => ({ key: x.key, label: x.label, res: Object.fromEntries(Object.entries(x.res).map(([s, o]) => [s, rr(o)])) })) };
 const p = process.argv[2] || path.join(dir, 'tk_sens.json'), old = fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : '', txt = JSON.stringify(out, null, 1) + '\n';
 fs.writeFileSync(p, txt);

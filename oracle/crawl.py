@@ -19,7 +19,7 @@ def crawl(path):
                     if 0 < len(t) < 14 and t not in SKIP and not t.startswith(('保守', '基準', '積極'))]
         def click(t):  # 以可見按鈕的文字精確比對（同名按鈕可能有隱藏副本；部分按鈕以 role 名稱查不到）
             try:
-                pg.locator('button:visible').filter(has_text=re.compile('^\\s*' + re.escape(t) + '\\s*$')).first.click(timeout=1500)
+                pg.locator('button:visible').filter(has_text=re.compile('^\\s*' + re.escape(t) + '\\s*$')).first.click(timeout=10000)
                 pg.wait_for_timeout(400); return True
             except Exception: return False
         for top in ['總結', '資金模型', '損益與評價']:

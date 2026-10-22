@@ -1,4 +1,4 @@
-# Oracle 收支模型 v0.3 原始碼包
+# Oracle 收支模型 v0.3.1 原始碼包
 
 Oracle（ORCL）收支與評價模型；由 `nebius/` @ `642d144`（CRWV v4.5＋Nebius v0.1b）複製建立。下方各節為模板沿革與技術說明（以 CoreWeave 為例），引擎與工具仍適用；Oracle 新增的結構（OCI 以 MW × 每 MW 收入、首期以 Q1 OCI 校準可計費 MW、傳統事業四線、客戶出資與預付重大財務組成、股利、投資級融資瀑布、強制轉換特別股、未起租租賃排程、CAPM WACC、分部 EV/EBITDA；v0.1c：EBITDAR 率 − 固定租金、MW 觸頂後穩態 GPU 汰換、終值以末期 UFCF 為基準）見交接檔 `docs/handoff/20261022_Oracle收支模型_交接檔_v0_3.md` 與下方「company.json 欄位說明」；v0.2 新增建設延誤模組（計費 MW 平移、GPU 資本支出照原時程與閒置資本、租約起租連動、延誤罰則；Excel「運營_產能與收入」（E）區）與租賃負債／租賃調整後槓桿（投資級上限 ≤ 4.5×；「各期收支」租賃負債區、「資產負債_新債與新股」槓桿列）。成品名稱＝`更新日_<meta.company>收支模型_v版本`（目前 `dist/20261022_Oracle收支模型_v0_3.html`／`.xlsx`）。v0.3：每 MW 年收入改為 Tokenomics v19.0 錨（IF_HoldEcon，在役世代加權）× 定價倍數 k（市場價格證據），容量情境與價格情境分離（Excel「每MW收入_錨定」分頁；含 Q1 驗證 F 區、3×3 矩陣 G 區、敏感度 G2 區），每 MW 建置成本、GPU 壽命、PUE 引用 Tokenomics（`Tokenomics_取數` 分頁、`TK_` 名稱；快照 `data/tokenomics_snapshot_v19.0.json`），EBITDAR 率依新營收重校；`methodology.perMw.revenue／capex` 設為 `legacy` 可重現 v0.2（`scripts/verify_legacy.sh`）。升版驗收的預期差異清單在 `scripts/expect/`（v0.3：`v0_3_vs_v0_2.txt`、`v0_3_vs_v0_2_crawl.txt`；v0.2：`v0_2_vs_v0_1.txt`；延誤 0 不變性：`v0_2_delay0_vs_v0_1.txt`；legacy：`legacy_vs_v0_2.txt`）。報告工具：`scripts/attrib_v03.js`（目標價逐步拆解）、`scripts/tk_sens.js`（敏感度與矩陣快照）、`scripts/build_report_v03.py`（對照 Excel）。`scripts/calib_ebitdar.js`：EBITDAR 率校準（`defaults.ebitdarAdj`；verify.sh 第 0c 項）。
 
@@ -138,7 +138,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY27 第 2–4 季、FY28、FY29、FY30、FY31，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 Oracle v0.3 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 Oracle v0.3.1 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -147,7 +147,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `meta.company` | 公司名稱 | 文字 | Oracle | 必改 |
 | `meta.ticker` | 股票代號 | 文字 | ORCL | 必改 |
 | `meta.updateDate` | 資料更新日 | 日期 | 2026-10-22 | 必改 |
-| `meta.priceDate` | 股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格） | 日期 | 2026-10-06 | 必改 |
+| `meta.priceDate` | 股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格） | 日期 | 2026-10-21 | 必改 |
 | `meta.consensusFile` | 市場共識資料檔路徑（v4.3；只讀，由使用者查證後提供；建置時併入 HTML、Excel 讀同一檔） | 路徑 | data/consensus_orcl_202610… | 必改 |
 | `meta.sourceOrderNote` | 資料來源的先後與衝突時的取捨原則（畫面說明文字） | 文字 | 時序先 FY27Q1 財報新聞稿與法說（2026-0… | 必改 |
 
@@ -380,8 +380,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `cdsLowDate` | CDS 低點日期 | 日期 | None | 否 |
 | `availability` | 未動用信用額度 | US$bn | 10 | 否 |
 | `price0918` | 9/18 收盤價 | US$ | None | 否 |
-| `priceLast` | 最新收盤價 | US$ | 144.77 | 是 |
-| `priceDate` | 最新收盤價日期 | 日期 | 2026-10-06 | 是 |
+| `priceLast` | 最新收盤價 | US$ | 129.13 | 是 |
+| `priceDate` | 最新收盤價日期 | 日期 | 2026-10-21 | 是 |
 | `postQShortDated` | 期後公告摘要 | 文字 | 2026-09-24 Oracle 對 Projec… | 是 |
 | `ttmRev` | 近十二個月營收 | US$bn | 71.777 | 是 |
 | `ttmOpInc` | 近十二個月 GAAP 營業損益 | US$bn | 23.056 | 是 |
@@ -411,7 +411,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.descriptions` | 三情境的一句說明（Excel A 區；v0.1b） | 物件（文字） | 物件（low、base、high） | 必改 |
 | `scenarios.billableRatio.mode` | 可計費 MW 的算法：ratio＝已連網 × 比例；converge＝期初以最新季實際營收年化 ÷ 每 MW 年收入校準，之後向已連網收斂（v0.1b） | 代碼 | converge | 檢查 |
 | `scenarios.billableRatio.openAnnualRevenue` | converge 模式的校準營收：最新季實際營收（OCI 等 MW 驅動部分）× 4（v0.1b） | US$bn | 29.552 | 必改 |
-| `scenarios.billableRatio.note` | 可計費 MW 校準與收斂比例的說明（v0.1b） | 文字 | 期初可計費 MW＝Q1 FY27 實際 OCI 營收… | 必改 |
+| `scenarios.billableRatio.note` | 可計費 MW 校準與收斂比例的說明（v0.1b） | 文字 | 期初等效計費 MW＝Q1 FY27 實際 OCI 營… | 必改 |
 | `scenarios.billableRatio.ratio` | 各期比例：ratio 模式＝在役 ÷ 已連網；converge 模式＝期初校準值向已連網收斂的比例（三情境共用；v0.1b） | 比例清單 | 0.5、0.8、0.85、0.9、0.9 | 檢查 |
 | `scenarios.mw31.low` | 保守情境：模型期後一年（FY31）新增的 MW，用於 FY30 的預建支出 | MW | 0 | 檢查 |
 | `scenarios.mw31.base` | 基準情境：同上 | MW | 0 | 檢查 |
@@ -472,7 +472,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.debtBacklog` | 新債上限：總債務不超過 backlog 的倍數 | 倍 | 0.5 | 檢查 |
 | `defaults.ctrTerm` | 新簽合約的平均年期（決定 backlog 補入量） | 年 | 3 | 檢查 |
 | `defaults.minCash` | 最低現金：每期融資後期末現金不低於此值 | US$bn | 10 | 檢查 |
-| `defaults.eqPx` | 新股發行參考價（預設＝現價） | US$ | 144.77 | 必改 |
+| `defaults.eqPx` | 新股發行參考價（預設＝現價） | US$ | 129.13 | 必改 |
 | `defaults.eqDisc` | 新股發行折價 | 比例 | 0.1 | 檢查 |
 | `defaults.eqCapPct` | 每年股權募資上限（占現市值）；輸入 9 以上視為無上限 | 比例 | 0.05 | 檢查 |
 | `defaults.eqCapShares` | 股權年上限的股數基礎：現市值＝發行參考價 × 此股數（5a；評價日時點，列入滾動檢查） | bn | 3.02374 | 必改 |
@@ -535,7 +535,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `valuation.price` | 現價 | US$ | 144.77 | 必改 |
+| `valuation.price` | 現價 | US$ | 129.13 | 必改 |
 | `valuation.shares` | 評價股數（含期後股權發行上限） | bn 股 | 3.05774 | 必改 |
 | `valuation.atmSharesInValuation` | 評價股數中「期後股權發行上限」的股數：期後股權／可轉債開關關閉時由評價股數扣回（v0.1b；CRWV 0.035、無此項的公司填 0） | bn 股 | 0 | 必改 |
 | `valuation.netDebt` | 淨負債（不含可轉債：其他借款 − 現金，含期後已入帳的股權／可轉債募得淨額；可轉債依 debt.convertibles 另計） | US$bn | 88.827 | 必改 |
@@ -562,7 +562,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `valuation.legacyEvEbitdaNote` | 分部加總說明 | 文字 | 傳統事業（雲端應用＋授權＋硬體＋服務）EV/EBIT… | 必改 |
 | `valuation.dcfMode` | DCF 股權為負時的處理：zero＝0 截斷、option＝選擇權法 | 文字 | zero | 可沿用 |
 | `valuation.sigma` | 企業價值波動率（選擇權法用） | 比例 | 0.5 | 檢查 |
-| `valuation.rf` | 無風險利率（CAPM 與選擇權法用） | 比例 | 0.0527 | 檢查 |
+| `valuation.rf` | 無風險利率（CAPM 與選擇權法用） | 比例 | 0.0512 | 檢查 |
 
 ### `methodology`：評價方法與評等門檻
 
@@ -643,6 +643,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `texts.fy0EquityNote` | 首期股權／可轉債的組成說明（含年初至今與首期模型的金額；v4.5；可用期間佔位符 «P0»、«YTD»、«STUB»） | 文字 | «P0»＝«YTD» ATM 淨收入 19.909（… | 必改 |
+| `texts.roicWaccNote` | 標題句「回收一個 MW 的 GPU（成本、年限、WACC）」中 WACC 的用途說明（CAPM 折現率 vs Tokenomics 錨內含 WACC 10%；v0.3.1） | 文字 | 本模型 CAPM 折現率（valuation.wac… | 必改 |
+| `texts.ebitdaBasisNote` | 摘要與損益 FY27 調整後 EBITDA 口徑差異說明（Q1 實際＋Q2–Q4 模型 vs 全年模型；Excel「摘要」與 HTML 一頁摘要同一句；v0.3.1） | 文字 | 口徑：本表 FY27 調整後 EBITDA＝Q1 實… | 必改 |
+| `texts.equivBillableNote` | 「期初等效計費 MW」旁註（為收入校準量、可高於已連網 MW；佔位符 {openMw}＝fleet.openMw；v0.3.1） | 文字 | 為收入校準量（最新季 OCI 年化 ÷ 首期每 MW… | 必改 |
 | `texts.sourceLine` | 頁首的資料來源一行（例如最新 10-Q、法說、期後 8-K；v4.5） | 文字 | FY27Q1 10-Q（2026-09-11）＋財報… | 必改 |
 | `texts.cashTaxNote` | 年初至今現金稅的說明（損益與評價頁；v4.5） | 文字 | «YTD» 現金稅未單獨揭露；10-Q 有效稅率 1… | 必改 |
 | `texts.thesis` | 模型命題一句話（HTML 標題列與檔案說明；v0.1b） | 文字 | 客戶預付與投資級債能否把 $664B RPO 變成現… | 必改 |
@@ -700,6 +703,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `pricing._note` | 每 MW 收入公司因素區段的說明（不進程式；Oracle v0.3） | 文字 | Oracle v0.3：每 MW 收入的公司因素（定… | 可沿用 |
 | `pricing.anchorMultiple._note` | 定價倍數 k 的口徑說明（已決定事項 14、下游資料契約第 4 條；不進程式） | 文字 | Oracle v0.3（已決定事項 14、15；比照… | 可沿用 |
+| `pricing.anchorMultiple.baseLabel` | 價格軸基準的名稱（畫面與 Excel 稱「價格基準」處並列；Oracle＝外部長約錨〔IREN–Microsoft〕；v0.3.1） | 文字 | 外部長約錨（IREN–Microsoft） | 可沿用 |
 | `pricing.anchorMultiple.long` | k_長約：base／low／high（價格軸低／基準／高）、證據來源 refEvidence、契約第 4 條指定解讀 interpretation、三筆長約中位數 sensMedian、Oracle 自身合約換算 ownContract（只列敏感度）、標記。base／low／high／sensMedian 為規格，建置時由證據價格 ÷ 目前快照同世代成本推算（kspec.py；HTML 端 segA.js kSpecApplyQ）：數字（固定倍數）｜{ref: 證據 label}｜{priceEq, gen, tkName}（端點換成固定價格）｜{median: [label…]}；ownContract.specs 逐項 {ref}｜{tcv(US$m), years, mw, gen, tkName}，建置時解出 values | 物件（倍數） | 物件（base、low、high、tag、refEvidence、sensMedian、note、interpretation、ownContract） | 檢查 |
 | `pricing.anchorMultiple.spot` | k_現貨：base／low／high、refEvidence、標記（非長約客戶的價格倍數）；base／low／high 為規格（同 k_長約） | 物件（倍數） | 物件（base、low、high、tag、refEvidence、note） | 檢查 |
 | `pricing.anchorMultiple.onDemandShare` | 隨需（現貨）占比：base（基準 10%，[Assumed]，區間長約 80–100%）、sens（敏感度清單）、標記與說明；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約 | 物件（比例） | 物件（base、sens、tag、note） | 檢查 |
@@ -731,7 +735,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `oracle._readme` | Oracle 資料草稿區段的說明（v0.1a 產出；引擎尚未讀取，v0.1b 依 mapTo 搬入既有欄位或新增） | 文字 | Oracle 資料草稿（v0.1a 產出）。v0.1… | 必改 |
-| `oracle.files` | Oracle 事實總帳、每 MW 推導、共識資料檔的路徑 | 物件（路徑） | 物件（facts、perMw、consensus） | 必改 |
+| `oracle.files` | Oracle 事實總帳、每 MW 推導、共識資料檔的路徑 | 物件（路徑） | 物件（facts、facts2、perMw、consensus） | 必改 |
 | `oracle.debt` | Oracle 債務草稿（逐檔票券、定期貸款、商業本票、到期梯、循環額度、強制轉換特別股、信評）；格式同上 | 物件 | 物件（ratings） | 必改 |
 | `oracle.equity` | Oracle ATM、FY27 融資計畫、股利、買回授權、股價草稿；格式同上 | 物件 | 物件（atmDone、fundingPlanFY27、dividendPerShareQ、buybackAuth、eqPx） | 必改 |
 | `oracle.prepay` | Oracle 客戶出資覆蓋比、預付累計、預付＋自帶硬體合約額草稿；格式同上 | 物件 | 物件（capexCover、cashCum、prepayAndByohContract、q1NewContracts） | 必改 |

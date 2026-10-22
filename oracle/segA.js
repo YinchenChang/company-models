@@ -26,7 +26,7 @@ var PERIODS = COMPANY_DATA.periods,
   REVSRCQ = PMW_REVQ === `tkAnchor` ? `Tokenomics 錨 × 定價倍數 k` : `Tokenomics 正向推導`, // 畫面文字的每 MW 收入來源（legacy 時與 v0.2 相同）
   SC_REV = PMW_REVQ === `tkAnchor` ? Object.fromEntries([`low`, `base`, `high`].map(k => [k, tkAnchorQ(k).rev])) : COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境；v0.3：tkAnchor 時＝錨 × k（價格軸基準），容量情境與價格脫鉤
   SC_BR = COMPANY_DATA.scenarios.billableRatio.ratio,
-  SC_BRM = COMPANY_DATA.scenarios.billableRatio.mode || `ratio`, // v0.1b（Oracle）：converge＝期初可計費 MW 以最新季實際營收年化 ÷ 每 MW 年收入校準，之後向已連網 MW 收斂
+  SC_BRM = COMPANY_DATA.scenarios.billableRatio.mode || `ratio`, // v0.1b（Oracle）：converge＝期初等效計費 MW 以最新季實際營收年化 ÷ 每 MW 年收入校準，之後向已連網 MW 收斂
   SC_BOPEN = k => SC_BRM === `converge` ? Math.round(COMPANY_DATA.scenarios.billableRatio.openAnnualRevenue / SC_REV[k][0]) : COMPANY_DATA.defaults.billableOpen,
   UL = COMPANY_DATA.leases.uncommenced, UL_TOT = COMPANY_DATA.leases.facts.notCommenced, // v0.1b（Oracle）：未起租租賃起租排程
   ulPath = (T = UL.termYears, N = UL.quarters, S = UL.startQ, tot = UL_TOT) => { // 每季起租 tot/N（未折現），每筆期限 T 年直線付租；各期租金＝每筆季租 ×(期末累計已起租筆季數 − 期初累計)
@@ -49,7 +49,7 @@ var PERIODS = COMPANY_DATA.periods,
     label: COMPANY_DATA.scenarios.labels[k],
     acc: SC_ACC[k],
     bil: SC_ACC[k].map((e, t) => SC_BRM === `converge` ? Math.round(SC_BOPEN(k) + (e - SC_BOPEN(k)) * SC_BR[t]) : Math.round(e * SC_BR[t])), // v0.1b：converge＝校準起點＋(已連網 − 起點)× 收斂比例
-    bOpen: SC_BOPEN(k), // v0.1b：期初可計費 MW（隨情境）
+    bOpen: SC_BOPEN(k), // v0.1b：期初等效計費 MW（隨情境）
     rev: SC_REV[k],
     mw31: SC_MW31[k],
     cvCap: COMPANY_DATA.scenarios.convCap[k], // v0.1b：瀑布可轉債每年新發行上限（保守 0＝不新發）
@@ -142,7 +142,7 @@ function capexTkQ(e) { // v0.3 步驟 4（自 Nebius capexTkQ；Oracle 用 IF_Ca
   return nm.map(mx => FL.generations.reduce((a, g) => a + (mx[g] || 0) * TK[g][cs], 0))
 }
 function tkAnchorQ(sc, o = {}) { // v0.3：每 MW 年收入＝Tokenomics 錨 × 定價倍數 k（Excel「每MW收入_錨定」同列同算式；tkanchor.py 為建置時參考）
-  // 期末在役 MW＝已連網 MW（scenarios.mwPath；不用可計費 MW，避免與期初可計費 MW 校準循環）；期初＝fleet.openMw；平均在役世代占比 × IF_HoldEcon（成本情境）÷ 1000＝錨；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約
+  // 期末在役 MW＝已連網 MW（scenarios.mwPath；不用可計費 MW，避免與期初等效計費 MW 校準循環）；期初＝fleet.openMw；平均在役世代占比 × IF_HoldEcon（成本情境）÷ 1000＝錨；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約
   let AM = COMPANY_DATA.pricing.anchorMultiple, FL = COMPANY_DATA.fleet, G = FL.generations, TK = COMPANY_DATA.tkSnap, P = COMPANY_DATA.scenarios.mwPath,
     px = o.px || `base`, cs = o.tkCase || `基準`, nm = o.newMix || FL.newMix,
     ref = side => AM.evidence.find(x => x.label === AM[side].refEvidence), rr = x => cs === `基準` ? 1 : TK[x.tkName][x.gen][`基準`] / TK[x.tkName][x.gen][cs], // k＝價格 ÷ 同成本情境持有成本：非基準成本情境以證據世代的成本比例重算（價格是事實）
@@ -652,7 +652,7 @@ function runFunding(e) {
     ok: !0,
     severity: `watch`,
     title: `已連網 MW-IT：${PERIOD_FY[0] - 1} 年底 ${e.mwYearEnd[PERIOD_FY[0] - 1]} MW → ${PERIODS[0]} 年底 ${t.accepted[0]} MW`,
-    detail: `${TXQ.mwFacts}口徑不明者以 ÷ PUE 1.2 換成 MW-IT。目前情境：${PERIODS[0]} 已連網 ${t.accepted[0]} MW、${PERIODS[1]} ${t.accepted[1]} MW、${PERIODS[4]} ${t.accepted[4]} MW。累計在役 MW 未揭露，不以營收反推（期初可計費 MW 以實際營收校準）。`
+    detail: `${TXQ.mwFacts}口徑不明者以 ÷ PUE 1.2 換成 MW-IT。目前情境：${PERIODS[0]} 已連網 ${t.accepted[0]} MW、${PERIODS[1]} ${t.accepted[1]} MW、${PERIODS[4]} ${t.accepted[4]} MW。累計在役 MW 未揭露，不以營收反推（期初等效計費 MW 以實際營收校準）。`
   }), _({
     id: `call-util`,
     ok: t.util[0] <= 100,
@@ -948,10 +948,20 @@ function reverseDcf(e, v) {
     ebs,
     grid,
     rev30: e.m.revMW[4] * (e.revScale ?? 1) * 1e3,
+    kReq: kReqQ(e, v, (f, lo, hi, inc, key) => solve(f, lo, hi, inc, key)), // v0.3.1：現價所需 k_長約（外部驗收採納 4b-iv）；非 tkAnchor 或無解為 null
     util30: e.m.util[4] / 100,
     cost30: e.a.costMW[4] * (e.capexScale ?? 1),
     eb30: e.ebSteady
   }
+}
+
+function kReqQ(e, v, solve) { // 現價所需 k_長約（數值求解，v0.3.1）：k 變動同時改變期初等效計費 MW（Q1 實際營收 ÷ 每 MW 年收入校準），不能線性換算；
+  // 把 tkScnQ 的 kLong 逐步調整、跑完整模型（與 Excel scripts/rv_solve.py 同一組上下界 0.5–3、22 次對半）。kD＝DCF 每股＝現價（純 DCF 口徑）、kT＝加權目標價＝現價（加權目標價口徑，主列）
+  if (PMW_REVQ !== `tkAnchor`) return null;
+  let AM = COMPANY_DATA.pricing.anchorMultiple, sc = [`low`, `base`, `high`].includes(e.scenario) ? e.scenario : COMPANY_DATA.defaults.scenario,
+    runK = x => { let n = structuredClone(tkScnQ(e, sc, { kLong: x })), r = structuredClone(v), i = runFunding(n), a = runValuation(i, n, r); return { dcf: a.d.invalid ? 0 : a.d.perShare, tgt: a.call.blended } },
+    kD = solve(runK, .5, 3, !0), kT = solve(runK, .5, 3, !0, `tgt`);
+  return Number.isFinite(kD) || Number.isFinite(kT) ? { now: AM.long.base, req: Number.isFinite(kD) ? kD : null, reqT: Number.isFinite(kT) ? kT : null } : null
 }
 
 function fA(e, t, v, q) {

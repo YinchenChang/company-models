@@ -109,7 +109,7 @@ function zM() {
             className: `font-medium text-accent-fg`,
             children: [`$`, Y(f.call.blended, 1)]
           }), `（情境區間 $${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}），較現價 `, f.call.upside >= 0 ? `+` : ``, hA(f.call.upside * 100, 0), `，結論「`, f.call.call, `」。`, (0, $.jsx)(tipQ, {
-            t: `三個判斷依據：(1) 預付款能否讓 backlog 變成現金——營收由已連網 MW × 每 MW 年收入（${REVSRCQ}，不用公司 ACV）驅動，客戶預付在建置前先收現、之後認列為非現金營收；(2) 單位經濟——每 MW 年 EBITDA（每 MW 年收入×利用率×EBITDA 率）是否高於 GPU 的年化資本回收（每 MW 成本×資本回收係數）；(3) 融資——缺口依序由預付、現金、資產擔保融資、可轉債、ATM 股權補足，最後才是高息債；市場願意以多少價格吸收多少新股，是估值最敏感的假設之一（見目標價頁敏感度表）。${PERIODS[0]} 欄為年初至今實際＋模型期。`,
+            t: `三個判斷依據：(1) 預付款能否讓 backlog 變成現金——營收由已連網 MW × 每 MW 年收入（${REVSRCQ}，不用公司 ACV）驅動，客戶預付在建置前先收現、之後認列為非現金營收；(2) 單位經濟——每 MW 年 EBITDA（每 MW 年收入×利用率×EBITDA 率）是否高於 GPU 的年化資本回收（每 MW 成本×資本回收係數）；(3) 融資——缺口依序由預付、現金、資產擔保融資、可轉債、ATM 股權補足，最後才是高息債；市場願意以多少價格吸收多少新股，是估值最敏感的假設之一（見目標價頁敏感度表）。${PERIODS[0]} 欄為年初至今實際＋模型期。${COMPANY_DATA.texts.roicWaccNote ? `句中 WACC ${hA(o.wacc * 100, 0)}＝${COMPANY_DATA.texts.roicWaccNote}` : ``}`,
             w: 500
           })]
         }), (0, $.jsxs)(`div`, {
@@ -303,8 +303,8 @@ function zM() {
                   })
                 }),
 (0, $.jsx)(LM, {
-                  label: `${CALQ.valuationMD} Billable MW`,
-                  hint: SC_BRM === `converge` ? `以 ${CALQ.filedQLabel} 實際營收年化 ÷ 每 MW 年收入校準（隨情境）` : `Assumed`,
+                  label: `${CALQ.valuationMD} 期初等效計費 MW`,
+                  hint: SC_BRM === `converge` ? `以 ${CALQ.filedQLabel} 實際營收年化 ÷ 每 MW 年收入校準（隨情境）；${COMPANY_DATA.texts.equivBillableNote.replace(`{openMw}`, Y(COMPANY_DATA.fleet.openMw, 0))}` : `Assumed`,
                   children: (0, $.jsx)(IM, {
                     value: e.billableOpen,
                     onChange: e => w({
