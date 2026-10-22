@@ -60,3 +60,10 @@
 - `anthropic/CLAUDE.md` 新增第 8 節：公開 S-1／經審計資料出現時的替換程序。
 - 成品：`tools/build_html.py`「①之三」改名「v0.1.3 更新了什麼」並加 η 拆解、Bridge 逐層對照（HTML 1,134 個數字）；`tools/read_html_screen.py`（Playwright 逐節讀畫面並截圖，桌機 1280／手機 390，無水平捲動、無外部請求、畫面文字與 data-v 0 不符）；`dist/20261022_Anthropic收支模型_v0_1_3.html／.xlsx`。
 - 報告 `docs/reports/20261022_v0.1.3.md`＋`_對照.xlsx`（`tools/make_report_v013b.py`）。
+
+## v0.1.4 Tokenomics v19.1 同步、η 診斷補充（2026-10-22；Excel `model/20261022_Anthropic_v0.1.4.xlsx`；v0.1.3 移至 `model/archive/`；分支 `claude/anthropic-v0.1.3`，PR #69）
+- 工作單 `docs/workorders/20261022_anthropic_v0.1.4_TK19.1.md`。commit 見 git log「Anthropic v0.1.4 步驟 1–6」。
+- TK 快照 v19.0 → v19.1（master `c2ecb71`）：39 個名稱值變動（check_tk_snapshot 重建後 OK 126、DIFF 0）；僅 `IF_TokGW_Luna` 進計算（Compute）；其餘為參考列、診斷或僅快照。命題輸出與 v0.1.3 逐位相同；η 0.52730 → 0.52543，有效推論 GW 2030 ＋0.0043、研發 GW −0.0043。
+- 新列（皆在尾端）：TK_Link ＋`IF_ProdDerate`；EtaDiag 第七節 E38–E47（`ETA_fU_Prod`、`ETA_Prod2`、`ETA_Resid2`）；Checks C153–C156。具名範圍 1,272 → 1,276、公式格 7,231 → 7,256。η 值不因診斷改變。
+- 刪除 `dist/_待刪除/` 與 v0.1.3 dist 檔；HTML「①之三」前端加 v0.1.4 摘要、逐群拆解表、η 各版本小表；`tools/html_scenarios.yaml` 加 `tk19_*` 群組與 `v013`、`v14_only_luna`、`v14_only_rest` 情境（舊情境加 `tk19_back` 以保持當時數字）。
+- 測試：`tests/parity/scenarios.yaml` 預期值（formula_cells 7,256、defined_names 1,276、tk_values 105）；`test_builder` 新增 `test_eta_prod_derate_section`，η 預期值改 0.525427732668394。報告 `docs/reports/20261022_v0.1.4.md`；工具 `tools/make_report_v014.py`。

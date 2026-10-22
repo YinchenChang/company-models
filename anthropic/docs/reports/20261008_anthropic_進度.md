@@ -1,7 +1,7 @@
 # Anthropic v0.1 分段建置進度（接手用；A1–A5 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- **v0.1.4 進行中**（工作單 `docs/workorders/20261022_anthropic_v0.1.4_TK19.1.md`；同分支 `claude/anthropic-v0.1.3`、PR #69，標題改「Anthropic v0.1.3＋v0.1.4」；不合併）。**已完成**：步驟 1（TK v19.1 快照；模型 `model/20261022_Anthropic_v0.1.4.xlsx`，CURRENT 已更新；39 個 DIFF 名稱中進計算者僅 `IF_TokGW_Luna`〔Compute〕，其餘為參考列或僅快照）。**步驟 2 已完成**（EtaDiag 第七節 E38–E47；Checks C153–C156；TK_Link 尾端 +IF_ProdDerate）。**下一步**：3 刪 `dist/_待刪除/` → 4 重算與測試 → 5 HTML／dist → 6 報告。**未解問題**：無。
+- **v0.1.4 完成**（2026-10-22；工作單 `docs/workorders/20261022_anthropic_v0.1.4_TK19.1.md`；同分支 `claude/anthropic-v0.1.3`、PR #69，標題「Anthropic v0.1.3＋v0.1.4」；**不合併**）。步驟 1–6 全部完成，報告 `docs/reports/20261022_v0.1.4.md`；pytest 117 項全過；命題輸出與 v0.1.3 逐位相同。**下一步**：chat 端審查 PR #69；待決僅 U2 付款分攤比例（A 段遺留）。**未解問題**：無新增。
 - **v0.1.3 A 段進行中**（分支 `claude/anthropic-v0.1.3`，PR #69 draft）：步驟 1–7 完成（報告 `docs/reports/20261022_v0.1.3-A.md`）。**B 段起點**：η 診斷拆分（不得改 η 值）、Bridge 頁（唯讀）、S-1 替換程序寫入 CLAUDE.md；B 段結束時重產 HTML 與 dist（目前 dist 為 A 段草稿，v0.1.2 成品在 `dist/_待刪除/`）。chat 端已更正 U2 公式（付款路徑不變、只改供給 GW）；待確認：工作單「公告金額比例」與「v0.1.2 路徑不變」的衝突（報告 ⑥）。B 段完成（2026-10-22；見下方「v0.1.3 B 段」表；PR #69 ready，待 chat 端審查合併）。
 
 - 已完成：v0.1（A0–A5）；v0.1.1（PR #56）；**v0.1.2（2026-10-21）全部步驟**：TK v5.26 → v18.0（master `868e2cc`）、語意核對、對照列、重算、pytest 109 項全過、HTML／dist、報告＋對照 Excel、CHANGELOG、交接檔。報告 `docs/reports/20261021_v0.1.2.md`。
@@ -107,3 +107,7 @@ Tokenomics：master `c2ecb71`，CURRENT `20261022_Tokenomics_v19.1.xlsx`（Luna 
 |---|---|---|---|
 | 1 快照 v19.1 | 完成 | 見 git log「v0.1.4 步驟 1」 | 重建 24 秒；check_tk_snapshot：OK 126、DIFF 0；重建前 v19.0 快照 vs v19.1 為 DIFF 39（與 chat 端一致）；v0.1.3 檔 git mv 到 archive |
 | 2 η 診斷補充（EtaDiag 第七節） | 完成 | 見 git log「v0.1.4 步驟 2」 | f_U' 0.581（＝0.683×0.85）；殘差 0.440 → 0.517（×1.176）；殘差倒數 1.933 ÷ TK L1_GapUnexplained 5.616 ＝ 0.344；η（2025）＝0.5254（TK v19.1 使 η 由 0.5273 小降，診斷不改 η）；版本小表加 v19.1 欄在報告／HTML（步驟 5–6） |
+| 3 刪除 dist/_待刪除 | 完成 | 見 git log「v0.1.4 步驟 3」 | git rm 6 檔 |
+| 4 重算與測試 | 完成 | 見 git log「v0.1.4 步驟 4–5」 | LO 錯誤 0、CHK_Errors＝0、Warnings＝2；pytest 依檔分開：test_builder 14、test_html 6、test_parity 97（分 7 片），共 117 項全過；預期值：formula_cells 7,256、defined_names 1,276、tk_values 105 |
+| 5 HTML 與 dist | 完成 | 同上 | dist v0.1.4；HTML 1,232 個數字；Playwright 12 節 × 桌機／手機 0 不符、無水平捲動、外部請求 0 |
+| 6 報告、CHANGELOG、交接檔、PR 留言 | 完成 | 見 git log「v0.1.4 步驟 6」 | `docs/reports/20261022_v0.1.4.md`＋`_對照.xlsx`；PR #69 留言 `[Anthropic 回報] v0.1.4｜完成｜2026-10-22` |
