@@ -1207,7 +1207,6 @@
 "Inputs 列數": "C05",
 "Inputs 區間順序異常列數": "C06",
 "Inputs Analogy／Assumed 缺區間列數": "C07",
-"TK_Link 具名名稱數（同 OpenAI v0.6 的 63 名）": "C08",
 "TK_Link 讀表列數（Cap_In／Price_Frontier 的 GLM 列與中國合格前緣）": "C09",
 "TK_Link 錯誤值格數": "C10",
 "TK 快照版本": "C11",
@@ -1293,9 +1292,14 @@
 "對照：2030 累計外部資金需求：智譜（$B）− OpenAI v0.6（$B）": "C92",
 "Cost：2H26 起供應商推算毛利 < 0 的期數（Z5b V1：租價下限）": "C93",
 "r2 P1：η 上調（研發殘差觸及訓練最低占比）的校準期數": "C94",
-"對照：研發 GW 1H26（殘差）÷ 研發項下算力費換算 GW": "C95"
+"對照：研發 GW 1H26（殘差）÷ 研發項下算力費換算 GW": "C95",
+"TK_Link 具名名稱數（v0.1.1：原 63 名＋智譜新增 11 名＋RNG_ 3 名）": "C96",
+"v0.1.1 對照：TK IF_AllocRDGW 區間下限（RNG_IF_AllocRDGW_Lo，GW·年）": "C97",
+"v0.1.1 對照：TK IF_AllocRDGW 區間上限（RNG_IF_AllocRDGW_Hi，GW·年）": "C98",
+"v0.1.1：Tokenomics 區間時效旗標 RNG_StaleFlag＝『一致』": "C99"
 },
 "retired_CHK": [
-"C42"
+"C42",
+"C08"
 ]
 }
