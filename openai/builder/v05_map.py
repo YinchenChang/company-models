@@ -937,7 +937,7 @@ def p5_rows(R: Recorder):
     R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 2026, 2027
 
 
-EPOCH_16B_SRC = ("Epoch AI『Frontier labs don't use most AI compute』附錄（引媒體報導 OpenAI 2025 年雲端算力支出 $16B，作 GPU 估計的交叉檢驗；頁面未載明發布日） "
+EPOCH_16B_SRC = ("Epoch AI『Frontier labs don't use most AI compute』附錄（引媒體報導 OpenAI 2025 年雲端算力支出 $16B，作 GPU 估計的交叉檢驗；頁面日期 2026-05-20） "
                  "https://epoch.ai/gradient-updates/frontier-labs-dont-use-most-ai-compute")
 BROCKMAN_SRC = ("Bloomberg Law 2026-05-05『OpenAI to Spend $50 Billion on Computing in 2026, Brockman Says』（Musk v. OpenAI 審判，OpenAI 總裁 Brockman 作證第二日） "
                 "https://news.bloomberglaw.com/ip-law/openai-to-spend-50-billion-on-computing-in-2026-brockman-says ；Epoch AI 2026-09-09 亦引："
@@ -952,9 +952,10 @@ def p6_rows(R: Recorder):
     S, I = R.src, R.inp
     ex = "（擷取 2026-10-22）"
     S("v0.6.1/PxQ/外部算力支出對照", "算力（雲端）支出：2025（媒體報導，經 Epoch 引用）", vlit=16, unit="$B",
-      scope="OpenAI 2025 年雲端算力支出約 $16B（媒體報導，Epoch 作交叉檢驗；口徑為雲端，未含自有）", date="—", tag="Interested-party",
+      scope="OpenAI 2025 年雲端算力支出約 $16B（媒體報導，Epoch 作交叉檢驗；口徑為雲端，未含自有）", date="2026-05-20", tag="Interested-party",
       source=EPOCH_16B_SRC, use="PxQ 對照列（不進主序列）：÷（GW × h）倍數",
-      note="P×Q 工作單第 4 節搜尋" + ex + "；Epoch 頁面未載明報導原始出處與發布日；與 TKQ_SRC_DEM_004＋006（20.4）並列對照")
+      note="P×Q 工作單第 4 節搜尋" + ex + "；Epoch 頁面未載明原始媒體報導；與 TKQ_SRC_DEM_004＋006（20.4）並列對照；日期依獨立查核補正（2026-10-22）")
+    R.src_rows[-1]["cl"] = dict(grade="2", stance="利害關係方（原始數字）／第三方轉引", why="Epoch AI（獨立研究機構，無直接利害）轉引媒體報導；原始報導與其消息來源未載明，數字最終源自 OpenAI 內部（誘因：募資與議價）", hand="二手")   # 獨立查核 2026-10-22
     S("v0.6.1/PxQ/外部算力支出對照", "算力支出：2026（Brockman 證詞）", vlit=50, unit="$B",
       scope="OpenAI 2026 年算力支出約 $50B（Brockman 在 Musk v. OpenAI 審判作證；約 2025 的三倍）", date="2026-05-05", tag="Interested-party",
       source=BROCKMAN_SRC, use="PxQ 對照列（不進主序列）：÷（GW × h）倍數",
@@ -963,6 +964,7 @@ def p6_rows(R: Recorder):
       scope="2025 年 OpenAI 算力在研發與推論間『大致平分』（roughly evenly）；0.50 為對『大致平分』的取值，非原文數字", date="2026-09-09", tag="Interested-party",
       source=EPOCH_SPLIT_SRC, use="PxQ 服務占比對照（基準取 Tokenomics TKQ_IF_ServeShare 0.41）",
       note="P×Q 工作單第 2 節搜尋" + ex + "；原文無區間，本列不補值（待 Project 判斷）；比值（營收 ÷ 成本）不受服務占比影響，只影響 Q 與 m×L 的水準")
+    R.src_rows[-1]["cl"] = dict(grade="2", stance="第三方", why="Epoch AI 為獨立研究機構，無直接利害；係其彙整報導數字之敘述，0.50 為本模型對『大致平分』的取值", hand="二手")   # 獨立查核 2026-10-22
     base = "v0.6.1/PxQ"
     I(base + "/2025 GW 主值", "2025 平均上線 GW 主值選擇（0＝指數內插；1＝線性內插）", unit="開關", vlit=0, tag="Decision", decision="工作單 20261022 判斷題 5",
       status="v0.6.1 新增（P×Q）", note="兩種內插（端點 TKQ_SRC_DEM_008／009）並列顯示；本開關只決定『主值』（PxQ 頁頂部讀法句、持平 GW 主值列）。基準＝指數", meta=False)
