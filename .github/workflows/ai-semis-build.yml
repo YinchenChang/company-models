@@ -1,0 +1,91 @@
+name: ai-semis-build
+
+# AI 半導體 Project（橋接表、網通、三家記憶體、台積電）的重建檢查：
+# 以 repo 內的建檔程式重新產生 xlsx → LibreOffice headless 重算 → (1) 錯誤格數必須為 0；
+# (2) 與各資料夾 dist/ 的成品逐格比對（數值容差 1e-9）。任何差異都讓 CI 失敗，並輸出前 20 個差異。
+# 比對工具：tools/xlsx_diff.py（本機也可執行）。
+on:
+  push:
+    paths:
+      - 'markets/**'
+      - 'tools/memory_model/**'
+      - 'tools/xlsx_diff.py'
+      - 'skhynix/**'
+      - 'micron/**'
+      - 'samsung/**'
+      - 'tsmc/**'
+      - '.github/workflows/ai-semis-build.yml'
+  pull_request:
+    paths:
+      - 'markets/**'
+      - 'tools/memory_model/**'
+      - 'tools/xlsx_diff.py'
+      - 'skhynix/**'
+      - 'micron/**'
+      - 'samsung/**'
+      - 'tsmc/**'
+      - '.github/workflows/ai-semis-build.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  rebuild-and-compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'   # markets/memory/__pycache__ 已被追蹤，避免重建時改動工作樹
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安裝 python3、openpyxl、libreoffice-calc
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends python3 python3-openpyxl libreoffice-calc
+
+      - name: 重建、重算、檢查錯誤格並與 dist 比對
+        run: |
+          set -u
+          mkdir -p build/raw build/out
+          # 名稱｜建檔指令（輸出檔路徑接在最後）｜成品所在資料夾
+          targets=(
+            "bridge|python3 markets/chip_bridge/build_bridge.py|markets/chip_bridge/dist"
+            "network|python3 markets/network/build_network.py|markets/network/dist"
+            "skhynix|python3 tools/memory_model/build.py skhynix/company.py|skhynix/dist"
+            "micron|python3 tools/memory_model/build.py micron/company.py|micron/dist"
+            "samsung|python3 tools/memory_model/build.py samsung/company.py|samsung/dist"
+            "tsmc|python3 tsmc/build_tsmc.py|tsmc/dist"
+          )
+          failed=0
+          for t in "${targets[@]}"; do
+            IFS='|' read -r name cmd dist <<< "$t"
+            echo "::group::$name"
+            # 建檔（openpyxl 寫公式，無快取值）
+            if ! $cmd "build/raw/$name.xlsx" > /dev/null; then
+              echo "::error::$name 建檔失敗"; failed=1; echo "::endgroup::"; continue
+            fi
+            # 重算：LibreOffice headless 載入時計算公式並存成含快取值的 xlsx
+            if ! soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" \
+                 --outdir build/out "build/raw/$name.xlsx" > /dev/null 2>&1; then
+              echo "::error::$name 重算失敗"; failed=1; echo "::endgroup::"; continue
+            fi
+            # 成品：該資料夾 dist/ 內唯一的 xlsx
+            mapfile -t refs < <(ls "$dist"/*.xlsx 2>/dev/null)
+            if [ "${#refs[@]}" -ne 1 ]; then
+              echo "::error::$dist 內應剛好一個 xlsx，實際 ${#refs[@]} 個"; failed=1; echo "::endgroup::"; continue
+            fi
+            # 錯誤格數 0 ＋ 逐格比對（容差 1e-9），輸出前 20 個差異
+            if ! python3 tools/xlsx_diff.py "build/out/$name.xlsx" "${refs[0]}" --tol 1e-9 --limit 20; then
+              echo "::error::$name 與 ${refs[0]} 有差異或錯誤格"; failed=1
+            fi
+            echo "::endgroup::"
+          done
+          if [ "$failed" -ne 0 ]; then
+            echo "重建結果與 dist 成品不一致（任何數值差異都視為錯誤）" >&2
+            exit 1
+          fi
+          echo "六個模型重建後錯誤格 0、與 dist 逐格相同"
+
+      - name: 確認工作樹未被改動
+        run: |
+          git diff --exit-code --stat -- . ':!build'

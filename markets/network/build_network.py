@@ -1,7 +1,7 @@
 # AI 網通市場模型 v0.2（AI 半導體 Project 步驟 3）
 # 用法：python3 markets/network/build_network.py raw.xlsx ；再以 LibreOffice headless 重算
 # 加速器顆數取自 markets/memory/market.py（與 HBM 市場同一份數量層）；每顆網通內容以 markets/chip_bridge v0.2 為錨
-import sys, os
+import sys, os, json
 import openpyxl
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
@@ -29,8 +29,16 @@ PLAT = {
  "TRN":  ("AWS Trainium", (600, 800, 800, 1200, 300, 300), "Assumed", "NeuronLink＋EFA；合計約 $4K"),
  "ASIC": ("其他 ASIC", (600, 800, 800, 1200, 300, 300), "Assumed", "比照 Trainium"),
 }
-ITU = {"GB": (66.2, "Derived", "Tokenomics v19.0 IF_CapexIT 32.237 $B ÷ 487,008（v5.27 為 37.445）"), "VR": (128.8, "Derived", "37.586 ÷ 291,744"),
-       "RU": (257.2, "Derived", "50.086 ÷ 194,760"), "HP": (38.3, "Derived", "27.510 ÷ 718,048"), "AMD8": (40, "Assumed", ""),
+# 每顆 IT capex（$K）＝ IF_CapexIT（$B）÷ IF_GPUsPerGW × 1e6，取自橋接表的 Tokenomics 快照（基準成本情境）；
+# 四捨五入到 0.1（與 v0.2 成品的顯示精度一致，使輸出與 v0.2 逐格相同）。
+_snap = json.load(open(os.path.join(ROOT, "markets", "chip_bridge", "data", "tokenomics_snapshot_v19.0.json"), encoding="utf-8"))
+_gen = {g["code"]: g["name"] for g in _snap["source"]["generations"]}
+def itu(code):
+    capex = _snap["items"]["IF_CapexIT"]["values"][_gen[code]]["基準"]
+    gpus = _snap["items"]["IF_GPUsPerGW"]["values"][_gen[code]]["基準"]
+    return round(capex / gpus * 1e6, 1)
+ITU = {"GB": (itu("GB300"), "Derived", "Tokenomics v19.0 IF_CapexIT 32.237 $B ÷ 487,008（v5.27 為 37.445）"), "VR": (itu("VR200"), "Derived", "37.586 ÷ 291,744"),
+       "RU": (itu("RU"), "Derived", "50.086 ÷ 194,760"), "HP": (itu("H100"), "Derived", "27.510 ÷ 718,048"), "AMD8": (40, "Assumed", ""),
        "AMDR": (100, "Assumed", "VR200 的約 0.8 倍"), "TPU": (25, "Assumed", ""), "TRN": (20, "Assumed", ""), "ASIC": (20, "Assumed", "")}
 TYPE2PLAT = {"bw": {y: "GB" for y in (26, 27, 28, 29)}, "rb": {y: "VR" for y in (26, 27, 28, 29)}, "ru": {y: "RU" for y in (26, 27, 28, 29)},
              "hp": {y: "HP" for y in (26, 27, 28, 29)}, "amd": {26: "AMD8", 27: "AMDR", 28: "AMDR", 29: "AMDR"},
