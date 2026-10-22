@@ -1,5 +1,14 @@
 {
  "method": "tkAnchor",
+ "axis": {
+  "kLo": 0.8,
+  "kHi": 1.469722,
+  "keys": [
+   "kLong080",
+   "kOwn1",
+   "kOwn2"
+  ]
+ },
  "matrix": {
   "low": {
    "low": {
@@ -1019,7 +1028,7 @@
   },
   {
    "key": "nonAi12",
-   "label": "期初可計費 MW 校準扣除非 AI 12% 的 OCI 營收",
+   "label": "期初等效計費 MW 校準扣除非 AI 12% 的 OCI 營收",
    "res": {
     "low": {
      "tgt": 74.332178,
@@ -1076,7 +1085,7 @@
   },
   {
    "key": "nonAi20",
-   "label": "期初可計費 MW 校準扣除非 AI 20% 的 OCI 營收",
+   "label": "期初等效計費 MW 校準扣除非 AI 20% 的 OCI 營收",
    "res": {
     "low": {
      "tgt": 72.838587,
@@ -1133,7 +1142,7 @@
   },
   {
    "key": "nonAi30",
-   "label": "期初可計費 MW 校準扣除非 AI 30% 的 OCI 營收",
+   "label": "期初等效計費 MW 校準扣除非 AI 30% 的 OCI 營收",
    "res": {
     "low": {
      "tgt": 71.339459,

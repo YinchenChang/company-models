@@ -411,7 +411,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.descriptions` | 三情境的一句說明（Excel A 區；v0.1b） | 物件（文字） | 物件（low、base、high） | 必改 |
 | `scenarios.billableRatio.mode` | 可計費 MW 的算法：ratio＝已連網 × 比例；converge＝期初以最新季實際營收年化 ÷ 每 MW 年收入校準，之後向已連網收斂（v0.1b） | 代碼 | converge | 檢查 |
 | `scenarios.billableRatio.openAnnualRevenue` | converge 模式的校準營收：最新季實際營收（OCI 等 MW 驅動部分）× 4（v0.1b） | US$bn | 29.552 | 必改 |
-| `scenarios.billableRatio.note` | 可計費 MW 校準與收斂比例的說明（v0.1b） | 文字 | 期初可計費 MW＝Q1 FY27 實際 OCI 營收… | 必改 |
+| `scenarios.billableRatio.note` | 可計費 MW 校準與收斂比例的說明（v0.1b） | 文字 | 期初等效計費 MW＝Q1 FY27 實際 OCI 營… | 必改 |
 | `scenarios.billableRatio.ratio` | 各期比例：ratio 模式＝在役 ÷ 已連網；converge 模式＝期初校準值向已連網收斂的比例（三情境共用；v0.1b） | 比例清單 | 0.5、0.8、0.85、0.9、0.9 | 檢查 |
 | `scenarios.mw31.low` | 保守情境：模型期後一年（FY31）新增的 MW，用於 FY30 的預建支出 | MW | 0 | 檢查 |
 | `scenarios.mw31.base` | 基準情境：同上 | MW | 0 | 檢查 |
@@ -645,6 +645,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.fy0EquityNote` | 首期股權／可轉債的組成說明（含年初至今與首期模型的金額；v4.5；可用期間佔位符 «P0»、«YTD»、«STUB»） | 文字 | «P0»＝«YTD» ATM 淨收入 19.909（… | 必改 |
 | `texts.roicWaccNote` | 標題句「回收一個 MW 的 GPU（成本、年限、WACC）」中 WACC 的用途說明（CAPM 折現率 vs Tokenomics 錨內含 WACC 10%；v0.3.1） | 文字 | 本模型 CAPM 折現率（valuation.wac… | 必改 |
 | `texts.ebitdaBasisNote` | 摘要與損益 FY27 調整後 EBITDA 口徑差異說明（Q1 實際＋Q2–Q4 模型 vs 全年模型；Excel「摘要」與 HTML 一頁摘要同一句；v0.3.1） | 文字 | 口徑：本表 FY27 調整後 EBITDA＝Q1 實… | 必改 |
+| `texts.equivBillableNote` | 「期初等效計費 MW」旁註（為收入校準量、可高於已連網 MW；佔位符 {openMw}＝fleet.openMw；v0.3.1） | 文字 | 為收入校準量（最新季 OCI 年化 ÷ 首期每 MW… | 必改 |
 | `texts.sourceLine` | 頁首的資料來源一行（例如最新 10-Q、法說、期後 8-K；v4.5） | 文字 | FY27Q1 10-Q（2026-09-11）＋財報… | 必改 |
 | `texts.cashTaxNote` | 年初至今現金稅的說明（損益與評價頁；v4.5） | 文字 | «YTD» 現金稅未單獨揭露；10-Q 有效稅率 1… | 必改 |
 | `texts.thesis` | 模型命題一句話（HTML 標題列與檔案說明；v0.1b） | 文字 | 客戶預付與投資級債能否把 $664B RPO 變成現… | 必改 |
@@ -702,6 +703,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `pricing._note` | 每 MW 收入公司因素區段的說明（不進程式；Oracle v0.3） | 文字 | Oracle v0.3：每 MW 收入的公司因素（定… | 可沿用 |
 | `pricing.anchorMultiple._note` | 定價倍數 k 的口徑說明（已決定事項 14、下游資料契約第 4 條；不進程式） | 文字 | Oracle v0.3（已決定事項 14、15；比照… | 可沿用 |
+| `pricing.anchorMultiple.baseLabel` | 價格軸基準的名稱（畫面與 Excel 稱「價格基準」處並列；Oracle＝外部長約錨〔IREN–Microsoft〕；v0.3.1） | 文字 | 外部長約錨（IREN–Microsoft） | 可沿用 |
 | `pricing.anchorMultiple.long` | k_長約：base／low／high（價格軸低／基準／高）、證據來源 refEvidence、契約第 4 條指定解讀 interpretation、三筆長約中位數 sensMedian、Oracle 自身合約換算 ownContract（只列敏感度）、標記。base／low／high／sensMedian 為規格，建置時由證據價格 ÷ 目前快照同世代成本推算（kspec.py；HTML 端 segA.js kSpecApplyQ）：數字（固定倍數）｜{ref: 證據 label}｜{priceEq, gen, tkName}（端點換成固定價格）｜{median: [label…]}；ownContract.specs 逐項 {ref}｜{tcv(US$m), years, mw, gen, tkName}，建置時解出 values | 物件（倍數） | 物件（base、low、high、tag、refEvidence、sensMedian、note、interpretation、ownContract） | 檢查 |
 | `pricing.anchorMultiple.spot` | k_現貨：base／low／high、refEvidence、標記（非長約客戶的價格倍數）；base／low／high 為規格（同 k_長約） | 物件（倍數） | 物件（base、low、high、tag、refEvidence、note） | 檢查 |
 | `pricing.anchorMultiple.onDemandShare` | 隨需（現貨）占比：base（基準 10%，[Assumed]，區間長約 80–100%）、sens（敏感度清單）、標記與說明；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約 | 物件（比例） | 物件（base、sens、tag、note） | 檢查 |

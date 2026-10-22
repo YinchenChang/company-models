@@ -303,8 +303,8 @@ function zM() {
                   })
                 }),
 (0, $.jsx)(LM, {
-                  label: `${CALQ.valuationMD} Billable MW`,
-                  hint: SC_BRM === `converge` ? `以 ${CALQ.filedQLabel} 實際營收年化 ÷ 每 MW 年收入校準（隨情境）` : `Assumed`,
+                  label: `${CALQ.valuationMD} 期初等效計費 MW`,
+                  hint: SC_BRM === `converge` ? `以 ${CALQ.filedQLabel} 實際營收年化 ÷ 每 MW 年收入校準（隨情境）；${COMPANY_DATA.texts.equivBillableNote.replace(`{openMw}`, Y(COMPANY_DATA.fleet.openMw, 0))}` : `Assumed`,
                   children: (0, $.jsx)(IM, {
                     value: e.billableOpen,
                     onChange: e => w({

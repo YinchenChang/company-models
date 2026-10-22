@@ -338,15 +338,15 @@ function scnQ(e, sc) {
     mw31: SCENARIOS[sc].mw31,
     cvCap: SCENARIOS[sc].cvCap,
     delayMonths: SCENARIOS[sc].delay, // v0.2
-    billableOpen: SCENARIOS[sc].bOpen, // v0.1b：期初可計費 MW 隨情境（以實際營收校準時）
+    billableOpen: SCENARIOS[sc].bOpen, // v0.1b：期初等效計費 MW 隨情境（以實際營收校準時）
     m: { ...e.m, accepted: [...SCENARIOS[sc].acc], billable: [...SCENARIOS[sc].bil], revMW: [...SCENARIOS[sc].rev] }
   };
 }
 
 // v0.3：容量情境 sc × 每 MW 收入變體 o（價格情境 px、k_長約／k_現貨、隨需占比 od、Tokenomics 成本情境 tkCase〔錨與每 MW 建置成本同動；k＝價格 ÷ 同情境成本，依證據世代重算〕、新增世代組合 newMix）
-// 每 MW 年收入改變時，期初可計費 MW 依「最新季 OCI 營收 × 4 ÷ 首期每 MW 年收入」自動重算，可計費路徑隨之重算（與 Excel 活公式相同）。供 3 × 3 矩陣、敏感度與拆解（scripts/tk_sens.js、attrib_*.js）共用。
+// 每 MW 年收入改變時，期初等效計費 MW 依「最新季 OCI 營收 × 4 ÷ 首期每 MW 年收入」自動重算，可計費路徑隨之重算（與 Excel 活公式相同）。供 3 × 3 矩陣、敏感度與拆解（scripts/tk_sens.js、attrib_*.js）共用。
 function tkScnQ(e, sc, o = {}) {
-  // 變體 o 另含：nonAi（OCI 營收中非 AI 部分占比，自期初可計費 MW 校準中扣除；v0.3 B 段）、ramp0（首期末收斂比例替代）、rampShift（第 2 期起收斂比例平移，上下限 0–1）
+  // 變體 o 另含：nonAi（OCI 營收中非 AI 部分占比，自期初等效計費 MW 校準中扣除；v0.3 B 段）、ramp0（首期末收斂比例替代）、rampShift（第 2 期起收斂比例平移，上下限 0–1）
   let s = scnQ(e, sc), rev = tkAnchorQ(sc, o).rev, bo = Math.round(COMPANY_DATA.scenarios.billableRatio.openAnnualRevenue * (1 - (o.nonAi || 0)) / rev[0]),
     br = SC_BR.map((x, t) => t === 0 ? (o.ramp0 ?? x) : Math.min(1, Math.max(0, x + (o.rampShift || 0))));
   if (PMW_CAPEXQ === `tokenomics` && (o.tkCase || o.newMix)) s.a = { ...s.a, costMW: capexTkQ({ tkCase: o.tkCase, newMix: o.newMix }) }; // 步驟 4：成本情境／世代組合改變時建置成本重算
@@ -368,7 +368,7 @@ function tkSensQ(e, v, onlyMatrix) { // v0.3 B 段（自 Nebius v0.2a）：3 × 
       [`tkLow`, `Tokenomics 低成本（錨與建置成本同動；k 依證據重算）`, { tkCase: `低成本` }], [`tkHigh`, `Tokenomics 高成本（錨與建置成本同動；k 依證據重算）`, { tkCase: `高成本` }],
       [`ramp40`, `首期末收斂比例 40%（預設 ${Math.round(SC_BR[0] * 100)}%）`, { ramp0: .4 }], [`ramp60`, `首期末收斂比例 60%`, { ramp0: .6 }],
       [`rampLate-`, `第 2 期起收斂比例 −10pt`, { rampShift: -.1 }], [`rampLate+`, `第 2 期起收斂比例 +10pt`, { rampShift: .1 }],
-      ...Q.nonAiCases.filter(x => x.n > 0).map((x, j) => [`nonAi${Math.round(x.n * 100)}`, `期初可計費 MW 校準扣除非 AI ${Math.round(x.n * 100)}% 的 OCI 營收`, { nonAi: x.n }])];
+      ...Q.nonAiCases.filter(x => x.n > 0).map((x, j) => [`nonAi${Math.round(x.n * 100)}`, `期初等效計費 MW 校準扣除非 AI ${Math.round(x.n * 100)}% 的 OCI 營收`, { nonAi: x.n }])];
   return {
     matrix: Object.fromEntries(K.map(sc => [sc, Object.fromEntries(K.map(px => [px, run(sc, { px })]))])),
     sens: onlyMatrix ? [] : C.map(([key, label, o]) => ({ key, label, res: Object.fromEntries(K.map(sc => [sc, run(sc, o)])) }))
@@ -382,6 +382,17 @@ var RANGE_MULTS = COMPANY_DATA.methodology.rangeMultiples,
   MARGIN_ALERT = RATE_TH.sellMarginAlert; // 任一情境與賣出門檻的距離小於現價的此比例（預設 5%）時，判斷句揭露該距離
 function multTxt(m) {
   return Number.isInteger(m) ? m.toFixed(0) : m.toFixed(1)
+}
+// v0.3.1：價格軸（k_長約／k_現貨）對結論的影響——取自建置快照 COMPANY_DATA.tkSens（tk_sens.json；與 Excel「每MW收入_錨定」G 區同一份），HTML 不新增計算。
+// ok＝快照檢查（目前情境 × 價格基準的快照目標價與即時值差 < 0.01）；flip＝快照內任一格（容量 × 價格）的目標價不低於賣出門檻；line＝基準容量情境下 k_長約 由低端到 Oracle 自身合約的目標價範圍。
+function pxAxisQ(st, pt, th) {
+  let TS = COMPANY_DATA.tkSens, AM = COMPANY_DATA.pricing.anchorMultiple;
+  if (PMW_REVQ !== `tkAnchor` || !TS || !TS.matrix || !TS.axis) return null;
+  let snap = TS.matrix[st && st.scenario] && TS.matrix[st.scenario].base ? TS.matrix[st.scenario].base.tgt : null, ok = snap != null && Math.abs(snap - pt) < .01,
+    flip = Object.values(TS.matrix).some(r => Object.values(r).some(c => c.tgt >= th)),
+    v = TS.axis.keys.map(k => (TS.sens.find(x => x.key === k) || { res: { base: { tgt: NaN } } }).res.base.tgt), f2 = x => x.toFixed(2);
+  return { ok, flip, label: AM.baseLabel,
+    line: `價格軸（基準容量情境；k_長約 ${f2(TS.axis.kLo)} 至 Oracle 自身合約 ${f2(TS.axis.kHi)}）：目標價 $${Y(Math.min(...v), 1)}–$${Y(Math.max(...v), 1)}` + (ok ? `` : `（快照已過期）`) }
 }
 function targetRange(d, st, o, base) {
   base = base || runValuation(d, st, o);
@@ -402,15 +413,16 @@ function targetRange(d, st, o, base) {
     pos = eq(m, mHi) ? `目前點位位於方法區間上緣（${multTxt(mHi)}x 為穩態倍數上緣）`
       : eq(m, mLo) ? `目前點位位於方法區間下緣（${multTxt(mLo)}x）`
       : `目前點位${m > mLo && m < mHi ? `位於方法區間內` : m > mHi ? `高於方法區間上緣` : `低於方法區間下緣`}（目前倍數 ${multTxt(m)}x）`,
+    PXA = pxAxisQ(st, pt, th), // v0.3.1：價格軸句（tkAnchor 才有；其餘維持原句）
     judge = (A[1] < P
-      ? `情境區間上緣 $${Y(A[1], 1)} 低於現價 $${Y(P, 2)}` + (notSell.length ? `，但${notSell.join(`、`)}情境未達賣出門檻 $${Y(th, 1)}` : `：賣出在三個擴張情境下都成立`)
-      : `情境區間上緣 $${Y(A[1], 1)} 不低於現價 $${Y(P, 2)}：賣出並非在三個擴張情境下都成立`) + `。` +
+      ? `情境區間上緣 $${Y(A[1], 1)} 低於現價 $${Y(P, 2)}` + (notSell.length ? `，但${notSell.join(`、`)}情境未達賣出門檻 $${Y(th, 1)}` : PXA ? `：在價格基準（${PXA.label}）下，三個容量情境均低於現價${PXA.ok && PXA.flip ? `；價格軸可使結論翻轉（見容量 × 價格矩陣）` : ``}` : `：賣出在三個擴張情境下都成立`)
+      : `情境區間上緣 $${Y(A[1], 1)} 不低於現價 $${Y(P, 2)}：賣出並非在三個${PXA ? `容量` : `擴張`}情境下都成立`) + `。` +
       sc.filter(s => Math.abs(s.gap) < MARGIN_ALERT * P).map(s => `${s.name}情境 $${Y(s.tgt, 1)}，${s.gap < 0 ? `距賣出門檻` : `高於賣出門檻`} $${Y(th, 1)} 僅 $${Y(Math.abs(s.gap), 1)}。`).join(``),
     note = base.d.invalid ? `DCF 失效，已以 EV/EBITDA 100% 計。`
       : o.dcfMode !== `option` && raw < 0 ? `DCF 為 $0 仍計 ${hA(wd * 100, 0)} 權重的原因：DCF 沒有失效，而是算出的股權價值為負（每股約 ${mA(raw, 1)}），代表自由現金流折現後的企業價值不足以償還淨負債。EV/EBITDA 沒有扣除 GPU 汰換與擴張支出，保留 DCF 權重，是為了讓目標價反映「EBITDA 付不起資本成本」。若不計 DCF，目標價為 $${Y(ev100, 1)}（${ev100Call}）；${hA(wd * 100, 0)}／${hA(we * 100, 0)} 為判斷值。`
       : ``;
   return {
-    pt, P, th, scen: sc, A, B, mults: [mLo, mHi], ev100, ev100Call, pos, judge, note,
+    pt, P, th, scen: sc, A, B, pxLine: PXA ? PXA.line : null, mults: [mLo, mHi], ev100, ev100Call, pos, judge, note,
     bLabel: `方法區間（目前情境，${multTxt(mLo)}–${multTxt(mHi)}x）`,
     head: `目標價 $${Y(pt, 1)}（情境區間 $${Y(A[0], 1)}–$${Y(A[1], 1)}）`
   }
@@ -542,7 +554,7 @@ function consensusView(d, p, o, TR, st) { // d＝runFunding、p＝runValuation�
   // v0.2：建設延誤一句（閒置資本峰值）
   let dm = S0.delayMonths ?? 0, idl = d.years.map(t => t.idleCap || 0), ipk = Math.max(...idl), ipi = idl.indexOf(ipk),
     delayLine = dm > 0 ? `建設延誤 ${multTxt(dm)} 個月（GPU 資本支出照原時程）：閒置資本（已支出、尚未產生收入）峰值 $${Y(ipk, 1)}bn（${PERIODS[ipi]} 末）。` : `建設延誤：本情境 0 個月（無閒置資本）。`;
-  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, adjLine, delayLine, junk: jk }
+  return { rows, ex, first, judge, impTgt, impPx, impTgtOci, impPxOci, lgE, mHi, implied, head, up, gapTh, rsn, rsnSum, igLine, adjLine, delayLine, pxLine: TR.pxLine, junk: jk }
 }
 
 // v4.4：差異原因的共用工具（年度共識對照與季度層共用）。類型固定為四種（已決定事項 2）；原因文字中的 {路徑:格式} 由模型數字帶入。

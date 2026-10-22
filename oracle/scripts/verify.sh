@@ -137,8 +137,13 @@ else bad "test_attrib（見 $OUT/test_attrib.log）"; tail -20 "$OUT/test_attrib
 
 if (( VS_DIST )); then
   step "9. 與 dist/ 成品比對"
-  python3 crawl.py "$DIST_HTML" "$OUT/crawl_dist.json"
-  python3 crawl.py "$HTML" "$OUT/crawl_new.json"
+  # v0.3.1：擷取偶爾因載入時序少抓一個分頁（頁數不同）；頁數不同時重擷取，最多 3 次
+  for _try in 1 2 3; do
+    python3 crawl.py "$DIST_HTML" "$OUT/crawl_dist.json"
+    python3 crawl.py "$HTML" "$OUT/crawl_new.json"
+    [[ "$(python3 -c "import json,sys; print(len(json.load(open('$OUT/crawl_dist.json'))['pages']) == len(json.load(open('$OUT/crawl_new.json'))['pages']))")" == "True" ]] && break
+    echo "  頁數不同，重擷取（第 $_try 次）"
+  done
   if python3 - "$OUT/crawl_dist.json" "$OUT/crawl_new.json" "${CRAWL_EXPECT:-}" <<'EOF'
 import sys, json, difflib, re
 a, b = (json.load(open(p)) for p in sys.argv[1:3])

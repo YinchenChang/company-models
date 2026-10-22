@@ -16,7 +16,7 @@ with sync_playwright() as p:
     pg.get_by_text('3 × 3 容量 × 價格矩陣（建置快照）').first.click(); pg.wait_for_timeout(400)
     t = pg.inner_text('body'); b.close()
 bad = []
-if '快照檢查：目前情境 × 價格基準的快照 − 即時加權目標價 → 通過' not in t: bad.append('快照檢查未顯示「通過」')
+if not re.search(r'快照檢查：目前情境 × 價格基準.*的快照 − 即時加權目標價 → 通過', t): bad.append('快照檢查未顯示「通過」')
 for sc in ('low', 'base', 'high'):
     for px in ('low', 'base', 'high'):
         v = f"${TS['matrix'][sc][px]['tgt']:.1f}"

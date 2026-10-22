@@ -50,7 +50,7 @@ cmp('傳統事業營收', '輸入|傳統事業營收（模型期）', H('legacyR
 d.lg.lines.forEach(x=>{ cmp('傳統 '+x.key+' 全年', `輸入|傳統事業｜${x.label}｜全年營收`, x.annual); cmp('傳統 '+x.key+' 模型期', `輸入|傳統事業｜${x.label}｜模型期營收`, x.rev); });
 cmp('現金稅', F+T('⑦ 現金稅（«STUB» 起）'), H('cashTax')); cmp('股利', F+'⑧ 股利（普通股＋特別股）', y.map((e,i)=>i===0?e.fyDividend:e.dividend)); cmp('債務上限', F+'債務上限（投資級：倍數 × 當期 EBITDA；或債務／backlog）', H('debtCap')); // v0.1b cmp('來源 傳統EBITDA', F+T('Ⓒ3 傳統事業 EBITDA（«STUB» 起）'), H('legacyEbitda'));
 cmp('36個月營收對照', S+'對照：評價日起 36 個月 MW 驅動營收', H('oci36')); cmp('RPO36 差額', '連動檢查|對照：RPO 36 個月內轉換 − 模型 36 個月 MW 驅動營收', [LATEST_Q.rpo*COMPANY_DATA.rpo.within36m-d.totals.oci36]); // v0.1b
-cmp('期初可計費MW', '輸入|«VMD» Billable MW'.replace('«VMD»',CALQ.valuationMD), [q.billableOpen]); // v0.1b：以實際營收校準
+cmp('期初可計費MW', '輸入|«VMD» 期初等效計費 MW'.replace('«VMD»',CALQ.valuationMD), [q.billableOpen]); // v0.1b：以實際營收校準
 cmp('信用損失', S+'信用損失（期初 RPO 部分）', H('loss'));
 cmp('RPO現金', S+'RPO 現金（可支應資本用途）', H('rpoCash'));
 cmp('新簽約現金', S+'新簽約現金', H('newCash'));
@@ -131,6 +131,7 @@ cmp('EPS(模型期)', V+'每股盈餘（EPS，模型期）', f.map(e=>e.eps));
 cmp('股數', V+'股數（含瀑布新股）', f.map(e=>e.shares));
 cmp('UFCF', V+'UFCF', f.map(e=>e.ufcf));
 cmp('UFCF現值', V+'UFCF 現值', p.d.pv);
+if(SC==='base'){ const rv=reverseDcf(q,VAL_DEFAULTS); if(rv.kReq) cmp('反向DCF 現價所需k_長約','評價_反向DCF|'+T('現價所需 k_長約（價格軸；«PL»）'),[rv.kReq.req]); } // v0.3.1：Excel 快照為預設（基準）情境求解，只比對基準情境
 cmp('DCF每股', V+'DCF 每股', [p.d.invalid?0:p.d.perShare]); // v0.1b：DCF 失效時 HTML 為 NaN、Excel 為 0（與反向 DCF 同一口徑）
 const NB='資產負債_新債與新股|';
 cmp('BS 期末現金', NB+'期末現金', H('cum'));
@@ -204,7 +205,7 @@ cmp('加權目標價', V+'加權目標價', [p.call.blended]);
   cmp('隱含 共識目標價OCI倍數',SM+`隱含｜共識平均目標價隱含 ${PERIODS[2]} OCI EV/EBITDA`,[cv.impTgtOci]); cmp('隱含 現價OCI倍數',SM+`隱含｜現價隱含 ${PERIODS[2]} OCI EV/EBITDA`,[cv.impPxOci]); cmp('隱含 傳統EBITDA',SM+`隱含｜模型 ${PERIODS[2]} 傳統事業 EBITDA`,[cv.lgE]);
   cmp('摘要 點位',SM+'結論｜點位（加權目標價）',[R.pt]); cmp('摘要 空間',SM+'結論｜空間',[cv.up]); cmp('摘要 點位−門檻',SM+'結論｜點位 − 賣出門檻',[cv.gapTh]);
   cmpT('文字 摘要評等',SM+'結論｜評等',p.call.call); cmpT('文字 摘要結論句',SM+'結論｜結論句',cv.head); cmpT('文字 摘要情境判斷句',SM+'結論｜情境判斷句',R.judge);
-  cmpT('文字 共識判斷句',SM+'差異｜判斷句',cv.judge); cmpT('文字 投資級句',SM+'結論｜投資級句',cv.igLine); cmpT('文字 延誤句',SM+'結論｜延誤句',cv.delayLine); cmpT('文字 調整後槓桿句',SM+'結論｜調整後槓桿句',cv.adjLine); cmpT('文字 隱含倍數句',SM+'隱含｜隱含倍數句',cv.implied);
+  cmpT('文字 共識判斷句',SM+'差異｜判斷句',cv.judge); cmpT('文字 投資級句',SM+'結論｜投資級句',cv.igLine); cmpT('文字 延誤句',SM+'結論｜延誤句',cv.delayLine); if(cv.pxLine) cmpT('文字 價格軸區間句',SM+'結論｜價格軸區間句',cv.pxLine); cmpT('文字 調整後槓桿句',SM+'結論｜調整後槓桿句',cv.adjLine); cmpT('文字 隱含倍數句',SM+'隱含｜隱含倍數句',cv.implied);
   // v4.4：年度差異原因（類型＋原因逐字；Excel 每個設定組合一列，未超過門檻時為空白）與原因摘要句
   cmpT('文字 差異原因摘要',SM+'差異｜差異原因摘要',cv.rsnSum);
   for(const k of Object.keys(X).filter(k=>k.startsWith(SM+'差異原因｜'))){ const [,yr,nm]=k.split('｜'), h=cv.rsn.find(x=>x.yr===yr&&x.name===nm), x=X[k];
