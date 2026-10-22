@@ -160,8 +160,8 @@ def build(ctx):
         if key in U2:       # v0.1.1 U2：開關 1＝金額型（GW＝付款 ÷ 合約價）；0＝v0.1 口徑（揭露 GW 型）
             U2_OLD[key] = (zh, fs, note)          # _old 列延到 Compute 最末節新增（保持既有列編號不變）
             fs = lambda i, c, key=key, fam=fam: f"={u2}*({u2m}*«sup_{key}_disc»+(1-{u2m})*«K:pay_{key}»/«price_{fam}»)+(1-{u2})*«sup_{key}_old»"  # noqa: E731
-            note = ("U2（v0.1.3 新法）：u2_switch＝1 且 u2_method＝1 時 GW＝揭露容量（MW ÷ 1000 × IT 換算 × 爬坡 × 期間），付款以『最高 86』為上限；u2_method＝0＝v0.1.1 金額型（GW＝付款 ÷ 合約價）；"
-                    "u2_switch＝0＝v0.1 口徑。原註：" + note)
+            note = ("U2（v0.1.3 新法）：u2_switch＝1 且 u2_method＝1 時 GW＝揭露容量（MW ÷ 1000 × IT 換算 × 爬坡 × 期間）；付款路徑不變（『最高 86』按 MW 比例分攤的年付款，Cost 第二十二節）；"
+                    "u2_method＝0＝v0.1.1 金額型（GW＝付款 ÷ 合約價）；u2_switch＝0＝v0.1 口徑。原註：" + note)
         C.add(f"sup_{key}", f"供給 GW：{zh}", "GW", fs, note + f"；族＝{FAM[fam][1].split('（')[0]}", name=f"CMP_Supply_{key.capitalize()}")
     C.add("note_coreweave", "（未計入）CoreWeave（2026-04 多年合約；金額、容量皆未揭露）", "GW", [None] * 6,
           "找不到金額與容量（A1 not_found）→ 不計入（不杜撰）；列入資料缺口")
