@@ -33,7 +33,7 @@ var PERIODS = COMPANY_DATA.periods,
       mw = mw.map((m, j) => m + add * G[j].mixAdds[r]);
       const T = mw.reduce((a, b) => a + b, 0), W = f => mw.reduce((a, m, j) => a + m * G[j][f], 0) / Math.max(T, 1e-9);
       const hold = W(`he`), opex = W(`op`), ref = W(`rf`), refP = W(`rp`);
-      return { k, gens: [...mw], tot: T, hold, opex, ref, refP, rev: hold * k / 1e3, opexMW: opex / 1e3, capRatio: hold * k / Math.max(ref, 1e-9), capRatioP: hold * k / Math.max(refP, 1e-9), pq: hold * k / 1e3 / (TKV.L1_RevGW_PQ_VR200 ?? NaN), pqLo: hold * k / 1e3 / (TKV.L1_RevGW_PQ_VR200_Hi ?? NaN), pqHi: hold * k / 1e3 / (TKV.L1_RevGW_PQ_VR200_Lo ?? NaN) }
+      return { k, gens: [...mw], tot: T, hold, opex, ref, refP, rev: hold * k / 1e3, opexMW: opex / 1e3, capRatio: hold * k / Math.max(ref, 1e-9), capRatioP: hold * k / Math.max(refP, 1e-9), pq: hold * k / (TKV.L1_RevGW_PQ_VR200 ?? NaN), pqLo: hold * k / (TKV.L1_RevGW_PQ_VR200_Hi ?? NaN), pqHi: hold * k / (TKV.L1_RevGW_PQ_VR200_Lo ?? NaN) }
     })
   },
   SC_REV = PRICING ? Object.fromEntries(K_AX.map(k => [k, revPathQ(SC_ACC[k], COMPANY_DATA.defaults.billableOpen, K_AX.indexOf(PRICING.axis)).map(x => x.rev)])) : COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境；MAG v0.1b：由 pricing 推得（容量軸改變世代組合）

@@ -436,10 +436,10 @@ if PRC:
                  "硬上限：> 100% 時檢查頁標紅（每 MW 收入高於客戶在生產條件下可產生的 token 營收）", BLACK)
     _HASPQ = _TKSNAP is not None and all(not _TKSNAP['items'].get(n_, {'missing': True}).get('missing') for n_ in ('L1_RevGW_PQ_VR200', 'L1_RevGW_PQ_VR200_Lo', 'L1_RevGW_PQ_VR200_Hi'))
     if _HASPQ:  # MAG v0.2.1：上限檢查第五列（對照，不設門檻）：每 MW 年收入 ÷ 模型商每 MW 實收 P×Q（L1_RevGW_PQ_VR200，US$bn/GW/年＝US$m/MW/年）；Lo／Hi 端點用 _Hi／_Lo 作分母
-        r = prow(r, "每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，無門檻）", "%", [f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/1000/TK_RevGW_PQ_VR200" for i in range(5)], PCT,
+        r = prow(r, "每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，無門檻）", "%", [f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/TK_RevGW_PQ_VR200" for i in range(5)], PCT,
                  "對外 AI 雲端每 MW 收入 ÷ 模型商（VR200）每 MW 年實收 TK_RevGW_PQ_VR200（US$m/MW，第一年，m＝L1_M；token 帳未閉合：模型付費 token 為需求面的 L1_TokLedger_2026Q2 倍；不得與 IFW_RevGWFleet 相減比較）；只作對照、不設門檻（工作單 v0.2.1 預設 3）", BLACK)
-        r = prow(r, "　其中：以 P×Q 高端點為分母（比值下緣）", "%", [f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/1000/TK_RevGW_PQ_VR200_Hi" for i in range(5)], PCT, "分母＝L1_RevGW_PQ_VR200_Hi", BLACK)
-        r = prow(r, "　其中：以 P×Q 低端點為分母（比值上緣）", "%", [f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/1000/TK_RevGW_PQ_VR200_Lo" for i in range(5)], PCT, "分母＝L1_RevGW_PQ_VR200_Lo", BLACK)
+        r = prow(r, "　其中：以 P×Q 高端點為分母（比值下緣）", "%", [f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/TK_RevGW_PQ_VR200_Hi" for i in range(5)], PCT, "分母＝L1_RevGW_PQ_VR200_Hi", BLACK)
+        r = prow(r, "　其中：以 P×Q 低端點為分母（比值上緣）", "%", [f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/TK_RevGW_PQ_VR200_Lo" for i in range(5)], PCT, "分母＝L1_RevGW_PQ_VR200_Lo", BLACK)
     for i in range(5):
         ws.cell(row=IN["每 MW 年收入"], column=3 + i, value=f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/1000")
     ws.cell(row=IN["每 MW 年收入"], column=9, value="＝加權每 MW 年持有成本 × 採用 k ÷ 1000（B0；Tokenomics × k，不以公司營收反推）")
