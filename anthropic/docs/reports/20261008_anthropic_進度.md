@@ -1,7 +1,7 @@
 # Anthropic v0.1 分段建置進度（接手用；A1–A5 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- **v0.1.3 A 段進行中**（分支 `claude/anthropic-v0.1.3`，PR #69 draft）：步驟 1–7 完成（報告 `docs/reports/20261022_v0.1.3-A.md`）。**B 段起點**：η 診斷拆分（不得改 η 值）、Bridge 頁（唯讀）、S-1 替換程序寫入 CLAUDE.md；B 段結束時重產 HTML 與 dist（目前 dist 為 A 段草稿，v0.1.2 成品在 `dist/_待刪除/`）。留意：HTML ⑥ combo1 已不產生外部資金需求（見報告 ⑤）。B 段尚未開始。
+- **v0.1.3 A 段進行中**（分支 `claude/anthropic-v0.1.3`，PR #69 draft）：步驟 1–7 完成（報告 `docs/reports/20261022_v0.1.3-A.md`）。**B 段起點**：η 診斷拆分（不得改 η 值）、Bridge 頁（唯讀）、S-1 替換程序寫入 CLAUDE.md；B 段結束時重產 HTML 與 dist（目前 dist 為 A 段草稿，v0.1.2 成品在 `dist/_待刪除/`）。chat 端已更正 U2 公式（付款路徑不變、只改供給 GW）；待確認：工作單「公告金額比例」與「v0.1.2 路徑不變」的衝突（報告 ⑥）。B 段尚未開始。
 
 - 已完成：v0.1（A0–A5）；v0.1.1（PR #56）；**v0.1.2（2026-10-21）全部步驟**：TK v5.26 → v18.0（master `868e2cc`）、語意核對、對照列、重算、pytest 109 項全過、HTML／dist、報告＋對照 Excel、CHANGELOG、交接檔。報告 `docs/reports/20261021_v0.1.2.md`。
 - 下一步：chat 端審查 PR #56（v0.1.1＋v0.1.2）並合併（代理不合併）；Andy 確認後刪除 `dist/_待刪除/`；OpenAI 模型同步 TK v18.0。
@@ -79,9 +79,9 @@
 | 步驟 | 狀態 | commit | 備註 |
 |---|---|---|---|
 | 1 TK 標記改 v19.0 | 完成 | 見 git log「v0.1.3 A1」 | check_tk_snapshot：快照 v18.0 vs CURRENT v19.0 → OK 103、DIFF 0、MISSING 0；重建後 27,934 格逐格比對，322 格差異全為版本／日期／SHA 文字，數值差異 0。TK 提交 `1916a06`，SHA-256 `d1728705…`。OpenAI 快照維持 v0.6（`34fc34a7…`；main 現行為 v0.6.1，不在本版範圍） |
-| 2 U2 新法（Nscale、Lambda 揭露容量＋86 當上限） | 完成 | 見 git log「v0.1.3 A2–A4」 | 新 Inputs `u2_method`（INP_187；1＝新法，0＝v0.1.1）；Compute 新列 `sup_*_disc`（揭露 GW）、Cost 第二十二節（年付款上限、約束年數、檢查）；Checks C127–C139。2030 差額 11.139 → 12.133 |
+| 2 U2 新法（Nscale、Lambda 揭露容量＋86 當上限） | 完成 | 見 git log「v0.1.3 A2–A4」 | 新 Inputs `u2_method`（INP_187；1＝新法，0＝v0.1.1）；Compute 新列 `sup_*_disc`（揭露 GW）、Cost 第二十二節（年付款列、隱含每 GW 年付款、檢查）；Checks C127、C129–C142。2030 差額 11.139 → 11.602（chat 端更正後：供給取揭露容量，付款路徑不變） |
 | 3 資金三層 | 完成 | 同上 | Funding 第十節；新 Inputs `l1_incl_cash`（第 1 層是否計 2025 年底現金，基準 0）；具名範圍 FND_L1/2/3_*；Checks 另加 d1_l2_eq（第 2 層＝基準）、d1_l_order |
 | 4 持續擴張情境 | 完成 | 同上 | Cost 第二十三節、Funding 第十一節；新 Inputs exp_pct（0.3，0–0.6）、exp_first_year／exp_last_year、exp_mon_none／half／full（0／0.5／1）；基準不受影響 |
-| 5 HTML 條件式措辭、①之三 | 完成 | 見 git log | `tools/build_html.py`、`tools/html_scenarios.yaml`（新增 `u2_method_old`、`v012`；v011 等情境加關閉 U2 新法）；`tests/test_html.py` combo1 斷言改為 0、combo3 為正 |
-| 6 重建與測試 | 完成 | 見 git log | test_builder 10、test_html 6 全過；parity 分 3 片（結果見 PR 留言）；`scenarios.yaml` 預期值 formula_cells 6550、defined_names 1240、inp_rows 190；新增情境 `ha_u2_method_old`、`hb_u2_cap_binds` |
+| 5 HTML 條件式措辭、①之三 | 完成 | 見 git log | `tools/build_html.py`、`tools/html_scenarios.yaml`（新增 `u2_method_old`、`v012`；v011 等情境加關閉 U2 新法）；`tests/test_html.py` 不變 |
+| 6 重建與測試 | 完成 | 見 git log | test_builder 10、test_html 6 全過；parity 分 3 片（結果見 PR 留言）；`scenarios.yaml` 預期值 formula_cells 6550、defined_names 1240、inp_rows 190；新增情境 `ha_u2_method_old`、`hb_u2_nscale_mw_up` |
 | 7 報告、對照 Excel、CHANGELOG、PR 留言 | 完成 | 見 git log | `tools/make_report_v013.py` 產生對照 Excel |
