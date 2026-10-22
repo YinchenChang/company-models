@@ -1,0 +1,150 @@
+
+=== 0. 季度層檢查（季度加總＝年度、指引一致性、超過門檻的差距都有原因；v4.4）
+一致性檢查 6 組
+low：季度加總＝年度 10 項
+low：年度差異原因 9 項、季度差異原因 4 項
+base：季度加總＝年度 10 項
+base：年度差異原因 7 項、季度差異原因 2 項
+high：季度加總＝年度 10 項
+high：年度差異原因 7 項、季度差異原因 2 項
+check_quarterly：全部通過
+[PASS] check_quarterly：季度加總＝年度、差異原因齊全
+
+=== 0b. README 欄位說明與 company.json 一致（scripts/fields_doc.py --check；5a）
+README 欄位說明與 company.json 一致
+[PASS] README 欄位說明與 company.json 一致
+
+=== 0c. EBITDAR 率校準（scripts/calib_ebitdar.js：defaults.ebitdarAdj＝基準情境租金 ÷ OCI 營收；Oracle v0.1c）
+基準情境 租金÷OCI 營收：起點 24.4247%、穩態 24.9862%（company.json：24.4247%／24.9862%）；基準 EBITDA 率 起點 65.2000%、穩態 47.0000%
+一致
+[PASS] EBITDAR 校準：基準情境起點／穩態 EBITDA 率不變
+
+=== 0d. Tokenomics 快照可重現（tools/tokenomics/import_tokenomics.py --check；v0.2a）
+警告：找不到 Tokenomics clone（--tokenomics／TOKENOMICS_DIR），略過 --check
+[PASS] Tokenomics 快照 --check：找不到 Tokenomics clone，略過（警告）
+
+=== 0e. 每 MW 收入 3 × 3 矩陣與敏感度快照（scripts/tk_sens.js → tk_sens.json；v0.3；v0.3.1 起先於建 HTML，HTML 內嵌同一份快照）
+3×3（容量 × 價格，加權目標價）：low 69.26／77.41／106.97；base 75.37／84.24／128.13；high 80.60／91.89／139.59（無變動）
+[PASS] tk_sens 快照：low 69.26／77.41／106.97；base 75.37／84.24／128.13；high 80.60／91.89／139.59（無變動）
+
+=== 1. 建 HTML（v0.3.1 · 2026-10-22）
+built 1078413
+[PASS] 建 HTML
+
+=== 2. 建 Excel
+saved /home/user/company-models/oracle/out/20261022_Oracle收支模型_v0_3_1.xlsx
+[PASS] 建 Excel
+
+=== 3. 重算（LibreOffice headless）
+{"status": "success", "total_formulas": 2944, "total_errors": 0, "error_summary": {}}
+[PASS] 重算：0 公式錯誤
+
+=== 3b. 反向 DCF：以 Excel 求解（scripts/rv_solve.py；v4.5 取代 JS 快照）
+反向 DCF（Excel 求解）：現價 129.13、R 1.7664、C 0.1141、Eb 無解、Rt 1.3084；矩陣 20/20 格有解
+rv_snap.json 無變動
+[PASS] 反向 DCF：Excel 求解，rv_snap.json 與 Excel 一致
+
+=== 4. fix_outline
+outline fixed
+[PASS] fix_outline
+
+=== 4b. fix_datatable（模擬運算表還原為 Excel 格式）
+datatable fixed: xl/worksheets/sheet3.xml D264:E266 輸入格 C5
+[PASS] fix_datatable
+
+=== 5. verify_ooxml
+OOXML OK
+[PASS] verify_ooxml：OOXML OK
+
+=== 5d. 快照值＝Excel「Tokenomics_取數」分頁值（scripts/check_tokenomics_tab.py；v0.2a）
+快照值＝Excel 分頁值：41 個名稱（missing 0）、420 個值、140 個具名範圍一致；其他工作表 53 格公式引用 36 個 TK_ 名稱（v19.0）
+[PASS] 快照值＝Excel 分頁值：41 個名稱（missing 0）、420 個值、140 個具名範圍一致；其他工作表 53 格公式引用 36 個 TK_ 名稱（v19.0）
+
+=== 5c. 離線開啟檢查（已決定事項 11：單一檔案、無網路請求、console 無錯誤、關鍵數字正常顯示）
+(a) 網路請求：0 個
+(b) console 錯誤與例外：0 個
+(c) 關鍵數字：5 個分頁、15 項，失敗 0 項
+離線開啟檢查：通過
+[PASS] 離線開啟：新建 HTML
+(a) 網路請求：0 個
+(b) console 錯誤與例外：0 個
+(c) 關鍵數字：5 個分頁、15 項，失敗 0 項
+離線開啟檢查：通過
+[PASS] 離線開啟：dist/ 成品
+3 × 3 矩陣次層檢查：通過（快照檢查「通過」、九格目標價與 tk_sens.json 一致）
+[PASS] HTML 3 × 3 矩陣次層：快照檢查通過、九格與 tk_sens.json 一致（v0.3.1）
+
+=== 6. 三情境 xlx＋cmp31（預設錨定）
+ok 1 1381
+[PASS] cmp31 low：459 項全部 OK
+ok 2 1381
+[PASS] cmp31 base：460 項全部 OK
+ok 3 1381
+[PASS] cmp31 high：459 項全部 OK
+
+=== 7. FY27 錨定 cmp31（基準）
+ok 2 1381
+[PASS] cmp31 base_FY27：460 項全部 OK
+
+=== 8. 季度層測試（暫存副本：假設 Q3 實際數、可移植性；v4.4）
+[PASS] test_quarterly：假設實際數與可移植性測試通過
+  畫面錯誤：無
+=== 結果
+test_quarterly：全部通過（測試 A 假設實際數、測試 B 可移植性）
+
+=== 8b. 期間滾動測試（暫存副本：日曆推算 6 種情況、滾動後第一屏無過期日期與期間字樣；v4.5）
+[PASS] test_rolling：日曆推算與滾動後第一屏
+C 滾動檢查：只滾日曆、未更新 asOf → 建置失敗並列出 30 項（清單 30 項）
+A 滾動 FY27Q2（評價日 2026-08-31 → 2026-11-30）：過期字樣 ['2026-08-31', '2Q–4Q27', 'Q1 2027', '第 2–4 季', '第 1 季', '2Q–4Q', '1Q27', '8/31', '1Q', 'Q1']；第一屏命中 0 行
+期間滾動測試：通過
+
+=== 8c. 目標價變動拆解工具測試（scripts/attrib.py：(a)＝(1＋WACC)^(月數÷12)，WACC 讀 Excel、月數讀 calendar_q；四項相加＝總變動）
+[PASS] test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）
+目標價變動拆解測試：通過
+
+=== 9. 與 dist/ 成品比對
+34 views; errors []
+33 views; errors []
+  頁數不同，重擷取（第 1 次）
+34 views; errors []
+34 views; errors []
+畫面：dist 34 個、新版 34 個頁面／分頁，約 142,578 字；差異 0 個；預期差異 0 個（清單 無）；頁面錯誤 dist 0、新版 0
+[PASS] crawl 畫面文字 0 差異
+0 differences
+以列名稱配對的工作表：無（全部逐格）
+新增列 0：
+[PASS] xl_diff --values --by-label 0 差異
+0 differences
+以列名稱配對的工作表：無（全部逐格）
+新增列 0：
+[PASS] xl_diff 公式 --by-label 0 差異
+
+================ 結果 ================
+PASS  check_quarterly：季度加總＝年度、差異原因齊全
+PASS  README 欄位說明與 company.json 一致
+PASS  EBITDAR 校準：基準情境起點／穩態 EBITDA 率不變
+PASS  Tokenomics 快照 --check：找不到 Tokenomics clone，略過（警告）
+PASS  tk_sens 快照：low 69.26／77.41／106.97；base 75.37／84.24／128.13；high 80.60／91.89／139.59（無變動）
+PASS  建 HTML
+PASS  建 Excel
+PASS  重算：0 公式錯誤
+PASS  反向 DCF：Excel 求解，rv_snap.json 與 Excel 一致
+PASS  fix_outline
+PASS  fix_datatable
+PASS  verify_ooxml：OOXML OK
+PASS  快照值＝Excel 分頁值：41 個名稱（missing 0）、420 個值、140 個具名範圍一致；其他工作表 53 格公式引用 36 個 TK_ 名稱（v19.0）
+PASS  離線開啟：新建 HTML
+PASS  離線開啟：dist/ 成品
+PASS  HTML 3 × 3 矩陣次層：快照檢查通過、九格與 tk_sens.json 一致（v0.3.1）
+PASS  cmp31 low：459 項全部 OK
+PASS  cmp31 base：460 項全部 OK
+PASS  cmp31 high：459 項全部 OK
+PASS  cmp31 base_FY27：460 項全部 OK
+PASS  test_quarterly：假設實際數與可移植性測試通過
+PASS  test_rolling：日曆推算與滾動後第一屏
+PASS  test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）
+PASS  crawl 畫面文字 0 差異
+PASS  xl_diff --values --by-label 0 差異
+PASS  xl_diff 公式 --by-label 0 差異
+verify.sh：全部通過（26 項）
+done
