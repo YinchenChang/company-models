@@ -46,3 +46,9 @@
 - 新增：Cost 第二十一節 K240–K255（TK P × Q 對照）、Checks C124–C126（info）、具名 `COST_TKPQ`／`COST_TKPQRatio`／`COST_TKTokLedger`；TK_Link C3 記錄 TK 檔案 SHA-256。說明文字更正 5 處（見報告③）。
 - 測試：parity 情境 +2（ha、hb）；HTML 情境 +3（v011、only_tokgw、only_hold），v010／only_u1／only_u2 改為同時把 TK 回到 v5.26（spec `prev`）；期望值 formula_cells 5878、defined_names 1146、tk_values 82。
 - 成品 `dist/20261021_Anthropic收支模型_v0_1_2.html／.xlsx`；v0.1.1 成品移至 `dist/_待刪除/`。報告 `docs/reports/20261021_v0.1.2.md`＋`_對照.xlsx`。
+
+## v0.1.3 A 段（2026-10-22；Excel `model/20261022_Anthropic_v0.1.3.xlsx`；分支 `claude/anthropic-v0.1.3`，PR #69）
+- 採納外部驗收報告（v0.1.2）：TK 快照改 v19.0（103 個值與 v18.0 相同）；U2 新法（Nscale、Lambda 供給 GW 取揭露容量，付款＝MIN(揭露 GW × 合約價, 86 年上限)；Inputs `u2_method`＝INP_187）；資金三層（Funding 第十節）；持續擴張情境（Cost 第二十二、二十三節、Funding 第十一節；Inputs INP_188–194）；HTML 結論改條件式並新增「①之三」。
+- 結果：每 VR 等值 GW 差額 2026–2030 −5.37／−4.83／−2.37／＋5.91／＋12.13（v0.1.2：−5.37／−4.89／−2.63／＋5.17／＋11.14）；覆蓋率 2030 1.87；營運自由現金流首次轉正 2029；三層累計外部資金需求 39.1／0／0；現金谷底 87.0（v0.1.2：84.2）。combo1（任務數低＋彈性弱）不再出現外部資金需求。
+- 公式格 6,550、具名範圍 1,240、Inputs 190、Checks 至 C139；CHK_Errors＝0、CHK_Warnings＝2。報告 `docs/reports/20261022_v0.1.3-A.md`。B 段（η 診斷、Bridge 頁、S-1 替換程序）尚未開始。
+
