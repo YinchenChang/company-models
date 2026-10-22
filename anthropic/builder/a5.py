@@ -268,7 +268,7 @@ def build(ctx):
     row("ua", "TK 實際利用率（IF_UtilActual；TK 對 OpenAI 機隊的估計）", "比例", "=TK_IF_UtilActual", "=TK_IF_UtilActual_Lo", "=TK_IF_UtilActual_Hi",
         tag="Analogy（TK；非 Anthropic 實測）", note="本模型無 Anthropic 自己的利用率資料；以 TK 區間作 Analogy")
     row("fu", "f_U：利用率因子", "倍", f"={d('ua')}/{d('u0')}", f"={d('ua','E')}/{d('u0')}", f"={d('ua','F')}/{d('u0')}", tag="Derived（以 Analogy）",
-        note="TK 方向（L1_GapUtil＝IF_Util ÷（實際 × 生產折減））約為本因子倒數再除以生產折減；本模型不計生產折減", name="ETA_fU")
+        note="TK 方向（L1_GapUtil＝IF_Util ÷（實際 × 生產折減））約為本因子倒數再除以生產折減；本列（第二節）不計生產折減，計入者見第七節 f_U×生產折減（v0.1.4）", name="ETA_fU")
 
     sec("四、工作負載（層級）組合因子 f_W ＝ TK 參考層級組合下 2025 機隊每 GW 付費產能 ÷ 本模型付費層級組合下的同一機隊每 GW 付費產能（兩者同一基準利用率、同一機隊組成）")
     for key, lab, ix in (("mx_low", "TK 參考付費層級組合（B4_MixPaid）：低層（Luna）", 1), ("mx_mid", "TK 參考付費層級組合（B4_MixPaid）：中層（Sol）", 2),
