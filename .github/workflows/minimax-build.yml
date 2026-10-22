@@ -1,6 +1,6 @@
 name: minimax-build
 
-# MiniMax：建置 → LibreOffice 重算 → 驗收（錯誤值 0、Checks 合計 0、快照一致）。
+# MiniMax：建置 → LibreOffice 重算 → 敏感度 → HTML → 驗收（錯誤值 0、Checks 合計 0、快照一致、HTML 數字對 Excel）。
 # 2026-10-22 chat 端補上（M1 報告列了此檔，但未進到分支）。驗收以本機為準，CI 為事後對照。
 on:
   push:
@@ -26,13 +26,10 @@ jobs:
           sudo apt-get update -q
           sudo apt-get install -y -q --no-install-recommends libreoffice-calc-nogui
           pip install openpyxl
-      - name: 建置與重算（只寫 out/）
+      - name: 全流程建置（Excel → 重算 → 敏感度 → HTML）與驗收（HTML 對 Excel、無外部引用、錯誤值 0、Checks 合計 0、快照一致）
         run: |
           mkdir -p out
-          python3 build_xlsx.py out/ci.xlsx > /dev/null
-          python3 scripts/recalc.py out/ci.xlsx
-      - name: 驗收（錯誤值 0、Checks 合計 0、快照一致）
-        run: python3 scripts/ci_check.py out/ci.xlsx
+          bash scripts/build_all.sh 20261022 v0_2
       - name: 快照對 Tokenomics master（WARN，不擋合併；Tokenomics 為公開 repo）
         continue-on-error: true
         run: |
