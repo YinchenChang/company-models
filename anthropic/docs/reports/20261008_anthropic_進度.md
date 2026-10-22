@@ -83,5 +83,5 @@
 | 3 資金三層 | 完成 | 同上 | Funding 第十節；新 Inputs `l1_incl_cash`（第 1 層是否計 2025 年底現金，基準 0）；具名範圍 FND_L1/2/3_*；Checks 另加 d1_l2_eq（第 2 層＝基準）、d1_l_order |
 | 4 持續擴張情境 | 完成 | 同上 | Cost 第二十三節、Funding 第十一節；新 Inputs exp_pct（0.3，0–0.6）、exp_first_year／exp_last_year、exp_mon_none／half／full（0／0.5／1）；基準不受影響 |
 | 5 HTML 條件式措辭、①之三 | 完成 | 見 git log | `tools/build_html.py`、`tools/html_scenarios.yaml`（新增 `u2_method_old`、`v012`；v011 等情境加關閉 U2 新法）；`tests/test_html.py` 不變 |
-| 6 重建與測試 | 完成 | 見 git log | test_builder 10、test_html 6 全過；parity 分 3 片（結果見 PR 留言）；`scenarios.yaml` 預期值 formula_cells 6550、defined_names 1240、inp_rows 190；新增情境 `ha_u2_method_old`、`hb_u2_nscale_mw_up` |
+| 6 重建與測試 | 完成 | 見 git log | test_builder 10、test_html 6 全過；pytest 113 項全過（builder 10、html 6、parity 情境 88、其餘 parity 9）；`scenarios.yaml` 預期值 formula_cells 6550、defined_names 1240、inp_rows 190；新增情境 `ha_u2_method_old`、`hb_u2_nscale_mw_up` |
 | 7 報告、對照 Excel、CHANGELOG、PR 留言 | 完成 | 見 git log | `tools/make_report_v013.py` 產生對照 Excel |
