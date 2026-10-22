@@ -37,6 +37,8 @@ V18_NAMES = [f"L1_RevGW_PQ_VR200{s}{b}" for s in ("", "_FY", "_Life") for b in (
 # v0.1.3 B（η 診斷；只對照，不回饋計算）：TK 實際利用率、VR200 每 GW 付費產能（TK 參考層級組合）、落差分解 L1_Gap*（OpenAI 口徑）
 V19B_NAMES = ["IF_UtilActual", "IF_UtilActual_Lo", "IF_UtilActual_Hi", "L1_TokGW_PaidCap_VR200", "B4_MixPaid"] + \
              [f"L1_Gap{g}{b}" for g in ("Prompt", "SpendBasis", "ISL", "Util", "Product", "Unexplained") for b in ("", "_Lo", "_Hi")]
+# v0.1.4（η 診斷補充；只對照，不回饋計算）：TK 生產折減（Interface 具名範圍；v19.0 起）。列在 V19B 之後（新列加在尾端）
+V19B_NAMES += ["IF_ProdDerate"]
 PENDING_NOTE = "待 Tokenomics 提供"
 
 

@@ -313,6 +313,24 @@ def build(ctx):
     row("m_res", "本模型：1 ÷ 殘差（TK 方向）", "倍", f"={d('res_inv')}", f"={d('res_inv','E')}", f"={d('res_inv','F')}", tag="Derived")
     row("m_prod", "本模型：1 ÷ 已解釋乘積（TK 方向）", "倍", f"=1/{d('prod')}", f"=1/{d('prod','F')}", f"=1/{d('prod','E')}", tag="Derived")
     row("r_all", "本模型 1 ÷ η（TK 方向的總落差；支出路線 ÷ token 路線）", "倍", f"=1/{d('eta')}", tag="Derived", note="＝1 ÷ η；TK 對應 L1_ScaleServe2000（約 10.4；OpenAI 口徑）")
+    # ── v0.1.4 補充（新列加在尾端；η 值不變）：利用率因子計入 TK 生產折減、殘差對照 TK L1_GapUnexplained ──
+    sec("七、v0.1.4 補充：f_U 計入 TK 生產折減（Andy 2026-10-22 預設）；殘差隨之重算。η 值不變，第五節（不計生產折減）原列保留以供前後對照")
+    row("pd", "TK 生產折減（IF_ProdDerate；具名範圍）", "比例", "=TK_IF_ProdDerate", tag="Analogy（TK；OpenAI 口徑）",
+        note="Interface C355（＝Serving CTL_ProdDerate）；token 換算 GW 的每 GW 產能是 100% 理論值，實際生產環境再打此折減")
+    row("fu2", "f_U'：利用率因子（計入生產折減）＝f_U × 生產折減", "倍", f"={d('fu')}*{d('pd')}", f"={d('fu','E')}*{d('pd')}", f"={d('fu','F')}*{d('pd')}",
+        tag="Derived（以 Analogy）", note="TK 方向 L1_GapUtil＝IF_Util ÷（實際 × 生產折減）＝本因子倒數", name="ETA_fU_Prod")
+    row("prod2", "已解釋部分 f_P × f_U' × f_W", "倍", f"={d('fp')}*{d('fu2')}*{d('fw')}", f"={d('fp','E')}*{d('fu2','E')}*{d('fw')}", f"={d('fp','F')}*{d('fu2','F')}*{d('fw')}",
+        tag="Derived", name="ETA_Prod2")
+    row("res2", "未解釋殘差（計入生產折減後）＝η ÷ 已解釋部分", "倍", f"={d('eta')}/{d('prod2')}", f"={d('eta')}/{d('prod2','F')}", f"={d('eta')}/{d('prod2','E')}",
+        tag="Derived（殘差；非獨立估計）", note="低＝除以高端乘積；高＝除以低端乘積", name="ETA_Resid2")
+    row("res_chg", "殘差：計入生產折減後 ÷ 前（第五節）", "倍", f"={d('res2')}/{d('res')}", tag="Derived", note="＝1 ÷ 生產折減")
+    row("res2_inv", "殘差倒數（TK 方向；計入生產折減後）", "倍", f"=1/{d('res2')}", f"=1/{d('res2','F')}", f"=1/{d('res2','E')}", tag="Derived")
+    row("res_tk", "對照：TK L1_GapUnexplained（OpenAI 口徑，Analogy；TK 方向）", "倍", "=TK_L1_GapUnexplained", "=TK_L1_GapUnexplained_Lo", "=TK_L1_GapUnexplained_Hi",
+        tag="Analogy（TK；OpenAI 口徑）", note="L1 D111；區間為 TK 低／高")
+    row("res_ratio", "比值：本模型殘差倒數（計入生產折減）÷ TK L1_GapUnexplained", "倍", f"={d('res2_inv')}/{d('res_tk')}", tag="Derived",
+        note="＜1：本模型未解釋部分較 TK 小；兩者口徑不同（Anthropic vs OpenAI），只並排；基準對基準，區間端點不相除")
+    row("res_ratio_old", "比值（前）：第五節殘差倒數（不計生產折減）÷ TK L1_GapUnexplained", "倍", f"={d('res_inv')}/{d('res_tk')}", tag="Derived", note="v0.1.3 口徑，供前後對照")
+    row("gu_chk", "核對：f_U' 的倒數 − TK L1_GapUtil（同一組輸入 0.41、0.85、0.60，應為 0；確認生產折減讀值與 TK 一致）", "倍", f"=1/{d('fu2')}-{d('gu')}", tag="Derived", note="本模型借用 TK 的 OpenAI 利用率輸入（Analogy），故與 L1_GapUtil 相同；若不為 0 表示 TK 改了定義")
     E.column_dimensions["A"].width = 7
     E.column_dimensions["B"].width = 78
     E.column_dimensions["C"].width = 12
@@ -346,4 +364,8 @@ def checks(ctx):
         ("e1_fw", "結果：η 拆解 f_W（層級組合）", f"={e('fw')}", None, "info", ""),
         ("e1_res", "結果：η 拆解未解釋殘差", f"={e('res')}", None, "info", "含輸入輸出組合、每任務 token 倍數等"),
         ("e1_tkq", "結果：Bridge 本模型 Q ÷ TK Q（2026）", f"=Bridge!$E${br['rt_q']}", None, "info", "對照 TK 帳未閉合倍數（Tokenomics 待辦）"),
+        ("e1_fu2", "結果：η 拆解 f_U'（計入 TK 生產折減）", f"={e('fu2')}", None, "info", "v0.1.4：f_U × IF_ProdDerate"),
+        ("e1_res2", "結果：未解釋殘差（計入生產折減後）", f"={e('res2')}", None, "info", "v0.1.4；前值見 e1_res"),
+        ("e1_idn2", "EtaDiag：f_P × f_U' × f_W × 殘差' − η", f"={e('prod2')}*{e('res2')}-{e('eta')}", 0, "tol", "v0.1.4 拆解恆等式"),
+        ("e1_gapr", "結果：本模型殘差倒數 ÷ TK L1_GapUnexplained", f"={e('res_ratio')}", None, "info", "v0.1.4；OpenAI 口徑 Analogy，只並排"),
     ]
