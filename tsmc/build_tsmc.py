@@ -1,4 +1,4 @@
-# 台積電模型 v0.1（AI 半導體 Project 步驟 4）：CoWoS 供需上限 × AI 營收由下而上 × 損益與估值
+# 台積電模型 v0.2（AI 半導體 Project 步驟 4）：CoWoS 供需上限 × AI 營收由下而上 × 損益與估值
 # 用法：python3 tsmc/build_tsmc.py raw.xlsx ；再以 LibreOffice headless 重算
 import sys, os
 import openpyxl
@@ -55,9 +55,35 @@ inp("ms_dem26", "Morgan Stanley 全球 CoWoS 需求 2026", "千片", None, 1394,
 inp("ms_dem27", "Morgan Stanley 全球 CoWoS 需求 2027", "千片", None, 2509, None, "Interested-party", "Morgan Stanley 2026-09（2.694M 為較早版本）")
 inp("hbm_gap27", "HBM 2027 需求缺口 ÷ 供給（markets/memory）", "%", None, 0.21, None, "Derived", "markets/memory Mkt：需求 7.10 EB vs 供給 5.86 EB")
 sec("D. 台積電營收")
-inp("fx", "美元兌新台幣", "NT$/US$", 30, 32, 33, "Verified", "公司 Q3 指引匯率假設")
+inp("fx", "美元兌新台幣（2027 起）", "NT$/US$", 30, 32, 33, "Assumed", "v0.1.1 標 Verified（當時 Q3 指引匯率）；4Q26 指引匯率為 31.8，2027 起未獲公司指引，數值不變")
 inp("rev25", "營收 2025", "$B", None, 122.43, None, "Verified", "四季加總")
-inp("rev26", "營收 2026", "$B", 168, 172, 176, "Verified／Derived", "Q1 35.9、Q2 40.2、Q3 約 46.7（7–9 月營收 NT$1,494.2B ÷ 32）；全年指引「略高於 40%」")
+PR3 = "公司：3Q26 新聞稿 pr.tsmc.com/english/news/3346（6-K a3q26e）｜媒體：見 Sources 頁"
+inp("rev26_1q", "營收 1Q26", "$B", None, 35.90, None, "Verified", "公司：1Q26 新聞稿；NT$1,134.10B")
+inp("rev26_2q", "營收 2Q26", "$B", None, 40.20, None, "Verified", "公司：2Q26 新聞稿；NT$1,270.38B")
+inp("rev26_3q", "營收 3Q26", "$B", None, 46.72, None, "Verified", PR3 + "｜NT$1,494.24B；多數媒體 46.7（個別媒體 46.13、46.87 與公司數不符，不採）")
+inp("rev26_4q", "營收 4Q26（指引低／中／高）", "$B", 52.3, 53.3, 54.3, "Interested-party", "公司 4Q26 指引 US$52.3–54.3B（匯率 31.8）｜媒體：BigGo、民視財經；中點為本模型取值，公司歷來常高於指引上緣")
+inp("fx26_4q", "4Q26 指引匯率", "NT$/US$", None, 31.8, None, "Interested-party", "公司 4Q26 指引假設")
+inp("ntd26_1q", "營收 1Q26（新台幣）", "NT$B", None, 1134.10, None, "Verified", "公司：1Q26 新聞稿")
+inp("ntd26_2q", "營收 2Q26（新台幣）", "NT$B", None, 1270.38, None, "Verified", "公司：2Q26 新聞稿")
+inp("ntd26_3q", "營收 3Q26（新台幣）", "NT$B", None, 1494.24, None, "Verified", PR3)
+inp("ntd26_4q", "營收 4Q26（新台幣；指引美元 × 指引匯率）", "NT$B", "=rev26_4q_lo*fx26_4q", "=rev26_4q*fx26_4q", "=rev26_4q_hi*fx26_4q", "Derived", "")
+inp("gm26_1q", "毛利率 1Q26", "%", None, 0.662, None, "Verified", "公司：1Q26 新聞稿")
+inp("gm26_2q", "毛利率 2Q26", "%", None, 0.677, None, "Verified", "公司：2Q26 新聞稿")
+inp("gm26_3q", "毛利率 3Q26", "%", None, 0.664, None, "Verified", PR3 + "｜2Q26 的 67.7% 下滑 1.3 個百分點，公司歸因 2 奈米初期爬坡稀釋")
+inp("gm26_4q", "毛利率 4Q26（指引低／中／高）", "%", 0.65, 0.66, 0.67, "Interested-party", "公司 4Q26 指引 65–67%｜媒體：民視財經（中值 66%）")
+inp("opm26_1q", "營業利益率 1Q26", "%", None, 0.581, None, "Verified", "公司：1Q26 新聞稿")
+inp("opm26_2q", "營業利益率 2Q26", "%", None, 0.603, None, "Verified", "公司：2Q26 新聞稿")
+inp("opm26_3q", "營業利益率 3Q26", "%", None, 0.587, None, "Verified", PR3)
+inp("opm26_4q", "營業利益率 4Q26（指引低／中／高）", "%", 0.565, 0.575, 0.585, "Interested-party", "公司 4Q26 指引 56.5–58.5%｜媒體：BigGo")
+inp("ni26_1q", "淨利 1Q26", "NT$B", None, 572.48, None, "Verified", "公司：1Q26 新聞稿（EPS NT$22.08）")
+inp("ni26_2q", "淨利 2Q26", "NT$B", None, 706.56, None, "Verified", "公司：2Q26 新聞稿（EPS NT$27.25）")
+inp("ni26_3q", "淨利 3Q26", "NT$B", None, 763.06, None, "Verified", PR3 + "（EPS NT$29.43）")
+inp("eps26_1to3q", "EPS 1–3Q26 實績合計", "NT$", None, "=22.08+27.25+29.43", None, "Verified", "公司：各季新聞稿 22.08、27.25、29.43")
+inp("hpc_3q", "HPC 占營收 3Q26（備忘，未進入公式）", "%", None, 0.68, None, "Verified", "公司：3Q26 簡報／逐字稿，2Q26 為 66%｜媒體：vestedfinance、Quest Review")
+inp("g26_guid", "公司 2026 全年美元營收成長指引", "%", None, 0.44, None, "Interested-party", "公司：由「略高於 40%」上修至約 44%｜媒體：StockFeel、民視財經；僅作 Recon 對照，不驅動營收")
+inp("rev26", "營收 2026（1–3Q 實績＋4Q 指引中點；低／高＝4Q 指引下／上緣）", "$B", "=rev26_1q+rev26_2q+rev26_3q+rev26_4q_lo", "=rev26_1q+rev26_2q+rev26_3q+rev26_4q", "=rev26_1q+rev26_2q+rev26_3q+rev26_4q_hi", "Derived", "v0.1.1 為 172（全年指引「略高於 40%」推算）")
+inp("ntd26", "營收 2026（新台幣）", "NT$B", None, "=ntd26_1q+ntd26_2q+ntd26_3q+ntd26_4q", None, "Derived", "")
+inp("fx_26", "2026 平均匯率（新台幣營收 ÷ 美元營收）", "NT$/US$", None, "=ntd26/rev26", None, "Derived", "僅用於 2026 EPS；2027 起用 fx")
 inp("ai_oth", "其他 AI 相關 ÷ 加速器內容（網通 ASIC、HBM 基底晶粒、CPU）", "%", 0.0, 0.2, 0.4, "Assumed", "使 2026 AI 營收約等於台積電口徑推算（2025 十幾%後段 × CAGR 約 57%）")
 for y, v in ((27, 0.12), (28, 0.08), (29, 0.05)):
     inp(f"px{y}", f"AI 內容價格調升 20{y}", "%", None, v, None, "Interested-party／Derived", "2027 先進製程 +5–10%（Nikkei、MS）、CoWoS 混合單價 +23%（JPMorgan）" if y == 27 else "Assumed")
@@ -65,15 +91,18 @@ for s, vals in zip(SC, ((0.12, 0.10, 0.08), (0.12, 0.05, 0.03), (0.12, 0.0, -0.0
     for y, v in zip((27, 28, 29), vals):
         inp(f"na{y}_{s}", f"非 AI 營收成長 20{y}（{s}）", "%", None, v, None, "Assumed", "公司 2024–29 全公司 CAGR 約 25%、AI 約 55–59% → 非 AI 約 10–15%" if (y == 27 and s == "A") else "")
 sec("E. 利潤率、資本支出、股本、估值")
-inp("gm26", "毛利率 2026", "%", None, 0.66, None, "Verified／Derived", "1Q 66.2%、2Q 67.7%、Q3 指引 65–67%")
+inp("gm26", "毛利率 2026（四季以新台幣營收加權）", "%", None, "=(ntd26_1q*gm26_1q+ntd26_2q*gm26_2q+ntd26_3q*gm26_3q+ntd26_4q*gm26_4q)/ntd26", None, "Derived", "v0.1.1 為 66%")
+inp("opm26", "營業利益率 2026（四季以新台幣營收加權）", "%", None, "=(ntd26_1q*opm26_1q+ntd26_2q*opm26_2q+ntd26_3q*opm26_3q+ntd26_4q*opm26_4q)/ntd26", None, "Derived", "")
+inp("opex_26", "營業費用 ÷ 營收 2026", "%", None, "=gm26-opm26", None, "Derived", "僅用於 2026；2027 起用 opex")
+inp("ni_op_26", "淨利 ÷ 營業利益 2026（1–3Q 實績比，4Q 沿用）", "x", None, "=(ni26_1q+ni26_2q+ni26_3q)/(ntd26_1q*opm26_1q+ntd26_2q*opm26_2q+ntd26_3q*opm26_3q)", None, "Derived", "1Q 0.869、2Q 0.922、3Q 0.870；4Q 公司未指引淨利率，Assumed 沿用 1–3Q 比")
 for s, vals in zip(SC, ((0.64, 0.63, 0.62), (0.64, 0.58, 0.56), (0.64, 0.54, 0.52))):
     for y, v in zip((27, 28, 29), vals):
         inp(f"gm{y}_{s}", f"毛利率 20{y}（{s}）", "%", None, v, None, "Derived／Assumed", "N2 稀釋 3–4 個百分點、海外廠 2–3 個百分點（公司）對上漲價；長期目標 56% 以上" if (y == 27 and s == "A") else "")
 inp("opex", "營業費用 ÷ 營收", "%", None, 0.075, None, "Derived", "2Q26 毛利率 67.7% − 營業利益率 60.3%")
 inp("ni_op", "淨利 ÷ 營業利益", "x", None, 0.92, None, "Derived", "2Q26 淨利率 55.6% ÷ 營業利益率 60.3%")
-inp("shares", "股數", "十億股", None, 25.93, None, "Derived", "市值 ÷ 股價")
+inp("shares", "股數", "十億股", None, 25.93, None, "Derived", "市值 ÷ 股價；3Q26 淨利 NT$763.06B ÷ EPS 29.43 ＝ 25.93，一致")
 inp("px", "股價（2026-10-07 收盤）", "NT$", None, 2585, None, "Interested-party", "Wantgoo")
-for y, v, tag, src in ((26, 62, "Verified", "指引 US$60–64B（7 月上修）"), (27, 77, "Interested-party", "Citi；券商 73–81"), (28, 90, "Interested-party", "JPMorgan"), (29, 95, "Assumed", "")):
+for y, v, tag, src in ((26, 62, "Interested-party", "公司指引 US$60–64B 中點（7 月上修；10 月維持不變）｜媒體：民視財經、vestedfinance"), (27, 77, "Interested-party", "Citi；券商 73–81"), (28, 90, "Interested-party", "JPMorgan"), (29, 95, "Assumed", "")):
     inp(f"capex{y}", f"資本支出 20{y}", "$B", None, v, None, tag, src)
 for i, (v, src) in enumerate(((15, "近谷底（2022 年約 11.9x）"), (20.5, "ADR 10 年中位數（GuruFocus）"), (32.7, "10 年最高（GuruFocus）")), 1):
     inp(f"pe_{i}", f"P/E {v}x", "x", None, v, None, "Interested-party", src)
@@ -89,7 +118,9 @@ for srow in rows:
     key, item, unit, lo, base, hi, tag, src = srow
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
-        if v is not None: IN.cell(r, j, v).font = BLUE
+        if v is not None:
+            IN.cell(r, j, v)
+            if not (isinstance(v, str) and v.startswith("=")): IN.cell(r, j).font = BLUE
     IN.cell(r, 7, tag); IN.cell(r, 8, src)
     wb.defined_names[key] = DefinedName(key, attr_text=f"In!$E${r}")
     if lo is not None: wb.defined_names[key + "_lo"] = DefinedName(key + "_lo", attr_text=f"In!$D${r}")
@@ -164,9 +195,10 @@ for col, lab, s, y in cols:
         PL[f"{col}{PR['gm']}"] = f"=gm{y}_{s}"
     PL[f"{col}{PR['aish']}"] = f"={col}{PR['ai']}/{col}{PR['rev']}"
     PL[f"{col}{PR['gp']}"] = f"={col}{PR['rev']}*{col}{PR['gm']}"
-    PL[f"{col}{PR['op']}"] = f"={col}{PR['rev']}*({col}{PR['gm']}-opex)"
-    PL[f"{col}{PR['ni']}"] = f"={col}{PR['op']}*ni_op"
-    PL[f"{col}{PR['eps']}"] = f"={col}{PR['ni']}*fx/shares"
+    sx = "_26" if y == 26 else ""
+    PL[f"{col}{PR['op']}"] = f"={col}{PR['rev']}*({col}{PR['gm']}-opex{sx})"
+    PL[f"{col}{PR['ni']}"] = f"={col}{PR['op']}*ni_op{sx}"
+    PL[f"{col}{PR['eps']}"] = f"={col}{PR['ni']}*fx{sx}/shares"
     PL[f"{col}{PR['pe_px']}"] = f"=px/{col}{PR['eps']}"
     PL[f"{col}{PR['capex']}"] = f"=capex{y}"
     PL[f"{col}{PR['fcf']}"] = f"={col}{PR['ni']}-{col}{PR['capex']}"
@@ -174,7 +206,7 @@ for col, lab, s, y in cols:
         PL[f"{col}{rr}"].number_format = "0.0%" if k in ("aish", "gm") else ("0.0" if k != "pe_px" else "0.0\"x\"")
 PL.column_dimensions["A"].width = 44
 for c in "BCDEFGHIJK": PL.column_dimensions[c].width = 10
-PL.cell(18, 1, "註：B 欄 2026 營收取公司指引推算；非 AI 營收＝營收 − AI（由下而上）。2027 起兩者分開推。")
+PL.cell(18, 1, "註：B 欄 2026 ＝1–3Q 實績＋4Q 指引中點（匯率、營業費用、淨利比用 2026 專屬參數）；非 AI 營收＝營收 − AI（由下而上）。2027 起兩者分開推。")
 
 # ---------------- Val ----------------
 V = wb.create_sheet("Val")
@@ -199,6 +231,8 @@ hdr(RC, 3, ["項目", "本模型", "對照值", "差距", "對照來源"])
 rec = [("2026 AI 相關營收 vs 公司口徑推算", f"=PL!B{PR['ai']}", "=rev25*ai25_share*(1+ai_cagr)", "2025 AI 加速器十幾%後段 × CAGR 57%（公司）"),
        ("2026 AI 加速器內容（不含其他 AI）vs 同上", f"=PL!B{PR['ai_acc']}", "=rev25*ai25_share*(1+ai_cagr)", "其他 AI 相關（ai_oth）為 Assumed"),
        ("2026 EPS vs 共識", f"=PL!B{PR['eps']}", "=cons_eps26", "MarketScreener"),
+       ("2026 營收 vs 公司全年成長指引（2025 × (1＋44%)）", f"=PL!B{PR['rev']}", "=rev25*(1+g26_guid)", "公司 3Q26 法說：全年美元成長約 44%"),
+       ("2026 EPS vs 1–3Q 實績＋4Q 指引推算", f"=PL!B{PR['eps']}", "=eps26_1to3q+ntd26_4q*opm26_4q*ni_op_26/shares", "公司各季 EPS 22.08／27.25／29.43＋4Q 指引中點"),
        ("2027 營收（A）vs 共識", f"=PL!C{PR['rev']}", "=cons_rev27", "MarketScreener"),
        ("2027 EPS（A）vs 共識", f"=PL!C{PR['eps']}", "=cons_eps27", "MarketScreener"),
        ("2026 CoWoS 需求 vs Morgan Stanley", f"=CoWoS!B{CR['dem']}", "=ms_dem26", "千片"),
@@ -240,11 +274,24 @@ srcs = [("台積電 2Q26 新聞稿", "https://pr.tsmc.com/english/news/3326"),
  ("Tom's Hardware／Nikkei 2027 漲價", "https://www.tomshardware.com/tech-industry/semiconductors/tsmc-eyes-price-hikes-of-up-to-25-percent-on-chip-production-services-in-2027-report-claims-plans-to-raise-baseline-prices-by-5-percent-to-10-percent-on-advanced-nodes"),
  ("MarketScreener 共識", "https://in.marketscreener.com/quote/stock/TSMC-TAIWAN-SEMICONDUCTOR-6492349/valuation/"),
  ("GuruFocus P/E", "https://www.gurufocus.com/term/pettm/TSM"),
+ ("【v0.2】台積電 3Q26 新聞稿（公司）", "https://pr.tsmc.com/english/news/3346"),
+ ("【v0.2】台積電 3Q26 EarningsRelease（公司）", "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-10/526b65af7305df2dde6b9ece6812b1fdf1e49f9b/3Q26%20EarningsRelease.pdf"),
+ ("【v0.2】台積電 3Q26 6-K（含指引）", "https://www.sec.gov/Archives/edgar/data/0001046179/000104617926000726/a3q26e_withguidancexfinal.htm"),
+ ("【v0.2】台積電 3Q26 逐字稿（公司）", "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-10/eba4fac72873bf546b669bd2b5d973df5c93215d/TSMC%203Q26%20Transcript.pdf"),
+ ("【v0.2】台積電 1Q26 新聞稿", "https://pr.tsmc.com/english/news/3297"),
+ ("【v0.2】台積電 2Q26 6-K（含指引）", "https://www.sec.gov/Archives/edgar/data/0001046179/000104617926000451/a2q26e_withguidancexfinal.htm"),
+ ("【v0.2】媒體：StockFeel 3Q26 法說重點", "https://www.stockfeel.com.tw/%E5%8F%B0%E7%A9%8D%E9%9B%BB-2330-2026q3-%E6%B3%95%E8%AA%AA%E6%9C%83/"),
+ ("【v0.2】媒體：民視財經 3Q26 法說", "https://finance.ftvnews.com.tw/news/detail/2026A15W0572"),
+ ("【v0.2】媒體：Futurum 3Q26", "https://futurumgroup.com/insights/tsmc-q3-fy-2026-earnings-beat-and-raise-on-ai-and-hpc-demand/"),
+ ("【v0.2】媒體：BigGo Finance 3Q26", "https://finance.biggo.com/news/US_TSM_2026-10-15"),
+ ("【v0.2】媒體：vestedfinance 3Q26", "https://vestedfinance.com/blog/us-stocks/tsmc-q3-earnings-2026/"),
+ ("【v0.2】媒體：TrendForce 券商解讀 3Q26", "https://www.trendforce.com/news/2026/10/16/news-after-tsmcs-3q26-earnings-key-brokerage-takeaways-as-2028-capex-forecasts-reach-us105b/"),
+ ("【v0.2】查證方式說明", "公司原文頁面在本次建置環境無法直接開啟（網路限制），3Q26 數字取自搜尋引擎對公司新聞稿的摘錄，並與至少兩則獨立媒體交叉；公司逐字稿原文待人工複核"),
  ("markets/chip_bridge v0.2、markets/memory（本 repo）", "")]
 for i, (a, b) in enumerate(srcs, 2): SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 44; SO.column_dimensions["B"].width = 130
 RD = wb.create_sheet("README", 0)
-lines = [("台積電模型 v0.1.1（AI 半導體 Project 步驟 4）　2026-10-22（Tokenomics v19.0 同步：數字與 v0.1 相同）", True),
+lines = [("台積電模型 v0.2（AI 半導體 Project 步驟 4）　2026-10-22　2026 年改為 1–3Q 實績＋4Q 指引中點；2027 起假設未變", True),
  ("模型命題：台積電在 AI 算力中的意義是供給上限而非分到的金額比例——AI 加速器只占其營收約兩成；2027 年加速器出貨受 HBM 而非 CoWoS 限制，台積電的獲利成長由「AI 顆數 × 每顆內容 × 漲價」與「非 AI 八成的穩定成長」共同決定。", False), ("", False),
  ("驅動因子 → 推導量", True),
  ("CoWoS：加速器顆數（markets/memory）÷ 每片封裝數 → CoWoS 需求；月產能年均 × 12 × (1＋委外) → 可用產能；需求 ÷ 產能 → 是否為瓶頸；與 HBM 缺口比較", False),
@@ -252,6 +299,8 @@ lines = [("台積電模型 v0.1.1（AI 半導體 Project 步驟 4）　2026-10-2
  ("情境：A 基準；B 2028 顆數 −20%、毛利率降至 58%；C 2028 顆數 −40%、毛利率 54%（AI 資本支出明顯下修）", False),
  ("Val：EPS × P/E（15x、10 年中位 20.5x、10 年最高 32.7x）", False), ("Recon、Sens：見各頁", False), ("", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。", False),
+ ("v0.2 變更（2026-10-22，3Q26 財報後）：2026 營收 172→176.1 $B（1–3Q 實績＋4Q 指引中點 53.3）；毛利率 66.0%→66.5%（四季加權）；EPS 114.2→112.1（新舊對照見 tsmc/README.md）。新增 2026 專屬參數 opex_26、ni_op_26、fx_26（來自實績）；2027 起毛利率、價格調升、非 AI 成長、CoWoS 產能全部未改（公司未給新的明確指引）。", False),
+ ("公司 3Q26 說法未取得：AI 加速器營收占比、CoWoS 產能的新數字（搜尋未找到逐字稿原文），故 CoWoS 頁不動。", False),
  ("已知限制：(1) 台積電不揭露 CoWoS 片數與先進封裝營收，產能為券商估計；(2) 先進製程（N3／N2）晶圓產能未找到，未建晶圓瓶頸；(3) 其他 AI 相關營收比例為 Assumed；(4) 淨利 ÷ 營業利益固定 0.92。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170

@@ -19,7 +19,7 @@
 | `skhynix/` | SK 海力士（000660.KS） | 記憶體樣板 `tools/memory_model`（AI 半導體 Project） | v0.3.1 |
 | `micron/` | 美光（MU） | 記憶體樣板（複製測試） | v0.2.1 |
 | `samsung/` | 三星電子（005930.KS） | 記憶體樣板（集團公司：只建模記憶體，其餘事業為輸入） | v0.1.1 |
-| `tsmc/` | 台積電（2330.TW） | 獨立產生器（CoWoS 供需上限＋損益估值；AI 半導體 Project） | v0.1.1 |
+| `tsmc/` | 台積電（2330.TW） | 獨立產生器（CoWoS 供需上限＋損益估值；AI 半導體 Project） | v0.2 |
 | `markets/overview/` | AI 半導體總覽儀表板 | 彙整橋接表、記憶體、網通、台積電模型；估值規則；美光 P/E 與買回加回 P/B 對照 | v0.2 |
 
 規則：
