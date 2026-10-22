@@ -477,7 +477,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.ebStart` | 第一期 EBITDA 率 | 比例 | -0.1149 | 必改 |
 | `defaults.ebSteady` | 最後一期（穩態）EBITDA 率；中間各期線性內插 | 比例 | 0.47 | 檢查 |
 | `defaults.ebitdaBasis` | EBITDA 口徑：ebitdar＝EBITDA＝EBITDAR 率 × 營收 − 租金（租金為固定成本，EBITDAR 率三情境共用）；其他值＝三情境共用 EBITDA 率（模板）（Oracle v0.1c） | 代碼 | ebitdar | 檢查 |
-| `defaults.ebitdarAdj` | EBITDAR 率校準：基準情境 [首期, 末期] 租金 ÷ OCI 營收；EBITDAR 率＝ebStart／ebSteady＋此值（scripts/calib_ebitdar.js --write 產生，verify.sh 檢查） | 比例清單 | 0.072418、0.017013 | 必改 |
+| `defaults.ebitdarAdj` | EBITDAR 率校準：基準情境 [首期, 末期] 租金 ÷ OCI 營收；EBITDAR 率＝ebStart／ebSteady＋此值（scripts/calib_ebitdar.js --write 產生，verify.sh 檢查） | 比例清單 | 0.098099、0.023836 | 必改 |
 | `defaults.ebitdarNote` | EBITDAR 口徑的說明文字 | 文字 | 雲端 EBITDA＝EBITDAR 率 × 雲端營收… | 可沿用 |
 | `defaults.services` | 非算力服務營收（軟體、儲存等），各期 | US$m 清單 | 0、0、0、0、0 | 檢查 |
 | `defaults.otherEbitda` | 其他事業 EBITDA（負值＝燒錢），各期；同時進入損益 EBITDA 與營運來源（v0.1b） | US$m 清單 | 0、0、0、0、0 | 必改 |

@@ -57,6 +57,11 @@ def main(path):
             if dn is None: errs.append(f'{k}：沒有具名範圍'); continue
             if dn.attr_text.replace("'", '') != f"{SHEET}!$G${r}": errs.append(f'{k}：具名範圍指向 {dn.attr_text}，應為 {SHEET}!G{r}')
             n_name += 1
+    for n in list(wb.defined_names):  # WhiteFiber v0.2：IF_CapexIT 的低／高成本具名範圍（_Lo＝F 欄、_Hi＝H 欄，與基準同一列）
+        if n.startswith('TK_') and n not in expect_names and n[-3:] in ('_Lo', '_Hi') and n[:-3] in expect_names:
+            g = wb.defined_names[n[:-3]].attr_text.replace("'", '').split('$G$')[1]
+            if wb.defined_names[n].attr_text.replace("'", '') != f"{SHEET}!${'F' if n.endswith('_Lo') else 'H'}${g}": errs.append(f'{n}：低／高成本具名範圍位置不符')
+            expect_names.add(n)
     extra = [n for n in wb.defined_names if n.startswith('TK_') and n not in expect_names]
     if extra: errs.append(f'多出的 TK_ 具名範圍：{extra[:5]}')
     pat = re.compile(r'Tokenomics_取數|\bTK_[A-Za-z0-9_]+')

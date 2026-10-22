@@ -643,8 +643,8 @@
   "ebSteady": 0.47,
   "ebitdaBasis": "ebitdar",
   "ebitdarAdj": [
-   0.072418,
-   0.017013
+   0.098099,
+   0.023836
   ],
   "ebitdarNote": "雲端 EBITDA＝EBITDAR 率 × 雲端營收 − 租金（機房租金與 GPU 租金皆為固定成本）。EBITDAR 率＝EBITDA 率（ebStart／ebSteady，指基準情境、自有 GPU 口徑）＋ebitdarAdj（基準情境機房租金〔在帳＋表外〕÷ 雲端營收，[起點, 穩態]），使基準情境未扣 GPU 租金的 EBITDA 率維持 −11.49%／47%；GPU 租金（新增 GPU 的租賃部分）不併入校準、直接扣 EBITDA（同業 EBITDA 率以自有 GPU 計；WhiteFiber v0.1b 步驟 4）。保守與積極用同一 EBITDAR 率，因而承擔固定租金。ebitdarAdj 由 scripts/calib_ebitdar.js 自基準情境（延誤 0）校準（verify.sh 檢查）[Derived]。",
   "services": [
