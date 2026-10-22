@@ -106,7 +106,8 @@ def main():
     w3 = wb.create_sheet("③已套用的預設")
     w3.append(["編號", "問題", "採用的預設", "替代選項", "對結果的影響方向"])
     txt = a.defaults.read_text(encoding="utf-8")
-    sec = txt.split("已套用的預設", 1)[-1]
+    m = re.search(r"^## \d+\. 已套用的預設.*?$(.*?)(?=^## |\Z)", txt, re.S | re.M)
+    sec = m.group(1) if m else ""
     for line in sec.splitlines():
         if line.startswith("|") and not re.match(r"^\|[-| ]+\|$", line):
             cells = [c.strip() for c in line.strip("|").split("|")]
