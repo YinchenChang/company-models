@@ -29,14 +29,13 @@ PLAT = {
  "TRN":  ("AWS Trainium", (600, 800, 800, 1200, 300, 300), "Assumed", "NeuronLink＋EFA；合計約 $4K"),
  "ASIC": ("其他 ASIC", (600, 800, 800, 1200, 300, 300), "Assumed", "比照 Trainium"),
 }
-# 每顆 IT capex（$K）＝ IF_CapexIT（$B）÷ IF_GPUsPerGW × 1e6，取自橋接表的 Tokenomics 快照（基準成本情境）；
-# 四捨五入到 0.1（與 v0.2 成品的顯示精度一致，使輸出與 v0.2 逐格相同）。
+# 每顆 IT capex（$K）＝ IF_CapexIT（$B）÷ IF_GPUsPerGW × 1e6，取自橋接表的 Tokenomics 快照（基準成本情境），完整精度不取整。
 _snap = json.load(open(os.path.join(ROOT, "markets", "chip_bridge", "data", "tokenomics_snapshot_v19.0.json"), encoding="utf-8"))
 _gen = {g["code"]: g["name"] for g in _snap["source"]["generations"]}
 def itu(code):
     capex = _snap["items"]["IF_CapexIT"]["values"][_gen[code]]["基準"]
     gpus = _snap["items"]["IF_GPUsPerGW"]["values"][_gen[code]]["基準"]
-    return round(capex / gpus * 1e6, 1)
+    return capex / gpus * 1e6
 ITU = {"GB": (itu("GB300"), "Derived", "Tokenomics v19.0 IF_CapexIT 32.237 $B ÷ 487,008（v5.27 為 37.445）"), "VR": (itu("VR200"), "Derived", "37.586 ÷ 291,744"),
        "RU": (itu("RU"), "Derived", "50.086 ÷ 194,760"), "HP": (itu("H100"), "Derived", "27.510 ÷ 718,048"), "AMD8": (40, "Assumed", ""),
        "AMDR": (100, "Assumed", "VR200 的約 0.8 倍"), "TPU": (25, "Assumed", ""), "TRN": (20, "Assumed", ""), "ASIC": (20, "Assumed", "")}
