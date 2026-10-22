@@ -31,6 +31,9 @@ EXTRA_NAMES = ["L1_Ans3", "L1_Ans3_Lo", "L1_Ans3_Hi"]
 S4_NAMES = ["IF_CapexTotal"]
 # Anthropic A2 新增（工程類；任務類別每任務 token 取自 Tokenomics，不在本模型自設）：任務名稱、任務長度、每次嘗試新鮮／快取／decode token
 A2_NAMES = ["IF_HdrTask", "IF_TaskLen", "IF_TaskTokFresh", "IF_TaskTokCached", "IF_TaskTokDec"]
+# v0.1.2（Tokenomics v18.0 新增；只作對照，不回饋計算）：VR200 每 GW 營收 P × Q（第一年、FY2026 口徑、壽命期年均）、付費 token 實際產出 Q、token 帳未閉合倍數、收入面 m 主口徑
+V18_NAMES = [f"L1_RevGW_PQ_VR200{s}{b}" for s in ("", "_FY", "_Life") for b in ("", "_Lo", "_Hi")] + \
+            [f"L1_TokGW_PaidPQ_VR200{b}" for b in ("", "_Lo", "_Hi")] + ["L1_TokLedger_2026Q2", "L1_M"]
 PENDING_NOTE = "待 Tokenomics 提供"
 
 
@@ -45,6 +48,8 @@ def read_snapshot(tk_dir: Path):
     current = (tk_dir / "model" / "CURRENT").read_text(encoding="utf-8").strip()
     path = tk_dir / "model" / current
     sha = subprocess.run(["git", "-C", str(tk_dir), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    import hashlib
+    sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
     m = re.search(r"_v(\d+(?:\.\d+)?)\.xlsx$", current)
     wb = openpyxl.load_workbook(path, data_only=True)
     names = {k: v.attr_text for k, v in wb.defined_names.items()}
@@ -58,6 +63,7 @@ def read_snapshot(tk_dir: Path):
     chosen += [n for n in EXTRA_NAMES if n in names]
     chosen += [n for n in S4_NAMES if n in names]
     chosen += [n for n in A2_NAMES if n in names]
+    chosen += [n for n in V18_NAMES if n in names]
     rows, seen = [], set()
     for n in chosen:
         if n in seen:
@@ -83,11 +89,11 @@ def read_snapshot(tk_dir: Path):
         rows.append(dict(name=n, kind=n.split("_")[0], label=label, unit=unit, values=vals, status="OK"))
     present = {r["name"] for r in rows}
     # 工作單要求、但 Tokenomics 現行版沒有者：逐名列入、值留空（E1）
-    wanted = SRC_DEM + BLOCK6 + EXTRA_NAMES + S4_NAMES + A2_NAMES
+    wanted = SRC_DEM + BLOCK6 + EXTRA_NAMES + S4_NAMES + A2_NAMES + V18_NAMES
     pending = [dict(name=n, kind=n.split("_")[0], label="", unit="", values=[], status=PENDING_NOTE) for n in wanted if n not in present]
     hdr_gen = [wb["Interface"].cell(4, k).value for k in range(3, 18)]
     hdr_cost = [wb["Interface"].cell(5, k).value for k in range(3, 18)]
-    return dict(file=current, version=f"v{m.group(1)}" if m else "?", sha=sha, rows=rows, pending=pending,
+    return dict(file=current, version=f"v{m.group(1)}" if m else "?", sha=sha, sha256=sha256, rows=rows, pending=pending,
                 hdr_gen=hdr_gen, hdr_cost=hdr_cost)
 
 

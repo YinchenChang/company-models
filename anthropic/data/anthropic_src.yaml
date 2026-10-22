@@ -6445,6 +6445,516 @@ rows:
   party: Anthropic（投資人簡報，募資／IPO 誘因）／NYT 知情人士
   basis: 未明
   note: A2 新增（只增不重用）：原文「roughly double…by the end of the next year」（同 SRC_ANT_267 原文）。供 SRC_ANT_268（Derived）以公式推導
+- id: SRC_ANT_380
+  key: rev_2026_h1_s1
+  group: A
+  metric: 2026 上半年營收（草擬 S-1，WSJ 轉述）
+  value: 16.3
+  lo: null
+  hi: null
+  unit: $B/半年
+  period: 2026-H1
+  source: TradingKey（Yulia Zeng，2026-10-21；引 WSJ 所見草擬 S-1）
+  url: https://www.tradingkey.com/analysis/stocks/us-stocks/262227958-anthropic-ipo-filing-80-7-billion-h1-loss-tradingkey
+  doc_date: 2026-10-21
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 總額
+  note: v0.1.1 新增（工作單 20261021）。TradingKey 原文：'generated $16.3 billion in revenue in the first half of 2026'；CoinCentral：'Revenue reached about $16.3 billion in the six months ended June 30.'；Implicator：'generated $16.3 billion in revenue for the six months ended June 30'；Crypto Briefing：'First-half 2026 revenue reached $16.3 billion'（同日其他轉載值相同）。與 SRC_ANT_004（Q1 4.73）＋ SRC 新列 Q2 實際 11.6 ＝ 16.33 一致。
+- id: SRC_ANT_381
+  key: rev_2025_h1_s1
+  group: A
+  metric: 2025 上半年營收（草擬 S-1，WSJ 轉述；對照）
+  value: 1.1
+  lo: null
+  hi: null
+  unit: $B/半年
+  period: 2025-H1
+  source: TradingKey（Yulia Zeng，2026-10-21；引 WSJ 所見草擬 S-1）
+  url: https://www.tradingkey.com/analysis/stocks/us-stocks/262227958-anthropic-ipo-filing-80-7-billion-h1-loss-tradingkey
+  doc_date: 2026-10-21
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 總額
+  note: v0.1.1 新增（工作單 20261021）。TradingKey 原文：'far exceeding $1.1 billion in the same period last year'；CoinCentral：'That is up from $1.1 billion in the same period of 2025.'。報導用「約」，無更精確值。
+- id: SRC_ANT_382
+  key: rev_2026_q2_actual
+  group: A
+  metric: 2026 Q2 營收（實際；取代 SRC_ANT_005 的 >11.5 初估作校準值）
+  value: 11.6
+  lo: null
+  hi: null
+  unit: $B/季
+  period: 2026-Q2
+  source: Implicator.ai〈Anthropic Tells Investors Q3 Revenue Hit $16.8 Billion as Growth Slowed to 45%〉（Marcus Schuler，2026-10-15；引 FT）
+  url: https://www.implicator.ai/anthropic-tells-investors-q3-revenue-hit-16-8-billion-as-growth-slowed-to-45/
+  doc_date: 2026-10-15
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（2026-10-14 私人投資人簡報；IPO 前募資誘因）；FT、CNBC 等為轉述者
+  basis: 未明
+  note: v0.1.1 新增（工作單 20261021）。原文：'Revenue rose about 45% quarter over quarter, from $11.6 billion in the second quarter.'。舊列 SRC_ANT_005（Bloomberg 初步 >11.5）保留；Euronews 同日報導寫 $11.5B（見 rev_2026_q2_euronews），兩者各一列。
+- id: SRC_ANT_383
+  key: rev_2026_q2_euronews
+  group: A
+  metric: 2026 Q2 營收（Euronews 同日報導值；與 11.6 並列）
+  value: 11.5
+  lo: null
+  hi: null
+  unit: $B/季
+  period: 2026-Q2
+  source: Euronews〈Anthropic revenue jumps 46% to $16.8bn…〉（Quirino Mealha，2026-10-15）
+  url: https://www.euronews.com/2026/10/15/anthropic-revenue-jumps-46-to-168bn-as-ai-firm-eyes-record-2-trillion-ipo-valuation
+  doc_date: 2026-10-15
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（2026-10-14 私人投資人簡報；IPO 前募資誘因）；FT、CNBC 等為轉述者
+  basis: 未明
+  note: v0.1.1 新增（工作單 20261021）。原文：'up about 46% from $11.5 billion (€10.3bn) in the previous three months'。與 Implicator 的 $11.6B（及增幅 45% vs 46%）略有出入，疑為進位或初估差異；兩者皆登錄，校準採 11.6（工作單）。
+- id: SRC_ANT_384
+  key: rev_2026_q3
+  group: A
+  metric: 2026 Q3 營收（投資人簡報）
+  value: 16.8
+  lo: null
+  hi: null
+  unit: $B/季
+  period: 2026-Q3
+  source: Implicator.ai〈Anthropic Tells Investors Q3 Revenue Hit $16.8 Billion…〉（引 FT；Euronews、Axios 同值）
+  url: https://www.implicator.ai/anthropic-tells-investors-q3-revenue-hit-16-8-billion-as-growth-slowed-to-45/
+  doc_date: 2026-10-15
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（2026-10-14 私人投資人簡報；IPO 前募資誘因）；FT、CNBC 等為轉述者
+  basis: 未明
+  note: v0.1.1 新增（工作單 20261021）。Implicator 原文：'third-quarter revenue reached $16.8 billion'；Euronews：'generated $16.8 billion (€15bn) in revenue between July and September'；Axios：'revenue surging nearly 50% to $16.8 billion compared with the April-to-June period.'。三者同值；季增幅各報 45%／46%／近 50%。投資人簡報未經審計，公司尚未公開。
+- id: SRC_ANT_385
+  key: adj_opmargin_2026_q3
+  group: A
+  metric: 2026 Q3 調整後營業利益率（第二個獲利季）
+  value: 0.11
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2026-Q3
+  source: Implicator.ai〈Anthropic Tells Investors Q3 Revenue Hit $16.8 Billion…〉（引 FT）；Euronews 同
+  url: https://www.implicator.ai/anthropic-tells-investors-q3-revenue-hit-16-8-billion-as-growth-slowed-to-45/
+  doc_date: 2026-10-15
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（2026-10-14 私人投資人簡報；IPO 前募資誘因）；FT、CNBC 等為轉述者
+  basis: 未明
+  note: v0.1.1 新增（工作單 20261021）。Implicator 原文：'Its adjusted operating margin was 11%'；'Anthropic said the third quarter was its second consecutive quarter of adjusted profitability.'；Euronews：'an operating margin of 11%, the share of revenue left after running costs'。「調整後」排除項目（是否含股權報酬）未見一手說明。
+- id: SRC_ANT_386
+  key: fcf_positive_2026_q3
+  group: A
+  metric: 2026 Q3 自由現金流為正（定性）
+  value: null
+  lo: null
+  hi: null
+  unit: 文字
+  period: 2026-Q3
+  source: Euronews（2026-10-15）；Implicator.ai；Axios
+  url: https://www.euronews.com/2026/10/15/anthropic-revenue-jumps-46-to-168bn-as-ai-firm-eyes-record-2-trillion-ipo-valuation
+  doc_date: 2026-10-15
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（2026-10-14 私人投資人簡報；IPO 前募資誘因）；FT、CNBC 等為轉述者
+  basis: 未明
+  note: v0.1.1 新增（工作單 20261021）。Euronews 原文：'it had positive free cash flow, meaning it brought in more cash than it spent'；Implicator：'it was cash-flow positive during the quarter'；Axios：'saying it was cash flow positive in the third quarter'。金額未揭露。
+- id: SRC_ANT_387
+  key: rev_per_compute_2026_q3
+  group: A
+  metric: 2026 Q3 每 $1 算力支出的營收
+  value: 1.7
+  lo: null
+  hi: null
+  unit: 倍
+  period: 2026-Q3
+  source: Implicator.ai（引 FT）；Euronews
+  url: https://www.implicator.ai/anthropic-tells-investors-q3-revenue-hit-16-8-billion-as-growth-slowed-to-45/
+  doc_date: 2026-10-15
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（2026-10-14 私人投資人簡報；IPO 前募資誘因）；FT、CNBC 等為轉述者
+  basis: 未明
+  note: v0.1.1 新增（工作單 20261021）。Implicator 原文：'generated $1.70 in revenue for every dollar spent on computing power'；Euronews：'Each dollar it spent on computing power brought in $1.70 of revenue in the quarter'。分母口徑（費用或現金、是否含自建）未明。
+- id: SRC_ANT_388
+  key: arr_semianalysis_2026_10
+  group: A
+  metric: 年化營收（SemiAnalysis 估計，2026-10）；單一來源，未採用
+  value: 74
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2026-10
+  source: Euronews（2026-10-15）與 Implicator.ai 轉述 SemiAnalysis
+  url: https://www.euronews.com/2026/10/15/anthropic-revenue-jumps-46-to-168bn-as-ai-firm-eyes-record-2-trillion-ipo-valuation
+  doc_date: 2026-10-15
+  retrieved: 2026-10-21
+  tag: Analogy
+  party: SemiAnalysis（第三方研究機構；偏樂觀，須第二獨立來源）；轉述者 Euronews、Implicator 皆未提供第二估計
+  basis: 未明
+  note: v0.1.1 新增。Euronews 原文：'puts the current figure at about $74 billion (€66.2bn)'（主詞為 SemiAnalysis）；Implicator：'Research firm SemiAnalysis estimates annualized revenue at about $74 billion'（轉引 Euronews，非獨立來源）。共同規則第 4 節：SemiAnalysis 不可單獨引用 → 僅登為「單一來源，未採用」，不進任何計算與對照列。YipitData 的 2026-07 估計（79.5）時點不同，不能充當第二來源。
+- id: SRC_ANT_389
+  key: arr_year_end_analysts_implicator
+  group: A
+  metric: 分析師估 2026 年底年化營收（約）
+  value: 110
+  lo: 100
+  hi: 120
+  unit: $B/年
+  period: 2026-12
+  source: Implicator.ai〈…Q3 Revenue Hit $16.8 Billion…〉
+  url: https://www.implicator.ai/anthropic-tells-investors-q3-revenue-hit-16-8-billion-as-growth-slowed-to-45/
+  doc_date: 2026-10-15
+  retrieved: 2026-10-21
+  tag: Analogy
+  party: 分析師（未具名）；轉述者 Implicator
+  basis: 未明
+  note: v0.1.1 新增。原文：'the annual revenue run rate could reach $110 billion by year-end'。與 Euronews 的 'expected to end 2026 below $100 billion' 互相矛盾 → 兩者各一列，只作對照（D23）。
+- id: SRC_ANT_390
+  key: arr_year_end_euronews_lt100
+  group: A
+  metric: 分析師預期 2026 年底年化營收（Euronews：低於 $100B）
+  value: 100
+  lo: null
+  hi: 100
+  unit: $B/年
+  period: 2026-12
+  source: Euronews（Quirino Mealha，2026-10-15）
+  url: https://www.euronews.com/2026/10/15/anthropic-revenue-jumps-46-to-168bn-as-ai-firm-eyes-record-2-trillion-ipo-valuation
+  doc_date: 2026-10-15
+  retrieved: 2026-10-21
+  tag: Analogy
+  party: 分析師（未具名）；轉述者 Euronews
+  basis: 未明
+  note: v0.1.1 新增。原文：'expected to end 2026 below $100 billion (€89.5bn)'（上限值，非點估計）。與 Implicator 的 110 矛盾；只作對照。
+- id: SRC_ANT_391
+  key: fin_netloss_2026_h1_s1
+  group: F
+  metric: 2026 上半年淨損（草擬 S-1，WSJ 轉述）
+  value: 80.7
+  lo: null
+  hi: null
+  unit: $B/半年
+  period: 2026-H1
+  source: TradingKey（Yulia Zeng，2026-10-21；引 WSJ 所見草擬 S-1）
+  url: https://www.tradingkey.com/analysis/stocks/us-stocks/262227958-anthropic-ipo-filing-80-7-billion-h1-loss-tradingkey
+  doc_date: 2026-10-21
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 總額
+  note: v0.1.1 新增（工作單 20261021）。TradingKey：'its net loss reached $80.7 billion over the same period'；CoinCentral：'Anthropic reported a net loss of $80.7 billion for the first half of 2026'；Crypto Briefing：'a net loss of $80.7 billion over the same stretch'；National Herald：'net loss of $80.7 billion in the first half of 2026'。
+- id: SRC_ANT_392
+  key: fin_noncash_2026_h1_s1
+  group: F
+  metric: 2026 上半年淨損中約 $72B 為可轉換票據等融資工具重估的非現金費用
+  value: 72
+  lo: null
+  hi: null
+  unit: $B/半年
+  period: 2026-H1
+  source: CoinCentral（2026-10-21；引 WSJ、Reuters 所見草擬 S-1）
+  url: https://coincentral.com/anthropic-ipo-filing-reveals-80-billion-loss-and-600-billion-in-computing-bills/
+  doc_date: 2026-10-21
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 非現金
+  note: v0.1.1 新增（工作單 20261021）。CoinCentral 原文：'About $72 billion came from an accounting charge linked to the value of convertible notes and other financing instruments.'；TradingKey：'about $72 billion of this was an accounting charge related to changes in the valuation of convertible notes'；Implicator：'$72 billion came from accounting charges tied to changes in the value of convertible notes' 'rather than equivalent cash payments during the period'；Investing.com：'$72 billion of that total stemmed from non-cash accounting adjustments'。Crypto Briefing、National Herald 只說「主要為」非現金，未給 72。D21／U7：不進現金流。
+- id: SRC_ANT_393
+  key: fin_netloss_2025_h1_s1
+  group: F
+  metric: 2025 上半年淨損（草擬 S-1，WSJ 轉述；對照）
+  value: 13
+  lo: null
+  hi: null
+  unit: $B/半年
+  period: 2025-H1
+  source: TradingKey（Yulia Zeng，2026-10-21；引 WSJ 所見草擬 S-1）
+  url: https://www.tradingkey.com/analysis/stocks/us-stocks/262227958-anthropic-ipo-filing-80-7-billion-h1-loss-tradingkey
+  doc_date: 2026-10-21
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 總額
+  note: v0.1.1 新增（工作單 20261021）。TradingKey：'widened from about $13 billion in the first half of last year'；Implicator：'compared with $13 billion in the same period a year earlier'。報導用「約」。
+- id: SRC_ANT_394
+  key: cmp_s1_spend_2026_h1
+  group: D
+  metric: 2026 上半年算力與基礎設施支出（近 $9B）
+  value: 9
+  lo: null
+  hi: null
+  unit: $B/半年
+  period: 2026-H1
+  source: TradingKey（Yulia Zeng，2026-10-21；引 WSJ 所見草擬 S-1）
+  url: https://www.tradingkey.com/analysis/stocks/us-stocks/262227958-anthropic-ipo-filing-80-7-billion-h1-loss-tradingkey
+  doc_date: 2026-10-21
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 未明
+  note: v0.1.1 新增（工作單 20261021）。TradingKey：'Anthropic spent nearly $9 billion on computing power and infrastructure'；CoinCentral：'nearly $9 billion on computing capacity and infrastructure in the first half'；Implicator：'nearly $9 billion in computing capacity and infrastructure costs in the first half of 2026'；Investing.com：'nearly $9 billion on computing capacity and infrastructure in the first six months of 2026 alone'。值「近 9」以 9 登錄，實際略低；口徑（損益費用或現金、是否含自建資本支出）未明（見報告 U4）。
+- id: SRC_ANT_395
+  key: cmp_s1_spend_2025_h1
+  group: D
+  metric: 2025 上半年算力與基礎設施支出
+  value: 2.3
+  lo: null
+  hi: null
+  unit: $B/半年
+  period: 2025-H1
+  source: CoinCentral（2026-10-21；引 WSJ、Reuters 所見草擬 S-1）
+  url: https://coincentral.com/anthropic-ipo-filing-reveals-80-billion-loss-and-600-billion-in-computing-bills/
+  doc_date: 2026-10-21
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 未明
+  note: v0.1.1 新增（工作單 20261021）。CoinCentral：'That is up from $2.3 billion a year earlier.'；Implicator：'Computing capacity and infrastructure costs rose from $2.3 billion in that same period of 2025.'；TradingKey：'almost four times the $2.3 billion in the same period last year'。2025 全年 7.33 見 SRC_ANT_252。
+- id: SRC_ANT_396
+  key: cmp_s1_cloud_total_450
+  group: D
+  metric: 雲端運算付款義務（未來 7–10 年，多數不可取消）
+  value: 450
+  lo: null
+  hi: null
+  unit: $B
+  period: 未來 7–10 年
+  source: TradingKey（Yulia Zeng，2026-10-21；引 WSJ 所見草擬 S-1）
+  url: https://www.tradingkey.com/analysis/stocks/us-stocks/262227958-anthropic-ipo-filing-80-7-billion-h1-loss-tradingkey
+  doc_date: 2026-10-21
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 總額
+  note: v0.1.1 新增（工作單 20261021）。TradingKey：'the company faces approximately $450 billion in cloud computing payment obligations over the next seven to ten years'；Implicator：'around $450 billion in cloud agreements over the next seven to ten years, with the bulk noncancelable'；Yahoo Finance：'roughly $450 billion in noncancelable cloud agreements spanning the next seven to ten years'；Investing.com 寫 'over the next decade'。KuCoin 彙整稱此數與 $518–600B+ 有爭議（口徑不同：450 為雲端付款義務，不含 Broadcom 租賃）。
+- id: SRC_ANT_397
+  key: cmp_s1_google_111
+  group: D
+  metric: Google 雲端付款義務
+  value: 111
+  lo: null
+  hi: null
+  unit: $B
+  period: 未來 7–10 年
+  source: TradingKey（Yulia Zeng，2026-10-21；引 WSJ 所見草擬 S-1）
+  url: https://www.tradingkey.com/analysis/stocks/us-stocks/262227958-anthropic-ipo-filing-80-7-billion-h1-loss-tradingkey
+  doc_date: 2026-10-21
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 總額
+  note: 'v0.1.1 新增（工作單 20261021）。TradingKey：''totaling approximately $111 billion and $110 billion, respectively''（Google Cloud 與 AWS）；Implicator：''$111 billion to Google, $110 billion to Amazon Web Services and $31 billion to Microsoft''；Dealroom：''noncancelable cloud deals with Google ($111 billion), AWS ($110 billion) and Microsoft ($31 billion)''；Trending Topics：''Google Cloud: $111 billion''。與 SRC_ANT 既有招股書列（Google ≥111.1）一致。'
+- id: SRC_ANT_398
+  key: cmp_s1_aws_110
+  group: D
+  metric: AWS（Amazon）雲端付款義務
+  value: 110
+  lo: null
+  hi: null
+  unit: $B
+  period: 未來 7–10 年
+  source: TradingKey（Yulia Zeng，2026-10-21；引 WSJ 所見草擬 S-1）
+  url: https://www.tradingkey.com/analysis/stocks/us-stocks/262227958-anthropic-ipo-filing-80-7-billion-h1-loss-tradingkey
+  doc_date: 2026-10-21
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 總額
+  note: 'v0.1.1 新增（工作單 20261021）。同 cmp_s1_google_111 的引文（Implicator：''$110 billion to Amazon Web Services''；Dealroom：''AWS ($110 billion)''；Trending Topics：''Amazon Web Services: $110 billion''）。'
+- id: SRC_ANT_399
+  key: cmp_s1_msft_31
+  group: D
+  metric: Microsoft 雲端付款義務
+  value: 31
+  lo: null
+  hi: null
+  unit: $B
+  period: 未來 7–10 年
+  source: TradingKey（Yulia Zeng，2026-10-21；引 WSJ 所見草擬 S-1）
+  url: https://www.tradingkey.com/analysis/stocks/us-stocks/262227958-anthropic-ipo-filing-80-7-billion-h1-loss-tradingkey
+  doc_date: 2026-10-21
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 總額
+  note: v0.1.1 新增（工作單 20261021）。TradingKey：'committing approximately $31 billion to Microsoft's' cloud platform；CoinCentral：'$31 billion with Microsoft'；Implicator：'$31 billion to Microsoft'。既有招股書列為 31.4。
+- id: SRC_ANT_400
+  key: cmp_s1_nscale_lambda_86
+  group: D
+  metric: Nscale＋Lambda 合計付款義務（租用 NVIDIA 晶片；最高 $86B，至 2033–2034）
+  value: 86
+  lo: null
+  hi: 86
+  unit: $B
+  period: 至 2033–2034
+  source: Implicator.ai（Marcus Schuler，2026-10-20；引 WSJ 所見草擬 S-1）
+  url: https://www.implicator.ai/anthropic-first-half-revenue-compute-costs/
+  doc_date: 2026-10-20
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 總額
+  note: v0.1.1 新增（工作單 20261021）。Implicator 原文：'up to $86 billion to rent Nvidia chips from Nscale and Lambda through 2033 and 2034, respectively'（Nscale 至 2033、Lambda 至 2034）；TradingKey：'a combined total of up to $86 billion to Nscale and Lambda by 2033–2034'；CoinCentral：'Anthropic also agreed to spend up to $86 billion renting Nvidia chips from Nscale and Lambda.'。既有公告 Nscale 45（460 MW）＋Lambda 35（350 MW）＝80；「最高 86」為合計上限。U2：以 86 錨定兩約。
+- id: SRC_ANT_401
+  key: cmp_s1_broadcom_160
+  group: D
+  metric: Broadcom（Google 客製晶片設備租賃）付款義務（>$160B）
+  value: 160
+  lo: 160
+  hi: null
+  unit: $B
+  period: 未來多年
+  source: Implicator.ai（Marcus Schuler，2026-10-20；引 WSJ 所見草擬 S-1）
+  url: https://www.implicator.ai/anthropic-first-half-revenue-compute-costs/
+  doc_date: 2026-10-20
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 總額
+  note: v0.1.1 新增（工作單 20261021）。Implicator：'more than $160 billion in equipment lease obligations to obtain Google chips through a deal with Broadcom'；TradingKey：'Factoring in more than $160 billion in obligations arising from arrangements via Broadcom'；CoinCentral：'Adding a lease of Google chips through Broadcom worth more than $160 billion'。既有招股書列為 161.2（SRC_ANT 的 cmp_prospectus_broadcom）。
+- id: SRC_ANT_402
+  key: cmp_s1_locked_600
+  group: D
+  metric: 已鎖定的算力與基礎設施承諾（>$600B；含 Broadcom 租賃）
+  value: 600
+  lo: 600
+  hi: null
+  unit: $B
+  period: 未來多年
+  source: Implicator.ai（Marcus Schuler，2026-10-20；引 WSJ 所見草擬 S-1）
+  url: https://www.implicator.ai/anthropic-first-half-revenue-compute-costs/
+  doc_date: 2026-10-20
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 總額
+  note: v0.1.1 新增（工作單 20261021）。Implicator：'bring future infrastructure commitments above $600 billion'；TradingKey：'locked-in computing power and infrastructure commitments exceed $600 billion'；CoinCentral：'future infrastructure costs top $600 billion'；Yahoo：'faces over $600 billion in future cloud and computing commitments'。Crypto Briefing 引 Reuters：'at least $518 billion over roughly 10 years' 'Recent reports suggest the total could exceed $600 billion'（舊口徑 518 見 SRC_ANT_245）。
+- id: SRC_ANT_403
+  key: cmp_s1_negotiating_150
+  group: D
+  metric: 談判中的新算力協議（最高約 $150B）
+  value: 150
+  lo: null
+  hi: 150
+  unit: $B
+  period: 未定
+  source: Implicator.ai（Marcus Schuler，2026-10-20；引 WSJ 所見草擬 S-1）
+  url: https://www.implicator.ai/anthropic-first-half-revenue-compute-costs/
+  doc_date: 2026-10-20
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 總額
+  note: v0.1.1 新增（工作單 20261021）。Implicator：'Additional computing deals under negotiation could add as much as $150 billion'；TradingKey：'The company is still in talks for up to roughly $150 billion in new agreements'；CoinCentral：'The company is negotiating deals that could add up to $150 billion.'。未簽約；U6 只作情境。
+- id: SRC_ANT_404
+  key: cmp_s1_total_750
+  group: D
+  metric: 全數成交後的潛在承諾總額（約 $750B）
+  value: 750
+  lo: null
+  hi: 750
+  unit: $B
+  period: 未來多年
+  source: Implicator.ai（Marcus Schuler，2026-10-20；引 WSJ 所見草擬 S-1）
+  url: https://www.implicator.ai/anthropic-first-half-revenue-compute-costs/
+  doc_date: 2026-10-20
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 總額
+  note: v0.1.1 新增（工作單 20261021）。Implicator：'taking the potential total toward $750 billion.'；TradingKey：'the total scale could further rise to $750 billion'；RuntimeWire：'up to $750B in potential future compute spending'；Dealroom：'Anthropic could commit up to $750 billion to compute capacity in the coming years'。＝已鎖定 >600 ＋ 談判中最高 150。
+- id: SRC_ANT_405
+  key: cmp_s1_customer_conc
+  group: A
+  metric: 2026 上半年兩家客戶占營收比例（約 20%）
+  value: 0.2
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2026-H1
+  source: TradingKey（Yulia Zeng，2026-10-21；引 WSJ 所見草擬 S-1）
+  url: https://www.tradingkey.com/analysis/stocks/us-stocks/262227958-anthropic-ipo-filing-80-7-billion-h1-loss-tradingkey
+  doc_date: 2026-10-21
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 總額
+  note: v0.1.1 新增（工作單 20261021）。TradingKey：'about 20% came from two unnamed customers, representing a combined contribution of approximately $3.26 billion'；Implicator：'Around one-fifth of first-half revenue came from two unnamed customers.'；Investing.com：'approximately 20% of Anthropic's $16.3 billion first-half revenue was derived from just two customers'；Dealroom：'about 20% of revenue came from just two customers.'；National Herald：'Two customers accounted for approximately a fifth of sales'。客戶未具名。
+- id: SRC_ANT_406
+  key: cmp_s1_customer_conc_usd
+  group: A
+  metric: 2026 上半年兩家客戶合計營收（約 $3.26B）
+  value: 3.26
+  lo: null
+  hi: null
+  unit: $B/半年
+  period: 2026-H1
+  source: TradingKey（Yulia Zeng，2026-10-21；引 WSJ 所見草擬 S-1）
+  url: https://www.tradingkey.com/analysis/stocks/us-stocks/262227958-anthropic-ipo-filing-80-7-billion-h1-loss-tradingkey
+  doc_date: 2026-10-21
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 總額
+  note: v0.1.1 新增（工作單 20261021）。TradingKey 原文：'representing a combined contribution of approximately $3.26 billion'（＝16.3 × 20%）。僅 TradingKey 給出金額，其他轉載只給比例。
+- id: SRC_ANT_407
+  key: cmp_s1_supply_constraint
+  group: D
+  metric: 算力供給是擴張最主要的限制；雲端夥伴不願提供所需的全部算力（定性）
+  value: null
+  lo: null
+  hi: null
+  unit: 文字
+  period: 2026-H1
+  source: TradingKey（Yulia Zeng，2026-10-21；引 WSJ 所見草擬 S-1）
+  url: https://www.tradingkey.com/analysis/stocks/us-stocks/262227958-anthropic-ipo-filing-80-7-billion-h1-loss-tradingkey
+  doc_date: 2026-10-21
+  retrieved: 2026-10-21
+  tag: Interested-party
+  party: Anthropic（草擬 S-1；IPO 募資誘因）；WSJ 為轉述者，非獨立查證
+  basis: 定性
+  note: v0.1.1 新增（工作單 20261021）。WSJ 原文措辭未能開啟（wsj.com 被擋）；以下為各轉載對同一句的轉述。TradingKey：'Computing power supply is the most prominent constraint in Anthropic's expansion.'；Implicator：'Anthropic has sought more computing capacity than its cloud partners were willing to provide' ，且夥伴 'increasingly viewing it as a competitor'；Yahoo Finance：'have been unwilling to provide the totality of the capacity it requires'；Investing.com：'sought more capacity than hyperscalers were willing to supply'；CoinCentral：'The filing says Anthropic asked for more capacity than its cloud partners were willing to provide.'。「不願出售其所需的全部」一語為轉載者措辭，WSJ 逐字未取得。與本模型『只計已簽合約、容量上限 2026 起不截頂』的關係見報告。
+- id: SRC_ANT_408
+  key: cmp_s1_spend_2026_q3_derived
+  group: D
+  metric: 2026 Q3 隱含算力支出＝Q3 營收 ÷ 每 $1 算力支出的營收
+  value: null
+  lo: null
+  hi: null
+  unit: $B/季
+  period: 2026-Q3
+  source: 由 rev_2026_q3 ÷ rev_per_compute_2026_q3 推算（Implicator／Euronews）
+  url: https://www.implicator.ai/anthropic-tells-investors-q3-revenue-hit-16-8-billion-as-growth-slowed-to-45/
+  doc_date: 2026-10-15
+  retrieved: 2026-10-21
+  tag: Derived
+  party: null
+  basis: 未明
+  note: v0.1.1 新增（工作單 20261021）。Derived：16.8 ÷ 1.70 ≈ 9.88。口徑隨 1.70 的分母（未明）。
+- id: SRC_ANT_409
+  key: cmp_s1_spend_2026_9m_derived
+  group: D
+  metric: 2026 前三季算力與基礎設施支出（上半年近 9 ＋ Q3 隱含）
+  value: null
+  lo: null
+  hi: null
+  unit: $B/9個月
+  period: 2026-Q1–Q3
+  source: Implicator.ai（Marcus Schuler，2026-10-20；引 WSJ 所見草擬 S-1）
+  url: https://www.implicator.ai/anthropic-first-half-revenue-compute-costs/
+  doc_date: 2026-10-20
+  retrieved: 2026-10-21
+  tag: Derived
+  party: null
+  basis: 未明
+  note: v0.1.1 新增（工作單 20261021）。由 cmp_s1_spend_2026_h1 ＋ cmp_s1_spend_2026_q3_derived 推算。
 not_found:
 - item: 2024 年認列營收（直接揭露值）
   tried: Reuters／Fortune／PYMNTS／Khaleej Times 招股書報導；查詢 "Anthropic 2024 revenue prospectus"
@@ -6609,3 +7119,23 @@ not_found:
   tried: Anthropic 新聞稿（僅 2026-06-01 秘密遞交）、Empower 2026-09-22（public filing pending）、Barchart 2026-10-02
   verdict: 找不到
   _file: finance
+- item: 2026-06-30 現金與短期投資（草擬 S-1 資產負債表）
+  tried: TradingKey、CoinCentral、RuntimeWire、Crypto Briefing、National Herald、Implicator（H1 與 Q3 兩篇）、Yahoo Finance、Dealroom、Investing.com、Trending Topics（皆為 WSJ 所見草擬 S-1 的轉載，均未提現金餘額）；wsj.com 原文被擋無法開啟
+  verdict: 找不到
+  note: 不是「不存在」：草擬 S-1 應有 2026-06-30 資產負債表；待公開版 S-1（EDGAR）。U8：Funding 不加對照列
+  _file: v0.1.1
+- item: WSJ 原文中「雲端夥伴不願出售其所需全部算力」的逐字措辭
+  tried: wsj.com 直連（被擋）；各轉載（TradingKey、CoinCentral、Implicator、Yahoo Finance、Investing.com、Dealroom、Trending Topics、National Herald）皆為二手轉述，措辭各異
+  verdict: 找不到
+  note: 最接近：Yahoo Finance 'have been unwilling to provide the totality of the capacity it requires'；Implicator 'sought more computing capacity than its cloud partners were willing to provide'。已登 SRC_ANT 為二手轉述
+  _file: v0.1.1
+- item: SemiAnalysis 約 74 的第二獨立來源（2026-10 年化營收）
+  tried: Euronews、Implicator（轉引 Euronews）、Axios、Fortune；搜尋 'Anthropic annualized revenue run rate October 2026 $74 billion'（只得 YipitData 2026-07 的 79.5，時點不同）
+  verdict: 找不到
+  note: 依共同規則第 4 節僅登為「單一來源，未採用」
+  _file: v0.1.1
+- item: 草擬 S-1 的逐年付款排程、股權報酬金額、2026 上半年營業費用明細
+  tried: 全部上列轉載；僅有加總（上半年算力近 9、承諾加總、逐家總額）
+  verdict: 找不到
+  note: 待公開版 S-1；影響 D13、D22 的校準
+  _file: v0.1.1

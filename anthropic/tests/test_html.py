@@ -22,7 +22,7 @@ REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 sys.path.insert(0, str(REPO / "tools"))
 from build_html import YEARS, Locator, fmt, load_scenarios, resolve_overrides  # noqa: E402
-from engine import Engine, current_model_path  # noqa: E402
+from engine import Engine, current_model_path, resolve_key  # noqa: E402
 
 MODEL = current_model_path()
 STAMP = MODEL.name.split("_")[0]
@@ -91,7 +91,7 @@ def loc():
 def _scenario_values(engine, loc, sc, keys):
     """在情境 sc 下讀 keys（(ref, year)）的 engine 值；結束後還原輸入。"""
     ov = resolve_overrides(sc, loc)
-    orig = {k: engine.get(*loc.locate(k)[:2]) for k in ov}
+    orig = {k: engine.get(*resolve_key(loc.names, k)) for k in ov}   # v0.1.2：覆寫鍵可含 NAME[k]（TK 快照多格名稱）
     try:
         for k, v in ov.items():
             engine.set_key(k, v)

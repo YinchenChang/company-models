@@ -73,6 +73,10 @@ CONTRACTS = [
      "金額型：容量未揭露；Blackwell 推論卡以 GB200 代理（Decision）"),
 ]
 CT = {c[0]: c for c in CONTRACTS}
+# v0.1.1 U2：Nscale＋Lambda 兩約合計錨定草擬 S-1『最高 $86B』（依既有揭露 MW 比例分攤；皆為金額型，GW 由金額回推）。Inputs u2_switch＝0 時還原 v0.1（Nscale 雙揭露 45、Lambda GW 型 35）。
+U2 = {"nscale": dict(mw="{SRC:cmp_nscale_mw}", s="{INP:nscale_start}", e="{INP:nscale_end}", fam="vr200"),
+      "lambda": dict(mw="{SRC:cmp_lambda_mw}", s="{INP:lambda_start}", e="{INP:lambda_end}", fam="gb300")}
+U2_TOTAL = "{SRC:cmp_s1_nscale_lambda_86}"
 LEASES = [  # 機房租約（只含建物與電力；D10 r1：不另計 GW）：key、名稱、MW 公式、說明
     ("terawulf", "TeraWulf Hawesville（KY；IT 401 MW；20 年約 $19B；直接承租）", "{SRC:cmp_terawulf_ky_mw}", "硬體為 Google TPU（第三方）→ 容量已含於 TPU 合約"),
     ("riot", "Riot Rockdale（TX；191 MW；20 年 $9.1B）", "{SRC:cmp_riot_rockdale_mw}", "硬體為 AMD MI450（第三方）→ 容量已含於 AMD 合約"),
@@ -110,7 +114,8 @@ def build(ctx):
     for g in GENS:
         for t, tz, _T in TIERS:
             C.add(f"tok_{g}_{t}", f"參數：每 GW 總產出 {GEN_ZH[g]}：{tz}（100% 利用率）", "M tok/GW/年",
-                  only25(f"=SUMIFS(TK_IF_TokGW_{TK_TIER[t]},TK_HdrGen,«lab_{g}@$»,TK_HdrCost,«lab_cost@$»)"), f"TK IF_TokGW_{TK_TIER[t]}")
+                  only25(f"=SUMIFS(TK_IF_TokGW_{TK_TIER[t]},TK_HdrGen,«lab_{g}@$»,TK_HdrCost,«lab_cost@$»)"),
+                  f"TK IF_TokGW_{TK_TIER[t]}（100% 層；v9.0 起 prefill 只計新鮮輸入、快取輸入仍算已服務 token，與 Demand 的『新鮮＋快取＋decode』同口徑；TK 契約 §2：不得直接當生產環境產能，本模型以 η 在 2025 校準吸收）")
 
     C.section("二、加速器族參數（各年同值；NonNV 比例相對 VR200，D6；持有比 D9）")
     for f, fz, base, nnv, _N in FAMS:
@@ -142,6 +147,8 @@ def build(ctx):
     def ramp(c, s):
         return f"MIN({r_},{c}$6-{s}+1)/{r_}"
 
+    u2 = I("u2_switch")
+    U2_OLD = {}
     for key, zh, fam, kind, p, _par, note in CONTRACTS:
         P = {k: fill(v) for k, v in p.items()}
         if kind in ("amt", "monthly"):
@@ -150,6 +157,10 @@ def build(ctx):
             fs = lambda i, c, P=P: f"={P['G']}*«itconv»*{ramp(c, P['s'])}*{act(c, P['s'], P['e'])}"  # noqa: E731
         else:   # gw
             fs = lambda i, c, P=P: f"={P['G']}*«itconv»*{ramp(c, P['s'])}*({c}$6>={P['s']})*({c}$6<{P['s']}+{P['term']})"  # noqa: E731
+        if key in U2:       # v0.1.1 U2：開關 1＝金額型（GW＝付款 ÷ 合約價）；0＝v0.1 口徑（揭露 GW 型）
+            U2_OLD[key] = (zh, fs, note)          # _old 列延到 Compute 最末節新增（保持既有列編號不變）
+            fs = lambda i, c, key=key, fam=fam: f"={u2}*«K:pay_{key}»/«price_{fam}»+(1-{u2})*«sup_{key}_old»"  # noqa: E731
+            note = "U2（v0.1.1）：開關 1＝金額型，GW＝付款 ÷ 合約價（D10），付款＝兩約合計『最高 86』按揭露 MW 比例分攤；開關 0＝v0.1 口徑。原註：" + note
         C.add(f"sup_{key}", f"供給 GW：{zh}", "GW", fs, note + f"；族＝{FAM[fam][1].split('（')[0]}", name=f"CMP_Supply_{key.capitalize()}")
     C.add("note_coreweave", "（未計入）CoreWeave（2026-04 多年合約；金額、容量皆未揭露）", "GW", [None] * 6,
           "找不到金額與容量（A1 not_found）→ 不計入（不杜撰）；列入資料缺口")
@@ -234,7 +245,7 @@ def build(ctx):
     C.add("flag", "缺口旗標（1＝有效推論超過可用 GW；固定年後）", "旗標", lambda i, c: f"=(«eff»>«avail»)*({c}$6>{capfix})", "不自動假設新增合約", name="CMP_CapFlag")
     C.add("ident", "檢查：推論（截頂後）＋研發＋閒置 − 供給", "GW", lambda i, c: "=«infcap»+«rd»+«idle»-«sup»", "各年應為 0（2025：說明書算力＝推論＋訓練）")
     C.add("rd_share", "研發占供給", "比例", lambda i, c: "=«rd»/«sup»", "")
-    C.add("tk_rd", "對照：TK IF_AllocRDGW（研發 GW·年；Tokenomics 計畫當量，訓練世代 VR200）", "GW", lambda i, c: "=TK_IF_AllocRDGW", "D12 並列；口徑為單一前沿實驗室的物理下限")
+    C.add("tk_rd", "對照：TK IF_AllocRDGW（研發 GW·年；Tokenomics 計畫當量；v8.0 起按 2025 研發世代組合加權，非單一 VR200）", "GW", lambda i, c: "=TK_IF_AllocRDGW", "D12 並列；口徑為單一前沿實驗室的物理下限；TK 契約 v12–v13：此值是區間（批次口徑倍數 RNG_*），非點值；只對照，不回饋")
 
     C.section("十二、VR 等值換算（命題分母；各族 Sol 產能比）")
     C.add("vrf", "機隊 VR 等值係數＝Σ 組合占比 × 各族 VR 等值係數", "倍", lambda i, c: "=" + "+".join(f"«s_{f}»*«vrf_{f}»" for f, *_ in FAMS), "", name="CMP_VReqFactor")
@@ -272,11 +283,12 @@ def build(ctx):
 
     C.section("十四、敏感度（Excel 公式；引用 Inputs／TK 的值、低、高欄）：A 合約價、B η 路徑、C TPU／Trainium／AMD 產出比")
     rp = D.inp_row("contract_price")
-    var = [k for k in ckeys if CT[k][3] in ("amt", "monthly")]
-    fix = [k for k in ckeys if CT[k][3] in ("both", "gw")]
-    C.add("sup_var", "供給 GW 中隨合約價反比者（金額型＋既有雲端）", "GW", lambda i, c: "=«sup_legacy»+" + "+".join(f"«sup_{k}»" for k in var), "")
+    var = [k for k in ckeys if CT[k][3] in ("amt", "monthly") and k not in U2]
+    fix = [k for k in ckeys if CT[k][3] in ("both", "gw") and k not in U2]
+    C.add("sup_var", "供給 GW 中隨合約價反比者（金額型＋既有雲端；Nscale、Lambda 在 U2 開關 1 時為金額型）", "GW",
+          lambda i, c: "=«sup_legacy»+" + "+".join(f"«sup_{k}»" for k in var) + f"+{u2}*(" + "+".join(f"«sup_{k}»" for k in U2) + ")", "")
     C.add("vr_var", "同上 VR 等值", "GW", lambda i, c: "=«sup_legacy»*(" + "+".join(f"«lsh_{f}»*«vrf_{f}»" for f, _ in LEGACY) + ")+"
-          + "+".join(f"«sup_{k}»*«vrf_{CT[k][2]}»" for k in var), "")
+          + "+".join(f"«sup_{k}»*«vrf_{CT[k][2]}»" for k in var) + f"+{u2}*(" + "+".join(f"«sup_{k}»*«vrf_{CT[k][2]}»" for k in U2) + ")", "")
     for tag, col, zh in (("lo", "F", "低端"), ("base", "E", "基準"), ("hi", "G", "高端")):
         P = f"Inputs!${col}${rp}"
         k = f"A_{tag}"
@@ -323,7 +335,7 @@ def build(ctx):
     for f, fz, base, _n, _N in FAMS:
         for tag, lab in (("base", "«C:lab_cost@$»"), ("lo", "«lab_lo@$»"), ("hi", "«lab_hi@$»")):
             K.add(f"hold_{f}_{tag}", f"參數：每 GW 年持有成本（{ {'base': '基準', 'lo': '低成本', 'hi': '高成本'}[tag] }）：{fz.split('（')[0]}", "$B/GW/年",
-                  only25(f"=SUMIFS(TK_IF_HoldEcon,TK_HdrGen,«C:lab_{base}@$»,TK_HdrCost,{lab})*«C:hold_{f}@D»"), "TK IF_HoldEcon（基準世代）× 持有比")
+                  only25(f"=SUMIFS(TK_IF_HoldEcon,TK_HdrGen,«C:lab_{base}@$»,TK_HdrCost,{lab})*«C:hold_{f}@D»"), "TK IF_HoldEcon（基準世代；壽命期等值，已含 IT 維護 IF_MaintIT，v5.31 起；本模型不另加維護）× 持有比")
 
     K.section("二、算力成本（現金口徑）＝逐合約實付＋自建資本支出（D10、D11）")
     ramp_s = lambda s, e: f"((({e}-{s}+1)+({e}-{s}+1)-{r_}+1)/{k2})"  # noqa: E731  Σ 權重＝（2n − r ＋ 1）÷ 2
@@ -333,10 +345,12 @@ def build(ctx):
           lambda i, c: ("=«act25»-(" + "+".join(f"«pay_{k}»" for k in others) + "+«C:own_capex»)") if i == 0
           else f"=«pay_legacy@D»*{I('legacy_carry_2026')}*({c}$6={I('year_2026')})",
           "2025＝實際算力支出 − 其他合約與自建（皆 0：新合約 2026 起）＝校準；2026＝2025 × 延續比例（Inputs 0.33）；2027 起 0（併入招股書新承諾）", name="COST_Pay_Legacy")
+    u2 = I("u2_switch")
+    amt_pay = lambda T, s_, e_, c: f"{T}/{ramp_s(s_, e_)}*MIN({r_},{c}$6-{s_}+1)/{r_}*({c}$6>={s_})*({c}$6<={e_})"  # noqa: E731
     for key, zh, fam, kind, p, _par, note in CONTRACTS:
         P = {k: fill(v) for k, v in p.items()}
         if kind in ("amt", "both"):
-            fs = lambda i, c, P=P: f"={P['T']}/{ramp_s(P['s'], P['e'])}*MIN({r_},{c}$6-{P['s']}+1)/{r_}*({c}$6>={P['s']})*({c}$6<={P['e']})"  # noqa: E731
+            fs = lambda i, c, P=P: "=" + amt_pay(P["T"], P["s"], P["e"], c)  # noqa: E731
             nt = "總額 ÷ Σ 爬坡權重 × 當年權重（期間內；權重＝MIN(r, k)÷r）"
         elif kind == "monthly":
             fs = lambda i, c, P=P: (f"={P['F']}*(({c}$6={P['s']})*{P['m1']}+({c}$6={P['e']})*{P['m2']}"  # noqa: E731
@@ -345,9 +359,21 @@ def build(ctx):
         else:
             fs = lambda i, c, key=key, fam=fam: f"=«C:sup_{key}»*«C:price_{fam}»"  # noqa: E731
             nt = "GW × 合約價 × 持有比"
+        if key in U2:       # v0.1.1 U2：開關 1＝錨定 86 的金額型付款；0＝v0.1
+            q = U2[key]
+            tk_ = "u2_T_n" if key == "nscale" else "u2_T_l"
+            old_fs = fs
+            if key == "nscale":
+                fs = lambda i, c, old_fs=old_fs, q=q, tk_=tk_: (f"={u2}*(" + amt_pay(f"«{tk_}@$»", fill(q["s"]), fill(q["e"]), c) + f")+(1-{u2})*(" + old_fs(i, c)[1:] + ")")  # noqa: E731
+            else:
+                fs = lambda i, c, old_fs=old_fs, q=q, tk_=tk_, key=key, fam=fam: (f"={u2}*(" + amt_pay(f"«{tk_}@$»", fill(q["s"]), fill(q["e"]), c)  # noqa: E731
+                                                                            + f")+(1-{u2})*«C:sup_{key}_old»*«C:price_{fam}»")
+            nt = f"U2：開關 1＝錨定總額（兩約合計 86 按 MW 比例）÷ Σ 爬坡權重 × 當年權重，期間＝起始年至結束年（Inputs）；開關 0＝v0.1：{nt}"
         K.add(f"pay_{key}", f"合約實付：{zh.split('（')[0]}", "$B", fs, nt, name=f"COST_Pay_{key.capitalize()}")
     K.add("pay", "合約實付合計", "$B", lambda i, c: "=«pay_legacy»+" + "+".join(f"«pay_{k}»" for k in ckeys), "", name="COST_ContractPay")
-    K.add("pay_gwtype", "其中：GW 型合約付款（與合約價成正比；敏感度 A）", "$B", lambda i, c: "=" + "+".join(f"«pay_{k}»" for k in ckeys if CT[k][3] == "gw"), "AMD、Lambda")
+    K.add("pay_gwtype", "其中：GW 型合約付款（與合約價成正比；敏感度 A）", "$B",
+          lambda i, c: "=" + "+".join((f"(1-{u2})*«pay_{k}»" if k in U2 else f"«pay_{k}»") for k in ckeys if CT[k][3] == "gw"),
+          "AMD；Lambda 僅在 U2 開關 0（v0.1 口徑，GW 型）時計入")
     K.add("own", "自建資本支出（Fluidstack）", "$B", lambda i, c: "=«C:own_capex»", "Compute 第五節", name="COST_OwnedCapex")
     K.add("cc", "算力成本（現金口徑）＝合約實付＋自建資本支出", "$B", lambda i, c: "=«pay»+«own»", "命題輸出基準（D10）", name="COST_Compute")
     K.add("gap25", "差距：2025 算力成本 − 說明書實際（應為 0）", "$B", only25("=«cc»-«act25»"), "2025 校準（既有雲端列為餘額）", name="COST_Gap2025", name_cols="D")
@@ -435,7 +461,7 @@ def build(ctx):
     for nm_, zh, key in (("IF_FullCostDefault_Sol", "下游預設 IF_FullCostDefault_Sol；基準", "tk_def"), ("IF_FullCost_Sol", "IF_FullCost_Sol；並列", "tk_full")):
         K.add(key, f"TK 參考：每 VR200 GW 年全成本（{zh}）", "$B/GW/年",
               lambda i, c, nm_=nm_: f"=SUMIFS(TK_{nm_},TK_HdrGen,«C:lab_vr200@$»,TK_HdrCost,«C:lab_cost@$»)*«C:tok_vr200_mid@$»*TK_IF_Util/{d2b}",
-              "TK $/M（VR200 Sol 基準欄）× 每 GW 年產出（Sol）× 基準利用率 ÷ 10⁹")
+              "TK $/M（VR200 Sol 基準欄）× 每 GW 年產出（Sol）× 基準利用率 ÷ 10⁹；只作參考。v6.0 起 TK 攤提溢價（IF_AmortBU）的分母為付費 token，本列以全部 token 產能乘，屬上緣")
     K.add("tk_gap", "差距：每 VR 等值 GW 算力成本（現金）− TK 參考（下游預設）", "$B/GW/年", lambda i, c: "=«p_cc_vr»-«tk_def»", "")
 
     K.section("九、D22 對照：2026 Q2 首次調整後營業利益（說明書／報導；不校準）")
@@ -448,7 +474,8 @@ def build(ctx):
     K.section("十、檢查列（各年應為 0；Checks 取最大絕對值）")
     K.add("ck_pay", "逐合約實付加總 − 合約實付合計", "$B", lambda i, c: "=«pay_legacy»+" + "+".join(f"«pay_{k}»" for k in ckeys) + "-«pay»", "")
     K.add("ck_amt", "金額型合約：|GW × 合約價 − 實付| 合計", "$B",
-          lambda i, c: "=" + "+".join(f"ABS(«C:sup_{k}»*«C:price_{CT[k][2]}»-«pay_{k}»)" for k in var) + "+ABS(«C:sup_legacy»*«C:lprice»-«pay_legacy»)", "D10：GW＝金額 ÷ 合約價")
+          lambda i, c: "=" + "+".join(f"ABS(«C:sup_{k}»*«C:price_{CT[k][2]}»-«pay_{k}»)" for k in var) + "+ABS(«C:sup_legacy»*«C:lprice»-«pay_legacy»)"
+          + f"+{u2}*(" + "+".join(f"ABS(«C:sup_{k}»*«C:price_{CT[k][2]}»-«pay_{k}»)" for k in U2) + ")", "D10：GW＝金額 ÷ 合約價（Nscale、Lambda 在 U2 開關 1 時計入）")
     K.add("ck_cc", "算力成本（現金）−（合約實付＋自建資本支出）", "$B", lambda i, c: "=«cc»-«pay»-«own»", "")
     K.add("ck_nc", "全成本 −（算力＋非算力（不含股權報酬）＋股權報酬）", "$B", lambda i, c: "=«full»-«cc»-«ncx»-«sbc»", "")
 
@@ -464,6 +491,10 @@ def build(ctx):
         else:
             f = f"=«C:gw_unit_{key}@$»*«C:price_{fam}@D»*(({P['term']})+({P['term']})-{r_}+1)/{k2}"
             nt = "滿載年付款 × Σ 爬坡權重（期間 Inputs）"
+        if key in U2:
+            tk_ = "u2_T_n" if key == "nscale" else "u2_T_l"
+            f = f"={u2}*«{tk_}@$»+(1-{u2})*(" + f[1:] + ")"
+            nt = "U2：開關 1＝錨定總額（兩約合計 86 按 MW 比例）；0＝v0.1：" + nt
         K.add(f"tot_{key}", f"合約總額（模型）：{zh.split('（')[0]}" + (f"［招股書：{par}］" if par else ""), "$B", only25(f), nt)
     K.add("tot6", "模型：招股書六家合作方對應合約加總", "$B", only25("=" + "+".join(f"«tot_{k}»" for k, *_r, par, _n in CONTRACTS if par)), "", name="COST_Commit6", name_cols="D")
     K.add("tot_all", "模型：全部新合約加總（含 Nscale、Lambda、Volta、Akamai）", "$B", only25("=" + "+".join(f"«tot_{k}»" for k in ckeys)), "", name="COST_CommitAll",
@@ -481,9 +512,20 @@ def build(ctx):
         if kind == "gw":
             C.add(f"gw_unit_{key}", f"參數：GW 型合約滿載 GW（{zh.split('（')[0]}）", "GW", only25(f"={fill(p['G'])}*«itconv@D»"), "揭露 GW ×（計入比例）× IT 換算")
 
-    # ── 解析與 Revenue 容量上限列
+    # ── v0.1.1 U2（放在 Compute 最末，使既有列編號不變）
+    C.section("十五、v0.1.1 U2：Nscale＋Lambda 兩約錨定『最高 86』（金額型）與 v0.1 口徑（開關 0）")
+    for key, (zh, fs0, note0) in U2_OLD.items():
+        C.add(f"sup_{key}_old", f"（U2 開關 0 的 v0.1 口徑）供給 GW：{zh.split('（')[0]}＝揭露 GW × IT 換算 × 爬坡", "GW", fs0,
+              "v0.1 口徑：" + note0 + "；只在 Inputs u2_switch＝0 時進入供給")
+    for key, zh in (("nscale", "Nscale"), ("lambda", "Lambda")):
+        C.add(f"ref_u2_{key}", f"對照（U2）：{zh} 揭露 MW ÷ 1000 vs 模型 {zh} 供給 GW（金額回推；D 欄＝揭露，E–I＝模型）", "GW",
+              [f"={fill(U2[key]['mw'])}/{mw}", "=«sup_%s@E»" % key, "=«sup_%s@F»" % key, "=«sup_%s@G»" % key, "=«sup_%s@H»" % key, "=«sup_%s@I»" % key],
+              "D10：GW 由金額回推並與既有揭露 GW 對照（不校準）")
+        C.add(f"ref_u2_{key}_x", f"對照（U2）：{zh} 模型峰值 GW ÷ 揭露 GW", "倍", only25(f"=MAX(«ref_u2_{key}@E»:«ref_u2_{key}@I»)/«ref_u2_{key}@D»"),
+              "> 1＝金額回推的 GW 大於揭露（合約價 12 偏低或『最高 86』含未計容量）", name=f"CMP_U2GWRatio_{zh}", name_cols="D")
+
+    # ── 解析與 Revenue 容量上限列（Cost 的解析延到 a4 末，因 a4 新增列被 a3 公式引用）
     C.resolve()
-    K.resolve()
     rcap = R.rows["cap"]
     for i, c in enumerate(YC):
         put(R.ws, f"{c}{rcap}", f"=Compute!{c}{C.rows['cap']}", fmt="0.000")

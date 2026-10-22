@@ -3,13 +3,13 @@
 # expect_err：該情境必須讓這些檢查轉 ERR（保證檢查有牙齒）；expect_warn：CHK_Warnings ≥ 1。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
   sheets: [README, SRC_ANT, TK_Link, OAI_Link, Inputs, Demand, Revenue, Compute, Cost, Funding, Reverse, Checks, _Defaults]
-  formula_cells: 5491             # v0.1（A4）：A3 的 4,720 ＋ Inputs 新增 15 列 ×2 ＋ Cost 第十二–十五節 ＋ Funding、Reverse ＋ Checks C83–C105
-  defined_names: 1068              # v0.1（A4）：＋Inputs 15、FND_* 26、RVS_* 11、COST_*（A4）8、COST_PropGap_GW
-  src_rows: 379                   # A1 376＋A2 新增 3（SRC_ANT_377–379）
-  src_named: 330                  # 有值欄的列才有 SRC_ANT_nnn 名稱（另有 _Lo／_Hi／_Date）
-  inp_rows: 175                   # INP_001–179；INP_016（A2 容量上限佔位）、INP_067–069 退役
-  base_warnings: 1                # v0.1（A4）：C89 逐家合約總額對招股書（AMD ×3.9）基準即 WARN（chat 端 A3 審查要求）
-  tk_values: 68                   # OpenAI v0.6 同一組 63 名＋A2 新增 5 名（IF_HdrTask、IF_TaskLen、IF_TaskTokFresh／Cached／Dec）
+  formula_cells: 5878             # v0.1.2：v0.1.1 的 5,834 ＋ Cost 第二十一節 16 列（TK L1_RevGW_PQ_VR200 對照）＋ Checks 3 列＋Cost／Checks 欄位格；v0.1.1：v0.1 的 5,491 ＋ 回歸開關與 U3–U7 新列（Revenue h1act、Compute U2 對照與 _old 列、Cost 第十六–十九節、Funding U7 與 S8）＋ Checks C106–C123
+  defined_names: 1146              # v0.1.2：＋TK_ 對照名稱 14（L1_RevGW_PQ_VR200 系列、L1_TokGW_PaidPQ_VR200 系列、L1_TokLedger_2026Q2、L1_M）＋COST_TKPQ、COST_TKPQRatio、COST_TKTokLedger；v0.1.1：＋SRC_ANT 30 列的名稱（值／下限／上限）、Inputs 7、COST_* 與 CMP_* 與 FND_* 新名
+  src_rows: 409                   # A1 376＋A2 新增 3（SRC_ANT_377–379）＋v0.1.1 新增 30（SRC_ANT_380–409）
+  src_named: 358                  # 有值欄的列才有 SRC_ANT_nnn 名稱（另有 _Lo／_Hi／_Date）；v0.1.1 新增 28 列有值（2 列定性）
+  inp_rows: 182                   # INP_001–186；INP_016（A2 容量上限佔位）、INP_067–069 退役；v0.1.1 新增 INP_180–186
+  base_warnings: 2                # v0.1.1：C89 逐家合約總額對招股書（AMD ×3.9）＋C116 U4 模型算力成本（含自建資本支出）對報導外推全年 +47%（U4 口徑未明）
+  tk_values: 82                   # OpenAI v0.6 同一組 63 名＋A2 新增 5 名（IF_HdrTask、IF_TaskLen、IF_TaskTokFresh／Cached／Dec）＋v0.1.2 新增 14 名（Tokenomics v18.0 對照名稱，只對照）
   tk_nonnv: 18                    # TK_NNV_*（TPU v7、Trainium3、MI455X × 6；讀表，非具名）
   oai_names: 21                   # OAI_ 17 個逐年名稱＋4 個中繼資料
   tk_pending: 0
@@ -62,8 +62,8 @@ scenarios:
     description: 2025 認列營收 4.6 → 4.59（另一來源）：其他營收殘差與 2025 總額改變，校準差仍為 0
     inputs: {"SRC_ANT_001": 4.59}
   - id: p_runrate_warn
-    description: 2026-07 年化營收 65 → 30：半校準總額遠低於里程碑推估（> 25% → WARN，不 ERR）
-    inputs: {"SRC_ANT_023": 30}
+    description: 2026-07 年化營收 65 → 150：v0.1.1 起 2026 模型營收改用 H1 與 Q3 實際（不再依 2026-07 年化），故改成里程碑推估遠高於模型（> 25% → WARN，不 ERR）
+    inputs: {"SRC_ANT_023": 150}
     expect_warn: true
   - id: q_code_tokens
     description: 程式代理每任務 token 倍數（相對 Tokenomics 長程任務）0.15 → 0.4（區間上緣；只改 token，不改營收）
@@ -128,3 +128,31 @@ scenarios:
     description: 最低現金月數 → −1（最低現金 ≤ 0 應 ERR；Inputs 區間 ERR）
     inputs: {"INP_165": -1}
     expect_err: [a4_mincash, inp_order]
+  # ── v0.1.1（工作單 20261021）：U1、U2、U6 各一，另加回歸開關與檢查有牙齒
+  - id: ga_u1_q4_growth
+    description: U1 Q4 營收相對 Q3 成長 0 → 0.4483（＝Q3／Q2 − 1，區間上緣）：2026 營收基準 49.9 → 56.6，API 倒推、2027 起任務成長基數與 Funding 隨之改變
+    inputs: {"INP_181": 0.4483}
+  - id: gb_u2_switch_off
+    description: U2 開關 1 → 0（Nscale＋Lambda 回到 v0.1 的各自公告值：Nscale 雙揭露 45、Lambda GW 型 35）：2027 起供給 GW、合約實付、Cost 對帳與敏感度 A 改變
+    inputs: {"INP_182": 0}
+  - id: gc_u6_neg_early_short
+    description: U6 談判中 $150B 起始年 2028 → 2027、付款期間 7 → 5 年：情境付款、新增 GW、含新協議的差額與 Funding S8 改變（基準不變）
+    inputs: {"INP_185": 2027, "INP_186": 5}
+  - id: gd_u1_switch_off
+    description: U1 開關 1 → 0（回到 v0.1 的 D15 r1：Q1＋Q2＋2026-07 年化 × 6／12 ＝ 48.7）：2026 基準、API 倒推與其後各年改變
+    inputs: {"INP_180": 0}
+  - id: ge_u6_term_short
+    description: U6 付款期間 7 → 1 年（短於爬坡年數 2；Σ 權重公式不成立 → b1_u6_term 與 Inputs 區間應 ERR）
+    inputs: {"INP_186": 1}
+    expect_err: [b1_u6_term, inp_order]
+  - id: gf_spend_report_low
+    description: U4 每 $1 算力支出的營收 1.70 → 3.0（Q3 隱含算力支出降到約 5.6）：報導外推全年約 20.2，模型合約實付高出 > 25%（WARN 增加；不 ERR）
+    inputs: {"SRC_ANT_387": 3.0}
+    expect_warn: true
+  # ── v0.1.2（工作單 20261021 TK18）：Tokenomics v18.0 快照
+  - id: ha_tk_tokgw_hopper_old
+    description: TK IF_TokGW_Sol 的 Hopper 基準格回到 v5.26 值（2.149e10；v10.2 的 SLO 改動使它升到 3.363e10）：η（2025 校準）、各族 VR 等值係數與 2026 起供給／差額隨之改變（相對世代產能比的敏感度）
+    inputs: {"TK_IF_TokGW_Sol[2]": 21490429685.4234}
+  - id: hb_tk_pq_override
+    description: TK L1_RevGW_PQ_VR200 48.79 → 30（只對照列）：COST_TKPQ 與比值改變，命題輸出不變（對照列不回饋計算）
+    inputs: {"TK_L1_RevGW_PQ_VR200": 30}

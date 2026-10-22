@@ -1,4 +1,4 @@
-"""Anthropic v0.1-A2：需求頁 Demand 與營收頁 Revenue（工作單 A2 第 4–6 步；規格 D2–D5、D14、D15 r1）。
+"""Anthropic v0.1-A2：需求頁 Demand 與營收頁 Revenue（工作單 A2 第 4–6 步；規格 D2–D5、D14、D15 r1；v0.1.1 起 D15 r2）。
 
 Python 只產生結構：每列的公式文字由此組裝，數值一律引用 SRC_ANT／Inputs／TK_ 具名範圍（E6：公式不含常數；恆等式 1−x、1＋成長率、年數 +1 除外）。
 兩頁互相引用（API 2025／2026 token 由 Revenue 的營收倒推；訂閱營收用 Demand 的人數），公式先以列鍵記號撰寫，兩頁建好後一次換成儲存格位址：
@@ -126,7 +126,7 @@ def build(ctx):
     # ═════════════════════ Revenue（先建：價格與校準基準） ═════════════════════
     R = Sheet(wb, "Revenue", "R", "R", years,
               "Revenue — 營收：API 牌價（價格事件天數加權）與有效單價、訂閱方案別、API 層級別、其他、廣告（＝0）、總額、雲端平台抽成、淨額、容量上限（A2 佔位）",
-              "2025 為校準年（D14）：訂閱＝SRC 訂閱營收、API＝SRC 用量計價營收、其他＝殘差，總額＝SRC 認列營收。2026 為半校準年（D15 r1）：總額＝Q1＋Q2 實際＋2026-07 年化 × 6／12，"
+              "2025 為校準年（D14）：訂閱＝SRC 訂閱營收、API＝SRC 用量計價營收、其他＝殘差，總額＝SRC 認列營收。2026 為半校準年（D15 r2，v0.1.1）：總額＝上半年實際（草擬 S-1）＋Q3 實際（投資人簡報）＋Q4（＝Q3 持平），"
               "API 為倒推項。2027 起正向推導（Demand 的任務數與每任務 token × 價格反應）。報導口徑為總額（雲端市集以總額認列），淨額＝總額 − 雲端平台抽成（D5 r1）；命題與現金流用淨額。",
               "單位：營收 $B；牌價與有效單價 $/M token（百萬 token）；月費 $/月。run-rate 里程碑只作對照（D14、D23），不反推參數。")
     R.section("一、年度日期（價格事件天數加權用）")
@@ -170,13 +170,16 @@ def build(ctx):
     R.add("p_cons_w", "個人付費加權月費", "$/月", lambda i, c: "=" + "+".join(f"«D:cmix_{p}»*«p_{p}»" for p, _, _ in CONS), "Σ 方案占比（Demand）× 月費")
     R.add("p_seat_w", "企業席位加權月費", "$/月", lambda i, c: "=" + "+".join(f"«D:smix_{p}»*«p_{p}»" for p, _, _ in SEATS), "Σ 席位占比（Demand）× 月費")
 
-    R.section("五、校準基準（2025 實際：D14；2026 半校準：D15 r1）")
+    R.section("五、校準基準（2025 實際：D14；2026 半校準：D15 r2〔v0.1.1；v0.1 為 r1〕）")
     R.add("cal_cons", "2025 個人訂閱營收＝消費者訂閱占營收（SRC，Analogy）× 2025 營收", "$B", [f"={S('rev_mix_consumer_share_2025_jaipuria')}*{S('rev_2025_recognized')}"] + [None] * 5,
           "SRC_ANT 分析師估計 15%（10–20%）；個人付費人數由此倒推（工作單預設）")
     R.add("cal_seat", "2025 企業席位訂閱營收＝SRC 訂閱營收 − 個人訂閱", "$B", [f"={S('rev_mix_2025_subscription')}-«cal_cons»"] + [None] * 5, "企業席位數由此倒推")
-    R.add("target", "營收總額基準（2025＝SRC 認列營收；2026＝Q1＋Q2 實際＋2026-07 年化 × 下半年月數 ÷ 12）", "$B",
-          [f"={S('rev_2025_recognized')}", f"={S('rev_2026_q1')}+{S('rev_2026_q2')}+{S('rev_runrate_2026_07')}*{h2}/{months}"] + [None] * 4,
-          "D14；D15 r1：下半年持平於最新觀測年化營收（保守；Decision）", name="REV_Target", name_cols="DE")
+    u1 = I("u1_switch")
+    R.add("target", "營收總額基準（2025＝SRC 認列營收；2026＝上半年實際＋Q3 實際＋Q4〔Q3 ×（1＋成長）〕；開關 0＝v0.1：Q1＋Q2＋2026-07 年化 × 下半年月數 ÷ 12）", "$B",
+          [f"={S('rev_2025_recognized')}",
+           f"=«h1act»+{u1}*({S('rev_2026_q3')}+{S('rev_2026_q3')}*(1+{I('q4_growth')}))+(1-{u1})*{S('rev_runrate_2026_07')}*{h2}/{months}"] + [None] * 4,
+          "D14；D15 r2（U1）：2026 已有上半年與 Q3 實際，Q4＝Q3 持平（Inputs 成長 0，保守；Decision）；D15 r1 的『下半年＝2026-07 年化 ÷ 2』僅在開關 0 時使用",
+          name="REV_Target", name_cols="DE")
 
     R.section("六、訂閱營收（$B＝人數（M）× 實收月費 × 12 ÷ 1000）")
     for p, pz, P in PAID:
@@ -237,17 +240,22 @@ def build(ctx):
     R.add("rr25gap", "2025 模型總額 ÷ run-rate 推估 − 1", "比例", ["=(«gross»-«rr25»)/«rr25»"] + [None] * 5, "run-rate 為未明口徑，且月初／月底不一")
     mid = f"AVERAGE({S('proj_arr_2026_end_investors')}_Lo,{S('proj_arr_2026_end_investors')}_Hi)"
     R.add("rr26", "2026 里程碑推估＝上半年實際＋下半年（2026-07 年化 → 年底投資人預期中點的對數平均）× 6 ÷ 12", "$B",
-          [None, f"={S('rev_2026_q1')}+{S('rev_2026_q2')}+({mid}-{S('rev_runrate_2026_07')})/LN({mid}/{S('rev_runrate_2026_07')})*{h2}/{months}"] + [None] * 4,
+          [None, f"=«h1act»+({mid}-{S('rev_runrate_2026_07')})/LN({mid}/{S('rev_runrate_2026_07')})*{h2}/{months}"] + [None] * 4,
           "年底投資人預期 $100–120B（SRC_ANT_373，非公司指引）只作對照", name="REV_RREst2026", name_cols="E")
     R.add("rr26gap", "2026 模型總額 ÷ 里程碑推估 − 1（|差距| > 門檻 → Checks WARN）", "比例", [None, "=(«gross»-«rr26»)/«rr26»"] + [None] * 4, "D15：差距 >25% 立 WARN，不自動校準",
           name="REV_RRGap2026", name_cols="E")
-    R.add("exit26", "2026 下半年隱含年化（模型）＝（總額 − 上半年實際）× 12 ÷ 6", "$B/年", [None, f"=(«gross»-{S('rev_2026_q1')}-{S('rev_2026_q2')})*{months}/{h2}"] + [None] * 4,
-          "＝2026-07 年化（D15 r1 持平假設）")
+    R.add("exit26", "2026 下半年隱含年化（模型）＝（總額 − 上半年實際）× 12 ÷ 6", "$B/年", [None, "=(«gross»-«h1act»)*" + f"{months}/{h2}"] + [None] * 4,
+          "v0.1＝2026-07 年化（D15 r1 持平假設）；v0.1.1（U1）＝（Q3＋Q4）× 2 的年化，約 67.2")
     R.add("mgmt", "管理層營收預測（2026-01 版；只對照，不驅動）", "$B",
           [None, f"={S('proj_rev_2026_2026_01')}", f"={S('proj_rev_2027_2026_01')}", None, f"={S('proj_rev_2029_2026_01')}", None], "SRC_ANT_368–370（Interested-party）")
     R.add("mgmtgap", "模型總額 − 管理層預測", "$B", [None, "=«gross»-«mgmt»", "=«gross»-«mgmt»", None, "=«gross»-«mgmt»", None], "")
     R.add("bofa", "BofA 2026 付給雲端金額 ÷ 模型 2026 通路營收（隱含抽成率上緣）", "比例", [None, f"={S('rev_partner_fee_2026_est')}/«ch_rev»"] + [None] * 4,
           "BofA 口徑可能含算力租金（SRC_ANT_033 註），只作 Inputs 抽成率上緣的依據")
+
+    R.section("十一之二、v0.1.1 U1：2026 上半年實際基準（列放在本節，使既有列編號不變；上方『營收總額基準』『里程碑推估』『下半年隱含年化』引用）")
+    R.add("h1act", "2026 上半年實際營收（U1 開關 1＝草擬 S-1 的 16.3；0＝v0.1 的 Q1＋Q2＝4.73＋11.5）", "$B",
+          [None, f"={I('u1_switch')}*{S('rev_2026_h1_s1')}+(1-{I('u1_switch')})*({S('rev_2026_q1')}+{S('rev_2026_q2')})"] + [None] * 4,
+          "v0.1.1：上半年實際改採草擬 S-1（WSJ 轉述，Interested-party）；Q1 4.73＋Q2 實際 11.6＝16.33 與之相符")
 
     # ── 十二、價格事件表（事件 × 年度：事件之後占當年的比例）
     ev0 = R.r + 1
@@ -278,7 +286,7 @@ def build(ctx):
     Dm = Sheet(wb, "Demand", "D", "D", years,
                "Demand — 需求：個人方案人數、企業席位、任務類別 × 每任務 token × 層級組合；API 任務數 × 每任務 token；token 量（DEM_Tok_*：層級 × 付費／免費）",
                "2025：個人付費人數＝個人訂閱營收 ÷ 加權月費（D14 校準）；企業席位同理；免費＝2025 月活 − 個人付費；API token＝API 營收 ÷ 組合有效單價（唯一倒推）。"
-               "2026：API token 由半校準總額倒推（D15 r1）。2027 起 API＝任務數 ×（1＋成長）× 價格反應 (p/p前)^ε × 每任務 token（同 OpenAI v0.6）。",
+               "2026：API token 由半校準總額倒推（D15 r2）。2027 起 API＝任務數 ×（1＋成長）× 價格反應 (p/p前)^ε × 每任務 token（同 OpenAI v0.6）。",
                "人數 M＝百萬；token T＝10^12；每任務 K token＝千 token；API 任務數＝十億。訂閱與免費 token 不產生營收，只供 A3 算力（推論 GW）。")
     Dm.section("一、方案組合與人數（M，FY 平均）")
     for k25, k26, p in (("cons_mix_pro_2025", "cons_mix_pro_2026", "pro"), ("cons_mix_max5_2025", "cons_mix_max5_2026", "max5")):
@@ -429,7 +437,7 @@ def checks(ctx):
         ("a2_sub25", "2025 訂閱：模型 − SRC 訂閱營收（$B）", f"=Revenue!$D${rr['sub']}-{S('rev_mix_2025_subscription')}", 0, "tol", "個人＋席位由營收倒推人數"),
         ("a2_api25", "2025 API：模型 − SRC 用量計價營收（$B）", f"=Revenue!$D${rr['api']}-{S('rev_mix_2025_consumption')}", 0, "tol", "API token 由營收 ÷ 有效單價倒推"),
         ("a2_ps25", "2025 雲端平台抽成：模型 − SRC 報導通路費（$B）", f"=Revenue!$D${rr['pshare']}-{S('rev_partner_fee_2025')}", 0, "tol", "D5 r1"),
-        ("a2_gap26", "2026 半校準：模型總額 − 基準（Q1＋Q2＋2026-07 年化 × 6／12）（$B）", "=REV_Gap2026", 0, "tol", "D15 r1；API 為倒推項"),
+        ("a2_gap26", "2026 半校準：模型總額 − 基準（上半年實際＋Q3 實際＋Q4；U1 開關 0 時為 v0.1 基準）（$B）", "=REV_Gap2026", 0, "tol", "D15 r2；API 為倒推項"),
         ("a2_rr26", "2026 對照：模型總額 ÷ 里程碑推估 − 1（|差距| > 門檻 → WARN）", "=REV_RRGap2026", I("runrate_warn_threshold"), "warn",
          "D15：只提示、不校準；推估＝上半年實際＋下半年由 2026-07 年化至年底投資人預期中點的對數平均"),
         ("a2_sumchk", "個人＋企業＋其他 − 總額（各年最大絕對差，$B）", mx(R, "sumchk"), 0, "tol", ""),
