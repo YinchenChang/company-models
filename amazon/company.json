@@ -529,7 +529,7 @@
    },
    "pace": {
     "low": 720,
-    "base": 3628.8,
+    "base": 3634.3,
     "high": 3733
    },
    "note": "對外 AI MW-IT（在役）：評價日 2,080（v0.1a：在役 AI 2,600 × 對外 80%，第三方估計，事實總帳 mw.ai.ext.2026q2）[Derived／Assumed]；各期期末＝MIN(上限, 前期＋速度 × 期間長度)，首期自評價日起算（connectedStart＝null）。MAG v0.1b r2（C10）：基準速度由 calibrate 設定以資本支出指引解出（scripts/calib_pace.js；verify 檢查）；保守＝第三方可辨識站點速度、積極＝公司容量目標換算。"
@@ -548,7 +548,7 @@
   },
   "mw31": {
    "low": 0,
-   "base": 3628.8,
+   "base": 3634.3,
    "high": 3733
   },
   "delayMonths": {
@@ -604,7 +604,7 @@
    "2024": 360,
    "2025": 1440
   },
-  "mw31": 3628.8,
+  "mw31": 3634.3,
   "capexFloorFY0": 220,
   "gpuLife": 6,
   "gpuLifeNote": "Tokenomics IF_DeprLifeIT 6 年（tk.IF_DeprLifeIT）；管理層口述伺服器 5–6 年（事實總帳 guide.server.life）[Derived]",
@@ -1625,7 +1625,7 @@
   "prepayCheck": "不適用（Amazon 無客戶預付融資）。",
   "mwFacts": "公司：2025 年新增電力 3.9 GW、2025Q4 單季 1.2 GW（口徑不明，推定設施）；2027 年底容量為 2025 年兩倍（總容量未揭露）。第三方：Epoch AI 追蹤三站 1,422 MW-IT（Trainium2，Anthropic），2028 預測 3,448 [Interested-party／第三方]。",
   "ebStartSource": "AI 雲端 EBITDA 率＝1 − Tokenomics 加權每 MW 營運成本 ÷ 每 MW 年收入",
-  "costMwNote": "每 MW 成本＝Σ 新增世代占比 × (TK_CapexIT＋自建比例 80% × TK_CapexFacility)（Tokenomics v5.27；US$m/MW-IT）",
+  "costMwNote": "每 MW 成本＝Σ 新增世代占比 × (TK_CapexIT＋自建比例 80% × TK_CapexFacility)（Tokenomics v19.0；US$m/MW-IT）",
   "ppeOpenNote": "評價日 PP&E 淨額 446.0（10-Q；含 AWS 263.8）[Interested-party]；D&A 分池：AI 期初毛額估計（評價日 AI 總 MW × Tokenomics 每 MW 成本）＋非 AI（其餘，壽命以最新季分部 D&A 年化校準）",
   "facilityName": "循環信用額度 20B，未動用",
   "newDebtRateNote": "瀑布新債利率取 2026-03 美元票據有效利率區間中點約 5.0% [Derived]；最長天期 2066 有效利率 6.33%",
@@ -1811,7 +1811,7 @@
    "facts": "data/amazon_facts_20261008.json",
    "kevidence": "data/kevidence_amazon_20261008.json",
    "consensus": "data/consensus_amzn_20261008.json",
-   "tokenomicsSnapshot": "data/tokenomics_snapshot_v5.27.json",
+   "tokenomicsSnapshot": "data/tokenomics_snapshot_v19.0.json",
    "tokenomicsNames": "data/tokenomics_names.txt"
   },
   "calendar": {
@@ -3278,10 +3278,10 @@
   "tokenomics": {
    "version": {
     "value": {
-     "file": "20261008_Tokenomics_v5.27.xlsx",
-     "current": "20261008_Tokenomics_v5.27.xlsx",
-     "commit": "ca78a8f42af36caa1af2cc6234d8e322f0415769",
-     "extracted": "2026-10-08"
+     "file": "20261022_Tokenomics_v19.0.xlsx",
+     "current": "20261022_Tokenomics_v19.0.xlsx",
+     "commit": "1916a06465bb0c7efed21383075f2ae098508e24",
+     "extracted": "2026-10-22"
     },
     "unit": "物件",
     "ref": "tk.IF_HoldEcon",
@@ -3322,9 +3322,9 @@
  },
  "tokenomics": {
   "_note": "算力相關的產業與物理層資料只引用 Tokenomics（YinchenChang/Tokenomics）的 IF_（不含 IF_Hdr*）、IFW_（四層瀑布，上限檢查用）、IFC_（用途欄）與 L1_ 名稱，經版本固定的快照檔讀入（tools/tokenomics/import_tokenomics.py）；模型主值取「基準」成本情境。Excel「Tokenomics_取數」分頁建具名範圍 TK_<名稱>_<世代>，每 MW 年收入、營運成本與資本支出列引用之。Tokenomics 每 GW＝IT 關鍵電力。",
-  "snapshotFile": "data/tokenomics_snapshot_v5.31.json",
-  "version": "v5.31",
-  "commit": "f16f161a28b5d43e00e89aa019e4d3e10fae4e3d",
+  "snapshotFile": "data/tokenomics_snapshot_v19.0.json",
+  "version": "v19.0",
+  "commit": "1916a06465bb0c7efed21383075f2ae098508e24",
   "names": [
    "IF_HoldEcon",
    "IF_HoldAcct",
@@ -3364,11 +3364,17 @@
    "IFW_RevGWFleet_Life",
    "IFC_Use",
    "IF_NonNVRatio",
-   "IF_NonNVCostRatio"
+   "IF_NonNVCostRatio",
+   "L1_RevGW_PQ_VR200",
+   "L1_RevGW_PQ_VR200_Lo",
+   "L1_RevGW_PQ_VR200_Hi"
   ],
   "optional": [
    "IF_NonNVRatio",
-   "IF_NonNVCostRatio"
+   "IF_NonNVCostRatio",
+   "L1_RevGW_PQ_VR200",
+   "L1_RevGW_PQ_VR200_Lo",
+   "L1_RevGW_PQ_VR200_Hi"
   ],
   "holdEconWacc": 0.1,
   "holdEconWaccNote": "IF_HoldEcon 的資本回收年金折現率：Tokenomics Inputs!E28「WACC（經濟口徑）」基準 10%（builder v5：L1_HoldEconGW＝資本回收年金（WACC 10%）＋營運費用）；非具名範圍，換 Tokenomics 版本時核對 [Verified]；只用於一致性檢查（對照表 r1 C15）"
@@ -3382,14 +3388,32 @@
    "high": "高 現貨改用 AWS 牌價"
   },
   "kLong": {
-   "low": 0.55,
-   "base": 0.75,
-   "high": 0.75
+   "low": {
+    "priceEq": 7.0191,
+    "gen": "VR200",
+    "tkName": "IF_HoldEcon"
+   },
+   "base": {
+    "priceEq": 9.5715,
+    "gen": "VR200",
+    "tkName": "IF_HoldEcon"
+   },
+   "high": {
+    "priceEq": 9.5715,
+    "gen": "VR200",
+    "tkName": "IF_HoldEcon"
+   }
   },
   "kSpot": {
-   "low": 1.76,
-   "base": 1.76,
-   "high": 4.29
+   "low": {
+    "ref": "spot.h100.index"
+   },
+   "base": {
+    "ref": "spot.h100.index"
+   },
+   "high": {
+    "ref": "price.p5.od"
+   }
   },
   "longShare": {
    "low": 0.8,
@@ -3397,10 +3421,40 @@
    "high": 0.8
   },
   "kNote": {
-   "kLong": "長約 k：OpenAI Trainium 0.70（IT）–0.84（設施）、OpenAI NVIDIA 30 萬顆 0.82 → 基準 0.75；低＝長約區間下緣 0.55（Anthropic 下限 0.22–0.45 只作對照）[Assumed]（kevidence longContracts）",
-   "kSpot": "現貨 k：基準 1.76＝與 Nebius／CRWV 同一市場現貨指數（對照表 r1 C1）；高＝AWS 牌價換算（p5.48xlarge 隨需 6.88 ÷ IF_GPUhrEcon H100 1.605＝4.29，kevidence price.p5.od）",
+   "kLong": "長約 k（v0.2.1 起隨目前快照重算）：v0.2 的判斷倍數 0.75（基準；依 OpenAI Trainium 0.70（IT）–0.84（設施）、OpenAI NVIDIA 30 萬顆 0.82 取中段）與下緣 0.55（Anthropic 下限 0.22–0.45 只作對照）[Assumed]，換成固定價格＝倍數 × 當時（v5.27）VR200 IF_HoldEcon 12.762 ＝ 9.5715／7.0191 US$m/MW-年 [Derived]；k＝該價格 ÷ 目前快照 VR200 IF_HoldEcon（Trainium3 等值成本的代理世代，與 kevidence 長約列一致）。v5.31／v19.0 的 VR200 為 12.2255 → 基準 0.783、下緣 0.574（成本分母下降 4.2%，價格不變）",
+   "kSpot": "現貨 k（v0.2.1 起隨目前快照重算）：基準＝Silicon Data H100 現貨指數 2.82 US$/GPU-hr ÷ 目前 IF_GPUhrEcon｜H100（v5.27 1.605 → 1.757；v19.0 1.5426 → 1.828），與 Nebius／CRWV／Oracle 同一證據，MAG 三家一致（對照表 r1 C1）；高＝AWS 牌價 p5.48xlarge 隨需 6.88 ÷ 目前 IF_GPUhrEcon｜H100（v5.27 4.287 → v19.0 4.460；kevidence price.p5.od）",
    "longShare": "長約占比 80%（Anthropic Trainium2 三站＋OpenAI 兩筆占對外容量多數；70%–90% [Assumed]）"
   },
+  "kEvidence": [
+   {
+    "id": "spot.h100.index",
+    "label": "H100 Silicon Data 現貨指數",
+    "gen": "H100",
+    "price": 2.82,
+    "unit": "US$/GPU-hr",
+    "tkName": "IF_GPUhrEcon",
+    "tag": "[Verified]（價格）／[Derived]（倍數）",
+    "source": "Silicon Data H100 Index 頁面",
+    "url": "https://www.silicondata.com/products/silicon-index/h100",
+    "date": "2026-10-06",
+    "retrieved": "2026-10-08",
+    "ref": "data/kevidence_amazon_20261008.json → spotIndex"
+   },
+   {
+    "id": "price.p5.od",
+    "label": "AWS p5.48xlarge 隨需（每 GPU 小時）",
+    "gen": "H100",
+    "price": 6.88,
+    "unit": "US$/GPU-hr",
+    "tkName": "IF_GPUhrEcon",
+    "tag": "[Verified]（公開價目）",
+    "source": "Vantage（AWS 價格 API）",
+    "url": "https://instances.vantage.sh/aws/ec2/p5.48xlarge",
+    "date": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "ref": "data/kevidence_amazon_20261008.json → listPrices[price.p5.od]"
+   }
+  ],
   "customFactor": 1.0,
   "customFactorSens": 0.7,
   "customCapexFactor": 1.0,

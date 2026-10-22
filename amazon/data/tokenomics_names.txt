@@ -40,3 +40,7 @@ IFW_RevGWFleet_Util # 同上：利用率層（上限檢查：每 MW 年收入 ÷
 IFW_RevGWFleet_Prod # 同上：生產折減層（硬上限：每 MW 年收入 ÷ 此層 > 100% 標紅）
 IFW_RevGWFleet_Life # 同上：壽命期價格與變現層
 IFC_Use # Interface 用途欄（檢查所取名稱的用途限制）
+# MAG v0.2.1（Tokenomics v19.0）：模型商每 GW 實收 P×Q（上限檢查第五列對照；optional 寫法，無則記 missing）
+L1_RevGW_PQ_VR200 optional # 模型商每 GW 年實收 P×Q（$B/GW/年；第一年）
+L1_RevGW_PQ_VR200_Lo optional # 同上，低
+L1_RevGW_PQ_VR200_Hi optional # 同上，高

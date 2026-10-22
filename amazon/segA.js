@@ -20,6 +20,7 @@ var PERIODS = COMPANY_DATA.periods,
   SC_ACC = Object.fromEntries([`low`, `base`, `high`].map(k => [k, PERIOD_YEARS.reduce((a, L, i) => (a.push(Math.min(SC_MWP.contracted[k][i], i === 0 ? (SC_MWP.connectedStart ?? COMPANY_DATA.defaults.billableOpen + SC_MWP.pace[k] * L) : a[i - 1] + SC_MWP.pace[k] * L)), a), [])])), // MAG v0.1b：connectedStart＝null 時首期自評價日（期初計費 MW）起算
   PRICING = COMPANY_DATA.pricing || null, // MAG v0.1b：對外 AI 雲端定價（company.json → pricing；Tokenomics × k）
   TKV = COMPANY_DATA.tk || {}, // MAG v0.1b：Tokenomics 快照基準值 {名稱: {世代代碼: 值} 或單值}（建置時由 calendar_q.tk_base 注入）
+  KSPEC_DONE = kSpecApplyQ(), // MAG v0.2.1：k 規格（證據價格 ÷ 目前快照同世代成本）在引用前解成數字（kspec.py 同算式；錨改變時 k 跟著重算）
   K_AX = [`low`, `base`, `high`],
   kAxQ = ax => { const a = K_AX[ax] ?? ax, p = PRICING; return p.longShare[a] * p.kLong[a] + (1 - p.longShare[a]) * p.kSpot[a] }, // 混合 k＝長約占比 × k_長約＋(1 − 長約占比) × k_現貨
   // MAG v0.1b：每 MW 年收入路徑。各世代在役 MW＝期初 × 期初占比＋Σ 本期新增（MAX(0, 期末 − 前期末)）× 新增占比；
@@ -32,7 +33,7 @@ var PERIODS = COMPANY_DATA.periods,
       mw = mw.map((m, j) => m + add * G[j].mixAdds[r]);
       const T = mw.reduce((a, b) => a + b, 0), W = f => mw.reduce((a, m, j) => a + m * G[j][f], 0) / Math.max(T, 1e-9);
       const hold = W(`he`), opex = W(`op`), ref = W(`rf`), refP = W(`rp`);
-      return { k, gens: [...mw], tot: T, hold, opex, ref, refP, rev: hold * k / 1e3, opexMW: opex / 1e3, capRatio: hold * k / Math.max(ref, 1e-9), capRatioP: hold * k / Math.max(refP, 1e-9) }
+      return { k, gens: [...mw], tot: T, hold, opex, ref, refP, rev: hold * k / 1e3, opexMW: opex / 1e3, capRatio: hold * k / Math.max(ref, 1e-9), capRatioP: hold * k / Math.max(refP, 1e-9), pq: hold * k / 1e3 / (TKV.L1_RevGW_PQ_VR200 ?? NaN), pqLo: hold * k / 1e3 / (TKV.L1_RevGW_PQ_VR200_Hi ?? NaN), pqHi: hold * k / 1e3 / (TKV.L1_RevGW_PQ_VR200_Lo ?? NaN) }
     })
   },
   SC_REV = PRICING ? Object.fromEntries(K_AX.map(k => [k, revPathQ(SC_ACC[k], COMPANY_DATA.defaults.billableOpen, K_AX.indexOf(PRICING.axis)).map(x => x.rev)])) : COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境；MAG v0.1b：由 pricing 推得（容量軸改變世代組合）
@@ -102,6 +103,12 @@ DEFAULTS.ulTerm = UL.termYears; // v0.2：未起租租約租期（延誤平移�
 // v0.2：租賃負債（期末剩餘租金現值；company.json → leases.liability）。LLQ＝租賃折現率、LLN＝在帳到期表模型期後尾端年數
 var LLQ = (COMPANY_DATA.leases.liability || {}).discRate ?? 0, LLN = (COMPANY_DATA.leases.liability || {}).tailYears ?? 12;
 // 在帳租約：期末之後各期到期表現金（期中付款）＋模型期後尾端（LEASE_AFTER_FY30 平均分 LLN 年、年中付款）的現值
+function kSpecApplyQ() { // MAG v0.2.1：k 規格 → 倍數（價格 ÷ 目前快照基準值；kspec.py 同算式）：數字｜{ref: 證據 id}｜{priceEq, gen, tkName}
+  const P = COMPANY_DATA.pricing, EV = Object.fromEntries((P.kEvidence || []).map(e => [e.id, e])), TK = COMPANY_DATA.tk;
+  const val = sp => typeof sp === `number` ? sp : sp.ref ? EV[sp.ref].price / TK[EV[sp.ref].tkName][EV[sp.ref].gen] : sp.priceEq != null ? sp.priceEq / TK[sp.tkName][sp.gen] : (() => { throw new Error(`pricing：無法辨識的 k 規格`) })();
+  [`kLong`, `kSpot`].forEach(sd => [`low`, `base`, `high`].forEach(a => P[sd][a] = val(P[sd][a])));
+  return true
+}
 function llOnQ(r) {
   const D = x => (1 + LLQ) ** -x, T = PERIOD_T, tail = LLQ > 0 ? LEASE_AFTER_FY30 / LLN * (1 + LLQ) ** .5 * (1 - (1 + LLQ) ** -LLN) / LLQ : LEASE_AFTER_FY30;
   return LEASE_CASH_ON_BAL.reduce((a, c, k) => a + (k > r ? c * D(T[k] - PERIOD_YEARS[k] / 2 - T[r]) : 0), 0) + tail * D(T[4] - T[r])
