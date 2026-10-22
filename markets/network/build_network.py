@@ -1,7 +1,7 @@
-# AI 網通市場模型 v0.2（AI 半導體 Project 步驟 3）
+# AI 網通市場模型 v0.2.1（AI 半導體 Project 步驟 3）
 # 用法：python3 markets/network/build_network.py raw.xlsx ；再以 LibreOffice headless 重算
 # 加速器顆數取自 markets/memory/market.py（與 HBM 市場同一份數量層）；每顆網通內容以 markets/chip_bridge v0.2 為錨
-import sys, os
+import sys, os, json
 import openpyxl
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
@@ -29,8 +29,15 @@ PLAT = {
  "TRN":  ("AWS Trainium", (600, 800, 800, 1200, 300, 300), "Assumed", "NeuronLink＋EFA；合計約 $4K"),
  "ASIC": ("其他 ASIC", (600, 800, 800, 1200, 300, 300), "Assumed", "比照 Trainium"),
 }
-ITU = {"GB": (66.2, "Derived", "Tokenomics v19.0 IF_CapexIT 32.237 $B ÷ 487,008（v5.27 為 37.445）"), "VR": (128.8, "Derived", "37.586 ÷ 291,744"),
-       "RU": (257.2, "Derived", "50.086 ÷ 194,760"), "HP": (38.3, "Derived", "27.510 ÷ 718,048"), "AMD8": (40, "Assumed", ""),
+# 每顆 IT capex（$K）＝ IF_CapexIT（$B）÷ IF_GPUsPerGW × 1e6，取自橋接表的 Tokenomics 快照（基準成本情境），完整精度不取整。
+_snap = json.load(open(os.path.join(ROOT, "markets", "chip_bridge", "data", "tokenomics_snapshot_v19.0.json"), encoding="utf-8"))
+_gen = {g["code"]: g["name"] for g in _snap["source"]["generations"]}
+def itu(code):
+    capex = _snap["items"]["IF_CapexIT"]["values"][_gen[code]]["基準"]
+    gpus = _snap["items"]["IF_GPUsPerGW"]["values"][_gen[code]]["基準"]
+    return capex / gpus * 1e6
+ITU = {"GB": (itu("GB300"), "Derived", "Tokenomics v19.0 IF_CapexIT 32.237 $B ÷ 487,008（v5.27 為 37.445）"), "VR": (itu("VR200"), "Derived", "37.586 ÷ 291,744"),
+       "RU": (itu("RU"), "Derived", "50.086 ÷ 194,760"), "HP": (itu("H100"), "Derived", "27.510 ÷ 718,048"), "AMD8": (40, "Assumed", ""),
        "AMDR": (100, "Assumed", "VR200 的約 0.8 倍"), "TPU": (25, "Assumed", ""), "TRN": (20, "Assumed", ""), "ASIC": (20, "Assumed", "")}
 TYPE2PLAT = {"bw": {y: "GB" for y in (26, 27, 28, 29)}, "rb": {y: "VR" for y in (26, 27, 28, 29)}, "ru": {y: "RU" for y in (26, 27, 28, 29)},
              "hp": {y: "HP" for y in (26, 27, 28, 29)}, "amd": {26: "AMD8", 27: "AMDR", 28: "AMDR", 29: "AMDR"},
@@ -211,7 +218,8 @@ srcs = [("markets/chip_bridge v0.2（每 GW 網通拆分）", "本 repo"), ("mar
 for i, (a, b) in enumerate(srcs, 2): SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 50; SO.column_dimensions["B"].width = 120
 RD = wb.create_sheet("README", 0)
-lines = [("AI 網通市場模型 v0.2（AI 半導體 Project 步驟 3）　2026-10-22（Tokenomics v19.0）", True),
+lines = [("AI 網通市場模型 v0.2.1（AI 半導體 Project 步驟 3）　2026-10-22（Tokenomics v19.0）", True),
+ ("v0.2.1：ITU 改讀 Tokenomics 快照、不取整（GB300、VR200、Rubin Ultra、Hopper）；網通金額不變。", False),
  ("模型命題：AI 網通的錢由「加速器顆數 × 每顆網通內容」決定；每顆內容隨 scale-up 域擴大（NVL72 → NVL576）與每 GPU 網卡頻寬倍增而上升，而 scale-up 的頻寬大多由便宜的銅承載，所以金額主體仍在 scale-out（交換器、光模組、網卡）。", False), ("", False),
  ("驅動因子 → 推導量", True),
  ("Units：加速器顆數（markets/memory，與 HBM 市場同一份）→ 各年各平台顆數", False),

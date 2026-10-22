@@ -7,11 +7,11 @@ import json, pathlib, numpy as np, openpyxl
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 F = {
     "bridge": ROOT / "markets/chip_bridge/dist/20261022_晶片內容橋接表_v0.2.xlsx",
-    "net": ROOT / "markets/network/dist/20261022_AI網通市場模型_v0.2.xlsx",
+    "net": ROOT / "markets/network/dist/20261022_AI網通市場模型_v0.2.1.xlsx",
     "sk": ROOT / "skhynix/dist/20261022_SK海力士模型_v0.3.1.xlsx",
     "ss": ROOT / "samsung/dist/20261022_三星電子模型_v0.1.1.xlsx",
     "mu": ROOT / "micron/dist/20261022_美光模型_v0.2.1.xlsx",
-    "tsmc": ROOT / "tsmc/dist/20261022_台積電模型_v0.1.1.xlsx",
+    "tsmc": ROOT / "tsmc/dist/20261022_台積電模型_v0.2.xlsx",
 }
 
 def rows(path, sheet):
@@ -193,6 +193,19 @@ eps27, eps28c = D["mem"]["mu"]["eps"]["2027 A"], D["mem"]["mu"]["eps"]["2028 C"]
 D["mu_alt"] = {"pe": mpe, "pba": mpba, "pe_hist": {y: round(v, 2) for y, v in mu_pe.items()}, "pba_hist": {y: round(v, 3) for y, v in mu_pba.items()},
                "adj_bvps": {"FY2027 A": round(adj27, 1), "FY2028 C": round(adj28c, 1)}}
 
+# ---------------------------------------------------------------------------
+# SK 海力士、三星 P/E 對照（Andy 2026-10-22：三家同樣呈現）。年底 P/E：companiesmarketcap（2016–2025）；
+# stockanalysis 2021–2025 交叉核對（差距 ≤ 8%）；2016–2020 只有單一來源。虧損年（P/E < 0）不計。
+KR_PE = {"sk": ("SK 海力士（P/E）", {2016: 9.57, 2017: 4.61, 2018: 2.54, 2019: 30.2, 2020: 16.2, 2021: 9.01, 2022: 22.6, 2023: -10.6, 2024: 5.99, 2025: 10.5}),
+         "ss": ("三星電子（P/E）", {2016: 9.15, 2017: 6.95, 2018: 5.06, 2019: 15.3, 2020: 19.1, 2021: 12.5, 2022: 6.50, 2023: 36.1, 2024: 10.6, 2025: 18.2})}
+KR_PE_CHECK = {"sk": {2021: 9.38, 2022: 23.13, 2024: 6.06, 2025: 10.47}, "ss": {2021: 13.40, 2022: 6.79, 2023: 35.92, 2024: 10.53, 2025: 17.39}}
+kr_pe = {}
+for k, (nm, hist) in KR_PE.items():
+    v = {y: x for y, x in hist.items() if x > 0}
+    kr_pe[k] = (nm, v, q3(v.values()))
+    for y, x in KR_PE_CHECK[k].items():
+        assert abs(x / hist[y] - 1) < 0.08, (k, y)
+
 out = pathlib.Path(__file__).with_name("data.json")
 out.write_text(json.dumps(D, ensure_ascii=False, indent=1))
 for k in ("sk", "ss", "mu"):
@@ -261,6 +274,15 @@ for nm, metric, ps, cases in (
                     "hist_min": ps["min"], "hist_max": ps["max"], "key": f"{nm} {case}", "case": case, "position": pos, "multiple": ps[k],
                     "basis_label": bl, "basis": round(basis, 2), "implied_px": round(ip, 1), "vs_px": round(ip / mu_px - 1, 3),
                     "px_multiple": round(mu_px / basis, 2)})
+for k, (nm, v_, ps) in kr_pe.items():
+    e = D["mem"][k]
+    for case, pos, q, bl, basis in (("見頂", "見頂年 → 25 分位", "p25", "2027 EPS（A）", e["eps"]["2027 A"]), ("中段", "中段 → 中位數", "p50", "2027 EPS（A）", e["eps"]["2027 A"]),
+                                    ("谷底", "谷底 → 75 分位", "p75", "2028 EPS（C）", e["eps"]["2028 C"])):
+        ip = ps[q] * basis
+        val.append({"company": nm, "metric": "P/E", "ccy": "KRW", "px": e["px"], "p25": ps["p25"], "p50": ps["p50"], "p75": ps["p75"],
+                    "hist_min": ps["min"], "hist_max": ps["max"], "key": f"{nm} {case}", "case": case, "position": pos, "multiple": ps[q],
+                    "basis_label": bl, "basis": round(basis, 2), "implied_px": round(ip, 1), "vs_px": round(ip / e["px"] - 1, 3),
+                    "px_multiple": round(e["px"] / basis, 2)})
 dump("valuation", val)
 
 mh = []
@@ -270,6 +292,8 @@ for k, nm in list(CO.items()) + [("tsmc", "台積電")]:
             mh.append({"company": nm, "metric": MULT[k]["kind"], "year": 2016 + i, "source": src, "multiple": x})
 for y_, v_ in mu_pe.items(): mh.append({"company": "美光（P/E）", "metric": "P/E", "year": y_, "source": "SEC 10-K＋macrotrends", "multiple": round(v_, 2)})
 for y_, v_ in mu_pba.items(): mh.append({"company": "美光（買回加回 P/B）", "metric": "P/B", "year": y_, "source": "SEC 10-K＋macrotrends", "multiple": round(v_, 3)})
+for k, (nm, v_, ps) in kr_pe.items():
+    for y_, x in v_.items(): mh.append({"company": nm, "metric": "P/E", "year": y_, "source": "companiesmarketcap", "multiple": x})
 dump("mult_hist", mh)
 dump("mu_hist", [{"fy": y_, "pb": pb, "equity": e, "treasury": t, "net_income": ni, "roe": round(ni / e, 3),
                   "pe": (round(pb * e / ni, 2) if ni > 0 else None), "pb_adj": round(pb * e / (e + t), 3)} for y_, (pb, e, t, ni) in MU_HIST.items()])
