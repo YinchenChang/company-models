@@ -1,10 +1,9 @@
 # WhiteFiber v0.1 分段建置進度（接手用；三張工作單共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 進行中：**v0.2（WhiteFiber v0.2：每 MW 收入以 Tokenomics 為錨＋同步 v19.0；PR #63 draft，不合併）**，分支 `claude/whitefiber-v0.2-tk19`（自 main 1079d5c）。
-- 已完成：A 段步驟 0（draft PR、基線 verify 19 項全過）、步驟 1（快照 v19.0＋`TK_` 取數＋names＋permw 註記）、步驟 2（tkAnchor／kSpec 移植，Excel「每MW收入_錨定」＋HTML 引擎，cmp31 四組各 484 項全 OK）；詳見下方「v0.2」段。
-- 下一步：A 段步驟 3（`legacy` 重現 v0.1）、步驟 4（資本支出／汰換年限／EBITDAR 重校準已部分完成，待跑 `calib_ebitdar.js --write` 與完整 verify），然後 B 段步驟 5–9。
-- 未解問題：見「v0.2」段「待 Project 判斷」。v0.1 的未解問題 (a)–(f) 不變（託管同業 2 家、beta、無 EBITDA／CapEx 共識、託管逐列明細只在 Excel、Krambu／NC-2／3 [Assumed]、NC-1 專案貸款償債保障）。
+- 已完成：**v0.2 全部（A 段步驟 0–4、B 段步驟 5–9）**，分支 `claude/whitefiber-v0.2-tk19`，PR #63（轉 ready，不合併）。三情境目標價 v0.1 → v0.2：保守 $10.04 → $11.48（賣出）、基準 $16.84 → $15.25（中立）、積極 $34.66 → $25.36（買進）。verify（LEGACY=1、--vs-dist）24 項通過；crawl 1 項因工具不穩定失敗，空閒時重跑 0 差異（見 `20261022_whitefiber_v0.2_verify.log` 補註）。
+- 下一步：chat 端審查 PR #63（報告 `20261022_whitefiber_v0.2.md` §8「待 Project 判斷」）；之後 FY26Q3 季度更新升 v0.3（財報約 2026-11 中）。
+- 未解問題：見 v0.2 報告 §8（汰換年限 5→6、非長約占比、巴黎 MW、上限 51.9%、積極評等跳動、共識差距、快照版本統一）；v0.1 的 (a)–(f) 不變。
 
 ## 工作單總覽
 | 工作單 | 分支 | PR | 狀態 |
@@ -13,7 +12,7 @@
 | v0.1b 模型改寫 | `claude/whitefiber-v0.1` | 同一 PR | 完成（chat 端審查：有條件通過，3 項於 v0.1c 步驟 0.5 處理） |
 | v0.1c 驗證與成品 | `claude/whitefiber-v0.1` | 同一 PR | 完成（已合併） |
 
-| v0.2 Tokenomics 錨定與 v19.0 同步 | `claude/whitefiber-v0.2-tk19` | #63（draft） | 進行中（A 段 → B 段；不合併） |
+| v0.2 Tokenomics 錨定與 v19.0 同步 | `claude/whitefiber-v0.2-tk19` | #63 | 完成，待審查（ready，不合併） |
 
 <!-- 各工作單在下方新增自己的段落：「## v0.1x」＋步驟紀錄表（步驟｜狀態｜commit｜備註） -->
 
@@ -104,3 +103,8 @@
 | 4 資本支出／汰換年限／EBITDAR | 完成 | （見 git log） | 雲端每 MW 建置成本＝Σ 新增世代占比 × `TK_CapexIT`（活公式）；`defaults.gpuLife` 5 → 6（`TK_DeprLifeIT`，公司會計 5 年改列待判斷）；GPU 數 → MW 換算以 `TK_GPUsPerGW` 核對（H 區）；`capexPerMwBand` 改 `TK_CapexIT_GB300_Lo／_Hi`（28.55–39.28）；`calib_ebitdar.js --write`（起點租金率 7.24% → 9.81%、穩態 1.70% → 2.38%）。A 段末完整 verify：cmp31 四組各 484 項全 OK、離線開啟通過。 |
 
 三情境目標價（US$／股）：v0.1 保守 10.04／基準 16.84／積極 34.66 → 目前 11.48／15.25／25.36（拆解見 `scripts/attrib_v02.js`：保守 +1.44、基準 −1.59、積極 −9.29）。
+| 5 收入上限五列、Q2 驗證 | 完成 | 90eebd4 | Excel「每MW收入_錨定」C 區（四層＋第五列 P×Q）、F 區（Q2 驗證，活公式）；`_Prod` 首期 51.9% > 50% 警示（只警示）；Q2 實現 8.37 對模型 11.32，差距 −2.95＝世代組合 −0.68＋價格 −2.06＋爬坡 −0.21。 |
+| 6 敏感度 | 完成 | 90eebd4 | `scripts/tk_sens.js` → `tk_sens.json` → Excel G／G2 區；3×3、k、自身合約、長約占比、TK 低／高、收斂比例、其他占比；汰換年限 5 年對照。 |
+| 7 升版 v0.2 | 完成 | 90eebd4 | VLOG 兩處；dist 換 `20261022_WhiteFiber收支模型_v0_2`（移除 v0.1）；交接檔 v0_2；README、CLAUDE.md（Q3 更新改 v0.3）；`scripts/expect/v0_2_vs_v0_1*.txt`；目標價 ①–⑥ 拆解誤差 0（`scripts/attrib_v02.js`）。 |
+| 8 對照 Excel | 完成 | 90eebd4 | `docs/reports/20261022_whitefiber_v0.2_TK同步.xlsx`（13 張，`scripts/build_report_v02.py`）。 |
+| 9 報告與 PR | 完成 | （本 commit） | `docs/reports/20261022_whitefiber_v0.2.md`、`…_verify.log`；PR 留言 `[WhiteFiber 回報] v0.2｜完成｜2026-10-22`；PR 轉 ready，不合併。 |
