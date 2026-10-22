@@ -46,12 +46,12 @@ def main():
     s = wb["Inputs"]
     for r in range(5, s.max_row + 1):
         i = s.cell(r, 1).value
-        if i and i >= "INP_276":
+        if i and str(i).startswith("INP_") and int(i[4:]) >= 276:
             ws.append(["Inputs", i, s.cell(r, 2).value + (f"（{s.cell(r, 3).value}）" if s.cell(r, 3).value not in (None, "—") else ""), s.cell(r, 5).value, s.cell(r, 6).value, s.cell(r, 7).value, s.cell(r, 4).value, s.cell(r, 8).value, s.cell(r, 12).value])
     s = wb["Checks"]
     for r in range(5, s.max_row + 1):
         i = s.cell(r, 1).value
-        if i and i >= "C131" and i != "CHK_Errors":
+        if i and str(i).startswith("C") and str(i)[1:].isdigit() and int(i[1:]) >= 131:
             ws.append(["Checks", i, s.cell(r, 2).value, s.cell(r, 3).value, s.cell(r, 4).value, s.cell(r, 5).value, "", "", s.cell(r, 6).value])
     for tab in ("TK_PxQ", "PxQ"):
         ws.append([tab, "（新頁）", f"{wb[tab].max_row} 列 × {wb[tab].max_column} 欄", "", "", "", "", "", "見報告"])

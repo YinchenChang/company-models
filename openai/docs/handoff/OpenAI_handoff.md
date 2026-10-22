@@ -20,8 +20,8 @@
 ## 4. 模型狀態：**v0.6 完成**（2026-10-08；S1–S6）
 | 項目 | 現況 |
 |---|---|
-| Excel | `model/20261022_OpenAI_v0.6.1.xlsx`（`model/CURRENT`；v0.6 數值一格不變，新增 PxQ、TK_PxQ 頁）；v0.6 成品副本 `dist/20261008_OpenAI收支模型_v0_6.xlsx` |
-| HTML 一頁摘要 | `dist/20261008_OpenAI收支模型_v0_6.html`（產生器 `tools/build_html.py`；敏感度情境 `tools/html_scenarios.yaml`；測試 `tests/test_html.py`） |
+| Excel | `model/20261022_OpenAI_v0.6.1.xlsx`（`model/CURRENT`；v0.6 數值一格不變，新增 PxQ、TK_PxQ 頁）；v0.6 成品副本 `dist/20261022_OpenAI收支模型_v0_6_1.xlsx` |
+| HTML 一頁摘要 | `dist/20261022_OpenAI收支模型_v0_6_1.html`（產生器 `tools/build_html.py`；敏感度情境 `tools/html_scenarios.yaml`；測試 `tests/test_html.py`） |
 | 命題與驅動對照表 | `docs/plan/20261008_OpenAI_命題與驅動對照表.md` |
 | Tokenomics | v5.26，master `3dd1216688e3872fcb80b28c279d8976a07df29b`，CURRENT `20261007_Tokenomics_v5.26.xlsx`（SHA-256 `abb8592c6921738d20d1c870bfb44dbc0afcb6a412dbb429f4bd24013224ed0d`）；63 名，check_tk_snapshot OK 63 |
 | 規模 | SRC_OAI 131；Inputs 263；具名範圍 646；公式格 3,063；Checks C01–C130（CHK_Errors＝0）；parity 107 項 |

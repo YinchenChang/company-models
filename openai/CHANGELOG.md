@@ -2,6 +2,14 @@
 
 每次同步記錄：Excel 版本、工作包、commit 與變動摘要。
 
+## 20261022_OpenAI_v0.6.1.xlsx — v0.6.1（P×Q 與回本比值序列）
+
+- **v0.6 原有數值一格不變**（表 2＝0）；新增 `PxQ` 頁、`TK_PxQ` 頁（Tokenomics v19.0 第二快照，master `ad33e28`，檔案 SHA-256 `d1728705…4b8d`；具名範圍 `TKQ_`）。`TK_Link` 維持 v5.26（63 名逐格相同）。v0.6 原檔移至 `model/archive/20261008_OpenAI_v0.6.xlsx`。
+- 主輸出：回本比值（實際 m×L ÷ 所需 m×L＝營收 ÷ 算力成本）：2025 指數／線性 1.24／1.12；2026（2.5／3.0／3.5 GW）1.47／1.23／1.05。持平所需 2026 GW 2.97（指數基準）／3.29（線性基準）。中間量（h、C、Q、P_eff、實際／所需 m×L、隱含 m）、四個敏感度區塊、外部支出對照倍數（Epoch 160 億、Brockman 500 億、204 億）、預覽值對帳（15 項中 14 項在 0.5% 內，Q 一項因預覽值只給兩位有效數字）。
+- 新增 SRC_OAI_138–140（Epoch 2025 雲端 16、Brockman 2026 的 50、Epoch 服務占比 0.50）、INP_276–288（GW 主值開關、2026 GW 三情境、組合來源開關與交接檔六列、折減讀法開關、對帳容許誤差）、Checks C131–C154（C140、C141 退役）；公式格 3,063→3,898；具名範圍 646→719。
+- builder：`--tk-pxq-dir`、`--tk-date`；`tk_link.read_pxq_snapshot`；`builder/p6.py`。`engine/core.py` 檔名正則接受 `v0.6.1`。`dist/` 成品隨現行版重新產生，v0.6 版移 `dist/_待刪除/`。
+- 測試：parity 新情境 aq–ay（C132、C142、C154 有牙齒）；`test_e6_no_constants_in_pxq_formulas`、`test_pxq_reference_whitelist`、`test_pxq_not_fed_back`、`test_tk_link_values_unchanged_from_v06`。工具：`tools/diff_workbooks.py`、`tools/make_pxq_report.py`。報告：`docs/reports/20261022_v0.6.1_PxQ.md`、`_對照.xlsx`。PR #59。
+
 ## 成品 v0.6（S6：HTML 一頁摘要、命題與驅動對照表、交接檔；Excel 不變）
 
 - Excel 仍為 `20261008_OpenAI_v0.6.xlsx`（本段不改模型；parity 107 項全過）。複製到 `dist/20261008_OpenAI收支模型_v0_6.xlsx`（與 `model/CURRENT` 位元組相同）。
