@@ -21,6 +21,8 @@ var PERIODS = COMPANY_DATA.periods,
   KSPEC_DONE = kSpecApplyQ(), // v0.3（自 Nebius v0.4）：k 規格（證據價格 ÷ 目前快照）在引用前解成數字（錨改變時 k 跟著重算；kspec.py 同算式）
   PMW_REVQ = ((COMPANY_DATA.methodology || {}).perMw || {}).revenue || `legacy`, // v0.3：每 MW 收入方法（tkAnchor＝Tokenomics 錨 × k；legacy＝scenarios.revMW，重現 v0.2）
   REVCAP_LAYERS_Q = [`100`, `Util`, `Prod`, `Life`], REVCAP_LAYER_Q = COMPANY_DATA.methodology.checks.revCapLayer || `Util`, // v0.3（自 Nebius v0.4／CoreWeave W9）：Tokenomics IFW_RevGWFleet_* 四層瀑布；比較層讀 methodology.checks.revCapLayer
+  PMW_CAPEXQ = ((COMPANY_DATA.methodology || {}).perMw || {}).capex || `legacy`, PMW_CAPEXNAME = ((COMPANY_DATA.methodology || {}).perMw || {}).capexName || `IF_CapexTotal`, // v0.3 步驟 4：每 MW 建置成本方法（tokenomics＝Σ 新增世代占比 × capexName｜世代；legacy＝scenarios.capexTemplate.costMW）
+  PMW_LIFEQ = ((COMPANY_DATA.methodology || {}).perMw || {}).deprLife || `legacy`, // v0.3 步驟 4：GPU 經濟壽命（tokenomics＝IF_DeprLifeIT｜fleet.refGen）
   REVSRCQ = PMW_REVQ === `tkAnchor` ? `Tokenomics 錨 × 定價倍數 k` : `Tokenomics 正向推導`, // 畫面文字的每 MW 收入來源（legacy 時與 v0.2 相同）
   SC_REV = PMW_REVQ === `tkAnchor` ? Object.fromEntries([`low`, `base`, `high`].map(k => [k, tkAnchorQ(k).rev])) : COMPANY_DATA.scenarios.revMW, // v0.1b：每 MW 年收入隨情境；v0.3：tkAnchor 時＝錨 × k（價格軸基準），容量情境與價格脫鉤
   SC_BR = COMPANY_DATA.scenarios.billableRatio.ratio,
@@ -37,7 +39,7 @@ var PERIODS = COMPANY_DATA.periods,
   scA = e => {
     let T = COMPANY_DATA.scenarios.capexTemplate;
     return {
-      costMW: [...T.costMW],
+      costMW: PMW_CAPEXQ === `tokenomics` ? capexTkQ(null) : [...T.costMW], // v0.3 步驟 4：每 MW 建置成本＝Σ 新增世代占比 × TK 資本支出（舊值 T.costMW 只作 legacy／對照）
       customerFund: PERIOD_YEARS.map(() => COMPANY_DATA.defaults.prepay.shareOfDeals * COMPANY_DATA.defaults.prepay.capexCover), // v0.1b：預付比率＝有預付的合約比例 × 預付占相關資本支出比
       newLease: ulPath(), // v0.1b（Oracle）：合約性，三情境相同
       div: [...T.div]
@@ -80,6 +82,7 @@ var PERIODS = COMPANY_DATA.periods,
   LEASE_FACTS = COMPANY_DATA.leases.facts,
   DEFAULTS = Object.fromEntries(Object.entries(structuredClone(COMPANY_DATA.defaults)).flatMap(([k, v]) => k === `intCal` ? [[k, v], [`a`, structuredClone(SCENARIOS.base.a)]] : [[k, v]])),
   Qk = DEFAULTS; // 模板函式庫片段（mid1–mid3）仍以 Qk 引用預設值，保留別名
+PMW_LIFEQ === `tokenomics` && (DEFAULTS.gpuLife = COMPANY_DATA.tkSnap.IF_DeprLifeIT[COMPANY_DATA.fleet.refGen][`基準`]); // v0.3 步驟 4：汰換年限引用 Tokenomics（company.json 存同值，build_xlsx 檢查）
 DEFAULTS.cvCap = SCENARIOS[COMPANY_DATA.defaults.scenario].cvCap; // v0.1b：預設情境的可轉債年上限
 PMW_REVQ === `tkAnchor` && (DEFAULTS.m.revMW = [...SC_REV[COMPANY_DATA.defaults.scenario]], DEFAULTS.billableOpen = SCENARIOS[COMPANY_DATA.defaults.scenario].bOpen, DEFAULTS.m.billable = [...SCENARIOS[COMPANY_DATA.defaults.scenario].bil]); // v0.3：預設輸入＝預設情境的錨定值（company.json 存同值，build_xlsx 檢查）
 DEFAULTS.delayMonths = SCENARIOS[COMPANY_DATA.defaults.scenario].delay; // v0.2：預設情境的建設延誤月數
@@ -133,6 +136,10 @@ function kSpecApplyQ() { // v0.3（自 Nebius v0.4）：k 規格 → 倍數（�
   [`long`, `spot`].forEach(sd => [`base`, `low`, `high`, `sensMedian`].forEach(k => AM[sd][k] != null && (AM[sd][k] = val(AM[sd][k]))));
   let nb = AM.long.ownContract; nb && nb.specs && (nb.values = nb.specs.map(val));
   return true
+}
+function capexTkQ(e) { // v0.3 步驟 4（自 Nebius capexTkQ；Oracle 用 IF_CapexIT）：每 MW 建置成本（US$m/MW）＝Σ 新增世代占比 × capexName｜世代（e.tkCase＝Tokenomics 成本情境，e.newMix＝世代組合替代）
+  let cs = (e && e.tkCase) || `基準`, FL = COMPANY_DATA.fleet, nm = (e && e.newMix) || FL.newMix, TK = COMPANY_DATA.tkSnap[PMW_CAPEXNAME];
+  return nm.map(mx => FL.generations.reduce((a, g) => a + (mx[g] || 0) * TK[g][cs], 0))
 }
 function tkAnchorQ(sc, o = {}) { // v0.3：每 MW 年收入＝Tokenomics 錨 × 定價倍數 k（Excel「每MW收入_錨定」同列同算式；tkanchor.py 為建置時參考）
   // 期末在役 MW＝已連網 MW（scenarios.mwPath；不用可計費 MW，避免與期初可計費 MW 校準循環）；期初＝fleet.openMw；平均在役世代占比 × IF_HoldEcon（成本情境）÷ 1000＝錨；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約

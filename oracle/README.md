@@ -425,6 +425,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.delayMonths.note` | 建設延誤月數的依據與說明（v0.2） | 文字 | 建設延誤月數（v0.2）：計費／營收的 MW＝原可計… | 必改 |
 | `scenarios.capexTemplate.costMW` | 每 MW 建置成本（GPU＋網路＋機房內裝），各期 | US$m/MW 清單 | 37.45、37.59、37.59、37.59、37.59 | 檢查 |
 | `scenarios.capexTemplate.div` | JV 後續增資與策略投資，各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
+| `scenarios.mwPath.pue` | 公司 MW 口徑不明者換成 MW-IT 時使用的 PUE（÷ PUE）；須等於 Tokenomics IF_FacilityGW｜fleet.refGen（建置時與 Excel 檢查） | 倍 | 1.2 | 檢查 |
 
 ### `legacy`：舊版對照值
 
@@ -451,7 +452,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.ebStart` | 第一期 EBITDA 率 | 比例 | 0.652 | 必改 |
 | `defaults.ebSteady` | 最後一期（穩態）EBITDA 率；中間各期線性內插 | 比例 | 0.47 | 檢查 |
 | `defaults.ebitdaBasis` | EBITDA 口徑：ebitdar＝EBITDA＝EBITDAR 率 × 營收 − 租金（租金為固定成本，EBITDAR 率三情境共用）；其他值＝三情境共用 EBITDA 率（模板）（Oracle v0.1c） | 代碼 | ebitdar | 檢查 |
-| `defaults.ebitdarAdj` | EBITDAR 率校準：基準情境 [首期, 末期] 租金 ÷ OCI 營收；EBITDAR 率＝ebStart／ebSteady＋此值（scripts/calib_ebitdar.js --write 產生，verify.sh 檢查） | 比例清單 | 0.193075、0.156683 | 必改 |
+| `defaults.ebitdarAdj` | EBITDAR 率校準：基準情境 [首期, 末期] 租金 ÷ OCI 營收；EBITDAR 率＝ebStart／ebSteady＋此值（scripts/calib_ebitdar.js --write 產生，verify.sh 檢查） | 比例清單 | 0.244247、0.249862 | 必改 |
 | `defaults.ebitdarNote` | EBITDAR 口徑的說明文字 | 文字 | v0.1c：OCI EBITDA＝EBITDAR 率… | 可沿用 |
 | `defaults.services` | 非算力服務營收（軟體、儲存等），各期 | US$bn 清單 | 0、0、0、0、0 | 檢查 |
 | `defaults.otherEbitda` | 其他事業 EBITDA（負值＝燒錢），各期；同時進入損益 EBITDA 與營運來源（v0.1b） | US$bn 清單 | 0、0、0、0、0 | 必改 |
@@ -588,6 +589,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.checks.revCapLayer` | 收入上限檢查的比較層（自 CoreWeave W9／Nebius v0.4）：Tokenomics 四層瀑布 IFW_RevGWFleet_100／_Util／_Prod／_Life 擇一；門檻 revCapShareMax 比較此層（_Prod 已扣 SLO 下產能折減，最接近可實際售出 token）；四層一起取、逐層列示（下游資料契約第 2 條）；未設＝Util | 代碼 | Prod | 檢查 |
 | `methodology.perMw._note` | 每 MW 收入方法開關的說明（不進程式；Oracle v0.3） | 文字 | 每 MW 收入方法開關（Oracle v0.3，已決… | 可沿用 |
 | `methodology.perMw.revenue` | 每 MW 收入方法（Oracle v0.3）：tkAnchor＝Tokenomics 錨（IF_HoldEcon，在役世代加權）× 定價倍數 k（pricing.anchorMultiple）；legacy＝scenarios.revMW（v0.2，回歸驗收用） | 代碼 | tkAnchor | 檢查 |
+| `methodology.perMw.capex` | 每 MW 建置成本方法（Oracle v0.3 步驟 4）：tokenomics＝Σ 新增世代占比（fleet.newMix）× capexName｜世代（Excel 活公式引用 TK_*；需 revenue＝tkAnchor）；legacy 或未設＝scenarios.capexTemplate.costMW（v0.2 寫死值，回歸驗收用） | 代碼 | tokenomics | 檢查 |
+| `methodology.perMw.capexName` | 每 MW 建置成本引用的 Tokenomics 名稱：Oracle 機房以租賃取得、成長與汰換資本支出只含 IT 設備＝IF_CapexIT（自建廠房者如 Nebius 用 IF_CapexTotal） | 代碼 | IF_CapexIT | 必改 |
+| `methodology.perMw.deprLife` | GPU 經濟壽命（汰換年限）方法：tokenomics＝引用 IF_DeprLifeIT｜fleet.refGen（建置時檢查 defaults.gpuLife 等於該值）；legacy 或未設＝defaults.gpuLife | 代碼 | tokenomics | 檢查 |
+| `methodology.perMw.pue` | PUE 換算方法：tokenomics＝以 IF_FacilityGW｜fleet.refGen 核對 scenarios.mwPath.pue（建置時檢查相等；Excel「每MW收入_錨定」核對列）；MW-IT 換算的各輸入仍以 company.json 的推導值存放 | 代碼 | tokenomics | 檢查 |
 
 ### `peers`：同業比較（Comps）
 
@@ -652,7 +657,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.prepayCheck` | 客戶預付的公司說法與推得覆蓋比（檢查頁；v0.1b） | 文字 | 公司：Q1 新簽 >$30B AI 合約以客戶預付或… | 必改 |
 | `texts.mwFacts` | 產能（MW）相關的公司揭露摘要（檢查頁；v0.1b） | 文字 | Q4 FY26 簡報與 Q1 FY27 新聞稿：FY… | 必改 |
 | `texts.ebStartSource` | 起始 EBITDA 率的來源或推導方式（v0.1b） | 文字 | FY27Q1 合併 EBITDA 扣除傳統事業後拆推… | 必改 |
-| `texts.costMwNote` | 每 MW 建置成本的來源與口徑（v0.1b） | 文字 | Tokenomics IF_CapexIT（GB30… | 必改 |
+| `texts.costMwNote` | 每 MW 建置成本的來源與口徑（v0.1b） | 文字 | Σ 新增世代占比 × Tokenomics IF_C… | 必改 |
 | `texts.ppeOpenNote` | 期初 PP&E 基礎的來源或校準方式（v0.1b） | 文字 | 以 FY27Q1 實際折舊 3.156 × 4 × … | 必改 |
 | `texts.facilityName` | 未動用額度的名稱與條件（v0.1b） | 文字 | 循環信用額度，未動用 | 必改 |
 | `texts.newDebtRateNote` | 瀑布新債利率的來源（v0.1b） | 文字 | 瀑布新債利率取 2026-02 一次性投資級無擔保債… | 必改 |
@@ -706,6 +711,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
+| `fleet.refGen` | 取 Tokenomics 單一世代值（IF_DeprLifeIT、IF_FacilityGW 等）時使用的參考世代 | 文字 | GB300 NVL72 | 檢查 |
 | `fleet._note` | 世代組合區段的說明（不進程式；Oracle v0.3） | 文字 | 世代組合（Oracle v0.3，比照 Nebius… | 可沿用 |
 | `fleet.generations` | 使用的世代（與 Tokenomics 快照世代同名） | 清單 | Hopper H100、GB200 NVL72、GB300 NVL72、VR200 NVL72 | 可沿用 |
 | `fleet.openMw` | 評價日已連網 MW-IT（期初在役 MW，世代權重的起點；只用於世代加權，不進收入的 MW） | MW | 2543 | 必改 |

@@ -49,6 +49,13 @@ else:
     assert PMW_REV == 'legacy', f'methodology.perMw.revenue 不支援：{PMW_REV}'
     _REV0 = CO['scenarios']['revMW']
     assert M['revMW'] == CO['scenarios']['revMW'][_dsc], "defaults.m.revMW ≠ scenarios.revMW（預設情境）"
+_PM = (CO.get('methodology', {}).get('perMw') or {})
+PMW_CAPEX = _PM.get('capex', 'legacy'); PMW_CAPEXNAME = _PM.get('capexName', 'IF_CapexTotal'); PMW_LIFE = _PM.get('deprLife', 'legacy'); PMW_PUE = _PM.get('pue', 'legacy')  # 步驟 4：資本支出、汰換年限、PUE 改引用 TK
+assert PMW_CAPEX in ('legacy', 'tokenomics') and (PMW_CAPEX == 'legacy' or PMW_REV == 'tkAnchor'), 'methodology.perMw.capex＝tokenomics 需要 revenue＝tkAnchor（世代組合在『每MW收入_錨定』）'
+if PMW_LIFE == 'tokenomics' or PMW_PUE == 'tokenomics':
+    _TKV = _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), CO['tokenomics']['snapshotFile']), encoding='utf-8'))['items']
+    if PMW_LIFE == 'tokenomics': assert D['gpuLife'] == _TKV['IF_DeprLifeIT']['values'][CO['fleet']['refGen']]['基準'], "defaults.gpuLife ≠ Tokenomics IF_DeprLifeIT（基準）"
+    if PMW_PUE == 'tokenomics': assert CO['scenarios']['mwPath']['pue'] == _TKV['IF_FacilityGW']['values'][CO['fleet']['refGen']]['基準'], "scenarios.mwPath.pue ≠ Tokenomics IF_FacilityGW（基準）"
 _bopen = lambda k: int(_BRC['openAnnualRevenue'] / _REV0[k][0] + 0.5) if _CONV else D['billableOpen']
 assert D['billableOpen'] == _bopen(_dsc), f"defaults.billableOpen ≠ {_dsc} 情境校準值 {_bopen(_dsc)}"
 assert M['billable'] == ([int(_bopen(_dsc) + (x - _bopen(_dsc)) * b + 0.5) for x, b in zip(_conn(_dsc), _BRC['ratio'])] if _CONV else
@@ -430,13 +437,17 @@ MW31 = gi(r, "FY31 新增 MW（FY30 預建用）", "MW",
           f"=CHOOSE({SEL},I{sc_rows['保守']},I{sc_rows['基準']},I{sc_rows['積極']})",
           "隨情境：保守 0／基準 500／積極 1,000 [Assumed]", NUM0); r += 1
 FLOOR = gi(r, "«P0» CapEx 下限（已承諾）", "US$bn", D['capexFloorFY0'], f"全年指引下緣（{TXQ['capexGuideSource']}）：當年支出多已下單"); r += 1
-LIFE = gi(r, "GPU 經濟壽命（年）", "年", D['gpuLife'], "公司伺服器與網通設備耐用年限 6 年（10-K）；Tokenomics 6 年 [Interested-party]", NUM0); r += 1
+if PMW_LIFE == 'tokenomics':
+    _gc = {g['name']: g['code'] for g in _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), CO['tokenomics']['snapshotFile']), encoding='utf-8'))['source']['generations']}
+    LIFE = gi(r, "GPU 經濟壽命（年）", "年", f"=TK_DeprLifeIT_{_gc[CO['fleet']['refGen']]}", "引用 Tokenomics IF_DeprLifeIT（基準；TK_DeprLifeIT_" + _gc[CO['fleet']['refGen']] + "）；公司伺服器與網通設備耐用年限 6 年（10-K）與之相同 [Derived]", NUM0, font=GREEN); r += 1
+else:
+    LIFE = gi(r, "GPU 經濟壽命（年）", "年", D['gpuLife'], "公司伺服器與網通設備耐用年限 6 年（10-K）；Tokenomics 6 年 [Interested-party]", NUM0); r += 1
 for _y in sorted(int(y) for y in D['mwYearEnd'] if int(y) != MW_Y0):
     MWY[_y] = gi(r, f"{_y} 年底主動電力", "MW", D['mwYearEnd'][str(_y)], CO['texts']['mwYearEndNotes'][str(_y)], NUM0); r += 1
 PPE0 = gi(r, "«VMD» 期初 PP&E 基礎", "US$bn", D['ppeOpen'], TXQ['ppeOpenNote']); r += 1
 CAPSC = gi(r, "每 MW 建置成本倍數（整體）", "%", D['capexScale'], "同時影響 CapEx、汰換與車隊折舊；反向 DCF 用；預設 100%", PCT); r += 1
 r = phdr(r)
-r = prow(r, "每 MW 建置成本", "US$m/MW", CO['scenarios']['capexTemplate']['costMW'], NUM1, TXQ['costMwNote'])
+r = prow(r, "每 MW 建置成本", "US$m/MW", CO['scenarios']['capexTemplate']['costMW'], NUM1, TXQ['costMwNote'], font=GREEN if PMW_CAPEX == 'tokenomics' else BLUE)
 PPD = D['prepay']  # v0.1b：預付款區塊輸入
 PP_SH = gi(r, "有預付的合約比例", "%", PPD['shareOfDeals'], "覆蓋比已是整體口徑時為 100%（company.json → defaults.prepay）", PCT); r += 1
 PP_CV = gi(r, "預付占相關資本支出比", "%", PPD['capexCover'], CO['texts']['prepayCoverNote'], PCT); r += 1
@@ -851,6 +862,10 @@ if PMW_REV == 'tkAnchor':
         for i, L in enumerate(COLS):  # 輸入與假設 A 區：每 MW 年收入｜情境（US$bn/MW）
             c = _wi.cell(row=sc_rows['rev_' + nm], column=3 + i, value=f"='每MW收入_錨定'!{L}{AR[P + 'rev']}/1000"); c.font = GREEN
 
+    if PMW_CAPEX == 'tokenomics':  # 步驟 4：輸入與假設 D 區「每 MW 建置成本」＝Σ 新增世代占比 × TK_<capexName>_<世代>（活公式；與 HTML capexTkQ 同算式）
+        _cn = re.sub(r'^(IF|L1)_', '', PMW_CAPEXNAME)
+        for i, L in enumerate(COLS):
+            c = _wi.cell(row=IN['每 MW 建置成本'], column=3 + i, value="=" + "+".join(f"'每MW收入_錨定'!{L}{AR['nm_' + g]}*TK_{_cn}_{_GCX[g]}" for g in GEN)); c.font = GREEN
     r = section(ws, r, "目前容量情境（依『輸入與假設』A 區情境選擇）")
     aphdr()
     for key, nmx, unit, fmt in (("anchor", "錨（IF_HoldEcon 加權）", "US$m/MW", _MF), ("k", "定價倍數 k", "倍", _MF),
@@ -897,6 +912,11 @@ if PMW_REV == 'tkAnchor':
          [f"={L}{AR['cur_rev']}/CHOOSE({SEL}," + ",".join(f"{L}{AR['old_' + k]}" for _, k in _SCX) + ")-1" for L in COLS], PCT); r += 1
     arow('cmp_cost', "對照｜成本加成路徑：錨 ×（1＋15%）÷（1 − 8%）（只作 ROIC 檢查）", "US$m/MW", [f"={L}{AR['cur_anchor']}*(1+0.15)/(1-0.08)" for L in COLS], _MF, BLACK,
          "v0.1a 路徑 A 基準（經濟利潤加成 15%、公司層級費用 8% [Assumed]）；契約第 4 條：只作 ROIC 與資金缺口檢查，不作收入輸入"); r += 1
+    arow('cmp_capex', "對照｜v0.2 每 MW 建置成本（寫死 37.45／37.59，Tokenomics v5.24；只列，不入模型）", "US$m/MW", list(CO['scenarios']['capexTemplate']['costMW']), NUM1, BLUE,
+         "v0.2 的 scenarios.capexTemplate.costMW（GB300 37.45、VR200 37.59）；v0.3 起模型採 Σ 新增世代占比 × IF_CapexIT（『輸入與假設』D 區）"); r += 1
+    if PMW_PUE == 'tokenomics':
+        arow('pue', "PUE 換算核對：Tokenomics IF_FacilityGW（參考世代，基準）− company.json PUE（MW-IT 換算用）", "倍", [f"=TK_FacilityGW_{_GCX[FLT['refGen']]}-{CO['scenarios']['mwPath']['pue']}", "", "", "", ""], '0.0000', BLACK,
+             f"company.json → scenarios.mwPath.pue＝{CO['scenarios']['mwPath']['pue']}（口徑不明的公司 MW ÷ PUE 換成 MW-IT）；須等於 Tokenomics 值，否則『檢查_連動』顯示不一致"); r += 1
     arow('cmp_q1', "對照｜Q1 實現：OCI 年化 ÷ 評價日已連網 MW（只列，不用）", "US$m/MW", [f"={_BRC['openAnnualRevenue']}/{OPEN}*1000", "", "", "", ""], _MF, BLACK,
          "Q1 FY27 OCI 營收 × 4 ÷ 評價日已連網 MW-IT（口徑不明者 ÷1.2）；Q1 隱含 k 不得用來校準（B 段列驗證拆解）"); r += 1
     arow('cmp_oai', "對照｜Oracle–OpenAI 合約隱含每 MW 年收入（視為 IT；只列，不用）", "US$m/MW", [f"=C{AR['ev_Oracle–OpenAI 約 $300bn／4.5 GW（未經證實）']}", "", "", "", ""], _MF, BLACK,
@@ -2676,6 +2696,8 @@ checks = [
     ("營收＝在役 MW × 每 MW × 利用率（五期差額）", f"=SUM('運營_產能與收入'!C{CR['核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間']}:G{CR['核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間']})", "=0",
      "=IF(ABS(B{r})<0.000001,\"通過\",\"不一致\")", NUM, "MW 驅動：營收＝平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度"),
 ]
+if AR and 'pue' in AR:
+    checks += [("PUE 換算＝Tokenomics IF_FacilityGW", f"='每MW收入_錨定'!C{AR['pue']}", "=0", "=IF(ABS(B{r})<0.000001,\"通過\",\"不一致\")", '0.0000', "MW-IT 換算的 PUE（company.json → scenarios.mwPath.pue）與 Tokenomics 基準值相同（v0.3 步驟 4）")]
 if AR:  # v0.3：收入上限檢查列放在清單最後（前面各列有依位置補公式的程式，不可插在中間）
     checks += [("收入上限：每 MW 收入 ÷ 客戶付費 token 營收（最高）", f"='每MW收入_錨定'!C{AR['cur_capMax']}", f"≤{_n(CK['revCapShareMax'] * 100)}%",
      "=IF(B{r}<=" + _n(CK['revCapShareMax']) + ",\"通過\",\"警示\")", PCT,

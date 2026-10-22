@@ -347,6 +347,7 @@ function scnQ(e, sc) {
 // 每 MW 年收入改變時，期初可計費 MW 依「最新季 OCI 營收 × 4 ÷ 首期每 MW 年收入」自動重算，可計費路徑隨之重算（與 Excel 活公式相同）。供 3 × 3 矩陣、敏感度與拆解（scripts/tk_sens.js、attrib_*.js）共用。
 function tkScnQ(e, sc, o = {}) {
   let s = scnQ(e, sc), rev = tkAnchorQ(sc, o).rev, bo = Math.round(COMPANY_DATA.scenarios.billableRatio.openAnnualRevenue / rev[0]);
+  if (PMW_CAPEXQ === `tokenomics` && (o.tkCase || o.newMix)) s.a = { ...s.a, costMW: capexTkQ({ tkCase: o.tkCase, newMix: o.newMix }) }; // 步驟 4：成本情境／世代組合改變時建置成本重算
   s.m = { ...s.m, revMW: rev, billable: SCENARIOS[sc].acc.map((x, t) => Math.round(bo + (x - bo) * SC_BR[t])) }; s.billableOpen = bo;
   return s
 }
