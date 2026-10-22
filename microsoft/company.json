@@ -565,7 +565,7 @@
    },
    "pace": {
     "low": 650,
-    "base": 2511.7,
+    "base": 2527.2,
     "high": 2400
    },
    "note": "對外 AI MW-IT（在役）：評價日 3,250（v0.1a：自有在役 AI 4,500 × 對外 60%＋neocloud 租用 1,100 × 50%；三法交叉估計，事實總帳 split.extMW）[Derived／Assumed]；各期期末＝MIN(上限, 前期＋速度 × 期間長度)，首期自評價日起算（connectedStart＝null）。MAG r1 C10：基準速度由 calibrate 設定以資本支出指引解出（scripts/calib_pace.js；verify 檢查）；保守＝第三方可辨識站點速度、積極＝公司容量目標換算。"
@@ -584,7 +584,7 @@
   },
   "mw31": {
    "low": 0,
-   "base": 2511.7,
+   "base": 2527.2,
    "high": 2400
   },
   "delayMonths": {
@@ -640,7 +640,7 @@
    "2025": 1630,
    "2026": 3250
   },
-  "mw31": 2511.7,
+  "mw31": 2527.2,
   "capexFloorFY0": 204.2,
   "gpuLife": 6,
   "gpuLifeNote": "Tokenomics IF_DeprLifeIT 6 年（tk.IF_DeprLifeIT）；10-K 伺服器與網路設備 2–6 年（事實總帳 pl.usefulLife.servers）[Verified]",
@@ -1707,7 +1707,7 @@
   "prepayCheck": "不適用（Microsoft 無客戶預付融資機制）。",
   "mwFacts": "公司：FY25 新增 >2 GW、FY26 Q2–Q4 各約 1 GW（口徑不明，推定設施）；總產能約兩年翻倍；FY26 AI 總產能 +80% 以上。第三方：Bloomberg 總容量約 12 GW（2026-09）、2032 目標約 38 GW；Epoch AI Fairwater Wisconsin 369、Atlanta 636 MW-IT 在役 [Interested-party／第三方]。",
   "ebStartSource": "AI 雲端 EBITDA 率＝1 − Tokenomics 加權每 MW 營運成本 ÷ 每 MW 年收入",
-  "costMwNote": "每 MW 成本＝Σ 新增世代占比 × (TK_CapexIT＋自建比例 60% × TK_CapexFacility)（Tokenomics v5.27；US$m/MW-IT）",
+  "costMwNote": "每 MW 成本＝Σ 新增世代占比 × (TK_CapexIT＋自建比例 60% × TK_CapexFacility)（Tokenomics v19.0；US$m/MW-IT）",
   "ppeOpenNote": "評價日 PP&E 淨額 313.1（10-K；含融資租賃資產 67.3）[Verified]；D&A 分池：AI 期初毛額估計（評價日 AI 總 MW × Tokenomics 每 MW 成本）＋非 AI（其餘，壽命以最新季 D&A 年化校準）",
   "facilityName": "無已揭露的循環信用額度（不列入瀑布）",
   "newDebtRateNote": "瀑布新債利率以 Moody's Aaa 公司債殖利率 6.26% 類比（MSFT 個別長債殖利率找不到）[Analogy]",
@@ -1889,9 +1889,9 @@
  },
  "tokenomics": {
   "_note": "算力相關的產業與物理層資料只引用 Tokenomics（YinchenChang/Tokenomics）的 IF_（不含 IF_Hdr*）、IFW_（四層瀑布，上限檢查用）、IFC_（用途欄）與 L1_ 名稱，經版本固定的快照檔讀入（tools/tokenomics/import_tokenomics.py）；模型主值取「基準」成本情境。Excel「Tokenomics_取數」分頁建具名範圍 TK_<名稱>_<世代>，每 MW 年收入、營運成本與資本支出列引用之。Tokenomics 每 GW＝IT 關鍵電力。",
-  "snapshotFile": "data/tokenomics_snapshot_v5.31.json",
-  "version": "v5.31",
-  "commit": "f16f161a28b5d43e00e89aa019e4d3e10fae4e3d",
+  "snapshotFile": "data/tokenomics_snapshot_v19.0.json",
+  "version": "v19.0",
+  "commit": "1916a06465bb0c7efed21383075f2ae098508e24",
   "names": [
    "IF_HoldEcon",
    "IF_HoldAcct",
@@ -1932,12 +1932,18 @@
    "IFC_Use",
    "IF_NonNVRatio",
    "IF_NonNVCostRatio",
-   "IF_NonNV_Maia"
+   "IF_NonNV_Maia",
+   "L1_RevGW_PQ_VR200",
+   "L1_RevGW_PQ_VR200_Lo",
+   "L1_RevGW_PQ_VR200_Hi"
   ],
   "optional": [
    "IF_NonNVRatio",
    "IF_NonNVCostRatio",
-   "IF_NonNV_Maia"
+   "IF_NonNV_Maia",
+   "L1_RevGW_PQ_VR200",
+   "L1_RevGW_PQ_VR200_Lo",
+   "L1_RevGW_PQ_VR200_Hi"
   ],
   "holdEconWacc": 0.1,
   "holdEconWaccNote": "IF_HoldEcon 的資本回收年金折現率：Tokenomics Inputs!E28「WACC（經濟口徑）」基準 10%（builder v5：L1_HoldEconGW＝資本回收年金（WACC 10%）＋營運費用）；非具名範圍，換 Tokenomics 版本時核對 [Verified]；只用於一致性檢查（對照表 r1 C15）"
@@ -1951,14 +1957,28 @@
    "high": "高 現貨改用 Azure 牌價"
   },
   "kLong": {
-   "low": 0.45,
-   "base": 0.76,
-   "high": 0.76
+   "low": {
+    "priceEq": 5.7429,
+    "gen": "VR200",
+    "tkName": "IF_HoldEcon"
+   },
+   "base": {
+    "ref": "lc.iren"
+   },
+   "high": {
+    "ref": "lc.iren"
+   }
   },
   "kSpot": {
-   "low": 1.76,
-   "base": 1.76,
-   "high": 7.66
+   "low": {
+    "ref": "spot.h100.index"
+   },
+   "base": {
+    "ref": "spot.h100.index"
+   },
+   "high": {
+    "ref": "az.h100.od"
+   }
   },
   "longShare": {
    "low": 0.7,
@@ -1966,10 +1986,54 @@
    "high": 0.7
   },
   "kNote": {
-   "kLong": "長約 k：IREN–Microsoft 0.76（一手 MW）、Nscale 約 0.88（金額二手）、Anthropic–Azure 0.39–0.71（年期假設）、Nebius ≤1.33 → 基準 0.76；低＝長約區間下緣 0.45（Anthropic 隱含）[Assumed]（kevidence longContracts）",
-   "kSpot": "現貨 k：基準 1.76＝與 Nebius／CRWV 同一市場現貨指數（對照表 r1 C1）；高＝Azure 牌價換算（H100 隨需 12.29 ÷ IF_GPUhrEcon H100 1.605＝7.66，kevidence az.h100.od；與 Amazon 同取隨需層；牌價不是大客戶成交價，只作上限；替代：3 年預留 3.36 → 混合 1.54）",
+   "kLong": "長約 k（v0.2.1 起隨目前快照重算）：基準＝IREN–Microsoft GB300 五年約 9.7 US$m/MW-年 ÷ 目前 IF_HoldEcon｜GB300（v5.27 12.725 → 0.762〔v0.2 取 0.76〕；v19.0 10.8864 → 0.891），Nscale 約 0.88、Anthropic–Azure 0.39–0.71、Nebius ≤1.33 為對照；低＝v0.2 的 0.45（Anthropic 隱含 [Assumed]）換成固定價格＝0.45 × 當時 VR200 IF_HoldEcon 12.762 ＝ 5.7429 US$m/MW-年 [Derived] ÷ 目前 VR200 12.2255 → 0.470（kevidence lc.anthropic 的分母世代）。成本分母下降（GB300 −14.4%、VR200 −4.2%），價格不變",
+   "kSpot": "現貨 k（v0.2.1 起隨目前快照重算）：基準＝Silicon Data H100 現貨指數 2.82 US$/GPU-hr ÷ 目前 IF_GPUhrEcon｜H100（v5.27 1.605 → 1.757；v19.0 1.5426 → 1.828），MAG 三家一致（對照表 r1 C1）；高＝Azure 牌價 H100 隨需 12.29 ÷ 目前 IF_GPUhrEcon｜H100（v5.27 7.657 → v19.0 7.967；kevidence az.h100.od；與 Amazon 同取隨需層；牌價不是大客戶成交價，只作上限；替代：3 年預留 5.395）",
    "longShare": "長約占比 70%（OpenAI 約占商用 RPO 45%＋Anthropic 等長約；45%–100% [Assumed]）"
   },
+  "kEvidence": [
+   {
+    "id": "spot.h100.index",
+    "label": "H100 Silicon Data 現貨指數",
+    "gen": "H100",
+    "price": 2.82,
+    "unit": "US$/GPU-hr",
+    "tkName": "IF_GPUhrEcon",
+    "tag": "[Verified]（價格）／[Derived]（倍數）",
+    "source": "Silicon Data H100 Index 頁面",
+    "url": "https://www.silicondata.com/products/silicon-index/h100",
+    "date": "2026-10-06",
+    "retrieved": "2026-10-08",
+    "ref": "data/kevidence_microsoft_20261008.json → spotIndex"
+   },
+   {
+    "id": "lc.iren",
+    "label": "IREN–Microsoft GB300 五年約（Microsoft 付給 neocloud 的買價，代理長約賣價）",
+    "gen": "GB300",
+    "price": 9.7,
+    "unit": "US$m/MW-年",
+    "tkName": "IF_HoldEcon",
+    "tag": "[Analogy]（原標 [Derived]）",
+    "source": "kevidence rows[lc.iren]：TCV 9,700 ÷ 5 年 ÷ 200 MW-IT",
+    "url": "",
+    "date": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "ref": "data/kevidence_microsoft_20261008.json → rows[lc.iren]"
+   },
+   {
+    "id": "az.h100.od",
+    "label": "Azure ND96isr_H100_v5 隨需（每 GPU 小時；牌價）",
+    "gen": "H100",
+    "price": 12.29,
+    "unit": "US$/GPU-hr",
+    "tkName": "IF_GPUhrEcon",
+    "tag": "[Interested-party]（牌價，Microsoft 賣價）",
+    "source": "kevidence rows[az.h100.od]：98.32 ÷ 8 GPU",
+    "url": "",
+    "date": "2026-10-08",
+    "retrieved": "2026-10-08",
+    "ref": "data/kevidence_microsoft_20261008.json → rows[az.h100.od]"
+   }
+  ],
   "customFactor": 1.0,
   "customFactorSens": 0.7,
   "customCapexFactor": 1.0,
@@ -2144,7 +2208,7 @@
    "facts": "data/microsoft_facts_20261008.json",
    "kEvidence": "data/kevidence_microsoft_20261008.json",
    "consensus": "data/consensus_msft_20261008.json",
-   "tokenomicsSnapshot": "data/tokenomics_snapshot_v5.27.json",
+   "tokenomicsSnapshot": "data/tokenomics_snapshot_v19.0.json",
    "tokenomicsNames": "data/tokenomics_names.txt"
   },
   "calendar": {
