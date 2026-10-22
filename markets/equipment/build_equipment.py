@@ -103,16 +103,16 @@ MU_NOTE = ("注意：公司原文是「資本支出『增量』多數為建築�
 inp("sh_mu_25", "美光：FY25 設備占資本支出比例（建築基數的起點）", "%", 0.58, 0.64, 0.70, "Analogy", SH_SRC1, SH_SRC2 + "。美光未揭露 FY25 建築／設備比例")
 inp("sh_mu_26", "美光：FY26 設備占資本支出比例", "%", SHM["lo"][0], SHM["base"][0], SHM["hi"][0], "Derived", MU_Q3 + "｜" + MU_Q4 + "｜FY26 增量多數為無塵室建築（摘要轉述，非逐字）", MU_NOTE + " 引文為公司一手（Verified），比例為 Derived（FY25 基準 64% 為 Analogy、c 為 Assumed）")
 inp("sh_mu_27", "美光：FY27–FY29 設備占資本支出比例", "%", SHM["lo"][1], SHM["base"][1], SHM["hi"][1], "Derived", MU_Q3 + "；" + MU_Q4, MU_NOTE + " 高＝c 取 50%（「多於一半」）時的推導上限，約 53%。引文為公司一手（Verified），比例為 Derived")
-inp("sh_sk", "SK 海力士：設備占資本支出比例", "%", 0.58, 0.64, 0.70, "Analogy", SH_SRC1, SH_SRC2 + "。未找到公司揭露（定性：董事會 2026-02 核准 21.6 兆韓元完成龍仁第一晶圓廠結構工程與二至六期無塵室——TrendForce／UPI；無年度建築／設備比例）")
-inp("sh_ss", "三星（記憶體）：設備占資本支出比例", "%", 0.58, 0.64, 0.70, "Analogy", SH_SRC1, SH_SRC2 + "。未找到公司揭露（P5 無塵室先行、設備發包另行；無建築／設備比例）；電子新聞稱「晶圓廠成本中設備 70–80%」為業界泛稱，非三星數字")
-inp("sh_fd", "台積電（代工與邏輯）：設備占資本支出比例", "%", 0.58, 0.64, 0.70, "Analogy", SH_SRC1, SH_SRC2 + "。未找到公司揭露；台積電資本支出含先進封裝、光罩等（公司稱 10–20%），未另扣")
+inp("sh_sk", "SK 海力士：設備占資本支出比例（2025 實績校準值）", "%", 0.0, 0.0, 0.0, "Derived", "Mkt 頁公式：令 2025 年「SK＋三星＋美光設備＋其他廠獨立估計」＝SEMI 2025 DRAM＋NAND 實績（38.5），解出 SK、三星共用的一個占比；2026 年以後沿用。低＝長鑫取 12.0 時的校準值；高＝58%（業界下限，Rebound Capital）", "校準只用 2025 實績；2026 年以後完全沒有參照 SEMI 或券商的預測。未找到 SK 海力士公司揭露（定性：董事會 2026-02 核准 21.6 兆韓元完成龍仁第一晶圓廠結構工程與二至六期無塵室）。業界值 64% 不再當基準，Sens 保留一列對照")
+inp("sh_ss", "三星（記憶體）：設備占資本支出比例（同 SK 海力士，校準值）", "%", 0.0, 0.0, 0.0, "Derived", "同 sh_sk（兩者共用同一個校準值，以 2025 實績校準）", "未找到三星公司揭露（P5 無塵室先行，無建築／設備比例）。三星記憶體 2025 資本支出為 DS 47.5 兆 × ss_mem（Assumed）；ss_mem 改變時校準值隨之改變（Sens）")
+inp("sh_fd", "台積電（代工與邏輯）：設備占資本支出比例", "%", 0.58, 0.64, 0.70, "Analogy", SH_SRC1, SH_SRC2 + "。台積電沒有類似美光的揭露，2025 年其他代工邏輯殘差為正，維持 64%；代工邏輯是否也有建築比重偏高的問題，待查。台積電資本支出含先進封裝、光罩等（公司稱 10–20%），未另扣")
 sec("B2. 其他廠 2026 年以後成長率（Assumed；每個區塊合併成一個年成長率，套用 2026–2029。依據公司資本支出指引；不參照 SEMI 2026 以後預測）")
 inp("g_oth_dram", "其他 DRAM 廠（長鑫、南亞、華邦等）設備成長率", "%/年", 0.10, 0.18, 0.60, "Assumed", "長鑫：未揭露資本支出；研究估計月產能 360k／420k／500k 片（2026／27／28）→ +17%／+19%（https://faxiangongchang.com/en/reports/china-memory-chip-2026，弱）；南亞 2026 資本支出上限 NT$69.7B，2027 最高 NT$200B（約 4 倍，https://www.digitimes.com/news/a20260713PD211/nanya-technology-capex-capacity-2027.html）；華邦 2026 NT$42.1B（紀錄高，https://www.gate.com/news/detail/winbond-approves-507b-capex-expands-kaohsiung-fab-production-to-24000-23369791）", "基準取長鑫產能成長（兩年平均約 18%，Analogy：產能成長代替資本支出）；低 10% 假設資本支出增速低於產能；高 60% 取南亞 2027 與鎧俠 FY26 的高增速。長鑫的資本支出指引：未找到；2025 年基準（華邦、南亞）：未找到")
 inp("g_oth_nand", "其他 NAND 廠（鎧俠、SanDisk 合資、長江存儲等）設備成長率", "%/年", 0.0, 0.18, 0.60, "Assumed", "鎧俠：FY25 ¥283.7B → FY26 ¥450B（+59%），FY26–28 年均約 ¥470B（https://www.trendforce.com/news/2026/06/03/news-kioxia-targets-%C2%A5470b-yearly-capex-in-fy26-28-up-66-from-fy25-reportedly-weighing-third-kitakami-fab-and-ma/）；SanDisk FY27 毛資本支出約營收 6%（含與鎧俠合資的分攤，與鎧俠重疊，不另加，https://www.fool.com/investing/2026/08/29/sandisk-and-kioxia-plan-to-invest-more-than-usd31-billion-in-japanese-memory-plants-about-60-of-what-they-have-spent-there-in-25-years/）；長江存儲：三廠 2026 底投產，金額未找到", "基準＝鎧俠 FY25→FY28 年複合 ((470/283.7)^(1/3)−1)≈18%（Derived，單一公司）；低 0% 為 FY27–28 持平；高 60% 為 FY26 單年增速。長江存儲資本支出指引：未找到")
 inp("g_oth_fd", "其他代工與邏輯（中芯、Intel、三星晶圓代工、華虹、聯電、GlobalFoundries 等）設備成長率", "%/年", 0.0, 0.08, 0.20, "Assumed", "中芯：2025 約 $8.1B、2026 約持平（https://www.trendforce.com/news/2026/03/30/news-smic-2026-action-plan-points-to-above-industry-growth-capex-held-in-line-with-2025/）；Intel：2026 提高到 >$20B（原約 $17–18B；2027「明顯更高」，https://www.gate.com/news/detail/intel-raises-2026-capex-guidance-to-over-20-billion-q2-earnings-beat-22949346）", "基準＝中芯（0%）與 Intel（約 +11%，18→20）以 2025 金額加權約 +8%（Derived）；低 0%＝中芯持平；高 20% 假設 Intel 2027 大增。三星晶圓代工、華虹、聯電、GlobalFoundries 資本支出指引：未找到（三星僅有半導體合計）")
-sec("G. 2025 年其他記憶體廠資本支出：獨立估計（只作核對，不進任何情境、不改任何基準參數）")
-inp("sh_oth", "其他記憶體廠設備占資本支出比例（業界值，核對用）", "%", 0.58, 0.64, 0.70, "Analogy", SH_SRC1, SH_SRC2)
-inp("ind_cxmt", "長鑫 2025 資本支出", "$B", 6.9, 6.9, 12.0, "Interested-party", "TechInsights（Reuters 轉引，2025 初）：2023、2024 約 $6–7B，預期 2025 +5%（≈6.9）https://finance.yahoo.com/news/exclusive-chipmaker-cxmt-plans-shanghai-073043365.html", "高 12.0：BigGo 摘要「CNY 80.5B（約 $12.0B）、+62%」，年度未核對 https://finance.biggo.com/news/5a548f95-479d-4e07-8dd1-af5beb8eea1f。TrendForce、券商的長鑫 2025 資本支出：未找到。基準取低端，無依據偏好")
+sec("G. 2025 年其他記憶體廠資本支出：獨立估計（用作 2025 其他廠基準，並用於校準 SK 海力士、三星設備占比；只用 2025 實績）")
+inp("sh_oth", "其他記憶體廠設備占資本支出比例（業界值）", "%", 0.58, 0.64, 0.70, "Analogy", SH_SRC1, SH_SRC2)
+inp("ind_cxmt", "長鑫 2025 資本支出（高值年度未核對）", "$B", 6.9, 6.9, 12.0, "Interested-party", "TechInsights（Reuters 轉引，2025 初）：2023、2024 約 $6–7B，預期 2025 +5%（≈6.9）https://finance.yahoo.com/news/exclusive-chipmaker-cxmt-plans-shanghai-073043365.html", "高 12.0：BigGo 摘要「CNY 80.5B（約 $12.0B）、+62%」，年度未核對 https://finance.biggo.com/news/5a548f95-479d-4e07-8dd1-af5beb8eea1f。TrendForce、券商的長鑫 2025 資本支出：未找到。基準取低端，無依據偏好")
 inp("ind_nand_ind", "全球 NAND 資本支出 2025", "$B", None, 21.1, None, "Interested-party", "TrendForce 2025-11-13：NAND 資本支出 2025 $21.1B、2026 $22.2B https://www.trendforce.com/presscenter/news/20251113-12780.html", "StorageNewsletter 轉載 https://www.storagenewsletter.com/2025/12/31/memory-industry-to-maintain-cautious-capex-in-2026/（非獨立）")
 inp("ind_ymtc_sh", "長江存儲占全球 NAND 資本支出比例（2025）", "%", None, 0.20, None, "Interested-party", "搜尋摘要稱 YMTC 2025 資本支出約占全球 NAND 投資 20%（出處為 Digitimes 系列報導，確切文章未核對）", "第二來源：未找到")
 inp("ind_kioxia", "鎧俠 FY2025 資本支出（FY 至 2026-03）", "¥B", None, 283.7, None, "Interested-party", "TrendForce 2026-06-03（FY26 ¥450B、FY26–28 年均 ¥470B，較 FY25 +66%；FY25 ¥283.7B 為二手整理）https://www.trendforce.com/news/2026/06/03/news-kioxia-targets-%C2%A5470b-yearly-capex-in-fy26-28-up-66-from-fy25-reportedly-weighing-third-kitakami-fab-and-ma/", "鎧俠 Investor Day 2026 簡報 https://www.kioxia-holdings.com/content/dam/kioxia-hd/en-jp/ir/library/event/asset/Kioxia-Investor-Day-2026-en.pdf（未開啟，未核對 ¥283.7B）")
@@ -215,29 +215,52 @@ _r = mr[0]
 mput("2025 年 SEMI DRAM ÷（DRAM＋NAND）（各年沿用，Assumed）", "%", {25: f"={c('semi_dram', 25)}/({c('semi_dram', 25)}+{c('semi_nand', 25)})", **{y: f"=$C{_r}" for y in Y2}}, key="dr", fmt="0.0%", note="把各廠記憶體設備拆成 DRAM（含 HBM）與 NAND：假設三家組合同 2025 年 SEMI 市場組合")
 mput("SEMI 其他前段占（記憶體＋代工邏輯）比例（2025；各年沿用，Assumed）", "%", {25: f"={c('semi_ofe', 25)}/({c('semi_dram', 25)}+{c('semi_nand', 25)}+{c('semi_fd', 25)})", **{y: f"=$C{_r+1}" for y in Y2}}, key="ofer", fmt="0.0%", note="其他前段（類比、功率、光罩等）v0.1 維持 2025 年占比")
 mr[0] += 1
-msec("2. 記憶體晶圓前段設備（2025：三家由下而上＋SEMI 殘差求其他廠基準；2026 起：其他廠＝基準 × 成長率）")
+msec("2. 記憶體晶圓前段設備（2025 以實績校準；2026 起沿用校準值與成長率）")
+msec("2a. 2025 年其他記憶體廠：由下而上獨立估計（資本支出 × sh_oth）＝其他廠 2025 基準")
+mput("長鑫資本支出", "$B", {25: "=ind_cxmt"}, key="i_cx", note="TechInsights（Reuters）；高 12.0 年度未核對，見 In／Sens")
+mput("南亞科資本支出", "$B", {25: "=ind_nanya/fx_twd"}, key="i_ny")
+mput("華邦資本支出", "$B", {25: 0}, key="i_wb", note="未找到，記 0")
+mput("其他 DRAM 廠資本支出", "$B", {25: f"={c('i_cx', 25)}+{c('i_ny', 25)}+{c('i_wb', 25)}"}, key="i_dc")
+mput("鎧俠資本支出（FY25）", "$B", {25: "=ind_kioxia/fx_jpy"}, key="i_kx")
+mput("長江存儲資本支出（全球 NAND 資本支出 × 占比）", "$B", {25: "=ind_nand_ind*ind_ymtc_sh"}, key="i_ym")
+mput("SanDisk（JV 分攤與鎧俠重疊，不另計）", "$B", {25: 0}, key="i_sd", note="FY25 未找到")
+mput("其他 NAND 廠資本支出", "$B", {25: f"={c('i_kx', 25)}+{c('i_ym', 25)}+{c('i_sd', 25)}"}, key="i_nc")
+mput("其他 DRAM 廠設備＝資本支出 × sh_oth", "$B", {25: f"={c('i_dc', 25)}*sh_oth"}, key="i_de")
+mput("其他 NAND 廠設備＝資本支出 × sh_oth", "$B", {25: f"={c('i_nc', 25)}*sh_oth"}, key="i_ne")
+mput("其他記憶體廠設備（獨立估計）", "$B", {25: f"={c('i_de', 25)}+{c('i_ne', 25)}"}, key="i_eq", bold=True)
+mr[0] += 1
+msec("2b. 三大廠資本支出")
 mput("SK 海力士資本支出（美元）", "$B", {y: f"=cap_sk_{y}*1000/fx" for y in YRS}, key="sk", note="兆韓元 × 1000 ÷ KRW/USD ＝ 十億美元（2025 亦用同一匯率，Assumed）")
 mput("美光資本支出（淨；FY≈日曆年）", "$B", {y: f"=cap_mu_{y}" for y in YRS}, key="mu")
 mput("三星記憶體資本支出（美元）", "$B", {25: "=cap_ssds_25*ss_mem*1000/fx", **{y: f"=cap_ss_{y}*1000/fx" for y in Y2}}, key="ss", note="2025＝DS 47.5 兆 × 記憶體占比（Assumed）")
 mput("三家資本支出合計", "$B", {y: f"={c('sk', y)}+{c('mu', y)}+{c('ss', y)}" for y in YRS}, key="cap3", bold=True)
+mr[0] += 1
+msec("2c. 校準（只用 2025 實績）：SK 海力士、三星共用一個設備占比，使 2025 年各廠設備加總＝SEMI 2025 DRAM＋NAND")
+mput("SEMI 2025 DRAM＋NAND 設備（實績）", "$B", {25: f"={c('semi_dram', 25)}+{c('semi_nand', 25)}"}, key="cal_semi")
+mput("  減：美光 2025 設備（資本支出 × sh_mu_25）", "$B", {25: f"={c('mu', 25)}*sh_mu_25"}, key="cal_mu")
+mput("  減：其他記憶體廠 2025 設備（獨立估計）", "$B", {25: f"={c('i_eq', 25)}"}, key="cal_oth")
+mput("  ＝SK 海力士＋三星 2025 設備（校準目標）", "$B", {25: f"={c('cal_semi', 25)}-{c('cal_mu', 25)}-{c('cal_oth', 25)}"}, key="cal_tgt")
+mput("  ÷ SK 海力士＋三星 2025 資本支出", "$B", {25: f"={c('sk', 25)}+{c('ss', 25)}"}, key="cal_den")
+mput("校準值：SK 海力士、三星設備占比（Derived；2026 年以後沿用）", "%", {25: f"={c('cal_tgt', 25)}/{c('cal_den', 25)}"}, key="cal", fmt="0.0%", bold=True, note="用公式算出；In 頁 sh_sk、sh_ss 基準取此值")
+mput("  低：長鑫取高值（In 高）時的校準值", "%", {25: f"=({c('cal_semi', 25)}-({c('i_dc', 25)}-{c('i_cx', 25)}+ind_cxmt_hi+{c('i_nc', 25)})*sh_oth-{c('cal_mu', 25)})/{c('cal_den', 25)}"}, key="cal_lo", fmt="0.0%")
+mput("  高：業界下限（sh_oth 低）", "%", {25: "=sh_oth_lo"}, key="cal_hi", fmt="0.0%")
+mput("  對照：業界值（sh_oth 基準，不再當基準）", "%", {25: "=sh_oth"}, key="cal_ind", fmt="0.0%")
+mr[0] += 1
+msec("2d. 各廠設備與合計")
 mput("SK 海力士設備＝資本支出 × sh_sk", "$B", {y: f"={c('sk', y)}*sh_sk" for y in YRS}, key="eq_sk")
 mput("美光設備＝資本支出 × sh_mu（FY25／FY26／FY27–29）", "$B", {25: f"={c('mu', 25)}*sh_mu_25", 26: f"={c('mu', 26)}*sh_mu_26", **{y: f"={c('mu', y)}*sh_mu_27" for y in (27, 28, 29)}}, key="eq_mu")
 mput("三星記憶體設備＝資本支出 × sh_ss", "$B", {y: f"={c('ss', y)}*sh_ss" for y in YRS}, key="eq_ss")
 mput("三家設備合計", "$B", {y: f"={c('eq_sk', y)}+{c('eq_mu', y)}+{c('eq_ss', y)}" for y in YRS}, key="eq3", bold=True)
 mput("  三家加權設備占比", "%", {y: f"={c('eq3', y)}/{c('cap3', y)}" for y in YRS}, key="wsh", fmt="0.0%")
-mput("  其中 DRAM（× 2025 年 DRAM 占比）", "$B", {y: f"={c('eq3', y)}*{c('dr', y)}" for y in YRS}, key="eq3d")
+mput("  其中 DRAM（× 2025 年 DRAM 占比）", "$B", {y: f"={c('eq3', y)}*{c('dr', y)}" for y in YRS}, key="eq3d", note="2025 年 DRAM／NAND 拆分為近似（以 SEMI 2025 比例拆三家），合計不受影響")
 mput("  其中 NAND", "$B", {y: f"={c('eq3', y)}-{c('eq3d', y)}" for y in YRS}, key="eq3n")
-mput("2025 殘差：其他 DRAM 廠＝SEMI DRAM − 三家 DRAM 設備（照實顯示，含負值）", "$B", {25: f"={c('semi_dram', 25)}-{c('eq3d', 25)}"}, key="rd25", note="Derived；只在 2025（實績）用 SEMI 求基準")
-mput("2025 殘差：其他 NAND 廠＝SEMI NAND − 三家 NAND 設備（照實顯示，含負值）", "$B", {25: f"={c('semi_nand', 25)}-{c('eq3n', 25)}"}, key="rn25")
-mput("  2025 殘差合計（DRAM＋NAND）", "$B", {25: f"={c('rd25', 25)}+{c('rn25', 25)}"}, key="r25", bold=True, note="為負＝三家資本支出 × 設備占比在實績年就已超過 SEMI 記憶體總額（發現）；基準先取 0")
 _r = mr[0]
-mput("其他 DRAM 廠設備（基準＝MAX(殘差, 0)；2026 起 × (1＋g_oth_dram)）", "$B", {25: f"=MAX({c('rd25', 25)},0)", **{y: f"={YC[y-1]}{_r}*(1+g_oth_dram)" for y in Y2}}, key="od")
+mput("其他 DRAM 廠設備（2025＝獨立估計；2026 起 × (1＋g_oth_dram)）", "$B", {25: f"={c('i_de', 25)}", **{y: f"={YC[y-1]}{_r}*(1+g_oth_dram)" for y in Y2}}, key="od")
 _r = mr[0]
-mput("其他 NAND 廠設備（基準＝MAX(殘差, 0)；2026 起 × (1＋g_oth_nand)）", "$B", {25: f"=MAX({c('rn25', 25)},0)", **{y: f"={YC[y-1]}{_r}*(1+g_oth_nand)" for y in Y2}}, key="on")
+mput("其他 NAND 廠設備（2025＝獨立估計；2026 起 × (1＋g_oth_nand)）", "$B", {25: f"={c('i_ne', 25)}", **{y: f"={YC[y-1]}{_r}*(1+g_oth_nand)" for y in Y2}}, key="on")
 mput("記憶體設備合計＝三家＋其他", "$B", {y: f"={c('eq3', y)}+{c('od', y)}+{c('on', y)}" for y in YRS}, key="mem", bold=True)
-mput("旗標：2025 殘差為負（1＝是）", "", {25: f"=IF({c('r25', 25)}<0,1,0)"}, key="neg", fmt="0")
-mput("診斷：記憶體合計 − SEMI DRAM＋NAND", "$B", {y: f"={c('mem', y)}-{c('semi_dram', y)}-{c('semi_nand', y)}" for y in YRS}, key="dmem", note="診斷值（不是輸入）：2026 起正＝本模型高於 SEMI")
-mput("診斷：SEMI 隱含設備占比（殘差剛好為 0）＝SEMI 記憶體 ÷ 三家資本支出", "%", {y: f"=({c('semi_dram', y)}+{c('semi_nand', y)})/{c('cap3', y)}" for y in YRS}, key="impl_m", fmt="0.0%", note="診斷值，不用於任何情境")
+mput("核對：2025 記憶體合計 − SEMI 實績（應為 0）", "$B", {25: f"={c('mem', 25)}-{c('cal_semi', 25)}"}, key="chk_cal", fmt="0.000")
+mput("診斷：記憶體合計 − SEMI DRAM＋NAND", "$B", {y: f"={c('mem', y)}-{c('semi_dram', y)}-{c('semi_nand', y)}" for y in YRS}, key="dmem", note="診斷值（不是輸入）：2026 起正＝本模型高於 SEMI；2025 為 0（校準）")
 mr[0] += 1
 msec("3. 代工與邏輯晶圓前段設備（2025：台積電由下而上＋SEMI 殘差求其他廠基準；2026 起：其他廠＝基準 × 成長率）")
 mput("台積電資本支出", "$B", {y: f"=cap_ts_{y}" for y in YRS}, key="ts")
@@ -251,25 +274,11 @@ mr[0] += 1
 msec("3b. 其他前段（類比、功率、光罩、廠務等）：維持 2025 年占（記憶體＋代工邏輯）的比例")
 mput("其他前段設備", "$B", {25: f"={c('semi_ofe', 25)}", **{y: f"={c('ofer', y)}*({c('mem', y)}+{c('fdt', y)})" for y in Y2}}, key="ofe", note="2025＝SEMI 差額；2026 起＝比例 × 本模型（記憶體＋代工邏輯）")
 mr[0] += 1
-msec("3c. 診斷：2025 年其他記憶體廠獨立估計（由下而上；只作核對，不進任何情境）")
-mput("長鑫資本支出", "$B", {25: "=ind_cxmt"}, key="i_cx", note="TechInsights（Reuters）；高 12.0 見 In")
-mput("南亞科資本支出", "$B", {25: "=ind_nanya/fx_twd"}, key="i_ny")
-mput("華邦資本支出", "$B", {25: 0}, key="i_wb", note="未找到，記 0")
-mput("其他 DRAM 廠資本支出", "$B", {25: f"={c('i_cx', 25)}+{c('i_ny', 25)}+{c('i_wb', 25)}"}, key="i_dc")
-mput("鎧俠資本支出（FY25）", "$B", {25: "=ind_kioxia/fx_jpy"}, key="i_kx")
-mput("長江存儲資本支出（全球 NAND 資本支出 × 占比）", "$B", {25: "=ind_nand_ind*ind_ymtc_sh"}, key="i_ym")
-mput("SanDisk（JV 分攤與鎧俠重疊，不另計）", "$B", {25: 0}, key="i_sd", note="FY25 未找到")
-mput("其他 NAND 廠資本支出", "$B", {25: f"={c('i_kx', 25)}+{c('i_ym', 25)}+{c('i_sd', 25)}"}, key="i_nc")
-mput("其他 DRAM 廠設備＝資本支出 × sh_oth", "$B", {25: f"={c('i_dc', 25)}*sh_oth"}, key="i_de")
-mput("其他 NAND 廠設備＝資本支出 × sh_oth", "$B", {25: f"={c('i_nc', 25)}*sh_oth"}, key="i_ne")
-mput("其他記憶體廠設備（獨立估計）", "$B", {25: f"={c('i_de', 25)}+{c('i_ne', 25)}"}, key="i_eq", bold=True, note="對照：基準的其他廠＝SEMI 殘差（下一列）")
-mput("  對照：基準的其他記憶體廠 2025（殘差）", "$B", {25: f"={c('od', 25)}+{c('on', 25)}"}, key="i_base")
-mput("三大廠隱含設備占比（獨立估計）＝(SEMI 2025 DRAM＋NAND − 其他廠獨立估計) ÷ 三大廠資本支出", "%", {25: f"=({c('semi_dram', 25)}+{c('semi_nand', 25)}-{c('i_eq', 25)})/{c('cap3', 25)}"}, key="i_impl", fmt="0.0%", bold=True, note="診斷值。與下兩列並列")
-mput("  對照：In 頁採用的三大廠加權設備占比（sh_sk／sh_mu_25／sh_ss）", "%", {25: f"={c('wsh', 25)}"}, key="i_wsh", fmt="0.0%")
-mput("  對照：SEMI 隱含占比（其他廠＝0）", "%", {25: f"={c('impl_m', 25)}"}, key="i_impl0", fmt="0.0%")
-mput("  敏感：長鑫取高（12.0）", "%", {25: f"=({c('semi_dram', 25)}+{c('semi_nand', 25)}-(({c('i_dc', 25)}-{c('i_cx', 25)}+ind_cxmt_hi)+{c('i_nc', 25)})*sh_oth)/{c('cap3', 25)}"}, key="i_impl_hi", fmt="0.0%")
-mput("  敏感：其他廠設備占比取 58%／70%", "%", {25: f"=({c('semi_dram', 25)}+{c('semi_nand', 25)}-({c('i_dc', 25)}+{c('i_nc', 25)})*sh_oth_lo)/{c('cap3', 25)}", 26: f"=({c('semi_dram', 25)}+{c('semi_nand', 25)}-({c('i_dc', 25)}+{c('i_nc', 25)})*sh_oth_hi)/{c('cap3', 25)}"}, key="i_impl_sh", fmt="0.0%", note="C 欄＝其他廠占比 58%；D 欄＝70%")
-mput("旗標：隱含占比低於業界下限 58%（1＝是）", "", {25: f"=IF({c('i_impl', 25)}<sh_sk_lo,1,0)"}, key="i_flag", fmt="0")
+msec("3c. 診斷：三大廠隱含設備占比（2025）")
+mput("三大廠隱含設備占比（獨立估計）＝(SEMI − 其他廠獨立估計) ÷ 三大廠資本支出", "%", {25: f"=({c('cal_semi', 25)}-{c('i_eq', 25)})/{c('cap3', 25)}"}, key="i_impl", fmt="0.0%", bold=True, note="＝三家加權設備占比（校準恆等）")
+mput("  其中 SK 海力士、三星校準值", "%", {25: f"={c('cal', 25)}"}, key="i_cal", fmt="0.0%")
+mput("  對照：業界值 sh_oth（Sens 保留 64% 對照列）", "%", {25: f"={c('cal_ind', 25)}"}, key="i_ind", fmt="0.0%")
+mput("旗標：校準值低於業界下限 58%（1＝是）", "", {25: f"=IF({c('cal', 25)}<sh_oth_lo,1,0)"}, key="i_flag", fmt="0", note="低於下限＝SK 海力士、三星資本支出中建築與無塵室比重高於業界值（與美光「增量多數為建築」方向一致，非證明）")
 mr[0] += 1
 msec("4. 測試與封裝設備（v0.1 以 SEMI 金額為輸入，不做由下而上）")
 M.cell(mr[0], 1, "為何不由下而上：需要「每顆加速器的測試時間（最終測試、燒機 burn-in、系統級測試 SLT 的小時數）」與「每條 CoWoS／HBM 堆疊產線的鍵合機台數」，兩者公開資料皆未找到（Hanmi 等僅有訂單，無台數與產能對照）；以 SEMI 為輸入、並標明為單一來源。"); mr[0] += 1
@@ -322,6 +331,11 @@ mput("2025 本模型（由下而上）− SEMI 實績合計", "$B", {25: f"={c('
 mput("情境 A 分項合計 − 總額（應為 0）", "$B", {y: f"=SUM({YC[y]}{MR['A_L1']}:{YC[y]}{MR['A_L7']})-{c('A_tot', y)}" for y in Y2}, key="chk2", fmt="0.000")
 mput("B、C 在 2025–2027 與 A 相同（差額合計，應為 0）", "$B", {y: f"=({c('B_tot', y)}-{c('A_tot', y)})+({c('C_tot', y)}-{c('A_tot', y)})" for y in (25, 26, 27)}, key="chk3", fmt="0.000")
 last_row = mr[0]
+# In 頁 sh_sk、sh_ss：基準／低／高取 Mkt 校準列
+for r_ in range(4, IN.max_row + 1):
+    if IN.cell(r_, 1).value in ("sh_sk", "sh_ss"):
+        for col_, key_ in ((4, "cal_lo"), (5, "cal"), (6, "cal_hi")):
+            cc = IN.cell(r_, col_, f"=Mkt!$C${MR[key_]}"); cc.number_format = "0.0%"; cc.font = Font(color="000000")
 
 # 摘要區（4–38）
 srow = 4
@@ -386,7 +400,7 @@ for label, y, src, expr, mk, note, growth in items:
     RC.cell(rr, 12, note); rr += 1
 RC.cell(rr + 1, 1, "核對：SEMI 2026 分項加總").font = BOLD
 RC.cell(rr + 2, 1, "DRAM＋NAND＋代工邏輯＋其他前段 − WFE"); RC.cell(rr + 2, 4, f"=Mkt!D{MR['semi_dram']}+Mkt!D{MR['semi_nand']}+Mkt!D{MR['semi_fd']}+Mkt!D{MR['semi_ofe']}-Mkt!D{MR['semi_wfe']}").number_format = "0.000"
-RC.cell(rr + 3, 1, "注意：2026 年以後 A 路徑的總額由下而上（其他廠＝2025 基準 × 成長率，Assumed），不由 SEMI 2026 以後預測決定（測試與封裝除外，v0.1 以 SEMI 為輸入），所以對 SEMI 與各來源的差距有意義。2025 年的其他廠基準由「SEMI 實績減已知廠」求得。")
+RC.cell(rr + 3, 1, "注意：校準只用 2025 實績；2026 年以後 A 路徑的總額由下而上（其他廠＝2025 基準 × 成長率，Assumed），不由 SEMI 或券商預測決定（測試與封裝除外，v0.1 以 SEMI 為輸入），所以對 SEMI 與各來源的差距有意義。")
 for col, w in zip("ABCDEFGHIJKL", [14, 7, 36, 10, 10, 9, 10, 9, 10, 9, 16, 70]): RC.column_dimensions[col].width = w
 RECON_LAST = rr
 
@@ -396,8 +410,14 @@ SE["A1"] = "Sens — 一次動一個輸入（低／高取 In 的區間）；輸�
 hdr(SE, 3, ["輸入", "2027 A", "相對基準", "2028 A", "相對基準", "2029 A", "相對基準", "說明"])
 def parts(**p):
     P = dict(sk="sh_sk", ss="sh_ss", mu25="sh_mu_25", mu26="sh_mu_26", mu27="sh_mu_27", fd="sh_fd", fx="fx", gd="g_oth_dram", gn="g_oth_nand", gf="g_oth_fd",
-             sk25="cap_sk_25", ssm="ss_mem", ts25="cap_ts_25", add=0, bd=None, bn=None)
-    P.update(p); return P
+             sk25="cap_sk_25", ssm="ss_mem", ts25="cap_ts_25", cx="ind_cxmt", sho="sh_oth", recal=False)
+    P.update(p)
+    if P["recal"]:   # 2025 輸入改變時重新校準 SK、三星共用占比
+        oth = f"((Mkt!$C${MR['i_dc']}-Mkt!$C${MR['i_cx']}+{P['cx']}+Mkt!$C${MR['i_nc']})*{P['sho']})"
+        mu = f"(cap_mu_25*{P['mu25']})"
+        den = f"({P['sk25']}*1000/{P['fx']}+cap_ssds_25*{P['ssm']}*1000/{P['fx']})"
+        P["sk"] = P["ss"] = f"((Mkt!$C${MR['cal_semi']}-{oth}-{mu})/{den})"
+    return P
 def eq3(y, P):
     mu_sh = {25: P["mu25"], 26: P["mu26"]}.get(y, P["mu27"])
     sk = f"{P['sk25'] if y == 25 else 'cap_sk_'+str(y)}*1000/{P['fx']}*{P['sk']}"
@@ -405,35 +425,36 @@ def eq3(y, P):
     ss = (f"cap_ssds_25*{P['ssm']}*1000/{P['fx']}*{P['ss']}" if y == 25 else f"cap_ss_{y}*1000/{P['fx']}*{P['ss']}")
     return f"({sk}+{mu}+{ss})"
 def tot(y, P):
-    dr = f"Mkt!$C${MR['dr']}"
-    base_d = P["bd"] or f"MAX(Mkt!$C${MR['semi_dram']}-{eq3(25, P)}*{dr},0)+{P['add']}*{dr}"
-    base_n = P["bn"] or f"MAX(Mkt!$C${MR['semi_nand']}-{eq3(25, P)}*(1-{dr}),0)+{P['add']}*(1-{dr})"
+    base_d = f"((Mkt!$C${MR['i_dc']}-Mkt!$C${MR['i_cx']}+{P['cx']})*{P['sho']})"
+    base_n = f"(Mkt!$C${MR['i_nc']}*{P['sho']})"
     n = y - 25
     mem = f"({eq3(y, P)}+({base_d})*(1+{P['gd']})^{n}+({base_n})*(1+{P['gn']})^{n})"
     ts = f"{P['ts25'] if y == 25 else 'cap_ts_'+str(y)}*{P['fd']}"
     fd = f"({ts}+MAX(Mkt!$C${MR['semi_fd']}-{P['ts25']}*{P['fd']},0)*(1+{P['gf']})^{n})"
     return f"={mem}+{fd}+Mkt!{YC[y]}{MR['ofer']}*({mem}+{fd})+Mkt!{YC[y]}{MR['test']}+Mkt!{YC[y]}{MR['pkg']}"
-cases = [("基準", {}),
- ("SK 海力士設備占比 低（58%）", {"sk": "sh_sk_lo"}), ("SK 海力士設備占比 高（70%）", {"sk": "sh_sk_hi"}),
- ("三星設備占比 低", {"ss": "sh_ss_lo"}), ("三星設備占比 高", {"ss": "sh_ss_hi"}),
- ("美光設備占比 低（FY25／26／27–29）", {"mu25": "sh_mu_25_lo", "mu26": "sh_mu_26_lo", "mu27": "sh_mu_27_lo"}), ("美光設備占比 高", {"mu25": "sh_mu_25_hi", "mu26": "sh_mu_26_hi", "mu27": "sh_mu_27_hi"}),
+cases = [("基準（2025 實績校準）", {}),
+ ("SK 海力士＋三星設備占比 低（長鑫取 12.0 的校準值）", {"sk": "sh_sk_lo", "ss": "sh_ss_lo", "cx": "ind_cxmt_hi"}),
+ ("SK 海力士＋三星設備占比 高（58%，業界下限）", {"sk": "sh_sk_hi", "ss": "sh_ss_hi"}),
+ ("對照：SK 海力士＋三星設備占比＝業界值 64%（不再當基準）", {"sk": "sh_oth", "ss": "sh_oth"}),
+ ("長鑫 2025 資本支出取高 12.0（年度未核對；重新校準）", {"cx": "ind_cxmt_hi", "recal": True}),
+ ("美光設備占比 低（FY25／26／27–29；重新校準）", {"mu25": "sh_mu_25_lo", "mu26": "sh_mu_26_lo", "mu27": "sh_mu_27_lo", "recal": True}),
+ ("美光設備占比 高（重新校準）", {"mu25": "sh_mu_25_hi", "mu26": "sh_mu_26_hi", "mu27": "sh_mu_27_hi", "recal": True}),
+ ("其他記憶體廠設備占比 58%（重新校準）", {"sho": "sh_oth_lo", "recal": True}), ("其他記憶體廠設備占比 70%（重新校準）", {"sho": "sh_oth_hi", "recal": True}),
  ("台積電設備占比 低", {"fd": "sh_fd_lo"}), ("台積電設備占比 高", {"fd": "sh_fd_hi"}),
- ("匯率 低（1,350）", {"fx": "fx_lo"}), ("匯率 高（1,500）", {"fx": "fx_hi"}),
- ("SK 海力士 2025 資本支出 低（28 兆）", {"sk25": "cap_sk_25_lo"}),
- ("三星 DS 記憶體占比 65%", {"ssm": "ss_mem_lo"}), ("三星 DS 記憶體占比 90%", {"ssm": "ss_mem_hi"}),
+ ("匯率 低（1,350；重新校準）", {"fx": "fx_lo", "recal": True}), ("匯率 高（1,500；重新校準）", {"fx": "fx_hi", "recal": True}),
+ ("SK 海力士 2025 資本支出 低（28 兆；重新校準）", {"sk25": "cap_sk_25_lo", "recal": True}),
+ ("三星 DS 記憶體占比 65%（重新校準）", {"ssm": "ss_mem_lo", "recal": True}), ("三星 DS 記憶體占比 90%（重新校準）", {"ssm": "ss_mem_hi", "recal": True}),
  ("台積電 2025 資本支出 低（40）", {"ts25": "cap_ts_25_lo"}), ("台積電 2025 資本支出 高（42）", {"ts25": "cap_ts_25_hi"}),
  ("其他 DRAM 廠成長 低", {"gd": "g_oth_dram_lo"}), ("其他 DRAM 廠成長 高", {"gd": "g_oth_dram_hi"}),
  ("其他 NAND 廠成長 低", {"gn": "g_oth_nand_lo"}), ("其他 NAND 廠成長 高", {"gn": "g_oth_nand_hi"}),
- ("其他代工邏輯成長 低", {"gf": "g_oth_fd_lo"}), ("其他代工邏輯成長 高", {"gf": "g_oth_fd_hi"}),
- ("其他記憶體廠 2025 基準 ＋5（DRAM／NAND 依 2025 比例分配）", {"add": 5}), ("其他記憶體廠 2025 基準 ＋10", {"add": 10}), ("其他記憶體廠 2025 基準 ＋20", {"add": 20})]
+ ("其他代工邏輯成長 低", {"gf": "g_oth_fd_lo"}), ("其他代工邏輯成長 高", {"gf": "g_oth_fd_hi"})]
 for i, (nm, kw) in enumerate(cases):
     rr = 4 + i; SE.cell(rr, 1, nm)
     for j, y in ((2, 27), (4, 28), (6, 29)):
         SE.cell(rr, j, tot(y, parts(**kw))).number_format = "0.0"
         SE.cell(rr, j + 1, f"={'BDF'[(j-2)//2]}{rr}/{'BDF'[(j-2)//2]}$4-1").number_format = "0.0%"
 SE.cell(4, 8, "同 Mkt 情境 A（公式重算；核對列應為 0）")
-SE.cell(17, 8, "90% 時 2025 三大廠設備增加，殘差轉為負，其他廠基準取 0，故總額不變；65% 時殘差變大（其他廠基準上升）")
-SE.cell(4 + len(cases) - 3, 8, "2025 殘差為負時其他記憶體廠基準取 0；真實的長鑫、鎧俠、SanDisk、南亞、華邦、長江存儲不為 0，以下三列看基準若非 0 的影響")
+SE.cell(4 + 14, 8, "標「重新校準」的列：2025 輸入改變後重新解出 SK、三星共用占比。匯率改變時校準值同比例改變，設備金額不變（匯率對 2026 年以後設備無影響）")
 rr = 4 + len(cases)
 SE.cell(rr, 1, "核對：基準 − Mkt 情境 A 總額（應為 0）")
 for j, y in ((2, 27), (4, 28), (6, 29)): SE.cell(rr, j, f"={'BDF'[(j-2)//2]}4-Mkt!{YC[y]}{MR['A_tot']}").number_format = "0.000"
@@ -445,14 +466,13 @@ for nm, sn, k28, k29 in (("B 係數 低", "B", "ck_B_28_lo", "ck_B_29_lo"), ("B 
     SE.cell(rr, 4, f"=B{rr}*{k29}").number_format = "0.0"; SE.cell(rr, 5, f"=D{rr}/B{rr}-1").number_format = "0.0%"; rr += 1
 SE.cell(rr, 1, "說明：係數為 Assumed，區間無實證；B 的見頂年度對 2029 係數敏感（≥1.00 則 2029 不下滑，見頂年度移到 2029）。")
 rr += 2
-SE.cell(rr, 1, "其他記憶體廠 2025 基準＝獨立估計（Mkt 3c）：對三情境總額與見頂年度的影響（基準參數不變；只替換其他廠基準）").font = BOLD; rr += 1
-hdr(SE, rr, ["情境／基準", "2025", "2026", "2027", "2028", "2029", "見頂年度", "說明"]); rr += 1
-IND = dict(bd=f"Mkt!$C${MR['i_de']}", bn=f"Mkt!$C${MR['i_ne']}")
+SE.cell(rr, 1, "校準值 vs 業界值 64%（對照）：三情境總額與見頂年度").font = BOLD; rr += 1
+hdr(SE, rr, ["情境／占比", "2025", "2026", "2027", "2028", "2029", "見頂年度", "說明"]); rr += 1
 def peak(row):
     mx = f"MAX(B{row}:F{row})"
     return "=" + "".join(f"IF(ROUND({'BCDEF'[k]}{row},9)=ROUND({mx},9),{2025+k}," for k in (4, 3, 2, 1)) + "2025" + ")" * 4
 blkrows = {}
-for lab, P in (("基準", parts()), ("獨立估計", parts(**IND))):
+for lab, P in (("校準值（基準）", parts()), ("業界值 64%", parts(sk="sh_oth", ss="sh_oth"))):
     for sn in "ABC":
         SE.cell(rr, 1, f"情境 {sn}（{lab}）")
         for k, y in enumerate((25, 26, 27, 28, 29)):
@@ -464,10 +484,10 @@ for lab, P in (("基準", parts()), ("獨立估計", parts(**IND))):
         SE[f"G{rr}"] = peak(rr); SE[f"G{rr}"].number_format = "0"
         blkrows[(lab, sn)] = rr; rr += 1
 for sn in "ABC":
-    SE.cell(rr, 1, f"  獨立估計 − 基準：情境 {sn}")
-    for col in "BCDEF": SE[f"{col}{rr}"] = f"={col}{blkrows[('獨立估計', sn)]}/{col}{blkrows[('基準', sn)]}-1"; SE[f"{col}{rr}"].number_format = "0.0%"
+    SE.cell(rr, 1, f"  業界值 64% − 校準值：情境 {sn}")
+    for col in "BCDEF": SE[f"{col}{rr}"] = f"={col}{blkrows[('業界值 64%', sn)]}/{col}{blkrows[('校準值（基準）', sn)]}-1"; SE[f"{col}{rr}"].number_format = "0.0%"
     rr += 1
-SE.cell(rr, 1, "說明：2025 欄的差額＝其他廠獨立估計相對基準（近 0）的設備；獨立估計下 2025 本模型總額高於 SEMI 實績，表示三大廠資本支出 × 64% 與其他廠獨立估計加總超過 SEMI（見 Mkt 3c 隱含占比）。")
+SE.cell(rr, 1, "說明：業界值 64% 下 2025 本模型總額高於 SEMI 實績（三家 64% 加上其他廠獨立估計超過 SEMI）；校準值使 2025 恰等於 SEMI 實績。單因子列中未標「重新校準」者，校準值固定不變。")
 SE.column_dimensions["A"].width = 48
 for col in "BCDEFG": SE.column_dimensions[col].width = 12
 SE.column_dimensions["H"].width = 60
@@ -519,11 +539,11 @@ BOTTLE = [
  ("HBM 鍵合機", "Hanmi 占 HBM TC 鍵合機營收 71.2%（TechInsights，2025 前三季）；SK 海力士 HBM4 約用 50 組 TC 鍵合機、約半數來自 ASMPT；預期約 100 台訂單（M15X 1b DRAM）；Hanmi 6 月接 SK 海力士約 15 台。供給短缺或交期：未找到", "TrendForce 2025-12-12；The Elec；Techtimes 2026-06", "中（供應商集中度）；短缺：未找到", "鍵合機屬後段／封裝，v0.1 以 SEMI 金額為輸入，未建模"),
 ]
 RECON_TXT = [
- "對帳差距 > 15% 的項目與可能原因（v0.1 建置時數值；未為對上而調參；2026 年以後總額由下而上，不由 SEMI 2026 以後預測決定）：",
- "(a) 2026 NAND +18.9%（模型 16.5 vs SEMI 13.9）：三家記憶體設備以 2025 年 SEMI DRAM／NAND 比例（72.4／27.6）拆分，而 SEMI 2026 的 NAND 占比降到 26.4%（資本支出轉向 DRAM／HBM）；其他 NAND 廠 2025 基準近 0，故 NAND 幾乎全來自三家。DRAM +11.8%、記憶體合計比 SEMI 高 7.2 $B，同一方向。",
- "(b) Goldman Sachs 2028 −21.4%（模型 A 220.9 vs 281）：GS 2027 年增約 +45%（150→218）、2028 +29%，分別高於 SEMI 的 +21.8%、+14.1%；GS 為最高的一組，可能納入不同口徑（KLA 口徑含先進封裝；廠務設備）、更激進的 DRAM／先進代工假設，且發布較晚（2026-08，SEMI 為 2026-07）。",
- "(c) 未超過 15% 的差距：2026 前段 159.6 比 SEMI 143.9 高 10.9%、比 Lam／KLA／GS 的 150 高 6.4%；2027 前段 197.3 比 SEMI 推得的 175.3 高 12.5%，落在 KLA 190（+3.8%）、Lam >200（−1.4%）、Morgan Stanley 202（−2.3%）、GS 218（−9.5%）之內；2028 前段 220.9 落在 Morgan Stanley 227 的 −2.7%。本模型高於 SEMI、低於其他來源，與「SEMI 7 月預測落後之後的上修」一致。B、C 在 2028 的差距是情境設計的結果。",
- "(d) 2025 殘差不是負值，而是近 0（DRAM＋NAND ＋0.05 $B）：三家資本支出 × 設備占比已幾乎填滿 SEMI 2025 記憶體總額，其他記憶體廠基準因此近 0，與其確實有設備支出矛盾。最可能的原因：（1）三星記憶體資本支出假設（DS 47.5 兆 × 75%，區間 65–90%；2025 年晶圓代工投資據報減半，記憶體占比較可能高於 75%）；（2）資本支出與設備營收的時差；（3）口徑。獨立估計（Mkt 3c，只作核對）：其他記憶體廠 2025 設備約 8.6 $B（長鑫 6.9、南亞 0.43、鎧俠 1.9、長江存儲 4.2 的資本支出 × 64%；華邦、SanDisk 未找到），三大廠隱含設備占比 49.8%（區間 44–51%），低於業界下限 58%——表示三大廠資本支出中建築與無塵室的比重高於業界值，與美光「增量多數為建築」的方向一致（只是方向，不是證明；估計不確定）。基準參數不變，是否改 64% 由 chat 端決定。",
+ "對帳差距 > 15% 的項目與可能原因（v0.1 建置時數值；2025 實績校準之外，2026 年以後完全沒有參照 SEMI 或券商的預測來設定參數）：",
+ "(a) 2026 NAND +25.9%（模型 17.5 vs SEMI 13.9）：2025 年三家設備以 SEMI 2025 的 DRAM／NAND 比例（72.4／27.6）拆分，其他 NAND 廠（鎧俠、長江存儲）2025 獨立估計 3.9 $B 已占 SEMI 2025 NAND 10.6 的 37%，再乘 18% 成長；SEMI 2026 NAND 占比降到 26.4%。DRAM 僅 +1.5%，DRAM＋NAND 合計高 4.2 $B（+7.9%）。2025 年 DRAM／NAND 拆分本身就不準（模型 DRAM 26.4 vs SEMI 27.9、NAND 12.2 vs 10.6），合計則因校準而相等。",
+ "(b) Goldman Sachs 2028 −22.9%（模型 A 216.6 vs 281）：GS 2027 年增約 +45%（150→218）、2028 +29%，分別高於 SEMI 的 +21.8%、+14.1%；GS 為最高的一組，可能納入不同口徑（KLA 口徑含先進封裝；廠務設備）、更激進的 DRAM／先進代工假設，且發布較晚（2026-08，SEMI 為 2026-07）。",
+ "(c) 未超過 15% 的差距：本模型高於 SEMI（2026 前段 +8.5%、2027 +10.0%、2028 +8.3%），低於 Lam／Morgan Stanley／GS 的 2027–2028 數字（−3.6% 到 −11.6%），落在 KLA 190（+1.5%）附近。B、C 在 2028 的差距是情境設計的結果。",
+ "(d) 校準：SK 海力士、三星共用一個設備占比（45.5%，區間 38.5–58%），使 2025 年各廠設備加總等於 SEMI 2025 DRAM＋NAND 實績。校準值低於業界下限 58%，表示 SK 海力士、三星的資本支出中建築與無塵室比重高於業界值，與美光「增量多數為建築」的方向一致（方向，不是證明）。校準的前提是其他記憶體廠 2025 獨立估計（8.6 $B，長鑫取 12.0 時校準值降到 38.5%）與三星記憶體資本支出假設（DS 47.5 兆 × 75%，區間 65–90%）。代工邏輯未比照辦理（台積電沒有類似美光的揭露、2025 殘差為正，維持 64%）；代工邏輯是否也有建築比重偏高的問題，待查。",
 ]
 RD = wb.create_sheet("README", 0)
 RD_LINES = [
@@ -531,17 +551,18 @@ RD_LINES = [
  ("模型命題：設備需求＝為滿足記憶體、代工擴產所需的資本支出 × 設備占比；本模型回答核心問題 1——設備循環在 2027 還是 2028 見頂——並列出核心問題 2、3 的瓶頸表。公司份額與毛利留給公司層，v0.1 不做。", False), ("", False),
  ("驅動因子 → 推導量", True),
  ("In：公司資本支出（讀自 skhynix／micron／samsung／tsmc dist，不修改它們）、設備占資本支出比例（兩個來源給低／高）、SEMI 2026-07 分項、情境係數（Assumed）、AI 分類假設", False),
- ("Mkt：2025 年用「SEMI 實績 − 已知廠」求其他廠基準（Derived）；2026 起記憶體＝三家資本支出 × 設備占比 ＋ 其他廠（基準 × 成長率，Assumed）；代工邏輯＝台積電 × 占比 ＋ 其他廠；測試與封裝＝SEMI；三情境 A／B／C；AI 增量占比；見頂年度", False),
+ ("Mkt：2025 年 SK 海力士、三星設備占比以 SEMI 實績校準（Derived），其他記憶體廠 2025 基準＝獨立估計，代工邏輯其他廠＝SEMI 實績殘差；2026 起各廠資本支出 × 占比，其他廠基準 × 成長率（Assumed）；測試與封裝＝SEMI；三情境 A／B／C；AI 增量占比；見頂年度", False),
  ("Recon：對 SEMI、Lam、KLA、Morgan Stanley、Goldman Sachs 的差距；不為對上而調參。Sens：占比、匯率、2025 資本支出、其他廠成長率與基準、情境係數", False), ("", False),
  ("結果摘要（v0.1 建置時；見 Mkt 摘要區）", True),
- ("設備總額（$B）：A 2025–2029＝134.7／181.6／222.7／250.3／262.6（2029 仍增，未在區間內見頂）；B＝134.7／181.6／222.7／222.7／211.6（見頂 2028，與 2027 同水準）；C＝134.7／181.6／222.7／178.2／178.2（見頂 2027）。", False),
- ("2026 年以後總額由下而上：三家記憶體與台積電的資本支出 × 設備占比，加「其他廠＝2025 基準 × 成長率（Assumed）」；其他前段維持 2025 年占比；測試與封裝為 SEMI 輸入。SEMI 2026 以後的 DRAM、NAND、代工邏輯、前段預測只用於對帳。", False),
- ("AI 相關增量（先進邏輯＋DRAM／HBM＋先進封裝）占總增量（相對 2025 累計）：A 2026–2029＝64／64／62／61%；B 64／64／64／65%；C 64／64／72／72%。結論取決於情境係數（Assumed），不是預測。", False), ("", False),
+ ("設備總額（$B）：A 2025–2029＝134.7／178.2／218.2／246.0／260.7（2029 仍增，未在區間內見頂）；B＝134.7／178.2／218.2／218.2／207.3（見頂 2028，與 2027 同水準）；C＝134.7／178.2／218.2／174.6／174.6（見頂 2027）。", False),
+ ("校準（只用 2025 實績）：SK 海力士、三星共用一個設備占比 45.5%（Derived；低 38.5%＝長鑫取 12.0，高 58%＝業界下限），使 2025 年「三家設備＋其他記憶體廠獨立估計」＝SEMI 2025 DRAM＋NAND 實績（38.5）；2026 年以後沿用。美光維持由原文推導的占比（FY26 52.1%、FY27–29 46.0%）；台積電維持 64%（Analogy）。業界值 64% 不再當基準，Sens 保留對照列。", False),
+ ("2026 年以後的前段設備完全沒有參照 SEMI 或券商預測：三家與台積電的資本支出 × 設備占比，加「其他廠＝2025 獨立估計（記憶體）或 SEMI 實績殘差（代工邏輯）× 成長率（Assumed）」；其他前段維持 2025 年占比。測試與封裝為 SEMI 輸入（v0.1 規格）。SEMI 2026 以後的 DRAM、NAND、代工邏輯、前段預測只用於對帳。", False),
+ ("AI 相關增量（先進邏輯＋DRAM／HBM＋先進封裝）占總增量（相對 2025 累計）：A 2026–2029＝63／63／61／60%；B 63／63／63／64%；C 63／63／72／72%。結論取決於情境係數（Assumed），不是預測。", False), ("", False),
  ("限制", True),
- ("(1) 2025 其他記憶體廠殘差近 0（＋0.05 $B）而非負值：三家資本支出 × 設備占比已幾乎填滿 SEMI 2025 記憶體總額；其他廠基準因此近 0，與其他廠實際存在矛盾。最可能原因：三星記憶體資本支出假設（DS 47.5 兆 × 75%，區間 65–90%）、資本支出與設備認列的時差、口徑差異。獨立估計（Mkt 3c）顯示三大廠隱含設備占比約 49.8%（44–51%），低於業界 58%，方向與美光「增量多數為建築」一致。Sens 列出基準 ＋5／＋10／＋20 $B 與「基準＝獨立估計」的影響。", False),
- ("(2) 其他廠成長率為 Assumed（依鎧俠、中芯、Intel 等指引與長鑫產能成長；長鑫、長江存儲、三星晶圓代工、華虹的資本支出指引未找到）。(3) 測試與封裝以 SEMI 為輸入：缺少每顆加速器的測試時間與每條產線鍵合機台數資料。(4) 情境係數為 Assumed，是「若 B／C 則…」的情境。", False),
- ("(5) Morgan Stanley 202／227 為 itiger 二手轉述（連結由使用者提供，環境無法開啟，未直接核對；上修前 191／215 另有 Investing.com 佐證）。(6) 台積電資本支出含先進封裝，與 SEMI 後段可能重疊。", False),
- ("(7) 時差：資本支出是現金支出，設備營收是出貨認列，兩者約差一到兩季，v0.1 沒有建模（年度金額直接相乘）。(8) 設備占比：美光依公司揭露推導（引文為一手，比例為 Derived；公司原文是「增量」多數為建築，並未給設備占比）；SK 海力士、三星、台積電未找到公司揭露，用業界 58–70%（Analogy）。", False), ("", False),
+ ("(1) 校準依賴其他記憶體廠 2025 獨立估計（長鑫 6.9–12.0 無一手資料、長江存儲為推算、華邦與 SanDisk 未找到）與三星記憶體資本支出假設；校準值低於業界下限 58%，方向與美光「增量多數為建築」一致，但不是證明。2025 年 DRAM／NAND 拆分不準（合計準）。", False),
+ ("(2) 其他廠成長率為 Assumed（長鑫、長江存儲、三星晶圓代工、華虹的資本支出指引未找到）。(3) 測試與封裝以 SEMI 為輸入：缺少每顆加速器的測試時間與每條產線鍵合機台數資料。(4) 情境係數為 Assumed，是「若 B／C 則…」的情境。", False),
+ ("(5) Morgan Stanley 202／227 為 itiger 二手轉述（連結由使用者提供，環境無法開啟，未直接核對；上修前 191／215 另有 Investing.com 佐證）。(6) 台積電資本支出含先進封裝，與 SEMI 後段可能重疊。代工邏輯是否也有建築比重偏高的問題，待查。", False),
+ ("(7) 時差：資本支出是現金支出，設備營收是出貨認列，兩者約差一到兩季，v0.1 沒有建模（年度金額直接相乘）。(8) 設備占比：美光依公司揭露推導（引文為一手，比例為 Derived；公司原文是「增量」多數為建築，並未給設備占比）；台積電未找到公司揭露，用業界 58–70%（Analogy）。", False), ("", False),
  ("瓶頸表（核心問題 2、3；v0.1 只做表，不入模）", True)]
 for t in RECON_TXT: pass
 r0 = len(RD_LINES) + 1
