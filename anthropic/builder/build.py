@@ -183,7 +183,7 @@ def sheet_readme(ctx, summary):
                             "③資金三層（Funding 第十節：①營運自由現金流自給、②加已到位股權＝基準、③再加條件式）；④持續擴張情境（Cost 第二十三節、Funding 第十一節；只作情境，基準不追加）；"
                             "⑤HTML 結論改條件式。新列皆附加在頁尾，既有列編號不變。"),
         ("v0.1.3 B 段更新", "①Bridge 頁（Cost 之後；唯讀）：需求 → token → GW → 成本逐層對照（公式來源、單位、2025–2030、2030 敏感度包絡、標記），最後一節與 Tokenomics 同口徑量對照；②EtaDiag 頁（唯讀）：η（2025）拆成計價口徑 × 利用率 × 工作負載組合 × 未解釋殘差（只作診斷，η 的值不變），並列 TK L1_Gap*（OpenAI 口徑，Analogy）；"
-                            "③TK_Link 尾端新增 22 個對照名稱（IF_UtilActual、L1_TokGW_PaidCap_VR200、L1_Gap* 各含低／高）；④公開 S-1 或經審計資料出現時的替換程序見 CLAUDE.md 第 8 節。兩頁不被任何計算頁引用（Checks e1_iso）。"),
+                            "③TK_Link 尾端新增 23 個對照名稱（IF_UtilActual、L1_TokGW_PaidCap_VR200、B4_MixPaid、L1_Gap* 各含低／高）；④公開 S-1 或經審計資料出現時的替換程序見 CLAUDE.md 第 8 節。兩頁不被任何計算頁引用（Checks e1_iso）。"),
         ("v0.1.2 更新", "Tokenomics 快照 v5.26 → v18.0（master 868e2cc）：TK_Link 以同一份名稱清單重讀；公式不變。η（2025 校準）吸收 IF_TokGW_* 的整體上升；"
                         "TK 值變動的名稱逐一在報告「語意核對」列出；Cost 第二十節、Checks 尾端加 L1_RevGW_PQ_VR200 對照列（只對照，不回饋計算）。"),
         ("v0.1.1 更新", "依 WSJ 轉述的草擬 S-1（2026-10-20）與 Q3 投資人簡報（2026-10-14）：新增 SRC_ANT_380–409；U1 2026 營收基準＝上半年實際＋Q3 實際＋Q4（Q3 持平）；U2 Nscale＋Lambda 兩約合計錨定『最高 86』；"
@@ -261,7 +261,7 @@ def sheet_tk(ctx):
     wb, snap, date = ctx.wb, ctx.snap, ctx.date
     ws = wb.create_sheet("TK_Link")
     title(ws, "TK_Link — Tokenomics 快照（第 0 層連結；不用 Excel 外部連結）",
-          "每列一個 Tokenomics 名稱。值（藍字）由 builder 從 Tokenomics master 的 model/CURRENT 讀出寫入；本模型公式只引用 TK_ 具名範圍。前 63 名與 OpenAI v0.6 相同，其後 5 名為 A2 新增（任務別每次嘗試 token）；再其後 14 名為 v0.1.2 新增（Tokenomics v18.0 的 L1_RevGW_PQ_VR200 等對照名稱，只對照、不回饋計算）；再其後 22 名為 v0.1.3 B 新增（IF_UtilActual、L1_TokGW_PaidCap_VR200、L1_Gap*，只供 EtaDiag 對照）；"
+          "每列一個 Tokenomics 名稱。值（藍字）由 builder 從 Tokenomics master 的 model/CURRENT 讀出寫入；本模型公式只引用 TK_ 具名範圍。前 63 名與 OpenAI v0.6 相同，其後 5 名為 A2 新增（任務別每次嘗試 token）；再其後 14 名為 v0.1.2 新增（Tokenomics v18.0 的 L1_RevGW_PQ_VR200 等對照名稱，只對照、不回饋計算）；再其後 23 名為 v0.1.3 B 新增（IF_UtilActual、L1_TokGW_PaidCap_VR200、B4_MixPaid、L1_Gap*，只供 EtaDiag 對照）；"
           "其後為 NonNV 表（Tokenomics 未設具名範圍，以列標籤＋欄標題讀表；狀態「讀表（非具名）」，列入 Tokenomics 缺口：建議 Tokenomics 把 NonNV 比例列進 Interface）。",
           "Interface 向量名稱為 15 欄＝5 世代（Hopper、GB200、GB300、VR200、Rubin Ultra）× 3 成本情境（低、基準、高）；NonNV 比例皆相對 VR200（同層級、同 SLO）。")
     meta = [("Tokenomics 檔案", snap["file"], "TK_File"), ("Tokenomics 版本", snap["version"], "TK_Version"),
@@ -370,7 +370,7 @@ def base_checks(ctx, n_src, n_inp):
         ("inp_rows", "Inputs 列數", "=SUMPRODUCT(--(LEN(Inputs!$A$5:$A$600)>0))", n_inp, "eq", ""),
         ("inp_order", "Inputs 區間順序異常列數", "=SUM(Inputs!$L$5:$L$600)", 0, "eq", "低 ≤ 值 ≤ 高（有三值者）"),
         ("inp_norange", "Inputs Analogy／Assumed 缺區間列數", "=SUM(Inputs!$M$5:$M$600)", 0, "eq", "共同規則第 4 節：Analogy／Assumed 一律給區間"),
-        ("tk_ok", "TK_Link 具名範圍已取值名稱數", '=COUNTIF(TK_Link!$F$10:$F$200,"OK")', len(snap["rows"]), "eq", "OpenAI v0.6 同一組 63 名＋A2 新增 5 名（IF_HdrTask、IF_TaskLen、IF_TaskTok*）＋v0.1.2 新增 14 名（L1_RevGW_PQ_VR200 系列等對照名稱）＋v0.1.3 B 新增 22 名（IF_UtilActual、L1_Gap* 等，只對照）"),
+        ("tk_ok", "TK_Link 具名範圍已取值名稱數", '=COUNTIF(TK_Link!$F$10:$F$200,"OK")', len(snap["rows"]), "eq", "OpenAI v0.6 同一組 63 名＋A2 新增 5 名（IF_HdrTask、IF_TaskLen、IF_TaskTok*）＋v0.1.2 新增 14 名（L1_RevGW_PQ_VR200 系列等對照名稱）＋v0.1.3 B 新增 23 名（IF_UtilActual、B4_MixPaid、L1_Gap* 等，只對照）"),
         ("tk_nnv", "TK_Link 讀表（非具名）格數：NonNV 18＋PUE 3", f'=COUNTIF(TK_Link!$F$10:$F$200,"{NONNV_STATUS}")', len(tbl), "eq",
          "TPU v7、Trainium3、AMD MI455X × 6 值（規格 D6、D6 r1）；A3 加 Tokenomics Inputs 頁 PUE（低／基準／高）"),
         ("tk_pending", "TK_Link 待 Tokenomics 提供名稱數", f'=COUNTIF(TK_Link!$F$10:$F$200,"{PENDING_NOTE}")', len(snap["pending"]), "eq", ""),

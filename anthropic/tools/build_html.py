@@ -689,6 +689,39 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 
     # ── ② 每 VR 等值 GW ──
     # ── ①之三 v0.1.3 A 段更新 ──
+    def _rid(sheet, prefix):
+        ws = V.loc.wb[sheet]
+        for r in range(1, ws.max_row + 1):
+            b = ws.cell(r, 2).value
+            if isinstance(b, str) and b.startswith(prefix):
+                return f"{sheet}!{ws.cell(r, 1).value}"
+        raise KeyError(f"{sheet} 找不到列：{prefix}")
+    brow = lambda p: _rid("Bridge", p)  # noqa: E731
+    erow = lambda p: _rid("EtaDiag", p)  # noqa: E731
+    eta_defs = [("計價口徑 f_P（每 GW 合約實付 ÷ TK 持有成本）", "f_P：計價口徑", "Analogy（TK 持有成本；區間＝TK 低／高成本情境）"),
+                ("利用率 f_U（TK 實際 ÷ 基準利用率）", "f_U：利用率", "Analogy（TK IF_UtilActual 0.30–0.65；非 Anthropic 實測）"),
+                ("工作負載（層級）組合 f_W（TK 參考組合 ÷ 本模型組合）", "f_W：工作負載", "Derived（無區間；Inputs 層級組合區間未接入）"),
+                ("輸入輸出組合", None, "無法分離：每任務 token 已含輸入、快取、輸出，並入殘差"),
+                ("已解釋部分 f_P × f_U × f_W", "已解釋部分", "Derived"),
+                ("未解釋殘差", "未解釋殘差", "Derived（殘差，非獨立估計）")]
+    eta_rows = ""
+    for lab, key, why in eta_defs:
+        if key is None:
+            eta_rows += f"<tr><td>{lab}</td><td colspan=\"3\">無法分離</td><td>{why}</td></tr>"
+        else:
+            rid = erow(key)
+            eta_rows += (f"<tr><td>{lab}</td><td>{cell(V, rid + ':D', None, 'f3')}</td><td>{cell(V, rid + ':E', None, 'f3')}</td><td>{cell(V, rid + ':F', None, 'f3')}</td><td>{why}</td></tr>")
+    bridge_defs = [("訂閱、席位與 Free 年任務數", "十億任務", "f1"), ("API 年任務數", "十億任務", "f1"), ("付費 token 合計", "T", "f0"), ("API 組合有效單價", "$/M", "f2"),
+                   ("營收總額（報導口徑）", "$B", "f1"), ("組合後每 GW 年產能（付費）", "M tok/GW/年", "f0"), ("推論 GW（token 換算）：合計", "GW", "f2"),
+                   ("η（有效產出係數", "倍", "f3"), ("有效推論 GW＝", "GW", "f2"), ("研發 GW（殘差）", "GW", "f2"), ("供給 GW 合計", "GW", "f2"),
+                   ("供給 VR 等值 GW", "GW", "f2"), ("算力成本（現金口徑）", "$B", "f1"), ("全成本（含股權報酬）", "$B", "f1"),
+                   ("每 VR 等值 GW：差額", "$B/GW/年", "sf1")]
+    bridge_rows = ""
+    for pre, unit, f in bridge_defs:
+        rid = brow(pre)
+        lab = V.loc.wb["Bridge"].cell(int(re.sub(r"\D", "", V.loc.locate(rid, 2025)[1])), 2).value
+        bridge_rows += (f"<tr><td>{html.escape(lab)}</td><td>{unit}</td><td>{cell(V, rid, 2025, f)}</td><td>{cell(V, rid, 2030, f)}</td>"
+                        f"<td>{cell(V, rid + ':L', None, f)}</td><td>{cell(V, rid + ':M', None, f)}</td></tr>")
     u2_cols = [("v0.1.2（U2 金額回推）", "v012"), (f"v{ver}（U2 新法）", "base")]
     def u2row(lab, ref, yr, f, em=False):
         return (f'<tr class="{"em" if em else ""}"><td>{lab}</td>' + "".join(f"<td>{n(ref, yr, f, sc)}</td>" for _l, sc in u2_cols) + "</tr>")
@@ -704,8 +737,8 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
         f"<tr><td>{lab}</td><td>{n(f'COST_PropGap_VR_Exp{k}', 2029, 'sf2')}</td><td>{n(f'COST_PropGap_VR_Exp{k}', 2030, 'sf2')}</td><td>{n(f'FND_FCFFirstPos_Exp{k}', None, 'yt')}</td>"
         f"<td>{n(f'FND_L1_ExtTotal_Exp{k}', None, 'f1')}</td><td>{n(f'FND_L2_ExtTotal_Exp{k}', None, 'f1')}</td><td>{n(f'FND_L3_ExtTotal_Exp{k}', None, 'f1')}</td><td>{n(f'FND_L2_Trough_Exp{k}', None, 'f1')}</td></tr>"
         for k, lab in (("None", "無需求（變現 0）"), ("Half", "部分變現（0.5）"), ("Full", "完全變現（1）")))
-    S.append(f"""<section id="s1c"><h2><span class="no">①之三</span>v{ver} A 段更新：U2 新法、資金三層、持續擴張情境</h2>
-<p class="lead">外部驗收報告（v0.1.2）採納後的第一段。U2 新法（chat 端更正公式）：Nscale（{n("SRC_ANT_222", None, "f0")} MW）、Lambda（{n("SRC_ANT_224", None, "f0")} MW）的供給 GW 改取揭露容量，年付款路徑不變（『最高 86』按 MW 比例分攤、依爬坡年度攤提）；因此成本不變、分母（供給 VR 等值 GW）下降，2030 每 VR 等值 GW 差額由 {n("COST_PropGap_VR", Y, "sf2", "v012")} 變為 {n("COST_PropGap_VR", Y, "sf2")}。隱含每 GW 年付款：Nscale {n("COST_U2PayPerGW_Nscale", None, "f1")}、Lambda {n("COST_U2PayPerGW_Lambda", None, "f1")}、兩約合計 {n("COST_U2PayPerGW_Both", None, "f1")} $B/GW/年，高於通用合約價 {n("INP_114", None, "f0")}，表示『最高 86』含揭露 GW 以外的容量或服務，或揭露 MW 低估。Tokenomics 快照改 {tk_ver}，數值與 v18.0 相同。</p>
+    S.append(f"""<section id="s1c"><h2><span class="no">①之三</span>v{ver} 更新了什麼：U2 新法、資金三層、持續擴張、η 拆解、逐層對照</h2>
+<p class="lead">v{ver} 採納外部驗收報告（v0.1.2）的 5 項建議。<b>變動只有三類</b>：①U2 新法改了供給 GW 的取法（本節第一個表）；②新增只供閱讀的對照——資金三層、持續擴張情境（只作情境，不進基準）、η 拆解、Bridge 逐層對照頁；③結論措辭改為條件式。其餘輸出與 v0.1.2 逐格相同。以下先說 U2 新法。U2 新法（chat 端更正公式）：Nscale（{n("SRC_ANT_222", None, "f0")} MW）、Lambda（{n("SRC_ANT_224", None, "f0")} MW）的供給 GW 改取揭露容量，年付款路徑不變（『最高 86』按 MW 比例分攤、依爬坡年度攤提）；因此成本不變、分母（供給 VR 等值 GW）下降，2030 每 VR 等值 GW 差額由 {n("COST_PropGap_VR", Y, "sf2", "v012")} 變為 {n("COST_PropGap_VR", Y, "sf2")}。隱含每 GW 年付款：Nscale {n("COST_U2PayPerGW_Nscale", None, "f1")}、Lambda {n("COST_U2PayPerGW_Lambda", None, "f1")}、兩約合計 {n("COST_U2PayPerGW_Both", None, "f1")} $B/GW/年，高於通用合約價 {n("INP_114", None, "f0")}，表示『最高 86』含揭露 GW 以外的容量或服務，或揭露 MW 低估。Tokenomics 快照改 {tk_ver}，數值與 v18.0 相同。</p>
 <div class="tw"><table><thead><tr><th>輸出</th>{"".join(f"<th>{l}</th>" for l, _s in u2_cols)}</tr></thead><tbody>
 {"".join(u2_rows)}
 </tbody></table></div>
@@ -715,7 +748,18 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <h3>持續擴張情境（只作情境）：2029、2030 每年追加算力＝當年合約付款的 {n("INP_189", None, "pct0")}</h3>
 <div class="tw"><table><thead><tr><th>變現比例</th><th>差額 2029</th><th>差額 2030</th><th>自由現金流首次轉正年</th><th>第 1 層累計外部資金 $B</th><th>第 2 層 $B</th><th>第 3 層 $B</th><th>第 2 層現金谷底 $B</th></tr></thead><tbody>{exp_rows}</tbody></table></div>
 <p class="note">基準（只計已簽合約）差額 2029 {n("COST_PropGap_VR", 2029, "sf2")}、2030 {n("COST_PropGap_VR", Y, "sf2")}。追加金額與變現比例為 Assumed（Inputs exp_*）；與 U6 談判中 $150B 並列，不進基準。</p>
-{V.src("COST_PropGap_VR", "CMP_Supply_Nscale", "COST_Pay_Nscale", "FND_L1_ExtTotal", "FND_L2_ExtTotal", "FND_L3_ExtTotal", "FND_L2_Trough", "FND_FCFFirstPos", "COST_PropGap_VR_ExpNone", "COST_PropGap_VR_ExpHalf", "COST_PropGap_VR_ExpFull")}
+<h3>η 拆解（診斷；η 的值不變）</h3>
+<p class="note">η（2025）＝token 換算推論 GW ÷ 支出換算推論 GW ＝ {n("ETA_Eta", None, "f3")}。拆成 計價口徑 × 利用率 × 工作負載（層級）組合 × 未解釋殘差；前兩項靠 Tokenomics 的 Analogy 區間，第三項無區間，輸入輸出組合在本模型<b>無法分離</b>（並入殘差）。</p>
+<div class="tw"><table><thead><tr><th>因子（η 的方向）</th><th>基準</th><th>低</th><th>高</th><th>依據</th></tr></thead><tbody>
+{eta_rows}
+</tbody></table></div>
+<p class="note">前三項合起來預期 η 約 {n("ETA_Prod", None, "f2")}，實際只有 {n("ETA_Eta", None, "f2")}，差 {n("ETA_Resid", None, "f2")} 倍沒有被解釋（殘差；含輸入輸出組合、每任務 token 倍數、任務數與支出的口徑差等），倒數 {cell(V, erow("殘差倒數"), None, "f2")}（TK 方向；TK 在 OpenAI 口徑的同類項 L1_GapUnexplained {cell(V, erow("TK 落差 5"), None, "f2")}、區間 {cell(V, erow("TK 落差 5") + ":E", None, "f1")}–{cell(V, erow("TK 落差 5") + ":F", None, "f1")}，只作並排）。TK 的 Tokenomics 版本由 v5.26 換到 v18.0 時，η 由 {n("CMP_Eta2025", None, "f3", "v011")} 降到 {n("CMP_Eta2025", None, "f3")}（見 <code>{report}</code> ③）。</p>
+<h3>需求 → token → GW → 成本逐層對照（Bridge 頁，唯讀）</h3>
+<div class="tw"><table><thead><tr><th>層</th><th>單位</th><th>2025</th><th>2030</th><th>2030 低</th><th>2030 高</th></tr></thead><tbody>
+{bridge_rows}
+</tbody></table></div>
+<p class="note">低／高＝2030 敏感度包絡（合約價 8／20、η 沿用／回升、TPU／Trainium／AMD 產出比低／高；Excel Compute 第十四節）。與 Tokenomics 同口徑量（2026）：TK 每 GW 營收 P × Q {cell(V, brow("TK：VR200 每 GW 營收"), 2026, "f1")} vs 本模型 {cell(V, brow("本模型：營收總額 ÷ 付費推論"), 2026, "f1")} $B/GW/年；TK 每 GW 付費 token Q {cell(V, brow("TK：VR200 每 GW 付費 token"), 2026, "f0")} vs 本模型 {cell(V, brow("本模型：每付費推論 VR"), 2026, "f0")} M tok（比值 {cell(V, brow("比值（本模型 ÷ TK）"), 2026, "f2")}）。TK 自己的 token 帳尚未閉合（L1_TokLedger_2026Q2＝{cell(V, brow("TK：token 帳未閉合"), 2026, "f2")} 倍），屬 Tokenomics 待辦，所以這些差額不作為本模型的通過條件。</p>
+{V.src("ETA_Eta", "ETA_fP", "ETA_fU", "ETA_fW", "ETA_Resid", "COST_PropGap_VR", "Bridge!" + brow("供給 GW 合計").split("!")[1])}
 </section>""")
 
     S.append(f"""<section id="s2"><h2><span class="no">②</span>每 VR 等值 GW：營收 vs 全成本（2025–2030）</h2>

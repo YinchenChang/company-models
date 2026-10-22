@@ -35,7 +35,7 @@ A2_NAMES = ["IF_HdrTask", "IF_TaskLen", "IF_TaskTokFresh", "IF_TaskTokCached", "
 V18_NAMES = [f"L1_RevGW_PQ_VR200{s}{b}" for s in ("", "_FY", "_Life") for b in ("", "_Lo", "_Hi")] + \
             [f"L1_TokGW_PaidPQ_VR200{b}" for b in ("", "_Lo", "_Hi")] + ["L1_TokLedger_2026Q2", "L1_M"]
 # v0.1.3 B（η 診斷；只對照，不回饋計算）：TK 實際利用率、VR200 每 GW 付費產能（TK 參考層級組合）、落差分解 L1_Gap*（OpenAI 口徑）
-V19B_NAMES = ["IF_UtilActual", "IF_UtilActual_Lo", "IF_UtilActual_Hi", "L1_TokGW_PaidCap_VR200"] + \
+V19B_NAMES = ["IF_UtilActual", "IF_UtilActual_Lo", "IF_UtilActual_Hi", "L1_TokGW_PaidCap_VR200", "B4_MixPaid"] + \
              [f"L1_Gap{g}{b}" for g in ("Prompt", "SpendBasis", "ISL", "Util", "Product", "Unexplained") for b in ("", "_Lo", "_Hi")]
 PENDING_NOTE = "待 Tokenomics 提供"
 

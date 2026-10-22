@@ -270,12 +270,26 @@ def build(ctx):
     row("fu", "f_U：利用率因子", "倍", f"={d('ua')}/{d('u0')}", f"={d('ua','E')}/{d('u0')}", f"={d('ua','F')}/{d('u0')}", tag="Derived（以 Analogy）",
         note="TK 方向（L1_GapUtil＝IF_Util ÷（實際 × 生產折減））約為本因子倒數再除以生產折減；本模型不計生產折減", name="ETA_fU")
 
-    sec("四、工作負載組合因子 f_W ＝ TK 參考層級組合的每 GW 付費產能 ÷ 本模型付費層級組合的每 GW 付費產能（VR200；兩者同一基準利用率）")
-    row("capref", "TK 參考層級組合下 VR200 每 GW 付費產能（L1_TokGW_PaidCap_VR200 × IF_Util）", "M tok/GW/年", "=TK_L1_TokGW_PaidCap_VR200*TK_IF_Util",
-        tag="Analogy（TK 的 B4_MixPaid 層級組合）", note="B4_MixPaid（Luna／Sol／Astra）＝TK 的付費層級組合")
-    row("capmod", "本模型付費層級組合下 VR200 每 GW 付費產能（2025）", "M tok/GW/年", f"={cD('cap_paid_vr200')}", tag="Derived（Assumed 層級組合）", note="Compute C109")
-    row("fw", "f_W：工作負載（層級）組合因子", "倍", f"={d('capref')}/{d('capmod')}", tag="Derived（假設各世代層級權重同 VR200）",
-        note="只含層級組合；區間：本模型層級組合的 Inputs 區間未接入此因子（無區間）。輸入輸出組合無法分離（並入殘差）", name="ETA_fW")
+    sec("四、工作負載（層級）組合因子 f_W ＝ TK 參考層級組合下 2025 機隊每 GW 付費產能 ÷ 本模型付費層級組合下的同一機隊每 GW 付費產能（兩者同一基準利用率、同一機隊組成）")
+    for key, lab, ix in (("mx_low", "TK 參考付費層級組合（B4_MixPaid）：低層（Luna）", 1), ("mx_mid", "TK 參考付費層級組合（B4_MixPaid）：中層（Sol）", 2),
+                         ("mx_top", "TK 參考付費層級組合（B4_MixPaid）：頂層（Astra）", 3)):
+        row(key, lab, "比例", f"=INDEX(TK_B4_MixPaid,1,{ix})", tag="Analogy（TK；OpenAI 口徑的付費層級組合）", note="Cap_In C31:E31（Luna／Sol／Astra）")
+    gens = (("hopper", "Hopper"), ("gb200", "GB200"), ("gb300", "GB300"), ("vr200", "VR200"))
+    for gk, gz in gens:
+        t_ = {t: cD(f"tok_{gk}_{t}") for t in ("top", "mid", "low")}
+        mm = f"({cD('m_paid_top')}/{t_['top']}+{cD('m_paid_mid')}/{t_['mid']}+{cD('m_paid_low')}/{t_['low']})"
+        rr = f"({d('mx_top')}/{t_['top']}+{d('mx_mid')}/{t_['mid']}+{d('mx_low')}/{t_['low']})"
+        row(f"r_{gk}", f"層級組合換算比（{gz}）＝（本模型組合的 Σ占比÷每 GW 總產出）÷（TK 參考組合的同式）", "倍", f"={mm}/{rr}", tag="Derived",
+            note="每 GW 產能 ∝ 1 ÷ Σ（層級占比 ÷ 該層每 GW 總產出）；比值＝TK 參考組合的產能 ÷ 本模型組合的產能")
+    fam_gen = (("hopper", "hopper"), ("gb200", "gb200"), ("gb300", "gb300"), ("vr200", "vr200"), ("tpu6", "hopper"), ("tpu7", "vr200"), ("trn2", "hopper"), ("trn3", "vr200"), ("mi455", "vr200"))
+    num = "+".join(f"{cD('s_' + f)}*{cD('cap_paid_' + f)}*{d('r_' + g)}" for f, g in fam_gen)
+    row("capmod", "本模型付費層級組合下 2025 機隊每 GW 付費產能（組合後）", "M tok/GW/年", f"={cD('cap_paid')}", tag="Derived（Assumed 層級組合；Analogy 產能）", note="Compute C115")
+    row("capref", "TK 參考層級組合下 2025 機隊每 GW 付費產能（逐族：本模型該族產能 × 該族所屬世代的換算比）", "M tok/GW/年", f"={num}",
+        tag="Derived（假設：TPU v6e、Trainium2 隨 Hopper；TPU v7、Trainium3、MI455X 隨 VR200，同本模型 NonNV 設定）", note="Σ 組合占比 × 該族產能 × 換算比")
+    row("fw", "f_W：工作負載（層級）組合因子", "倍", f"={d('capref')}/{d('capmod')}", tag="Derived",
+        note="只含層級組合；本模型層級組合的 Inputs 區間未接入此因子（無區間）。輸入輸出組合無法分離（並入殘差）", name="ETA_fW")
+    row("fw_vr", "對照：僅以 VR200 近似的 f_W（舊口徑，TK L1_TokGW_PaidCap_VR200 × IF_Util ÷ 本模型 VR200 付費產能）", "倍",
+        f"=TK_L1_TokGW_PaidCap_VR200*TK_IF_Util/{cD('cap_paid_vr200')}", tag="Derived", note="2025 機隊是 Hopper／TPU v6e／Trainium2，故正式口徑用機隊加權")
     row("fio", "輸入輸出組合因子（請求形狀、每則 token 數）", "倍", '="無法分離"', tag="無法分離", note="每任務 token 已取自 TK 任務模板（新鮮＋快取＋decode）；無獨立可比的 TK 參考請求組合 → 並入殘差")
 
     sec("五、乘積與未解釋殘差")

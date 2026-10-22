@@ -91,5 +91,8 @@
 A 段已確認完成（進度檔 A 段步驟 1–7 全部「完成」，分支上 12 個 commit，模型 CHK_Errors＝0）。B 段起點模型：`model/20261022_Anthropic_v0.1.3.xlsx`（A 段版）。
 | 步驟 | 狀態 | commit | 備註 |
 |---|---|---|---|
-| 1 Bridge 頁（Cost 之後，唯讀） | 完成 | 見 git log「v0.1.3 B1–B2」 | `builder/a5.py`；110 列；每列來源編號、2025–2030、標記；低／高＝2030 敏感度包絡（合約價 8／20、η 沿用／回升、產出比低／高）或 Inputs 區間（2025）；最後一節與 TK 對照（P × Q、Q、token 帳）。新增 Checks C143–C152；builder 掃描 `bridge_refs`＝0 |
-| 2 η 拆解（EtaDiag 頁，唯讀） | 完成 | 同上 | η（2025）0.5273 ＝ f_P 1.237 × f_U 0.683 × f_W 1.390 × 殘差 0.449；f_P、f_U 有區間，f_W 無區間，輸入輸出組合「無法分離」；並列 TK L1_Gap*（OpenAI 口徑）。TK_Link 尾端 +22 名（IF_UtilActual、L1_TokGW_PaidCap_VR200、L1_Gap* 各含低／高）。重建後既有頁（SRC_ANT、Inputs、Demand、Revenue、Compute、Cost、Funding、Reverse）逐格比對：公式與值差異 0 |
+| 1 Bridge 頁（Cost 之後，唯讀） | 完成 | 見 git log「v0.1.3 B1–B2」 | `builder/a5.py`；109 列；每列來源編號、2025–2030、標記；低／高＝2030 敏感度包絡（合約價 8／20、η 沿用／回升、產出比低／高）或 Inputs 區間（2025）；最後一節與 TK 對照（P × Q、Q、token 帳）。新增 Checks C143–C152；builder 掃描 `bridge_refs`＝0 |
+| 2 η 拆解（EtaDiag 頁，唯讀） | 完成 | 同上 | η（2025）0.5273 ＝ f_P 1.237 × f_U 0.683 × f_W 1.399（機隊加權）× 殘差 0.446；f_P、f_U 有區間，f_W 無區間，輸入輸出組合「無法分離」；並列 TK L1_Gap*（OpenAI 口徑）。TK_Link 尾端 +23 名（IF_UtilActual、L1_TokGW_PaidCap_VR200、B4_MixPaid、L1_Gap* 各含低／高）。重建後既有頁（SRC_ANT、Inputs、Demand、Revenue、Compute、Cost、Funding、Reverse）逐格比對：公式與值差異 0 |
+| 3 S-1 替換程序 | 完成 | 見 git log「v0.1.3 B3」 | `anthropic/CLAUDE.md` 第 8 節（新增 SRC 列、舊列標已被取代並保留、模型引用改指新列、報告七項欄位） |
+| 4 成品（HTML、dist） | 完成 | 見 git log「v0.1.3 B4」 | `tools/build_html.py` 「①之三」加 η 拆解與 Bridge 逐層對照；HTML 1,134 個數字；`tools/read_html_screen.py`：12 節 × 桌機／手機，畫面文字與 data-v 0 不符、無水平捲動、外部請求 0；截圖 `docs/reports/img/20261022_v0.1.3_*`；dist 重產（v0.1.2 成品已在 `dist/_待刪除/`） |
+| 5 報告、對照 Excel、CHANGELOG、交接檔、PR 留言、轉 ready | 見 git log「v0.1.3 B5」 | — | `docs/reports/20261022_v0.1.3.md`＋`_對照.xlsx`；PR #69 留言；PR 轉 ready（不合併） |

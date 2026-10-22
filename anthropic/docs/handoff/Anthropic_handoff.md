@@ -12,15 +12,17 @@
 - 規格 `docs/plan/20261008_Anthropic_v0.1_規格.md`（r1）；共同規則與 A1–A5 工作單 `docs/workorders/20261008_anthropic_*`。
 - 成品：`dist/`；Drive `02-算力收支/Anthropic/`（chat 端放置）。
 
-## 3. 模型狀態：**v0.1.2**（2026-10-21；Tokenomics 快照更新至 v18.0；v0.1 於 2026-10-08 完成，A0–A5）
+## 3. 模型狀態：**v0.1.3**（2026-10-22；A 段＋B 段完成，PR #69 待 chat 端審查合併；v0.1 於 2026-10-08 完成，A0–A5；v0.1.2 見下方摘要）
 | 項目 | 現況 |
 |---|---|
-| Excel | `model/20261021_Anthropic_v0.1.2.xlsx`（`model/CURRENT`）；v0.1、v0.1.1 在 `model/archive/`；成品副本 `dist/20261021_Anthropic收支模型_v0_1_2.xlsx`（位元組相同，測試檢查）；舊成品在 `dist/_待刪除/` |
-| HTML 一頁摘要 | `dist/20261021_Anthropic收支模型_v0_1_2.html`（產生器 `tools/build_html.py`；情境 `tools/html_scenarios.yaml` 26 個；測試 `tests/test_html.py`）；「①之二」改為 v0.1.2（TK v18.0）更新，v0.1.1 摘要收在其中的折疊區 |
-| 報告 | `docs/reports/20261021_v0.1.2.md`、`20261021_v0.1.2_對照.xlsx`；v0.1.1、v0.1 報告仍有效 |
-| Tokenomics | **v18.0**，master `868e2cc`（`20261021_Tokenomics_v18.0.xlsx`，SHA-256 `e654876e…`）；82 名（含 14 個只對照的 v18.0 名稱）＋NonNV 18 格＋PUE 3 格。OpenAI v0.6 仍用 v5.26，並排時 TK 版本不同 |
+| Excel | `model/20261022_Anthropic_v0.1.3.xlsx`（`model/CURRENT`）；v0.1–v0.1.2 在 `model/archive/`；成品副本 `dist/20261022_Anthropic收支模型_v0_1_3.xlsx`（位元組相同，測試檢查）；舊成品在 `dist/_待刪除/`（待 Andy 確認後刪除） |
+| HTML 一頁摘要 | `dist/20261022_Anthropic收支模型_v0_1_3.html`（產生器 `tools/build_html.py`；情境 `tools/html_scenarios.yaml`；測試 `tests/test_html.py`；畫面檢查 `tools/read_html_screen.py`）；「①之三」＝v0.1.3 更新了什麼（U2 新法、資金三層、持續擴張、η 拆解、Bridge 逐層對照） |
+| 報告 | `docs/reports/20261022_v0.1.3.md`、`20261022_v0.1.3_對照.xlsx`（B 段，含全版本摘要）；`20261022_v0.1.3-A.md`；v0.1.2、v0.1.1、v0.1 報告仍有效 |
+| Tokenomics | **v19.0**，master `1916a06`（`20261022_Tokenomics_v19.0.xlsx`，SHA-256 `d1728705…`；103 個值與 v18.0 相同）；105 名（含 14 個 v18.0 對照名稱、23 個 B 段 η 診斷對照名稱）＋NonNV 18 格＋PUE 3 格。OpenAI v0.6 仍用 v5.26，並排時 TK 版本不同 |
 | OpenAI 對照 | `OAI_Link`：`20261008_OpenAI_v0.6.xlsx`（SHA-256 `34fc34a7…`，`e91df57`），17 名 |
-| 規模 | 13 頁；SRC_ANT 409；Inputs 182；具名範圍 1,146；公式格 5,878；Checks C01–C126（CHK_Errors＝0、CHK_Warnings＝2：C89 逐家對帳、C116 U4 含自建的 2026 算力成本 +47%）；parity 情境 40 |
+| 規模 | 15 頁（新增 Bridge、EtaDiag，皆唯讀）；SRC_ANT 409；Inputs 190；具名範圍 1,272；公式格 7,231；Checks C01–C152（CHK_Errors＝0、CHK_Warnings＝2：C89 逐家對帳、C116 U4 含自建的 2026 算力成本 +47%）；parity 情境 44 |
+
+**v0.1.3 變動摘要**：TK v19.0（值同 v18.0）；U2 新法（供給取揭露容量、付款路徑不變；2030 差額 11.14 → 11.60）；資金三層（營運自給 41.9／已到位股權 0／條件式 0）；持續擴張情境（只作情境）；結論改條件式；B 段：Bridge 頁、η 拆解（0.527＝1.237×0.683×1.399×殘差 0.446；TK v5.26→v18.0 的 η 變動幾乎全被殘差吸收）、CLAUDE.md 第 8 節 S-1 替換程序。
 
 **主要結果（基準）**：每 VR 等值 GW 差額 2026–2030 −5.4／−4.9／−2.6／＋5.2／＋11.2；覆蓋率 2030 1.80；2026 營收 49.9；累計外部資金需求 **0**；現金谷底 2028 年 84.2。談判中 $150B（U6，情境）全數成交：2030 差額 ＋6.7、累計外部資金仍 0。回歸開關 INP_180／INP_182＝0 即回到 v0.1 輸出。
 
@@ -40,6 +42,7 @@ D1 命題與命名同 OpenAI；D2 營收線方案別＋API 層級別；D3 廣告
 4. **只計已簽合約**（v0.1 第 1 項）：使 2029–2030 轉正；新增合約機制需 Andy 決定。
 5. **2026 非算力成本低估**（A4-17／D22）：Q3 年化法約 10.2、營收比例法約 5.0（v0.1 Q2 版 6.9）。
 6. **Fluidstack 自建 16.7 與報導「算力與基礎設施支出」是否同口徑**（C116 WARN）。
+7. **v0.1.3 待 Andy／chat 端**：(a) A 段報告⑥：U2 付款分攤比例（MW 比例 460:350 vs 公告金額 45:35）的衝突，已採 MW 比例，待 chat 端確認；(b) η 拆解的 f_U 是否計入 TK 生產折減 0.85（殘差 0.446 → 約 0.525）；(c) 是否把 η 拆解擴成『TK 絕對產能水準』第四因子（目前 TK 產能整體上升全落在殘差）；(d) 刪除 `dist/_待刪除/`；(e) PR #69 審查與合併（代理不合併）。
 7. **v0.1.2 待 Andy**：OpenAI 模型何時同步 TK v18.0；η（0.527）是否隨年回升（Inputs 開關，基準 0）；是否改用 TK `_Prod` 層（差異可忽略，建議不改）。見 `docs/reports/20261021_v0.1.2.md` ⑤。
 7. v0.1 其餘：API 任務數成長、合約價 12、已到位 $100B 組成。
 
