@@ -21,6 +21,7 @@
 | `samsung/` | 三星電子（005930.KS） | 記憶體樣板（集團公司：只建模記憶體，其餘事業為輸入） | v0.1.1 |
 | `tsmc/` | 台積電（2330.TW） | 獨立產生器（CoWoS 供需上限＋損益估值；AI 半導體 Project） | v0.2 |
 | `markets/equipment/` | 半導體設備市場模型：記憶體、代工邏輯資本支出 → 設備需求；三情境、對帳、瓶頸表 | 新建（AI 半導體 Project 步驟 5） | v0.1.1（成品：`markets/equipment/dist/20261022_半導體設備市場模型_v0.1.1.xlsx`；v0.1.1 只改來源文字） |
+| `advantest/` | Advantest（6857.T）：SoC／記憶體測試機收支與 P/E 估值；三情境、對帳、敏感度；見 `advantest/README.md` | 獨立產生器（比照 `tsmc/`；AI 半導體 Project 步驟 5 第一家公司） | v0.1（成品：`advantest/dist/20261022_Advantest模型_v0.1.xlsx`） |
 | `markets/overview/` | AI 半導體總覽儀表板 | 彙整橋接表、記憶體、網通、台積電模型；估值規則；記憶體三家 P/E 對照、美光買回加回 P/B | v0.3 |
 
 規則：
