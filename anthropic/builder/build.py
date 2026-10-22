@@ -34,8 +34,8 @@ from common import F_BOLD, F_CALC, F_IN, F_NOTE, e6_violations, header, lo_recal
 from oai_link import read_oai  # noqa: E402
 from tk_link import NONNV_STATUS, PENDING_NOTE, V19B_NAMES, read_nonnv, read_snapshot  # noqa: E402
 
-VERSION = "v0.1.3"
-STAGE = "v0.1.3-B"
+VERSION = "v0.1.4"
+STAGE = "v0.1.4"
 REGISTRY_PATH = HERE / "id_registry.json"
 SRC_YAML = ROOT / "data" / "anthropic_src.yaml"
 INP_YAML = ROOT / "data" / "anthropic_inputs.yaml"
