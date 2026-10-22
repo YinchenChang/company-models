@@ -1,4 +1,4 @@
-# AI 網通市場模型 v0.2（AI 半導體 Project 步驟 3）
+# AI 網通市場模型 v0.2.1（AI 半導體 Project 步驟 3）
 # 用法：python3 markets/network/build_network.py raw.xlsx ；再以 LibreOffice headless 重算
 # 加速器顆數取自 markets/memory/market.py（與 HBM 市場同一份數量層）；每顆網通內容以 markets/chip_bridge v0.2 為錨
 import sys, os, json
@@ -218,7 +218,8 @@ srcs = [("markets/chip_bridge v0.2（每 GW 網通拆分）", "本 repo"), ("mar
 for i, (a, b) in enumerate(srcs, 2): SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 50; SO.column_dimensions["B"].width = 120
 RD = wb.create_sheet("README", 0)
-lines = [("AI 網通市場模型 v0.2（AI 半導體 Project 步驟 3）　2026-10-22（Tokenomics v19.0）", True),
+lines = [("AI 網通市場模型 v0.2.1（AI 半導體 Project 步驟 3）　2026-10-22（Tokenomics v19.0）", True),
+ ("v0.2.1：ITU 改讀 Tokenomics 快照、不取整（GB300、VR200、Rubin Ultra、Hopper）；網通金額不變。", False),
  ("模型命題：AI 網通的錢由「加速器顆數 × 每顆網通內容」決定；每顆內容隨 scale-up 域擴大（NVL72 → NVL576）與每 GPU 網卡頻寬倍增而上升，而 scale-up 的頻寬大多由便宜的銅承載，所以金額主體仍在 scale-out（交換器、光模組、網卡）。", False), ("", False),
  ("驅動因子 → 推導量", True),
  ("Units：加速器顆數（markets/memory，與 HBM 市場同一份）→ 各年各平台顆數", False),
