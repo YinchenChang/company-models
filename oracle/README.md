@@ -643,6 +643,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `texts.fy0EquityNote` | 首期股權／可轉債的組成說明（含年初至今與首期模型的金額；v4.5；可用期間佔位符 «P0»、«YTD»、«STUB»） | 文字 | «P0»＝«YTD» ATM 淨收入 19.909（… | 必改 |
+| `texts.roicWaccNote` | 標題句「回收一個 MW 的 GPU（成本、年限、WACC）」中 WACC 的用途說明（CAPM 折現率 vs Tokenomics 錨內含 WACC 10%；v0.3.1） | 文字 | 本模型 CAPM 折現率（valuation.wac… | 必改 |
+| `texts.ebitdaBasisNote` | 摘要與損益 FY27 調整後 EBITDA 口徑差異說明（Q1 實際＋Q2–Q4 模型 vs 全年模型；Excel「摘要」與 HTML 一頁摘要同一句；v0.3.1） | 文字 | 口徑：本表 FY27 調整後 EBITDA＝Q1 實… | 必改 |
 | `texts.sourceLine` | 頁首的資料來源一行（例如最新 10-Q、法說、期後 8-K；v4.5） | 文字 | FY27Q1 10-Q（2026-09-11）＋財報… | 必改 |
 | `texts.cashTaxNote` | 年初至今現金稅的說明（損益與評價頁；v4.5） | 文字 | «YTD» 現金稅未單獨揭露；10-Q 有效稅率 1… | 必改 |
 | `texts.thesis` | 模型命題一句話（HTML 標題列與檔案說明；v0.1b） | 文字 | 客戶預付與投資級債能否把 $664B RPO 變成現… | 必改 |

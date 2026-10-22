@@ -21,6 +21,8 @@ F = [
  ('meta.updateDate', '資料更新日', '日期', M), ('meta.priceDate', '股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格）', '日期', M),
  ('meta.consensusFile', '市場共識資料檔路徑（v4.3；只讀，由使用者查證後提供；建置時併入 HTML、Excel 讀同一檔）', '路徑', M),
  ('texts.fy0EquityNote', '首期股權／可轉債的組成說明（含年初至今與首期模型的金額；v4.5；可用期間佔位符 «P0»、«YTD»、«STUB»）', '文字', M),
+ ('texts.roicWaccNote', '標題句「回收一個 MW 的 GPU（成本、年限、WACC）」中 WACC 的用途說明（CAPM 折現率 vs Tokenomics 錨內含 WACC 10%；v0.3.1）', '文字', M),
+ ('texts.ebitdaBasisNote', '摘要與損益 FY27 調整後 EBITDA 口徑差異說明（Q1 實際＋Q2–Q4 模型 vs 全年模型；Excel「摘要」與 HTML 一頁摘要同一句；v0.3.1）', '文字', M),
  ('texts.sourceLine', '頁首的資料來源一行（例如最新 10-Q、法說、期後 8-K；v4.5）', '文字', M),
  ('texts.cashTaxNote', '年初至今現金稅的說明（損益與評價頁；v4.5）', '文字', M),
  ('texts.thesis', '模型命題一句話（HTML 標題列與檔案說明；v0.1b）', '文字', M),

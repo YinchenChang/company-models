@@ -72,11 +72,11 @@ else
 fi
 
 
+step "0e. 每 MW 收入 3 × 3 矩陣與敏感度快照（scripts/tk_sens.js → tk_sens.json；v0.3；v0.3.1 起先於建 HTML，HTML 內嵌同一份快照）"
+if r=$(node scripts/tk_sens.js); then echo "$r"; ok "tk_sens 快照：$(sed 's/^3×3（容量 × 價格，加權目標價）：//' <<<"$r")"; else echo "$r"; bad "tk_sens 快照"; finish; fi
+
 step "1. 建 HTML（v$VER · $DATE）"
 if python3 build_html_portable.py "$VER" "$HTML" "$DATE" docs/template_v3_3.html; then ok "建 HTML"; else bad "建 HTML"; finish; fi
-
-step "1b. 每 MW 收入 3 × 3 矩陣與敏感度快照（scripts/tk_sens.js → tk_sens.json；v0.3）"
-if r=$(node scripts/tk_sens.js); then echo "$r"; ok "tk_sens 快照：$(sed 's/^3×3（容量 × 價格，加權目標價）：//' <<<"$r")"; else echo "$r"; bad "tk_sens 快照"; finish; fi
 
 step "2. 建 Excel"
 if python3 build_xlsx.py "$XLSX"; then ok "建 Excel"; else bad "建 Excel"; finish; fi
@@ -110,6 +110,7 @@ else ok "Tokenomics_取數：不適用（無 tokenomics 區段）"; fi
 step "5c. 離線開啟檢查（已決定事項 11：單一檔案、無網路請求、console 無錯誤、關鍵數字正常顯示）"
 if python3 scripts/check_offline.py "$HTML" "$XLSX"; then ok "離線開啟：新建 HTML"; else bad "離線開啟：新建 HTML"; fi
 if python3 scripts/check_offline.py "$DIST_HTML" "$DIST_XLSX"; then ok "離線開啟：dist/ 成品"; else bad "離線開啟：dist/ 成品"; fi
+if r=$(python3 scripts/check_tkmatrix.py "$HTML"); then echo "$r"; ok "HTML 3 × 3 矩陣次層：快照檢查通過、九格與 tk_sens.json 一致（v0.3.1）"; else echo "$r"; bad "HTML 3 × 3 矩陣次層"; fi
 
 step "6. 三情境 xlx＋cmp31（預設錨定）"
 declare -A SC=([1]=low [2]=base [3]=high)

@@ -1,0 +1,296 @@
+{
+ "_readme": "Oracle 事實總帳增補（v0.3.1，2026-10-22）。承 oracle_facts_20261007.json（保留，不刪）；只列本次市場資料更新。每筆：數值、單位、期間、來源與網址、文件日、擷取日、標記；找不到者 value 為「不適用」並寫明試過的來源。",
+ "asOf": "2026-10-22",
+ "tagLegend": {
+  "Verified": "可公開查證",
+  "Interested-party": "來源有利害關係",
+  "Analogy": "由可比對象推估",
+  "Assumed": "無實證",
+  "Derived": "由其他數字換算"
+ },
+ "groups": {
+  "10_v0.3.1市場資料更新": [
+   {
+    "id": "mkt.price.close.20261021",
+    "item": "ORCL 最新收盤價",
+    "value": 129.13,
+    "unit": "US$",
+    "period": "2026-10-21",
+    "source": "StockAnalysis.com 歷史股價頁；Morningstar 報價頁（同值）",
+    "url": "https://stockanalysis.com/stocks/orcl/history/",
+    "docDate": "2026-10-21",
+    "retrieved": "2026-10-22",
+    "tag": "[Verified]",
+    "note": "兩個來源同值 129.13（跌 1.53%，前收 131.14）；Investing.com 131.03 與其不符視為過時不採用；盤後 127.87 非收盤不採用。經網路搜尋工具回傳的頁面摘要取得（二手轉述）；原站被網路政策封鎖（stockanalysis.com、marketscreener.com、finance.yahoo.com、fred.stlouisfed.org、sec.gov、home.treasury.gov 直連與 WebFetch 皆失敗），未能開啟原頁逐格核對"
+   },
+   {
+    "id": "mkt.price.prev.20261020",
+    "item": "ORCL 前一交易日收盤",
+    "value": 131.14,
+    "unit": "US$",
+    "period": "2026-10-20",
+    "source": "StockAnalysis.com；heygotrade（同值）",
+    "url": "https://stockanalysis.com/stocks/orcl/history/",
+    "docDate": "2026-10-20",
+    "retrieved": "2026-10-22",
+    "tag": "[Verified]",
+    "note": "對照用。經網路搜尋工具回傳的頁面摘要取得（二手轉述）；原站被網路政策封鎖（stockanalysis.com、marketscreener.com、finance.yahoo.com、fred.stlouisfed.org、sec.gov、home.treasury.gov 直連與 WebFetch 皆失敗），未能開啟原頁逐格核對"
+   },
+   {
+    "id": "mkt.target.sp.20261022",
+    "item": "ORCL 分析師目標價平均／中位／高／低／家數",
+    "value": {
+     "mean": 237.36,
+     "median": 240.0,
+     "high": 400.0,
+     "low": 110.0,
+     "analysts": 43,
+     "rating": "Buy"
+    },
+    "unit": "物件（US$）",
+    "period": "頁面表列日期 2026-10-20",
+    "source": "S&P Global Market Intelligence（經 StockAnalysis.com 預測頁）",
+    "url": "https://stockanalysis.com/stocks/orcl/forecast/",
+    "docDate": "2026-10-20",
+    "retrieved": "2026-10-22",
+    "tag": "[Interested-party]",
+    "note": "賣方分析師預估，有承銷與偏多傾向。前版 237.97（2026-10-07）。經網路搜尋工具回傳的頁面摘要取得（二手轉述）；原站被網路政策封鎖（stockanalysis.com、marketscreener.com、finance.yahoo.com、fred.stlouisfed.org、sec.gov、home.treasury.gov 直連與 WebFetch 皆失敗），未能開啟原頁逐格核對"
+   },
+   {
+    "id": "mkt.target.marketbeat.20261022",
+    "item": "ORCL 分析師目標價（MarketBeat 彙整）",
+    "value": {
+     "mean": 249.52,
+     "high": 400.0,
+     "low": 110.0,
+     "analysts": 47,
+     "rating": "Moderate Buy"
+    },
+    "unit": "物件（US$）",
+    "period": "2026-10-21",
+    "source": "MarketBeat（自行彙整，獨立於 S&P）",
+    "url": "https://www.marketbeat.com/stocks/NYSE/ORCL/forecast/",
+    "docDate": "2026-10-21",
+    "retrieved": "2026-10-22",
+    "tag": "[Interested-party]",
+    "note": "前版 251.72（2026-10-10 報導：1 賣出、9 持有、36 買進、1 強力買進）。經網路搜尋工具回傳的頁面摘要取得（二手轉述）；原站被網路政策封鎖（stockanalysis.com、marketscreener.com、finance.yahoo.com、fred.stlouisfed.org、sec.gov、home.treasury.gov 直連與 WebFetch 皆失敗），未能開啟原頁逐格核對"
+   },
+   {
+    "id": "mkt.target.wzen.20261022",
+    "item": "ORCL 分析師目標價（WallStreetZen 彙整，樣本 24 家）",
+    "value": {
+     "mean": 243.38,
+     "analysts": 24
+    },
+    "unit": "物件（US$）",
+    "period": "頁面無日期",
+    "source": "WallStreetZen",
+    "url": "https://www.wallstreetzen.com/stocks/us/nyse/orcl/stock-forecast",
+    "docDate": null,
+    "retrieved": "2026-10-22",
+    "tag": "[Interested-party]",
+    "note": "只作第三個呈現；樣本與日期未明。經網路搜尋工具回傳的頁面摘要取得（二手轉述）；原站被網路政策封鎖（stockanalysis.com、marketscreener.com、finance.yahoo.com、fred.stlouisfed.org、sec.gov、home.treasury.gov 直連與 WebFetch 皆失敗），未能開啟原頁逐格核對"
+   },
+   {
+    "id": "mkt.est.ms.fy27",
+    "item": "FY27 營收／EBITDA 共識",
+    "value": {
+     "revenue": 90.423,
+     "ebitda": 51.942
+    },
+    "unit": "US$bn",
+    "period": "FY27（2026-06 至 2027-05）",
+    "source": "MarketScreener 財務頁（S&P Capital IQ 系共識）",
+    "url": "https://www.marketscreener.com/quote/stock/ORACLE-CORPORATION-13620698/finances/",
+    "docDate": null,
+    "retrieved": "2026-10-22",
+    "tag": "[Interested-party]",
+    "note": "頁面無日期。前版 90.449／51.664。經網路搜尋工具回傳的頁面摘要取得（二手轉述）；原站被網路政策封鎖（stockanalysis.com、marketscreener.com、finance.yahoo.com、fred.stlouisfed.org、sec.gov、home.treasury.gov 直連與 WebFetch 皆失敗），未能開啟原頁逐格核對"
+   },
+   {
+    "id": "mkt.est.ms.fy28",
+    "item": "FY28 營收／EBITDA 共識",
+    "value": {
+     "revenue": 131.711,
+     "ebitda": 74.642
+    },
+    "unit": "US$bn",
+    "period": "FY28",
+    "source": "MarketScreener 財務頁",
+    "url": "https://www.marketscreener.com/quote/stock/ORACLE-CORPORATION-13620698/finances/",
+    "docDate": null,
+    "retrieved": "2026-10-22",
+    "tag": "[Interested-party]",
+    "note": "與前版相同（131.711／74.642）。頁面無日期。經網路搜尋工具回傳的頁面摘要取得（二手轉述）；原站被網路政策封鎖（stockanalysis.com、marketscreener.com、finance.yahoo.com、fred.stlouisfed.org、sec.gov、home.treasury.gov 直連與 WebFetch 皆失敗），未能開啟原頁逐格核對"
+   },
+   {
+    "id": "mkt.est.ms.fy29",
+    "item": "FY29 營收／EBITDA 共識",
+    "value": {
+     "revenue": 183.655,
+     "ebitda": 107.543
+    },
+    "unit": "US$bn",
+    "period": "FY29",
+    "source": "MarketScreener 財務頁",
+    "url": "https://www.marketscreener.com/quote/stock/ORACLE-CORPORATION-13620698/finances/",
+    "docDate": null,
+    "retrieved": "2026-10-22",
+    "tag": "[Interested-party]",
+    "note": "前版 183.569／107.543。頁面無日期。經網路搜尋工具回傳的頁面摘要取得（二手轉述）；原站被網路政策封鎖（stockanalysis.com、marketscreener.com、finance.yahoo.com、fred.stlouisfed.org、sec.gov、home.treasury.gov 直連與 WebFetch 皆失敗），未能開啟原頁逐格核對"
+   },
+   {
+    "id": "mkt.est.lseg",
+    "item": "FY27／FY28 營收與 EPS 共識（LSEG）",
+    "value": {
+     "FY27": {
+      "revenue": 90.42,
+      "epsAdjusted": 8.14
+     },
+     "FY28": {
+      "revenue": 131.77,
+      "revenueLow": 117.92,
+      "revenueHigh": 139.64,
+      "epsAdjusted": 11.0,
+      "epsLow": 9.0,
+      "epsHigh": 13.3
+     }
+    },
+    "unit": "物件（US$bn；US$）",
+    "period": "FY27–FY28",
+    "source": "LSEG（經 Yahoo Finance Analysis 頁）",
+    "url": "https://finance.yahoo.com/quote/ORCL/analysis/",
+    "docDate": "約 2026-10-10 頁面快照",
+    "retrieved": "2026-10-22",
+    "tag": "[Interested-party]",
+    "note": "獨立於 S&P 系。FY28 營收低端由 107.66 調為 117.92。經網路搜尋工具回傳的頁面摘要取得（二手轉述）；原站被網路政策封鎖（stockanalysis.com、marketscreener.com、finance.yahoo.com、fred.stlouisfed.org、sec.gov、home.treasury.gov 直連與 WebFetch 皆失敗），未能開啟原頁逐格核對"
+   },
+   {
+    "id": "mkt.est.fy29.eps",
+    "item": "FY29 EPS 共識",
+    "value": "不適用",
+    "unit": "—",
+    "period": "FY29",
+    "source": "—",
+    "url": "—",
+    "docDate": null,
+    "retrieved": "2026-10-22",
+    "tag": "—",
+    "note": "找不到（兩次搜尋皆無）；不是「不存在」。"
+   },
+   {
+    "id": "val.ust10.treasury.20261020",
+    "item": "美國 10 年期公債殖利率（票面殖利率曲線）",
+    "value": 0.0512,
+    "unit": "比率",
+    "period": "2026-10-20",
+    "source": "U.S. Treasury Daily Treasury Par Yield Curve／Fed H.15（2026-10-20 列 5.12）",
+    "url": "https://www.federalreserve.gov/releases/h15/",
+    "docDate": "2026-10-20",
+    "retrieved": "2026-10-22",
+    "tag": "[Verified]",
+    "note": "官方最新已公布值（2026-10-21 官方值搜尋時尚未見）；二手 2026-10-21：Trading Economics／Forbes 5.13、Investing.com 5.127（val.ust10.sec）。前版 5.27%（2026-10-06）。經網路搜尋工具回傳的頁面摘要取得（二手轉述）；原站被網路政策封鎖（stockanalysis.com、marketscreener.com、finance.yahoo.com、fred.stlouisfed.org、sec.gov、home.treasury.gov 直連與 WebFetch 皆失敗），未能開啟原頁逐格核對"
+   },
+   {
+    "id": "val.ust10.sec",
+    "item": "美國 10 年期公債殖利率（二手，隔日）",
+    "value": 0.0513,
+    "unit": "比率",
+    "period": "2026-10-21",
+    "source": "Trading Economics；Forbes Advisor；Investing.com 5.127",
+    "url": "https://tradingeconomics.com/united-states/government-bond-yield",
+    "docDate": "2026-10-21",
+    "retrieved": "2026-10-22",
+    "tag": "[Verified]",
+    "note": "對照用，不採用（官方值尚未公布）。經網路搜尋工具回傳的頁面摘要取得（二手轉述）；原站被網路政策封鎖（stockanalysis.com、marketscreener.com、finance.yahoo.com、fred.stlouisfed.org、sec.gov、home.treasury.gov 直連與 WebFetch 皆失敗），未能開啟原頁逐格核對"
+   },
+   {
+    "id": "val.beta.cand1",
+    "item": "ORCL beta（5Y 月）候選",
+    "value": 1.712,
+    "unit": "倍",
+    "period": "頁面無日期（價格約 144 附近，推測 2026-10 初）",
+    "source": "coindataflow.com",
+    "url": "https://coindataflow.com/en/stock/ORCL",
+    "docDate": null,
+    "retrieved": "2026-10-22",
+    "tag": "[Verified]",
+    "note": "未採用：無日期、與 val.beta.sa／yahoo（2026-10-07，1.77）不一致且不較新。經網路搜尋工具回傳的頁面摘要取得（二手轉述）；原站被網路政策封鎖（stockanalysis.com、marketscreener.com、finance.yahoo.com、fred.stlouisfed.org、sec.gov、home.treasury.gov 直連與 WebFetch 皆失敗），未能開啟原頁逐格核對"
+   },
+   {
+    "id": "val.beta.cand2",
+    "item": "ORCL beta 候選（估值頁，價格約 144.22）",
+    "value": 1.71,
+    "unit": "倍",
+    "period": "頁面無日期",
+    "source": "某估值頁（搜尋摘要未列網域）",
+    "url": "—",
+    "docDate": null,
+    "retrieved": "2026-10-22",
+    "tag": "[Verified]",
+    "note": "未採用：與 cand1 可能同源（不獨立）、無日期。若 Project 改採 1.71，WACC 約降 0.2–0.3pt（β 差 0.06 × ERP 5% × 股權權重）。經網路搜尋工具回傳的頁面摘要取得（二手轉述）；原站被網路政策封鎖（stockanalysis.com、marketscreener.com、finance.yahoo.com、fred.stlouisfed.org、sec.gov、home.treasury.gov 直連與 WebFetch 皆失敗），未能開啟原頁逐格核對"
+   },
+   {
+    "id": "val.kd.note",
+    "item": "ORCL 6.55% 2046 票據殖利率",
+    "value": 0.0811,
+    "unit": "比率",
+    "period": "2026-10-01（Benzinga，價 84.91）",
+    "source": "Benzinga／TradingView News（沿用 val.bond.2046）",
+    "url": "https://www.benzinga.com/markets/bonds/26/10/62136978/oracle-20-year-bond-yields-8-percent-stock-return",
+    "docDate": "2026-10-02",
+    "retrieved": "2026-10-22",
+    "tag": "[Derived]",
+    "note": "2026-10-22 找不到較新的可驗證殖利率：Public.com 7.58%、bondblox 7.59%（價 89.649）皆無日期；GuruFocus 6.56% 為發行時殖利率。沿用 8.11%。經網路搜尋工具回傳的頁面摘要取得（二手轉述）；原站被網路政策封鎖（stockanalysis.com、marketscreener.com、finance.yahoo.com、fred.stlouisfed.org、sec.gov、home.treasury.gov 直連與 WebFetch 皆失敗），未能開啟原頁逐格核對"
+   },
+   {
+    "id": "val.peer.crwv.20261021",
+    "item": "AI 基礎設施同業：CoreWeave",
+    "value": {
+     "close": 61.82,
+     "mktCap": 34090,
+     "sharesBn": 0.5515,
+     "ev": 80120
+    },
+    "unit": "物件（US$；USD M）",
+    "period": "2026-10-21 收盤",
+    "source": "Yahoo Finance、MarketScreener、Finviz、Motley Fool（收盤同值 61.82，跌 0.50%）",
+    "url": "https://finviz.com/stock?t=CRWV",
+    "docDate": "2026-10-21",
+    "retrieved": "2026-10-22",
+    "tag": "[Derived]",
+    "note": "市值＝收盤 × 股數 0.5515bn（2026-10-07 StockAnalysis 市值 49,110 ÷ 價 89.05 反推）；EV＝市值＋淨負債 46,030（val.peer.crwv 沿用）。本 repo `coreweave/` v4.12 的價格日期為 2026-09-24（早於本表），不可用。經網路搜尋工具回傳的頁面摘要取得（二手轉述）；原站被網路政策封鎖（stockanalysis.com、marketscreener.com、finance.yahoo.com、fred.stlouisfed.org、sec.gov、home.treasury.gov 直連與 WebFetch 皆失敗），未能開啟原頁逐格核對"
+   },
+   {
+    "id": "val.peer.nbis.20261021",
+    "item": "AI 基礎設施同業：Nebius",
+    "value": {
+     "close": 171.57,
+     "mktCap": 46640,
+     "ev": 48790
+    },
+    "unit": "物件（US$；USD M）",
+    "period": "2026-10-21 收盤",
+    "source": "Finviz（市值 46.64B）；TradingView 46.61B；CNN 收盤 171.57",
+    "url": "https://finviz.com/stock?t=NBIS",
+    "docDate": "2026-10-21",
+    "retrieved": "2026-10-22",
+    "tag": "[Verified]",
+    "note": "市值 [Verified]；EV＝市值＋淨負債 2,150（2026-10-06 EV 70,640 − 市值 68,490，沿用）[Derived]。本 repo `nebius/` v0.4 價格日期 2026-10-06（早於本表）。CompaniesMarketCap 42.01B 無日期，不採用。經網路搜尋工具回傳的頁面摘要取得（二手轉述）；原站被網路政策封鎖（stockanalysis.com、marketscreener.com、finance.yahoo.com、fred.stlouisfed.org、sec.gov、home.treasury.gov 直連與 WebFetch 皆失敗），未能開啟原頁逐格核對"
+   },
+   {
+    "id": "val.peer.software.20261022",
+    "item": "軟體同業 NTM EV/EBITDA（MSFT、SAP、CRM、ADBE、NOW）",
+    "value": "不適用",
+    "unit": "倍",
+    "period": "—",
+    "source": "—",
+    "url": "—",
+    "docDate": null,
+    "retrieved": "2026-10-22",
+    "tag": "—",
+    "note": "找不到較新的 NTM 值：現行方法（StockAnalysis EV ÷ MarketScreener 共識 EBITDA 時間加權）所需原頁被網路政策封鎖；搜尋只得 TTM（Multiples.vc：CRM 11.9、NOW 20.0、ADBE 7.4；Stockrow 2026-10-09：ADBE 9.5、CRM 14.7、NOW 43.3，兩站互相不一致）或 194 天前的 NTM（TIKR：CRM 9.12、NOW 16.34）。沿用 2026-10-07 值（MSFT 15.59、SAP 15.02、CRM 10.8、ADBE 6.6、NOW 20.65，中位數 15.02），不以 TTM 替代（口徑不同）。"
+   }
+  ]
+ }
+}

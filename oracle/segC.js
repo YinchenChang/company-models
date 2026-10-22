@@ -1018,7 +1018,10 @@ function AM({
             children: m.notes.map(e => (0, $.jsxs)(`li`, {
               children: [`— `, e]
             }, e))
-          }) : null, (0, $.jsx)(`p`, {
+          }) : null, (0, $.jsx)(TkMatrixQ, {
+            sc: t.scenario,
+            tgt: m.blended
+          }), (0, $.jsx)(`p`, {
             className: `mt-4 text-xs leading-relaxed text-muted`,
             children: `缺口處理：採期前融資瀑布——每期在需要前先融足，使期末現金不低於最低現金；依序動用未動用額度、資產層新債（總債務 ≤ 債務／backlog 上限）、股權（按現價折價發行）。新債利息進損益，新股進股數；DCF 以融資後股數計每股，並加回新股募得現金的現值；EV/EBITDA 用錨定年末（預設 FY29）淨負債與股數。舉債部分反映在錨定年末淨負債（與舊版扣缺口本金等價），股權部分反映在股數。 結論規則：股權募資 > 現市值 ${multTxt(RATE_TH.equityRaiseMaxMult)} 倍 → 禁止買進；加權目標價低於現價 ${pctQ(SELL_TH)} 以上，或股權需求過大且目標價低於現價 ${pctQ(RATE_TH.sellUpsideMaxIfEquityOver)} 以上 → 賣出；上檔 ≥${pctQ(RATE_TH.buyUpsideMin)} 且股權需求未超標才買進。這是研究框架，不是投資建議。Street $144 隱含市場相信資產層債務能以可接受成本持續擴張、股權稀釋有限，與本模型的債務上限與股權殘差假設不同。`
           })]
