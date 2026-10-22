@@ -18,15 +18,19 @@ const run = (sc, st) => {
   const r = fSensQ(s, VAL_DEFAULTS);
   return { tgt: r.tgt, eq: r.eq, gap: r.gap, levMax: r.levMax, rev0: st.rev[0] * 1e3, rev4: st.rev[4] * 1e3, bo, fy27Rev: r.fy27Rev };
 };
+// 舊方法（v0.2：路徑 A 成本加成與路徑 B 市場價 50/50 平均；資料 data/permw_tokenomics_20261007.json，GB300 基準成本情境）以新快照的 GB300 IF_HoldEcon 重算＝純 Tokenomics 同步（①a）；其餘（①b）＝以錨取代舊推導
+const PMD = JSON.parse(fs.readFileSync(path.join(dir, 'data/permw_tokenomics_20261007.json'), 'utf8')), HE_NEW0 = COMPANY_DATA.tkSnap.IF_HoldEcon[`GB300 NVL72`][`基準`], GP0 = COMPANY_DATA.tkSnap.IF_GPUsPerGW[`GB300 NVL72`][`基準`] / 1e3,
+  PA = { low: [0.0, 0.06], base: [0.15, 0.08], high: [0.30, 0.10] }, PB = { low: 9.7, base: 5.21 * GP0 * 8760 / 1e6 * .85, high: 7.82 * GP0 * 8760 / 1e6 * .90 }, // 路徑 A：[加成 k, 公司層級費用 o]；路徑 B：保守＝IREN 長約、基準＝spot 5.21 × 85%、積極＝24 個月預留 7.82 × 90%
+  oldFormula = (sc, he) => (he * (1 + PA[sc][0]) / (1 - PA[sc][1]) + PB[sc]) / 2;
 const out = { ref: REF, eOld: E_OLD, eNew: E_NEW, costOld: COST_OLD, costNew: capexTkQ(null), target: {}, permw: {} };
 for (const sc of K3) {
   const R = ratio(sc), A1 = tkAnchorQ(sc, { kLong: 1, kSpot: 1 }).rev, T = tkAnchorQ(sc).rev, CN = capexTkQ(null);
-  const S = [{ rev: OLD[sc], cost: COST_OLD, eAdj: E_OLD }, { rev: A1.map((x, i) => x * R[i]), cost: COST_OLD, eAdj: E_OLD }, { rev: T.map((x, i) => x * R[i]), cost: COST_OLD, eAdj: E_OLD },
+  const S1a = Array(5).fill(oldFormula(sc, HE_NEW0) / 1e3), S = [{ rev: OLD[sc], cost: COST_OLD, eAdj: E_OLD }, { rev: A1.map((x, i) => x * R[i]), cost: COST_OLD, eAdj: E_OLD }, { rev: T.map((x, i) => x * R[i]), cost: COST_OLD, eAdj: E_OLD },
     { rev: T, cost: COST_OLD, eAdj: E_OLD }, { rev: T, cost: CN, eAdj: E_OLD }, { rev: T, cost: CN, eAdj: E_NEW }].map(st => run(sc, st));
-  const live = fSensQ(scnQ(DEFAULTS, sc), VAL_DEFAULTS).tgt, d = i => S[i].tgt - S[i - 1].tgt;
-  out.target[sc] = { steps: S, v02: S[0].tgt, d1: d(1), d2: d(2), d3: d(3), d4: d(4), d5: d(5), d6: 0, v03: S[5].tgt, live, total: S[5].tgt - S[0].tgt, sumSteps: d(1) + d(2) + d(3) + d(4) + d(5), err: S[5].tgt - live };
+  const live = fSensQ(scnQ(DEFAULTS, sc), VAL_DEFAULTS).tgt, d = i => S[i].tgt - S[i - 1].tgt, R1a = run(sc, { rev: S1a, cost: COST_OLD, eAdj: E_OLD });
+  out.target[sc] = { steps: S, step1a: R1a, d1a: R1a.tgt - S[0].tgt, d1b: S[1].tgt - R1a.tgt, rev1a: S1a[0] * 1e3, v02: S[0].tgt, d1: d(1), d2: d(2), d3: d(3), d4: d(4), d5: d(5), d6: 0, v03: S[5].tgt, live, total: S[5].tgt - S[0].tgt, sumSteps: d(1) + d(2) + d(3) + d(4) + d(5), err: S[5].tgt - live };
   const o = out.target[sc], f = x => (x >= 0 ? '+' : '') + x.toFixed(2);
-  console.log(`${sc}：v0.2 $${o.v02.toFixed(2)} → ① ${f(o.d1)} → ② ${f(o.d2)} → ③ ${f(o.d3)} → ④ ${f(o.d4)} → ⑤ ${f(o.d5)} → ⑥ 0 → v0.3 $${o.v03.toFixed(2)}（引擎現值 $${live.toFixed(2)}，差 ${(o.v03 - live).toExponential(1)}）；合計 ${f(o.total)}（①–⑤ 相加 ${f(o.sumSteps)}）；期初可計費 MW ${S.map(x => x.bo).join('／')}`);
+  console.log(`${sc}：v0.2 $${o.v02.toFixed(2)} → ① ${f(o.d1)}〔①a TK 同步 ${f(o.d1a)}＋①b 錨取代舊推導 ${f(o.d1b)}〕→ ② ${f(o.d2)} → ③ ${f(o.d3)} → ④ ${f(o.d4)} → ⑤ ${f(o.d5)} → ⑥ 0 → v0.3 $${o.v03.toFixed(2)}（引擎現值 $${live.toFixed(2)}，差 ${(o.v03 - live).toExponential(1)}）；合計 ${f(o.total)}（①–⑤ 相加 ${f(o.sumSteps)}）；期初可計費 MW ${S.map(x => x.bo).join('／')}`);
 }
 // 二、每 MW 年收入橋（基準容量情境；v0.2 路徑 A 成本加成 ＋ 路徑 B 市場價 50/50 平均，GB300 基準成本情境；資料 data/permw_tokenomics_20261007.json＝v5.24 手抄值）
 const PM = JSON.parse(fs.readFileSync(path.join(dir, 'data/permw_tokenomics_20261007.json'), 'utf8')), HE_OLD = 12.7247463559608, // v5.24 GB300 IF_HoldEcon 基準（model/archive/20261007_Tokenomics_v5.24.xlsx；permw 檔四捨五入為 12.72）
