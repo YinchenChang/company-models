@@ -28,7 +28,7 @@ README 欄位說明與 company.json 一致
 [PASS] tk_sens 快照：low 69.26／77.41／106.97；base 75.37／84.24／128.13；high 80.60／91.89／139.59（無變動）
 
 === 1. 建 HTML（v0.3.1 · 2026-10-22）
-built 1078413
+built 1078844
 [PASS] 建 HTML
 
 === 2. 建 Excel
@@ -36,7 +36,7 @@ saved /home/user/company-models/oracle/out/20261022_Oracle收支模型_v0_3_1.xl
 [PASS] 建 Excel
 
 === 3. 重算（LibreOffice headless）
-{"status": "success", "total_formulas": 2944, "total_errors": 0, "error_summary": {}}
+{"status": "success", "total_formulas": 2947, "total_errors": 0, "error_summary": {}}
 [PASS] 重算：0 公式錯誤
 
 === 3b. 反向 DCF：以 Excel 求解（scripts/rv_solve.py；v4.5 取代 JS 快照）
@@ -75,15 +75,15 @@ OOXML OK
 [PASS] HTML 3 × 3 矩陣次層：快照檢查通過、九格與 tk_sens.json 一致（v0.3.1）
 
 === 6. 三情境 xlx＋cmp31（預設錨定）
-ok 1 1381
+ok 1 1382
 [PASS] cmp31 low：459 項全部 OK
-ok 2 1381
-[PASS] cmp31 base：460 項全部 OK
-ok 3 1381
+ok 2 1382
+[PASS] cmp31 base：461 項全部 OK
+ok 3 1382
 [PASS] cmp31 high：459 項全部 OK
 
 === 7. FY27 錨定 cmp31（基準）
-ok 2 1381
+ok 2 1382
 [PASS] cmp31 base_FY27：460 項全部 OK
 
 === 8. 季度層測試（暫存副本：假設 Q3 實際數、可移植性；v4.4）
@@ -95,7 +95,7 @@ test_quarterly：全部通過（測試 A 假設實際數、測試 B 可移植性
 === 8b. 期間滾動測試（暫存副本：日曆推算 6 種情況、滾動後第一屏無過期日期與期間字樣；v4.5）
 [PASS] test_rolling：日曆推算與滾動後第一屏
 C 滾動檢查：只滾日曆、未更新 asOf → 建置失敗並列出 30 項（清單 30 項）
-A 滾動 FY27Q2（評價日 2026-08-31 → 2026-11-30）：過期字樣 ['2026-08-31', '2Q–4Q27', 'Q1 2027', '第 2–4 季', '第 1 季', '2Q–4Q', '1Q27', '8/31', '1Q', 'Q1']；第一屏命中 0 行
+A 滾動 FY27Q2（評價日 2026-08-31 → 2026-11-30）：過期字樣 ['2026-08-31', 'Q1 2027', '第 2–4 季', '2Q–4Q27', '第 1 季', '2Q–4Q', '1Q27', '8/31', '1Q', 'Q1']；第一屏命中 0 行
 期間滾動測試：通過
 
 === 8c. 目標價變動拆解工具測試（scripts/attrib.py：(a)＝(1＋WACC)^(月數÷12)，WACC 讀 Excel、月數讀 calendar_q；四項相加＝總變動）
@@ -104,11 +104,8 @@ A 滾動 FY27Q2（評價日 2026-08-31 → 2026-11-30）：過期字樣 ['2026-0
 
 === 9. 與 dist/ 成品比對
 34 views; errors []
-33 views; errors []
-  頁數不同，重擷取（第 1 次）
 34 views; errors []
-34 views; errors []
-畫面：dist 34 個、新版 34 個頁面／分頁，約 142,578 字；差異 0 個；預期差異 0 個（清單 無）；頁面錯誤 dist 0、新版 0
+畫面：dist 34 個、新版 34 個頁面／分頁，約 142,700 字；差異 0 個；預期差異 0 個（清單 無）；頁面錯誤 dist 0、新版 0
 [PASS] crawl 畫面文字 0 差異
 0 differences
 以列名稱配對的工作表：無（全部逐格）
@@ -137,7 +134,7 @@ PASS  離線開啟：新建 HTML
 PASS  離線開啟：dist/ 成品
 PASS  HTML 3 × 3 矩陣次層：快照檢查通過、九格與 tk_sens.json 一致（v0.3.1）
 PASS  cmp31 low：459 項全部 OK
-PASS  cmp31 base：460 項全部 OK
+PASS  cmp31 base：461 項全部 OK
 PASS  cmp31 high：459 項全部 OK
 PASS  cmp31 base_FY27：460 項全部 OK
 PASS  test_quarterly：假設實際數與可移植性測試通過
