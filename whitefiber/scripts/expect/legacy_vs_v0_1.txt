@@ -1,0 +1,2 @@
+# legacy（methodology.perMw.revenue＝legacy）對 v0.1 成品的預期差異：僅說明文字
+輸入與假設!I21 說明文字：期初可計費 MW 的校準說明改寫（v0.2，billableRatio.note；數字不變）

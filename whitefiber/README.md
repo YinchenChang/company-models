@@ -1,6 +1,6 @@
-# WhiteFiber 收支模型 v0.1 原始碼包
+# WhiteFiber 收支模型 v0.2 原始碼包
 
-WhiteFiber（WYFI）收支與評價模型；由 `oracle/` @ `e4540c3`（Oracle v0.2 分支＝CRWV v4.5＋Nebius v0.1b＋Oracle v0.1–v0.2）複製建立。下方各節為模板沿革與技術說明（以 CoreWeave 為例），引擎與工具仍適用；WhiteFiber 新增或改寫的結構——雲端 MW × 每 MW 收入（Tokenomics 正向推導，首期以 Q2 經常性雲端營收校準可計費 MW）、託管分部（`defaults.colo`：MW 驅動站點、合約租金與年調、建置 CapEx、建物折舊，經模板「傳統事業」列進入損益、營運來源與分部 EV/EBITDA；畫面用語由 `texts.labelMap` 替換）、GPU 租賃（`defaults.gpuLease`：新增 50% 租賃改計固定租金）、客戶預付覆蓋比、期後事件（`valuation.postEvents`：2032 可轉債、2031 交換、DDTL、RBC 聯貸）、可轉債逐檔、額外融資成本（DDTL MOIC）、NC-1 專案貸款（`scenarios.projectFinance`：排程貸款，v0.1c）、融資瀑布（債務上限 5× EBITDA）、建設延誤、CAPM WACC、分部 EV/EBITDA（託管 20.75×＋雲端 6×）、**金額單位 US$m（`meta.unit`＝m，v0.1c；股數 m 股）**——見交接檔 `docs/handoff/20261008_WhiteFiber收支模型_交接檔_v0_1.md` 與下方「company.json 欄位說明」。成品名稱＝`更新日_<meta.company>收支模型_v版本`（目前 `dist/20261008_WhiteFiber收支模型_v0_1.html`／`.xlsx`）。Oracle v0.2 時期的 `scripts/expect/` 升版預期差異清單不適用於本公司（保留作工具範例）。`scripts/calib_ebitdar.js`：EBITDAR 率校準（`defaults.ebitdarAdj`；verify.sh 第 0c 項）。
+WhiteFiber（WYFI）收支與評價模型；由 `oracle/` @ `e4540c3`（Oracle v0.2 分支＝CRWV v4.5＋Nebius v0.1b＋Oracle v0.1–v0.2）複製建立。下方各節為模板沿革與技術說明（以 CoreWeave 為例），引擎與工具仍適用；WhiteFiber 新增或改寫的結構——雲端 MW × 每 MW 收入（**v0.2 起＝Tokenomics 錨 × 定價倍數 k**：Σ 在役世代占比 × `TK_HoldEcon` × k，k＝市場價格證據 ÷ 同世代持有成本；容量情境與價格情境分離；Tokenomics 取數經 v19.0 快照 `data/tokenomics_snapshot_v19.0.json` 與 Excel `TK_` 具名範圍；首期以 Q2 經常性雲端營收校準可計費 MW；`methodology.perMw.revenue` 設 `legacy` 可重現 v0.1，`scripts/verify_legacy.sh`）、託管分部（`defaults.colo`：MW 驅動站點、合約租金與年調、建置 CapEx、建物折舊，經模板「傳統事業」列進入損益、營運來源與分部 EV/EBITDA；畫面用語由 `texts.labelMap` 替換）、GPU 租賃（`defaults.gpuLease`：新增 50% 租賃改計固定租金）、客戶預付覆蓋比、期後事件（`valuation.postEvents`：2032 可轉債、2031 交換、DDTL、RBC 聯貸）、可轉債逐檔、額外融資成本（DDTL MOIC）、NC-1 專案貸款（`scenarios.projectFinance`：排程貸款，v0.1c）、融資瀑布（債務上限 5× EBITDA）、建設延誤、CAPM WACC、分部 EV/EBITDA（託管 20.75×＋雲端 6×）、**金額單位 US$m（`meta.unit`＝m，v0.1c；股數 m 股）**——見交接檔 `docs/handoff/20261022_WhiteFiber收支模型_交接檔_v0_2.md` 與下方「company.json 欄位說明」。成品名稱＝`更新日_<meta.company>收支模型_v版本`（目前 `dist/20261022_WhiteFiber收支模型_v0_2.html`／`.xlsx`）。`scripts/expect/`：`v0_2_vs_v0_1*.txt`＝v0.2 對 v0.1 成品的預期差異清單，`legacy_vs_v0_1.txt`＝legacy 回歸。`scripts/calib_ebitdar.js`：EBITDAR 率校準（`defaults.ebitdarAdj`；verify.sh 第 0c 項）。
 
 HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo 根目錄；建置產物寫到 `out/`（不納入版控），交付成品放 `dist/`。HTML 的函式庫模板為 `docs/template_v3_3.html`。
 
@@ -138,7 +138,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY26 下半年、FY27、FY28、FY29、FY30，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 WhiteFiber v0.1 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 WhiteFiber v0.2 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -146,7 +146,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `meta.company` | 公司名稱 | 文字 | WhiteFiber | 必改 |
 | `meta.ticker` | 股票代號 | 文字 | WYFI | 必改 |
-| `meta.updateDate` | 資料更新日 | 日期 | 2026-10-08 | 必改 |
+| `meta.updateDate` | 資料更新日 | 日期 | 2026-10-22 | 必改 |
 | `meta.priceDate` | 股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格） | 日期 | 2026-10-07 | 必改 |
 | `meta.consensusFile` | 市場共識資料檔路徑（v4.3；只讀，由使用者查證後提供；建置時併入 HTML、Excel 讀同一檔） | 路徑 | data/consensus_wyfi_202610… | 必改 |
 | `meta.unit` | 金額單位（WhiteFiber v0.1c）：m＝US$m、股數 m 股；省略或 bn＝US$m、m 股。下表「單位」欄依此顯示；程式內以 US$m 寫的常數（容差、下限）自動換算 | 文字 | m | 檢查 |
@@ -438,6 +438,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `scenarios.delayMonths.note` | 建設延誤月數的依據與說明（v0.2） | 文字 | 建設延誤月數：計費 MW＝原可計費路徑往後平移此月數… | 必改 |
 | `scenarios.capexTemplate.costMW` | 每 MW 建置成本（GPU＋網路＋機房內裝），各期 | US$m/MW 清單 | 37.45、37.59、37.59、37.59、37.59 | 檢查 |
 | `scenarios.capexTemplate.div` | JV 後續增資與策略投資，各期 | US$m 清單 | 0、0、0、0、0 | 檢查 |
+| `scenarios.mwPath.gpuConv` | GPU 數 → MW-IT 的換算核對清單（label、gpus、gen、mwIT）：建置時以 IF_GPUsPerGW 檢查，Excel「每MW收入_錨定」H 區以 TK_GPUsPerGW_* 活公式核對 | 清單 | 5 筆 | 必改 |
+| `scenarios.mwPath.gpuConvNote` | 上一欄的口徑與近似說明 | 文字 | mwIT＝GPU 數 ÷ (IF_GPUsPerGW… | 可沿用 |
 
 ### `legacy`：舊版對照值
 
@@ -467,7 +469,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.mwYearEnd` | 各年底主動電力，以年份為鍵（例如 "2025": 850）：首期期初取首期前一財年末；GPU 汰換批次＝各年新增 MW（5a；列入滾動檢查） | MW 物件 | 物件（2025） | 必改 |
 | `defaults.mw31` | 模型期後一年新增 MW 的預設值（情境切換時改用 scenarios.mw31） | MW | 0 | 檢查 |
 | `defaults.capexFloorFY0` | 首期所屬財年的全年資本支出下限（已下單的承諾，取公司指引下緣；首期＝下限 − 年初至今實際認列） | US$m | 0 | 必改 |
-| `defaults.gpuLife` | GPU 經濟壽命（決定汰換時點與折舊） | 年 | 5 | 檢查 |
+| `defaults.gpuLife` | GPU 經濟壽命（決定汰換時點與折舊） | 年 | 6 | 檢查 |
 | `defaults.refreshSteady` | 穩態汰換：true＝已連網 MW 不再增加的期間（觸頂後）及終值年，汰換 CapEx＝平均已連網 MW × 每 MW 建置成本 ÷ GPU 壽命 × 期間長度；false＝只有批次汰換（Oracle v0.1c） | 是／否 | 是 | 檢查 |
 | `defaults.refreshNote` | 穩態汰換的說明文字 | 文字 | v0.1c：已連網 MW 不再增加的期間（觸頂後）及… | 可沿用 |
 | `defaults.revScale` | 每 MW 年收入整體倍數（反向 DCF 與壓力測試用，1＝不調整） | 倍 | 1 | 可沿用 |
@@ -475,7 +477,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.ebStart` | 第一期 EBITDA 率 | 比例 | -0.1149 | 必改 |
 | `defaults.ebSteady` | 最後一期（穩態）EBITDA 率；中間各期線性內插 | 比例 | 0.47 | 檢查 |
 | `defaults.ebitdaBasis` | EBITDA 口徑：ebitdar＝EBITDA＝EBITDAR 率 × 營收 − 租金（租金為固定成本，EBITDAR 率三情境共用）；其他值＝三情境共用 EBITDA 率（模板）（Oracle v0.1c） | 代碼 | ebitdar | 檢查 |
-| `defaults.ebitdarAdj` | EBITDAR 率校準：基準情境 [首期, 末期] 租金 ÷ OCI 營收；EBITDAR 率＝ebStart／ebSteady＋此值（scripts/calib_ebitdar.js --write 產生，verify.sh 檢查） | 比例清單 | 0.072418、0.017013 | 必改 |
+| `defaults.ebitdarAdj` | EBITDAR 率校準：基準情境 [首期, 末期] 租金 ÷ OCI 營收；EBITDAR 率＝ebStart／ebSteady＋此值（scripts/calib_ebitdar.js --write 產生，verify.sh 檢查） | 比例清單 | 0.098099、0.023836 | 必改 |
 | `defaults.ebitdarNote` | EBITDAR 口徑的說明文字 | 文字 | 雲端 EBITDA＝EBITDAR 率 × 雲端營收… | 可沿用 |
 | `defaults.services` | 非算力服務營收（軟體、儲存等），各期 | US$m 清單 | 0、0、0、0、0 | 檢查 |
 | `defaults.otherEbitda` | 其他事業 EBITDA（負值＝燒錢），各期；同時進入損益 EBITDA 與營運來源（v0.1b） | US$m 清單 | 0、0、0、0、0 | 必改 |
@@ -528,7 +530,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.linkSites` | 具名站點的 MW 是否連動第一期產能下限 | 是／否 | 是 | 可沿用 |
 | `defaults.linkLeaseTail` | 舊模板遺留開關，目前程式未使用 | 是／否 | 是 | 可沿用 |
 | `defaults.useAvgMw` | 收入以平均在役 MW 計（true）或期末存量計（false） | 是／否 | 是 | 可沿用 |
-| `defaults.billableOpen` | 最新季末可計費 MW（第一期期初） | MW | 2.65 | 必改 |
+| `defaults.billableOpen` | 最新季末可計費 MW（第一期期初） | MW | 4.07 | 必改 |
 | `defaults.cds` | 信用違約交換（CDS）中價 | bps | None | 必改 |
 | `defaults.cdsBid` | CDS 買價 | bps | None | 必改 |
 | `defaults.cdsAsk` | CDS 賣價 | bps | None | 必改 |
@@ -538,9 +540,9 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.useFacility` | 融資時是否先動用未動用信用額度 | 是／否 | 是 | 可沿用 |
 | `defaults.facility` | 未動用信用額度 | US$m | 20 | 必改 |
 | `defaults.m.accepted` | 已驗收 MW 的預設路徑（實際依所選情境覆寫） | MW 清單 | 14.574、16.548、19.548、22.548、25.548 | 檢查 |
-| `defaults.m.billable` | 可計費 MW 的預設路徑（實際依情境與爬坡比例覆寫） | MW 清單 | 11、14.46、17.86、20.56、23.26 | 檢查 |
+| `defaults.m.billable` | 可計費 MW 的預設路徑（實際依情境與爬坡比例覆寫） | MW 清單 | 11.42、14.68、18、20.7、23.4 | 檢查 |
 | `defaults.m.util` | 利用率，各期 | % 清單 | 100、100、100、100、100 | 檢查 |
-| `defaults.m.revMW` | 每 MW 年收入，各期 | US$m/MW 清單 | 17.4、17.4、17.4、17.4、17.4 | 必改 |
+| `defaults.m.revMW` | 每 MW 年收入，各期 | US$m/MW 清單 | 11.3191、11.7135、11.9325、12.1389、12.3408 | 必改 |
 | `defaults.m.aiShare` | AI 占比，各期（目前只做範圍檢查，未參與計算） | % 清單 | 100、100、100、100、100 | 可沿用 |
 | `defaults.m.fill` | 新產能簽約率：未被既有 RPO 占用的產能能賣出的比例 | % 清單 | 100、100、100、100、100 | 檢查 |
 | `defaults.m.power` | 電價（overlay 開啟時才用） | $/MWh 清單 | 60、62、64、66、68 | 檢查 |
@@ -608,11 +610,20 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.rating.sellMarginAlert` | 任一情境與賣出門檻的距離小於「現價 × 此值」時，判斷句另外揭露 | 比例 | 0.05 | 可沿用 |
 | `methodology.rating.tvShareWarn` | 終值占企業價值超過此值時提出警示（融資說明、檢查頁） | 比例 | 0.85 | 可沿用 |
 | `methodology.checks.cmpTol` | cmp31（HTML vs Excel）數值比對的絕對容差（引擎金額單位 meta.unit；預設 0.005；WhiteFiber 0.0001，US$m 口徑下＝US$100，比率、MW、每股同一容差；WhiteFiber v0.1b／v0.1c） | 數字 | 0.0001 | 檢查 |
-| `methodology.checks.capexPerMwBand` | 檢查頁：模型期 CapEx 強度（每 MW 百萬美元）的合理區間下端與上端（5a） | US$m/MW 清單 | 28、51 | 檢查 |
+| `methodology.checks.capexPerMwBand` | 檢查頁：模型期 CapEx 強度（每 MW 百萬美元）的合理區間下端與上端（5a） | US$m/MW 清單 | 28.5549、39.2826 | 檢查 |
 | `methodology.checks.leaseVsCommitMin` | 檢查頁：表外租金路徑 ÷ 已承諾租約至少要達到的倍數（5a） | 倍 | 0.8 | 檢查 |
 | `methodology.checks.unsignedRevShareMax` | 檢查頁：後段年度依賴未簽約收入的比例上限（5a） | 比例 | 0.5 | 檢查 |
 | `methodology.checks.siteRentGapMax` | 檢查頁：站點租賃五期租金可能低估的金額上限（5a） | US$m | 10 | 檢查 |
 | `methodology.checks.rentVsBenchMin` | 檢查頁：模型每 MW 年租金至少要達到「市場基準 × 第三方占比」的比例（5a） | 比例 | 0.8 | 檢查 |
+| `methodology.checks.revCapShareMax` | 檢查頁：每 MW 年收入 ÷ Tokenomics 客戶每 MW 付費 token 營收（比較層）的上限；超過即警示，只警示不改數字（WhiteFiber v0.2） | 比例 | 0.5 | 檢查 |
+| `methodology.checks.revCapLayer` | 收入上限檢查的比較層（自 CoreWeave W9／Nebius v0.4）：Tokenomics 四層瀑布 IFW_RevGWFleet_100／_Util／_Prod／_Life 擇一；門檻 revCapShareMax 比較此層（_Prod 已扣 SLO 下產能折減，最接近可實際售出 token）；四層一起取、逐層列示（下游資料契約第 2 條）；未設＝Util | 代碼 | Prod | 檢查 |
+| `methodology.perMw._note` | 每 MW 收入方法開關的說明（不進程式；WhiteFiber v0.2） | 文字 | 每 MW 收入方法開關（WhiteFiber v0.… | 可沿用 |
+| `methodology.perMw.revenue` | 每 MW 收入方法（WhiteFiber v0.2）：tkAnchor＝Tokenomics 錨（IF_HoldEcon，在役世代加權）× 定價倍數 k（pricing.anchorMultiple）；legacy＝scenarios.revMW（v0.2，回歸驗收用） | 代碼 | tkAnchor | 檢查 |
+| `methodology.perMw.capex` | 每 MW 建置成本方法（WhiteFiber v0.2 步驟 4）：tokenomics＝Σ 新增世代占比（fleet.newMix）× capexName｜世代（Excel 活公式引用 TK_*；需 revenue＝tkAnchor）；legacy 或未設＝scenarios.capexTemplate.costMW（v0.2 寫死值，回歸驗收用） | 代碼 | tokenomics | 檢查 |
+| `methodology.perMw.capexName` | 每 MW 建置成本引用的 Tokenomics 名稱：雲端機房以第三方承租取得、成長與汰換資本支出只含 IT 設備＝IF_CapexIT（自建廠房者如 Nebius 用 IF_CapexTotal；託管自建廠房維持公司資料） | 代碼 | IF_CapexIT | 必改 |
+| `methodology.perMw.deprLife` | GPU 經濟壽命（汰換年限）方法：tokenomics＝引用 IF_DeprLifeIT｜fleet.refGen（建置時檢查 defaults.gpuLife 等於該值）；legacy 或未設＝defaults.gpuLife | 代碼 | tokenomics | 檢查 |
+| `methodology.perMw.gpuConv` | GPU 數 → MW 換算方法：tokenomics＝以 IF_GPUsPerGW 核對 scenarios.mwPath.gpuConv（建置時檢查） | 代碼 | tokenomics | 檢查 |
+| `methodology.checks.capexPerMwBandRef` | 檢查頁 CapEx 強度區間的來源說明（不進程式）：區間等於 TK_CapexIT_GB300 低成本／高成本，建置時檢查 | 文字 | TK_CapexIT_GB300 低成本／高成本（I… | 可沿用 |
 
 ### `peers`：同業比較（Comps）
 
@@ -666,7 +677,8 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.revMwContractsNote` | 合約隱含單價的推導口徑說明（WhiteFiber v0.1b） | 文字 | 合約隱含每 MW-IT 年營收 [Derived]：… | 必改 |
 | `texts.mwBasis.title` | MW 口徑檢查項的標題（檢查頁；WhiteFiber v0.1b） | 文字 | MW 口徑：雲端 MW-IT 由合約 GPU 數換算… | 必改 |
 | `texts.mwBasis.detail` | MW 口徑說明（IT／毛容量、換算方式；檢查頁；WhiteFiber v0.1b） | 文字 | 模型以 MW-IT 為主口徑（Tokenomics … | 必改 |
-| `texts.scenarioTip` | 情境選擇的浮動說明（資金模型頁；WhiteFiber v0.1b） | 文字 | 三個情境依對照表 r1 第 4 節第 1 條與審查留… | 必改 |
+| `texts.scenarioTip` | 情境選擇的浮動說明（資金模型頁；WhiteFiber v0.1b）；legacy 每 MW 收入時使用 | 文字 | 三個情境依對照表 r1 第 4 節第 1 條與審查留… | 必改 |
+| `texts.scenarioTipTk` | 情境選擇的浮動說明（tkAnchor 每 MW 收入時使用；WhiteFiber v0.2） | 文字 | 三個情境依對照表 r1 第 4 節第 1 條與審查留… | 必改 |
 | `texts.siteTip` | 站點表的浮動說明（WhiteFiber v0.1b） | 文字 | 具名雲端站點可編輯。公司多數雲端站點為第三方機房、不… | 必改 |
 | `texts.headline` | 資金模型頁首標題（WhiteFiber v0.1b；未設時用模板「Backlog 不是現金」） | 文字 | 託管長約能撐住雲端擴張嗎 | 必改 |
 | `texts.subhead` | 資金模型頁首副標（WhiteFiber v0.1b） | 文字 | Nscale 10 年長約與客戶預付是融資底座；雲端… | 必改 |
@@ -686,7 +698,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.prepayCheck` | 客戶預付的公司說法與推得覆蓋比（檢查頁；v0.1b） | 文字 | 公司：雲端與資料中心客戶預付（1H26 流入 72.… | 必改 |
 | `texts.mwFacts` | 產能（MW）相關的公司揭露摘要（檢查頁；v0.1b） | 文字 | 公司簡報（2026-09）：MW 為毛容量；IT 另… | 必改 |
 | `texts.ebStartSource` | 起始 EBITDA 率的來源或推導方式（v0.1b） | 文字 | 2026 Q2 經常性雲端 EBITDA 率（扣終止… | 必改 |
-| `texts.costMwNote` | 每 MW 建置成本的來源與口徑（v0.1b） | 文字 | Tokenomics IF_CapexIT（GB30… | 必改 |
+| `texts.costMwNote` | 每 MW 建置成本的來源與口徑（v0.1b） | 文字 | Σ 新增世代占比 × Tokenomics IF_C… | 必改 |
 | `texts.ppeOpenNote` | 期初 PP&E 基礎的來源或校準方式（v0.1b） | 文字 | 雲端 GPU：以 Q2 D&A 6.567 扣託管在… | 必改 |
 | `texts.facilityName` | 未動用額度的名稱與條件（v0.1b） | 文字 | Bit Digital DDTL 未動用額度 20（… | 必改 |
 | `texts.newDebtRateNote` | 瀑布新債利率的來源（v0.1b） | 文字 | 瀑布新債（資產層／專案債）利率 9.5%（DDTL … | 必改 |
@@ -695,7 +707,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.netDebtNote` | 淨負債輸入的口徑說明（v0.1b） | 文字 | 不含租賃與可轉債（其他借款 − 現金）；評價日 6/… | 必改 |
 | `texts.otherRevNote` | 非算力服務／其他事業營收的說明（v0.1b） | 文字 | 非算力服務預設 0（其他營收＝設備銷售型租賃利息，每… | 必改 |
 | `texts.rvRevNote` | 反向 DCF 每 MW 年收入列的對照說明（v0.1b） | 文字 | WhiteFiber 對照：新簽雲端長約隱含 14.… | 必改 |
-| `texts.rvCostNote` | 反向 DCF 每 MW 建置成本列的對照說明（v0.1b） | 文字 | Tokenomics IF_CapexIT 37.4… | 必改 |
+| `texts.rvCostNote` | 反向 DCF 每 MW 建置成本列的對照說明（v0.1b） | 文字 | Tokenomics IF_CapexIT｜世代加權… | 必改 |
 | `texts.priceNote` | 定價（續約價、新約價）的公司說法與讀法（v0.1b） | 文字 | 續約價格衰退未建模（CRWV 尚未做）：雲端合約到期… | 必改 |
 | `texts.prepayCoverNote` | 客戶預付覆蓋比的來源（v0.1b） | 文字 | WhiteFiber：1H26 客戶預付 72.6 … | 必改 |
 | `texts.prepayOpenNote` | 期初合約負債的口徑（v0.1b） | 文字 | 遞延營收（合約負債）143.110：流動 17.90… | 必改 |
@@ -709,6 +721,55 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `texts.headerCards` | 資金模型頁首的公司揭露卡片，一列一張：[標題, 內容]（v0.1b） | 清單 | 3 筆 | 必改 |
 | `texts.legacyMarginNote` | 傳統事業 EBITDA 率的推導說明（v0.1b） | 文字 | 不適用（WhiteFiber 無傳統事業；託管分部 … | 必改 |
 | `texts.mwYearEndNotes` | 各年底主動電力的來源說明，以年份為鍵（Excel「輸入與假設」說明欄；5a） | 物件（文字） | 物件（2025） | 必改 |
+
+### `tokenomics`：Tokenomics 取數層（WhiteFiber v0.2；快照檔、版本與引用名稱）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `tokenomics._note` | Tokenomics 取數層的說明（不進程式；WhiteFiber v0.2，比照 Nebius v0.2a／CoreWeave W1） | 文字 | 算力相關的產業與物理層資料改引用 Tokenomic… | 可沿用 |
+| `tokenomics.snapshotFile` | Tokenomics 快照檔路徑（tools/tokenomics/import_tokenomics.py 產生；Excel「Tokenomics_取數」分頁讀此檔） | 路徑 | data/tokenomics_snapshot_v… | 可沿用 |
+| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v19.0 | 可沿用 |
+| `tokenomics.commit` | 快照的 Tokenomics commit SHA（取數時 clone 的 HEAD） | 文字 | 1916a06465bb0c7efed2138307… | 可沿用 |
+| `tokenomics.mergeCommit` | 該版 xlsx 合併進 Tokenomics master 的雜湊（下游資料契約第 5 條） | 文字 | ad33e28 | 可沿用 |
+| `tokenomics.currentFile` | 取數時 Tokenomics model/CURRENT 的檔名 | 文字 | 20261022_Tokenomics_v19.0.… | 可沿用 |
+| `tokenomics.names` | 引用的 Tokenomics 名稱（IF_、IFW_、IFC_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW、IF_RevGWFleet、IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、L1_HoldEconMW_Hopper、L1_HoldEconMW_GB200、L1_HoldEconMW_GB300、L1_HoldEconMW_VR200、L1_TokMW_Gen_ratio_VR200、L1_TokMW_Gen_ratio_VR200_Lo、L1_TokMW_Gen_ratio_VR200_Hi、L1_RevGW_PQ_VR200、L1_RevGW_PQ_VR200_Lo、L1_RevGW_PQ_VR200_Hi、L1_TokMW_Gen_ratio_GB200、L1_TokMW_Gen_ratio_GB300、L1_GPUhr_GB300、L1_GPUhr_VR200、IFC_Layer | 檢查 |
+| `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（v19.0 全數已提供） | 清單 | IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、L1_HoldEconMW_Hopper、L1_HoldEconMW_GB200、L1_HoldEconMW_GB300、L1_HoldEconMW_VR200、L1_TokMW_Gen_ratio_VR200、L1_TokMW_Gen_ratio_VR200_Lo、L1_TokMW_Gen_ratio_VR200_Hi、L1_RevGW_PQ_VR200、L1_RevGW_PQ_VR200_Lo、L1_RevGW_PQ_VR200_Hi、L1_TokMW_Gen_ratio_GB200、L1_TokMW_Gen_ratio_GB300、L1_GPUhr_GB300、L1_GPUhr_VR200、IFC_Layer | 檢查 |
+
+### `pricing`：每 MW 收入的公司因素：定價倍數 k、證據表（WhiteFiber v0.2）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `pricing._note` | 每 MW 收入公司因素區段的說明（不進程式；WhiteFiber v0.2） | 文字 | WhiteFiber v0.2：每 MW 收入的公司… | 可沿用 |
+| `pricing.anchorMultiple._note` | 定價倍數 k 的口徑說明（已決定事項 14、下游資料契約第 4 條；不進程式） | 文字 | WhiteFiber v0.2（已決定事項 14、1… | 可沿用 |
+| `pricing.anchorMultiple.long` | k_長約：base／low／high（價格軸低／基準／高）、證據來源 refEvidence、契約第 4 條指定解讀 interpretation、三筆長約中位數 sensMedian、WhiteFiber 自身合約換算 ownContract（只列敏感度）、標記。base／low／high／sensMedian 為規格，建置時由證據價格 ÷ 目前快照同世代成本推算（kspec.py；HTML 端 segA.js kSpecApplyQ）：數字（固定倍數）｜{ref: 證據 label}｜{priceEq, gen, tkName}（端點換成固定價格）｜{median: [label…]}；ownContract.specs 逐項 {ref}｜{tcv(US$m), years, mw, gen, tkName}，建置時解出 values | 物件（倍數） | 物件（base、low、high、tag、refEvidence、sensMedian、note、interpretation、ownContract） | 檢查 |
+| `pricing.anchorMultiple.spot` | k_現貨：base／low／high、refEvidence、標記（非長約客戶的價格倍數）；base／low／high 為規格（同 k_長約） | 物件（倍數） | 物件（base、low、high、tag、refEvidence、note） | 檢查 |
+| `pricing.anchorMultiple.onDemandShare` | 隨需（現貨）占比：base（基準 10%，[Assumed]，區間長約 80–100%）、sens（敏感度清單）、標記與說明；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約 | 物件（比例） | 物件（base、sens、tag、note） | 檢查 |
+| `pricing.anchorMultiple.contractMix` | 合約組合的揭露（只作對照；找不到者寫明試過的來源） | 清單 | 10 筆 | 必改 |
+| `pricing.anchorMultiple.notFound` | 找不到的價格證據與試過的來源（「找不到」與「不存在」分開寫） | 清單（文字） | VR200 長約或現貨每 GPU 小時價格：找不到（…、WhiteFiber 既有機隊（評價日 5.5 MW…、第二筆獨立於 IREN 的 neocloud 長約（… | 必改 |
+| `pricing.anchorMultiple.evidence` | k 證據表：每筆 label、gen（Tokenomics 世代名）、price、unit、tkName（IF_HoldEcon 或 IF_GPUhrEcon）、合約型態與期間、use（long／spot＝驅動基準，range＝只支持區間，list＝只列）、來源、日期、標記；倍數＝price ÷ 同世代 Tokenomics 基準值（建置時計算） | 清單 | 14 筆 | 必改 |
+| `pricing.qCheck._note` | 最新季（Q2）驗證區段說明（B 段；不進程式） | 文字 | 最新季（2026 Q2）驗證（B 段；不是校準、不回… | 可沿用 |
+| `pricing.qCheck.legacyIndex` | ownContract 中代表「現有機隊價格」的項目序號（0 起算；Q2 驗證的價格項用） | 序號 | 3 | 可沿用 |
+| `pricing.qCheck.otherCases` | 經常性雲端營收中非 GPU 計費部分（雲端 CPU、儲存等）占比的情境清單（n、label、tag）：F 區拆解欄與 tkSensQ 的扣除敏感度共用；公司未分拆，故為 [Assumed] 區間 | 清單 | 4 筆 | 必改 |
+| `pricing.qCheck.otherNote` | 其他占比的資料缺口說明（不存在／未揭露，試過的來源） | 文字 | 公司未分拆經常性雲端營收中 GPU 計費與其他（雲端… | 可沿用 |
+| `pricing.qCheck.mixNote` | 世代組合仍為 [Assumed] 的提醒 | 文字 | 期初世代組合（fleet.openMix）與新增世代… | 可沿用 |
+
+### `fleet`：世代組合（WhiteFiber v0.2；收入錨加權）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `fleet.refGen` | 取 Tokenomics 單一世代值（IF_DeprLifeIT、IF_FacilityGW 等）時使用的參考世代 | 文字 | GB300 NVL72 | 檢查 |
+| `fleet._note` | 世代組合區段的說明（不進程式；WhiteFiber v0.2） | 文字 | 世代組合（WhiteFiber v0.2，比照 Or… | 可沿用 |
+| `fleet.generations` | 使用的世代（與 Tokenomics 快照世代同名） | 清單 | Hopper H100、GB200 NVL72、GB300 NVL72、VR200 NVL72 | 可沿用 |
+| `fleet.openMw` | 評價日已連網 MW-IT（期初在役 MW，世代權重的起點；只用於世代加權，不進收入的 MW） | MW | 5.5 | 必改 |
+| `fleet.openMwNote` | 上一欄的推導與口徑 | 文字 | 評價日（2026-06-30）已連網雲端 MW-IT… | 必改 |
+| `fleet.openMix` | 期初在役機隊世代占比（asOf、mix、range、來源、標記） | 物件 | 物件（asOf、mix、tag、range、source） | 必改 |
+| `fleet.newMix` | 各期新增在役 MW 的世代占比（五期，每期一個 {世代: 占比}，合計 100%） | 清單 | 5 筆 | 檢查 |
+| `fleet.newMixNote` | 新增世代占比的依據與區間 | 文字 | [Derived／Assumed]：FY26（2H）… | 檢查 |
+
+### `oracle`：Oracle 資料草稿（v0.1a；v0.1b 逐步搬入，只留後續步驟用或只作對照的欄位）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
 
 ## v4.0 架構：公司資料單一來源
 - **company.json**：所有公司原始輸入（HTML 引擎與 Excel 共用）。換公司時先改這個檔；衍生值（情境 Billable 比率、Q3 新增 RPO 權重、債務合計與平均利率）留在 segA 開頭由程式推導。

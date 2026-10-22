@@ -35,6 +35,22 @@ cmp('isRev', S+'損益用算力收入（模型期＝RPO 轉換＋新簽約）', 
 cmp('營收−MW×單價×利用率', S+'核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間', y.map(e=>e.isRev-e.capacity)); // v0.1b：MW 驅動時為 0
 cmp('每MW年收入', '輸入|每 MW 年收入', d.m.revMW);
 (COMPANY_DATA.texts.revMwContracts||[]).forEach(x=>cmp('合約隱含 '+x[0], S+'對照｜合約隱含每 MW｜'+x[0], [x[1], d.m.revMW[0]*1e3/UFQ*(q.revScale??1), x[1]/(d.m.revMW[0]*1e3/UFQ*(q.revScale??1))])); // WhiteFiber v0.1b：合約隱含每 MW 對照列
+if (PMW_REVQ === 'tkAnchor') { // v0.3：Tokenomics 錨 × k（Excel「每MW收入_錨定」各容量情境；HTML tkAnchorQ）
+  for (const k of ['low', 'base', 'high']) { const A = tkAnchorQ(k), lb = COMPANY_DATA.scenarios.labels[k] + '｜', W = '每MW收入_錨定|' + lb;
+    cmp('期末在役 ' + k, W + '期末在役 MW（＝已連網 MW）', A.end);
+    cmp('新增在役 ' + k, W + '新增在役 MW', A.add);
+    for (const g of COMPANY_DATA.fleet.generations) cmp('平均占比 ' + g + ' ' + k, W + `平均在役占比｜${g}`, A.share[g]);
+    cmp('錨 ' + k, W + '錨：每 MW 經濟持有成本（IF_HoldEcon，在役世代加權）', A.anchor.map(x => x * 1e3 / UFQ));
+    cmp('k ' + k, W + '定價倍數 k（隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約）', A.k);
+    cmp('錨×k ' + k, W + '每 MW 年收入（錨 × k，100% 計費時數）', A.rev.map(x => x * 1e3 / UFQ));
+    cmp('上限比 ' + k, W + '上限檢查｜每 MW 收入 ÷ 客戶付費 token 營收', A.capRatio); // 比較層（revCapLayer）
+    for (const L of REVCAP_LAYERS_Q) { // 四層瀑布每層一列（客戶每 MW 付費 token 營收、WhiteFiber 每 MW 計費收入 ÷ 該層）
+      cmp('四層 token 營收 _' + L + ' ' + k, W + `上限檢查｜四層｜客戶每 MW 付費 token 營收｜_${L}（IFW_RevGWFleet_${L}，在役世代加權）`, A.capLay[L].map(x => x * 1e3 / UFQ));
+      cmp('四層比例 _' + L + ' ' + k, W + `上限檢查｜四層｜WhiteFiber 每 MW 計費收入 ÷ _${L}`, A.capRL[L]); } }
+  { const AM = COMPANY_DATA.pricing.anchorMultiple, A = tkAnchorQ(SC);
+    cmp('k_長約 目前價格情境', '每MW收入_錨定|k_長約（目前價格情境）', [A.kL]); cmp('k_現貨 目前價格情境', '每MW收入_錨定|k_現貨（目前價格情境）', [A.kS]);
+    cmp('WhiteFiber 自身合約 k', '每MW收入_錨定|WhiteFiber 自身合約 k（只列為敏感度）', AM.long.ownContract.values); }
+}
 cmp('傳統事業營收', '輸入|傳統事業營收（模型期）', H('legacyRev')); cmp('傳統事業EBITDA', '輸入|傳統事業 EBITDA（模型期）', H('legacyEbitda')); // v0.1b（Oracle）
 cmp('GPU投資(自購＋租賃)', '輸入|GPU 成長型投資（自購＋租賃）', H('gpuInvest')); cmp('GPU租賃新增', '輸入|GPU 租賃｜本期新增租賃設備', H('gpuLeaseNew')); // WhiteFiber v0.1b：GPU 租賃
 cmp('GPU租賃期初累計', '輸入|GPU 租賃｜期初累計租賃設備', H('gpuLeaseBeg')); cmp('GPU租金', '輸入|GPU 租金（租賃設備）', H('gpuRent')); cmp('GPU租金(收支)', F+'② GPU 租金（租賃設備）', H('gpuRent'));
