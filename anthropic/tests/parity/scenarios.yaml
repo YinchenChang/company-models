@@ -3,13 +3,13 @@
 # expect_err：該情境必須讓這些檢查轉 ERR（保證檢查有牙齒）；expect_warn：CHK_Warnings ≥ 1。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
   sheets: [README, SRC_ANT, TK_Link, OAI_Link, Inputs, Demand, Revenue, Compute, Cost, Bridge, EtaDiag, Funding, Reverse, Checks, _Defaults]
-  formula_cells: 7231             # v0.1.3 B：＋Bridge 頁與 EtaDiag 頁（唯讀）＋Checks C143–C152；v0.1.2：v0.1.1 的 5,834 ＋ Cost 第二十一節 16 列（TK L1_RevGW_PQ_VR200 對照）＋ Checks 3 列＋Cost／Checks 欄位格；v0.1.1：v0.1 的 5,491 ＋ 回歸開關與 U3–U7 新列（Revenue h1act、Compute U2 對照與 _old 列、Cost 第十六–十九節、Funding U7 與 S8）＋ Checks C106–C123
-  defined_names: 1272              # v0.1.3 B：＋TK_ 對照名稱 23（IF_UtilActual、L1_TokGW_PaidCap_VR200、B4_MixPaid、L1_Gap*；其中 22 個前綴為 TK_IF_／TK_L1_）＋ETA_ 6（Eta、fP、fU、fW、Prod、Resid）；v0.1.2：＋TK_ 對照名稱 14（L1_RevGW_PQ_VR200 系列、L1_TokGW_PaidPQ_VR200 系列、L1_TokLedger_2026Q2、L1_M）＋COST_TKPQ、COST_TKPQRatio、COST_TKTokLedger；v0.1.1：＋SRC_ANT 30 列的名稱（值／下限／上限）、Inputs 7、COST_* 與 CMP_* 與 FND_* 新名
+  formula_cells: 7256             # v0.1.4：＋EtaDiag 第七節與 Checks C153–C156（25 格）；v0.1.3 B 7,231：＋Bridge 頁與 EtaDiag 頁（唯讀）＋Checks C143–C152；v0.1.2：v0.1.1 的 5,834 ＋ Cost 第二十一節 16 列（TK L1_RevGW_PQ_VR200 對照）＋ Checks 3 列＋Cost／Checks 欄位格；v0.1.1：v0.1 的 5,491 ＋ 回歸開關與 U3–U7 新列（Revenue h1act、Compute U2 對照與 _old 列、Cost 第十六–十九節、Funding U7 與 S8）＋ Checks C106–C123
+  defined_names: 1276              # v0.1.4：＋TK_IF_ProdDerate 與 ETA_fU_Prod／Prod2／Resid2（1272 → 1276）；v0.1.3 B：＋TK_ 對照名稱 23（IF_UtilActual、L1_TokGW_PaidCap_VR200、B4_MixPaid、L1_Gap*；其中 22 個前綴為 TK_IF_／TK_L1_）＋ETA_ 6（Eta、fP、fU、fW、Prod、Resid）；v0.1.2：＋TK_ 對照名稱 14（L1_RevGW_PQ_VR200 系列、L1_TokGW_PaidPQ_VR200 系列、L1_TokLedger_2026Q2、L1_M）＋COST_TKPQ、COST_TKPQRatio、COST_TKTokLedger；v0.1.1：＋SRC_ANT 30 列的名稱（值／下限／上限）、Inputs 7、COST_* 與 CMP_* 與 FND_* 新名
   src_rows: 409                   # A1 376＋A2 新增 3（SRC_ANT_377–379）＋v0.1.1 新增 30（SRC_ANT_380–409）
   src_named: 358                  # 有值欄的列才有 SRC_ANT_nnn 名稱（另有 _Lo／_Hi／_Date）；v0.1.1 新增 28 列有值（2 列定性）
   inp_rows: 190                   # INP_001–186；INP_016（A2 容量上限佔位）、INP_067–069 退役；v0.1.1 新增 INP_180–186
   base_warnings: 2                # v0.1.1：C89 逐家合約總額對招股書（AMD ×3.9）＋C116 U4 模型算力成本（含自建資本支出）對報導外推全年 +47%（U4 口徑未明）
-  tk_values: 104                  # v0.1.3 B：＋22（η 診斷對照名稱）；OpenAI v0.6 同一組 63 名＋A2 新增 5 名（IF_HdrTask、IF_TaskLen、IF_TaskTokFresh／Cached／Dec）＋v0.1.2 新增 14 名（Tokenomics v18.0 對照名稱，只對照）
+  tk_values: 105                  # v0.1.4：＋1（IF_ProdDerate）；v0.1.3 B：＋22（η 診斷對照名稱）；OpenAI v0.6 同一組 63 名＋A2 新增 5 名（IF_HdrTask、IF_TaskLen、IF_TaskTokFresh／Cached／Dec）＋v0.1.2 新增 14 名（Tokenomics v18.0 對照名稱，只對照）
   tk_nonnv: 18                    # TK_NNV_*（TPU v7、Trainium3、MI455X × 6；讀表，非具名）
   oai_names: 21                   # OAI_ 17 個逐年名稱＋4 個中繼資料
   tk_pending: 0

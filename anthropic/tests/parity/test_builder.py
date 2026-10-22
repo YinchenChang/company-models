@@ -175,15 +175,26 @@ def test_bridge_not_fed_back(wb):
 
 
 def test_eta_decomposition_does_not_change_eta(eng):
-    """η 拆解只作診斷：η 的值與 v0.1.3 A 段（及 v0.1.2）相同；乘積 × 殘差 ＝ η；殘差為正。"""
+    """η 拆解只作診斷：η 等於 Compute 的值（v0.1.4 起隨 TK v19.1 為 0.525427732668394；v0.1.3 為 0.52729641508883，差異全來自 TK IF_TokGW_Luna）；乘積 × 殘差 ＝ η；殘差為正。"""
     eta = eng.get_name("CMP_Eta2025")
-    assert abs(eta - 0.52729641508883) < 1e-9
+    assert abs(eta - 0.525427732668394) < 1e-9
     assert abs(eng.get_name("ETA_Eta") - eta) < 1e-12
     prod = eng.get_name("ETA_fP") * eng.get_name("ETA_fU") * eng.get_name("ETA_fW")
     assert abs(prod - eng.get_name("ETA_Prod")) < 1e-12
     assert abs(prod * eng.get_name("ETA_Resid") - eta) < 1e-12
     assert eng.get_name("ETA_Resid") > 0
     assert 0 < eng.get_name("ETA_fU") < 2 and eng.get_name("ETA_fW") > 0 and eng.get_name("ETA_fP") > 0
+
+
+def test_eta_prod_derate_section(eng):
+    """v0.1.4：f_U'＝f_U × TK 生產折減；殘差' ＝ η ÷ (f_P × f_U' × f_W)；η 不變，殘差 ×（1 ÷ 生產折減）。"""
+    eta = eng.get_name("CMP_Eta2025")
+    pd = eng.get_name("TK_IF_ProdDerate")
+    assert abs(eng.get_name("ETA_fU_Prod") - eng.get_name("ETA_fU") * pd) < 1e-12
+    prod2 = eng.get_name("ETA_fP") * eng.get_name("ETA_fU_Prod") * eng.get_name("ETA_fW")
+    assert abs(prod2 - eng.get_name("ETA_Prod2")) < 1e-12
+    assert abs(prod2 * eng.get_name("ETA_Resid2") - eta) < 1e-12
+    assert abs(eng.get_name("ETA_Resid2") - eng.get_name("ETA_Resid") / pd) < 1e-12
 
 
 def test_bridge_ties_to_calc_sheets(eng):
