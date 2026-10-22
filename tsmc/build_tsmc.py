@@ -99,7 +99,7 @@ for s, vals in zip(SC, ((0.64, 0.63, 0.62), (0.64, 0.58, 0.56), (0.64, 0.54, 0.5
     for y, v in zip((27, 28, 29), vals):
         inp(f"gm{y}_{s}", f"毛利率 20{y}（{s}）", "%", None, v, None, "Derived／Assumed", "N2 稀釋 3–4 個百分點、海外廠 2–3 個百分點（公司）對上漲價；長期目標 56% 以上" if (y == 27 and s == "A") else "")
 inp("opex", "營業費用 ÷ 營收", "%", None, 0.075, None, "Derived", "2Q26 毛利率 67.7% − 營業利益率 60.3%")
-inp("ni_op", "淨利 ÷ 營業利益（2027 起；低／高＝區間）", "x", 0.887, "=(1+nonop_hist)*(1-etr_new)", 0.92, "Derived", "基準＝(1＋歷史營業外比率)×(1－新稅率)，推導見 NI_OI 頁；低 0.887＝2024、2025 實績比；高 0.92＝v0.1.1 值（2Q26 單季，含 VIS 處分利益）。v0.1.1 為 0.92")
+inp("ni_op", "淨利 ÷ 營業利益（2027 起；低／高＝區間）", "x", "=ni_op_underlying", "=(1+nonop_hist)*(1-etr_new)", "=ni_op_2023", "Derived", "基準＝(1＋歷史營業外比率)×(1－新稅率)，推導見 NI_OI 頁；低 0.864＝2026 年扣除一次性利益後的內含水準；高 0.909＝2023 年年度值（稅率上升前、2022–2025 年度最高）。v0.1.1 為 0.92（含一次性利益的 2Q26 單季值，不再當上限）")
 inp("shares", "股數", "十億股", None, 25.93, None, "Derived", "市值 ÷ 股價；3Q26 淨利 NT$763.06B ÷ EPS 29.43 ＝ 25.93，一致")
 inp("px", "股價（2026-10-07 收盤）", "NT$", None, 2585, None, "Interested-party", "Wantgoo")
 for y, v, tag, src in ((26, 62, "Interested-party", "公司指引 US$60–64B 中點（7 月上修；10 月維持不變）｜媒體：民視財經、vestedfinance"), (27, 77, "Interested-party", "Citi；券商 73–81"), (28, 90, "Interested-party", "JPMorgan"), (29, 95, "Assumed", "")):
@@ -262,7 +262,7 @@ SE.column_dimensions["A"].width = 36
 
 SE.cell(13, 1, "淨利 ÷ 營業利益 對 EPS 的影響（情境 A）").font = BOLD
 hdr(SE, 14, ["設定", "比值", "2027 EPS", "相對基準", "2028 EPS", "相對基準"])
-for k, (nm, rr_) in enumerate((("基準（推導值）", "ni_op"), ("淨利 ÷ 營業利益 0.887（低）", "ni_op_lo"), ("淨利 ÷ 營業利益 0.92（高；v0.1.1 值）", "ni_op_hi")), 15):
+for k, (nm, rr_) in enumerate((("基準（推導值）", "ni_op"), ("淨利 ÷ 營業利益 0.864（低）", "ni_op_lo"), ("淨利 ÷ 營業利益 0.909（高）", "ni_op_hi")), 15):
     SE.cell(k, 1, nm); SE.cell(k, 2, f"={rr_}").number_format = "0.000"
     SE.cell(k, 3, f"=PL!C{PR['op']}*B{k}*fx/shares").number_format = "0.0"
     SE.cell(k, 4, f"=C{k}/C$15-1").number_format = "0.0%"
@@ -283,8 +283,8 @@ PER = [  # 期間, OI, nonop, tax, NI, interest, fx, oneoff, 來源數, 標記, 
  ("2024", 1322.05, 83.79, 233.41, 1172.43, 87.21, 10.00, 0, 2, "Verified", "公司：2024 年報、2025 20-F｜媒體：MoneyDJ、中央社；匯兌 10.00 僅 20-F／財報一個來源"),
  ("2025", 1936.09, 105.56, 326.25, 1715.40, 105.74, 13.83, 0, 2, "Verified", "公司：2025 年報、2025 20-F｜媒體：工商時報（營業外約 1,056 億、稅前 2 兆 417 億、稅 3,263 億）；匯兌 13.83 僅 20-F／財報一個來源；其他利益及損失未拆"),
  ("1Q26", "=ntd26_1q*opm26_1q", 28.83, None, 572.48, None, None, 0, 1, "Derived", "營業利益＝新台幣營收×營益率（Derived）；營業外 28.83 取自 2Q26 簡報比較欄，欄位標籤未能直接確認；稅額＝稅前淨利－淨利（Derived）"),
- ("2Q26", "=ntd26_2q*opm26_2q", 95.83, 155.65, 706.56, None, None, 63.20, 2, "Verified／Derived", "公司：2Q26 簡報、3Q26 Management Report（稅 155.65、有效稅率 18.1%）｜媒體：鏡報（處分世界先進 VIS 股權利益 632.0 億）、鉅亨（營業外 958.27 億）；營業利益為 Derived"),
- ("3Q26", 876.45, 34.59, 147.70, 763.06, None, None, 0, 1, "Verified（單一來源）", "公司：3Q26 Management Report／6-K（營業外 34.59、稅 147.70、有效稅率 16.2%；較 2Q26 降，主因無 VIS 處分與評價利益）；媒體僅有淨利，其餘待複核"),
+ ("2Q26", "=ntd26_2q*opm26_2q", 95.83, 155.65, 706.56, None, None, 63.20, 2, "Verified／Derived", "公司：2Q26 簡報、3Q26 Management Report（稅 155.65、有效稅率 18.1%）；SEC 3Q26 6-K（含 2Q26 比較欄）核對營業利益、稅前淨利、淨利相符｜媒體：鉅亨（營業外 958.27 億）；營業利益 NT$ 欄為 Derived。一次性項目 63.20 的出處見下方「一次性利益出處」"),
+ ("3Q26", 876.45, 34.59, 147.70, 763.06, None, None, 0, 2, "Verified", "公司：3Q26 Management Report（營業外 34.59、稅 147.70、有效稅率 16.2%；較 2Q26 降，主因無 VIS 處分與評價利益）｜SEC 3Q26 6-K a3q26e（營業利益、稅前淨利、淨利核對相符；使用者提供的核對）"),
 ]
 r0 = 4
 for i, (per, oi, no, tx, ni, it, fxg, one, nsrc, tag, note) in enumerate(PER):
@@ -314,15 +314,19 @@ rows_ = [
  ("歷史營業外比率＝2022–2025 加 1–3Q26（扣除一次性項目）的營業外合計 ÷ 營業利益合計", f"=(SUM(C{r0}:C{r0+3})+C{rT}-I{rT})/(SUM(B{r0}:B{r0+3})+B{rT})", "0.0%", "nonop_hist",
   "營業外收支主體是利息收入（2024 87.2、2025 105.7，占營業外 100% 以上）；匯兌 2024 +10.0、2025 +13.8，量級小且為收益；2Q26 VIS 處分利益 63.2 為一次性，已扣除"),
  ("基準＝(1＋歷史營業外比率) × (1－新稅率)", f"=(1+B{p0+2})*(1-B{p0+1})", "0.000", "ni_op_calc", "少數股權等調整各期約 1.000，略去"),
- ("對照：2024、2025 實績比（低值 0.887 的來源）", f"=(F{r0+2}+F{r0+3})/(B{r0+2}+B{r0+3})", "0.000", None, ""),
+ ("對照：2024、2025 實績比（前版低值 0.887）", f"=(F{r0+2}+F{r0+3})/(B{r0+2}+B{r0+3})", "0.000", None, ""),
  ("對照：1–3Q26 實績比", f"=M{rT}", "0.000", None, "含 2Q26 一次性利益"),
- ("對照：1–3Q26 扣除一次性利益（按新稅率稅後）", f"=(F{rT}-I{rT}*(1-B{p0+1}))/B{rT}", "0.000", None, "約為 2026 年的內含水準；1Q26、3Q26 單季分別 0.869、0.871"),
+ ("區間低值＝1–3Q26 扣除一次性利益（按新稅率稅後）", f"=(F{rT}-I{rT}*(1-B{p0+1}))/B{rT}", "0.000", "ni_op_underlying", "2026 年的內含水準；1Q26、3Q26 單季分別 0.869、0.871"),
+ ("區間高值＝2023 年年度值（稅率上升前、2022–2025 年度最高）", f"=M{r0+1}", "0.000", "ni_op_2023", "2022 0.907、2023 0.909、2024 0.887、2025 0.886"),
+ ("敏感：63.2 若非一次性（不扣除）→ 歷史營業外比率", f"=(SUM(C{r0}:C{r0+3})+C{rT})/(SUM(B{r0}:B{r0+3})+B{rT})", "0.0%", "nonop_hist_alt", "分子不扣 63.2"),
+ ("敏感：63.2 若非一次性 → 基準", f"=(1+B{p0+8})*(1-B{p0+1})", "0.000", "ni_op_alt", "相對基準 0.875 的變化見 README"),
 ]
 for k, (lab, f, fmt, nm, note) in enumerate(rows_, 1):
     rr = p0 + k
     NO.cell(rr, 1, lab); NO.cell(rr, 2, f).number_format = fmt; NO.cell(rr, 16, note)
     if nm: wb.defined_names[nm] = DefinedName(nm, attr_text=f"NI_OI!$B${rr}")
-NO.cell(p0 + 8, 1, "判定：差距兩個來源都有——(a) 稅率由 2022 年 11% 升至 2024 年起約 16.6%，屬長期；(b) 營業外比率 2022 年 2.0% → 2023–25 年 5.5–6.3%（利息收入墊高），2Q26 另有一次性處分利益使 0.92 偏高。依規則取「新稅率 × 歷史平均營業外比率」。")
+NO.cell(p0 + 14, 1, "一次性利益出處（2Q26 VIS 處分與評價利益 63.20）：公司 2Q26 合併財務報告（SEC 6-K）載明處分利益 NT$63,202,285 千元，其中含對剩餘持股改按公允價值衡量的非現金重新衡量利益 56,398,783 千元（喪失重大影響力）；公司 2026-05-15 公告表示近期無進一步出售計畫；3Q26 Management Report 說明營業外由 95.83 降至 34.59 主因無該項處分與評價利益；媒體：中央社、東森財經、鉅亨。頁碼：搜尋摘錄未含頁碼，未取得（文件與段落見 Sources 頁）。SEC 3Q26 6-K 本身未標註一次性項目。")
+NO.cell(p0 + 12, 1, "判定：差距兩個來源都有——(a) 稅率由 2022 年 11% 升至 2024 年起約 16.6%，屬長期；(b) 營業外比率 2022 年 2.0% → 2023–25 年 5.5–6.3%（利息收入墊高），2Q26 另有一次性處分利益使 0.92 偏高。依規則取「新稅率 × 歷史平均營業外比率」。")
 NO.column_dimensions["A"].width = 60; NO.column_dimensions["P"].width = 120; NO.column_dimensions["O"].width = 22
 for c in "BCDEFGHIJKLMN": NO.column_dimensions[c].width = 11
 
@@ -358,6 +362,11 @@ srcs = [("台積電 2Q26 新聞稿", "https://pr.tsmc.com/english/news/3326"),
  ("【v0.2】NI_OI：台積電 3Q26 Management Report", "https://investor.tsmc.com/schinese/encrypt/files/encrypt_file/qr/phase4_reports/2026-10/f53a64fd40fc0b453f94e077e5aba8cad506f27b/3Q26%20ManagementReport.pdf"),
  ("【v0.2】NI_OI：MoneyDJ 113 年（2024）損益表", "https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=0c9c7a58-321f-4b5c-83c9-7f4837872969"),
  ("【v0.2】NI_OI：工商時報 2025 年報", "https://www.ctee.com.tw/news/20260416702066-430502"),
+ ("【v0.2】NI_OI：台積電 2Q26 合併財務報告（SEC 6-K；VIS 處分利益 63,202,285 千元）", "https://www.sec.gov/Archives/edgar/data/0001046179/000104617926000541/a2026q2consolidatedreport-.htm"),
+ ("【v0.2】NI_OI：台積電出售 VIS 股權公告（SEC 6-K，2026-05）", "https://www.sec.gov/Archives/edgar/data/0001046179/000104617926000280/tsmctosell81ofvanguardinte.htm"),
+ ("【v0.2】NI_OI：台積電 3Q26 6-K（核對 2Q26、3Q26 營業利益、稅前淨利、淨利）", "https://www.sec.gov/Archives/edgar/data/0001046179/000104617926000726/a3q26e_withguidancexfinal.htm"),
+ ("【v0.2】NI_OI：中央社（處分 VIS 1.52 億股）", "https://www.cna.com.tw/news/afe/202605180297.aspx"),
+ ("【v0.2】NI_OI：東森財經（估獲利 632.02 億）", "https://fnc.ebc.net.tw/fncnews/stock/210975"),
  ("【v0.2】NI_OI：鏡報（2Q26 處分 VIS 利益）", "https://www.mirrordaily.news/story/79601"),
  ("【v0.2】NI_OI：鉅亨 2Q26 財報分析", "https://hao.cnyes.com/post/259466"),
  ("【v0.2】查證方式說明", "公司原文頁面在本次建置環境無法直接開啟（網路限制），3Q26 數字取自搜尋引擎對公司新聞稿的摘錄，並與至少兩則獨立媒體交叉；公司逐字稿原文待人工複核"),
@@ -373,7 +382,7 @@ lines = [("台積電模型 v0.2（AI 半導體 Project 步驟 4）　2026-10-22�
  ("情境：A 基準；B 2028 顆數 −20%、毛利率降至 58%；C 2028 顆數 −40%、毛利率 54%（AI 資本支出明顯下修）", False),
  ("Val：EPS × P/E（15x、10 年中位 20.5x、10 年最高 32.7x）", False), ("Recon、Sens：見各頁", False), ("", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。", False),
- ("v0.2 變更（2026-10-22，3Q26 財報後）：2026 營收 172→176.1 $B（1–3Q 實績＋4Q 指引中點 53.3）；毛利率 66.0%→66.5%（四季加權）；EPS 114.2→112.1（新舊對照見 tsmc/README.md）。新增 2026 專屬參數 opex_26、ni_op_26、fx_26（來自實績）；2027 起淨利÷營業利益由 0.92 改為推導值（NI_OI 頁；區間 0.887–0.92）；毛利率、價格調升、非 AI 成長、CoWoS 產能全部未改（公司未給新的明確指引）。", False),
+ ("v0.2 變更（2026-10-22，3Q26 財報後）：2026 營收 172→176.1 $B（1–3Q 實績＋4Q 指引中點 53.3）；毛利率 66.0%→66.5%（四季加權）；EPS 114.2→112.1（新舊對照見 tsmc/README.md）。新增 2026 專屬參數 opex_26、ni_op_26、fx_26（來自實績）；2027 起淨利÷營業利益由 0.92 改為推導值（NI_OI 頁；區間 0.864–0.909）；毛利率、價格調升、非 AI 成長、CoWoS 產能全部未改（公司未給新的明確指引）。", False),
  ("公司 3Q26 說法未取得：AI 加速器營收占比、CoWoS 產能的新數字（搜尋未找到逐字稿原文），故 CoWoS 頁不動。", False),
  ("已知限制：(1) 台積電不揭露 CoWoS 片數與先進封裝營收，產能為券商估計；(2) 先進製程（N3／N2）晶圓產能未找到，未建晶圓瓶頸；(3) 其他 AI 相關營收比例為 Assumed；(4) 淨利 ÷ 營業利益 2027 起為單一推導值（見 NI_OI），2022 年與 1Q26 的明細為單一來源。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
