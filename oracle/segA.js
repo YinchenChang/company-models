@@ -948,18 +948,19 @@ function reverseDcf(e, v) {
     ebs,
     grid,
     rev30: e.m.revMW[4] * (e.revScale ?? 1) * 1e3,
-    kReq: kReqQ(e, R), // v0.3.1：現價所需 k_長約（外部驗收採納 4b-iv）；非 tkAnchor 或無解為 null
+    kReq: kReqQ(e, R, Rt), // v0.3.1：現價所需 k_長約（外部驗收採納 4b-iv）；非 tkAnchor 或無解為 null
     util30: e.m.util[4] / 100,
     cost30: e.a.costMW[4] * (e.capexScale ?? 1),
     eb30: e.ebSteady
   }
 }
 
-function kReqQ(e, R) { // 現價所需 k_長約＝（現價所需每 MW 年收入 ÷ 在役加權錨 − 隨需占比 × k_現貨）÷（1 − 隨需占比）；錨取目前情境（自訂情境用預設情境）、FY31 欄
+function kReqQ(e, R, Rt) { // 現價所需 k_長約＝（現價所需每 MW 年收入 ÷ 在役加權錨 − 隨需占比 × k_現貨）÷（1 − 隨需占比）；錨取目前情境（自訂情境用預設情境）、FY31 欄
   if (PMW_REVQ !== `tkAnchor` || !Number.isFinite(R)) return null;
   let AM = COMPANY_DATA.pricing.anchorMultiple, sc = [`low`, `base`, `high`].includes(e.scenario) ? e.scenario : COMPANY_DATA.defaults.scenario,
     an = tkAnchorQ(sc).anchor[4] * 1e3, od = AM.onDemandShare.base, need = e.m.revMW[4] * (e.revScale ?? 1) * 1e3 * R;
-  return { now: AM.long.base, req: (need / an - od * AM.spot.base) / (1 - od) }
+  let f = x => (e.m.revMW[4] * (e.revScale ?? 1) * 1e3 * x / an - od * AM.spot.base) / (1 - od); // x＝所需倍數；R＝純 DCF 口徑、Rt＝加權目標價口徑（主列，與摘要價格軸句同口徑）
+  return { now: AM.long.base, req: f(R), reqT: Number.isFinite(Rt) ? f(Rt) : null }
 }
 
 function fA(e, t, v, q) {

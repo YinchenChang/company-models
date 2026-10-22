@@ -1020,18 +1020,19 @@ function reverseDcf(e, v) {
     ebs,
     grid,
     rev30: e.m.revMW[4] * (e.revScale ?? 1) * 1e3,
-    kReq: kReqQ(e, R), // v0.3.1：現價所需 k_長約（外部驗收採納 4b-iv）；非 tkAnchor 或無解為 null
+    kReq: kReqQ(e, R, Rt), // v0.3.1：現價所需 k_長約（外部驗收採納 4b-iv）；非 tkAnchor 或無解為 null
     util30: e.m.util[4] / 100,
     cost30: e.a.costMW[4] * (e.capexScale ?? 1),
     eb30: e.ebSteady
   }
 }
 
-function kReqQ(e, R) { // 現價所需 k_長約＝（現價所需每 MW 年收入 ÷ 在役加權錨 − 隨需占比 × k_現貨）÷（1 − 隨需占比）；錨取目前情境（自訂情境用預設情境）、FY31 欄
+function kReqQ(e, R, Rt) { // 現價所需 k_長約＝（現價所需每 MW 年收入 ÷ 在役加權錨 − 隨需占比 × k_現貨）÷（1 − 隨需占比）；錨取目前情境（自訂情境用預設情境）、FY31 欄
   if (PMW_REVQ !== `tkAnchor` || !Number.isFinite(R)) return null;
   let AM = COMPANY_DATA.pricing.anchorMultiple, sc = [`low`, `base`, `high`].includes(e.scenario) ? e.scenario : COMPANY_DATA.defaults.scenario,
     an = tkAnchorQ(sc).anchor[4] * 1e3, od = AM.onDemandShare.base, need = e.m.revMW[4] * (e.revScale ?? 1) * 1e3 * R;
-  return { now: AM.long.base, req: (need / an - od * AM.spot.base) / (1 - od) }
+  let f = x => (e.m.revMW[4] * (e.revScale ?? 1) * 1e3 * x / an - od * AM.spot.base) / (1 - od); // x＝所需倍數；R＝純 DCF 口徑、Rt＝加權目標價口徑（主列，與摘要價格軸句同口徑）
+  return { now: AM.long.base, req: f(R), reqT: Number.isFinite(Rt) ? f(Rt) : null }
 }
 
 function fA(e, t, v, q) {
@@ -4535,7 +4536,8 @@ function AM({
                   [`每 MW 建置成本（US$m）`, Y(RV.cost30, 1), Number.isFinite(RV.C) ? Y(RV.cost30 * RV.C, 1) : `不可達`, Number.isFinite(RV.C) ? hA((RV.C - 1) * 100, 0) : `—`, TXQ.rvCostNote],
                   [`穩態 EBITDA 率（${PERIODS[4]}）`, hA(RV.eb30 * 100, 1), Number.isFinite(RV.Eb) ? hA(RV.Eb * 100, 1) : `不可達（>99%）`, Number.isFinite(RV.Eb) ? `${Y((RV.Eb - RV.eb30) * 100, 1)} pt` : `—`, `OCI（算力）EBITDA 率，傳統事業不動；可觀察 neocloud 區間：IREN 約 35%、CRWV 約 59%`],
                   [`（對照）加權目標價＝現價所需每 MW 年收入`, Y(RV.rev30, 1), Number.isFinite(RV.Rt) ? Y(RV.rev30 * RV.Rt, 1) : `不可達`, Number.isFinite(RV.Rt) ? hA((RV.Rt - 1) * 100, 0) : `—`, `含 EV/EBITDA ${Y(n.evEbitda,1)}x（${PERIOD_LABELS[n.evYear ?? 1]}）腿；非純反向 DCF`],
-                  ...(RV.kReq ? [[`現價所需 k_長約（價格軸；${PERIODS[4]}）`, Y(RV.kReq.now, 2), Y(RV.kReq.req, 2), hA((RV.kReq.req / RV.kReq.now - 1) * 100, 0), `＝（現價所需每 MW 年收入 ÷ 在役加權錨 − 隨需占比 × k_現貨）÷ 長約占比；對照 Oracle 自身合約 k ${COMPANY_DATA.pricing.anchorMultiple.long.ownContract.values.map(x => Y(x, 2)).join(`／`)}（未證實）`]] : [])
+                  ...(RV.kReq && RV.kReq.reqT != null ? [[`現價所需 k_長約（加權目標價口徑；${PERIODS[4]}）`, Y(RV.kReq.now, 2), Y(RV.kReq.reqT, 2), hA((RV.kReq.reqT / RV.kReq.now - 1) * 100, 0), `主列：加權目標價＝現價所需每 MW 年收入（上方對照列）換成 k_長約＝（所需收入 ÷ 在役加權錨 − 隨需占比 × k_現貨）÷ 長約占比，與摘要價格軸區間同口徑；對照 Oracle 自身合約 k ${COMPANY_DATA.pricing.anchorMultiple.long.ownContract.values.map(x => Y(x, 2)).join(`／`)}（未證實）`]] : []),
+                  ...(RV.kReq ? [[`現價所需 k_長約（純 DCF 口徑；${PERIODS[4]}）`, Y(RV.kReq.now, 2), Y(RV.kReq.req, 2), hA((RV.kReq.req / RV.kReq.now - 1) * 100, 0), `同上換算，所需收入取 DCF＝現價（上方第一列）；不含 EV/EBITDA 腿`]] : [])
                 ].map((e, t) => (0, $.jsx)(`tr`, {
                   children: e.map((e, n) => (0, $.jsx)(`td`, {
                     style: {

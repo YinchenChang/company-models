@@ -131,7 +131,7 @@ cmp('EPS(模型期)', V+'每股盈餘（EPS，模型期）', f.map(e=>e.eps));
 cmp('股數', V+'股數（含瀑布新股）', f.map(e=>e.shares));
 cmp('UFCF', V+'UFCF', f.map(e=>e.ufcf));
 cmp('UFCF現值', V+'UFCF 現值', p.d.pv);
-if(SC==='base'){ const rv=reverseDcf(q,VAL_DEFAULTS); if(rv.kReq) cmp('反向DCF 現價所需k_長約','評價_反向DCF|'+T('現價所需 k_長約（價格軸；«PL»）'),[rv.kReq.req]); } // v0.3.1：Excel 快照為預設（基準）情境求解，只比對基準情境
+if(SC==='base'){ const rv=reverseDcf(q,VAL_DEFAULTS); if(rv.kReq){ cmp('反向DCF 現價所需k_長約(純DCF)','評價_反向DCF|'+T('現價所需 k_長約（純 DCF 口徑；«PL»）'),[rv.kReq.req]); if(rv.kReq.reqT!=null && !AKX) cmp('反向DCF 現價所需k_長約(加權目標價)','評價_反向DCF|'+T('現價所需 k_長約（加權目標價口徑；«PL»）'),[rv.kReq.reqT]); } } // v0.3.1：Excel 快照為預設（基準）情境求解，只比對基準情境
 cmp('DCF每股', V+'DCF 每股', [p.d.invalid?0:p.d.perShare]); // v0.1b：DCF 失效時 HTML 為 NaN、Excel 為 0（與反向 DCF 同一口徑）
 const NB='資產負債_新債與新股|';
 cmp('BS 期末現金', NB+'期末現金', H('cum'));

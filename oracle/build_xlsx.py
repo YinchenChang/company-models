@@ -2655,13 +2655,14 @@ _rows = [
 ]
 RV_R0 = r  # v4.3：單一槓桿快照第一列（「摘要」頁引用）
 if AR:  # v0.3.1：現價所需 k_長約（外部驗收採納 4b-iv）——插在「每 MW 年收入」列之後，Excel 活公式（讀同頁快照列與『每MW收入_錨定』）
-    _rows.append(("現價所需 k_長約（價格軸；«PL»）", "KREQ", "KREQ", "KREQ", "＝（現價所需每 MW 年收入 ÷ 在役加權錨 − 隨需占比 × k_現貨）÷ 長約占比；對照 Oracle 自身合約 k " + "／".join(f"{x:.2f}" for x in CO['pricing']['anchorMultiple']['long']['ownContract']['values']) + "（未證實，『每MW收入_錨定』A 區）"))
+    _rows.append(("現價所需 k_長約（加權目標價口徑；«PL»）", "KREQT", "KREQT", "KREQT", "主列：加權目標價＝現價所需每 MW 年收入（上方對照列）換成 k_長約，與摘要價格軸區間同口徑；對照 Oracle 自身合約 k " + "／".join(f"{x:.2f}" for x in CO['pricing']['anchorMultiple']['long']['ownContract']['values']) + "（未證實，『每MW收入_錨定』A 區）"))
+    _rows.append(("現價所需 k_長約（純 DCF 口徑；«PL»）", "KREQ", "KREQ", "KREQ", "＝（現價所需每 MW 年收入 ÷ 在役加權錨 − 隨需占比 × k_現貨）÷ 長約占比；對照 Oracle 自身合約 k " + "／".join(f"{x:.2f}" for x in CO['pricing']['anchorMultiple']['long']['ownContract']['values']) + "（未證實，『每MW收入_錨定』A 區）"))
 for k, (nm, a, b, d, note) in enumerate(_rows):
-    if a == "KREQ":
+    if a in ("KREQ", "KREQT"):
         ws.cell(row=r, column=1, value=nm).font = BLACK
         _AN = "CHOOSE(" + SEL + "," + ",".join(f"'每MW收入_錨定'!$G${AR[CO['scenarios']['labels'][_k] + '｜anchor']}" for _k in ("low", "base", "high")) + ")"
         _od, _kS = f"'每MW收入_錨定'!$C${AR['od']}", f"'每MW收入_錨定'!$C${AR['kS']}"
-        for col, f in [(2, f"='每MW收入_錨定'!$C${AR['kL']}"), (3, f"=(C{RV_R0}/{_AN}-{_od}*{_kS})/(1-{_od})"), (4, f"=C{r}/B{r}-1")]:
+        for col, f in [(2, f"='每MW收入_錨定'!$C${AR['kL']}"), (3, f"=(C{RV_R0 + (3 if a == 'KREQT' else 0)}/{_AN}-{_od}*{_kS})/(1-{_od})"), (4, f"=C{r}/B{r}-1")]:
             c = ws.cell(row=r, column=col, value=f); c.number_format = PCT if col == 4 else '0.00'; c.border = BOX
         ws.cell(row=r, column=7, value=note).font = SMALL
         r += 1; continue
