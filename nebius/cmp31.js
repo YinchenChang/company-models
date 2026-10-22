@@ -28,7 +28,7 @@ cmp('RPO轉換', S+'期初 RPO 轉換收入（模型期）', H('revenue'));
 cmp('新簽約收入', S+'新簽約收入', H('newRev'));
 cmp('未售', S+'未售產能（浪費）', H('unsold'));
 cmp('isRev', S+'損益用算力收入（模型期＝RPO 轉換＋新簽約）', H('isRev'));
-cmp('營收−MW×單價×利用率', S+'核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間', y.map(e=>e.isRev-e.capacity)); // v0.1b：MW 驅動時為 0
+cmp('營收−MW×單價×利用率', S+'核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間', y.map((e,i)=>e.isRev-e.capacity+(1-d.m.fill[i]/100)*Math.max(0,e.capacity-e.scheduled))); // v0.1b：MW 驅動時為 0
 cmp('每MW年收入', '輸入|每 MW 年收入', d.m.revMW);
 if (PMW_REVQ === 'tkAnchor') { // v0.2a：Tokenomics 錨 × k（Excel「每MW收入_錨定」各容量情境；HTML tkAnchorQ）
   for (const k of ['low', 'base', 'high']) { const A = tkAnchorQ(k), lb = COMPANY_DATA.scenarios.labels[k] + '｜', W = '每MW收入_錨定|' + lb;
@@ -43,7 +43,9 @@ if (PMW_REVQ === 'tkAnchor') { // v0.2a：Tokenomics 錨 × k（Excel「每MW收
   if (!AKX) { const TS = tkSensQ(DEFAULTS, VAL_DEFAULTS), lb = COMPANY_DATA.scenarios.labels[SC], K3 = ['low', 'base', 'high']; // v0.2a 步驟 5：快照＝引擎即時（tk_sens.json 未過期；快照為預設錨定年度，FY27 錨定測試不比）
     cmp('矩陣目標價 ' + SC, '每MW收入_錨定|矩陣｜加權目標價｜' + lb, K3.map(p => TS.matrix[SC][p].tgt));
     cmp('矩陣募資 ' + SC, '每MW收入_錨定|矩陣｜五期股權募資｜' + lb, K3.map(p => TS.matrix[SC][p].eq));
-    for (const x of TS.sens) cmp('敏感度 ' + x.key, '每MW收入_錨定|敏感度｜' + x.label, K3.map(s => x.res[s].tgt)); }
+    for (const x of TS.sens) cmp('敏感度 ' + x.key, '每MW收入_錨定|敏感度｜' + x.label, K3.map(s => x.res[s].tgt));
+    cmp('簽約率 100%', V + '簽約率敏感度｜新產能簽約率 100%（基準）', K3.map(s => TS.matrix[s].base.tgt)); // v0.5a B：評價頁簽約率敏感度＝快照列
+    for (const [k, n] of [['fill75', 75], ['fill50', 50]]) cmp('簽約率 ' + n + '%', V + '簽約率敏感度｜新產能簽約率 ' + n + '%', K3.map(s => TS.sens.find(x => x.key === k).res[s].tgt)); }
   { const A = tkAnchorQ(SC), FL = COMPANY_DATA.fleet, TK = COMPANY_DATA.tkSnap, W = '每MW收入_錨定|', ann = LATEST_Q.revenue * 4, svc = COMPANY_DATA.priceCheck.inServiceMw, bo = q.billableOpen, // v0.2a 步驟 4：Q2 驗證拆解
       a0 = FL.generations.reduce((s, g) => s + (FL.openMix.mix[g] || 0) * TK.IF_HoldEcon[g]['基準'], 0), rS = ann / svc * 1e3, rB = ann / bo * 1e3, kB = rB / a0, m = A.rev[0] * 1e3, gap = m - rS,
       i1 = rB - rS, i2 = (A.k[0] - kB) * a0, i3 = (A.anchor[0] * 1e3 - a0) * A.k[0];
@@ -51,6 +53,19 @@ if (PMW_REVQ === 'tkAnchor') { // v0.2a：Tokenomics 錨 × k（Excel「每MW收
     cmp('Q2隱含k', W + 'Q2 隱含 k（÷ 在役 MW ÷ 期初錨；只列，不用）', [rS / a0]); cmp('Q2總差距', W + '總差距（模型 − Q2 實現 ÷ 在役）', [gap]);
     cmp('Q2(i)', W + '(i) 爬坡分母：計費 MW 對在役 MW', [i1]); cmp('Q2(ii)', W + '(ii) 定價倍數 k：模型 k 對 Q2 隱含 k（÷ 計費）', [i2]);
     cmp('Q2(iii)', W + '(iii) 世代組合：FY26 平均在役世代對季末世代', [i3]); cmp('Q2(iv)', W + '(iv) 其他（殘差）', [gap - i1 - i2 - i3]); }
+  { const B = fy26BridgeQ(q), W = '每MW收入_錨定|', n = x => x ? 1 : 0; // v0.5a A：FY26 指引閉合橋（F2；C＝校準前、D＝校準後）
+    cmp('F2 指引下緣', W + '公司指引 FY26 營收｜下緣', [B.lo, B.lo]); cmp('F2 指引上緣', W + '公司指引 FY26 營收｜上緣', [B.hi, B.hi]); cmp('F2 指引中點', W + '公司指引 FY26 營收｜中點', [B.mid, B.mid]);
+    cmp('F2 1H', W + '1H26 實際營收（已實現）', [B.ytd, B.ytd]); cmp('F2 爬坡', W + '首期末爬坡係數', B.ramp);
+    cmp('F2 期初MW', W + '期初可計費 MW（Q2 營收 × 4 ÷ 首期每 MW 年收入；公式不動）', [B.b0, B.b0]); cmp('F2 已連網', W + '首期末已連網 MW', [B.conn, B.conn]);
+    cmp('F2 首期末MW', W + '首期末可計費 MW（已連網 × 在役比例 × 爬坡係數）', B.b1); cmp('F2 單價', W + '首期每 MW 年收入（錨 × k；k 不動）', [B.p, B.p]);
+    cmp('F2 模型FY26', W + '模型 FY26 營收（重算：1H 實際 ＋ 首期 MW × 單價）', B.model); cmp('F2 − 下緣', W + '模型 − 指引下緣', B.vlo); cmp('F2 − 中點', W + '模型 − 指引中點', B.vmid);
+    cmp('F2 ÷ 中點', W + '模型 ÷ 指引中點 − 1', B.vmidp);
+    cmp('F2 總差距', W + '總差距（指引中點 − 校準前模型 FY26）', [B.gap]); cmp('F2 (i)', W + '(i) 期初可計費 MW', [B.i]); cmp('F2 (ii)', W + '(ii) 每 MW 單價（k）', [B.ii]);
+    cmp('F2 (iii)', W + '(iii) 2H 新增 MW 與爬坡（首期末可計費 MW）', [B.iii]); cmp('F2 (iv)', W + '(iv) 非算力服務營收', [B.iv]);
+    cmp('F2 (v)', W + '(v) 其他：單價／口徑未解（校準後模型 → 指引中點）', [B.v]); cmp('F2 加總核對', W + '核對：(i)＋(ii)＋(iii)＋(iv)＋(v) − 總差距', [B.sum]);
+    cmp('F2 需 期初MW', W + '期初可計費 MW 需達', [B.nb0]); cmp('F2 需 首期末MW', W + '首期末可計費 MW 需達', [B.nb1]); cmp('F2 需 爬坡', W + '　對應爬坡係數（可計費 ÷（已連網 × 在役比例））', [B.nramp]);
+    cmp('F2 需 在役比例', W + '　或對應在役比例（可計費 ÷ 已連網；爬坡 100%）', [B.nratio]); cmp('F2 需 單價', W + '每 MW 年收入需達（期初 MW 隨單價重校準：期初 MW × 單價＝Q2 年化營收）', [B.np]);
+    cmp('F2 需 k', W + '　對應 k（÷ 首期錨）', [B.nk]); cmp('F2 需 服務', W + '非算力服務營收需達（首期）', [B.nsv]); }
 }
 cmp('信用損失', S+'信用損失（期初 RPO 部分）', H('loss'));
 cmp('RPO現金', S+'RPO 現金（可支應資本用途）', H('rpoCash'));
@@ -153,6 +168,15 @@ cmp('加權目標價', V+'加權目標價', [p.call.blended]);
   cmp('方法區間 B', RG+'方法區間（下緣／上緣）', R.B);
   cmp('100% EV/EBITDA 目標價', RG+'100% EV/EBITDA 目標價（價位／評等代碼）', [R.ev100, CODE[R.ev100Call]]);
   cmp('未截斷 DCF 每股', RG+'未截斷 DCF 每股', [p.d.perShareRaw]);
+  // v0.5a C：方法並列（A 現行／B DCF 腿為 0 時權重全移至 EV/EBITDA）
+  cmp('方法並列 A', V+'方法並列｜A 現行加權目標價（DCF／EV/EBITDA 按權重；評等依此）', R.scen.map(s=>s.tgt));
+  if (!AKX) { // B 讀法為建置時快照（預設錨定年度），FY27 錨定另跑時不比對
+  cmp('方法並列 B', V+'方法並列｜B DCF 腿為 0 時權重全移至 EV/EBITDA（只作方法敏感度）', R.scen.map(s=>s.evB));
+  cmp('方法並列 快照檢查', V+'方法並列｜快照檢查：目前情境 B 的快照 − 即時值', [0]);
+  cmp('方法並列 B−A', V+'方法並列｜B − A', R.scen.map(s=>s.evB-s.tgt));
+  cmp('方法並列 B 距門檻', V+'方法並列｜B 距賣出門檻', R.scen.map(s=>s.evB-R.th));
+  { const x=X[V.replace('損益與評價|','評價_DCF與目標價|')+'方法並列｜結論']; rows.push([x&&x[0]===R.pair?'OK ':'XX ','文字 方法並列結論',JSON.stringify(R.pair),JSON.stringify(x&&x[0])]); }
+  }
   const cmpT=(label,xlKey,h)=>{ const x=X[xlKey]; if(!x){rows.push([label,'MISSING XL KEY '+xlKey]);return;} rows.push([x[0]===h?'OK ':'XX ',label,JSON.stringify(h),JSON.stringify(x[0])]); };
   cmpT('文字 點位摘要', RG+'點位摘要', R.head);
   cmpT('文字 方法區間標籤', RG+'方法區間標籤', R.bLabel);
@@ -176,7 +200,7 @@ cmp('加權目標價', V+'加權目標價', [p.call.blended]);
   cmp('隱含 共識目標價倍數',SM+'隱含｜共識平均目標價隱含 FY28 EV/EBITDA',[cv.impTgt]); cmp('隱含 現價倍數',SM+'隱含｜現價隱含 FY28 EV/EBITDA',[cv.impPx]);
   cmp('隱含 模型上緣',SM+'隱含｜模型方法區間上緣',[cv.mHi]);
   cmp('摘要 點位',SM+'結論｜點位（加權目標價）',[R.pt]); cmp('摘要 空間',SM+'結論｜空間',[cv.up]); cmp('摘要 點位−門檻',SM+'結論｜點位 − 賣出門檻',[cv.gapTh]);
-  cmpT('文字 摘要評等',SM+'結論｜評等',p.call.call); cmpT('文字 摘要結論句',SM+'結論｜結論句',cv.head); cmpT('文字 摘要情境判斷句',SM+'結論｜情境判斷句',R.judge);
+  cmpT('文字 摘要評等',SM+'結論｜評等',p.call.call); cmpT('文字 摘要結論句',SM+'結論｜結論句',cv.head); cmpT('文字 摘要情境判斷句',SM+'結論｜情境判斷句',R.judge); if (!AKX) cmpT('文字 摘要方法並列句',SM+'結論｜方法並列句',R.pairLine);
   cmpT('文字 共識判斷句',SM+'差異｜判斷句',cv.judge); cmpT('文字 隱含倍數句',SM+'隱含｜隱含倍數句',cv.implied);
   // v4.4：年度差異原因（類型＋原因逐字；Excel 每個設定組合一列，未超過門檻時為空白）與原因摘要句
   cmpT('文字 差異原因摘要',SM+'差異｜差異原因摘要',cv.rsnSum);

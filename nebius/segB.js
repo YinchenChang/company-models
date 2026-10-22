@@ -158,7 +158,7 @@ function evEbitdaLeg(e, t) {
   return (e[k].ebitda * t.evEbitda - n) / r / Math.pow(1 + t.wacc, k - CALQ.evOffset) // v4.5：錨定期末折回目標價時點（calendar.targetHorizon）
 }
 // v3.5：錨定年度 × 倍數矩陣（加權目標價與 EV/EBITDA 腿，均為每股）
-var EVG_MULTS = [3.4, 4.5, 5, 6, 7];
+var EVG_MULTS = [3.4, 4.5, 5, 6, 7, 8, 9]; // v0.5a D：補 8x、9x
 function evAnchorGrid(d, st, o) {
   let base = runValuation(d, st, o);
   let leg = EVG_MULTS.map(m => [1, 2, 3, 4].map(k => {
@@ -338,6 +338,7 @@ function tkScnQ(e, sc, o = {}) {
     let TK = COMPANY_DATA.tkSnap.IF_CapexTotal, g = i => i === 0 ? `GB300 NVL72` : `VR200 NVL72`;
     s.a = { ...s.a, costMW: s.a.costMW.map((x, i) => x * TK[g(i)][cs] / TK[g(i)][`基準`]) }
   }
+  if (o.fill != null) s.m = { ...s.m, fill: s.m.fill.map(() => o.fill * 100) }; // v0.5a B：RPO 覆蓋以外的新產能簽約率（未簽約部分照建、CapEx 不變）
   if (o.ramp0 != null) s.m.billable = s.m.billable.map((x, i) => i === 0 ? Math.round(SCENARIOS[sc].acc[0] * SC_BR[0] * o.ramp0) : x);
   return s
 }
@@ -349,10 +350,36 @@ function tkSensQ(e, v, onlyMatrix) { // v0.2a：3 × 3 容量 × 價格矩陣與
       ...NB.values.map((x, j) => [`kNb${j + 1}`, `k_長約 ${x.toFixed(2)}（Nebius–Microsoft：${NB.labels[j]}）`, { kLong: x }]),
       ...AM.onDemandShare.sens.map((x, j) => [`od${j + 1}`, `隨需占比 ${Math.round(x * 100)}%（k_現貨 ${AM.spot.base.toFixed(2)}）`, { od: x }]),
       [`tkLow`, `Tokenomics 低成本（錨與建置成本同動；k 依證據重算）`, { tkCase: `低成本` }], [`tkHigh`, `Tokenomics 高成本（錨與建置成本同動；k 依證據重算）`, { tkCase: `高成本` }],
-      [`ramp50`, `首期末爬坡 50%`, { ramp0: .5 }], [`ramp80`, `首期末爬坡 80%`, { ramp0: .8 }]];
+      [`ramp50`, `首期末爬坡 50%`, { ramp0: .5 }], [`ramp80`, `首期末爬坡 80%`, { ramp0: .8 }],
+      [`fill75`, `新產能簽約率 75%（RPO 覆蓋以外；未簽約部分照建）`, { fill: .75 }], [`fill50`, `新產能簽約率 50%（RPO 覆蓋以外；未簽約部分照建）`, { fill: .5 }]];
   return {
     matrix: Object.fromEntries(K.map(sc => [sc, Object.fromEntries(K.map(px => [px, run(sc, { px })]))])),
     sens: onlyMatrix ? [] : C.map(([key, label, o]) => ({ key, label, res: Object.fromEntries(K.map(sc => [sc, run(sc, o)])) }))
+  }
+}
+
+// v0.5a B：RPO 覆蓋以外的新產能簽約率敏感度（100%／75%／50%；三容量情境，價格基準）。未簽約部分照建（CapEx 不變），只按簽約率產生收入。
+function fillSensQ(e, v) {
+  return [1, .75, .5].map(f => ({ fill: f, res: Object.fromEntries([`low`, `base`, `high`].map(sc => [sc, fA(tkScnQ(e, sc, f === 1 ? {} : { fill: f }), null, v)])) }))
+}
+
+// v0.5a A：FY26 指引閉合橋（Excel「每MW收入_錨定」F2 同一算式；cmp31 逐項比對）。
+// 模型 FY26 營收＝1H 實際 ＋ 首期長度 × 利用率 × (平均或期末可計費 MW) × 每 MW 年收入 × 倍數 ＋ 服務營收。
+// 校準前＝v0.4 爬坡係數（scenarios.billableRatio.rampPrev）；校準後＝目前輸入。橋：校準前模型 → 指引中點，逐項依序代入（期初 MW → 單價 → 首期末 MW → 服務營收），餘額＝(v) 單價／口徑未解。
+function fy26BridgeQ(e) {
+  let BRQ = COMPANY_DATA.scenarios.billableRatio, sc = SCENARIOS[e.scenario] ? e.scenario : `base`,
+    lo = CALL_FACTS.revLo, hi = CALL_FACTS.revHi, mid = (lo + hi) / 2, ytd = ACTUAL_1H.revenue, L = PERIOD_YEARS[0], u = e.m.util[0] / 100, scl = e.revScale ?? 1,
+    p = e.m.revMW[0], svc = e.services[0], avg = e.useAvgMw ? 1 : 0, b0 = e.billableOpen, conn = e.m.accepted[0], ratio = SC_BR[0],
+    rp0 = (BRQ.rampPrev || BRQ.ramp)[0], b1 = [Math.round(conn * ratio * rp0), e.m.billable[0]], ramp = [rp0, e.m.billable[0] / (conn * ratio)], // 沒有 rampPrev 的公司：校準前＝目前
+    mod = (B0, B1, P, S) => ytd + L * u * (avg ? (B0 + B1) / 2 : B1) * P * scl + S,
+    m0 = mod(b0, b1[0], p, svc), m1 = mod(b0, b1[1], p, svc),
+    i = mod(b0, b1[0], p, svc) - m0, ii = 0, iii = m1 - mod(b0, b1[0], p, svc), iv = 0, v = mid - m1, gap = mid - m0,
+    den = L * u * p * scl, nb1 = b1[1] + v / ((avg ? .5 : 1) * den), anchor = PMW_REVQ === `tkAnchor` ? tkAnchorQ(sc).anchor[0] * 1e3 : NaN,
+    np = (avg ? (2 * (mid - ytd - svc) / (L * u * scl) - LATEST_Q.revenue * 4) / b1[1] : (mid - ytd - svc) / (L * u * scl * b1[1])) * 1e3;
+  return {
+    lo, hi, mid, ytd, ramp, b0, conn, ratio, b1, p, L, u, scl, svc, model: [m0, m1], vlo: [m0 - lo, m1 - lo], vmid: [m0 - mid, m1 - mid], vmidp: [m0 / mid - 1, m1 / mid - 1],
+    inr: [m0 >= lo && m0 <= hi, m1 >= lo && m1 <= hi], gap, i, ii, iii, iv, v, sum: i + ii + iii + iv + v - gap,
+    nb0: avg ? b0 + v / (.5 * den) : NaN, nb0ref: (COMPANY_DATA.priceCheck || {}).inServiceMw ?? NaN, nb1, nramp: nb1 / (conn * ratio), nrampLo: (b1[1] + (lo - m1) / ((avg ? .5 : 1) * den)) / (conn * ratio), nratio: nb1 / conn, np, nk: np / anchor, nsv: v, anchor
   }
 }
 
@@ -369,7 +396,7 @@ function targetRange(d, st, o, base) {
   let P = o.price, th = P * (1 + SELL_TH), pt = base.call.blended,
     sc = [`low`, `base`, `high`].map(k => {
       let s2 = scnQ(st, k), d2 = runFunding(s2), p2 = runValuation(d2, s2, o);
-      return { sc: k, name: SCENARIOS[k].label.split(` `)[0], tgt: p2.call.blended, call: p2.call.call, gap: p2.call.blended - th }
+      return { sc: k, name: SCENARIOS[k].label.split(` `)[0], tgt: p2.call.blended, call: p2.call.call, gap: p2.call.blended - th, evB: (p2.d.invalid || !(p2.d.perShareT > 1e-12)) ? p2.peAdj : p2.call.blended } // v0.5a C：evB＝B 讀法（DCF 腿為 0 時權重全移至 EV/EBITDA；只作方法敏感度，評等仍依 tgt）
     }),
     A = [Math.min(sc[0].tgt, sc[2].tgt), Math.max(sc[0].tgt, sc[2].tgt)],
     mLo = Math.min(...RANGE_MULTS), mHi = Math.max(...RANGE_MULTS),
@@ -391,7 +418,7 @@ function targetRange(d, st, o, base) {
       : o.dcfMode !== `option` && raw < 0 ? `DCF 為 $0 仍計 ${hA(wd * 100, 0)} 權重的原因：DCF 沒有失效，而是算出的股權價值為負（每股約 ${mA(raw, 1)}），代表自由現金流折現後的企業價值不足以償還淨負債。EV/EBITDA 沒有扣除 GPU 汰換與擴張支出，保留 DCF 權重，是為了讓目標價反映「EBITDA 付不起資本成本」。若不計 DCF，目標價為 $${Y(ev100, 1)}（${ev100Call}）；${hA(wd * 100, 0)}／${hA(we * 100, 0)} 為判斷值。`
       : ``;
   return {
-    pt, P, th, scen: sc, A, B, mults: [mLo, mHi], ev100, ev100Call, pos, judge, note,
+    pt, P, th, scen: sc, A, B, mults: [mLo, mHi], ev100, ev100Call, pos, judge, note, pairLine: `方法並列：A 現行 ${sc.map(x => `$${Y(x.tgt, 1)}`).join(`／`)}（保守／基準／積極）；B（DCF 腿為 0 時權重全移 EV/EBITDA）${sc.map(x => `$${Y(x.evB, 1)}`).join(`／`)}，只作方法敏感度，評等仍依 A。`, pair: (mxB => mxB < th ? `B 讀法三情境最高 $${Y(mxB, 1)}，仍低於賣出門檻 $${Y(th, 1)}：評等結論不變（評等仍依 A）。` : `B 讀法最高 $${Y(mxB, 1)} 不低於賣出門檻 $${Y(th, 1)}：評等仍依 A，B 只作方法敏感度。`)(Math.max(...sc.map(x => x.evB))),
     bLabel: `方法區間（目前情境，${multTxt(mLo)}–${multTxt(mHi)}x）`,
     head: `目標價 $${Y(pt, 1)}（情境區間 $${Y(A[0], 1)}–$${Y(A[1], 1)}）`
   }

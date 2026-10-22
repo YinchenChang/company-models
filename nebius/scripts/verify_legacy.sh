@@ -24,6 +24,7 @@ bo = int(co['latestQuarter']['revenue'] * 4 / rev[0] + 0.5)
 co['methodology']['perMw']['revenue'] = 'legacy'
 co['methodology']['perMw']['capex'] = 'legacy'  # v0.4a：每 MW 建置成本也還原為 v0.2 的寫死值（非 tokenomics 即用 scenarios.capexTemplate.costMW）
 co['defaults']['m']['revMW'] = rev; co['defaults']['billableOpen'] = bo
+co['scenarios']['billableRatio']['ramp'] = ref['scenarios']['billableRatio']['ramp']; co['defaults']['m']['billable'] = ref['defaults']['m']['billable']  # v0.5a：爬坡係數與可計費 MW 預設也還原為 v0.2 的值
 open(p, 'w', encoding='utf-8').write(json.dumps(co, indent=1, ensure_ascii=False) + '\n')
 PY
 REF="${LEGACY_DIST_REF:-6760147}"
@@ -46,7 +47,7 @@ export VER=0.2 DATE=2026-10-07
 # README 欄位表的「目前數值」隨 company.json 改變：副本內重新產生（只為通過 0b，不影響比對）
 (cd "$DST/nebius" && python3 scripts/fields_doc.py --write >/dev/null)
 set +e
-LEGACY= EXPECT=scripts/expect/legacy_vs_v0_2.txt "$DST/nebius/scripts/verify.sh" --vs-dist > "$ROOT/out/verify_legacy.log" 2>&1; rc=$?
+LEGACY= EXPECT=scripts/expect/legacy_vs_v0_2.txt CRAWL_EXPECT=scripts/expect/legacy_vs_v0_2_crawl.txt "$DST/nebius/scripts/verify.sh" --vs-dist > "$ROOT/out/verify_legacy.log" 2>&1; rc=$?
 set -e
 tail -30 "$ROOT/out/verify_legacy.log"
 exit $rc

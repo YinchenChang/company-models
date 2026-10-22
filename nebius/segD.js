@@ -1,3 +1,33 @@
+// v0.5a A：FY26 指引閉合橋（次層，預設收合；Excel「每MW收入_錨定」F2 同一算式）
+function Fy26BridgeUiQ({ e }) {
+  let B = fy26BridgeQ(e), pc = x => hA(x * 100, 0), td = (x, st) => (0, $.jsx)(`td`, { className: `py-1 pr-4 text-right font-mono tabular-nums`, style: st, children: x }),
+    tl = (x, st) => (0, $.jsx)(`td`, { className: `py-1 pr-4`, style: st, children: x }),
+    tbl = (head, rows) => (0, $.jsx)(`div`, { style: xstyQ.wrap, className: `mt-2`, children: (0, $.jsxs)(`table`, { style: { ...xstyQ.table, minWidth: 420 }, children: [
+      (0, $.jsx)(`thead`, { children: (0, $.jsx)(`tr`, { children: head.map((h, i) => (0, $.jsx)(`th`, { style: i === 0 ? xstyQ.thL : xstyQ.th, children: h }, h)) }) }),
+      (0, $.jsx)(`tbody`, { children: rows.map((r, z) => (0, $.jsx)(`tr`, { children: r.map((c, i) => (0, $.jsx)(`td`, { style: { ...(i === 0 ? xstyQ.tdL : xstyQ.td), background: z % 2 ? `#fbfaf7` : `#fff` }, children: c }, i)) }, r[0])) })] }) });
+  return (0, $.jsxs)(`details`, { className: `mt-3 rounded border border-border p-3`, children: [
+    (0, $.jsxs)(`summary`, { className: `cursor-pointer text-sm font-semibold`, children: [`次層｜FY26 指引閉合橋：模型 ${Y(B.model[1], 2)} 對指引 ${Y(B.lo, 1)}–${Y(B.hi, 1)}（中點 ${Y(B.mid, 1)}），${B.inr[1] ? `落入區間` : `差中點 ${Y(B.mid - B.model[1], 2)}`}`] }),
+    (0, $.jsx)(`p`, { className: `mt-2 text-xs leading-relaxed text-muted`, children: `依 v0.1c 規則重新校準首期末爬坡係數（k 與期初可計費 MW 公式不動）：到指引下緣需 ${pc(B.nrampLo)}、到中點需 ${pc(B.nramp)}，皆超過可計費＝在役的 100% 上限，所以停在 ${pc(B.ramp[1])}；剩餘差距列為「單價／口徑未解」。` }),
+    tbl([`項目`, `校準前（v0.4）`, `校準後（目前）`], [
+      [`首期末爬坡係數`, pc(B.ramp[0]), pc(B.ramp[1])],
+      [`期初／首期末可計費 MW`, `${Y(B.b0, 0)} ／ ${Y(B.b1[0], 0)}`, `${Y(B.b0, 0)} ／ ${Y(B.b1[1], 0)}`],
+      [`模型 FY26 營收（US$bn）`, Y(B.model[0], 3), Y(B.model[1], 3)],
+      [`模型 ÷ 指引中點 − 1`, pc(B.vmidp[0]), pc(B.vmidp[1])],
+      [`是否落入指引區間 ${Y(B.lo, 1)}–${Y(B.hi, 1)}`, B.inr[0] ? `是` : `否`, B.inr[1] ? `是` : `否`]]),
+    (0, $.jsx)(`p`, { className: `mt-3 text-xs font-medium`, children: `橋：校準前模型 → 指引中點（US$bn；加總＝總差距）` }),
+    tbl([`項目`, `US$bn`], [
+      [`總差距（指引中點 − 校準前模型）`, Y(B.gap, 3)], [`(i) 期初可計費 MW（不動）`, Y(B.i, 3)], [`(ii) 每 MW 單價 k（不動）`, Y(B.ii, 3)], [`(iii) 2H 新增 MW 與爬坡（本版動作）`, Y(B.iii, 3)],
+      [`(iv) 非算力服務營收`, Y(B.iv, 3)], [`(v) 其他：單價／口徑未解`, Y(B.v, 3)], [`核對：加總 − 總差距`, Y(B.sum, 6)]]),
+    (0, $.jsx)(`p`, { className: `mt-3 text-xs font-medium`, children: `單獨補足所需：對 (v) ${Y(B.v, 2)}，每項單獨成立（其餘維持模型值）要達到的數值` }),
+    tbl([`項目`, `需達`, `對照`], [
+      [`期初可計費 MW`, `${Y(B.nb0, 0)} MW`, `期初在役 ${Y(B.nb0ref, 0)} MW（內插），且須違反 Q2 已實現營收校準`],
+      [`首期末可計費 MW`, `${Y(B.nb1, 0)} MW`, `已連網 ${Y(B.conn, 0)} MW × 在役 ${pc(B.ratio)} ＝ ${Y(B.conn * B.ratio, 0)} MW（爬坡 100%）`],
+      [`　對應爬坡係數／在役比例`, `${pc(B.nramp)} ／ ${pc(B.nratio)}`, `爬坡上限 100%`],
+      [`每 MW 年收入（期初 MW 隨單價重校準）`, `$${Y(B.np, 1)}m${Number.isFinite(B.nk) ? `（k ${Y(B.nk, 2)}）` : ``}`, `模型 $${Y(B.p * 1e3, 1)}m${Number.isFinite(B.anchor) ? `（k ${Y(B.p * 1e3 / B.anchor, 2)}）` : ``}`],
+      [`非算力服務營收（首期）`, `${Y(B.nsv, 2)}bn`, `模型 ${Y(B.svc, 2)}；Q2 營收已含非 AI cloud 收入`]]),
+    (0, $.jsx)(`p`, { className: `mt-2 text-xs leading-relaxed text-muted`, children: `差異原因（類型：已知限制）：只靠爬坡無法閉合；餘額要靠單價高於證據價格、期初計費 MW 高於 Q2 已實現營收所示，或年底連網／在役 MW 高於模型路徑，三項都沒有一手證據，因此不硬調、在此揭露。` })] })
+}
+
 function zM() {
   let [e, t] = (0, v.useState)(PM), [n, r] = (0, v.useState)(0), [i, a] = (0, v.useState)(`summary`), [o, s] = (0, v.useState)(() => structuredClone(VAL_DEFAULTS)), [c, l] = (0, v.useState)(0), u = (0, v.useRef)(null), d = (0, v.useMemo)(() => runFunding(e), [e]), f = (0, v.useMemo)(() => runValuation(d, e, o), [d, e, o]), TR = (0, v.useMemo)(() => targetRange(d, e, o, f), [d, e, o, f]), RVQ = rvHookQ(e, o), p = (0, v.useMemo)(() => EM(f, d, e), [f, d, e]), m = (0, v.useMemo)(() => sensitivities(e, o), [e, o]), h = lA(e.cds), g = d.totals.end >= 0, _ = d.totals.operatingGap + e.cash >= 0, y = (0, v.useMemo)(() => aA(e, d), [e, d]), b = (0, v.useMemo)(() => rpoBridge(d), [d]), x = (0, v.useMemo)(() => sA(e, d), [e, d]), S = (0, v.useMemo)(() => cA(e), [e]), C = e => s(t => ({
     ...t,
@@ -808,7 +838,7 @@ function zM() {
                     [`產能瓶頸`, d.years.map(e => e.bottleneck), void 0, void 0, `calc`, `＝MAX(0, 排程 − 容量)。合約有、機房沒有，本期收不到且不遞延到下期（保守處理）。`],
                     [`期初 RPO 轉換收入`, d.years.map(e => e.revenue), void 0, void 0, void 0, `＝排程 − 瓶頸。瓶頸>0 時恆等於容量上限。`],
                     [`新簽約收入（計算）`, d.years.map(e => e.newRev), void 0, void 0, `calc`, `＝MAX(0, 容量 − 排程) × 新產能簽約率。FY28 起模型收入主要來自這裡——尚未簽署的合約。`],
-                    [`未售產能`, d.years.map(e => e.unsold), void 0, void 0, void 0, `蓋好但賣不掉。MW 驅動時新產能簽約率 100%，此列為 0。`],
+                    [`未售產能`, d.years.map(e => e.unsold), void 0, void 0, void 0, `蓋好但賣不掉。MW 驅動且新產能簽約率 100%（預設）時，此列為 0。`],
                     [`信用損失`, d.years.map(e => e.loss), void 0, void 0, void 0, `＝收入 × 違約率 × (1−回收率)。前三大客戶占 72% 營收。`],
                     [`損益用算力收入`, d.years.map(e => e.isRev), void 0, void 0, `tot`, `＝RPO 轉換 ＋ 新簽約。損益與評價頁用的是同一個數字。`],
                     [`來源（FY26 欄＝1H 實際現金流＋下半年模型）`, null],
@@ -867,17 +897,17 @@ function zM() {
                 className: `space-y-3`,
                 children: [(0, $.jsx)(hdrQ, {
                   title: `收入／產能輸入`,
-                  tip: `營收 ＝ 平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度（MW 驅動，新產能簽約率 100%）。${PMW_REVQ === `tkAnchor` ? `每 MW 年收入＝Tokenomics 錨（IF_HoldEcon，在役世代加權的打平租金）× 定價倍數 k（長約占比 × k_長約＋其餘 × k_現貨），容量情境與價格情境分離；不用公司 ACV（$20–25M 只作對照）。按 MW-year 計價，不乘 IF_Util，所以利用率預設 100%。` : `每 MW 年收入取 Tokenomics 正向推導三情境（11.62／17.40／24.20 US$m/MW-IT），不用公司 ACV（$20–25M 只作對照）。路徑 B 已含可計費利用率，所以利用率預設 100%。`}RPO 排程只作對照與產能瓶頸旗標。${PERIODS[0]} 欄的 MW 為年底存量、收入為模型期金額。`
+                  tip: `營收 ＝ 平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度（MW 驅動，新產能簽約率預設 100%）。${PMW_REVQ === `tkAnchor` ? `每 MW 年收入＝錨 × 定價倍數 k：Tokenomics 持有成本（IF_HoldEcon，在役世代加權的打平租金）提供跨世代的正規化基準，市場合約價格證據決定倍數 k（隨需占比 × k_現貨＋其餘 × k_長約）；容量情境與價格情境分離；不用公司 ACV（$20–25M 只作對照）。按 MW-year 計價，不乘 IF_Util，所以利用率預設 100%。` : `每 MW 年收入取 Tokenomics 正向推導三情境（11.62／17.40／24.20 US$m/MW-IT），不用公司 ACV（$20–25M 只作對照）。路徑 B 已含可計費利用率，所以利用率預設 100%。`}RPO 排程只作對照與產能瓶頸旗標。${PERIODS[0]} 欄的 MW 為年底存量、收入為模型期金額。`
                 }), (0, $.jsx)(BM, {
                   rows: [
                     [`Accepted MW（期末主動電力）`, d.m.accepted, (e, t) => D(`accepted`, e, t), void 0, void 0, `YE26 指引 >1,850 MW；2030 目標 ≥8,000 MW。引擎會強制單調不減。`, `MW`],
                     [`Billable MW`, d.m.billable, (e, t) => D(`billable`, e, t), void 0, void 0, `引擎會強制不超過 Accepted。`, `MW`],
                     [`利用率`, e.m.util, (e, t) => D(`util`, e, t), void 0, void 0, `法說稱「近期產能實質售罄」，本模型不擬合為 100%。`, `%`],
-                    [`每 MW 年收入`, e.m.revMW, (e, t) => D(`revMW`, e, t), 5e-4, void 0, PMW_REVQ === `tkAnchor` ? `Tokenomics 錨 × 定價倍數 k（Excel「每MW收入_錨定」；${COMPANY_DATA.tokenomics.version}）；容量情境只改 MW，價格情境改 k [Derived]。` : `Tokenomics 正向推導（data/permw_tokenomics_20261007.json）；隨情境：保守 0.01162／基準 0.0174／積極 0.0242 [Derived]。`, `US$bn/MW`],
+                    [`每 MW 年收入`, e.m.revMW, (e, t) => D(`revMW`, e, t), 5e-4, void 0, PMW_REVQ === `tkAnchor` ? `錨 × 定價倍數 k（Excel「每MW收入_錨定」；${COMPANY_DATA.tokenomics.version}）：Tokenomics 持有成本提供跨世代的正規化基準，市場合約價格證據決定倍數 k；容量情境只改 MW，價格情境改 k [Derived]。` : `Tokenomics 正向推導（data/permw_tokenomics_20261007.json）；隨情境：保守 0.01162／基準 0.0174／積極 0.0242 [Derived]。`, `US$bn/MW`],
                     [`新產能簽約率`, e.m.fill, (e, t) => D(`fill`, e, t), 1, void 0, `把這欄調成 0，就能看到只靠期初 RPO 的缺口有多大——最重要的壓力測試。`, `%`],
 
                   ]
-                })]
+                }), (0, $.jsx)(Fy26BridgeUiQ, { e: e })]
               }), n === 3 && (0, $.jsxs)(`div`, {
                 className: `space-y-3`,
                 children: [(0, $.jsx)(hdrQ, {
@@ -1384,7 +1414,7 @@ function zM() {
                         [`期後籌資`, `2026-07 資產擔保 $775M；2026-08 可轉債 $5.75B、以股換債 $800M`, `期後事項，季報未含`, `淨現金 ${Y(e.atm, 2)} 記於首期模型部分；資產擔保額度為瀑布第一順位`],
                         [`已連網／合約電力`, `2026 年底 connected 0.8–1.0 GW；合約 5 GW；2027 起每年 >1 GW`, `季末 active MW 未揭露`, `三情境依對照表 r1；口徑不明者 ÷1.2 換 MW-IT`],
                         [`利用率`, `未揭露`, `無`, `每 MW 年收入已含可計費利用率，利用率欄 100%`],
-                        [`定價`, `Q2 新約 ACV $20–25M/MW；短約 $40–50M/MW`, `無`, PMW_REVQ === `tkAnchor` ? `不用公司 ACV；每 MW 年收入＝Tokenomics 錨 × 定價倍數 k（市場價格證據）` : `不用公司 ACV；每 MW 年收入取 Tokenomics 正向推導 11.62／17.40／24.20`],
+                        [`定價`, `Q2 新約 ACV $20–25M/MW；短約 $40–50M/MW`, `無`, PMW_REVQ === `tkAnchor` ? `不用公司 ACV；Tokenomics 持有成本提供跨世代的正規化基準，市場合約價格證據決定倍數 k` : `不用公司 ACV；每 MW 年收入取 Tokenomics 正向推導 11.62／17.40／24.20`],
                         [`營收／EBITDA 指引`, `營收 ${CALL_FACTS.revLo}–${CALL_FACTS.revHi}；年底 ARR ${CALL_FACTS.arrLo}–${CALL_FACTS.arrHi}；調整後 EBITDA 率約 40%`, `年初至今營收 ${Y(ACTUAL_1H.revenue, 3)}；GAAP 營損 ${Y(ACTUAL_1H.opInc, 3)}`, `營收不回推單價；EBITDA 率取可觀察 neocloud 區間`],
                         [`客戶集中`, `Microsoft、Meta 大單`, `C ${hA(LATEST_Q.custA * 100, 0)}／D ${hA(LATEST_Q.custB * 100, 0)}／E ${hA(LATEST_Q.custC * 100, 0)}`, `違約率 0.5→2.5%、回收 50%`],
                         [`回收期`, `新約 1 年 10 個月（先前 2–3 年）`, `無`, `公司說法只作對照，不作輸入`],

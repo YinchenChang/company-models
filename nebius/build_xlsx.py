@@ -199,7 +199,7 @@ guide = [
     ("", None),
     ("■ 營收主軸：MW × 每 MW 年收入 × 利用率", None),
     ("  已連網 MW（情境路徑，口徑不明者 ÷ PUE 1.2 換成 MW-IT）→ 在役 MW（× 在役比例）→ 平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度＝營收。", None),
-    (("  每 MW 年收入＝Tokenomics 錨（IF_HoldEcon，在役世代加權的打平租金）× 定價倍數 k（市場價格證據；『每MW收入_錨定』），不用公司 ACV（只作對照）；按 MW-year 計價、不乘 IF_Util，利用率預設 100%。容量情境與價格情境分離。" if PMW_REV == 'tkAnchor'
+    (("  每 MW 年收入＝錨 × 定價倍數 k（Tokenomics 持有成本提供跨世代的正規化基準，市場合約價格證據決定倍數 k；錨＝IF_HoldEcon 在役世代加權的打平租金；『每MW收入_錨定』），不用公司 ACV（只作對照）；按 MW-year 計價、不乘 IF_Util，利用率預設 100%。容量情境與價格情境分離。" if PMW_REV == 'tkAnchor'
       else "  每 MW 年收入取 Tokenomics 正向推導的三情境值（data/permw_tokenomics_20261007.json），不用公司 ACV（只作對照）；利用率預設 100%，因推導值已含可計費利用率。"), None),
     ("  RPO 排程（季報桶分攤）只作對照：排程 > 容量的部分顯示為『產能瓶頸』旗標，並作為資產擔保融資容量的 backlog。", None),
     ("", None),
@@ -318,7 +318,7 @@ for nm, k, note in _SCN:
 for nm, k, _ in _SCN:
     if PMW_REV == 'tkAnchor':  # v0.2a：＝『每MW收入_錨定』錨 × k ÷ 1000（公式於該分頁建立後填入）
         row_line(ws, r, f"每 MW 年收入｜{CO['scenarios']['labels'][k]}", "US$bn/MW", [0] * 5, '0.0000', GREEN,
-                 "＝『每MW收入_錨定』Tokenomics 錨（IF_HoldEcon，在役世代加權）× 定價倍數 k（目前價格情境）÷ 1000 [Derived]；v0.2 舊值見該頁對照列")
+                 "＝『每MW收入_錨定』錨（IF_HoldEcon，在役世代加權）× 定價倍數 k（目前價格情境）÷ 1000；Tokenomics 持有成本提供跨世代的正規化基準，市場合約價格證據決定 k [Derived]；v0.2 舊值見該頁對照列")
     else:
         row_line(ws, r, f"每 MW 年收入｜{CO['scenarios']['labels'][k]}", "US$bn/MW", CO['scenarios']['revMW'][k], '0.0000', BLUE,
                  "Tokenomics 正向推導三情境（data/permw_tokenomics_20261007.json）；不用公司 ACV [Derived]")
@@ -327,7 +327,7 @@ row_line(ws, r, "在役／已連網比例", "%", CO['scenarios']['billableRatio'
          "三情境共用；新連網產能自驗收到可計費需數季 [Assumed]")
 BR_ROW = r; r += 1
 row_line(ws, r, "可計費爬坡係數", "%", CO['scenarios']['billableRatio']['ramp'], PCT, BLUE,
-         "v0.1c 首期營收校準：可計費 MW＝已連網 × 在役比例 × 爬坡係數，逐步收斂（60%／80%／100%）；60% 為能讓基準 FY26 落入公司指引的保守值 [Assumed]")
+         "v0.1c 首期營收校準：可計費 MW＝已連網 × 在役比例 × 爬坡係數；v0.5a 起 100%（v0.1c–v0.4 為 60%／80%／100%；首期末需 111%–126% 才到指引下緣／中點，只靠爬坡無法閉合，停在 100%，見『每MW收入_錨定』F2 閉合橋）[Assumed]")
 RAMP_ROW = r; r += 1
 row_line(ws, r, "表外現金租金（積極路徑）", "US$bn", CO['scenarios']['leaseHighPath'], NUM, BLUE,
          f"已簽約未起租租賃的現金路徑；其他情境依 MW 比例縮放（起算 {CO['scenarios']['leaseRampFloorMw']:,} MW）")
@@ -346,7 +346,7 @@ QREV = gi(r, "最新已申報季營收（單季）", "US$bn", CO['latestQuarter'
 MW0_ROW = r
 MW0 = gi(r, "«VMD» Billable MW", "MW", D['billableOpen'], "v0.1c 校準：＝最新季營收 × 4 ÷ 首期每 MW 年收入（對齊已實現年化營收；季末在役 MW 未揭露，不用內插值）[Derived]", NUM0); r += 1
 AVGON = gi(r, "收入用平均在役 MW（1=是）", "", int(D['useAvgMw']), "0＝用期末存量全期化；建議 1", NUM0); r += 1
-REVDRV = gi(r, "營收驅動（mw＝MW × 每 MW 年收入；rpo＝RPO 排程）", "", D['revenueDriver'], "mw：新產能簽約率固定 100%，營收＝容量上限；RPO 只作對照與產能瓶頸旗標（company.json → defaults.revenueDriver）", "@"); r += 1
+REVDRV = gi(r, "營收驅動（mw＝MW × 每 MW 年收入；rpo＝RPO 排程）", "", D['revenueDriver'], "mw：營收＝容量上限，RPO 覆蓋以外的部分乘新產能簽約率（預設 100%）；RPO 只作對照與產能瓶頸旗標（company.json → defaults.revenueDriver）", "@"); r += 1
 REVSC = gi(r, "每 MW 年收入倍數（整體）", "%", D['revScale'], "反向 DCF 與壓力測試用；預設 100%。以『目標搜尋』調整此格即可反解市價隱含單價", PCT); r += 1
 r = phdr(r)
 r = prow(r, "模型期長度（年）", "", CO['periodYears'], NUM,
@@ -367,7 +367,7 @@ for i in range(5):
     L = COLS[i]
     ws.cell(row=IN["每 MW 年收入"], column=3 + i, value=f"=CHOOSE({SEL},{L}{sc_rows['rev_保守']},{L}{sc_rows['rev_基準']},{L}{sc_rows['rev_積極']})")
 _c = ws.cell(row=MW0_ROW, column=3, value=f"=ROUND({QREV}*4/C{IN['每 MW 年收入']},0)"); _c.font = BLACK  # v0.1c：期初可計費 MW 校準（活公式）
-r = prow(r, "新產能簽約率", "%", PCT_(M['fill']), PCT, "MW 驅動：100%（RPO 只作對照）")
+r = prow(r, "新產能簽約率", "%", PCT_(M['fill']), PCT, "預設 100%（RPO 只作對照）；敏感度 75%／50%：未簽約部分照建、CapEx 不變（v0.5a B）")
 r = prow(r, "客戶違約率", "%", PCT_(M['defaultP']), PCT, "前三大客戶約 59% 營收的定價，非預測 [Assumed]")
 r = prow(r, "回收率", "%", PCT_(M['recovery']), PCT, "[Assumed]")
 r = prow(r, "非算力服務營收", "US$bn", D['services'], NUM, "預設 0：AI cloud 軟體已含在每 MW 年收入；其他事業另列 [Assumed]")
@@ -635,7 +635,7 @@ if PMW_REV == 'tkAnchor':
     ws.column_dimensions["H"].width = 4
     ws.column_dimensions["I"].width = 90
     ws["A1"] = "每 MW 收入 — Tokenomics 錨 × 定價倍數 k（v0.2a）"; ws["A1"].font = TITLE
-    ws["A2"] = ("每 MW 年收入（100% 計費時數）＝ Σ 平均在役世代占比 × IF_HoldEcon（WACC 10% 打平租金）× k；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約（新增產能按長約價；長約占比只作對照）。"
+    ws["A2"] = ("每 MW 年收入（100% 計費時數）＝ Σ 平均在役世代占比 × IF_HoldEcon（WACC 10% 打平租金）× k；k＝隨需占比 × k_現貨＋（1 − 隨需占比）× k_長約（新增產能按長約價；長約占比只作對照）。Tokenomics 持有成本提供跨世代的正規化基準，市場合約價格證據決定倍數 k。"
                 "按 MW-year 計價：利用率不另扣（IF_Util 不進收入），爬坡與簽約率在『輸入與假設』B 區。k 只取市場價格證據，不以 Nebius 營收、ARR、RPO、ACV 反推。")
     ws["A2"].font = SMALL
     ws["A3"] = "容量情境（輸入與假設 A 區情境選擇）只改 MW 路徑；價格情境（A 區價格情境選擇）只改 k。Q2 實績只作驗證（D 區），不校準 k。"
@@ -890,6 +890,81 @@ if PMW_REV == 'tkAnchor':
     ws.cell(row=r, column=9, value=(f"類型：觀點／已知限制。差距幾乎全部來自 (i) 爬坡分母——6/30 在役約 {CO['priceCheck']['inServiceMw']} MW（內插）中只有約 {D['billableOpen']} MW 依 Q2 營收計費（Microsoft 全部 tranche 於第二季下半季才交付、"
                                     "其他新容量第二季下半季上線），模型把差距歸為爬坡而非低價；Q2 隱含 k（÷ 在役）約 0.56 只列不用。季末在役 MW 公司未揭露（資料缺口），Q3 揭露後重估。")).font = SMALL
     AR['q2_reason'] = r; r += 2
+    # =====================================================================
+    # v0.5a A｜F2 FY26 指引閉合橋：公司指引中點 vs 模型 FY26 營收（目前情境）。只動首期末爬坡係數（依 v0.1c 原規則重新校準）；
+    # k 與期初可計費 MW 公式不動。C 欄＝校準前（v0.4 爬坡係數 scenarios.billableRatio.rampPrev）、D 欄＝校準後（目前輸入）。
+    # 公式與 HTML fy26BridgeQ（segB.js）同一算式，cmp31 逐項比對。
+    # =====================================================================
+    r = section(ws, r, "F2｜FY26 指引閉合橋（v0.5a）：公司指引 vs 模型 FY26 營收；爬坡係數依 v0.1c 規則重新校準（k 與期初可計費 MW 公式不動）")
+    for j, h in enumerate(["項目", "單位", "校準前（v0.4）", "校準後（目前）"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    c = ws.cell(row=r, column=9, value="算式／說明"); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    _b = {}
+    _IN = lambda k: f"'輸入與假設'!$C${IN[k]}"
+    def brow(key, name, unit, fc, fd=None, fmt=_MF, note=None, bold=False, font=None):
+        global r
+        ws.cell(row=r, column=1, value=name).font = BOLD if bold else BLACK
+        ws.cell(row=r, column=2, value=unit).font = SMALL
+        for col, f in ((3, fc), (4, fd)):
+            if f is None: continue
+            c = ws.cell(row=r, column=col, value=f); c.font = font or (BOLD if bold else BLACK); c.number_format = fmt; c.border = BOX
+        if note: ws.cell(row=r, column=9, value=note).font = SMALL
+        _b[key] = r; AR['f2_' + key] = r; r += 1
+        return r - 1
+    BC = lambda k, col='C': f"${col}${_b[k]}"
+    BR_ = CO['scenarios']['billableRatio']
+    brow('lo', "公司指引 FY26 營收｜下緣", "US$bn", CO['callFacts']['revLo'], CO['callFacts']['revLo'], NUM, "company.json → callFacts.revLo [Interested-party] 公司指引（法說會轉述）", font=BLUE)
+    brow('hi', "公司指引 FY26 營收｜上緣", "US$bn", CO['callFacts']['revHi'], CO['callFacts']['revHi'], NUM, "company.json → callFacts.revHi [Interested-party]", font=BLUE)
+    brow('mid', "公司指引 FY26 營收｜中點", "US$bn", f"=({BC('lo')}+{BC('hi')})/2", f"=({BC('lo','D')}+{BC('hi','D')})/2", NUM)
+    brow('ytd', "1H26 實際營收（已實現）", "US$bn", CO['ytdActual']['revenue'], CO['ytdActual']['revenue'], '0.0000', "company.json → ytdActual.revenue（6-K）", font=BLUE)
+    brow('ramp', "首期末爬坡係數", "%", BR_['rampPrev'][0], f"='輸入與假設'!$C${RAMP_ROW}", PCT, "C＝v0.4 值（company.json → scenarios.billableRatio.rampPrev）；D＝目前輸入", font=BLUE)
+    ws.cell(row=_b['ramp'], column=4).font = GREEN
+    brow('b0', "期初可計費 MW（Q2 營收 × 4 ÷ 首期每 MW 年收入；公式不動）", "MW", f"={MW0}", f"={MW0}", NUM0, "已實現 Q2 營收決定，不因本版改動")
+    brow('conn', "首期末已連網 MW", "MW", f"={_IN('Accepted MW（期末主動電力）')}", f"={_IN('Accepted MW（期末主動電力）')}", NUM0)
+    brow('ratio', "在役比例（首期）", "%", f"='輸入與假設'!$C${BR_ROW}", f"='輸入與假設'!$C${BR_ROW}", PCT)
+    brow('b1', "首期末可計費 MW（已連網 × 在役比例 × 爬坡係數）", "MW", f"=ROUND({BC('conn')}*{BC('ratio')}*{BC('ramp')},0)", f"={_IN('Billable MW')}", NUM0)
+    brow('p', "首期每 MW 年收入（錨 × k；k 不動）", "US$bn/MW", f"={_IN('每 MW 年收入')}", f"={_IN('每 MW 年收入')}", '0.00000')
+    brow('L', "首期長度", "年", f"={_IN('模型期長度（年）')}", f"={_IN('模型期長度（年）')}", NUM)
+    brow('u', "利用率", "%", f"={_IN('利用率')}", f"={_IN('利用率')}", PCT)
+    brow('sc', "每 MW 年收入倍數（整體）", "%", f"={REVSC}", f"={REVSC}", PCT)
+    brow('svc', "非算力服務營收（首期）", "US$bn", f"={_IN('非算力服務營收')}", f"={_IN('非算力服務營收')}", NUM)
+    def _mod(k, c0, c1, cp, cs):  # 模型 FY26 營收＝1H 實際 ＋ 首期長度 × 利用率 × (平均或期末可計費 MW) × 單價 × 倍數 ＋ 服務營收
+        return (f"({BC('ytd', cp)}+{BC('L', cp)}*{BC('u', cp)}*IF({AVGON}=1,({BC('b0', c0)}+{BC('b1', c1)})/2,{BC('b1', c1)})*{BC('p', cp)}*{BC('sc', cp)}+{BC('svc', cs)})")
+    brow('model', "模型 FY26 營收（重算：1H 實際 ＋ 首期 MW × 單價）", "US$bn", "=" + _mod('', 'C', 'C', 'C', 'C'), "=" + _mod('', 'D', 'D', 'D', 'D'), '0.0000', "＝1H 實際 ＋ 首期長度 × 利用率 × 平均可計費 MW × 每 MW 年收入 × 倍數 ＋ 服務營收；檢查列對『損益』全年總營收", bold=True)
+    brow('vlo', "模型 − 指引下緣", "US$bn", f"={BC('model')}-{BC('lo')}", f"={BC('model','D')}-{BC('lo','D')}", '0.0000')
+    brow('vmid', "模型 − 指引中點", "US$bn", f"={BC('model')}-{BC('mid')}", f"={BC('model','D')}-{BC('mid','D')}", '0.0000')
+    brow('vmidp', "模型 ÷ 指引中點 − 1", "%", f"={BC('model')}/{BC('mid')}-1", f"={BC('model','D')}/{BC('mid','D')}-1", PCT)
+    brow('inr', "是否落入指引區間", "", f'=IF(AND({BC("model")}>={BC("lo")},{BC("model")}<={BC("hi")}),"是","否")', f'=IF(AND({BC("model","D")}>={BC("lo","D")},{BC("model","D")}<={BC("hi","D")}),"是","否")', '@')
+    brow('chk', "核對：重算 − 『損益』全年總營收（目前輸入）", "US$bn", None, "0", '0.000000', "應為 0（誤差 < 0.01）；建置後段填入")
+    r += 1
+    ws.cell(row=r, column=1, value="橋：校準前模型 → 指引中點（逐項依序代入，加總＝總差距）").font = BOLD
+    r += 1
+    brow('gap', "總差距（指引中點 − 校準前模型 FY26）", "US$bn", f"={BC('mid')}-{BC('model')}", None, '0.0000', bold=True)
+    brow('i', "(i) 期初可計費 MW", "US$bn", "=" + _mod('', 'D', 'C', 'C', 'C') + "-" + _mod('', 'C', 'C', 'C', 'C'), None, '0.0000', "本版不動（由已實現 Q2 營收決定）：校準前後同值 → 0")
+    brow('ii', "(ii) 每 MW 單價（k）", "US$bn", "=" + _mod('', 'D', 'C', 'D', 'C') + "-" + _mod('', 'D', 'C', 'C', 'C'), None, '0.0000', "本版不動（k 由證據價格決定）→ 0")
+    brow('iii', "(iii) 2H 新增 MW 與爬坡（首期末可計費 MW）", "US$bn", "=" + _mod('', 'D', 'D', 'D', 'C') + "-" + _mod('', 'D', 'C', 'D', 'C'), None, '0.0000', "本版唯一動作：首期末爬坡係數 校準前 → 校準後（上限 100%）")
+    brow('iv', "(iv) 非算力服務營收", "US$bn", "=" + _mod('', 'D', 'D', 'D', 'D') + "-" + _mod('', 'D', 'D', 'D', 'C'), None, '0.0000', "模型未另列（Q2 營收已含非 AI cloud 收入，併入期初可計費 MW 校準）→ 0")
+    brow('v', "(v) 其他：單價／口徑未解（校準後模型 → 指引中點）", "US$bn", f"={BC('mid')}-{BC('model','D')}", None, '0.0000', "校準後仍未閉合的差距：只靠爬坡無法閉合（需要的係數 > 100%），餘額歸單價（k）／口徑差異，見下方『單獨補足所需』")
+    brow('sum', "核對：(i)＋(ii)＋(iii)＋(iv)＋(v) − 總差距", "US$bn", f"={BC('i')}+{BC('ii')}+{BC('iii')}+{BC('iv')}+{BC('v')}-{BC('gap')}", None, '0.000000', "應為 0（誤差 < 0.01）")
+    r += 1
+    ws.cell(row=r, column=1, value="單獨補足所需：對『(v) 單價／口徑未解』，每項單獨成立（其餘維持校準後的模型值）所需達到的數值").font = BOLD
+    r += 1
+    _w = f"IF({AVGON}=1,0.5,0)"
+    _den = f"({BC('L','D')}*{BC('u','D')}*{BC('p','D')}*{BC('sc','D')})"
+    brow('nb0', "期初可計費 MW 需達", "MW", f'=IF({AVGON}=1,{BC("b0","D")}+{BC("v")}/({_w}*{_den}),NA())', None, NUM0, "＝期初 MW ＋ 差距 ÷（0.5 × 首期長度 × 單價）；對照：期初在役 MW（內插）見下一列。違反 Q2 已實現營收校準")
+    brow('nb0ref', "　對照：期初在役 MW（內插；全部在役 MW 皆計費的上限）", "MW", f"={OPEN}", None, NUM0, "company.json → priceCheck.inServiceMw [Derived]")
+    brow('nb1', "首期末可計費 MW 需達", "MW", f"={BC('b1','D')}+{BC('v')}/(IF({AVGON}=1,0.5,1)*{_den})", None, NUM0, "＝首期末 MW ＋ 差距 ÷（0.5 × 首期長度 × 單價）")
+    brow('nramp', "　對應爬坡係數（可計費 ÷（已連網 × 在役比例））", "%", f"={BC('nb1')}/({BC('conn','D')}*{BC('ratio','D')})", None, PCT, "> 100% 表示即使已連網 MW 全部在役仍無法只靠爬坡閉合")
+    brow('nratio', "　或對應在役比例（可計費 ÷ 已連網；爬坡 100%）", "%", f"={BC('nb1')}/{BC('conn','D')}", None, PCT, "對照：模型在役比例（首期）見上；> 100% 則連網 MW 全計費仍不足")
+    brow('np', "每 MW 年收入需達（期初 MW 隨單價重校準：期初 MW × 單價＝Q2 年化營收）", "US$m/MW", f"=IF({AVGON}=1,(2*({BC('mid','D')}-{BC('ytd','D')}-{BC('svc','D')})/({BC('L','D')}*{BC('u','D')}*{BC('sc','D')})-{QREV}*4)/{BC('b1','D')},({BC('mid','D')}-{BC('ytd','D')}-{BC('svc','D')})/({BC('L','D')}*{BC('u','D')}*{BC('sc','D')}*{BC('b1','D')}))*1000", None, _MF, "Q2 營收已實現，期初 MW 隨單價反向調整；單價只影響新增 MW")
+    brow('nk', "　對應 k（÷ 首期錨）", "倍", f"={BC('np')}/$C${AR['cur_anchor']}", None, '0.000', "對照：k_長約 基準／高 見 A 區 D6／E6；Nebius 自身合約 k 見 A 區第 11 列（只列敏感度）")
+    brow('nsv', "非算力服務營收需達（首期）", "US$bn", f"={BC('v')}", None, '0.0000', "模型現為 0；Q2 營收已含非 AI cloud 收入，尚未有額外已揭露來源")
+    ws.cell(row=r, column=1, value="差異原因（已決定事項 2）").font = BOLD
+    ws.cell(row=r, column=9, value=("類型：已知限制。依 v0.1c 規則（爬坡取能讓基準 FY26 落入指引的最小值）重新校準後，首期末爬坡需要超過 100% 才能到指引區間，所以停在 100%；"
+                                    "剩餘差距不是爬坡能解的——要靠單價高於證據價格（k）、期初計費 MW 高於 Q2 已實現營收所示，或年底前實際連網／在役 MW 高於模型路徑（750／563 MW）。"
+                                    "三項皆無一手證據支持，k 與期初可計費 MW 公式不動，差距在此揭露而不硬調。")).font = SMALL
+    AR['f2_reason'] = r; r += 2
     # v0.2a 第 2 輪：公司實況驗證（已決定事項 15；company.json → companyCheck）
     CC = CO['companyCheck']
     ws = wb.create_sheet("公司實況驗證")
@@ -1010,7 +1085,7 @@ crow("未被期初 RPO 占用的產能", "US$bn",
      lambda i: f"=MAX(0,{COLS[i]}{cap_row}-{COLS[i]}{ai_row})", NUM, BLACK,
      "容量 − 排程。機房有、期初合約沒占滿 → 要靠新簽約")
 free_row = CR["未被期初 RPO 占用的產能"]
-crow("新產能簽約率", "%", lambda i: f'=IF({REVDRV}="mw",1,{inref("新產能簽約率", i)})', PCT, GREEN, "MW 驅動時固定 100%")
+crow("新產能簽約率", "%", lambda i: f'={inref("新產能簽約率", i)}', PCT, GREEN, "RPO 覆蓋以外的新產能簽約率：預設 100%；敏感度 75%／50%（v0.5a B：未簽約部分照建、CapEx 不變，只按簽約率產生收入）")
 crow("新簽約收入", "US$bn",
      lambda i: f"={COLS[i]}{free_row}*{COLS[i]}{CR['新產能簽約率']}", NUM, BLACK,
      "超出期初 RPO 的產能收入（MW 驅動，簽約率 100%）")
@@ -1023,8 +1098,8 @@ crow("損益用算力收入（模型期＝RPO 轉換＋新簽約）", "US$bn",
      "損益與評價頁的算力收入由此連結，確保現金與損益同一組數字")
 isrev_row = CR["損益用算力收入（模型期＝RPO 轉換＋新簽約）"]
 crow("核對：算力收入 − 平均在役 MW × 每 MW × 利用率 × 期間", "US$bn",
-     lambda i: f"={COLS[i]}{isrev_row}-{COLS[i]}{avg_row}*{inref('每 MW 年收入', i)}*{REVSC}*{inref('利用率', i)}*{COLS[i]}{CR['模型期長度（年）']}", NUM, BLACK,
-     "MW 驅動時應為 0：營收可追溯為 MW × 每 MW 年收入 × 利用率（v0.1b）")
+     lambda i: f"={COLS[i]}{isrev_row}-{COLS[i]}{avg_row}*{inref('每 MW 年收入', i)}*{REVSC}*{inref('利用率', i)}*{COLS[i]}{CR['模型期長度（年）']}+(1-{COLS[i]}{CR['新產能簽約率']})*{COLS[i]}{free_row}", NUM, BLACK,
+     "MW 驅動時應為 0：營收可追溯為 MW × 每 MW 年收入 × 利用率，扣除未簽約部分（簽約率 100% 時即容量上限；v0.1b、v0.5a）")
 
 crow("«YTDL» 實際營收（季報，已實現）", "US$bn",
      lambda i: (f"={H_REV}" if i == 0 else "=0"), NUM, GREEN,
@@ -1872,6 +1947,9 @@ vrow("«YTDL» 實際營收（已實現）", "US$bn", lambda i: (f"={H_REV}" if 
 fy_h1 = VR["«YTDL» 實際營收（已實現）"]
 vrow("全年總營收", "US$bn", lambda i: f"={COLS[i]}{fy_h1}+{COLS[i]}{rev_v}", NUM, BLACK, f"«P0» 可對照指引 {CO['callFacts']['revLo']}–{CO['callFacts']['revHi']}", bold=True)
 fy_rev = VR["全年總營收"]
+if PMW_REV == 'tkAnchor':  # v0.5a A：F2 閉合橋的重算營收對『損益』全年總營收的核對（損益頁建立後才有列號）
+    _wt = wb["每MW收入_錨定"]
+    _c = _wt.cell(row=AR['f2_chk'], column=4, value=f"=D{AR['f2_model']}-'損益'!C{fy_rev}"); _c.number_format = '0.000000'; _c.font = BLACK; _c.border = BOX
 vrow("營收 YoY", "%", lambda i: (f"={COLS[i]}{fy_rev}/{_n(PREV_FY_REV)}-1" if i == 0 else f"={COLS[i]}{fy_rev}/{COLS[i-1]}{fy_rev}-1"), PCT, BLACK, f"{PREV_FY} 實際 {_n(PREV_FY_REV)}")
 vrow("全年 GAAP 營業利益", "US$bn", lambda i: (f"={H_OPINC}+{COLS[i]}{ebit_v}" if i == 0 else f"={COLS[i]}{ebit_v}"), NUM, BLACK)
 fy_ebit = VR["全年 GAAP 營業利益"]
@@ -2181,12 +2259,64 @@ ws.cell(row=NOTE_R, column=3, value=(
     f'若不計 DCF，目標價為 $"&{_T1(EVE_ADJ)}&"（"&{_CALL(f"D{R0+11}")}&"）；"&TEXT({WDCF},"0%")&"／"&TEXT(1-{WDCF},"0%")&" 為判斷值。",""))')).font = BLACK
 RG_PT_CODE = f"C{R0+3}"
 
+import json as _jb, os as _ob
+_TSB = _jb.load(open(_ob.path.join(_ob.path.dirname(_ob.path.abspath(__file__)), 'tk_sens.json'), encoding='utf-8'))  # v0.5a C：B 讀法三情境快照（A 讀法來自『輸入與假設』H 區運算表，B 讀法為快照；LibreOffice 一個運算表只展開兩欄，再加一塊運算表會使重算殘留他情境值）
+assert 'pair' in _TSB, 'tk_sens.json 沒有 pair（先執行 node scripts/tk_sens.js）'
+# v0.5a C：方法並列——A 現行（點位，評等依此）vs B（DCF 腿為 0 時權重全移至 EV/EBITDA；只作方法敏感度）。A 三情境取自『輸入與假設』H 區模擬運算表；B 為快照（tk_sens.js）。
+r += 1
+r = section(ws, r, "方法並列（v0.5a C）：A 現行（點位，評等依此）vs B（DCF 腿為 0 時權重全移至 EV/EBITDA；只作方法敏感度）")
+for j, h in enumerate(["項目", "單位", "保守", "基準", "積極"]):
+    c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+ws.cell(row=r, column=9, value="說明").font = HEAD; ws.cell(row=r, column=9).fill = FILL_HEAD
+r += 1
+MP = {}
+for key, nm, fs, fmt, nt in [
+    ('A', "方法並列｜A 現行加權目標價（DCF／EV/EBITDA 按權重；評等依此）", [f"={_IW}D{DT_H+1+j}" for j in range(3)], USD, "點位；三情境來自模擬運算表（保留其餘手動輸入）"),
+    ('B', "方法並列｜B DCF 腿為 0 時權重全移至 EV/EBITDA（只作方法敏感度）", [_TSB['pair'][k] for k in DT_SC], USD, "DCF 腿（0 截斷）為 0 或 DCF 失效時＝100% EV/EBITDA 目標價；DCF 腿 > 0 時與 A 相同。B 只作方法敏感度；評等仍依 A。快照（scripts/tk_sens.js，HTML 引擎；下方檢查列以目前情境即時值核對）"),
+    ('D', "方法並列｜B − A", None, USD, "DCF 腿為 0 時，A 把 45% 權重放在 0 上，所以 B 高於 A；差額就是『權重配置』的價值"),
+    ('G', "方法並列｜B 距賣出門檻", None, USD, "B 減賣出門檻價；負值＝仍低於賣出門檻"),
+]:
+    MP[key] = r
+    ws.cell(row=r, column=1, value=nm).font = BLACK
+    ws.cell(row=r, column=2, value="US$").font = SMALL
+    for j in range(3):
+        f = fs[j] if fs else (f"={get_column_letter(3 + j)}{MP['B']}-{get_column_letter(3 + j)}{MP['A']}" if key == 'D' else f"={get_column_letter(3 + j)}{MP['B']}-$C${R0+4}")
+        c = ws.cell(row=r, column=3 + j, value=f); c.number_format = fmt; c.font = BLACK; c.border = BOX
+    ws.cell(row=r, column=9, value=nt).font = SMALL
+    r += 1
+MP['chk'] = r
+ws.cell(row=r, column=1, value="方法並列｜快照檢查：目前情境 B 的快照 − 即時值").font = BOLD
+ws.cell(row=r, column=2, value="US$").font = SMALL
+c = ws.cell(row=r, column=3, value=f"=INDEX(C{MP['B']}:E{MP['B']},{SEL})-IF(OR({DCF_BAD}=1,{DCF_T}<=0),{EVE_ADJ},{TGT})"); c.number_format = '0.0000'; c.border = BOX
+ws.cell(row=r, column=4, value=f'=IF(ABS(C{r})<0.01,"通過","快照已過期")').font = BOLD
+ws.cell(row=r, column=9, value="改了任何輸入後快照不會自動更新；重建（node scripts/tk_sens.js → build_xlsx.py）即更新").font = SMALL
+r += 1
+MP['txt'] = r
+ws.cell(row=r, column=1, value="方法並列｜結論").font = BOLD
+ws.cell(row=r, column=3, value=(f'=IF(MAX(C{MP["B"]}:E{MP["B"]})<$C${R0+4},"B 讀法三情境最高 $"&{_T1(f"MAX(C{MP["B"]}:E{MP["B"]})")}&"，仍低於賣出門檻 $"&{_T1(f"$C${R0+4}")}&"：評等結論不變（評等仍依 A）。",'
+                                    f'"B 讀法最高 $"&{_T1(f"MAX(C{MP["B"]}:E{MP["B"]})")}&" 不低於賣出門檻 $"&{_T1(f"$C${R0+4}")}&"：評等仍依 A，B 只作方法敏感度。")')).font = BLACK
+r += 2
+# v0.5a B：新產能簽約率敏感度（RPO 覆蓋以外；未簽約部分照建、CapEx 不變，只按簽約率產生收入）。值取自『每MW收入_錨定』G2 快照（建置後段填入）
+r = section(ws, r, "簽約率敏感度（v0.5a B）：RPO 覆蓋以外的新產能簽約率 100%／75%／50%（加權目標價；快照）")
+for j, h in enumerate(["項目", "單位", "保守", "基準", "積極"]):
+    c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+ws.cell(row=r, column=9, value="說明").font = HEAD; ws.cell(row=r, column=9).fill = FILL_HEAD
+r += 1
+FS = {}
+for key, nm in [('base', "簽約率敏感度｜新產能簽約率 100%（基準）"), ('fill75', "簽約率敏感度｜新產能簽約率 75%"), ('fill50', "簽約率敏感度｜新產能簽約率 50%")]:
+    FS[key] = r
+    ws.cell(row=r, column=1, value=nm).font = BLACK
+    ws.cell(row=r, column=2, value="US$").font = SMALL
+    if key == 'base':
+        ws.cell(row=r, column=9, value="未簽約部分照建（CapEx 不變），只按簽約率產生收入；簽約率只作用於 RPO 覆蓋以外的新產能收入。基準不變。快照：改輸入後需重建（node scripts/tk_sens.js → build_xlsx.py）").font = SMALL
+    r += 1
+r += 1
 # v3.5：錨定年度 × 倍數矩陣（全為活公式；與 HTML evGrid 同一算法）
 from openpyxl.formatting.rule import CellIsRule as _CIR
 r += 1
 r = section(ws, r, "錨定年度 × 倍數矩陣（每股；«EVDISC»）")
 ws.cell(row=r, column=9, value="EV/EBITDA 腿＝(錨定年 EBITDA × 倍數 − 錨定年末淨負債) ÷ 錨定年末股數 × 折現因子；加權＝DCF 採用值 × 有效權重 ＋ 腿 × 有效權重。綠底＝不低於現價").font = SMALL
-EVG_M = [3.4, 4.5, 5.0, 6.0, 7.0]
+EVG_M = [3.4, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0]  # v0.5a D：補 8x、9x
 for kind in ("EV/EBITDA 腿", "加權目標價"):
     for j, h in enumerate(["倍數 ＼ 錨定（" + kind + "）", "倍數", "FY27", "FY28", "FY29", "FY30"]):
         c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
@@ -3361,6 +3491,7 @@ srow("結論｜結論句", "", [(f'=C{_s("評等")}&"：點位 $"&TEXT(C{_s("點
                          f'&"；點位"&IF(C{_s("點位 − 賣出門檻")}<0,"低於","高於")&"賣出門檻 $"&TEXT(C{_s("賣出門檻價")},"0.0")&" 達 $"&TEXT(ABS(C{_s("點位 − 賣出門檻")}),"0.0")&"。"')],
      bold=True)
 srow("結論｜情境判斷句", "", [f"={VQ}C{TRROW['目標價區間｜判斷句']}"])
+srow("結論｜方法並列句", "", [(f'="方法並列：A 現行 "&' + '&"／"&'.join(f'"$"&TEXT({VQ}{c}{MP["A"]},"0.0")' for c in "CDE") + f'&"（保守／基準／積極）；B（DCF 腿為 0 時權重全移 EV/EBITDA）"&' + '&"／"&'.join(f'"$"&TEXT({VQ}{c}{MP["B"]},"0.0")' for c in "CDE") + '&"，只作方法敏感度，評等仍依 A。"')])
 
 r += 1
 r = section(ws, r, "2｜與市場的差異（模型：目前情境 vs 共識；FY26–FY28）")
@@ -3526,15 +3657,21 @@ if AR:
         c = ws.cell(row=r, column=3 + j, value=_TS['matrix'][k]['base']['tgt']); c.number_format = USD; c.border = BOX
         c = ws.cell(row=r, column=6 + j, value=_TS['matrix'][k]['base']['eq']); c.number_format = NUM; c.border = BOX
     r += 1
+    _G2ROW = {'base': r - 1}  # v0.5a B：『評價_DCF與目標價』簽約率敏感度引用此處快照列
     for x in _TS['sens']:
+        _G2ROW[x['key']] = r
         ws.cell(row=r, column=1, value=f"敏感度｜{x['label']}").font = BLACK
         ws.cell(row=r, column=2, value="US$").font = SMALL
         for j, k in enumerate(_K3):
             c = ws.cell(row=r, column=3 + j, value=x['res'][k]['tgt']); c.number_format = USD; c.border = BOX
             c = ws.cell(row=r, column=6 + j, value=x['res'][k]['eq']); c.number_format = NUM; c.border = BOX
         r += 1
+    _wv = wb['評價_DCF與目標價']  # v0.5a B：簽約率敏感度（評價頁）＝G2 快照列的連結
+    for _k, _rv in FS.items():
+        for j in range(3):
+            c = _wv.cell(row=_rv, column=3 + j, value=f"='每MW收入_錨定'!{get_column_letter(3 + j)}{_G2ROW[_k]}"); c.number_format = USD; c.font = GREEN; c.border = BOX
     ws.cell(row=r, column=1, value=("Tokenomics 低／高成本：錨（IF_HoldEcon）與每 MW 建置成本（IF_CapexTotal 比例）同時改變，k 以證據世代的成本比例重算（k＝市場價格 ÷ 同情境持有成本；價格是事實），"
-                                    "所以收入大致不隨成本情境改變、成本改變。Nebius–Microsoft 合約 k 需假設容量（條款未揭露 MW／GPU 數），只列敏感度。首期末爬坡 50–80% 為 [Assumed] 區間（預設 60%）。")).font = SMALL
+                                    "所以收入大致不隨成本情境改變、成本改變。Nebius–Microsoft 合約 k 需假設容量（條款未揭露 MW／GPU 數），只列敏感度。首期末爬坡 50%／80% 為 [Assumed] 下行敏感度（v0.5a 基準 100%；v0.4 為 60%）。新產能簽約率 75%／50%：RPO 覆蓋以外的新產能未簽約部分照建（CapEx 不變），只按簽約率產生收入。")).font = SMALL
     r += 1
 
 # v0.2a（2026-10-08，比照 CoreWeave W1）：Tokenomics 取數分頁。值取自 company.json → tokenomics.snapshotFile 的版本固定快照（tools/tokenomics/import_tokenomics.py 產生），

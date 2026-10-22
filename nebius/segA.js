@@ -170,7 +170,7 @@ function nA(e) {
       rate: [...e.m.rate]
     },
     n = eA(e.sites);
-  e.revenueDriver === `mw` && (t.fill = t.fill.map(() => 100)); // v0.1b：MW 驅動——營收＝容量上限（平均在役 MW × 每 MW 年收入 × 利用率），RPO 只作對照
+  // v0.1b：MW 驅動——營收＝容量上限（平均在役 MW × 每 MW 年收入 × 利用率），RPO 只作對照；v0.5a B：新產能簽約率（RPO 覆蓋以外）在 MW 驅動下也生效，預設 100%（敏感度 75%／50%：未簽約部分照建，只按簽約率產生收入）
   e.linkSites && (t.accepted[0] = Math.max(t.accepted[0], n.accepted), t.billable[0] = Math.max(t.billable[0], n.billable));
   for (let e = 0; e < 5; e++) t.accepted[e] = Math.max(0, t.accepted[e]), e > 0 && (t.accepted[e] = Math.max(t.accepted[e], t.accepted[e - 1])), t.billable[e] = Math.min(Math.max(0, t.billable[e]), t.accepted[e]), t.util[e] = Math.min(100, Math.max(0, t.util[e])), t.aiShare[e] = Math.min(100, Math.max(0, t.aiShare[e])), t.fill[e] = Math.min(100, Math.max(0, t.fill[e])), t.defaultP[e] = Math.min(100, Math.max(0, t.defaultP[e])), t.recovery[e] = Math.min(100, Math.max(0, t.recovery[e]));
   return t
@@ -491,7 +491,7 @@ function runFunding(e) {
     _ = e => g.push(e);
   _({
     id: `rev-mw`,
-    ok: o.every(y => Math.abs(y.isRev - y.capacity) < 1e-9) || e.revenueDriver !== `mw`,
+    ok: o.every((y, i) => Math.abs(y.isRev - y.capacity + (1 - t.fill[i] / 100) * Math.max(0, y.capacity - y.scheduled)) < 1e-9) || e.revenueDriver !== `mw`,
     severity: `ok`,
     title: `營收＝平均在役 MW × 每 MW 年收入 × 利用率 × 期間長度`,
     detail: `${e.revenueDriver === `mw` ? `MW 驅動` : `RPO 驅動`}：五期算力營收 ${o.map(y => Y(y.isRev, 2)).join(`／`)}；容量上限 ${o.map(y => Y(y.capacity, 2)).join(`／`)}。每 MW 年收入 ${t.revMW.map(x => Y(x * 1e3, 2)).join(`／`)} US$m/MW-IT（${REVSRCQ}；公司 ACV $20–25M 只作對照）。`
@@ -545,7 +545,7 @@ function runFunding(e) {
     ok: t.util[0] <= 100,
     severity: `watch`,
     title: PMW_REVQ === `tkAnchor` ? `利用率 ${t.util[0]}%：按 MW-year 計價，不乘 Tokenomics IF_Util` : `利用率 ${t.util[0]}%：每 MW 年收入已含可計費利用率`,
-    detail: PMW_REVQ === `tkAnchor` ? `每 MW 年收入＝Tokenomics 錨（IF_HoldEcon，100% 計費時數的打平租金）× 定價倍數 k；按 MW-year 計價，收入取決於簽約率與爬坡（可計費 MW），不再乘技術利用率 IF_Util（下游資料契約第 3 條，重複扣減禁止），所以利用率欄 100%；欄位保留供壓力測試。目前每 MW 年收入 $${Y(t.revMW[0] * 1e3 * (e.revScale ?? 1), 2)}m/MW-IT。`
+    detail: PMW_REVQ === `tkAnchor` ? `每 MW 年收入＝錨 × 定價倍數 k（Tokenomics 持有成本提供跨世代的正規化基準，市場合約價格證據決定倍數 k；錨＝IF_HoldEcon，100% 計費時數的打平租金）；按 MW-year 計價，收入取決於簽約率與爬坡（可計費 MW），不再乘技術利用率 IF_Util（下游資料契約第 3 條，重複扣減禁止），所以利用率欄 100%；欄位保留供壓力測試。目前每 MW 年收入 $${Y(t.revMW[0] * 1e3 * (e.revScale ?? 1), 2)}m/MW-IT。`
       : `每 MW 年收入取 Tokenomics 正向推導（路徑 B 已乘可計費利用率 80／85／90%），所以利用率欄預設 100%、不重複扣除；欄位保留供壓力測試。目前每 MW 年收入 $${Y(t.revMW[0] * 1e3 * (e.revScale ?? 1), 2)}m/MW-IT。`
   });
   if (PMW_REVQ === `tkAnchor`) { // v0.2a：收入上限檢查（Excel「檢查_連動」同一列；門檻 company.json → methodology.checks.revCapShareMax）
@@ -844,7 +844,8 @@ function fA(e, t, v, q) {
   return {
     tgt: a.call.blended,
     eq: i.totals.equity,
-    gap: Math.max(0, -i.totals.preFinEnd)
+    gap: Math.max(0, -i.totals.preFinEnd),
+    evB: (a.d.invalid || !(a.d.perShareT > 1e-12)) ? a.peAdj : a.call.blended // v0.5a C：B 讀法（DCF 腿為 0 時權重全移至 EV/EBITDA；只作方法敏感度）
   }
 }
 
