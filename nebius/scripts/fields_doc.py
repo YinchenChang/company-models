@@ -90,6 +90,7 @@ F = [
  ('scenarios.revMW.base', '基準情境：同上', 'US$bn/MW 清單', M), ('scenarios.revMW.high', '積極情境：同上', 'US$bn/MW 清單', M),
  ('scenarios.billableRatio.ratio', '在役（可計費）÷ 已連網比例，各期（三情境共用；v0.1b）', '比例清單', C),
  ('scenarios.billableRatio.ramp', '可計費爬坡係數，各期（三情境共用；首期營收校準，可計費 MW＝已連網 × 在役比例 × 爬坡係數；v0.1c）', '比例清單', C),
+ ('scenarios.billableRatio.rampPrev', '校準前（v0.4）的首期末爬坡係數，各期；只供 Excel「每MW收入_錨定」F2 閉合橋的「校準前」欄與橋拆解使用，不驅動模型（v0.5a）', '比例清單', C),
  ('scenarios.billableRatio.note', '首期營收校準的說明（v0.1c）', '文字', C),
  ('scenarios.leaseHighPath', '積極情境下，尚未起租租約的新增年租金路徑；其他情境依 MW 比例縮放', 'US$bn 清單', C),
  ('scenarios.leaseRampFloorMw', '低於此電力時不產生新增表外租金（縮放公式的起點）', 'MW', C),

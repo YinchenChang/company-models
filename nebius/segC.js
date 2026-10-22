@@ -1,3 +1,28 @@
+// v0.5a C：方法並列（次層，預設收合）：A 現行（點位，評等依此）vs B（DCF 腿為 0 時權重全移至 EV/EBITDA）
+function MethodPairUiQ({ TR }) {
+  let sc = TR.scen, cell = x => (0, $.jsx)(`td`, { style: { ...xstyQ.td }, children: `$${Y(x, 1)}` });
+  return (0, $.jsxs)(`details`, { className: `mt-3 rounded border border-border p-3`, children: [
+    (0, $.jsx)(`summary`, { className: `cursor-pointer text-sm font-semibold`, children: `次層｜方法並列：A 現行 vs B（DCF 腿為 0 時權重全移至 EV/EBITDA；只作方法敏感度，評等仍依 A）` }),
+    (0, $.jsx)(`div`, { style: xstyQ.wrap, className: `mt-2`, children: (0, $.jsxs)(`table`, { style: { ...xstyQ.table, minWidth: 420 }, children: [
+      (0, $.jsx)(`thead`, { children: (0, $.jsx)(`tr`, { children: [`US$／股`, ...sc.map(x => x.name)].map((h, i) => (0, $.jsx)(`th`, { style: i === 0 ? xstyQ.thL : xstyQ.th, children: h }, h)) }) }),
+      (0, $.jsxs)(`tbody`, { children: [
+        (0, $.jsxs)(`tr`, { children: [(0, $.jsx)(`td`, { style: xstyQ.tdL, children: `A 現行（點位；評等依此）` }), ...sc.map(x => cell(x.tgt))] }),
+        (0, $.jsxs)(`tr`, { children: [(0, $.jsx)(`td`, { style: xstyQ.tdL, children: `B（DCF 腿為 0 → 100% EV/EBITDA）` }), ...sc.map(x => cell(x.evB))] }),
+        (0, $.jsxs)(`tr`, { children: [(0, $.jsx)(`td`, { style: xstyQ.tdL, children: `B − A` }), ...sc.map(x => cell(x.evB - x.tgt))] }),
+        (0, $.jsxs)(`tr`, { children: [(0, $.jsx)(`td`, { style: xstyQ.tdL, children: `B 距賣出門檻 $${Y(TR.th, 1)}` }), ...sc.map(x => cell(x.evB - TR.th))] })] })] }) }),
+    (0, $.jsx)(`p`, { className: `mt-2 text-xs leading-relaxed text-muted`, children: `${TR.pair}DCF 腿（0 截斷）為 0 時，A 把 ${pctQ(BLEND_W.dcf)} 權重放在 0 上；B 把權重全移到 EV/EBITDA，兩者差距就是權重配置的價值。` })] })
+}
+// v0.5a B：新產能簽約率敏感度（次層，預設收合）：RPO 覆蓋以外的新產能簽約率 100%／75%／50%
+function FillSensUiQ({ st, o }) {
+  let R = (0, v.useMemo)(() => fillSensQ(st, o), [st, o]), K = [`low`, `base`, `high`];
+  return (0, $.jsxs)(`details`, { className: `mt-3 rounded border border-border p-3`, children: [
+    (0, $.jsx)(`summary`, { className: `cursor-pointer text-sm font-semibold`, children: `次層｜新產能簽約率敏感度：RPO 覆蓋以外的新產能簽約率 100%／75%／50%（加權目標價；基準不變）` }),
+    (0, $.jsx)(`div`, { style: xstyQ.wrap, className: `mt-2`, children: (0, $.jsxs)(`table`, { style: { ...xstyQ.table, minWidth: 420 }, children: [
+      (0, $.jsx)(`thead`, { children: (0, $.jsx)(`tr`, { children: [`簽約率`, ...K.map(k => SCENARIOS[k].label.split(` `)[0])].map((h, i) => (0, $.jsx)(`th`, { style: i === 0 ? xstyQ.thL : xstyQ.th, children: h }, h)) }) }),
+      (0, $.jsx)(`tbody`, { children: R.map(x => (0, $.jsxs)(`tr`, { children: [(0, $.jsx)(`td`, { style: xstyQ.tdL, children: `${Math.round(x.fill * 100)}%${x.fill === 1 ? `（基準）` : ``}` }), ...K.map(k => (0, $.jsx)(`td`, { style: xstyQ.td, children: `$${Y(x.res[k].tgt, 1)}` }, k))] }, x.fill)) })] }) }),
+    (0, $.jsx)(`p`, { className: `mt-2 text-xs leading-relaxed text-muted`, children: `未簽約部分照建（資本支出不變），只按簽約率產生收入；簽約率只作用於超出期初 RPO 的新產能收入（基準情境建到 5 GW「合約電力」＝土地與電力，不是客戶合約）。` })] })
+}
+
 function AM({
   result: e,
   state: t,
@@ -1013,6 +1038,11 @@ function AM({
               body: `$${Y(TR.B[0],1)}–$${Y(TR.B[1],1)}`,
               hint: `目前輸入，EV/EBITDA 倍數換成 ${multTxt(TR.mults[0])}x 與 ${multTxt(TR.mults[1])}x；${TR.pos}。`
             })]
+          }), (0, $.jsx)(MethodPairUiQ, {
+            TR: TR
+          }), (0, $.jsx)(FillSensUiQ, {
+            st: t,
+            o: n
           }), m.notes.length ? (0, $.jsx)(`ul`, {
             className: `mt-4 space-y-1 text-xs leading-relaxed text-muted`,
             children: m.notes.map(e => (0, $.jsxs)(`li`, {

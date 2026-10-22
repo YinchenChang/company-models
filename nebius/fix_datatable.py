@@ -17,26 +17,34 @@ def fix(x):
         if t: hits.append((m, t))
     if not hits:
         return x, None
-    cols = [ci(m.group(1)) for m, _ in hits]; rows = [int(m.group(2)) for m, _ in hits]
-    c0, c1, r0, r1 = min(cols), max(cols), min(rows), max(rows)
-    assert len(hits) == (c1 - c0 + 1) * (r1 - r0 + 1), 'TABLE() 儲存格不是一個完整的矩形區塊'
-    inputs = {(t.group(3), t.group(4)) for _, t in hits}
-    assert len(inputs) == 1, f'輸入格不唯一：{inputs}'
-    for m, t in hits:  # 單變數、輸入值排成一欄：公式列在區塊上一列、輸入值在區塊左一欄
-        assert int(t.group(2)) == r0 - 1 and t.group(1) == m.group(1), '公式列位置不符（只支援輸入值排成一欄）'
-        assert ci(t.group(5)) == c0 - 1 and t.group(6) == m.group(2), '輸入值位置不符（只支援輸入值排成一欄）'
-    ref = f'{cl(c0)}{r0}:{cl(c1)}{r1}'
-    inp = ''.join(inputs.pop())
-    top = f'{cl(c0)}{r0}'
+    # v0.5a：同一工作表可有多塊運算表（各自的公式列）；依公式列分組，逐塊檢查矩形與輸入格
+    groups = {}
+    for m, t in hits:
+        groups.setdefault(int(t.group(2)), []).append((m, t))
+    tops, info = {}, []
+    for frow, hs in groups.items():
+        cols = [ci(m.group(1)) for m, _ in hs]; rows = [int(m.group(2)) for m, _ in hs]
+        c0, c1, r0, r1 = min(cols), max(cols), min(rows), max(rows)
+        assert len(hs) == (c1 - c0 + 1) * (r1 - r0 + 1), 'TABLE() 儲存格不是一個完整的矩形區塊'
+        inputs = {(t.group(3), t.group(4)) for _, t in hs}
+        assert len(inputs) == 1, f'輸入格不唯一：{inputs}'
+        for m, t in hs:  # 單變數、輸入值排成一欄：公式列在區塊上一列、輸入值在區塊左一欄
+            assert int(t.group(2)) == r0 - 1 and t.group(1) == m.group(1), '公式列位置不符（只支援輸入值排成一欄）'
+            assert ci(t.group(5)) == c0 - 1 and t.group(6) == m.group(2), '輸入值位置不符（只支援輸入值排成一欄）'
+        ref = f'{cl(c0)}{r0}:{cl(c1)}{r1}'
+        inp = ''.join(inputs.pop())
+        tops[f'{cl(c0)}{r0}'] = (ref, inp); info.append((ref, inp))
     out, last = [], 0
     for m, t in hits:
         body = TABLE.sub('', m.group(4))
-        if f'{m.group(1)}{m.group(2)}' == top:
+        key = f'{m.group(1)}{m.group(2)}'
+        if key in tops:
+            ref, inp = tops[key]
             body = f'<f t="dataTable" ref="{ref}" dt2D="0" dtr="0" r1="{inp}"/>' + body
         out.append(x[last:m.start()] + f'<c r="{m.group(1)}{m.group(2)}"{m.group(3)}>{body}</c>')
         last = m.end()
     out.append(x[last:])
-    return ''.join(out), (ref, inp)
+    return ''.join(out), info
 
 
 src = sys.argv[1]; tmp = src + '.tmp'
@@ -46,7 +54,7 @@ for item in zin.infolist():
     data = zin.read(item.filename)
     if item.filename.startswith('xl/worksheets/sheet') and b'TABLE(' in data:
         x, info = fix(data.decode())
-        if info: done.append((item.filename, *info)); data = x.encode()
+        if info: done += [(item.filename, ref, inp) for ref, inp in info]; data = x.encode()
     zout.writestr(item, data)
 zout.close(); zin.close(); shutil.move(tmp, src)
 if not done: sys.exit('找不到 TABLE() 儲存格：模擬運算表遺失（建置或重算有問題）')

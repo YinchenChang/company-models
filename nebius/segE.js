@@ -201,7 +201,8 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
       elQ(`div`, { key: `a`, style: { fontSize: 12, color: `var(--color-muted)` } }, a),
       elQ(`div`, { key: `b`, style: { fontSize: 18, fontWeight: 700, fontVariantNumeric: `tabular-nums` } }, b)]))),
     elQ(`p`, { key: `h`, style: { fontSize: 13.5, lineHeight: 1.45, margin: `6px 0 0` } }, cv.head),
-    elQ(`p`, { key: `j`, style: { ...sm, fontSize: 11.5, margin: `3px 0 0` } }, TR.judge)
+    elQ(`p`, { key: `j`, style: { ...sm, fontSize: 11.5, margin: `3px 0 0` } }, TR.judge),
+    elQ(`p`, { key: `m`, style: { ...sm, fontSize: 11.5, margin: `3px 0 0` } }, TR.pairLine) // v0.5a C：方法並列（次層）
   ]);
   let b2 = box(`b2`, `2｜與市場的差異（模型：${scLabel} vs 共識）`, [
     elQ(`table`, { key: `t`, style: { borderCollapse: `collapse`, width: `100%`, fontSize: 12, fontVariantNumeric: `tabular-nums` } }, [
@@ -646,7 +647,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
         ...K3.flatMap(sc => [elQ(`div`, { key: `r` + sc, className: `sumQ-a sumQ-a2`, style: { fontSize: 20, fontWeight: 700 } }, SCENARIOS[sc].label), ...K3.map(px => cell(sc, px))])
       ]),
       elQ(`div`, { key: `l`, className: `sumQ-a sumQ-a3`, style: { marginTop: 14 } }, elQ(LegQ, { items: [[`低於賣出門檻 $${Y(TR.th, 1)}`, COLQ.real], [`門檻與現價之間`, COLQ.conv], [`高於現價 $${Y(P, 1)}`, `var(--color-ok)`]] })),
-      elQ(NoteQ, { key: `n` }, `每 MW 年收入＝Tokenomics 錨 × k；三個容量情境的價格基準欄目標價 $${Y(cLo, 1)}–$${Y(cHi, 1)}。粗框＝目前情境。新股＝五期股權募資。`)
+      elQ(NoteQ, { key: `n` }, `每 MW 年收入＝錨 × k（Tokenomics 持有成本提供正規化基準，市場合約價格證據決定 k）；三個容量情境的價格基準欄目標價 $${Y(cLo, 1)}–$${Y(cHi, 1)}。粗框＝目前情境。新股＝五期股權募資。`)
     ]);
   }
 
