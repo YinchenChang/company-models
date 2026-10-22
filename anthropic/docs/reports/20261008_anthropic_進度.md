@@ -1,7 +1,7 @@
 # Anthropic v0.1 分段建置進度（接手用；A1–A5 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- **v0.1.3 A 段進行中**（分支 `claude/anthropic-v0.1.3`，PR #69 draft）：步驟 1–7 完成（報告 `docs/reports/20261022_v0.1.3-A.md`）。**B 段起點**：η 診斷拆分（不得改 η 值）、Bridge 頁（唯讀）、S-1 替換程序寫入 CLAUDE.md；B 段結束時重產 HTML 與 dist（目前 dist 為 A 段草稿，v0.1.2 成品在 `dist/_待刪除/`）。chat 端已更正 U2 公式（付款路徑不變、只改供給 GW）；待確認：工作單「公告金額比例」與「v0.1.2 路徑不變」的衝突（報告 ⑥）。B 段進行中（2026-10-22）：步驟 1–2 完成（見下方「v0.1.3 B 段」表）。
+- **v0.1.3 A 段進行中**（分支 `claude/anthropic-v0.1.3`，PR #69 draft）：步驟 1–7 完成（報告 `docs/reports/20261022_v0.1.3-A.md`）。**B 段起點**：η 診斷拆分（不得改 η 值）、Bridge 頁（唯讀）、S-1 替換程序寫入 CLAUDE.md；B 段結束時重產 HTML 與 dist（目前 dist 為 A 段草稿，v0.1.2 成品在 `dist/_待刪除/`）。chat 端已更正 U2 公式（付款路徑不變、只改供給 GW）；待確認：工作單「公告金額比例」與「v0.1.2 路徑不變」的衝突（報告 ⑥）。B 段完成（2026-10-22；見下方「v0.1.3 B 段」表；PR #69 ready，待 chat 端審查合併）。
 
 - 已完成：v0.1（A0–A5）；v0.1.1（PR #56）；**v0.1.2（2026-10-21）全部步驟**：TK v5.26 → v18.0（master `868e2cc`）、語意核對、對照列、重算、pytest 109 項全過、HTML／dist、報告＋對照 Excel、CHANGELOG、交接檔。報告 `docs/reports/20261021_v0.1.2.md`。
 - 下一步：chat 端審查 PR #56（v0.1.1＋v0.1.2）並合併（代理不合併）；Andy 確認後刪除 `dist/_待刪除/`；OpenAI 模型同步 TK v18.0。
@@ -95,4 +95,6 @@ A 段已確認完成（進度檔 A 段步驟 1–7 全部「完成」，分支�
 | 2 η 拆解（EtaDiag 頁，唯讀） | 完成 | 同上 | η（2025）0.5273 ＝ f_P 1.237 × f_U 0.683 × f_W 1.399（機隊加權）× 殘差 0.446；f_P、f_U 有區間，f_W 無區間，輸入輸出組合「無法分離」；並列 TK L1_Gap*（OpenAI 口徑）。TK_Link 尾端 +23 名（IF_UtilActual、L1_TokGW_PaidCap_VR200、B4_MixPaid、L1_Gap* 各含低／高）。重建後既有頁（SRC_ANT、Inputs、Demand、Revenue、Compute、Cost、Funding、Reverse）逐格比對：公式與值差異 0 |
 | 3 S-1 替換程序 | 完成 | 見 git log「v0.1.3 B3」 | `anthropic/CLAUDE.md` 第 8 節（新增 SRC 列、舊列標已被取代並保留、模型引用改指新列、報告七項欄位） |
 | 4 成品（HTML、dist） | 完成 | 見 git log「v0.1.3 B4」 | `tools/build_html.py` 「①之三」加 η 拆解與 Bridge 逐層對照；HTML 1,134 個數字；`tools/read_html_screen.py`：12 節 × 桌機／手機，畫面文字與 data-v 0 不符、無水平捲動、外部請求 0；截圖 `docs/reports/img/20261022_v0.1.3_*`；dist 重產（v0.1.2 成品已在 `dist/_待刪除/`） |
-| 5 報告、對照 Excel、CHANGELOG、交接檔、PR 留言、轉 ready | 見 git log「v0.1.3 B5」 | — | `docs/reports/20261022_v0.1.3.md`＋`_對照.xlsx`；PR #69 留言；PR 轉 ready（不合併） |
+| 5 報告、對照 Excel、CHANGELOG、交接檔、PR 留言、轉 ready | 完成 | 見 git log「v0.1.3 B4–B5」 | `docs/reports/20261022_v0.1.3.md`＋`_對照.xlsx`；PR #69 留言；PR 轉 ready（不合併） |
+
+B 段測試（依檔分開）：test_builder 13、test_html 6、test_parity 97，合計 116 項全過；CHK_Errors＝0、CHK_Warnings＝2。B 段**完成**；PR #69 轉 ready，不合併。
