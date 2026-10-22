@@ -636,7 +636,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
 | `varianceReasons._note` | 差異原因的說明文字（不進程式） | 文字 | 差異原因（已決定事項 2）：差距超過 methodo… | 可沿用 |
-| `varianceReasons.list` | 差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗 | 清單 | 8 筆 | 檢查 |
+| `varianceReasons.list` | 差異原因（已決定事項 2），一筆一列：scope（annual 年度共識對照／quarter 季度）、period（FY27、2026Q3 或 *）、metric（年度：rev、ebitda、capex、nd；季度：metrics 的 key）、vs（consensus、guidance、actual 或 *）、type（觀點／已知限制）、text 一句原因，{路徑:格式} 由模型數字帶入。「拆法」由程式判定，不需填。差距超過 methodology.consensusGapTol 卻沒有原因時建置失敗 | 清單 | 9 筆 | 檢查 |
 
 ### `texts`：公司特有的說明文字（v4.5；隨資料更新）
 
@@ -706,6 +706,12 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `pricing.anchorMultiple.contractMix` | 合約組合的揭露（只作對照；找不到者寫明試過的來源） | 清單 | 1 筆 | 必改 |
 | `pricing.anchorMultiple.notFound` | 找不到的價格證據與試過的來源（「找不到」與「不存在」分開寫） | 清單（文字） | VR200 長約或現貨每 GPU 小時價格：找不到（…、Oracle 自身合約每 GPU 小時價格：不得作為…、第二筆獨立於 IREN 的 neocloud 長約（… | 必改 |
 | `pricing.anchorMultiple.evidence` | k 證據表：每筆 label、gen（Tokenomics 世代名）、price、unit、tkName（IF_HoldEcon 或 IF_GPUhrEcon）、合約型態與期間、use（long／spot＝驅動基準，range＝只支持區間，list＝只列）、來源、日期、標記；倍數＝price ÷ 同世代 Tokenomics 基準值（建置時計算） | 清單 | 11 筆 | 必改 |
+| `pricing.q1Check._note` | Q1 驗證區段說明（v0.3 B 段；不進程式） | 文字 | Q1 驗證（v0.3 B 段；不是校準、不回頭改 k… | 可沿用 |
+| `pricing.q1Check.cpuGpuQ` | Q1 FY27 「CPU 與 GPU」營收（OCI 子項，單季，Interested-party）：Excel「每MW收入_錨定」F 區年化後作對照 | US$bn | 6.5 | 可沿用 |
+| `pricing.q1Check.cpuGpuNote` | 上述子項的來源與口徑說明（含「仍含一般運算 CPU」） | 文字 | Q1 FY27 簡報「CPU 與 GPU」營收（OC… | 可沿用 |
+| `pricing.q1Check.nonAiCases` | 非 AI 占 OCI 營收的情境清單（n、label、tag）：F 區拆解欄與 tkSensQ 的非 AI 扣除敏感度共用；公司未分拆，故為 [Assumed]／[Derived] 區間 | 清單 | 4 筆 | 必改 |
+| `pricing.q1Check.nonAiNote` | 非 AI 占比的資料缺口說明（不存在／未揭露，試過的來源） | 文字 | 公司未分拆 OCI 中 AI 與非 AI 營收（不存… | 可沿用 |
+| `pricing.q1Check.mixNote` | 世代組合仍為 [Assumed] 的提醒 | 文字 | 期初世代組合（fleet.openMix）與新增世代… | 可沿用 |
 
 ### `fleet`：世代組合（Oracle v0.3；收入錨加權）
 

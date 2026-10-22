@@ -874,7 +874,17 @@ if PMW_REV == 'tkAnchor':
             (("capR", "上限檢查｜每 MW 收入 ÷ 客戶付費 token 營收", "%", PCT),):
         arow('cur_' + key, f"目前情境｜{nmx}", unit,
              [f"=CHOOSE({SEL}," + ",".join(f"{L}{AR[CO['scenarios']['labels'][k] + '｜' + key]}" for _, k in _SCX) + ")" for L in COLS], fmt, BOLD if key == 'rev' else BLACK); r += 1
-    arow('cur_capMax', "目前情境｜上限檢查最高值（五期）", "%", [f"=MAX(C{AR['cur_capR']}:G{AR['cur_capR']})", "", "", "", ""], PCT); r += 2
+    arow('cur_capMax', "目前情境｜上限檢查最高值（五期）", "%", [f"=MAX(C{AR['cur_capR']}:G{AR['cur_capR']})", "", "", "", ""], PCT); r += 1
+    # v0.3 B 段：第五列對照（不設門檻、不進估值）——模型商（OpenAI 類）每 MW 實收營收 P × Q（L1_RevGW_PQ_VR200；$B/GW ＝ $M/MW）。回答「客戶實收的錢有多少要付給 Oracle」
+    _hasPQ = all(f'L1_RevGW_PQ_VR200{x_}' in _TKI and not _TKI[f'L1_RevGW_PQ_VR200{x_}'].get('missing') for x_ in ('', '_Lo', '_Hi'))
+    if _hasPQ:
+        arow('cur_pq', "上限檢查｜第五列｜模型商每 MW 實收營收 P×Q（VR200 第一年：基準／低／高 依序在 C、D、E）", "US$m/MW", ["=TK_RevGW_PQ_VR200", "=TK_RevGW_PQ_VR200_Lo", "=TK_RevGW_PQ_VR200_Hi", "", ""], NUM1, GREEN,
+             "Tokenomics L1_RevGW_PQ_VR200（模型商每 GW 實收營收＝Q × 有效單價 × m；低／高＝Q 的低／高，利用率 0.30／0.65）；只有 VR200 一欄，Oracle 機隊混合 GB200／GB300，僅作量級對照。不設門檻、不進估值"); r += 1
+        arow('cur_pqR', "第五列｜Oracle 每 MW 年收入 ÷ 模型商每 MW 實收（基準 P×Q）", "%", [f"={L}{AR['cur_rev']}/$C${AR['cur_pq']}" for L in COLS], PCT, BLACK,
+             "＝模型商（OpenAI 類客戶）每 MW 實收營收中，要付給 Oracle 的比例；Oracle 每 MW 收入 ＝ 錨 × k（100% 計費時數）"); r += 1
+        arow('cur_pqRHi', "第五列｜同上，模型商實收取高端（P×Q＿Hi，付給 Oracle 的比例下緣）", "%", [f"={L}{AR['cur_rev']}/$E${AR['cur_pq']}" for L in COLS], PCT); r += 1
+        arow('cur_pqRLo', "第五列｜同上，模型商實收取低端（P×Q＿Lo，付給 Oracle 的比例上緣）", "%", [f"={L}{AR['cur_rev']}/$D${AR['cur_pq']}" for L in COLS], PCT); r += 1
+    r += 1
 
     r = section(ws, r, "D｜k 證據表（倍數＝市場價格 ÷ 同世代 Tokenomics 基準持有成本；use：long／spot＝驅動基準、range＝只支持區間、list＝只列）")
     for j, h in enumerate(["證據", "單位", "價格", "Tokenomics", "倍數 k", "用途"]):
@@ -921,6 +931,81 @@ if PMW_REV == 'tkAnchor':
          "Q1 FY27 OCI 營收 × 4 ÷ 評價日已連網 MW-IT（口徑不明者 ÷1.2）；Q1 隱含 k 不得用來校準（B 段列驗證拆解）"); r += 1
     arow('cmp_oai', "對照｜Oracle–OpenAI 合約隱含每 MW 年收入（視為 IT；只列，不用）", "US$m/MW", [f"=C{AR['ev_Oracle–OpenAI 約 $300bn／4.5 GW（未經證實）']}", "", "", "", ""], _MF, BLACK,
          "約 $300bn／5 年／4.5 GW（WSJ 轉述，未經證實，MW 口徑不明）；公司自身合約只作敏感度（C 區 kOwn 列）"); r += 1
+    # ---------------------------------------------------------------
+    # F｜Q1 驗證（v0.3 B 段；不是校準，不回頭改 k）：FY27 模型每 MW 年收入 vs Q1 FY27 實現；差距由「模型」走向「實現」，拆成 (iii) 世代組合、(ii) 價格、(iv) 爬坡分母、(i) 非 AI 營收
+    # ---------------------------------------------------------------
+    QK = CO['pricing']['q1Check']
+    r += 1
+    r = section(ws, r, "F｜Q1 驗證（不是校準；只列，不回頭改 k）：FY27 模型每 MW 年收入 vs Q1 FY27 實現（OCI 年化 ÷ 評價日已連網 MW）")
+    for j, h in enumerate(["項目", "單位", "數值"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    c = ws.cell(row=r, column=9, value="算式／說明"); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    _q = {}
+    def qrow(key, name, unit, f, fmt=_MF, note=None, bold=False, font=None):
+        global r
+        ws.cell(row=r, column=1, value=name).font = BOLD if bold else BLACK
+        ws.cell(row=r, column=2, value=unit).font = SMALL
+        c = ws.cell(row=r, column=3, value=f); c.font = font or (BOLD if bold else (BLACK if isinstance(f, str) and f.startswith("=") else BLUE)); c.number_format = fmt; c.border = BOX
+        if note: ws.cell(row=r, column=9, value=note).font = SMALL
+        _q[key] = f"$C${r}"; AR['q1_' + key] = r; r += 1
+    qrow('ann', "Q1｜OCI 營收年化（最新季 × 4）", "US$bn", f"={OPENREV}", NUM, "已實現實際數（10-Q 核閱數）[Interested-party]；含非 AI 的 OCI（資料庫、一般運算、多雲資料庫等）")
+    qrow('svc', "Q1｜評價日已連網 MW-IT", "MW", f"={OPEN}", NUM0, FLT['openMwNote'])
+    qrow('bo', "Q1｜期初可計費 MW（模型校準值，目前情境）", "MW", f"={MW0}", NUM0, "＝Q1 OCI 年化 ÷ 首期每 MW 年收入（對齊已實現實際數的校準，非推價格）")
+    qrow('f', "模型隱含：期初可計費 MW ÷ 評價日已連網 MW", "%", f"={_q['bo']}/{_q['svc']}", PCT, "超過 100% 表示模型把 Q1 營收全數歸給 AI 計費、且價格取 Tokenomics 錨 × k，導致可計費 MW 比已連網 MW 多——這是本驗證要解釋的現象，不回頭改 k")
+    qrow('rSvc', "Q1 實現每 MW 年收入（÷ 已連網 MW）", "US$m/MW", f"={_q['ann']}/{_q['svc']}*1000", note="Q1 OCI 年化 ÷ 評價日已連網 MW-IT（口徑不明者 ÷1.2）")
+    qrow('rBo', "Q1 實現每 MW 年收入（÷ 模型期初可計費 MW）", "US$m/MW", f"={_q['ann']}/{_q['bo']}*1000", note="與模型首期每 MW 年收入只差期初可計費 MW 的四捨五入（因校準所致，非獨立證據）")
+    qrow('cg', "Q1｜CPU＆GPU 子項年化", "US$bn", f"={QK['cpuGpuQ']}*4", NUM, QK['cpuGpuNote'], font=BLUE)
+    qrow('rCg', "Q1 實現（僅 CPU＆GPU 子項年化 ÷ 已連網 MW；仍含一般運算 CPU）", "US$m/MW", f"={_q['cg']}/{_q['svc']}*1000", note="排除 OCI 中非 CPU＆GPU 子項（12%）後的對照；若此值已接近模型，代表差距主要來自非 GPU 子項")
+    qrow('a0', "期初錨（評價日世代組合 × IF_HoldEcon）", "US$m/MW", "=" + "+".join(f"$E${AR['gen_' + g]}*$C${AR['gen_' + g]}" for g in GEN), note="評價日世代組合 fleet.openMix [Assumed]")
+    qrow('mA', "模型 FY27 錨（平均在役世代）", "US$m/MW", f"=C{AR['cur_anchor']}")
+    qrow('mK', "模型 FY27 定價倍數 k", "倍", f"=C{AR['cur_k']}", '0.000')
+    qrow('mRev', "模型 FY27 每 MW 年收入（目前情境，錨 × k）", "US$m/MW", f"=C{AR['cur_rev']}", bold=True)
+    qrow('kImp', "Q1 隱含 k（÷ 已連網 MW ÷ 期初錨；只列，不用）", "倍", f"={_q['rSvc']}/{_q['a0']}", '0.000', "不得用來校準 k（已決定事項 14）；含非 AI 營收與爬坡，不是價格")
+    qrow('kO1', "Oracle 自身合約 k（4.5 GW 視為 IT；只列）", "倍", f"=C{AR['kOwn']}", '0.000', "Oracle–OpenAI 約 $300bn／5 年／4.5 GW（WSJ 轉述，未經證實）÷ 同世代 Tokenomics 持有成本 [Derived]")
+    qrow('kO2', "Oracle 自身合約 k（4.5 GW 視為設施 ÷ PUE 1.2；只列）", "倍", f"=D{AR['kOwn']}", '0.000')
+    qrow('gap', "總差距（Q1 實現 − 模型 FY27）", "US$m/MW", f"={_q['rSvc']}-{_q['mRev']}", bold=True)
+    qrow('gapPct', "總差距 ÷ 模型 FY27", "%", f"={_q['gap']}/{_q['mRev']}", PCT, "> 5% 附原因（已決定事項 2），見下方「差異原因」")
+    r += 1
+    for j, h in enumerate(["差距拆解（由模型走向 Q1 實現）", "單位", f"非 AI＝{QK['nonAiCases'][0]['n']:.0%}", f"非 AI＝{QK['nonAiCases'][1]['n']:.0%}", f"非 AI＝{QK['nonAiCases'][2]['n']:.0%}", f"非 AI＝{QK['nonAiCases'][3]['n']:.0%}"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    c = ws.cell(row=r, column=9, value="算式／說明"); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    _cols = ['C', 'D', 'E', 'F']
+    def frow(key, name, unit, fn, fmt=_MF, note=None, bold=False, inp=False):
+        global r
+        ws.cell(row=r, column=1, value=name).font = BOLD if bold else BLACK
+        ws.cell(row=r, column=2, value=unit).font = SMALL
+        for j, L in enumerate(_cols):
+            v = fn(j, L)
+            c = ws.cell(row=r, column=3 + j, value=v); c.font = BLUE if inp else (BOLD if bold else BLACK); c.number_format = fmt; c.border = BOX
+        if note: ws.cell(row=r, column=9, value=note).font = SMALL
+        AR['q1b_' + key] = r; r += 1
+    frow('n', "非 AI 營收占 OCI 營收的比例 n（情境；輸入）", "%", lambda j, L: QK['nonAiCases'][j]['n'], PCT,
+         QK['nonAiNote'] + " 各欄：" + "；".join(f"{x['n']:.0%}＝{x['label']} {x['tag']}" for x in QK['nonAiCases']), inp=True)
+    R_ = _q['rSvc']
+    frow('b0', "起點：模型 FY27 每 MW 年收入（錨 × k）", "US$m/MW", lambda j, L: f"={_q['mRev']}")
+    frow('iii', "(iii) 世代組合：評價日世代組合的錨 對 FY27 平均在役世代的錨（× 模型 k）", "US$m/MW", lambda j, L: f"=({_q['a0']}-{_q['mA']})*{_q['mK']}", note="＝（期初錨 − FY27 平均錨）× 模型 k；Q1 營收來自評價日機隊，FY27 平均含較新（較貴）的新增世代")
+    frow('ii', "(ii) 價格：Oracle 自身合約 k 對模型 k（× 期初錨）", "US$m/MW", lambda j, L: f"=({_q['kO1']}-{_q['mK']})*{_q['a0']}", note="＝（Oracle 自身合約 k − 模型 k）× 期初錨；模型 k 取 IREN 長約 + 現貨證據，Oracle 對 OpenAI 的合約價較高（隱含 k 1.22；設施口徑 1.47 見敏感度）。只說明，不採用")
+    frow('sub', "小計：全為 AI、100% 計費、評價日世代、Oracle 自身合約價", "US$m/MW", lambda j, L: f"={L}{AR['q1b_b0']}+{L}{AR['q1b_iii']}+{L}{AR['q1b_ii']}", note="＝期初錨 × Oracle 自身合約 k")
+    frow('iv', "(iv) 爬坡分母：計費 MW 少於已連網 MW（殘差）", "US$m/MW", lambda j, L: f"={R_}*(1-{L}{AR['q1b_n']})-{L}{AR['q1b_sub']}", note="＝AI 營收（Q1 實現 ×（1 − n））− 小計；負值＝已連網 MW 中只有一部分在計費。這是由 n 與 k 決定的殘差，不是獨立估計")
+    frow('i', "(i) 非 AI 營收：OCI 營收中不屬 AI 計費的部分", "US$m/MW", lambda j, L: f"={R_}*{L}{AR['q1b_n']}", note="＝Q1 實現 × n")
+    frow('end', "終點：Q1 實現每 MW 年收入", "US$m/MW", lambda j, L: f"={L}{AR['q1b_sub']}+{L}{AR['q1b_iv']}+{L}{AR['q1b_i']}", bold=True)
+    frow('chk', "核對：終點 − Q1 實現", "US$m/MW", lambda j, L: f"={L}{AR['q1b_end']}-{R_}", '0.000000', "應為 0（誤差 < 0.01）")
+    frow('f', "隱含期初可計費 ÷ 已連網（f；Oracle 自身合約 k）", "%", lambda j, L: f"={R_}*(1-{L}{AR['q1b_n']})/{L}{AR['q1b_sub']}", PCT, "＝AI 營收 ÷ 小計；≤ 100% 才合理（計費 MW 不可能超過已連網）")
+    frow('bo', "隱含期初可計費 MW（Oracle 自身合約 k）", "MW", lambda j, L: f"={L}{AR['q1b_f']}*{_q['svc']}", NUM0)
+    frow('fM', "隱含期初可計費 ÷ 已連網（f；模型 k）", "%", lambda j, L: f"={R_}*(1-{L}{AR['q1b_n']})/({_q['a0']}*{_q['mK']})", PCT, "若價格取模型 k：f > 100% 代表 Q1 營收無法由已連網 MW 在模型價格下解釋，需要非 AI 營收或更高的價格")
+    frow('fM2', "隱含期初可計費 ÷ 已連網（f；Oracle 自身合約 k，設施口徑）", "%", lambda j, L: f"={R_}*(1-{L}{AR['q1b_n']})/({_q['a0']}*{_q['kO2']})", PCT)
+    ws.cell(row=r, column=1, value="讓 f ≤ 100% 所需的最低非 AI 占比（模型 k）").font = BLACK
+    ws.cell(row=r, column=2, value="%").font = SMALL
+    c = ws.cell(row=r, column=3, value=f"=MAX(0,1-{_q['a0']}*{_q['mK']}/{R_})"); c.number_format = PCT; c.border = BOX
+    ws.cell(row=r, column=9, value="＝1 − 期初錨 × 模型 k ÷ Q1 實現；即在模型價格下，要 Q1 營收可由已連網 MW 解釋，至少須有此比例屬非 AI／非計費營收").font = SMALL
+    AR['q1_nStar'] = r; r += 1
+    ws.cell(row=r, column=1, value="差異原因（已決定事項 2）").font = BOLD
+    ws.cell(row=r, column=9, value=("類型：已知限制。Q1 實現（OCI 年化 ÷ 已連網 MW）高於模型 FY27，原因依序為：(i) OCI 營收含非 AI 部分（公司未分拆＝未揭露；CPU＆GPU 子項占 88% 為下限證據，其餘 12% 肯定非 GPU 運算）；"
+                                    "(ii) Oracle 對 OpenAI 等客戶的實際合約價高於 IREN 長約（隱含 k 1.22，未證實）；(iii) 評價日機隊世代較舊、FY27 平均含新增世代，反向影響很小；(iv) 期初可計費 MW 校準值（3,025）高於已連網（2,543）是因為校準把 Q1 全部 OCI 營收除以模型價格——"
+                                    "只要非 AI 占比 ≥ 約 19%（模型 k）或 Oracle 實際價高於模型價，計費 MW 就會回到已連網以下。Q1 隱含 k 只列不用，不回頭改 k；非 AI 扣除的敏感度見 G2 區。")).font = SMALL
+    AR['q1_reason'] = r; r += 2
     ws = _wi  # 還原
 
 
@@ -3656,6 +3741,60 @@ srow("驗證｜目標價（平均／中位數／最低／最高）", "US$", [f"=
      f"{CONS['priceTarget']['analysts']} 家；{CONS['priceTarget']['source']}，擷取 {CONS['priceTarget']['retrieved']} [Interested-party]")
 ws.cell(row=r + 1, column=1, value="來源獨立性：" + CONS['sourceIndependence']).font = SMALL
 ws.cell(row=r + 2, column=1, value=f"共識來源：{CONS['annualEstimates']['source']}、{CONS['priceTarget']['source']}；擷取 {CONS['annualEstimates']['retrieved']}。逐筆來源、日期與標記見『輸入與假設』I 區。").font = SMALL
+
+# v0.3 B 段：「每MW收入_錨定」G 區——3 × 3 容量 × 價格矩陣與每 MW 收入敏感度（建置時快照：scripts/tk_sens.js 以 HTML 引擎計算，
+# 該引擎與本 Excel 經 cmp31 逐項一致；改輸入後快照不會自動更新，過期檢查列會顯示「快照已過期」）
+if AR:
+    _TS = _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), 'tk_sens.json'), encoding='utf-8'))
+    assert _TS.get('method') == 'tkAnchor', 'tk_sens.json 不是 tkAnchor 快照（先執行 node scripts/tk_sens.js）'
+    ws = wb['每MW收入_錨定']
+    r = ws.max_row + 2
+    _K3 = ['low', 'base', 'high']
+    _MET = [('tgt', '加權目標價', 'US$', USD), ('eq', '五期股權募資', 'US$bn', NUM), ('gap', '融資前缺口', 'US$bn', NUM), ('levMax', '調整後槓桿峰值', '倍', '0.00'), ('sh', '新股數', 'bn 股', '0.000')]
+    _AM3 = CO['pricing']['anchorMultiple']
+    r = section(ws, r, "G｜3 × 3 容量 × 價格（快照）：各指標（容量情境 ＼ 價格情境；價格低／基準／高依序在 C、D、E 欄）")
+    for j, h in enumerate(["容量情境 ＼ 價格情境", "單位", "價格低", "價格基準", "價格高"]):
+        c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+    c = ws.cell(row=r, column=9, value="說明"); c.font = HEAD; c.fill = FILL_HEAD
+    r += 1
+    _m0 = r
+    for mk, mn, mu, mf in _MET:
+        for k in _K3:
+            ws.cell(row=r, column=1, value=f"矩陣｜{mn}｜{CO['scenarios']['labels'][k]}").font = BLACK
+            ws.cell(row=r, column=2, value=mu).font = SMALL
+            for j, px in enumerate(_K3):
+                c = ws.cell(row=r, column=3 + j, value=_TS['matrix'][k][px][mk]); c.font = BLACK; c.number_format = mf; c.border = BOX
+            if mk == 'tgt' and k == 'low':
+                ws.cell(row=r, column=9, value=(f"價格低＝k_長約 {_AM3['long']['low']:.2f}、k_現貨 {_AM3['spot']['low']:.2f}；基準＝{_AM3['long']['base']:.2f}、{_AM3['spot']['base']:.2f}；"
+                                                f"高＝{_AM3['long']['high']:.2f}、{_AM3['spot']['high']:.2f}（隨 Tokenomics 快照重算）。容量情境＝合約上限、併網速度、OpenAI 實現率、建設延誤月數")).font = SMALL
+            r += 1
+    ws.cell(row=r, column=1, value="快照檢查：目前情境 × 目前價格情境的快照 − 即時加權目標價").font = BOLD
+    ws.cell(row=r, column=2, value="US$").font = SMALL
+    c = ws.cell(row=r, column=3, value=f"=INDEX(C{_m0}:E{_m0 + 2},{SEL},{PXSEL})-'評價_DCF與目標價'!{TGT}"); c.number_format = '0.0000'; c.border = BOX
+    ws.cell(row=r, column=4, value=f'=IF(ABS(C{r})<0.01,"通過","快照已過期")').font = BOLD
+    ws.cell(row=r, column=9, value="改了任何輸入後快照不會自動更新；重建（node scripts/tk_sens.js → build_xlsx.py）即更新").font = SMALL
+    AR['snapChk'] = r; r += 2
+    r = section(ws, r, "G2｜每 MW 收入與校準的敏感度（價格基準；快照；保守／基準／積極 依序在 C、D、E 欄）")
+    for mk, mn, mu, mf in _MET:
+        for j, h in enumerate([f"{mn}｜變動", "單位", "保守", "基準", "積極"]):
+            c = ws.cell(row=r, column=1 + j, value=h); c.font = HEAD; c.fill = FILL_HEAD
+        r += 1
+        ws.cell(row=r, column=1, value=f"敏感度｜{mn}｜基準（目前輸入）").font = BOLD
+        ws.cell(row=r, column=2, value=mu).font = SMALL
+        for j, k in enumerate(_K3):
+            c = ws.cell(row=r, column=3 + j, value=_TS['matrix'][k]['base'][mk]); c.number_format = mf; c.border = BOX
+        AR['sens_' + mk + '_base'] = r; r += 1
+        for x in _TS['sens']:
+            ws.cell(row=r, column=1, value=f"敏感度｜{mn}｜{x['label']}").font = BLACK
+            ws.cell(row=r, column=2, value=mu).font = SMALL
+            for j, k in enumerate(_K3):
+                c = ws.cell(row=r, column=3 + j, value=x['res'][k][mk]); c.number_format = mf; c.border = BOX
+            AR['sens_' + mk + '_' + x['key']] = r; r += 1
+        r += 1
+    ws.cell(row=r, column=1, value=("說明：Tokenomics 低／高成本——錨（IF_HoldEcon）與每 MW 建置成本（IF_CapexIT）同時改變，k 以證據世代的成本比例重算（k＝市場價格 ÷ 同情境持有成本；價格是事實），所以收入大致不隨成本情境改變、成本改變。"
+                                    "Oracle 自身合約 k（1.22／1.47）只改 k_長約（長約占比維持 90%）。非 AI 扣除：期初可計費 MW＝Q1 OCI 年化 ×（1 − n）÷ 首期每 MW 年收入，n＝12%／20%／30%（公司未分拆，見 F 區）。"
+                                    "收斂比例：基準首期末 50%、之後 80%→90%（[Assumed]）。")).font = SMALL
+    r += 1
 
 # v0.2a（2026-10-08，比照 CoreWeave W1）：Tokenomics 取數分頁。值取自 company.json → tokenomics.snapshotFile 的版本固定快照（tools/tokenomics/import_tokenomics.py 產生），
 # 藍字輸入格；每個名稱的「基準」值格另建具名範圍 TK_<名稱去掉 IF_／L1_>_<世代代碼>（單值名稱不加世代），供每 MW 收入錨定（v0.2a 步驟 3）公式引用。

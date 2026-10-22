@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # 一次跑完建置與核對：季度層檢查 → 建 HTML → 建 Excel → 重算 → fix_outline → fix_datatable → verify_ooxml → 離線開啟檢查 → 三情境 xlx＋cmp31 → FY27 錨定 cmp31 → 季度層測試（v4.4）→ 期間滾動測試 → 目標價變動拆解工具測試。
 # 任何一項失敗即以非零代碼結束。產物放在 repo 根目錄的 out/（不納入版控）。
-# 用法：scripts/verify.sh [--vs-dist]
+# 用法：[LEGACY=1] scripts/verify.sh [--vs-dist]（LEGACY=1：另跑 scripts/verify_legacy.sh，舊方法須重現 v0.2；v0.3）
 #   --vs-dist  另與 dist/ 內現行成品比對：crawl.py 畫面文字與 xl_diff.py --by-label（值與公式）皆須 0 差異（純結構修改的驗收）。
 #              新增列、常數改為引用輸入格、文字改為活公式會另列清單，不計為差異（規則見 xl_diff.py 開頭）。
 # 版本號與更新日：預設取 vlog.py 最後一列與 dist/ 成品檔名的日期；可用環境變數 VER、DATE 覆寫。
 # EXPECT＝預期差異清單（v4.5）：傳給 xl_diff.py --expect（升版時對舊版成品做 --vs-dist，列出預期變動的格子，其餘須 0 差異）。
+# CRAWL_EXPECT＝預期畫面文字差異清單（v0.3）：「頁面 X」整頁允許不同、「行 正規式」符合的增刪行允許不同，其餘須 0 差異。
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT="$ROOT/out"
@@ -74,6 +75,9 @@ fi
 step "1. 建 HTML（v$VER · $DATE）"
 if python3 build_html_portable.py "$VER" "$HTML" "$DATE" docs/template_v3_3.html; then ok "建 HTML"; else bad "建 HTML"; finish; fi
 
+step "1b. 每 MW 收入 3 × 3 矩陣與敏感度快照（scripts/tk_sens.js → tk_sens.json；v0.3）"
+if r=$(node scripts/tk_sens.js); then echo "$r"; ok "tk_sens 快照：$(sed 's/^3×3（容量 × 價格，加權目標價）：//' <<<"$r")"; else echo "$r"; bad "tk_sens 快照"; finish; fi
+
 step "2. 建 Excel"
 if python3 build_xlsx.py "$XLSX"; then ok "建 Excel"; else bad "建 Excel"; finish; fi
 
@@ -134,23 +138,44 @@ if (( VS_DIST )); then
   step "9. 與 dist/ 成品比對"
   python3 crawl.py "$DIST_HTML" "$OUT/crawl_dist.json"
   python3 crawl.py "$HTML" "$OUT/crawl_new.json"
-  if python3 - "$OUT/crawl_dist.json" "$OUT/crawl_new.json" <<'EOF'
-import sys, json, difflib
+  if python3 - "$OUT/crawl_dist.json" "$OUT/crawl_new.json" "${CRAWL_EXPECT:-}" <<'EOF'
+import sys, json, difflib, re
 a, b = (json.load(open(p)) for p in sys.argv[1:3])
 pa, pb = a['pages'], b['pages']
 n = sum(len(v) for v in pa.values())
-diff = [k for k in sorted(set(pa) | set(pb)) if pa.get(k) != pb.get(k)]
-print(f'畫面：dist {len(pa)} 個、新版 {len(pb)} 個頁面／分頁，約 {n:,} 字；差異 {len(diff)} 個；頁面錯誤 dist {len(a["errors"])}、新版 {len(b["errors"])}')
-for k in diff[:5]:
-    print('  ', k); print('\n'.join(list(difflib.unified_diff((pa.get(k) or '').splitlines(), (pb.get(k) or '').splitlines(), lineterm='', n=0))[:12]))
+# v0.2：CRAWL_EXPECT＝預期畫面差異清單（「頁面 X」整頁允許不同；「行 正規式」符合的增刪行允許不同），其餘須 0 差異
+pages, rules = set(), []
+if len(sys.argv) > 3 and sys.argv[3]:
+    for ln in open(sys.argv[3], encoding='utf-8'):
+        ln = ln.rstrip('\n')
+        if ln.startswith('頁面 '): pages.add(ln[3:].strip())
+        elif ln.startswith('行 '): rules.append(re.compile(ln[2:]))
+diff, exp, hit = [], [], {}
+for k in sorted(set(pa) | set(pb)):
+    if pa.get(k) == pb.get(k): continue
+    if k in pages: exp.append(k); continue
+    d = [l for l in difflib.unified_diff((pa.get(k) or '').splitlines(), (pb.get(k) or '').splitlines(), lineterm='', n=0) if l[:1] in '+-' and l[:3] not in ('+++', '---')]
+    left = [l for l in d if not any(r.search(l[1:]) for r in rules)]
+    for l in d:
+        if l not in left: hit[l[:60]] = hit.get(l[:60], 0) + 1
+    (diff if left else exp).append(k)
+    if left: print('  ', k); print('\n'.join(left[:12]))
+print(f'畫面：dist {len(pa)} 個、新版 {len(pb)} 個頁面／分頁，約 {n:,} 字；差異 {len(diff)} 個；預期差異 {len(exp)} 個（清單 {sys.argv[3] if len(sys.argv) > 3 and sys.argv[3] else "無"}）；頁面錯誤 dist {len(a["errors"])}、新版 {len(b["errors"])}')
+if exp: print('  整頁預期不同：' + '、'.join(sorted(pages & set(exp))) + f'；其餘 {len(set(exp) - pages)} 個頁面只有清單內的行不同（{len(hit)} 種行，合計 {sum(hit.values())} 處）')
 sys.exit(1 if diff or b['errors'] or not pa else 0)
 EOF
-  then ok "crawl 畫面文字 0 差異"; else bad "crawl 畫面文字"; fi
+  then ok "crawl 畫面文字 0 差異${CRAWL_EXPECT:+（預期差異清單除外）}"; else bad "crawl 畫面文字"; fi
   # v4.2：--by-label——列數或 A 欄不同的工作表以「區段＋列名稱」配對（新增列另列清單；列名稱重複即報錯），其餘逐格
   r=$(python3 xl_diff.py "$DIST_XLSX" "$XLSX" --values --by-label ${EXPECT:+--expect=$EXPECT} || true); echo "$r"
   if [[ "$(head -1 <<<"$r")" == "0 differences" ]]; then ok "xl_diff --values --by-label 0 差異"; else bad "xl_diff --values --by-label"; fi
   r=$(python3 xl_diff.py "$DIST_XLSX" "$XLSX" --by-label ${EXPECT:+--expect=$EXPECT} || true); echo "$r"
   if [[ "$(head -1 <<<"$r")" == "0 differences" ]]; then ok "xl_diff 公式 --by-label 0 差異"; else bad "xl_diff 公式 --by-label"; fi
+fi
+
+if [[ "${LEGACY:-}" == "1" ]]; then  # v0.3：舊方法回歸驗收（methodology.perMw.revenue＝legacy 須重現 v0.2 成品；scripts/verify_legacy.sh）
+  step "10. 舊方法回歸：legacy 對 v0.2 成品 --vs-dist（scripts/verify_legacy.sh）"
+  if bash scripts/verify_legacy.sh > "$OUT/verify_legacy.out" 2>&1; then ok "legacy 重現 v0.2：$(grep -o '全部通過（[0-9]* 項）' "$OUT/verify_legacy.log" | tail -1)（crawl 0 差異、xl_diff 值與公式 0 差異）"
+  else bad "legacy 重現 v0.2（見 $OUT/verify_legacy.log）"; tail -20 "$OUT/verify_legacy.log"; fi
 fi
 
 finish

@@ -346,10 +346,33 @@ function scnQ(e, sc) {
 // v0.3：容量情境 sc × 每 MW 收入變體 o（價格情境 px、k_長約／k_現貨、隨需占比 od、Tokenomics 成本情境 tkCase〔錨與每 MW 建置成本同動；k＝價格 ÷ 同情境成本，依證據世代重算〕、新增世代組合 newMix）
 // 每 MW 年收入改變時，期初可計費 MW 依「最新季 OCI 營收 × 4 ÷ 首期每 MW 年收入」自動重算，可計費路徑隨之重算（與 Excel 活公式相同）。供 3 × 3 矩陣、敏感度與拆解（scripts/tk_sens.js、attrib_*.js）共用。
 function tkScnQ(e, sc, o = {}) {
-  let s = scnQ(e, sc), rev = tkAnchorQ(sc, o).rev, bo = Math.round(COMPANY_DATA.scenarios.billableRatio.openAnnualRevenue / rev[0]);
+  // 變體 o 另含：nonAi（OCI 營收中非 AI 部分占比，自期初可計費 MW 校準中扣除；v0.3 B 段）、ramp0（首期末收斂比例替代）、rampShift（第 2 期起收斂比例平移，上下限 0–1）
+  let s = scnQ(e, sc), rev = tkAnchorQ(sc, o).rev, bo = Math.round(COMPANY_DATA.scenarios.billableRatio.openAnnualRevenue * (1 - (o.nonAi || 0)) / rev[0]),
+    br = SC_BR.map((x, t) => t === 0 ? (o.ramp0 ?? x) : Math.min(1, Math.max(0, x + (o.rampShift || 0))));
   if (PMW_CAPEXQ === `tokenomics` && (o.tkCase || o.newMix)) s.a = { ...s.a, costMW: capexTkQ({ tkCase: o.tkCase, newMix: o.newMix }) }; // 步驟 4：成本情境／世代組合改變時建置成本重算
-  s.m = { ...s.m, revMW: rev, billable: SCENARIOS[sc].acc.map((x, t) => Math.round(bo + (x - bo) * SC_BR[t])) }; s.billableOpen = bo;
+  s.m = { ...s.m, revMW: rev, billable: SCENARIOS[sc].acc.map((x, t) => Math.round(bo + (x - bo) * br[t])) }; s.billableOpen = bo;
   return s
+}
+function fSensQ(e, v) { // v0.3 B 段：fA 的延伸版（同一引擎）：目標價 tgt、五期股權募資 eq、融資前缺口 gap、新股數 sh（bn 股）、調整後槓桿各期 lev 與峰值 levMax、上限 cap
+  let n = structuredClone(e), r = structuredClone(v), f = runFunding(n), a = runValuation(f, n, r), L = f.years.map(y => y.adjLev);
+  return { tgt: a.call.blended, eq: f.totals.equity, gap: Math.max(0, -f.totals.preFinEnd), sh: f.totals.newShares, lev: L, levMax: Math.max(...L), cap: n.debtEbitdaMax, junk: f.totals.junk, fy27Rev: f.totals.fyRevenue }
+}
+function tkSensQ(e, v, onlyMatrix) { // v0.3 B 段（自 Nebius v0.2a）：3 × 3 容量 × 價格矩陣與每 MW 收入敏感度
+  let K = [`low`, `base`, `high`], AM = COMPANY_DATA.pricing.anchorMultiple, run = (sc, o) => fSensQ(tkScnQ(e, sc, o), v),
+    OC = AM.long.ownContract, Q = COMPANY_DATA.pricing.q1Check, f2 = x => x.toFixed(2),
+    C = [[`kLong080`, `k_長約 0.80（價格軸低端以下）`, { kLong: .8 }], [`kLong100`, `k_長約 1.00（＝長約價等於打平租金）`, { kLong: 1 }],
+      [`kLongMed`, `k_長約 ${f2(AM.long.sensMedian)}（三筆長約中位數）`, { kLong: AM.long.sensMedian }],
+      ...OC.values.map((x, j) => [`kOwn${j + 1}`, `k_長約 ${f2(x)}（Oracle–OpenAI 自身合約：${OC.labels[j]}）`, { kLong: x }]),
+      [`kSpotLo`, `k_現貨 ${f2(AM.spot.low)}（現貨低端）`, { kSpot: AM.spot.low }], [`kSpotHi`, `k_現貨 ${f2(AM.spot.high)}（現貨高端）`, { kSpot: AM.spot.high }],
+      ...AM.onDemandShare.sens.map((x, j) => [`od${j + 1}`, `長約占比 ${Math.round((1 - x) * 100)}%（隨需 ${Math.round(x * 100)}%）`, { od: x }]),
+      [`tkLow`, `Tokenomics 低成本（錨與建置成本同動；k 依證據重算）`, { tkCase: `低成本` }], [`tkHigh`, `Tokenomics 高成本（錨與建置成本同動；k 依證據重算）`, { tkCase: `高成本` }],
+      [`ramp40`, `首期末收斂比例 40%（預設 ${Math.round(SC_BR[0] * 100)}%）`, { ramp0: .4 }], [`ramp60`, `首期末收斂比例 60%`, { ramp0: .6 }],
+      [`rampLate-`, `第 2 期起收斂比例 −10pt`, { rampShift: -.1 }], [`rampLate+`, `第 2 期起收斂比例 +10pt`, { rampShift: .1 }],
+      ...Q.nonAiCases.filter(x => x.n > 0).map((x, j) => [`nonAi${Math.round(x.n * 100)}`, `期初可計費 MW 校準扣除非 AI ${Math.round(x.n * 100)}% 的 OCI 營收`, { nonAi: x.n }])];
+  return {
+    matrix: Object.fromEntries(K.map(sc => [sc, Object.fromEntries(K.map(px => [px, run(sc, { px })]))])),
+    sens: onlyMatrix ? [] : C.map(([key, label, o]) => ({ key, label, res: Object.fromEntries(K.map(sc => [sc, run(sc, o)])) }))
+  }
 }
 
 // v4.1：目標價區間。點位＝目前輸入的加權目標價（評等仍依點位）；

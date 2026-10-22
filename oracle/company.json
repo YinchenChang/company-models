@@ -921,7 +921,7 @@
     0.9
    ],
    "openAnnualRevenue": 29.552,
-   "note": "期初可計費 MW＝Q1 FY27 實際 OCI 營收 7.388 × 4＝29.552 ÷ 各情境每 MW 年收入（保守 2,543／基準 1,698／積極 1,221 MW-IT），是對齊已實現實際數的校準，不是以公司預測反推參數。各期末可計費 MW＝期初校準值＋(已連網 − 期初校準值)× 收斂比例；首期 50% 取能讓基準 FY27 營收落在公司指引 ≥90 的保守值（40% 時基準 FY27 約 89.1，低於指引），之後 80%→90%（新產能自交付到計費約一季）[Derived／Assumed]。"
+   "note": "期初可計費 MW＝Q1 FY27 實際 OCI 營收 7.388 × 4＝29.552 ÷ 首期每 MW 年收入（Tokenomics 錨 × k；基準情境 3,025 MW）。這是對齊已實現實際數的校準，不是以公司預測反推參數；因價格改由 Tokenomics 正向推導，校準值高於評價日已連網 2,543（因 Q1 OCI 含非 AI 營收且 Oracle 實際價高於模型價，見 v0.3 報告 Q1 驗證），之後向已連網收斂。各期末可計費 MW＝期初校準值＋(已連網 − 期初校準值)× 收斂比例；首期 50%、之後 80%→90%（新產能自交付到計費約一季）[Derived／Assumed]；v0.3 起 FY27 基準營收約 $83bn、低於公司指引 ≥$90bn（−7.7%），收斂比例改為 100% 也只到約 $85bn（敏感度見『每MW收入_錨定』G2 區），故不再以達成指引為選取收斂比例的依據。"
   },
   "mw31": {
    "low": 0,
@@ -1753,6 +1753,14 @@
     "vs": "*",
     "type": "觀點",
     "text": "CapEx 依新增已連網 MW × 每 MW IT 建置成本（Tokenomics IF_CapexIT；機房由開發商建、以租賃取得）計算；客戶自帶硬體不建模"
+   },
+   {
+    "scope": "annual",
+    "period": "FY27",
+    "metric": "rev",
+    "vs": "*",
+    "type": "已知限制",
+    "text": "營收＝OCI（在役 MW × 每 MW 年收入；年底已連網 {y.accepted:0} MW-IT）＋傳統事業四線。FY27 同時低於公司全年指引（≥$90bn）：首期 OCI 由 Q1 實際年化校準，之後每 MW 價格取 Tokenomics 錨 × k（長約約 0.89 倍打平租金、現貨 1.83 倍，市場證據），不取 Oracle 對 OpenAI 的合約價（隱含 k 約 1.22，未證實）；FY27 營收對價格與爬坡不敏感（首期末收斂比例 100%、k_長約取 1.47 仍低於 $90bn），指引隱含的計費爬坡與合約價超出本模型的 MW × 市價推導，列為已知限制；Q1 驗證與敏感度見 v0.3 報告"
    },
    {
     "scope": "annual",
@@ -2836,6 +2844,35 @@
      "note": "17,400 ÷ 5 ÷ 100,000 ÷ 8,760 ×1e6＝3.97 US$/GPU-hr；GPU 數未經公司證實、TCV 可能含非 GPU 服務；屬 Nebius 自身合約（RPO 的一部分），依工作單不得作為 k 的證據，只列作對照（是否採用見『需要 Andy 決定』）"
     }
    ]
+  },
+  "q1Check": {
+   "_note": "Q1 驗證（v0.3 B 段；不是校準、不回頭改 k）：把 FY27 模型每 MW 年收入與 Q1 FY27 實現（OCI 營收年化 ÷ 評價日已連網 MW）並列，差距拆成 (i) 非 AI 的 OCI 營收、(ii) 價格（Oracle 自身合約 k 對模型 k）、(iii) 世代組合、(iv) 爬坡分母。Excel「每MW收入_錨定」F 區（活公式）；非 AI 敏感度（自期初可計費 MW 校準扣除）在 G2 區（建置時快照，scripts/tk_sens.js）。",
+   "cpuGpuQ": 6.5,
+   "cpuGpuNote": "Q1 FY27 簡報「CPU 與 GPU」營收（OCI 子項）6,500 US$m＝OCI 7,388 的 88% [Interested-party]（Oracle IR 財報簡報 2026-09-10，q4cdn；總帳 rev.cpuGpu.fy27q1）。此子項仍含一般運算（非 AI）CPU，所以只是「非 AI 占比」的下限證據之一的上緣；OCI 中其餘 12%（資料庫、儲存、網路、軟體授權等非 CPU＆GPU 子項）[Derived] 為「至少非 GPU 運算」的部分。",
+   "nonAiCases": [
+    {
+     "n": 0.0,
+     "label": "0%（OCI 全部視為 AI）",
+     "tag": "[Assumed]"
+    },
+    {
+     "n": 0.12,
+     "label": "12%（OCI 中非 CPU＆GPU 子項；公司簡報 1 − 6,500／7,388）",
+     "tag": "[Derived]"
+    },
+    {
+     "n": 0.2,
+     "label": "20%（含一部分一般運算 CPU 與多雲資料庫）",
+     "tag": "[Assumed]"
+    },
+    {
+     "n": 0.3,
+     "label": "30%（上緣）",
+     "tag": "[Assumed]"
+    }
+   ],
+   "nonAiNote": "公司未分拆 OCI 中 AI 與非 AI 營收（不存在／未揭露；試過：FY2026 10-K、FY27Q1 10-Q、法說與簡報、v0.1a 總帳）。可找到的公開線索只有 CPU＆GPU 子項占 OCI 88%（見 cpuGpuNote），故非 AI 占比區間取 12%–30% [Assumed]，不作基準；只用於 Q1 驗證拆解與期初可計費 MW 校準的敏感度。",
+   "mixNote": "期初世代組合（fleet.openMix）與新增世代組合（fleet.newMix）仍為 [Assumed]（Oracle 未揭露機隊世代，見 fleet.openMix.source）。"
   }
  },
  "fleet": {
