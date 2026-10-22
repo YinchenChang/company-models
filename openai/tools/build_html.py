@@ -448,6 +448,13 @@ def latest_src_date(model: Path) -> str:
     return max(ds) if ds else "—"
 
 
+def checks_range(model: Path) -> str:
+    """Checks 頁 A 欄的檢查編號範圍（讀 Excel，不寫死；2026-10-22 獨立查核 #1）。"""
+    ws = openpyxl.load_workbook(model, read_only=True)["Checks"]
+    ids = [int(r[0][1:]) for r in ws.iter_rows(values_only=True) if isinstance(r[0], str) and re.fullmatch(r"C\d+", r[0])]
+    return f"C{min(ids):02d}–C{max(ids)}" if ids else "—"
+
+
 def render(V: Values, model: Path, ver: str, stamp: str) -> str:
     n = V.n
     Y = 2030
@@ -508,7 +515,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 {year_table(V, [("有效推論 GW", "CMP_InfGW_Eff", "f2", ""), ("研發 GW（殘差）", "CMP_RDGW", "f2", ""), ("總需求 GW", "CMP_DemandGW", "f2", "em"),
                 ("合約供給 GW", "CMP_SupplyContractGW", "f2", ""), ("自建供給 GW", "CMP_Supply_Owned", "f2", ""), ("供給 GW 合計", "CMP_SupplyGW", "f2", "em"),
                 ("推論可用 GW（容量上限）", "CMP_InfAvailGW", "f2", "")], head="GW")}
-<p><b>研發 GW 是殘差，不是獨立需求。</b>模型先由 token 需求推出推論 GW，再把「供給扣閒置後剩下的」全部記為研發；2027 年起研發占總需求約 6–9 成（2027 年 {n("CMP_RDGW", 2027, "f1")} / {n("CMP_DemandGW", 2027, "f1")} GW，2030 年 {n("CMP_RDGW", Y, "f1")} / {n("CMP_DemandGW", Y, "f1")} GW）。意義：①總需求其實由已簽合約決定，不是由用量推出；②若這些 GW 實際上是閒置或轉賣，現金成本照付、命題結論不變，但「研發投入」的解讀要打折；③推論只用掉 2030 年推論可用 GW 的約一半（{n("CMP_InfGW_Eff", Y, "f1")} / {n("CMP_InfAvailGW", Y, "f1")}），營收上行的算力餘裕有限。</p>
+<p><b>研發 GW 是殘差，不是獨立需求。</b>模型先由 token 需求推出推論 GW，再把「供給扣閒置後剩下的」全部記為研發；2027 年起研發占總需求約 5–9 成（v0.6.2 起；Tokenomics v19.0 的世代產能較高，2030 年降至約 5 成）（2027 年 {n("CMP_RDGW", 2027, "f1")} / {n("CMP_DemandGW", 2027, "f1")} GW，2030 年 {n("CMP_RDGW", Y, "f1")} / {n("CMP_DemandGW", Y, "f1")} GW）。意義：①總需求其實由已簽合約決定，不是由用量推出；②若這些 GW 實際上是閒置或轉賣，現金成本照付、命題結論不變，但「研發投入」的解讀要打折；③推論只用掉 2030 年推論可用 GW 的約一半（{n("CMP_InfGW_Eff", Y, "f1")} / {n("CMP_InfAvailGW", Y, "f1")}），營收上行的算力餘裕有限。</p>
 {V.src("CMP_InfGW_Eff", "CMP_RDGW", "CMP_DemandGW", "CMP_SupplyContractGW", "CMP_Supply_Owned", "CMP_SupplyGW", "CMP_InfAvailGW")}
 </section>""")
 
@@ -568,7 +575,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <dt>Excel</dt><dd><code>{html.escape(model.name)}</code>（v{ver}；唯一計算引擎；本頁同資料夾附 xlsx）</dd>
 <dt>Tokenomics</dt><dd>{html.escape(str(tk_ver))}（<code>{html.escape(str(tk_file))}</code>），master <code>{html.escape(str(tk_sha))}</code>，讀取日 {html.escape(str(tk_date))}</dd>
 <dt>資料日期</dt><dd>SRC_OAI 最新文件日期 {latest_src_date(model)}；模型日期 {date_disp}</dd>
-<dt>檢查</dt><dd>CHK_Errors＝{n("CHK_Errors", None, "f0")}（Checks C01–C130）</dd>
+<dt>檢查</dt><dd>CHK_Errors＝{n("CHK_Errors", None, "f0")}（Checks {checks_range(model)}）</dd>
 <dt>期間與單位</dt><dd>FY2025–FY2030 曆年制，2025 為實際校準年；$B；GW＝IT 關鍵電力；VR 等值＝以 VR200 Sol 層級每 GW 產能換算</dd>
 </dl>
 <p class="note"><span class="tag">Verified</span>已查核原文 <span class="tag">Interested-party</span>公司或利害關係方說法 <span class="tag">Analogy</span>類比推估（附區間） <span class="tag">Assumed</span>假設（附區間） <span class="tag">Derived</span>由其他數字推得 <span class="tag">Decision</span>建模決定。公司原始數據在 SRC_OAI、算力物理取自 Tokenomics（TK_Link）、假設在 Inputs。</p>

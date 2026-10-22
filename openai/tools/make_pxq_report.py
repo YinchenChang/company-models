@@ -13,12 +13,12 @@ sys.path.insert(0, str(REPO))
 from engine import current_model_path  # noqa: E402
 
 DEFAULTS = [
-    ("L 讀法（判斷題 1）", "壽命期價格係數：隱含 m＝實際 m×L ÷ L，L 取 TKQ_IF_LTotalFleetVDisc（2025 機隊）與 TKQ_IF_LTotalDisc（新世代）；只作顯示", "表列牌價另列為一因子（P_eff ÷ (1−d)）", "不影響比值；影響隱含 m 的讀數"),
-    ("服務占比（判斷題 2）", "基準 TKQ_IF_ServeShare 0.41；對照 0.50（Epoch『研發與推論大致平分』，SRC_OAI_140）", "其他占比", "比值不變；Q 與 m×L 的水準隨之改變（0.50：2025 線性欄實際 m×L 1.51→1.24）"),
+    ("L 讀法（判斷題 1）", "壽命期價格係數：隱含 m＝實際 m×L ÷ L，L 取 TK_IF_LTotalFleetVDisc（2025 機隊）與 TK_IF_LTotalDisc（新世代）；只作顯示", "表列牌價另列為一因子（P_eff ÷ (1−d)）", "不影響比值；影響隱含 m 的讀數"),
+    ("服務占比（判斷題 2）", "基準 TK_IF_ServeShare 0.41；對照 0.50（Epoch『研發與推論大致平分』，SRC_OAI_140）", "其他占比", "比值不變；Q 與 m×L 的水準隨之改變（0.50：2025 線性欄實際 m×L 1.51→1.24）"),
     ("2026 營收（判斷題 3）", "SRC_OAI_043 管理層目標 36（FT 2026-09-18 七月投資人簡報；改標為利害關係方的管理層目標）；對照 REV_GrossCapped 34.2", "模型正向 34.2", "基準 2026 比值 1.225→1.164（GW 3.0）"),
     ("世代組合（判斷題 4）", "基準＝v0.6 自有 V1（CMP_Share_*；自研＝VR200×INP_204）；對照＝交接檔 2026 Hopper .25／GB200 .45／GB300 .25／VR200 .05（INP_281–286）", "交接檔組合", "2026 h 9.80→9.73 $B/GW；比值 1.225→1.233"),
     ("2025 GW 主值（判斷題 5）", "指數內插 1.128 GW 為主值（INP_276＝0）；線性 1.25 並列", "線性內插", "2025 比值 1.239→1.118"),
-    ("生產折減（判斷題 6）", "v19.0 讀法：VR200 用 TKQ_IF_FleetProdRatio_VR200（0.806），其他世代用 TKQ_IF_ProdDerate（0.85）；自研／其他、Rubin Ultra 用 ProdDerate", "交接檔一律 0.85（INP_287＝1）", "2026 含 VR200 占比 5%：Q 約 −0.6%（2026 基準欄 2.446→2.461 ×10¹⁰ M tok）；比值不變"),
+    ("生產折減（判斷題 6）", "v19.0 讀法：VR200 用 TK_IF_FleetProdRatio_VR200（0.806），其他世代用 TK_IF_ProdDerate（0.85）；自研／其他、Rubin Ultra 用 ProdDerate", "交接檔一律 0.85（INP_287＝1）", "2026 含 VR200 占比 5%：Q 約 −0.6%（2026 基準欄 2.446→2.461 ×10¹⁰ M tok）；比值不變"),
     ("自研晶片", "持有成本與付費年產能＝VR200 × INP_204（0.6）", "—", "沿用 v0.6 P3／P4 做法"),
     ("2026 平均 GW", "3.0（2.5–3.5）三情境；電力口徑未明", "—", "比值反比於 GW"),
     ("持平所需 GW", "2026 營收 ÷（2026 h × 2025 比值）；指數／線性各算", "—", "主值依 INP_276"),
@@ -53,7 +53,7 @@ def main():
         i = s.cell(r, 1).value
         if i and str(i).startswith("C") and str(i)[1:].isdigit() and int(i[1:]) >= 131:
             ws.append(["Checks", i, s.cell(r, 2).value, s.cell(r, 3).value, s.cell(r, 4).value, s.cell(r, 5).value, "", "", s.cell(r, 6).value])
-    for tab in ("TK_PxQ", "PxQ"):
+    for tab in ("PxQ",):
         ws.append([tab, "（新頁）", f"{wb[tab].max_row} 列 × {wb[tab].max_column} 欄", "", "", "", "", "", "見報告"])
     # ② 全表
     w2 = out.create_sheet("②比值與中間量")

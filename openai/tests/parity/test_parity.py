@@ -162,7 +162,7 @@ def test_scenario_expected_results(model):
             "i_event_order_broken": "C34", "m_usage_mix_broken": "C30", "u_fleet_broken": "C40",
             "ad_sbc_too_high": "C73", "ak_reverse_fit_broken": "C122", "al_min_cash_negative": "C95", "am_amazon_switch_half": "C96",
             "ao_round_outside": "C94",
-            "av_handoff_mix_broken": "C154", "aw_mix_switch_half": "C142", "ay_tkq_revenue_mismatch": "C132"}
+            "av_handoff_mix_broken": "C154", "aw_mix_switch_half": "C142", "ay_tkq_revenue_mismatch": "C155"}
     eng0 = new_engine(model, fresh=True)
     assert eng0.get_name("CHK_Errors") == 0
     for sc in SCENARIOS[1:]:

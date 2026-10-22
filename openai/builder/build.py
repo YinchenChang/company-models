@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """產生 OpenAI 收支模型 Excel（v0.6-P1）。
 
-用法：python3 builder/build.py --tk-dir <Tokenomics v5.26 repo> --tk-pxq-dir <Tokenomics v19.0 repo> --out model/20261022_OpenAI_v0.6.1.xlsx [--base <前一版>] [--date 2026-10-22] [--tk-date 2026-10-08]
+用法：python3 builder/build.py --tk-dir <Tokenomics v19.0 repo（master model/CURRENT）> --out model/<YYYYMMDD>_OpenAI_v0.6.2.xlsx [--base <前一版>] [--date 2026-10-22] [--tk-date 2026-10-08]
   --base：前一版 xlsx；有給時依 Excel 優先規則保留 Excel 內已改過的藍字輸入（builder/preserve.py）。
 輸出經 LibreOffice 重算後才寫到 --out（內含快取值；engine 仍會強制重算）。同目錄寫 restore_log.txt、leafmap.csv、build_summary.json。
 """
@@ -20,7 +20,7 @@ sys.path.insert(0, str(HERE))
 import preserve  # noqa: E402
 import source_rules  # noqa: E402
 from common import F_BOLD, F_CALC, F_IN, F_NOTE, WRAP, header, lo_recalc, put, title  # noqa: E402
-from tk_link import PENDING_NOTE, read_pxq_snapshot, read_snapshot  # noqa: E402
+from tk_link import PENDING_NOTE, read_snapshot  # noqa: E402
 from v05_map import REGISTRY_PATH, SEP, build_map, coverage_report  # noqa: E402
 import p2  # noqa: E402
 import p3  # noqa: E402
@@ -28,7 +28,7 @@ import p4  # noqa: E402
 import p5  # noqa: E402
 import p6  # noqa: E402
 
-VERSION = "v0.6.1"
+VERSION = "v0.6.2"
 KIND_LABEL = {"SRC": "SRC_OAI", "INP": "Inputs", "FORMULA": "公式（後續工作包）", "DUP": "重複併入", "SKIP": "不遷入", "TK": "不遷入；改取 TK_Link"}
 SRC_COLS = ["SRC_ID", "指標", "數值", "低", "高", "單位", "口徑", "適用對象", "日期", "出處（v0.5 原文）", "來源等級", "立場", "立場說明",
             "一手／二手", "狀態", "取代者", "v0.5 標記", "查核狀態（v0.5 chk）", "v0.5 路徑", "模型使用位置", "備註",
@@ -147,49 +147,6 @@ def sheet_tk(wb, snap, date):
     return r - 1
 
 
-def sheet_tkq(wb, snap, date):
-    """TK_PxQ — 第二快照（Tokenomics v19.0；TKQ_ 前綴；v0.6.1）。結構同 TK_Link。"""
-    ws = wb.create_sheet("TK_PxQ")
-    title(ws, "TK_PxQ — Tokenomics 第二快照（P×Q 取數；釘選 v19.0；不用 Excel 外部連結）",
-          "只供 PxQ 頁使用：Interface N 節 P×Q 取數名稱、IF_HoldEcon／IF_ServeShare／IF_FreeShare 與 SRC_Demand 五個公司層級原始數據。具名範圍前綴 TKQ_。不得連 B4_／AL_／L1_／CTL_（Tokenomics README）。",
-          "與 TK_Link（v5.26）各自釘選、各自記版本；全量同步另案。Interface 向量為 15 欄＝5 世代 × 3 成本情境，基準欄為每世代第 2 欄。")
-    meta = [("Tokenomics 檔案", snap["file"], "TKQ_File"), ("Tokenomics 版本", snap["version"], "TKQ_Version"),
-            ("Tokenomics 提交 SHA（master）", snap["sha"], "TKQ_Commit"), ("檔案 SHA-256", snap["file_sha256"], "TKQ_FileSHA256"),
-            ("讀取日期", date, "TKQ_ReadDate")]
-    for i, (lab, v, name) in enumerate(meta):
-        put(ws, f"A{3 + i}", lab, F_BOLD)
-        put(ws, f"B{3 + i}", v, F_CALC)
-        nm(wb, name, f"TK_PxQ!$B${3 + i}")
-    put(ws, "I7", "世代", F_BOLD)
-    put(ws, "I8", "成本情境", F_BOLD)
-    L = openpyxl.utils.get_column_letter
-    for k in range(15):
-        put(ws, f"{L(TK_VCOL0 + k)}7", snap["hdr_gen"][k], F_CALC)
-        put(ws, f"{L(TK_VCOL0 + k)}8", snap["hdr_cost"][k], F_CALC)
-    nm(wb, "TKQ_HdrGen", "TK_PxQ!$J$7:$X$7")
-    nm(wb, "TKQ_HdrCost", "TK_PxQ!$J$8:$X$8")
-    header(ws, 9, ["Tokenomics 名稱", "本模型名稱", "說明", "單位", "欄數", "狀態", "Tokenomics 版本", "提交 SHA", "讀取日期"] + [f"值{k + 1}" for k in range(15)])
-    r = TK_FIRST
-    for row in snap["rows"]:
-        n = len(row["values"])
-        vals = [row["name"], "TKQ_" + row["name"], row["label"], row["unit"], n, "OK", snap["version"], snap["sha"][:7], date]
-        for c, v in enumerate(vals, start=1):
-            put(ws, f"{L(c)}{r}", v, F_CALC)
-        for k, v in enumerate(row["values"]):
-            put(ws, f"{L(TK_VCOL0 + k)}{r}", v, F_IN)
-        nm(wb, "TKQ_" + row["name"], f"TK_PxQ!$J${r}" + (f":${L(TK_VCOL0 + n - 1)}${r}" if n > 1 else ""))
-        r += 1
-    for row in snap["pending"]:
-        vals = [row["name"], "（Tokenomics v19.0 無此名稱；無具名範圍）", "Tokenomics 缺口：見報告", "", 0, row["status"], snap["version"], snap["sha"][:7], date]
-        for c, v in enumerate(vals, start=1):
-            put(ws, f"{L(c)}{r}", v, F_CALC)
-        r += 1
-    ws.column_dimensions["A"].width = 26
-    ws.column_dimensions["B"].width = 30
-    ws.column_dimensions["C"].width = 50
-    ws.freeze_panes = "D10"
-
-
 def sheet_map(wb, R):
     ws = wb.create_sheet("Map_v05")
     title(ws, "Map_v05 — v0.5 JSON 每個葉節點的去處（表 1 的明細）",
@@ -302,7 +259,7 @@ def sheet_derived(wb, R):
     ws.column_dimensions["G"].width = 70
 
 
-def sheet_checks(wb, R, n_src, n_inp, n_pending, P2, P3, P4, P5, P6, snapq):
+def sheet_checks(wb, R, n_src, n_inp, n_pending, P2, P3, P4, P5, P6):
     ws = wb.create_sheet("Checks")
     title(ws, "Checks — P1–P5 檢查（公式；結果 ERR 的格數＝CHK_Errors）",
           "OK／ERR：比對期望值；INFO：只列示。編號（C##）由 builder/id_registry.json 固定：新檢查取下一個號碼，退役號碼不重用（F1）。期望值為 builder 寫入的常數（黑字）。")
@@ -358,7 +315,7 @@ def sheet_checks(wb, R, n_src, n_inp, n_pending, P2, P3, P4, P5, P6, snapq):
     rows += p3_checks(R, P3, S, rowof)
     rows += p4_checks(R, P3, P4, S, rowof)
     rows += p5_checks(R, P2, P3, P4, P5, S, rowof)
-    rows += p6_checks(R, P6, snapq, S, rowof)
+    rows += p6_checks(R, P6, S, rowof)
     # F1：Checks 編號納入穩定 ID registry（label → C##）
     reg = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
     known = reg.setdefault("CHK", {})
@@ -595,22 +552,24 @@ def p5_checks(R, P2, P3, P4, P5, S, rowof):
     ]
 
 
-def p6_checks(R, P6, snapq, S, rowof):
+def p6_checks(R, P6, S, rowof):
     """v0.6.1（P×Q）新增的檢查（編號取 registry 下一號）。"""
     rw = P6.rows
     inp = lambda name, idx=None: inp_id(R, name, idx)  # noqa: E731
     sws = [inp("2025 平均上線 GW 主值選擇"), inp("世代組合來源"), inp("生產折減讀法")]
     sq = lambda tag: "+".join(f"ABS(PxQ!${c}${rw[tag + '_shsum']}-1)" for c in "DEFGH")  # noqa: E731
-    pend = len(snapq["pending"])
     return [
         ("P×Q：比值恆等式（比值 − 營收÷成本）平方和（主序列；應＝0）", "=SUMPRODUCT(PXQ_Identity,PXQ_Identity)", 0, "tol", "實際 m×L ÷ 所需 m×L ＝ 營收 ÷ 算力成本（Q 與牌價約掉）"),
-        ("P×Q：FY2025 營收兩來源相等（SRC_OAI_002 − TKQ_SRC_DEM_007，$B）", f"={S('營收：FY2025')}-TKQ_SRC_DEM_007", 0, "tol", "13.07"),
-        ("P×Q：TK_PxQ 禁用前綴名稱數（B4_／AL_／L1_／CTL_）", '=COUNTIF(TK_PxQ!$A$10:$A$100,"B4_*")+COUNTIF(TK_PxQ!$A$10:$A$100,"AL_*")+COUNTIF(TK_PxQ!$A$10:$A$100,"L1_*")+COUNTIF(TK_PxQ!$A$10:$A$100,"CTL_*")', 0, "eq", "Tokenomics README 規定；PxQ 頁引用另由 test_builder 白名單測試把關"),
-        ("P×Q：TK_Link 版本維持 v5.26", "=TK_Version", "v5.26", "eq", "既有 63 名不隨 v0.6.1 更新（全量同步另案）；值相同由 test_builder 與 v0.6 逐格比對"),
-        ("P×Q：TK_Link 已取值名稱數維持 63", '=COUNTIF(TK_Link!$F$10:$F$200,"OK")', 63, "eq", ""),
-        ("P×Q：TK_PxQ 版本＝v19.0", "=TKQ_Version", "v19.0", "eq", "釘選 Tokenomics master ad33e28"),
-        ("P×Q：TK_PxQ 待 Tokenomics 提供名稱數", f'=COUNTIF(TK_PxQ!$F$10:$F$100,"{PENDING_NOTE}")', pend, "eq", "工作單點名、v19.0 無：IF_PxEffMix_Lo／_Hi（只有 IF_PxEffMix25 有低高）"),
-        ("P×Q：TK_PxQ 錯誤值格數", "=SUMPRODUCT(--ISERROR(TK_PxQ!$J$10:$X$100))", 0, "eq", ""),
+        ("P×Q：FY2025 營收兩來源相等（SRC_OAI_002 − TK_SRC_DEM_007，$B）", f"={S('營收：FY2025')}-TK_SRC_DEM_007", 0, "tol", "13.07"),
+        ("v0.6.2：TK_Link 為單一快照，版本＝v19.0", "=TK_Version", "v19.0", "eq", "v0.6.2 起 TK_PxQ 併入 TK_Link；Tokenomics master model/CURRENT"),
+        ("v0.6.2：TK_Link 已取值名稱數（63 原名＋25 併入／新增）", '=COUNTIF(TK_Link!$F$10:$F$200,"OK")', 88, "eq", "原 63 名＋P×Q 取數名稱 22＋RNG_ 3；IF_HoldEcon、SRC_DEM_004／006–009 原已在 63 名內"),
+        ("v0.6.2：TK_Link 檔案 SHA-256 已記錄（非空）", "=IF(LEN(TK_FileSHA256)=64,1,0)", 1, "eq", "Tokenomics 檔案 SHA-256（64 位十六進位）"),
+        ("v0.6.2 對照：研發 GW 占（研發＋推論）比，本模型 2025", "=INDEX(CMP_RDGW,1)/(INDEX(CMP_RDGW,1)+INDEX(CMP_InfGW,1))", None, "info",
+         "口徑對應 Tokenomics Q1（研發 GW ÷ 研發＋服務 GW）；本模型研發 GW 為殘差（2026 起）、2025 為訓練支出 ÷ 合約價"),
+        ("v0.6.2 對照：TK IF_AllocQ1（R1，支出路線；v11.0／v12.0 起口徑改變，原 v5.26＝0.636）", "=TK_IF_AllocQ1", None, "info", "v19.0＝0.184"),
+        ("v0.6.2 對照：TK IF_AllocQ1 區間下限（RNG_IF_AllocQ1_Lo）", "=TK_RNG_IF_AllocQ1_Lo", None, "info", "v13.0 起視為區間"),
+        ("v0.6.2 對照：TK IF_AllocQ1 區間上限（RNG_IF_AllocQ1_Hi）", "=TK_RNG_IF_AllocQ1_Hi", None, "info", "v13.0 起視為區間"),
+        ("v0.6.2：Tokenomics 區間時效旗標 RNG_StaleFlag＝『一致』", '=IF(TK_RNG_StaleFlag="一致",1,0)', 1, "eq", "使用 IF_AllocQ1 區間前須確認（Tokenomics 規定）；不一致時此列 ERR"),
         ("P×Q：PxQ 頁錯誤值格數", "=SUMPRODUCT(--ISERROR(PxQ!$D$7:$H$400))", 0, "eq", ""),
         ("P×Q：世代占比合計與 1 的絕對差之和（主序列）", "=" + sq("m"), 0, "tol", "含 Inputs 開關與交接檔組合（2026）"),
         ("P×Q：世代占比合計與 1 的絕對差之和（預覽基準＝交接檔組合）", "=" + sq("pv"), 0, "tol", "交接檔 2026 組合六列合計須為 1"),
@@ -628,7 +587,7 @@ def p6_checks(R, P6, snapq, S, rowof):
     ]
 
 
-def sheet_readme(wb, snap, date, summary, snapq=None, tkdate=None):
+def sheet_readme(wb, snap, date, summary, tkdate=None):
     ws = wb.active
     ws.title = "README"
     title(ws, f"OpenAI 收支模型 {VERSION}（{date}）",
@@ -637,8 +596,7 @@ def sheet_readme(wb, snap, date, summary, snapq=None, tkdate=None):
         ("本版範圍", "P1：repo 骨架、SRC_OAI（公司財務原始數據）、TK_Link（Tokenomics 快照）、Inputs（v0.5 Assumed 項目遷入）。P2：Demand（需求與 token 量）、Revenue（營收、Microsoft 分成、淨額）。P3：Compute（算力需求與供給、η、容量上限、VR 等值）、Revenue 第八節（截頂後營收）。P4：Cost（算力成本、供應商持有成本與雲端毛利、非算力成本、Q3、命題輸出、V16 Azure 檢查）、Compute 第十三節（自建 GW 計入供給）。融資於 P5。"),
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構，重建時保留 Excel 內已改過的藍字。"),
         ("SRC_OAI", f"{summary['src']} 列；v0.5『已取得的原始訊息』逐筆遷入（Interested-party／Verified）。"),
-        ("TK_Link", f"Tokenomics {snap['version']}（{snap['file']}），master 提交 {snap['sha'][:7]}，讀取日 {tkdate or date}；{summary['tk_ok']} 個名稱有值、{summary['tk_pending']} 個待 Tokenomics 提供。"),
-        ("TK_PxQ", f"v0.6.1 第二快照：Tokenomics {snapq['version']}（{snapq['file']}），master 提交 {snapq['sha'][:7]}，檔案 SHA-256 {snapq['file_sha256'][:12]}…，讀取日 {date}；{len(snapq['rows'])} 個名稱有值（TKQ_ 前綴；只供 PxQ 頁）、{len(snapq['pending'])} 個待 Tokenomics 提供。"),
+        ("TK_Link", f"單一快照（v0.6.2 起；TK_PxQ 併入，TKQ_ 前綴退役）：Tokenomics {snap['version']}（{snap['file']}），master 提交 {snap['sha'][:7]}，讀取日 {tkdate or date}；{summary['tk_ok']} 個名稱有值、{summary['tk_pending']} 個待 Tokenomics 提供。"),
         ("PxQ", "v0.6.1 P×Q 與回本比值：實際 m×L ÷ 所需 m×L（＝營收 ÷ 算力成本）的年度序列（2025 指數／線性、2026 三情境）、中間量（h、C、Q、P_eff、隱含 m、持平 GW）、敏感度、外部支出對照、預覽值對帳（具名範圍 PXQ_*）。"),
         ("Inputs", f"{summary['inp']} 列；v0.5 Assumed／Analogy／Decision 項目（長表）。"),
         ("Map_v05", f"v0.5 JSON {summary['leaves']} 個葉節點的去處。"),
@@ -663,8 +621,7 @@ def sheet_readme(wb, snap, date, summary, snapq=None, tkdate=None):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tk-dir", required=True, type=Path)
-    ap.add_argument("--tk-pxq-dir", required=True, type=Path, help="Tokenomics v19.0 checkout（第二快照 TK_PxQ）")
-    ap.add_argument("--tk-date", default=None, help="TK_Link 的讀取日期（預設同 --date；v0.6.1 保持 2026-10-08，因 v5.26 快照未重讀）")
+    ap.add_argument("--tk-date", default=None, help="TK_Link 的讀取日期（預設同 --date）")
     ap.add_argument("--out", required=True, type=Path)
     ap.add_argument("--base", type=Path)
     ap.add_argument("--date", default="2026-10-04")
@@ -675,8 +632,6 @@ def main():
     if miss:
         sys.exit(f"v0.5 葉節點未分類：{miss[:10]}")
     snap = read_snapshot(a.tk_dir)
-    snapq = read_pxq_snapshot(a.tk_pxq_dir)
-    assert snapq["version"] == "v19.0", snapq["version"]
     outdir = Path("build_out")            # 紀錄檔（restore_log、leafmap、build_summary）不放進 model/
     outdir.mkdir(parents=True, exist_ok=True)
     a.out.parent.mkdir(parents=True, exist_ok=True)
@@ -698,18 +653,17 @@ def main():
     wb = openpyxl.Workbook()
     summary = dict(src=len(R.src_rows), inp=len(R.inp_rows), leaves=len(R.leaves), tk_ok=len(snap["rows"]),
                    tk_pending=len(snap["pending"]))
-    sheet_readme(wb, snap, a.date, summary, snapq, a.tk_date)
+    sheet_readme(wb, snap, a.date, summary, a.tk_date)
     sheet_src(wb, R, final)
     sheet_tk(wb, snap, a.tk_date or a.date)
-    sheet_tkq(wb, snapq, a.date)
     sheet_inputs(wb, R, final)
     sheet_derived(wb, R)
     P2 = p2.build_p2(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), lambda iid: inp_row(R, iid))
     P3 = p3.build_p3(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), lambda iid: inp_row(R, iid), P2, snap)
     P4 = p4.build_p4(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), lambda iid: inp_row(R, iid), P2, P3, snap)
     P5 = p5.build_p5(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), lambda iid: inp_row(R, iid), P2, P3, P4)
-    P6 = p6.build_p6(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), nm, snapq)
-    sheet_checks(wb, R, len(R.src_rows), len(R.inp_rows), summary["tk_pending"], P2, P3, P4, P5, P6, snapq)
+    P6 = p6.build_p6(wb, R, lambda m: sid(R, m), lambda n, i=None: inp_id(R, n, i), nm, snap)
+    sheet_checks(wb, R, len(R.src_rows), len(R.inp_rows), summary["tk_pending"], P2, P3, P4, P5, P6)
     sheet_map(wb, R)
     preserve.write_defaults(wb, final)
     raw = Path(tempfile.mkdtemp()) / a.out.name

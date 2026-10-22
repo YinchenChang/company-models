@@ -4,7 +4,7 @@
    顯示文字＝同一格式化規則的結果，data-v 與 engine 值相對誤差 ≤1e-9。
 2. HTML 無任何外部引用（http://、https://、//cdn、@import、url(、src=、href= 外部）。
 3. dist 的 xlsx 與 model/CURRENT 位元組相同；HTML 只有一份且對應現行版本。
-4. 文字敘述中的定性主張（每年差額皆為負、研發 GW 占比 6–9 成等）與 Excel 一致。
+4. 文字敘述中的定性主張（每年差額皆為負、研發 GW 占比 5–9 成等）與 Excel 一致。
 """
 from __future__ import annotations
 
@@ -150,5 +150,5 @@ def test_narrative_claims(engine):
     assert all(g < 0 for g in gap), "『每一年差額皆為負』不成立"
     rd, dem = engine.get_name("CMP_RDGW"), engine.get_name("CMP_DemandGW")
     shares = [r / d for r, d, y in zip(rd, dem, YEARS) if y >= 2027]
-    assert all(0.6 <= s <= 0.9 for s in shares), f"『2027 起研發占總需求 6–9 成』不成立：{shares}"
+    assert all(0.5 <= s <= 0.9 for s in shares), f"『2027 起研發占總需求 5–9 成』不成立：{shares}"
     assert engine.get_name("CHK_Errors") == 0
