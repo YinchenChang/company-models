@@ -79,13 +79,28 @@ for y, (v, ref) in TS.items():
     r = CAPSRC["ts"][y - 26]
     inp(f"cap_ts_{y}", f"台積電資本支出 {2000+y}", "$B", None, v, None, r[6], ref, f"模型 In 標記：{r[6]}｜{r[7]}")
 
-sec("B. 設備占資本支出比例（兩個來源給低／高；基準＝兩者中點，機械取值，未對照任何預測調整）")
+sec("B. 設備占資本支出比例：按公司分開（公司有揭露建築與設備比例者用公司揭露；未找到者用業界 58–70%，Analogy）")
 SH_SRC1 = "SEMI 2025 WFE 116.9B（年中預測新聞稿）÷ Semiconductor Intelligence 2025 全球半導體資本支出 166B（https://www.semiconductorintelligence.com/capex-up-for-foundry-memory/）＝70.4% → 高 70%"
-SH_SRC2 = "Rebound Capital（Substack）資本支出→晶圓前段設備轉換率約 58%（https://reboundcapital.substack.com/p/industry-deep-dive-semiconductor）→ 低 58%。業界合計值，未找到記憶體／代工分項"
-inp("sh_mem", "記憶體：設備占資本支出比例", "%", 0.58, 0.64, 0.70, "Analogy", SH_SRC1, SH_SRC2 + "。方向性證據：美光稱 FY27 資本支出多數為建築（無塵室），故記憶體實際比例可能低於業界值——見 Mkt「隱含設備占比」")
-inp("sh_fd", "代工與邏輯：設備占資本支出比例", "%", 0.58, 0.64, 0.70, "Analogy", SH_SRC1, SH_SRC2 + "。台積電資本支出含先進封裝、光罩等（公司稱 10–20%），未另扣")
-inp("fl_mem", "其他記憶體廠設備支出下限（殘差為負時採用）", "$B", 0, 0, 10, "Assumed", "無：長鑫、鎧俠、SanDisk、南亞等 2026 設備支出公開估計未找到", "下限 0＝殘差為負時視為其他廠為 0（總額為下限）；高 10 無依據，只用於敏感度")
-inp("fl_fd", "其他代工邏輯設備支出下限", "$B", 0, 0, 0, "Assumed", "同上（台積電以外代工邏輯）", "殘差為正，未啟用")
+SH_SRC2 = "Rebound Capital（Substack）資本支出→晶圓前段設備轉換率約 58%（https://reboundcapital.substack.com/p/industry-deep-dive-semiconductor）→ 低 58%；基準取兩者中點 64%。業界合計值，未找到記憶體／代工分項"
+# 美光：由公司揭露推導（建築占增量比例 c；FY25 基準設備占比＝業界中點）
+MU25, MU26, MU27 = 13.80, MU[26][0], MU[27][0]; B25 = 0.64
+def mu_share(cap_y, cap_prev, cons_prev, c): return 1 - (cons_prev + c * (cap_y - cap_prev)) / cap_y
+cons25 = (1 - B25) * MU25
+SHM = {}
+for c_, tag in ((0.5, "hi"), (0.6, "base"), (0.7, "lo")):
+    cons26 = cons25 + c_ * (MU26 - MU25); cons27 = cons26 + c_ * (MU27 - MU26)
+    SHM[tag] = (round(1 - cons26 / MU26, 3), round(1 - cons27 / MU27, 3))
+SHM["hi"] = (SHM["hi"][0], min(SHM["hi"][1], 0.50))   # FY27 上限 50%：使用者指定（鏈式推導上限約 53%，見說明）
+MU_Q3 = "FQ3 FY26 準備稿（https://s25.q4cdn.com/621799436/files/doc_financials/2026/q3/Q3-FY26-Prepared-Remarks.pdf）：「more than half the increase year over year in fiscal 2027 from construction capex as we pull in cleanroom capacity required to address long-term demand」（引自搜尋摘要，未能開啟全文）"
+MU_Q4 = "FQ4 FY26 法說（https://s25.q4cdn.com/621799436/files/doc_financials/2026/q4/Q4-FY26-Prepared-Remarks.pdf；逐字稿 https://www.fool.com/earnings/call-transcripts/2026/10/01/micron-mu-q4-2026-earnings-call-transcript/）：「A majority of the increase is for construction capex, most of which is to help accelerate clean room space availability in late calendar 2028 and beyond」「a meaningfully higher growth rate in construction CapEx as compared to equipment CapEx in fiscal 2027」（引自搜尋摘要）"
+MU_NOTE = ("注意：公司原文是「資本支出『增量』多數為建築」，不是「FY27 資本支出多數為建築」，故文稿本身不給出設備占比，只給出下限性的建築比例。"
+           "推導：FY25 淨資本支出 13.80（8-K）× (1−64%) ＝建築基數；之後每年增量中建築占 c（c＝50%「多於一半」為上限情境，60%、70% 為 Assumed 區間）；"
+           f"FY26＝{MU26:.2f}、FY27＝{MU27:.0f}（美光模型）。FY28–FY29 無揭露，沿用 FY27。")
+inp("sh_mu_26", "美光：FY26 設備占資本支出比例", "%", SHM["lo"][0], SHM["base"][0], SHM["hi"][0], "Derived", MU_Q4 + "｜FY26 增量多數為無塵室建築（摘要轉述，非逐字）", MU_NOTE + " 引文為公司一手（Verified），比例為 Derived（FY25 基準 64% 為 Analogy、c 為 Assumed）")
+inp("sh_mu_27", "美光：FY27–FY29 設備占資本支出比例", "%", SHM["lo"][1], SHM["base"][1], SHM["hi"][1], "Derived", MU_Q3 + "；" + MU_Q4, MU_NOTE + " 高＝50% 為使用者指定上限（鏈式推導在 c＝50% 時約 53%，故 50% 較嚴）。引文為公司一手，比例為 Derived")
+inp("sh_sk", "SK 海力士：設備占資本支出比例", "%", 0.58, 0.64, 0.70, "Analogy", SH_SRC1, SH_SRC2 + "。未找到公司揭露（定性：董事會 2026-02 核准 21.6 兆韓元完成龍仁第一晶圓廠結構工程與二至六期無塵室——TrendForce／UPI；無年度建築／設備比例）")
+inp("sh_ss", "三星（記憶體）：設備占資本支出比例", "%", 0.58, 0.64, 0.70, "Analogy", SH_SRC1, SH_SRC2 + "。未找到公司揭露（P5 無塵室先行、設備發包另行；無建築／設備比例）；電子新聞稱「晶圓廠成本中設備 70–80%」為業界泛稱，非三星數字")
+inp("sh_fd", "台積電（代工與邏輯）：設備占資本支出比例", "%", 0.58, 0.64, 0.70, "Analogy", SH_SRC1, SH_SRC2 + "。未找到公司揭露；台積電資本支出含先進封裝、光罩等（公司稱 10–20%），未另扣")
 sec("C. SEMI 2026-07 年中預測（Interested-party）。2026 金額為新聞稿值；2027、2028 以年增率連乘；2028 測試、封裝為新聞稿金額")
 for nm, k, lvl, g26, g27, g28 in (("DRAM 設備", "dram", 38.8, 0.390, 0.274, 0.150), ("NAND 設備", "nand", 13.9, 0.307, 0.311, 0.145),
                                 ("代工與邏輯設備", "fd", 78.0, 0.189, 0.181, 0.136), ("晶圓前段設備合計（WFE）", "wfe", 143.9, 0.231, 0.218, 0.141)):
@@ -117,8 +132,8 @@ inp("rc_lam26", "Lam Research 2026 WFE（低 150B）", "$B", None, 150, None, "I
 inp("rc_lam27", "Lam Research 2027 WFE（>200B，下限；額外對照）", "$B", None, 200, None, "Interested-party", "同上法說稿：2027 預估 >$200B", "使用者未列；額外列示")
 inp("rc_kla26", "KLA 2026 WFE（低 150B；含先進封裝）", "$B", None, 150, None, "Interested-party", "使用者提供；KLA FQ4 2026 法說（摘要：https://finance.biggo.com/news/US_KLAC_2026-07-28）", "社群摘要 https://x.com/TheValueist/status/2082235400190640364（弱）；KLA 2025 約 120 vs SEMI 116.9，口徑含先進封裝")
 inp("rc_kla27", "KLA 2027 規劃（約 190B）", "$B", None, 190, None, "Interested-party", "使用者提供；同上 KLA 法說摘要", "同上社群摘要；一手逐字稿未找到")
-inp("rc_ms27", "Morgan Stanley 2027 WFE", "$B", None, 202, None, "Interested-party", "使用者提供；未能獨立查到", "搜尋僅查到較早版本 149／191／215（2026／27／28；https://www.investing.com/news/stock-market-news/semicap-stocks-morgan-stanley-raises-wfe-outlook-and-shifts-ratings-4696580）")
-inp("rc_ms28", "Morgan Stanley 2028 WFE", "$B", None, 227, None, "Interested-party", "使用者提供；未能獨立查到", "同上")
+inp("rc_ms27", "Morgan Stanley 2027 WFE", "$B", None, 202, None, "Interested-party", "二手轉述（itiger，2026-07-06；連結由使用者提供：https://www.itiger.com/news/2649678863——「2027 由 191 上修到 202，2028 由 215 上修到 227」；本環境無法開啟該頁，未直接核對）", "上修前版本 191／215 與 Investing.com 報導一致（2026／27／28＝149／191／215；https://www.investing.com/news/stock-market-news/semicap-stocks-morgan-stanley-raises-wfe-outlook-and-shifts-ratings-4696580），故 202／227 為其上修值")
+inp("rc_ms28", "Morgan Stanley 2028 WFE", "$B", None, 227, None, "Interested-party", "同上（itiger，二手轉述）", "同上")
 inp("rc_gs26", "Goldman Sachs 2026 WFE", "$B", None, 150, None, "Interested-party", GS_URL, "https://www.kucoin.com/news/flash/goldman-sachs-upgrades-wfe-forecast-to-1-5-trillion-by-2026-dram-and-foundry-drive-growth（標題單位誤植，內文 150）")
 inp("rc_gs27", "Goldman Sachs 2027 WFE", "$B", None, 218, None, "Interested-party", GS_URL, "同上")
 inp("rc_gs28", "Goldman Sachs 2028 WFE", "$B", None, 281, None, "Interested-party", GS_URL, "同上")
@@ -183,18 +198,22 @@ mput("SK 海力士資本支出（美元）", "$B", {y: f"=cap_sk_{y}*1000/fx" fo
 mput("美光資本支出（淨；FY≈日曆年）", "$B", {y: f"=cap_mu_{y}" for y in Y2}, key="mu")
 mput("三星記憶體資本支出（美元）", "$B", {y: f"=cap_ss_{y}*1000/fx" for y in Y2}, key="ss")
 mput("三家資本支出合計", "$B", {y: f"={c('sk', y)}+{c('mu', y)}+{c('ss', y)}" for y in Y2}, key="cap3", bold=True)
-mput("三家設備＝資本支出 × 設備占比", "$B", {y: f"={c('cap3', y)}*sh_mem" for y in Y2}, key="eq3")
-mput("其他記憶體廠（殘差）＝SEMI DRAM＋NAND − 三家設備", "$B", {y: f"={c('semi_dram', y)}+{c('semi_nand', y)}-{c('eq3', y)}" for y in Y2}, key="oth_raw", note="Derived；為負＝三家由下而上已超過 SEMI 記憶體總額")
-mput("其他記憶體廠（採用＝MAX(殘差, 下限)）", "$B", {y: f"=MAX({c('oth_raw', y)},fl_mem)" for y in Y2}, key="oth")
-mput("記憶體設備合計", "$B", {25: f"={c('semi_dram', 25)}+{c('semi_nand', 25)}", **{y: f"={c('eq3', y)}+{c('oth', y)}" for y in Y2}}, key="mem", bold=True, note="2025＝SEMI 實績")
-mput("旗標：殘差為負（1＝是）", "", {y: f"=IF({c('oth_raw', y)}<0,1,0)" for y in Y2}, key="neg", fmt="0")
-mput("隱含設備占比（殘差剛好為 0）＝SEMI 記憶體 ÷ 三家資本支出", "%", {y: f"=({c('semi_dram', y)}+{c('semi_nand', y)})/{c('cap3', y)}" for y in Y2}, key="impl_m", fmt="0.0%", note="診斷值，非輸入。低於 In 的 58–70% 區間＝三家資本支出內含大量非設備支出（建築、無塵室）或 SEMI 低估")
+mput("SK 海力士設備＝資本支出 × sh_sk", "$B", {y: f"={c('sk', y)}*sh_sk" for y in Y2}, key="eq_sk")
+mput("美光設備＝資本支出 × sh_mu（FY26／FY27–29）", "$B", {26: f"={c('mu', 26)}*sh_mu_26", **{y: f"={c('mu', y)}*sh_mu_27" for y in (27, 28, 29)}}, key="eq_mu")
+mput("三星記憶體設備＝資本支出 × sh_ss", "$B", {y: f"={c('ss', y)}*sh_ss" for y in Y2}, key="eq_ss")
+mput("三家設備合計", "$B", {y: f"={c('eq_sk', y)}+{c('eq_mu', y)}+{c('eq_ss', y)}" for y in Y2}, key="eq3", bold=True)
+mput("  三家加權設備占比（採用）", "%", {y: f"={c('eq3', y)}/{c('cap3', y)}" for y in Y2}, key="wsh", fmt="0.0%")
+mput("其他記憶體廠（殘差）＝SEMI DRAM＋NAND − 三家設備（照實顯示，含負值）", "$B", {y: f"={c('semi_dram', y)}+{c('semi_nand', y)}-{c('eq3', y)}" for y in Y2}, key="oth", note="Derived。為負＝三家資本支出 × 設備占比已超過 SEMI 記憶體總額；這本身是一項發現（見下列說明）")
+mput("記憶體設備合計＝三家＋其他（殘差）", "$B", {25: f"={c('semi_dram', 25)}+{c('semi_nand', 25)}", **{y: f"={c('eq3', y)}+{c('oth', y)}" for y in Y2}}, key="mem", bold=True, note="因其他廠以殘差定義，合計≡SEMI；由下而上只決定「三家 vs 其他」的分配，不決定總額")
+mput("旗標：殘差為負（1＝是）", "", {y: f"=IF({c('oth', y)}<0,1,0)" for y in Y2}, key="neg", fmt="0")
+mput("SEMI 隱含設備占比（殘差剛好為 0）＝SEMI 記憶體 ÷ 三家資本支出", "%", {y: f"=({c('semi_dram', y)}+{c('semi_nand', y)})/{c('cap3', y)}" for y in Y2}, key="impl_m", fmt="0.0%", note="診斷值，不是輸入、不用於任何情境")
+M.cell(mr[0], 1, "發現：殘差為負＝三家資本支出 × 設備占比已超過 SEMI 的 DRAM＋NAND 總額。可能原因：資本支出含建築（美光稱增量多數為建築）與設備營收的口徑與時差、SEMI 預測偏低、其他廠（長鑫、鎧俠等）被 SEMI 計入；本模型不調整任何參數去消除它。"); mr[0] += 1
 mr[0] += 1
 msec("3. 代工與邏輯晶圓前段設備（台積電由下而上 ＋ 其他 ＝ SEMI 差額，標 Derived）")
 mput("台積電資本支出", "$B", {y: f"=cap_ts_{y}" for y in Y2}, key="ts")
-mput("台積電設備＝資本支出 × 設備占比", "$B", {y: f"={c('ts', y)}*sh_fd" for y in Y2}, key="eqts")
-mput("其他代工與邏輯（殘差）＝SEMI 代工邏輯 − 台積電設備", "$B", {y: f"={c('semi_fd', y)}-{c('eqts', y)}" for y in Y2}, key="fo_raw", note="Derived：三星晶圓代工、Intel、中芯等")
-mput("其他代工與邏輯（採用）", "$B", {y: f"=MAX({c('fo_raw', y)},fl_fd)" for y in Y2}, key="fo")
+mput("台積電設備＝資本支出 × sh_fd", "$B", {y: f"={c('ts', y)}*sh_fd" for y in Y2}, key="eqts")
+mput("其他代工與邏輯（殘差）＝SEMI 代工邏輯 − 台積電設備", "$B", {y: f"={c('semi_fd', y)}-{c('eqts', y)}" for y in Y2}, key="fo_raw", note="Derived：三星晶圓代工、Intel、中芯等；為負則照實顯示")
+mput("其他代工與邏輯（殘差，照實顯示）", "$B", {y: f"={c('fo_raw', y)}" for y in Y2}, key="fo")
 mput("代工與邏輯設備合計", "$B", {25: f"={c('semi_fd', 25)}", **{y: f"={c('eqts', y)}+{c('fo', y)}" for y in Y2}}, key="fdt", bold=True)
 mput("旗標：殘差為負（1＝是）", "", {y: f"=IF({c('fo_raw', y)}<0,1,0)" for y in Y2}, key="neg_fd", fmt="0")
 mput("隱含設備占比（殘差剛好為 0）", "%", {y: f"={c('semi_fd', y)}/{c('ts', y)}" for y in Y2}, key="impl_f", fmt="0.0%", note="此為台積電占 SEMI 代工邏輯的倒數；>100% 表示台積電只占 SEMI 的一部分")
@@ -290,8 +309,8 @@ add("晶圓前段", 2026, "Lam Research（低 150B）", "=rc_lam26", "wfe", "Lam
 add("晶圓前段", 2026, "KLA（低 150B；含先進封裝）", "=rc_kla26", "wfe", "KLA 口徑含先進封裝，2025 基準約 120 vs SEMI 116.9")
 add("晶圓前段", 2027, "KLA 規劃（約 190B）", "=rc_kla27", "wfe", "")
 add("晶圓前段", 2027, "Lam Research（>200B；額外對照）", "=rc_lam27", "wfe", "取下限")
-add("晶圓前段", 2027, "Morgan Stanley", "=rc_ms27", "wfe", "使用者提供，未能獨立查到；較早版本 191")
-add("晶圓前段", 2028, "Morgan Stanley", "=rc_ms28", "wfe", "使用者提供，未能獨立查到；較早版本 215")
+add("晶圓前段", 2027, "Morgan Stanley（itiger 二手轉述 https://www.itiger.com/news/2649678863）", "=rc_ms27", "wfe", "itiger 二手轉述（2026-07-06）：2027 由 191 上修到 202；連結見 In 頁")
+add("晶圓前段", 2028, "Morgan Stanley（itiger 二手轉述 https://www.itiger.com/news/2649678863）", "=rc_ms28", "wfe", "itiger 二手轉述：2028 由 215 上修到 227")
 add("晶圓前段", 2026, "Goldman Sachs", "=rc_gs26", "wfe", "")
 add("晶圓前段", 2027, "Goldman Sachs", "=rc_gs27", "wfe", "")
 add("晶圓前段", 2028, "Goldman Sachs", "=rc_gs28", "wfe", "")
@@ -313,40 +332,40 @@ for label, y, src, expr, mk, note, growth in items:
     RC.cell(rr, 12, note); rr += 1
 RC.cell(rr + 1, 1, "核對：SEMI 2026 分項加總").font = BOLD
 RC.cell(rr + 2, 1, "DRAM＋NAND＋代工邏輯＋其他前段 − WFE"); RC.cell(rr + 2, 4, f"=Mkt!D{MR['semi_dram']}+Mkt!D{MR['semi_nand']}+Mkt!D{MR['semi_fd']}+Mkt!D{MR['semi_ofe']}-Mkt!D{MR['semi_wfe']}").number_format = "0.000"
-RC.cell(rr + 3, 1, "注意：A 路徑中「其他廠」＝SEMI − 三家／台積電，殘差為正時 A 的各 SEMI 分項≡SEMI；與 SEMI 的獨立差距只出現在殘差為負（採下限）之處。獨立檢驗來自 Lam／KLA／MS／GS。")
+RC.cell(rr + 3, 1, "注意：A 路徑的「其他廠」＝SEMI − 已知廠（殘差，含負值），故 A 的記憶體、代工邏輯、前段與合計≡SEMI（2029 沿 g29）；對 SEMI 的差距為 0 是結構結果，非獨立驗證。獨立檢驗只來自 Lam／KLA／Morgan Stanley／Goldman Sachs。")
 for col, w in zip("ABCDEFGHIJKL", [14, 7, 36, 10, 10, 9, 10, 9, 10, 9, 16, 70]): RC.column_dimensions[col].width = w
 RECON_LAST = rr
 
 # ---------------- Sens ----------------
 SE = wb.create_sheet("Sens")
-SE["A1"] = "Sens — 一次動一個輸入（低／高取 In 的區間）；輸出：情境 A 2027、2028 設備總額（$B）與 2029 情境 A"
-hdr(SE, 3, ["輸入", "2027 A", "相對基準", "2028 A", "相對基準", "2029 A", "相對基準", "說明"])
-def tot_formula(y, sh_m="sh_mem", sh_f="sh_fd", fxe="fx", fl="fl_mem", g="g29"):
+SE["A1"] = "Sens — 一次動一個輸入（低／高取 In 的區間）。情境 A 的總額由 SEMI 決定（其他廠為殘差），故占比與匯率只改變「其他記憶體廠殘差」；2029 總額只對 g29 敏感"
+hdr(SE, 3, ["輸入", "2026 殘差", "2027 殘差", "2028 殘差", "2029 殘差", "2029 A 總額", "相對基準", "說明"])
+def resid(y, sk="sh_sk", mu=None, ss="sh_ss", fxe="fx", g="g29"):
+    mu = mu or ("sh_mu_26" if y == 26 else "sh_mu_27")
     col = YC[y]
-    def semi(k):
-        if y < 29: return f"Mkt!{col}{MR['semi_'+k]}"
-        return f"Mkt!F{MR['semi_'+k]}*(1+{g})"
-    three = f"(cap_sk_{y}*1000/{fxe}+cap_mu_{y}+cap_ss_{y}*1000/{fxe})*{sh_m}"
-    mem = f"({three}+MAX({semi('dram')}+{semi('nand')}-{three},{fl}))"
-    ts = f"(cap_ts_{y}*{sh_f})"
-    fd = f"({ts}+MAX({semi('fd')}-{ts},fl_fd))"
-    wfe = semi("wfe"); ofe = f"({wfe}-{semi('fd')}-{semi('dram')}-{semi('nand')})"
-    return f"={mem}+{fd}+{ofe}+{semi('test')}+{semi('pkg')}"
-cases = [("基準", {}), ("記憶體設備占比 低", {"sh_m": "sh_mem_lo"}), ("記憶體設備占比 高", {"sh_m": "sh_mem_hi"}),
-         ("代工設備占比 低", {"sh_f": "sh_fd_lo"}), ("代工設備占比 高", {"sh_f": "sh_fd_hi"}),
-         ("匯率 低（1,350）", {"fxe": "fx_lo"}), ("匯率 高（1,500）", {"fxe": "fx_hi"}), ("其他記憶體廠下限 高（10）", {"fl": "fl_mem_hi"}),
+    semi = (lambda k: f"Mkt!{col}{MR['semi_'+k]}") if y < 29 else (lambda k: f"Mkt!F{MR['semi_'+k]}*(1+{g})")
+    three = f"(cap_sk_{y}*1000/{fxe}*{sk}+cap_mu_{y}*{mu}+cap_ss_{y}*1000/{fxe}*{ss})"
+    return f"={semi('dram')}+{semi('nand')}-{three}"
+def total29(g):
+    return f"=Mkt!F{MR['semi_wfe']}*(1+{g})+Mkt!F{MR['semi_test']}*(1+{g})+Mkt!F{MR['semi_pkg']}*(1+{g})"
+cases = [("基準", {}), ("SK 海力士設備占比 低（58%）", {"sk": "sh_sk_lo"}), ("SK 海力士設備占比 高（70%）", {"sk": "sh_sk_hi"}),
+         ("三星設備占比 低", {"ss": "sh_ss_lo"}), ("三星設備占比 高", {"ss": "sh_ss_hi"}),
+         ("美光設備占比 低", {"mu": ("sh_mu_26_lo", "sh_mu_27_lo")}), ("美光設備占比 高", {"mu": ("sh_mu_26_hi", "sh_mu_27_hi")}),
+         ("匯率 低（1,350）", {"fxe": "fx_lo"}), ("匯率 高（1,500）", {"fxe": "fx_hi"}),
          ("2029 SEMI 外推年增 低（0%）", {"g": "g29_lo"}), ("2029 SEMI 外推年增 高（12%）", {"g": "g29_hi"})]
 for i, (nm, kw) in enumerate(cases):
     rr = 4 + i; SE.cell(rr, 1, nm)
-    for j, y in ((2, 27), (4, 28), (6, 29)):
-        SE.cell(rr, j, tot_formula(y, **kw)).number_format = "0.0"
-        SE.cell(rr, j + 1, f"={'BDF'[(j-2)//2]}{rr}/{'BDF'[(j-2)//2]}$4-1").number_format = "0.0%"
-SE.cell(4, 8, "同 Mkt 情境 A（公式重算；與 Mkt 差額見下）")
-SE.cell(7, 8, "代工邏輯殘差為正：A 路徑的代工邏輯總額＝SEMI，占比只改台積電與其他廠的分配，總額不變")
-SE.cell(5, 8, "記憶體殘差為負（採下限 0）：總額＝三家資本支出 × 占比，故對占比敏感")
+    for j, y in ((2, 26), (3, 27), (4, 28), (5, 29)):
+        k2 = dict(kw)
+        if "mu" in k2: k2["mu"] = k2["mu"][0] if y == 26 else k2["mu"][1]
+        SE.cell(rr, j, resid(y, **k2)).number_format = "0.0"
+    SE.cell(rr, 6, total29(kw.get("g", "g29"))).number_format = "0.0"
+    SE.cell(rr, 7, f"=F{rr}/F$4-1").number_format = "0.0%"
+SE.cell(4, 8, "殘差為負＝三家資本支出 × 設備占比超過 SEMI 記憶體總額")
 rr = 4 + len(cases)
-SE.cell(rr, 1, "核對：基準 − Mkt 情境 A 總額（應為 0）")
-for j, y in ((2, 27), (4, 28), (6, 29)): SE.cell(rr, j, f"={'BDF'[(j-2)//2]}4-Mkt!{YC[y]}{MR['A_tot']}").number_format = "0.000"
+SE.cell(rr, 1, "核對：基準 − Mkt 其他記憶體廠殘差（應為 0）")
+for j, y in ((2, 26), (3, 27), (4, 28), (5, 29)): SE.cell(rr, j, f"={'BCDE'[j-2]}4-Mkt!{YC[y]}{MR['oth']}").number_format = "0.000"
+SE.cell(rr, 6, f"=F4-Mkt!G{MR['A_tot']}").number_format = "0.000"
 rr += 2
 hdr(SE, rr, ["情境係數", "2028 設備總額", "相對 2027", "2029 設備總額", "相對 2028", "", "", "說明"]); rr += 1
 for nm, sn, k28, k29 in (("B 係數 低", "B", "ck_B_28_lo", "ck_B_29_lo"), ("B 係數 基準", "B", "ck_B_28", "ck_B_29"), ("B 係數 高", "B", "ck_B_28_hi", "ck_B_29_hi"),
@@ -389,7 +408,7 @@ for col, w in zip("ABCD", [52, 120, 48, 30]): SO.column_dimensions[col].width = 
 
 # ---------------- README ----------------
 BOTTLE = [
- ("無塵室空間", "美光稱 FY27 資本支出增量一半以上、且 FY27 多數資本支出為建築，用於提前取得無塵室空間；KLA 稱客戶受廠房就緒度與廠房外殼限制，壓住 1H 出貨；SK 證券稱記憶體供給成長受無塵室限制至 2027；SK 海力士首座無塵室提前到 2027-02", "Micron FQ3 FY26 準備稿；Futurum（KLA FQ2 2026 摘要）；Cleanroom Technology（三星 P5）", "強（美光一手）／中／弱", "解釋為何三家資本支出 × 業界設備占比超過 SEMI 記憶體總額（隱含設備占比 48–53%）；設備落地可能落後資本支出一至兩季。v0.1 未建模"),
+ ("無塵室空間", "美光：FY27 資本支出『增量』一半以上為建築（FQ3 稿）、『增量』多數為建築且用於 2028 下半年後的無塵室（FQ4 法說）；KLA 稱客戶受廠房就緒度與廠房外殼限制，壓住 1H 出貨；SK 證券稱記憶體供給成長受無塵室限制至 2027；SK 海力士首座無塵室提前到 2027-02", "Micron FQ3／FQ4 FY26 稿；Futurum（KLA FQ2 2026 摘要）；Cleanroom Technology（三星 P5）", "強（美光一手）／中／弱", "解釋為何三家資本支出 × 設備占比可能超過 SEMI 記憶體總額；設備認列落後資本支出現金支出一至兩季，v0.1 未建模"),
  ("長交期零組件", "TrendForce：設備零組件（閥件管路、陶瓷、RF 電源、氣體箱）交期據報倍增、最長 40 個月；BigGo：日本關鍵零件最長 40 個月，沉積設備零組件由約 4 個月增至約 10 個月", "TrendForce 2026-09-18；BigGo Finance", "中（皆為「據報」）／弱；應用材料、Lam 的一手說法：未找到", "限制 2027–28 設備出貨上限，不改變需求面；若上限生效，情境 A 的 2028 可能偏高"),
  ("EUV", "ASML：2026 低 NA 產能約 65 台、2027 再增約 30%；2027、2028 需求超過供給（二手摘要）；各來源對 2027 台數不一致（56／80／約 85）", "ASML 2026 Q2 6-K；Pomegra、TechPowerUp、Tom's 類二手整理", "強（產能，一手）／弱（2027 台數與供不應求，二手）", "EUV 台數限制先進邏輯與 DRAM 的 2027–28 增量；v0.1 未建模"),
  ("量測", "KLA 稱 2026 先進封裝製程控制營收約 $1.1B；交期 18–24 個月僅見於社群貼文轉述 KLA 法說；「量測產能是瓶頸」本身的證據：未找到（搜尋 Onto、KLA 皆無交期或積壓一手數字）", "Zacks／TradingView；X（TheValueist）；Futurum", "弱；瓶頸證據：未找到", "不影響 v0.1 數字；列為待查"),
@@ -397,10 +416,10 @@ BOTTLE = [
 ]
 RECON_TXT = [
  "對帳差距 > 15% 的項目與可能原因（v0.1 建置時數值；未為對上而調參）：",
- "(a) 2026 DRAM、NAND 各 +19.8%（模型 46.5／16.7 vs SEMI 38.8／13.9）：三家資本支出 98.6B × 64% ＝ 63.1B，已超過 SEMI 的 DRAM＋NAND 52.7B，殘差 −10.4B 採下限 0。可能原因：美光明言資本支出多數為建築，三家資本支出含大量非設備支出（隱含設備占比 53%，低於業界區間 58–70%）；三星記憶體資本支出 52.5 兆韓元為 Assumed（全公司 × 約 75%）；資本支出為現金支出、SEMI 為設備商出貨營收，時點不同；美光 FY 非日曆年；SEMI 為 7 月預測，可能偏低。",
- "(b) Goldman Sachs 2028 −20.8%（模型 A 222.5 vs 281）：GS 2028 年增 +29%（218→281），高於 SEMI +14.1%、Morgan Stanley 較早版本 +12%（191→215）與本模型 A +12.4%；GS 為最高的一組，可能納入不同口徑（先進封裝、廠務設備）或更激進的 DRAM／先進代工假設。B、C 情境偏離 GS、MS 2028 為設計結果（情境係數為 Assumed）。",
- "(c) 未超過 15% 但值得注意：2027 前段 197.9 比 SEMI 推得的 175.3 高 12.9%，卻落在 KLA 190／Lam >200／Morgan Stanley 202 的 −2% 到 +4%，GS 218 的 −9%；表示 SEMI 7 月預測可能已落後 Lam、KLA、GS 之後的上修。2027 前段年增模型 +28.3% vs SEMI +21.8%（差 6.5 個百分點），主因是記憶體資本支出 2027 年增 43%（美光 FY26 27.4→FY27 55，含建築）。",
- "(d) 本模型 A 路徑在殘差為正的線上（代工邏輯）等於 SEMI，這是「其他廠＝SEMI − 已知廠」的結構結果，不是獨立驗證；獨立檢驗只來自 Lam、KLA、Morgan Stanley、Goldman Sachs。",
+ "(a) Goldman Sachs 2027 −19.6%、2028 −28.8%（模型 A 175.3／200.0 vs 218／281）：GS 2027 年增約 +45%（150→218）、2028 +29%，分別高於 SEMI 的 +21.8%、+14.1%；GS 為最高的一組，可能納入不同口徑（KLA 口徑含先進封裝；廠務設備）、更激進的 DRAM／先進代工假設，且發布較晚（2026-08，SEMI 為 2026-07）。",
+ "(b) 未超過 15% 但方向一致：2027 前段 175.3 低於 KLA 190（−7.8%）、Lam >200（−12.4%）、Morgan Stanley 202（−13.2%），2028 低於 Morgan Stanley 227（−11.9%）；2026 低於 Lam／KLA／GS 的 150（−4.1%，KLA 含先進封裝）。全部在同一側，顯示 SEMI 7 月預測（A 路徑的天花板）可能落後之後的上修（Morgan Stanley 2026-07-06 上修、Lam 2026-10 法說）。",
+ "(c) A 路徑的記憶體與代工邏輯因「其他廠＝SEMI − 已知廠」的殘差定義，合計≡SEMI（結構結果，非獨立驗證）；獨立檢驗只來自 Lam、KLA、Morgan Stanley、Goldman Sachs。B、C 在 2028 的差距是情境設計的結果。",
+ "(d) 發現：「其他記憶體廠」殘差為負（2026–2029：−7.2／−12.8／−11.7／−7.2 $B）——三家資本支出 × 設備占比（加權 57–61%）已超過 SEMI 的 DRAM＋NAND 總額。可能原因：資本支出含建築（美光稱增量多數為建築；SK 海力士龍仁、三星 P5 的無塵室先行）、資本支出與設備認列時差、SEMI 偏低、SEMI 口徑差異。v0.1 照實顯示，不取下限、不調參。",
 ]
 RD = wb.create_sheet("README", 0)
 RD_LINES = [
@@ -411,11 +430,13 @@ RD_LINES = [
  ("Mkt：記憶體＝三家資本支出 × 設備占比 ＋ 其他廠（SEMI DRAM＋NAND − 三家，Derived）；代工邏輯＝台積電 × 占比 ＋ 其他（SEMI − 台積電，Derived）；測試與封裝＝SEMI；三情境 A／B／C；AI 增量占比；見頂年度", False),
  ("Recon：對 SEMI、Lam、KLA、Morgan Stanley、Goldman Sachs 的差距；不為對上而調參。Sens：占比、匯率、下限、2029 外推、情境係數", False), ("", False),
  ("結果摘要（v0.1 建置時；見 Mkt 摘要區）", True),
- ("設備總額（$B）：A 2026–2029＝176／223／252／266（2029 仍增，未在區間內見頂）；B＝176／223／223／212（見頂 2028，與 2027 同水準）；C＝176／223／179／179（見頂 2027）。2025 SEMI 實績 134.7。", False),
- ("AI 相關增量（先進邏輯＋DRAM／HBM＋先進封裝）占總增量（相對 2026 累計）：A 2027 65%、2028 63%、2029 60%。結論取決於情境係數（Assumed），不是預測。", False), ("", False),
+ ("設備總額（$B）：A 2026–2029＝165.9／200.7／229.4／247.7（2029 仍增，未在區間內見頂）；B＝165.9／200.7／200.7／190.7（見頂 2028，與 2027 同水準）；C＝165.9／200.7／160.6／160.6（見頂 2027）。2025 SEMI 實績 134.7。", False),
+ ("A 路徑的總額由 SEMI 決定（其他記憶體廠、其他代工邏輯為殘差）；公司資本支出 × 設備占比決定「三家 vs 其他」的分配與 AI 分類，不決定總額。", False),
+ ("AI 相關增量（先進邏輯＋DRAM／HBM＋先進封裝）占總增量（相對 2026 累計）：A 2027 63%、2028 62%、2029 59%；B 63%／63%／65%；C 2027 63%，2028 起總增量接近 0，比值失真。結論取決於情境係數（Assumed），不是預測。", False), ("", False),
  ("限制", True),
- ("(1) 三家記憶體資本支出 × 業界設備占比（58–70%）超過 SEMI 的 DRAM＋NAND 設備總額，「其他記憶體廠」殘差為負、採下限 0，記憶體總額＝三家由下而上（下限）。(2) 2025 為 SEMI 實績（SK 海力士、三星記憶體 2025 資本支出未找到），2026 年增率含口徑轉換。", False),
- ("(3) 測試與封裝以 SEMI 為輸入：缺少每顆加速器的測試時間與每條產線鍵合機台數資料。(4) 情境係數為 Assumed，是「若 B／C 則…」的情境。(5) Morgan Stanley 2027／2028（202／227）為使用者提供，搜尋只查到較早版本。(6) 台積電資本支出含先進封裝，與 SEMI 後段可能重疊。", False), ("", False),
+ ("(1) 其他記憶體廠殘差為負（三家資本支出 × 設備占比超過 SEMI 的 DRAM＋NAND），照實顯示，見 Recon 說明 (d)。(2) 2025 為 SEMI 實績（SK 海力士、三星記憶體 2025 資本支出未找到），2026 年增率含口徑轉換。", False),
+ ("(3) 測試與封裝以 SEMI 為輸入：缺少每顆加速器的測試時間與每條產線鍵合機台數資料。(4) 情境係數為 Assumed，是「若 B／C 則…」的情境。(5) Morgan Stanley 202／227 為 itiger 二手轉述（連結由使用者提供，環境無法開啟，未直接核對；上修前 191／215 另有 Investing.com 佐證）。(6) 台積電資本支出含先進封裝，與 SEMI 後段可能重疊。", False),
+ ("(7) 時差：資本支出是現金支出，設備營收是出貨認列，兩者約差一到兩季，v0.1 沒有建模（年度金額直接相乘）。(8) 設備占比：美光依公司揭露推導（引文為一手，比例為 Derived；公司原文是增量多數為建築，並未給設備占比）；SK 海力士、三星、台積電未找到公司揭露，用業界 58–70%（Analogy）。", False), ("", False),
  ("瓶頸表（核心問題 2、3；v0.1 只做表，不入模）", True)]
 for t in RECON_TXT: pass
 r0 = len(RD_LINES) + 1
