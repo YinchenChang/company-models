@@ -66,3 +66,10 @@
 - parity：46 情境（＋ar_eta_old_method、as_rd_fee_share_low）；aa_rd_fee_too_high 改用 INP_137；workbook_expectations：公式格 6,214、具名範圍 1,559、SRC_ZP 1,054、Inputs 139。
 - HTML 782 個數字（基準＋22 情境）；`tests/test_html.py` 定性主張更新。
 - 報告 `docs/reports/20261008_v0.1-r2_查核修正.md`＋`_對照.xlsx`＋`_r2_敏感度.json`。
+
+## v0.1.1（2026-10-22，建置代理）— Excel `model/20261022_Zhipu_v0.1.1.xlsx`（v0.1 移 `model/archive/20261008_Zhipu_v0.1.xlsx`）
+- Tokenomics 同步 v5.26 → **v19.0**（master `1916a06`，`20261022_Tokenomics_v19.0.xlsx`，SHA-256 `d1728705…`）；`OAI_Link` 更新至 **OpenAI v0.6.2**（`main@f645e19`）。工作單 `docs/workorders/20261022_zhipu_TK同步v19.md`，分支 `claude/zhipu-tk-v19-sync`，PR #73。
+- TK_Link 新增 `RNG_IF_AllocRDGW_Lo／_Hi`、`RNG_StaleFlag`（工程類）；Checks 新增 C96（取代舊 C08 標籤，C08 退役）、C97–C99；Compute 並列列說明改寫；公式格 6,214 → 6,218，具名範圍 1,559 → 1,562。
+- 結果：命題 1 結論不變（每年差額為負；2030 −2,394 → −1,804 RMB 億；覆蓋率 0.708 → 0.734；η 2025 1.126 → 1.000、1H26 3.908 → 3.137）；累計外部資金需求 2030 43.6 → 7.5 RMB 億（首次缺口年仍 2030）。歸因：①IF_TokGW_*（VR 等值係數）②IF_HoldEcon／IF_OpexGW（租價下限）③IF_Cost*（η）；IF_AllocRDGW 對輸出貢獻 0。反證：全部名稱改回 v5.26 與 v0.1 七頁 10,322 格逐格相同。
+- 工具：`tools/tk_attribution.py`、`tools/make_v011_report.py`；`build_html.py` 檢查編號範圍讀 Excel；`engine/core.py` 檔名規則允許三段版號；敏感度與翻轉點重算（`docs/reports/20261022_v0.1.1_敏感度.json`）。
+- 成品：`dist/20261022_智譜收支模型_v0_1_1.html／.xlsx`（舊版移 `dist/_待刪除/`）。報告 `docs/reports/20261022_v0.1.1_TK同步.md`＋`_對照.xlsx`。

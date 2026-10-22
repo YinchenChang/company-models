@@ -10,7 +10,13 @@
 - repo `YinchenChang/company-models`，資料夾 `zhipu/`；建置分支 `claude/zhipu-v0.1`（單一 PR）。
 - 成品：`dist/`；Drive `02-算力收支/Zhipu/`（chat 端放置）。
 
-## 3. 模型狀態（v0.1 r2 完成，2026-10-08）
+## 3.0 v0.1.1 TK 同步（2026-10-22）
+- Excel 現行：`model/20261022_Zhipu_v0.1.1.xlsx`（v0.1 在 `model/archive/20261008_Zhipu_v0.1.xlsx`）；成品 `dist/20261022_智譜收支模型_v0_1_1.html／.xlsx`；報告 `docs/reports/20261022_v0.1.1_TK同步.md`（分支 `claude/zhipu-tk-v19-sync`，PR #73）。
+- 結論不變：命題 1 每年差額為負、2028 年後不再收斂；2030 差額 −1,804 RMB 億（−26.8 $B）、覆蓋率 0.734、每實體 GW −1.75 $B；η 2025 1.000／1H26 3.137；累計外部資金需求 2030 7.5 RMB 億（v0.1 43.6）。命題 2 翻轉點逼近基準：研發項下算力費占比 ≤0.708（基準 0.718）、最低毛利 ≤−0.9%；命題 1 翻轉點放寬到 ≤0.347。
+- 下文第 3 節數字為 v0.1 r2（TK v5.26）；以報告第 4–5 節為準。
+- 工具：`tools/tk_attribution.py`（五組歸因＋反證＋區間端點，LibreOffice 重算）、`tools/make_v011_report.py`。
+
+## 3. 模型狀態（v0.1 r2 完成，2026-10-08；數字為 TK v5.26 版）
 - Z0（骨架）→ Z1（資料，SRC_ZP 610 列；r2 加招股章程 444 列＝1,054）→ Z2（Demand、Revenue）→ Z3／Z3b（Compute、Cost；token 類型加權換算 GW）→ Z4（Funding、Reverse）＝v0.1 Excel → **Z5 成品完成**。
 - Excel：`model/20261008_Zhipu_v0.1.xlsx`（唯一計算引擎；舊版在 `model/archive/`）。
 - 成品：`dist/20261008_智譜收支模型_v0_1.html`（一頁摘要，11 節，離線單檔，每個數字附 Excel 位置）＋`dist/20261008_智譜收支模型_v0_1.xlsx`（＝model 複本）。產生：`python3 tools/build_html.py`（LibreOffice 重算 23 個情境後讀值，約 2 分鐘）；驗證：`python3 -m pytest tests/test_html.py -q -p no:warnings`；截圖：`PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers python3 tools/screenshot_html.py dist/<檔名>.html --out docs/reports/img --prefix 20261008_v0.1_成品`。
@@ -23,7 +29,7 @@
   - 1 GW 情境：累計外部資金需求 915.8 億、2026 起缺口；現金口徑 2027 −106,018、2030 +2,883；攤提口徑 2030 −1,450（覆蓋率 0.80），投產後並未轉正。η 收斂至 1：累計 2,034 億（Z5b 5,075）。
   - 反向：共識 2028 324.7 億＝正向 2.47 倍；市值 2,916、淨現金 329.3、EV 2,586.6、市值隱含營收 65.1 億（32.5–130.1），正向 2027 達到。
   - 與 OpenAI v0.6：覆蓋率 2030 0.71 對 0.46；累計外部資金需求 $0.65B 對 $443B。每 VR 等值 GW 金額僅供參考（智譜每 GW 營收約為 OpenAI 10 倍；P1 後 η 已降到 3.9 但 10 倍仍在，不能只歸因於 η）。
-- Tokenomics 快照：v5.26（master `70d859e`；CURRENT 未變），與 OpenAI v0.6 相同。OpenAI 對照：`OAI_Link`（`claude/openai-s6-release@e91df57`）。
+- Tokenomics 快照：**v19.0**（v0.1.1，2026-10-22；master `1916a06465bb0c7efed21383075f2ae098508e24`，`20261022_Tokenomics_v19.0.xlsx`，SHA-256 `d1728705daaf19bfdfa7657b667f3617ac57d67a4c8e55404ac66522b970b9d8`）。OpenAI 對照：`OAI_Link` ＝ OpenAI v0.6.2（`main@f645e19`，`20261022_OpenAI_v0.6.2.xlsx`；SHA-256 見 `OAI_Link!B4`）。v0.1／r2 為 TK v5.26（`70d859e`）＋OpenAI v0.6（`e91df57`）。
 - 驗收環境：GitHub Actions 因帳號付款問題不執行，以本地 pytest＋LibreOffice 為準。r2 改 Excel 後全套重跑（見 `docs/reports/20261008_v0.1-r2_查核修正.md`「測試結果」）。
 
 ## 4. 未解問題（v0.1）
