@@ -1,7 +1,27 @@
 # 每 GW 晶片內容橋接表（步驟 0）建檔程式：openpyxl 寫公式，之後由 LibreOffice 重算
+import json, os
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment
 from openpyxl.utils import get_column_letter as L
+
+# ---------------- Tokenomics 取數 ----------------
+# 契約名稱（IF_）：取自版本固定快照（tools/tokenomics/import_tokenomics.py 產生；Tokenomics 唯讀）
+HERE = os.path.dirname(os.path.abspath(__file__))
+SNAPSHOT = os.path.join(HERE, "data", "tokenomics_snapshot_v19.0.json")
+_snap = json.load(open(SNAPSHOT, encoding="utf-8"))
+_gen = {g["code"]: g["name"] for g in _snap["source"]["generations"]}
+def tk(name):
+    """IF_ 名稱 → (GB300 低, 基準, 高, VR200 低, 基準, 高)"""
+    v = _snap["items"][name]["values"]
+    return tuple(v[_gen[g]][c] for g in ("GB300", "VR200") for c in ("低成本", "基準", "高成本"))
+
+# 非契約儲存格，待 R1（Interface 新增 IF_RackPrice／IF_ScaleOutShare／IF_StoragePerGPU 後改讀快照）。
+# 欄序同 tk()：GB300 低／基準／高、VR200 低／基準／高。
+NON_CONTRACT_R1 = {
+    "rack": (4.0, 4.3, 5.0, 7.8, 8.4, 9.1),            # Spec_Rack E11:F13，$M/架
+    "so":   (0.05, 0.10, 0.15, 0.05, 0.10, 0.15),      # Inputs D13:F13，Scale-out 網路 ÷ 機架價格
+    "stor": (300, 500, 800, 300, 500, 800),            # Inputs D14:F14，$/GPU
+}
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 wb = openpyxl.Workbook()
@@ -14,14 +34,14 @@ for j, h in enumerate(hdr, 1):
     c = ws.cell(3, j, h); c.font = BOLD; c.fill = HDR
 rows = [
  ("sec","A. Tokenomics v19.0（算力收支；只讀不改）"),
- ("rack","機架單價","$M/架",4.0,4.3,5.0,7.8,8.4,9.1,"TK","Spec_Rack E11:F13（非 Interface 具名範圍；已提修改申請 R1）"),
- ("racks","每 GW 機架數","架",6764,6764,6764,4052,4052,4052,"TK","IF_RacksPerGW"),
- ("gpus","每 GW GPU 數","顆",487008,487008,487008,291744,291744,291744,"TK","IF_GPUsPerGW"),
- ("so","Scale-out 網路 ÷ 機架價格","%",0.05,0.10,0.15,0.05,0.10,0.15,"TK","Inputs D13:F13（Analogy；非 Interface，R1）"),
- ("stor","儲存與管理","$/GPU",300,500,800,300,500,800,"TK","Inputs D14:F14（Assumed；非 Interface，R1）"),
- ("capit","每 GW 資本支出 — IT 設備","$B",28.5549024,32.237224,39.2826064,33.2734032,37.586352,42.6375752,"TK","IF_CapexIT"),
- ("capfac","每 GW 資本支出 — 廠房","$B",10.212,12.67,16.186,10.212,12.67,16.186,"TK","IF_CapexFacility"),
- ("captot","每 GW 資本支出 — 合計","$B",38.7669024,44.907224,55.4686064,43.4854032,50.256352,58.8235752,"TK","IF_CapexTotal"),
+ ("rack","機架單價","$M/架",*NON_CONTRACT_R1["rack"],"TK","Spec_Rack E11:F13（非 Interface 具名範圍；已提修改申請 R1）"),
+ ("racks","每 GW 機架數","架",*tk("IF_RacksPerGW"),"TK","IF_RacksPerGW"),
+ ("gpus","每 GW GPU 數","顆",*tk("IF_GPUsPerGW"),"TK","IF_GPUsPerGW"),
+ ("so","Scale-out 網路 ÷ 機架價格","%",*NON_CONTRACT_R1["so"],"TK","Inputs D13:F13（Analogy；非 Interface，R1）"),
+ ("stor","儲存與管理","$/GPU",*NON_CONTRACT_R1["stor"],"TK","Inputs D14:F14（Assumed；非 Interface，R1）"),
+ ("capit","每 GW 資本支出 — IT 設備","$B",*tk("IF_CapexIT"),"TK","IF_CapexIT"),
+ ("capfac","每 GW 資本支出 — 廠房","$B",*tk("IF_CapexFacility"),"TK","IF_CapexFacility"),
+ ("captot","每 GW 資本支出 — 合計","$B",*tk("IF_CapexTotal"),"TK","IF_CapexTotal"),
  ("sec","B. 機架內構件（本專案蒐集；每數字盡量兩來源）"),
  ("gpu_n","每架 GPU 封裝數","顆",72,72,72,72,72,72,"Verified","NVIDIA 規格頁"),
  ("gpu_p","GPU 模組售價（NVIDIA 對買方）","$K/顆",37.6,40.4,47,50,55,60,"Interested-party／Derived","GB300（v0.2 改）：Data Gravity 採購單 72 模組約 $3.4M、整架約 $5.0M（Wing VC 2026-08；＝Tokenomics v5.31 起的機架高值）→ 模組占整架 67.7%；依 Tokenomics 低／基準 4.0／4.3 等比例換算為 37.6／40.4，高 47 為採購單原值。v0.1 用 47 配 $5.0M 機架；Tokenomics 基準改 4.3 後若不換算，機架殘差為 −5.9%（構件超過售價）；Epoch B200 $30–40K。VR200：Morgan Stanley $55K（內文；標題 $50K，Tom's Hardware 2026-05-21）"),

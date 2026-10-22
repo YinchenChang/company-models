@@ -6,7 +6,11 @@
 - 顆數取自 `markets/memory/market.py`（與 HBM 市場同一份加速器數量層）；NVIDIA 平台每顆內容以 `markets/chip_bridge` v0.2 為錨（GB300 約 $11.6K（v0.1 $13.0K；Tokenomics v19.0 機架基準價 $4.3M）、VR200 約 $24.5K；Bernstein GB200 約 $10.7K 為第二來源）。
 - 頁面：README、In、Units、Mkt（依元件、依產品類別、網通 ÷ AI IT capex、NVIDIA／Broadcom 對帳）、Sens、Sources。
 
-## v0.2 結果（十億美元；Tokenomics v19.0）
+## v0.2.1（2026-10-22）
+
+每顆 IT capex（`In` 頁 `it_GB`、`it_VR`、`it_RU`、`it_HP`）由 Tokenomics 快照（`markets/chip_bridge/data/tokenomics_snapshot_v19.0.json`）以 `IF_CapexIT ÷ IF_GPUsPerGW` 完整精度計算，不再取整（v0.2 為取到 0.1 $K 的寫死值，例：GB300 66.2 → 66.1944）。與 v0.2 相比只有 `In` 頁 4 個 IT capex 格與 `Mkt` 頁 AI IT 資本支出、網通 ÷ AI IT capex、NVIDIA 平台 ÷ IT 三列不同；網通 ÷ AI IT capex 變動 ≤ 0.003 個百分點，市場金額不變。AMD／TPU／Trainium／ASIC 的 IT capex 仍為 Assumed 寫死值。
+
+## v0.2 結果（十億美元；Tokenomics v19.0；v0.2.1 的顯示值相同）
 
 | | 2026 | 2027 | 2028 | 2029 |
 |---|---|---|---|---|
