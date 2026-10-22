@@ -20,8 +20,8 @@
 ## 4. 模型狀態：**v0.6 完成**（2026-10-08；S1–S6）
 | 項目 | 現況 |
 |---|---|
-| Excel | `model/20261008_OpenAI_v0.6.xlsx`（`model/CURRENT`）；成品副本 `dist/20261008_OpenAI收支模型_v0_6.xlsx` |
-| HTML 一頁摘要 | `dist/20261008_OpenAI收支模型_v0_6.html`（產生器 `tools/build_html.py`；敏感度情境 `tools/html_scenarios.yaml`；測試 `tests/test_html.py`） |
+| Excel | `model/20261022_OpenAI_v0.6.1.xlsx`（`model/CURRENT`；v0.6 數值一格不變，新增 PxQ、TK_PxQ 頁）；v0.6 成品副本 `dist/20261022_OpenAI收支模型_v0_6_1.xlsx` |
+| HTML 一頁摘要 | `dist/20261022_OpenAI收支模型_v0_6_1.html`（產生器 `tools/build_html.py`；敏感度情境 `tools/html_scenarios.yaml`；測試 `tests/test_html.py`） |
 | 命題與驅動對照表 | `docs/plan/20261008_OpenAI_命題與驅動對照表.md` |
 | Tokenomics | v5.26，master `3dd1216688e3872fcb80b28c279d8976a07df29b`，CURRENT `20261007_Tokenomics_v5.26.xlsx`（SHA-256 `abb8592c6921738d20d1c870bfb44dbc0afcb6a412dbb429f4bd24013224ed0d`）；63 名，check_tk_snapshot OK 63 |
 | 規模 | SRC_OAI 131；Inputs 263；具名範圍 646；公式格 3,063；Checks C01–C130（CHK_Errors＝0）；parity 107 項 |
@@ -70,3 +70,21 @@ V1 時變世代組合；V2 η 以 2025 推論支出校準；V3 算力成本＝�
 - 已修正（chat 端 2026-10-08）：P5 報告「有利組合」2030 營收淨額由 142.1（未截頂 263.9、係數 0.54）更正為 Excel 值 138.1（273.95、0.504）。
 - 成品放 Drive `02-算力收支/OpenAI/`（chat 端）。
 
+## 9. P×Q 回本比值規格（Andy 2026-10-21～22 原話；v0.6.1；Project Instructions 第 2 條）
+權威來源：`docs/plan/20261022_OpenAI_PxQ回本比值_交接.md` 第 2 節。實作：`PxQ` 頁、`TK_PxQ`（Tokenomics v19.0 第二快照，`TKQ_`）、INP_276–288、SRC_OAI_138–140、Checks C131–C154。以下定義由 `tests/parity/test_builder.py`（PxQ 引用白名單、E6、不回饋）與 Checks 把關。
+| 原話 | 模型中的定義 |
+|---|---|
+| 「m 要定義成『付費服務 token 的有效牌價（1 − 折扣 20%）變現率』」「m 單純只看收費業務」「跟營收有關，跟成本無關」「20% 是預設折扣，不要寫死」 | m＝實收單價 ÷ 有效牌價；有效牌價＝表列 ×（1 − d），d＝`TKQ_IF_Disc`，不寫死 |
+| 「P 就是 M 去乘上 L，再乘上一減掉預設折扣」「L 其實就是牌價」 | L 讀法待 Andy 確認；預設＝壽命期價格係數（`TKQ_IF_LTotalFleetVDisc`／`LTotalDisc`），隱含 m＝實際 m×L ÷ L，只作顯示 |
+| 「Q 就是真正拿去用作服務的算力，去乘上每單位算力可以產生的 token 數」 | Q＝平均上線 GW × 服務占比 ×（1 − 免費占比）× Σ（世代占比 × `TKQ_IF_TokGWPaidMix` × 生產折減）× `TKQ_IF_UtilActual` |
+| 「看的並不是回本的絕對數字，而是看實際除以所需這個比例的趨勢」 | 主輸出＝比值（實際 m×L ÷ 所需 m×L＝營收 ÷ 算力成本）的年度序列：2025 指數／線性 × 2026 低／基準／高 GW |
+| 「總算力支出是從持有的機隊成本去推算出來的……用 3 G 瓦的這個機隊……所需要的持有成本」 | 算力成本 C＝平均上線 GW × Σ（世代占比 × `TKQ_IF_HoldEcon` 基準欄） |
+| 「計算上一定要先從 tokenomics 開始……真的沒有，再從外面找，放進去之後……依據那個規則去把它擺進 tokenomics」 | 每 GW 參數只取 `TKQ_`（不得連 `B4_`、`AL_`、`L1_`、`CTL_`）；外部數字先登 SRC_OAI（138–140），只作對照 |
+| 「三 G 瓦其實應該是擺在 OpenAI 他們自己裡面」 | 公司層級（GW、世代組合、營收、比值）在本模型 Inputs；Tokenomics 只露出每 GW |
+| 「二零二五年……兩百零四億，很明顯是高估了」 | 推論＋訓練 20.4 不作算力成本，只列對照倍數 |
+| 「當然是用 Tokenomics……隨便亂算一下的」（撤回 1.0 GW） | 2025 平均 GW 由 `TKQ_SRC_DEM_008／009`（0.6、1.9）內插：指數 1.128、線性 1.25 並列 |
+v0.6.1 不變條件：`TK_Link`（v5.26，63 名）值與 v0.6 逐格相同；全量同步（v5.33、v5.36、v15.x–v19.0 累積名稱變動）另案。
+
+## 11. 2026-10-22 獨立查核與 TK 同步評估
+- v0.6.1 P×Q 經未參與建置的代理獨立查核：通過（132 值一致；v0.6 既有頁不變）；次要問題已處置（報告「獨立查核」節）。PR #59 待 Andy 指示合併。
+- TK 同步範圍（v5.26 → v19.0）：`docs/plan/20261022_TK同步範圍_v5.26至v19.0.md`（DIFF 30／OK 33；會動數字的只有 `IF_TokGW_*`、`IF_HoldEcon`、`IF_CapexTotal`；建議同步時把 `TK_Link` 與 `TK_PxQ` 合成單一 v19.0 快照）。待 Andy 指示是否發同步工作單。

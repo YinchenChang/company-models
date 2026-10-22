@@ -6,6 +6,7 @@
 """
 from __future__ import annotations
 
+import hashlib
 import re
 import subprocess
 from pathlib import Path
@@ -85,4 +86,51 @@ def read_snapshot(tk_dir: Path):
     hdr_gen = [wb["Interface"].cell(4, k).value for k in range(3, 18)]
     hdr_cost = [wb["Interface"].cell(5, k).value for k in range(3, 18)]
     return dict(file=current, version=f"v{m.group(1)}" if m else "?", sha=sha, rows=rows, pending=pending,
-                hdr_gen=hdr_gen, hdr_cost=hdr_cost)
+                hdr_gen=hdr_gen, hdr_cost=hdr_cost, file_sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+
+
+# ── v0.6.1：第二快照 TK_PxQ（Tokenomics v19.0；TKQ_ 前綴；工作單 20261022 第 1 節 2）──
+# 只取 Interface 的 P×Q 取數名稱與 SRC_Demand 的五個公司層級原始數據；不得連 B4_／AL_／L1_／CTL_（Tokenomics README）。
+PXQ_NAMES = (
+    ["IF_HoldEcon", "IF_TokGWPaidMix", "IF_Disc", "IF_ProdDerate", "IF_FleetProdRatio_VR200", "IF_PxEffMix", "IF_PxEffMix_Lo", "IF_PxEffMix_Hi",
+     "IF_PxEffMix25", "IF_PxEffMix25_Lo", "IF_PxEffMix25_Hi", "IF_ServeShare", "IF_FreeShare",
+     "IF_MixPaid_Luna", "IF_MixPaid_Sol", "IF_MixPaid_Astra"]
+    + [f"IF_UtilActual{s}" for s in ("", "_Lo", "_Hi")]
+    + [f"IF_LTotalDisc{s}" for s in ("", "_Lo", "_Hi")]
+    + [f"IF_LTotalFleetVDisc{s}" for s in ("", "_Lo", "_Hi")]
+    + ["SRC_DEM_004", "SRC_DEM_006", "SRC_DEM_007", "SRC_DEM_008", "SRC_DEM_009"]
+)
+PXQ_FORBIDDEN = ("B4_", "AL_", "L1_", "CTL_")
+
+
+def read_pxq_snapshot(tk_dir: Path):
+    """讀 Tokenomics 檔案（釘選 model/CURRENT，須為 v19.0）；回傳與 read_snapshot 同形的字典，另含 file_sha256。"""
+    tk_dir = Path(tk_dir)
+    current = (tk_dir / "model" / "CURRENT").read_text(encoding="utf-8").strip()
+    path = tk_dir / "model" / current
+    sha = subprocess.run(["git", "-C", str(tk_dir), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    m = re.search(r"_v(\d+(?:\.\d+)?)\.xlsx$", current)
+    wb = openpyxl.load_workbook(path, data_only=True)
+    names = {k: v.attr_text for k, v in wb.defined_names.items()}
+    assert not any(n.startswith(PXQ_FORBIDDEN) for n in PXQ_NAMES)
+    from openpyxl.utils import column_index_from_string as ci
+    rows = []
+    for n in PXQ_NAMES:
+        if n not in names:
+            continue
+        sheet, c1, r1, c2, r2 = _split(names[n])
+        ws = wb[sheet]
+        vals = [ws.cell(r1, k).value for k in range(ci(c1), ci(c2 or c1) + 1)]
+        if sheet == "Interface":
+            label = re.sub(r"[\s\u3000]*\[IF_[^\]]*\]\s*$", "", str(ws.cell(r1, 1).value))
+            unit = ws.cell(r1, 2).value or ""
+        else:
+            label = f"{ws.cell(r1, 2).value}（{ws.cell(r1, 7).value}）"
+            unit = ws.cell(r1, 6).value or ""
+        rows.append(dict(name=n, kind=n.split("_")[0], label=label, unit=unit, values=vals, status="OK"))
+    present = {r["name"] for r in rows}
+    pending = [dict(name=n, kind=n.split("_")[0], label="", unit="", values=[], status=PENDING_NOTE) for n in PXQ_NAMES if n not in present]
+    hdr_gen = [wb["Interface"].cell(4, k).value for k in range(3, 18)]
+    hdr_cost = [wb["Interface"].cell(5, k).value for k in range(3, 18)]
+    return dict(file=current, version=f"v{m.group(1)}" if m else "?", sha=sha, rows=rows, pending=pending,
+                hdr_gen=hdr_gen, hdr_cost=hdr_cost, file_sha256=hashlib.sha256(path.read_bytes()).hexdigest())
