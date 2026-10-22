@@ -2,7 +2,7 @@
  "meta": {
   "company": "WhiteFiber",
   "ticker": "WYFI",
-  "updateDate": "2026-10-08",
+  "updateDate": "2026-10-22",
   "priceDate": "2026-10-07",
   "sourceOrderNote": "時序先 2026 Q2 財報新聞稿與法說（2026-08-12；新聞稿未以 8-K 提交，用 PR Newswire 轉載；法說只有 MarketBeat 二手摘要），再 10-Q（2026-08-12，核閱、未查核）與 FY2025 10-K（經查核）；期後 8-K：2032 可轉債與 2031 交換（2026-08-21）、NC-2／3 買賣協議（2026-08-17）、9 月公司簡報。入帳數字聽 10-Q／10-K；公司未給正式財務指引（只有目標，不作輸入）。期初可計費雲端 MW 以 Q2 經常性雲端營收（扣除終止費 12.3）年化校準，不以公司目標反推。",
   "consensusFile": "data/consensus_wyfi_20261008.json",
@@ -496,7 +496,40 @@
     "base": 100,
     "high": 100
    },
-   "note": "雲端已連網 MW-IT（期末）＝MIN(情境路徑, 前期＋併網速度 × 期間長度)；併網速度設 100（不受限），路徑由合約 GPU 數換算 [Derived]：首期期末（FY26 年底）＝冰島第三方機房 5.5（10-Q）＋Baseten 1,392 顆 B300 2.858（2026-11）＋巴黎 1.84（GPU 數未揭露：年額 >32 ÷ Tokenomics 基準 17.40，[Derived] 下限）＋雪梨 2.5（2026 Q4 起租）＋128 顆 B300 0.263＋Prime GB200 216 顆 0.43＋冰島 B300 576 顆 1.183＝14.574；FY27 加 Prime VR200 576 顆 1.974（2027 Q2）＝16.548。每顆 GPU IT kW 取 Tokenomics v5.26（B300／B200 以 GB300／GB200 近似）。保守不含雪梨（尚無客戶合約）；基準自 FY28 每年 +3、積極 +6 MW-IT（2026 年新簽約約 8.6 MW-IT 的約 35%／70%，[Assumed]）。"
+   "note": "雲端已連網 MW-IT（期末）＝MIN(情境路徑, 前期＋併網速度 × 期間長度)；併網速度設 100（不受限），路徑由合約 GPU 數換算 [Derived]：首期期末（FY26 年底）＝冰島第三方機房 5.5（10-Q）＋Baseten 1,392 顆 B300 2.858（2026-11）＋巴黎 1.84（GPU 數未揭露：年額 >32 ÷ Tokenomics 基準 17.40，[Derived] 下限）＋雪梨 2.5（2026 Q4 起租）＋128 顆 B300 0.263＋Prime GB200 216 顆 0.43＋冰島 B300 576 顆 1.183＝14.574；FY27 加 Prime VR200 576 顆 1.974（2027 Q2）＝16.548。每顆 GPU IT kW 取 Tokenomics v5.26（B300／B200 以 GB300／GB200 近似）。保守不含雪梨（尚無客戶合約）；基準自 FY28 每年 +3、積極 +6 MW-IT（2026 年新簽約約 8.6 MW-IT 的約 35%／70%，[Assumed]）。",
+   "gpuConv": [
+    {
+     "label": "Baseten B300",
+     "gpus": 1392,
+     "gen": "GB300 NVL72",
+     "mwIT": 2.858
+    },
+    {
+     "label": "128 顆 B300",
+     "gpus": 128,
+     "gen": "GB300 NVL72",
+     "mwIT": 0.263
+    },
+    {
+     "label": "Prime GB200",
+     "gpus": 216,
+     "gen": "GB200 NVL72",
+     "mwIT": 0.43
+    },
+    {
+     "label": "冰島 B300",
+     "gpus": 576,
+     "gen": "GB300 NVL72",
+     "mwIT": 1.183
+    },
+    {
+     "label": "Prime VR200",
+     "gpus": 576,
+     "gen": "VR200 NVL72",
+     "mwIT": 1.974
+    }
+   ],
+   "gpuConvNote": "mwIT＝GPU 數 ÷ (IF_GPUsPerGW ÷ 1000)，取 3 位小數；B300／B200 以 GB300／GB200 欄近似（HGX 氣冷機實際每顆 kW 較低 0–12%）[Analogy]。巴黎 1.84 MW 為 v0.1 以年額 >32 ÷ 17.40 推得（GPU 數未揭露），v0.2 未重算（列待 Project 判斷）。"
   },
   "revMW": {
    "low": [
@@ -532,7 +565,7 @@
    ],
    "openAnnualRevenue": 46.024,
    "roundDp": 2,
-   "note": "期初可計費 MW＝2026 Q2 經常性雲端營收 11.506（23.806 扣終止費 12.3）× 4＝46.02 ÷ 各情境每 MW 年收入（保守 3.96／基準 2.65／積極 1.9 MW-IT），是對齊已實現實際數的校準，不是以公司目標反推（評價日已連網 5.5 MW 中實際計費當量較低：舊世代 H100 機隊單價低於 Tokenomics）。各期末可計費 MW＝期初校準值＋(已連網 − 期初校準值)× 收斂比例 70%／85%／90%／90%／90%（新合約 2026-07 至 2027 Q2 陸續起算，首期 70% [Assumed]）；小數 2 位（roundDp）。"
+   "note": "期初可計費 MW＝2026 Q2 經常性雲端營收 11.506（23.806 扣終止費 12.3）× 4＝46.02 ÷ 首期每 MW 年收入（Tokenomics 錨 × k；基準情境約 4.9 MW-IT）。這是對齊已實現實際數的校準，不是以公司預測反推參數；之後向已連網 MW 收斂：各期末可計費 MW＝期初校準值＋(已連網 − 期初校準值)× 收斂比例 70%／85%／90%／90%／90%（新合約 2026-07 至 2027 Q2 陸續起算，首期 70% [Assumed]）；小數 2 位（roundDp）。評價日已連網 5.5 MW 中實際計費當量較低的原因與驗證見『每MW收入_錨定』F 區（Q2 驗證）。"
   },
   "mw31": {
    "low": 0,
@@ -601,7 +634,7 @@
   },
   "mw31": 0,
   "capexFloorFY0": 0,
-  "gpuLife": 5,
+  "gpuLife": 6,
   "refreshSteady": true,
   "refreshNote": "v0.1c：已連網 MW 不再增加的期間（觸頂後）及終值年，汰換 CapEx＝期間平均已連網 MW × 每 MW GPU 資本支出（IF_CapexIT，只含 IT）÷ GPU 經濟壽命 × 期間長度；建築與電力屬租賃不計；取代批次汰換（mwYearEnd 批次落在模型期之後）。false＝模板口徑（只有批次汰換）。",
   "revScale": 1,
@@ -703,7 +736,7 @@
   "linkSites": true,
   "linkLeaseTail": true,
   "useAvgMw": true,
-  "billableOpen": 2.65,
+  "billableOpen": 4.07,
   "cds": null,
   "cdsBid": null,
   "cdsAsk": null,
@@ -721,11 +754,11 @@
     25.548
    ],
    "billable": [
-    11.0,
-    14.46,
-    17.86,
-    20.56,
-    23.26
+    11.42,
+    14.68,
+    18.0,
+    20.7,
+    23.4
    ],
    "util": [
     100,
@@ -735,11 +768,11 @@
     100
    ],
    "revMW": [
-    17.4,
-    17.4,
-    17.4,
-    17.4,
-    17.4
+    11.3191096124,
+    11.7135178513,
+    11.9325114276,
+    12.1388872844,
+    12.3407664645
    ],
    "aiShare": [
     100,
@@ -1185,14 +1218,17 @@
   "profitMarginTolPt": 0.02,
   "checks": {
    "capexPerMwBand": [
-    28,
-    51
+    28.5549,
+    39.2826
    ],
    "leaseVsCommitMin": 0.8,
    "unsignedRevShareMax": 0.5,
    "siteRentGapMax": 10,
    "rentVsBenchMin": 0.8,
-   "cmpTol": 0.0001
+   "cmpTol": 0.0001,
+   "capexPerMwBandRef": "TK_CapexIT_GB300 低成本／高成本（IF_CapexIT；v0.1 手抄 [28, 51]）：建置時檢查等於快照值，Excel 檢查列直接引用 TK_CapexIT_GB300_Lo／_Hi",
+   "revCapShareMax": 0.5,
+   "revCapLayer": "Prod"
   },
   "debtCapSens": [
    4,
@@ -1201,7 +1237,15 @@
   "mw31Sens": [
    6,
    0
-  ]
+  ],
+  "perMw": {
+   "_note": "每 MW 收入方法開關（WhiteFiber v0.2，已決定事項 14）：tkAnchor＝Σ 平均在役世代占比 × IF_HoldEcon × 定價倍數 k（pricing.anchorMultiple；容量情境與價格情境分離）；legacy＝scenarios.revMW（v0.1 三情境 11.62／17.40／24.20，路徑 A 成本加成與路徑 B 市場價 50/50 平均，隨容量情境同向；已停用，只作對照與回歸驗收）。capex＝tokenomics 時，雲端每 MW 建置成本（成長與汰換資本支出）＝Σ 新增世代占比（fleet.newMix）× capexName（IF_CapexIT；雲端機房以第三方承租取得，不含廠房）｜世代，Excel 活公式引用 TK_CapexIT_*；legacy＝scenarios.capexTemplate.costMW（v0.1 寫死 37.45／37.59，回歸驗收用）。託管自建廠房（NC-1 等）的建置成本維持公司資料（defaults.colo），TK_CapexFacility 只作對照列。deprLife＝tokenomics 時 GPU 經濟壽命（汰換年限）引用 TK_DeprLifeIT｜fleet.refGen（建置時檢查 defaults.gpuLife 等於該值）；legacy 為 v0.1 的公司會計年限 5 年。gpuConv＝tokenomics 時以 IF_GPUsPerGW 核對 scenarios.mwPath.gpuConv 的 GPU 數 → MW-IT 換算（Excel「每MW收入_錨定」H 區）。",
+   "revenue": "tkAnchor",
+   "capex": "tokenomics",
+   "capexName": "IF_CapexIT",
+   "deprLife": "tokenomics",
+   "gpuConv": "tokenomics"
+  }
  },
  "peers": {
   "priceDate": "2026-10-07",
@@ -1502,7 +1546,7 @@
     "metric": "revenue",
     "vs": "*",
     "type": "觀點",
-    "text": "雲端營收＝在役 MW × 每 MW 年收入（Tokenomics 正向推導），期初可計費 MW 以 Q2 經常性雲端營收年化校準；託管營收照已簽約合約排程；共識未揭露 MW 與單價假設"
+    "text": "雲端營收＝在役 MW × 每 MW 年收入（Tokenomics 錨 × 定價倍數 k），期初可計費 MW 以 Q2 經常性雲端營收年化校準；託管營收照已簽約合約排程；共識未揭露 MW 與單價假設"
    },
    {
     "scope": "quarter",
@@ -1534,7 +1578,7 @@
     "metric": "rev",
     "vs": "consensus",
     "type": "觀點",
-    "text": "營收＝雲端（在役 MW × 每 MW 年收入，Tokenomics 正向推導；年底已連網 {y.accepted:1} MW-IT）＋託管（已簽約合約排程與擴建）；共識未揭露 MW 與單價假設"
+    "text": "營收＝雲端（在役 MW × 每 MW 年收入，Tokenomics 錨 × k；年底已連網 {y.accepted:1} MW-IT）＋託管（已簽約合約排程與擴建）；共識未揭露 MW 與單價假設"
    },
    {
     "scope": "annual",
@@ -1572,7 +1616,7 @@
   "thesis": "長約託管能否成為可融資的現金流底座，撐住雲端 GPU 擴張而不反覆稀釋",
   "guideLine": "公司未給正式營收或 EBITDA 指引；目標（不作輸入）：雲端合約全部到位後年化 > $200M、2026 年底約 70 毛 MW 上線、NC-1 2026-08 底全額計費 [Interested-party]",
   "taxNote": "美國聯邦法定 21%（開曼控股；美國子公司 21%＋州稅、加拿大約 26.5%；1H26 有效稅率 −1.3%）",
-  "revMwCompare": "WhiteFiber 對照值：新簽 B300／VR200 長約隱含 14.8–20.3（平均 18.2）、Q2 經常性雲端年化 ÷ 冰島 5.5 MW＝8.37（上限），只作對照",
+  "revMwCompare": "WhiteFiber 對照值：新簽 B300／VR200 長約隱含 14.8–20.3（平均 18.2）、Q2 經常性雲端年化 ÷ 冰島 5.5 MW＝8.37（上限），只作對照與驗證，不用來反推 k",
   "rpoNote": "雲端 RPO 75.1：2026 下半年 21.6、2027 43.3、2028 10.3（不含 7–8 月簽約的 Baseten、Prime VR200、冰島 B300 與巴黎）；託管 RPO 932.9 另列於託管分部；只作對照",
   "leaseNote": "WhiteFiber 雲端以第三方機房承租（冰島、亞特蘭大、雪梨等），託管站點自有（MTL-2／3、NC-1）；GPU 伺服器租賃為變動租金（未資本化）",
   "offBalanceLeaseTerm": "雪梨機房 2026 Q4 起租、59 個月、每月約 USD 0.344",
@@ -1581,7 +1625,7 @@
   "prepayCheck": "公司：雲端與資料中心客戶預付（1H26 流入 72.6；巴黎合約 12 個月服務費預付）；遞延營收 143.1（流動 17.9），未分託管與雲端 [Interested-party]。1H26 預付 ÷ 資本支出＝21.1% [Derived]。",
   "mwFacts": "公司簡報（2026-09）：MW 為毛容量；IT 另列 MTL-1 3、MTL-2 3、MTL-3 5、NC-1 40；雲端站點多為第三方機房（冰島 5.5 IT、雪梨 2.5 IT，安大略、巴黎、亞特蘭大未揭露）[Interested-party]。",
   "ebStartSource": "2026 Q2 經常性雲端 EBITDA 率（扣終止費 12.3、GPU 租賃終止成本約 4.0、呆帳 2.2；扣託管分部 EBITDA 與其他營收後 ÷ 經常性雲端營收 11.506）",
-  "costMwNote": "Tokenomics IF_CapexIT（GB300 37.45、VR200 37.59 US$m/MW-IT；只含 IT／GPU，雲端機房以第三方承租取得）[Derived]",
+  "costMwNote": "Σ 新增世代占比 × Tokenomics IF_CapexIT｜世代（只含 IT／GPU；雲端機房以第三方承租取得，不用 IF_CapexTotal；v19.0 GB300 32.24、VR200 37.59 US$m/MW-IT）[Derived]；v0.1 寫死值 37.45／37.59 見『每MW收入_錨定』E 區對照列",
   "ppeOpenNote": "雲端 GPU：以 Q2 D&A 6.567 扣託管在役資產折舊約 0.99（託管設備＋建物＋租賃改良毛額 78.9 ÷ 20 年 ÷ 4）後 × 4 × 壽命 5 年校準＝111.6（10-Q 雲端設備毛額 121.0）[Derived]",
   "facilityName": "Bit Digital DDTL 未動用額度 20（額度 100、已動用 80；可增至 150 未承諾，不計）",
   "newDebtRateNote": "瀑布新債（資產層／專案債）利率 9.5%（DDTL 純債票面，v0.1a 預設；冰島 7.92%–10.64% 區間）[Interested-party／Assumed]",
@@ -1592,9 +1636,9 @@
   "sharesNote": "未歸屬 RSU 0.124m 股；零履約價買權 5.905511m 股自稀釋股數排除（2031 年收回，經濟上已買回；審查留言第 1 條預設，替代：計入）；期後交換股 6.278m 見期後事件",
   "netDebtNote": "不含租賃與可轉債（其他借款 − 現金）；評價日 6/30 加期後事件（2032 可轉債淨收入、2031 交換現金、DDTL 追加、RBC 聯貸）",
   "otherRevNote": "非算力服務預設 0（其他營收＝設備銷售型租賃利息，每季約 0.3，未建模；託管另列）",
-  "rvRevNote": "WhiteFiber 對照：新簽雲端長約隱含 14.8–20.3、Q2 經常性年化 ÷ 冰島 5.5 MW＝8.37（上限）",
-  "rvCostNote": "Tokenomics IF_CapexIT 37.45–37.59 US$m/MW-IT（GPU；機房另計）",
-  "priceNote": "續約價格衰退未建模（CRWV 尚未做）：雲端合約到期後以 Tokenomics 每 MW 續作（已知限制）",
+  "rvRevNote": "WhiteFiber 對照：新簽雲端長約隱含 14.8–20.3、Q2 經常性年化 ÷ 冰島 5.5 MW＝8.37（上限）；模型每 MW＝Tokenomics 錨 × k，不以此反推",
+  "rvCostNote": "Tokenomics IF_CapexIT｜世代加權（v19.0 GB300 32.24、VR200 37.59 US$m/MW-IT；GPU；機房另計）",
+  "priceNote": "續約價格衰退未建模（CRWV 尚未做）：雲端合約到期後以 Tokenomics 錨 × k 續作（合約期內 k 固定；Tokenomics L 證據 E4：出租方合約期內 L≈1、續約約原價）（已知限制）",
   "prepayCoverNote": "WhiteFiber：1H26 客戶預付 72.6 ÷ 資本支出 344.7＝21.1%（含託管；10-Q 未分拆）[Derived]；敏感度 ±5pt",
   "prepayOpenNote": "遞延營收（合約負債）143.110：流動 17.909、非流動 125.201（10-Q）；未分託管與雲端；認列 8 年＝143.110 ÷ 17.909 [Derived]",
   "ytdEquityNote": "1H26 未發行普通股；2031 可轉債淨額 222.1、零履約價買權 120.0",
@@ -1665,7 +1709,7 @@
     "定價",
     "年化 > $200M 目標",
     "無",
-    "不用公司目標；雲端每 MW 取 Tokenomics 11.62／17.40／24.20"
+    "不用公司目標；雲端每 MW＝Tokenomics 錨 × 定價倍數 k（GB300 長約 9.70）"
    ],
    [
     "客戶集中",
@@ -1813,7 +1857,7 @@
    ],
    [
     "Derived",
-    "每 MW 年收入（Tokenomics v5.26 正向推導，與 v5.24 相同）：保守 11.62／基準 17.40／積極 24.20 US$m/MW-IT·年；每 MW IT 建置成本 IF_CapexIT 37.45（GB300）／37.59（VR200）。WhiteFiber 合約隱含單價只作對照。"
+    "每 MW 年收入（Tokenomics v19.0 快照 × 定價倍數 k）：Σ 在役世代占比 × IF_HoldEcon × k，k＝證據價格 ÷ 同世代持有成本（IREN–Microsoft GB300 五年約 9.70 → k_長約 0.891；H100 現貨指數 → k_現貨 1.83）；每 MW IT 建置成本 Σ 新增世代占比 × IF_CapexIT（v19.0 GB300 32.24／VR200 37.59）。WhiteFiber 合約隱含單價只作對照與敏感度。"
    ],
    [
     "Verified",
@@ -1931,11 +1975,604 @@
   "revMwContractsNote": "合約隱含每 MW-IT 年營收 [Derived]：TCV ÷ 年數 ÷（GPU 數 × 每顆 IT kW ÷ 1000），每顆 IT kW 取 Tokenomics v5.26（B300／B200 以 GB300／GB200 近似，HGX 氣冷機實際約低 0–12%，使隱含單價略為低估）；只作對照與敏感度，不作輸入（共同規則第 4 節）",
   "mwBasis": {
    "title": "MW 口徑：雲端 MW-IT 由合約 GPU 數換算；託管站點 IT／毛容量分列",
-   "detail": "模型以 MW-IT 為主口徑（Tokenomics 每 MW 單價為 IT）。雲端站點多為第三方機房、公司未揭露 MW：由合約 GPU 數 × 每顆 IT kW（Tokenomics v5.26）換算（[Derived]；巴黎 GPU 數未揭露，以年額 ÷ 17.40 推得）。託管：公司簡報 MW 為毛容量，IT 另列；未揭露 IT 者以毛 ÷ 1.35（NC-1 第一期 54 毛／40 IT）換算。"
+   "detail": "模型以 MW-IT 為主口徑（Tokenomics 每 MW 單價為 IT）。雲端站點多為第三方機房、公司未揭露 MW：由合約 GPU 數 × 每顆 IT kW（Tokenomics v5.26）換算（[Derived]；巴黎 GPU 數未揭露，以年額 ÷ 17.40（v0.1 的每 MW 年收入，v0.2 未重算）推得）。託管：公司簡報 MW 為毛容量，IT 另列；未揭露 IT 者以毛 ÷ 1.35（NC-1 第一期 54 毛／40 IT）換算。"
   },
   "scenarioTip": "三個情境依對照表 r1 第 4 節第 1 條與審查留言第 6 條：保守＝只有已簽約（雲端合約 GPU、NC-1 40 MW、MTL 現有站點；NC-1 專案融資未完成）；基準＝加雪梨 2.5 MW 與雲端每年 3 MW-IT、NC-1 下一批 45 毛 MW，NC-1 專案融資完成；積極＝雲端每年 6 MW-IT、再加 NC-2／3、NC-1 擴建與 Krambu 100 MW。每 MW 年收入隨情境取 Tokenomics 正向推導三情境值。切換情境只會改寫已連網／可計費 MW、每 MW 年收入、FY31 預建、託管站點與延誤月數；你手動調整的其他數字會保留，按頁首「重設」才回到預設值。",
   "siteTip": "具名雲端站點可編輯。公司多數雲端站點為第三方機房、不揭露 MW；下列 MW 由合約 GPU 數換算（[Derived]）。最後一列是殘差＝年度已連網 MW − 具名加總。託管站點見託管分部。",
   "headline": "託管長約能撐住雲端擴張嗎",
-  "subhead": "Nscale 10 年長約與客戶預付是融資底座；雲端 GPU 擴張仍要靠可轉債與專案融資"
+  "subhead": "Nscale 10 年長約與客戶預付是融資底座；雲端 GPU 擴張仍要靠可轉債與專案融資",
+  "scenarioTipTk": "三個情境依對照表 r1 第 4 節第 1 條與審查留言第 6 條：保守＝只有已簽約（雲端合約 GPU、NC-1 40 MW、MTL 現有站點；NC-1 專案融資未完成）；基準＝加雪梨 2.5 MW 與雲端每年 3 MW-IT、NC-1 下一批 45 毛 MW，NC-1 專案融資完成；積極＝雲端每年 6 MW-IT、再加 NC-2／3、NC-1 擴建與 Krambu 100 MW。每 MW 年收入＝Tokenomics 錨 × 定價倍數 k（價格軸與容量情境分離；三個容量情境預設都用基準 k，各情境只因新增產能的世代組合略有不同）。切換情境只會改寫已連網／可計費 MW、每 MW 年收入、FY31 預建、託管站點與延誤月數；你手動調整的其他數字會保留，按頁首「重設」才回到預設值。"
+ },
+ "tokenomics": {
+  "_note": "算力相關的產業與物理層資料改引用 Tokenomics（YinchenChang/Tokenomics）：只引用 IF_（不含 IF_Hdr*）、IFW_、IFC_ 與 L1_ 名稱，經版本固定的快照檔讀入（tools/tokenomics/import_tokenomics.py；下游資料契約第 2 條）；模型主值一律取「基準」成本情境，低成本／高成本只作敏感度。Tokenomics 每 GW＝IT 關鍵電力。Excel「Tokenomics_取數」分頁建具名範圍（TK_）。WhiteFiber v0.2（2026-10-22）：取代手工 JSON data/permw_tokenomics_20261008.json（v5.24／v5.26 手抄，已標「已被快照取代」）；快照 v19.0（model/CURRENT＝20261022_Tokenomics_v19.0.xlsx，v19.0 合併 master ad33e28；取數時 master HEAD 為 1916a06，其後只有文件提交，model/ 與 ad33e28 相同）。",
+  "snapshotFile": "data/tokenomics_snapshot_v19.0.json",
+  "version": "v19.0",
+  "commit": "1916a06465bb0c7efed21383075f2ae098508e24",
+  "mergeCommit": "ad33e28",
+  "currentFile": "20261022_Tokenomics_v19.0.xlsx",
+  "names": [
+   "IF_RacksPerGW",
+   "IF_GPUsPerGW",
+   "IF_FacilityGW",
+   "IF_CapexIT",
+   "IF_CapexFacility",
+   "IF_CapexTotal",
+   "IF_HoldAcct",
+   "IF_HoldEcon",
+   "IF_GPUhrEcon",
+   "IF_PowerCost",
+   "IF_Util",
+   "L1_FacCapexMW",
+   "L1_GPUhr_GB200_vsCW",
+   "L1_GPUhr_GB300_vsBE",
+   "L1_RevGW_Fleet_VR200",
+   "IF_DeprLifeIT",
+   "IF_DeprIT",
+   "IF_DeprFac",
+   "IF_AvgDraw",
+   "IF_PowerPrice",
+   "IF_MaintIT",
+   "IF_MaintFac",
+   "IF_StaffSW",
+   "IF_TaxIns",
+   "IF_OpexGW",
+   "IF_RevGWFleet",
+   "IFW_RevGWFleet_100",
+   "IFW_RevGWFleet_Util",
+   "IFW_RevGWFleet_Prod",
+   "IFW_RevGWFleet_Life",
+   "IFC_Use",
+   "L1_HoldEconMW_Hopper",
+   "L1_HoldEconMW_GB200",
+   "L1_HoldEconMW_GB300",
+   "L1_HoldEconMW_VR200",
+   "L1_TokMW_Gen_ratio_VR200",
+   "L1_TokMW_Gen_ratio_VR200_Lo",
+   "L1_TokMW_Gen_ratio_VR200_Hi",
+   "L1_RevGW_PQ_VR200",
+   "L1_RevGW_PQ_VR200_Lo",
+   "L1_RevGW_PQ_VR200_Hi",
+   "L1_TokMW_Gen_ratio_GB200",
+   "L1_TokMW_Gen_ratio_GB300",
+   "L1_GPUhr_GB300",
+   "L1_GPUhr_VR200",
+   "IFC_Layer"
+  ],
+  "optional": [
+   "IFW_RevGWFleet_100",
+   "IFW_RevGWFleet_Util",
+   "IFW_RevGWFleet_Prod",
+   "IFW_RevGWFleet_Life",
+   "IFC_Use",
+   "L1_HoldEconMW_Hopper",
+   "L1_HoldEconMW_GB200",
+   "L1_HoldEconMW_GB300",
+   "L1_HoldEconMW_VR200",
+   "L1_TokMW_Gen_ratio_VR200",
+   "L1_TokMW_Gen_ratio_VR200_Lo",
+   "L1_TokMW_Gen_ratio_VR200_Hi",
+   "L1_RevGW_PQ_VR200",
+   "L1_RevGW_PQ_VR200_Lo",
+   "L1_RevGW_PQ_VR200_Hi",
+   "L1_TokMW_Gen_ratio_GB200",
+   "L1_TokMW_Gen_ratio_GB300",
+   "L1_GPUhr_GB300",
+   "L1_GPUhr_VR200",
+   "IFC_Layer"
+  ]
+ },
+ "fleet": {
+  "_note": "世代組合（WhiteFiber v0.2，比照 Oracle v0.3／Nebius v0.2a／CoreWeave W2 的簡化版）：世代名稱與 Tokenomics 快照同名。期初在役 MW（fleet.openMw＝評價日已連網雲端 MW-IT）依 openMix；各期新增（期末已連網 MW 路徑 scenarios.mwPath 的增量）依 newMix；汰換不做。平均在役世代占比＝各世代（期初＋期末）÷（期初總＋期末總），供收入錨加權。權重用已連網 MW（價格無關，避免期初可計費 MW 與每 MW 收入互相循環）。",
+  "generations": [
+   "Hopper H100",
+   "GB200 NVL72",
+   "GB300 NVL72",
+   "VR200 NVL72"
+  ],
+  "openMw": 5.5,
+  "openMwNote": "評價日（2026-06-30）已連網雲端 MW-IT：冰島 Blönduós 第三方機房已簽 5.5 MW IT（10-Q；scenarios.mwPath.note、texts.mwYearEndNotes）。亞特蘭大（2026-02 起承租）與加拿大 MW 未揭露，故為下限 [Derived]；Q2 經常性雲端營收年化 ÷ 此值＝8.37 為上限（事實總帳 pm.a.perMW）。",
+  "openMix": {
+   "asOf": "2026-06-30",
+   "mix": {
+    "Hopper H100": 0.6,
+    "GB200 NVL72": 0.35,
+    "GB300 NVL72": 0.05
+   },
+   "tag": "[Assumed]",
+   "range": {
+    "Hopper H100": [
+     0.45,
+     0.75
+    ],
+    "GB200 NVL72": [
+     0.2,
+     0.45
+    ],
+    "GB300 NVL72": [
+     0.0,
+     0.1
+    ]
+   },
+   "source": "WhiteFiber 未揭露評價日機隊的世代組合與逐站 MW（找不到：試過 FY2025 10-K、2026 Q2 10-Q、9 月簡報、MarketBeat 二手法說摘要、事實總帳）。可辨識的合約機隊（事實總帳群組 3）：H100 256 台（2,048 顆；2.852 MW-IT，24 個月，Hopper）、Hyperbolic 自有 H200 機隊（MW 未揭露，以 Hopper 欄代表）、B200 384 顆（0.765 MW-IT，2026-01 起，以 GB200 欄近似）；已終止的 Initial Customer 464 顆 B200（0.925 MW-IT）設備可能閒置或轉售。以 5.5 MW 計：Hopper 約 2.85＋H200 估 0.4＝約 59%、GB200 類約 0.77＋0.93＝約 31%，餘約 10% 未辨識。取整為 Hopper 60%／GB200 35%／GB300 5%，Tokenomics 無 H200 欄，以 Hopper H100 欄代表。屬 [Assumed]，給區間。"
+  },
+  "newMix": [
+   {
+    "GB200 NVL72": 0.047,
+    "GB300 NVL72": 0.953
+   },
+   {
+    "VR200 NVL72": 1
+   },
+   {
+    "GB300 NVL72": 0.5,
+    "VR200 NVL72": 0.5
+   },
+   {
+    "VR200 NVL72": 1
+   },
+   {
+    "VR200 NVL72": 1
+   }
+  ],
+  "newMixNote": "[Derived／Assumed]：FY26（2H）新增 9.074 MW＝Baseten 1,392 顆 B300 2.858、巴黎 1.84、雪梨 2.5、128 顆 B300 0.263、冰島 B300 1.183（皆 GB300 欄近似，合計 8.644＝95.3%）＋Prime GB200 216 顆 0.43（4.7%）[Derived，事實總帳群組 3]；FY27 新增＝Prime VR200 576 顆 1.974（100% VR200）[Derived]；FY28 起新簽約（基準每年 +3 MW）依 Oracle v0.3 同一假設：FY28 GB300 50%／VR200 50%、FY29 起 VR200 100% [Assumed]（Vera Rubin 2027 下半年起交付）。區間：VR200 提前一年（FY28 100%）或延後一年（FY29 50%）。",
+  "refGen": "GB300 NVL72"
+ },
+ "pricing": {
+  "_note": "WhiteFiber v0.2：每 MW 收入的公司因素（定價倍數 k）與證據表；只有 anchorMultiple 驅動計算（methodology.perMw.revenue＝tkAnchor）。證據價格沿用 CoreWeave／Nebius／Oracle（跨模型一致）。",
+  "anchorMultiple": {
+   "_note": "WhiteFiber v0.2（已決定事項 14、15；比照 Oracle v0.3／Nebius v0.2a 第 2 輪／v0.4）：雲端每 MW 年收入（100% 計費時數）＝ Σ 平均在役世代占比 × IF_HoldEcon（基準成本情境）× 定價倍數 k；k＝隨需占比 × k_現貨 ＋（1 − 隨需占比）× k_長約。長約占比預設 75%、非長約（1–2 年期預留或隨需，以現貨指數代表）25%（[Derived]，區間長約 50–90%）：由事實總帳已揭露的雲端合約估計——年化營收 ≥3 年期合約（Baseten、Prime VR200、冰島 B300、128 顆 B300、巴黎下限）合計 145.97 ÷ 全部有年期的合約 195.42＝74.7%，取整 75%（算式見 contractMix；巴黎年額為下限 >32）。k 只取「市場價格或同業已揭露合約條款 ÷ 同世代 Tokenomics 持有成本」證據（evidence，use＝long／spot 者驅動，range 只支持區間，list 只列）；證據價格本身不改；不得以 WhiteFiber 營收、RPO、合約金額反推 k（WhiteFiber 自身合約隱含 k 只作敏感度）。k 隨 Tokenomics 成本情境以證據世代成本比例重算。合約期內 k 固定（Tokenomics L 證據 E4：出租方合約期內 L≈1，續約約原價；續約價格衰退不做，CRWV 未完成待辦）。價格軸（k 低／基準／高）與容量軸（scenarios）分離。",
+   "long": {
+    "base": {
+     "ref": "IREN–Microsoft GB300 五年約"
+    },
+    "low": {
+     "priceEq": 8.9073,
+     "gen": "GB300 NVL72",
+     "tkName": "IF_HoldEcon"
+    },
+    "high": {
+     "priceEq": 12.7247,
+     "gen": "GB300 NVL72",
+     "tkName": "IF_HoldEcon"
+    },
+    "tag": "[Analogy]",
+    "refEvidence": "IREN–Microsoft GB300 五年約",
+    "sensMedian": {
+     "median": [
+      "IREN–Microsoft GB300 五年約",
+      "IREN–NVIDIA 氣冷 Blackwell 五年約（GB300 類比）"
+     ]
+    },
+    "note": "k 依目前快照重算（價格是事實，k＝價格 ÷ 同世代 Tokenomics 持有成本，錨改變時 k 跟著改；比照 CoreWeave W6 r1）。基準＝IREN–Microsoft GB300 五年約 9.70 ÷ IF_HoldEcon｜GB300（v5.27 12.72 → 0.762、v18.0／v19.0 10.89 → 0.891）；區間端點為 0.70–1.00 × v5.27 錨 12.725 換成固定價格 8.907／12.725 US$m/MW/年 [Derived]（v19.0 為 0.818–1.169）；中位數＝兩筆長約（IREN–Microsoft、IREN–NVIDIA；同一供應商，非獨立）倍數的中位數＝平均",
+    "interpretation": "契約第 4 條指定解讀（預設）：長約以低於打平租金（WACC 10% 經濟持有成本）的價格換取預付（20%）與多年確定性，客戶分攤部分資本成本——WhiteFiber 的雲端合約同樣收客戶預付（客戶出資覆蓋比 1H26 實際 21.1%；巴黎合約 12 個月服務費預付）。替代解讀：(a) 成本結構不同（IREN 自有電力與廠房，持有成本低於 Tokenomics 基準；WhiteFiber 雲端為第三方機房承租）→ k 應以自身成本計；(b) 合約含非收入條款（預付的資金成本價值未計入價格）→ 經濟價格高於帳面價格。三者對 WhiteFiber 收入的影響方向：預設解讀最保守。",
+    "ownContract": {
+     "specs": [
+      {
+       "tcv": 165.2,
+       "years": 3,
+       "mw": 2.858,
+       "gen": "GB300 NVL72",
+       "tkName": "IF_HoldEcon"
+      },
+      {
+       "tcv": 87.5,
+       "years": 5,
+       "mw": 1.183,
+       "gen": "GB300 NVL72",
+       "tkName": "IF_HoldEcon"
+      },
+      {
+       "tcv": 108.2,
+       "years": 3,
+       "mw": 1.974,
+       "gen": "VR200 NVL72",
+       "tkName": "IF_HoldEcon"
+      },
+      {
+       "tcv": 50.2,
+       "years": 2,
+       "mw": 2.852,
+       "gen": "Hopper H100",
+       "tkName": "IF_HoldEcon"
+      }
+     ],
+     "labels": [
+      "Baseten B300 3 年",
+      "冰島 B300 5 年",
+      "Prime Intellect VR200 3 年",
+      "H100 256 台 24 個月（現有機隊代表）"
+     ],
+     "tag": "[Derived]／[Analogy]",
+     "note": "WhiteFiber 自身合約（事實總帳群組 3，10-Q 核閱數）：TCV ÷ 年數 ÷ MW-IT（GPU 數 × 每顆 IT kW，B300／B200 以 GB300／GB200 近似，HGX 氣冷機實際約低 0–12%，使隱含單價略為低估）÷ 同世代 Tokenomics 持有成本。列為「公司自身合約」敏感度，不作基準（共同規則第 4 節：不以公司合約反推 k；比照 Nebius／Oracle）；前三筆為 2026 新簽 B300／VR200 長約（隱含 k 約 1.4–1.8），第四筆為現有機隊的 H100 24 個月約（隱含 k 約 0.9），供 Q2 驗證的價格項使用。"
+    }
+   },
+   "spot": {
+    "base": {
+     "ref": "H100 Silicon Data 現貨指數"
+    },
+    "low": {
+     "priceEq": 2.4075,
+     "gen": "Hopper H100",
+     "tkName": "IF_GPUhrEcon"
+    },
+    "high": {
+     "ref": "B300 Silicon Data 現貨指數（GB300 類比）"
+    },
+    "tag": "[Analogy]",
+    "refEvidence": "H100 Silicon Data 現貨指數",
+    "note": "k 依目前快照重算（比照 CoreWeave W6 r1）。基準＝H100 Silicon Data 現貨指數 2.82 ÷ IF_GPUhrEcon｜H100（v5.27 1.605 → 1.757、v18.0／v19.0 1.543 → 1.828）；上緣＝B300 指數 6.82 ÷ IF_GPUhrEcon｜GB300（v5.27 2.29、v18.0／v19.0 2.67）；下緣＝1.5 × v5.27 H100 成本 1.605 換成固定價格 2.408 US$/GPU-hr [Derived]（v19.0 為 1.56）。WhiteFiber 非長約客戶為 1–2 年期預留（Hyperbolic、H100、B200、Prime GB200），介於長約與隨需之間，以現貨指數代表"
+   },
+   "onDemandShare": {
+    "base": 0.25,
+    "sens": [
+     0.1,
+     0.3,
+     0.5
+    ],
+    "tag": "[Derived]",
+    "note": "非長約（現貨）占在役計費產能的比例；公司未揭露合約型態占營收比例（找不到），改由事實總帳已揭露的雲端合約估計：長約（≥3 年）＝Baseten 55.07＋Prime VR200 36.07＋冰島 B300 17.5＋128 顆 B300 5.33＋巴黎 32（下限）＝145.97 US$m/年；非長約（1–2 年）＝H100 25.1＋Hyperbolic 8.5＋B200 9.05＋Prime GB200 6.8＝49.45；長約占比＝145.97 ÷ 195.42＝74.7%，取整 75%（隨需 25%）。區間長約 50–90%（隨需 10–50%）；敏感度長約 90%／70%（工作單預設 70% 的備援值）／50%。已揭露合約為 2026 新簽，偏重長約；既有機隊的合約型態未知，故給寬區間；不得用 Q2 隱含 k 反推"
+   },
+   "contractMix": [
+    {
+     "label": "Baseten B300（3 年）年化營收",
+     "value": 55.067,
+     "unit": "US$m/年",
+     "tag": "[Interested-party]",
+     "source": "10-Q 核閱數（165.2 ÷ 3）；事實總帳 ct.baseten；長約（≥3 年）",
+     "url": "",
+     "date": "2026-08-12",
+     "retrieved": "2026-10-22"
+    },
+    {
+     "label": "Prime Intellect VR200（3 年）年化營收",
+     "value": 36.067,
+     "unit": "US$m/年",
+     "tag": "[Interested-party]",
+     "source": "10-Q 核閱數（108.2 ÷ 3）；ct.primeVR；長約",
+     "url": "",
+     "date": "2026-08-12",
+     "retrieved": "2026-10-22"
+    },
+    {
+     "label": "冰島 B300（5 年）年化營收",
+     "value": 17.5,
+     "unit": "US$m/年",
+     "tag": "[Interested-party]",
+     "source": "10-Q 核閱數（87.5 ÷ 5）；ct.icelandB300；長約",
+     "url": "",
+     "date": "2026-08-12",
+     "retrieved": "2026-10-22"
+    },
+    {
+     "label": "128 顆 B300（3 年）年化營收",
+     "value": 5.333,
+     "unit": "US$m/年",
+     "tag": "[Interested-party]",
+     "source": "10-Q 核閱數（16.0 ÷ 3）；ct.b300_128；長約",
+     "url": "",
+     "date": "2026-08-12",
+     "retrieved": "2026-10-22"
+    },
+    {
+     "label": "巴黎（5 年）年化營收下限",
+     "value": 32.0,
+     "unit": "US$m/年",
+     "tag": "[Interested-party]",
+     "source": "10-Q 核閱數（TCV >160 ÷ 5，下限）；ct.paris；長約",
+     "url": "",
+     "date": "2026-08-12",
+     "retrieved": "2026-10-22"
+    },
+    {
+     "label": "H100 256 台（2 年）年化營收",
+     "value": 25.1,
+     "unit": "US$m/年",
+     "tag": "[Interested-party]",
+     "source": "10-Q 核閱數（50.2 ÷ 2）；ct.h100_2048；非長約（<3 年）",
+     "url": "",
+     "date": "2026-08-12",
+     "retrieved": "2026-10-22"
+    },
+    {
+     "label": "Hyperbolic H200（2 年）年化營收",
+     "value": 8.5,
+     "unit": "US$m/年",
+     "tag": "[Interested-party]",
+     "source": "10-Q 核閱數（17.0 ÷ 2）；ct.hyperbolic；非長約",
+     "url": "",
+     "date": "2026-08-12",
+     "retrieved": "2026-10-22"
+    },
+    {
+     "label": "B200 384 顆（2 年）年化營收",
+     "value": 9.05,
+     "unit": "US$m/年",
+     "tag": "[Interested-party]",
+     "source": "10-Q 核閱數（18.1 ÷ 2）；ct.b200_384；非長約",
+     "url": "",
+     "date": "2026-08-12",
+     "retrieved": "2026-10-22"
+    },
+    {
+     "label": "Prime GB200 216 顆（1 年）年化營收",
+     "value": 6.8,
+     "unit": "US$m/年",
+     "tag": "[Interested-party]",
+     "source": "10-Q 核閱數；ct.primeGB200；非長約",
+     "url": "",
+     "date": "2026-08-12",
+     "retrieved": "2026-10-22"
+    },
+    {
+     "label": "長約（≥3 年）合計 ÷ 全部有年期合約",
+     "value": 0.747,
+     "unit": "比例",
+     "tag": "[Derived]",
+     "source": "145.97 ÷ 195.42＝74.7%（取整 75%＝onDemandShare 的補數）；僅涵蓋 2026 新簽合約，既有機隊合約型態未知",
+     "url": "",
+     "date": "",
+     "retrieved": "2026-10-22"
+    }
+   ],
+   "notFound": [
+    "VR200 長約或現貨每 GPU 小時價格：找不到（尚未上市交付；試過 Nebius／CoreWeave／Verda 價目、Silicon Data、GetDeploying、新聞搜尋）",
+    "WhiteFiber 既有機隊（評價日 5.5 MW）的合約型態、年期與世代：找不到（公司只揭露 2026 新簽合約；試過 10-K、10-Q、簡報、二手法說）——不代表不存在",
+    "第二筆獨立於 IREN 的 neocloud 長約（含年期與 GPU 數）：找不到可換算者——Nscale–Microsoft（FT 報導約 $14bn、約 11.6 萬顆 GB300）未揭露年期，無法換算；Lambda–Microsoft 未揭露金額"
+   ],
+   "evidence": [
+    {
+     "label": "IREN–Microsoft GB300 五年約",
+     "gen": "GB300 NVL72",
+     "price": 9.7,
+     "unit": "US$m/MW/年",
+     "tkName": "IF_HoldEcon",
+     "contract": "長約（hyperscaler）",
+     "term": "5 年",
+     "use": "long",
+     "tag": "[Derived]",
+     "source": "IREN Secures $9.7bn AI Cloud Contract with Microsoft（IREN 新聞稿）",
+     "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-97bn-ai-cloud-contract-microsoft",
+     "date": "2025-11-03",
+     "retrieved": "2026-10-08",
+     "note": "$9.7bn ÷ 5 年 ÷ 200 MW critical IT；含 20% 預付；非 WhiteFiber 合約（同業成交）；契約第 4 條指定解讀見 long.interpretation"
+    },
+    {
+     "label": "IREN–NVIDIA 氣冷 Blackwell 五年約（GB300 類比）",
+     "gen": "GB300 NVL72",
+     "price": 11.333,
+     "unit": "US$m/MW/年",
+     "tkName": "IF_HoldEcon",
+     "contract": "長約（晶片商客戶）",
+     "term": "5 年",
+     "use": "range",
+     "tag": "[Analogy]",
+     "source": "IREN Secures $3.4bn AI Cloud Contract with NVIDIA（IREN 新聞稿）",
+     "url": "https://iren.gcs-web.com/news-releases/news-release-details/iren-secures-34bn-ai-cloud-contract-nvidia",
+     "date": "2026-05-07",
+     "retrieved": "2026-10-08",
+     "note": "$3.4bn ÷ 5 年 ÷ 約 60 MW（MW 口徑未註明，視為 IT）；氣冷 Blackwell 以 GB300 類比；與第 1 筆同一供應商，只支持區間"
+    },
+    {
+     "label": "H100 Silicon Data 現貨指數",
+     "gen": "Hopper H100",
+     "price": 2.82,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "現貨（市場租金指數）",
+     "term": "隨需／短期",
+     "use": "spot",
+     "tag": "[Verified]",
+     "source": "Silicon Data H100 Index 頁面",
+     "url": "https://www.silicondata.com/products/silicon-index/h100",
+     "date": "2026-10-06",
+     "retrieved": "2026-10-08",
+     "note": "價格 [Verified]；倍數 [Derived]；k_現貨 基準"
+    },
+    {
+     "label": "B300 Silicon Data 現貨指數（GB300 類比）",
+     "gen": "GB300 NVL72",
+     "price": 6.82,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "現貨（市場租金指數）",
+     "term": "隨需／短期",
+     "use": "range",
+     "tag": "[Analogy]",
+     "source": "Silicon Data H100 Index 頁面（含 B200、B300 指數）",
+     "url": "https://www.silicondata.com/products/silicon-index/h100",
+     "date": "2026-10-06",
+     "retrieved": "2026-10-08",
+     "note": "HGX B300 對 GB300 NVL72 類比；k_現貨 上緣"
+    },
+    {
+     "label": "B200 Ornn 成交指數（GB200 類比）",
+     "gen": "GB200 NVL72",
+     "price": 4.08,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "現貨（市場成交指數）",
+     "term": "隨需／短期",
+     "use": "range",
+     "tag": "[Analogy]",
+     "source": "Ornn（經 WSJ 轉述；CoreWeave W1 第 6c 步）",
+     "url": "",
+     "date": "2026-04-13",
+     "retrieved": "2026-10-08",
+     "note": "HGX B200 對 GB200 NVL72 類比；落在 k_現貨 區間內"
+    },
+    {
+     "label": "B200 Silicon Data 現貨指數（GB200 類比）",
+     "gen": "GB200 NVL72",
+     "price": 5.87,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "現貨（市場租金指數）",
+     "term": "隨需／短期",
+     "use": "list",
+     "tag": "[Analogy]",
+     "source": "Silicon Data H100 Index 頁面（含 B200、B300 指數）",
+     "url": "https://www.silicondata.com/products/silicon-index/h100",
+     "date": "2026-10-06",
+     "retrieved": "2026-10-08",
+     "note": "高於 k_現貨 區間上緣；HGX 對 NVL72 類比偏高，只列"
+    },
+    {
+     "label": "Nebius H100 隨需牌價（10/1 起）",
+     "gen": "Hopper H100",
+     "price": 4.5,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "隨需牌價",
+     "term": "隨需",
+     "use": "list",
+     "tag": "[Interested-party]",
+     "source": "Nebius NVIDIA GPU Pricing（官網價目；2026-10-01 起 4.50，此前 3.85）",
+     "url": "https://nebius.com/prices",
+     "date": "2026-10-01",
+     "retrieved": "2026-10-08",
+     "note": "牌價非成交價；官網稱多月期預留最多便宜 35%（→ 2.93，倍數約 1.82）；只列不用"
+    },
+    {
+     "label": "Nebius H200 隨需牌價（Hopper 類比，10/1 起）",
+     "gen": "Hopper H100",
+     "price": 5.4,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "隨需牌價",
+     "term": "隨需",
+     "use": "list",
+     "tag": "[Interested-party]",
+     "source": "Nebius NVIDIA GPU Pricing（官網價目；2026-10-01 起 5.40，此前 4.50）",
+     "url": "https://nebius.com/prices",
+     "date": "2026-10-01",
+     "retrieved": "2026-10-08",
+     "note": "Tokenomics 無 H200 欄，以 Hopper H100 欄代表；牌價非成交價；只列不用"
+    },
+    {
+     "label": "Nebius B300 隨需牌價（GB300 類比，10/1 起）",
+     "gen": "GB300 NVL72",
+     "price": 9.5,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "隨需牌價",
+     "term": "隨需",
+     "use": "list",
+     "tag": "[Interested-party]",
+     "source": "Nebius NVIDIA GPU Pricing（官網價目；2026-10-01 起 9.50，此前 7.85；GB300 NVL72 為洽詢報價）",
+     "url": "https://nebius.com/prices",
+     "date": "2026-10-01",
+     "retrieved": "2026-10-08",
+     "note": "牌價非成交價；預留最多便宜 35%（→ 6.18，倍數約 2.07）；只列不用"
+    },
+    {
+     "label": "Nebius–Microsoft 五年約（約 10 萬顆 GB300，Nebius 自身合約）",
+     "gen": "GB300 NVL72",
+     "price": 3.973,
+     "unit": "US$/GPU-hr",
+     "tkName": "IF_GPUhrEcon",
+     "contract": "長約（hyperscaler；Nebius 自身）",
+     "term": "5 年",
+     "use": "list",
+     "tag": "[Derived]",
+     "source": "Nebius 6-K 2025-09-08（TCV $17.4bn，5 年）＋Bloomberg 2025-10-02 引述匿名消息（約 10 萬顆 GB300，經 TechNews 轉述）",
+     "url": "https://technews.tw/?p=1448224",
+     "date": "2025-10-02",
+     "retrieved": "2026-10-08",
+     "note": "17,400 ÷ 5 ÷ 100,000 ÷ 8,760 ×1e6＝3.97 US$/GPU-hr；GPU 數未經公司證實、TCV 可能含非 GPU 服務；屬 Nebius 自身合約（RPO 的一部分），依工作單不得作為 k 的證據，只列作對照（）"
+    },
+    {
+     "label": "WhiteFiber–Baseten B300 三年約（自身合約）",
+     "gen": "GB300 NVL72",
+     "price": 19.27,
+     "unit": "US$m/MW/年",
+     "tkName": "IF_HoldEcon",
+     "contract": "WhiteFiber 自身合約",
+     "term": "3 年",
+     "use": "list",
+     "tag": "[Derived]",
+     "source": "WhiteFiber 2026 Q2 10-Q（核閱數）；事實總帳 ct.baseten",
+     "url": "",
+     "date": "2026-08-12",
+     "retrieved": "2026-10-22",
+     "note": "TCV 165.2 ÷ 3 ÷ 2.858 MW-IT（1,392 顆 B300 × 2.053 kW，B300 以 GB300 近似）；依共同規則第 4 節不得作為 k 的證據，只列對照與敏感度"
+    },
+    {
+     "label": "WhiteFiber–冰島 B300 五年約（自身合約）",
+     "gen": "GB300 NVL72",
+     "price": 14.8,
+     "unit": "US$m/MW/年",
+     "tkName": "IF_HoldEcon",
+     "contract": "WhiteFiber 自身合約",
+     "term": "5 年",
+     "use": "list",
+     "tag": "[Derived]",
+     "source": "WhiteFiber 2026 Q2 10-Q（核閱數）；ct.icelandB300",
+     "url": "",
+     "date": "2026-08-12",
+     "retrieved": "2026-10-22",
+     "note": "TCV 87.5 ÷ 5 ÷ 1.183 MW-IT；另有營收分成上檔；只列不用"
+    },
+    {
+     "label": "WhiteFiber–Prime Intellect VR200 三年約（自身合約）",
+     "gen": "VR200 NVL72",
+     "price": 18.27,
+     "unit": "US$m/MW/年",
+     "tkName": "IF_HoldEcon",
+     "contract": "WhiteFiber 自身合約",
+     "term": "3 年",
+     "use": "list",
+     "tag": "[Derived]",
+     "source": "WhiteFiber 2026 Q2 10-Q（核閱數）；ct.primeVR",
+     "url": "",
+     "date": "2026-08-12",
+     "retrieved": "2026-10-22",
+     "note": "TCV 108.2 ÷ 3 ÷ 1.974 MW-IT（576 顆 VR200 × 3.428 kW）；只列不用"
+    },
+    {
+     "label": "WhiteFiber–H100 256 台兩年約（自身合約，現有機隊）",
+     "gen": "Hopper H100",
+     "price": 8.8,
+     "unit": "US$m/MW/年",
+     "tkName": "IF_HoldEcon",
+     "contract": "WhiteFiber 自身合約",
+     "term": "2 年",
+     "use": "list",
+     "tag": "[Derived]",
+     "source": "WhiteFiber 2026 Q2 10-Q（核閱數）；ct.h100_2048",
+     "url": "",
+     "date": "2026-08-12",
+     "retrieved": "2026-10-22",
+     "note": "TCV 50.2 ÷ 2 ÷ 2.852 MW-IT（2,048 顆 H100 × 1.393 kW；8 卡／台為 [Assumed]）；現有機隊代表合約，Q2 驗證的價格項用；只列不用"
+    }
+   ]
+  },
+  "qCheck": {
+   "_note": "最新季（2026 Q2）驗證（B 段；不是校準、不回頭改 k）：把模型首期（FY26 下半年）每 MW 年收入與 Q2 實現（經常性雲端營收年化 ÷ 評價日已連網 MW）並列，差距拆成 (iii) 世代組合、(ii) 價格（現有機隊代表合約 k 對模型 k）、(iv) 爬坡分母、(i) 其他（非 GPU 雲端營收等）。Excel「每MW收入_錨定」F 區（活公式）；其他占比扣除的敏感度（自期初可計費 MW 校準扣除）在 G2 區（建置時快照，scripts/tk_sens.js）。",
+   "legacyIndex": 3,
+   "otherCases": [
+    {
+     "n": 0.0,
+     "label": "0%（經常性雲端營收全部視為 GPU 計費）",
+     "tag": "[Assumed]"
+    },
+    {
+     "n": 0.1,
+     "label": "10%（含雲端 CPU、儲存等非 GPU 服務）",
+     "tag": "[Assumed]"
+    },
+    {
+     "n": 0.2,
+     "label": "20%",
+     "tag": "[Assumed]"
+    },
+    {
+     "n": 0.3,
+     "label": "30%（上緣）",
+     "tag": "[Assumed]"
+    }
+   ],
+   "otherNote": "公司未分拆經常性雲端營收中 GPU 計費與其他（雲端 CPU、儲存、軟體；10-Q 稱新簽合約「含雲端 CPU／儲存」）的比例（不存在／未揭露；試過：FY2025 10-K、2026 Q2 10-Q、簡報、事實總帳）。區間 0–30% [Assumed]，不作基準；只用於 Q2 驗證拆解與期初可計費 MW 校準的敏感度。",
+   "mixNote": "期初世代組合（fleet.openMix）與新增世代組合（fleet.newMix）仍為 [Assumed]（見 fleet.openMix.source）。"
+  }
  }
 }

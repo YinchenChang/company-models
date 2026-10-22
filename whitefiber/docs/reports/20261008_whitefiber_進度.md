@@ -1,16 +1,19 @@
 # WhiteFiber v0.1 分段建置進度（接手用；三張工作單共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- 已完成：v0.1a、v0.1b、v0.1c 全部：步驟 0、0.5-1（f61b36e）、0.5-2／0.5-3（790ea4e）、1（d78d3fc）、2／3（e807bf5）、4（fd67595）、5（0d24a74）、6（PR 回報 issuecomment-6051810304；PR ready）。目標價 保守 $10.04（賣出）／基準 $16.84（中立）／積極 $34.66（中立）；verify.sh 19 項、--vs-dist 22 項全過。
-- 下一步：等 chat 端審查與 Andy 合併（代理不合併）；之後 FY26Q3 季度更新（財報約 2026-11 中，步驟見交接檔 §9），升 v0.2。
-- 未解問題：(a) 託管同業 NTM 只 2 家（DLR、EQIX）；(b) 個股 beta 不可靠（預設 2.5）；(c) EBITDA、CapEx、淨負債共識找不到；(d) 託管站點逐列明細只在 Excel；(e) Krambu、NC-1 擴建、NC-2／3 經濟條件多為 [Assumed]；(f) NC-1 專案貸款不占公司層級上限為 [Assumed]、65% × 10 年直線攤還時 FY28–FY29 償債保障 < 1。
+- 進行中：**v0.2（WhiteFiber v0.2：每 MW 收入以 Tokenomics 為錨＋同步 v19.0；PR #63 draft，不合併）**，分支 `claude/whitefiber-v0.2-tk19`（自 main 1079d5c）。
+- 已完成：A 段步驟 0（draft PR、基線 verify 19 項全過）、步驟 1（快照 v19.0＋`TK_` 取數＋names＋permw 註記）、步驟 2（tkAnchor／kSpec 移植，Excel「每MW收入_錨定」＋HTML 引擎，cmp31 四組各 484 項全 OK）；詳見下方「v0.2」段。
+- 下一步：A 段步驟 3（`legacy` 重現 v0.1）、步驟 4（資本支出／汰換年限／EBITDAR 重校準已部分完成，待跑 `calib_ebitdar.js --write` 與完整 verify），然後 B 段步驟 5–9。
+- 未解問題：見「v0.2」段「待 Project 判斷」。v0.1 的未解問題 (a)–(f) 不變（託管同業 2 家、beta、無 EBITDA／CapEx 共識、託管逐列明細只在 Excel、Krambu／NC-2／3 [Assumed]、NC-1 專案貸款償債保障）。
 
 ## 工作單總覽
 | 工作單 | 分支 | PR | 狀態 |
 |---|---|---|---|
 | v0.1a 資料蒐集 | `claude/whitefiber-v0.1` | #23（draft） | 完成（chat 端審查通過） |
 | v0.1b 模型改寫 | `claude/whitefiber-v0.1` | 同一 PR | 完成（chat 端審查：有條件通過，3 項於 v0.1c 步驟 0.5 處理） |
-| v0.1c 驗證與成品 | `claude/whitefiber-v0.1` | 同一 PR | 完成（待 chat 端審查） |
+| v0.1c 驗證與成品 | `claude/whitefiber-v0.1` | 同一 PR | 完成（已合併） |
+
+| v0.2 Tokenomics 錨定與 v19.0 同步 | `claude/whitefiber-v0.2-tk19` | #63（draft） | 進行中（A 段 → B 段；不合併） |
 
 <!-- 各工作單在下方新增自己的段落：「## v0.1x」＋步驟紀錄表（步驟｜狀態｜commit｜備註） -->
 
@@ -84,3 +87,16 @@
 | 4 交接檔與文件 | 完成 | fd67595 | docs/handoff/ 以 20261008_WhiteFiber收支模型_交接檔_v0_1.md 取代 Oracle v0.2 交接檔（命題與目前答案、檔案與規則、結構與因果、目前結果、來源與標記、已套用的預設、資料缺口、已知限制 11 項、待辦與 FY26Q3 季度更新步驟、如何重建）；whitefiber/README.md 開頭改為 WhiteFiber（模板來源 oracle/ @ e4540c3、WhiteFiber 新結構、成品名稱）；CLAUDE.md 開頭改 WhiteFiber、待辦改 WhiteFiber 待辦（守則條文保留）；根目錄 README 新增 `whitefiber/`｜WhiteFiber（WYFI）｜`oracle/` @ `e4540c3`（Oracle v0.2 分支）｜v0.1。dist/ 不變，不升版。 |
 | 5 最終報告 | 完成 | 0d24a74 | docs/reports/20261008_whitefiber_v0.1.md：一句話結論、三情境目標價與共識差距、步驟 0.5 前後對照、雲端三種單價、NC-1 每 MW 經濟性（租金、建置、EBITDA、回收、可借額度、償債保障）、敏感度 9 組、已套用的預設 30 項、資料缺口、已知限制 12 項、verify.sh 與 --vs-dist 完整輸出（最終重跑：19 項、22 項全過）。 |
 | 6 PR 回報 | 完成 | （本 commit） | PR #23 留言 `[WhiteFiber 回報] v0.1c｜完成｜2026-10-08`（issuecomment-6051810304）；PR 已轉 ready（draft＝false）、不合併。 |
+
+
+## v0.2 Tokenomics 錨定與 v19.0 同步（A 段：步驟 0–4）
+
+- 分支：`claude/whitefiber-v0.2-tk19`（自 main 1079d5c；工作單 ee3fcd4）；PR #63（draft）。範本：Oracle v0.3（main，PR #60），以三方合併（base＝oracle @ e4540c3、ours＝whitefiber、theirs＝oracle v0.3）移植，衝突逐一手動解決，並把所有金額/單位換成 WhiteFiber 的 US$m（`tkanchor.py` 的 `uf()`、`segA.js` 的 `UFQ`）。
+- Tokenomics：clone `YinchenChang/Tokenomics`，`model/CURRENT`＝`20261022_Tokenomics_v19.0.xlsx`；master 現為 `1916a06`（v19.0 合併為 `ad33e28`，其後只有文件提交，`git diff ad33e28 1916a06 -- model` 無差異）→ 快照 commit 記 `1916a06`、`mergeCommit` 記 `ad33e28`；46 個名稱 missing 0，`--check` 通過；快照值與 Oracle v0.3 快照逐項相同。
+
+### 步驟紀錄
+| 步驟 | 狀態 | commit | 備註 |
+|---|---|---|---|
+| 0 draft PR、進度檔、基線 | 完成 | （見 git log） | PR #63；工具 soffice 24.2、openpyxl、playwright 1.56、node 22 已在環境；基線 `verify.sh` 19 項全過（v0.1 dist；目標價保守 10.04／基準 16.84／積極 34.66）。 |
+| 1 快照與取數層 | 完成 | （見 git log） | `data/tokenomics_names.txt`（Oracle v0.3 名稱＋審視報告第三節名稱，46 個）、`data/tokenomics_snapshot_v19.0.json`、`company.json → tokenomics`；Excel「Tokenomics_取數」分頁與 `TK_` 具名範圍（另建 `TK_CapexIT_GB300_Lo／_Hi`）；`verify.sh` 的 `--check` 步驟（0d）與 5d；`permw_tokenomics_20261008.json` 的 `Inputs!`／`DC_Cost!` 五處改寫為 IF_ 名稱說明並加 `_supersededBy`（原值未刪）；事實總帳無此類引用。 |
+| 2 錨定與 k | 完成 | （見 git log） | `kspec.py`、`tkanchor.py`、`segA.js`（`kSpecApplyQ`、`tkAnchorQ`、`capexTkQ`）、`segB.js`（`tkScnQ`、`tkSensQ`）、`build_xlsx.py`「每MW收入_錨定」分頁（A 價格軸 k、B 錨與世代組合與四層、各容量情境、D 證據表、E 對照、F Q2 驗證、G 3×3 與敏感度、H GPU→MW 換算核對）；`company.json → pricing／fleet／methodology.perMw`；cmp31 加比對項（低／基準／高／FY27 錨定各 484 項全 OK）；`fields_doc.py --write`。 |
