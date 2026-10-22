@@ -481,5 +481,50 @@
    "high": 1.31
   },
   "vsPeers": "nebius／coreweave：k_長約 0.76（0.70–1.00）、k_現貨 1.76（1.5–2.3）；Microsoft 採同一基準值，長約區間下緣放寬到 0.45（Anthropic 隱含）"
+ },
+ "spotIndex": {
+  "id": "spot.h100.index",
+  "label": "H100 Silicon Data 現貨指數",
+  "gen": "H100",
+  "price": 2.82,
+  "unit": "US$/GPU-hr",
+  "tkName": "IF_GPUhrEcon",
+  "tag": "[Verified]（價格）／[Derived]（倍數）",
+  "source": "Silicon Data H100 Index 頁面",
+  "url": "https://www.silicondata.com/products/silicon-index/h100",
+  "date": "2026-10-06",
+  "retrieved": "2026-10-08",
+  "note": "v0.2.1 補列：k_現貨基準的證據價格（原 v0.2 固定 1.76＝2.82 ÷ 1.605；MAG 三家共用，與 nebius／coreweave／oracle 同源）。k 由 company.json pricing.kEvidence／kspec 依目前 Tokenomics 快照重算。"
+ },
+ "kspecNote": "v0.2.1：本檔 tokenomics 欄與各列 IF_GPUhrEcon／IF_HoldEcon 分母為 v5.27 取數時的歷史值（保留作紀錄）；模型的 k 一律由證據價格 ÷ 目前快照同世代成本重算（kspec.py）。",
+ "kspecInputs": {
+  "spot.h100.index": {
+   "price": 2.82,
+   "unit": "US$/GPU-hr",
+   "gen": "H100",
+   "tkName": "IF_GPUhrEcon",
+   "basis": "Silicon Data H100 Index 頁面（2026-10-06；取數 2026-10-08）"
+  },
+  "az.h100.od": {
+   "price": 12.29,
+   "unit": "US$/GPU-hr",
+   "gen": "H100",
+   "tkName": "IF_GPUhrEcon",
+   "basis": "kevidence rows[az.h100.od]：98.32 ÷ 8 GPU"
+  },
+  "lc.iren": {
+   "price": 9.7,
+   "unit": "US$m/MW-年",
+   "gen": "GB300",
+   "tkName": "IF_HoldEcon",
+   "basis": "kevidence rows[lc.iren]：TCV 9,700 ÷ 5 年 ÷ 200 MW-IT"
+  },
+  "long.low": {
+   "price": 5.7429,
+   "unit": "US$m/MW-年",
+   "gen": "VR200",
+   "tkName": "IF_HoldEcon",
+   "basis": "由 v0.2 判斷倍數 × Tokenomics v5.27 VR200 成本 12.762 換算，不是觀察到的市場價格"
+  }
  }
 }

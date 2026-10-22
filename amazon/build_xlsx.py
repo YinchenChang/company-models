@@ -24,6 +24,9 @@ _g3 = (CONS.get('companyGuidance') or {}).get(CO['quarterly']['quarters'][0]['ke
 assert (_g3.get('revenueLow'), _g3.get('revenueHigh')) == (CO['callFacts']['nextQRevLo'], CO['callFacts']['nextQRevHi']), 'Q3 營收指引：company.json 與共識檔不一致'
 assert abs(CO['ytdActual']['adjEbitda'] - sum(v for k, v in CO['ytdActual']['adjEbitdaMeta'].items() if re.fullmatch(r'q\d', k))) < 1e-9, '年初至今調整後 EBITDA ≠ 各季合計'
 D, V, M = CO['defaults'], CO['valuation'], CO['defaults']['m']
+import kspec as _kspec  # MAG v0.2.1：k 的低／基準／高＝證據價格 ÷ 目前快照同世代成本；CO 原地換成數字，規格留在 KSPEC 供 Excel 寫活公式（須在其他讀取 k 的程式之前）
+_TKSNAP = _jco.load(open(_osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), CO['tokenomics']['snapshotFile']), encoding='utf-8')) if CO.get('tokenomics') else None
+KSPEC = _kspec.resolve(CO, _TKSNAP) if _TKSNAP else {}
 PRC = CO.get('pricing')  # MAG v0.1b：對外 AI 雲端定價（Tokenomics × k）；有此區段時每 MW 年收入為公式（輸入與假設 B0）
 # v0.1b：開啟時的預設輸入（defaults.m）必須等於預設情境的已連網 MW、可計費 MW 與每 MW 年收入（HTML 開啟時用 defaults，Excel 用情境公式）
 def _conn(k, mp=CO['scenarios']['mwPath']):
@@ -379,12 +382,34 @@ if PRC:
     ws.cell(row=r, column=4, value=f'=CHOOSE(C{r},"{_AXL["low"]}","{_AXL["base"]}","{_AXL["high"]}")').font = BOLD
     ws.cell(row=r, column=9, value="價格軸與容量軸（A 區情境）分離；三容量情境預設都用基準 k，3 × 3 目標價矩陣見「評價_DCF與目標價」（對照表 r1 第 5 節第 1 條）").font = SMALL
     PSEL = f"'輸入與假設'!$C${r}"; r += 1
+    _EVK = {e['id']: e for e in PRC.get('kEvidence', [])}
+    _EVR = {}  # MAG v0.2.1 補充：k 的證據價格各占一格（藍字輸入），k 公式引用這些格；旁註寫來源（data/kevidence_*.json）
+    if _EVK:
+        for j, h in enumerate(["k 證據價格（輸入；k＝價格 ÷ 目前快照同世代成本）", "單位", "價格", "目前同世代成本", "倍數"]):
+            cc = ws.cell(row=r, column=1 + j, value=h); cc.font = HEAD; cc.fill = FILL_HEAD
+        r += 1
+        for e_ in PRC['kEvidence']:
+            _tkn = f"TK_{re.sub(r'^(IF|L1)_', '', e_['tkName'])}_{e_['gen']}"
+            ws.cell(row=r, column=1, value=f"證據價格｜{e_['label']}").font = BLACK
+            ws.cell(row=r, column=2, value=e_['unit']).font = SMALL
+            c = ws.cell(row=r, column=3, value=e_['price']); c.font = BLUE; c.number_format = '0.0000'; c.border = BOX
+            c = ws.cell(row=r, column=4, value=f"={_tkn}"); c.font = GREEN; c.number_format = '0.0000'; c.border = BOX
+            c = ws.cell(row=r, column=5, value=f"=C{r}/D{r}"); c.font = BLACK; c.number_format = '0.000'; c.border = BOX
+            ws.cell(row=r, column=9, value=f"{e_['note']}｜來源：{e_['source']}（{e_['ref']}）{e_['tag']}").font = SMALL
+            _EVR[e_['id']] = r; r += 1
     for j, h in enumerate(["k 組成（價格軸）", "單位", "低", "基準", "高"]):
         cc = ws.cell(row=r, column=1 + j, value=h); cc.font = HEAD; cc.fill = FILL_HEAD
     r += 1
     _KR = {}
+    def _kfx(sp):  # 規格 → Excel 公式（證據價格格 ÷ TK_ 同世代成本）；固定倍數回傳 None
+        if not isinstance(sp, dict): return None
+        e_ = _EVK[sp['ref']]
+        return f"=C{_EVR[sp['ref']]}/TK_{re.sub(r'^(IF|L1)_', '', e_['tkName'])}_{e_['gen']}"
     for key, nm, unit, fm in (("kLong", "k｜長約", "倍", '0.000'), ("kSpot", "k｜現貨", "倍", '0.000'), ("longShare", "長約占比", "%", PCT)):
-        row_line(ws, r, nm, unit, [PRC[key][a] for a in ('low', 'base', 'high')], fm, BLUE, PRC['kNote'][key]); IN[nm] = _KR[key] = r; r += 1
+        _vk = []
+        for a in ('low', 'base', 'high'):
+            _fx = _kfx(KSPEC.get(key, {}).get(a)); _vk.append(_fx if _fx else PRC[key][a])
+        row_line(ws, r, nm, unit, _vk, fm, GREEN if key in KSPEC else BLUE, PRC['kNote'][key]); IN[nm] = _KR[key] = r; r += 1
     row_line(ws, r, "混合 k", "倍", [f"={c_}{_KR['longShare']}*{c_}{_KR['kLong']}+(1-{c_}{_KR['longShare']})*{c_}{_KR['kSpot']}" for c_ in "CDE"], '0.000', BLACK,
              "＝長約占比 × k_長約＋(1 − 長約占比) × k_現貨"); IN["混合 k"] = _KMIX = r; r += 1
     KSEL = gi(r, "採用 k（依價格軸）", "倍", f"=CHOOSE({PSEL},C{_KMIX},D{_KMIX},E{_KMIX})", "＝依上方價格軸選擇", '0.000', True, font=BLACK); r += 1
@@ -422,6 +447,12 @@ if PRC:
         r = prow(r, "加權每 MW 參考付費營收（生產折減層）", "US$m/MW", [f"={_sp(4, i)}" for i in range(5)], '0.000', "＝Σ 世代在役 MW × IFW_RevGWFleet_Prod ÷ 合計（MAG v0.2）", BLACK)
         r = prow(r, "每 MW 年收入 ÷ 參考付費營收（生產折減層）", "%", [f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/MAX(1E-9,{COLS[i]}{IN['加權每 MW 參考付費營收（生產折減層）']})" for i in range(5)], PCT,
                  "硬上限：> 100% 時檢查頁標紅（每 MW 收入高於客戶在生產條件下可產生的 token 營收）", BLACK)
+    _HASPQ = _TKSNAP is not None and all(not _TKSNAP['items'].get(n_, {'missing': True}).get('missing') for n_ in ('L1_RevGW_PQ_VR200', 'L1_RevGW_PQ_VR200_Lo', 'L1_RevGW_PQ_VR200_Hi'))
+    if _HASPQ:  # MAG v0.2.1：上限檢查第五列（對照，不設門檻）：每 MW 年收入 ÷ 模型商每 MW 實收 P×Q（L1_RevGW_PQ_VR200，US$bn/GW/年＝US$m/MW/年）；Lo／Hi 端點用 _Hi／_Lo 作分母
+        r = prow(r, "每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，無門檻）", "%", [f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/TK_RevGW_PQ_VR200" for i in range(5)], PCT,
+                 "對外 AI 雲端每 MW 收入 ÷ 模型商（VR200）每 MW 年實收 TK_RevGW_PQ_VR200（US$m/MW，第一年，m＝L1_M；token 帳未閉合：模型付費 token 為需求面的 L1_TokLedger_2026Q2 倍；不得與 IFW_RevGWFleet 相減比較）；只作對照、不設門檻（工作單 v0.2.1 預設 3）", BLACK)
+        r = prow(r, "　其中：以 P×Q 高端點為分母（比值下緣）", "%", [f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/TK_RevGW_PQ_VR200_Hi" for i in range(5)], PCT, "分母＝L1_RevGW_PQ_VR200_Hi", BLACK)
+        r = prow(r, "　其中：以 P×Q 低端點為分母（比值上緣）", "%", [f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/TK_RevGW_PQ_VR200_Lo" for i in range(5)], PCT, "分母＝L1_RevGW_PQ_VR200_Lo", BLACK)
     for i in range(5):
         ws.cell(row=IN["每 MW 年收入"], column=3 + i, value=f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/1000")
     ws.cell(row=IN["每 MW 年收入"], column=9, value="＝加權每 MW 年持有成本 × 採用 k ÷ 1000（B0；Tokenomics × k，不以公司營收反推）")
@@ -2793,7 +2824,10 @@ checks = [
 ] + ([
     ("每 MW 年收入 ÷ 參考付費營收（生產折減層，五期最高）", f"=MAX('輸入與假設'!C{IN['每 MW 年收入 ÷ 參考付費營收（生產折減層）']}:G{IN['每 MW 年收入 ÷ 參考付費營收（生產折減層）']})", f"≤{_n(CK.get('capProdMax', 1) * 100)}%（硬上限）",
      "=IF(B{r}<=" + _n(CK.get('capProdMax', 1)) + ",\"通過\",\"超過硬上限\")", PCT, "IFW_RevGWFleet_Prod（利用率層 × 生產折減）；超過即標紅並寫入報告（MAG v0.2）"),
-] if PRC and 'IFW_RevGWFleet_Prod' in set(CO.get('tokenomics', {}).get('names', [])) else []) + [
+] if PRC and 'IFW_RevGWFleet_Prod' in set(CO.get('tokenomics', {}).get('names', [])) else []) + ([
+    ("每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，五期最高）", f"=MAX('輸入與假設'!C{IN['每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，無門檻）']}:G{IN['每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，無門檻）']})", "無門檻（對照）",
+     "=\"對照\"", PCT, "L1_RevGW_PQ_VR200（VR200 第一年；Lo／Hi 端點見『輸入與假設』B0）；token 帳未閉合，只作對照、不作門檻（MAG v0.2.1）"),
+] if PRC and _HASPQ else []) + [
     ("世代在役 MW 合計 − Accepted MW（«PL»）", f"='輸入與假設'!G{IN['在役 MW 合計（世代加總）']}-'輸入與假設'!G{IN['Accepted MW（期末主動電力）']}", "=0",
      "=IF(ABS(B{r})<0.5,\"通過\",\"不一致\")", NUM0, "新增占比合計須為 100%、期初占比合計須為 100%"),
 ] if PRC else []) + [  # MAG v0.1b：非 AI 雲端殘差合理性
