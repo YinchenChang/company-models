@@ -47,7 +47,7 @@
 <div class="ai">
   <header class="ai-head">
     <h1 id="title">AI 半導體價值鏈</h1>
-    <p class="muted">每 GW 算力支出分到哪裡，以及記憶體、網通、晶圓代工三個區塊各自的核心問題。數字來自 company-models 的模型成品（Tokenomics v19.0；橋接表 v0.2、記憶體樣板 v0.3、網通 v0.2、台積電 v0.1.1；總覽 v0.3）；股價為 2026-10-07／08 收盤。點任一數字可看來源。</p>
+    <p class="muted">每 GW 算力支出分到哪裡，以及記憶體、網通、晶圓代工三個區塊各自的核心問題。數字來自 company-models 的模型成品（Tokenomics v19.0；橋接表 v0.2、記憶體樣板 v0.3、網通 v0.2.1、台積電 v0.2；總覽 v0.3.1）；股價為 2026-10-07／08 收盤。點任一數字可看來源。</p>
   </header>
 
   <nav class="ai-tabs" role="tablist" aria-label="區塊">
@@ -218,7 +218,7 @@
         <li>循環位置的歸類：記憶體 2027 年為見頂年（三個情境共用），2028 年情境 C 為谷底；台積電 2027 年為中段。這是套用規則時的判斷，可以改。</li>
         <li>兩個來源時，各分位取兩者平均；三星只有一個完整來源，中位數以 GuruFocus（1.44）核對。</li>
         <li>美光的歷史倍數以會計年度（8 月底）為主。另列兩種對照（Andy 2026-10-22）：P/E＝P/B × 權益 ÷ 歸屬淨利（SEC 10-K；FY2016、FY2023 虧損不計，FY2024 136x 保留）；買回加回 P/B＝市值 ÷（權益＋庫藏股），預測年再加回模型買回（FY2026 年底庫藏股未公布，用 FY2025 的 $7.85B，偏低）。</li>
-        <li>SK 海力士、三星的 P/E 對照（Andy 2026-10-22）：年底 P/E 取 companiesmarketcap 2016–2025，虧損年（SK 海力士 2023）不計；2021–2025 以 stockanalysis 核對（差距 ≤ 8%），2016–2020 只有單一來源。</li>
+        <li>SK 海力士、三星的 P/E 對照（Andy 2026-10-22）：年底 P/E 取 companiesmarketcap 2016–2025，虧損年（SK 海力士 2023）不計；2021–2025 以 stockanalysis 核對（差距 ≤ 8%）；2016–2025 另以 DART 合併財報換算（P/B × 歸屬權益 ÷ 歸屬淨利）核對，差距超過 15% 的只有三星 2016（<span class="num" data-source="kr_pe_check" data-field="gap" data-where="company=三星電子（P/E）&amp;year=2016" data-fmt="spct1">—</span>），接受原值，對 25 分位的影響約 ±5%。</li>
         <li>限制：P/B 分位來自 ROE 0–44% 的十年，用在 ROE 50–90% 的年度會低估；P/E 分位在見頂年取低分位，等於假設市場仍把高峰盈餘當一次性。兩者是不同的問題：P/B 問「淨值撐不撐得住」，P/E 問「高峰盈餘值多少」。</li>
       </ul>
     </div>
@@ -231,7 +231,7 @@
       <h2>來源</h2>
       <ul class="rule-list">
         <li>模型：repo YinchenChang/company-models，markets/chip_bridge、markets/memory、tools/memory_model、skhynix、samsung、micron、markets/network、tsmc 各資料夾的 dist/*.xlsx。</li>
-        <li>倍數：<a href="https://companiesmarketcap.com/sk-hynix/pb-ratio/">companiesmarketcap（SK 海力士）</a>、<a href="https://marketcapof.com/stocks/000660.ks/pb-ratio/">marketcapof</a>、<a href="https://companiesmarketcap.com/samsung/pb-ratio/">companiesmarketcap（三星）</a>、<a href="https://www.gurufocus.com/term/pb-ratio/BUE:SMSN%20LI">GuruFocus</a>、<a href="https://www.macrotrends.net/stocks/charts/MU/micron-technology/price-book">macrotrends（美光）</a>、<a href="https://companiesmarketcap.com/micron-technology/pb-ratio/">companiesmarketcap（美光）</a>、<a href="https://fullratio.com/stocks/nyse-tsm/pe-ratio">FullRatio（台積電）</a>、<a href="https://companiesmarketcap.com/tsmc/pe-ratio/">companiesmarketcap（台積電）</a>。皆為彙整網站，非公司揭露。SK 海力士、三星 P/E：<a href="https://companiesmarketcap.com/sk-hynix/pe-ratio/">companiesmarketcap（SK 海力士）</a>、<a href="https://companiesmarketcap.com/samsung/pe-ratio/">companiesmarketcap（三星）</a>、<a href="https://stockanalysis.com/quote/krx/000660/financials/ratios/">stockanalysis（核對）</a>。美光權益、庫藏股、淨利：<a href="https://data.sec.gov/api/xbrl/companyconcept/CIK0000723125/us-gaap/StockholdersEquity.json">SEC XBRL（10-K）</a>。</li>
+        <li>倍數：<a href="https://companiesmarketcap.com/sk-hynix/pb-ratio/">companiesmarketcap（SK 海力士）</a>、<a href="https://marketcapof.com/stocks/000660.ks/pb-ratio/">marketcapof</a>、<a href="https://companiesmarketcap.com/samsung/pb-ratio/">companiesmarketcap（三星）</a>、<a href="https://www.gurufocus.com/term/pb-ratio/BUE:SMSN%20LI">GuruFocus</a>、<a href="https://www.macrotrends.net/stocks/charts/MU/micron-technology/price-book">macrotrends（美光）</a>、<a href="https://companiesmarketcap.com/micron-technology/pb-ratio/">companiesmarketcap（美光）</a>、<a href="https://fullratio.com/stocks/nyse-tsm/pe-ratio">FullRatio（台積電）</a>、<a href="https://companiesmarketcap.com/tsmc/pe-ratio/">companiesmarketcap（台積電）</a>。皆為彙整網站，非公司揭露。SK 海力士、三星 P/E：<a href="https://companiesmarketcap.com/sk-hynix/pe-ratio/">companiesmarketcap（SK 海力士）</a>、<a href="https://companiesmarketcap.com/samsung/pe-ratio/">companiesmarketcap（三星）</a>、<a href="https://stockanalysis.com/quote/krx/000660/financials/ratios/">stockanalysis（核對）</a>、<a href="https://dart.fss.or.kr/">DART 合併財報（核對；各年度接收編號見資料來源）</a>。美光權益、庫藏股、淨利：<a href="https://data.sec.gov/api/xbrl/companyconcept/CIK0000723125/us-gaap/StockholdersEquity.json">SEC XBRL（10-K）</a>。</li>
         <li>限制：每片 CoWoS 封裝數、每顆台積電內容、網通機架外拆分為推導或類比值；記憶體價格路徑為情境假設，不是預測。</li>
       </ul>
     </div>
@@ -242,6 +242,7 @@
 (() => {
   // ---------- 共用：格式、取列、提示框 ----------
   const F = {
+    spct1: (v) => (v > 0 ? '+' : v < 0 ? '−' : '') + d3.format('.1%')(Math.abs(v)),
     spct: (v) => (v > 0 ? '+' : v < 0 ? '−' : '') + d3.format('.0%')(Math.abs(v)),
     pct0: d3.format('.0%'), pct1: d3.format('.1%'),
     x: (v) => d3.format('.2~f')(v) + 'x',
