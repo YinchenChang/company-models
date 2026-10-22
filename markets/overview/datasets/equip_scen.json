@@ -1,0 +1,167 @@
+[
+{
+"key": "A 2025",
+"scenario": "A",
+"year": 2025,
+"total": 134.7,
+"wfe": 116.9,
+"ai": 65.5,
+"yoy": null,
+"ai_inc_share": null,
+"peak": 2029
+},
+{
+"key": "A 2026",
+"scenario": "A",
+"year": 2026,
+"total": 178.2,
+"wfe": 156.2,
+"ai": 93.0,
+"yoy": 0.323,
+"ai_inc_share": 0.634,
+"peak": 2029
+},
+{
+"key": "A 2027",
+"scenario": "A",
+"year": 2027,
+"total": 218.2,
+"wfe": 192.8,
+"ai": 117.8,
+"yoy": 0.225,
+"ai_inc_share": 0.627,
+"peak": 2029
+},
+{
+"key": "A 2028",
+"scenario": "A",
+"year": 2028,
+"total": 246.0,
+"wfe": 216.6,
+"ai": 133.9,
+"yoy": 0.127,
+"ai_inc_share": 0.614,
+"peak": 2029
+},
+{
+"key": "A 2029",
+"scenario": "A",
+"year": 2029,
+"total": 260.7,
+"wfe": 228.9,
+"ai": 140.7,
+"yoy": 0.059,
+"ai_inc_share": 0.597,
+"peak": 2029
+},
+{
+"key": "B 2025",
+"scenario": "B",
+"year": 2025,
+"total": 134.7,
+"wfe": 116.9,
+"ai": 65.5,
+"yoy": null,
+"ai_inc_share": null,
+"peak": 2028
+},
+{
+"key": "B 2026",
+"scenario": "B",
+"year": 2026,
+"total": 178.2,
+"wfe": 156.2,
+"ai": 93.0,
+"yoy": 0.323,
+"ai_inc_share": 0.634,
+"peak": 2028
+},
+{
+"key": "B 2027",
+"scenario": "B",
+"year": 2027,
+"total": 218.2,
+"wfe": 192.8,
+"ai": 117.8,
+"yoy": 0.225,
+"ai_inc_share": 0.627,
+"peak": 2028
+},
+{
+"key": "B 2028",
+"scenario": "B",
+"year": 2028,
+"total": 218.2,
+"wfe": 192.8,
+"ai": 117.8,
+"yoy": 0,
+"ai_inc_share": 0.627,
+"peak": 2028
+},
+{
+"key": "B 2029",
+"scenario": "B",
+"year": 2029,
+"total": 207.3,
+"wfe": 183.2,
+"ai": 111.9,
+"yoy": -0.05,
+"ai_inc_share": 0.64,
+"peak": 2028
+},
+{
+"key": "C 2025",
+"scenario": "C",
+"year": 2025,
+"total": 134.7,
+"wfe": 116.9,
+"ai": 65.5,
+"yoy": null,
+"ai_inc_share": null,
+"peak": 2027
+},
+{
+"key": "C 2026",
+"scenario": "C",
+"year": 2026,
+"total": 178.2,
+"wfe": 156.2,
+"ai": 93.0,
+"yoy": 0.323,
+"ai_inc_share": 0.634,
+"peak": 2027
+},
+{
+"key": "C 2027",
+"scenario": "C",
+"year": 2027,
+"total": 218.2,
+"wfe": 192.8,
+"ai": 117.8,
+"yoy": 0.225,
+"ai_inc_share": 0.627,
+"peak": 2027
+},
+{
+"key": "C 2028",
+"scenario": "C",
+"year": 2028,
+"total": 174.6,
+"wfe": 154.2,
+"ai": 94.3,
+"yoy": -0.2,
+"ai_inc_share": 0.722,
+"peak": 2027
+},
+{
+"key": "C 2029",
+"scenario": "C",
+"year": 2029,
+"total": 174.6,
+"wfe": 154.2,
+"ai": 94.3,
+"yoy": 0,
+"ai_inc_share": 0.722,
+"peak": 2027
+}
+]

@@ -22,7 +22,7 @@
 | `tsmc/` | 台積電（2330.TW） | 獨立產生器（CoWoS 供需上限＋損益估值；AI 半導體 Project） | v0.2 |
 | `markets/equipment/` | 半導體設備市場模型：記憶體、代工邏輯資本支出 → 設備需求；三情境、對帳、瓶頸表 | 新建（AI 半導體 Project 步驟 5） | v0.1.1（成品：`markets/equipment/dist/20261022_半導體設備市場模型_v0.1.1.xlsx`；v0.1.1 只改來源文字） |
 | `advantest/` | Advantest（6857.T）：SoC／記憶體測試機收支與 P/E 估值；三情境、對帳、敏感度；見 `advantest/README.md` | 獨立產生器（比照 `tsmc/`；AI 半導體 Project 步驟 5 第一家公司） | v0.1（成品：`advantest/dist/20261022_Advantest模型_v0.1.xlsx`） |
-| `markets/overview/` | AI 半導體總覽儀表板 | 彙整橋接表、記憶體、網通、台積電模型；估值規則；記憶體三家 P/E 對照、美光買回加回 P/B | v0.3 |
+| `markets/overview/` | AI 半導體總覽儀表板 | 彙整橋接表、記憶體、網通、台積電模型；估值規則；記憶體三家 P/E 對照、美光買回加回 P/B；設備分頁（設備市場、Advantest） | v0.4 |
 
 規則：
 - 事實來源與分層：算力相關的產業與物理層資料取自 Tokenomics（`YinchenChang/Tokenomics` 的 Interface／L1／SRC，X8）；公司專屬資料放各公司的 `company.json` 與 `data/`。

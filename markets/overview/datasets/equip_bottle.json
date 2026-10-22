@@ -1,0 +1,32 @@
+[
+{
+"bottleneck": "無塵室空間",
+"evidence": "美光：FY27 資本支出「增量」一半以上為建築（FQ3 稿）、「增量」多數為建築（FQ4 法說）；KLA：客戶受廠房就緒度與廠房外殼限制；SK 證券：記憶體供給成長受無塵室限制至 2027",
+"source": "Micron FQ3 FY26 準備稿；Futurum；Cleanroom Technology",
+"strength": "強（美光一手）／中／弱"
+},
+{
+"bottleneck": "長交期零組件",
+"evidence": "設備零組件（閥件管路、陶瓷、RF 電源、氣體箱）交期據報倍增、最長 40 個月；沉積設備零組件約 4→10 個月。應用材料、Lam 的一手說法：未找到",
+"source": "TrendForce 2026-09-18；BigGo",
+"strength": "中（「據報」）／弱"
+},
+{
+"bottleneck": "EUV",
+"evidence": "2026 低 NA 產能約 65 台、2027 再增約 30%；2027–28 需求超過供給（二手）；2027 台數各來源不一致（56／80／約 85）",
+"source": "ASML 2026 Q2 6-K；Pomegra",
+"strength": "強（產能，一手）／弱（供不應求，二手）"
+},
+{
+"bottleneck": "量測",
+"evidence": "KLA 2026 先進封裝製程控制營收約 $1.1B；交期 18–24 個月僅見社群貼文轉述；「量測產能是瓶頸」本身的證據：未找到",
+"source": "X（KLA 法說摘要）；Zacks／TradingView",
+"strength": "弱；瓶頸證據未找到"
+},
+{
+"bottleneck": "HBM 鍵合機",
+"evidence": "Hanmi 占 HBM TC 鍵合機營收 71.2%（TechInsights，2025 前三季）；SK 海力士 HBM4 約 50 組 TC 鍵合機、約半數 ASMPT；預期約 100 台訂單。供給短缺或交期：未找到",
+"source": "TrendForce 2025-12-12",
+"strength": "中（集中度）；短缺未找到"
+}
+]

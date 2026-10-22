@@ -12,6 +12,9 @@ F = {
     "ss": ROOT / "samsung/dist/20261022_三星電子模型_v0.1.1.xlsx",
     "mu": ROOT / "micron/dist/20261022_美光模型_v0.2.1.xlsx",
     "tsmc": ROOT / "tsmc/dist/20261022_台積電模型_v0.2.xlsx",
+    "eq": ROOT / "markets/equipment/dist/20261022_半導體設備市場模型_v0.1.1.xlsx",
+    "adv": ROOT / "advantest/dist/20261022_Advantest模型_v0.1.xlsx",
+    "eq_readme": ROOT / "markets/equipment/README.md",
 }
 
 def rows(path, sheet):
@@ -233,6 +236,80 @@ for r in kr_chk:
     if r["flag"]:
         print("KR P/E 差距 >15%：", r["company"], r["year"], "換算", r["pe_dart"], "cmc", r["pe_cmc"], f'{r["gap"]:+.1%}')
 
+# ---------------------------------------------------------------------------
+# 設備市場（markets/equipment v0.1.1）與 Advantest（advantest v0.1）
+import re as _re
+wbq = openpyxl.load_workbook(F["eq"], data_only=True)
+mk = wbq["Mkt"]; sc = None; eqs = {}
+LBL = {"設備總額": "total", "年增": "yoy", "其中晶圓前段": "wfe", "AI 相關設備": "ai", "AI 增量占總增量（相對 2025 累計）": "ai_inc_share", "見頂年度": "peak"}
+for r in mk.iter_rows(min_row=4, max_row=30):
+    a = r[0].value
+    if isinstance(a, str) and a.startswith("情境 "):
+        sc = a[-1]; continue
+    if sc and isinstance(a, str) and a.strip() in LBL:
+        eqs.setdefault(sc, {})[LBL[a.strip()]] = [c.value for c in r[2:7]]
+EQY = [2025, 2026, 2027, 2028, 2029]
+eq_rows = []
+for s_, d in eqs.items():
+    for i, y_ in enumerate(EQY):
+        eq_rows.append({"key": f"{s_} {y_}", "scenario": s_, "year": y_, "total": round(d["total"][i], 1),
+                        "wfe": round(d["wfe"][i], 1), "ai": round(d["ai"][i], 1),
+                        "yoy": (round(d["yoy"][i], 3) if isinstance(d["yoy"][i], (int, float)) else None),
+                        "ai_inc_share": (round(d["ai_inc_share"][i], 3) if isinstance(d["ai_inc_share"][i], (int, float)) else None),
+                        "peak": d["peak"][0]})
+def mrow(label):
+    for r in mk.iter_rows():
+        if isinstance(r[0].value, str) and r[0].value.strip().startswith(label): return [c.value for c in r]
+    raise KeyError(label)
+calib = {"sk_ss": mrow("校準值：SK 海力士、三星設備占比")[2], "sk_ss_lo": mrow("低：長鑫取高值")[2], "sk_ss_hi": mrow("高：業界下限")[2],
+         "industry": mrow("對照：業界值")[2], "big3_2026": mrow("三家加權設備占比")[3], "other_mem_2025": mrow("其他記憶體廠設備（獨立估計）")[2],
+         "semi_mem_2025": mrow("SEMI 2025 DRAM＋NAND 設備（實績）")[2]}
+rc = wbq["Recon"]; eq_recon = []
+for r in rc.iter_rows(min_row=4, max_row=21):
+    v = [c.value for c in r[:9]]
+    if v[0] and isinstance(v[3], (int, float)):
+        src = _re.sub(r"\s*https?://\S+", "", str(v[2]))
+        src = src + "）" * (src.count("（") - src.count("）"))
+        eq_recon.append({"key": f"{v[0]} {v[1]} {src}", "item": v[0], "year": v[1], "source": src, "value": v[3],
+                         "model_a": round(v[4], 1), "gap_a": round(v[5], 3), "model_c": round(v[8], 1)})
+bt = []; txt = F["eq_readme"].read_text()
+blk = txt[txt.index("## 瓶頸表"):txt.index("## 限制")]
+for line in blk.splitlines():
+    if line.startswith("| ") and not line.startswith("| 瓶頸") and not line.startswith("|---"):
+        c = [x.strip() for x in line.strip("|").split("|")]
+        clean = lambda t: _re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", t).replace("**", "").replace("『", "「").replace("』", "」")
+        bt.append({"bottleneck": c[0], "evidence": clean(c[1]), "source": clean(c[2]), "strength": clean(c[3])})
+D["equip"] = {"scen": eq_rows, "calib": calib}
+
+wa = openpyxl.load_workbook(F["adv"], data_only=True); pa = wa["PL"]; sc = None; adv = []
+for r in pa.iter_rows(min_row=4, max_row=36):
+    a, u = r[0].value, r[1].value
+    if isinstance(a, str) and a.startswith("情境 "):
+        sc = a[-1]; continue
+    if sc and isinstance(a, str):
+        k = {("營收", "¥B"): "rev", ("營收", "US$B"): "rev_usd", ("SoC 測試機", "¥B"): "soc", ("記憶體測試機", "¥B"): "mem",
+             ("營業利益率", "%"): "opm", ("EPS", "¥"): "eps", ("營業利益", "¥B"): "op"}.get((a.strip(), u))
+        if k:
+            for i, fy in enumerate(["FY2025", "FY2026", "FY2027", "FY2028", "FY2029"]):
+                row = next((x for x in adv if x["scenario"] == sc and x["fy"] == fy), None)
+                if row is None:
+                    row = {"key": f"{sc} {fy}", "scenario": sc, "fy": fy}; adv.append(row)
+                row[k] = round(r[2 + i].value, 3)
+va = wa["Val"]
+def vrow(label):
+    for r in va.iter_rows():
+        if r[0].value == label: return [c.value for c in r]
+adv_ps = {"p25": round(vrow("25 分位")[1], 2), "p50": round(vrow("中位數")[1], 2), "p75": round(vrow("75 分位")[1], 2)}
+adv_px = vrow("現價（stockanalysis 2026-10-21 收盤）")[1]
+adv_fpe = vrow("遠期 P/E：stockanalysis")[1]
+adv_pe_hist = []
+for r in va.iter_rows():
+    if isinstance(r[0].value, str) and _re.match(r"^20\d\d-12$", r[0].value) and isinstance(r[4].value, (int, float)):
+        adv_pe_hist.append((int(r[0].value[:4]), round(r[4].value, 2)))
+adv_hist_vals = [x for _, x in adv_pe_hist]
+adv_ps |= {"min": min(adv_hist_vals), "max": max(adv_hist_vals)}
+eA27 = next(x for x in adv if x["key"] == "A FY2027")["eps"]; eC28 = next(x for x in adv if x["key"] == "C FY2028")["eps"]
+
 out = pathlib.Path(__file__).with_name("data.json")
 out.write_text(json.dumps(D, ensure_ascii=False, indent=1))
 for k in ("sk", "ss", "mu"):
@@ -310,6 +387,13 @@ for k, (nm, v_, ps) in kr_pe.items():
                     "hist_min": ps["min"], "hist_max": ps["max"], "key": f"{nm} {case}", "case": case, "position": pos, "multiple": ps[q],
                     "basis_label": bl, "basis": round(basis, 2), "implied_px": round(ip, 1), "vs_px": round(ip / e["px"] - 1, 3),
                     "px_multiple": round(e["px"] / basis, 2)})
+for case, pos, q, bl, basis in (("見頂", "見頂年 → 25 分位", "p25", "FY2027 EPS（A）", eA27), ("中段", "中段 → 中位數", "p50", "FY2027 EPS（A）", eA27),
+                                ("谷底", "谷底 → 75 分位", "p75", "FY2028 EPS（C）", eC28)):
+    ip = adv_ps[q] * basis
+    val.append({"company": "Advantest", "metric": "P/E", "ccy": "JPY", "px": adv_px, "p25": adv_ps["p25"], "p50": adv_ps["p50"], "p75": adv_ps["p75"],
+                "hist_min": adv_ps["min"], "hist_max": adv_ps["max"], "key": f"Advantest {case}", "case": case, "position": pos, "multiple": adv_ps[q],
+                "basis_label": bl, "basis": round(basis, 2), "implied_px": round(ip, 1), "vs_px": round(ip / adv_px - 1, 3), "px_multiple": round(adv_px / basis, 2),
+                "fwd_pe": adv_fpe})
 dump("valuation", val)
 
 mh = []
@@ -321,7 +405,13 @@ for y_, v_ in mu_pe.items(): mh.append({"company": "美光（P/E）", "metric": 
 for y_, v_ in mu_pba.items(): mh.append({"company": "美光（買回加回 P/B）", "metric": "P/B", "year": y_, "source": "SEC 10-K＋macrotrends", "multiple": round(v_, 3)})
 for k, (nm, v_, ps) in kr_pe.items():
     for y_, x in v_.items(): mh.append({"company": nm, "metric": "P/E", "year": y_, "source": "companiesmarketcap", "multiple": x})
+for y_, x in adv_pe_hist: mh.append({"company": "Advantest", "metric": "P/E", "year": y_, "source": "年底股價 ÷ 當期 FY 基本 EPS（自算）", "multiple": x})
 dump("mult_hist", mh)
+dump("equip_scen", eq_rows)
+dump("equip_calib", [{k: (round(v, 4) if isinstance(v, float) else v) for k, v in calib.items()}])
+dump("equip_recon", eq_recon)
+dump("equip_bottle", bt)
+dump("adv_pl", adv)
 dump("kr_pe_check", kr_chk)
 dump("mu_hist", [{"fy": y_, "pb": pb, "equity": e, "treasury": t, "net_income": ni, "roe": round(ni / e, 3),
                   "pe": (round(pb * e / ni, 2) if ni > 0 else None), "pb_adj": round(pb * e / (e + t), 3)} for y_, (pb, e, t, ni) in MU_HIST.items()])
