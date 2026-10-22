@@ -206,6 +206,33 @@ for k, (nm, hist) in KR_PE.items():
     for y, x in KR_PE_CHECK[k].items():
         assert abs(x / hist[y] - 1) < 0.08, (k, y)
 
+# 第二來源核對（只核對，不改 KR_PE）：DART 合併財報（Verified）的歸屬母公司權益與歸屬淨利（兆韓元），
+# 換算 P/E = P/B × 權益 ÷ 淨利，與 companiesmarketcap 的年底 P/E 逐年比對。
+# 取各年度自己的事業報告書（該年度有「기재정정」者取最新更正版）；來源 = DART 接收編號，
+# 連結 https://dart.fss.or.kr/dsaf001/main.do?rcpNo=<接收編號>（III. 재무에 관한 사항 → 2. 연결재무제표）。
+KR_HIST = {  # 年度：(歸屬母公司權益, 歸屬淨利, DART 接收編號)
+    "sk": {2016: (24.017, 2.954, "20170331004537"), 2017: (33.815, 10.642, "20180615000111"), 2018: (46.846, 15.540, "20190404002329"),
+           2019: (47.928, 2.013, "20200330004441"), 2020: (51.889, 4.755, "20210330000776"), 2021: (62.157, 9.602, "20220322000590"),
+           2022: (63.266, 2.230, "20230321001209"), 2023: (53.504, -9.112, "20240319000684"), 2024: (73.903, 19.789, "20250319000665"),
+           2025: (120.516, 42.919, "20260317000635")},
+    "ss": {2016: (186.424, 22.416, "20170331004518"), 2017: (207.213, 41.345, "20180402005019"), 2018: (240.069, 43.891, "20190401004781"),
+           2019: (254.915, 21.505, "20200330003851"), 2020: (267.670, 26.091, "20210309000744"), 2021: (296.238, 39.244, "20220308000798"),
+           2022: (345.186, 54.730, "20230307000542"), 2023: (353.234, 14.473, "20240312000736"), 2024: (391.688, 33.621, "20250311001085"),
+           2025: (424.313, 44.261, "20260310002820")}}
+KR_PB = {"sk": {y: (a + b) / 2 if y < 2025 else a for y, (a, b) in enumerate(zip(MULT["sk"]["src"]["companiesmarketcap"], MULT["sk"]["src"]["marketcapof（2016–24）"] + [None]), 2016)},
+         "ss": dict(enumerate(MULT["ss"]["src"]["companiesmarketcap"], 2016))}   # SK＝兩來源平均（2025 只有 cmc）；三星＝cmc
+KR_PE_GAP = 0.15
+kr_chk = []
+for k, (nm, hist) in KR_PE.items():
+    for y, (eq, ni, rc) in KR_HIST[k].items():
+        pe_dart = KR_PB[k][y] * eq / ni
+        gap = pe_dart / hist[y] - 1
+        kr_chk.append({"company": nm, "year": y, "pb": round(KR_PB[k][y], 3), "equity_tn": eq, "net_income_tn": ni, "pe_dart": round(pe_dart, 2),
+                       "pe_cmc": hist[y], "gap": round(gap, 3), "flag": abs(gap) > KR_PE_GAP, "dart_rcp_no": rc})
+for r in kr_chk:
+    if r["flag"]:
+        print("KR P/E 差距 >15%：", r["company"], r["year"], "換算", r["pe_dart"], "cmc", r["pe_cmc"], f'{r["gap"]:+.1%}')
+
 out = pathlib.Path(__file__).with_name("data.json")
 out.write_text(json.dumps(D, ensure_ascii=False, indent=1))
 for k in ("sk", "ss", "mu"):
@@ -295,6 +322,7 @@ for y_, v_ in mu_pba.items(): mh.append({"company": "美光（買回加回 P/B�
 for k, (nm, v_, ps) in kr_pe.items():
     for y_, x in v_.items(): mh.append({"company": nm, "metric": "P/E", "year": y_, "source": "companiesmarketcap", "multiple": x})
 dump("mult_hist", mh)
+dump("kr_pe_check", kr_chk)
 dump("mu_hist", [{"fy": y_, "pb": pb, "equity": e, "treasury": t, "net_income": ni, "roe": round(ni / e, 3),
                   "pe": (round(pb * e / ni, 2) if ni > 0 else None), "pb_adj": round(pb * e / (e + t), 3)} for y_, (pb, e, t, ni) in MU_HIST.items()])
 
