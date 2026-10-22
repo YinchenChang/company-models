@@ -1,10 +1,10 @@
 {
  "source": {
-  "file": "20261021_Tokenomics_v18.0.xlsx",
-  "current": "20261021_Tokenomics_v18.0.xlsx",
-  "version": "v18.0",
-  "commit": "868e2cc552621fcf3a513ecd3a9960bafb318e99",
-  "extractedAt": "2026-10-21",
+  "file": "20261022_Tokenomics_v19.0.xlsx",
+  "current": "20261022_Tokenomics_v19.0.xlsx",
+  "version": "v19.0",
+  "commit": "1916a06465bb0c7efed21383075f2ae098508e24",
+  "extractedAt": "2026-10-22",
   "repo": "YinchenChang/Tokenomics",
   "recalculated": false,
   "optional": [
@@ -19,7 +19,10 @@
    "L1_HoldEconMW_VR200",
    "L1_TokMW_Gen_ratio_VR200",
    "L1_TokMW_Gen_ratio_VR200_Lo",
-   "L1_TokMW_Gen_ratio_VR200_Hi"
+   "L1_TokMW_Gen_ratio_VR200_Hi",
+   "L1_RevGW_PQ_VR200",
+   "L1_RevGW_PQ_VR200_Lo",
+   "L1_RevGW_PQ_VR200_Hi"
   ],
   "generations": [
    {
@@ -1673,7 +1676,7 @@
   },
   "IFC_Use": {
    "sheet": "Interface",
-   "ref": "Interface!S6:S344",
+   "ref": "Interface!S6:S361",
    "label": "Decision Use（公式）",
    "unit": null,
    "kind": "by_name",
@@ -1935,7 +1938,22 @@
     "IF_TrainFLOP_Astra": "情境、相對比較、反轉門檻",
     "IF_TrainInferShare_Astra": "情境、相對比較、反轉門檻",
     "IF_GMDefault_Astra": "情境、相對比較、反轉門檻",
-    "IF_AmortRevShare": "情境、相對比較、反轉門檻"
+    "IF_AmortRevShare": "情境、相對比較、反轉門檻",
+    "IF_Disc": "基準輸入",
+    "IF_MixPaid_Luna": "基準輸入",
+    "IF_MixPaid_Sol": "基準輸入",
+    "IF_MixPaid_Astra": "基準輸入",
+    "IF_MixFree_Luna": "基準輸入",
+    "IF_MixFree_Sol": "基準輸入",
+    "IF_MixFree_Astra": "基準輸入",
+    "IF_UtilActual": "基準輸入",
+    "IF_ProdDerate": "情境、相對比較、反轉門檻",
+    "IF_FleetProdRatio_VR200": "情境、相對比較、反轉門檻",
+    "IF_PxEffMix": "情境、相對比較、反轉門檻",
+    "IF_PxEffMix25": "基準輸入",
+    "IF_LTotalDisc": "情境、相對比較、反轉門檻",
+    "IF_LTotalFleetVDisc": "情境、相對比較、反轉門檻",
+    "IF_TokGWPaidMix": "情境、相對比較、反轉門檻"
    },
    "cells": {
     "IF_RacksPerGW": "Interface!S6",
@@ -2195,7 +2213,22 @@
     "IF_TrainFLOP_Astra": "Interface!S341",
     "IF_TrainInferShare_Astra": "Interface!S342",
     "IF_GMDefault_Astra": "Interface!S343",
-    "IF_AmortRevShare": "Interface!S344"
+    "IF_AmortRevShare": "Interface!S344",
+    "IF_Disc": "Interface!S347",
+    "IF_MixPaid_Luna": "Interface!S348",
+    "IF_MixPaid_Sol": "Interface!S349",
+    "IF_MixPaid_Astra": "Interface!S350",
+    "IF_MixFree_Luna": "Interface!S351",
+    "IF_MixFree_Sol": "Interface!S352",
+    "IF_MixFree_Astra": "Interface!S353",
+    "IF_UtilActual": "Interface!S354",
+    "IF_ProdDerate": "Interface!S355",
+    "IF_FleetProdRatio_VR200": "Interface!S356",
+    "IF_PxEffMix": "Interface!S357",
+    "IF_PxEffMix25": "Interface!S358",
+    "IF_LTotalDisc": "Interface!S359",
+    "IF_LTotalFleetVDisc": "Interface!S360",
+    "IF_TokGWPaidMix": "Interface!S361"
    }
   },
   "L1_HoldEconMW_Hopper": {
@@ -2344,6 +2377,78 @@
     "srcId": "SRC_PERF_027；SRC_PERF_028",
     "外部低": 1.54249752389113,
     "外部高": 1.54249752389113
+   }
+  },
+  "L1_RevGW_PQ_VR200": {
+   "sheet": "L1",
+   "ref": "L1!D129",
+   "label": "VR200 每 GW 營收 P × Q — 第一年（主口徑 m＝L1_M，2026 Q2）",
+   "unit": "$B/GW/年",
+   "condition": "＝Q × L1_PxEff_2026 × L1_M ÷ 1E9；P＝有效單價 × m",
+   "kind": "single",
+   "values": 48.7876810461932,
+   "cell": "L1!D129",
+   "range": {
+    "低": 35.6983032045316,
+    "高": 77.3463236098185,
+    "def": "低／高＝Q 的低／高（利用率 0.30／0.65）；m、單價取基準",
+    "cells": {
+     "低": "L1!E129",
+     "高": "L1!F129"
+    }
+   },
+   "external": {
+    "srcId": "無外部對照",
+    "外部低": "—",
+    "外部高": "—"
+   }
+  },
+  "L1_RevGW_PQ_VR200_Lo": {
+   "sheet": "L1",
+   "ref": "L1!E129",
+   "label": "VR200 每 GW 營收 P × Q — 第一年（主口徑 m＝L1_M，2026 Q2）",
+   "unit": "$B/GW/年",
+   "condition": "＝Q × L1_PxEff_2026 × L1_M ÷ 1E9；P＝有效單價 × m",
+   "kind": "single",
+   "values": 35.6983032045316,
+   "cell": "L1!E129",
+   "range": {
+    "低": 35.6983032045316,
+    "高": 77.3463236098185,
+    "def": "低／高＝Q 的低／高（利用率 0.30／0.65）；m、單價取基準",
+    "cells": {
+     "低": "L1!E129",
+     "高": "L1!F129"
+    }
+   },
+   "external": {
+    "srcId": "無外部對照",
+    "外部低": "—",
+    "外部高": "—"
+   }
+  },
+  "L1_RevGW_PQ_VR200_Hi": {
+   "sheet": "L1",
+   "ref": "L1!F129",
+   "label": "VR200 每 GW 營收 P × Q — 第一年（主口徑 m＝L1_M，2026 Q2）",
+   "unit": "$B/GW/年",
+   "condition": "＝Q × L1_PxEff_2026 × L1_M ÷ 1E9；P＝有效單價 × m",
+   "kind": "single",
+   "values": 77.3463236098185,
+   "cell": "L1!F129",
+   "range": {
+    "低": 35.6983032045316,
+    "高": 77.3463236098185,
+    "def": "低／高＝Q 的低／高（利用率 0.30／0.65）；m、單價取基準",
+    "cells": {
+     "低": "L1!E129",
+     "高": "L1!F129"
+    }
+   },
+   "external": {
+    "srcId": "無外部對照",
+    "外部低": "—",
+    "外部高": "—"
    }
   }
  }

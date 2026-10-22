@@ -39,3 +39,7 @@ L1_HoldEconMW_VR200 optional # VR200 每 MW 經濟持有成本（L1；對照）
 L1_TokMW_Gen_ratio_VR200 optional # VR200 對 GB300 每 MW token 產出比 q（基準；判讀）
 L1_TokMW_Gen_ratio_VR200_Lo optional # q 低端
 L1_TokMW_Gen_ratio_VR200_Hi optional # q 高端
+# v0.5.1 新增（Tokenomics v19.0；比照 Oracle v0.3，optional 寫法）
+L1_RevGW_PQ_VR200 optional # 模型商每 GW 實收營收 P×Q（v19.0；Nebius 每 MW 收入 ÷ 模型商實收的對照列，不設門檻）
+L1_RevGW_PQ_VR200_Lo optional # P×Q 低端
+L1_RevGW_PQ_VR200_Hi optional # P×Q 高端

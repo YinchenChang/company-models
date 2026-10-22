@@ -815,7 +815,17 @@ if PMW_REV == 'tkAnchor':
             (("capR", "上限檢查｜每 MW 收入 ÷ 客戶付費 token 營收", "%", PCT),):
         arow('cur_' + key, f"目前情境｜{nmx}", unit,
              [f"=CHOOSE({SEL}," + ",".join(f"{L}{AR[CO['scenarios']['labels'][k] + '｜' + key]}" for _, k in _SCX) + ")" for L in COLS], fmt, BOLD if key == 'rev' else BLACK); r += 1
-    arow('cur_capMax', "目前情境｜上限檢查最高值（五期）", "%", [f"=MAX(C{AR['cur_capR']}:G{AR['cur_capR']})", "", "", "", ""], PCT); r += 2
+    arow('cur_capMax', "目前情境｜上限檢查最高值（五期）", "%", [f"=MAX(C{AR['cur_capR']}:G{AR['cur_capR']})", "", "", "", ""], PCT); r += 1
+    # v0.5.1（自 Oracle v0.3 B 段）：第五列對照（不設門檻、不進估值）——模型商（OpenAI 類）每 MW 實收營收 P × Q（L1_RevGW_PQ_VR200；$B/GW ＝ $M/MW）。回答「客戶實收的錢有多少要付給 Nebius」
+    _hasPQ = all(f'L1_RevGW_PQ_VR200{x_}' in _TKI and not _TKI[f'L1_RevGW_PQ_VR200{x_}'].get('missing') for x_ in ('', '_Lo', '_Hi'))
+    if _hasPQ:
+        arow('cur_pq', "上限檢查｜第五列｜模型商每 MW 實收營收 P×Q（VR200 第一年：基準／低／高 依序在 C、D、E）", "US$m/MW", ["=TK_RevGW_PQ_VR200", "=TK_RevGW_PQ_VR200_Lo", "=TK_RevGW_PQ_VR200_Hi", "", ""], NUM1, GREEN,
+             "Tokenomics L1_RevGW_PQ_VR200（模型商每 GW 實收營收＝Q × 有效單價 × m；低／高＝Q 的低／高，利用率 0.30／0.65）；只有 VR200 一欄，Nebius 機隊混合 GB200／GB300，僅作量級對照。不設門檻、不進估值"); r += 1
+        arow('cur_pqR', "第五列｜Nebius 每 MW 年收入 ÷ 模型商每 MW 實收（基準 P×Q）", "%", [f"={L}{AR['cur_rev']}/$C${AR['cur_pq']}" for L in COLS], PCT, BLACK,
+             "＝模型商（OpenAI 類客戶）每 MW 實收營收中，要付給 Nebius 的比例；Nebius 每 MW 收入 ＝ 錨 × k（100% 計費時數）"); r += 1
+        arow('cur_pqRHi', "第五列｜同上，模型商實收取高端（P×Q＿Hi，付給 Nebius 的比例下緣）", "%", [f"={L}{AR['cur_rev']}/$E${AR['cur_pq']}" for L in COLS], PCT); r += 1
+        arow('cur_pqRLo', "第五列｜同上，模型商實收取低端（P×Q＿Lo，付給 Nebius 的比例上緣）", "%", [f"={L}{AR['cur_rev']}/$D${AR['cur_pq']}" for L in COLS], PCT); r += 1
+    r += 1
 
     r = section(ws, r, "D｜k 證據表（倍數＝市場價格 ÷ 同世代 Tokenomics 基準持有成本；use：long／spot＝驅動基準、range＝只支持區間、list＝只列）")
     for j, h in enumerate(["證據", "單位", "價格", "Tokenomics", "倍數 k", "用途"]):

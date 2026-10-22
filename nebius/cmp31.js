@@ -46,6 +46,11 @@ if (PMW_REVQ === 'tkAnchor') { // v0.2a：Tokenomics 錨 × k（Excel「每MW收
     for (const x of TS.sens) cmp('敏感度 ' + x.key, '每MW收入_錨定|敏感度｜' + x.label, K3.map(s => x.res[s].tgt));
     cmp('簽約率 100%', V + '簽約率敏感度｜新產能簽約率 100%（基準）', K3.map(s => TS.matrix[s].base.tgt)); // v0.5a B：評價頁簽約率敏感度＝快照列
     for (const [k, n] of [['fill75', 75], ['fill50', 50]]) cmp('簽約率 ' + n + '%', V + '簽約率敏感度｜新產能簽約率 ' + n + '%', K3.map(s => TS.sens.find(x => x.key === k).res[s].tgt)); }
+  { const A = tkAnchorQ(SC), W = '每MW收入_錨定|'; if (A.pq) { // v0.5.1：第五列對照（Excel 目前情境列；P×Q 基準／低／高在 C、D、E）
+      cmp('第五列 P×Q', W + '上限檢查｜第五列｜模型商每 MW 實收營收 P×Q（VR200 第一年：基準／低／高 依序在 C、D、E）', [A.pq.base, A.pq.lo, A.pq.hi]);
+      cmp('第五列 比例 基準', W + '第五列｜Nebius 每 MW 年收入 ÷ 模型商每 MW 實收（基準 P×Q）', A.pq.r);
+      cmp('第五列 比例 Hi', W + '第五列｜同上，模型商實收取高端（P×Q＿Hi，付給 Nebius 的比例下緣）', A.pq.rHi);
+      cmp('第五列 比例 Lo', W + '第五列｜同上，模型商實收取低端（P×Q＿Lo，付給 Nebius 的比例上緣）', A.pq.rLo); } }
   { const A = tkAnchorQ(SC), FL = COMPANY_DATA.fleet, TK = COMPANY_DATA.tkSnap, W = '每MW收入_錨定|', ann = LATEST_Q.revenue * 4, svc = COMPANY_DATA.priceCheck.inServiceMw, bo = q.billableOpen, // v0.2a 步驟 4：Q2 驗證拆解
       a0 = FL.generations.reduce((s, g) => s + (FL.openMix.mix[g] || 0) * TK.IF_HoldEcon[g]['基準'], 0), rS = ann / svc * 1e3, rB = ann / bo * 1e3, kB = rB / a0, m = A.rev[0] * 1e3, gap = m - rS,
       i1 = rB - rS, i2 = (A.k[0] - kB) * a0, i3 = (A.anchor[0] * 1e3 - a0) * A.k[0];
