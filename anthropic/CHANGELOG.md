@@ -46,3 +46,24 @@
 - 新增：Cost 第二十一節 K240–K255（TK P × Q 對照）、Checks C124–C126（info）、具名 `COST_TKPQ`／`COST_TKPQRatio`／`COST_TKTokLedger`；TK_Link C3 記錄 TK 檔案 SHA-256。說明文字更正 5 處（見報告③）。
 - 測試：parity 情境 +2（ha、hb）；HTML 情境 +3（v011、only_tokgw、only_hold），v010／only_u1／only_u2 改為同時把 TK 回到 v5.26（spec `prev`）；期望值 formula_cells 5878、defined_names 1146、tk_values 82。
 - 成品 `dist/20261021_Anthropic收支模型_v0_1_2.html／.xlsx`；v0.1.1 成品移至 `dist/_待刪除/`。報告 `docs/reports/20261021_v0.1.2.md`＋`_對照.xlsx`。
+
+## v0.1.3 A 段（2026-10-22；Excel `model/20261022_Anthropic_v0.1.3.xlsx`；分支 `claude/anthropic-v0.1.3`，PR #69）
+- 採納外部驗收報告（v0.1.2）：TK 快照改 v19.0（103 個值與 v18.0 相同）；U2 新法（chat 端更正公式：Nscale、Lambda 供給 GW 取揭露容量，付款路徑不變＝『最高 86』按 MW 比例的攤提；隱含每 GW 年付款 Nscale 19.3／Lambda 14.2／合計 17.1；Inputs `u2_method`＝INP_187）；資金三層（Funding 第十節）；持續擴張情境（Cost 第二十二、二十三節、Funding 第十一節；Inputs INP_188–194）；HTML 結論改條件式並新增「①之三」。
+- 結果：每 VR 等值 GW 差額 2026–2030 −5.37／−4.91／−2.70／＋5.38／＋11.60（v0.1.2：−5.37／−4.89／−2.63／＋5.17／＋11.14）；覆蓋率 2030 1.80（不變）；營運自由現金流首次轉正 2029；三層累計外部資金需求 41.9／0／0；現金谷底 84.2（不變）。
+- 公式格 6,543、具名範圍 1,243（A 段原記 6,550／1,240，B 段以 engine 實測更正）、Inputs 190、Checks 至 C142；CHK_Errors＝0、CHK_Warnings＝2。報告 `docs/reports/20261022_v0.1.3-A.md`。
+
+
+## v0.1.3 B 段（2026-10-22；Excel `model/20261022_Anthropic_v0.1.3.xlsx` 同檔名重建；分支 `claude/anthropic-v0.1.3`，PR #69）
+- 新增 `builder/a5.py`：**Bridge 頁**（Cost 之後；109 列；需求 → token → GW → 成本逐層；每列來源編號、2025–2030、標記；低／高＝2030 敏感度包絡或 2025 Inputs 區間；末節與 TK 對照）與 **EtaDiag 頁**（37 列；η（2025）＝計價口徑 f_P × 利用率 f_U × 工作負載組合 f_W × 未解釋殘差；並列 TK L1_Gap*）。兩頁唯讀，不被計算頁引用（Checks e1_iso；`test_bridge_not_fed_back`）；η 的值不變。
+- TK_Link 尾端 +23 名（IF_UtilActual 含低高、L1_TokGW_PaidCap_VR200、B4_MixPaid、L1_Gap{Prompt,SpendBasis,ISL,Util,Product,Unexplained} 各含低高），只供 EtaDiag；`check_tk_snapshot`：OK 126。Checks C143–C152（5 個 OK 類、5 個 info）；具名範圍 +29（TK 23、ETA_ 6）。
+- 既有頁（Inputs、Demand、Revenue、Funding、Reverse）對 v0.1.2 逐格比對 0 差異；Compute、Cost 的差異全為 U2 新法鏈（A 段）；`u2_method`＝0 時與 v0.1.2 逐格相同（僅 5 格說明文字）。公式格 6,543 → 7,231；具名範圍 1,243 → 1,272；Inputs 190（不變）。
+- `anthropic/CLAUDE.md` 新增第 8 節：公開 S-1／經審計資料出現時的替換程序。
+- 成品：`tools/build_html.py`「①之三」改名「v0.1.3 更新了什麼」並加 η 拆解、Bridge 逐層對照（HTML 1,134 個數字）；`tools/read_html_screen.py`（Playwright 逐節讀畫面並截圖，桌機 1280／手機 390，無水平捲動、無外部請求、畫面文字與 data-v 0 不符）；`dist/20261022_Anthropic收支模型_v0_1_3.html／.xlsx`。
+- 報告 `docs/reports/20261022_v0.1.3.md`＋`_對照.xlsx`（`tools/make_report_v013b.py`）。
+
+## v0.1.4 Tokenomics v19.1 同步、η 診斷補充（2026-10-22；Excel `model/20261022_Anthropic_v0.1.4.xlsx`；v0.1.3 移至 `model/archive/`；分支 `claude/anthropic-v0.1.3`，PR #69）
+- 工作單 `docs/workorders/20261022_anthropic_v0.1.4_TK19.1.md`。commit 見 git log「Anthropic v0.1.4 步驟 1–6」。
+- TK 快照 v19.0 → v19.1（master `c2ecb71`）：39 個名稱值變動（check_tk_snapshot 重建後 OK 126、DIFF 0）；僅 `IF_TokGW_Luna` 進計算（Compute）；其餘為參考列、診斷或僅快照。命題輸出與 v0.1.3 逐位相同；η 0.52730 → 0.52543，有效推論 GW 2030 ＋0.0043、研發 GW −0.0043。
+- 新列（皆在尾端）：TK_Link ＋`IF_ProdDerate`；EtaDiag 第七節 E38–E47（`ETA_fU_Prod`、`ETA_Prod2`、`ETA_Resid2`）；Checks C153–C156。具名範圍 1,272 → 1,276、公式格 7,231 → 7,256。η 值不因診斷改變。
+- 刪除 `dist/_待刪除/` 與 v0.1.3 dist 檔；HTML「①之三」前端加 v0.1.4 摘要、逐群拆解表、η 各版本小表；`tools/html_scenarios.yaml` 加 `tk19_*` 群組與 `v013`、`v14_only_luna`、`v14_only_rest` 情境（舊情境加 `tk19_back` 以保持當時數字）。
+- 測試：`tests/parity/scenarios.yaml` 預期值（formula_cells 7,256、defined_names 1,276、tk_values 105）；`test_builder` 新增 `test_eta_prod_derate_section`，η 預期值改 0.525427732668394。報告 `docs/reports/20261022_v0.1.4.md`；工具 `tools/make_report_v014.py`。

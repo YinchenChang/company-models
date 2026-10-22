@@ -109,6 +109,9 @@ def resolve_overrides(scn_id: str, loc: Locator, cfg: dict | None = None) -> dic
                 v = loc.input_cell(name, spec)
             elif isinstance(spec, dict) and "mul" in spec:
                 v = loc.input_cell(name, "val") * loc.input_cell(spec["mul"], "val")
+            elif spec == "prev19":
+                out.update(prev_cells(name, PREV19_XLSX))      # v0.1.4：TK 快照回到 v19.0（值取自 v0.1.3 Excel）
+                continue
             elif spec == "prev":
                 out.update(prev_cells(name))       # v0.1.2：Tokenomics 快照回到上一版（v0.1.1＝TK v5.26）的值；值取自上一版 Excel
                 continue
@@ -123,17 +126,19 @@ def resolve_overrides(scn_id: str, loc: Locator, cfg: dict | None = None) -> dic
 
 
 PREV_XLSX = REPO / "model" / "archive" / "20261021_Anthropic_v0.1.1.xlsx"
+PREV19_XLSX = REPO / "model" / "archive" / "20261022_Anthropic_v0.1.3.xlsx"
 _PREV: dict = {}
 
 
-def prev_cells(name: str) -> dict[str, object]:
+def prev_cells(name: str, path: Path | None = None) -> dict[str, object]:
     """上一版（PREV_XLSX，v0.1.1：TK 快照 v5.26）TK_Link 具名範圍的值；單格 → {name: v}，多格 → {name[k]: v}（k 從 1 起）。"""
-    if "wb" not in _PREV:
-        wb = openpyxl.load_workbook(PREV_XLSX)
-        _PREV["wb"] = wb
-        _PREV["names"] = {k: v.attr_text for k, v in wb.defined_names.items()}
-    sheet, ref = parse_ref(_PREV["names"][name])
-    ws = _PREV["wb"][sheet]
+    path = path or PREV_XLSX
+    if path not in _PREV:
+        wb = openpyxl.load_workbook(path)
+        _PREV[path] = (wb, {k: v.attr_text for k, v in wb.defined_names.items()})
+    wb, names_ = _PREV[path]
+    sheet, ref = parse_ref(names_[name])
+    ws = wb[sheet]
     ref = ref.replace("$", "")
     if ":" not in ref:
         return {name: ws[ref].value}
@@ -608,9 +613,10 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
     # ── ① 命題與結論 ──
     S.append(f"""<section id="s1"><h2><span class="no">①</span>命題與一句話結論</h2>
 <p class="note">命題（與 OpenAI v0.6 同一句）：Anthropic 每 VR 等值 GW 的年營收，能否覆蓋每 GW 年全成本？若不能，缺口要多少外部資金、由誰補？</p>
-<p class="lead">2026–2028 年還不能（每 VR 等值 GW 差額 {n("COST_PropGap_VR", 2026)}／{n("COST_PropGap_VR", 2027)}／{n("COST_PropGap_VR", 2028)} $B/GW/年），2029 年起轉正（2030 年 {n("COST_PropGap_VR", Y, "sf1")}，覆蓋率 {n("COST_Coverage", Y, "pct0")}）；
-2026–2028 的現金缺口已由 2026 年交割的 ${n("FND_Committed", 2026, "f0")}B 股權補足，2026–2030 累計外部資金需求 ${n("FND_ExtNeedCum", Y, "f0")}B。
-<b>要成立必須</b>：2029 年後不再大量新增算力合約（模型只計已簽合約），且 API 需求成長與價格反應不同時落在區間下緣。</p>
+<p class="lead">在目前需求成長、價格彈性、已簽算力合約與 2026 年已到位融資（${n("FND_Committed", 2026, "f0")}B）的假設下，2026–2028 年每 VR 等值 GW 的營收還不能覆蓋全成本（差額 {n("COST_PropGap_VR", 2026)}／{n("COST_PropGap_VR", 2027)}／{n("COST_PropGap_VR", 2028)} $B/GW/年），2029 年起轉正（2030 年 {n("COST_PropGap_VR", Y, "sf1")}，覆蓋率 {n("COST_Coverage", Y, "pct0")}）；
+按目前已到位融資與基準支出路徑，2026–2030 不出現最低現金缺口（累計外部資金需求 ${n("FND_ExtNeedCum", Y, "f0")}B）。
+<b>營運自由現金流本身要到 {n("FND_FCFFirstPos", None, "yt")} 年才自給</b>：若不靠任何融資（第 1 層），2026–2030 累計仍需外部提供 ${n("FND_L1_ExtTotal", None, "f0")}B、現金谷底 {n("FND_L1_Trough", None, "f1")}；已到位股權（第 2 層）才使缺口消失（見 ⑤）。
+<b>此結論要成立必須</b>：2029 年後不再大量新增算力合約（基準只計已簽合約；持續擴張只作情境，見 ①之三），且 API 需求成長與價格反應不同時落在區間下緣。</p>
 <div class="kpis">
 <div class="kpi"><div class="k">2030 每 VR 等值 GW：營收 vs 全成本</div><div class="v">{n("COST_PropRev_VR", Y)} <span class="note">vs</span> {n("COST_PropFull_VR", Y)}</div><div class="s">$B/GW/年；差額 <b class="pos">{n("COST_PropGap_VR", Y, "sf1")}</b></div></div>
 <div class="kpi"><div class="k">覆蓋率（營收淨額 ÷ 全成本）</div><div class="v">{n("COST_Coverage", Y, "pct0")}</div><div class="s">2030；2026–2028 為 {n("COST_Coverage", 2026, "pct0")}／{n("COST_Coverage", 2027, "pct0")}／{n("COST_Coverage", 2028, "pct0")}；全成本含股權報酬、現金口徑</div></div>
@@ -628,7 +634,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
     upd_rows += [upd(f"每 VR 等值 GW 差額 {y}（$B/GW/年）", "COST_PropGap_VR", y, "sf2", y == 2030) for y in (2026, 2027, 2028, 2029, 2030)]
     upd_rows += [upd("覆蓋率 2030", "COST_Coverage", Y, "pct0"), upd("累計外部資金需求 2026–2030 $B", "FND_ExtNeedCum", Y, "f1", True),
                  upd("只靠已到位融資的現金谷底 $B", "FND_CashNoExtTrough", None, "f1")]
-    tk_cols = [("v0.1.1（TK v5.26）", "v011"), ("只換 IF_TokGW 群", "only_tokgw"), ("只換 IF_HoldEcon", "only_hold"), (f"v{ver}（TK {tk_ver}）", "base")]
+    tk_cols = [("v0.1.1（TK v5.26）", "v011"), ("只換 IF_TokGW 群", "only_tokgw"), ("只換 IF_HoldEcon", "only_hold"), (f"v0.1.2（TK v18.0；v19.0 值相同）", "v012")]
     def tkrow(lab, ref, yr, f, em=False):
         return (f'<tr class="{"em" if em else ""}"><td>{lab}</td>' + "".join(f"<td>{n(ref, yr, f, sc)}</td>" for _l, sc in tk_cols) + "</tr>")
     tk_rows = [tkrow("η（2025 校準；各年同值）", "CMP_Eta", 2025, "f3", True), tkrow("供給 VR 等值 GW 2030", "CMP_Supply_VReq", Y, "f2")]
@@ -643,14 +649,14 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
         ("TK P × Q ÷ 本模型（付費推論口徑）", "Cost!K250", "f2"), ("TK P × Q ÷ 本模型（供給口徑，含閒置與研發 GW；僅供參考）", "Cost!K251", "f2"),
         ("TK token 帳未閉合倍數（模型付費 token ÷ 需求面付費 token）", "Cost!K245", "f2"), ("本模型每 GW 付費 token ÷ TK Q", "Cost!K255", "f2")]
     pq_html = "".join(f"<tr><td>{lab}</td><td>{n(ref, 2026, f)}</td></tr>" for lab, ref, f in pq_rows)
-    S.append(f"""<section id="s1b"><h2><span class="no">①之二</span>v{ver} 更新了什麼：Tokenomics {tk_ver}</h2>
-<p class="lead">Tokenomics 由 v5.26 升到 {tk_ver} 後，命題結論不變：2026–2028 仍為負、2029 起轉正，累計外部資金需求仍為 {n("FND_ExtNeedCum", Y, "f0")}。
-變動集中在 η：TK 每 GW 年產能（IF_TokGW_*）上升約 1.3–1.8 倍（v9.0 快取命中進產能、v10.2 每用戶速度 SLO 改量測值），η 由 {n("CMP_Eta", 2025, "f3", "v011")} 降到 {n("CMP_Eta", 2025, "f3")}，把整體上升吸收掉，所以供給 VR 等值 GW 2030 只由 {n("CMP_Supply_VReq", Y, "f2", "v011")} 變為 {n("CMP_Supply_VReq", Y, "f2")}，2026–2030 各年每 VR 等值 GW 差額變動不超過 0.1（2025 年分母只有約 0.06 VR 等值 GW，該年數字本來就極端）。
+    S.append(f"""<section id="s1b"><h2><span class="no">①之二</span>v0.1.2 更新了什麼：Tokenomics v18.0（v0.1.3 快照 v19.0 值相同；v0.1.4 改 v19.1，見 ①之三）</h2>
+<p class="lead">Tokenomics 由 v5.26 升到 v18.0 後，命題結論不變：2026–2028 仍為負、2029 起轉正，累計外部資金需求仍為 {n("FND_ExtNeedCum", Y, "f0")}。
+變動集中在 η：TK 每 GW 年產能（IF_TokGW_*）上升約 1.3–1.8 倍（v9.0 快取命中進產能、v10.2 每用戶速度 SLO 改量測值），η 由 {n("CMP_Eta", 2025, "f3", "v011")} 降到 {n("CMP_Eta", 2025, "f3")}，把整體上升吸收掉，所以供給 VR 等值 GW 2030 只由 {n("CMP_Supply_VReq", Y, "f2", "v011")} 變為 {n("CMP_Supply_VReq", Y, "f2", "v012")}（v0.1.3 再因 U2 新法改為 {n("CMP_Supply_VReq", Y, "f2", "v013")}），2026–2030 各年每 VR 等值 GW 差額變動不超過 0.1（2025 年分母只有約 0.06 VR 等值 GW，該年數字本來就極端）。
 公式沒有改；只更正五處過時的說明文字，見報告「語意核對」。</p>
 <div class="tw"><table><thead><tr><th>輸出</th>{"".join(f"<th>{l}</th>" for l, _s in tk_cols)}</tr></thead><tbody>
 {"".join(tk_rows)}
 </tbody></table></div>
-<p class="note">「只換」欄＝其他 TK 名稱維持 v5.26 值，只把該群換成 {tk_ver}；TK 另有 26 個值變動的名稱（IF_Alloc*、IF_FullCost* 等）本模型只快照、不進命題輸出。IF_CapexTotal 的 VR200 欄未變，自建 GW 不受影響。逐名稱新舊值與變動版本見報告。</p>
+<p class="note">「只換」欄＝其他 TK 名稱維持 v5.26 值，只把該群換成 v18.0；TK 另有 26 個值變動的名稱（IF_Alloc*、IF_FullCost* 等）本模型只快照、不進命題輸出。IF_CapexTotal 的 VR200 欄未變，自建 GW 不受影響。逐名稱新舊值與變動版本見報告。</p>
 <h3>與 TK v18.0 新名稱對照：每 VR200 GW 營收 P × Q（只對照，不回饋計算）</h3>
 <div class="tw"><table><thead><tr><th>項目</th><th>2026</th></tr></thead><tbody>{pq_html}</tbody></table></div>
 <p class="note">TK 自己標明 token 帳未閉合：模型付費 token 約為需求面的 {n("Cost!K245", 2026, "f1")} 倍，P × Q 是「模型產能推算的 Q × 需求面 P」，若誤差全在產能側，實際營收約為該列除以此倍數。兩邊口徑不同（TK 為 VR200 每 GW 第一年、取實際利用率；本模型以 η 校準到 2025 推論支出），請當作量級對照，不要相減。</p>
@@ -687,6 +693,105 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 </section>""")
 
     # ── ② 每 VR 等值 GW ──
+    # ── ①之三 v0.1.3 A 段更新 ──
+    def _rid(sheet, prefix):
+        ws = V.loc.wb[sheet]
+        for r in range(1, ws.max_row + 1):
+            b = ws.cell(r, 2).value
+            if isinstance(b, str) and b.startswith(prefix):
+                return f"{sheet}!{ws.cell(r, 1).value}"
+        raise KeyError(f"{sheet} 找不到列：{prefix}")
+    brow = lambda p: _rid("Bridge", p)  # noqa: E731
+    erow = lambda p: _rid("EtaDiag", p)  # noqa: E731
+    eta_defs = [("計價口徑 f_P（每 GW 合約實付 ÷ TK 持有成本）", "f_P：計價口徑", "Analogy（TK 持有成本；區間＝TK 低／高成本情境）"),
+                ("利用率 f_U（TK 實際 ÷ 基準利用率）", "f_U：利用率", "Analogy（TK IF_UtilActual 0.30–0.65；非 Anthropic 實測）"),
+                ("工作負載（層級）組合 f_W（TK 參考組合 ÷ 本模型組合）", "f_W：工作負載", "Derived（無區間；Inputs 層級組合區間未接入）"),
+                ("輸入輸出組合", None, "無法分離：每任務 token 已含輸入、快取、輸出，並入殘差"),
+                ("已解釋部分 f_P × f_U × f_W", "已解釋部分", "Derived"),
+                ("未解釋殘差", "未解釋殘差", "Derived（殘差，非獨立估計）")]
+    eta_rows = ""
+    for lab, key, why in eta_defs:
+        if key is None:
+            eta_rows += f"<tr><td>{lab}</td><td colspan=\"3\">無法分離</td><td>{why}</td></tr>"
+        else:
+            rid = erow(key)
+            eta_rows += (f"<tr><td>{lab}</td><td>{cell(V, rid + ':D', None, 'f3')}</td><td>{cell(V, rid + ':E', None, 'f3')}</td><td>{cell(V, rid + ':F', None, 'f3')}</td><td>{why}</td></tr>")
+    bridge_defs = [("訂閱、席位與 Free 年任務數", "十億任務", "f1"), ("API 年任務數", "十億任務", "f1"), ("付費 token 合計", "T", "f0"), ("API 組合有效單價", "$/M", "f2"),
+                   ("營收總額（報導口徑）", "$B", "f1"), ("組合後每 GW 年產能（付費）", "M tok/GW/年", "f0"), ("推論 GW（token 換算）：合計", "GW", "f2"),
+                   ("η（有效產出係數", "倍", "f3"), ("有效推論 GW＝", "GW", "f2"), ("研發 GW（殘差）", "GW", "f2"), ("供給 GW 合計", "GW", "f2"),
+                   ("供給 VR 等值 GW", "GW", "f2"), ("算力成本（現金口徑）", "$B", "f1"), ("全成本（含股權報酬）", "$B", "f1"),
+                   ("每 VR 等值 GW：差額", "$B/GW/年", "sf1")]
+    bridge_rows = ""
+    for pre, unit, f in bridge_defs:
+        rid = brow(pre)
+        lab = V.loc.wb["Bridge"].cell(int(re.sub(r"\D", "", V.loc.locate(rid, 2025)[1])), 2).value
+        bridge_rows += (f"<tr><td>{html.escape(lab)}</td><td>{unit}</td><td>{cell(V, rid, 2025, f)}</td><td>{cell(V, rid, 2030, f)}</td>"
+                        f"<td>{cell(V, rid + ':L', None, f)}</td><td>{cell(V, rid + ':M', None, f)}</td></tr>")
+    u2_cols = [("v0.1.2（U2 金額回推）", "v012"), (f"v{ver}（U2 新法）", "base")]
+    def u2row(lab, ref, yr, f, em=False):
+        return (f'<tr class="{"em" if em else ""}"><td>{lab}</td>' + "".join(f"<td>{n(ref, yr, f, sc)}</td>" for _l, sc in u2_cols) + "</tr>")
+    u2_rows = [u2row(f"每 VR 等值 GW 差額 {y}（$B/GW/年）", "COST_PropGap_VR", y, "sf2", y == 2030) for y in (2026, 2027, 2028, 2029, 2030)]
+    u2_rows += [u2row("覆蓋率 2030", "COST_Coverage", Y, "pct0"), u2row("供給 VR 等值 GW 2030", "CMP_Supply_VReq", Y, "f2"),
+                u2row("Nscale 供給 GW 2030", "CMP_Supply_Nscale", Y, "f2"), u2row("Lambda 供給 GW 2030", "CMP_Supply_Lambda", Y, "f2"),
+                u2row("Nscale 合約實付 2030 $B", "COST_Pay_Nscale", Y, "f2"), u2row("Lambda 合約實付 2030 $B", "COST_Pay_Lambda", Y, "f2"),
+                u2row("累計外部資金需求 2026–2030 $B", "FND_ExtNeedCum", Y, "f1"), u2row("只靠已到位融資的現金谷底 $B", "FND_CashNoExtTrough", None, "f1")]
+    lay_rows = "".join(
+        f"<tr><td>{L_ZH}</td><td>{n(f'FND_L{k}_GapYear', None, 'yt')}</td><td>{n(f'FND_L{k}_ExtTotal', None, 'f1')}</td><td>{n(f'FND_L{k}_Trough', None, 'f1')}</td></tr>"
+        for k, L_ZH in ((1, "① 營運自由現金流自給（不靠任何融資）"), (2, "② 加已到位股權（現行基準）"), (3, "③ 再加條件式與談判中（IPO、Amazon、Google、NVIDIA、AMD；上緣）")))
+    exp_rows = "".join(
+        f"<tr><td>{lab}</td><td>{n(f'COST_PropGap_VR_Exp{k}', 2029, 'sf2')}</td><td>{n(f'COST_PropGap_VR_Exp{k}', 2030, 'sf2')}</td><td>{n(f'FND_FCFFirstPos_Exp{k}', None, 'yt')}</td>"
+        f"<td>{n(f'FND_L1_ExtTotal_Exp{k}', None, 'f1')}</td><td>{n(f'FND_L2_ExtTotal_Exp{k}', None, 'f1')}</td><td>{n(f'FND_L3_ExtTotal_Exp{k}', None, 'f1')}</td><td>{n(f'FND_L2_Trough_Exp{k}', None, 'f1')}</td></tr>"
+        for k, lab in (("None", "無需求（變現 0）"), ("Half", "部分變現（0.5）"), ("Full", "完全變現（1）")))
+    k14_cols = [("v0.1.3（TK v19.0）", "v013"), ("只換 Luna（IF_TokGW_Luna）", "v14_only_luna"), ("只換其餘 38 名稱", "v14_only_rest"), (f"v0.1.4（TK {tk_ver}）", "base")]
+    def k14row(lab, ref, yr, f, em=False):
+        return (f'<tr class="{"em" if em else ""}"><td>{lab}</td>' + "".join(f"<td>{n(ref, yr, f, sc)}</td>" for _l, sc in k14_cols) + "</tr>")
+    k14_rows = [k14row("η（2025 校準）", "CMP_Eta", 2025, "f3", True), k14row("供給 VR 等值 GW 2030", "CMP_Supply_VReq", Y, "f3")]
+    k14_rows += [k14row(f"每 VR 等值 GW 差額 {y}（$B/GW/年）", "COST_PropGap_VR", y, "sf3", y == 2030) for y in (2025, 2026, 2027, 2028, 2029, 2030)]
+    k14_rows += [k14row("有效推論 GW 2030", "CMP_InfGW_Eff", Y, "f3"), k14row("研發 GW 2030", "CMP_RDGW", Y, "f3"), k14row("覆蓋率 2030（倍）", "COST_Coverage", Y, "f3"), k14row("累計外部資金需求 2026–2030 $B（基準）", "FND_ExtNeedCum", Y, "f1", True),
+                 k14row("只靠已到位融資的現金谷底 $B", "FND_CashNoExtTrough", None, "f2")]
+    ev_cols = [("v0.1.1（TK v5.26）", "v011"), ("v0.1.2（v18.0）", "v012"), ("v0.1.3（v19.0）", "v013"), ("v0.1.4（v19.1）", "base")]
+    def evrow(lab, ref, f, em=False):
+        ratio = V.get(ref, None, "base") / V.get(ref, None, "v013")
+        return (f'<tr class="{"em" if em else ""}"><td>{lab}</td>' + "".join(f"<td>{n(ref, None, f, sc)}</td>" for _l, sc in ev_cols) + f"<td>{ratio:.3f}</td></tr>")
+    ev_rows = [evrow("η（2025）", "ETA_Eta", "f3", True), evrow("f_P 計價口徑", "ETA_fP", "f3"), evrow("f_U 利用率（不計生產折減）", "ETA_fU", "f3"),
+               evrow("f_W 工作負載組合", "ETA_fW", "f3"), evrow("未解釋殘差（不計生產折減；v0.1.3 口徑）", "ETA_Resid", "f3"),
+               evrow("f_U' 利用率（計入生產折減）", "ETA_fU_Prod", "f3"), evrow("未解釋殘差（計入生產折減；v0.1.4）", "ETA_Resid2", "f3", True)]
+    S.append(f"""<section id="s1c"><h2><span class="no">①之三</span>v0.1.3＋v0.1.4 更新了什麼：TK v19.1、η 診斷補充；U2 新法、資金三層、持續擴張、η 拆解、逐層對照</h2>
+<p class="lead"><b>v0.1.4 摘要</b>：Tokenomics 由 v19.0 升到 v19.1（Luna 的 CSA top-k 1024 → 512；39 個名稱值變動，其中只有 IF_TokGW_Luna 進命題計算），η 由 {n("CMP_Eta2025", None, "f3", "v013")} 微降到 {n("CMP_Eta2025", None, "f3")}，命題輸出（每 VR 等值 GW 差額、覆蓋率、供給 GW、現金流、外部資金需求）與 v0.1.3 <b>逐位相同</b>（2030 年差額 {n("COST_PropGap_VR", Y, "sf3", "v013")} → {n("COST_PropGap_VR", Y, "sf3")} $B/GW/年；累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0")}）：供給 GW 由已簽合約決定，TK 產能變動被 η 的 2025 校準吸收，只移動有效推論 GW 與研發 GW 的分攤（2030 年有效推論 GW {n("CMP_InfGW_Eff", Y, "f3", "v013")} → {n("CMP_InfGW_Eff", Y, "f3")}，研發 GW {n("CMP_RDGW", Y, "f3", "v013")} → {n("CMP_RDGW", Y, "f3")}）。η 診斷補充：利用率因子計入 TK 生產折減（{n("TK_IF_ProdDerate", None, "f2")}）後，未解釋殘差由 {n("ETA_Resid", None, "f3")} 變為 {n("ETA_Resid2", None, "f3")}；η 本身不因診斷而改變。以下兩個表之後，為 v0.1.3 的內容（表中數字為 v0.1.4 現值，標明 v0.1.3 者為 TK v19.0 當時值）。</p>
+<h3>v0.1.4：TK v19.0 → v19.1 的差異拆解（逐群）</h3>
+<div class="tw"><table><thead><tr><th>輸出</th>{"".join(f"<th>{l}</th>" for l, _s in k14_cols)}</tr></thead><tbody>
+{"".join(k14_rows)}
+</tbody></table></div>
+<p class="note">「只換 Luna」＝只有 IF_TokGW_Luna 取 v19.1、其餘 38 個名稱維持 v19.0；「只換其餘 38」相反。其餘 38 個名稱（IF_FullCost*、IF_Alloc*、L1_RevGW_PQ_VR200* 等）本模型只對照或快照，不進命題輸出；逐名稱新舊值見報告 ①。</p>
+<h3>η 與殘差：各 TK 版本（診斷；η 以外的因子為比值，TK 整體產能放大時不動）</h3>
+<div class="tw"><table><thead><tr><th>項目</th>{"".join(f"<th>{l}</th>" for l, _s in ev_cols)}<th>v0.1.4 ÷ v0.1.3</th></tr></thead><tbody>
+{"".join(ev_rows)}
+</tbody></table></div>
+<p class="note">殘差＝η ÷（f_P × f_U × f_W）；「計入生產折減」列把 f_U 再乘 TK 生產折減。與 TK 的 OpenAI 口徑 L1_GapUnexplained {cell(V, erow("TK 落差 5"), None, "f2")}（v0.1.3 為 {cell(V, erow("TK 落差 5"), None, "f2", "v013")}）並排：本模型殘差倒數（計入生產折減）{cell(V, erow("殘差倒數（TK 方向；計入"), None, "f2")}，為 TK 的 {cell(V, erow("比值：本模型殘差倒數"), None, "f3")} 倍；兩者口徑不同（Anthropic 對 OpenAI），只作並排。</p>
+<p class="lead">v0.1.3 採納外部驗收報告（v0.1.2）的 5 項建議。<b>變動只有三類</b>：①U2 新法改了供給 GW 的取法（本節第一個表）；②新增只供閱讀的對照——資金三層、持續擴張情境（只作情境，不進基準）、η 拆解、Bridge 逐層對照頁；③結論措辭改為條件式。其餘輸出與 v0.1.2 逐格相同。以下先說 U2 新法。U2 新法（chat 端更正公式）：Nscale（{n("SRC_ANT_222", None, "f0")} MW）、Lambda（{n("SRC_ANT_224", None, "f0")} MW）的供給 GW 改取揭露容量，年付款路徑不變（『最高 86』按 MW 比例分攤、依爬坡年度攤提）；因此成本不變、分母（供給 VR 等值 GW）下降，2030 每 VR 等值 GW 差額由 {n("COST_PropGap_VR", Y, "sf2", "v012")} 變為 {n("COST_PropGap_VR", Y, "sf2")}。隱含每 GW 年付款：Nscale {n("COST_U2PayPerGW_Nscale", None, "f1")}、Lambda {n("COST_U2PayPerGW_Lambda", None, "f1")}、兩約合計 {n("COST_U2PayPerGW_Both", None, "f1")} $B/GW/年，高於通用合約價 {n("INP_114", None, "f0")}，表示『最高 86』含揭露 GW 以外的容量或服務，或揭露 MW 低估。v0.1.3 的 Tokenomics 快照改 v19.0，數值與 v18.0 相同（v0.1.4 改 {tk_ver}，見本節開頭）。</p>
+<div class="tw"><table><thead><tr><th>輸出</th>{"".join(f"<th>{l}</th>" for l, _s in u2_cols)}</tr></thead><tbody>
+{"".join(u2_rows)}
+</tbody></table></div>
+<h3>資金三層（基準）：營運現金流自給 → 已到位股權 → 條件式</h3>
+<div class="tw"><table><thead><tr><th>層</th><th>最低現金缺口首次出現年</th><th>累計外部資金需求 2026–2030 $B</th><th>現金谷底 $B</th></tr></thead><tbody>{lay_rows}</tbody></table></div>
+<p class="note">第 1 層不計 2025 年底現金（Inputs l1_incl_cash＝0）；第 3 層把 NVIDIA 與 IPO 基石都算入，屬上緣。營運自由現金流首次轉正年：{n("FND_FCFFirstPos", None, "yt")}。</p>
+<h3>持續擴張情境（只作情境）：2029、2030 每年追加算力＝當年合約付款的 {n("INP_189", None, "pct0")}</h3>
+<div class="tw"><table><thead><tr><th>變現比例</th><th>差額 2029</th><th>差額 2030</th><th>自由現金流首次轉正年</th><th>第 1 層累計外部資金 $B</th><th>第 2 層 $B</th><th>第 3 層 $B</th><th>第 2 層現金谷底 $B</th></tr></thead><tbody>{exp_rows}</tbody></table></div>
+<p class="note">基準（只計已簽合約）差額 2029 {n("COST_PropGap_VR", 2029, "sf2")}、2030 {n("COST_PropGap_VR", Y, "sf2")}。追加金額與變現比例為 Assumed（Inputs exp_*）；與 U6 談判中 $150B 並列，不進基準。</p>
+<h3>η 拆解（診斷；η 的值不變）</h3>
+<p class="note">η（2025）＝token 換算推論 GW ÷ 支出換算推論 GW ＝ {n("ETA_Eta", None, "f3")}。拆成 計價口徑 × 利用率 × 工作負載（層級）組合 × 未解釋殘差；前兩項靠 Tokenomics 的 Analogy 區間，第三項無區間，輸入輸出組合在本模型<b>無法分離</b>（並入殘差）。</p>
+<div class="tw"><table><thead><tr><th>因子（η 的方向）</th><th>基準</th><th>低</th><th>高</th><th>依據</th></tr></thead><tbody>
+{eta_rows}
+</tbody></table></div>
+<p class="note">前三項合起來預期 η 約 {n("ETA_Prod", None, "f2")}，實際只有 {n("ETA_Eta", None, "f2")}，差 {n("ETA_Resid", None, "f2")} 倍沒有被解釋（殘差；含輸入輸出組合、每任務 token 倍數、任務數與支出的口徑差等），倒數 {cell(V, erow("殘差倒數"), None, "f2")}（TK 方向；TK 在 OpenAI 口徑的同類項 L1_GapUnexplained {cell(V, erow("TK 落差 5"), None, "f2")}、區間 {cell(V, erow("TK 落差 5") + ":E", None, "f1")}–{cell(V, erow("TK 落差 5") + ":F", None, "f1")}，只作並排）。TK 的 Tokenomics 版本由 v5.26 換到 v18.0 時，η 由 {n("CMP_Eta2025", None, "f3", "v011")} 降到 {n("CMP_Eta2025", None, "f3", "v012")}（見 <code>docs/reports/20261022_v0.1.3.md</code> ④）；v0.1.4 的 {tk_ver} 使 η 再降到 {n("CMP_Eta2025", None, "f3")}（見 <code>{report}</code> ③）。</p>
+<h3>需求 → token → GW → 成本逐層對照（Bridge 頁，唯讀）</h3>
+<div class="tw"><table><thead><tr><th>層</th><th>單位</th><th>2025</th><th>2030</th><th>2030 低</th><th>2030 高</th></tr></thead><tbody>
+{bridge_rows}
+</tbody></table></div>
+<p class="note">低／高＝2030 敏感度包絡（合約價 8／20、η 沿用／回升、TPU／Trainium／AMD 產出比低／高；Excel Compute 第十四節）。與 Tokenomics 同口徑量（2026）：TK 每 GW 營收 P × Q {cell(V, brow("TK：VR200 每 GW 營收"), 2026, "f1")} vs 本模型 {cell(V, brow("本模型：營收總額 ÷ 付費推論"), 2026, "f1")} $B/GW/年；TK 每 GW 付費 token Q {cell(V, brow("TK：VR200 每 GW 付費 token"), 2026, "f0")} vs 本模型 {cell(V, brow("本模型：每付費推論 VR"), 2026, "f0")} M tok（比值 {cell(V, brow("比值（本模型 ÷ TK）"), 2026, "f2")}）。TK 自己的 token 帳尚未閉合（L1_TokLedger_2026Q2＝{cell(V, brow("TK：token 帳未閉合"), 2026, "f2")} 倍），屬 Tokenomics 待辦，所以這些差額不作為本模型的通過條件。</p>
+{V.src("ETA_Eta", "ETA_fP", "ETA_fU", "ETA_fW", "ETA_Resid", "COST_PropGap_VR", "Bridge!" + brow("供給 GW 合計").split("!")[1])}
+</section>""")
+
     S.append(f"""<section id="s2"><h2><span class="no">②</span>每 VR 等值 GW：營收 vs 全成本（2025–2030）</h2>
 <div class="legend"><span><i style="background:var(--rev)"></i>營收淨額（截頂後；扣雲端平台抽成）</span><span><i style="background:var(--cost)"></i>全成本（算力＋非算力＋股權報酬，現金口徑）</span><span><b style="color:var(--gap)">紅</b>／<b style="color:var(--pos)">綠</b>字＝差額</span><span>2025 長條截斷，白字為實值</span></div>
 <div class="cw">{chart_gw(V)}</div>
@@ -832,7 +937,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <div class="tw"><table><thead>{head}</thead><tbody>
 {"".join(srow(lab, sc) for lab, sc in combos)}
 </tbody></table></div>
-<div class="must"><b>「不需外部資金」要成立，必須：</b>
+<div class="must"><b>「按目前已到位融資與基準支出路徑，不出現最低現金缺口」要成立，必須：</b>
 <ol><li><b>2029 年後新增算力的支出不超過餘裕</b>（最大的前提；模型只計已簽合約，未建「新簽合約」機制）。若營收不變，2029 年新增算力支出超過 {n("COST_GapCash", 2029, "f1")}、2030 年超過 {n("COST_GapCash", Y, "f1")}（＝當年差額），差額就轉負；新增支出累計超過 {n("FND_Headroom", Y, "f1")}（2030 年現金餘裕；且各年不超過當年餘裕：2028 年 {n("FND_Headroom", 2028, "f1")}、2029 年 {n("FND_Headroom", 2029, "f1")}），才需要外部資金。對照：供給 GW 2028 → 2030 由 {n("CMP_SupplyGW", 2028, "f1")} 降到 {n("CMP_SupplyGW", Y, "f1")}，營收淨額卻由 {n("REV_NetCapped", 2028, "f1")} 增到 {n("REV_NetCapped", Y, "f1")}。</li>
 <li><b>API 需求成長與價格彈性不同時落在下緣</b>：兩者同時取下緣 → 2030 差額 {n("COST_PropGap_VR", Y, "sf1", "combo1")}、累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "combo1")}；再加合約價 20、爬坡 1 年 → {n("FND_ExtNeedCum", Y, "f1", "combo4")}（首次缺口 {n("FND_FirstGapYear", None, "yt", "combo4")}）。</li>
 <li><b>2026 年的 ${n("FND_Committed", 2026, "f0")}B 已交割</b>（Series G／H 為公司新聞稿與律所公告，多個獨立來源）。</li></ol></div>
