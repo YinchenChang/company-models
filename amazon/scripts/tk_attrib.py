@@ -1,6 +1,6 @@
 # MAG v0.2.1：Tokenomics 同步的目標價變動拆解（工作單 step 5）。數值一律取自 Excel（LibreOffice 開啟重算；三情境以「情境選擇」切換）。
 # 四步依序累加，加總＝總變動：
-#   ① 換快照（k 固定為舊值、C10 速度舊值）　② k 隨成本重算　③ C10 重解　④ 上限檢查（新增 P×Q 第五列等；應為 0）
+#   ① 換快照（k 固定為舊值、C10 速度舊值）　② k 隨成本重算　③ C10 重解　（Alphabet：④ 層級費用線依新營收重算）　最後一步 上限檢查（新增 P×Q 第五列等；應為 0）
 # 起點（v0.2）＝舊成品 xlsx；終點＝本 repo 目前資料。步驟用暫存副本的 company.json 變體建 Excel（不動 repo 檔案）。
 # 用法：python3 scripts/tk_attrib.py --old dist/舊版.xlsx --k-old low,base,high:... （見下）--json out.json
 #   --old       舊版成品 .xlsx
@@ -11,8 +11,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT); sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from uno_q import Workbook
 IN, VA, AI = '輸入與假設', '評價_DCF與目標價', 'AI增量報酬'
-ap = argparse.ArgumentParser(); ap.add_argument('--old', required=True); ap.add_argument('--kold', required=True); ap.add_argument('--pace-old', type=float, required=True); ap.add_argument('--json')
+ap = argparse.ArgumentParser(); ap.add_argument('--old'); ap.add_argument('--kold'); ap.add_argument('--pace-old', type=float); ap.add_argument('--read', help='只讀這個 xlsx 的三情境數值並印出 JSON（不做拆解）'); ap.add_argument('--pace-old-high', type=float, help='積極情境速度舊值（與基準連動的公司才給）'); ap.add_argument('--corp-old', help='Alphabet 層級費用線 EBITDA 舊值（JSON 陣列）；給了才加「層級費用線重算」一步'); ap.add_argument('--json')
 a = ap.parse_args()
+ROIC_COL = 'CDEFG'[(json.load(open(os.path.join(ROOT, 'company.json'), encoding='utf-8')).get('capexModel') or {}).get('roicYear', 3)]  # 對外 AI ROIC 的錨定期欄（capexModel.roicYear；Microsoft 為 2）
 
 
 def variant(tmp, name, edit):
@@ -33,7 +34,7 @@ def read(x):
         t1, t2 = wb.cell(VA, '加權目標價'), wb.cell(VA, '讀法 2｜加權目標價')
         for s in (1, 2, 3):
             wb.set(sel, s)
-            try: roic = wb.get(wb.cell(AI, '對外 AI ROIC（主值）', col='F')); be = wb.get(wb.cell(AI, '打平 k（', col='C', prefix=True)); k = wb.get(wb.cell(AI, '目前採用 k'))
+            try: roic = wb.get(wb.cell(AI, '對外 AI ROIC（主值）', col=ROIC_COL)); be = wb.get(wb.cell(AI, '打平 k（', col='C', prefix=True)); k = wb.get(wb.cell(AI, '目前採用 k'))
             except KeyError: roic = be = k = None
             out[s] = {'t1': wb.get(t1), 't2': wb.get(t2), 'roic': roic, 'be': be, 'k': k}
         wb.set(sel, s0)
@@ -51,6 +52,11 @@ def strip_pq(co, d):  # 移除 P×Q 名稱（快照與清單），Excel 即無�
 
 def set_pace(co, v):
     co['scenarios']['mwPath']['pace']['base'] = v; co['scenarios']['mw31']['base'] = v; co['defaults']['mw31'] = v
+    if a.pace_old_high is not None: co['scenarios']['mwPath']['pace']['high'] = a.pace_old_high; co['scenarios']['mw31']['high'] = a.pace_old_high
+
+
+def set_corp(co):
+    if a.corp_old: next(l for l in co['defaults']['legacyBiz']['lines'] if l['key'] == 'corp')['ebitda'] = json.loads(a.corp_old)
 
 
 def fix_k(co):
@@ -58,13 +64,16 @@ def fix_k(co):
     for sd in ('kLong', 'kSpot'): co['pricing'][sd] = ko[sd]
 
 
+if a.read: print(json.dumps(read(a.read), ensure_ascii=False)); sys.exit(0)
+if not (a.old and a.kold and a.pace_old): sys.exit('需要 --old --kold --pace-old（或只用 --read）')
 with tempfile.TemporaryDirectory() as tmp:
     final = json.load(open(os.path.join(ROOT, 'company.json'), encoding='utf-8'))['scenarios']['mwPath']['pace']['base']
     steps = [('v0.2', None),
-             ('① 換快照（k、C10 固定）', lambda: variant(tmp, 's1', lambda co, d: (fix_k(co), set_pace(co, a.pace_old), strip_pq(co, d)))),
-             ('② k 隨成本重算', lambda: variant(tmp, 's2', lambda co, d: (set_pace(co, a.pace_old), strip_pq(co, d)))),
-             ('③ C10 重解', lambda: variant(tmp, 's3', lambda co, d: strip_pq(co, d))),
-             ('④ 上限檢查層（新增第五列）', lambda: variant(tmp, 's4', lambda co, d: None))]
+             ('① 換快照（k、C10 固定）', lambda: variant(tmp, 's1', lambda co, d: (fix_k(co), set_pace(co, a.pace_old), set_corp(co), strip_pq(co, d)))),
+             ('② k 隨成本重算', lambda: variant(tmp, 's2', lambda co, d: (set_pace(co, a.pace_old), set_corp(co), strip_pq(co, d)))),
+             ('③ C10 重解', lambda: variant(tmp, 's3', lambda co, d: (set_corp(co), strip_pq(co, d))))]
+    if a.corp_old: steps.append(('④ 層級費用線依新營收重算', lambda: variant(tmp, 's3b', lambda co, d: strip_pq(co, d))))
+    steps.append((f"{'⑤' if a.corp_old else '④'} 上限檢查層（新增第五列）", lambda: variant(tmp, 's4', lambda co, d: None)))
     res = []
     for nm, f in steps:
         x = a.old if f is None else f()
@@ -73,9 +82,9 @@ with tempfile.TemporaryDirectory() as tmp:
     for s, sn in ((1, '保守'), (2, '基準'), (3, '積極')):
         for key, rd in (('t1', '讀法 1'), ('t2', '讀法 2')):
             vals = [r[1][s][key] for r in res]
-            d = [vals[i + 1] - vals[i] for i in range(4)]
-            rows.append({'scenario': sn, 'reading': rd, 'v02': vals[0], 'steps': d, 'new': vals[4], 'total': vals[4] - vals[0], 'residual': (vals[4] - vals[0]) - sum(d)})
-    meta = {sn: {'old': {k: res[0][1][s][k] for k in ('roic', 'be', 'k')}, 'new': {k: res[4][1][s][k] for k in ('roic', 'be', 'k')}} for s, sn in ((1, '保守'), (2, '基準'), (3, '積極'))}
+            n = len(vals) - 1; d = [vals[i + 1] - vals[i] for i in range(n)]
+            rows.append({'scenario': sn, 'reading': rd, 'v02': vals[0], 'steps': d, 'new': vals[-1], 'total': vals[-1] - vals[0], 'residual': (vals[-1] - vals[0]) - sum(d)})
+    meta = {sn: {'old': {k: res[0][1][s][k] for k in ('roic', 'be', 'k')}, 'new': {k: res[-1][1][s][k] for k in ('roic', 'be', 'k')}} for s, sn in ((1, '保守'), (2, '基準'), (3, '積極'))}
     out = {'steps': [r[0] for r in res], 'rows': rows, 'meta': meta, 'paceNew': final}
     for r in rows: print(f"{r['scenario']} {r['reading']}: {r['v02']:.2f} → {r['new']:.2f}（{r['total']:+.2f}）｜" + '｜'.join(f'{x:+.2f}' for x in r['steps']))
     if a.json: json.dump(out, open(a.json, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
