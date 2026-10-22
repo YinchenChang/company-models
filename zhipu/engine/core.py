@@ -43,7 +43,7 @@ _patch_pycel_defined_names()
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 MODEL_DIR = REPO_ROOT / "model"
-MODEL_NAME_RE = re.compile(r"^\d{8}_Zhipu_v\d+(\.\d+)?\.xlsx$")
+MODEL_NAME_RE = re.compile(r"^\d{8}_Zhipu_v\d+(\.\d+)*\.xlsx$")
 _REF_RE = re.compile(
     r"^(?:'(?P<q>(?:[^']|'')+)'|(?P<u>[^!']+))!"
     r"\$?(?P<c1>[A-Z]+)\$?(?P<r1>\d+)(?::\$?(?P<c2>[A-Z]+)\$?(?P<r2>\d+))?$"

@@ -148,7 +148,7 @@ def test_no_external_references(page):
 
 def test_required_sections(page):
     """chat 端要求的各節都在。"""
-    for h in ("命題與一句話結論（兩種讀法）", "主要風險／與實際觀察的落差", "市值對照", "與 OpenAI v0.6 並排（美元）", "2028 年後不再收斂", "可信度低", "僅供參考"):
+    for h in ("命題與一句話結論（兩種讀法）", "主要風險／與實際觀察的落差", "市值對照", "與 OpenAI v0.6.2 並排（美元）", "2028 年後不再收斂", "可信度低", "僅供參考"):
         assert h in page, f"缺少：{h}"
     assert "優於 OpenAI" not in page, "第①節不得出現『優於 OpenAI』之類讀法（Z5b V7）"
     for sid in ("SRC_ZP_540", "SRC_ZP_458", "SRC_ZP_810", "SRC_ZP_219", "SRC_ZP_220", "Compute G129"):

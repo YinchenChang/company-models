@@ -286,7 +286,7 @@ def build(wb, D, Z, snap):
     C.add("檢查：推論（截頂後）＋研發＋閒置 − 供給", "GW", {c: f"={c}«C.infcap»+{c}«C.rd»+{c}«C.idle»-{c}«C.sup»" for c in ALL}, "各期應為 0", key="ident")
     C.add("對照：研發 GW（扣除法研發算力費 ÷ 每 GW 價格）", "GW", {c: f"={c}«C.f_rd_a»/{per(c, f'{c}«C.p»')}" for c in cal},
           "D12：智譜揭露研發算力費，可作獨立對照（D10r 第一法）", key="rd_a")
-    C.add("對照：TK IF_AllocRDGW（OpenAI 規模研發 GW·年）", "GW·年", {"D": "=TK_IF_AllocRDGW"}, "Tokenomics Alloc（k ×（N_major × 家族＋N_refresh × 改版））；只並列", key="rd_tk")
+    C.add("對照：TK IF_AllocRDGW（OpenAI 規模研發 GW·年）", "GW·年", {"D": "=TK_IF_AllocRDGW"}, "Tokenomics Alloc（k ×（N_major × 家族＋N_refresh × 改版））；只並列、不驅動任何輸出。v19.0 點值 0.203（v5.26 0.0907）；v13.0 起視為區間 RNG_IF_AllocRDGW_Lo／_Hi（Checks C97–C98；使用前確認 RNG_StaleFlag＝『一致』，C99）。OpenAI 規模的物理下限，與本模型研發 GW 的口徑不同，不可互相驗證", key="rd_tk")
 
     # 十、VR 等值
     C.section("十、VR 等值換算（各族 Sol 層級每 GW 產能 ÷ VR200 Sol；同 OpenAI v0.6）")

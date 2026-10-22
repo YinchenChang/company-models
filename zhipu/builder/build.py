@@ -2,8 +2,8 @@
 """產生智譜收支模型 Excel（v0.1：README、SRC_ZP、TK_Link、OAI_Link、Inputs、Demand、Revenue、Compute、Cost、Funding、Reverse、Checks）。
 
 用法（在 zhipu/ 內）：
-  python3 builder/build.py --tk-dir <Tokenomics checkout> --oai-xlsx <OpenAI v0.6 xlsx> --out model/20261008_Zhipu_v0.1.xlsx \
-      [--base <前一版>] [--date 2026-10-08] [--oai-ref claude/openai-s6-release@e91df57]
+  python3 builder/build.py --tk-dir <Tokenomics checkout> --oai-xlsx <OpenAI CURRENT xlsx> --out model/20261008_Zhipu_v0.1.xlsx \
+      [--base <前一版>] [--date 2026-10-08] [--oai-ref main@<提交>]
   --base：前一版 xlsx；依 Excel 優先規則保留 Excel 內已改過的藍字輸入（builder/preserve.py）。
 輸出經 LibreOffice 重算後才寫到 --out（內含快取值；engine 仍會強制重算）。紀錄檔寫在 build_out/（restore_log.txt、build_summary.json）。
 
@@ -122,8 +122,8 @@ def sheet_readme(wb, D, snap, oai, date, summary):
                      "API 牌價：人民幣元／百萬 token；token：兆（T）；Coding Plan 訂閱者：萬人；智譜清言用戶：百萬人。OAI_Link 為美元（$B），不換算、不參與計算。"),
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構，重建時保留 Excel 內已改過的藍字（隱藏頁 _Defaults）。公式不含常數（E6）：單位換算、天數、月數為 Inputs 的定義常數。"),
         ("SRC_ZP", f"{summary['src']} 列（SRC_ZP_001–{summary['src']:03d}，Z1 發出、穩定不改號）；有數值者具名 SRC_ZP_nnn，有低／高者另具名 _Lo／_Hi。來源四欄為 CC 初評（builder/source_rules.py）。"),
-        ("TK_Link", f"Tokenomics {snap['version']}（{snap['file']}），master 提交 {snap['sha'][:7]}，讀取日 {date}；{summary['tk_ok']} 個具名範圍（OpenAI v0.6 的 63 名＋智譜 Z3b 的逐 token 類型單位成本 9 名＋Z5b 的 IF_OpexGW、IF_DeprLifeIT）＋{summary['tk_table']} 列以列標籤讀表（狀態『{TABLE_NOTE}』，只供對照）。"),
-        ("OAI_Link", f"OpenAI v0.6 Excel（{oai['file']}，{oai['ref']}；SHA-256 {oai['sha'][:16]}…）的命題輸出逐年值（美元）；只被 Checks 與 HTML 引用（規格 D26）。"),
+        ("TK_Link", f"Tokenomics {snap['version']}（{snap['file']}），master 提交 {snap['sha'][:7]}，讀取日 {date}；{summary['tk_ok']} 個具名範圍（OpenAI v0.6 的 63 名＋智譜 Z3b 的逐 token 類型單位成本 9 名＋Z5b 的 IF_OpexGW、IF_DeprLifeIT＋v0.1.1 的 RNG_ 區間與時效旗標 3 名）＋{summary['tk_table']} 列以列標籤讀表（狀態『{TABLE_NOTE}』，只供對照）。"),
+        ("OAI_Link", f"OpenAI Excel（{oai['file']}，{oai['ref']}；SHA-256 {oai['sha'][:16]}…）的命題輸出逐年值（美元）；只被 Checks 與 HTML 引用（規格 D26）。"),
         ("Inputs", f"{summary['inp']} 列（INP_001 起，依 data/zhipu_inputs.yaml 的鍵發號）；每列附標記、依據、區間理由；Analogy／Assumed 一律給區間。"),
         ("Demand", "需求：①API 按量計費 token（2025、1H26＝營收 ÷ 有效單價倒推；2H26 起任務數 × 每任務 token × 價格反應）②GLM Coding Plan 訂閱者（方案別）× 每訂閱者 token ③智譜清言（免費）用戶 × 任務 × 每任務 token；"
                    "輸出 DEM_Tok_*（層級 Sol／Luna × 付費／免費）。本地化部署不耗智譜算力，不進 Demand（D4）。"),
@@ -249,8 +249,8 @@ def sheet_tk(wb, snap, date):
 
 def sheet_oai(wb, oai, date):
     ws = wb.create_sheet("OAI_Link")
-    title(ws, "OAI_Link — OpenAI v0.6 命題輸出快照（美元；只被 Checks 與 HTML 引用，規格 D26）",
-          "值（藍字）由 builder 從 OpenAI v0.6 Excel 的具名範圍讀出（LibreOffice 重算後快取值）。本頁不參與任何計算；test_builder 掃描其他頁公式不得含 OAI_。",
+    title(ws, "OAI_Link — OpenAI 命題輸出快照（版本見檔名列）（美元；只被 Checks 與 HTML 引用，規格 D26）",
+          "值（藍字）由 builder 從 OpenAI Excel（main 上 openai/model/CURRENT）的具名範圍讀出（LibreOffice 重算後快取值）。本頁不參與任何計算；test_builder 掃描其他頁公式不得含 OAI_。",
           "比較問題：同樣以 token 計價、單價只有美國前沿模型幾分之一、算力用國產晶片的中國模型公司，每 GW 經濟與 OpenAI 差多少（Z5 HTML 並排）。")
     meta = [("OpenAI Excel 檔案", oai["file"], "OAI_File"), ("SHA-256", oai["sha"], "OAI_SHA256"), ("來源分支與提交", oai["ref"], "OAI_Ref"), ("讀取日期", date, "OAI_ReadDate")]
     for i, (lab, v, name) in enumerate(meta):
@@ -365,7 +365,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tk-dir", required=True, type=Path)
     ap.add_argument("--oai-xlsx", required=True, type=Path)
-    ap.add_argument("--oai-ref", default="claude/openai-s6-release@e91df57")
+    ap.add_argument("--oai-ref", default="main@f645e19")
     ap.add_argument("--out", required=True, type=Path)
     ap.add_argument("--base", type=Path)
     ap.add_argument("--date", default="2026-10-08")

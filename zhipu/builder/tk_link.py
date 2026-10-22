@@ -1,4 +1,4 @@
-"""Tokenomics 快照讀取（沿用 OpenAI v0.6 的 63 名；智譜 Z2 另以列標籤讀 Cap_In／Price_Frontier 的 GLM 列與中國合格前緣）。
+"""Tokenomics 快照讀取（沿用 OpenAI v0.6 的 63 名；v0.1.1 起取 Tokenomics v19.0，另加 RNG_ 3 名；智譜 Z2 另以列標籤讀 Cap_In／Price_Frontier 的 GLM 列與中國合格前緣）。
 
 - 值取自 Tokenomics master 的 model/CURRENT，逐名讀出寫入 TK_Link；不用 Excel 外部連結。
 - 列序：P1 原 37 名（列位不變）→ SRC_DEM_010–013（＋013 低／高）→ Block 6（IF_Alloc* 7 名）→ S1 新增（r6 下游需要）→ S4 新增（IF_CapexTotal）→ 智譜 Z3b 新增（IF_CostPre／Cache／Dec_*，9 名）→ 智譜 Z5b 新增（IF_OpexGW、IF_DeprLifeIT）。
@@ -6,6 +6,7 @@
 """
 from __future__ import annotations
 
+import hashlib
 import re
 import subprocess
 from pathlib import Path
@@ -33,6 +34,8 @@ S4_NAMES = ["IF_CapexTotal"]
 Z3B_PATTERNS = [r"IF_Cost(Pre|Cache|Dec)_(Luna|Sol|Astra)"]
 # 智譜 Z5b（V2）新增：自有算力每 GW 營運費用（不含折舊）與 IT 折舊年限，列於最後
 Z5B_NAMES = ["IF_OpexGW", "IF_DeprLifeIT"]
+# 智譜 v0.1.1（TK 同步 v19.0）新增（工程類）：研發算力 IF_AllocRDGW 的區間端點與時效旗標（v13.0 起視為區間；使用前確認 RNG_StaleFlag＝『一致』）
+RNG_NAMES = ["RNG_IF_AllocRDGW_Lo", "RNG_IF_AllocRDGW_Hi", "RNG_StaleFlag"]
 PENDING_NOTE = "待 Tokenomics 提供"
 TABLE_NOTE = "讀表（非具名）"
 
@@ -98,6 +101,7 @@ def read_snapshot(tk_dir: Path):
     for pat in Z3B_PATTERNS:
         chosen += sorted(n for n in names if re.fullmatch(pat, n))
     chosen += [n for n in Z5B_NAMES if n in names]
+    chosen += [n for n in RNG_NAMES if n in names]
     rows, seen = [], set()
     for n in chosen:
         if n in seen:
@@ -110,7 +114,10 @@ def read_snapshot(tk_dir: Path):
             vals = [ws.cell(r1, k).value for k in range(ci(c1), ci(c2) + 1)]
         else:
             vals = [ws[f"{c1}{r1}"].value]
-        if sheet == "Interface":
+        if n.startswith("RNG_"):
+            label = f"{ws.cell(r1, 1).value} {ws.cell(r1, 2).value or ''}".strip()
+            unit = "GW·年" if n.endswith(("_Lo", "_Hi")) else "文字"
+        elif sheet == "Interface":
             label = re.sub(r"[\s　]*\[IF_[^\]]*\]\s*$", "", str(ws.cell(r1, 1).value))
             unit = ws.cell(r1, 2).value or ""
         elif sheet == "L1":
@@ -123,9 +130,10 @@ def read_snapshot(tk_dir: Path):
         rows.append(dict(name=n, kind=n.split("_")[0], label=label, unit=unit, values=vals, status="OK"))
     present = {r["name"] for r in rows}
     # 工作單要求、但 Tokenomics 現行版沒有者：逐名列入、值留空（E1）
-    wanted = SRC_DEM + BLOCK6 + EXTRA_NAMES + S4_NAMES + [f"IF_Cost{k}_{t}" for k in ("Pre", "Cache", "Dec") for t in ("Luna", "Sol", "Astra")] + Z5B_NAMES
+    wanted = SRC_DEM + BLOCK6 + EXTRA_NAMES + S4_NAMES + [f"IF_Cost{k}_{t}" for k in ("Pre", "Cache", "Dec") for t in ("Luna", "Sol", "Astra")] + Z5B_NAMES + RNG_NAMES
     pending = [dict(name=n, kind=n.split("_")[0], label="", unit="", values=[], status=PENDING_NOTE) for n in wanted if n not in present]
     hdr_gen = [wb["Interface"].cell(4, k).value for k in range(3, 18)]
     hdr_cost = [wb["Interface"].cell(5, k).value for k in range(3, 18)]
     return dict(file=current, version=f"v{m.group(1)}" if m else "?", sha=sha, rows=rows, pending=pending,
-                hdr_gen=hdr_gen, hdr_cost=hdr_cost, table=read_table_rows(wb))
+                hdr_gen=hdr_gen, hdr_cost=hdr_cost, table=read_table_rows(wb),
+                file_sha256=hashlib.sha256(path.read_bytes()).hexdigest())

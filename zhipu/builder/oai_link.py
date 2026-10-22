@@ -1,4 +1,4 @@
-"""OAI_Link：OpenAI v0.6 命題輸出快照（規格 D26）。
+"""OAI_Link：OpenAI 命題輸出快照（規格 D26；v0.1.1 起取 OpenAI v0.6.2）。
 
 讀 OpenAI v0.6 Excel（LibreOffice 重算後的快取值），逐名取 FY2025–FY2030 六個值寫入 OAI_Link 頁；記錄檔名與 SHA-256。
 只被 Checks 與 HTML 引用（test_builder 掃描：其他頁的公式不得含 OAI_）。數值為美元（$B 或 $B/GW），不在本模型換算或計算。

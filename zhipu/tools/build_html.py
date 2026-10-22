@@ -414,7 +414,7 @@ def chart_cash(V: Values) -> str:
 
 
 def chart_vs(V: Values) -> str:
-    """每 VR 等值 GW 差額（$B）：智譜 vs OpenAI v0.6。"""
+    """每 VR 等值 GW 差額（$B）：智譜 vs OpenAI v0.6.2。"""
     W, H, L, R, T, B = 640, 280, 48, 10, 30, 34
     zp = [V.get("COST_PropGap_VR_USD", y) for y in YEARS]
     oa = [V.get("OAI_COST_PropGap_VR", y) for y in YEARS]
@@ -495,6 +495,13 @@ def latest_src_date(model: Path) -> str:
     return max(ds) if ds else "—"
 
 
+def checks_range(model: Path) -> str:
+    """Checks 頁 A 欄的檢查編號範圍（讀 Excel，不寫死；比照 OpenAI v0.6.2）。"""
+    ws = openpyxl.load_workbook(model, read_only=True)["Checks"]
+    ids = [int(r[0][1:]) for r in ws.iter_rows(values_only=True) if isinstance(r[0], str) and re.fullmatch(r"C\d+", r[0])]
+    return f"C{min(ids):02d}–C{max(ids)}" if ids else "—"
+
+
 def render(V: Values, model: Path, ver: str, stamp: str, cfg: dict) -> str:
     n = V.n
     Y = 2030
@@ -509,7 +516,7 @@ def render(V: Values, model: Path, ver: str, stamp: str, cfg: dict) -> str:
     S = []
     # ── 標頭 ──
     S.append(f"""<header><h1>智譜收支模型 v{ver}｜一頁摘要</h1>
-<div class="meta">{date_disp}｜Excel <code>{html.escape(model.name)}</code>｜Tokenomics {html.escape(str(tk_ver))}（<code>{html.escape(str(tk_sha))[:7]}</code>）｜OpenAI v0.6 對照（OAI_Link）｜單位 RMB 億（人民幣億元）、與 OpenAI 並排時 $B，曆年制｜數字游標停留可見 Excel 位置；手機上圖表可左右滑動</div></header>""")
+<div class="meta">{date_disp}｜Excel <code>{html.escape(model.name)}</code>｜Tokenomics {html.escape(str(tk_ver))}（<code>{html.escape(str(tk_sha))[:7]}</code>）｜OpenAI v0.6.2 對照（OAI_Link）｜單位 RMB 億（人民幣億元）、與 OpenAI 並排時 $B，曆年制｜數字游標停留可見 Excel 位置；手機上圖表可左右滑動</div></header>""")
 
     # ── ① 命題與結論 ──
     S.append(f"""<section id="s1"><h2><span class="no">①</span>命題與一句話結論（兩種讀法）</h2>
@@ -664,9 +671,9 @@ Coding Plan 額度使用率與 Coding Plan 輸出占比不列為翻轉點：它�
                     cells.append("<td>—</td>")
             c = (cls + (" sep" if k == 0 else "")).strip()
             tb.append(f'<tr class="{c}"><td>{lab_ if k == 0 else ""}　{who}</td>{"".join(cells)}</tr>')
-    S.append(f"""<section id="s9"><h2><span class="no">⑨</span>與 OpenAI v0.6 並排（美元）</h2>
+    S.append(f"""<section id="s9"><h2><span class="no">⑨</span>與 OpenAI v0.6.2 並排（美元）</h2>
 <div class="must"><b>讀法提醒</b>：智譜每 VR 等值 GW 營收（2030 {n("COST_PropRev_VR_USD", Y, "f1")} $B）約為 OpenAI（{n("OAI_COST_PropRev_VR", Y, "f1")} $B）的 10 倍，經濟上不合理。招股章程更正（P1）後 η 已由約 9.5 降到 {n("CMP_Eta1H26", None, "f1")}，但供給 GW 幾乎不變（2030 {n("CMP_SupplyGW", Y, "f3")} GW），10 倍仍在——所以不能只歸因於 η：智譜的 GW 分母是「算力費 ÷ 租價」推得，而 1H26 的 token 量以 Tokenomics 物理換算所需的 GW 是其中推論部分的 {n("CMP_Eta1H26", None, "f1")} 倍（η），再乘上機隊 VR 等值係數 {n("Cost!K67", Y, "f3")}，分母可能偏小。因此<b>並排以覆蓋率與現金流為主讀，每 GW 金額僅供參考</b>，不能據此說哪一家每 GW 經濟較好。</div>
-<div class="legend"><span><i style="background:var(--gap)"></i>智譜每 VR 等值 GW 差額（僅供參考）</span><span><i style="background:var(--oai)"></i>OpenAI v0.6</span></div>
+<div class="legend"><span><i style="background:var(--gap)"></i>智譜每 VR 等值 GW 差額（僅供參考）</span><span><i style="background:var(--oai)"></i>OpenAI v0.6.2</span></div>
 <div class="cw">{chart_vs(V)}</div>
 <div class="tw"><table><thead><tr><th>項目</th>{hd}</tr></thead><tbody>
 {"".join(tb)}
@@ -695,7 +702,7 @@ Coding Plan 額度使用率與 Coding Plan 輸出占比不列為翻轉點：它�
 <dt>Tokenomics</dt><dd>{html.escape(str(tk_ver))}（<code>{html.escape(str(tk_file))}</code>），master <code>{html.escape(str(tk_sha))}</code>，讀取日 {html.escape(str(tk_date))}</dd>
 <dt>OpenAI 對照</dt><dd><code>{html.escape(str(V.get("OAI_File")))}</code>（{html.escape(str(V.get("OAI_Ref")))}；SHA-256 <code>{html.escape(str(V.get("OAI_SHA256")))[:12]}…</code>）</dd>
 <dt>資料日期</dt><dd>SRC_ZP 最新文件日期 {latest_src_date(model)}（含招股章程 2025-12-30 擷取 SRC_ZP_611–1054）；股價 2026-10-07；匯率 2026-09-28 中間價；模型日期 {date_disp}</dd>
-<dt>檢查</dt><dd>CHK_Errors＝{n("CHK_Errors", None, "f0")}（Checks C01–C95；WARN：ARR 差距兩項、η 範圍兩項、η 上調一項）</dd>
+<dt>檢查</dt><dd>CHK_Errors＝{n("CHK_Errors", None, "f0")}（Checks {checks_range(model)}；WARN：ARR 差距兩項、η 範圍一項（1H26）、η 上調一項）</dd>
 <dt>期間與單位</dt><dd>FY2025–FY2030 曆年制，2025 為實際校準年、1H26 為第二個實際點；RMB 億；GW＝IT 關鍵電力；VR 等值＝以 VR200 Sol 層級每 GW 產能換算</dd>
 </dl>
 <p class="note"><span class="tag">Verified</span>已查核原文 <span class="tag">Interested-party</span>公司或利害關係方說法 <span class="tag">Analogy</span>類比推估（附區間） <span class="tag">Assumed</span>假設（附區間） <span class="tag">Derived</span>由其他數字推得 <span class="tag">Decision</span>建模決定。公司原始數據在 SRC_ZP、算力物理取自 Tokenomics（TK_Link）、假設在 Inputs、OpenAI 對照在 OAI_Link。</p>
