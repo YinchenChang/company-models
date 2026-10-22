@@ -953,7 +953,7 @@ if PMW_REV == 'tkAnchor':
     qrow('ann', "Q1｜OCI 營收年化（最新季 × 4）", "US$bn", f"={OPENREV}", NUM, "已實現實際數（10-Q 核閱數）[Interested-party]；含非 AI 的 OCI（資料庫、一般運算、多雲資料庫等）")
     qrow('svc', "Q1｜評價日已連網 MW-IT", "MW", f"={OPEN}", NUM0, FLT['openMwNote'])
     qrow('bo', "Q1｜期初等效計費 MW（模型校準值，目前情境）", "MW", f"={MW0}", NUM0, "＝Q1 OCI 年化 ÷ 首期每 MW 年收入（對齊已實現實際數的校準，非推價格）；" + _EQN)
-    qrow('f', "模型隱含：期初等效計費 MW ÷ 評價日已連網 MW", "%", f"={_q['bo']}/{_q['svc']}", PCT, "超過 100% 表示模型把 Q1 營收全數歸給 AI 計費、且價格取 Tokenomics 錨 × k，導致可計費 MW 比已連網 MW 多——這是本驗證要解釋的現象，不回頭改 k")
+    qrow('f', "模型隱含：期初等效計費 MW ÷ 評價日已連網 MW", "%", f"={_q['bo']}/{_q['svc']}", PCT, "超過 100% 表示模型把 Q1 營收全數歸給 AI 計費、且價格取 Tokenomics 錨 × k，導致期初等效計費 MW 比已連網 MW 多——這是本驗證要解釋的現象，不回頭改 k")
     qrow('rSvc', "Q1 實現每 MW 年收入（÷ 已連網 MW）", "US$m/MW", f"={_q['ann']}/{_q['svc']}*1000", note="Q1 OCI 年化 ÷ 評價日已連網 MW-IT（口徑不明者 ÷1.2）")
     qrow('rBo', "Q1 實現每 MW 年收入（÷ 模型期初等效計費 MW）", "US$m/MW", f"={_q['ann']}/{_q['bo']}*1000", note="與模型首期每 MW 年收入只差期初等效計費 MW 的四捨五入（因校準所致，非獨立證據）")
     qrow('cg', "Q1｜CPU＆GPU 子項年化", "US$bn", f"={QK['cpuGpuQ']}*4", NUM, QK['cpuGpuNote'], font=BLUE)
@@ -993,10 +993,10 @@ if PMW_REV == 'tkAnchor':
     frow('i', "(i) 非 AI 營收：OCI 營收中不屬 AI 計費的部分", "US$m/MW", lambda j, L: f"={R_}*{L}{AR['q1b_n']}", note="＝Q1 實現 × n")
     frow('end', "終點：Q1 實現每 MW 年收入", "US$m/MW", lambda j, L: f"={L}{AR['q1b_sub']}+{L}{AR['q1b_iv']}+{L}{AR['q1b_i']}", bold=True)
     frow('chk', "核對：終點 − Q1 實現", "US$m/MW", lambda j, L: f"={L}{AR['q1b_end']}-{R_}", '0.000000', "應為 0（誤差 < 0.01）")
-    frow('f', "隱含期初可計費 ÷ 已連網（f；Oracle 自身合約 k）", "%", lambda j, L: f"={R_}*(1-{L}{AR['q1b_n']})/{L}{AR['q1b_sub']}", PCT, "＝AI 營收 ÷ 小計；≤ 100% 才合理（計費 MW 不可能超過已連網）")
+    frow('f', "隱含期初等效計費 ÷ 已連網（f；Oracle 自身合約 k）", "%", lambda j, L: f"={R_}*(1-{L}{AR['q1b_n']})/{L}{AR['q1b_sub']}", PCT, "＝AI 營收 ÷ 小計；≤ 100% 才合理（計費 MW 不可能超過已連網）")
     frow('bo', "隱含期初等效計費 MW（Oracle 自身合約 k）", "MW", lambda j, L: f"={L}{AR['q1b_f']}*{_q['svc']}", NUM0)
-    frow('fM', "隱含期初可計費 ÷ 已連網（f；模型 k）", "%", lambda j, L: f"={R_}*(1-{L}{AR['q1b_n']})/({_q['a0']}*{_q['mK']})", PCT, "若價格取模型 k：f > 100% 代表 Q1 營收無法由已連網 MW 在模型價格下解釋，需要非 AI 營收或更高的價格")
-    frow('fM2', "隱含期初可計費 ÷ 已連網（f；Oracle 自身合約 k，設施口徑）", "%", lambda j, L: f"={R_}*(1-{L}{AR['q1b_n']})/({_q['a0']}*{_q['kO2']})", PCT)
+    frow('fM', "隱含期初等效計費 ÷ 已連網（f；模型 k）", "%", lambda j, L: f"={R_}*(1-{L}{AR['q1b_n']})/({_q['a0']}*{_q['mK']})", PCT, "若價格取模型 k：f > 100% 代表 Q1 營收無法由已連網 MW 在模型價格下解釋，需要非 AI 營收或更高的價格")
+    frow('fM2', "隱含期初等效計費 ÷ 已連網（f；Oracle 自身合約 k，設施口徑）", "%", lambda j, L: f"={R_}*(1-{L}{AR['q1b_n']})/({_q['a0']}*{_q['kO2']})", PCT)
     ws.cell(row=r, column=1, value="讓 f ≤ 100% 所需的最低非 AI 占比（模型 k）").font = BLACK
     ws.cell(row=r, column=2, value="%").font = SMALL
     c = ws.cell(row=r, column=3, value=f"=MAX(0,1-{_q['a0']}*{_q['mK']}/{R_})"); c.number_format = PCT; c.border = BOX
@@ -2655,14 +2655,13 @@ _rows = [
 ]
 RV_R0 = r  # v4.3：單一槓桿快照第一列（「摘要」頁引用）
 if AR:  # v0.3.1：現價所需 k_長約（外部驗收採納 4b-iv）——插在「每 MW 年收入」列之後，Excel 活公式（讀同頁快照列與『每MW收入_錨定』）
-    _rows.append(("現價所需 k_長約（加權目標價口徑；«PL»）", "KREQT", "KREQT", "KREQT", "主列：加權目標價＝現價所需每 MW 年收入（上方對照列）換成 k_長約，與摘要價格軸區間同口徑；對照 Oracle 自身合約 k " + "／".join(f"{x:.2f}" for x in CO['pricing']['anchorMultiple']['long']['ownContract']['values']) + "（未證實，『每MW收入_錨定』A 區）"))
-    _rows.append(("現價所需 k_長約（純 DCF 口徑；«PL»）", "KREQ", "KREQ", "KREQ", "＝（現價所需每 MW 年收入 ÷ 在役加權錨 − 隨需占比 × k_現貨）÷ 長約占比；對照 Oracle 自身合約 k " + "／".join(f"{x:.2f}" for x in CO['pricing']['anchorMultiple']['long']['ownContract']['values']) + "（未證實，『每MW收入_錨定』A 區）"))
+    _rows.append(("現價所需 k_長約（加權目標價口徑；«PL»）", "KREQT", "KREQT", "KREQT", "主列：建置時以 Excel 數值求解（scripts/rv_solve.py：逐步調 k_長約、跑完整模型，k 同時改變期初等效計費 MW，不能線性換算）直到加權目標價＝現價；與摘要價格軸區間同口徑；對照 Oracle 自身合約 k " + "／".join(f"{x:.2f}" for x in CO['pricing']['anchorMultiple']['long']['ownContract']['values']) + "（未證實，『每MW收入_錨定』A 區）"))
+    _rows.append(("現價所需 k_長約（純 DCF 口徑；«PL»）", "KREQ", "KREQ", "KREQ", "同上數值求解，目標改為 DCF 每股＝現價；不含 EV/EBITDA 腿；對照 Oracle 自身合約 k " + "／".join(f"{x:.2f}" for x in CO['pricing']['anchorMultiple']['long']['ownContract']['values']) + "（未證實，『每MW收入_錨定』A 區）"))
 for k, (nm, a, b, d, note) in enumerate(_rows):
     if a in ("KREQ", "KREQT"):
         ws.cell(row=r, column=1, value=nm).font = BLACK
-        _AN = "CHOOSE(" + SEL + "," + ",".join(f"'每MW收入_錨定'!$G${AR[CO['scenarios']['labels'][_k] + '｜anchor']}" for _k in ("low", "base", "high")) + ")"
-        _od, _kS = f"'每MW收入_錨定'!$C${AR['od']}", f"'每MW收入_錨定'!$C${AR['kS']}"
-        for col, f in [(2, f"='每MW收入_錨定'!$C${AR['kL']}"), (3, f"=(C{RV_R0 + (3 if a == 'KREQT' else 0)}/{_AN}-{_od}*{_kS})/(1-{_od})"), (4, f"=C{r}/B{r}-1")]:
+        _kv = rv.get('kT' if a == 'KREQT' else 'kD')  # 數值求解結果（rv_snap.json；scripts/rv_solve.py）
+        for col, f in [(2, f"='每MW收入_錨定'!$C${AR['kL']}"), (3, round(_kv, 4) if _kv is not None else "無解"), (4, f"=C{r}/B{r}-1" if _kv is not None else "無解")]:
             c = ws.cell(row=r, column=col, value=f); c.number_format = PCT if col == 4 else '0.00'; c.border = BOX
         ws.cell(row=r, column=7, value=note).font = SMALL
         r += 1; continue

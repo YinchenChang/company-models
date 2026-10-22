@@ -948,19 +948,20 @@ function reverseDcf(e, v) {
     ebs,
     grid,
     rev30: e.m.revMW[4] * (e.revScale ?? 1) * 1e3,
-    kReq: kReqQ(e, R, Rt), // v0.3.1：現價所需 k_長約（外部驗收採納 4b-iv）；非 tkAnchor 或無解為 null
+    kReq: kReqQ(e, v, (f, lo, hi, inc, key) => solve(f, lo, hi, inc, key)), // v0.3.1：現價所需 k_長約（外部驗收採納 4b-iv）；非 tkAnchor 或無解為 null
     util30: e.m.util[4] / 100,
     cost30: e.a.costMW[4] * (e.capexScale ?? 1),
     eb30: e.ebSteady
   }
 }
 
-function kReqQ(e, R, Rt) { // 現價所需 k_長約＝（現價所需每 MW 年收入 ÷ 在役加權錨 − 隨需占比 × k_現貨）÷（1 − 隨需占比）；錨取目前情境（自訂情境用預設情境）、FY31 欄
-  if (PMW_REVQ !== `tkAnchor` || !Number.isFinite(R)) return null;
+function kReqQ(e, v, solve) { // 現價所需 k_長約（數值求解，v0.3.1）：k 變動同時改變期初等效計費 MW（Q1 實際營收 ÷ 每 MW 年收入校準），不能線性換算；
+  // 把 tkScnQ 的 kLong 逐步調整、跑完整模型（與 Excel scripts/rv_solve.py 同一組上下界 0.5–3、22 次對半）。kD＝DCF 每股＝現價（純 DCF 口徑）、kT＝加權目標價＝現價（加權目標價口徑，主列）
+  if (PMW_REVQ !== `tkAnchor`) return null;
   let AM = COMPANY_DATA.pricing.anchorMultiple, sc = [`low`, `base`, `high`].includes(e.scenario) ? e.scenario : COMPANY_DATA.defaults.scenario,
-    an = tkAnchorQ(sc).anchor[4] * 1e3, od = AM.onDemandShare.base, need = e.m.revMW[4] * (e.revScale ?? 1) * 1e3 * R;
-  let f = x => (e.m.revMW[4] * (e.revScale ?? 1) * 1e3 * x / an - od * AM.spot.base) / (1 - od); // x＝所需倍數；R＝純 DCF 口徑、Rt＝加權目標價口徑（主列，與摘要價格軸句同口徑）
-  return { now: AM.long.base, req: f(R), reqT: Number.isFinite(Rt) ? f(Rt) : null }
+    runK = x => { let n = structuredClone(tkScnQ(e, sc, { kLong: x })), r = structuredClone(v), i = runFunding(n), a = runValuation(i, n, r); return { dcf: a.d.invalid ? 0 : a.d.perShare, tgt: a.call.blended } },
+    kD = solve(runK, .5, 3, !0), kT = solve(runK, .5, 3, !0, `tgt`);
+  return Number.isFinite(kD) || Number.isFinite(kT) ? { now: AM.long.base, req: Number.isFinite(kD) ? kD : null, reqT: Number.isFinite(kT) ? kT : null } : null
 }
 
 function fA(e, t, v, q) {

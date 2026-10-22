@@ -695,8 +695,8 @@ function AM({
                   [`每 MW 建置成本（US$m）`, Y(RV.cost30, 1), Number.isFinite(RV.C) ? Y(RV.cost30 * RV.C, 1) : `不可達`, Number.isFinite(RV.C) ? hA((RV.C - 1) * 100, 0) : `—`, TXQ.rvCostNote],
                   [`穩態 EBITDA 率（${PERIODS[4]}）`, hA(RV.eb30 * 100, 1), Number.isFinite(RV.Eb) ? hA(RV.Eb * 100, 1) : `不可達（>99%）`, Number.isFinite(RV.Eb) ? `${Y((RV.Eb - RV.eb30) * 100, 1)} pt` : `—`, `OCI（算力）EBITDA 率，傳統事業不動；可觀察 neocloud 區間：IREN 約 35%、CRWV 約 59%`],
                   [`（對照）加權目標價＝現價所需每 MW 年收入`, Y(RV.rev30, 1), Number.isFinite(RV.Rt) ? Y(RV.rev30 * RV.Rt, 1) : `不可達`, Number.isFinite(RV.Rt) ? hA((RV.Rt - 1) * 100, 0) : `—`, `含 EV/EBITDA ${Y(n.evEbitda,1)}x（${PERIOD_LABELS[n.evYear ?? 1]}）腿；非純反向 DCF`],
-                  ...(RV.kReq && RV.kReq.reqT != null ? [[`現價所需 k_長約（加權目標價口徑；${PERIODS[4]}）`, Y(RV.kReq.now, 2), Y(RV.kReq.reqT, 2), hA((RV.kReq.reqT / RV.kReq.now - 1) * 100, 0), `主列：加權目標價＝現價所需每 MW 年收入（上方對照列）換成 k_長約＝（所需收入 ÷ 在役加權錨 − 隨需占比 × k_現貨）÷ 長約占比，與摘要價格軸區間同口徑；對照 Oracle 自身合約 k ${COMPANY_DATA.pricing.anchorMultiple.long.ownContract.values.map(x => Y(x, 2)).join(`／`)}（未證實）`]] : []),
-                  ...(RV.kReq ? [[`現價所需 k_長約（純 DCF 口徑；${PERIODS[4]}）`, Y(RV.kReq.now, 2), Y(RV.kReq.req, 2), hA((RV.kReq.req / RV.kReq.now - 1) * 100, 0), `同上換算，所需收入取 DCF＝現價（上方第一列）；不含 EV/EBITDA 腿`]] : [])
+                  ...(RV.kReq && RV.kReq.reqT != null ? [[`現價所需 k_長約（加權目標價口徑；${PERIODS[4]}）`, Y(RV.kReq.now, 2), Y(RV.kReq.reqT, 2), hA((RV.kReq.reqT / RV.kReq.now - 1) * 100, 0), `主列：數值求解——逐步調 k_長約、跑完整模型（k 同時改變期初等效計費 MW，不能線性換算），直到加權目標價＝現價；與摘要價格軸區間同口徑；對照 Oracle 自身合約 k ${COMPANY_DATA.pricing.anchorMultiple.long.ownContract.values.map(x => Y(x, 2)).join(`／`)}（未證實）`]] : []),
+                  ...(RV.kReq && RV.kReq.req != null ? [[`現價所需 k_長約（純 DCF 口徑；${PERIODS[4]}）`, Y(RV.kReq.now, 2), Y(RV.kReq.req, 2), hA((RV.kReq.req / RV.kReq.now - 1) * 100, 0), `同上數值求解，目標改為 DCF 每股＝現價；不含 EV/EBITDA 腿`]] : [])
                 ].map((e, t) => (0, $.jsx)(`tr`, {
                   children: e.map((e, n) => (0, $.jsx)(`td`, {
                     style: {
