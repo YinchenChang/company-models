@@ -517,18 +517,19 @@ def build(ctx):
     for key, (zh, fs0, note0) in U2_OLD.items():
         C.add(f"sup_{key}_old", f"（U2 開關 0 的 v0.1 口徑）供給 GW：{zh.split('（')[0]}＝揭露 GW × IT 換算 × 爬坡", "GW", fs0,
               "v0.1 口徑：" + note0 + "；只在 Inputs u2_switch＝0 時進入供給")
-    for key in U2:
-        q = U2[key]
-        zh_ = CT[key][1].split("（")[0]
-        C.add(f"sup_{key}_disc", f"供給 GW（U2 新法）：{zh_}＝揭露 MW ÷ 1000 × IT 換算 × 爬坡 × 期間", "GW",
-              lambda i, c, q=q: f"={fill(q['mw'])}/{mw}*«itconv»*{ramp(c, fill(q['s']))}*{act(c, fill(q['s']), fill(q['e']))}",
-              "揭露容量（SRC_ANT 的 MW，Verified／Interested-party）；期間＝Inputs 起始年至結束年（U2）；u2_method＝1 時進入供給", name=f"CMP_Supply_{key.capitalize()}_Disc")
     for key, zh in (("nscale", "Nscale"), ("lambda", "Lambda")):
         C.add(f"ref_u2_{key}", f"對照（U2）：{zh} 揭露 MW ÷ 1000 vs 模型 {zh} 供給 GW（金額回推；D 欄＝揭露，E–I＝模型）", "GW",
               [f"={fill(U2[key]['mw'])}/{mw}", "=«sup_%s@E»" % key, "=«sup_%s@F»" % key, "=«sup_%s@G»" % key, "=«sup_%s@H»" % key, "=«sup_%s@I»" % key],
               "D10：GW 由金額回推並與既有揭露 GW 對照（不校準）")
         C.add(f"ref_u2_{key}_x", f"對照（U2）：{zh} 模型峰值 GW ÷ 揭露 GW", "倍", only25(f"=MAX(«ref_u2_{key}@E»:«ref_u2_{key}@I»)/«ref_u2_{key}@D»"),
               "> 1＝金額回推的 GW 大於揭露（合約價 12 偏低或『最高 86』含未計容量）", name=f"CMP_U2GWRatio_{zh}", name_cols="D")
+
+    for key in U2:
+        q = U2[key]
+        zh_ = CT[key][1].split("（")[0]
+        C.add(f"sup_{key}_disc", f"供給 GW（U2 新法）：{zh_}＝揭露 MW ÷ 1000 × IT 換算 × 爬坡 × 期間", "GW",
+              lambda i, c, q=q: f"={fill(q['mw'])}/{mw}*«itconv»*{ramp(c, fill(q['s']))}*{act(c, fill(q['s']), fill(q['e']))}",
+              "揭露容量（SRC_ANT 的 MW，Verified／Interested-party）；期間＝Inputs 起始年至結束年（U2）；u2_method＝1 時進入供給", name=f"CMP_Supply_{key.capitalize()}_Disc")
 
     # ── 解析與 Revenue 容量上限列（Cost 的解析延到 a4 末，因 a4 新增列被 a3 公式引用）
     C.resolve()
