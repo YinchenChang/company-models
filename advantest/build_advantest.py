@@ -78,8 +78,9 @@ inp("mk_soc25", "SoC 測試機市場 CY2025", "US$B", None, 6.9, None, "Interest
 inp("mk_mem25", "記憶體測試機市場 CY2025", "US$B", None, 2.1, None, "Interested-party", "同上：約 2.1", "第二來源：未找到")
 inp("mk_soc26", "SoC 測試機市場 CY2026（公司上修後）", "US$B", 10.5, 11.0, 11.5, "Interested-party", "Advantest FY2025 簡報（2026-04-27）：10.5–11.5（二手轉述，搜尋摘錄；公司原文未開啟）", "第二來源：未找到。SoC＋記憶體合計 13.0–14.5 的二手說法與 10.5+2.5、11.5+3.0 一致")
 inp("mk_mem26", "記憶體測試機市場 CY2026", "US$B", 2.5, 2.75, 3.0, "Interested-party", "Advantest：2.5–3.0（公司原文未開啟，二手摘錄）", "合計 13.0–14.5 的二手說法間接支持；第二來源：未找到")
-inp("nonai26", "非 AI SoC 測試機市場 CY2026（手機、車用、PC、工業等）", "US$B", 2.5, 3.2, 4.0, "Assumed", "無：公司不分 AI／非 AI 市場規模", "區間依 CY2025 市場 6.9 的約四成（Assumed）；影響 AI 每顆支出的校準，見 Sens")
+inp("nonai26", "非 AI SoC 測試機市場 CY2026（手機、車用、PC、工業等）", "US$B", 3.7, 4.3, 4.9, "Analogy", "AI 需求出現前的 SoC 測試機市場：Teradyne 4Q22 法說（marketbeat 逐字稿）CY2022 約 4.6、較 2021 −6%（2021 約 4.9，Derived）；Teradyne 2Q23 法說 CY2023 3.7–4.1（https://www.marketbeat.com/earnings/transcripts/86996 、/94281）。低＝CY2023 下緣 3.7，高＝CY2021 推得 4.9，基準＝兩者中點 4.3", "第二來源：Advantest FY2023 4Q Investor Note 列 SoC 測試機市場 4.3／4.0／3.3（年份標籤未能從摘錄確認，僅作數量級佐證）。搜尋過：Teradyne 4Q20／4Q22／2Q23 法說、Advantest 各季 Note 與 Investors Guide、Technavio／ResearchAndMarkets（只有增量或不一致的估計，未採）。與現在的差異：(1) 2021–22 已含早期 AI／運算（Teradyne 稱運算部分歷來僅 US$0.5–0.6B，2020）；(2) 2023 後手機大幅走弱（2020 年手機測試市場約 1.7）、車用 ADAS 與工業走強；(3) Teradyne 與 Advantest 對 TAM 的定義不同（兩家 CY2024 分別約 4.0–4.2 與 4.1，相近）；(4) 基準假設 2026 非 AI 回到 2021–23 區間的中點")
 inp("g_nonai", "非 AI SoC 市場年增", "%", 0.0, 0.04, 0.08, "Assumed", "無", "—")
+inp("eff_par", "平行測試效率提升（每年降低每加權顆所需測試支出）", "%/年", 0.05, 0.0, 0.10, "Assumed", "無：基準為 0，不納入基準（納入等於用 SEMI 預測校準）；只在 Sens 列 5%／10%", "低欄＝5%、高欄＝10%（Sens 用）；公司未揭露平行度提升")
 inp("asp_m", "高階 SoC 測試機平均單價", "US$M／台", 1.0, 1.5, 2.5, "Assumed", "無：公司不揭露台數與單價", "只影響「每百萬顆機台數」的顯示（k＝每顆支出 ÷ 單價），不影響營收與 EPS")
 for k, nm, tt, lo, hi, src in (
     ("bw", "NVIDIA Blackwell", 1.0, 0.9, 1.1, "基準世代（定義為 1.0）"),
@@ -124,7 +125,7 @@ inp("opex_var", "營業費用變動部分占營收（兩點斜率）", "%", None
 inp("opex_fix", "營業費用固定部分", "¥B", None, "=opex25-opex_var*a25_rev", None, "Derived", "FY2025 營業費用 − 變動部分 × FY2025 營收", "—")
 inp("phi", "營業費用中變動部分占比（FY2025；Sens 用）", "%", 0.35, "=opex_var*a25_rev/opex25", 0.75, "Derived", "基準＝兩點推導值；低／高 Assumed", "—")
 sec("G. 淨利、股數、匯率")
-inp("nioi", "淨利 ÷ 營業利益", "x", 0.72, "=a25_ni/a25_oi", "=g_ni/g_oi", "Derived", "基準＝FY2025 實績；高＝FY2026 指引（含 Q1 戰略投資評價益，公司稱一時性）；低 Assumed（稅率正常化）", "FY2025 Q4 含選擇權評價益約 ¥17.3B")
+inp("nioi", "淨利 ÷ 營業利益", "x", 0.72, "=a25_ni/a25_oi", "=g_ni/g_oi", "Derived", "基準＝FY2025 實績 0.752；高＝FY2026 指引隱含 0.780（含戰略投資評價益，屬一次性，不當基準，只在 Sens 列示；處理方式同台積電模型的一次性利益）；低 Assumed（稅率正常化）", "FY2025 Q4 含選擇權評價益約 ¥17.3B")
 inp("shares", "股數（指引淨利 ÷ 指引 EPS）", "百萬股", None, "=g_ni/g_eps*1000", None, "Derived", "660.0B÷911.64＝約 724.0M", "FY2025 加權平均約 728.6M（淨利 375.4B÷515.15）")
 inp("fx", "匯率", "¥/US$", 140, 150, 160, "Interested-party", "公司 FY2026 假設：第二季起 ¥150（Q1 FY26 法說；公司原文未開啟）", "第二來源：未找到。FY2025 實績不換匯；只用於把美元市場換成日圓營收")
 sec("H. 公司指引（FY2026；2026-07-29 上修）與對帳來源")
@@ -256,7 +257,7 @@ for s in SC:
 ur += 1
 UN.cell(ur, 1, "校準（只用公司 CY2026 市場規模，不用共識）").font = BOLD; ur += 1
 cal = [("CY2026 SoC 測試機市場（公司）", "US$B", "=mk_soc26", "0.00", "Interested-party"),
-       ("− 非 AI SoC（Assumed）", "US$B", "=nonai26", "0.00", "Assumed，2.5–4.0"),
+       ("− 非 AI SoC（Analogy：AI 前的 SoC 測試機市場）", "US$B", "=nonai26", "0.00", "Analogy，3.7–4.9；見 In 頁"),
        ("＝ AI SoC 測試機市場 CY2026", "US$B", "=C{a}-C{b}", "0.00", "Derived"),
        ("÷ CY2026 加權顆數（情境 A＝B＝C，2026 年無情境係數）", "百萬顆", f"=C{UR[('A','wu')]}", "0.00", ""),
        ("＝ 每加權顆測試支出", "US$／顆", "=C{c}/C{d}*1000", "0", "Derived：每顆 Blackwell 等值的測試機支出"),
@@ -283,7 +284,7 @@ UNITS_CHECK_ROW = ur + 2
 
 # ---------------- 引擎：一個情境的完整推導（PL 與 Sens 共用，確保一致） ----------------
 FYC = {y: chr(ord("C") + y - 2025) for y in range(2025, 2030)}   # FY2025＝C … FY2029＝G
-DEFP = dict(fx="fx", sh="sh_soc", shC28="shC_28", shC29="shC_29", shm="sh_mem", tt="", mk26="mk_soc26", nonai="nonai26",
+DEFP = dict(fx="fx", eff="0", sh="sh_soc", shC28="shC_28", shC29="shC_29", shm="sh_mem", tt="", mk26="mk_soc26", nonai="nonai26",
             w="w_hbm", F="opex_fix", v="opex_var", nioi="nioi", mkm26="mk_mem26", scn="A")
 def engine(ws, r0, title, P0=None, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
@@ -299,7 +300,7 @@ def engine(ws, r0, title, P0=None, **over):
         ws.cell(r, 8, note); R[key] = r; r += 1
     row("wu", "測試時間加權顆數", "百萬顆", {**{cyc(y): "=" + "+".join(f"{u(k, y, s)}*tt_{k}{P['tt']}" for k in PLAT) for y in CYS[:4]}, "G": f"=F{r}*(1+cy30g)"}, note="Σ 顆數 × tt；CY2030＝CY2029×(1+cy30g)")
     row("cw", "每加權顆測試支出（以 CY2026 校準）", "US$B／百萬顆", {"C": f"=({P['mk26']}-{P['nonai']})/C{R['wu']}"}, fmt="0.0000", note="（公司 CY2026 SoC 市場 − 非 AI）÷ 加權顆數")
-    row("ai", "AI SoC 測試機市場", "US$B", {cyc(y): f"=$C${R['cw']}*{cyc(y)}{R['wu']}" for y in CYS})
+    row("ai", "AI SoC 測試機市場", "US$B", {cyc(y): f"=$C${R['cw']}*{cyc(y)}{R['wu']}*(1-{P['eff']})^{y-2026}" for y in CYS})
     row("nai", "非 AI SoC 測試機市場", "US$B", {cyc(y): f"={P['nonai']}*(1+g_nonai)^{y-2026}" for y in CYS})
     row("soc", "SoC 測試機市場 CY", "US$B", {cyc(y): f"={cyc(y)}{R['ai']}+{cyc(y)}{R['nai']}" for y in CYS}, note="CY2026 ＝ 公司規模（校準）")
     dr = lambda y: f"dr{s}_{y % 100}"
@@ -359,13 +360,13 @@ V = wb.create_sheet("Val")
 V["A1"] = "Val — P/E 估值。跨公司規則：合理倍數＝10 年（2016–2025 年底）P/E 的分位，依循環位置：見頂年 25 分位、中段中位數、谷底 75 分位。本模型把 FY2027 歸為見頂年"
 V["A2"] = "P/E 定義（自算）：日曆年底收盤價 ÷ 「當期會計年度」公司公布的基本 EPS（年底所在會計年度，例如 2025-12 對 FY2025＝2026-03 期）；另列「前期」（上一個已結束會計年度）。所有價格與 EPS 為 2023-10 的 4 比 1 分割調整後"
 V.cell(4, 1, "1. 公司公布 EPS（會計年度，日圓，分割調整後）— 兩個來源").font = BOLD
-hdr(V, 5, ["會計年度（3 月結束）", "來源1：irbank（分割調整後）", "來源2：公司原始 EPS（分割前）", "來源2 ÷ 4", "兩者差距", "標記", "說明"])
+hdr(V, 5, ["會計年度（3 月結束）", "來源1：irbank（分割調整後；2025-03 改用公司決算書）", "來源2：公司原始 EPS（分割前）", "來源2 ÷ 4", "兩者差距", "標記", "說明"])
 EPSD = [("2016-03", 9.59, 38.35, "公司 74th 年報：基本 38.35"), ("2017-03", 20.27, 81.07, "公司 FY2017 決算附註：基本 81.07（摘要表另列 148.11，口徑不同，未採）"),
         ("2018-03", 25.49, 101.94, "公司 FY2018 決算附註：101.94（摘要表 256.28，未採）"), ("2019-03", 75.59, 302.35, "公司 FY2019 決算附註：302.35"),
         ("2020-03", 67.53, 270.12, "公司 FY2020 決算：270.12"), ("2021-03", 88.47, 353.87, "公司 FY2020 決算 353.87；株探 353.9"),
         ("2022-03", 112.39, 449.6, "株探 449.6（公司值未直接取得）"), ("2023-03", 174.35, 697.4, "株探 697.4（公司值未直接取得）"),
         ("2024-03", 84.45, 337.8, "公司 FY2024 決算：84.45（分割後）；右欄為 84.45×4 的還原（Derived，非獨立來源）"),
-        ("2025-03", 218.67, 874.68, "松井證券 218.67；公司 FY2025 決算書另載前期 226.24（未解，見 README）；右欄為 ×4 還原"),
+        ("2025-03", 226.24, 904.96, "公司 FY2025 決算書（FY2024 Consolidated Financial Results，E_FR_FY2024_FN.pdf）：基本 226.24、希薄化後 225.77；右欄為 ×4 還原。irbank／松井證券列 218.67，口徑未解，不採"),
         ("2026-03", 515.15, 2060.6, "公司 FY2025 決算 515.15（Q 頁）；右欄為 ×4 還原")]
 EP = {}
 for i, (fy_, a, raw, note) in enumerate(EPSD, 6):
@@ -375,6 +376,7 @@ for i, (fy_, a, raw, note) in enumerate(EPSD, 6):
     for c in "BD": V[f"{c}{i}"].number_format = "0.00"
     V[f"E{i}"].number_format = "0.0%"
     V.cell(i, 6, "Verified" if i < 11 else "Verified（單一來源＋還原）"); V.cell(i, 7, note); EP[fy_] = i
+V.cell(17, 1, "全部年度統一用基本 EPS（Basic）。公司決算書均區分基本與稀釋；2016–2020 年 3 月期取自公司決算附註的基本 EPS，2021-03 與 2024-03 以後取自公司決算的基本 EPS，2022-03、2023-03 為株探值（未直接取得公司值）").font = BOLD
 V.cell(18, 1, "2. 10 年 P/E（年底）").font = BOLD
 hdr(V, 19, ["年底", "收盤價 ¥（分割調整）", "當期 FY EPS", "前期 FY EPS", "P/E 當期（自算）", "P/E 前期（自算）", "companiesmarketcap P/E", "自算當期 − cmc", "自算前期 − cmc", "標記", "來源／說明"])
 PX = {2016: None, 2017: 522.8, 2018: 561.0, 2019: 1540.0, 2020: 1932.5, 2021: 2725.0, 2022: 2120.0, 2023: 4797.0, 2024: 9198.0, 2025: 19635.0}
@@ -447,15 +449,16 @@ SE = wb.create_sheet("Sens")
 SE["A1"] = "Sens — 一次動一個輸入（情境 A）：對 FY2027、FY2028 營收與 EPS 的影響。每個案例是一個完整的推導區塊（本頁下方，與 PL 同一引擎）"
 hdr(SE, 3, ["案例", "設定", "FY2027 營收 ¥B", "FY2027 EPS ¥", "相對基準", "FY2028 營收 ¥B", "FY2028 EPS ¥", "相對基準"])
 cases = [("市占 −5 個百分點", "SoC 市占 61%", dict(sh="sh_soc_lo")), ("市占 +5 個百分點", "SoC 市占 71%", dict(sh="sh_soc_hi")),
+         ("平行測試效率每年 −5%（Assumed）", "每加權顆測試支出每年 −5%（2027 起）", dict(eff="eff_par_lo")), ("平行測試效率每年 −10%（Assumed）", "每年 −10%", dict(eff="eff_par_hi")),
          ("每顆測試時間係數 低", "各平台 tt 取低值", dict(tt="_lo")), ("每顆測試時間係數 高", "各平台 tt 取高值", dict(tt="_hi")),
          ("營業費用變動比例 低（35%）", "FY2025 營業費用中變動部分 35%（固定 65%）", dict(F="(1-phi_lo)*opex25", v="phi_lo*opex25/a25_rev")),
          ("營業費用變動比例 高（75%）", "變動 75%（固定 25%）", dict(F="(1-phi_hi)*opex25", v="phi_hi*opex25/a25_rev")),
          ("CY2026 SoC 市場 低（10.5）", "校準錨 10.5", dict(mk26="mk_soc26_lo")), ("CY2026 SoC 市場 高（11.5）", "校準錨 11.5", dict(mk26="mk_soc26_hi")),
-         ("非 AI SoC 低（2.5）", "AI 占比較高 → 每顆支出較高", dict(nonai="nonai26_lo")), ("非 AI SoC 高（4.0）", "", dict(nonai="nonai26_hi")),
+         ("非 AI SoC 低（3.7）", "AI 占比較高 → 每顆支出較高", dict(nonai="nonai26_lo")), ("非 AI SoC 高（4.9）", "AI 占比較低 → 每顆支出較低", dict(nonai="nonai26_hi")),
          ("記憶體市占 −5pt", "", dict(shm="sh_mem_lo")), ("記憶體市占 +5pt", "", dict(shm="sh_mem_hi")),
          ("記憶體 HBM 比重 低（30%）", "", dict(w="w_hbm_lo")), ("記憶體 HBM 比重 高（70%）", "", dict(w="w_hbm_hi")),
          ("匯率 ¥140", "", dict(fx="fx_lo")), ("匯率 ¥160", "", dict(fx="fx_hi")),
-         ("淨利÷營業利益 低（0.72）", "", dict(nioi="nioi_lo")), ("淨利÷營業利益 高（指引比 0.78）", "", dict(nioi="nioi_hi"))]
+         ("淨利÷營業利益 低（0.72）", "", dict(nioi="nioi_lo")), ("淨利÷營業利益 0.780（指引隱含）", "含戰略投資評價益（一次性），不當基準", dict(nioi="nioi_hi"))]
 SE.cell(4, 1, "基準（情境 A）"); SE.cell(4, 2, "PL 區塊 A")
 def put_case(i, name, setting, R):
     SE.cell(i, 1, name); SE.cell(i, 2, setting)
@@ -567,7 +570,7 @@ lines = [("Advantest（6857.T）收支與估值模型 v0.1（AI 半導體 Projec
  ("情境 A／B／C：顆數係數讀台積電模型成品（2028 ×1.0／0.8／0.6，2029 ×1.0／0.85／0.6）；情境 C 另加 Teradyne 搶回市占（FY2028 61%、FY2029 56%）與價格壓力", False),
  ("Val：P/E 規則——10 年（2016–2025 年底）P/E 分位，見頂年（本模型 FY2027）取 25 分位。Recon：對公司指引、共識、公司市場規模、SEMI。Sens：市占、測試時間係數、顆數情境、營業費用變動比例等", False), ("", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。公司原文（advantest.com）在建置環境無法開啟，數字取自搜尋引擎摘錄，原文待人工複核。", False),
- ("已知限制：(1) 每加權顆測試支出由「公司 CY2026 市場規模 − 非 AI 假設」校準，市場規模為測試機廠自估（Interested-party）；(2) 每顆測試時間係數無實證，只決定世代間相對權重；(3) HBM 出貨位元在 markets/memory 不隨情境變動（供給限制），記憶體測試機的情境差異來自 DRAM 設備支出；(4) 無測試機效率（平行測試）提升的建模，可能高估 CY2027 之後市場；(5) CY2030 無市場層資料，持平假設；(6) 10 年 P/E 缺 2016 年底收盤價。", False)]
+ ("已知限制：(1) 每加權顆測試支出由「公司 CY2026 市場規模 − 非 AI 市場」校準，市場規模為測試機廠自估（Interested-party），非 AI 以 AI 前（CY2021–23）Teradyne 公布的 SoC 測試機市場為參照（Analogy，3.7–4.9）；平行測試效率提升不在基準，只在 Sens 列示；(2) 每顆測試時間係數無實證，只決定世代間相對權重；(3) HBM 出貨位元在 markets/memory 不隨情境變動（供給限制），記憶體測試機的情境差異來自 DRAM 設備支出；(4) 無測試機效率（平行測試）提升的建模，可能高估 CY2027 之後市場；(5) CY2030 無市場層資料，持平假設；(6) 10 年 P/E 缺 2016 年底收盤價；(7) HBM 出貨位元不隨顆數情境變動，屬市場層（markets/memory）待改。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
 
