@@ -508,7 +508,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 {year_table(V, [("有效推論 GW", "CMP_InfGW_Eff", "f2", ""), ("研發 GW（殘差）", "CMP_RDGW", "f2", ""), ("總需求 GW", "CMP_DemandGW", "f2", "em"),
                 ("合約供給 GW", "CMP_SupplyContractGW", "f2", ""), ("自建供給 GW", "CMP_Supply_Owned", "f2", ""), ("供給 GW 合計", "CMP_SupplyGW", "f2", "em"),
                 ("推論可用 GW（容量上限）", "CMP_InfAvailGW", "f2", "")], head="GW")}
-<p><b>研發 GW 是殘差，不是獨立需求。</b>模型先由 token 需求推出推論 GW，再把「供給扣閒置後剩下的」全部記為研發；2027 年起研發占總需求約 6–9 成（2027 年 {n("CMP_RDGW", 2027, "f1")} / {n("CMP_DemandGW", 2027, "f1")} GW，2030 年 {n("CMP_RDGW", Y, "f1")} / {n("CMP_DemandGW", Y, "f1")} GW）。意義：①總需求其實由已簽合約決定，不是由用量推出；②若這些 GW 實際上是閒置或轉賣，現金成本照付、命題結論不變，但「研發投入」的解讀要打折；③推論只用掉 2030 年推論可用 GW 的約一半（{n("CMP_InfGW_Eff", Y, "f1")} / {n("CMP_InfAvailGW", Y, "f1")}），營收上行的算力餘裕有限。</p>
+<p><b>研發 GW 是殘差，不是獨立需求。</b>模型先由 token 需求推出推論 GW，再把「供給扣閒置後剩下的」全部記為研發；2027 年起研發占總需求約 5–9 成（v0.6.2 起；Tokenomics v19.0 的世代產能較高，2030 年降至約 5 成）（2027 年 {n("CMP_RDGW", 2027, "f1")} / {n("CMP_DemandGW", 2027, "f1")} GW，2030 年 {n("CMP_RDGW", Y, "f1")} / {n("CMP_DemandGW", Y, "f1")} GW）。意義：①總需求其實由已簽合約決定，不是由用量推出；②若這些 GW 實際上是閒置或轉賣，現金成本照付、命題結論不變，但「研發投入」的解讀要打折；③推論只用掉 2030 年推論可用 GW 的約一半（{n("CMP_InfGW_Eff", Y, "f1")} / {n("CMP_InfAvailGW", Y, "f1")}），營收上行的算力餘裕有限。</p>
 {V.src("CMP_InfGW_Eff", "CMP_RDGW", "CMP_DemandGW", "CMP_SupplyContractGW", "CMP_Supply_Owned", "CMP_SupplyGW", "CMP_InfAvailGW")}
 </section>""")
 
