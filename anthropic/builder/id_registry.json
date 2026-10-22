@@ -592,7 +592,15 @@
 "spend_warn_threshold": "INP_183",
 "lambda_end": "INP_184",
 "neg_start_year": "INP_185",
-"neg_term_years": "INP_186"
+"neg_term_years": "INP_186",
+"u2_method": "INP_187",
+"l1_incl_cash": "INP_188",
+"exp_pct": "INP_189",
+"exp_first_year": "INP_190",
+"exp_last_year": "INP_191",
+"exp_mon_none": "INP_192",
+"exp_mon_half": "INP_193",
+"exp_mon_full": "INP_194"
 },
 "CHK": {
 "src_rows": "C01",
@@ -720,7 +728,20 @@
 "b1_u7_nc": "C123",
 "c2_tkpq": "C124",
 "c2_tkpq_r": "C125",
-"c2_tkled": "C126"
+"c2_tkled": "C126",
+"d1_u2_ck": "C127",
+"d1_u2_bind": "C128",
+"d1_l2_eq": "C129",
+"d1_l_order": "C130",
+"d1_l1_first": "C131",
+"d1_l1_ext": "C132",
+"d1_l1_tr": "C133",
+"d1_l2_tr": "C134",
+"d1_l3_tr": "C135",
+"d1_x_none": "C136",
+"d1_x_half": "C137",
+"d1_x_full": "C138",
+"d1_x_ext": "C139"
 },
 "retired_INP": [
 "INP_067",

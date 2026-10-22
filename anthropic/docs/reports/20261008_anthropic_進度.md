@@ -1,7 +1,7 @@
 # Anthropic v0.1 分段建置進度（接手用；A1–A5 共用）
 
 ## 目前狀態（每次 push 前覆寫）
-- **v0.1.3 A 段進行中**（分支 `claude/anthropic-v0.1.3`，PR #69 draft）：步驟 1 完成（TK v19.0）。下一步：步驟 2 U2 改法。B 段尚未開始。
+- **v0.1.3 A 段進行中**（分支 `claude/anthropic-v0.1.3`，PR #69 draft）：步驟 1–4 完成（TK v19.0、U2 新法、資金三層、持續擴張）；下一步：步驟 5 HTML 條件式措辭、步驟 6 測試與重建、步驟 7 報告。B 段尚未開始。
 
 - 已完成：v0.1（A0–A5）；v0.1.1（PR #56）；**v0.1.2（2026-10-21）全部步驟**：TK v5.26 → v18.0（master `868e2cc`）、語意核對、對照列、重算、pytest 109 項全過、HTML／dist、報告＋對照 Excel、CHANGELOG、交接檔。報告 `docs/reports/20261021_v0.1.2.md`。
 - 下一步：chat 端審查 PR #56（v0.1.1＋v0.1.2）並合併（代理不合併）；Andy 確認後刪除 `dist/_待刪除/`；OpenAI 模型同步 TK v18.0。
@@ -79,3 +79,6 @@
 | 步驟 | 狀態 | commit | 備註 |
 |---|---|---|---|
 | 1 TK 標記改 v19.0 | 完成 | 見 git log「v0.1.3 A1」 | check_tk_snapshot：快照 v18.0 vs CURRENT v19.0 → OK 103、DIFF 0、MISSING 0；重建後 27,934 格逐格比對，322 格差異全為版本／日期／SHA 文字，數值差異 0。TK 提交 `1916a06`，SHA-256 `d1728705…`。OpenAI 快照維持 v0.6（`34fc34a7…`；main 現行為 v0.6.1，不在本版範圍） |
+| 2 U2 新法（Nscale、Lambda 揭露容量＋86 當上限） | 完成 | 見 git log「v0.1.3 A2–A4」 | 新 Inputs `u2_method`（INP_187；1＝新法，0＝v0.1.1）；Compute 新列 `sup_*_disc`（揭露 GW）、Cost 第二十二節（年付款上限、約束年數、檢查）；Checks C127–C128。2030 差額 11.139 → 12.133 |
+| 3 資金三層 | 完成 | 同上 | Funding 第十節；新 Inputs `l1_incl_cash`（第 1 層是否計 2025 年底現金，基準 0）；具名範圍 FND_L1/2/3_*；Checks 另加 d1_l2_eq（第 2 層＝基準）、d1_l_order |
+| 4 持續擴張情境 | 完成 | 同上 | Cost 第二十三節、Funding 第十一節；新 Inputs exp_pct（0.3，0–0.6）、exp_first_year／exp_last_year、exp_mon_none／half／full（0／0.5／1）；基準不受影響 |

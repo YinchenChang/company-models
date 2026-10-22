@@ -38,9 +38,11 @@ def waterfall(S, tag, zh, fcf, inflow, cash25, minref, names=None, note=""):
     """現金瀑布（同 S7 規則）：補足前＝期初＋自由現金流＋股權流入；外部資金＝補足至最低現金；年底＝補足前＋外部資金；累計。
     fcf：記號字串（例如 «fcf»）；inflow：callable(i, c) → 運算式（不含 =）；names：{'ext':…, 'end':…, 'cum':…, 'pre':…}。"""
     names = names or {}
-    S.add(f"{tag}_in", f"股權流入（{zh}）", "$B", lambda i, c: None if i == 0 else "=" + inflow(i, c), note, name=names.get("in"))
+    if inflow is not None:
+        S.add(f"{tag}_in", f"股權流入（{zh}）", "$B", lambda i, c: None if i == 0 else "=" + inflow(i, c), note, name=names.get("in"))
+    inn = f"+«{tag}_in»" if inflow is not None else ""
     S.add(f"{tag}_pre", f"補足前年底現金（{zh}）", "$B",
-          lambda i, c: None if i == 0 else (f"={cash25}+{fcf}+«{tag}_in»" if i == 1 else f"=«{tag}_end@p»+{fcf}+«{tag}_in»"), "", name=names.get("pre"))
+          lambda i, c: None if i == 0 else (f"={cash25}+{fcf}{inn}" if i == 1 else f"=«{tag}_end@p»+{fcf}{inn}"), "", name=names.get("pre"))
     S.add(f"{tag}_ext", f"當年外部資金需求（{zh}）", "$B", lambda i, c: None if i == 0 else f"=({minref}-«{tag}_pre»)*({minref}>«{tag}_pre»)", "",
           name=names.get("ext"))
     S.add(f"{tag}_end", f"年底現金（{zh}）", "$B", lambda i, c: f"={cash25}" if i == 0 else f"=«{tag}_pre»+«{tag}_ext»", "", name=names.get("end"))
@@ -220,6 +222,45 @@ def build(ctx):
     K.add("pq_q_tk", "TK：VR200 每 GW 付費 token 實際產出 Q（M tok／年；L1_TokGW_PaidPQ_VR200）", "M tok/GW/年", only26("=TK_L1_TokGW_PaidPQ_VR200"), "實際利用率 0.45（低 0.30、高 0.65）")
     K.add("pq_q_ratio", "本模型 Q ÷ TK Q（2026）", "倍", only26("=«pq_q_model»/«pq_q_tk»"), "對照 TK 的帳未閉合倍數 L1_TokLedger_2026Q2")
 
+    K.section("二十二、v0.1.3 U2 新法：Nscale、Lambda 年付款上限＝『最高 86』按 MW 比例 ÷ Σ 爬坡權重 × 當年權重（付款 ＝ MIN(揭露 GW × 合約價, 年上限)；列放在本節，使既有列編號不變）")
+    r_, k2 = I("ramp_years"), I("arith_k2")
+    for key in U2:
+        q = U2[key]
+        s_, e_ = D.fill(q["s"]), D.fill(q["e"])
+        tk_ = "u2_T_n" if key == "nscale" else "u2_T_l"
+        K.add(f"u2cap_{key}", f"U2 年付款上限：{CT[key][1].split('（')[0]}＝錨定總額 ÷ Σ 爬坡權重 × 當年權重", "$B",
+              lambda i, c, s_=s_, e_=e_, tk_=tk_: (f"=«{tk_}@$»/((({e_}-{s_}+1)+({e_}-{s_}+1)-{r_}+1)/{k2})*MIN({r_},{c}$6-{s_}+1)/{r_}*({c}$6>={s_})*({c}$6<={e_})"),
+              "v0.1.1 的付款時程（金額型）即此列；新法以它為上限，揭露容量 × 合約價較低時取較低者", name=f"COST_U2Cap_{key.capitalize()}")
+    K.add("u2cap_bind", "U2 新法：年上限實際約束的合約年數（揭露 GW × 合約價 > 年上限）", "年數",
+          lambda i, c: "=" + "+".join(f"(«C:sup_{k}_disc»*«C:price_{CT[k][2]}»>«u2cap_{k}»)" for k in U2), "0＝兩約付款都由揭露容量決定（未被 86 約束）")
+    K.add("u2_pay_chg", "U2 新法 − v0.1.1：Nscale＋Lambda 合約實付差（新法開啟時；$B）", "$B",
+          lambda i, c: "=" + I("u2_switch") + "*" + I("u2_method") + "*(«pay_nscale»+«pay_lambda»-«u2cap_nscale»-«u2cap_lambda»)", "＝新法付款 − 年上限（v0.1.1 付款）；≤ 0")
+    K.add("ck_u2", "U2 新法檢查：付款 − 年上限 的正部分，及付款 − 揭露 GW × 合約價 的正部分（合計；應為 0）", "$B",
+          lambda i, c: "=" + I("u2_switch") + "*" + I("u2_method") + "*(" + "+".join(
+              f"(«pay_{k}»-MIN(«pay_{k}»,«u2cap_{k}»))+(«pay_{k}»-MIN(«pay_{k}»,«C:sup_{k}_disc»*«C:price_{CT[k][2]}»))" for k in U2) + ")", "")
+
+    K.section("二十三、v0.1.3 持續擴張情境（外部驗收 Priority 3；只作情境，基準仍只計已簽合約）：2029–2030 每年追加算力，變現比例 3 檔（0 無需求／0.5 部分／1 完全）")
+    ex_pct, ex_y1, ex_y2 = I("exp_pct"), I("exp_first_year"), I("exp_last_year")
+    yrs = "$D$6:$I$6"
+    K.add("x_a", "追加合約滿載年付款＝比例 × 當年基準合約付款（追加年內；Inputs）", "$B",
+          lambda i, c: f"={ex_pct}*«pay»*({c}$6>={ex_y1})*({c}$6<={ex_y2})", "Assumed（區間 0–60%）；基準模型不追加", name="COST_ExpAdd")
+    K.add("x_pay", "追加合約實付（各批依爬坡年數爬坡後加總）", "$B",
+          lambda i, c: (f"=SUMPRODUCT(({yrs}<={c}$6)*«x_a@R»*((({c}$6-{yrs}+1)<{r_})*({c}$6-{yrs}+1)+(({c}$6-{yrs}+1)>={r_})*{r_})/{r_})"),
+          "各批付款 × MIN(爬坡年數, 已過年數) ÷ 爬坡年數（同金額型合約）；合約價沿用既有", name="COST_ExpPay")
+    K.add("x_gw", "追加供給 GW＝追加實付 ÷ VR200 族合約價", "GW", lambda i, c: "=«x_pay»/«C:price_vr200»", "D10：GW＝金額 ÷ 合約價；新簽 → VR200 世代（同 U6）", name="CMP_ExpGW")
+    K.add("x_vr", "供給 VR 等值 GW（含追加）", "GW", lambda i, c: "=«C:vr_sup»+«x_gw»*«C:vrf_vr200»", "")
+    K.add("x_cc", "算力成本（含追加）", "$B", lambda i, c: "=«cc»+«x_pay»", "", name="COST_ComputeExp")
+    for tg, zh, mi in (("n", "無需求", "exp_mon_none"), ("h", "部分變現", "exp_mon_half"), ("f", "完全變現", "exp_mon_full")):
+        nmx = {"n": "None", "h": "Half", "f": "Full"}[tg]
+        mon = I(mi)
+        K.add(f"x{tg}_rev", f"追加營收（{zh}）＝變現比例 × 追加 VR 等值 GW × 當年基準每 VR 等值 GW 營收淨額", "$B",
+              lambda i, c, mon=mon: f"={mon}*«x_gw»*«C:vrf_vr200»*«p_rev_vr»", "完全變現＝新增 GW 的每 GW 營收等於當年基準每 VR 等值 GW 營收淨額（工作單）", name=f"REV_ExpAdd{nmx}")
+        K.add(f"x{tg}_gap", f"每 VR 等值 GW 差額（含股權報酬；追加情境：{zh}）", "$B/GW/年",
+              lambda i, c, tg=tg: f"=(«gap_b»+«x{tg}_rev»-«x_pay»)/«x_vr»", "＝（基準差額 ＋ 追加營收 − 追加實付）÷（基準＋追加 VR 等值 GW）", name=f"COST_PropGap_VR_Exp{nmx}")
+        K.add(f"x{tg}_dgap", f"差：追加情境（{zh}）− 基準（每 VR 等值 GW 差額）", "$B/GW/年", lambda i, c, tg=tg: f"=«x{tg}_gap»-«p_gap_vr»", "")
+        K.add(f"x{tg}_cov", f"覆蓋率（追加情境：{zh}）", "倍", lambda i, c, tg=tg: f"=(«p_rev»+«x{tg}_rev»)/(«full»+«x_pay»)", "營收淨額 ÷ 全成本（含股權報酬）", name=f"COST_Coverage_Exp{nmx}")
+        K.add(f"x{tg}_fcf", f"自由現金流（追加情境：{zh}）", "$B", lambda i, c, tg=tg: f"=«p_rev»+«x{tg}_rev»-«cc»-«x_pay»-«ncx»", "Funding 第十節", name=f"FND_FCF_Exp{nmx}")
+
     # ═════════════════════ Funding ═════════════════════
     F = Sheet(wb, "Funding", "F", "F", years,
               "Funding — 融資：自由現金流、已到位融資、最低現金與外部資金需求、條件式與 IPO 情境、敏感度情境、或有負債、回流對照（D18）",
@@ -366,6 +407,40 @@ def build(ctx):
               "Cost 第二十節（新增付款；營收不因新增供給增加）")
 
 
+    F.section("十、v0.1.3 資金三層（外部驗收 Priority 4）：①營運自由現金流能否自給（不靠任何融資）②加已到位股權（現行基準）③再加條件式與談判中（IPO、Amazon、Google、NVIDIA、AMD；NVIDIA 與 IPO 基石可能重複 → 上緣）。列放在本節，使既有列編號不變")
+    F.add("l1_open", "第 1 層起算現金（Inputs：1＝計入 2025 年底現金；基準 0＝純營運現金流）", "$B", only25(f"={cash25}*{I('l1_incl_cash')}"),
+          "2025 年底現金是過去融資所得 → 第 1 層預設不計", name="FND_L1_OpenCash", name_cols="D")
+    F.add("fcf_cum", "自由現金流累計（2026 起）", "$B", lambda i, c: None if i == 0 else ("=«fcf»" if i == 1 else "=«fcf_cum@p»+«fcf»"),
+          "營運現金流本身的累計；轉正前的累計負值＝需靠外部提供的資金", name="FND_FCFCum")
+
+    L_IN = {2: "«eq»", 3: "«committed»+«c_ipo»+«c_amzn»+«c_googl»+«c_nvda»+«c_amd»"}
+    L_ZH = {1: "①營運自給（無任何融資）", 2: "②加已到位股權（基準）", 3: "③再加條件式與談判中"}
+
+    def layers(pre, zh, fcf, sfx, first_flag):
+        """三層資金結果：每層輸出最低現金缺口年度、累計外部資金需求、現金谷底（補足前路徑最小值）。fcf：自由現金流記號；first_flag：自由現金流轉正的運算式。"""
+        F.add(f"{pre}_fy", f"自由現金流轉正年標示（{zh}）", "年", lambda i, c: None if i == 0 else f'=IF({first_flag},{c}$6,"")', "")
+        F.add(f"{pre}_first", f"營運自由現金流首次轉正年（{zh}；無則「無」）", "年", only25(f'=IF(COUNT(«{pre}_fy@R»),MIN(«{pre}_fy@R»),"無")'),
+              "第一個自給年；不代表其後每年皆為正", name=f"FND_FCFFirstPos{sfx}", name_cols="D")
+        for n in (1, 2, 3):
+            tag = f"{pre}{n}"
+            start = "«l1_open@$»" if n == 1 else cash25
+            inflow = None if n == 1 else (lambda i, c, n=n: L_IN[n])
+            waterfall(F, tag, f"{zh}：{L_ZH[n]}", fcf, inflow, start, "«min»", dict(cum=f"FND_L{n}_ExtNeedCum{sfx}", end=f"FND_L{n}_CashEnd{sfx}"))
+            inn = f"+«{tag}_in»" if n > 1 else ""
+            F.add(f"{tag}_path", f"補足前現金路徑（不補外部資金；{zh}：{L_ZH[n]}）", "$B",
+                  lambda i, c, tag=tag, start=start, inn=inn: None if i == 0 else (f"={start}+{fcf}{inn}" if i == 1 else f"=«{tag}_path@p»+{fcf}{inn}"), "可為負；谷底＝最小值")
+            F.add(f"{tag}_fy", f"缺口年標示（{zh}：{L_ZH[n]}）", "年", lambda i, c, tag=tag: None if i == 0 else f'=IF(SIGN(«{tag}_ext»),{c}$6,"")', "")
+            F.add(f"{tag}_gy", f"最低現金缺口首次出現年（{zh}：{L_ZH[n]}；無則「無」）", "年", only25(f'=IF(COUNT(«{tag}_fy@R»),MIN(«{tag}_fy@R»),"無")'), "",
+                  name=f"FND_L{n}_GapYear{sfx}", name_cols="D")
+            F.add(f"{tag}_cf", f"累計外部資金需求（{zh}：{L_ZH[n]}；2026–2030）", "$B", only25(f"=«{tag}_cum@I»"), "", name=f"FND_L{n}_ExtTotal{sfx}", name_cols="D")
+            F.add(f"{tag}_tr", f"現金谷底（{zh}：{L_ZH[n]}；補足前路徑 2026–2030 最小值）", "$B", only25(f"=MIN(«{tag}_path@R»)"), "負＝需外部補足的金額（不含最低現金）",
+                  name=f"FND_L{n}_Trough{sfx}", name_cols="D")
+
+    layers("lb", "基準", "«fcf»", "", "«rev»>«cc»+«ncx»")
+    F.section("十一、v0.1.3 持續擴張情境的資金三層（與 U6 第八節並列；基準不變）：2029–2030 每年追加算力，變現比例 無需求／部分／完全")
+    for tg, zh, nmx in (("n", "擴張・無需求", "ExpNone"), ("h", "擴張・部分變現", "ExpHalf"), ("f", "擴張・完全變現", "ExpFull")):
+        layers(f"l{tg}", zh, f"«K:x{tg}_fcf»", "_" + nmx, f"«K:p_rev»+«K:x{tg}_rev»>«K:cc»+«K:x_pay»+«K:ncx»")
+
     # ═════════════════════ Reverse ═════════════════════
     X = Sheet(wb, "Reverse", "X", "X", years,
               "Reverse — 反向模式（D19）：假設管理層營收目標達成，反解所需倍數與反向資金（同一支出）；只作對照，不回饋基準",
@@ -485,6 +560,20 @@ def checks(ctx):
         ("c2_tkpq", "v0.1.2：TK L1_RevGW_PQ_VR200（VR200 每 GW 營收 P × Q，2026 第一年；$B/GW/年）", "=COST_TKPQ", None, "info", "只對照，不回饋計算"),
         ("c2_tkpq_r", "v0.1.2：TK P × Q ÷ 本模型 2026 每付費推論 VR 等值 GW 營收總額", "=COST_TKPQRatio", None, "info", "1＝一致；Cost 第二十一節"),
         ("c2_tkled", "v0.1.2：TK token 帳未閉合倍數（L1_TokLedger_2026Q2）", "=COST_TKTokLedger", None, "info", "契約 v18.0：約 6.26"),
+        # ── v0.1.3 A 段
+        ("d1_u2_ck", "v0.1.3 U2 新法：付款超出年上限或揭露容量 × 合約價的金額（各年最大；$B）", f"=MAX(MAX(Cost!$D${K.rows['ck_u2']}:$I${K.rows['ck_u2']}),-MIN(Cost!$D${K.rows['ck_u2']}:$I${K.rows['ck_u2']}))", 0, "tol", "Cost 第二十二節"),
+        ("d1_u2_bind", "v0.1.3 U2 新法：年上限實際約束的合約年數（info）", f"=SUM(Cost!$D${K.rows['u2cap_bind']}:$I${K.rows['u2cap_bind']})", None, "info", "0＝86 沒有約束付款"),
+        ("d1_l2_eq", "v0.1.3 資金第 2 層累計外部資金需求 − 基準 FND_ExtNeedCum（2030；$B）", "=FND_L2_ExtTotal-INDEX(FND_ExtNeedCum,1,6)", 0, "tol", "第 2 層即現行基準；Funding 第十節"),
+        ("d1_l_order", "v0.1.3 資金三層累計外部資金需求不遞增的違反數（①≥②≥③）", "=(FND_L1_ExtTotal<FND_L2_ExtTotal)+(FND_L2_ExtTotal<FND_L3_ExtTotal)", 0, "eq", "層越多，需補的外部資金越少"),
+        ("d1_l1_first", "v0.1.3 營運自由現金流首次轉正年（基準）", "=FND_FCFFirstPos", None, "info", "報告 ① 句使用"),
+        ("d1_l1_ext", "v0.1.3 第 1 層（營運自給）累計外部資金需求 2026–2030（$B）", "=FND_L1_ExtTotal", None, "info", "不靠任何融資（含不計 2025 年底現金）"),
+        ("d1_l1_tr", "v0.1.3 第 1 層現金谷底（$B）", "=FND_L1_Trough", None, "info", ""),
+        ("d1_l2_tr", "v0.1.3 第 2 層現金谷底（$B）", "=FND_L2_Trough", None, "info", "只靠已到位融資"),
+        ("d1_l3_tr", "v0.1.3 第 3 層現金谷底（$B）", "=FND_L3_Trough", None, "info", "含條件式（上緣）"),
+        ("d1_x_none", "v0.1.3 持續擴張・無需求：2030 每 VR 等值 GW 差額（$B/GW/年）", "=INDEX(COST_PropGap_VR_ExpNone,1,6)", None, "info", "基準 a3_gap30"),
+        ("d1_x_half", "v0.1.3 持續擴張・部分變現：2030 每 VR 等值 GW 差額", "=INDEX(COST_PropGap_VR_ExpHalf,1,6)", None, "info", ""),
+        ("d1_x_full", "v0.1.3 持續擴張・完全變現：2030 每 VR 等值 GW 差額", "=INDEX(COST_PropGap_VR_ExpFull,1,6)", None, "info", ""),
+        ("d1_x_ext", "v0.1.3 持續擴張・無需求：第 2 層累計外部資金需求（$B）", "=FND_L2_ExtTotal_ExpNone", None, "info", "基準 0"),
         ("a4_oai_cum", "OpenAI 並排：2030 累計外部資金需求 Anthropic − OpenAI（$B）", f"={d(F, 'cum', 'I')}-INDEX(OAI_FND_ExtNeedCum,1,6)", None, "info", "OAI_Link（D20）"),
         ("a4_oai_cash", "OpenAI 並排：2030 年底現金 Anthropic − OpenAI（$B）", f"={d(F, 'end', 'I')}-INDEX(OAI_FND_CashEnd,1,6)", None, "info", ""),
     ]
