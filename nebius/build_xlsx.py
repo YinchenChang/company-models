@@ -2259,7 +2259,10 @@ ws.cell(row=NOTE_R, column=3, value=(
     f'若不計 DCF，目標價為 $"&{_T1(EVE_ADJ)}&"（"&{_CALL(f"D{R0+11}")}&"）；"&TEXT({WDCF},"0%")&"／"&TEXT(1-{WDCF},"0%")&" 為判斷值。",""))')).font = BLACK
 RG_PT_CODE = f"C{R0+3}"
 
-# v0.5a C：方法並列——A 現行（點位，評等依此）vs B（DCF 腿為 0 時權重全移至 EV/EBITDA；只作方法敏感度）。三情境值取自『輸入與假設』H 區模擬運算表（D 欄＝A、F 欄＝B）。
+import json as _jb, os as _ob
+_TSB = _jb.load(open(_ob.path.join(_ob.path.dirname(_ob.path.abspath(__file__)), 'tk_sens.json'), encoding='utf-8'))  # v0.5a C：B 讀法三情境快照（A 讀法來自『輸入與假設』H 區運算表，B 讀法為快照；LibreOffice 一個運算表只展開兩欄，再加一塊運算表會使重算殘留他情境值）
+assert 'pair' in _TSB, 'tk_sens.json 沒有 pair（先執行 node scripts/tk_sens.js）'
+# v0.5a C：方法並列——A 現行（點位，評等依此）vs B（DCF 腿為 0 時權重全移至 EV/EBITDA；只作方法敏感度）。A 三情境取自『輸入與假設』H 區模擬運算表；B 為快照（tk_sens.js）。
 r += 1
 r = section(ws, r, "方法並列（v0.5a C）：A 現行（點位，評等依此）vs B（DCF 腿為 0 時權重全移至 EV/EBITDA；只作方法敏感度）")
 for j, h in enumerate(["項目", "單位", "保守", "基準", "積極"]):
@@ -2269,7 +2272,7 @@ r += 1
 MP = {}
 for key, nm, fs, fmt, nt in [
     ('A', "方法並列｜A 現行加權目標價（DCF／EV/EBITDA 按權重；評等依此）", [f"={_IW}D{DT_H+1+j}" for j in range(3)], USD, "點位；三情境來自模擬運算表（保留其餘手動輸入）"),
-    ('B', "方法並列｜B DCF 腿為 0 時權重全移至 EV/EBITDA（只作方法敏感度）", [f"={_IW}D{DT_H+6+j}" for j in range(3)], USD, "DCF 腿（0 截斷）為 0 或 DCF 失效時＝100% EV/EBITDA 目標價；DCF 腿 > 0 時與 A 相同。B 只作方法敏感度；評等仍依 A"),
+    ('B', "方法並列｜B DCF 腿為 0 時權重全移至 EV/EBITDA（只作方法敏感度）", [_TSB['pair'][k] for k in DT_SC], USD, "DCF 腿（0 截斷）為 0 或 DCF 失效時＝100% EV/EBITDA 目標價；DCF 腿 > 0 時與 A 相同。B 只作方法敏感度；評等仍依 A。快照（scripts/tk_sens.js，HTML 引擎；下方檢查列以目前情境即時值核對）"),
     ('D', "方法並列｜B − A", None, USD, "DCF 腿為 0 時，A 把 45% 權重放在 0 上，所以 B 高於 A；差額就是『權重配置』的價值"),
     ('G', "方法並列｜B 距賣出門檻", None, USD, "B 減賣出門檻價；負值＝仍低於賣出門檻"),
 ]:
@@ -2281,6 +2284,13 @@ for key, nm, fs, fmt, nt in [
         c = ws.cell(row=r, column=3 + j, value=f); c.number_format = fmt; c.font = BLACK; c.border = BOX
     ws.cell(row=r, column=9, value=nt).font = SMALL
     r += 1
+MP['chk'] = r
+ws.cell(row=r, column=1, value="方法並列｜快照檢查：目前情境 B 的快照 − 即時值").font = BOLD
+ws.cell(row=r, column=2, value="US$").font = SMALL
+c = ws.cell(row=r, column=3, value=f"=INDEX(C{MP['B']}:E{MP['B']},{SEL})-IF(OR({DCF_BAD}=1,{DCF_T}<=0),{EVE_ADJ},{TGT})"); c.number_format = '0.0000'; c.border = BOX
+ws.cell(row=r, column=4, value=f'=IF(ABS(C{r})<0.01,"通過","快照已過期")').font = BOLD
+ws.cell(row=r, column=9, value="改了任何輸入後快照不會自動更新；重建（node scripts/tk_sens.js → build_xlsx.py）即更新").font = SMALL
+r += 1
 MP['txt'] = r
 ws.cell(row=r, column=1, value="方法並列｜結論").font = BOLD
 ws.cell(row=r, column=3, value=(f'=IF(MAX(C{MP["B"]}:E{MP["B"]})<$C${R0+4},"B 讀法三情境最高 $"&{_T1(f"MAX(C{MP["B"]}:E{MP["B"]})")}&"，仍低於賣出門檻 $"&{_T1(f"$C${R0+4}")}&"：評等結論不變（評等仍依 A）。",'
@@ -2793,16 +2803,6 @@ for j, k in enumerate(DT_SC):
 ws.cell(row=DT_H + 1, column=4, value=_DTF(ref=f"D{DT_H+1}:E{DT_H+3}", dt2D=False, dtr=False, r1=SEL.split("!")[1].replace("$", "")))
 for rr in range(DT_H + 1, DT_H + 4):
     ws.cell(row=rr, column=4).number_format = USD; ws.cell(row=rr, column=5).number_format = NUM0
-# v0.5a C：第二個運算表（B 讀法：DCF 腿為 0 時權重全移至 EV/EBITDA；LibreOffice 匯入時一個運算表只展開兩欄，另立一塊，fix_datatable 逐塊還原）
-ws.cell(row=DT_H + 5, column=1, value="情境區間運算表｜公式列 B 讀法（DCF 腿為 0 時權重全移至 EV/EBITDA）").font = BLACK
-c = ws.cell(row=DT_H + 5, column=4, value=f"=IF(OR('評價_DCF與目標價'!{DCF_BAD}=1,'評價_DCF與目標價'!{DCF_T}<=0),'評價_DCF與目標價'!{EVE_ADJ},'評價_DCF與目標價'!{TGT})")
-c.font = BLACK; c.number_format = USD
-for j, k in enumerate(DT_SC):
-    rr = DT_H + 6 + j
-    ws.cell(row=rr, column=1, value=f"情境區間運算表｜B 讀法｜{DT_NM[k]}").font = BLACK
-    c = ws.cell(row=rr, column=3, value=j + 1); c.font = BLACK; c.number_format = NUM0
-    ws.cell(row=rr, column=4).number_format = USD
-ws.cell(row=DT_H + 6, column=4, value=_DTF(ref=f"D{DT_H+6}:D{DT_H+8}", dt2D=False, dtr=False, r1=SEL.split("!")[1].replace("$", "")))
 
 # =====================================================================
 # v4.3：I｜市場共識（「輸入與假設」底部，接在 H 區模擬運算表之後，以免移動運算表）
@@ -2887,7 +2887,7 @@ def cons_items():
 
 
 ws = wb["輸入與假設"]
-r = DT_H + 10
+r = DT_H + 5
 r = section(ws, r, f"I｜市場共識（{CO['meta']['consensusFile']}；只讀，不增補數字；下游只引用本區）")
 ws.cell(row=r - 1, column=9, value=f"標記：Verified＝{CONS['tagLegend']['Verified']}；Interested-party＝{CONS['tagLegend']['Interested-party']}").font = SMALL
 ws.column_dimensions["G"].width = 16

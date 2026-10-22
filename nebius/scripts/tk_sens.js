@@ -3,9 +3,11 @@
 // 用法：node scripts/tk_sens.js [輸出檔]
 const fs = require('fs'), path = require('path');
 const dir = path.join(__dirname, '..'); require(path.join(dir, 'load_engine.js'))(dir);
-if (PMW_REVQ !== 'tkAnchor') { fs.writeFileSync(process.argv[2] || path.join(dir, 'tk_sens.json'), JSON.stringify({ method: PMW_REVQ }) + '\n'); console.log('legacy：不產生矩陣'); process.exit(0); }
+// v0.5a C：pair＝方法並列 B 讀法（DCF 腿為 0 時權重全移至 EV/EBITDA）三情境快照（legacy 也產生；Excel「方法並列」B 列）
+const PAIR = Object.fromEntries(['low', 'base', 'high'].map(sc => [sc, Math.round(fA(scnQ(DEFAULTS, sc), null, VAL_DEFAULTS).evB * 1e6) / 1e6]));
+if (PMW_REVQ !== 'tkAnchor') { fs.writeFileSync(process.argv[2] || path.join(dir, 'tk_sens.json'), JSON.stringify({ method: PMW_REVQ, pair: PAIR }) + '\n'); console.log('legacy：不產生矩陣'); process.exit(0); }
 const R = tkSensQ(DEFAULTS, VAL_DEFAULTS), rd = x => Math.round(x * 1e6) / 1e6, rr = o => ({ tgt: rd(o.tgt), eq: rd(o.eq), gap: rd(o.gap) });
-const out = { method: 'tkAnchor', matrix: Object.fromEntries(Object.entries(R.matrix).map(([s, v]) => [s, Object.fromEntries(Object.entries(v).map(([p, o]) => [p, rr(o)]))])),
+const out = { method: 'tkAnchor', pair: PAIR, matrix: Object.fromEntries(Object.entries(R.matrix).map(([s, v]) => [s, Object.fromEntries(Object.entries(v).map(([p, o]) => [p, rr(o)]))])),
   sens: R.sens.map(x => ({ key: x.key, label: x.label, res: Object.fromEntries(Object.entries(x.res).map(([s, o]) => [s, rr(o)])) })) };
 const p = process.argv[2] || path.join(dir, 'tk_sens.json'), old = fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : '', txt = JSON.stringify(out, null, 1) + '\n';
 fs.writeFileSync(p, txt);

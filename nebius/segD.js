@@ -23,7 +23,7 @@ function Fy26BridgeUiQ({ e }) {
       [`期初可計費 MW`, `${Y(B.nb0, 0)} MW`, `期初在役 ${Y(B.nb0ref, 0)} MW（內插），且須違反 Q2 已實現營收校準`],
       [`首期末可計費 MW`, `${Y(B.nb1, 0)} MW`, `已連網 ${Y(B.conn, 0)} MW × 在役 ${pc(B.ratio)} ＝ ${Y(B.conn * B.ratio, 0)} MW（爬坡 100%）`],
       [`　對應爬坡係數／在役比例`, `${pc(B.nramp)} ／ ${pc(B.nratio)}`, `爬坡上限 100%`],
-      [`每 MW 年收入（期初 MW 隨單價重校準）`, `$${Y(B.np, 1)}m（k ${Y(B.nk, 2)}）`, `模型 $${Y(B.p * 1e3, 1)}m（k ${Y(B.p * 1e3 / B.anchor, 2)}）`],
+      [`每 MW 年收入（期初 MW 隨單價重校準）`, `$${Y(B.np, 1)}m${Number.isFinite(B.nk) ? `（k ${Y(B.nk, 2)}）` : ``}`, `模型 $${Y(B.p * 1e3, 1)}m${Number.isFinite(B.anchor) ? `（k ${Y(B.p * 1e3 / B.anchor, 2)}）` : ``}`],
       [`非算力服務營收（首期）`, `${Y(B.nsv, 2)}bn`, `模型 ${Y(B.svc, 2)}；Q2 營收已含非 AI cloud 收入`]]),
     (0, $.jsx)(`p`, { className: `mt-2 text-xs leading-relaxed text-muted`, children: `差異原因（類型：已知限制）：只靠爬坡無法閉合；餘額要靠單價高於證據價格、期初計費 MW 高於 Q2 已實現營收所示，或年底連網／在役 MW 高於模型路徑，三項都沒有一手證據，因此不硬調、在此揭露。` })] })
 }

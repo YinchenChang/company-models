@@ -147,7 +147,7 @@ function StatQ({ label, value, note, tone }) {
 // v3.5：錨定年度 × 倍數矩陣（評價頁與總結頁共用）。big＝投影片字級
 function EvGridQ({ st, o, g, big }) {
   let G0 = (0, v.useMemo)(() => g ? null : evAnchorGrid(runFunding(st), st, o), [g, st, o]), G = g || G0;
-  let P = o.price, ck = o.evYear ?? 1, fs = big ? 17 : 12.5, pd = big ? `6px 12px` : `4px 8px`;
+  let P = o.price, ck = o.evYear ?? 1, fs = big ? 17 : 12.5, pd = big ? `3px 12px` : `4px 8px`;
   let tab = (title, M, sub) => elQ(`div`, { key: title, style: { minWidth: 0 } }, [
     elQ(`div`, { key: `h`, style: { fontSize: fs + 1, fontWeight: 700, marginBottom: 6 } }, title),
     elQ(`table`, { key: `t`, style: { borderCollapse: `collapse`, width: `100%`, fontSize: fs, fontVariantNumeric: `tabular-nums` } }, [

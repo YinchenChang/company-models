@@ -1,0 +1,163 @@
+=== 升版驗收（對 v0.4 成品 --vs-dist，LEGACY=1；25 項全過；之後僅調整簡報附錄矩陣列距）===
+================ 結果 ================
+PASS  check_quarterly：季度加總＝年度、差異原因齊全
+PASS  README 欄位說明與 company.json 一致
+PASS  Tokenomics 快照 --check：38 個名稱（missing 0）與快照一致（20261021_Tokenomics_v18.0.xlsx，相對誤差 ≤ 1e-09）
+PASS  建 HTML
+PASS  tk_sens 快照：low 24.61／29.53／46.57；base 17.24／21.38／38.98；high 13.09／19.43／41.56（無變動）
+PASS  建 Excel
+PASS  重算：0 公式錯誤
+PASS  反向 DCF：Excel 求解，rv_snap.json 與 Excel 一致
+PASS  fix_outline
+PASS  fix_datatable
+PASS  verify_ooxml：OOXML OK
+PASS  快照值＝Excel 分頁值：38 個名稱（missing 0）、411 個值、137 個具名範圍一致；其他工作表 49 格公式引用 31 個 TK_ 名稱（v18.0）
+PASS  離線開啟：新建 HTML
+PASS  離線開啟：dist/ 成品
+PASS  cmp31 low：439 項全部 OK
+PASS  cmp31 base：439 項全部 OK
+PASS  cmp31 high：439 項全部 OK
+PASS  cmp31 base_FY27：414 項全部 OK
+PASS  test_quarterly：假設實際數與可移植性測試通過
+PASS  test_rolling：日曆推算與滾動後第一屏
+PASS  test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）
+PASS  crawl 畫面文字 0 差異（預期差異清單除外）
+PASS  xl_diff --values --by-label 0 差異
+PASS  xl_diff 公式 --by-label 0 差異
+PASS  legacy 重現 v0.2：全部通過（24 項）（crawl 0 差異、xl_diff 值與公式 0 差異）
+verify.sh：全部通過（25 項）
+
+real	10m1.500s
+user	3m50.407s
+sys	0m58.431s
+
+=== 最終完整 verify（dist 為 v0.5，LEGACY=1）完整輸出 ===
+
+=== 0. 季度層檢查（季度加總＝年度、指引一致性、超過門檻的差距都有原因；v4.4）
+一致性檢查 7 組
+low：季度加總＝年度 10 項
+low：年度差異原因 11 項、季度差異原因 4 項
+base：季度加總＝年度 10 項
+base：年度差異原因 11 項、季度差異原因 4 項
+high：季度加總＝年度 10 項
+high：年度差異原因 12 項、季度差異原因 4 項
+check_quarterly：全部通過
+[PASS] check_quarterly：季度加總＝年度、差異原因齊全
+
+=== 0b. README 欄位說明與 company.json 一致（scripts/fields_doc.py --check；5a）
+README 欄位說明與 company.json 一致
+[PASS] README 欄位說明與 company.json 一致
+
+=== 0c. Tokenomics 快照可重現（tools/tokenomics/import_tokenomics.py --check；v0.2a）
+注意：clone HEAD 1916a06 ≠ 快照 commit 868e2cc；以同一檔名 20261021_Tokenomics_v18.0.xlsx 比對
+--check 通過：38 個名稱（missing 0）與快照一致（20261021_Tokenomics_v18.0.xlsx，相對誤差 ≤ 1e-09）
+[PASS] Tokenomics 快照 --check：38 個名稱（missing 0）與快照一致（20261021_Tokenomics_v18.0.xlsx，相對誤差 ≤ 1e-09）
+
+=== 1. 建 HTML（v0.5 · 2026-10-22）
+built 1075648
+[PASS] 建 HTML
+
+=== 1b. 每 MW 收入 3 × 3 矩陣與敏感度快照（scripts/tk_sens.js → tk_sens.json；v0.2a）
+3×3（容量 × 價格，加權目標價）：low 24.61／29.53／46.57；base 17.24／21.38／38.98；high 13.09／19.43／41.56（無變動）
+[PASS] tk_sens 快照：low 24.61／29.53／46.57；base 17.24／21.38／38.98；high 13.09／19.43／41.56（無變動）
+
+=== 2. 建 Excel
+saved /home/user/company-models/nebius/out/20261022_Nebius收支模型_v0_5.xlsx
+[PASS] 建 Excel
+
+=== 3. 重算（LibreOffice headless）
+{"status": "success", "total_formulas": 2697, "total_errors": 0, "error_summary": {}}
+[PASS] 重算：0 公式錯誤
+
+=== 3b. 反向 DCF：以 Excel 求解（scripts/rv_solve.py；v4.5 取代 JS 快照）
+反向 DCF（Excel 求解）：現價 249.87、R 3.0177、C 無解、Eb 無解、Rt 2.7518；矩陣 19/20 格有解
+rv_snap.json 無變動
+[PASS] 反向 DCF：Excel 求解，rv_snap.json 與 Excel 一致
+
+=== 4. fix_outline
+outline fixed
+[PASS] fix_outline
+
+=== 4b. fix_datatable（模擬運算表還原為 Excel 格式）
+datatable fixed: xl/worksheets/sheet3.xml D202:E204 輸入格 C5
+[PASS] fix_datatable
+
+=== 5. verify_ooxml
+OOXML OK
+[PASS] verify_ooxml：OOXML OK
+
+=== 5d. 快照值＝Excel「Tokenomics_取數」分頁值（scripts/check_tokenomics_tab.py；v0.2a）
+快照值＝Excel 分頁值：38 個名稱（missing 0）、411 個值、137 個具名範圍一致；其他工作表 49 格公式引用 31 個 TK_ 名稱（v18.0）
+[PASS] 快照值＝Excel 分頁值：38 個名稱（missing 0）、411 個值、137 個具名範圍一致；其他工作表 49 格公式引用 31 個 TK_ 名稱（v18.0）
+
+=== 5c. 離線開啟檢查（已決定事項 11：單一檔案、無網路請求、console 無錯誤、關鍵數字正常顯示）
+(a) 網路請求：0 個
+(b) console 錯誤與例外：0 個
+(c) 關鍵數字：5 個分頁、15 項，失敗 0 項
+離線開啟檢查：通過
+[PASS] 離線開啟：新建 HTML
+(a) 網路請求：0 個
+(b) console 錯誤與例外：0 個
+(c) 關鍵數字：5 個分頁、15 項，失敗 0 項
+離線開啟檢查：通過
+[PASS] 離線開啟：dist/ 成品
+
+=== 6. 三情境 xlx＋cmp31（預設錨定）
+ok 1 1179
+[PASS] cmp31 low：439 項全部 OK
+ok 2 1179
+[PASS] cmp31 base：439 項全部 OK
+ok 3 1179
+[PASS] cmp31 high：439 項全部 OK
+
+=== 7. FY27 錨定 cmp31（基準）
+ok 2 1179
+[PASS] cmp31 base_FY27：414 項全部 OK
+
+=== 8. 季度層測試（暫存副本：假設 Q3 實際數、可移植性；v4.4）
+[PASS] test_quarterly：假設實際數與可移植性測試通過
+  畫面錯誤：無
+=== 結果
+test_quarterly：全部通過（測試 A 假設實際數、測試 B 可移植性）
+
+=== 8b. 期間滾動測試（暫存副本：日曆推算 6 種情況、滾動後第一屏無過期日期與期間字樣；v4.5）
+[PASS] test_rolling：日曆推算與滾動後第一屏
+C 滾動檢查：只滾日曆、未更新 asOf → 建置失敗並列出 28 項（清單 28 項）
+A 滾動 FY26Q3（評價日 2026-06-30 → 2026-09-30）：過期字樣 ['2026-06-30', 'Q2 2026', '2H26', '6/30', '1H26', '上半年', '下半年', '1H', 'H1', '2H']；第一屏命中 0 行
+期間滾動測試：通過
+
+=== 8c. 目標價變動拆解工具測試（scripts/attrib.py：(a)＝(1＋WACC)^(月數÷12)，WACC 讀 Excel、月數讀 calendar_q；四項相加＝總變動）
+[PASS] test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）
+目標價變動拆解測試：通過
+
+=== 10. 舊方法回歸：legacy 對 v0.2 成品 --vs-dist（scripts/verify_legacy.sh）
+[PASS] legacy 重現 v0.2：全部通過（24 項）（crawl 0 差異、xl_diff 值與公式 0 差異）
+
+================ 結果 ================
+PASS  check_quarterly：季度加總＝年度、差異原因齊全
+PASS  README 欄位說明與 company.json 一致
+PASS  Tokenomics 快照 --check：38 個名稱（missing 0）與快照一致（20261021_Tokenomics_v18.0.xlsx，相對誤差 ≤ 1e-09）
+PASS  建 HTML
+PASS  tk_sens 快照：low 24.61／29.53／46.57；base 17.24／21.38／38.98；high 13.09／19.43／41.56（無變動）
+PASS  建 Excel
+PASS  重算：0 公式錯誤
+PASS  反向 DCF：Excel 求解，rv_snap.json 與 Excel 一致
+PASS  fix_outline
+PASS  fix_datatable
+PASS  verify_ooxml：OOXML OK
+PASS  快照值＝Excel 分頁值：38 個名稱（missing 0）、411 個值、137 個具名範圍一致；其他工作表 49 格公式引用 31 個 TK_ 名稱（v18.0）
+PASS  離線開啟：新建 HTML
+PASS  離線開啟：dist/ 成品
+PASS  cmp31 low：439 項全部 OK
+PASS  cmp31 base：439 項全部 OK
+PASS  cmp31 high：439 項全部 OK
+PASS  cmp31 base_FY27：414 項全部 OK
+PASS  test_quarterly：假設實際數與可移植性測試通過
+PASS  test_rolling：日曆推算與滾動後第一屏
+PASS  test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）
+PASS  legacy 重現 v0.2：全部通過（24 項）（crawl 0 差異、xl_diff 值與公式 0 差異）
+verify.sh：全部通過（22 項）
+
+real	8m31.381s
+user	3m37.713s
+sys	0m56.040s

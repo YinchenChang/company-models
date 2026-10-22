@@ -170,10 +170,13 @@ cmp('加權目標價', V+'加權目標價', [p.call.blended]);
   cmp('未截斷 DCF 每股', RG+'未截斷 DCF 每股', [p.d.perShareRaw]);
   // v0.5a C：方法並列（A 現行／B DCF 腿為 0 時權重全移至 EV/EBITDA）
   cmp('方法並列 A', V+'方法並列｜A 現行加權目標價（DCF／EV/EBITDA 按權重；評等依此）', R.scen.map(s=>s.tgt));
+  if (!AKX) { // B 讀法為建置時快照（預設錨定年度），FY27 錨定另跑時不比對
   cmp('方法並列 B', V+'方法並列｜B DCF 腿為 0 時權重全移至 EV/EBITDA（只作方法敏感度）', R.scen.map(s=>s.evB));
+  cmp('方法並列 快照檢查', V+'方法並列｜快照檢查：目前情境 B 的快照 − 即時值', [0]);
   cmp('方法並列 B−A', V+'方法並列｜B − A', R.scen.map(s=>s.evB-s.tgt));
   cmp('方法並列 B 距門檻', V+'方法並列｜B 距賣出門檻', R.scen.map(s=>s.evB-R.th));
   { const x=X[V.replace('損益與評價|','評價_DCF與目標價|')+'方法並列｜結論']; rows.push([x&&x[0]===R.pair?'OK ':'XX ','文字 方法並列結論',JSON.stringify(R.pair),JSON.stringify(x&&x[0])]); }
+  }
   const cmpT=(label,xlKey,h)=>{ const x=X[xlKey]; if(!x){rows.push([label,'MISSING XL KEY '+xlKey]);return;} rows.push([x[0]===h?'OK ':'XX ',label,JSON.stringify(h),JSON.stringify(x[0])]); };
   cmpT('文字 點位摘要', RG+'點位摘要', R.head);
   cmpT('文字 方法區間標籤', RG+'方法區間標籤', R.bLabel);
@@ -197,7 +200,7 @@ cmp('加權目標價', V+'加權目標價', [p.call.blended]);
   cmp('隱含 共識目標價倍數',SM+'隱含｜共識平均目標價隱含 FY28 EV/EBITDA',[cv.impTgt]); cmp('隱含 現價倍數',SM+'隱含｜現價隱含 FY28 EV/EBITDA',[cv.impPx]);
   cmp('隱含 模型上緣',SM+'隱含｜模型方法區間上緣',[cv.mHi]);
   cmp('摘要 點位',SM+'結論｜點位（加權目標價）',[R.pt]); cmp('摘要 空間',SM+'結論｜空間',[cv.up]); cmp('摘要 點位−門檻',SM+'結論｜點位 − 賣出門檻',[cv.gapTh]);
-  cmpT('文字 摘要評等',SM+'結論｜評等',p.call.call); cmpT('文字 摘要結論句',SM+'結論｜結論句',cv.head); cmpT('文字 摘要情境判斷句',SM+'結論｜情境判斷句',R.judge); cmpT('文字 摘要方法並列句',SM+'結論｜方法並列句',R.pairLine);
+  cmpT('文字 摘要評等',SM+'結論｜評等',p.call.call); cmpT('文字 摘要結論句',SM+'結論｜結論句',cv.head); cmpT('文字 摘要情境判斷句',SM+'結論｜情境判斷句',R.judge); if (!AKX) cmpT('文字 摘要方法並列句',SM+'結論｜方法並列句',R.pairLine);
   cmpT('文字 共識判斷句',SM+'差異｜判斷句',cv.judge); cmpT('文字 隱含倍數句',SM+'隱含｜隱含倍數句',cv.implied);
   // v4.4：年度差異原因（類型＋原因逐字；Excel 每個設定組合一列，未超過門檻時為空白）與原因摘要句
   cmpT('文字 差異原因摘要',SM+'差異｜差異原因摘要',cv.rsnSum);

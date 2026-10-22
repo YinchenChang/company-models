@@ -370,16 +370,16 @@ function fy26BridgeQ(e) {
   let BRQ = COMPANY_DATA.scenarios.billableRatio, sc = SCENARIOS[e.scenario] ? e.scenario : `base`,
     lo = CALL_FACTS.revLo, hi = CALL_FACTS.revHi, mid = (lo + hi) / 2, ytd = ACTUAL_1H.revenue, L = PERIOD_YEARS[0], u = e.m.util[0] / 100, scl = e.revScale ?? 1,
     p = e.m.revMW[0], svc = e.services[0], avg = e.useAvgMw ? 1 : 0, b0 = e.billableOpen, conn = e.m.accepted[0], ratio = SC_BR[0],
-    b1 = [Math.round(conn * ratio * BRQ.rampPrev[0]), e.m.billable[0]], ramp = [BRQ.rampPrev[0], e.m.billable[0] / (conn * ratio)],
+    rp0 = (BRQ.rampPrev || BRQ.ramp)[0], b1 = [Math.round(conn * ratio * rp0), e.m.billable[0]], ramp = [rp0, e.m.billable[0] / (conn * ratio)], // 沒有 rampPrev 的公司：校準前＝目前
     mod = (B0, B1, P, S) => ytd + L * u * (avg ? (B0 + B1) / 2 : B1) * P * scl + S,
     m0 = mod(b0, b1[0], p, svc), m1 = mod(b0, b1[1], p, svc),
     i = mod(b0, b1[0], p, svc) - m0, ii = 0, iii = m1 - mod(b0, b1[0], p, svc), iv = 0, v = mid - m1, gap = mid - m0,
-    den = L * u * p * scl, nb1 = b1[1] + v / ((avg ? .5 : 1) * den), anchor = tkAnchorQ(sc).anchor[0] * 1e3,
+    den = L * u * p * scl, nb1 = b1[1] + v / ((avg ? .5 : 1) * den), anchor = PMW_REVQ === `tkAnchor` ? tkAnchorQ(sc).anchor[0] * 1e3 : NaN,
     np = (avg ? (2 * (mid - ytd - svc) / (L * u * scl) - LATEST_Q.revenue * 4) / b1[1] : (mid - ytd - svc) / (L * u * scl * b1[1])) * 1e3;
   return {
     lo, hi, mid, ytd, ramp, b0, conn, ratio, b1, p, L, u, scl, svc, model: [m0, m1], vlo: [m0 - lo, m1 - lo], vmid: [m0 - mid, m1 - mid], vmidp: [m0 / mid - 1, m1 / mid - 1],
     inr: [m0 >= lo && m0 <= hi, m1 >= lo && m1 <= hi], gap, i, ii, iii, iv, v, sum: i + ii + iii + iv + v - gap,
-    nb0: avg ? b0 + v / (.5 * den) : NaN, nb0ref: COMPANY_DATA.priceCheck.inServiceMw, nb1, nramp: nb1 / (conn * ratio), nrampLo: (b1[1] + (lo - m1) / ((avg ? .5 : 1) * den)) / (conn * ratio), nratio: nb1 / conn, np, nk: np / anchor, nsv: v, anchor
+    nb0: avg ? b0 + v / (.5 * den) : NaN, nb0ref: (COMPANY_DATA.priceCheck || {}).inServiceMw ?? NaN, nb1, nramp: nb1 / (conn * ratio), nrampLo: (b1[1] + (lo - m1) / ((avg ? .5 : 1) * den)) / (conn * ratio), nratio: nb1 / conn, np, nk: np / anchor, nsv: v, anchor
   }
 }
 

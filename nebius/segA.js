@@ -844,7 +844,8 @@ function fA(e, t, v, q) {
   return {
     tgt: a.call.blended,
     eq: i.totals.equity,
-    gap: Math.max(0, -i.totals.preFinEnd)
+    gap: Math.max(0, -i.totals.preFinEnd),
+    evB: (a.d.invalid || !(a.d.perShareT > 1e-12)) ? a.peAdj : a.call.blended // v0.5a C：B 讀法（DCF 腿為 0 時權重全移至 EV/EBITDA；只作方法敏感度）
   }
 }
 
