@@ -173,8 +173,8 @@ EOF
 fi
 
 if [[ "${LEGACY:-}" == "1" ]]; then  # v0.3：舊方法回歸驗收（methodology.perMw.revenue＝legacy 須重現 v0.2 成品；scripts/verify_legacy.sh）
-  step "10. 舊方法回歸：legacy 對 v0.2 成品 --vs-dist（scripts/verify_legacy.sh）"
-  if bash scripts/verify_legacy.sh > "$OUT/verify_legacy.out" 2>&1; then ok "legacy 重現 v0.2：$(grep -o '全部通過（[0-9]* 項）' "$OUT/verify_legacy.log" | tail -1)（crawl 0 差異、xl_diff 值與公式 0 差異）"
+  step "10. 舊方法回歸：legacy 對舊版成品 --vs-dist（scripts/verify_legacy.sh）"
+  if bash scripts/verify_legacy.sh > "$OUT/verify_legacy.out" 2>&1; then ok "legacy 重現舊版成品：$(grep -o '全部通過（[0-9]* 項）' "$OUT/verify_legacy.log" | tail -1)（crawl 0 差異、xl_diff 值與公式 0 差異）"
   else bad "legacy 重現 v0.2（見 $OUT/verify_legacy.log）"; tail -20 "$OUT/verify_legacy.log"; fi
 fi
 

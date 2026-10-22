@@ -62,8 +62,8 @@ Andy 不熟程式，他透過 Claude 聊天端（讀 Gmail 裡的 GitHub 通知�
 8. 同業 Comps 與評等門檻只放在 `company.json`（`peers`、`methodology.rating`）；segB／segC／build_xlsx 不再寫任何同業數字或門檻數字。含門檻的畫面文字以門檻值組字（HTML `pctQ`／`multTxt`，Excel `_PC`／`_MT`），cmp31 以標籤為鍵的列（例如「賣出門檻價（現價 × (1 − 15%)）」）標籤也由門檻值產生。
 
 ## 待辦（WhiteFiber；依序，每項一張工作單、一個 PR）
-CRWV 未完成的待辦（5a 精簡、5b 只讀檢視器、折舊修正、機率加權目標價、GPU 批次與續約價格衰退）依 repo 根目錄 README，WhiteFiber 也先不做。
-1. **FY26Q3 季度更新**（季末 2026-09-30；財報約 2026-11 中；步驟見交接檔「待辦與季度更新」）：填 `quarterly.actuals`、10-Q 後滾動評價日至 2026-09-30（首期縮為 Q4，0.25 年）、更新 `ytdActual`、`latestQuarter`、`asOf` 全部欄位；期初可計費雲端 MW 依 Q3 經常性雲端營收 × 4 重新校準；託管站點依實際起租更新（NC-1 第一期 8 月底全額計費）；NC-1 專案貸款若已完成，金額、利率、攤還改為實際條件；`node scripts/calib_ebitdar.js --write`；延誤月數依最新進度檢討；升版 v0.2。
+CRWV 未完成的待辦（5a 精簡、5b 只讀檢視器、折舊修正、機率加權目標價、GPU 批次與續約價格衰退）依 repo 根目錄 README，WhiteFiber 也先不做（v0.2 已把雲端每 MW 收入改為 Tokenomics 錨 × k；合約期內 k 固定，續約衰退仍為範圍外）。
+1. **FY26Q3 季度更新**（季末 2026-09-30；財報約 2026-11 中；步驟見交接檔「待辦與季度更新」）：填 `quarterly.actuals`、10-Q 後滾動評價日至 2026-09-30（首期縮為 Q4，0.25 年）、更新 `ytdActual`、`latestQuarter`、`asOf` 全部欄位；期初可計費雲端 MW 依 Q3 經常性雲端營收 × 4 重新校準；託管站點依實際起租更新（NC-1 第一期 8 月底全額計費）；NC-1 專案貸款若已完成，金額、利率、攤還改為實際條件；`node scripts/calib_ebitdar.js --write`；延誤月數依最新進度檢討；Tokenomics 快照若有新版一併更新（`tools/tokenomics/import_tokenomics.py`），重算 `fleet`／`pricing`（`scripts/tkanchor_sync.py --write`）並做 Q3 驗證；升版 v0.3。
 2. **Nscale 對手方信用**：目前未建模（只有違約敏感度）；Nscale 本身是 neocloud，可考慮以 Nscale 融資狀況設定違約機率或部分履約情境。
 3. **託管同業倍數與 beta**：託管同業 NTM EV/EBITDA 只 2 家（DLR、EQIX），個股 beta 不可靠（預設 2.5）；資料可得時更新（`peers.software`、`valuation.capm.beta`）。
 4. **共識**：EBITDA、CapEx、淨負債共識未取得；共識檔放 `data/`，改 `meta.consensusFile`。

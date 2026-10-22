@@ -5,7 +5,7 @@
 //   (a) 時間推移、(b) 實際數更新皆 0；①、④ 含 (c) TK 同步，②③⑤⑥ 為 (d) 方法變更（①為兩者合併：舊推導停用與新快照同時發生）。
 // 二、每 MW 年收入（基準容量情境）逐年橋：舊值 17.40 → TK 錨本身變動 → 成本加成停用 → 市場價平均停用 → 世代組合 → k 證據 → 新值。
 // 每一步期初可計費 MW 依「最新季經常性雲端營收 × 4 ÷ 首期每 MW 年收入」重算（與 Excel 活公式相同）。
-// 用法：node scripts/attrib_v03.js [輸出.json]（v0.2 參考值取自 git 的 LEGACY_REF，預設 b4ba593）
+// 用法：node scripts/attrib_v02.js [輸出.json]（v0.2 參考值取自 git 的 LEGACY_REF，預設 b4ba593）
 const fs = require('fs'), path = require('path'), cp = require('child_process');
 const dir = path.join(__dirname, '..'); require(path.join(dir, 'load_engine.js'))(dir);
 const REF = process.env.LEGACY_REF || '1079d5c', K3 = ['low', 'base', 'high'], OLD = COMPANY_DATA.scenarios.revMW, ratio = sc => OLD[sc].map((x, i) => x / OLD.base[i]);
@@ -44,4 +44,4 @@ out.permw.base = TB.rev.map((rev, t) => {
 out.permw.params = { HE_OLD, HE_NEW, gpus, SPOT, UTIL, pathA_old: pathA(HE_OLD), pathA_new: pathA(HE_NEW), pathB };
 for (const x of out.permw.base) console.log(`每 MW ${x.period}：舊 ${x.old.toFixed(2)}｜進位 ${x.d.rounding.toFixed(3)}｜TK 錨 ${x.d.tkAnchor.toFixed(2)}｜成本加成停用 ${x.d.costPlus.toFixed(2)}｜市場價平均停用 ${x.d.marketPrice.toFixed(2)}｜世代組合 ${x.d.genMix.toFixed(2)}｜k 證據 ${x.d.kEvidence.toFixed(2)}｜新 ${x.new.toFixed(2)}｜加總（含進位）${x.sum.toFixed(3)}`);
 fs.mkdirSync(path.join(dir, 'out'), { recursive: true });
-fs.writeFileSync(process.argv[2] || path.join(dir, 'out', 'attrib_v03.json'), JSON.stringify(out, null, 1));
+fs.writeFileSync(process.argv[2] || path.join(dir, 'out', 'attrib_v02.json'), JSON.stringify(out, null, 1));
