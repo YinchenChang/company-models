@@ -1,12 +1,12 @@
 # HTML 一頁摘要的敏感度情境（Z5；r2：招股章程 P1 後依 tools/sensitivity_r2.yaml 重設）。
 # 只定義「改哪些輸入格」，不含數值參數：值一律取自 Excel（Inputs 低／高欄），
-# 翻轉點取自 docs/reports/20261008_v0.1-r2_敏感度.json（tools/sensitivity_z4.py --yaml tools/sensitivity_r2.yaml，以 engine 執行 Excel 二分搜尋的結果）。
+# 翻轉點取自 docs/reports/20261022_v0.1.1_敏感度.json（v0.1.1 重算）（tools/sensitivity_z4.py --yaml tools/sensitivity_r2.yaml，以 engine 執行 Excel 二分搜尋的結果）。
 # 覆寫寫法（鍵＝INP_nnn 或 SRC_ZP_nnn 具名範圍）：
 #   lo / hi          → 該 Inputs 列的「低」「高」欄
 #   {flip: f_xxx}    → 敏感度 JSON flips[id＝f_xxx].value
 #   0                → 歸零（只用於「只計部分已到位融資」情境：把該筆 SRC_ZP 融資淨額設為 0）
 # 計算一律由 Excel 執行：build_html.py 以 LibreOffice 重算；tests/test_html.py 以 engine（pycel）重算比對。
-flips_json: docs/reports/20261008_v0.1-r2_敏感度.json
+flips_json: docs/reports/20261022_v0.1.1_敏感度.json
 
 scenarios:
   base: {label: 基準, set: {}}
