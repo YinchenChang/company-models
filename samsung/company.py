@@ -2,7 +2,7 @@
 S = "sec"
 Z = lambda k, nm: (k, nm, "兆韓元", None, 0, None, "Verified", "")
 CONFIG = {
- "name": "三星電子", "version": "v0.1.1", "date": "2026-10-22",
+ "name": "三星電子", "version": "v0.2", "date": "2026-10-23",
  "unit": "兆韓元", "ccy_per_usdB": "fx/1000", "share_scale": 1000000,
  "base_fy": 2026, "fy_offset": 0, "fy_label": "{}", "fy_desc": "日曆年（K-IFRS 合併）；記憶體事業以外為輸入",
  "thesis": "三星電子 2026 年的獲利幾乎全部來自記憶體，盈餘由一般 DRAM 價格循環與 HBM 份額追趕兩條線決定；股價取決於循環見頂的年度、見頂時累積的淨值，以及非記憶體事業（手機、晶圓代工、面板、家電）在谷底時能撐住多少。",
@@ -120,6 +120,6 @@ CONFIG = {
   ("companiesmarketcap P/B", "https://companiesmarketcap.com/samsung/pb-ratio/"),
   ("Seoul Economic Daily（P4、資本支出）", "https://en.sedaily.com/finance/2026/04/22/samsung-accelerates-p4-fab-advances-full-production-by-six"),
  ],
- "readme_extra": ["v0.1.1：Tokenomics v19.0 同步。只有對帳頁的「每顆 GPU 的 NVIDIA 內容」由 51.6 改 42.8 千美元（橋接表 v0.2：GB300 機架基準價 $4.3M）；損益、淨值、估值與 v0.1 相同。", "集團公司處理：只建模記憶體事業（DRAM、HBM、NAND），手機、晶圓代工、面板、家電、Harman 以「非記憶體事業營收、營業利益」輸入；權益、淨現金、股數、估值為全公司。",
+ "readme_extra": ["v0.2：HBM 出貨位元隨情境變動（markets/memory）：2028–29 需求位元 × 情境顆數係數（B 0.8／0.85、C 0.6／0.6；與台積電、Advantest 同一套），供給與 2028 前的單價假設不變。2026–27 與 v0.1.1 相同；情境 A 全部相同；B、C 的 2028–29 HBM 營收下降，營業成本量指數隨 HBM 位元同步下降。", "v0.1.1：Tokenomics v19.0 同步。只有對帳頁的「每顆 GPU 的 NVIDIA 內容」由 51.6 改 42.8 千美元（橋接表 v0.2：GB300 機架基準價 $4.3M）；損益、淨值、估值與 v0.1 相同。", "集團公司處理：只建模記憶體事業（DRAM、HBM、NAND），手機、晶圓代工、面板、家電、Harman 以「非記憶體事業營收、營業利益」輸入；權益、淨現金、股數、估值為全公司。",
                   "最大限制：三星不揭露記憶體營業利益；基準年記憶體利潤率由 DS 營業利益加回晶圓代工虧損估計推得，並以 2026Q3 初步財報（合併營業利益 107.4 兆）核對。"],
 }

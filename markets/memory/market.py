@@ -7,6 +7,11 @@ SCEN_DESC = {"A": "2027–28 高檔持平、2029 緩降（BofA、TrendForce 型�
              "B": "2027 Q2 見頂、2028 回落約一半、2029 溫和回升（Citi、Bernstein 型）",
              "C": "2028 回到 2025 年價格水準、2029 自谷底回升（完整循環）"}
 
+# 加速器顆數的情境係數（2028、2029 年 ÷ 情境 A 基準）：與 tsmc/build_tsmc.py、advantest 同一套，由這裡單一來源提供
+SCEN_UNITS = {"A": (1.0, 1.0), "B": (0.8, 0.85), "C": (0.6, 0.6)}
+# 低／高（Assumed 區間；A 為基準定義，不給區間）
+SCEN_UNITS_RNG = {"B": ((0.7, 0.9), (0.75, 0.95)), "C": ((0.5, 0.7), (0.5, 0.7))}
+
 def qcol(i):  # 0..15 → Path 欄
     return chr(ord("C") + i)
 
@@ -57,19 +62,26 @@ def inputs(sec, inp):
             inp(f"u_{k}_{y}", f"{nm} 顆數 20{y}", "百萬顆", None, u[i], None, tag, src if i == 0 else "同上")
         for i, y in enumerate((26, 27, 28)):
             inp(f"g_{k}_{y}", f"{nm} 每顆 HBM 20{y}", "GB", None, gb[i], None, tag, "同上")
+    sec("M2b. 情境顆數係數（2028–29 加速器顆數 ÷ 情境 A 基準；與台積電、Advantest 模型同一套）")
+    for sc in SCEN:
+        for n, y in enumerate((28, 29)):
+            rng = SCEN_UNITS_RNG.get(sc)
+            lo, hi = (rng[n] if rng else (None, None))
+            inp(f"um{y}_{sc}", f"情境 {sc}：20{y} 顆數 ÷ 基準", "x", lo, SCEN_UNITS[sc][n], hi, "Assumed",
+                ("A＝基準（定義為 1.0）；B＝AI 資本支出消化；C＝明顯下修。無外部預測可校準，B、C 區間皆 ±0.1；與 tsmc/build_tsmc.py 同值。HBM 需求位元、台積電 CoWoS 需求、Advantest 測試機需求用同一組係數" if (sc == "A" and y == 28) else "同上"))
     sec("M3. HBM 市場")
     inp("hbm_mkt25", "HBM 市場 2025", "$B", 34, 35, 35, "Verified", "Micron TAM 約 $35B（2025-12 法說）；Yole 約 $34B")
     inp("hbm_g26", "2026 HBM 位元成長（推 2025 出貨位元）", "%", 0.6, 0.7, 0.8, "Interested-party", "TrendForce：2026 >70%")
     inp("hbm_gross", "出貨位元 ÷ 加速器裝載位元", "x", 1.0, 1.15, 1.3, "Assumed", "封裝良率損失、庫存與未列入的買方（Epoch：CoWoS-L 良率 65–95%）")
-    inp("hbm_sup27", "2027 HBM 位元供給成長", "%", 0.50, 0.55, 0.63, "Interested-party", "TrendForce 2027 +50–60%；JPMorgan 2026–28 CAGR 63%")
-    inp("hbm_sup28", "2028 HBM 位元供給成長", "%", 0.30, 0.45, 0.63, "Assumed", "新廠 2028 才貢獻（TrendForce）")
+    inp("hbm_sup27", "2027 HBM 位元供給成長（三情境相同：產能已定）", "%", 0.50, 0.55, 0.63, "Interested-party", "TrendForce 2027 +50–60%；JPMorgan 2026–28 CAGR 63%")
+    inp("hbm_sup28", "2028 HBM 位元供給成長（三情境相同）", "%", 0.30, 0.45, 0.63, "Assumed", "新廠 2028 才貢獻（TrendForce）；供給不隨需求情境變：2028 產能的設備與廠房在 2027 前已訂定，需求下修的結果是閒置產能與降價，不是減產")
     inp("hbm_p26", "HBM 混合單價 2026", "$/GB", 12.5, 14.6, 16.0, "Interested-party", "BofA $14.6/GB；DigiTimes HBM3E $12–12.8、HBM4 約 $16")
     inp("hbm_p27", "HBM 單價 2027 變動（三情境相同；年約已議定）", "%", 0.38, 0.80, 1.21, "Interested-party", "BofA +38%、JPM +54%、UBS +76–79%、TrendForce +121%；Micron：CY27 大部分已簽、大幅漲價")
     inp("hbm_p28_A", "HBM 單價 2028 變動（A）", "%", 0.0, 0.10, 0.25, "Interested-party", "JPMorgan 2028 +25%（上限）")
     inp("hbm_p28_B", "HBM 單價 2028 變動（B）", "%", -0.40, -0.25, -0.10, "Assumed", "一般 DRAM 大跌時 HBM 年約重議下修")
     inp("hbm_p28_C", "HBM 單價 2028 變動（C）", "%", -0.55, -0.40, -0.25, "Assumed", "完整谷底")
-    inp("hbm_dem29", "2029 HBM 需求位元成長", "%", 0.20, 0.30, 0.45, "Assumed", "2029 無顆數預測；Micron：HBM 位元成長快於一般 DRAM 至 2028")
-    inp("hbm_sup29", "2029 HBM 位元供給成長", "%", 0.25, 0.35, 0.50, "Assumed", "P5、龍仁、M15X 等新廠 2028–29 投產")
+    inp("hbm_dem29", "2029 HBM 需求位元成長（情境 A 基準；B、C 再乘 um29）", "%", 0.20, 0.30, 0.45, "Assumed", "2029 無顆數預測；Micron：HBM 位元成長快於一般 DRAM 至 2028")
+    inp("hbm_sup29", "2029 HBM 位元供給成長（三情境相同）", "%", 0.25, 0.35, 0.50, "Assumed", "P5、龍仁、M15X 等新廠 2028–29 投產")
     inp("hbm_p29_A", "HBM 單價 2029 變動（A）", "%", -0.15, -0.05, 0.05, "Assumed", "")
     inp("hbm_p29_B", "HBM 單價 2029 變動（B）", "%", -0.10, 0.0, 0.10, "Assumed", "")
     inp("hbm_p29_C", "HBM 單價 2029 變動（C）", "%", -0.10, 0.05, 0.15, "Assumed", "自谷底回升")
@@ -107,7 +119,7 @@ def write(wb, hdr, Font):
     for i in range(NQ): P.column_dimensions[qcol(i)].width = 8
 
     M = wb.create_sheet("Mkt")
-    M["A1"] = "Mkt — 加速器數量層（最小版）與 HBM 市場（日曆年）。需求＝顆數 × GB；出貨＝MIN(需求, 供給)；市場＝出貨 × 單價"
+    M["A1"] = "Mkt — 加速器數量層（最小版）與 HBM 市場（日曆年）。需求＝顆數 × GB × 情境顆數係數（2028–29）；供給三情境相同；出貨＝MIN(需求, 供給)；市場＝出貨 × 單價（單價依情境）"
     hdr(M, 3, ["項目", "單位", "2025", "2026", "2027", "2028", "2029", "說明"])
     MK = {}; mr = [4]
     def put(label, unit, fs, key=None, fmt="0.00", note=""):
@@ -126,21 +138,30 @@ def write(wb, hdr, Font):
     a, b = MK["pb_bw"], MK["pb_oth"]
     put("需求合計（裝載）", "EB", [None] + [f"=SUM({YC[y]}{a}:{YC[y]}{b})/1000" for y in (26, 27, 28)], key="dem")
     M.cell(MK["dem"], 7, f"=F{MK['dem']}*(1+hbm_dem29)").number_format = "0.00"
-    put("需求 × 出貨係數", "EB", [None] + [f"={YC[y]}{MK['dem']}*hbm_gross" for y in (26, 27, 28, 29)], key="demg")
-    put("加速器顆數合計", "百萬顆", [None] + ["=" + "+".join(f"u_{k}_{y}" for k, *_ in UNITS) for y in (26, 27, 28)], key="units", fmt="0.0", note="JPMorgan 2027：GPU 10.9M、ASIC 12.5M")
+    put("需求 × 出貨係數（基準＝情境 A）", "EB", [None] + [f"={YC[y]}{MK['dem']}*hbm_gross" for y in (26, 27, 28, 29)], key="demg")
+    put("加速器顆數合計", "百萬顆", [None] + ["=" + "+".join(f"u_{k}_{y}" for k, *_ in UNITS) for y in (26, 27, 28)], key="units", fmt="0.0", note="JPMorgan 2027：GPU 10.9M、ASIC 12.5M；情境 A 基準")
     put("每顆平均 HBM", "GB", [None] + [f"={YC[y]}{MK['dem']}*1000/{YC[y]}{MK['units']}" for y in (26, 27, 28)], key="gbavg", fmt="0")
-    put("供給", "EB", ["=D{s}/(1+hbm_g26)", "=D{d}", "=D{s}*(1+hbm_sup27)", "=E{s}*(1+hbm_sup28)"], key="sup", note="2026 供給＝需求出貨（年中已成交）")
+    put("供給（三情境相同）", "EB", [None] * 5, key="sup", note="2026 供給＝需求出貨（年中已成交）；供給不隨需求情境變（產能 2027 前已訂定）")
     rr = MK["sup"]
     for j, f in enumerate(["=D{0}/(1+hbm_g26)".format(rr), "=D{0}".format(MK["demg"]), "=D{0}*(1+hbm_sup27)".format(rr), "=E{0}*(1+hbm_sup28)".format(rr), "=F{0}*(1+hbm_sup29)".format(rr)]):
         M.cell(rr, 3 + j, f).number_format = "0.00"
-    put("出貨＝MIN(需求, 供給)", "EB", [f"=C{MK['sup']}"] + [f"=MIN({YC[y]}{MK['demg']},{YC[y]}{MK['sup']})" for y in (26, 27, 28, 29)], key="ship")
-    put("需求 − 供給（>0＝短缺）", "EB", [None] + [f"={YC[y]}{MK['demg']}-{YC[y]}{MK['sup']}" for y in (26, 27, 28, 29)], key="gap")
+    # 情境層：顆數係數 → 需求 → 出貨 → 缺口（供給不變，需求隨情境）
     for s in SCEN:
-        put(f"HBM 單價（{s}）", "$/GB", [f"=hbm_mkt25/C{MK['ship']}", "=hbm_p26", "=D{r}*(1+hbm_p27)", f"=E{{r}}*(1+hbm_p28_{s})"], key="p" + s)
+        put(f"顆數係數（{s}；2028–29 ÷ 基準，與台積電、Advantest 同一套）", "x", [None, 1, 1, f"=um28_{s}", f"=um29_{s}"], key="cf" + s, fmt="0.00", note="2026–27 無情境差異")
+    for s in SCEN:
+        put(f"需求 × 出貨係數（{s}）", "EB", [None] + [f"={YC[y]}{MK['demg']}*{YC[y]}{MK['cf' + s]}" for y in (26, 27, 28, 29)], key="demg" + s)
+    for s in SCEN:
+        put(f"出貨＝MIN(需求, 供給)（{s}）", "EB", [f"=C{MK['sup']}"] + [f"=MIN({YC[y]}{MK['demg' + s]},{YC[y]}{MK['sup']})" for y in (26, 27, 28, 29)], key="ship" + s,
+            note="需求低於供給時出貨＝需求（閒置產能）" if s == "A" else "")
+    for s in SCEN:
+        put(f"需求 − 供給（{s}；>0＝短缺）", "EB", [None] + [f"={YC[y]}{MK['demg' + s]}-{YC[y]}{MK['sup']}" for y in (26, 27, 28, 29)], key="gap" + s)
+    MK["ship"], MK["gap"] = MK["shipA"], MK["gapA"]   # 舊鍵：情境 A（2026–27 三情境相同）
+    for s in SCEN:
+        put(f"HBM 單價（{s}）", "$/GB", [f"=hbm_mkt25/C{MK['shipA']}", "=hbm_p26", "=D{r}*(1+hbm_p27)", f"=E{{r}}*(1+hbm_p28_{s})"], key="p" + s)
         rr = MK["p" + s]
         M.cell(rr, 5, f"=D{rr}*(1+hbm_p27)"); M.cell(rr, 6, f"=E{rr}*(1+hbm_p28_{s})"); M.cell(rr, 7, f"=F{rr}*(1+hbm_p29_{s})")
     for s in SCEN:
-        put(f"HBM 市場（{s}）", "$B", [f"={YC[y]}{MK['ship']}*{YC[y]}{MK['p' + s]}" for y in (25, 26, 27, 28, 29)], key="m" + s, fmt="0.0")
+        put(f"HBM 市場（{s}）", "$B", [f"={YC[y]}{MK['ship' + s]}*{YC[y]}{MK['p' + s]}" for y in (25, 26, 27, 28, 29)], key="m" + s, fmt="0.0")
     mr[0] += 1
     M.cell(mr[0], 1, "對帳（樣板驗收 2）").font = BOLD; mr[0] += 1
     put("由下而上：NVIDIA 裝載 HBM × 單價（2026）", "$B", [None, f"=(D{MK['pb_bw']}+D{MK['pb_rb']}+D{MK['pb_ru']}+D{MK['pb_hp']})/1000*hbm_p26"], key="bu", fmt="0.0")

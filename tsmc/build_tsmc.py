@@ -38,7 +38,7 @@ for k, nm, u, gb, tag, src in MEM.UNITS:
     for i, y in enumerate((26, 27, 28)):
         inp(f"u_{k}_{y}", f"{nm} 顆數 20{y}", "百萬顆", None, u[i], None, tag, ("markets/memory：" + src) if i == 0 else "同上")
     inp(f"g29_{k}", f"{nm} 2029 顆數成長", "%", None, {"bw": -0.5, "hp": 0.0}.get(k, 0.15), None, "Assumed", "")
-for s, (v28, v29) in zip(SC, ((1.0, 1.0), (0.8, 0.85), (0.6, 0.6))):
+for s, (v28, v29) in zip(SC, [MEM.SCEN_UNITS[s_] for s_ in SC]):   # 單一來源：markets/memory/market.py（HBM 需求位元用同一組）
     inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, v28, None, "Assumed", "A＝基準；B＝AI 資本支出消化；C＝明顯下修" if s == "A" else "")
     inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, v29, None, "Assumed", "")
 sec("B. 每片 CoWoS 晶圓封裝數、每顆台積電內容")

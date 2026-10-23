@@ -71,8 +71,8 @@ def path_avg(kind, s, y):
 def hbm_fy(y, s):
     terms = [f"Mkt!{MYC[cy_of(i)]}{MK['m' + s]}/4*{C['hbm_share'][cy_of(i)]}" for i in fy_quarters(y)]
     return "(" + "+".join(terms) + f")*{CCY}"
-def hbmbits_fy(y):
-    return "(" + "+".join(f"Mkt!{MYC[cy_of(i)]}{MK['ship']}/4*{C['hbm_share'][cy_of(i)]}" for i in fy_quarters(y)) + ")"
+def hbmbits_fy(y, s):
+    return "(" + "+".join(f"Mkt!{MYC[cy_of(i)]}{MK['ship' + s]}/4*{C['hbm_share'][cy_of(i)]}" for i in fy_quarters(y)) + ")"
 
 # ---------------- Q：季度 ----------------
 Q = wb.create_sheet("Q")
@@ -156,7 +156,7 @@ setc("C", "rev", qs_("rev")); setc("C", "hbm", "=" + hbm_fy(BASE, "A")); setc("C
 setc("C", "nand", qs_("nand")); setc("C", "oth", qs_("oth")); setc("C", "da", qs_("da")); setc("C", "cogs", qs_("cogs"))
 setc("C", "opex", qs_("opex")); setc("C", "op", qs_("op")); setc("C", "ni", qs_("ni")); setc("C", "capex", "=cap_0")
 setc("C", "nmrev", "=nm_rev_0"); setc("C", "nmop", "=nm_op_0")
-setc("C", "hbmbits", "=" + hbmbits_fy(BASE), "0.00")
+setc("C", "hbmbits", "=" + hbmbits_fy(BASE, "A"), "0.00")  # 基準年：情境係數 2028 才開始，三情境相同
 fq = [i for i, q in enumerate(qs[-4:]) if q["type"] == "F"]
 fni = "+".join(f"Q!{qs and QC[-4 + i]}{QR['ni']}" for i in fq) or "0"
 fda = "+".join(f"Q!{QC[-4 + i]}{QR['da']}" for i in fq) or "0"
@@ -184,7 +184,7 @@ for (s, n), col in FC.items():
     setc(col, "nand", f"={P}{R['nand']}*(1+nb_{n})*({path_avg('nand', s, y)}/{path_avg('nand', s, y - 1)})")
     setc(col, "oth", "=other_y")
     setc(col, "rev", f"={col}{R['conv']}+{col}{R['hbm']}+{col}{R['nand']}+{col}{R['oth']}")
-    setc(col, "hbmbits", "=" + hbmbits_fy(y), "0.00")
+    setc(col, "hbmbits", "=" + hbmbits_fy(y, s), "0.00")
     setc(col, "da", f"={P}{R['da']}+({P}{R['capex']}-{P}{R['da']})/da_life")
     setc(col, "vol", f"=w_c*(1+cb_{n})+w_h*{col}{R['hbmbits']}/{P}{R['hbmbits']}+w_n*(1+nb_{n})", "0.00")
     setc(col, "cogs", f"=({P}{R['cogs']}-da_cogs*{P}{R['da']})*{col}{R['vol']}*(1-costdn_y)+da_cogs*{col}{R['da']}")
@@ -266,7 +266,7 @@ FB = wb.create_sheet("Feedback"); FB["A1"] = "Feedback — 回饋算力收支"; 
 fb = [("每顆加速器 HBM 金額（GB300，2026 價）", "=nv_hbm", "$K"),
       ("全市場每顆加速器平均 HBM 2026／2027", f"=TEXT(Mkt!D{MK['gbavg']},\"0\")&\" ／ \"&TEXT(Mkt!E{MK['gbavg']},\"0\")", "GB"),
       ("HBM 市場 2026／2027（A）", f"=TEXT(Mkt!D{MK['mA']},\"0\")&\" ／ \"&TEXT(Mkt!E{MK['mA']},\"0\")", "$B"),
-      ("2027 HBM 需求缺口", f"=Mkt!E{MK['gap']}", "EB"),
+      ("2027 HBM 需求缺口（三情境相同）", f"=Mkt!E{MK['gap']}", "EB"),
       (f"{C['name']} HBM 毛利率", "無法由公開資料分離", "—")]
 for i, row in enumerate(fb, 3):
     for j, v in enumerate(row, 1): FB.cell(i, j, v)
@@ -279,7 +279,7 @@ RD = wb.create_sheet("README", 0)
 lines = [(f"{C['name']} 收支與估值模型 {C['version']}（記憶體樣板 v0.3）　{C['date']}", True), ("模型命題：" + C["thesis"], False), ("", False),
  ("驅動因子 → 推導量", True),
  ("Path（共用市場層）：一般 DRAM、NAND 合約價季增 → 季度指數（情境 A／B／C）；各公司依會計年度取平均，算年均價變動", False),
- ("Mkt（共用市場層）：加速器顆數 × 每顆 GB → 需求位元；MIN(需求, 供給) → 出貨；× 單價 → HBM 市場（日曆年）", False),
+ ("Mkt（共用市場層）：加速器顆數 × 每顆 GB × 情境顆數係數（2028–29，與台積電、Advantest 同一套）→ 需求位元；MIN(需求, 供給（三情境相同）) → 出貨；× 單價（依情境）→ HBM 市場（日曆年）", False),
  ("Q：最後實績季 × 公司指引 × TrendForce 季價 → 基準年剩餘季度", False),
  ("Y：前一年 × (1＋位元) × 價格指數比 → 一般 DRAM、NAND；Σ 各季 HBM 市場 × 市占 → HBM；成本量 × (1 − 年降)＋折舊 → 營業利益 → 淨利 → 權益 → 每股淨值", False),
  ("Val：每股淨值 × P/B（主）、EPS × P/E（對照）", False), ("Sens：各收入線同幅變動對營業利益的影響", False), ("非記憶體事業（只有三星）：營收與營業利益為輸入，不建模", False), ("Recon：與共識、公司指引事後對照", False), ("", False),
