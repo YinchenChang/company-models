@@ -1,6 +1,6 @@
 name: ai-semis-build
 
-# AI 半導體 Project（橋接表、網通、設備、三家記憶體、台積電、Advantest、Disco）的重建檢查：
+# AI 半導體 Project（橋接表、網通、設備、三家記憶體、台積電、Advantest、Disco、NVIDIA）的重建檢查：
 # 以 repo 內的建檔程式重新產生 xlsx → LibreOffice headless 重算 → (1) 錯誤格數必須為 0；
 # (2) 與各資料夾 dist/ 的成品逐格比對（數值容差 1e-9）。任何差異都讓 CI 失敗，並輸出前 20 個差異。
 # 比對工具：tools/xlsx_diff.py（本機也可執行）。
@@ -20,6 +20,7 @@ on:
       - 'tsmc/**'
       - 'advantest/**'
       - 'disco/**'
+      - 'nvidia/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -36,6 +37,7 @@ on:
       - 'tsmc/**'
       - 'advantest/**'
       - 'disco/**'
+      - 'nvidia/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -70,6 +72,7 @@ jobs:
             "tsmc|python3 tsmc/build_tsmc.py|tsmc/dist"
             "advantest|python3 advantest/build_advantest.py|advantest/dist"
             "disco|python3 disco/build_disco.py|disco/dist"
+            "nvidia|python3 nvidia/build_nvidia.py|nvidia/dist"
           )
           failed=0
           for t in "${targets[@]}"; do
@@ -99,7 +102,7 @@ jobs:
             echo "重建結果與 dist 成品不一致（任何數值差異都視為錯誤）" >&2
             exit 1
           fi
-          echo "九個模型重建後錯誤格 0、與 dist 逐格相同"
+          echo "十個模型重建後錯誤格 0、與 dist 逐格相同"
 
       - name: HTML 展示層檢核（重現性、抽數、無手寫數字、自含）
         run: |
