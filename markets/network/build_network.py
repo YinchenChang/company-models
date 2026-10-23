@@ -1,4 +1,4 @@
-# AI 網通市場模型 v0.2.1（AI 半導體 Project 步驟 3）
+# AI 網通市場模型 v0.2.2（AI 半導體 Project 步驟 3）
 # 用法：python3 markets/network/build_network.py raw.xlsx ；再以 LibreOffice headless 重算
 # 加速器顆數取自 markets/memory/market.py（與 HBM 市場同一份數量層）；每顆網通內容以 markets/chip_bridge v0.2 為錨
 import sys, os, json
@@ -19,7 +19,7 @@ COMP = [("su_sw", "scale-up 交換晶片"), ("su_ic", "scale-up 互連與交換�
         ("so_opt", "scale-out 光模組"), ("so_cu", "scale-out 銅纜（DAC／AEC）"), ("nic", "網卡／DPU（SuperNIC）")]
 # 每顆加速器網通內容（美元）：su_sw, su_ic, so_sw, so_opt, so_cu, nic
 PLAT = {
- "GB":   ("GB300 NVL72（Blackwell）", (1493, 1493, 2688, 2090, 1195, 2624), "Derived", "橋接表 v0.2 GB300（Tokenomics v19.0 機架基準價 $4.3M；v0.1 為 $5.0M）：NVLink 交換晶片 0.727、交換匣其他 0.727、機架外 scale-out 2.909、機架內網卡＋DPU 1.278（$B/GW）÷ 每 GW 487,008 顆；機架外依 交換器 45%／光模組 35%／銅 20% 拆——v0.1 初版 35／50／15 使 2026 光學 41.8B，高於 LightCounting 26B 61%，改以 LightCounting 與光模組廠營收加總（約 26–30B）校準 [Derived]。合計約 $11.6K（v0.1 $13.0K）；Bernstein GB200 約 $10.7K（第二來源）"),
+ "GB":   ("GB300 NVL72（Blackwell）", (1493, 1493, 2688, 2090, 1195, 2624), "Derived", "橋接表 v0.2.1 GB300（Tokenomics v20.1，與 v19.0 相同：機架基準價 $4.3M；v0.1 為 $5.0M）：NVLink 交換晶片 0.727、交換匣其他 0.727、機架外 scale-out 2.909、機架內網卡＋DPU 1.278（$B/GW）÷ 每 GW 487,008 顆；機架外依 交換器 45%／光模組 35%／銅 20% 拆——v0.1 初版 35／50／15 使 2026 光學 41.8B，高於 LightCounting 26B 61%，改以 LightCounting 與光模組廠營收加總（約 26–30B）校準 [Derived]。合計約 $11.6K（v0.1 $13.0K）；Bernstein GB200 約 $10.7K（第二來源）"),
  "VR":   ("VR200 NVL72（Rubin）", (2917, 2917, 5251, 4084, 2334, 7000), "Derived", "橋接表 v0.2 VR200 ÷ 每 GW 291,744 顆；NVLink 6 交換晶片 36 顆（GB300 的 2 倍）、ConnectX-9 每架 144 顆；機架外拆分同上（45／35／20）。合計約 $24.5K"),
  "RU":   ("Rubin Ultra（MGX 單架／NVL576）", (4375, 4375, 5251, 4084, 2334, 7000), "Assumed", "scale-up 為 VR200 的 1.5 倍（NVL576 兩層 NVLink）；scale-out 同 VR200"),
  "HP":   ("Hopper HGX（8 GPU）", (300, 100, 2520, 1960, 1120, 2000), "Assumed", "NVSwitch 機內；400G InfiniBand 每 GPU 1 埠；合計約 $8K"),
@@ -30,13 +30,13 @@ PLAT = {
  "ASIC": ("其他 ASIC", (600, 800, 800, 1200, 300, 300), "Assumed", "比照 Trainium"),
 }
 # 每顆 IT capex（$K）＝ IF_CapexIT（$B）÷ IF_GPUsPerGW × 1e6，取自橋接表的 Tokenomics 快照（基準成本情境），完整精度不取整。
-_snap = json.load(open(os.path.join(ROOT, "markets", "chip_bridge", "data", "tokenomics_snapshot_v19.0.json"), encoding="utf-8"))
+_snap = json.load(open(os.path.join(ROOT, "markets", "chip_bridge", "data", "tokenomics_snapshot_v20.1.json"), encoding="utf-8"))
 _gen = {g["code"]: g["name"] for g in _snap["source"]["generations"]}
 def itu(code):
     capex = _snap["items"]["IF_CapexIT"]["values"][_gen[code]]["基準"]
     gpus = _snap["items"]["IF_GPUsPerGW"]["values"][_gen[code]]["基準"]
     return capex / gpus * 1e6
-ITU = {"GB": (itu("GB300"), "Derived", "Tokenomics v19.0 IF_CapexIT 32.237 $B ÷ 487,008（v5.27 為 37.445）"), "VR": (itu("VR200"), "Derived", "37.586 ÷ 291,744"),
+ITU = {"GB": (itu("GB300"), "Derived", "Tokenomics v20.1（與 v19.0 相同）IF_CapexIT 32.237 $B ÷ 487,008（v5.27 為 37.445）"), "VR": (itu("VR200"), "Derived", "37.586 ÷ 291,744"),
        "RU": (itu("RU"), "Derived", "50.086 ÷ 194,760"), "HP": (itu("H100"), "Derived", "27.510 ÷ 718,048"), "AMD8": (40, "Assumed", ""),
        "AMDR": (100, "Assumed", "VR200 的約 0.8 倍"), "TPU": (25, "Assumed", ""), "TRN": (20, "Assumed", ""), "ASIC": (20, "Assumed", "")}
 TYPE2PLAT = {"bw": {y: "GB" for y in (26, 27, 28, 29)}, "rb": {y: "VR" for y in (26, 27, 28, 29)}, "ru": {y: "RU" for y in (26, 27, 28, 29)},
@@ -203,7 +203,7 @@ SE.column_dimensions["A"].width = 40; SE.column_dimensions["D"].width = 40
 
 # ---------------- Sources、README ----------------
 SO = wb.create_sheet("Sources"); SO["A1"] = "來源"; SO["A1"].font = BOLD
-srcs = [("markets/chip_bridge v0.2（每 GW 網通拆分）", "本 repo"), ("markets/memory/market.py（加速器顆數）", "本 repo"),
+srcs = [("markets/chip_bridge v0.2.1（每 GW 網通拆分）", "本 repo"), ("markets/memory/market.py（加速器顆數）", "本 repo"),
  ("NVIDIA Q1 FY27 CFO 書面說明", "https://s201.q4cdn.com/141608511/files/doc_financials/2027/Q127/Q1FY27-CFO-Commentary.pdf"),
  ("NVIDIA Q2 FY27 法說（Webull）", "https://www.webull.com/news/15497781742806016"),
  ("Broadcom Q3 FY26（MarketBeat）", "https://www.marketbeat.com/instant-alerts/transcript-broadcom-q3-earnings-call-highlights-2026-09-02/"),
@@ -218,7 +218,8 @@ srcs = [("markets/chip_bridge v0.2（每 GW 網通拆分）", "本 repo"), ("mar
 for i, (a, b) in enumerate(srcs, 2): SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 50; SO.column_dimensions["B"].width = 120
 RD = wb.create_sheet("README", 0)
-lines = [("AI 網通市場模型 v0.2.1（AI 半導體 Project 步驟 3）　2026-10-22（Tokenomics v19.0）", True),
+lines = [("AI 網通市場模型 v0.2.2（AI 半導體 Project 步驟 3）　2026-10-23（Tokenomics v20.1）", True),
+ ("v0.2.2：Tokenomics 快照改 v20.1；IF_CapexIT、IF_GPUsPerGW 等五個名稱逐值與 v19.0 相同，只更新版本標籤與說明文字，數值不變。", False),
  ("v0.2.1：ITU 改讀 Tokenomics 快照、不取整（GB300、VR200、Rubin Ultra、Hopper）；網通金額不變。", False),
  ("模型命題：AI 網通的錢由「加速器顆數 × 每顆網通內容」決定；每顆內容隨 scale-up 域擴大（NVL72 → NVL576）與每 GPU 網卡頻寬倍增而上升，而 scale-up 的頻寬大多由便宜的銅承載，所以金額主體仍在 scale-out（交換器、光模組、網卡）。", False), ("", False),
  ("驅動因子 → 推導量", True),

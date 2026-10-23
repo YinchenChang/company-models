@@ -7,7 +7,7 @@ from openpyxl.utils import get_column_letter as L
 # ---------------- Tokenomics 取數 ----------------
 # 契約名稱（IF_）：取自版本固定快照（tools/tokenomics/import_tokenomics.py 產生；Tokenomics 唯讀）
 HERE = os.path.dirname(os.path.abspath(__file__))
-SNAPSHOT = os.path.join(HERE, "data", "tokenomics_snapshot_v19.0.json")
+SNAPSHOT = os.path.join(HERE, "data", "tokenomics_snapshot_v20.1.json")
 _snap = json.load(open(SNAPSHOT, encoding="utf-8"))
 _gen = {g["code"]: g["name"] for g in _snap["source"]["generations"]}
 def tk(name):
@@ -28,12 +28,12 @@ wb = openpyxl.Workbook()
 
 # ---------------- In：輸入 ----------------
 ws = wb.active; ws.title = "In"
-ws["A1"] = "In — 輸入（藍字）。基準欄＝E（GB300）、H（VR200）。Tokenomics 列取自 v19.0（model/20261022_Tokenomics_v19.0.xlsx，SHA-256 d1728705…b9d8）"
+ws["A1"] = "In — 輸入（藍字）。基準欄＝E（GB300）、H（VR200）。Tokenomics 列取自 v20.1（model/20261023_Tokenomics_v20.1.xlsx，SHA-256 027fef9e…d607；五個 IF_ 名稱逐值與 v19.0 相同）"
 hdr = ["鍵", "項目", "單位", "GB300 低", "GB300 基準", "GB300 高", "VR200 低", "VR200 基準", "VR200 高", "標記", "來源／說明"]
 for j, h in enumerate(hdr, 1):
     c = ws.cell(3, j, h); c.font = BOLD; c.fill = HDR
 rows = [
- ("sec","A. Tokenomics v19.0（算力收支；只讀不改）"),
+ ("sec","A. Tokenomics v20.1（算力收支；只讀不改；五個 IF_ 名稱與 v19.0 逐值相同）"),
  ("rack","機架單價","$M/架",*NON_CONTRACT_R1["rack"],"TK","Spec_Rack E11:F13（非 Interface 具名範圍；已提修改申請 R1）"),
  ("racks","每 GW 機架數","架",*tk("IF_RacksPerGW"),"TK","IF_RacksPerGW"),
  ("gpus","每 GW GPU 數","顆",*tk("IF_GPUsPerGW"),"TK","IF_GPUsPerGW"),
@@ -269,10 +269,11 @@ for col in "BCDEFGHIJKLM": se.column_dimensions[col].width = 13
 # ---------------- README ----------------
 rd = wb.create_sheet("README", 0)
 lines = [
- ("每 GW 晶片內容橋接表（AI 半導體專案 步驟 0）v0.2　2026-10-22", True),
+ ("每 GW 晶片內容橋接表（AI 半導體專案 步驟 0）v0.2.1　2026-10-23", True),
+ ("v0.2.1：Tokenomics 快照改 v20.1（v19.0→v20.1 為 LifeSelf 主口徑與 L1_PriceReqBE 的 L 改動，與本表使用的名稱無關）；IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_GPUsPerGW、IF_RacksPerGW 逐值相同，只更新版本標籤與說明文字，數值不變。", False),
  ("模型命題：買方每投入 1 GW 的資料中心資本支出，晶片內容（運算、HBM、非 HBM 記憶體、網通晶片、代工）各分到多少，作為後續 HBM、網通、台積電模型的共同分母。", False),
  ("", False),
- ("取數：Tokenomics v19.0（repo YinchenChang/Tokenomics，model/20261022_Tokenomics_v19.0.xlsx，SHA-256 d1728705daaf19bfdfa7657b667f3617ac57d67a4c8e55404ac66522b970b9d8）。具名範圍：IF_RacksPerGW、IF_GPUsPerGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal；機架單價、scale-out 比率、儲存 $/GPU 不在 Interface，暫讀 Spec_Rack／Inputs 原格（修改申請 R1）。", False),
+ ("取數：Tokenomics v20.1（repo YinchenChang/Tokenomics，model/20261023_Tokenomics_v20.1.xlsx，commit 4c4c27f，SHA-256 027fef9ebd3008d5cb7abdad911e4c2f0806bf1afb105f4a62e7b5b9826fd607；五個 IF_ 名稱的 75 個值〔5 名稱 × 5 世代 × 3 成本情境〕逐值與 v19.0 相同，Spec_Rack E11:F13、Inputs D13:F14 的抄錄值亦相同）。具名範圍：IF_RacksPerGW、IF_GPUsPerGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal；機架單價、scale-out 比率、儲存 $/GPU 不在 Interface，暫讀 Spec_Rack／Inputs 原格（修改申請 R1）。", False),
  ("範圍：NVIDIA GB300 NVL72、VR200 NVL72 各一個代表性 1 GW；不含 ASIC 與世代組合（屬步驟 1 加速器數量層）。", False),
  ("", False),
  ("驅動因子 → 推導量（頁：輸入 → 推導 → 因果方向）", True),
@@ -304,7 +305,8 @@ rq.column_dimensions["A"].width = 6; rq.column_dimensions["B"].width = 26; rq.co
 # ---------------- Sources ----------------
 so = wb.create_sheet("Sources")
 srcs = [
- ("Tokenomics v19.0", "https://github.com/YinchenChang/Tokenomics/blob/master/model/20261022_Tokenomics_v19.0.xlsx"),
+ ("Tokenomics v20.1", "https://github.com/YinchenChang/Tokenomics/blob/master/model/20261023_Tokenomics_v20.1.xlsx"),
+ ("Tokenomics v19.0（對照：數值與 v20.1 相同）", "https://github.com/YinchenChang/Tokenomics/blob/master/model/archive/20261022_Tokenomics_v19.0.xlsx"),
  ("Wing VC / Data Gravity, How Much Does an NVIDIA NVL72 Cost?（2026-08）", "https://www.wing.vc/content/how-much-does-an-nvidia-nvl72-cost"),
  ("Tom's Hardware（Morgan Stanley VR200 $7.8M、Rubin $55K、Vera $5K、記憶體約 $2M，2026-05-21）", "https://www.tomshardware.com/tech-industry/artificial-intelligence/nvidias-memory-costs-soar-485-percent-latest-ai-systems-now-cost-usd7-8-million-to-build-memory-now-comprises-25-percent-of-the-total-cost-rubin-gpus-a-mere-usd50-000-apiece"),
  ("Epoch AI, B200 cost breakdown（2025-12-10）", "https://epoch.ai/data-insights/b200-cost-breakdown"),

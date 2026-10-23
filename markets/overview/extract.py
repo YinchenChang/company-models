@@ -6,8 +6,8 @@ import json, pathlib, numpy as np, openpyxl
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 F = {
-    "bridge": ROOT / "markets/chip_bridge/dist/20261022_晶片內容橋接表_v0.2.xlsx",
-    "net": ROOT / "markets/network/dist/20261022_AI網通市場模型_v0.2.1.xlsx",
+    "bridge": ROOT / "markets/chip_bridge/dist/20261023_晶片內容橋接表_v0.2.1.xlsx",
+    "net": ROOT / "markets/network/dist/20261023_AI網通市場模型_v0.2.2.xlsx",
     "sk": ROOT / "skhynix/dist/20261023_SK海力士模型_v0.4.xlsx",
     "ss": ROOT / "samsung/dist/20261023_三星電子模型_v0.2.xlsx",
     "mu": ROOT / "micron/dist/20261023_美光模型_v0.3.xlsx",

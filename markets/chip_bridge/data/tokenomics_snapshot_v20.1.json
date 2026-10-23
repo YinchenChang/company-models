@@ -1,10 +1,10 @@
 {
  "source": {
-  "file": "20261022_Tokenomics_v19.0.xlsx",
-  "current": "20261022_Tokenomics_v19.0.xlsx",
-  "version": "v19.0",
-  "commit": "1916a06465bb0c7efed21383075f2ae098508e24",
-  "extractedAt": "2026-10-22",
+  "file": "20261023_Tokenomics_v20.1.xlsx",
+  "current": "20261023_Tokenomics_v20.1.xlsx",
+  "version": "v20.1",
+  "commit": "4c4c27f6058eddae30a9a776b3dd715ee491a032",
+  "extractedAt": "2026-10-23",
   "repo": "YinchenChang/Tokenomics",
   "recalculated": false,
   "optional": [],
