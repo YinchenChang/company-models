@@ -121,8 +121,8 @@ def check_company(cdir, errs):
     text = open(committed, encoding='utf-8').read()
     ps = P()
     ps.feed(text)
-    wb = openpyxl.load_workbook(xlsx, data_only=True)
-    cell = lambda ref: wb[ref.split('!')[0]][ref.split('!')[1]].value
+    book = B.Book(xlsx)
+    cell = lambda ref: book.cell(*ref.split('!', 1))
     n_x = n_lbl = n_na = n_pt = 0
     meta_expect = {
         'ticker': cfg['ticker'], 'version': 'v' + B.parse_name(xlsx)[1], 'date': B.parse_name(xlsx)[0],

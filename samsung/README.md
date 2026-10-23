@@ -7,7 +7,15 @@
 | 檔案 | 內容 |
 |---|---|
 | `company.py` | 設定檔（只放參數） |
-| `dist/20261023_三星電子模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261023_三星電子模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+
+## v0.2.1（2026-10-23）：估值規則區塊
+
+Val 頁底部新增「十年倍數與規則值」區塊（`tools/valuation_rule.py`）：2016–2025 年底的倍數歷史（輸入，藍字，附來源與標記）、各來源分位、採用值，以及依循環位置的規則值（見頂 25 分位、中段中位數、谷底 75 分位）與隱含股價。含 P/B（主）與 P/E（對照）。損益、EPS 與原有儲存格不變；升版為 v0.2.1，檔名隨之更新；引用這些成品的模型（設備市場、Advantest、Disco）同步升版，數值不變，只有引用的檔名文字更新。`markets/overview/extract.py` 與 HTML 展示層改讀這裡，歷史倍數只保留這一份，總覽重跑時逐項核對。
+
+## HTML 展示層
+
+`html.json`（頁面設定）與 `dist/20261023_三星電子模型_v0.2.1.html`（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格；十年分位的規則值取自 `markets/overview/datasets/valuation.json`，頁內標明）。產生與檢核見 `tools/company_html/README.md`；xlsx 或 `html.json` 變動後須重建 HTML 一併提交。
 
 ## v0.2 變更（2026-10-23）
 

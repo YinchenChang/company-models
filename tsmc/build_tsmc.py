@@ -1,4 +1,4 @@
-# 台積電模型 v0.2（AI 半導體 Project 步驟 4）：CoWoS 供需上限 × AI 營收由下而上 × 損益與估值
+# 台積電模型 v0.2.1（AI 半導體 Project 步驟 4）：CoWoS 供需上限 × AI 營收由下而上 × 損益與估值
 # 用法：python3 tsmc/build_tsmc.py raw.xlsx ；再以 LibreOffice headless 重算
 import sys, os
 import openpyxl
@@ -7,6 +7,8 @@ from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 import market as MEM
+sys.path.insert(0, os.path.join(ROOT, "tools"))
+import valuation_rule as VR
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 wb = openpyxl.Workbook()
@@ -224,6 +226,19 @@ for col, lab, s, y in cols:
 V.cell(vr + 1, 1, "讀法：目前股價 ÷ 2027 EPS 即市場給的遠期 P/E；與 10 年中位 20.5x 比，看市場是否已提前反映 2027–28 的成長與情境 B／C 風險")
 for c, w in zip("ABCDEFG", [8, 8, 10, 8, 10, 12, 10]): V.column_dimensions[c].width = w
 
+# 估值規則區塊：十年 P/E 歷史與規則值（2027＝中段取中位數、區間 25–75 分位；另列 2028 情境 C × 75 分位）
+# 歷史值原放在 markets/overview/extract.py（2026-10-23 移入）
+VR.add_rule_block(V, vr + 4, [{"id": "P/E", "name": "P/E", "sources": [
+    {"label": "FullRatio", "vals": [14.5, 17.71, 16.13, 25.62, 31.11, 29.18, 11.94, 19.46, 28.72, 29.03], "tag": "Interested-party"},
+    {"label": "companiesmarketcap", "vals": [11.6, 14.8, 14.2, 23.5, 28.3, 27.2, 11.2, 19.3, 28.8, 28.3], "tag": "Verified"}],
+    "cases": [
+        {"case": "中段", "pos": "中段 → 中位數", "q": 50, "basis_label": "2027 EPS（A）", "basis": f"=PL!C{PR['eps']}"},
+        {"case": "低", "pos": "25 分位（區間下緣）", "q": 25, "basis_label": "2027 EPS（A）", "basis": f"=PL!C{PR['eps']}"},
+        {"case": "高", "pos": "75 分位（區間上緣）", "q": 75, "basis_label": "2027 EPS（A）", "basis": f"=PL!C{PR['eps']}"},
+        {"case": "2028 C", "pos": "參考：2028 情境 C × 75 分位", "q": 75, "basis_label": "2028 EPS（C）", "basis": f"=PL!J{PR['eps']}"}]}],
+    "0.0", "規則（Andy 2026-10-13）：合理倍數＝2016–2025 年底 P/E 依循環位置取分位；台積電 2027 為中段，取中位數，區間為 25 與 75 分位。兩個來源各自取分位再平均、四捨五入到兩位。倍數歷史為輸入（藍字）。")
+V.column_dimensions["A"].width = 36
+
 # ---------------- Recon ----------------
 RC = wb.create_sheet("Recon")
 RC["A1"] = "Recon — 本模型 vs 公司口徑、共識（只作事後對照）"
@@ -374,7 +389,7 @@ srcs = [("台積電 2Q26 新聞稿", "https://pr.tsmc.com/english/news/3326"),
 for i, (a, b) in enumerate(srcs, 2): SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 44; SO.column_dimensions["B"].width = 130
 RD = wb.create_sheet("README", 0)
-lines = [("台積電模型 v0.2（AI 半導體 Project 步驟 4）　2026-10-22　2026 年改為 1–3Q 實績＋4Q 指引中點；2027 起假設未變", True),
+lines = [("台積電模型 v0.2.1（AI 半導體 Project 步驟 4）　2026-10-23　2026 年改為 1–3Q 實績＋4Q 指引中點；2027 起假設未變", True),
  ("模型命題：台積電在 AI 算力中的意義是供給上限而非分到的金額比例——AI 加速器只占其營收約兩成；2027 年加速器出貨受 HBM 而非 CoWoS 限制，台積電的獲利成長由「AI 顆數 × 每顆內容 × 漲價」與「非 AI 八成的穩定成長」共同決定。", False), ("", False),
  ("驅動因子 → 推導量", True),
  ("CoWoS：加速器顆數（markets/memory）÷ 每片封裝數 → CoWoS 需求；月產能年均 × 12 × (1＋委外) → 可用產能；需求 ÷ 產能 → 是否為瓶頸；與 HBM 缺口比較", False),
@@ -382,6 +397,7 @@ lines = [("台積電模型 v0.2（AI 半導體 Project 步驟 4）　2026-10-22�
  ("情境：A 基準；B 2028 顆數 −20%、毛利率降至 58%；C 2028 顆數 −40%、毛利率 54%（AI 資本支出明顯下修）", False),
  ("Val：EPS × P/E（15x、10 年中位 20.5x、10 年最高 32.7x）", False), ("Recon、Sens：見各頁", False), ("", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。", False),
+ ("v0.2.1 變更（2026-10-23）：Val 頁新增「十年倍數與規則值」區塊（十年 P/E 歷史、分位、規則值與隱含股價；原放在 markets/overview/extract.py），總覽與 HTML 展示層改讀此處；損益、EPS 與原有儲存格不變。", False),
  ("v0.2 變更（2026-10-22，3Q26 財報後）：2026 營收 172→176.1 $B（1–3Q 實績＋4Q 指引中點 53.3）；毛利率 66.0%→66.5%（四季加權）；EPS 114.2→112.1（新舊對照見 tsmc/README.md）。新增 2026 專屬參數 opex_26、ni_op_26、fx_26（來自實績）；2027 起淨利÷營業利益由 0.92 改為推導值（NI_OI 頁；區間 0.864–0.909）；毛利率、價格調升、非 AI 成長、CoWoS 產能全部未改（公司未給新的明確指引）。", False),
  ("公司 3Q26 說法未取得：AI 加速器營收占比、CoWoS 產能的新數字（搜尋未找到逐字稿原文），故 CoWoS 頁不動。", False),
  ("已知限制：(1) 台積電不揭露 CoWoS 片數與先進封裝營收，產能為券商估計；(2) 先進製程（N3／N2）晶圓產能未找到，未建晶圓瓶頸；(3) 其他 AI 相關營收比例為 Assumed；(4) 淨利 ÷ 營業利益 2027 起為單一推導值（見 NI_OI），2022 年與 1Q26 的明細為單一來源。", False)]

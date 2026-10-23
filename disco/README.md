@@ -1,8 +1,16 @@
-# disco/ — Disco（6146.T）收支與估值模型 v0.1.1
+# disco/ — Disco（6146.T）收支與估值模型 v0.1.2
 
 **模型命題：** Disco 的營收由需要研削與切割的晶圓次數驅動，AI 只占約兩成；問題是 HBM 堆疊與先進封裝帶來的增量，能否抵過非 AI 後段的循環，撐住目前約 41 倍的近 12 月本益比？
 
 （「約 41 倍」＝現價 ¥51,230 ÷ FY2025 基本 EPS ¥1,249.84 ＝ 41.0 倍，用的是上一個會計年度。若用嚴格的近 12 月 EPS——FY2025 減去 FY2025 上半、再加 FY2026 上半，得 ¥1,474.98——則是 34.7 倍。見 Val 頁。）
+
+## v0.1.2（2026-10-23）：上游檔名更新
+
+引用的上游成品升版（SK 海力士 v0.4.1、美光 v0.3.1、三星 v0.2.1、台積電 v0.2.1；十年倍數與規則值移入它們的 Val 頁），本模型 In 頁的來源檔名文字隨之更新；**所有數值不變**（與 v0.1.1 逐格比對，數值差異 0）。
+
+## HTML 展示層
+
+`html.json`（頁面設定）與 `dist/20261023_Disco模型_v0.1.2.html`（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格；CI 檢核）。產生與檢核見 `tools/company_html/README.md`；xlsx 或 `html.json` 變動後須重建 HTML 一併提交。
 
 ## 驅動因子 → 推導量
 
@@ -25,7 +33,7 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_disco.py` | 產生器（openpyxl 寫公式） |
-| `dist/20261023_Disco模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261023_Disco模型_v0.1.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 
 建置：`python3 disco/build_disco.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序是 README、In、Q、Hist、PL、Val、Recon、Sens、Sources。
 

@@ -1,4 +1,4 @@
-# 半導體設備市場模型 v0.1.2（AI 半導體 Project 步驟 5：設備與材料——設備部分）
+# 半導體設備市場模型 v0.1.3（AI 半導體 Project 步驟 5：設備與材料——設備部分）
 # 用法：python3 markets/equipment/build_equipment.py raw.xlsx ；再以 LibreOffice headless 重算
 # 需求＝為滿足記憶體、代工擴產所需的資本支出：資本支出讀自 skhynix／micron／samsung／tsmc 的 dist 成品（不修改那些模型）
 import sys, os, glob
@@ -687,7 +687,8 @@ for i, (lab, src, ref, nt) in enumerate((
     RC.cell(r2, 6, f"=E{r2}-D{r2}").number_format = "0.0%"; RC.cell(r2, 12, nt)
 RD = wb.create_sheet("README", 0)
 RD_LINES = [
- ("半導體設備市場模型 v0.1.2（AI 半導體 Project 步驟 5：設備與材料——設備部分）　2026-10-23", True),
+ ("半導體設備市場模型 v0.1.3（AI 半導體 Project 步驟 5：設備與材料——設備部分）　2026-10-23", True),
+ ("v0.1.3（2026-10-23）：引用的上游成品檔名更新（SK 海力士 v0.4.1、美光 v0.3.1、三星 v0.2.1、台積電 v0.2.1 升版）；所有數值不變。", False),
  ("模型命題：設備需求＝為滿足記憶體、代工擴產所需的資本支出 × 設備占比；本模型回答核心問題 1——設備循環在 2027 還是 2028 見頂——並列出核心問題 2、3 的瓶頸表。公司份額與毛利留給公司層，v0.1 不做。", False), ("", False),
  ("驅動因子 → 推導量", True),
  ("In：公司資本支出（讀自 skhynix／micron／samsung／tsmc dist，不修改它們）、設備占資本支出比例（兩個來源給低／高）、SEMI 2026-07 分項、情境係數（Assumed）、AI 分類假設", False),

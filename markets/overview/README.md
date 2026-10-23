@@ -33,7 +33,7 @@
 | Advantest | P/E（9 年） | 20.5／22.8／38.1 | 共用規則：A 中段 −25%、B 中段 −28%、C 見頂 −38% |
 | Disco | P/E（10 年） | 19.6／28.1／36.4 | 共用規則：A 中段 −5%、B 中段 −11%、C 見頂 −44% |
 
-重建：`python3 markets/overview/extract.py`（需先有各模型的重算 xlsx）。
+重建：`python3 markets/overview/extract.py`（需先有各模型的重算 xlsx）。2026-10-23 起，記憶體三家與台積電的十年倍數歷史與規則值在各公司 xlsx 的 Val 頁（`tools/valuation_rule.py`），本檔只讀取並逐項核對；CI 重跑本檔，`data.json` 與 `datasets/` 須與已提交的相同。
 
 ## v0.2（2026-10-22）
 
@@ -62,3 +62,6 @@
 - **加入 Disco**（disco v0.1.1，FY2026 錨定公司上半實績與第三季指引）：A ¥48,426（−5%）、B ¥45,528（−11%）、C ¥28,931（−44%），現價 ¥51,230。
 - `valuation` 資料集的 Advantest 列改為三情境各一列（key＝`Advantest A／B／C`，舊的 `Advantest 見頂／中段／谷底` 不再提供）；新增 `Disco A／B／C`、`disco_pl` 資料集；`mult_hist` 加入 Disco 10 年 P/E。
 
+## 2026-10-23：改讀升版後的成品
+
+改讀 skhynix v0.4.1、micron v0.3.1、samsung v0.2.1、tsmc v0.2.1、equipment v0.1.3、advantest v0.2.2、disco v0.1.2（升版內容：十年倍數與規則值移入各公司 Val 頁，以及上游檔名文字更新；數值不變，`data.json` 與 `datasets/` 逐位元組相同）。
