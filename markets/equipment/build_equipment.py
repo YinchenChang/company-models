@@ -1,4 +1,4 @@
-# 半導體設備市場模型 v0.1.1（AI 半導體 Project 步驟 5：設備與材料——設備部分）
+# 半導體設備市場模型 v0.1.2（AI 半導體 Project 步驟 5：設備與材料——設備部分）
 # 用法：python3 markets/equipment/build_equipment.py raw.xlsx ；再以 LibreOffice headless 重算
 # 需求＝為滿足記憶體、代工擴產所需的資本支出：資本支出讀自 skhynix／micron／samsung／tsmc 的 dist 成品（不修改那些模型）
 import sys, os, glob
@@ -105,7 +105,11 @@ inp("sh_mu_26", "美光：FY26 設備占資本支出比例", "%", SHM["lo"][0], 
 inp("sh_mu_27", "美光：FY27–FY29 設備占資本支出比例", "%", SHM["lo"][1], SHM["base"][1], SHM["hi"][1], "Derived", MU_Q3 + "；" + MU_Q4, MU_NOTE + " 高＝c 取 50%（「多於一半」）時的推導上限，約 53%。引文為公司一手（Verified），比例為 Derived")
 inp("sh_sk", "SK 海力士：設備占資本支出比例（2025 實績校準值）", "%", 0.0, 0.0, 0.0, "Derived", "Mkt 頁公式：令 2025 年「SK＋三星＋美光設備＋其他廠獨立估計」＝SEMI 2025 DRAM＋NAND 實績（38.5），解出 SK、三星共用的一個占比；2026 年以後沿用。低＝長鑫取 12.0 時的校準值；高＝58%（業界下限，Rebound Capital）", "校準只用 2025 實績；2026 年以後完全沒有參照 SEMI 或券商的預測。未找到 SK 海力士公司揭露（定性：董事會 2026-02 核准 21.6 兆韓元完成龍仁第一晶圓廠結構工程與二至六期無塵室）。業界值 64% 不再當基準，Sens 保留一列對照")
 inp("sh_ss", "三星（記憶體）：設備占資本支出比例（同 SK 海力士，校準值）", "%", 0.0, 0.0, 0.0, "Derived", "同 sh_sk（兩者共用同一個校準值，以 2025 實績校準）", "未找到三星公司揭露（P5 無塵室先行，無建築／設備比例）。三星記憶體 2025 資本支出為 DS 47.5 兆 × ss_mem（Assumed）；ss_mem 改變時校準值隨之改變（Sens）")
-inp("sh_fd", "台積電（代工與邏輯）：設備占資本支出比例", "%", 0.58, 0.64, 0.70, "Analogy", SH_SRC1, SH_SRC2 + "。台積電沒有類似美光的揭露，2025 年其他代工邏輯殘差為正，維持 64%；代工邏輯是否也有建築比重偏高的問題，待查。台積電資本支出含先進封裝、光罩等（公司稱 10–20%），未另扣")
+inp("sh_fd", "台積電（代工與邏輯）：設備占資本支出比例", "%", 0.50, 0.64, 0.75, "Analogy", SH_SRC1, SH_SRC2 + "。v0.1.2 查證（TSMC 頁）：台積電董事會每季資本預算有分「機器設備」與「不動產與資本化租賃資產」（二手摘要，5 次，彙總設備占 60%，單次 47–71%）；元大投顧稱先進製程外商前段設備占資本支出 7～8 成（Interested-party）。兩者都未顯示台積電像 SK 海力士、三星（45.5%）那樣偏低，故基準維持 64%；低 50%＝董事會 2025-08（47%）、2026-02（52%）兩次的水準，高 75%＝元大 7～8 成的中點。年報不動產廠房及設備附註的分類增添：未找到（本環境無法開啟年報 PDF）。台積電資本支出含先進封裝、光罩等（公司稱 10–20%），base 未另扣，見 pk_ts 與 Sens")
+sec("B1b. 台積電設備占比證據（v0.1.2；明細見 TSMC 頁）")
+inp("pk_ts", "台積電資本支出中屬先進封裝、測試、光罩及其他的比例", "%", 0.10, 0.15, 0.20, "Interested-party", "台積電（3Q25 法說逐字稿，Motley Fool）：2025 資本支出約 10–20% 用於先進封裝、測試、光罩及其他 https://www.fool.com/earnings/call-transcripts/2025/10/17/tsmc-tsm-q3-2025-earnings-call-transcript", "2026 年配置同為 10–20%（搜尋摘要：https://xmy.tw/articles/global-semiconductor-capex-2026/tsmc-capex-2026，未開啟原文）。公司揭露的是「用途」分類，不是設備／建築分類；其設備中有多少被 SEMI 分入後段（測試、組裝封裝）或其他前段（光罩）：未找到。base 不扣，只進 Sens 與 TSMC 頁")
+inp("cap_smic_25", "中芯 2025 資本支出（TSMC 頁可識別性檢查用）", "$B", 8.1, 8.1, 8.1, "Interested-party", "TrendForce（2026-03-30）：中芯 2025 約 $8.1B、2026 約持平 https://www.trendforce.com/news/2026/03/30/news-smic-2026-action-plan-points-to-above-industry-growth-capex-held-in-line-with-2025/", "第二來源：未找到。沿用本模型 g_oth_fd 說明所引數字")
+inp("cap_intel_25", "Intel 2025 資本支出（毛額；扣抵後淨額約 11.2）", "$B", 11.2, 17.7, 17.7, "Interested-party", "Intel 4Q25 法說摘要（Yahoo Finance／MarketBeat）：毛額 $17.7B、扣抵約 $6.5B → 淨約 $11.2B（Derived）https://finance.yahoo.com/news/intel-q4-earnings-call-highlights-234233695.html", "第二來源：Intel FY2025 10-K（https://www.sec.gov/Archives/edgar/data/50863/000005086326000011/intc-20251227.htm，搜尋結果列出，未開啟核對）；第三方資料站現金流量口徑 14.65（口徑不同）。SEMI 計的是設備出貨，取毛額為基準")
 sec("B2. 其他廠 2026 年以後成長率（Assumed；每個區塊合併成一個年成長率，套用 2026–2029。依據公司資本支出指引；不參照 SEMI 2026 以後預測）")
 inp("g_oth_dram", "其他 DRAM 廠（長鑫、南亞、華邦等）設備成長率", "%/年", 0.10, 0.18, 0.60, "Assumed", "長鑫：未揭露資本支出；研究估計月產能 360k／420k／500k 片（2026／27／28）→ +17%／+19%（https://faxiangongchang.com/en/reports/china-memory-chip-2026，弱）；南亞 2026 資本支出上限 NT$69.7B，2027 最高 NT$200B（約 4 倍，https://www.digitimes.com/news/a20260713PD211/nanya-technology-capex-capacity-2027.html）；華邦 2026 NT$42.1B（紀錄高，https://www.gate.com/news/detail/winbond-approves-507b-capex-expands-kaohsiung-fab-production-to-24000-23369791）", "基準取長鑫產能成長（兩年平均約 18%，Analogy：產能成長代替資本支出）；低 10% 假設資本支出增速低於產能；高 60% 取南亞 2027 與鎧俠 FY26 的高增速。長鑫的資本支出指引：未找到；2025 年基準（華邦、南亞）：未找到")
 inp("g_oth_nand", "其他 NAND 廠（鎧俠、SanDisk 合資、長江存儲等）設備成長率", "%/年", 0.0, 0.18, 0.60, "Assumed", "鎧俠：FY25 ¥283.7B → FY26 ¥450B（+59%），FY26–28 年均約 ¥470B（https://www.trendforce.com/news/2026/06/03/news-kioxia-targets-%C2%A5470b-yearly-capex-in-fy26-28-up-66-from-fy25-reportedly-weighing-third-kitakami-fab-and-ma/）；SanDisk FY27 毛資本支出約營收 6%（含與鎧俠合資的分攤，與鎧俠重疊，不另加，https://www.fool.com/investing/2026/08/29/sandisk-and-kioxia-plan-to-invest-more-than-usd31-billion-in-japanese-memory-plants-about-60-of-what-they-have-spent-there-in-25-years/）；長江存儲：三廠 2026 底投產，金額未找到", "基準＝鎧俠 FY25→FY28 年複合 ((470/283.7)^(1/3)−1)≈18%（Derived，單一公司）；低 0% 為 FY27–28 持平；高 60% 為 FY26 單年增速。長江存儲資本支出指引：未找到")
@@ -264,8 +268,8 @@ mput("診斷：記憶體合計 − SEMI DRAM＋NAND", "$B", {y: f"={c('mem', y)}
 mr[0] += 1
 msec("3. 代工與邏輯晶圓前段設備（2025：台積電由下而上＋SEMI 殘差求其他廠基準；2026 起：其他廠＝基準 × 成長率）")
 mput("台積電資本支出", "$B", {y: f"=cap_ts_{y}" for y in YRS}, key="ts")
-mput("台積電設備＝資本支出 × sh_fd", "$B", {y: f"={c('ts', y)}*sh_fd" for y in YRS}, key="eqts")
-mput("2025 殘差：其他代工邏輯＝SEMI 代工邏輯 − 台積電設備（照實顯示）", "$B", {25: f"={c('semi_fd', 25)}-{c('eqts', 25)}"}, key="fo25", note="Derived：三星晶圓代工、Intel、中芯等")
+mput("台積電設備＝資本支出 × sh_fd", "$B", {y: f"={c('ts', y)}*sh_fd" for y in YRS}, key="eqts", note="v0.1.2：sh_fd 基準 64% 維持（Analogy），區間改 50–75%；證據與可識別性見 TSMC 頁。未另扣先進封裝／光罩（10–20%），上限影響見 Sens")
+mput("2025 殘差：其他代工邏輯＝SEMI 代工邏輯 − 台積電設備（照實顯示）", "$B", {25: f"={c('semi_fd', 25)}-{c('eqts', 25)}"}, key="fo25", note="Derived：三星晶圓代工、Intel、中芯等。v0.1.2：此殘差無法拆成『台積電占比』與『未列名其他廠』（TSMC 頁可識別性檢查：需 X＝18–30 的未列名設備），所以台積電占比不由 SEMI 校準")
 _r = mr[0]
 mput("其他代工與邏輯設備（基準＝MAX(殘差, 0)；2026 起 × (1＋g_oth_fd)）", "$B", {25: f"=MAX({c('fo25', 25)},0)", **{y: f"={YC[y-1]}{_r}*(1+g_oth_fd)" for y in Y2}}, key="fo")
 mput("代工與邏輯設備合計", "$B", {y: f"={c('eqts', y)}+{c('fo', y)}" for y in YRS}, key="fdt", bold=True)
@@ -356,6 +360,100 @@ for col in "CDEFG": M.column_dimensions[col].width = 10
 M.column_dimensions["H"].width = 80
 M.freeze_panes = "C4"
 
+# ---------------- TSMC（v0.1.2：台積電設備占比證據） ----------------
+TS_ = wb.create_sheet("TSMC")
+TS_["A1"] = "TSMC — 台積電設備占資本支出：證據、可識別性、先進封裝／光罩重疊（v0.1.2）。金額：百萬美元（除另註）。藍字＝本頁輸入"
+TS_["A2"] = ("年報／20-F「不動產、廠房及設備」附註的分類增添（房屋及建築、機器設備、待驗設備及未完工程）：未找到——本環境無法開啟年報與 SEC 原文，只能讀搜尋摘錄；該附註公司有揭露，屬檢索缺口，不是公司不揭露。"
+             "以下改用董事會每季「資本預算」分項（核准額，不是實際支出）；各次分項來自二手摘要，三項加總與公司公告總額相符（核對欄）。")
+hdr(TS_, 4, ["董事會日期", "機器設備：先進製程", "機器設備：先進封裝／成熟／特殊", "不動產與資本化租賃資產", "三項合計", "公司公告總額", "合計−公告", "設備占比", "來源1", "來源2／備註", "標記"])
+EV = [  # 日期, 先進, 封裝等, 不動產, 公告總額, 來源1, 來源2/備註
+ ("2025-05-13", 9590, 308, 5350, 15247, "Investing.com 6-K 摘要（2025-06-25）https://www.investing.com/news/sec-filings/tsmc-reports-board-share-changes-and-new-capital-spending-approvals-93CH-4110161", "總額：Focus Taiwan https://focustaiwan.tw/business/202505130022；Tom's Hardware 逐季 15.247"),
+ ("2025-08-12", 7800, 2000, 10900, 20657, "Panabee 摘要（只到 0.1B）https://www.panabee.com/news/tsmc-commits-us-20-7-billion-to-bolster-advanced-tech-and-manufacturing-capacity", "總額：Tom's Hardware 逐季 20.657；公司 6-K 原文分項：未能開啟核對"),
+ ("2026-02-10", 18921, 4670, 21372, 44962, "Investing.com 6-K 摘要 https://www.investing.com/news/sec-filings/tsmc-reports-board-shareholding-changes-and-major-capital-approvals-for-february-93CH-4579333", "總額：Taipei Times https://www.taipeitimes.com/News/biz/archives/2026/02/11/2003852112；TipRanks 同分項。公司新聞稿決議文只列用途與總額，分項見於 6-K 摘要"),
+ ("2026-05-12", 21013, 0, 10271, 31284, "TipRanks 摘要 https://www.tipranks.com/news/company-announcements/tsmc-details-heavy-capex-bond-issuance-and-share-capital-reduction-for-may-2026", "總額：Focus Taiwan https://focustaiwan.tw/business/202605120026；摘要只列兩項，封裝等機器設備未單獨列（可能併入先進製程）"),
+ ("2026-08", 16035, 4791, 8616, 29442.5, "Stocktitan 6-K 摘要 https://www.stocktitan.net/sec-filings/TSM/6-k-taiwan-semiconductor-manufacturing-co-ltd-current-report-foreign--efeb868a1401.html", "總額：Focus Taiwan https://focustaiwan.tw/business/202608110015（29.44B）；SEC 檔 tsm-monthend6kx20260924（搜尋結果列出，未開啟）")]
+for i, (d, a, b, rl, tot_, s1, s2) in enumerate(EV):
+    rr = 5 + i; TS_.cell(rr, 1, d)
+    for j, v in ((2, a), (3, b), (4, rl), (6, tot_)): TS_.cell(rr, j, v).font = BLUE; TS_.cell(rr, j).number_format = "#,##0.0"
+    TS_.cell(rr, 5, f"=SUM(B{rr}:D{rr})").number_format = "#,##0.0"; TS_.cell(rr, 7, f"=E{rr}-F{rr}").number_format = "#,##0.0"
+    TS_.cell(rr, 8, f"=(B{rr}+C{rr})/E{rr}").number_format = "0.0%"
+    TS_.cell(rr, 9, s1); TS_.cell(rr, 10, s2); TS_.cell(rr, 11, "Interested-party（台積電揭露；二手摘要，合計與公告總額核對）")
+for rr, lab, a, b in ((10, "2025 兩次合計（5、8 月）", 5, 6), (11, "2026 三次合計", 7, 9), (12, "五次合計", 5, 9)):
+    TS_.cell(rr, 1, lab).font = BOLD
+    for j in range(2, 7):
+        col = "ABCDEF"[j - 1]; TS_.cell(rr, j, f"=SUM({col}{a}:{col}{b})").number_format = "#,##0.0"
+    TS_.cell(rr, 8, f"=(B{rr}+C{rr})/E{rr}").number_format = "0.0%"; TS_.cell(rr, 11, "Derived")
+TS_.cell(13, 1, "單次最低／最高設備占比"); TS_.cell(13, 8, "=MIN(H5:H9)").number_format = "0.0%"; TS_.cell(13, 9, "=MAX(H5:H9)").number_format = "0.0%"
+TS_.cell(14, 1, ("怎麼讀：(1) 這是核准額，不是支出；核准在前、多年執行，且「資本化租賃資產」含非現金項目（2025 年四次核准合計 68.0B，現金資本支出 40.9B）。"
+                 "(2) 建廠先於裝機，擴廠加速期的不動產占比會領先實際支出占比。(3) SEMI 的 WFE 含「廠務設備」（Fab Facilities），台積電『不動產與廠務系統』裡的廠務機電部分在 SEMI 口徑可能算設備，所以和 SEMI 可比的設備占比 ≥ 本欄。"
+                 "(4) 2025 年只有 2 次、2026 年 3 次找到分項；2025-02、2025-11 與 2021–2024 各次：只找到總額（下表），分項未找到。"))
+TS_.cell(14, 1).alignment = WRAP
+hdr(TS_, 16, ["只找到總額的董事會核准（分項未找到）", "核准總額 US$M", "", "", "", "", "", "", "來源", "備註", "標記"])
+TOT_ONLY = [("2025-02-12", 17141.4, "TSMC 決議新聞稿 https://pr.tsmc.com/english/news/3207", ""),
+            ("2025-11-11", 14981, "Tom's Hardware 逐季；Tribune https://www.tribuneindia.com/news/business/tsmc-approved-a-capital-appropriation-plan-of-usd-14-98-bn-company-also-raised-dividend-payout/amp", "此次含 2026 年研發與經常性資本預算、資本化租賃資產"),
+            ("2024-02", 9421.48, "搜尋摘要（TSMC 決議）", "含資本化租賃資產"), ("2024-06-05", 17356.2, "TSMC 決議 https://pr.tsmc.com/system/files/newspdf/attachment/4f8848e007a8291ca9e5e720193efebc599d0a9e/0605%20board%20meeting%20(E)_final_wmn.pdf", ""),
+            ("2024-08-13", 29615.47, "MarketScreener 6-K 標題頁", ""), ("2024-11-12", 15479.95, "SEC 6-K https://www.sec.gov/Archives/edgar/data/1046179/000104617924000124/tsm-boardx20241112x6k.htm", ""),
+            ("2023-02-14", 6959.5, "SEC 6-K https://www.sec.gov/Archives/edgar/data/1046179/000156459023001822/tsm-6k_20230214.htm", ""), ("2023-05-09", 366.1, "搜尋摘要（SEC 6-K）", "僅廠房建設"),
+            ("2023-08-08", 6059.5, "SEC 6-K https://www.sec.gov/Archives/edgar/data/1046179/000162828023027944/tsm-boardx20230808x6k.htm", "2023-11 一次：未找到"),
+            ("2022 全年", 20944.17, "TSMC 2022 年報 https://investor.tsmc.com/sites/ir/annual-report/2022/2022%20Annual%20Report-E.pdf（搜尋摘錄）", "2022-12 摘錄顯示「不動產與資本化租賃資產」曾單列約 1.1B，其餘分項未找到"),
+            ("2021-06", 9290, "Focus Taiwan https://focustaiwan.tw/business/202106100005", "2021 其他季：未找到")]
+for i, (d, v, s1, nt) in enumerate(TOT_ONLY):
+    rr = 17 + i; TS_.cell(rr, 1, d); TS_.cell(rr, 2, v).font = BLUE; TS_.cell(rr, 2).number_format = "#,##0.0"; TS_.cell(rr, 9, s1); TS_.cell(rr, 10, nt); TS_.cell(rr, 11, "Verified（公司公告總額；搜尋摘錄）")
+rr = 17 + len(TOT_ONLY) + 1
+TS_.cell(rr, 1, "現金資本支出（取得不動產、廠房及設備）").font = BOLD; hdr(TS_, rr + 1, ["年度", "新台幣百萬元", "美元百萬元", "", "", "", "", "", "來源", "備註", "標記"])
+CASH = [(2021, None, None, "未找到（本次搜尋未取得 2021 年數字）", ""), (2022, 1082672, None, "TSMC 2024 20-F 搜尋摘錄（2022–2024 資本支出）https://investor.tsmc.com/sites/ir/sec-filings/2024%2020-F.pdf", ""),
+        (2023, 949817, None, "同上", ""), (2024, 956007, 29755, "同上；4Q24 Management Report 29.76B", "美元為公司換算"),
+        (2025, 1272410.529, 40900, "Stocktitan 2025 年報 6-K 摘要（PP&E 增添 1,272,410,529 千元）；美元 40.9B：Semiconductor Intelligence https://www.semiconductorintelligence.com/capex-up-for-foundry-memory/", "新台幣為二手摘要，未開原文")]
+for i, (y, n, u, s1, nt) in enumerate(CASH):
+    r2 = rr + 2 + i; TS_.cell(r2, 1, y)
+    for j, v in ((2, n), (3, u)):
+        if v is not None: TS_.cell(r2, j, v).font = BLUE; TS_.cell(r2, j).number_format = "#,##0"
+    TS_.cell(r2, 9, s1); TS_.cell(r2, 10, nt); TS_.cell(r2, 11, "Verified（現金流量表金額）" if n else "未找到")
+rr = rr + 2 + len(CASH) + 1
+TS_.cell(rr, 1, "其他證據與業界值").font = BOLD; hdr(TS_, rr + 1, ["項目", "低", "基準／中", "高", "", "", "", "", "來源", "備註", "標記"])
+OTH = [("元大投顧：先進製程外商前段設備占資本支出", 0.70, None, 0.80, "自由財經／財富自由（2026-01 法說後）https://stock.ltn.com.tw/article/70szg3dsjge2", "媒體轉述，原報告全文未找到；只含外商主導的前段設備、限先進製程；投顧報告以設備供應鏈受惠股為主題，立場偏多", "Interested-party（元大投顧）"),
+       ("業界值：SEMI 2025 WFE ÷ 全球資本支出", 0.58, 0.64, 0.70, "見 In 頁 SH_SRC1／SH_SRC2（SEMI；Semiconductor Intelligence；Rebound Capital）", "業界合計，非台積電", "Analogy（全產業，差異：含記憶體與 IDM）"),
+       ("SK 海力士、三星校準值（對照）", 0.385, "=sh_sk", 0.58, "Mkt 2c", "Derived，記憶體廠；用來問「台積電是否也同樣偏低」", "Derived")]
+OTH_R0 = rr + 2
+for i, (nm, lo, mid, hi, s1, nt, tg) in enumerate(OTH):
+    r2 = rr + 2 + i; TS_.cell(r2, 1, nm)
+    for j, v in ((2, lo), (3, mid), (4, hi)):
+        if v is not None: TS_.cell(r2, j, v).number_format = "0.0%"; TS_.cell(r2, j).font = BLUE if not isinstance(v, str) else Font(color="000000")
+    TS_.cell(r2, 9, s1); TS_.cell(r2, 10, nt); TS_.cell(r2, 11, tg)
+rr = rr + 2 + len(OTH) + 1
+TS_.cell(rr, 1, "可識別性：能不能用 SEMI 2025 代工邏輯實績校準台積電的設備占比？（比照 SK＋三星，但其他廠無法獨立估計）").font = BOLD; rr += 1
+ID0 = rr
+rows_id = [("SEMI 2025 代工與邏輯設備（實績）", f"=Mkt!C{MR['semi_fd']}", "$B", "In 頁／Mkt 1"),
+           ("台積電 2025 資本支出", "=cap_ts_25", "$B", "In"),
+           ("已知其他廠 2025 資本支出：中芯＋Intel（毛額）", "=cap_smic_25+cap_intel_25", "$B", "僅此二家有數字；三星晶圓代工（報導約 5 兆韓元，未核對）、聯電（資料站約 1.5B，弱）、GlobalFoundries、華虹、力積電、世界先進、Rapidus、中國未上市廠：未找到可用的 2025 資本支出"),
+           ("已知其他廠設備（× 業界值 64%）", f"=B{ID0+2}*sh_oth", "$B", "Analogy：假設同業界值；Intel 含大量建廠，可能偏高")]
+for i, (a, f, u, nt) in enumerate(rows_id):
+    TS_.cell(rr, 1, a); TS_.cell(rr, 2, f).number_format = "0.0"; TS_.cell(rr, 3, u); TS_.cell(rr, 10, nt); rr += 1
+hdr(TS_, rr, ["假設台積電設備占比 s", "台積電設備", "需要的『未列名其他廠設備』X＝SEMI−台積電−已知其他廠", "X 占 SEMI 代工邏輯", "", "", "", "", "", "說明", ""]); rr += 1
+for s_ in ("sh_fd_lo", "sh_fd", "sh_fd_hi", "sh_sk"):
+    TS_.cell(rr, 1, f"={s_}").number_format = "0.0%"; TS_.cell(rr, 2, f"=B{ID0+1}*A{rr}").number_format = "0.0"
+    TS_.cell(rr, 3, f"=B{ID0}-B{rr}-B{ID0+3}").number_format = "0.0"; TS_.cell(rr, 4, f"=C{rr}/B{ID0}").number_format = "0%"; rr += 1
+TS_.cell(rr, 1, "s 的上限情況：X＝0 時隱含的 s"); TS_.cell(rr, 2, f"=(B{ID0}-B{ID0+3})/B{ID0+1}").number_format = "0%"
+TS_.cell(rr, 10, "超過 100% 不可能：SEMI 代工邏輯設備出貨，大於「台積電全部資本支出＋已知其他廠 × 64%」。"); rr += 1
+TS_.cell(rr, 1, ("結論：不論 s 取 45.5%、64% 或 75%，都需要 X＝約 18–30 十億美元（占 SEMI 代工邏輯 28–46%）的『未列名其他廠設備』才能湊成 SEMI 實績，而這個 X 沒有任何獨立估計（未找到）。"
+                 "因此與 SK＋三星不同：記憶體校準有 SEMI 實績＋美光（一手揭露）＋其他廠獨立估計三個已知量，只剩一個未知數；代工邏輯是『台積電 s』與『X』兩個未知數、一條方程式，不可識別。"
+                 "SEMI 實績只約束 s×台積電資本支出＋其他廠＝65.6，s 由其他證據決定。可能的來源：SEMI 計設備出貨、資本支出是現金支出（時差，見限制 5）；中國未上市晶圓廠與口徑差異；本表已知其他廠的資本支出不全。"))
+TS_.cell(rr, 1).alignment = WRAP; rr += 2
+TS_.cell(rr, 1, "先進封裝、測試、光罩與 SEMI 分類的重疊").font = BOLD; rr += 1
+OV = [("公司稱用於先進封裝、測試、光罩及其他（pk_ts）", "=pk_ts_lo", "=pk_ts", "=pk_ts_hi", "%"),
+      ("2026 台積電資本支出（Mkt，三情境相同）", f"=Mkt!D{MR['ts']}", f"=Mkt!D{MR['ts']}", f"=Mkt!D{MR['ts']}", "$B"),
+      ("該類資本支出 × 設備占比 sh_fd（若全部被 SEMI 分入後段或其他前段）", f"=B{rr+1}*B{rr}*sh_fd", f"=C{rr+1}*C{rr}*sh_fd", f"=D{rr+1}*D{rr}*sh_fd", "$B"),
+      ("占情境 A 2026 設備總額", f"=B{rr+2}/Mkt!D{MR['A_tot']}", f"=C{rr+2}/Mkt!D{MR['A_tot']}", f"=D{rr+2}/Mkt!D{MR['A_tot']}", "%")]
+for a, f1, f2, f3, u in OV:
+    TS_.cell(rr, 1, a)
+    for j, f in ((2, f1), (3, f2), (4, f3)): TS_.cell(rr, j, f).number_format = "0.0%" if u == "%" else "0.0"
+    rr += 1
+TS_.cell(rr, 1, ("判斷：SEMI 的口徑——總設備＝WFE（晶圓處理、光罩、廠務）＋測試＋組裝封裝（來源：SEMI 簡報定義，搜尋摘錄）；台積電的先進封裝（CoWoS 等）設備應落在 SEMI『組裝與封裝』或『測試』，光罩設備落在 WFE 的光罩項（本模型的『其他前段』），"
+                 "而本模型把台積電全部資本支出 × 設備占比放進『代工邏輯』，另外再以 SEMI 金額加入測試與封裝——所以有重疊的可能，上表是上限（10–20% 內含測試、光罩與『其他』，且部分封裝用的蝕刻、沉積、微影設備 SEMI 可能算在 WFE）。"
+                 "2025 年因代工邏輯由 SEMI 殘差補平，重疊不影響總額；2026 年以後台積電成長（+52%）遠高於其他廠（+8%），重疊使總額高估；直接扣除為 2026 年設備總額的 2.2–4.5%（上表），但因 2025 殘差補平，Sens 的淨影響較小：情境 A 2026–2029 約 −1.1% 至 −2.2%（扣 15%／20%）。SEMI 是否把 CoWoS 前段工序算在 WFE：未找到。base 不扣，理由：重疊程度無法識別，且扣除方向會被『未列名其他廠』的校準殘差吸收。"))
+TS_.cell(rr, 1).alignment = WRAP
+for col, w in zip("ABCDEFGHIJK", [46, 16, 22, 20, 12, 12, 10, 10, 70, 70, 34]): TS_.column_dimensions[col].width = w
+
 # ---------------- Recon ----------------
 RC = wb.create_sheet("Recon")
 RC["A1"] = "Recon — 本模型與外部來源對帳。不為對上來源而調整參數；差距 > 15% 的原因見 README。模型欄＝晶圓前段設備（除非另註）；來源口徑各異（SEMI WFE、分析師 WFE、KLA 含先進封裝）"
@@ -410,7 +508,7 @@ SE["A1"] = "Sens — 一次動一個輸入（低／高取 In 的區間）；輸�
 hdr(SE, 3, ["輸入", "2027 A", "相對基準", "2028 A", "相對基準", "2029 A", "相對基準", "說明"])
 def parts(**p):
     P = dict(sk="sh_sk", ss="sh_ss", mu25="sh_mu_25", mu26="sh_mu_26", mu27="sh_mu_27", fd="sh_fd", fx="fx", gd="g_oth_dram", gn="g_oth_nand", gf="g_oth_fd",
-             sk25="cap_sk_25", ssm="ss_mem", ts25="cap_ts_25", cx="ind_cxmt", sho="sh_oth", recal=False)
+             sk25="cap_sk_25", ssm="ss_mem", ts25="cap_ts_25", cx="ind_cxmt", sho="sh_oth", pk="0", recal=False)
     P.update(p)
     if P["recal"]:   # 2025 輸入改變時重新校準 SK、三星共用占比
         oth = f"((Mkt!$C${MR['i_dc']}-Mkt!$C${MR['i_cx']}+{P['cx']}+Mkt!$C${MR['i_nc']})*{P['sho']})"
@@ -429,8 +527,8 @@ def tot(y, P):
     base_n = f"(Mkt!$C${MR['i_nc']}*{P['sho']})"
     n = y - 25
     mem = f"({eq3(y, P)}+({base_d})*(1+{P['gd']})^{n}+({base_n})*(1+{P['gn']})^{n})"
-    ts = f"{P['ts25'] if y == 25 else 'cap_ts_'+str(y)}*{P['fd']}"
-    fd = f"({ts}+MAX(Mkt!$C${MR['semi_fd']}-{P['ts25']}*{P['fd']},0)*(1+{P['gf']})^{n})"
+    ts = f"{P['ts25'] if y == 25 else 'cap_ts_'+str(y)}*(1-{P['pk']})*{P['fd']}"
+    fd = f"({ts}+MAX(Mkt!$C${MR['semi_fd']}-{P['ts25']}*(1-{P['pk']})*{P['fd']},0)*(1+{P['gf']})^{n})"
     return f"={mem}+{fd}+Mkt!{YC[y]}{MR['ofer']}*({mem}+{fd})+Mkt!{YC[y]}{MR['test']}+Mkt!{YC[y]}{MR['pkg']}"
 cases = [("基準（2025 實績校準）", {}),
  ("SK 海力士＋三星設備占比 低（長鑫取 12.0 的校準值）", {"sk": "sh_sk_lo", "ss": "sh_ss_lo", "cx": "ind_cxmt_hi"}),
@@ -440,7 +538,9 @@ cases = [("基準（2025 實績校準）", {}),
  ("美光設備占比 低（FY25／26／27–29；重新校準）", {"mu25": "sh_mu_25_lo", "mu26": "sh_mu_26_lo", "mu27": "sh_mu_27_lo", "recal": True}),
  ("美光設備占比 高（重新校準）", {"mu25": "sh_mu_25_hi", "mu26": "sh_mu_26_hi", "mu27": "sh_mu_27_hi", "recal": True}),
  ("其他記憶體廠設備占比 58%（重新校準）", {"sho": "sh_oth_lo", "recal": True}), ("其他記憶體廠設備占比 70%（重新校準）", {"sho": "sh_oth_hi", "recal": True}),
- ("台積電設備占比 低", {"fd": "sh_fd_lo"}), ("台積電設備占比 高", {"fd": "sh_fd_hi"}),
+ ("台積電設備占比 低（50%）", {"fd": "sh_fd_lo"}), ("台積電設備占比 高（75%）", {"fd": "sh_fd_hi"}),
+ ("台積電設備占比＝SK 海力士、三星校準值（45.5%；若台積電也同樣偏低）", {"fd": "sh_sk"}),
+ ("台積電資本支出扣除先進封裝／光罩等 10%（設備同比例；上限，見 TSMC 頁）", {"pk": "pk_ts_lo"}), ("台積電資本支出扣除先進封裝／光罩等 20%（上限）", {"pk": "pk_ts_hi"}),
  ("匯率 低（1,350；重新校準）", {"fx": "fx_lo", "recal": True}), ("匯率 高（1,500；重新校準）", {"fx": "fx_hi", "recal": True}),
  ("SK 海力士 2025 資本支出 低（28 兆；重新校準）", {"sk25": "cap_sk_25_lo", "recal": True}),
  ("三星 DS 記憶體占比 65%（重新校準）", {"ssm": "ss_mem_lo", "recal": True}), ("三星 DS 記憶體占比 90%（重新校準）", {"ssm": "ss_mem_hi", "recal": True}),
@@ -487,6 +587,28 @@ for sn in "ABC":
     SE.cell(rr, 1, f"  業界值 64% − 校準值：情境 {sn}")
     for col in "BCDEF": SE[f"{col}{rr}"] = f"={col}{blkrows[('業界值 64%', sn)]}/{col}{blkrows[('校準值（基準）', sn)]}-1"; SE[f"{col}{rr}"].number_format = "0.0%"
     rr += 1
+rr += 2
+SE.cell(rr, 1, "台積電設備占比／封裝光罩扣除（v0.1.2）：三情境總額與見頂年度（其他參數不動）").font = BOLD; rr += 1
+hdr(SE, rr, ["情境／台積電設定", "2025", "2026", "2027", "2028", "2029", "見頂年度", "說明"]); rr += 1
+ts_blk = {}
+for lab, P in (("基準 64%", parts()), ("50%（低）", parts(fd="sh_fd_lo")), ("75%（高）", parts(fd="sh_fd_hi")), ("45.5%（比照 SK、三星）", parts(fd="sh_sk")), ("基準 64% 並扣封裝／光罩 15%", parts(pk="pk_ts")), ("基準 64% 並扣 20%（上限）", parts(pk="pk_ts_hi"))):
+    for sn in "ABC":
+        SE.cell(rr, 1, f"情境 {sn}（台積電 {lab}）")
+        for k, y in enumerate((25, 26, 27, 28, 29)):
+            col = "BCDEF"[k]
+            if sn == "A" or y <= 27: SE[f"{col}{rr}"] = tot(y, P)
+            elif y == 28: SE[f"{col}{rr}"] = f"=D{rr}*ck_{sn}_28"
+            else: SE[f"{col}{rr}"] = f"=E{rr}*ck_{sn}_29"
+            SE[f"{col}{rr}"].number_format = "0.0"
+        SE[f"G{rr}"] = peak(rr); SE[f"G{rr}"].number_format = "0"
+        ts_blk[(lab, sn)] = rr; rr += 1
+for lab in ("50%（低）", "75%（高）", "45.5%（比照 SK、三星）", "基準 64% 並扣封裝／光罩 15%", "基準 64% 並扣 20%（上限）"):
+    for sn in "ABC":
+        SE.cell(rr, 1, f"  相對基準 64%：情境 {sn}（{lab}）")
+        for col in "BCDEF": SE[f"{col}{rr}"] = f"={col}{ts_blk[(lab, sn)]}/{col}{ts_blk[('基準 64%', sn)]}-1"; SE[f"{col}{rr}"].number_format = "0.0%"
+        rr += 1
+SE.cell(rr, 1, "說明：2025 因代工邏輯由 SEMI 殘差補平，台積電占比不影響 2025 總額；2026 年以後台積電資本支出成長（+52%）遠高於其他廠（+8%，Assumed），占比降低使總額下降。見頂年度由情境係數決定，不受台積電占比影響（三情境見頂年度與基準相同，見 G 欄）。")
+rr += 2
 SE.cell(rr, 1, "說明：業界值 64% 下 2025 本模型總額高於 SEMI 實績（三家 64% 加上其他廠獨立估計超過 SEMI）；校準值使 2025 恰等於 SEMI 實績。單因子列中未標「重新校準」者，校準值固定不變。")
 SE.column_dimensions["A"].width = 48
 for col in "BCDEFG": SE.column_dimensions[col].width = 12
@@ -525,6 +647,11 @@ srcs = [
  ("TrendForce：SK 海力士 HBM4 TC 鍵合機訂單", "https://www.trendforce.com/news/2025/12/12/news-sk-hynix-reportedly-places-hbm4-tc-bonder-order-with-asmpt-as-hanmi-hanwha-patent-clash-heats-up/", "鍵合機供應商集中度", "中"),
  ("Futurum：KLA FQ2 2026（客戶受廠房就緒度限制）", "https://futurumgroup.com/insights/kla-corporation-q2-fy-2026-results-beat-on-ai-led-demand/", "無塵室／廠房限制", "中"),
  ("Samsung 投資 P5 無塵室（Cleanroom Technology）", "https://cleanroomtechnology.com/samsung-speeds-up-construction-of-p5-cleanroom-for", "無塵室先行", "中"),
+ ("台積電董事會資本預算（Investing.com／TipRanks／Stocktitan／Panabee 對 6-K 的摘要）", "見 TSMC 頁來源欄", "台積電設備占比：機器設備 vs 不動產與資本化租賃資產（v0.1.2）", "中（公司揭露，二手摘要；合計與公司公告總額核對相符；6-K 原文未開啟）"),
+ ("元大投顧：先進製程外商前段設備占資本支出 7～8 成（自由財經）", "https://stock.ltn.com.tw/article/70szg3dsjge2", "台積電設備占比第二來源", "弱～中（媒體轉述，投顧立場偏多，原報告未找到）"),
+ ("台積電 3Q25 法說逐字稿（Motley Fool）", "https://www.fool.com/earnings/call-transcripts/2025/10/17/tsmc-tsm-q3-2025-earnings-call-transcript", "資本支出配置：先進製程約 70%、特殊 10–20%、先進封裝／測試／光罩 10–20%", "中（公司一手，經逐字稿網站）"),
+ ("SEMI 設備口徑簡報（搜尋摘錄）", "https://www.semi.org/sites/semi.org/files/2024-07/SEMI%20Market%20Outlook_2024%20SEMICON%20WEST_SMG%20Meetingl.pdf", "總設備＝WFE（晶圓處理＋光罩＋廠務）＋測試＋組裝封裝", "中（摘錄，未開啟）"),
+ ("Intel 4Q25 法說摘要（Yahoo Finance）", "https://finance.yahoo.com/news/intel-q4-earnings-call-highlights-234233695.html", "Intel 2025 資本支出毛額 17.7、扣抵 6.5（TSMC 頁可識別性檢查）", "中（摘要）"),
 ]
 for i, row in enumerate(srcs, 3):
     for j, v in enumerate(row, 1): SO.cell(i, j, v)
@@ -545,9 +672,22 @@ RECON_TXT = [
  "(c) 未超過 15% 的差距：本模型高於 SEMI（2026 前段 +8.5%、2027 +10.0%、2028 +8.3%），低於 Lam／Morgan Stanley／GS 的 2027–2028 數字（−3.6% 到 −11.6%），落在 KLA 190（+1.5%）附近。B、C 在 2028 的差距是情境設計的結果。",
  "(d) 校準：SK 海力士、三星共用一個設備占比（45.5%，區間 38.5–58%），使 2025 年各廠設備加總等於 SEMI 2025 DRAM＋NAND 實績。校準值低於業界下限 58%，表示 SK 海力士、三星的資本支出中建築與無塵室比重高於業界值，與美光「增量多數為建築」的方向一致（方向，不是證明）。校準的前提是其他記憶體廠 2025 獨立估計（8.6 $B，長鑫取 12.0 時校準值降到 38.5%）與三星記憶體資本支出假設（DS 47.5 兆 × 75%，區間 65–90%）。代工邏輯未比照辦理（台積電沒有類似美光的揭露、2025 殘差為正，維持 64%）；代工邏輯是否也有建築比重偏高的問題，待查。",
 ]
+rr = RECON_LAST + 5
+RC.cell(rr, 1, "台積電設備占比對帳（v0.1.2；不併入上方差距表，單位：占比，差距為百分點）").font = BOLD
+hdr(RC, rr + 1, ["項目", "", "來源", "來源值", "模型 sh_fd 基準", "差距（模型−來源）", "", "", "", "", "", "口徑備註"])
+for i, (lab, src, ref, nt) in enumerate((
+        ("董事會資本預算：五次合計設備占比", "台積電 6-K 二手摘要（TSMC 頁）", "=TSMC!H12", "核准額，非支出；含資本化租賃資產；單次 47–71%"),
+        ("董事會資本預算：2025 兩次（5、8 月）", "同上", "=TSMC!H10", "只有 2 次找到分項；2025 全年支出占比：未找到"),
+        ("董事會資本預算：2026 三次（2、5、8 月）", "同上", "=TSMC!H11", ""),
+        ("元大投顧：先進製程外商前段設備（中點）", "自由財經轉述（Interested-party）", f"=AVERAGE(TSMC!B{OTH_R0},TSMC!D{OTH_R0})", "只含外商前段設備、限先進製程"),
+        ("業界值（SEMI WFE ÷ 全球資本支出等）", "In 頁 sh_oth", "=sh_oth", "Analogy，模型基準的來源"),
+        ("SK 海力士、三星校準值（對照，不是台積電的證據）", "Mkt 2c", "=sh_sk", "記憶體廠，Derived")), 1):
+    r2 = rr + 1 + i
+    RC.cell(r2, 1, lab); RC.cell(r2, 3, src); RC.cell(r2, 4, ref).number_format = "0.0%"; RC.cell(r2, 5, "=sh_fd").number_format = "0.0%"
+    RC.cell(r2, 6, f"=E{r2}-D{r2}").number_format = "0.0%"; RC.cell(r2, 12, nt)
 RD = wb.create_sheet("README", 0)
 RD_LINES = [
- ("半導體設備市場模型 v0.1.1（AI 半導體 Project 步驟 5：設備與材料——設備部分）　2026-10-22", True),
+ ("半導體設備市場模型 v0.1.2（AI 半導體 Project 步驟 5：設備與材料——設備部分）　2026-10-23", True),
  ("模型命題：設備需求＝為滿足記憶體、代工擴產所需的資本支出 × 設備占比；本模型回答核心問題 1——設備循環在 2027 還是 2028 見頂——並列出核心問題 2、3 的瓶頸表。公司份額與毛利留給公司層，v0.1 不做。", False), ("", False),
  ("驅動因子 → 推導量", True),
  ("In：公司資本支出（讀自 skhynix／micron／samsung／tsmc dist，不修改它們）、設備占資本支出比例（兩個來源給低／高）、SEMI 2026-07 分項、情境係數（Assumed）、AI 分類假設", False),
@@ -561,8 +701,11 @@ RD_LINES = [
  ("限制", True),
  ("(1) 校準依賴其他記憶體廠 2025 獨立估計（長鑫 6.9–12.0 無一手資料、長江存儲為推算、華邦與 SanDisk 未找到）與三星記憶體資本支出假設；校準值低於業界下限 58%，方向與美光「增量多數為建築」一致，但不是證明。2025 年 DRAM／NAND 拆分不準（合計準）。", False),
  ("(2) 其他廠成長率為 Assumed（長鑫、長江存儲、三星晶圓代工、華虹的資本支出指引未找到）。(3) 測試與封裝以 SEMI 為輸入：缺少每顆加速器的測試時間與每條產線鍵合機台數資料。(4) 情境係數為 Assumed，是「若 B／C 則…」的情境。", False),
- ("(5) Morgan Stanley 202／227 為 itiger 二手轉述（2026-07-06，環境無法開啟，未直接核對；上修前 191／215 另有 Investing.com 佐證）。(6) 台積電資本支出含先進封裝，與 SEMI 後段可能重疊。代工邏輯是否也有建築比重偏高的問題，待查。", False),
- ("(7) 時差：資本支出是現金支出，設備營收是出貨認列，兩者約差一到兩季，v0.1 沒有建模（年度金額直接相乘）。(8) 設備占比：美光依公司揭露推導（引文為一手，比例為 Derived；公司原文是「增量」多數為建築，並未給設備占比）；台積電未找到公司揭露，用業界 58–70%（Analogy）。", False), ("", False),
+ ("(5) Morgan Stanley 202／227 為 itiger 二手轉述（2026-07-06，環境無法開啟，未直接核對；上修前 191／215 另有 Investing.com 佐證）。(6) 台積電資本支出含先進封裝、光罩（公司稱 10–20%），與 SEMI 後段、其他前段可能重疊：重疊程度無法識別，base 不扣，上限影響見 Sens（情境 A 2026–2029 約 −1.1% 至 −2.2%）。", False),
+ ("(7) 時差：資本支出是現金支出，設備營收是出貨認列，兩者約差一到兩季，v0.1 沒有建模（年度金額直接相乘）。(8) 設備占比：美光依公司揭露推導（引文為一手，比例為 Derived；公司原文是「增量」多數為建築，並未給設備占比）；台積電的設備／建築比例未找到年報分類數字（附註有揭露，本環境無法開啟原文），用業界值 64%（Analogy，區間改 50–75%），以董事會資本預算分項（5 次彙總 60%）與元大 7～8 成交叉檢查。", False), ("", False),
+ ("v0.1.2（2026-10-23）台積電設備占比查證", True),
+ ("結論：台積電設備占比維持 64%（Analogy），只改區間（58–70% → 50–75%）；數值不變，三情境設備總額與見頂年度與 v0.1.1 完全相同。理由：(a) 董事會資本預算「機器設備」占比 5 次彙總 60%（單次 47–71%），元大稱先進製程前段設備 7～8 成，兩者夾住 64%，都沒有像 SK 海力士、三星（45.5%）那樣明顯偏低；(b) SEMI 2025 代工邏輯實績無法校準台積電：台積電占比與『未列名其他廠』是兩個未知數、一條方程式（TSMC 頁），所以沒有比照記憶體做校準。", False),
+ ("證據缺口：年報／20-F 不動產廠房及設備附註的分類增添（2021–2025）、董事會預算 2021–2024 與 2025-02、2025-11 的分項、2021 年現金資本支出：未找到（檢索缺口，非公司不揭露）。董事會預算是核准額不是支出，且含非現金的資本化租賃資產。", False), ("", False),
  ("瓶頸表（核心問題 2、3；v0.1 只做表，不入模）", True)]
 for t in RECON_TXT: pass
 r0 = len(RD_LINES) + 1

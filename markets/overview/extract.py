@@ -12,7 +12,7 @@ F = {
     "ss": ROOT / "samsung/dist/20261022_三星電子模型_v0.1.1.xlsx",
     "mu": ROOT / "micron/dist/20261022_美光模型_v0.2.1.xlsx",
     "tsmc": ROOT / "tsmc/dist/20261022_台積電模型_v0.2.xlsx",
-    "eq": ROOT / "markets/equipment/dist/20261022_半導體設備市場模型_v0.1.1.xlsx",
+    "eq": ROOT / "markets/equipment/dist/20261023_半導體設備市場模型_v0.1.2.xlsx",
     "adv": ROOT / "advantest/dist/20261022_Advantest模型_v0.1.xlsx",
     "eq_readme": ROOT / "markets/equipment/README.md",
 }
@@ -237,7 +237,7 @@ for r in kr_chk:
         print("KR P/E 差距 >15%：", r["company"], r["year"], "換算", r["pe_dart"], "cmc", r["pe_cmc"], f'{r["gap"]:+.1%}')
 
 # ---------------------------------------------------------------------------
-# 設備市場（markets/equipment v0.1.1）與 Advantest（advantest v0.1）
+# 設備市場（markets/equipment v0.1.2）與 Advantest（advantest v0.1）
 import re as _re
 wbq = openpyxl.load_workbook(F["eq"], data_only=True)
 mk = wbq["Mkt"]; sc = None; eqs = {}
