@@ -34,7 +34,7 @@
 - 成品的 Drive 位置：`02-算力收支/<公司>/`（資料夾 2026-10-07 由錯字「02-算利收支」改名）。
 
 ## 共用工具：公司模型 HTML 展示層（`tools/company_html/`）
-- Excel 仍是計算事實的來源；`<公司>/html.json` ＋ 共用產生器 → `<公司>/dist/<日期>_<公司>模型_v<版本>.html`（單頁自含、每個數字標註來源儲存格）。檢核（重現性、抽數、無手寫數字）在 `ai-semis-build` CI。說明見 `tools/company_html/README.md`。目前：Advantest、SK 海力士、美光、三星、台積電（Disco 之後再議）。風格比照 AI 半導體價值鏈儀表板：白底、青綠主色，不做深色模式。
+- Excel 仍是計算事實的來源；`<公司>/html.json` ＋ 共用產生器 → `<公司>/dist/<日期>_<公司>模型_v<版本>.html`（單頁自含、每個數字標註來源儲存格）。檢核（重現性、抽數、無手寫數字）在 `ai-semis-build` CI。說明見 `tools/company_html/README.md`。目前：Advantest、Disco、SK 海力士、美光、三星、台積電。風格比照 AI 半導體價值鏈儀表板：白底、青綠主色，不做深色模式。
 
 ## 共用工具：Tokenomics 取數（`tools/tokenomics/import_tokenomics.py`）
 - **用途**：把 Tokenomics 的 Interface（`IF_`、四層瀑布 `IFW_`、用途欄 `IFC_`）、L1（`L1_`）與來源（`SRC_`，限 Active）具名範圍讀成版本固定的快照 JSON（記錄檔名、`model/CURRENT`、commit、擷取日；每個值記名稱、世代、成本情境、單位、工作表!儲存格），供各公司 `company.json` → `tokenomics.snapshotFile` 引用。公司模型只讀快照，不直接讀 Tokenomics。
