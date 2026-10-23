@@ -8,6 +8,8 @@ from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 import market as MEM
+sys.path.insert(0, os.path.join(ROOT, "tools"))
+import cycle_position as CP
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -55,6 +57,7 @@ for r in ws_.iter_rows():
     if lab == "測試設備":
         TEST = ([r[2 + j].value for j in range(5)], f"{rel(EQ_F)}｜Mkt!C{r[0].row}:G{r[0].row}")
 assert _n == 3 and TEST
+PEAK, PEAK_SRC = CP.peak_years(ROOT)   # 設備股共用循環位置規則：各情境見頂年度（markets/equipment）
 
 # ---------------- In ----------------
 IN = wb.active; IN.title = "In"
@@ -139,6 +142,8 @@ inp("g_mem", "指引記憶體測試機 FY2026", "¥B", None, 227.0, None, "Inter
 inp("g_eps", "指引 EPS FY2026（基本）", "¥", None, 911.64, None, "Interested-party", "公司決算短信（Yahoo Japan 摘要）", "kabutan 記 913.83（差 0.2%，未解）")
 inp("cons_rev26", "共識營收 FY2026", "¥B", None, 1760.0, None, "Interested-party", "stockanalysis.com 2026-10-07：¥1.76T", "第二來源：未找到")
 inp("cons_oi26", "共識營業利益 FY2026", "¥B", None, 886.4, None, "Interested-party", "stockanalysis.com 2026-10-07", "第二來源：未找到")
+for s in SC:
+    inp(f"pk_{s}", f"情境 {s}：設備市場見頂年度（日曆年；循環位置規則用）", "年", None, PEAK[s], None, "Derived", PEAK_SRC[s], "設備股共用規則（tools/cycle_position.py）：FY(t) 早於見頂年＝中段、等於＝見頂、晚於＝谷底；設備市場模型 v0.1.2 的情境係數為 Assumed" if s == "A" else "同上")
 inp("px", "股價（stockanalysis 2026-10-21 收盤）", "¥", None, 34440, None, "Interested-party", "stockanalysis.com", "第二來源：未找到")
 inp("sa_fpe", "遠期 P/E（stockanalysis）", "x", None, 37.7, None, "Interested-party", "stockanalysis.com", "自算：股價 ÷ 指引 EPS，見 Val")
 
@@ -359,7 +364,7 @@ for c in "CDEFG": PL.column_dimensions[c].width = 13
 
 # ---------------- Val：P/E 估值 ----------------
 V = wb.create_sheet("Val")
-V["A1"] = "Val — P/E 估值。跨公司規則：合理倍數＝10 年（2016–2025 年底）P/E 的分位，依循環位置：見頂年 25 分位、中段中位數、谷底 75 分位。本模型把 FY2027 歸為見頂年"
+V["A1"] = "Val — P/E 估值。跨公司規則：合理倍數＝10 年（2016–2025 年底）P/E 的分位，依循環位置：見頂年 25 分位、中段中位數、谷底 75 分位。循環位置依設備股共用規則（見第 4 節；v0.2 以前三情境皆把 FY2027 歸為見頂年）"
 V["A2"] = "P/E 定義（自算）：日曆年底收盤價 ÷ 「當期會計年度」公司公布的基本 EPS（年底所在會計年度，例如 2025-12 對 FY2025＝2026-03 期）；另列「前期」（上一個已結束會計年度）。所有價格與 EPS 為 2023-10 的 4 比 1 分割調整後"
 V.cell(4, 1, "1. 公司公布 EPS（會計年度，日圓，分割調整後）— 兩個來源").font = BOLD
 hdr(V, 5, ["會計年度（3 月結束）", "來源1：irbank（分割調整後；2025-03 改用公司決算書）", "來源2：公司原始 EPS（分割前）", "來源2 ÷ 4", "兩者差距", "標記", "說明"])
@@ -397,7 +402,7 @@ for i, y in enumerate(range(2016, 2026), 20):
 V.cell(31, 1, "收盤價來源1：日經新聞 過去10年株價（nikkei.com/nkd/company/history/yprice/?scode=6857）；來源2：未找到（Yahoo Japan、kabutan 歷史頁未開啟）。EPS 來源1：irbank；來源2：公司決算（見上表）。companiesmarketcap（美元計價 TTM 口徑，與日圓自算不可直接比較）僅作對照，差距見 H、I 欄。")
 V.cell(33, 1, "3. 分位（只含有價格的年度）").font = BOLD
 hdr(V, 34, ["統計", "P/E 當期（自算）", "P/E 前期（自算）", "cmc P/E（參考）", "用途"])
-for i, (nm, p, use) in enumerate((("25 分位", 0.25, "見頂年（FY2027）"), ("中位數", 0.5, "中段"), ("75 分位", 0.75, "谷底")), 35):
+for i, (nm, p, use) in enumerate((("25 分位", 0.25, "見頂年"), ("中位數", 0.5, "中段"), ("75 分位", 0.75, "谷底")), 35):
     V.cell(i, 1, nm); V.cell(i, 5, use)
     V.cell(i, 2, f"=PERCENTILE(E20:E29,{p})"); V.cell(i, 3, f"=PERCENTILE(F20:F29,{p})"); V.cell(i, 4, f"=PERCENTILE(G20:G29,{p})")
     for c in "BCD": V[f"{c}{i}"].number_format = "0.0"
@@ -417,20 +422,28 @@ for j, x in enumerate((10, 20, 30)):
     V[f"B{42+j}"] = f"=PERCENTILE({col}48:{col}57,0.25)"; V[f"C{42+j}"] = f"=PERCENTILE({col}48:{col}57,0.5)"; V[f"D{42+j}"] = f"=PERCENTILE({col}48:{col}57,0.75)"
     for c in "BCD": V[f"{c}{42+j}"].number_format = "0.0"
 
-V.cell(60, 1, "4. 隱含股價（日圓）：見頂年規則＝FY2027 EPS × 25 分位；其餘倍數僅供參考").font = BOLD
-hdr(V, 61, ["情境", "EPS 年度", "EPS", "倍數類型", "倍數", "隱含股價", "相對現價", "備註"])
-vr = 62; VAL = {}
+V.cell(59, 1, "4. 循環位置（設備股共用規則；見頂年度讀設備市場模型，不在本模型另訂）").font = BOLD
+V.cell(60, 1, CP.rule_text(PEAK))
+hdr(V, 61, ["情境", "設備市場見頂年度", "FY2027 對照日曆年", "判定", "倍數", "v0.2 判定（對照）", "v0.2 倍數", "規則"])
+for i, s in enumerate(SC, 62):
+    V.cell(i, 1, s); V.cell(i, 2, f"=pk_{s}"); V.cell(i, 3, 2027).font = BLUE
+    V.cell(i, 4, "=" + CP.excel_rule(f"C{i}", f"pk_{s}"))
+    V.cell(i, 5, f'=IF(D{i}="見頂",pe_peak,IF(D{i}="谷底",pe_trough,pe_mid))').number_format = "0.0"
+    V.cell(i, 6, "見頂"); V.cell(i, 7, "=pe_peak").number_format = "0.0"; V.cell(i, 8, "tools/cycle_position.py")
+V.cell(66, 1, "5. 隱含股價（日圓）：規則值＝FY2027 EPS × 依循環位置的倍數；其餘倍數僅供參考").font = BOLD
+hdr(V, 67, ["情境", "EPS 年度", "EPS", "倍數類型", "倍數", "隱含股價", "相對現價", "備註"])
+vr = 68; VAL = {}
 for s in SC:
-    for y, typ, nm in ((2027, "pe_peak", "見頂年：25 分位（規則值）"), (2027, "pe_mid", "參考：中位數"), (2027, "pe_trough", "參考：75 分位"),
+    for y, typ, nm in ((2027, f"E{62 + SC.index(s)}", "rule"), (2027, "pe_peak", "參考：25 分位（v0.2 規則值）"), (2027, "pe_mid", "參考：中位數"), (2027, "pe_trough", "參考：75 分位"),
                        (2028, "pe_peak", "參考：25 分位"), (2028, "pe_mid", "參考：中位數"), (2028, "pe_trough", "參考：75 分位")):
         V.cell(vr, 1, s); V.cell(vr, 2, f"FY{y}"); V.cell(vr, 3, f"=PL!{FYC[y]}{SUMR[(s,'eps')]}").number_format = "#,##0"
-        V.cell(vr, 4, nm); V.cell(vr, 5, f"={typ}").number_format = "0.0"
+        V.cell(vr, 4, nm if nm != "rule" else f'="規則值："&D{62 + SC.index(s)}'); V.cell(vr, 5, f"={typ}").number_format = "0.0"
         V.cell(vr, 6, f"=C{vr}*E{vr}").number_format = "#,##0"; V.cell(vr, 7, f"=F{vr}/px-1").number_format = "0%"
-        if y == 2027 and typ == "pe_peak":
+        if nm == "rule":
             for c in range(1, 9): V.cell(vr, c).fill = KEY
             VAL[s] = vr
         vr += 1
-V.cell(vr + 1, 1, "5. 目前遠期 P/E").font = BOLD
+V.cell(vr + 1, 1, "6. 目前遠期 P/E").font = BOLD
 hdr(V, vr + 2, ["項目", "數值", "備註"])
 fr = vr + 3
 for nm, f, fm, note in (("現價（stockanalysis 2026-10-21 收盤）", "=px", "#,##0", ""),
@@ -439,7 +452,7 @@ for nm, f, fm, note in (("現價（stockanalysis 2026-10-21 收盤）", "=px", "
                         ("  兩者差距", f"=B{fr+2}-B{fr+1}", "0.0", "stockanalysis 的遠期 EPS 為共識，非公司指引，故小差"),
                         ("現價 ÷ 模型 FY2026 EPS（A）", f"=px/PL!{FYC[2026]}{SUMR[('A','eps')]}", "0.0", ""),
                         ("現價 ÷ 模型 FY2027 EPS（A／B／C）", f"=px/PL!{FYC[2027]}{SUMR[('A','eps')]}", "0.0", "B、C 見右"),
-                        ("現價隱含倍數 ÷ 規則倍數（25 分位）— 以 FY2027 A EPS", f"=B{fr+5}/pe_peak", "0.00", ">1＝現價高於規則給的倍數")):
+                        ("現價隱含倍數 ÷ 規則倍數（情境 A）— 以 FY2027 A EPS", f"=B{fr+5}/E62", "0.00", ">1＝現價高於規則給的倍數")):
     V.cell(fr, 1, nm); V.cell(fr, 2, f).number_format = fm; V.cell(fr, 3, note); fr += 1
 V.cell(fr - 2, 3, f"=px/PL!{FYC[2027]}{SUMR[('B','eps')]}").number_format = "0.0"; V.cell(fr - 2, 4, f"=px/PL!{FYC[2027]}{SUMR[('C','eps')]}").number_format = "0.0"
 V.column_dimensions["A"].width = 46
@@ -562,7 +575,7 @@ SO.column_dimensions["A"].width = 70; SO.column_dimensions["B"].width = 130
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Advantest（6857.T）收支與估值模型 v0.2（AI 半導體 Project 步驟 5：設備與材料）　2026-10-23", True),
+lines = [("Advantest（6857.T）收支與估值模型 v0.2.1（AI 半導體 Project 步驟 5：設備與材料）　2026-10-23", True),
  ("模型命題：Advantest 的盈餘由 AI 加速器的 SoC 測試需求決定。每顆晶片的測試時間隨複雜度上升，Advantest 握有約三分之二的市占。股價取決於加速器顆數的成長在 FY2027 之後放緩時，測試機的投資會不會跟著回落。", False), ("", False),
  ("會計年度：4 月到隔年 3 月（FY2026＝2026-04～2027-03）。金額以日圓（¥B）為主，另列美元；匯率基準 ¥150（公司第二季起的假設）放 In 頁。FY2026 第二季預定 2026-10-28 公布，建置日（2026-10-22）尚未公布，故不納入。", False), ("", False),
  ("驅動因子 → 推導量", True),
@@ -570,7 +583,7 @@ lines = [("Advantest（6857.T）收支與估值模型 v0.2（AI 半導體 Projec
  ("記憶體測試機：公司 CY2026 市場規模為錨 × [w × HBM 出貨位元指數（markets/memory）＋(1−w) × DRAM 設備支出指數（markets/equipment）] × 市占（FY2025 實績推得）", False),
  ("其他系統、服務與其他：前一年 × 成長率（Assumed）。毛利率＝截距＋斜率 × SoC 占比（FY2025 與 FY2026 指引兩點推導）；營業費用＝固定＋變動 × 營收（兩點推導）；不寫死利益率", False),
  ("情境 A／B／C：顆數係數讀台積電模型成品（2028 ×1.0／0.8／0.6，2029 ×1.0／0.85／0.6）；情境 C 另加 Teradyne 搶回市占（FY2028 61%、FY2029 56%）與價格壓力", False),
- ("Val：P/E 規則——10 年（2016–2025 年底）P/E 分位，見頂年（本模型 FY2027）取 25 分位。Recon：對公司指引、共識、公司市場規模、SEMI。Sens：市占、測試時間係數、顆數情境、營業費用變動比例等", False), ("", False),
+ ("Val：P/E 規則——10 年（2016–2025 年底）P/E 分位，見頂年 25 分位、中段中位數、谷底 75 分位；循環位置依設備股共用規則（各情境見頂年度讀設備市場模型：" + "、".join(f"{s_} {PEAK[s_]}" for s_ in SC) + " → FY2027：" + CP.fy2027_text(PEAK) + "）。Recon：對公司指引、共識、公司市場規模、SEMI。Sens：市占、測試時間係數、顆數情境、營業費用變動比例等", False), ("", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。公司原文（advantest.com）在建置環境無法開啟，數字取自搜尋引擎摘錄，原文待人工複核。", False),
  ("已知限制：(1) 每加權顆測試支出由「公司 CY2026 市場規模 − 非 AI 市場」校準，市場規模為測試機廠自估（Interested-party），非 AI 以 AI 前（CY2021–23）Teradyne 公布的 SoC 測試機市場為參照（Analogy，3.7–4.9）；平行測試效率提升不在基準，只在 Sens 列示；(2) 每顆測試時間係數無實證，只決定世代間相對權重；(3) HBM 出貨位元自 markets/memory v0.4 起隨情境顆數係數變動（2028–29）；供給三情境相同、單價假設未重估，B、C 的 HBM 位元與單價同時下修；記憶體測試機的情境差異來自 HBM 出貨位元與 DRAM 設備支出兩條線；(4) 無測試機效率（平行測試）提升的建模，可能高估 CY2027 之後市場；(5) CY2030 無市場層資料，持平假設；(6) 10 年 P/E 缺 2016 年底收盤價。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)

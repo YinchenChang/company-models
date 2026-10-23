@@ -13,7 +13,7 @@ F = {
     "mu": ROOT / "micron/dist/20261023_美光模型_v0.3.xlsx",
     "tsmc": ROOT / "tsmc/dist/20261022_台積電模型_v0.2.xlsx",
     "eq": ROOT / "markets/equipment/dist/20261023_半導體設備市場模型_v0.1.2.xlsx",
-    "adv": ROOT / "advantest/dist/20261023_Advantest模型_v0.2.xlsx",
+    "adv": ROOT / "advantest/dist/20261023_Advantest模型_v0.2.1.xlsx",
     "eq_readme": ROOT / "markets/equipment/README.md",
 }
 
