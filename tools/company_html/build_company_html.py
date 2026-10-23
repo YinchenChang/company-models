@@ -78,18 +78,36 @@ def parse_display(s):
 
 
 # ───────────────────────── 活頁簿與參照 ─────────────────────────
+DS_DIR = os.path.join('markets', 'overview', 'datasets')
+
+
 class Book:
-    def __init__(self, path):
+    """xlsx 重算值；另可讀市場層資料集（參照寫成 ds:資料集名!列鍵.欄位，例如 ds:valuation!美光 見頂.multiple）。"""
+
+    def __init__(self, path, root=None):
         self.path = path
+        self.root = root
         self.wb = openpyxl.load_workbook(path, data_only=True)
+        self._ds = {}
 
     def cell(self, sheet, coord):
+        if sheet.startswith('ds:'):
+            name = sheet[3:]
+            if name not in self._ds:
+                with open(os.path.join(self.root, DS_DIR, name + '.json'), encoding='utf-8') as fh:
+                    self._ds[name] = {r['key']: r for r in json.load(fh)}
+            key, field = coord.rsplit('.', 1)
+            return self._ds[name][key][field]
         return self.wb[sheet][coord].value
 
     def expand(self, refs):
         """'PL!C5:G5,PL!B5' → [(sheet, coord), …]；範圍依列優先展開。"""
         out = []
         for part in refs.split(','):
+            if part.strip().startswith('ds:'):
+                sh, co = part.strip().split('!', 1)
+                out.append((sh, co))
+                continue
             m = REF_RE.match(part.strip())
             if not m:
                 raise ValueError(f'無法解析儲存格參照：{part!r}')
@@ -294,7 +312,9 @@ def nice_ticks(lo, hi, n=4):
 
 def render_lines(cx, blk, scen):
     """折線圖（inline SVG）。series：[{name, y, scenario}]；點的 data-ref／data-v 供檢核。"""
-    xs_lab = cx.values(blk['x'])
+    xs_lab = blk['x'] if isinstance(blk['x'], list) else cx.values(blk['x'])
+    for lab in (xs_lab if isinstance(blk['x'], list) else []):
+        check_prose(lab, 'x 軸標籤')
     series = blk['series']
     f = blk.get('fmt', 'n0')
     W, H, L, R, T, B = 360, 236, 46, 12, 10, 30
@@ -314,7 +334,6 @@ def render_lines(cx, blk, scen):
     for i, lab in enumerate(xs_lab):
         anc = 'end' if i == n - 1 else 'middle'
         o.append(f'<text x="{px(i):.1f}" y="{H - 10}" class="ax" text-anchor="{anc}">{esc(lab)}</text>')
-    xrefs = cx.b.expand(blk['x'])
     for si, s in reversed(list(enumerate(series))):          # C、B、A 的順序畫，A 在最上層
         refs = cx.b.expand(s['y'])
         vals = [cx.b.cell(a, c) for a, c in refs]
@@ -345,10 +364,10 @@ def render_pl(cx, blk, cfg):
             rng = m['rows'][sc['key']]
             rows.append([sc['name'], rng if '|' in rng else f'{rng}|{f}'])
         out.append(render_table(cx, {
-            'grid': True, 'caption': m['name'], 'head': [m.get('corner', '情境'), years], 'rows': rows}))
+            'grid': True, 'caption': m['name'], 'head': [m.get('corner', '情境')] + (years if isinstance(years, list) else [years]), 'rows': rows}))
         if m.get('chart'):
             charts.append(render_lines(cx, {
-                'title': m['name'], 'x': split_spec(years)[0], 'fmt': f, 'ymin': m.get('ymin', 'zero'),
+                'title': m['name'], 'x': years if isinstance(years, list) else split_spec(years)[0], 'fmt': f, 'ymin': m.get('ymin', 'zero'),
                 'series': [{'name': sc['name'], 'y': split_spec(m['rows'][sc['key']])[0]} for sc in scen]}, scen))
     return ''.join(out) + '<div class="charts">' + ''.join(charts) + '</div>'
 
@@ -628,7 +647,7 @@ def build(cdir, xlsx=None, root=None):
     xlsx = find_xlsx(cdir, xlsx)
     root = root or os.path.dirname(os.path.abspath(cdir))
     date, ver = parse_name(xlsx)
-    cx = Ctx(Book(xlsx), {'$version': 'v' + ver, '$date': date, '$sha': sha12(xlsx), '$xlsx': os.path.basename(xlsx)})
+    cx = Ctx(Book(xlsx, root), {'$version': 'v' + ver, '$date': date, '$sha': sha12(xlsx), '$xlsx': os.path.basename(xlsx)})
     ids = [s['id'] for s in cfg['sections']]
     if ids[:len(REQUIRED_IDS)] != REQUIRED_IDS:
         raise SystemExit(f'sections 的 id 須依序為 {REQUIRED_IDS}，實際 {ids}')

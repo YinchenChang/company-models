@@ -11,6 +11,10 @@ AI 半導體 Project 步驟 4。獨立的 Python→Excel 產生器（不套記�
 
 工作表：README、In、CoWoS、PL、Val、Recon、Sens、Sources。情境 A／B／C：2028–29 加速器數 × 1.0／0.8–0.85／0.6，毛利率路徑分開。
 
+## HTML 展示層
+
+`html.json`（頁面設定）與 `dist/20261022_台積電模型_v0.2.html`（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格；十年分位的規則值取自 `markets/overview/datasets/valuation.json`，頁內標明）。產生與檢核見 `tools/company_html/README.md`；xlsx 或 `html.json` 變動後須重建 HTML 一併提交。
+
 ## 主要結果（v0.2）
 
 | 項目 | 結果 | 對照 |

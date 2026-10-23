@@ -9,6 +9,10 @@ AI 半導體樣板的第一家公司（之後複製到美光、三星）。
 | `company.py` | 設定檔（只放參數）；結構在 `tools/memory_model/build.py`（記憶體樣板）與 `markets/memory/market.py`（共用市場層） |
 | `dist/20261023_SK海力士模型_v0.4.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 
+## HTML 展示層
+
+`html.json`（頁面設定）與 `dist/20261023_SK海力士模型_v0.4.html`（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格；十年分位的規則值取自 `markets/overview/datasets/valuation.json`，頁內標明）。產生與檢核見 `tools/company_html/README.md`；xlsx 或 `html.json` 變動後須重建 HTML 一併提交。
+
 ## 建置
 
 ```

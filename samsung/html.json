@@ -1,0 +1,563 @@
+{
+  "company": "三星電子",
+  "ticker": "005930.KS",
+  "thesis": "@README!A2",
+  "question": "循環見頂之後，淨值撐不撐得住股價",
+  "scenarios": [
+    {
+      "key": "A",
+      "name": "情境 A"
+    },
+    {
+      "key": "B",
+      "name": "情境 B"
+    },
+    {
+      "key": "C",
+      "name": "情境 C"
+    }
+  ],
+  "sections": [
+    {
+      "id": "thesis",
+      "title": "命題與核心問題",
+      "intro": "@README!A15",
+      "blocks": [
+        {
+          "type": "kv",
+          "items": [
+            [
+              "情境定義",
+              "@README!A14"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "drivers",
+      "title": "驅動因子 → 推導量",
+      "intro": "標記沿用 Excel：Verified、Interested-party、Analogy、Assumed、Derived。輸入取自 In 頁，推導量取自 Y 頁（情境 A）；方向欄為因果方向，非統計關係。",
+      "blocks": [
+        {
+          "type": "table",
+          "head": [
+            "輸入",
+            "基準值",
+            "標記",
+            "推導量",
+            "因果方向"
+          ],
+          "rows": [
+            [
+              "@In!B23",
+              [
+                "@In!E23|p1",
+                " ",
+                "@In!C23"
+              ],
+              "@In!G23|tag",
+              [
+                "一般 DRAM 營收（情境 A，2027）：",
+                "@Y!D5|n1"
+              ],
+              "位元成長與價格指數比同向放大一般 DRAM 營收"
+            ],
+            [
+              "@In!B26",
+              [
+                "@In!E26|p1",
+                " ",
+                "@In!C26"
+              ],
+              "@In!G26|tag",
+              [
+                "NAND 營收（情境 A，2027）：",
+                "@Y!D7|n1"
+              ],
+              "位元成長與價格指數比同向放大 NAND 營收"
+            ],
+            [
+              "@In!B31",
+              [
+                "@In!E31|p1",
+                " ",
+                "@In!C31"
+              ],
+              "@In!G31|tag",
+              [
+                "HBM 營收（情境 A，2027）：",
+                "@Y!D6|n1"
+              ],
+              "HBM 市場乘以市占，市占同向影響 HBM 營收"
+            ],
+            [
+              "@In!B38",
+              [
+                "@In!E38|p1",
+                " ",
+                "@In!C38"
+              ],
+              "@In!G38|tag",
+              [
+                "營業成本（情境 A，2027）：",
+                "@Y!D12|n1"
+              ],
+              "單位成本年降愈大，營業成本愈低（反向）"
+            ],
+            [
+              "@In!B44",
+              [
+                "@In!E44|p1",
+                " ",
+                "@In!C44"
+              ],
+              "@In!G44|tag",
+              [
+                "淨利（情境 A，2027）：",
+                "@Y!D20|n1"
+              ],
+              "稅率愈高，淨利愈低（反向）"
+            ],
+            [
+              "@In!B47",
+              [
+                "@In!E47|p1",
+                " ",
+                "@In!C47"
+              ],
+              "@In!G47|tag",
+              [
+                "自由現金流（情境 A，2027）：",
+                "@Y!D22|n1"
+              ],
+              "資本支出愈高，自由現金流愈低（反向）；折舊延後反映"
+            ],
+            [
+              "@In!B71",
+              [
+                "@In!E71|p1",
+                " ",
+                "@In!C71"
+              ],
+              "@In!G71|tag",
+              [
+                "買回（情境 A，2027）：",
+                "@Y!D24|n1"
+              ],
+              "回饋比例乘以自由現金流扣股利，轉成買回，降低股數、墊高每股淨值"
+            ],
+            [
+              "@In!B6",
+              [
+                "@In!E6|n0",
+                " ",
+                "@In!C6"
+              ],
+              "@In!G6|tag",
+              [
+                "情境 A 見頂年隱含價相對現價：",
+                "@ds:valuation!三星電子 見頂.vs_px|sp1"
+              ],
+              "現價只是比較基準，不影響隱含價"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pl",
+      "title": "三情境損益",
+      "intro": "2026 為基準年（含最後實績季與推估季），2027 起三情境分歧。",
+      "blocks": [
+        {
+          "type": "pl",
+          "years": [
+            "2026",
+            "2027",
+            "2028",
+            "2029"
+          ],
+          "metrics": [
+            {
+              "name": "合併營收",
+              "fmt": "n1",
+              "chart": true,
+              "rows": {
+                "A": "@Y!C18,Y!D18:F18",
+                "B": "@Y!C18,Y!G18:I18",
+                "C": "@Y!C18,Y!J18:L18"
+              }
+            },
+            {
+              "name": "合併營業利益",
+              "fmt": "n1",
+              "rows": {
+                "A": "@Y!C19,Y!D19:F19",
+                "B": "@Y!C19,Y!G19:I19",
+                "C": "@Y!C19,Y!J19:L19"
+              }
+            },
+            {
+              "name": "記憶體營業利益率",
+              "fmt": "p1",
+              "chart": true,
+              "ymin": "auto",
+              "rows": {
+                "A": "@Y!C15,Y!D15:F15",
+                "B": "@Y!C15,Y!G15:I15",
+                "C": "@Y!C15,Y!J15:L15"
+              }
+            },
+            {
+              "name": "淨利",
+              "fmt": "n1",
+              "rows": {
+                "A": "@Y!C20,Y!D20:F20",
+                "B": "@Y!C20,Y!G20:I20",
+                "C": "@Y!C20,Y!J20:L20"
+              }
+            },
+            {
+              "name": "每股淨值",
+              "fmt": "n0",
+              "rows": {
+                "A": "@Y!C28,Y!D28:F28",
+                "B": "@Y!C28,Y!G28:I28",
+                "C": "@Y!C28,Y!J28:L28"
+              }
+            },
+            {
+              "name": "EPS（期末股數）",
+              "fmt": "n0",
+              "chart": true,
+              "rows": {
+                "A": "@Y!C29,Y!D29:F29",
+                "B": "@Y!C29,Y!G29:I29",
+                "C": "@Y!C29,Y!J29:L29"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "valuation",
+      "title": "估值",
+      "intro": "@Val!A1",
+      "blocks": [
+        {
+          "type": "kv",
+          "items": [
+            [
+              "@In!B6",
+              "@In!E6|n0"
+            ]
+          ]
+        },
+        {
+          "type": "note",
+          "parts": [
+            "規則值（十年分位倍數）取自市場層資料集 markets/overview/datasets/valuation.json，歷史倍數不在公司 xlsx 內；隱含股價與相對現價亦取自該資料集。下方「模型內的倍數格」為公司 xlsx 自己的 Val 頁。"
+          ]
+        },
+        {
+          "type": "table",
+          "caption": "估值規則：每股淨值（P/B，主）× 十年分位",
+          "head": [
+            "循環位置",
+            "倍數（十年分位）",
+            "基準",
+            "每股基準",
+            "隱含股價",
+            "相對現價"
+          ],
+          "rows": [
+            [
+              "@ds:valuation!三星電子 見頂.position",
+              "@ds:valuation!三星電子 見頂.multiple|x2",
+              "@ds:valuation!三星電子 見頂.basis_label",
+              "@ds:valuation!三星電子 見頂.basis|n1",
+              "@ds:valuation!三星電子 見頂.implied_px|n0",
+              "@ds:valuation!三星電子 見頂.vs_px|sp1"
+            ],
+            [
+              "@ds:valuation!三星電子 中段.position",
+              "@ds:valuation!三星電子 中段.multiple|x2",
+              "@ds:valuation!三星電子 中段.basis_label",
+              "@ds:valuation!三星電子 中段.basis|n1",
+              "@ds:valuation!三星電子 中段.implied_px|n0",
+              "@ds:valuation!三星電子 中段.vs_px|sp1"
+            ],
+            [
+              "@ds:valuation!三星電子 谷底.position",
+              "@ds:valuation!三星電子 谷底.multiple|x2",
+              "@ds:valuation!三星電子 谷底.basis_label",
+              "@ds:valuation!三星電子 谷底.basis|n1",
+              "@ds:valuation!三星電子 谷底.implied_px|n0",
+              "@ds:valuation!三星電子 谷底.vs_px|sp1"
+            ]
+          ]
+        },
+        {
+          "type": "bars",
+          "title": "三個循環位置的隱含股價與現價",
+          "fmt": "n0",
+          "items": [
+            {
+              "label": "見頂",
+              "value": "@ds:valuation!三星電子 見頂.implied_px",
+              "series": 0
+            },
+            {
+              "label": "中段",
+              "value": "@ds:valuation!三星電子 中段.implied_px",
+              "series": 1
+            },
+            {
+              "label": "谷底",
+              "value": "@ds:valuation!三星電子 谷底.implied_px",
+              "series": 2
+            }
+          ],
+          "ref": {
+            "label": "@In!B6",
+            "value": "@In!E6"
+          }
+        },
+        {
+          "type": "table",
+          "caption": "對照：EPS（P/E）× 十年分位",
+          "head": [
+            "循環位置",
+            "倍數（十年分位）",
+            "基準",
+            "每股基準",
+            "隱含股價",
+            "相對現價"
+          ],
+          "rows": [
+            [
+              "@ds:valuation!三星電子（P/E） 見頂.position",
+              "@ds:valuation!三星電子（P/E） 見頂.multiple|x2",
+              "@ds:valuation!三星電子（P/E） 見頂.basis_label",
+              "@ds:valuation!三星電子（P/E） 見頂.basis|n1",
+              "@ds:valuation!三星電子（P/E） 見頂.implied_px|n0",
+              "@ds:valuation!三星電子（P/E） 見頂.vs_px|sp1"
+            ],
+            [
+              "@ds:valuation!三星電子（P/E） 中段.position",
+              "@ds:valuation!三星電子（P/E） 中段.multiple|x2",
+              "@ds:valuation!三星電子（P/E） 中段.basis_label",
+              "@ds:valuation!三星電子（P/E） 中段.basis|n1",
+              "@ds:valuation!三星電子（P/E） 中段.implied_px|n0",
+              "@ds:valuation!三星電子（P/E） 中段.vs_px|sp1"
+            ],
+            [
+              "@ds:valuation!三星電子（P/E） 谷底.position",
+              "@ds:valuation!三星電子（P/E） 谷底.multiple|x2",
+              "@ds:valuation!三星電子（P/E） 谷底.basis_label",
+              "@ds:valuation!三星電子（P/E） 谷底.basis|n1",
+              "@ds:valuation!三星電子（P/E） 谷底.implied_px|n0",
+              "@ds:valuation!三星電子（P/E） 谷底.vs_px|sp1"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "collapse": true,
+          "summary": "展開：模型內的倍數格（Val 頁：固定倍數 × 各年度各情境）",
+          "head": [
+            "@Val!A3",
+            "@Val!B3",
+            "@Val!C3",
+            "@Val!D3",
+            "@Val!E3",
+            "@Val!F3",
+            "@Val!G3"
+          ],
+          "rowgen": {
+            "sheet": "Val",
+            "rows": "4-60",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E",
+              "F",
+              "G"
+            ],
+            "fmts": [
+              "",
+              "x1",
+              "",
+              "",
+              "n1",
+              "n0",
+              "sp1"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "recon",
+      "title": "對帳：與共識、公司指引",
+      "intro": "@Recon!A1",
+      "blocks": [
+        {
+          "type": "table",
+          "head": [
+            "@Recon!A3",
+            "@Recon!B3",
+            "@Recon!C3",
+            "@Recon!D3",
+            "@Recon!E3"
+          ],
+          "rowgen": {
+            "sheet": "Recon",
+            "rows": "4-10",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ],
+            "fmts": [
+              "",
+              "n1",
+              "n1",
+              "sp1",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sens",
+      "title": "敏感度",
+      "intro": "@Sens!A1",
+      "blocks": [
+        {
+          "type": "tornado",
+          "title": [
+            "@Sens!A5",
+            "：各收入線同幅變動對營業利益的影響"
+          ],
+          "sheet": "Sens",
+          "rows": "5-10",
+          "label_col": "B",
+          "value_col": "E",
+          "fmt": "sp1"
+        },
+        {
+          "type": "table",
+          "collapse": true,
+          "summary": "展開：全部年度與情境的敏感度",
+          "head": [
+            "@Sens!A3",
+            "@Sens!B3",
+            "@Sens!C3",
+            "@Sens!D3",
+            "@Sens!E3"
+          ],
+          "rowgen": {
+            "sheet": "Sens",
+            "rows": "4-10,12-18,20-26,28-34",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ],
+            "fmts": [
+              "",
+              "",
+              "n1",
+              "n1",
+              "sp1"
+            ]
+          }
+        },
+        {
+          "type": "note",
+          "parts": [
+            "@Sens!A36"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "status",
+      "title": "資料狀態",
+      "blocks": [
+        {
+          "type": "kv",
+          "items": [
+            [
+              "模型版本",
+              [
+                "$version",
+                "（",
+                "$date",
+                "）"
+              ]
+            ],
+            [
+              "來源 xlsx",
+              "$xlsx"
+            ],
+            [
+              "來源 xlsx 的雜湊指紋（取代建置 commit，理由見 README）",
+              "$sha"
+            ],
+            [
+              "Tokenomics 快照版本",
+              "本模型不直接讀取 Tokenomics 快照；經由市場層間接使用，版本見下方上游成品的標題。"
+            ]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "上游成品（市場層與其他公司模型）"
+        },
+        {
+          "type": "upstream",
+          "sheets": [
+            "In"
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "已知限制"
+        },
+        {
+          "type": "note",
+          "parts": [
+            "@README!A21"
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "「未找到」清單"
+        },
+        {
+          "type": "scan",
+          "needle": "未找到",
+          "collapse": true,
+          "summary": "展開：標為「未找到」的輸入與來源",
+          "sheets": {
+            "In": [
+              "B"
+            ]
+          },
+          "empty": "沒有標為未找到的項目。"
+        }
+      ]
+    }
+  ]
+}

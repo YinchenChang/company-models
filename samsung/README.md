@@ -9,6 +9,10 @@
 | `company.py` | 設定檔（只放參數） |
 | `dist/20261023_三星電子模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 
+## HTML 展示層
+
+`html.json`（頁面設定）與 `dist/20261023_三星電子模型_v0.2.html`（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格；十年分位的規則值取自 `markets/overview/datasets/valuation.json`，頁內標明）。產生與檢核見 `tools/company_html/README.md`；xlsx 或 `html.json` 變動後須重建 HTML 一併提交。
+
 ## v0.2 變更（2026-10-23）
 
 HBM 出貨位元隨情境（markets/memory v0.4）：2028–29 需求位元 × 情境顆數係數（2028 B 0.8／C 0.6、2029 B 0.85／C 0.6，與台積電、Advantest 同一套），供給與單價假設不變。情境 A 與 2026–27 不變；2028 B／C 記憶體營業利益 357.1→354.6／234.4→218.4（兆韓元），2028 C EPS −6.6%。前後對照見 `docs/reports/20261023_HBM情境與TK快照v20.1_報告.md`。

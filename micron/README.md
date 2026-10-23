@@ -11,6 +11,10 @@
 
 建置：`python3 tools/memory_model/build.py micron/company.py raw.xlsx`，再以 LibreOffice headless 重算。
 
+## HTML 展示層
+
+`html.json`（頁面設定）與 `dist/20261023_美光模型_v0.3.html`（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格；十年分位的規則值取自 `markets/overview/datasets/valuation.json`，頁內標明）。產生與檢核見 `tools/company_html/README.md`；xlsx 或 `html.json` 變動後須重建 HTML 一併提交。
+
 ## v0.3 變更（2026-10-23）
 
 HBM 出貨位元隨情境（markets/memory v0.4）：2028–29 需求位元 × 情境顆數係數（2028 B 0.8／C 0.6、2029 B 0.85／C 0.6，與台積電、Advantest 同一套），供給與單價假設不變。情境 A 與 2026–27 不變；FY2028 B／C 營業利益 146.1→145.4／116.4→112.2（十億美元），FY2029 C 113.6→105.6；FY2029 C EPS −7.3%（美光 FY 含半年 CY2028，影響較小）。前後對照見 `docs/reports/20261023_HBM情境與TK快照v20.1_報告.md`。
