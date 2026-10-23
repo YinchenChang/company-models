@@ -126,3 +126,14 @@ CONFIG = {
  "readme_extra": ["v0.4：HBM 出貨位元隨情境變動（markets/memory）：2028–29 需求位元 × 情境顆數係數（B 0.8／0.85、C 0.6／0.6；與台積電、Advantest 同一套），供給與 2028 前的單價假設不變。2026–27 與 v0.3.1 相同；情境 A 全部相同；B、C 的 2028–29 HBM 營收下降，營業成本量指數隨 HBM 位元同步下降。", "v0.3.1：Tokenomics v19.0 同步。只有對帳頁的「每顆 GPU 的 NVIDIA 內容」由 51.6 改 42.8 千美元（橋接表 v0.2：GB300 機架基準價 $4.3M）；損益、淨值、估值與 v0.3 相同。", "v0.3：預測延長到 2029（三情境各加 2029 年走法）；前兩年數字與 v0.2 相同。", "v0.2 相對 v0.1：(1) 一般 DRAM、NAND 年均價變動改由共用季價路徑（Path）依會計年度平均算出，不再逐年手填；(2) 新增情境 C；(3) HBM 市場移到共用市場層 markets/memory。",
                   "已知簡化：營運資金未計；股數用期末；HBM 毛利率無法由公開資料分離。"],
 }
+
+# 估值規則的十年倍數歷史（2016–2025 年底；規則見 tools/valuation_rule.py；值原放在 markets/overview/extract.py，2026-10-23 移入）
+CONFIG["rule"] = {
+ "pb": {"sources": [
+   {"label": "companiesmarketcap", "vals": [1.31, 1.59, .8832, 1.34, 1.56, 1.45, .81, 1.87, 1.62, 3.86], "tag": "Verified"},
+   {"label": "marketcapof（2016–24）", "vals": [1.35, 1.60, .90, 1.34, 1.56, 1.45, .82, 1.83, 1.62, None], "tag": "Verified", "note": "2025 年底未提供"}]},
+ "pe": {"sources": [
+   {"label": "companiesmarketcap（年底 P/E，含虧損年）", "vals": [9.57, 4.61, 2.54, 30.2, 16.2, 9.01, 22.6, -10.6, 5.99, 10.5], "tag": "Verified", "use": False, "note": "2023 年虧損（P/E 為負）"},
+   {"label": "採用（虧損年不計）", "vals": ['=IF(B{r}>0,B{r},"")'] * 10, "tag": "Derived", "note": "虧損年不計入分位"},
+   {"label": "stockanalysis（核對，不採用）", "vals": [None, None, None, None, None, 9.38, 23.13, None, 6.06, 10.47], "tag": "Verified", "use": False, "note": "2021–2025 與 companiesmarketcap 差距 ≤ 8%"}]},
+}

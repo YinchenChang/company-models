@@ -2,7 +2,7 @@
   "company": "台積電",
   "ticker": "2330.TW",
   "thesis": "@README!A2",
-  "question": "AI 成長有多少變成台積電的 EPS",
+  "question": "AI 加速器的成長有多少變成台積電的 EPS，CoWoS 供給上限會不會先成為瓶頸",
   "scenarios": [
     {
       "key": "A",
@@ -156,7 +156,7 @@
               "@In!G135|tag",
               [
                 "情境 A 中段隱含價相對現價：",
-                "@ds:valuation!台積電 中段.vs_px|sp1"
+                "@Val!G54|sp1"
               ],
               "現價只是比較基準，不影響隱含價"
             ]
@@ -302,12 +302,12 @@
         {
           "type": "note",
           "parts": [
-            "規則值（十年分位倍數）取自市場層資料集 markets/overview/datasets/valuation.json，歷史倍數不在公司 xlsx 內；隱含股價與相對現價亦取自該資料集。台積電 2027 為中段，取中位數，區間為二十五與七十五分位。下方「模型內的倍數格」為公司 xlsx 自己的 Val 頁。"
+            "@Val!A27"
           ]
         },
         {
           "type": "table",
-          "caption": "估值規則：2027 年 EPS（情境 A）× 十年 P/E 分位",
+          "caption": "估值規則：EPS × 十年 P/E 分位（2027 為中段；最後一列為 2028 情境 C 的參考）",
           "head": [
             "循環位置",
             "倍數（十年分位）",
@@ -318,28 +318,36 @@
           ],
           "rows": [
             [
-              "@ds:valuation!台積電 低.position",
-              "@ds:valuation!台積電 低.multiple|x2",
-              "@ds:valuation!台積電 低.basis_label",
-              "@ds:valuation!台積電 低.basis|n1",
-              "@ds:valuation!台積電 低.implied_px|n0",
-              "@ds:valuation!台積電 低.vs_px|sp1"
+              "@Val!B55",
+              "@Val!C55|x2",
+              "@Val!D55",
+              "@Val!E55|n1",
+              "@Val!F55|n0",
+              "@Val!G55|sp1"
             ],
             [
-              "@ds:valuation!台積電 中段.position",
-              "@ds:valuation!台積電 中段.multiple|x2",
-              "@ds:valuation!台積電 中段.basis_label",
-              "@ds:valuation!台積電 中段.basis|n1",
-              "@ds:valuation!台積電 中段.implied_px|n0",
-              "@ds:valuation!台積電 中段.vs_px|sp1"
+              "@Val!B54",
+              "@Val!C54|x2",
+              "@Val!D54",
+              "@Val!E54|n1",
+              "@Val!F54|n0",
+              "@Val!G54|sp1"
             ],
             [
-              "@ds:valuation!台積電 高.position",
-              "@ds:valuation!台積電 高.multiple|x2",
-              "@ds:valuation!台積電 高.basis_label",
-              "@ds:valuation!台積電 高.basis|n1",
-              "@ds:valuation!台積電 高.implied_px|n0",
-              "@ds:valuation!台積電 高.vs_px|sp1"
+              "@Val!B56",
+              "@Val!C56|x2",
+              "@Val!D56",
+              "@Val!E56|n1",
+              "@Val!F56|n0",
+              "@Val!G56|sp1"
+            ],
+            [
+              "@Val!B57",
+              "@Val!C57|x2",
+              "@Val!D57",
+              "@Val!E57|n1",
+              "@Val!F57|n0",
+              "@Val!G57|sp1"
             ]
           ]
         },
@@ -350,17 +358,17 @@
           "items": [
             {
               "label": "低",
-              "value": "@ds:valuation!台積電 低.implied_px",
+              "value": "@Val!F55",
               "series": 0
             },
             {
               "label": "中段",
-              "value": "@ds:valuation!台積電 中段.implied_px",
+              "value": "@Val!F54",
               "series": 1
             },
             {
               "label": "高",
-              "value": "@ds:valuation!台積電 高.implied_px",
+              "value": "@Val!F56",
               "series": 2
             }
           ],
@@ -372,7 +380,31 @@
         {
           "type": "table",
           "collapse": true,
-          "summary": "展開：模型內的倍數格（Val 頁：固定倍數 × 各年度各情境）",
+          "summary": "展開：十年 P/E 歷史倍數與分位",
+          "head": [
+            "@Val!A30",
+            "@Val!B30",
+            "@Val!C30"
+          ],
+          "rowgen": {
+            "sheet": "Val",
+            "rows": "31-45",
+            "cols": [
+              "A",
+              "B",
+              "C"
+            ],
+            "fmts": [
+              "",
+              "x2",
+              "x2"
+            ]
+          }
+        },
+        {
+          "type": "table",
+          "collapse": true,
+          "summary": "展開：固定倍數格（Val 頁：固定倍數 × 各年度各情境）",
           "head": [
             "@Val!A3",
             "@Val!B3",

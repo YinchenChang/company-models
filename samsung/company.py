@@ -123,3 +123,12 @@ CONFIG = {
  "readme_extra": ["v0.2：HBM 出貨位元隨情境變動（markets/memory）：2028–29 需求位元 × 情境顆數係數（B 0.8／0.85、C 0.6／0.6；與台積電、Advantest 同一套），供給與 2028 前的單價假設不變。2026–27 與 v0.1.1 相同；情境 A 全部相同；B、C 的 2028–29 HBM 營收下降，營業成本量指數隨 HBM 位元同步下降。", "v0.1.1：Tokenomics v19.0 同步。只有對帳頁的「每顆 GPU 的 NVIDIA 內容」由 51.6 改 42.8 千美元（橋接表 v0.2：GB300 機架基準價 $4.3M）；損益、淨值、估值與 v0.1 相同。", "集團公司處理：只建模記憶體事業（DRAM、HBM、NAND），手機、晶圓代工、面板、家電、Harman 以「非記憶體事業營收、營業利益」輸入；權益、淨現金、股數、估值為全公司。",
                   "最大限制：三星不揭露記憶體營業利益；基準年記憶體利潤率由 DS 營業利益加回晶圓代工虧損估計推得，並以 2026Q3 初步財報（合併營業利益 107.4 兆）核對。"],
 }
+
+# 估值規則的十年倍數歷史（2016–2025 年底；規則見 tools/valuation_rule.py；值原放在 markets/overview/extract.py，2026-10-23 移入）
+CONFIG["rule"] = {
+ "pb": {"sources": [
+   {"label": "companiesmarketcap", "vals": [1.27, 1.59, 1.04, 1.41, 1.97, 1.73, 1.04, 1.43, .8865, 1.96], "tag": "Verified", "note": "核對：GuruFocus 十年中位 1.44"}]},
+ "pe": {"sources": [
+   {"label": "companiesmarketcap（年底 P/E）", "vals": [9.15, 6.95, 5.06, 15.3, 19.1, 12.5, 6.50, 36.1, 10.6, 18.2], "tag": "Verified"},
+   {"label": "stockanalysis（核對，不採用）", "vals": [None, None, None, None, None, 13.40, 6.79, 35.92, 10.53, 17.39], "tag": "Verified", "use": False, "note": "2021–2025 與 companiesmarketcap 差距 ≤ 8%"}]},
+}

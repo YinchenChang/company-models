@@ -16,7 +16,7 @@ Excel 是計算事實的來源；HTML 只負責呈現，給 Andy 與投資處同
 
 頂層：`company`、`ticker`、`thesis`（儲存格參照，取自 xlsx README 頁的命題）、`question`（核心問題，純文字）、`scenarios`（`[{key, name}]`）、`sections`。每章：`id`、`title`、可選 `intro`、`blocks`。
 
-儲存格規格字串：`@工作表!儲存格[:範圍][,…][|格式]`，例如 `@PL!C5:G5|n0`。範圍在表格列內自動展開成多格；其他字串是純文字。格式碼：`n0–n3` 數字、`p0–p2` 百分比（值×100）、`sp0–sp2` 帶正負號百分比、`x1` 倍數、`yr` 年、`tag`（標記欄加底色）、空白＝依型別（文字原樣、數字通用）。`@ds:資料集名!列鍵.欄位|格式`（例如 `@ds:valuation!美光 見頂.multiple|x2`）讀 `markets/overview/datasets/<資料集名>.json`，供 xlsx 內沒有、但規則需要的值（十年分位倍數）使用；檢核同樣回頭比對該 JSON。`$version`、`$date`、`$sha`、`$xlsx` 是中繼資料（取自檔名與 xlsx 雜湊）。
+儲存格規格字串：`@工作表!儲存格[:範圍][,…][|格式]`，例如 `@PL!C5:G5|n0`。範圍在表格列內自動展開成多格；其他字串是純文字。格式碼：`n0–n3` 數字、`p0–p2` 百分比（值×100）、`sp0–sp2` 帶正負號百分比、`x1` 倍數、`yr` 年、`tag`（標記欄加底色）、空白＝依型別（文字原樣、數字通用）。`$version`、`$date`、`$sha`、`$xlsx` 是中繼資料（取自檔名與 xlsx 雜湊）。
 
 區塊型別：`table`（`head`＋`rows`，或 `rowgen`：依工作表列號與欄產生，可用 `row_fmt` 逐列覆蓋格式；`collapse`＋`summary` 可摺疊）、`pl`（每個指標一張情境×年度表，`chart:true` 另畫折線圖）、`bars`（隱含價長條與現價標線）、`tornado`（敏感度長條，依絕對值排序）、`kv`、`note`、`list`、`h3`、`scan`（掃描指定工作表中含關鍵字，如「未找到」的儲存格）、`upstream`（掃描 In 頁引用的上游 `dist/*.xlsx`，列出 repo 內現況與上游標題）。
 

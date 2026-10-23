@@ -121,7 +121,7 @@ def check_company(cdir, errs):
     text = open(committed, encoding='utf-8').read()
     ps = P()
     ps.feed(text)
-    book = B.Book(xlsx, os.path.dirname(os.path.abspath(cdir)))
+    book = B.Book(xlsx)
     cell = lambda ref: book.cell(*ref.split('!', 1))
     n_x = n_lbl = n_na = n_pt = 0
     meta_expect = {

@@ -2,7 +2,7 @@
   "company": "SK 海力士",
   "ticker": "000660.KS",
   "thesis": "@README!A2",
-  "question": "循環見頂之後，淨值撐不撐得住股價",
+  "question": "這個循環在哪一年見頂，見頂時累積的淨值撐不撐得住股價",
   "scenarios": [
     {
       "key": "A",
@@ -157,7 +157,7 @@
               "@In!G6|tag",
               [
                 "情境 A 見頂年隱含價相對現價：",
-                "@ds:valuation!SK 海力士 見頂.vs_px|sp1"
+                "@Val!G91|sp1"
               ],
               "現價只是比較基準，不影響隱含價"
             ]
@@ -258,7 +258,7 @@
         {
           "type": "note",
           "parts": [
-            "規則值（十年分位倍數）取自市場層資料集 markets/overview/datasets/valuation.json，歷史倍數不在公司 xlsx 內；隱含股價與相對現價亦取自該資料集。下方「模型內的倍數格」為公司 xlsx 自己的 Val 頁。"
+            "@Val!A64"
           ]
         },
         {
@@ -274,28 +274,28 @@
           ],
           "rows": [
             [
-              "@ds:valuation!SK 海力士 見頂.position",
-              "@ds:valuation!SK 海力士 見頂.multiple|x2",
-              "@ds:valuation!SK 海力士 見頂.basis_label",
-              "@ds:valuation!SK 海力士 見頂.basis|n1",
-              "@ds:valuation!SK 海力士 見頂.implied_px|n0",
-              "@ds:valuation!SK 海力士 見頂.vs_px|sp1"
+              "@Val!B91",
+              "@Val!C91|x2",
+              "@Val!D91",
+              "@Val!E91|n1",
+              "@Val!F91|n0",
+              "@Val!G91|sp1"
             ],
             [
-              "@ds:valuation!SK 海力士 中段.position",
-              "@ds:valuation!SK 海力士 中段.multiple|x2",
-              "@ds:valuation!SK 海力士 中段.basis_label",
-              "@ds:valuation!SK 海力士 中段.basis|n1",
-              "@ds:valuation!SK 海力士 中段.implied_px|n0",
-              "@ds:valuation!SK 海力士 中段.vs_px|sp1"
+              "@Val!B92",
+              "@Val!C92|x2",
+              "@Val!D92",
+              "@Val!E92|n1",
+              "@Val!F92|n0",
+              "@Val!G92|sp1"
             ],
             [
-              "@ds:valuation!SK 海力士 谷底.position",
-              "@ds:valuation!SK 海力士 谷底.multiple|x2",
-              "@ds:valuation!SK 海力士 谷底.basis_label",
-              "@ds:valuation!SK 海力士 谷底.basis|n1",
-              "@ds:valuation!SK 海力士 谷底.implied_px|n0",
-              "@ds:valuation!SK 海力士 谷底.vs_px|sp1"
+              "@Val!B93",
+              "@Val!C93|x2",
+              "@Val!D93",
+              "@Val!E93|n1",
+              "@Val!F93|n0",
+              "@Val!G93|sp1"
             ]
           ]
         },
@@ -306,17 +306,17 @@
           "items": [
             {
               "label": "見頂",
-              "value": "@ds:valuation!SK 海力士 見頂.implied_px",
+              "value": "@Val!F91",
               "series": 0
             },
             {
               "label": "中段",
-              "value": "@ds:valuation!SK 海力士 中段.implied_px",
+              "value": "@Val!F92",
               "series": 1
             },
             {
               "label": "谷底",
-              "value": "@ds:valuation!SK 海力士 谷底.implied_px",
+              "value": "@Val!F93",
               "series": 2
             }
           ],
@@ -338,35 +338,86 @@
           ],
           "rows": [
             [
-              "@ds:valuation!SK 海力士（P/E） 見頂.position",
-              "@ds:valuation!SK 海力士（P/E） 見頂.multiple|x2",
-              "@ds:valuation!SK 海力士（P/E） 見頂.basis_label",
-              "@ds:valuation!SK 海力士（P/E） 見頂.basis|n1",
-              "@ds:valuation!SK 海力士（P/E） 見頂.implied_px|n0",
-              "@ds:valuation!SK 海力士（P/E） 見頂.vs_px|sp1"
+              "@Val!B121",
+              "@Val!C121|x2",
+              "@Val!D121",
+              "@Val!E121|n1",
+              "@Val!F121|n0",
+              "@Val!G121|sp1"
             ],
             [
-              "@ds:valuation!SK 海力士（P/E） 中段.position",
-              "@ds:valuation!SK 海力士（P/E） 中段.multiple|x2",
-              "@ds:valuation!SK 海力士（P/E） 中段.basis_label",
-              "@ds:valuation!SK 海力士（P/E） 中段.basis|n1",
-              "@ds:valuation!SK 海力士（P/E） 中段.implied_px|n0",
-              "@ds:valuation!SK 海力士（P/E） 中段.vs_px|sp1"
+              "@Val!B122",
+              "@Val!C122|x2",
+              "@Val!D122",
+              "@Val!E122|n1",
+              "@Val!F122|n0",
+              "@Val!G122|sp1"
             ],
             [
-              "@ds:valuation!SK 海力士（P/E） 谷底.position",
-              "@ds:valuation!SK 海力士（P/E） 谷底.multiple|x2",
-              "@ds:valuation!SK 海力士（P/E） 谷底.basis_label",
-              "@ds:valuation!SK 海力士（P/E） 谷底.basis|n1",
-              "@ds:valuation!SK 海力士（P/E） 谷底.implied_px|n0",
-              "@ds:valuation!SK 海力士（P/E） 谷底.vs_px|sp1"
+              "@Val!B123",
+              "@Val!C123|x2",
+              "@Val!D123",
+              "@Val!E123|n1",
+              "@Val!F123|n0",
+              "@Val!G123|sp1"
             ]
           ]
         },
         {
           "type": "table",
           "collapse": true,
-          "summary": "展開：模型內的倍數格（Val 頁：固定倍數 × 各年度各情境）",
+          "summary": "展開：P/B（主）的十年歷史倍數與分位",
+          "head": [
+            "@Val!A67",
+            "@Val!B67",
+            "@Val!C67"
+          ],
+          "rowgen": {
+            "sheet": "Val",
+            "rows": "68-82",
+            "cols": [
+              "A",
+              "B",
+              "C"
+            ],
+            "fmts": [
+              "",
+              "x2",
+              "x2"
+            ]
+          }
+        },
+        {
+          "type": "table",
+          "collapse": true,
+          "summary": "展開：P/E（對照）的十年歷史倍數與分位",
+          "head": [
+            "@Val!A97",
+            "@Val!B97",
+            "@Val!C97",
+            "@Val!D97"
+          ],
+          "rowgen": {
+            "sheet": "Val",
+            "rows": "98-112",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D"
+            ],
+            "fmts": [
+              "",
+              "x2",
+              "x2",
+              "x2"
+            ]
+          }
+        },
+        {
+          "type": "table",
+          "collapse": true,
+          "summary": "展開：固定倍數格（Val 頁：固定倍數 × 各年度各情境）",
           "head": [
             "@Val!A3",
             "@Val!B3",

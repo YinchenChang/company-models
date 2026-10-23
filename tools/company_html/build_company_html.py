@@ -78,36 +78,20 @@ def parse_display(s):
 
 
 # ───────────────────────── 活頁簿與參照 ─────────────────────────
-DS_DIR = os.path.join('markets', 'overview', 'datasets')
-
-
 class Book:
-    """xlsx 重算值；另可讀市場層資料集（參照寫成 ds:資料集名!列鍵.欄位，例如 ds:valuation!美光 見頂.multiple）。"""
+    """xlsx 的重算值（LibreOffice 存檔後的快取值）。"""
 
-    def __init__(self, path, root=None):
+    def __init__(self, path):
         self.path = path
-        self.root = root
         self.wb = openpyxl.load_workbook(path, data_only=True)
-        self._ds = {}
 
     def cell(self, sheet, coord):
-        if sheet.startswith('ds:'):
-            name = sheet[3:]
-            if name not in self._ds:
-                with open(os.path.join(self.root, DS_DIR, name + '.json'), encoding='utf-8') as fh:
-                    self._ds[name] = {r['key']: r for r in json.load(fh)}
-            key, field = coord.rsplit('.', 1)
-            return self._ds[name][key][field]
         return self.wb[sheet][coord].value
 
     def expand(self, refs):
         """'PL!C5:G5,PL!B5' → [(sheet, coord), …]；範圍依列優先展開。"""
         out = []
         for part in refs.split(','):
-            if part.strip().startswith('ds:'):
-                sh, co = part.strip().split('!', 1)
-                out.append((sh, co))
-                continue
             m = REF_RE.match(part.strip())
             if not m:
                 raise ValueError(f'無法解析儲存格參照：{part!r}')
@@ -647,7 +631,7 @@ def build(cdir, xlsx=None, root=None):
     xlsx = find_xlsx(cdir, xlsx)
     root = root or os.path.dirname(os.path.abspath(cdir))
     date, ver = parse_name(xlsx)
-    cx = Ctx(Book(xlsx, root), {'$version': 'v' + ver, '$date': date, '$sha': sha12(xlsx), '$xlsx': os.path.basename(xlsx)})
+    cx = Ctx(Book(xlsx), {'$version': 'v' + ver, '$date': date, '$sha': sha12(xlsx), '$xlsx': os.path.basename(xlsx)})
     ids = [s['id'] for s in cfg['sections']]
     if ids[:len(REQUIRED_IDS)] != REQUIRED_IDS:
         raise SystemExit(f'sections 的 id 須依序為 {REQUIRED_IDS}，實際 {ids}')

@@ -11,6 +11,10 @@ AI 半導體 Project 步驟 4。獨立的 Python→Excel 產生器（不套記�
 
 工作表：README、In、CoWoS、PL、Val、Recon、Sens、Sources。情境 A／B／C：2028–29 加速器數 × 1.0／0.8–0.85／0.6，毛利率路徑分開。
 
+## 估值規則區塊（2026-10-23）
+
+Val 頁底部新增「十年倍數與規則值」區塊（`tools/valuation_rule.py`）：2016–2025 年底的倍數歷史（輸入，藍字，附來源與標記）、各來源分位、採用值，以及依循環位置的規則值（見頂 25 分位、中段中位數、谷底 75 分位）與隱含股價。含 P/E（2027 為中段取中位數，區間 25 與 75 分位；另列 2028 情境 C × 75 分位）。損益、EPS 與原有儲存格不變；**檔名與版本號不變**（上游模型的引用檔名固定），這是 2026-10-23 當日的補充。`markets/overview/extract.py` 與 HTML 展示層改讀這裡，歷史倍數只保留這一份，總覽重跑時逐項核對。
+
 ## HTML 展示層
 
 `html.json`（頁面設定）與 `dist/20261022_台積電模型_v0.2.html`（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格；十年分位的規則值取自 `markets/overview/datasets/valuation.json`，頁內標明）。產生與檢核見 `tools/company_html/README.md`；xlsx 或 `html.json` 變動後須重建 HTML 一併提交。

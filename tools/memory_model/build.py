@@ -9,6 +9,8 @@ from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 import market as MKT
+sys.path.insert(0, os.path.join(ROOT, "tools"))
+import valuation_rule as VR
 
 def load(path):
     spec = importlib.util.spec_from_file_location("company", path)
@@ -229,6 +231,39 @@ for n, y in enumerate(YRS, 1):
     for s in MKT.SCEN:
         for nm, k in pes: vrow(nm, k, FYL.format(y) + " EPS", s, f"{FC[(s, n)]}{R['eps']}", fmtp)
 for c, w in zip("ABCDEFG", [24, 8, 20, 8, 16, 14, 10]): V.column_dimensions[c].width = w
+
+# 估值規則區塊：十年倍數歷史與規則值（見頂 25 分位、中段中位數、谷底 75 分位；2027 A 為見頂與中段、2028 C 為谷底）
+RULE = C["rule"]
+def _y(s, n, k): return f"Y!{FC[(s, n)]}{R[k]}"
+def _cases(basis_peak, basis_trough, lab_peak, lab_trough):
+    return [{"case": "見頂", "pos": "見頂年 → 25 分位", "q": 25, "basis_label": lab_peak, "basis": basis_peak},
+            {"case": "中段", "pos": "中段 → 中位數", "q": 50, "basis_label": lab_peak, "basis": basis_peak},
+            {"case": "谷底", "pos": "谷底 → 75 分位", "q": 75, "basis_label": lab_trough, "basis": basis_trough}]
+y1, y2 = FYL.format(YRS[0]), FYL.format(YRS[1])
+vseries = [
+    {"id": "P/B", "name": "P/B（主）", "sources": [dict(x) for x in RULE["pb"]["sources"]],
+     "cases": _cases("=" + _y("A", 1, "bvps"), "=" + _y("C", 2, "bvps"), f"{y1} 年底每股淨值（A）", f"{y2} 年底每股淨值（C）")}]
+pe_src = [dict(x) for x in RULE["pe"]["sources"]] if "pe" in RULE else None
+nr = vr + 2
+if "sec" in RULE:
+    nr, SECW = VR.add_sec_table(V, nr, "5. 美光歷史財務（SEC 10-K XBRL；P/B 為 macrotrends 會計年度底）",
+        ["會計年度", "P/B", "權益 $B", "庫藏股（成本）$B", "歸屬淨利 $B"], [(str(y), *v) for y, *v in RULE["sec"]],
+        "P/E ＝ P/B × 權益 ÷ 淨利（虧損年不計）；買回加回 P/B ＝ P/B × 權益 ÷（權益＋庫藏股）。庫藏股為成本；FY2026 年底尚未公布，調整每股淨值用 FY2025 值（偏低）")
+    sr = [SECW[str(y)] for y, *_ in RULE["sec"]]
+    pe_src = [{"label": "SEC 10-K 換算", "tag": "Verified／Derived", "note": "虧損年不計",
+               "vals": [f'=IF(E{r_}>0,B{r_}*C{r_}/E{r_},"")' for r_ in sr]}]
+    pba_src = [{"label": "SEC 10-K 換算", "tag": "Verified／Derived",
+                "vals": [f"=B{r_}*C{r_}/(C{r_}+D{r_})" for r_ in sr]}]
+    t_last = f"$D${SECW['2025']}"
+    adj27 = f"=(Y!{FC[('A', 1)]}{R['eq']}+{t_last}+Y!{FC[('A', 1)]}{R['bb']})/Y!{FC[('A', 1)]}{R['sh']}*1000"
+    adj28 = f"=(Y!{FC[('C', 2)]}{R['eq']}+{t_last}+Y!{FC[('C', 1)]}{R['bb']}+Y!{FC[('C', 2)]}{R['bb']})/Y!{FC[('C', 2)]}{R['sh']}*1000"
+vseries.append({"id": "P/E", "name": "P/E（對照）", "sources": pe_src,
+    "cases": _cases("=" + _y("A", 1, "eps"), "=" + _y("C", 2, "eps"), f"{y1} EPS（A）", f"{y2} EPS（C）")})
+if "sec" in RULE:
+    vseries.append({"id": "買回加回 P/B", "name": "買回加回 P/B（對照）", "sources": pba_src,
+        "cases": _cases(adj27, adj28, f"{y1} 年底調整每股淨值（A）", f"{y2} 年底調整每股淨值（C）")})
+VR.add_rule_block(V, nr, vseries, fmtp, "規則（Andy 2026-10-13）：合理倍數＝2016–2025 年底倍數依循環位置取分位。多個來源時各自取分位再平均、四捨五入到兩位。倍數歷史為輸入（藍字），來源與標記見各表；原放在 markets/overview/extract.py（2026-10-23 移入）。")
+V.column_dimensions["A"].width = 36
 
 # ---------------- Sens（營收變動 × (1 − 變動營業費用率)；成本不隨價格變動，故為精確值）----------------
 SE = wb.create_sheet("Sens")

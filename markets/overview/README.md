@@ -33,7 +33,7 @@
 | Advantest | P/E（9 年） | 20.5／22.8／38.1 | 共用規則：A 中段 −25%、B 中段 −28%、C 見頂 −38% |
 | Disco | P/E（10 年） | 19.6／28.1／36.4 | 共用規則：A 中段 −5%、B 中段 −11%、C 見頂 −44% |
 
-重建：`python3 markets/overview/extract.py`（需先有各模型的重算 xlsx）。
+重建：`python3 markets/overview/extract.py`（需先有各模型的重算 xlsx）。2026-10-23 起，記憶體三家與台積電的十年倍數歷史與規則值在各公司 xlsx 的 Val 頁（`tools/valuation_rule.py`），本檔只讀取並逐項核對；CI 重跑本檔，`data.json` 與 `datasets/` 須與已提交的相同。
 
 ## v0.2（2026-10-22）
 

@@ -7,6 +7,8 @@ from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 import market as MEM
+sys.path.insert(0, os.path.join(ROOT, "tools"))
+import valuation_rule as VR
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 wb = openpyxl.Workbook()
@@ -223,6 +225,19 @@ for col, lab, s, y in cols:
         vr += 1
 V.cell(vr + 1, 1, "讀法：目前股價 ÷ 2027 EPS 即市場給的遠期 P/E；與 10 年中位 20.5x 比，看市場是否已提前反映 2027–28 的成長與情境 B／C 風險")
 for c, w in zip("ABCDEFG", [8, 8, 10, 8, 10, 12, 10]): V.column_dimensions[c].width = w
+
+# 估值規則區塊：十年 P/E 歷史與規則值（2027＝中段取中位數、區間 25–75 分位；另列 2028 情境 C × 75 分位）
+# 歷史值原放在 markets/overview/extract.py（2026-10-23 移入）
+VR.add_rule_block(V, vr + 4, [{"id": "P/E", "name": "P/E", "sources": [
+    {"label": "FullRatio", "vals": [14.5, 17.71, 16.13, 25.62, 31.11, 29.18, 11.94, 19.46, 28.72, 29.03], "tag": "Interested-party"},
+    {"label": "companiesmarketcap", "vals": [11.6, 14.8, 14.2, 23.5, 28.3, 27.2, 11.2, 19.3, 28.8, 28.3], "tag": "Verified"}],
+    "cases": [
+        {"case": "中段", "pos": "中段 → 中位數", "q": 50, "basis_label": "2027 EPS（A）", "basis": f"=PL!C{PR['eps']}"},
+        {"case": "低", "pos": "25 分位（區間下緣）", "q": 25, "basis_label": "2027 EPS（A）", "basis": f"=PL!C{PR['eps']}"},
+        {"case": "高", "pos": "75 分位（區間上緣）", "q": 75, "basis_label": "2027 EPS（A）", "basis": f"=PL!C{PR['eps']}"},
+        {"case": "2028 C", "pos": "參考：2028 情境 C × 75 分位", "q": 75, "basis_label": "2028 EPS（C）", "basis": f"=PL!J{PR['eps']}"}]}],
+    "0.0", "規則（Andy 2026-10-13）：合理倍數＝2016–2025 年底 P/E 依循環位置取分位；台積電 2027 為中段，取中位數，區間為 25 與 75 分位。兩個來源各自取分位再平均、四捨五入到兩位。倍數歷史為輸入（藍字）。")
+V.column_dimensions["A"].width = 36
 
 # ---------------- Recon ----------------
 RC = wb.create_sheet("Recon")
