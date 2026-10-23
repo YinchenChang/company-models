@@ -1,4 +1,4 @@
-# NVIDIA（NVDA）收支與估值模型 v0.1（AI 半導體 Project：運算層第一個樣板）
+# NVIDIA（NVDA）收支與估值模型 v0.1.1（AI 半導體 Project：運算層第一個樣板）
 # 用法：python3 nvidia/build_nvidia.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度 FY(t)＝t−1 年 2 月～t 年 1 月，約等於日曆年 t−1（FY(t) 直接取 CY(t−1)，不跨年加權；11/12 落在同一日曆年）。金額：十億美元（US$B）。
 import sys, os, glob
@@ -324,7 +324,7 @@ UN.column_dimensions["G"].width = 70
 # ---------------- 引擎：一個情境的完整推導（PL 與 Sens 共用，確保一致） ----------------
 FYS = (2026, 2027, 2028, 2029, 2030); FC = {2026: "C", 2027: "D", 2028: "E", 2029: "F", 2030: "G"}
 BU = (2027, 2028, 2029, 2030)   # 有「由下而上」推導的會計年度（CY＝FY−1）
-DEFP = dict(scn="A", flat29=False, uf="1", nvm=None, abs="abs_mem", cn="0", opxa="0", pf="1", pm_bw="pm_bw", pm_rb="pm_rb", pm_ru="pm_ru", pm_hp="pm_hp")
+DEFP = dict(scn="A", flat29=False, krec="k_rec", cnh="c_nh", uf="1", nvm=None, abs="abs_mem", cn="0", opxa="0", pf="1", pm_bw="pm_bw", pm_rb="pm_rb", pm_ru="pm_ru", pm_hp="pm_hp")
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
     ws.cell(r0, 1, title).font = BOLD
@@ -342,17 +342,17 @@ def engine(ws, r0, title, **over):
     cy = lambda fy: fy - 1
     c_ = lambda fy: FC[fy]
     cyu = lambda fy: 2028 if (P["flat29"] and cy(fy) == 2029) else cy(fy)   # flat29：CY2029 顆數與 CY2028 持平（FY2030 顆數持平）
-    sec_("A. 由下而上（C 欄空白；D＝FY2027≈CY2026 … G＝FY2030≈CY2029；FY2027 的由下而上只用於校準與 Recon，報告值取錨點）")
+    sec_("A. 由下而上（C 欄空白；D＝FY2027≈CY2026 … G＝FY2030≈CY2029；顆數為「認列顆數」＝市場層顆數 × k_rec，FY2027 的 Data Center 營收與毛利率因此等於錨點，FY2028 起沿用 k_rec）")
     def ufx(fy):
-        parts = []
+        parts = [P["krec"]]
         if cy(fy) >= 2027:
             parts.append(P["uf"])
             if P["nvm"]: parts.append(P["nvm"](cy(fy)))
         return "*".join(parts) or "1"
-    row("ufac", "NVIDIA 顆數乘數（Sens；基準為 1）", "x", {c_(fy): "=" + ufx(fy) for fy in BU}, fmt="0.000")
+    row("ufac", "NVIDIA 認列顆數乘數（k_rec × Sens 乘數）", "x", {c_(fy): "=" + ufx(fy) for fy in BU}, fmt="0.000")
     for p in NVP:
-        row("u_" + p, f"{PNAME[p]} 顆數", "百萬顆", {c_(fy): f"=({uexp(p, cyu(fy), s)})*{c_(fy)}{R['ufac']}" for fy in BU}, fmt="0.00")
-    row("nvu", "NVIDIA 顆數合計", "百萬顆", {c_(fy): f"=SUM({c_(fy)}{R['u_bw']}:{c_(fy)}{R['u_hp']})" for fy in BU}, fmt="0.00", note="2026＝7.6、2027＝9.7、2028＝9.5（A）")
+        row("u_" + p, f"{PNAME[p]} 認列顆數", "百萬顆", {c_(fy): f"=({uexp(p, cyu(fy), s)})*{c_(fy)}{R['ufac']}" for fy in BU}, fmt="0.00")
+    row("nvu", "NVIDIA 認列顆數合計", "百萬顆", {c_(fy): f"=SUM({c_(fy)}{R['u_bw']}:{c_(fy)}{R['u_hp']})" for fy in BU}, fmt="0.00", note="2026＝7.6、2027＝9.7、2028＝9.5（A）")
     pb = lambda p: f"({P['pm_' + p]}+pcpu_{p}+plp_{p}+k_tray*pres_{p})"
     hb = lambda p, fy: f"hbm_{s}_{cy(fy) % 100}/hbm_{s}_26"
     cx = lambda fy: f"cdx_{s}_{cy(fy) % 100}/cdx_{s}_26"
@@ -364,8 +364,8 @@ def engine(ws, r0, title, **over):
         row("hc_" + p, f"{PNAME[p]} 每顆 HBM 成本", "US$K", {c_(fy): f"={gbx(p, fy)}*hpx_{p}*{hb(p, fy)}/1000" for fy in BU}, fmt="0.00",
             note="容量 × 2026 合約價 × 情境別 HBM 價格指數（markets/memory）" if p == "bw" else "")
     for p in NVP:
-        row("cg_" + p, f"{PNAME[p]} 每顆成本", "US$K", {c_(fy): f"={P['pf']}*c_nh*{pb(p)}+{c_(fy)}{R['hc_' + p]}+plp_{p}*({cx(fy)}-1)" for fy in BU}, fmt="0.00",
-            note="非 HBM 成本（基準價 × c_nh，FY2027 校準）＋ HBM 成本 ＋ LPDDR 成本增加" if p == "bw" else "")
+        row("cg_" + p, f"{PNAME[p]} 每顆成本", "US$K", {c_(fy): f"={P['pf']}*{P['cnh']}*{pb(p)}+{c_(fy)}{R['hc_' + p]}+plp_{p}*({cx(fy)}-1)" for fy in BU}, fmt="0.00",
+            note="非 HBM 成本（基準價 × c_nh，FY2027 校準）＋ HBM 成本 ＋ LPDDR 成本增加（每顆；顆數另乘 k_rec）" if p == "bw" else "")
     for p in NVP:
         row("r_" + p, f"{PNAME[p]} 運算營收", "US$B", {c_(fy): f"={c_(fy)}{R['u_' + p]}*{c_(fy)}{R['px_' + p]}" for fy in BU})
     row("comp", "運算營收（Σ 顆數 × 每顆售價）", "US$B", {c_(fy): f"=SUM({c_(fy)}{R['r_bw']}:{c_(fy)}{R['r_hp']})" for fy in BU})
@@ -380,7 +380,7 @@ def engine(ws, r0, title, **over):
     row("edgec", "Edge 成本", "US$B", {c_(fy): f"=(1-gm_edge)*{c_(fy)}{R['edge']}" for fy in BU})
     row("bur", "由下而上營收合計", "US$B", {c_(fy): f"={c_(fy)}{R['comp']}+{c_(fy)}{R['cn']}+{c_(fy)}{R['net']}+{c_(fy)}{R['edge']}" for fy in BU})
     row("buc", "由下而上成本合計", "US$B", {c_(fy): f"={c_(fy)}{R['compc']}+{c_(fy)}{R['cnc']}+{c_(fy)}{R['netc']}+{c_(fy)}{R['edgec']}" for fy in BU})
-    row("bugm", "由下而上毛利率", "%", {c_(fy): f"=1-{c_(fy)}{R['buc']}/{c_(fy)}{R['bur']}" for fy in BU}, fmt="0.0%", note="FY2027 ＝ 錨點毛利率（c_nh 校準的恆等式，非獨立檢驗）")
+    row("bugm", "由下而上毛利率", "%", {c_(fy): f"=1-{c_(fy)}{R['buc']}/{c_(fy)}{R['bur']}" for fy in BU}, fmt="0.0%", note="FY2027 ＝ 錨點毛利率（c_nh 校準的恆等式，非獨立檢驗；對照區塊 k_rec＝1 時用 c_nh_p）")
     row("hbmr", "HBM 成本占由下而上營收", "%", {c_(fy): f"={c_(fy)}{R['hbmc']}/{c_(fy)}{R['bur']}" for fy in BU}, fmt="0.0%")
     sec_("B. 報告值（FY2026A、FY2027 為實績與錨點；FY2028 起為由下而上）")
     row("rev", "營收", "US$B", {"C": "=a26_rev", "D": "=a27_rev", **{c_(fy): f"={c_(fy)}{R['bur']}" for fy in BU[1:]}})
@@ -404,11 +404,12 @@ def engine(ws, r0, title, **over):
 
 # ---------------- PL：三情境 ----------------
 PL = wb.create_sheet("PL")
-PL["A1"] = "PL — NVIDIA 損益（US$B；FY2026A、FY2027 為實績與錨點，FY2028 起為模型）。FY(t)≈CY(t−1)。三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2027、FY2028 三情境相同（情境係數從 CY2028＝FY2029 才開始）"
+PL["A1"] = "PL — NVIDIA 損益（US$B；FY2026A、FY2027 為實績與錨點，FY2028 起為模型，顆數用認列顆數＝市場層顆數 × k_rec）。FY(t)≈CY(t−1)。三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2027、FY2028 三情境幾乎相同（情境係數從 CY2028＝FY2029 才開始；FY2028 的差在 B、C 的 LPDDR 成本）"
 PB = {}; r0 = 70
 for s in SC:
     PB[s] = engine(PL, r0, {"A": "情境 A：基準（顆數係數 1.0）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85", "C": "情境 C：CY2028–29 顆數 ×0.6"}[s], scn=s)
     r0 = PB[s]["end"] + 2
+PB0 = engine(PL, r0, "對照：v0.1 基準（k_rec＝1，未校準；FY2027 由下而上高於錨點；c_nh_p 為 v0.1 的毛利率校準）", scn="A", krec="1", cnh="c_nh_p")
 hdr(PL, 3, ["情境／項目", "單位", "FY2026A", "FY2027", "FY2028", "FY2029", "FY2030", "說明"])
 sr = 4; SUMR = {}
 for s in SC:
@@ -422,34 +423,46 @@ for s in SC:
             PL[f"{FC[fy]}{sr}"] = f"={FC[fy]}{PB[s][key]}"; PL[f"{FC[fy]}{sr}"].number_format = fmt
         SUMR[(s, key)] = sr; sr += 1
     sr += 1
-PL.cell(sr, 1, "核對：FY2027 由下而上毛利率 − 錨點毛利率（應為 0；c_nh 校準恆等式）").font = BOLD; sr += 1
-PL.cell(sr, 1, "  情境 A"); PL[f"D{sr}"] = f"=D{PB['A']['bugm']}-D{PB['A']['gm']}"; PL[f"D{sr}"].number_format = "0.0000"; CHK_ROW = sr
+PL.cell(sr, 1, "核對（應為 0）：FY2027 由下而上毛利率 − 錨點毛利率；FY2027 由下而上營收 − 錨點營收（k_rec、c_nh 校準恆等式）").font = BOLD; sr += 1
+PL.cell(sr, 1, "  情境 A：毛利率差"); PL[f"D{sr}"] = f"=D{PB['A']['bugm']}-D{PB['A']['gm']}"; PL[f"D{sr}"].number_format = "0.0000"; CHK_ROW = sr; sr += 1
+PL.cell(sr, 1, "  情境 A：營收差（US$B）"); PL[f"D{sr}"] = f"=D{PB['A']['bur']}-a27_rev"; PL[f"D{sr}"].number_format = "0.0000"
 PL.column_dimensions["A"].width = 60; PL.column_dimensions["B"].width = 14; PL.column_dimensions["H"].width = 70
 for c in "CDEFG": PL.column_dimensions[c].width = 13
 
-# ---------------- Units 的校準區塊（引擎建好後填）：c_nh、pf_cal ----------------
-A_ = PB["A"]
-UN.cell(CAL_ROW, 1, "校準（只用公司 FY2027 錨點的毛利率與資料中心營收，不用共識；不用營收反推顆數）").font = BOLD
+# ---------------- Units 的校準區塊（引擎建好後填）：k_rec、c_nh、c_nh_p、pf_cal ----------------
+A_ = PB["A"]; Z_ = PB0
+UN.cell(CAL_ROW, 1, "校準（只用公司已發生的實績與當年指引：FY2027 錨點的 Data Center 營收與毛利率；不用共識、不用公司對 FY2028 的預測）").font = BOLD
 cal = CAL_ROW + 1
+pbraw = "+".join(f"u_{p}_26*(pm_{p}+pcpu_{p}+plp_{p}+k_tray*pres_{p})" for p in NVP)
+UN.cell(cal, 1, "NVIDIA 認列顆數係數 k_rec ＝ 錨點 Data Center 營收 ÷ （市場層顆數 × 基準售價的運算營收 ＋ 網通歸屬）（FY2027；營收與成本同比例縮放）"); UN.cell(cal, 2, "x")
+UN[f"C{cal}"] = f"=a27_dc/({pbraw}+net_26)"; UN[f"C{cal}"].number_format = "0.0000"
+UN.cell(cal, 7, "Derived：以已發生的實績校準，FY2028 起沿用。不改 markets/memory 的共用顆數（市場層顆數維持原值，只在本模型內縮放）。顆數層與售價層無法分開識別，k_rec 是兩者的合併係數；k_tray 變動時 k_rec 隨之重算，營收水準不變")
+defname("k_rec", f"Units!$C${cal}"); UN[f"D{cal}"] = "Derived"; K_ROW = cal
 pbu = "+".join(f"PL!D{A_['u_' + p]}*(pm_{p}+pcpu_{p}+plp_{p}+k_tray*pres_{p})" for p in NVP)
-UN.cell(cal, 1, "非 HBM 成本占基準售價 c_nh ＝ [(1−錨點毛利率) × 由下而上營收 − HBM 成本 − 網通成本 − Edge 成本] ÷ Σ 顆數 × 基準售價（FY2027）")
-UN.cell(cal, 2, "x")
-UN[f"C{cal}"] = f"=((1-a27_gp/a27_rev)*PL!D{A_['bur']}-PL!D{A_['hbmc']}-PL!D{A_['netc']}-PL!D{A_['edgec']})/({pbu})"
-UN[f"C{cal}"].number_format = "0.0000"; UN.cell(cal, 7, "Derived：讓 FY2027 由下而上的毛利率等於錨點毛利率；FY2028 起的毛利率變化來自 HBM／LPDDR 成本、世代與顆數組合、吸收比例")
-defname("c_nh", f"Units!$C${cal}")
-UN.cell(cal + 1, 1, "FY2027 由下而上 Data Center 營收（運算＋網通）"); UN.cell(cal + 1, 2, "US$B")
-UN[f"C{cal+1}"] = f"=PL!D{A_['comp']}+PL!D{A_['net']}"; UN[f"C{cal+1}"].number_format = "0.0"
-UN.cell(cal + 2, 1, "FY2027 錨點 Data Center 營收（公司）"); UN.cell(cal + 2, 2, "US$B"); UN[f"C{cal+2}"] = "=a27_dc"; UN[f"C{cal+2}"].number_format = "0.0"
-UN.cell(cal + 3, 1, "差額（由下而上 ÷ 錨點 − 1）"); UN.cell(cal + 3, 2, "%"); UN[f"C{cal+3}"] = f"=C{cal+1}/C{cal+2}-1"; UN[f"C{cal+3}"].number_format = "0.0%"
-UN.cell(cal + 3, 7, "來源待查（顆數層或售價層）：見 Recon")
-UN.cell(cal + 4, 1, "售價整體係數 pf_cal ＝ (錨點 Data Center − 由下而上網通) ÷ 由下而上運算（Derived；只在 Sens 當一個案例，不進基準）"); UN.cell(cal + 4, 2, "x")
-UN[f"C{cal+4}"] = f"=(a27_dc-PL!D{A_['net']})/PL!D{A_['comp']}"; UN[f"C{cal+4}"].number_format = "0.000"
-defname("pf_cal", f"Units!$C${cal+4}")
+UN.cell(cal + 1, 1, "非 HBM 成本占基準售價 c_nh ＝ [(1−錨點毛利率) × 由下而上營收 − HBM 成本 − 網通成本 − Edge 成本] ÷ Σ 認列顆數 × 基準售價（FY2027）"); UN.cell(cal + 1, 2, "x")
+UN[f"C{cal+1}"] = f"=((1-a27_gp/a27_rev)*PL!D{A_['bur']}-PL!D{A_['hbmc']}-PL!D{A_['netc']}-PL!D{A_['edgec']})/({pbu})"
+UN[f"C{cal+1}"].number_format = "0.0000"; UN.cell(cal + 1, 7, "Derived：讓 FY2027 由下而上的毛利率等於錨點毛利率；FY2028 起的毛利率變化來自 HBM／LPDDR 成本、世代與顆數組合、吸收比例")
+defname("c_nh", f"Units!$C${cal+1}")
+pbz = "+".join(f"PL!D{Z_['u_' + p]}*(pm_{p}+pcpu_{p}+plp_{p}+k_tray*pres_{p})" for p in NVP)
+UN.cell(cal + 2, 1, "c_nh_p（v0.1 的毛利率校準，k_rec＝1；只供 Sens 對照案例用）"); UN.cell(cal + 2, 2, "x")
+UN[f"C{cal+2}"] = f"=((1-a27_gp/a27_rev)*PL!D{Z_['bur']}-PL!D{Z_['hbmc']}-PL!D{Z_['netc']}-PL!D{Z_['edgec']})/({pbz})"
+UN[f"C{cal+2}"].number_format = "0.0000"; UN.cell(cal + 2, 7, "Derived；公式同 c_nh，但取對照區塊（未校準顆數）")
+defname("c_nh_p", f"Units!$C${cal+2}")
+UN.cell(cal + 3, 1, "FY2027 未校準由下而上 Data Center 營收（k_rec＝1；運算＋網通）"); UN.cell(cal + 3, 2, "US$B")
+UN[f"C{cal+3}"] = f"=PL!D{Z_['comp']}+PL!D{Z_['net']}"; UN[f"C{cal+3}"].number_format = "0.0"
+UN.cell(cal + 4, 1, "FY2027 錨點 Data Center 營收（公司）"); UN.cell(cal + 4, 2, "US$B"); UN[f"C{cal+4}"] = "=a27_dc"; UN[f"C{cal+4}"].number_format = "0.0"
+UN.cell(cal + 5, 1, "未校準差額（未校準 ÷ 錨點 − 1）"); UN.cell(cal + 5, 2, "%"); UN[f"C{cal+5}"] = f"=C{cal+3}/C{cal+4}-1"; UN[f"C{cal+5}"].number_format = "0.0%"
+UN.cell(cal + 5, 7, "差額來源待查（顆數層或售價層）：見 Recon B2 節")
+UN.cell(cal + 6, 1, "FY2027 認列後 Data Center 營收（k_rec 校準後；應等於錨點）"); UN.cell(cal + 6, 2, "US$B")
+UN[f"C{cal+6}"] = f"=PL!D{A_['comp']}+PL!D{A_['net']}"; UN[f"C{cal+6}"].number_format = "0.0"
+UN.cell(cal + 7, 1, "售價整體係數 pf_cal ＝ (錨點 Data Center − 未校準網通) ÷ 未校準運算（Derived；v0.1 的作法，只在 Sens 當對照案例，不進基準）"); UN.cell(cal + 7, 2, "x")
+UN[f"C{cal+7}"] = f"=(a27_dc-PL!D{Z_['net']})/PL!D{Z_['comp']}"; UN[f"C{cal+7}"].number_format = "0.000"
+defname("pf_cal", f"Units!$C${cal+7}")
 
 # ---------------- Val：P/E 估值 ----------------
 V = wb.create_sheet("Val")
-V["A1"] = "Val — P/E 估值（美元）。跨公司規則：合理倍數＝10 年（FY2016–FY2025 年底）P/E 的分位，依循環位置：見頂年 25 分位、中段中位數、谷底 75 分位。NVIDIA 的 FY(t) 對照日曆年 t−1，循環位置用共用規則的 lag 包裝（tools/cycle_position.py classify_lag），見頂年度讀設備市場模型"
-V["A2"] = "倍數口徑警告：歷史倍數是「會計年度年底價 ÷ 該年度（剛結束）GAAP 稀釋 EPS」＝落後（trailing）倍數；規則把它乘在 FY2028 EPS 上，得到的是約 2028-01 的價格（距 2026-10-22 約 1.27 年，未折現；折現值另列）。歷史倍數含高成長期的高估值（FY2023 因 EPS 低谷達 114x），規則值遠高於現價——見下方「What must be true」"
+V["A1"] = "Val — P/E 估值（美元）。結論用「現價 ÷ FY2028 EPS（模型與共識）」；10 年落後 P/E 規則值不適用（保留計算，不進結論）。跨公司規則：合理倍數＝10 年（FY2016–FY2025 年底）P/E 的分位，依循環位置：見頂年 25 分位、中段中位數、谷底 75 分位。NVIDIA 的 FY(t) 對照日曆年 t−1，循環位置用共用規則的 lag 包裝（tools/cycle_position.py classify_lag），見頂年度讀設備市場模型"
+V["A2"] = "不適用的理由：歷史倍數是「會計年度年底價 ÷ 該年度（剛結束）GAAP 稀釋 EPS」＝落後（trailing）倍數；規則把它乘在 FY2028 EPS 上，得到的是約 2028-01 的價格（距 2026-10-22 約 1.27 年，未折現；折現值另列）。歷史倍數含高成長期的高估值（FY2023 因 EPS 低谷達 114x），規則值遠高於現價——見下方「What must be true」"
 V.cell(4, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, 5, ["項目", "A", "B", "C", "說明"])
 V.cell(6, 1, "現價（2026-10-22 收盤）"); V["B6"] = "=px"; V["B6"].number_format = "0.00"
@@ -462,7 +475,7 @@ for j, s in enumerate(SC):
     V[f"{c}7"] = f"=px/PL!E{SUMR[(s, 'eps')]}"; V[f"{c}8"] = f"=px/PL!F{SUMR[(s, 'eps')]}"
     for rr in (7, 8): V[f"{c}{rr}"].number_format = "0.0"
 V["B9"] = "=px/cons_eps28"; V["B9"].number_format = "0.0"; V["B10"] = "=th_mult"; V["B10"].number_format = "0.0"
-V["E7"] = "FY2028 EPS 三情境相同（情境係數從 FY2029 才開始），故 A、B、C 的 FY2028 倍數相同"
+V["E7"] = "FY2028 EPS 三情境幾乎相同（情境係數從 FY2029 才開始；差在 B、C 的 LPDDR 成本），故 A、B、C 的 FY2028 倍數相近"
 V["E9"] = "共識 EPS 為新 non-GAAP 口徑（含 SBC），與本模型口徑近似（Q 頁檢查列）"
 
 V.cell(12, 1, "2. 循環位置（共用規則的 lag 版）與規則倍數").font = BOLD
@@ -488,15 +501,15 @@ for i, s in enumerate(SC, 21):
     V.cell(i, 5, f'=IF(D{i}="見頂",pe_peak,IF(D{i}="谷底",pe_trough,pe_mid))').number_format = "0.0"
     V.cell(i, 6, f'=IF(B{i}=2030,"是：營收到觀測期末仍在增加，見頂年未知","否")')
     V.cell(i, 7, "FY(t) 對照 CY t−1；以本模型營收最大的會計年度為見頂" if s == "A" else "同上")
-V.cell(25, 1, "3. 隱含股價（美元）：規則值＝FY2028 EPS × 依循環位置的倍數；其餘僅供參考").font = BOLD
-hdr(V, 26, ["情境", "EPS 年度", "EPS", "倍數類型", "倍數", "隱含股價（約 2028-01，未折現）", "相對現價", "折現到現在"])
+V.cell(25, 1, "3. 規則值隱含股價（美元）——不適用：落後倍數含高成長期溢價，保留計算但不進結論；規則值＝FY2028 EPS × 依循環位置的倍數").font = BOLD
+hdr(V, 26, ["情境", "EPS 年度", "EPS", "倍數類型", "倍數", "隱含股價（不適用；約 FY2028 年底，未折現）", "相對現價", "折現到現在"])
 vr = 27; VAL = {}
 for j, s in enumerate(SC):
     for y, typ, nm in ((2028, f"E{15 + j}", "rule"), (2028, "pe_peak", "參考：25 分位"), (2028, "pe_mid", "參考：中位數"), (2028, "pe_trough", "參考：75 分位"),
                        (2029, f"H{15 + j}", "rule29")):
         col = FC[y]
         V.cell(vr, 1, s); V.cell(vr, 2, f"FY{y}"); V.cell(vr, 3, f"=PL!{col}{SUMR[(s, 'eps')]}").number_format = "0.00"
-        V.cell(vr, 4, f'="規則值："&D{15 + j}' if nm == "rule" else (f'="規則值（FY2029）："&G{15 + j}' if nm == "rule29" else nm))
+        V.cell(vr, 4, f'="規則值（不適用）："&D{15 + j}' if nm == "rule" else (f'="規則值（FY2029；不適用）："&G{15 + j}' if nm == "rule29" else nm))
         V.cell(vr, 5, f"={typ}").number_format = "0.0"
         V.cell(vr, 6, f"=C{vr}*E{vr}").number_format = "#,##0"; V.cell(vr, 7, f"=F{vr}/px-1").number_format = "0%"
         V.cell(vr, 8, f"=F{vr}/(1+r_disc)^(1.27+{y - 2028})").number_format = "#,##0"
@@ -548,9 +561,10 @@ V.column_dimensions["K"].width = 60
 
 # ---------------- Sens ----------------
 SE = wb.create_sheet("Sens")
-SE["A1"] = "Sens — 一次動一個輸入（情境 A）：對 FY2028、FY2029 的營收、EPS 與隱含股價的影響。每個案例是一個完整的推導區塊（本頁下方，與 PL 同一引擎）。隱含股價＝EPS × 情境 A 的規則倍數（FY2028：Val!E15；FY2029：Val!H15）"
-hdr(SE, 3, ["案例", "設定", "FY2028 營收", "FY2028 EPS", "FY2028 EPS 相對基準", "FY2028 隱含價", "隱含價相對基準", "FY2029 營收", "FY2029 EPS", "FY2029 EPS 相對基準", "FY2029 隱含價", "隱含價相對基準", "FY2030 EPS", "FY2030 EPS 年增（對 FY2029）"])
+SE["A1"] = "Sens — 一次動一個輸入（情境 A，k_rec 校準後的基準）：對 FY2028、FY2029、FY2030 的營收、EPS 與隱含股價（規則值，不適用，僅供對照）的影響。每個案例是一個完整的推導區塊（本頁下方，與 PL 同一引擎）。隱含股價＝EPS × 情境 A 的規則倍數（FY2028：Val!E15；FY2029：Val!H15）"
+hdr(SE, 3, ["案例", "設定", "FY2028 營收", "FY2028 EPS", "FY2028 EPS 相對基準", "FY2028 隱含價（規則值，不適用，僅供對照）", "隱含價相對基準", "FY2029 營收", "FY2029 EPS", "FY2029 EPS 相對基準", "FY2029 隱含價（規則值，不適用）", "隱含價相對基準", "FY2030 EPS", "FY2030 EPS 年增（對 FY2029）"])
 sh_nv = lambda cy: f"((Units!{cyc(cy)}{SHR['A'][('ds', 'nv')]}+{{d}})/Units!{cyc(cy)}{SHR['A'][('ds', 'nv')]})"
+PFCASE = "對照：v0.1 的作法——只調售價（pf_cal；k_rec＝1）"
 cases = [("NVIDIA 顆數係數 低（×0.9）", "FY2028 起所有 NVIDIA 世代顆數 ×0.9", dict(uf="uk_lo")),
          ("NVIDIA 顆數係數 高（×1.1）", "×1.1", dict(uf="uk_hi")),
          ("Rubin Ultra 售價 低", "GPU 模組價 60K", dict(pm_ru="pm_ru_lo")), ("Rubin Ultra 售價 高", "GPU 模組價 100K", dict(pm_ru="pm_ru_hi")),
@@ -560,7 +574,7 @@ cases = [("NVIDIA 顆數係數 低（×0.9）", "FY2028 起所有 NVIDIA 世代�
          ("中國恢復 低（10）", "FY2028 起每年加 10", dict(cn="cn_amt_lo")), ("中國恢復 基準（20）", "每年加 20", dict(cn="cn_amt")), ("中國恢復 高（40）", "每年加 40", dict(cn="cn_amt_hi")),
          ("營業費用率 −2pt", "營業費用額外 −2% × 營收", dict(opxa="opx_adj_lo")), ("營業費用率 +2pt", "+2% × 營收", dict(opxa="opx_adj_hi")),
          ("CY2029 顆數與 CY2028 持平（FY2030 顆數持平）", "核心問題：顆數持平以後 EPS 還能不能成長；網通同步持平", dict(flat29=True)),
-         ("售價整體係數＝FY2027 錨點值（pf_cal）", "全部運算售價（與非 HBM 成本）× pf_cal：讓 FY2027 的 Data Center 由下而上等於公司錨點", dict(pf="pf_cal"))]
+         (PFCASE, "全部運算售價（與非 HBM 成本）× pf_cal，顆數不縮放：讓 FY2027 的 Data Center 等於錨點；FY2028 毛利率與公司指引不一致（見 Recon 對應列）；不進基準", dict(pf="pf_cal", krec="1", cnh="c_nh_p"))]
 SE.cell(4, 1, "基準（情境 A）"); SE.cell(4, 2, "PL 區塊 A")
 base_row = 40
 SB = {}
@@ -584,7 +598,8 @@ for n, (nm, setting, ov) in enumerate(cases):
 nn = 5 + len(cases)
 put_case(nn, "顆數情境 B", "CY2028 ×0.8、CY2029 ×0.85；記憶體 B 路徑", PB["B"], "PL!")
 put_case(nn + 1, "顆數情境 C", "CY2028–29 ×0.6；記憶體 C 路徑", PB["C"], "PL!")
-SE.cell(nn + 3, 1, "讀法：FY2028（≈CY2027）三情境相同；顆數係數、售價與吸收比例的影響從 FY2028 起；情境 B、C 的差異從 FY2029 起。隱含價用情境 A 的規則倍數，只反映 EPS 變動，不反映循環位置變動。")
+put_case(nn + 2, "對照：v0.1 基準（k_rec＝1，未校準）", "FY2027 由下而上高於錨點；FY2028 起沿用未校準水準", PB0, "PL!")
+SE.cell(nn + 4, 1, "讀法：FY2028（≈CY2027）三情境幾乎相同；顆數係數、售價與吸收比例的影響從 FY2028 起；情境 B、C 的差異從 FY2029 起。隱含價欄為規則值（10 年落後 P/E 分位，不適用，僅供對照），只反映 EPS 變動，不反映循環位置變動。")
 SENS_N = len(cases)
 SE.column_dimensions["A"].width = 46; SE.column_dimensions["B"].width = 56
 for c in "CDEFGHIJKLMN": SE.column_dimensions[c].width = 15
@@ -594,8 +609,10 @@ RC = wb.create_sheet("Recon")
 RC["A1"] = "Recon — 本模型 vs 公司指引、共識、市場層。只作事後對照，不為對上數字而調整參數。公司指引（FY2028 營收年增約 70%、毛利率 72–73%）與共識只放在這裡，不用於校準"
 hdr(RC, 3, ["項目", "對照值", "模型 A", "差距 A", "模型 B", "差距 B", "模型 C", "差距 C", "對照來源", "說明"])
 rr_ = 4
+RFMT = {}
 def rec(label, ref, getter, src, note="", fmt="#,##0.0", pt=False, fmts=None):
     global rr_
+    RFMT[rr_] = (fmt, ref is not None)
     RC.cell(rr_, 1, label)
     if ref is not None: RC.cell(rr_, 2, ref).number_format = fmt
     for j, s in enumerate(SC):
@@ -613,16 +630,33 @@ rec("FY2028 營收 vs 共識推算（共識 FY2027 營收 ×(1＋63%)）", "=con
 rec("FY2028 毛利率 vs 指引 72–73% 中點（百分點）", "=g28_gm", pl("gm", 2028), "二手報導；逐字稿未取得", "", fmt="0.0%", pt=True)
 rec("FY2027 錨點 EPS vs 共識 FY2027 EPS", "=cons_eps27", pl("eps", 2027), "stockanalysis（二手）", "")
 rec("FY2028 EPS vs 共識 FY2028 EPS", "=cons_eps28", pl("eps", 2028), "247wallst／Wallstreetzen（二手）", "共識區間 15.70–16.13（In 頁）", fmt="0.00")
+rec("FY2028 毛利率：v0.1 對照案例（只調售價 pf_cal）vs 指引 72–73% 中點（百分點）", "=g28_gm", lambda s: f"=Sens!E{SB[PFCASE]['gm']}", "Sens 對照案例（只調售價，顆數不縮放）", "與公司指引不一致：只調售價時 HBM 成本相對營收被放大，FY2028 毛利率偏低", fmt="0.0%", pt=True)
 rec("FY2029 EPS（共識：未找到）", None, pl("eps", 2029), "—", "WallStreetSmart 自有模型 FY2029 EPS 20.70（非共識，不採）", fmt="0.00")
-RC.cell(rr_, 1, "B. FY2027 由下而上 vs 錨點：顆數層或售價層（不用營收反推顆數）").font = BOLD; rr_ += 1
-ABU = PB["A"]
-rec("Data Center 營收：由下而上（運算＋網通）vs 公司錨點", "=a27_dc", lambda s: f"=PL!D{ABU['comp']}+PL!D{ABU['net']}", "公司 Q1、Q2 實績＋Q3 指引＋Q4 假設", "FY2027 三情境相同（情境係數從 CY2028 起）")
-rec("  其中運算：由下而上 vs 錨點 Data Center − 網通推估（rep_nv26）", "=a27_dc-rep_nv26", lambda s: f"=PL!D{ABU['comp']}", "網通推估 rep_nv26＝74（Q1 實際 14.8＋推估）", "把網通拿掉後的運算差距")
-rec("  網通：本模型歸屬 vs 實際推估 rep_nv26（markets/network 的對帳）", "=rep_nv26", lambda s: f"=PL!D{ABU['net']}", "markets/network v0.2.2 Recon：−16.6%", "歸屬比例為 Assumed")
-rec("  網通：本模型 vs Q1 FY27 實際年化（14.8 × 4）", "=net_q1*4", lambda s: f"=PL!D{ABU['net']}", "公司 Q1 FY27 稿", "網通季增中，年化為下限")
-rec("NVIDIA 顆數：市場層 CY2026（百萬顆）vs 以錨點運算 ÷ 模型平均運算售價推得", f"=(a27_dc-rep_nv26)/(PL!D{ABU['comp']}/PL!D{ABU['nvu']})", lambda s: f"=PL!D{ABU['nvu']}", "市場層 UNITS；先前紀錄：營收推得 8.74M、市場層 7.6M", "若售價正確，顆數層高估 → 推得值低於 7.6；負差距（模型 ÷ 對照）為正＝顆數層偏高", fmt="0.00")
-rec("缺口相當於 Rubin 顆數（百萬）：(由下而上運算 − 錨點運算) ÷ Rubin 每顆運算售價；Rubin CY2026 顆數＝", f"=u_rb_26", lambda s: f"=(PL!D{ABU['comp']}-(a27_dc-rep_nv26))/PL!D{ABU['px_rb']}", "市場層 UNITS", "若缺口全來自 Rubin 的 FY↔CY 時點（CY2026 的 1.7M 顆有多少落在 FY2027 之外），所需的顆數；候選來源之一，未驗證", fmt="0.00")
-rec("每顆平均運算售價（US$K）：模型 vs 以錨點運算 ÷ 市場層顆數推得", f"=(a27_dc-rep_nv26)/PL!D{ABU['nvu']}*1", lambda s: f"=PL!D{ABU['comp']}/PL!D{ABU['nvu']}", "—", "若顆數正確，售價層高估多少（Blackwell 以 GB300 計，未區分 B200 較低價；Rubin 在 CY2026 僅 1.7M，多數落在 Q4 FY27 之後，FY↔CY 近似可能多算）", fmt="0.0")
+RC.cell(rr_, 1, "B. FY2027 水準差與 k_rec（v0.1.1：基準已用 k_rec 校準到錨點；未校準的差額保留供查）").font = BOLD; rr_ += 1
+ABU = PB["A"]; ZBU = PB0
+rec("Data Center 營收：未校準由下而上（k_rec＝1；運算＋網通）vs 公司錨點", "=a27_dc", lambda s: f"=PL!D{ZBU['comp']}+PL!D{ZBU['net']}", "公司 Q1、Q2 實績＋Q3 指引＋Q4 假設（v0.1 基準的差額）", "FY2027 三情境相同（情境係數從 CY2028 起）")
+rec("認列顆數係數 k_rec（Derived）", None, lambda s: "=k_rec", "錨點 Data Center ÷ 未校準由下而上", "以已發生的實績校準，FY2028 起沿用；營收與成本同比例縮放；顆數層與售價層無法分開識別", fmt="0.000")
+rec("認列後 FY2027 Data Center 營收 vs 錨點（應為 0）", "=a27_dc", lambda s: f"=PL!D{ABU['comp']}+PL!D{ABU['net']}", "校準恆等式，非獨立檢驗", "")
+rec("認列後 FY2027 毛利率 vs 錨點毛利率（應為 0；百分點）", "=a27_gp/a27_rev", lambda s: f"=PL!D{ABU['bugm']}", "c_nh 校準恆等式，非獨立檢驗", "", fmt="0.0%", pt=True)
+rec("認列顆數（百萬顆）：k_rec × 市場層 vs 市場層 CY2026 NVIDIA 顆數", "=u_bw_26+u_rb_26+u_ru_26+u_hp_26", lambda s: f"=PL!D{ABU['nvu']}", "市場層 UNITS（markets/memory，未修改）", "認列顆數低於市場層＝顆數層與售價層的合併下調", fmt="0.00")
+rec("  網通：本模型歸屬（未縮放）vs 實際推估 rep_nv26（markets/network 的對帳）", "=rep_nv26", lambda s: f"=PL!D{ZBU['net']}", "markets/network v0.2.2 Recon：−16.6%", "歸屬比例為 Assumed")
+rec("  網通：本模型歸屬（未縮放）vs Q1 FY27 實際年化（14.8 × 4）", "=net_q1*4", lambda s: f"=PL!D{ZBU['net']}", "公司 Q1 FY27 稿", "網通季增中，年化為下限")
+rec("  運算：未校準由下而上 vs 錨點 Data Center − 網通推估（rep_nv26）", "=a27_dc-rep_nv26", lambda s: f"=PL!D{ZBU['comp']}", "網通推估 rep_nv26＝74（Q1 實際 14.8＋推估）", "把網通拿掉後的運算差距（B2 節各候選來源以此為缺口）")
+RC.cell(rr_, 1, "B2. 差額來源待查（以上一列的運算缺口為準；各列為候選來源，未驗證）").font = BOLD; rr_ += 1
+hdr(RC, rr_, ["候選來源", "對照值", "模型 A", "差距 A", "模型 B", "差距 B", "模型 C", "差距 C", "目前狀態", "可查的公開資料"]); rr_ += 1
+GAP = lambda: f"(PL!D{ZBU['comp']}-(a27_dc-rep_nv26))"
+rec("① Rubin CY2026 出貨時點（FY↔CY）：缺口相當於 Rubin 顆數（百萬）；對照值＝Rubin CY2026 顆數", "=u_rb_26", lambda s: f"={GAP()}/PL!D{ZBU['px_rb']}",
+    "未驗證。二手報導：Rubin 量產出貨自日曆年 2026 第三季開始、第四季放量（digitalcitizen、winbuzzer、經濟日報經 wccftech）；日曆年第三季多數落在 FY2027 第二、三季，只有 2027 年 1 月落在 FY2027 之外，時點本身應只解釋小部分缺口（本模型推論，未驗證）",
+    "可查：公司法說與 10-Q 的 Rubin 營收認列時點與出貨顆數（財務長書面說明、10-Q 本環境無法開啟）；TrendForce 的 Rubin 季別出貨；ODM（鴻海、廣達）月營收與機櫃出貨", fmt="0.00")
+rec("① 同上：缺口占 Rubin CY2026 顆數的比例（需落在 FY2027 之外的比例）", None, lambda s: f"={GAP()}/PL!D{ZBU['px_rb']}/u_rb_26", "—", "比例愈高，愈難只用出貨時點解釋", fmt="0.0%")
+rec("② B200／B300 價差：僅靠 Blackwell 均價下調解釋缺口，所需降幅", None, lambda s: f"={GAP()}/PL!D{ZBU['r_bw']}",
+    "未驗證。公司不分 B200／B300 揭露；橋接表 Rack 頁只有 GB300（模組價 40.4K）。二手：HSBC 稱 B200→B300（GB200→GB300）沒有明顯 ASP 提升（wccftech 轉述，原報告未取得）→ 價差本身不足以解釋缺口",
+    "可查：賣方 ASP 估計（HSBC、KeyBanc）、B200 HGX 8 卡系統報價（經銷商）、GB200 機架價與 GB300 機架價對照；目前只找到機架層級 $3.7–4.0M（blog，無原始出處）", fmt="0.0%")
+rec("③ 匣級加價保留比例 k_tray 由基準降到 0：未校準運算營收變動占缺口的比例", None, lambda s: f"=k_tray*(u_bw_26*pres_bw+u_rb_26*pres_rb+u_ru_26*pres_ru+u_hp_26*pres_hp)/{GAP()}",
+    "Assumed（0–1）。公司不揭露匣級加價與 ODM 分成", "可查：NVIDIA 與 ODM（鴻海、廣達、緯創）的毛利率與營收認列方式（是否以機櫃或 GPU 板認列）", fmt="0.0%")
+rec("④ 顆數層（市場層 UNITS 為賣方與研調估計）：全歸顆數層時，CY2026 NVIDIA 顆數需為（百萬顆）；對照值＝市場層", "=u_bw_26+u_rb_26+u_ru_26+u_hp_26", lambda s: f"=(a27_dc-rep_nv26)/(PL!D{ZBU['comp']}/PL!D{ZBU['nvu']})",
+    "未驗證。市場層顆數為 Morgan Stanley、TrendForce 等估計（Interested-party）", "可查：台積電 CoWoS 出貨與 NVIDIA 分配、各研調的 2026 出貨更新；公司不揭露顆數", fmt="0.00")
+rec("⑤ 全歸售價層時，每顆平均運算售價（US$K）；對照值＝模型（未校準）", f"=PL!D{ZBU['comp']}/PL!D{ZBU['nvu']}", lambda s: f"=(a27_dc-rep_nv26)/PL!D{ZBU['nvu']}", "未驗證", "同②③", fmt="0.0")
 RC.cell(rr_, 1, "C. 網通與記憶體").font = BOLD; rr_ += 1
 rec("HBM 價格指數 CY2027 ÷ CY2026：本模型（markets/memory）vs 橋接表 VR200 2027 合約（36 ÷ 16.7）", f"={BR['hbm_px'][3]}/{BR['hbm_px'][1]}", lambda s: f"=hbm_{s}_27/hbm_{s}_26", "橋接表 Rack 頁 D4／C4（Tokenomics v20.1）", "市場層混合價 +80%；橋接表 HBM4 合約 +116%：吸收時毛利率壓力的上限", fmt="0.00")
 rec("HBM 價格 CY2027 ($/GB)：市場層 vs 二手 HBM4 估計（Bernstein 約 $53、Fubon $31–32、TrendForce 約 $36）", 36, lambda s: f"=hbm_{s}_27", "Silicon Analysts／TrendForce／Bernstein（二手；賣方與記憶體廠有價格方向誘因）", "市場層為混合單價（含 HBM3E）", fmt="0.0")
@@ -670,7 +704,8 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("NVIDIA（NVDA）收支與估值模型 v0.1（AI 半導體 Project：運算層第一個樣板）　2026-10-23", True),
+lines = [("NVIDIA（NVDA）收支與估值模型 v0.1.1（AI 半導體 Project：運算層第一個樣板）　2026-10-23", True),
+ ("v0.1.1（PR 審查後）：(1) 新增 NVIDIA 認列顆數係數 k_rec（Derived，只在本模型內縮放，不改 markets/memory 的共用顆數；營收與成本同比例縮放），使 FY2027 由下而上的 Data Center 營收與毛利率等於錨點，FY2028 起沿用；v0.1 的未校準基準保留在 PL 對照區塊與 Sens。(2) 原 pf_cal（只調售價）留在 Sens 當對照。(3) Recon 新增 B2「差額來源待查」。(4) Val：10 年落後 P/E 規則值標「不適用」（保留計算，不進結論）。", False),
  ("模型命題：NVIDIA 的營收＝加速器顆數 × 每顆售價＋網通附掛。2027 年 ASIC 把 NVIDIA 的金額份額壓到約 75–80%，HBM 漲價壓毛利 2–3 個百分點。股價取決於 2028 年顆數持平之後，EPS 還能不能成長：現價約為 2027 年 EPS 的 13.5 倍，是低估，還是見頂前的折價。", False),
  ("核心問題：加速器顆數在 2028 年持平以後，NVIDIA 的 EPS 還能不能成長。（命題的「2027 年」＝日曆年 2027＝FY2028；「2028 年顆數持平」＝CY2028＝FY2029，故問題是 FY2030 EPS 相對 FY2029。）", False), ("", False),
  ("會計年度：FY(t)＝t−1 年 2 月～t 年 1 月，約等於日曆年 t−1（FY2027＝CY2026 … FY2030＝CY2029）。上游市場層是日曆年，FY(t) 直接取 CY(t−1)，不做跨年加權（11/12 落在同一日曆年）——這是近似。預測期 FY2027–FY2030。", False), ("", False),
@@ -678,10 +713,10 @@ lines = [("NVIDIA（NVDA）收支與估值模型 v0.1（AI 半導體 Project：�
  ("各世代顆數（markets/memory UNITS × 情境係數）× 每顆售價（橋接表 Rack 頁：GPU 模組＋CPU＋LPDDR＋匣級加價中 NVIDIA 保留的部分；Rubin Ultra 為 Assumed 區間）→ 運算營收；＋網通附掛（markets/network 的「NVIDIA 網通（本模型歸屬）」列，B／C 依顆數係數縮放）＋Edge Computing（公司實績＋成長率）", False),
  ("毛利率：非 HBM 成本占基準售價的比例（c_nh）在 FY2027 校準到公司錨點毛利率；FY2028 起毛利率的變化來自 HBM 與 LPDDR 成本（markets/memory 的情境別價格路徑 × 每顆容量）、NVIDIA 吸收比例（In 頁 abs_mem，Assumed 0–1，基準 0.5）、世代與顆數組合。中國資料中心運算基準為 0（公司 Q3 FY27 指引假設），Sens 列恢復。", False),
  ("EPS 口徑：GAAP 扣除權益證券損益（一次性），含股票薪酬；近似公司自 Q1 FY27 起的新 non-GAAP（含 SBC；Q 頁檢查列差 −0.03～−0.02）。營業費用、稅率、股數：公司實績（Q 頁）＋In 頁假設。", False),
- ("校準：FY2027 ＝ Q1、Q2 實績＋Q3 指引（$108B ±2%）＋Q4 假設。由下而上的「每顆售價 × 顆數」與錨點不合時，差額與來源列在 Recon B 節，不用公司營收反推顆數。驅動因子從 FY2028 起作用。公司指引（FY2028 營收約 +70%、毛利率 72–73%）與共識只在 Recon 對帳，不作校準。", False),
- ("估值：P/E 規則——FY2016–FY2025 年底 P/E 分位（見頂 25 分位、中段中位數、谷底 75 分位）；循環位置用 tools/cycle_position.py 的共用規則（lag 版：FY(t) 對照 CY t−1；見頂年度讀設備市場模型 " + "、".join(f"{s_} {PEAK[s_]}" for s_ in SC) + " → FY2028：" + "、".join(f"{s_} {CP.classify_lag(2028, PEAK[s_])}" for s_ in SC) + "）；另列以本模型營收路徑自己的見頂年判斷的對照欄（只作對照）。", False), ("", False),
+ ("校準：FY2027 ＝ Q1、Q2 實績＋Q3 指引（$108B ±2%）＋Q4 假設。k_rec（Derived）＝錨點 Data Center 營收 ÷ 未校準的由下而上（市場層顆數 × 橋接表售價＋網通歸屬）；以已發生的實績校準，不用公司對 FY2028 的預測；顆數層與售價層無法分開識別，k_rec 是合併係數，FY2028 起沿用。c_nh 另讓 FY2027 毛利率等於錨點毛利率。驅動因子從 FY2028 起作用。公司指引（FY2028 營收約 +70%、毛利率 72–73%）與共識只在 Recon 對帳，不作校準。", False),
+ ("估值：P/E 規則——FY2016–FY2025 年底 P/E 分位（見頂 25 分位、中段中位數、谷底 75 分位）；循環位置用 tools/cycle_position.py 的共用規則（lag 版：FY(t) 對照 CY t−1；見頂年度讀設備市場模型 " + "、".join(f"{s_} {PEAK[s_]}" for s_ in SC) + " → FY2028：" + "、".join(f"{s_} {CP.classify_lag(2028, PEAK[s_])}" for s_ in SC) + "）；另列以本模型營收路徑自己的見頂年判斷的對照欄（只作對照）。10 年落後 P/E 規則值標「不適用」（歷史倍數含高成長期溢價；保留計算，不進結論）；結論用現價 ÷ FY2028 EPS（模型與共識）。前瞻 P/E 歷史資料由擁有者另行提供，本版不做。", False), ("", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未單獨使用。公司原文＝8-K 新聞稿（nvidianews.nvidia.com，已抓取）；CFO 書面說明、10-Q、法說逐字稿無法開啟，相關數字只經搜尋摘要（標二手），原文待人工複核。", False),
- ("已知限制：(1) 由下而上的 FY2027 Data Center 營收高於公司錨點（Recon B 節），差額來自顆數層或售價層（無法分開識別），FY2028 起沿用；Sens 列「售價整體係數」案例顯示若全歸售價層，FY2028 EPS 變動多少。(2) 吸收比例、Rubin Ultra 售價、ASIC 單價、Edge 與網通毛利率為 Assumed。(3) P/E 歷史只有一個可用序列（Macrotrends，9 年）；自算需要會計年度年底收盤價（未找到）。(4) 歷史倍數是落後倍數，乘在 FY2028 EPS 上得到約 2028-01 的價格；規則值遠高於現價（Val 頁 What must be true）。(5) FY↔CY 近似：Rubin 在 CY2026 的 1.7M 顆多數出貨在 FY2027 Q4 之後。(6) 網通的 B／C 縮放假設組合不變。(7) 公司 FY2028 美元指引（約 $690B）未找到直接陳述。", False)]
+ ("已知限制：(1) k_rec 是顆數層與售價層的合併係數（無法分開識別，Recon B2 列各候選來源與公開資料，皆未驗證）；FY2028 起沿用 k_rec 假設該缺口持續；Sens 對照案例顯示 v0.1 未校準基準與只調售價（pf_cal）的結果，後者 FY2028 毛利率與公司指引不一致。(2) 吸收比例、Rubin Ultra 售價、ASIC 單價、Edge 與網通毛利率為 Assumed。(3) P/E 歷史只有一個可用序列（Macrotrends，9 年）；自算需要會計年度年底收盤價（未找到）。(4) 10 年落後 P/E 規則值不適用：歷史倍數含高成長期溢價，乘在 FY2028 EPS 上得到的價格遠高於現價（Val 頁 What must be true）。(5) FY↔CY 近似：Rubin 在 CY2026 的 1.7M 顆多數出貨在 FY2027 Q4 之後。(6) 網通的 B／C 縮放假設組合不變。(7) 公司 FY2028 美元指引（約 $690B）未找到直接陳述。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
 
@@ -690,4 +725,4 @@ wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])
 if os.environ.get("NV_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
-    json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "VAL": {f"{k[0]}|{k[1]}": v for k, v in VAL.items()}, "SHR": {s: {str(k): v for k, v in R.items()} for s, R in SHR.items()}, "CHK": CHK_ROW, "SENSN": SENS_N}, open(os.environ["NV_ROWMAP"], "w"))
+    json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "VAL": {f"{k[0]}|{k[1]}": v for k, v in VAL.items()}, "SHR": {s: {str(k): v for k, v in R.items()} for s, R in SHR.items()}, "CHK": CHK_ROW, "KROW": K_ROW, "SENSN": SENS_N, "PB0": PB0, "RFMT": {str(k): v for k, v in RFMT.items()}, "PFROW": SB[PFCASE]["gm"], "RC_END": rr_}, open(os.environ["NV_ROWMAP"], "w"))
