@@ -119,7 +119,7 @@ inp("g_nonB_28", "情境 B：FY2028 非 AI 裝置年增", "%", -0.05, 0.0, 0.05,
 inp("g_nonC_28", "情境 C：FY2028 非 AI 裝置年增（循環下行）", "%", -0.20, -0.12, -0.04, "Analogy", "公司 FY2018→FY2019（2019年3月期）營收 −11.9%（Hist 頁：167.4→147.5），記憶體與中國投資下行", "第二來源：FY2019→FY2020 −4.3%（147.5→141.1）。差異：當時 AI 尚無貢獻；現在非 AI 裝置占營收約 45%")
 inp("g_tl", "非 AI 消耗品年增（隨稼動率，不隨新機）", "%", 0.0, 0.05, 0.10, "Analogy", "公司構成比推得 FY2022 0%、FY2023 +11%、FY2024 +13%、FY2025 +9%（各年說明資料的年增率，含匯率與 AI）", "基準取 0–10% 中點；情境 C FY2028 取 0%（下方）")
 inp("g_tlC_28", "情境 C：FY2028 非 AI 消耗品年增", "%", -0.05, 0.0, 0.05, "Assumed", "公司：FY2019 下行期消耗品出貨仍創新高（film/20200423）", "")
-inp("w_tlai", "FY2025 消耗品中屬 AI 工序的比例", "%", 0.10, "=ai25/eq25", 0.25, "Assumed", "公司不揭露；基準＝AI 占裝置營收的比例（約 28%）——假設裝機組合等於當年出貨組合", "AI 消耗品隨 AI 工序量（稼動）而非新機變動")
+inp("w_tlai", "FY2025 消耗品中屬 AI 工序的比例", "%", 0.10, "=ai25/eq25", 0.40, "Assumed", "公司不揭露；基準＝AI 占裝置營收的比例（約 28%）——假設裝機組合等於當年出貨組合", "AI 消耗品隨 AI 工序量（稼動）而非新機變動")
 
 sec("G. 市占（只用於「市占變化」的情境，校準已含 FY2025 水準）")
 inp("sh", "Disco 研削／切割裝置市占（2025）", "%", 0.60, 0.70, 0.80, "Interested-party", "Morningstar（2025）：60–70%（未引一手調查）", "第二來源：現代ビジネス（2025-12-30，田宮寬之，東洋經濟）：研削、切割 7–8 成（未引出處）；Desk Research Design（note）70–80%。三者都不是一手市場調查")
@@ -304,6 +304,7 @@ def engine(ws, r0, title, **over):
     row("rev", "營收", "¥B", {FYC[y]: f"={FYC[y]}{R['eq']}+{FYC[y]}{R['tl']}+{FYC[y]}{R['ot']}" for y in FY}, fmt="#,##0.0")
     row("aish", "AI 占營收（AI 裝置＋AI 消耗品＋按比例的その他）", "%", {FYC[y]: f"=({FYC[y]}{R['eai']}+{FYC[y]}{R['tai']})*(1+r_ot)/{FYC[y]}{R['rev']}" for y in FY}, fmt="0.0%")
     adj = {2028: P["gadj"] if s == "C" else "0", 2029: P["gadj"] if s == "C" else "0"}
+    row("aieq", "AI 裝置占營收（不含消耗品；その他按比例）", "%", {FYC[y]: f"={FYC[y]}{R['eai']}*(1+r_ot)/{FYC[y]}{R['rev']}" for y in FY}, fmt="0.0%", note="命題的「約兩成」用這一列")
     row("gm", "毛利率", "%", {"C": "=a25_gp/a25_rev", **{FYC[y]: f"={P['ga']}+{P['gb']}*LN({FYC[y]}{R['rev']})+{adj.get(y, '0')}" for y in FY1}}, fmt="0.0%", note="a ＋ b × ln 營收（11 年迴歸）")
     row("gp", "毛利", "¥B", {FYC[y]: f"={FYC[y]}{R['rev']}*{FYC[y]}{R['gm']}" for y in FY}, fmt="#,##0.0")
     row("sga", "銷管費", "¥B", {"C": "=a25_sga", **{FYC[y]: f"=sg_f+sg_v*{FYC[y]}{R['rev']}" for y in FY1}}, fmt="#,##0.0", note="固定＋變動 × 營收（11 年迴歸）")
@@ -327,7 +328,7 @@ sr = 4; SUMR = {}
 for s in SC:
     PL.cell(sr, 1, f"情境 {s}").font = BOLD; sr += 1
     for key, lab, unit, fmt in (("rev", "營收", "¥B", "#,##0"), ("eh", "  HBM 裝置", "¥B", "#,##0"), ("el", "  先進封裝裝置", "¥B", "#,##0"), ("en", "  非 AI 裝置", "¥B", "#,##0"),
-                                ("tl", "  消耗品", "¥B", "#,##0"), ("ot", "  その他", "¥B", "#,##0"), ("aish", "AI 占營收", "%", "0.0%"), ("gm", "毛利率", "%", "0.0%"),
+                                ("tl", "  消耗品", "¥B", "#,##0"), ("ot", "  その他", "¥B", "#,##0"), ("aish", "AI 占營收（含 AI 消耗品）", "%", "0.0%"), ("aieq", "AI 裝置占營收", "%", "0.0%"), ("gm", "毛利率", "%", "0.0%"),
                                 ("oi", "營業利益", "¥B", "#,##0"), ("oim", "營業利益率", "%", "0.0%"), ("ni", "淨利", "¥B", "#,##0"), ("eps", "EPS", "¥", "#,##0")):
         PL.cell(sr, 1, lab); PL.cell(sr, 2, unit)
         for y in range(2025, 2030):
@@ -391,7 +392,7 @@ hdr(V, vr + 2, ["項目", "數值", "備註"])
 fr = vr + 3
 for nm, f, fm, note in (("現價（2026-10-22 收盤）", "=px", "#,##0", "Yahoo!ファイナンス、松井證券"),
                         ("P/E：現價 ÷ FY2025 EPS 1,249.84", "=px/a25_eps", "0.0", "命題中的「約 41 倍」；這是上一個會計年度，不是嚴格的近 12 月"),
-                        ("P/E：現價 ÷ 近 12 月 EPS（FY25 Q3＋Q4＋FY26 上半）", "=px/(a25_eps-Q!C7-Q!B7+q26h1_eps)", "0.0", "近 12 月 EPS ＝ 1,249.84 − 上半 515.70 ＋ 740.84 ＝ 1,474.98（Derived）"),
+                        ("P/E：現價 ÷ 近 12 月 EPS（FY25 Q3＋Q4＋FY26 上半）", "=px/(a25_eps-515.70+q26h1_eps)", "0.0", "近 12 月 EPS ＝ 1,249.84 − 上半 515.70 ＋ 740.84 ＝ 1,474.98（Derived）"),
                         ("TTM P/E：stockanalysis（2026-10-21）", "=sa_ttm", "0.0", "其 TTM EPS 1,340.86，未含 FY26 Q2"),
                         ("遠期 P/E：stockanalysis（共識）", "=sa_fpe", "0.0", "參考，不用於估值"),
                         ("現價 ÷ 模型 FY2026 EPS（A）", f"=px/PL!{FYC[2026]}{SUMR[('A', 'eps')]}", "0.0", ""),
@@ -418,7 +419,7 @@ cases = [("汰換／升級比例 5%", "dlt 低", dict(dlt="dlt_lo")), ("汰換�
          ("CoWoS 2025 600 千片", "cw_25 低", dict(cw25="cw_25_lo")),
          ("非 AI 裝置年增 0%", "g_non 低", dict(gn="g_non_lo")), ("非 AI 裝置年增 12%", "g_non 高", dict(gn="g_non_hi")),
          ("非 AI 消耗品年增 0%", "g_tl 低", dict(gtl="g_tl_lo")), ("非 AI 消耗品年增 10%", "g_tl 高", dict(gtl="g_tl_hi")),
-         ("AI 消耗品比例 10%", "w_tlai 低", dict(wtl="w_tlai_lo")), ("AI 消耗品比例 25%", "w_tlai 高", dict(wtl="w_tlai_hi")),
+         ("AI 消耗品比例 10%", "w_tlai 低", dict(wtl="w_tlai_lo")), ("AI 消耗品比例 40%", "w_tlai 高", dict(wtl="w_tlai_hi")),
          ("市占 FY2029 −10pt（線性）", "sh_loss 高", dict(shl="sh_loss_hi")),
          ("毛利率迴歸只用 FY2019–25", "gm_a2、gm_b2", dict(ga="gm_a2", gb="gm_b2")),
          ("淨利÷營業利益 0.689（FY26 上半）", "nioi 低", dict(nioi="nioi_lo")), ("淨利÷營業利益 0.743（FY2024）", "nioi 高", dict(nioi="nioi_hi"))]
@@ -473,7 +474,11 @@ rec("FY2027 營收 vs 樂天證券（640）", "=cons_rev27", pl("rev", 2027), "�
 RC.cell(rr_, 1, "C. 結構檢查").font = BOLD; rr_ += 1
 rec("非 AI 裝置 FY2026 年增 vs SEMI 組裝封裝設備 CY2026 年增（百分點）", "=semi_pk/semi_pk_lo-1", lambda s: f"=PL!{FYC[2026]}{SUMR[(s, 'en')]}/PL!C{SUMR[(s, 'en')]}-1", "markets/equipment（SEMI 2026-07）", "口徑不同（SEMI 為全球封裝設備美元金額），只看方向", fmt="0.0%", pt=True)
 RC.cell(rr_, 1, "FY2025 AI 占營收（校準結果）"); RC.cell(rr_, 3, f"=PL!C{SUMR[('A', 'aish')]}").number_format = "0.0%"; RC.cell(rr_, 10, "AI 裝置 75 ＋ AI 消耗品，再按比例加その他；命題的「約兩成」"); rr_ += 1
-RC.cell(rr_, 1, "FY2027 AI 占營收（A／B／C）")
+RC.cell(rr_, 1, "FY2025 AI 裝置占營收（不含消耗品）"); RC.cell(rr_, 3, f"=PL!C{SUMR[('A', 'aieq')]}").number_format = "0.0%"; rr_ += 1
+RC.cell(rr_, 1, "FY2027 AI 裝置占營收（A／B／C）")
+for j, s in enumerate(SC): RC.cell(rr_, 3 + 2 * j, f"=PL!E{SUMR[(s, 'aieq')]}").number_format = "0.0%"
+rr_ += 1
+RC.cell(rr_, 1, "FY2027 AI 占營收（含 AI 消耗品；A／B／C）")
 for j, s in enumerate(SC): RC.cell(rr_, 3 + 2 * j, f"=PL!E{SUMR[(s, 'aish')]}").number_format = "0.0%"
 rr_ += 1
 RC.cell(rr_, 1, "參考：公司稱 FY26 Q2 記憶體占營收略低於 40%、Q3 約 30%（含一般 DRAM／NAND，口徑不同，不可直接比較）"); rr_ += 1
