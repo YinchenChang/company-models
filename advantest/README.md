@@ -8,6 +8,8 @@ AI 半導體 Project 步驟 5（設備與材料）的第一家公司樣板。獨
 |---|---|
 | `build_advantest.py` | 產生器（參數與公式） |
 | `dist/20261023_Advantest模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `html.json` | HTML 展示層設定（頁面結構與要抽的儲存格；格式見 `tools/company_html/README.md`） |
+| `dist/20261023_Advantest模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出，標註來源儲存格；CI 檢核） |
 
 建置：`python3 advantest/build_advantest.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`、`tsmc/dist`、`skhynix/dist`、`markets/equipment/dist`；不修改它們。
 

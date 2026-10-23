@@ -11,6 +11,8 @@ on:
       - 'tools/memory_model/**'
       - 'tools/xlsx_diff.py'
       - 'tools/cycle_position.py'
+      - 'tools/company_html/**'
+      - '**/html.json'
       - 'skhynix/**'
       - 'micron/**'
       - 'samsung/**'
@@ -24,6 +26,8 @@ on:
       - 'tools/memory_model/**'
       - 'tools/xlsx_diff.py'
       - 'tools/cycle_position.py'
+      - 'tools/company_html/**'
+      - '**/html.json'
       - 'skhynix/**'
       - 'micron/**'
       - 'samsung/**'
@@ -94,6 +98,12 @@ jobs:
             exit 1
           fi
           echo "九個模型重建後錯誤格 0、與 dist 逐格相同"
+
+      - name: HTML 展示層檢核（重現性、抽數、無手寫數字、自含）
+        run: |
+          # 以 dist 內已提交的 xlsx 產生 HTML，須與已提交的 HTML 逐位元組相同；並逐一回頭比對 xlsx 重算值
+          dirs=$(ls -d */ | tr -d '/' | while read d; do [ -f "$d/html.json" ] && echo "$d"; done)
+          python3 tools/company_html/check_company_html.py $dirs
 
       - name: 確認工作樹未被改動
         run: |
