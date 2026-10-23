@@ -15,15 +15,15 @@
 | `amazon/` | Amazon（AMZN） | `oracle/`（v0.2）→ MAG 共用引擎（Amazon v0.1b；共用文件見 `mag/`） | v0.2（Tokenomics v5.31） |
 | `alphabet/` | Alphabet（GOOGL） | `oracle/`（v0.2）→ 套用 Amazon 引擎（amazon@`41f9a54`，v0.2） | v0.2 |
 | `microsoft/` | Microsoft（MSFT） | `oracle/`（v0.2）→ 套用 Amazon 引擎（amazon@`41f9a54`，v0.2） | v0.2 |
-| `markets/` | 市場層（AI 半導體）：每 GW 晶片內容橋接表等，見 `markets/README.md` | 新建（AI 半導體 Project） | chip_bridge v0.2.1、network v0.2.2、equipment v0.1.2、overview v0.5（Tokenomics v20.1；memory v0.4） |
+| `markets/` | 市場層（AI 半導體）：每 GW 晶片內容橋接表等，見 `markets/README.md` | 新建（AI 半導體 Project） | chip_bridge v0.2.1、network v0.2.2、equipment v0.1.2、overview v0.6（Tokenomics v20.1；memory v0.4） |
 | `skhynix/` | SK 海力士（000660.KS） | 記憶體樣板 `tools/memory_model`（AI 半導體 Project） | v0.4（HBM 位元隨情境） |
 | `micron/` | 美光（MU） | 記憶體樣板（複製測試） | v0.3 |
 | `samsung/` | 三星電子（005930.KS） | 記憶體樣板（集團公司：只建模記憶體，其餘事業為輸入） | v0.2 |
 | `tsmc/` | 台積電（2330.TW） | 獨立產生器（CoWoS 供需上限＋損益估值；AI 半導體 Project） | v0.2 |
 | `markets/equipment/` | 半導體設備市場模型：記憶體、代工邏輯資本支出 → 設備需求；三情境、對帳、瓶頸表 | 新建（AI 半導體 Project 步驟 5） | v0.1.2（成品：`markets/equipment/dist/20261023_半導體設備市場模型_v0.1.2.xlsx`；台積電設備占比查證，數值不變） |
-| `advantest/` | Advantest（6857.T）：SoC／記憶體測試機收支與 P/E 估值；三情境、對帳、敏感度；見 `advantest/README.md` | 獨立產生器（比照 `tsmc/`；AI 半導體 Project 步驟 5 第一家公司） | v0.2（成品：`advantest/dist/20261023_Advantest模型_v0.2.xlsx`；HBM 位元隨情境） |
-| `disco/` | Disco（6146.T）：研削／切割裝置與消耗品收支、P/E 估值；HBM 工序與 CoWoS 片數驅動、三情境、混合鍵合開關、對帳、敏感度；見 `disco/README.md` | 獨立產生器（比照 `advantest/`；AI 半導體 Project 步驟 5 第二家公司） | v0.1（成品：`disco/dist/20261023_Disco模型_v0.1.xlsx`；markets/memory v0.4） |
-| `markets/overview/` | AI 半導體總覽儀表板 | 彙整橋接表、記憶體、網通、台積電模型；估值規則；記憶體三家 P/E 對照、美光買回加回 P/B；設備分頁（設備市場、Advantest） | v0.5 |
+| `advantest/` | Advantest（6857.T）：SoC／記憶體測試機收支與 P/E 估值；三情境、對帳、敏感度；見 `advantest/README.md` | 獨立產生器（比照 `tsmc/`；AI 半導體 Project 步驟 5 第一家公司） | v0.2.1（成品：`advantest/dist/20261023_Advantest模型_v0.2.1.xlsx`；設備股共用循環位置規則） |
+| `disco/` | Disco（6146.T）：研削／切割裝置與消耗品收支、P/E 估值；HBM 工序與 CoWoS 片數驅動、三情境、混合鍵合開關、對帳、敏感度；見 `disco/README.md` | 獨立產生器（比照 `advantest/`；AI 半導體 Project 步驟 5 第二家公司） | v0.1.1（成品：`disco/dist/20261023_Disco模型_v0.1.1.xlsx`；FY2026 錨定公司資料、設備股共用循環位置規則） |
+| `markets/overview/` | AI 半導體總覽儀表板 | 彙整橋接表、記憶體、網通、台積電模型；估值規則；記憶體三家 P/E 對照、美光買回加回 P/B；設備分頁（設備市場、Advantest、Disco；設備股共用循環位置規則） | v0.6 |
 
 規則：
 - 事實來源與分層：算力相關的產業與物理層資料取自 Tokenomics（`YinchenChang/Tokenomics` 的 Interface／L1／SRC，X8）；公司專屬資料放各公司的 `company.json` 與 `data/`。

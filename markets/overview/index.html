@@ -47,7 +47,7 @@
 <div class="ai">
   <header class="ai-head">
     <h1 id="title">AI 半導體價值鏈</h1>
-    <p class="muted">每 GW 算力支出分到哪裡，以及記憶體、網通、晶圓代工、設備四個區塊各自的核心問題。數字來自 company-models 的模型成品（Tokenomics v19.0；橋接表 v0.2、記憶體樣板 v0.3、網通 v0.2.1、台積電 v0.2、設備 v0.1.1、Advantest v0.1；總覽 v0.4）；股價為 2026-10-07／08 收盤。點任一數字可看來源。</p>
+    <p class="muted">每 GW 算力支出分到哪裡，以及記憶體、網通、晶圓代工、設備四個區塊各自的核心問題。數字來自 company-models 的模型成品（Tokenomics v19.0；橋接表 v0.2、記憶體樣板 v0.3、網通 v0.2.1、台積電 v0.2、設備 v0.1.2、Advantest v0.2.1、Disco v0.1.1；總覽 v0.6）；股價為 2026-10-07／08 收盤。點任一數字可看來源。</p>
   </header>
 
   <nav class="ai-tabs" role="tablist" aria-label="區塊">
@@ -94,7 +94,7 @@
         <span class="muted">設備</span>
         <h3>AI 資本支出流到設備商多少？2027 還是 2028 見頂？</h3>
         <p class="verdict">照現有擴產計畫，2028 年以後仍在增加；2027 年見頂需要 2028 年資本支出縮手。</p>
-        <p>設備市場 2027 年 <b class="num" data-source="equip_scen" data-field="total" data-where="key=A 2027" data-fmt="usdb">—</b>，AI 相關增量占總增量 <span class="num" data-source="equip_scen" data-field="ai_inc_share" data-where="key=A 2027" data-fmt="pct0">—</span>。情境 A 見頂 <span class="num" data-source="equip_scen" data-field="peak" data-where="key=A 2025">—</span> 年、B <span class="num" data-source="equip_scen" data-field="peak" data-where="key=B 2025">—</span> 年、C <span class="num" data-source="equip_scen" data-field="peak" data-where="key=C 2025">—</span> 年。Advantest 依規則（FY2027 × 25 分位 P/E）為 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=Advantest 見頂" data-fmt="spct">—</b>。</p>
+        <p>設備市場 2027 年 <b class="num" data-source="equip_scen" data-field="total" data-where="key=A 2027" data-fmt="usdb">—</b>，AI 相關增量占總增量 <span class="num" data-source="equip_scen" data-field="ai_inc_share" data-where="key=A 2027" data-fmt="pct0">—</span>。情境 A 見頂 <span class="num" data-source="equip_scen" data-field="peak" data-where="key=A 2025">—</span> 年、B <span class="num" data-source="equip_scen" data-field="peak" data-where="key=B 2025">—</span> 年、C <span class="num" data-source="equip_scen" data-field="peak" data-where="key=C 2025">—</span> 年。依設備股共用規則（FY2027 在 A、B 為中段、C 為見頂），Advantest 為 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=Advantest A" data-fmt="spct">—</b>（A）／<span class="num" data-source="valuation" data-field="vs_px" data-where="key=Advantest C" data-fmt="spct">—</span>（C），Disco 為 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=Disco A" data-fmt="spct">—</b>（A）／<span class="num" data-source="valuation" data-field="vs_px" data-where="key=Disco C" data-fmt="spct">—</span>（C）。</p>
         <button type="button" data-goto="equipment">看設備</button>
       </div>
     </div>
@@ -263,7 +263,7 @@
     <div class="q">
       <span class="eyebrow">核心問題 3</span>
       <h2>日美荷設備商，誰的份額與毛利守得住？</h2>
-      <p>第一家公司樣板是 Advantest（SoC 測試機市占約三分之二）。盈餘由 AI 加速器的測試需求決定；情境 C 加入 Teradyne 搶回份額。其他設備商尚未建模。</p>
+      <p>已建模 Advantest（SoC 測試機市占約三分之二；盈餘由 AI 加速器的測試需求決定，情境 C 加入 Teradyne 搶回份額）與 Disco（研削／切割，AI 約占兩成；HBM 工序、CoWoS 片數與非 AI 後段）。其他設備商尚未建模。</p>
     </div>
     <div class="grid">
       <div class="card" id="card-adv-eps">
@@ -274,8 +274,12 @@
       </div>
       <div class="card" id="card-adv-val">
         <h2>Advantest 依規則的隱含股價</h2>
-        <p>FY2027 歸為見頂年，取 9 年 P/E 的 25 分位 <span class="num" data-source="valuation" data-field="multiple" data-where="key=Advantest 見頂" data-fmt="x">—</span>：隱含 ¥<b class="num" data-source="valuation" data-field="implied_px" data-where="key=Advantest 見頂" data-fmt="n0">—</b>，相對現價 ¥<span class="num" data-source="valuation" data-field="px" data-where="key=Advantest 見頂" data-fmt="n0">—</span> 為 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=Advantest 見頂" data-fmt="spct">—</b>。現價約為 FY2027 EPS（A）的 <span class="num" data-source="valuation" data-field="px_multiple" data-where="key=Advantest 見頂" data-fmt="x">—</span>，遠期 P/E <span class="num" data-source="valuation" data-field="fwd_pe" data-where="key=Advantest 見頂" data-fmt="x">—</span>。</p>
+        <p>設備股共用規則：各情境見頂年度讀設備市場模型（A 2029、B 2028、C 2027），所以 FY2027 在 A、B 為中段（9 年 P/E 中位數 <span class="num" data-source="valuation" data-field="multiple" data-where="key=Advantest A" data-fmt="x">—</span>）、C 為見頂（25 分位 <span class="num" data-source="valuation" data-field="multiple" data-where="key=Advantest C" data-fmt="x">—</span>）。隱含 ¥<b class="num" data-source="valuation" data-field="implied_px" data-where="key=Advantest A" data-fmt="n0">—</b>（A）／¥<span class="num" data-source="valuation" data-field="implied_px" data-where="key=Advantest B" data-fmt="n0">—</span>（B）／¥<span class="num" data-source="valuation" data-field="implied_px" data-where="key=Advantest C" data-fmt="n0">—</span>（C），相對現價 ¥<span class="num" data-source="valuation" data-field="px" data-where="key=Advantest A" data-fmt="n0">—</span> 為 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=Advantest A" data-fmt="spct">—</b>／<span class="num" data-source="valuation" data-field="vs_px" data-where="key=Advantest B" data-fmt="spct">—</span>／<span class="num" data-source="valuation" data-field="vs_px" data-where="key=Advantest C" data-fmt="spct">—</span>。現價約為 FY2027 EPS（A）的 <span class="num" data-source="valuation" data-field="px_multiple" data-where="key=Advantest A" data-fmt="x">—</span>，遠期 P/E <span class="num" data-source="valuation" data-field="fwd_pe" data-where="key=Advantest A" data-fmt="x">—</span>。</p>
         <p class="muted">和記憶體一樣，結論取決於歷史倍數是否適用：過去 9 年的 P/E 形成於成長遠低於現在的時期。實績與指引尚待以公司原文複核。</p>
+      </div>
+      <div class="card" id="card-disco-val">
+        <h2>Disco 依規則的隱含股價</h2>
+        <p>研削／切割裝置與消耗品；AI 裝置約占營收兩成（FY2025 約 21%，disco/README.md）。FY2026 錨定公司上半實績與第三季指引。同一規則下，FY2027 EPS ¥<span class="num" data-source="valuation" data-field="basis" data-where="key=Disco A" data-fmt="n0">—</span>（A）／¥<span class="num" data-source="valuation" data-field="basis" data-where="key=Disco B" data-fmt="n0">—</span>（B）／¥<span class="num" data-source="valuation" data-field="basis" data-where="key=Disco C" data-fmt="n0">—</span>（C），10 年 P/E 中位數 <span class="num" data-source="valuation" data-field="multiple" data-where="key=Disco A" data-fmt="x">—</span>、25 分位 <span class="num" data-source="valuation" data-field="multiple" data-where="key=Disco C" data-fmt="x">—</span>：隱含 ¥<b class="num" data-source="valuation" data-field="implied_px" data-where="key=Disco A" data-fmt="n0">—</b>／¥<span class="num" data-source="valuation" data-field="implied_px" data-where="key=Disco B" data-fmt="n0">—</span>／¥<span class="num" data-source="valuation" data-field="implied_px" data-where="key=Disco C" data-fmt="n0">—</span>，相對現價 ¥<span class="num" data-source="valuation" data-field="px" data-where="key=Disco A" data-fmt="n0">—</span> 為 <b class="num" data-source="valuation" data-field="vs_px" data-where="key=Disco A" data-fmt="spct">—</b>／<span class="num" data-source="valuation" data-field="vs_px" data-where="key=Disco B" data-fmt="spct">—</span>／<span class="num" data-source="valuation" data-field="vs_px" data-where="key=Disco C" data-fmt="spct">—</span>。</p>
       </div>
     </div>
   </section>
@@ -286,11 +290,12 @@
       <h2>估值規則</h2>
       <ul class="rule-list">
         <li>合理倍數＝該公司 10 年（2016–2025 年底）倍數的分位：見頂年 25 分位、中段中位數、谷底 75 分位。記憶體用 P/B，台積電用 P/E。</li>
-        <li>循環位置的歸類：記憶體 2027 年為見頂年（三個情境共用），2028 年情境 C 為谷底；台積電 2027 年為中段。這是套用規則時的判斷，可以改。</li>
+        <li>循環位置的歸類：記憶體 2027 年為見頂年（三個情境共用），2028 年情境 C 為谷底；台積電 2027 年為中段；設備股依下方共用規則。這是套用規則時的判斷，可以改。</li>
         <li>兩個來源時，各分位取兩者平均；三星只有一個完整來源，中位數以 GuruFocus（1.44）核對。</li>
         <li>美光的歷史倍數以會計年度（8 月底）為主。另列兩種對照（Andy 2026-10-22）：P/E＝P/B × 權益 ÷ 歸屬淨利（SEC 10-K；FY2016、FY2023 虧損不計，FY2024 136x 保留）；買回加回 P/B＝市值 ÷（權益＋庫藏股），預測年再加回模型買回（FY2026 年底庫藏股未公布，用 FY2025 的 $7.85B，偏低）。</li>
         <li>SK 海力士、三星的 P/E 對照（Andy 2026-10-22）：年底 P/E 取 companiesmarketcap 2016–2025，虧損年（SK 海力士 2023）不計；2021–2025 以 stockanalysis 核對（差距 ≤ 8%）；2016–2025 另以 DART 合併財報換算（P/B × 歸屬權益 ÷ 歸屬淨利）核對，差距超過 15% 的只有三星 2016（<span class="num" data-source="kr_pe_check" data-field="gap" data-where="company=三星電子（P/E）&amp;year=2016" data-fmt="spct1">—</span>），接受原值，對 25 分位的影響約 ±5%。</li>
-        <li>Advantest（2026-10-22）：P/E＝日曆年底收盤價 ÷ 當期會計年度基本 EPS（自算，2017–2025 共 9 年；2016 年底股價未找到）。FY2027 歸為見頂年。</li>
+        <li>Advantest（2026-10-22）：P/E＝日曆年底收盤價 ÷ 當期會計年度基本 EPS（自算，2017–2025 共 9 年；2016 年底股價未找到）。Disco（2026-10-23）同一定義，2016–2025 共 10 年。</li>
+        <li>設備股共用的循環位置規則（2026-10-23）：各情境的見頂年度讀設備市場模型（markets/equipment：A 2029、B 2028、C 2027），會計年度 FY(t) 對照日曆年 t，早於見頂年＝中段、等於＝見頂、晚於＝谷底。FY2027 因此在 A、B 為中段（中位數）、C 為見頂（25 分位）。Advantest 先前三情境都當見頂年，已改用此規則。實作：tools/cycle_position.py；各公司 Val 頁算出規則值，總覽直接讀。</li>
         <li>限制：P/B 分位來自 ROE 0–44% 的十年，用在 ROE 50–90% 的年度會低估；P/E 分位在見頂年取低分位，等於假設市場仍把高峰盈餘當一次性。兩者是不同的問題：P/B 問「淨值撐不撐得住」，P/E 問「高峰盈餘值多少」。</li>
       </ul>
     </div>

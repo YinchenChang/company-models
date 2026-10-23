@@ -1,6 +1,8 @@
 """AI 半導體總覽：從各模型的重算 xlsx 抽取 HTML 所需數字，輸出 data.json。
 只讀模型成品（dist/*.xlsx 的快取值），不重算、不改模型。估值規則（Andy 2026-10-13）：
 合理倍數＝10 年（2016–2025 年底）倍數區間內依循環位置取分位：見頂年 25 分位、中段中位數、谷底 75 分位。
+設備股（Advantest、Disco）的循環位置用共用規則（tools/cycle_position.py，2026-10-23）：各情境見頂年度讀設備市場模型，
+FY(t) 早於見頂年＝中段、等於＝見頂、晚於＝谷底；本檔讀各公司 Val 頁依規則算出的「規則值」列，不在這裡另判。
 """
 import json, pathlib, numpy as np, openpyxl
 
@@ -13,7 +15,8 @@ F = {
     "mu": ROOT / "micron/dist/20261023_美光模型_v0.3.xlsx",
     "tsmc": ROOT / "tsmc/dist/20261022_台積電模型_v0.2.xlsx",
     "eq": ROOT / "markets/equipment/dist/20261023_半導體設備市場模型_v0.1.2.xlsx",
-    "adv": ROOT / "advantest/dist/20261023_Advantest模型_v0.2.xlsx",
+    "adv": ROOT / "advantest/dist/20261023_Advantest模型_v0.2.1.xlsx",
+    "disco": ROOT / "disco/dist/20261023_Disco模型_v0.1.1.xlsx",
     "eq_readme": ROOT / "markets/equipment/README.md",
 }
 
@@ -389,13 +392,35 @@ for k, (nm, v_, ps) in kr_pe.items():
                     "hist_min": ps["min"], "hist_max": ps["max"], "key": f"{nm} {case}", "case": case, "position": pos, "multiple": ps[q],
                     "basis_label": bl, "basis": round(basis, 2), "implied_px": round(ip, 1), "vs_px": round(ip / e["px"] - 1, 3),
                     "px_multiple": round(e["px"] / basis, 2)})
-for case, pos, q, bl, basis in (("見頂", "見頂年 → 25 分位", "p25", "FY2027 EPS（A）", eA27), ("中段", "中段 → 中位數", "p50", "FY2027 EPS（A）", eA27),
-                                ("谷底", "谷底 → 75 分位", "p75", "FY2028 EPS（C）", eC28)):
-    ip = adv_ps[q] * basis
-    val.append({"company": "Advantest", "metric": "P/E", "ccy": "JPY", "px": adv_px, "p25": adv_ps["p25"], "p50": adv_ps["p50"], "p75": adv_ps["p75"],
-                "hist_min": adv_ps["min"], "hist_max": adv_ps["max"], "key": f"Advantest {case}", "case": case, "position": pos, "multiple": adv_ps[q],
-                "basis_label": bl, "basis": round(basis, 2), "implied_px": round(ip, 1), "vs_px": round(ip / adv_px - 1, 3), "px_multiple": round(adv_px / basis, 2),
-                "fwd_pe": adv_fpe})
+POS = {"見頂": "見頂年 → 25 分位", "中段": "中段 → 中位數", "谷底": "谷底 → 75 分位"}
+def rule_rows(wbk, label_px):
+    """讀公司 Val 頁的「規則值」列（情境、EPS、判定、倍數、隱含股價、相對現價）。"""
+    out = []
+    for r in wbk["Val"].iter_rows():
+        if r[1].value == "FY2027" and isinstance(r[3].value, str) and r[3].value.startswith("規則值："):
+            out.append({"scenario": r[0].value, "eps": r[2].value, "case": r[3].value.split("：")[1], "multiple": r[4].value, "implied": r[5].value})
+    assert [x["scenario"] for x in out] == ["A", "B", "C"], out
+    return out
+for co, wbk, ps_, px_, fpe_ in (("Advantest", wa, adv_ps, adv_px, adv_fpe), ("Disco", None, None, None, None)):
+    if co == "Disco":
+        wbk = openpyxl.load_workbook(F["disco"], data_only=True)
+        dv = wbk["Val"]; hvals = []
+        for r in dv.iter_rows(min_row=6, max_row=15):
+            if isinstance(r[7].value, (int, float)): hvals.append((int(str(r[0].value)[:4]), round(r[7].value, 2)))
+        def dget(label):
+            for r in dv.iter_rows():
+                if r[0].value == label: return r[1].value
+        ps_ = {"p25": round(dget("25 分位"), 2), "p50": round(dget("中位數"), 2), "p75": round(dget("75 分位"), 2),
+               "min": min(x for _, x in hvals), "max": max(x for _, x in hvals)}
+        px_ = dget("現價（2026-10-22 收盤）"); fpe_ = dget("遠期 P/E：stockanalysis（共識）")
+        disco_hist = hvals
+    for x in rule_rows(wbk, None):
+        assert abs(x["multiple"] - ps_[{"見頂": "p25", "中段": "p50", "谷底": "p75"}[x["case"]]]) < 0.01, (co, x)
+        val.append({"company": co, "metric": "P/E", "ccy": "JPY", "px": px_, "p25": ps_["p25"], "p50": ps_["p50"], "p75": ps_["p75"],
+                    "hist_min": ps_["min"], "hist_max": ps_["max"], "key": f"{co} {x['scenario']}", "case": x["case"], "scenario": x["scenario"],
+                    "position": f"情境 {x['scenario']}：" + POS[x["case"]], "multiple": round(x["multiple"], 2),
+                    "basis_label": f"FY2027 EPS（{x['scenario']}）", "basis": round(x["eps"], 2), "implied_px": round(x["implied"], 1),
+                    "vs_px": round(x["implied"] / px_ - 1, 3), "px_multiple": round(px_ / x["eps"], 2), "fwd_pe": fpe_})
 dump("valuation", val)
 
 mh = []
@@ -408,12 +433,26 @@ for y_, v_ in mu_pba.items(): mh.append({"company": "美光（買回加回 P/B�
 for k, (nm, v_, ps) in kr_pe.items():
     for y_, x in v_.items(): mh.append({"company": nm, "metric": "P/E", "year": y_, "source": "companiesmarketcap", "multiple": x})
 for y_, x in adv_pe_hist: mh.append({"company": "Advantest", "metric": "P/E", "year": y_, "source": "年底股價 ÷ 當期 FY 基本 EPS（自算）", "multiple": x})
+for y_, x in disco_hist: mh.append({"company": "Disco", "metric": "P/E", "year": y_, "source": "年底股價 ÷ 當期 FY 基本 EPS（自算）", "multiple": x})
 dump("mult_hist", mh)
 dump("equip_scen", eq_rows)
 dump("equip_calib", [{k: (round(v, 4) if isinstance(v, float) else v) for k, v in calib.items()}])
 dump("equip_recon", eq_recon)
 dump("equip_bottle", bt)
 dump("adv_pl", adv)
+pdz = openpyxl.load_workbook(F["disco"], data_only=True)["PL"]; sc = None; dpl = []
+for r in pdz.iter_rows(min_row=4, max_row=60):
+    a, u = r[0].value, r[1].value
+    if isinstance(a, str) and a.startswith("情境 "):
+        sc = a[-1]; continue
+    k = {("營收", "¥B"): "rev", ("營業利益", "¥B"): "op", ("營業利益率", "%"): "opm", ("EPS", "¥"): "eps", ("AI 裝置占營收", "%"): "ai_share"}.get((str(a).strip(), u)) if sc else None
+    if k:
+        for i, fy in enumerate(["FY2025", "FY2026", "FY2027", "FY2028", "FY2029"]):
+            row = next((x for x in dpl if x["scenario"] == sc and x["fy"] == fy), None)
+            if row is None:
+                row = {"key": f"{sc} {fy}", "scenario": sc, "fy": fy}; dpl.append(row)
+            row[k] = round(r[2 + i].value, 3)
+dump("disco_pl", dpl)
 dump("kr_pe_check", kr_chk)
 dump("mu_hist", [{"fy": y_, "pb": pb, "equity": e, "treasury": t, "net_income": ni, "roe": round(ni / e, 3),
                   "pe": (round(pb * e / ni, 2) if ni > 0 else None), "pb_adj": round(pb * e / (e + t), 3)} for y_, (pb, e, t, ni) in MU_HIST.items()])
