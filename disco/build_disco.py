@@ -1,4 +1,4 @@
-# Disco（6146.T）收支與估值模型 v0.1.1（AI 半導體 Project 步驟 5：設備與材料——第二家公司）
+# Disco（6146.T）收支與估值模型 v0.1.2（AI 半導體 Project 步驟 5：設備與材料——第二家公司）
 # 用法：python3 disco/build_disco.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度 4 月到隔年 3 月：FY2025＝2025-04～2026-03（公司「2026年3月期」）。金額：十億日圓（¥B）。
 # 結構比照 advantest/build_advantest.py：In、Q、Hist、Drv（驅動推導）、PL、Val、Recon、Sens、Sources、README。
@@ -578,7 +578,8 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 130
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
 PROP = "Disco 的營收由需要研削與切割的晶圓次數驅動，AI 只占約兩成；問題是 HBM 堆疊與先進封裝帶來的增量，能否抵過非 AI 後段的循環，撐住目前約 41 倍的近 12 月本益比？"
-lines = [("Disco（6146.T）收支與估值模型 v0.1.1（AI 半導體 Project 步驟 5：設備與材料）　2026-10-23", True),
+lines = [("Disco（6146.T）收支與估值模型 v0.1.2（AI 半導體 Project 步驟 5：設備與材料）　2026-10-23", True),
+ ("v0.1.2（2026-10-23）：引用的上游成品檔名更新（SK 海力士 v0.4.1、美光 v0.3.1、三星 v0.2.1、台積電 v0.2.1 升版）；所有數值不變。", False),
  ("模型命題：" + PROP, False),
  ("註：41 倍＝現價 ¥51,230 ÷ FY2025 EPS ¥1,249.84（上一個會計年度）；嚴格的近 12 月 EPS（含 FY2026 上半）為 1,474.98，對應 34.7 倍（Val 頁）。", False), ("", False),
  ("驅動因子 → 推導量（因果方向：左邊決定右邊）", True),

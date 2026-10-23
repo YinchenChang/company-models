@@ -1,14 +1,18 @@
-# markets/equipment — 半導體設備市場模型 v0.1.2
+# markets/equipment — 半導體設備市場模型 v0.1.3
 
 AI 半導體 Project 步驟 5（設備與材料）的設備部分。**設備需求＝為滿足記憶體、代工擴產所需的資本支出 × 設備占比。** 回答核心問題 1（循環在 2027 還是 2028 見頂）；核心問題 2、3 只做瓶頸表；公司份額與毛利留給公司層。
 
-- 建置：`python3 markets/equipment/build_equipment.py raw.xlsx`，再以 LibreOffice headless 重算（`soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`），錯誤格須為 0。成品：`dist/20261023_半導體設備市場模型_v0.1.2.xlsx`。CI：`.github/workflows/ai-semis-build.yml`（重建、錯誤格 0、逐格比對 dist）。
+- 建置：`python3 markets/equipment/build_equipment.py raw.xlsx`，再以 LibreOffice headless 重算（`soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`），錯誤格須為 0。成品：`dist/20261023_半導體設備市場模型_v0.1.3.xlsx`。CI：`.github/workflows/ai-semis-build.yml`（重建、錯誤格 0、逐格比對 dist）。
 - 頁面：README、In（輸入、標記、兩個來源）、Mkt（SEMI 分項、記憶體、代工邏輯、測試封裝、三情境、摘要）、TSMC（台積電設備占比證據，v0.1.2 新增）、Recon、Sens、Sources。
 - 取數：skhynix、micron、samsung（只記憶體）、tsmc 的 `dist/*.xlsx`「資本支出」列（三情境相同，建置時檢查）；不修改這些模型。
 
 **v0.1.2（2026-10-23）：台積電設備占比查證，數值不變。** 結論：台積電維持 64%（Analogy），只把區間由 58–70% 改為 50–75%；三情境 2026–2029 設備總額與見頂年度與 v0.1.1 逐格相同（Mkt 頁 0 差異）。證據與推論見下方「台積電設備占比查證」與 TSMC 頁；Sens 新增台積電 50%／75%／45.5%（比照 SK、三星）與扣除先進封裝光罩 15%／20% 的三情境對照。
 
 **v0.1.1（2026-10-22）：** 只改來源文字，數值不變。In 頁與本檔中標為「使用者提供」的來源，改寫為原始來源：Lam 2026 WFE 低 150B → Lam FQ4-26 法說逐字稿（Investing.com）；KLA 2026 低 150B、2027 約 190B → KLA FQ4-26 法說摘要（社群摘要，弱）；Morgan Stanley 202／227 → itiger 二手轉述（2026-07-06）；SEMI 2027 前段 +21.8% → SEMI 新聞稿。重建後與 v0.1 的數值格差異為 0。
+
+## v0.1.3（2026-10-23）：上游檔名更新
+
+引用的上游成品升版（SK 海力士 v0.4.1、美光 v0.3.1、三星 v0.2.1、台積電 v0.2.1；十年倍數與規則值移入它們的 Val 頁），本模型 In 頁的來源檔名文字隨之更新；**所有數值不變**（與 v0.1.2 逐格比對，數值差異 0）。
 
 ## 結構（v5：以 2025 實績校準）
 

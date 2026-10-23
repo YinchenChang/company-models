@@ -10,13 +10,13 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 F = {
     "bridge": ROOT / "markets/chip_bridge/dist/20261023_晶片內容橋接表_v0.2.1.xlsx",
     "net": ROOT / "markets/network/dist/20261023_AI網通市場模型_v0.2.2.xlsx",
-    "sk": ROOT / "skhynix/dist/20261023_SK海力士模型_v0.4.xlsx",
-    "ss": ROOT / "samsung/dist/20261023_三星電子模型_v0.2.xlsx",
-    "mu": ROOT / "micron/dist/20261023_美光模型_v0.3.xlsx",
-    "tsmc": ROOT / "tsmc/dist/20261022_台積電模型_v0.2.xlsx",
-    "eq": ROOT / "markets/equipment/dist/20261023_半導體設備市場模型_v0.1.2.xlsx",
-    "adv": ROOT / "advantest/dist/20261023_Advantest模型_v0.2.1.xlsx",
-    "disco": ROOT / "disco/dist/20261023_Disco模型_v0.1.1.xlsx",
+    "sk": ROOT / "skhynix/dist/20261023_SK海力士模型_v0.4.1.xlsx",
+    "ss": ROOT / "samsung/dist/20261023_三星電子模型_v0.2.1.xlsx",
+    "mu": ROOT / "micron/dist/20261023_美光模型_v0.3.1.xlsx",
+    "tsmc": ROOT / "tsmc/dist/20261023_台積電模型_v0.2.1.xlsx",
+    "eq": ROOT / "markets/equipment/dist/20261023_半導體設備市場模型_v0.1.3.xlsx",
+    "adv": ROOT / "advantest/dist/20261023_Advantest模型_v0.2.2.xlsx",
+    "disco": ROOT / "disco/dist/20261023_Disco模型_v0.1.2.xlsx",
     "eq_readme": ROOT / "markets/equipment/README.md",
 }
 
