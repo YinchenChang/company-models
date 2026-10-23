@@ -51,3 +51,16 @@ def rule_text(peaks):
 def fy2027_text(peaks):
     """FY2027 各情境的判定（說明用）。"""
     return "、".join(f"{s} {classify(2027, peaks[s])}" for s in SC)
+
+
+# ---- 會計年度與日曆年錯開的公司（例：NVIDIA，FY(t)＝t−1 年 2 月～t 年 1 月，約等於日曆年 t−1） ----
+# 設備股的函式（上方）維持原狀；錯開的公司用下面的包裝函式，lag＝會計年度比對應日曆年晚幾年（NVIDIA＝1）。
+# 判定改成 classify(fy − lag, peak)：FY(t) 對照日曆年 t−lag 再與見頂年度比較。
+def classify_lag(fy, peak, lag=1):
+    """Python 版：FY(fy) 對照日曆年 fy−lag；其餘規則同 classify。"""
+    return classify(fy - lag, peak)
+
+
+def excel_rule_lag(fy_cell, peak_name, lag=1):
+    """Excel 版公式字串（不含等號）：與 classify_lag 相同。"""
+    return excel_rule(f"({fy_cell}-{lag})", peak_name)
