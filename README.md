@@ -22,7 +22,7 @@
 | `tsmc/` | 台積電（2330.TW） | 獨立產生器（CoWoS 供需上限＋損益估值；AI 半導體 Project） | v0.2.1 |
 | `markets/equipment/` | 半導體設備市場模型：記憶體、代工邏輯資本支出 → 設備需求；三情境、對帳、瓶頸表 | 新建（AI 半導體 Project 步驟 5） | v0.1.3（成品：`markets/equipment/dist/20261023_半導體設備市場模型_v0.1.3.xlsx`；台積電設備占比查證，數值不變） |
 | `advantest/` | Advantest（6857.T）：SoC／記憶體測試機收支與 P/E 估值；三情境、對帳、敏感度；見 `advantest/README.md` | 獨立產生器（比照 `tsmc/`；AI 半導體 Project 步驟 5 第一家公司） | v0.2.2（成品：`advantest/dist/20261023_Advantest模型_v0.2.2.xlsx`、`.html`；設備股共用循環位置規則；HTML 展示層） |
-| `disco/` | Disco（6146.T）：研削／切割裝置與消耗品收支、P/E 估值；HBM 工序與 CoWoS 片數驅動、三情境、混合鍵合開關、對帳、敏感度；見 `disco/README.md` | 獨立產生器（比照 `advantest/`；AI 半導體 Project 步驟 5 第二家公司） | v0.1.2（成品：`disco/dist/20261023_Disco模型_v0.1.2.xlsx`；FY2026 錨定公司資料、設備股共用循環位置規則） |
+| `disco/` | Disco（6146.T）：研削／切割裝置與消耗品收支、P/E 估值；HBM 工序與 CoWoS 片數驅動、三情境、混合鍵合開關、對帳、敏感度；見 `disco/README.md` | 獨立產生器（比照 `advantest/`；AI 半導體 Project 步驟 5 第二家公司） | v0.1.3（成品：`disco/dist/20261023_Disco模型_v0.1.3.xlsx`；FY2026 錨定公司資料、設備股共用循環位置規則） |
 | `markets/overview/` | AI 半導體總覽儀表板 | 彙整橋接表、記憶體、網通、台積電模型；估值規則；記憶體三家 P/E 對照、美光買回加回 P/B；設備分頁（設備市場、Advantest、Disco；設備股共用循環位置規則） | v0.6 |
 
 規則：

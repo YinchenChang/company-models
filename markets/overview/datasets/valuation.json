@@ -583,10 +583,10 @@
 "position": "情境 B：中段 → 中位數",
 "multiple": 28.11,
 "basis_label": "FY2027 EPS（B）",
-"basis": 1619.64,
-"implied_px": 45528.3,
-"vs_px": -0.111,
-"px_multiple": 31.63,
+"basis": 1587.94,
+"implied_px": 44637.3,
+"vs_px": -0.129,
+"px_multiple": 32.26,
 "fwd_pe": 28.33
 },
 {
@@ -605,10 +605,10 @@
 "position": "情境 C：見頂年 → 25 分位",
 "multiple": 19.6,
 "basis_label": "FY2027 EPS（C）",
-"basis": 1475.71,
-"implied_px": 28930.5,
-"vs_px": -0.435,
-"px_multiple": 34.72,
+"basis": 1416.69,
+"implied_px": 27773.6,
+"vs_px": -0.458,
+"px_multiple": 36.16,
 "fwd_pe": 28.33
 }
 ]

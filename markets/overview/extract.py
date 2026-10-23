@@ -16,7 +16,7 @@ F = {
     "tsmc": ROOT / "tsmc/dist/20261023_台積電模型_v0.2.1.xlsx",
     "eq": ROOT / "markets/equipment/dist/20261023_半導體設備市場模型_v0.1.3.xlsx",
     "adv": ROOT / "advantest/dist/20261023_Advantest模型_v0.2.2.xlsx",
-    "disco": ROOT / "disco/dist/20261023_Disco模型_v0.1.2.xlsx",
+    "disco": ROOT / "disco/dist/20261023_Disco模型_v0.1.3.xlsx",
     "eq_readme": ROOT / "markets/equipment/README.md",
 }
 
