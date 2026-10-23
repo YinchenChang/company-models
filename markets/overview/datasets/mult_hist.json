@@ -733,5 +733,75 @@
 "year": 2025,
 "source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
 "multiple": 38.12
+},
+{
+"company": "Disco",
+"metric": "P/E",
+"year": 2016,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 20.95
+},
+{
+"company": "Disco",
+"metric": "P/E",
+"year": 2017,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 24.21
+},
+{
+"company": "Disco",
+"metric": "P/E",
+"year": 2018,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 16.02
+},
+{
+"company": "Disco",
+"metric": "P/E",
+"year": 2019,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 33.66
+},
+{
+"company": "Disco",
+"metric": "P/E",
+"year": 2020,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 32.01
+},
+{
+"company": "Disco",
+"metric": "P/E",
+"year": 2021,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 19.16
+},
+{
+"company": "Disco",
+"metric": "P/E",
+"year": 2022,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 16.44
+},
+{
+"company": "Disco",
+"metric": "P/E",
+"year": 2023,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 45.0
+},
+{
+"company": "Disco",
+"metric": "P/E",
+"year": 2024,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 37.38
+},
+{
+"company": "Disco",
+"metric": "P/E",
+"year": 2025,
+"source": "年底股價 ÷ 當期 FY 基本 EPS（自算）",
+"multiple": 38.54
 }
 ]
