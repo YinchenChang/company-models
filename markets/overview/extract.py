@@ -6,14 +6,14 @@ import json, pathlib, numpy as np, openpyxl
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 F = {
-    "bridge": ROOT / "markets/chip_bridge/dist/20261022_晶片內容橋接表_v0.2.xlsx",
-    "net": ROOT / "markets/network/dist/20261022_AI網通市場模型_v0.2.1.xlsx",
-    "sk": ROOT / "skhynix/dist/20261022_SK海力士模型_v0.3.1.xlsx",
-    "ss": ROOT / "samsung/dist/20261022_三星電子模型_v0.1.1.xlsx",
-    "mu": ROOT / "micron/dist/20261022_美光模型_v0.2.1.xlsx",
+    "bridge": ROOT / "markets/chip_bridge/dist/20261023_晶片內容橋接表_v0.2.1.xlsx",
+    "net": ROOT / "markets/network/dist/20261023_AI網通市場模型_v0.2.2.xlsx",
+    "sk": ROOT / "skhynix/dist/20261023_SK海力士模型_v0.4.xlsx",
+    "ss": ROOT / "samsung/dist/20261023_三星電子模型_v0.2.xlsx",
+    "mu": ROOT / "micron/dist/20261023_美光模型_v0.3.xlsx",
     "tsmc": ROOT / "tsmc/dist/20261022_台積電模型_v0.2.xlsx",
     "eq": ROOT / "markets/equipment/dist/20261023_半導體設備市場模型_v0.1.2.xlsx",
-    "adv": ROOT / "advantest/dist/20261022_Advantest模型_v0.1.xlsx",
+    "adv": ROOT / "advantest/dist/20261023_Advantest模型_v0.2.xlsx",
     "eq_readme": ROOT / "markets/equipment/README.md",
 }
 
@@ -102,8 +102,10 @@ m = rows(F["sk"], "Mkt")
 D["hbm"] = {"years": [2025, 2026, 2027, 2028, 2029],
             "mkt": {s: [round(x, 1) for x in m[f"HBM 市場（{s}）"][1:6]] for s in "ABC"},
             "price": {s: [round(x, 2) for x in m[f"HBM 單價（{s}）"][1:6]] for s in "ABC"},
-            "supply_eb": [round(x, 2) for x in m["供給"][1:6]],
-            "gap_eb": [None] + [round(x, 2) for x in m["需求 − 供給（>0＝短缺）"][2:6]],
+            "supply_eb": [round(x, 2) for x in m["供給（三情境相同）"][1:6]],
+            "gap_eb": [None] + [round(x, 2) for x in m["需求 − 供給（A；>0＝短缺）"][2:6]],
+            "ship_eb": {s: [round(x, 2) for x in m[f"出貨＝MIN(需求, 供給)（{s}）"][1:6]] for s in "ABC"},
+            "gap_eb_s": {s: [None] + [round(x, 2) for x in m[f"需求 − 供給（{s}；>0＝短缺）"][2:6]] for s in "ABC"},
             "units_m": [None] + [round(x, 1) for x in m["加速器顆數合計"][2:5]]}
 
 # 記憶體三家
@@ -342,7 +344,7 @@ dump("mem_path", [{"quarter": qq, **{f"dram_{s}": D["path"]["dram"][s][i] for s 
 
 h = D["hbm"]
 dump("hbm_mkt", [{"year": y_, **{f"mkt_{s}": h["mkt"][s][i] for s in "ABC"}, **{f"price_{s}": h["price"][s][i] for s in "ABC"},
-                  "supply_eb": h["supply_eb"][i], "gap_eb": h["gap_eb"][i],
+                  "supply_eb": h["supply_eb"][i], **{f"ship_{s}": h["ship_eb"][s][i] for s in "ABC"}, **{f"gap_eb_{s}": h["gap_eb_s"][s][i] for s in "ABC"}, "gap_eb": h["gap_eb"][i],
                   "gap_pct": (round(h["gap_eb"][i] / h["supply_eb"][i], 3) if h["gap_eb"][i] is not None else None)}
                  for i, y_ in enumerate(h["years"])])
 

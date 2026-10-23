@@ -1,4 +1,4 @@
-# Advantest（6857.T）收支與估值模型 v0.1（AI 半導體 Project 步驟 5：設備與材料——第一家公司）
+# Advantest（6857.T）收支與估值模型 v0.2（AI 半導體 Project 步驟 5：設備與材料——第一家公司）
 # 用法：python3 advantest/build_advantest.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度 4 月到隔年 3 月：FY2026＝2026-04～2027-03。金額：日圓十億（¥B）為主，另列美元（US$B）。
 import sys, os, glob
@@ -37,12 +37,13 @@ for k, nm, u, gb, tag, src in MEM.UNITS:
         assert abs(TS[f"u_{k}_{y}"][0] - u[i]) < 1e-9, (k, y)
 
 ws_ = openpyxl.load_workbook(SKH_F, data_only=True)["Mkt"]
-SHIP = None
+SHIP = {}   # HBM 出貨位元（EB），三情境各一列（markets/memory v0.4 起隨情境顆數係數變動）
 for r in ws_.iter_rows():
-    if r[0].value and str(r[0].value).startswith("出貨＝MIN"):
-        SHIP = ([r[2 + j].value for j in range(5)], f"{rel(SKH_F)}｜Mkt!C{r[0].row}:G{r[0].row}")
-        break
-assert SHIP and all(v is not None for v in SHIP[0])
+    lab = str(r[0].value or "")
+    if lab.startswith("出貨＝MIN"):
+        sc_ = lab[-2]
+        SHIP[sc_] = ([r[2 + j].value for j in range(5)], f"{rel(SKH_F)}｜Mkt!C{r[0].row}:G{r[0].row}")
+assert sorted(SHIP) == ["A", "B", "C"] and all(v is not None for sc_ in SHIP for v in SHIP[sc_][0])
 
 ws_ = openpyxl.load_workbook(EQ_F, data_only=True)["Mkt"]
 DRAM = {}; TEST = None; _n = 0
@@ -99,8 +100,9 @@ inp("shC_29", "情境 C：FY2029 市占", "%", 0.51, 0.56, 0.61, "Analogy", "CY2
 inp("sh_mem", "Advantest 記憶體測試機市占（FY2025 實績 ÷ FY2025 市場，Derived）", "%", "=sh_mem-0.05", "=a25_mem/(fmk_mem25*fx)", "=sh_mem+0.05", "Derived", "FY2025 實績（Q 頁）÷（3/4×CY2025＋1/4×CY2026 市場）÷ 匯率", "公司稱 CY2025 記憶體市占略低於前一年（二手轉述）；±5 個百分點為 Assumed")
 inp("w_hbm", "記憶體測試機需求中隨 HBM 位元成長的比重（其餘隨 DRAM 設備支出）", "%", 0.3, 0.5, 0.7, "Assumed", "無：公司稱 HBM 測試機為記憶體成長主力", "第二來源：未找到")
 sec("D. 記憶體（讀 markets/memory 與 markets/equipment 成品；唯讀）")
-for j, y in enumerate((25, 26, 27, 28, 29)):
-    inp(f"hs_{y}", f"HBM 出貨位元 20{y}（EB；三情境相同）", "EB", None, SHIP[0][j], None, "Derived", SHIP[1], "markets/memory Mkt：出貨＝MIN(需求, 供給)")
+for s in SC:
+    for j, y in enumerate((25, 26, 27, 28, 29)):
+        inp(f"hs{s}_{y}", f"HBM 出貨位元 20{y}（EB；{s}）", "EB", None, SHIP[s][0][j], None, "Derived", SHIP[s][1], "markets/memory Mkt：出貨＝MIN(需求 × 情境顆數係數, 供給)；2028–29 隨情境，2026–27 三情境相同")
 for s in SC:
     for j, y in enumerate((25, 26, 27, 28, 29)):
         inp(f"dr{s}_{y}", f"DRAM 設備支出（含 HBM）20{y}（{s}）", "US$B", None, DRAM[s][0][j], None, "Derived", DRAM[s][1], "markets/equipment Mkt（以公司資本支出 × 設備占比推得）")
@@ -304,7 +306,7 @@ def engine(ws, r0, title, P0=None, **over):
     row("nai", "非 AI SoC 測試機市場", "US$B", {cyc(y): f"={P['nonai']}*(1+g_nonai)^{y-2026}" for y in CYS})
     row("soc", "SoC 測試機市場 CY", "US$B", {cyc(y): f"={cyc(y)}{R['ai']}+{cyc(y)}{R['nai']}" for y in CYS}, note="CY2026 ＝ 公司規模（校準）")
     dr = lambda y: f"dr{s}_{y % 100}"
-    row("mem", "記憶體測試機市場 CY", "US$B", {**{cyc(y): f"={P['mkm26']}*({P['w']}*hs_{y%100}/hs_26+(1-{P['w']})*{dr(y)}/{dr(2026)})" for y in CYS[:4]}, "G": f"=F{r}*(1+cy30g)"}, note="CY2026 錨定公司規模；之後＝w×HBM 出貨位元指數＋(1−w)×DRAM 設備支出指數")
+    row("mem", "記憶體測試機市場 CY", "US$B", {**{cyc(y): f"={P['mkm26']}*({P['w']}*hs{s}_{y%100}/hs{s}_26+(1-{P['w']})*{dr(y)}/{dr(2026)})" for y in CYS[:4]}, "G": f"=F{r}*(1+cy30g)"}, note="CY2026 錨定公司規模；之後＝w×HBM 出貨位元指數＋(1−w)×DRAM 設備支出指數")
     ws.cell(r, 1, "B. 會計年度（C＝FY2025 … G＝FY2029；FY(t)＝3/4×CY(t)＋1/4×CY(t+1)）").font = BOLD; r += 1
     fy = lambda y: FYC[y]
     row("fsoc", "SoC 測試機市場 FY", "US$B", {"C": f"=fmk_soc25", **{fy(y): f"=0.75*{cyc(y)}{R['soc']}+0.25*{cyc(y+1)}{R['soc']}" for y in range(2026, 2030)}})
@@ -560,7 +562,7 @@ SO.column_dimensions["A"].width = 70; SO.column_dimensions["B"].width = 130
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Advantest（6857.T）收支與估值模型 v0.1（AI 半導體 Project 步驟 5：設備與材料）　2026-10-22", True),
+lines = [("Advantest（6857.T）收支與估值模型 v0.2（AI 半導體 Project 步驟 5：設備與材料）　2026-10-23", True),
  ("模型命題：Advantest 的盈餘由 AI 加速器的 SoC 測試需求決定。每顆晶片的測試時間隨複雜度上升，Advantest 握有約三分之二的市占。股價取決於加速器顆數的成長在 FY2027 之後放緩時，測試機的投資會不會跟著回落。", False), ("", False),
  ("會計年度：4 月到隔年 3 月（FY2026＝2026-04～2027-03）。金額以日圓（¥B）為主，另列美元；匯率基準 ¥150（公司第二季起的假設）放 In 頁。FY2026 第二季預定 2026-10-28 公布，建置日（2026-10-22）尚未公布，故不納入。", False), ("", False),
  ("驅動因子 → 推導量", True),
@@ -570,7 +572,7 @@ lines = [("Advantest（6857.T）收支與估值模型 v0.1（AI 半導體 Projec
  ("情境 A／B／C：顆數係數讀台積電模型成品（2028 ×1.0／0.8／0.6，2029 ×1.0／0.85／0.6）；情境 C 另加 Teradyne 搶回市占（FY2028 61%、FY2029 56%）與價格壓力", False),
  ("Val：P/E 規則——10 年（2016–2025 年底）P/E 分位，見頂年（本模型 FY2027）取 25 分位。Recon：對公司指引、共識、公司市場規模、SEMI。Sens：市占、測試時間係數、顆數情境、營業費用變動比例等", False), ("", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。公司原文（advantest.com）在建置環境無法開啟，數字取自搜尋引擎摘錄，原文待人工複核。", False),
- ("已知限制：(1) 每加權顆測試支出由「公司 CY2026 市場規模 − 非 AI 市場」校準，市場規模為測試機廠自估（Interested-party），非 AI 以 AI 前（CY2021–23）Teradyne 公布的 SoC 測試機市場為參照（Analogy，3.7–4.9）；平行測試效率提升不在基準，只在 Sens 列示；(2) 每顆測試時間係數無實證，只決定世代間相對權重；(3) HBM 出貨位元在 markets/memory 不隨情境變動（供給限制），記憶體測試機的情境差異來自 DRAM 設備支出；(4) 無測試機效率（平行測試）提升的建模，可能高估 CY2027 之後市場；(5) CY2030 無市場層資料，持平假設；(6) 10 年 P/E 缺 2016 年底收盤價；(7) HBM 出貨位元不隨顆數情境變動，屬市場層（markets/memory）待改。", False)]
+ ("已知限制：(1) 每加權顆測試支出由「公司 CY2026 市場規模 − 非 AI 市場」校準，市場規模為測試機廠自估（Interested-party），非 AI 以 AI 前（CY2021–23）Teradyne 公布的 SoC 測試機市場為參照（Analogy，3.7–4.9）；平行測試效率提升不在基準，只在 Sens 列示；(2) 每顆測試時間係數無實證，只決定世代間相對權重；(3) HBM 出貨位元自 markets/memory v0.4 起隨情境顆數係數變動（2028–29）；供給三情境相同、單價假設未重估，B、C 的 HBM 位元與單價同時下修；記憶體測試機的情境差異來自 HBM 出貨位元與 DRAM 設備支出兩條線；(4) 無測試機效率（平行測試）提升的建模，可能高估 CY2027 之後市場；(5) CY2030 無市場層資料，持平假設；(6) 10 年 P/E 缺 2016 年底收盤價。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
 

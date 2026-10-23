@@ -54,10 +54,10 @@
 "position": "谷底 → 75 分位",
 "multiple": 1.61,
 "basis_label": "2028 年底每股淨值（C）",
-"basis": 1111323.23,
-"implied_px": 1789230.4,
-"vs_px": 0.038,
-"px_multiple": 1.55
+"basis": 1094692.47,
+"implied_px": 1762454.9,
+"vs_px": 0.023,
+"px_multiple": 1.57
 },
 {
 "company": "三星電子",
@@ -114,10 +114,10 @@
 "position": "谷底 → 75 分位",
 "multiple": 1.7,
 "basis_label": "2028 年底每股淨值（C）",
-"basis": 209501.19,
-"implied_px": 356152.0,
-"vs_px": 0.359,
-"px_multiple": 1.25
+"basis": 207337.86,
+"implied_px": 352474.4,
+"vs_px": 0.345,
+"px_multiple": 1.26
 },
 {
 "company": "美光",
@@ -174,10 +174,10 @@
 "position": "谷底 → 75 分位",
 "multiple": 1.82,
 "basis_label": "FY2028 年底每股淨值（C）",
-"basis": 270.18,
-"implied_px": 491.7,
-"vs_px": -0.548,
-"px_multiple": 4.03
+"basis": 268.73,
+"implied_px": 489.1,
+"vs_px": -0.55,
+"px_multiple": 4.05
 },
 {
 "company": "台積電",
@@ -294,10 +294,10 @@
 "position": "谷底 → 75 分位",
 "multiple": 16.31,
 "basis_label": "FY2028 EPS（C）",
-"basis": 104.72,
-"implied_px": 1708.0,
-"vs_px": 0.57,
-"px_multiple": 10.39
+"basis": 100.81,
+"implied_px": 1644.2,
+"vs_px": 0.511,
+"px_multiple": 10.79
 },
 {
 "company": "美光（買回加回 P/B）",
@@ -354,10 +354,10 @@
 "position": "谷底 → 75 分位",
 "multiple": 1.77,
 "basis_label": "FY2028 年底調整每股淨值（C）",
-"basis": 455.9,
-"implied_px": 806.9,
-"vs_px": -0.258,
-"px_multiple": 2.39
+"basis": 451.05,
+"implied_px": 798.4,
+"vs_px": -0.266,
+"px_multiple": 2.41
 },
 {
 "company": "SK 海力士（P/E）",
@@ -414,10 +414,10 @@
 "position": "谷底 → 75 分位",
 "multiple": 16.2,
 "basis_label": "2028 EPS（C）",
-"basis": 216843.23,
-"implied_px": 3512860.3,
-"vs_px": 1.039,
-"px_multiple": 7.95
+"basis": 195351.01,
+"implied_px": 3164686.4,
+"vs_px": 0.837,
+"px_multiple": 8.82
 },
 {
 "company": "三星電子（P/E）",
@@ -474,10 +474,10 @@
 "position": "谷底 → 75 分位",
 "multiple": 17.48,
 "basis_label": "2028 EPS（C）",
-"basis": 39081.68,
-"implied_px": 683147.8,
-"vs_px": 1.607,
-"px_multiple": 6.7
+"basis": 36498.16,
+"implied_px": 637987.8,
+"vs_px": 1.435,
+"px_multiple": 7.18
 },
 {
 "company": "Advantest",
@@ -536,10 +536,10 @@
 "position": "谷底 → 75 分位",
 "multiple": 38.12,
 "basis_label": "FY2028 EPS（C）",
-"basis": 824.77,
-"implied_px": 31440.3,
-"vs_px": -0.087,
-"px_multiple": 41.76,
+"basis": 810.57,
+"implied_px": 30898.9,
+"vs_px": -0.103,
+"px_multiple": 42.49,
 "fwd_pe": 37.7
 }
 ]

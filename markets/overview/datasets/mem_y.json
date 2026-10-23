@@ -76,24 +76,24 @@
 "year": 2028,
 "scenario": "B",
 "key": "SK 海力士 2028 B",
-"op_usd_b": 172.6,
-"opm": 0.719,
-"hbm_share": 0.279,
-"bvps": 1202569.98,
-"eps": 334762.92,
-"roe": 0.278
+"op_usd_b": 170.9,
+"opm": 0.718,
+"hbm_share": 0.272,
+"bvps": 1199773.72,
+"eps": 331149.26,
+"roe": 0.276
 },
 {
 "company": "SK 海力士",
 "year": 2029,
 "scenario": "B",
 "key": "SK 海力士 2029 B",
-"op_usd_b": 335.9,
+"op_usd_b": 335.1,
 "opm": 0.808,
-"hbm_share": 0.218,
-"bvps": 1489972.35,
-"eps": 704534.27,
-"roe": 0.473
+"hbm_share": 0.216,
+"bvps": 1488532.31,
+"eps": 702674.02,
+"roe": 0.472
 },
 {
 "company": "SK 海力士",
@@ -112,24 +112,24 @@
 "year": 2028,
 "scenario": "C",
 "key": "SK 海力士 2028 C",
-"op_usd_b": 113.9,
-"opm": 0.638,
-"hbm_share": 0.3,
-"bvps": 1111323.23,
-"eps": 216843.23,
-"roe": 0.195
+"op_usd_b": 102.8,
+"opm": 0.627,
+"hbm_share": 0.237,
+"bvps": 1094692.47,
+"eps": 195351.01,
+"roe": 0.178
 },
 {
 "company": "SK 海力士",
 "year": 2029,
 "scenario": "C",
 "key": "SK 海力士 2029 C",
-"op_usd_b": 245.9,
+"op_usd_b": 228.4,
 "opm": 0.765,
-"hbm_share": 0.236,
-"bvps": 1325325.8,
-"eps": 491843.01,
-"roe": 0.371
+"hbm_share": 0.178,
+"bvps": 1295211.2,
+"eps": 452940.81,
+"roe": 0.35
 },
 {
 "company": "三星電子",
@@ -208,24 +208,24 @@
 "year": 2028,
 "scenario": "B",
 "key": "三星電子 2028 B",
-"op_usd_b": 251.5,
+"op_usd_b": 249.7,
 "opm": 0.719,
-"hbm_share": 0.192,
-"bvps": 226777.16,
-"eps": 59713.18,
-"roe": 0.263
+"hbm_share": 0.187,
+"bvps": 226413.03,
+"eps": 59278.33,
+"roe": 0.262
 },
 {
 "company": "三星電子",
 "year": 2029,
 "scenario": "B",
 "key": "三星電子 2029 B",
-"op_usd_b": 498.3,
+"op_usd_b": 497.6,
 "opm": 0.81,
-"hbm_share": 0.147,
-"bvps": 283932.54,
-"eps": 127969.95,
-"roe": 0.451
+"hbm_share": 0.146,
+"bvps": 283738.13,
+"eps": 127737.78,
+"roe": 0.45
 },
 {
 "company": "三星電子",
@@ -244,24 +244,24 @@
 "year": 2028,
 "scenario": "C",
 "key": "三星電子 2028 C",
-"op_usd_b": 165.1,
-"opm": 0.64,
-"hbm_share": 0.208,
-"bvps": 209501.19,
-"eps": 39081.68,
-"roe": 0.187
+"op_usd_b": 153.8,
+"opm": 0.633,
+"hbm_share": 0.16,
+"bvps": 207337.86,
+"eps": 36498.16,
+"roe": 0.176
 },
 {
 "company": "三星電子",
 "year": 2029,
 "scenario": "C",
 "key": "三星電子 2029 C",
-"op_usd_b": 364.4,
+"op_usd_b": 346.7,
 "opm": 0.77,
-"hbm_share": 0.161,
-"bvps": 251368.61,
-"eps": 89081.07,
-"roe": 0.354
+"hbm_share": 0.118,
+"bvps": 247347.34,
+"eps": 84278.75,
+"roe": 0.341
 },
 {
 "company": "美光",
@@ -340,24 +340,24 @@
 "year": 2028,
 "scenario": "B",
 "key": "美光 2028 B",
-"op_usd_b": 146.1,
+"op_usd_b": 145.4,
 "opm": 0.744,
-"hbm_share": 0.167,
-"bvps": 280.69,
-"eps": 133.13,
-"roe": 0.474
+"hbm_share": 0.164,
+"bvps": 280.45,
+"eps": 132.48,
+"roe": 0.472
 },
 {
 "company": "美光",
 "year": 2029,
 "scenario": "B",
 "key": "美光 2029 B",
-"op_usd_b": 198.3,
+"op_usd_b": 197.8,
 "opm": 0.786,
-"hbm_share": 0.168,
-"bvps": 300.16,
-"eps": 185.8,
-"roe": 0.619
+"hbm_share": 0.166,
+"bvps": 299.96,
+"eps": 185.27,
+"roe": 0.618
 },
 {
 "company": "美光",
@@ -376,23 +376,23 @@
 "year": 2028,
 "scenario": "C",
 "key": "美光 2028 C",
-"op_usd_b": 116.4,
-"opm": 0.7,
-"hbm_share": 0.167,
-"bvps": 270.18,
-"eps": 104.72,
-"roe": 0.388
+"op_usd_b": 112.2,
+"opm": 0.698,
+"hbm_share": 0.139,
+"bvps": 268.73,
+"eps": 100.81,
+"roe": 0.375
 },
 {
 "company": "美光",
 "year": 2029,
 "scenario": "C",
 "key": "美光 2029 C",
-"op_usd_b": 113.6,
-"opm": 0.683,
-"hbm_share": 0.211,
-"bvps": 269.2,
-"eps": 102.16,
-"roe": 0.38
+"op_usd_b": 105.6,
+"opm": 0.677,
+"hbm_share": 0.159,
+"bvps": 266.45,
+"eps": 94.73,
+"roe": 0.356
 }
 ]

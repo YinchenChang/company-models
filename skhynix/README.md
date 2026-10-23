@@ -7,7 +7,7 @@ AI 半導體樣板的第一家公司（之後複製到美光、三星）。
 | 檔案 | 內容 |
 |---|---|
 | `company.py` | 設定檔（只放參數）；結構在 `tools/memory_model/build.py`（記憶體樣板）與 `markets/memory/market.py`（共用市場層） |
-| `dist/20261008_SK海力士模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261023_SK海力士模型_v0.4.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 
 ## 建置
 
@@ -25,6 +25,10 @@ README（命題、驅動 → 推導、驗收清單）、In（輸入、標記、�
 - `markets/chip_bridge` v0.1（Tokenomics v5.27）：每顆 GPU HBM 金額、每顆 GPU 的 NVIDIA 內容。
 - 公司數字：SEC 424B4（2026-07）、6-K 半年報（2026-08-18）、公司法說。
 - SemiAnalysis 未使用。參數不由共識回推；共識只在 Recon 頁事後對照。
+
+## v0.4 變更（2026-10-23）
+
+HBM 出貨位元隨情境（markets/memory v0.4）：2028–29 需求位元 × 情境顆數係數（2028 B 0.8／C 0.6、2029 B 0.85／C 0.6，與台積電、Advantest 同一套），供給與單價假設不變。情境 A 與 2026–27 不變；2028 B／C 營業利益 245.2→242.7／161.7→146.0（兆韓元），2029 B／C 477→476／349→324；2028 C EPS −9.9%。前後對照見 `docs/reports/20261023_HBM情境與TK快照v20.1_報告.md`。
 
 ## v0.3 變更（2026-10-08）
 
