@@ -90,6 +90,7 @@ for r in wsk["Path"].iter_rows(min_row=10, max_row=20):
 assert sorted(HBMP) == list(SC) and sorted(CDX) == list(SC), (HBMP.keys(), CDX.keys())
 
 PEAK, PEAK_SRC = CP.peak_years(ROOT)   # 見頂年度（日曆年）：設備市場模型
+assert tuple(CP.classify_lag(2028, PEAK[s_]) for s_ in ("A", "B", "C")) == ("中段", "中段", "見頂"), PEAK   # 擁有者 2026-10-23 核准的結果：FY2028 在 A、B 為中段、C 為見頂
 
 # ---------------- In ----------------
 IN = wb.active; IN.title = "In"
