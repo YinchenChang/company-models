@@ -102,7 +102,7 @@ jobs:
       - name: HTML 展示層檢核（重現性、抽數、無手寫數字、自含）
         run: |
           # 以 dist 內已提交的 xlsx 產生 HTML，須與已提交的 HTML 逐位元組相同；並逐一回頭比對 xlsx 重算值
-          dirs=$(ls -d */ | tr -d '/' | while read d; do [ -f "$d/html.json" ] && echo "$d"; done)
+          dirs=$(ls */html.json | xargs -n1 dirname)
           python3 tools/company_html/check_company_html.py $dirs
 
       - name: 確認工作樹未被改動
