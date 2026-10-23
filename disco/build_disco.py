@@ -1,4 +1,4 @@
-# Disco（6146.T）收支與估值模型 v0.1.2（AI 半導體 Project 步驟 5：設備與材料——第二家公司）
+# Disco（6146.T）收支與估值模型 v0.1.3（AI 半導體 Project 步驟 5：設備與材料——第二家公司）
 # 用法：python3 disco/build_disco.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度 4 月到隔年 3 月：FY2025＝2025-04～2026-03（公司「2026年3月期」）。金額：十億日圓（¥B）。
 # 結構比照 advantest/build_advantest.py：In、Q、Hist、Drv（驅動推導）、PL、Val、Recon、Sens、Sources、README。
@@ -324,7 +324,7 @@ def engine(ws, r0, title, **over):
     row("aoi", "FY2026 錨點營業利益（上半＋第三季指引＋第四季營收 × m_q4）", "¥B", {"D": f"=q26h1_oi+g3_oi+D{R['a4r']}*{P['m_q4']}"}, fmt="#,##0.0")
     row("ani", "FY2026 錨點淨利（上半＋第三季指引＋第四季營業利益 × 淨利÷營業利益）", "¥B", {"D": f"=q26h1_ni+g3_ni+D{R['a4r']}*{P['m_q4']}*{P['nioi']}"}, fmt="#,##0.0")
     row("sc", "錨點 ÷ 驅動推導（FY2026）", "x", {"D": f"=D{R['arev']}/D{R['revd']}"}, fmt="0.000", note="FY2026 各組成同比例縮放成錨點")
-    sc_ref = f"D{R['sc']}" if s == "A" else "sc_A"   # v0.1.2：B、C 的非 AI 基期一律用「同一組輸入下」情境 A 的 sc（具名範圍 sc_A 指向 PL 區塊 A）
+    sc_ref = f"D{R['sc']}" if s == "A" else "sc_A"   # v0.1.3：B、C 的非 AI 基期一律用「同一組輸入下」情境 A 的 sc（具名範圍 sc_A 指向 PL 區塊 A）
     row("cf", "非 AI 兩項的基期調整（FY2027 起；用情境 A 的 sc）", "x", {"D": f"=1+{P['carry']}*({sc_ref}-1)"}, fmt="0.000", note="anc_carry＝1：非 AI 裝置與非 AI 消耗品以情境 A 的錨定水準為基期（B、C 較大的 sc 來自較低的 AI 驅動推導，不算非 AI）；Sens 案例皆為情境 A，用自己區塊的 sc")
     ws.cell(r, 1, "E. 損益（FY2025 實績；FY2026 錨點；FY2027 起驅動推導）").font = BOLD; r += 1
     mult = lambda y, ai: ("1" if y == 2025 else (f"$D${R['sc']}" if y == 2026 else ("1" if ai else f"$D${R['cf']}")))
@@ -580,7 +580,8 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 130
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
 PROP = "Disco 的營收由需要研削與切割的晶圓次數驅動，AI 只占約兩成；問題是 HBM 堆疊與先進封裝帶來的增量，能否抵過非 AI 後段的循環，撐住目前約 41 倍的近 12 月本益比？"
-lines = [("Disco（6146.T）收支與估值模型 v0.1.2（AI 半導體 Project 步驟 5：設備與材料）　2026-10-23", True),
+lines = [("Disco（6146.T）收支與估值模型 v0.1.3（AI 半導體 Project 步驟 5：設備與材料）　2026-10-23", True),
+ ("v0.1.2（2026-10-23）：引用的上游成品檔名更新（SK 海力士 v0.4.1、美光 v0.3.1、三星 v0.2.1、台積電 v0.2.1 升版）；所有數值不變。", False),
  ("模型命題：" + PROP, False),
  ("註：41 倍＝現價 ¥51,230 ÷ FY2025 EPS ¥1,249.84（上一個會計年度）；嚴格的近 12 月 EPS（含 FY2026 上半）為 1,474.98，對應 34.7 倍（Val 頁）。", False), ("", False),
  ("驅動因子 → 推導量（因果方向：左邊決定右邊）", True),
@@ -592,12 +593,12 @@ lines = [("Disco（6146.T）收支與估值模型 v0.1.2（AI 半導體 Project 
  ("Hist → PL｜毛利率＝a ＋ b × ln 營收、銷管費＝固定＋變動 × 營收（FY2015–FY2025 迴歸）→ 營業利益與營業利益率是結果，不寫死", False),
  ("PL（D 節）｜FY2026 錨點：上半實績＋第三季指引（由公司累計指引推得 132.4／58.1／41.5）＋第四季（＝第三季 ×（1＋g_q4），g_q4 基準 10%，Assumed 0–22%）；各組成同比例縮放成錨點，FY2027 起 AI 兩項回到驅動推導、非 AI 兩項以錨定水準為基期", False),
  ("Val｜10 年 P/E 分位 × FY2027 EPS；循環位置依設備股共用規則（tools/cycle_position.py：見頂年度讀設備市場模型 " + "、".join(f"{s_} {PEAK[s_]}" for s_ in SC) + " → FY2027：" + CP.fy2027_text(PEAK) + "）。Recon｜錨點恆等式、只用 v0.1 驅動的對照、共識。Sens｜一次動一個輸入", False), ("", False),
- ("v0.1.2 變更（2026-10-23）：錨點差額（sc）延續到 FY2027 以後的非 AI 兩項時，三情境一律用情境 A 的 sc（具名範圍 sc_A）。B、C 的 sc 較大（1.078、1.099 vs A 1.055）是因為其 AI 驅動推導較低，不是非 AI 較強；原寫法把這部分算成非 AI、墊高 B、C 的基期。FY2026 不變（三情境仍各自縮放到同一錨點）；情境 A 不變；Sens 各案例皆為情境 A，用自己區塊的 sc（改 g_q4、m_q4 時隨之變動）。前後對照見 disco/README.md", False),
  ("v0.1.1 變更（2026-10-23）：(1) FY2026 錨定公司資料；(2) 淨利 ÷ 營業利益 0.733 → 0.722（稅前÷營業利益 0.99 ×（1 − 有效稅率 27.1%），含防衛特別法人稅 +0.9pt；區間 0.687–0.738）；(3) 循環位置改用設備股共用規則（v0.1 為各自依營業利益路徑判定，三情境皆中段）。前後對照見 disco/README.md", False), ("", False),
  ("會計年度：4 月到隔年 3 月（FY2025＝2025-04～2026-03，公司「2026年3月期」）。日曆年轉會計年度：FY(t)＝3/4 × CY(t)＋1/4 × CY(t+1)。金額為日圓，未建匯率。", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。公司原文以網頁擷取讀取（數字已與松井證券交叉）；版面待人工複核。", False),
  ("可識別性：只有一個 AI 錨點（FY2025 ¥75B，券商估計）。kH、kL 各由一個點校準，因此「kH × 工序定義」「kL × 片數」只有乘積可識別；汰換比例、每堆疊工序數、晶粒容量與層數只改變路徑形狀，不改變 FY2025 水準，無法由資料分開，列在 Sens。AI 消耗品比例公司不揭露（Assumed）。市占只透過「變化」進入模型。", False),
- ("已知限制：見 disco/README.md「待辦與限制」。", False)]
+ ("已知限制：見 disco/README.md「待辦與限制」。", False),
+ ("v0.1.3 變更（2026-10-23）：錨點差額（sc）延續到 FY2027 以後的非 AI 兩項時，三情境一律用情境 A 的 sc（具名範圍 sc_A）。B、C 的 sc 較大（1.078、1.099 vs A 1.055）是因為其 AI 驅動推導較低，不是非 AI 較強；原寫法把這部分算成非 AI、墊高 B、C 的基期。FY2026 不變（三情境仍各自縮放到同一錨點）；情境 A 不變；Sens 各案例皆為情境 A，用自己區塊的 sc（改 g_q4、m_q4 時隨之變動）。前後對照見 disco/README.md", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 180
 

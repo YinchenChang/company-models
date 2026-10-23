@@ -10,13 +10,13 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 F = {
     "bridge": ROOT / "markets/chip_bridge/dist/20261023_晶片內容橋接表_v0.2.1.xlsx",
     "net": ROOT / "markets/network/dist/20261023_AI網通市場模型_v0.2.2.xlsx",
-    "sk": ROOT / "skhynix/dist/20261023_SK海力士模型_v0.4.xlsx",
-    "ss": ROOT / "samsung/dist/20261023_三星電子模型_v0.2.xlsx",
-    "mu": ROOT / "micron/dist/20261023_美光模型_v0.3.xlsx",
-    "tsmc": ROOT / "tsmc/dist/20261022_台積電模型_v0.2.xlsx",
-    "eq": ROOT / "markets/equipment/dist/20261023_半導體設備市場模型_v0.1.2.xlsx",
-    "adv": ROOT / "advantest/dist/20261023_Advantest模型_v0.2.1.xlsx",
-    "disco": ROOT / "disco/dist/20261023_Disco模型_v0.1.2.xlsx",
+    "sk": ROOT / "skhynix/dist/20261023_SK海力士模型_v0.4.1.xlsx",
+    "ss": ROOT / "samsung/dist/20261023_三星電子模型_v0.2.1.xlsx",
+    "mu": ROOT / "micron/dist/20261023_美光模型_v0.3.1.xlsx",
+    "tsmc": ROOT / "tsmc/dist/20261023_台積電模型_v0.2.1.xlsx",
+    "eq": ROOT / "markets/equipment/dist/20261023_半導體設備市場模型_v0.1.3.xlsx",
+    "adv": ROOT / "advantest/dist/20261023_Advantest模型_v0.2.2.xlsx",
+    "disco": ROOT / "disco/dist/20261023_Disco模型_v0.1.3.xlsx",
     "eq_readme": ROOT / "markets/equipment/README.md",
 }
 
@@ -34,16 +34,50 @@ def name(path, key):
     s, ref = list(wb.defined_names[key].destinations)[0]
     return wb[s][ref.replace("$", "")].value
 
-# 10 年倍數（2016–2025 年底），兩個來源取各分位的平均；來源見 README
+# 10 年倍數（2016–2025 年底）：2026-10-23 起歷史值放在各公司 xlsx 的 Val 頁（規則區塊；tools/valuation_rule.py），
+# 本檔只讀取；各來源分別取分位再平均的規則與 xlsx 相同，並在下面逐項與 xlsx 的「採用」列核對。
+def val_ws(path):
+    return openpyxl.load_workbook(path, data_only=True)["Val"]
+
+def load_hist(path, title):
+    """讀 Val 頁「<title>：十年歷史倍數」表，回傳 [(來源標籤, [2016–2025 的值或 None])]（依欄位順序）。"""
+    ws = val_ws(path)
+    r0 = next(r for r in range(1, ws.max_row + 1) if ws.cell(r, 1).value == f"{title}：十年歷史倍數")
+    labels = []
+    c = 2
+    while ws.cell(r0 + 1, c).value not in (None, "標記／說明"):
+        labels.append(ws.cell(r0 + 1, c).value)
+        c += 1
+    out = []
+    for j, lab in enumerate(labels):
+        vals = []
+        for i in range(10):
+            v = ws.cell(r0 + 2 + i, 2 + j).value
+            vals.append(v if isinstance(v, (int, float)) else None)
+        out.append((lab, vals))
+    return out
+
+def load_adopted(path, sid):
+    ws = val_ws(path)
+    return {lab: ws.cell(next(r for r in range(1, ws.max_row + 1) if ws.cell(r, 1).value == f"採用 {lab}（{sid}）"), 2).value
+            for lab in ("25 分位", "中位數", "75 分位", "最小", "最大")}
+
+def mult_of(path, title, kind):
+    srcs = load_hist(path, title)
+    used = {lab: [v for v in vals] for lab, vals in srcs if "不採用" not in lab}
+    # 缺值（None）的年度不計入：與 xlsx 的 PERCENTILE 忽略空白一致
+    used = {lab: [v for v in vals if v is not None] for lab, vals in used.items()}
+    m = {"kind": kind, "src": used}
+    alt = [(lab, [v for v in vals if v is not None]) for lab, vals in srcs if "不採用" in lab]
+    if alt:
+        m["alt"] = dict(alt[:1])
+    return m
+
 MULT = {
-    "sk": {"kind": "P/B", "src": {"companiesmarketcap": [1.31, 1.59, .8832, 1.34, 1.56, 1.45, .81, 1.87, 1.62, 3.86],
-                                   "marketcapof（2016–24）": [1.35, 1.60, .90, 1.34, 1.56, 1.45, .82, 1.83, 1.62]}},
-    "ss": {"kind": "P/B", "src": {"companiesmarketcap": [1.27, 1.59, 1.04, 1.41, 1.97, 1.73, 1.04, 1.43, .8865, 1.96]},
-           "check": "GuruFocus 10 年中位 1.44"},
-    "mu": {"kind": "P/B", "src": {"macrotrends（會計年度 8 月底）": [1.29, 1.78, 1.79, 1.33, 1.27, 1.83, 1.22, 1.72, 2.35, 2.46]},
-           "alt": {"companiesmarketcap（日曆年底）": [1.83, 2.03, 1.02, 1.64, 2.10, 2.27, 1.11, 2.20, 2.11, 6.04]}},
-    "tsmc": {"kind": "P/E", "src": {"FullRatio": [14.5, 17.71, 16.13, 25.62, 31.11, 29.18, 11.94, 19.46, 28.72, 29.03],
-                                     "companiesmarketcap": [11.6, 14.8, 14.2, 23.5, 28.3, 27.2, 11.2, 19.3, 28.8, 28.3]}},
+    "sk": mult_of(F["sk"], "P/B（主）", "P/B"),
+    "ss": dict(mult_of(F["ss"], "P/B（主）", "P/B"), check="GuruFocus 10 年中位 1.44"),
+    "mu": mult_of(F["mu"], "P/B（主）", "P/B"),
+    "tsmc": mult_of(F["tsmc"], "P/E", "P/E"),
 }
 def pct(m):
     ps = {}
@@ -55,6 +89,12 @@ def pct(m):
         a = list(m["alt"].values())[0]
         ps["alt"] = {f"p{q}": round(float(np.percentile(a, q)), 2) for q in (25, 50, 75)}
     return ps
+
+# 與 xlsx「採用」列核對：本檔由歷史值重算的分位必須等於 xlsx 的採用值（防止兩邊漂移）
+for _k, _p, _t in (("sk", F["sk"], "P/B"), ("ss", F["ss"], "P/B"), ("mu", F["mu"], "P/B"), ("tsmc", F["tsmc"], "P/E")):
+    _ps, _ad = pct(MULT[_k]), load_adopted(_p, _t)
+    for _a, _b in (("p25", "25 分位"), ("p50", "中位數"), ("p75", "75 分位"), ("min", "最小"), ("max", "最大")):
+        assert abs(_ps[_a] - _ad[_b]) < 1e-9, (_k, _a, _ps[_a], _ad[_b])
 
 D = {}
 
@@ -181,15 +221,20 @@ D["tsmc"] = {"px": px,
 # ---------------------------------------------------------------------------
 # 美光替代估值（Andy 2026-10-22「都做」）：(1) P/E；(2) 買回加回的 P/B。
 # 歷史值：SEC 10-K XBRL（Verified）——權益、庫藏股（成本）、歸屬淨利；P/B 為 macrotrends 會計年度底。
-MU_HIST = {  # 會計年度：P/B, 權益 $B, 庫藏股 $B, 淨利 $B
-    2016: (1.29, 12.080, 1.029, -0.276), 2017: (1.78, 18.621, 0.067, 5.089), 2018: (1.79, 32.294, 0.429, 14.135),
-    2019: (1.33, 35.881, 3.221, 6.313), 2020: (1.27, 38.996, 3.495, 2.687), 2021: (1.83, 43.933, 4.695, 5.861),
-    2022: (1.22, 49.907, 7.127, 8.687), 2023: (1.72, 44.120, 7.552, -5.833), 2024: (2.35, 45.131, 7.852, 0.778),
-    2025: (2.46, 54.165, 7.852, 8.539)}
+def load_mu_hist(path):
+    """讀 Val 頁 SEC 表（會計年度：P/B、權益、庫藏股、歸屬淨利）。"""
+    ws = val_ws(path)
+    r0 = next(r for r in range(1, ws.max_row + 1) if str(ws.cell(r, 1).value or "").startswith("5. 美光歷史財務"))
+    return {2016 + i: tuple(ws.cell(r0 + 2 + i, c).value for c in (2, 3, 4, 5)) for i in range(10)}
+MU_HIST = load_mu_hist(F["mu"])  # 會計年度：P/B, 權益 $B, 庫藏股 $B, 淨利 $B（SEC 10-K XBRL）
 mu_pe = {y: pb * e / ni for y, (pb, e, t, ni) in MU_HIST.items() if ni > 0}          # 市值 ÷ 淨利＝P/B × 權益 ÷ 淨利
 mu_pba = {y: pb * e / (e + t) for y, (pb, e, t, ni) in MU_HIST.items()}             # 市值 ÷（權益＋庫藏股）
 def q3(v): return {f"p{q}": round(float(np.percentile(list(v), q)), 2) for q in (25, 50, 75)} | {"min": round(min(v), 2), "max": round(max(v), 2)}
 mpe, mpba = q3(mu_pe.values()), q3(mu_pba.values())
+for _ps, _sid in ((mpe, "P/E"), (mpba, "買回加回 P/B")):          # 與 xlsx 的採用列核對
+    _ad = load_adopted(F["mu"], _sid)
+    for _a, _b in (("p25", "25 分位"), ("p50", "中位數"), ("p75", "75 分位"), ("min", "最小"), ("max", "最大")):
+        assert abs(_ps[_a] - _ad[_b]) < 1e-9, (_sid, _a, _ps[_a], _ad[_b])
 yu = rows(F["mu"], "Y")
 def gy(lbl, s): return yu[lbl][1 + SC.index(s)]
 T_last = MU_HIST[2025][2]  # FY2026 年底庫藏股尚未公布，用 FY2025（偏低）
@@ -204,13 +249,21 @@ D["mu_alt"] = {"pe": mpe, "pba": mpba, "pe_hist": {y: round(v, 2) for y, v in mu
 # ---------------------------------------------------------------------------
 # SK 海力士、三星 P/E 對照（Andy 2026-10-22：三家同樣呈現）。年底 P/E：companiesmarketcap（2016–2025）；
 # stockanalysis 2021–2025 交叉核對（差距 ≤ 8%）；2016–2020 只有單一來源。虧損年（P/E < 0）不計。
-KR_PE = {"sk": ("SK 海力士（P/E）", {2016: 9.57, 2017: 4.61, 2018: 2.54, 2019: 30.2, 2020: 16.2, 2021: 9.01, 2022: 22.6, 2023: -10.6, 2024: 5.99, 2025: 10.5}),
-         "ss": ("三星電子（P/E）", {2016: 9.15, 2017: 6.95, 2018: 5.06, 2019: 15.3, 2020: 19.1, 2021: 12.5, 2022: 6.50, 2023: 36.1, 2024: 10.6, 2025: 18.2})}
-KR_PE_CHECK = {"sk": {2021: 9.38, 2022: 23.13, 2024: 6.06, 2025: 10.47}, "ss": {2021: 13.40, 2022: 6.79, 2023: 35.92, 2024: 10.53, 2025: 17.39}}
+def kr_hist(path):
+    srcs = load_hist(path, "P/E（對照）")
+    raw = dict(zip(range(2016, 2026), srcs[0][1]))                               # 第一欄：年底 P/E（含虧損年）
+    chk = {y: v for y, v in zip(range(2016, 2026), next(v for lab, v in srcs if "核對" in lab)) if v is not None}
+    return raw, chk
+_sk_raw, _sk_chk = kr_hist(F["sk"]); _ss_raw, _ss_chk = kr_hist(F["ss"])
+KR_PE = {"sk": ("SK 海力士（P/E）", _sk_raw), "ss": ("三星電子（P/E）", _ss_raw)}
+KR_PE_CHECK = {"sk": _sk_chk, "ss": _ss_chk}
 kr_pe = {}
 for k, (nm, hist) in KR_PE.items():
     v = {y: x for y, x in hist.items() if x > 0}
     kr_pe[k] = (nm, v, q3(v.values()))
+    _ad = load_adopted(F[k], "P/E")                                  # 與 xlsx 的採用列核對
+    for _a, _b in (("p25", "25 分位"), ("p50", "中位數"), ("p75", "75 分位"), ("min", "最小"), ("max", "最大")):
+        assert abs(kr_pe[k][2][_a] - _ad[_b]) < 1e-9, (k, _a)
     for y, x in KR_PE_CHECK[k].items():
         assert abs(x / hist[y] - 1) < 0.08, (k, y)
 

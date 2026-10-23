@@ -1,0 +1,697 @@
+{
+  "company": "Disco",
+  "ticker": "6146.T",
+  "thesis": "@README!A2",
+  "question": "HBM 與先進封裝的增量，能否抵過非 AI 後段的循環，撐住目前的本益比",
+  "scenarios": [
+    {
+      "key": "A",
+      "name": "情境 A"
+    },
+    {
+      "key": "B",
+      "name": "情境 B"
+    },
+    {
+      "key": "C",
+      "name": "情境 C"
+    }
+  ],
+  "sections": [
+    {
+      "id": "thesis",
+      "title": "命題與核心問題",
+      "intro": "@README!A17",
+      "blocks": [
+        {
+          "type": "kv",
+          "items": [
+            [
+              "本益比口徑的註記",
+              "@README!A3"
+            ],
+            [
+              "情境 B 的設定",
+              "@PL!A131"
+            ],
+            [
+              "情境 C 的設定",
+              "@PL!A192"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "drivers",
+      "title": "驅動因子 → 推導量",
+      "intro": "標記沿用 Excel：Verified、Interested-party、Analogy、Assumed、Derived。輸入取自 In 頁，推導量取自 PL 與 Val 頁（情境 A）；方向欄為因果方向，非統計關係。",
+      "blocks": [
+        {
+          "type": "table",
+          "head": [
+            "輸入",
+            "基準值",
+            "標記",
+            "推導量",
+            "因果方向"
+          ],
+          "rows": [
+            [
+              "@In!B24",
+              [
+                "@In!E24|n2",
+                " ",
+                "@In!C24"
+              ],
+              "@In!G24|tag",
+              [
+                "HBM 裝置營收（¥B，情境 A，FY2027）：",
+                "@PL!E6|n1"
+              ],
+              "出貨位元除以晶粒容量得晶粒數，位元同向放大研削與切割工序，進而放大新機需求"
+            ],
+            [
+              "@In!B39",
+              [
+                "@In!E39|n0",
+                " ",
+                "@In!C39"
+              ],
+              "@In!G39|tag",
+              [
+                "HBM 裝置營收（¥B，情境 A，FY2027）：",
+                "@PL!E6|n1"
+              ],
+              "同樣位元，晶粒容量愈大所需晶粒數愈少（反向）"
+            ],
+            [
+              "@In!B70",
+              [
+                "@In!E70|p1",
+                " ",
+                "@In!C70"
+              ],
+              "@In!G70|tag",
+              [
+                "HBM 裝置營收（¥B，情境 A，FY2029）：",
+                "@PL!G6|n1"
+              ],
+              "混合鍵合占比乘以淨影響；淨影響為正時增加每道工序的裝置支出"
+            ],
+            [
+              "@In!B55",
+              [
+                "@In!E55|n0",
+                " ",
+                "@In!C55"
+              ],
+              "@In!G55|tag",
+              [
+                "先進封裝裝置營收（¥B，情境 A，FY2027）：",
+                "@PL!E7|n1"
+              ],
+              "CoWoS 片數的增量加汰換形成新機需求，片數同向"
+            ],
+            [
+              "@In!B18",
+              [
+                "@In!E18|n0",
+                " ",
+                "@In!C18"
+              ],
+              "@In!G18|tag",
+              [
+                "AI 占營收（FY2025，含 AI 消耗品）：",
+                "@PL!C11|p1"
+              ],
+              "單一 AI 錨點校準 HBM 與先進封裝兩個係數，只識別乘積"
+            ],
+            [
+              "@In!B74",
+              [
+                "@In!E74|p1",
+                " ",
+                "@In!C74"
+              ],
+              "@In!G74|tag",
+              [
+                "非 AI 裝置營收（¥B，情境 A，FY2027）：",
+                "@PL!E8|n1"
+              ],
+              "非 AI 後段的年增同向影響非 AI 裝置營收"
+            ],
+            [
+              "@In!B77",
+              [
+                "@In!E77|p1",
+                " ",
+                "@In!C77"
+              ],
+              "@In!G77|tag",
+              [
+                "消耗品營收（¥B，情境 A，FY2027）：",
+                "@PL!E9|n1"
+              ],
+              "消耗品隨稼動、不隨新機；非 AI 部分以年增推算"
+            ],
+            [
+              "@In!B96",
+              [
+                "@In!E96|n3",
+                " ",
+                "@In!C96"
+              ],
+              "@In!G96|tag",
+              [
+                "EPS（¥，情境 A，FY2027）：",
+                "@PL!E17|n1"
+              ],
+              "淨利對營業利益的比例同向影響 EPS"
+            ],
+            [
+              "@In!B120",
+              [
+                "@In!E120|yr",
+                " ",
+                "@In!C120"
+              ],
+              "@In!G120|tag",
+              [
+                "循環位置（FY2027，情境 A）：",
+                "@Val!D30|"
+              ],
+              "設備市場見頂年度決定各情境的 P/E 分位"
+            ],
+            [
+              "@In!B123",
+              [
+                "@In!E123|n0",
+                " ",
+                "@In!C123"
+              ],
+              "@In!G123|tag",
+              [
+                "情境 A 隱含股價相對現價：",
+                "@Val!G35|sp1"
+              ],
+              "現價只是比較基準，不影響隱含價"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pl",
+      "title": "三情境損益",
+      "intro": "FY2025 為實績，FY2026 錨定上半實績與第三季指引，FY2027 起三情境分歧（會計年度四月至隔年三月）。",
+      "blocks": [
+        {
+          "type": "pl",
+          "years": "@PL!C3:G3",
+          "metrics": [
+            {
+              "name": [
+                "營收（",
+                "@PL!B5",
+                "）"
+              ],
+              "fmt": "n0",
+              "chart": true,
+              "rows": {
+                "A": "@PL!C5:G5",
+                "B": "@PL!C23:G23",
+                "C": "@PL!C41:G41"
+              }
+            },
+            {
+              "name": "AI 占營收（含 AI 消耗品）",
+              "fmt": "p1",
+              "chart": true,
+              "ymin": "auto",
+              "rows": {
+                "A": "@PL!C11:G11",
+                "B": "@PL!C29:G29",
+                "C": "@PL!C47:G47"
+              }
+            },
+            {
+              "name": [
+                "營業利益（",
+                "@PL!B14",
+                "）"
+              ],
+              "fmt": "n0",
+              "rows": {
+                "A": "@PL!C14:G14",
+                "B": "@PL!C32:G32",
+                "C": "@PL!C50:G50"
+              }
+            },
+            {
+              "name": "營業利益率",
+              "fmt": "p1",
+              "ymin": "auto",
+              "rows": {
+                "A": "@PL!C15:G15",
+                "B": "@PL!C33:G33",
+                "C": "@PL!C51:G51"
+              }
+            },
+            {
+              "name": [
+                "EPS（",
+                "@PL!B17",
+                "）"
+              ],
+              "fmt": "n0",
+              "chart": true,
+              "rows": {
+                "A": "@PL!C17:G17",
+                "B": "@PL!C35:G35",
+                "C": "@PL!C53:G53"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "valuation",
+      "title": "估值",
+      "intro": "@Val!A1",
+      "blocks": [
+        {
+          "type": "kv",
+          "items": [
+            [
+              "@Val!A53",
+              "@Val!B53|n0"
+            ],
+            [
+              "@Val!A54",
+              "@Val!B54|x1"
+            ],
+            [
+              "@Val!A55",
+              "@Val!B55|x1"
+            ],
+            [
+              "@Val!A58",
+              "@Val!B58|x1"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "caption": "依循環位置的規則值（FY2027 EPS × 倍數）",
+          "head": [
+            "@Val!A34",
+            "@Val!B34",
+            "@Val!C34",
+            "@Val!D34",
+            "@Val!E34",
+            "@Val!F34",
+            "@Val!G34"
+          ],
+          "rowgen": {
+            "sheet": "Val",
+            "rows": "35,40,45",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E",
+              "F",
+              "G"
+            ],
+            "fmts": [
+              "",
+              "",
+              "n0",
+              "",
+              "x1",
+              "n0",
+              "sp1"
+            ]
+          }
+        },
+        {
+          "type": "bars",
+          "title": "三情境隱含股價與現價",
+          "fmt": "n0",
+          "items": [
+            {
+              "label": "情境 A",
+              "value": "@Val!F35",
+              "series": 0
+            },
+            {
+              "label": "情境 B",
+              "value": "@Val!F40",
+              "series": 1
+            },
+            {
+              "label": "情境 C",
+              "value": "@Val!F45",
+              "series": 2
+            }
+          ],
+          "ref": {
+            "label": "@Val!A53",
+            "value": "@Val!B53"
+          }
+        },
+        {
+          "type": "h3",
+          "text": "循環位置判定"
+        },
+        {
+          "type": "note",
+          "parts": [
+            "@Val!A28"
+          ]
+        },
+        {
+          "type": "table",
+          "head": [
+            "@Val!A29",
+            "@Val!B29",
+            "@Val!C29",
+            "@Val!D29",
+            "@Val!E29"
+          ],
+          "rowgen": {
+            "sheet": "Val",
+            "rows": "30-32",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ],
+            "fmts": [
+              "",
+              "yr",
+              "yr",
+              "",
+              "x1"
+            ]
+          }
+        },
+        {
+          "type": "h3",
+          "text": "歷史 P/E 分位"
+        },
+        {
+          "type": "table",
+          "head": [
+            "@Val!A20",
+            "@Val!B20",
+            "@Val!C20"
+          ],
+          "rowgen": {
+            "sheet": "Val",
+            "rows": "21-24",
+            "cols": [
+              "A",
+              "B",
+              "C"
+            ],
+            "fmts": [
+              "",
+              "x1",
+              ""
+            ],
+            "row_fmt": {
+              "24": {
+                "B": "n0"
+              }
+            }
+          }
+        },
+        {
+          "type": "table",
+          "collapse": true,
+          "summary": "展開：各情境、各分位倍數的隱含股價（FY2027 與 FY2028 EPS）",
+          "head": [
+            "@Val!A34",
+            "@Val!B34",
+            "@Val!C34",
+            "@Val!D34",
+            "@Val!E34",
+            "@Val!F34",
+            "@Val!G34"
+          ],
+          "rowgen": {
+            "sheet": "Val",
+            "rows": "35-49",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E",
+              "F",
+              "G"
+            ],
+            "fmts": [
+              "",
+              "",
+              "n0",
+              "",
+              "x1",
+              "n0",
+              "sp1"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "recon",
+      "title": "對帳：由上而下與由下而上",
+      "intro": "@Recon!A1",
+      "blocks": [
+        {
+          "type": "table",
+          "head": [
+            "@Recon!A3",
+            "@Recon!B3",
+            "@Recon!C3",
+            "@Recon!D3",
+            "@Recon!E3",
+            "@Recon!F3",
+            "@Recon!G3",
+            "@Recon!H3",
+            "@Recon!I3"
+          ],
+          "rowgen": {
+            "sheet": "Recon",
+            "rows": "4-27",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E",
+              "F",
+              "G",
+              "H",
+              "I"
+            ],
+            "fmts": [
+              "",
+              "n1",
+              "n1",
+              "sp1",
+              "n1",
+              "sp1",
+              "n1",
+              "sp1",
+              ""
+            ],
+            "row_fmt": {
+              "8": {
+                "B": "p1",
+                "C": "p1",
+                "E": "p1",
+                "G": "p1"
+              },
+              "9": {
+                "B": "p1",
+                "C": "p1",
+                "E": "p1",
+                "G": "p1"
+              },
+              "22": {
+                "B": "p1",
+                "C": "p1",
+                "E": "p1",
+                "G": "p1"
+              },
+              "23": {
+                "C": "p1"
+              },
+              "24": {
+                "C": "p1"
+              },
+              "25": {
+                "C": "p1",
+                "E": "p1",
+                "G": "p1"
+              },
+              "26": {
+                "C": "p1",
+                "E": "p1",
+                "G": "p1"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "sens",
+      "title": "敏感度",
+      "intro": "@Sens!A1",
+      "blocks": [
+        {
+          "type": "tornado",
+          "title": "FY2027 EPS 相對基準的變動（情境 A，一次動一個輸入）",
+          "sheet": "Sens",
+          "rows": "5-40",
+          "label_col": "A",
+          "value_col": "E",
+          "fmt": "sp1"
+        },
+        {
+          "type": "table",
+          "collapse": true,
+          "summary": "展開：全部案例的 FY2027、FY2028 營收與 EPS",
+          "head": [
+            "@Sens!A3",
+            "@Sens!B3",
+            "@Sens!C3",
+            "@Sens!D3",
+            "@Sens!E3",
+            "@Sens!F3",
+            "@Sens!G3",
+            "@Sens!H3"
+          ],
+          "rowgen": {
+            "sheet": "Sens",
+            "rows": "4-40",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E",
+              "F",
+              "G",
+              "H"
+            ],
+            "fmts": [
+              "",
+              "",
+              "n0",
+              "n0",
+              "sp1",
+              "n0",
+              "n0",
+              "sp1"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "status",
+      "title": "資料狀態",
+      "blocks": [
+        {
+          "type": "kv",
+          "items": [
+            [
+              "模型版本",
+              [
+                "$version",
+                "（",
+                "$date",
+                "）"
+              ]
+            ],
+            [
+              "來源 xlsx",
+              "$xlsx"
+            ],
+            [
+              "來源 xlsx 的雜湊指紋（取代建置 commit，理由見 README）",
+              "$sha"
+            ],
+            [
+              "Tokenomics 快照版本",
+              "本模型不直接讀取 Tokenomics 快照；經由市場層間接使用，版本見下方上游成品的標題。"
+            ]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "上游成品（市場層與其他公司模型）"
+        },
+        {
+          "type": "upstream",
+          "sheets": [
+            "In"
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "待複核項目"
+        },
+        {
+          "type": "list",
+          "items": [
+            "@README!A18",
+            "@Sources!A1"
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "已知限制"
+        },
+        {
+          "type": "note",
+          "parts": [
+            "@README!A19"
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "「未找到」清單"
+        },
+        {
+          "type": "scan",
+          "needle": "未找到",
+          "collapse": true,
+          "summary": "展開：標為「未找到」的輸入與來源",
+          "sheets": {
+            "In": [
+              "B"
+            ],
+            "Q": [
+              "A"
+            ],
+            "Val": [
+              "A"
+            ]
+          },
+          "empty": "沒有標為未找到的項目。"
+        }
+      ]
+    }
+  ]
+}

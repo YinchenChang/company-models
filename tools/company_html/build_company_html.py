@@ -79,6 +79,8 @@ def parse_display(s):
 
 # ───────────────────────── 活頁簿與參照 ─────────────────────────
 class Book:
+    """xlsx 的重算值（LibreOffice 存檔後的快取值）。"""
+
     def __init__(self, path):
         self.path = path
         self.wb = openpyxl.load_workbook(path, data_only=True)
@@ -294,7 +296,9 @@ def nice_ticks(lo, hi, n=4):
 
 def render_lines(cx, blk, scen):
     """折線圖（inline SVG）。series：[{name, y, scenario}]；點的 data-ref／data-v 供檢核。"""
-    xs_lab = cx.values(blk['x'])
+    xs_lab = blk['x'] if isinstance(blk['x'], list) else cx.values(blk['x'])
+    for lab in (xs_lab if isinstance(blk['x'], list) else []):
+        check_prose(lab, 'x 軸標籤')
     series = blk['series']
     f = blk.get('fmt', 'n0')
     W, H, L, R, T, B = 360, 236, 46, 12, 10, 30
@@ -314,7 +318,6 @@ def render_lines(cx, blk, scen):
     for i, lab in enumerate(xs_lab):
         anc = 'end' if i == n - 1 else 'middle'
         o.append(f'<text x="{px(i):.1f}" y="{H - 10}" class="ax" text-anchor="{anc}">{esc(lab)}</text>')
-    xrefs = cx.b.expand(blk['x'])
     for si, s in reversed(list(enumerate(series))):          # C、B、A 的順序畫，A 在最上層
         refs = cx.b.expand(s['y'])
         vals = [cx.b.cell(a, c) for a, c in refs]
@@ -345,10 +348,10 @@ def render_pl(cx, blk, cfg):
             rng = m['rows'][sc['key']]
             rows.append([sc['name'], rng if '|' in rng else f'{rng}|{f}'])
         out.append(render_table(cx, {
-            'grid': True, 'caption': m['name'], 'head': [m.get('corner', '情境'), years], 'rows': rows}))
+            'grid': True, 'caption': m['name'], 'head': [m.get('corner', '情境')] + (years if isinstance(years, list) else [years]), 'rows': rows}))
         if m.get('chart'):
             charts.append(render_lines(cx, {
-                'title': m['name'], 'x': split_spec(years)[0], 'fmt': f, 'ymin': m.get('ymin', 'zero'),
+                'title': m['name'], 'x': years if isinstance(years, list) else split_spec(years)[0], 'fmt': f, 'ymin': m.get('ymin', 'zero'),
                 'series': [{'name': sc['name'], 'y': split_spec(m['rows'][sc['key']])[0]} for sc in scen]}, scen))
     return ''.join(out) + '<div class="charts">' + ''.join(charts) + '</div>'
 
@@ -513,75 +516,76 @@ def render_block(cx, blk, cfg, root):
 
 # ───────────────────────── 頁面 ─────────────────────────
 CSS = """
-:root{--bg:#fafaf8;--surface:#fff;--ink:#1c1f23;--muted:#5b626b;--line:#d9dce0;--accent:#0b5cad;--c0:#0072b2;--c1:#b36b00;--c2:#a8326a;
---pos:#1b7f4b;--neg:#b3261e;--tv:#e3f2e8;--ti:#fdecc8;--ta:#fadbd8;--tn:#e6e0f5;--td:#dbe9f6}
-@media (prefers-color-scheme:dark){:root{--bg:#14171a;--surface:#1c2025;--ink:#e8eaed;--muted:#a3abb4;--line:#343a41;--accent:#6cb2ff;--c0:#56b4e9;--c1:#f0b429;--c2:#f08fc0;
---pos:#5fd08d;--neg:#ff8f87;--tv:#1f3a2a;--ti:#463a18;--ta:#4a2623;--tn:#322b4a;--td:#1f3347}}
+:root{--bg:#fff;--surface:#fff;--soft:#f7fbfb;--ink:#3b3838;--muted:#5f605f;--line:#dce3e3;--grid:#ecefef;--axis:#8a8c8c;
+--accent:#0b7a80;--teal:#10a0a7;--c0:#10a0a7;--c1:#c29a2b;--c2:#6f6bae;--pos:#0b7a80;--neg:#b4472f;
+--tv:#d5ecea;--ti:#fbf8ee;--ta:#f6e3de;--tn:#f1f0f8;--td:#f2f9f9;color-scheme:light}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 -apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;overflow-wrap:anywhere}
-.wrap{max-width:980px;margin:0 auto;padding:16px}
-header.top{padding:20px 0 8px;border-bottom:1px solid var(--line)}
-h1{font-size:26px;line-height:1.3;margin:0 0 6px}
-h2{font-size:19px;margin:34px 0 8px;padding-top:8px;border-top:1px solid var(--line);counter-increment:sec}
-h2::before{content:counter(sec) ". ";color:var(--muted)}
-h3{font-size:15px;margin:20px 0 4px;color:var(--muted)}
-main{counter-reset:sec}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 'Noto Sans TC','Microsoft JhengHei','微軟正黑體','PingFang TC',Arial,sans-serif;overflow-wrap:anywhere}
+.wrap{max-width:78rem;margin:0 auto;padding:32px 24px 40px}
+header.top{display:grid;gap:8px}
+h1{font-size:28px;line-height:1.3;font-weight:400;margin:0}
+h2{font-size:20px;font-weight:600;margin:0 0 8px;counter-increment:sec}
+h2::before{content:counter(sec) ". ";color:var(--teal)}
+h3{font-size:15px;font-weight:600;margin:18px 0 4px}
+main{counter-reset:sec;display:grid;gap:24px;margin-top:20px}
+section{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:20px;min-width:0}
 .meta{color:var(--muted);font-size:13px}
-.thesis{font-size:17px;margin:10px 0 4px}
-.q{border-left:3px solid var(--accent);padding:2px 12px;margin:10px 0;background:var(--surface)}
-nav.toc{display:flex;flex-wrap:wrap;gap:4px 14px;margin:12px 0 0;font-size:13px}
-nav.toc a{color:var(--accent);text-decoration:none}
+.thesis{font-size:18px;line-height:1.6;margin:4px 0 8px;max-width:70ch}
+.q{border-left:3px solid var(--teal);padding:4px 12px;margin:10px 0;background:var(--soft);max-width:70ch}
+nav.toc{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1px solid var(--line);margin-top:10px;font-size:14px}
+nav.toc a{color:var(--muted);text-decoration:none;padding:6px 12px;border-bottom:2px solid transparent;margin-bottom:-1px}
+nav.toc a:hover{color:var(--ink);border-bottom-color:var(--teal)}
 .refs-toggle{position:absolute;opacity:0;pointer-events:none}
-label.refs{display:inline-block;margin-top:10px;font-size:13px;color:var(--muted);cursor:pointer;border:1px solid var(--line);border-radius:6px;padding:2px 10px}
+label.refs{justify-self:start;font-size:13px;color:var(--accent);cursor:pointer;border:1px solid var(--teal);border-radius:999px;padding:2px 14px;background:#fff}
 .refs-toggle:focus-visible+.wrap label.refs{outline:2px solid var(--accent)}
-.refs-toggle:checked+.wrap label.refs{background:var(--accent);color:var(--bg)}
+.refs-toggle:checked+.wrap label.refs{background:var(--teal);color:#fff}
 .refs-toggle:checked+.wrap .x::after,.refs-toggle:checked+.wrap .lbl::after,.refs-toggle:checked+.wrap .na::after{content:" [" attr(data-ref) "]";font-size:10px;color:var(--muted);font-weight:400;white-space:nowrap}
 p.cap{margin:14px 0 4px;font-weight:600}
-.note{margin:8px 0}
+.note{margin:8px 0;max-width:80ch}
 .tw{max-width:100%;overflow-x:auto}
-table{border-collapse:collapse;width:100%;background:var(--surface);font-size:14px}
+table{border-collapse:collapse;width:100%;font-size:14px}
 th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
-thead th{font-size:13px;color:var(--muted);font-weight:600;border-bottom:2px solid var(--line)}
+thead th{font-size:13px;color:var(--muted);font-weight:600}
 table.grid td,table.grid thead th:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}
 table.grid th,table.grid td{padding:6px 4px;font-size:13px}
-tr.sub th{background:var(--bg);font-size:13px;color:var(--muted);padding-top:12px}
+tr.sub th{background:var(--soft);font-size:13px;color:var(--accent);padding-top:10px}
 .x,.meta[data-ref]{font-variant-numeric:tabular-nums;white-space:nowrap}
-.tag{display:inline-block;white-space:nowrap;padding:0 7px;border-radius:9px;font-size:12px;background:var(--line)}
+.tag{display:inline-block;white-space:nowrap;padding:0 8px;border-radius:9px;font-size:12px;background:var(--grid)}
 .tv{background:var(--tv)}.ti{background:var(--ti)}.ta{background:var(--ta)}.tn{background:var(--tn)}.td{background:var(--td)}
-.na{color:var(--muted)}
-.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin:12px 0}
-figure.fig{margin:0;padding:8px 10px;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+.na{color:var(--axis)}
+.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr));gap:16px;margin:14px 0}
+figure.fig{margin:0;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:6px}
 figcaption{font-weight:600;font-size:14px;margin-bottom:4px}
 svg.chart{width:100%;height:auto;display:block;max-width:560px}
 .chart text{font-size:10px;fill:var(--muted)}
-.chart .grid{stroke:var(--line);stroke-width:1}
-.ln{fill:none;stroke-width:2;stroke-linejoin:round}
+.chart .grid{stroke:var(--grid);stroke-width:1}
+.ln{fill:none;stroke-width:2.2;stroke-linejoin:round}
 .s0.ln,.legend .s0{stroke:var(--c0)}.s1.ln,.legend .s1{stroke:var(--c1)}.s2.ln,.legend .s2{stroke:var(--c2)}
 .ln.s1{stroke-dasharray:6 3}.ln.s2{stroke-dasharray:2 3}.legend .s1{stroke-dasharray:6 3}.legend .s2{stroke-dasharray:2 3}
-.pt.s0{fill:var(--c0)}.pt.s1{fill:var(--c1)}.pt.s2{fill:var(--c2)}.pt{stroke:var(--surface);stroke-width:1.5}
-.legend{display:flex;gap:4px 14px;flex-wrap:wrap;list-style:none;margin:2px 0 0;padding:0;font-size:12px;color:var(--muted)}
+.pt.s0{fill:var(--c0)}.pt.s1{fill:var(--c1)}.pt.s2{fill:var(--c2)}.pt{stroke:#fff;stroke-width:1.5}
+.legend{display:flex;gap:4px 14px;flex-wrap:wrap;list-style:none;margin:2px 0 0;padding:0;font-size:13px;color:var(--muted)}
 .legend li{display:flex;align-items:center;gap:5px}.sw{width:28px;height:8px}.sw .ln{stroke-width:2}
 .br,.trw{display:grid;gap:8px;align-items:center;margin:6px 0}
 .br{grid-template-columns:minmax(70px,150px) 1fr 72px}
-.bt{position:relative;height:16px;background:var(--bg);border-radius:3px}
+.bt{position:relative;height:18px;background:var(--grid);border-radius:3px}
 .bt i{position:absolute;left:0;top:0;bottom:0;border-radius:3px}
 .bt i.s0{background:var(--c0)}.bt i.s1{background:var(--c1)}.bt i.s2{background:var(--c2)}
 .bt b{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
 .bv{text-align:right;font-variant-numeric:tabular-nums}
 .refline{font-size:13px;color:var(--muted);margin:4px 0 0}
 .trw{grid-template-columns:minmax(110px,230px) 1fr 62px;font-size:13px}
-.ttr{position:relative;height:14px;background:var(--bg);border-radius:3px}
-.ttr::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--line)}
-.ttr i{position:absolute;top:2px;bottom:2px;border-radius:2px}.ttr i.p{background:var(--pos)}.ttr i.n{background:var(--neg)}
+.ttr{position:relative;height:14px;background:var(--grid);border-radius:3px}
+.ttr::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--axis)}
+.ttr i{position:absolute;top:2px;bottom:2px;border-radius:2px}.ttr i.p{background:var(--teal)}.ttr i.n{background:var(--neg)}
 .tvv{text-align:right;font-variant-numeric:tabular-nums}
 dl.kv{margin:8px 0}dl.kv div{display:flex;gap:10px;border-bottom:1px solid var(--line);padding:4px 0;flex-wrap:wrap}
 dl.kv dt{color:var(--muted);flex:1 1 180px}dl.kv dd{margin:0;flex:2 1 220px}
 ul.items{margin:6px 0;padding-left:20px}
 details.more{margin:8px 0}summary{cursor:pointer;color:var(--accent)}
 code.meta{font:12px/1.4 ui-monospace,Menlo,monospace}
-footer{margin:30px 0 20px;padding-top:10px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+footer{margin:24px 0 0;padding-top:10px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
 @media (max-width:640px){
- body{font-size:14.5px}h1{font-size:22px}.wrap{padding:12px 16px}
+ body{font-size:14.5px}h1{font-size:23px}.wrap{padding:16px}section{padding:14px}
  table.rt thead{display:none}
  table.rt,table.rt tbody,table.rt tr,table.rt th,table.rt td{display:block;width:100%}
  table.rt tr{border:1px solid var(--line);border-radius:6px;margin:8px 0;padding:4px 8px;background:var(--surface)}
@@ -653,7 +657,7 @@ def build(cdir, xlsx=None, root=None):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="light">
 <title>{esc(title)}</title>
 <style>{CSS}</style>
 </head>

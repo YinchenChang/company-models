@@ -1,4 +1,4 @@
-# advantest/ — Advantest（6857.T）收支與估值模型 v0.2.1
+# advantest/ — Advantest（6857.T）收支與估值模型 v0.2.2
 
 Advantest 的盈餘由 AI 加速器的 SoC 測試需求決定。每顆晶片的測試時間隨複雜度上升，Advantest 握有約三分之二的市占。股價取決於加速器顆數的成長在 FY2027 之後放緩時，測試機的投資會不會跟著回落。
 
@@ -7,11 +7,15 @@ AI 半導體 Project 步驟 5（設備與材料）的第一家公司樣板。獨
 | 檔案 | 內容 |
 |---|---|
 | `build_advantest.py` | 產生器（參數與公式） |
-| `dist/20261023_Advantest模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261023_Advantest模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（頁面結構與要抽的儲存格；格式見 `tools/company_html/README.md`） |
-| `dist/20261023_Advantest模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出，標註來源儲存格；CI 檢核） |
+| `dist/20261023_Advantest模型_v0.2.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出，標註來源儲存格；CI 檢核） |
 
 建置：`python3 advantest/build_advantest.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`、`tsmc/dist`、`skhynix/dist`、`markets/equipment/dist`；不修改它們。
+
+## v0.2.2（2026-10-23）：上游檔名更新
+
+引用的上游成品升版（SK 海力士 v0.4.1、美光 v0.3.1、三星 v0.2.1、台積電 v0.2.1；十年倍數與規則值移入它們的 Val 頁），本模型 In 頁的來源檔名文字隨之更新；**所有數值不變**（與 v0.2.1 逐格比對，數值差異 0）。
 
 ## v0.2.1（2026-10-23）：設備股共用循環位置規則
 

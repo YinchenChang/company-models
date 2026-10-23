@@ -11,6 +11,7 @@ on:
       - 'tools/memory_model/**'
       - 'tools/xlsx_diff.py'
       - 'tools/cycle_position.py'
+      - 'tools/valuation_rule.py'
       - 'tools/company_html/**'
       - '**/html.json'
       - 'skhynix/**'
@@ -26,6 +27,7 @@ on:
       - 'tools/memory_model/**'
       - 'tools/xlsx_diff.py'
       - 'tools/cycle_position.py'
+      - 'tools/valuation_rule.py'
       - 'tools/company_html/**'
       - '**/html.json'
       - 'skhynix/**'
@@ -51,7 +53,7 @@ jobs:
       - name: 安裝 python3、openpyxl、libreoffice-calc
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends python3 python3-openpyxl libreoffice-calc
+          sudo apt-get install -y --no-install-recommends python3 python3-openpyxl python3-numpy libreoffice-calc
 
       - name: 重建、重算、檢查錯誤格並與 dist 比對
         run: |
@@ -102,8 +104,12 @@ jobs:
       - name: HTML 展示層檢核（重現性、抽數、無手寫數字、自含）
         run: |
           # 以 dist 內已提交的 xlsx 產生 HTML，須與已提交的 HTML 逐位元組相同；並逐一回頭比對 xlsx 重算值
-          dirs=$(ls -d */ | tr -d '/' | while read d; do [ -f "$d/html.json" ] && echo "$d"; done)
+          dirs=$(ls */html.json | xargs -n1 dirname)
           python3 tools/company_html/check_company_html.py $dirs
+
+      - name: 總覽重跑（讀各公司 xlsx 的規則值；data.json 與 datasets 須與已提交的相同）
+        run: |
+          python3 markets/overview/extract.py > /dev/null
 
       - name: 確認工作樹未被改動
         run: |
