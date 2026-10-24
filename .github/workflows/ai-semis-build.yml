@@ -23,6 +23,7 @@ on:
       - 'nvidia/**'
       - 'arista/**'
       - 'ibiden/**'
+      - 'delta/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -42,6 +43,7 @@ on:
       - 'nvidia/**'
       - 'arista/**'
       - 'ibiden/**'
+      - 'delta/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -79,6 +81,7 @@ jobs:
             "nvidia|python3 nvidia/build_nvidia.py|nvidia/dist"
             "arista|python3 arista/build_arista.py|arista/dist"
             "ibiden|python3 ibiden/build_ibiden.py|ibiden/dist"
+            "delta|python3 delta/build_delta.py|delta/dist"
           )
           failed=0
           for t in "${targets[@]}"; do
