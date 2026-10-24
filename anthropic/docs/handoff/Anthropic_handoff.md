@@ -12,15 +12,17 @@
 - 規格 `docs/plan/20261008_Anthropic_v0.1_規格.md`（r1）；共同規則與 A1–A5 工作單 `docs/workorders/20261008_anthropic_*`。
 - 成品：`dist/`；Drive `02-算力收支/Anthropic/`（chat 端放置）。
 
-## 3. 模型狀態：**v0.1.4**（2026-10-22；v0.1.3 A＋B 段＋v0.1.4 同在 PR #69，待 chat 端審查合併；v0.1 於 2026-10-08 完成，A0–A5；v0.1.2 見下方摘要）
+## 3. 模型狀態：**v0.1.5**（2026-10-24；TK v21.2 同步，分支 `claude/anthropic-v0.1.5`，不合併，待 chat 端審查；以下 v0.1.4 起為前版：v0.1.3 A＋B 段＋v0.1.4 同在 PR #69，待 chat 端審查合併；v0.1 於 2026-10-08 完成，A0–A5；v0.1.2 見下方摘要）
 | 項目 | 現況 |
 |---|---|
-| Excel | `model/20261022_Anthropic_v0.1.4.xlsx`（`model/CURRENT`）；v0.1–v0.1.3 在 `model/archive/`；成品副本 `dist/20261022_Anthropic收支模型_v0_1_4.xlsx`（位元組相同，測試檢查）；`dist/_待刪除/` 已於 v0.1.4 刪除（Drive 仍有副本） |
-| HTML 一頁摘要 | `dist/20261022_Anthropic收支模型_v0_1_4.html`（產生器 `tools/build_html.py`；情境 `tools/html_scenarios.yaml`；測試 `tests/test_html.py`；畫面檢查 `tools/read_html_screen.py`）；「①之三」＝v0.1.3 更新了什麼（U2 新法、資金三層、持續擴張、η 拆解、Bridge 逐層對照） |
-| 報告 | `docs/reports/20261022_v0.1.4.md`、`20261022_v0.1.4_對照.xlsx`（v0.1.4）；`20261022_v0.1.3.md`、`_對照.xlsx`（B 段，含全版本摘要）；`20261022_v0.1.3-A.md`；v0.1.2、v0.1.1、v0.1 報告仍有效 |
-| Tokenomics | **v19.1**，master `c2ecb71`（`20261022_Tokenomics_v19.1.xlsx`；Luna CSA top-k 1024 → 512；v19.0 為 `1916a06`）；106 名（含 14 個 v18.0 對照名稱、23 個 B 段 η 診斷對照名稱）＋NonNV 18 格＋PUE 3 格。OpenAI v0.6 仍用 v5.26，並排時 TK 版本不同 |
+| Excel | `model/20261024_Anthropic_v0.1.5.xlsx`（`model/CURRENT`）；v0.1–v0.1.4 在 `model/archive/`；成品副本 `dist/20261024_Anthropic收支模型_v0_1_5.xlsx`（位元組相同，測試檢查）；`dist/_待刪除/` 已於 v0.1.4 刪除（Drive 仍有副本） |
+| HTML 一頁摘要 | `dist/20261024_Anthropic收支模型_v0_1_5.html`（產生器 `tools/build_html.py`；情境 `tools/html_scenarios.yaml`；測試 `tests/test_html.py`；畫面檢查 `tools/read_html_screen.py`）；「①之三」＝v0.1.3 更新了什麼（U2 新法、資金三層、持續擴張、η 拆解、Bridge 逐層對照） |
+| 報告 | `docs/reports/20261024_v0.1.5.md`、`20261024_v0.1.5_對照.xlsx`（v0.1.5）；`docs/reports/20261022_v0.1.4.md`、`20261022_v0.1.4_對照.xlsx`（v0.1.4）；`20261022_v0.1.3.md`、`_對照.xlsx`（B 段，含全版本摘要）；`20261022_v0.1.3-A.md`；v0.1.2、v0.1.1、v0.1 報告仍有效 |
+| Tokenomics | **v21.2**，master `45ce1ca`（`20261023_Tokenomics_v21.2.xlsx`；計價倍數 0.85 → 1.8，127 值中 10 個變動，只進對照列）。前版 v19.1 `c2ecb71`（`20261022_Tokenomics_v19.1.xlsx`；Luna CSA top-k 1024 → 512；v19.0 為 `1916a06`）；106 名（含 14 個 v18.0 對照名稱、23 個 B 段 η 診斷對照名稱）＋NonNV 18 格＋PUE 3 格。OpenAI v0.6 仍用 v5.26，並排時 TK 版本不同 |
 | OpenAI 對照 | `OAI_Link`：`20261008_OpenAI_v0.6.xlsx`（SHA-256 `34fc34a7…`，`e91df57`），17 名 |
 | 規模 | 15 頁（新增 Bridge、EtaDiag，皆唯讀）；SRC_ANT 409；Inputs 190；具名範圍 1,276；公式格 7,256；Checks C01–C156（CHK_Errors＝0、CHK_Warnings＝2：C89 逐家對帳、C116 U4 含自建的 2026 算力成本 +47%）；parity 情境 44 |
+
+**v0.1.5 變動摘要**：TK v19.1 → v21.2；10 個名稱（L1_TokLedger_2026Q2、L1_GapSpendBasis／Product／Unexplained 各含低高）只進對照列；token 帳未閉合倍數 6.39 → 3.02；本模型命題輸出、η、資金、擴張與 v0.1.4 逐位相同。
 
 **v0.1.4 變動摘要**：TK v19.0 → v19.1（39 個名稱值變動，只有 IF_TokGW_Luna 進計算）；命題輸出與 v0.1.3 逐位相同（供給 GW 由合約決定；η 0.5273 → 0.5254 吸收 Luna 產能 +17.8%，只移動有效推論／研發 GW 分攤：2030 推論 +0.004 GW）；η 診斷補充：f_U 計入 TK 生產折減（殘差 0.440 → 0.517）、殘差對照 TK L1_GapUnexplained（0.344 倍）；刪 `dist/_待刪除/`；EtaDiag 第七節 E38–E47、Checks C153–C156；公式格 7,256、具名範圍 1,276。
 

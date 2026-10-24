@@ -179,6 +179,8 @@ def sheet_readme(ctx, summary):
     lines = [
         ("本版範圍", f"{STAGE}：SRC_ANT、TK_Link（含 NonNV 讀表）、OAI_Link、Inputs、Demand（需求與 token 量）、Revenue（訂閱方案別、API 層級別、通路分成、淨額、容量上限）、Compute（加速器族、逐合約供給 GW、η、推論與研發 GW、容量上限、VR 等值）、"
                     "Cost（逐合約實付、自建資本支出、供應商持有成本、非算力成本、股權報酬、命題表；A4 補逐家對帳與敏感度）、Bridge（逐層對照，唯讀）、EtaDiag（η 診斷，唯讀）、Funding（命題 2）、Reverse（管理層目標反解，只作對照）、Checks。"),
+        ("v0.1.5 更新", "Tokenomics 快照 v19.1 → v21.2（master 45ce1ca；TK 計價倍數 AL_SpendBasis 0.85 → 1.8）：TK_Link 以同一份名稱清單重讀，127 個值中 10 個變動（L1_TokLedger_2026Q2、L1_GapSpendBasis／Product／Unexplained 各含低／高），"
+                        "只進對照列（Cost 第二十一節 token 帳未閉合倍數、Bridge、EtaDiag 第六、七節、Checks 資訊列）；公式、η 與全部命題輸出不變。"),
         ("v0.1.3 A 段更新", "採納外部驗收報告（v0.1.2）：①TK 快照改 v19.0（103 個值與 v18.0 相同）；②U2 新法（Inputs u2_method）：Nscale、Lambda 供給 GW 取揭露 MW（460／350），付款路徑不變（『最高 86』按 MW 比例分攤的年付款，Cost 第二十二節；隱含每 GW 年付款對照列）；"
                             "③資金三層（Funding 第十節：①營運自由現金流自給、②加已到位股權＝基準、③再加條件式）；④持續擴張情境（Cost 第二十三節、Funding 第十一節；只作情境，基準不追加）；"
                             "⑤HTML 結論改條件式。新列皆附加在頁尾，既有列編號不變。"),
