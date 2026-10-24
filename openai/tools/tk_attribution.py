@@ -8,7 +8,8 @@ LibreOffice 重算，從具名範圍讀輸出。情境：
   ONLY_g 只有 g 組為 v19.0（其餘 v5.26）
   LOO_g  只有 g 組為 v5.26（其餘 v19.0）
 組別：1 IF_TokGW_*；2 IF_HoldEcon；3 IF_CapexTotal；4 其餘（兩版都有、值不同的名稱，且不在 1–3）。
-用法：python3 tools/tk_attribution.py --new model/<v0.6.2>.xlsx --old model/archive/<v0.6.1>.xlsx --out <json>
+v0.6.3（TK v19.0 → v21.4）加細：4 IF_TokGWPaidMix＋IF_FleetProdRatio_VR200（P×Q 的 Q 面）；5 IF_PxEffMix（P×Q 的牌價）；6 其餘（旗標 --split-q）。
+用法：python3 tools/tk_attribution.py --new model/<新>.xlsx --old model/archive/<舊>.xlsx --out <json> [--split-q]
 """
 import argparse
 import json
@@ -31,7 +32,8 @@ OUTPUTS = {  # 名稱 → 說明；皆為具名範圍（年度向量取 FY2025�
     "CMP_TokGW": "token 換算 GW（÷η 前）", "CMP_VReqFactor": "機隊 VR 等值係數", "CMP_Supply_VReq": "供給 VR 等值 GW",
     "COST_PropRev_VR": "每 VR 等值 GW 營收 $B", "COST_PropFull_VR": "每 VR 等值 GW 全成本（現金）$B", "COST_Coverage": "營收覆蓋全成本比",
     "COST_RDCompute": "研發算力成本 $B", "COST_Q3": "Q3 研發占整體成本", "COST_Q3GapTK": "研發算力 − TK L1_Ans3 差距 $B",
-    "PXQ_Ratio": "PxQ 比值", "CHK_Errors": "Checks 錯誤數",
+    "PXQ_Ratio": "PxQ 比值", "PXQ_Q": "PxQ Q（M tok/年）", "PXQ_Peff": "PxQ 有效牌價", "PXQ_h": "PxQ 每 GW 持有成本 h", "PXQ_C": "PxQ 算力成本 C",
+    "PXQ_mL_Actual": "PxQ 實際 m×L", "PXQ_mL_Required": "PxQ 所需 m×L", "CHK_Errors": "Checks 錯誤數",
 }
 
 
@@ -59,6 +61,7 @@ def main():
     ap.add_argument("--new", type=Path, required=True)
     ap.add_argument("--old", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--split-q", action="store_true", help="v0.6.3：組 4 拆為 Q 面（IF_TokGWPaidMix、IF_FleetProdRatio_VR200）、5 牌價（IF_PxEffMix）、6 其餘")
     a = ap.parse_args()
     new_ws = openpyxl.load_workbook(a.new, data_only=True)["TK_Link"]
     old_ws = openpyxl.load_workbook(a.old, data_only=True)["TK_Link"]
@@ -73,6 +76,11 @@ def main():
     groups = {1: [n for n in diff if re.fullmatch(r"IF_TokGW_(Luna|Sol|Astra)", n)], 2: [n for n in diff if n == "IF_HoldEcon"],
               3: [n for n in diff if n == "IF_CapexTotal"]}
     groups[4] = [n for n in diff if n not in sum(groups.values(), [])]
+    if a.split_q:
+        q = [n for n in groups[4] if n in ("IF_TokGWPaidMix", "IF_FleetProdRatio_VR200")]
+        px = [n for n in groups[4] if n == "IF_PxEffMix"]
+        groups[5], groups[6] = px, [n for n in groups[4] if n not in q + px]
+        groups[4] = q
     print({g: len(v) for g, v in groups.items()}, "異動名稱", len(diff))
 
     def variant(old_groups, tag):
@@ -89,9 +97,10 @@ def main():
         res = openpyxl.load_workbook(rc, data_only=True)
         return {k: values(res, k) for k in OUTPUTS}
 
-    scen = {"OLD": variant([1, 2, 3, 4], "OLD"), "NEW": variant([], "NEW")}
-    for g in (1, 2, 3, 4):
-        scen[f"ONLY_{g}"] = variant([x for x in (1, 2, 3, 4) if x != g], f"ONLY_{g}")
+    gs = sorted(groups)
+    scen = {"OLD": variant(gs, "OLD"), "NEW": variant([], "NEW")}
+    for g in gs:
+        scen[f"ONLY_{g}"] = variant([x for x in gs if x != g], f"ONLY_{g}")
         scen[f"LOO_{g}"] = variant([g], f"LOO_{g}")
         print("done", g, flush=True)
     a.out.write_text(json.dumps(dict(outputs=OUTPUTS, groups=groups, scen=scen), ensure_ascii=False, indent=1, default=str), encoding="utf-8")

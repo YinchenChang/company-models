@@ -202,8 +202,8 @@ def test_pxq_not_fed_back():
                     assert "PxQ!" not in c.value and "PXQ_" not in c.value, f"{ws.title}!{c.coordinate}"
 
 
-def test_tk_link_single_snapshot_v19():
-    """v0.6.2：TK_Link 為單一 Tokenomics v19.0 快照（88 名有值、待提供 2 名）；TK_PxQ 頁與 TKQ_ 名稱已退役；前 63 名列位與 v0.6.1 相同（名稱、列序不變）。"""
+def test_tk_link_single_snapshot_v21_4():
+    """v0.6.3：TK_Link 為單一 Tokenomics v21.4 快照（v0.6.2 起單一快照；v0.6.3 換版 v19.0→v21.4）（88 名有值、待提供 2 名）；TK_PxQ 頁與 TKQ_ 名稱已退役；前 63 名列位與 v0.6.1 相同（名稱、列序不變）。"""
     import openpyxl
     root = Path(__file__).resolve().parents[2]
     old = openpyxl.load_workbook(root / "model" / "archive" / "20261022_OpenAI_v0.6.1.xlsx", data_only=True)["TK_Link"]
@@ -211,7 +211,7 @@ def test_tk_link_single_snapshot_v19():
     assert "TK_PxQ" not in new.sheetnames
     assert not any(n.startswith("TKQ_") for n in new.defined_names)
     cur = new["TK_Link"]
-    assert cur["B4"].value == "v19.0"
+    assert cur["B4"].value == "v21.4"
     n = 0
     for r in range(10, 200):
         if old.cell(r, 1).value is None:
