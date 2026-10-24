@@ -1,6 +1,7 @@
 # Anthropic v0.1 分段建置進度（接手用；A1–A5 共用）
 
 ## 目前狀態（每次 push 前覆寫）
+- **v0.1.5 進行中**（2026-10-24；工作單 `docs/workorders/20261024_anthropic_v0.1.5_TK21.2.md`；分支 `claude/anthropic-v0.1.5`；**不合併**）。已完成：步驟 1（TK_Link 重建為 v21.2，`model/20261024_Anthropic_v0.1.5.xlsx`；check_tk_snapshot OK 127；與 v0.1.4 逐格比較：TK_Link 10 值＋Cost E272/E279、Bridge E123、EtaDiag 14 格、Checks C130/C159 為對照／資訊格，其餘主要輸出差 0）。**下一步**：步驟 2（a4 c2_tkled 說明不寫死、HTML η 小表加 v21.2 欄）→3 重算與測試→4 HTML／dist→5 報告與 PR。**未解問題**：無。
 - **v0.1.4 完成**（2026-10-22；工作單 `docs/workorders/20261022_anthropic_v0.1.4_TK19.1.md`；同分支 `claude/anthropic-v0.1.3`、PR #69，標題「Anthropic v0.1.3＋v0.1.4」；**不合併**）。步驟 1–6 全部完成，報告 `docs/reports/20261022_v0.1.4.md`；pytest 117 項全過；命題輸出與 v0.1.3 逐位相同。**下一步**：chat 端審查 PR #69；待決僅 U2 付款分攤比例（A 段遺留）。**未解問題**：無新增。
 - **v0.1.3 A 段進行中**（分支 `claude/anthropic-v0.1.3`，PR #69 draft）：步驟 1–7 完成（報告 `docs/reports/20261022_v0.1.3-A.md`）。**B 段起點**：η 診斷拆分（不得改 η 值）、Bridge 頁（唯讀）、S-1 替換程序寫入 CLAUDE.md；B 段結束時重產 HTML 與 dist（目前 dist 為 A 段草稿，v0.1.2 成品在 `dist/_待刪除/`）。chat 端已更正 U2 公式（付款路徑不變、只改供給 GW）；待確認：工作單「公告金額比例」與「v0.1.2 路徑不變」的衝突（報告 ⑥）。B 段完成（2026-10-22；見下方「v0.1.3 B 段」表；PR #69 ready，待 chat 端審查合併）。
 
