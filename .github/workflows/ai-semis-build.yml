@@ -25,6 +25,7 @@ on:
       - 'ibiden/**'
       - 'delta/**'
       - 'quanta/**'
+      - 'innolight/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -46,6 +47,7 @@ on:
       - 'ibiden/**'
       - 'delta/**'
       - 'quanta/**'
+      - 'innolight/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -85,6 +87,7 @@ jobs:
             "ibiden|python3 ibiden/build_ibiden.py|ibiden/dist"
             "delta|python3 delta/build_delta.py|delta/dist"
             "quanta|python3 quanta/build_quanta.py|quanta/dist"
+            "innolight|python3 innolight/build_innolight.py|innolight/dist"
           )
           failed=0
           for t in "${targets[@]}"; do
