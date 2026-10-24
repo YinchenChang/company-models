@@ -107,6 +107,8 @@ function tkAnchorQ(sc, o = {}) { // v0.2a：每 MW 年收入＝Tokenomics 錨 ×
     R.start.push(prevT); R.end.push(end); R.add.push(add); R.avg.push(avg); R.anchor.push(A); R.longMw.push(lm); R.ls.push(s); R.k.push(k); R.rev.push(A * k); R.capRef.push(cap); REVCAP_LAYERS_Q.forEach(L => { R.capLay[L].push(lay[L]); R.capRL[L].push(A * k / lay[L]) }); R.capRatio.push(A * k / lay[REVCAP_LAYER_Q]); // v0.4a：capRatio 取比較層（四層明細在 capLay／capRL；capRef＝IF_RevGWFleet 對照）
     prev = cur; prevT = end
   }
+  let PQ = [``, `_Lo`, `_Hi`].map(x => TK[`L1_RevGW_PQ_VR200` + x]); // v0.5.1（自 Oracle v0.3）：第五列對照＝Nebius 每 MW 年收入 ÷ 模型商每 MW 實收 P×Q（VR200 第一年；基準／低／高）；不設門檻、不進估值
+  R.pq = PQ.every(v => typeof v === `number`) ? { base: PQ[0], lo: PQ[1], hi: PQ[2], r: R.rev.map(x => x * 1e3 / PQ[0]), rHi: R.rev.map(x => x * 1e3 / PQ[2]), rLo: R.rev.map(x => x * 1e3 / PQ[1]) } : null;
   return R
 }
 function siteBenchQ(e) {

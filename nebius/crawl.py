@@ -10,7 +10,7 @@ def crawl(path):
         pg = b.new_page(viewport={'width': 1440, 'height': 900})
         pg.on('pageerror', lambda e: errs.append(str(e)))
         pg.goto('file://' + os.path.abspath(path)); pg.wait_for_timeout(2500)
-        norm = lambda t: re.sub(r'v\d\.\d', 'vX', t)
+        norm = lambda t: re.sub(r'v\d\.\d(?:\.\d+)?', 'vX', t)
         # 擷取整頁可見文字：<main> 只是資金模型頁的一個區塊，總結頁與損益與評價頁的內容不在其中
         def snap(key): out[key] = norm(pg.inner_text('body'))
         SKIP = ('總結', '資金模型', '損益與評價', '簡報模式（全螢幕）', '列印／另存 PDF', '載入', '重設', '儲存 JSON', '年度 CSV', '站點 CSV')
