@@ -22,6 +22,7 @@ on:
       - 'disco/**'
       - 'nvidia/**'
       - 'arista/**'
+      - 'ibiden/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -40,6 +41,7 @@ on:
       - 'disco/**'
       - 'nvidia/**'
       - 'arista/**'
+      - 'ibiden/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -76,6 +78,7 @@ jobs:
             "disco|python3 disco/build_disco.py|disco/dist"
             "nvidia|python3 nvidia/build_nvidia.py|nvidia/dist"
             "arista|python3 arista/build_arista.py|arista/dist"
+            "ibiden|python3 ibiden/build_ibiden.py|ibiden/dist"
           )
           failed=0
           for t in "${targets[@]}"; do
@@ -105,7 +108,7 @@ jobs:
             echo "重建結果與 dist 成品不一致（任何數值差異都視為錯誤）" >&2
             exit 1
           fi
-          echo "十個模型重建後錯誤格 0、與 dist 逐格相同"
+          echo "全部模型重建後錯誤格 0、與 dist 逐格相同"
 
       - name: HTML 展示層檢核（重現性、抽數、無手寫數字、自含）
         run: |
