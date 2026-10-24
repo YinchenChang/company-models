@@ -380,7 +380,7 @@ def build_p6(wb, R, S, I, nm, snapq):
     X.line("Q（M tok／年）＝GW × 服務占比 ×（1 − 免費占比）× 每 GW 付費年產能 × 折減 × 實際利用率", "w_Q", {
         c: "=%s{w_gw}*TK_IF_ServeShare*(1-TK_IF_FreeShare)*%s{w_cap0}*%s{w_der}*TK_IF_UtilActual" % (c, c, c) for c in "DEF"}, fmt_map={c: SCI for c in "DEF"}, unit="M tok/年",
            note="與 PxQ 主序列 Q 同式（GW 路線＝P×Q 的 Q 所用口徑）；(C) 應等於主序列口徑一基準欄的 Q")
-    X.line("核對：Q −（4.1 預覽基準 Q／主序列 Q，同欄）（應＝0）", "w_Qchk", {"D": "=D{w_Q}-$G${pv_Q}", "F": "=F{w_Q}-$G${m_Q}"}, fmt_map={"D": "0.0E+00", "F": "0.0E+00"}, unit="M tok/年",
+    X.line("核對：（Q −（4.1 預覽基準 Q／主序列 Q））÷ 該 Q（應＝0；相對差）", "w_Qchk", {"D": "=(D{w_Q}-$G${pv_Q})/$G${pv_Q}", "F": "=(F{w_Q}-$G${m_Q})/$G${m_Q}"}, fmt_map={"D": "0.0E+00", "F": "0.0E+00"}, unit="比例",
            note="(A) 對 4.1 預覽基準區塊（交接檔組合＋一律 0.85）；(C) 對主序列；Checks 驗證")
     X.hdr(["8.2 需求面付費 token（2026 Q2，年化）", "單位", "(A)", "(B)", "(C)"], "w_hdr2")
     X.line("API 付費 token＝每分鐘處理 token（時點值）× 每年分鐘數 → M tok／年", "w_api", {

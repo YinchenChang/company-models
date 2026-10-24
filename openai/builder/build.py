@@ -581,7 +581,7 @@ def p6_checks(R, P6, S, rowof):
         ("v0.6.3 P×Q：證據對帳（6B：A 段／J7／工作單驗收值）超出容許誤差的項數", "=PXQ_ReconBad", 0, "eq", "容許誤差 INP_307（1%）；6A 交接檔 v18.0 歷史對照不再計入"),
         ("v0.6.3 W3：GW 路線 token 帳 (A) 交接檔組合×0.85 對 2.10 的相對差絕對值", "=ABS(INDEX(PXQ_TokLedgerRel,1))", 0.01, "le", "token帳缺口 A 段 2.0966；工作單驗收 2.10，容差 1%"),
         ("v0.6.3 W3：GW 路線 token 帳 (B) 交接檔組合×0.806 對 1.99 的相對差絕對值", "=ABS(INDEX(PXQ_TokLedgerRel,2))", 0.01, "le", "token帳缺口 A 段 1.9876；工作單驗收 1.99，容差 1%"),
-        ("v0.6.3 W3：第八節 Q 與主序列／預覽基準 Q 的差（應＝0）", f"=ABS(PxQ!$D${rw['w_Qchk']})+ABS(PxQ!$F${rw['w_Qchk']})", 0, "tol", ""),
+        ("v0.6.3 W3：第八節 Q 與主序列／預覽基準 Q 的相對差（應＝0）", f"=ABS(PxQ!$D${rw['w_Qchk']})+ABS(PxQ!$F${rw['w_Qchk']})", 0, "tol", "浮點誤差內為 0"),
         ("v0.6.3：API 每分鐘 token 與 TK_SRC_DEM_011 相等（B tok/min）", f"={S('API 每分鐘處理 token：2026-03-31（超過）')}-TK_SRC_DEM_011", 0, "tol", "照 Tokenomics 原紀錄抄錄"),
         ("v0.6.3：Fairwater 六情境倍數最小值（J7 結果 0.76）", "=MIN(PXQ_FW_Mult)", None, "info", "J7：倍數 0.76–0.98"),
         ("v0.6.3：Fairwater 六情境倍數最大值（J7 結果 0.98）", "=MAX(PXQ_FW_Mult)", None, "info", ""),

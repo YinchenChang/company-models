@@ -7,6 +7,9 @@ OpenAI 收支模型（v0.6，建置中）。2026-10-07 由 `YinchenChang/openai-
 - 本地建置：`pip install -r requirements-dev.txt`；`python3 builder/build.py --tk-dir <Tokenomics> --out model/<檔名>.xlsx --base model/<現行>.xlsx`；測試 `python3 -m pytest tests/parity`。
 - 需要 LibreOffice Calc（Ubuntu：`apt-get install -y --no-install-recommends libreoffice-calc-nogui`）。
 
+## v0.6.3：PxQ 比值 2026 三口徑（Tokenomics v21.4）
+- `PxQ` 頁 11 欄：2025 指數／線性 + 2026 口徑一（Q2 年化營收÷Q2 季平均 GW，主）／口徑二（FY2026 營收÷全年平均 GW）／口徑三（9 月底 run-rate÷年底 GW）× 低／基準／高；新增 Fairwater 六情境（第七節）與 GW 路線 token 帳（第八節）。建置：`python3 builder/build.py --tk-dir <Tokenomics checkout> --out model/20261025_OpenAI_v0.6.3.xlsx --base model/archive/20261022_OpenAI_v0.6.2.xlsx --date 2026-10-25 --tk-date 2026-10-25`。報告 `docs/reports/20261025_v0.6.3.md`。
+
 ## v0.6.2：Tokenomics 同步 v19.0（單一快照）
 - `TK_Link` 改取 Tokenomics master `model/CURRENT`（v19.0）；`TK_PxQ`／`TKQ_` 退役。建置只需一份 Tokenomics：`python3 builder/build.py --tk-dir <Tokenomics checkout> --out model/20261022_OpenAI_v0.6.2.xlsx --base model/archive/20261022_OpenAI_v0.6.1.xlsx --date 2026-10-22`。報告 `docs/reports/20261022_v0.6.2_TK同步.md`；歸因 `tools/tk_attribution.py`。（以下 v0.6.1 的 `TK_PxQ`／`--tk-pxq-dir` 說明為歷史紀錄。）
 
