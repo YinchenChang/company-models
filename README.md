@@ -24,6 +24,7 @@
 | `advantest/` | Advantest（6857.T）：SoC／記憶體測試機收支與 P/E 估值；三情境、對帳、敏感度；見 `advantest/README.md` | 獨立產生器（比照 `tsmc/`；AI 半導體 Project 步驟 5 第一家公司） | v0.2.2（成品：`advantest/dist/20261023_Advantest模型_v0.2.2.xlsx`、`.html`；設備股共用循環位置規則；HTML 展示層） |
 | `disco/` | Disco（6146.T）：研削／切割裝置與消耗品收支、P/E 估值；HBM 工序與 CoWoS 片數驅動、三情境、混合鍵合開關、對帳、敏感度；見 `disco/README.md` | 獨立產生器（比照 `advantest/`；AI 半導體 Project 步驟 5 第二家公司） | v0.1.3（成品：`disco/dist/20261023_Disco模型_v0.1.3.xlsx`；FY2026 錨定公司資料、設備股共用循環位置規則） |
 | `nvidia/` | NVIDIA（NVDA）：運算顆數 × 每顆售價＋網通附掛的收支與 P/E 估值；三情境、FY2027 錨點、對帳、敏感度、金額份額可重用函式；見 `nvidia/README.md` | 獨立產生器（比照 `advantest/`；AI 半導體 Project 運算層第一個樣板，之後 AVGO、AMD 複製） | v0.1.1（成品：`nvidia/dist/20261023_NVIDIA模型_v0.1.1.xlsx`、`.html`；認列顆數係數 k_rec 使 FY2027 與 FY2028 基準一致；10 年落後 P/E 規則值不適用；循環位置用共用規則的 lag 版） |
+| `arista/` | Arista Networks（ANET）：AI 後端乙太網路交換器市場 × Arista 份額＋非 AI 的收支與 P/E 估值；三情境、FY2026 錨點、對帳、敏感度；Arista 份額為本專案權威；見 `arista/README.md` | 獨立產生器（比照 `nvidia/`、`avgo/`；AI 半導體 Project 網通系統端樣板） | v0.1（成品：`arista/dist/20261024_Arista模型_v0.1.xlsx`、`.html`） |
 | `markets/overview/` | AI 半導體總覽儀表板 | 彙整橋接表、記憶體、網通、台積電模型；估值規則；記憶體三家 P/E 對照、美光買回加回 P/B；設備分頁（設備市場、Advantest、Disco；設備股共用循環位置規則） | v0.6 |
 
 規則：
@@ -35,7 +36,7 @@
 - 成品的 Drive 位置：`02-算力收支/<公司>/`（資料夾 2026-10-07 由錯字「02-算利收支」改名）。
 
 ## 共用工具：公司模型 HTML 展示層（`tools/company_html/`）
-- Excel 仍是計算事實的來源；`<公司>/html.json` ＋ 共用產生器 → `<公司>/dist/<日期>_<公司>模型_v<版本>.html`（單頁自含、每個數字標註來源儲存格）。檢核（重現性、抽數、無手寫數字）在 `ai-semis-build` CI。說明見 `tools/company_html/README.md`。目前：Advantest、Disco、SK 海力士、美光、三星、台積電、NVIDIA。風格比照 AI 半導體價值鏈儀表板：白底、青綠主色，不做深色模式。
+- Excel 仍是計算事實的來源；`<公司>/html.json` ＋ 共用產生器 → `<公司>/dist/<日期>_<公司>模型_v<版本>.html`（單頁自含、每個數字標註來源儲存格）。檢核（重現性、抽數、無手寫數字）在 `ai-semis-build` CI。說明見 `tools/company_html/README.md`。目前：Advantest、Disco、SK 海力士、美光、三星、台積電、NVIDIA、Arista。風格比照 AI 半導體價值鏈儀表板：白底、青綠主色，不做深色模式。
 
 ## 共用工具：Tokenomics 取數（`tools/tokenomics/import_tokenomics.py`）
 - **用途**：把 Tokenomics 的 Interface（`IF_`、四層瀑布 `IFW_`、用途欄 `IFC_`）、L1（`L1_`）與來源（`SRC_`，限 Active）具名範圍讀成版本固定的快照 JSON（記錄檔名、`model/CURRENT`、commit、擷取日；每個值記名稱、世代、成本情境、單位、工作表!儲存格），供各公司 `company.json` → `tokenomics.snapshotFile` 引用。公司模型只讀快照，不直接讀 Tokenomics。

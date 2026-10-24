@@ -21,6 +21,7 @@ on:
       - 'advantest/**'
       - 'disco/**'
       - 'nvidia/**'
+      - 'arista/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -38,6 +39,7 @@ on:
       - 'advantest/**'
       - 'disco/**'
       - 'nvidia/**'
+      - 'arista/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -73,6 +75,7 @@ jobs:
             "advantest|python3 advantest/build_advantest.py|advantest/dist"
             "disco|python3 disco/build_disco.py|disco/dist"
             "nvidia|python3 nvidia/build_nvidia.py|nvidia/dist"
+            "arista|python3 arista/build_arista.py|arista/dist"
           )
           failed=0
           for t in "${targets[@]}"; do
