@@ -109,6 +109,9 @@ def resolve_overrides(scn_id: str, loc: Locator, cfg: dict | None = None) -> dic
                 v = loc.input_cell(name, spec)
             elif isinstance(spec, dict) and "mul" in spec:
                 v = loc.input_cell(name, "val") * loc.input_cell(spec["mul"], "val")
+            elif spec == "prev14":
+                out.update(prev_cells(name, PREV14_XLSX))      # v0.1.5：TK 快照回到 v19.1（值取自 v0.1.4 Excel）
+                continue
             elif spec == "prev19":
                 out.update(prev_cells(name, PREV19_XLSX))      # v0.1.4：TK 快照回到 v19.0（值取自 v0.1.3 Excel）
                 continue
@@ -127,6 +130,7 @@ def resolve_overrides(scn_id: str, loc: Locator, cfg: dict | None = None) -> dic
 
 PREV_XLSX = REPO / "model" / "archive" / "20261021_Anthropic_v0.1.1.xlsx"
 PREV19_XLSX = REPO / "model" / "archive" / "20261022_Anthropic_v0.1.3.xlsx"
+PREV14_XLSX = REPO / "model" / "archive" / "20261022_Anthropic_v0.1.4.xlsx"
 _PREV: dict = {}
 
 
@@ -749,22 +753,31 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
     k14_rows += [k14row(f"每 VR 等值 GW 差額 {y}（$B/GW/年）", "COST_PropGap_VR", y, "sf3", y == 2030) for y in (2025, 2026, 2027, 2028, 2029, 2030)]
     k14_rows += [k14row("有效推論 GW 2030", "CMP_InfGW_Eff", Y, "f3"), k14row("研發 GW 2030", "CMP_RDGW", Y, "f3"), k14row("覆蓋率 2030（倍）", "COST_Coverage", Y, "f3"), k14row("累計外部資金需求 2026–2030 $B（基準）", "FND_ExtNeedCum", Y, "f1", True),
                  k14row("只靠已到位融資的現金谷底 $B", "FND_CashNoExtTrough", None, "f2")]
-    ev_cols = [("v0.1.1（TK v5.26）", "v011"), ("v0.1.2（v18.0）", "v012"), ("v0.1.3（v19.0）", "v013"), ("v0.1.4（v19.1）", "base")]
+    ev_cols = [("v0.1.1（TK v5.26）", "v011"), ("v0.1.2（v18.0）", "v012"), ("v0.1.3（v19.0）", "v013"), ("v0.1.4（v19.1）", "v014"), (f"v0.1.5（{tk_ver}）", "base")]
     def evrow(lab, ref, f, em=False):
         ratio = V.get(ref, None, "base") / V.get(ref, None, "v013")
         return (f'<tr class="{"em" if em else ""}"><td>{lab}</td>' + "".join(f"<td>{n(ref, None, f, sc)}</td>" for _l, sc in ev_cols) + f"<td>{ratio:.3f}</td></tr>")
     ev_rows = [evrow("η（2025）", "ETA_Eta", "f3", True), evrow("f_P 計價口徑", "ETA_fP", "f3"), evrow("f_U 利用率（不計生產折減）", "ETA_fU", "f3"),
                evrow("f_W 工作負載組合", "ETA_fW", "f3"), evrow("未解釋殘差（不計生產折減；v0.1.3 口徑）", "ETA_Resid", "f3"),
                evrow("f_U' 利用率（計入生產折減）", "ETA_fU_Prod", "f3"), evrow("未解釋殘差（計入生產折減；v0.1.4）", "ETA_Resid2", "f3", True)]
-    S.append(f"""<section id="s1c"><h2><span class="no">①之三</span>v0.1.3＋v0.1.4 更新了什麼：TK v19.1、η 診斷補充；U2 新法、資金三層、持續擴張、η 拆解、逐層對照</h2>
-<p class="lead"><b>v0.1.4 摘要</b>：Tokenomics 由 v19.0 升到 v19.1（Luna 的 CSA top-k 1024 → 512；39 個名稱值變動，其中只有 IF_TokGW_Luna 進命題計算），η 由 {n("CMP_Eta2025", None, "f3", "v013")} 微降到 {n("CMP_Eta2025", None, "f3")}，命題輸出（每 VR 等值 GW 差額、覆蓋率、供給 GW、現金流、外部資金需求）與 v0.1.3 <b>逐位相同</b>（2030 年差額 {n("COST_PropGap_VR", Y, "sf3", "v013")} → {n("COST_PropGap_VR", Y, "sf3")} $B/GW/年；累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0")}）：供給 GW 由已簽合約決定，TK 產能變動被 η 的 2025 校準吸收，只移動有效推論 GW 與研發 GW 的分攤（2030 年有效推論 GW {n("CMP_InfGW_Eff", Y, "f3", "v013")} → {n("CMP_InfGW_Eff", Y, "f3")}，研發 GW {n("CMP_RDGW", Y, "f3", "v013")} → {n("CMP_RDGW", Y, "f3")}）。η 診斷補充：利用率因子計入 TK 生產折減（{n("TK_IF_ProdDerate", None, "f2")}）後，未解釋殘差由 {n("ETA_Resid", None, "f3")} 變為 {n("ETA_Resid2", None, "f3")}；η 本身不因診斷而改變。以下兩個表之後，為 v0.1.3 的內容（表中數字為 v0.1.4 現值，標明 v0.1.3 者為 TK v19.0 當時值）。</p>
+    k15 = [("L1_TokLedger_2026Q2", "token 帳未閉合倍數（模型付費 token ÷ 需求面付費 token）", "f2"),
+           ("L1_GapSpendBasis", "TK 落差 2：推論支出計價 ÷ 持有成本（AL_SpendBasis 計價倍數）", "f2"), ("L1_GapSpendBasis_Lo", "　低", "f2"), ("L1_GapSpendBasis_Hi", "　高", "f2"),
+           ("L1_GapProduct", "TK 四項乘積（已解釋部分）", "f2"), ("L1_GapProduct_Lo", "　低", "f2"), ("L1_GapProduct_Hi", "　高", "f1"),
+           ("L1_GapUnexplained", "TK 落差 5：未解釋", "f2"), ("L1_GapUnexplained_Lo", "　低", "f2"), ("L1_GapUnexplained_Hi", "　高", "f2")]
+    k15_html = "".join(f'<tr><td><code>{nm}</code>　{lab}</td><td>{n("TK_" + nm, None, f, "v014")}</td><td>{n("TK_" + nm, None, f)}</td></tr>' for nm, lab, f in k15)
+    S.append(f"""<section id="s1c"><h2><span class="no">①之三</span>v0.1.3＋v0.1.4＋v0.1.5 更新了什麼：TK v21.2、v19.1、η 診斷補充；U2 新法、資金三層、持續擴張、η 拆解、逐層對照</h2>
+<p class="lead"><b>v0.1.5 摘要</b>：Tokenomics 由 v19.1 升到 {tk_ver}（計價倍數 AL_SpendBasis {n("TK_L1_GapSpendBasis", None, "f2", "v014")} → {n("TK_L1_GapSpendBasis", None, "f2")}）；本模型讀取的 127 個值中只有 10 個變動，全部只進對照列（token 帳未閉合倍數、η 診斷的 TK 並列欄），<b>每 VR 等值 GW 差額、覆蓋率、η、供給 GW、資金與擴張數值全部與 v0.1.4 逐位相同</b>（2030 年差額 {n("COST_PropGap_VR", Y, "sf3")} $B/GW/年；累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0")}；η {n("CMP_Eta2025", None, "f3")}）。token 帳未閉合倍數 {n("Cost!K245", 2026, "f2", "v014")} → {n("Cost!K245", 2026, "f2")}；TK 在 OpenAI 口徑的未解釋落差 L1_GapUnexplained {n("TK_L1_GapUnexplained", None, "f2", "v014")} → {n("TK_L1_GapUnexplained", None, "f2")}，故本模型殘差倒數（計入生產折減）為 TK 的倍數由 {cell(V, erow("比值：本模型殘差倒數"), None, "f3", "v014")} 變為 {cell(V, erow("比值：本模型殘差倒數"), None, "f3")}。</p>
+<h3>v0.1.5：TK v19.1 → {tk_ver} 變動的 10 個名稱（只進對照列）</h3>
+<div class="tw"><table><thead><tr><th>Tokenomics 名稱</th><th>v0.1.4（v19.1）</th><th>v0.1.5（{tk_ver}）</th></tr></thead><tbody>{k15_html}</tbody></table></div>
+<p class="note">這 10 個值只被 Cost 第二十一節（token 帳倍數）、Bridge 與 EtaDiag 第六、七節（TK 並列欄與比值）、Checks 資訊列引用；不被任何命題輸出、資金或判定使用。TK 方向 L1_GapSpendBasis 的計價倍數由 {n("TK_L1_GapSpendBasis", None, "f2", "v014")} 改為 {n("TK_L1_GapSpendBasis", None, "f2")}，是 TK 對 OpenAI 推論支出計價口徑的修正，與本模型自己的計價因子 f_P（取自 Inputs）無關，故 η 不變。</p>
+<p class="lead"><b>v0.1.4 摘要</b>：Tokenomics 由 v19.0 升到 v19.1（Luna 的 CSA top-k 1024 → 512；39 個名稱值變動，其中只有 IF_TokGW_Luna 進命題計算），η 由 {n("CMP_Eta2025", None, "f3", "v013")} 微降到 {n("CMP_Eta2025", None, "f3")}，命題輸出（每 VR 等值 GW 差額、覆蓋率、供給 GW、現金流、外部資金需求）與 v0.1.3 <b>逐位相同</b>（2030 年差額 {n("COST_PropGap_VR", Y, "sf3", "v013")} → {n("COST_PropGap_VR", Y, "sf3")} $B/GW/年；累計外部資金需求 {n("FND_ExtNeedCum", Y, "f0")}）：供給 GW 由已簽合約決定，TK 產能變動被 η 的 2025 校準吸收，只移動有效推論 GW 與研發 GW 的分攤（2030 年有效推論 GW {n("CMP_InfGW_Eff", Y, "f3", "v013")} → {n("CMP_InfGW_Eff", Y, "f3")}，研發 GW {n("CMP_RDGW", Y, "f3", "v013")} → {n("CMP_RDGW", Y, "f3")}）。η 診斷補充：利用率因子計入 TK 生產折減（{n("TK_IF_ProdDerate", None, "f2")}）後，未解釋殘差由 {n("ETA_Resid", None, "f3")} 變為 {n("ETA_Resid2", None, "f3")}；η 本身不因診斷而改變。以下兩個表之後，為 v0.1.3 的內容（表中數字為現值，標明 v0.1.3 者為 TK v19.0 當時值）。</p>
 <h3>v0.1.4：TK v19.0 → v19.1 的差異拆解（逐群）</h3>
 <div class="tw"><table><thead><tr><th>輸出</th>{"".join(f"<th>{l}</th>" for l, _s in k14_cols)}</tr></thead><tbody>
 {"".join(k14_rows)}
 </tbody></table></div>
 <p class="note">「只換 Luna」＝只有 IF_TokGW_Luna 取 v19.1、其餘 38 個名稱維持 v19.0；「只換其餘 38」相反。其餘 38 個名稱（IF_FullCost*、IF_Alloc*、L1_RevGW_PQ_VR200* 等）本模型只對照或快照，不進命題輸出；逐名稱新舊值見報告 ①。</p>
 <h3>η 與殘差：各 TK 版本（診斷；η 以外的因子為比值，TK 整體產能放大時不動）</h3>
-<div class="tw"><table><thead><tr><th>項目</th>{"".join(f"<th>{l}</th>" for l, _s in ev_cols)}<th>v0.1.4 ÷ v0.1.3</th></tr></thead><tbody>
+<div class="tw"><table><thead><tr><th>項目</th>{"".join(f"<th>{l}</th>" for l, _s in ev_cols)}<th>v0.1.5 ÷ v0.1.3</th></tr></thead><tbody>
 {"".join(ev_rows)}
 </tbody></table></div>
 <p class="note">殘差＝η ÷（f_P × f_U × f_W）；「計入生產折減」列把 f_U 再乘 TK 生產折減。與 TK 的 OpenAI 口徑 L1_GapUnexplained {cell(V, erow("TK 落差 5"), None, "f2")}（v0.1.3 為 {cell(V, erow("TK 落差 5"), None, "f2", "v013")}）並排：本模型殘差倒數（計入生產折減）{cell(V, erow("殘差倒數（TK 方向；計入"), None, "f2")}，為 TK 的 {cell(V, erow("比值：本模型殘差倒數"), None, "f3")} 倍；兩者口徑不同（Anthropic 對 OpenAI），只作並排。</p>

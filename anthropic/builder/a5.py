@@ -2,7 +2,7 @@
 
 兩頁都是「唯讀」：只引用既有頁與 TK_Link，不被任何計算頁引用（Checks 除外；builder 掃描＋tests 每次重驗）。
 - Bridge：由上而下逐層列出每一步的公式來源（編號）、單位、2025–2030 值、2030 敏感度包絡（低／高）、標記；最後一節與 Tokenomics 同口徑量對照。
-  不以「與 Tokenomics 逐項閉合」為驗收條件（TK token 帳 6.26 倍未閉合是 Tokenomics 端的待辦）。
+  不以「與 Tokenomics 逐項閉合」為驗收條件（TK token 帳未閉合倍數是 Tokenomics 端的待辦；倍數隨 TK 版本變動，見 TK_L1_TokLedger_2026Q2）。
 - EtaDiag：η（2025）＝計價口徑因子 × 利用率因子 × 工作負載組合因子 × 未解釋殘差。只作診斷，不改 η 的值；
   並列 TK 的 L1_Gap*（OpenAI 口徑，Analogy；方向相反：TK 為支出路線 ÷ token 路線）。
 新列／新頁皆附加在尾端，既有列編號不變。數值一律引用既有具名範圍或儲存格（公式不含常數；常數經 Inputs 定義常數）。
@@ -188,7 +188,7 @@ def build(ctx):
         lohi("Compute", ["A_lo_gap", "A_hi_gap", "C_lo_gap", "C_hi_gap"], "2030；合約價 8／20 與產出比低／高的最小／最大"))
     add("p_cov", "覆蓋率（營收淨額 ÷ 全成本）", "倍", lambda i, c: "=«K:p_cov»", "Derived")
     # ═════════════════════ 八、與 Tokenomics 對照 ═════════════════════
-    B.section("八、與 Tokenomics 對照（2026；TK 的 P × Q、Q 與 token 帳診斷；只對照，不回饋）。TK token 帳未閉合（6.26 倍）是 Tokenomics 端待辦，差額大不代表本模型錯")
+    B.section("八、與 Tokenomics 對照（2026；TK 的 P × Q、Q 與 token 帳診斷；只對照，不回饋）。TK token 帳未閉合（倍數見下方 TK_L1_TokLedger_2026Q2；v21.2 起 TK 計價倍數 1.8，約 3.0）是 Tokenomics 端待辦，差額大不代表本模型錯")
     add("tk_pq", "TK：VR200 每 GW 營收 P × Q（L1_RevGW_PQ_VR200；2026 Q2 年化 m）", "$B/GW/年", only26("=«K:pq_base@E»"),
         "Analogy（TK；OpenAI 口徑推導的機隊產出）", "", ("=Cost!$E$" + str(kr["pq_lo"]), "=Cost!$E$" + str(kr["pq_hi"]), "2026；TK 實際利用率 0.30／0.65"))
     add("md_pq", "本模型：營收總額 ÷ 付費推論 VR 等值 GW（與 TK P × Q 最接近的口徑）", "$B/GW/年", only26("=«K:pq_rev_paid@E»"), "Derived")
