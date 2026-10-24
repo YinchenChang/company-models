@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """產生 OpenAI 收支模型 Excel（v0.6-P1）。
 
-用法：python3 builder/build.py --tk-dir <Tokenomics v19.0 repo（master model/CURRENT）> --out model/<YYYYMMDD>_OpenAI_v0.6.2.xlsx [--base <前一版>] [--date 2026-10-22] [--tk-date 2026-10-08]
+用法：python3 builder/build.py --tk-dir <Tokenomics repo（master model/CURRENT；v0.6.3＝v21.4）> --out model/<YYYYMMDD>_OpenAI_v0.6.3.xlsx [--base <前一版>] [--date 2026-10-25] [--tk-date 2026-10-08]
   --base：前一版 xlsx；有給時依 Excel 優先規則保留 Excel 內已改過的藍字輸入（builder/preserve.py）。
 輸出經 LibreOffice 重算後才寫到 --out（內含快取值；engine 仍會強制重算）。同目錄寫 restore_log.txt、leafmap.csv、build_summary.json。
 """
@@ -28,7 +28,7 @@ import p4  # noqa: E402
 import p5  # noqa: E402
 import p6  # noqa: E402
 
-VERSION = "v0.6.2"
+VERSION = "v0.6.3"
 KIND_LABEL = {"SRC": "SRC_OAI", "INP": "Inputs", "FORMULA": "公式（後續工作包）", "DUP": "重複併入", "SKIP": "不遷入", "TK": "不遷入；改取 TK_Link"}
 SRC_COLS = ["SRC_ID", "指標", "數值", "低", "高", "單位", "口徑", "適用對象", "日期", "出處（v0.5 原文）", "來源等級", "立場", "立場說明",
             "一手／二手", "狀態", "取代者", "v0.5 標記", "查核狀態（v0.5 chk）", "v0.5 路徑", "模型使用位置", "備註",
@@ -561,12 +561,12 @@ def p6_checks(R, P6, S, rowof):
     return [
         ("P×Q：比值恆等式（比值 − 營收÷成本）平方和（主序列；應＝0）", "=SUMPRODUCT(PXQ_Identity,PXQ_Identity)", 0, "tol", "實際 m×L ÷ 所需 m×L ＝ 營收 ÷ 算力成本（Q 與牌價約掉）"),
         ("P×Q：FY2025 營收兩來源相等（SRC_OAI_002 − TK_SRC_DEM_007，$B）", f"={S('營收：FY2025')}-TK_SRC_DEM_007", 0, "tol", "13.07"),
-        ("v0.6.2：TK_Link 為單一快照，版本＝v19.0", "=TK_Version", "v19.0", "eq", "v0.6.2 起 TK_PxQ 併入 TK_Link；Tokenomics master model/CURRENT"),
+        ("v0.6.3：TK_Link 為單一快照，版本＝v21.4", "=TK_Version", "v21.4", "eq", "v0.6.2 起 TK_PxQ 併入 TK_Link；v0.6.3 換快照至 Tokenomics v21.4（master 693792f）"),
         ("v0.6.2：TK_Link 已取值名稱數（63 原名＋25 併入／新增）", '=COUNTIF(TK_Link!$F$10:$F$200,"OK")', 88, "eq", "原 63 名＋P×Q 取數名稱 22＋RNG_ 3；IF_HoldEcon、SRC_DEM_004／006–009 原已在 63 名內"),
         ("v0.6.2：TK_Link 檔案 SHA-256 已記錄（非空）", "=IF(LEN(TK_FileSHA256)=64,1,0)", 1, "eq", "Tokenomics 檔案 SHA-256（64 位十六進位）"),
         ("v0.6.2 對照：研發 GW 占（研發＋推論）比，本模型 2025", "=INDEX(CMP_RDGW,1)/(INDEX(CMP_RDGW,1)+INDEX(CMP_InfGW,1))", None, "info",
          "口徑對應 Tokenomics Q1（研發 GW ÷ 研發＋服務 GW）；本模型研發 GW 為殘差（2026 起）、2025 為訓練支出 ÷ 合約價"),
-        ("v0.6.2 對照：TK IF_AllocQ1（R1，支出路線；v11.0／v12.0 起口徑改變，原 v5.26＝0.636）", "=TK_IF_AllocQ1", None, "info", "v19.0＝0.184"),
+        ("v0.6.2 對照：TK IF_AllocQ1（R1，支出路線；v11.0／v12.0 起口徑改變，原 v5.26＝0.636）", "=TK_IF_AllocQ1", None, "info", "v19.0＝0.184；v21.4 見 TK_Link"),
         ("v0.6.2 對照：TK IF_AllocQ1 區間下限（RNG_IF_AllocQ1_Lo）", "=TK_RNG_IF_AllocQ1_Lo", None, "info", "v13.0 起視為區間"),
         ("v0.6.2 對照：TK IF_AllocQ1 區間上限（RNG_IF_AllocQ1_Hi）", "=TK_RNG_IF_AllocQ1_Hi", None, "info", "v13.0 起視為區間"),
         ("v0.6.2：Tokenomics 區間時效旗標 RNG_StaleFlag＝『一致』", '=IF(TK_RNG_StaleFlag="一致",1,0)', 1, "eq", "使用 IF_AllocQ1 區間前須確認（Tokenomics 規定）；不一致時此列 ERR"),
