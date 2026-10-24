@@ -347,6 +347,8 @@ def sheet_checks(wb, R, n_src, n_inp, n_pending, P2, P3, P4, P5, P6):
             put(ws, f"E{n}", f'=IF(C{n}=D{n},"OK","ERR")')
         elif kind == "tol":
             put(ws, f"E{n}", f'=IF(ISNUMBER(C{n}),IF(ABS(C{n}-D{n})<0.000000001,"OK","ERR"),"ERR")')
+        elif kind == "le":
+            put(ws, f"E{n}", f'=IF(ISNUMBER(C{n}),IF(C{n}<=D{n},"OK","ERR"),"ERR")')
         elif kind == "warn":
             put(ws, f"E{n}", "WARN")
         else:
@@ -557,7 +559,7 @@ def p6_checks(R, P6, S, rowof):
     rw = P6.rows
     inp = lambda name, idx=None: inp_id(R, name, idx)  # noqa: E731
     sws = [inp("2025 平均上線 GW 主值選擇"), inp("世代組合來源"), inp("生產折減讀法")]
-    sq = lambda tag: "+".join(f"ABS(PxQ!${c}${rw[tag + '_shsum']}-1)" for c in "DEFGH")  # noqa: E731
+    sq = lambda tag: "+".join(f"ABS(PxQ!${c}${rw[tag + '_shsum']}-1)" for c in "DEFGHIJKLMN")  # noqa: E731
     return [
         ("P×Q：比值恆等式（比值 − 營收÷成本）平方和（主序列；應＝0）", "=SUMPRODUCT(PXQ_Identity,PXQ_Identity)", 0, "tol", "實際 m×L ÷ 所需 m×L ＝ 營收 ÷ 算力成本（Q 與牌價約掉）"),
         ("P×Q：FY2025 營收兩來源相等（SRC_OAI_002 − TK_SRC_DEM_007，$B）", f"={S('營收：FY2025')}-TK_SRC_DEM_007", 0, "tol", "13.07"),
@@ -570,20 +572,27 @@ def p6_checks(R, P6, S, rowof):
         ("v0.6.2 對照：TK IF_AllocQ1 區間下限（RNG_IF_AllocQ1_Lo）", "=TK_RNG_IF_AllocQ1_Lo", None, "info", "v13.0 起視為區間"),
         ("v0.6.2 對照：TK IF_AllocQ1 區間上限（RNG_IF_AllocQ1_Hi）", "=TK_RNG_IF_AllocQ1_Hi", None, "info", "v13.0 起視為區間"),
         ("v0.6.2：Tokenomics 區間時效旗標 RNG_StaleFlag＝『一致』", '=IF(TK_RNG_StaleFlag="一致",1,0)', 1, "eq", "使用 IF_AllocQ1 區間前須確認（Tokenomics 規定）；不一致時此列 ERR"),
-        ("P×Q：PxQ 頁錯誤值格數", "=SUMPRODUCT(--ISERROR(PxQ!$D$7:$H$400))", 0, "eq", ""),
+        ("P×Q：PxQ 頁錯誤值格數", "=SUMPRODUCT(--ISERROR(PxQ!$D$7:$N$400))", 0, "eq", ""),
         ("P×Q：世代占比合計與 1 的絕對差之和（主序列）", "=" + sq("m"), 0, "tol", "含 Inputs 開關與交接檔組合（2026）"),
         ("P×Q：世代占比合計與 1 的絕對差之和（預覽基準＝交接檔組合）", "=" + sq("pv"), 0, "tol", "交接檔 2026 組合六列合計須為 1"),
         ("P×Q：Inputs 開關值不在 {0,1} 的程度（x(1−x) 之和）", "=" + "+".join(f"{x}*(1-{x})" for x in sws), 0, "tol", "2025 GW 主值、世代組合來源、生產折減讀法"),
         ("P×Q：平均上線 GW ≤ 0 的案例數", '=COUNTIF(PXQ_GW,"<=0")', 0, "eq", ""),
         ("P×Q：Q ≤ 0 的案例數", '=COUNTIF(PXQ_Q,"<=0")', 0, "eq", ""),
-        ("P×Q：預覽值對帳超出容許誤差的項數（預覽基準）", "=PXQ_ReconBad", None, "info", "逐項說明見報告；容許誤差 INP_288"),
-        ("P×Q 比值：2025 指數內插", f"=PxQ!$D${rw['m_ratio']}", None, "info", "交接檔預覽 1.24（交接檔組合與一律 0.85）"),
-        ("P×Q 比值：2025 線性內插", f"=PxQ!$E${rw['m_ratio']}", None, "info", "預覽 1.12"),
-        ("P×Q 比值：2026 低 GW", f"=PxQ!$F${rw['m_ratio']}", None, "info", "預覽 1.48"),
-        ("P×Q 比值：2026 基準 GW", f"=PxQ!$G${rw['m_ratio']}", None, "info", "預覽 1.23"),
-        ("P×Q 比值：2026 高 GW", f"=PxQ!$H${rw['m_ratio']}", None, "info", "預覽 1.06"),
+        ("v0.6.3 P×Q：證據對帳（6B：A 段／J7／工作單驗收值）超出容許誤差的項數", "=PXQ_ReconBad", 0, "eq", "容許誤差 INP_307（1%）；6A 交接檔 v18.0 歷史對照不再計入"),
+        ("v0.6.3 W3：GW 路線 token 帳 (A) 交接檔組合×0.85 對 2.10 的相對差絕對值", "=ABS(INDEX(PXQ_TokLedgerRel,1))", 0.01, "le", "token帳缺口 A 段 2.0966；工作單驗收 2.10，容差 1%"),
+        ("v0.6.3 W3：GW 路線 token 帳 (B) 交接檔組合×0.806 對 1.99 的相對差絕對值", "=ABS(INDEX(PXQ_TokLedgerRel,2))", 0.01, "le", "token帳缺口 A 段 1.9876；工作單驗收 1.99，容差 1%"),
+        ("v0.6.3 W3：第八節 Q 與主序列／預覽基準 Q 的差（應＝0）", f"=ABS(PxQ!$D${rw['w_Qchk']})+ABS(PxQ!$F${rw['w_Qchk']})", 0, "tol", ""),
+        ("v0.6.3：API 每分鐘 token 與 TK_SRC_DEM_011 相等（B tok/min）", f"={S('API 每分鐘處理 token：2026-03-31（超過）')}-TK_SRC_DEM_011", 0, "tol", "照 Tokenomics 原紀錄抄錄"),
+        ("v0.6.3：Fairwater 六情境倍數最小值（J7 結果 0.76）", "=MIN(PXQ_FW_Mult)", None, "info", "J7：倍數 0.76–0.98"),
+        ("v0.6.3：Fairwater 六情境倍數最大值（J7 結果 0.98）", "=MAX(PXQ_FW_Mult)", None, "info", ""),
+        ("v0.6.3 P×Q 比值：口徑一 低／基準／高", "=TEXT(PxQ!$D$9,\"0.00\")&\" / \"&TEXT(PxQ!$E$9,\"0.00\")&\" / \"&TEXT(PxQ!$F$9,\"0.00\")", None, "info", "Q2 年化營收 ÷ Q2 季平均 GW"),
+        ("v0.6.3 P×Q 比值：口徑二 基準", "=PxQ!$E$10", None, "info", "FY2026 營收 ÷ 全年平均 GW"),
+        ("v0.6.3 P×Q 比值：口徑三 基準", "=PxQ!$E$11", None, "info", "9 月底 run-rate ÷ 年底 GW"),
+        ("v0.6.3 P×Q 倍數（對 2025 主值）：口徑一／二／三 基準", "=TEXT(PxQ!$E$15,\"0.00\")&\" / \"&TEXT(PxQ!$E$16,\"0.00\")&\" / \"&TEXT(PxQ!$E$17,\"0.00\")", None, "info", "預期 0.93／0.96／0.90"),
+        ("P×Q 比值：2025 指數內插", f"=PxQ!$D${rw['m_ratio']}", None, "info", "A 段 1.239"),
+        ("P×Q 比值：2025 線性內插", f"=PxQ!$E${rw['m_ratio']}", None, "info", "A 段 1.118"),
         ("P×Q 對照：2025 雲端支出（Epoch 16）÷（GW × h），指數內插", f"=PxQ!$D${rw['x_mult']}", None, "info", "不進主序列"),
-        ("P×Q 對照：2026 支出（Brockman 50）÷（GW × h），基準 GW", f"=PxQ!$G${rw['x_mult']}", None, "info", "不進主序列"),
+        ("P×Q 對照：2026 支出（Brockman 50）÷（GW × h），口徑二基準 GW", f"=PxQ!$J${rw['x_mult']}", None, "info", "不進主序列"),
     ]
 
 
@@ -597,7 +606,7 @@ def sheet_readme(wb, snap, date, summary, tkdate=None):
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構，重建時保留 Excel 內已改過的藍字。"),
         ("SRC_OAI", f"{summary['src']} 列；v0.5『已取得的原始訊息』逐筆遷入（Interested-party／Verified）。"),
         ("TK_Link", f"單一快照（v0.6.2 起；TK_PxQ 併入，TKQ_ 前綴退役）：Tokenomics {snap['version']}（{snap['file']}），master 提交 {snap['sha'][:7]}，讀取日 {tkdate or date}；{summary['tk_ok']} 個名稱有值、{summary['tk_pending']} 個待 Tokenomics 提供。"),
-        ("PxQ", "v0.6.1 P×Q 與回本比值：實際 m×L ÷ 所需 m×L（＝營收 ÷ 算力成本）的年度序列（2025 指數／線性、2026 三情境）、中間量（h、C、Q、P_eff、隱含 m、持平 GW）、敏感度、外部支出對照、預覽值對帳（具名範圍 PXQ_*）。"),
+        ("PxQ", "v0.6.3 P×Q 與回本比值：實際 m×L ÷ 所需 m×L（＝營收 ÷ 算力成本）；11 欄＝2025 指數／線性 + 2026 三口徑（Q2 年化營收÷Q2 季平均 GW；FY2026 營收÷全年平均 GW；9 月底 run-rate÷年底 GW）× 低／基準／高；頂部主輸出（比值、倍數、持平門檻）、中間量、敏感度 4.1–4.7、外部支出對照、證據對帳（6B）、Fairwater 六情境（J7）、GW 路線 token 帳（具名範圍 PXQ_*）。"),
         ("Inputs", f"{summary['inp']} 列；v0.5 Assumed／Analogy／Decision 項目（長表）。"),
         ("Map_v05", f"v0.5 JSON {summary['leaves']} 個葉節點的去處。"),
         ("Demand", "P2 需求：訂閱各方案人數、每日任務數 × 每任務 token、API 任務數與計費 token；token 量（層級 × 付費／免費，具名範圍 DEM_Tok_*，供 P3）。"),
