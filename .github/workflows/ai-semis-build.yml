@@ -61,6 +61,7 @@ on:
       - 'guc/**'
       - 'fabrinet/**'
       - 'smci/**'
+      - 'accretech/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -118,6 +119,7 @@ on:
       - 'guc/**'
       - 'fabrinet/**'
       - 'smci/**'
+      - 'accretech/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -159,6 +161,7 @@ jobs:
             "quanta|python3 quanta/build_quanta.py|quanta/dist"
             "innolight|python3 innolight/build_innolight.py|innolight/dist"
             "avgo|python3 avgo/build_avgo.py|avgo/dist"
+            "accretech|python3 accretech/build_accretech.py|accretech/dist"
             "smci|python3 smci/build_smci.py|smci/dist"
             "fabrinet|python3 fabrinet/build_fabrinet.py|fabrinet/dist"
             "guc|python3 guc/build_guc.py|guc/dist"
