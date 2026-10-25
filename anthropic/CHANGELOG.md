@@ -67,3 +67,10 @@
 - 新列（皆在尾端）：TK_Link ＋`IF_ProdDerate`；EtaDiag 第七節 E38–E47（`ETA_fU_Prod`、`ETA_Prod2`、`ETA_Resid2`）；Checks C153–C156。具名範圍 1,272 → 1,276、公式格 7,231 → 7,256。η 值不因診斷改變。
 - 刪除 `dist/_待刪除/` 與 v0.1.3 dist 檔；HTML「①之三」前端加 v0.1.4 摘要、逐群拆解表、η 各版本小表；`tools/html_scenarios.yaml` 加 `tk19_*` 群組與 `v013`、`v14_only_luna`、`v14_only_rest` 情境（舊情境加 `tk19_back` 以保持當時數字）。
 - 測試：`tests/parity/scenarios.yaml` 預期值（formula_cells 7,256、defined_names 1,276、tk_values 105）；`test_builder` 新增 `test_eta_prod_derate_section`，η 預期值改 0.525427732668394。報告 `docs/reports/20261022_v0.1.4.md`；工具 `tools/make_report_v014.py`。
+
+## v0.1.5 Tokenomics v21.2 同步（2026-10-24；Excel `model/20261024_Anthropic_v0.1.5.xlsx`；v0.1.4 移至 `model/archive/`；分支 `claude/anthropic-v0.1.5`）
+- 工作單 `docs/workorders/20261024_anthropic_v0.1.5_TK21.2.md`。commit 見 git log「anthropic v0.1.5 步驟 1–5」。
+- TK 快照 v19.1 → v21.2（master `45ce1ca`；計價倍數 AL_SpendBasis 0.85 → 1.8）：127 個值中 10 個變動（`L1_TokLedger_2026Q2`、`L1_GapSpendBasis`／`GapProduct`／`GapUnexplained` 各含低高）；重建後 check_tk_snapshot OK 127。全部只進對照列（Cost E272／E279、Bridge E123、EtaDiag D–F38／41／42／56–58、Checks C130／C159）；命題輸出、η、資金、擴張與 v0.1.4 逐位相同。
+- 說明文字：a4 `c2_tkled`、a5 第八節標題不再寫死「約 6.26」；README 加「v0.1.5 更新」。公式、具名範圍數、公式格數不變。
+- HTML：「①之三」改名 v0.1.3＋v0.1.4＋v0.1.5，前端加 v0.1.5 摘要與 10 名稱新舊值表；η 各版本小表加 v0.1.4（v19.1）、v0.1.5（v21.2）欄；`tools/html_scenarios.yaml` 加 `tk14_back`、`v014`。dist 改 `20261024_Anthropic收支模型_v0_1_5.html／.xlsx`，v0.1.4 dist 檔已 git rm。
+- 報告 `docs/reports/20261024_v0.1.5.md`＋`_對照.xlsx`（`tools/make_report_v015.py`）。

@@ -202,8 +202,8 @@ def test_pxq_not_fed_back():
                     assert "PxQ!" not in c.value and "PXQ_" not in c.value, f"{ws.title}!{c.coordinate}"
 
 
-def test_tk_link_single_snapshot_v19():
-    """v0.6.2：TK_Link 為單一 Tokenomics v19.0 快照（88 名有值、待提供 2 名）；TK_PxQ 頁與 TKQ_ 名稱已退役；前 63 名列位與 v0.6.1 相同（名稱、列序不變）。"""
+def test_tk_link_single_snapshot_v21_4():
+    """v0.6.3：TK_Link 為單一 Tokenomics v21.4 快照（v0.6.2 起單一快照；v0.6.3 換版 v19.0→v21.4）（88 名有值、待提供 2 名）；TK_PxQ 頁與 TKQ_ 名稱已退役；前 63 名列位與 v0.6.1 相同（名稱、列序不變）。"""
     import openpyxl
     root = Path(__file__).resolve().parents[2]
     old = openpyxl.load_workbook(root / "model" / "archive" / "20261022_OpenAI_v0.6.1.xlsx", data_only=True)["TK_Link"]
@@ -211,7 +211,7 @@ def test_tk_link_single_snapshot_v19():
     assert "TK_PxQ" not in new.sheetnames
     assert not any(n.startswith("TKQ_") for n in new.defined_names)
     cur = new["TK_Link"]
-    assert cur["B4"].value == "v19.0"
+    assert cur["B4"].value == "v21.4"
     n = 0
     for r in range(10, 200):
         if old.cell(r, 1).value is None:
@@ -226,3 +226,61 @@ def test_tk_link_single_snapshot_v19():
         v = cur.cell(r, 1).value
         assert not (v and str(v).startswith(("B4_", "AL_", "CTL_")))
         assert not (v and str(v).startswith("L1_") and not str(v).startswith("L1_Ans3"))   # L1_ 只許 L1_Ans3（Q3 對照；下游契約第 15 條）
+
+
+def _pxq_values():
+    """以 LibreOffice 重算後的值讀 PxQ（建置時已重算並存檔；此處讀模型檔內的快取值）。"""
+    import openpyxl
+    wb = openpyxl.load_workbook(current_model_path(), data_only=True)
+    return wb["PxQ"]
+
+
+def test_pxq_three_scope_structure():
+    """v0.6.3：PxQ 頂部主輸出＝三口徑 × 低／基準／高；2025 對照；倍數與持平門檻表齊備；欄 D–N 共 11 欄案例。"""
+    ws = _pxq_values()
+    hdr = [ws.cell(5, c).value for c in range(4, 15)]
+    assert hdr[:2] == ["2025 指數內插", "2025 線性內插"]
+    assert [h for h in hdr[2:]] == [f"口徑{z} {lv}" for z in "一二三" for lv in ("低", "基準", "高")]
+    base = {1: (9, 2.34, 26.3), 2: (10, 3.0, 35.0), 3: (11, 4.6, 50.0)}
+    for s, (r, gw, rev) in base.items():
+        assert abs(ws.cell(r, 8).value - gw) < 1e-9 and abs(ws.cell(r, 10).value - rev) < 1e-9
+    r25 = ws["F12"].value
+    assert abs(r25 - 1.239) < 0.001
+    for s, mult in ((1, 0.93), (2, 0.96), (3, 0.90)):
+        assert abs(ws.cell(14 + s, 5).value - mult) < 0.01 * mult + 0.005, (s, ws.cell(14 + s, 5).value)
+    # 持平門檻（A 段表）
+    expect = {21: (2.4014, 2.1669, 1.9218), 22: (3.1958, 2.8837, 2.5575), 23: (4.5654, 4.1196, 3.6536)}
+    for r, vals in expect.items():
+        for c, v in zip((4, 5, 6), vals):
+            assert abs(ws.cell(r, c).value / v - 1) < 0.01, (r, c)
+
+
+def test_w3_gw_route_token_ledger():
+    """W3：GW 路線 token 帳 (A) 交接檔組合×0.85 ＝2.10；(B) ×0.806 ＝1.99；容差 1%。"""
+    import openpyxl
+    wb = openpyxl.load_workbook(current_model_path(), data_only=True)
+    ws = wb["PxQ"]
+    names = {n: wb.defined_names[n].attr_text for n in ("PXQ_TokLedger", "PXQ_TokLedgerRel")}
+    sheet, rng = names["PXQ_TokLedger"].split("!")
+    cells = [c.value for c in ws[rng.replace("$", "")][0]]
+    assert abs(cells[0] / 2.10 - 1) <= 0.01 and abs(cells[1] / 1.99 - 1) <= 0.01, cells
+
+
+def test_fairwater_six_scenarios_match_j7():
+    """J7：六組 Q2 GW（占比 × 日期）的倍數與證據檔一致（容差 1%），範圍 0.76–0.98。"""
+    import openpyxl
+    wb = openpyxl.load_workbook(current_model_path(), data_only=True)
+    sheet, rng = wb.defined_names["PXQ_FW_Mult"].attr_text.split("!")
+    got = [r[0].value for r in wb["PxQ"][rng.replace("$", "")]]
+    exp = [0.98249, 0.90648, 0.92599, 0.83742, 0.85707, 0.76092]
+    assert len(got) == 6
+    for g, e in zip(got, exp):
+        assert abs(g / e - 1) <= 0.01, (g, e)
+    assert abs(min(got) - 0.76) < 0.01 and abs(max(got) - 0.98) < 0.01
+
+
+def test_pxq_recon_6b_clean():
+    import openpyxl
+    wb = openpyxl.load_workbook(current_model_path(), data_only=True)
+    sheet, rng = wb.defined_names["PXQ_ReconBad"].attr_text.split("!")
+    assert wb["PxQ"][rng.replace("$", "")].value == 0
