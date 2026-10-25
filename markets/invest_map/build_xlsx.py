@@ -22,7 +22,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.1"
+VERSION = "v0.3"
 DATE = "20261025"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
@@ -73,12 +73,12 @@ SEGMENTS = [
     ("compute", "L3 IT 設備", "運算", "約 43%", 0.43, 1, 100, "AI半導體 次產業排序 v0.2.2"),
     ("memory", "L3 IT 設備", "記憶體", "約 23%", 0.23, 1, 100, "同上"),
     ("network", "L3 IT 設備", "網通", "約 19%", 0.19, 2, 75, "同上"),
+    ("substrate", "L3 IT 設備", "載板與 PCB", "ABF 約 0.3%＋PCB／CCL 未拆", 0.003, 2, 25, "同上；[Assumed] 區間"),
     ("power", "L3 IT 設備", "電源與散熱", "約 3–5%", 0.04, 2, 25, "同上；[Assumed] 區間"),
     ("server", "L3 IT 設備", "伺服器組裝", "附加價值約 1–3%", 0.02, 3, 25, "同上；營收流量大、附加價值小"),
-    ("substrate", "L3 IT 設備", "載板與 PCB", "ABF 約 0.3%＋PCB／CCL 未拆", 0.003, 2, 25, "同上；[Assumed] 區間"),
-    ("foundry", "L2 半導體製造", "代工與封測", "軸 A 可見約 3%（藏在晶片成本）", 0.03, 1, 75,
+    ("foundry", "L2 半導體製造與設備", "代工與封測", "軸 A 可見約 3%（藏在晶片成本）", 0.03, 1, 75,
      "例外：軸 A 只見 3%，但先進製程與 CoWoS 的價值藏在運算 43% 的成本內，給 75 [判斷]"),
-    ("equipment", "L2 半導體製造", "設備與材料", "約 7.5%（軸 B，不可與軸 A 相加）", 0.075, 1, 50, "同上"),
+    ("equipment", "L2 半導體製造與設備", "設備與材料", "約 7.5%（軸 B，不可與軸 A 相加）", 0.075, 1, 50, "同上"),
 ]
 SEG_BY_NAME = {s[2]: s for s in SEGMENTS}
 

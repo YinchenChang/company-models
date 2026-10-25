@@ -1,11 +1,11 @@
 {
  "meta": {
-  "version": "v0.1",
-  "book": "20261025_AI投資地圖_資料_v0.1.xlsx",
+  "version": "v0.3",
+  "book": "20261025_AI投資地圖_資料_v0.3.xlsx",
   "tk_file": "20261024_Tokenomics_v21.4.xlsx",
   "tk_version": "v21.4",
   "tk_commit": "3ac70ac",
-  "cm_commit": "8b9312c",
+  "cm_commit": "b64d955",
   "built": "2026-10-25",
   "price_date": "2026-10-23（台積電、廣達為 10-22）",
   "pages": "https://yinchenchang.github.io/company-models/",
@@ -183,6 +183,16 @@
   },
   {
    "layer": "L3 IT 設備",
+   "name": "載板與 PCB",
+   "share": "ABF 約 0.3%＋PCB／CCL 未拆",
+   "mid": 0.003,
+   "usd": 0.096711672,
+   "irr": 2,
+   "vc": 25,
+   "basis": "同上；[Assumed] 區間"
+  },
+  {
+   "layer": "L3 IT 設備",
    "name": "電源與散熱",
    "share": "約 3–5%",
    "mid": 0.04,
@@ -202,17 +212,7 @@
    "basis": "同上；營收流量大、附加價值小"
   },
   {
-   "layer": "L3 IT 設備",
-   "name": "載板與 PCB",
-   "share": "ABF 約 0.3%＋PCB／CCL 未拆",
-   "mid": 0.003,
-   "usd": 0.096711672,
-   "irr": 2,
-   "vc": 25,
-   "basis": "同上；[Assumed] 區間"
-  },
-  {
-   "layer": "L2 半導體製造",
+   "layer": "L2 半導體製造與設備",
    "name": "代工與封測",
    "share": "軸 A 可見約 3%（藏在晶片成本）",
    "mid": 0.03,
@@ -222,7 +222,7 @@
    "basis": "例外：軸 A 只見 3%，但先進製程與 CoWoS 的價值藏在運算 43% 的成本內，給 75 [判斷]"
   },
   {
-   "layer": "L2 半導體製造",
+   "layer": "L2 半導體製造與設備",
    "name": "設備與材料",
    "share": "約 7.5%（軸 B，不可與軸 A 相加）",
    "mid": 0.075,
@@ -341,7 +341,7 @@
   {
    "tk": "2330",
    "name": "台積電",
-   "layer": "L2 半導體製造",
+   "layer": "L2 半導體製造與設備",
    "seg": "代工與封測",
    "imp": 1,
    "posn": 1,
@@ -401,7 +401,7 @@
   {
    "tk": "6857",
    "name": "Advantest",
-   "layer": "L2 半導體製造",
+   "layer": "L2 半導體製造與設備",
    "seg": "設備與材料",
    "imp": 1,
    "posn": 1,
@@ -416,7 +416,7 @@
   {
    "tk": "6146",
    "name": "Disco",
-   "layer": "L2 半導體製造",
+   "layer": "L2 半導體製造與設備",
    "seg": "設備與材料",
    "imp": 2,
    "posn": 1,
@@ -763,7 +763,7 @@
   {
    "tk": "2330",
    "name": "台積電",
-   "layer": "L2 半導體製造",
+   "layer": "L2 半導體製造與設備",
    "seg": "代工與封測",
    "method": "P/E：規則值與 Andy 合理 P/E 取低",
    "ccy": "TWD",
@@ -997,7 +997,7 @@
   {
    "tk": "6857",
    "name": "Advantest",
-   "layer": "L2 半導體製造",
+   "layer": "L2 半導體製造與設備",
    "seg": "設備與材料",
    "method": "P/E 規則值（設備股共用循環規則）",
    "ccy": "JPY",
@@ -1036,7 +1036,7 @@
   {
    "tk": "6146",
    "name": "Disco",
-   "layer": "L2 半導體製造",
+   "layer": "L2 半導體製造與設備",
    "seg": "設備與材料",
    "method": "P/E 規則值（設備股共用循環規則）",
    "ccy": "JPY",

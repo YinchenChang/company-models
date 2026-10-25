@@ -122,6 +122,7 @@ tr:hover td{background:var(--sunken)}
 .co b{font-weight:600}
 .co .t{font-family:var(--f-mono);font-size:11px;color:var(--faint);margin-left:6px}
 .co .s{display:block;font-size:11.5px;color:var(--muted)}
+#v-position table{table-layout:fixed;min-width:860px}
 .score{display:grid;grid-template-columns:44px minmax(80px,1fr);gap:8px;align-items:center}
 .score .b{height:8px;background:var(--bar-soft);position:relative}
 .score .b i{position:absolute;inset:0 auto 0 0;background:var(--bar)}
@@ -337,7 +338,7 @@ function renderMap(){
   ${layer("L4","算力平台",`$${hold.base.toFixed(1)}B <small>/GW·年 持有成本</small>`,"持有並出租 GPU。上游資本支出的付款方，回本比值的承擔者。",grid(segs("L4 算力平台")))}
   ${layer("L3","AI 資料中心建置",`$${cx.base.toFixed(1)}B <small>/GW 資本支出</small>`,`IT 設備 $${it.base.toFixed(1)}B；比例為 2027 年占 AI IT 資本支出（AI半導體 次產業排序）。`,grid(segs("L3 IT 設備")),
     `<div class="facility"><b>設施：電力、機房、冷卻</b> · <span class="num">$${fac.base.toFixed(1)}B/GW</span>（${fac.lo.toFixed(1)}–${fac.hi.toFixed(1)}） · 尚無研究專案覆蓋（電力基建另案待開）</div>`)}
-  ${layer("L2","半導體製造",`軸 B <small>不與 L3 相加</small>`,"代工的營收藏在晶片商的營業成本；設備的營收來自代工與記憶體廠的資本支出。",grid(segs("L2 半導體製造")),
+  ${layer("L2","半導體製造與設備",`軸 B <small>不與 L3 相加</small>`,"代工的營收藏在晶片商的營業成本；設備的營收來自代工與記憶體廠的資本支出。",grid(segs("L2 半導體製造與設備")),
     `<div class="axisB">會計恆等式：L3 各塊加總＝買方付出的總額。L2 的數字是另一條軸（晶片怎麼造），只用來看位置與瓶頸，不可加回 L3。</div>`)}
   </div>`;
 }
@@ -345,22 +346,36 @@ function renderMap(){
 /* ---------- 02 position ---------- */
 let posFilter="全部";
 function renderPosition(){
-  const layers=["全部",...new Set(D.position.map(p=>p.layer))];
-  const list=D.position.filter(p=>posFilter==="全部"||p.layer===posFilter).sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name));
+  const layerOrder=[...new Set(D.segments.map(s=>s.layer))];
+  const layers=["全部",...layerOrder.filter(L=>D.position.some(p=>p.layer===L))];
   const w=D.params;
-  $("#v-position").innerHTML=`
-  <div class="head"><span class="label">視角 02</span><h2>產業地位：誰守得住自己的位置</h2>
-  <p>地位分數＝${w.w_irr} × 不可替代性＋${w.w_pos} × 市場位置＋${w.w_vc} × 價值鏈分量（各 0–100）。不可替代性取次產業與公司本身兩者平均；市場位置是在所屬次產業內的排位；價值鏈分量依該次產業占 AI 資本支出的比例。分項多為研究判斷，可在資料活頁簿黃底欄直接改。</p></div>
-  <div class="panel"><div class="ph"><h3>研究覆蓋 ${D.position.length} 家 · 依地位分數排序</h3><div class="filters">${layers.map(l=>`<button class="fbtn" data-pf="${esc(l)}" aria-pressed="${l===posFilter}">${esc(l)}</button>`).join("")}</div></div>
-  <div class="tbl"><table><thead><tr><th class="n">排名</th><th>公司</th><th>層級 · 次產業</th><th>地位分數</th><th class="n">不可替代</th><th class="n">市場位置</th><th class="n">價值鏈</th><th>地位依據</th><th>可投資性</th></tr></thead>
-  <tbody>${list.map(p=>{const v=V[p.tk];return `<tr>
+  const dots=n=>"●".repeat(4-n)+"○".repeat(n-1);
+  const row=p=>{const v=V[p.tk];return `<tr>
    <td class="n">${p.rank}</td>
    <td class="co"><button class="linkish" data-open="${esc(p.tk)}"><b>${esc(p.name)}</b></button><span class="t">${esc(p.tk)}</span></td>
-   <td>${esc(p.layer)}<span class="co"><span class="s">${esc(p.seg)}</span></span></td>
    <td><div class="score"><span class="num">${f1(p.score)}</span><span class="b"><i style="width:${p.score}%"></i></span></div></td>
    <td class="n mini">${p.irr_s}</td><td class="n mini">${p.pos_s}</td><td class="n mini">${p.vc_s}</td>
    <td style="min-width:260px">${esc(p.basis)} <span class="tagx">${esc(p.tag)}</span></td>
-   <td><span class="pill ${esc(v.tier)}">${esc(v.tier)}</span></td></tr>`}).join("")}</tbody></table></div></div>
+   <td><span class="pill ${esc(v.tier)}">${esc(v.tier)}</span></td></tr>`};
+  const thead=`<colgroup><col style="width:64px"><col style="width:150px"><col style="width:170px"><col style="width:76px"><col style="width:76px"><col style="width:64px"><col><col style="width:92px"></colgroup><thead><tr><th class="n">總排名</th><th>公司</th><th>地位分數</th><th class="n">不可替代</th><th class="n">市場位置</th><th class="n">價值鏈</th><th>地位依據</th><th>可投資性</th></tr></thead>`;
+  let body="";
+  layerOrder.filter(L=>posFilter==="全部"||L===posFilter).forEach(L=>{
+    const segs=D.segments.filter(s=>s.layer===L&&D.position.some(p=>p.seg===s.name));
+    if(!segs.length)return;
+    body+=`<div class="grp">${esc(L)}</div>`;
+    segs.forEach(sg=>{
+      const list=D.position.filter(p=>p.seg===sg.name).sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name));
+      const cands=D.nodes.filter(n=>n.seg===sg.name).length;
+      body+=`<div class="panel"><div class="ph"><h3>${esc(sg.name)}</h3>
+       <span class="note">${esc(sg.share)}${sg.usd!=null?` · $${sg.usd.toFixed(1)}B/GW`:""} · 不可替代 ${dots(sg.irr)} · 已建模 ${list.length}${cands>list.length?` ／ 候選 ${cands}`:""} 家</span></div>
+       <div class="tbl"><table>${thead}<tbody>${list.map(row).join("")}</tbody></table></div></div>`;
+    });
+  });
+  $("#v-position").innerHTML=`
+  <div class="head"><span class="label">視角 02</span><h2>產業地位：誰守得住自己的位置</h2>
+  <p>依供應鏈層級與次產業分區，區內依地位分數排序；「總排名」是全部 ${D.position.length} 家的排名。地位分數＝${w.w_irr} × 不可替代性＋${w.w_pos} × 市場位置＋${w.w_vc} × 價值鏈分量（各 0–100）。不可替代性取次產業與公司本身兩者平均；市場位置是在所屬次產業內的排位；價值鏈分量依該次產業占 AI 資本支出的比例。分項多為研究判斷，可在資料活頁簿黃底欄直接改。</p></div>
+  <div class="filters">${layers.map(l=>`<button class="fbtn" data-pf="${esc(l)}" aria-pressed="${l===posFilter}">${esc(l)}</button>`).join("")}</div>
+  ${body}
   <p class="note">市場位置級距：1 龍頭／2 前二或寡占／3 主要參與者／4 追隨者。標記：[D] 本專案推導；[IP] 有利害關係的來源（公司、賣方、媒體）；[判斷] 研究判斷，尚無量化來源。</p>`;
 }
 
