@@ -105,6 +105,8 @@ POSITION = {
     "CRWV": ("Neocloud（GPU 租賃）", 2, 1, "最大 neocloud；客戶集中於 Microsoft、OpenAI", "[判斷]"),
     "NBIS": ("Neocloud（GPU 租賃）", 2, 2, "歐洲為主的 neocloud；Microsoft 長約", "[判斷]"),
     "WYFI": ("Neocloud（GPU 租賃）", 3, 4, "小型 neocloud＋託管", "[判斷]"),
+    "OpenAI": ("AI 模型商", 1, 1, "ChatGPT 與 API 用量最大的模型商；算力承諾最大（本專案 OpenAI 模型）", "[判斷]"),
+    "Anthropic": ("AI 模型商", 1, 2, "企業與程式開發用途為主的前沿模型商（本專案 Anthropic 模型）", "[判斷]"),
     "00100": ("AI 模型商", 3, 3, "中國第二梯隊模型商；多模態、海外營收占比高", "[判斷]"),
     "02513": ("AI 模型商", 3, 3, "中國第二梯隊模型商；政企本地化部署", "[判斷]"),
 }
@@ -123,13 +125,11 @@ COMPANY_META = {
     "CRWV": ("CoreWeave", "美", "USD", "coreweave"), "NBIS": ("Nebius", "美", "USD", "nebius"),
     "WYFI": ("WhiteFiber", "美", "USD", "whitefiber"),
     "00100": ("MiniMax", "港", "HKD", "minimax"), "02513": ("智譜", "港", "HKD", "zhipu"),
+    "OpenAI": ("OpenAI", "未上市", "USD", "openai"), "Anthropic": ("Anthropic", "未上市", "USD", "anthropic"),
 }
 
 # 未上市與算力層的地圖節點（不進排序）
-MAP_EXTRA = [
-    ("OpenAI", "未上市", "AI 模型商", "company-models openai v0.6.3（P×Q 回本比值）"),
-    ("Anthropic", "未上市", "AI 模型商", "company-models anthropic v0.1.5"),
-]
+MAP_EXTRA = []  # OpenAI、Anthropic 已納入 POSITION（2026-10-25 Andy：未上市也放，可投資性寫「未上市」）
 
 PARAMS = [
     ("tier_center", 0.20, "「機會」：中心空間至少"),
@@ -193,7 +193,7 @@ def main():
         "公司模型：company-models 各公司 dist/*.xlsx（extract_models.py 抽數；AVGO 讀 PR #93 分支，未合併）。",
         "AI半導體 候選母體 v0.2.2（2026-10-24）：次產業排序、公司重要性、市場地位文字。權威在 AI半導體 Project。",
         "收支關卡（Andy 2026-10-25 10:48）：先看收支、再看評價。模型期間（2026 起約五年）現金收支合計為負＝入不敷出、有資金缺口，"
-        "不論估值空間多大，最終分級一律為「收支不足」。口徑：有自由現金流列者用自由現金流；雲端／neocloud 模板無此列者用「營運缺口（不含融資、不含還本）」；"
+        "不論估值空間多大，最終分級一律為「收支不足」。口徑：雲端／neocloud／MAG 模板一律用「營運缺口＋股東回饋（股利、回購）」；記憶體、模型商用自由現金流；"
         "只有損益的半導體模型以「各情境淨利皆為正」判定（現金流本專案未建立）。",
         "可投資性口徑（預設，Andy 可改）：中心價＝各模型主口徑；半導體 P/E 類取「十年倍數規則值」與「Andy 先驗合理 P/E」兩者較低者；"
         "規則值不適用者（NVDA、AVGO、Ibiden）只用 Andy 合理 P/E，標「替代口徑」；記憶體以 P/B 規則值為主、P/E 規則值為對照；"
@@ -329,7 +329,7 @@ def main():
         if tk in prices and prices[tk]["close"]:
             wpz.cell(i, 6, float(prices[tk]["close"])).font = BLUE
             wpz.cell(i, 7, f"{prices[tk]['date']}｜{prices[tk]['source']}")
-        wpz.cell(i, 8, f"=IF(ISNUMBER(F{i}),F{i},C{i})")
+        wpz.cell(i, 8, "未上市" if m.get("unlisted") else f"=IF(ISNUMBER(F{i}),F{i},C{i})")
 
     # ============ 估值
     we = wb.create_sheet("估值")
@@ -413,6 +413,9 @@ def main():
             we.cell(i, 24, m["disc_ratio"]["value"]).font = BLUE
             c1 = (f"=X{i}*價格!C{prow}", f"{src(m['disc_ratio'])} × 模型現價")
             b1 = (f"=X{i}*價格!C{prow}", "同中心（模型只有一個情境）")
+        elif m.get("unlisted"):
+            method = "未上市"
+            note = "未上市：不評估可投資性；收支關卡結果只作參考。"
         elif tk == "02513":
             method = "未估值（反向模式）"
             note = (f"模型未出隱含價；2028 年共識營收需為正向推估的 {m['need_ratio_2028']['value']:.2f} 倍"
@@ -429,7 +432,7 @@ def main():
             we.cell(i, 18, f"=P{i}/N{i}-1")
             we.cell(i, 19, f'=IF(AND(Q{i}>=tier_center,R{i}>=tier_bear),"機會",IF(Q{i}<tier_rich,"偏貴","觀察"))')
         else:
-            we.cell(i, 19, "未估值")
+            we.cell(i, 19, "未上市" if m.get("unlisted") else "未估值")
         if alt:
             we.cell(i, 20, alt[0])
             we.cell(i, 21, altlbl)
@@ -448,12 +451,12 @@ def main():
         if cash["basis"] == "現金流":
             we.cell(i, 30, "、".join(f"{y} {v:,.1f}" for y, v, _ in cash["values"]))
         else:
-            we.cell(i, 30, f"{len(vals)} 個情境年度淨利，全部 {'為正' if min(vals) > 0 else '含負值'}")
+            we.cell(i, 30, f"{len(vals)} 個情境年度淨利（不含實績），全部{'為正' if min(vals) > 0 else '含負值'}")
         we.cell(i, 31, sum(vals)).font = BLUE
         we.cell(i, 32, min(vals)).font = BLUE
         we.cell(i, 33, f"[Derived] {cash['file']} {cells[0]}…{cells[-1]}")
         we.cell(i, 34, f'=IF(AB{i}="淨利",IF(AF{i}>0,"通過（淨利）","不通過"),IF(AE{i}<0,"不通過","通過（現金流）"))')
-        we.cell(i, 35, f'=IF(AH{i}="不通過","收支不足",S{i})')
+        we.cell(i, 35, f'=IF(S{i}="未上市","未上市",IF(AH{i}="不通過","收支不足",S{i}))')
 
     # ============ 地圖節點（全部候選＋算力層）
     wm = wb.create_sheet("地圖節點")
