@@ -30,6 +30,7 @@ on:
       - 'foxconn/**'
       - 'avc/**'
       - 'amat/**'
+      - 'emc/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -56,6 +57,7 @@ on:
       - 'foxconn/**'
       - 'avc/**'
       - 'amat/**'
+      - 'emc/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -97,6 +99,7 @@ jobs:
             "quanta|python3 quanta/build_quanta.py|quanta/dist"
             "innolight|python3 innolight/build_innolight.py|innolight/dist"
             "avgo|python3 avgo/build_avgo.py|avgo/dist"
+            "emc|python3 emc/build_emc.py|emc/dist"
             "amat|python3 amat/build_amat.py|amat/dist"
             "avc|python3 avc/build_avc.py|avc/dist"
             "foxconn|python3 foxconn/build_foxconn.py|foxconn/dist"
