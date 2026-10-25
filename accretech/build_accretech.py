@@ -1,4 +1,4 @@
-# 東京精密（Tokyo Seimitsu／ACCRETECH，7729.T）收支與估值模型 v0.1（AI 半導體 Project：設備與材料）
+# 東京精密（Tokyo Seimitsu／ACCRETECH，7729.T）收支與估值模型 v0.1.1（AI 半導體 Project：設備與材料）
 # 用法：python3 accretech/build_accretech.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度 4 月到隔年 3 月：FY2025＝2025-04～2026-03（公司「2026年3月期」）。金額：十億日圓（¥B）；EPS：日圓。
 # 結構比照 disco/build_disco.py：README、In、Q、Hist、PL、Val、Recon、Sens、Sources。
@@ -627,7 +627,7 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 130
 RD = wb.create_sheet("README", 0)
 PROP = ("東京精密約八成營收來自半導體設備（探針台約七成、切割／研削／CMP 約三成），其餘為計測機器；HPC 已占設備營收四成半。"
         "問題是 AI 測試與先進封裝的增量能否撐過設備循環，並讓現價約 20 倍的公司指引本益比（低於日本設備同業的 30 倍以上）被重估？")
-lines = [("東京精密（7729.T）收支與估值模型 v0.1（AI 半導體 Project：設備與材料）　2026-10-25", True),
+lines = [("東京精密（7729.T）收支與估值模型 v0.1.1（AI 半導體 Project：設備與材料）　2026-10-25", True),
  ("模型命題：" + PROP, False),
  ("（約 20 倍＝現價 ¥15,520（2026-10-23 收盤）÷ 公司 FY2026 指引 EPS ¥758.83 ＝ 20.5 倍；見 Val 頁第 1 節）", False), ("", False),
  ("驅動因子 → 推導量（因果方向：左邊決定右邊）", True),
@@ -654,6 +654,26 @@ for s in SC:
         IN.cell(r, 1, f"tot_{s}_{y}"); IN.cell(r, 2, f"設備總額 CY20{y}（情境 {s}）"); IN.cell(r, 3, "US$B")
         IN.cell(r, 5, EQ[(s, "tot")][0][j]).font = BLUE; IN.cell(r, 7, "Derived"); IN.cell(r, 8, EQ[(s, "tot")][1] if j == 0 else "同上")
         defname(f"tot_{s}_{y}", f"In!$E${r}"); r += 1
+
+
+# ---------------- v0.1.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00、14:17）；新增列放在各頁現有最後一列之後，既有儲存格不變 ----------------
+_U = f"B{T['upw']}"
+_G = V.max_row + 2
+V.cell(_G, 1, "上檔空間級距")
+V[f"B{_G}"] = f'=IF({_U}>0.5,"大於 50%",IF({_U}>0.25,"25%–50%",IF({_U}>=0,"0%–25%",IF({_U}>=-0.25,"0%～−25%",IF({_U}>=-0.5,"−25%～−50%","小於 −50%")))))'
+V[f"B{_G}"].number_format = "@"; V[f"E{_G}"] = "以「上檔空間：加權目標價」分六級（Andy 2026-10-25 14:00）"
+V.cell(_G + 1, 1, "投資建議")
+V[f"B{_G + 1}"] = f'=IF({_U}>0.5,"強力買進",IF({_U}>0.25,"買進",IF({_U}>=-0.25,"中立",IF({_U}>=-0.5,"放空","強力放空"))))'
+V[f"B{_G + 1}"].number_format = "@"
+V[f"E{_G + 1}"] = "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空"
+OBS = ["目標價 ¥19,528（DCF 10,189、Comparable 28,867 各半），比現價 15,520（2026-10-23）高 25.8%，級距 25%–50%；Comparable 單獨為 +86.0%。主因是 Comparable 的倍數：同業（Disco、東京威力科創、Advantest、Lasertec、Kokusai Electric）前瞻 P/E 中位數 34.0 倍，東京精密自身前瞻 P/E 只有 21.9 倍、現價隱含 18.3 倍 12 個月後前瞻 EPS（849），Comparable 未扣本公司長期低於同業的折價；EPS 只比共識前瞻 EPS 801 高 5.9%。DCF 反而比現價低 34.3%（ROE 13.9%、再投資率 28.7%）。",
+       "共識目標價 20,900 只隱含 26.1 倍（比同業中位數低 23.3%），市場已給折價；若 Comparable 改用 26.1 倍，加權目標價約落在中立區。情境 FY2028 EPS A 1,077、B 831、C 562，現價隱含 P/E 的十年分位 A 44%、B 90%、C 100%。",
+       "FY2027 EPS 對 FY2026 錨點（實績低於指引 3% → −3.6%、高於 5% → +6.0%）與中國 SPE（−20% → −4.5%）最敏感，情境 C 為 −18.6%。下一個檢驗事件是 FY2026 第二季財報（約 2026-11 上旬，日期未確認）：上半年實績與全年指引是否維持。"]   # 重點觀察（與 accretech/README.md 相同文字）
+_R = RD.max_row + 1
+RD.cell(_R, 1, "v0.1.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁最後新增「上檔空間級距」「投資建議」兩列（依「上檔空間：加權目標價」固定規則）；README 頁最後新增投資建議與重點觀察三點。")
+RD.cell(_R + 1, 1, f'="投資建議："&Val!B{_G + 1}&"（依上檔空間固定規則）"')
+for _i, _t in enumerate(OBS, 1): RD.cell(_R + 1 + _i, 1, f"重點觀察 {_i}：{_t}")
+if os.environ.get("G1_ROWS"): print("G1ROWS", "accretech", "grade", _G, "rec", _G + 1, "readme_obs", _R + 2, _R + 4)
 
 if os.environ.get("ROWS"):
     print("T", T, "SUMR", SUMR, "EXT", EXT, "PB", {s: PB[s] for s in SC}, "CHK26", CHK26, "TS0", TS0, "SENS_LAST", SENS_LAST)

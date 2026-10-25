@@ -1,4 +1,4 @@
-# BESI（BE Semiconductor Industries，BESI.AS）收支與估值模型 v0.1（AI 半導體 Project 步驟 5：設備與材料）
+# BESI（BE Semiconductor Industries，BESI.AS）收支與估值模型 v0.1.1（AI 半導體 Project 步驟 5：設備與材料）
 # 用法：python3 besi/build_besi.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年（FY2026＝2026-01～12）。金額：百萬歐元（€M）；EPS：歐元。
 # 樣板：hanmi/（鍵合設備；HBM 晶粒與混合鍵合比例口徑相同）、advantest/（設備股統一循環規則）
@@ -496,7 +496,7 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 120
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("BESI（BE Semiconductor Industries，BESI.AS）收支與估值模型 v0.1（AI 半導體 Project 步驟 5：設備與材料）　2026-10-25", True),
+lines = [("BESI（BE Semiconductor Industries，BESI.AS）收支與估值模型 v0.1.1（AI 半導體 Project 步驟 5：設備與材料）　2026-10-25", True),
  ("v0.1（2026-10-25）：首版。樣板 hanmi/（鍵合設備，HBM 晶粒與混合鍵合比例口徑相同）與 advantest/（設備股統一循環規則）。本版未做先驗，無 Andy 合理 P/E 對照。", False),
  ("模型命題：BESI 的盈餘由混合鍵合機的新機需求決定——邏輯（SoIC 類）由 AI 先進封裝晶圓 × 混合鍵合導入比例推得，HBM 由 HBM 晶粒 × 混合鍵合占比（與韓美同一口徑）÷ 機台產能推得；傳統貼合機等主流業務隨設備市場循環。股價取決於 2027 年 CoWoS 增速放緩後，邏輯導入比例與 HBM4E／HBM5 混合鍵合能否接棒，以及 BESI 能否守住份額。", False), ("", False),
  ("會計年度＝日曆年。金額以百萬歐元（€M）為主；EPS 為歐元。FY2026 為錨點：前三季實績（184.9＋249.9＋283.4）＋第四季公司指引（營收持平 ±5%、毛利率 63–65%、費用 +5～10%）；第三季已於 2026-10-22 公布並納入。", False), ("", False),
@@ -687,6 +687,26 @@ def valuation_v2(CFG):
     return T, EXT
 
 V2T, V2EXT = valuation_v2(CFG_V2)
+
+# ---------------- v0.1.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00、14:17）；新增列放在各頁現有最後一列之後，既有儲存格不變 ----------------
+_U = f"B{V2T['upw']}"
+_G = V.max_row + 2
+V.cell(_G, 1, "上檔空間級距")
+V[f"B{_G}"] = f'=IF({_U}>0.5,"大於 50%",IF({_U}>0.25,"25%–50%",IF({_U}>=0,"0%–25%",IF({_U}>=-0.25,"0%～−25%",IF({_U}>=-0.5,"−25%～−50%","小於 −50%")))))'
+V[f"B{_G}"].number_format = "@"; V[f"E{_G}"] = "以「上檔空間：加權目標價」分六級（Andy 2026-10-25 14:00）"
+V.cell(_G + 1, 1, "投資建議")
+V[f"B{_G + 1}"] = f'=IF({_U}>0.5,"強力買進",IF({_U}>0.25,"買進",IF({_U}>=-0.25,"中立",IF({_U}>=-0.5,"放空","強力放空"))))'
+V[f"B{_G + 1}"].number_format = "@"
+V[f"E{_G + 1}"] = "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空"
+OBS = ["目標價 €133.69（DCF 97.68、Comparable 169.71 各半），比現價 145.10（2026-10-23）低 7.9%，級距 0%～−25%；Comparable 單獨為 +17.0%。DCF 低是情境分歧造成：DCF 情境價值 A 158.4（現價的 1.09 倍）、B 82.4、C 44.8，B 的 FY2028 EPS 6.59 比 A 的 9.37 低 30%。",
+       "本模型 12 個月後前瞻 EPS 6.52 比共識前瞻 EPS 8.14 低 19.9%；共識目標價 270.57 隱含 33.2 倍，同業中位數 26.0 倍（倍數因素 +27.7%）。",
+       "最敏感的是邏輯（SoIC 類）混合鍵合導入速度：導入比例 ×0.7／×1.3 使 FY2027 EPS −22.0%／+22.0%，改走情境 B 路徑 −12.2%；HBM 混合鍵合取 Disco 低值 −7.2%。下一個檢驗事件是 Q4-26 財報（約 2027-02 下旬）的混合鍵合訂單（Q3-26 訂單 €342.6M）。"]   # 重點觀察（與 besi/README.md 相同文字）
+_R = RD.max_row + 1
+RD.cell(_R, 1, "v0.1.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁最後新增「上檔空間級距」「投資建議」兩列（依「上檔空間：加權目標價」固定規則）；README 頁最後新增投資建議與重點觀察三點。")
+RD.cell(_R + 1, 1, f'="投資建議："&Val!B{_G + 1}&"（依上檔空間固定規則）"')
+for _i, _t in enumerate(OBS, 1): RD.cell(_R + 1 + _i, 1, f"重點觀察 {_i}：{_t}")
+if os.environ.get("G1_ROWS"): print("G1ROWS", "besi", "grade", _G, "rec", _G + 1, "readme_obs", _R + 2, _R + 4)
+
 if os.environ.get("V2_ROWS"):
     print("V2", V2T, V2EXT)
 
