@@ -45,6 +45,7 @@ on:
       - 'crdo/**'
       - 'lite/**'
       - 'wiwynn/**'
+      - 'wistron/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -86,6 +87,7 @@ on:
       - 'crdo/**'
       - 'lite/**'
       - 'wiwynn/**'
+      - 'wistron/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -127,6 +129,7 @@ jobs:
             "quanta|python3 quanta/build_quanta.py|quanta/dist"
             "innolight|python3 innolight/build_innolight.py|innolight/dist"
             "avgo|python3 avgo/build_avgo.py|avgo/dist"
+            "wistron|python3 wistron/build_wistron.py|wistron/dist"
             "wiwynn|python3 wiwynn/build_wiwynn.py|wiwynn/dist"
             "lite|python3 lite/build_lite.py|lite/dist"
             "crdo|python3 crdo/build_crdo.py|crdo/dist"
