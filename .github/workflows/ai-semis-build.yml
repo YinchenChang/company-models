@@ -59,6 +59,7 @@ on:
       - 'ter/**'
       - 'auras/**'
       - 'guc/**'
+      - 'fabrinet/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -114,6 +115,7 @@ on:
       - 'ter/**'
       - 'auras/**'
       - 'guc/**'
+      - 'fabrinet/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -155,6 +157,7 @@ jobs:
             "quanta|python3 quanta/build_quanta.py|quanta/dist"
             "innolight|python3 innolight/build_innolight.py|innolight/dist"
             "avgo|python3 avgo/build_avgo.py|avgo/dist"
+            "fabrinet|python3 fabrinet/build_fabrinet.py|fabrinet/dist"
             "guc|python3 guc/build_guc.py|guc/dist"
             "auras|python3 auras/build_auras.py|auras/dist"
             "ter|python3 ter/build_ter.py|ter/dist"
