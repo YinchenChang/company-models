@@ -15,7 +15,7 @@ AI 加速器（GPU）市場中 NVIDIA 以外的第二大 GPU 供應商，同時�
 
 ## 公司在做什麼
 - 賣資料中心晶片：Instinct GPU（MI355X、MI450／MI455X，用來訓練與執行 AI 模型）、EPYC 伺服器 CPU、DPU、FPGA；另有個人電腦（Client）、遊戲主機與顯示卡（Gaming）、嵌入式（Embedded）[本專案：AMD模型_v0.2.1.xlsx Q!A5:A10]。
-- Helios 是 AMD 的整櫃 AI 系統（72 顆 MI455X＋EPYC CPU＋網通），把 GPU 賣成整櫃，對標 NVIDIA 的 NVL72 [外部・未經本專案檢核]。
+- Helios 是 AMD 的整櫃 AI 系統（MI455X GPU＋EPYC CPU＋網通），把 GPU 賣成整櫃，對標 NVIDIA 的 NVL72 [外部・未經本專案檢核]。
 - 大客戶以「GW（十億瓦）」為單位簽約：OpenAI 6 GW、Meta 6 GW（兩案合計 12 GW）、Anthropic 最多 2 GW、Oracle 首批 5 萬顆 MI450 [本專案：AMD模型_v0.2.1.xlsx In!E122、In!E112、In!E124、In!E125]。
 - 公司不揭露資料中心內 GPU 與 CPU 的拆分；本專案的 GPU 金額是假設拆分（Assumed）[本專案：AMD模型_v0.2.1.xlsx Q!M6]。
 
