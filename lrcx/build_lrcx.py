@@ -1,0 +1,551 @@
+# Lam Research（LRCX）收支與估值模型 v0.1（AI 半導體 Project 步驟 5：設備與材料）
+# 用法：python3 lrcx/build_lrcx.py raw.xlsx ；再以 LibreOffice headless 重算
+# 會計年度 7 月到隔年 6 月（以 6 月最後一個星期日結束）：FY2027＝2026-07～2027-06。金額：十億美元（US$B）；EPS 美元。
+# 樣板：advantest/（工作表結構、三情境、Val 列標籤、設備股共用循環規則）。
+import sys, os, glob
+import openpyxl
+from openpyxl.styles import Font, PatternFill
+from openpyxl.workbook.defined_name import DefinedName
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(ROOT, "tools"))
+import cycle_position as CP
+
+BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
+KEY = PatternFill("solid", fgColor="FFF2CC")
+wb = openpyxl.Workbook()
+def hdr(ws, row, labels):
+    for j, h in enumerate(labels, 1):
+        c = ws.cell(row, j, h); c.font = BOLD; c.fill = HDR
+SC = ("A", "B", "C")
+
+# ---------------- 讀入設備市場模型成品（唯讀；不修改） ----------------
+def only(pattern):
+    fs = glob.glob(os.path.join(ROOT, pattern))
+    assert len(fs) == 1, (pattern, fs)
+    return fs[0]
+EQ_F = only("markets/equipment/dist/*.xlsx")
+rel = lambda f: os.path.relpath(f, ROOT)
+ws_ = openpyxl.load_workbook(EQ_F, data_only=True)["Mkt"]
+EQ = {}      # (情境, 分項) -> ([CY2025..CY2029], 來源)
+LABS = {"先進邏輯（台積電設備＋其他代工中屬先進者）〔AI〕": "adv", "其他代工與邏輯": "ofl", "DRAM（含 HBM）〔AI〕": "dram", "NAND": "nand", "晶圓前段設備": "wfe"}
+cur = None
+for r in ws_.iter_rows():
+    lab = r[0].value
+    if isinstance(lab, str) and lab.startswith("5A."): cur = "A"
+    elif isinstance(lab, str) and lab.startswith("5B."): cur = "B"
+    elif isinstance(lab, str) and lab.startswith("5C."): cur = "C"
+    elif isinstance(lab, str) and lab.startswith("6."): cur = None
+    if cur and lab in LABS:
+        EQ[(cur, LABS[lab])] = ([r[2 + j].value for j in range(5)], f"{rel(EQ_F)}｜Mkt!C{r[0].row}:G{r[0].row}")
+assert len(EQ) == 15 and all(v is not None for k in EQ for v in EQ[k][0]), sorted(EQ)
+for k in ("adv", "ofl", "dram", "nand"):   # 2025–2027 三情境相同（設備模型的設計）
+    for j in range(3):
+        assert abs(EQ[("A", k)][0][j] - EQ[("C", k)][0][j]) < 1e-9
+PEAK, PEAK_SRC = CP.peak_years(ROOT)
+
+# ---------------- In ----------------
+IN = wb.active; IN.title = "In"
+IN["A1"] = "In — 輸入（藍字；基準欄 E，低 D、高 F）。金額：十億美元（US$B）；EPS 美元。每個輸入附兩個來源（來源2 找不到者寫「未找到」）；公司原文算一個"
+IN["A2"] = "標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy、Assumed 給低／高區間。SemiAnalysis 未使用。公司財報（8-K 新聞稿、10-K、10-Q）取自 SEC EDGAR 原文；法說內容取自逐字稿摘要（Motley Fool、MarketBeat、TIKR）"
+hdr(IN, 3, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源1", "來源2／說明"])
+rows = []; sec = lambda t: rows.append(("sec", t)); inp = lambda *a: rows.append(a)
+
+SEGN = {"fl": "代工與邏輯（先進邏輯＋其他代工與邏輯）", "dram": "DRAM（含 HBM）", "nand": "NAND"}
+sec("A. 晶圓前段設備市場（讀 markets/equipment 成品 Mkt 頁 5A／5B／5C；三情境；日曆年 US$B；唯讀，不另估）")
+for s in SC:
+    for k, nm in (("adv", "先進邏輯〔AI〕"), ("ofl", "其他代工與邏輯"), ("dram", "DRAM（含 HBM）〔AI〕"), ("nand", "NAND"), ("wfe", "晶圓前段設備合計")):
+        for j, y in enumerate(range(2025, 2030)):
+            inp(f"{k}{s}_{y % 100}", f"{nm} CY{y}（情境 {s}）", "US$B", None, EQ[(s, k)][0][j], None, "Derived", EQ[(s, k)][1] if j == 0 else "同上",
+                "markets/equipment：公司資本支出 × 設備占比＋其他廠；2028 起 B、C 乘情境係數（Assumed）" if j == 0 else "")
+for s in SC:
+    inp(f"pk_{s}", f"情境 {s}：設備市場見頂年度（日曆年；循環位置規則用）", "年", None, PEAK[s], None, "Derived", PEAK_SRC[s],
+        "設備股共用規則（tools/cycle_position.py）：FY(t) 早於見頂年＝中段、等於＝見頂、晚於＝谷底" if s == "A" else "同上")
+
+sec("B. 系統營收的情境與份額參數")
+inp("h1s", "上半年（1–6 月）占日曆年系統營收與 CSBG 的比例（CY→FY 轉換用）", "%", 0.45, 0.50, 0.55, "Assumed", "無：FY(t)＝CY(t−1) 下半＋CY(t) 上半；基準各半", "CY2026 實績＋指引：上半 8.0、下半 11.8（系統）——成長年下半較高，故區間 45–55%")
+inp("drift", "相對 WFE 分項的份額漂移（每年，CY2027 起）", "%/年", -0.02, 0.0, 0.02, "Assumed", "無：基準為 0（CY2026 的份額錨點延續）",
+    "公司稱 CY2026 為連續第三年優於 WFE、SAM 占 WFE 比重上升約 4 個百分點（Interested-party）；不放進基準，只在 Sens 列 ±2%")
+inp("cn_sh", "中國占系統營收比重（以 FY2026 中國占總營收代用）", "%", 0.26, 0.34, 0.43, "Verified", "Lam FY2026 10-K：中國占營收 34%（FY2025 34%）",
+    "季別：FY26 Q1 43%、Q2 35%、Q3 34%、Q4 26%、FY27 Q1 35%（8-K）；低／高＝季別最小／最大。系統營收的中國比重未揭露（Assumed 同總營收）")
+inp("cutC", "情境 C：出口管制加嚴，中國系統營收折損（CY2028 起）", "%", 0.0, 0.20, 0.40, "Assumed",
+    "Analogy：2022-10 美國出口管制，公司估 2023 年營收影響 US$2.0–2.5B（techwireasia 轉述；當時中國約占營收 30%），約為中國營收的三到四成",
+    "基準 20%＝類比區間的一半；高 40%＝類比上緣。CSBG（含 Reliant 成熟製程設備）未套用")
+inp("cut_sens", "Sens：中國系統營收折損（情境 A，CY2027 起）", "%", 0.20, 0.0, 0.40, "Assumed", "同上：基準 0（現行管制已反映在 CY2026 錨點）", "低欄＝20%、高欄＝40%（Sens 用）")
+inp("csq2_g", "FY2027 Q2 CSBG 相對 Q1 的變化（拆分指引營收用）", "%", -0.05, 0.0, 0.10, "Assumed", "無：公司只給總營收指引 8.6",
+    "結果檢查：CY2026 CSBG 年增＝33%（公司稱逾 30%，Recon）")
+
+sec("C. 客戶支援事業群 CSBG（服務、備件、升級、Reliant 成熟製程設備）")
+inp("g_cs27", "CSBG CY2027 年增", "%", 0.10, 0.15, 0.20, "Interested-party", "Lam FQ1-27 法說（2026-10-21）：CY2027 成長逾 15%（Motley Fool 逐字稿）", "第二來源：未找到。低／高 Assumed")
+for s, g in (("A", 0.12), ("B", 0.06), ("C", -0.03)):
+    inp(f"g_cs_{s}", f"CSBG CY2028–29 年增（{s}）", "%", g - 0.04, g, g + 0.04, "Assumed",
+        "無：裝機量（公司稱逾 10 萬腔體）持續增加、記憶體稼動率隨情境；C 含 NAND 升級潮結束（公司稱 2027 年結束）", "—")
+
+sec("D. 毛利率與營業費用（兩點推導：FY2026 實績與 FY2027 上半〔Q1 實績＋Q2 指引〕年化；不寫死利益率）")
+inp("rev_h1", "FY2027 上半營收年化（Q1 實績＋Q2 指引）× 2", "US$B", None, "=2*(q1_rev+g_q2rev)", None, "Derived", "Q 頁", "—")
+inp("gm_h1", "FY2027 上半毛利率（Q1 實績＋Q2 指引 52.5%）", "%", None, "=(q1_gp+g_q2gm*g_q2rev)/(q1_rev+g_q2rev)", None, "Derived", "Q 頁", "—")
+inp("gm_b", "毛利率斜率（每單位 ln 營收）", "pt", None, "=(gm_h1-a26_gp/a26_rev)/(LN(rev_h1)-LN(a26_rev))", None, "Derived",
+    "兩點：FY2026（營收 23.2、毛利率 50.5%）、FY2027 上半年化（33.6、52.4%）", "對數形式：規模效益遞減；FY2025→FY2026 的斜率較大（7.8），未採")
+inp("gm_a", "毛利率截距", "%", None, "=a26_gp/a26_rev-gm_b*LN(a26_rev)", None, "Derived", "同上", "公司長期目標毛利率 mid-50s（Interested-party）；對照見 Recon")
+inp("opx_h1", "FY2027 上半營業費用年化（Q1 實績＋Q2 指引〔毛利率 − 營益率〕× 營收）× 2", "US$B", None, "=2*(q1_opx+(g_q2gm-g_q2om)*g_q2rev)", None, "Derived", "Q 頁", "—")
+inp("opex_var", "營業費用變動部分占營收（兩點斜率）", "%", None, "=(opx_h1-a26_opx)/(rev_h1-a26_rev)", None, "Derived", "（上半年化 − FY2026）÷（營收差）", "—")
+inp("opex_fix", "營業費用固定部分", "US$B", None, "=a26_opx-opex_var*a26_rev", None, "Derived", "FY2026 營業費用 − 變動 × 營收", "—")
+inp("phi", "營業費用中變動部分占比（FY2026；Sens 用）", "%", 0.15, "=opex_var*a26_rev/a26_opx", 0.50, "Derived", "基準＝兩點推導值；低／高 Assumed", "—")
+
+sec("E. 業外、稅率、股數")
+inp("oth_inc", "業外收益淨額（每年）", "US$B", 0.0, 0.10, 0.20, "Assumed", "FY2026 0.063、FY2025 0.057、FY27 Q1 0.028（8-K）", "含遞延薪酬資產評價，波動大")
+inp("tax", "有效稅率", "%", 0.13, 0.165, 0.19, "Interested-party", "Lam FQ1-27 法說：非 GAAP 稅率 16.5%，12 月季「及之後」預期在此範圍（Motley Fool 逐字稿）",
+    "GAAP：FY27 Q1 16.9%（559.1÷3,312.2，8-K）；FY2026 12.1%、FY2025 10.1%（偏低，不當基準）")
+inp("sh_27", "FY2027 稀釋股數", "十億股", None, 1.253, None, "Interested-party", "公司 12 月季指引：稀釋股數 1.253B（8-K 2026-10-21）", "FY27 Q1 實績 1.2558B（10-Q）")
+inp("bb", "FY2028 起每年股數淨減少（庫藏股）", "%/年", 0.0, 0.015, 0.03, "Assumed", "FY2025→FY2026 稀釋股數 1.2901→1.2611（−2.2%，10-K）", "公司長期目標：自由現金流 85% 回饋股東（Interested-party）")
+
+sec("F. 公司指引（FY2027 Q2＝2026-10～12 月季；2026-10-21 公布）、法說說法、共識與股價")
+inp("g_q2rev", "指引營收 FY27 Q2", "US$B", 8.2, 8.6, 9.0, "Interested-party", "Lam 8-K 新聞稿（2026-10-21）：8.60 ± 0.40", "Motley Fool 逐字稿同")
+inp("g_q2gm", "指引毛利率 FY27 Q2", "%", 0.515, 0.525, 0.535, "Interested-party", "同上：52.5% ± 1%", "同上")
+inp("g_q2om", "指引營業利益率 FY27 Q2", "%", 0.395, 0.405, 0.415, "Interested-party", "同上：40.5% ± 1%", "同上")
+inp("g_q2eps", "指引稀釋 EPS FY27 Q2", "US$", 2.18, 2.33, 2.48, "Interested-party", "同上：2.33 ± 0.15", "同上")
+inp("co_wfe26", "公司估 CY2026 WFE（mid-$150B）", "US$B", None, 155, None, "Interested-party", "Lam FQ1-27 法說：mid-$150B（年初 mid-$130B）", "GuruFocus／BigGo 法說摘要；公司 WFE 口徑與 SEMI 不同")
+inp("co_wfe25", "公司估 CY2025 WFE（約 $110B）", "US$B", None, 110, None, "Interested-party", "Lam FQ2-26 法說（2026-01-28）：約 110（TIKR 摘要）", "第二來源：未找到")
+inp("co_wfe27", "公司初步看 CY2027 WFE（逾 $200B）", "US$B", None, 200, None, "Interested-party", "Lam FQ1-27 法說：more than $200B；DRAM 成長最多，其次代工邏輯、NAND", "GuruFocus 法說摘要")
+inp("co_sys26", "公司：CY2026 系統營收年增（well over 40%）", "%", None, 0.40, None, "Interested-party", "Lam FQ1-27 法說（含 12 月季指引中點）", "下限值；Recon 用")
+inp("co_cs26", "公司：CY2026 CSBG 年增（逾 30%）", "%", None, 0.30, None, "Interested-party", "Lam FQ1-27 法說", "下限值；Recon 用")
+inp("cons_eps27", "共識 EPS FY2027（Yahoo，29 位分析師）", "US$", None, 9.63, None, "Interested-party", "Yahoo Finance analysis（2026-10-23 收盤後頁面）", "stockanalysis 9.48（30 位，2026-10-22；非 GAAP）")
+inp("cons_eps27b", "共識 EPS FY2027（stockanalysis）", "US$", None, 9.48, None, "Interested-party", "stockanalysis forecast（2026-10-22 更新）", "—")
+inp("cons_rev27", "共識營收 FY2027（Yahoo）", "US$B", None, 35.39, None, "Interested-party", "Yahoo Finance analysis", "stockanalysis 34.9")
+inp("cons_eps28", "共識 EPS FY2028（Yahoo，28 位）", "US$", None, 12.15, None, "Interested-party", "Yahoo Finance analysis（低 10.41／高 15.12）", "第二來源：未找到（stockanalysis 需付費）")
+inp("cons_rev28", "共識營收 FY2028（Yahoo）", "US$B", None, 42.68, None, "Interested-party", "Yahoo Finance analysis", "第二來源：未找到")
+inp("px", "股價（stockanalysis 2026-10-23 收盤）", "US$", None, 230.10, None, "Interested-party", "stockanalysis.com（2026-10-23 16:00 EDT）", "digrin 月資料 2026-10：230.10")
+inp("sa_fpe", "遠期 P/E（stockanalysis）", "x", None, 22.39, None, "Interested-party", "stockanalysis.com", "自算見 Val")
+for s, w in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
+    inp(f"tp_w{s}", f"目標價情境權重 {s}", "%", None, w, None, "Assumed", "Andy 可改", "三者合計應為 100%（Val 第 0 節檢查）")
+
+r = 4
+for srow in rows:
+    if srow[0] == "sec":
+        IN.cell(r, 1, srow[1]).font = BOLD; r += 1; continue
+    key, item, unit, lo, base, hi, tag, s1, s2 = srow
+    IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
+    for j, v in ((4, lo), (5, base), (6, hi)):
+        if v is not None:
+            IN.cell(r, j, v)
+            if not (isinstance(v, str) and v.startswith("=")): IN.cell(r, j).font = BLUE
+    IN.cell(r, 7, tag); IN.cell(r, 8, s1); IN.cell(r, 9, s2)
+    wb.defined_names[key] = DefinedName(key, attr_text=f"In!$E${r}")
+    if lo is not None: wb.defined_names[key + "_lo"] = DefinedName(key + "_lo", attr_text=f"In!$D${r}")
+    if hi is not None: wb.defined_names[key + "_hi"] = DefinedName(key + "_hi", attr_text=f"In!$F${r}")
+    r += 1
+for col, w in zip("ABCDEFGHI", [12, 64, 10, 9, 11, 9, 18, 80, 70]): IN.column_dimensions[col].width = w
+IN.freeze_panes = "D4"
+INROW = {}
+for rr in range(4, r):
+    if IN.cell(rr, 3).value is not None: INROW[IN.cell(rr, 1).value] = rr
+
+def defname(name, ref):
+    wb.defined_names[name] = DefinedName(name, attr_text=ref)
+
+# ---------------- Q：實績（FY2025 全年、FY2026 四季與全年、FY2027 Q1、Q2 指引） ----------------
+Q = wb.create_sheet("Q")
+Q["A1"] = "Q — 實績（十億美元；EPS 美元；GAAP）。會計年度 7–6 月：FY2026＝2025-07～2026-06。藍字＝輸入；黑字＝公式（Derived）。來源：Lam 8-K 新聞稿（Exhibit 99.1）、10-K、10-Q（SEC EDGAR 原文）"
+Q["A2"] = "FY2027 第一季（2026-07～09）已於 2026-10-21 公布並納入（G 欄）；H 欄為 12 月季指引（2026-10-21）。下一次財報：FY2027 第二季，預計 2027-01 下旬（公司尚未公告日期）"
+hdr(Q, 3, ["項目", "FY2025 全年", "FY26 Q1（7–9月）", "FY26 Q2（10–12月）", "FY26 Q3（1–3月）", "FY26 Q4（4–6月）", "FY27 Q1（7–9月）", "FY27 Q2（指引）", "FY2026 全年", "標記", "來源1（公司）", "來源2／說明"])
+QR = {}
+def qrow(r, key, label, vals, tag, s1, s2, fmt="#,##0.000"):
+    QR[key] = r
+    Q.cell(r, 1, label)
+    for j, v in zip("BCDEFGHI", vals):
+        if v is None: continue
+        c = Q[f"{j}{r}"]; c.value = v; c.number_format = fmt
+        if not (isinstance(v, str) and v.startswith("=")): c.font = BLUE
+    Q.cell(r, 10, tag); Q.cell(r, 11, s1); Q.cell(r, 12, s2)
+K10 = "FY2026 10-K（2026-08-07）"; PR = "各季 8-K 新聞稿（2025-07-30、2025-10-22、2026-01-28、2026-04-22、2026-07-29、2026-10-21）"
+qrow(4, "sys", "系統營收（新的先進製程設備）", [11.491280, 3.547565, 3.357493, 3.730582, 4.249848, 5.732907, "=H6-H5", 14.885488], "Verified", PR + "：Systems revenue", K10 + "：FY2026 14,885.5、FY2025 11,491.3（百萬美元）；四季合計＝全年（見檢查列）")
+qrow(5, "cs", "客戶支援與其他（CSBG：服務、備件、升級、Reliant 成熟製程設備）", [6.944311, 1.776608, 1.987298, 2.110906, 2.472390, 2.486511, "=G5*(1+csq2_g)", 8.347202], "Verified", PR + "：Customer support-related revenue and other", K10 + "；Q2 指引欄＝Q1 × (1＋csq2_g)（Assumed）")
+qrow(6, "rev", "營收", [18.435591, 5.324173, 5.344791, 5.841488, 6.722238, 8.219418, "=g_q2rev", 23.232690], "Verified", PR, K10 + "：23,232.7、18,435.6")
+qrow(7, "chk1", "檢查：系統＋CSBG − 營收（應為 0）", [f"={c}4+{c}5-{c}6" for c in "BCDEFGHI"], "—", "—", "—", "0.000")
+qrow(8, "gp", "毛利", [8.979059, 2.684879, 2.651162, 2.910527, 3.478740, 4.298853, "=H6*g_q2gm", 11.725308], "Verified", PR, K10)
+qrow(9, "gmr", "毛利率", [f"={c}8/{c}6" for c in "BCDEFGHI"], "Derived", "—", "公司：FY2026 50.5%、FY27 Q1 52.3%（GAAP）", "0.0%")
+qrow(10, "rd", "研發費用", [2.096387, 0.576446, 0.573305, 0.583200, 0.642922, 0.666398, None, 2.375873], "Verified", PR, K10)
+qrow(11, "sga", "銷管費用", [0.981704, 0.279345, 0.267654, 0.280311, 0.322330, 0.348728, None, 1.149640], "Verified", PR, K10)
+qrow(12, "opx", "營業費用", ["=B10+B11", "=C10+C11", "=D10+D11", "=E10+E11", "=F10+F11", "=G10+G11", "=H8-H13", "=I10+I11"], "Derived", "—", "Q2 指引欄＝毛利 − 營業利益")
+qrow(13, "oi", "營業利益", [5.900968, 1.829088, 1.810203, 2.047016, 2.513488, 3.283727, "=H6*g_q2om", 8.199795], "Verified", PR, K10)
+qrow(14, "oim", "營業利益率", [f"={c}13/{c}6" for c in "BCDEFGHI"], "Derived", "—", "公司：FY2026 35.3%、FY27 Q1 40.0%", "0.0%")
+qrow(15, "oth", "業外收益淨額", [0.057161, 0.030074, 0.026410, -0.035460, 0.041654, 0.028493, None, 0.062678], "Verified", PR, K10)
+qrow(16, "tx", "所得稅", [0.599912, 0.290502, 0.242619, 0.186096, 0.277860, 0.559082, None, 0.997077], "Verified", PR, K10)
+qrow(17, "ni", "淨利", [5.358217, 1.568660, 1.593994, 1.825460, 2.277282, 2.753138, "=H18*H19", 7.265396], "Verified", PR, K10 + "；Q2 指引欄＝指引 EPS × 指引股數（Derived）")
+qrow(18, "eps", "EPS（稀釋，美元）", [4.15, 1.24, 1.26, 1.45, 1.81, 2.19, "=g_q2eps", 5.76], "Verified", PR, K10 + "；非 GAAP FY2026 5.82（各季 1.26＋1.27＋1.47＋1.82）", "0.00")
+qrow(19, "dsh", "稀釋股數（十億股）", [1.290142, 1.269313, 1.261739, 1.257325, 1.256032, 1.255768, "=sh_27", 1.261102], "Verified", PR, K10, "0.0000")
+qrow(20, "epsb", "EPS（基本，美元；Val 的十年 P/E 用）", [4.17, 1.24, 1.27, 1.46, 1.82, 2.20, None, 5.79], "Verified", PR, K10, "0.00")
+qrow(21, "ck2", "檢查：四季合計 − 全年（系統、CSBG、營收、毛利、營業利益、淨利依序在 B–G 欄）",
+     ["=SUM(C4:F4)-I4", "=SUM(C5:F5)-I5", "=SUM(C6:F6)-I6", "=SUM(C8:F8)-I8", "=SUM(C13:F13)-I13", "=SUM(C17:F17)-I17"], "—", "—", "—", "0.000")
+Q.cell(23, 1, "地區與客戶別（占比）").font = BOLD
+qrow(24, "cn", "中國占營收", [0.34, 0.43, 0.35, 0.34, 0.26, 0.35, None, 0.34], "Verified", PR + "：Region revenue", K10 + "：FY2026、FY2025 皆 34%；管理層稱 12 月季中國占比將「明顯下降」（FQ1-27 法說）", "0%")
+qrow(25, "pf", "代工（Foundry）占系統營收", [0.45, 0.60, 0.59, 0.54, 0.44, 0.46, "=G25", 0.54], "Verified", "各季 10-Q 與 FY2026 10-K：設備與升級營收的客戶別占比", "法說稱占「系統營收」，數字與 10-Q 相同；Q2 指引欄沿用 Q1（Assumed）", "0%")
+qrow(26, "pl_", "邏輯／IDM 占系統營收", [0.13, 0.06, 0.07, 0.07, 0.10, 0.08, "=G26", 0.07], "Verified", "同上", "同上", "0%")
+qrow(27, "pd", "DRAM 占系統營收", [None, 0.16, 0.23, 0.27, 0.23, 0.20, "=G27", None], "Interested-party", "法說逐字稿摘要（TIKR FQ2-26；MarketBeat FQ4-26；Motley Fool FQ1-27）：Q1 16%、Q2 23%、Q3 27%、Q4 23%、FY27 Q1 20%",
+     "10-Q 只揭露記憶體合計；DRAM＋NAND＝記憶體（見檢查列）。FY2025 全年 DRAM／NAND 拆分：未找到", "0%")
+qrow(28, "pn", "NAND（非揮發性記憶體）占系統營收", [None, 0.18, 0.11, 0.12, 0.23, 0.26, "=G28", None], "Interested-party", "同上：Q1 18%、Q2 11%、Q3 12%、Q4 23%、FY27 Q1 26%", "同上", "0%")
+qrow(29, "pm", "記憶體占系統營收（10-Q）", [0.42, 0.34, 0.34, 0.39, 0.46, 0.46, "=G29", 0.39], "Verified", "10-Q／10-K：Memory", "—", "0%")
+qrow(30, "ck3", "檢查：代工＋邏輯＋記憶體 − 1；DRAM＋NAND − 記憶體（C–H 欄）", ["=B25+B26+B29-1", "=C27+C28-C29", "=D27+D28-D29", "=E27+E28-E29", "=F27+F28-F29", "=G27+G28-G29", "=H27+H28-H29", "=I25+I26+I29-1"], "—", "—", "B、I 欄為三項合計 − 1", "0.00")
+Q.cell(32, 1, "CY2025 對照用：FY2025 下半（2025-01～06）").font = BOLD
+hdr(Q, 33, ["項目", "FY25 Q3（1–3月）", "FY25 Q4（4–6月）", "", "", "", "", "", "", "標記", "來源1（公司）", "來源2／說明"])
+for i, (nm, a, b) in enumerate((("系統營收", 3.035276, 3.437625), ("CSBG", 1.684899, 1.733768), ("營收", 4.720175, 5.171393)), 34):
+    Q.cell(i, 1, nm); Q.cell(i, 2, a).font = BLUE; Q.cell(i, 3, b).font = BLUE
+    for c in "BC": Q[f"{c}{i}"].number_format = "#,##0.000"
+    Q.cell(i, 10, "Verified"); Q.cell(i, 11, "8-K 2025-04-23、2025-07-30；FY26 Q3 與 Q1 新聞稿的前期比較欄"); Q.cell(i, 12, "—")
+for nm, rr in (("sys", 4), ("cs", 5), ("rev", 6), ("gp", 8), ("opx", 12), ("oi", 13), ("ni", 17), ("eps", 18), ("dsh", 19), ("epsb", 20)):
+    defname(f"a25_{nm}", f"Q!$B${rr}"); defname(f"a26_{nm}", f"Q!$I${rr}"); defname(f"q1_{nm}", f"Q!$G${rr}")
+Q.column_dimensions["A"].width = 62
+for c in "BCDEFGHI": Q.column_dimensions[c].width = 14
+Q.column_dimensions["J"].width = 18; Q.column_dimensions["K"].width = 80; Q.column_dimensions["L"].width = 80
+Q.freeze_panes = "B4"
+
+# ---------------- Units：CY2026 系統營收錨點（客戶別）與對 WFE 分項的比例 ----------------
+UN = wb.create_sheet("Units")
+UN["A1"] = "Units — 日曆年系統營收依客戶別的錨點：CY2026＝FY26 Q3＋Q4（實績）＋FY27 Q1（實績）＋FY27 Q2（指引）；各季系統營收 × 客戶別占比；再除以設備市場模型的 CY2026 分項，得到份額係數 k"
+hdr(UN, 3, ["項目", "單位", "FY26 Q3", "FY26 Q4", "FY27 Q1", "FY27 Q2（指引）", "CY2026", "說明"])
+QC = {"FY26 Q3": "E", "FY26 Q4": "F", "FY27 Q1": "G", "FY27 Q2": "H"}
+UR = {}
+def urow(r, key, lab, unit, fs, total, fmt="0.000", note=""):
+    UN.cell(r, 1, lab); UN.cell(r, 2, unit)
+    for j, f in enumerate(fs):
+        if f is None: continue
+        UN.cell(r, 3 + j, f).number_format = fmt
+    if total is not None: UN.cell(r, 7, total).number_format = fmt
+    UN.cell(r, 8, note); UR[key] = r
+urow(4, "sys", "系統營收", "US$B", [f"=Q!{c}4" for c in QC.values()], "=SUM(C4:F4)", note="Q2 指引欄＝指引營收 − CSBG 推估")
+urow(5, "fl", "  代工與邏輯", "US$B", [f"=Q!{c}4*(Q!{c}25+Q!{c}26)" for c in QC.values()], "=SUM(C5:F5)")
+urow(6, "dram", "  DRAM", "US$B", [f"=Q!{c}4*Q!{c}27" for c in QC.values()], "=SUM(C6:F6)")
+urow(7, "nand", "  NAND", "US$B", [f"=Q!{c}4*Q!{c}28" for c in QC.values()], "=SUM(C7:F7)")
+urow(8, "chk", "  檢查：三項 − 系統營收（應為 0）", "US$B", ["=C5+C6+C7-C4", "=D5+D6+D7-D4", "=E5+E6+E7-E4", "=F5+F6+F7-F4"], "=G5+G6+G7-G4")
+urow(9, "cs", "CSBG", "US$B", [f"=Q!{c}5" for c in QC.values()], "=SUM(C9:F9)")
+for k in ("sys", "fl", "dram", "nand", "cs"): defname(f"cy26_{k}", f"Units!$G${UR[k]}")
+defname("h2_26_sys", "Units!$E$4:$F$4"); defname("h2_26_cs", "Units!$E$9:$F$9")
+UN.cell(11, 1, "CY2025 與 CY2026 年增（對照公司說法）").font = BOLD
+UN.cell(12, 1, "CY2025 系統營收（FY25 Q3＋Q4＋FY26 Q1＋Q2）"); UN.cell(12, 2, "US$B"); UN["G12"] = "=Q!B34+Q!C34+Q!C4+Q!D4"
+UN.cell(13, 1, "CY2025 CSBG"); UN.cell(13, 2, "US$B"); UN["G13"] = "=Q!B35+Q!C35+Q!C5+Q!D5"
+UN.cell(14, 1, "CY2026 系統營收年增"); UN.cell(14, 2, "%"); UN["G14"] = "=G4/G12-1"; UN.cell(14, 8, "公司：well over 40%（含 12 月季指引中點）")
+UN.cell(15, 1, "CY2026 CSBG 年增"); UN.cell(15, 2, "%"); UN["G15"] = "=G9/G13-1"; UN.cell(15, 8, "公司：逾 30%")
+UN.cell(16, 1, "CY2026 下半系統營收（FY27 Q1＋Q2）"); UN.cell(16, 2, "US$B"); UN["G16"] = "=E4+F4"
+UN.cell(17, 1, "CY2026 下半 CSBG"); UN.cell(17, 2, "US$B"); UN["G17"] = "=E9+F9"
+for rr, f in ((12, "0.000"), (13, "0.000"), (14, "0.0%"), (15, "0.0%"), (16, "0.000"), (17, "0.000")): UN[f"G{rr}"].number_format = f
+defname("cy25_sys", "Units!$G$12"); defname("cy25_cs", "Units!$G$13"); defname("h2s26", "Units!$G$16"); defname("h2c26", "Units!$G$17")
+UN.cell(19, 1, "份額係數 k＝CY2026 Lam 系統營收（客戶別）÷ 設備市場模型 CY2026 分項（三情境 CY2026 相同）").font = BOLD
+hdr(UN, 20, ["分項", "單位", "Lam CY2026", "WFE 分項 CY2026", "k", "", "", "說明"])
+for i, (k, nm, wf) in enumerate((("fl", "代工與邏輯", "advA_26+oflA_26"), ("dram", "DRAM（含 HBM）", "dramA_26"), ("nand", "NAND", "nandA_26")), 21):
+    UN.cell(i, 1, nm); UN.cell(i, 2, "US$B"); UN[f"C{i}"] = f"=cy26_{k}"; UN[f"D{i}"] = f"={wf}"; UN[f"E{i}"] = f"=C{i}/D{i}"
+    for c in "CD": UN[f"{c}{i}"].number_format = "0.00"
+    UN[f"E{i}"].number_format = "0.0%"; defname(f"k_{k}", f"Units!$E${i}")
+    UN.cell(i, 8, "Derived：只用公司實績與指引，未用共識；k 是「系統營收 ÷ 模型 WFE 分項」，不是嚴格市占（口徑：系統營收不含升級與 Reliant；WFE 模型為設備市場模型由下而上值）")
+UN.cell(24, 1, "合計：Lam 系統營收 ÷ 模型晶圓前段設備"); UN["C24"] = "=cy26_sys"; UN["D24"] = "=wfeA_26"; UN["E24"] = "=C24/D24"; UN["E24"].number_format = "0.0%"
+UN.cell(25, 1, "對照：Lam（系統＋CSBG）÷ 公司估 CY2026 WFE"); UN["C25"] = "=cy26_sys+cy26_cs"; UN["D25"] = "=co_wfe26"; UN["E25"] = "=C25/D25"; UN["E25"].number_format = "0.0%"
+UN.cell(25, 8, "CSBG 不屬 WFE，僅供量級參考")
+UN.column_dimensions["A"].width = 60; UN.column_dimensions["H"].width = 90
+for c in "CDEFG": UN.column_dimensions[c].width = 13
+
+# ---------------- 引擎：一個情境的完整推導（PL 與 Sens 共用） ----------------
+COL = {2025: "C", 2026: "D", 2027: "E", 2028: "F", 2029: "G"}   # FY 與 CY 共用欄：D＝CY2026／FY2026 … G＝CY2029／FY2029
+DEFP = dict(h1="h1s", drift="drift", cut27="0", cut28=None, cs27="g_cs27", csg=None, F="opex_fix", v="opex_var", tax="tax", bb="bb", oth="oth_inc", scn="A")
+def engine(ws, r0, title, **over):
+    P = dict(DEFP); P.update(over); s = P["scn"]
+    if P["cut28"] is None: P["cut28"] = "cutC" if s == "C" else P["cut27"]
+    if P["csg"] is None: P["csg"] = f"g_cs_{s}"
+    ws.cell(r0, 1, title).font = BOLD
+    R = {}; r = r0 + 1
+    hdr(ws, r, ["項目", "單位", "FY2025", "CY2026／FY2026", "CY2027／FY2027", "CY2028／FY2028", "CY2029／FY2029", "說明"]); r += 1
+    ws.cell(r, 1, "A. 日曆年（D＝CY2026 … G＝CY2029）").font = BOLD; r += 1
+    def row(key, label, unit, fs, fmt="0.000", note=""):
+        nonlocal r
+        ws.cell(r, 1, label); ws.cell(r, 2, unit)
+        for y, f in fs.items():
+            c = ws[f"{COL[y]}{r}"]; c.value = f; c.number_format = fmt
+        ws.cell(r, 8, note); R[key] = r; r += 1
+    wfl = lambda y: f"(adv{s}_{y % 100}+ofl{s}_{y % 100})"
+    W = {"fl": wfl, "dram": lambda y: f"dram{s}_{y % 100}", "nand": lambda y: f"nand{s}_{y % 100}"}
+    for k, nm in (("fl", "代工與邏輯"), ("dram", "DRAM"), ("nand", "NAND")):
+        row(f"s_{k}", f"系統營收：{nm}", "US$B", {2026: f"=cy26_{k}", **{y: f"=k_{k}*{W[k](y)}*(1+{P['drift']})^{y - 2026}" for y in (2027, 2028, 2029)}},
+            note="CY2026＝錨點（實績＋指引）；之後＝k × 設備市場模型分項 × (1＋份額漂移)^年")
+    cut = {2027: P["cut27"], 2028: P["cut28"], 2029: P["cut28"]}
+    row("s_cut", "出口管制：中國系統營收折損", "US$B", {y: f"=-cn_sh*{cut[y]}*({COL[y]}{R['s_fl']}+{COL[y]}{R['s_dram']}+{COL[y]}{R['s_nand']})" for y in (2027, 2028, 2029)},
+        note="−中國占比 × 折損比例 × 系統營收；情境 C 自 CY2028 起 cutC，其餘為 0（Sens 另設）")
+    row("s_cy", "系統營收 CY", "US$B", {y: f"=SUM({COL[y]}{R['s_fl']}:{COL[y]}{R['s_cut']})" for y in (2026, 2027, 2028, 2029)})
+    row("c_cy", "CSBG CY", "US$B", {2026: "=cy26_cs", 2027: f"=D{r}*(1+{P['cs27']})", 2028: f"=E{r}*(1+{P['csg']})", 2029: f"=F{r}*(1+{P['csg']})"},
+        note="CY2026＝錨點；CY2027 公司稱逾 15%；之後依情境")
+    ws.cell(r, 1, "B. 會計年度（C＝FY2025 … G＝FY2029；FY(t)＝CY(t−1) 下半＋CY(t) 上半）").font = BOLD; r += 1
+    def fyc(key):
+        cy = R[key]
+        return {2027: f"={'h2s26' if key == 's_cy' else 'h2c26'}+{P['h1']}*E{cy}",
+                2028: f"=(1-{P['h1']})*E{cy}+{P['h1']}*F{cy}", 2029: f"=(1-{P['h1']})*F{cy}+{P['h1']}*G{cy}"}
+    row("sys", "系統營收", "US$B", {2025: "=a25_sys", 2026: "=a26_sys", **fyc("s_cy")}, note="FY2027＝CY2026 下半（FY27 Q1 實績＋Q2 指引）＋ h1 × CY2027")
+    row("cs", "CSBG", "US$B", {2025: "=a25_cs", 2026: "=a26_cs", **fyc("c_cy")})
+    row("rev", "營收", "US$B", {y: f"={COL[y]}{R['sys']}+{COL[y]}{R['cs']}" for y in COL})
+    row("gm", "毛利率", "%", {2025: "=a25_gp/a25_rev", 2026: "=a26_gp/a26_rev", **{y: f"=gm_a+gm_b*LN({COL[y]}{R['rev']})" for y in (2027, 2028, 2029)}}, fmt="0.0%",
+        note="截距＋斜率 × ln 營收（兩點推導）")
+    row("gp", "毛利", "US$B", {y: f"={COL[y]}{R['rev']}*{COL[y]}{R['gm']}" for y in COL})
+    row("opx", "營業費用", "US$B", {2025: "=a25_opx", 2026: "=a26_opx", **{y: f"={P['F']}+{P['v']}*{COL[y]}{R['rev']}" for y in (2027, 2028, 2029)}}, note="固定＋變動 × 營收")
+    row("oi", "營業利益", "US$B", {y: f"={COL[y]}{R['gp']}-{COL[y]}{R['opx']}" for y in COL})
+    row("oim", "營業利益率", "%", {y: f"={COL[y]}{R['oi']}/{COL[y]}{R['rev']}" for y in COL}, fmt="0.0%")
+    row("ni", "淨利", "US$B", {2025: "=a25_ni", 2026: "=a26_ni", **{y: f"=({COL[y]}{R['oi']}+{P['oth']})*(1-{P['tax']})" for y in (2027, 2028, 2029)}})
+    row("dsh", "稀釋股數", "十億股", {2025: "=a25_dsh", 2026: "=a26_dsh", 2027: "=sh_27", 2028: f"=E{r}*(1-{P['bb']})", 2029: f"=F{r}*(1-{P['bb']})"}, fmt="0.0000")
+    row("eps", "EPS（稀釋）", "US$", {2025: "=a25_eps", 2026: "=a26_eps", **{y: f"={COL[y]}{R['ni']}/{COL[y]}{R['dsh']}" for y in (2027, 2028, 2029)}}, fmt="0.00")
+    row("ssh", "系統營收占營收", "%", {y: f"={COL[y]}{R['sys']}/{COL[y]}{R['rev']}" for y in COL}, fmt="0.0%")
+    R["end"] = r
+    return R
+
+# ---------------- PL：三情境 ----------------
+PL = wb.create_sheet("PL")
+PL["A1"] = "PL — Lam Research 損益（US$B；FY2025、FY2026 為實績，FY2027 起為模型；FY2027 上半錨定 Q1 實績＋Q2 指引）。三情境各一個完整推導區塊（見下方），本頁頂端為摘要"
+PB = {}; r0 = 40
+for s in SC:
+    PB[s] = engine(PL, r0, {"A": "情境 A：設備市場續增（markets/equipment A：2029 見頂）",
+                            "B": "情境 B：設備市場 2028 持平、2029 −5%（markets/equipment B）",
+                            "C": "情境 C：設備市場 2028 −20%（markets/equipment C）；另加出口管制中國系統營收 −20%（CY2028 起）"}[s], scn=s)
+    r0 = PB[s]["end"] + 2
+hdr(PL, 3, ["情境／項目", "單位", "FY2025A", "FY2026A", "FY2027", "FY2028", "FY2029", "說明"])
+sr = 4; SUMR = {}
+for s in SC:
+    PL.cell(sr, 1, f"情境 {s}").font = BOLD; sr += 1
+    for key, lab, unit, fmt in (("rev", "營收", "US$B", "#,##0.00"), ("sys", "  系統營收", "US$B", "#,##0.00"), ("cs", "  CSBG", "US$B", "#,##0.00"),
+                                ("gm", "毛利率", "%", "0.0%"), ("oi", "營業利益", "US$B", "#,##0.00"), ("oim", "營業利益率", "%", "0.0%"), ("ni", "淨利", "US$B", "#,##0.00"), ("eps", "EPS（稀釋）", "US$", "0.00")):
+        PL.cell(sr, 1, lab); PL.cell(sr, 2, unit)
+        for y in COL:
+            PL[f"{COL[y]}{sr}"] = f"={COL[y]}{PB[s][key]}"; PL[f"{COL[y]}{sr}"].number_format = fmt
+        SUMR[(s, key)] = sr; sr += 1
+    sr += 1
+PL.cell(sr, 1, "核對：FY2025、FY2026 模型＝實績（營收、EPS 差的絕對值合計，應為 0）").font = BOLD; sr += 1
+PL[f"C{sr}"] = "=" + "+".join(f"ABS({c}{SUMR[(s, 'rev')]}-{a}_rev)+ABS({c}{SUMR[(s, 'eps')]}-{a}_eps)" for s in SC for c, a in (("C", "a25"), ("D", "a26"))); PL[f"C{sr}"].number_format = "0.0000"
+PL.column_dimensions["A"].width = 56; PL.column_dimensions["B"].width = 12; PL.column_dimensions["H"].width = 70
+for c in "CDEFG": PL.column_dimensions[c].width = 14
+
+# ---------------- Val：P/E 估值 ----------------
+V = wb.create_sheet("Val")
+V["A1"] = "Val — P/E 估值。跨公司規則：合理倍數＝10 年（2016–2025 年底）P/E 的分位，依循環位置：見頂年 25 分位、中段中位數、谷底 75 分位。循環位置依設備股共用規則（見第 4 節）"
+V["A2"] = "P/E 定義（自算）：日曆年底收盤價 ÷ 「當期會計年度」公司公布的基本 EPS（年底所在會計年度，例如 2025-12 對 FY2026＝2025-07～2026-06）。價格與 EPS 皆為 2024-10 的 10 比 1 分割調整後"
+# 0. 目標價（列號固定在 4–13）
+V.cell(4, 1, "0. 目標價與上檔空間").font = BOLD
+hdr(V, 5, ["項目", "數值", "說明"])
+VAL_ROW = {"A": None}
+# 先保留，第 5 節建好後回填
+# 1. EPS
+V.cell(16, 1, "1. 公司公布 EPS（會計年度，美元，分割調整後）— 兩個來源").font = BOLD
+hdr(V, 17, ["會計年度（6 月結束）", "來源1：10-K 基本 EPS（分割調整）", "來源2：10-K 稀釋 EPS（分割調整）", "基本 ÷ 稀釋 − 1", "原始基本 EPS（分割前）", "標記", "說明"])
+EPSD = [("FY2016", 5.75, 5.22, True), ("FY2017", 10.47, 9.24, True), ("FY2018", 14.73, 13.17, True), ("FY2019", 14.37, 13.70, True), ("FY2020", 15.55, 15.10, True),
+        ("FY2021", 27.22, 26.90, True), ("FY2022", 32.92, 32.75, True), ("FY2023", 3.33, 3.32, False), ("FY2024", 2.91, 2.90, False), ("FY2025", 4.17, 4.15, False), ("FY2026", 5.79, 5.76, False)]
+EP = {}
+for i, (fy_, b, d, pre) in enumerate(EPSD, 18):
+    V.cell(i, 1, fy_)
+    if pre:
+        V.cell(i, 5, b).font = BLUE; V.cell(i, 2, f"=E{i}/10"); V.cell(i, 3, d / 10).font = BLUE
+        note = "SEC XBRL（各年 10-K）：分割前基本 EPS ÷ 10；稀釋同理"
+    else:
+        V.cell(i, 2, b).font = BLUE; V.cell(i, 3, d).font = BLUE; V.cell(i, 5, f"=B{i}*10")
+        note = "FY2025／FY2026 10-K（分割後重編）；E 欄為 ×10 還原（Derived）"
+    V.cell(i, 4, f"=B{i}/C{i}-1")
+    for c in "BCE": V[f"{c}{i}"].number_format = "0.000"
+    V[f"D{i}"].number_format = "0.0%"
+    V.cell(i, 6, "Verified"); V.cell(i, 7, note); EP[fy_] = i
+V.cell(29, 1, "全部年度統一用基本 EPS（Basic，比照樣板）。來源2 為同一份 10-K 的稀釋 EPS（非獨立來源，只作口徑對照）；獨立的第二個 EPS 來源：未找到（macrotrends、stockanalysis 頁面未取得年度表）")
+V.cell(30, 1, "2. 10 年 P/E（年底）").font = BOLD
+hdr(V, 31, ["年底", "收盤價 US$（分割調整，未還原股利）", "當期 FY EPS（基本）", "前期 FY EPS（基本）", "P/E 當期（自算）", "P/E 前期（自算）", "companiesmarketcap P/E", "自算當期 − cmc", "macrotrends 年底價（還原股利）", "標記", "來源／說明"])
+PX = {2016: 105.73, 2017: 184.07, 2018: 136.17, 2019: 292.40, 2020: 472.27, 2021: 719.15, 2022: 420.30, 2023: 783.26, 2024: 72.23, 2025: 171.18}
+MT = {2016: 9.3223, 2017: 16.4265, 2018: 12.4183, 2019: 27.2375, 2020: 44.7187, 2021: 68.7159, 2022: 40.7327, 2023: 76.8336, 2024: 71.5745, 2025: 171.18}
+CMC = {2016: 15.1, 2017: 15.9, 2018: 6.83, 2019: 19.4, 2020: 21.9, 2021: 21.3, 2022: 11.0, 2023: 29.7, 2024: 21.7, 2025: 34.9}
+for i, y in enumerate(range(2016, 2026), 32):
+    V.cell(i, 1, f"{y}-12")
+    if y <= 2023: V.cell(i, 2, f"={PX[y]}/10")
+    else: V.cell(i, 2, PX[y]).font = BLUE
+    V.cell(i, 3, f"=B{EP[f'FY{y+1}']}"); V.cell(i, 4, f"=B{EP[f'FY{y}']}")
+    V.cell(i, 5, f"=B{i}/C{i}"); V.cell(i, 6, f"=B{i}/D{i}")
+    V.cell(i, 7, CMC[y]).font = BLUE; V.cell(i, 8, f"=E{i}-G{i}"); V.cell(i, 9, MT[y]).font = BLUE
+    for c in "BCDI": V[f"{c}{i}"].number_format = "#,##0.00"
+    for c in "EFGH": V[f"{c}{i}"].number_format = "0.0"
+    V.cell(i, 10, "Verified／Derived")
+    V.cell(i, 11, "收盤價：digrin「Real price」（分割前原價 ÷ 10）" if y <= 2023 else "收盤價：digrin（分割後）")
+V.cell(42, 1, "收盤價來源1：digrin 年底原價（2016–2023 為分割前，公式 ÷ 10）；來源2：macrotrends 年底價（分割與股利還原，故早年較低；2025 相同）。companiesmarketcap 為 TTM 口徑，只作對照（差距見 H 欄）。")
+V.cell(44, 1, "3. 分位").font = BOLD
+hdr(V, 45, ["統計", "P/E 當期（自算）", "P/E 前期（自算）", "cmc P/E（參考）", "用途"])
+for i, (nm, p, use) in enumerate((("25 分位", 0.25, "見頂年"), ("中位數", 0.5, "中段"), ("75 分位", 0.75, "谷底")), 46):
+    V.cell(i, 1, nm); V.cell(i, 5, use)
+    V.cell(i, 2, f"=PERCENTILE(E32:E41,{p})"); V.cell(i, 3, f"=PERCENTILE(F32:F41,{p})"); V.cell(i, 4, f"=PERCENTILE(G32:G41,{p})")
+    for c in "BCD": V[f"{c}{i}"].number_format = "0.0"
+V.cell(49, 1, "年數"); V["B49"] = "=COUNT(E32:E41)"; V["C49"] = "=COUNT(F32:F41)"; V["D49"] = "=COUNT(G32:G41)"
+defname("pe_peak", "Val!$B$46"); defname("pe_mid", "Val!$B$47"); defname("pe_trough", "Val!$B$48")
+V.cell(50, 1, "讀法：當期口徑的分母是年底時仍在進行中的會計年度（已過一半），接近遠期 P/E；2018、2022 年底記憶體下行使倍數偏低，2023、2025 年底 AI 預期使倍數偏高。")
+V.cell(52, 1, "4. 循環位置（設備股共用規則；見頂年度讀設備市場模型，不在本模型另訂）").font = BOLD
+V.cell(53, 1, CP.rule_text(PEAK) + "。Lam 的 FY(t)＝t−1 年 7 月～t 年 6 月，日曆年 t 只占一半；比照樣板以會計年度結束的年份 t 對照（FY2027 對照 2027）")
+hdr(V, 54, ["情境", "設備市場見頂年度", "FY2027 對照日曆年", "判定", "倍數", "對照：以 2026 對照（lag 1）的判定", "規則"])
+for i, s in enumerate(SC, 55):
+    V.cell(i, 1, s); V.cell(i, 2, f"=pk_{s}"); V.cell(i, 3, 2027).font = BLUE
+    V.cell(i, 4, "=" + CP.excel_rule(f"C{i}", f"pk_{s}"))
+    V.cell(i, 5, f'=IF(D{i}="見頂",pe_peak,IF(D{i}="谷底",pe_trough,pe_mid))').number_format = "0.0"
+    V.cell(i, 6, "=" + CP.excel_rule_lag(f"C{i}", f"pk_{s}", 1)); V.cell(i, 7, "tools/cycle_position.py")
+V.cell(59, 1, "5. 隱含股價（美元）：規則值＝FY2027 EPS × 依循環位置的倍數；其餘倍數僅供參考").font = BOLD
+hdr(V, 60, ["情境", "EPS 年度", "EPS", "倍數類型", "倍數", "隱含股價", "相對現價", "備註"])
+vr = 61; VAL = {}
+for s in SC:
+    for y, typ, nm in ((2027, f"E{55 + SC.index(s)}", "rule"), (2027, "pe_peak", "參考：25 分位"), (2027, "pe_mid", "參考：中位數"), (2027, "pe_trough", "參考：75 分位"),
+                       (2028, "pe_peak", "參考：25 分位"), (2028, "pe_mid", "參考：中位數"), (2028, "pe_trough", "參考：75 分位")):
+        V.cell(vr, 1, s); V.cell(vr, 2, f"FY{y}"); V.cell(vr, 3, f"=PL!{COL[y]}{SUMR[(s, 'eps')]}").number_format = "0.00"
+        V.cell(vr, 4, nm if nm != "rule" else f'="規則值："&D{55 + SC.index(s)}'); V.cell(vr, 5, f"={typ}").number_format = "0.0"
+        V.cell(vr, 6, f"=C{vr}*E{vr}").number_format = "#,##0.0"; V.cell(vr, 7, f"=F{vr}/px-1").number_format = "0%"
+        if nm == "rule":
+            for c in range(1, 9): V.cell(vr, c).fill = KEY
+            VAL[s] = vr
+        vr += 1
+V.cell(vr + 1, 1, "6. 目前遠期 P/E").font = BOLD
+hdr(V, vr + 2, ["項目", "A", "B", "C", "備註"])
+fr = vr + 3; FR = {}
+for key, nm, fa, fb, fc, fm, note in (
+        ("px", "現價（stockanalysis 2026-10-23 收盤）", "=px", None, None, "#,##0.00", ""),
+        ("sa", "遠期 P/E：stockanalysis", "=sa_fpe", None, None, "0.0", "stockanalysis 顯示 22.39x（遠期 EPS 口徑未註明）"),
+        ("cons", "遠期 P/E：現價 ÷ 共識 FY2027 EPS（Yahoo 9.63）", "=px/cons_eps27", None, None, "0.0", ""),
+        ("p26", "現價 ÷ FY2026 EPS（實績 5.76）", "=px/a26_eps", None, None, "0.0", "已結束的會計年度"),
+        ("p27", "現價 ÷ FY2027 EPS（模型）", *[f"=px/PL!E{SUMR[(s, 'eps')]}" for s in SC], "0.0", "A／B／C"),
+        ("p28", "現價 ÷ FY2028 EPS（模型）", *[f"=px/PL!F{SUMR[(s, 'eps')]}" for s in SC], "0.0", "A／B／C"),
+        ("rel", "現價隱含倍數 ÷ 規則倍數（情境 A）— 以 FY2027 A EPS", None, None, None, "0.00", ">1＝現價高於規則給的倍數")):
+    V.cell(fr, 1, nm)
+    for j, f in enumerate((fa, fb, fc)):
+        if f is not None: V.cell(fr, 2 + j, f).number_format = fm
+    V.cell(fr, 5, note); FR[key] = fr; fr += 1
+V.cell(FR["rel"], 2, f"=B{FR['p27']}/E55").number_format = "0.00"
+# 回填第 0 節
+TP = [("目標價（12 個月，情境加權）", f"=tp_wA*B8+tp_wB*B9+tp_wC*B10", "#,##0.0", "＝權重 A × 情境 A 隱含價＋權重 B × 情境 B 隱含價＋權重 C × 情境 C 隱含價"),
+      ("上檔空間（目標價 ÷ 現價 − 1）", "=B6/px-1", "0.0%", "現價：stockanalysis 2026-10-23 收盤"),
+      ("情境 A 隱含價（樂觀）", f"=F{VAL['A']}", "#,##0.0", f"＝第 5 節規則值（FY2027 EPS × 依循環位置的倍數）"),
+      ("情境 B 隱含價（基準）", f"=F{VAL['B']}", "#,##0.0", "同上"),
+      ("情境 C 隱含價（下檔）", f"=F{VAL['C']}", "#,##0.0", "同上"),
+      ("情境權重 A／B／C", "=tp_wA", "0%", "In 頁 tp_wA／tp_wB／tp_wC（Assumed；Andy 可改）"),
+      ("目標價方法", "P/E：模型 FY2027 稀釋 EPS（A／B／C 各自）× 依設備股共用循環規則的 10 年（2016–2025 年底）當期 P/E 分位（A、B 中段＝中位數，C 見頂＝25 分位）；樣本含 2018、2022 記憶體下行年的低倍數與 2023、2025 年底的 AI 高倍數，未調整", None, ""),
+      ("檢查：權重合計 − 1（應為 0）", "=tp_wA+tp_wB+tp_wC-1", "0.00", "")]
+for i, (lab, f, fm, note) in enumerate(TP, 6):
+    V.cell(i, 1, lab); c = V.cell(i, 2, f)
+    if fm: c.number_format = fm
+    V.cell(i, 3, note)
+V["C11"] = "=tp_wB"; V["D11"] = "=tp_wC"; V["C11"].number_format = "0%"; V["D11"].number_format = "0%"; V["E11"] = "In 頁 tp_wA／tp_wB／tp_wC（Assumed；Andy 可改）"
+for c in range(1, 4): V.cell(6, c).fill = KEY
+V.column_dimensions["A"].width = 52
+for c in "BCDEFGHIJ": V.column_dimensions[c].width = 16
+V.column_dimensions["K"].width = 60
+
+# ---------------- Sens ----------------
+SE = wb.create_sheet("Sens")
+SE["A1"] = "Sens — 一次動一個輸入（情境 A）：對 FY2027、FY2028 營收與 EPS 的影響。每個案例是一個完整的推導區塊（本頁下方，與 PL 同一引擎）"
+hdr(SE, 3, ["案例", "設定", "FY2027 營收 US$B", "FY2027 EPS US$", "相對基準", "FY2028 營收 US$B", "FY2028 EPS US$", "相對基準"])
+cases = [("份額漂移 −2%／年", "CY2027 起每年相對 WFE 分項 −2%", dict(drift="drift_lo")), ("份額漂移 +2%／年", "每年 +2%", dict(drift="drift_hi")),
+         ("出口管制：中國系統營收 −20%（CY2027 起）", "cn_sh 34% × 20%", dict(cut27="cut_sens_lo")), ("出口管制：中國系統營收 −40%（CY2027 起）", "cn_sh 34% × 40%（2022 管制類比上緣）", dict(cut27="cut_sens_hi")),
+         ("上半年占比 45%", "FY(t) 中 CY(t) 上半的權重", dict(h1="h1s_lo")), ("上半年占比 55%", "", dict(h1="h1s_hi")),
+         ("CSBG CY2027 +10%", "公司稱逾 15%", dict(cs27="g_cs27_lo")), ("CSBG CY2027 +20%", "", dict(cs27="g_cs27_hi")),
+         ("CSBG CY2028–29 +8%", "", dict(csg="g_cs_A_lo")), ("CSBG CY2028–29 +16%", "", dict(csg="g_cs_A_hi")),
+         ("營業費用變動比例 低（15%）", "FY2026 營業費用中變動部分 15%", dict(F="(1-phi_lo)*a26_opx", v="phi_lo*a26_opx/a26_rev")),
+         ("營業費用變動比例 高（50%）", "變動 50%", dict(F="(1-phi_hi)*a26_opx", v="phi_hi*a26_opx/a26_rev")),
+         ("稅率 13%", "", dict(tax="tax_lo")), ("稅率 19%", "", dict(tax="tax_hi")),
+         ("庫藏股 0%／年", "", dict(bb="bb_lo")), ("庫藏股 3%／年", "", dict(bb="bb_hi")),
+         ("業外收益 0", "", dict(oth="oth_inc_lo")), ("業外收益 0.2", "", dict(oth="oth_inc_hi"))]
+def put_case(i, name, setting, R, pre=""):
+    SE.cell(i, 1, name); SE.cell(i, 2, setting)
+    SE[f"C{i}"] = f"={pre}E{R['rev']}"; SE[f"D{i}"] = f"={pre}E{R['eps']}"; SE[f"F{i}"] = f"={pre}F{R['rev']}"; SE[f"G{i}"] = f"={pre}F{R['eps']}"
+    SE[f"E{i}"] = f"=D{i}/D$4-1"; SE[f"H{i}"] = f"=G{i}/G$4-1"
+    for c in "CF": SE[f"{c}{i}"].number_format = "#,##0.00"
+    for c in "DG": SE[f"{c}{i}"].number_format = "0.00"
+    for c in "EH": SE[f"{c}{i}"].number_format = "0.0%"
+put_case(4, "基準（情境 A）", "PL 區塊 A", PB["A"], "PL!")
+SB = {}
+for n, (nm, setting, ov) in enumerate(cases):
+    SB[nm] = engine(SE, 50 + n * 30, f"案例區塊：{nm}（情境 A）", scn="A", **ov)
+    put_case(5 + n, nm, setting, SB[nm])
+nn = 5 + len(cases)
+put_case(nn, "設備市場情境 B", "WFE 分項讀 markets/equipment B；CSBG 成長 B", PB["B"], "PL!")
+put_case(nn + 1, "設備市場情境 C", "WFE 分項讀 C；出口管制 −20%（CY2028 起）；CSBG 成長 C", PB["C"], "PL!")
+SE.cell(nn + 3, 1, "讀法：FY2027 上半已錨定（Q1 實績＋Q2 指引），只有下半（CY2027 上半）隨輸入變動，所以 FY2027 的敏感度小、FY2028 才明顯；設備市場 B、C 的係數從 CY2028 開始。")
+SENS_LAST = nn + 1
+SE.column_dimensions["A"].width = 44; SE.column_dimensions["B"].width = 46
+for c in "CDEFGH": SE.column_dimensions[c].width = 15
+
+# ---------------- Recon ----------------
+RC = wb.create_sheet("Recon")
+RC["A1"] = "Recon — 本模型 vs 公司說法、共識、設備市場模型。只作事後對照，不為對上數字而調整參數。差距 > 10% 的原因見 README"
+hdr(RC, 3, ["項目", "對照值", "模型 A", "差距 A", "模型 B", "差距 B", "模型 C", "差距 C", "對照來源", "說明"])
+rr_ = 4
+def rec(label, ref, getter, src, note="", fmt="#,##0.00", pt=False):
+    global rr_
+    RC.cell(rr_, 1, label); RC.cell(rr_, 2, ref).number_format = fmt
+    for j, s in enumerate(SC):
+        cv, cd = 3 + 2 * j, 4 + 2 * j
+        RC.cell(rr_, cv, getter(s)).number_format = fmt
+        L = chr(64 + cv)
+        RC.cell(rr_, cd, f"={L}{rr_}-B{rr_}" if pt else f"={L}{rr_}/B{rr_}-1").number_format = "0.0%"
+    RC.cell(rr_, 9, src); RC.cell(rr_, 10, note); rr_ += 1
+pl = lambda key, y: (lambda s: f"=PL!{COL[y]}{SUMR[(s, key)]}")
+RC.cell(rr_, 1, "A. FY2027、FY2028 vs 共識（校準未使用共識）").font = BOLD; rr_ += 1
+rec("FY2027 營收", "=cons_rev27", pl("rev", 2027), "Yahoo（29 位）", "stockanalysis 34.9")
+rec("FY2027 EPS（Yahoo）", "=cons_eps27", pl("eps", 2027), "Yahoo（9.63）", "共識多為非 GAAP；Lam 非 GAAP 與 GAAP 差約 0.01／季")
+rec("FY2027 EPS（stockanalysis）", "=cons_eps27b", pl("eps", 2027), "stockanalysis（9.48）")
+rec("FY2028 營收", "=cons_rev28", pl("rev", 2028), "Yahoo（28 位；區間 36.5–49.2）")
+rec("FY2028 EPS", "=cons_eps28", pl("eps", 2028), "Yahoo（12.15；區間 10.41–15.12）")
+RC.cell(rr_, 1, "B. 公司說法（法說，Interested-party）").font = BOLD; rr_ += 1
+rec("CY2026 系統營收年增（公司：well over 40%）", "=co_sys26", lambda s: "=Units!G14", "FQ1-27 法說", "模型值＝實績＋指引（含 Q2 拆分假設），非獨立檢驗", fmt="0.0%", pt=True)
+rec("CY2026 CSBG 年增（公司：逾 30%）", "=co_cs26", lambda s: "=Units!G15", "FQ1-27 法說", "同上；Q2 CSBG＝Q1 持平時", fmt="0.0%", pt=True)
+rec("FY2027 毛利率 vs Q2 指引 52.5%", "=g_q2gm", pl("gm", 2027), "8-K 2026-10-21", "公司稱近期維持目前水準；長期 mid-50s", fmt="0.0%", pt=True)
+rec("FY2029 毛利率 vs 公司長期目標（mid-50s，取 55%）", "=0.55", pl("gm", 2029), "FQ4-26／FQ1-27 法說", "", fmt="0.0%", pt=True)
+RC.cell(rr_, 1, "C. 設備市場（WFE，US$B）").font = BOLD; rr_ += 1
+rec("CY2026 晶圓前段（公司 mid-$150B vs 設備市場模型）", "=co_wfe26", lambda s: f"=wfe{s}_26", "FQ1-27 法說", "口徑不同（公司 CY2025 約 110、SEMI 116.9）")
+rec("CY2027 晶圓前段（公司 >$200B vs 設備市場模型）", "=co_wfe27", lambda s: f"=wfe{s}_27", "FQ1-27 法說", "下限值")
+rec("CY2026／CY2025 晶圓前段成長：公司（155÷110）vs 模型", "=co_wfe26/co_wfe25-1", lambda s: f"=wfe{s}_26/wfe{s}_25-1", "FQ2-26、FQ1-27 法說", "", fmt="0.0%", pt=True)
+RC.cell(rr_, 1, "D. 其他資訊（非對帳）").font = BOLD; rr_ += 1
+RC.cell(rr_, 1, "FY2027 上半（Q1 實績＋Q2 指引）÷ 模型 FY2027 全年營收（A）"); RC.cell(rr_, 3, f"=(q1_rev+g_q2rev)/PL!E{SUMR[('A', 'rev')]}").number_format = "0.0%"; rr_ += 1
+RC.cell(rr_, 1, "FY2027 上半 EPS（Q1 實績＋Q2 指引）÷ 模型 FY2027 EPS（A）"); RC.cell(rr_, 3, f"=(q1_eps+g_q2eps)/PL!E{SUMR[('A', 'eps')]}").number_format = "0.0%"; rr_ += 1
+RC.cell(rr_, 1, "Lam 系統營收 ÷ 模型晶圓前段（CY2026）"); RC.cell(rr_, 3, "=Units!E24").number_format = "0.0%"; rr_ += 1
+RECON_LAST = rr_ - 1
+RC.column_dimensions["A"].width = 58
+for c in "BCDEFGH": RC.column_dimensions[c].width = 12
+RC.column_dimensions["I"].width = 30; RC.column_dimensions["J"].width = 70
+
+# ---------------- Sources ----------------
+SO = wb.create_sheet("Sources"); SO["A1"] = "來源（公司財報取自 SEC EDGAR 原文；法說取自逐字稿摘要）"; SO["A1"].font = BOLD
+E = "https://www.sec.gov/Archives/edgar/data/707549/"
+srcs = [("公司：FY27 Q1 8-K 新聞稿（2026-10-21）", E + "000070754926000052/lrcx_exhibitx991xq1x2027.htm"),
+ ("公司：FY27 Q1 10-Q（2026-10-22）", E + "000070754926000054/lrcx-20260927.htm"),
+ ("公司：FY2026 10-K（2026-08-07）", E + "000070754926000037/lrcx-20260628.htm"),
+ ("公司：FY26 Q4 8-K 新聞稿（2026-07-29）", E + "000070754926000033/lrcx_exhibitx991xq4x2026.htm"),
+ ("公司：FY26 Q3 8-K 新聞稿（2026-04-22）", E + "000070754926000020/lrcx_exhibitx991xq3x2026.htm"),
+ ("公司：FY26 Q2 8-K 新聞稿（2026-01-28）", E + "000070754926000006/lrcx_exhibitx991xq2x2026.htm"),
+ ("公司：FY26 Q1 8-K 新聞稿（2025-10-22）", E + "000070754925000082/lrcx_exhibitx991xq1x2026.htm"),
+ ("公司：FY25 Q4 8-K 新聞稿（2025-07-30）", E + "000070754925000068/lrcx_exhibitx991xq4x2025.htm"),
+ ("公司：10-Q（FY26 Q1、Q2、Q3：客戶別占比）", E + "000070754926000022/lrcx-20260329.htm"),
+ ("SEC XBRL：EPS 歷史（基本、稀釋）", "https://data.sec.gov/api/xbrl/companyconcept/CIK0000707549/us-gaap/EarningsPerShareBasic.json"),
+ ("Motley Fool：FQ1-27 法說逐字稿（WFE、客戶別、CSBG、稅率）", "https://www.fool.com/earnings/call-transcripts/2026/10/21/lam-research-lrcx-q1-2027-earnings-call-transcript/"),
+ ("MarketBeat：FQ4-26 法說重點（6 月季客戶別、WFE low-$150B）", "https://www.marketbeat.com/instant-alerts/lam-research-q4-earnings-call-highlights-2026-07-29/"),
+ ("TIKR：FQ2-26 法說重點（12 月季客戶別、CY2025 WFE 約 110）", "https://www.tikr.com/blog/lam-research-stock-after-q2-eps-beats-foundry-surges-and-nand-waits"),
+ ("GuruFocus：FQ1-27 法說重點（$200B WFE）", "https://www.gurufocus.com/news/9136007/lam-research-corp-lrcx-q1-2027-earnings-call-highlights-record-revenue-firstever-40-operating-margin-and-a-bullish-200-billion-wfe-outlook"),
+ ("techwireasia：2022-10 出口管制影響 US$2.0–2.5B（類比）", "https://techwireasia.com/2022/10/us-chip-ban-on-china-may-cost-lam-research-a-staggering-us2-5bn/"),
+ ("stockanalysis：現價、遠期 P/E", "https://stockanalysis.com/stocks/lrcx/"),
+ ("stockanalysis：共識（FY2027）", "https://stockanalysis.com/stocks/lrcx/forecast/"),
+ ("Yahoo Finance：共識（FY2027、FY2028）", "https://finance.yahoo.com/quote/LRCX/analysis/"),
+ ("digrin：年底收盤價（原價與還原價）", "https://www.digrin.com/stocks/detail/LRCX/price"),
+ ("macrotrends：年底收盤價（還原股利）", "https://www.macrotrends.net/stocks/charts/LRCX/lam-research/stock-price-history"),
+ ("companiesmarketcap：年底 P/E（TTM 口徑）", "https://companiesmarketcap.com/lam-research/pe-ratio/"),
+ ("市場層：markets/equipment 成品（本 repo，唯讀）", rel(EQ_F)),
+ ("SemiAnalysis", "未使用")]
+for i, (a, b) in enumerate(srcs, 2): SO.cell(i, 1, a); SO.cell(i, 2, b)
+SO.column_dimensions["A"].width = 70; SO.column_dimensions["B"].width = 130
+
+# ---------------- README ----------------
+RD = wb.create_sheet("README", 0)
+lines = [("Lam Research（LRCX）收支與估值模型 v0.1（AI 半導體 Project 步驟 5：設備與材料）　2026-10-25", True),
+ ("模型命題：Lam 的系統營收跟著晶圓前段設備（WFE）的記憶體與代工邏輯支出走，記憶體占系統營收近一半（DRAM 與 NAND 升級）、中國占營收約三分之一。核心問題：WFE 在 2027 年後放緩、或對中國的出口管制加嚴時，FY2027 以後的 EPS 還撐得住現在約 25 倍的遠期本益比嗎？", False), ("", False),
+ ("會計年度：7 月到隔年 6 月（FY2027＝2026-07～2027-06）；FY(t)＝CY(t−1) 下半＋CY(t) 上半（上半占比 h1，基準 50%）。FY2026 已結束（實績）；FY2027 第一季（2026-09 季）已於 2026-10-21 公布並納入，12 月季用公司指引。金額十億美元。", False), ("", False),
+ ("驅動因子 → 推導量", True),
+ ("系統營收（日曆年）＝ k（份額係數）× 設備市場模型的 WFE 分項（代工與邏輯、DRAM、NAND；三情境；markets/equipment）；k 由 CY2026（FY26 Q3–Q4 實績＋FY27 Q1 實績＋Q2 指引）× 客戶別占比校準", False),
+ ("CSBG（服務、備件、升級、Reliant）另推：CY2026 錨點 × 年增（CY2027 公司稱逾 15%；之後依情境 Assumed）", False),
+ ("毛利率＝截距＋斜率 × ln 營收（FY2026 與 FY2027 上半年化兩點推導）；營業費用＝固定＋變動 × 營收（同兩點）；稅率 16.5%（公司說法）；股數 1.253B 起每年 −1.5%", False),
+ ("情境 A／B／C：WFE 分項讀設備市場模型 A（2029 見頂）／B（2028 持平）／C（2028 −20%）；情境 C 另加出口管制：中國系統營收 −20%（CY2028 起，Assumed；2022 管制類比約三到四成）", False),
+ ("Val：P/E 規則——10 年（2016–2025 年底）當期 P/E 分位，見頂年 25 分位、中段中位數、谷底 75 分位；循環位置依設備股共用規則（各情境見頂年度：" + "、".join(f"{s_} {PEAK[s_]}" for s_ in SC) + " → FY2027：" + CP.fy2027_text(PEAK) + "）。第 0 節：情境加權目標價。本版未做先驗，無 Andy 合理 P/E 對照。", False), ("", False),
+ ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。", False),
+ ("已知限制：(1) k 只在 CY2026 一點校準，之後份額不變（漂移只在 Sens）；公司稱連續三年優於 WFE，若延續則模型偏低；(2) 客戶別占比為「設備與升級營收」口徑（10-Q），套用於系統營收；DRAM／NAND 拆分來自法說摘要；(3) 中國以總營收占比代用系統營收占比，出口管制折損為 Assumed；(4) 設備市場模型的 WFE 以 SEMI 2025 實績校準，與公司 WFE 口徑不同，只用成長率；(5) CY→FY 以上下半各半轉換，成長年下半較高（h1 區間 45–55%）；(6) CSBG 成長無由下而上（裝機量 × 每腔體支出）推導；(7) NAND 升級潮公司稱 2027 年結束，模型的 NAND 隨設備市場模型 NAND 支出成長，可能高估 CY2028 後的 NAND。", False)]
+for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
+RD.column_dimensions["A"].width = 170
+
+order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
+wb._sheets = [wb[n] for n in order]
+wb.save(sys.argv[1])
+if os.environ.get("LRCX_ROWS"):
+    print("IN", {k: INROW[k] for k in ("h1s", "drift", "cn_sh", "cutC", "g_cs27", "gm_b", "tax", "bb", "px", "pk_A", "dramA_26", "tp_wA")})
+    print("PB", PB["A"], "SUMR", SUMR, "VAL", VAL, "FR", FR, "SENS_LAST", SENS_LAST, "RECON_LAST", RECON_LAST)
