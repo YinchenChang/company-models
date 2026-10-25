@@ -51,6 +51,7 @@ on:
       - 'mediatek/**'
       - 'gce/**'
       - 'nanya_pcb/**'
+      - 'alchip/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -98,6 +99,7 @@ on:
       - 'mediatek/**'
       - 'gce/**'
       - 'nanya_pcb/**'
+      - 'alchip/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -139,6 +141,7 @@ jobs:
             "quanta|python3 quanta/build_quanta.py|quanta/dist"
             "innolight|python3 innolight/build_innolight.py|innolight/dist"
             "avgo|python3 avgo/build_avgo.py|avgo/dist"
+            "alchip|python3 alchip/build_alchip.py|alchip/dist"
             "nanya_pcb|python3 nanya_pcb/build_nanya_pcb.py|nanya_pcb/dist"
             "gce|python3 gce/build_gce.py|gce/dist"
             "mediatek|python3 mediatek/build_mediatek.py|mediatek/dist"
