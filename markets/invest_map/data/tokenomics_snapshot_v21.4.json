@@ -1,0 +1,772 @@
+{
+ "source": {
+  "file": "20261024_Tokenomics_v21.4.xlsx",
+  "current": "20261024_Tokenomics_v21.4.xlsx",
+  "version": "v21.4",
+  "commit": "3ac70acfda55adcc5c7c323c0fe1f690c5a4e99f",
+  "extractedAt": "2026-10-25",
+  "repo": "YinchenChang/Tokenomics",
+  "recalculated": false,
+  "optional": [],
+  "generations": [
+   {
+    "name": "Hopper H100",
+    "code": "H100"
+   },
+   {
+    "name": "GB200 NVL72",
+    "code": "GB200"
+   },
+   {
+    "name": "GB300 NVL72",
+    "code": "GB300"
+   },
+   {
+    "name": "VR200 NVL72",
+    "code": "VR200"
+   },
+   {
+    "name": "Rubin Ultra（MGX NVL 單架，72 GPU）",
+    "code": "RU"
+   }
+  ],
+  "note": "主值取「基準」成本情境；低成本／高成本只作敏感度。每 GW＝IT 關鍵電力（Tokenomics Interface 第 1 列）。"
+ },
+ "items": {
+  "IF_CapexIT": {
+   "sheet": "Interface",
+   "ref": "Interface!C9:Q9",
+   "label": "每 GW 資本支出 — IT 設備",
+   "unit": "$B",
+   "kind": "gen_cost",
+   "values": {
+    "Hopper H100": {
+     "低成本": 21.4202694,
+     "基準": 27.510214,
+     "高成本": 34.1207434
+    },
+    "GB200 NVL72": {
+     "低成本": 20.6393904,
+     "基準": 24.015174,
+     "高成本": 27.6502044
+    },
+    "GB300 NVL72": {
+     "低成本": 28.5549024,
+     "基準": 32.237224,
+     "高成本": 39.2826064
+    },
+    "VR200 NVL72": {
+     "低成本": 31.9970232,
+     "基準": 37.586352,
+     "高成本": 42.6375752
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 35.845578,
+     "基準": 50.08578,
+     "高成本": 65.481558
+    }
+   },
+   "cells": {
+    "Hopper H100": {
+     "低成本": "Interface!C9",
+     "基準": "Interface!D9",
+     "高成本": "Interface!E9"
+    },
+    "GB200 NVL72": {
+     "低成本": "Interface!F9",
+     "基準": "Interface!G9",
+     "高成本": "Interface!H9"
+    },
+    "GB300 NVL72": {
+     "低成本": "Interface!I9",
+     "基準": "Interface!J9",
+     "高成本": "Interface!K9"
+    },
+    "VR200 NVL72": {
+     "低成本": "Interface!L9",
+     "基準": "Interface!M9",
+     "高成本": "Interface!N9"
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": "Interface!O9",
+     "基準": "Interface!P9",
+     "高成本": "Interface!Q9"
+    }
+   }
+  },
+  "IF_CapexFacility": {
+   "sheet": "Interface",
+   "ref": "Interface!C10:Q10",
+   "label": "每 GW 資本支出 — 廠房",
+   "unit": "$B",
+   "kind": "gen_cost",
+   "values": {
+    "Hopper H100": {
+     "低成本": 10.212,
+     "基準": 12.67,
+     "高成本": 16.186
+    },
+    "GB200 NVL72": {
+     "低成本": 10.212,
+     "基準": 12.67,
+     "高成本": 16.186
+    },
+    "GB300 NVL72": {
+     "低成本": 10.212,
+     "基準": 12.67,
+     "高成本": 16.186
+    },
+    "VR200 NVL72": {
+     "低成本": 10.212,
+     "基準": 12.67,
+     "高成本": 16.186
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 10.212,
+     "基準": 12.67,
+     "高成本": 16.186
+    }
+   },
+   "cells": {
+    "Hopper H100": {
+     "低成本": "Interface!C10",
+     "基準": "Interface!D10",
+     "高成本": "Interface!E10"
+    },
+    "GB200 NVL72": {
+     "低成本": "Interface!F10",
+     "基準": "Interface!G10",
+     "高成本": "Interface!H10"
+    },
+    "GB300 NVL72": {
+     "低成本": "Interface!I10",
+     "基準": "Interface!J10",
+     "高成本": "Interface!K10"
+    },
+    "VR200 NVL72": {
+     "低成本": "Interface!L10",
+     "基準": "Interface!M10",
+     "高成本": "Interface!N10"
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": "Interface!O10",
+     "基準": "Interface!P10",
+     "高成本": "Interface!Q10"
+    }
+   }
+  },
+  "IF_CapexTotal": {
+   "sheet": "Interface",
+   "ref": "Interface!C11:Q11",
+   "label": "每 GW 資本支出 — 合計",
+   "unit": "$B",
+   "kind": "gen_cost",
+   "values": {
+    "Hopper H100": {
+     "低成本": 31.6322694,
+     "基準": 40.180214,
+     "高成本": 50.3067434
+    },
+    "GB200 NVL72": {
+     "低成本": 30.8513904,
+     "基準": 36.685174,
+     "高成本": 43.8362044
+    },
+    "GB300 NVL72": {
+     "低成本": 38.7669024,
+     "基準": 44.907224,
+     "高成本": 55.4686064
+    },
+    "VR200 NVL72": {
+     "低成本": 42.2090232,
+     "基準": 50.256352,
+     "高成本": 58.8235752
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 46.057578,
+     "基準": 62.75578,
+     "高成本": 81.667558
+    }
+   },
+   "cells": {
+    "Hopper H100": {
+     "低成本": "Interface!C11",
+     "基準": "Interface!D11",
+     "高成本": "Interface!E11"
+    },
+    "GB200 NVL72": {
+     "低成本": "Interface!F11",
+     "基準": "Interface!G11",
+     "高成本": "Interface!H11"
+    },
+    "GB300 NVL72": {
+     "低成本": "Interface!I11",
+     "基準": "Interface!J11",
+     "高成本": "Interface!K11"
+    },
+    "VR200 NVL72": {
+     "低成本": "Interface!L11",
+     "基準": "Interface!M11",
+     "高成本": "Interface!N11"
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": "Interface!O11",
+     "基準": "Interface!P11",
+     "高成本": "Interface!Q11"
+    }
+   }
+  },
+  "IF_GPUsPerGW": {
+   "sheet": "Interface",
+   "ref": "Interface!C7:Q7",
+   "label": "每 GW GPU 數",
+   "unit": "顆",
+   "kind": "gen_cost",
+   "values": {
+    "Hopper H100": {
+     "低成本": 718048,
+     "基準": 718048,
+     "高成本": 718048
+    },
+    "GB200 NVL72": {
+     "低成本": 501768,
+     "基準": 501768,
+     "高成本": 501768
+    },
+    "GB300 NVL72": {
+     "低成本": 487008,
+     "基準": 487008,
+     "高成本": 487008
+    },
+    "VR200 NVL72": {
+     "低成本": 291744,
+     "基準": 291744,
+     "高成本": 291744
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 194760,
+     "基準": 194760,
+     "高成本": 194760
+    }
+   },
+   "cells": {
+    "Hopper H100": {
+     "低成本": "Interface!C7",
+     "基準": "Interface!D7",
+     "高成本": "Interface!E7"
+    },
+    "GB200 NVL72": {
+     "低成本": "Interface!F7",
+     "基準": "Interface!G7",
+     "高成本": "Interface!H7"
+    },
+    "GB300 NVL72": {
+     "低成本": "Interface!I7",
+     "基準": "Interface!J7",
+     "高成本": "Interface!K7"
+    },
+    "VR200 NVL72": {
+     "低成本": "Interface!L7",
+     "基準": "Interface!M7",
+     "高成本": "Interface!N7"
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": "Interface!O7",
+     "基準": "Interface!P7",
+     "高成本": "Interface!Q7"
+    }
+   }
+  },
+  "IF_RackPrice": {
+   "sheet": "Interface",
+   "ref": "Interface!C364:Q364",
+   "label": "機架價格（買方取得價，CSP／hyperscaler 口徑；涵蓋範圍＝Spec_Rack 第 14 列：Hopper＝8 GPU 伺服器＋CPU、NIC、機內儲存（HGX ×4＝32 GPU 為一架）；GB200／GB300＝運算匣＋NVLink 交換匣＋機架內冷卻；VR200＝運算匣＋交換匣＋冷卻＋約 $1M NAND，是否含部分網路待查；Rubin Ultra＝72 封裝單架，價格為 VR200 機架價 × 倍數（Assumed，無公開報價）；基準倍數 2.0（Spec_Rack G12＝F12 × 2）；標記（Spec_Rack 第 17 列，依世代）：Hopper Analogy；GB200 Interested-party；GB300 Derived／Interested-party；VR200 Interested-party；Rubin Ultra Derived／Assumed；低成本／基準／高成本＝Spec_Rack 第 11／12／13 列）",
+   "unit": "$M/架",
+   "kind": "gen_cost",
+   "values": {
+    "Hopper H100": {
+     "低成本": 0.9,
+     "基準": 1.1,
+     "高成本": 1.3
+    },
+    "GB200 NVL72": {
+     "低成本": 2.8,
+     "基準": 3.1,
+     "高成本": 3.4
+    },
+    "GB300 NVL72": {
+     "低成本": 4,
+     "基準": 4.3,
+     "高成本": 5
+    },
+    "VR200 NVL72": {
+     "低成本": 7.5,
+     "基準": 8.4,
+     "高成本": 9.1
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 12.6,
+     "基準": 16.8,
+     "高成本": 21
+    }
+   },
+   "cells": {
+    "Hopper H100": {
+     "低成本": "Interface!C364",
+     "基準": "Interface!D364",
+     "高成本": "Interface!E364"
+    },
+    "GB200 NVL72": {
+     "低成本": "Interface!F364",
+     "基準": "Interface!G364",
+     "高成本": "Interface!H364"
+    },
+    "GB300 NVL72": {
+     "低成本": "Interface!I364",
+     "基準": "Interface!J364",
+     "高成本": "Interface!K364"
+    },
+    "VR200 NVL72": {
+     "低成本": "Interface!L364",
+     "基準": "Interface!M364",
+     "高成本": "Interface!N364"
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": "Interface!O364",
+     "基準": "Interface!P364",
+     "高成本": "Interface!Q364"
+    }
+   }
+  },
+  "IF_HoldEcon": {
+   "sheet": "Interface",
+   "ref": "Interface!C13:Q13",
+   "label": "每 GW 年持有成本 — 經濟口徑",
+   "unit": "$B/年",
+   "kind": "gen_cost",
+   "values": {
+    "Hopper H100": {
+     "低成本": 6.79107465326444,
+     "基準": 9.70308728611469,
+     "高成本": 16.6637697337026
+    },
+    "GB200 NVL72": {
+     "低成本": 6.6118162762144,
+     "基準": 8.82816556596761,
+     "高成本": 14.3185748619737
+    },
+    "GB300 NVL72": {
+     "低成本": 8.42889912085495,
+     "基準": 10.8864110021101,
+     "高成本": 18.5346455040469
+    },
+    "VR200 NVL72": {
+     "低成本": 9.21907146281596,
+     "基準": 12.2254710045841,
+     "高成本": 19.7506269894487
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 10.1025446864987,
+     "基準": 15.3544827030524,
+     "高成本": 28.0302450108258
+    }
+   },
+   "cells": {
+    "Hopper H100": {
+     "低成本": "Interface!C13",
+     "基準": "Interface!D13",
+     "高成本": "Interface!E13"
+    },
+    "GB200 NVL72": {
+     "低成本": "Interface!F13",
+     "基準": "Interface!G13",
+     "高成本": "Interface!H13"
+    },
+    "GB300 NVL72": {
+     "低成本": "Interface!I13",
+     "基準": "Interface!J13",
+     "高成本": "Interface!K13"
+    },
+    "VR200 NVL72": {
+     "低成本": "Interface!L13",
+     "基準": "Interface!M13",
+     "高成本": "Interface!N13"
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": "Interface!O13",
+     "基準": "Interface!P13",
+     "高成本": "Interface!Q13"
+    }
+   }
+  },
+  "L1_HoldEconGW_VR200": {
+   "sheet": "L1",
+   "ref": "L1!D14",
+   "label": "每 GW 年經濟持有成本（VR200）",
+   "unit": "$B/GW/年",
+   "condition": "資本回收年金（WACC 10%）＋營運費用",
+   "kind": "single",
+   "values": 12.2254710045841,
+   "cell": "L1!D14",
+   "range": {
+    "低": 9.21907146281596,
+    "高": 19.7506269894487,
+    "def": "成本角落情境（低成本／高成本欄）",
+    "cells": {
+     "低": "L1!E14",
+     "高": "L1!F14"
+    }
+   }
+  },
+  "L1_HoldEconGW_VR200_Lo": {
+   "sheet": "L1",
+   "ref": "L1!E14",
+   "label": "每 GW 年經濟持有成本（VR200）",
+   "unit": "$B/GW/年",
+   "condition": "資本回收年金（WACC 10%）＋營運費用",
+   "kind": "single",
+   "values": 9.21907146281596,
+   "cell": "L1!E14",
+   "range": {
+    "低": 9.21907146281596,
+    "高": 19.7506269894487,
+    "def": "成本角落情境（低成本／高成本欄）",
+    "cells": {
+     "低": "L1!E14",
+     "高": "L1!F14"
+    }
+   }
+  },
+  "L1_HoldEconGW_VR200_Hi": {
+   "sheet": "L1",
+   "ref": "L1!F14",
+   "label": "每 GW 年經濟持有成本（VR200）",
+   "unit": "$B/GW/年",
+   "condition": "資本回收年金（WACC 10%）＋營運費用",
+   "kind": "single",
+   "values": 19.7506269894487,
+   "cell": "L1!F14",
+   "range": {
+    "低": 9.21907146281596,
+    "高": 19.7506269894487,
+    "def": "成本角落情境（低成本／高成本欄）",
+    "cells": {
+     "低": "L1!E14",
+     "高": "L1!F14"
+    }
+   }
+  },
+  "L1_RevGW_PQ_VR200": {
+   "sheet": "L1",
+   "ref": "L1!D129",
+   "label": "VR200 每 GW 營收 P × Q — 第一年（主口徑 m＝L1_M，2026 Q2）",
+   "unit": "$B/GW/年",
+   "condition": "＝Q × L1_PxEff_2026 × L1_M ÷ 1E9；P＝有效單價 × m",
+   "kind": "single",
+   "values": 49.5137840363362,
+   "cell": "L1!D129",
+   "range": {
+    "低": 36.2295980753679,
+    "高": 78.4974624966305,
+    "def": "低／高＝Q 的低／高（利用率 0.30／0.65）；m、單價取基準",
+    "cells": {
+     "低": "L1!E129",
+     "高": "L1!F129"
+    }
+   },
+   "external": {
+    "srcId": "無外部對照",
+    "外部低": "—",
+    "外部高": "—"
+   }
+  },
+  "L1_RevGW_PQ_VR200_Lo": {
+   "sheet": "L1",
+   "ref": "L1!E129",
+   "label": "VR200 每 GW 營收 P × Q — 第一年（主口徑 m＝L1_M，2026 Q2）",
+   "unit": "$B/GW/年",
+   "condition": "＝Q × L1_PxEff_2026 × L1_M ÷ 1E9；P＝有效單價 × m",
+   "kind": "single",
+   "values": 36.2295980753679,
+   "cell": "L1!E129",
+   "range": {
+    "低": 36.2295980753679,
+    "高": 78.4974624966305,
+    "def": "低／高＝Q 的低／高（利用率 0.30／0.65）；m、單價取基準",
+    "cells": {
+     "低": "L1!E129",
+     "高": "L1!F129"
+    }
+   },
+   "external": {
+    "srcId": "無外部對照",
+    "外部低": "—",
+    "外部高": "—"
+   }
+  },
+  "L1_RevGW_PQ_VR200_Hi": {
+   "sheet": "L1",
+   "ref": "L1!F129",
+   "label": "VR200 每 GW 營收 P × Q — 第一年（主口徑 m＝L1_M，2026 Q2）",
+   "unit": "$B/GW/年",
+   "condition": "＝Q × L1_PxEff_2026 × L1_M ÷ 1E9；P＝有效單價 × m",
+   "kind": "single",
+   "values": 78.4974624966305,
+   "cell": "L1!F129",
+   "range": {
+    "低": 36.2295980753679,
+    "高": 78.4974624966305,
+    "def": "低／高＝Q 的低／高（利用率 0.30／0.65）；m、單價取基準",
+    "cells": {
+     "低": "L1!E129",
+     "高": "L1!F129"
+    }
+   },
+   "external": {
+    "srcId": "無外部對照",
+    "外部低": "—",
+    "外部高": "—"
+   }
+  },
+  "L1_RevGW_PQ_VR200_Life": {
+   "sheet": "L1",
+   "ref": "L1!D131",
+   "label": "VR200 每 GW 營收 P × Q — 壽命期年均（第一年 × L1_LTotalDisc；假設 m 不變）",
+   "unit": "$B/GW/年",
+   "condition": "＝L1_RevGW_PQ_VR200 × L1_LTotalDisc；低／高各乘 L1_LTotalDisc_Lo／_Hi",
+   "kind": "single",
+   "values": 34.6024369655691,
+   "cell": "L1!D131",
+   "range": {
+    "低": 16.1583510983491,
+    "高": 85.8875600439659,
+    "def": "低＝低端 Q × 低端 L；高＝高端 Q × 高端 L（兩端同向組合，範圍很寬）",
+    "cells": {
+     "低": "L1!E131",
+     "高": "L1!F131"
+    }
+   },
+   "external": {
+    "srcId": "無外部對照",
+    "外部低": "—",
+    "外部高": "—"
+   }
+  },
+  "L1_RevGW_PQ_VR200_Life_Lo": {
+   "sheet": "L1",
+   "ref": "L1!E131",
+   "label": "VR200 每 GW 營收 P × Q — 壽命期年均（第一年 × L1_LTotalDisc；假設 m 不變）",
+   "unit": "$B/GW/年",
+   "condition": "＝L1_RevGW_PQ_VR200 × L1_LTotalDisc；低／高各乘 L1_LTotalDisc_Lo／_Hi",
+   "kind": "single",
+   "values": 16.1583510983491,
+   "cell": "L1!E131",
+   "range": {
+    "低": 16.1583510983491,
+    "高": 85.8875600439659,
+    "def": "低＝低端 Q × 低端 L；高＝高端 Q × 高端 L（兩端同向組合，範圍很寬）",
+    "cells": {
+     "低": "L1!E131",
+     "高": "L1!F131"
+    }
+   },
+   "external": {
+    "srcId": "無外部對照",
+    "外部低": "—",
+    "外部高": "—"
+   }
+  },
+  "L1_RevGW_PQ_VR200_Life_Hi": {
+   "sheet": "L1",
+   "ref": "L1!F131",
+   "label": "VR200 每 GW 營收 P × Q — 壽命期年均（第一年 × L1_LTotalDisc；假設 m 不變）",
+   "unit": "$B/GW/年",
+   "condition": "＝L1_RevGW_PQ_VR200 × L1_LTotalDisc；低／高各乘 L1_LTotalDisc_Lo／_Hi",
+   "kind": "single",
+   "values": 85.8875600439659,
+   "cell": "L1!F131",
+   "range": {
+    "低": 16.1583510983491,
+    "高": 85.8875600439659,
+    "def": "低＝低端 Q × 低端 L；高＝高端 Q × 高端 L（兩端同向組合，範圍很寬）",
+    "cells": {
+     "低": "L1!E131",
+     "高": "L1!F131"
+    }
+   },
+   "external": {
+    "srcId": "無外部對照",
+    "外部低": "—",
+    "外部高": "—"
+   }
+  },
+  "L1_LTotalFleetVDisc": {
+   "sheet": "L1",
+   "ref": "L1!D116",
+   "label": "壽命期價格係數 L — 機隊折現 L（世代起點＋折現；錨點 2025；v17.0 判讀主口徑）",
+   "unit": "x",
+   "condition": "各世代從自己的服務起點 s_v 算 L，以 WACC 折現到該世代起點；錨點年 A＝2025.5；以 2025 營收（AL_ShareGen × AL_RevGW25）加權；v17.0",
+   "kind": "single",
+   "values": 0.758597367273996,
+   "cell": "L1!D116",
+   "range": {
+    "低": 0.479441891854564,
+    "高": 1.13827219966509,
+    "def": "低＝低端組合（g −0.20、T1 3、ρ 0.17、s_v 較晚、g_pre −0.09、WACC 8%）；高＝高端組合（g +0.05、T1 5、ρ 0.7、s_v 較早、g_pre −0.30、WACC 13%）",
+    "cells": {
+     "低": "L1!E116",
+     "高": "L1!F116"
+    }
+   },
+   "external": {
+    "srcId": "無外部對照",
+    "外部低": "—",
+    "外部高": "—"
+   }
+  },
+  "L1_LTotalFleetVDisc_Lo": {
+   "sheet": "L1",
+   "ref": "L1!E116",
+   "label": "壽命期價格係數 L — 機隊折現 L（世代起點＋折現；錨點 2025；v17.0 判讀主口徑）",
+   "unit": "x",
+   "condition": "各世代從自己的服務起點 s_v 算 L，以 WACC 折現到該世代起點；錨點年 A＝2025.5；以 2025 營收（AL_ShareGen × AL_RevGW25）加權；v17.0",
+   "kind": "single",
+   "values": 0.479441891854564,
+   "cell": "L1!E116",
+   "range": {
+    "低": 0.479441891854564,
+    "高": 1.13827219966509,
+    "def": "低＝低端組合（g −0.20、T1 3、ρ 0.17、s_v 較晚、g_pre −0.09、WACC 8%）；高＝高端組合（g +0.05、T1 5、ρ 0.7、s_v 較早、g_pre −0.30、WACC 13%）",
+    "cells": {
+     "低": "L1!E116",
+     "高": "L1!F116"
+    }
+   },
+   "external": {
+    "srcId": "無外部對照",
+    "外部低": "—",
+    "外部高": "—"
+   }
+  },
+  "L1_LTotalFleetVDisc_Hi": {
+   "sheet": "L1",
+   "ref": "L1!F116",
+   "label": "壽命期價格係數 L — 機隊折現 L（世代起點＋折現；錨點 2025；v17.0 判讀主口徑）",
+   "unit": "x",
+   "condition": "各世代從自己的服務起點 s_v 算 L，以 WACC 折現到該世代起點；錨點年 A＝2025.5；以 2025 營收（AL_ShareGen × AL_RevGW25）加權；v17.0",
+   "kind": "single",
+   "values": 1.13827219966509,
+   "cell": "L1!F116",
+   "range": {
+    "低": 0.479441891854564,
+    "高": 1.13827219966509,
+    "def": "低＝低端組合（g −0.20、T1 3、ρ 0.17、s_v 較晚、g_pre −0.09、WACC 8%）；高＝高端組合（g +0.05、T1 5、ρ 0.7、s_v 較早、g_pre −0.30、WACC 13%）",
+    "cells": {
+     "低": "L1!E116",
+     "高": "L1!F116"
+    }
+   },
+   "external": {
+    "srcId": "無外部對照",
+    "外部低": "—",
+    "外部高": "—"
+   }
+  },
+  "L1_LReqFleet_Full": {
+   "sheet": "L1",
+   "ref": "L1!D140",
+   "label": "回本所需 L — 全部算力持有成本口徑（v20.0 起主口徑）",
+   "unit": "x",
+   "condition": "＝L1_HoldFleet25 ÷ SRC_DEM_007（不含計價倍數與 κ，因成本已是持有成本）",
+   "kind": "single",
+   "values": 0.807078229832035,
+   "cell": "L1!D140",
+   "range": {
+    "低": 0.715617337265177,
+    "高": 0.894521671581471,
+    "def": "低＝GW 1.0 的持有成本 ÷ 營收；高＝GW 1.25 的持有成本 ÷ 營收",
+    "cells": {
+     "低": "L1!E140",
+     "高": "L1!F140"
+    }
+   },
+   "external": {
+    "srcId": "無外部對照",
+    "外部低": "—",
+    "外部高": "—"
+   }
+  },
+  "L1_LReqFleet_Full_Lo": {
+   "sheet": "L1",
+   "ref": "L1!E140",
+   "label": "回本所需 L — 全部算力持有成本口徑（v20.0 起主口徑）",
+   "unit": "x",
+   "condition": "＝L1_HoldFleet25 ÷ SRC_DEM_007（不含計價倍數與 κ，因成本已是持有成本）",
+   "kind": "single",
+   "values": 0.715617337265177,
+   "cell": "L1!E140",
+   "range": {
+    "低": 0.715617337265177,
+    "高": 0.894521671581471,
+    "def": "低＝GW 1.0 的持有成本 ÷ 營收；高＝GW 1.25 的持有成本 ÷ 營收",
+    "cells": {
+     "低": "L1!E140",
+     "高": "L1!F140"
+    }
+   },
+   "external": {
+    "srcId": "無外部對照",
+    "外部低": "—",
+    "外部高": "—"
+   }
+  },
+  "L1_LReqFleet_Full_Hi": {
+   "sheet": "L1",
+   "ref": "L1!F140",
+   "label": "回本所需 L — 全部算力持有成本口徑（v20.0 起主口徑）",
+   "unit": "x",
+   "condition": "＝L1_HoldFleet25 ÷ SRC_DEM_007（不含計價倍數與 κ，因成本已是持有成本）",
+   "kind": "single",
+   "values": 0.894521671581471,
+   "cell": "L1!F140",
+   "range": {
+    "低": 0.715617337265177,
+    "高": 0.894521671581471,
+    "def": "低＝GW 1.0 的持有成本 ÷ 營收；高＝GW 1.25 的持有成本 ÷ 營收",
+    "cells": {
+     "低": "L1!E140",
+     "高": "L1!F140"
+    }
+   },
+   "external": {
+    "srcId": "無外部對照",
+    "外部低": "—",
+    "外部高": "—"
+   }
+  },
+  "L1_M": {
+   "sheet": "L1",
+   "ref": "L1!D121",
+   "label": "收入面 m — 主口徑（J1：2026 Q2 年化；替代 FY2026 待 Andy 提供『市場預估 360 億』出處）",
+   "unit": "x",
+   "condition": "＝L1_M_2026Q2；L1_M＝付費服務 token 的實收單價 ÷ 有效牌價（Andy 2026-10-21）；分子＝當期營收（Cap_In 第 187 列，已排除廣告與其他，J3），分母＝需求面付費 token（API ＋ ChatGPT 付費）× 當年有效牌價。2025 欄用 2025 年度有效牌價（CAP_Price25Mix 1.359），2026 欄用 2026 快照（1.961）——各年用各自的牌價",
+   "kind": "single",
+   "values": 1.35536760963455,
+   "cell": "L1!D121",
+   "range": {
+    "低": 0.81752332009703,
+    "高": 1.60949903644103,
+    "def": "＝L1_M_2026Q2 的區間（v20.0）：低＝token 取高（每則 AL_TokPerPrompt_Hi 11,000、免費占比 AL_FreeShare_Lo 0.4）；高＝token 取低（每則 AL_TokPerPrompt_Lo 2,000、免費占比 AL_FreeShare_Hi 0.8）；營收、API token、單價、每日則數不變（v20.0；同 2025 寫法）",
+    "cells": {
+     "低": "L1!E121",
+     "高": "L1!F121"
+    }
+   },
+   "external": {
+    "srcId": "無外部對照",
+    "外部低": "—",
+    "外部高": "—"
+   }
+  }
+ }
+}

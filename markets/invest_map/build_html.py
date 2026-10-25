@@ -1,0 +1,125 @@
+"""AI 投資地圖 — 由資料活頁簿（LibreOffice 重算後的值）產生網站 dist/index.html。
+
+網站只呈現活頁簿的值，不做任何計算（排序、篩選、繪圖除外）。
+用法：python3 markets/invest_map/build_html.py
+"""
+import csv
+import glob
+import json
+import os
+import shutil
+import subprocess
+import tempfile
+
+import openpyxl
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(os.path.dirname(HERE))
+
+
+def recalc(path):
+    tmp = tempfile.mkdtemp()
+    subprocess.run(["soffice", "--headless", "--convert-to", "xlsx", "--outdir", tmp, path],
+                   check=True, capture_output=True)
+    out = os.path.join(tmp, os.path.basename(path))
+    return out, tmp
+
+
+def rows(ws):
+    hdr = [c.value for c in ws[1]]
+    for r in ws.iter_rows(min_row=2, values_only=True):
+        if r[0] is None:
+            continue
+        yield dict(zip(hdr, r))
+
+
+def num(x):
+    return x if isinstance(x, (int, float)) else None
+
+
+def main():
+    books = sorted(glob.glob(os.path.join(HERE, "dist", "*_AI投資地圖_資料_*.xlsx")))
+    src = books[-1]
+    calc, tmp = recalc(src)
+    wb = openpyxl.load_workbook(calc, data_only=True)
+    shutil.rmtree(tmp, ignore_errors=True)
+
+    errors = []
+    for ws in wb:
+        for r in ws.iter_rows(values_only=True):
+            for v in r:
+                if isinstance(v, str) and (v.startswith("#") or v.startswith("Err:")):
+                    errors.append((ws.title, v))
+    if errors:
+        raise SystemExit(f"活頁簿有錯誤值：{errors[:5]}")
+
+    snap = json.load(open(sorted(glob.glob(os.path.join(HERE, "data", "tokenomics_snapshot_v*.json")))[-1],
+                          encoding="utf-8"))["source"]
+    cm = subprocess.run(["git", "-C", ROOT, "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
+
+    pergw = {}
+    for r in wb["每GW"].iter_rows(min_row=2, values_only=True):
+        if r[0]:
+            pergw[f"{r[0]}｜{r[1]}"] = {"lo": num(r[2]), "base": num(r[3]), "hi": num(r[4]), "unit": r[5],
+                                         "name": r[6], "cell": r[7]}
+
+    segments = [{"layer": d["層級"], "name": d["次產業"], "share": d["占 AI IT 資本支出"],
+                 "mid": num(d["比例中值"]), "usd": num(d["每 GW 金額（GB300，$B）"]),
+                 "irr": d["不可替代性（1–3）"], "vc": d["價值鏈分量分"], "basis": d["依據"]}
+                for d in rows(wb["價值鏈"])]
+
+    position = [{"tk": str(d["代號"]), "name": d["公司"], "layer": d["層級"], "seg": d["次產業"],
+                 "imp": d["公司重要性（1–3）"], "posn": d["市場位置（1–4）"], "basis": d["地位依據"], "tag": d["標記"],
+                 "irr_s": d["不可替代性分"], "pos_s": d["市場位置分"], "vc_s": d["價值鏈分量分"],
+                 "score": d["地位分數"], "rank": d["排名"]} for d in rows(wb["地位"])]
+
+    prices = {str(d["代號"]): d for d in rows(wb["價格"])}
+    sources = {}
+    with open(os.path.join(HERE, "data", "prices.csv"), encoding="utf-8") as f:
+        for d in csv.DictReader(f):
+            sources[d["ticker"]] = d
+
+    valuation = []
+    for d in rows(wb["估值"]):
+        tk = str(d["代號"])
+        p = prices[tk]
+        valuation.append({
+            "tk": tk, "name": d["公司"], "layer": d["層級"], "seg": d["次產業"], "method": d["方法"],
+            "ccy": p["幣別"], "price": num(d["採用價"]), "price_date": sources.get(tk, {}).get("date", p["模型價日期"]),
+            "price_src": sources.get(tk, {}).get("source", ""), "price_n": sources.get(tk, {}).get("sources_count", ""),
+            "model_px": num(p["模型內現價"]), "model_date": p["模型價日期"], "move": num(d["模型價日以來漲跌"]),
+            "flag": d["價格變動旗標"] or "",
+            "center": num(d["中心價"]), "bear": num(d["下檔價"]), "cu": num(d["中心空間"]), "bu": num(d["下檔空間"]),
+            "tier": d["分級"], "alt": num(d["對照口徑空間"]), "altlbl": d["對照口徑"] or "",
+            "pe28": d["現價 ÷ 模型 FY2028 EPS（A／B／C）"] or "", "note": d["註記"] or "",
+            "c1src": d["中心候選 1 來源"] or "", "c2src": d["中心候選 2 來源"] or "",
+            "b1src": d["下檔候選 1 來源"] or "", "b2src": d["下檔候選 2 來源"] or "",
+        })
+
+    nodes = [{"seg": d["次產業"], "order": d["次產業內優先序"], "name": d["公司"], "tk": str(d["代號"] or ""),
+              "listing": d["掛牌"], "role": d["角色"] or "", "imp": d["供應鏈重要性（1–3）"],
+              "pos": d["市場地位"] or "", "tag": d["標記"] or "", "status": d["研究狀態"] or ""}
+             for d in rows(wb["地圖節點"])]
+
+    params = {r[0]: r[1] for r in wb["參數"].iter_rows(min_row=2, values_only=True) if r[0]}
+
+    data = {
+        "meta": {"version": os.path.basename(src).split("_")[-1].replace(".xlsx", ""),
+                 "book": os.path.basename(src), "tk_file": snap["file"], "tk_version": snap["version"],
+                 "tk_commit": snap["commit"][:7], "cm_commit": cm, "built": "2026-10-25",
+                 "price_date": "2026-10-23（台股三檔為 10-22）"},
+        "pergw": pergw, "segments": segments, "position": position, "valuation": valuation,
+        "nodes": nodes, "params": params,
+    }
+    tpl = open(os.path.join(HERE, "template.html"), encoding="utf-8").read()
+    html = tpl.replace("/*__DATA__*/null", json.dumps(data, ensure_ascii=False))
+    out = os.path.join(HERE, "dist", "index.html")
+    with open(out, "w", encoding="utf-8") as f:
+        f.write(html)
+    with open(os.path.join(HERE, "dist", "data.json"), "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=1)
+    print("寫出", out, f"（{len(valuation)} 檔估值、{len(position)} 檔地位、{len(nodes)} 個地圖節點）")
+
+
+if __name__ == "__main__":
+    main()
