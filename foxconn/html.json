@@ -424,6 +424,61 @@
        "@PL!D46|n3"
       ]
      ]
+    },
+    {
+     "type": "h3",
+     "text": "延伸到 FY2032（FY2030 起為收斂法）"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@PL!A192"
+     ]
+    },
+    {
+     "type": "pl",
+     "years": "@PL!C194:J194",
+     "metrics": [
+      {
+       "name": [
+        "營收（",
+        "@PL!B195",
+        "）"
+       ],
+       "fmt": "n1",
+       "chart": true,
+       "rows": {
+        "A": "@PL!C195:J195",
+        "B": "@PL!C207:J207",
+        "C": "@PL!C219:J219"
+       }
+      },
+      {
+       "name": "淨利率",
+       "fmt": "p1",
+       "chart": true,
+       "ymin": "auto",
+       "rows": {
+        "A": "@PL!C198:J198",
+        "B": "@PL!C210:J210",
+        "C": "@PL!C222:J222"
+       }
+      },
+      {
+       "name": [
+        "EPS（",
+        "@PL!B200",
+        "）"
+       ],
+       "fmt": "n2",
+       "chart": true,
+       "rows": {
+        "A": "@PL!C200:J200",
+        "B": "@PL!C212:J212",
+        "C": "@PL!C224:J224"
+       }
+      }
+     ]
     }
    ]
   },
@@ -434,7 +489,308 @@
    "blocks": [
     {
      "type": "table",
-     "caption": "目標價與上檔空間（情境加權）",
+     "caption": "目標價（DCF 與 Comparable 加權）",
+     "head": [
+      "@Val!A119",
+      "@Val!B119",
+      "",
+      ""
+     ],
+     "rows": [
+      [
+       "@Val!A120",
+       "@Val!B120|n0",
+       "",
+       ""
+      ],
+      [
+       "@Val!A121",
+       "@Val!B121|n0",
+       "",
+       ""
+      ],
+      [
+       "@Val!A122",
+       "@Val!B122|n0",
+       "",
+       ""
+      ],
+      [
+       "@Val!A123",
+       "@Val!B123|sp1",
+       "",
+       ""
+      ],
+      [
+       "@Val!A124",
+       "@Val!B124|sp1",
+       "",
+       ""
+      ],
+      [
+       "@Val!A125",
+       "@Val!B125|sp1",
+       "",
+       ""
+      ],
+      [
+       "@Val!A126",
+       "@Val!B126|sp1",
+       "",
+       ""
+      ],
+      [
+       "@Val!A127",
+       "@Val!B127",
+       "",
+       ""
+      ],
+      [
+       "@Val!A128",
+       "@Val!B128|p0",
+       "@Val!C128|p0",
+       "@Val!D128|p0"
+      ],
+      [
+       "@Val!A129",
+       "@Val!B129",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Val!A86",
+     "head": [
+      "@Val!A87",
+      "@Val!B87",
+      "@Val!C87",
+      "@Val!D87"
+     ],
+     "rows": [
+      [
+       "@Val!A88",
+       "",
+       "",
+       ""
+      ],
+      [
+       "@Val!A89",
+       "@Val!B89|n2",
+       "@Val!C89|n2",
+       "@Val!D89|n2"
+      ],
+      [
+       "@Val!A90",
+       "@Val!B90|n2",
+       "@Val!C90|n2",
+       "@Val!D90|n2"
+      ],
+      [
+       "@Val!A91",
+       "@Val!B91|n2",
+       "@Val!C91|n2",
+       "@Val!D91|n2"
+      ],
+      [
+       "@Val!A92",
+       "@Val!B92|n2",
+       "@Val!C92|n2",
+       "@Val!D92|n2"
+      ],
+      [
+       "@Val!A93",
+       "@Val!B93|n2",
+       "@Val!C93|n2",
+       "@Val!D93|n2"
+      ],
+      [
+       "@Val!A94",
+       "@Val!B94|n2",
+       "@Val!C94|n2",
+       "@Val!D94|n2"
+      ],
+      [
+       "@Val!A95",
+       "",
+       "",
+       ""
+      ],
+      [
+       "@Val!A96",
+       "@Val!B96|p1",
+       "",
+       ""
+      ],
+      [
+       "@Val!A97",
+       "@Val!B97|n2",
+       "@Val!C97|n2",
+       "@Val!D97|n2"
+      ],
+      [
+       "@Val!A98",
+       "@Val!B98|n2",
+       "@Val!C98|n2",
+       "@Val!D98|n2"
+      ],
+      [
+       "@Val!A99",
+       "@Val!B99|n2",
+       "@Val!C99|n2",
+       "@Val!D99|n2"
+      ],
+      [
+       "@Val!A100",
+       "@Val!B100|n2",
+       "@Val!C100|n2",
+       "@Val!D100|n2"
+      ],
+      [
+       "@Val!A101",
+       "@Val!B101|n2",
+       "@Val!C101|n2",
+       "@Val!D101|n2"
+      ],
+      [
+       "@Val!A102",
+       "@Val!B102|n2",
+       "@Val!C102|n2",
+       "@Val!D102|n2"
+      ],
+      [
+       "@Val!A103",
+       "@Val!B103|n0",
+       "@Val!C103|n0",
+       "@Val!D103|n0"
+      ],
+      [
+       "@Val!A104",
+       "@Val!B104|n0",
+       "@Val!C104|n0",
+       "@Val!D104|n0"
+      ],
+      [
+       "@Val!A105",
+       "@Val!B105|n0",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Val!A107",
+     "head": [
+      "@Val!A108",
+      "@Val!B108",
+      "@Val!C108",
+      "@Val!D108",
+      "@Val!F108"
+     ],
+     "rows": [
+      [
+       "@Val!A109",
+       "@Val!B109",
+       "@Val!C109|x1",
+       "@Val!D109",
+       "@Val!F109"
+      ],
+      [
+       "@Val!A110",
+       "@Val!B110",
+       "@Val!C110|x1",
+       "@Val!D110",
+       "@Val!F110"
+      ],
+      [
+       "@Val!A111",
+       "@Val!B111",
+       "@Val!C111|x1",
+       "@Val!D111",
+       "@Val!F111"
+      ],
+      [
+       "@Val!A112",
+       "@Val!B112",
+       "@Val!C112|x1",
+       "@Val!D112",
+       "@Val!F112"
+      ],
+      [
+       "@Val!A113",
+       "@Val!B113",
+       "@Val!C113|x1",
+       "@Val!D113",
+       "@Val!F113"
+      ],
+      [
+       "@Val!A114",
+       "@Val!B114|x1",
+       "",
+       "",
+       ""
+      ],
+      [
+       "@Val!A115",
+       "@Val!B115|n2",
+       "",
+       "",
+       ""
+      ],
+      [
+       "@Val!A116",
+       "@Val!B116|n0",
+       "",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!E114"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Val!A131",
+     "collapse": true,
+     "summary": "展開：十年年底市盈率（分位檢查用）",
+     "head": [
+      "@Val!A131",
+      "@Val!B131",
+      "@Val!C131",
+      "@Val!D131",
+      "@Val!E131",
+      "@Val!F131",
+      "@Val!G131",
+      "@Val!H131",
+      "@Val!I131",
+      "@Val!J131",
+      "@Val!K131"
+     ],
+     "rows": [
+      [
+       "@Val!A132",
+       "@Val!B132|x1",
+       "@Val!C132|x1",
+       "@Val!D132|x1",
+       "@Val!E132|x1",
+       "@Val!F132|x1",
+       "@Val!G132|x1",
+       "@Val!H132|x1",
+       "@Val!I132|x1",
+       "@Val!J132|x1",
+       "@Val!K132|x1"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "舊法：規則值情境加權（參考）",
      "head": [
       "項目",
       "數值",
@@ -901,6 +1257,42 @@
      "parts": [
       "@Sens!A29"
      ]
+    },
+    {
+     "type": "h3",
+     "text": "目標價參數"
+    },
+    {
+     "type": "table",
+     "caption": "@Sens!A964",
+     "head": [
+      "@Sens!A965",
+      "@Sens!B965",
+      "@Sens!C965",
+      "@Sens!D965",
+      "@Sens!E965",
+      "@Sens!F965"
+     ],
+     "rowgen": {
+      "sheet": "Sens",
+      "rows": "966-972",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "",
+       "n0",
+       "n0",
+       "n0",
+       "sp1"
+      ]
+     }
     }
    ]
   },
