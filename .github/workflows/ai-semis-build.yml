@@ -39,6 +39,7 @@ on:
       - 'amd/**'
       - 'mrvl/**'
       - 'eoptolink/**'
+      - 'kyec/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -74,6 +75,7 @@ on:
       - 'amd/**'
       - 'mrvl/**'
       - 'eoptolink/**'
+      - 'kyec/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -115,6 +117,7 @@ jobs:
             "quanta|python3 quanta/build_quanta.py|quanta/dist"
             "innolight|python3 innolight/build_innolight.py|innolight/dist"
             "avgo|python3 avgo/build_avgo.py|avgo/dist"
+            "kyec|python3 kyec/build_kyec.py|kyec/dist"
             "eoptolink|python3 eoptolink/build_eoptolink.py|eoptolink/dist"
             "mrvl|python3 mrvl/build_mrvl.py|mrvl/dist"
             "amd|python3 amd/build_amd.py|amd/dist"
