@@ -596,7 +596,7 @@ SO.column_dimensions["A"].width = 70; SO.column_dimensions["B"].width = 130
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Advantest（6857.T）收支與估值模型 v0.3（AI 半導體 Project 步驟 5：設備與材料）　2026-10-25", True),
+lines = [("Advantest（6857.T）收支與估值模型 v0.3.1（AI 半導體 Project 步驟 5：設備與材料）　2026-10-25", True),
  ("v0.2.2（2026-10-23）：引用的上游成品檔名更新（SK 海力士 v0.4.1、美光 v0.3.1、三星 v0.2.1、台積電 v0.2.1 升版）；所有數值不變。", False),
  ("模型命題：Advantest 的盈餘由 AI 加速器的 SoC 測試需求決定。每顆晶片的測試時間隨複雜度上升，Advantest 握有約三分之二的市占。股價取決於加速器顆數的成長在 FY2027 之後放緩時，測試機的投資會不會跟著回落。", False), ("", False),
  ("會計年度：4 月到隔年 3 月（FY2026＝2026-04～2027-03）。金額以日圓（¥B）為主，另列美元；匯率基準 ¥150（公司第二季起的假設）放 In 頁。FY2026 第二季預定 2026-10-28 公布，建置日（2026-10-22）尚未公布，故不納入。", False), ("", False),
@@ -798,6 +798,50 @@ def valuation_v2(CFG):
 V2T, V2EXT = valuation_v2(CFG_V2)
 if os.environ.get("V2_ROWS"):
     print("V2", V2T, V2EXT)
+
+
+# ---------------- v0.3.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00、14:17）；新增列放在各頁現有最後一列之後，既有儲存格不變 ----------------
+# 自由現金流（算力收支 2026-10-25 請求；地圖依列標籤讀取）：In 頁最後新增 da_rev、cx_rev；PL 頁最後新增一列（三情境 × FY2026–FY2032）
+from openpyxl.utils import get_column_letter
+_ir = IN.max_row + 1
+for _k, _nm, _v, _src in (("da_rev", "折舊 ÷ 營收（自由現金流列用）", "=24.330/a25_rev", "FY2025（2026-03 期）實績：減価償却費 24,330 百萬日圓 ÷ 營收 1,128.6 十億日圓＝2.2%（stockanalysis 現金流量表；finboard 為 25,612，口徑差約 5%，採 stockanalysis）"),
+                          ("cx_rev", "資本支出 ÷ 營收（自由現金流列用）", "=33.012/a25_rev", "FY2025 實績：設備投資（有形固定資產取得）33,012 百萬日圓 ÷ 營收＝2.9%（stockanalysis、finboard 一致）")):
+    IN.cell(_ir, 1, _k); IN.cell(_ir, 2, _nm); IN.cell(_ir, 3, "%"); IN.cell(_ir, 5, _v).number_format = "0.0%"
+    IN.cell(_ir, 7, "Assumed"); IN.cell(_ir, 8, _src); IN.cell(_ir, 9, "錨＝最近完整年度 FY2025 實績 [Verified]；FY2026 起各年比率不變 [Assumed]")
+    defname(_k, f"In!$E${_ir}"); _ir += 1
+_fh = PL.max_row + 2
+_FC = {}; _ci = 2
+for _s in SC:
+    for _y in range(2026, 2033):
+        _FC[(_s, _y)] = get_column_letter(_ci); _ci += 1
+PL.cell(_fh, 1, "項目")
+for (_s, _y), _c in _FC.items(): PL[f"{_c}{_fh}"] = f"FY{_y} {_s}" + ("（收斂）" if _y >= 2030 else "")
+hdr(PL, _fh, [PL.cell(_fh, _j).value for _j in range(1, _ci)])
+PL.cell(_fh + 1, 1, "自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）")
+for (_s, _y), _c in _FC.items():
+    _e = chr(ord("C") + _y - 2025); _R2 = V2EXT[_s]
+    PL[f"{_c}{_fh + 1}"] = f"=PL!{_e}{_R2['ni']}+PL!{_e}{_R2['rev']}*(da_rev-cx_rev)"; PL[f"{_c}{_fh + 1}"].number_format = "#,##0.0"
+PL.cell(_fh + 2, 1, "註：上一列＝淨利 ＋ 營收 ×（折舊 ÷ 營收 − 資本支出 ÷ 營收），淨利與營收取本頁「延伸到 FY2032」區塊（FY2030 起為收斂法）；比率見 In 頁 da_rev、cx_rev（FY2025 實績）。¥B。")
+_sr = SO.max_row + 1
+for _a, _b in [["[Verified] 自由現金流列：Advantest FY2025（2026-03 期）折舊攤銷 24,330、資本支出 33,012（百萬日圓；stockanalysis）", "https://stockanalysis.com/quote/tyo/6857/financials/cash-flow-statement/"], ["[Verified] 第二來源：finboard 現金流量（折舊 25,612、資本支出 33,012）", "https://finboard.net/companies/JP:6857/cash-flow"], ["[Assumed] 折舊 ÷ 營收、資本支出 ÷ 營收 FY2026 起各年維持 FY2025 實績比率", "本模型假設"]]:
+    SO.cell(_sr, 1, _a); SO.cell(_sr, 2, _b); _sr += 1
+_U = f"B{V2T['upw']}"
+_G = V.max_row + 2
+V.cell(_G, 1, "上檔空間級距")
+V[f"B{_G}"] = f'=IF({_U}>0.5,"大於 50%",IF({_U}>0.25,"25%–50%",IF({_U}>=0,"0%–25%",IF({_U}>=-0.25,"0%～−25%",IF({_U}>=-0.5,"−25%～−50%","小於 −50%")))))'
+V[f"B{_G}"].number_format = "@"; V[f"E{_G}"] = "以「上檔空間：加權目標價」分六級（Andy 2026-10-25 14:00）"
+V.cell(_G + 1, 1, "投資建議")
+V[f"B{_G + 1}"] = f'=IF({_U}>0.5,"強力買進",IF({_U}>0.25,"買進",IF({_U}>=-0.25,"中立",IF({_U}>=-0.5,"放空","強力放空"))))'
+V[f"B{_G + 1}"].number_format = "@"
+V[f"E{_G + 1}"] = "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空"
+OBS = ["目標價 ¥23,222（DCF 16,539、Comparable 29,904 各半），比現價 32,340（2026-10-23）低 28.2%，級距 −25%～−50%；Comparable 單獨為 −7.5%。主因是 DCF：DCF 目標價比現價低 48.9%（A 情境 23,028 也只有現價的 0.71 倍），r 10%、g 4% 下 FY2027 EPS 1,139 只值約 20 倍，而現價隱含 29.3 倍 12 個月後前瞻 EPS（1,104）；ROE 35.9% 高於折現率，DCF 偏低不是 ROE 造成。EPS 也不是主因：本模型前瞻 EPS 比共識 913.5 高 20.8%（共識期間早約一年半）；同業前瞻 P/E 中位數 27.1 倍，共識目標價 42,686 隱含 46.7 倍（比同業高 72%）。",
+       "情境 C 是最大下行：FY2028 EPS A 1,298、B 1,117、C 811（C 含 Teradyne 搶回市占與價格壓力），DCF 情境價值 23,028／16,105／7,893。FY2027 EPS 對 SoC 市占（±5pt → ±7.4%）與匯率（¥140／¥160 → −6.9%／+6.9%）最敏感，平行測試效率每年 −10% 則 −8.8%。",
+       "下一個檢驗事件是 FY2026 第二季財報（2026-10-28）：SoC 測試機訂單、CY2026 SoC 測試機市場規模（模型錨點 110 億美元，±5 億美元 → FY2027 EPS ±5.2%）與全年指引是否上修。"]   # 重點觀察（與 advantest/README.md 相同文字）
+_R = RD.max_row + 1
+RD.cell(_R, 1, "v0.3.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁最後新增「上檔空間級距」「投資建議」兩列（依「上檔空間：加權目標價」固定規則）；README 頁最後新增投資建議與重點觀察三點。另依算力收支 2026-10-25 請求，PL 頁最後新增「自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）」一列（三情境、所有模型年度；折舊、資本支出＝營收 × FY2025 實績比率 2.2%、2.9%），In 頁最後新增 「折舊 ÷ 營收」（da_rev）與「資本支出 ÷ 營收」（cx_rev）兩列；既有列不移動、既有數值不變。")
+RD.cell(_R + 1, 1, f'="投資建議："&Val!B{_G + 1}&"（依上檔空間固定規則）"')
+for _i, _t in enumerate(OBS, 1): RD.cell(_R + 1 + _i, 1, f"重點觀察 {_i}：{_t}")
+if os.environ.get("G1_ROWS"): print("G1ROWS", "advantest", "grade", _G, "rec", _G + 1, "readme_obs", _R + 2, _R + 4)
 
 wb.move_sheet("In", offset=0)
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]

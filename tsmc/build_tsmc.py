@@ -447,7 +447,7 @@ srcs = [("台積電 2Q26 新聞稿", "https://pr.tsmc.com/english/news/3326"),
 for i, (a, b) in enumerate(srcs, 2): SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 44; SO.column_dimensions["B"].width = 130
 RD = wb.create_sheet("README", 0)
-lines = [("台積電模型 v0.3（AI 半導體 Project 步驟 4）　2026-10-25　2026 年改為 1–3Q 實績＋4Q 指引中點；2027 起假設未變", True),
+lines = [("台積電模型 v0.3.1（AI 半導體 Project 步驟 4）　2026-10-25　2026 年改為 1–3Q 實績＋4Q 指引中點；2027 起假設未變", True),
  ("模型命題：台積電在 AI 算力中的意義是供給上限而非分到的金額比例——AI 加速器只占其營收約兩成；2027 年加速器出貨受 HBM 而非 CoWoS 限制，台積電的獲利成長由「AI 顆數 × 每顆內容 × 漲價」與「非 AI 八成的穩定成長」共同決定。", False), ("", False),
  ("驅動因子 → 推導量", True),
  ("CoWoS：加速器顆數（markets/memory）÷ 每片封裝數 → CoWoS 需求；月產能年均 × 12 × (1＋委外) → 可用產能；需求 ÷ 產能 → 是否為瓶頸；與 HBM 缺口比較", False),
@@ -593,4 +593,42 @@ for i, (nm, a, b, src) in enumerate([("2027 EPS（A）vs 共識（2026-10-25 擷
                                       ("2028 EPS（A）vs 共識（2026-10-25 擷取）", f"=PL!D{PR['eps']}", "=cons_feps28", "MarketScreener 預估頁")], rn):
     RC.cell(i, 1, nm); RC.cell(i, 2, a).number_format = "#,##0.0"; RC.cell(i, 3, b).number_format = "#,##0.0"
     RC.cell(i, 4, f"=B{i}/C{i}-1").number_format = "0%"; RC.cell(i, 5, src)
+
+# ---------------- v0.3.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00、14:17）；新增列放在各頁現有最後一列之後，既有儲存格不變 ----------------
+# 自由現金流（算力收支 2026-10-25 請求；地圖依列標籤讀取）：In 頁最後新增 da_rev、cx_rev；PL 頁最後新增一列（B–T 欄，三情境、2026–2032）；原「淨利 − 資本支出（粗估）」列保留不動
+_ir = IN.max_row + 1
+for _k, _nm, _v, _src in (("da_rev", "折舊 ÷ 營收（自由現金流列用）", "=681.649/3809.054", "2025 實績：折舊攤銷 681,649 百萬新台幣 ÷ 營收 3,809,054 百萬＝17.9%（stockanalysis 現金流量表、損益表）"),
+                          ("cx_rev", "資本支出 ÷ 營收（只用於 2030–2032 收斂欄）", "=1272.411/3809.054", "2025 實績：資本支出 1,272,411 百萬新台幣 ÷ 營收＝33.4%（stockanalysis 現金流量表；約 US$40.9B，與公司公布一致）；2026–2029 用 PL 頁資本支出列（capex26–capex29）")):
+    IN.cell(_ir, 1, _k); IN.cell(_ir, 2, _nm); IN.cell(_ir, 3, "%"); IN.cell(_ir, 5, _v).number_format = "0.0%"
+    IN.cell(_ir, 7, "Assumed"); IN.cell(_ir, 8, _src); IN.cell(_ir, 9, "錨＝最近完整年度 2025 實績 [Verified]；以後各年比率不變 [Assumed]")
+    wb.defined_names[_k] = DefinedName(_k, attr_text=f"In!$E${_ir}"); _ir += 1
+_fr = PL.max_row + 1
+PL.cell(_fr, 1, "自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）")
+for col, lab, s, y in cols:
+    PL[f"{col}{_fr}"] = f"={col}{PR['ni']}+{col}{PR['rev']}*da_rev-{col}{PR['capex']}"; PL[f"{col}{_fr}"].number_format = "0.0"
+for (s, y), c in FCOL.items():
+    PL[f"{c}{_fr}"] = f"={c}{PR['ni']}+{c}{PR['rev']}*(da_rev-cx_rev)"; PL[f"{c}{_fr}"].number_format = "0.0"; PL[f"{c}{_fr}"].fill = FADEFILL
+PL.cell(_fr + 1, 1, "註：上一列折舊＝營收 × da_rev（In 頁，2025 實績 17.9%）；資本支出 2026–2029＝PL 頁資本支出列（In 頁 capex26–29），2030–2032 收斂欄＝營收 × cx_rev（2025 實績 33.4%）。十億美元。")
+_sr = SO.max_row + 1
+for _a, _b in (("[Verified] 自由現金流列：台積電 2025 折舊攤銷 681,649、資本支出 1,272,411、營收 3,809,054（百萬新台幣；stockanalysis）", "https://stockanalysis.com/quote/tpe/2330/financials/cash-flow-statement/ ；https://stockanalysis.com/quote/tpe/2330/financials/"),
+               ("[Assumed] 折舊 ÷ 營收各年、資本支出 ÷ 營收（2030–2032 收斂欄）維持 2025 實績比率", "本模型假設")):
+    SO.cell(_sr, 1, _a); SO.cell(_sr, 2, _b); _sr += 1
+_U = f"B{T['upw']}"
+_G = V.max_row + 2
+V.cell(_G, 1, "上檔空間級距")
+V[f"B{_G}"] = f'=IF({_U}>0.5,"大於 50%",IF({_U}>0.25,"25%–50%",IF({_U}>=0,"0%–25%",IF({_U}>=-0.25,"0%～−25%",IF({_U}>=-0.5,"−25%～−50%","小於 −50%")))))'
+V[f"B{_G}"].number_format = "@"; V[f"E{_G}"] = "以「上檔空間：加權目標價」分六級（Andy 2026-10-25 14:00）"
+V.cell(_G + 1, 1, "投資建議")
+V[f"B{_G + 1}"] = f'=IF({_U}>0.5,"強力買進",IF({_U}>0.25,"買進",IF({_U}>=-0.25,"中立",IF({_U}>=-0.5,"放空","強力放空"))))'
+V[f"B{_G + 1}"].number_format = "@"
+V[f"E{_G + 1}"] = "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空"
+OBS = ["目標價 NT$2,446（DCF 2,150、Comparable 2,742 各半），比現價 2,385（2026-10-22）高 2.6%，級距 0%–25%；Comparable 單獨為 +15.0%。與共識目標價 3,390 的差距主要是 EPS：本模型 12 個月後前瞻 EPS 134.0 比共識前瞻 EPS 低 26.2%，倍數因素只 −8.7%（共識目標價隱含 18.7 倍，同業中位數 20.5 倍）。",
+       "2027 三情境 EPS 相同（137.6），分歧從 2028 開始：A 157.6、B 129.5、C 106.3（顆數 ×1.0／0.8／0.6、B／C 毛利率 58%／54%），DCF 情境價值 2,769／2,041／1,496。2027 EPS 對非 AI 營收（持平 → −7.5%）與毛利率（60% → −7.1%、67% → +5.3%）最敏感。",
+       "資本支出不隨情境下修（2028、2029 皆為 90、95 十億美元），情境 B、C 的自由現金流降得比淨利快：2028 自由現金流 A 84.8、B 57.4、C 34.1 十億美元（淨利 127.7／104.9／86.2）；DCF 用 EPS ×（1 − g／ROE）未扣資本支出，偏高估。下一個檢驗事件是 4Q26 財報（約 2027-01 中旬）的 2027 資本支出與毛利率指引；折現率 ±1pt 使加權目標價 −6.0%／+8.3%。"]   # 重點觀察（與 tsmc/README.md 相同文字）
+_R = RD.max_row + 1
+RD.cell(_R, 1, "v0.3.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁最後新增「上檔空間級距」「投資建議」兩列（依「上檔空間：加權目標價」固定規則）；README 頁最後新增投資建議與重點觀察三點。另依算力收支 2026-10-25 請求，PL 頁最後新增「自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）」一列（三情境、2026–2032；折舊＝營收 × 2025 實績 17.9%，資本支出 2026–2029 用既有資本支出列、2030–2032 用營收 × 2025 實績 33.4%），In 頁最後新增「折舊 ÷ 營收」（da_rev）與「資本支出 ÷ 營收」（cx_rev）；原「淨利 − 資本支出（不含折舊，粗估）」列保留不動，既有數值不變。")
+RD.cell(_R + 1, 1, f'="投資建議："&Val!B{_G + 1}&"（依上檔空間固定規則）"')
+for _i, _t in enumerate(OBS, 1): RD.cell(_R + 1 + _i, 1, f"重點觀察 {_i}：{_t}")
+if os.environ.get("G1_ROWS"): print("G1ROWS", "tsmc", "grade", _G, "rec", _G + 1, "readme_obs", _R + 2, _R + 4)
+
 wb.save(sys.argv[1]); print("saved")

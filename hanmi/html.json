@@ -407,6 +407,35 @@
         {
           "type": "note",
           "parts": [
+            "@Val!A122",
+            "：",
+            "@Val!B122"
+          ]
+        },
+        {
+          "type": "note",
+          "parts": [
+            "@Val!A123",
+            "：",
+            "@Val!B123",
+            "（依上檔空間固定規則）"
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "重點觀察"
+        },
+        {
+          "type": "list",
+          "items": [
+            "@README!A20",
+            "@README!A21",
+            "@README!A22"
+          ]
+        },
+        {
+          "type": "note",
+          "parts": [
             "@Val!A120",
             "：",
             "@Val!B120"
