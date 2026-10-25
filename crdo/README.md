@@ -1,4 +1,4 @@
-# crdo/ — Credo（CRDO）收支與估值模型 v0.1
+# crdo/ — Credo（CRDO）收支與估值模型 v0.2
 
 Credo 的 AEC 營收＝AI 銅纜市場（`markets/network`：scale-up 背板與線纜＋scale-out DAC／AEC）× Credo 有效份額（AEC 滲透率 × Credo 占 AEC）；光學（光 DSP、矽光 PIC〔DustPhotonics〕、ZeroFlap 光學）＝可插拔光模組市場 × 光學份額；線卡 PHY、重定時器與 SerDes IP 另依成長率推。股價自 52 週高點跌約 52%、只約 15 倍共識 FY2028 EPS：市場定價像是 AEC 成長在 FY2028 前後見頂。
 
@@ -11,9 +11,9 @@ AI 半導體 Project **網通次產業內複製（主動電纜、SerDes、光 DS
 | 檔案 | 內容 |
 |---|---|
 | `build_crdo.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_Credo模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261025_Credo模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_Credo模型_v0.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261025_Credo模型_v0.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 crdo/build_crdo.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI 銅纜、scale-out 銅纜、可插拔光模組、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`、`tools/valuation_rule.py`（只用規則函式）；**不修改它們**。
 
@@ -45,7 +45,39 @@ AI 半導體 Project **網通次產業內複製（主動電纜、SerDes、光 DS
 - **市場隱含（Val 第 4 節）：** 現價 147.29 ÷ 15x ＝ FY2028 EPS 9.8（約等於模型 A）；÷ 20x ＝ 7.4（約等於情境 C）；÷ 30x ＝ 4.9（較模型 A −47%，需要兩到三條不利路徑同時發生）。
 - **最大變數（FY2028 EPS，情境 A）：** 最大客戶流失（−25%）、AEC 份額流失（−19%）、AI 銅纜市場 ×0.8（−15%）、顆數情境 C（−15%；FY2029 −44%）；稅率 17% 只 −5%。
 
-## 估值（Val）
+## 估值（Val 頁第 0 節：目標價＝DCF 與 Comparable 加權）
+
+| 項目 | 值 |
+|---|---|
+| DCF 情境價值，推到 12 個月後（A／B／C） | 143.39／95.31／53.13 |
+| DCF 目標價（權重 0.3／0.5／0.2） | **101.30** |
+| 同業前瞻 P/E | Astera Labs 45.8、Marvell 40.4、Broadcom 18.5、MACOM 28.6；中位數 **34.5x** |
+| 12 個月後前瞻 EPS（情境加權） | 8.40 |
+| Comparable 目標價 | **290.10**（+97.0%） |
+| **目標價（DCF 0.5／Comparable 0.5）** | **195.70（+32.9%）**，相對現價 147.29（2026-10-23） |
+| 市場共識目標價 | 279.09（In 頁 tp_street：20 家平均 279.09（2026-10-05）；10-23 為 284.05） |
+| 與共識的差距 | EPS 因素 -13.3%；倍數因素 -16.6%（共識目標價隱含 28.8x，同業中位數 34.5x） |
+| 價格帶（DCF 不如預期～順利） | 53.13～143.39 |
+| 歷史倍數檢查：現價 ÷ FY2028 EPS 在十年 P/E 分布的分位（A／B／C） | 0%／0%／0% |
+
+再投資率 20.0%（tp_g ÷ tp_roe，tp_roe＝20.0%）。
+
+EPS（FY2027–FY2032；FY2030 起為收斂法）：
+| 情境 | FY2027 | FY2028 | FY2029 | FY2030 | FY2031 | FY2032 |
+|---|---|---|---|---|---|---|
+| A | 6.45 | 9.20 | 10.07 | 11.01 | 11.76 | 12.28 |
+| B | 6.45 | 8.50 | 8.17 | 7.91 | 7.73 | 7.64 |
+| C | 6.45 | 7.81 | 5.66 | 4.58 | 3.98 | 3.69 |
+
+對加權目標價的敏感度（Sens）：折現率 +1pt -3.4%；折現率 −1pt +4.8%；長期成長 +1pt +2.0%；長期成長 −1pt -1.3%；DCF 權重 0.3 +19.3%；DCF 權重 0.7 -19.3%。
+
+**DCF 的設定**：r 10%、g 4%。ROE 需與本模型 non-GAAP EPS 同口徑，本模型沒有股東權益、算不出，依主串規則取 tp_roe 0.20（Assumed），再投資率 20%；GAAP ROE（FY2024–26 平均約 12%）只列在 In 頁作參考、不採用。會計年度 4 月底結束，FY2027 是錨點年（2026-05～2027-04），DCF 的 t＝1 對 FY2027，偏高估。三情境 FY2027 EPS 相同，DCF 情境差異來自 FY2028 之後；情境 C 的 FY2029 起營收下滑，收斂法下 FY2032 EPS 低於 FY2027。Credo 2022 年上市，十年平均淨利率未找到，收斂法依工作單用 FY2029 × 0.8（Assumed）。十年 P/E 只有 2025 年一個觀測值（GAAP），歷史分位檢查參考性低。
+
+**Comparable 的設定**：美股高速連接晶片同業 Astera Labs、Marvell、Broadcom、MACOM（stockanalysis forward PE，2026-10-23）；不放 A 股。Broadcom 規模與業務組合不同（18.5x），拉低中位數。市場共識目標價隱含約 29x，低於同業中位數（倍數因素 −17%）；EPS 因素 −13%：本模型 FY2028 EPS 低於 Yahoo 共識。
+
+本版未做先驗，無 Andy 合理 P/E 對照。
+
+**舊法（參考，不是目標價）**：以下為 v0.1／v0.1.1 的十年 P/E 規則值與情境加權，保留在 Val 頁第 1–6 節與「舊法：規則值情境加權（參考）」。
 
 現價 ÷ FY2027 EPS＝22.8x、÷ FY2028 EPS：A 16.0x、B 17.3x、C 18.9x。十年 P/E：Credo 2022-01 上市，companiesmarketcap 年底 P/E 只有 2023 −92.7x、2024 −456x（虧損，不用）與 2025 118x，三個分位都是 118x；StockAnalysis 會計年度末 P/E（FY2025 157x、FY2026 72x）日期口徑不同，只列參考。規則值基準＝2027 年底近 12 月 GAAP 換算 EPS（≈ ½ FY2027＋½ FY2028 × g2n）：A 646（+339%）、B 618、C 589。
 
@@ -59,3 +91,11 @@ AI 半導體 Project **網通次產業內複製（主動電纜、SerDes、光 DS
 - 客戶名稱（Amazon、xAI、Microsoft）只有券商與媒體來源；10-K 只揭露未具名的終端客戶占比（FY2026：33%、32%、19%）。
 - 網通模型的銅纜市場以 NVIDIA 平台為主，Credo 客戶以 ASIC 與超大規模業者為主，份額校準吸收了這個口徑差。
 - 十年 P/E 只有一個正值、一個來源；規則值與目標價可信度低，前瞻 P/E 歷史待 Bloomberg。R4 產業部署路徑未建。
+
+## v0.2（2026-10-25）：估值 v2
+
+- Val 頁最前面新增「0. 目標價」：0.1 DCF（股東現金流＝EPS ×（1 − tp_g ÷ tp_roe），FY2027–FY2032 明確期＋永續，基準日 2026 年底）、0.2 Comparable（市場主流同業前瞻 P/E 中位數 × 12 個月後前瞻 EPS）、0.3 結論（加權目標價與 Comparable 目標價並列）。既有內容整體下移（列號改變，列標籤不變）。
+- 今天上午加的「0. 目標價與上檔空間」改名「舊法：規則值情境加權（參考）」保留，不再叫目標價。
+- PL 三情境延伸到 FY2032：**FY2030 起為收斂法，非驅動因子推導**（營收年增由 FY2029 線性收斂到 A＝tp_g＋2pt、B＝tp_g、C＝tp_g−2pt；淨利率收斂到中段利潤率；PL 頁灰底）；說明欄移到 K 欄。
+- In 頁新增 K 節（黃底，Andy 可改）：tp_r 10%、tp_g 4%、tp_roe（近三年平均）、tp_w_dcf 0.5、收斂法參數、市場共識目標價、共識前瞻 EPS。Sens 頁加 tp_r ±1pt、tp_g ±1pt、tp_w_dcf 0.3／0.7。
+- 現價維持 2026-10-23 收盤（與 `markets/invest_map/data/prices.csv` 一致或已為兩來源）。FY2026–FY2029 既有 EPS 與其他既有儲存格不變（`tools/xlsx_diff.py` 對舊 dist 比對，差異只在新增列、延伸年度、改名標籤與版本文字）。

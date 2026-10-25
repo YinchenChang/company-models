@@ -27,7 +27,7 @@
 | `arista/` | Arista Networks（ANET）：AI 後端乙太網路交換器市場 × Arista 份額＋非 AI 的收支與 P/E 估值；三情境、FY2026 錨點、對帳、敏感度；Arista 份額為本專案權威；見 `arista/README.md` | 獨立產生器（比照 `nvidia/`、`avgo/`；AI 半導體 Project 網通系統端樣板） | v0.1（成品：`arista/dist/20261025_Arista模型_v0.1.1.xlsx`、`.html`） |
 | `delta/` | 台達電（2308）：部署 GW ×（AI 電源每 kW 內容 × 台達電份額＋液冷每 GW 營收）＋非 AI 的收支與 P/E 估值；三情境、FY2026 錨點、對帳、敏感度；AI 電源內容、份額、液冷每 GW 為本專案權威；見 `delta/README.md` | 獨立產生器（比照 `arista/`；AI 半導體 Project 電源與散熱樣板） | v0.1（成品：`delta/dist/20261025_台達電模型_v0.2.xlsx`、`.html`） |
 | `quanta/` | 廣達（2382）：部署 GW × 每 GW ODM 整櫃價值 × 廣達有效份額 ×（1 − 客供比例）＋非 AI 的收支與 P/E 估值；三情境、FY2026 錨點、對帳、敏感度；組裝市場、份額、ODM 每櫃價格、客供比例為本專案權威；見 `quanta/README.md` | 獨立產生器（比照 `delta/`；AI 半導體 Project 伺服器組裝樣板） | v0.1（成品：`quanta/dist/20261025_廣達模型_v0.2.xlsx`、`.html`） |
-| `innolight/` | 中際旭創（300308.SZ）：AI 可插拔光模組市場 × 中際旭創份額 × 單價係數＋CPO 光學 × CPO 份額＋其他營收的收支與 P/E 估值；三情境、FY2026 錨點（1H26 實績＋2H26 假設）、市場隱含 FY2028 EPS、對帳、敏感度；光模組份額為本專案權威；見 `innolight/README.md` | 獨立產生器（比照 `arista/`；AI 半導體 Project 網通次產業內複製——光模組） | v0.1（成品：`innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx`、`.html`） |
+| `innolight/` | 中際旭創（300308.SZ）：AI 可插拔光模組市場 × 中際旭創份額 × 單價係數＋CPO 光學 × CPO 份額＋其他營收的收支與 P/E 估值；三情境、FY2026 錨點（1H26 實績＋2H26 假設）、市場隱含 FY2028 EPS、對帳、敏感度；光模組份額為本專案權威；見 `innolight/README.md` | 獨立產生器（比照 `arista/`；AI 半導體 Project 網通次產業內複製——光模組） | v0.1（成品：`innolight/dist/20261025_中際旭創模型_v0.2.xlsx`、`.html`） |
 | `markets/overview/` | AI 半導體總覽儀表板 | 彙整橋接表、記憶體、網通、台積電模型；估值規則；記憶體三家 P/E 對照、美光買回加回 P/B；設備分頁（設備市場、Advantest、Disco；設備股共用循環位置規則） | v0.6 |
 
 規則：

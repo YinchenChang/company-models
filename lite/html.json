@@ -390,6 +390,51 @@
        "@PL!D46|p1"
       ]
      ]
+    },
+    {
+     "type": "h3",
+     "text": "延伸到 FY2032（FY2030 起為收斂法）"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@PL!A2"
+     ]
+    },
+    {
+     "type": "pl",
+     "years": "@PL!C3:J3",
+     "metrics": [
+      {
+       "name": "營收",
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!C5:J5",
+        "B": "@PL!C18:J18",
+        "C": "@PL!C31:J31"
+       },
+       "chart": true
+      },
+      {
+       "name": "淨利率",
+       "fmt": "p1",
+       "rows": {
+        "A": "@PL!C12:J12",
+        "B": "@PL!C25:J25",
+        "C": "@PL!C38:J38"
+       }
+      },
+      {
+       "name": "EPS（non-GAAP）",
+       "fmt": "n2",
+       "rows": {
+        "A": "@PL!C14:J14",
+        "B": "@PL!C27:J27",
+        "C": "@PL!C40:J40"
+       },
+       "chart": true
+      }
+     ]
     }
    ]
   },
@@ -400,45 +445,219 @@
    "blocks": [
     {
      "type": "table",
-     "caption": "@Val!A4",
+     "caption": "@Val!A37",
      "head": [
-      "@Val!A5",
-      "@Val!B5"
+      "@Val!A38",
+      "@Val!B38",
+      "",
+      "",
+      "@Val!E38"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "39-47",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "n2",
+       "n2",
+       "n2",
+       ""
+      ],
+      "row_fmt": {
+       "42": {
+        "B": "sp1"
+       },
+       "43": {
+        "B": "sp1"
+       },
+       "44": {
+        "B": "sp1"
+       },
+       "45": {
+        "B": "sp1"
+       },
+       "46": {
+        "B": ""
+       },
+       "47": {
+        "B": "p0",
+        "C": "p0",
+        "D": "p0"
+       }
+      }
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!A48",
+      "：",
+      "@Val!B48"
+     ]
+    },
+    {
+     "type": "bars",
+     "title": "目標價與現價",
+     "fmt": "n2",
+     "items": [
+      {
+       "label": "@Val!A39",
+       "value": "@Val!B39",
+       "series": 0
+      },
+      {
+       "label": "@Val!A24",
+       "value": "@Val!B24",
+       "series": 1
+      },
+      {
+       "label": "@Val!A40",
+       "value": "@Val!B40",
+       "series": 2
+      },
+      {
+       "label": "@Val!A41",
+       "value": "@Val!B41",
+       "series": 1
+      }
+     ],
+     "ref": {
+      "label": "@Val!A63",
+      "value": "@Val!B63"
+     }
+    },
+    {
+     "type": "table",
+     "caption": "@Val!A5",
+     "head": [
+      "@Val!A6",
+      "@Val!B6",
+      "@Val!C6",
+      "@Val!D6",
+      "@Val!E6"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "7-24",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "n2",
+       "n2",
+       "n2",
+       ""
+      ],
+      "row_fmt": {
+       "15": {
+        "B": "p1"
+       }
+      }
+     }
+    },
+    {
+     "type": "table",
+     "caption": "@Val!A26",
+     "head": [
+      "@Val!A27",
+      "@Val!B27",
+      "@Val!C27",
+      "@Val!D27",
+      "@Val!F27"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "28-32",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "",
+       "x1",
+       "",
+       "tag"
+      ]
+     }
+    },
+    {
+     "type": "kv",
+     "items": [
+      [
+       "@Val!A33",
+       "@Val!B33|x1"
+      ],
+      [
+       "@Val!A34",
+       "@Val!B34|n2"
+      ],
+      [
+       "@Val!A35",
+       "@Val!B35|n2"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "既有估值（現價倍數、規則值與舊法情境加權；參考）"
+    },
+    {
+     "type": "table",
+     "caption": "@Val!A51",
+     "head": [
+      "@Val!A52",
+      "@Val!B52"
      ],
      "rows": [
       [
-       "@Val!A6",
-       "@Val!B6|n0"
+       "@Val!A53",
+       "@Val!B53|n0"
       ],
       [
-       "@Val!A7",
-       "@Val!B7|sp1"
+       "@Val!A54",
+       "@Val!B54|sp1"
       ],
       [
-       "@Val!A8",
-       "@Val!B8|n0"
+       "@Val!A55",
+       "@Val!B55|n0"
       ],
       [
-       "@Val!A9",
-       "@Val!B9|n0"
+       "@Val!A56",
+       "@Val!B56|n0"
       ],
       [
-       "@Val!A10",
-       "@Val!B10|n0"
+       "@Val!A57",
+       "@Val!B57|n0"
       ],
       [
-       "@Val!A11",
+       "@Val!A58",
        [
-        "@Val!B11|p0",
+        "@Val!B58|p0",
         "／",
-        "@Val!C11|p0",
+        "@Val!C58|p0",
         "／",
-        "@Val!D11|p0"
+        "@Val!D58|p0"
        ]
       ],
       [
-       "@Val!A12",
-       "@Val!B12"
+       "@Val!A59",
+       "@Val!B59"
       ]
      ]
     },
@@ -446,57 +665,57 @@
      "type": "table",
      "caption": "現價與市場隱含倍數",
      "head": [
-      "@Val!A15",
-      "@Val!B15",
-      "@Val!C15",
-      "@Val!D15"
+      "@Val!A62",
+      "@Val!B62",
+      "@Val!C62",
+      "@Val!D62"
      ],
      "rows": [
       [
-       "@Val!A16",
-       "@Val!B16|n2",
+       "@Val!A63",
+       "@Val!B63|n2",
        "",
        ""
       ],
       [
-       "@Val!A17",
-       "@Val!B17|x1",
-       "@Val!C17|x1",
-       "@Val!D17|x1"
+       "@Val!A64",
+       "@Val!B64|x1",
+       "@Val!C64|x1",
+       "@Val!D64|x1"
       ],
       [
-       "@Val!A18",
-       "@Val!B18|x1",
-       "@Val!C18|x1",
-       "@Val!D18|x1"
+       "@Val!A65",
+       "@Val!B65|x1",
+       "@Val!C65|x1",
+       "@Val!D65|x1"
       ],
       [
-       "@Val!A19",
-       "@Val!B19|x1",
-       "@Val!C19|x1",
-       "@Val!D19|x1"
+       "@Val!A66",
+       "@Val!B66|x1",
+       "@Val!C66|x1",
+       "@Val!D66|x1"
       ],
       [
-       "@Val!A20",
-       "@Val!B20|x1",
-       "@Val!C20|x1",
-       "@Val!D20|x1"
+       "@Val!A67",
+       "@Val!B67|x1",
+       "@Val!C67|x1",
+       "@Val!D67|x1"
       ],
       [
-       "@Val!A21",
-       "@Val!B21|x1",
+       "@Val!A68",
+       "@Val!B68|x1",
        "",
        ""
       ],
       [
-       "@Val!A22",
-       "@Val!B22|sp0",
+       "@Val!A69",
+       "@Val!B69|sp0",
        "",
        ""
       ],
       [
-       "@Val!A23",
-       "@Val!B23|n1",
+       "@Val!A70",
+       "@Val!B70|n1",
        "",
        ""
       ]
@@ -509,16 +728,16 @@
     {
      "type": "table",
      "head": [
-      "@Val!A38",
-      "@Val!B38",
-      "@Val!C38",
-      "@Val!D38",
-      "@Val!E38",
-      "@Val!F38"
+      "@Val!A85",
+      "@Val!B85",
+      "@Val!C85",
+      "@Val!D85",
+      "@Val!E85",
+      "@Val!F85"
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "39-42",
+      "rows": "86-89",
       "cols": [
        "A",
        "B",
@@ -540,7 +759,7 @@
     {
      "type": "note",
      "parts": [
-      "@Val!A43"
+      "@Val!A90"
      ]
     },
     {
@@ -553,15 +772,15 @@
      "type": "table",
      "caption": "循環位置",
      "head": [
-      "@Val!A26",
-      "@Val!B26",
-      "@Val!C26",
-      "@Val!D26",
-      "@Val!E26"
+      "@Val!A73",
+      "@Val!B73",
+      "@Val!C73",
+      "@Val!D73",
+      "@Val!E73"
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "27-29",
+      "rows": "74-76",
       "cols": [
        "A",
        "B",
@@ -585,16 +804,16 @@
     {
      "type": "table",
      "head": [
-      "@Val!A32",
-      "@Val!B32",
-      "@Val!C32",
-      "@Val!D32",
-      "@Val!E32",
-      "@Val!F32"
+      "@Val!A79",
+      "@Val!B79",
+      "@Val!C79",
+      "@Val!D79",
+      "@Val!E79",
+      "@Val!F79"
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "33-35",
+      "rows": "80-82",
       "cols": [
        "A",
        "B",
@@ -619,23 +838,23 @@
      "items": [
       {
        "label": "情境 A",
-       "value": "@Val!D33",
+       "value": "@Val!D80",
        "series": 0
       },
       {
        "label": "情境 B",
-       "value": "@Val!D34",
+       "value": "@Val!D81",
        "series": 1
       },
       {
        "label": "情境 C",
-       "value": "@Val!D35",
+       "value": "@Val!D82",
        "series": 2
       }
      ],
      "ref": {
       "label": "現價",
-      "value": "@Val!B16"
+      "value": "@Val!B63"
      },
      "fmt": "n0"
     },
@@ -643,17 +862,17 @@
      "type": "table",
      "caption": "十年本益比分位（規則值）",
      "head": [
-      "@Val!A80",
-      "@Val!B80",
-      "@Val!C80",
-      "@Val!D80",
-      "@Val!E80",
-      "@Val!F80",
-      "@Val!G80"
+      "@Val!A127",
+      "@Val!B127",
+      "@Val!C127",
+      "@Val!D127",
+      "@Val!E127",
+      "@Val!F127",
+      "@Val!G127"
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "81-83",
+      "rows": "128-130",
       "cols": [
        "A",
        "B",
@@ -677,13 +896,13 @@
     {
      "type": "note",
      "parts": [
-      "@Val!A51"
+      "@Val!A98"
      ]
     },
     {
      "type": "note",
      "parts": [
-      "@Val!A45"
+      "@Val!A92"
      ]
     }
    ]
@@ -871,6 +1090,38 @@
      "parts": [
       "@Sens!A26"
      ]
+    },
+    {
+     "type": "table",
+     "caption": "@Sens!A28",
+     "head": [
+      "@Sens!A29",
+      "@Sens!B29",
+      "@Sens!C29",
+      "@Sens!D29",
+      "@Sens!E29",
+      "@Sens!F29"
+     ],
+     "rowgen": {
+      "sheet": "Sens",
+      "rows": "30-36",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "",
+       "n2",
+       "n2",
+       "n2",
+       "sp1"
+      ]
+     }
     }
    ]
   },

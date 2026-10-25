@@ -1,4 +1,4 @@
-# Amkor Technology（AMKR）收支與估值模型 v0.1（AI 半導體 Project：封測次產業）
+# Amkor Technology（AMKR）收支與估值模型 v0.2（AI 半導體 Project：封測次產業）
 # 用法：python3 amkr/build_amkr.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不平移。金額：百萬美元（US$M）；EPS：美元（稀釋）。
 # 口徑：歸屬母公司淨利（GAAP）。結構比照 quanta/build_quanta.py：README、In、Q、Units、PL、Val、Recon、Sens、Sources。
@@ -196,10 +196,10 @@ TP_KEYS = []
 for s, w in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
     inp(f"tp_w{s}", f"目標價情境權重 {s}（A 順利／B 平平／C 不如預期）", "%", None, w, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）", "三者合計應為 100%（Val 頁第 0 節列示）")
     TP_KEYS.append(f"tp_w{s}")
-inp("tp_r", "折現率／要求報酬", "%", None, 0.10, None, "Assumed", "Andy 可改（工作單預設 10%）", "情境目標價折回一年；長期法折回五年")
+inp("tp_r", "折現率／要求報酬", "%", None, 0.10, None, "Assumed", "Andy 可改（工作單預設 10%；各市場同一值）", "DCF 與 Sens")
 inp("tp_g", "長期成長率", "%", None, 0.04, None, "Assumed", "Andy 可改（工作單預設 4%）", "成熟倍數與 FY2032 收斂目標（情境 B）")
 inp("tp_roe", "ROE（近三年平均，FY2023–25）", "%", None, "=AVERAGE(0.0941,0.0870,0.0866)", None, "Derived", "stockanalysis 比率頁：FY2023 9.41%、FY2024 8.70%、FY2025 8.66%", "單一來源；近 12 月 12.51%（同站）")
-inp("tp_w_dcf", "目標價中 DCF 的權重；其餘為 Comparable", "%", None, 0.6, None, "Assumed", "Andy 可改（工作單 2026-10-25 11:28 預設 0.6）", "—")
+inp("tp_w_dcf", "目標價中 DCF 的權重；其餘為 Comparable", "%", None, 0.5, None, "Assumed", "Andy 可改（工作單 2026-10-25 11:53 定 DCF／Comparable 各半；v0.1 為 0.6）", "—")
 inp("fade_gA", "情境 A：FY2032 營收年增收斂目標（tp_g＋2pt）", "%", None, "=tp_g+0.02", None, "Assumed", "工作單 2026-10-25 11:20 收斂法", "FY2030 起由 FY2029 年增線性收斂")
 inp("fade_gB", "情境 B：FY2032 營收年增收斂目標（＝tp_g）", "%", None, "=tp_g", None, "Assumed", "同上", "—")
 inp("fade_gC", "情境 C：FY2032 營收年增收斂目標（tp_g−2pt）", "%", None, "=tp_g-0.02", None, "Assumed", "同上", "—")
@@ -569,13 +569,14 @@ tset(23, "dcf12", "  DCF 情境價值推到 12 個月後（×(1＋tp_r)）", [f"
 tset(24, "dcftp", "DCF 目標價（情境加權）", ["=tp_wA*B23+tp_wB*C23+tp_wC*D23", None, None], "0.00", "Σ 權重 × 情境價值 ×(1＋r)；權重見 In 頁")
 V.cell(26, 1, "0.2 Comparable（市場主流同業前瞻 P/E）").font = BOLD
 hdr(V, 27, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"])
-PEERS = [("日月光投控（ASE Technology）", "ASX／3711.TW", 27.37, "2026-10-23"), ("長電科技（JCET）", "600584.SS", 35.64, "2026-09-30"),
-         ("通富微電（Tongfu）", "002156.SZ", 49.64, "2026-09-30"), ("力成（Powertech）", "6239.TW", 20.60, "2026-10-02"), ("京元電子（KYEC）", "2449.TW", 27.13, "2026-09-24")]
+# v0.2：非 A 股公司的同業不放 A 股（Andy 2026-10-25 11:53）——移除長電、通富，補矽格、南茂
+PEERS = [("日月光投控（ASE Technology）", "ASX／3711.TW", 27.37, "2026-10-23"), ("力成（Powertech）", "6239.TW", 20.60, "2026-10-02"),
+         ("京元電子（KYEC）", "2449.TW", 26.13, "2026-10-06"), ("矽格（Sigurd）", "6257.TW", 23.30, "2026-10-02"), ("南茂（ChipMOS）", "IMOS／8150.TW", 22.08, "2026-10-08")]
 for i, (nm, tk, pe, dt) in enumerate(PEERS, 28):
     V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pe); c.font = BLUE; c.number_format = "0.0"
     V.cell(i, 4, dt); V.cell(i, 5, "stockanalysis.com forward PE（分析師共識；價格日期如左）"); V.cell(i, 6, "Interested-party")
 PEER_LAST = 27 + len(PEERS)
-tset(33, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C28:C{PEER_LAST})", None, None], "0.0", "封測同業：日月光、長電、通富、力成、京元電（券商常用的 OSAT 比較組）")
+tset(33, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C28:C{PEER_LAST})", None, None], "0.0", "台美封測同業：日月光、力成、京元電、矽格、南茂（不放 A 股：長電、通富有結構性溢價）")
 tset(34, "feps", "12 個月後的前瞻 EPS（情境加權）", [f"=tp_wA*(2/12*B{EPSR[2027]}+10/12*B{EPSR[2028]})+tp_wB*(2/12*C{EPSR[2027]}+10/12*C{EPSR[2028]})+tp_wC*(2/12*D{EPSR[2027]}+10/12*D{EPSR[2028]})", None, None], "0.00",
      "約 2027-10 時的未來 12 月 EPS ≈ 2／12 × FY2027＋10／12 × FY2028（會計年度＝日曆年）")
 tset(35, "comptp", "Comparable 目標價", ["=B33*B34", None, None], "0.00", "同業中位數 × 前瞻 EPS")
@@ -595,7 +596,7 @@ tset(47, "pr", "歷史倍數檢查：現價隱含 P/E 的十年分位（A／B／
 V.cell(48, 1, "目標價方法")
 V["B48"] = ("DCF：股東現金流＝GAAP 稀釋 EPS ×（1 − g／ROE），r＝10%、g＝4%、ROE 為近三年平均約 9%（再投資率約 45%），FY2027–32 明確期＋永續；"
             "Amkor 資本密集，但 FY2030 起只有收斂法、亞利桑那第二期支出未建，未改用淨利＋折舊－資本支出，現金流偏高估。"
-            "Comparable：日月光、長電、通富、力成、京元電前瞻 P/E 中位數；中國同業倍數高（35–50x）、部分價格為 9 月底，偏高估。"
+            "Comparable：台美封測同業（日月光、力成、京元電、矽格、南茂）前瞻 P/E 中位數；不放 A 股（長電、通富約 35–50x，結構性溢價）；京元電以 AI 測試為主、倍數較高，部分價格為 10 月上旬。"
             "情境對應：A＝順利（顆數基準）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6、通訊下滑）")
 for r_ in (24, 35, 39):
     V[f"B{r_}"].fill = KEY
@@ -651,9 +652,9 @@ def tp_case(i, name, setting, r="tp_r", g="tp_g", w="tp_w_dcf"):
     SE[f"F{i}"] = f"=E{i}/E${TPS0 + 2}-1"
     for c in "CDE": SE[f"{c}{i}"].number_format = "0.00"
     SE[f"F{i}"].number_format = "0.0%"
-TPCASES = [("基準", "r 10%、g 4%、DCF 權重 0.6", {}), ("折現率 +1pt", "r 11%", dict(r="(tp_r+0.01)")), ("折現率 −1pt", "r 9%", dict(r="(tp_r-0.01)")),
+TPCASES = [("基準", "r 10%、g 4%、DCF 權重 0.5", {}), ("折現率 +1pt", "r 11%", dict(r="(tp_r+0.01)")), ("折現率 −1pt", "r 9%", dict(r="(tp_r-0.01)")),
            ("長期成長 +1pt", "g 5%", dict(g="(tp_g+0.01)")), ("長期成長 −1pt", "g 3%", dict(g="(tp_g-0.01)")),
-           ("DCF 權重 0.4", "", dict(w="0.4")), ("DCF 權重 0.8", "", dict(w="0.8"))]
+           ("DCF 權重 0.3", "Comparable 0.7", dict(w="0.3")), ("DCF 權重 0.7", "Comparable 0.3", dict(w="0.7"))]
 for k, (nm, st, kw) in enumerate(TPCASES):
     tp_case(TPS0 + 2 + k, nm, st, **kw)
 TPS_LAST = TPS0 + 1 + len(TPCASES)
@@ -739,8 +740,8 @@ SO.column_dimensions["A"].width = 100; SO.column_dimensions["B"].width = 130
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Amkor Technology（AMKR）收支與估值模型 v0.1（AI 半導體 Project：封測次產業）　2026-10-25", True),
- ("版本：v0.1（初版）。Amkor 為全球第二大封測廠，承接台積電 CoWoS 後段（oS、測試）與 2.5D／HDFO 委外；亞利桑那廠為美國第一座量產先進封裝廠。日月光模型待 10-29 法說後建立，本版未讀。", False),
+lines = [("Amkor Technology（AMKR）收支與估值模型 v0.2（AI 半導體 Project：封測次產業）　2026-10-25", True),
+ ("版本：v0.2（2026-10-25：tp_w_dcf 改 0.5；Comparable 同業移除 A 股；v0.1 初版）。Amkor 為全球第二大封測廠，承接台積電 CoWoS 後段（oS、測試）與 2.5D／HDFO 委外；亞利桑那廠為美國第一座量產先進封裝廠。日月光模型待 10-29 法說後建立，本版未讀。", False),
  ("模型命題：Amkor 的 AI 先進封裝營收＝AI 加速器顆數（tsmc 成品）× 後段委外比例 × Amkor 份額 × 每顆封測金額（隨封裝面積上升），FY2026 約占營收一成；其餘九成是通訊（Apple 占 29.8%）、車用與工業、消費與非 AI 運算。毛利率只有 14–19%，資本支出 2026 年約 US$2.75B（營收的三成以上），亞利桑那的啟動成本與折舊是 2027–29 毛利率的關鍵。", False),
  ("核心問題：AI 封裝的高成長能不能抵過通訊（Apple）停滯與亞利桑那折舊，讓 EPS 在 FY2027–28 持續成長；約 14 倍前瞻 P/E 隱含什麼路徑。", False), ("", False),
  ("會計年度＝日曆年，FY(t)＝CY(t)，不平移。預測期 FY2027–FY2029（三年）。金額：百萬美元；EPS：美元（稀釋）。口徑：歸屬母公司淨利（GAAP）。3Q26 財報 2026-10-26 公布，本版未納入。", False), ("", False),
@@ -749,7 +750,7 @@ lines = [("Amkor Technology（AMKR）收支與估值模型 v0.1（AI 半導體 P
  ("其他終端：通訊依情境（A +3%／B 0%／C −6% 於 FY2027），車用與工業 +10%、消費 +3%（公司投資人日 CAGR），非 AI 運算 +3%。亞利桑那第一期營收 FY2028–29 依情境（Assumed）。", False),
  ("毛利：本業毛利＝FY2026 錨點＋現金流通率 40%（Assumed）× 營收增量 − 本業折舊增量（資本支出率 14%、年限 7 年）；亞利桑那毛利＝營收 × 55% − 固定現金成本 − 折舊（第一期 US$3.5B × (1 − 補助 35%) ÷ 12 年）。營業費用彈性 0.5；營業外、稅率 20%、股數持平。", False),
  ("校準：FY2026 ＝ 1H26 實績＋3Q26 公司指引（終端市場季增說法、毛利率 19%、營業費用 140）＋4Q26 假設。不用券商數字（只在 Recon 對帳）。", False),
- ("估值：Val 第 0 節目標價＝0.6 × DCF 目標價（股東現金流＝EPS ×（1 − g／ROE），FY2027–32 明確期＋永續，r 10%、g 4%，三情境權重 0.3／0.5／0.2）＋0.4 × Comparable 目標價（日月光、長電、通富、力成、京元電前瞻 P/E 中位數 × 12 個月後前瞻 EPS）；另列 Comparable 單獨目標價、市場共識目標價與差距拆解。十年 P/E 規則值 × FY2027 EPS 保留為參考（不是目標價）。情境對應：A＝順利、B＝平平、C＝不如預期（原為顆數情境）。本版未做先驗，無 Andy 合理 P/E 對照。", False),
+ ("估值：Val 第 0 節目標價＝0.5 × DCF 目標價（股東現金流＝EPS ×（1 − g／ROE），FY2027–32 明確期＋永續，r 10%、g 4%，三情境權重 0.3／0.5／0.2）＋0.5 × Comparable 目標價（日月光、力成、京元電、矽格、南茂前瞻 P/E 中位數 × 12 個月後前瞻 EPS；不放 A 股）；另列 Comparable 單獨目標價、市場共識目標價與差距拆解。十年 P/E 規則值 × FY2027 EPS 保留為參考（不是目標價）。情境對應：A＝順利、B＝平平、C＝不如預期（原為顆數情境）。本版未做先驗，無 Andy 合理 P/E 對照。", False),
  ("預估期間：FY2027–FY2029 由驅動因子推導；FY2030 起為收斂法，非驅動因子推導（營收年增由 FY2029 線性收斂到 fade_g、淨利率收斂到 fade_m，FY2032 達到；PL 頁灰底）。", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。公司數字取自 SEC 8-K 與 10-K；法說內容經逐字稿與摘要；券商與資料商為 Interested-party。", False),
  ("", False),
