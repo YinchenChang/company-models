@@ -1,0 +1,1097 @@
+{
+ "company": "戴爾",
+ "ticker": "DELL",
+ "thesis": "@README!A3",
+ "question": "在手訂單能否在下一個會計年度轉成人工智慧伺服器營收再成長並守住營益率；現價高於品牌同業的前瞻本益比隱含什麼路徑",
+ "scenarios": [
+  {
+   "key": "A",
+   "name": "情境 A（順利）"
+  },
+  {
+   "key": "B",
+   "name": "情境 B（平平）"
+  },
+  {
+   "key": "C",
+   "name": "情境 C（不如預期）"
+  }
+ ],
+ "sections": [
+  {
+   "id": "thesis",
+   "title": "命題與核心問題",
+   "intro": "@README!A4",
+   "blocks": [
+    {
+     "type": "kv",
+     "items": [
+      [
+       "情境 A",
+       "@PL!A60"
+      ],
+      [
+       "情境 B",
+       "@PL!A97"
+      ],
+      [
+       "情境 C",
+       "@PL!A134"
+      ],
+      [
+       "會計年度與口徑",
+       "@README!A8"
+      ],
+      [
+       "預估期間",
+       "@README!A15"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "drivers",
+   "title": "驅動因子 → 推導量",
+   "intro": "標記沿用 Excel：Verified、Interested-party、Analogy、Assumed、Derived。輸入取自 In 頁，推導量取自 PL 頁情境 A 與 Units 頁。",
+   "blocks": [
+    {
+     "type": "table",
+     "head": [
+      "輸入",
+      "基準值",
+      "標記",
+      "推導量",
+      "因果方向"
+     ],
+     "rows": [
+      [
+       "@In!B10",
+       [
+        "@In!E10|n2",
+        " ",
+        "@In!C10"
+       ],
+       "@In!G10|tag",
+       [
+        "商用 GPU 系統市場（FY2028）：",
+        "@Units!D8|n0"
+       ],
+       "顆數讀台積電模型（同字母情境係數）；乘每顆系統價值得到整櫃售價市場"
+      ],
+      [
+       "@In!B20",
+       [
+        "@In!E20|n1",
+        " ",
+        "@In!C20"
+       ],
+       "@In!G20|tag",
+       [
+        "商用 GPU 系統市場（FY2027）：",
+        "@Units!C8|n0"
+       ],
+       "橋接表機架價除以每架顆數；Dell 為品牌商，營收含整櫃與 GPU"
+      ],
+      [
+       "@PL!A66",
+       [
+        "@PL!D66|p2"
+       ],
+       "Derived",
+       [
+        "AI 伺服器營收（FY2027）：",
+        "@PL!D70|n1"
+       ],
+       "以公司 AI 伺服器營收指引校準；分母為全部商用 GPU 系統"
+      ],
+      [
+       "@In!B23",
+       [
+        "@In!E23|n2",
+        " ",
+        "@In!C23"
+       ],
+       "@In!G23|tag",
+       [
+        "Dell 有效份額（FY2028）：",
+        "@PL!E69|p2"
+       ],
+       "雲端與新興雲端直接向代工廠採購、同業競價為下檔；在手訂單為上檔"
+      ],
+      [
+       "@In!B28",
+       [
+        "@In!E28|n2",
+        " ",
+        "@In!C28"
+       ],
+       "@In!G28|tag",
+       [
+        "情境 C 的 AI 伺服器營收（FY2029）：",
+        "@PL!F144|n1"
+       ],
+       "公司特有變數依情境調整：需求放緩時信用較弱的客戶先縮"
+      ],
+      [
+       "@In!B39",
+       [
+        "@In!E39|p0",
+        " ",
+        "@In!C39"
+       ],
+       "@In!G39|tag",
+       [
+        "AI 伺服器營業利益率（FY2027）：",
+        "@PL!D81|p2"
+       ],
+       "公司不揭露 AI 營益率；以非 AI 營益率拆分，殘差即 AI 營益率"
+      ],
+      [
+       "@In!B41",
+       [
+        "@In!E41|p1",
+        " ",
+        "@In!C41"
+       ],
+       "@In!G41|tag",
+       [
+        "營業利益率（FY2028）：",
+        "@PL!E87|p2"
+       ],
+       "新世代機架單價高、轉手 GPU 比重高，營益率百分比下降"
+      ],
+      [
+       "@In!B48",
+       [
+        "@In!E48|p0",
+        " ",
+        "@In!C48"
+       ],
+       "@In!G48|tag",
+       [
+        "傳統伺服器與網通（FY2028）：",
+        "@PL!E72|n1"
+       ],
+       "與 AI 情境無關；記憶體轉嫁帶動的高基期回落"
+      ],
+      [
+       "@In!B54",
+       [
+        "@In!E54|p0",
+        " ",
+        "@In!C54"
+       ],
+       "@In!G54|tag",
+       [
+        "個人電腦（FY2028）：",
+        "@PL!E75|n1"
+       ],
+       "與 AI 情境無關"
+      ],
+      [
+       "@In!B59",
+       [
+        "@In!E59|p0",
+        " ",
+        "@In!C59"
+       ],
+       "@In!G59|tag",
+       [
+        "EPS（FY2028）：",
+        "@PL!E91|n2"
+       ],
+       "回購使股數逐年下降，EPS 成長快於淨利"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "商用 GPU 系統市場、Dell 份額與組裝廠份額對照（情境 A）",
+     "head": [
+      "@Units!A3",
+      "@Units!B3",
+      "@Units!C3",
+      "@Units!D3",
+      "@Units!E3",
+      "@Units!F3"
+     ],
+     "rowgen": {
+      "sheet": "Units",
+      "rows": "4-15",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "",
+       "n1",
+       "n1",
+       "n1",
+       "n1"
+      ],
+      "row_fmt": {
+       "9": {
+        "C": "p2",
+        "D": "p2",
+        "E": "p2",
+        "F": "p2"
+       },
+       "13": {
+        "C": "p2",
+        "D": "p2",
+        "E": "p2",
+        "F": "p2"
+       },
+       "14": {
+        "C": "p2",
+        "D": "p2",
+        "E": "p2",
+        "F": "p2"
+       },
+       "15": {
+        "C": "p2",
+        "D": "p2",
+        "E": "p2",
+        "F": "p2"
+       },
+       "4": {
+        "C": "n2",
+        "D": "n2",
+        "E": "n2",
+        "F": "n2"
+       },
+       "5": {
+        "C": "n2",
+        "D": "n2",
+        "E": "n2",
+        "F": "n2"
+       },
+       "6": {
+        "C": "n1",
+        "D": "n1",
+        "E": "n1",
+        "F": "n1"
+       },
+       "7": {
+        "C": "n1",
+        "D": "n1",
+        "E": "n1",
+        "F": "n1"
+       }
+      }
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Units!A17"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pl",
+   "title": "三情境損益",
+   "intro": "@PL!A2",
+   "blocks": [
+    {
+     "type": "pl",
+     "years": "@PL!C3:I3",
+     "metrics": [
+      {
+       "name": [
+        "營收（",
+        "@PL!B5",
+        "）"
+       ],
+       "fmt": "n0",
+       "rows": {
+        "A": "@PL!C5:I5",
+        "B": "@PL!C19:I19",
+        "C": "@PL!C33:I33"
+       },
+       "chart": true
+      },
+      {
+       "name": "淨利率",
+       "fmt": "p2",
+       "rows": {
+        "A": "@PL!C14:I14",
+        "B": "@PL!C28:I28",
+        "C": "@PL!C42:I42"
+       }
+      },
+      {
+       "name": [
+        "EPS（",
+        "@PL!B15",
+        "，non-GAAP）"
+       ],
+       "fmt": "n2",
+       "rows": {
+        "A": "@PL!C15:I15",
+        "B": "@PL!C29:I29",
+        "C": "@PL!C43:I43"
+       },
+       "chart": true
+      }
+     ]
+    },
+    {
+     "type": "pl",
+     "years": "@PL!C3:G3",
+     "metrics": [
+      {
+       "name": [
+        "AI 伺服器營收（",
+        "@PL!B7",
+        "）"
+       ],
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!C7:G7",
+        "B": "@PL!C21:G21",
+        "C": "@PL!C35:G35"
+       },
+       "chart": true
+      },
+      {
+       "name": [
+        "傳統伺服器與網通（",
+        "@PL!B8",
+        "）"
+       ],
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!C8:G8",
+        "B": "@PL!C22:G22",
+        "C": "@PL!C36:G36"
+       }
+      },
+      {
+       "name": [
+        "個人電腦（",
+        "@PL!B10",
+        "）"
+       ],
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!C10:G10",
+        "B": "@PL!C24:G24",
+        "C": "@PL!C38:G38"
+       }
+      },
+      {
+       "name": "AI 伺服器營業利益率",
+       "fmt": "p2",
+       "rows": {
+        "A": "@PL!C11:G11",
+        "B": "@PL!C25:G25",
+        "C": "@PL!C39:G39"
+       },
+       "chart": true,
+       "ymin": "auto"
+      },
+      {
+       "name": "營業利益率",
+       "fmt": "p2",
+       "rows": {
+        "A": "@PL!C12:G12",
+        "B": "@PL!C26:G26",
+        "C": "@PL!C40:G40"
+       }
+      }
+     ]
+    },
+    {
+     "type": "kv",
+     "items": [
+      [
+       "@PL!A47",
+       "@PL!D47|n3"
+      ],
+      [
+       "@PL!A48",
+       "@PL!D48|n3"
+      ],
+      [
+       "@PL!A49",
+       "@PL!D49|n3"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "valuation",
+   "title": "估值",
+   "intro": "@Val!A1",
+   "blocks": [
+    {
+     "type": "table",
+     "caption": "@Val!A37",
+     "head": [
+      "@Val!A38",
+      "@Val!B38",
+      "@Val!C38",
+      "@Val!D38",
+      "@Val!E38"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "39-49",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "n2",
+       "n2",
+       "n2",
+       ""
+      ],
+      "row_fmt": {
+       "42": {
+        "B": "sp1"
+       },
+       "43": {
+        "B": "sp1"
+       },
+       "44": {
+        "B": "sp1",
+        "C": "n2"
+       },
+       "45": {
+        "B": "sp1",
+        "C": "x1",
+        "D": "x1"
+       },
+       "47": {
+        "B": "p0",
+        "C": "p0",
+        "D": "p0"
+       },
+       "48": {
+        "B": ""
+       },
+       "49": {
+        "B": ""
+       }
+      }
+     }
+    },
+    {
+     "type": "h3",
+     "text": "重點觀察"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A5",
+      "@README!A6",
+      "@README!A7"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!A50",
+      "：",
+      "@Val!B50"
+     ]
+    },
+    {
+     "type": "bars",
+     "title": "目標價與現價",
+     "fmt": "n0",
+     "items": [
+      {
+       "label": "@Val!A39",
+       "value": "@Val!B39",
+       "series": 0
+      },
+      {
+       "label": "@Val!A24",
+       "value": "@Val!B24",
+       "series": 1
+      },
+      {
+       "label": "@Val!A40",
+       "value": "@Val!B40",
+       "series": 2
+      },
+      {
+       "label": "@Val!A41",
+       "value": "@Val!B41",
+       "series": 1
+      }
+     ],
+     "ref": {
+      "label": "@Val!A55",
+      "value": "@Val!B55"
+     }
+    },
+    {
+     "type": "table",
+     "caption": "@Val!A5",
+     "head": [
+      "@Val!A6",
+      "@Val!B6",
+      "@Val!C6",
+      "@Val!D6",
+      "@Val!E6",
+      "@Val!F6",
+      "@Val!G6"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "7-24",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G"
+      ],
+      "fmts": [
+       "",
+       "n2",
+       "n2",
+       "n2",
+       "",
+       "n3",
+       "n3"
+      ],
+      "row_fmt": {
+       "15": {
+        "B": "p1"
+       },
+       "22": {
+        "B": "n0",
+        "C": "n0",
+        "D": "n0"
+       },
+       "23": {
+        "B": "n0",
+        "C": "n0",
+        "D": "n0"
+       },
+       "24": {
+        "B": "n0"
+       }
+      }
+     }
+    },
+    {
+     "type": "table",
+     "caption": "@Val!A26",
+     "head": [
+      "@Val!A27",
+      "@Val!B27",
+      "@Val!C27",
+      "@Val!D27",
+      "@Val!F27"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "28-32",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "",
+       "x1",
+       "",
+       "tag"
+      ]
+     }
+    },
+    {
+     "type": "kv",
+     "items": [
+      [
+       "@Val!A33",
+       "@Val!B33|x1"
+      ],
+      [
+       "@Val!A34",
+       "@Val!B34|n2"
+      ],
+      [
+       "@Val!A35",
+       "@Val!B35|n0"
+      ]
+     ]
+    },
+    {
+     "type": "kv",
+     "items": [
+      [
+       "@Val!A55",
+       "@Val!B55|n2"
+      ],
+      [
+       "@Val!A57",
+       "@Val!B57|x1"
+      ],
+      [
+       "@Val!A58",
+       "@Val!B58|x1"
+      ],
+      [
+       "@Val!A62",
+       "@Val!B62|x1"
+      ],
+      [
+       "@Val!A63",
+       "@Val!B63|x1"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "十年 P/E 規則值（FY2027 EPS 乘依循環位置的倍數）"
+    },
+    {
+     "type": "table",
+     "head": [
+      "@Val!A72",
+      "@Val!B72",
+      "@Val!D72",
+      "@Val!E72",
+      "@Val!F72",
+      "@Val!G72"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "73-75",
+      "cols": [
+       "A",
+       "B",
+       "D",
+       "E",
+       "F",
+       "G"
+      ],
+      "fmts": [
+       "",
+       "n2",
+       "x1",
+       "n0",
+       "sp1",
+       "x1"
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "head": [
+      "@Val!A66",
+      "@Val!B66",
+      "@Val!C66",
+      "@Val!D66"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "67-69",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D"
+      ],
+      "fmts": [
+       "",
+       "yr",
+       "",
+       "x1"
+      ]
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!A2"
+     ]
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：年底 P/E（兩來源；重新上市後各年）",
+     "head": [
+      "@Val!A87",
+      "@Val!B87",
+      "@Val!C87",
+      "@Val!D87"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "91-97",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D"
+      ],
+      "fmts": [
+       "",
+       "x1",
+       "x1",
+       "x1"
+      ]
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!A84"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "recon",
+   "title": "對帳：由上而下與由下而上",
+   "intro": "@Recon!A1",
+   "blocks": [
+    {
+     "type": "table",
+     "head": [
+      "@Recon!A3",
+      "@Recon!B3",
+      "@Recon!C3",
+      "@Recon!D3",
+      "@Recon!E3",
+      "@Recon!F3",
+      "@Recon!G3",
+      "@Recon!H3",
+      "@Recon!I3"
+     ],
+     "rowgen": {
+      "sheet": "Recon",
+      "rows": "4-23",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H",
+       "I"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "sp1",
+       "n1",
+       "sp1",
+       "n1",
+       "sp1",
+       ""
+      ],
+      "row_fmt": {
+       "14": {
+        "B": "p1",
+        "C": "p1",
+        "E": "p1",
+        "G": "p1",
+        "D": "sp1",
+        "F": "sp1",
+        "H": "sp1"
+       },
+       "15": {
+        "B": "p1",
+        "C": "p1",
+        "E": "p1",
+        "G": "p1",
+        "D": "sp1",
+        "F": "sp1",
+        "H": "sp1"
+       },
+       "16": {
+        "B": "p1",
+        "C": "p1",
+        "E": "p1",
+        "G": "p1",
+        "D": "sp1",
+        "F": "sp1",
+        "H": "sp1"
+       },
+       "19": {
+        "B": "p1",
+        "C": "p1",
+        "E": "p1",
+        "G": "p1",
+        "D": "sp1",
+        "F": "sp1",
+        "H": "sp1"
+       },
+       "20": {
+        "B": "p1",
+        "C": "p1",
+        "E": "p1",
+        "G": "p1",
+        "D": "sp1",
+        "F": "sp1",
+        "H": "sp1"
+       },
+       "17": {
+        "C": "n2",
+        "E": "n2",
+        "G": "n2"
+       },
+       "6": {
+        "B": "n2",
+        "C": "n2",
+        "E": "n2",
+        "G": "n2"
+       },
+       "8": {
+        "B": "n2",
+        "C": "n2",
+        "E": "n2",
+        "G": "n2"
+       },
+       "9": {
+        "B": "n2",
+        "C": "n2",
+        "E": "n2",
+        "G": "n2"
+       },
+       "21": {
+        "B": "n2",
+        "C": "n2",
+        "E": "n2",
+        "G": "n2"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "sens",
+   "title": "敏感度",
+   "intro": "@Sens!A1",
+   "blocks": [
+    {
+     "type": "tornado",
+     "title": "FY2028 EPS 相對基準的變動（情境 A，一次動一個輸入；另列情境 B、C）",
+     "sheet": "Sens",
+     "rows": "5-25",
+     "label_col": "A",
+     "value_col": "F",
+     "fmt": "sp1"
+    },
+    {
+     "type": "tornado",
+     "title": "FY2029 EPS 相對基準的變動",
+     "sheet": "Sens",
+     "rows": "5-25",
+     "label_col": "A",
+     "value_col": "J",
+     "fmt": "sp1"
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：全部案例的 FY2028、FY2029 營收、營益率與 EPS",
+     "head": [
+      "@Sens!A3",
+      "@Sens!B3",
+      "@Sens!C3",
+      "@Sens!D3",
+      "@Sens!E3",
+      "@Sens!F3",
+      "@Sens!G3",
+      "@Sens!H3",
+      "@Sens!I3",
+      "@Sens!J3"
+     ],
+     "rowgen": {
+      "sheet": "Sens",
+      "rows": "4-25",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H",
+       "I",
+       "J"
+      ],
+      "fmts": [
+       "",
+       "",
+       "n1",
+       "p2",
+       "n2",
+       "sp1",
+       "n1",
+       "p2",
+       "n2",
+       "sp1"
+      ]
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Sens!A27"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Sens!A29",
+     "head": [
+      "@Sens!A30",
+      "@Sens!B30",
+      "@Sens!C30",
+      "@Sens!D30",
+      "@Sens!E30",
+      "@Sens!F30"
+     ],
+     "rowgen": {
+      "sheet": "Sens",
+      "rows": "31-37",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "",
+       "n0",
+       "n0",
+       "n0",
+       "sp1"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "status",
+   "title": "資料狀態",
+   "blocks": [
+    {
+     "type": "kv",
+     "items": [
+      [
+       "模型版本",
+       [
+        "$version",
+        "（",
+        "$date",
+        "）"
+       ]
+      ],
+      [
+       "來源 xlsx",
+       "$xlsx"
+      ],
+      [
+       "來源 xlsx 的雜湊指紋（取代建置 commit，理由見 README）",
+       "$sha"
+      ],
+      [
+       "Tokenomics 快照版本",
+       "本模型不直接讀取 Tokenomics 快照；經由橋接表間接使用（機架單價、每架顆數），版本見下方上游成品的標題。"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "上游成品（市場層與其他公司模型）"
+    },
+    {
+     "type": "upstream",
+     "sheets": [
+      "In",
+      "Units"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "待複核項目"
+    },
+    {
+     "type": "list",
+     "items": [
+      "公司原文取自財報新聞稿附件；指引為公司說法（Interested-party）；共識與同業倍數取自資料商。",
+      "@Q!A2",
+      "標為「未找到」的項目（見下方清單）待找到來源後補上。"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "已知限制"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A18"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "「未找到」清單"
+    },
+    {
+     "type": "scan",
+     "needle": "未找到",
+     "collapse": true,
+     "summary": "展開：標為「未找到」的輸入與來源",
+     "sheets": {
+      "In": [
+       "B",
+       "H",
+       "I"
+      ],
+      "Q": [
+       "A",
+       "I"
+      ],
+      "Sources": [
+       "A",
+       "B"
+      ],
+      "Recon": [
+       "A",
+       "I",
+       "J"
+      ]
+     },
+     "empty": "沒有標為未找到的項目。"
+    }
+   ]
+  }
+ ]
+}
