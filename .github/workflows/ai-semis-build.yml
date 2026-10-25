@@ -57,6 +57,7 @@ on:
       - 'alab/**'
       - 'liteon/**'
       - 'ter/**'
+      - 'auras/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -110,6 +111,7 @@ on:
       - 'alab/**'
       - 'liteon/**'
       - 'ter/**'
+      - 'auras/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -151,6 +153,7 @@ jobs:
             "quanta|python3 quanta/build_quanta.py|quanta/dist"
             "innolight|python3 innolight/build_innolight.py|innolight/dist"
             "avgo|python3 avgo/build_avgo.py|avgo/dist"
+            "auras|python3 auras/build_auras.py|auras/dist"
             "ter|python3 ter/build_ter.py|ter/dist"
             "liteon|python3 liteon/build_liteon.py|liteon/dist"
             "alab|python3 alab/build_alab.py|alab/dist"
