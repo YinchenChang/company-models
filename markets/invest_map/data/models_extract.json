@@ -1,51 +1,65 @@
 {
  "NVDA": {
-  "model": "nvidia/dist/20261025_NVIDIA模型_v0.1.2.xlsx",
-  "price": {
-   "value": 212.21,
-   "cell": "Val!B6",
-   "file": "nvidia/dist/20261025_NVIDIA模型_v0.1.2.xlsx"
+  "model": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx",
+  "v2": true,
+  "tp": {
+   "value": 251.880296390576,
+   "cell": "Val!B40",
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
   },
-  "price_date": "2026-10-22",
+  "tp_dcf": {
+   "value": 235.04668098705,
+   "cell": "Val!B23",
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+  },
+  "tp_comp": {
+   "value": 268.713911794101,
+   "cell": "Val!B41",
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+  },
+  "tp_cons": {
+   "value": 328.95,
+   "cell": "Val!B42",
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+  },
+  "old_rule": {
+   "value": 467.571184194614,
+   "cell": "Val!B170",
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+  },
+  "dcf_C": {
+   "value": 128.622689303977,
+   "cell": "Val!B47",
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+  },
+  "dcf_A": {
+   "value": 313.135963327362,
+   "cell": "Val!C47",
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+  },
+  "model_px": {
+   "value": 210.96,
+   "cell": "Val!B57",
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx",
+   "date": "2026-10-23"
+  },
   "pe_fy28": [
    {
-    "value": 14.4210102045224,
-    "cell": "Val!B7",
-    "file": "nvidia/dist/20261025_NVIDIA模型_v0.1.2.xlsx"
+    "value": 14.3360648072478,
+    "cell": "Val!B58",
+    "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
    },
    {
-    "value": 14.3992004797279,
-    "cell": "Val!C7",
-    "file": "nvidia/dist/20261025_NVIDIA模型_v0.1.2.xlsx"
+    "value": 14.3143835502728,
+    "cell": "Val!C58",
+    "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
    },
    {
-    "value": 14.3992004797279,
-    "cell": "Val!D7",
-    "file": "nvidia/dist/20261025_NVIDIA模型_v0.1.2.xlsx"
+    "value": 14.3143835502728,
+    "cell": "Val!D58",
+    "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
    }
   ],
-  "eps_fy28_A": {
-   "value": 14.7153352636455,
-   "cell": "Val!C27",
-   "file": "nvidia/dist/20261025_NVIDIA模型_v0.1.2.xlsx"
-  },
-  "eps_fy29_C": {
-   "value": 9.9233998538598,
-   "cell": "Val!C41",
-   "file": "nvidia/dist/20261025_NVIDIA模型_v0.1.2.xlsx"
-  },
-  "eps_fy29_A": {
-   "value": 15.8231422227187,
-   "cell": "Val!C31",
-   "file": "nvidia/dist/20261025_NVIDIA模型_v0.1.2.xlsx"
-  },
-  "andy_pe": {
-   "value": 25,
-   "cell": null,
-   "file": null,
-   "source": "AI半導體 先驗比對_NVDA_20261023.md N7b「合理 P/E＝現價（約 25x）」"
-  },
-  "rule_note": "規則值不適用（落後倍數含高成長期溢價；模型 Val 第 3 節）",
   "cash": {
    "basis": "淨利",
    "label": "PL 頁各情境模型年度淨利（不含實績）",
@@ -111,71 +125,70 @@
      "PL!G292"
     ]
    ],
-   "file": "nvidia/dist/20261025_NVIDIA模型_v0.1.2.xlsx"
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
   }
  },
  "AVGO": {
-  "model": "avgo/dist/20261025_Broadcom模型_v0.1.1.xlsx",
-  "price": {
-   "value": 323.24,
-   "cell": "Val!B6",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.1.1.xlsx"
+  "model": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx",
+  "v2": true,
+  "tp": {
+   "value": 340.643248720447,
+   "cell": "Val!B40",
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
   },
-  "price_date": "2026-10-22",
+  "tp_dcf": {
+   "value": 324.563443935248,
+   "cell": "Val!B23",
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+  },
+  "tp_comp": {
+   "value": 356.723053505646,
+   "cell": "Val!B41",
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+  },
+  "tp_cons": {
+   "value": 529.1,
+   "cell": "Val!B42",
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+  },
+  "old_rule": {
+   "value": 647.367676593253,
+   "cell": "Val!B104",
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+  },
+  "dcf_C": {
+   "value": 221.914547314327,
+   "cell": "Val!B47",
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+  },
+  "dcf_A": {
+   "value": 394.262829032538,
+   "cell": "Val!C47",
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+  },
+  "model_px": {
+   "value": 321.68,
+   "cell": "Val!B57",
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx",
+   "date": "2026-10-23"
+  },
   "pe_fy28": [
    {
-    "value": 15.3728496895549,
-    "cell": "Val!B9",
-    "file": "avgo/dist/20261025_Broadcom模型_v0.1.1.xlsx"
+    "value": 15.2986582357877,
+    "cell": "Val!B60",
+    "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
    },
    {
-    "value": 18.1211848859495,
-    "cell": "Val!C9",
-    "file": "avgo/dist/20261025_Broadcom模型_v0.1.1.xlsx"
+    "value": 18.0337295944568,
+    "cell": "Val!C60",
+    "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
    },
    {
-    "value": 21.8108621240607,
-    "cell": "Val!D9",
-    "file": "avgo/dist/20261025_Broadcom模型_v0.1.1.xlsx"
+    "value": 21.7055999507111,
+    "cell": "Val!D60",
+    "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
    }
   ],
-  "andy_pe": {
-   "value": 25.0,
-   "cell": null,
-   "file": null,
-   "source": "avgo/dist/20261025_Broadcom模型_v0.1.1.xlsx Val!A31 標題"
-  },
-  "andy27_A": {
-   "value": 451.946157912072,
-   "cell": "Val!C33",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.1.1.xlsx"
-  },
-  "andy28_A": {
-   "value": 525.667014456705,
-   "cell": "Val!F33",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.1.1.xlsx"
-  },
-  "andy27_B": {
-   "value": 451.946157912072,
-   "cell": "Val!C34",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.1.1.xlsx"
-  },
-  "andy28_B": {
-   "value": 445.942141800326,
-   "cell": "Val!F34",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.1.1.xlsx"
-  },
-  "andy27_C": {
-   "value": 451.946157912072,
-   "cell": "Val!C35",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.1.1.xlsx"
-  },
-  "andy28_C": {
-   "value": 370.503465385049,
-   "cell": "Val!F35",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.1.1.xlsx"
-  },
-  "rule_note": "十年倍數待前瞻 P/E 歷史（Bloomberg）；規則值未算",
   "cash": {
    "basis": "淨利",
    "label": "PL 頁各情境模型年度淨利（不含實績）",
@@ -221,80 +234,52 @@
      "PL!G39"
     ]
    ],
-   "file": "avgo/dist/20261025_Broadcom模型_v0.1.1.xlsx"
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
   }
  },
  "000660": {
-  "model": "skhynix/dist/20261025_SK海力士模型_v0.4.2.xlsx",
-  "pb_rule": {
-   "見頂": {
-    "value": 1252559.889355,
-    "cell": "Val!F91",
-    "file": "skhynix/dist/20261025_SK海力士模型_v0.4.2.xlsx"
-   },
-   "見頂_upside": {
-    "value": -0.273035467582705,
-    "cell": "Val!G91",
-    "file": "skhynix/dist/20261025_SK海力士模型_v0.4.2.xlsx"
-   },
-   "中段": {
-    "value": 1393826.04228977,
-    "cell": "Val!F92",
-    "file": "skhynix/dist/20261025_SK海力士模型_v0.4.2.xlsx"
-   },
-   "中段_upside": {
-    "value": -0.19104698648301,
-    "cell": "Val!G92",
-    "file": "skhynix/dist/20261025_SK海力士模型_v0.4.2.xlsx"
-   },
-   "谷底": {
-    "value": 1762454.87048227,
-    "cell": "Val!F93",
-    "file": "skhynix/dist/20261025_SK海力士模型_v0.4.2.xlsx"
-   },
-   "谷底_upside": {
-    "value": 0.0228989381789155,
-    "cell": "Val!G93",
-    "file": "skhynix/dist/20261025_SK海力士模型_v0.4.2.xlsx"
-   }
+  "model": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx",
+  "v2": true,
+  "tp": {
+   "value": 3087845.415541,
+   "cell": "Val!B161",
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
   },
-  "pe_rule": {
-   "見頂": {
-    "value": 3294714.30031091,
-    "cell": "Val!F121",
-    "file": "skhynix/dist/20261025_SK海力士模型_v0.4.2.xlsx"
-   },
-   "見頂_upside": {
-    "value": 0.912196343767211,
-    "cell": "Val!G121",
-    "file": "skhynix/dist/20261025_SK海力士模型_v0.4.2.xlsx"
-   },
-   "中段": {
-    "value": 5263842.37962861,
-    "cell": "Val!F122",
-    "file": "skhynix/dist/20261025_SK海力士模型_v0.4.2.xlsx"
-   },
-   "中段_upside": {
-    "value": 2.05504490982508,
-    "cell": "Val!G122",
-    "file": "skhynix/dist/20261025_SK海力士模型_v0.4.2.xlsx"
-   },
-   "谷底": {
-    "value": 3164686.34609776,
-    "cell": "Val!F123",
-    "file": "skhynix/dist/20261025_SK海力士模型_v0.4.2.xlsx"
-   },
-   "谷底_upside": {
-    "value": 0.836730322749717,
-    "cell": "Val!G123",
-    "file": "skhynix/dist/20261025_SK海力士模型_v0.4.2.xlsx"
-   }
+  "tp_dcf": {
+   "value": 3709129.83314453,
+   "cell": "Val!B146",
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
+  },
+  "tp_comp": {
+   "value": 2466560.99793747,
+   "cell": "Val!B162",
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
+  },
+  "tp_cons": {
+   "value": 3096288,
+   "cell": "Val!B163",
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
+  },
+  "old_rule": {
+   "value": 1392208.55280262,
+   "cell": "Val!B176",
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
+  },
+  "dcf_A": {
+   "value": 6513978.22849394,
+   "cell": "Val!B145",
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
+  },
+  "dcf_C": {
+   "value": 1308904.14697498,
+   "cell": "Val!D145",
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
   },
   "model_px": {
-   "value": 1723000,
+   "value": 1277000,
    "cell": "In!E6",
-   "file": "skhynix/dist/20261025_SK海力士模型_v0.4.2.xlsx",
-   "date": "2026-10-07"
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx",
+   "date": "2026-10-23"
   },
   "cash": {
    "basis": "現金流",
@@ -317,7 +302,7 @@
     ],
     [
      "2029 A",
-     360.323749215463,
+     372.324950657057,
      "Y!F22"
     ],
     [
@@ -332,7 +317,7 @@
     ],
     [
      "2029 B",
-     327.369972649571,
+     187.980540169177,
      "Y!I22"
     ],
     [
@@ -347,84 +332,56 @@
     ],
     [
      "2029 C",
-     210.688364829193,
+     63.7338503409949,
      "Y!L22"
     ]
    ],
-   "file": "skhynix/dist/20261025_SK海力士模型_v0.4.2.xlsx"
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
   }
  },
  "005930": {
-  "model": "samsung/dist/20261025_三星電子模型_v0.2.2.xlsx",
-  "pb_rule": {
-   "見頂": {
-    "value": 196861.777994851,
-    "cell": "Val!F91",
-    "file": "samsung/dist/20261025_三星電子模型_v0.2.2.xlsx"
-   },
-   "見頂_upside": {
-    "value": -0.248619167958584,
-    "cell": "Val!G91",
-    "file": "samsung/dist/20261025_三星電子模型_v0.2.2.xlsx"
-   },
-   "中段": {
-    "value": 254130.65886608,
-    "cell": "Val!F92",
-    "file": "samsung/dist/20261025_三星電子模型_v0.2.2.xlsx"
-   },
-   "中段_upside": {
-    "value": -0.0300356531828989,
-    "cell": "Val!G92",
-    "file": "samsung/dist/20261025_三星電子模型_v0.2.2.xlsx"
-   },
-   "谷底": {
-    "value": 352474.36400347,
-    "cell": "Val!F93",
-    "file": "samsung/dist/20261025_三星電子模型_v0.2.2.xlsx"
-   },
-   "谷底_upside": {
-    "value": 0.345322000013245,
-    "cell": "Val!G93",
-    "file": "samsung/dist/20261025_三星電子模型_v0.2.2.xlsx"
-   }
+  "model": "samsung/dist/20261025_三星電子模型_v0.3.xlsx",
+  "v2": true,
+  "tp": {
+   "value": 477143.173864418,
+   "cell": "Val!B161",
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
   },
-  "pe_rule": {
-   "見頂": {
-    "value": 718682.078159864,
-    "cell": "Val!F121",
-    "file": "samsung/dist/20261025_三星電子模型_v0.2.2.xlsx"
-   },
-   "見頂_upside": {
-    "value": 1.74306136702238,
-    "cell": "Val!G121",
-    "file": "samsung/dist/20261025_三星電子模型_v0.2.2.xlsx"
-   },
-   "中段": {
-    "value": 1106770.40036619,
-    "cell": "Val!F122",
-    "file": "samsung/dist/20261025_三星電子模型_v0.2.2.xlsx"
-   },
-   "中段_upside": {
-    "value": 3.22431450521447,
-    "cell": "Val!G122",
-    "file": "samsung/dist/20261025_三星電子模型_v0.2.2.xlsx"
-   },
-   "谷底": {
-    "value": 637987.827012816,
-    "cell": "Val!F123",
-    "file": "samsung/dist/20261025_三星電子模型_v0.2.2.xlsx"
-   },
-   "谷底_upside": {
-    "value": 1.43506804203365,
-    "cell": "Val!G123",
-    "file": "samsung/dist/20261025_三星電子模型_v0.2.2.xlsx"
-   }
+  "tp_dcf": {
+   "value": 486542.246351878,
+   "cell": "Val!B146",
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
+  },
+  "tp_comp": {
+   "value": 467744.101376957,
+   "cell": "Val!B162",
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
+  },
+  "tp_cons": {
+   "value": 478906,
+   "cell": "Val!B163",
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
+  },
+  "old_rule": {
+   "value": 255831.994790815,
+   "cell": "Val!B176",
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
+  },
+  "dcf_A": {
+   "value": 818535.37839522,
+   "cell": "Val!B145",
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
+  },
+  "dcf_C": {
+   "value": 218882.499300042,
+   "cell": "Val!D145",
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
   },
   "model_px": {
-   "value": 262000,
+   "value": 215500,
    "cell": "In!E6",
-   "file": "samsung/dist/20261025_三星電子模型_v0.2.2.xlsx",
-   "date": "2026-10-08"
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx",
+   "date": "2026-10-23"
   },
   "cash": {
    "basis": "現金流",
@@ -447,7 +404,7 @@
     ],
     [
      "2029 A",
-     587.967522797666,
+     611.637943318905,
      "Y!F22"
     ],
     [
@@ -462,7 +419,7 @@
     ],
     [
      "2029 B",
-     555.763156666016,
+     324.078726725048,
      "Y!I22"
     ],
     [
@@ -477,84 +434,56 @@
     ],
     [
      "2029 C",
-     384.372488194777,
+     138.429996291849,
      "Y!L22"
     ]
    ],
-   "file": "samsung/dist/20261025_三星電子模型_v0.2.2.xlsx"
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
   }
  },
  "MU": {
-  "model": "micron/dist/20261025_美光模型_v0.3.2.xlsx",
-  "pb_rule": {
-   "見頂": {
-    "value": 269.113458198834,
-    "cell": "Val!F108",
-    "file": "micron/dist/20261025_美光模型_v0.3.2.xlsx"
-   },
-   "見頂_upside": {
-    "value": -0.752653071508425,
-    "cell": "Val!G108",
-    "file": "micron/dist/20261025_美光模型_v0.3.2.xlsx"
-   },
-   "中段": {
-    "value": 362.268116806123,
-    "cell": "Val!F109",
-    "file": "micron/dist/20261025_美光模型_v0.3.2.xlsx"
-   },
-   "中段_upside": {
-    "value": -0.667032980876726,
-    "cell": "Val!G109",
-    "file": "micron/dist/20261025_美光模型_v0.3.2.xlsx"
-   },
-   "谷底": {
-    "value": 489.084356171092,
-    "cell": "Val!F110",
-    "file": "micron/dist/20261025_美光模型_v0.3.2.xlsx"
-   },
-   "谷底_upside": {
-    "value": -0.550473937342746,
-    "cell": "Val!G110",
-    "file": "micron/dist/20261025_美光模型_v0.3.2.xlsx"
-   }
+  "model": "micron/dist/20261025_美光模型_v0.4.xlsx",
+  "v2": true,
+  "tp": {
+   "value": 684.089469121124,
+   "cell": "Val!B208",
+   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
   },
-  "pe_rule": {
-   "見頂": {
-    "value": 1312.19524660809,
-    "cell": "Val!F138",
-    "file": "micron/dist/20261025_美光模型_v0.3.2.xlsx"
-   },
-   "見頂_upside": {
-    "value": 0.206061807544204,
-    "cell": "Val!G138",
-    "file": "micron/dist/20261025_美光模型_v0.3.2.xlsx"
-   },
-   "中段": {
-    "value": 2029.32520696368,
-    "cell": "Val!F139",
-    "file": "micron/dist/20261025_美光模型_v0.3.2.xlsx"
-   },
-   "中段_upside": {
-    "value": 0.865188609341617,
-    "cell": "Val!G139",
-    "file": "micron/dist/20261025_美光模型_v0.3.2.xlsx"
-   },
-   "谷底": {
-    "value": 1644.21765664228,
-    "cell": "Val!F140",
-    "file": "micron/dist/20261025_美光模型_v0.3.2.xlsx"
-   },
-   "谷底_upside": {
-    "value": 0.51122946382562,
-    "cell": "Val!G140",
-    "file": "micron/dist/20261025_美光模型_v0.3.2.xlsx"
-   }
+  "tp_dcf": {
+   "value": 932.626083378287,
+   "cell": "Val!B193",
+   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
+  },
+  "tp_comp": {
+   "value": 435.552854863962,
+   "cell": "Val!B209",
+   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
+  },
+  "tp_cons": {
+   "value": 1560.57,
+   "cell": "Val!B210",
+   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
+  },
+  "old_rule": {
+   "value": 348.754265504643,
+   "cell": "Val!B223",
+   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
+  },
+  "dcf_A": {
+   "value": 1714.01729481759,
+   "cell": "Val!B192",
+   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
+  },
+  "dcf_C": {
+   "value": 321.896486338575,
+   "cell": "Val!D192",
+   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
   },
   "model_px": {
-   "value": 1088,
+   "value": 877.55,
    "cell": "In!E5",
-   "file": "micron/dist/20261025_美光模型_v0.3.2.xlsx",
-   "date": "2026-10-07"
+   "file": "micron/dist/20261025_美光模型_v0.4.xlsx",
+   "date": "2026-10-23"
   },
   "cash": {
    "basis": "現金流",
@@ -577,7 +506,7 @@
     ],
     [
      "FY2029 A",
-     179.38199169276,
+     191.797678969014,
      "Y!F22"
     ],
     [
@@ -592,7 +521,7 @@
     ],
     [
      "FY2029 B",
-     131.982781801875,
+     77.2936081759417,
      "Y!I22"
     ],
     [
@@ -607,51 +536,56 @@
     ],
     [
      "FY2029 C",
-     54.0750248819423,
+     8.80076543801593,
      "Y!L22"
     ]
    ],
-   "file": "micron/dist/20261025_美光模型_v0.3.2.xlsx"
+   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
   }
  },
  "2330": {
-  "model": "tsmc/dist/20261025_台積電模型_v0.2.2.xlsx",
-  "model_px": {
-   "value": 2585,
-   "cell": "In!E135",
-   "file": "tsmc/dist/20261025_台積電模型_v0.2.2.xlsx",
-   "date": "2026-10-07"
+  "model": "tsmc/dist/20261025_台積電模型_v0.3.xlsx",
+  "v2": true,
+  "tp": {
+   "value": 2446.02329898547,
+   "cell": "Val!B94",
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
   },
-  "rule_mid": {
+  "tp_dcf": {
+   "value": 2150.17798362528,
+   "cell": "Val!B79",
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
+  },
+  "tp_comp": {
+   "value": 2741.86861434566,
+   "cell": "Val!B95",
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
+  },
+  "tp_cons": {
+   "value": 3390.43,
+   "cell": "Val!B96",
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
+  },
+  "old_rule": {
    "value": 3022.97680876707,
-   "cell": "Val!F54",
-   "file": "tsmc/dist/20261025_台積電模型_v0.2.2.xlsx"
+   "cell": "Val!B107",
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
   },
-  "rule_lo": {
-   "value": 2124.47710183721,
-   "cell": "Val!F55",
-   "file": "tsmc/dist/20261025_台積電模型_v0.2.2.xlsx"
+  "dcf_A": {
+   "value": 2769.08365296963,
+   "cell": "Val!B78",
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
   },
-  "rule_mid_upside": {
-   "value": 0.169430100103314,
-   "cell": "Val!G54",
-   "file": "tsmc/dist/20261025_台積電模型_v0.2.2.xlsx"
+  "dcf_C": {
+   "value": 1495.88897703241,
+   "cell": "Val!D78",
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
   },
-  "eps27_A": {
-   "value": 137.595667217436,
-   "cell": "Val!E54",
-   "file": "tsmc/dist/20261025_台積電模型_v0.2.2.xlsx"
-  },
-  "eps28_C": {
-   "value": 106.34571226785,
-   "cell": "Val!E57",
-   "file": "tsmc/dist/20261025_台積電模型_v0.2.2.xlsx"
-  },
-  "andy_pe": {
-   "value": 35,
-   "cell": null,
-   "file": null,
-   "source": "AI半導體 先驗比對_台積電_20261008.md T7b「合理 P/E 35x」"
+  "model_px": {
+   "value": 2385,
+   "cell": "In!E135",
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx",
+   "date": "2026-10-22"
   },
   "cash": {
    "basis": "淨利",
@@ -706,92 +640,117 @@
      "2029 C",
      84.633409367754,
      "PL!K12"
+    ],
+    [
+     "2030 A 收斂",
+     154.198183898225,
+     "PL!L12"
+    ],
+    [
+     "2031 A 收斂",
+     166.458698932918,
+     "PL!M12"
+    ],
+    [
+     "2032 A 收斂",
+     176.446220868893,
+     "PL!N12"
+    ],
+    [
+     "2030 B 收斂",
+     117.957102629387,
+     "PL!O12"
+    ],
+    [
+     "2031 B 收斂",
+     122.990801668493,
+     "PL!P12"
+    ],
+    [
+     "2032 B 收斂",
+     125.731767358183,
+     "PL!Q12"
+    ],
+    [
+     "2030 C 收斂",
+     86.1648832344315,
+     "PL!R12"
+    ],
+    [
+     "2031 C 收斂",
+     87.5418852467905,
+     "PL!S12"
+    ],
+    [
+     "2032 C 收斂",
+     88.755772051217,
+     "PL!T12"
     ]
    ],
-   "file": "tsmc/dist/20261025_台積電模型_v0.2.2.xlsx"
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
   }
  },
  "ANET": {
-  "model": "arista/dist/20261025_Arista模型_v0.1.1.xlsx",
-  "price": {
+  "model": "arista/dist/20261025_Arista模型_v0.2.xlsx",
+  "v2": true,
+  "tp": {
+   "value": 99.4630381559788,
+   "cell": "Val!B40",
+   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+  },
+  "tp_dcf": {
+   "value": 87.244896541368,
+   "cell": "Val!B23",
+   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+  },
+  "tp_comp": {
+   "value": 111.68117977059,
+   "cell": "Val!B41",
+   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+  },
+  "tp_cons": {
+   "value": 243.59,
+   "cell": "Val!B42",
+   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+  },
+  "old_rule": {
+   "value": 174.075889279442,
+   "cell": "Val!B137",
+   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+  },
+  "dcf_C": {
+   "value": 66.5504868771763,
+   "cell": "Val!B47",
+   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+  },
+  "dcf_A": {
+   "value": 101.884522283968,
+   "cell": "Val!C47",
+   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+  },
+  "model_px": {
    "value": 172.37,
-   "cell": "Val!B6",
-   "file": "arista/dist/20261025_Arista模型_v0.1.1.xlsx"
+   "cell": "Val!B57",
+   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx",
+   "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 28.7824916250012,
-    "cell": "Val!B9",
-    "file": "arista/dist/20261025_Arista模型_v0.1.1.xlsx"
+    "cell": "Val!B60",
+    "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
    },
    {
     "value": 31.2852673835325,
-    "cell": "Val!C9",
-    "file": "arista/dist/20261025_Arista模型_v0.1.1.xlsx"
+    "cell": "Val!C60",
+    "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
    },
    {
     "value": 34.7046878144637,
-    "cell": "Val!D9",
-    "file": "arista/dist/20261025_Arista模型_v0.1.1.xlsx"
+    "cell": "Val!D60",
+    "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
    }
   ],
-  "price_date": "2026-10-23",
-  "rule_A": {
-   "value": 181.312183514024,
-   "cell": "Val!E23",
-   "file": "arista/dist/20261025_Arista模型_v0.1.1.xlsx"
-  },
-  "rule_mult_A": {
-   "value": 35.83,
-   "cell": "Val!D23",
-   "file": "arista/dist/20261025_Arista模型_v0.1.1.xlsx"
-  },
-  "rule_C": {
-   "value": 145.130712341116,
-   "cell": "Val!E25",
-   "file": "arista/dist/20261025_Arista模型_v0.1.1.xlsx"
-  },
-  "rule_mult_C": {
-   "value": 28.68,
-   "cell": "Val!D25",
-   "file": "arista/dist/20261025_Arista模型_v0.1.1.xlsx"
-  },
-  "andy_pe": {
-   "value": 25.0,
-   "cell": null,
-   "file": null,
-   "source": "arista/dist/20261025_Arista模型_v0.1.1.xlsx Val!A35 標題"
-  },
-  "andy27_A": {
-   "value": 136.629331701888,
-   "cell": "Val!C37",
-   "file": "arista/dist/20261025_Arista模型_v0.1.1.xlsx"
-  },
-  "andy28_A": {
-   "value": 149.717753978494,
-   "cell": "Val!F37",
-   "file": "arista/dist/20261025_Arista模型_v0.1.1.xlsx"
-  },
-  "andy27_B": {
-   "value": 136.629331701888,
-   "cell": "Val!C38",
-   "file": "arista/dist/20261025_Arista模型_v0.1.1.xlsx"
-  },
-  "andy28_B": {
-   "value": 137.740552035948,
-   "cell": "Val!F38",
-   "file": "arista/dist/20261025_Arista模型_v0.1.1.xlsx"
-  },
-  "andy27_C": {
-   "value": 136.629331701888,
-   "cell": "Val!C39",
-   "file": "arista/dist/20261025_Arista模型_v0.1.1.xlsx"
-  },
-  "andy28_C": {
-   "value": 124.169104273114,
-   "cell": "Val!F39",
-   "file": "arista/dist/20261025_Arista模型_v0.1.1.xlsx"
-  },
   "cash": {
    "basis": "淨利",
    "label": "PL 頁各情境模型年度淨利（不含實績）",
@@ -837,90 +796,224 @@
      "PL!G36"
     ]
    ],
-   "file": "arista/dist/20261025_Arista模型_v0.1.1.xlsx"
+   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+  }
+ },
+ "300308": {
+  "model": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx",
+  "v2": true,
+  "tp": {
+   "value": 1355.25565207254,
+   "cell": "Val!B39",
+   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+  },
+  "tp_dcf": {
+   "value": 831.458806236827,
+   "cell": "Val!B24",
+   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+  },
+  "tp_comp": {
+   "value": 1879.05249790826,
+   "cell": "Val!B40",
+   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+  },
+  "tp_cons": {
+   "value": 1321,
+   "cell": "Val!B41",
+   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+  },
+  "old_rule": {
+   "value": 2265.72535634618,
+   "cell": "Val!B133",
+   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+  },
+  "dcf_A": {
+   "value": 1049.4079271775,
+   "cell": "Val!B23",
+   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+  },
+  "dcf_C": {
+   "value": 498.176089619339,
+   "cell": "Val!D23",
+   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+  },
+  "model_px": {
+   "value": 612.63,
+   "cell": "Val!B53",
+   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx",
+   "date": "2026-10-23"
+  },
+  "pe_fy28": [
+   {
+    "value": 12.3059398917007,
+    "cell": "Val!B56",
+    "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+   },
+   {
+    "value": 15.4730418489938,
+    "cell": "Val!C56",
+    "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+   },
+   {
+    "value": 21.0008139851548,
+    "cell": "Val!D56",
+    "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+   }
+  ],
+  "cash": {
+   "basis": "淨利",
+   "label": "PL 頁各情境模型年度淨利（不含實績）",
+   "values": [
+    [
+     "FY2026（錨點）",
+     31.8281188474012,
+     "PL!D12"
+    ],
+    [
+     "FY2027",
+     55.674619462434,
+     "PL!E12"
+    ],
+    [
+     "FY2028",
+     58.6401745797024,
+     "PL!F12"
+    ],
+    [
+     "FY2029",
+     71.1339395621388,
+     "PL!G12"
+    ],
+    [
+     "FY2030（收斂）",
+     83.6178959972778,
+     "PL!H12"
+    ],
+    [
+     "FY2031（收斂）",
+     93.4638738881508,
+     "PL!I12"
+    ],
+    [
+     "FY2032（收斂）",
+     99.0717063214398,
+     "PL!J12"
+    ],
+    [
+     "FY2028",
+     46.6374014016887,
+     "PL!F24"
+    ],
+    [
+     "FY2029",
+     60.0159099914807,
+     "PL!G24"
+    ],
+    [
+     "FY2030（收斂）",
+     70.5471760282588,
+     "PL!H24"
+    ],
+    [
+     "FY2031（收斂）",
+     76.8334511481676,
+     "PL!I24"
+    ],
+    [
+     "FY2032（收斂）",
+     77.0529752943052,
+     "PL!J24"
+    ],
+    [
+     "FY2028",
+     34.3616425595101,
+     "PL!F36"
+    ],
+    [
+     "FY2029",
+     41.66436411542,
+     "PL!G36"
+    ],
+    [
+     "FY2030（收斂）",
+     45.0755323751388,
+     "PL!H36"
+    ],
+    [
+     "FY2031（收斂）",
+     45.6050721068062,
+     "PL!I36"
+    ],
+    [
+     "FY2032（收斂）",
+     42.9389294297929,
+     "PL!J36"
+    ]
+   ],
+   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
   }
  },
  "2308": {
-  "model": "delta/dist/20261025_台達電模型_v0.1.1.xlsx",
-  "price": {
+  "model": "delta/dist/20261025_台達電模型_v0.2.xlsx",
+  "v2": true,
+  "tp": {
+   "value": 1213.77022935506,
+   "cell": "Val!B119",
+   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+  },
+  "tp_dcf": {
+   "value": 999.125303827978,
+   "cell": "Val!B105",
+   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+  },
+  "tp_comp": {
+   "value": 1428.41515488214,
+   "cell": "Val!B120",
+   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+  },
+  "tp_cons": {
+   "value": 2502.36,
+   "cell": "Val!B121",
+   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+  },
+  "old_rule": {
+   "value": 1360.0134167175,
+   "cell": "Val!B42",
+   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+  },
+  "dcf_A": {
+   "value": 1234.67030966788,
+   "cell": "Val!B104",
+   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+  },
+  "dcf_C": {
+   "value": 639.329478515099,
+   "cell": "Val!D104",
+   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+  },
+  "model_px": {
    "value": 1605,
    "cell": "Val!B6",
-   "file": "delta/dist/20261025_台達電模型_v0.1.1.xlsx"
+   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx",
+   "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 20.8075999559417,
     "cell": "Val!B9",
-    "file": "delta/dist/20261025_台達電模型_v0.1.1.xlsx"
+    "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
    },
    {
     "value": 24.4860094602926,
     "cell": "Val!C9",
-    "file": "delta/dist/20261025_台達電模型_v0.1.1.xlsx"
+    "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
    },
    {
     "value": 31.8229567383198,
     "cell": "Val!D9",
-    "file": "delta/dist/20261025_台達電模型_v0.1.1.xlsx"
+    "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
    }
   ],
-  "price_date": "2026-10-23",
-  "rule_A": {
-   "value": 1360.0134167175,
-   "cell": "Val!E23",
-   "file": "delta/dist/20261025_台達電模型_v0.1.1.xlsx"
-  },
-  "rule_mult_A": {
-   "value": 22.4,
-   "cell": "Val!D23",
-   "file": "delta/dist/20261025_台達電模型_v0.1.1.xlsx"
-  },
-  "rule_C": {
-   "value": 1360.0134167175,
-   "cell": "Val!E25",
-   "file": "delta/dist/20261025_台達電模型_v0.1.1.xlsx"
-  },
-  "rule_mult_C": {
-   "value": 22.4,
-   "cell": "Val!D25",
-   "file": "delta/dist/20261025_台達電模型_v0.1.1.xlsx"
-  },
-  "andy_pe": {
-   "value": 25.0,
-   "cell": null,
-   "file": null,
-   "source": "delta/dist/20261025_台達電模型_v0.1.1.xlsx Val!A35 標題"
-  },
-  "andy27_A": {
-   "value": 1517.87211687221,
-   "cell": "Val!C37",
-   "file": "delta/dist/20261025_台達電模型_v0.1.1.xlsx"
-  },
-  "andy28_A": {
-   "value": 1928.38194145222,
-   "cell": "Val!F37",
-   "file": "delta/dist/20261025_台達電模型_v0.1.1.xlsx"
-  },
-  "andy27_B": {
-   "value": 1517.87211687221,
-   "cell": "Val!C38",
-   "file": "delta/dist/20261025_台達電模型_v0.1.1.xlsx"
-  },
-  "andy28_B": {
-   "value": 1638.69086406538,
-   "cell": "Val!F38",
-   "file": "delta/dist/20261025_台達電模型_v0.1.1.xlsx"
-  },
-  "andy27_C": {
-   "value": 1517.87211687221,
-   "cell": "Val!C39",
-   "file": "delta/dist/20261025_台達電模型_v0.1.1.xlsx"
-  },
-  "andy28_C": {
-   "value": 1260.88220934176,
-   "cell": "Val!F39",
-   "file": "delta/dist/20261025_台達電模型_v0.1.1.xlsx"
-  },
   "cash": {
    "basis": "淨利",
    "label": "PL 頁各情境模型年度淨利（不含實績）",
@@ -966,219 +1059,70 @@
      "PL!G39"
     ]
    ],
-   "file": "delta/dist/20261025_台達電模型_v0.1.1.xlsx"
-  }
- },
- "300308": {
-  "model": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx",
-  "price": {
-   "value": 612.63,
-   "cell": "Val!B6",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx"
-  },
-  "pe_fy28": [
-   {
-    "value": 12.3059398917007,
-    "cell": "Val!B9",
-    "file": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx"
-   },
-   {
-    "value": 15.4730418489938,
-    "cell": "Val!C9",
-    "file": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx"
-   },
-   {
-    "value": 21.0008139851548,
-    "cell": "Val!D9",
-    "file": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx"
-   }
-  ],
-  "price_date": "2026-10-23",
-  "rule_A": {
-   "value": 2493.26211088245,
-   "cell": "Val!D23",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx"
-  },
-  "rule_mult_A": {
-   "value": 52.75,
-   "cell": "Val!C23",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx"
-  },
-  "rule_C": {
-   "value": 1355.57833820111,
-   "cell": "Val!D25",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx"
-  },
-  "rule_mult_C": {
-   "value": 28.68,
-   "cell": "Val!C25",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx"
-  },
-  "andy_pe": {
-   "value": 30.0,
-   "cell": null,
-   "file": null,
-   "source": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx Val!A35 標題"
-  },
-  "andy27_A": {
-   "value": 1417.96897301371,
-   "cell": "Val!C37",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx"
-  },
-  "andy28_A": {
-   "value": 1493.49827495867,
-   "cell": "Val!F37",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx"
-  },
-  "andy27_B": {
-   "value": 1417.96897301371,
-   "cell": "Val!C38",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx"
-  },
-  "andy28_B": {
-   "value": 1187.80135020414,
-   "cell": "Val!F38",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx"
-  },
-  "andy27_C": {
-   "value": 1417.96897301371,
-   "cell": "Val!C39",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx"
-  },
-  "andy28_C": {
-   "value": 875.151792353943,
-   "cell": "Val!F39",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx"
-  },
-  "cash": {
-   "basis": "淨利",
-   "label": "PL 頁各情境模型年度淨利（不含實績）",
-   "values": [
-    [
-     "FY2026（錨點）",
-     31.8281188474012,
-     "PL!D12"
-    ],
-    [
-     "FY2027",
-     55.674619462434,
-     "PL!E12"
-    ],
-    [
-     "FY2028",
-     58.6401745797024,
-     "PL!F12"
-    ],
-    [
-     "FY2029",
-     71.1339395621388,
-     "PL!G12"
-    ],
-    [
-     "FY2028",
-     46.6374014016887,
-     "PL!F24"
-    ],
-    [
-     "FY2029",
-     60.0159099914807,
-     "PL!G24"
-    ],
-    [
-     "FY2028",
-     34.3616425595101,
-     "PL!F36"
-    ],
-    [
-     "FY2029",
-     41.66436411542,
-     "PL!G36"
-    ]
-   ],
-   "file": "innolight/dist/20261025_中際旭創模型_v0.1.1.xlsx"
+   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
   }
  },
  "2382": {
-  "model": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx",
-  "price": {
+  "model": "quanta/dist/20261025_廣達模型_v0.2.xlsx",
+  "v2": true,
+  "tp": {
+   "value": 566.562292345012,
+   "cell": "Val!B120",
+   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+  },
+  "tp_dcf": {
+   "value": 644.262613388321,
+   "cell": "Val!B105",
+   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+  },
+  "tp_comp": {
+   "value": 488.861971301704,
+   "cell": "Val!B121",
+   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+  },
+  "tp_cons": {
+   "value": 427.84,
+   "cell": "Val!B122",
+   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+  },
+  "old_rule": {
+   "value": 490.548184039647,
+   "cell": "Val!B42",
+   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+  },
+  "dcf_A": {
+   "value": 808.669116512409,
+   "cell": "Val!B104",
+   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+  },
+  "dcf_C": {
+   "value": 404.067828743699,
+   "cell": "Val!D104",
+   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+  },
+  "model_px": {
    "value": 322,
    "cell": "Val!B6",
-   "file": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx"
+   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx",
+   "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 6.20130758001893,
     "cell": "Val!B9",
-    "file": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx"
+    "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
    },
    {
     "value": 7.67314718501047,
     "cell": "Val!C9",
-    "file": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx"
+    "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
    },
    {
     "value": 10.2013340196073,
     "cell": "Val!D9",
-    "file": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx"
+    "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
    }
   ],
-  "price_date": "2026-10-22",
-  "rule_A": {
-   "value": 535.119685114373,
-   "cell": "Val!E23",
-   "file": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx"
-  },
-  "rule_mult_A": {
-   "value": 12.27,
-   "cell": "Val!D23",
-   "file": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx"
-  },
-  "rule_C": {
-   "value": 471.446112150478,
-   "cell": "Val!E25",
-   "file": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx"
-  },
-  "rule_mult_C": {
-   "value": 10.81,
-   "cell": "Val!D25",
-   "file": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx"
-  },
-  "andy_pe": {
-   "value": 15.0,
-   "cell": null,
-   "file": null,
-   "source": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx Val!A35 標題"
-  },
-  "andy27_A": {
-   "value": 654.1805441496,
-   "cell": "Val!C37",
-   "file": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx"
-  },
-  "andy28_A": {
-   "value": 778.867994802035,
-   "cell": "Val!F37",
-   "file": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx"
-  },
-  "andy27_B": {
-   "value": 654.1805441496,
-   "cell": "Val!C38",
-   "file": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx"
-  },
-  "andy28_B": {
-   "value": 629.467920208208,
-   "cell": "Val!F38",
-   "file": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx"
-  },
-  "andy27_C": {
-   "value": 654.1805441496,
-   "cell": "Val!C39",
-   "file": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx"
-  },
-  "andy28_C": {
-   "value": 473.467488733982,
-   "cell": "Val!F39",
-   "file": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx"
-  },
   "cash": {
    "basis": "淨利",
    "label": "PL 頁各情境模型年度淨利（不含實績）",
@@ -1224,71 +1168,70 @@
      "PL!G39"
     ]
    ],
-   "file": "quanta/dist/20261025_廣達模型_v0.1.1.xlsx"
+   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
   }
  },
  "4062": {
-  "model": "ibiden/dist/20261025_Ibiden模型_v0.1.1.xlsx",
-  "price": {
-   "value": 9764,
-   "cell": "Val!B6",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.1.1.xlsx"
+  "model": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx",
+  "v2": true,
+  "tp": {
+   "value": 5236.24114444144,
+   "cell": "Val!B96",
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
   },
-  "price_date": "2026-10-16",
+  "tp_dcf": {
+   "value": 1931.24288735174,
+   "cell": "Val!B81",
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+  },
+  "tp_comp": {
+   "value": 8541.23940153114,
+   "cell": "Val!B97",
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+  },
+  "tp_cons": {
+   "value": 12432.35,
+   "cell": "Val!B98",
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+  },
+  "old_rule": {
+   "value": 9531.45203105499,
+   "cell": "Val!B38",
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+  },
+  "dcf_A": {
+   "value": 2378.3168940138,
+   "cell": "Val!B80",
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+  },
+  "dcf_C": {
+   "value": 1293.75775376326,
+   "cell": "Val!D80",
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+  },
+  "model_px": {
+   "value": 8512,
+   "cell": "Val!B6",
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx",
+   "date": "2026-10-23"
+  },
   "pe_fy28": [
    {
-    "value": 44.5863273041175,
+    "value": 38.8691947985097,
     "cell": "Val!B9",
-    "file": "ibiden/dist/20261025_Ibiden模型_v0.1.1.xlsx"
+    "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
    },
    {
-    "value": 52.9372381156191,
+    "value": 46.1493005776475,
     "cell": "Val!C9",
-    "file": "ibiden/dist/20261025_Ibiden模型_v0.1.1.xlsx"
+    "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
    },
    {
-    "value": 65.1372953221051,
+    "value": 56.7849915794509,
     "cell": "Val!D9",
-    "file": "ibiden/dist/20261025_Ibiden模型_v0.1.1.xlsx"
+    "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
    }
   ],
-  "andy_pe": {
-   "value": 25.0,
-   "cell": null,
-   "file": null,
-   "source": "ibiden/dist/20261025_Ibiden模型_v0.1.1.xlsx Val!A30 標題"
-  },
-  "andy27_A": {
-   "value": 5403.31747792233,
-   "cell": "Val!C32",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.1.1.xlsx"
-  },
-  "andy28_A": {
-   "value": 5474.77253138671,
-   "cell": "Val!F32",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.1.1.xlsx"
-  },
-  "andy27_B": {
-   "value": 5403.31747792233,
-   "cell": "Val!C33",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.1.1.xlsx"
-  },
-  "andy28_B": {
-   "value": 4611.12080435451,
-   "cell": "Val!F33",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.1.1.xlsx"
-  },
-  "andy27_C": {
-   "value": 5403.31747792233,
-   "cell": "Val!C34",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.1.1.xlsx"
-  },
-  "andy28_C": {
-   "value": 3747.46907732231,
-   "cell": "Val!F34",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.1.1.xlsx"
-  },
-  "rule_note": "模型未算十年倍數規則值",
   "cash": {
    "basis": "淨利",
    "label": "PL 頁各情境模型年度淨利（不含實績）",
@@ -1334,26 +1277,52 @@
      "PL!G33"
     ]
    ],
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.1.1.xlsx"
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
   }
  },
  "6857": {
-  "model": "advantest/dist/20261025_Advantest模型_v0.2.3.xlsx",
-  "price": {
-   "value": 34440,
+  "model": "advantest/dist/20261025_Advantest模型_v0.3.xlsx",
+  "v2": true,
+  "tp": {
+   "value": 23221.5916701459,
+   "cell": "Val!B146",
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+  },
+  "tp_dcf": {
+   "value": 16539.4842804199,
+   "cell": "Val!B131",
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+  },
+  "tp_comp": {
+   "value": 29903.6990598718,
+   "cell": "Val!B147",
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+  },
+  "tp_cons": {
+   "value": 42686,
+   "cell": "Val!B148",
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+  },
+  "old_rule": {
+   "value": 24494.453736442,
+   "cell": "Val!B102",
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+  },
+  "dcf_A": {
+   "value": 23027.5344473547,
+   "cell": "Val!B130",
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+  },
+  "dcf_C": {
+   "value": 7893.3662518531,
+   "cell": "Val!D130",
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+  },
+  "model_px": {
+   "value": 32340,
    "cell": "Val!B92",
-   "file": "advantest/dist/20261025_Advantest模型_v0.2.3.xlsx"
-  },
-  "price_date": "2026-10-21",
-  "rule_A": {
-   "value": 25964.3043713706,
-   "cell": "Val!F68",
-   "file": "advantest/dist/20261025_Advantest模型_v0.2.3.xlsx"
-  },
-  "rule_C": {
-   "value": 21312.7210727656,
-   "cell": "Val!F82",
-   "file": "advantest/dist/20261025_Advantest模型_v0.2.3.xlsx"
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx",
+   "date": "2026-10-23"
   },
   "cash": {
    "basis": "淨利",
@@ -1410,26 +1379,52 @@
      "PL!G34"
     ]
    ],
-   "file": "advantest/dist/20261025_Advantest模型_v0.2.3.xlsx"
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
   }
  },
  "6146": {
-  "model": "disco/dist/20261025_Disco模型_v0.1.4.xlsx",
-  "price": {
-   "value": 51230,
+  "model": "disco/dist/20261025_Disco模型_v0.2.xlsx",
+  "v2": true,
+  "tp": {
+   "value": 39546.7520018695,
+   "cell": "Val!B107",
+   "file": "disco/dist/20261025_Disco模型_v0.2.xlsx"
+  },
+  "tp_dcf": {
+   "value": 22898.3785132001,
+   "cell": "Val!B92",
+   "file": "disco/dist/20261025_Disco模型_v0.2.xlsx"
+  },
+  "tp_comp": {
+   "value": 56195.1254905388,
+   "cell": "Val!B108",
+   "file": "disco/dist/20261025_Disco模型_v0.2.xlsx"
+  },
+  "tp_cons": {
+   "value": 81575,
+   "cell": "Val!B109",
+   "file": "disco/dist/20261025_Disco模型_v0.2.xlsx"
+  },
+  "old_rule": {
+   "value": 42401.2310199762,
+   "cell": "Val!B63",
+   "file": "disco/dist/20261025_Disco模型_v0.2.xlsx"
+  },
+  "dcf_A": {
+   "value": 27699.2516922566,
+   "cell": "Val!B91",
+   "file": "disco/dist/20261025_Disco模型_v0.2.xlsx"
+  },
+  "dcf_C": {
+   "value": 16147.5039278059,
+   "cell": "Val!D91",
+   "file": "disco/dist/20261025_Disco模型_v0.2.xlsx"
+  },
+  "model_px": {
+   "value": 49290,
    "cell": "Val!B53",
-   "file": "disco/dist/20261025_Disco模型_v0.1.4.xlsx"
-  },
-  "price_date": "2026-10-22",
-  "rule_A": {
-   "value": 48426.1597690523,
-   "cell": "Val!F35",
-   "file": "disco/dist/20261025_Disco模型_v0.1.4.xlsx"
-  },
-  "rule_C": {
-   "value": 27773.5675456227,
-   "cell": "Val!F45",
-   "file": "disco/dist/20261025_Disco模型_v0.1.4.xlsx"
+   "file": "disco/dist/20261025_Disco模型_v0.2.xlsx",
+   "date": "2026-10-23"
   },
   "cash": {
    "basis": "淨利",
@@ -1486,7 +1481,7 @@
      "PL!G52"
     ]
    ],
-   "file": "disco/dist/20261025_Disco模型_v0.1.4.xlsx"
+   "file": "disco/dist/20261025_Disco模型_v0.2.xlsx"
   }
  },
  "MSFT": {
