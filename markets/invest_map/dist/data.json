@@ -5,7 +5,7 @@
   "tk_file": "20261024_Tokenomics_v21.4.xlsx",
   "tk_version": "v21.4",
   "tk_commit": "3ac70ac",
-  "cm_commit": "b47bbda",
+  "cm_commit": "05d8da3",
   "built": "2026-10-25",
   "price_date": "2026-10-23（台積電、廣達為 10-22）"
  },
@@ -612,10 +612,10 @@
    "alt": null,
    "altlbl": "",
    "pe28": "15.4 ／ 18.1 ／ 21.8",
-   "note": "十年倍數待前瞻 P/E 歷史（Bloomberg）；規則值未算；模型在 PR #93，未合併",
-   "c1src": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx Val!C33",
+   "note": "十年倍數待前瞻 P/E 歷史（Bloomberg）；規則值未算",
+   "c1src": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx Val!C33",
    "c2src": "",
-   "b1src": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx Val!F35",
+   "b1src": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx Val!F35",
    "b2src": ""
   },
   {
@@ -961,10 +961,10 @@
    "altlbl": "",
    "pe28": "",
    "note": "賣出：點位 $359.1，較現價 $529.76 低 32%；情境區間 $360.2–$380.6，方法區間 $353.5–$359.1；點位低於賣出門檻 $450.3 達 $91.2。｜MAG 模型終值占 EV 逾 90%，評價口徑待 MAG v0.3",
-   "c1src": "microsoft/dist/20261022_Microsoft收支模型_v0_2_1.xlsx 摘要!C7",
+   "c1src": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx 摘要!C7",
    "c2src": "",
-   "b1src": "microsoft/dist/20261022_Microsoft收支模型_v0_2_1.xlsx 摘要!C7",
-   "b2src": "microsoft/dist/20261022_Microsoft收支模型_v0_2_1.xlsx 摘要!C10"
+   "b1src": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx 摘要!C7",
+   "b2src": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx 摘要!C10"
   },
   {
    "tk": "AMZN",
@@ -990,10 +990,10 @@
    "altlbl": "",
    "pe28": "",
    "note": "賣出：點位 $201.7，較現價 $259.92 低 22%；情境區間 $201.1–$212.3，方法區間 $197.5–$201.7；點位低於賣出門檻 $220.9 達 $19.2。｜MAG 模型終值占 EV 逾 90%，評價口徑待 MAG v0.3",
-   "c1src": "amazon/dist/20261022_Amazon收支模型_v0_2_1.xlsx 摘要!C7",
+   "c1src": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx 摘要!C7",
    "c2src": "",
-   "b1src": "amazon/dist/20261022_Amazon收支模型_v0_2_1.xlsx 摘要!C7",
-   "b2src": "amazon/dist/20261022_Amazon收支模型_v0_2_1.xlsx 摘要!C10"
+   "b1src": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx 摘要!C7",
+   "b2src": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx 摘要!C10"
   },
   {
    "tk": "GOOGL",
@@ -1019,10 +1019,10 @@
    "altlbl": "",
    "pe28": "",
    "note": "賣出：點位 $146.1，較現價 $350.50 低 58%；情境區間 $122.9–$175.1，方法區間 $144.1–$146.1；點位低於賣出門檻 $297.9 達 $151.8。｜MAG 模型終值占 EV 逾 90%，評價口徑待 MAG v0.3",
-   "c1src": "alphabet/dist/20261022_Alphabet收支模型_v0_2_1.xlsx 摘要!C7",
+   "c1src": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx 摘要!C7",
    "c2src": "",
-   "b1src": "alphabet/dist/20261022_Alphabet收支模型_v0_2_1.xlsx 摘要!C7",
-   "b2src": "alphabet/dist/20261022_Alphabet收支模型_v0_2_1.xlsx 摘要!C10"
+   "b1src": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx 摘要!C7",
+   "b2src": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx 摘要!C10"
   },
   {
    "tk": "ORCL",
@@ -2414,8 +2414,8 @@
     "管理層與經營風格": "<div class=\"ptbl\"><table><thead><tr><th>職位</th><th>姓名</th><th>任職起</th><th>背景</th></tr></thead><tbody><tr><td>總裁兼執行長</td><td>陳福陽（Hock Tan）</td><td>2006（Avago 時期起）</td><td>[外部・未經本專案檢核]</td></tr><tr><td>財務長</td><td>Amie Thuener</td><td>2026-06-12</td><td>前 Alphabet 主計長暨會計長；接替退休的 Kirsten Spears [外部・未經本專案檢核]</td></tr></tbody></table></div><ul><li>經營風格：本專案尚未研究。</li><li>本專案記錄的特色：替客戶融資。對 Anthropic 放款上限 US$42B、為 OpenAI 安排超過 50B，媒體合計約 92B，約為模型 FY2027 AI 營收的 76% <span class=\"tg\">[本專案：Broadcom模型_v0.1.xlsx Recon!B34、Recon!C35]</span>。</li></ul>",
     "同業與競爭態勢": "<div class=\"ptbl\"><table><thead><tr><th>同業</th><th>重疊領域</th><th>市占或規模</th><th>標記</th></tr></thead><tbody><tr><td>NVIDIA</td><td>AI 加速器、網通</td><td>CY2027 加速器金額份額 71.3%（Broadcom 模型）／75.1%（NVIDIA 模型）</td><td><span class=\"tg\">[本專案：Broadcom模型_v0.1.xlsx Recon!C24；NVIDIA模型_v0.1.1.xlsx Units!D32]</span></td></tr><tr><td>Marvell</td><td>客製 ASIC</td><td>2027 約 8%（Counterpoint）／10–12%（JPMorgan）</td><td><span class=\"tg\">[本專案：先驗比對_AVGO_20261023.md 資料表]</span></td></tr><tr><td>聯發科（MediaTek）</td><td>Google TPU 部分版本</td><td>本專案未建立</td><td>—</td></tr><tr><td>AWS Trainium（非 Broadcom）</td><td>自研 AI 晶片</td><td>CY2027 加速器金額份額 3.0%</td><td><span class=\"tg\">[本專案：NVIDIA模型_v0.1.1.xlsx Units!D35]</span></td></tr></tbody></table></div><ul><li>模型假設 Broadcom 在 Google TPU 的份額由 90%（2026）降到 75%（2028）<span class=\"tg\">[本專案：Broadcom模型_v0.1.xlsx Units!C5:E5]</span>。</li></ul>",
     "近期重大事件": "<ul><li>2026-10-08｜傳 Broadcom 與 OpenAI 進行晶片融資的初步洽談｜客戶融資擴大 [外部新聞：Bloomberg]</li><li>2026-10-02｜傳 Broadcom 開始籌組 Anthropic 晶片融資｜同上 [外部新聞：Bloomberg]</li><li>2026-10-01｜Anthropic 上市文件揭露 Broadcom 放款上限 US$42B 用於租賃晶片與設備 <span class=\"tg\">[本專案：先驗比對_AVGO_20261023.md 資料表]</span>｜市場質疑「循環融資」 [外部新聞：Yahoo Finance 引 Reuters]</li><li>2026-09-02｜FY2026 Q3 財報：營收 US$29.6B、AI 16.7B；Q4 指引營收 34.8B、AI 21.7B；公司展望 FY2027 AI 約 115B、FY2028 約 230B <span class=\"tg\">[本專案：Broadcom模型_v0.1.xlsx Q!E4、Q!E7、Q!F4、Q!F7、Recon!B6、Recon!B8]</span>；Google TPU v8i 開始量產出貨、OpenAI 首代 XPU 出貨 [外部新聞：Constellation Research]</li></ul>",
-    "需要觀察的事項": "<ul><li>FY2028 AI 營收 230B 的可達性｜要對上，Broadcom XPU 顆數需為市場層推得的 1.73 倍 <span class=\"tg\">[本專案：Broadcom模型_v0.1.xlsx Recon!C11]</span>｜FY2026 Q4 財報（約 2026-12-10，未確認）</li><li>毛利率下滑幅度｜模型 FY2027 67.8% vs 共識隱含約 72.4%，差在代購 HBM 比例 <span class=\"tg\">[本專案：Broadcom模型_v0.1.xlsx Recon!C32、Recon!B32]</span>｜同上</li><li>客戶融資曝險｜約 92B，若全損約等於模型 FY2027 淨利 1.03 倍 <span class=\"tg\">[本專案：Broadcom模型_v0.1.xlsx Recon!C36]</span>｜Anthropic 上市進度、OpenAI 融資條款</li><li>Google TPU 份額（聯發科分食）｜份額假設 90%→75% 是 Assumed <span class=\"tg\">[本專案：Broadcom模型_v0.1.xlsx Units!C5:E5]</span>｜Google 下一代 TPU 供應商消息</li><li>模型狀態｜Broadcom 模型 v0.1（PR #93）尚未合併到 main <span class=\"tg\">[本專案：models_extract.json AVGO.model_pending]</span>｜PR 審查</li></ul>",
-    "來源": "<ol><li>本專案：`/tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx`（README、Q、Units、PL、Recon；PR #93 未合併）；`nvidia/dist/20261023_NVIDIA模型_v0.1.1.xlsx`（Units）；AI半導體 `先驗比對_AVGO_20261023.md`、`先驗比對_Arista_20261024.md`；`markets/invest_map/data/models_extract.json`</li><li><a href=\"https://www.bloomberg.com/news/videos/2026-10-08/broadcom-in-early-financing-talks-for-openai-chips-video\" target=\"_blank\" rel=\"noopener\">Broadcom in Early Financing Talks for OpenAI Chips</a>（2026-10-08）</li><li><a href=\"https://www.bloomberg.com/news/articles/2026-10-02/broadcom-starts-amassing-60-billion-to-fund-chips-for-anthropic\" target=\"_blank\" rel=\"noopener\">Broadcom Starts Amassing Funds for Anthropic Chips</a>（2026-10-02，僅標題）</li><li><a href=\"https://finance.yahoo.com/technology/article/broadcom-to-lend-anthropic-up-to-42-billion-to-lease-chips-in-latest-circular-investing-deal-121617505.html\" target=\"_blank\" rel=\"noopener\">Broadcom to lend Anthropic up to $42 billion to lease chips</a>（2026-10-01）</li><li><a href=\"https://www.constellationr.com/insights/news/broadcom-reports-strong-q3-sees-ai-chip-revenue-accelerating-q4\" target=\"_blank\" rel=\"noopener\">Broadcom reports strong Q3, sees AI chip revenue accelerating in Q4</a>（2026-09-02）</li><li><a href=\"https://investors.broadcom.com/news-releases/news-release-details/broadcom-announces-planned-chief-financial-officer-transition\" target=\"_blank\" rel=\"noopener\">Broadcom Announces Planned Chief Financial Officer Transition</a>（2026-04-02）</li><li><a href=\"https://days.to/when-is/broadcom-earnings\" target=\"_blank\" rel=\"noopener\">When is Broadcom Earnings Q4 FY2026?</a>（日期未確認）</li></ol>"
+    "需要觀察的事項": "<ul><li>FY2028 AI 營收 230B 的可達性｜要對上，Broadcom XPU 顆數需為市場層推得的 1.73 倍 <span class=\"tg\">[本專案：Broadcom模型_v0.1.xlsx Recon!C11]</span>｜FY2026 Q4 財報（約 2026-12-10，未確認）</li><li>毛利率下滑幅度｜模型 FY2027 67.8% vs 共識隱含約 72.4%，差在代購 HBM 比例 <span class=\"tg\">[本專案：Broadcom模型_v0.1.xlsx Recon!C32、Recon!B32]</span>｜同上</li><li>客戶融資曝險｜約 92B，若全損約等於模型 FY2027 淨利 1.03 倍 <span class=\"tg\">[本專案：Broadcom模型_v0.1.xlsx Recon!C36]</span>｜Anthropic 上市進度、OpenAI 融資條款</li><li>Google TPU 份額（聯發科分食）｜份額假設 90%→75% 是 Assumed <span class=\"tg\">[本專案：Broadcom模型_v0.1.xlsx Units!C5:E5]</span>｜Google 下一代 TPU 供應商消息</li><li>模型狀態｜Broadcom 模型 v0.1 已合併到 main（PR #107，`avgo/dist/`）<span class=\"tg\">[本專案：avgo/dist/20261023_Broadcom模型_v0.1.xlsx]</span>｜下一版更新</li></ul>",
+    "來源": "<ol><li>本專案：`avgo/dist/20261023_Broadcom模型_v0.1.xlsx`（README、Q、Units、PL、Recon）；`nvidia/dist/20261023_NVIDIA模型_v0.1.1.xlsx`（Units）；AI半導體 `先驗比對_AVGO_20261023.md`、`先驗比對_Arista_20261024.md`；`markets/invest_map/data/models_extract.json`</li><li><a href=\"https://www.bloomberg.com/news/videos/2026-10-08/broadcom-in-early-financing-talks-for-openai-chips-video\" target=\"_blank\" rel=\"noopener\">Broadcom in Early Financing Talks for OpenAI Chips</a>（2026-10-08）</li><li><a href=\"https://www.bloomberg.com/news/articles/2026-10-02/broadcom-starts-amassing-60-billion-to-fund-chips-for-anthropic\" target=\"_blank\" rel=\"noopener\">Broadcom Starts Amassing Funds for Anthropic Chips</a>（2026-10-02，僅標題）</li><li><a href=\"https://finance.yahoo.com/technology/article/broadcom-to-lend-anthropic-up-to-42-billion-to-lease-chips-in-latest-circular-investing-deal-121617505.html\" target=\"_blank\" rel=\"noopener\">Broadcom to lend Anthropic up to $42 billion to lease chips</a>（2026-10-01）</li><li><a href=\"https://www.constellationr.com/insights/news/broadcom-reports-strong-q3-sees-ai-chip-revenue-accelerating-q4\" target=\"_blank\" rel=\"noopener\">Broadcom reports strong Q3, sees AI chip revenue accelerating in Q4</a>（2026-09-02）</li><li><a href=\"https://investors.broadcom.com/news-releases/news-release-details/broadcom-announces-planned-chief-financial-officer-transition\" target=\"_blank\" rel=\"noopener\">Broadcom Announces Planned Chief Financial Officer Transition</a>（2026-04-02）</li><li><a href=\"https://days.to/when-is/broadcom-earnings\" target=\"_blank\" rel=\"noopener\">When is Broadcom Earnings Q4 FY2026?</a>（日期未確認）</li></ol>"
    },
    "missing": []
   },
@@ -2565,7 +2565,7 @@
     "同業與競爭態勢": "<div class=\"ptbl\"><table><thead><tr><th>同業</th><th>重疊領域</th><th>市占或規模</th><th>標記</th></tr></thead><tbody><tr><td>Google TPU（Broadcom 設計）</td><td>自研 AI 晶片</td><td>CY2027 金額份額 9.8%</td><td><span class=\"tg\">[本專案：NVIDIA模型_v0.1.1.xlsx Units!D34]</span></td></tr><tr><td>AMD Instinct</td><td>GPU</td><td>CY2027 金額份額 6.7%</td><td><span class=\"tg\">[本專案：NVIDIA模型_v0.1.1.xlsx Units!D33]</span></td></tr><tr><td>AWS Trainium</td><td>自研 AI 晶片</td><td>CY2027 金額份額 3.0%</td><td><span class=\"tg\">[本專案：NVIDIA模型_v0.1.1.xlsx Units!D35]</span></td></tr><tr><td>其他 ASIC（MTIA、Maia、昇騰等）</td><td>自研 AI 晶片</td><td>CY2027 金額份額 5.4%</td><td><span class=\"tg\">[本專案：NVIDIA模型_v0.1.1.xlsx Units!D36]</span></td></tr></tbody></table></div><ul><li>ASIC 顆數 2027 年已過半（JPMorgan 54%），但金額只占約 14–19% <span class=\"tg\">[本專案：先驗比對_NVDA_20261023.md N5b]</span>。</li><li>本專案市場層 NVIDIA 顆數 CY2027 到 CY2028 持平（9.7M→9.5M）<span class=\"tg\">[本專案：先驗比對_NVDA_20261023.md 資料表]</span>。</li></ul>",
     "近期重大事件": "<ul><li>2026-10-19｜在德國投資高峰會與德國政府簽署「實體 AI」合作備忘錄，並宣布在歐洲投資新創與研究機構｜歐洲主權 AI 需求 [外部新聞：The Next Web]</li><li>2026-10-14｜IDC 報告指 NVIDIA 在中國 AI 晶片的份額於 2026 上半年明顯下滑，本土晶片（華為等）替代｜中國營收難回升 [外部新聞：GuruFocus 引 IDC]</li><li>2026-10-10｜FT 報導 NVIDIA 正探討與 AI 新創 Reflection AI 的交易（含收購）｜往模型端延伸 [外部新聞：Bloomberg 轉述 FT]</li><li>2026-08-27｜首批 H200 依美國新許可制度出貨中國，金額很小｜Q3 指引仍假設中國資料中心運算為 0 [外部新聞：SCMP]</li><li>2026-08-26｜FY2027 Q2 財報：營收 US$96.2B、Data Center 89.0B；Q3 指引 108B；FY2028 營收指引年增約 70%、毛利率約 72–73% <span class=\"tg\">[本專案：NVIDIA模型_v0.1.1.xlsx Q!H4、Q!H5、Q!I4、Recon!B6、Recon!B8]</span>；Vera Rubin 全面量產 [外部新聞：StorageNewsletter]</li></ul>",
     "需要觀察的事項": "<ul><li>營收水準係數 k_rec（0.828）｜FY2027 由下而上比實績高 20.7%，差額來源未驗證；Q3 實績可檢驗是時點還是長期水準｜FY2027 Q3 財報（2026-11 中旬，公司尚未公告日期）<span class=\"tg\">[本專案：nvidia/README.md v0.1.1 第 1 點、Recon B2]</span></li><li>FY2028 毛利率｜模型 68.7% vs 公司 72–73%，差在 HBM 成本吸收比例（假設 0.5）<span class=\"tg\">[本專案：NVIDIA模型_v0.1.1.xlsx Recon!C8、Recon!B8]</span>｜同上</li><li>ASIC 金額份額｜±5 個百分點使 FY2028 EPS ±6.6% <span class=\"tg\">[本專案：nvidia/README.md 敏感度]</span>｜Broadcom 2026-12 財報</li><li>2028 後顆數持平｜CY2029 顆數持平時 FY2030 EPS 只成長 2.1% <span class=\"tg\">[本專案：nvidia/README.md 核心問題的答案]</span>｜CoWoS、HBM 2027–28 擴產消息</li><li>中國恢復｜恢復 10／20／40（US$B）使 FY2028 EPS +1.5%／+3.0%／+6.0% <span class=\"tg\">[本專案：nvidia/README.md 敏感度]</span>｜美國許可與中國採購政策</li></ul>",
-    "來源": "<ol><li>本專案：`nvidia/README.md`；`nvidia/dist/20261023_NVIDIA模型_v0.1.1.xlsx`（Q、Units、Recon）；`/tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx`（Recon）；AI半導體 `先驗比對_NVDA_20261023.md`；`tsmc/README.md`（2026-10-23）</li><li><a href=\"https://thenextweb.com/news/germany-nvidia-ai-partnership-berlin-summit\" target=\"_blank\" rel=\"noopener\">Germany signs AI partnership with Nvidia at Berlin investment summit</a>（2026-10-20）</li><li><a href=\"https://www.gurufocus.com/news/9122830/nvidias-market-share-in-china-ai-chips-drops-amid-us-export-restrictions-nvda\" target=\"_blank\" rel=\"noopener\">Nvidia's Market Share in China AI Chips Drops Amid U.S. Export Restrictions</a>（2026-10-14）</li><li><a href=\"https://www.bloomberg.com/news/articles/2026-10-10/nvidia-is-in-talks-to-acquire-reflection-ai-the-ft-reports\" target=\"_blank\" rel=\"noopener\">Nvidia Explores Deal Options With Reflection AI, Financial Times Says</a>（2026-10-10，僅標題）</li><li><a href=\"https://www.scmp.com/tech/big-tech/article/3365383/nvidia-ships-first-h200s-china-forecasts-no-data-centre-computing-revenue\" target=\"_blank\" rel=\"noopener\">Nvidia ships first H200 chips to China, but forecasts no data-centre computing revenue</a>（2026-08-27）</li><li><a href=\"https://www.storagenewsletter.com/2026/08/27/nvidia-fiscal-2q27-financial-results/\" target=\"_blank\" rel=\"noopener\">NVIDIA fiscal 2Q27 financial results</a>（2026-08-27）</li><li><a href=\"https://www.cmelitegroup.com/knowledge-hub/nvidia-earnings-date/\" target=\"_blank\" rel=\"noopener\">Nvidia Earnings Date: Q3 FY2027</a>（2026-10-21，日期未確認）</li></ol>"
+    "來源": "<ol><li>本專案：`nvidia/README.md`；`nvidia/dist/20261023_NVIDIA模型_v0.1.1.xlsx`（Q、Units、Recon）；`avgo/dist/20261023_Broadcom模型_v0.1.xlsx`（Recon）；AI半導體 `先驗比對_NVDA_20261023.md`；`tsmc/README.md`（2026-10-23）</li><li><a href=\"https://thenextweb.com/news/germany-nvidia-ai-partnership-berlin-summit\" target=\"_blank\" rel=\"noopener\">Germany signs AI partnership with Nvidia at Berlin investment summit</a>（2026-10-20）</li><li><a href=\"https://www.gurufocus.com/news/9122830/nvidias-market-share-in-china-ai-chips-drops-amid-us-export-restrictions-nvda\" target=\"_blank\" rel=\"noopener\">Nvidia's Market Share in China AI Chips Drops Amid U.S. Export Restrictions</a>（2026-10-14）</li><li><a href=\"https://www.bloomberg.com/news/articles/2026-10-10/nvidia-is-in-talks-to-acquire-reflection-ai-the-ft-reports\" target=\"_blank\" rel=\"noopener\">Nvidia Explores Deal Options With Reflection AI, Financial Times Says</a>（2026-10-10，僅標題）</li><li><a href=\"https://www.scmp.com/tech/big-tech/article/3365383/nvidia-ships-first-h200s-china-forecasts-no-data-centre-computing-revenue\" target=\"_blank\" rel=\"noopener\">Nvidia ships first H200 chips to China, but forecasts no data-centre computing revenue</a>（2026-08-27）</li><li><a href=\"https://www.storagenewsletter.com/2026/08/27/nvidia-fiscal-2q27-financial-results/\" target=\"_blank\" rel=\"noopener\">NVIDIA fiscal 2Q27 financial results</a>（2026-08-27）</li><li><a href=\"https://www.cmelitegroup.com/knowledge-hub/nvidia-earnings-date/\" target=\"_blank\" rel=\"noopener\">Nvidia Earnings Date: Q3 FY2027</a>（2026-10-21，日期未確認）</li></ol>"
    },
    "missing": []
   },
@@ -2618,6 +2618,184 @@
     "來源": "<ol><li>本專案：`/home/claude/company-models/whitefiber/dist/20261022_WhiteFiber收支模型_v0_2.xlsx`（摘要、來源、輸入與假設、損益）；`whitefiber/company.json`；`whitefiber/docs/reports/20261008_whitefiber_v0.1a_資料.md`</li><li><a href=\"https://kalkine.ca/news/technology/why-is-whitefiber-nasdaqwyfi-down-695-at-an-oversold-rsi-of-277-as-ai-infrastructure-names-slide\" target=\"_blank\" rel=\"noopener\">Why Is WhiteFiber Down 6.95% at an Oversold RSI of 27.7 as AI Infrastructure Names Slide?</a>（Kalkine，2026-10-14）</li><li><a href=\"https://www.marketbeat.com/instant-alerts/price-whitefiber-nasdaq-wyfi-stock-price-down-82-heres-what-happened-2026-10-08/\" target=\"_blank\" rel=\"noopener\">WhiteFiber Stock Price Down 8.2%</a>（MarketBeat，2026-10-08）</li><li><a href=\"https://finance.yahoo.com/markets/stocks/articles/b-riley-keeps-whitefiber-buy-221508312.html\" target=\"_blank\" rel=\"noopener\">B. Riley keeps WhiteFiber at Buy, $38 target as North Carolina financing nears</a>（Yahoo Finance，2026-09-10）</li><li><a href=\"https://www.panabee.com/news/whitefiber-reshuffles-leadership-cfo-succession-and-board-realignment\" target=\"_blank\" rel=\"noopener\">WhiteFiber Reshuffles Leadership: CFO Succession and Board Realignment</a>（Panabee，2026-08-03）</li></ol>"
    },
    "missing": []
+  }
+ },
+ "models": {
+  "NVDA": {
+   "folder": "nvidia",
+   "file": "20261023_NVIDIA模型_v0.1.1.html",
+   "title": "NVIDIA模型",
+   "date": "2026-10-23",
+   "ver": "v0.1.1",
+   "xlsx": "20261023_NVIDIA模型_v0.1.1.xlsx"
+  },
+  "AVGO": {
+   "folder": "avgo",
+   "file": "20261023_Broadcom模型_v0.1.html",
+   "title": "Broadcom模型",
+   "date": "2026-10-23",
+   "ver": "v0.1",
+   "xlsx": "20261023_Broadcom模型_v0.1.xlsx"
+  },
+  "000660": {
+   "folder": "skhynix",
+   "file": "20261023_SK海力士模型_v0.4.1.html",
+   "title": "SK海力士模型",
+   "date": "2026-10-23",
+   "ver": "v0.4.1",
+   "xlsx": "20261023_SK海力士模型_v0.4.1.xlsx"
+  },
+  "005930": {
+   "folder": "samsung",
+   "file": "20261023_三星電子模型_v0.2.1.html",
+   "title": "三星電子模型",
+   "date": "2026-10-23",
+   "ver": "v0.2.1",
+   "xlsx": "20261023_三星電子模型_v0.2.1.xlsx"
+  },
+  "MU": {
+   "folder": "micron",
+   "file": "20261023_美光模型_v0.3.1.html",
+   "title": "美光模型",
+   "date": "2026-10-23",
+   "ver": "v0.3.1",
+   "xlsx": "20261023_美光模型_v0.3.1.xlsx"
+  },
+  "2330": {
+   "folder": "tsmc",
+   "file": "20261023_台積電模型_v0.2.1.html",
+   "title": "台積電模型",
+   "date": "2026-10-23",
+   "ver": "v0.2.1",
+   "xlsx": "20261023_台積電模型_v0.2.1.xlsx"
+  },
+  "ANET": {
+   "folder": "arista",
+   "file": "20261024_Arista模型_v0.1.html",
+   "title": "Arista模型",
+   "date": "2026-10-24",
+   "ver": "v0.1",
+   "xlsx": "20261024_Arista模型_v0.1.xlsx"
+  },
+  "300308": {
+   "folder": "innolight",
+   "file": "20261024_中際旭創模型_v0.1.html",
+   "title": "中際旭創模型",
+   "date": "2026-10-24",
+   "ver": "v0.1",
+   "xlsx": "20261024_中際旭創模型_v0.1.xlsx"
+  },
+  "2308": {
+   "folder": "delta",
+   "file": "20261024_台達電模型_v0.1.html",
+   "title": "台達電模型",
+   "date": "2026-10-24",
+   "ver": "v0.1",
+   "xlsx": "20261024_台達電模型_v0.1.xlsx"
+  },
+  "2382": {
+   "folder": "quanta",
+   "file": "20261024_廣達模型_v0.1.html",
+   "title": "廣達模型",
+   "date": "2026-10-24",
+   "ver": "v0.1",
+   "xlsx": "20261024_廣達模型_v0.1.xlsx"
+  },
+  "4062": {
+   "folder": "ibiden",
+   "file": "20261024_Ibiden模型_v0.1.html",
+   "title": "Ibiden模型",
+   "date": "2026-10-24",
+   "ver": "v0.1",
+   "xlsx": "20261024_Ibiden模型_v0.1.xlsx"
+  },
+  "6857": {
+   "folder": "advantest",
+   "file": "20261023_Advantest模型_v0.2.2.html",
+   "title": "Advantest模型",
+   "date": "2026-10-23",
+   "ver": "v0.2.2",
+   "xlsx": "20261023_Advantest模型_v0.2.2.xlsx"
+  },
+  "6146": {
+   "folder": "disco",
+   "file": "20261023_Disco模型_v0.1.3.html",
+   "title": "Disco模型",
+   "date": "2026-10-23",
+   "ver": "v0.1.3",
+   "xlsx": "20261023_Disco模型_v0.1.3.xlsx"
+  },
+  "MSFT": {
+   "folder": "microsoft",
+   "file": "20261025_Microsoft收支模型_v0_2_2.html",
+   "title": "Microsoft收支模型",
+   "date": "2026-10-25",
+   "ver": "v0.2.2",
+   "xlsx": "20261025_Microsoft收支模型_v0_2_2.xlsx"
+  },
+  "AMZN": {
+   "folder": "amazon",
+   "file": "20261025_Amazon收支模型_v0_2_2.html",
+   "title": "Amazon收支模型",
+   "date": "2026-10-25",
+   "ver": "v0.2.2",
+   "xlsx": "20261025_Amazon收支模型_v0_2_2.xlsx"
+  },
+  "GOOGL": {
+   "folder": "alphabet",
+   "file": "20261025_Alphabet收支模型_v0_2_2.html",
+   "title": "Alphabet收支模型",
+   "date": "2026-10-25",
+   "ver": "v0.2.2",
+   "xlsx": "20261025_Alphabet收支模型_v0_2_2.xlsx"
+  },
+  "ORCL": {
+   "folder": "oracle",
+   "file": "20261022_Oracle收支模型_v0_3_1.html",
+   "title": "Oracle收支模型",
+   "date": "2026-10-22",
+   "ver": "v0.3.1",
+   "xlsx": "20261022_Oracle收支模型_v0_3_1.xlsx"
+  },
+  "CRWV": {
+   "folder": "coreweave",
+   "file": "20261021_CoreWeave收支模型_v4_12.html",
+   "title": "CoreWeave收支模型",
+   "date": "2026-10-21",
+   "ver": "v4.12",
+   "xlsx": "20261021_CoreWeave收支模型_v4_12.xlsx"
+  },
+  "NBIS": {
+   "folder": "nebius",
+   "file": "20261022_Nebius收支模型_v0_5.html",
+   "title": "Nebius收支模型",
+   "date": "2026-10-22",
+   "ver": "v0.5",
+   "xlsx": "20261022_Nebius收支模型_v0_5.xlsx"
+  },
+  "WYFI": {
+   "folder": "whitefiber",
+   "file": "20261022_WhiteFiber收支模型_v0_2.html",
+   "title": "WhiteFiber收支模型",
+   "date": "2026-10-22",
+   "ver": "v0.2",
+   "xlsx": "20261022_WhiteFiber收支模型_v0_2.xlsx"
+  },
+  "00100": {
+   "folder": "minimax",
+   "file": "20261022_MiniMax收支模型_v0_2.html",
+   "title": "MiniMax收支模型",
+   "date": "2026-10-22",
+   "ver": "v0.2",
+   "xlsx": "20261022_MiniMax收支模型_v0_2.xlsx"
+  },
+  "02513": {
+   "folder": "zhipu",
+   "file": "20261022_智譜收支模型_v0_1_1.html",
+   "title": "智譜收支模型",
+   "date": "2026-10-22",
+   "ver": "v0.1.1",
+   "xlsx": "20261022_智譜收支模型_v0_1_1.xlsx"
   }
  }
 }

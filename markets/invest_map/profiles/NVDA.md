@@ -71,7 +71,7 @@ AI 加速器（GPU）與整櫃系統的最大供應商，靠「加速器顆數 �
 - 中國恢復｜恢復 10／20／40（US$B）使 FY2028 EPS +1.5%／+3.0%／+6.0% [本專案：nvidia/README.md 敏感度]｜美國許可與中國採購政策
 
 ## 來源
-1. 本專案：`nvidia/README.md`；`nvidia/dist/20261023_NVIDIA模型_v0.1.1.xlsx`（Q、Units、Recon）；`/tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx`（Recon）；AI半導體 `先驗比對_NVDA_20261023.md`；`tsmc/README.md`（2026-10-23）
+1. 本專案：`nvidia/README.md`；`nvidia/dist/20261023_NVIDIA模型_v0.1.1.xlsx`（Q、Units、Recon）；`avgo/dist/20261023_Broadcom模型_v0.1.xlsx`（Recon）；AI半導體 `先驗比對_NVDA_20261023.md`；`tsmc/README.md`（2026-10-23）
 2. [Germany signs AI partnership with Nvidia at Berlin investment summit](https://thenextweb.com/news/germany-nvidia-ai-partnership-berlin-summit)（2026-10-20）
 3. [Nvidia's Market Share in China AI Chips Drops Amid U.S. Export Restrictions](https://www.gurufocus.com/news/9122830/nvidias-market-share-in-china-ai-chips-drops-amid-us-export-restrictions-nvda)（2026-10-14）
 4. [Nvidia Explores Deal Options With Reflection AI, Financial Times Says](https://www.bloomberg.com/news/articles/2026-10-10/nvidia-is-in-talks-to-acquire-reflection-ai-the-ft-reports)（2026-10-10，僅標題）

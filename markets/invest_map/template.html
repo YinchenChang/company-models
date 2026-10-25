@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>AI 投資地圖</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -204,6 +205,11 @@ details[open] summary::before{content:"－ "}
 .dsec li{padding-left:2px}
 .ptbl{overflow-x:auto;border:1px solid var(--rule)}
 .ptbl table{font-size:12.5px}
+.mcard{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px 16px;border:1px solid var(--rule);padding:10px 12px;margin:6px 0 10px}
+.mcard .k{font-size:11px;color:var(--muted)}.mcard .v{font-size:14px;color:var(--ink)}
+.mopen{display:inline-block;border:1px solid var(--rule-strong);padding:6px 12px;color:var(--ink);text-decoration:none;font-size:13px}
+.mopen:hover{border-color:var(--brass)}
+.mframe{width:100%;height:78vh;min-height:520px;border:1px solid var(--rule);background:#fff;margin-top:8px}
 .ptbl th{position:static;background:var(--sunken)}
 .ptbl td{vertical-align:top}
 .mixbar{display:block;height:5px;background:var(--bar-soft);margin-top:4px;min-width:60px}
@@ -441,7 +447,17 @@ function renderProfiles(){
   });
   $("#v-profiles").innerHTML=h;
 }
-const DT=[["概要",["公司在做什麼","主要產品與營收占比"]],["產業與競爭",["市場定位與產業位置","同業與競爭態勢"]],["管理層",["管理層與經營風格"]],["動態與觀察",["近期重大事件","需要觀察的事項"]],["來源",["來源"]]];
+const DT=[["概要",["公司在做什麼","主要產品與營收占比"]],["產業與競爭",["市場定位與產業位置","同業與競爭態勢"]],["管理層",["管理層與經營風格"]],["動態與觀察",["近期重大事件","需要觀察的事項"]],["我們的模型",null],["來源",["來源"]]];
+const MD=D.models||{};
+const modelUrl=m=>location.protocol==="file:"?`../../../${m.folder}/dist/${m.file}`:`models/${m.folder}/${encodeURIComponent(m.file)}`;
+function modelPane(tk){const m=MD[tk], v=V[tk];
+  if(!m)return '<div class="pending">這家公司的模型成品尚未放上網站。</div>';
+  const u=modelUrl(m);
+  return `<section class="dsec"><h3>${esc(m.title)} · ${esc(m.ver)}</h3>
+  <div class="mcard"><div><div class="k">成品日期</div><div class="v mono">${esc(m.date)}</div></div><div><div class="k">模型隱含中心價</div><div class="v mono">${v&&v.center!=null?v.center.toFixed(2):"—"}</div></div><div><div class="k">同日收盤</div><div class="v mono">${v&&v.price!=null?v.price.toFixed(2):"—"}</div></div><div><div class="k">估值方法</div><div class="v">${esc(v?v.method:"")}</div></div></div>
+  <p class="note">以下嵌入本專案模型成品（HTML 版，與 Excel 版 <code>${esc(m.xlsx)}</code> 同一版次；可在嵌入框內切換分頁、調整情境）。數字的權威在 Excel 版。</p>
+  <p><a class="mopen" href="${u}" target="_blank" rel="noopener">在新分頁開啟完整模型 ↗</a></p>
+  <iframe class="mframe" src="${u}" loading="lazy" title="${esc(m.title)}"></iframe></section>`;}
 let lastFocus=null, curTk=null;
 function decorateMix(root){
   root.querySelectorAll(".ptbl").forEach(t=>{
@@ -452,6 +468,7 @@ function decorateMix(root){
   });
 }
 function paneHtml(pf,i){
+  if(DT[i][1]===null)return modelPane(curTk);
   return DT[i][1].map(s=>`<section class="dsec${s==="近期重大事件"?" ev":""}"><h3>${s}</h3>${pf.sections[s]||'<p class="note">（未填）</p>'}</section>`).join("");
 }
 function openDrawer(tk,tab){
@@ -464,7 +481,7 @@ function openDrawer(tk,tab){
    ${pf?`<div class="dmeta" style="color:var(--navy-muted)">${["name_full","hq","founded","employees","fiscal_year_end","asof"].filter(k=>m[k]).map(k=>`<span class="mi"><span>${{name_full:"全名",hq:"總部",founded:"成立",employees:"員工",fiscal_year_end:"會計年度結束",asof:"資料日"}[k]}</span><b style="color:var(--navy-ink)">${m[k]}</b></span>`).join("")}</div>`:""}</div>
    <div class="dstats">${stats.map(([k,x])=>`<div><div class="k">${k}</div><div class="v">${x}</div></div>`).join("")}</div>
    <div class="dbody"><div class="dtabs" role="tablist">${DT.map((d,i)=>`<button class="dtab" role="tab" data-dt="${i}" aria-selected="${i===(tab||0)}">${d[0]}</button>`).join("")}<button class="dtab" data-goval="${esc(tk)}">估值 →</button></div>
-   <div class="dpane" id="dpane">${pf?paneHtml(pf,tab||0):'<div class="pending">這家公司的檔案尚未完成。</div>'}</div></div>`;
+   <div class="dpane" id="dpane">${pf||DT[tab||0][1]===null?paneHtml(pf,tab||0):'<div class="pending">這家公司的檔案尚未完成。</div>'}</div></div>`;
   if(pf)decorateMix($("#dpane"));
   $("#drawer").hidden=false; $("#scrim").hidden=false; document.body.style.overflow="hidden";
   $("#dclose").focus();
@@ -480,12 +497,13 @@ function renderMethod(){
   <dl class="def">
    ${row("資料活頁簿",`<code>company-models/markets/invest_map/dist/${esc(D.meta.book)}</code>：參數、每GW、價值鏈、地位、價格、估值、地圖節點七頁。`)}
    ${row("Tokenomics",`<code>${esc(D.meta.tk_file)}</code>（commit ${esc(D.meta.tk_commit)}），經官方取數工具快照：IF_CapexIT／IF_CapexFacility／IF_CapexTotal／IF_HoldEcon／L1_RevGW_PQ_VR200／L1_LTotalFleetVDisc／L1_LReqFleet_Full 等。每 GW＝IT 關鍵電力。`)}
-   ${row("公司模型","company-models 各公司 <code>dist/*.xlsx</code> 的重算值，抽數程式記錄每個值的工作表與儲存格。Broadcom 讀 PR #93 分支（未合併）。")}
+   ${row("公司模型","company-models 各公司 <code>dist/*.xlsx</code> 的重算值，抽數程式記錄每個值的工作表與儲存格。")}
    ${row("候選母體","AI半導體 候選母體 v0.2.2（2026-10-24）：60 家、8 個次產業、次產業排序與公司重要性。權威在 AI半導體 Project。")}
    ${row("中心價","半導體 P/E 類：十年倍數規則值與 Andy 先驗合理 P/E 兩者取低；記憶體：P/B 規則值（P/E 規則值為對照）；設備股：共用循環位置規則；雲端與 neocloud：模型加權目標價；MiniMax：反向檢驗折現價值 ÷ 市值 × 模型日股價。")}
    ${row("下檔價","同一方法下最差情境（多為情境 C、FY2028）與中心價取低；雲端取情境區間下緣。")}
    ${row("股價",`${esc(D.meta.price_date)} 收盤，WebSearch 取得並記錄來源數。各模型內的現價為建模日（09-24 至 10-23），差距超過 20% 時標示。`)}
    ${row("地位分數","不可替代性（次產業與公司平均）、市場位置（次產業內 1–4 級）、價值鏈分量（占 AI IT 資本支出比例分級），加權合成。")}
+   ${row("我們的模型","公司檔案的「我們的模型」分頁嵌入各公司模型成品的 HTML 版（<code>&lt;資料夾&gt;/dist/*.html</code>，與抽數用的 xlsx 同一版次）；GitHub Pages 發布時一併複製到 <code>models/</code>。")}
    ${row("公司檔案","每家一份 Markdown（<code>markets/invest_map/profiles/&lt;代號&gt;.md</code>），由研究代理依同一規格撰寫、附來源標記，經未參與撰寫的代理抽查數字。背景知識用途，不是投資結論。")}
    ${row("限制","各模型估值方法不同，空間只能粗略比較；MAG 三家模型終值占 EV 逾 90%，評價口徑待 MAG v0.3；智譜模型未出隱含價；未上市的 OpenAI、Anthropic 只列在地圖。")}
   </dl>`;
@@ -502,7 +520,7 @@ document.addEventListener("click",e=>{
   const t=e.target.closest(".tab"); if(t){show(t.dataset.v);try{history.replaceState(null,"","#"+t.dataset.v)}catch(_){};return;}
   const op=e.target.closest("[data-open]"); if(op){e.preventDefault();openDrawer(op.dataset.open);return;}
   if(e.target.closest("#dclose")||e.target.id==="scrim"){closeDrawer();return;}
-  const dt=e.target.closest("[data-dt]"); if(dt&&curTk){const i=+dt.dataset.dt; document.querySelectorAll(".dtab[data-dt]").forEach(b=>b.setAttribute("aria-selected",+b.dataset.dt===i)); $("#dpane").innerHTML=paneHtml(PF[curTk],i); decorateMix($("#dpane")); $("#dpane").parentElement.scrollTop=0; return;}
+  const dt=e.target.closest("[data-dt]"); if(dt&&curTk){const i=+dt.dataset.dt; document.querySelectorAll(".dtab[data-dt]").forEach(b=>b.setAttribute("aria-selected",+b.dataset.dt===i)); $("#dpane").innerHTML=(PF[curTk]||DT[i][1]===null)?paneHtml(PF[curTk],i):'<div class="pending">這家公司的檔案尚未完成。</div>'; decorateMix($("#dpane")); $("#dpane").parentElement.scrollTop=0; return;}
   const gv=e.target.closest("[data-goval]"); if(gv){const t=gv.dataset.goval; closeDrawer(); invFilter="全部"; renderInvest(); show("invest",t); return;}
   const g=e.target.closest("[data-go]"); if(g){e.preventDefault();invFilter="全部";renderInvest();show("invest",g.dataset.go);return;}
   const pf=e.target.closest("[data-pf]"); if(pf){posFilter=pf.dataset.pf;renderPosition();return;}
