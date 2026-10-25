@@ -26,6 +26,17 @@ on:
       - 'delta/**'
       - 'quanta/**'
       - 'innolight/**'
+      - 'avgo/**'
+      - 'foxconn/**'
+      - 'avc/**'
+      - 'amat/**'
+      - 'emc/**'
+      - 'asml/**'
+      - 'accton/**'
+      - 'lrcx/**'
+      - 'klac/**'
+      - 'hanmi/**'
+      - 'amd/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -48,6 +59,17 @@ on:
       - 'delta/**'
       - 'quanta/**'
       - 'innolight/**'
+      - 'avgo/**'
+      - 'foxconn/**'
+      - 'avc/**'
+      - 'amat/**'
+      - 'emc/**'
+      - 'asml/**'
+      - 'accton/**'
+      - 'lrcx/**'
+      - 'klac/**'
+      - 'hanmi/**'
+      - 'amd/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -88,6 +110,17 @@ jobs:
             "delta|python3 delta/build_delta.py|delta/dist"
             "quanta|python3 quanta/build_quanta.py|quanta/dist"
             "innolight|python3 innolight/build_innolight.py|innolight/dist"
+            "avgo|python3 avgo/build_avgo.py|avgo/dist"
+            "amd|python3 amd/build_amd.py|amd/dist"
+            "hanmi|python3 hanmi/build_hanmi.py|hanmi/dist"
+            "klac|python3 klac/build_klac.py|klac/dist"
+            "lrcx|python3 lrcx/build_lrcx.py|lrcx/dist"
+            "accton|python3 accton/build_accton.py|accton/dist"
+            "asml|python3 asml/build_asml.py|asml/dist"
+            "emc|python3 emc/build_emc.py|emc/dist"
+            "amat|python3 amat/build_amat.py|amat/dist"
+            "avc|python3 avc/build_avc.py|avc/dist"
+            "foxconn|python3 foxconn/build_foxconn.py|foxconn/dist"
           )
           failed=0
           for t in "${targets[@]}"; do

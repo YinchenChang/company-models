@@ -1,0 +1,89 @@
+{
+ "company": "智邦科技",
+ "ticker": "2345",
+ "thesis": "@README!A3",
+ "question": "交換器速率換代與 Trainium 第二供應商之下，智邦在白牌交換器與加速卡的份額路徑能否支撐目前的倍數",
+ "scenarios": [{"key": "A", "name": "情境 A"}, {"key": "B", "name": "情境 B"}, {"key": "C", "name": "情境 C"}],
+ "sections": [
+  {"id": "thesis", "title": "命題與核心問題", "intro": "@README!A4", "blocks": [
+   {"type": "kv", "items": [["情境 A", "@PL!A60"], ["情境 B", "@PL!A103"], ["情境 C", "@PL!A146"], ["會計年度與口徑", "@README!A6"]]}
+  ]},
+  {"id": "drivers", "title": "驅動因子 → 推導量", "intro": "標記沿用 Excel：Verified、Interested-party、Analogy、Assumed、Derived。輸入取自 In 頁，推導量取自 PL 頁情境 A 與 Units 頁。", "blocks": [
+   {"type": "table", "head": ["輸入", "基準值", "標記", "推導量", "因果方向"], "rows": [
+    ["@In!B6", ["@In!E6|n1", " ", "@In!C6"], "@In!G6|tag", ["AI 乙太網路交換器市場（FY2027）：", "@Units!D4|n1", " ", "US$B"], "加速器顆數 × 每顆 scale-out 交換器內容；讀網通市場模型，不在本模型另訂；換代的單價上升含在每顆內容"],
+    ["@In!B10", ["@In!E10|n1", " ", "@In!C10"], "@In!G10|tag", ["其中非 NVIDIA scale-up 交換匣（FY2027）：", "@Units!D5|n1", " ", "US$B"], "Trainium、其他 ASIC、AMD 機架內的乙太網路交換匣"],
+    ["@In!B34", ["@In!E34|p0"], "@In!G34|tag", ["白牌 AI 乙太網路交換器市場（FY2027）：", "@Units!D7|n1", " ", "US$B"], "超大規模業者自研網路作業系統、擴大白牌；NVIDIA 整套方案則反方向"],
+    ["@PL!A73", ["@PL!D73|p1"], "Derived", ["智邦 AI 交換器營收（FY2026）：", "@PL!D76|n1", " ", "NT$B"], "以營收拆分校準；分子含前端資料中心交換器"],
+    ["@In!B38", ["@In!E38|n2"], "@In!G38|tag", ["智邦 AI 交換器營收（FY2028）：", "@PL!F76|n1", " ", "NT$B"], "份額相對值是最需要逐季檢查的輸入：每個速率世代重新競標"],
+    ["@In!B41", ["@In!E41|n2"], "@In!G41|tag", ["網路應用產品營收（FY2027）：", "@PL!E81|n1", " ", "NT$B"], "Trainium 顆數 × 每顆智邦營收；第二供應商與下一代 Trainium 是主要風險"],
+    ["@In!B49", ["@In!E49|p0"], "@In!G49|tag", ["每顆 Trainium 的智邦營收（FY2026）：", "@PL!D79|n1", " ", "千新台幣"], "決定兩條 AI 營收線的起點；公司未揭露 FY2026 產品別比例"],
+    ["@In!B55", ["@In!E55|p0"], "@In!G55|tag", ["毛利率（FY2027）：", "@PL!E91|p1"], "網路應用產品占比下降時，毛利率上升"],
+    ["@In!B65", ["@In!E65|n2"], "@In!G65|tag", ["營業利益率（FY2027）：", "@PL!E95|p1"], "營業費用成長慢於營收，營業利益率上升"]
+   ]},
+   {"type": "table", "caption": "智邦白牌交換器份額（本專案權威）", "head": ["@Units!A3", "@Units!B3", "@Units!C3", "@Units!D3", "@Units!E3", "@Units!F3"], "rowgen": {"sheet": "Units", "rows": "4-13", "cols": ["A", "B", "C", "D", "E", "F"], "fmts": ["", "", "n1", "n1", "n1", "n1"], "row_fmt": {"6": {"C": "p1", "D": "p1", "E": "p1", "F": "p1"}, "8": {"C": "p1", "D": "p1", "E": "p1", "F": "p1"}, "9": {"C": "n2", "D": "n2", "E": "n2", "F": "n2"}, "11": {"C": "p1", "D": "p1", "E": "p1", "F": "p1"}, "12": {"C": "n2", "D": "n2", "E": "n2", "F": "n2"}, "13": {"C": "p2", "D": "p2", "E": "p2", "F": "p2"}}}},
+   {"type": "note", "parts": ["@Units!A15"]}
+  ]},
+  {"id": "pl", "title": "三情境損益", "intro": "FY2025 為實績，FY2026 為錨點（前兩季實績＋第三季營收實績＋假設），FY2027 起為模型。三情境在 FY2027 相同，差異從 CY2028 的顆數係數開始。", "blocks": [
+   {"type": "pl", "years": "@PL!C3:G3", "metrics": [
+    {"name": ["營收（", "@PL!B5", "）"], "fmt": "n1", "chart": true, "rows": {"A": "@PL!C5:G5", "B": "@PL!C18:G18", "C": "@PL!C31:G31"}},
+    {"name": ["AI 交換器營收（", "@PL!B7", "）"], "fmt": "n1", "chart": true, "rows": {"A": "@PL!C7:G7", "B": "@PL!C20:G20", "C": "@PL!C33:G33"}},
+    {"name": ["網路應用產品營收（", "@PL!B8", "）"], "fmt": "n1", "rows": {"A": "@PL!C8:G8", "B": "@PL!C21:G21", "C": "@PL!C34:G34"}},
+    {"name": "毛利率", "fmt": "p1", "chart": true, "ymin": "auto", "rows": {"A": "@PL!C11:G11", "B": "@PL!C24:G24", "C": "@PL!C37:G37"}},
+    {"name": "營業利益率", "fmt": "p1", "rows": {"A": "@PL!C12:G12", "B": "@PL!C25:G25", "C": "@PL!C38:G38"}},
+    {"name": ["EPS（", "@PL!B14", "）"], "fmt": "n2", "chart": true, "rows": {"A": "@PL!C14:G14", "B": "@PL!C27:G27", "C": "@PL!C40:G40"}}
+   ]},
+   {"type": "kv", "items": [["@PL!A44", "@PL!D44|n3"], ["@PL!A45", "@PL!D45|n3"], ["@PL!A46", "@PL!D46|n3"]]}
+  ]},
+  {"id": "valuation", "title": "估值", "intro": "@Val!A1", "blocks": [
+   {"type": "table", "caption": "目標價與上檔空間", "head": ["@Val!A5", "@Val!B5", "@Val!C5", "@Val!D5"], "rows": [
+    ["@Val!A6", "@Val!B6|n0", "", ""],
+    ["@Val!A7", "@Val!B7|sp0", "", ""],
+    ["@Val!A8", "@Val!B8|n0", "@Val!C8|sp0", ""],
+    ["@Val!A9", "@Val!B9|n0", "@Val!C9|sp0", ""],
+    ["@Val!A10", "@Val!B10|n0", "@Val!C10|sp0", ""],
+    ["@Val!A11", "@Val!B11|p0", "@Val!C11|p0", "@Val!D11|p0"]
+   ]},
+   {"type": "note", "parts": ["@Val!A12", "：", "@Val!B12"]},
+   {"type": "table", "caption": "現價與市場隱含倍數", "head": ["@Val!A15", "@Val!B15", "@Val!C15", "@Val!D15"], "rows": [
+    ["@Val!A16", "@Val!B16|n0", "", ""],
+    ["@Val!A17", "@Val!B17|x1", "@Val!C17|x1", "@Val!D17|x1"],
+    ["@Val!A18", "@Val!B18|x1", "@Val!C18|x1", "@Val!D18|x1"],
+    ["@Val!A19", "@Val!B19|x1", "@Val!C19|x1", "@Val!D19|x1"],
+    ["@Val!A20", "@Val!B20|x1", "@Val!C20|x1", "@Val!D20|x1"],
+    ["@Val!A21", "@Val!B21|n2", "", ""],
+    ["@Val!A22", "@Val!B22|x1", "", ""],
+    ["@Val!A23", "@Val!B23|x1", "", ""]
+   ]},
+   {"type": "note", "parts": ["@Val!A2"]},
+   {"type": "table", "caption": "循環位置", "head": ["@Val!A26", "@Val!B26", "@Val!C26", "@Val!D26", "@Val!E26"], "rowgen": {"sheet": "Val", "rows": "27-29", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "yr", "", "x1", ""]}},
+   {"type": "h3", "text": "規則值隱含股價（十年市盈率）"},
+   {"type": "table", "head": ["@Val!A32", "@Val!B32", "@Val!C32", "@Val!D32", "@Val!E32", "@Val!F32", "@Val!G32"], "rowgen": {"sheet": "Val", "rows": "33-35", "cols": ["A", "B", "C", "D", "E", "F", "G"], "fmts": ["", "n2", "n2", "x1", "n0", "sp0", "x1"]}},
+   {"type": "bars", "title": "規則值隱含股價與現價", "items": [{"label": "情境 A", "value": "@Val!E33", "series": 0}, {"label": "情境 B", "value": "@Val!E34", "series": 1}, {"label": "情境 C", "value": "@Val!E35", "series": 2}], "ref": {"label": "現價", "value": "@Val!B16"}, "fmt": "n0"},
+   {"type": "h3", "text": "What must be true：FY2027 年底要達到的倍數"},
+   {"type": "table", "head": ["@Val!A37", "@Val!B37", "@Val!C37", "@Val!D37"], "rowgen": {"sheet": "Val", "rows": "38-42", "cols": ["A", "B", "C", "D"], "fmts": ["n2", "x1", "x1", "x1"]}},
+   {"type": "note", "parts": ["@Val!A43"]},
+   {"type": "table", "caption": "十年市盈率與規則值", "collapse": true, "summary": "展開：十年年底市盈率（兩個資料商來源）與分位", "head": ["@Val!A64", "@Val!B64", "@Val!C64"], "rowgen": {"sheet": "Val", "rows": "65-84", "cols": ["A", "B", "C"], "fmts": ["", "x1", "x1"]}},
+   {"type": "note", "parts": ["@Val!A61"]}
+  ]},
+  {"id": "recon", "title": "對帳：共識、法人拆分與研調份額", "intro": "@Recon!A1", "blocks": [
+   {"type": "table", "head": ["@Recon!A3", "@Recon!B3", "@Recon!C3", "@Recon!D3", "@Recon!E3", "@Recon!F3", "@Recon!G3", "@Recon!H3", "@Recon!I3", "@Recon!J3"], "rowgen": {"sheet": "Recon", "rows": "4-21", "cols": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"], "fmts": ["", "n2", "n2", "sp1", "n2", "sp1", "n2", "sp1", "", ""],
+    "row_fmt": {"11": {"B": "p1", "C": "p1", "D": "sp1", "E": "p1", "F": "sp1", "G": "p1", "H": "sp1"}, "12": {"B": "p1", "C": "p1", "D": "sp1", "E": "p1", "F": "sp1", "G": "p1", "H": "sp1"}, "13": {"C": "p1", "E": "p1", "G": "p1"}, "14": {"C": "p2", "E": "p2", "G": "p2"}, "17": {"C": "p1", "E": "p1", "G": "p1"}, "18": {"B": "p1", "C": "p1", "D": "sp1", "E": "p1", "F": "sp1", "G": "p1", "H": "sp1"}}}}
+  ]},
+  {"id": "sens", "title": "敏感度", "intro": "@Sens!A1", "blocks": [
+   {"type": "tornado", "title": "FY2028 EPS 相對基準的變動（情境 A，一次動一個輸入）", "sheet": "Sens", "rows": "5-22", "label_col": "A", "value_col": "L", "fmt": "sp1"},
+   {"type": "table", "collapse": true, "summary": "展開：全部案例的 FY2027、FY2028 營收、AI 交換器營收、毛利率與 EPS", "head": ["@Sens!A3", "@Sens!B3", "@Sens!C3", "@Sens!D3", "@Sens!E3", "@Sens!F3", "@Sens!G3", "@Sens!H3", "@Sens!I3", "@Sens!J3", "@Sens!K3", "@Sens!L3"], "rowgen": {"sheet": "Sens", "rows": "4-22", "cols": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"], "fmts": ["", "", "n1", "n1", "p1", "n2", "sp1", "n1", "n1", "p1", "n2", "sp1"]}},
+   {"type": "note", "parts": ["@Sens!A24"]}
+  ]},
+  {"id": "status", "title": "資料狀態", "blocks": [
+   {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋（取代建置 commit）", "$sha"], ["Tokenomics 快照版本", "本模型不直接讀取 Tokenomics 快照；經由網通市場模型間接使用，版本見下方上游成品的標題。"]]},
+   {"type": "h3", "text": "上游成品（市場層與其他公司模型）"},
+   {"type": "upstream", "sheets": ["In"]},
+   {"type": "h3", "text": "待複核項目"},
+   {"type": "list", "items": ["公司原文（季報、月營收、法說簡報）本版只經媒體轉述，原文待人工複核。", "@Q!A2", "標為「未找到」的項目（見下方清單）待找到來源後補上。"]},
+   {"type": "h3", "text": "已知限制"},
+   {"type": "note", "parts": ["@README!A15"]},
+   {"type": "h3", "text": "「未找到」清單"},
+   {"type": "scan", "needle": "未找到", "collapse": true, "summary": "展開：標為「未找到」的輸入與來源", "sheets": {"In": ["B", "H", "I"], "Q": ["A", "J"], "Val": ["A", "C"], "Sources": ["A", "B"]}, "empty": "沒有標為未找到的項目。"}
+  ]}
+ ]
+}

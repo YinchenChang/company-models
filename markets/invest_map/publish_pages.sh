@@ -9,14 +9,21 @@ URL=$(git -C "$ROOT" remote get-url origin)
 TMP=$(mktemp -d)
 cp "$ROOT/markets/invest_map/dist/index.html" "$TMP/index.html"
 touch "$TMP/.nojekyll"
-# 各公司完整收支模型（HTML＋Excel），以資料夾名為穩定網址：models/<資料夾>.html／.xlsx
-mkdir -p "$TMP/models"
-for d in "$ROOT"/*/dist; do
-  f=$(basename "$(dirname "$d")")
-  h=$(ls "$d"/*.html 2>/dev/null | head -1); x=$(ls "$d"/*.xlsx 2>/dev/null | head -1)
-  [ -n "$h" ] && cp "$h" "$TMP/models/$f.html"
-  [ -n "$x" ] && cp "$x" "$TMP/models/$f.xlsx"
-done
+# 「我們的模型」分頁：複製 data.json 列出的各公司模型 HTML 到 models/<資料夾>/
+python3 - "$ROOT" "$TMP" <<'PY'
+import json, os, shutil, sys
+root, tmp = sys.argv[1], sys.argv[2]
+d = json.load(open(os.path.join(root, "markets/invest_map/dist/data.json"), encoding="utf-8"))
+for tk, m in d.get("models", {}).items():
+    src = os.path.join(root, m["folder"], "dist", m["file"])
+    dst = os.path.join(tmp, "models", m["folder"])
+    os.makedirs(dst, exist_ok=True)
+    shutil.copy2(src, os.path.join(dst, m["file"]))
+    x = os.path.join(root, m["folder"], "dist", m["xlsx"])
+    if os.path.exists(x):
+        shutil.copy2(x, os.path.join(dst, m["xlsx"]))
+print("模型 HTML：", len(d.get("models", {})), "份")
+PY
 printf '# AI 投資地圖（GitHub Pages 發布分支）\n\n本分支只放網站成品，由 main 的 `markets/invest_map/publish_pages.sh` 產生（來源 %s）。研究整理，非投資建議。\n' "$SHA" > "$TMP/README.md"
 cd "$TMP"
 git init -q -b gh-pages

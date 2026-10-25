@@ -6,6 +6,7 @@
 import csv
 import glob
 import json
+import re
 import os
 import shutil
 import subprocess
@@ -128,6 +129,7 @@ def main():
         "pergw": pergw, "segments": segments, "position": position, "valuation": valuation,
         "nodes": nodes, "params": params,
         "profiles": load_all(os.path.join(HERE, "profiles")),
+        "models": model_files(valuation),
     }
     miss = {k: v["missing"] for k, v in data["profiles"].items() if v["missing"]}
     if miss:
@@ -143,6 +145,30 @@ def main():
     with open(os.path.join(HERE, "dist", "data.json"), "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=1)
     print("寫出", out, f"（{len(valuation)} 檔估值、{len(position)} 檔地位、{len(nodes)} 個地圖節點）")
+
+
+def model_files(valuation):
+    """各公司模型成品 HTML（與抽數用的 xlsx 同名）：網站「我們的模型」分頁嵌入。
+    GitHub Pages 上的路徑為 models/<資料夾>/<檔名>（publish_pages.sh 複製）；本機開 dist/index.html 時改用 repo 相對路徑。"""
+    ROOT = os.path.dirname(os.path.dirname(HERE))
+    ext = json.load(open(os.path.join(HERE, "data", "models_extract.json"), encoding="utf-8"))
+    out = {}
+    for v in valuation:
+        m = (ext.get(v["tk"]) or {}).get("model")
+        if not m:
+            continue
+        h = os.path.splitext(m)[0] + ".html"
+        if not os.path.exists(os.path.join(ROOT, h)):
+            print("警告：找不到模型 HTML", h)
+            continue
+        folder, _, fn = h.split("/", 2)
+        stem = fn[:-5]
+        mm = re.match(r"^(\d{8})_(.+?)_(v[\d._]+)$", stem)
+        date, title, ver = (mm.group(1), mm.group(2), mm.group(3).replace("_", ".")) if mm else ("", stem, "")
+        out[v["tk"]] = {"folder": folder, "file": fn, "title": title,
+                        "date": f"{date[:4]}-{date[4:6]}-{date[6:]}" if date else "", "ver": ver,
+                        "xlsx": os.path.basename(m)}
+    return out
 
 
 if __name__ == "__main__":

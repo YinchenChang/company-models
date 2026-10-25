@@ -115,68 +115,67 @@
   }
  },
  "AVGO": {
-  "model": "20261023_Broadcom模型_v0.1.xlsx",
+  "model": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx",
   "price": {
    "value": 323.24,
    "cell": "Val!B6",
-   "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+   "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
   },
   "price_date": "2026-10-22",
   "pe_fy28": [
    {
     "value": 15.3728496895549,
     "cell": "Val!B9",
-    "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+    "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
    },
    {
     "value": 18.1211848859495,
     "cell": "Val!C9",
-    "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+    "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
    },
    {
     "value": 21.8108621240607,
     "cell": "Val!D9",
-    "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+    "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
    }
   ],
   "andy_pe": {
    "value": 25.0,
    "cell": null,
    "file": null,
-   "source": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx Val!A31 標題"
+   "source": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx Val!A31 標題"
   },
   "andy27_A": {
    "value": 451.946157912072,
    "cell": "Val!C33",
-   "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+   "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
   },
   "andy28_A": {
    "value": 525.667014456705,
    "cell": "Val!F33",
-   "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+   "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
   },
   "andy27_B": {
    "value": 451.946157912072,
    "cell": "Val!C34",
-   "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+   "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
   },
   "andy28_B": {
    "value": 445.942141800326,
    "cell": "Val!F34",
-   "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+   "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
   },
   "andy27_C": {
    "value": 451.946157912072,
    "cell": "Val!C35",
-   "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+   "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
   },
   "andy28_C": {
    "value": 370.503465385049,
    "cell": "Val!F35",
-   "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+   "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
   },
   "rule_note": "十年倍數待前瞻 P/E 歷史（Bloomberg）；規則值未算",
-  "model_pending": "PR #93 未合併",
   "cash": {
    "basis": "淨利",
    "label": "PL 頁各情境模型年度淨利（不含實績）",
@@ -222,7 +221,7 @@
      "PL!G39"
     ]
    ],
-   "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+   "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
   }
  },
  "000660": {
@@ -1530,7 +1529,7 @@
   },
   "cash": {
    "basis": "現金流",
-   "label": "營運缺口＋股利＋回購（營運缺口加回股東回饋）",
+   "label": "營運缺口＋股利＋回購",
    "values": [
     [
      "FY27",
@@ -1601,7 +1600,7 @@
   },
   "cash": {
    "basis": "現金流",
-   "label": "營運缺口＋股利＋回購（營運缺口加回股東回饋）",
+   "label": "營運缺口＋股利＋回購",
    "values": [
     [
      "2026",
@@ -1672,7 +1671,7 @@
   },
   "cash": {
    "basis": "現金流",
-   "label": "營運缺口＋股利＋回購（營運缺口加回股東回饋）",
+   "label": "營運缺口＋股利＋回購",
    "values": [
     [
      "2026",
@@ -1743,7 +1742,7 @@
   },
   "cash": {
    "basis": "現金流",
-   "label": "營運缺口＋股利（營運缺口加回股東回饋）",
+   "label": "營運缺口＋股利",
    "values": [
     [
      "FY27",
@@ -1814,7 +1813,7 @@
   },
   "cash": {
    "basis": "現金流",
-   "label": "營運缺口（營運缺口加回股東回饋）",
+   "label": "營運缺口（不含融資、不含還本；無股利與回購）",
    "values": [
     [
      "FY26",
@@ -1885,7 +1884,7 @@
   },
   "cash": {
    "basis": "現金流",
-   "label": "營運缺口（營運缺口加回股東回饋）",
+   "label": "營運缺口（不含融資、不含還本；無股利與回購）",
    "values": [
     [
      "FY26",
@@ -1956,7 +1955,7 @@
   },
   "cash": {
    "basis": "現金流",
-   "label": "營運缺口＋股利（營運缺口加回股東回饋）",
+   "label": "營運缺口＋股利",
    "values": [
     [
      "FY26",

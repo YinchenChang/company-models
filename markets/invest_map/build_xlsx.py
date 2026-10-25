@@ -190,7 +190,7 @@ def main():
         "三個視角：(1) 供應鏈地圖＝「價值鏈」頁＋Tokenomics 每 GW 金額；(2) 產業地位＝「地位」頁；(3) 可投資性＝「估值」頁。",
         "黃底＝判斷輸入（Andy 可直接改；重建時讀回，不被程式覆寫）。藍字＝自各模型或 Tokenomics 抄錄的值，旁欄註明來源儲存格。其餘為公式。",
         f"Tokenomics：{TK['source']['file']}（commit {TK['source']['commit'][:7]}；擷取 {TK['source']['extractedAt']}）",
-        "公司模型：company-models 各公司 dist/*.xlsx（extract_models.py 抽數；AVGO 讀 PR #93 分支，未合併）。",
+        "公司模型：company-models 各公司 dist/*.xlsx（extract_models.py 抽數）。",
         "AI半導體 候選母體 v0.2.2（2026-10-24）：次產業排序、公司重要性、市場地位文字。權威在 AI半導體 Project。",
         "收支關卡（Andy 2026-10-25 10:48）：先看收支、再看評價。模型期間（2026 起約五年）現金收支合計為負＝入不敷出、有資金缺口，"
         "不論估值空間多大，最終分級一律為「收支不足」。口徑：雲端／neocloud／MAG 模板一律用「營運缺口＋股東回饋（股利、回購）」；記憶體、模型商用自由現金流；"
@@ -372,7 +372,7 @@ def main():
             method = "替代口徑：Andy 合理 P/E"
             c1 = m["andy27_A"]
             b1 = m["andy28_C"]
-            note = m["rule_note"] + ("；模型在 PR #93，未合併" if tk == "AVGO" else "")
+            note = m["rule_note"]
         elif tk in ("ANET", "2308", "300308", "2382"):
             method = "P/E：規則值與 Andy 合理 P/E 取低"
             c1, c2 = m["rule_A"], m["andy27_A"]

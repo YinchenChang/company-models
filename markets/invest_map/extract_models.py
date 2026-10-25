@@ -4,7 +4,7 @@
 本程式只讀、不計算；換算（空間、分級、地位分數）在 AI投資地圖_資料.xlsx 以公式完成。
 
 用法：python3 markets/invest_map/extract_models.py [--avgo <avgo dist xlsx 路徑>]
-AVGO 模型在 PR #93（未合併）時，以 --avgo 指向該分支的成品。
+AVGO 模型已合併（PR #107，avgo/dist/）；預設讀 avgo/dist，--avgo 只在要改讀其他成品時使用。
 """
 import argparse
 import glob
@@ -189,7 +189,8 @@ def gap_plus_returns(b):
                 x[1] += amap[x[0]][0]
                 x[2] += "＋" + amap[x[0]][1].split("!")[1]
         parts.append(name)
-    return {"basis": "現金流", "label": "＋".join(parts) + "（營運缺口加回股東回饋）",
+    label = "＋".join(parts) if len(parts) > 1 else "營運缺口（不含融資、不含還本；無股利與回購）"
+    return {"basis": "現金流", "label": label,
             "values": [tuple(x) for x in vals], "file": b.rel}
 
 
@@ -210,7 +211,7 @@ def cloud(b):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--avgo", help="AVGO 成品 xlsx（PR #93 分支）")
+    ap.add_argument("--avgo", help="AVGO 成品 xlsx（預設 avgo/dist）")
     a = ap.parse_args()
     out = {}
 
@@ -226,14 +227,13 @@ def main():
          "rule_note": "規則值不適用（落後倍數含高成長期溢價；模型 Val 第 3 節）"}
     out["NVDA"] = {"model": b.rel, **d}
 
-    if a.avgo:
-        b = Book(a.avgo)
+    if True:
+        b = Book(a.avgo or dist_xlsx("avgo"))
         d = {"price": b.num("Val", [(0, r"^現價（")], 0), "price_date": "2026-10-22",
              "pe_fy28": [b.num("Val", [(0, r"^現價 ÷ FY2028 EPS（模型）")], i) for i in range(3)],
              **andy_rows(b, r"(\d+)x"),
              "rule_note": "十年倍數待前瞻 P/E 歷史（Bloomberg）；規則值未算"}
-        d["model_pending"] = "PR #93 未合併"
-        out["AVGO"] = {"model": os.path.basename(a.avgo), **d}
+        out["AVGO"] = {"model": b.rel, **d}
 
     # --- 記憶體（P/B 主、P/E 對照） ---
     for tk, folder in (("000660", "skhynix"), ("005930", "samsung"), ("MU", "micron")):
@@ -296,8 +296,7 @@ def main():
     for tk, folder in (("NVDA", "nvidia"), ("2330", "tsmc"), ("ANET", "arista"), ("2308", "delta"), ("300308", "innolight"),
                        ("2382", "quanta"), ("4062", "ibiden"), ("6857", "advantest"), ("6146", "disco")):
         out[tk]["cash"] = dict(basis="淨利", **net_income_rows(Book(dist_xlsx(folder))))
-    if a.avgo:
-        out["AVGO"]["cash"] = dict(basis="淨利", **net_income_rows(Book(a.avgo)))
+    out["AVGO"]["cash"] = dict(basis="淨利", **net_income_rows(Book(a.avgo or dist_xlsx("avgo"))))
     # --- 模型商 ---
     bm = Book(dist_xlsx("minimax"))
     f06 = cash_rows(bm, "Funding", [r"^F06$"])
