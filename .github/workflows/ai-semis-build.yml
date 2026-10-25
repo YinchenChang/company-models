@@ -53,6 +53,7 @@ on:
       - 'nanya_pcb/**'
       - 'alchip/**'
       - 'besi/**'
+      - 'towa/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -102,6 +103,7 @@ on:
       - 'nanya_pcb/**'
       - 'alchip/**'
       - 'besi/**'
+      - 'towa/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -143,6 +145,7 @@ jobs:
             "quanta|python3 quanta/build_quanta.py|quanta/dist"
             "innolight|python3 innolight/build_innolight.py|innolight/dist"
             "avgo|python3 avgo/build_avgo.py|avgo/dist"
+            "towa|python3 towa/build_towa.py|towa/dist"
             "besi|python3 besi/build_besi.py|besi/dist"
             "alchip|python3 alchip/build_alchip.py|alchip/dist"
             "nanya_pcb|python3 nanya_pcb/build_nanya_pcb.py|nanya_pcb/dist"
