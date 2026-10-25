@@ -32,6 +32,7 @@
    {"type": "kv", "items": [["@PL!A38", "@PL!D38|n3"], ["@PL!A39", "@PL!D39|n3"], ["@PL!A40", "@PL!D40|n3"]]}
   ]},
   {"id": "valuation", "title": "估值", "intro": "@Val!A1", "blocks": [
+   {"type": "table", "caption": "@Val!A36", "head": ["@Val!A37", "@Val!B37"], "rows": [["@Val!A38", "@Val!B38|n0"], ["@Val!A39", "@Val!B39|sp1"], ["@Val!A40", "@Val!B40|n0"], ["@Val!A41", "@Val!B41|n0"], ["@Val!A42", "@Val!B42|n0"], ["@Val!A43", ["@Val!B43|p0", "／", "@Val!C43|p0", "／", "@Val!D43|p0"]], ["@Val!A44", "@Val!B44"]]},
    {"type": "table", "caption": "現價與市場隱含倍數", "head": ["@Val!A5", "@Val!B5", "@Val!C5", "@Val!D5"], "rows": [
     ["@Val!A6", "@Val!B6|n0", "", ""],
     ["@Val!A7", "@Val!B7|x1", "@Val!C7|x1", "@Val!D7|x1"],

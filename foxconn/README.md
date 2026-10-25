@@ -1,4 +1,6 @@
-# foxconn/ — 鴻海（2317）收支與估值模型 v0.1
+# foxconn/ — 鴻海（2317）收支與估值模型 v0.1.1
+
+> v0.1.1（2026-10-25）：補目標價——Val 新增第 0 節「目標價與上檔空間」、In 新增情境權重 `tp_wA／tp_wB／tp_wC`（0.3／0.5／0.2，Assumed，Andy 可改）；其餘數值與 v0.1 相同。
 
 鴻海是集團公司。比照三星的做法，只把「雲端網路產品」中的 AI 伺服器拆細：AI 伺服器營收＝部署 GW（AI IT 資本支出 ÷ 每 GW IT 資本支出）× 每 GW ODM 整櫃價值 × 鴻海有效份額 ×（1 − 客供比例），2026 年約占營收三成。其餘七成（雲端網路的非 AI 部分、消費智能／iPhone、電腦終端、元件及其他）用簡化成長率推。
 
@@ -9,9 +11,9 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_foxconn.py` | 產生器（參數與公式；上游成品唯讀） |
-| `dist/20261025_鴻海模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261025_鴻海模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_鴻海模型_v0.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261025_鴻海模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 建置：`python3 foxconn/build_foxconn.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用：`markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`quanta/dist`（ODM 每櫃價格、Rubin 占比、匯率、每 GW 價值變動；廣達有效份額只用來做合計檢查）。另外經 `tools/cycle_position.py` 使用規則函式。**這些檔案都不修改。**
 
@@ -49,6 +51,8 @@
 - **最敏感：** 份額流失（FY2028 EPS −14%）、每 GW 價值（−9%／+12%）、AI 部署 ×0.8（−11%）、淨利 ÷ 營業利益（−9%／+11%）；顆數情境 C −25%。客供比例本身對 EPS 的影響小（±1%）。iPhone（消費智能）低成長的影響是 −5%。
 
 ## 估值（Val）
+
+**目標價（12 個月，情境加權 A／B／C＝0.3／0.5／0.2）：NT$261，上檔空間 +6.7%**（現價 NT$245，2026-10-22 收盤）。三情境隱含價：A NT$265、B NT$265、C NT$247（規則值）。方法：十年 P/E（companiesmarketcap、Goodinfo 兩來源平均）依循環位置取分位 × FY2027 EPS；十年倍數含 iPhone 組裝期低倍數，可能偏低；隱含價約為 FY2027 年底、未折現，作 12 個月目標價的近似。見 Val 第 0 節（第 37 列；為了不位移既有列放在空白列）。
 
 現價 NT$245（2026-10-22 收盤）÷ FY2027 EPS＝9.2x；÷ 未來 12 月 EPS（0.2 × FY2026＋0.8 × FY2027）＝9.7x；÷ FY2028 EPS：A 7.8x、B 8.8x、C 10.4x。十年年底 P/E 用兩個來源（companiesmarketcap；Goodinfo 年底收盤 ÷ EPS），各自取分位後平均：25 分位 9.25x、中位數 9.92x、75 分位 11.52x。情境 A、B 營收最高年在 FY2029，判為中段，規則值 9.92x × FY2027 EPS＝NT$265（+8%）。情境 C 營收最高年在 FY2027，判為見頂，9.25x → NT$247（+1%）。十年 P/E 裡 2016–2023 年是 iPhone 組裝期（約 7–12x），2024 年起約 16–17x，所以規則值可能低估 AI 期的倍數。本版未做先驗，無 Andy 合理 P/E 對照。
 

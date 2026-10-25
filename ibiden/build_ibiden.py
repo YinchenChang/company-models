@@ -127,6 +127,9 @@ inp("pe_ttm", "近 12 月 P/E", "x", None, 83.85, None, "Interested-party", "sto
 inp("pe_fair_andy", "Andy 先驗：合理 P/E", "x", None, 25, None, "Assumed", "先驗_Andy_Ibiden_20261024 I10b（Drive；不在本 repo）", "只作對照")
 inp("tgt30_rev", "公司 FY2030 目標營收", "¥B", None, 1000, None, "Interested-party", "Quartr FY2025 摘要（AI 摘要；營收數字有誤處未採用）", "第二來源：未找到")
 inp("tgt30_oi", "公司 FY2030 目標營業利益", "¥B", None, 300, None, "Interested-party", "同上", "第二來源：未找到")
+sec("H. 目標價情境權重（v0.1.1 新增；Val 頁第 0 節用）")
+for s, w in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
+    inp(f"tp_w{s}", f"目標價情境權重 {s}", "%", None, w, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）", "三者合計應為 100%（Val 頁第 0 節列示）")
 
 r = 4
 for srow in rows:
@@ -445,7 +448,7 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Ibiden（4062）收支與估值模型 v0.1（AI 半導體 Project：載板與 PCB 樣板）　2026-10-24", True),
+lines = [("Ibiden（4062）收支與估值模型 v0.1.1（AI 半導體 Project：載板與 PCB 樣板）　2026-10-25", True),
  ("版本：v0.1（初版）。Ibiden 在 AI 加速器載板的有效金額與份額在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
  ("模型命題：Ibiden 的 AI 伺服器載板營收＝AI 加速器顆數（本專案網通模型）× Ibiden 份額 × 每顆載板金額（面積、層數逐年增加）× 短缺溢價；電子事業的非 AI 部分、陶瓷與其他事業另依成長率推。股價約 54–65 倍前瞻 EPS：2028 年產能擴到 2.5 倍、競爭者同時擴產之後，短缺溢價能否守住電子事業約 29% 的營益率？", False),
  ("核心問題：短缺溢價回落多少、何時回落，FY2028 EPS 會少多少；現價隱含的溢價路徑合不合理。", False), ("", False),
@@ -458,10 +461,50 @@ lines = [("Ibiden（4062）收支與估值模型 v0.1（AI 半導體 Project：�
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。", False),
  ("", False),
  ("已知限制：(1) AI 載板營收公司未揭露，以 Assumed 切分校準；(2) 溢價指數與份額相對值皆為 Assumed，是 FY2028 EPS 最敏感的輸入（Sens）；(3) 未設產能上限（2024 基準面積未找到）；(4) FY2026 錨點為公司預測，Q2 決算後更新；(5) 十年 P/E 規則值待 Bloomberg；(6) CB 轉換稀釋只在 Sens；(7) R4 產業部署路徑未建（Recon 預留列）。", False)]
+lines.append(("v0.1.1（2026-10-25）：Val 頁新增「0. 目標價與上檔空間」與目標價用的十年 P/E（companiesmarketcap，Interested-party，單一來源）（放在 Val 既有內容之後，不位移既有儲存格），In 頁新增目標價情境權重 tp_wA／tp_wB／tp_wC（0.3／0.5／0.2，Assumed）。目標價＝十年 P/E 中位數 × 各情境 FY2027 EPS；其餘儲存格不變。", False))
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
 
-order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
+# ---------------- Val 第 0 節：目標價與上檔空間（v0.1.1 新增；Andy 2026-10-25 要求，列標籤依工作單逐字） ----------------
+# 為不位移既有儲存格（與舊版 dist 逐格相同），本節放在 Val 既有內容之後；HTML 估值章第一個區塊即為本節
+def add_target_price(V, imp, note, fmt, method, px_note, t0=None):
+    t0 = t0 or V.max_row + 2
+    V.cell(t0, 1, "0. 目標價與上檔空間").font = BOLD
+    hdr(V, t0 + 1, ["項目", "數值", "", "", "說明"])
+    V.cell(t0 + 2, 1, "目標價（12 個月，情境加權）"); V[f"B{t0 + 2}"] = f"=tp_wA*B{t0 + 4}+tp_wB*B{t0 + 5}+tp_wC*B{t0 + 6}"; V[f"B{t0 + 2}"].number_format = fmt
+    V[f"E{t0 + 2}"] = "權重 × 各情境隱含價"
+    V.cell(t0 + 3, 1, "上檔空間（目標價 ÷ 現價 − 1）"); V[f"B{t0 + 3}"] = f"=B{t0 + 2}/px-1"; V[f"B{t0 + 3}"].number_format = "0.0%"; V[f"E{t0 + 3}"] = px_note
+    for i, (s, lab) in enumerate((("A", "情境 A 隱含價（樂觀）"), ("B", "情境 B 隱含價（基準）"), ("C", "情境 C 隱含價（下檔）"))):
+        rr = t0 + 4 + i
+        V.cell(rr, 1, lab); V[f"B{rr}"] = imp[s]; V[f"B{rr}"].number_format = fmt; V[f"E{rr}"] = note[s]
+    rr = t0 + 7
+    V.cell(rr, 1, "情境權重 A／B／C"); V[f"B{rr}"] = "=tp_wA"; V[f"C{rr}"] = "=tp_wB"; V[f"D{rr}"] = "=tp_wC"
+    for c in "BCD": V[f"{c}{rr}"].number_format = "0%"
+    V[f"E{rr}"] = f'="合計 "&TEXT(B{rr}+C{rr}+D{rr},"0%")&"；In 頁 tp_wA／tp_wB／tp_wC（Assumed，Andy 可改）"'
+    V.cell(t0 + 8, 1, "目標價方法"); V[f"B{t0 + 8}"] = method
+    return t0
+TP0 = V.max_row + 2
+# 目標價用十年 P/E（本節下方）：companiesmarketcap 年底 P/E（2026-10-25 取得）；2017 為虧損（負值），不計入中位數
+PE_CMC = [(2016, 44.1), (2017, -6.66), (2018, 35.3), (2019, 137.0), (2020, 55.2), (2021, 53.1), (2022, 40.7), (2023, 26.8), (2024, 57.2), (2025, 33.6)]
+pr = TP0 + 10
+V.cell(pr, 1, "0a. 十年 P/E（目標價用；companiesmarketcap 日曆年年底 P/E，Interested-party，資料商；第二來源：未找到）").font = BOLD
+hdr(V, pr + 1, ["年底", "P/E", "計入中位數", "說明"])
+for i, (y, v) in enumerate(PE_CMC):
+    rw = pr + 2 + i
+    V.cell(rw, 1, str(y)); V.cell(rw, 2, v).font = BLUE; V.cell(rw, 2).number_format = "0.0"
+    V.cell(rw, 3, "否" if v <= 0 else "是")
+    V.cell(rw, 4, "https://companiesmarketcap.com/ibiden/pe-ratio/（2026-10-25 讀取）" if i == 0 else ("虧損年，P/E 為負，不計" if v <= 0 else ""))
+PE_MED_ROW = pr + 12
+V.cell(PE_MED_ROW, 1, "中位數（計入者）"); V[f"B{PE_MED_ROW}"] = "=MEDIAN(" + ",".join(f"B{pr + 2 + i}" for i, (y, v) in enumerate(PE_CMC) if v > 0) + ")"
+V[f"B{PE_MED_ROW}"].number_format = "0.0"
+add_target_price(V, {s: f"=$B${PE_MED_ROW}*PL!E{SUMR[(s, 'eps')]}" for s in SC},
+    {s: f"情境 {s} FY2027 EPS（PL 頁）× 十年 P/E 中位數（第 0a 節）" for s in SC}, "#,##0",
+    "P/E：十年（2016–2025 日曆年年底）P/E 中位數（companiesmarketcap 單一來源，第 0a 節；2017 年虧損不計，9 年）× 各情境 FY2027 EPS（FY2027＝2027-04～2028-03）。"
+    "本模型無規則值（十年 P/E 待 Bloomberg），依工作單改用此備案；倍數為日曆年年底口徑，與 3 月制會計年度不完全對齊。十年倍數多為 AI 載板需求前的時期（2019 年獲利低谷約 137x 為極值，中位數受影響小），偏誤方向不明確；"
+    "FY2027 三情境 EPS 相同（情境差從 FY2028 起），故三情境隱含價相同；隱含價約為 FY2027 年底（2028-03）的價格、未折現，當作 12 個月目標價時偏高。",
+    "現價＝In 頁 px（2026-10-16 收盤，分割後）", t0=TP0)
+
+order =["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])
 if os.environ.get("IBIDEN_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數

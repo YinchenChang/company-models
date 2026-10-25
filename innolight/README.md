@@ -1,4 +1,4 @@
-# innolight/ — 中際旭創（300308.SZ／3308.HK）收支與估值模型 v0.1
+# innolight/ — 中際旭創（300308.SZ／3308.HK）收支與估值模型 v0.1.1
 
 中際旭創的 AI 營收＝AI 可插拔光模組市場（`markets/network`）× 中際旭創份額 × 單價係數＋CPO 光學 × 中際旭創 CPO 份額；其他營收（國內、電信）另依成長率推。股價自 52 週高點跌約 57%、只約 12 倍共識未來 12 月 EPS：市場定價像是 2027 年就是獲利高點。
 
@@ -9,9 +9,9 @@ AI 半導體 Project **網通次產業內複製（光模組）**，比照 `arist
 | 檔案 | 內容 |
 |---|---|
 | `build_innolight.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261024_中際旭創模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261025_中際旭創模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261024_中際旭創模型_v0.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261025_中際旭創模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 innolight/build_innolight.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（可插拔光模組、CPO、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`（只用規則函式）；**不修改它們**。
 
@@ -45,6 +45,8 @@ AI 半導體 Project **網通次產業內複製（光模組）**，比照 `arist
 
 ## 估值（Val）
 
+- **目標價（12 個月，情境加權 A 30%／B 50%／C 20%）：RMB 2,266，上檔空間 +269.8%**（情境 A／B／C 隱含價 RMB 2,493／RMB 2,493／RMB 1,356；Val 頁「0. 目標價與上檔空間」，放在 Val 既有內容之後；權重為 In 頁 tp_wA／tp_wB／tp_wC，Assumed，Andy 可改）。方法：P/E：各情境 FY2027 EPS × 十年（2016–2025 年底）P/E 依循環位置取分位（以本模型營收最高年判定：A、B 中段＝中位數，C 見頂＝25 分位）；倍數只有 companiesmarketcap 一個來源、8 年（2018–2025）。十年倍數多為 AI 前、公司規模較小時期的高倍數（2019 年約 98x），偏誤方向為高估；FY2027 三情境 EPS 相同，A、B 隱含價相同、C 只差在倍數；隱含價約為 FY2027 年底的價格、未折現，當作 12 個月目標價時偏高。
+
 現價 ÷ FY2027 EPS＝13.0x、÷ FY2028 EPS：A 12.3x、B 15.5x、C 21.0x。十年 P/E（companiesmarketcap，2018–2025 共 8 年；2017 年以前為併購前的中際裝備）：25 分位 28.7x、中位數 52.8x、75 分位 58.4x。規則值：A、B 中段 2,493（+307%）、C 見頂 1,356（+121%）——歷史倍數為高成長期落後 P/E，規則值很可能高估；前瞻 P/E 歷史待 Bloomberg。以 Andy 先驗合理 30x × FY2027 EPS 計 1,418（+131%）。
 
 ## 最大限制
@@ -52,3 +54,9 @@ AI 半導體 Project **網通次產業內複製（光模組）**，比照 `arist
 - 份額相對值、CPO 份額、毛利率路徑皆為 Assumed；客戶名稱與 800G／1.6T 份額只有次級來源。
 - 2H26 為假設；全公司毛利率以光模組代用；1H26 少數股權未找到。
 - 十年 P/E 只有一個來源、8 年；R4 產業部署路徑未建。
+
+## v0.1.1（2026-10-25）：補目標價
+
+Val 頁新增「0. 目標價與上檔空間」（列標籤依工作單；為不位移既有儲存格，放在 Val 既有內容之後），In 頁最後新增目標價情境權重 tp_wA／tp_wB／tp_wC（0.3／0.5／0.2，Assumed）；HTML 估值章第一個區塊為本節。除新增列、README 頁標題與引用上游成品的檔名文字外，原有儲存格的值與 v0.1 相同（`tools/xlsx_diff.py` 比對）。
+
+- **目標價（12 個月，情境加權 A 30%／B 50%／C 20%）：RMB 2,266，上檔空間 +269.8%**（情境 A／B／C 隱含價 RMB 2,493／RMB 2,493／RMB 1,356；Val 頁「0. 目標價與上檔空間」，放在 Val 既有內容之後；權重為 In 頁 tp_wA／tp_wB／tp_wC，Assumed，Andy 可改）。方法：P/E：各情境 FY2027 EPS × 十年（2016–2025 年底）P/E 依循環位置取分位（以本模型營收最高年判定：A、B 中段＝中位數，C 見頂＝25 分位）；倍數只有 companiesmarketcap 一個來源、8 年（2018–2025）。十年倍數多為 AI 前、公司規模較小時期的高倍數（2019 年約 98x），偏誤方向為高估；FY2027 三情境 EPS 相同，A、B 隱含價相同、C 只差在倍數；隱含價約為 FY2027 年底的價格、未折現，當作 12 個月目標價時偏高。

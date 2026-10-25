@@ -1,4 +1,4 @@
-# Applied Materials（AMAT）收支與估值模型 v0.1（AI 半導體 Project 步驟 5：設備與材料——第三家公司）
+# Applied Materials（AMAT）收支與估值模型 v0.1.1（AI 半導體 Project 步驟 5：設備與材料——第三家公司）
 # 用法：python3 amat/build_amat.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度約 11 月到隔年 10 月底（52／53 週，結束於 10 月最後一個星期日）：FY2026＝2025-10-27～2026-10-25。
 # 金額：百萬美元（US$M）；EPS 為美元，採公司 non-GAAP 稀釋 EPS（指引與共識同口徑），GAAP 另列。
@@ -126,6 +126,11 @@ for s in SC:
     inp(f"pk_{s}", f"情境 {s}：設備市場見頂年度（日曆年；循環位置規則用）", "年", None, PEAK[s], None, "Derived", PEAK_SRC[s], "設備股共用規則（tools/cycle_position.py）：FY(t) 早於見頂年＝中段、等於＝見頂、晚於＝谷底；AMAT 的 FY(t) 有 10/12 落在日曆年 t，直接對照 t（不平移）" if s == "A" else "同上")
 inp("px", "股價（stockanalysis 2026-10-23 收盤）", "US$", None, 377.24, None, "Interested-party", "stockanalysis.com：2026-10-23 收盤 377.24、市值 299.38B、流通股 793.60M", "statmuse 最新價 377.24（未標日期）")
 inp("sa_fpe", "遠期 P/E（stockanalysis）", "x", None, 21.39, None, "Interested-party", "stockanalysis.com（2026-10-23）", "自算：現價 ÷ 共識 FY2027 EPS，見 Val")
+
+sec("G. 目標價情境權重（Val 第 0 節用；Andy 可改）")
+for s_, w_, nm_ in (("A", 0.3, "樂觀"), ("B", 0.5, "基準"), ("C", 0.2, "下檔")):
+    inp(f"tp_w{s_}", f"目標價情境權重：情境 {s_}（{nm_}）", "權重", None, w_, None, "Assumed",
+        "Andy 可改（2026-10-25 目標價規格預設 A／B／C＝0.3／0.5／0.2）", "三個權重合計應為 1；目標價＝Σ 權重 × 情境隱含價（Val 第 0 節）")
 
 r = 4
 for srow in rows:
@@ -411,6 +416,32 @@ for key, nm, f, fm, note in (("px", "現價（stockanalysis 2026-10-23 收盤）
         V.cell(fr, 2, f"=B{FR['e27']}/E62").number_format = fm
     fr += 1
 V_END = fr
+
+# ---------------- Val 第 0 節：目標價與上檔空間（v0.1.1 新增；放在既有空白列，不位移既有列） ----------------
+TP0 = 46; TPR = {}
+assert all(V.cell(rw, c).value is None for rw in range(TP0 - 1, TP0 + 9) for c in range(1, 12)), TP0
+assert V["A3"].value is None
+V["A3"] = f"目標價與上檔空間：見第 0 節（本頁第 {TP0} 列；v0.1.1 新增，為了不位移既有列而放在空白列）"
+V.cell(TP0, 1, "0. 目標價與上檔空間（12 個月，情境加權；權重為 In 頁 tp_wA／tp_wB／tp_wC，Andy 可改）").font = BOLD
+for k_, (key_, lab_) in enumerate((("tp", "目標價（12 個月，情境加權）"), ("up", "上檔空間（目標價 ÷ 現價 − 1）"),
+        ("A", "情境 A 隱含價（樂觀）"), ("B", "情境 B 隱含價（基準）"), ("C", "情境 C 隱含價（下檔）"),
+        ("w", "情境權重 A／B／C"), ("m", "目標價方法")), TP0 + 1):
+    V.cell(k_, 1, lab_); TPR[key_] = k_
+V.cell(TPR["tp"], 2, f"=tp_wA*B{TPR['A']}+tp_wB*B{TPR['B']}+tp_wC*B{TPR['C']}").number_format = "#,##0"
+V.cell(TPR["tp"], 5, "＝權重 A × 情境 A 隱含價＋權重 B × 情境 B 隱含價＋權重 C × 情境 C 隱含價（US$）")
+V.cell(TPR["up"], 2, f"=B{TPR['tp']}/px-1").number_format = "0.0%"
+V.cell(TPR["up"], 5, "相對「" + V.cell(FR["px"], 1).value + "」")
+for s_ in SC:
+    V.cell(TPR[s_], 2, f"=F{VAL[s_]}").number_format = "#,##0"
+    V.cell(TPR[s_], 5, f"＝規則值隱含股價 F{VAL[s_]}（{TITLES[s_]}）")
+for j_, s_ in enumerate(SC):
+    V.cell(TPR["w"], 2 + j_, f"=tp_w{s_}").number_format = "0%"
+V.cell(TPR["w"], 5, "In 頁輸入（Assumed，Andy 可改）：B 欄＝情境 A、C 欄＝情境 B、D 欄＝情境 C")
+V.cell(TPR["m"], 2, "P/E 規則值：各情境 FY2027 non-GAAP EPS × 2016–2025 年底 non-GAAP P/E（自算）依設備股共用循環規則取分位（見頂＝25 分位、中段＝中位數、谷底＝75 分位；見頂年讀 markets/equipment）。隱含價約為 FY2027 年底價、未折現，作 12 個月目標價的近似；情境 A／B／C 即本模型三個設備市場情境（A 最高、C 最低）。偏誤：十年倍數含 2018 年極端低值（7.4x），去掉後分位略高（第 3 節敏感度），目標價可能略偏低。")
+for c_ in range(1, 6):
+    V.cell(TPR["tp"], c_).fill = KEY; V.cell(TPR["up"], c_).fill = KEY
+V.cell(TPR["tp"], 1).font = BOLD
+defname("tp_price", f"Val!$B${TPR['tp']}"); defname("tp_upside", f"Val!$B${TPR['up']}")
 V.column_dimensions["A"].width = 50
 for c in "BCDEFGHIJ": V.column_dimensions[c].width = 16
 V.column_dimensions["K"].width = 80
@@ -526,7 +557,7 @@ SO.column_dimensions["A"].width = 70; SO.column_dimensions["B"].width = 130
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Applied Materials（AMAT）收支與估值模型 v0.1（AI 半導體 Project 步驟 5：設備與材料）　2026-10-25", True),
+lines = [("Applied Materials（AMAT）收支與估值模型 v0.1.1（AI 半導體 Project 步驟 5：設備與材料）　2026-10-25", True),
  ("模型命題：AMAT 的營收約四分之三來自半導體系統，跟著晶圓廠設備支出走；成長集中在先進代工邏輯、DRAM／HBM 與先進封裝，中國約占三成。股價取決於 2028 年設備支出會不會見頂，以及出口管制會不會再收緊。", False), ("", False),
  ("會計年度：約 11 月到隔年 10 月底（52／53 週；FY2026＝2025-10-27～2026-10-25）。FY(t) 有 10/12 落在日曆年 t：日曆年轉會計年度用 FY(t)＝2/12×CY(t−1)＋10/12×CY(t)；循環位置把 FY(t) 直接對照日曆年 t。FY2026 已結束但第四季尚未公布（預定 2026-11-12），本版 FY2026＝前三季實績＋第四季公司指引（錨點）。金額為百萬美元；EPS 為 non-GAAP 稀釋（與指引、共識同口徑）。", False), ("", False),
  ("驅動因子 → 推導量", True),

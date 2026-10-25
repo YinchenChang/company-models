@@ -1,4 +1,6 @@
-# delta/ — 台達電（2308）收支與估值模型 v0.1
+# delta/ — 台達電（2308）收支與估值模型 v0.1.1
+
+> v0.1.1（2026-10-25）：補目標價——Val 新增第 0 節「目標價與上檔空間」、In 新增情境權重 `tp_wA／tp_wB／tp_wC`（0.3／0.5／0.2，Assumed，Andy 可改）；其餘數值與 v0.1 相同。
 
 台達電的 AI 營收＝部署 GW（AI IT 資本支出 ÷ 每 GW IT 資本支出）×（AI 電源每 kW 內容 × 台達電份額＋液冷每 GW 營收）。800V HVDC 把交流轉直流移到機架外，每 GW 可做的金額變大；同時光寶、Flex、中國廠追趕份額。
 
@@ -9,9 +11,9 @@ AI 半導體 Project **電源與散熱次產業的樣板**。AI 電源每 kW 內
 | 檔案 | 內容 |
 |---|---|
 | `build_delta.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261024_台達電模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261025_台達電模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261024_台達電模型_v0.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261025_台達電模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 delta/build_delta.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、機架內液冷）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）；**不修改它們**。
 
@@ -48,6 +50,8 @@ AI 半導體 Project **電源與散熱次產業的樣板**。AI 電源每 kW 內
 - **最敏感：** AI 部署 ×0.8（FY2028 EPS −14.8%）、「AI 相關含液冷」讀法（−16.4%）、份額流失（−12.8%）、營業費用率 +2pt（−9.4%）；顆數情境 C −34.6%。
 
 ## 估值（Val）
+
+**目標價（12 個月，情境加權 A／B／C＝0.3／0.5／0.2）：NT$1,360，上檔空間 −15.3%**（現價 NT$1,605，2026-10-23 收盤）。三情境隱含價：A NT$1,360、B NT$1,360、C NT$1,360（規則值）。方法：十年 P/E（companiesmarketcap）依循環位置取分位 × FY2027 EPS；十年倍數含低成長電源期低倍數，可能偏低；隱含價約為 FY2027 年底、未折現，作 12 個月目標價的近似。見 Val 第 0 節（第 41 列；為了不位移既有列放在空白列）。
 
 現價 NT$1,605（2026-10-23）÷ FY2027 EPS＝26.4x；÷ 未來 12 月 EPS（¼ FY2026＋¾ FY2027）＝29.2x；÷ FY2028 EPS：A 20.8x、B 24.5x、C 31.8x。十年年底 P/E（companiesmarketcap，單一來源）：25 分位 16.6x、中位數 22.4x、75 分位 24.3x。三情境營收最高年都是 FY2029（C 在 FY2028 回落後回升），判為中段 → 規則值 22.4x × FY2027 EPS＝NT$1,360（−15%）。以 Andy 先驗合理 25x 計：FY2027 NT$1,518（−5%）、FY2028 A NT$1,928（+20%）。
 

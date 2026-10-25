@@ -129,6 +129,9 @@ inp("pe_fair_andy", "Andy 先驗：合理 P/E", "x", None, 30, None, "Assumed", 
 sec("I. 價格與估值")
 inp("px", "股價（2026-10-23 收盤，A 股）", "RMB", None, 612.63, None, "Interested-party", "https://www.etnet.com.hk/www/sc/ashares/quote.php?code=300308：612.63（+3.82%；前收 590.11）", "https://www.21jingji.com/article/20261023/c6f736ac52a4cda8658a9afc828059c5.html：10-22 收盤 590.11")
 inp("px_hi", "52 週高點", "RMB", None, 1416.88, None, "Interested-party", "https://www.google.com/finance/quote/300308:SHE?hl=zh：52 週區間 337.00–1,416.88", "—")
+sec("J. 目標價情境權重（v0.1.1 新增；Val 頁第 0 節用）")
+for s, w in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
+    inp(f"tp_w{s}", f"目標價情境權重 {s}", "%", None, w, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）", "三者合計應為 100%（Val 頁第 0 節列示）")
 
 r = 4
 for srow in rows:
@@ -477,7 +480,7 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("中際旭創（300308.SZ／3308.HK）收支與估值模型 v0.1（AI 半導體 Project：網通次產業內複製——光模組）　2026-10-24", True),
+lines = [("中際旭創（300308.SZ／3308.HK）收支與估值模型 v0.1.1（AI 半導體 Project：網通次產業內複製——光模組）　2026-10-25", True),
  ("版本：v0.1（初版）。中際旭創在 AI 光模組的份額在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
  ("模型命題：中際旭創的 AI 營收＝AI 可插拔光模組市場（本專案網通模型）× 中際旭創份額 × 單價係數＋CPO 光學 × 中際旭創 CPO 份額；其他營收（國內、電信）另依成長率推。股價自高點腰斬、只約 12 倍共識未來 12 月 EPS：市場定價像是 2027 年就是獲利高點。", False),
  ("核心問題：市場隱含的 FY2028 EPS 遠低於模型——要成立，份額（新易盛、美國限制）、單價（每 Gb 降價）、CPO 替代三條路徑各要不利到什麼程度？", False), ("", False),
@@ -490,10 +493,35 @@ lines = [("中際旭創（300308.SZ／3308.HK）收支與估值模型 v0.1（AI 
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。公司原文經財經媒體轉載；客戶名稱與 800G／1.6T 份額只有次級來源。", False),
  ("", False),
  ("已知限制：(1) 份額相對值、CPO 份額、毛利率路徑皆為 Assumed，是 FY2028 EPS 最敏感的輸入（Sens）；(2) FY2026 錨點的 2H26 為假設，3Q26 季報 10-31 前公布；(3) 網通模型 2027 年可插拔光模組 +84%，未設雷射、DSP 供給上限（Sens 用市場 ×0.8）；(4) 十年 P/E 只有一個來源、8 年，含高成長期溢價；(5) 毛利率以光模組代用（占營收 99%）；(6) R4 產業部署路徑未建（Recon 預留列）。", False)]
+lines.append(("v0.1.1（2026-10-25）：Val 頁新增「0. 目標價與上檔空間」（放在 Val 既有內容之後，不位移既有儲存格）與 In 頁目標價情境權重 tp_wA／tp_wB／tp_wC（0.3／0.5／0.2，Assumed）。各情境隱含價＝第 3 節規則值；其餘儲存格不變。", False))
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
 
-order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
+# ---------------- Val 第 0 節：目標價與上檔空間（v0.1.1 新增；Andy 2026-10-25 要求，列標籤依工作單逐字） ----------------
+# 為不位移既有儲存格（與舊版 dist 逐格相同），本節放在 Val 既有內容之後；HTML 估值章第一個區塊即為本節
+def add_target_price(V, imp, note, fmt, method, px_note):
+    t0 = V.max_row + 2
+    V.cell(t0, 1, "0. 目標價與上檔空間").font = BOLD
+    hdr(V, t0 + 1, ["項目", "數值", "", "", "說明"])
+    V.cell(t0 + 2, 1, "目標價（12 個月，情境加權）"); V[f"B{t0 + 2}"] = f"=tp_wA*B{t0 + 4}+tp_wB*B{t0 + 5}+tp_wC*B{t0 + 6}"; V[f"B{t0 + 2}"].number_format = fmt
+    V[f"E{t0 + 2}"] = "權重 × 各情境隱含價"
+    V.cell(t0 + 3, 1, "上檔空間（目標價 ÷ 現價 − 1）"); V[f"B{t0 + 3}"] = f"=B{t0 + 2}/px-1"; V[f"B{t0 + 3}"].number_format = "0.0%"; V[f"E{t0 + 3}"] = px_note
+    for i, (s, lab) in enumerate((("A", "情境 A 隱含價（樂觀）"), ("B", "情境 B 隱含價（基準）"), ("C", "情境 C 隱含價（下檔）"))):
+        rr = t0 + 4 + i
+        V.cell(rr, 1, lab); V[f"B{rr}"] = imp[s]; V[f"B{rr}"].number_format = fmt; V[f"E{rr}"] = note[s]
+    rr = t0 + 7
+    V.cell(rr, 1, "情境權重 A／B／C"); V[f"B{rr}"] = "=tp_wA"; V[f"C{rr}"] = "=tp_wB"; V[f"D{rr}"] = "=tp_wC"
+    for c in "BCD": V[f"{c}{rr}"].number_format = "0%"
+    V[f"E{rr}"] = f'="合計 "&TEXT(B{rr}+C{rr}+D{rr},"0%")&"；In 頁 tp_wA／tp_wB／tp_wC（Assumed，Andy 可改）"'
+    V.cell(t0 + 8, 1, "目標價方法"); V[f"B{t0 + 8}"] = method
+    return t0
+TP0 = add_target_price(V, {s: f"=D{VAL[s]}" for s in SC},
+    {s: f'="第 3 節規則值：FY2027 EPS × "&TEXT(C{VAL[s]},"0.0")&"x（"&C{17 + SC.index(s)}&"）"' for s in SC}, "#,##0",
+    "P/E：各情境 FY2027 EPS × 十年（2016–2025 年底）P/E 依循環位置取分位（以本模型營收最高年判定：A、B 中段＝中位數，C 見頂＝25 分位）；倍數只有 companiesmarketcap 一個來源、8 年（2018–2025）。"
+    "十年倍數多為 AI 前、公司規模較小時期的高倍數（2019 年約 98x），偏誤方向為高估；FY2027 三情境 EPS 相同，A、B 隱含價相同、C 只差在倍數；隱含價約為 FY2027 年底的價格、未折現，當作 12 個月目標價時偏高。",
+    "現價＝In 頁 px（2026-10-23 收盤，A 股）")
+
+order =["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])
 if os.environ.get("INNOLIGHT_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數

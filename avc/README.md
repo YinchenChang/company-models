@@ -1,4 +1,6 @@
-# avc/ — 奇鋐（3017）收支與估值模型 v0.1
+# avc/ — 奇鋐（3017）收支與估值模型 v0.1.1
+
+> v0.1.1（2026-10-25）：補目標價——Val 新增第 0 節「目標價與上檔空間」、In 新增情境權重 `tp_wA／tp_wB／tp_wC`（0.3／0.5／0.2，Assumed，Andy 可改）；其餘數值與 v0.1 相同。
 
 奇鋐的 AI 營收＝部署 GW（AI IT 資本支出 ÷ 每 GW IT 資本支出）×（液冷滲透率 × 每 GW 液冷內容 × 奇鋐份額＋每 GW AI 氣冷與機構）。VR200 每 GW 機架數較少（6,764 → 4,052 架），橋接表的每 GW 液冷內容下降；成長要靠液冷滲透率、Rubin 全液冷與 ASIC 液冷提高每架內容，同時守住冷板份額。
 
@@ -9,9 +11,9 @@ AI 半導體 Project 電源與散熱次產業，樣板＝`delta/`。每架機架
 | 檔案 | 內容 |
 |---|---|
 | `build_avc.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_奇鋐模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261025_奇鋐模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_奇鋐模型_v0.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261025_奇鋐模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 avc/build_avc.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、機架內液冷）、`tsmc/dist`（情境顆數係數）、`delta/dist`（台達電液冷營收，只作 Recon）；**不修改它們**。
 
@@ -49,6 +51,8 @@ AI 半導體 Project 電源與散熱次產業，樣板＝`delta/`。每架機架
 - **最敏感：** 每架液冷內容調整（FY2028 EPS ±17.5%）、AI 部署 ×0.8（−15.3%）、份額流失（−10.2%）、營業費用率 +2pt（−6.8%）；顆數情境 C −31.6%。液冷滲透率的影響小，因為 FY2026 份額依滲透率反向校準。
 
 ## 估值（Val）
+
+**目標價（12 個月，情境加權 A／B／C＝0.3／0.5／0.2）：NT$2,025，上檔空間 −35.6%**（現價 NT$3,145，2026-10-22 收盤）。三情境隱含價：A NT$2,079、B NT$2,079、C NT$1,813（規則值）。方法：十年 P/E（Goodinfo 年底收盤 ÷ EPS）依循環位置取分位 × FY2027 EPS；十年倍數含 AI 前氣冷散熱期低倍數，可能偏低；隱含價約為 FY2027 年底、未折現，作 12 個月目標價的近似。見 Val 第 0 節（第 74 列；為了不位移既有列放在空白列）。
 
 現價 NT$3,145（2026-10-22 收盤；10-23 收盤未找到）÷ FY2027 EPS＝19.3x；÷ 未來 12 月 EPS（¼ FY2026＋¾ FY2027）＝21.1x；÷ FY2028 EPS：A 15.0x、B 17.7x、C 21.9x。十年年底 P/E（Goodinfo 年底收盤 ÷ 當年 EPS；stockanalysis 2021–2025 核對、差距 0.5x 內）：25 分位 11.1x、中位數 12.7x、75 分位 21.7x。A、B 營收最高年是 FY2029 → 中段 → 規則值 12.74x × FY2027 EPS＝NT$2,079（−34%）；C 營收最高年是 FY2027 → 見頂 → 11.11x＝NT$1,813（−42%）。本版未做先驗，無 Andy 合理 P/E 對照。
 

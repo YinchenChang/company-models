@@ -175,6 +175,9 @@ inp("fin_oai", "Broadcom 為 OpenAI 安排的融資", "US$B", None, 50, None, "I
 inp("fin_lease", "一家客戶 AI 機架租賃擔保", "US$B", None, 29, None, "Interested-party", "top1markets 引 Broadcom 季報：最高約 $29B", "—")
 for s in SC:
     inp(f"pk_{s}", f"情境 {s}：設備市場見頂年度（日曆年；循環位置規則用）", "年", None, PEAK[s], None, "Derived", PEAK_SRC[s], "共用規則（tools/cycle_position.py）：AVGO 的 FY(t) 對照日曆年 t（不平移）" if s == "A" else "同上")
+sec("目標價情境權重（v0.1.1 新增；Val 頁第 0 節用）")
+for s, w in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
+    inp(f"tp_w{s}", f"目標價情境權重 {s}", "%", None, w, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）", "三者合計應為 100%（Val 頁第 0 節列示）")
 
 r = 4
 for srow in rows:
@@ -605,7 +608,7 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Broadcom（AVGO）收支與估值模型 v0.1（AI 半導體 Project：運算層第二個樣板，ASIC＋網通）　2026-10-23", True),
+lines = [("Broadcom（AVGO）收支與估值模型 v0.1.1（AI 半導體 Project：運算層第二個樣板，ASIC＋網通）　2026-10-25", True),
  ("版本：v0.1（初版）。ASIC 每顆規格（Broadcom 份額、核心售價、HBM 代購）在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
  ("模型命題：Broadcom 的 AI 營收＝各 XPU 平台的顆數 × Broadcom 份額 × 每顆售價（核心＋代購 HBM）＋網通附掛；2027–28 年的增量集中在 Anthropic、OpenAI 兩家靠融資部署的客戶。股價約 17 倍 FY2027 EPS：這個折價是在定價客戶信用風險，還是低估了營收？", False),
  ("核心問題：以市場層顆數往前推，Broadcom 的 AI 營收與 EPS 能否支撐公司展望（FY2027 約 115B、FY2028 約 230B）；差距要靠多少額外顆數補上。", False), ("", False),
@@ -618,10 +621,39 @@ lines = [("Broadcom（AVGO）收支與估值模型 v0.1（AI 半導體 Project�
  ("估值：結論用現價 ÷ FY2027、FY2028 EPS；十年 GAAP P/E 規則值不適用（攤銷扭曲），前瞻 P/E 歷史待 Bloomberg。循環位置（共用規則，不平移）只作紀錄：設備市場見頂年度 " + "、".join(f"{s_} {PEAK[s_]}" for s_ in SC) + "。", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。公司原文＝SEC EDGAR 8-K；法說內容只經二手轉述（標二手）。", False),
  ("已知限制：(1) k_x 是顆數、份額、核心單價的合併係數，無法分開識別；(2) Broadcom 各平台份額、核心售價、HBM 代購比例皆為 Assumed，FY2027 起的毛利率對代購比例高度敏感（Sens）；(3) 「其他 ASIC」含昇騰、Maia 等非 Broadcom 晶片，份額為粗估；(4) 客戶融資曝險不進基準 EPS（Recon F）；(5) 十年倍數待補；(6) R4 產業部署路徑未建（Recon 預留列）。", False)]
+lines.append(("v0.1.1（2026-10-25）：Val 頁新增「0. 目標價與上檔空間」（放在 Val 既有內容之後，不位移既有儲存格）與 In 頁目標價情境權重 tp_wA／tp_wB／tp_wC（0.3／0.5／0.2，Assumed）。本模型無規則值，目標價用十年 GAAP P/E 中位數 × 各情境 FY2027 non-GAAP EPS（偏誤方向為高估，見 Val 頁目標價方法）；其餘儲存格不變。", False))
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
 
-order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
+# ---------------- Val 第 0 節：目標價與上檔空間（v0.1.1 新增；Andy 2026-10-25 要求，列標籤依工作單逐字） ----------------
+# 為不位移既有儲存格（與舊版 dist 逐格相同），本節放在 Val 既有內容之後；HTML 估值章第一個區塊即為本節
+def add_target_price(V, imp, note, fmt, method, px_note):
+    t0 = V.max_row + 2
+    V.cell(t0, 1, "0. 目標價與上檔空間").font = BOLD
+    hdr(V, t0 + 1, ["項目", "數值", "", "", "說明"])
+    V.cell(t0 + 2, 1, "目標價（12 個月，情境加權）"); V[f"B{t0 + 2}"] = f"=tp_wA*B{t0 + 4}+tp_wB*B{t0 + 5}+tp_wC*B{t0 + 6}"; V[f"B{t0 + 2}"].number_format = fmt
+    V[f"E{t0 + 2}"] = "權重 × 各情境隱含價"
+    V.cell(t0 + 3, 1, "上檔空間（目標價 ÷ 現價 − 1）"); V[f"B{t0 + 3}"] = f"=B{t0 + 2}/px-1"; V[f"B{t0 + 3}"].number_format = "0.0%"; V[f"E{t0 + 3}"] = px_note
+    for i, (s, lab) in enumerate((("A", "情境 A 隱含價（樂觀）"), ("B", "情境 B 隱含價（基準）"), ("C", "情境 C 隱含價（下檔）"))):
+        rr = t0 + 4 + i
+        V.cell(rr, 1, lab); V[f"B{rr}"] = imp[s]; V[f"B{rr}"].number_format = fmt; V[f"E{rr}"] = note[s]
+    rr = t0 + 7
+    V.cell(rr, 1, "情境權重 A／B／C"); V[f"B{rr}"] = "=tp_wA"; V[f"C{rr}"] = "=tp_wB"; V[f"D{rr}"] = "=tp_wC"
+    for c in "BCD": V[f"{c}{rr}"].number_format = "0%"
+    V[f"E{rr}"] = f'="合計 "&TEXT(B{rr}+C{rr}+D{rr},"0%")&"；In 頁 tp_wA／tp_wB／tp_wC（Assumed，Andy 可改）"'
+    V.cell(t0 + 8, 1, "目標價方法"); V[f"B{t0 + 8}"] = method
+    return t0
+PE_ROWS = [rw for rw in range(1, V.max_row + 1) if V.cell(rw, 1).value in [str(y) for y in range(2016, 2026)]]
+assert len(PE_ROWS) == 10 and PE_ROWS[-1] - PE_ROWS[0] == 9, PE_ROWS
+PE_MED = f"MEDIAN($B${PE_ROWS[0]}:$B${PE_ROWS[-1]})"
+TP0 = add_target_price(V, {s: f"={PE_MED}*PL!E{SUMR[(s, 'eps')]}" for s in SC},
+    {s: f"情境 {s} FY2027 non-GAAP EPS（PL 頁）× 十年 GAAP P/E 中位數（第 5 節，有值的 8 年）" for s in SC}, "#,##0.00",
+    "P/E：十年（2016–2025，10 月底會計年度年底）GAAP P/E 中位數（Macrotrends，第 5 節；2016 GAAP EPS 為負、2025 未找到，取有值的 8 年）× 各情境 FY2027 non-GAAP EPS（FY2027＝2026-11～2027-10）。"
+    "本模型無規則值（前瞻 P/E 歷史待補），依工作單改用此備案。偏誤方向為高估：GAAP EPS 受併購無形資產攤銷壓低，GAAP P/E 高於 non-GAAP 口徑（2024 年併購 VMware 後約 137x），乘在 non-GAAP EPS 上偏高；"
+    "FY2027 三情境 EPS 相同（情境差從 FY2028 起），故三情境隱含價相同；隱含價約為 FY2027 年底（2027-10）的價格、未折現。",
+    "現價＝In 頁 px（2026-10-22 收盤）")
+
+order =["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])
 if os.environ.get("AVGO_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數

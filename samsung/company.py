@@ -2,7 +2,7 @@
 S = "sec"
 Z = lambda k, nm: (k, nm, "兆韓元", None, 0, None, "Verified", "")
 CONFIG = {
- "name": "三星電子", "version": "v0.2.1", "date": "2026-10-23",
+ "name": "三星電子", "version": "v0.2.2", "date": "2026-10-25",
  "unit": "兆韓元", "ccy_per_usdB": "fx/1000", "share_scale": 1000000,
  "base_fy": 2026, "fy_offset": 0, "fy_label": "{}", "fy_desc": "日曆年（K-IFRS 合併）；記憶體事業以外為輸入",
  "thesis": "三星電子 2026 年的獲利幾乎全部來自記憶體，盈餘由一般 DRAM 價格循環與 HBM 份額追趕兩條線決定；股價取決於循環見頂的年度、見頂時累積的淨值，以及非記憶體事業（手機、晶圓代工、面板、家電）在谷底時能撐住多少。",
@@ -132,3 +132,7 @@ CONFIG["rule"] = {
    {"label": "companiesmarketcap（年底 P/E）", "vals": [9.15, 6.95, 5.06, 15.3, 19.1, 12.5, 6.50, 36.1, 10.6, 18.2], "tag": "Verified"},
    {"label": "stockanalysis（核對，不採用）", "vals": [None, None, None, None, None, 13.40, 6.79, 35.92, 10.53, 17.39], "tag": "Verified", "use": False, "note": "2021–2025 與 companiesmarketcap 差距 ≤ 8%"}]},
 }
+
+# v0.2.2（2026-10-25）：目標價與上檔空間（Andy 2026-10-25 要求；Val 頁最後一節、In 頁最後三列；既有儲存格不變）
+CONFIG["readme_extra"] = CONFIG["readme_extra"] + ["v0.2.2（2026-10-25）：Val 頁新增「0. 目標價與上檔空間」（放在 Val 既有內容之後，不位移既有列）：目標價＝In 頁權重 tp_wA／tp_wB／tp_wC（預設 A 0.3／B 0.5／C 0.2，Assumed，Andy 可改）× 三個 P/B 規則值（A＝中段、B＝見頂、C＝谷底）；既有儲存格的值不變。"]
+CONFIG["tp_bias"] = "十年 P/B 含 AI 前的低倍數期，且為全公司口徑（含手機、晶圓代工等非記憶體事業的集團折價），偏誤方向為低估。"

@@ -7,7 +7,13 @@ AI 半導體樣板的第一家公司（之後複製到美光、三星）。
 | 檔案 | 內容 |
 |---|---|
 | `company.py` | 設定檔（只放參數）；結構在 `tools/memory_model/build.py`（記憶體樣板）與 `markets/memory/market.py`（共用市場層） |
-| `dist/20261023_SK海力士模型_v0.4.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261025_SK海力士模型_v0.4.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+
+## v0.4.2（2026-10-25）：目標價與上檔空間
+
+Val 頁新增「0. 目標價與上檔空間」（放在 Val 既有內容之後，不位移既有列；HTML 估值章第一個區塊）：目標價（12 個月，情境加權）＝ In 頁 `tp_wA／tp_wB／tp_wC`（預設 0.3／0.5／0.2，Assumed，Andy 可改）× 三個 P/B 規則值——情境 A＝中段（中位數 × 2027 年底每股淨值 A）、B＝見頂（25 分位 × 同上）、C＝谷底（75 分位 × 2028 年底每股淨值 C）。三者就是第 6 節的規則值，每股基準不是各情境各自的每股淨值；隱含價約為年底價格、未折現。十年 P/B 含 2016–2023 年 AI 前（HBM 未放量）的低倍數期，偏誤方向為低估；C（谷底，75 分位 × 2028 C 每股淨值）高於 A、B 是規則本身的結果。共用工具 `tools/memory_model/build.py` 改動，SK 海力士、美光、三星一起重建；與上一版逐格比對，差異只有新增列與 README 頁標題的版本。
+
+**目標價 ₩1,396,919（韓元），相對現價 ₩1,723,000（2026-10-07 收盤）上檔空間 −18.9%。** 三情境隱含價 A ₩1,393,826／B ₩1,252,560／C ₩1,762,455。
 
 ## v0.4.1（2026-10-23）：估值規則區塊
 
@@ -15,7 +21,7 @@ Val 頁底部新增「十年倍數與規則值」區塊（`tools/valuation_rule.
 
 ## HTML 展示層
 
-`html.json`（頁面設定）與 `dist/20261023_SK海力士模型_v0.4.1.html`（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格；十年分位的規則值取自 `markets/overview/datasets/valuation.json`，頁內標明）。產生與檢核見 `tools/company_html/README.md`；xlsx 或 `html.json` 變動後須重建 HTML 一併提交。
+`html.json`（頁面設定）與 `dist/20261025_SK海力士模型_v0.4.2.html`（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格；十年分位的規則值取自 `markets/overview/datasets/valuation.json`，頁內標明）。產生與檢核見 `tools/company_html/README.md`；xlsx 或 `html.json` 變動後須重建 HTML 一併提交。
 
 ## 建置
 

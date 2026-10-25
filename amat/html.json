@@ -77,6 +77,17 @@
       "title": "估值",
       "intro": "@Val!A1",
       "blocks": [
+        {"type": "table", "caption": "目標價與上檔空間（情境加權）",
+         "head": ["項目", "數值", "", ""],
+         "rows": [
+          ["@Val!A47", "@Val!B47|n0", "", ""],
+          ["@Val!A48", "@Val!B48|sp1", "", ""],
+          ["@Val!A49", "@Val!B49|n0", "", ""],
+          ["@Val!A50", "@Val!B50|n0", "", ""],
+          ["@Val!A51", "@Val!B51|n0", "", ""],
+          ["@Val!A52", "@Val!B52|p0", "@Val!C52|p0", "@Val!D52|p0"],
+          ["@Val!A53", "@Val!B53", "", ""]
+         ]},
         {"type": "kv", "items": [
           ["@Val!A92", "@Val!B92|n2"],
           ["@Val!A93", "@Val!B93|x1"],
