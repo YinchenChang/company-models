@@ -1,4 +1,4 @@
-# AMD（AMD）收支與估值模型 v0.1（AI 半導體 Project：運算層，GPU 側非 NVIDIA 份額）
+# AMD（AMD）收支與估值模型 v0.2（AI 半導體 Project：運算層，GPU 側非 NVIDIA 份額）
 # 用法：python3 amd/build_amd.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年（FY2026＝CY2026；AMD 的會計年度約在 12 月最後一個週六結束，不做平移）。金額：十億美元（US$B）；EPS 為 non-GAAP（公司口徑）。
 import sys, os, glob
@@ -9,9 +9,11 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 sys.path.insert(0, os.path.join(ROOT, "nvidia"))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))   # 本資料夾的 tp_v2.py 優先
 import market as MEM
 import cycle_position as CP
 import valuation_rule as VR
+import tp_v2 as TP
 import accel_share as AS          # 加速器金額份額的可重用函式（NVIDIA 模型建立；AMD 為 GPU 側非 NVIDIA 份額）
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
@@ -162,12 +164,20 @@ inp("cons_eps27", "共識 FY2027 non-GAAP EPS", "US$", 11.23, 15.76, None, "Inte
 inp("cons_eps28", "共識 FY2028 EPS（約 $20）", "US$", 14.41, 20.0, None, "Interested-party", "ts2.tech 2026-07-30 轉述 Motley Fool（二手）", "低＝tickflow 四季合計 14.41")
 
 sec("I. 價格與估值")
-inp("px", "股價（2026-10-23 收盤，stockanalysis）", "US$", None, 516.79, None, "Interested-party", "stockanalysis.com 歷史股價（2026-10-23 收盤 516.79）", "heygotrade 每日報導的收盤序列與 stockanalysis 一致（10-19 538.05、10-14 570.82）；10-23 當日第二來源：未找到")
+inp("px", "股價（2026-10-23 收盤）", "US$", None, 516.79, None, "Interested-party", "stockanalysis.com 歷史股價與統計頁（2026-10-23 收盤 516.79）", "digrin.com AMD 價格頁現價 516.79（2026-10-25 頁面，即 10-23 收盤）；heygotrade 每日報導的收盤序列與 stockanalysis 一致（10-19 538.05、10-14 570.82）")
 inp("r_disc", "折現率（把 FY2027 年底隱含價折回現在；參考用）", "%", 0.08, 0.10, 0.12, "Assumed", "無", "FY2027 年底（2027-12）距 2026-10-23 約 1.19 年")
 for s in SC:
     inp(f"pk_{s}", f"情境 {s}：設備市場見頂年度（日曆年；循環位置規則用）", "年", None, PEAK[s], None, "Derived", PEAK_SRC[s], "共用規則（tools/cycle_position.py classify）：AMD 會計年度＝日曆年，不平移" if s == "A" else "同上")
 for s, w in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
     inp(f"tp_w{s}", f"目標價情境權重 {s}", "%", None, w, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 0.3／0.5／0.2）", "三權重合計應為 1")
+sec("J. 目標價參數（v0.2 新增：DCF 與 Comparable 加權、FY2029 後收斂法；黃底＝Andy 可改）")
+inp("tp_r", "DCF 折現率（股東權益成本）", "%", None, 0.10, None, "Assumed", "Andy 可改（工作單 2026-10-25：美、台、日、韓同一值）", "Sens 頁 ±1pt")
+inp("tp_g", "長期成長率（FY2032 後永續；PL 延伸期 B 情境的收斂目標）", "%", None, 0.04, None, "Assumed", "Andy 可改（工作單 2026-10-25）", "Sens 頁 ±1pt（只改 DCF 再投資率與永續成長，不改 PL 收斂路徑）")
+inp("tp_gd", "延伸期 A／C 情境長期成長相對 tp_g 的差（A＋、C−）", "pt", None, 0.02, None, "Assumed", "工作單 2026-10-25：A＝tp_g＋2pt、C＝tp_g−2pt", "—")
+inp("tp_roe", "ROE（再投資率＝tp_g ÷ tp_roe）：同口徑近三年平均未找到，用工作單預設 0.20", "%", None, 0.20, None, "Assumed", "工作單：近三年平均 ROE，找不到用 0.20。GAAP ROE（valueinvesting.io）2023 1.53%、2024 2.85%、2025 6.88%，平均 3.75%，受 Xilinx 併購攤銷壓低，與本模型 non-GAAP EPS 不同口徑，不採", "若採 GAAP 3.75%（≤ tp_g），再投資率達上限 0.8，股東現金流只剩 EPS 的 20%；stockanalysis 近 12 月 ROE 10.20%")
+inp("tp_w_dcf", "目標價中 DCF 的權重（其餘為 Comparable）", "%", None, 0.5, None, "Assumed", "Andy 可改（Andy 2026-10-25 11:53 定 50／50）", "Sens 頁 0.3／0.7")
+inp("nm10_k", "延伸期 C 情境淨利率目標＝FY2029 淨利率 × 本係數（同口徑十年平均未找到）", "x", None, 0.8, None, "Assumed", "工作單：找不到十年平均用最後一年 × 0.8。本模型為 non-GAAP 口徑；同口徑十年淨利率：未找到", "參考：GAAP 十年平均 7.10%（valueinvesting.io 2016–2025：−11.63%、−0.63%、5.20%、5.07%、25.50%、19.24%、5.59%、3.77%、6.36%、12.51%），含 Xilinx 攤銷，口徑不同不採")
+inp("cons_tp", "市場共識目標價（賣方平均）", "US$", None, 637.61, None, "Interested-party", "stockanalysis.com（55 位分析師平均，2026-10-25 頁面；現價為 10-23 收盤）", "賣方有目標價誘因；只作對照，不進目標價")
 
 r = 4
 INROW = {}
@@ -390,18 +400,18 @@ eps = lambda s, y: f"PL!{FC[y]}{SUMR[(s, 'eps')]}"
 V = wb.create_sheet("Val")
 V["A1"] = "Val — P/E 估值（美元；non-GAAP EPS）。目標價＝十年 non-GAAP P/E 中位數 × FY2027 EPS（各情境），情境加權（第 0 節）。結論另看「現價 ÷ FY2027、FY2028 EPS」。跨公司規則：合理倍數＝10 年（2016–2025 年底）P/E 的分位，依循環位置：見頂年 25 分位、中段中位數、谷底 75 分位；AMD 會計年度＝日曆年，用共用規則 classify（不平移），見頂年度讀設備市場模型"
 V["A2"] = "依循環位置取分位的規則值：不適用（保留計算，不進結論；比照 NVIDIA 模型）。理由：歷史倍數是落後倍數（年底價 ÷ 當年 non-GAAP EPS），含高成長期溢價與 EPS 低谷年（2016 為虧損、2022 年 18.5x、2019 年 71.7x）；GAAP 倍數另受 Xilinx 併購攤銷扭曲（2023 年 283x），只列參考。本版未做先驗，無 Andy 合理 P/E 對照"
-V.cell(4, 1, "0. 目標價與上檔空間").font = BOLD
+V.cell(4, 1, "舊法：規則值情境加權（參考）").font = BOLD
 hdr(V, 5, ["項目", "值", "", "", "說明"])
-V.cell(6, 1, "目標價（12 個月，情境加權）"); V["B6"] = "=tp_wA*B8+tp_wB*B9+tp_wC*B10"; V["B6"].number_format = "0.00"
+V.cell(6, 1, "規則值情境加權價（參考，非目標價）"); V["B6"] = "=tp_wA*B8+tp_wB*B9+tp_wC*B10"; V["B6"].number_format = "0.00"
 for c in range(1, 6): V.cell(6, c).fill = KEY
-V.cell(7, 1, "上檔空間（目標價 ÷ 現價 − 1）"); V["B7"] = "=B6/px-1"; V["B7"].number_format = "0.0%"
+V.cell(7, 1, "相對現價（參考）"); V["B7"] = "=B6/px-1"; V["B7"].number_format = "0.0%"
 for i, (s, nm) in enumerate((("A", "樂觀"), ("B", "基準"), ("C", "下檔")), 8):
     V.cell(i, 1, f"情境 {s} 隱含價（{nm}）"); V[f"B{i}"] = f"=pe_mid*{eps(s, 2027)}"; V[f"B{i}"].number_format = "0.00"
     V.cell(i, 5, f"十年 non-GAAP P/E 中位數 × 情境 {s} FY2027 EPS")
 V.cell(11, 1, "情境權重 A／B／C"); V["B11"] = "=tp_wA"; V["C11"] = "=tp_wB"; V["D11"] = "=tp_wC"
 for c in "BCD": V[f"{c}11"].number_format = "0%"
 V["E11"] = "In 頁 tp_wA／tp_wB／tp_wC（Assumed，Andy 可改）"
-V.cell(12, 1, "目標價方法"); V["B12"] = ("P/E：十年（2016–2025 年底）non-GAAP P/E 中位數（年底價 ÷ 公司 non-GAAP EPS，自算；規則值不適用時的替代）× FY2027（≈未來 12–14 個月）non-GAAP EPS，情境加權。"
+V.cell(12, 1, "舊法說明"); V["B12"] = ("P/E：十年（2016–2025 年底）non-GAAP P/E 中位數（年底價 ÷ 公司 non-GAAP EPS，自算；規則值不適用時的替代）× FY2027（≈未來 12–14 個月）non-GAAP EPS，情境加權。"
                                        "偏誤方向：歷史倍數含 AMD 2017–2021 年轉型期與 AI 前的高成長溢價（偏高）。FY2027 EPS 三情境相同（情境係數自 CY2028 起），故三情境隱含價相同；"
                                        "樣板標籤 A 樂觀／B 基準／C 下檔沿用，本模型 A＝市場層基準、B＝AI 資本支出消化、C＝明顯下修")
 V.cell(14, 1, "1. 價格與市場隱含倍數").font = BOLD
@@ -608,7 +618,7 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("AMD（AMD）收支與估值模型 v0.1（AI 半導體 Project：運算層，GPU 側非 NVIDIA 份額）　2026-10-25", True),
+lines = [("AMD（AMD）收支與估值模型 v0.2（AI 半導體 Project：運算層，GPU 側非 NVIDIA 份額）　2026-10-25", True),
  ("本版：運算層第三個模型，複製 nvidia/ 的結構，匯入 nvidia/accel_share.py 的份額函式（AMD 為 GPU 側非 NVIDIA 份額）；Val 頁第 0 節為情境加權目標價。", False),
  ("模型命題：AMD 的資料中心 GPU 營收＝加速器市場（本專案加速器數量層 × 各平台每顆價）× AMD 金額份額；OpenAI、Meta 各 6 GW 與 Anthropic、Oracle 大單在 2026 下半年起放量，但每 GW 附帶認股權證稀釋，HBM 漲價又壓 GPU 毛利率。股價約為 FY2027 共識 EPS 的 33 倍：要多少大單如期放量、毛利率守住多少，才撐得住現價。", False),
  ("核心問題：以市場層顆數推得的 AMD 資料中心 GPU 營收與 EPS，能否支撐現價與公司「2027 年資料中心逾一倍、EPS 逾 $20」的說法；差距來自顆數、售價還是毛利率。", False), ("", False),
@@ -623,6 +633,37 @@ lines = [("AMD（AMD）收支與估值模型 v0.1（AI 半導體 Project：運�
  ("已知限制：(1) 公司不拆分 GPU 與 CPU，FY2026 錨點的 GPU 營收（約 15）為 Assumed 拆分，k_rec 隨之變動。(2) k_rec 是顆數層與售價層的合併係數；FY2027 起沿用（世代售價係數 1.0）可能低估 MI450 的售價提升，Sens 列「隨 HBM 容量」與「每顆＝市場層價」兩個上界。(3) HBM 吸收比例、GPU 毛利率、各業務成長率為 Assumed。(4) 認股權證的會計處理（是否抵減營收）與各批股數未找到；本模型只計股數稀釋。(5) 情境 B、C 只影響加速器顆數與 HBM 價格，CPU 等業務三情境相同。(6) 共識兩來源差距大（FY2027 EPS 15.76 vs 11.23）。(7) 十年 P/E 為落後倍數，含高成長期溢價（目標價方法已註明偏誤方向）。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
+
+# ---------------- v0.2：三情境延伸到 FY2032、Val 第 0 節（DCF 與 Comparable 加權）、Sens 目標價參數 ----------------
+XH, XR, XC = TP.extend_pl(PL, PB, FC, FYS, 2029, {"rev": "rev", "ni": "ni", "sh": "sh", "eps": "eps"}, "US$",
+    "三情境延伸到 FY2032（v0.2；FY2025A–FY2029 引用上方推導區塊，FY2030 起為收斂法，非驅動因子推導；收斂年度為橘底）",
+    "上游市場層（markets/*、台積電顆數）只到 CY2029＝FY2029；FY2030 起：營收年增由 FY2029 年增線性收斂到 FY2032 的長期成長（A＝tp_g＋tp_gd、B＝tp_g、C＝tp_g−tp_gd），"
+    "淨利率由 FY2029 線性收斂到中段利潤率（A＝FY2029、B＝FY2029 與 C 目標的中點、C＝FY2029 × nm10_k；同口徑十年平均未找到），股數沿用 FY2029 年變動")
+_h = next(r for r in range(1, V.max_row + 1) if V.cell(r, 1).value == "P/E：十年歷史倍數")
+TPL, TPN = TP.add_tp_section(wb, V,
+    eps={s: [f"PL!{XC[y]}{XR[(s, 'eps')]}" for y in range(2027, 2033)] for s in SC}, e_mon=12,
+    fwd={s: [(f"PL!{XC[2027]}{XR[(s, 'eps')]}", "2/12"), (f"PL!{XC[2028]}{XR[(s, 'eps')]}", "10/12")] for s in SC},
+    fwd_note="會計年度＝日曆年：約 12 個月後（2027-10 底）的未來 12 個月＝2027-11～2028-10（2/12 × FY2027＋10/12 × FY2028）",
+    peers=[("NVIDIA", "NVDA", 17.44, "2026-10-23", "stockanalysis.com 統計頁（Forward PE）", "Interested-party（資料商彙整賣方預估）"),
+           ("Broadcom", "AVGO", 18.52, "2026-10-23", "同上", "Interested-party（同上）"),
+           ("Intel", "INTC", 50.64, "2026-10-23", "同上", "Interested-party（同上）"),
+           ("Qualcomm", "QCOM", 18.98, "2026-10-23", "同上", "Interested-party（同上）"),
+           ("Marvell", "MRVL", 40.44, "2026-10-23", "同上", "Interested-party（同上）")],
+    peer_note="券商常用的 CPU／GPU／AI 半導體同業（NVIDIA、Intel 為直接競爭者）；不含 A 股（Andy 11:53）。前瞻 P/E 口徑為資料商的未來 12 個月共識 EPS，各家 GAAP／non-GAAP 口徑不一",
+    cons_tp="cons_tp", cons_note="stockanalysis.com：55 位分析師平均目標價（2026-10-25 頁面）；Interested-party",
+    cons_fwd="2/12*cons_eps27+10/12*cons_eps28", cons_fwd_note="同權重的共識 EPS：2/12 × 共識 FY2027（15.76，stockanalysis）＋10/12 × 共識 FY2028（約 20，二手）",
+    eps28={s: f"PL!{XC[2028]}{XR[(s, 'eps')]}" for s in SC}, hist=f"B{_h + 2}:B{_h + 11}", fmt="#,##0.00",
+    method="DCF：股東現金流＝non-GAAP EPS ×（1 − tp_g ÷ tp_roe），tp_r 10%、tp_g 4%、tp_roe 0.20（工作單預設；GAAP ROE 受 Xilinx 攤銷壓低不採）；基準日 2026 年底，FY2027 起逐年折現，FY2032 後永續。"
+           "Comparable：NVIDIA、Broadcom、Intel、Qualcomm、Marvell 前瞻 P/E 中位數 × 12 個月後前瞻 EPS。偏誤方向：non-GAAP EPS 排除股票薪酬與攤銷（偏高）；C 情境 FY2030 起淨利率收斂到 FY2029 × 0.8（Assumed）；"
+           "歷史分位用自算十年 non-GAAP 落後 P/E（含轉型期高倍數）；永續價值占 DCF 價值過半，對 tp_r、tp_g 敏感（Sens 頁）。")
+assert nn + 9 < 40, nn
+TP.add_tp_sens(SE, nn + 5, TPL, "#,##0.00")
+TP.dump_rowmap(TPL, TPN, XH, XR, XC, nn + 5)
+TP.yellow_inputs(IN)
+RD.cell(len(lines) + 1, 1, "v0.2（2026-10-25）：(1) 目標價改為 DCF 與 Comparable 加權（Val 頁最前面「0. 目標價」：0.1 DCF 股東權益現金流、0.2 Comparable 同業前瞻 P/E、0.3 結論；Val 既有內容整體下移，公式一併改寫）；"
+        "v0.1 的「0. 目標價與上檔空間」改名「舊法：規則值情境加權（參考）」保留。(2) PL 頁末新增三情境延伸到 FY2032：FY2030 起為收斂法，非驅動因子推導（上游市場層只到 CY2029＝FY2029）。"
+        "(3) 現價維持 2026-10-23 收盤 516.79（補第二來源 digrin）。(4) In 頁 J 節新增目標價參數（黃底，Andy 可改）；Sens 頁新增 tp_r、tp_g、tp_w_dcf 對加權目標價的影響。FY2025–FY2029 既有數字不變。")
+RD.cell(len(lines) + 2, 1, "情境對應（v0.2 延伸期）：A＝順利（市場層基準顆數）、B＝平平（AI 資本支出消化：CY2028 ×0.8、CY2029 ×0.85）、C＝不如預期（CY2028–29 ×0.6）；FY2027 三情境相同，情境差從 FY2028 起。本版未做先驗，無 Andy 合理 P/E 對照。")
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
