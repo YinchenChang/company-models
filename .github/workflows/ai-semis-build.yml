@@ -38,6 +38,7 @@ on:
       - 'hanmi/**'
       - 'amd/**'
       - 'mrvl/**'
+      - 'eoptolink/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -72,6 +73,7 @@ on:
       - 'hanmi/**'
       - 'amd/**'
       - 'mrvl/**'
+      - 'eoptolink/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -113,6 +115,7 @@ jobs:
             "quanta|python3 quanta/build_quanta.py|quanta/dist"
             "innolight|python3 innolight/build_innolight.py|innolight/dist"
             "avgo|python3 avgo/build_avgo.py|avgo/dist"
+            "eoptolink|python3 eoptolink/build_eoptolink.py|eoptolink/dist"
             "mrvl|python3 mrvl/build_mrvl.py|mrvl/dist"
             "amd|python3 amd/build_amd.py|amd/dist"
             "hanmi|python3 hanmi/build_hanmi.py|hanmi/dist"
