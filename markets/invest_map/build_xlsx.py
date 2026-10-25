@@ -190,7 +190,7 @@ def main():
         "三個視角：(1) 供應鏈地圖＝「價值鏈」頁＋Tokenomics 每 GW 金額；(2) 產業地位＝「地位」頁；(3) 可投資性＝「估值」頁。",
         "黃底＝判斷輸入（Andy 可直接改；重建時讀回，不被程式覆寫）。藍字＝自各模型或 Tokenomics 抄錄的值，旁欄註明來源儲存格。其餘為公式。",
         f"Tokenomics：{TK['source']['file']}（commit {TK['source']['commit'][:7]}；擷取 {TK['source']['extractedAt']}）",
-        "公司模型：company-models 各公司 dist/*.xlsx（extract_models.py 抽數；AVGO 讀 PR #93 分支，未合併）。",
+        "公司模型：company-models 各公司 dist/*.xlsx（extract_models.py 抽數）。",
         "AI半導體 候選母體 v0.2.2（2026-10-24）：次產業排序、公司重要性、市場地位文字。權威在 AI半導體 Project。",
         "可投資性口徑（預設，Andy 可改）：中心價＝各模型主口徑；半導體 P/E 類取「十年倍數規則值」與「Andy 先驗合理 P/E」兩者較低者；"
         "規則值不適用者（NVDA、AVGO、Ibiden）只用 Andy 合理 P/E，標「替代口徑」；記憶體以 P/B 規則值為主、P/E 規則值為對照；"
@@ -368,7 +368,7 @@ def main():
             method = "替代口徑：Andy 合理 P/E"
             c1 = m["andy27_A"]
             b1 = m["andy28_C"]
-            note = m["rule_note"] + ("；模型在 PR #93，未合併" if tk == "AVGO" else "")
+            note = m["rule_note"]
         elif tk in ("ANET", "2308", "300308", "2382"):
             method = "P/E：規則值與 Andy 合理 P/E 取低"
             c1, c2 = m["rule_A"], m["andy27_A"]

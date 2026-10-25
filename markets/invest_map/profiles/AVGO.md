@@ -68,10 +68,10 @@ asof: 2026-10-25
 - 毛利率下滑幅度｜模型 FY2027 67.8% vs 共識隱含約 72.4%，差在代購 HBM 比例 [本專案：Broadcom模型_v0.1.xlsx Recon!C32、Recon!B32]｜同上
 - 客戶融資曝險｜約 92B，若全損約等於模型 FY2027 淨利 1.03 倍 [本專案：Broadcom模型_v0.1.xlsx Recon!C36]｜Anthropic 上市進度、OpenAI 融資條款
 - Google TPU 份額（聯發科分食）｜份額假設 90%→75% 是 Assumed [本專案：Broadcom模型_v0.1.xlsx Units!C5:E5]｜Google 下一代 TPU 供應商消息
-- 模型狀態｜Broadcom 模型 v0.1（PR #93）尚未合併到 main [本專案：models_extract.json AVGO.model_pending]｜PR 審查
+- 模型狀態｜Broadcom 模型 v0.1 已合併到 main（PR #107，`avgo/dist/`）[本專案：avgo/dist/20261023_Broadcom模型_v0.1.xlsx]｜下一版更新
 
 ## 來源
-1. 本專案：`/tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx`（README、Q、Units、PL、Recon；PR #93 未合併）；`nvidia/dist/20261023_NVIDIA模型_v0.1.1.xlsx`（Units）；AI半導體 `先驗比對_AVGO_20261023.md`、`先驗比對_Arista_20261024.md`；`markets/invest_map/data/models_extract.json`
+1. 本專案：`avgo/dist/20261023_Broadcom模型_v0.1.xlsx`（README、Q、Units、PL、Recon）；`nvidia/dist/20261023_NVIDIA模型_v0.1.1.xlsx`（Units）；AI半導體 `先驗比對_AVGO_20261023.md`、`先驗比對_Arista_20261024.md`；`markets/invest_map/data/models_extract.json`
 2. [Broadcom in Early Financing Talks for OpenAI Chips](https://www.bloomberg.com/news/videos/2026-10-08/broadcom-in-early-financing-talks-for-openai-chips-video)（2026-10-08）
 3. [Broadcom Starts Amassing Funds for Anthropic Chips](https://www.bloomberg.com/news/articles/2026-10-02/broadcom-starts-amassing-60-billion-to-fund-chips-for-anthropic)（2026-10-02，僅標題）
 4. [Broadcom to lend Anthropic up to $42 billion to lease chips](https://finance.yahoo.com/technology/article/broadcom-to-lend-anthropic-up-to-42-billion-to-lease-chips-in-latest-circular-investing-deal-121617505.html)（2026-10-01）

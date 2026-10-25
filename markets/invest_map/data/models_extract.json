@@ -48,68 +48,67 @@
   "rule_note": "規則值不適用（落後倍數含高成長期溢價；模型 Val 第 3 節）"
  },
  "AVGO": {
-  "model": "20261023_Broadcom模型_v0.1.xlsx",
+  "model": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx",
   "price": {
    "value": 323.24,
    "cell": "Val!B6",
-   "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+   "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
   },
   "price_date": "2026-10-22",
   "pe_fy28": [
    {
     "value": 15.3728496895549,
     "cell": "Val!B9",
-    "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+    "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
    },
    {
     "value": 18.1211848859495,
     "cell": "Val!C9",
-    "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+    "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
    },
    {
     "value": 21.8108621240607,
     "cell": "Val!D9",
-    "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+    "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
    }
   ],
   "andy_pe": {
    "value": 25.0,
    "cell": null,
    "file": null,
-   "source": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx Val!A31 標題"
+   "source": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx Val!A31 標題"
   },
   "andy27_A": {
    "value": 451.946157912072,
    "cell": "Val!C33",
-   "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+   "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
   },
   "andy28_A": {
    "value": 525.667014456705,
    "cell": "Val!F33",
-   "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+   "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
   },
   "andy27_B": {
    "value": 451.946157912072,
    "cell": "Val!C34",
-   "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+   "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
   },
   "andy28_B": {
    "value": 445.942141800326,
    "cell": "Val!F34",
-   "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+   "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
   },
   "andy27_C": {
    "value": 451.946157912072,
    "cell": "Val!C35",
-   "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+   "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
   },
   "andy28_C": {
    "value": 370.503465385049,
    "cell": "Val!F35",
-   "file": "../../../tmp/claude-0/avgo/avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
+   "file": "avgo/dist/20261023_Broadcom模型_v0.1.xlsx"
   },
-  "rule_note": "十年倍數待前瞻 P/E 歷史（Bloomberg）；規則值未算",
-  "model_pending": "PR #93 未合併"
+  "rule_note": "十年倍數待前瞻 P/E 歷史（Bloomberg）；規則值未算"
  },
  "000660": {
   "model": "skhynix/dist/20261023_SK海力士模型_v0.4.1.xlsx",
@@ -800,119 +799,119 @@
   }
  },
  "MSFT": {
-  "model": "microsoft/dist/20261022_Microsoft收支模型_v0_2_1.xlsx",
+  "model": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx",
   "rating": {
    "value": "賣出",
    "cell": "摘要",
-   "file": "microsoft/dist/20261022_Microsoft收支模型_v0_2_1.xlsx"
+   "file": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx"
   },
   "target": {
    "value": 359.058838816622,
    "cell": "摘要!C7",
-   "file": "microsoft/dist/20261022_Microsoft收支模型_v0_2_1.xlsx"
+   "file": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx"
   },
   "price": {
    "value": 529.76,
    "cell": "摘要!C8",
-   "file": "microsoft/dist/20261022_Microsoft收支模型_v0_2_1.xlsx"
+   "file": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx"
   },
   "scen_lo": {
    "value": 360.157606985669,
    "cell": "摘要!C10",
-   "file": "microsoft/dist/20261022_Microsoft收支模型_v0_2_1.xlsx"
+   "file": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx"
   },
   "scen_hi": {
    "value": 380.564120769465,
    "cell": "摘要!D10",
-   "file": "microsoft/dist/20261022_Microsoft收支模型_v0_2_1.xlsx"
+   "file": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx"
   },
   "sentence": {
    "value": "賣出：點位 $359.1，較現價 $529.76 低 32%；情境區間 $360.2–$380.6，方法區間 $353.5–$359.1；點位低於賣出門檻 $450.3 達 $91.2。",
    "cell": "摘要",
-   "file": "microsoft/dist/20261022_Microsoft收支模型_v0_2_1.xlsx"
+   "file": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx"
   },
   "model_px": {
    "value": 529.76,
    "cell": "輸入與假設!C345",
-   "file": "microsoft/dist/20261022_Microsoft收支模型_v0_2_1.xlsx",
+   "file": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx",
    "date": "2026-10-07"
   }
  },
  "AMZN": {
-  "model": "amazon/dist/20261022_Amazon收支模型_v0_2_1.xlsx",
+  "model": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx",
   "rating": {
    "value": "賣出",
    "cell": "摘要",
-   "file": "amazon/dist/20261022_Amazon收支模型_v0_2_1.xlsx"
+   "file": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx"
   },
   "target": {
    "value": 201.7143092677,
    "cell": "摘要!C7",
-   "file": "amazon/dist/20261022_Amazon收支模型_v0_2_1.xlsx"
+   "file": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx"
   },
   "price": {
    "value": 259.92,
    "cell": "摘要!C8",
-   "file": "amazon/dist/20261022_Amazon收支模型_v0_2_1.xlsx"
+   "file": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx"
   },
   "scen_lo": {
    "value": 201.136157296701,
    "cell": "摘要!C10",
-   "file": "amazon/dist/20261022_Amazon收支模型_v0_2_1.xlsx"
+   "file": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx"
   },
   "scen_hi": {
    "value": 212.333201378338,
    "cell": "摘要!D10",
-   "file": "amazon/dist/20261022_Amazon收支模型_v0_2_1.xlsx"
+   "file": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx"
   },
   "sentence": {
    "value": "賣出：點位 $201.7，較現價 $259.92 低 22%；情境區間 $201.1–$212.3，方法區間 $197.5–$201.7；點位低於賣出門檻 $220.9 達 $19.2。",
    "cell": "摘要",
-   "file": "amazon/dist/20261022_Amazon收支模型_v0_2_1.xlsx"
+   "file": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx"
   },
   "model_px": {
    "value": 259.92,
    "cell": "輸入與假設!C328",
-   "file": "amazon/dist/20261022_Amazon收支模型_v0_2_1.xlsx",
+   "file": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx",
    "date": "2026-10-07"
   }
  },
  "GOOGL": {
-  "model": "alphabet/dist/20261022_Alphabet收支模型_v0_2_1.xlsx",
+  "model": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx",
   "rating": {
    "value": "賣出",
    "cell": "摘要",
-   "file": "alphabet/dist/20261022_Alphabet收支模型_v0_2_1.xlsx"
+   "file": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx"
   },
   "target": {
    "value": 146.09287356031,
    "cell": "摘要!C7",
-   "file": "alphabet/dist/20261022_Alphabet收支模型_v0_2_1.xlsx"
+   "file": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx"
   },
   "price": {
    "value": 350.5,
    "cell": "摘要!C8",
-   "file": "alphabet/dist/20261022_Alphabet收支模型_v0_2_1.xlsx"
+   "file": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx"
   },
   "scen_lo": {
    "value": 122.889116020962,
    "cell": "摘要!C10",
-   "file": "alphabet/dist/20261022_Alphabet收支模型_v0_2_1.xlsx"
+   "file": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx"
   },
   "scen_hi": {
    "value": 175.083617103409,
    "cell": "摘要!D10",
-   "file": "alphabet/dist/20261022_Alphabet收支模型_v0_2_1.xlsx"
+   "file": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx"
   },
   "sentence": {
    "value": "賣出：點位 $146.1，較現價 $350.50 低 58%；情境區間 $122.9–$175.1，方法區間 $144.1–$146.1；點位低於賣出門檻 $297.9 達 $151.8。",
    "cell": "摘要",
-   "file": "alphabet/dist/20261022_Alphabet收支模型_v0_2_1.xlsx"
+   "file": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx"
   },
   "model_px": {
    "value": 350.5,
    "cell": "輸入與假設!C374",
-   "file": "alphabet/dist/20261022_Alphabet收支模型_v0_2_1.xlsx",
+   "file": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx",
    "date": "2026-10-07"
   }
  },

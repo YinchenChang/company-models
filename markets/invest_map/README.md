@@ -44,6 +44,8 @@ python3 markets/invest_map/build_html.py
 
 ## 版本
 
+- v0.3（2026-10-25）：公司檔案新增「我們的模型」分頁（Andy 10:45 要求）：嵌入各公司模型成品 HTML（與抽數 xlsx 同一版次），附「在新分頁開啟」；`publish_pages.sh` 把 22 份模型 HTML 複製到 gh-pages 的 `models/<資料夾>/`。AVGO 改讀已合併的 `avgo/dist/`（PR #107）；MAG 三家改讀 v0.2.2（數值不變）。頁首加 `<meta charset="utf-8">`（不依賴伺服器宣告編碼）。
+
 - v0.2（2026-10-25）：22 家公司檔案（profiles/）、公司檔案面板與總覽分頁、GitHub Pages 發布腳本；台達電改用模型 10-23 收盤。
 
 - v0.1（2026-10-25）：22 檔上市公司估值、22 檔地位、71 個地圖節點；Tokenomics v21.4；股價 2026-10-23（台積電、廣達 10-22）。
