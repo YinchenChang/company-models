@@ -33,6 +33,7 @@ on:
       - 'emc/**'
       - 'asml/**'
       - 'accton/**'
+      - 'lrcx/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -62,6 +63,7 @@ on:
       - 'emc/**'
       - 'asml/**'
       - 'accton/**'
+      - 'lrcx/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -103,6 +105,7 @@ jobs:
             "quanta|python3 quanta/build_quanta.py|quanta/dist"
             "innolight|python3 innolight/build_innolight.py|innolight/dist"
             "avgo|python3 avgo/build_avgo.py|avgo/dist"
+            "lrcx|python3 lrcx/build_lrcx.py|lrcx/dist"
             "accton|python3 accton/build_accton.py|accton/dist"
             "asml|python3 asml/build_asml.py|asml/dist"
             "emc|python3 emc/build_emc.py|emc/dist"
