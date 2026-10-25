@@ -64,6 +64,9 @@ on:
       - 'accretech/**'
       - 'dell/**'
       - 'jentech/**'
+      - 'markets/nand/**'
+      - 'sndk/**'
+      - 'kioxia/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -124,6 +127,9 @@ on:
       - 'accretech/**'
       - 'dell/**'
       - 'jentech/**'
+      - 'markets/nand/**'
+      - 'sndk/**'
+      - 'kioxia/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -152,9 +158,12 @@ jobs:
             "bridge|python3 markets/chip_bridge/build_bridge.py|markets/chip_bridge/dist"
             "network|python3 markets/network/build_network.py|markets/network/dist"
             "equipment|python3 markets/equipment/build_equipment.py|markets/equipment/dist"
+            "nand|python3 markets/nand/build_nand.py|markets/nand/dist"
             "skhynix|python3 tools/memory_model/build.py skhynix/company.py|skhynix/dist"
             "micron|python3 tools/memory_model/build.py micron/company.py|micron/dist"
             "samsung|python3 tools/memory_model/build.py samsung/company.py|samsung/dist"
+            "sndk|python3 sndk/build_sndk.py|sndk/dist"
+            "kioxia|python3 kioxia/build_kioxia.py|kioxia/dist"
             "tsmc|python3 tsmc/build_tsmc.py|tsmc/dist"
             "advantest|python3 advantest/build_advantest.py|advantest/dist"
             "disco|python3 disco/build_disco.py|disco/dist"
