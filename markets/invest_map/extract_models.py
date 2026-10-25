@@ -125,6 +125,75 @@ def model_px(b, sheet, label_pat):
     return {"value": v, "cell": f"{sheet}!{c}", "file": b.rel, "date": date}
 
 
+def cash_rows(b, sheet, label_pats, hdr_row=None):
+    """收支關卡：回傳 {basis, label, values:[(年,值,儲存格)], file, sheet}；依序找第一個存在的列標籤。"""
+    ws = b.wb[sheet]
+    for pat in label_pats:
+        for row in ws.iter_rows():
+            v = row[0].value
+            if isinstance(v, str) and re.match(pat, v):
+                r = row[0].row
+                hdr = hdr_row or next(rr for rr in range(1, r) if str(ws.cell(rr, 1).value or "").startswith(("項目", "ID", "編號")))
+                vals = []
+                for c in row[1:]:
+                    yr = ws.cell(hdr, c.column).value
+                    if isinstance(c.value, (int, float)) and yr not in (None, "單位") \
+                            and "2025" not in str(yr) and "H20" not in str(yr) \
+                            and not re.search(r"v\d|對照", str(yr)):  # 只取模型期間（2026 起）的年度欄，不含舊版對照欄
+                        vals.append((str(yr), c.value, f"{sheet}!{c.coordinate}"))
+                return {"label": v, "values": vals, "file": b.rel}
+    raise KeyError(f"{b.rel} {sheet} 找不到 {label_pats}")
+
+
+NI_LABELS = {"淨利", "歸屬母公司淨利", "歸母淨利", "淨利（歸屬母公司）", "淨利（不含權益證券損益）", "淨利（non-GAAP）"}
+
+
+def net_income_rows(b):
+    """模型只有損益時：PL 頁所有「淨利」列（各情境、各年）的數值。"""
+    ws = b.wb["PL"]
+    hdr = {}
+    for row in ws.iter_rows():                      # 表頭列：第一格為「情境／項目」或「項目」
+        if str(row[0].value or "").startswith(("情境／項目", "項目")):
+            hdr = {c.column: str(c.value) for c in row if c.value is not None}
+            break
+    vals, seen = [], set()
+    for row in ws.iter_rows():
+        v = row[0].value
+        if isinstance(v, str) and v.strip() in NI_LABELS:
+            for c in row[1:]:
+                h = hdr.get(c.column, "")
+                if not isinstance(c.value, (int, float)) or not h or re.search(r"\dA$|A（|實績|說明|單位", h):
+                    continue                        # 排除實績年度（FY2025A 等）
+                key = (h, round(c.value, 6))
+                if key in seen:                     # 同一情境在摘要與推導區塊各出現一次，只計一次
+                    continue
+                seen.add(key)
+                vals.append((h, c.value, f"PL!{c.coordinate}"))
+    return {"label": "PL 頁各情境模型年度淨利（不含實績）", "values": vals, "file": b.rel}
+
+
+def gap_plus_returns(b):
+    """雲端模板統一口徑（2026-10-25）：營運缺口（不含融資、不含還本）＋股利＋回購。
+    股東回饋可由公司自行停止，不算入不敷出；租金、利息、稅、資本支出照扣。"""
+    gap = cash_rows(b, "各期收支", [r"^營運缺口（不含融資"])
+    vals = [list(x) for x in gap["values"]]
+    parts = ["營運缺口"]
+    for pat, name in ((r"^⑧ 股利", "股利"), (r"^⑨ 回購", "回購")):
+        try:
+            add = cash_rows(b, "各期收支", [pat])
+        except KeyError:
+            continue
+        amap = {y: (v, c) for y, v, c in add["values"]}
+        for x in vals:
+            if x[0] in amap:
+                x[1] += amap[x[0]][0]
+                x[2] += "＋" + amap[x[0]][1].split("!")[1]
+        parts.append(name)
+    label = "＋".join(parts) if len(parts) > 1 else "營運缺口（不含融資、不含還本；無股利與回購）"
+    return {"basis": "現金流", "label": label,
+            "values": [tuple(x) for x in vals], "file": b.rel}
+
+
 def cloud(b):
     def row(lbl, k=0):
         return b.num("摘要", [(0, "^" + re.escape(lbl))], k)
@@ -136,6 +205,7 @@ def cloud(b):
         "scen_hi": row("結論｜情境區間（下緣／上緣）", 1),
         "sentence": {"value": b.find("摘要", (0, r"^結論｜結論句$"))[1][1], "cell": "摘要", "file": b.rel},
         "model_px": model_px(b, "輸入與假設", r"^現價（"),
+        "cash": gap_plus_returns(b),
     }
 
 
@@ -168,7 +238,8 @@ def main():
     # --- 記憶體（P/B 主、P/E 對照） ---
     for tk, folder in (("000660", "skhynix"), ("005930", "samsung"), ("MU", "micron")):
         b = Book(dist_xlsx(folder))
-        out[tk] = {"model": b.rel, **memory(b), "model_px": model_px(b, "In", r"股價（")}
+        out[tk] = {"model": b.rel, **memory(b), "model_px": model_px(b, "In", r"股價（"),
+                   "cash": dict(basis="現金流", **cash_rows(b, "Y", [r"^自由現金流"], hdr_row=3))}
 
     # --- 代工 ---
     b = Book(dist_xlsx("tsmc"))
@@ -221,6 +292,27 @@ def main():
                     "need_ratio_2028": b.num("Reverse", [(0, "^X21$")], 3),
                     "need_ratio_2028_lo": b.num("Reverse", [(0, "^X22$")], 3)}
 
+    # --- 收支關卡：只有損益的半導體模型 ---
+    for tk, folder in (("NVDA", "nvidia"), ("2330", "tsmc"), ("ANET", "arista"), ("2308", "delta"), ("300308", "innolight"),
+                       ("2382", "quanta"), ("4062", "ibiden"), ("6857", "advantest"), ("6146", "disco")):
+        out[tk]["cash"] = dict(basis="淨利", **net_income_rows(Book(dist_xlsx(folder))))
+    out["AVGO"]["cash"] = dict(basis="淨利", **net_income_rows(Book(a.avgo or dist_xlsx("avgo"))))
+    # --- 模型商 ---
+    bm = Book(dist_xlsx("minimax"))
+    f06 = cash_rows(bm, "Funding", [r"^F06$"])
+    f07 = {y: (v, c) for y, v, c in cash_rows(bm, "Funding", [r"^F07$"])["values"]}
+    out["00100"]["cash"] = {"basis": "現金流", "file": bm.rel,
+                            "label": "F06 營運燒錢（經調整淨利）＋F07 算力預付與自建資本支出",
+                            "values": [(y, v + f07.get(y, (0, ""))[0], c + ("＋" + f07[y][1].split("!")[1] if y in f07 else ""))
+                                       for y, v, c in f06["values"]]}
+    out["02513"]["cash"] = dict(basis="現金流", **cash_rows(Book(dist_xlsx("zhipu")), "Funding", [r"^F09$"]))
+    out["02513"]["cash"]["label"] = "F09 自由現金流"
+    # --- 未上市模型商：只取收支（無股價、無估值） ---
+    for tk, folder, rowid in (("OpenAI", "openai", r"^F06$"), ("Anthropic", "anthropic", r"^F07$")):
+        b = Book(dist_xlsx(folder))
+        out[tk] = {"model": b.rel, "unlisted": True,
+                   "cash": dict(basis="現金流", **cash_rows(b, "Funding", [rowid]))}
+        out[tk]["cash"]["label"] = ("F06 " if rowid == r"^F06$" else "F07 ") + "自由現金流"
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)

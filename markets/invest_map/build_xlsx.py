@@ -22,7 +22,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.1"
+VERSION = "v0.3"
 DATE = "20261025"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
@@ -73,12 +73,12 @@ SEGMENTS = [
     ("compute", "L3 IT 設備", "運算", "約 43%", 0.43, 1, 100, "AI半導體 次產業排序 v0.2.2"),
     ("memory", "L3 IT 設備", "記憶體", "約 23%", 0.23, 1, 100, "同上"),
     ("network", "L3 IT 設備", "網通", "約 19%", 0.19, 2, 75, "同上"),
+    ("substrate", "L3 IT 設備", "載板與 PCB", "ABF 約 0.3%＋PCB／CCL 未拆", 0.003, 2, 25, "同上；[Assumed] 區間"),
     ("power", "L3 IT 設備", "電源與散熱", "約 3–5%", 0.04, 2, 25, "同上；[Assumed] 區間"),
     ("server", "L3 IT 設備", "伺服器組裝", "附加價值約 1–3%", 0.02, 3, 25, "同上；營收流量大、附加價值小"),
-    ("substrate", "L3 IT 設備", "載板與 PCB", "ABF 約 0.3%＋PCB／CCL 未拆", 0.003, 2, 25, "同上；[Assumed] 區間"),
-    ("foundry", "L2 半導體製造", "代工與封測", "軸 A 可見約 3%（藏在晶片成本）", 0.03, 1, 75,
+    ("foundry", "L2 半導體製造與設備", "代工與封測", "軸 A 可見約 3%（藏在晶片成本）", 0.03, 1, 75,
      "例外：軸 A 只見 3%，但先進製程與 CoWoS 的價值藏在運算 43% 的成本內，給 75 [判斷]"),
-    ("equipment", "L2 半導體製造", "設備與材料", "約 7.5%（軸 B，不可與軸 A 相加）", 0.075, 1, 50, "同上"),
+    ("equipment", "L2 半導體製造與設備", "設備與材料", "約 7.5%（軸 B，不可與軸 A 相加）", 0.075, 1, 50, "同上"),
 ]
 SEG_BY_NAME = {s[2]: s for s in SEGMENTS}
 
@@ -105,6 +105,8 @@ POSITION = {
     "CRWV": ("Neocloud（GPU 租賃）", 2, 1, "最大 neocloud；客戶集中於 Microsoft、OpenAI", "[判斷]"),
     "NBIS": ("Neocloud（GPU 租賃）", 2, 2, "歐洲為主的 neocloud；Microsoft 長約", "[判斷]"),
     "WYFI": ("Neocloud（GPU 租賃）", 3, 4, "小型 neocloud＋託管", "[判斷]"),
+    "OpenAI": ("AI 模型商", 1, 1, "ChatGPT 與 API 用量最大的模型商；算力承諾最大（本專案 OpenAI 模型）", "[判斷]"),
+    "Anthropic": ("AI 模型商", 1, 2, "企業與程式開發用途為主的前沿模型商（本專案 Anthropic 模型）", "[判斷]"),
     "00100": ("AI 模型商", 3, 3, "中國第二梯隊模型商；多模態、海外營收占比高", "[判斷]"),
     "02513": ("AI 模型商", 3, 3, "中國第二梯隊模型商；政企本地化部署", "[判斷]"),
 }
@@ -123,13 +125,11 @@ COMPANY_META = {
     "CRWV": ("CoreWeave", "美", "USD", "coreweave"), "NBIS": ("Nebius", "美", "USD", "nebius"),
     "WYFI": ("WhiteFiber", "美", "USD", "whitefiber"),
     "00100": ("MiniMax", "港", "HKD", "minimax"), "02513": ("智譜", "港", "HKD", "zhipu"),
+    "OpenAI": ("OpenAI", "未上市", "USD", "openai"), "Anthropic": ("Anthropic", "未上市", "USD", "anthropic"),
 }
 
 # 未上市與算力層的地圖節點（不進排序）
-MAP_EXTRA = [
-    ("OpenAI", "未上市", "AI 模型商", "company-models openai v0.6.3（P×Q 回本比值）"),
-    ("Anthropic", "未上市", "AI 模型商", "company-models anthropic v0.1.5"),
-]
+MAP_EXTRA = []  # OpenAI、Anthropic 已納入 POSITION（2026-10-25 Andy：未上市也放，可投資性寫「未上市」）
 
 PARAMS = [
     ("tier_center", 0.20, "「機會」：中心空間至少"),
@@ -192,6 +192,9 @@ def main():
         f"Tokenomics：{TK['source']['file']}（commit {TK['source']['commit'][:7]}；擷取 {TK['source']['extractedAt']}）",
         "公司模型：company-models 各公司 dist/*.xlsx（extract_models.py 抽數）。",
         "AI半導體 候選母體 v0.2.2（2026-10-24）：次產業排序、公司重要性、市場地位文字。權威在 AI半導體 Project。",
+        "收支關卡（Andy 2026-10-25 10:48）：先看收支、再看評價。模型期間（2026 起約五年）現金收支合計為負＝入不敷出、有資金缺口，"
+        "不論估值空間多大，最終分級一律為「收支不足」。口徑：雲端／neocloud／MAG 模板一律用「營運缺口＋股東回饋（股利、回購）」；記憶體、模型商用自由現金流；"
+        "只有損益的半導體模型以「各情境淨利皆為正」判定（現金流本專案未建立）。",
         "可投資性口徑（預設，Andy 可改）：中心價＝各模型主口徑；半導體 P/E 類取「十年倍數規則值」與「Andy 先驗合理 P/E」兩者較低者；"
         "規則值不適用者（NVDA、AVGO、Ibiden）只用 Andy 合理 P/E，標「替代口徑」；記憶體以 P/B 規則值為主、P/E 規則值為對照；"
         "雲端與 neocloud 用模型加權目標價與情境下緣；MiniMax 用反向檢驗折現價值。空間＝隱含價 ÷ 10-23 收盤價 − 1，未折現。",
@@ -326,15 +329,16 @@ def main():
         if tk in prices and prices[tk]["close"]:
             wpz.cell(i, 6, float(prices[tk]["close"])).font = BLUE
             wpz.cell(i, 7, f"{prices[tk]['date']}｜{prices[tk]['source']}")
-        wpz.cell(i, 8, f"=IF(ISNUMBER(F{i}),F{i},C{i})")
+        wpz.cell(i, 8, "未上市" if m.get("unlisted") else f"=IF(ISNUMBER(F{i}),F{i},C{i})")
 
     # ============ 估值
     we = wb.create_sheet("估值")
     cols = ["代號", "公司", "層級", "次產業", "方法", "中心候選 1", "中心候選 1 來源", "中心候選 2", "中心候選 2 來源",
             "下檔候選 1", "下檔候選 1 來源", "下檔候選 2", "下檔候選 2 來源", "採用價", "中心價", "下檔價",
             "中心空間", "下檔空間", "分級", "對照口徑空間", "對照口徑", "現價 ÷ 模型 FY2028 EPS（A／B／C）", "註記",
-            "輔助 1", "輔助 2", "模型價日以來漲跌", "價格變動旗標"]
-    hdr(we, cols, [9, 12, 14, 18, 24, 12, 40, 12, 40, 12, 40, 12, 40, 11, 11, 11, 9, 9, 8, 10, 30, 22, 60, 10, 10, 10, 18])
+            "輔助 1", "輔助 2", "模型價日以來漲跌", "價格變動旗標",
+            "收支口徑", "收支列（模型）", "收支序列", "期間合計", "最小值", "收支來源", "收支關卡", "最終分級"]
+    hdr(we, cols, [9, 12, 14, 18, 24, 12, 40, 12, 40, 12, 40, 12, 40, 11, 11, 11, 9, 9, 8, 10, 30, 22, 60, 10, 10, 10, 18, 9, 30, 46, 10, 10, 44, 14, 12])
 
     def put(i, j, d, fmt_src=True):
         if d is None:
@@ -409,6 +413,9 @@ def main():
             we.cell(i, 24, m["disc_ratio"]["value"]).font = BLUE
             c1 = (f"=X{i}*價格!C{prow}", f"{src(m['disc_ratio'])} × 模型現價")
             b1 = (f"=X{i}*價格!C{prow}", "同中心（模型只有一個情境）")
+        elif m.get("unlisted"):
+            method = "未上市"
+            note = "未上市：不評估可投資性；收支關卡結果只作參考。"
         elif tk == "02513":
             method = "未估值（反向模式）"
             note = (f"模型未出隱含價；2028 年共識營收需為正向推估的 {m['need_ratio_2028']['value']:.2f} 倍"
@@ -425,7 +432,7 @@ def main():
             we.cell(i, 18, f"=P{i}/N{i}-1")
             we.cell(i, 19, f'=IF(AND(Q{i}>=tier_center,R{i}>=tier_bear),"機會",IF(Q{i}<tier_rich,"偏貴","觀察"))')
         else:
-            we.cell(i, 19, "未估值")
+            we.cell(i, 19, "未上市" if m.get("unlisted") else "未估值")
         if alt:
             we.cell(i, 20, alt[0])
             we.cell(i, 21, altlbl)
@@ -435,6 +442,21 @@ def main():
         we.cell(i, 23, note).alignment = WRAP
         we.cell(i, 26, f'=IF(ISNUMBER(價格!C{prow}),價格!H{prow}/價格!C{prow}-1,"")')
         we.cell(i, 27, f'=IF(Z{i}="","",IF(ABS(Z{i})>0.2,"模型尚未反映期間變化",""))')
+        # 收支關卡（Andy 2026-10-25 10:48）：入不敷出（模型期間現金收支合計為負）者不得列為可投資
+        cash = m["cash"]
+        vals = [v for _, v, _ in cash["values"]]
+        cells = [c for _, _, c in cash["values"]]
+        we.cell(i, 28, cash["basis"])
+        we.cell(i, 29, cash["label"])
+        if cash["basis"] == "現金流":
+            we.cell(i, 30, "、".join(f"{y} {v:,.1f}" for y, v, _ in cash["values"]))
+        else:
+            we.cell(i, 30, f"{len(vals)} 個情境年度淨利（不含實績），全部{'為正' if min(vals) > 0 else '含負值'}")
+        we.cell(i, 31, sum(vals)).font = BLUE
+        we.cell(i, 32, min(vals)).font = BLUE
+        we.cell(i, 33, f"[Derived] {cash['file']} {cells[0]}…{cells[-1]}")
+        we.cell(i, 34, f'=IF(AB{i}="淨利",IF(AF{i}>0,"通過（淨利）","不通過"),IF(AE{i}<0,"不通過","通過（現金流）"))')
+        we.cell(i, 35, f'=IF(S{i}="未上市","未上市",IF(AH{i}="不通過","收支不足",S{i}))')
 
     # ============ 地圖節點（全部候選＋算力層）
     wm = wb.create_sheet("地圖節點")
