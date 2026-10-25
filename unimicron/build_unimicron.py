@@ -1,4 +1,4 @@
-# 欣興電子（3037.TW）收支與估值模型 v0.1（AI 半導體 Project：載板與 PCB 次產業；樣板 ibiden/）
+# 欣興電子（3037.TW）收支與估值模型 v0.1.1（AI 半導體 Project：載板與 PCB 次產業；樣板 ibiden/）
 # 用法：python3 unimicron/build_unimicron.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不平移。金額：十億新台幣（NT$B）；EPS：新台幣（基本，歸屬母公司）。
 # AI 加速器載板的份額口徑與 Ibiden 一致：每顆 NVIDIA 載板金額、Ibiden 份額、非 NVIDIA 權重唯讀取自 ibiden/dist（本專案權威，規則第 13 條）。
@@ -772,6 +772,39 @@ lines = [("欣興電子（3037.TW）收支與估值模型 v0.1（AI 半導體 Pr
  ("已知限制：(1) 加速器載板與其他 AI 載板的拆分公司未揭露，其他 AI 載板為校準殘差；(2) 份額、產能指數、漲價年度化皆為 Assumed，與 Ibiden 合計只做上限檢查；(3) 毛利用現金流通率近似，未建分廠稼動率與爬坡良率；(4) DCF 未計客戶預付款（光復二廠、楊梅二廠全額預付）與營運資金，現金流偏低估；(5) FY2026 錨點含 2Q26 一次性業外，FY2026 P/E 偏低；(6) 十年 P/E 多為 AI 前的 PCB 循環、與盈餘反向；(7) 共識 FactSet 為 2026-06，10 月只有兩家券商；(8) 3Q26 財報（約 10-29）後更新錨點。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
+
+# ---------------- v0.1.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00／14:17）----------------
+# 新列一律放在 Val、README 工作表既有內容之後，不位移既有列；既有數值不變
+VER_PREV, VER_NOW = 'v0.1', 'v0.1.1'
+OBS = [
+ "目標價 NT$727（DCF 389、Comparable 1,065 各半），比現價 1,085（2026-10-22）低 33.0%，級距 −25%～−50%；Comparable 單獨為 −1.8%。主因是 DCF 不是 EPS：本模型前瞻 EPS 24.54 只比共識前瞻 EPS 25.66 低 4.4%，同業前瞻 P/E 中位數 43.4 倍與現價 ÷ 共識前瞻 EPS 42.3 倍相近；DCF 用每股（淨利＋折舊 − 資本支出），擴產期 FY2027 情境 A 每股現金流 9.16 只有 EPS 27.51 的 33%，DCF 比現價低 64.2%（改用 EPS ×（1 − g／ROE）只有 249，因 ROE 8.6% 低於折現率 10%）。",
+ "ABF 漲價路徑最敏感：ABF 溢價取 Ibiden 低值（2028 年 0.85）時 FY2028 EPS −24.1%、取高值 +24.1%；漲價年度化 0%（基準 5%）時 FY2027 EPS −11.1%，AI 部署 ×0.8 時 −19.4%。",
+ "情境分歧從 FY2028 開始：FY2027 EPS 三情境同為 27.51（比 2026-06 FactSet 共識 30.37 低 9.4%），FY2028 為 30.44／23.21／16.05。下一個檢驗點是 3Q26 財報與法說（約 2026-10-29）：ABF 報價與 2027 年資本支出。"
+]   # 重點觀察（數字取自重算後的 Val／PL／Sens；與 README.md 相同文字）
+UPW_ROW = next(r_ for r_ in range(1, V.max_row + 1) if V.cell(r_, 1).value == "上檔空間：加權目標價")
+GRADE_ROW = V.max_row + 1; REC_ROW = GRADE_ROW + 1
+_u = f"B{UPW_ROW}"
+V.cell(GRADE_ROW, 1, "上檔空間級距")
+V[f"B{GRADE_ROW}"] = f'=IF({_u}>0.5,"大於 50%",IF({_u}>0.25,"25%–50%",IF({_u}>=0,"0%–25%",IF({_u}>=-0.25,"0%～−25%",IF({_u}>=-0.5,"−25%～−50%","小於 −50%")))))'
+V[f"B{GRADE_ROW}"].number_format = "@"
+V[f"E{GRADE_ROW}"] = f"以「上檔空間：加權目標價」（第 {UPW_ROW} 列）分六級（Andy 2026-10-25 14:00）"
+V.cell(REC_ROW, 1, "投資建議")
+V[f"B{REC_ROW}"] = f'=IF({_u}>0.5,"強力買進",IF({_u}>0.25,"買進",IF({_u}>=-0.25,"中立",IF({_u}>=-0.5,"放空","強力放空"))))'
+V[f"B{REC_ROW}"].number_format = "@"
+V[f"E{REC_ROW}"] = "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空（剛好 +25% 為中立、+50% 為買進、−25% 為中立、−50% 為放空）"
+_t = RD["A1"].value
+assert VER_PREV in _t and VER_NOW not in _t, _t
+RD["A1"] = _t.replace(VER_PREV, VER_NOW, 1)
+for r_ in range(2, RD.max_row + 1):
+    _v = RD.cell(r_, 1).value
+    if isinstance(_v, str) and _v.startswith("版本："):
+        RD.cell(r_, 1, "版本：" + VER_NOW + "（2026-10-25：補上檔空間級距、投資建議、重點觀察，數值不變）。前版：" + _v[3:])
+        break
+rn = RD.max_row + 1
+RD.cell(rn, 1, VER_NOW + "：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁最後新增「上檔空間級距」「投資建議」兩列（第 " + str(GRADE_ROW) + "、" + str(REC_ROW) + " 列，依「上檔空間：加權目標價」的固定規則）；重點觀察見下方三列。")
+RD.cell(rn + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"')
+for k_, o_ in enumerate(OBS, 1):
+    RD.cell(rn + 1 + k_, 1, f"重點觀察 {k_}：" + o_)
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

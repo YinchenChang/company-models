@@ -1,4 +1,4 @@
-# KLA（KLAC）收支與估值模型 v0.2（AI 半導體 Project 步驟 5：設備與材料——量測與檢測）
+# KLA（KLAC）收支與估值模型 v0.2.1（AI 半導體 Project 步驟 5：設備與材料——量測與檢測）
 # 用法：python3 klac/build_klac.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度 7 月到隔年 6 月：FY2027＝2026-07～2027-06（一半在 CY2026、一半在 CY2027）。金額：百萬美元（US$M）；EPS 為美元（2026-06 的 10 比 1 分割調整後）。
 import sys, os, glob
@@ -693,6 +693,39 @@ def valuation_v2(CFG):
 V2T, V2EXT = valuation_v2(CFG_V2)
 if os.environ.get("V2_ROWS"):
     print("V2", V2T, V2EXT)
+
+# ---------------- v0.2.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00／14:17）----------------
+# 新列一律放在 Val、README 工作表既有內容之後，不位移既有列；既有數值不變
+VER_PREV, VER_NOW = 'v0.2', 'v0.2.1'
+OBS = [
+ "目標價 US$121（DCF 94、Comparable 149 各半），比現價 145.61（2026-10-23）低 16.6%，級距 0%～−25%；Comparable 單獨為 +2.1%。DCF 比現價低 35.4%，因情境 B、C 的 EPS 在 FY2029 後依收斂法下滑（C 的 FY2032 EPS 3.56 只有 FY2027 5.19 的 69%），不是 ROE（近三年 92.0%）。",
+ "與共識目標價 232.38 的差距主要是倍數：共識隱含 34.5 倍，比同業前瞻 P/E 中位數 24.7 倍高 39.4%；EPS 因素為 −10.9%（本模型前瞻 EPS 6.01 為 GAAP、約晚四個月，共識 FY2028 非 GAAP EPS 6.74）。",
+ "中國出口管制最敏感：中國系統營收 −50% 使 FY2028 EPS −14.9%，設備情境 C 使 −19.2%。下一個檢驗點是 FQ1-27 財報（2026-10-28 盤後）：CY2026 下半年增幅（15%～25% 時 FY2027 EPS ±4.6%）與中國占比。"
+]   # 重點觀察（數字取自重算後的 Val／PL／Sens；與 README.md 相同文字）
+UPW_ROW = next(r_ for r_ in range(1, V.max_row + 1) if V.cell(r_, 1).value == "上檔空間：加權目標價")
+GRADE_ROW = V.max_row + 1; REC_ROW = GRADE_ROW + 1
+_u = f"B{UPW_ROW}"
+V.cell(GRADE_ROW, 1, "上檔空間級距")
+V[f"B{GRADE_ROW}"] = f'=IF({_u}>0.5,"大於 50%",IF({_u}>0.25,"25%–50%",IF({_u}>=0,"0%–25%",IF({_u}>=-0.25,"0%～−25%",IF({_u}>=-0.5,"−25%～−50%","小於 −50%")))))'
+V[f"B{GRADE_ROW}"].number_format = "@"
+V[f"E{GRADE_ROW}"] = f"以「上檔空間：加權目標價」（第 {UPW_ROW} 列）分六級（Andy 2026-10-25 14:00）"
+V.cell(REC_ROW, 1, "投資建議")
+V[f"B{REC_ROW}"] = f'=IF({_u}>0.5,"強力買進",IF({_u}>0.25,"買進",IF({_u}>=-0.25,"中立",IF({_u}>=-0.5,"放空","強力放空"))))'
+V[f"B{REC_ROW}"].number_format = "@"
+V[f"E{REC_ROW}"] = "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空（剛好 +25% 為中立、+50% 為買進、−25% 為中立、−50% 為放空）"
+_t = RD["A1"].value
+assert VER_PREV in _t and VER_NOW not in _t, _t
+RD["A1"] = _t.replace(VER_PREV, VER_NOW, 1)
+for r_ in range(2, RD.max_row + 1):
+    _v = RD.cell(r_, 1).value
+    if isinstance(_v, str) and _v.startswith("版本："):
+        RD.cell(r_, 1, "版本：" + VER_NOW + "（2026-10-25：補上檔空間級距、投資建議、重點觀察，數值不變）。前版：" + _v[3:])
+        break
+rn = RD.max_row + 1
+RD.cell(rn, 1, VER_NOW + "：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁最後新增「上檔空間級距」「投資建議」兩列（第 " + str(GRADE_ROW) + "、" + str(REC_ROW) + " 列，依「上檔空間：加權目標價」的固定規則）；重點觀察見下方三列。")
+RD.cell(rn + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"')
+for k_, o_ in enumerate(OBS, 1):
+    RD.cell(rn + 1 + k_, 1, f"重點觀察 {k_}：" + o_)
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

@@ -1,15 +1,25 @@
-# lrcx/ — Lam Research（LRCX，科林研發）收支與估值模型 v0.2
+# lrcx/ — Lam Research（LRCX，科林研發）收支與估值模型 v0.2.1
 
 Lam 的系統營收跟著晶圓前段設備（WFE）的記憶體與代工邏輯支出走。記憶體占系統營收近一半（DRAM 加上 NAND 升級），中國占營收約三分之一。**核心問題：WFE 在 CY2027 之後放緩、或對中國的出口管制加嚴時，FY2027 以後的 EPS 撐得住現在約 24 倍的遠期本益比嗎？**
+
+**投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 −11.8%，落在 −25%～+25%）。
+
+## 重點觀察
+
+1. 目標價 US$203（DCF 147、Comparable 259 各半），比現價 230.10（2026-10-23）低 11.8%，級距 0%～−25%；Comparable 單獨為 +12.5%。DCF 比現價低 36.2%，因情境 B、C 的 EPS 在 FY2029 後依收斂法下滑（C 的 FY2032 EPS 5.25 只有 FY2027 9.42 的 56%），不是 ROE（近三年 56.3%）。
+2. 與市場的主要差異在 EPS：本模型前瞻 EPS 10.07 比共識 FY2028 EPS 12.15 低 17.1%（期間約晚四個月），情境 A 的 FY2028 EPS 10.68 也比共識低 12.1%；共識目標價 364.03 隱含 30.0 倍，比同業前瞻 P/E 中位數 25.7 倍高 16.6%。
+3. 出口管制與設備市場情境最敏感：中國系統營收 −40% 使 FY2028 EPS −11.8%、設備情境 C 使 −18.2%。下一個檢驗點是 FY2027 第二季（12 月季）財報（預計 2027-01 下旬），檢驗 CY2027 上半年的權重（45%～55% 時 FY2027 EPS ±6.6%）。
+
+v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。
 
 AI 半導體 Project 步驟 5（設備與材料）的公司模型，樣板為 `advantest/`（工作表結構、三情境、Val 列標籤、設備股共用循環規則）。產生器是獨立的 Python→Excel（openpyxl）。
 
 | 檔案 | 內容 |
 |---|---|
 | `build_lrcx.py` | 產生器（參數與公式） |
-| `dist/20261025_科林研發模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261025_科林研發模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（格式見 `tools/company_html/README.md`） |
-| `dist/20261025_科林研發模型_v0.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261025_科林研發模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 建置：`python3 lrcx/build_lrcx.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir dist raw.xlsx`。工作表依序是 README、In、Q、Units、PL、Val、Recon、Sens、Sources。上游只讀取 `markets/equipment/dist`（WFE 分項三情境、見頂年度）與 `tools/cycle_position.py`，兩者都不修改。
 

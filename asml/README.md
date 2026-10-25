@@ -1,15 +1,25 @@
-# asml/ — ASML（ASML.AS／ASML ADR）收支與估值模型 v0.2
+# asml/ — ASML（ASML.AS／ASML ADR）收支與估值模型 v0.2.1
 
 ASML 是 EUV 唯一供應者，營收由晶圓廠的微影設備支出與裝機基礎服務決定。2026 年 AI 帶動記憶體與先進邏輯擴產，營收約 +36%，毛利率升到 56%。股價約 25 倍前瞻本益比。核心問題：設備支出在 2027 年後放緩、中國營收占比續降時，產能 +30% 與漲價能否撐住盈餘成長？
+
+**投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 −19.9%，落在 −25%～+25%）。
+
+## 重點觀察
+
+1. 目標價 €1,126（DCF 837、Comparable 1,416 各半），比現價 1,407.2（2026-10-23）低 19.9%，級距 0%～−25%；Comparable 單獨為 +0.6%。差距來自 DCF（比現價低 40.5%）：情境 B、C 的 EPS 在 FY2028–29 後依收斂法持平或下滑（B 的 FY2032 EPS 50.29 低於 FY2027 的 52.64），不是 ROE（近三年 56.1%，遠高於折現率 10%）；本模型前瞻 EPS 54.95 只比共識 55.93 低 1.7%，共識目標價 2,108 隱含 37.7 倍、同業前瞻 P/E 中位數 25.8 倍，EUV 獨占溢價 Comparable 未計入。
+2. 設備市場情境是最大變數：FY2027 三情境 EPS 54.29／52.64／50.36 相近，FY2028 分歧為 64.96／55.33／41.28（Sens：情境 C 對 FY2028 EPS −36.5%），DCF 價格帶 €506～1,219。追蹤 markets/equipment 對 2028 年晶圓前段設備支出的修正。
+3. 下一個檢驗點是 FY2026 第四季與全年財報（預定 2027-01 下旬）的 2027 年展望；微影強度與價格（Assumed +3%／年）改為 0% 時 FY2028 EPS −5.0%，淨利 ÷ 營業利益降到 0.80 時 −5.9%；2027-06-10 投資人日可能更新 2030 目標。
+
+v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。
 
 AI 半導體 Project 步驟 5（設備與材料）。獨立的 Python→Excel 產生器（比照 `advantest/build_advantest.py`，openpyxl）。**會計年度＝日曆年**（FY2026＝2026-01～12），不需要 3/4、1/4 的日曆年轉換。金額以歐元為主：Q 頁用 €M，PL 頁用 €B；EPS 為歐元。
 
 | 檔案 | 內容 |
 |---|---|
 | `build_asml.py` | 產生器（參數與公式） |
-| `dist/20261025_ASML模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261025_ASML模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（格式見 `tools/company_html/README.md`） |
-| `dist/20261025_ASML模型_v0.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261025_ASML模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 建置：`python3 asml/build_asml.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序是 README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/equipment/dist`（晶圓前段設備三情境分項、各情境見頂年度、SEMI WFE）與 `tools/cycle_position.py`；不修改它們。算力假設不自行重估，只經由設備市場模型間接使用。
 
