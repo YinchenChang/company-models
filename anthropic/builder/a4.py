@@ -559,7 +559,7 @@ def checks(ctx):
         # ── v0.1.2：Tokenomics v18.0 對照（只對照）
         ("c2_tkpq", "v0.1.2：TK L1_RevGW_PQ_VR200（VR200 每 GW 營收 P × Q，2026 第一年；$B/GW/年）", "=COST_TKPQ", None, "info", "只對照，不回饋計算"),
         ("c2_tkpq_r", "v0.1.2：TK P × Q ÷ 本模型 2026 每付費推論 VR 等值 GW 營收總額", "=COST_TKPQRatio", None, "info", "1＝一致；Cost 第二十一節"),
-        ("c2_tkled", "v0.1.2：TK token 帳未閉合倍數（L1_TokLedger_2026Q2）", "=COST_TKTokLedger", None, "info", "契約 v18.0：約 6.26"),
+        ("c2_tkled", "v0.1.2：TK token 帳未閉合倍數（L1_TokLedger_2026Q2）", "=COST_TKTokLedger", None, "info", "數值讀 TK_Link（本列 E 欄），說明不寫死倍數；v21.2 起 TK 計價倍數 AL_SpendBasis 為 1.8，token 帳約 3.0（v19.1 為約 6.4）"),
         # ── v0.1.3 A 段
         ("d1_u2_ck", "v0.1.3 U2 新法：合約實付與『最高 86』年付款列的差（各年最大；$B）", f"=MAX(MAX(Cost!$D${K.rows['ck_u2']}:$I${K.rows['ck_u2']}),-MIN(Cost!$D${K.rows['ck_u2']}:$I${K.rows['ck_u2']}))", 0, "tol", "Cost 第二十二節"),
         ("d1_u2_pgw_n", "v0.1.3 U2：Nscale 隱含每 GW 年付款（$B/GW/年；對照通用合約價）", "=COST_U2PayPerGW_Nscale", None, "info", "chat 端預期約 15–18"),

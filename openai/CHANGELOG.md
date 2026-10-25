@@ -2,6 +2,15 @@
 
 每次同步記錄：Excel 版本、工作包、commit 與變動摘要。
 
+## 20261025_OpenAI_v0.6.3.xlsx — v0.6.3（PxQ 比值 2026 三口徑、TK 快照 v21.4、GW 路線 token 帳）
+
+- `TK_Link` 改取 Tokenomics master `693792f`（CURRENT＝`20261024_Tokenomics_v21.4.xlsx`）：88 名有值、2 名待提供（`IF_PxEffMix_Lo／_Hi`）。check_tk_snapshot（v19.0 快照 vs v21.4）OK 53／DIFF 35／MISSING 2。除 PxQ 以外各頁計算邏輯不改。
+- `PxQ` 頁改為 11 欄（D–N）：2025 指數／線性 + 2026 三口徑 × 低／基準／高。口徑一＝Q2 年化營收 26.3 ÷ Q2 季平均 GW（2.21／2.34／3.3，主口徑）；口徑二＝FY2026 營收 35 ÷ 全年平均 GW（2.5／3.0／3.8）；口徑三＝9 月底 run-rate 50 ÷ 年底 GW（3.5／4.6／5.7）。頂部三張主輸出：比值、對 2025 主值的倍數、持平門檻 GW（以 2025 線性 1.118／指數 1.239／上緣 1.397）。
+- 新增第 4.6／4.7 節（管理層 36、WSJ 26.8 營收對照）、6B 證據對帳（A 段／J7／工作單驗收值）、第七節 Fairwater 六情境與 2025 站點估（J7）、第八節 GW 路線 token 帳（交接檔組合×0.85＝2.0966、×0.806＝1.9876，容差 1%）。6A 交接檔 v18.0 預覽對帳改為歷史對照、不再計數。
+- 新增 SRC_OAI_141–145、INP_289–307；INP_277–279 改名為口徑二 GW（值不變）。Checks 新增 C165–C175、退役 C156（見 id_registry）。
+- 測試：新增 `test_pxq_three_scope_structure`、`test_w3_gw_route_token_ledger`、`test_fairwater_six_scenarios_match_j7`、`test_pxq_recon_6b_clean`；scenarios.yaml 期望值更新並新增 az–bc 四個情境。
+- `tools/build_html.py`：回本比值區塊（⑥′）顯示三口徑；`dist/` 重產，v0.6.2 移 `dist/_待刪除/`。工具 `tools/tk_attribution.py` 加細 Q 面分組。報告：`docs/reports/20261025_v0.6.3.md`；PR #104。
+
 ## 20261022_OpenAI_v0.6.2.xlsx — v0.6.2（Tokenomics 同步 v5.26 → v19.0；單一快照）
 
 - `TK_Link` 改取 Tokenomics master `1916a06`（CURRENT＝`20261022_Tokenomics_v19.0.xlsx`，SHA-256 `d1728705…4b8d`）：88 名有值（原 63＋P×Q 取數名稱 22＋`RNG_IF_AllocQ1_Lo／_Hi`、`RNG_StaleFlag`）、2 名待提供（`IF_PxEffMix_Lo／_Hi`）。`TK_PxQ` 頁與 `TKQ_` 名稱退役，`PxQ` 公式改引用 `TK_`；`PxQ` 776 個數值格與 v0.6.1 逐格相同。builder 移除 `--tk-pxq-dir`；`tk_link.read_pxq_snapshot` 移除。

@@ -21,6 +21,11 @@ on:
       - 'advantest/**'
       - 'disco/**'
       - 'nvidia/**'
+      - 'arista/**'
+      - 'ibiden/**'
+      - 'delta/**'
+      - 'quanta/**'
+      - 'innolight/**'
       - 'avgo/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
@@ -39,6 +44,11 @@ on:
       - 'advantest/**'
       - 'disco/**'
       - 'nvidia/**'
+      - 'arista/**'
+      - 'ibiden/**'
+      - 'delta/**'
+      - 'quanta/**'
+      - 'innolight/**'
       - 'avgo/**'
       - '.github/workflows/ai-semis-build.yml'
 
@@ -75,6 +85,11 @@ jobs:
             "advantest|python3 advantest/build_advantest.py|advantest/dist"
             "disco|python3 disco/build_disco.py|disco/dist"
             "nvidia|python3 nvidia/build_nvidia.py|nvidia/dist"
+            "arista|python3 arista/build_arista.py|arista/dist"
+            "ibiden|python3 ibiden/build_ibiden.py|ibiden/dist"
+            "delta|python3 delta/build_delta.py|delta/dist"
+            "quanta|python3 quanta/build_quanta.py|quanta/dist"
+            "innolight|python3 innolight/build_innolight.py|innolight/dist"
             "avgo|python3 avgo/build_avgo.py|avgo/dist"
           )
           failed=0
@@ -105,7 +120,7 @@ jobs:
             echo "重建結果與 dist 成品不一致（任何數值差異都視為錯誤）" >&2
             exit 1
           fi
-          echo "十一個模型重建後錯誤格 0、與 dist 逐格相同"
+          echo "全部模型重建後錯誤格 0、與 dist 逐格相同"
 
       - name: HTML 展示層檢核（重現性、抽數、無手寫數字、自含）
         run: |
