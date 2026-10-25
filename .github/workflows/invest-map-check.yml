@@ -1,0 +1,20 @@
+name: invest-map-check
+
+# AI 投資地圖：公司檔案主文無出處標記、目錄內無合併衝突標記（markets/invest_map/check_profiles.py）。
+on:
+  push:
+    paths: ['markets/invest_map/**', '.github/workflows/invest-map-check.yml']
+  pull_request:
+    paths: ['markets/invest_map/**', '.github/workflows/invest-map-check.yml']
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: 檢查
+        run: python3 markets/invest_map/check_profiles.py
