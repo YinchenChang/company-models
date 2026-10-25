@@ -109,7 +109,7 @@ def main():
         "meta": {"version": os.path.basename(src).split("_")[-1].replace(".xlsx", ""),
                  "book": os.path.basename(src), "tk_file": snap["file"], "tk_version": snap["version"],
                  "tk_commit": snap["commit"][:7], "cm_commit": cm, "built": "2026-10-25",
-                 "price_date": "2026-10-23（台股三檔為 10-22）"},
+                 "price_date": "2026-10-23（台積電、廣達為 10-22）"},
         "pergw": pergw, "segments": segments, "position": position, "valuation": valuation,
         "nodes": nodes, "params": params,
         "profiles": load_all(os.path.join(HERE, "profiles")),

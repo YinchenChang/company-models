@@ -11,7 +11,7 @@ asof: 2026-10-25
 ---
 
 ## 一句話定位
-小型 AI 基礎設施商，兩條腿走路：一是在第三方機房出租 GPU 的 AI 雲，二是自有資料中心的託管（colocation，把機房空間與電力長租給別的 AI 雲業者）；母公司 Bit Digital 仍持股約六成。
+小型 AI 基礎設施商，兩條腿走路：一是在第三方機房出租 GPU 的 AI 雲，二是自有資料中心的託管（colocation，把機房空間與電力長租給別的 AI 雲業者）；母公司 Bit Digital 仍持股約六成 [本專案：whitefiber/docs/reports/20261008_whitefiber_v0.1a_資料.md 第 5 點（59.9%）]。
 
 ## 公司在做什麼
 - AI 雲：在冰島、亞特蘭大、雪梨、加拿大、巴黎等第三方機房放 GPU 出租，客戶包括 Baseten、Prime Intellect 等 AI 公司 [本專案：WhiteFiber收支模型_v0_2.xlsx 來源!B9]（[Interested-party]）。
@@ -69,7 +69,7 @@ asof: 2026-10-25
 ## 需要觀察的事項
 - 融資上限｜模型以總債務 ≤ 5× EBITDA 為上限，總債務／EBITDA 路徑 26.8／25.5／9.4／6.2／4.7×，FY26 超限期間只能用已承諾額度、可轉債或股權 [本專案：WhiteFiber收支模型_v0_2.xlsx 摘要!C16–C17]｜NC-1 專案融資完成公告
 - NC-1 與 Nscale 信用｜託管 RPO 932.9m 主要來自 Nscale；Nscale 違約時託管營收歸零 [本專案：whitefiber/company.json texts.concentration]｜Nscale 紐約上市進度
-- 每 MW 年收入｜本專案反向 DCF：現價需 FY30 雲端每 MW 年收入 15.5（目前 12.3）US$m；DCF 隱含值 28.6 [本專案：WhiteFiber收支模型_v0_2.xlsx 摘要!C56–D56、C59–D59]｜Q3 財報（約 2026-11 中）
+- 每 MW 年收入｜本專案反向 DCF（以模型日現價 US$16.83〔2026-10-07〕計；10-23 收盤 US$9.98 下結論方向可能相反，見網站「可投資性」頁）：現價需 FY30 雲端每 MW 年收入 15.5（目前 12.3）US$m；DCF 隱含值 28.6 [本專案：WhiteFiber收支模型_v0_2.xlsx 摘要!C56–D56、C59–D59]｜Q3 財報（約 2026-11 中）
 - 雲端合約銜接｜新簽 Baseten、Prime Intellect、冰島 B300、巴黎合約的上線時點 [本專案：WhiteFiber收支模型_v0_2.xlsx 來源!B9]｜Q3 財報
 - 營收與共識差距｜模型 FY28 營收 336m 對共識 530m [本專案：WhiteFiber收支模型_v0_2.xlsx 摘要!E22–E23]｜Q3 財報
 

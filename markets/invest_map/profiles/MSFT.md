@@ -3,8 +3,8 @@ ticker: MSFT
 name: Microsoft
 name_full: Microsoft Corporation
 listing: Nasdaq｜MSFT
-hq: 美國華盛頓州雷德蒙德
-founded: 1975
+hq: 美國華盛頓州雷德蒙德 [外部・未經本專案檢核]
+founded: 1975 [外部・未經本專案檢核]
 employees: 約 223,000（FY2026）[本專案：microsoft_facts_20261008.json emp.fy2026]
 fiscal_year_end: 6 月底
 asof: 2026-10-25

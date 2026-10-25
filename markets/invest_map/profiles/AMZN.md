@@ -3,8 +3,8 @@ ticker: AMZN
 name: Amazon
 name_full: Amazon.com, Inc.
 listing: Nasdaq｜AMZN
-hq: 美國華盛頓州西雅圖
-founded: 1994
+hq: 美國華盛頓州西雅圖 [外部・未經本專案檢核]
+founded: 1994 [外部・未經本專案檢核]
 employees: 約 1,595,000（2026Q2）[本專案：amazon_facts_20261008.json is.employees.2026q2]
 fiscal_year_end: 12 月底
 asof: 2026-10-25
@@ -61,11 +61,11 @@ asof: 2026-10-25
 - Anthropic 同時向 Google（TPU）採購算力，客戶不是 AWS 獨占 [本專案：alphabet_facts_20261008.json rp.anthropic.cloudCommit]。
 
 ## 近期重大事件
+- 2026Q2 後｜對 OpenAI 再投入 213 億，合計 500 億美元到位｜客戶即股東，關聯交易需留意 [本專案：amazon_facts_20261008.json rel.oai.invested]
 - 2026-10-29｜Q3 財報盤後發布（預定）｜下一個驗證點 [外部新聞：About Amazon]
 - 2026-08-26｜NVIDIA 法說公告 Amazon 追加約 200 萬顆 GPU（2027–2028 交付）｜GPU 與 Trainium 並行擴產 [本專案：amazon_facts_20261008.json chip.nv.order2027]
 - 2026-07～09｜發行美元票據 250 億、英鎊票據 42.5 億｜資本支出改由舉債支應一部分 [本專案：amazon company.json callFacts.postQShortDated]
 - 2026-07-30｜Q2 財報：營收 2,006.1 億美元；淨利 626.5 億主要來自 Anthropic 投資評價利益；資本支出指引上調至約 2,200 億美元 [本專案：amazon_facts_20261008.json is.TOT.rev.2026q2、guide.2026.capex；company.json latestQuarter]
-- 2026Q2 後｜對 OpenAI 再投入 213 億，合計 500 億美元到位｜客戶即股東，關聯交易需留意 [本專案：amazon_facts_20261008.json rel.oai.invested]
 
 ## 需要觀察的事項
 - 對外 AI 產能比例｜公司未揭露，模型假設 80%；60% 時目標價 170.64、100% 時 218.08 美元 [本專案：20261022_Amazon收支模型_v0_2_1.xlsx 摘要!C21]｜2026-10-29 財報

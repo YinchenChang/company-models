@@ -3,8 +3,8 @@ ticker: ORCL
 name: Oracle
 name_full: Oracle Corporation
 listing: NYSE｜ORCL
-hq: 美國德州奧斯汀
-founded: 1977
+hq: 美國德州奧斯汀 [外部・未經本專案檢核]
+founded: 1977 [外部・未經本專案檢核]
 employees: 本專案未建立
 fiscal_year_end: 5 月底
 asof: 2026-10-25
@@ -29,7 +29,7 @@ asof: 2026-10-25
 | 硬體 | Exadata 等伺服器與儲存 | 4.6%（30.8 億美元） | FY2026 | [本專案：oracle_facts_20261007.json is.rev.hw.fy2026；Derived] |
 | 服務 | 顧問與導入 | 8.5%（57.4 億美元） | FY2026 | [本專案：oracle_facts_20261007.json is.rev.svc.fy2026；Derived] |
 
-- 合計 673.6 億美元＝全公司營收，占比合計 100% [本專案：oracle_facts_20261007.json is.rev.total.fy2026]；前四列合為報導分部「雲端與授權」585.3 億美元 [本專案：oracle_facts_20261007.json seg.cs.margin.fy2026]。
+- 合計 673.6 億美元＝全公司營收，占比合計 100% [本專案：oracle_facts_20261007.json is.rev.total.fy2026]；前四列合為報導分部「雲端與授權」585.3 億美元 [本專案：oracle_facts_20261007.json seg.cs.margin.fy2026 的 note]。
 - 成長最快的是 OCI：FY2026 年增 77%（102.3 → 181.0 億美元）[本專案：oracle_facts_20261007.json is.rev.iaas.fy2025、is.rev.iaas.fy2026；Derived]。
 - OCI 未單獨揭露利潤 [本專案：oracle_facts_20261007.json seg.total.margin.fy2026]。
 
@@ -75,7 +75,7 @@ asof: 2026-10-25
 - 槓桿與投資級｜模型調整後槓桿 FY28 達 4.2×，距 S&P 門檻 4.5× 只剩 0.3× [本專案：20261022_Oracle收支模型_v0_3_1.xlsx 摘要!C18]｜信評動作
 - 營收與公司指引落差｜模型 FY27 營收 830.5 億美元，低於公司指引 900 億 [本專案：20261022_Oracle收支模型_v0_3_1.xlsx 摘要!C23；oracle_facts_20261007.json guide.fy27.rev]｜FY27Q2 財報
 - 建設延誤與閒置資本｜延誤 3 個月時閒置資本峰值 209 億美元 [本專案：20261022_Oracle收支模型_v0_3_1.xlsx 摘要!C19]｜Jupiter 管線與 Abilene 交付
-- 終值占 EV｜86.7%，超過 85% 警示線 [本專案：20261022_Oracle收支模型_v0_3_1.xlsx 評價_DCF與目標價!C27]｜模型改版時
+- 終值占 EV｜86.7%，低於評等規則的 90% 線但仍偏高 [本專案：20261022_Oracle收支模型_v0_3_1.xlsx 評價_DCF與目標價!C27]｜模型改版時
 - 對外比例不適用：Oracle 的 AI 產能幾乎全數對外出租，模型不設此假設 [判斷]
 
 ## 來源

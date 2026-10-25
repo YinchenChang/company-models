@@ -3,8 +3,8 @@ ticker: GOOGL
 name: Alphabet
 name_full: Alphabet Inc.
 listing: Nasdaq｜GOOGL（A 股）、GOOG（C 股）
-hq: 美國加州山景城
-founded: 1998（Google）；2015（Alphabet 控股架構）
+hq: 美國加州山景城 [外部・未經本專案檢核]
+founded: 1998（Google）；2015（Alphabet 控股架構） [外部・未經本專案檢核]
 employees: 約 198,933（2026Q2）[本專案：alphabet_facts_20261008.json op.emp.2026q2]
 fiscal_year_end: 12 月底
 asof: 2026-10-25
@@ -63,11 +63,11 @@ asof: 2026-10-25
 - TPU 對外銷售讓 Google 也成為 AI 晶片供應者，與 NVIDIA 形成部分競爭 [外部・未經本專案檢核]。
 
 ## 近期重大事件
-- 2026-10-28｜Q3 財報盤後發布（預定）｜下一個驗證點 [外部新聞：days.to（稱公司 IR 已確認）]
 - 2026-10｜SpaceX 算力租約起租，每月約 9.2 億美元至 2029-06｜短期用租的補產能，Cloud 利潤率受壓 [本專案：alphabet_facts_20261008.json rent.spacex]
+- 2026-10-28｜Q3 財報盤後發布（預定）｜下一個驗證點 [外部新聞：days.to（稱公司 IR 已確認）]
 - 2026-08｜發行美元票據 250 億美元（2028–2066 年到期）｜資本支出部分改由舉債支應 [本專案：alphabet company.json callFacts.postQShortDated]
-- 2026-07-22｜Q2 財報：營收 1,198.0 億美元、Cloud 年增 81.8%；2026 資本支出指引由 1,800–1,900 億上調至 1,950–2,050 億美元 [本專案：alphabet company.json latestQuarter、mag.segments.cloud；alphabet_facts_20261008.json guid.capex.2026.jul]
 - 2026-07｜支付歐盟 Android 案罰款與利息 52 億美元 [本專案：alphabet company.json callFacts.postQShortDated]
+- 2026-07-22｜Q2 財報：營收 1,198.0 億美元、Cloud 年增 81.8%；2026 資本支出指引由 1,800–1,900 億上調至 1,950–2,050 億美元 [本專案：alphabet company.json latestQuarter、mag.segments.cloud；alphabet_facts_20261008.json guid.capex.2026.jul]
 
 ## 需要觀察的事項
 - 對外 AI 產能比例｜公司未揭露，模型假設 30%；10% 時目標價 99.27、50% 時 179.71 美元，是最大不確定 [本專案：20261022_Alphabet收支模型_v0_2_1.xlsx 摘要!C21]｜2026-10-28 財報
