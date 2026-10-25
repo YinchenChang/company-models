@@ -69,8 +69,8 @@ asof: 2026-10-25
 - AI 乙太網路份額｜份額相對值 0.80／0.70 使 FY2028 EPS −8.8%，是最大變數 [本專案：arista/README.md 結果]｜3Q26 財報 2026-11-03
 - 市場規模與供給｜模型 FY2027 EPS 5.47 高於市場一截，來自網通模型 2027 年 scale-out 交換器 +90%；市場 ×0.8 使 FY2027 EPS −7.8% [本專案：arista/README.md 結果]｜同上，及公司 2027 展望
 - 顆數情境｜情境 C（顆數 ×0.6）使 FY2028 EPS −17.1% [本專案：arista/README.md 結果]｜NVIDIA、雲端業者資本支出
-- 估值｜現價 US$172.37 ÷ FY2027 EPS＝31.5x；十年 GAAP P/E 中位數 35.8x [本專案：arista/README.md 估值]｜同上
-- AI 毛利率｜假設 AI 毛利率比非 AI 低 6 個百分點，雲端占比上升使毛利率下滑 [本專案：arista/README.md 驅動因子；Arista模型_v0.1.xlsx Recon!C18]｜同上
+- 估值｜現價 US$172.37（2026-10-23 收盤，與網站同日）÷ FY2027 EPS＝31.5x；十年 GAAP P/E 中位數 35.8x [本專案：arista/README.md 估值]｜同上
+- AI 毛利率｜假設 AI 毛利率比非 AI 低 6 個百分點，雲端占比上升使毛利率下滑 [本專案：arista/README.md 驅動因子（In 頁 D 節）]｜同上
 
 ## 來源
 1. 本專案：`arista/README.md`；`arista/dist/20261024_Arista模型_v0.1.xlsx`（Q、Recon）；AI半導體 `先驗比對_Arista_20261024.md`

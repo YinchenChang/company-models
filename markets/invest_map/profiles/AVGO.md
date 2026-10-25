@@ -16,7 +16,7 @@ asof: 2026-10-25
 ## 公司在做什麼
 - 替 Google、Meta、OpenAI、Anthropic 等設計並代工出貨客製 AI 晶片（ASIC，為單一客戶量身做的晶片，比通用 GPU 便宜但用途窄）[本專案：先驗比對_AVGO_20261023.md 資料表]。
 - 賣 AI 網通晶片（Tomahawk、Jericho 交換器晶片、網卡）；白牌交換器與 Arista 多半用 Broadcom 晶片 [本專案：先驗比對_Arista_20261024.md A5c]。
-- 非 AI 半導體（寬頻、無線、儲存等）與基礎架構軟體（VMware）[本專案：Broadcom模型_v0.1.xlsx Q!A5:A11]。
+- 非 AI 半導體（寬頻、無線、儲存等）與基礎架構軟體（VMware）[外部・未經本專案檢核]。
 - XPU 營收含代客戶採購的 HBM，按成本加成轉嫁，所以毛利率比 NVIDIA 低 [本專案：先驗比對_AVGO_20261023.md 機制節]。
 
 ## 主要產品與營收占比
