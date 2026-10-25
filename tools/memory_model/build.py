@@ -1,4 +1,4 @@
-# 記憶體公司收支與估值樣板 v0.3（v0.3：預測 3 年、非記憶體事業列）（AI 半導體 Project）
+# 記憶體公司收支與估值樣板 v0.4（v0.4：DCF＋Comparable 目標價、三情境延伸到 FY2032 收斂法；v0.3：預測 3 年、非記憶體事業列）（AI 半導體 Project）
 # 用法：python3 tools/memory_model/build.py <公司設定檔 company.py> <輸出 raw.xlsx>
 # 公司設定檔只放參數（幣別、會計年度、季度實績、輸入值）；結構全部在本檔與 markets/memory/market.py。
 import sys, os, importlib.util
@@ -42,10 +42,30 @@ for s in C["inputs"]:
     else: inp(*s)
 MKT.inputs(sec, inp)
 MKT.ref_inputs(sec, inp)
-# 目標價情境權重（Andy 2026-10-25）：放在 In 頁最後，不位移既有列
-sec("目標價情境權重（Val 頁「0. 目標價與上檔空間」用；Andy 可改）")
+# 目標價參數（Andy 2026-10-25）：放在 In 頁最後，不位移既有列（v0.4 樣板：DCF＋Comparable；黃底）
+TPC = C["tp"]
+sec("目標價參數（黃底；Val 頁第 0 節 DCF＋Comparable 與收斂法用；Assumed 者 Andy 可改）")
 for s_, w_ in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
-    inp(f"tp_w{s_}", f"目標價情境權重 {s_}", "%", None, w_, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）；三者合計應為 100%（Val 頁第 0 節列示）")
+    inp(f"tp_w{s_}", f"目標價情境權重 {s_}（A 順利／B 平平／C 不如預期）", "%", None, w_, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）；三者合計應為 100%（Val 頁第 0 節列示）")
+inp("tp_r", "折現率／要求報酬", "%", None, 0.10, None, "Assumed", "Andy 可改（工作單預設 10%；美、台、日、韓同一值）")
+inp("tp_g", "長期成長率（永續、收斂法 B 的 FY2032 營收年增）", "%", None, 0.04, None, "Assumed", "Andy 可改（工作單預設 4%）")
+inp("tp_roe", TPC["roe_label"], "%", None, TPC["roe"], None, "Derived", TPC["roe_src"])
+inp("tp_w_dcf", "目標價中 DCF 的權重；其餘為 Comparable", "%", None, 0.5, None, "Assumed", "Andy 可改（Andy 2026-10-25 11:53 定 50／50）")
+inp("nim10", "十年平均淨利率（2016–2025；淨利 ÷ 合併營收）", "%", None, TPC["nim10"], None, "Derived", TPC["nim10_src"])
+for s_, f_, t_ in (("A", "=tp_g+0.02", "tp_g＋2pt"), ("B", "=tp_g", "＝tp_g"), ("C", "=tp_g-0.02", "tp_g−2pt")):
+    inp(f"fade_g{s_}", f"情境 {s_}：FY2032 合併營收年增收斂目標（{t_}）", "%", None, f_, None, "Assumed", "工作單 2026-10-25 11:20 收斂法：FY2030 起由 FY2029 年增線性收斂，FY2032 達到")
+# 記憶體為循環股：收斂期改收斂到「循環中段」淨利率（主串 2026-10-25 定預設；Andy 可改），不延續高峰利潤率
+inp("cyc_mA", "循環中段係數：情境 A 淨利率收斂目標 ÷ 十年平均", "x", None, 1.2, None, "Assumed", "Andy 可改（預設 1.2；記憶體循環股，收斂期不延續 FY2029 高峰利潤率）")
+inp("cyc_mC", "循環中段係數：情境 C 淨利率收斂目標 ÷ 十年平均", "x", None, 0.8, None, "Assumed", "Andy 可改（預設 0.8）")
+for s_, f_, t_ in (("A", "=nim10*cyc_mA", "十年平均 × cyc_mA"), ("B", "=nim10", "＝十年平均淨利率"), ("C", "=nim10*cyc_mC", "十年平均 × cyc_mC")):
+    inp(f"fade_m{s_}", f"情境 {s_}：FY2032 淨利率收斂目標（循環中段：{t_}）", "%", None, f_, None, "Derived", "In 頁 nim10 × 循環中段係數；FY2030 起由 FY2029 淨利率線性收斂，FY2032 達到")
+PXU = next(x[2] for x in C["inputs"] if x[0] == "px")
+inp("cons_tp", "市場共識目標價（賣方平均；低／高＝最低／最高）", PXU, TPC["cons_tp"][1], TPC["cons_tp"][0], TPC["cons_tp"][2], "Interested-party", TPC["cons_tp"][3])
+for k_, lab_, v_, s_ in TPC["cons"]:
+    inp(k_, lab_, PXU, None, v_, None, "Interested-party", s_)
+TPKEYS = ["tp_wA", "tp_wB", "tp_wC", "tp_r", "tp_g", "tp_roe", "tp_w_dcf", "nim10", "fade_gA", "fade_gB", "fade_gC", "cyc_mA", "cyc_mC", "fade_mA", "fade_mB", "fade_mC", "cons_tp"] + [x[0] for x in TPC["cons"]]
+YEL = PatternFill("solid", fgColor="FFF2CC")
+INROW = {}
 r = 4
 for s in rows:
     if s[0] == "sec":
@@ -55,6 +75,10 @@ for s in rows:
     for j, v in ((4, lo), (5, base), (6, hi)):
         if v is not None: IN.cell(r, j, v).font = BLUE
     IN.cell(r, 7, tag); IN.cell(r, 8, src)
+    INROW[key] = r
+    if key in TPKEYS:
+        for j in range(1, 9): IN.cell(r, j).fill = YEL
+        if isinstance(base, str) and base.startswith("="): IN.cell(r, 5).font = Font(color="000000")
     wb.defined_names[key] = DefinedName(key, attr_text=f"In!$E${r}")
     if lo is not None: wb.defined_names[key + "_lo"] = DefinedName(key + "_lo", attr_text=f"In!$D${r}")
     if hi is not None: wb.defined_names[key + "_hi"] = DefinedName(key + "_hi", attr_text=f"In!$F${r}")
@@ -141,12 +165,22 @@ for s in MKT.SCEN:
     for n, y in enumerate(YRS, 1):
         L = next(letters); FC[(s, n)] = L
         cols.append((L, f"{FYL.format(y)} {s}", s, n))
+# v0.4 樣板：FY2030–FY2032 收斂法欄（M–U，接在既有欄之後；說明欄移到 V）
+FADEY = [BASE + 4, BASE + 5, BASE + 6]
+FCF_ = {}
+letters2 = iter("MNOPQRSTU")
+for s in MKT.SCEN:
+    for y in FADEY:
+        L = next(letters2); FCF_[(s, y)] = L
+        cols.append((L, f"{FYL.format(y)} {s} 收斂", s, y))
 hdr(Y, 3, ["項目"] + [c[1] for c in cols] + ["說明"])
-YR = {k: 4 + i for i, k in enumerate(["rev", "conv", "hbm", "nand", "oth", "hbmsh", "da", "vol", "cogs", "opex", "op", "opm", "nmrev", "nmop", "crev", "cop", "ni", "capex", "fcf", "div", "bb", "eq", "nc", "sh", "bvps", "eps", "roe", "hbmbits"])}
+NOTEC = 2 + len(cols)
+YR = {k: 4 + i for i, k in enumerate(["rev", "conv", "hbm", "nand", "oth", "hbmsh", "da", "vol", "cogs", "opex", "op", "opm", "nmrev", "nmop", "crev", "cop", "ni", "capex", "fcf", "div", "bb", "eq", "nc", "sh", "bvps", "eps", "roe", "hbmbits", "cg", "nim"])}
 YLAB = {"nmrev": "非記憶體事業營收", "nmop": "非記憶體事業營業利益", "crev": "合併營收", "cop": "合併營業利益", "rev": "記憶體營收", "conv": "  一般 DRAM", "hbm": "  HBM", "nand": "  NAND", "oth": "  其他", "hbmsh": "  HBM ÷ 營收", "da": "折舊攤銷",
         "vol": "成本量指數（÷ 前一年）", "cogs": "營業成本", "opex": "營業費用", "op": "記憶體營業利益", "opm": "記憶體營業利益率", "ni": "淨利（合併）", "capex": "資本支出",
         "fcf": "自由現金流（淨利＋折舊 − 資本支出）", "div": "股利", "bb": "買回", "eq": "期末權益", "nc": "期末淨現金", "sh": "期末流通股數",
-        "bvps": "每股淨值 BVPS", "eps": "每股盈餘 EPS（期末股數）", "roe": "ROE（期末權益）", "hbmbits": "HBM 出貨位元（EB，公司）"}
+        "bvps": "每股淨值 BVPS", "eps": "每股盈餘 EPS（期末股數）", "roe": "ROE（期末權益）", "hbmbits": "HBM 出貨位元（EB，公司）",
+        "cg": "合併營收年增", "nim": "淨利率（淨利 ÷ 合併營收）"}
 for k, rr in YR.items(): Y.cell(rr, 1, YLAB[k])
 def setc(col, key, f, fmt="0.0"):
     c = Y[f"{col}{YR[key]}"]; c.value = f; c.number_format = fmt
@@ -184,7 +218,7 @@ def common(col, P):
 common("C", None)
 for (s, n), col in FC.items():
     y = YRS[n - 1]
-    P = "C" if n == 1 else FC[(s, 1)]
+    P = "C" if n == 1 else FC[(s, n - 1)]   # v0.4 修正：前一年＝第 n−1 年（原誤取第 1 年，FY2029 以 FY2027 為基期）
     setc(col, "conv", f"={P}{R['conv']}*(1+cb_{n})*({path_avg('conv', s, y)}/{path_avg('conv', s, y - 1)})")
     setc(col, "hbm", "=" + hbm_fy(y, s))
     setc(col, "nand", f"={P}{R['nand']}*(1+nb_{n})*({path_avg('nand', s, y)}/{path_avg('nand', s, y - 1)})")
@@ -205,12 +239,33 @@ for (s, n), col in FC.items():
     setc(col, "nc", f"={P}{R['nc']}+{col}{R['fcf']}-{col}{R['div']}-{col}{R['bb']}")
     setc(col, "sh", f"={P}{R['sh']}-{col}{R['bb']}/bb_px*{SS}", "0.0")
     common(col, P)
+# 合併營收年增、淨利率（基準年起；收斂法的起點）
+setc("C", "nim", f"=C{R['ni']}/C{R['crev']}", "0.0%")
+for (s, n), col in FC.items():
+    P = "C" if n == 1 else FC[(s, n - 1)]
+    setc(col, "cg", f"={col}{R['crev']}/{P}{R['crev']}-1", "0.0%")
+    setc(col, "nim", f"={col}{R['ni']}/{col}{R['crev']}", "0.0%")
+# FY2030–FY2032：收斂法（上游市場層只到 2029；非驅動因子推導）。合併營收年增由 FY2029 線性收斂到 fade_g、淨利率收斂到 fade_m（FY2032 達到）；股數固定為 FY2029 期末
+FADEFILL = PatternFill("solid", fgColor="E7E6E6")
+for (s, y), col in FCF_.items():
+    k = y - FADEY[0] + 1
+    L9 = FC[(s, 3)]; P = L9 if k == 1 else FCF_[(s, y - 1)]
+    setc(col, "cg", f"=${L9}{R['cg']}+(fade_g{s}-${L9}{R['cg']})*{k}/3", "0.0%")
+    setc(col, "crev", f"={P}{R['crev']}*(1+{col}{R['cg']})")
+    setc(col, "nim", f"=${L9}{R['nim']}+(fade_m{s}-${L9}{R['nim']})*{k}/3", "0.0%")
+    setc(col, "ni", f"={col}{R['crev']}*{col}{R['nim']}")
+    setc(col, "sh", f"={P}{R['sh']}", "0.0")
+    setc(col, "eps", f"={col}{R['ni']}/{col}{R['sh']}*{SS}", "#,##0.00" if SS < 1e5 else "#,##0")
+    for key in ("cg", "crev", "nim", "ni", "sh", "eps"): Y[f"{col}{R[key]}"].fill = FADEFILL
+Y["A2"] = (f"灰底＝{FYL.format(FADEY[0])}–{FYL.format(FADEY[-1])} 收斂法（上游市場層只到 2029）：合併營收年增由 {FYL.format(BASE + 3)} 線性收斂到 fade_g、淨利率收斂到 fade_m（In 頁目標價參數），"
+           "股數固定；非驅動因子推導，只算營收、淨利、EPS")
 Y.column_dimensions["A"].width = 34
-for c in "BCDEFGHIJKL": Y.column_dimensions[c].width = 12
+for c in "BCDEFGHIJKLMNOPQRSTU": Y.column_dimensions[c].width = 12
 notes = {"conv": "前一年 × (1＋位元) × 會計年度價格指數平均比（Path）", "hbm": "Σ 會計年度各季：HBM 市場 ÷ 4 × 市占 × 匯率（Mkt）",
          "cogs": "現金成本 × 量 × (1 − 年降)＋折舊", "ni": "（營業利益＋淨現金 × 收益率）× (1 − 稅率)", "bb": "回饋比例 × FCF − 股利"}
-for k, t in notes.items(): Y.cell(R[k], 13, t)
-Y.column_dimensions["M"].width = 50
+notes["crev"] = f"{FYL.format(FADEY[0])} 起為收斂法：合併營收年增由 {FYL.format(BASE + 3)} 線性收斂到 fade_g、淨利率收斂到 fade_m（{FYL.format(FADEY[-1])} 達到），非驅動因子推導"
+for k, t in notes.items(): Y.cell(R[k], NOTEC, t)
+Y.column_dimensions["V"].width = 50
 
 # ---------------- Val ----------------
 V = wb.create_sheet("Val")
@@ -268,29 +323,101 @@ if "sec" in RULE:
         "cases": _cases(adj27, adj28, f"{y1} 年底調整每股淨值（A）", f"{y2} 年底調整每股淨值（C）")})
 tr = VR.add_rule_block(V, nr, vseries, fmtp, "規則（Andy 2026-10-13）：合理倍數＝2016–2025 年底倍數依循環位置取分位。多個來源時各自取分位再平均、四捨五入到兩位。倍數歷史為輸入（藍字），來源與標記見各表；原放在 markets/overview/extract.py（2026-10-23 移入）。")
 
-# 0. 目標價與上檔空間（Andy 2026-10-25 要求；列標籤依工作單逐字）。放在 Val 既有內容之後，不位移既有列；HTML 估值章第一個區塊讀這裡
-RV = {V.cell(i, 1).value: i for i in range(1, tr) if isinstance(V.cell(i, 1).value, str) and V.cell(i, 1).value.startswith("規則值：")}
-TPMAP = (("A", "情境 A 隱含價（樂觀）", "中段"), ("B", "情境 B 隱含價（基準）", "見頂"), ("C", "情境 C 隱含價（下檔）", "谷底"))
-V.cell(tr, 1, "0. 目標價與上檔空間").font = BOLD
-hdr(V, tr + 1, ["項目", "數值", "", "", "說明"])
-t0 = tr + 2
-V.cell(t0, 1, "目標價（12 個月，情境加權）")
+# 0. 目標價（v0.4 樣板；Andy 2026-10-25 11:28 定版：DCF 與 Comparable 加權，11:53 權重各半；列標籤依工作單逐字，記憶體 Comparable 用 P/B）
+# 放在 Val 既有內容之後（不位移既有列；HTML 估值章第一個區塊讀這裡）；B／C／D 欄＝情境 A 順利／B 平平／C 不如預期
+YRS6 = YRS + FADEY
+def ycol(s, y): return FC[(s, YRS.index(y) + 1)] if y in YRS else FCF_[(s, y)]
+FW = C["tp"]["fwd_w"]            # 12 個月後的未來 12 月 EPS 權重（第一年、第二年）
+PB0 = nr + 5                    # 第 6 節 P/B 十年歷史第一個來源（B 欄）
+PB10 = f"$B${PB0}:$B${PB0 + 9}"
+assert V.cell(PB0, 1).value == "2016" and V.cell(PB0 + 9, 1).value == "2025", (V.cell(PB0, 1).value, V.cell(PB0 + 9, 1).value)
+T = {}
+def tset(r_, key, label, fs, fmt, note=""):
+    V.cell(r_, 1, label); T[key] = r_
+    for c_, f_ in zip("BCD", fs):
+        if f_ is None: continue
+        V[f"{c_}{r_}"] = f_; V[f"{c_}{r_}"].number_format = fmt
+    if note: V[f"E{r_}"] = note
+KEYF = PatternFill("solid", fgColor="FFF2CC")
+r_ = tr
+V.cell(r_, 1, "0. 目標價").font = BOLD; T["sec0"] = r_; r_ += 1
+V.cell(r_, 1, "0.1 DCF（股東權益現金流，FY2027–FY2032 明確期＋FY2032 後永續）").font = BOLD; T["sec01"] = r_; r_ += 1
+hdr(V, r_, ["項目", "A（順利）", "B（平平）", "C（不如預期）", "說明"]); T["h01"] = r_; r_ += 1
+V.cell(r_, 1, "情境 EPS（FY2027–FY2032）"); V.cell(r_, 5, f"Y 頁各情境；{FYL.format(FADEY[0])} 起為收斂法（Y 頁灰底）"); T["eps_h"] = r_; r_ += 1
+EPSR = {}
+for y in YRS6:
+    tset(r_, f"eps{y}", f"  {FYL.format(y)}", [f"=Y!{ycol(s, y)}{R['eps']}" for s in MKT.SCEN], fmtp); EPSR[y] = r_; r_ += 1
+V.cell(r_, 1, "股東現金流＝EPS ×（1 − tp_g ÷ tp_roe）"); T["cf_h"] = r_
+V.cell(r_, 5, f"記憶體資本密集：{FYL.format(YRS[0])}–{FYL.format(YRS[-1])} 改用每股（淨利＋折舊－資本支出）＝ Y 頁自由現金流 ÷ 期末股數；收斂期（{FYL.format(FADEY[0])} 起）沒有資本支出與折舊的推導，用 EPS ×（1 − 再投資率）"); r_ += 1
+tset(r_, "reinv", f"  再投資率（tp_g ÷ tp_roe，上限 0.8；{FYL.format(FADEY[0])} 起用）", ["=MIN(tp_g/tp_roe,0.8)", None, None], "0.0%", "ROE 為近三年平均（In 頁 tp_roe）"); REINV = r_; r_ += 1
+CFR = {}
+for y in YRS6:
+    fs = [(f"=Y!{ycol(s, y)}{R['fcf']}/Y!{ycol(s, y)}{R['sh']}*{SS}" if y in YRS else f"={c_}{EPSR[y]}*(1-$B${REINV})") for s, c_ in zip(MKT.SCEN, "BCD")]
+    tset(r_, f"cf{y}", f"  {FYL.format(y)}" + ("（淨利＋折舊－資本支出，每股）" if y in YRS else "（EPS ×（1 − 再投資率））"), fs, fmtp); CFR[y] = r_; r_ += 1
+c0, c9 = CFR[YRS6[0]], CFR[YRS6[-1]]
+tset(r_, "dcfv", "DCF 情境每股價值（折現率 tp_r）", [f"=SUMPRODUCT({c_}{c0}:{c_}{c9},1/(1+tp_r)^{{1;2;3;4;5;6}})+{c_}{c9}*(1+tp_g)/(tp_r-tp_g)/(1+tp_r)^6" for c_ in "BCD"], fmtp,
+     f"Σ 明確期現金流 ÷ (1＋r)^t ＋ 永續價值 ÷ (1＋r)^6；永續價值＝{FYL.format(FADEY[-1])} 現金流 ×(1＋g)÷(r−g)；基準日 2026 年底，t＝1 對 {FYL.format(YRS[0])}" + C["tp"].get("dcf_note", "")); r_ += 1
+tset(r_, "dcf12", "  DCF 情境價值推到 12 個月後（×(1＋tp_r)）", [f"={c_}{T['dcfv']}*(1+tp_r)" for c_ in "BCD"], fmtp); r_ += 1
+tset(r_, "dcftp", "DCF 目標價（情境加權）", [f"=tp_wA*B{T['dcf12']}+tp_wB*C{T['dcf12']}+tp_wC*D{T['dcf12']}", None, None], fmtp, "Σ 權重 × 情境價值 ×(1＋r)；權重見 In 頁"); r_ += 2
+V.cell(r_, 1, "0.2 Comparable（市場主流同業前瞻 P/B）").font = BOLD; T["sec02"] = r_; r_ += 1
+hdr(V, r_, ["同業與前瞻 P/B", "代號", "前瞻 P/B", "日期", "來源", "標記"]); T["ph"] = r_; r_ += 1
+p0 = r_
+for nm_, tk_, pb_, dt_, src_ in C["tp"]["peers"]:
+    V.cell(r_, 1, nm_); V.cell(r_, 2, tk_); c = V.cell(r_, 3, pb_); c.font = BLUE; c.number_format = "0.00"
+    V.cell(r_, 4, dt_); V.cell(r_, 5, src_); V.cell(r_, 6, "Interested-party"); r_ += 1
+p9 = r_ - 1
+T["p0"], T["p9"] = p0, p9
+tset(r_, "pmed", "同業前瞻 P/B 中位數", [f"=MEDIAN(C{p0}:C{p9})", None, None], "0.00", C["tp"]["peer_note"]); r_ += 1
+y28 = YRS[1]
+tset(r_, "fbv", "12 個月後的前瞻每股淨值（情境加權）", ["=" + "+".join(f"tp_w{s}*Y!{ycol(s, y28)}{R['bvps']}" for s in MKT.SCEN), None, None], fmtp,
+     f"同業倍數＝現價 ÷ 下一個會計年度末共識每股淨值（約 14 個月後）；對應 12 個月後（約 2027-10）用 {FYL.format(y28)} 年底每股淨值（情境加權）"); r_ += 1
+tset(r_, "comptp", "Comparable 目標價", [f"=B{T['pmed']}*B{T['fbv']}", None, None], fmtp, "同業中位數 × 前瞻每股淨值"); r_ += 1
+feps = "+".join(f"tp_w{s}*({FW[0]}*Y!{ycol(s, YRS[0])}{R['eps']}+{FW[1]}*Y!{ycol(s, YRS[1])}{R['eps']})" for s in MKT.SCEN)
+tset(r_, "feps", "  對照：12 個月後的前瞻 EPS（情境加權）", ["=" + feps, None, None], fmtp, C["tp"]["fwd_note"]); r_ += 2
+V.cell(r_, 1, "0.3 結論").font = BOLD; T["sec03"] = r_; r_ += 1
+hdr(V, r_, ["項目", "數值", "", "", "說明"]); T["h03"] = r_; r_ += 1
+tset(r_, "tpw", "目標價（DCF 與 Comparable 加權）", [f"=tp_w_dcf*B{T['dcftp']}+(1-tp_w_dcf)*B{T['comptp']}", None, None], fmtp, "tp_w_dcf × DCF＋（1 − tp_w_dcf）× Comparable；tp_w_dcf 見 In 頁"); r_ += 1
+tset(r_, "comp2", "Comparable 目標價（市場主流同業法）", [f"=B{T['comptp']}", None, None], fmtp); r_ += 1
+tset(r_, "cons", "市場共識目標價", ["=cons_tp", None, None], fmtp, C["tp"]["cons_tp"][3]); r_ += 1
+tset(r_, "upw", "上檔空間：加權目標價", [f"=B{T['tpw']}/px-1", None, None], "0.0%", "現價＝In 頁 px"); r_ += 1
+tset(r_, "upc", "上檔空間：Comparable 目標價", [f"=B{T['comp2']}/px-1", None, None], "0.0%"); r_ += 1
+tset(r_, "dcfpx", "DCF ÷ 現價", [f"={c_}{T['dcf12']}/px" for c_ in "BCD"], '0.00"x"', "各情境 DCF 價值（推到 12 個月後）÷ 現價（A／B／C）；任一情境高於 3 倍時，目標價方法加註"); r_ += 1
+tset(r_, "gbv", "與市場共識目標價的差距：EPS 因素（記憶體以每股淨值計）", [f"=B{T['fbv']}/cons_bvps28-1", None, None], "0.0%",
+     f"本模型 {FYL.format(y28)} 年底每股淨值（情境加權）÷ 共識 {FYL.format(y28)} 每股淨值 − 1（Comparable 用 P/B，故以每股淨值代 EPS）"); r_ += 1
+tset(r_, "geps", "  對照：前瞻 EPS ÷ 共識前瞻 EPS − 1", [f"=B{T['feps']}/({FW[0]}*cons_eps27+{FW[1]}*cons_eps28)-1", None, None], "0.0%", "共識 EPS 見 In 頁與 Recon 頁"); r_ += 1
+tset(r_, "gmul", "與市場共識目標價的差距：倍數因素", [f"=(cons_tp/cons_bvps28)/B{T['pmed']}-1", None, None], "0.0%")
+V[f"E{r_}"] = f'="共識目標價隱含 P/B "&TEXT(cons_tp/cons_bvps28,"0.00")&"x（÷ 共識 {FYL.format(y28)} 每股淨值），同業中位數 "&TEXT(B{T["pmed"]},"0.00")&"x"'; r_ += 1
+tset(r_, "band", "價格帶（DCF 不如預期～順利）", [f'=TEXT(D{T["dcf12"]},"#,##0")&"～"&TEXT(B{T["dcf12"]},"#,##0")', None, None], "@", "C 情境價值～A 情境價值（推到 12 個月後）"); r_ += 1
+tset(r_, "pr", "歷史倍數檢查：現價隱含 P/B 的十年分位（A／B／C）", [f"=IF(px/Y!{ycol(s, y28)}{R['bvps']}>=MAX({PB10}),1,IF(px/Y!{ycol(s, y28)}{R['bvps']}<=MIN({PB10}),0,PERCENTRANK({PB10},px/Y!{ycol(s, y28)}{R['bvps']})))" for s in MKT.SCEN], "0%",
+     f"現價 ÷ 各情境 {FYL.format(y28)} 年底每股淨值，在 2016–2025 年底 P/B（第 6 節第一個來源）分布的分位（高於十年最大值記 100%、低於最小值記 0%）；只作檢查，不進目標價（記憶體主估值為 P/B，故以 P/B 代 P/E）"); r_ += 1
+V.cell(r_, 1, "目標價方法"); T["meth"] = r_
+_m = C["tp"]["method"]
+_lit = "&".join('"' + _m[i:i + 200] + '"' for i in range(0, len(_m), 200))      # 公式字串常數上限 255 字
+V[f"B{r_}"] = (f'={_lit}&IF(MAX(B{T["dcfpx"]}:D{T["dcfpx"]})>3,"注意：DCF ÷ 現價有情境高於 3 倍（見上方「DCF ÷ 現價」列）；DCF 對收斂期淨利率與永續假設敏感，宜與 Comparable、市場共識並讀。","")'); r_ += 2
+for k_ in ("dcftp", "comptp", "tpw"): V[f"B{T[k_]}"].fill = KEYF
+
+# 舊法：規則值情境加權（參考；v0.4 起不再叫目標價）。情境對應（Andy 2026-10-25）：A 順利＝P/B 75 分位、B 平平＝中位數、C 不如預期＝25 分位，× 各情境 y1 年底每股淨值；C 一定最低
+AD = {V.cell(i, 1).value: i for i in range(1, tr) if isinstance(V.cell(i, 1).value, str) and V.cell(i, 1).value.startswith("採用 ")}
+TPMAP = (("A", f"情境 A（順利）：75 分位 × {y1} 年底每股淨值（A）", "75 分位"), ("B", f"情境 B（平平）：中位數 × {y1} 年底每股淨值（B）", "中位數"), ("C", f"情境 C（不如預期）：25 分位 × {y1} 年底每股淨值（C）", "25 分位"))
+V.cell(r_, 1, "舊法：規則值情境加權（參考）").font = BOLD; T["old"] = r_
+hdr(V, r_ + 1, ["項目", "數值", "", "", "說明"])
+t0 = r_ + 2; T["old0"] = t0
+V.cell(t0, 1, "規則值情境加權價（參考，非目標價）")
 V.cell(t0, 2, f"=tp_wA*B{t0 + 2}+tp_wB*B{t0 + 3}+tp_wC*B{t0 + 4}").number_format = fmtp
-V.cell(t0, 5, "權重 × 各情境隱含價（第 6 節 P/B 規則值）")
-V.cell(t0 + 1, 1, "上檔空間（目標價 ÷ 現價 − 1）")
+V.cell(t0, 5, "權重 × 各情境隱含價；約為年底價格、未折現。v0.4 樣板起目標價改為第 0 節（DCF 與 Comparable 加權）")
+V.cell(t0 + 1, 1, "相對現價（規則值情境加權價 ÷ 現價 − 1）")
 V.cell(t0 + 1, 2, f"=B{t0}/px-1").number_format = "0.0%"
-V.cell(t0 + 1, 5, "現價＝In 頁 px")
-for k_, (s_, lab, case) in enumerate(TPMAP):
-    rr_ = t0 + 2 + k_; src = RV[f"規則值：{case}（P/B）"]
-    V.cell(rr_, 1, lab); V.cell(rr_, 2, f"=F{src}").number_format = fmtp
-    V.cell(rr_, 5, f'="規則值：{case}（P/B）＝"&D{src}&" × "&TEXT(C{src},"0.00")&"x（第 6 節 F{src}）"')
+for k_, (s_, lab, q_) in enumerate(TPMAP):
+    rr_ = t0 + 2 + k_; src = AD[f"採用 {q_}（P/B）"]
+    V.cell(rr_, 1, lab); V.cell(rr_, 2, f"=B{src}*Y!{FC[(s_, 1)]}{R['bvps']}").number_format = fmtp
+    V.cell(rr_, 5, f'="P/B 採用 {q_} "&TEXT(B{src},"0.00")&"x（第 6 節 B{src}）× Y 頁 {FC[(s_, 1)]}{R["bvps"]}"')
 V.cell(t0 + 5, 1, "情境權重 A／B／C")
 for j_, s_ in enumerate("ABC"): V.cell(t0 + 5, 2 + j_, f"=tp_w{s_}").number_format = "0%"
 V.cell(t0 + 5, 5, f'="合計 "&TEXT(B{t0 + 5}+C{t0 + 5}+D{t0 + 5},"0%")&"；In 頁 tp_wA／tp_wB／tp_wC（Assumed，Andy 可改）"')
-V.cell(t0 + 6, 1, "目標價方法")
-V.cell(t0 + 6, 2, (f"P/B（主估值法）：每股淨值 × 十年（2016–2025 年底）P/B 依循環位置取分位。情境 A 取「中段」（中位數 × {y1} 年底每股淨值 A：循環延後見頂）、"
-                   f"B 取「見頂」（25 分位 × {y1} 年底每股淨值 A：{y1} 為見頂年）、C 取「谷底」（75 分位 × {y2} 年底每股淨值 C）。三者即第 6 節的三個規則值，每股基準不是各情境各自的每股淨值。"
-                   "隱含價約為年底價格、未折現。" + C.get("tp_bias", "")))
+V.cell(t0 + 6, 1, "舊法說明")
+V.cell(t0 + 6, 2, (f"十年（2016–2025 年底）P/B 分位 × 各情境 {y1} 年底每股淨值：A 順利＝75 分位、B 平平＝中位數、C 不如預期＝25 分位（Andy 2026-10-25；C 一定最低）。"
+                   "第 6 節的見頂／中段／谷底規則值不變（AI 投資地圖抽數用）。" + C.get("tp_bias", "")))
+T["old_end"] = t0 + 6
 V.column_dimensions["A"].width = 36
 
 # ---------------- Sens（營收變動 × (1 − 變動營業費用率)；成本不隨價格變動，故為精確值）----------------
@@ -311,13 +438,40 @@ for (s, n) in (("A", 1), ("B", 2), ("C", 2), ("C", 3)):
         sr += 1
     sr += 1
 SE.cell(sr, 1, "讀法：哪一條收入線的同幅變動對營業利益影響最大，就是該年度的主要驅動。價格路徑本身的情境差異見 Y 頁 A／B／C 欄。")
+# 目標價參數（v0.4 樣板）：tp_r ±1pt、tp_g ±1pt、tp_w_dcf 0.3／0.7 對加權目標價的影響（Comparable 不隨 r、g 變動；收斂法的 fade_g 不隨 tp_g 變動）
+TPS0 = sr + 2
+SE.cell(TPS0, 1, "目標價參數（只改 DCF 參數；Y 頁收斂法的 fade_g 不隨 tp_g 變動）").font = BOLD
+hdr(SE, TPS0 + 1, ["案例", "設定", "DCF 目標價", "Comparable 目標價", "加權目標價", "相對基準"])
+def dcf_expr(c_, r="tp_r", g="tp_g"):
+    reinv = f"MIN({g}/tp_roe,0.8)"
+    cf = lambda y: (f"Val!{c_}{CFR[y]}" if y in YRS else f"Val!{c_}{EPSR[y]}*(1-{reinv})")
+    pv = "+".join(f"{cf(y)}/(1+{r})^{t}" for t, y in enumerate(YRS6, 1))
+    return f"({pv}+{cf(YRS6[-1])}*(1+{g})/({r}-{g})/(1+{r})^6)"
+TPCASES = [("基準", "r 10%、g 4%、DCF 權重 0.5", {}), ("折現率 +1pt", "r 11%", dict(r="(tp_r+0.01)")), ("折現率 −1pt", "r 9%", dict(r="(tp_r-0.01)")),
+           ("長期成長 +1pt", "g 5%", dict(g="(tp_g+0.01)")), ("長期成長 −1pt", "g 3%", dict(g="(tp_g-0.01)")),
+           ("DCF 權重 0.3", "Comparable 0.7", dict(w="0.3")), ("DCF 權重 0.7", "Comparable 0.3", dict(w="0.7"))]
+for k_, (nm_, st_, kw) in enumerate(TPCASES):
+    i_ = TPS0 + 2 + k_
+    r_, g_, w_ = kw.get("r", "tp_r"), kw.get("g", "tp_g"), kw.get("w", "tp_w_dcf")
+    SE.cell(i_, 1, nm_); SE.cell(i_, 2, st_)
+    SE[f"C{i_}"] = "=(" + "+".join(f"tp_w{s}*{dcf_expr(c_, r_, g_)}" for s, c_ in zip(MKT.SCEN, "BCD")) + f")*(1+{r_})"
+    SE[f"D{i_}"] = f"=Val!B{T['comptp']}"
+    SE[f"E{i_}"] = f"={w_}*C{i_}+(1-{w_})*D{i_}"
+    SE[f"F{i_}"] = f"=E{i_}/E${TPS0 + 2}-1"
+    for c_ in "CDE": SE[f"{c_}{i_}"].number_format = fmtp
+    SE[f"F{i_}"].number_format = "0.0%"
+TPS_LAST = TPS0 + 1 + len(TPCASES)
+SE.cell(TPS_LAST + 1, 1, "核對：基準列 DCF 目標價應等於 Val 頁第 0 節"); SE[f"C{TPS_LAST + 1}"] = f"=C{TPS0 + 2}-Val!B{T['dcftp']}"; SE[f"C{TPS_LAST + 1}"].number_format = "0.000000"
 SE.column_dimensions["A"].width = 14; SE.column_dimensions["B"].width = 30
 
 # ---------------- Recon ----------------
 RC = wb.create_sheet("Recon")
 RC["A1"] = f"Recon — 本模型（正向推導）vs 共識或公司指引（只作事後對照，不用來回推參數）；{U}"
 hdr(RC, 3, ["項目", "本模型", "對照值", "差距", "對照來源"])
-for i, (nm, f, v, src) in enumerate(C["recon"]):
+RECON = C["recon"] + [(f"{FYL.format(YRS[0])}E EPS（A）vs 共識（第 0 節差距拆解用）", "=Y!" + FC[("A", 1)] + "{eps}", "=cons_eps27", C["tp"]["cons_src"]),
+                      (f"{FYL.format(YRS[1])}E EPS（A）vs 共識（第 0 節差距拆解用）", "=Y!" + FC[("A", 2)] + "{eps}", "=cons_eps28", C["tp"]["cons_src"]),
+                      (f"{FYL.format(YRS[1])}E 年底每股淨值（A）vs 共識", "=Y!" + FC[("A", 2)] + "{bvps}", "=cons_bvps28", C["tp"]["cons_src"])]
+for i, (nm, f, v, src) in enumerate(RECON):
     rr = 4 + i
     RC.cell(rr, 1, nm); RC.cell(rr, 2, f.format(**R)).number_format = "0.0"
     RC.cell(rr, 3, v).font = BLUE
@@ -339,14 +493,14 @@ for i, (a, b) in enumerate(C["sources"] + [("markets/memory/market.py（共用�
     SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 60; SO.column_dimensions["B"].width = 120
 RD = wb.create_sheet("README", 0)
-lines = [(f"{C['name']} 收支與估值模型 {C['version']}（記憶體樣板 v0.3）　{C['date']}", True), ("模型命題：" + C["thesis"], False), ("", False),
+lines = [(f"{C['name']} 收支與估值模型 {C['version']}（記憶體樣板 v0.4）　{C['date']}", True), ("模型命題：" + C["thesis"], False), ("", False),
  ("驅動因子 → 推導量", True),
  ("Path（共用市場層）：一般 DRAM、NAND 合約價季增 → 季度指數（情境 A／B／C）；各公司依會計年度取平均，算年均價變動", False),
  ("Mkt（共用市場層）：加速器顆數 × 每顆 GB × 情境顆數係數（2028–29，與台積電、Advantest 同一套）→ 需求位元；MIN(需求, 供給（三情境相同）) → 出貨；× 單價（依情境）→ HBM 市場（日曆年）", False),
  ("Q：最後實績季 × 公司指引 × TrendForce 季價 → 基準年剩餘季度", False),
  ("Y：前一年 × (1＋位元) × 價格指數比 → 一般 DRAM、NAND；Σ 各季 HBM 市場 × 市占 → HBM；成本量 × (1 − 年降)＋折舊 → 營業利益 → 淨利 → 權益 → 每股淨值", False),
- ("Val：每股淨值 × P/B（主）、EPS × P/E（對照）", False), ("Sens：各收入線同幅變動對營業利益的影響", False), ("非記憶體事業（只有三星）：營收與營業利益為輸入，不建模", False), ("Recon：與共識、公司指引事後對照", False), ("", False),
- (f"情境：A＝{MKT.SCEN_DESC['A']}；B＝{MKT.SCEN_DESC['B']}；C＝{MKT.SCEN_DESC['C']}", False),
+ ("Val：第 0 節目標價＝DCF（股東現金流，FY2027–FY2032 明確期＋永續）與 Comparable（同業前瞻 P/B × 前瞻每股淨值）加權；另有每股淨值 × P/B（主）、EPS × P/E（對照）與十年倍數規則值", False), ("Sens：各收入線同幅變動對營業利益的影響", False), ("非記憶體事業（只有三星）：營收與營業利益為輸入，不建模", False), ("Recon：與共識、公司指引事後對照", False), ("", False),
+ (f"情境：A＝{MKT.SCEN_DESC['A']}；B＝{MKT.SCEN_DESC['B']}；C＝{MKT.SCEN_DESC['C']}（目標價對應：A＝順利、B＝平平、C＝不如預期；{FYL.format(FADEY[0])}–{FYL.format(FADEY[-1])} 為收斂法）", False),
  (f"幣別單位：{U}；會計年度：{C['fy_desc']}", False), ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。", False), ("", False)] + [(t, False) for t in C["readme_extra"]]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
