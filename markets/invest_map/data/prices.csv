@@ -1,17 +1,4 @@
 ticker,close,currency,date,source,sources_count
-NVDA,210.96,USD,2026-10-23,tipranks；bullfincher,2
-AVGO,321.68,USD,2026-10-23,bullfincher；stockscan,2
-MU,877.55,USD,2026-10-23,stockscan；bullfincher,2
-000660,1277000,KRW,2026-10-23,tradersunion；digrin；stockhub（Yonhap +4.4%）,2
-005930,215500,KRW,2026-10-23,tradersunion,1
-2330,2385,TWD,2026-10-22,Yahoo 股市；永豐；鉅亨（10-23 收盤未取得）,2
-2308,1605,TWD,2026-10-23,台達電模型 In!E70（Yahoo 股市 10-24 頁面「昨收」）；10-22 收盤 1,560 見同列 I70,1
-2382,322,TWD,2026-10-22,財報狗（10-23 收盤未取得）,1
-4062,8512,JPY,2026-10-23,株探；松井證券,2
-6857,32340,JPY,2026-10-23,Yahoo!ファイナンス；株探,2
-6146,49290,JPY,2026-10-23,株探；kabutore,2
-300308,612.63,CNY,2026-10-23,etnet,1
-ANET,172.37,USD,2026-10-23,stockscan；bullfincher,2
 CRWV,54.23,USD,2026-10-23,stockscan；digrin,2
 NBIS,158.74,USD,2026-10-23,stockscan（digrin 158.64）,1
 ORCL,126.16,USD,2026-10-23,stockanalysis；stockscan,2

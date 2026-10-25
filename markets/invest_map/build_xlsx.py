@@ -22,7 +22,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.4"
+VERSION = "v0.5"
 DATE = "20261025"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
@@ -137,13 +137,33 @@ COMPANY_META = {
     "OpenAI": ("OpenAI", "未上市", "USD", "openai"), "Anthropic": ("Anthropic", "未上市", "USD", "anthropic"),
 }
 
+# v0.5（2026-10-25 Andy 18:14）：AI半導體 其餘個股全部接入。公司名、掛牌、次產業、重要性、地位依據取自候選母體；
+# 市場位置（1–4）預設由「次產業內優先序」換算（1→1、2→2、3–5→3、≥6→4），標 [判斷]，黃底可改。
+CCY_BY_LISTING = {"美": "USD", "台": "TWD", "日": "JPY", "韓": "KRW", "中": "CNY", "荷": "EUR", "港": "HKD"}
+
+
+def _add_semis():
+    import extract_models
+    with open(latest("universe_ai_semis_v*.csv"), encoding="utf-8") as f:
+        uni = {r["代號"]: r for r in csv.DictReader(f)}
+    for tk, folder in extract_models.SEMIS_V2:
+        if tk in COMPANY_META:
+            continue
+        u = uni[tk]
+        order = int(u["次產業內優先序"])
+        posn = 1 if order == 1 else 2 if order == 2 else 3 if order <= 5 else 4
+        COMPANY_META[tk] = (u["公司"], u["掛牌"], CCY_BY_LISTING[u["掛牌"]], folder)
+        POSITION[tk] = (u["次產業"], int(u["供應鏈重要性（1 高–3 低）"]), posn,
+                        f"{u['市場地位']}（AI半導體 候選母體 v0.2.2；市場位置由次產業內優先序 {order} 換算）", "[判斷]")
+
+
+_add_semis()
+
+
 # 未上市與算力層的地圖節點（不進排序）
 MAP_EXTRA = []  # OpenAI、Anthropic 已納入 POSITION（2026-10-25 Andy：未上市也放，可投資性寫「未上市」）
 
 PARAMS = [
-    ("tier_center", 0.20, "「機會」：中心空間至少"),
-    ("tier_bear", -0.25, "「機會」：下檔空間不低於"),
-    ("tier_rich", -0.10, "「偏貴」：中心空間低於"),
     ("w_irr", 0.40, "地位分數權重：不可替代性"),
     ("w_pos", 0.35, "地位分數權重：市場位置"),
     ("w_vc", 0.25, "地位分數權重：價值鏈分量"),
@@ -210,11 +230,10 @@ def main():
         "收支關卡（Andy 2026-10-25 10:48）：先看收支、再看評價。模型期間（2026 起約五年）現金收支合計為負＝入不敷出、有資金缺口，"
         "不論估值空間多大，最終分級一律為「收支不足」。口徑：雲端／neocloud／MAG 模板一律用「營運缺口＋股東回饋（股利、回購）」；記憶體、模型商用自由現金流；"
         "只有損益的半導體模型以「各情境淨利皆為正」判定（現金流本專案未建立）。",
-        "可投資性口徑（v0.4 預設，Andy 可改）：中心價＝各模型主口徑。半導體 13 家讀估值 v2 的「目標價（DCF 與 Comparable 加權）」"
-        "（AI半導體 2026-10-25；DCF 50%＋Comparable 50%，約 12 個月後），下檔＝C 情境 DCF 價值（推到 12 個月後）；"
-        "舊法（規則值情境加權價）放對照欄。雲端與 neocloud 用模型加權目標價與情境下緣；MiniMax 用反向檢驗折現價值。"
-        "空間＝隱含價 ÷ 10-23 收盤價 − 1。",
-        "分級：中心空間 ≥ 參數 tier_center 且下檔 ≥ tier_bear → 機會；中心 < tier_rich → 偏貴；其餘 → 觀察。",
+        "可投資性口徑（v0.5，Andy 2026-10-25 18:14：數字引用個股模型，模型沒有的才自算）：半導體 52 家的中心價＝模型「目標價（DCF 與 Comparable 加權）」、"
+        "中心空間＝模型「上檔空間：加權目標價」、現價＝模型現價（上檔空間的分母）、投資建議與上檔空間級距＝模型 Val 列；模型尚未補列者依 AI半導體 固定規則"
+        "（>+50% 強力買進、+25～+50% 買進、−25～+25% 中立、−50～−25% 放空、<−50% 強力放空）以模型上檔空間自算。下檔空間＝C 情境 DCF 價值 ÷ 模型現價 − 1（模型無此欄，自算）。"
+        "雲端與 neocloud 用模型加權目標價與模型自身評等，空間以外部收盤自算；MiniMax 用反向檢驗折現價值，依同一固定規則自算。",
         "本活頁簿是研究整理，不是投資建議；各模型的方法與假設見各自 README 與 Val／摘要頁。",
     ]
     for i, t in enumerate(lines, 1):
@@ -318,7 +337,7 @@ def main():
 
     # ============ 價格
     wpz = wb.create_sheet("價格")
-    hdr(wpz, ["代號", "幣別", "模型內現價", "模型價日期", "模型價來源", "10-23 收盤", "收盤來源", "採用價"],
+    hdr(wpz, ["代號", "幣別", "模型內現價", "模型價日期", "模型價來源", "外部收盤（非半導體模型）", "收盤來源", "採用價"],
         [9, 7, 12, 12, 52, 12, 52, 12])
     prices = {}
     pfile = os.path.join(HERE, "data", "prices.csv")
@@ -345,7 +364,12 @@ def main():
         if tk in prices and prices[tk]["close"]:
             wpz.cell(i, 6, float(prices[tk]["close"])).font = BLUE
             wpz.cell(i, 7, f"{prices[tk]['date']}｜{prices[tk]['source']}")
-        wpz.cell(i, 8, "未上市" if m.get("unlisted") else f"=IF(ISNUMBER(F{i}),F{i},C{i})")
+        if m.get("unlisted"):
+            wpz.cell(i, 8, "未上市")
+        elif m.get("v2"):   # v0.5（Andy 18:14：數字引用個股模型）：半導體用模型現價，即模型上檔空間的分母
+            wpz.cell(i, 8, f"=C{i}")
+        else:
+            wpz.cell(i, 8, f"=IF(ISNUMBER(F{i}),F{i},C{i})")
 
     # ============ 估值
     we = wb.create_sheet("估值")
@@ -353,8 +377,12 @@ def main():
             "下檔候選 1", "下檔候選 1 來源", "下檔候選 2", "下檔候選 2 來源", "採用價", "中心價", "下檔價",
             "中心空間", "下檔空間", "分級", "對照口徑空間", "對照口徑", "現價 ÷ 模型 FY2028 EPS（A／B／C）", "註記",
             "輔助 1", "輔助 2", "模型價日以來漲跌", "價格變動旗標",
-            "收支口徑", "收支列（模型）", "收支序列", "期間合計", "最小值", "收支來源", "收支關卡", "最終分級"]
-    hdr(we, cols, [9, 12, 14, 18, 24, 12, 40, 12, 40, 12, 40, 12, 40, 11, 11, 11, 9, 9, 8, 10, 30, 22, 60, 10, 10, 10, 18, 9, 30, 46, 10, 10, 44, 14, 12])
+            "收支口徑", "收支列（模型）", "收支序列", "期間合計", "最小值", "收支來源", "收支關卡", "最終分級",
+            "上檔空間級距", "投資建議與上檔空間依據"]
+    hdr(we, cols, [9, 12, 14, 18, 24, 12, 40, 12, 40, 12, 40, 12, 40, 11, 11, 11, 9, 9, 8, 10, 30, 22, 60, 10, 10, 10, 18, 9, 30, 46, 10, 10, 44, 14, 12, 12, 60])
+    REC = 'IF(Q{i}>0.5,"強力買進",IF(Q{i}>0.25,"買進",IF(Q{i}>=-0.25,"中立",IF(Q{i}>=-0.5,"放空","強力放空"))))'
+    TIER6 = ('IF(Q{i}>0.5,"大於 50%",IF(Q{i}>0.25,"25%–50%",IF(Q{i}>=0,"0%–25%",'
+             'IF(Q{i}>=-0.25,"0%～−25%",IF(Q{i}>=-0.5,"−25%～−50%","小於 −50%")))))')
 
     def put(i, j, d, fmt_src=True):
         if d is None:
@@ -383,8 +411,9 @@ def main():
             method = "加權目標價（DCF 50%＋Comparable 50%）"
             c1 = m["tp"]
             b1 = m["dcf_C"]
-            alt = (f"={m['old_rule']['value']}/N{i}-1", )
-            altlbl = f"舊法：規則值情境加權價（參考，{m['old_rule']['cell']}）"
+            if "old_rule" in m:
+                alt = (f"={m['old_rule']['value']}/N{i}-1", )
+                altlbl = f"舊法：規則值情境加權價（參考，{m['old_rule']['cell']}）"
             note = (f"DCF 目標價 {m['tp_dcf']['value']:,.1f}（{m['tp_dcf']['cell']}）；"
                     f"Comparable 目標價 {m['tp_comp']['value']:,.1f}（{m['tp_comp']['cell']}）；"
                     f"市場共識目標價 {m['tp_cons']['value']:,.1f}（{m['tp_cons']['cell']}，外部、僅供對照）；"
@@ -417,9 +446,28 @@ def main():
         if c1 is not None:
             we.cell(i, 15, f"=MIN(F{i},H{i})")
             we.cell(i, 16, f"=MIN(J{i},L{i})")
-            we.cell(i, 17, f"=O{i}/N{i}-1")
-            we.cell(i, 18, f"=P{i}/N{i}-1")
-            we.cell(i, 19, f'=IF(AND(Q{i}>=tier_center,R{i}>=tier_bear),"機會",IF(Q{i}<tier_rich,"偏貴","觀察"))')
+            we.cell(i, 18, f"=P{i}/N{i}-1")          # 下檔空間：模型無此欄，自算（C 情境 DCF ÷ 模型現價 − 1）
+            if m.get("v2"):
+                # v0.5（Andy 18:14）：模型有的數字直接引用——上檔空間、投資建議、級距；模型尚未補列者依同一固定規則自算
+                we.cell(i, 17, m["up"]["value"]).font = BLUE
+                basis = [f"上檔空間 {src(m['up'])}"]
+                for col, key, f in ((19, "rec", REC), (36, "tier6", TIER6)):
+                    if key in m:
+                        we.cell(i, col, m[key]["value"]).font = BLUE
+                        basis.append(f"{'投資建議' if key == 'rec' else '級距'} {src(m[key])}")
+                    else:
+                        we.cell(i, col, "=" + f.format(i=i))
+                        basis.append(f"{'投資建議' if key == 'rec' else '級距'}：模型尚未補列，依 AI半導體 固定規則自算")
+                we.cell(i, 37, "；".join(basis)).alignment = WRAP
+            elif "rating" in m:                       # 雲端、neocloud、MAG：模型自己的評等
+                we.cell(i, 17, f"=O{i}/N{i}-1")
+                we.cell(i, 19, m["rating"]["value"]).font = BLUE
+                we.cell(i, 37, f"評等 {src(m['rating'])}（模型自身評等規則）；空間以外部收盤自算")
+            else:                                     # MiniMax：模型無評等，依同一固定規則自算
+                we.cell(i, 17, f"=O{i}/N{i}-1")
+                we.cell(i, 19, "=" + REC.format(i=i))
+                we.cell(i, 36, "=" + TIER6.format(i=i))
+                we.cell(i, 37, "模型無評等；依 AI半導體 固定規則自算")
         else:
             we.cell(i, 19, "未上市" if m.get("unlisted") else "未估值")
         if alt:
