@@ -1,4 +1,4 @@
-# Arista Networks（ANET）收支與估值模型 v0.1（AI 半導體 Project：網通系統端樣板）
+# Arista Networks（ANET）收支與估值模型 v0.2（AI 半導體 Project：網通系統端樣板）
 # 用法：python3 arista/build_arista.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不做平移。金額：十億美元（US$B）；EPS：美元；口徑：公司 non-GAAP（排除股票薪酬、攤銷等；
 # 2026 年起 non-GAAP 稅額改用新方法，公司已重編 2025 年各季，本模型 FY2025 用 2025 年度新聞稿的原報值，見 Q 頁說明）。
@@ -8,7 +8,9 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))   # 本資料夾的 tp_v2.py
 import cycle_position as CP
+import tp_v2 as TP
 import valuation_rule as VR
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
@@ -108,13 +110,22 @@ inp("idc_anet", "2Q26 資料中心乙太網路交換器：Arista 份額（全部
 inp("pe_fair_andy", "Andy 先驗：合理 P/E", "x", None, 25, None, "Assumed", "先驗_Andy_Arista_20261024 A9b（Drive；不在本 repo）", "只作對照")
 
 sec("H. 價格與估值")
-inp("px", "股價（2026-10-23 收盤）", "US$", None, 172.37, None, "Interested-party", "StockAnalysis（2026-10-23 收盤）", "MarketBeat：10-23 開盤 170.57")
+inp("px", "股價（2026-10-23 收盤）", "US$", None, 172.37, None, "Interested-party", "StockAnalysis（2026-10-23 收盤）", "markets/invest_map/data/prices.csv 同值（stockscan；bullfincher 兩來源核對）；MarketBeat：10-23 開盤 170.57")
 inp("pe_ttm_gaap", "近 12 月 GAAP P/E", "x", None, 54.55, None, "Interested-party", "StockAnalysis", "MarketBeat 53.81")
 inp("pe_fwd_sa", "前瞻 P/E（StockAnalysis）", "x", None, 37.06, None, "Interested-party", "StockAnalysis（口徑：未來 12 個月 non-GAAP，頁面未明示）", "第二來源：未找到")
 inp("g2n", "GAAP EPS ÷ non-GAAP EPS（規則值換算用）", "x", None, "=1.75/1.89", None, "Derived", PR_Q226 + "：1H26 GAAP 稀釋 EPS 1.75、non-GAAP 1.89", "FY2025：2.75 ÷ 2.98＝0.923（公司）")
 sec("I. 目標價情境權重（v0.1.1 新增；Val 頁第 0 節用）")
 for s, w in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
     inp(f"tp_w{s}", f"目標價情境權重 {s}", "%", None, w, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）", "三者合計應為 100%（Val 頁第 0 節列示）")
+
+sec("J. 目標價參數（v0.2 新增：DCF 與 Comparable 加權、FY2029 後收斂法；黃底＝Andy 可改）")
+inp("tp_r", "DCF 折現率（股東權益成本）", "%", None, 0.10, None, "Assumed", "Andy 可改（工作單 2026-10-25：美、台、日、韓同一值）", "Sens 頁 ±1pt")
+inp("tp_g", "長期成長率（FY2032 後永續；PL 延伸期 B 情境的收斂目標）", "%", None, 0.04, None, "Assumed", "Andy 可改（工作單 2026-10-25）", "Sens 頁 ±1pt（只改 DCF 再投資率與永續成長，不改 PL 收斂路徑）")
+inp("tp_gd", "延伸期 A／C 情境長期成長相對 tp_g 的差（A＋、C−）", "pt", None, 0.02, None, "Assumed", "工作單 2026-10-25：A＝tp_g＋2pt、C＝tp_g−2pt", "—")
+inp("tp_roe", "近三年平均 ROE（再投資率＝tp_g ÷ tp_roe）", "%", None, 0.2861, None, "Derived", "stockalarm.io ANET ROE（GAAP，年度）：2023 28.91%、2024 28.54%、2025 28.39%，平均 28.61%（資料商，Interested-party）", "stockanalysis 近 12 月 ROE 31.48%；OpenCapital 季度 31.4–33.6%")
+inp("tp_w_dcf", "目標價中 DCF 的權重（其餘為 Comparable）", "%", None, 0.5, None, "Assumed", "Andy 可改（Andy 2026-10-25 11:53 定 50／50）", "Sens 頁 0.3／0.7")
+inp("nm10_k", "延伸期 C 情境淨利率目標＝FY2029 淨利率 × 本係數（同口徑十年平均未找到）", "x", None, 0.8, None, "Assumed", "工作單：找不到十年平均用最後一年 × 0.8。本模型為 non-GAAP 口徑；同口徑十年淨利率：未找到", "參考：GAAP 十年平均 29.51%（valueinvesting.io 2016–2025：16.31%、25.71%、15.25%、35.67%、27.38%、28.52%、30.87%、35.62%、40.73%、38.99%）")
+inp("cons_tp", "市場共識目標價（賣方平均）", "US$", None, 243.59, None, "Interested-party", "stockanalysis.com（32 位分析師平均，2026-10-23）", "賣方有目標價誘因；只作對照，不進目標價")
 
 r = 4
 for srow in rows:
@@ -468,7 +479,7 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Arista Networks（ANET）收支與估值模型 v0.1.1（AI 半導體 Project：網通系統端樣板）　2026-10-25", True),
+lines = [("Arista Networks（ANET）收支與估值模型 v0.2（AI 半導體 Project：網通系統端樣板）　2026-10-25", True),
  ("版本：v0.1（初版）。Arista 在 AI 後端乙太網路交換器的份額在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
  ("模型命題：Arista 的 AI 營收＝AI 後端 scale-out 交換器市場（本專案網通模型）× 乙太網路占比 × Arista 份額（含前端與 scale-across 附掛）；非 AI（雲端前端、企業、園區）另依成長率推。股價約 37 倍前瞻 EPS：在 NVIDIA（Spectrum-X）與白牌夾擊下，Arista 的份額路徑能否支撐這個倍數？", False),
  ("核心問題：2027–28 年 Arista 在 AI 乙太網路的份額每掉一截，EPS 少多少；現價隱含的份額路徑合不合理。", False), ("", False),
@@ -485,15 +496,14 @@ lines.append(("v0.1.1（2026-10-25）：Val 頁新增「0. 目標價與上檔空
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
 
-# ---------------- Val 第 0 節：目標價與上檔空間（v0.1.1 新增；Andy 2026-10-25 要求，列標籤依工作單逐字） ----------------
-# 為不位移既有儲存格（與舊版 dist 逐格相同），本節放在 Val 既有內容之後；HTML 估值章第一個區塊即為本節
+# ---------------- 舊法：規則值情境加權（v0.1.1 的「0. 目標價與上檔空間」；v0.2 改名保留，不再叫目標價） ----------------
 def add_target_price(V, imp, note, fmt, method, px_note):
     t0 = V.max_row + 2
-    V.cell(t0, 1, "0. 目標價與上檔空間").font = BOLD
+    V.cell(t0, 1, "舊法：規則值情境加權（參考）").font = BOLD
     hdr(V, t0 + 1, ["項目", "數值", "", "", "說明"])
-    V.cell(t0 + 2, 1, "目標價（12 個月，情境加權）"); V[f"B{t0 + 2}"] = f"=tp_wA*B{t0 + 4}+tp_wB*B{t0 + 5}+tp_wC*B{t0 + 6}"; V[f"B{t0 + 2}"].number_format = fmt
+    V.cell(t0 + 2, 1, "規則值情境加權價（參考，非目標價）"); V[f"B{t0 + 2}"] = f"=tp_wA*B{t0 + 4}+tp_wB*B{t0 + 5}+tp_wC*B{t0 + 6}"; V[f"B{t0 + 2}"].number_format = fmt
     V[f"E{t0 + 2}"] = "權重 × 各情境隱含價"
-    V.cell(t0 + 3, 1, "上檔空間（目標價 ÷ 現價 − 1）"); V[f"B{t0 + 3}"] = f"=B{t0 + 2}/px-1"; V[f"B{t0 + 3}"].number_format = "0.0%"; V[f"E{t0 + 3}"] = px_note
+    V.cell(t0 + 3, 1, "相對現價（參考）"); V[f"B{t0 + 3}"] = f"=B{t0 + 2}/px-1"; V[f"B{t0 + 3}"].number_format = "0.0%"; V[f"E{t0 + 3}"] = px_note
     for i, (s, lab) in enumerate((("A", "情境 A 隱含價（樂觀）"), ("B", "情境 B 隱含價（基準）"), ("C", "情境 C 隱含價（下檔）"))):
         rr = t0 + 4 + i
         V.cell(rr, 1, lab); V[f"B{rr}"] = imp[s]; V[f"B{rr}"].number_format = fmt; V[f"E{rr}"] = note[s]
@@ -501,13 +511,45 @@ def add_target_price(V, imp, note, fmt, method, px_note):
     V.cell(rr, 1, "情境權重 A／B／C"); V[f"B{rr}"] = "=tp_wA"; V[f"C{rr}"] = "=tp_wB"; V[f"D{rr}"] = "=tp_wC"
     for c in "BCD": V[f"{c}{rr}"].number_format = "0%"
     V[f"E{rr}"] = f'="合計 "&TEXT(B{rr}+C{rr}+D{rr},"0%")&"；In 頁 tp_wA／tp_wB／tp_wC（Assumed，Andy 可改）"'
-    V.cell(t0 + 8, 1, "目標價方法"); V[f"B{t0 + 8}"] = method
+    V.cell(t0 + 8, 1, "舊法說明"); V[f"B{t0 + 8}"] = method
     return t0
 TP0 = add_target_price(V, {s: f"=E{VAL[s]}" for s in SC},
     {s: f'="第 3 節規則值：FY2027 GAAP 換算 EPS × "&TEXT(D{VAL[s]},"0.0")&"x（"&C{17 + SC.index(s)}&"）"' for s in SC}, "#,##0.00",
     "P/E：各情境 FY2027 GAAP 換算 EPS（non-GAAP EPS × g2n）× 十年（2016–2025 年底）GAAP P/E 依循環位置取分位（以本模型營收最高年判定：A、B 中段＝中位數，C 見頂＝25 分位；companiesmarketcap 與 Macrotrends 兩來源平均）。"
     "十年倍數含 2021 年與 2024–2025 年高成長期的高倍數，偏誤方向為高估；FY2027 三情境 EPS 相同，A、B 隱含價相同、C 只差在倍數；隱含價約為 FY2027 年底的價格、未折現，當作 12 個月目標價時偏高。",
     "現價＝In 頁 px（2026-10-23 收盤）")
+
+# ---------------- v0.2：三情境延伸到 FY2032、Val 第 0 節（DCF 與 Comparable 加權）、Sens 目標價參數 ----------------
+XH, XR, XC = TP.extend_pl(PL, PB, FC, FYS, 2029, {"rev": "rev", "ni": "ni", "sh": "sh_", "eps": "eps"}, "US$",
+    "三情境延伸到 FY2032（v0.2；FY2025A–FY2029 引用上方推導區塊，FY2030 起為收斂法，非驅動因子推導；收斂年度為橘底）",
+    "上游市場層（markets/network、台積電顆數）只到 CY2029＝FY2029；FY2030 起：營收年增由 FY2029 年增線性收斂到 FY2032 的長期成長（A＝tp_g＋tp_gd、B＝tp_g、C＝tp_g−tp_gd），"
+    "淨利率由 FY2029 線性收斂到中段利潤率（A＝FY2029、B＝FY2029 與 C 目標的中點、C＝FY2029 × nm10_k；同口徑十年平均未找到），股數沿用 FY2029 年變動")
+_h = next(r for r in range(1, V.max_row + 1) if V.cell(r, 1).value == "P/E：十年歷史倍數")
+TPL, TPN = TP.add_tp_section(wb, V,
+    eps={s: [f"PL!{XC[y]}{XR[(s, 'eps')]}" for y in range(2027, 2033)] for s in SC}, e_mon=12,
+    fwd={s: [(f"PL!{XC[2027]}{XR[(s, 'eps')]}", "2/12"), (f"PL!{XC[2028]}{XR[(s, 'eps')]}", "10/12")] for s in SC},
+    fwd_note="會計年度＝日曆年：約 12 個月後（2027-10 底）的未來 12 個月＝2027-11～2028-10（2/12 × FY2027＋10/12 × FY2028）",
+    peers=[("Cisco", "CSCO", 20.70, "2026-10-23", "stockanalysis.com 統計頁（Forward PE）", "Interested-party（資料商彙整賣方預估）"),
+           ("Ciena", "CIEN", 30.77, "2026-10-23", "同上", "Interested-party（同上）"),
+           ("Celestica", "CLS", 16.65, "2026-10-23", "同上", "Interested-party（同上）"),
+           ("Hewlett Packard Enterprise（含 Juniper）", "HPE", 12.19, "2026-10-23", "同上", "Interested-party（同上）"),
+           ("Credo", "CRDO", 20.19, "2026-10-23", "同上", "Interested-party（同上）")],
+    peer_note="券商常用的資料中心網通同業（交換器：Cisco、HPE＋Juniper；光傳輸：Ciena；白牌交換器 ODM：Celestica；AI 互連：Credo）；不含 A 股（Andy 11:53）。前瞻 P/E 口徑為資料商的未來 12 個月共識 EPS，各家 GAAP／non-GAAP 口徑不一",
+    cons_tp="cons_tp", cons_note="stockanalysis.com：32 位分析師平均目標價（2026-10-23）；Interested-party",
+    cons_fwd="px/pe_fwd_sa", cons_fwd_note="共識未來 12 個月 EPS＝現價 ÷ StockAnalysis 前瞻 P/E（FY2027 以後共識未找到）；比較窗為 2026-11～2027-10，故 B 用同窗的情境加權 2/12 × FY2026＋10/12 × FY2027",
+    ours=lambda L: "(" + "+".join(f"tp_w{s}*(2/12*PL!{XC[2026]}{XR[(s, 'eps')]}+10/12*PL!{XC[2027]}{XR[(s, 'eps')]})" for s in SC) + ")",
+    eps28={s: f"PL!{XC[2028]}{XR[(s, 'eps')]}" for s in SC}, hist=f"B{_h + 2}:B{_h + 11}", fmt="#,##0.00",
+    method="DCF：股東現金流＝non-GAAP EPS ×（1 − tp_g ÷ tp_roe），tp_r 10%、tp_g 4%、tp_roe 近三年平均 GAAP ROE 28.6%（再投資率約 14%）；基準日 2026 年底，FY2027 起逐年折現，FY2032 後永續。"
+           "Comparable：Cisco、Ciena、Celestica、HPE、Credo 前瞻 P/E 中位數 × 12 個月後前瞻 EPS。偏誤方向：同業成長低於 Arista，中位數偏低（Comparable 偏保守）；non-GAAP EPS 排除股票薪酬（偏高）；"
+           "C 情境 FY2030 起淨利率收斂到 FY2029 × 0.8（Assumed）；歷史分位用十年 GAAP 落後 P/E（companiesmarketcap）；永續價值占 DCF 價值過半（Sens 頁）。")
+assert nn + 9 < 40, nn
+TP.add_tp_sens(SE, nn + 5, TPL, "#,##0.00")
+TP.dump_rowmap(TPL, TPN, XH, XR, XC, nn + 5)
+TP.yellow_inputs(IN)
+RD.cell(len(lines) + 1, 1, "v0.2（2026-10-25）：(1) 目標價改為 DCF 與 Comparable 加權（Val 頁最前面「0. 目標價」：0.1 DCF 股東權益現金流、0.2 Comparable 同業前瞻 P/E、0.3 結論；Val 既有內容整體下移，公式一併改寫）；"
+        "v0.1.1 的「0. 目標價與上檔空間」改名「舊法：規則值情境加權（參考）」保留在 Val 頁末。(2) PL 頁末新增三情境延伸到 FY2032：FY2030 起為收斂法，非驅動因子推導（上游市場層只到 CY2029＝FY2029）。"
+        "(3) 現價維持 2026-10-23 收盤 172.37（補第二來源 prices.csv）。(4) In 頁 J 節新增目標價參數（黃底，Andy 可改）；Sens 頁新增 tp_r、tp_g、tp_w_dcf 對加權目標價的影響。FY2025–FY2029 既有數字不變。")
+RD.cell(len(lines) + 2, 1, "情境對應（v0.2 延伸期）：A＝順利（基準顆數）、B＝平平（CY2028 ×0.8、CY2029 ×0.85）、C＝不如預期（CY2028–29 ×0.6）；FY2027 三情境相同，情境差從 FY2028 起。")
 
 order =["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

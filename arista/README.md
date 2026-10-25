@@ -1,4 +1,4 @@
-# arista/ — Arista Networks（ANET）收支與估值模型 v0.1.1
+# arista/ — Arista Networks（ANET）收支與估值模型 v0.2
 
 Arista 的 AI 營收＝AI 後端 scale-out 交換器市場（`markets/network`）× 乙太網路占比 × Arista 份額（含前端與 scale-across 附掛）；非 AI（雲端前端、企業、園區）另依成長率推。股價約 37 倍前瞻 EPS：在 NVIDIA（Spectrum-X）與白牌夾擊下，Arista 的份額路徑能否支撐這個倍數？
 
@@ -9,9 +9,10 @@ AI 半導體 Project **網通系統端的樣板**（AVGO 為網通晶片端）�
 | 檔案 | 內容 |
 |---|---|
 | `build_arista.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_Arista模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `tp_v2.py` | v0.2 目標價與延伸期的共用函式（PL 延伸到 FY2032 的收斂法、Val 第 0 節 DCF＋Comparable、Sens 目標價參數；各公司資料夾各放一份相同內容） |
+| `dist/20261025_Arista模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_Arista模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261025_Arista模型_v0.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 arista/build_arista.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（scale-out 交換器市場、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）；**不修改它們**。不依賴 #93（`avgo/`）。
 
@@ -45,7 +46,25 @@ AI 半導體 Project **網通系統端的樣板**（AVGO 為網通晶片端）�
 
 ## 估值（Val）
 
-- **目標價（12 個月，情境加權 A 30%／B 50%／C 20%）：US$174.08，上檔空間 +1.0%**（情境 A／B／C 隱含價 US$181.31／US$181.31／US$145.13；Val 頁「0. 目標價與上檔空間」，放在 Val 既有內容之後；權重為 In 頁 tp_wA／tp_wB／tp_wC，Assumed，Andy 可改）。方法：P/E：各情境 FY2027 GAAP 換算 EPS（non-GAAP EPS × g2n）× 十年（2016–2025 年底）GAAP P/E 依循環位置取分位（以本模型營收最高年判定：A、B 中段＝中位數，C 見頂＝25 分位；companiesmarketcap 與 Macrotrends 兩來源平均）。十年倍數含 2021 年與 2024–2025 年高成長期的高倍數，偏誤方向為高估；FY2027 三情境 EPS 相同，A、B 隱含價相同、C 只差在倍數；隱含價約為 FY2027 年底的價格、未折現，當作 12 個月目標價時偏高。
+**目標價（v0.2：DCF 與 Comparable 加權，DCF 權重 50%）：US$99.46，上檔空間 −42.3%**（現價 US$172.37，2026-10-23 收盤）。Val 頁最前面「0. 目標價」：
+
+| 項目 | 值 |
+|---|---|
+| DCF 情境每股價值（A／B／C，基準日 2026 年底） | 92.62／78.85／60.50 |
+| DCF 目標價（情境加權 30／50／20，推到 12 個月後） | US$87.24 |
+| 同業前瞻 P/E 中位數（Cisco 20.7、Ciena 30.8、Celestica 16.6、Hewlett Packard Enterprise（含 Juniper） 12.2、Credo 20.2） | 20.2x |
+| 12 個月後的前瞻 EPS（情境加權） | 5.53 |
+| **Comparable 目標價（市場主流同業法）** | **US$111.68**（上檔 −35.2%） |
+| **目標價（DCF 與 Comparable 加權）** | **US$99.46**（上檔 −42.3%） |
+| 市場共識目標價 | US$243.59（stockanalysis.com：32 位分析師平均目標價（2026-10-23）；Interested-party） |
+| 與共識差距：EPS 因素（我們 ÷ 共識前瞻 EPS 4.65 − 1） | +12.6% |
+| 與共識差距：倍數因素（共識目標價隱含 52.4x vs 同業 20.2x） | +159.4% |
+| 價格帶（DCF 不如預期～順利） | US$66.55～US$101.88 |
+| 歷史倍數檢查：現價 ÷ FY2028 EPS（28.8x／31.3x／34.7x）的十年分位 A／B／C | 24%／28%／33% |
+
+- 方法：DCF：股東現金流＝non-GAAP EPS ×（1 − tp_g ÷ tp_roe），tp_r 10%、tp_g 4%、tp_roe 近三年平均 GAAP ROE 28.6%（再投資率約 14%）；基準日 2026 年底，FY2027 起逐年折現，FY2032 後永續。Comparable：Cisco、Ciena、Celestica、HPE、Credo 前瞻 P/E 中位數 × 12 個月後前瞻 EPS。偏誤方向：同業成長低於 Arista，中位數偏低（Comparable 偏保守）；non-GAAP EPS 排除股票薪酬（偏高）；C 情境 FY2030 起淨利率收斂到 FY2029 × 0.8（Assumed）；歷史分位用十年 GAAP 落後 P/E（companiesmarketcap）；永續價值占 DCF 價值過半（Sens 頁）。
+- 延伸期：上游市場層結束後，**FY2030 起為收斂法，非驅動因子推導**（PL 頁末「三情境延伸到 FY2032」，橘底）。情境對應：A＝順利、B＝平平、C＝不如預期。
+- 舊的規則值目標價改名「舊法：規則值情境加權（參考）」保留在 Val 頁，不再叫目標價。 Comparable 同業（Cisco、HPE 等）成長遠低於 Arista，中位數 20x 低於 Arista 自身前瞻 37x；DCF 也低於現價（A 情境 FY2032 EPS 8.05、年增收斂到 6%，現價隱含更長的高成長期）。
 
 現價 $172.37（2026-10-23）÷ FY2027 EPS＝31.5x、÷ FY2028 EPS：A 28.8x、B 31.3x、C 34.7x。十年 GAAP P/E（companiesmarketcap、Macrotrends 兩來源）：25 分位 28.7x、中位數 35.8x、75 分位 43.0x。循環位置以本模型營收最高年判定（A、B 到 FY2029 仍成長＝中段；C 見頂於 FY2027）。規則值隱含價（約 FY2027 年底）：A、B $181（+5%）、C $145（−16%）。以 Andy 先驗合理 25x × FY2027 EPS 計 $137（−21%）。
 
@@ -56,7 +75,25 @@ AI 半導體 Project **網通系統端的樣板**（AVGO 為網通晶片端）�
 - 2027 共識未找到（付費）；FY2025 non-GAAP 淨利為原報值（公司 2026 年起改稅額方法，重編全年值未找到）。
 - 十年 P/E 含高成長期溢價；前瞻 P/E 歷史待 Bloomberg。R4 產業部署路徑未建。
 
-## v0.1.1（2026-10-25）：補目標價
+## v0.2（2026-10-25）：目標價改為 DCF 與 Comparable 加權、延伸到 FY2032
+
+依工作單（Andy 2026-10-25 11:18、11:20、11:28、11:53）：
+
+1. **Val 頁最前面「0. 目標價」**（0.1 DCF、0.2 Comparable、0.3 結論；列標籤依工作單逐字）。Val 既有內容整體下移 51 列，全活頁簿指向 Val 的公式與定義名稱一併改寫（`tp_v2.py` 的 `shift_rows`），重算值與上一版逐格對應相同（現價相關格除外）。上一版的「0. 目標價與上檔空間」改名「舊法：規則值情境加權（參考）」保留。
+2. **PL 頁末「三情境延伸到 FY2032」**：既有年度引用推導區塊，**FY2030 起為收斂法，非驅動因子推導**（橘底）：營收年增線性收斂到 FY2032 的 tp_g±tp_gd，淨利率收斂到中段（A 維持、B 中點、C 十年平均或最後一年 × nm10_k），股數沿用最後一年變動。
+3. **In 頁末**新增黃底輸入（Andy 可改）：tp_r 10%、tp_g 4%、tp_gd 2pt、tp_roe 28.61%（Derived）、tp_w_dcf 50%、nm10_k 0.8（Assumed）、cons_tp US$243.59（Interested-party）。
+4. **Sens 頁**新增 tp_r ±1pt、tp_g ±1pt、tp_w_dcf 0.3／0.7 對加權目標價的影響（第 21–25 列）。
+5. **現價**更新到 2026-10-23 收盤 US$172.37。
+
+既有年度的 EPS 與上一版相同（PL 頁既有儲存格逐格相同）：
+
+| 情境 | FY2025A | FY2026 | FY2027 | FY2028 | FY2029 | FY2030（收斂） | FY2031（收斂） | FY2032（收斂） |
+|---|---|---|---|---|---|---|---|---|
+| A | 2.98 | 4.09 | 5.47 | 5.99 | 6.56 | 7.09 | 7.59 | 8.05 |
+| B | 2.98 | 4.09 | 5.47 | 5.51 | 6.14 | 6.47 | 6.65 | 6.67 |
+| C | 2.98 | 4.09 | 5.47 | 4.97 | 5.39 | 5.35 | 5.17 | 4.87 |
+
+## v0.1.1（2026-10-25）：補目標價（已由 v0.2 取代，以下為當時內容）
 
 Val 頁新增「0. 目標價與上檔空間」（列標籤依工作單；為不位移既有儲存格，放在 Val 既有內容之後），In 頁最後新增目標價情境權重 tp_wA／tp_wB／tp_wC（0.3／0.5／0.2，Assumed）；HTML 估值章第一個區塊為本節。除新增列、README 頁標題與引用上游成品的檔名文字外，原有儲存格的值與 v0.1 相同（`tools/xlsx_diff.py` 比對）。
 

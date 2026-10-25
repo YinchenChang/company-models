@@ -1,4 +1,4 @@
-# 智邦科技（2345）收支與估值模型 v0.1（AI 半導體 Project：網通系統端，白牌交換器 ODM）
+# 智邦科技（2345）收支與估值模型 v0.2（AI 半導體 Project：網通系統端，白牌交換器 ODM）
 # 用法：python3 accton/build_accton.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不平移。金額：十億新台幣（NT$B）；市場以美元輸入、以匯率 fx 換算；EPS：新台幣。
 # 口徑：稅後淨利（歸屬母公司；公司公告）。業外與稅以「淨利 ÷ 營業利益」一個係數涵蓋（比照 quanta/）。
@@ -8,7 +8,9 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))   # 本資料夾的 tp_v2.py
 import cycle_position as CP
+import tp_v2 as TP
 import valuation_rule as VR
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
@@ -155,11 +157,20 @@ inp("br_sw26", "法人：FY2026 交換器 ÷ 營收", "%", None, 0.48, None, "In
 inp("dell_top2", "2025 AI 後端乙太網路：Celestica＋NVIDIA 合計份額", "%", None, 0.50, None, "Interested-party", "Dell'Oro 2026-03-10", "—")
 
 sec("I. 價格與估值")
-inp("px", "股價（2026-10-22 收盤）", "NT$", None, 1775, None, "Interested-party", "鉅亨網 2345（10-22 收盤 1,775、前收 1,815）", "永豐金 AI 投資、財報狗同值；10-23 收盤：未找到")
+inp("px", "股價（2026-10-22 收盤）", "NT$", None, 1775, None, "Interested-party", "鉅亨網 2345（10-22 收盤 1,775、前收 1,815）；臺灣證券交易所 STOCK_DAY（115/10/22 收盤 1,775.00，2026-10-25 查詢）", "永豐金 AI 投資、財報狗同值；工作單：台股無 10-23 收盤時用 10-22（證交所當月資料只到 10/22）；10-23 收盤：未找到")
 inp("pe_ttm", "近 12 月 P/E（鉅亨，10-22）", "x", None, 27.88, None, "Interested-party", "鉅亨網", "財報狗 27.89")
 inp("tp_wA", "目標價情境權重 A（樂觀）", "%", None, 0.3, None, "Assumed", "Andy 可改", "三個權重合計應為 1")
 inp("tp_wB", "目標價情境權重 B（基準）", "%", None, 0.5, None, "Assumed", "Andy 可改", "—")
 inp("tp_wC", "目標價情境權重 C（下檔）", "%", None, 0.2, None, "Assumed", "Andy 可改", "—")
+
+sec("J. 目標價參數（v0.2 新增：DCF 與 Comparable 加權、FY2029 後收斂法；黃底＝Andy 可改）")
+inp("tp_r", "DCF 折現率（股東權益成本）", "%", None, 0.10, None, "Assumed", "Andy 可改（工作單 2026-10-25：美、台、日、韓同一值）", "Sens 頁 ±1pt")
+inp("tp_g", "長期成長率（FY2032 後永續；PL 延伸期 B 情境的收斂目標）", "%", None, 0.04, None, "Assumed", "Andy 可改（工作單 2026-10-25）", "Sens 頁 ±1pt（只改 DCF 再投資率與永續成長，不改 PL 收斂路徑）")
+inp("tp_gd", "延伸期 A／C 情境長期成長相對 tp_g 的差（A＋、C−）", "pt", None, 0.02, None, "Assumed", "工作單 2026-10-25：A＝tp_g＋2pt、C＝tp_g−2pt", "—")
+inp("tp_roe", "近三年平均 ROE（再投資率＝tp_g ÷ tp_roe）", "%", None, 0.4475, None, "Derived", "永豐金 AI 投資 2345 頁（年度 ROE）：2023 39.11%、2024 39.01%、2025 56.13%，平均 44.75%（資料商，Interested-party）", "stockanalysis 近 12 月 ROE 65.58%")
+inp("tp_w_dcf", "目標價中 DCF 的權重（其餘為 Comparable）", "%", None, 0.5, None, "Assumed", "Andy 可改（Andy 2026-10-25 11:53 定 50／50）", "Sens 頁 0.3／0.7")
+inp("nm10_k", "延伸期 C 情境淨利率目標＝FY2029 淨利率 × 本係數（十年平均未找到）", "x", None, 0.8, None, "Assumed", "工作單：找不到十年平均用最後一年 × 0.8。2016–2021 年淨利率：未找到", "參考：永豐金 AI 投資稅後淨利率 2022 10.58%、2023 10.60%、2024 10.87%、2025 10.59%（四年平均 10.66%）")
+inp("cons_tp", "市場共識目標價（FactSet）", "NT$", None, 3500, None, "Interested-party", FS + "：FactSet 10 位分析師目標價 3,500（2026-10-14，鉅亨網）", "stockanalysis（13 位）平均 3,234.92（頁面現價日期不一致，不採）；賣方有目標價誘因，只作對照")
 
 r = 4
 for srow in rows:
@@ -353,11 +364,11 @@ V = wb.create_sheet("Val")
 V["A1"] = "Val — P/E 估值（新台幣）。結論用「現價 ÷ FY2027、FY2028 EPS（模型）」與十年 P/E 規則值（年底落後 P/E，基準為 FY2027 EPS）；目標價為三情境規則值隱含價的加權"
 V["A2"] = "循環位置：智邦不是設備股，不套設備市場見頂年；以本模型營收最高的會計年度為見頂年（比照 Arista、廣達；FY(t)＝CY(t)，不平移）。營收到 FY2029 仍在增加時，見頂年未知，判為中段"
 O = 10  # 第 0 節占用的列數
-V.cell(4, 1, "0. 目標價與上檔空間").font = BOLD
+V.cell(4, 1, "舊法：規則值情境加權（參考）").font = BOLD
 hdr(V, 5, ["項目", "值", "相對現價或權重 B", "權重 C", "說明"])
-V.cell(6, 1, "目標價（12 個月，情境加權）"); V.cell(7, 1, "上檔空間（目標價 ÷ 現價 − 1）")
+V.cell(6, 1, "規則值情境加權價（參考，非目標價）"); V.cell(7, 1, "相對現價（參考）")
 V.cell(8, 1, "情境 A 隱含價（樂觀）"); V.cell(9, 1, "情境 B 隱含價（基準）"); V.cell(10, 1, "情境 C 隱含價（下檔）")
-V.cell(11, 1, "情境權重 A／B／C"); V.cell(12, 1, "目標價方法")
+V.cell(11, 1, "情境權重 A／B／C"); V.cell(12, 1, "舊法說明")
 V.cell(13, 1, "  權重合計（應為 1）")
 for c in range(1, 6): V.cell(6, c).fill = KEY
 
@@ -556,7 +567,7 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("智邦科技（2345）收支與估值模型 v0.1（AI 半導體 Project：網通系統端，白牌交換器 ODM）　2026-10-25", True),
+lines = [("智邦科技（2345）收支與估值模型 v0.2（AI 半導體 Project：網通系統端，白牌交換器 ODM）　2026-10-25", True),
  ("版本：v0.1（初版）。智邦在白牌 AI 乙太網路交換器的份額在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
  ("模型命題：智邦的 AI 交換器營收＝AI 資料中心乙太網路交換器市場（scale-out × 乙太網路占比＋非 NVIDIA scale-up 交換匣；本專案網通模型）× 白牌占比 × 智邦在白牌中的份額；另一半營收是 AWS Trainium 加速卡等網路應用產品（Trainium 顆數 × 每顆營收）；非 AI 另依成長率推。股價約 12 倍模型 FY2027 EPS（共識 FY2027 約 15 倍）：800G → 1.6T 換代與 Trainium 第二供應商之下，份額撐得住嗎？", False),
  ("核心問題：2027–28 年智邦在白牌交換器與 Trainium 加速卡的份額各掉一截，EPS 少多少；現價隱含的路徑合不合理。", False), ("", False),
@@ -571,6 +582,36 @@ lines = [("智邦科技（2345）收支與估值模型 v0.1（AI 半導體 Proje
  ("已知限制：(1) FY2026 產品別拆分（網路應用產品 50%）與交換器的 AI 比例為 Assumed，決定 AI 交換器與 Trainium 兩條線的起點；(2) 白牌占比與份額相對值皆為 Assumed；(3) 網通模型 Trainium 顆數為 Assumed（年出貨未找到）；(4) 記憶體與 PCB 改客供（代購）會壓低營收、墊高毛利率，本版未拆；(5) 3Q26 財報未出，3Q 毛利率與費用為假設；(6) 十年 P/E 兩來源 2016–2017 年只有一個；(7) R4 產業部署路徑未建（Recon 預留列）。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
+
+# ---------------- v0.2：三情境延伸到 FY2032、Val 第 0 節（DCF 與 Comparable 加權）、Sens 目標價參數 ----------------
+XH, XR, XC = TP.extend_pl(PL, PB, FC, FYS, 2029, {"rev": "rev", "ni": "ni", "sh": "sh_", "eps": "eps"}, "NT$",
+    "三情境延伸到 FY2032（v0.2；FY2025A–FY2029 引用上方推導區塊，FY2030 起為收斂法，非驅動因子推導；收斂年度為橘底）",
+    "上游市場層（markets/network、台積電顆數）只到 CY2029＝FY2029；FY2030 起：營收年增由 FY2029 年增線性收斂到 FY2032 的長期成長（A＝tp_g＋tp_gd、B＝tp_g、C＝tp_g−tp_gd），"
+    "淨利率由 FY2029 線性收斂到中段利潤率（A＝FY2029、B＝FY2029 與 C 目標的中點、C＝FY2029 × nm10_k；十年平均未找到），股數沿用 FY2029 年變動")
+_h = next(r for r in range(1, V.max_row + 1) if V.cell(r, 1).value == "P/E：十年歷史倍數")
+TPL, TPN = TP.add_tp_section(wb, V,
+    eps={s: [f"PL!{XC[y]}{XR[(s, 'eps')]}" for y in range(2027, 2033)] for s in SC}, e_mon=12,
+    fwd={s: [(f"PL!{XC[2027]}{XR[(s, 'eps')]}", "2/12"), (f"PL!{XC[2028]}{XR[(s, 'eps')]}", "10/12")] for s in SC},
+    fwd_note="會計年度＝日曆年：約 12 個月後（2027-10 底）的未來 12 個月＝2027-11～2028-10（2/12 × FY2027＋10/12 × FY2028）",
+    peers=[("Arista Networks", "ANET", 37.06, "2026-10-23", "stockanalysis.com 統計頁（Forward PE）", "Interested-party（資料商彙整賣方預估）"),
+           ("Celestica", "CLS", 16.65, "2026-10-23", "同上", "Interested-party（同上）"),
+           ("緯穎", "6669.TW", 11.73, "2026-10-21", "同上（台股頁，價格延遲）", "Interested-party（同上）"),
+           ("廣達", "2382.TW", 11.52, "2026-10-21", "同上（台股頁，價格延遲）", "Interested-party（同上）")],
+    peer_note="法人常用的資料中心網通與 AI 伺服器 ODM 同業（Arista 為品牌交換器、Celestica 為白牌交換器直接競爭者、緯穎與廣達為台灣 AI 伺服器 ODM）；不含 A 股（Andy 11:53）。前瞻 P/E 為資料商的未來 12 個月共識 EPS",
+    cons_tp="cons_tp", cons_note="FactSet：10 位分析師目標價（2026-10-14，鉅亨網轉述）；Interested-party",
+    cons_fwd="2/12*cons_eps27+10/12*cons_eps28", cons_fwd_note="同權重的共識 EPS：2/12 × FactSet FY2027 中位數 120.82＋10/12 × FY2028 中位數 170.57",
+    eps28={s: f"PL!{XC[2028]}{XR[(s, 'eps')]}" for s in SC}, hist=f"B{_h + 2}:B{_h + 11}", fmt="#,##0",
+    method="DCF：股東現金流＝EPS ×（1 − tp_g ÷ tp_roe），tp_r 10%、tp_g 4%、tp_roe 近三年平均 44.75%（再投資率約 9%）；基準日 2026 年底，FY2027 起逐年折現，FY2032 後永續。"
+           "Comparable：Arista、Celestica、緯穎、廣達前瞻 P/E 中位數 × 12 個月後前瞻 EPS。偏誤方向：伺服器 ODM（緯穎、廣達）毛利率與成長低於智邦，中位數偏低（Comparable 偏保守）；"
+           "C 情境 FY2030 起淨利率收斂到 FY2029 × 0.8（Assumed）；歷史分位用十年年底落後 P/E（companiesmarketcap）；永續價值占 DCF 價值過半（Sens 頁）。")
+assert nn + 9 < 40, nn
+TP.add_tp_sens(SE, nn + 5, TPL, "#,##0")
+TP.dump_rowmap(TPL, TPN, XH, XR, XC, nn + 5)
+TP.yellow_inputs(IN)
+RD.cell(len(lines) + 1, 1, "v0.2（2026-10-25）：(1) 目標價改為 DCF 與 Comparable 加權（Val 頁最前面「0. 目標價」：0.1 DCF 股東權益現金流、0.2 Comparable 同業前瞻 P/E、0.3 結論；Val 既有內容整體下移，公式一併改寫）；"
+        "v0.1 的「0. 目標價與上檔空間」改名「舊法：規則值情境加權（參考）」保留。(2) PL 頁末新增三情境延伸到 FY2032：FY2030 起為收斂法，非驅動因子推導（上游市場層只到 CY2029＝FY2029）。"
+        "(3) 現價維持 2026-10-22 收盤 1,775（10-23 收盤未取得；補證交所為第二來源）。(4) In 頁 J 節新增目標價參數（黃底，Andy 可改）；Sens 頁新增 tp_r、tp_g、tp_w_dcf 對加權目標價的影響。FY2025–FY2029 既有數字不變。")
+RD.cell(len(lines) + 2, 1, "情境對應（v0.2 延伸期）：A＝順利（基準顆數）、B＝平平（CY2028 ×0.8、CY2029 ×0.85）、C＝不如預期（CY2028–29 ×0.6）；FY2027 三情境相同，情境差從 FY2028 起。本版未做先驗，無 Andy 合理 P/E 對照。")
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
