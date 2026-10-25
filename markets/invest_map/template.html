@@ -9,7 +9,7 @@
   --paper:#F5F6F8; --surface:#FFFFFF; --sunken:#EEF1F5; --ink:#0F1B2D; --muted:#5A6577; --faint:#8A94A3;
   --rule:#D8DDE4; --rule-strong:#AEB7C3; --navy:#12284A; --navy-ink:#E9EEF6; --navy-muted:#9FB0C9;
   --brass:#8C6A2E; --pos:#1D7A52; --pos-bg:#E3F2EA; --watch:#9A6410; --watch-bg:#F7EDDB; --neg:#B0281F; --neg-bg:#F8E4E2;
-  --none:#6B7480; --none-bg:#ECEEF1; --bar:#2F4C78; --bar-soft:#C9D4E4;
+  --none:#6B7480; --none-bg:#ECEEF1; --gap:#5B3C88; --gap-bg:#ECE6F5; --bar:#2F4C78; --bar-soft:#C9D4E4;
   --f-display:"Noto Serif TC","Songti TC",Georgia,serif;
   --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
   --f-mono:"IBM Plex Mono","SFMono-Regular",Menlo,Consolas,monospace;
@@ -18,12 +18,12 @@
   --paper:#0C1118; --surface:#121923; --sunken:#0F151E; --ink:#E4E9F0; --muted:#9BA6B6; --faint:#6F7A8A;
   --rule:#243041; --rule-strong:#3A4A60; --navy:#0A1626; --navy-ink:#E4EAF3; --navy-muted:#8296B3;
   --brass:#C9A35C; --pos:#55C08E; --pos-bg:#11291F; --watch:#E2A64A; --watch-bg:#2B2213; --neg:#F07A70; --neg-bg:#301717;
-  --none:#9AA3AF; --none-bg:#1C2430; --bar:#7FA2D6; --bar-soft:#2A3A52; color-scheme:dark}}
+  --none:#9AA3AF; --none-bg:#1C2430; --gap:#B79AE6; --gap-bg:#251C36; --bar:#7FA2D6; --bar-soft:#2A3A52; color-scheme:dark}}
 :root[data-theme="dark"]{
   --paper:#0C1118; --surface:#121923; --sunken:#0F151E; --ink:#E4E9F0; --muted:#9BA6B6; --faint:#6F7A8A;
   --rule:#243041; --rule-strong:#3A4A60; --navy:#0A1626; --navy-ink:#E4EAF3; --navy-muted:#8296B3;
   --brass:#C9A35C; --pos:#55C08E; --pos-bg:#11291F; --watch:#E2A64A; --watch-bg:#2B2213; --neg:#F07A70; --neg-bg:#301717;
-  --none:#9AA3AF; --none-bg:#1C2430; --bar:#7FA2D6; --bar-soft:#2A3A52; color-scheme:dark}
+  --none:#9AA3AF; --none-bg:#1C2430; --gap:#B79AE6; --gap-bg:#251C36; --bar:#7FA2D6; --bar-soft:#2A3A52; color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.55;margin:0}
@@ -106,7 +106,7 @@ main{padding-block:26px 56px}
 .chip.r:hover{border-color:var(--ink)}
 .chip .d{width:7px;height:7px;border-radius:50%;flex:none;background:var(--none)}
 .chip .t{font-family:var(--f-mono);font-size:10.5px;color:var(--faint)}
-.d.機會{background:var(--pos)} .d.觀察{background:var(--watch)} .d.偏貴{background:var(--neg)} .d.未估值{background:var(--none)}
+.d.機會{background:var(--pos)} .d.觀察{background:var(--watch)} .d.偏貴{background:var(--neg)} .d.未估值{background:var(--none)} .d.收支不足{background:var(--gap)}
 .legend{display:flex;flex-wrap:wrap;gap:16px;font-size:12px;color:var(--muted);align-items:center}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .facility{padding:14px 16px;color:var(--muted);font-size:13px}
@@ -128,7 +128,8 @@ tr:hover td{background:var(--sunken)}
 .mini{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
 .pill{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:2px;white-space:nowrap}
 .pill.機會{color:var(--pos);background:var(--pos-bg)} .pill.觀察{color:var(--watch);background:var(--watch-bg)}
-.pill.偏貴{color:var(--neg);background:var(--neg-bg)} .pill.未估值{color:var(--none);background:var(--none-bg)}
+.pill.偏貴{color:var(--neg);background:var(--neg-bg)} .pill.未估值{color:var(--none);background:var(--none-bg)} .pill.收支不足{color:var(--gap);background:var(--gap-bg)}
+.gate{font-size:11.5px;white-space:nowrap} .gate.ok{color:var(--pos)} .gate.no{color:var(--gap);font-weight:600}
 .up{color:var(--pos)} .dn{color:var(--neg)}
 .flag{font-size:11px;color:var(--watch);display:block}
 .filters{display:flex;flex-wrap:wrap;gap:6px}
@@ -141,7 +142,7 @@ tr:hover td{background:var(--sunken)}
 .rng .z{position:absolute;top:0;bottom:0;width:1px;background:var(--ink);opacity:.55}
 .rng .rs{position:absolute;top:6px;height:6px;background:var(--bar-soft)}
 .rng .c{position:absolute;top:3px;width:12px;height:12px;border-radius:50%;transform:translateX(-50%);border:2px solid var(--surface)}
-.rng .c.機會{background:var(--pos)} .rng .c.觀察{background:var(--watch)} .rng .c.偏貴{background:var(--neg)}
+.rng .c.機會{background:var(--pos)} .rng .c.觀察{background:var(--watch)} .rng .c.偏貴{background:var(--neg)} .rng .c.收支不足{background:var(--gap)}
 .rng .o{position:absolute;top:1px;font-size:10px;font-family:var(--f-mono);color:var(--muted)}
 details summary{cursor:pointer;color:var(--muted);font-size:12px;list-style:none}
 details summary::-webkit-details-marker{display:none}
@@ -158,7 +159,7 @@ details[open] summary::before{content:"－ "}
 .chart .zl{stroke:var(--ink);stroke-opacity:.5;stroke-width:1}
 .chart .q{fill:var(--brass);font-size:11px;letter-spacing:.06em}
 
-.callouts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.callouts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .callout{background:var(--surface);border:1px solid var(--rule);padding:12px 14px;display:grid;gap:4px;font-size:12.5px;color:var(--muted);min-width:0}
 .callout b{color:var(--ink);font-size:13px}
 .def{display:grid;grid-template-columns:200px minmax(0,1fr);gap:0;border-top:1px solid var(--rule)}
@@ -289,7 +290,7 @@ const ratio=G("回本比值（實際 L ÷ 所需 L）｜機隊").base;
 $("#kpis").innerHTML=[
  ["研究覆蓋上市公司",D.valuation.length,"每家都有收支與估值模型"],
  ["可投資性：機會",tiers("機會").length,tiers("機會").map(v=>v.name).join("、")],
- ["可投資性：偏貴",tiers("偏貴").length,"算力平台 7 家中 6 家為模型賣出評等"],
+ ["偏貴／收支不足",tiers("偏貴").length+" / "+tiers("收支不足").length,"收支不足＝模型期間入不敷出，不論估值一律排除"],
  ["機隊回本比值",ratio.toFixed(2),"實際 L ÷ 所需 L；Tokenomics 判讀「未定」"]
 ].map(([k,v,s])=>`<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${esc(s)}</div></div>`).join("");
 
@@ -312,7 +313,8 @@ function renderMap(){
   const segs=n=>D.segments.filter(s=>s.layer===n);
   const layer=(code,title,fig,cap,inner,extra="")=>`<div class="layer"><div class="rail"><span class="code">${code}</span><h3>${title}</h3><div class="fig">${fig}</div><div class="cap">${cap}</div></div><div>${inner}${extra}</div></div>`;
   const grid=list=>`<div class="segs">${list.map(segCard).join("")}</div>`;
-  const extraModel=`<div class="note" style="padding:0 16px 14px">OpenAI、Anthropic 未上市，只列在地圖；其 P×Q 回本比值見 company-models 各自模型。</div>`;
+  const pm=D.meta.private_models||{};
+  const extraModel=`<div class="note" style="padding:0 16px 14px">OpenAI、Anthropic 未上市，只列在地圖。完整收支模型：${Object.keys(pm).map(k=>`<a href="${D.meta.pages}models/${k}.html" target="_blank" rel="noopener">${k==="openai"?"OpenAI":"Anthropic"}（${esc(pm[k])}）</a>`).join("、")}</div>`;
   $("#v-map").innerHTML=`
   <div class="head"><span class="label">視角 01</span><h2>供應鏈地圖：每 1 GW 的錢怎麼流</h2>
   <p>由上往下是資金流向：模型商向使用者收費，付租金給算力平台；算力平台以資本支出向資料中心供應鏈採購；IT 設備的成本再往下藏著代工與設備。每層的金額取自 Tokenomics ${esc(D.meta.tk_version)}，公司依 AI半導體 候選母體與算力收支模型歸位。</p></div>
@@ -322,11 +324,13 @@ function renderMap(){
     <div class="st"><div class="t">模型商營收 P×Q（每 GW · 年）</div><div class="v">$${rev.base.toFixed(1)}B <small>第一年</small></div><div class="r">壽命期平均 ${life.base.toFixed(1)}（${life.lo.toFixed(1)}–${life.hi.toFixed(1)}）</div></div>
     <div class="st"><div class="t">機隊回本比值</div><div class="v">${ratio.toFixed(2)} <small>未定</small></div><div class="r">實際 L ÷ 所需 L；&lt;1 代表價格下跌快於回本所需</div></div>
   </div>
-  <div class="legend"><span><span class="chip r" style="pointer-events:none"><span class="d 機會"></span>有模型</span>點選開公司檔案</span>
-   <span><span class="d 機會 chip" style="padding:0;border:0;width:8px;height:8px;border-radius:50%"></span>機會</span>
+  <div class="legend"><span><span class="chip r" style="pointer-events:none">公司名</span>深色實框＝有模型，點選開公司檔案</span>
+   <span><span class="chip" style="pointer-events:none">公司名</span>淺色框＝候選母體、尚未建模</span>
+   <span style="color:var(--muted)">圓點顏色＝可投資性：</span>
+   <span><span class="d 機會" style="width:8px;height:8px;border-radius:50%;display:inline-block"></span>機會</span>
    <span><span class="d 觀察" style="width:8px;height:8px;border-radius:50%;display:inline-block"></span>觀察</span>
    <span><span class="d 偏貴" style="width:8px;height:8px;border-radius:50%;display:inline-block"></span>偏貴</span>
-   <span><span class="chip" style="pointer-events:none">未建模</span>候選母體中、尚未建模</span>
+   <span><span class="d 收支不足" style="width:8px;height:8px;border-radius:50%;display:inline-block"></span>收支不足</span>
    <span>不可替代 ●●● 高 → ●○○ 低</span></div>
   <div>
   ${layer("L5","AI 模型商",`$${rev.base.toFixed(1)}B <small>/GW·年 營收</small>`,"P×Q：牌價 × m × L ×（1 − 折扣）× 服務算力產出。收入池的源頭。",grid(segs("L5 模型商")),extraModel)}
@@ -379,7 +383,7 @@ function scatter(){
   g+=`<line class="zl" x1="${m.l}" x2="${W-m.r}" y1="${Y(0)}" y2="${Y(0)}"/>`;
   g+=`<text x="${(m.l+W-m.r)/2}" y="${H-6}" text-anchor="middle">地位分數 →</text><text transform="translate(14 ${(m.t+H-m.b)/2}) rotate(-90)" text-anchor="middle">中心空間（隱含價 ÷ 現價 − 1）</text>`;
   g+=`<text class="q" x="${W-m.r-6}" y="${m.t+14}" text-anchor="end">高地位 · 現價未反映</text><text class="q" x="${W-m.r-6}" y="${H-m.b-8}" text-anchor="end">高地位 · 現價已超前</text>`;
-  const col={機會:"var(--pos)",觀察:"var(--watch)",偏貴:"var(--neg)"};
+  const col={機會:"var(--pos)",觀察:"var(--watch)",偏貴:"var(--neg)",收支不足:"var(--gap)"};
   const placed=[];
   pts.sort((a,b)=>b.x-a.x).forEach(p=>{
     const cx=X(p.x), cy=Y(p.y);
@@ -394,24 +398,26 @@ function scatter(){
 let invFilter="全部";
 function renderInvest(){
   const w=D.params;
-  const order={機會:0,觀察:1,偏貴:2,未估值:3};
+  const order={機會:0,觀察:1,偏貴:2,收支不足:3,未估值:4};
   const list=D.valuation.filter(v=>invFilter==="全部"||v.tier===invFilter).sort((a,b)=>(order[a.tier]-order[b.tier])||((b.cu??-9)-(a.cu??-9)));
   const cnt=t=>D.valuation.filter(v=>v.tier===t).length;
   $("#v-invest").innerHTML=`
   <div class="head"><span class="label">視角 03</span><h2>可投資性：現價反映了多少</h2>
-  <p>中心空間＝各模型主口徑的隱含價 ÷ ${esc(D.meta.price_date)} 收盤價 − 1，約為一至兩年後的價位、未折現。分級：中心 ≥ ${pct(w.tier_center,0)} 且下檔 ≥ ${pct(w.tier_bear,0)} 為「機會」；中心 &lt; ${pct(w.tier_rich,0)} 為「偏貴」；其餘「觀察」。這是研究模型的輸出，不是投資建議。</p></div>
+  <p><b>兩道關卡，順序固定。</b>第一關「收支」：模型期間（2026 起約五年）的現金收支合計為負，即入不敷出、有資金缺口，最終分級一律為「收支不足」，不看估值。第二關「評價」：中心空間＝各模型主口徑的隱含價 ÷ ${esc(D.meta.price_date)} 收盤價 − 1，約為一至兩年後的價位、未折現。分級：中心 ≥ ${pct(w.tier_center,0)} 且下檔 ≥ ${pct(w.tier_bear,0)} 為「機會」；中心 &lt; ${pct(w.tier_rich,0)} 為「偏貴」；其餘「觀察」。這是研究模型的輸出，不是投資建議。</p></div>
   <div class="callouts">
+   <div class="callout"><b>收支關卡排除 ${cnt("收支不足")} 家</b>${D.valuation.filter(v=>v.tier==="收支不足").map(v=>esc(v.name)).join("、")}。其中 ${D.valuation.filter(v=>v.tier==="收支不足"&&v.vtier==="機會").map(v=>esc(v.name)).join("、")||"—"} 估值上屬「機會」，因入不敷出而排除。半導體模型多只到淨利，以「各情境淨利皆為正」通過，現金流本專案未建立。</div>
    <div class="callout"><b>方法衝突：記憶體三家</b>主口徑 P/B 規則值顯示 SK 海力士 ${pct(V["000660"].cu)}、三星 ${pct(V["005930"].cu)}、美光 ${pct(V["MU"].cu)}；P/E 規則值對照則為 ${pct(V["000660"].alt)}、${pct(V["005930"].alt)}、${pct(V["MU"].alt)}。差異來自 2027 年 ROE 遠高於十年歷史。</div>
    <div class="callout"><b>替代口徑：NVIDIA、Broadcom、Ibiden</b>模型的十年倍數規則值不適用或未算，改用 Andy 先驗的合理 P/E。NVIDIA 的先驗 25x 為近 12 月口徑，套在前瞻 EPS 偏保守。</div>
    <div class="callout"><b>價格已大幅偏離模型日</b>${D.valuation.filter(v=>v.flag).map(v=>`${esc(v.name)} ${pct(v.move)}`).join("、")}。模型尚未反映期間的消息；分級依新價格計算，判讀前應先更新模型。</div>
   </div>
   <div class="panel"><div class="ph"><h3>地位 × 可投資性</h3><span class="note">右上：產業位置強、現價仍低於模型隱含價。超出 +150% 以三角形標在上緣。</span></div><div class="pb chart">${scatter()}</div></div>
-  <div class="panel"><div class="ph"><h3>估值區間 · 機會 ${cnt("機會")} · 觀察 ${cnt("觀察")} · 偏貴 ${cnt("偏貴")} · 未估值 ${cnt("未估值")}</h3>
-   <div class="filters">${["全部","機會","觀察","偏貴","未估值"].map(l=>`<button class="fbtn" data-if="${l}" aria-pressed="${l===invFilter}">${l}</button>`).join("")}</div></div>
-  <div class="tbl"><table><thead><tr><th>公司</th><th>分級</th><th class="n">現價</th><th class="n">中心價</th><th class="n">中心空間</th><th class="n">下檔空間</th><th>下檔 ～ 中心（−100% ～ +150%）</th><th>方法 · 依據</th></tr></thead>
+  <div class="panel"><div class="ph"><h3>收支 → 評價 · 機會 ${cnt("機會")} · 觀察 ${cnt("觀察")} · 偏貴 ${cnt("偏貴")} · 收支不足 ${cnt("收支不足")}</h3>
+   <div class="filters">${["全部","機會","觀察","偏貴","收支不足"].map(l=>`<button class="fbtn" data-if="${l}" aria-pressed="${l===invFilter}">${l}</button>`).join("")}</div></div>
+  <div class="tbl"><table><thead><tr><th>公司</th><th>分級</th><th>收支關卡</th><th class="n">現價</th><th class="n">中心價</th><th class="n">中心空間</th><th class="n">下檔空間</th><th>下檔 ～ 中心（−100% ～ +150%）</th><th>方法 · 依據</th></tr></thead>
   <tbody>${list.map(v=>`<tr id="r-${esc(v.tk)}">
    <td class="co"><button class="linkish" data-open="${esc(v.tk)}"><b>${esc(v.name)}</b></button><span class="t">${esc(v.tk)}</span><span class="s">${esc(v.seg)}</span></td>
-   <td><span class="pill ${esc(v.tier)}">${esc(v.tier)}</span></td>
+   <td><span class="pill ${esc(v.tier)}">${esc(v.tier)}</span>${v.tier==="收支不足"&&v.vtier&&v.vtier!=="未估值"?`<span class="co"><span class="s">評價：${esc(v.vtier)}</span></span>`:""}</td>
+   <td><span class="gate ${v.gate==="不通過"?"no":"ok"}">${esc(v.gate)}</span><span class="co"><span class="s">${v.gbasis==="淨利"?"淨利（無現金流）":"合計 "+(v.gsum==null?"—":v.gsum.toLocaleString("en-US",{maximumFractionDigits:1}))}</span></span></td>
    <td class="n">${CCY[v.ccy]||""}${px(v.price,v.ccy)}<span class="co"><span class="s">${esc(v.price_date)}</span></span></td>
    <td class="n">${v.center==null?"—":(CCY[v.ccy]||"")+px(v.center,v.ccy)}</td>
    <td class="n ${cls(v.cu)}">${pct(v.cu)}</td><td class="n ${cls(v.bu)}">${pct(v.bu)}</td>
@@ -419,6 +425,7 @@ function renderInvest(){
    <td style="min-width:240px">${esc(v.method)}${v.flag?`<span class="flag">${esc(v.flag)}：模型價 ${CCY[v.ccy]||""}${px(v.model_px,v.ccy)}（${esc(v.model_date)}），其後 ${pct(v.move)}</span>`:""}
     <details><summary>依據與來源</summary><div class="det">
      ${v.note?`<div>${esc(v.note)}</div>`:""}
+     <div><b>收支關卡</b>：${esc(v.gate)}｜${esc(v.glabel)}｜${esc(v.gseries)}｜${esc(v.gsrc)}</div>
      ${v.alt!=null?`<div><b>對照口徑</b>：${esc(v.altlbl)} → ${pct(v.alt)}</div>`:""}
      ${v.pe28?`<div><b>現價 ÷ 模型 FY2028 EPS（A／B／C）</b>：${esc(v.pe28)}x（模型日價格）</div>`:""}
      ${v.c1src?`<div><b>中心</b>：${esc(v.c1src)}${v.c2src?`；取低：${esc(v.c2src)}`:""}</div>`:""}
@@ -441,7 +448,17 @@ function renderProfiles(){
   });
   $("#v-profiles").innerHTML=h;
 }
-const DT=[["概要",["公司在做什麼","主要產品與營收占比"]],["產業與競爭",["市場定位與產業位置","同業與競爭態勢"]],["管理層",["管理層與經營風格"]],["動態與觀察",["近期重大事件","需要觀察的事項"]],["來源",["來源"]]];
+const DT=[["概要",["公司在做什麼","主要產品與營收占比"]],["產業與競爭",["市場定位與產業位置","同業與競爭態勢"]],["管理層",["管理層與經營風格"]],["動態與觀察",["近期重大事件","需要觀察的事項"]],["收支模型",null],["來源",["來源"]]];
+function modelPane(tk){
+  const v=V[tk];
+  if(!v.mfolder) return `<section class="dsec"><h3>收支模型</h3><p>本專案模型（${esc(v.mfile)}）尚在 PR 審查中，合併後放上網站。</p></section>`;
+  const base=D.meta.pages+"models/"+v.mfolder;
+  return `<section class="dsec"><h3>收支模型</h3>
+   <p>本專案的完整模型：<b>${esc(v.mfile)}</b>。網頁版為模型成品，Excel 為計算的權威版本，兩者數字一致。</p>
+   <div class="filters"><a class="fbtn" style="text-decoration:none;background:var(--ink);color:var(--surface);border-color:var(--ink)" href="${base}.html" target="_blank" rel="noopener">開啟完整模型（新分頁）</a><a class="fbtn" style="text-decoration:none" href="${base}.xlsx" target="_blank" rel="noopener">下載 Excel</a></div>
+   <ul><li>收支關卡：${esc(v.gate)}｜${esc(v.glabel)}｜${esc(v.gseries)}</li>
+   <li>模型內的現價為建模日 ${esc(v.model_date)}（${CCY[v.ccy]||""}${px(v.model_px,v.ccy)}）；本網站的空間以 ${esc(v.price_date)} 收盤 ${CCY[v.ccy]||""}${px(v.price,v.ccy)} 重算。</li></ul></section>`;
+}
 let lastFocus=null, curTk=null;
 function decorateMix(root){
   root.querySelectorAll(".ptbl").forEach(t=>{
@@ -452,13 +469,14 @@ function decorateMix(root){
   });
 }
 function paneHtml(pf,i){
+  if(!DT[i][1]) return modelPane(curTk);
   return DT[i][1].map(s=>`<section class="dsec${s==="近期重大事件"?" ev":""}"><h3>${s}</h3>${pf.sections[s]||'<p class="note">（未填）</p>'}</section>`).join("");
 }
 function openDrawer(tk,tab){
   const p=P[tk], v=V[tk], pf=PF[tk]; if(!p)return;
   curTk=tk; lastFocus=document.activeElement;
   const m=pf?pf.meta:{};
-  const stats=[["產業位置",`${esc(p.seg)}`],["地位分數",`${f1(p.score)} · 第 ${p.rank} 名`],["可投資性",`<span class="pill ${esc(v.tier)}">${esc(v.tier)}</span>`],["中心空間",v.cu==null?"—":`<span class="${cls(v.cu)}">${pct(v.cu)}</span>`]];
+  const stats=[["產業位置",`${esc(p.seg)}`],["地位分數",`${f1(p.score)} · 第 ${p.rank} 名`],["可投資性",`<span class="pill ${esc(v.tier)}">${esc(v.tier)}</span> <span class="gate ${v.gate==="不通過"?"no":"ok"}">收支${v.gate==="不通過"?"不通過":"通過"}</span>`],["中心空間",v.cu==null?"—":`<span class="${cls(v.cu)}">${pct(v.cu)}</span>`]];
   $("#drawer").innerHTML=`<div class="dh"><div class="row1"><div><div class="sub">${esc(p.layer)} · ${m.listing||esc(p.tk)}</div><h2 id="dname">${esc(p.name)}</h2></div><button class="close" id="dclose">關閉 Esc</button></div>
    <div class="one">${pf?pf.oneliner:"公司檔案撰寫中。"}</div>
    ${pf?`<div class="dmeta" style="color:var(--navy-muted)">${["name_full","hq","founded","employees","fiscal_year_end","asof"].filter(k=>m[k]).map(k=>`<span class="mi"><span>${{name_full:"全名",hq:"總部",founded:"成立",employees:"員工",fiscal_year_end:"會計年度結束",asof:"資料日"}[k]}</span><b style="color:var(--navy-ink)">${m[k]}</b></span>`).join("")}</div>`:""}</div>
@@ -482,6 +500,7 @@ function renderMethod(){
    ${row("Tokenomics",`<code>${esc(D.meta.tk_file)}</code>（commit ${esc(D.meta.tk_commit)}），經官方取數工具快照：IF_CapexIT／IF_CapexFacility／IF_CapexTotal／IF_HoldEcon／L1_RevGW_PQ_VR200／L1_LTotalFleetVDisc／L1_LReqFleet_Full 等。每 GW＝IT 關鍵電力。`)}
    ${row("公司模型","company-models 各公司 <code>dist/*.xlsx</code> 的重算值，抽數程式記錄每個值的工作表與儲存格。Broadcom 讀 PR #93 分支（未合併）。")}
    ${row("候選母體","AI半導體 候選母體 v0.2.2（2026-10-24）：60 家、8 個次產業、次產業排序與公司重要性。權威在 AI半導體 Project。")}
+   ${row("收支關卡（第一關）","Andy 2026-10-25：入不敷出、有資金缺口者不買進，不論評價多低。判定：模型期間現金收支合計 &lt; 0 → 收支不足。口徑依模型：自由現金流（MAG、記憶體、MiniMax、智譜）；營運缺口（不含融資、不含還本；Oracle、CoreWeave、Nebius、WhiteFiber）；只有損益的半導體模型以各情境淨利皆為正判定。")}
    ${row("中心價","半導體 P/E 類：十年倍數規則值與 Andy 先驗合理 P/E 兩者取低；記憶體：P/B 規則值（P/E 規則值為對照）；設備股：共用循環位置規則；雲端與 neocloud：模型加權目標價；MiniMax：反向檢驗折現價值 ÷ 市值 × 模型日股價。")}
    ${row("下檔價","同一方法下最差情境（多為情境 C、FY2028）與中心價取低；雲端取情境區間下緣。")}
    ${row("股價",`${esc(D.meta.price_date)} 收盤，WebSearch 取得並記錄來源數。各模型內的現價為建模日（09-24 至 10-23），差距超過 20% 時標示。`)}

@@ -81,6 +81,15 @@ def main():
         for d in csv.DictReader(f):
             sources[d["ticker"]] = d
 
+    mx = json.load(open(os.path.join(HERE, "data", "models_extract.json"), encoding="utf-8"))
+    MFOLDER, MFILE = {}, {}
+    for tk_, v_ in mx.items():
+        folder = v_["model"].split("/")[0] if "/" in v_["model"] else None
+        if folder and glob.glob(os.path.join(ROOT, folder, "dist", "*.html")):
+            MFOLDER[tk_] = folder
+            MFILE[tk_] = os.path.basename(glob.glob(os.path.join(ROOT, folder, "dist", "*.html"))[0])
+        else:
+            MFILE[tk_] = os.path.basename(v_["model"])
     valuation = []
     for d in rows(wb["估值"]):
         tk = str(d["代號"])
@@ -92,7 +101,10 @@ def main():
             "model_px": num(p["模型內現價"]), "model_date": p["模型價日期"], "move": num(d["模型價日以來漲跌"]),
             "flag": d["價格變動旗標"] or "",
             "center": num(d["中心價"]), "bear": num(d["下檔價"]), "cu": num(d["中心空間"]), "bu": num(d["下檔空間"]),
-            "tier": d["分級"], "alt": num(d["對照口徑空間"]), "altlbl": d["對照口徑"] or "",
+            "tier": d["最終分級"], "vtier": d["分級"],
+            "mfolder": MFOLDER.get(tk), "mfile": MFILE.get(tk, ""),
+            "gate": d["收支關卡"], "gbasis": d["收支口徑"], "glabel": d["收支列（模型）"] or "", "gseries": d["收支序列"] or "",
+            "gsum": num(d["期間合計"]), "gmin": num(d["最小值"]), "gsrc": d["收支來源"] or "", "alt": num(d["對照口徑空間"]), "altlbl": d["對照口徑"] or "",
             "pe28": d["現價 ÷ 模型 FY2028 EPS（A／B／C）"] or "", "note": d["註記"] or "",
             "c1src": d["中心候選 1 來源"] or "", "c2src": d["中心候選 2 來源"] or "",
             "b1src": d["下檔候選 1 來源"] or "", "b2src": d["下檔候選 2 來源"] or "",
@@ -109,7 +121,10 @@ def main():
         "meta": {"version": os.path.basename(src).split("_")[-1].replace(".xlsx", ""),
                  "book": os.path.basename(src), "tk_file": snap["file"], "tk_version": snap["version"],
                  "tk_commit": snap["commit"][:7], "cm_commit": cm, "built": "2026-10-25",
-                 "price_date": "2026-10-23（台積電、廣達為 10-22）"},
+                 "price_date": "2026-10-23（台積電、廣達為 10-22）",
+                 "pages": "https://yinchenchang.github.io/company-models/",
+                 "private_models": {k: os.path.basename(glob.glob(os.path.join(ROOT, k, "dist", "*.html"))[0])
+                                    for k in ("openai", "anthropic") if glob.glob(os.path.join(ROOT, k, "dist", "*.html"))}},
         "pergw": pergw, "segments": segments, "position": position, "valuation": valuation,
         "nodes": nodes, "params": params,
         "profiles": load_all(os.path.join(HERE, "profiles")),

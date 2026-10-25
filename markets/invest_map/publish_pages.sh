@@ -9,6 +9,14 @@ URL=$(git -C "$ROOT" remote get-url origin)
 TMP=$(mktemp -d)
 cp "$ROOT/markets/invest_map/dist/index.html" "$TMP/index.html"
 touch "$TMP/.nojekyll"
+# 各公司完整收支模型（HTML＋Excel），以資料夾名為穩定網址：models/<資料夾>.html／.xlsx
+mkdir -p "$TMP/models"
+for d in "$ROOT"/*/dist; do
+  f=$(basename "$(dirname "$d")")
+  h=$(ls "$d"/*.html 2>/dev/null | head -1); x=$(ls "$d"/*.xlsx 2>/dev/null | head -1)
+  [ -n "$h" ] && cp "$h" "$TMP/models/$f.html"
+  [ -n "$x" ] && cp "$x" "$TMP/models/$f.xlsx"
+done
 printf '# AI 投資地圖（GitHub Pages 發布分支）\n\n本分支只放網站成品，由 main 的 `markets/invest_map/publish_pages.sh` 產生（來源 %s）。研究整理，非投資建議。\n' "$SHA" > "$TMP/README.md"
 cd "$TMP"
 git init -q -b gh-pages
