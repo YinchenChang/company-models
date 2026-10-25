@@ -28,6 +28,7 @@ on:
       - 'innolight/**'
       - 'avgo/**'
       - 'foxconn/**'
+      - 'avc/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -52,6 +53,7 @@ on:
       - 'innolight/**'
       - 'avgo/**'
       - 'foxconn/**'
+      - 'avc/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -93,6 +95,7 @@ jobs:
             "quanta|python3 quanta/build_quanta.py|quanta/dist"
             "innolight|python3 innolight/build_innolight.py|innolight/dist"
             "avgo|python3 avgo/build_avgo.py|avgo/dist"
+            "avc|python3 avc/build_avc.py|avc/dist"
             "foxconn|python3 foxconn/build_foxconn.py|foxconn/dist"
           )
           failed=0
