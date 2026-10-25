@@ -809,9 +809,9 @@ for lab, ref, mdl, src in (("12 個月後的前瞻 EPS（情境加權）vs 共�
 # --- README ---
 for rw in range(1, RD.max_row + 1):
     v_ = RD.cell(rw, 1).value
-    if isinstance(v_, str) and rw == 1: RD.cell(rw, 1, v_.replace("v0.1.1", "v0.2"))
+    if isinstance(v_, str) and rw == 1: RD.cell(rw, 1, v_.replace("v0.1.1", "v0.2.1"))
     elif isinstance(v_, str) and v_.startswith("估值："): RD.cell(rw, 1, V2["readme_val"] + "（v0.1.1 原估值說明，保留作參考：" + v_[3:] + "）")
-    elif isinstance(v_, str) and v_.startswith("版本："): RD.cell(rw, 1, "版本：v0.2（2026-10-25：目標價改為 DCF 與 Comparable 加權、三情境延伸到 FY2032；FY2025–FY2029 數值不變）。前版：" + v_[3:])
+    elif isinstance(v_, str) and v_.startswith("版本："): RD.cell(rw, 1, "版本：v0.2.1（2026-10-25：補上檔空間級距、投資建議、重點觀察（數值不變））。v0.2（2026-10-25：目標價改為 DCF 與 Comparable 加權、三情境延伸到 FY2032；FY2025–FY2029 數值不變）。前版：" + v_[3:])
 rn = RD.max_row + 1
 for t_ in V2["readme_add"]:
     RD.cell(rn, 1, t_); rn += 1
@@ -819,6 +819,26 @@ if os.environ.get("V2_ROWMAP"):
     import json as _json
     _json.dump({"XT": XT, "XH": XH, "XR": XR, "T": T, "EPSR": EPSR, "CFR": CFR, "TPS0": TPS0, "TPS_LAST": TPS_LAST, "RECV2": RECV2},
                open(os.environ["V2_ROWMAP"], "w"), ensure_ascii=False, indent=1)
+
+# ================= v0.2.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（工作單；Andy 2026-10-25 14:00、14:17） =================
+# 全部放在 Val、README 現有最後一列之後，不位移既有儲存格
+OBS = [
+       "目標價 NT$349.9（DCF 290.3、Comparable 409.5 各半），比現價 245（2026-10-22）高 42.8%，級距 25%–50%；Comparable 單獨為 67.2%。主因是 EPS 與倍數兩者：本模型 12 個月後前瞻 EPS 27.78 比共識前瞻 EPS 21.06 高 31.9%（兩者期間差約一年），同業（廣達、緯創、和碩、Jabil、Flex）前瞻 P/E 中位數 14.7 倍也高於現價隱含 11.6 倍；DCF 只高 18.5%，因 ROE 10.1% 接近折現率 10%（再投資率 39.7%）。",
+       "FY2027 EPS 26.71 比法人 22.0–25.0 高 6.9%–21.4%；淨利 ÷ 營業利益是顆數以外最敏感的變數（0.60 時 FY2027 EPS −9.1%，回到 FY2025 的 0.73 時 +10.6%）。3Q26 財報與法說（約 11 月中）的業外與稅率是第一個檢驗點。",
+       "FY2028 EPS A／B／C＝31.42／27.71／23.60，法人 28.0 落在 A 與 B 之間；份額相對值 0.75（廣達、緯創搶單）時 FY2028 EPS −14.3%，份額 1.15（Vera Rubin 市占目標五成）時 +8.5%。追蹤 Vera Rubin 整櫃出貨份額。"
+      ]   # 重點觀察（與 README.md 相同文字；數字取自重算後的 xlsx）
+_U = f"B{T['upw']}"
+GR = V.max_row + 3
+V.cell(GR - 1, 1, "0.4 上檔空間級距與投資建議（v0.2.1 新增；放在本頁最後以免位移既有儲存格；依「上檔空間：加權目標價」第 " + str(T["upw"]) + " 列）").font = BOLD
+tset(GR, "grade", "上檔空間級距", [f'=IF({_U}>0.5,"大於 50%",IF({_U}>0.25,"25%–50%",IF({_U}>=0,"0%–25%",IF({_U}>=-0.25,"0%～−25%",IF({_U}>=-0.5,"−25%～−50%","小於 −50%")))))', None, None], "General",
+     "以「上檔空間：加權目標價」分六級（Andy 2026-10-25 14:00）；負值區間同樣重要")
+tset(GR + 1, "rec", "投資建議", [f'=IF({_U}>0.5,"強力買進",IF({_U}>0.25,"買進",IF({_U}>=-0.25,"中立",IF({_U}>=-0.5,"放空","強力放空"))))', None, None], "General",
+     "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空（剛好 +25% 為中立、+50% 為買進、−25% 為中立、−50% 為放空）")
+rn = RD.max_row + 1
+RD.cell(rn, 1, f'="投資建議："&Val!B{GR + 1}&"（依上檔空間固定規則）"').font = BOLD
+OBS_ROW = rn + 1
+for i_, t_ in enumerate(OBS, 1):
+    RD.cell(rn + i_, 1, f"重點觀察 {i_}：" + t_)
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
