@@ -32,9 +32,8 @@ L1_HoldEconGW_GB200 # GB200 每 GW 年經濟持有成本（L1）
 L1_HoldEconGW_GB300 # GB300 每 GW 年經濟持有成本（L1）
 L1_HoldEconGW_VR200 # VR200 每 GW 年經濟持有成本（L1）
 L1_NvContentGW_VR200 # VR200 每 GW 的 NVIDIA 內容價值（NonNV 換算的近似參考）
-IF_NonNVRatio optional # 非 NVIDIA（Maia、Trainium、TPU）世代相對 VR 的等值比例 — Tokenomics 有 NonNV 頁但無 IF_ 介面名稱
-IF_NonNVCostRatio optional # 同上，成本比例（若 Tokenomics 日後以此名稱提供）
-IF_NonNV_Maia optional # Maia 100／200 對 NVIDIA 世代的等值比例（Tokenomics 尚未提供；本版依對照表 C2 以 Hopper × 1.0）
+IF_NonNV_Out_Maia # Maia 產出比（每 GW 產出 ÷ VR200；低／基準／高 3 格，Assumed；v21.0 起）— 只登錄、不切換：模型仍維持同期 NVIDIA 世代 × 1.0（MAG v0.2.2）
+IF_NonNV_Hold_Maia # Maia 持有成本比（每 GW 持有成本 ÷ VR200；低／基準／高 3 格，Assumed；v21.0 起）— 同上
 # MAG v0.2（Tokenomics v5.31；下游契約第 2 條第 2 項）：理論營收四層瀑布（四層一起取）與用途欄
 IFW_RevGWFleet_100 # 1 GW 參考機隊付費營收：100% 層（上限，不得作預測）
 IFW_RevGWFleet_Util # 同上：利用率層（上限檢查：每 MW 年收入 ÷ 此層 > 50% 示警）

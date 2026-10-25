@@ -11,7 +11,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT); sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from uno_q import Workbook
 IN, VA, AI = '輸入與假設', '評價_DCF與目標價', 'AI增量報酬'
-ap = argparse.ArgumentParser(); ap.add_argument('--old'); ap.add_argument('--kold'); ap.add_argument('--pace-old', type=float); ap.add_argument('--read', help='只讀這個 xlsx 的三情境數值並印出 JSON（不做拆解）'); ap.add_argument('--pace-old-high', type=float, help='積極情境速度舊值（與基準連動的公司才給）'); ap.add_argument('--corp-old', help='Alphabet 層級費用線 EBITDA 舊值（JSON 陣列）；給了才加「層級費用線重算」一步'); ap.add_argument('--json')
+ap = argparse.ArgumentParser(); ap.add_argument('--old'); ap.add_argument('--kold'); ap.add_argument('--pace-old', type=float); ap.add_argument('--read', help='只讀這個 xlsx 的三情境數值並印出 JSON（不做拆解）'); ap.add_argument('--pace-old-high', type=float, help='積極情境速度舊值（與基準連動的公司才給）'); ap.add_argument('--corp-old', help='Alphabet 層級費用線 EBITDA 舊值（JSON 陣列）；給了才加「層級費用線重算」一步'); ap.add_argument('--cap-old-snap', help='舊快照 JSON；給了則步驟 ①–③ 的上限檢查層名稱（IF_RevGWFleet、IFW_RevGWFleet_*、L1_RevGW_PQ_*）用舊值，最後一步才換成新值（v0.2.2；兩版都有第五列時用，取代 strip_pq）'); ap.add_argument('--json')
 a = ap.parse_args()
 ROIC_COL = 'CDEFG'[(json.load(open(os.path.join(ROOT, 'company.json'), encoding='utf-8')).get('capexModel') or {}).get('roicYear', 3)]  # 對外 AI ROIC 的錨定期欄（capexModel.roicYear；Microsoft 為 2）
 
@@ -50,6 +50,14 @@ def strip_pq(co, d):  # 移除 P×Q 名稱（快照與清單），Excel 即無�
     json.dump(sn, open(sp, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 
 
+def cap_old(co, d):  # v0.2.2：兩版都有 P×Q 名稱時，上限檢查層（不影響目標價）先用舊值，最後一步才換新值
+    if not a.cap_old_snap: return strip_pq(co, d)
+    sp = os.path.join(d, co['tokenomics']['snapshotFile']); sn = json.load(open(sp, encoding='utf-8')); old = json.load(open(a.cap_old_snap, encoding='utf-8'))['items']
+    for n in list(sn['items']):
+        if (n == 'IF_RevGWFleet' or n.startswith('IFW_RevGWFleet_') or n.startswith('L1_RevGW_PQ_')) and n in old and not old[n].get('missing'): sn['items'][n] = old[n]
+    json.dump(sn, open(sp, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+
+
 def set_pace(co, v):
     co['scenarios']['mwPath']['pace']['base'] = v; co['scenarios']['mw31']['base'] = v; co['defaults']['mw31'] = v
     if a.pace_old_high is not None: co['scenarios']['mwPath']['pace']['high'] = a.pace_old_high; co['scenarios']['mw31']['high'] = a.pace_old_high
@@ -69,10 +77,10 @@ if not (a.old and a.kold and a.pace_old): sys.exit('需要 --old --kold --pace-o
 with tempfile.TemporaryDirectory() as tmp:
     final = json.load(open(os.path.join(ROOT, 'company.json'), encoding='utf-8'))['scenarios']['mwPath']['pace']['base']
     steps = [('v0.2', None),
-             ('① 換快照（k、C10 固定）', lambda: variant(tmp, 's1', lambda co, d: (fix_k(co), set_pace(co, a.pace_old), set_corp(co), strip_pq(co, d)))),
-             ('② k 隨成本重算', lambda: variant(tmp, 's2', lambda co, d: (set_pace(co, a.pace_old), set_corp(co), strip_pq(co, d)))),
-             ('③ C10 重解', lambda: variant(tmp, 's3', lambda co, d: (set_corp(co), strip_pq(co, d))))]
-    if a.corp_old: steps.append(('④ 層級費用線依新營收重算', lambda: variant(tmp, 's3b', lambda co, d: strip_pq(co, d))))
+             ('① 換快照（k、C10 固定）', lambda: variant(tmp, 's1', lambda co, d: (fix_k(co), set_pace(co, a.pace_old), set_corp(co), cap_old(co, d)))),
+             ('② k 隨成本重算', lambda: variant(tmp, 's2', lambda co, d: (set_pace(co, a.pace_old), set_corp(co), cap_old(co, d)))),
+             ('③ C10 重解', lambda: variant(tmp, 's3', lambda co, d: (set_corp(co), cap_old(co, d))))]
+    if a.corp_old: steps.append(('④ 層級費用線依新營收重算', lambda: variant(tmp, 's3b', lambda co, d: cap_old(co, d))))
     steps.append((f"{'⑤' if a.corp_old else '④'} 上限檢查層（新增第五列）", lambda: variant(tmp, 's4', lambda co, d: None)))
     res = []
     for nm, f in steps:

@@ -3983,6 +3983,11 @@ if TK:
             _key = f"TK_{_short(_nm)}"
             _tkrow(_key, _nm, _it['label'], _it['unit'], "—", _vals, _loc, _fmt(_it['unit'], _vals))
             wb.defined_names[_key] = _DN(_key, attr_text=f"'Tokenomics_取數'!$G${r - 1}")
+        elif _it['kind'] == 'vector':  # MAG v0.2.2：Tokenomics v21.0 起的 IF_NonNV_Out_／Hold_*（Interface 單列 3 格：低／基準／高；只登錄、模型不引用）
+            _vals = list(_it['values'])
+            _key = f"TK_{_short(_nm)}"
+            _tkrow(_key, _nm, _it['label'], _it['unit'], "—", _vals, f"{_it['ref']}（低／基準／高＝C／D／E）", _fmt(_it['unit'], _vals))
+            wb.defined_names[_key] = _DN(_key, attr_text=f"'Tokenomics_取數'!$G${r - 1}")
         elif _it['kind'] == 'by_name':  # MAG v0.2：IFC_ 用途欄——只列本快照所取名稱的用途（文字，不建具名範圍，不進公式）
             for _n2 in _TKS['items']:
                 if _n2 in _it['values']:

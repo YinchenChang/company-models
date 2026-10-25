@@ -1897,7 +1897,7 @@
   "files": {
    "facts": "data/alphabet_facts_20261008.json",
    "kEvidence": "data/kevidence_alphabet_20261008.json",
-   "tokenomicsSnapshot": "data/tokenomics_snapshot_v19.0.json",
+   "tokenomicsSnapshot": "data/tokenomics_snapshot_v21.4.json",
    "tokenomicsNames": "data/tokenomics_names.txt",
    "consensus": "data/consensus_googl_20261008.json"
   },
@@ -2867,9 +2867,9 @@
  },
  "tokenomics": {
   "_note": "算力相關的產業與物理層資料只引用 Tokenomics（YinchenChang/Tokenomics）的 IF_（不含 IF_Hdr*）、IFW_（四層瀑布，上限檢查用）、IFC_（用途欄）與 L1_ 名稱，經版本固定的快照檔讀入（tools/tokenomics/import_tokenomics.py）；模型主值取「基準」成本情境。Excel「Tokenomics_取數」分頁建具名範圍 TK_<名稱>_<世代>，每 MW 年收入、營運成本與資本支出列引用之。Tokenomics 每 GW＝IT 關鍵電力。",
-  "snapshotFile": "data/tokenomics_snapshot_v19.0.json",
-  "version": "v19.0",
-  "commit": "1916a06465bb0c7efed21383075f2ae098508e24",
+  "snapshotFile": "data/tokenomics_snapshot_v21.4.json",
+  "version": "v21.4",
+  "commit": "3ac70acfda55adcc5c7c323c0fe1f690c5a4e99f",
   "names": [
    "IF_HoldEcon",
    "IF_HoldAcct",
@@ -2903,20 +2903,18 @@
    "L1_HoldEconGW_GB300",
    "L1_HoldEconGW_VR200",
    "L1_NvContentGW_VR200",
+   "IF_NonNV_Out_TPU",
+   "IF_NonNV_Hold_TPU",
    "IFW_RevGWFleet_100",
    "IFW_RevGWFleet_Util",
    "IFW_RevGWFleet_Prod",
    "IFW_RevGWFleet_Life",
    "IFC_Use",
-   "IF_NonNVRatio",
-   "IF_NonNVCostRatio",
    "L1_RevGW_PQ_VR200",
    "L1_RevGW_PQ_VR200_Lo",
    "L1_RevGW_PQ_VR200_Hi"
   ],
   "optional": [
-   "IF_NonNVRatio",
-   "IF_NonNVCostRatio",
    "L1_RevGW_PQ_VR200",
    "L1_RevGW_PQ_VR200_Lo",
    "L1_RevGW_PQ_VR200_Hi"
