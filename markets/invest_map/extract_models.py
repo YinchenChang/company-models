@@ -95,25 +95,59 @@ V2_COMP = r"^Comparable 目標價（市場主流同業法）"
 V2_CONS = r"^市場共識目標價"
 V2_SCEN12 = r"DCF 情境價值推到 12 個月後"          # A／B／C 三欄（部分樣板無此列 → 改讀價格帶）
 V2_BAND = r"^價格帶（DCF 不如預期～順利）"          # 數值版：C 情境、A 情境
-V2_OLD = r"^(規則值情境加權價|舊法隱含價（情境加權)"                      # 舊法（參考，非目標價）
+V2_OLD = r"^(規則值情境加權價|舊法隱含價（情境加權)"
+V2_UP = r"^上檔空間：加權目標價"                    # 模型自算（÷ 模型現價 − 1）；網站直接引用
+V2_UPC = r"^上檔空間：Comparable 目標價"
+V2_TIER6 = r"^上檔空間級距"                          # 文字列（#164 起；尚未補的模型沒有）
+V2_REC = r"^投資建議"                                # 文字列（#164 起；尚未補的模型沒有）                      # 舊法（參考，非目標價）
+
+
+def text_cell(b, sheet, pat):
+    """首格符合 pat 的列，取其後第一個文字值（投資建議、級距等）；沒有該列回傳 None。"""
+    for cells in b.rows(sheet):
+        if re.search(pat, str(cells[0][1])):
+            for c, v in cells[1:]:
+                if isinstance(v, str) and v.strip():
+                    return {"value": v.strip(), "cell": f"{sheet}!{c}", "file": b.rel}
+            return None
+    return None
+
+
+def semis_px(b):
+    """模型現價（上檔空間的分母）：Val 頁「現價（日期…）」優先；記憶體、台積電等放 In 頁。"""
+    for sheet, pat in (("Val", r"^現價（\d{4}-\d{2}-\d{2}"), ("In", r"股價（"), ("In", r"現價（"), ("Val", r"^現價（")):
+        if sheet not in b.wb.sheetnames:
+            continue
+        try:
+            return model_px(b, sheet, pat)
+        except (KeyError, IndexError):
+            continue
+    raise KeyError(f"{b.rel} 找不到模型現價")
 
 
 def semis_v2(b):
     """估值 v2 半導體模型：加權目標價、DCF、Comparable、共識、C 情境 DCF 價值（12 個月後）、舊法參考價、現價。"""
     out = {}
-    for k, pat in (("tp", V2_TP), ("tp_dcf", V2_DCF), ("tp_comp", V2_COMP), ("tp_cons", V2_CONS), ("old_rule", V2_OLD)):
+    for k, pat in (("tp", V2_TP), ("tp_dcf", V2_DCF), ("tp_comp", V2_COMP), ("tp_cons", V2_CONS),
+                   ("up", V2_UP), ("up_comp", V2_UPC)):
         c, v = first_num_row(b, "Val", pat)[0]
         out[k] = cell(b, "Val", c, v)
+    try:
+        c, v = first_num_row(b, "Val", V2_OLD)[0]
+        out["old_rule"] = cell(b, "Val", c, v)
+    except KeyError:
+        pass                                              # 新建模型（v0.1 起即 v2）沒有舊法
+    for k, pat in (("tier6", V2_TIER6), ("rec", V2_REC)):
+        t = text_cell(b, "Val", pat)
+        if t:
+            out[k] = t
     try:
         nums = first_num_row(b, "Val", V2_SCEN12)
         out["dcf_A"], out["dcf_C"] = cell(b, "Val", *nums[0]), cell(b, "Val", *nums[2])
     except KeyError:
         nums = first_num_row(b, "Val", V2_BAND)          # B＝C 情境、C＝A 情境
         out["dcf_C"], out["dcf_A"] = cell(b, "Val", *nums[0]), cell(b, "Val", *nums[1])
-    try:                                                  # 現價：Val 頁「現價（日期 收盤）」，記憶體與台積電在 In 頁
-        out["model_px"] = model_px(b, "Val", r"^現價（\d{4}-\d{2}-\d{2}")
-    except KeyError:
-        out["model_px"] = model_px(b, "In", r"股價（")
+    out["model_px"] = semis_px(b)
     try:
         out["pe_fy28"] = [b.num("Val", [(0, r"^現價 ÷ FY2028 EPS（模型）")], i) for i in range(3)]
     except (KeyError, IndexError):
@@ -141,7 +175,8 @@ def cash_rows(b, sheet, label_pats, hdr_row=None):
     raise KeyError(f"{b.rel} {sheet} 找不到 {label_pats}")
 
 
-NI_LABELS = {"淨利", "歸屬母公司淨利", "歸母淨利", "淨利（歸屬母公司）", "淨利（不含權益證券損益）", "淨利（non-GAAP）"}
+NI_LABELS = {"淨利", "歸屬母公司淨利", "歸母淨利", "淨利（歸屬母公司）", "淨利（不含權益證券損益）", "淨利（non-GAAP）",
+             "歸屬淨利", "稅後淨利", "non-GAAP 淨利"}  # v0.5：新模型的列名
 
 
 def net_income_rows(b):
@@ -205,9 +240,22 @@ def cloud(b):
     }
 
 
-SEMIS_V2 = (("NVDA", "nvidia"), ("AVGO", "avgo"), ("000660", "skhynix"), ("005930", "samsung"), ("MU", "micron"),
-            ("2330", "tsmc"), ("ANET", "arista"), ("300308", "innolight"), ("2308", "delta"), ("2382", "quanta"),
-            ("4062", "ibiden"), ("6857", "advantest"), ("6146", "disco"))
+# 半導體個股（AI半導體 模型，估值 v2）：代號 → 模型資料夾。v0.5 起 52 家（2026-10-25 Andy 18:14：個股全部接入）。
+SEMIS_V2 = (("NVDA", "nvidia"), ("AVGO", "avgo"), ("AMD", "amd"), ("2454", "mediatek"), ("MRVL", "mrvl"),
+            ("3661", "alchip"), ("3443", "guc"),
+            ("000660", "skhynix"), ("005930", "samsung"), ("MU", "micron"), ("285A", "kioxia"), ("SNDK", "sndk"),
+            ("ANET", "arista"), ("300308", "innolight"), ("COHR", "cohr"), ("LITE", "lite"), ("300502", "eoptolink"),
+            ("2345", "accton"), ("FN", "fabrinet"), ("CRDO", "crdo"), ("ALAB", "alab"),
+            ("2330", "tsmc"), ("2449", "kyec"), ("AMKR", "amkr"),
+            ("4062", "ibiden"), ("2383", "emc"), ("3037", "unimicron"), ("8046", "nanya_pcb"), ("2368", "gce"),
+            ("300476", "victory_giant"),
+            ("ASML", "asml"), ("AMAT", "amat"), ("LRCX", "lrcx"), ("KLAC", "klac"), ("6857", "advantest"),
+            ("6146", "disco"), ("042700", "hanmi"), ("TER", "ter"), ("BESI", "besi"), ("6315", "towa"),
+            ("7729", "accretech"),
+            ("2317", "foxconn"), ("2382", "quanta"), ("3231", "wistron"), ("6669", "wiwynn"), ("DELL", "dell"),
+            ("SMCI", "smci"),
+            ("2308", "delta"), ("3017", "avc"), ("2301", "liteon"), ("3324", "auras"), ("3653", "jentech"))
+MEMORY_FCF = ("000660", "005930", "MU")   # 收支關卡用 Y 頁自由現金流（其餘先用淨利，待 AI半導體 補自由現金流列）
 
 
 def main():
@@ -220,7 +268,7 @@ def main():
     for tk, folder in SEMIS_V2:
         b = Book(a.avgo if (tk == "AVGO" and a.avgo) else dist_xlsx(folder))
         out[tk] = {"model": b.rel, "v2": True, **semis_v2(b)}
-    for tk in ("000660", "005930", "MU"):              # 記憶體：收支關卡用 Y 頁自由現金流
+    for tk in MEMORY_FCF:                              # 記憶體：收支關卡用 Y 頁自由現金流
         b = Book(dist_xlsx(dict(SEMIS_V2)[tk]))
         out[tk]["cash"] = dict(basis="現金流", **cash_rows(b, "Y", [r"^自由現金流"], hdr_row=3))
 
@@ -242,7 +290,7 @@ def main():
 
     # --- 收支關卡：只有損益的半導體模型 ---
     for tk, folder in SEMIS_V2:
-        if tk in ("000660", "005930", "MU"):
+        if tk in MEMORY_FCF:
             continue
         b = Book(a.avgo if (tk == "AVGO" and a.avgo) else dist_xlsx(folder))
         out[tk]["cash"] = dict(basis="淨利", **net_income_rows(b))

@@ -1,0 +1,86 @@
+---
+ticker: ASML
+name: ASML
+name_full: ASML Holding N.V.
+listing: Euronext Amsterdam｜ASML；Nasdaq ADR｜ASML
+hq: 荷蘭費爾德霍溫（Veldhoven）[外部・未經本專案檢核]
+founded: 1984 [外部・未經本專案檢核]
+employees: 本專案未建立
+fiscal_year_end: 12 月底
+asof: 2026-10-25
+---
+
+## 一句話定位
+晶片製造「微影」（把電路圖案投影到晶圓上）設備的龍頭，也是 EUV（極紫外光微影機）唯一供應者：靠賣微影機和替已裝機台做服務與升級賺錢，營收跟著晶圓廠的設備支出走 [本專案：asml/README.md 開頭；universe_ai_semis_v0.2.2.csv ASML 列]。
+
+## 公司在做什麼
+- 微影機是晶圓廠裡把電路圖「印」上晶圓的機器；製程愈先進、需要用 EUV 曝光的層數愈多 [本專案：ASML模型_v0.2.xlsx In!H109]。
+- 產品分兩大類：EUV（最先進，含新一代 High-NA EUV）與 DUV（深紫外光，較成熟，含浸潤式），另有量測檢測設備 [本專案：ASML模型_v0.2.xlsx Q!M23、N24]。
+- 第二條收入是「裝機基礎管理」（IBM）：替客戶已裝的機台做服務、零件與生產力升級，隨裝機量成長 [本專案：ASML模型_v0.2.xlsx In!H116]。
+- AI 的關係：2026 年 AI 帶動記憶體（含 HBM）與先進邏輯擴產，公司指引 2026 年記憶體系統營收約 +75%、邏輯約 +10% [本專案：ASML模型_v0.2.xlsx In!E98:E99]。
+- 客戶是晶圓代工與記憶體廠；台積電 2030 年、三星 2028 年才把 High-NA EUV 用於量產 [本專案：ASML模型_v0.2.xlsx In!H130]。
+
+## 主要產品與營收占比
+| 產品／部門 | 內容（白話） | 營收占比 | 期間 | 標記 |
+|---|---|---|---|---|
+| EUV 系統 | 極紫外光微影機（含 High-NA） | 35.5%（€11.6B ÷ €32.7B） | FY2025 | [本專案：ASML模型_v0.2.xlsx Q!B23、F6；占比為 Derived] |
+| 非 EUV 系統 | DUV 微影機（公司稱 €12.0B）與量測檢測（€825M） | 39.4%（€12.87B） | FY2025 | [本專案：ASML模型_v0.2.xlsx Q!B24、N24；占比為 Derived] |
+| 裝機基礎管理（IBM） | 服務、零件、升級 | 25.1%（€8.19B） | FY2025 | [本專案：ASML模型_v0.2.xlsx Q!F5、F6；占比為 Derived] |
+| 合計 | | 100%（€32.67B） | FY2025 | [本專案：ASML模型_v0.2.xlsx Q!F6] |
+
+- FY2026 錨點（前三季實績＋第四季指引中點）：營收 €44.46B，系統 72.5%、IBM 27.5%；EUV 系統約 €16.8B，占系統營收 52.2% [本專案：ASML模型_v0.2.xlsx Q!K4:K6、G23、G25；占比為 Derived]。
+- 用途別：邏輯占系統營收 FY2025 65.8%，2026 年單季降到 49%／51%／54%（記憶體拉貨） [本專案：ASML模型_v0.2.xlsx Q!B26:E26]。公司不揭露「AI 營收占比」：本專案未建立。
+- 毛利率 FY2025 52.8%、FY2026 錨點 55.7%（第三季單季 57.5%）；營業利益率 FY2025 34.6%、FY2026 錨點 41.8% [本專案：ASML模型_v0.2.xlsx Q!F8、K8、I8；asml/README.md 結果]。
+- 中國占總營收 FY2025 33%，公司稱 2026 年約 20% [本專案：ASML模型_v0.2.xlsx In!E107、E106]。
+
+## 市場定位與產業位置
+- EUV 唯一供應者，屬瓶頸型地位 [本專案：universe_ai_semis_v0.2.2.csv ASML 列，Verified]。
+- 規模：ASML 系統營收換成美元後，占 SEMI 2025 年晶圓前段設備（WFE）實績約 23.7% [本專案：ASML模型_v0.2.xlsx Recon!B20]。
+- 全球設備商排名第 1（TechInsights 2025 前五名列為 ASML、AMAT、Lam、TEL、KLA，全文付費、排序未明示）[本專案：先驗比對_TEL_20261023.md 第 1 節，Interested-party]。
+- 產能是供給面限制：公司稱 2027 年產能約 +30%、Low-NA EUV「至少 80 台」，2028 年在研究再 +30% [本專案：ASML模型_v0.2.xlsx In!E110:E111、E135]；本專案基準下 FY2027 需求 ÷ 產能為 91%，上限未生效 [本專案：asml/README.md 驅動因子 4]。
+- 定價：公司表示關鍵產品漲價自 2027 年生效、2028 年全年生效 [本專案：ASML模型_v0.2.xlsx In!H109]。
+- 客戶集中度：本專案未建立。
+
+## 管理層與經營風格
+| 職位 | 姓名 | 任職起 | 背景 |
+|---|---|---|---|
+| 總裁兼執行長（CEO） | Christophe Fouquet | 2024-04 任 CEO；2018 年起任管理委員會成員 | 本專案未建立 [外部・未經本專案檢核] |
+| 執行副總兼財務長（CFO） | Roger Dassen | 2018 年起任管理委員會成員 | [外部・未經本專案檢核] |
+| 執行副總兼營運長（COO） | Frédéric Schneider-Maunoury | 2010 年起任管理委員會成員 | [外部・未經本專案檢核] |
+| 執行副總兼技術長（CTO） | Marco Pieters | 2026 年起任管理委員會成員 | 新任技術長 [外部・未經本專案檢核] |
+
+- 資本配置：公司有 €12B 買回計畫，2026–2028 年執行；2026 年第三季單季買回約 2.8M 股 [本專案：ASML模型_v0.2.xlsx In!H125、H101]。
+- 2026 年起不再公布訂單 [本專案：asml/README.md 資料狀態]。
+- 投資 Mistral AI：2026 年第三季認列評價益 €509.7M（一次性）[本專案：ASML模型_v0.2.xlsx Q!I13]。
+- 其他經營風格與治理：本專案尚未研究。
+
+## 同業與競爭態勢
+| 同業 | 重疊領域 | 市占或規模 | 標記 |
+|---|---|---|---|
+| Canon、Nikon | DUV 微影機 | 本專案未建立 | — |
+| 應用材料、科林研發、東京威力科創、科磊 | 同屬晶圓前段設備（不同製程步驟，非直接競爭微影） | 同業排名第 2–5 名 | [本專案：先驗比對_TEL_20261023.md 第 1 節] |
+| 中國本土微影設備廠 | 成熟製程微影 | 本專案未建立 | — |
+
+- EUV 沒有競爭者；本專案判讀的主要變數不是份額，而是設備支出循環與中國占比下降 [本專案：asml/README.md 開頭、驅動因子 3]。
+- 中國：本專案基準 A 情境中國系統營收持平，占系統營收由 FY2026 20% 降到 FY2029 13.4%；C 情境每年 −25% [本專案：asml/README.md 驅動因子 3]。
+
+## 近期重大事件
+- 2026-10-23｜Euronext 收盤 €1,407.20｜模型日股價 [本專案：ASML模型_v0.2.xlsx In!E139]
+- 2026-10-14｜第三季財報：營收 €11,662M、毛利率 57.5%、淨利 €4,960M（含 Mistral AI 評價益 €509.7M）；第四季營收指引 €14.2–15.2B，全年指引 €44–45B｜全年指引下緣由 €43B 上調到 €44B [本專案：ASML模型_v0.2.xlsx Q!I6、I8、I14、I13；In!D89:F89、H94]
+- 2026-10-14｜中國占系統出貨由第二季 14% 升到第三季 23%（記憶體廠備貨）｜與公司「全年約 20%」並列 [本專案：ASML模型_v0.2.xlsx Q!D27:E27，aiweekly；In!H106]
+- 2026-07-18｜媒體報導美國商務部自 4 月起詢問 ASML 是否有 EUV 系統違規流入中國；ASML 否認，尚無處分｜出口管制風險 [外部新聞：Börse Express]
+- 2026-07-15｜第二季法說：全年營收指引上調為 €43–45B，2027 年產能約 +30% [本專案：ASML模型_v0.2.xlsx In!H94、H110]
+
+## 需要觀察的事項
+- 設備市場情境（WFE 2028 年的路徑）｜最敏感變數：情境 C 使 FY2028 EPS −36.5%、B −14.8% [本專案：asml/README.md 敏感度]｜各大晶圓廠 2027 年資本支出指引
+- 微影強度與價格（g_int，基準每年 +3%）｜0%／+6% 使 FY2028 EPS −5.0%／+5.2%；漲價 2027 年生效 [本專案：asml/README.md 敏感度；ASML模型_v0.2.xlsx In!E109]｜2027-01 第四季財報（含 2027 年毛利率指引）
+- 中國營收下降速度｜每年 ±10% 使 FY2028 EPS −2.8%／+3.1%；美國出口審查是否升級 [本專案：asml/README.md 敏感度]｜每季法說
+- 產能擴充與 High-NA 台數｜2028 年再 +30% 尚未確定，本專案只取一半 [本專案：asml/README.md 驅動因子 4]｜2027-06-10 投資人日（更新 2030 目標）
+- 模型 vs 共識｜FY2027 營收比共識低 7.1%、FY2028 EPS 比 eulerpool 隱含值低 13.2% [本專案：asml/README.md 對帳]｜2027-01 下旬第四季財報
+
+## 來源
+1. 本專案：`asml/README.md`（v0.2，2026-10-25）；`asml/dist/20261025_ASML模型_v0.2.xlsx`（In、Q、Recon 頁）
+2. 本專案：`先驗與比對/先驗比對_TEL_20261023.md`；`markets/invest_map/data/universe_ai_semis_v0.2.2.csv`
+3. [ASML Board of Management](https://www.asml.com/en/company/governance/board-of-management)（查閱 2026-10-25）
+4. [Börse Express：ASML: Rekordausblick trifft Exportverdacht](https://www.boerse-express.com/news/articles/asml-rekordausblick-trifft-exportverdacht-929561)（2026-07-18）
+5. [aiweekly：ASML Q3 China Equipment Sales 23% of System Shipments](https://aiweekly.co/alerts/asml-q3-china-equipment-sales-soar-109-qoq-to-23-of-system-shipments-as-memory)（2026-10-15）

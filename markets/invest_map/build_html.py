@@ -109,6 +109,7 @@ def main():
             "pe28": d["現價 ÷ 模型 FY2028 EPS（A／B／C）"] or "", "note": d["註記"] or "",
             "c1src": d["中心候選 1 來源"] or "", "c2src": d["中心候選 2 來源"] or "",
             "b1src": d["下檔候選 1 來源"] or "", "b2src": d["下檔候選 2 來源"] or "",
+            "tier6": d.get("上檔空間級距") or "", "recsrc": d.get("投資建議與上檔空間依據") or "",
         })
 
     nodes = [{"seg": d["次產業"], "order": d["次產業內優先序"], "name": d["公司"], "tk": str(d["代號"] or ""),
@@ -122,7 +123,7 @@ def main():
         "meta": {"version": os.path.basename(src).split("_")[-1].replace(".xlsx", ""),
                  "book": os.path.basename(src), "tk_file": snap["file"], "tk_version": snap["version"],
                  "tk_commit": snap["commit"][:7], "cm_commit": cm, "built": "2026-10-25",
-                 "price_date": "2026-10-23（台積電、廣達為 10-22）",
+                 "price_date": "半導體：各模型現價（2026-10-22／23）；雲端與模型商：2026-10-23 收盤",
                  "pages": "https://yinchenchang.github.io/company-models/",
                  "private_models": {k: os.path.basename(glob.glob(os.path.join(ROOT, k, "dist", "*.html"))[0])
                                     for k in ("openai", "anthropic") if glob.glob(os.path.join(ROOT, k, "dist", "*.html"))}},
