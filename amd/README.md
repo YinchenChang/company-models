@@ -1,4 +1,4 @@
-# amd/ — AMD（AMD）收支與估值模型 v0.2
+# amd/ — AMD（AMD）收支與估值模型 v0.2.1
 
 AMD 的資料中心 GPU 營收＝加速器市場（本專案加速器數量層 × 各平台每顆價）× AMD 金額份額。OpenAI、Meta 各 6 GW 與 Anthropic、Oracle 的大單在 2026 下半年起放量，但每 GW 附帶認股權證稀釋，HBM 漲價又壓 GPU 毛利率。股價約為 FY2027 共識 EPS 的 33 倍：要多少大單如期放量、毛利率守住多少，才撐得住現價。
 
@@ -10,11 +10,47 @@ AI 半導體 Project **運算層第三個模型**（GPU 側非 NVIDIA 份額）�
 |---|---|
 | `build_amd.py` | 產生器（參數與公式；唯讀取用上游成品） |
 | `tp_v2.py` | v0.2 目標價與延伸期的共用函式（PL 延伸到 FY2032 的收斂法、Val 第 0 節 DCF＋Comparable、Sens 目標價參數；各公司資料夾各放一份相同內容） |
-| `dist/20261025_AMD模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261025_AMD模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_AMD模型_v0.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
+| `dist/20261025_AMD模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
 
 建置：`python3 amd/build_amd.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`（UNITS）、`tsmc/dist`（顆數、情境係數，建置時與 UNITS 核對）、`nvidia/dist`（各平台每顆價、HBM 價格路徑）、`markets/chip_bridge/dist`（每 GW GPU 數）、`markets/equipment/dist`（見頂年度）；**不修改它們**。
+
+## v0.2.1（2026-10-25）：情境一致性修正
+
+依「情境與行業一致」稽核（2026-10-25）：v0.2 的 HBM 吸收比例 `abs_mem` 三情境相同（0.5），而上游 HBM 單價 A 最高，HBM 是 AMD 的成本，結果 FY2028–FY2031 EPS B＞A；FY2030–32 收斂目標淨利率 B 21.5%＞A 20.5%。修正：
+
+1. `abs_mem` 拆成 `abs_mem_A／_B／_C`（In 頁 K 節，Assumed）＝**A 0.2、B 0.5、C 0.7**（A 需求強、轉嫁最多）。FY2028 起讀本情境；FY2026–27 三情境共用 `abs_mem` 0.5（HBM 2027 價三情境相同），所以 FY2027 三情境仍相同。工作單預設 A 0.3：試算 FY2028 EPS A 11.07＜B 11.11（認股權證按 GW × um 歸屬，A 稀釋最多；照原邏輯不改），故 A 取 0.2。
+2. FY2030–32 收斂目標淨利率改為 A ≥ B ≥ C：C＝FY2029(C) × `nm10_k`；B＝MAX(B 原規則中點, C 目標)；A＝MAX(FY2029(A), B 目標)。
+3. 結果：FY2028–FY2032 EPS 全部 A ≥ B ≥ C。
+
+### 情境對照表
+
+| 項目 | A（順利） | B（平平） | C（不如預期） |
+|---|---|---|---|
+| 加速器顆數係數 | `um28_A`／`um29_A`（1.0／1.0） | `um28_B`／`um29_B`（0.8／0.85） | `um28_C`／`um29_C`（0.6／0.6） |
+| 來源 | `tsmc/dist` In（＝`markets/memory` SCEN_UNITS） | 同左 | 同左 |
+| HBM 混合單價 | `hbm_A_26–29` | `hbm_B_26–29` | `hbm_C_26–29` |
+| 來源 | `nvidia/dist` In（轉抄 `skhynix/dist` Mkt） | 同左 | 同左 |
+| 認股權證已歸屬 GW（2028–29） | `gw_28／29 × um_A` | `× um_B` | `× um_C` |
+| 循環位置見頂年 | `pk_A`（equipment Mkt） | `pk_B` | `pk_C` |
+| 公司特有：HBM 吸收比例（FY2028 起） | `abs_mem_A` 0.2 | `abs_mem_B` 0.5 | `abs_mem_C` 0.7 |
+| 公司特有：GPU 毛利率、份額係數、CPU／Client／Gaming／Embedded 成長 | 三情境相同 | 同左 | 同左 |
+| FY2030–32 收斂：營收年增目標 | tp_g＋2pt | tp_g | tp_g−2pt |
+| FY2030–32 收斂：淨利率目標 | MAX(FY2029 A, B 目標) | MAX(B 中點, C 目標) | FY2029 C × nm10_k |
+
+### 修正前後（US$；non-GAAP EPS）
+
+| 項目 | v0.2（修正前） | v0.2.1（修正後） |
+|---|---|---|
+| FY2027 EPS A／B／C | 9.14／9.14／9.14 | 9.14／9.14／9.14 |
+| FY2028 EPS A／B／C | 10.44／11.11／9.91 | 11.39／11.11／9.87 |
+| FY2029 EPS A／B／C | 11.72／12.52／10.95 | 12.67／12.52／10.88 |
+| DCF 情境價值 A／B／C | 142.47／140.71／110.27 | 153.36／140.71／109.56 |
+| 加權目標價（DCF 與 Comparable） | 173.18 | 177.10 |
+| 上檔空間（現價 516.79） | −66.5% | −65.7% |
+
+以下 v0.2 段落的數字為修正前，修正後以 dist 成品與本節為準。
 
 ## 驅動因子（全部唯讀上游）
 
@@ -23,7 +59,7 @@ AI 半導體 Project **運算層第三個模型**（GPU 側非 NVIDIA 份額）�
 | 加速器市場金額 × AMD 金額份額（AMD Instinct 顆數 0.75／1.5／2.0M，CY2026–28；情境係數 B 0.8／0.85、C 0.6） | `markets/memory` UNITS、`tsmc/dist`；每顆價讀 `nvidia/dist`（pa_amd 30K，區間 20–45K） | AMD GPU 基準營收 |
 | k_rec（Derived）＝FY2026 錨點 GPU 營收 ÷（AMD 市場層 CY2026 顆數 × pa_amd）＝0.673 | Units 頁；FY2027 起沿用 | GPU 營收水準 |
 | 世代售價係數（基準 1.0；Analogy 高＝HBM 容量比 1.25／1.5） | In 頁 D 節 | MI450／Helios 售價 |
-| HBM 價格指數 × 吸收比例 0.5（HBM 成本占 FY2026 認列售價 20.8%） | `nvidia/dist` 轉抄 `skhynix` 路徑（2027 +80%） | GPU 毛利率 |
+| HBM 價格指數 × 吸收比例（FY2026–27 0.5；FY2028 起 A 0.2／B 0.5／C 0.7；HBM 成本占 FY2026 認列售價 20.8%） | `nvidia/dist` 轉抄 `skhynix` 路徑（2027 +80%） | GPU 毛利率 |
 | GPU 毛利率 50%（Assumed）；非 GPU 毛利率 FY2026 校準（Derived） | In 頁 D 節；PL 各區塊 | 公司毛利率 |
 | 資料中心非 GPU（CPU 等）+50%／+25%／+15%；Client +3%、Gaming −10%、Embedded +10% | In 頁 E 節（Assumed） | 其他營收 |
 | 營業費用彈性 0.81（FY2026 推得）、稅率 13%（公司）、股數 +1%／年 | Q 頁、In 頁 G 節 | EPS |

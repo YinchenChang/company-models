@@ -1,4 +1,4 @@
-# 韓美半導體 Hanmi Semiconductor（042700.KS）收支與估值模型 v0.2（AI 半導體 Project 步驟 5：設備與材料）
+# 韓美半導體 Hanmi Semiconductor（042700.KS）收支與估值模型 v0.2.1（AI 半導體 Project 步驟 5：設備與材料）
 # 用法：python3 hanmi/build_hanmi.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年（FY2026＝2026-01～12）。金額：億韓元（₩億）；EPS：韓元。
 import sys, os, glob
@@ -79,7 +79,7 @@ inp("beta", "堆疊層數對每顆晶粒鍵合時間的影響（每多 4 層，�
 for y in range(25, 31):
     v, src = DS[f"hbp_{y}"]
     inp(f"hbp_{y}", f"混合鍵合占 HBM 鍵合產能比例 20{y}（Disco 模型：低／基準／高）", "%", v[0], v[1], v[2], "Assumed", src,
-        "TrendForce（2025-10-07，引 News1）：HBM4E 時代混合鍵合比重將大增；公司：16 層以上 HBM 約 2029 年量產時推出第二代混合鍵合機（2026-07-14 新聞稿）。本模型：情境 A 不納入、B 取基準、C 取高值；Sens 另列" if y == 25 else "同上")
+        "TrendForce（2025-10-07，引 News1）：HBM4E 時代混合鍵合比重將大增；公司：16 層以上 HBM 約 2029 年量產時推出第二代混合鍵合機（2026-07-14 新聞稿）。本模型（v0.2.1）：混合鍵合為行業技術變數，與 Disco 同字母——CY2028 起 A 取高值（導入快）、B 取基準、C 取低值（導入慢），CY2027 以前三情境皆取基準；Sens 另列不納入與基準" if y == 25 else "同上")
 inp("dlt", "已裝機鍵合產能每年汰換／升級比例（新機需求＝產能增量＋汰換）", "%/年", 0.05, 0.10, 0.15, "Assumed", "無：公司不揭露裝機量與機齡；HBM3E→HBM4→HBM4E 換代需新機（TC BONDER 4、4.5）", "與 Disco 模型的 dlt 同值（Assumed）")
 sec("C. 三家記憶體廠的 HBM 營收市占（讀 SK 海力士、三星、美光模型成品 In 頁；以營收市占代替產能增量占比，Analogy）")
 MN = {"sk": "SK 海力士", "ss": "三星", "mu": "美光"}
@@ -90,10 +90,10 @@ for m in ("sk", "ss", "mu"):
 sec("D. 韓美在各記憶體廠的 TC 鍵合機份額（份額是本模型的關鍵，皆為 Assumed／Interested-party，給區間）")
 inp("hsk_25", "韓美占 SK 海力士 TC 鍵合機採購 2025", "%", 0.40, 0.50, 0.65, "Interested-party", "TrendForce（2025-12-12，引 The Elec，匿名來源）：韓美 2024 年前為 SK 海力士 HBM 獨家供應商；ASMPT 2024 年底加入，HBM4 約 50 套中約半數為 ASMPT；韓華 Semitech 2025 年初加入", "LS 證券（Interested-party，dealsite 2025-07-25）：2025 年韓美 TC 鍵合機營收中 SK 海力士占 40%、海外 60%")
 for s, b in (("A", 0.45), ("B", 0.45), ("C", 0.35)):
-    inp(f"hsk_{s}", f"韓美占 SK 海力士 TC 鍵合機採購 2026 起（{s}）", "%", b - 0.10, b, b + 0.10, "Assumed", "韓美 2025-05（₩428 億）、2026-06（₩442 億，約 15 台）接 SK 海力士 HBM4 訂單；SK 海力士 2026-03 預計下約 100 台 HBM4 鍵合機，三家分配未公開（TrendForce 2025-12-12）", "C：韓華 Semitech 與 ASMPT 擴大份額（Assumed）" if s == "C" else "A、B：ASMPT 約四成、韓華約一成（Assumed）")
+    inp(f"hsk_{s}", f"韓美占 SK 海力士 TC 鍵合機採購（{s}；v0.2.1：2026–27 三情境共用 A 值，2028 起分情境）", "%", b - 0.10, b, b + 0.10, "Assumed", "韓美 2025-05（₩428 億）、2026-06（₩442 億，約 15 台）接 SK 海力士 HBM4 訂單；SK 海力士 2026-03 預計下約 100 台 HBM4 鍵合機，三家分配未公開（TrendForce 2025-12-12）", "C：韓華 Semitech 與 ASMPT 擴大份額（Assumed）" if s == "C" else "A、B：ASMPT 約四成、韓華約一成（Assumed）")
 inp("hmu_25", "韓美占美光 TC 鍵合機採購 2025", "%", 0.70, 0.80, 0.90, "Interested-party", "美光 2025 年選韓美為「Top Supplier」（公司新聞稿 2026-02-09）；美光為 2024 年第二大客戶 ₩1,111 億（事業報告，newdaily 2025-04-02）", "TechInvestments（2026，引 CGSI）：美光以韓美為主，測試 ASMPT 與 BESI；BofA（dealsite 2026-07-22）：Q2 2026 主要來自美光加單")
 for s, b in (("A", 0.75), ("B", 0.70), ("C", 0.55)):
-    inp(f"hmu_{s}", f"韓美占美光 TC 鍵合機採購 2026 起（{s}）", "%", b - 0.10, b, b + 0.10, "Assumed", "同上；美光擴大 HBM 後段產能（買下 AUO、力積電廠房；2026-07）", "C：ASMPT、BESI 進入美光（Assumed）" if s == "C" else "—")
+    inp(f"hmu_{s}", f"韓美占美光 TC 鍵合機採購（{s}；v0.2.1：2026–27 三情境共用 A 值，2028 起分情境）", "%", b - 0.10, b, b + 0.10, "Assumed", "同上；美光擴大 HBM 後段產能（買下 AUO、力積電廠房；2026-07）", "C：ASMPT、BESI 進入美光（Assumed）" if s == "C" else "—")
 inp("hss", "韓美占三星 TC 鍵合機採購（各年）", "%", 0.0, 0.0, 0.10, "Assumed", "三星主要採用自家 SEMES（TechInvestments 2026，引 CGSI）；韓美被視為可能但份額有限的供應商", "Sens 列 10%")
 sec("E. FY2025 構成（校準錨）與其他業務")
 inp("tcb_sh25", "TC 鍵合機（含中國）占 FY2025 營收", "%", 0.50, 0.60, 0.70, "Interested-party", "CGSI（TechInvestments 引用）：FY25F 中國出口 ₩589 億＝TC 鍵合機營收 17% → TC 鍵合機約 ₩3,460 億（Derived）÷ 營收 5,767 ≈ 60%", "公司不揭露產品別營收；第二來源：未找到")
@@ -101,7 +101,7 @@ inp("cn_sh25", "中國客戶占 FY2025 TC 鍵合機營收", "%", 0.10, 0.17, 0.2
 inp("a25_hbm", "FY2025 對三大記憶體廠的 HBM TC 鍵合機營收（Derived）", "₩億", None, "=a25_rev*tcb_sh25*(1-cn_sh25)", None, "Derived", "營收 × TC 鍵合機占比 ×（1 − 中國占比）", "其餘（中國 TC 鍵合機、MSVP、EMI Shield、2.5D／FC 鍵合機、零件服務）歸「其他」")
 inp("g_o26", "其他業務 FY2026 成長", "%", 0.0, 0.15, 0.35, "Assumed", "無：CGSI 預估中國 TC 鍵合機 FY26 約 2.8 倍（Interested-party，不採作點估計）；MSVP 訂單增加（dealsite 2026-07-14，無數字）", "AI 前（2019–2022）公司總營收 1,204–3,732（Analogy：其他業務的量級）")
 for s, b in (("A", 0.12), ("B", 0.08), ("C", -0.05)):
-    inp(f"g_o_{s}", f"其他業務 FY2027–29 年成長（{s}）", "%", b - 0.05, b, b + 0.05, "Assumed", "無：2.5D 封裝機（2026 推出三款）、HBF 用鍵合機、北美客戶", "C：中國出口受管制（Assumed）" if s == "C" else "—")
+    inp(f"g_o_{s}", f"其他業務年成長（{s}；v0.2.1：FY2027 三情境共用 A 值，FY2028–29 分情境）", "%", b - 0.05, b, b + 0.05, "Assumed", "無：2.5D 封裝機（2026 推出三款）、HBF 用鍵合機、北美客戶", "C：中國出口受管制（Assumed）" if s == "C" else "—")
 sec("F. FY2026 錨點（上半年實績＋下半年假設；第三季 2026-11 才公布）")
 inp("h2f", "FY2026 下半年營收 ÷（2 × 第二季營收）", "x", 0.70, 0.90, 1.10, "Assumed", "第二季含美光超常加單（BofA，dealsite 2026-07-22）；SK 海力士 2026-03 預計約 100 台 HBM4 訂單（TrendForce）", "Interested-party 對照（不校準）：BofA 下半年約 ₩5,200 億＝1.04；共識全年 ₩7,280 億隱含 0.85")
 inp("m_h2", "FY2026 下半年營業利益率", "%", 0.42, 0.48, 0.52, "Assumed", "第二季 51.9%（創高）；FY2025 43.6%", "基準取兩者之間")
@@ -200,7 +200,7 @@ Q.freeze_panes = "B4"
 
 # ---------------- Units：鍵合產能需求（情境 A，示範；PL 引擎每個區塊自行計算） ----------------
 COL = {y: chr(ord("C") + y - 2025) for y in range(2025, 2031)}   # C＝2025 … H＝2030
-HB = {"A": "0", "B": "hbp_{y}", "C": "hbp_{y}_hi"}
+HB = {"A": "hbp_{y}_hi", "B": "hbp_{y}", "C": "hbp_{y}_lo"}   # v0.2.1：混合鍵合為行業技術變數，與 Disco 同字母（A 導入快＝高值、B 基準、C 慢＝低值）；CY2027 以前三情境皆讀基準
 DEFP = dict(scn="A", den="", stk="", beta="beta", dlt="dlt", gt="g_tail", hb=None, hsk=None, hmu=None, hss="hss",
             hsk25="hsk_25", hmu25="hmu_25", a25h="a25_hbm", go26="g_o26", go=None, rev26="rev26", oi26="oi26",
             F="opex_fix", v="opex_var", nioi="nioi", gmadj=True)
@@ -208,7 +208,10 @@ DEFP = dict(scn="A", den="", stk="", beta="beta", dlt="dlt", gt="g_tail", hb=Non
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
     hb = P["hb"] if P["hb"] is not None else HB[s]
+    hby = lambda y: (P["hb"] if P["hb"] is not None else ("hbp_{y}" if y <= 2027 else HB[s])).format(y=y % 100)   # 情境分歧自 CY2028
+    hb28p = (P["hb"] if P["hb"] is not None else "hbp_{y}").format(y=28)   # CY2027 購機的共同前提：CY2028 混合鍵合取基準
     hsk = P["hsk"] or f"hsk_{s}"; hmu = P["hmu"] or f"hmu_{s}"; go = P["go"] or f"g_o_{s}"
+    hsk0 = P["hsk"] or "hsk_A"; hmu0 = P["hmu"] or "hmu_A"; go0 = P["go"] or "g_o_A"   # v0.2.1：CY2026–27 三情境共用情境 A 值，公司特有變數自 CY2028 起分歧
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
     hdr(ws, r, ["項目", "單位", "2025", "2026", "2027", "2028", "2029", "2030", "說明"]); r += 1
@@ -224,17 +227,18 @@ def engine(ws, r0, title, **over):
     row("dies", "核心晶粒數＝位元 × 8000 ÷ 容量", "百萬顆", {y: f"={COL[y]}{R['ship']}*8000/{COL[y]}{R['den']}" for y in range(2025, 2031)}, fmt="#,##0", note="1 EB＝8×10⁹ Gb；每顆核心晶粒鍵合一次")
     row("stk", "平均堆疊層數", "層", {y: f"=stk_{y % 100}{P['stk']}" for y in range(2025, 2031)}, fmt="0.0")
     row("lf", "層數加權（每顆晶粒鍵合時間）", "x", {y: f"=1+{P['beta']}*({COL[y]}{R['stk']}-$C{R['stk']})/4" for y in range(2025, 2031)}, fmt="0.000")
-    row("hb", "混合鍵合占比", "%", {y: "=" + hb.format(y=y % 100) for y in range(2025, 2031)}, fmt="0.0%", note={"A": "情境 A 不納入", "B": "情境 B：Disco 模型基準值", "C": "情境 C：Disco 模型高值"}.get(s, "") if P["hb"] is None else "")
+    row("hb", "混合鍵合占比", "%", {y: "=" + hby(y) for y in range(2025, 2031)}, fmt="0.0%", note={"A": "情境 A：CY2028 起 Disco 模型高值（導入快）", "B": "情境 B：Disco 模型基準值", "C": "情境 C：CY2028 起 Disco 模型低值（導入慢）"}.get(s, "") if P["hb"] is None else "")
     row("cap", "TC 鍵合產能需求（晶粒 × 層數加權 ×（1 − 混合鍵合））", "百萬顆當量", {y: f"={COL[y]}{R['dies']}*{COL[y]}{R['lf']}*(1-{COL[y]}{R['hb']})" for y in range(2025, 2031)}, fmt="#,##0")
-    row("new", "新機需求＝MAX(0, 下一年產能 − 本年)＋汰換 × 本年", "百萬顆當量", {y: f"=MAX(0,{COL[y+1]}{R['cap']}-{COL[y]}{R['cap']})+{P['dlt']}*{COL[y]}{R['cap']}" for y in YRS}, fmt="#,##0", note="鍵合機在產能需要前一年購入")
+    nxt = lambda y: (f"hsA_28*8000/{COL[2028]}{R['den']}*{COL[2028]}{R['lf']}*(1-{hb28p})" if y == 2027 else f"{COL[y+1]}{R['cap']}")
+    row("new", "新機需求＝MAX(0, 下一年產能 − 本年)＋汰換 × 本年（CY2027 的下一年產能用三情境共同前提）", "百萬顆當量", {y: f"=MAX(0,{nxt(y)}-{COL[y]}{R['cap']})+{P['dlt']}*{COL[y]}{R['cap']}" for y in YRS}, fmt="#,##0", note="鍵合機在產能需要前一年購入；v0.2.1：CY2027 購機的 CY2028 產能＝情境 A 的 HBM 位元（hsA_28）× 混合鍵合基準，三情境相同（與 markets/equipment 2027 三情境相同、記憶體供給三情境相同一致）；CY2028 起照讀本情境")
     tot = lambda y: "+".join(f"ms_{m}_{min(y + 1, 2029) % 100}" for m in ("sk", "ss", "mu"))
     for m, nm in (("sk", "SK 海力士"), ("ss", "三星"), ("mu", "美光")):
         row("w" + m, f"{nm} 占產能增量（t＋1 年 HBM 市占，三家正規化）", "%", {y: f"=ms_{m}_{min(y + 1, 2029) % 100}/({tot(y)})" for y in YRS}, fmt="0.0%")
-    shk = {2025: P["hsk25"], **{y: hsk for y in range(2026, 2030)}}; shm = {2025: P["hmu25"], **{y: hmu for y in range(2026, 2030)}}
+    shk = {2025: P["hsk25"], 2026: hsk0, 2027: hsk0, 2028: hsk, 2029: hsk}; shm = {2025: P["hmu25"], 2026: hmu0, 2027: hmu0, 2028: hmu, 2029: hmu}
     row("hw", "韓美加權份額＝Σ 占比 × 韓美在該廠份額", "%", {y: f"={COL[y]}{R['wsk']}*{shk[y]}+{COL[y]}{R['wss']}*{P['hss']}+{COL[y]}{R['wmu']}*{shm[y]}" for y in YRS}, fmt="0.0%")
     row("addr", "韓美可得新機需求＝新機需求 × 加權份額", "百萬顆當量", {y: f"={COL[y]}{R['new']}*{COL[y]}{R['hw']}" for y in YRS}, fmt="#,##0")
     ws.cell(r, 1, "B. 損益（會計年度；FY2026＝錨點）").font = BOLD; r += 1
-    row("oth", "其他業務營收（中國 TC 鍵合機、MSVP、EMI、2.5D 等）", "₩億", {2025: f"=a25_rev-{P['a25h']}", 2026: f"=C{r}*(1+{P['go26']})", **{y: f"={COL[y-1]}{r}*(1+{go})" for y in (2027, 2028, 2029)}}, fmt="#,##0")
+    row("oth", "其他業務營收（中國 TC 鍵合機、MSVP、EMI、2.5D 等）", "₩億", {2025: f"=a25_rev-{P['a25h']}", 2026: f"=C{r}*(1+{P['go26']})", **{y: f"={COL[y-1]}{r}*(1+{go0 if y == 2027 else go})" for y in (2027, 2028, 2029)}}, fmt="#,##0", note="v0.2.1：FY2027 三情境共用 g_o_A，FY2028 起讀 g_o_{情境}")
     row("hbm", "HBM TC 鍵合機營收（三大記憶體廠）", "₩億", {2025: f"={P['a25h']}", 2026: f"={P['rev26']}-D{R['oth']}", **{y: f"=$C{r+1}*{COL[y]}{R['addr']}" for y in (2027, 2028, 2029)}}, fmt="#,##0", note="FY2026＝錨點營收 − 其他；FY2027 起＝k × 可得新機需求")
     row("k", "校準係數 k＝(FY2025＋FY2026 HBM 營收) ÷ (兩年可得新機需求)", "₩億／百萬顆", {2025: f"=(C{R['hbm']}+D{R['hbm']})/(C{R['addr']}+D{R['addr']})"}, fmt="0.000", note="兩年平均，平滑訂單的季節與交期波動；不使用共識")
     row("rev", "營收", "₩億", {2025: "=a25_rev", **{y: f"={COL[y]}{R['oth']}+{COL[y]}{R['hbm']}" for y in range(2026, 2030)}}, fmt="#,##0")
@@ -256,7 +260,7 @@ def engine(ws, r0, title, **over):
 PL = wb.create_sheet("PL")
 PL["A1"] = "PL — 韓美半導體損益（₩億；FY2025 實績，FY2026 錨點＝上半年實績＋下半年假設，FY2027–FY2029 為模型）。三情境各一個完整推導區塊（見下方），本頁頂端為摘要"
 PB = {}; r0 = 40
-TITLES = {"A": "情境 A：基準顆數；不納入混合鍵合", "B": "情境 B：2028 顆數 ×0.8、2029 ×0.85；混合鍵合取 Disco 基準", "C": "情境 C：2028–29 顆數 ×0.6；混合鍵合取高值；韓華、ASMPT 搶份額與價格壓力"}
+TITLES = {"A": "情境 A：基準顆數；混合鍵合導入快（CY2028 起 Disco 高值）", "B": "情境 B：2028 顆數 ×0.8、2029 ×0.85；混合鍵合取 Disco 基準", "C": "情境 C：2028–29 顆數 ×0.6；混合鍵合導入慢（CY2028 起 Disco 低值）；韓華、ASMPT 搶份額與價格壓力"}
 for s in SC:
     PB[s] = engine(PL, r0, TITLES[s], scn=s); r0 = PB[s]["end"] + 2
 hdr(PL, 3, ["情境／項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "說明"])
@@ -388,7 +392,7 @@ hdr(SE, 3, ["案例", "設定", "FY2027 營收 ₩億", "FY2027 EPS ₩", "相�
 cases = [("SK 海力士份額 −10pt", "35%", dict(hsk="hsk_A_lo")), ("SK 海力士份額 +10pt", "55%", dict(hsk="hsk_A_hi")),
          ("美光份額 −10pt", "65%", dict(hmu="hmu_A_lo")), ("美光份額 +10pt", "85%", dict(hmu="hmu_A_hi")),
          ("三星份額 10%", "韓美打進三星", dict(hss="hss_hi")),
-         ("混合鍵合 Disco 基準", "2028 5%、2029 15%、2030 25%", dict(hb="hbp_{y}")), ("混合鍵合 Disco 高值", "2028 15%、2029 30%、2030 40%", dict(hb="hbp_{y}_hi")),
+         ("混合鍵合 不納入", "各年 0%", dict(hb="0")), ("混合鍵合 Disco 基準", "2028 5%、2029 15%、2030 25%", dict(hb="hbp_{y}")),
          ("晶粒容量 低", "各年取低值（晶粒較多）", dict(den="_lo")), ("晶粒容量 高", "各年取高值（晶粒較少）", dict(den="_hi")),
          ("堆疊層數 低", "", dict(stk="_lo")), ("堆疊層數 高", "", dict(stk="_hi")),
          ("層數對鍵合時間 0", "beta＝0", dict(beta="beta_lo")), ("層數對鍵合時間 0.25", "beta＝0.25", dict(beta="beta_hi")),
@@ -483,7 +487,7 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 120
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("韓美半導體 Hanmi Semiconductor（042700.KS）收支與估值模型 v0.2（AI 半導體 Project 步驟 5：設備與材料）　2026-10-25", True),
+lines = [("韓美半導體 Hanmi Semiconductor（042700.KS）收支與估值模型 v0.2.1（AI 半導體 Project 步驟 5：設備與材料）　2026-10-25", True),
  ("v0.1（2026-10-25）：首版。樣板 advantest/（設備股，統一循環規則）。本版未做先驗，無 Andy 合理 P/E 對照。", False),
  ("模型命題：韓美的盈餘由 HBM 的 TC 鍵合需求決定——需求來自記憶體廠下一年的鍵合產能增量（HBM 位元 ÷ 晶粒容量 × 層數加權），韓美的份額集中在 SK 海力士與美光。股價取決於 HBM 位元成長在 2028 之後放緩、晶粒容量提高與混合鍵合導入時，TC 鍵合機的新機需求與韓美在 SK 海力士的份額能否守住。", False), ("", False),
  ("會計年度＝日曆年。金額以億韓元（₩億）為主；EPS 為韓元。FY2026 為錨點：上半年實績（509＋2,511）＋下半年假設（h2f、m_h2）；第三季預定 2026-11 公布，建置日未納入。", False), ("", False),
@@ -491,7 +495,7 @@ lines = [("韓美半導體 Hanmi Semiconductor（042700.KS）收支與估值模�
  ("HBM 出貨位元（markets/memory，情境別）÷ 晶粒容量 → 核心晶粒數 × 層數加權 ×（1 − 混合鍵合占比）→ TC 鍵合產能需求；新機需求＝下一年產能增量＋汰換", False),
  ("× 各記憶體廠占產能增量（t＋1 年 HBM 市占，讀三家記憶體模型）× 韓美在該廠份額 → 韓美可得需求 × 校準係數 k（FY2025–26 兩年營收）→ HBM TC 鍵合機營收；其他業務＝前一年 × 成長率", False),
  ("毛利率：FY2026 由錨點營業利益反推，之後沿用（C 扣價格競爭）；營業費用＝固定＋變動 × 營收；不寫死利益率", False),
- ("情境 A／B／C：HBM 位元讀 markets/memory（2028 ×1.0／0.8／0.6，2029 ×1.0／0.85／0.6）；混合鍵合 A 不納入、B 取 Disco 基準、C 取高值；C 另加韓華、ASMPT 搶份額與毛利率下調。Val：十年 P/E 分位，循環位置依設備股共用規則（見頂年 " + "、".join(f"{s_} {PEAK[s_]}" for s_ in SC) + " → FY2027：" + CP.fy2027_text(PEAK) + "）；目標價＝三情境 0.3／0.5／0.2 加權", False), ("", False),
+ ("情境 A／B／C：HBM 位元讀 markets/memory（2028 ×1.0／0.8／0.6，2029 ×1.0／0.85／0.6）；混合鍵合為行業技術變數、與 Disco 同字母（v0.2.1：CY2028 起 A 取高值、B 基準、C 低值）；公司特有變數（份額、其他業務成長）CY2028 起分情境、A 最有利；C 另加韓華、ASMPT 搶份額與毛利率下調。Val：十年 P/E 分位，循環位置依設備股共用規則（見頂年 " + "、".join(f"{s_} {PEAK[s_]}" for s_ in SC) + " → FY2027：" + CP.fy2027_text(PEAK) + "）；目標價＝三情境 0.3／0.5／0.2 加權", False), ("", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。DART 原文未開啟，實績取自新聞稿報導與財務資料頁，原文待人工複核。", False),
  ("已知限制：(1) 公司不揭露產品別與 2025 客戶別營收，TC 鍵合機占比（60%）與中國比重（17%）取自 CGSI（賣方）；(2) 韓美在 SK 海力士、美光的份額為 Assumed，模型對它們最敏感；(3) 以 HBM 營收市占代替各廠產能增量占比（Analogy）；(4) 晶粒容量、層數、混合鍵合比例沿用 Disco 模型的 Assumed；(5) 鍵合機假設比產能早一年購入，實際交期可能更短，會讓模型的轉折早於實際；(6) 韓美自家混合鍵合機（2027 量產工廠）的營收不建模；(7) 十年 P/E 2016–2017 只有一個來源，companiesmarketcap 2021 年值與他源差異大。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
@@ -682,6 +686,7 @@ def valuation_v2(CFG):
     return T, EXT
 
 V2T, V2EXT = valuation_v2(CFG_V2)
+RD.cell(RD.max_row + 1, 1, "v0.2.1（2026-10-25）情境一致性修正：(1) CY2027 購機的「下一年（CY2028）產能」三情境用共同前提＝情境 A 的 HBM 位元（hsA_28）× 混合鍵合基準，與 markets/equipment 2027 三情境相同、記憶體供給三情境相同一致；(2) 韓美在 SK 海力士／美光的份額與其他業務成長，CY2026–27 三情境共用情境 A 值，CY2028 起分情境（A 最有利）；(3) 混合鍵合為行業技術變數，與 Disco 同字母：CY2028 起 A＝導入快（Disco 高值）、B＝基準、C＝導入慢（低值）。A 情境 TC 鍵合需求被混合鍵合侵蝕最多，FY2028 EPS A＜B 屬預期結果。FY2027 三情境相同。")
 if os.environ.get("V2_ROWS"):
     print("V2", V2T, V2EXT)
 
