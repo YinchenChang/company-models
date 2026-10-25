@@ -1,4 +1,4 @@
-# 勝宏科技（300476.SZ／02476.HK）收支與估值模型 v0.1（AI 半導體 Project：載板與 PCB 次產業；AI 加速卡與伺服器高層數 PCB、HDI）
+# 勝宏科技（300476.SZ／02476.HK）收支與估值模型 v0.1.1（AI 半導體 Project：載板與 PCB 次產業；AI 加速卡與伺服器高層數 PCB、HDI）
 # 用法：python3 victory_giant/build_victory_giant.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不平移。金額：十億人民幣（RMB B）；每 GW PCB 金額以美元輸入、以匯率 fx 換算；EPS：人民幣。
 # 口徑：歸屬母公司淨利（中國企業會計準則）。樣板：emc/（台光電：每 GW 高速 CCL 金額 × 份額，產能上限）。
@@ -759,6 +759,39 @@ lines = [("勝宏科技（300476.SZ／02476.HK）收支與估值模型 v0.1（AI
  ("已知限制：(1) 每 GW PCB 金額的 2026 年水準與世代指數皆為 Assumed／Analogy（Morgan Stanley 每架金額只含 NVL72 機架內）；水準只影響校準份額，指數影響成長；(2) 產值產能指數為 Assumed，公司只給 2030 年千億目標與各廠產值，爬坡速度未揭露；(3) AI 占比 FY2025 取券商轉引的招股書口徑，FY2026 由「非 AI 持平」反推；(4) 未建資本支出與折舊，毛利率的新廠爬坡效果以額外改善近似，DCF 現金流在擴產期偏高估；(5) 人民幣 2026 年升值（中間價 6.72），出口占 76.8%，匯兌與售價影響未建；(6) 十年 P/E 只有一個採用來源，且 2016–2024 年為 AI 前汽車、消費板期；(7) 3Q26 季報（10-29）後更新錨點；R4 產業部署路徑未建。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
+
+# ---------------- v0.1.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00／14:17）----------------
+# 新列一律放在 Val、README 工作表既有內容之後，不位移既有列；既有數值不變
+VER_PREV, VER_NOW = 'v0.1', 'v0.1.1'
+OBS = [
+ "目標價人民幣 322.84（DCF 202.71、Comparable 442.98 各半），比現價 183.48（2026-10-23）高 76.0%，級距大於 50%；Comparable 單獨為 +141.4%。主因是倍數不是 EPS：本模型前瞻 EPS 14.39 比共識前瞻 EPS 12.36 高 16.4%，但 A 股 PCB 同業（沪电、深南、生益电子、鹏鼎）前瞻 P/E 中位數 30.8 倍、共識目標價 388.30 隱含 31.4 倍，現價只隱含 14.8 倍；DCF 單獨僅 +10.5%，上檔空間主要來自 Comparable，市場對份額（Rubin 份額傳聞）與擴產的折價未計入 Comparable。",
+ "份額、每 GW 金額與擴產最敏感：份額流失（2028 年相對值 0.60）使 FY2028 EPS −23.7%、每 GW 金額成長低值 −20.9%、擴產延遲 −20.0%；顆數情境 C 的 FY2028 EPS 10.86 比情境 A 17.78 低 38.9%，DCF 價格帶 98.55～287.37。",
+ "上檔空間不靠比共識樂觀：本模型 FY2027 EPS 12.81（三情境相同）比共識 14.77 低 13.3%、情境 A 的 FY2028 EPS 17.78 比共識 22.13 低 19.7%。下一個檢驗點是 3Q26 季報（2026-10-29）。"
+]   # 重點觀察（數字取自重算後的 Val／PL／Sens；與 README.md 相同文字）
+UPW_ROW = next(r_ for r_ in range(1, V.max_row + 1) if V.cell(r_, 1).value == "上檔空間：加權目標價")
+GRADE_ROW = V.max_row + 1; REC_ROW = GRADE_ROW + 1
+_u = f"B{UPW_ROW}"
+V.cell(GRADE_ROW, 1, "上檔空間級距")
+V[f"B{GRADE_ROW}"] = f'=IF({_u}>0.5,"大於 50%",IF({_u}>0.25,"25%–50%",IF({_u}>=0,"0%–25%",IF({_u}>=-0.25,"0%～−25%",IF({_u}>=-0.5,"−25%～−50%","小於 −50%")))))'
+V[f"B{GRADE_ROW}"].number_format = "@"
+V[f"E{GRADE_ROW}"] = f"以「上檔空間：加權目標價」（第 {UPW_ROW} 列）分六級（Andy 2026-10-25 14:00）"
+V.cell(REC_ROW, 1, "投資建議")
+V[f"B{REC_ROW}"] = f'=IF({_u}>0.5,"強力買進",IF({_u}>0.25,"買進",IF({_u}>=-0.25,"中立",IF({_u}>=-0.5,"放空","強力放空"))))'
+V[f"B{REC_ROW}"].number_format = "@"
+V[f"E{REC_ROW}"] = "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空（剛好 +25% 為中立、+50% 為買進、−25% 為中立、−50% 為放空）"
+_t = RD["A1"].value
+assert VER_PREV in _t and VER_NOW not in _t, _t
+RD["A1"] = _t.replace(VER_PREV, VER_NOW, 1)
+for r_ in range(2, RD.max_row + 1):
+    _v = RD.cell(r_, 1).value
+    if isinstance(_v, str) and _v.startswith("版本："):
+        RD.cell(r_, 1, "版本：" + VER_NOW + "（2026-10-25：補上檔空間級距、投資建議、重點觀察，數值不變）。前版：" + _v[3:])
+        break
+rn = RD.max_row + 1
+RD.cell(rn, 1, VER_NOW + "：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁最後新增「上檔空間級距」「投資建議」兩列（第 " + str(GRADE_ROW) + "、" + str(REC_ROW) + " 列，依「上檔空間：加權目標價」的固定規則）；重點觀察見下方三列。")
+RD.cell(rn + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"')
+for k_, o_ in enumerate(OBS, 1):
+    RD.cell(rn + 1 + k_, 1, f"重點觀察 {k_}：" + o_)
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

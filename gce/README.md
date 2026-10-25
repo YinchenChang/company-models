@@ -1,17 +1,27 @@
-# gce/ — 金像電（2368.TW）收支與估值模型 v0.1
+# gce/ — 金像電（2368.TW）收支與估值模型 v0.1.1
 
 金像電的 AI 營收＝部署 GW（AI IT 資本支出 ÷ 每 GW IT 資本支出）× 每 GW 可參與 AI 高速 PCB 金額（沿用勝宏模型的加速器卡／運算板、交換器板、中板／背板／其他三項；中板／背板 × 金像電參與係數）× 金像電份額 × 價格指數，但受**產值產能**限制（全產全銷：營收上限＝FY2026 營收 × 擴產指數 × 價格指數）。非 AI（一般伺服器、網通、筆電、其他）另設成長率。
 
 **核心問題：2026 年約 190 億元資本支出（台灣、蘇州、常熟、泰國；蘇州二廠、泰國二廠 2027 年下半年量產）能讓產能在 2027–29 年擴大多少；ASIC 主板由高層數板改 HDI＋HLC 混壓後份額守不守得住；現價約 20 倍前瞻 P/E 隱含什麼路徑。**
+
+**投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 +13.7%，落在 −25%～+25%）。
+
+## 重點觀察
+
+1. 目標價 NT$1,267（DCF 1,203、Comparable 1,331 各半），比現價 1,115（2026-10-22）高 13.7%，級距 0%–25%；Comparable 單獨為 +19.4%。兩法接近；與共識目標價 1,554 的差距在倍數：本模型前瞻 EPS 72.00 比共識前瞻 EPS 56.97 高 26.4%（期間約晚一年），但同業（健鼎、華通、臻鼎-KY、博智、TTM）前瞻 P/E 中位數只有 18.5 倍，共識目標價隱含 27.3 倍。
+2. 擴產進度最敏感：擴產延遲（2028 年產能指數 1.60）使 FY2028 EPS −18.3%、價格回落快 −13.5%、份額流失 −10.7%；情境 C 的 FY2028 EPS 45.31 比情境 B 76.56 低 40.8%，DCF 價格帶 559～1,723。
+3. 本模型情境 B 的 FY2027 EPS 60.15 比共識 62.80 低 4.2%、FY2028 EPS 76.56 比共識 95.35 低 19.7%。下一個檢驗點是 3Q26 財報與法說（預計 2026-11 上旬，stockanalysis 估 11-11）與 10 月營收（11-10 前後）。
+
+v0.1.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。
 
 AI 半導體 Project 載板與 PCB 次產業，樣板 `victory_giant/`（勝宏）。**每 GW PCB 金額口徑與勝宏一致**：唯讀 `victory_giant/dist` 的 Units 頁（本專案每 GW PCB 金額的權威在勝宏模型），本模型只加中板／背板參與係數 `w_mid`（0.5，Assumed）與成長倍率 `pgwf`（1.0，Sens 用）；Recon 頁對照勝宏模型與台光電模型的每 GW CCL 金額。會計年度＝日曆年；金額為十億新台幣（IFRS），每 GW 金額以美元計、以匯率 32.0 換算（與台光電模型相同）；口徑為歸屬母公司淨利。
 
 | 檔案 | 內容 |
 |---|---|
 | `build_gce.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_金像電模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261025_金像電模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_金像電模型_v0.1.html` | HTML 展示層（數字全由 xlsx 重算值抽出） |
+| `dist/20261025_金像電模型_v0.1.1.html` | HTML 展示層（數字全由 xlsx 重算值抽出） |
 
 建置：`python3 gce/build_gce.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`markets/memory/market.py`（SCEN_UNITS，核對用）、`victory_giant/dist`（每 GW PCB 金額）、`emc/dist`（台光電每 GW CCL 金額，只在 Recon）、`tools/cycle_position.py`、`tools/valuation_rule.py`；**不修改它們**。
 
