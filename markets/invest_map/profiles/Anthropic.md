@@ -1,7 +1,7 @@
 ---
 ticker: Anthropic
 name: Anthropic
-name_full: Anthropic PBC [外部・未經本專案檢核]
+name_full: Anthropic PBC
 listing: 未上市
 hq: 美國加州舊金山 [外部・未經本專案檢核]
 founded: 2021 [外部・未經本專案檢核]
@@ -11,7 +11,7 @@ asof: 2026-10-25
 ---
 
 ## 一句話定位
-AI 模型公司（位於 AI 金流的最上游）：自研 Claude 系列大模型，收入八成以上來自企業與開發者按 token 付費的 API，算力向 Google、Amazon、Microsoft 等租用；本專案模型推估自由現金流 2029 年轉正，但前提是只計入已簽的算力合約。
+AI 模型公司（位於 AI 金流的最上游）：自研 Claude 系列大模型，收入以企業與開發者按 token 付費的 API 為主（FY2025 82.6%，模型推估 FY2026 90.9%）[本專案：Anthropic收支模型_v0_1_5.xlsx SRC_ANT!E30、E5；Revenue!E58、E67；Derived]，算力向 Google、Amazon、Microsoft 等租用；本專案模型推估自由現金流 2029 年轉正 [本專案：Anthropic收支模型_v0_1_5.xlsx Funding!H14]，但前提是只計入已簽的算力合約。
 
 ## 公司在做什麼
 - 模型與 API：Claude 分 Opus（頂層）、Sonnet（中層）、Haiku（低層）三個價位，按「每百萬 token」計價（token 是模型處理文字的最小單位）；2026-09 Opus 5.5 牌價輸入 4、輸出 20 美元，2026-10 Haiku 5.5 降至 0.1／0.5 美元 [本專案：Anthropic收支模型_v0_1_5.xlsx SRC_ANT!E115–E116、E119–E120]。

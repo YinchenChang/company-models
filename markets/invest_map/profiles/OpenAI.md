@@ -1,7 +1,7 @@
 ---
 ticker: OpenAI
 name: OpenAI
-name_full: OpenAI Group PBC（營利實體）[外部・未經本專案檢核]
+name_full: OpenAI Group PBC（營利實體）
 listing: 未上市
 hq: 美國加州舊金山 [外部・未經本專案檢核]
 founded: 2015 [外部・未經本專案檢核]
@@ -11,14 +11,14 @@ asof: 2026-10-25
 ---
 
 ## 一句話定位
-AI 模型公司（位於 AI 金流的最上游）：自研 GPT 系列大模型，透過 ChatGPT 訂閱、API 計費與企業席位收錢，再把大部分收入付給雲端業者與晶片商租用算力；本專案模型推估 2026–2030 每年自由現金流都是負數，靠外部融資撐住算力擴張。
+AI 模型公司（位於 AI 金流的最上游）：自研 GPT 系列大模型，透過 ChatGPT 訂閱、API 計費與企業席位收錢，再把大部分收入付給雲端業者與晶片商租用算力；本專案模型推估 2026–2030 每年自由現金流都是負數 [本專案：OpenAI收支模型_v0_6_3.xlsx Funding!E13:I13]，靠外部融資撐住算力擴張。
 
 ## 公司在做什麼
 - 消費端產品是 ChatGPT（對話式 AI 助理）：免費版加上 Go、Plus、Pro 三種月費方案，牌價分別為每月 8、20、100–200 美元 [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C35–C38]；2026-02 週活躍用戶 900M [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C91]（[Interested-party]）。
 - API（應用程式介面，讓開發者按用量付費呼叫模型）：以「每百萬 token」計價（token 是模型處理文字的最小單位），分頂層、中層、低層三個價位；2026-09 旗艦 GPT-6 Astra 牌價為輸入 10、輸出 50 美元／百萬 token [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C17、C19、C26]。2026-03 底 API 每分鐘處理超過 15B token [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C143]（[Interested-party]）。
 - 企業端：ChatGPT 企業席位（Business／Enterprise）加上 API 大客戶；公司 CFO 稱年初消費端與企業端約 60／40，8 月企業端已超過消費端 [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C11]（[Interested-party]）。
 - 營收規模：FY2025 認列營收 13.07bn 美元 [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C6]；2026 Q1 5.7bn、Q2 6.7bn [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C8–C9]；9 月底 run-rate（年化營收）約 50bn（OpenAI 淨額口徑）[本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C142]（皆為 [Interested-party] 或二手報導）。
-- 算力主要靠租用：2025 年底算力規模約 1.9 GW [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C89]（[Interested-party]，電力口徑未明），另有自建園區（例如 Stargate 系列）[外部・未經本專案檢核]。
+- 算力主要靠租用：2025 年底算力規模約 1.9 GW [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C89]（[Interested-party]，電力口徑未明）。
 
 ## 主要產品與營收占比
 | 產品／部門 | 內容（白話） | 營收占比 | 期間 | 標記 |
@@ -34,8 +34,8 @@ AI 模型公司（位於 AI 金流的最上游）：自研 GPT 系列大模型�
 
 ## 市場定位與產業位置
 - 在 AI 金流最上游：用戶付給 OpenAI 的錢，大部分轉付給雲端與晶片供應鏈。模型 2026 算力成本（現金）53.2bn，高於營收淨額 27.4bn [本專案：OpenAI收支模型_v0_6_3.xlsx Cost!E27；Revenue!E41]。
-- P×Q 回本比值（＝營收 ÷ 機隊持有成本）：2025 為 1.24 [本專案：OpenAI收支模型_v0_6_3.xlsx PxQ!D12]；2026 主口徑（Q2 年化營收 26.3bn ÷ Q2 平均 2.34 GW）為 1.15，是 2025 的 0.93 倍 [本專案：OpenAI收支模型_v0_6_3.xlsx PxQ!E9、H9、E15]。換算每 GW 年營收約 11.2bn，對照 Tokenomics 每 GW 年持有成本 9.80bn [本專案：OpenAI收支模型_v0_6_3.xlsx PxQ!G54]（[Derived]：26.3 ÷ 2.34）。比值 >1 只代表實收能覆蓋機隊持有成本，還沒算人事與研發。
-- 算力合約（模型逐家計入）：Microsoft Azure 增購 250bn、Oracle 300bn（2027–2031、約 4.5 GW）、AWS Nvidia 晶片 38bn、AWS Trainium 100bn（2 GW）、CoreWeave 22.4bn、Cerebras 20bn（0.75 GW）[本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C59–C60、C63–C64、C67、C70–C71、C74、C76]。意向或條款書層級（未計入模型付款）：Nvidia 10 GW／100bn、Broadcom 自研晶片 10 GW、AMD 6 GW [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C103–C106]。
+- P×Q 回本比值（＝營收 ÷ 機隊持有成本）：2025 為 1.24 [本專案：OpenAI收支模型_v0_6_3.xlsx PxQ!D12]；2026 主口徑（Q2 年化營收 26.3bn ÷ Q2 平均 2.34 GW）為 1.15，是 2025 的 0.93 倍 [本專案：OpenAI收支模型_v0_6_3.xlsx PxQ!E9、H9、J9、E15]。換算每 GW 年營收約 11.2bn，對照 Tokenomics 每 GW 年持有成本 9.80bn [本專案：OpenAI收支模型_v0_6_3.xlsx PxQ!G54]（[Derived]：26.3 ÷ 2.34）。比值 >1 只代表實收能覆蓋機隊持有成本，還沒算人事與研發。
+- 算力合約（模型逐家計入）：Microsoft Azure 增購 250bn、Oracle 300bn（2027–2031、約 4.5 GW；SRC_OAI!C61–C62）、AWS Nvidia 晶片 38bn、AWS Trainium 100bn（2 GW）、CoreWeave 22.4bn、Cerebras 20bn（0.75 GW）[本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C59–C60、C63–C64、C67、C70–C71、C74、C76]。意向或條款書層級（未計入模型付款）：Nvidia 10 GW／100bn、Broadcom 自研晶片 10 GW、AMD 6 GW [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C103–C106]。
 - 模型合約供給 GW：2026 年 2.83 GW，2030 年 16.09 GW（含自建）[本專案：OpenAI收支模型_v0_6_3.xlsx Compute!E87、I87]；2027 年 Oracle 合約起跑，年付款 60bn，使算力成本由 53.2 跳到 141.7bn [本專案：OpenAI收支模型_v0_6_3.xlsx Cost!F18、E27、F27]。
 - 對供應鏈的意義：OpenAI 是 Oracle、CoreWeave、Microsoft、AWS 的大客戶，其付款能力取決於外部融資是否持續 [判斷]。
 
@@ -43,14 +43,14 @@ AI 模型公司（位於 AI 金流的最上游）：自研 GPT 系列大模型�
 | 職位 | 姓名 | 任職起 | 背景 |
 |---|---|---|---|
 | 執行長（共同創辦人） | Sam Altman | 2019（任執行長） | [外部・未經本專案檢核] |
-| 總裁（共同創辦人） | Greg Brockman | 2015 | Simo 休假期間督導產品策略 [外部・未經本專案檢核] |
+| 總裁（共同創辦人） | Greg Brockman | 2015 共同創辦（總裁起始年待查） | 2026-07 起接管 ChatGPT 產品事業 [外部・未經本專案檢核] |
 | 財務長 | Sarah Friar | 2024 | [外部・未經本專案檢核] |
 | 營收長 | Denise Dresser | 2025-12 | [外部・未經本專案檢核] |
 
 - 經營風格：本專案尚未研究。
 - 資本募集（本專案可見部分）：2026-03 股權融資 122bn，其中無條件部分 Amazon 15、SoftBank 30（三期）、Nvidia 30、其他約 12；Amazon 另 35bn 以 IPO 或 AGI 里程碑為條件 [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C81–C82、C107–C110]。2025 年底現金約 40bn [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C80]。
 - 表外承諾存量 665bn；或有負債 Nvidia 擔保 250bn、晶片融資洽談 350bn（只列示）[本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C78、C83–C84]。
-- 2026 年人事：應用事業執行長 Fidji Simo 7 月轉任兼職顧問，COO 與行銷長先前已異動（見近期重大事件）。
+- 2026 年人事：應用事業執行長 Fidji Simo 7 月轉任兼職顧問、Brockman 接管產品；COO Brad Lightcap 8 月宣布離職；行銷長 Kate Rouch 4 月休假後卸任 [外部・未經本專案檢核]。
 
 ## 同業與競爭態勢
 | 同業 | 重疊領域 | 市占或規模 | 標記 |
@@ -62,7 +62,7 @@ AI 模型公司（位於 AI 金流的最上游）：自研 GPT 系列大模型�
 
 - 市占：本專案未建立。
 - 營收口徑不同：Anthropic 經雲端市集的銷售以總額認列 [本專案：Anthropic收支模型_v0_1_5.xlsx Revenue!B67]；OpenAI 9 月底 50bn 為淨額口徑 [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C142]，兩家季營收不能直接比大小。
-- 價格競爭：2026-07～09 OpenAI 五次調價，中、低層降幅最大（Luna 輸入由 1 降至 0.1 美元）[本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C29–C33、C115、C23]；中國模型商以開源與低價搶用量 [外部・未經本專案檢核]。
+- 價格競爭：2026-07～09 OpenAI 五次調價，中、低層降幅最大（Luna 輸入由 1 降至 0.1 美元）[本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C29–C33、C115、C23]。
 
 ## 近期重大事件
 - 2026-10-09｜Bloomberg 報導 OpenAI 預期年底年化營收達 70bn 以上；前一日 FT 報導公司告訴投資人 9 月底年化營收接近 50bn，與先前流傳的 70bn 差距來自是否比照 Anthropic 以總額計雲端通路營收 [外部新聞：Teleborsa 引 Bloomberg；AI Weekly 引 FT]
@@ -72,7 +72,8 @@ AI 模型公司（位於 AI 金流的最上游）：自研 GPT 系列大模型�
 - 2026-09-18｜FT 披露 7 月投資人簡報：2026 營收目標 36bn、2030 年 350bn，2026–2030 累計自由現金流 −278bn、算力支出 856bn [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C47–C48、C56–C57]
 - 2026-09-03｜推出新旗艦 GPT-6 Astra，頂層牌價升至 10／50 美元 [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C32]
 - 2026-08-18｜WSJ：Q2 營收 6.7bn [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C9]
-- 2026-07-09｜應用事業執行長 Fidji Simo 因病轉任兼職顧問；COO Brad Lightcap 4 月已轉任特別專案 [外部新聞：TechCrunch]
+- 2026-08-11｜COO Brad Lightcap 宣布離職（4 月已轉任特別專案）[外部新聞：AI Weekly、TechCrunch]
+- 2026-07-09｜應用事業執行長 Fidji Simo 轉任兼職顧問，總裁 Brockman 接管產品事業 [外部新聞：TechCrunch、PYMNTS]
 
 ## 需要觀察的事項
 - 收支結果｜本專案模型 2026–2030 自由現金流全部為負：−39.4、−116.0、−134.9、−137.6、−131.9bn [本專案：OpenAI收支模型_v0_6_3.xlsx Funding!E13–I13]；五年合計約 −560bn（[Derived]），比管理層 −278bn 更深 [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C56]；2027 年起每年需外部資金，至 2030 累計 442.8bn [本專案：OpenAI收支模型_v0_6_3.xlsx Funding!F33、I31]｜下一輪融資或 IPO 申報
