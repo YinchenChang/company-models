@@ -181,7 +181,7 @@ details[open] summary::before{content:"－ "}
 /* drawer */
 .scrim{position:fixed;inset:0;background:#0b1220;opacity:.38;z-index:20}
 .drawer{position:fixed;top:0;right:0;bottom:0;width:min(760px,100%);background:var(--surface);z-index:21;display:grid;grid-template-rows:auto auto minmax(0,1fr);box-shadow:-12px 0 32px #0000002e;border-left:1px solid var(--rule-strong);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
-.dh{background:var(--navy);color:var(--navy-ink);padding:18px 22px 14px;display:grid;gap:8px}
+.dh{background:var(--navy);color:var(--navy-ink);padding:16px 22px 12px;display:grid;gap:6px}
 .dh .row1{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
 .dh h2{font-size:24px}
 .dh .sub{font-size:12px;color:var(--navy-muted);font-family:var(--f-mono)}
@@ -192,7 +192,7 @@ details[open] summary::before{content:"－ "}
 .dstats div:last-child{border-right:0}
 .dstats .k{font-size:11px;color:var(--muted)}
 .dstats .v{font-family:var(--f-mono);font-size:15px}
-.dbody{overflow-y:auto;display:grid;grid-template-rows:auto 1fr;min-height:0}
+.dbody{overflow-y:auto;min-height:0;display:block}
 .dtabs{display:flex;gap:2px;border-bottom:1px solid var(--rule-strong);padding:0 14px;overflow-x:auto;position:sticky;top:0;background:var(--surface);z-index:1}
 .dtab{appearance:none;border:0;background:none;font:inherit;font-size:13px;color:var(--muted);padding:11px 10px 9px;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
 .dtab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--brass)}
@@ -208,8 +208,9 @@ details[open] summary::before{content:"－ "}
 .ptbl td{vertical-align:top}
 .mixbar{display:block;height:5px;background:var(--bar-soft);margin-top:4px;min-width:60px}
 .mixbar i{display:block;height:100%;background:var(--bar)}
-.tg{font-family:var(--f-mono);font-size:10px;color:var(--faint);white-space:nowrap}
-.dmeta{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;font-size:12.5px;color:var(--muted)}
+.tg{font-family:var(--f-mono);font-size:10px;color:var(--faint);overflow-wrap:anywhere}
+.dmeta{display:flex;flex-wrap:wrap;gap:2px 18px;font-size:12px;color:var(--muted)}
+.dmeta .mi{display:inline-flex;gap:6px}
 .dmeta b{color:var(--ink);font-weight:500}
 .ev li{list-style:none;margin-left:-1.2em;padding-left:0;border-left:2px solid var(--rule-strong);padding:2px 0 2px 12px}
 .pending{padding:22px;color:var(--muted)}
@@ -460,7 +461,7 @@ function openDrawer(tk,tab){
   const stats=[["產業位置",`${esc(p.seg)}`],["地位分數",`${f1(p.score)} · 第 ${p.rank} 名`],["可投資性",`<span class="pill ${esc(v.tier)}">${esc(v.tier)}</span>`],["中心空間",v.cu==null?"—":`<span class="${cls(v.cu)}">${pct(v.cu)}</span>`]];
   $("#drawer").innerHTML=`<div class="dh"><div class="row1"><div><div class="sub">${esc(p.layer)} · ${m.listing||esc(p.tk)}</div><h2 id="dname">${esc(p.name)}</h2></div><button class="close" id="dclose">關閉 Esc</button></div>
    <div class="one">${pf?pf.oneliner:"公司檔案撰寫中。"}</div>
-   ${pf?`<div class="dmeta" style="color:var(--navy-muted)">${["name_full","hq","founded","employees","fiscal_year_end","asof"].filter(k=>m[k]).map(k=>`<span>${{name_full:"全名",hq:"總部",founded:"成立",employees:"員工",fiscal_year_end:"會計年度結束",asof:"資料日"}[k]}</span><b style="color:var(--navy-ink)">${m[k]}</b>`).join("")}</div>`:""}</div>
+   ${pf?`<div class="dmeta" style="color:var(--navy-muted)">${["name_full","hq","founded","employees","fiscal_year_end","asof"].filter(k=>m[k]).map(k=>`<span class="mi"><span>${{name_full:"全名",hq:"總部",founded:"成立",employees:"員工",fiscal_year_end:"會計年度結束",asof:"資料日"}[k]}</span><b style="color:var(--navy-ink)">${m[k]}</b></span>`).join("")}</div>`:""}</div>
    <div class="dstats">${stats.map(([k,x])=>`<div><div class="k">${k}</div><div class="v">${x}</div></div>`).join("")}</div>
    <div class="dbody"><div class="dtabs" role="tablist">${DT.map((d,i)=>`<button class="dtab" role="tab" data-dt="${i}" aria-selected="${i===(tab||0)}">${d[0]}</button>`).join("")}<button class="dtab" data-goval="${esc(tk)}">估值 →</button></div>
    <div class="dpane" id="dpane">${pf?paneHtml(pf,tab||0):'<div class="pending">這家公司的檔案尚未完成。</div>'}</div></div>`;
