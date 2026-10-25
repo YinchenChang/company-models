@@ -1,4 +1,4 @@
-# AMD（AMD）收支與估值模型 v0.2（AI 半導體 Project：運算層，GPU 側非 NVIDIA 份額）
+# AMD（AMD）收支與估值模型 v0.2.1（AI 半導體 Project：運算層，GPU 側非 NVIDIA 份額）
 # 用法：python3 amd/build_amd.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年（FY2026＝CY2026；AMD 的會計年度約在 12 月最後一個週六結束，不做平移）。金額：十億美元（US$B）；EPS 為 non-GAAP（公司口徑）。
 import sys, os, glob
@@ -101,7 +101,7 @@ inp("gs_q2", "Q2 2026 GPU 占資料中心營收", "%", 0.39, 0.43, 0.47, "Assume
 inp("ng_q3", "Q3 2026 資料中心非 GPU（CPU 等）季增", "%", 0.04, 0.08, 0.12, "Assumed", "公司：下半年伺服器營收年增逾 80%、2026 伺服器 CPU 供給吃緊（法說摘要，二手）", "—")
 inp("ng_q4", "Q4 2026 資料中心非 GPU 季增", "%", 0.02, 0.06, 0.10, "Assumed", "同上；Venice（Zen 6）2026 下半年開始部署（公司）", "—")
 inp("gm_gpu", "資料中心 GPU 毛利率（FY2026；non-GAAP 口徑）", "%", 0.40, 0.50, 0.55, "Assumed", "公司：資料中心 AI 毛利率低於公司平均（Q2 2026 法說摘要，二手）；公司平均 FY2026 錨點約 56%", "第二來源：未找到。非 GPU 毛利率由此在 FY2026 校準（Derived，PL 各區塊）")
-inp("abs_mem", "HBM 漲價由 AMD 吸收的比例（其餘轉嫁到售價）", "x", 0.0, 0.5, 1.0, "Assumed", "比照 NVIDIA 模型（Assumed 0–1，基準 0.5）", "第二來源：未找到。AMD 對 HBM4 合約價轉嫁的公開說法：未找到")
+inp("abs_mem", "HBM 漲價由 AMD 吸收的比例（其餘轉嫁到售價）：FY2026–27 三情境共用；FY2028 起改讀 K 節 abs_mem_A／_B／_C；低／高為 Sens 用", "x", 0.0, 0.5, 1.0, "Assumed", "比照 NVIDIA 模型（Assumed 0–1，基準 0.5）", "第二來源：未找到。AMD 對 HBM4 合約價轉嫁的公開說法：未找到")
 inp("uf", "AMD 顆數係數（Sens 用；FY2027 起乘以 AMD 市場層顆數）", "x", 0.8, 1.0, 1.2, "Assumed", "無：OpenAI、Meta 各 6 GW、Anthropic 2 GW、Oracle 5 萬顆等大單的時點不確定（見 H 節）", "±20%")
 for y, gbx in ((27, GB_AMD[1]), (28, GB_AMD[2]), (29, GB_AMD[2])):
     inp(f"pg_{y}", f"世代售價係數 20{y}（MI450／Helios 每顆售價 ÷ FY2026 認列售價）", "x", 1.0, 1.0, round(gbx / GB_AMD[0], 6), "Analogy／Assumed", "基準 1.0＝k_rec 延續（比照 NVIDIA 模型：FY2026 校準的水準沿用）；高＝售價隨 HBM 容量等比例（Analogy：432 ÷ 288）", "MI455X 官方價：未找到；部落格 $15–50K（NVIDIA 模型 In 頁 pa_amd 說明）")
@@ -178,6 +178,9 @@ inp("tp_roe", "ROE（再投資率＝tp_g ÷ tp_roe）：同口徑近三年平均
 inp("tp_w_dcf", "目標價中 DCF 的權重（其餘為 Comparable）", "%", None, 0.5, None, "Assumed", "Andy 可改（Andy 2026-10-25 11:53 定 50／50）", "Sens 頁 0.3／0.7")
 inp("nm10_k", "延伸期 C 情境淨利率目標＝FY2029 淨利率 × 本係數（同口徑十年平均未找到）", "x", None, 0.8, None, "Assumed", "工作單：找不到十年平均用最後一年 × 0.8。本模型為 non-GAAP 口徑；同口徑十年淨利率：未找到", "參考：GAAP 十年平均 7.10%（valueinvesting.io 2016–2025：−11.63%、−0.63%、5.20%、5.07%、25.50%、19.24%、5.59%、3.77%、6.36%、12.51%），含 Xilinx 攤銷，口徑不同不採")
 inp("cons_tp", "市場共識目標價（賣方平均）", "US$", None, 637.61, None, "Interested-party", "stockanalysis.com（55 位分析師平均，2026-10-25 頁面；現價為 10-23 收盤）", "賣方有目標價誘因；只作對照，不進目標價")
+sec("K. 情境一致性（v0.2.1 新增，Andy 2026-10-25 13:13「情境與行業一致」：公司特有變數方向 A 最有利、C 最不利）")
+for s, v, why in (("A", 0.2, "順利：加速器需求強，HBM 漲價轉嫁最多"), ("B", 0.5, "平平：與 v0.2 三情境共用值相同"), ("C", 0.7, "不如預期：需求轉弱，AMD 吸收最多以保份額")):
+    inp(f"abs_mem_{s}", f"情境 {s}：HBM 漲價由 AMD 吸收的比例（FY2028 起）", "x", None, v, None, "Assumed", why, "v0.2 為三情境 0.5，HBM 價 A 最高使 EPS B＞A（稽核 2026-10-25）；改為 A 0.2／B 0.5／C 0.7（A 先試 0.3：FY2028 EPS 11.07＜B 11.11，因認股權證稀釋 A 最多，故取 0.2）。轉嫁比例的公開資料：未找到")
 
 r = 4
 INROW = {}
@@ -301,9 +304,10 @@ UN.column_dimensions["G"].width = 80
 # ---------------- 引擎 ----------------
 FYS = (2025, 2026, 2027, 2028, 2029); FC = {2025: "C", 2026: "D", 2027: "E", 2028: "F", 2029: "G"}
 BU = (2026, 2027, 2028, 2029)
-DEFP = dict(scn="A", uf="1", pg=lambda y: f"pg_{y % 100}", abs="abs_mem", gmg="gm_gpu", gcpu=lambda y: f"g_cpu{y % 100}", opxa="0", wf="wf")
+DEFP = dict(scn="A", uf="1", pg=lambda y: f"pg_{y % 100}", abs="abs_mem", abs_s=None, gmg="gm_gpu", gcpu=lambda y: f"g_cpu{y % 100}", opxa="0", wf="wf")
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    absy = lambda fy: P["abs"] if fy <= 2027 else (P["abs_s"] or f"abs_mem_{s}")   # v0.2.1：FY2027 三情境共用 abs_mem；FY2028 起讀 abs_mem_{s}
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
     hdr(ws, r, ["項目", "單位", "FY2025A", "FY2026", "FY2027", "FY2028", "FY2029", "說明"]); r += 1
@@ -327,7 +331,7 @@ def engine(ws, r0, title, **over):
     row("pg", "世代售價係數（MI450／Helios）", "x", {"D": "=1", **{c_(fy): "=" + P["pg"](fy) for fy in BU[1:]}}, fmt="0.000")
     row("gbase", "GPU 基準營收 ＝ 市場金額 × AMD 份額 × 認列係數 × 世代係數", "US$B", {c_(fy): f"={c_(fy)}{R['mkt']}*{c_(fy)}{R['shr']}*{c_(fy)}{R['ufac']}*{c_(fy)}{R['pg']}" for fy in BU})
     row("hix", "HBM 價格指數（相對 2026）", "x", {c_(fy): f"=hbm_{s}_{fy % 100}/hbm_{s}_26" for fy in BU}, fmt="0.000")
-    row("gpur", "資料中心 GPU 營收（含 HBM 漲價轉嫁 (1−吸收比例)）", "US$B", {c_(fy): f"={c_(fy)}{R['gbase']}*(1+(1-{P['abs']})*hs_26*({c_(fy)}{R['hix']}-1))" for fy in BU})
+    row("gpur", f"資料中心 GPU 營收（含 HBM 漲價轉嫁 (1−吸收比例)；吸收比例 FY2026–27 abs_mem、FY2028 起 abs_mem_{s}）", "US$B", {c_(fy): f"={c_(fy)}{R['gbase']}*(1+(1-{absy(fy)})*hs_26*({c_(fy)}{R['hix']}-1))" for fy in BU}, note="v0.2.1：FY2028 起吸收比例分情境（A 0.2 轉嫁最多、B 0.5、C 0.7）；FY2026–27 三情境相同（abs_mem）")
     row("gpuc", "資料中心 GPU 成本", "US$B", {c_(fy): f"={c_(fy)}{R['gbase']}*((1-{P['gmg']})+hs_26*({c_(fy)}{R['hix']}-1))" for fy in BU}, note="基準營收 ×（非 HBM 成本＋HBM 成本占比的增加）")
     row("gpugm", "資料中心 GPU 毛利率", "%", {c_(fy): f"=1-{c_(fy)}{R['gpuc']}/{c_(fy)}{R['gpur']}" for fy in BU}, fmt="0.0%")
     row("cpu", "資料中心非 GPU（EPYC CPU 等）", "US$B", {"D": "=a26_dcx", **{c_(fy): f"={c_(fy - 1)}{r}*(1+{P['gcpu'](fy)})" for fy in BU[1:]}})
@@ -504,7 +508,7 @@ cases = [("AMD 顆數係數 低（×0.8）", "FY2027 起 AMD 認列顆數 ×0.8�
          ("AMD 顆數係數 高（×1.2）", "×1.2（OpenAI、Meta、Anthropic、Oracle 提前放量）", dict(uf="uf_hi")),
          ("世代售價係數 高（隨 HBM 容量）", "FY2027 ×1.25、FY2028 起 ×1.5（Analogy）", dict(pg=lambda y: f"pg_{y % 100}_hi")),
          ("對照：FY2027 起每顆＝市場層 pa_amd（k_rec 只解釋 2026 售價）", "世代係數＝1 ÷ k_rec", dict(pg=lambda y: "1/k_rec")),
-         ("HBM 吸收比例 0（全額轉嫁）", "吸收比例 0.0", dict(abs="abs_mem_lo")), ("HBM 吸收比例 1（全額吸收）", "吸收比例 1.0", dict(abs="abs_mem_hi")),
+         ("HBM 吸收比例 0（全額轉嫁）", "吸收比例 0.0", dict(abs="abs_mem_lo", abs_s="abs_mem_lo")), ("HBM 吸收比例 1（全額吸收）", "吸收比例 1.0", dict(abs="abs_mem_hi", abs_s="abs_mem_hi")),
          ("GPU 毛利率 低（40%）", "FY2026 GPU 毛利率 40%（非 GPU 毛利率重新校準）", dict(gmg="gm_gpu_lo")), ("GPU 毛利率 高（55%）", "55%", dict(gmg="gm_gpu_hi")),
          ("資料中心 CPU 成長 低", "FY2027 +30%、FY2028 +10%、FY2029 +5%", dict(gcpu=lambda y: f"g_cpu{y % 100}_lo")),
          ("資料中心 CPU 成長 高（公司說法）", "FY2027 +70%、FY2028 +40%、FY2029 +25%", dict(gcpu=lambda y: f"g_cpu{y % 100}_hi")),
@@ -618,7 +622,7 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("AMD（AMD）收支與估值模型 v0.2（AI 半導體 Project：運算層，GPU 側非 NVIDIA 份額）　2026-10-25", True),
+lines = [("AMD（AMD）收支與估值模型 v0.2.1（AI 半導體 Project：運算層，GPU 側非 NVIDIA 份額）　2026-10-25", True),
  ("本版：運算層第三個模型，複製 nvidia/ 的結構，匯入 nvidia/accel_share.py 的份額函式（AMD 為 GPU 側非 NVIDIA 份額）；Val 頁第 0 節為情境加權目標價。", False),
  ("模型命題：AMD 的資料中心 GPU 營收＝加速器市場（本專案加速器數量層 × 各平台每顆價）× AMD 金額份額；OpenAI、Meta 各 6 GW 與 Anthropic、Oracle 大單在 2026 下半年起放量，但每 GW 附帶認股權證稀釋，HBM 漲價又壓 GPU 毛利率。股價約為 FY2027 共識 EPS 的 33 倍：要多少大單如期放量、毛利率守住多少，才撐得住現價。", False),
  ("核心問題：以市場層顆數推得的 AMD 資料中心 GPU 營收與 EPS，能否支撐現價與公司「2027 年資料中心逾一倍、EPS 逾 $20」的說法；差距來自顆數、售價還是毛利率。", False), ("", False),
@@ -639,6 +643,18 @@ XH, XR, XC = TP.extend_pl(PL, PB, FC, FYS, 2029, {"rev": "rev", "ni": "ni", "sh"
     "三情境延伸到 FY2032（v0.2；FY2025A–FY2029 引用上方推導區塊，FY2030 起為收斂法，非驅動因子推導；收斂年度為橘底）",
     "上游市場層（markets/*、台積電顆數）只到 CY2029＝FY2029；FY2030 起：營收年增由 FY2029 年增線性收斂到 FY2032 的長期成長（A＝tp_g＋tp_gd、B＝tp_g、C＝tp_g−tp_gd），"
     "淨利率由 FY2029 線性收斂到中段利潤率（A＝FY2029、B＝FY2029 與 C 目標的中點、C＝FY2029 × nm10_k；同口徑十年平均未找到），股數沿用 FY2029 年變動")
+# v0.2.1：收斂目標淨利率改為 A ≥ B ≥ C（v0.2 的 A＝FY2029 淨利率，因 HBM 成本 A 最高而低於 B 目標）。
+#   C＝FY2029(C) × nm10_k；B＝MAX(FY2029(B) 與 C 規則的中點, C 目標)；A＝MAX(FY2029(A), B 目標)
+_lc = XC[2029]; _nm = {s_: f"${_lc}${XR[(s_, 'nm')]}" for s_ in SC}
+_T = {"C": f"{_nm['C']}*nm10_k"}
+_T["B"] = f"MAX(({_nm['B']}+{_nm['B']}*nm10_k)/2,{_T['C']})"
+_T["A"] = f"MAX({_nm['A']},{_T['B']})"
+_conv = [y for y in range(2030, 2033)]
+for s_ in ("A", "B"):
+    for k_, y in enumerate(_conv, 1):
+        PL[f"{XC[y]}{XR[(s_, 'nm')]}"] = f"={_nm[s_]}+({_T[s_]}-{_nm[s_]})*{k_}/{len(_conv)}"
+    PL.cell(XR[(s_, "nm")], 3 + len(XC), {"A": "FY2030 起：FY2029 淨利率線性收斂到 MAX(FY2029 淨利率, B 目標)（v0.2.1：確保收斂目標 A ≥ B ≥ C）",
+                                         "B": "FY2030 起：FY2029 淨利率線性收斂到 MAX(FY2029 與 FY2029 × nm10_k 的中點, C 目標)（v0.2.1：確保 B ≥ C）"}[s_])
 _h = next(r for r in range(1, V.max_row + 1) if V.cell(r, 1).value == "P/E：十年歷史倍數")
 TPL, TPN = TP.add_tp_section(wb, V,
     eps={s: [f"PL!{XC[y]}{XR[(s, 'eps')]}" for y in range(2027, 2033)] for s in SC}, e_mon=12,
@@ -665,6 +681,8 @@ RD.cell(len(lines) + 1, 1, "v0.2（2026-10-25）：(1) 目標價改為 DCF 與 C
         "(3) 現價維持 2026-10-23 收盤 516.79（補第二來源 digrin）。(4) In 頁 J 節新增目標價參數（黃底，Andy 可改）；Sens 頁新增 tp_r、tp_g、tp_w_dcf 對加權目標價的影響。FY2025–FY2029 既有數字不變。")
 RD.cell(len(lines) + 2, 1, "情境對應（v0.2 延伸期）：A＝順利（市場層基準顆數）、B＝平平（AI 資本支出消化：CY2028 ×0.8、CY2029 ×0.85）、C＝不如預期（CY2028–29 ×0.6）；FY2027 三情境相同，情境差從 FY2028 起。本版未做先驗，無 Andy 合理 P/E 對照。")
 
+RD.cell(len(lines) + 3, 1, "v0.2.1（2026-10-25）情境一致性修正：(1) HBM 漲價吸收比例拆成 abs_mem_A／_B／_C（In 頁 K 節：A 0.2、B 0.5、C 0.7，A 轉嫁最多），FY2028 起讀本情境、FY2026–27 三情境共用 abs_mem 0.5（FY2027 三情境仍相同）；"
+        "A 先試 0.3 時 FY2028 EPS 仍 B＞A（認股權證稀釋 A 最多），故取 0.2。認股權證照原邏輯。(2) FY2030–32 收斂目標淨利率改為 A ≥ B ≥ C：C＝FY2029(C) × nm10_k、B＝MAX(B 中點, C 目標)、A＝MAX(FY2029(A), B 目標)。修正後 FY2028–FY2032 EPS A ≥ B ≥ C。")
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])

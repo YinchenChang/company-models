@@ -1,4 +1,4 @@
-# Disco（6146.T）收支與估值模型 v0.2（AI 半導體 Project 步驟 5：設備與材料——第二家公司）
+# Disco（6146.T）收支與估值模型 v0.2.1（AI 半導體 Project 步驟 5：設備與材料——第二家公司）
 # 用法：python3 disco/build_disco.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度 4 月到隔年 3 月：FY2025＝2025-04～2026-03（公司「2026年3月期」）。金額：十億日圓（¥B）。
 # 結構比照 advantest/build_advantest.py：In、Q、Hist、Drv（驅動推導）、PL、Val、Recon、Sens、Sources、README。
@@ -300,10 +300,12 @@ def engine(ws, r0, title, **over):
     row("pas", "HBM 研削／切割工序數", "十億次", {CYC[y]: f"={CYC[y]}{R['dies']}*(1+{P['sstk']}/{CYC[y]}{R['stk']})" for y in range(2025, 2032)}, note="晶粒數 ×（1＋每堆疊額外工序 ÷ 層數）")
     row("hbp", "混合鍵合占比 × 開關", "%", {CYC[y]: f"=hbp_{yy(y)}{P['hbp']}*{P['hbon']}" for y in range(2025, 2032)}, fmt="0%")
     row("vh", "HBM 產能需求（精度加權工序）", "十億次", {CYC[y]: f"={CYC[y]}{R['pas']}*(1+{CYC[y]}{R['hbp']}*{P['hbe']})" for y in range(2025, 2032)}, note="混合鍵合工序 × (1＋淨影響)")
-    row("xh", "HBM 新機需求（下一年產能增量＋汰換）", "十億次", {CYC[y]: f"=MAX(0,{CYC[y+1]}{R['vh']}-{CYC[y]}{R['vh']})+{P['dlt']}*{CYC[y]}{R['vh']}" for y in range(2025, 2031)}, note="設備在產能需要前一年購入")
+    nxh = lambda y: ("vhA_28" if (y == 2027 and s != "A") else f"{CYC[y+1]}{R['vh']}")   # v0.2.1：CY2027 的下一年（CY2028）產能讀情境 A 路徑，2027 三情境相同
+    row("xh", "HBM 新機需求（下一年產能增量＋汰換；CY2027 的下一年產能讀情境 A）", "十億次", {CYC[y]: f"=MAX(0,{nxh(y)}-{CYC[y]}{R['vh']})+{P['dlt']}*{CYC[y]}{R['vh']}" for y in range(2025, 2031)}, note="設備在產能需要前一年購入；v0.2.1：CY2027 購機依 2027 年當時的共同前提（情境 A 的 CY2028 產能，具名 vhA_28），與 markets/equipment 2027 三情境相同一致；CY2028 起照讀本情境")
     um = {2028: f"*um28_{s}", 2029: f"*um29_{s}"}
     row("vl", "CoWoS 片數需求", "千片", {"C": f"={P['cw25']}", **{CYC[y]: f"=cw_{y % 100}{um.get(y, '')}" for y in range(2026, 2030)}, "H": f"=G{r}*(1+{P['tail']})", "I": f"=H{r}*(1+{P['tail']})"}, fmt="#,##0", note="台積電模型；B、C 的 2028–29 × 情境係數")
-    row("xl", "先進封裝新機需求（下一年片數增量＋汰換）", "千片", {CYC[y]: f"=MAX(0,{CYC[y+1]}{R['vl']}-{CYC[y]}{R['vl']})+{P['dlt']}*{CYC[y]}{R['vl']}" for y in range(2025, 2031)}, fmt="#,##0")
+    nxl = lambda y: ("cw_28*um28_A" if y == 2027 else f"{CYC[y+1]}{R['vl']}")   # v0.2.1：CY2027 的下一年（CY2028）片數讀情境 A
+    row("xl", "先進封裝新機需求（下一年片數增量＋汰換；CY2027 的下一年片數讀情境 A）", "千片", {CYC[y]: f"=MAX(0,{nxl(y)}-{CYC[y]}{R['vl']})+{P['dlt']}*{CYC[y]}{R['vl']}" for y in range(2025, 2031)}, fmt="#,##0", note="v0.2.1：CY2027 購機用 cw_28 × um28_A（情境 A），2027 三情境相同")
     ws.cell(r, 1, "B. 校準（只用 FY2025 AI 出貨錨點；FY(t)＝3/4×CY(t)＋1/4×CY(t+1)）").font = BOLD; r += 1
     fw = lambda key, y: f"(0.75*{CYC[y]}{R[key]}+0.25*{CYC[y+1]}{R[key]})"
     row("kh", "HBM：每單位新機需求的裝置營收 kH", "¥B／十億次", {"C": f"={P['ai']}*{P['w']}/{fw('xh', 2025)}"}, fmt="0.000", note="＝AI 出貨 × HBM 比重 ÷ FY2025 新機需求")
@@ -368,7 +370,7 @@ PB = {}; r0 = 70
 for s in SC:
     PB[s] = engine(PL, r0, {"A": "情境 A：基準（加速器顆數續增）", "B": "情境 B：2028 顆數 ×0.8、2029 ×0.85；非 AI FY2028 持平", "C": "情境 C：2028–29 顆數 ×0.6；非 AI FY2028 −12%、毛利率下調"}[s], scn=s)
     r0 = PB[s]["end"] + 2
-    if s == "A": defname("sc_A", f"PL!$D${PB['A']['sc']}")   # B、C 區塊的 cf 讀這一格
+    if s == "A": defname("sc_A", f"PL!$D${PB['A']['sc']}"); defname("vhA_28", f"PL!$F${PB['A']['vh']}")   # vhA_28：情境 A 的 CY2028 HBM 產能需求（B、C 的 CY2027 購機讀這一格）   # B、C 區塊的 cf 讀這一格
 hdr(PL, 3, ["情境／項目", "單位", "FY2025A", "FY2026", "FY2027", "FY2028", "FY2029", "說明"])
 sr = 4; SUMR = {}
 for s in SC:
@@ -601,7 +603,7 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 130
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
 PROP = "Disco 的營收由需要研削與切割的晶圓次數驅動，AI 只占約兩成；問題是 HBM 堆疊與先進封裝帶來的增量，能否抵過非 AI 後段的循環，撐住目前約 41 倍的近 12 月本益比？"
-lines = [("Disco（6146.T）收支與估值模型 v0.2（AI 半導體 Project 步驟 5：設備與材料）　2026-10-25", True),
+lines = [("Disco（6146.T）收支與估值模型 v0.2.1（AI 半導體 Project 步驟 5：設備與材料）　2026-10-25", True),
  ("v0.1.2（2026-10-23）：引用的上游成品檔名更新（SK 海力士 v0.4.1、美光 v0.3.1、三星 v0.2.1、台積電 v0.2.1 升版）；所有數值不變。", False),
  ("模型命題：" + PROP, False),
  ("註（v0.1 時以 2026-10-22 收盤計）：41 倍＝現價 ¥51,230 ÷ FY2025 EPS ¥1,249.84（上一個會計年度）；嚴格的近 12 月 EPS（含 FY2026 上半）為 1,474.98，對應 34.7 倍（Val 頁）。", False), ("", False),
@@ -809,6 +811,7 @@ def valuation_v2(CFG):
     return T, EXT
 
 V2T, V2EXT = valuation_v2(CFG_V2)
+RD.cell(RD.max_row + 1, 1, "v0.2.1（2026-10-25）情境一致性修正：CY2027 的「下一年設備增量」三情境改讀情境 A 路徑（HBM：具名 vhA_28＝情境 A 的 CY2028 產能需求；先進封裝：cw_28 × um28_A），與 markets/equipment 2027 三情境相同、markets/memory HBM 供給三情境相同的上游前提一致；CY2028 起照讀本情境。FY2027（2027-04～2028-03）含 CY2028 第一季，情境差只剩這一季（與 Advantest 相同處理）。混合鍵合占比三情境皆取基準（行業技術變數；韓美模型 CY2028 起 A 高、B 基準、C 低）。")
 if os.environ.get("V2_ROWS"):
     print("V2", V2T, V2EXT)
 
