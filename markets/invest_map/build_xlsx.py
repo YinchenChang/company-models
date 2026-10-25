@@ -258,7 +258,7 @@ def main():
     wv = wb.create_sheet("價值鏈")
     hdr(wv, ["層級", "次產業", "占 AI IT 資本支出", "比例中值", "每 GW 金額（GB300，$B）", "不可替代性（1–3）", "價值鏈分量分",
              "依據"], [14, 22, 30, 10, 14, 12, 12, 70])
-    capex_it_row = 3  # 每GW!D3＝IF_CapexIT GB300 基準
+    capex_it_row = 2  # 每GW!D2＝IF_CapexIT GB300 基準（D3 為 VR200）
     for i, s in enumerate(SEGMENTS, 2):
         key, layer, name, txt, mid, irr, vc, basis = s
         irr, vc = rseg.get(name, (irr, vc))
