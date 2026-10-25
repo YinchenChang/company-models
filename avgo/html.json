@@ -294,6 +294,50 @@
    "intro": "@Val!A1",
    "blocks": [
     {
+     "type": "table",
+     "caption": "@Val!A51",
+     "head": [
+      "@Val!A52",
+      "@Val!B52"
+     ],
+     "rows": [
+      [
+       "@Val!A53",
+       "@Val!B53|n2"
+      ],
+      [
+       "@Val!A54",
+       "@Val!B54|sp1"
+      ],
+      [
+       "@Val!A55",
+       "@Val!B55|n2"
+      ],
+      [
+       "@Val!A56",
+       "@Val!B56|n2"
+      ],
+      [
+       "@Val!A57",
+       "@Val!B57|n2"
+      ],
+      [
+       "@Val!A58",
+       [
+        "@Val!B58|p0",
+        "／",
+        "@Val!C58|p0",
+        "／",
+        "@Val!D58|p0"
+       ]
+      ],
+      [
+       "@Val!A59",
+       "@Val!B59"
+      ]
+     ]
+    },
+    {
      "type": "note",
      "parts": [
       "@Val!A2"

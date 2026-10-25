@@ -202,6 +202,9 @@ inp("px", "股價（2026-10-22 收盤，stockanalysis）", "US$", None, 212.21, 
 inp("r_disc", "折現率（把 FY2028 年底隱含價折回現在；參考用）", "%", 0.08, 0.10, 0.12, "Assumed", "無", "FY2028 年底（2028-01）距 2026-10-22 約 1.27 年")
 for s in SC:
     inp(f"pk_{s}", f"情境 {s}：設備市場見頂年度（日曆年；循環位置規則用）", "年", None, PEAK[s], None, "Derived", PEAK_SRC[s], "共用規則（tools/cycle_position.py）：NVIDIA 的 FY(t) 對照日曆年 t−1，用 classify_lag；設備市場模型的情境係數為 Assumed" if s == "A" else "同上")
+sec("L. 目標價情境權重（v0.1.2 新增；Val 頁第 0 節用）")
+for s, w in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
+    inp(f"tp_w{s}", f"目標價情境權重 {s}", "%", None, w, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）", "三者合計應為 100%（Val 頁第 0 節列示）")
 
 r = 4
 for srow in rows:
@@ -704,7 +707,7 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("NVIDIA（NVDA）收支與估值模型 v0.1.1（AI 半導體 Project：運算層第一個樣板）　2026-10-23", True),
+lines = [("NVIDIA（NVDA）收支與估值模型 v0.1.2（AI 半導體 Project：運算層第一個樣板）　2026-10-25", True),
  ("v0.1.1（PR 審查後）：(1) 新增 NVIDIA 認列顆數係數 k_rec（Derived，只在本模型內縮放，不改 markets/memory 的共用顆數；營收與成本同比例縮放），使 FY2027 由下而上的 Data Center 營收與毛利率等於錨點，FY2028 起沿用；v0.1 的未校準基準保留在 PL 對照區塊與 Sens。(2) 原 pf_cal（只調售價）留在 Sens 當對照。(3) Recon 新增 B2「差額來源待查」。(4) Val：10 年落後 P/E 規則值標「不適用」（保留計算，不進結論）。", False),
  ("模型命題：NVIDIA 的營收＝加速器顆數 × 每顆售價＋網通附掛。2027 年 ASIC 把 NVIDIA 的金額份額壓到約 75–80%，HBM 漲價壓毛利 2–3 個百分點。股價取決於 2028 年顆數持平之後，EPS 還能不能成長：現價約為 2027 年 EPS 的 13.5 倍，是低估，還是見頂前的折價。", False),
  ("核心問題：加速器顆數在 2028 年持平以後，NVIDIA 的 EPS 還能不能成長。（命題的「2027 年」＝日曆年 2027＝FY2028；「2028 年顆數持平」＝CY2028＝FY2029，故問題是 FY2030 EPS 相對 FY2029。）", False), ("", False),
@@ -717,10 +720,36 @@ lines = [("NVIDIA（NVDA）收支與估值模型 v0.1.1（AI 半導體 Project�
  ("估值：P/E 規則——FY2016–FY2025 年底 P/E 分位（見頂 25 分位、中段中位數、谷底 75 分位）；循環位置用 tools/cycle_position.py 的共用規則（lag 版：FY(t) 對照 CY t−1；見頂年度讀設備市場模型 " + "、".join(f"{s_} {PEAK[s_]}" for s_ in SC) + " → FY2028：" + "、".join(f"{s_} {CP.classify_lag(2028, PEAK[s_])}" for s_ in SC) + "）；另列以本模型營收路徑自己的見頂年判斷的對照欄（只作對照）。10 年落後 P/E 規則值標「不適用」（歷史倍數含高成長期溢價；保留計算，不進結論）；結論用現價 ÷ FY2028 EPS（模型與共識）。前瞻 P/E 歷史資料由擁有者另行提供，本版不做。", False), ("", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未單獨使用。公司原文＝8-K 新聞稿（nvidianews.nvidia.com，已抓取）；CFO 書面說明、10-Q、法說逐字稿無法開啟，相關數字只經搜尋摘要（標二手），原文待人工複核。", False),
  ("已知限制：(1) k_rec 是顆數層與售價層的合併係數（無法分開識別，Recon B2 列各候選來源與公開資料，皆未驗證）；FY2028 起沿用 k_rec 假設該缺口持續；Sens 對照案例顯示 v0.1 未校準基準與只調售價（pf_cal）的結果，後者 FY2028 毛利率與公司指引不一致。(2) 吸收比例、Rubin Ultra 售價、ASIC 單價、Edge 與網通毛利率為 Assumed。(3) P/E 歷史只有一個可用序列（Macrotrends，9 年）；自算需要會計年度年底收盤價（未找到）。(4) 10 年落後 P/E 規則值不適用：歷史倍數含高成長期溢價，乘在 FY2028 EPS 上得到的價格遠高於現價（Val 頁 What must be true）。(5) FY↔CY 近似：Rubin 在 CY2026 的 1.7M 顆多數出貨在 FY2027 Q4 之後。(6) 網通的 B／C 縮放假設組合不變。(7) 公司 FY2028 美元指引（約 $690B）未找到直接陳述。", False)]
+lines.append(("v0.1.2（2026-10-25）：Val 頁新增「0. 目標價與上檔空間」（放在 Val 既有內容之後，不位移既有儲存格）與 In 頁目標價情境權重 tp_wA／tp_wB／tp_wC（0.3／0.5／0.2，Assumed）。主估值法標「不適用」，目標價改用十年 P/E 中位數 × 各情境 FY2027 EPS；其餘儲存格不變。", False))
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
 
-order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
+# ---------------- Val 第 0 節：目標價與上檔空間（v0.1.2 新增；Andy 2026-10-25 要求，列標籤依工作單逐字） ----------------
+# 為不位移既有儲存格（與舊版 dist 逐格相同），本節放在 Val 既有內容之後；HTML 估值章第一個區塊即為本節
+def add_target_price(V, imp, note, fmt, method, px_note):
+    t0 = V.max_row + 2
+    V.cell(t0, 1, "0. 目標價與上檔空間").font = BOLD
+    hdr(V, t0 + 1, ["項目", "數值", "", "", "說明"])
+    V.cell(t0 + 2, 1, "目標價（12 個月，情境加權）"); V[f"B{t0 + 2}"] = f"=tp_wA*B{t0 + 4}+tp_wB*B{t0 + 5}+tp_wC*B{t0 + 6}"; V[f"B{t0 + 2}"].number_format = fmt
+    V[f"E{t0 + 2}"] = "權重 × 各情境隱含價"
+    V.cell(t0 + 3, 1, "上檔空間（目標價 ÷ 現價 − 1）"); V[f"B{t0 + 3}"] = f"=B{t0 + 2}/px-1"; V[f"B{t0 + 3}"].number_format = "0.0%"; V[f"E{t0 + 3}"] = px_note
+    for i, (s, lab) in enumerate((("A", "情境 A 隱含價（樂觀）"), ("B", "情境 B 隱含價（基準）"), ("C", "情境 C 隱含價（下檔）"))):
+        rr = t0 + 4 + i
+        V.cell(rr, 1, lab); V[f"B{rr}"] = imp[s]; V[f"B{rr}"].number_format = fmt; V[f"E{rr}"] = note[s]
+    rr = t0 + 7
+    V.cell(rr, 1, "情境權重 A／B／C"); V[f"B{rr}"] = "=tp_wA"; V[f"C{rr}"] = "=tp_wB"; V[f"D{rr}"] = "=tp_wC"
+    for c in "BCD": V[f"{c}{rr}"].number_format = "0%"
+    V[f"E{rr}"] = f'="合計 "&TEXT(B{rr}+C{rr}+D{rr},"0%")&"；In 頁 tp_wA／tp_wB／tp_wC（Assumed，Andy 可改）"'
+    V.cell(t0 + 8, 1, "目標價方法"); V[f"B{t0 + 8}"] = method
+    return t0
+TP0 = add_target_price(V, {s: f"=pe_mid*PL!D{SUMR[(s, 'eps')]}" for s in SC},
+    {s: f"情境 {s} FY2027 EPS（PL 頁）× 十年 P/E 中位數（第 6 節 pe_mid）" for s in SC}, "#,##0.00",
+    "P/E：十年（FY2016–FY2025 會計年度年底，Macrotrends 9 年）落後 P/E 中位數 × 各情境 FY2027 EPS（不含權益證券損益；FY2027＝2026-02～2027-01）。"
+    "本模型主估值法（FY2028 EPS × 循環位置分位）標「不適用」，依工作單改用此備案。十年倍數含高成長期溢價（FY2023 約 115x、FY2021 約 75x），偏誤方向為高估；"
+    "FY2027 三情境 EPS 相同（情境差從 FY2028 起），故三情境隱含價相同；隱含價約為 FY2027 年底（2027-01）的價格、未折現。",
+    "現價＝In 頁 px（2026-10-22 收盤）")
+
+order =["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])
 if os.environ.get("NV_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數

@@ -1,4 +1,6 @@
-# quanta/ — 廣達（2382）收支與估值模型 v0.1
+# quanta/ — 廣達（2382）收支與估值模型 v0.1.1
+
+> v0.1.1（2026-10-25）：補目標價——Val 新增第 0 節「目標價與上檔空間」、In 新增情境權重 `tp_wA／tp_wB／tp_wC`（0.3／0.5／0.2，Assumed，Andy 可改）；其餘數值與 v0.1 相同。
 
 廣達的 AI 伺服器營收＝部署 GW（AI IT 資本支出 ÷ 每 GW IT 資本支出）× 每 GW ODM 整櫃價值 × 廣達有效份額 ×（1 − 客供比例）。組裝營收包含轉手的 GPU，所以營收大、毛利率約 5%。客供比例上升時，營收成長放慢、毛利率回升，毛利金額大致不變。
 
@@ -9,9 +11,9 @@ AI 半導體 Project **伺服器組裝次產業的樣板**。AI 伺服器組裝�
 | 檔案 | 內容 |
 |---|---|
 | `build_quanta.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261024_廣達模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261025_廣達模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261024_廣達模型_v0.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261025_廣達模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 quanta/build_quanta.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、整櫃買方價格）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）；**不修改它們**。
 
@@ -49,6 +51,8 @@ AI 半導體 Project **伺服器組裝次產業的樣板**。AI 伺服器組裝�
 - **最敏感：** AI 部署 ×0.8（FY2028 EPS −17%）、份額流失（−18%）、每 GW 價值（±14–18%）、淨利係數 0.75（−13%）；顆數情境 C −39%。客供比例本身對 EPS 影響小（±1%），要看保留毛利比例。
 
 ## 估值（Val）
+
+**目標價（12 個月，情境加權 A／B／C＝0.3／0.5／0.2）：NT$491，上檔空間 +52.3%**（現價 NT$322，2026-10-22 收盤）。三情境隱含價：A NT$535、B NT$471、C NT$471（規則值）。方法：十年 P/E（companiesmarketcap、Goodinfo 兩來源平均）依循環位置取分位 × FY2027 EPS；十年倍數含筆電代工期低倍數，可能偏低；隱含價約為 FY2027 年底、未折現，作 12 個月目標價的近似。見 Val 第 0 節（第 41 列；為了不位移既有列放在空白列）。
 
 現價 NT$322（2026-10-22）÷ FY2027 EPS＝7.4x；÷ 未來 12 月 EPS（0.2 × FY2026＋0.8 × FY2027）＝7.9x；÷ FY2028 EPS：A 6.2x、B 7.7x、C 10.2x。十年年底 P/E 兩個來源（companiesmarketcap、Goodinfo 年底收盤 ÷ EPS）取分位再平均：25 分位 10.8x、中位數 12.3x、75 分位 14.6x。情境 A 營收最高年 FY2029，判為中段 → 規則值 12.3x × FY2027 EPS＝NT$535（+66%）；B、C 營收最高年 FY2027 → 見頂 10.8x → NT$471（+46%）。以 Andy 先驗合理 15x 計：FY2027 NT$654（+103%）。
 

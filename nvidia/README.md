@@ -1,4 +1,4 @@
-# nvidia/ — NVIDIA（NVDA）收支與估值模型 v0.1.1
+# nvidia/ — NVIDIA（NVDA）收支與估值模型 v0.1.2
 
 NVIDIA 的營收＝加速器顆數 × 每顆售價＋網通附掛。2027 年 ASIC 把 NVIDIA 的金額份額壓到約 75–80%，HBM 漲價壓毛利 2–3 個百分點。股價取決於 2028 年顆數持平之後，EPS 還能不能成長：現價約為 2027 年 EPS 的 13.5 倍，是低估，還是見頂前的折價。
 
@@ -10,9 +10,9 @@ AI 半導體 Project **運算層的第一個樣板**（之後 AVGO、AMD 複製�
 |---|---|
 | `build_nvidia.py` | 產生器（參數與公式；唯讀取用上游成品） |
 | `accel_share.py` | 加速器金額份額的可重用函式（同一份顆數 × 各平台每顆價 → 各家金額與份額）；本 PR 只建在 `nvidia/` 內，之後 AVGO、AMD 模型匯入使用 |
-| `dist/20261023_NVIDIA模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261025_NVIDIA模型_v0.1.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261023_NVIDIA模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261025_NVIDIA模型_v0.1.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 nvidia/build_nvidia.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`、`markets/chip_bridge/dist`、`markets/network/dist`、`markets/equipment/dist`、`skhynix/dist`、`tsmc/dist`；**不修改它們**。共用工具只新增 `tools/cycle_position.py` 的 `classify_lag`／`excel_rule_lag` 兩個函式，設備股既有函式與行為不變。
 
@@ -87,6 +87,8 @@ FY2027 三情境相同；FY2028 幾乎相同（情境係數從 CY2028＝FY2029 �
 
 ## 估值（Val）
 
+- **目標價（12 個月，情境加權 A 30%／B 50%／C 20%）：US$467.57，上檔空間 +120.3%**（情境 A／B／C 隱含價 US$467.57／US$467.57／US$467.57；Val 頁「0. 目標價與上檔空間」，放在 Val 既有內容之後；權重為 In 頁 tp_wA／tp_wB／tp_wC，Assumed，Andy 可改）。方法：P/E：十年（FY2016–FY2025 會計年度年底，Macrotrends 9 年）落後 P/E 中位數 × 各情境 FY2027 EPS（不含權益證券損益；FY2027＝2026-02～2027-01）。本模型主估值法（FY2028 EPS × 循環位置分位）標「不適用」，依工作單改用此備案。十年倍數含高成長期溢價（FY2023 約 115x、FY2021 約 75x），偏誤方向為高估；FY2027 三情境 EPS 相同（情境差從 FY2028 起），故三情境隱含價相同；隱含價約為 FY2027 年底（2027-01）的價格、未折現。
+
 **結論用**：現價 $212.21（2026-10-22 收盤，stockanalysis；10-23 收盤未找到）÷ FY2028 EPS＝**14.4x**（模型，情境 A；B、C 14.4x）、**13.3x**（共識 15.91）；命題的 13.5x 介於兩者之間。FY2029 EPS 的倍數（模型）：A 13.4x、B 16.0x、C 21.4x。Val 頁「What must be true」：FY2028 年底價格不變需要 14.4x，兩年 21% 報酬需要 17.5x。
 
 **10 年落後 P/E 規則值：不適用**（保留計算，不進結論）。理由：歷史倍數是落後倍數（年底價 ÷ 剛結束年度的 GAAP EPS），含高成長期溢價與 EPS 低谷年（FY2023 114.7x）；歷史分位為 25 分位 42.1x、中位數 51.6x、75 分位 63.4x（Macrotrends，9 年，缺 FY2016），規則值 $620–761 是現價的 2.9–3.6 倍。前瞻 P/E 歷史資料由擁有者另行提供，本版不做。
@@ -151,3 +153,9 @@ FY2028 EPS 最敏感的是**水準**（k_rec 之前的 +20.2%）與顆數（±9.
 - 情境 B、C 的網通縮放假設組合不變；情境係數（0.8／0.6）為 Assumed，無外部預測可校準。
 - FY↔CY 不做跨年加權（近似）。
 - 本模型不含 R4 產業部署路徑（`markets/deploy_path/` 尚未建立，Recon 預留列）。
+
+## v0.1.2（2026-10-25）：補目標價
+
+Val 頁新增「0. 目標價與上檔空間」（列標籤依工作單；為不位移既有儲存格，放在 Val 既有內容之後），In 頁最後新增目標價情境權重 tp_wA／tp_wB／tp_wC（0.3／0.5／0.2，Assumed）；HTML 估值章第一個區塊為本節。除新增列、README 頁標題與引用上游成品的檔名文字外，原有儲存格的值與 v0.1.1 相同（`tools/xlsx_diff.py` 比對）。
+
+- **目標價（12 個月，情境加權 A 30%／B 50%／C 20%）：US$467.57，上檔空間 +120.3%**（情境 A／B／C 隱含價 US$467.57／US$467.57／US$467.57；Val 頁「0. 目標價與上檔空間」，放在 Val 既有內容之後；權重為 In 頁 tp_wA／tp_wB／tp_wC，Assumed，Andy 可改）。方法：P/E：十年（FY2016–FY2025 會計年度年底，Macrotrends 9 年）落後 P/E 中位數 × 各情境 FY2027 EPS（不含權益證券損益；FY2027＝2026-02～2027-01）。本模型主估值法（FY2028 EPS × 循環位置分位）標「不適用」，依工作單改用此備案。十年倍數含高成長期溢價（FY2023 約 115x、FY2021 約 75x），偏誤方向為高估；FY2027 三情境 EPS 相同（情境差從 FY2028 起），故三情境隱含價相同；隱含價約為 FY2027 年底（2027-01）的價格、未折現。

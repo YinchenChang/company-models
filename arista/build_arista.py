@@ -112,6 +112,9 @@ inp("px", "股價（2026-10-23 收盤）", "US$", None, 172.37, None, "Intereste
 inp("pe_ttm_gaap", "近 12 月 GAAP P/E", "x", None, 54.55, None, "Interested-party", "StockAnalysis", "MarketBeat 53.81")
 inp("pe_fwd_sa", "前瞻 P/E（StockAnalysis）", "x", None, 37.06, None, "Interested-party", "StockAnalysis（口徑：未來 12 個月 non-GAAP，頁面未明示）", "第二來源：未找到")
 inp("g2n", "GAAP EPS ÷ non-GAAP EPS（規則值換算用）", "x", None, "=1.75/1.89", None, "Derived", PR_Q226 + "：1H26 GAAP 稀釋 EPS 1.75、non-GAAP 1.89", "FY2025：2.75 ÷ 2.98＝0.923（公司）")
+sec("I. 目標價情境權重（v0.1.1 新增；Val 頁第 0 節用）")
+for s, w in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
+    inp(f"tp_w{s}", f"目標價情境權重 {s}", "%", None, w, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）", "三者合計應為 100%（Val 頁第 0 節列示）")
 
 r = 4
 for srow in rows:
@@ -465,7 +468,7 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Arista Networks（ANET）收支與估值模型 v0.1（AI 半導體 Project：網通系統端樣板）　2026-10-24", True),
+lines = [("Arista Networks（ANET）收支與估值模型 v0.1.1（AI 半導體 Project：網通系統端樣板）　2026-10-25", True),
  ("版本：v0.1（初版）。Arista 在 AI 後端乙太網路交換器的份額在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
  ("模型命題：Arista 的 AI 營收＝AI 後端 scale-out 交換器市場（本專案網通模型）× 乙太網路占比 × Arista 份額（含前端與 scale-across 附掛）；非 AI（雲端前端、企業、園區）另依成長率推。股價約 37 倍前瞻 EPS：在 NVIDIA（Spectrum-X）與白牌夾擊下，Arista 的份額路徑能否支撐這個倍數？", False),
  ("核心問題：2027–28 年 Arista 在 AI 乙太網路的份額每掉一截，EPS 少多少；現價隱含的份額路徑合不合理。", False), ("", False),
@@ -478,10 +481,35 @@ lines = [("Arista Networks（ANET）收支與估值模型 v0.1（AI 半導體 Pr
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。公司原文＝SEC EDGAR 8-K；法說內容只經二手轉述（標二手）。", False),
  ("", False),
  ("已知限制：(1) 份額相對值與乙太網路占比皆為 Assumed，是 FY2028 EPS 最敏感的輸入（Sens）；(2) FY2026 AI 用公司目標「至少 3.5」，實際可能較高；(3) 網通模型 2027 年 scale-out 交換器 +90%，公司稱供給吃緊到 2028 年，模型未設供給上限（Sens 用市場 ×0.8）；(4) 2027 共識未找到，只有單一分析師；(5) 十年 P/E 含高成長期溢價；(6) R4 產業部署路徑未建（Recon 預留列）。", False)]
+lines.append(("v0.1.1（2026-10-25）：Val 頁新增「0. 目標價與上檔空間」（放在 Val 既有內容之後，不位移既有儲存格）與 In 頁目標價情境權重 tp_wA／tp_wB／tp_wC（0.3／0.5／0.2，Assumed）。各情境隱含價＝第 3 節規則值；其餘儲存格不變。", False))
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
 
-order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
+# ---------------- Val 第 0 節：目標價與上檔空間（v0.1.1 新增；Andy 2026-10-25 要求，列標籤依工作單逐字） ----------------
+# 為不位移既有儲存格（與舊版 dist 逐格相同），本節放在 Val 既有內容之後；HTML 估值章第一個區塊即為本節
+def add_target_price(V, imp, note, fmt, method, px_note):
+    t0 = V.max_row + 2
+    V.cell(t0, 1, "0. 目標價與上檔空間").font = BOLD
+    hdr(V, t0 + 1, ["項目", "數值", "", "", "說明"])
+    V.cell(t0 + 2, 1, "目標價（12 個月，情境加權）"); V[f"B{t0 + 2}"] = f"=tp_wA*B{t0 + 4}+tp_wB*B{t0 + 5}+tp_wC*B{t0 + 6}"; V[f"B{t0 + 2}"].number_format = fmt
+    V[f"E{t0 + 2}"] = "權重 × 各情境隱含價"
+    V.cell(t0 + 3, 1, "上檔空間（目標價 ÷ 現價 − 1）"); V[f"B{t0 + 3}"] = f"=B{t0 + 2}/px-1"; V[f"B{t0 + 3}"].number_format = "0.0%"; V[f"E{t0 + 3}"] = px_note
+    for i, (s, lab) in enumerate((("A", "情境 A 隱含價（樂觀）"), ("B", "情境 B 隱含價（基準）"), ("C", "情境 C 隱含價（下檔）"))):
+        rr = t0 + 4 + i
+        V.cell(rr, 1, lab); V[f"B{rr}"] = imp[s]; V[f"B{rr}"].number_format = fmt; V[f"E{rr}"] = note[s]
+    rr = t0 + 7
+    V.cell(rr, 1, "情境權重 A／B／C"); V[f"B{rr}"] = "=tp_wA"; V[f"C{rr}"] = "=tp_wB"; V[f"D{rr}"] = "=tp_wC"
+    for c in "BCD": V[f"{c}{rr}"].number_format = "0%"
+    V[f"E{rr}"] = f'="合計 "&TEXT(B{rr}+C{rr}+D{rr},"0%")&"；In 頁 tp_wA／tp_wB／tp_wC（Assumed，Andy 可改）"'
+    V.cell(t0 + 8, 1, "目標價方法"); V[f"B{t0 + 8}"] = method
+    return t0
+TP0 = add_target_price(V, {s: f"=E{VAL[s]}" for s in SC},
+    {s: f'="第 3 節規則值：FY2027 GAAP 換算 EPS × "&TEXT(D{VAL[s]},"0.0")&"x（"&C{17 + SC.index(s)}&"）"' for s in SC}, "#,##0.00",
+    "P/E：各情境 FY2027 GAAP 換算 EPS（non-GAAP EPS × g2n）× 十年（2016–2025 年底）GAAP P/E 依循環位置取分位（以本模型營收最高年判定：A、B 中段＝中位數，C 見頂＝25 分位；companiesmarketcap 與 Macrotrends 兩來源平均）。"
+    "十年倍數含 2021 年與 2024–2025 年高成長期的高倍數，偏誤方向為高估；FY2027 三情境 EPS 相同，A、B 隱含價相同、C 只差在倍數；隱含價約為 FY2027 年底的價格、未折現，當作 12 個月目標價時偏高。",
+    "現價＝In 頁 px（2026-10-23 收盤）")
+
+order =["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])
 if os.environ.get("ARISTA_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數

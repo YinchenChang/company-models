@@ -1,4 +1,4 @@
-# Disco（6146.T）收支與估值模型 v0.1.3（AI 半導體 Project 步驟 5：設備與材料——第二家公司）
+# Disco（6146.T）收支與估值模型 v0.1.4（AI 半導體 Project 步驟 5：設備與材料——第二家公司）
 # 用法：python3 disco/build_disco.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度 4 月到隔年 3 月：FY2025＝2025-04～2026-03（公司「2026年3月期」）。金額：十億日圓（¥B）。
 # 結構比照 advantest/build_advantest.py：In、Q、Hist、Drv（驅動推導）、PL、Val、Recon、Sens、Sources、README。
@@ -172,6 +172,10 @@ inp("px", "股價（2026-10-22 收盤）", "¥", None, 51230, None, "Verified", 
 inp("sa_fpe", "遠期 P/E（stockanalysis，2026-10-21）", "x", None, 28.33, None, "Interested-party", "stockanalysis.com statistics（股價 53,570）；EPS 年度未標明", "隱含遠期 EPS 約 1,891（Derived）")
 inp("sa_ttm", "TTM P/E（stockanalysis，2026-10-21）", "x", None, 39.95, None, "Interested-party", "stockanalysis.com（TTM EPS 1,340.86，未含 FY26 Q2）", "")
 inp("semi_pk", "SEMI 組裝與封裝設備 CY2025／CY2026（markets/equipment）", "US$B", "=" + str(PKG[0][0]), PKG[0][1], None, "Interested-party", PKG[1], "SEMI 2026-07；D 欄＝2025、E 欄＝2026；只作對照")
+# v0.1.4：目標價情境權重（放在 In 頁最後，不位移既有列）
+sec("J. 目標價情境權重（Val 頁「0. 目標價與上檔空間」用；Andy 可改）")
+for s_, w_ in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
+    inp(f"tp_w{s_}", f"目標價情境權重 {s_}", "%", None, w_, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）", "三者合計應為 100%（Val 頁第 0 節列示）")
 
 r = 4
 for srow in rows:
@@ -440,6 +444,23 @@ for nm, f, fm, note in (("現價（2026-10-22 收盤）", "=px", "#,##0", "Yahoo
                         ("現價 ÷ 模型 FY2027 EPS（A／B／C）", f"=px/PL!{FYC[2027]}{SUMR[('A', 'eps')]}", "0.0", "B、C 見右")):
     V.cell(fr, 1, nm); V.cell(fr, 2, f).number_format = fm; V.cell(fr, 3, note); fr += 1
 V.cell(fr - 1, 4, f"=px/PL!{FYC[2027]}{SUMR[('B', 'eps')]}").number_format = "0.0"; V.cell(fr - 1, 5, f"=px/PL!{FYC[2027]}{SUMR[('C', 'eps')]}").number_format = "0.0"
+# 0. 目標價與上檔空間（v0.1.4；Andy 2026-10-25 要求；列標籤依工作單逐字）。放在 Val 既有內容之後，不位移既有列；HTML 估值章第一個區塊讀這裡
+tp0 = fr + 1
+V.cell(tp0, 1, "0. 目標價與上檔空間").font = BOLD
+hdr(V, tp0 + 1, ["項目", "數值", "", "", "說明"])
+V.cell(tp0 + 2, 1, "目標價（12 個月，情境加權）"); V.cell(tp0 + 2, 2, f"=tp_wA*B{tp0 + 4}+tp_wB*B{tp0 + 5}+tp_wC*B{tp0 + 6}").number_format = "#,##0"
+V.cell(tp0 + 2, 5, "權重 × 各情境隱含價（第 4 節規則值）")
+V.cell(tp0 + 3, 1, "上檔空間（目標價 ÷ 現價 − 1）"); V.cell(tp0 + 3, 2, f"=B{tp0 + 2}/px-1").number_format = "0.0%"; V.cell(tp0 + 3, 5, "現價＝In 頁 px（2026-10-22 收盤）")
+for k_, (s_, lab) in enumerate((("A", "情境 A 隱含價（樂觀）"), ("B", "情境 B 隱含價（基準）"), ("C", "情境 C 隱含價（下檔）"))):
+    rr_ = tp0 + 4 + k_
+    V.cell(rr_, 1, lab); V.cell(rr_, 2, f"=F{VAL[s_]}").number_format = "#,##0"
+    V.cell(rr_, 5, f'="FY2027 EPS × "&D{VAL[s_]}&" "&TEXT(E{VAL[s_]},"0.0")&"x（第 4 節 F{VAL[s_]}）"')
+V.cell(tp0 + 7, 1, "情境權重 A／B／C")
+for j_, s_ in enumerate("ABC"): V.cell(tp0 + 7, 2 + j_, f"=tp_w{s_}").number_format = "0%"
+V.cell(tp0 + 7, 5, f'="合計 "&TEXT(B{tp0 + 7}+C{tp0 + 7}+D{tp0 + 7},"0%")&"；In 頁 tp_wA／tp_wB／tp_wC（Assumed，Andy 可改）"')
+V.cell(tp0 + 8, 1, "目標價方法")
+V.cell(tp0 + 8, 2, "P/E：各情境 FY2027 EPS × 十年（2016–2025 年底）P/E 依循環位置取分位（設備股共用規則：A、B 中段＝中位數，C 見頂＝25 分位）。"
+                 "十年倍數一半以上來自 AI 前（2016–2022 年 16–34x），偏誤方向為低估；2023 年 EPS 僅成長 1.5%、股價先反映 AI 的 45.0x 則偏高（去掉後分位見第 2 節）。隱含價約為 FY2027 年底（2028-03）的價格、未折現")
 V.column_dimensions["A"].width = 50
 for c in "BCDEFGHI": V.column_dimensions[c].width = 15
 V.column_dimensions["J"].width = 70
@@ -580,7 +601,7 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 130
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
 PROP = "Disco 的營收由需要研削與切割的晶圓次數驅動，AI 只占約兩成；問題是 HBM 堆疊與先進封裝帶來的增量，能否抵過非 AI 後段的循環，撐住目前約 41 倍的近 12 月本益比？"
-lines = [("Disco（6146.T）收支與估值模型 v0.1.3（AI 半導體 Project 步驟 5：設備與材料）　2026-10-23", True),
+lines = [("Disco（6146.T）收支與估值模型 v0.1.4（AI 半導體 Project 步驟 5：設備與材料）　2026-10-25", True),
  ("v0.1.2（2026-10-23）：引用的上游成品檔名更新（SK 海力士 v0.4.1、美光 v0.3.1、三星 v0.2.1、台積電 v0.2.1 升版）；所有數值不變。", False),
  ("模型命題：" + PROP, False),
  ("註：41 倍＝現價 ¥51,230 ÷ FY2025 EPS ¥1,249.84（上一個會計年度）；嚴格的近 12 月 EPS（含 FY2026 上半）為 1,474.98，對應 34.7 倍（Val 頁）。", False), ("", False),
@@ -598,7 +619,8 @@ lines = [("Disco（6146.T）收支與估值模型 v0.1.3（AI 半導體 Project 
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。公司原文以網頁擷取讀取（數字已與松井證券交叉）；版面待人工複核。", False),
  ("可識別性：只有一個 AI 錨點（FY2025 ¥75B，券商估計）。kH、kL 各由一個點校準，因此「kH × 工序定義」「kL × 片數」只有乘積可識別；汰換比例、每堆疊工序數、晶粒容量與層數只改變路徑形狀，不改變 FY2025 水準，無法由資料分開，列在 Sens。AI 消耗品比例公司不揭露（Assumed）。市占只透過「變化」進入模型。", False),
  ("已知限制：見 disco/README.md「待辦與限制」。", False),
- ("v0.1.3 變更（2026-10-23）：錨點差額（sc）延續到 FY2027 以後的非 AI 兩項時，三情境一律用情境 A 的 sc（具名範圍 sc_A）。B、C 的 sc 較大（1.078、1.099 vs A 1.055）是因為其 AI 驅動推導較低，不是非 AI 較強；原寫法把這部分算成非 AI、墊高 B、C 的基期。FY2026 不變（三情境仍各自縮放到同一錨點）；情境 A 不變；Sens 各案例皆為情境 A，用自己區塊的 sc（改 g_q4、m_q4 時隨之變動）。前後對照見 disco/README.md", False)]
+ ("v0.1.3 變更（2026-10-23）：錨點差額（sc）延續到 FY2027 以後的非 AI 兩項時，三情境一律用情境 A 的 sc（具名範圍 sc_A）。B、C 的 sc 較大（1.078、1.099 vs A 1.055）是因為其 AI 驅動推導較低，不是非 AI 較強；原寫法把這部分算成非 AI、墊高 B、C 的基期。FY2026 不變（三情境仍各自縮放到同一錨點）；情境 A 不變；Sens 各案例皆為情境 A，用自己區塊的 sc（改 g_q4、m_q4 時隨之變動）。前後對照見 disco/README.md", False),
+ ("v0.1.4（2026-10-25）：Val 頁新增「0. 目標價與上檔空間」（放在 Val 既有內容之後，不位移既有列）：目標價＝In 頁權重 tp_wA／tp_wB／tp_wC（預設 A 0.3／B 0.5／C 0.2，Assumed，Andy 可改）× 三情境規則值隱含價；引用的上游成品檔名更新（SK 海力士 v0.4.2）；其餘數值不變。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 180
 

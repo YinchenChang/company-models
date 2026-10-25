@@ -42,6 +42,10 @@ for s in C["inputs"]:
     else: inp(*s)
 MKT.inputs(sec, inp)
 MKT.ref_inputs(sec, inp)
+# 目標價情境權重（Andy 2026-10-25）：放在 In 頁最後，不位移既有列
+sec("目標價情境權重（Val 頁「0. 目標價與上檔空間」用；Andy 可改）")
+for s_, w_ in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
+    inp(f"tp_w{s_}", f"目標價情境權重 {s_}", "%", None, w_, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）；三者合計應為 100%（Val 頁第 0 節列示）")
 r = 4
 for s in rows:
     if s[0] == "sec":
@@ -262,7 +266,31 @@ vseries.append({"id": "P/E", "name": "P/E（對照）", "sources": pe_src,
 if "sec" in RULE:
     vseries.append({"id": "買回加回 P/B", "name": "買回加回 P/B（對照）", "sources": pba_src,
         "cases": _cases(adj27, adj28, f"{y1} 年底調整每股淨值（A）", f"{y2} 年底調整每股淨值（C）")})
-VR.add_rule_block(V, nr, vseries, fmtp, "規則（Andy 2026-10-13）：合理倍數＝2016–2025 年底倍數依循環位置取分位。多個來源時各自取分位再平均、四捨五入到兩位。倍數歷史為輸入（藍字），來源與標記見各表；原放在 markets/overview/extract.py（2026-10-23 移入）。")
+tr = VR.add_rule_block(V, nr, vseries, fmtp, "規則（Andy 2026-10-13）：合理倍數＝2016–2025 年底倍數依循環位置取分位。多個來源時各自取分位再平均、四捨五入到兩位。倍數歷史為輸入（藍字），來源與標記見各表；原放在 markets/overview/extract.py（2026-10-23 移入）。")
+
+# 0. 目標價與上檔空間（Andy 2026-10-25 要求；列標籤依工作單逐字）。放在 Val 既有內容之後，不位移既有列；HTML 估值章第一個區塊讀這裡
+RV = {V.cell(i, 1).value: i for i in range(1, tr) if isinstance(V.cell(i, 1).value, str) and V.cell(i, 1).value.startswith("規則值：")}
+TPMAP = (("A", "情境 A 隱含價（樂觀）", "中段"), ("B", "情境 B 隱含價（基準）", "見頂"), ("C", "情境 C 隱含價（下檔）", "谷底"))
+V.cell(tr, 1, "0. 目標價與上檔空間").font = BOLD
+hdr(V, tr + 1, ["項目", "數值", "", "", "說明"])
+t0 = tr + 2
+V.cell(t0, 1, "目標價（12 個月，情境加權）")
+V.cell(t0, 2, f"=tp_wA*B{t0 + 2}+tp_wB*B{t0 + 3}+tp_wC*B{t0 + 4}").number_format = fmtp
+V.cell(t0, 5, "權重 × 各情境隱含價（第 6 節 P/B 規則值）")
+V.cell(t0 + 1, 1, "上檔空間（目標價 ÷ 現價 − 1）")
+V.cell(t0 + 1, 2, f"=B{t0}/px-1").number_format = "0.0%"
+V.cell(t0 + 1, 5, "現價＝In 頁 px")
+for k_, (s_, lab, case) in enumerate(TPMAP):
+    rr_ = t0 + 2 + k_; src = RV[f"規則值：{case}（P/B）"]
+    V.cell(rr_, 1, lab); V.cell(rr_, 2, f"=F{src}").number_format = fmtp
+    V.cell(rr_, 5, f'="規則值：{case}（P/B）＝"&D{src}&" × "&TEXT(C{src},"0.00")&"x（第 6 節 F{src}）"')
+V.cell(t0 + 5, 1, "情境權重 A／B／C")
+for j_, s_ in enumerate("ABC"): V.cell(t0 + 5, 2 + j_, f"=tp_w{s_}").number_format = "0%"
+V.cell(t0 + 5, 5, f'="合計 "&TEXT(B{t0 + 5}+C{t0 + 5}+D{t0 + 5},"0%")&"；In 頁 tp_wA／tp_wB／tp_wC（Assumed，Andy 可改）"')
+V.cell(t0 + 6, 1, "目標價方法")
+V.cell(t0 + 6, 2, (f"P/B（主估值法）：每股淨值 × 十年（2016–2025 年底）P/B 依循環位置取分位。情境 A 取「中段」（中位數 × {y1} 年底每股淨值 A：循環延後見頂）、"
+                   f"B 取「見頂」（25 分位 × {y1} 年底每股淨值 A：{y1} 為見頂年）、C 取「谷底」（75 分位 × {y2} 年底每股淨值 C）。三者即第 6 節的三個規則值，每股基準不是各情境各自的每股淨值。"
+                   "隱含價約為年底價格、未折現。" + C.get("tp_bias", "")))
 V.column_dimensions["A"].width = 36
 
 # ---------------- Sens（營收變動 × (1 − 變動營業費用率)；成本不隨價格變動，故為精確值）----------------

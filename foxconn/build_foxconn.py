@@ -1,4 +1,4 @@
-# 鴻海精密（2317）收支與估值模型 v0.1（AI 半導體 Project：伺服器組裝次產業，樣板＝quanta/）
+# 鴻海精密（2317）收支與估值模型 v0.1.1（AI 半導體 Project：伺服器組裝次產業，樣板＝quanta/）
 # 用法：python3 foxconn/build_foxconn.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不平移。金額：十億新台幣（NT$B）；整櫃價格與市場以美元輸入、以匯率 fx 換算；EPS：新台幣。
 # 口徑：歸屬母公司淨利。集團公司：比照三星只拆「雲端網路產品」中的 AI 伺服器做細；雲端網路的非 AI 部分（網通、一般伺服器）、
@@ -167,6 +167,11 @@ inp("rk_sh2", "鴻海占 NVIDIA AI 伺服器機櫃的全球份額（法人估）
 sec("H. 價格與估值")
 inp("px", "股價（2026-10-22 收盤）", "NT$", None, 245, None, "Interested-party", "聚財網 2317 日成交（10-22 收盤 245、10-21 250）", "Yahoo 股市：10-16 收盤 244")
 inp("pe_ttm", "近 12 月 P/E（Yahoo，10-16）", "x", None, 16.08, None, "Interested-party", "Yahoo 股市 2317（10-16）", "Goodinfo 目前 P/E 16.14；companiesmarketcap TTM 15.3")
+
+sec("I. 目標價情境權重（Val 第 0 節用；Andy 可改）")
+for s_, w_, nm_ in (("A", 0.3, "樂觀"), ("B", 0.5, "基準"), ("C", 0.2, "下檔")):
+    inp(f"tp_w{s_}", f"目標價情境權重：情境 {s_}（{nm_}）", "權重", None, w_, None, "Assumed",
+        "Andy 可改（2026-10-25 目標價規格預設 A／B／C＝0.3／0.5／0.2）", "三個權重合計應為 1；目標價＝Σ 權重 × 情境隱含價（Val 第 0 節）")
 
 r = 4
 for srow in rows:
@@ -438,6 +443,32 @@ rule_rows = [rw for rw in range(50, block_end) if str(V.cell(rw, 1).value or "")
 assert len(rule_rows) == 3, rule_rows
 for nm, rw in zip(("pe_peak", "pe_mid", "pe_trough"), rule_rows):
     defname(nm, f"Val!$C${rw}")
+
+# ---------------- Val 第 0 節：目標價與上檔空間（v0.1.1 新增；放在既有空白列，不位移既有列） ----------------
+TP0 = 37; TPR = {}
+assert all(V.cell(rw, c).value is None for rw in range(TP0 - 1, TP0 + 9) for c in range(1, 9)), TP0
+assert V["A3"].value is None
+V["A3"] = f"目標價與上檔空間：見第 0 節（本頁第 {TP0} 列；v0.1.1 新增，為了不位移既有列而放在空白列）"
+V.cell(TP0, 1, "0. 目標價與上檔空間（12 個月，情境加權；權重為 In 頁 tp_wA／tp_wB／tp_wC，Andy 可改）").font = BOLD
+for k_, (key_, lab_) in enumerate((("tp", "目標價（12 個月，情境加權）"), ("up", "上檔空間（目標價 ÷ 現價 − 1）"),
+        ("A", "情境 A 隱含價（樂觀）"), ("B", "情境 B 隱含價（基準）"), ("C", "情境 C 隱含價（下檔）"),
+        ("w", "情境權重 A／B／C"), ("m", "目標價方法")), TP0 + 1):
+    V.cell(k_, 1, lab_); TPR[key_] = k_
+V.cell(TPR["tp"], 2, f"=tp_wA*B{TPR['A']}+tp_wB*B{TPR['B']}+tp_wC*B{TPR['C']}").number_format = "#,##0"
+V.cell(TPR["tp"], 5, "＝權重 A × 情境 A 隱含價＋權重 B × 情境 B 隱含價＋權重 C × 情境 C 隱含價（NT$）")
+V.cell(TPR["up"], 2, f"=B{TPR['tp']}/px-1").number_format = "0.0%"
+V.cell(TPR["up"], 5, "相對「" + V["A6"].value + "」")
+for s_ in SC:
+    V.cell(TPR[s_], 2, f"=E{VAL[s_]}").number_format = "#,##0"
+    V.cell(TPR[s_], 5, f"＝規則值隱含股價 E{VAL[s_]}（{SCN_T[s_]}）")
+for j_, s_ in enumerate(SC):
+    V.cell(TPR["w"], 2 + j_, f"=tp_w{s_}").number_format = "0%"
+V.cell(TPR["w"], 5, "In 頁輸入（Assumed，Andy 可改）：B 欄＝情境 A、C 欄＝情境 B、D 欄＝情境 C")
+V.cell(TPR["m"], 2, "P/E 規則值：各情境 FY2027 EPS × 2016–2025 年底 P/E 依循環位置取分位（見頂＝25 分位、中段＝中位數、谷底＝75 分位；companiesmarketcap 與 Goodinfo 兩來源分別取分位再平均）。隱含價約為 FY2027 年底價、未折現，作 12 個月目標價的近似；情境 A／B／C 即本模型三個顆數情境（A 最高、C 最低）。偏誤：十年倍數含 2016–2023 年 iPhone 組裝期低倍數（約 7–12x），目標價可能偏低。")
+for c_ in range(1, 6):
+    V.cell(TPR["tp"], c_).fill = KEY; V.cell(TPR["up"], c_).fill = KEY
+V.cell(TPR["tp"], 1).font = BOLD
+defname("tp_price", f"Val!$B${TPR['tp']}"); defname("tp_upside", f"Val!$B${TPR['up']}")
 V.column_dimensions["A"].width = 58
 for c in "BCDEFGH": V.column_dimensions[c].width = 18
 
@@ -561,8 +592,8 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("鴻海精密（2317）收支與估值模型 v0.1（AI 半導體 Project：伺服器組裝次產業，樣板＝廣達）　2026-10-25", True),
- ("版本：v0.1（初版）。AI 伺服器組裝市場與 ODM 每櫃價格讀廣達模型（本專案權威，規則第 13 條），與廣達同口徑；本模型只決定鴻海份額、客供與其他事業。", False),
+lines = [("鴻海精密（2317）收支與估值模型 v0.1.1（AI 半導體 Project：伺服器組裝次產業，樣板＝廣達）　2026-10-25", True),
+ ("版本：v0.1.1（2026-10-25：Val 新增第 0 節「目標價與上檔空間」、In 新增情境權重 tp_wA／tp_wB／tp_wC；其餘數值與 v0.1 相同）。v0.1（初版）：AI 伺服器組裝市場與 ODM 每櫃價格讀廣達模型（本專案權威，規則第 13 條），與廣達同口徑；本模型只決定鴻海份額、客供與其他事業。", False),
  ("模型命題：鴻海是集團公司，AI 伺服器營收＝部署 GW（AI IT 資本支出 ÷ 每 GW IT 資本支出）× 每 GW ODM 整櫃價值 × 鴻海有效份額 ×（1 − 客供比例），2026 年約占營收三成；其餘七成（iPhone、網通與一般伺服器、電腦、元件）以簡化成長率推。AI 伺服器拉高營收與營業利益，但業外損失、稅率上升與少數股權使淨利 ÷ 營業利益從 0.73 降到約 0.66。市場約 10 倍未來 12 月 EPS。", False),
  ("核心問題：AI 伺服器份額（NVIDIA 整櫃最大組裝廠）能不能在客供上升下撐住營業利益成長，以及淨利 ÷ 營業利益能不能穩在 0.66 左右；約 10 倍未來 12 月 P/E 隱含什麼路徑。", False), ("", False),
  ("會計年度＝日曆年，FY(t)＝CY(t)，不平移。預測期 FY2027–FY2029（三年）。金額：十億新台幣；整櫃價格與市場以美元計、以匯率換算。口徑：歸屬母公司淨利。", False), ("", False),

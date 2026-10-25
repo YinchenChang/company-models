@@ -1,4 +1,4 @@
-# 台光電（2383）收支與估值模型 v0.1（AI 半導體 Project：載板與 PCB 次產業；高速 CCL 銅箔基板）
+# 台光電（2383）收支與估值模型 v0.1.1（AI 半導體 Project：載板與 PCB 次產業；高速 CCL 銅箔基板）
 # 用法：python3 emc/build_emc.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不平移。金額：十億新台幣（NT$B）；每 GW CCL 金額以美元輸入、以匯率 fx 換算；EPS：新台幣。
 # 口徑：歸屬母公司淨利。樣板：ibiden/（次產業）；台股寫法（月營收、法說）比照 delta/、quanta/。
@@ -169,6 +169,11 @@ inp("sht_vr", "每架 CCL 張數 VR200", "張", None, 578, None, "Interested-par
 sec("I. 價格與估值")
 inp("px", "股價（2026-10-22 收盤）", "NT$", None, 5070, None, "Interested-party", "Yahoo 股市 2383（10-22 14:30 收盤 5,070，+1.6%）", "財報狗：10-22 收盤 5,070；10-23 收盤：未找到")
 inp("pe_ttm", "近 12 月 P/E（10-22）", "x", None, 79.28, None, "Interested-party", "Yahoo 股市、財報狗（近四季 EPS 63.95）", "HiStock 10 月 79.28")
+
+sec("J. 目標價情境權重（Val 第 0 節用；Andy 可改）")
+for s_, w_, nm_ in (("A", 0.3, "樂觀"), ("B", 0.5, "基準"), ("C", 0.2, "下檔")):
+    inp(f"tp_w{s_}", f"目標價情境權重：情境 {s_}（{nm_}）", "權重", None, w_, None, "Assumed",
+        "Andy 可改（2026-10-25 目標價規格預設 A／B／C＝0.3／0.5／0.2）", "三個權重合計應為 1；目標價＝Σ 權重 × 情境隱含價（Val 第 0 節）")
 
 r = 4
 for srow in rows:
@@ -444,6 +449,32 @@ rule_rows = [rw for rw in range(50, block_end) if str(V.cell(rw, 1).value or "")
 assert len(rule_rows) == 3, rule_rows
 for nm, rw in zip(("pe_peak", "pe_mid", "pe_trough"), rule_rows):
     defname(nm, f"Val!$C${rw}")
+
+# ---------------- Val 第 0 節：目標價與上檔空間（v0.1.1 新增；放在既有空白列，不位移既有列） ----------------
+TP0 = 35; TPR = {}
+assert all(V.cell(rw, c).value is None for rw in range(TP0 - 1, TP0 + 9) for c in range(1, 9)), TP0
+assert V["A3"].value is None
+V["A3"] = f"目標價與上檔空間：見第 0 節（本頁第 {TP0} 列；v0.1.1 新增，為了不位移既有列而放在空白列）"
+V.cell(TP0, 1, "0. 目標價與上檔空間（12 個月，情境加權；權重為 In 頁 tp_wA／tp_wB／tp_wC，Andy 可改）").font = BOLD
+for k_, (key_, lab_) in enumerate((("tp", "目標價（12 個月，情境加權）"), ("up", "上檔空間（目標價 ÷ 現價 − 1）"),
+        ("A", "情境 A 隱含價（樂觀）"), ("B", "情境 B 隱含價（基準）"), ("C", "情境 C 隱含價（下檔）"),
+        ("w", "情境權重 A／B／C"), ("m", "目標價方法")), TP0 + 1):
+    V.cell(k_, 1, lab_); TPR[key_] = k_
+V.cell(TPR["tp"], 2, f"=tp_wA*B{TPR['A']}+tp_wB*B{TPR['B']}+tp_wC*B{TPR['C']}").number_format = "#,##0"
+V.cell(TPR["tp"], 5, "＝權重 A × 情境 A 隱含價＋權重 B × 情境 B 隱含價＋權重 C × 情境 C 隱含價（NT$）")
+V.cell(TPR["up"], 2, f"=B{TPR['tp']}/px-1").number_format = "0.0%"
+V.cell(TPR["up"], 5, "相對「" + V["A6"].value + "」")
+for s_ in SC:
+    V.cell(TPR[s_], 2, f"=E{VAL[s_]}").number_format = "#,##0"
+    V.cell(TPR[s_], 5, f"＝規則值隱含股價 E{VAL[s_]}（{SCN_T[s_]}）")
+for j_, s_ in enumerate(SC):
+    V.cell(TPR["w"], 2 + j_, f"=tp_w{s_}").number_format = "0%"
+V.cell(TPR["w"], 5, "In 頁輸入（Assumed，Andy 可改）：B 欄＝情境 A、C 欄＝情境 B、D 欄＝情境 C")
+V.cell(TPR["m"], 2, "P/E 規則值：各情境 FY2027 EPS × 2017–2025 年底 P/E 依循環位置取分位（見頂＝25 分位、中段＝中位數、谷底＝75 分位；年底收盤 ÷ 當年 EPS，一個來源、9 年）。隱含價約為 FY2027 年底價、未折現，作 12 個月目標價的近似；情境 A／B／C 即本模型三個顆數情境（A 最高、C 最低）。偏誤：十年倍數含 2017–2022 年手機、筆電 HDI 材料期低倍數（約 11–17x），目標價可能偏低。")
+for c_ in range(1, 6):
+    V.cell(TPR["tp"], c_).fill = KEY; V.cell(TPR["up"], c_).fill = KEY
+V.cell(TPR["tp"], 1).font = BOLD
+defname("tp_price", f"Val!$B${TPR['tp']}"); defname("tp_upside", f"Val!$B${TPR['up']}")
 V.column_dimensions["A"].width = 58
 for c in "BCDEFGH": V.column_dimensions[c].width = 18
 
@@ -575,8 +606,8 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("台光電（2383）收支與估值模型 v0.1（AI 半導體 Project：載板與 PCB 次產業；高速 CCL）　2026-10-25", True),
- ("版本：v0.1（初版）。每 GW 高速 CCL 金額（加速器／運算板、交換器板、UBB／中板）、台光電份額與產能在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）；台燿、聯茂等 CCL 廠之後讀這條線。", False),
+lines = [("台光電（2383）收支與估值模型 v0.1.1（AI 半導體 Project：載板與 PCB 次產業；高速 CCL）　2026-10-25", True),
+ ("版本：v0.1.1（2026-10-25：Val 新增第 0 節「目標價與上檔空間」、In 新增情境權重 tp_wA／tp_wB／tp_wC；其餘數值與 v0.1 相同）。v0.1（初版）：每 GW 高速 CCL 金額（加速器／運算板、交換器板、UBB／中板）、台光電份額與產能在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）；台燿、聯茂等 CCL 廠之後讀這條線。", False),
  ("模型命題：台光電的 AI 營收＝部署 GW（AI IT 資本支出 ÷ 每 GW IT 資本支出）× 每 GW 高速 CCL 金額（VR200 中板、M9 等級使每 GW 金額上升）× 台光電份額 × 價格指數，但受月產能 × 每張營收限制（全產全銷）。非 AI（通用伺服器、低軌衛星、手機、筆電、車用）另依成長率推。股價約 42 倍 FY2026、24 倍 FY2027 EPS（模型）。", False),
  ("核心問題：2027–28 年 AI 每 GW CCL 需求超過產能時，擴產（月產能 615 → 945 → 1,110 萬張）與 M9 組合升級能讓營收成長多少；價格與份額回落時 EPS 會少多少；現價隱含的路徑合不合理。", False), ("", False),
  ("會計年度＝日曆年，FY(t)＝CY(t)，不平移。預測期 FY2027–FY2029（三年）。金額：十億新台幣；每 GW 金額以美元計、以匯率換算。口徑：歸屬母公司淨利。", False), ("", False),

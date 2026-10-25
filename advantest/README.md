@@ -1,4 +1,4 @@
-# advantest/ — Advantest（6857.T）收支與估值模型 v0.2.2
+# advantest/ — Advantest（6857.T）收支與估值模型 v0.2.3
 
 Advantest 的盈餘由 AI 加速器的 SoC 測試需求決定。每顆晶片的測試時間隨複雜度上升，Advantest 握有約三分之二的市占。股價取決於加速器顆數的成長在 FY2027 之後放緩時，測試機的投資會不會跟著回落。
 
@@ -7,11 +7,17 @@ AI 半導體 Project 步驟 5（設備與材料）的第一家公司樣板。獨
 | 檔案 | 內容 |
 |---|---|
 | `build_advantest.py` | 產生器（參數與公式） |
-| `dist/20261023_Advantest模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261025_Advantest模型_v0.2.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（頁面結構與要抽的儲存格；格式見 `tools/company_html/README.md`） |
-| `dist/20261023_Advantest模型_v0.2.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出，標註來源儲存格；CI 檢核） |
+| `dist/20261025_Advantest模型_v0.2.3.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出，標註來源儲存格；CI 檢核） |
 
 建置：`python3 advantest/build_advantest.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`、`tsmc/dist`、`skhynix/dist`、`markets/equipment/dist`；不修改它們。
+
+## v0.2.3（2026-10-25）：目標價與上檔空間
+
+Val 頁新增「0. 目標價與上檔空間」（放在 Val 既有內容之後，不位移既有列；HTML 估值章第一個區塊）：目標價（12 個月，情境加權）＝ In 頁 `tp_wA／tp_wB／tp_wC`（預設 0.3／0.5／0.2，Assumed，Andy 可改）× 三情境規則值隱含價（FY2027 EPS × 依循環位置的十年 P/E 分位）。十年倍數多數來自 AI 前（2017–2022 年 7–24x），偏誤方向為低估；2023 年 EPS 低谷的 56.8x 只拉高 75 分位，不影響本規則用到的中位數與 25 分位。引用的 SK 海力士成品升版為 v0.4.2（只加目標價），In 頁來源檔名文字隨之更新；其餘數值不變（與上一版逐格比對，差異只有新增列、README 頁標題版本與來源檔名文字）。
+
+**目標價 ¥24,494，相對現價 ¥34,440（stockanalysis 2026-10-21 收盤）上檔空間 −28.9%。** 三情境隱含價 A ¥25,964（中段 22.8x）／B ¥24,885（中段 22.8x）／C ¥21,313（見頂 20.5x）。
 
 ## v0.2.2（2026-10-23）：上游檔名更新
 
@@ -74,6 +80,8 @@ markets/memory v0.4 起 HBM 出貨位元隨情境顆數係數變動（2028–29�
 FY2026 三情境相同（情境係數從 2028 才開始）。
 
 ## 估值（Val）
+
+**目標價（12 個月，情境加權；Val 頁第 0 節）：¥24,494，上檔空間 −28.9%（相對現價 ¥34,440）。** 權重 A 0.3／B 0.5／C 0.2（In 頁，Andy 可改）。
 
 P/E 規則：10 年（2016–2025 年底）P/E 的分位，見頂年 25 分位、中段中位數、谷底 75 分位。循環位置依設備股共用規則（v0.2.1 起）：FY2027 在 A、B 為中段，C 為見頂（見上方 v0.2.1 表）。
 

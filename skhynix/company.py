@@ -1,7 +1,7 @@
 # SK 海力士設定檔（樣板 v0.2）。只放參數；結構在 tools/memory_model/build.py 與 markets/memory/market.py
 S = "sec"
 CONFIG = {
- "name": "SK 海力士", "version": "v0.4.1", "date": "2026-10-23",
+ "name": "SK 海力士", "version": "v0.4.2", "date": "2026-10-25",
  "unit": "兆韓元", "ccy_per_usdB": "fx/1000", "share_scale": 1000000,
  "base_fy": 2026, "fy_offset": 0, "fy_label": "{}", "fy_desc": "日曆年（K-IFRS 合併）",
  "thesis": "SK 海力士的盈餘由兩條價格線決定——每季議價的一般 DRAM 與年約鎖價的 HBM；股價取決於這個循環在哪一年見頂，以及見頂時累積了多少淨值。",
@@ -137,3 +137,7 @@ CONFIG["rule"] = {
    {"label": "採用（虧損年不計）", "vals": ['=IF(B{r}>0,B{r},"")'] * 10, "tag": "Derived", "note": "虧損年不計入分位"},
    {"label": "stockanalysis（核對，不採用）", "vals": [None, None, None, None, None, 9.38, 23.13, None, 6.06, 10.47], "tag": "Verified", "use": False, "note": "2021–2025 與 companiesmarketcap 差距 ≤ 8%"}]},
 }
+
+# v0.4.2（2026-10-25）：目標價與上檔空間（Andy 2026-10-25 要求；Val 頁最後一節、In 頁最後三列；既有儲存格不變）
+CONFIG["readme_extra"] = CONFIG["readme_extra"] + ["v0.4.2（2026-10-25）：Val 頁新增「0. 目標價與上檔空間」（放在 Val 既有內容之後，不位移既有列）：目標價＝In 頁權重 tp_wA／tp_wB／tp_wC（預設 A 0.3／B 0.5／C 0.2，Assumed，Andy 可改）× 三個 P/B 規則值（A＝中段、B＝見頂、C＝谷底）；既有儲存格的值不變。"]
+CONFIG["tp_bias"] = "十年 P/B 含 2016–2023 年 AI 前（HBM 未放量）的低倍數期，偏誤方向為低估。"

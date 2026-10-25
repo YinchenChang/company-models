@@ -1,4 +1,6 @@
-# emc/ — 台光電（2383）收支與估值模型 v0.1
+# emc/ — 台光電（2383）收支與估值模型 v0.1.1
+
+> v0.1.1（2026-10-25）：補目標價——Val 新增第 0 節「目標價與上檔空間」、In 新增情境權重 `tp_wA／tp_wB／tp_wC`（0.3／0.5／0.2，Assumed，Andy 可改）；其餘數值與 v0.1 相同。
 
 台光電的 AI 營收＝部署 GW（AI IT 資本支出 ÷ 每 GW IT 資本支出）× 每 GW 高速 CCL 金額（加速器／運算板、交換器板、UBB／中板；VR200 中板與 M9 等級使每 GW 金額上升）× 台光電份額 × 價格指數，但受**月產能 × 每張營收**限制（全產全銷）。非 AI（通用伺服器、低軌衛星、手機、筆電、車用）另依成長率推。
 
@@ -9,9 +11,9 @@ AI 半導體 Project 載板與 PCB 次產業（樣板 `ibiden/`）的第一家�
 | 檔案 | 內容 |
 |---|---|
 | `build_emc.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_台光電模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261025_台光電模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_台光電模型_v0.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261025_台光電模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 emc/build_emc.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）、`tools/valuation_rule.py`；**不修改它們**。
 
@@ -50,6 +52,8 @@ AI 半導體 Project 載板與 PCB 次產業（樣板 `ibiden/`）的第一家�
 - **最敏感（FY2028 EPS）：** 價格回落快（−26.2%）／價格延續（+23.9%）、每張組合升級慢（−19.5%）、每 GW 金額成長低（−15.3%）、AI 部署 ×0.8（−11.8%）、擴產延遲（−8.5%）、份額流失（−8.7%）；顆數情境 C −30.7%。
 
 ## 估值（Val）
+
+**目標價（12 個月，情境加權 A／B／C＝0.3／0.5／0.2）：NT$2,905，上檔空間 −42.7%**（現價 NT$5,070，2026-10-22 收盤）。三情境隱含價：A NT$2,905、B NT$2,905、C NT$2,905（規則值）。方法：九年 P/E（年底收盤 ÷ EPS）依循環位置取分位 × FY2027 EPS；十年倍數含手機、筆電 HDI 材料期低倍數，可能偏低；隱含價約為 FY2027 年底、未折現，作 12 個月目標價的近似。見 Val 第 0 節（第 35 列；為了不位移既有列放在空白列）。
 
 現價 NT$5,070（2026-10-22）÷ FY2026 EPS＝42.4x；÷ FY2027 EPS＝24.2x；÷ 未來 12 月 EPS（¼ FY2026＋¾ FY2027）＝27.1x；÷ FY2028 EPS：A 16.9x、B 19.2x、C 24.4x。近 12 月 P/E 79.3x。十年年底 P/E（年底收盤 ÷ 當年 EPS，2017–2025 共 9 年；2016 年 EPS 未找到）：25 分位 12.0x、中位數 13.9x、75 分位 22.2x；stockanalysis、HiStock 2021–2025 同量級，只作核對。三情境營收最高年都是 FY2029，判為中段 → 規則值 13.9x × FY2027 EPS＝NT$2,905（−43%）。2017–2022 年為 AI 前的手機、筆電材料期（11–17x），規則值可能低估 AI 期倍數。本版未做先驗，無 Andy 合理 P/E 對照。
 

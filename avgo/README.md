@@ -1,4 +1,4 @@
-# avgo/ — Broadcom（AVGO）收支與估值模型 v0.1
+# avgo/ — Broadcom（AVGO）收支與估值模型 v0.1.1
 
 Broadcom 的 AI 營收＝各 XPU 平台的顆數 × Broadcom 份額 × 每顆售價（核心＋代購 HBM）＋網通附掛。2027–28 年的增量集中在 Anthropic、OpenAI 兩家靠融資部署的客戶。股價約 17 倍 FY2027 EPS：這個折價是在定價客戶信用風險，還是低估了營收？
 
@@ -11,9 +11,9 @@ AI 半導體 Project **運算層的第二個樣板**（ASIC＋網通），複製
 | 檔案 | 內容 |
 |---|---|
 | `build_avgo.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261023_Broadcom模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261025_Broadcom模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261023_Broadcom模型_v0.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261025_Broadcom模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 avgo/build_avgo.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`、`markets/network/dist`、`skhynix/dist`、`tsmc/dist`、`markets/equipment/dist`、`nvidia/dist`；**不修改它們**。
 
@@ -67,6 +67,8 @@ AI 半導體 Project **運算層的第二個樣板**（ASIC＋網通），複製
 
 ## 估值（Val）
 
+- **目標價（12 個月，情境加權 A 30%／B 50%／C 20%）：US$647.37，上檔空間 +100.3%**（情境 A／B／C 隱含價 US$647.37／US$647.37／US$647.37；Val 頁「0. 目標價與上檔空間」，放在 Val 既有內容之後；權重為 In 頁 tp_wA／tp_wB／tp_wC，Assumed，Andy 可改）。方法：P/E：十年（2016–2025，10 月底會計年度年底）GAAP P/E 中位數（Macrotrends，第 5 節；2016 GAAP EPS 為負、2025 未找到，取有值的 8 年）× 各情境 FY2027 non-GAAP EPS（FY2027＝2026-11～2027-10）。本模型無規則值（前瞻 P/E 歷史待補），依工作單改用此備案。偏誤方向為高估：GAAP EPS 受併購無形資產攤銷壓低，GAAP P/E 高於 non-GAAP 口徑（2024 年併購 VMware 後約 137x），乘在 non-GAAP EPS 上偏高；FY2027 三情境 EPS 相同（情境差從 FY2028 起），故三情境隱含價相同；隱含價約為 FY2027 年底（2027-10）的價格、未折現。
+
 現價 $323.24（2026-10-22）÷ FY2027 EPS＝**17.9x**（模型）、16.7x（共識）；÷ FY2028 EPS：A 15.4x、B 18.1x、C 21.8x。近 12 月 non-GAAP P/E 33.1x、GAAP 41.3x。以 Andy 先驗的合理 25x 計，FY2027 EPS 隱含 $452（+40%）。
 
 **十年 P/E 規則值：本版不適用。** GAAP 落後 P/E 受無形資產攤銷扭曲（2016 年 EPS 為負、2018 年 6.5x、2024 年 137x）；前瞻 P/E 十年歷史待 Bloomberg 抓取單（10-27）。循環位置（共用規則，不平移）只作紀錄：FY2027 A、B 中段、C 見頂。
@@ -81,3 +83,9 @@ AI 半導體 Project **運算層的第二個樣板**（ASIC＋網通），複製
 - Broadcom 各平台份額、核心售價、HBM 代購比例皆為 Assumed；「其他 ASIC」含昇騰、Maia 等非 Broadcom 晶片，份額為粗估。
 - XPU 占 AI 營收（FY2026 錨點 69%）依 `markets/network` 的網通實際推估 17.6；Q3 的 73% 只有一個二手來源。
 - 客戶融資曝險不進基準 EPS；十年倍數待補；R4 產業部署路徑未建（Recon 預留列）。
+
+## v0.1.1（2026-10-25）：補目標價
+
+Val 頁新增「0. 目標價與上檔空間」（列標籤依工作單；為不位移既有儲存格，放在 Val 既有內容之後），In 頁最後新增目標價情境權重 tp_wA／tp_wB／tp_wC（0.3／0.5／0.2，Assumed）；HTML 估值章第一個區塊為本節。除新增列、README 頁標題與引用上游成品的檔名文字外，原有儲存格的值與 v0.1 相同（`tools/xlsx_diff.py` 比對）。
+
+- **目標價（12 個月，情境加權 A 30%／B 50%／C 20%）：US$647.37，上檔空間 +100.3%**（情境 A／B／C 隱含價 US$647.37／US$647.37／US$647.37；Val 頁「0. 目標價與上檔空間」，放在 Val 既有內容之後；權重為 In 頁 tp_wA／tp_wB／tp_wC，Assumed，Andy 可改）。方法：P/E：十年（2016–2025，10 月底會計年度年底）GAAP P/E 中位數（Macrotrends，第 5 節；2016 GAAP EPS 為負、2025 未找到，取有值的 8 年）× 各情境 FY2027 non-GAAP EPS（FY2027＝2026-11～2027-10）。本模型無規則值（前瞻 P/E 歷史待補），依工作單改用此備案。偏誤方向為高估：GAAP EPS 受併購無形資產攤銷壓低，GAAP P/E 高於 non-GAAP 口徑（2024 年併購 VMware 後約 137x），乘在 non-GAAP EPS 上偏高；FY2027 三情境 EPS 相同（情境差從 FY2028 起），故三情境隱含價相同；隱含價約為 FY2027 年底（2027-10）的價格、未折現。

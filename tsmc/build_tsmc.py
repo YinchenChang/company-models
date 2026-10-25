@@ -113,6 +113,8 @@ inp("cons_eps26", "共識 EPS 2026", "NT$", None, 107.6, None, "Interested-party
 inp("cons_eps27", "共識 EPS 2027", "NT$", None, 142.0, None, "Interested-party", "MarketScreener")
 inp("ai25_share", "AI 加速器 ÷ 營收 2025", "%", None, 0.18, None, "Verified", "公司：十幾%後段（high-teens）")
 inp("ai_cagr", "AI 加速器營收 CAGR（2024–29）", "%", None, 0.57, None, "Verified", "公司：50% 中後段，往高 50% 靠攏")
+for s, w in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
+    inp(f"tp_w{s}", f"目標價情境權重 {s}（v0.2.2 新增；Val 頁第 0 節用）", "%", None, w, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）；三者合計應為 100%（Val 頁第 0 節列示）")
 r = 4
 for srow in rows:
     if srow[0] == "sec":
@@ -389,7 +391,7 @@ srcs = [("台積電 2Q26 新聞稿", "https://pr.tsmc.com/english/news/3326"),
 for i, (a, b) in enumerate(srcs, 2): SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 44; SO.column_dimensions["B"].width = 130
 RD = wb.create_sheet("README", 0)
-lines = [("台積電模型 v0.2.1（AI 半導體 Project 步驟 4）　2026-10-23　2026 年改為 1–3Q 實績＋4Q 指引中點；2027 起假設未變", True),
+lines = [("台積電模型 v0.2.2（AI 半導體 Project 步驟 4）　2026-10-25　2026 年改為 1–3Q 實績＋4Q 指引中點；2027 起假設未變", True),
  ("模型命題：台積電在 AI 算力中的意義是供給上限而非分到的金額比例——AI 加速器只占其營收約兩成；2027 年加速器出貨受 HBM 而非 CoWoS 限制，台積電的獲利成長由「AI 顆數 × 每顆內容 × 漲價」與「非 AI 八成的穩定成長」共同決定。", False), ("", False),
  ("驅動因子 → 推導量", True),
  ("CoWoS：加速器顆數（markets/memory）÷ 每片封裝數 → CoWoS 需求；月產能年均 × 12 × (1＋委外) → 可用產能；需求 ÷ 產能 → 是否為瓶頸；與 HBM 缺口比較", False),
@@ -401,6 +403,36 @@ lines = [("台積電模型 v0.2.1（AI 半導體 Project 步驟 4）　2026-10-2
  ("v0.2 變更（2026-10-22，3Q26 財報後）：2026 營收 172→176.1 $B（1–3Q 實績＋4Q 指引中點 53.3）；毛利率 66.0%→66.5%（四季加權）；EPS 114.2→112.1（新舊對照見 tsmc/README.md）。新增 2026 專屬參數 opex_26、ni_op_26、fx_26（來自實績）；2027 起淨利÷營業利益由 0.92 改為推導值（NI_OI 頁；區間 0.864–0.909）；毛利率、價格調升、非 AI 成長、CoWoS 產能全部未改（公司未給新的明確指引）。", False),
  ("公司 3Q26 說法未取得：AI 加速器營收占比、CoWoS 產能的新數字（搜尋未找到逐字稿原文），故 CoWoS 頁不動。", False),
  ("已知限制：(1) 台積電不揭露 CoWoS 片數與先進封裝營收，產能為券商估計；(2) 先進製程（N3／N2）晶圓產能未找到，未建晶圓瓶頸；(3) 其他 AI 相關營收比例為 Assumed；(4) 淨利 ÷ 營業利益 2027 起為單一推導值（見 NI_OI），2022 年與 1Q26 的明細為單一來源。", False)]
+lines.append(("v0.2.2（2026-10-25）：Val 頁新增「0. 目標價與上檔空間」（放在 Val 既有內容之後，不位移既有儲存格）與 In 頁目標價情境權重 tp_wA／tp_wB／tp_wC（0.3／0.5／0.2，Assumed）。各情境隱含價＝十年 P/E 中位數（規則值：2027 中段）× 各情境 2027 EPS；其餘儲存格不變。", False))
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
+
+# ---------------- Val 第 0 節：目標價與上檔空間（v0.2.2 新增；Andy 2026-10-25 要求，列標籤依工作單逐字） ----------------
+# 為不位移既有儲存格（與舊版 dist 逐格相同），本節放在 Val 既有內容之後；HTML 估值章第一個區塊即為本節
+def add_target_price(V, imp, note, fmt, method, px_note):
+    t0 = V.max_row + 2
+    V.cell(t0, 1, "0. 目標價與上檔空間").font = BOLD
+    hdr(V, t0 + 1, ["項目", "數值", "", "", "說明"])
+    V.cell(t0 + 2, 1, "目標價（12 個月，情境加權）"); V[f"B{t0 + 2}"] = f"=tp_wA*B{t0 + 4}+tp_wB*B{t0 + 5}+tp_wC*B{t0 + 6}"; V[f"B{t0 + 2}"].number_format = fmt
+    V[f"E{t0 + 2}"] = "權重 × 各情境隱含價"
+    V.cell(t0 + 3, 1, "上檔空間（目標價 ÷ 現價 − 1）"); V[f"B{t0 + 3}"] = f"=B{t0 + 2}/px-1"; V[f"B{t0 + 3}"].number_format = "0.0%"; V[f"E{t0 + 3}"] = px_note
+    for i, (s, lab) in enumerate((("A", "情境 A 隱含價（樂觀）"), ("B", "情境 B 隱含價（基準）"), ("C", "情境 C 隱含價（下檔）"))):
+        rr = t0 + 4 + i
+        V.cell(rr, 1, lab); V[f"B{rr}"] = imp[s]; V[f"B{rr}"].number_format = fmt; V[f"E{rr}"] = note[s]
+    rr = t0 + 7
+    V.cell(rr, 1, "情境權重 A／B／C"); V[f"B{rr}"] = "=tp_wA"; V[f"C{rr}"] = "=tp_wB"; V[f"D{rr}"] = "=tp_wC"
+    for c in "BCD": V[f"{c}{rr}"].number_format = "0%"
+    V[f"E{rr}"] = f'="合計 "&TEXT(B{rr}+C{rr}+D{rr},"0%")&"；In 頁 tp_wA／tp_wB／tp_wC（Assumed，Andy 可改）"'
+    V.cell(t0 + 8, 1, "目標價方法"); V[f"B{t0 + 8}"] = method
+    return t0
+MID = [rw for rw in range(1, V.max_row + 1) if V.cell(rw, 1).value == "規則值：中段（P/E）"]
+assert len(MID) == 1, MID
+EPS27 = {"A": "C", "B": "F", "C": "I"}   # PL 頁 2027 欄（表頭：2027 A／B／C）
+assert all(PL[f"{c}3"].value == f"2027 {s}" for s, c in EPS27.items())
+TP0 = add_target_price(V, {s: f"=$C${MID[0]}*PL!{EPS27[s]}{PR['eps']}" for s in SC},
+    {s: f"情境 {s} 2027 EPS（PL 頁）× 十年 P/E 中位數（第 6 節規則值：中段）" for s in SC}, "#,##0",
+    "P/E：各情境 2027 EPS × 十年（2016–2025 年底）P/E 中位數（FullRatio 與 companiesmarketcap 兩來源平均；規則值：2027 為中段，取中位數，第 6 節）。"
+    "2027 三情境 EPS 相同（情境差從 2028 起），故三情境隱含價相同；十年倍數兼含 2022 年低谷（11–12x）與 2020、2024–2025 年（28–31x），中位數無明顯單向偏誤；"
+    "隱含價約為 2027 年底的價格、未折現，當作 12 個月目標價時偏高；現價為 2026-10-07 收盤（本版未更新）。",
+    "現價＝In 頁 px（2026-10-07 收盤）")
 wb.save(sys.argv[1]); print("saved")

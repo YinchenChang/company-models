@@ -72,6 +72,15 @@
       "title": "估值",
       "intro": "@Val!A1",
       "blocks": [
+        {"type": "table", "caption": "@Val!A100", "head": ["@Val!A101", "@Val!B101"], "rows": [
+          ["@Val!A102", "@Val!B102|n0"],
+          ["@Val!A103", "@Val!B103|sp1"],
+          ["@Val!A104", "@Val!B104|n0"],
+          ["@Val!A105", "@Val!B105|n0"],
+          ["@Val!A106", "@Val!B106|n0"],
+          ["@Val!A107", ["@Val!B107|p0", "／", "@Val!C107|p0", "／", "@Val!D107|p0"]],
+          ["@Val!A108", "@Val!B108"]
+        ]},
         {"type": "kv", "items": [
           ["@Val!A92", "@Val!B92|n0"],
           ["@Val!A93", "@Val!B93|x1"],

@@ -7,16 +7,23 @@ FY(t) 早於見頂年＝中段、等於＝見頂、晚於＝谷底；本檔讀�
 import json, pathlib, numpy as np, openpyxl
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
+def _only(folder):
+    """該資料夾 dist/ 內唯一的 xlsx（檔名含版本號，升版時不必改本檔）。"""
+    fs = sorted((ROOT / folder / "dist").glob("*.xlsx"))
+    assert len(fs) == 1, f"{folder}/dist 應恰有一個 xlsx"
+    return fs[0]
+
+
 F = {
-    "bridge": ROOT / "markets/chip_bridge/dist/20261023_晶片內容橋接表_v0.2.1.xlsx",
-    "net": ROOT / "markets/network/dist/20261023_AI網通市場模型_v0.2.2.xlsx",
-    "sk": ROOT / "skhynix/dist/20261023_SK海力士模型_v0.4.1.xlsx",
-    "ss": ROOT / "samsung/dist/20261023_三星電子模型_v0.2.1.xlsx",
-    "mu": ROOT / "micron/dist/20261023_美光模型_v0.3.1.xlsx",
-    "tsmc": ROOT / "tsmc/dist/20261023_台積電模型_v0.2.1.xlsx",
-    "eq": ROOT / "markets/equipment/dist/20261023_半導體設備市場模型_v0.1.3.xlsx",
-    "adv": ROOT / "advantest/dist/20261023_Advantest模型_v0.2.2.xlsx",
-    "disco": ROOT / "disco/dist/20261023_Disco模型_v0.1.3.xlsx",
+    "bridge": _only("markets/chip_bridge"),
+    "net": _only("markets/network"),
+    "sk": _only("skhynix"),
+    "ss": _only("samsung"),
+    "mu": _only("micron"),
+    "tsmc": _only("tsmc"),
+    "eq": _only("markets/equipment"),
+    "adv": _only("advantest"),
+    "disco": _only("disco"),
     "eq_readme": ROOT / "markets/equipment/README.md",
 }
 
