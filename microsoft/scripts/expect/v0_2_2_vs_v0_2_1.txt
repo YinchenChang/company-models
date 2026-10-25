@@ -1,0 +1,349 @@
+# MAG v0.2.2：Tokenomics 同步 v19.0 → v21.4。預期差異：Tokenomics_取數（VR200 低成本欄、IF_RevGWFleet／IFW_／L1_RevGW_PQ 值、新增 TK_NonNV_* 列〔取代舊佔位 TK_NonNVRatio 等〕）、輸入與假設的上限檢查列、檢查頁備註文字、版本字串；目標價與其他數字 0 差異
+# 列改名（同一區段內）
+列 Microsoft 收支與評價模型 — Excel 版 v0.2.1（更新 2026-10-11；與 HTML v0.2.1 同步；市價截至 2026-10-07 收盤） => Microsoft 收支與評價模型 — Excel 版 v0.2.2（更新 2026-10-11；與 HTML v0.2.2 同步；市價截至 2026-10-07 收盤）
+列 來源：YinchenChang/Tokenomics 20261022_Tokenomics_v19.0.xlsx（v19.0，commit 1916a06，擷取 2026-10-22）。只引用 IF_（不含 IF_Hdr*）、IFW_（四層瀑布）、IFC_（用途欄）與 L1_ 名稱；標「上限，不得作預測」者只作上限檢查、不作收入輸入；模型主值取「基準」，低／高只作敏感度；Tokenomics 每 GW＝IT 關鍵電力。 => 來源：YinchenChang/Tokenomics 20261024_Tokenomics_v21.4.xlsx（v21.4，commit 3ac70ac，擷取 2026-10-25）。只引用 IF_（不含 IF_Hdr*）、IFW_（四層瀑布）、IFC_（用途欄）與 L1_ 名稱；標「上限，不得作預測」者只作上限檢查、不作收入輸入；模型主值取「基準」，低／高只作敏感度；Tokenomics 每 GW＝IT 關鍵電力。
+# 舊版佔位列（Tokenomics 從未提供）由實際名稱 TK_NonNV_Out_／Hold_ 取代
+缺少 Tokenomics_取數!TK_NonNVRatio
+缺少 Tokenomics_取數!TK_NonNVCostRatio
+缺少 Tokenomics_取數!TK_NonNV_Maia
+# 逐格（工作表!儲存格  來源｜列名稱）
+輸入與假設!C78  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜世代｜Hopper（H100／H200）｜每 MW 參考付費營收（利用率層）
+輸入與假設!C79  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜世代｜Hopper（H100／H200）｜每 MW 參考付費營收（生產折減層）
+輸入與假設!C85  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜世代｜GB200｜每 MW 參考付費營收（利用率層）
+輸入與假設!C86  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜世代｜GB200｜每 MW 參考付費營收（生產折減層）
+輸入與假設!C92  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜世代｜GB300｜每 MW 參考付費營收（利用率層）
+輸入與假設!C93  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜世代｜GB300｜每 MW 參考付費營收（生產折減層）
+輸入與假設!C99  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜世代｜Maia 200｜每 MW 參考付費營收（利用率層）
+輸入與假設!C100  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜世代｜Maia 200｜每 MW 參考付費營收（生產折減層）
+輸入與假設!C106  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜世代｜Vera Rubin（VR200）｜每 MW 參考付費營收（利用率層）
+輸入與假設!C107  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜世代｜Vera Rubin（VR200）｜每 MW 參考付費營收（生產折減層）
+輸入與假設!C114  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜加權每 MW 參考付費營收（利用率層）
+輸入與假設!D114  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜加權每 MW 參考付費營收（利用率層）
+輸入與假設!E114  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜加權每 MW 參考付費營收（利用率層）
+輸入與假設!F114  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜加權每 MW 參考付費營收（利用率層）
+輸入與假設!G114  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜加權每 MW 參考付費營收（利用率層）
+輸入與假設!C115  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 參考付費營收（利用率層）
+輸入與假設!D115  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 參考付費營收（利用率層）
+輸入與假設!E115  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 參考付費營收（利用率層）
+輸入與假設!F115  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 參考付費營收（利用率層）
+輸入與假設!G115  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 參考付費營收（利用率層）
+輸入與假設!C116  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜加權每 MW 參考付費營收（生產折減層）
+輸入與假設!D116  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜加權每 MW 參考付費營收（生產折減層）
+輸入與假設!E116  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜加權每 MW 參考付費營收（生產折減層）
+輸入與假設!F116  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜加權每 MW 參考付費營收（生產折減層）
+輸入與假設!G116  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜加權每 MW 參考付費營收（生產折減層）
+輸入與假設!C117  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 參考付費營收（生產折減層）
+輸入與假設!D117  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 參考付費營收（生產折減層）
+輸入與假設!E117  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 參考付費營收（生產折減層）
+輸入與假設!F117  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 參考付費營收（生產折減層）
+輸入與假設!G117  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 參考付費營收（生產折減層）
+輸入與假設!C118  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，無門檻）
+輸入與假設!D118  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，無門檻）
+輸入與假設!E118  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，無門檻）
+輸入與假設!F118  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，無門檻）
+輸入與假設!G118  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，無門檻）
+輸入與假設!I118  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，無門檻）
+輸入與假設!C119  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜其中：以 P×Q 高端點為分母（比值下緣）
+輸入與假設!D119  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜其中：以 P×Q 高端點為分母（比值下緣）
+輸入與假設!E119  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜其中：以 P×Q 高端點為分母（比值下緣）
+輸入與假設!F119  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜其中：以 P×Q 高端點為分母（比值下緣）
+輸入與假設!G119  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜其中：以 P×Q 高端點為分母（比值下緣）
+輸入與假設!C120  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜其中：以 P×Q 低端點為分母（比值上緣）
+輸入與假設!D120  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜其中：以 P×Q 低端點為分母（比值上緣）
+輸入與假設!E120  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜其中：以 P×Q 低端點為分母（比值上緣）
+輸入與假設!F120  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜其中：以 P×Q 低端點為分母（比值上緣）
+輸入與假設!G120  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜其中：以 P×Q 低端點為分母（比值上緣）
+輸入與假設!I250  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 建置成本
+檢查_連動!B9  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 參考付費營收（利用率層，五期最高）
+檢查_連動!B10  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 參考付費營收（生產折減層，五期最高）
+檢查_連動!B11  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，五期最高）
+檢查_連動!E11  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，五期最高）
+Tokenomics_取數!J5  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldEcon_H100
+Tokenomics_取數!J6  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldEcon_GB200
+Tokenomics_取數!J7  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldEcon_GB300
+Tokenomics_取數!F8  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldEcon_VR200
+Tokenomics_取數!J8  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldEcon_VR200
+Tokenomics_取數!J9  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldEcon_RU
+Tokenomics_取數!J10  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldAcct_H100
+Tokenomics_取數!J11  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldAcct_GB200
+Tokenomics_取數!J12  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldAcct_GB300
+Tokenomics_取數!F13  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldAcct_VR200
+Tokenomics_取數!J13  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldAcct_VR200
+Tokenomics_取數!J14  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldAcct_RU
+Tokenomics_取數!J15  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_GPUhrEcon_H100
+Tokenomics_取數!J16  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_GPUhrEcon_GB200
+Tokenomics_取數!J17  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_GPUhrEcon_GB300
+Tokenomics_取數!F18  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_GPUhrEcon_VR200
+Tokenomics_取數!J18  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_GPUhrEcon_VR200
+Tokenomics_取數!J19  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_GPUhrEcon_RU
+Tokenomics_取數!J20  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexIT_H100
+Tokenomics_取數!J21  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexIT_GB200
+Tokenomics_取數!J22  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexIT_GB300
+Tokenomics_取數!F23  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexIT_VR200
+Tokenomics_取數!J23  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexIT_VR200
+Tokenomics_取數!J24  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexIT_RU
+Tokenomics_取數!J25  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexFacility_H100
+Tokenomics_取數!J26  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexFacility_GB200
+Tokenomics_取數!J27  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexFacility_GB300
+Tokenomics_取數!J28  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexFacility_VR200
+Tokenomics_取數!J29  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexFacility_RU
+Tokenomics_取數!J30  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexTotal_H100
+Tokenomics_取數!J31  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexTotal_GB200
+Tokenomics_取數!J32  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexTotal_GB300
+Tokenomics_取數!F33  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexTotal_VR200
+Tokenomics_取數!J33  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexTotal_VR200
+Tokenomics_取數!J34  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_CapexTotal_RU
+Tokenomics_取數!J35  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_FacCapexMW
+Tokenomics_取數!J36  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_DeprLifeIT_H100
+Tokenomics_取數!J37  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_DeprLifeIT_GB200
+Tokenomics_取數!J38  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_DeprLifeIT_GB300
+Tokenomics_取數!J39  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_DeprLifeIT_VR200
+Tokenomics_取數!J40  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_DeprLifeIT_RU
+Tokenomics_取數!J41  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_DeprIT_H100
+Tokenomics_取數!J42  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_DeprIT_GB200
+Tokenomics_取數!J43  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_DeprIT_GB300
+Tokenomics_取數!F44  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_DeprIT_VR200
+Tokenomics_取數!J44  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_DeprIT_VR200
+Tokenomics_取數!J45  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_DeprIT_RU
+Tokenomics_取數!J46  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_DeprFac_H100
+Tokenomics_取數!J47  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_DeprFac_GB200
+Tokenomics_取數!J48  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_DeprFac_GB300
+Tokenomics_取數!J49  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_DeprFac_VR200
+Tokenomics_取數!J50  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_DeprFac_RU
+Tokenomics_取數!J51  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_OpexGW_H100
+Tokenomics_取數!J52  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_OpexGW_GB200
+Tokenomics_取數!J53  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_OpexGW_GB300
+Tokenomics_取數!F54  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_OpexGW_VR200
+Tokenomics_取數!J54  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_OpexGW_VR200
+Tokenomics_取數!J55  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_OpexGW_RU
+Tokenomics_取數!J56  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_PowerPrice_H100
+Tokenomics_取數!J57  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_PowerPrice_GB200
+Tokenomics_取數!J58  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_PowerPrice_GB300
+Tokenomics_取數!J59  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_PowerPrice_VR200
+Tokenomics_取數!J60  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_PowerPrice_RU
+Tokenomics_取數!J61  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_PowerCost_H100
+Tokenomics_取數!J62  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_PowerCost_GB200
+Tokenomics_取數!J63  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_PowerCost_GB300
+Tokenomics_取數!J64  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_PowerCost_VR200
+Tokenomics_取數!J65  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_PowerCost_RU
+Tokenomics_取數!J66  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_MaintIT_H100
+Tokenomics_取數!J67  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_MaintIT_GB200
+Tokenomics_取數!J68  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_MaintIT_GB300
+Tokenomics_取數!F69  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_MaintIT_VR200
+Tokenomics_取數!J69  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_MaintIT_VR200
+Tokenomics_取數!J70  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_MaintIT_RU
+Tokenomics_取數!J71  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_MaintFac_H100
+Tokenomics_取數!J72  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_MaintFac_GB200
+Tokenomics_取數!J73  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_MaintFac_GB300
+Tokenomics_取數!J74  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_MaintFac_VR200
+Tokenomics_取數!J75  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_MaintFac_RU
+Tokenomics_取數!J76  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_StaffSW_H100
+Tokenomics_取數!J77  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_StaffSW_GB200
+Tokenomics_取數!J78  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_StaffSW_GB300
+Tokenomics_取數!J79  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_StaffSW_VR200
+Tokenomics_取數!J80  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_StaffSW_RU
+Tokenomics_取數!J81  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_TaxIns_H100
+Tokenomics_取數!J82  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_TaxIns_GB200
+Tokenomics_取數!J83  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_TaxIns_GB300
+Tokenomics_取數!F84  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_TaxIns_VR200
+Tokenomics_取數!J84  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_TaxIns_VR200
+Tokenomics_取數!J85  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_TaxIns_RU
+Tokenomics_取數!J86  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_AvgDraw_H100
+Tokenomics_取數!J87  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_AvgDraw_GB200
+Tokenomics_取數!J88  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_AvgDraw_GB300
+Tokenomics_取數!J89  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_AvgDraw_VR200
+Tokenomics_取數!J90  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_AvgDraw_RU
+Tokenomics_取數!J91  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_FacilityGW_H100
+Tokenomics_取數!J92  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_FacilityGW_GB200
+Tokenomics_取數!J93  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_FacilityGW_GB300
+Tokenomics_取數!J94  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_FacilityGW_VR200
+Tokenomics_取數!J95  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_FacilityGW_RU
+Tokenomics_取數!J96  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_GPUsPerGW_H100
+Tokenomics_取數!J97  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_GPUsPerGW_GB200
+Tokenomics_取數!J98  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_GPUsPerGW_GB300
+Tokenomics_取數!J99  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_GPUsPerGW_VR200
+Tokenomics_取數!J100  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_GPUsPerGW_RU
+Tokenomics_取數!J101  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RacksPerGW_H100
+Tokenomics_取數!J102  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RacksPerGW_GB200
+Tokenomics_取數!J103  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RacksPerGW_GB300
+Tokenomics_取數!J104  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RacksPerGW_VR200
+Tokenomics_取數!J105  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RacksPerGW_RU
+Tokenomics_取數!J106  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_Util
+Tokenomics_取數!F107  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_H100
+Tokenomics_取數!G107  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_H100
+Tokenomics_取數!H107  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_H100
+Tokenomics_取數!J107  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_H100
+Tokenomics_取數!F108  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_GB200
+Tokenomics_取數!G108  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_GB200
+Tokenomics_取數!H108  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_GB200
+Tokenomics_取數!J108  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_GB200
+Tokenomics_取數!F109  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_GB300
+Tokenomics_取數!G109  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_GB300
+Tokenomics_取數!H109  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_GB300
+Tokenomics_取數!J109  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_GB300
+Tokenomics_取數!F110  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_VR200
+Tokenomics_取數!G110  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_VR200
+Tokenomics_取數!H110  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_VR200
+Tokenomics_取數!J110  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_VR200
+Tokenomics_取數!F111  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_RU
+Tokenomics_取數!G111  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_RU
+Tokenomics_取數!H111  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_RU
+Tokenomics_取數!J111  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGWFleet_RU
+Tokenomics_取數!J112  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_GPUhr_Hopper
+Tokenomics_取數!J113  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_GPUhr_GB200
+Tokenomics_取數!J114  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_GPUhr_GB300
+Tokenomics_取數!F115  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_GPUhr_VR200
+Tokenomics_取數!J115  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_GPUhr_VR200
+Tokenomics_取數!J116  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldEconGW_Hopper
+Tokenomics_取數!J117  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldEconGW_GB200
+Tokenomics_取數!J118  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldEconGW_GB300
+Tokenomics_取數!F119  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldEconGW_VR200
+Tokenomics_取數!J119  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_HoldEconGW_VR200
+Tokenomics_取數!F120  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_NvContentGW_VR200
+Tokenomics_取數!J120  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_NvContentGW_VR200
+Tokenomics_取數!F123  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_H100
+Tokenomics_取數!G123  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_H100
+Tokenomics_取數!H123  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_H100
+Tokenomics_取數!J123  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_H100
+Tokenomics_取數!F124  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_GB200
+Tokenomics_取數!G124  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_GB200
+Tokenomics_取數!H124  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_GB200
+Tokenomics_取數!J124  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_GB200
+Tokenomics_取數!F125  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_GB300
+Tokenomics_取數!G125  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_GB300
+Tokenomics_取數!H125  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_GB300
+Tokenomics_取數!J125  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_GB300
+Tokenomics_取數!F126  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_VR200
+Tokenomics_取數!G126  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_VR200
+Tokenomics_取數!H126  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_VR200
+Tokenomics_取數!J126  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_VR200
+Tokenomics_取數!F127  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_RU
+Tokenomics_取數!G127  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_RU
+Tokenomics_取數!H127  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_RU
+Tokenomics_取數!J127  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_100_RU
+Tokenomics_取數!F128  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_H100
+Tokenomics_取數!G128  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_H100
+Tokenomics_取數!H128  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_H100
+Tokenomics_取數!J128  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_H100
+Tokenomics_取數!F129  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_GB200
+Tokenomics_取數!G129  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_GB200
+Tokenomics_取數!H129  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_GB200
+Tokenomics_取數!J129  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_GB200
+Tokenomics_取數!F130  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_GB300
+Tokenomics_取數!G130  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_GB300
+Tokenomics_取數!H130  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_GB300
+Tokenomics_取數!J130  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_GB300
+Tokenomics_取數!F131  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_VR200
+Tokenomics_取數!G131  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_VR200
+Tokenomics_取數!H131  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_VR200
+Tokenomics_取數!J131  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_VR200
+Tokenomics_取數!F132  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_RU
+Tokenomics_取數!G132  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_RU
+Tokenomics_取數!H132  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_RU
+Tokenomics_取數!J132  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Util_RU
+Tokenomics_取數!F133  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_H100
+Tokenomics_取數!G133  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_H100
+Tokenomics_取數!H133  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_H100
+Tokenomics_取數!J133  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_H100
+Tokenomics_取數!F134  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_GB200
+Tokenomics_取數!G134  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_GB200
+Tokenomics_取數!H134  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_GB200
+Tokenomics_取數!J134  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_GB200
+Tokenomics_取數!F135  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_GB300
+Tokenomics_取數!G135  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_GB300
+Tokenomics_取數!H135  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_GB300
+Tokenomics_取數!J135  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_GB300
+Tokenomics_取數!F136  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_VR200
+Tokenomics_取數!G136  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_VR200
+Tokenomics_取數!H136  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_VR200
+Tokenomics_取數!J136  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_VR200
+Tokenomics_取數!F137  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_RU
+Tokenomics_取數!G137  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_RU
+Tokenomics_取數!H137  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_RU
+Tokenomics_取數!J137  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Prod_RU
+Tokenomics_取數!F138  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_H100
+Tokenomics_取數!G138  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_H100
+Tokenomics_取數!H138  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_H100
+Tokenomics_取數!J138  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_H100
+Tokenomics_取數!F139  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_GB200
+Tokenomics_取數!G139  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_GB200
+Tokenomics_取數!H139  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_GB200
+Tokenomics_取數!J139  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_GB200
+Tokenomics_取數!F140  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_GB300
+Tokenomics_取數!G140  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_GB300
+Tokenomics_取數!H140  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_GB300
+Tokenomics_取數!J140  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_GB300
+Tokenomics_取數!F141  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_VR200
+Tokenomics_取數!G141  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_VR200
+Tokenomics_取數!H141  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_VR200
+Tokenomics_取數!J141  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_VR200
+Tokenomics_取數!F142  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_RU
+Tokenomics_取數!G142  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_RU
+Tokenomics_取數!H142  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_RU
+Tokenomics_取數!J142  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_IFW_RevGWFleet_Life_RU
+Tokenomics_取數!I143  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_HoldEcon
+Tokenomics_取數!J143  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_HoldEcon
+Tokenomics_取數!I144  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_HoldAcct
+Tokenomics_取數!J144  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_HoldAcct
+Tokenomics_取數!I145  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_GPUhrEcon
+Tokenomics_取數!J145  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_GPUhrEcon
+Tokenomics_取數!I146  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_CapexIT
+Tokenomics_取數!J146  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_CapexIT
+Tokenomics_取數!I147  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_CapexFacility
+Tokenomics_取數!J147  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_CapexFacility
+Tokenomics_取數!I148  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_CapexTotal
+Tokenomics_取數!J148  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_CapexTotal
+Tokenomics_取數!I149  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_DeprLifeIT
+Tokenomics_取數!J149  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_DeprLifeIT
+Tokenomics_取數!I150  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_DeprIT
+Tokenomics_取數!J150  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_DeprIT
+Tokenomics_取數!I151  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_DeprFac
+Tokenomics_取數!J151  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_DeprFac
+Tokenomics_取數!I152  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_OpexGW
+Tokenomics_取數!J152  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_OpexGW
+Tokenomics_取數!I153  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_PowerPrice
+Tokenomics_取數!J153  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_PowerPrice
+Tokenomics_取數!I154  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_PowerCost
+Tokenomics_取數!J154  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_PowerCost
+Tokenomics_取數!I155  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_MaintIT
+Tokenomics_取數!J155  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_MaintIT
+Tokenomics_取數!I156  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_MaintFac
+Tokenomics_取數!J156  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_MaintFac
+Tokenomics_取數!I157  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_StaffSW
+Tokenomics_取數!J157  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_StaffSW
+Tokenomics_取數!I158  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_TaxIns
+Tokenomics_取數!J158  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_TaxIns
+Tokenomics_取數!I159  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_AvgDraw
+Tokenomics_取數!J159  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_AvgDraw
+Tokenomics_取數!I160  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_FacilityGW
+Tokenomics_取數!J160  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_FacilityGW
+Tokenomics_取數!I161  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_GPUsPerGW
+Tokenomics_取數!J161  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_GPUsPerGW
+Tokenomics_取數!I162  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_RacksPerGW
+Tokenomics_取數!J162  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_RacksPerGW
+Tokenomics_取數!I163  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_Util
+Tokenomics_取數!J163  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_Util
+Tokenomics_取數!I164  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_RevGWFleet
+Tokenomics_取數!J164  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IF_RevGWFleet
+Tokenomics_取數!I167  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IFW_RevGWFleet_100
+Tokenomics_取數!J167  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IFW_RevGWFleet_100
+Tokenomics_取數!I168  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IFW_RevGWFleet_Util
+Tokenomics_取數!J168  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IFW_RevGWFleet_Util
+Tokenomics_取數!I169  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IFW_RevGWFleet_Prod
+Tokenomics_取數!J169  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IFW_RevGWFleet_Prod
+Tokenomics_取數!I170  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IFW_RevGWFleet_Life
+Tokenomics_取數!J170  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜IFC_Use｜IFW_RevGWFleet_Life
+Tokenomics_取數!F171  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGW_PQ_VR200
+Tokenomics_取數!G171  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGW_PQ_VR200
+Tokenomics_取數!H171  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGW_PQ_VR200
+Tokenomics_取數!J171  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGW_PQ_VR200
+Tokenomics_取數!F172  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGW_PQ_VR200_Lo
+Tokenomics_取數!G172  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGW_PQ_VR200_Lo
+Tokenomics_取數!H172  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGW_PQ_VR200_Lo
+Tokenomics_取數!J172  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGW_PQ_VR200_Lo
+Tokenomics_取數!F173  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGW_PQ_VR200_Hi
+Tokenomics_取數!G173  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGW_PQ_VR200_Hi
+Tokenomics_取數!H173  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGW_PQ_VR200_Hi
+Tokenomics_取數!J173  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜TK_RevGW_PQ_VR200_Hi
+導覽!A1  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜版本字串
+Tokenomics_取數!A2  MAG v0.2.2 Tokenomics v21.4（VR200 低成本端、上限檢查層、NonNV 名稱列、版本字串）｜版本字串

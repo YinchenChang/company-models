@@ -21,13 +21,15 @@ def norm(v):
 
 # --expect=檔案（v4.5）：預期差異清單，每行「工作表!儲存格  原因」（# 開頭為註解）。清單內的格有差異時另列「預期差異」、不計入差異數；
 # 清單內的格若沒有差異也會列出（提醒清單過期）。每個任務只列經說明的格，升版後清空。
-EXP, SEC_RENAME, ROW_RENAME = {}, {}, {}  # SEC_RENAME：新版區段標題 → 舊版（「區段 舊標題 => 新標題」；該區段的列仍以列名稱配對比對）
+EXP, SEC_RENAME, ROW_RENAME, MISSOK = {}, {}, {}, set()  # SEC_RENAME：新版區段標題 → 舊版（「區段 舊標題 => 新標題」；該區段的列仍以列名稱配對比對）
 for o in sys.argv:
     if o.startswith('--expect='):
         for ln in open(o.split('=', 1)[1], encoding='utf-8'):
             ln = ln.strip()
             if ln.startswith('列 ') and ' => ' in ln:  # 列名稱改名（同一區段內）
                 o_, n_ = ln[2:].split(' => ', 1); ROW_RENAME[norm(n_.strip())] = norm(o_.strip()); continue
+            if ln.startswith('缺少 '):  # MAG v0.2.2：預期「新版缺少此列」（舊版佔位列被實際名稱取代）：「缺少 工作表!列名稱」
+                MISSOK.add(norm(ln[3:].strip())); continue
             if ln.startswith('區段 ') and ' => ' in ln:
                 o_, n_ = ln[3:].split(' => ', 1); SEC_RENAME[norm(n_.split('  ')[0].strip())] = norm(o_.strip()); continue
             if ln and not ln.startswith('#'):
@@ -83,7 +85,7 @@ for n in wa.sheetnames:
         ka, ea = keys(A); kb, eb = keys(B, new=True); errs += ea + [e + '（新版）' for e in eb]
         mode[n] = 'label'; rowmap[n] = {ra: kb[k] for k, ra in ka.items() if k in kb}
         added += [(n, rb, k[1]) for k, rb in sorted(kb.items(), key=lambda t: t[1]) if k not in ka]
-        diffs += [(n, f'第 {ra} 列', f'新版缺少此列：{k[1][:60]}', '') for k, ra in ka.items() if k not in kb]
+        diffs += [(n, f'第 {ra} 列', f'新版缺少此列：{k[1][:60]}', '') for k, ra in ka.items() if k not in kb and norm(f'{n}!{str(k[1]).strip()}') not in MISSOK]
     else:
         mode[n] = 'pos'
 if errs:

@@ -1625,7 +1625,7 @@
   "prepayCheck": "不適用（Amazon 無客戶預付融資）。",
   "mwFacts": "公司：2025 年新增電力 3.9 GW、2025Q4 單季 1.2 GW（口徑不明，推定設施）；2027 年底容量為 2025 年兩倍（總容量未揭露）。第三方：Epoch AI 追蹤三站 1,422 MW-IT（Trainium2，Anthropic），2028 預測 3,448 [Interested-party／第三方]。",
   "ebStartSource": "AI 雲端 EBITDA 率＝1 − Tokenomics 加權每 MW 營運成本 ÷ 每 MW 年收入",
-  "costMwNote": "每 MW 成本＝Σ 新增世代占比 × (TK_CapexIT＋自建比例 80% × TK_CapexFacility)（Tokenomics v19.0；US$m/MW-IT）",
+  "costMwNote": "每 MW 成本＝Σ 新增世代占比 × (TK_CapexIT＋自建比例 80% × TK_CapexFacility)（Tokenomics v21.4；US$m/MW-IT）",
   "ppeOpenNote": "評價日 PP&E 淨額 446.0（10-Q；含 AWS 263.8）[Interested-party]；D&A 分池：AI 期初毛額估計（評價日 AI 總 MW × Tokenomics 每 MW 成本）＋非 AI（其餘，壽命以最新季分部 D&A 年化校準）",
   "facilityName": "循環信用額度 20B，未動用",
   "newDebtRateNote": "瀑布新債利率取 2026-03 美元票據有效利率區間中點約 5.0% [Derived]；最長天期 2066 有效利率 6.33%",
@@ -1811,7 +1811,7 @@
    "facts": "data/amazon_facts_20261008.json",
    "kevidence": "data/kevidence_amazon_20261008.json",
    "consensus": "data/consensus_amzn_20261008.json",
-   "tokenomicsSnapshot": "data/tokenomics_snapshot_v19.0.json",
+   "tokenomicsSnapshot": "data/tokenomics_snapshot_v21.4.json",
    "tokenomicsNames": "data/tokenomics_names.txt"
   },
   "calendar": {
@@ -3278,10 +3278,10 @@
   "tokenomics": {
    "version": {
     "value": {
-     "file": "20261022_Tokenomics_v19.0.xlsx",
-     "current": "20261022_Tokenomics_v19.0.xlsx",
-     "commit": "1916a06465bb0c7efed21383075f2ae098508e24",
-     "extracted": "2026-10-22"
+     "file": "20261024_Tokenomics_v21.4.xlsx",
+     "current": "20261024_Tokenomics_v21.4.xlsx",
+     "commit": "3ac70acfda55adcc5c7c323c0fe1f690c5a4e99f",
+     "extracted": "2026-10-25"
     },
     "unit": "物件",
     "ref": "tk.IF_HoldEcon",
@@ -3322,9 +3322,9 @@
  },
  "tokenomics": {
   "_note": "算力相關的產業與物理層資料只引用 Tokenomics（YinchenChang/Tokenomics）的 IF_（不含 IF_Hdr*）、IFW_（四層瀑布，上限檢查用）、IFC_（用途欄）與 L1_ 名稱，經版本固定的快照檔讀入（tools/tokenomics/import_tokenomics.py）；模型主值取「基準」成本情境。Excel「Tokenomics_取數」分頁建具名範圍 TK_<名稱>_<世代>，每 MW 年收入、營運成本與資本支出列引用之。Tokenomics 每 GW＝IT 關鍵電力。",
-  "snapshotFile": "data/tokenomics_snapshot_v19.0.json",
-  "version": "v19.0",
-  "commit": "1916a06465bb0c7efed21383075f2ae098508e24",
+  "snapshotFile": "data/tokenomics_snapshot_v21.4.json",
+  "version": "v21.4",
+  "commit": "3ac70acfda55adcc5c7c323c0fe1f690c5a4e99f",
   "names": [
    "IF_HoldEcon",
    "IF_HoldAcct",
@@ -3358,20 +3358,18 @@
    "L1_HoldEconGW_GB300",
    "L1_HoldEconGW_VR200",
    "L1_NvContentGW_VR200",
+   "IF_NonNV_Out_Trn",
+   "IF_NonNV_Hold_Trn",
    "IFW_RevGWFleet_100",
    "IFW_RevGWFleet_Util",
    "IFW_RevGWFleet_Prod",
    "IFW_RevGWFleet_Life",
    "IFC_Use",
-   "IF_NonNVRatio",
-   "IF_NonNVCostRatio",
    "L1_RevGW_PQ_VR200",
    "L1_RevGW_PQ_VR200_Lo",
    "L1_RevGW_PQ_VR200_Hi"
   ],
   "optional": [
-   "IF_NonNVRatio",
-   "IF_NonNVCostRatio",
    "L1_RevGW_PQ_VR200",
    "L1_RevGW_PQ_VR200_Lo",
    "L1_RevGW_PQ_VR200_Hi"

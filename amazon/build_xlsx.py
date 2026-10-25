@@ -450,7 +450,7 @@ if PRC:
     _HASPQ = _TKSNAP is not None and all(not _TKSNAP['items'].get(n_, {'missing': True}).get('missing') for n_ in ('L1_RevGW_PQ_VR200', 'L1_RevGW_PQ_VR200_Lo', 'L1_RevGW_PQ_VR200_Hi'))
     if _HASPQ:  # MAG v0.2.1：上限檢查第五列（對照，不設門檻）：每 MW 年收入 ÷ 模型商每 MW 實收 P×Q（L1_RevGW_PQ_VR200，US$bn/GW/年＝US$m/MW/年）；Lo／Hi 端點用 _Hi／_Lo 作分母
         r = prow(r, "每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，無門檻）", "%", [f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/TK_RevGW_PQ_VR200" for i in range(5)], PCT,
-                 "對外 AI 雲端每 MW 收入 ÷ 模型商（VR200）每 MW 年實收 TK_RevGW_PQ_VR200（US$m/MW，第一年，m＝L1_M；token 帳未閉合：模型付費 token 為需求面的 L1_TokLedger_2026Q2 倍；不得與 IFW_RevGWFleet 相減比較）；只作對照、不設門檻（工作單 v0.2.1 預設 3）", BLACK)
+                 "對外 AI 雲端每 MW 收入 ÷ 模型商（VR200）每 MW 年實收 TK_RevGW_PQ_VR200（US$m/MW，第一年，m＝L1_M）；P×Q 的 Q 與 GW 路線 token 帳同構（GW 路線 2025 約 1.52、2026 Q2 約 2.0–2.1，數值權威在 openai 模型；支出路線約 3.0 只作對照）；不得與 IFW_RevGWFleet 相減比較；只作對照、不設門檻（工作單 v0.2.1 預設 3；說明文字 v0.2.2 改）", BLACK)
         r = prow(r, "　其中：以 P×Q 高端點為分母（比值下緣）", "%", [f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/TK_RevGW_PQ_VR200_Hi" for i in range(5)], PCT, "分母＝L1_RevGW_PQ_VR200_Hi", BLACK)
         r = prow(r, "　其中：以 P×Q 低端點為分母（比值上緣）", "%", [f"={COLS[i]}{IN['加權每 MW 年持有成本']}*{KSEL}/TK_RevGW_PQ_VR200_Lo" for i in range(5)], PCT, "分母＝L1_RevGW_PQ_VR200_Lo", BLACK)
     for i in range(5):
@@ -2826,7 +2826,7 @@ checks = [
      "=IF(B{r}<=" + _n(CK.get('capProdMax', 1)) + ",\"通過\",\"超過硬上限\")", PCT, "IFW_RevGWFleet_Prod（利用率層 × 生產折減）；超過即標紅並寫入報告（MAG v0.2）"),
 ] if PRC and 'IFW_RevGWFleet_Prod' in set(CO.get('tokenomics', {}).get('names', [])) else []) + ([
     ("每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，五期最高）", f"=MAX('輸入與假設'!C{IN['每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，無門檻）']}:G{IN['每 MW 年收入 ÷ 模型商每 MW 年實收 P×Q（第五列對照，無門檻）']})", "無門檻（對照）",
-     "=\"對照\"", PCT, "L1_RevGW_PQ_VR200（VR200 第一年；Lo／Hi 端點見『輸入與假設』B0）；token 帳未閉合，只作對照、不作門檻（MAG v0.2.1）"),
+     "=\"對照\"", PCT, "L1_RevGW_PQ_VR200（VR200 第一年；Lo／Hi 端點見『輸入與假設』B0）；Q 與 GW 路線 token 帳同構（GW 路線 2025 約 1.52、2026 Q2 約 2.0–2.1；支出路線約 3.0 只作對照），只作對照、不作門檻（MAG v0.2.1）"),
 ] if PRC and _HASPQ else []) + [
     ("世代在役 MW 合計 − Accepted MW（«PL»）", f"='輸入與假設'!G{IN['在役 MW 合計（世代加總）']}-'輸入與假設'!G{IN['Accepted MW（期末主動電力）']}", "=0",
      "=IF(ABS(B{r})<0.5,\"通過\",\"不一致\")", NUM0, "新增占比合計須為 100%、期初占比合計須為 100%"),
@@ -3982,6 +3982,11 @@ if TK:
             _loc = _it['cell'] + (f"（低／高＝{_rg['cells']['低'].split('!')[1]}／{_rg['cells']['高'].split('!')[1]}；{_rg.get('def') or ''}）" if _rg else "")
             _key = f"TK_{_short(_nm)}"
             _tkrow(_key, _nm, _it['label'], _it['unit'], "—", _vals, _loc, _fmt(_it['unit'], _vals))
+            wb.defined_names[_key] = _DN(_key, attr_text=f"'Tokenomics_取數'!$G${r - 1}")
+        elif _it['kind'] == 'vector':  # MAG v0.2.2：Tokenomics v21.0 起的 IF_NonNV_Out_／Hold_*（Interface 單列 3 格：低／基準／高；只登錄、模型不引用）
+            _vals = list(_it['values'])
+            _key = f"TK_{_short(_nm)}"
+            _tkrow(_key, _nm, _it['label'], _it['unit'], "—", _vals, f"{_it['ref']}（低／基準／高＝C／D／E）", _fmt(_it['unit'], _vals))
             wb.defined_names[_key] = _DN(_key, attr_text=f"'Tokenomics_取數'!$G${r - 1}")
         elif _it['kind'] == 'by_name':  # MAG v0.2：IFC_ 用途欄——只列本快照所取名稱的用途（文字，不建具名範圍，不進公式）
             for _n2 in _TKS['items']:
