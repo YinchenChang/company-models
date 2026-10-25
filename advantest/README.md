@@ -1,4 +1,4 @@
-# advantest/ — Advantest（6857.T）收支與估值模型 v0.2.3
+# advantest/ — Advantest（6857.T）收支與估值模型 v0.3
 
 Advantest 的盈餘由 AI 加速器的 SoC 測試需求決定。每顆晶片的測試時間隨複雜度上升，Advantest 握有約三分之二的市占。股價取決於加速器顆數的成長在 FY2027 之後放緩時，測試機的投資會不會跟著回落。
 
@@ -7,11 +7,23 @@ AI 半導體 Project 步驟 5（設備與材料）的第一家公司樣板。獨
 | 檔案 | 內容 |
 |---|---|
 | `build_advantest.py` | 產生器（參數與公式） |
-| `dist/20261025_Advantest模型_v0.2.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261025_Advantest模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（頁面結構與要抽的儲存格；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_Advantest模型_v0.2.3.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出，標註來源儲存格；CI 檢核） |
+| `dist/20261025_Advantest模型_v0.3.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出，標註來源儲存格；CI 檢核） |
 
 建置：`python3 advantest/build_advantest.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`、`tsmc/dist`、`skhynix/dist`、`markets/equipment/dist`；不修改它們。
+
+## v0.3（2026-10-25）：估值 v2——目標價＝DCF 與 Comparable 加權、延伸到 FY2032
+
+- **目標價（DCF 與 Comparable 各半，Val 第 0 節）：¥23,222，上檔空間 −28.2%**（現價 ¥32,340，2026-10-23 收盤）。**Comparable 目標價（市場主流同業法）：¥29,904，上檔空間 −7.5%。**
+- DCF：股東現金流＝EPS ×（1 − g／ROE）（模型無折舊與資本支出項目，未用淨利＋折舊－資本支出）；r 10%、g 4%、ROE 近三年平均 35.9%（再投資率 11.2%）；FY2027–32 明確期＋永續，基準日 2026 年底。情境價值（推到 12 個月後）A ¥23,028／B ¥16,105／C ¥7,893；DCF 目標價（權重 0.3／0.5／0.2）¥16,539。
+- Comparable：泰瑞達（Teradyne） 32.5x（2026-10-23）、東京威力科創（Tokyo Electron） 27.1x（2026-10-21）、Lasertec 34.0x（2026-10-23）、Disco 26.0x（2026-10-23）、科磊（KLA） 26.6x（2026-10-23）；中位數 27.1x × 12 個月後前瞻 EPS ¥1,104。同業名單不含中國 A 股。
+- 市場共識目標價 ¥42,686（stockanalysis：21 位分析師平均 ¥42,686（中位數 42,900；區間 23,000–55,000），資料更新 2026-10-07）。差距拆解：EPS 因素 +20.8%、倍數因素 +72.5%（共識目標價 ÷ 共識前瞻 EPS 隱含 46.7x，同業中位數 27.1x）。
+- 價格帶（DCF 不如預期～順利）：¥7,893～23,028。歷史倍數檢查（現價 ÷ 各情境 FY2028 EPS 在十年年底 P/E 的分位，不進目標價）：A 63%／B 67%／C 84%。
+- 預估期間延伸到 FY2032：**FY2030 起為收斂法，非驅動因子推導**（PL 頁底部延伸區塊，灰底）：營收年增由 FY2029 線性收斂到 A＝tp_g＋2pt、B＝tp_g、C＝tp_g−2pt；淨利率收斂到 A＝FY2029、B＝FY2029 與十年平均的中點、C＝十年平均；十年平均淨利率 19.1%。
+- 情境對應：A＝順利、B＝平平、C＝不如預期（原為顆數情境）。現價更新為 2026-10-23 收盤 ¥32,340（Yahoo!ファイナンス、株探；markets/invest_map/data/prices.csv），原為 stockanalysis 2026-10-21 ¥34,440。
+- 原「0. 目標價與上檔空間」改名「舊法：規則值情境加權（參考）」，不再叫目標價；新內容放在各頁既有內容之後，不位移既有列。FY2026–FY2029 既有 EPS 與上一版逐格相同。本版未做先驗，無 Andy 合理 P/E 對照。
+- In 頁新增 J 節（tp_r、tp_g、tp_roe、tp_w_dcf、nim10、cons_tp、cons_feps；黃底 Assumed，Andy 可改）；Sens 頁底部新增 tp_r ±1pt、tp_g ±1pt、tp_w_dcf 0.4／0.8 對加權目標價的影響。
 
 ## v0.2.3（2026-10-25）：目標價與上檔空間
 
@@ -80,6 +92,8 @@ markets/memory v0.4 起 HBM 出貨位元隨情境顆數係數變動（2028–29�
 FY2026 三情境相同（情境係數從 2028 才開始）。
 
 ## 估值（Val）
+
+**估值 v2 目標價（Val 第 0 節，DCF 與 Comparable 加權）：¥23,222，上檔空間 −28.2%；Comparable 單獨 ¥29,904。** 下列原「目標價與上檔空間」段落為舊法（規則值情境加權，參考），v0.3 起不再叫目標價；其中的現價與上檔空間為該版當時數字。本版未做先驗，無 Andy 合理 P/E 對照。
 
 **目標價（12 個月，情境加權；Val 頁第 0 節）：¥24,494，上檔空間 −28.9%（相對現價 ¥34,440）。** 權重 A 0.3／B 0.5／C 0.2（In 頁，Andy 可改）。
 
