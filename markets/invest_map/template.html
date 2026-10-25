@@ -217,6 +217,16 @@ details[open] summary::before{content:"－ "}
 .mixbar{display:block;height:5px;background:var(--bar-soft);margin-top:4px;min-width:60px}
 .mixbar i{display:block;height:100%;background:var(--bar)}
 .tg{font-family:var(--f-mono);font-size:10px;color:var(--faint);overflow-wrap:anywhere}
+.sv{border-bottom:1px dotted var(--faint);cursor:help;outline:none}
+.sv:hover,.sv:focus{border-bottom-color:var(--brass);background:color-mix(in srgb,var(--brass) 12%,transparent)}
+.sm{font-size:9px;color:var(--faint);cursor:help;margin-left:1px;outline:none;vertical-align:super;line-height:0}
+.sm:hover,.sm:focus{color:var(--brass)}
+#srctip{position:fixed;z-index:40;max-width:min(420px,calc(100vw - 24px));background:var(--navy,#14213d);color:#fff;font-family:var(--f-mono);font-size:11px;line-height:1.45;padding:7px 9px;border-radius:3px;box-shadow:0 6px 18px #0000003a;pointer-events:none;overflow-wrap:anywhere}
+#srctip .h{font-family:var(--f-body);font-size:10px;letter-spacing:.08em;opacity:.7;margin-bottom:2px}
+details.srcs{margin-top:18px;border-top:1px solid var(--rule);padding-top:8px;font-size:11.5px;color:var(--muted)}
+details.srcs summary{cursor:pointer;font-size:11.5px;color:var(--muted)}
+details.srcs h4{margin:8px 0 2px;font-size:11px;font-weight:600;color:var(--brass);letter-spacing:.06em}
+details.srcs ol{margin:0;padding-left:1.6em;display:grid;gap:2px;font-family:var(--f-mono);font-size:10.5px;overflow-wrap:anywhere}
 .dmeta{display:flex;flex-wrap:wrap;gap:2px 18px;font-size:12px;color:var(--muted)}
 .dmeta .mi{display:inline-flex;gap:6px}
 .dmeta b{color:var(--ink);font-weight:500}
@@ -461,7 +471,7 @@ function renderProfiles(){
   const layers=[...new Set(D.position.map(p=>p.layer))].sort().reverse();
   const n=Object.keys(PF).length;
   let h=`<div class="head"><span class="label">視角 04</span><h2>公司檔案：先懂公司，再看數字</h2>
-  <p>每家一份背景資料：在做什麼、主要產品與營收占比、市場位置、管理層、同業競爭、近期重大事件與需要觀察的事項。點卡片開啟；各事實附來源標記，市占數字標出研究機構。已完成 ${n} / ${D.valuation.length} 家。</p></div>`;
+  <p>每家一份背景資料：在做什麼、主要產品與營收占比、市場位置、管理層、同業競爭、近期重大事件與需要觀察的事項。點卡片開啟。主文不夾出處：滑鼠停在數字（虛線底）或 ⓘ 上可看資料出處，各頁底部也列出全部出處。已完成 ${n} / ${D.valuation.length} 家。</p></div>`;
   layers.forEach(L=>{
     const list=D.position.filter(p=>p.layer===L).sort((a,b)=>b.score-a.score);
     h+=`<div class="grp">${esc(L)}</div><div class="pgrid">${list.map(p=>{const v=V[p.tk],pf=PF[p.tk];
@@ -491,10 +501,31 @@ function decorateMix(root){
       if(m){const x=Math.min(100,parseFloat(m[1])); td.insertAdjacentHTML("beforeend",`<span class="mixbar"><i style="width:${x}%"></i></span>`);}});
   });
 }
+function srcList(pf,secs){
+  const N=pf.notes||{}; const g=secs.filter(s=>N[s]&&N[s].length); if(!g.length)return "";
+  const n=g.reduce((a,s)=>a+N[s].length,0);
+  return `<details class="srcs"><summary>本頁資料出處（${n}）· 滑鼠停在數字或 ⓘ 上也可看</summary>${g.map(s=>`<h4>${esc(s)}</h4><ol>${N[s].map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`).join("")}</details>`;
+}
 function paneHtml(pf,i){
   if(DT[i][1]===null)return modelPane(curTk);
-  return DT[i][1].map(s=>`<section class="dsec${s==="近期重大事件"?" ev":""}"><h3>${s}</h3>${pf.sections[s]||'<p class="note">（未填）</p>'}</section>`).join("");
+  const secs=DT[i][1];
+  return secs.map(s=>`<section class="dsec${s==="近期重大事件"?" ev":""}"><h3>${s}</h3>${pf.sections[s]||'<p class="note">（未填）</p>'}</section>`).join("")
+    + srcList(pf, i===0?["基本資料",...secs]:secs[0]==="來源"?Object.keys(pf.notes||{}):secs);
 }
+/* 出處懸浮提示：主文不寫出處，滑鼠停（或鍵盤／觸控聚焦）在數字上顯示 */
+(function(){
+  const tip=document.createElement("div"); tip.id="srctip"; tip.hidden=true; tip.setAttribute("role","tooltip"); document.body.appendChild(tip);
+  const show=el=>{const s=el.getAttribute("data-src"); if(!s)return;
+    tip.innerHTML=`<div class="h">資料出處</div>${esc(s)}`; tip.hidden=false;
+    const r=el.getBoundingClientRect(), w=tip.offsetWidth, h=tip.offsetHeight;
+    let x=Math.min(Math.max(8,r.left), innerWidth-w-8), y=r.bottom+6; if(y+h>innerHeight-8)y=r.top-h-6;
+    tip.style.left=x+"px"; tip.style.top=y+"px";};
+  const hide=()=>{tip.hidden=true;};
+  document.addEventListener("mouseover",e=>{const el=e.target.closest&&e.target.closest("[data-src]"); el?show(el):hide();});
+  document.addEventListener("focusin",e=>{const el=e.target.closest&&e.target.closest("[data-src]"); el?show(el):hide();});
+  document.addEventListener("click",e=>{const el=e.target.closest&&e.target.closest("[data-src]"); el?show(el):hide();});
+  document.addEventListener("scroll",hide,true);
+})();
 function openDrawer(tk,tab){
   const p=P[tk], v=V[tk], pf=PF[tk]; if(!p)return;
   curTk=tk; lastFocus=document.activeElement;
