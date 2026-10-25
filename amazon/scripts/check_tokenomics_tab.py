@@ -45,6 +45,8 @@ def main(path):
             continue
         if it['kind'] == 'gen_cost':
             exp = [(f'TK_{short(nm)}_{gc[g]}', [v['低成本'], v['基準'], v['高成本']], g) for g, v in it['values'].items()]
+        elif it['kind'] == 'vector':  # MAG v0.2.2：IF_NonNV_Out_／Hold_*（Interface 單列 3 格：低／基準／高）
+            exp = [(f'TK_{short(nm)}', list(it['values']), '—')]
         else:
             rg = it.get('range') or {}
             exp = [(f'TK_{short(nm)}', [rg.get('低'), it['values'], rg.get('高')] if rg else [None, it['values'], None], '—')]

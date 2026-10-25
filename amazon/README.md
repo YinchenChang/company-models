@@ -1,6 +1,8 @@
-# Amazon 收支模型原始碼包 v0.2（MAG 共用引擎；由 Oracle v0.2 改寫）
+# Amazon 收支模型原始碼包 v0.2.2（MAG 共用引擎；由 Oracle v0.2 改寫）
 
-**v0.2.1（2026-10-22）**：Tokenomics 同步 v19.0（master `1916a06`）；驅動名稱的值與 v5.31 全同、只有上限檢查層上調；k 改為規格（證據價格 ÷ 目前快照同世代成本，`kspec.py`）：k_長約 0.75 → 0.783、k_現貨 1.76 → 1.828；上限檢查加第五列（÷ 模型商每 MW 實收 P×Q，無門檻）；C10 重解 3,634.3 MW／年。成品 `dist/20261022_Amazon收支模型_v0_2_1.html／.xlsx`；交接檔 `docs/handoff/20261022_Amazon收支模型_交接檔_v0_2_1.md`；報告 `docs/reports/20261022_amazon_v0.2.1.md`。基準目標價 $201.71（讀法 1）／$220.09（讀法 2），三情境皆賣出。
+**v0.2.2（2026-10-25）**：Tokenomics 同步 v21.4（master `3ac70ac`，`model/CURRENT`＝`20261024_Tokenomics_v21.4.xlsx`）；v19.0 → v21.4 只有 VR200 低成本端與上限檢查層變動、基準與高成本欄不變，故 k、C10 速度、目標價（基準 $201.71／$220.09，讀法 1／讀法 2）與 v0.2.1 完全相同（拆解皆 0.00）；NonNV 名稱 `IF_NonNV_Out_／Hold_*` 登錄（只登錄、不切換）；上限第五列說明改為 Q 與 GW 路線 token 帳同構。成品 `dist/20261025_Amazon收支模型_v0_2_2.html／.xlsx`；交接檔 `docs/handoff/20261025_Amazon收支模型_交接檔_v0_2_2.md`；報告 `docs/reports/20261025_amazon_v0.2.2.md`。
+
+前一版 **v0.2.1（2026-10-22）**：Tokenomics 同步 v19.0（master `1916a06`）；驅動名稱的值與 v5.31 全同、只有上限檢查層上調；k 改為規格（證據價格 ÷ 目前快照同世代成本，`kspec.py`）：k_長約 0.75 → 0.783、k_現貨 1.76 → 1.828；上限檢查加第五列（÷ 模型商每 MW 實收 P×Q，無門檻）；C10 重解 3,634.3 MW／年。成品 `dist/20261022_Amazon收支模型_v0_2_1.html／.xlsx`；交接檔 `docs/handoff/20261022_Amazon收支模型_交接檔_v0_2_1.md`；報告 `docs/reports/20261022_amazon_v0.2.1.md`。基準目標價 $201.71（讀法 1）／$220.09（讀法 2），三情境皆賣出。
 
 前一版 **v0.2（2026-10-11）**：接 Tokenomics v5.31（master `f16f161`）；上限檢查改四層瀑布（`IFW_RevGWFleet_Util` 示警 50%、`_Prod` 硬上限 100%）；C10 重解 3,628.8 MW／年。成品 `dist/20261011_Amazon收支模型_v0_2.html／.xlsx`；交接檔 `docs/handoff/20261011_Amazon收支模型_交接檔_v0_2.md`；報告 `docs/reports/20261011_amazon_v0.2.md`。基準目標價 $199.27（讀法 1）／$217.62（讀法 2），三情境皆賣出。
 
@@ -153,7 +155,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：2026 下半年、2027、2028、2029、2030，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 Amazon v0.2.1 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 Amazon v0.2.2 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -731,10 +733,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `tokenomics._note` | Tokenomics 引用規則說明（只引用 IF_／L1_，主值取基準） | 文字 | 算力相關的產業與物理層資料只引用 Tokenomic… | 可沿用 |
 | `tokenomics.snapshotFile` | Tokenomics 版本固定快照檔路徑（tools/tokenomics/import_tokenomics.py 產生） | 路徑 | data/tokenomics_snapshot_v… | 必改 |
-| `tokenomics.version` | 快照的 Tokenomics 版本（須與快照檔一致） | 文字 | v19.0 | 必改 |
-| `tokenomics.commit` | 快照的 Tokenomics master commit（須與快照檔一致） | 文字 | 1916a06465bb0c7efed2138307… | 必改 |
-| `tokenomics.names` | 快照名稱清單（須與快照檔一致；Excel「Tokenomics_取數」逐名稱建 TK_ 具名範圍） | 清單 | IF_HoldEcon、IF_HoldAcct、IF_GPUhrEcon、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、L1_FacCapexMW、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_OpexGW、IF_PowerPrice、IF_PowerCost、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_AvgDraw、IF_FacilityGW、IF_GPUsPerGW、IF_RacksPerGW、IF_Util、IF_RevGWFleet、L1_GPUhr_Hopper、L1_GPUhr_GB200、L1_GPUhr_GB300、L1_GPUhr_VR200、L1_HoldEconGW_Hopper、L1_HoldEconGW_GB200、L1_HoldEconGW_GB300、L1_HoldEconGW_VR200、L1_NvContentGW_VR200、IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、IF_NonNVRatio、IF_NonNVCostRatio、L1_RevGW_PQ_VR200、L1_RevGW_PQ_VR200_Lo、L1_RevGW_PQ_VR200_Hi | 必改 |
-| `tokenomics.optional` | Tokenomics 尚未提供、記為 missing 的名稱（資料缺口） | 清單 | IF_NonNVRatio、IF_NonNVCostRatio、L1_RevGW_PQ_VR200、L1_RevGW_PQ_VR200_Lo、L1_RevGW_PQ_VR200_Hi | 必改 |
+| `tokenomics.version` | 快照的 Tokenomics 版本（須與快照檔一致） | 文字 | v21.4 | 必改 |
+| `tokenomics.commit` | 快照的 Tokenomics master commit（須與快照檔一致） | 文字 | 3ac70acfda55adcc5c7c323c0f… | 必改 |
+| `tokenomics.names` | 快照名稱清單（須與快照檔一致；Excel「Tokenomics_取數」逐名稱建 TK_ 具名範圍） | 清單 | IF_HoldEcon、IF_HoldAcct、IF_GPUhrEcon、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、L1_FacCapexMW、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_OpexGW、IF_PowerPrice、IF_PowerCost、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_AvgDraw、IF_FacilityGW、IF_GPUsPerGW、IF_RacksPerGW、IF_Util、IF_RevGWFleet、L1_GPUhr_Hopper、L1_GPUhr_GB200、L1_GPUhr_GB300、L1_GPUhr_VR200、L1_HoldEconGW_Hopper、L1_HoldEconGW_GB200、L1_HoldEconGW_GB300、L1_HoldEconGW_VR200、L1_NvContentGW_VR200、IF_NonNV_Out_Trn、IF_NonNV_Hold_Trn、IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、L1_RevGW_PQ_VR200、L1_RevGW_PQ_VR200_Lo、L1_RevGW_PQ_VR200_Hi | 必改 |
+| `tokenomics.optional` | Tokenomics 尚未提供、記為 missing 的名稱（資料缺口） | 清單 | L1_RevGW_PQ_VR200、L1_RevGW_PQ_VR200_Lo、L1_RevGW_PQ_VR200_Hi | 必改 |
 | `tokenomics.holdEconWacc` | IF_HoldEcon 資本回收年金的折現率（Tokenomics「WACC（經濟口徑）」；只用於一致性檢查，MAG v0.1b r2 C15） | 比例 | 0.1 | 檢查 |
 | `tokenomics.holdEconWaccNote` | 上列的來源 | 文字 | IF_HoldEcon 的資本回收年金折現率：Tok… | 必改 |
 
