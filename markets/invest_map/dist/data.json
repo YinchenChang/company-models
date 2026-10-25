@@ -5,7 +5,7 @@
   "tk_file": "20261024_Tokenomics_v21.4.xlsx",
   "tk_version": "v21.4",
   "tk_commit": "3ac70ac",
-  "cm_commit": "0329ef7",
+  "cm_commit": "9ba0c40",
   "built": "2026-10-25",
   "price_date": "2026-10-23（台股三檔為 10-22）"
  },
@@ -2067,5 +2067,6 @@
   "s_pos2": 75,
   "s_pos3": 50,
   "s_pos4": 25
- }
+ },
+ "profiles": {}
 }

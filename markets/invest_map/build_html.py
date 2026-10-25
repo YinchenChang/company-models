@@ -13,6 +13,8 @@ import tempfile
 
 import openpyxl
 
+from profiles_md import load_all
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 
@@ -110,7 +112,14 @@ def main():
                  "price_date": "2026-10-23（台股三檔為 10-22）"},
         "pergw": pergw, "segments": segments, "position": position, "valuation": valuation,
         "nodes": nodes, "params": params,
+        "profiles": load_all(os.path.join(HERE, "profiles")),
     }
+    miss = {k: v["missing"] for k, v in data["profiles"].items() if v["missing"]}
+    if miss:
+        print("警告：公司檔案缺少段落", miss)
+    nop = [v["tk"] for v in valuation if v["tk"] not in data["profiles"]]
+    if nop:
+        print("警告：尚無公司檔案", nop)
     tpl = open(os.path.join(HERE, "template.html"), encoding="utf-8").read()
     html = tpl.replace("/*__DATA__*/null", json.dumps(data, ensure_ascii=False))
     out = os.path.join(HERE, "dist", "index.html")
