@@ -1,4 +1,4 @@
-# Coherent（COHR，NYSE）收支與估值模型 v0.2（AI 半導體 Project：網通次產業內複製——光模組，樣板 innolight/）
+# Coherent（COHR，NYSE）收支與估值模型 v0.2.1（AI 半導體 Project：網通次產業內複製——光模組，樣板 innolight/）
 # 用法：python3 cohr/build_cohr.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度：FY(t)＝t−1 年 7 月～t 年 6 月（6 月底結束）。FY(t) 一半落在 CY(t−1) 下半年、一半落在 CY(t) 上半年。
 #   市場模型是日曆年：FY2027 資料中心＝CY2026 下半年（FY2027 Q1 指引＋Q2 假設）＋ hw × CY2027；FY2028＝（1 − hw）× CY2027 ＋ hw × CY2028；FY2029 同理。
@@ -575,8 +575,8 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Coherent（COHR，NYSE）收支與估值模型 v0.2（AI 半導體 Project：網通次產業內複製——光模組，樣板中際旭創）　2026-10-25", True),
- ("版本：v0.2（2026-10-25：三情境延伸到 FY2032、目標價＝DCF 與 Comparable 加權；v0.1 初版）。Coherent 的有效份額口徑與中際旭創模型一致（資料中心營收 ÷ 可插拔市場），Units 頁檢查兩者相加低於 100%。", False),
+lines = [("Coherent（COHR，NYSE）收支與估值模型 v0.2.1（AI 半導體 Project：網通次產業內複製——光模組，樣板中際旭創）　2026-10-25", True),
+ ("版本：v0.2.1（2026-10-25：補上檔空間級距、投資建議、重點觀察，數值不變）；v0.2（2026-10-25：三情境延伸到 FY2032、目標價＝DCF 與 Comparable 加權；v0.1 初版）。Coherent 的有效份額口徑與中際旭創模型一致（資料中心營收 ÷ 可插拔市場），Units 頁檢查兩者相加低於 100%。", False),
  ("模型命題：Coherent 的資料中心營收＝AI 可插拔光模組市場（本專案網通模型）× Coherent 有效份額（光模組＋自製 EML／VCSEL／CW 雷射）× 單價係數＋CPO 光學 × CPO 份額；通訊、工業另依成長率推。股價自 52 週高點 440 跌到約 209（−52%），約 21 倍共識未來 12 月 EPS：市場在問磷化銦產能倍增換來的成長能否撐到 FY2028。", False),
  ("核心問題：FY2027 訂單已近滿載，股價卻腰斬——市場隱含的 FY2028 EPS 要多低，份額（新易盛、中際旭創）、單價、AI 市場三條路徑各要不利到什麼程度？", False), ("", False),
  ("會計年度：FY(t)＝t−1 年 7 月～t 年 6 月（6 月底結束）；FY2026＝2025-07～2026-06（實績）、FY2027＝2026-07～2027-06。日曆年市場以「上半年比重 hw」換算：FY(t)＝（1 − hw）× CY(t−1)＋hw × CY(t)，FY2027 的 CY2026 下半年用 Q1 指引＋Q2 假設。口徑：non-GAAP；淨利＝歸屬 Coherent。", False), ("", False),
@@ -776,6 +776,28 @@ TPT = _tp_section(V, lambda s_, y: f"PL!{FCX[y]}{SUMR[(s_, 'eps')]}", [(2028, '8
     _rule_pe_range(V, 2), '#,##0.00',
     "本模型前瞻 EPS ÷ 共識前瞻 EPS − 1；共識前瞻 EPS＝In 頁 cons_feps")
 TPS0, TPS_LAST = _tp_sens(SE, TPT)
+
+# ---------------- v0.2.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 14:00、14:17；既有數值與儲存格位置不變） ----------------
+_UPW = [r_ for r_ in range(1, 60) if V.cell(r_, 1).value == "上檔空間：加權目標價"]
+assert _UPW == [42], _UPW
+GR_ROW, RC_ROW = 49, 50   # 0.3 結論後的空白預留列（不移動其他列）
+for _r in (GR_ROW, RC_ROW):
+    assert all(V.cell(_r, _c).value is None for _c in range(1, V.max_column + 1)), _r
+V.cell(GR_ROW, 1, "上檔空間級距")
+V.cell(GR_ROW, 2, '=IF(B42>0.5,"大於 50%",IF(B42>0.25,"25%–50%",IF(B42>=0,"0%–25%",IF(B42>=-0.25,"0%～−25%",IF(B42>=-0.5,"−25%～−50%","小於 −50%")))))').number_format = "@"
+V.cell(GR_ROW, 5, "以「上檔空間：加權目標價」分六級（Andy 2026-10-25 14:00）")
+V.cell(RC_ROW, 1, "投資建議")
+V.cell(RC_ROW, 2, '=IF(B42>0.5,"強力買進",IF(B42>0.25,"買進",IF(B42>=-0.25,"中立",IF(B42>=-0.5,"放空","強力放空"))))').number_format = "@"
+V.cell(RC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
+OBS = [
+       "目標價 US$322（DCF 206、Comparable 438 各半），比現價 209.17（2026-10-23）高 54.1%，級距 大於 50%；Comparable 單獨為 +109.5%。主因是 Comparable 的倍數：DCF 206 與現價相當（−1.4%），本模型 12 個月後前瞻 EPS 14.24 只比共識前瞻 EPS 13.07 高 9.0%（本模型含 4／12 的 FY2029）；美股光通訊同業前瞻 P/E 中位數 30.8 倍，與共識目標價 394.79 隱含的 30.2 倍相近，但現價只隱含 21.4 倍共識未來 12 月 EPS——共識目標價本身也比現價高 88.7%。",
+       "最敏感的是毛利率與份額：毛利率低案例（FY2028 37.5%）FY2028 EPS −17.5%、份額流失 −16.8%、AI 市場 ×0.8 −15.2%；情境 C FY2028 EPS 12.28，只比情境 A 的 14.63 低 16.0%（通訊、工業另推，分散 AI 曝險），DCF 價格帶 127～273。",
+       "追蹤 FY2027 Q1 財報（2026-11-04 盤後）：資料中心與通訊金額公司只揭露合計、本版為推導值，季報後更新。CPO 份額 0 時 FY2028 EPS −2.5%；網通 CPO 目前只有一條路徑、三情境相同，待 markets/network 改版。"
+      ]   # 重點觀察（與 README.md 相同文字）
+_n0 = RD.max_row
+RD.cell(_n0 + 1, 1, "v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（Val 頁 0.3 結論加「上檔空間級距」「投資建議」兩列、README 頁加重點觀察三點；數值不變，既有儲存格位置不變）。")
+RD.cell(_n0 + 2, 1, f'="投資建議："&Val!B{RC_ROW}&"（依上檔空間固定規則）"').font = BOLD
+for _i, _t in enumerate(OBS, 1): RD.cell(_n0 + 2 + _i, 1, f"重點觀察 {_i}：" + _t)
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

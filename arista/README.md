@@ -1,8 +1,16 @@
-# arista/ — Arista Networks（ANET）收支與估值模型 v0.2
+# arista/ — Arista Networks（ANET）收支與估值模型 v0.2.1
 
 Arista 的 AI 營收＝AI 後端 scale-out 交換器市場（`markets/network`）× 乙太網路占比 × Arista 份額（含前端與 scale-across 附掛）；非 AI（雲端前端、企業、園區）另依成長率推。股價約 37 倍前瞻 EPS：在 NVIDIA（Spectrum-X）與白牌夾擊下，Arista 的份額路徑能否支撐這個倍數？
 
 **核心問題：2027–28 年 Arista 在 AI 乙太網路的份額每掉一截，EPS 少多少；現價隱含的份額路徑合不合理。**
+
+**投資建議：放空**（依上檔空間固定規則：加權目標價上檔空間 −42.3%，落在 −50%～−25%；級距 −25%～−50%）。
+
+## 重點觀察
+
+1. 目標價 US$99.5（DCF 87.2、Comparable 111.7 各半），比現價 172.37（2026-10-23）低 42.3%，級距 −25%～−50%；Comparable 單獨為 −35.2%。主因是倍數不是 EPS：本模型 12 個月後前瞻 EPS 5.53 比共識前瞻 EPS 4.65 高 12.6%（期間差約一年），但同業（Cisco、Ciena、Celestica、HPE、Credo）前瞻 P/E 中位數 20.2 倍，現價隱含 37.1 倍、共識目標價 243.59 隱含 52.4 倍（比同業高 159%）；市場給 Arista 的 AI 乙太網路份額與高毛利溢價，Comparable 未計入。DCF 87.2 更低，因 ROE 雖有 28.6%，B 情境 FY2028 EPS 5.51 幾乎不成長（+0.8%）。
+2. 最敏感的是份額與市場量：份額相對值降到 0.80／0.70 時 FY2028 EPS −8.8%，AI scale-out 交換器市場 ×0.8 時 −7.9%；情境 C（CY2028–29 顆數 ×0.6）FY2028 EPS 4.97，比情境 A 的 5.99 低 17.1%，營收在 FY2027 見頂。追蹤 3Q26 財報（2026-11-03）的 AI 營收（FY2026 目標至少 35 億美元）與 2027 年指引。
+3. 以歷史看不貴：現價 ÷ FY2028 EPS 為 28.8／31.3／34.7 倍（A／B／C），在 2016–2025 年底 P/E 的 24%～33% 分位；目標價偏低是因 Comparable 同業成長較低。DCF 權重改 0.3／0.7 時加權目標價 104.4／94.6（±4.9%）、折現率 ±1pt 時 −5.9%／+8.3%，都不改變放空級距。
 
 AI 半導體 Project **網通系統端的樣板**（AVGO 為網通晶片端）。**Arista 在 AI 後端乙太網路的份額**在 Units 頁建立，是本專案的權威資料（跨專案規則第 13 條）。會計年度＝日曆年，不平移。金額以十億美元為主；口徑為公司 non-GAAP；十年 P/E 規則值用 GAAP 換算 EPS（non-GAAP × 1H26 GAAP÷non-GAAP 0.926）。
 
@@ -10,9 +18,9 @@ AI 半導體 Project **網通系統端的樣板**（AVGO 為網通晶片端）�
 |---|---|
 | `build_arista.py` | 產生器（參數與公式；唯讀取用上游成品） |
 | `tp_v2.py` | v0.2 目標價與延伸期的共用函式（PL 延伸到 FY2032 的收斂法、Val 第 0 節 DCF＋Comparable、Sens 目標價參數；各公司資料夾各放一份相同內容） |
-| `dist/20261025_Arista模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261025_Arista模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_Arista模型_v0.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261025_Arista模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 arista/build_arista.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（scale-out 交換器市場、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）；**不修改它們**。不依賴 #93（`avgo/`）。
 
@@ -74,6 +82,10 @@ AI 半導體 Project **網通系統端的樣板**（AVGO 為網通晶片端）�
 - FY2026 AI 用公司目標「至少 3.5」；各季 AI 營收未揭露。
 - 2027 共識未找到（付費）；FY2025 non-GAAP 淨利為原報值（公司 2026 年起改稅額方法，重編全年值未找到）。
 - 十年 P/E 含高成長期溢價；前瞻 P/E 歷史待 Bloomberg。R4 產業部署路徑未建。
+
+## v0.2.1（2026-10-25）：上檔空間級距、投資建議、重點觀察
+
+補上檔空間級距、投資建議、重點觀察（Val 頁 0.3 結論加「上檔空間級距」「投資建議」兩列、README 頁加重點觀察三點；數值不變，既有儲存格位置不變）。另在 PL 頁末新增「自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）」三情境列（FY2025A–FY2032；算力收支 2026-10-25 請求），In 頁末新增 fcf_da、fcf_capex（FY2025 10-K 比率 0.81%、1.33%）。
 
 ## v0.2（2026-10-25）：目標價改為 DCF 與 Comparable 加權、延伸到 FY2032
 

@@ -1,4 +1,4 @@
-# Amkor Technology（AMKR）收支與估值模型 v0.2（AI 半導體 Project：封測次產業）
+# Amkor Technology（AMKR）收支與估值模型 v0.2.1（AI 半導體 Project：封測次產業）
 # 用法：python3 amkr/build_amkr.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不平移。金額：百萬美元（US$M）；EPS：美元（稀釋）。
 # 口徑：歸屬母公司淨利（GAAP）。結構比照 quanta/build_quanta.py：README、In、Q、Units、PL、Val、Recon、Sens、Sources。
@@ -740,8 +740,8 @@ SO.column_dimensions["A"].width = 100; SO.column_dimensions["B"].width = 130
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Amkor Technology（AMKR）收支與估值模型 v0.2（AI 半導體 Project：封測次產業）　2026-10-25", True),
- ("版本：v0.2（2026-10-25：tp_w_dcf 改 0.5；Comparable 同業移除 A 股；v0.1 初版）。Amkor 為全球第二大封測廠，承接台積電 CoWoS 後段（oS、測試）與 2.5D／HDFO 委外；亞利桑那廠為美國第一座量產先進封裝廠。日月光模型待 10-29 法說後建立，本版未讀。", False),
+lines = [("Amkor Technology（AMKR）收支與估值模型 v0.2.1（AI 半導體 Project：封測次產業）　2026-10-25", True),
+ ("版本：v0.2.1（2026-10-25：補上檔空間級距、投資建議、重點觀察，數值不變）；v0.2（2026-10-25：tp_w_dcf 改 0.5；Comparable 同業移除 A 股；v0.1 初版）。Amkor 為全球第二大封測廠，承接台積電 CoWoS 後段（oS、測試）與 2.5D／HDFO 委外；亞利桑那廠為美國第一座量產先進封裝廠。日月光模型待 10-29 法說後建立，本版未讀。", False),
  ("模型命題：Amkor 的 AI 先進封裝營收＝AI 加速器顆數（tsmc 成品）× 後段委外比例 × Amkor 份額 × 每顆封測金額（隨封裝面積上升），FY2026 約占營收一成；其餘九成是通訊（Apple 占 29.8%）、車用與工業、消費與非 AI 運算。毛利率只有 14–19%，資本支出 2026 年約 US$2.75B（營收的三成以上），亞利桑那的啟動成本與折舊是 2027–29 毛利率的關鍵。", False),
  ("核心問題：AI 封裝的高成長能不能抵過通訊（Apple）停滯與亞利桑那折舊，讓 EPS 在 FY2027–28 持續成長；約 14 倍前瞻 P/E 隱含什麼路徑。", False), ("", False),
  ("會計年度＝日曆年，FY(t)＝CY(t)，不平移。預測期 FY2027–FY2029（三年）。金額：百萬美元；EPS：美元（稀釋）。口徑：歸屬母公司淨利（GAAP）。3Q26 財報 2026-10-26 公布，本版未納入。", False), ("", False),
@@ -757,6 +757,28 @@ lines = [("Amkor Technology（AMKR）收支與估值模型 v0.2（AI 半導體 P
  ("已知限制：(1) AI 先進封裝金額公司未揭露，FY2026 由「約三倍」說法反推，委外比例與份額是 Assumed；(2) 每顆封測金額只隨封裝面積變動，未分 2.5D、HDFO、測試；(3) 亞利桑那營收可能部分替代亞洲既有產能（Apple 晶片在美國封裝），本模型當作增量；(4) 亞利桑那支出時程、補助的會計處理未找到；(5) 本業毛利用單一現金流通率，未建稼動率；(6) 十年 P/E 與盈餘反向（低谷年高倍數），規則值偏向高估；(7) 共識 FY2027 只有單一來源且年度標示不明；(8) 3Q26 財報（10-26）後更新錨點。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
+
+# ---------------- v0.2.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 14:00、14:17；既有數值與儲存格位置不變） ----------------
+_UPW = [r_ for r_ in range(1, 60) if V.cell(r_, 1).value == "上檔空間：加權目標價"]
+assert _UPW == [42], _UPW
+GR_ROW, RC_ROW = 49, 50   # 0.3 結論後的空白預留列（不移動其他列）
+for _r in (GR_ROW, RC_ROW):
+    assert all(V.cell(_r, _c).value is None for _c in range(1, V.max_column + 1)), _r
+V.cell(GR_ROW, 1, "上檔空間級距")
+V.cell(GR_ROW, 2, '=IF(B42>0.5,"大於 50%",IF(B42>0.25,"25%–50%",IF(B42>=0,"0%–25%",IF(B42>=-0.25,"0%～−25%",IF(B42>=-0.5,"−25%～−50%","小於 −50%")))))').number_format = "@"
+V.cell(GR_ROW, 5, "以「上檔空間：加權目標價」分六級（Andy 2026-10-25 14:00）")
+V.cell(RC_ROW, 1, "投資建議")
+V.cell(RC_ROW, 2, '=IF(B42>0.5,"強力買進",IF(B42>0.25,"買進",IF(B42>=-0.25,"中立",IF(B42>=-0.5,"放空","強力放空"))))').number_format = "@"
+V.cell(RC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
+OBS = [
+       "目標價 US$55.7（DCF 36.0、Comparable 75.3 各半），比現價 39.30（2026-10-23）高 41.7%，級距 25%–50%；Comparable 單獨為 +91.7%。主因是倍數：本模型 12 個月後前瞻 EPS 3.23 比共識前瞻 EPS 2.80 高 15.3%（期間差約一年），台美封測同業（日月光、力成、京元電、矽格、南茂）前瞻 P/E 中位數 23.3 倍，現價只隱含 14.0 倍、共識目標價 76.40 隱含 27.3 倍；DCF 36.0 低於現價（−8.4%），因近三年 ROE 8.9% 低於折現率 10%（可發放比例只 55%）。",
+       "最敏感的是現金流通率、委外比例與份額：現金流通率 30% 時 FY2028 EPS −16.9%、委外比例低 −16.2%、Amkor 份額低（28%）−15.7%、AI 部署 ×0.8 −12.8%；情境 C FY2028 EPS 2.32，比情境 A 的 4.00 低 42.0%。",
+       "追蹤 3Q26 財報（2026-10-26）：本版 3Q26 用公司指引（毛利率 19%），AI 先進封裝金額公司未揭露、由「約三倍」說法反推；亞利桑那廠固定成本與折舊從 FY2028 起影響毛利率（固定成本高案例 FY2028 EPS −4.0%）。"
+      ]   # 重點觀察（與 README.md 相同文字）
+_n0 = RD.max_row
+RD.cell(_n0 + 1, 1, "v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（Val 頁 0.3 結論加「上檔空間級距」「投資建議」兩列、README 頁加重點觀察三點；數值不變，既有儲存格位置不變）。")
+RD.cell(_n0 + 2, 1, f'="投資建議："&Val!B{RC_ROW}&"（依上檔空間固定規則）"').font = BOLD
+for _i, _t in enumerate(OBS, 1): RD.cell(_n0 + 2 + _i, 1, f"重點觀察 {_i}：" + _t)
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
