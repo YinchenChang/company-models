@@ -1,4 +1,4 @@
-# AMD（AMD）收支與估值模型 v0.2.1（AI 半導體 Project：運算層，GPU 側非 NVIDIA 份額）
+# AMD（AMD）收支與估值模型 v0.2.2（AI 半導體 Project：運算層，GPU 側非 NVIDIA 份額）
 # 用法：python3 amd/build_amd.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年（FY2026＝CY2026；AMD 的會計年度約在 12 月最後一個週六結束，不做平移）。金額：十億美元（US$B）；EPS 為 non-GAAP（公司口徑）。
 import sys, os, glob
@@ -622,7 +622,7 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("AMD（AMD）收支與估值模型 v0.2.1（AI 半導體 Project：運算層，GPU 側非 NVIDIA 份額）　2026-10-25", True),
+lines = [("AMD（AMD）收支與估值模型 v0.2.2（AI 半導體 Project：運算層，GPU 側非 NVIDIA 份額）　2026-10-25", True),
  ("本版：運算層第三個模型，複製 nvidia/ 的結構，匯入 nvidia/accel_share.py 的份額函式（AMD 為 GPU 側非 NVIDIA 份額）；Val 頁第 0 節為情境加權目標價。", False),
  ("模型命題：AMD 的資料中心 GPU 營收＝加速器市場（本專案加速器數量層 × 各平台每顆價）× AMD 金額份額；OpenAI、Meta 各 6 GW 與 Anthropic、Oracle 大單在 2026 下半年起放量，但每 GW 附帶認股權證稀釋，HBM 漲價又壓 GPU 毛利率。股價約為 FY2027 共識 EPS 的 33 倍：要多少大單如期放量、毛利率守住多少，才撐得住現價。", False),
  ("核心問題：以市場層顆數推得的 AMD 資料中心 GPU 營收與 EPS，能否支撐現價與公司「2027 年資料中心逾一倍、EPS 逾 $20」的說法；差距來自顆數、售價還是毛利率。", False), ("", False),
@@ -683,6 +683,25 @@ RD.cell(len(lines) + 2, 1, "情境對應（v0.2 延伸期）：A＝順利（市�
 
 RD.cell(len(lines) + 3, 1, "v0.2.1（2026-10-25）情境一致性修正：(1) HBM 漲價吸收比例拆成 abs_mem_A／_B／_C（In 頁 K 節：A 0.2、B 0.5、C 0.7，A 轉嫁最多），FY2028 起讀本情境、FY2026–27 三情境共用 abs_mem 0.5（FY2027 三情境仍相同）；"
         "A 先試 0.3 時 FY2028 EPS 仍 B＞A（認股權證稀釋 A 最多），故取 0.2。認股權證照原邏輯。(2) FY2030–32 收斂目標淨利率改為 A ≥ B ≥ C：C＝FY2029(C) × nm10_k、B＝MAX(B 中點, C 目標)、A＝MAX(FY2029(A), B 目標)。修正後 FY2028–FY2032 EPS A ≥ B ≥ C。")
+
+# ---------------- v0.2.2：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00、14:17）；各頁只在現有最後一列之後追加，不位移既有列 ----------------
+_up = next(r for r in range(1, V.max_row + 1) if V.cell(r, 1).value == "上檔空間：加權目標價")
+GRADE_ROW = V.max_row + 2; REC_ROW = GRADE_ROW + 1
+V.cell(GRADE_ROW, 1, "上檔空間級距")
+V.cell(GRADE_ROW, 2, f'=IF(B{_up}>0.5,"大於 50%",IF(B{_up}>0.25,"25%–50%",IF(B{_up}>=0,"0%–25%",IF(B{_up}>=-0.25,"0%～−25%",IF(B{_up}>=-0.5,"−25%～−50%","小於 −50%")))))')
+V.cell(GRADE_ROW, 5, f"以「上檔空間：加權目標價」（B{_up}）分六級（Andy 2026-10-25 14:00）")
+V.cell(REC_ROW, 1, "投資建議")
+V.cell(REC_ROW, 2, f'=IF(B{_up}>0.5,"強力買進",IF(B{_up}>0.25,"買進",IF(B{_up}>=-0.25,"中立",IF(B{_up}>=-0.5,"放空","強力放空"))))')
+V.cell(REC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
+OBS = ['目標價 US$177（DCF 152、Comparable 202 各半），比現價 516.79（2026-10-23）低 65.7%，級距 小於 −50%；Comparable 單獨為 −60.9%。EPS 與倍數兩個因素都在：本模型 12 個月後前瞻 EPS 10.65 比共識前瞻 EPS 19.29 低 44.8%；同業（NVIDIA、Broadcom、Intel、Qualcomm、Marvell）前瞻 P/E 中位數 19.0 倍，現價隱含 26.8 倍共識 EPS（48.5 倍本模型 EPS），共識目標價 637.61 隱含 33.0 倍（比同業高 74.1%）。', 'EPS 缺口從 FY2027 就出現：本模型 FY2027 EPS 9.14（三情境相同）比共識 15.76 低 42.0%，FY2028 B 情境 11.11 約為共識（約 20，二手）的 56%；單一變數補不了缺口——Sens 頁 AMD 顆數 ×1.2 只讓 FY2027 EPS +5.8%、世代售價隨 HBM 容量上調 +7.2%，賣方路徑隱含大客戶訂單全面放量。', 'HBM 漲價吸收比例是最大單一變數（全額轉嫁時 FY2027 EPS +10.9%、全額吸收時 −10.9%），其次是營業費用率 ±2pt（∓8.5%）（Sens 頁）。下一個檢驗點是 Q3 2026 財報（2026-11-03 盤後）的資料中心營收與 MI450 出貨時程。']   # 重點觀察（與 README.md 相同文字；數字取自重算後的 Val／PL／Sens 頁）
+_rr = RD.max_row + 1
+RD.cell(_rr, 1, 'v0.2.2（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁末新增「上檔空間級距」「投資建議」兩列（Andy 2026-10-25 14:00、14:17 固定規則），README 頁末新增投資建議與重點觀察三點；既有儲存格位置與數值不變。')
+RD.cell(_rr + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"').font = Font(bold=True)
+for _j, _t in enumerate(OBS, 1): RD.cell(_rr + 1 + _j, 1, f"重點觀察 {_j}：" + _t)
+if os.environ.get("RATING_ROWMAP"):   # 除錯用：輸出新增列號（供撰寫 html.json）；CI 不設此變數
+    print("ROWMAP", GRADE_ROW, REC_ROW, _rr, _rr + 1, _rr + 2)
+
+
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])

@@ -1,8 +1,16 @@
-# mediatek/ — 聯發科（2454.TW）收支與估值模型 v0.1
+# mediatek/ — 聯發科（2454.TW）收支與估值模型 v0.1.1
 
 聯發科的 AI ASIC 營收＝Google TPU 顆數（市場層）× 聯發科份額 × 每顆營收（Broadcom 模型規格）。FY2026 只有約 20 億美元，賣方卻估 FY2028 達 500 億美元。Broadcom 占 TPU 75%、Marvell 5% 的份額口徑下，聯發科最多拿到兩成 TPU，這樣推得出多少 ASIC 營收與 EPS？
 
 **核心問題：以市場層 TPU 顆數與份額上限往前推，聯發科 FY2027–28 的 ASIC 營收與 EPS 離公司目標、賣方估計有多遠；差距要靠顆數、份額還是單價補上；現價約 39 倍前瞻 P/E 隱含哪一條路徑。**
+
+**投資建議：放空**（依上檔空間固定規則：加權目標價上檔空間 −48.7%，落在 −50%～−25%）。
+
+## 重點觀察
+
+1. 目標價 NT$2,057（DCF 1,846、Comparable 2,268 各半），比現價 4,010（2026-10-22）低 48.7%，級距 −25%～−50%；Comparable 單獨為 −43.4%。主因是倍數不是 EPS：本模型 12 個月後前瞻 EPS 119.49 比共識前瞻 EPS 103.48 高 15.5%，但同業（高通、博通、邁威爾、世芯、創意）前瞻 P/E 中位數 19.0 倍，現價隱含 38.8 倍、共識目標價 6,067 隱含 58.6 倍（比同業高 208.9%）；市場給聯發科的 AI ASIC 成長溢價，Comparable 未計入。
+2. 情境分歧大：FY2028 EPS A／B／C 為 149.3／119.5／85.3，DCF 價格帶 1,012～2,466；C 情境（顆數 ×0.6、手機 −8%）FY2028 EPS 低於 FY2027 的 100.1。即使 A 情境 DCF 2,466 也比現價低 38.5%。
+3. TPU 份額是最敏感變數：聯發科占 TPU −5pt 時 FY2027 EPS −13.2%、取上限 20% 時 +13.2%；營業費用彈性 0.6 時 −12.7%（Sens 頁）。下一個檢驗點是 3Q26 財報與法說（約 2026-10 底）的 ASIC 營收與客戶進度。
 
 這是 AI 半導體 Project 運算層的模型。ASIC 部分讀 `avgo/dist` 的 ASIC 每顆規格（核心售價、HBM 代購比例、代購毛利率）與 Broadcom 份額，Marvell 份額讀 `mrvl/dist`，兩者都只讀。建置時檢查：Broadcom 基準＋Marvell 基準＋聯發科高值 ≤ 100%（Units 頁第 2 節）。結構參考 `mrvl/`（ASIC 引擎）與 `amkr/`（FY2032 延伸、目標價第 0 節）。手機、智慧邊緣平台（不含 ASIC）、電源 IC 用簡化成長率推估。
 
@@ -11,9 +19,9 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_mediatek.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_聯發科模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261025_聯發科模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_聯發科模型_v0.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
+| `dist/20261025_聯發科模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
 
 建置：先跑 `python3 mediatek/build_mediatek.py raw.xlsx`，再跑 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序為 README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用的上游為 `tsmc/dist`（TPU 與其他 ASIC 顆數、2029 成長、情境係數）、`avgo/dist`（ASIC 規格、Broadcom 份額、HBM 價格路徑）、`mrvl/dist`（Marvell 份額）、`tools/cycle_position.py`（只用規則函式）與 `tools/valuation_rule.py`；**不修改它們**。
 

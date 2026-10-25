@@ -1,4 +1,4 @@
-# Credo（CRDO）收支與估值模型 v0.2（AI 半導體 Project：網通次產業內複製——主動電纜 AEC、SerDes、光 DSP）
+# Credo（CRDO）收支與估值模型 v0.2.1（AI 半導體 Project：網通次產業內複製——主動電纜 AEC、SerDes、光 DSP）
 # 用法：python3 crdo/build_crdo.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度：FY(t) 於 t 年 4 月底／5 月初結束（52／53 週；FY2026：2025-05-04～2026-05-02；FY2027：2026-05-03～2027-05-01）。
 #   FY(t) 有 8 個月落在日曆年 t−1（5–12 月）、4 個月落在 t（1–4 月）。上游市場層是日曆年，FY(t) 市場＝8/12 × CY(t−1)＋4/12 × CY(t)（月數加權）。
@@ -569,7 +569,7 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Credo（CRDO）收支與估值模型 v0.2（AI 半導體 Project：網通次產業內複製——主動電纜 AEC、SerDes、光 DSP）　2026-10-25", True),
+lines = [("Credo（CRDO）收支與估值模型 v0.2.1（AI 半導體 Project：網通次產業內複製——主動電纜 AEC、SerDes、光 DSP）　2026-10-25", True),
  ("版本：v0.2（2026-10-25：三情境延伸到 FY2032、目標價＝DCF 與 Comparable 加權；v0.1 初版）。Credo 在 AI 銅纜（AEC）與光學的份額在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
  ("模型命題：Credo 的 AEC 營收＝AI 銅纜市場（本專案網通模型：scale-up 背板與線纜＋scale-out DAC／AEC）× Credo 有效份額（AEC 滲透率 × Credo 占 AEC）；光學（光 DSP、矽光 PIC、ZeroFlap 光學）＝可插拔光模組市場 × 光學份額；線卡 PHY、重定時器與 SerDes IP 另依成長率推。股價自 52 週高點跌約 52%、只約 15 倍共識 FY2028 EPS：市場定價像是 AEC 成長在 FY2028 前後見頂。", False),
  ("核心問題：市場隱含的 FY2028 EPS 是否低於模型——要成立，AEC 份額（競爭、主動光纜自我替代）、客戶集中（前四大終端客戶占 84%）、銅轉光（AI 銅纜市場）三條路徑各要不利到什麼程度？", False), ("", False),
@@ -770,6 +770,25 @@ TPT = _tp_section(V, lambda s_, y: f"PL!{FCX[y]}{SUMR[(s_, 'eps')]}", [(2028, '6
     _rule_pe_range(V, 1), '#,##0.00',
     "本模型前瞻 EPS ÷ 共識前瞻 EPS − 1；共識前瞻 EPS＝In 頁 cons_feps")
 TPS0, TPS_LAST = _tp_sens(SE, TPT)
+
+
+# ---------------- v0.2.1：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00、14:17）；各頁只在現有最後一列之後追加，不位移既有列 ----------------
+_up = next(r for r in range(1, V.max_row + 1) if V.cell(r, 1).value == "上檔空間：加權目標價")
+GRADE_ROW = V.max_row + 2; REC_ROW = GRADE_ROW + 1
+V.cell(GRADE_ROW, 1, "上檔空間級距")
+V.cell(GRADE_ROW, 2, f'=IF(B{_up}>0.5,"大於 50%",IF(B{_up}>0.25,"25%–50%",IF(B{_up}>=0,"0%–25%",IF(B{_up}>=-0.25,"0%～−25%",IF(B{_up}>=-0.5,"−25%～−50%","小於 −50%")))))')
+V.cell(GRADE_ROW, 5, f"以「上檔空間：加權目標價」（B{_up}）分六級（Andy 2026-10-25 14:00）")
+V.cell(REC_ROW, 1, "投資建議")
+V.cell(REC_ROW, 2, f'=IF(B{_up}>0.5,"強力買進",IF(B{_up}>0.25,"買進",IF(B{_up}>=-0.25,"中立",IF(B{_up}>=-0.5,"放空","強力放空"))))')
+V.cell(REC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
+OBS = ['目標價 US$196（DCF 101、Comparable 290 各半），比現價 147.29（2026-10-23）高 32.9%，級距 25%–50%；Comparable 單獨為 +97.0%。上檔全部來自倍數：本模型 12 個月後前瞻 EPS 8.40 比共識 9.69 低 13.3%，但現價只隱含 15.2 倍共識前瞻 EPS，同業（Astera Labs、Marvell、Broadcom、MACOM）前瞻 P/E 中位數 34.5 倍、共識目標價 279.09 隱含 28.8 倍；DCF 101 反而比現價低 31.2%，因 B、C 情境 FY2029 起 EPS 下滑（FY2032 B 7.64、C 3.69），且 ROE 無同口徑資料、取 20%。', '目標價對 DCF 權重最敏感：DCF 權重 0.3／0.7 時目標價 233.5／157.9（±19.3%），權重 0.7 時上檔空間只剩 +7.2%、落入中立。', 'FY2028 EPS 最敏感的是 AEC：最大客戶流失時 −24.5%、AEC 份額流失 −18.6%、AI 銅纜市場 ×0.8 時 −14.9%（Sens 頁）。下一個檢驗點是 2Q FY27 財報（約 2026-12 初）的 AEC 營收與最大客戶占比。']   # 重點觀察（與 README.md 相同文字；數字取自重算後的 Val／PL／Sens 頁）
+_rr = RD.max_row + 1
+RD.cell(_rr, 1, 'v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁末新增「上檔空間級距」「投資建議」兩列（Andy 2026-10-25 14:00、14:17 固定規則），README 頁末新增投資建議與重點觀察三點；既有儲存格位置與數值不變。')
+RD.cell(_rr + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"').font = Font(bold=True)
+for _j, _t in enumerate(OBS, 1): RD.cell(_rr + 1 + _j, 1, f"重點觀察 {_j}：" + _t)
+if os.environ.get("RATING_ROWMAP"):   # 除錯用：輸出新增列號（供撰寫 html.json）；CI 不設此變數
+    print("ROWMAP", GRADE_ROW, REC_ROW, _rr, _rr + 1, _rr + 2)
+
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

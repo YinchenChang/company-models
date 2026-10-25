@@ -1,8 +1,16 @@
-# amd/ — AMD（AMD）收支與估值模型 v0.2.1
+# amd/ — AMD（AMD）收支與估值模型 v0.2.2
 
 AMD 的資料中心 GPU 營收＝加速器市場（本專案加速器數量層 × 各平台每顆價）× AMD 金額份額。OpenAI、Meta 各 6 GW 與 Anthropic、Oracle 的大單在 2026 下半年起放量，但每 GW 附帶認股權證稀釋，HBM 漲價又壓 GPU 毛利率。股價約為 FY2027 共識 EPS 的 33 倍：要多少大單如期放量、毛利率守住多少，才撐得住現價。
 
 **核心問題：以市場層顆數推得的 AMD 資料中心 GPU 營收與 EPS，能否支撐現價與公司「2027 年資料中心逾一倍、EPS 逾 $20」的說法；差距來自顆數、售價還是毛利率。**
+
+**投資建議：強力放空**（依上檔空間固定規則：加權目標價上檔空間 −65.7%，落在 小於 −50%）。
+
+## 重點觀察
+
+1. 目標價 US$177（DCF 152、Comparable 202 各半），比現價 516.79（2026-10-23）低 65.7%，級距 小於 −50%；Comparable 單獨為 −60.9%。EPS 與倍數兩個因素都在：本模型 12 個月後前瞻 EPS 10.65 比共識前瞻 EPS 19.29 低 44.8%；同業（NVIDIA、Broadcom、Intel、Qualcomm、Marvell）前瞻 P/E 中位數 19.0 倍，現價隱含 26.8 倍共識 EPS（48.5 倍本模型 EPS），共識目標價 637.61 隱含 33.0 倍（比同業高 74.1%）。
+2. EPS 缺口從 FY2027 就出現：本模型 FY2027 EPS 9.14（三情境相同）比共識 15.76 低 42.0%，FY2028 B 情境 11.11 約為共識（約 20，二手）的 56%；單一變數補不了缺口——Sens 頁 AMD 顆數 ×1.2 只讓 FY2027 EPS +5.8%、世代售價隨 HBM 容量上調 +7.2%，賣方路徑隱含大客戶訂單全面放量。
+3. HBM 漲價吸收比例是最大單一變數（全額轉嫁時 FY2027 EPS +10.9%、全額吸收時 −10.9%），其次是營業費用率 ±2pt（∓8.5%）（Sens 頁）。下一個檢驗點是 Q3 2026 財報（2026-11-03 盤後）的資料中心營收與 MI450 出貨時程。
 
 AI 半導體 Project **運算層第三個模型**（GPU 側非 NVIDIA 份額），複製 `nvidia/` 的結構，匯入 `nvidia/accel_share.py` 的份額函式；加速器顆數與金額口徑同 `nvidia/README.md`（模組層級每顆價 × 顆數，與 NVIDIA 模型同一套價格）。會計年度約在 12 月最後一個週六結束，**FY(t)＝CY(t)，不平移**。金額以十億美元為主；口徑為公司 non-GAAP（排除股票薪酬、併購無形資產攤銷、投資損益）。
 
@@ -10,9 +18,9 @@ AI 半導體 Project **運算層第三個模型**（GPU 側非 NVIDIA 份額）�
 |---|---|
 | `build_amd.py` | 產生器（參數與公式；唯讀取用上游成品） |
 | `tp_v2.py` | v0.2 目標價與延伸期的共用函式（PL 延伸到 FY2032 的收斂法、Val 第 0 節 DCF＋Comparable、Sens 目標價參數；各公司資料夾各放一份相同內容） |
-| `dist/20261025_AMD模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261025_AMD模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_AMD模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
+| `dist/20261025_AMD模型_v0.2.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
 
 建置：`python3 amd/build_amd.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`（UNITS）、`tsmc/dist`（顆數、情境係數，建置時與 UNITS 核對）、`nvidia/dist`（各平台每顆價、HBM 價格路徑）、`markets/chip_bridge/dist`（每 GW GPU 數）、`markets/equipment/dist`（見頂年度）；**不修改它們**。
 

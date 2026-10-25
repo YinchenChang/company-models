@@ -500,6 +500,35 @@
     {
      "type": "note",
      "parts": [
+      "@Val!A129",
+      "：",
+      "@Val!B129"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!A130",
+      "：",
+      "@Val!B130",
+      "（依上檔空間固定規則）"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "重點觀察"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A18",
+      "@README!A19",
+      "@README!A20"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
       "@Val!A48",
       "：",
       "@Val!B48"

@@ -1,4 +1,4 @@
-# NVIDIA（NVDA）收支與估值模型 v0.2（AI 半導體 Project：運算層第一個樣板）
+# NVIDIA（NVDA）收支與估值模型 v0.2.1（AI 半導體 Project：運算層第一個樣板）
 # 用法：python3 nvidia/build_nvidia.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度 FY(t)＝t−1 年 2 月～t 年 1 月，約等於日曆年 t−1（FY(t) 直接取 CY(t−1)，不跨年加權；11/12 落在同一日曆年）。金額：十億美元（US$B）。
 import sys, os, glob
@@ -718,7 +718,7 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("NVIDIA（NVDA）收支與估值模型 v0.2（AI 半導體 Project：運算層第一個樣板）　2026-10-25", True),
+lines = [("NVIDIA（NVDA）收支與估值模型 v0.2.1（AI 半導體 Project：運算層第一個樣板）　2026-10-25", True),
  ("v0.1.1（PR 審查後）：(1) 新增 NVIDIA 認列顆數係數 k_rec（Derived，只在本模型內縮放，不改 markets/memory 的共用顆數；營收與成本同比例縮放），使 FY2027 由下而上的 Data Center 營收與毛利率等於錨點，FY2028 起沿用；v0.1 的未校準基準保留在 PL 對照區塊與 Sens。(2) 原 pf_cal（只調售價）留在 Sens 當對照。(3) Recon 新增 B2「差額來源待查」。(4) Val：10 年落後 P/E 規則值標「不適用」（保留計算，不進結論）。", False),
  ("模型命題：NVIDIA 的營收＝加速器顆數 × 每顆售價＋網通附掛。2027 年 ASIC 把 NVIDIA 的金額份額壓到約 75–80%，HBM 漲價壓毛利 2–3 個百分點。股價取決於 2028 年顆數持平之後，EPS 還能不能成長：現價約為 2027 年 EPS 的 13.5 倍，是低估，還是見頂前的折價。", False),
  ("核心問題：加速器顆數在 2028 年持平以後，NVIDIA 的 EPS 還能不能成長。（命題的「2027 年」＝日曆年 2027＝FY2028；「2028 年顆數持平」＝CY2028＝FY2029，故問題是 FY2030 EPS 相對 FY2029。）", False), ("", False),
@@ -789,6 +789,47 @@ RD.cell(len(lines) + 1, 1, "v0.2（2026-10-25）：(1) 目標價改為 DCF 與 C
         "v0.1.2 的「0. 目標價與上檔空間」改名「舊法：規則值情境加權（參考）」保留在 Val 頁末。(2) PL 頁末新增三情境延伸到 FY2032：FY2031 起為收斂法，非驅動因子推導（上游市場層只到 CY2029＝FY2030）。"
         "(3) 現價更新到 2026-10-23 收盤 210.96（markets/invest_map/data/prices.csv）。(4) In 頁 M 節新增目標價參數（黃底，Andy 可改）；Sens 頁新增 tp_r、tp_g、tp_w_dcf 對加權目標價的影響。FY2026–FY2030 既有數字不變。")
 RD.cell(len(lines) + 2, 1, "情境對應（v0.2 延伸期）：A＝順利（基準顆數）、B＝平平（CY2028 顆數 ×0.8、CY2029 ×0.85）、C＝不如預期（CY2028–29 ×0.6）。三情境在 FY2027 相同、FY2028 幾乎相同（只差 LPDDR 成本），DCF 的情境差異主要來自 FY2029 之後。本版未做先驗，無 Andy 合理 P/E 對照。")
+
+
+# ---------------- v0.2.1：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00、14:17）；各頁只在現有最後一列之後追加，不位移既有列 ----------------
+
+# (A) 自由現金流（算力收支 2026-10-25 請求；地圖依列標籤「自由現金流」抽數）：In、PL、Sources 只在現有最後一列之後追加
+_ir = IN.max_row + 2
+IN.cell(_ir, 1, "N. 自由現金流假設（v0.2.1 新增；FY2026 實績為錨，各年營收 × 比率）").font = BOLD
+for _j, (_k, _it, _v, _s1) in enumerate((("da_rev", '折舊 ÷ 營收（含無形資產攤銷；自由現金流用）', '=2.843/215.938', 'NVIDIA FY2026 10-K 現金流量表（會計年度至 2026-01-25）：Depreciation and amortization 2,843 ÷ 營收 215,938（US$M）'),
+                                        ("cx_rev", '資本支出 ÷ 營收（購置不動產、廠房設備與無形資產；自由現金流用）', '=6.042/215.938', '同上：Purchases related to property and equipment and intangible assets 6,042 ÷ 營收 215,938（US$M）')), 1):
+    IN.cell(_ir + _j, 1, _k); IN.cell(_ir + _j, 2, _it); IN.cell(_ir + _j, 3, "%"); IN.cell(_ir + _j, 5, _v); IN.cell(_ir + _j, 5).number_format = "0.00%"
+    IN.cell(_ir + _j, 7, "Verified"); IN.cell(_ir + _j, 8, _s1); IN.cell(_ir + _j, 9, '各年沿用 FY2026 比率（Assumed：比率不變）；FY2025 為 1.43%／2.48%（1,864、3,236 ÷ 130,497）')
+    wb.defined_names[_k] = DefinedName(_k, attr_text=f"In!$E${_ir + _j}")
+FCY = list(range(2027, 2033))
+_pr = PL.max_row + 2
+PL.cell(_pr, 1, "v0.2.1 新增：每年自由現金流＝淨利（延伸表）＋營收 × da_rev − 營收 × cx_rev（In 頁 N 節；FY2026 比率沿用）；不含營運資金變動。欄位：各情境 × 各年度").font = BOLD
+hdr(PL, _pr + 1, ["項目", "單位"] + [f"FY{y} {s}" for s in SC for y in FCY] + ["說明"])
+FCF_ROW = _pr + 2
+PL.cell(FCF_ROW, 1, "自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）"); PL.cell(FCF_ROW, 2, "US$B")
+for _j, (_s, _y) in enumerate([(s, y) for s in SC for y in FCY]):
+    _c = XC[_y]; _ni = XR[(_s, "ni")]; _rv = XR[(_s, "rev")]
+    PL.cell(FCF_ROW, 3 + _j, f"={_c}{_ni}+{_c}{_rv}*da_rev-{_c}{_rv}*cx_rev").number_format = "0.0"
+PL.cell(FCF_ROW, 3 + len(SC) * len(FCY), '淨利＝PL 延伸表「淨利（延伸表）」（GAAP 扣除權益證券損益，含股票薪酬，近似公司自 Q1 FY27 起的 non-GAAP）；折舊含收購無形資產攤銷（GAAP 淨利已扣），加回一致')
+_sr = SO.max_row + 1
+for _j, (_a, _b) in enumerate([('自由現金流假設 da_rev、cx_rev：NVIDIA FY2026 10-K 現金流量表 [Verified]', 'https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm（數字經 https://sec-api.io/media/prompts/nvidia-financial-statements/report.html 抽出：D&A 2,843、資本支出 6,042、營收 215,938，US$M）'), ('自由現金流各年比率沿用 FY2026 [Assumed]', '折舊、資本支出占營收比例 FY2027 起不變；未含營運資金變動')]):
+    SO.cell(_sr + _j, 1, _a); SO.cell(_sr + _j, 2, _b)
+_up = next(r for r in range(1, V.max_row + 1) if V.cell(r, 1).value == "上檔空間：加權目標價")
+GRADE_ROW = V.max_row + 2; REC_ROW = GRADE_ROW + 1
+V.cell(GRADE_ROW, 1, "上檔空間級距")
+V.cell(GRADE_ROW, 2, f'=IF(B{_up}>0.5,"大於 50%",IF(B{_up}>0.25,"25%–50%",IF(B{_up}>=0,"0%–25%",IF(B{_up}>=-0.25,"0%～−25%",IF(B{_up}>=-0.5,"−25%～−50%","小於 −50%")))))')
+V.cell(GRADE_ROW, 5, f"以「上檔空間：加權目標價」（B{_up}）分六級（Andy 2026-10-25 14:00）")
+V.cell(REC_ROW, 1, "投資建議")
+V.cell(REC_ROW, 2, f'=IF(B{_up}>0.5,"強力買進",IF(B{_up}>0.25,"買進",IF(B{_up}>=-0.25,"中立",IF(B{_up}>=-0.5,"放空","強力放空"))))')
+V.cell(REC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
+OBS = ['目標價 US$252（DCF 235、Comparable 269 各半），比現價 210.96（2026-10-23）高 19.4%，級距 0%–25%；Comparable 單獨為 +27.4%。上檔來自倍數不是 EPS：本模型 FY2028 EPS（情境加權）14.73 比共識 15.91 低 7.4%，但現價只有共識 FY2028 EPS 的 13.3 倍，低於同業（AMD、Broadcom、Marvell、台積電 ADR、Qualcomm）前瞻 P/E 中位數 19.6 倍；共識目標價 328.95 隱含 20.7 倍，與同業只差 5.4%。', '情境分歧從 FY2029 起：FY2028 EPS 三情境 14.72～14.74 幾乎相同，FY2029 A／B／C 為 15.82／13.26／9.92、FY2030 為 18.36／16.18／11.43，DCF 價格帶 129～313。核心問題（CY2028 顆數持平後 EPS 能否成長）在 B 情境的答案是 FY2029 先降 10.0%、FY2030 再回升 22.0%。', '最敏感的是 NVIDIA 顆數：顆數 ×0.9 時 FY2028 EPS −9.9%；ASIC 金額份額 +5pt 時 −6.6%；HBM／LPDDR 全額吸收時 −4.8%（Sens 頁）。下一個檢驗點是 Q3 FY27 財報（約 2026-11 下旬）：Data Center 營收對照 Q3 指引 1,080 億美元 ±2%，以及 Q4 指引。']   # 重點觀察（與 README.md 相同文字；數字取自重算後的 Val／PL／Sens 頁）
+_rr = RD.max_row + 1
+RD.cell(_rr, 1, 'v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁末新增「上檔空間級距」「投資建議」兩列（Andy 2026-10-25 14:00、14:17 固定規則），README 頁末新增投資建議與重點觀察三點；既有儲存格位置與數值不變。另依算力收支 2026-10-25 請求，PL 頁末新增「自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）」一列（三情境 × 各年度），In 頁末新增 da_rev、cx_rev 兩個比率（最近完整會計年度實績）。')
+RD.cell(_rr + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"').font = Font(bold=True)
+for _j, _t in enumerate(OBS, 1): RD.cell(_rr + 1 + _j, 1, f"重點觀察 {_j}：" + _t)
+if os.environ.get("RATING_ROWMAP"):   # 除錯用：輸出新增列號（供撰寫 html.json）；CI 不設此變數
+    print("ROWMAP", GRADE_ROW, REC_ROW, _rr, _rr + 1, _rr + 2, FCF_ROW)
+
 
 order =["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
