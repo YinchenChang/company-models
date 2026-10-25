@@ -557,6 +557,31 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 {V.src("REV_NetCapped", "COST_PropGap_VR", "COST_Coverage", "FND_ExtNeedCum", "COST_FullCash", "CMP_InfAvailGW", "CMP_CapFactor", "REV_Net")}
 </section>""")
 
+    # ── ⑥′ 回本比值（PxQ；v0.6.3 三口徑）──
+    def prow(lab, r, f="f2", gw=True):
+        cells = "".join(f"<td>{n_(f'PxQ!{c}{r}', f)}</td>" for c in "DEF")
+        g = "".join(f"<td>{n_(f'PxQ!{c}{r}', 'f2')}</td>" for c in "GHI") if gw else "<td></td><td></td><td></td>"
+        rev = f"<td>{n_(f'PxQ!J{r}', 'f1')}</td>" if gw else "<td></td>"
+        return f"<tr><td>{lab}</td>{cells}{g}{rev}</tr>"
+
+    def n_(ref, f):
+        return V.n(ref, None, f)
+
+    scope_nm = {9: "口徑一｜Q2 年化營收 ÷ Q2 季平均 GW", 10: "口徑二｜FY2026 營收 ÷ 全年平均 GW", 11: "口徑三｜9 月底 run-rate ÷ 年底 GW"}
+    t1 = "".join(prow(scope_nm[r], r) for r in (9, 10, 11))
+    mult = "".join(f"<tr><td>{scope_nm[r]}</td>" + "".join(f"<td>{n_(f'PxQ!{c}{r + 6}', 'f2')}</td>" for c in "DEF") + "</tr>" for r in (9, 10, 11))
+    be = "".join(f"<tr><td>{scope_nm[r - 12]}</td>" + "".join(f"<td>{n_(f'PxQ!{c}{r}', 'f2')}</td>" for c in "DEF") + "</tr>" for r in (21, 22, 23))
+    reads = "".join(f"<li>{html.escape(str(V.get(f'PxQ!D{r}')))}</li>" for r in (26, 27, 28))
+    S.append(f"""<section id="s6b"><h2><span class="no">⑥′</span>回本比值（實際 m×L ÷ 所需 m×L＝營收 ÷ 算力成本）：2026 三口徑</h2>
+<p class="note">比值＞1 表示實收足以覆蓋機隊持有成本；重點是相對 2025 的趨勢（2025 主值 {n_("PxQ!F12", "f2")}，指數 {n_("PxQ!D12", "f2")}／線性 {n_("PxQ!E12", "f2")}）。三口徑的營收與 GW 必須配對：營收是流量，Q2 年化營收配 Q2 季平均 GW（口徑一為主）；9 月底 run-rate 是時點值，只配年底 GW。情境欄的「低／基準／高」指 GW（GW 低則比值高）。</p>
+<div class="tw"><table><thead><tr><th>比值</th><th>GW 低</th><th>GW 基準</th><th>GW 高</th><th>GW（低）</th><th>GW（基準）</th><th>GW（高）</th><th>營收 $B</th></tr></thead><tbody>{t1}</tbody></table></div>
+<div class="tw"><table><thead><tr><th>相對 2025 主值的倍數</th><th>GW 低</th><th>GW 基準</th><th>GW 高</th></tr></thead><tbody>{mult}</tbody></table></div>
+<div class="tw"><table><thead><tr><th>持平門檻 GW（高於此值比值低於 2025）</th><th>以 2025 線性 {n_("PxQ!D20", "f2")}</th><th>以 2025 指數 {n_("PxQ!E20", "f2")}</th><th>以 2025 上緣 {n_("PxQ!F20", "f2")}</th></tr></thead><tbody>{be}</tbody></table></div>
+<ul>{reads}</ul>
+<p class="note">J7 Fairwater 對照：六組 Q2 GW 情境（占比 × 上線日期）的倍數範圍 {n_("PxQ!F273", "f2")}–{n_("PxQ!F274", "f2")}；若 OpenAI 用到 Fairwater 兩站四成以上或新站上線早於 Epoch 快照日，Q2 比值低於 2025，兩條件都不成立則約持平到略升。GW 路線 token 帳（交接檔組合）：{n_("PxQ!D293", "f2")}（折減 0.85）／{n_("PxQ!E293", "f2")}（0.806），完全閉合＝1。</p>
+{V.src("PxQ!E9", "PxQ!E15", "PxQ!E21")}
+</section>""")
+
     # ── ⑦ Andy 最該審的 5 項預設 ──
     S.append(f"""<section id="s7"><h2><span class="no">⑦</span>最該審的 5 項預設（取自 v0.6 完成報告 ☆）</h2>
 <ol>

@@ -2,6 +2,7 @@
 - 結構性：頁、名稱、CURRENT、SRC_OAI 筆數；
 - 情境：改輸入 → LibreOffice 重算作基準 → 與 engine 比對全部公式格；任何情境不得出現錯誤值（檢查頁 ERR 是字串，不是錯誤值）；
 - 效能：增量與全簿重算各 < 2 秒；快取等價。"""
+import gc
 import os
 import time
 from pathlib import Path
@@ -154,6 +155,8 @@ def test_scenarios_actually_change_outputs(model, base_engine):
             eng.set_key(key, v)
         cur = eng.evaluate_all()
         assert [k for k in base if base[k] != cur[k]], f"{sc['id']} 未改變任何公式格"
+        del eng, cur
+        gc.collect()                      # v0.6.3：公式格增至 4858，逐情境釋放引擎（只減記憶體，斷言不變）
 
 
 def test_scenario_expected_results(model):
@@ -173,6 +176,8 @@ def test_scenario_expected_results(model):
         if want.get(sc["id"]):
             assert want[sc["id"]] in errs, (sc["id"], errs)
         assert eng.get_name("CHK_Errors") == len(errs)
+        del eng
+        gc.collect()
 
 
 def test_incremental_recalc_matches_fresh_and_is_fast(model):

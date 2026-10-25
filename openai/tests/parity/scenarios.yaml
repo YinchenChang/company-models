@@ -2,11 +2,11 @@
 # 輸入一律以具名範圍設定（SRC_OAI_nnn、INP_nnn、TK_*）。v0.6-P1 只有檢查頁有公式；v0.6-P2 起 Demand、Revenue 頁的公式也由情境驅動（h 起為 P2 情境）。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
   sheets: [README, SRC_OAI, TK_Link, Inputs, Derived_V9, Demand, Revenue, Compute, Cost, Funding, Reverse, PxQ, Checks, Map_v05, _Defaults]
-  formula_cells: 3898             # P2：652 → 1260；P3：→ 1989（Compute 頁、Revenue 第八節、Inputs 新列檢查欄、Checks C40–C66）；P4：→ 2629（Cost 頁、Compute 第十三節、Inputs／SRC 新列檢查欄、Checks C67–C90）；v0.6.1：→ 3898（PxQ 頁、Inputs／SRC 新列檢查欄、Checks C131–C154）；P5：→ 3063（Funding 192、Reverse 184、Inputs 新列檢查欄 5、Checks C91–C130 共 53）
-  defined_names: 709              # S1：426；P2：＋16 SRC_OAI＋10 INP＋64 DEM_／REV_；P3：＋6 INP＋35 CMP_＋5 REV_；P4：＋9 SRC_OAI＋9 INP＋1 TK＋2 CMP_＋36 COST_；P5：＋5 INP＋14 FND_＋8 RVS_；v0.6.1：＋3 SRC_OAI＋13 INP＋TK_FileSHA256＋TK_ 35（5 meta＋2 表頭＋28 名稱）＋PXQ_ 21（合計 73 個新名稱）；v0.6.2：719 − TKQ_ 35 ＋ TK_ 新名稱 25（22 取數名稱＋RNG_ 3）＝ 709
-  src_rows: 134                   # SRC_OAI 筆數（與報告一致）；P2：106＋16（價格事件數值與公告日）；P4：＋9（SRC_OAI_129–137：2025 銷售／管理／營業損失、人數、股權報酬）；v0.6.1：＋3（SRC_OAI_138–140：Epoch 16、Brockman 50、Epoch 服務占比 0.5）
-  src_named: 132                  # 有數值的列才有 SRC_OAI_nnn 名稱（Business 每席只有低／高；退役 ID 不重用）
-  inp_rows: 276                   # P2：233＋10（E8c 事件時點偏移 4、E6 定義常數 6）；P3：＋6（INP_256–261）；P4：＋9（INP_262–270）；P5：＋5（INP_271–275）；v0.6.1：＋13（INP_276–288）
+  formula_cells: 4858             # P2：652 → 1260；P3：→ 1989（Compute 頁、Revenue 第八節、Inputs 新列檢查欄、Checks C40–C66）；P4：→ 2629（Cost 頁、Compute 第十三節、Inputs／SRC 新列檢查欄、Checks C67–C90）；v0.6.1：→ 3898（PxQ 頁、Inputs／SRC 新列檢查欄、Checks C131–C154）；P5：→ 3063（Funding 192、Reverse 184、Inputs 新列檢查欄 5、Checks C91–C130 共 53）
+  defined_names: 740              # S1：426；P2：＋16 SRC_OAI＋10 INP＋64 DEM_／REV_；P3：＋6 INP＋35 CMP_＋5 REV_；P4：＋9 SRC_OAI＋9 INP＋1 TK＋2 CMP_＋36 COST_；P5：＋5 INP＋14 FND_＋8 RVS_；v0.6.1：＋3 SRC_OAI＋13 INP＋TK_FileSHA256＋TK_ 35（5 meta＋2 表頭＋28 名稱）＋PXQ_ 21（合計 73 個新名稱）；v0.6.2：719 − TKQ_ 35 ＋ TK_ 新名稱 25（22 取數名稱＋RNG_ 3）＝ 709
+  src_rows: 139                   # SRC_OAI 筆數（與報告一致）；P2：106＋16（價格事件數值與公告日）；P4：＋9（SRC_OAI_129–137：2025 銷售／管理／營業損失、人數、股權報酬）；v0.6.1：＋3（SRC_OAI_138–140：Epoch 16、Brockman 50、Epoch 服務占比 0.5）
+  src_named: 137                  # 有數值的列才有 SRC_OAI_nnn 名稱（Business 每席只有低／高；退役 ID 不重用）
+  inp_rows: 295                   # P2：233＋10（E8c 事件時點偏移 4、E6 定義常數 6）；P3：＋6（INP_256–261）；P4：＋9（INP_262–270）；P5：＋5（INP_271–275）；v0.6.1：＋13（INP_276–288）
   tk_values: 85                   # TK_Link 有值的名稱（TK_IF_／TK_SRC_／TK_L1_ 具名範圍；S1 v5.24 快照：37＋25；S4 v5.25：＋IF_CapexTotal；S5 v5.26：數值不變）；v0.6.2：v19.0 單一快照，＋22（P×Q 取數名稱；RNG_ 3 名不在此計）
   tk_pending: 2                   # 待 Tokenomics 提供（S1：v5.24 已全部提供）；v0.6.2：IF_PxEffMix_Lo／_Hi（Tokenomics 缺口）
   v05_leaves: 849
@@ -143,7 +143,7 @@ scenarios:
     description: P5：Amazon 條件式到位年 2026→2027（區間上緣）：第四節情境 2027 流入 35；基準不變（開關 0）
     inputs: {"INP_275": 2027}
   - id: aq_gw2026_base_high
-    description: P×Q：2026 平均上線 GW 基準 3.0→3.3：PxQ 基準欄 GW、算力成本、Q、比值與持平 GW 連動；低／高情境欄不變
+    description: P×Q：口徑二（FY2026 全年平均）GW 基準 3.0→3.3：PxQ 口徑二基準欄 GW、算力成本、Q、比值與持平 GW 連動；低／高情境欄不變
     inputs: {"INP_277": 3.3}
   - id: ar_gw25_linear_main
     description: P×Q：2025 GW 主值開關 0→1（線性內插）：2025 主值比值、讀法句與持平 GW（主值）連動；兩欄並列的數值不變
@@ -169,3 +169,15 @@ scenarios:
   - id: ay_tkq_revenue_mismatch
     description: P×Q：Tokenomics SRC_DEM_007 快照 13.07→12：營收兩來源不相等（C132 應轉 ERR）
     inputs: {"TK_SRC_DEM_007": 12}
+  - id: az_scope1_gw_base
+    description: v0.6.3 P×Q：口徑一（Q2 年化營收）基準 GW 2.34→2.6：口徑一基準欄 GW、C、Q、比值、第八節 token 帳 (C) 連動；口徑二、三不變
+    inputs: {"INP_289": 2.6}
+  - id: ba_scope3_gw_base
+    description: v0.6.3 P×Q：口徑三（9 月底 run-rate）年底 GW 基準 4.6→5.0：口徑三基準欄連動，持平門檻 GW 不變
+    inputs: {"INP_292": 5.0}
+  - id: bb_chat_msgs_low
+    description: v0.6.3 W3：ChatGPT 每日則數 3.6→3.2：第八節需求面 token 與 token 帳 (A)(B)(C) 連動；(A)(B) 偏離證據值超過 1%，Checks W3 兩列轉 ERR
+    inputs: {"INP_304": 3.2}
+  - id: bc_fairwater_gw
+    description: v0.6.3 J7：Q2 GW 情境「中占比＋晚日期」2.34→2.5：第七節對應列倍數連動，6B 對帳該列轉差異
+    inputs: {"INP_297": 2.5}
