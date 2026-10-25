@@ -298,6 +298,59 @@
        }
       }
      ]
+    },
+    {
+     "type": "h3",
+     "text": "延伸到 FY2032（灰底年度為收斂法）"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@PL!A153"
+     ]
+    },
+    {
+     "type": "pl",
+     "years": "@PL!C154:J154",
+     "metrics": [
+      {
+       "name": [
+        "營收（",
+        "@PL!B156",
+        "）"
+       ],
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!C156:J156",
+        "B": "@PL!C163:J163",
+        "C": "@PL!C170:J170"
+       },
+       "chart": true
+      },
+      {
+       "name": "淨利率",
+       "fmt": "p1",
+       "rows": {
+        "A": "@PL!C158:J158",
+        "B": "@PL!C165:J165",
+        "C": "@PL!C172:J172"
+       }
+      },
+      {
+       "name": [
+        "EPS（",
+        "@PL!B160",
+        "）"
+       ],
+       "fmt": "n2",
+       "rows": {
+        "A": "@PL!C160:J160",
+        "B": "@PL!C167:J167",
+        "C": "@PL!C174:J174"
+       },
+       "chart": true
+      }
+     ]
     }
    ]
   },
@@ -306,6 +359,180 @@
    "title": "估值",
    "intro": "@Val!A1",
    "blocks": [
+    {
+     "type": "table",
+     "caption": "@Val!A113",
+     "head": [
+      "@Val!A114",
+      "@Val!B114",
+      "",
+      "",
+      "@Val!E114"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "115-123",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "n2",
+       "n2",
+       "n2",
+       ""
+      ],
+      "row_fmt": {
+       "118": {
+        "B": "sp1"
+       },
+       "119": {
+        "B": "sp1"
+       },
+       "120": {
+        "B": "sp1"
+       },
+       "121": {
+        "B": "sp1"
+       },
+       "122": {
+        "B": ""
+       },
+       "123": {
+        "B": "p0",
+        "C": "p0",
+        "D": "p0"
+       }
+      }
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!A124",
+      "：",
+      "@Val!B124"
+     ]
+    },
+    {
+     "type": "bars",
+     "title": "目標價與現價",
+     "fmt": "n2",
+     "items": [
+      {
+       "label": "@Val!A115",
+       "value": "@Val!B115",
+       "series": 0
+      },
+      {
+       "label": "@Val!A100",
+       "value": "@Val!B100",
+       "series": 1
+      },
+      {
+       "label": "@Val!A116",
+       "value": "@Val!B116",
+       "series": 2
+      },
+      {
+       "label": "@Val!A117",
+       "value": "@Val!B117",
+       "series": 1
+      }
+     ],
+     "ref": {
+      "label": "@In!B139",
+      "value": "@In!E139"
+     }
+    },
+    {
+     "type": "table",
+     "caption": "@Val!A81",
+     "head": [
+      "@Val!A82",
+      "@Val!B82",
+      "@Val!C82",
+      "@Val!D82",
+      "@Val!E82"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "83-100",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "n2",
+       "n2",
+       "n2",
+       ""
+      ],
+      "row_fmt": {
+       "91": {
+        "B": "p1"
+       }
+      }
+     }
+    },
+    {
+     "type": "table",
+     "caption": "@Val!A102",
+     "head": [
+      "@Val!A103",
+      "@Val!B103",
+      "@Val!C103",
+      "@Val!D103",
+      "@Val!F103"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "104-108",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "",
+       "x1",
+       "",
+       "tag"
+      ]
+     }
+    },
+    {
+     "type": "kv",
+     "items": [
+      [
+       "@Val!A109",
+       "@Val!B109|x1"
+      ],
+      [
+       "@Val!A110",
+       "@Val!B110|n2"
+      ],
+      [
+       "@Val!A111",
+       "@Val!B111|n2"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "舊法：規則值情境加權（參考，不是目標價）"
+    },
     {
      "type": "table",
      "caption": "@Val!A4",
@@ -801,6 +1028,38 @@
      "parts": [
       "@Sens!A26"
      ]
+    },
+    {
+     "type": "table",
+     "caption": "@Sens!A764",
+     "head": [
+      "@Sens!A765",
+      "@Sens!B765",
+      "@Sens!C765",
+      "@Sens!D765",
+      "@Sens!E765",
+      "@Sens!F765"
+     ],
+     "rowgen": {
+      "sheet": "Sens",
+      "rows": "766-772",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "",
+       "n2",
+       "n2",
+       "n2",
+       "sp1"
+      ]
+     }
     }
    ]
   },

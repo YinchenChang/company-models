@@ -273,6 +273,59 @@
               }
             }
           ]
+        },
+        {
+          "type": "h3",
+          "text": "延伸到 FY2032（灰底年度為收斂法）"
+        },
+        {
+          "type": "note",
+          "parts": [
+            "@PL!A254"
+          ]
+        },
+        {
+          "type": "pl",
+          "years": "@PL!C255:J255",
+          "metrics": [
+            {
+              "name": [
+                "營收（",
+                "@PL!B257",
+                "）"
+              ],
+              "fmt": "n0",
+              "rows": {
+                "A": "@PL!C257:J257",
+                "B": "@PL!C264:J264",
+                "C": "@PL!C271:J271"
+              },
+              "chart": true
+            },
+            {
+              "name": "淨利率",
+              "fmt": "p1",
+              "rows": {
+                "A": "@PL!C259:J259",
+                "B": "@PL!C266:J266",
+                "C": "@PL!C273:J273"
+              }
+            },
+            {
+              "name": [
+                "EPS（",
+                "@PL!B261",
+                "）"
+              ],
+              "fmt": "n0",
+              "rows": {
+                "A": "@PL!C261:J261",
+                "B": "@PL!C268:J268",
+                "C": "@PL!C275:J275"
+              },
+              "chart": true
+            }
+          ]
         }
       ]
     },
@@ -281,6 +334,180 @@
       "title": "估值",
       "intro": "@Val!A1",
       "blocks": [
+        {
+          "type": "table",
+          "caption": "@Val!A105",
+          "head": [
+            "@Val!A106",
+            "@Val!B106",
+            "",
+            "",
+            "@Val!E106"
+          ],
+          "rowgen": {
+            "sheet": "Val",
+            "rows": "107-115",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ],
+            "fmts": [
+              "",
+              "n0",
+              "n0",
+              "n0",
+              ""
+            ],
+            "row_fmt": {
+              "110": {
+                "B": "sp1"
+              },
+              "111": {
+                "B": "sp1"
+              },
+              "112": {
+                "B": "sp1"
+              },
+              "113": {
+                "B": "sp1"
+              },
+              "114": {
+                "B": ""
+              },
+              "115": {
+                "B": "p0",
+                "C": "p0",
+                "D": "p0"
+              }
+            }
+          }
+        },
+        {
+          "type": "note",
+          "parts": [
+            "@Val!A116",
+            "：",
+            "@Val!B116"
+          ]
+        },
+        {
+          "type": "bars",
+          "title": "目標價與現價",
+          "fmt": "n0",
+          "items": [
+            {
+              "label": "@Val!A107",
+              "value": "@Val!B107",
+              "series": 0
+            },
+            {
+              "label": "@Val!A92",
+              "value": "@Val!B92",
+              "series": 1
+            },
+            {
+              "label": "@Val!A108",
+              "value": "@Val!B108",
+              "series": 2
+            },
+            {
+              "label": "@Val!A109",
+              "value": "@Val!B109",
+              "series": 1
+            }
+          ],
+          "ref": {
+            "label": "@In!B123",
+            "value": "@In!E123"
+          }
+        },
+        {
+          "type": "table",
+          "caption": "@Val!A73",
+          "head": [
+            "@Val!A74",
+            "@Val!B74",
+            "@Val!C74",
+            "@Val!D74",
+            "@Val!E74"
+          ],
+          "rowgen": {
+            "sheet": "Val",
+            "rows": "75-92",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ],
+            "fmts": [
+              "",
+              "n0",
+              "n0",
+              "n0",
+              ""
+            ],
+            "row_fmt": {
+              "83": {
+                "B": "p1"
+              }
+            }
+          }
+        },
+        {
+          "type": "table",
+          "caption": "@Val!A94",
+          "head": [
+            "@Val!A95",
+            "@Val!B95",
+            "@Val!C95",
+            "@Val!D95",
+            "@Val!F95"
+          ],
+          "rowgen": {
+            "sheet": "Val",
+            "rows": "96-100",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "F"
+            ],
+            "fmts": [
+              "",
+              "",
+              "x1",
+              "",
+              "tag"
+            ]
+          }
+        },
+        {
+          "type": "kv",
+          "items": [
+            [
+              "@Val!A101",
+              "@Val!B101|x1"
+            ],
+            [
+              "@Val!A102",
+              "@Val!B102|n0"
+            ],
+            [
+              "@Val!A103",
+              "@Val!B103|n0"
+            ]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "舊法：規則值情境加權（參考，不是目標價）"
+        },
         {
           "type": "table",
           "caption": "@Val!A61",
@@ -644,6 +871,38 @@
               "n0",
               "n0",
               "sp1",
+              "n0",
+              "n0",
+              "sp1"
+            ]
+          }
+        },
+        {
+          "type": "table",
+          "caption": "@Sens!A2451",
+          "head": [
+            "@Sens!A2452",
+            "@Sens!B2452",
+            "@Sens!C2452",
+            "@Sens!D2452",
+            "@Sens!E2452",
+            "@Sens!F2452"
+          ],
+          "rowgen": {
+            "sheet": "Sens",
+            "rows": "2453-2459",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E",
+              "F"
+            ],
+            "fmts": [
+              "",
+              "",
+              "n0",
               "n0",
               "n0",
               "sp1"

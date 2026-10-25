@@ -27,6 +27,13 @@ F = {
     "eq_readme": ROOT / "markets/equipment/README.md",
 }
 
+def _lab_ok(v, label):
+    """列標籤比對：完全相同；「現價（」開頭的標籤以前綴比對（日期會隨模型更新）。"""
+    if v == label: return True
+    return (label.startswith("現價（") and isinstance(v, str) and v.startswith("現價（")
+            and "÷" not in v and "隱含" not in v)
+
+
 def rows(path, sheet):
     """回傳 {A 欄標籤（去空白）: [B.. 欄值]}。"""
     ws = openpyxl.load_workbook(path, data_only=True)[sheet]
@@ -363,7 +370,7 @@ for r in pa.iter_rows(min_row=4, max_row=36):
 va = wa["Val"]
 def vrow(label):
     for r in va.iter_rows():
-        if r[0].value == label: return [c.value for c in r]
+        if _lab_ok(r[0].value, label): return [c.value for c in r]
 adv_ps = {"p25": round(vrow("25 分位")[1], 2), "p50": round(vrow("中位數")[1], 2), "p75": round(vrow("75 分位")[1], 2)}
 adv_px = vrow("現價（stockanalysis 2026-10-21 收盤）")[1]
 adv_fpe = vrow("遠期 P/E：stockanalysis")[1]
@@ -469,7 +476,7 @@ for co, wbk, ps_, px_, fpe_ in (("Advantest", wa, adv_ps, adv_px, adv_fpe), ("Di
             if isinstance(r[7].value, (int, float)): hvals.append((int(str(r[0].value)[:4]), round(r[7].value, 2)))
         def dget(label):
             for r in dv.iter_rows():
-                if r[0].value == label: return r[1].value
+                if _lab_ok(r[0].value, label): return r[1].value
         ps_ = {"p25": round(dget("25 分位"), 2), "p50": round(dget("中位數"), 2), "p75": round(dget("75 分位"), 2),
                "min": min(x for _, x in hvals), "max": max(x for _, x in hvals)}
         px_ = dget("現價（2026-10-22 收盤）"); fpe_ = dget("遠期 P/E：stockanalysis（共識）")
