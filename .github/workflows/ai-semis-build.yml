@@ -63,6 +63,7 @@ on:
       - 'smci/**'
       - 'accretech/**'
       - 'dell/**'
+      - 'jentech/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -122,6 +123,7 @@ on:
       - 'smci/**'
       - 'accretech/**'
       - 'dell/**'
+      - 'jentech/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -163,6 +165,7 @@ jobs:
             "quanta|python3 quanta/build_quanta.py|quanta/dist"
             "innolight|python3 innolight/build_innolight.py|innolight/dist"
             "avgo|python3 avgo/build_avgo.py|avgo/dist"
+            "jentech|python3 jentech/build_jentech.py|jentech/dist"
             "dell|python3 dell/build_dell.py|dell/dist"
             "accretech|python3 accretech/build_accretech.py|accretech/dist"
             "smci|python3 smci/build_smci.py|smci/dist"
