@@ -49,6 +49,7 @@ on:
       - 'unimicron/**'
       - 'victory_giant/**'
       - 'mediatek/**'
+      - 'gce/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -94,6 +95,7 @@ on:
       - 'unimicron/**'
       - 'victory_giant/**'
       - 'mediatek/**'
+      - 'gce/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -135,6 +137,7 @@ jobs:
             "quanta|python3 quanta/build_quanta.py|quanta/dist"
             "innolight|python3 innolight/build_innolight.py|innolight/dist"
             "avgo|python3 avgo/build_avgo.py|avgo/dist"
+            "gce|python3 gce/build_gce.py|gce/dist"
             "mediatek|python3 mediatek/build_mediatek.py|mediatek/dist"
             "victory_giant|python3 victory_giant/build_victory_giant.py|victory_giant/dist"
             "unimicron|python3 unimicron/build_unimicron.py|unimicron/dist"
