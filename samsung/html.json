@@ -238,6 +238,73 @@
               }
             }
           ]
+        },
+        {
+          "type": "h3",
+          "text": "延伸到 FY2032（FY2030 起為收斂法，非驅動因子推導）",
+          "long": true
+        },
+        {
+          "type": "pl",
+          "years": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030",
+            "2031",
+            "2032"
+          ],
+          "metrics": [
+            {
+              "name": "合併營收",
+              "fmt": "n1",
+              "chart": true,
+              "rows": {
+                "A": "@Y!C18,Y!D18:F18,Y!M18:O18",
+                "B": "@Y!C18,Y!G18:I18,Y!P18:R18",
+                "C": "@Y!C18,Y!J18:L18,Y!S18:U18"
+              }
+            },
+            {
+              "name": "淨利率（淨利 ÷ 合併營收）",
+              "fmt": "p1",
+              "chart": false,
+              "rows": {
+                "A": "@Y!C33,Y!D33:F33,Y!M33:O33",
+                "B": "@Y!C33,Y!G33:I33,Y!P33:R33",
+                "C": "@Y!C33,Y!J33:L33,Y!S33:U33"
+              }
+            },
+            {
+              "name": "淨利",
+              "fmt": "n1",
+              "chart": false,
+              "rows": {
+                "A": "@Y!C20,Y!D20:F20,Y!M20:O20",
+                "B": "@Y!C20,Y!G20:I20,Y!P20:R20",
+                "C": "@Y!C20,Y!J20:L20,Y!S20:U20"
+              }
+            },
+            {
+              "name": "EPS（期末股數）",
+              "fmt": "n0",
+              "chart": true,
+              "rows": {
+                "A": "@Y!C29,Y!D29:F29,Y!M29:O29",
+                "B": "@Y!C29,Y!G29:I29,Y!P29:R29",
+                "C": "@Y!C29,Y!J29:L29,Y!S29:U29"
+              }
+            }
+          ],
+          "long": true
+        },
+        {
+          "type": "note",
+          "parts": [
+            "@Y!A2"
+          ],
+          "long": true
         }
       ]
     },
@@ -248,47 +315,222 @@
       "blocks": [
         {
           "type": "table",
-          "caption": "@Val!A126",
+          "caption": "@Val!A159",
           "head": [
-            "@Val!A127",
-            "@Val!B127"
+            "@Val!A160",
+            "@Val!B160",
+            "",
+            "",
+            "@Val!E160"
           ],
-          "rows": [
+          "rowgen": {
+            "sheet": "Val",
+            "rows": "161-171",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ],
+            "fmts": [
+              "",
+              "n0",
+              "n0",
+              "n0",
+              ""
+            ],
+            "row_fmt": {
+              "164": {
+                "B": "sp1"
+              },
+              "165": {
+                "B": "sp1"
+              },
+              "166": {
+                "B": "x2",
+                "C": "x2",
+                "D": "x2"
+              },
+              "167": {
+                "B": "sp1"
+              },
+              "168": {
+                "B": "sp1"
+              },
+              "169": {
+                "B": "sp1"
+              },
+              "170": {
+                "B": ""
+              },
+              "171": {
+                "B": "p0",
+                "C": "p0",
+                "D": "p0"
+              }
+            }
+          }
+        },
+        {
+          "type": "note",
+          "parts": [
+            "@Val!A172",
+            "：",
+            "@Val!B172"
+          ]
+        },
+        {
+          "type": "bars",
+          "title": "目標價與現價",
+          "fmt": "n0",
+          "items": [
+            {
+              "label": "@Val!A161",
+              "value": "@Val!B161",
+              "series": 0
+            },
+            {
+              "label": "@Val!A146",
+              "value": "@Val!B146",
+              "series": 1
+            },
+            {
+              "label": "@Val!A162",
+              "value": "@Val!B162",
+              "series": 2
+            },
+            {
+              "label": "@Val!A163",
+              "value": "@Val!B163",
+              "series": 1
+            }
+          ],
+          "ref": {
+            "label": "@In!B6",
+            "value": "@In!E6"
+          }
+        },
+        {
+          "type": "table",
+          "caption": "@Val!A127",
+          "head": [
+            "@Val!A128",
+            "@Val!B128",
+            "@Val!C128",
+            "@Val!D128",
+            "@Val!E128"
+          ],
+          "rowgen": {
+            "sheet": "Val",
+            "rows": "129-146",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ],
+            "fmts": [
+              "",
+              "n0",
+              "n0",
+              "n0",
+              ""
+            ],
+            "row_fmt": {
+              "137": {
+                "B": "p1"
+              }
+            }
+          }
+        },
+        {
+          "type": "table",
+          "caption": "@Val!A148",
+          "head": [
+            "@Val!A149",
+            "@Val!B149",
+            "@Val!C149",
+            "@Val!D149",
+            "@Val!F149"
+          ],
+          "rowgen": {
+            "sheet": "Val",
+            "rows": "150-153",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "F"
+            ],
+            "fmts": [
+              "",
+              "",
+              "x2",
+              "",
+              "tag"
+            ]
+          }
+        },
+        {
+          "type": "kv",
+          "items": [
             [
-              "@Val!A128",
-              "@Val!B128|n0"
+              "@Val!A154",
+              "@Val!B154|x2"
             ],
             [
-              "@Val!A129",
-              "@Val!B129|sp1"
+              "@Val!A155",
+              "@Val!B155|n0"
             ],
             [
-              "@Val!A130",
-              "@Val!B130|n0"
-            ],
-            [
-              "@Val!A131",
-              "@Val!B131|n0"
-            ],
-            [
-              "@Val!A132",
-              "@Val!B132|n0"
-            ],
-            [
-              "@Val!A133",
-              [
-                "@Val!B133|p0",
-                "／",
-                "@Val!C133|p0",
-                "／",
-                "@Val!D133|p0"
-              ]
-            ],
-            [
-              "@Val!A134",
-              "@Val!B134"
+              "@Val!A156",
+              "@Val!B156|n0"
             ]
           ]
+        },
+        {
+          "type": "table",
+          "collapse": true,
+          "summary": "展開：舊法（規則值情境加權，參考，不是目標價）",
+          "caption": "@Val!A174",
+          "head": [
+            "@Val!A175",
+            "@Val!B175",
+            "",
+            "",
+            "@Val!E175"
+          ],
+          "rowgen": {
+            "sheet": "Val",
+            "rows": "176-181",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ],
+            "fmts": [
+              "",
+              "n0",
+              "",
+              "",
+              ""
+            ],
+            "row_fmt": {
+              "177": {
+                "B": "sp1"
+              },
+              "181": {
+                "B": "p0",
+                "C": "p0",
+                "D": "p0"
+              }
+            }
+          }
         },
         {
           "type": "kv",
@@ -577,6 +819,43 @@
           "parts": [
             "@Sens!A36"
           ]
+        },
+        {
+          "type": "h3",
+          "text": "@Sens!A38",
+          "long": true
+        },
+        {
+          "type": "table",
+          "long": true,
+          "head": [
+            "@Sens!A39",
+            "@Sens!B39",
+            "@Sens!C39",
+            "@Sens!D39",
+            "@Sens!E39",
+            "@Sens!F39"
+          ],
+          "rowgen": {
+            "sheet": "Sens",
+            "rows": "40-46",
+            "cols": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E",
+              "F"
+            ],
+            "fmts": [
+              "",
+              "",
+              "n0",
+              "n0",
+              "n0",
+              "sp1"
+            ]
+          }
         }
       ]
     },
