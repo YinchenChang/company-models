@@ -41,6 +41,7 @@ on:
       - 'eoptolink/**'
       - 'kyec/**'
       - 'cohr/**'
+      - 'amkr/**'
       - '.github/workflows/ai-semis-build.yml'
   pull_request:
     paths:
@@ -78,6 +79,7 @@ on:
       - 'eoptolink/**'
       - 'kyec/**'
       - 'cohr/**'
+      - 'amkr/**'
       - '.github/workflows/ai-semis-build.yml'
 
 permissions:
@@ -119,6 +121,7 @@ jobs:
             "quanta|python3 quanta/build_quanta.py|quanta/dist"
             "innolight|python3 innolight/build_innolight.py|innolight/dist"
             "avgo|python3 avgo/build_avgo.py|avgo/dist"
+            "amkr|python3 amkr/build_amkr.py|amkr/dist"
             "cohr|python3 cohr/build_cohr.py|cohr/dist"
             "kyec|python3 kyec/build_kyec.py|kyec/dist"
             "eoptolink|python3 eoptolink/build_eoptolink.py|eoptolink/dist"
