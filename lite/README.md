@@ -1,8 +1,16 @@
-# lite/ — Lumentum（LITE，美股）收支與估值模型 v0.2
+# lite/ — Lumentum（LITE，美股）收支與估值模型 v0.2.1
 
 Lumentum 的雷射晶片營收＝高速光模組數量（`markets/network` 可插拔光模組金額 ÷ 模組單價）× 每模組 EML／CW 雷射數 × 雷射單價 × Lumentum 份額；光模組、OCS（Google TPU）、CPO 外部光源另推；電信與 DCI、工業與 3D 感測依成長率推。股價約 35 倍共識 FY2027 EPS，遠高於十年 non-GAAP P/E 中位數（17.7x）。
 
 **核心問題：EML 供給缺口收斂、矽光以較少 CW 雷射替代、OCS 與 CPO 放量時程——哪一條路徑決定 FY2028 獲利，現價隱含的倍數與獲利要多少才合理？**
+
+**投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 −19.1%，落在 −25%～+25%；級距 0%～−25%）。
+
+## 重點觀察
+
+1. 目標價 US$612（DCF 376、Comparable 848 各半），比現價 756.17（2026-10-23）低 19.1%，級距 0%～−25%；Comparable 單獨為 +12.2%。DCF 拉低：DCF 單獨 −50.3%（ROE 用預設 20%），而本模型 12 個月後前瞻 EPS 28.90 比共識前瞻 EPS 23.60 高 22.5%（共識 FY2028 只有單一來源）；共識目標價 1,165.03 隱含 49.4 倍，比同業中位數 29.3 倍高 68.3%，市場給 EML／CW 雷射供給缺口的溢價，Comparable 未計入。
+2. 最敏感的是 AI 市場與毛利率：AI 市場 ×0.8 時 FY2028 EPS −13.8%、毛利率低（FY2028 46%）−11.4%、雷射單價低 −10.3%、每模組雷射數低（矽光替代）−8.5%；情境 C FY2028 EPS 25.45，比情境 A 的 31.43 低 19.0%。現價 ÷ FY2028 EPS 24.1～29.7 倍，在十年分位 78%～80%。
+3. 追蹤 FY2027 Q1 財報（約 2026-11-05）：產品別營收（雷射、光模組、OCS）公司不揭露，本版為 Assumed 拆分。CPO 外部光源份額低／高時 FY2028 EPS −4.5%／+3.0%；網通 CPO 目前只有一條路徑、三情境相同，待 markets/network 改版。
 
 AI 半導體 Project **網通次產業內複製（雷射與光元件）**，樣板為 `innolight/`。**Lumentum 的雷射有效份額**在 Units 頁建立：口徑是「占光模組內雷射金額」（上游元件），**不可與中際旭創等光模組廠份額相加**；Lumentum 自己的光模組份額另列（模組廠口徑）。
 
@@ -11,9 +19,9 @@ AI 半導體 Project **網通次產業內複製（雷射與光元件）**，樣�
 | 檔案 | 內容 |
 |---|---|
 | `build_lite.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_Lumentum模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；重建逐格一致） |
+| `dist/20261025_Lumentum模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；重建逐格一致） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_Lumentum模型_v0.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
+| `dist/20261025_Lumentum模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
 
 建置：`python3 lite/build_lite.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（可插拔光模組、CPO、Google TPU 顆數、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`、`tools/valuation_rule.py`；**不修改它們**。
 
@@ -90,6 +98,10 @@ EPS（FY2027–FY2032；FY2030 起為收斂法）：
 - FY2027 第二季為假設；未設 EML 產能上限（公司 EML 出貨年增約 50%）。
 - 網通模型 CY2028 可插拔光模組只 +12%，模組數比凱基出貨預測低 25%。
 - 十年 P/E 為推導序列（FY2018 non-GAAP EPS 待人工複核）；R4 產業部署路徑未建。
+
+## v0.2.1（2026-10-25）：上檔空間級距、投資建議、重點觀察
+
+補上檔空間級距、投資建議、重點觀察（Val 頁 0.3 結論加「上檔空間級距」「投資建議」兩列、README 頁加重點觀察三點；數值不變，既有儲存格位置不變）。
 
 ## v0.2（2026-10-25）：估值 v2
 

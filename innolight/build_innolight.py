@@ -1,4 +1,4 @@
-# 中際旭創（300308.SZ／3308.HK）收支與估值模型 v0.1（AI 半導體 Project：網通次產業內複製——光模組）
+# 中際旭創（300308.SZ／3308.HK）收支與估值模型 v0.2.1（AI 半導體 Project：網通次產業內複製——光模組）
 # 用法：python3 innolight/build_innolight.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不做平移。金額：十億人民幣（RMB B）；市場：十億美元（US$B，讀 markets/network）；EPS：人民幣。
 # 口徑：中國會計準則；淨利＝歸屬母公司股東淨利。公司不給營收或獲利指引；FY2026 錨點＝1H26 實績＋2H26 假設（Q3 季報 10-31 前公布後更新）。
@@ -494,8 +494,8 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("中際旭創（300308.SZ／3308.HK）收支與估值模型 v0.2（AI 半導體 Project：網通次產業內複製——光模組）　2026-10-25", True),
- ("版本：v0.2（2026-10-25：三情境延伸到 FY2032、目標價＝DCF 與 Comparable 加權；v0.1 初版、v0.1.1 加規則值情境加權）。中際旭創在 AI 光模組的份額在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
+lines = [("中際旭創（300308.SZ／3308.HK）收支與估值模型 v0.2.1（AI 半導體 Project：網通次產業內複製——光模組）　2026-10-25", True),
+ ("版本：v0.2.1（2026-10-25：補上檔空間級距、投資建議、重點觀察，數值不變）；v0.2（2026-10-25：三情境延伸到 FY2032、目標價＝DCF 與 Comparable 加權；v0.1 初版、v0.1.1 加規則值情境加權）。中際旭創在 AI 光模組的份額在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
  ("模型命題：中際旭創的 AI 營收＝AI 可插拔光模組市場（本專案網通模型）× 中際旭創份額 × 單價係數＋CPO 光學 × 中際旭創 CPO 份額；其他營收（國內、電信）另依成長率推。股價自高點腰斬、只約 12 倍共識未來 12 月 EPS：市場定價像是 2027 年就是獲利高點。", False),
  ("核心問題：市場隱含的 FY2028 EPS 遠低於模型——要成立，份額（新易盛、美國限制）、單價（每 Gb 降價）、CPO 替代三條路徑各要不利到什麼程度？", False), ("", False),
  ("會計年度＝日曆年，FY(t)＝CY(t)，不平移。預測期 FY2027–FY2029 由驅動因子推導；FY2030–FY2032 為收斂法。口徑：中國會計準則；淨利＝歸母淨利；EPS 以 H 股發行後股數。", False), ("", False),
@@ -726,6 +726,47 @@ TPT = _tp_section(V, lambda s_, y: f"PL!{FCX[y]}{SUMR[(s_, 'eps')]}", [(2027, "2
     _rule_pe_range(V), "#,##0.00",
     "本模型前瞻 EPS ÷ 共識前瞻 EPS − 1；共識前瞻 EPS＝In 頁 cons_feps（同花順 FY2027、FY2028 共識，與本模型同期間加權）")
 TPS0, TPS_LAST = _tp_sens(SE, TPT)
+
+# ---------------- v0.2.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 14:00、14:17；既有數值與儲存格位置不變） ----------------
+_UPW = [r_ for r_ in range(1, 60) if V.cell(r_, 1).value == "上檔空間：加權目標價"]
+assert _UPW == [42], _UPW
+GR_ROW, RC_ROW = 49, 50   # 0.3 結論後的空白預留列（不移動其他列）
+for _r in (GR_ROW, RC_ROW):
+    assert all(V.cell(_r, _c).value is None for _c in range(1, V.max_column + 1)), _r
+V.cell(GR_ROW, 1, "上檔空間級距")
+V.cell(GR_ROW, 2, '=IF(B42>0.5,"大於 50%",IF(B42>0.25,"25%–50%",IF(B42>=0,"0%–25%",IF(B42>=-0.25,"0%～−25%",IF(B42>=-0.5,"−25%～−50%","小於 −50%")))))').number_format = "@"
+V.cell(GR_ROW, 5, "以「上檔空間：加權目標價」分六級（Andy 2026-10-25 14:00）")
+V.cell(RC_ROW, 1, "投資建議")
+V.cell(RC_ROW, 2, '=IF(B42>0.5,"強力買進",IF(B42>0.25,"買進",IF(B42>=-0.25,"中立",IF(B42>=-0.5,"放空","強力放空"))))').number_format = "@"
+V.cell(RC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
+# 自由現金流（算力收支 2026-10-25 請求；地圖抽數依列標籤讀取）：In 頁、PL 頁、Sources 頁皆在現有最後一列之後新增，不移動既有列
+_ri = IN.max_row + 1
+for _k, _lab, _f, _s1 in (("fcf_da", "折舊 ÷ 營收（自由現金流用；各年營收 × 比率）", "=819.47/38240", "FY2025 年報：折舊與攤銷 819.47 百萬元（stockanalysis 轉載現金流量表）÷ 營收 38,240 百萬元（Verified）"),
+                         ("fcf_capex", "資本支出 ÷ 營收（自由現金流用；各年營收 × 比率）", "=2759.99/38240", "FY2025 年報：購建固定資產、無形資產和其他長期資產支付的現金 2,759.99 百萬元（中財網；stockanalysis 2,760）÷ 營收 38,240 百萬元（Verified）")):
+    IN.cell(_ri, 1, _k); IN.cell(_ri, 2, _lab); IN.cell(_ri, 3, "%"); IN.cell(_ri, 5, _f).number_format = "0.00%"
+    IN.cell(_ri, 7, "Assumed"); IN.cell(_ri, 8, _s1); IN.cell(_ri, 9, "FY2026 起沿用最近一個完整年度（FY2025）年報比率（Assumed）；只用於 PL 頁自由現金流列，不進 EPS 與目標價")
+    defname(_k, f"In!$E${_ri}"); _ri += 1
+_fr = PL.max_row + 2
+PL.cell(_fr, 1, "自由現金流（v0.2.1；算力收支 2026-10-25 請求）：歸母淨利＋折舊 − 資本支出；折舊、資本支出＝各年營收 × In 頁 fcf_da、fcf_capex（FY2025 年報比率）；不含營運資金變動、不進 EPS 與目標價").font = BOLD
+_yrs = sorted(FCX)
+hdr(PL, _fr + 1, ["項目", "單位"] + [f"FY{y}" + ("A" if y == 2025 else "") for y in _yrs] + ["說明"])
+for _i, s in enumerate(SC):
+    _rr = _fr + 2 + _i
+    PL.cell(_rr, 1, f"自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）：情境 {s}"); PL.cell(_rr, 2, "RMB B")
+    for y in _yrs:
+        PL[f"{FCX[y]}{_rr}"] = f"={FCX[y]}{SUMR[(s, 'ni')]}+{FCX[y]}{SUMR[(s, 'rev')]}*(fcf_da-fcf_capex)"; PL[f"{FCX[y]}{_rr}"].number_format = "#,##0.00"
+    PL.cell(_rr, 3 + len(_yrs), "FY2025A 為實績營收 × 年報比率；FY2030 起營收、淨利為收斂法" if _i == 0 else None)
+SO.cell(SO.max_row + 1, 1, "[Verified] 公司 FY2025 年報現金流量表（資料商轉載）：折舊與攤銷 819.47、購建長期資產現金 2,759.99（百萬元）；營收 382.4 億元——自由現金流比率錨點"); SO.cell(SO.max_row, 2, "https://quote.cfi.cn/xjll/14097/300308.html（現金流量表 2025 年報：購建固定資產、無形資產和其他長期資產支付的現金 275,999.47 萬元）；https://stockanalysis.com/quote/she/300308/financials/cash-flow-statement/（FY2025 折舊與攤銷 819.47 百萬元、資本支出 2,760 百萬元）；https://stock.10jqka.com.cn/20260331/c675646713.shtml（2025 年營收 382.4 億元）")
+SO.cell(SO.max_row + 1, 1, "[Assumed] 自由現金流：FY2026 起折舊 ÷ 營收、資本支出 ÷ 營收沿用 FY2025 比率（In 頁 fcf_da、fcf_capex）；不含營運資金變動"); SO.cell(SO.max_row, 2, "本模型假設")
+OBS = [
+       "目標價 ¥1,355（DCF 831、Comparable 1,879 各半），比現價 612.63（2026-10-23）高 121.2%，級距 大於 50%；Comparable 單獨為 +206.7%。主因是倍數不是 EPS：本模型 12 個月後前瞻 EPS 41.68 比共識前瞻 EPS 75.09 低 44.5%，但 A 股光通訊同業（新易盛、天孚、光迅、華工、劍橋）前瞻 P/E 中位數 45.1 倍，現價只隱含 12.1 倍（共識未來 12 月 EPS）、共識目標價 1,321 隱含 17.6 倍；Comparable 未扣同業規模較小、部分價格日期較舊的溢價，也未計美國限制風險。DCF 單獨也有 +35.7%（ROE 30.6% 高於折現率 10%）。",
+       "最敏感的是美國限制與份額：美國限制案例（份額相對值 2028 0.55）FY2028 EPS −39.1%、份額流失 −21.6%、降價快於模型 −19.4%、AI 市場 ×0.8 −19.1%；情境 C FY2028 EPS 29.17，比情境 A 的 49.78 低 41.4%，DCF 價格帶 498～1,049。",
+       "追蹤 3Q26 季報（10-31 前）：FY2026 錨點的 2H26（季增 15%、毛利率 47%）為假設。CPO 份額對 EPS 影響小（份額 0 時 FY2028 −2.0%），但網通 CPO 目前只有一條路徑、三情境相同，CPO 替代可插拔的風險待 markets/network 改版。"
+      ]   # 重點觀察（與 README.md 相同文字）
+_n0 = RD.max_row
+RD.cell(_n0 + 1, 1, "v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（Val 頁 0.3 結論加「上檔空間級距」「投資建議」兩列、README 頁加重點觀察三點；數值不變，既有儲存格位置不變）。另在 PL 頁末新增「自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）」三情境列（FY2025A–FY2032；歸母淨利口徑；算力收支 2026-10-25 請求），In 頁末新增 fcf_da、fcf_capex（FY2025 年報比率 2.14%、7.22%）。")
+RD.cell(_n0 + 2, 1, f'="投資建議："&Val!B{RC_ROW}&"（依上檔空間固定規則）"').font = BOLD
+for _i, _t in enumerate(OBS, 1): RD.cell(_n0 + 2 + _i, 1, f"重點觀察 {_i}：" + _t)
 
 order =["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

@@ -1,4 +1,4 @@
-# Lumentum（LITE，美股）收支與估值模型 v0.2（AI 半導體 Project：網通次產業內複製——雷射與光元件）
+# Lumentum（LITE，美股）收支與估值模型 v0.2.1（AI 半導體 Project：網通次產業內複製——雷射與光元件）
 # 用法：python3 lite/build_lite.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度：6 月底附近的週六結束（FY2026＝2025-06-29～2026-06-27）。FY(t) 的後半年（1–6 月）在日曆年 t、前半年（7–12 月）在日曆年 t−1。
 #   市場層（markets/network）是日曆年；本模型先在日曆年算各產品營收，再換成會計年度：
@@ -589,8 +589,8 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Lumentum（LITE）收支與估值模型 v0.2（AI 半導體 Project：網通次產業內複製——雷射與光元件）　2026-10-25", True),
- ("版本：v0.2（2026-10-25：三情境延伸到 FY2032、目標價＝DCF 與 Comparable 加權；v0.1 初版）。Lumentum 的雷射有效份額（上游元件口徑）在本模型 Units 頁建立；不可與中際旭創等光模組廠份額相加。", False),
+lines = [("Lumentum（LITE）收支與估值模型 v0.2.1（AI 半導體 Project：網通次產業內複製——雷射與光元件）　2026-10-25", True),
+ ("版本：v0.2.1（2026-10-25：補上檔空間級距、投資建議、重點觀察，數值不變）；v0.2（2026-10-25：三情境延伸到 FY2032、目標價＝DCF 與 Comparable 加權；v0.1 初版）。Lumentum 的雷射有效份額（上游元件口徑）在本模型 Units 頁建立；不可與中際旭創等光模組廠份額相加。", False),
  ("模型命題：Lumentum 的雷射晶片營收＝高速光模組數量（本專案網通模型金額 ÷ 模組單價）× 每模組 EML／CW 雷射數 × 雷射單價 × Lumentum 份額；光模組、OCS（Google TPU）、CPO 外部光源另推；電信與 DCI、工業與 3D 感測依成長率推。股價約 35 倍共識 FY2027 EPS，遠高於十年 non-GAAP P/E 中位數。", False),
  ("核心問題：EML 供給缺口收斂、矽光以較少 CW 雷射替代、OCS 與 CPO 放量時程——哪一條路徑決定 FY2028 獲利，現價隱含的倍數與獲利要多少才合理？", False), ("", False),
  ("會計年度 6 月底結束：FY2027＝2026-07～2027-06（FY(t) 後半年在日曆年 t）。市場層為日曆年，先算 CY2026–CY2029 產品營收，再換成 FY2027–FY2029（FY(t)＝CY(t−1) 下半年＋CY(t) 上半年，上半年占比 h＝47%）。口徑：公司 non-GAAP；EPS 以 non-GAAP 稀釋股數（含可轉債假設轉換）。", False), ("", False),
@@ -789,6 +789,28 @@ TPT = _tp_section(V, lambda s_, y: f"PL!{FCX[y]}{SUMR[(s_, 'eps')]}", [(2028, '8
     _rule_pe_range(V, 1), '#,##0.00',
     "本模型前瞻 EPS ÷ 共識前瞻 EPS − 1；共識前瞻 EPS＝In 頁 cons_feps")
 TPS0, TPS_LAST = _tp_sens(SE, TPT)
+
+# ---------------- v0.2.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 14:00、14:17；既有數值與儲存格位置不變） ----------------
+_UPW = [r_ for r_ in range(1, 60) if V.cell(r_, 1).value == "上檔空間：加權目標價"]
+assert _UPW == [42], _UPW
+GR_ROW, RC_ROW = 49, 50   # 0.3 結論後的空白預留列（不移動其他列）
+for _r in (GR_ROW, RC_ROW):
+    assert all(V.cell(_r, _c).value is None for _c in range(1, V.max_column + 1)), _r
+V.cell(GR_ROW, 1, "上檔空間級距")
+V.cell(GR_ROW, 2, '=IF(B42>0.5,"大於 50%",IF(B42>0.25,"25%–50%",IF(B42>=0,"0%–25%",IF(B42>=-0.25,"0%～−25%",IF(B42>=-0.5,"−25%～−50%","小於 −50%")))))').number_format = "@"
+V.cell(GR_ROW, 5, "以「上檔空間：加權目標價」分六級（Andy 2026-10-25 14:00）")
+V.cell(RC_ROW, 1, "投資建議")
+V.cell(RC_ROW, 2, '=IF(B42>0.5,"強力買進",IF(B42>0.25,"買進",IF(B42>=-0.25,"中立",IF(B42>=-0.5,"放空","強力放空"))))').number_format = "@"
+V.cell(RC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
+OBS = [
+       "目標價 US$612（DCF 376、Comparable 848 各半），比現價 756.17（2026-10-23）低 19.1%，級距 0%～−25%；Comparable 單獨為 +12.2%。DCF 拉低：DCF 單獨 −50.3%（ROE 用預設 20%），而本模型 12 個月後前瞻 EPS 28.90 比共識前瞻 EPS 23.60 高 22.5%（共識 FY2028 只有單一來源）；共識目標價 1,165.03 隱含 49.4 倍，比同業中位數 29.3 倍高 68.3%，市場給 EML／CW 雷射供給缺口的溢價，Comparable 未計入。",
+       "最敏感的是 AI 市場與毛利率：AI 市場 ×0.8 時 FY2028 EPS −13.8%、毛利率低（FY2028 46%）−11.4%、雷射單價低 −10.3%、每模組雷射數低（矽光替代）−8.5%；情境 C FY2028 EPS 25.45，比情境 A 的 31.43 低 19.0%。現價 ÷ FY2028 EPS 24.1～29.7 倍，在十年分位 78%～80%。",
+       "追蹤 FY2027 Q1 財報（約 2026-11-05）：產品別營收（雷射、光模組、OCS）公司不揭露，本版為 Assumed 拆分。CPO 外部光源份額低／高時 FY2028 EPS −4.5%／+3.0%；網通 CPO 目前只有一條路徑、三情境相同，待 markets/network 改版。"
+      ]   # 重點觀察（與 README.md 相同文字）
+_n0 = RD.max_row
+RD.cell(_n0 + 1, 1, "v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（Val 頁 0.3 結論加「上檔空間級距」「投資建議」兩列、README 頁加重點觀察三點；數值不變，既有儲存格位置不變）。")
+RD.cell(_n0 + 2, 1, f'="投資建議："&Val!B{RC_ROW}&"（依上檔空間固定規則）"').font = BOLD
+for _i, _t in enumerate(OBS, 1): RD.cell(_n0 + 2 + _i, 1, f"重點觀察 {_i}：" + _t)
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

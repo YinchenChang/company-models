@@ -1,10 +1,18 @@
-# fabrinet/ — Fabrinet（FN，NYSE）收支與估值模型 v0.1
+# fabrinet/ — Fabrinet（FN，NYSE）收支與估值模型 v0.1.1
 
 Fabrinet 是光模組與光元件代工廠（NVIDIA 光模組、DCI 相干模組、HPC 系統、電信、車用）。資料中心營收＝AI 可插拔光模組市場（`markets/network`）× Fabrinet 光模組有效份額 × 單價係數＋CPO 光學 × Fabrinet CPO 份額＋DCI＋HPC。DCI、HPC 另乘同字母 AI 情境係數。通訊基礎設施（電信系統、衛星通訊、電信元件）與車用、工業與其他（EV 充電、LiDAR、工業雷射）另依成長率推。
 
 股價從 52 週高點 748.89 美元跌到 314.94 美元（−58%，2026-10-23），只約 17 倍共識未來 12 個月 EPS。NVIDIA 占營收由 FY2025 的 27.6% 降到 FY2026 的 16.3%，DCI 與 HPC 則高速成長。
 
 **核心問題：NVIDIA 份額下滑而 DCI、HPC 高成長——市場隱含的 FY2028 EPS 要多低？要讓它成立，光模組份額、AI 市場、毛利率三條路徑各要不利到什麼程度？**
+
+**投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 +14.5%，落在 −25%～+25%；級距 0%–25%）。
+
+## 重點觀察
+
+1. 目標價 US$361（DCF 332、Comparable 389 各半），比現價 314.94（2026-10-23）高 14.5%，級距 0%–25%；Comparable 單獨為 +23.5%。本模型 12 個月後前瞻 EPS 23.37 比共識前瞻 EPS 21.27 高 9.9%，但同業（Coherent、Lumentum、Jabil、Celestica、Flex）前瞻 P/E 中位數 16.7 倍，遠低於共識目標價 687.78 隱含的 32.3 倍（高 94.2%）；共識目標價比現價高 118.4%，與本模型的差距幾乎全在倍數。
+2. 情境分歧大：情境 A／C（含份額、CPO、毛利率）FY2028 EPS 比 B 高 22.1%／低 20.8%，DCF 價格帶 165～505；單一變數中計入 Pillar Two 補充稅 −9.5%、光模組份額流失 −7.7%、毛利率低（新廠爬坡）−6.9%。
+3. 追蹤 FY2027 Q1 財報（預估 2026-11-02）：資料中心內光模組、DCI、HPC 金額為推導值，NVIDIA 光模組營收未揭露。CPO 份額低／高時 FY2028 EPS −2.0%／+3.0%；網通 CPO 目前只有一條路徑、三情境相同，待 markets/network 改版。
 
 本模型是 AI 半導體 Project **網通次產業內的複製（光模組代工）**，樣板為 `cohr/`（同為 6 月底結束的會計年度）。份額口徑與中際旭創、Coherent 相同：光模組營收 ÷ 可插拔市場。Units 頁讀 `innolight/dist` 的份額，檢查兩者相加低於 100%：CY2026 合計 46.4%（Fabrinet 4.2%）。Fabrinet 是代工廠，營收含料件，所以是「有效」份額，與模組廠出貨份額口徑不同。
 
@@ -13,9 +21,9 @@ Fabrinet 是光模組與光元件代工廠（NVIDIA 光模組、DCI 相干模組
 | 檔案 | 內容 |
 |---|---|
 | `build_fabrinet.py` | 產生器（參數與公式；上游成品唯讀） |
-| `dist/20261025_Fabrinet模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261025_Fabrinet模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_Fabrinet模型_v0.1.html` | HTML 展示層（數字全部由 xlsx 重算值抽出） |
+| `dist/20261025_Fabrinet模型_v0.1.1.html` | HTML 展示層（數字全部由 xlsx 重算值抽出） |
 
 建置：`python3 fabrinet/build_fabrinet.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序為 README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用的上游如下，本模型**不修改它們**：
 
@@ -119,3 +127,7 @@ Fabrinet 是光模組與光元件代工廠（NVIDIA 光模組、DCI 相干模組
 - 代工營收含料件轉嫁，有效份額與模組廠出貨份額口徑不同；NVIDIA 光模組營收公司未揭露（只有占總營收 16.3%）。
 - non-GAAP 排除 Pillar Two 補充稅（每股約 1.6 美元／年）；資本支出未建模。
 - 十年 P/E 是 GAAP 倍數，前瞻 P/E 歷史待 Bloomberg。共識取自彙整網站，FY2028 營收只有一個來源，且疑似未更新。R4 產業部署路徑尚未建立。
+
+## v0.1.1（2026-10-25）：上檔空間級距、投資建議、重點觀察
+
+補上檔空間級距、投資建議、重點觀察（Val 頁 0.3 結論加「上檔空間級距」「投資建議」兩列、README 頁加重點觀察三點；數值不變，既有儲存格位置不變）。

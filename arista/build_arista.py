@@ -1,4 +1,4 @@
-# Arista Networks（ANET）收支與估值模型 v0.2（AI 半導體 Project：網通系統端樣板）
+# Arista Networks（ANET）收支與估值模型 v0.2.1（AI 半導體 Project：網通系統端樣板）
 # 用法：python3 arista/build_arista.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不做平移。金額：十億美元（US$B）；EPS：美元；口徑：公司 non-GAAP（排除股票薪酬、攤銷等；
 # 2026 年起 non-GAAP 稅額改用新方法，公司已重編 2025 年各季，本模型 FY2025 用 2025 年度新聞稿的原報值，見 Q 頁說明）。
@@ -479,8 +479,8 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Arista Networks（ANET）收支與估值模型 v0.2（AI 半導體 Project：網通系統端樣板）　2026-10-25", True),
- ("版本：v0.1（初版）。Arista 在 AI 後端乙太網路交換器的份額在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
+lines = [("Arista Networks（ANET）收支與估值模型 v0.2.1（AI 半導體 Project：網通系統端樣板）　2026-10-25", True),
+ ("版本：v0.2.1（2026-10-25：補上檔空間級距、投資建議、重點觀察，數值不變）；v0.1（初版）。Arista 在 AI 後端乙太網路交換器的份額在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
  ("模型命題：Arista 的 AI 營收＝AI 後端 scale-out 交換器市場（本專案網通模型）× 乙太網路占比 × Arista 份額（含前端與 scale-across 附掛）；非 AI（雲端前端、企業、園區）另依成長率推。股價約 37 倍前瞻 EPS：在 NVIDIA（Spectrum-X）與白牌夾擊下，Arista 的份額路徑能否支撐這個倍數？", False),
  ("核心問題：2027–28 年 Arista 在 AI 乙太網路的份額每掉一截，EPS 少多少；現價隱含的份額路徑合不合理。", False), ("", False),
  ("會計年度＝日曆年，FY(t)＝CY(t)，不平移。預測期 FY2027–FY2029（三年）。口徑：公司 non-GAAP；十年 P/E 規則值用 GAAP 換算 EPS。", False), ("", False),
@@ -550,6 +550,47 @@ RD.cell(len(lines) + 1, 1, "v0.2（2026-10-25）：(1) 目標價改為 DCF 與 C
         "v0.1.1 的「0. 目標價與上檔空間」改名「舊法：規則值情境加權（參考）」保留在 Val 頁末。(2) PL 頁末新增三情境延伸到 FY2032：FY2030 起為收斂法，非驅動因子推導（上游市場層只到 CY2029＝FY2029）。"
         "(3) 現價維持 2026-10-23 收盤 172.37（補第二來源 prices.csv）。(4) In 頁 J 節新增目標價參數（黃底，Andy 可改）；Sens 頁新增 tp_r、tp_g、tp_w_dcf 對加權目標價的影響。FY2025–FY2029 既有數字不變。")
 RD.cell(len(lines) + 2, 1, "情境對應（v0.2 延伸期）：A＝順利（基準顆數）、B＝平平（CY2028 ×0.8、CY2029 ×0.85）、C＝不如預期（CY2028–29 ×0.6）；FY2027 三情境相同，情境差從 FY2028 起。")
+
+# ---------------- v0.2.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 14:00、14:17；既有數值與儲存格位置不變） ----------------
+_UPW = [r_ for r_ in range(1, 60) if V.cell(r_, 1).value == "上檔空間：加權目標價"]
+assert _UPW == [43], _UPW
+GR_ROW, RC_ROW = 52, 53   # 0.3 結論後的空白預留列（不移動其他列）
+for _r in (GR_ROW, RC_ROW):
+    assert all(V.cell(_r, _c).value is None for _c in range(1, V.max_column + 1)), _r
+V.cell(GR_ROW, 1, "上檔空間級距")
+V.cell(GR_ROW, 2, '=IF(B43>0.5,"大於 50%",IF(B43>0.25,"25%–50%",IF(B43>=0,"0%–25%",IF(B43>=-0.25,"0%～−25%",IF(B43>=-0.5,"−25%～−50%","小於 −50%")))))').number_format = "@"
+V.cell(GR_ROW, 5, "以「上檔空間：加權目標價」分六級（Andy 2026-10-25 14:00）")
+V.cell(RC_ROW, 1, "投資建議")
+V.cell(RC_ROW, 2, '=IF(B43>0.5,"強力買進",IF(B43>0.25,"買進",IF(B43>=-0.25,"中立",IF(B43>=-0.5,"放空","強力放空"))))').number_format = "@"
+V.cell(RC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
+# 自由現金流（算力收支 2026-10-25 請求；地圖抽數依列標籤讀取）：In 頁、PL 頁、Sources 頁皆在現有最後一列之後新增，不移動既有列
+_ri = IN.max_row + 1
+for _k, _lab, _f, _s1 in (("fcf_da", "折舊 ÷ 營收（自由現金流用；各年營收 × 比率）", "=72.6/9006", "FY2025 10-K：折舊與攤銷 72.6 百萬美元 ÷ 營收 9,006 百萬美元（Verified）"),
+                         ("fcf_capex", "資本支出 ÷ 營收（自由現金流用；各年營收 × 比率）", "=119.5/9006", "FY2025 10-K：購置不動產、設備與無形資產 119.5 百萬美元 ÷ 營收 9,006 百萬美元（Verified）")):
+    IN.cell(_ri, 1, _k); IN.cell(_ri, 2, _lab); IN.cell(_ri, 3, "%"); IN.cell(_ri, 5, _f).number_format = "0.00%"
+    IN.cell(_ri, 7, "Assumed"); IN.cell(_ri, 8, _s1); IN.cell(_ri, 9, "FY2026 起沿用最近一個完整年度（FY2025）年報比率（Assumed）；只用於 PL 頁自由現金流列，不進 EPS 與目標價")
+    defname(_k, f"In!$E${_ri}"); _ri += 1
+_fr = PL.max_row + 2
+PL.cell(_fr, 1, "自由現金流（v0.2.1；算力收支 2026-10-25 請求）：淨利（non-GAAP，延伸表）＋折舊 − 資本支出；折舊、資本支出＝各年營收 × In 頁 fcf_da、fcf_capex（FY2025 年報比率）；不含營運資金變動、不進 EPS 與目標價").font = BOLD
+_yrs = sorted(XC)
+hdr(PL, _fr + 1, ["項目", "單位"] + [f"FY{y}" + ("A" if y == 2025 else "") for y in _yrs] + ["說明"])
+for _i, s in enumerate(SC):
+    _rr = _fr + 2 + _i
+    PL.cell(_rr, 1, f"自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）：情境 {s}"); PL.cell(_rr, 2, "US$B")
+    for y in _yrs:
+        PL[f"{XC[y]}{_rr}"] = f"={XC[y]}{XR[(s, 'ni')]}+{XC[y]}{XR[(s, 'rev')]}*(fcf_da-fcf_capex)"; PL[f"{XC[y]}{_rr}"].number_format = "#,##0.00"
+    PL.cell(_rr, 3 + len(_yrs), "FY2025A 為實績營收 × 年報比率；FY2030 起營收、淨利為收斂法" if _i == 0 else None)
+SO.cell(SO.max_row + 1, 1, "[Verified] 公司 FY2025 10-K（SEC XBRL）：折舊與攤銷 72.6、購置不動產設備與無形資產 119.5（百萬美元）；營收 9,006 百萬美元——自由現金流比率錨點"); SO.cell(SO.max_row, 2, "https://data.sec.gov/api/xbrl/companyconcept/CIK0001596532/us-gaap/DepreciationDepletionAndAmortization.json；https://data.sec.gov/api/xbrl/companyconcept/CIK0001596532/us-gaap/PaymentsToAcquireProductiveAssets.json（10-K accession 0001596532-26-000013）")
+SO.cell(SO.max_row + 1, 1, "[Assumed] 自由現金流：FY2026 起折舊 ÷ 營收、資本支出 ÷ 營收沿用 FY2025 比率（In 頁 fcf_da、fcf_capex）；不含營運資金變動"); SO.cell(SO.max_row, 2, "本模型假設")
+OBS = [
+       "目標價 US$99.5（DCF 87.2、Comparable 111.7 各半），比現價 172.37（2026-10-23）低 42.3%，級距 −25%～−50%；Comparable 單獨為 −35.2%。主因是倍數不是 EPS：本模型 12 個月後前瞻 EPS 5.53 比共識前瞻 EPS 4.65 高 12.6%（期間差約一年），但同業（Cisco、Ciena、Celestica、HPE、Credo）前瞻 P/E 中位數 20.2 倍，現價隱含 37.1 倍、共識目標價 243.59 隱含 52.4 倍（比同業高 159%）；市場給 Arista 的 AI 乙太網路份額與高毛利溢價，Comparable 未計入。DCF 87.2 更低，因 ROE 雖有 28.6%，B 情境 FY2028 EPS 5.51 幾乎不成長（+0.8%）。",
+       "最敏感的是份額與市場量：份額相對值降到 0.80／0.70 時 FY2028 EPS −8.8%，AI scale-out 交換器市場 ×0.8 時 −7.9%；情境 C（CY2028–29 顆數 ×0.6）FY2028 EPS 4.97，比情境 A 的 5.99 低 17.1%，營收在 FY2027 見頂。追蹤 3Q26 財報（2026-11-03）的 AI 營收（FY2026 目標至少 35 億美元）與 2027 年指引。",
+       "以歷史看不貴：現價 ÷ FY2028 EPS 為 28.8／31.3／34.7 倍（A／B／C），在 2016–2025 年底 P/E 的 24%～33% 分位；目標價偏低是因 Comparable 同業成長較低。DCF 權重改 0.3／0.7 時加權目標價 104.4／94.6（±4.9%）、折現率 ±1pt 時 −5.9%／+8.3%，都不改變放空級距。"
+      ]   # 重點觀察（與 README.md 相同文字）
+_n0 = RD.max_row
+RD.cell(_n0 + 1, 1, "v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（Val 頁 0.3 結論加「上檔空間級距」「投資建議」兩列、README 頁加重點觀察三點；數值不變，既有儲存格位置不變）。另在 PL 頁末新增「自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）」三情境列（FY2025A–FY2032；算力收支 2026-10-25 請求），In 頁末新增 fcf_da、fcf_capex（FY2025 10-K 比率 0.81%、1.33%）。")
+RD.cell(_n0 + 2, 1, f'="投資建議："&Val!B{RC_ROW}&"（依上檔空間固定規則）"').font = BOLD
+for _i, _t in enumerate(OBS, 1): RD.cell(_n0 + 2 + _i, 1, f"重點觀察 {_i}：" + _t)
 
 order =["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
