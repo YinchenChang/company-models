@@ -5,6 +5,8 @@
 
 用法：python3 markets/invest_map/extract_models.py [--avgo <avgo dist xlsx 路徑>]
 AVGO 模型已合併（PR #107，avgo/dist/）；預設讀 avgo/dist，--avgo 只在要改讀其他成品時使用。
+v0.4（2026-10-25）：半導體 13 家改讀估值 v2 的統一列標籤（semis_v2）；舊的 Andy 合理 P/E、規則值專用讀法已移除
+（v2 模型不再有「對照：以 Andy 合理 P/E」一節）。
 """
 import argparse
 import glob
@@ -62,59 +64,6 @@ def lit(value, src):
     return {"value": value, "cell": None, "file": None, "source": src}
 
 
-def semis_generic(b, price_pat, rule=True, rule_scen=("A", "C")):
-    """P/E 類半導體（Arista、台達電、中際旭創、廣達）：Val 頁第 1、3、5 節。"""
-    out = {
-        "price": b.num("Val", [(0, price_pat)], 0),
-        "pe_fy28": [b.num("Val", [(0, r"^現價 ÷ FY2028 EPS")], i) for i in range(3)],
-    }
-    out["price_date"] = re.search(r"(\d{4}-\d{2}-\d{2})", b.find("Val", (0, price_pat))[0][1]).group(1)
-    if rule:
-        for s in rule_scen:
-            row = b.find("Val", (0, f"^{s}$"), (2, r"^\d"))  # 第 3 節：情境列
-            nums = [(c, v) for c, v in row if isinstance(v, (int, float))]
-            # 第 3 節欄位：EPS…、規則倍數、隱含股價、相對現價、現價 ÷ EPS
-            c, v = nums[-3]
-            out[f"rule_{s}"] = {"value": v, "cell": f"Val!{c}", "file": b.rel}
-            c, v = nums[-4]
-            out[f"rule_mult_{s}"] = {"value": v, "cell": f"Val!{c}", "file": b.rel}
-    return out
-
-
-def andy_rows(b, mult_pat):
-    """第 5 節（或第 4 節）「以 Andy 合理 P/E 計算的隱含價」：A 列 FY2027、C 列 FY2028。"""
-    hdr_row = None
-    ws = b.wb["Val"]
-    for row in ws.iter_rows():
-        v = row[0].value
-        if v and re.search(r"對照：以 Andy 合理 P/E", str(v)):
-            hdr_row = row[0].row
-            mult = float(re.search(mult_pat, str(v)).group(1))
-            break
-    res = {"andy_pe": lit(mult, f"{b.rel} Val!A{hdr_row} 標題")}
-    for r in range(hdr_row + 2, hdr_row + 5):
-        s = ws.cell(r, 1).value
-        vals = [(ws.cell(r, j).coordinate, ws.cell(r, j).value) for j in range(2, 9)
-                if isinstance(ws.cell(r, j).value, (int, float))]
-        # 欄位：FY2027 EPS、× 倍數、相對現價、FY2028 EPS、× 倍數、相對現價
-        res[f"andy27_{s}"] = {"value": vals[1][1], "cell": f"Val!{vals[1][0]}", "file": b.rel}
-        res[f"andy28_{s}"] = {"value": vals[4][1], "cell": f"Val!{vals[4][0]}", "file": b.rel}
-    return res
-
-
-def memory(b):
-    out = {"pb_rule": {}, "pe_rule": {}}
-    for kind, key in (("P/B", "pb_rule"), ("P/E", "pe_rule")):
-        for pos in ("見頂", "中段", "谷底"):
-            row = b.find("Val", (0, rf"^規則值：{pos}（{re.escape(kind)}）"))
-            nums = [(c, v) for c, v in row if isinstance(v, (int, float))]
-            c, v = nums[2]  # 倍數、每股基準、隱含股價
-            out[key][pos] = {"value": v, "cell": f"Val!{c}", "file": b.rel}
-            c2, v2 = nums[3]
-            out[key][pos + "_upside"] = {"value": v2, "cell": f"Val!{c2}", "file": b.rel}
-    return out
-
-
 def model_px(b, sheet, label_pat):
     """模型輸入頁的股價列：回傳 {value, cell, file, date}。"""
     cells = b.find(sheet, (1, label_pat)) if sheet == "In" else b.find(sheet, (0, label_pat))
@@ -123,6 +72,53 @@ def model_px(b, sheet, label_pat):
     c, v = nums[0]
     date = re.search(r"(\d{4}-\d{2}-\d{2})", lbl[0]).group(1) if lbl else ""
     return {"value": v, "cell": f"{sheet}!{c}", "file": b.rel, "date": date}
+
+
+def first_num_row(b, sheet, pat):
+    """第一個「首格符合 pat 且至少有一個數值」的列：回傳 [(儲存格, 值), ...]（只含數值）。"""
+    for cells in b.rows(sheet):
+        if re.search(pat, str(cells[0][1])):
+            nums = [(c, v) for c, v in cells[1:] if isinstance(v, (int, float)) and not isinstance(v, bool)]
+            if nums:
+                return nums
+    raise KeyError(f"{b.rel} {sheet} 找不到含數值的列 {pat}")
+
+
+def cell(b, sheet, c, v):
+    return {"value": v, "cell": f"{sheet}!{c}", "file": b.rel}
+
+
+# 估值 v2（AI半導體 2026-10-25，company-models #133–#140）：Val 頁「0. 目標價」區塊的統一列標籤
+V2_TP = r"^目標價（DCF 與 Comparable 加權）"
+V2_DCF = r"^DCF 目標價（情境加權）"
+V2_COMP = r"^Comparable 目標價（市場主流同業法）"
+V2_CONS = r"^市場共識目標價"
+V2_SCEN12 = r"DCF 情境價值推到 12 個月後"          # A／B／C 三欄（部分樣板無此列 → 改讀價格帶）
+V2_BAND = r"^價格帶（DCF 不如預期～順利）"          # 數值版：C 情境、A 情境
+V2_OLD = r"^(規則值情境加權價|舊法隱含價（情境加權)"                      # 舊法（參考，非目標價）
+
+
+def semis_v2(b):
+    """估值 v2 半導體模型：加權目標價、DCF、Comparable、共識、C 情境 DCF 價值（12 個月後）、舊法參考價、現價。"""
+    out = {}
+    for k, pat in (("tp", V2_TP), ("tp_dcf", V2_DCF), ("tp_comp", V2_COMP), ("tp_cons", V2_CONS), ("old_rule", V2_OLD)):
+        c, v = first_num_row(b, "Val", pat)[0]
+        out[k] = cell(b, "Val", c, v)
+    try:
+        nums = first_num_row(b, "Val", V2_SCEN12)
+        out["dcf_A"], out["dcf_C"] = cell(b, "Val", *nums[0]), cell(b, "Val", *nums[2])
+    except KeyError:
+        nums = first_num_row(b, "Val", V2_BAND)          # B＝C 情境、C＝A 情境
+        out["dcf_C"], out["dcf_A"] = cell(b, "Val", *nums[0]), cell(b, "Val", *nums[1])
+    try:                                                  # 現價：Val 頁「現價（日期 收盤）」，記憶體與台積電在 In 頁
+        out["model_px"] = model_px(b, "Val", r"^現價（\d{4}-\d{2}-\d{2}")
+    except KeyError:
+        out["model_px"] = model_px(b, "In", r"股價（")
+    try:
+        out["pe_fy28"] = [b.num("Val", [(0, r"^現價 ÷ FY2028 EPS（模型）")], i) for i in range(3)]
+    except (KeyError, IndexError):
+        pass
+    return out
 
 
 def cash_rows(b, sheet, label_pats, hdr_row=None):
@@ -209,72 +205,24 @@ def cloud(b):
     }
 
 
+SEMIS_V2 = (("NVDA", "nvidia"), ("AVGO", "avgo"), ("000660", "skhynix"), ("005930", "samsung"), ("MU", "micron"),
+            ("2330", "tsmc"), ("ANET", "arista"), ("300308", "innolight"), ("2308", "delta"), ("2382", "quanta"),
+            ("4062", "ibiden"), ("6857", "advantest"), ("6146", "disco"))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--avgo", help="AVGO 成品 xlsx（預設 avgo/dist）")
     a = ap.parse_args()
     out = {}
 
-    # --- 運算 ---
-    b = Book(dist_xlsx("nvidia"))
-    d = {"price": b.num("Val", [(0, r"^現價（")], 0),
-         "price_date": "2026-10-22",
-         "pe_fy28": [b.num("Val", [(0, r"^現價 ÷ FY2028 EPS（模型）")], i) for i in range(3)],
-         "eps_fy28_A": b.num("Val", [(0, "^A$"), (1, "FY2028"), (3, "^規則值")], 0),
-         "eps_fy29_C": b.num("Val", [(0, "^C$"), (1, "FY2029"), (3, "^規則值")], 0),
-         "eps_fy29_A": b.num("Val", [(0, "^A$"), (1, "FY2029"), (3, "^規則值")], 0),
-         "andy_pe": lit(25, "AI半導體 先驗比對_NVDA_20261023.md N7b「合理 P/E＝現價（約 25x）」"),
-         "rule_note": "規則值不適用（落後倍數含高成長期溢價；模型 Val 第 3 節）"}
-    out["NVDA"] = {"model": b.rel, **d}
-
-    if True:
-        b = Book(a.avgo or dist_xlsx("avgo"))
-        d = {"price": b.num("Val", [(0, r"^現價（")], 0), "price_date": "2026-10-22",
-             "pe_fy28": [b.num("Val", [(0, r"^現價 ÷ FY2028 EPS（模型）")], i) for i in range(3)],
-             **andy_rows(b, r"(\d+)x"),
-             "rule_note": "十年倍數待前瞻 P/E 歷史（Bloomberg）；規則值未算"}
-        out["AVGO"] = {"model": b.rel, **d}
-
-    # --- 記憶體（P/B 主、P/E 對照） ---
-    for tk, folder in (("000660", "skhynix"), ("005930", "samsung"), ("MU", "micron")):
-        b = Book(dist_xlsx(folder))
-        out[tk] = {"model": b.rel, **memory(b), "model_px": model_px(b, "In", r"股價（"),
-                   "cash": dict(basis="現金流", **cash_rows(b, "Y", [r"^自由現金流"], hdr_row=3))}
-
-    # --- 代工 ---
-    b = Book(dist_xlsx("tsmc"))
-    out["2330"] = {"model": b.rel, "model_px": model_px(b, "In", r"^股價（"),
-                   # 列欄位：倍數、每股基準（EPS）、隱含股價、相對目前、現價 ÷ 基準
-                   "rule_mid": b.num("Val", [(0, r"^規則值：中段（P/E）")], 2),
-                   "rule_lo": b.num("Val", [(0, r"^規則值：低（P/E）")], 2),
-                   "rule_mid_upside": b.num("Val", [(0, r"^規則值：中段（P/E）")], 3),
-                   "eps27_A": b.num("Val", [(0, r"^規則值：中段（P/E）")], 1),
-                   "eps28_C": b.num("Val", [(0, r"^規則值：2028 C（P/E）")], 1),
-                   "andy_pe": lit(35, "AI半導體 先驗比對_台積電_20261008.md T7b「合理 P/E 35x」")}
-
-    # --- 網通、電源、組裝 ---
-    for tk, folder, mp in (("ANET", "arista", r"(\d+)x"), ("2308", "delta", r"(\d+)x"),
-                           ("300308", "innolight", r"(\d+)x"), ("2382", "quanta", r"(\d+)x")):
-        b = Book(dist_xlsx(folder))
-        out[tk] = {"model": b.rel, **semis_generic(b, r"^現價（"), **andy_rows(b, mp)}
-
-    # --- 載板（無規則值） ---
-    b = Book(dist_xlsx("ibiden"))
-    out["4062"] = {"model": b.rel, "price": b.num("Val", [(0, r"^現價（")], 0), "price_date": "2026-10-16",
-                   "pe_fy28": [b.num("Val", [(0, r"^現價 ÷ FY2028 EPS（模型）")], i) for i in range(3)],
-                   **andy_rows(b, r"(\d+)x"), "rule_note": "模型未算十年倍數規則值"}
-
-    # --- 設備 ---
-    b = Book(dist_xlsx("advantest"))
-    out["6857"] = {"model": b.rel,
-                   "price": b.num("Val", [(0, r"^現價（stockanalysis")], 0), "price_date": "2026-10-21",
-                   "rule_A": b.num("Val", [(0, "^A$"), (1, "FY2027"), (3, "^規則值")], 2),
-                   "rule_C": b.num("Val", [(0, "^C$"), (1, "FY2027"), (3, "^規則值")], 2)}
-    b = Book(dist_xlsx("disco"))
-    out["6146"] = {"model": b.rel,
-                   "price": b.num("Val", [(0, r"^現價（")], 0), "price_date": "2026-10-22",
-                   "rule_A": b.num("Val", [(0, "^A$"), (1, "FY2027"), (3, "^規則值")], 2),
-                   "rule_C": b.num("Val", [(0, "^C$"), (1, "FY2027"), (3, "^規則值")], 2)}
+    # --- 半導體 13 家：估值 v2 通用讀法（地圖 v0.4） ---
+    for tk, folder in SEMIS_V2:
+        b = Book(a.avgo if (tk == "AVGO" and a.avgo) else dist_xlsx(folder))
+        out[tk] = {"model": b.rel, "v2": True, **semis_v2(b)}
+    for tk in ("000660", "005930", "MU"):              # 記憶體：收支關卡用 Y 頁自由現金流
+        b = Book(dist_xlsx(dict(SEMIS_V2)[tk]))
+        out[tk]["cash"] = dict(basis="現金流", **cash_rows(b, "Y", [r"^自由現金流"], hdr_row=3))
 
     # --- 算力平台（雲端、neocloud）：一頁摘要 ---
     for tk, folder in (("MSFT", "microsoft"), ("AMZN", "amazon"), ("GOOGL", "alphabet"),
@@ -293,10 +241,11 @@ def main():
                     "need_ratio_2028_lo": b.num("Reverse", [(0, "^X22$")], 3)}
 
     # --- 收支關卡：只有損益的半導體模型 ---
-    for tk, folder in (("NVDA", "nvidia"), ("2330", "tsmc"), ("ANET", "arista"), ("2308", "delta"), ("300308", "innolight"),
-                       ("2382", "quanta"), ("4062", "ibiden"), ("6857", "advantest"), ("6146", "disco")):
-        out[tk]["cash"] = dict(basis="淨利", **net_income_rows(Book(dist_xlsx(folder))))
-    out["AVGO"]["cash"] = dict(basis="淨利", **net_income_rows(Book(a.avgo or dist_xlsx("avgo"))))
+    for tk, folder in SEMIS_V2:
+        if tk in ("000660", "005930", "MU"):
+            continue
+        b = Book(a.avgo if (tk == "AVGO" and a.avgo) else dist_xlsx(folder))
+        out[tk]["cash"] = dict(basis="淨利", **net_income_rows(b))
     # --- 模型商 ---
     bm = Book(dist_xlsx("minimax"))
     f06 = cash_rows(bm, "Funding", [r"^F06$"])

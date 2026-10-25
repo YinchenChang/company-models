@@ -22,7 +22,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.3.2"
+VERSION = "v0.4"
 DATE = "20261025"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
@@ -155,9 +155,15 @@ PARAMS = [
 
 # ---------------------------------------------------------------- 讀回既有黃底輸入
 def restore():
-    if not os.path.exists(OUT):
-        return {}, {}, {}
-    wb = openpyxl.load_workbook(OUT)
+    """讀回黃底判斷輸入：優先讀本版活頁簿；本版尚未產生（升版）時讀 dist/ 最新一版，避免升版時判斷被預設值覆蓋。"""
+    src = OUT
+    if not os.path.exists(src):
+        prev = sorted(glob.glob(os.path.join(HERE, "dist", "*_AI投資地圖_資料_*.xlsx")))
+        if not prev:
+            return {}, {}, {}
+        src = prev[-1]
+        print("讀回黃底輸入：", os.path.basename(src))
+    wb = openpyxl.load_workbook(src)
     p = {r[0].value: r[1].value for r in wb["參數"].iter_rows(min_row=2) if r[0].value}
     seg = {}
     for r in wb["價值鏈"].iter_rows(min_row=2):
@@ -204,9 +210,10 @@ def main():
         "收支關卡（Andy 2026-10-25 10:48）：先看收支、再看評價。模型期間（2026 起約五年）現金收支合計為負＝入不敷出、有資金缺口，"
         "不論估值空間多大，最終分級一律為「收支不足」。口徑：雲端／neocloud／MAG 模板一律用「營運缺口＋股東回饋（股利、回購）」；記憶體、模型商用自由現金流；"
         "只有損益的半導體模型以「各情境淨利皆為正」判定（現金流本專案未建立）。",
-        "可投資性口徑（預設，Andy 可改）：中心價＝各模型主口徑；半導體 P/E 類取「十年倍數規則值」與「Andy 先驗合理 P/E」兩者較低者；"
-        "規則值不適用者（NVDA、AVGO、Ibiden）只用 Andy 合理 P/E，標「替代口徑」；記憶體以 P/B 規則值為主、P/E 規則值為對照；"
-        "雲端與 neocloud 用模型加權目標價與情境下緣；MiniMax 用反向檢驗折現價值。空間＝隱含價 ÷ 10-23 收盤價 − 1，未折現。",
+        "可投資性口徑（v0.4 預設，Andy 可改）：中心價＝各模型主口徑。半導體 13 家讀估值 v2 的「目標價（DCF 與 Comparable 加權）」"
+        "（AI半導體 2026-10-25；DCF 50%＋Comparable 50%，約 12 個月後），下檔＝C 情境 DCF 價值（推到 12 個月後）；"
+        "舊法（規則值情境加權價）放對照欄。雲端與 neocloud 用模型加權目標價與情境下緣；MiniMax 用反向檢驗折現價值。"
+        "空間＝隱含價 ÷ 10-23 收盤價 − 1。",
         "分級：中心空間 ≥ 參數 tier_center 且下檔 ≥ tier_bear → 機會；中心 < tier_rich → 偏貴；其餘 → 觀察。",
         "本活頁簿是研究整理，不是投資建議；各模型的方法與假設見各自 README 與 Val／摘要頁。",
     ]
@@ -370,45 +377,18 @@ def main():
         we.cell(i, 4, seg)
         we.cell(i, 14, f"=價格!H{prow}")
         method, c1, c2, b1, b2, alt, altlbl, note = "", None, None, None, None, None, "", ""
-        if tk == "NVDA":
-            method = "替代口徑：Andy 合理 P/E"
-            we.cell(i, 24, m["eps_fy28_A"]["value"]).font = BLUE
-            we.cell(i, 25, m["eps_fy29_C"]["value"]).font = BLUE
-            c1 = (f"=25*X{i}", f"Andy 先驗 25x × FY2028 EPS（A）{src(m['eps_fy28_A'])}")
-            b1 = (f"=25*Y{i}", f"25x × FY2029 EPS（C）{src(m['eps_fy29_C'])}")
-            note = m["rule_note"] + "；先驗 25x 為近 12 月口徑，套在前瞻 EPS 偏保守"
-        elif tk in ("AVGO", "4062"):
-            method = "替代口徑：Andy 合理 P/E"
-            c1 = m["andy27_A"]
-            b1 = m["andy28_C"]
-            note = m["rule_note"]
-        elif tk in ("ANET", "2308", "300308", "2382"):
-            method = "P/E：規則值與 Andy 合理 P/E 取低"
-            c1, c2 = m["rule_A"], m["andy27_A"]
-            b1, b2 = m["rule_C"], m["andy28_C"]
-            if tk == "300308":
-                note = "十年 P/E 中位數 52.75x 含小型股時期，規則值偏高；取低後由 Andy 30x 決定"
-        elif tk == "2330":
-            method = "P/E：規則值與 Andy 合理 P/E 取低"
-            we.cell(i, 24, m["eps27_A"]["value"]).font = BLUE
-            we.cell(i, 25, m["eps28_C"]["value"]).font = BLUE
-            c1 = m["rule_mid"]
-            c2 = (f"=35*X{i}", f"Andy 先驗 35x × 2027 EPS（A）{src(m['eps27_A'])}")
-            b1 = m["rule_lo"]
-            b2 = (f"=35*Y{i}", f"35x × 2028 EPS（C）{src(m['eps28_C'])}")
-            note = "Andy 35x 高於十年最高值（先驗比對 T7b），取低後由規則值決定"
-        elif tk in ("000660", "005930", "MU"):
-            method = "P/B 規則值（主）"
-            c1 = m["pb_rule"]["見頂"]
-            b1 = m["pb_rule"]["見頂"]
-            b2 = m["pb_rule"]["谷底"]
-            alt = (f"={m['pe_rule']['見頂']['value']}/N{i}-1", )
-            altlbl = f"P/E 規則值：見頂（{m['pe_rule']['見頂']['cell']}）"
-            note = "方法衝突：P/B 假設 ROE 回到歷史；P/E 假設高峰盈餘以歷史倍數計價（overview README v0.3）"
-        elif tk in ("6857", "6146"):
-            method = "P/E 規則值（設備股共用循環規則）"
-            c1 = m["rule_A"]
-            b1 = m["rule_C"]
+        if m.get("v2"):
+            # 估值 v2（地圖 v0.4，2026-10-25）：中心＝模型「目標價（DCF 與 Comparable 加權）」；
+            # 下檔＝C 情境 DCF 價值（推到 12 個月後，即價格帶下緣）。對照欄＝模型內的舊法規則值情境加權價（參考）。
+            method = "加權目標價（DCF 50%＋Comparable 50%）"
+            c1 = m["tp"]
+            b1 = m["dcf_C"]
+            alt = (f"={m['old_rule']['value']}/N{i}-1", )
+            altlbl = f"舊法：規則值情境加權價（參考，{m['old_rule']['cell']}）"
+            note = (f"DCF 目標價 {m['tp_dcf']['value']:,.1f}（{m['tp_dcf']['cell']}）；"
+                    f"Comparable 目標價 {m['tp_comp']['value']:,.1f}（{m['tp_comp']['cell']}）；"
+                    f"市場共識目標價 {m['tp_cons']['value']:,.1f}（{m['tp_cons']['cell']}，外部、僅供對照）；"
+                    f"價格帶 C～A 情境 DCF {m['dcf_C']['value']:,.1f}～{m['dcf_A']['value']:,.1f}")
         elif tk in ("MSFT", "AMZN", "GOOGL", "ORCL", "CRWV", "NBIS", "WYFI"):
             method = f"模型加權目標價（評等：{m['rating']['value']}）"
             c1 = m["target"]

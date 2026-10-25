@@ -435,11 +435,10 @@ function renderInvest(){
   const cnt=t=>D.valuation.filter(v=>v.tier===t).length;
   $("#v-invest").innerHTML=`
   <div class="head"><span class="label">視角 03</span><h2>可投資性：現價反映了多少</h2>
-  <p><b>兩道關卡，順序固定。</b>第一關「收支」：模型期間（2026 起約五年）的現金收支合計為負，即入不敷出、有資金缺口，最終分級一律為「收支不足」，不看估值。第二關「評價」：中心空間＝各模型主口徑的隱含價 ÷ ${esc(D.meta.price_date)} 收盤價 − 1，約為一至兩年後的價位、未折現。分級：中心 ≥ ${pct(w.tier_center,0)} 且下檔 ≥ ${pct(w.tier_bear,0)} 為「機會」；中心 &lt; ${pct(w.tier_rich,0)} 為「偏貴」；其餘「觀察」。這是研究模型的輸出，不是投資建議。</p></div>
+  <p><b>兩道關卡，順序固定。</b>第一關「收支」：模型期間（2026 起約五年）的現金收支合計為負，即入不敷出、有資金缺口，最終分級一律為「收支不足」，不看估值。第二關「評價」：中心空間＝各模型主口徑的隱含價 ÷ ${esc(D.meta.price_date)} 收盤價 − 1，半導體為模型約 12 個月後的加權目標價，雲端與 neocloud 為模型目標價，皆未再折現。分級：中心 ≥ ${pct(w.tier_center,0)} 且下檔 ≥ ${pct(w.tier_bear,0)} 為「機會」；中心 &lt; ${pct(w.tier_rich,0)} 為「偏貴」；其餘「觀察」。這是研究模型的輸出，不是投資建議。</p></div>
   <div class="callouts">
    <div class="callout"><b>收支關卡排除 ${cnt("收支不足")} 家</b>${D.valuation.filter(v=>v.tier==="收支不足").map(v=>esc(v.name)).join("、")}。口徑：雲端、neocloud、MAG 模板用「營運缺口＋股東回饋」（股利、回購可停，不算入不敷出；租金、利息、稅、資本支出照扣）；Oracle 合計約 −5.4B，屬邊緣。其中 ${D.valuation.filter(v=>v.tier==="收支不足"&&v.vtier==="機會").map(v=>esc(v.name)).join("、")||"—"} 估值上屬「機會」，因入不敷出而排除。半導體模型多只到淨利，以「各情境淨利皆為正」通過，現金流本專案未建立。</div>
-   <div class="callout"><b>方法衝突：記憶體三家</b>主口徑 P/B 規則值顯示 SK 海力士 ${pct(V["000660"].cu)}、三星 ${pct(V["005930"].cu)}、美光 ${pct(V["MU"].cu)}；P/E 規則值對照則為 ${pct(V["000660"].alt)}、${pct(V["005930"].alt)}、${pct(V["MU"].alt)}。差異來自 2027 年 ROE 遠高於十年歷史。</div>
-   <div class="callout"><b>替代口徑：NVIDIA、Broadcom、Ibiden</b>模型的十年倍數規則值不適用或未算，改用 Andy 先驗的合理 P/E。NVIDIA 的先驗 25x 為近 12 月口徑，套在前瞻 EPS 偏保守。</div>
+   <div class="callout"><b>半導體估值改版（v0.4）</b>13 家半導體的中心價改讀各模型的「目標價（DCF 與 Comparable 加權）」，下檔為 C 情境 DCF 價值（推到 12 個月後）。改版前的方法（十年倍數規則值，部分取 Andy 先驗合理 P/E）在 v2 模型中已不再作為目標價；模型內保留的舊法規則值情境加權價列在「對照口徑」。對照口徑與新中心價方向不同者：${D.valuation.filter(v=>v.method&&v.method.startsWith("加權目標價")&&v.alt!=null&&v.cu!=null&&Math.sign(v.alt)!==Math.sign(v.cu)).map(v=>`${esc(v.name)}（新 ${pct(v.cu)}／舊法 ${pct(v.alt)}）`).join("、")||"無"}。</div>
    <div class="callout"><b>價格已大幅偏離模型日</b>${D.valuation.filter(v=>v.flag).map(v=>`${esc(v.name)} ${pct(v.move)}`).join("、")}。模型尚未反映期間的消息；分級依新價格計算，判讀前應先更新模型。</div>
   </div>
   <div class="panel"><div class="ph"><h3>地位 × 可投資性</h3><span class="note">右上：產業位置強、現價仍低於模型隱含價。超出 +150% 以三角形標在上緣。</span></div><div class="pb chart">${scatter()}</div></div>
@@ -555,7 +554,7 @@ function renderMethod(){
    ${row("公司模型","company-models 各公司 <code>dist/*.xlsx</code> 的重算值，抽數程式記錄每個值的工作表與儲存格。")}
    ${row("候選母體","AI半導體 候選母體 v0.2.2（2026-10-24）：60 家、8 個次產業、次產業排序與公司重要性。權威在 AI半導體 Project。")}
    ${row("收支關卡（第一關）","Andy 2026-10-25：入不敷出、有資金缺口者不買進，不論評價多低。判定：模型期間現金收支合計 &lt; 0 → 收支不足。口徑依模型：雲端、neocloud、MAG 模板用「營運缺口＋股東回饋（股利、回購）」；記憶體與模型商用自由現金流（MiniMax 為經調整淨利＋算力預付）；只有損益的半導體模型以各情境淨利皆為正判定。")}
-   ${row("中心價","半導體 P/E 類：十年倍數規則值與 Andy 先驗合理 P/E 兩者取低；記憶體：P/B 規則值（P/E 規則值為對照）；設備股：共用循環位置規則；雲端與 neocloud：模型加權目標價；MiniMax：反向檢驗折現價值 ÷ 市值 × 模型日股價。")}
+   ${row("中心價","半導體（估值 v2，AI半導體 2026-10-25）：模型「目標價（DCF 與 Comparable 加權）」＝50% DCF（三情境 30／50／20，股東現金流，FY2027–FY2032 明確期＋永續）＋50% Comparable（市場主流同業前瞻 P/E，記憶體用 P/B），約 12 個月後；下檔＝C 情境 DCF 價值（推到 12 個月後）；對照口徑＝模型內舊法規則值情境加權價（參考）。雲端與 neocloud：模型加權目標價；MiniMax：反向檢驗折現價值 ÷ 市值 × 模型日股價。")}
    ${row("下檔價","同一方法下最差情境（多為情境 C、FY2028）與中心價取低；雲端取情境區間下緣。")}
    ${row("股價",`${esc(D.meta.price_date)} 收盤，WebSearch 取得並記錄來源數。各模型內的現價為建模日（09-24 至 10-23），差距超過 20% 時標示。`)}
    ${row("地位分數","不可替代性（次產業與公司平均）、市場位置（次產業內 1–4 級）、價值鏈分量（占 AI IT 資本支出比例分級），加權合成。")}
