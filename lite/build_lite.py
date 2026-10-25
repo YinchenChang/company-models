@@ -1,4 +1,4 @@
-# Lumentum（LITE，美股）收支與估值模型 v0.1（AI 半導體 Project：網通次產業內複製——雷射與光元件）
+# Lumentum（LITE，美股）收支與估值模型 v0.2（AI 半導體 Project：網通次產業內複製——雷射與光元件）
 # 用法：python3 lite/build_lite.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度：6 月底附近的週六結束（FY2026＝2025-06-29～2026-06-27）。FY(t) 的後半年（1–6 月）在日曆年 t、前半年（7–12 月）在日曆年 t−1。
 #   市場層（markets/network）是日曆年；本模型先在日曆年算各產品營收，再換成會計年度：
@@ -173,6 +173,20 @@ inp("px_hi", "2026 年內高點", "US$", None, 1143, None, "Interested-party", I
 inp("sh_basic", "普通股股數（2026-08-14）", "百萬股", None, 89.7, None, "Verified", K10 + "：8,970 萬股", "—")
 for s, w in (("A", 0.3), ("B", 0.5), ("C", 0.2)):
     inp(f"tp_w{s}", f"目標價情境權重 {s}", "%", None, w, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 A 0.3／B 0.5／C 0.2）", "三者合計應為 100%（Val 頁第 0 節列示）")
+
+sec("K. 目標價（DCF＋Comparable）與收斂法參數（v0.2 新增；黃底，Assumed，Andy 可改）")
+inp("tp_r", "折現率／要求報酬（DCF）", "%", None, 0.10, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 10%；各市場同一值）", "DCF 與 Sens")
+inp("tp_g", "長期成長率（DCF 永續；收斂法情境 B 的 FY2032 營收年增）", "%", None, 0.04, None, "Assumed", "Andy 可改（工作單預設 4%）", "—")
+inp("tp_roe", "ROE（與 EPS 同口徑：non-GAAP 淨利 ÷ 平均股東權益，近三年平均；DCF 再投資率＝tp_g ÷ tp_roe）", "%", None, 0.2, None, "Assumed", "本模型沒有股東權益（資產負債表未建），non-GAAP ROE 算不出；依主串規則（2026-10-25）取 0.20", '參考（不採）：GAAP ROE stockanalysis FY2024 −47.25%、FY2025 2.48%、FY2026 −240.03%（FY2026 GAAP 淨損含可轉債公允價值損失）')
+inp("tp_w_dcf", "目標價中 DCF 的權重；其餘為 Comparable", "%", None, 0.5, None, "Assumed", "Andy 可改（工作單 2026-10-25 11:53 定 DCF／Comparable 各半）", "—")
+inp("fade_gA", "收斂法：情境 A 於 FY2032 的營收年增（＝tp_g＋2pt）", "%", None, "=tp_g+0.02", None, "Assumed", "工作單 2026-10-25 11:20 收斂法；FY2030 起由 FY2029 年增線性收斂", "FY2030 起為收斂法，非驅動因子推導")
+inp("fade_gB", "收斂法：情境 B 於 FY2032 的營收年增（＝tp_g）", "%", None, "=tp_g", None, "Assumed", "同上", "—")
+inp("fade_gC", "收斂法：情境 C 於 FY2032 的營收年增（＝tp_g−2pt）", "%", None, "=tp_g-0.02", None, "Assumed", "同上", "—")
+inp("fade_mA", "收斂法：情境 A 的中段淨利率（＝情境 A FY2029 淨利率）", "%", None, None, None, "Derived", "PL 頁情境 A FY2029（公式於建置時連結）", "—")
+inp("fade_mB", "收斂法：情境 B 的中段淨利率（＝FY2029 與十年平均的中點；十年平均以 FY2029 × 0.8 代替）", "%", None, None, None, "Assumed", "十年平均淨利率（2016–2025，與本模型同口徑）：未找到，依工作單以 FY2029 × 0.8 代替；本列＝（FY2029＋FY2029 × 0.8）÷ 2", "Andy 可改")
+inp("fade_mC", "收斂法：情境 C 的中段淨利率（＝十年平均；以情境 C FY2029 × 0.8 代替）", "%", None, None, None, "Assumed", "十年平均淨利率：未找到，依工作單以情境 C FY2029 淨利率 × 0.8 代替", "Andy 可改")
+inp("cons_tp", "市場共識目標價（賣方平均）", 'US$', None, 1165.03, None, "Interested-party", 'stockanalysis 統計頁：27 位分析師平均 1,165.03（2026-10-23）', '第二來源：未找到')
+inp("cons_feps", '共識 12 個月後前瞻 EPS（≈ FY2028；FY2029 共識未找到）', 'US$', None, '=cons_eps28', None, "Derived", 'tickflow FY2028 共識 23.60（5 家，In 頁 cons_eps28；單一來源，可信度低）；本模型前瞻 EPS 含 4／12 的 FY2029', "共識只放 Recon 與本列，不作校準")
 
 r = 4; INROW = {}
 for srow in rows:
@@ -375,7 +389,7 @@ UN.column_dimensions["G"].width = 50
 
 # ---------------- Val ----------------
 V = wb.create_sheet("Val")
-V["A1"] = "Val — P/E 估值（美元；non-GAAP EPS）。結論用目標價（第 0 節）、「現價 ÷ FY2027、FY2028 EPS（模型）」、市場隱含 EPS 與十年 P/E 規則值。十年 P/E 用年底股價 ÷ 近 12 月 non-GAAP EPS（推導；與模型 EPS 同口徑）"
+V["A1"] = "Val — P/E 估值（美元；non-GAAP EPS）。目標價＝DCF 與 Comparable 加權（第 0 節）；舊法規則值情境加權保留參考；另列「現價 ÷ FY2027、FY2028 EPS（模型）」、市場隱含 EPS 與十年 P/E 規則值。十年 P/E 用年底股價 ÷ 近 12 月 non-GAAP EPS（推導；與模型 EPS 同口徑）"
 V["A2"] = "循環位置：Lumentum 不是設備股，不套設備市場見頂年；以本模型營收最高的會計年度為見頂年（比照中際旭創）。營收到 FY2029 仍在增加時，見頂年未知，判為中段"
 V.cell(14, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, 15, ["項目", "A", "B", "C", "說明"])
@@ -446,19 +460,19 @@ rule_rows = [rw for rw in range(50, block_end) if str(V.cell(rw, 1).value or "")
 assert len(rule_rows) == 3, rule_rows
 for nm, rw in zip(("pe_peak", "pe_mid", "pe_trough"), rule_rows):
     defname(nm, f"Val!$C${rw}")
-# 0. 目標價與上檔空間（Andy 2026-10-25 要求；列標籤依工作單逐字）
-V.cell(4, 1, "0. 目標價與上檔空間").font = BOLD
+# 舊法：規則值情境加權（v0.1 稱「0. 目標價與上檔空間」；v0.2 改名保留，只作參考；建置後與其他內容一起下移）
+V.cell(4, 1, "舊法：規則值情境加權（參考）").font = BOLD
 hdr(V, 5, ["項目", "數值", "", "", "說明"])
-V.cell(6, 1, "目標價（12 個月，情境加權）"); V["B6"] = f"=tp_wA*D{VAL['A']}+tp_wB*D{VAL['B']}+tp_wC*D{VAL['C']}"; V["B6"].number_format = "#,##0"
+V.cell(6, 1, "規則值情境加權價（參考，非目標價）"); V["B6"] = f"=tp_wA*D{VAL['A']}+tp_wB*D{VAL['B']}+tp_wC*D{VAL['C']}"; V["B6"].number_format = "#,##0"
 V["E6"] = "權重 × 各情境隱含價（第 3 節規則值）"
-V.cell(7, 1, "上檔空間（目標價 ÷ 現價 − 1）"); V["B7"] = "=B6/px-1"; V["B7"].number_format = "0.0%"; V["E7"] = "現價＝In 頁 px（2026-10-23 收盤）"
+V.cell(7, 1, "規則值情境加權價 ÷ 現價 − 1（參考）"); V["B7"] = "=B6/px-1"; V["B7"].number_format = "0.0%"; V["E7"] = "現價＝In 頁 px（2026-10-23 收盤）"
 for rr, s, lab in ((8, "A", "情境 A 隱含價（樂觀）"), (9, "B", "情境 B 隱含價（基準）"), (10, "C", "情境 C 隱含價（下檔）")):
     V.cell(rr, 1, lab); V[f"B{rr}"] = f"=D{VAL[s]}"; V[f"B{rr}"].number_format = "#,##0"
     V[f"E{rr}"] = f'="FY2027 EPS "&TEXT(B{VAL[s]},"0.00")&" × "&TEXT(C{VAL[s]},"0.0")&"x（第 3 節；"&C{27 + SC.index(s)}&"）"'
 V.cell(11, 1, "情境權重 A／B／C"); V["B11"] = "=tp_wA"; V["C11"] = "=tp_wB"; V["D11"] = "=tp_wC"
 for c in "BCD": V[f"{c}11"].number_format = "0%"
 V["E11"] = '="合計 "&TEXT(B11+C11+D11,"0%")&"；In 頁 tp_wA／tp_wB／tp_wC（Assumed，Andy 可改）"'
-V.cell(12, 1, "目標價方法")
+V.cell(12, 1, "舊法說明")
 V["B12"] = ("P/E：各情境 FY2027（2026-07～2027-06）non-GAAP EPS × 十年（2016–2025 年底）P/E 依循環位置取分位（本模型營收到 FY2029 仍增加，三情境皆中段＝中位數）；"
             "P/E 為年底股價 ÷ 近 12 月 non-GAAP EPS（推導）。十年倍數 8 年落在 AI 前的電信、3D 感測期（約 10–24x），偏誤方向為低估；"
             "另 FY2027 EPS 三情境相同、且低於 FY2028，用 FY2027 也偏低。對照：凱基歷史平均 45x（口徑未說明）、現價 ÷ 共識 FY2027 EPS 約 35x")
@@ -575,20 +589,206 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Lumentum（LITE）收支與估值模型 v0.1（AI 半導體 Project：網通次產業內複製——雷射與光元件）　2026-10-25", True),
- ("版本：v0.1（初版）。Lumentum 的雷射有效份額（上游元件口徑）在本模型 Units 頁建立；不可與中際旭創等光模組廠份額相加。", False),
+lines = [("Lumentum（LITE）收支與估值模型 v0.2（AI 半導體 Project：網通次產業內複製——雷射與光元件）　2026-10-25", True),
+ ("版本：v0.2（2026-10-25：三情境延伸到 FY2032、目標價＝DCF 與 Comparable 加權；v0.1 初版）。Lumentum 的雷射有效份額（上游元件口徑）在本模型 Units 頁建立；不可與中際旭創等光模組廠份額相加。", False),
  ("模型命題：Lumentum 的雷射晶片營收＝高速光模組數量（本專案網通模型金額 ÷ 模組單價）× 每模組 EML／CW 雷射數 × 雷射單價 × Lumentum 份額；光模組、OCS（Google TPU）、CPO 外部光源另推；電信與 DCI、工業與 3D 感測依成長率推。股價約 35 倍共識 FY2027 EPS，遠高於十年 non-GAAP P/E 中位數。", False),
  ("核心問題：EML 供給缺口收斂、矽光以較少 CW 雷射替代、OCS 與 CPO 放量時程——哪一條路徑決定 FY2028 獲利，現價隱含的倍數與獲利要多少才合理？", False), ("", False),
  ("會計年度 6 月底結束：FY2027＝2026-07～2027-06（FY(t) 後半年在日曆年 t）。市場層為日曆年，先算 CY2026–CY2029 產品營收，再換成 FY2027–FY2029（FY(t)＝CY(t−1) 下半年＋CY(t) 上半年，上半年占比 h＝47%）。口徑：公司 non-GAAP；EPS 以 non-GAAP 稀釋股數（含可轉債假設轉換）。", False), ("", False),
  ("驅動因子 → 推導量（全部唯讀上游，不修改）", True),
  ("雷射晶片：markets/network 可插拔光模組市場 × 情境顆數係數 ÷ 模組單價 × 每模組雷射數 × 雷射單價 × 有效份額（CY2026 以產品拆分殘差校準）× 份額相對值。光模組：可插拔市場 × 份額。OCS：Google TPU 顆數（網通模型 Units）× 每顆 TPU 營收。CPO：CPO 光學市場 × 份額。", False),
  ("CY2026 錨點＝FY2026 第三、四季實績＋FY2027 第一季指引中點＋第二季季增 12%（Assumed）。產品拆分（OCS、CPO、電信與 DCI、工業與 3D 感測、光模組）為 Assumed／公司展望，雷射晶片＝殘差。毛利率 FY2027 起為輸入路徑；營業費用彈性 phi（Derived）；稅率 16.5%；營業外淨收入由第一季指引推導。", False),
- ("估值：目標價（Val 第 0 節）＝三情境規則值加權；規則值＝FY2027 EPS × 十年 P/E 依循環位置取分位（年底股價 ÷ 近 12 月 non-GAAP EPS，推導）。本版未做先驗，無 Andy 合理 P/E 對照。", False),
+ ("估值：目標價（Val 第 0 節）＝0.5 × DCF（股東現金流＝EPS ×（1 − g／ROE），FY2027–32 明確期＋永續，r 10%、g 4%，情境權重 0.3／0.5／0.2）＋0.5 × Comparable（美股光通訊同業前瞻 P/E 中位數 × 12 個月後前瞻 EPS）。舊法規則值情境加權保留參考（不是目標價）；規則值＝FY2027 EPS × 十年 P/E 依循環位置取分位（年底股價 ÷ 近 12 月 non-GAAP EPS，推導）。本版未做先驗，無 Andy 合理 P/E 對照。", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。公司不揭露產品別營收；法說內容多經第三方轉述。", False),
  ("", False),
  ("已知限制：(1) 產品拆分、雷射單價、每模組雷射數皆為 Assumed，雷射份額由殘差推得；(2) CY2026 下半年第二季為假設，FY2027 第一季財報約 11-05 公布；(3) 網通模型 CY2028 可插拔光模組只 +12%，比券商出貨預測保守；(4) 未設 EML 產能上限（公司 EML 出貨年增約 50%）；(5) 十年 P/E 為推導序列、多數年份在 AI 前，規則值偏低；(6) R4 產業部署路徑未建（Recon 預留列）。", False)]
+lines.append(("v0.2（2026-10-25）：Val 頁最前面新增「0. 目標價」（0.1 DCF、0.2 Comparable、0.3 結論），既有內容整體下移；原「0. 目標價與上檔空間」改名「舊法：規則值情境加權（參考）」保留。PL 三情境延伸到 FY2032（FY2030 起為收斂法，非驅動因子推導；灰底），說明欄移到 K 欄。In 頁新增 K 節（tp_r、tp_g、tp_roe、tp_w_dcf、收斂法參數、共識目標價）。Sens 加目標價參數列。FY2026–FY2029 既有數字不變。", False))
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
+
+
+# ================= v0.2（2026-10-25）：FY2030–FY2032 收斂法；目標價＝DCF 與 Comparable 加權 =================
+# 工作單：Andy 2026-10-25 11:18／11:20（三情境延伸到 FY2032、收斂法）、11:28（目標價＝DCF＋Comparable）、11:53（tp_w_dcf 0.5；A 股與其他市場同業分開）
+# 本節在其他工作表都建好之後執行：(1) PL 說明欄由 H 移到 K，H–J 放 FY2030–32 收斂年度；(2) Val 既有內容整體下移，最前面放「0. 目標價」；(3) Sens 加目標價參數列
+import re as _re
+from copy import copy as _copy
+FADE = (2030, 2031, 2032); FADEFILL = PatternFill("solid", fgColor="E7E6E6")
+FCX = dict(FC); FCX.update({2030: "H", 2031: "I", 2032: "J"})
+YRS6 = (2027, 2028, 2029, 2030, 2031, 2032)
+INR = {IN.cell(i, 1).value: i for i in range(4, IN.max_row + 1) if IN.cell(i, 1).value}
+for _k, _i in INR.items():
+    if str(_k).startswith(("tp_", "fade_")) or _k in ("cons_tp", "cons_feps"):
+        for _j in range(1, 10): IN.cell(_i, _j).fill = KEY
+
+def _move_notes(ws):
+    """說明欄（第 8 欄，H）移到第 11 欄（K），讓出 H–J；表頭列補上收斂年度。"""
+    for r in range(1, ws.max_row + 1):
+        c = ws.cell(r, 8)
+        if c.value is None: continue
+        assert not (isinstance(c.value, str) and c.value.startswith("=")), (ws.title, r, c.value)
+        k = ws.cell(r, 11); k.value = c.value; k.font = _copy(c.font); k.fill = _copy(c.fill)
+        c.value = None; c.font = Font(); c.fill = PatternFill()
+        if str(ws.cell(r, 1).value or "") in ("項目", "情境／項目"):
+            for j, y in zip((8, 9, 10), FADE):
+                h = ws.cell(r, j, f"FY{y}（收斂）"); h.font = BOLD; h.fill = HDR
+    ws.column_dimensions["K"].width = ws.column_dimensions["H"].width or 70
+    for col in "HIJ": ws.column_dimensions[col].width = 14
+
+def _fade(ws, R, s, eps_f):
+    """FY2030–32：營收年增由 FY2029 線性收斂到 fade_g、淨利率收斂到 fade_m（FY2032 達到）；非驅動因子推導。"""
+    for y in FADE:
+        c, pc, k = FCX[y], FCX[y - 1], y - 2029
+        fs = {"g": f"=$G{R['g']}+(fade_g{s}-$G{R['g']})*{k}/3", "rev": f"={pc}{R['rev']}*(1+{c}{R['g']})",
+              "nim": f"=$G{R['nim']}+(fade_m{s}-$G{R['nim']})*{k}/3", "ni": f"={c}{R['rev']}*{c}{R['nim']}",
+              "sh_": f"={pc}{R['sh_']}*(1+sh_g)", "eps": "=" + eps_f(c, R), "epsg": f"={c}{R['eps']}/{pc}{R['eps']}-1"}
+        for key, f in fs.items():
+            ws[f"{c}{R[key]}"] = f; ws[f"{c}{R[key]}"].number_format = ws[f"G{R[key]}"].number_format; ws[f"{c}{R[key]}"].fill = FADEFILL
+
+def _shift_rows(wb, sheet, start, n):
+    """把 sheet 第 start 列起的內容整體下移 n 列，並同步改寫所有公式與定義名稱中指向這些列的參照（等同插入列）。"""
+    ws = wb[sheet]
+    cell_ = r"\$?[A-Z]{1,3}\$?\d+"
+    pat = _re.compile(r"(?<![A-Za-z0-9_.!$:])((?:'[^']+'|[A-Za-z_][A-Za-z0-9_]*)!)?(" + cell_ + r")(?::(" + cell_ + r"))?(?![A-Za-z0-9_(!])")
+    one = _re.compile(r"(\$?[A-Z]{1,3}\$?)(\d+)")
+    def fix(f, own):
+        parts = f.split('"')
+        for i in range(0, len(parts), 2):
+            def rep(m):
+                pre = m.group(1)
+                tgt = (pre is None and own) or (pre is not None and pre.strip("'!") == sheet)
+                def sh(x):
+                    a, rr = one.fullmatch(x).groups()
+                    rr = int(rr)
+                    return f"{a}{rr + n if (tgt and rr >= start) else rr}"
+                return (pre or "") + sh(m.group(2)) + (":" + sh(m.group(3)) if m.group(3) else "")
+            parts[i] = pat.sub(rep, parts[i])
+        return '"'.join(parts)
+    for w in wb.worksheets:
+        for row in w.iter_rows():
+            for c in row:
+                if isinstance(c.value, str) and c.value.startswith("="):
+                    c.value = fix(c.value, w.title == sheet)
+    for nm in list(wb.defined_names.keys()):
+        d = wb.defined_names[nm]
+        if sheet + "!" in d.attr_text: d.attr_text = fix(d.attr_text, False)
+    cells = [(c.row, c.column) for row in ws.iter_rows(min_row=start) for c in row if c.value is not None or c.has_style]
+    for r, col in sorted(cells, reverse=True):
+        src = ws.cell(r, col); dst = ws.cell(r + n, col)
+        dst.value = src.value; dst._style = _copy(src._style); dst.number_format = src.number_format
+        src.value = None; src._style = _copy(ws.cell(1, 30)._style)
+
+def _tp_section(V, eps_ref, fwd, fwd_note, peers, peer_note, cons_note, method, pe_rng, fmt, cons_feps_note):
+    """Val 第 0 節（第 4–48 列）：0.1 DCF、0.2 Comparable、0.3 結論。列標籤依工作單逐字；B／C／D＝情境 A 順利／B 平平／C 不如預期。"""
+    T = {}
+    def tset(r, key, label, fs, nf, note=""):
+        V.cell(r, 1, label); T[key] = r
+        for c, f in zip("BCD", fs):
+            if f is None: continue
+            V[f"{c}{r}"] = f; V[f"{c}{r}"].number_format = nf
+        if note: V[f"E{r}"] = note
+    V.cell(4, 1, "0. 目標價").font = BOLD
+    V.cell(5, 1, "0.1 DCF（股東權益現金流，FY2027–FY2032 明確期＋FY2032 後永續）").font = BOLD
+    hdr(V, 6, ["項目", "A（順利）", "B（平平）", "C（不如預期）", "說明"])
+    V.cell(7, 1, "情境 EPS（FY2027–FY2032）"); V["E7"] = "PL 頁各情境；FY2030 起為收斂法（PL 頁灰底）"
+    for i, y in enumerate(YRS6):
+        tset(8 + i, f"eps{y}", f"  FY{y}", [f"={eps_ref(s, y)}" for s in SC], "0.00")
+    V.cell(14, 1, "股東現金流＝EPS ×（1 − tp_g ÷ tp_roe）")
+    tset(15, "reinv", "  再投資率（tp_g ÷ tp_roe，上限 0.8）", ["=IF(tp_roe<=tp_g,0.8,MIN(tp_g/tp_roe,0.8))", None, None], "0.0%", "ROE＝In 頁 tp_roe；tp_roe ≤ tp_g 時取上限 0.8")
+    for i, y in enumerate(YRS6):
+        tset(16 + i, f"cf{y}", f"  FY{y}", [f"={c}{8 + i}*(1-$B$15)" for c in "BCD"], "0.00")
+    tset(22, "dcfv", "DCF 情境每股價值（折現率 tp_r）", [f"=SUMPRODUCT({c}16:{c}21,1/(1+tp_r)^{{1;2;3;4;5;6}})+{c}21*(1+tp_g)/(tp_r-tp_g)/(1+tp_r)^6" for c in "BCD"], fmt,
+         "Σ 明確期現金流 ÷ (1＋r)^t ＋ 永續價值 ÷ (1＋r)^6；永續價值＝FY2032 現金流 ×(1＋g)÷(r−g)；基準日 2026 年底，t＝1 對 FY2027")
+    tset(23, "dcf12", "  DCF 情境價值推到 12 個月後（×(1＋tp_r)）", [f"={c}22*(1+tp_r)" for c in "BCD"], fmt)
+    tset(24, "dcftp", "DCF 目標價（情境加權）", ["=tp_wA*B23+tp_wB*C23+tp_wC*D23", None, None], fmt, "Σ 權重 × 情境價值 ×(1＋r)；權重見 In 頁")
+    V.cell(26, 1, "0.2 Comparable（市場主流同業前瞻 P/E）").font = BOLD
+    hdr(V, 27, ["同業與前瞻 P/E", "代號", "前瞻 12 月 P/E", "日期", "來源", "標記"])
+    assert 3 <= len(peers) <= 5, peers
+    for i, (nm, tk, pe, dt, src) in enumerate(peers, 28):
+        V.cell(i, 1, nm); V.cell(i, 2, tk); c = V.cell(i, 3, pe); c.font = BLUE; c.number_format = "0.0"
+        V.cell(i, 4, dt); V.cell(i, 5, src); V.cell(i, 6, "Interested-party")
+    tset(33, "pmed", "同業前瞻 P/E 中位數", [f"=MEDIAN(C28:C{27 + len(peers)})", None, None], "0.0", peer_note)
+    tset(34, "feps", "12 個月後的前瞻 EPS（情境加權）",
+         ["=" + "+".join(f"tp_w{s}*(" + "+".join(f"{w}*{c}{8 + YRS6.index(y)}" for y, w in fwd) + ")" for s, c in zip(SC, "BCD")), None, None], "0.00", fwd_note)
+    tset(35, "comptp", "Comparable 目標價", ["=B33*B34", None, None], fmt, "同業中位數 × 前瞻 EPS")
+    V.cell(37, 1, "0.3 結論").font = BOLD
+    hdr(V, 38, ["項目", "數值", "", "", "說明"])
+    tset(39, "tpw", "目標價（DCF 與 Comparable 加權）", ["=tp_w_dcf*B24+(1-tp_w_dcf)*B35", None, None], fmt, "tp_w_dcf × DCF＋（1 − tp_w_dcf）× Comparable；tp_w_dcf 見 In 頁")
+    tset(40, "comp2", "Comparable 目標價（市場主流同業法）", ["=B35", None, None], fmt)
+    tset(41, "cons", "市場共識目標價", ["=cons_tp", None, None], fmt, cons_note)
+    tset(42, "upw", "上檔空間：加權目標價", ["=B39/px-1", None, None], "0.0%", "現價＝In 頁 px")
+    tset(43, "upc", "上檔空間：Comparable 目標價", ["=B40/px-1", None, None], "0.0%")
+    tset(44, "geps", "與市場共識目標價的差距：EPS 因素", ["=B34/cons_feps-1", None, None], "0.0%", cons_feps_note)
+    tset(45, "gmul", "與市場共識目標價的差距：倍數因素", ["=(cons_tp/cons_feps)/B33-1", None, None], "0.0%")
+    V["E45"] = '="共識目標價隱含 "&TEXT(cons_tp/cons_feps,"0.0")&"x，同業中位數 "&TEXT(B33,"0.0")&"x"'
+    tset(46, "band", "價格帶（DCF 不如預期～順利）", [f'=TEXT(D23,"{fmt}")&"～"&TEXT(B23,"{fmt}")', None, None], "@", "C 情境價值～A 情境價值（推到 12 個月後）")
+    tset(47, "pr", "歷史倍數檢查：現價隱含 P/E 的十年分位（A／B／C）",
+         [f"=IF(px/{c}9>MAX({pe_rng}),1,IF(px/{c}9<MIN({pe_rng}),0,PERCENTRANK({pe_rng},px/{c}9)))" for c in "BCD"], "0%",
+         "現價 ÷ 各情境 FY2028 EPS 在 2016–2025 年底 P/E（第 6 節採用來源）的分位；高於十年最大值＝100%；只作檢查，不進目標價")
+    V.cell(48, 1, "目標價方法"); V["B48"] = method
+    for r_ in (24, 35, 39):
+        V[f"B{r_}"].fill = KEY
+    return T
+
+def _tp_sens(SE, T):
+    """Sens：目標價參數（tp_r ±1pt、tp_g ±1pt、tp_w_dcf 0.3／0.7）；放在案例摘要與第 40 列推導區塊之間。"""
+    last = max(r for r in range(1, 40) if any(SE.cell(r, j).value is not None for j in range(1, 13)))
+    t0 = last + 2
+    SE.cell(t0, 1, "目標價參數（只改 DCF 參數與權重；PL 收斂法的 fade_g 不隨 tp_g 變動）").font = BOLD
+    hdr(SE, t0 + 1, ["案例", "設定", "DCF 目標價", "Comparable 目標價", "加權目標價", "相對基準"])
+    def dcf_f(c, r, g, reinv):
+        cf = lambda i: f"Val!{c}{8 + i}*(1-{reinv})"
+        pv = "+".join(f"{cf(i)}/(1+{r})^{i + 1}" for i in range(6))
+        return f"({pv}+{cf(5)}*(1+{g})/({r}-{g})/(1+{r})^6)"
+    cases = [("基準", "r 10%、g 4%、DCF 權重 0.5", {}), ("折現率 +1pt", "r 11%", dict(r="(tp_r+0.01)")), ("折現率 −1pt", "r 9%", dict(r="(tp_r-0.01)")),
+             ("長期成長 +1pt", "g 5%", dict(g="(tp_g+0.01)")), ("長期成長 −1pt", "g 3%", dict(g="(tp_g-0.01)")),
+             ("DCF 權重 0.3", "Comparable 0.7", dict(w="0.3")), ("DCF 權重 0.7", "Comparable 0.3", dict(w="0.7"))]
+    for k, (nm, st, kw) in enumerate(cases):
+        i = t0 + 2 + k; r = kw.get("r", "tp_r"); g = kw.get("g", "tp_g"); w = kw.get("w", "tp_w_dcf")
+        reinv = f"IF(tp_roe<={g},0.8,MIN({g}/tp_roe,0.8))"
+        SE.cell(i, 1, nm); SE.cell(i, 2, st)
+        SE[f"C{i}"] = "=(" + "+".join(f"tp_w{s}*{dcf_f(c, r, g, reinv)}" for s, c in zip(SC, "BCD")) + f")*(1+{r})"
+        SE[f"D{i}"] = f"=Val!B{T['comptp']}"
+        SE[f"E{i}"] = f"={w}*C{i}+(1-{w})*D{i}"
+        SE[f"F{i}"] = f"=E{i}/E${t0 + 2}-1"
+        for c in "CDE": SE[f"{c}{i}"].number_format = "0.00"
+        SE[f"F{i}"].number_format = "0.0%"
+    assert t0 + 1 + len(cases) < 40, t0
+    return t0, t0 + 1 + len(cases)
+
+def _fade_all(eps_f, nim10):
+    """PL：三情境推導區塊與頂端摘要延伸到 FY2032；In 頁 fade_m 連到 PL 頁 FY2029 淨利率。nim10＝十年平均淨利率的名稱；None＝未找到，依工作單用 FY2029 × 0.8。"""
+    _move_notes(PL)
+    for s in SC:
+        _fade(PL, PB[s], s, eps_f)
+        for key in ("rev", "g", "nim", "ni", "eps", "epsg"):
+            if (s, key) not in SUMR: continue
+            for y in FADE:
+                cc = PL[f"{FCX[y]}{SUMR[(s, key)]}"]; cc.value = f"={FCX[y]}{PB[s][key]}"
+                cc.number_format = PL[f"G{SUMR[(s, key)]}"].number_format; cc.fill = FADEFILL
+    nimr = {s: f"PL!$G${PB[s]['nim']}" for s in SC}
+    IN.cell(INR["fade_mA"], 5, f"={nimr['A']}")
+    IN.cell(INR["fade_mB"], 5, f"=({nimr['B']}+{nim10})/2" if nim10 else f"=({nimr['B']}+{nimr['B']}*0.8)/2")
+    IN.cell(INR["fade_mC"], 5, f"={nim10}" if nim10 else f"={nimr['C']}*0.8")
+    PL["A2"] = ("灰底＝FY2030–FY2032 收斂法，非驅動因子推導（上游市場層只到 2029）：營收年增由 FY2029 線性收斂到 fade_g（A＝tp_g＋2pt、B＝tp_g、C＝tp_g−2pt），"
+                "淨利率由 FY2029 線性收斂到 fade_m（In 頁 K 節），FY2032 達到；股數依 sh_g")
+
+def _rule_pe_range(V, ncols=1):
+    """第 6 節十年倍數表（2016–2025 列）中採用來源的欄位範圍（PERCENTRANK 用；ncols＞1 時各來源合併成一個分布）。"""
+    yr = [r for r in range(1, V.max_row + 1) if V.cell(r, 1).value in [str(y) for y in range(2016, 2026)]]
+    yr = [r for r in yr if r > 50][:10]
+    assert len(yr) == 10 and yr[-1] - yr[0] == 9, yr
+    return f"$B${yr[0]}:${chr(65 + ncols)}${yr[-1]}"
+
+_fade_all(lambda c, R: f"{c}{R['ni']}*1000/{c}{R['sh_']}", None)
+_shift_rows(wb, "Val", 4, 47)
+TPT = _tp_section(V, lambda s_, y: f"PL!{FCX[y]}{SUMR[(s_, 'eps')]}", [(2028, '8/12'), (2029, '4/12')],
+    '約 2027-10 時的未來 12 月（2027-11～2028-10）≈ 8／12 × FY2028＋4／12 × FY2029（會計年度 6 月底結束）',
+    [('Coherent', 'COHR', 22.3, '2026-10-23', 'stockanalysis forward PE（分析師共識；價格日期如左）'), ('Fabrinet', 'FN', 17.27, '2026-10-23', 'stockanalysis forward PE（分析師共識；價格日期如左）'), ('Applied Optoelectronics', 'AAOI', 29.34, '2026-10-23', 'stockanalysis forward PE（分析師共識；價格日期如左）'), ('Ciena', 'CIEN', 30.77, '2026-10-23', 'stockanalysis forward PE（分析師共識；價格日期如左）'), ('Corning', 'GLW', 32.89, '2026-10-23', 'stockanalysis forward PE（分析師共識；價格日期如左）')],
+    '美股光通訊同業（不放 A 股）',
+    'stockanalysis：27 位分析師平均 1,165.03（2026-10-23）',
+    'DCF：股東現金流＝EPS ×（1 − g／ROE），r＝10%、g＝4%；ROE 需與 non-GAAP EPS 同口徑，本模型無股東權益、算不出，取 0.20（Assumed；再投資率 20%），FY2027–32 明確期＋永續，FY2030 起為收斂法。Comparable：美股光通訊同業（Coherent、Fabrinet、AAOI、Ciena、Corning）前瞻 P/E 中位數 × 12 個月後前瞻 EPS（non-GAAP）。會計年度 6 月底結束：DCF 的 t＝1 對 FY2027（2026-07～2027-06），偏高估。情境對應：顆數情境 A＝順利、B＝平平、C＝不如預期。',
+    _rule_pe_range(V, 1), '#,##0.00',
+    "本模型前瞻 EPS ÷ 共識前瞻 EPS − 1；共識前瞻 EPS＝In 頁 cons_feps")
+TPS0, TPS_LAST = _tp_sens(SE, TPT)
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
