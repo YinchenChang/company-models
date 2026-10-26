@@ -62,7 +62,7 @@ function buildSummary_(ss) {
   s.getRange('A1').setValue('總計').setFontWeight('bold');
   s.getRange('A2:B5').setValues([['開啟次數', ''], ['不重複訪客', ''], ['分頁切換', ''], ['公司檔案開啟', '']]);
   s.getRange('B2').setFormula('=COUNTIF(' + L + 'C2:C,"view")');
-  s.getRange('B3').setFormula('=IFERROR(COUNTUNIQUE(FILTER(' + L + 'E2:E,' + L + 'C2:C="view")),0)');
+  s.getRange('B3').setFormula('=IFERROR(ROWS(UNIQUE(FILTER(' + L + 'E2:E,' + L + 'C2:C="view"))),0)');   // 無資料時 FILTER 報錯 → 0（COUNTUNIQUE 會把錯誤當 1）
   s.getRange('B4').setFormula('=COUNTIF(' + L + 'C2:C,"tab")');
   s.getRange('B5').setFormula('=COUNTIF(' + L + 'C2:C,"profile")');
   // 最近 60 天
@@ -72,7 +72,7 @@ function buildSummary_(ss) {
     var r = 8 + i, d = 'TEXT($A' + r + ',"yyyy-mm-dd")';
     f.push(['=TODAY()-' + i,
             '=COUNTIFS(' + L + 'B2:B,' + d + ',' + L + 'C2:C,"view")',
-            '=IFERROR(COUNTUNIQUE(FILTER(' + L + 'E2:E,' + L + 'B2:B=' + d + ',' + L + 'C2:C="view")),0)',
+            '=IFERROR(ROWS(UNIQUE(FILTER(' + L + 'E2:E,' + L + 'B2:B=' + d + ',' + L + 'C2:C="view"))),0)',
             '=COUNTIFS(' + L + 'B2:B,' + d + ',' + L + 'C2:C,"tab")',
             '=COUNTIFS(' + L + 'B2:B,' + d + ',' + L + 'C2:C,"profile")']);
   }
