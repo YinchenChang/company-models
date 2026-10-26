@@ -39,6 +39,9 @@ function record_(e) {
 function clip_(s, n) { return String(s == null ? '' : s).replace(/[\r\n\t]/g, ' ').replace(/^[=+\-@]/, "'$&").slice(0, n); }
 function out_(s) { return ContentService.createTextOutput(s).setMimeType(ContentService.MimeType.TEXT); }
 
+/** 重建「彙總」頁公式（程式改版後在編輯器選此函式按「執行」；不動「紀錄」頁資料）。 */
+function rebuildSummary() { buildSummary_(SpreadsheetApp.getActiveSpreadsheet()); }
+
 /** 第一次收到資料時自動建立「紀錄」與「彙總」兩頁（也可在編輯器手動執行 setup）。 */
 function setup() { ensure_(SpreadsheetApp.getActiveSpreadsheet()); }
 
