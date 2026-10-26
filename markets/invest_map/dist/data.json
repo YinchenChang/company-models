@@ -1,11 +1,11 @@
 {
  "meta": {
-  "version": "v0.5.1",
-  "book": "20261026_AI投資地圖_資料_v0.5.1.xlsx",
+  "version": "v0.5.2",
+  "book": "20261026_AI投資地圖_資料_v0.5.2.xlsx",
   "tk_file": "20261024_Tokenomics_v21.4.xlsx",
   "tk_version": "v21.4",
   "tk_commit": "3ac70ac",
-  "cm_commit": "51a31d6",
+  "cm_commit": "797d6f7",
   "built": "2026-10-26",
   "price_date": "半導體：各模型現價（2026-10-22／23）；雲端與模型商：2026-10-23 收盤",
   "pages": "https://yinchenchang.github.io/company-models/",
@@ -154,72 +154,72 @@
   {
    "layer": "L3 IT 設備",
    "name": "運算",
-   "share": "57.3%（VR200 2027 約 37%）",
-   "mid": 0.573,
-   "usd": 18.471929352,
+   "share": "51.6%（VR200 2027 33.2%）",
+   "mid": 0.516,
+   "usd": 16.634407584,
    "irr": 1,
    "vc": 100,
-   "basis": "晶片內容橋接表 v0.2.1 Bridge GB300 欄 B10＋B11＋B13＋B14（NVIDIA 晶片毛利 48.5%＋台積電 3.5%＋其他製造 2.3%＋CPU 3.0%）÷ B7；HBM 移到記憶體 [Derived]"
+   "basis": "AI半導體 次產業排序 v0.2.3：NVIDIA GPU 晶片毛利＋CPU；HBM、台積電、網通晶片不在此塊；只含 NVIDIA 平台 [Derived]"
   },
   {
    "layer": "L3 IT 設備",
    "name": "記憶體",
-   "share": "13.4%（VR200 2027 約 23%）",
-   "mid": 0.134,
-   "usd": 4.319788016,
+   "share": "13.5%（VR200 2027 22.8%）",
+   "mid": 0.135,
+   "usd": 4.35202524,
    "irr": 1,
    "vc": 100,
-   "basis": "晶片內容橋接表 v0.2.1 Bridge GB300 欄 B12＋B15＋B16（HBM 6.7%＋LPDDR 4.6%＋機架內 SSD 2.1%）÷ B7；2027 HBM 合約價約翻倍，VR200 2027 約 23%，級距沿用 100 [Derived]"
+   "basis": "AI半導體 次產業排序 v0.2.3：HBM＋LPDDR5X＋機架內 NAND（NAND 為 Assumed）；2027 HBM 合約價約翻倍 [Derived]"
   },
   {
    "layer": "L3 IT 設備",
    "name": "網通",
-   "share": "17.5%（VR200 約 19%）",
+   "share": "17.5%（VR200 2027 19.0%）",
    "mid": 0.175,
    "usd": 5.6415142,
    "irr": 2,
    "vc": 75,
-   "basis": "晶片內容橋接表 v0.2.1 Bridge GB300 欄 B17＋B20（網卡與 DPU 4.0%＋NVLink 4.5%＋機架外交換器、光模組、線纜 9.0%）÷ B7 [Derived]"
+   "basis": "AI半導體 次產業排序 v0.2.3：NVLink 交換晶片＋交換匣其他＋scale-out 機架外＋SuperNIC／DPU [Derived]"
+  },
+  {
+   "layer": "L3 IT 設備",
+   "name": "代工與封測",
+   "share": "5.4%（VR200 2027 3.0%）",
+   "mid": 0.054,
+   "usd": 1.740810096,
+   "irr": 1,
+   "vc": 75,
+   "basis": "AI半導體 次產業排序 v0.2.3：台積電（GPU 晶片＋CoWoS）＋其他製造（測試、良率損失），扣除 ABF；比例小但先進製程與 CoWoS 近獨占，分量分例外給 75 [Derived]／[判斷]"
   },
   {
    "layer": "L3 IT 設備",
    "name": "載板與 PCB",
-   "share": "含在運算「其他製造」2.3% 內（ABF 約 0.3%），不另加",
+   "share": "0.3%（VR200 2027 0.3%；ABF，0.2–0.4%；PCB／CCL 在伺服器組裝內）",
    "mid": 0.003,
    "usd": 0.096711672,
    "irr": 2,
    "vc": 25,
-   "basis": "AI半導體 次產業排序 v0.2.2（Ibiden 比對）；屬 晶片內容橋接表 v0.2.1 Bridge GB300 欄 B13 的一部分，金額不與運算相加 [Assumed] 區間"
+   "basis": "AI半導體 次產業排序 v0.2.3：ABF 自「其他製造」切出 [Assumed] 區間"
   },
   {
    "layer": "L3 IT 設備",
    "name": "電源與散熱",
-   "share": "6.3%（電源、散熱、機構、整合；電源＋散熱約 3–5%）",
+   "share": "6.3%（VR200 2027 6.3%；含機構、整合；電源＋散熱約 3–5%）",
    "mid": 0.063,
    "usd": 2.030945112,
    "irr": 2,
    "vc": 25,
-   "basis": "晶片內容橋接表 v0.2.1 Bridge GB300 欄 B18 ÷ B7；電源＋散熱 3–5% 為 AI半導體 判斷，級距依 3–5% 給 25 [Derived]／[Assumed]"
+   "basis": "AI半導體 次產業排序 v0.2.3：非 NVIDIA 機架內容全額；電源＋散熱 3–5% 為判斷，級距依 3–5% 給 25 [Derived]／[Assumed]"
   },
   {
    "layer": "L3 IT 設備",
    "name": "伺服器組裝",
-   "share": "4.6%（板卡、供電與組裝加價；ODM 附加價值約 1–3%）",
+   "share": "4.6%（VR200 2027 14.9%；殘差，未拆；ODM 附加價值約 1–3%）",
    "mid": 0.046,
    "usd": 1.482912304,
    "irr": 3,
    "vc": 25,
-   "basis": "晶片內容橋接表 v0.2.1 Bridge GB300 欄 B19 ÷ B7（殘差：匣級電路板、供電、NVIDIA／ODM 匣級加價）；ODM 附加價值 1–3% 為 AI半導體 判斷 [Derived]"
-  },
-  {
-   "layer": "L2 半導體製造與設備",
-   "name": "代工與封測",
-   "share": "約 3.5%（含在 L3 運算內，不另加；僅 NVIDIA 平台）",
-   "mid": 0.035,
-   "usd": null,
-   "irr": 1,
-   "vc": 75,
-   "basis": "例外：晶片內容橋接表 v0.2.1 Bridge GB300 欄 B11 ÷ B7 只見 3.5%，但先進製程與 CoWoS 的價值藏在運算的晶片成本內，給 75 [判斷]"
+   "basis": "AI半導體 次產業排序 v0.2.3：橋接表殘差（匣級電路板含 PCB、匣級供電、NVIDIA／ODM 匣級加價），未拆；組裝廠附加價值 1–3% 為判斷 [Derived]"
   },
   {
    "layer": "L2 半導體製造與設備",
@@ -229,7 +229,7 @@
    "usd": null,
    "irr": 1,
    "vc": 50,
-   "basis": "AI半導體 次產業排序 v0.2.2（設備模型情境 A：2027 AI 相關設備 117.8B ÷ 1,565B）"
+   "basis": "AI半導體 次產業排序 v0.2.3（設備模型情境 A：2027 AI 相關設備 117.8B ÷ 1,565B）"
   }
  ],
  "position": [
@@ -341,7 +341,7 @@
   {
    "tk": "2330",
    "name": "台積電",
-   "layer": "L2 半導體製造與設備",
+   "layer": "L3 IT 設備",
    "seg": "代工與封測",
    "imp": 1,
    "posn": 1,
@@ -806,7 +806,7 @@
   {
    "tk": "2449",
    "name": "京元電",
-   "layer": "L2 半導體製造與設備",
+   "layer": "L3 IT 設備",
    "seg": "代工與封測",
    "imp": 2,
    "posn": 3,
@@ -821,7 +821,7 @@
   {
    "tk": "AMKR",
    "name": "Amkor",
-   "layer": "L2 半導體製造與設備",
+   "layer": "L3 IT 設備",
    "seg": "代工與封測",
    "imp": 2,
    "posn": 3,
@@ -1388,7 +1388,7 @@
   {
    "tk": "2330",
    "name": "台積電",
-   "layer": "L2 半導體製造與設備",
+   "layer": "L3 IT 設備",
    "seg": "代工與封測",
    "method": "加權目標價（DCF 50%＋Comparable 50%）",
    "ccy": "TWD",
@@ -2741,7 +2741,7 @@
   {
    "tk": "2449",
    "name": "京元電",
-   "layer": "L2 半導體製造與設備",
+   "layer": "L3 IT 設備",
    "seg": "代工與封測",
    "method": "加權目標價（DCF 50%＋Comparable 50%）",
    "ccy": "TWD",
@@ -2782,7 +2782,7 @@
   {
    "tk": "AMKR",
    "name": "Amkor",
-   "layer": "L2 半導體製造與設備",
+   "layer": "L3 IT 設備",
    "seg": "代工與封測",
    "method": "加權目標價（DCF 50%＋Comparable 50%）",
    "ccy": "USD",

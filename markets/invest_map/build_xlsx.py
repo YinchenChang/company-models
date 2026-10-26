@@ -23,7 +23,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.5.1"
+VERSION = "v0.5.2"
 DATE = "20261026"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
@@ -71,25 +71,48 @@ SEGMENTS = [
      "持有並出租算力；年持有成本由此層支付，是上游資本支出的付款方 [判斷]"),
     ("neocloud", "L4 算力平台", "Neocloud（GPU 租賃）", "持有算力資產", None, 3, 50,
      "同為算力持有者，但客戶集中、融資依賴高、可替代 [判斷]"),
-    # L3 比例（v0.3.2，Andy 10-25 11:46 發現重疊）：改讀 晶片內容橋接表 v0.2.1 Bridge GB300 欄（與每 GW 44.9＝IT 32.2＋廠房 12.67 同口徑，六塊＋儲存合計 100%）。
-    # 原 AI半導體 次產業排序 v0.2.2 的 43／23／19%：HBM 在運算與記憶體重複、HBM 價格期間混用、網通取自另一模型，合計約 91%（已發交流）。
-    # 價值鏈分量分沿用原值：以 VR200 2027（AI半導體 原口徑年份）套級距，各塊級距不變（見依據欄）。
-    ("compute", "L3 IT 設備", "運算", "57.3%（VR200 2027 約 37%）", 0.573, 1, 100,
-     "晶片內容橋接表 v0.2.1 Bridge GB300 欄 B10＋B11＋B13＋B14（NVIDIA 晶片毛利 48.5%＋台積電 3.5%＋其他製造 2.3%＋CPU 3.0%）÷ B7；HBM 移到記憶體 [Derived]"),
-    ("memory", "L3 IT 設備", "記憶體", "13.4%（VR200 2027 約 23%）", 0.134, 1, 100,
-     "晶片內容橋接表 v0.2.1 Bridge GB300 欄 B12＋B15＋B16（HBM 6.7%＋LPDDR 4.6%＋機架內 SSD 2.1%）÷ B7；2027 HBM 合約價約翻倍，VR200 2027 約 23%，級距沿用 100 [Derived]"),
-    ("network", "L3 IT 設備", "網通", "17.5%（VR200 約 19%）", 0.175, 2, 75,
-     "晶片內容橋接表 v0.2.1 Bridge GB300 欄 B17＋B20（網卡與 DPU 4.0%＋NVLink 4.5%＋機架外交換器、光模組、線纜 9.0%）÷ B7 [Derived]"),
-    ("substrate", "L3 IT 設備", "載板與 PCB", "含在運算「其他製造」2.3% 內（ABF 約 0.3%），不另加", 0.003, 2, 25,
-     "AI半導體 次產業排序 v0.2.2（Ibiden 比對）；屬 晶片內容橋接表 v0.2.1 Bridge GB300 欄 B13 的一部分，金額不與運算相加 [Assumed] 區間"),
-    ("power", "L3 IT 設備", "電源與散熱", "6.3%（電源、散熱、機構、整合；電源＋散熱約 3–5%）", 0.063, 2, 25,
-     "晶片內容橋接表 v0.2.1 Bridge GB300 欄 B18 ÷ B7；電源＋散熱 3–5% 為 AI半導體 判斷，級距依 3–5% 給 25 [Derived]／[Assumed]"),
-    ("server", "L3 IT 設備", "伺服器組裝", "4.6%（板卡、供電與組裝加價；ODM 附加價值約 1–3%）", 0.046, 3, 25,
-     "晶片內容橋接表 v0.2.1 Bridge GB300 欄 B19 ÷ B7（殘差：匣級電路板、供電、NVIDIA／ODM 匣級加價）；ODM 附加價值 1–3% 為 AI半導體 判斷 [Derived]"),
-    ("foundry", "L2 半導體製造與設備", "代工與封測", "約 3.5%（含在 L3 運算內，不另加；僅 NVIDIA 平台）", 0.035, 1, 75,
-     "例外：晶片內容橋接表 v0.2.1 Bridge GB300 欄 B11 ÷ B7 只見 3.5%，但先進製程與 CoWoS 的價值藏在運算的晶片成本內，給 75 [判斷]"),
-    ("equipment", "L2 半導體製造與設備", "設備與材料", "約 7.5%（軸 B，不可與軸 A 相加）", 0.075, 1, 50, "AI半導體 次產業排序 v0.2.2（設備模型情境 A：2027 AI 相關設備 117.8B ÷ 1,565B）"),
+    # L3 比例（v0.5.2，2026-10-26）：改回讀 AI半導體 次產業排序 v0.2.3 的「GB300 對照 ÷ IT」欄（company-models #166；各塊互斥、合計 100%，
+    # 與 Andy 10-25 11:55「L3 口徑＝GB300、2026 年價格」及每 GW 44.9 同口徑）。v0.3.2–v0.5.1 為本專案自讀晶片內容橋接表的過渡值。
+    # v0.2.3 歸塊與過渡值不同：運算＝NVIDIA 晶片毛利＋CPU（不含台積電與其他製造）；代工與封測、載板（ABF）各自成塊並計入 100%；儲存與管理另列。
+    # 因此「代工與封測」由 L2（軸 B）移到 L3。價值鏈分量分沿用原值（以 VR200 2027 套級距，各塊級距不變；例外見依據欄）。
+    ("compute", "L3 IT 設備", "運算", "{運算}", "運算", 1, 100,
+     "AI半導體 次產業排序 v0.2.3：NVIDIA GPU 晶片毛利＋CPU；HBM、台積電、網通晶片不在此塊；只含 NVIDIA 平台 [Derived]"),
+    ("memory", "L3 IT 設備", "記憶體", "{記憶體}", "記憶體", 1, 100,
+     "AI半導體 次產業排序 v0.2.3：HBM＋LPDDR5X＋機架內 NAND（NAND 為 Assumed）；2027 HBM 合約價約翻倍 [Derived]"),
+    ("network", "L3 IT 設備", "網通", "{網通}", "網通", 2, 75,
+     "AI半導體 次產業排序 v0.2.3：NVLink 交換晶片＋交換匣其他＋scale-out 機架外＋SuperNIC／DPU [Derived]"),
+    ("foundry", "L3 IT 設備", "代工與封測", "{代工與封測}", "代工與封測", 1, 75,
+     "AI半導體 次產業排序 v0.2.3：台積電（GPU 晶片＋CoWoS）＋其他製造（測試、良率損失），扣除 ABF；比例小但先進製程與 CoWoS 近獨占，分量分例外給 75 [Derived]／[判斷]"),
+    ("substrate", "L3 IT 設備", "載板與 PCB", "{載板與 PCB}|ABF，0.2–0.4%；PCB／CCL 在伺服器組裝內", "載板與 PCB", 2, 25,
+     "AI半導體 次產業排序 v0.2.3：ABF 自「其他製造」切出 [Assumed] 區間"),
+    ("power", "L3 IT 設備", "電源與散熱", "{電源與散熱}|含機構、整合；電源＋散熱約 3–5%", "電源與散熱", 2, 25,
+     "AI半導體 次產業排序 v0.2.3：非 NVIDIA 機架內容全額；電源＋散熱 3–5% 為判斷，級距依 3–5% 給 25 [Derived]／[Assumed]"),
+    ("server", "L3 IT 設備", "伺服器組裝", "{伺服器組裝}|殘差，未拆；ODM 附加價值約 1–3%", "伺服器組裝", 3, 25,
+     "AI半導體 次產業排序 v0.2.3：橋接表殘差（匣級電路板含 PCB、匣級供電、NVIDIA／ODM 匣級加價），未拆；組裝廠附加價值 1–3% 為判斷 [Derived]"),
+    ("equipment", "L2 半導體製造與設備", "設備與材料", "約 7.5%（軸 B，不可與軸 A 相加）", 0.075, 1, 50, "AI半導體 次產業排序 v0.2.3（設備模型情境 A：2027 AI 相關設備 117.8B ÷ 1,565B）"),
 ]
+
+
+def _seg_shares():
+    """讀 AI半導體 次產業排序最新版的 GB300 欄與 2027（VR200）欄；回傳 {次產業: (GB300 比例, 'VR200 文字')}。"""
+    out = {}
+    with open(latest("segments_ai_semis_v*.csv"), encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            g = r.get("GB300 對照 ÷ IT", "").strip()
+            if g.endswith("%"):
+                out[r["次產業"]] = (float(g[:-1]) / 100, r["2027 金額 ÷ AI IT capex"].strip())
+    return out
+
+
+_SH = _seg_shares()
+SEGMENTS = [
+    (k, ly, nm, (f"{_SH[mid][0]:.1%}（VR200 2027 {_SH[mid][1]}" + ("；" + txt.split("|", 1)[1] if "|" in txt else "") + "）"
+                 if isinstance(mid, str) else txt),
+     (_SH[mid][0] if isinstance(mid, str) else mid), irr, vc, b)
+    for (k, ly, nm, txt, mid, irr, vc, b) in SEGMENTS
+]
+SEG_STORAGE = _SH.get("儲存與管理", (None, ""))
+assert abs(sum(v for (k, ly, nm, t, v, *_ ) in SEGMENTS if ly == "L3 IT 設備") + (SEG_STORAGE[0] or 0) - 1) < 0.002, "L3 各塊加儲存應合計 100%"
 SEG_BY_NAME = {s[2]: s for s in SEGMENTS}
 
 # 研究覆蓋公司（有模型者）的地位判斷：代號 → (次產業, 公司重要性 1–3, 市場位置 1–4, 地位依據, 標記)
