@@ -16,14 +16,15 @@ import csv
 import glob
 import json
 import os
+import re
 
 import openpyxl
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.5"
-DATE = "20261025"
+VERSION = "v0.5.1"
+DATE = "20261026"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
 YELLOW = PatternFill("solid", fgColor="FFF2CC")
@@ -232,8 +233,8 @@ def main():
         "只有損益的半導體模型以「各情境淨利皆為正」判定（現金流本專案未建立）。",
         "可投資性口徑（v0.5，Andy 2026-10-25 18:14：數字引用個股模型，模型沒有的才自算）：半導體 52 家的中心價＝模型「目標價（DCF 與 Comparable 加權）」、"
         "中心空間＝模型「上檔空間：加權目標價」、現價＝模型現價（上檔空間的分母）、投資建議與上檔空間級距＝模型 Val 列；模型尚未補列者依 AI半導體 固定規則"
-        "（>+50% 強力買進、+25～+50% 買進、−25～+25% 中立、−50～−25% 放空、<−50% 強力放空）以模型上檔空間自算。下檔空間＝C 情境 DCF 價值 ÷ 模型現價 − 1（模型無此欄，自算）。"
-        "雲端與 neocloud 用模型加權目標價與模型自身評等，空間以外部收盤自算；MiniMax 用反向檢驗折現價值，依同一固定規則自算。",
+        "（>+50% 強力買進、+25～+50% 買進、−25～+25% 中立、−50～−25% 放空、<−50% 強力放空）以模型上檔空間自算。悲觀情境空間（v0.5.1 前稱「下檔空間」）＝C 情境 DCF 價值 ÷ 模型現價 − 1（模型無此欄，自算）；不是一般所說目標價相對現價的下跌幅度。"
+        "雲端與 neocloud（v0.5.1）：上檔空間＝模型加權目標價 ÷ 最近外部收盤價 − 1，依同一五級規則自算（不用模型自身評等，不再出現「賣出」）；MiniMax 用反向檢驗折現價值，依同一固定規則自算。",
         "本活頁簿是研究整理，不是投資建議；各模型的方法與假設見各自 README 與 Val／摘要頁。",
     ]
     for i, t in enumerate(lines, 1):
@@ -374,8 +375,8 @@ def main():
     # ============ 估值
     we = wb.create_sheet("估值")
     cols = ["代號", "公司", "層級", "次產業", "方法", "中心候選 1", "中心候選 1 來源", "中心候選 2", "中心候選 2 來源",
-            "下檔候選 1", "下檔候選 1 來源", "下檔候選 2", "下檔候選 2 來源", "採用價", "中心價", "下檔價",
-            "中心空間", "下檔空間", "分級", "對照口徑空間", "對照口徑", "現價 ÷ 模型 FY2028 EPS（A／B／C）", "註記",
+            "悲觀情境候選 1", "悲觀情境候選 1 來源", "悲觀情境候選 2", "悲觀情境候選 2 來源", "採用價", "中心價", "悲觀情境價",
+            "中心空間", "悲觀情境空間", "分級", "對照口徑空間", "對照口徑", "現價 ÷ 模型 FY2028 EPS（A／B／C）", "註記",
             "輔助 1", "輔助 2", "模型價日以來漲跌", "價格變動旗標",
             "收支口徑", "收支列（模型）", "收支序列", "期間合計", "最小值", "收支來源", "收支關卡", "最終分級",
             "上檔空間級距", "投資建議與上檔空間依據"]
@@ -419,11 +420,14 @@ def main():
                     f"市場共識目標價 {m['tp_cons']['value']:,.1f}（{m['tp_cons']['cell']}，外部、僅供對照）；"
                     f"價格帶 C～A 情境 DCF {m['dcf_C']['value']:,.1f}～{m['dcf_A']['value']:,.1f}")
         elif tk in ("MSFT", "AMZN", "GOOGL", "ORCL", "CRWV", "NBIS", "WYFI"):
-            method = f"模型加權目標價（評等：{m['rating']['value']}）"
+            method = "模型加權目標價"   # v0.5.1（Andy 2026-10-26）：不顯示模型自身評等（含「賣出」），改用本地圖五級
             c1 = m["target"]
             b1 = m["target"]
             b2 = m["scen_lo"]
-            note = m["sentence"]["value"]
+            # v0.5.1：模型摘要句含模型自身評等與門檻（「賣出」等），網站不顯示；只留點位與區間，評等改依本地圖五級
+            parts = m["sentence"]["value"].rstrip("。").split("；")
+            head = re.sub(r"^[^：]*：點位 (\S+)，較現價 (\S+) .*$", r"模型點位 \1（模型日現價 \2）", parts[0])
+            note = "；".join([head] + [x for x in parts[1:] if "門檻" not in x])
             if tk in ("MSFT", "AMZN", "GOOGL"):
                 note += "｜MAG 模型終值占 EV 逾 90%，評價口徑待 MAG v0.3"
         elif tk == "00100":
@@ -446,7 +450,7 @@ def main():
         if c1 is not None:
             we.cell(i, 15, f"=MIN(F{i},H{i})")
             we.cell(i, 16, f"=MIN(J{i},L{i})")
-            we.cell(i, 18, f"=P{i}/N{i}-1")          # 下檔空間：模型無此欄，自算（C 情境 DCF ÷ 模型現價 − 1）
+            we.cell(i, 18, f"=P{i}/N{i}-1")          # 悲觀情境空間（v0.5.1 前稱「下檔空間」）：模型無此欄，自算（C 情境 DCF ÷ 模型現價 − 1）
             if m.get("v2"):
                 # v0.5（Andy 18:14）：模型有的數字直接引用——上檔空間、投資建議、級距；模型尚未補列者依同一固定規則自算
                 we.cell(i, 17, m["up"]["value"]).font = BLUE
@@ -459,10 +463,14 @@ def main():
                         we.cell(i, col, "=" + f.format(i=i))
                         basis.append(f"{'投資建議' if key == 'rec' else '級距'}：模型尚未補列，依 AI半導體 固定規則自算")
                 we.cell(i, 37, "；".join(basis)).alignment = WRAP
-            elif "rating" in m:                       # 雲端、neocloud、MAG：模型自己的評等
+            elif "rating" in m:                       # 雲端、neocloud、MAG
+                # v0.5.1（Andy 2026-10-26）：「賣出」與放空易混，取消；模型未更新前，以模型加權目標價 ÷ 最近收盤價自算上檔空間，
+                # 依本地圖五級規則評等。模型自身評等（以模型日價計）只留在依據欄供對照，網站不顯示。
                 we.cell(i, 17, f"=O{i}/N{i}-1")
-                we.cell(i, 19, m["rating"]["value"]).font = BLUE
-                we.cell(i, 37, f"評等 {src(m['rating'])}（模型自身評等規則）；空間以外部收盤自算")
+                we.cell(i, 19, "=" + REC.format(i=i))
+                we.cell(i, 36, "=" + TIER6.format(i=i))
+                we.cell(i, 37, f"上檔空間＝模型加權目標價 {src(m['target'])} ÷ 外部收盤價 − 1，依本地圖五級規則自算"
+                               "（模型自身評等以模型日價計、級距不同，不採用；原值見模型摘要頁）")
             else:                                     # MiniMax：模型無評等，依同一固定規則自算
                 we.cell(i, 17, f"=O{i}/N{i}-1")
                 we.cell(i, 19, "=" + REC.format(i=i))

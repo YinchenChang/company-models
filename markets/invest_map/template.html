@@ -107,7 +107,7 @@ main{padding-block:26px 56px}
 .chip.r:hover{border-color:var(--ink)}
 .chip .d{width:7px;height:7px;border-radius:50%;flex:none;background:var(--none)}
 .chip .t{font-family:var(--f-mono);font-size:10.5px;color:var(--faint)}
-.d.機會,.d.強力買進,.d.買進{background:var(--pos)} .d.中立{background:var(--watch)} .d.放空,.d.強力放空,.d.賣出{background:var(--neg)} .d.機會{background:var(--pos)} .d.觀察{background:var(--watch)} .d.偏貴{background:var(--neg)} .d.未估值{background:var(--none)} .d.收支不足{background:var(--gap)} .d.未上市{background:transparent;border:1.5px solid var(--faint)}
+.d.機會,.d.強力買進,.d.買進{background:var(--pos)} .d.中立{background:var(--watch)} .d.放空,.d.強力放空{background:var(--neg)} .d.機會{background:var(--pos)} .d.觀察{background:var(--watch)} .d.偏貴{background:var(--neg)} .d.未估值{background:var(--none)} .d.收支不足{background:var(--gap)} .d.未上市{background:transparent;border:1.5px solid var(--faint)}
 .legend{display:flex;flex-wrap:wrap;gap:16px;font-size:12px;color:var(--muted);align-items:center}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .facility{padding:14px 16px;color:var(--muted);font-size:13px}
@@ -129,7 +129,7 @@ tr:hover td{background:var(--sunken)}
 .score .b i{position:absolute;inset:0 auto 0 0;background:var(--bar)}
 .mini{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
 .pill{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:2px;white-space:nowrap}
-.pill.強力買進,.pill.買進{color:var(--pos);background:var(--pos-bg)} .pill.強力買進,.pill.強力放空{outline:1.5px solid currentColor;outline-offset:-1.5px} .pill.中立{color:var(--watch);background:var(--watch-bg)} .pill.放空,.pill.強力放空,.pill.賣出{color:var(--neg);background:var(--neg-bg)} .pill.機會{color:var(--pos);background:var(--pos-bg)} .pill.觀察{color:var(--watch);background:var(--watch-bg)}
+.pill.強力買進,.pill.買進{color:var(--pos);background:var(--pos-bg)} .pill.強力買進,.pill.強力放空{outline:1.5px solid currentColor;outline-offset:-1.5px} .pill.中立{color:var(--watch);background:var(--watch-bg)} .pill.放空,.pill.強力放空{color:var(--neg);background:var(--neg-bg)} .pill.機會{color:var(--pos);background:var(--pos-bg)} .pill.觀察{color:var(--watch);background:var(--watch-bg)}
 .pill.偏貴{color:var(--neg);background:var(--neg-bg)} .pill.未估值{color:var(--none);background:var(--none-bg)} .pill.收支不足{color:var(--gap);background:var(--gap-bg)} .pill.未上市{color:var(--muted);background:transparent;border:1px solid var(--rule-strong)}
 .gate{font-size:11.5px;white-space:nowrap} .gate.ok{color:var(--pos)} .gate.no{color:var(--gap);font-weight:600}
 .up{color:var(--pos)} .dn{color:var(--neg)}
@@ -144,7 +144,7 @@ tr:hover td{background:var(--sunken)}
 .rng .z{position:absolute;top:0;bottom:0;width:1px;background:var(--ink);opacity:.55}
 .rng .rs{position:absolute;top:6px;height:6px;background:var(--bar-soft)}
 .rng .c{position:absolute;top:3px;width:12px;height:12px;border-radius:50%;transform:translateX(-50%);border:2px solid var(--surface)}
-.rng .c.強力買進,.rng .c.買進{background:var(--pos)} .rng .c.中立{background:var(--watch)} .rng .c.放空,.rng .c.強力放空,.rng .c.賣出{background:var(--neg)} .rng .c.機會{background:var(--pos)} .rng .c.觀察{background:var(--watch)} .rng .c.偏貴{background:var(--neg)} .rng .c.收支不足{background:var(--gap)}
+.rng .c.強力買進,.rng .c.買進{background:var(--pos)} .rng .c.中立{background:var(--watch)} .rng .c.放空,.rng .c.強力放空{background:var(--neg)} .rng .c.機會{background:var(--pos)} .rng .c.觀察{background:var(--watch)} .rng .c.偏貴{background:var(--neg)} .rng .c.收支不足{background:var(--gap)}
 .rng .o{position:absolute;top:1px;font-size:10px;font-family:var(--f-mono);color:var(--muted)}
 details summary{cursor:pointer;color:var(--muted);font-size:12px;list-style:none}
 details summary::-webkit-details-marker{display:none}
@@ -307,7 +307,7 @@ const ratio=G("回本比值（實際 L ÷ 所需 L）｜機隊").base;
 $("#kpis").innerHTML=[
  ["研究覆蓋公司",D.valuation.length,`上市 ${D.valuation.filter(v=>v.tier!=="未上市").length} 家；未上市 ${D.valuation.filter(v=>v.tier==="未上市").map(v=>v.name).join("、")}`],
  ["買進以上",tiers("強力買進").length+tiers("買進").length,`強力買進 ${tiers("強力買進").length}、買進 ${tiers("買進").length}（依個股模型投資建議）`],
- ["放空以下／收支不足",(tiers("放空").length+tiers("強力放空").length+tiers("賣出").length)+" / "+tiers("收支不足").length,"收支不足＝模型期間入不敷出，不論估值一律排除"],
+ ["放空以下／收支不足",(tiers("放空").length+tiers("強力放空").length)+" / "+tiers("收支不足").length,"收支不足＝模型期間入不敷出，不論估值一律排除"],
  ["機隊回本比值",ratio.toFixed(2),"實際 L ÷ 所需 L；Tokenomics 判讀「未定」"]
 ].map(([k,v,s])=>`<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${esc(s)}</div></div>`).join("");
 
@@ -346,7 +346,7 @@ function renderMap(){
    <span style="color:var(--muted)">圓點顏色＝可投資性：</span>
    <span><span class="d 買進" style="width:8px;height:8px;border-radius:50%;display:inline-block"></span>強力買進／買進</span>
    <span><span class="d 中立" style="width:8px;height:8px;border-radius:50%;display:inline-block"></span>中立</span>
-   <span><span class="d 放空" style="width:8px;height:8px;border-radius:50%;display:inline-block"></span>放空／強力放空（雲端：賣出）</span>
+   <span><span class="d 放空" style="width:8px;height:8px;border-radius:50%;display:inline-block"></span>放空／強力放空</span>
    <span><span class="d 收支不足" style="width:8px;height:8px;border-radius:50%;display:inline-block"></span>收支不足</span>
    <span><span class="d 未上市" style="width:8px;height:8px;border-radius:50%;display:inline-block"></span>未上市</span>
    <span>不可替代 ●●● 高 → ●○○ 低</span></div>
@@ -403,7 +403,7 @@ function rangeBar(v){
   const sx=x=>((Math.max(XMIN,Math.min(XMAX,x))-XMIN)/(XMAX-XMIN)*100);
   const a=Math.min(v.bu,v.cu), b=Math.max(v.bu,v.cu);
   const over=v.cu>XMAX?`<span class="o" style="right:0">${pct(v.cu)}→</span>`:"";
-  return `<div class="rng" title="下檔 ${pct(v.bu)} ～ 中心 ${pct(v.cu)}"><span class="ax"></span><span class="rs" style="left:${sx(a)}%;width:${Math.max(1,sx(b)-sx(a))}%"></span><span class="z" style="left:${sx(0)}%"></span><span class="c ${esc(v.tier)}" style="left:${sx(v.cu)}%"></span>${over}</div>`;
+  return `<div class="rng" title="悲觀情境 ${pct(v.bu)} ～ 中心 ${pct(v.cu)}"><span class="ax"></span><span class="rs" style="left:${sx(a)}%;width:${Math.max(1,sx(b)-sx(a))}%"></span><span class="z" style="left:${sx(0)}%"></span><span class="c ${esc(v.tier)}" style="left:${sx(v.cu)}%"></span>${over}</div>`;
 }
 function scatter(){
   const W=880,H=420,m={l:56,r:24,t:22,b:44};
@@ -415,7 +415,7 @@ function scatter(){
   g+=`<line class="zl" x1="${m.l}" x2="${W-m.r}" y1="${Y(0)}" y2="${Y(0)}"/>`;
   g+=`<text x="${(m.l+W-m.r)/2}" y="${H-6}" text-anchor="middle">地位分數 →</text><text transform="translate(14 ${(m.t+H-m.b)/2}) rotate(-90)" text-anchor="middle">中心空間（隱含價 ÷ 現價 − 1）</text>`;
   g+=`<text class="q" x="${W-m.r-6}" y="${m.t+14}" text-anchor="end">高地位 · 現價未反映</text><text class="q" x="${W-m.r-6}" y="${H-m.b-8}" text-anchor="end">高地位 · 現價已超前</text>`;
-  const col={強力買進:"var(--pos)",買進:"var(--pos)",中立:"var(--watch)",放空:"var(--neg)",強力放空:"var(--neg)",賣出:"var(--neg)",收支不足:"var(--gap)",機會:"var(--pos)",觀察:"var(--watch)",偏貴:"var(--neg)"};
+  const col={強力買進:"var(--pos)",買進:"var(--pos)",中立:"var(--watch)",放空:"var(--neg)",強力放空:"var(--neg)",收支不足:"var(--gap)",機會:"var(--pos)",觀察:"var(--watch)",偏貴:"var(--neg)"};
   const placed=[];
   pts.sort((a,b)=>b.x-a.x).forEach(p=>{
     const cx=X(p.x), cy=Y(p.y);
@@ -430,12 +430,12 @@ function scatter(){
 let invFilter="全部";
 function renderInvest(){
   const w=D.params;
-  const order={強力買進:0,買進:1,中立:2,放空:3,賣出:3,強力放空:4,收支不足:5,未估值:6,未上市:7};
+  const order={強力買進:0,買進:1,中立:2,放空:3,強力放空:4,收支不足:5,未估值:6,未上市:7};
   const list=D.valuation.filter(v=>invFilter==="全部"||v.tier===invFilter).sort((a,b)=>(order[a.tier]-order[b.tier])||((b.cu??-9)-(a.cu??-9)));
   const cnt=t=>D.valuation.filter(v=>v.tier===t).length;
   $("#v-invest").innerHTML=`
   <div class="head"><span class="label">視角 03</span><h2>可投資性：現價反映了多少</h2>
-  <p><b>兩道關卡，順序固定。</b>第一關「收支」：模型期間（2026 起約五年）的現金收支合計為負，即入不敷出、有資金缺口，最終分級一律為「收支不足」，不看估值。第二關「評價」：<b>數字一律引用個股模型</b>。半導體的中心價＝模型「目標價（DCF 與 Comparable 加權）」，中心空間＝模型「上檔空間：加權目標價」（分母為模型現價），分級＝模型「投資建議」：&gt;+50% 強力買進、+25～+50% 買進、−25～+25% 中立、−50～−25% 放空、&lt;−50% 強力放空；模型尚未補「投資建議」列者依同一規則以模型上檔空間自算。下檔空間＝C 情境 DCF ÷ 模型現價 − 1（模型無此欄，自算）。雲端與 neocloud 顯示模型自身評等。這是研究模型的輸出，不是投資建議。</p></div>
+  <p><b>兩道關卡，順序固定。</b>第一關「收支」：模型期間（2026 起約五年）的現金收支合計為負，即入不敷出、有資金缺口，最終分級一律為「收支不足」，不看估值。第二關「評價」：<b>數字一律引用個股模型</b>。半導體的中心價＝模型「目標價（DCF 與 Comparable 加權）」，中心空間＝模型「上檔空間：加權目標價」（分母為模型現價），分級＝模型「投資建議」：&gt;+50% 強力買進、+25～+50% 買進、−25～+25% 中立、−50～−25% 放空、&lt;−50% 強力放空；模型尚未補「投資建議」列者依同一規則以模型上檔空間自算。悲觀情境空間＝C 情境（悲觀情境）DCF 價值 ÷ 模型現價 − 1（模型無此欄，自算），表示模型悲觀情境下的價值相對現價，不是一般所說「目標價相對現價會跌多少」。雲端與 neocloud：模型尚未更新前，上檔空間＝模型加權目標價 ÷ 最近收盤價 − 1，依同一五級規則評等（不用模型自身評等）。這是研究模型的輸出，不是投資建議。</p></div>
   <div class="callouts">
    <div class="callout"><b>收支關卡排除 ${cnt("收支不足")} 家</b>${D.valuation.filter(v=>v.tier==="收支不足").map(v=>esc(v.name)).join("、")}。口徑：雲端、neocloud、MAG 模板用「營運缺口＋股東回饋」（股利、回購可停，不算入不敷出；租金、利息、稅、資本支出照扣）；Oracle 合計約 −5.4B，屬邊緣。其中 ${D.valuation.filter(v=>v.tier==="收支不足"&&["強力買進","買進"].includes(v.vtier)).map(v=>esc(v.name)).join("、")||"無"} 估值上屬買進以上，因入不敷出而排除。半導體模型多只到淨利，以「各情境淨利皆為正」通過，現金流本專案未建立。</div>
    <div class="callout"><b>個股數字引用模型（v0.5）</b>半導體 ${D.valuation.filter(v=>v.method&&v.method.startsWith("加權目標價")).length} 家：目標價、上檔空間、現價皆直接取自 AI半導體 個股模型；投資建議由模型 Val 頁直接引用 ${D.valuation.filter(v=>v.recsrc&&v.recsrc.includes("投資建議 ")&&!v.recsrc.includes("尚未補列")).length} 家，其餘模型尚未補列、依同一固定規則以模型上檔空間自算（AI半導體 補列合併後改為直接引用）。逐家依據見下表「依據與來源」。</div>
@@ -444,7 +444,7 @@ function renderInvest(){
   <div class="panel"><div class="ph"><h3>地位 × 可投資性</h3><span class="note">右上：產業位置強、現價仍低於模型隱含價。超出 +150% 以三角形標在上緣。</span></div><div class="pb chart">${scatter()}</div></div>
   <div class="panel"><div class="ph"><h3>收支 → 評價 · ${Object.keys(order).filter(t=>cnt(t)).map(t=>`${t} ${cnt(t)}`).join(" · ")}</h3>
    <div class="filters">${["全部",...Object.keys(order).filter(t=>cnt(t))].map(l=>`<button class="fbtn" data-if="${l}" aria-pressed="${l===invFilter}">${l}</button>`).join("")}</div></div>
-  <div class="tbl"><table><thead><tr><th>公司</th><th>分級</th><th>收支關卡</th><th class="n">現價</th><th class="n">中心價</th><th class="n">中心空間</th><th class="n">下檔空間</th><th>下檔 ～ 中心（−100% ～ +150%）</th><th>方法 · 依據</th></tr></thead>
+  <div class="tbl"><table><thead><tr><th>公司</th><th>分級</th><th>收支關卡</th><th class="n">現價</th><th class="n">中心價</th><th class="n">中心空間</th><th class="n">悲觀情境空間</th><th>悲觀情境 ～ 中心（−100% ～ +150%）</th><th>方法 · 依據</th></tr></thead>
   <tbody>${list.map(v=>`<tr id="r-${esc(v.tk)}">
    <td class="co"><button class="linkish" data-open="${esc(v.tk)}"><b>${esc(v.name)}</b></button><span class="t">${esc(v.tk)}</span><span class="s">${esc(v.seg)}</span></td>
    <td><span class="pill ${esc(v.tier)}">${esc(v.tier)}</span>${v.tier==="收支不足"&&v.vtier&&v.vtier!=="未估值"?`<span class="co"><span class="s">評價：${esc(v.vtier)}</span></span>`:""}</td>
@@ -461,7 +461,7 @@ function renderInvest(){
      ${v.alt!=null?`<div><b>對照口徑</b>：${esc(v.altlbl)} → ${pct(v.alt)}</div>`:""}
      ${v.pe28?`<div><b>現價 ÷ 模型 FY2028 EPS（A／B／C）</b>：${esc(v.pe28)}x（模型日價格）</div>`:""}
      ${v.c1src?`<div><b>中心</b>：${esc(v.c1src)}${v.c2src?`；取低：${esc(v.c2src)}`:""}</div>`:""}
-     ${v.b1src?`<div><b>下檔</b>：${esc(v.b1src)}${v.b2src?`；取低：${esc(v.b2src)}`:""}</div>`:""}
+     ${v.b1src?`<div><b>悲觀情境</b>：${esc(v.b1src)}${v.b2src?`；取低：${esc(v.b2src)}`:""}</div>`:""}
      <div><b>股價</b>：${esc(v.price_src)}（${esc(v.price_n)} 個來源）</div></div></details></td></tr>`).join("")}</tbody></table></div></div>`;
 }
 
@@ -555,8 +555,8 @@ function renderMethod(){
    ${row("公司模型","company-models 各公司 <code>dist/*.xlsx</code> 的重算值，抽數程式記錄每個值的工作表與儲存格。")}
    ${row("候選母體","AI半導體 候選母體 v0.2.2（2026-10-24）：60 家、8 個次產業、次產業排序與公司重要性。權威在 AI半導體 Project。")}
    ${row("收支關卡（第一關）","Andy 2026-10-25：入不敷出、有資金缺口者不買進，不論評價多低。判定：模型期間現金收支合計 &lt; 0 → 收支不足。口徑依模型：雲端、neocloud、MAG 模板用「營運缺口＋股東回饋（股利、回購）」；記憶體與模型商用自由現金流（MiniMax 為經調整淨利＋算力預付）；只有損益的半導體模型以各情境淨利皆為正判定。")}
-   ${row("中心價與分級","半導體（AI半導體 個股模型，估值 v2）：中心價＝模型「目標價（DCF 與 Comparable 加權）」（50% DCF＋50% Comparable，約 12 個月後）；中心空間＝模型「上檔空間：加權目標價」；現價＝模型現價；分級＝模型「投資建議」（>+50% 強力買進、+25～+50% 買進、−25～+25% 中立、−50～−25% 放空、<−50% 強力放空；模型未補列者依同一規則自算）。下檔＝C 情境 DCF 價值 ÷ 模型現價 − 1（自算）。雲端與 neocloud：模型加權目標價與模型評等；MiniMax：反向檢驗折現價值，依同一規則自算。")}
-   ${row("下檔價","同一方法下最差情境（多為情境 C、FY2028）與中心價取低；雲端取情境區間下緣。")}
+   ${row("中心價與分級","半導體（AI半導體 個股模型，估值 v2）：中心價＝模型「目標價（DCF 與 Comparable 加權）」（50% DCF＋50% Comparable，約 12 個月後）；中心空間＝模型「上檔空間：加權目標價」；現價＝模型現價；分級＝模型「投資建議」（>+50% 強力買進、+25～+50% 買進、−25～+25% 中立、−50～−25% 放空、<−50% 強力放空；模型未補列者依同一規則自算）。悲觀情境空間（v0.5.1 前稱「下檔空間」）＝C 情境 DCF 價值 ÷ 模型現價 − 1（自算）。雲端與 neocloud：模型加權目標價 ÷ 最近收盤價 − 1，依同一五級規則評等；MiniMax：反向檢驗折現價值，依同一規則自算。")}
+   ${row("悲觀情境價","同一方法下最差情境（多為情境 C、FY2028）與中心價取低；雲端取情境區間下緣。")}
    ${row("股價",`${esc(D.meta.price_date)} 收盤，WebSearch 取得並記錄來源數。各模型內的現價為建模日（09-24 至 10-23），差距超過 20% 時標示。`)}
    ${row("地位分數","不可替代性（次產業與公司平均）、市場位置（次產業內 1–4 級）、價值鏈分量（占 AI IT 資本支出比例分級），加權合成。")}
    ${row("收支模型","公司檔案的「收支模型」分頁嵌入各公司模型成品的 HTML 版（<code>&lt;資料夾&gt;/dist/*.html</code>，與抽數用的 xlsx 同一版次）；GitHub Pages 發布時一併複製到 <code>models/</code>。")}
