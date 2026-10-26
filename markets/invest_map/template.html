@@ -334,7 +334,7 @@ function renderMap(){
   const extraModel=`<div class="note" style="padding:0 16px 14px">OpenAI、Anthropic 未上市：產業地位與公司檔案照常建立，可投資性標「未上市」。</div>`;
   $("#v-map").innerHTML=`
   <div class="head"><span class="label">視角 01</span><h2>供應鏈地圖：每 1 GW 的錢怎麼流</h2>
-  <p>由上往下是資金流向：模型商向使用者收費，付租金給算力平台；算力平台以資本支出向資料中心供應鏈採購；IT 設備的成本再往下藏著代工與設備。每層的金額取自 Tokenomics ${esc(D.meta.tk_version)}，公司依 AI半導體 候選母體與算力收支模型歸位。</p></div>
+  <p>由上往下是資金流向：模型商向使用者收費，付租金給算力平台；算力平台以資本支出向資料中心供應鏈採購；IT 設備的晶片再往上游是半導體設備與材料。每層的金額取自 Tokenomics ${esc(D.meta.tk_version)}，公司依 AI半導體 候選母體與算力收支模型歸位。</p></div>
   <div class="flow">
     <div class="st"><div class="t">資本支出（建一座 1 GW）</div><div class="v">$${cx.base.toFixed(1)}B <small>GB300</small></div><div class="r">VR200 $${cxv.base.toFixed(1)}B · IT ${it.base.toFixed(1)}＋設施 ${fac.base.toFixed(1)}</div></div>
     <div class="st"><div class="t">年持有成本（每 GW · 年）</div><div class="v">$${hold.base.toFixed(1)}B <small>VR200</small></div><div class="r">區間 ${hold.lo.toFixed(1)}–${hold.hi.toFixed(1)} · 年金化 WACC 10%</div></div>
@@ -353,9 +353,9 @@ function renderMap(){
   <div>
   ${layer("L5","AI 模型商",`$${rev.base.toFixed(1)}B <small>/GW·年 營收</small>`,"P×Q：牌價 × m × L ×（1 − 折扣）× 服務算力產出。收入池的源頭。",grid(segs("L5 模型商")),extraModel)}
   ${layer("L4","算力平台",`$${hold.base.toFixed(1)}B <small>/GW·年 持有成本</small>`,"持有並出租 GPU。上游資本支出的付款方，回本比值的承擔者。",grid(segs("L4 算力平台")))}
-  ${layer("L3","AI 資料中心建置",`$${cx.base.toFixed(1)}B <small>/GW 資本支出</small>`,`＝IT 設備 $${it.base.toFixed(1)}B＋廠房 $${(cx.base-it.base).toFixed(1)}B。下列比例皆占 IT 設備（GB300，晶片內容橋接表），運算、記憶體、網通、電源與散熱、伺服器組裝五塊加儲存 0.8% 合計 100%；載板含在運算內不另加。VR200 加 2027 HBM 價時記憶體占比升到約 23%。`,grid(segs("L3 IT 設備")),
+  ${layer("L3","AI 資料中心建置",`$${cx.base.toFixed(1)}B <small>/GW 資本支出</small>`,`＝IT 設備 $${it.base.toFixed(1)}B＋廠房 $${(cx.base-it.base).toFixed(1)}B。下列比例皆占 IT 設備（GB300、2026 年價格；AI半導體 次產業排序 v0.2.3），運算、記憶體、網通、代工與封測、載板、電源與散熱、伺服器組裝七塊加儲存與管理 0.8% 互斥、合計 100%。運算只含 NVIDIA 晶片毛利＋CPU，台積電另列代工與封測。VR200 加 2027 HBM 價時記憶體升到約 23%、運算降到約 33%。只含 NVIDIA 平台（ASIC 未入）。`,grid(segs("L3 IT 設備")),
     `<div class="facility"><b>設施：電力、機房、冷卻</b> · <span class="num">$${fac.base.toFixed(1)}B/GW</span>（${fac.lo.toFixed(1)}–${fac.hi.toFixed(1)}） · 尚無研究專案覆蓋（電力基建另案待開）</div>`)}
-  ${layer("L2","半導體製造與設備",`軸 B <small>不與 L3 相加</small>`,"代工的營收藏在晶片商的營業成本；設備的營收來自代工與記憶體廠的資本支出。",grid(segs("L2 半導體製造與設備")),
+  ${layer("L2","半導體製造與設備",`軸 B <small>不與 L3 相加</small>`,"設備的營收來自代工與記憶體廠的資本支出（代工與封測自 v0.5.2 起列在 L3）。",grid(segs("L2 半導體製造與設備")),
     `<div class="axisB">會計恆等式：L3 各塊加總＝買方付出的總額。L2 的數字是另一條軸（晶片怎麼造），只用來看位置與瓶頸，不可加回 L3。</div>`)}
   </div>`;
 }
