@@ -1294,12 +1294,12 @@
   "headerTag": "MW × 每 MW · 預付優先"
  },
  "tokenomics": {
-  "_note": "算力相關的產業與物理層資料改引用 Tokenomics（YinchenChang/Tokenomics）：只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱，經版本固定的快照檔讀入（tools/tokenomics/import_tokenomics.py；下游資料契約第 2 條）；模型主值一律取「基準」成本情境，低成本／高成本只作敏感度。Tokenomics 每 GW＝IT 關鍵電力。Excel「Tokenomics_取數」分頁建具名範圍（TK_）。v0.2a：取代手工 JSON data/permw_tokenomics_20261007.json（v5.24，已標「已被快照取代」）；v5.24 → v5.27 Interface 既有數值逐格不變。v0.4a（2026-10-21）：快照換 v18.0（master 868e2cc，PR #140）；26 個既有名稱中成本類（IF_HoldEcon、IF_GPUhrEcon、IF_CapexIT／Total、IF_MaintIT、IF_OpexGW 等）與 IF_RevGWFleet 數值改變，其餘逐值相同；新增 12 個 optional 名稱（四層瀑布 IFW_RevGWFleet_*、IFC_Use、L1_HoldEconMW_*、L1_TokMW_Gen_ratio_VR200）。",
-  "snapshotFile": "data/tokenomics_snapshot_v18.0.json",
-  "version": "v18.0",
-  "commit": "868e2cc552621fcf3a513ecd3a9960bafb318e99",
-  "mergeCommit": "868e2cc",
-  "currentFile": "20261021_Tokenomics_v18.0.xlsx",
+  "_note": "算力相關的產業與物理層資料改引用 Tokenomics（YinchenChang/Tokenomics）：只引用 IF_（不含 IF_Hdr*）與 L1_ 名稱，經版本固定的快照檔讀入（tools/tokenomics/import_tokenomics.py；下游資料契約第 2 條）；模型主值一律取「基準」成本情境，低成本／高成本只作敏感度。Tokenomics 每 GW＝IT 關鍵電力。Excel「Tokenomics_取數」分頁建具名範圍（TK_）。v0.2a：取代手工 JSON data/permw_tokenomics_20261007.json（v5.24，已標「已被快照取代」）；v5.24 → v5.27 Interface 既有數值逐格不變。v0.4a（2026-10-21）：快照換 v18.0（master 868e2cc，PR #140）；26 個既有名稱中成本類（IF_HoldEcon、IF_GPUhrEcon、IF_CapexIT／Total、IF_MaintIT、IF_OpexGW 等）與 IF_RevGWFleet 數值改變，其餘逐值相同；新增 12 個 optional 名稱（四層瀑布 IFW_RevGWFleet_*、IFC_Use、L1_HoldEconMW_*、L1_TokMW_Gen_ratio_VR200）。 v0.5.1（2026-10-22）：快照換 v19.0（master 1916a06，PR #144）；既有 38 個名稱數值與 v18.0 逐值相同（IFC_Use 僅範圍引用列數不同）；新增 3 個 optional 名稱 L1_RevGW_PQ_VR200／_Lo／_Hi（模型商每 GW 實收營收 P×Q），供收入上限檢查第五列對照（不設門檻、不進估值）。",
+  "snapshotFile": "data/tokenomics_snapshot_v19.0.json",
+  "version": "v19.0",
+  "commit": "1916a06465bb0c7efed21383075f2ae098508e24",
+  "mergeCommit": "1916a06",
+  "currentFile": "20261022_Tokenomics_v19.0.xlsx",
   "names": [
    "IF_RacksPerGW",
    "IF_GPUsPerGW",
@@ -1338,7 +1338,10 @@
    "L1_HoldEconMW_VR200",
    "L1_TokMW_Gen_ratio_VR200",
    "L1_TokMW_Gen_ratio_VR200_Lo",
-   "L1_TokMW_Gen_ratio_VR200_Hi"
+   "L1_TokMW_Gen_ratio_VR200_Hi",
+   "L1_RevGW_PQ_VR200",
+   "L1_RevGW_PQ_VR200_Lo",
+   "L1_RevGW_PQ_VR200_Hi"
   ],
   "optional": [
    "IFW_RevGWFleet_100",
@@ -1352,7 +1355,10 @@
    "L1_HoldEconMW_VR200",
    "L1_TokMW_Gen_ratio_VR200",
    "L1_TokMW_Gen_ratio_VR200_Lo",
-   "L1_TokMW_Gen_ratio_VR200_Hi"
+   "L1_TokMW_Gen_ratio_VR200_Hi",
+   "L1_RevGW_PQ_VR200",
+   "L1_RevGW_PQ_VR200_Lo",
+   "L1_RevGW_PQ_VR200_Hi"
   ]
  },
  "pricing": {

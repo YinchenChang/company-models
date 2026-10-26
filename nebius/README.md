@@ -48,7 +48,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | scripts/attrib_tkanchor.js | v0.3：v0.2 → v0.3 目標價 (d) 方法變更再拆：① 錨取代舊推導（k＝1）→ ② 套用 k → ③ 情境軸分離 → ④ 上限檢查 |
 | scripts/check_tokenomics_tab.py | v0.3：Excel「Tokenomics_取數」分頁值＝快照值、TK_ 具名範圍指向正確（verify.sh 步驟 5d；自 CoreWeave W1 複製） |
 | scripts/verify_legacy.sh | v0.3：舊方法回歸——副本把 `methodology.perMw.revenue` 改 legacy（預設輸入、副標、差異原因、更新日還原為 v0.2），對 v0.2 成品（git `6760147`）跑 `--vs-dist` 須 0 差異；`LEGACY=1 scripts/verify.sh` 一併執行 |
-| data/tokenomics_names.txt、data/tokenomics_snapshot_v18.0.json | v0.3：Tokenomics 取數名稱清單與官方快照（`tools/tokenomics/import_tokenomics.py`；verify.sh 步驟 0c 以 `--check` 重現，需 `TOKENOMICS_DIR=<Tokenomics clone>`，找不到 clone 時以警告略過） |
+| data/tokenomics_names.txt、data/tokenomics_snapshot_v19.0.json | v0.5.1 起快照為 v19.0（v0.4 為 v18.0）；v0.3：Tokenomics 取數名稱清單與官方快照（`tools/tokenomics/import_tokenomics.py`；verify.sh 步驟 0c 以 `--check` 重現，需 `TOKENOMICS_DIR=<Tokenomics clone>`，找不到 clone 時以警告略過） |
 | scripts/expect/ | 升版驗收的預期差異清單：`EXPECT`（Excel，xl_diff.py --expect）與 `CRAWL_EXPECT`（畫面文字，v0.2：「頁面 X」整頁允許不同、「行 正規式」符合的行允許不同），用法 `EXPECT=… CRAWL_EXPECT=… scripts/verify.sh --vs-dist` |
 | scripts/check_quarterly.js | v4.4：季度加總＝年度（三情境）、`quarterly.consistency` 一致性、超過門檻的差距都有原因；`build_html_portable.py` 建置時呼叫，verify.sh 步驟 0 |
 | scripts/test_quarterly.py | v4.4：暫存副本測試——(A) 假設 Q3 實際數，Python 獨立計算差距並與 HTML、Excel 比對；(B) 可移植性（無 MW、無季度指引與共識）。verify.sh 步驟 8 |
@@ -77,6 +77,11 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **C 方法並列**：A 現行（點位，評等依此）vs B（DCF 腿為 0 時權重全移至 EV/EBITDA，只作方法敏感度）。Excel：A 取「輸入與假設」H 區運算表的三情境值；B 為建置時快照（`scripts/tk_sens.js` 的 `evB`，附「快照已過期」檢查列）——LibreOffice 一個運算表只展開兩欄，再加一塊運算表會使重算殘留他情境值。
 - **D**：「錨定 × 倍數」表補 8.0x、9.0x。**E**：每 MW 收入說明句改為「Tokenomics 持有成本提供跨世代的正規化基準，市場合約價格證據決定倍數 k」。
 - **驗收**：`TOKENOMICS_DIR=<clone> DATE=2026-10-22 EXPECT=scripts/expect/v0_5_vs_v0_4.txt CRAWL_EXPECT=scripts/expect/v0_5_vs_v0_4_crawl.txt LEGACY=1 scripts/verify.sh --vs-dist`（以 v0.4 成品為 dist）。
+
+## v0.5.1 Tokenomics v19.0 同步與收入上限第五列
+- **快照**：`model/CURRENT`＝`20261022_Tokenomics_v19.0.xlsx`（`1916a06`）；`data/tokenomics_snapshot_v19.0.json`（41 個名稱）。既有 38 個名稱數值與 v18.0 逐值相同，三情境目標價不變（保守 $29.5、基準 $21.4、積極 $19.4）。
+- **第五列**：新增 optional 名稱 `L1_RevGW_PQ_VR200／_Lo／_Hi`（模型商每 GW 實收營收 P×Q）；Excel「每MW收入_錨定」目前情境區加四列（P×Q 基準／低／高；Nebius 每 MW 年收入 ÷ P×Q 基準／取高端／取低端），不設門檻、不進估值；HTML `tkAnchorQ` 的 `R.pq` 同算式，`cmp31.js` 逐項比對。
+- **驗收**：`TOKENOMICS_DIR=<clone> DATE=2026-10-22 EXPECT=scripts/expect/v0_5_1_vs_v0_5.txt CRAWL_EXPECT=scripts/expect/v0_5_1_vs_v0_5_crawl.txt LEGACY=1 scripts/verify.sh --vs-dist`（以 v0.5 成品為 dist）。
 
 ## Excel 產生流程（scripts/verify.sh 步驟 2–7 即為此流程）
 1. `python3 build_xlsx.py`（輸出到 `out/`）
@@ -171,7 +176,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY26 下半年、FY27、FY28、FY29、FY30，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 Nebius v0.5 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 Nebius v0.5.1 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -649,12 +654,12 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `tokenomics._note` | Tokenomics 取數層的說明（不進程式；v0.2a，比照 CoreWeave W1） | 文字 | 算力相關的產業與物理層資料改引用 Tokenomic… | 可沿用 |
 | `tokenomics.snapshotFile` | Tokenomics 快照檔路徑（tools/tokenomics/import_tokenomics.py 產生；Excel「Tokenomics_取數」分頁讀此檔） | 路徑 | data/tokenomics_snapshot_v… | 可沿用 |
-| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v18.0 | 可沿用 |
-| `tokenomics.commit` | 快照的 Tokenomics commit SHA（取數時 clone 的 HEAD） | 文字 | 868e2cc552621fcf3a513ecd3a… | 可沿用 |
-| `tokenomics.mergeCommit` | 該版 xlsx 合併進 Tokenomics master 的雜湊（下游資料契約第 5 條） | 文字 | 868e2cc | 可沿用 |
-| `tokenomics.currentFile` | 取數時 Tokenomics model/CURRENT 的檔名 | 文字 | 20261021_Tokenomics_v18.0.… | 可沿用 |
-| `tokenomics.names` | 引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW、IF_RevGWFleet、IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、L1_HoldEconMW_Hopper、L1_HoldEconMW_GB200、L1_HoldEconMW_GB300、L1_HoldEconMW_VR200、L1_TokMW_Gen_ratio_VR200、L1_TokMW_Gen_ratio_VR200_Lo、L1_TokMW_Gen_ratio_VR200_Hi | 檢查 |
-| `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（目前無） | 清單 | IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、L1_HoldEconMW_Hopper、L1_HoldEconMW_GB200、L1_HoldEconMW_GB300、L1_HoldEconMW_VR200、L1_TokMW_Gen_ratio_VR200、L1_TokMW_Gen_ratio_VR200_Lo、L1_TokMW_Gen_ratio_VR200_Hi | 檢查 |
+| `tokenomics.version` | 快照的 Tokenomics 版本（model/CURRENT 的版本號） | 文字 | v19.0 | 可沿用 |
+| `tokenomics.commit` | 快照的 Tokenomics commit SHA（取數時 clone 的 HEAD） | 文字 | 1916a06465bb0c7efed2138307… | 可沿用 |
+| `tokenomics.mergeCommit` | 該版 xlsx 合併進 Tokenomics master 的雜湊（下游資料契約第 5 條） | 文字 | 1916a06 | 可沿用 |
+| `tokenomics.currentFile` | 取數時 Tokenomics model/CURRENT 的檔名 | 文字 | 20261022_Tokenomics_v19.0.… | 可沿用 |
+| `tokenomics.names` | 引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt） | 清單 | IF_RacksPerGW、IF_GPUsPerGW、IF_FacilityGW、IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_HoldAcct、IF_HoldEcon、IF_GPUhrEcon、IF_PowerCost、IF_Util、L1_FacCapexMW、L1_GPUhr_GB200_vsCW、L1_GPUhr_GB300_vsBE、L1_RevGW_Fleet_VR200、IF_DeprLifeIT、IF_DeprIT、IF_DeprFac、IF_AvgDraw、IF_PowerPrice、IF_MaintIT、IF_MaintFac、IF_StaffSW、IF_TaxIns、IF_OpexGW、IF_RevGWFleet、IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、L1_HoldEconMW_Hopper、L1_HoldEconMW_GB200、L1_HoldEconMW_GB300、L1_HoldEconMW_VR200、L1_TokMW_Gen_ratio_VR200、L1_TokMW_Gen_ratio_VR200_Lo、L1_TokMW_Gen_ratio_VR200_Hi、L1_RevGW_PQ_VR200、L1_RevGW_PQ_VR200_Lo、L1_RevGW_PQ_VR200_Hi | 檢查 |
+| `tokenomics.optional` | 其中 Tokenomics 尚未提供時記為 missing 的名稱（目前無） | 清單 | IFW_RevGWFleet_100、IFW_RevGWFleet_Util、IFW_RevGWFleet_Prod、IFW_RevGWFleet_Life、IFC_Use、L1_HoldEconMW_Hopper、L1_HoldEconMW_GB200、L1_HoldEconMW_GB300、L1_HoldEconMW_VR200、L1_TokMW_Gen_ratio_VR200、L1_TokMW_Gen_ratio_VR200_Lo、L1_TokMW_Gen_ratio_VR200_Hi、L1_RevGW_PQ_VR200、L1_RevGW_PQ_VR200_Lo、L1_RevGW_PQ_VR200_Hi | 檢查 |
 
 ### `pricing`：每 MW 收入的公司因素：定價倍數 k、長約占比、證據表（v0.2a）
 
