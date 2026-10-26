@@ -30,6 +30,7 @@
 | `innolight/` | 中際旭創（300308.SZ）：AI 可插拔光模組市場 × 中際旭創份額 × 單價係數＋CPO 光學 × CPO 份額＋其他營收的收支與 P/E 估值；三情境、FY2026 錨點（1H26 實績＋2H26 假設）、市場隱含 FY2028 EPS、對帳、敏感度；光模組份額為本專案權威；見 `innolight/README.md` | 獨立產生器（比照 `arista/`；AI 半導體 Project 網通次產業內複製——光模組） | v0.1（成品：`innolight/dist/20261025_中際旭創模型_v0.2.1.xlsx`、`.html`） |
 | `markets/overview/` | AI 半導體總覽儀表板 | 彙整橋接表、記憶體、網通、台積電模型；估值規則；記憶體三家 P/E 對照、美光買回加回 P/B；設備分頁（設備市場、Advantest、Disco；設備股共用循環位置規則） | v0.6 |
 | `ajinomoto/` | 味之素（2802.T）：ABF 增層膜（ファンクショナルマテリアルズ）＝加速器顆數 × 載板面積層數 × 份額 × 可出貨量上限 × 價格，其他事業以成長率推的收支與 P/E 估值；三情境、FY2026 錨點、DCF＋Comparable（食品同業）加權目標價、SOTP 與現價隱含 ABF 價值、對帳、敏感度；見 `ajinomoto/README.md` | 獨立產生器（比照 `ibiden/`、`dell/`；AI 半導體 Project 載板與 PCB 次產業的材料端） | v0.1（成品：`ajinomoto/dist/20261026_味之素模型_v0.1.xlsx`、`.html`） |
+| `kinsus/` | 景碩（3189.TW）：ABF 載板＝MIN（需求, 產能），需求含 NVIDIA CPU（Grace／Vera）載板、GPU 與 ASIC 加速器載板（與 Ibiden、欣興、南電同口徑）、其他 AI 與非 AI ABF；BT 與其他載板以情境年增推，晶碩（隱形眼鏡）扣非控制權益；三情境、FY2026 錨點、DCF（淨利＋折舊－資本支出）＋Comparable 加權目標價、對帳、敏感度；見 `kinsus/README.md` | 獨立產生器（比照 `nanya_pcb/`、`unimicron/`；AI 半導體 Project 載板與 PCB 次產業） | v0.1（成品：`kinsus/dist/20261026_景碩模型_v0.1.xlsx`、`.html`） |
 
 規則：
 - 事實來源與分層：算力相關的產業與物理層資料取自 Tokenomics（`YinchenChang/Tokenomics` 的 Interface／L1／SRC，X8）；公司專屬資料放各公司的 `company.json` 與 `data/`。
