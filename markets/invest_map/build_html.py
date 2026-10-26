@@ -101,14 +101,15 @@ def main():
             "price_src": sources.get(tk, {}).get("source", ""), "price_n": sources.get(tk, {}).get("sources_count", ""),
             "model_px": num(p["模型內現價"]), "model_date": p["模型價日期"], "move": num(d["模型價日以來漲跌"]),
             "flag": d["價格變動旗標"] or "",
-            "center": num(d["中心價"]), "bear": num(d["下檔價"]), "cu": num(d["中心空間"]), "bu": num(d["下檔空間"]),
+            "center": num(d["中心價"]), "bear": num(d["悲觀情境價"]), "cu": num(d["中心空間"]), "bu": num(d["悲觀情境空間"]),
             "tier": d["最終分級"], "vtier": d["分級"],
             "mfolder": MFOLDER.get(tk), "mfile": MFILE.get(tk, ""),
             "gate": d["收支關卡"], "gbasis": d["收支口徑"], "glabel": d["收支列（模型）"] or "", "gseries": d["收支序列"] or "",
             "gsum": num(d["期間合計"]), "gmin": num(d["最小值"]), "gsrc": d["收支來源"] or "", "alt": num(d["對照口徑空間"]), "altlbl": d["對照口徑"] or "",
             "pe28": d["現價 ÷ 模型 FY2028 EPS（A／B／C）"] or "", "note": d["註記"] or "",
             "c1src": d["中心候選 1 來源"] or "", "c2src": d["中心候選 2 來源"] or "",
-            "b1src": d["下檔候選 1 來源"] or "", "b2src": d["下檔候選 2 來源"] or "",
+            "b1src": d["悲觀情境候選 1 來源"] or "", "b2src": d["悲觀情境候選 2 來源"] or "",
+            "tier6": d.get("上檔空間級距") or "", "recsrc": d.get("投資建議與上檔空間依據") or "",
         })
 
     nodes = [{"seg": d["次產業"], "order": d["次產業內優先序"], "name": d["公司"], "tk": str(d["代號"] or ""),
@@ -121,8 +122,8 @@ def main():
     data = {
         "meta": {"version": os.path.basename(src).split("_")[-1].replace(".xlsx", ""),
                  "book": os.path.basename(src), "tk_file": snap["file"], "tk_version": snap["version"],
-                 "tk_commit": snap["commit"][:7], "cm_commit": cm, "built": "2026-10-25",
-                 "price_date": "2026-10-23（台積電、廣達為 10-22）",
+                 "tk_commit": snap["commit"][:7], "cm_commit": cm, "built": "2026-10-26",
+                 "price_date": "半導體：各模型現價（2026-10-22／23）；雲端與模型商：2026-10-23 收盤",
                  "pages": "https://yinchenchang.github.io/company-models/",
                  "private_models": {k: os.path.basename(glob.glob(os.path.join(ROOT, k, "dist", "*.html"))[0])
                                     for k in ("openai", "anthropic") if glob.glob(os.path.join(ROOT, k, "dist", "*.html"))}},
@@ -138,7 +139,12 @@ def main():
     if nop:
         print("警告：尚無公司檔案", nop)
     tpl = open(os.path.join(HERE, "template.html"), encoding="utf-8").read()
-    html = tpl.replace("/*__DATA__*/null", json.dumps(data, ensure_ascii=False))
+    # 造訪計數器網址（Google Apps Script 網頁應用程式；counter/endpoint.txt，空白＝不計數）
+    ep = os.path.join(HERE, "counter", "endpoint.txt")
+    cnt = open(ep, encoding="utf-8").read().strip() if os.path.exists(ep) else ""
+    if cnt and not re.match(r"^https://script\.google\.com/macros/s/[\w-]+/exec$", cnt):
+        raise SystemExit(f"counter/endpoint.txt 格式不對：{cnt}")
+    html = tpl.replace("/*__DATA__*/null", json.dumps(data, ensure_ascii=False)).replace('/*__COUNTER__*/""', json.dumps(cnt))
     out = os.path.join(HERE, "dist", "index.html")
     with open(out, "w", encoding="utf-8") as f:
         f.write(html)

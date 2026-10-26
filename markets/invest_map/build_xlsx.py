@@ -16,14 +16,15 @@ import csv
 import glob
 import json
 import os
+import re
 
 import openpyxl
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.4"
-DATE = "20261025"
+VERSION = "v0.5.2"
+DATE = "20261026"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
 YELLOW = PatternFill("solid", fgColor="FFF2CC")
@@ -70,25 +71,48 @@ SEGMENTS = [
      "持有並出租算力；年持有成本由此層支付，是上游資本支出的付款方 [判斷]"),
     ("neocloud", "L4 算力平台", "Neocloud（GPU 租賃）", "持有算力資產", None, 3, 50,
      "同為算力持有者，但客戶集中、融資依賴高、可替代 [判斷]"),
-    # L3 比例（v0.3.2，Andy 10-25 11:46 發現重疊）：改讀 晶片內容橋接表 v0.2.1 Bridge GB300 欄（與每 GW 44.9＝IT 32.2＋廠房 12.67 同口徑，六塊＋儲存合計 100%）。
-    # 原 AI半導體 次產業排序 v0.2.2 的 43／23／19%：HBM 在運算與記憶體重複、HBM 價格期間混用、網通取自另一模型，合計約 91%（已發交流）。
-    # 價值鏈分量分沿用原值：以 VR200 2027（AI半導體 原口徑年份）套級距，各塊級距不變（見依據欄）。
-    ("compute", "L3 IT 設備", "運算", "57.3%（VR200 2027 約 37%）", 0.573, 1, 100,
-     "晶片內容橋接表 v0.2.1 Bridge GB300 欄 B10＋B11＋B13＋B14（NVIDIA 晶片毛利 48.5%＋台積電 3.5%＋其他製造 2.3%＋CPU 3.0%）÷ B7；HBM 移到記憶體 [Derived]"),
-    ("memory", "L3 IT 設備", "記憶體", "13.4%（VR200 2027 約 23%）", 0.134, 1, 100,
-     "晶片內容橋接表 v0.2.1 Bridge GB300 欄 B12＋B15＋B16（HBM 6.7%＋LPDDR 4.6%＋機架內 SSD 2.1%）÷ B7；2027 HBM 合約價約翻倍，VR200 2027 約 23%，級距沿用 100 [Derived]"),
-    ("network", "L3 IT 設備", "網通", "17.5%（VR200 約 19%）", 0.175, 2, 75,
-     "晶片內容橋接表 v0.2.1 Bridge GB300 欄 B17＋B20（網卡與 DPU 4.0%＋NVLink 4.5%＋機架外交換器、光模組、線纜 9.0%）÷ B7 [Derived]"),
-    ("substrate", "L3 IT 設備", "載板與 PCB", "含在運算「其他製造」2.3% 內（ABF 約 0.3%），不另加", 0.003, 2, 25,
-     "AI半導體 次產業排序 v0.2.2（Ibiden 比對）；屬 晶片內容橋接表 v0.2.1 Bridge GB300 欄 B13 的一部分，金額不與運算相加 [Assumed] 區間"),
-    ("power", "L3 IT 設備", "電源與散熱", "6.3%（電源、散熱、機構、整合；電源＋散熱約 3–5%）", 0.063, 2, 25,
-     "晶片內容橋接表 v0.2.1 Bridge GB300 欄 B18 ÷ B7；電源＋散熱 3–5% 為 AI半導體 判斷，級距依 3–5% 給 25 [Derived]／[Assumed]"),
-    ("server", "L3 IT 設備", "伺服器組裝", "4.6%（板卡、供電與組裝加價；ODM 附加價值約 1–3%）", 0.046, 3, 25,
-     "晶片內容橋接表 v0.2.1 Bridge GB300 欄 B19 ÷ B7（殘差：匣級電路板、供電、NVIDIA／ODM 匣級加價）；ODM 附加價值 1–3% 為 AI半導體 判斷 [Derived]"),
-    ("foundry", "L2 半導體製造與設備", "代工與封測", "約 3.5%（含在 L3 運算內，不另加；僅 NVIDIA 平台）", 0.035, 1, 75,
-     "例外：晶片內容橋接表 v0.2.1 Bridge GB300 欄 B11 ÷ B7 只見 3.5%，但先進製程與 CoWoS 的價值藏在運算的晶片成本內，給 75 [判斷]"),
-    ("equipment", "L2 半導體製造與設備", "設備與材料", "約 7.5%（軸 B，不可與軸 A 相加）", 0.075, 1, 50, "AI半導體 次產業排序 v0.2.2（設備模型情境 A：2027 AI 相關設備 117.8B ÷ 1,565B）"),
+    # L3 比例（v0.5.2，2026-10-26）：改回讀 AI半導體 次產業排序 v0.2.3 的「GB300 對照 ÷ IT」欄（company-models #166；各塊互斥、合計 100%，
+    # 與 Andy 10-25 11:55「L3 口徑＝GB300、2026 年價格」及每 GW 44.9 同口徑）。v0.3.2–v0.5.1 為本專案自讀晶片內容橋接表的過渡值。
+    # v0.2.3 歸塊與過渡值不同：運算＝NVIDIA 晶片毛利＋CPU（不含台積電與其他製造）；代工與封測、載板（ABF）各自成塊並計入 100%；儲存與管理另列。
+    # 因此「代工與封測」由 L2（軸 B）移到 L3。價值鏈分量分沿用原值（以 VR200 2027 套級距，各塊級距不變；例外見依據欄）。
+    ("compute", "L3 IT 設備", "運算", "{運算}", "運算", 1, 100,
+     "AI半導體 次產業排序 v0.2.3：NVIDIA GPU 晶片毛利＋CPU；HBM、台積電、網通晶片不在此塊；只含 NVIDIA 平台 [Derived]"),
+    ("memory", "L3 IT 設備", "記憶體", "{記憶體}", "記憶體", 1, 100,
+     "AI半導體 次產業排序 v0.2.3：HBM＋LPDDR5X＋機架內 NAND（NAND 為 Assumed）；2027 HBM 合約價約翻倍 [Derived]"),
+    ("network", "L3 IT 設備", "網通", "{網通}", "網通", 2, 75,
+     "AI半導體 次產業排序 v0.2.3：NVLink 交換晶片＋交換匣其他＋scale-out 機架外＋SuperNIC／DPU [Derived]"),
+    ("foundry", "L3 IT 設備", "代工與封測", "{代工與封測}", "代工與封測", 1, 75,
+     "AI半導體 次產業排序 v0.2.3：台積電（GPU 晶片＋CoWoS）＋其他製造（測試、良率損失），扣除 ABF；比例小但先進製程與 CoWoS 近獨占，分量分例外給 75 [Derived]／[判斷]"),
+    ("substrate", "L3 IT 設備", "載板與 PCB", "{載板與 PCB}|ABF，0.2–0.4%；PCB／CCL 在伺服器組裝內", "載板與 PCB", 2, 25,
+     "AI半導體 次產業排序 v0.2.3：ABF 自「其他製造」切出 [Assumed] 區間"),
+    ("power", "L3 IT 設備", "電源與散熱", "{電源與散熱}|含機構、整合；電源＋散熱約 3–5%", "電源與散熱", 2, 25,
+     "AI半導體 次產業排序 v0.2.3：非 NVIDIA 機架內容全額；電源＋散熱 3–5% 為判斷，級距依 3–5% 給 25 [Derived]／[Assumed]"),
+    ("server", "L3 IT 設備", "伺服器組裝", "{伺服器組裝}|殘差，未拆；ODM 附加價值約 1–3%", "伺服器組裝", 3, 25,
+     "AI半導體 次產業排序 v0.2.3：橋接表殘差（匣級電路板含 PCB、匣級供電、NVIDIA／ODM 匣級加價），未拆；組裝廠附加價值 1–3% 為判斷 [Derived]"),
+    ("equipment", "L2 半導體製造與設備", "設備與材料", "約 7.5%（軸 B，不可與軸 A 相加）", 0.075, 1, 50, "AI半導體 次產業排序 v0.2.3（設備模型情境 A：2027 AI 相關設備 117.8B ÷ 1,565B）"),
 ]
+
+
+def _seg_shares():
+    """讀 AI半導體 次產業排序最新版的 GB300 欄與 2027（VR200）欄；回傳 {次產業: (GB300 比例, 'VR200 文字')}。"""
+    out = {}
+    with open(latest("segments_ai_semis_v*.csv"), encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            g = r.get("GB300 對照 ÷ IT", "").strip()
+            if g.endswith("%"):
+                out[r["次產業"]] = (float(g[:-1]) / 100, r["2027 金額 ÷ AI IT capex"].strip())
+    return out
+
+
+_SH = _seg_shares()
+SEGMENTS = [
+    (k, ly, nm, (f"{_SH[mid][0]:.1%}（VR200 2027 {_SH[mid][1]}" + ("；" + txt.split("|", 1)[1] if "|" in txt else "") + "）"
+                 if isinstance(mid, str) else txt),
+     (_SH[mid][0] if isinstance(mid, str) else mid), irr, vc, b)
+    for (k, ly, nm, txt, mid, irr, vc, b) in SEGMENTS
+]
+SEG_STORAGE = _SH.get("儲存與管理", (None, ""))
+assert abs(sum(v for (k, ly, nm, t, v, *_ ) in SEGMENTS if ly == "L3 IT 設備") + (SEG_STORAGE[0] or 0) - 1) < 0.002, "L3 各塊加儲存應合計 100%"
 SEG_BY_NAME = {s[2]: s for s in SEGMENTS}
 
 # 研究覆蓋公司（有模型者）的地位判斷：代號 → (次產業, 公司重要性 1–3, 市場位置 1–4, 地位依據, 標記)
@@ -137,13 +161,33 @@ COMPANY_META = {
     "OpenAI": ("OpenAI", "未上市", "USD", "openai"), "Anthropic": ("Anthropic", "未上市", "USD", "anthropic"),
 }
 
+# v0.5（2026-10-25 Andy 18:14）：AI半導體 其餘個股全部接入。公司名、掛牌、次產業、重要性、地位依據取自候選母體；
+# 市場位置（1–4）預設由「次產業內優先序」換算（1→1、2→2、3–5→3、≥6→4），標 [判斷]，黃底可改。
+CCY_BY_LISTING = {"美": "USD", "台": "TWD", "日": "JPY", "韓": "KRW", "中": "CNY", "荷": "EUR", "港": "HKD"}
+
+
+def _add_semis():
+    import extract_models
+    with open(latest("universe_ai_semis_v*.csv"), encoding="utf-8") as f:
+        uni = {r["代號"]: r for r in csv.DictReader(f)}
+    for tk, folder in extract_models.SEMIS_V2:
+        if tk in COMPANY_META:
+            continue
+        u = uni[tk]
+        order = int(u["次產業內優先序"])
+        posn = 1 if order == 1 else 2 if order == 2 else 3 if order <= 5 else 4
+        COMPANY_META[tk] = (u["公司"], u["掛牌"], CCY_BY_LISTING[u["掛牌"]], folder)
+        POSITION[tk] = (u["次產業"], int(u["供應鏈重要性（1 高–3 低）"]), posn,
+                        f"{u['市場地位']}（AI半導體 候選母體 v0.2.2；市場位置由次產業內優先序 {order} 換算）", "[判斷]")
+
+
+_add_semis()
+
+
 # 未上市與算力層的地圖節點（不進排序）
 MAP_EXTRA = []  # OpenAI、Anthropic 已納入 POSITION（2026-10-25 Andy：未上市也放，可投資性寫「未上市」）
 
 PARAMS = [
-    ("tier_center", 0.20, "「機會」：中心空間至少"),
-    ("tier_bear", -0.25, "「機會」：下檔空間不低於"),
-    ("tier_rich", -0.10, "「偏貴」：中心空間低於"),
     ("w_irr", 0.40, "地位分數權重：不可替代性"),
     ("w_pos", 0.35, "地位分數權重：市場位置"),
     ("w_vc", 0.25, "地位分數權重：價值鏈分量"),
@@ -208,13 +252,12 @@ def main():
         "公司模型：company-models 各公司 dist/*.xlsx（extract_models.py 抽數）。",
         "AI半導體 候選母體 v0.2.2（2026-10-24）：次產業排序、公司重要性、市場地位文字。權威在 AI半導體 Project。",
         "收支關卡（Andy 2026-10-25 10:48）：先看收支、再看評價。模型期間（2026 起約五年）現金收支合計為負＝入不敷出、有資金缺口，"
-        "不論估值空間多大，最終分級一律為「收支不足」。口徑：雲端／neocloud／MAG 模板一律用「營運缺口＋股東回饋（股利、回購）」；記憶體、模型商用自由現金流；"
+        "評價為買進以上（或未估值）者，最終分級改為「收支不足」；評價為中立、放空、強力放空者維持原評價，入不敷出只加重放空理由（Andy 2026-10-26 修訂）。口徑：雲端／neocloud／MAG 模板一律用「營運缺口＋股東回饋（股利、回購）」；記憶體、模型商用自由現金流；"
         "只有損益的半導體模型以「各情境淨利皆為正」判定（現金流本專案未建立）。",
-        "可投資性口徑（v0.4 預設，Andy 可改）：中心價＝各模型主口徑。半導體 13 家讀估值 v2 的「目標價（DCF 與 Comparable 加權）」"
-        "（AI半導體 2026-10-25；DCF 50%＋Comparable 50%，約 12 個月後），下檔＝C 情境 DCF 價值（推到 12 個月後）；"
-        "舊法（規則值情境加權價）放對照欄。雲端與 neocloud 用模型加權目標價與情境下緣；MiniMax 用反向檢驗折現價值。"
-        "空間＝隱含價 ÷ 10-23 收盤價 − 1。",
-        "分級：中心空間 ≥ 參數 tier_center 且下檔 ≥ tier_bear → 機會；中心 < tier_rich → 偏貴；其餘 → 觀察。",
+        "可投資性口徑（v0.5，Andy 2026-10-25 18:14：數字引用個股模型，模型沒有的才自算）：半導體 52 家的中心價＝模型「目標價（DCF 與 Comparable 加權）」、"
+        "中心空間＝模型「上檔空間：加權目標價」、現價＝模型現價（上檔空間的分母）、投資建議與上檔空間級距＝模型 Val 列；模型尚未補列者依 AI半導體 固定規則"
+        "（>+50% 強力買進、+25～+50% 買進、−25～+25% 中立、−50～−25% 放空、<−50% 強力放空）以模型上檔空間自算。悲觀情境空間（v0.5.1 前稱「下檔空間」）＝C 情境 DCF 價值 ÷ 模型現價 − 1（模型無此欄，自算）；不是一般所說目標價相對現價的下跌幅度。"
+        "雲端與 neocloud（v0.5.1）：上檔空間＝模型加權目標價 ÷ 最近外部收盤價 − 1，依同一五級規則自算（不用模型自身評等，不再出現「賣出」）；MiniMax 用反向檢驗折現價值，依同一固定規則自算。",
         "本活頁簿是研究整理，不是投資建議；各模型的方法與假設見各自 README 與 Val／摘要頁。",
     ]
     for i, t in enumerate(lines, 1):
@@ -318,7 +361,7 @@ def main():
 
     # ============ 價格
     wpz = wb.create_sheet("價格")
-    hdr(wpz, ["代號", "幣別", "模型內現價", "模型價日期", "模型價來源", "10-23 收盤", "收盤來源", "採用價"],
+    hdr(wpz, ["代號", "幣別", "模型內現價", "模型價日期", "模型價來源", "外部收盤（非半導體模型）", "收盤來源", "採用價"],
         [9, 7, 12, 12, 52, 12, 52, 12])
     prices = {}
     pfile = os.path.join(HERE, "data", "prices.csv")
@@ -345,16 +388,25 @@ def main():
         if tk in prices and prices[tk]["close"]:
             wpz.cell(i, 6, float(prices[tk]["close"])).font = BLUE
             wpz.cell(i, 7, f"{prices[tk]['date']}｜{prices[tk]['source']}")
-        wpz.cell(i, 8, "未上市" if m.get("unlisted") else f"=IF(ISNUMBER(F{i}),F{i},C{i})")
+        if m.get("unlisted"):
+            wpz.cell(i, 8, "未上市")
+        elif m.get("v2"):   # v0.5（Andy 18:14：數字引用個股模型）：半導體用模型現價，即模型上檔空間的分母
+            wpz.cell(i, 8, f"=C{i}")
+        else:
+            wpz.cell(i, 8, f"=IF(ISNUMBER(F{i}),F{i},C{i})")
 
     # ============ 估值
     we = wb.create_sheet("估值")
     cols = ["代號", "公司", "層級", "次產業", "方法", "中心候選 1", "中心候選 1 來源", "中心候選 2", "中心候選 2 來源",
-            "下檔候選 1", "下檔候選 1 來源", "下檔候選 2", "下檔候選 2 來源", "採用價", "中心價", "下檔價",
-            "中心空間", "下檔空間", "分級", "對照口徑空間", "對照口徑", "現價 ÷ 模型 FY2028 EPS（A／B／C）", "註記",
+            "悲觀情境候選 1", "悲觀情境候選 1 來源", "悲觀情境候選 2", "悲觀情境候選 2 來源", "採用價", "中心價", "悲觀情境價",
+            "中心空間", "悲觀情境空間", "分級", "對照口徑空間", "對照口徑", "現價 ÷ 模型 FY2028 EPS（A／B／C）", "註記",
             "輔助 1", "輔助 2", "模型價日以來漲跌", "價格變動旗標",
-            "收支口徑", "收支列（模型）", "收支序列", "期間合計", "最小值", "收支來源", "收支關卡", "最終分級"]
-    hdr(we, cols, [9, 12, 14, 18, 24, 12, 40, 12, 40, 12, 40, 12, 40, 11, 11, 11, 9, 9, 8, 10, 30, 22, 60, 10, 10, 10, 18, 9, 30, 46, 10, 10, 44, 14, 12])
+            "收支口徑", "收支列（模型）", "收支序列", "期間合計", "最小值", "收支來源", "收支關卡", "最終分級",
+            "上檔空間級距", "投資建議與上檔空間依據"]
+    hdr(we, cols, [9, 12, 14, 18, 24, 12, 40, 12, 40, 12, 40, 12, 40, 11, 11, 11, 9, 9, 8, 10, 30, 22, 60, 10, 10, 10, 18, 9, 30, 46, 10, 10, 44, 14, 12, 12, 60])
+    REC = 'IF(Q{i}>0.5,"強力買進",IF(Q{i}>0.25,"買進",IF(Q{i}>=-0.25,"中立",IF(Q{i}>=-0.5,"放空","強力放空"))))'
+    TIER6 = ('IF(Q{i}>0.5,"大於 50%",IF(Q{i}>0.25,"25%–50%",IF(Q{i}>=0,"0%–25%",'
+             'IF(Q{i}>=-0.25,"0%～−25%",IF(Q{i}>=-0.5,"−25%～−50%","小於 −50%")))))')
 
     def put(i, j, d, fmt_src=True):
         if d is None:
@@ -383,18 +435,22 @@ def main():
             method = "加權目標價（DCF 50%＋Comparable 50%）"
             c1 = m["tp"]
             b1 = m["dcf_C"]
-            alt = (f"={m['old_rule']['value']}/N{i}-1", )
-            altlbl = f"舊法：規則值情境加權價（參考，{m['old_rule']['cell']}）"
+            if "old_rule" in m:
+                alt = (f"={m['old_rule']['value']}/N{i}-1", )
+                altlbl = f"舊法：規則值情境加權價（參考，{m['old_rule']['cell']}）"
             note = (f"DCF 目標價 {m['tp_dcf']['value']:,.1f}（{m['tp_dcf']['cell']}）；"
                     f"Comparable 目標價 {m['tp_comp']['value']:,.1f}（{m['tp_comp']['cell']}）；"
                     f"市場共識目標價 {m['tp_cons']['value']:,.1f}（{m['tp_cons']['cell']}，外部、僅供對照）；"
                     f"價格帶 C～A 情境 DCF {m['dcf_C']['value']:,.1f}～{m['dcf_A']['value']:,.1f}")
         elif tk in ("MSFT", "AMZN", "GOOGL", "ORCL", "CRWV", "NBIS", "WYFI"):
-            method = f"模型加權目標價（評等：{m['rating']['value']}）"
+            method = "模型加權目標價"   # v0.5.1（Andy 2026-10-26）：不顯示模型自身評等（含「賣出」），改用本地圖五級
             c1 = m["target"]
             b1 = m["target"]
             b2 = m["scen_lo"]
-            note = m["sentence"]["value"]
+            # v0.5.1：模型摘要句含模型自身評等與門檻（「賣出」等），網站不顯示；只留點位與區間，評等改依本地圖五級
+            parts = m["sentence"]["value"].rstrip("。").split("；")
+            head = re.sub(r"^[^：]*：點位 (\S+)，較現價 (\S+) .*$", r"模型點位 \1（模型日現價 \2）", parts[0])
+            note = "；".join([head] + [x for x in parts[1:] if "門檻" not in x])
             if tk in ("MSFT", "AMZN", "GOOGL"):
                 note += "｜MAG 模型終值占 EV 逾 90%，評價口徑待 MAG v0.3"
         elif tk == "00100":
@@ -417,9 +473,32 @@ def main():
         if c1 is not None:
             we.cell(i, 15, f"=MIN(F{i},H{i})")
             we.cell(i, 16, f"=MIN(J{i},L{i})")
-            we.cell(i, 17, f"=O{i}/N{i}-1")
-            we.cell(i, 18, f"=P{i}/N{i}-1")
-            we.cell(i, 19, f'=IF(AND(Q{i}>=tier_center,R{i}>=tier_bear),"機會",IF(Q{i}<tier_rich,"偏貴","觀察"))')
+            we.cell(i, 18, f"=P{i}/N{i}-1")          # 悲觀情境空間（v0.5.1 前稱「下檔空間」）：模型無此欄，自算（C 情境 DCF ÷ 模型現價 − 1）
+            if m.get("v2"):
+                # v0.5（Andy 18:14）：模型有的數字直接引用——上檔空間、投資建議、級距；模型尚未補列者依同一固定規則自算
+                we.cell(i, 17, m["up"]["value"]).font = BLUE
+                basis = [f"上檔空間 {src(m['up'])}"]
+                for col, key, f in ((19, "rec", REC), (36, "tier6", TIER6)):
+                    if key in m:
+                        we.cell(i, col, m[key]["value"]).font = BLUE
+                        basis.append(f"{'投資建議' if key == 'rec' else '級距'} {src(m[key])}")
+                    else:
+                        we.cell(i, col, "=" + f.format(i=i))
+                        basis.append(f"{'投資建議' if key == 'rec' else '級距'}：模型尚未補列，依 AI半導體 固定規則自算")
+                we.cell(i, 37, "；".join(basis)).alignment = WRAP
+            elif "rating" in m:                       # 雲端、neocloud、MAG
+                # v0.5.1（Andy 2026-10-26）：「賣出」與放空易混，取消；模型未更新前，以模型加權目標價 ÷ 最近收盤價自算上檔空間，
+                # 依本地圖五級規則評等。模型自身評等（以模型日價計）只留在依據欄供對照，網站不顯示。
+                we.cell(i, 17, f"=O{i}/N{i}-1")
+                we.cell(i, 19, "=" + REC.format(i=i))
+                we.cell(i, 36, "=" + TIER6.format(i=i))
+                we.cell(i, 37, f"上檔空間＝模型加權目標價 {src(m['target'])} ÷ 外部收盤價 − 1，依本地圖五級規則自算"
+                               "（模型自身評等以模型日價計、級距不同，不採用；原值見模型摘要頁）")
+            else:                                     # MiniMax：模型無評等，依同一固定規則自算
+                we.cell(i, 17, f"=O{i}/N{i}-1")
+                we.cell(i, 19, "=" + REC.format(i=i))
+                we.cell(i, 36, "=" + TIER6.format(i=i))
+                we.cell(i, 37, "模型無評等；依 AI半導體 固定規則自算")
         else:
             we.cell(i, 19, "未上市" if m.get("unlisted") else "未估值")
         if alt:
@@ -445,7 +524,8 @@ def main():
         we.cell(i, 32, min(vals)).font = BLUE
         we.cell(i, 33, f"[Derived] {cash['file']} {cells[0]}…{cells[-1]}")
         we.cell(i, 34, f'=IF(AB{i}="淨利",IF(AF{i}>0,"通過（淨利）","不通過"),IF(AE{i}<0,"不通過","通過（現金流）"))')
-        we.cell(i, 35, f'=IF(S{i}="未上市","未上市",IF(AH{i}="不通過","收支不足",S{i}))')
+        # v0.5.1（Andy 2026-10-26）：收支不足只壓過「買進以上」（與未估值）；放空、強力放空、中立維持原評價——現金流缺口加重放空理由
+        we.cell(i, 35, f'=IF(S{i}="未上市","未上市",IF(AND(AH{i}="不通過",OR(S{i}="強力買進",S{i}="買進",S{i}="未估值")),"收支不足",S{i}))')
 
     # ============ 地圖節點（全部候選＋算力層）
     wm = wb.create_sheet("地圖節點")
