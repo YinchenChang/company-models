@@ -101,14 +101,14 @@ def main():
             "price_src": sources.get(tk, {}).get("source", ""), "price_n": sources.get(tk, {}).get("sources_count", ""),
             "model_px": num(p["模型內現價"]), "model_date": p["模型價日期"], "move": num(d["模型價日以來漲跌"]),
             "flag": d["價格變動旗標"] or "",
-            "center": num(d["中心價"]), "bear": num(d["下檔價"]), "cu": num(d["中心空間"]), "bu": num(d["下檔空間"]),
+            "center": num(d["中心價"]), "bear": num(d["悲觀情境價"]), "cu": num(d["中心空間"]), "bu": num(d["悲觀情境空間"]),
             "tier": d["最終分級"], "vtier": d["分級"],
             "mfolder": MFOLDER.get(tk), "mfile": MFILE.get(tk, ""),
             "gate": d["收支關卡"], "gbasis": d["收支口徑"], "glabel": d["收支列（模型）"] or "", "gseries": d["收支序列"] or "",
             "gsum": num(d["期間合計"]), "gmin": num(d["最小值"]), "gsrc": d["收支來源"] or "", "alt": num(d["對照口徑空間"]), "altlbl": d["對照口徑"] or "",
             "pe28": d["現價 ÷ 模型 FY2028 EPS（A／B／C）"] or "", "note": d["註記"] or "",
             "c1src": d["中心候選 1 來源"] or "", "c2src": d["中心候選 2 來源"] or "",
-            "b1src": d["下檔候選 1 來源"] or "", "b2src": d["下檔候選 2 來源"] or "",
+            "b1src": d["悲觀情境候選 1 來源"] or "", "b2src": d["悲觀情境候選 2 來源"] or "",
             "tier6": d.get("上檔空間級距") or "", "recsrc": d.get("投資建議與上檔空間依據") or "",
         })
 
@@ -122,7 +122,7 @@ def main():
     data = {
         "meta": {"version": os.path.basename(src).split("_")[-1].replace(".xlsx", ""),
                  "book": os.path.basename(src), "tk_file": snap["file"], "tk_version": snap["version"],
-                 "tk_commit": snap["commit"][:7], "cm_commit": cm, "built": "2026-10-25",
+                 "tk_commit": snap["commit"][:7], "cm_commit": cm, "built": "2026-10-26",
                  "price_date": "半導體：各模型現價（2026-10-22／23）；雲端與模型商：2026-10-23 收盤",
                  "pages": "https://yinchenchang.github.io/company-models/",
                  "private_models": {k: os.path.basename(glob.glob(os.path.join(ROOT, k, "dist", "*.html"))[0])
