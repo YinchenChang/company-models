@@ -1,8 +1,16 @@
-# alchip/：世芯-KY（3661.TW）收支與估值模型 v0.1
+# alchip/：世芯-KY（3661.TW）收支與估值模型 v0.1.1
 
 世芯的營收正從 NRE（委託設計）轉成 Trainium 量產（turnkey，含晶圓與封裝轉售，毛利率低）。FY2026 的 3 奈米營收約 15 億美元，3Q26 單季營收 260.5 億元（季增 241%）。本模型用市場層的 AWS Trainium 顆數 × 世芯份額 × 每顆營收往前推，看 FY2027–28 的營收與 EPS 有多少，以及 2 奈米換代時份額與每顆營收的差異有多大。
 
 **核心問題：在市場層 Trainium 顆數（CY2027 2.5 百萬顆）與 Marvell 份額口徑下，世芯 FY2027–28 的 EPS 與賣方差多少；FY2028 的 2 奈米換代靠份額還是每顆營收；現價約 17 倍前瞻 P/E 隱含哪一條路徑。**
+
+**投資建議：強力買進**（依上檔空間固定規則：加權目標價上檔空間 +69.6%，落在 大於 +50%）。
+
+## 重點觀察
+
+1. 目標價 NT$5,926（DCF 3,503、Comparable 8,348 各半），比現價 3,495（2026-10-22）高 69.6%，級距 大於 50%；Comparable 單獨為 +138.9%。主因是倍數：本模型 12 個月後前瞻 EPS 215.44 只比共識前瞻 EPS 203.79 高 5.7%，但同業（創意、智原、聯發科、博通、邁威爾）前瞻 P/E 中位數 38.8 倍，現價只隱含 17.2 倍、共識目標價 5,803 隱含 28.5 倍（比同業低 26.5%）；DCF 3,503 與現價幾乎相同（+0.2%），上檔全部來自 Comparable，而 Comparable 未扣世芯單一客戶集中與 turnkey 低毛利的折價，偏高估。
+2. 情境分歧很大：FY2028 EPS A／B／C 為 338.6／196.6／103.5，DCF 價格帶 1,226～5,691，差在 Trainium 顆數與世芯份額（CY2028 起 55%／45%／35%）；目標價對 DCF 權重也敏感，權重 0.7 時降 16.4%（約 4,957，上檔 +41.8%）。
+3. Trainium 份額是 FY2027 EPS 最敏感的變數（取高值 +20.7%、−10pt 時 −10.4%）；FY2028 起再加上 2 奈米每顆營收（×2.5 時 FY2028 營收 +58.9%、COT 模式 ×0.8 時 −41.2%）（Sens 頁）。下一個檢驗點是 3Q26 財報與法說（約 2026-11 上旬）的 Trainium 3 量產進度。
 
 這是 AI 半導體 Project 運算層的模型。Trainium 顆數讀 `tsmc/dist`（與 `markets/memory` UNITS 同一份，建置時檢查）。每顆規格讀 `avgo/dist` 的 pa_trn，扣掉 CY2026 HBM 金額，口徑與 `mrvl/` 的 core_trn 相同（建置時檢查同值）。Marvell 的 Trainium 份額讀 `mrvl/dist`，建置時檢查 Marvell 基準＋世芯高值 ≤ 100%（Units 頁第 2 節）。以上上游都只讀。結構參考 `mediatek/`（ASIC 引擎、FY2032 延伸、目標價第 0 節）。
 
@@ -11,9 +19,9 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_alchip.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_世芯-KY模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261025_世芯-KY模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_世芯-KY模型_v0.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
+| `dist/20261025_世芯-KY模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
 
 建置：先跑 `python3 alchip/build_alchip.py raw.xlsx`，再跑 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序為 README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用的上游有：
 - `tsmc/dist`：Trainium 顆數、2029 成長、情境係數

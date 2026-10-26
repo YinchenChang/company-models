@@ -1,8 +1,16 @@
-# alab/ — Astera Labs（ALAB）收支與估值模型 v0.1
+# alab/ — Astera Labs（ALAB）收支與估值模型 v0.1.1
 
 Astera Labs 的 Scorpio X 營收＝非 NVIDIA scale-up 交換晶片市場（`markets/network`：AMD、Trainium、其他 ASIC 顆數 × 每顆 scale-up 交換晶片內容）× Astera 有效份額；PCIe 與訊號調節（Aries 重定時器、Scorpio P PCIe 交換晶片、Taurus AEC 模組、Leo CXL）＝AI 加速器顆數 × 每顆內容 × 份額。3Q26 指引季增約 40%、Scorpio 成為最大產品線：成長重心正由重定時器轉到 scale-up 交換晶片。現價約 64 倍共識 FY2026 EPS、40 倍 FY2027。
 
 **核心問題：現價隱含的 FY2028 EPS 需要 Scorpio X 在非 NVIDIA scale-up 交換晶片維持多少份額、PCIe 等業務流失多少才成立？非 NVIDIA 加速器顆數與 NVLink Fusion 的競爭是主要不確定性。**
+
+**投資建議：放空**（依上檔空間固定規則：加權目標價上檔空間 −48.5%，落在 −50%～−25%）。
+
+## 重點觀察
+
+1. 目標價 US$132（DCF 105、Comparable 160 各半），比現價 257.16（2026-10-23）低 48.5%，級距 −25%～−50%；Comparable 單獨為 −37.9%。EPS 與倍數兩個因素都在：本模型 12 個月後前瞻 EPS 6.33 比共識 8.21 低 22.9%；同業（Credo、Marvell、Broadcom、Rambus、MACOM）前瞻 P/E 中位數 25.2 倍，現價隱含 31.3 倍共識 EPS、共識目標價 388.36 隱含 47.3 倍（比同業高 87.5%）；Comparable 未給 Astera 的成長溢價（本身前瞻 P/E 約 46 倍）。
+2. 情境分歧從 FY2028 起：FY2027 EPS 三情境同為 6.90，FY2028 A／B／C 為 8.10／6.13／3.60，DCF 價格帶 52～139；Val 頁讀法：以同業約 25 倍計，現價隱含的 FY2028 EPS 比模型 A 高約三成，需要 Scorpio X 份額上升才達得到。
+3. FY2027 EPS 最敏感的是 Scorpio X 份額（高 +18.7%、低 −14.0%）與 PCIe 等份額（高 +15.2%、低 −11.4%）；最大客戶 30% 轉單時 −12.8%（Sens 頁）。下一個檢驗點是 3Q26 財報（2026-11-03）的 Scorpio X 營收與客戶數。
 
 AI 半導體 Project **網通次產業內複製（scale-up 互連：重定時器、交換晶片、AEC）**，樣板為 `crdo/`。**Astera Labs 在非 NVIDIA scale-up 交換晶片（Scorpio X）與 PCIe／CXL／AEC 的份額**在 Units 頁建立，是本專案的權威資料（跨專案規則第 13 條）。金額十億美元；口徑：公司 non-GAAP（排除股票薪酬、併購費用與非現金公允價值調整）；十年 P/E 規則值用 GAAP 換算 EPS（× g2n 0.70，Assumed）。
 
@@ -11,9 +19,9 @@ AI 半導體 Project **網通次產業內複製（scale-up 互連：重定時器
 | 檔案 | 內容 |
 |---|---|
 | `build_alab.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_Astera Labs模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261025_Astera Labs模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_Astera Labs模型_v0.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261025_Astera Labs模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 alab/build_alab.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（scale-up 交換晶片、加速器顆數、每顆 scale-up 交換晶片內容、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`、`tools/valuation_rule.py`（只用規則函式）；**不修改它們**。
 

@@ -184,14 +184,14 @@ V2 = {'name': '奇鋐',
  'pe10': None,
  'px_note': '現價＝In 頁 px（2026-10-22 收盤 3,145；10-23 收盤未找到）',
  'method': 'DCF：股東現金流＝EPS ×（1 − g／ROE），r＝10%、g＝4%、ROE＝近三年平均約 36%（再投資率約 11%），FY2027–29 驅動因子、FY2030–32 收斂法＋永續；ROE 高使再投資率低，DCF 偏高估。Comparable：雙鴻、健策、Vertiv、台達電前瞻 P/E 中位數；同業倍數分散（約 17–59x），雙鴻、健策價格為 8 '
-           '月底，偏誤方向不明確。情境對應：A＝順利、B＝平平、C＝不如預期（原顆數情境）。',
+           '月底，偏誤方向不明確。情境對應：A＝順利（顆數基準＋液冷滲透率高值）、B＝平平（顆數 B＋基準）、C＝不如預期（顆數 C＋滲透率低值）。',
  'readme_val': '估值：Val 第 0 節目標價＝0.5 × DCF 目標價（股東現金流＝EPS ×（1 − tp_g ÷ tp_roe），FY2027–FY2032 明確期＋永續，r 10%、g 4%，三情境權重 0.3／0.5／0.2，推到 12 個月後）＋0.5 × Comparable 目標價（雙鴻、健策、Vertiv、台達電 前瞻 P/E 中位數 × 12 個月後前瞻 '
                'EPS）；另列 Comparable 單獨目標價、市場共識目標價與差距拆解（EPS 因素、倍數因素）、DCF 價格帶、十年 P/E 分位檢查（只作檢查）。',
  'readme_add': ['v0.2（2026-10-25）：(1) PL 頁最下方新增延伸表，三情境延伸到 FY2032；FY2030 起為收斂法，非驅動因子推導（營收年增由 FY2029 線性收斂到 A＝tp_g＋2pt、B＝tp_g、C＝tp_g−2pt；淨利率由 FY2029 收斂到 A＝FY2029、B＝FY2029 '
                 '與十年平均的中點、C＝十年平均；十年平均淨利率未找到，依工作單以 FY2029 × 0.8 替代，Assumed；PL 延伸表灰底）。(2) Val 第 0 節目標價＝DCF 與 Comparable 加權（tp_w_dcf＝0.5）；v0.1.1 的「0. 目標價與上檔空間」改名「舊法：規則值情境加權（參考）」保留，不再是目標價。(3) Sens '
                 '新增目標價參數（tp_r ±1pt、tp_g ±1pt、tp_w_dcf 0.4／0.8）。(4) Recon 新增目標價對帳。(5) 現價：10-23 收盤未找到（Yahoo 股市、HiStock、鉅亨於 2026-10-25 仍為 10-22 或更早），依工作單沿用 2026-10-22 收盤 3,145。上游台達電模型改為 v0.2，本模型讀取的 '
                 'Units 液冷線數值不變。 新增內容一律放在各頁既有內容之後，FY2025–FY2029 既有數值不變。',
-                '情境對應：A＝順利（顆數基準）、B＝平平（CY2028 顆數 ×0.8、CY2029 ×0.85）、C＝不如預期（CY2028–29 ×0.6），即原本的三個顆數情境。三情境在 FY2028 前完全相同（只差顆數係數，從 CY2028 起），DCF 三情境仍照算，差異來自 FY2028 之後（含 FY2030 起的收斂法）。',
+                '情境對應：A＝順利（顆數基準、FY2027 起液冷滲透率高值）、B＝平平（CY2028 顆數 ×0.8、CY2029 ×0.85，滲透率基準）、C＝不如預期（CY2028–29 ×0.6、滲透率低值）。v0.2.1 起液冷滲透率依情境字母（Andy 2026-10-25 13:13，與雙鴻模型同值），FY2027 三情境只差滲透率，顆數差異從 CY2028 起。',
                 '先驗：本版未做先驗，無 Andy 合理 P/E 對照。']}
 sec("J. 目標價（DCF 與 Comparable 加權）與收斂法參數（v0.2 新增；黃底＝Assumed，Andy 可改）")
 inp("tp_r", "折現率／要求報酬（DCF）", "%", None, 0.10, None, "Assumed", "Andy 可改（工作單 2026-10-25 預設 10%；美、台、日、韓同一值）", "Sens 頁 ±1pt")
@@ -290,14 +290,21 @@ for c in "BCDEF": Q.column_dimensions[c].width = 15
 Q.column_dimensions["G"].width = 26; Q.column_dimensions["H"].width = 90; Q.column_dimensions["I"].width = 70
 Q.freeze_panes = "B4"
 
+# 液冷滲透率屬行業情境（技術替代），依情境字母（Andy 2026-10-25 13:13；v0.2.1）：FY2027 起 A＝高值、B＝基準、C＝低值，FY2026 三情境皆基準。
+# 與雙鴻模型（auras/）同一做法；數值單一來源＝本頁 In 的 lpen_26～lpen_29（低／基準／高），雙鴻讀此三欄。
+for y in (26, 27, 28, 29):
+    for s_, suf in (("A", "_hi"), ("B", ""), ("C", "_lo")):
+        wb.defined_names[f"lpen{s_}_{y}"] = DefinedName(f"lpen{s_}_{y}", attr_text=wb.defined_names[f"lpen_{y}" + ("" if y == 26 else suf)].attr_text)
+
 # ---------------- 引擎 ----------------
 FYS = (2025, 2026, 2027, 2028, 2029); FC = {2025: "C", 2026: "D", 2027: "E", 2028: "F", 2029: "G"}
 BU = (2026, 2027, 2028, 2029)
 umx = lambda y, s: {2026: "1", 2027: "1", 2028: f"um28_{s}", 2029: f"um29_{s}"}[y]
-DEFP = dict(scn="A", rel="rel", lcadj="lcadj", lpen="lpen", acr="acr", mf="1", gg="g_gen", gn="g_nai", d="d_lc", opxa="0", mani="mani",
+DEFP = dict(scn="A", rel="rel", lcadj="lcadj", lpen=None, acr="acr", mf="1", gg="g_gen", gn="g_nai", d="d_lc", opxa="0", mani="mani",
             lc="lc", air="air", gen="gen")
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    P["lpen"] = P["lpen"] or f"lpen{s}"   # 液冷滲透率依情境字母（v0.2.1）
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
     hdr(ws, r, ["項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "說明"]); r += 1
@@ -359,9 +366,9 @@ def engine(ws, r0, title, **over):
 
 # ---------------- PL ----------------
 PL = wb.create_sheet("PL")
-PL["A1"] = "PL — 奇鋐損益（十億新台幣；EPS 新台幣；歸屬母公司）。FY2025A 實績、FY2026 錨點（1H26 實績＋3Q26 營收實績＋假設），FY2027 起為模型。FY(t)＝CY(t)。三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2026–FY2027 三情境相同（顆數係數從 CY2028 開始）"
+PL["A1"] = "PL — 奇鋐損益（十億新台幣；EPS 新台幣；歸屬母公司）。FY2025A 實績、FY2026 錨點（1H26 實績＋3Q26 營收實績＋假設），FY2027 起為模型。FY(t)＝CY(t)。三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2026 三情境相同；FY2027 起液冷滲透率依情境字母（A 高、B 基準、C 低；v0.2.1），顆數係數從 CY2028 開始"
 PB = {}; r0 = 60
-SCN_T = {"A": "情境 A：基準（顆數係數 1.0）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85", "C": "情境 C：CY2028–29 顆數 ×0.6"}
+SCN_T = {"A": "情境 A：基準顆數（係數 1.0）＋液冷滲透率高值（FY2027 起）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85＋液冷滲透率基準", "C": "情境 C：CY2028–29 顆數 ×0.6＋液冷滲透率低值（FY2027 起）"}
 for s in SC:
     PB[s] = engine(PL, r0, SCN_T[s], scn=s)
     r0 = PB[s]["end"] + 2
@@ -396,7 +403,7 @@ hdr(UN, 3, ["項目", "單位", "CY2026", "CY2027", "CY2028", "CY2029", "說明"
 ur = 4; UR = {}
 for key, lab, unit, f, fmt, note in (
         ("gw", "部署 GW（情境 A）", "GW", lambda y: f"=PL!{FC[y]}{A_['gw']}", "0.0", "AI IT 資本支出 ÷ 每 GW IT 資本支出"),
-        ("lpen", "液冷滲透率（部署 GW）", "%", lambda y: f"=PL!{FC[y]}{A_['lpen']}", "0.0%", "In 頁 B 節（Assumed）"),
+        ("lpen", "液冷滲透率（部署 GW）", "%", lambda y: f"=PL!{FC[y]}{A_['lpen']}", "0.0%", "In 頁 B 節（Assumed）；情境 A 取高值（FY2027 起）"),
         ("cpg", "每 GW 液冷內容", "US$M/GW", lambda y: f"=PL!{FC[y]}{A_['cpg']}", "#,##0", "橋接表機架內液冷＋分歧管 × 每 GW 機架數 × 內容調整"),
         ("crk", "每架液冷內容（以 VR200 每 GW 架數換算）", "US$K/架", lambda y: f"=PL!{FC[y]}{A_['cpg']}*1000/racks_vr", "#,##0", "對照：橋接表 VR200 機架內液冷 US$56K＋分歧管"),
         ("lmk", "AI 液冷市場（奇鋐可做部分）", "US$B", lambda y: f"=PL!{FC[y]}{A_['lmk']}", "#,##0.0", "不含 CDU、機架外冷卻與液對氣"),
@@ -430,7 +437,7 @@ for j, s in enumerate(SC):
 V.cell(11, 1, "未來 12 月 EPS（模型 A）≈ ¼ FY2026＋¾ FY2027"); V["B11"] = f"=0.25*PL!D{SUMR[('A', 'eps')]}+0.75*PL!E{SUMR[('A', 'eps')]}"; V["B11"].number_format = "0.00"
 V.cell(12, 1, "  現價 ÷ 未來 12 月 EPS（模型 A）"); V["B12"] = "=px/B11"; V["B12"].number_format = "0.0"
 V.cell(13, 1, "近 12 月 P/E（HiStock，10-22）"); V["B13"] = "=pe_ttm"; V["B13"].number_format = "0.0"
-V["E8"] = "FY2027 三情境相同（顆數係數從 CY2028 開始）"
+V["E8"] = "FY2027 三情境只差液冷滲透率（A 高、B 基準、C 低；v0.2.1）；顆數係數從 CY2028 開始"
 V.cell(15, 1, "2. 循環位置（本模型營收最高年；FY(t)＝CY(t)）").font = BOLD
 hdr(V, 16, ["情境", "營收最高年（FY2026–FY2029）", "FY2027 判定", "規則倍數（P/E）", "見頂年是否未知", "說明"])
 for i, s in enumerate(SC, 17):
@@ -516,12 +523,12 @@ for c in "BCDEFGH": V.column_dimensions[c].width = 18
 
 # ---------------- Sens ----------------
 SE = wb.create_sheet("Sens")
-SE["A1"] = "Sens — 一次動一個輸入（情境 A；有效份額、AI 氣冷每 GW、其他營收毛利率在每個案例內依 FY2026 錨點重算，FY2026 恆等於錨點）：對 FY2027、FY2028 的營收、液冷營收、毛利率與 EPS 的影響。每個案例是一個完整推導區塊（本頁下方）"
+SE["A1"] = "Sens — 一次動一個輸入（情境 A，含 FY2027 起液冷滲透率高值；有效份額、AI 氣冷每 GW、其他營收毛利率在每個案例內依 FY2026 錨點重算，FY2026 恆等於錨點）：對 FY2027、FY2028 的營收、液冷營收、毛利率與 EPS 的影響。每個案例是一個完整推導區塊（本頁下方）"
 hdr(SE, 3, ["案例", "設定", "FY2027 營收", "FY2027 液冷營收", "FY2027 毛利率", "FY2027 EPS", "FY2027 EPS 相對基準", "FY2028 營收", "FY2028 液冷營收", "FY2028 毛利率", "FY2028 EPS", "FY2028 EPS 相對基準"])
 cases = [("份額流失（低）", "份額相對值 2027 0.85、2028 0.75、2029 0.70（雙鴻、酷碼、台達電追趕）", dict(rel="RLO")),
          ("份額上升（高）", "份額相對值 1.05", dict(rel="RHI")),
          ("每架液冷內容 低", "內容調整 1.0（只有橋接表的機架內液冷）", dict(lcadj="CALO")), ("每架液冷內容 高", "內容調整 2027 1.6、2028–29 1.8", dict(lcadj="CAHI")),
-         ("液冷滲透率 低", "2026 45%、2027 60%、2028 70%、2029 75%", dict(lpen="LPLO")), ("液冷滲透率 高", "2026 65%、2027 85%、2028–29 95%", dict(lpen="LPHI")),
+         ("液冷滲透率 低", "2026 45%、2027 60%、2028 70%、2029 75%（相對情境 A 的高值）", dict(lpen="LPLO")), ("液冷滲透率 高", "2026 65%、2027 85%、2028–29 95%（FY2027 起與情境 A 相同，只差 FY2026 份額校準）", dict(lpen="LPHI")),
          ("AI 氣冷每 GW 低", "相對值 0.60／0.45／0.40", dict(acr="ACLO")), ("AI 氣冷每 GW 高", "相對值 0.90／0.85／0.80", dict(acr="ACHI")),
          ("AI 部署 ×0.8", "FY2027 起 AI IT 資本支出 ×0.8", dict(mf="mf_lo")), ("AI 部署 ×1.2", "×1.2", dict(mf="mf_hi")),
          ("非 AI 成長 低", "一般伺服器與非伺服器 2027–29 0%", dict(gg="GGLO", gn="GNLO")), ("非 AI 成長 高", "一般伺服器 +15／12／10%、非伺服器 +12／10／8%", dict(gg="GGHI", gn="GNHI")),
@@ -552,11 +559,11 @@ for nm, setting, ov in cases:
 for n, (nm, setting, ov) in enumerate(cases):
     put_case(5 + n, nm, setting, SB[nm], "")
 nn = 5 + len(cases)
-put_case(nn, "顆數情境 B", "CY2028 ×0.8、CY2029 ×0.85", PB["B"], "PL!")
-put_case(nn + 1, "顆數情境 C", "CY2028–29 ×0.6", PB["C"], "PL!")
+put_case(nn, "情境 B（全部）", "CY2028 ×0.8、CY2029 ×0.85＋液冷滲透率基準", PB["B"], "PL!")
+put_case(nn + 1, "情境 C（全部）", "CY2028–29 ×0.6＋液冷滲透率低值", PB["C"], "PL!")
 assert nn + 3 < 40
 SENS_N = len(cases); SENS_NOTE = nn + 3
-SE.cell(nn + 3, 1, "讀法：FY2027 三情境相同；顆數情境 B、C 的差異從 FY2028 起。每個案例的 FY2026 有效份額與 AI 氣冷每 GW 依該案例重算，所以 FY2026 恆等於錨點。「液冷滲透率」案例的 FY2026 份額會反向調整（滲透率低 → 份額高），所以只影響 FY2027 起的成長路徑。")
+SE.cell(nn + 3, 1, "讀法：FY2027 三情境只差液冷滲透率（A 高、B 基準、C 低）；顆數情境 B、C 的差異從 FY2028 起。每個案例的 FY2026 有效份額與 AI 氣冷每 GW 依該案例重算，所以 FY2026 恆等於錨點。「液冷滲透率」案例的 FY2026 份額會反向調整（滲透率低 → 份額高），所以只影響 FY2027 起的成長路徑。")
 SE.column_dimensions["A"].width = 30; SE.column_dimensions["B"].width = 56
 for c in "CDEFGHIJKL": SE.column_dimensions[c].width = 14
 
@@ -809,9 +816,9 @@ for lab, ref, mdl, src in (("12 個月後的前瞻 EPS（情境加權）vs 共�
 # --- README ---
 for rw in range(1, RD.max_row + 1):
     v_ = RD.cell(rw, 1).value
-    if isinstance(v_, str) and rw == 1: RD.cell(rw, 1, v_.replace("v0.1.1", "v0.2"))
+    if isinstance(v_, str) and rw == 1: RD.cell(rw, 1, v_.replace("v0.1.1", "v0.2.1"))
     elif isinstance(v_, str) and v_.startswith("估值："): RD.cell(rw, 1, V2["readme_val"] + "（v0.1.1 原估值說明，保留作參考：" + v_[3:] + "）")
-    elif isinstance(v_, str) and v_.startswith("版本："): RD.cell(rw, 1, "版本：v0.2（2026-10-25：目標價改為 DCF 與 Comparable 加權、三情境延伸到 FY2032；FY2025–FY2029 數值不變）。前版：" + v_[3:])
+    elif isinstance(v_, str) and v_.startswith("版本："): RD.cell(rw, 1, "版本：v0.2.1（2026-10-25：液冷滲透率改依情境字母（奇鋐），數值變動：FY2027 起 A＝高值、B＝基準、C＝低值（與雙鴻模型同值，Andy 2026-10-25 13:13）；補上檔空間級距、投資建議、重點觀察）。v0.2（2026-10-25：目標價改為 DCF 與 Comparable 加權、三情境延伸到 FY2032；FY2025–FY2029 數值不變）。前版：" + v_[3:])
 rn = RD.max_row + 1
 for t_ in V2["readme_add"]:
     RD.cell(rn, 1, t_); rn += 1
@@ -819,6 +826,26 @@ if os.environ.get("V2_ROWMAP"):
     import json as _json
     _json.dump({"XT": XT, "XH": XH, "XR": XR, "T": T, "EPSR": EPSR, "CFR": CFR, "TPS0": TPS0, "TPS_LAST": TPS_LAST, "RECV2": RECV2},
                open(os.environ["V2_ROWMAP"], "w"), ensure_ascii=False, indent=1)
+
+# ================= v0.2.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（工作單；Andy 2026-10-25 14:00、14:17） =================
+# 全部放在 Val、README 現有最後一列之後，不位移既有儲存格
+OBS = [
+       "目標價 NT$3,966（DCF 3,002、Comparable 4,929 各半），比現價 3,145（2026-10-22）高 26.1%，級距 25%–50%；Comparable 單獨為 56.7%。主因是 EPS：本模型 12 個月後前瞻 EPS 179.1 比共識前瞻 EPS 132.6 高 35.1%（兩者期間差約一年；FY2027 B 163.2 比高盛 154.8 高 5.4%），同業（雙鴻、健策、Vertiv、台達電）前瞻 P/E 中位數 27.5 倍略高於現價隱含 23.7 倍；DCF 只有前瞻 EPS 的 16.8 倍、比現價低 4.5%，上檔空間全由 Comparable 拉動。",
+       "v0.2.1 起液冷滲透率依情境字母（A 高、B 基準、C 低）：FY2027 EPS A／B／C＝174.7／163.2／145.8（原三情境同為 163.2），FY2028＝224.8／177.5／130.4（原 209.7／177.5／143.4）；加權目標價由 3,956 升到 3,966，上檔空間由 25.8% 升到 26.1%，離買進與中立的界線 +25% 很近。",
+       "每架液冷內容調整是最敏感的變數：調整 1.0（只有橋接表的機架內液冷）時 FY2028 EPS −18.2%，2027 1.6、2028 1.8 時 +18.3%。10 月營收（約 11-10）與 3Q26 財報與法說（預計 11 月中）可檢驗 2026 年液冷占比（本模型 32%，券商 30–35%）。"
+      ]   # 重點觀察（與 README.md 相同文字；數字取自重算後的 xlsx）
+_U = f"B{T['upw']}"
+GR = V.max_row + 3
+V.cell(GR - 1, 1, "0.4 上檔空間級距與投資建議（v0.2.1 新增；放在本頁最後以免位移既有儲存格；依「上檔空間：加權目標價」第 " + str(T["upw"]) + " 列）").font = BOLD
+tset(GR, "grade", "上檔空間級距", [f'=IF({_U}>0.5,"大於 50%",IF({_U}>0.25,"25%–50%",IF({_U}>=0,"0%–25%",IF({_U}>=-0.25,"0%～−25%",IF({_U}>=-0.5,"−25%～−50%","小於 −50%")))))', None, None], "General",
+     "以「上檔空間：加權目標價」分六級（Andy 2026-10-25 14:00）；負值區間同樣重要")
+tset(GR + 1, "rec", "投資建議", [f'=IF({_U}>0.5,"強力買進",IF({_U}>0.25,"買進",IF({_U}>=-0.25,"中立",IF({_U}>=-0.5,"放空","強力放空"))))', None, None], "General",
+     "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空（剛好 +25% 為中立、+50% 為買進、−25% 為中立、−50% 為放空）")
+rn = RD.max_row + 1
+RD.cell(rn, 1, f'="投資建議："&Val!B{GR + 1}&"（依上檔空間固定規則）"').font = BOLD
+OBS_ROW = rn + 1
+for i_, t_ in enumerate(OBS, 1):
+    RD.cell(rn + i_, 1, f"重點觀察 {i_}：" + t_)
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

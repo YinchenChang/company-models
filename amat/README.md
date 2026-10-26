@@ -1,4 +1,4 @@
-# amat/ — Applied Materials（AMAT）收支與估值模型 v0.2
+# amat/ — Applied Materials（AMAT）收支與估值模型 v0.2.1
 
 > v0.1.1（2026-10-25）：補目標價——Val 新增第 0 節「目標價與上檔空間」、In 新增情境權重 `tp_wA／tp_wB／tp_wC`（0.3／0.5／0.2，Assumed，Andy 可改）；其餘數值與 v0.1 相同。
 
@@ -6,14 +6,24 @@
 
 **核心問題：** 晶圓廠設備支出若在 CY2028 見頂、出口管制再收緊，AMAT 的盈餘能否撐住目前的倍數？
 
+**投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 −6.7%，落在 −25%～+25%）。
+
+## 重點觀察
+
+1. 目標價 US$352（DCF 253、Comparable 451 各半），比現價 377.24（2026-10-23）低 6.7%，級距 0%～−25%；Comparable 單獨為 +19.6%。兩法差距大：DCF 比現價低 33.0%，因情境 B、C 的 EPS 在 FY2028 後依收斂法持平或下滑（B 的 FY2032 EPS 16.01 低於 FY2027 的 16.48），不是 ROE（近三年 41.4%）；本模型前瞻 EPS 17.55 比共識 FY2027 EPS 18.49 低 5.1%（期間晚一年）。
+2. 中國是最敏感的單一輸入：中國營收 −20% 使 FY2028 EPS −6.9%、−40% 使 −13.7%；設備市場情境 C（2028 年 −20%）使 FY2028 EPS 由 19.85 降到 13.95（−29.7%），DCF 價格帶 US$161～355。
+3. 下一個檢驗點是 FY2026 第四季財報（預定 2026-11-12）的 FY2027 第一季指引與中國占比；與共識目標價 627.83 的差距主要是倍數：共識隱含 34.0 倍，比同業前瞻 P/E 中位數 25.7 倍高 32.1%。
+
+v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。
+
 AI 半導體 Project 步驟 5（設備與材料）的第三家公司，結構比照 `advantest/`（設備股：讀 `markets/equipment` 成品、用設備股共用循環位置規則），工作表依序為 README、In、Q、Units、PL、Val、Recon、Sens、Sources。獨立的 Python→Excel 產生器（openpyxl 寫公式，LibreOffice 重算）。
 
 | 檔案 | 內容 |
 |---|---|
 | `build_amat.py` | 產生器（參數與公式） |
-| `dist/20261025_應用材料模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261025_應用材料模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（格式見 `tools/company_html/README.md`） |
-| `dist/20261025_應用材料模型_v0.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格） |
+| `dist/20261025_應用材料模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格） |
 
 建置：`python3 amat/build_amat.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。唯讀取用 `markets/equipment/dist`（各終端市場設備支出三情境、見頂年度、SEMI 對帳值）與 `tools/cycle_position.py`；不修改它們。算力假設（GW、每 GW capex）不直接讀，經設備市場模型間接使用。
 

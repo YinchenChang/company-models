@@ -1,4 +1,4 @@
-# Marvell（MRVL）收支與估值模型 v0.2（AI 半導體 Project：運算層，客製 ASIC＋光互連 DSP＋交換器；樣板 avgo/）
+# Marvell（MRVL）收支與估值模型 v0.2.1（AI 半導體 Project：運算層，客製 ASIC＋光互連 DSP＋交換器；樣板 avgo/）
 # 用法：python3 mrvl/build_mrvl.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度 FY(t)＝t−1 年 2 月～t 年 1 月底（FY2027：2026-02-01～2027-01-30），11/12 落在日曆年 t−1，
 # 所以 FY(t) 直接取 CY(t−1)（與 NVIDIA 相同，平移一年；不跨年加權）。金額：十億美元（US$B）；EPS：美元；口徑：公司 non-GAAP（排除股票薪酬、攤銷、重組、併購費用）。
@@ -703,7 +703,7 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Marvell（MRVL）收支與估值模型 v0.2（AI 半導體 Project：運算層，客製 ASIC＋光互連 DSP＋交換器）　2026-10-25", True),
+lines = [("Marvell（MRVL）收支與估值模型 v0.2.1（AI 半導體 Project：運算層，客製 ASIC＋光互連 DSP＋交換器）　2026-10-25", True),
  ("版本：v0.1（初版）。樣板 avgo/；ASIC 每顆規格（核心售價、HBM 代購）讀 Broadcom 模型（本專案權威），本模型只加 Marvell 份額與光晶片組。本版未做先驗。", False),
  ("模型命題：Marvell 的資料中心營收＝客製 XPU（市場層 ASIC 顆數 × Marvell 份額 × 每顆售價）＋光互連（AI 光模組數 × 每模組晶片組金額 × 份額）＋交換器與其他；公司一年內把 FY2028 營收展望從 $13B 上修到 $20B，市場層顆數推得出多少？", False),
  ("核心問題：以市場層顆數與光模組市場往前推，Marvell FY2028 營收與 EPS 離公司 $20B 展望與共識有多遠；差距要靠哪條產品線補上，現價隱含多少。", False), ("", False),
@@ -750,6 +750,25 @@ RD.cell(len(lines) + 1, 1, "v0.2（2026-10-25）：(1) 目標價改為 DCF 與 C
         "v0.1 的「0. 目標價與上檔空間」改名「舊法：規則值情境加權（參考）」保留。(2) PL 頁末新增三情境延伸到 FY2032：FY2031 起為收斂法，非驅動因子推導（上游市場層只到 CY2029＝FY2030）。"
         "(3) 現價維持 2026-10-23 收盤 228.51（補第二來源 digrin）。(4) In 頁 J 節新增目標價參數（黃底，Andy 可改）；Sens 頁新增 tp_r、tp_g、tp_w_dcf 對加權目標價的影響。FY2026–FY2030 既有數字不變。")
 RD.cell(len(lines) + 2, 1, "情境對應（v0.2 延伸期）：A＝順利（市場層基準顆數）、B＝平平（CY2028 ×0.8、CY2029 ×0.85）、C＝不如預期（CY2028–29 ×0.6）；FY2028 三情境相同，情境差從 FY2029（CY2028）起。本版未做先驗，無 Andy 合理 P/E 對照。")
+
+
+# ---------------- v0.2.1：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00、14:17）；各頁只在現有最後一列之後追加，不位移既有列 ----------------
+_up = next(r for r in range(1, V.max_row + 1) if V.cell(r, 1).value == "上檔空間：加權目標價")
+GRADE_ROW = V.max_row + 2; REC_ROW = GRADE_ROW + 1
+V.cell(GRADE_ROW, 1, "上檔空間級距")
+V.cell(GRADE_ROW, 2, f'=IF(B{_up}>0.5,"大於 50%",IF(B{_up}>0.25,"25%–50%",IF(B{_up}>=0,"0%–25%",IF(B{_up}>=-0.25,"0%～−25%",IF(B{_up}>=-0.5,"−25%～−50%","小於 −50%")))))')
+V.cell(GRADE_ROW, 5, f"以「上檔空間：加權目標價」（B{_up}）分六級（Andy 2026-10-25 14:00）")
+V.cell(REC_ROW, 1, "投資建議")
+V.cell(REC_ROW, 2, f'=IF(B{_up}>0.5,"強力買進",IF(B{_up}>0.25,"買進",IF(B{_up}>=-0.25,"中立",IF(B{_up}>=-0.5,"放空","強力放空"))))')
+V.cell(REC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
+OBS = ['目標價 US$128（DCF 116、Comparable 140 各半），比現價 228.51（2026-10-23）低 44.0%，級距 −25%～−50%；Comparable 單獨為 −38.9%。主因是倍數：本模型 FY2028 EPS 6.52 比共識 7.33 低 11.1%，但現價隱含 31.2 倍共識 FY2028 EPS、共識目標價 341.44 隱含 46.6 倍，同業（Broadcom、NVIDIA、AMD、Astera Labs、Credo）前瞻 P/E 中位數 20.2 倍（共識隱含倍數高 130.7%）。', '情境分歧從 FY2029 起：FY2028 EPS 三情境同為 6.52，FY2029 A／B／C 為 8.58／6.93／5.03，DCF 價格帶 71～147；即使 A 情境 FY2029 EPS 8.58 乘同業中位數 20.2 倍（約 173）也低於現價。', 'FY2028 EPS 最敏感的是光互連：每模組光晶片組金額 ×0.8 時 −12.0%、光晶片組份額 −10pt 時 −9.5%；XPU 方面 TPU 份額 +5pt 可 +8.4%（Sens 頁）。下一個檢驗點是 Q3 FY27 財報（約 2026-11-30～12 月初）的資料中心營收與光互連成長。']   # 重點觀察（與 README.md 相同文字；數字取自重算後的 Val／PL／Sens 頁）
+_rr = RD.max_row + 1
+RD.cell(_rr, 1, 'v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁末新增「上檔空間級距」「投資建議」兩列（Andy 2026-10-25 14:00、14:17 固定規則），README 頁末新增投資建議與重點觀察三點；既有儲存格位置與數值不變。')
+RD.cell(_rr + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"').font = Font(bold=True)
+for _j, _t in enumerate(OBS, 1): RD.cell(_rr + 1 + _j, 1, f"重點觀察 {_j}：" + _t)
+if os.environ.get("RATING_ROWMAP"):   # 除錯用：輸出新增列號（供撰寫 html.json）；CI 不設此變數
+    print("ROWMAP", GRADE_ROW, REC_ROW, _rr, _rr + 1, _rr + 2)
+
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

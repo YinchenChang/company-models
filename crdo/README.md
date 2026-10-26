@@ -1,8 +1,16 @@
-# crdo/ — Credo（CRDO）收支與估值模型 v0.2
+# crdo/ — Credo（CRDO）收支與估值模型 v0.2.1
 
 Credo 的 AEC 營收＝AI 銅纜市場（`markets/network`：scale-up 背板與線纜＋scale-out DAC／AEC）× Credo 有效份額（AEC 滲透率 × Credo 占 AEC）；光學（光 DSP、矽光 PIC〔DustPhotonics〕、ZeroFlap 光學）＝可插拔光模組市場 × 光學份額；線卡 PHY、重定時器與 SerDes IP 另依成長率推。股價自 52 週高點跌約 52%、只約 15 倍共識 FY2028 EPS：市場定價像是 AEC 成長在 FY2028 前後見頂。
 
 **核心問題：市場隱含的 FY2028 EPS 是否低於模型——要成立，AEC 份額（競爭、主動光纜自我替代）、客戶集中（前四大終端客戶占 84%）、銅轉光（AI 銅纜市場）三條路徑各要不利到什麼程度？**
+
+**投資建議：買進**（依上檔空間固定規則：加權目標價上檔空間 +32.9%，落在 +25%～+50%）。
+
+## 重點觀察
+
+1. 目標價 US$196（DCF 101、Comparable 290 各半），比現價 147.29（2026-10-23）高 32.9%，級距 25%–50%；Comparable 單獨為 +97.0%。上檔全部來自倍數：本模型 12 個月後前瞻 EPS 8.40 比共識 9.69 低 13.3%，但現價只隱含 15.2 倍共識前瞻 EPS，同業（Astera Labs、Marvell、Broadcom、MACOM）前瞻 P/E 中位數 34.5 倍、共識目標價 279.09 隱含 28.8 倍；DCF 101 反而比現價低 31.2%，因 B、C 情境 FY2029 起 EPS 下滑（FY2032 B 7.64、C 3.69），且 ROE 無同口徑資料、取 20%。
+2. 目標價對 DCF 權重最敏感：DCF 權重 0.3／0.7 時目標價 233.5／157.9（±19.3%），權重 0.7 時上檔空間只剩 +7.2%、落入中立。
+3. FY2028 EPS 最敏感的是 AEC：最大客戶流失時 −24.5%、AEC 份額流失 −18.6%、AI 銅纜市場 ×0.8 時 −14.9%（Sens 頁）。下一個檢驗點是 2Q FY27 財報（約 2026-12 初）的 AEC 營收與最大客戶占比。
 
 AI 半導體 Project **網通次產業內複製（主動電纜、SerDes、光 DSP）**，比照 `innolight/`。**Credo 在 AI 銅纜（AEC）與光學的份額**在 Units 頁建立，是本專案的權威資料（跨專案規則第 13 條）。金額十億美元；口徑：公司 non-GAAP（排除股票薪酬、併購攤銷與整合費用）；十年 P/E 規則值用 GAAP 換算 EPS（× g2n 0.70，Assumed）。
 
@@ -11,9 +19,9 @@ AI 半導體 Project **網通次產業內複製（主動電纜、SerDes、光 DS
 | 檔案 | 內容 |
 |---|---|
 | `build_crdo.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_Credo模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261025_Credo模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_Credo模型_v0.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261025_Credo模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 crdo/build_crdo.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI 銅纜、scale-out 銅纜、可插拔光模組、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`、`tools/valuation_rule.py`（只用規則函式）；**不修改它們**。
 

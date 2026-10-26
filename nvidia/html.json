@@ -460,6 +460,35 @@
           ]
         },
         {
+          "type": "note",
+          "parts": [
+            "@Val!A178",
+            "：",
+            "@Val!B178"
+          ]
+        },
+        {
+          "type": "note",
+          "parts": [
+            "@Val!A179",
+            "：",
+            "@Val!B179",
+            "（依上檔空間固定規則）"
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "重點觀察"
+        },
+        {
+          "type": "list",
+          "items": [
+            "@README!A22",
+            "@README!A23",
+            "@README!A24"
+          ]
+        },
+        {
           "type": "bars",
           "title": "目標價與現價",
           "items": [

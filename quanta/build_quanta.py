@@ -751,9 +751,9 @@ for lab, ref, mdl, src in (("12 個月後的前瞻 EPS（情境加權）vs 共�
 # --- README ---
 for rw in range(1, RD.max_row + 1):
     v_ = RD.cell(rw, 1).value
-    if isinstance(v_, str) and rw == 1: RD.cell(rw, 1, v_.replace("v0.1.1", "v0.2"))
+    if isinstance(v_, str) and rw == 1: RD.cell(rw, 1, v_.replace("v0.1.1", "v0.2.1"))
     elif isinstance(v_, str) and v_.startswith("估值："): RD.cell(rw, 1, V2["readme_val"] + "（v0.1.1 原估值說明，保留作參考：" + v_[3:] + "）")
-    elif isinstance(v_, str) and v_.startswith("版本："): RD.cell(rw, 1, "版本：v0.2（2026-10-25：目標價改為 DCF 與 Comparable 加權、三情境延伸到 FY2032；FY2025–FY2029 數值不變）。前版：" + v_[3:])
+    elif isinstance(v_, str) and v_.startswith("版本："): RD.cell(rw, 1, "版本：v0.2.1（2026-10-25：補上檔空間級距、投資建議、重點觀察；PL 頁最後新增三情境自由現金流列（淨利＋折舊 − 資本支出，不含營運資金變動）、In 頁最後新增折舊 ÷ 營收、資本支出 ÷ 營收（數值不變））。v0.2（2026-10-25：目標價改為 DCF 與 Comparable 加權、三情境延伸到 FY2032；FY2025–FY2029 數值不變）。前版：" + v_[3:])
 rn = RD.max_row + 1
 for t_ in V2["readme_add"]:
     RD.cell(rn, 1, t_); rn += 1
@@ -761,6 +761,52 @@ if os.environ.get("V2_ROWMAP"):
     import json as _json
     _json.dump({"XT": XT, "XH": XH, "XR": XR, "T": T, "EPSR": EPSR, "CFR": CFR, "TPS0": TPS0, "TPS_LAST": TPS_LAST, "RECV2": RECV2},
                open(os.environ["V2_ROWMAP"], "w"), ensure_ascii=False, indent=1)
+
+# ================= v0.2.1（2026-10-25）：自由現金流（算力收支 2026-10-25 請求；投資地圖依列標籤「自由現金流」讀取） =================
+# In 頁最後新增折舊 ÷ 營收、資本支出 ÷ 營收（FY2025 實績為錨，各年沿用）；PL 頁最後新增三情境自由現金流列。不位移既有儲存格。
+ir = IN.max_row + 2
+IN.cell(ir, 1, "K. 自由現金流參數（v0.2.1 新增；以 FY2025 年報實績為錨，FY2026 起各年沿用；只供 PL 頁自由現金流列，不進 EPS 與目標價）").font = BOLD; ir += 1
+for key_, item_, val_, s1_ in (("da_r", "折舊與攤銷 ÷ 營收", "=12.081/a25_rev", "FY2025 折舊與攤銷 120.81 億元 ÷ FY2025 營收（Q 頁 B4）；stockanalysis（S&P Global）現金流量表，2026-10-25 擷取"),
+                               ("cx_r", "資本支出 ÷ 營收", "=14.757/a25_rev", "FY2025 資本支出（購置不動產、廠房及設備）147.57 億元 ÷ FY2025 營收（Q 頁 B4）；stockanalysis（S&P Global）現金流量表，2026-10-25 擷取")):
+    IN.cell(ir, 1, key_); IN.cell(ir, 2, item_); IN.cell(ir, 3, "%")
+    IN.cell(ir, 5, val_).number_format = "0.00%"
+    IN.cell(ir, 7, "Verified（FY2025 實績）／Assumed（各年沿用）"); IN.cell(ir, 8, s1_); IN.cell(ir, 9, "FY2026 起各年＝營收 × 本比率（Assumed：資本密集度不變）")
+    wb.defined_names[key_] = DefinedName(key_, attr_text=f"In!$E${ir}"); ir += 1
+fr = PL.max_row + 3
+PL.cell(fr, 1, "自由現金流（v0.2.1 新增；算力收支 2026-10-25 請求）：淨利（歸屬母公司，延伸表）＋折舊與攤銷（營收 × In 頁 da_r）− 資本支出（營收 × In 頁 cx_r）；不含營運資金變動。FY2030 起營收、淨利為收斂法").font = BOLD; fr += 1
+hdr(PL, fr, ["項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "FY2030（收斂）", "FY2031（收斂）", "FY2032（收斂）", "說明"]); FCF_H = fr; fr += 1
+FCFR = {}
+for s in SC:
+    PL.cell(fr, 1, f"自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）｜{SCN_T[s]}"); PL.cell(fr, 2, V2["unit"])
+    for y in XY[1:]:
+        c = XC[y]
+        PL[f"{c}{fr}"] = f"={c}{XR[s]['ni']}+{c}{XR[s]['rev']}*da_r-{c}{XR[s]['rev']}*cx_r"; PL[f"{c}{fr}"].number_format = "#,##0.0"
+        if y in FADE: PL[f"{c}{fr}"].fill = FADEFILL
+    PL.cell(fr, 11, "淨利、營收引用本頁延伸表同情境列；折舊、資本支出以 FY2025 實績比率 × 營收")
+    FCFR[s] = fr; fr += 1
+so = SO.max_row + 1
+SO.cell(so, 1, "[Verified] 廣達 FY2025 年報：折舊與攤銷 120.81 億元、資本支出 147.57 億元、營業現金流 −103.65 億元（資料商轉載合併現金流量表）"); SO.cell(so, 2, "https://stockanalysis.com/quote/tpe/2382/financials/cash-flow-statement/")
+SO.cell(so + 1, 1, "[Assumed] FY2026 起折舊 ÷ 營收、資本支出 ÷ 營收沿用 FY2025 實績比率（In 頁 da_r、cx_r）；自由現金流不含營運資金變動"); SO.cell(so + 1, 2, "本模型假設")
+
+# ================= v0.2.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（工作單；Andy 2026-10-25 14:00、14:17） =================
+# 全部放在 Val、README 現有最後一列之後，不位移既有儲存格
+OBS = [
+       "目標價 NT$566.6（DCF 644.3、Comparable 488.9 各半），比現價 322（2026-10-22）高 76.0%，級距大於 50%；Comparable 單獨為 51.8%。主因是 EPS 不是倍數：本模型 12 個月後前瞻 EPS 43.00 比共識前瞻 EPS 28.56 高 50.6%（兩者期間差約一年；FY2027 EPS 43.61 也比法人 10-08 的 32.09 高 35.9%），同業（緯創、緯穎、鴻海、英業達、Super Micro）前瞻 P/E 中位數 11.4 倍與現價隱含 11.3 倍幾乎相同；DCF（ROE 27.2%、再投資率 14.7%）比 Comparable 高 31.8%，再把目標價往上拉。",
+       "EPS 高於法人來自營收與淨利係數：FY2027 營收 5.71 兆元比法人 5.30 兆元高 7.7%，淨利 ÷ 營業利益約 0.87；改用券商隱含的 0.75 時 FY2027 EPS 降 13.3% 到 37.81，是 FY2027 最敏感的變數。3Q26 法說（11 月中）的業外與稅率是第一個檢驗點。",
+       "情境分歧從 FY2028 起：FY2028 EPS A／B／C＝51.92／41.96／31.56（B、C 比 A 低 19.2%、39.2%）；份額相對值 0.75（鴻海、緯創搶單）時 FY2028 EPS −18.2%。追蹤三家 ODM 的 Vera Rubin 櫃數份額（本模型 FY2026 有效份額 13.4%）與 2027 年客供比例。"
+      ]   # 重點觀察（與 README.md 相同文字；數字取自重算後的 xlsx）
+_U = f"B{T['upw']}"
+GR = V.max_row + 3
+V.cell(GR - 1, 1, "0.4 上檔空間級距與投資建議（v0.2.1 新增；放在本頁最後以免位移既有儲存格；依「上檔空間：加權目標價」第 " + str(T["upw"]) + " 列）").font = BOLD
+tset(GR, "grade", "上檔空間級距", [f'=IF({_U}>0.5,"大於 50%",IF({_U}>0.25,"25%–50%",IF({_U}>=0,"0%–25%",IF({_U}>=-0.25,"0%～−25%",IF({_U}>=-0.5,"−25%～−50%","小於 −50%")))))', None, None], "General",
+     "以「上檔空間：加權目標價」分六級（Andy 2026-10-25 14:00）；負值區間同樣重要")
+tset(GR + 1, "rec", "投資建議", [f'=IF({_U}>0.5,"強力買進",IF({_U}>0.25,"買進",IF({_U}>=-0.25,"中立",IF({_U}>=-0.5,"放空","強力放空"))))', None, None], "General",
+     "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空（剛好 +25% 為中立、+50% 為買進、−25% 為中立、−50% 為放空）")
+rn = RD.max_row + 1
+RD.cell(rn, 1, f'="投資建議："&Val!B{GR + 1}&"（依上檔空間固定規則）"').font = BOLD
+OBS_ROW = rn + 1
+for i_, t_ in enumerate(OBS, 1):
+    RD.cell(rn + i_, 1, f"重點觀察 {i_}：" + t_)
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

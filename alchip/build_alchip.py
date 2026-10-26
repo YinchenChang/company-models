@@ -1,4 +1,4 @@
-# 世芯-KY（3661.TW）收支與估值模型 v0.1（AI 半導體 Project：運算層，ASIC 設計服務＋量產；樣板 mediatek/、mrvl/）
+# 世芯-KY（3661.TW）收支與估值模型 v0.1.1（AI 半導體 Project：運算層，ASIC 設計服務＋量產；樣板 mediatek/、mrvl/）
 # 用法：python3 alchip/build_alchip.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不平移。金額：十億新台幣（NT$B）；每顆價格：千美元（US$K）；EPS：新台幣（基本）。
 # 營收＝NRE（委託設計）＋量產（turnkey：晶圓、封裝、測試轉售，毛利率低）。
@@ -731,7 +731,7 @@ SO.column_dimensions["A"].width = 100; SO.column_dimensions["B"].width = 130
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("世芯-KY（3661.TW）收支與估值模型 v0.1（AI 半導體 Project：運算層，ASIC 設計服務＋量產）　2026-10-25", True),
+lines = [("世芯-KY（3661.TW）收支與估值模型 v0.1.1（AI 半導體 Project：運算層，ASIC 設計服務＋量產）　2026-10-25", True),
  ("版本：v0.1（初版）。Trainium 顆數讀台積電模型（與 markets/memory 同一份），每顆規格讀 Broadcom 模型 pa_trn（扣 HBM 口徑與 Marvell 模型相同），份額與 Marvell 合計不超過 100%；其他營收（NRE＋非 Trainium 量產）用簡化成長率。本版未做先驗。", False),
  ("模型命題：世芯的營收由 NRE 轉為 Trainium 量產（turnkey，含晶圓與封裝轉售、毛利率低）。FY2026 3 奈米約 15 億美元、3Q26 單季營收 260 億元；以市場層 Trainium 顆數 × 世芯份額 × 每顆營收往前推，FY2027–28 的營收與 EPS 有多少，2 奈米換代的份額與每顆營收差異有多大？", False),
  ("核心問題：在市場層 Trainium 顆數（CY2027 2.5 百萬顆）與 Marvell 份額口徑下，世芯 FY2027–28 的 EPS 與賣方差多少；FY2028 的 2 奈米換代靠份額還是每顆營收；現價約 17 倍前瞻 P/E 隱含哪一條路徑。", False), ("", False),
@@ -751,6 +751,25 @@ lines = [("世芯-KY（3661.TW）收支與估值模型 v0.1（AI 半導體 Proje
  ("公司特有：世芯 Trainium 份額 CY2027 55%／50%／40%、CY2028 起 55%／45%／35%；2 奈米每顆營收係數 1.5／1.2／1.0；Trainium 毛利率調整 +1／0／−2pt；其他營收年增 FY2027 +15%／+5%／−10%、FY2028–29 +12%／+5%／−5%。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
+
+
+# ---------------- v0.1.1：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00、14:17）；各頁只在現有最後一列之後追加，不位移既有列 ----------------
+_up = next(r for r in range(1, V.max_row + 1) if V.cell(r, 1).value == "上檔空間：加權目標價")
+GRADE_ROW = V.max_row + 2; REC_ROW = GRADE_ROW + 1
+V.cell(GRADE_ROW, 1, "上檔空間級距")
+V.cell(GRADE_ROW, 2, f'=IF(B{_up}>0.5,"大於 50%",IF(B{_up}>0.25,"25%–50%",IF(B{_up}>=0,"0%–25%",IF(B{_up}>=-0.25,"0%～−25%",IF(B{_up}>=-0.5,"−25%～−50%","小於 −50%")))))')
+V.cell(GRADE_ROW, 5, f"以「上檔空間：加權目標價」（B{_up}）分六級（Andy 2026-10-25 14:00）")
+V.cell(REC_ROW, 1, "投資建議")
+V.cell(REC_ROW, 2, f'=IF(B{_up}>0.5,"強力買進",IF(B{_up}>0.25,"買進",IF(B{_up}>=-0.25,"中立",IF(B{_up}>=-0.5,"放空","強力放空"))))')
+V.cell(REC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
+OBS = ['目標價 NT$5,926（DCF 3,503、Comparable 8,348 各半），比現價 3,495（2026-10-22）高 69.6%，級距 大於 50%；Comparable 單獨為 +138.9%。主因是倍數：本模型 12 個月後前瞻 EPS 215.44 只比共識前瞻 EPS 203.79 高 5.7%，但同業（創意、智原、聯發科、博通、邁威爾）前瞻 P/E 中位數 38.8 倍，現價只隱含 17.2 倍、共識目標價 5,803 隱含 28.5 倍（比同業低 26.5%）；DCF 3,503 與現價幾乎相同（+0.2%），上檔全部來自 Comparable，而 Comparable 未扣世芯單一客戶集中與 turnkey 低毛利的折價，偏高估。', '情境分歧很大：FY2028 EPS A／B／C 為 338.6／196.6／103.5，DCF 價格帶 1,226～5,691，差在 Trainium 顆數與世芯份額（CY2028 起 55%／45%／35%）；目標價對 DCF 權重也敏感，權重 0.7 時降 16.4%（約 4,957，上檔 +41.8%）。', 'Trainium 份額是 FY2027 EPS 最敏感的變數（取高值 +20.7%、−10pt 時 −10.4%）；FY2028 起再加上 2 奈米每顆營收（×2.5 時 FY2028 營收 +58.9%、COT 模式 ×0.8 時 −41.2%）（Sens 頁）。下一個檢驗點是 3Q26 財報與法說（約 2026-11 上旬）的 Trainium 3 量產進度。']   # 重點觀察（與 README.md 相同文字；數字取自重算後的 Val／PL／Sens 頁）
+_rr = RD.max_row + 1
+RD.cell(_rr, 1, 'v0.1.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁末新增「上檔空間級距」「投資建議」兩列（Andy 2026-10-25 14:00、14:17 固定規則），README 頁末新增投資建議與重點觀察三點；既有儲存格位置與數值不變。')
+RD.cell(_rr + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"').font = Font(bold=True)
+for _j, _t in enumerate(OBS, 1): RD.cell(_rr + 1 + _j, 1, f"重點觀察 {_j}：" + _t)
+if os.environ.get("RATING_ROWMAP"):   # 除錯用：輸出新增列號（供撰寫 html.json）；CI 不設此變數
+    print("ROWMAP", GRADE_ROW, REC_ROW, _rr, _rr + 1, _rr + 2)
+
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

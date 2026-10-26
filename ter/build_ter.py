@@ -1,4 +1,4 @@
-# 泰瑞達（Teradyne，TER US）收支與估值模型 v0.1（AI 半導體 Project 步驟 5：設備與材料——測試機第二家）
+# 泰瑞達（Teradyne，TER US）收支與估值模型 v0.1.1（AI 半導體 Project 步驟 5：設備與材料——測試機第二家）
 # 用法：python3 ter/build_ter.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年（FY2026＝2026-01～12）。金額：百萬美元（US$M）；EPS：美元（GAAP 稀釋）。
 # 樣板：advantest/（工作表結構、三情境、Val 列標籤、html.json 七章）。
@@ -564,7 +564,7 @@ SO.column_dimensions["A"].width = 70; SO.column_dimensions["B"].width = 120
 
 # ---------------- README 頁 ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("泰瑞達（Teradyne，TER US）收支與估值模型 v0.1（AI 半導體 Project 步驟 5：設備與材料）　2026-10-25", True),
+lines = [("泰瑞達（Teradyne，TER US）收支與估值模型 v0.1.1（AI 半導體 Project 步驟 5：設備與材料）　2026-10-25", True),
  ("模型命題：泰瑞達的盈餘由 AI 加速器與 HBM 的測試需求決定：SoC 測試機約三成份額、記憶體測試機約三成份額，乘上與 Advantest 同一份測試機市場；機器人事業另列、不隨 AI 情境。股價要看兩件事：測試機市場在 2027 年是否真的再長四成（公司自己說測試對 WFE 比 2027 年可能回落），以及 GPU 與第二家雲端客戶的份額能否在 2027 年起明顯增加。", False),
  ("", False),
  ("會計年度＝日曆年。金額為百萬美元，EPS 為 GAAP 稀釋（共識為 non-GAAP，差約每年 0.3）。3Q26 預定 2026-10-27 盤後公布，建置日（2026-10-25）尚未公布；FY2026 為錨點：上半年實績＋下半年＝ 2 × 3Q26 指引中點。", False),
@@ -753,6 +753,25 @@ if os.environ.get("TER_ROWS"):
     json.dump(dict(V2T=V2T, EXT=V2EXT, J=V2J, SUMR={f"{a}|{b}": v for (a, b), v in SUMR.items()}, PB=PB, VAL=VAL, FR=FR, TP0=TP0, INROW=INROW,
                    UR={f"{a}|{b}": v for (a, b), v in UR.items()}, SENS_LAST=SENS_LAST, RECON_LAST=RECON_LAST, EP=EP),
               open(os.environ["TER_ROWS"], "w"), ensure_ascii=False, indent=0)
+
+
+# ---------------- v0.1.1：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00、14:17）；各頁只在現有最後一列之後追加，不位移既有列 ----------------
+_up = next(r for r in range(1, V.max_row + 1) if V.cell(r, 1).value == "上檔空間：加權目標價")
+GRADE_ROW = V.max_row + 2; REC_ROW = GRADE_ROW + 1
+V.cell(GRADE_ROW, 1, "上檔空間級距")
+V.cell(GRADE_ROW, 2, f'=IF(B{_up}>0.5,"大於 50%",IF(B{_up}>0.25,"25%–50%",IF(B{_up}>=0,"0%–25%",IF(B{_up}>=-0.25,"0%～−25%",IF(B{_up}>=-0.5,"−25%～−50%","小於 −50%")))))')
+V.cell(GRADE_ROW, 5, f"以「上檔空間：加權目標價」（B{_up}）分六級（Andy 2026-10-25 14:00）")
+V.cell(REC_ROW, 1, "投資建議")
+V.cell(REC_ROW, 2, f'=IF(B{_up}>0.5,"強力買進",IF(B{_up}>0.25,"買進",IF(B{_up}>=-0.25,"中立",IF(B{_up}>=-0.5,"放空","強力放空"))))')
+V.cell(REC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
+OBS = ['目標價 US$312（DCF 219、Comparable 405 各半），比現價 308.85（2026-10-23）高 1.1%，級距 0%–25%；Comparable 單獨為 +31.2%。兩法分歧大：同業（Advantest、KLA、Cohu、FormFactor、應用材料）前瞻 P/E 中位數 28.2 倍 × 12 個月後前瞻 EPS 14.38 得 405，DCF 只有 219（比現價低 29.0%）；本模型前瞻 EPS 比共識 FY2027 EPS 11.30 高 27.3%（期間約早一年），共識目標價 446.47 隱含 39.5 倍。', 'EPS 偏高的來源是測試機市場：整份取自 Advantest 模型，CY2027 比 CY2026 高約四成，高於泰瑞達自己說的測試對 WFE 比；SoC 測試機市場 −15% 時 FY2027 EPS −14.0%，SoC 市占 ±5pt 時 ±14.9%（Sens 頁）。', '情境 B、C 從 FY2028 起分歧：FY2028 EPS A／B／C 為 16.61／14.15／12.31，DCF 價格帶 154～286。下一個檢驗點是 3Q26 財報（2026-10-27 盤後；建置日尚未公布、未納入）。']   # 重點觀察（與 README.md 相同文字；數字取自重算後的 Val／PL／Sens 頁）
+_rr = RD.max_row + 1
+RD.cell(_rr, 1, 'v0.1.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁末新增「上檔空間級距」「投資建議」兩列（Andy 2026-10-25 14:00、14:17 固定規則），README 頁末新增投資建議與重點觀察三點；既有儲存格位置與數值不變。')
+RD.cell(_rr + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"').font = Font(bold=True)
+for _j, _t in enumerate(OBS, 1): RD.cell(_rr + 1 + _j, 1, f"重點觀察 {_j}：" + _t)
+if os.environ.get("RATING_ROWMAP"):   # 除錯用：輸出新增列號（供撰寫 html.json）；CI 不設此變數
+    print("ROWMAP", GRADE_ROW, REC_ROW, _rr, _rr + 1, _rr + 2)
+
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

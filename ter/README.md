@@ -1,8 +1,16 @@
-# ter/ — 泰瑞達（Teradyne，TER US）收支與估值模型 v0.1
+# ter/ — 泰瑞達（Teradyne，TER US）收支與估值模型 v0.1.1
 
 **模型命題：** 泰瑞達的盈餘由 AI 加速器與 HBM 的測試需求決定。SoC 測試機約有三成份額，記憶體測試機也約三成，兩者都乘上與 Advantest 同一份測試機市場。機器人事業另列，不隨 AI 情境變動。
 
 **核心問題：** 股價要看兩件事。第一，測試機市場在 2027 年是否真的再長約四成（公司自己說測試對 WFE 比 2027 年可能回落到 7%）。第二，泰瑞達在 GPU 客戶與第二家雲端客戶的份額，能否從 2027 年起明顯增加。
+
+**投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 +1.1%，落在 −25%～+25%）。
+
+## 重點觀察
+
+1. 目標價 US$312（DCF 219、Comparable 405 各半），比現價 308.85（2026-10-23）高 1.1%，級距 0%–25%；Comparable 單獨為 +31.2%。兩法分歧大：同業（Advantest、KLA、Cohu、FormFactor、應用材料）前瞻 P/E 中位數 28.2 倍 × 12 個月後前瞻 EPS 14.38 得 405，DCF 只有 219（比現價低 29.0%）；本模型前瞻 EPS 比共識 FY2027 EPS 11.30 高 27.3%（期間約早一年），共識目標價 446.47 隱含 39.5 倍。
+2. EPS 偏高的來源是測試機市場：整份取自 Advantest 模型，CY2027 比 CY2026 高約四成，高於泰瑞達自己說的測試對 WFE 比；SoC 測試機市場 −15% 時 FY2027 EPS −14.0%，SoC 市占 ±5pt 時 ±14.9%（Sens 頁）。
+3. 情境 B、C 從 FY2028 起分歧：FY2028 EPS A／B／C 為 16.61／14.15／12.31，DCF 價格帶 154～286。下一個檢驗點是 3Q26 財報（2026-10-27 盤後；建置日尚未公布、未納入）。
 
 AI 半導體 Project 步驟 5（設備與材料）的第二家測試機公司。樣板是 `advantest/`：工作表結構、三情境、Val 列標籤與 `html.json` 七章都相同，以 openpyxl 寫公式。
 
@@ -11,9 +19,9 @@ AI 半導體 Project 步驟 5（設備與材料）的第二家測試機公司。
 | 檔案 | 內容 |
 |---|---|
 | `build_ter.py` | 產生器（參數與公式） |
-| `dist/20261025_泰瑞達模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；重建逐格比對差異 0） |
+| `dist/20261025_泰瑞達模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；重建逐格比對差異 0） |
 | `html.json` | HTML 展示層設定（格式見 `tools/company_html/README.md`） |
-| `dist/20261025_泰瑞達模型_v0.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261025_泰瑞達模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 **建置。** 先執行 `python3 ter/build_ter.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序為 README、In、Q、Units、PL、Val、Recon、Sens、Sources。
 

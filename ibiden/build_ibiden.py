@@ -1,4 +1,4 @@
-# Ibiden（4062）收支與估值模型 v0.2（AI 半導體 Project：載板與 PCB 次產業樣板）
+# Ibiden（4062）收支與估值模型 v0.2.1（AI 半導體 Project：載板與 PCB 次產業樣板）
 # 用法：python3 ibiden/build_ibiden.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度 4 月至隔年 3 月：FY(t)＝t/4–(t+1)/3（公司稱「(t+1) 年 3 月期」），對照 CY(t) 的加速器顆數（重疊 9 個月，不做平移）。
 # 金額：十億日圓（¥B）；EPS：日圓（2026-10-01 一拆二之後的股數口徑）。美元換算只作對照（¥152／US$，公司 FY2026 前提）。
@@ -718,6 +718,78 @@ if os.environ.get("V2_ROWMAP"):
     import json as _json
     _json.dump({"XT": XT, "XH": XH, "XR": XR, "T": T, "EPSR": EPSR, "CFR": CFR, "TPS0": TPS0, "TPS_LAST": TPS_LAST, "RECV2": RECV2},
                open(os.environ["V2_ROWMAP"], "w"), ensure_ascii=False, indent=1)
+
+# ---------------- v0.2.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00／14:17）----------------
+# 新列一律放在 Val、README 工作表既有內容之後，不位移既有列；既有數值不變
+VER_PREV, VER_NOW = 'v0.2', 'v0.2.1'
+OBS = [
+ "目標價 ¥5,236（DCF 1,931、Comparable 8,541 各半），比現價 8,512（2026-10-23）低 38.5%，級距 −25%～−50%；Comparable 單獨為 +0.3%。主因是 DCF 不是 EPS：本模型 12 個月後前瞻 EPS 202.0 比共識前瞻 EPS 180.9 高 11.7%，但 ROE 近三年平均 8.6% 低於折現率 10%，再投資率 46% 使成長不創造價值，DCF 比現價低 77.3%；Comparable 端同業前瞻 P/E 中位數 42.3 倍、現價 ÷ 共識前瞻 EPS 47.0 倍、共識目標價 12,432 隱含 68.7 倍。ROE 用的是 AI 載板放量前的年度，DCF 對 ABF 漲價路徑的反映有限，待 Andy 判斷。",
+ "短缺溢價是最敏感的變數：溢價快速回落（2028 年指數 0.85）時 FY2028 EPS −24.6%、電子事業營益率由 29.1% 降到 23.0%，溢價延續則 +24.6%；份額流失（2028 年相對值 0.75）−11.7%；顆數情境 C −31.6%。",
+ "自由現金流（v0.2.1 新增；淨利＋折舊 − 資本支出，不含營運資金變動；折舊、資本支出各取營收的 15%、25%）情境 B 的 FY2027 為 ¥50.4B、FY2028 為 ¥36.2B；若 FY2026 照公司計畫（設備投資 2,100 億、折舊 810 億）則約 −¥45B，固定比率會攤平擴產前段的負值。下一個檢驗點是 FY2026 上半年決算（預計 2026-10 底或 11 月初）：全年預測與設備投資 2,100 億是否調整。"
+]   # 重點觀察（數字取自重算後的 Val／PL／Sens；與 README.md 相同文字）
+UPW_ROW = next(r_ for r_ in range(1, V.max_row + 1) if V.cell(r_, 1).value == "上檔空間：加權目標價")
+GRADE_ROW = V.max_row + 1; REC_ROW = GRADE_ROW + 1
+_u = f"B{UPW_ROW}"
+V.cell(GRADE_ROW, 1, "上檔空間級距")
+V[f"B{GRADE_ROW}"] = f'=IF({_u}>0.5,"大於 50%",IF({_u}>0.25,"25%–50%",IF({_u}>=0,"0%–25%",IF({_u}>=-0.25,"0%～−25%",IF({_u}>=-0.5,"−25%～−50%","小於 −50%")))))'
+V[f"B{GRADE_ROW}"].number_format = "@"
+V[f"E{GRADE_ROW}"] = f"以「上檔空間：加權目標價」（第 {UPW_ROW} 列）分六級（Andy 2026-10-25 14:00）"
+V.cell(REC_ROW, 1, "投資建議")
+V[f"B{REC_ROW}"] = f'=IF({_u}>0.5,"強力買進",IF({_u}>0.25,"買進",IF({_u}>=-0.25,"中立",IF({_u}>=-0.5,"放空","強力放空"))))'
+V[f"B{REC_ROW}"].number_format = "@"
+V[f"E{REC_ROW}"] = "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空（剛好 +25% 為中立、+50% 為買進、−25% 為中立、−50% 為放空）"
+# --- 自由現金流（算力收支 2026-10-25 請求；地圖依列標籤讀取）：In 頁最後新增折舊 ÷ 營收、資本支出 ÷ 營收；PL 頁最後新增一列（三情境 × 模型年度） ---
+r_in = IN.max_row + 2
+IN.cell(r_in, 1, "K. 自由現金流假設（v0.2.1 新增；算力收支 2026-10-25 請求；只用於 PL 頁最後一列「自由現金流」，不進 EPS、DCF 與目標價）").font = BOLD; r_in += 1
+for key_, item_, lo_, base_, hi_, s1_, s2_ in (
+        ("da_rev", "折舊 ÷ 營收", 0.13, 0.15, 0.17,
+         "FY2025 實績（2026 年 3 月期）：折舊攤銷 662 億 ÷ 營收 4,162 億＝15.9%（stockanalysis 現金流量表，Verified）",
+         "FY2026 公司計畫：折舊 810 億 ÷ 營收預測 5,500 億＝14.7%（Q1 補足資料，Interested-party）；取兩者之間 15%，各年同比率（Assumed）"),
+        ("cx_rev", "資本支出 ÷ 營收", 0.20, 0.25, 0.38,
+         "FY2025 實績：資本支出 1,061 億 ÷ 營收 4,162 億＝25.5%（stockanalysis 現金流量表，Verified）；公司計畫 2026–2028 年度三年約 5,000 億（EE Times Japan 2026-02-05，Interested-party）÷ 本模型情境 B 三年營收約 1.93 兆＝25.9%",
+         "FY2026 單年計畫設備投資 2,100 億 ÷ 5,500 億＝38.2%（前段集中；高值）；FY2029 起擴產計畫結束，固定 25% 可能高估資本支出（Assumed）")):
+    IN.cell(r_in, 1, key_); IN.cell(r_in, 2, item_); IN.cell(r_in, 3, "%")
+    for j_, v_ in ((4, lo_), (5, base_), (6, hi_)):
+        IN.cell(r_in, j_, v_).font = BLUE; IN.cell(r_in, j_).number_format = "0.0%"
+    IN.cell(r_in, 5).fill = KEY
+    IN.cell(r_in, 7, "Assumed"); IN.cell(r_in, 8, s1_); IN.cell(r_in, 9, s2_)
+    wb.defined_names[key_] = DefinedName(key_, attr_text=f"In!$E${r_in}")
+    r_in += 1
+FCF_YRS = (2026, 2027, 2028, 2029, 2030, 2031, 2032)
+fh = PL.max_row + 1; fr = fh + 1
+PL.cell(fh, 1, "項目（自由現金流；欄＝年度 × 情境，FY2026 為錨點年、FY2030 起為收斂法）").font = BOLD
+PL.cell(fh, 2, "單位")
+_col = 3
+for s_ in SC:
+    for y_ in FCF_YRS:
+        PL.cell(fh, _col, f"FY{y_} {s_}").font = BOLD
+        R_ = XR[s_]; c_ = XC[y_]
+        PL.cell(fr, _col, f"={c_}{R_['ni']}+{c_}{R_['rev']}*da_rev-{c_}{R_['rev']}*cx_rev").number_format = "#,##0.0"
+        _col += 1
+PL.cell(fh, _col, "說明").font = BOLD
+PL.cell(fr, 1, "自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）"); PL.cell(fr, 2, V2["unit"])
+PL.cell(fr, _col, "淨利與營收取自本頁延伸表；折舊＝營收 × In 頁 da_rev、資本支出＝營收 × In 頁 cx_rev（各年同比率，Assumed）；FY2026 若照公司計畫（設備投資 2,100 億、折舊 810 億）約 −45（¥B），固定比率會攤平擴產前段的負值")
+_s0 = SO.max_row + 1
+for _i, (_a, _b) in enumerate((
+        ("[Verified] stockanalysis 現金流量表：2026 年 3 月期（本模型 FY2025）折舊攤銷 66,236、資本支出 106,118、營業現金流 106,407（百萬日圓）", "https://stockanalysis.com/quote/tyo/4062/financials/cash-flow-statement/"),
+        ("[Verified] 公司 Q1 補足資料：2027 年 3 月期（本模型 FY2026）設備投資 2,100 億、折舊 810 億（公司計畫，Interested-party）", SUPQ1_URL),
+        ("[Verified] EE Times Japan 2026-02-05：2026–2028 年度三年投資約 5,000 億（第一期約 2,200 億，河間 Cell 6，2027 年度起陸續投產）", "https://eetimes.itmedia.co.jp/ee/articles/2602/05/news037.html"),
+        ("[Assumed] 折舊 ÷ 營收 15%、資本支出 ÷ 營收 25%（In 頁 da_rev、cx_rev；PL 頁自由現金流列用；FY2029 起擴產計畫結束後可能高估資本支出）", "—"))):
+    SO.cell(_s0 + _i, 1, _a); SO.cell(_s0 + _i, 2, _b)
+VER_NOTE_EXTRA = "PL 頁最後新增「自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）」一列（三情境 × FY2026–FY2032，表頭在其上一列），折舊、資本支出＝營收 × In 頁新增的 da_rev（15%）、cx_rev（25%）；不進 EPS 與目標價。"
+_t = RD["A1"].value
+assert VER_PREV in _t and VER_NOW not in _t, _t
+RD["A1"] = _t.replace(VER_PREV, VER_NOW, 1)
+for r_ in range(2, RD.max_row + 1):
+    _v = RD.cell(r_, 1).value
+    if isinstance(_v, str) and _v.startswith("版本："):
+        RD.cell(r_, 1, "版本：" + VER_NOW + "（2026-10-25：補上檔空間級距、投資建議、重點觀察，數值不變）。前版：" + _v[3:])
+        break
+rn = RD.max_row + 1
+RD.cell(rn, 1, VER_NOW + "：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁最後新增「上檔空間級距」「投資建議」兩列（第 " + str(GRADE_ROW) + "、" + str(REC_ROW) + " 列，依「上檔空間：加權目標價」的固定規則）；重點觀察見下方三列。" + VER_NOTE_EXTRA)
+RD.cell(rn + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"')
+for k_, o_ in enumerate(OBS, 1):
+    RD.cell(rn + 1 + k_, 1, f"重點觀察 {k_}：" + o_)
 
 order =["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

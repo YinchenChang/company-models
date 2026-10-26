@@ -1,4 +1,4 @@
-# ASML（ASML.AS／ASML ADR）收支與估值模型 v0.2（AI 半導體 Project 步驟 5：設備與材料）
+# ASML（ASML.AS／ASML ADR）收支與估值模型 v0.2.1（AI 半導體 Project 步驟 5：設備與材料）
 # 用法：python3 asml/build_asml.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年（FY2026＝2026-01～12）。金額：歐元（Q 頁 €M，PL 頁 €B）；EPS 為歐元。
 # 結構比照 advantest/build_advantest.py：README、In、Q、Units、PL、Val、Recon、Sens、Sources。
@@ -713,6 +713,39 @@ def valuation_v2(CFG):
 V2T, V2EXT = valuation_v2(CFG_V2)
 if os.environ.get("V2_ROWS"):
     print("V2", V2T, V2EXT)
+
+# ---------------- v0.2.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00／14:17）----------------
+# 新列一律放在 Val、README 工作表既有內容之後，不位移既有列；既有數值不變
+VER_PREV, VER_NOW = 'v0.2', 'v0.2.1'
+OBS = [
+ "目標價 €1,126（DCF 837、Comparable 1,416 各半），比現價 1,407.2（2026-10-23）低 19.9%，級距 0%～−25%；Comparable 單獨為 +0.6%。差距來自 DCF（比現價低 40.5%）：情境 B、C 的 EPS 在 FY2028–29 後依收斂法持平或下滑（B 的 FY2032 EPS 50.29 低於 FY2027 的 52.64），不是 ROE（近三年 56.1%，遠高於折現率 10%）；本模型前瞻 EPS 54.95 只比共識 55.93 低 1.7%，共識目標價 2,108 隱含 37.7 倍、同業前瞻 P/E 中位數 25.8 倍，EUV 獨占溢價 Comparable 未計入。",
+ "設備市場情境是最大變數：FY2027 三情境 EPS 54.29／52.64／50.36 相近，FY2028 分歧為 64.96／55.33／41.28（Sens：情境 C 對 FY2028 EPS −36.5%），DCF 價格帶 €506～1,219。追蹤 markets/equipment 對 2028 年晶圓前段設備支出的修正。",
+ "下一個檢驗點是 FY2026 第四季與全年財報（預定 2027-01 下旬）的 2027 年展望；微影強度與價格（Assumed +3%／年）改為 0% 時 FY2028 EPS −5.0%，淨利 ÷ 營業利益降到 0.80 時 −5.9%；2027-06-10 投資人日可能更新 2030 目標。"
+]   # 重點觀察（數字取自重算後的 Val／PL／Sens；與 README.md 相同文字）
+UPW_ROW = next(r_ for r_ in range(1, V.max_row + 1) if V.cell(r_, 1).value == "上檔空間：加權目標價")
+GRADE_ROW = V.max_row + 1; REC_ROW = GRADE_ROW + 1
+_u = f"B{UPW_ROW}"
+V.cell(GRADE_ROW, 1, "上檔空間級距")
+V[f"B{GRADE_ROW}"] = f'=IF({_u}>0.5,"大於 50%",IF({_u}>0.25,"25%–50%",IF({_u}>=0,"0%–25%",IF({_u}>=-0.25,"0%～−25%",IF({_u}>=-0.5,"−25%～−50%","小於 −50%")))))'
+V[f"B{GRADE_ROW}"].number_format = "@"
+V[f"E{GRADE_ROW}"] = f"以「上檔空間：加權目標價」（第 {UPW_ROW} 列）分六級（Andy 2026-10-25 14:00）"
+V.cell(REC_ROW, 1, "投資建議")
+V[f"B{REC_ROW}"] = f'=IF({_u}>0.5,"強力買進",IF({_u}>0.25,"買進",IF({_u}>=-0.25,"中立",IF({_u}>=-0.5,"放空","強力放空"))))'
+V[f"B{REC_ROW}"].number_format = "@"
+V[f"E{REC_ROW}"] = "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空（剛好 +25% 為中立、+50% 為買進、−25% 為中立、−50% 為放空）"
+_t = RD["A1"].value
+assert VER_PREV in _t and VER_NOW not in _t, _t
+RD["A1"] = _t.replace(VER_PREV, VER_NOW, 1)
+for r_ in range(2, RD.max_row + 1):
+    _v = RD.cell(r_, 1).value
+    if isinstance(_v, str) and _v.startswith("版本："):
+        RD.cell(r_, 1, "版本：" + VER_NOW + "（2026-10-25：補上檔空間級距、投資建議、重點觀察，數值不變）。前版：" + _v[3:])
+        break
+rn = RD.max_row + 1
+RD.cell(rn, 1, VER_NOW + "：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁最後新增「上檔空間級距」「投資建議」兩列（第 " + str(GRADE_ROW) + "、" + str(REC_ROW) + " 列，依「上檔空間：加權目標價」的固定規則）；重點觀察見下方三列。")
+RD.cell(rn + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"')
+for k_, o_ in enumerate(OBS, 1):
+    RD.cell(rn + 1 + k_, 1, f"重點觀察 {k_}：" + o_)
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

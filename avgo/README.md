@@ -1,8 +1,18 @@
-# avgo/ — Broadcom（AVGO）收支與估值模型 v0.2
+# avgo/ — Broadcom（AVGO）收支與估值模型 v0.2.1
 
 Broadcom 的 AI 營收＝各 XPU 平台的顆數 × Broadcom 份額 × 每顆售價（核心＋代購 HBM）＋網通附掛。2027–28 年的增量集中在 Anthropic、OpenAI 兩家靠融資部署的客戶。股價約 17 倍 FY2027 EPS：這個折價是在定價客戶信用風險，還是低估了營收？
 
 **核心問題：以市場層顆數往前推，Broadcom 的 AI 營收與 EPS 能否支撐公司展望（FY2027 約 115B、FY2028 約 230B）；差距要靠多少額外顆數補上。**
+
+**投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 +5.9%，落在 −25%～+25%）。
+
+## 重點觀察
+
+1. 目標價 US$341（DCF 325、Comparable 357 各半），比現價 321.68（2026-10-23）高 5.9%，級距 0%–25%；Comparable 單獨為 +10.9%。與共識目標價 529.1 的差距主要在倍數：本模型 FY2027 EPS 18.08 只比共識 19.40 低 6.8%，但共識目標價隱含 27.3 倍共識 EPS，比同業（NVIDIA、AMD、Marvell、Qualcomm、台積電 ADR）前瞻 P/E 中位數 19.6 倍高 39.1%；現價隱含 16.6 倍。
+2. 情境分歧從 FY2028 起：FY2027 EPS 三情境同為 18.08，FY2028 A／B／C 為 21.03／17.84／14.82（B、C 低於 FY2027），DCF 價格帶 222～394；現價約為 B 情境 FY2028 EPS 的 18.0 倍。PL 頁末自由現金流（non-GAAP 淨利＋折舊 − 資本支出）B 情境 FY2027 約 @FCF27@、FY2028 約 @FCF28@ 十億美元，與淨利幾乎相同（資本支出約為營收 1%）。
+3. FY2027 EPS 最敏感的是 XPU 核心售價（±20% 對 EPS ±8.2%），其次是 TPU 份額（−15pt 時 −5.7%，聯發科版 TPU 放量）與 AI 網通（×0.8 時 −5.1%）（Sens 頁）。下一個檢驗點是 FY2026 第四季財報（約 2026-12 中旬）的 AI 半導體營收與下一季指引。
+
+**自由現金流（v0.2.1，算力收支 2026-10-25 請求）：** PL 頁末新增「自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）」一列（三情境 × FY2026–FY2032；表頭在上一列），折舊、資本支出＝營收 × In 頁 `da_rev`（0.90%）、`cx_rev`（0.98%），比率取 FY2025 實績（折舊 574、資本支出 623、營收 63,887 百萬美元）。淨利為 non-GAAP（已排除無形資產攤銷，所以只加回不動產、廠房設備折舊，不加回攤銷 8,201）。情境 B：FY2027 88.8、FY2028 87.2 十億美元。
 
 AI 半導體 Project **運算層的第二個樣板**（ASIC＋網通），複製 `nvidia/` 的結構，匯入 `nvidia/accel_share.py` 的份額函式（本模型是 ASIC 側）。**ASIC 每顆規格**（Broadcom 在各平台的份額、核心售價、HBM 代購比例、每顆 Broadcom 營收與總價）在 Units 頁建立，是本專案的權威資料（跨專案規則第 13 條）。
 
@@ -12,9 +22,9 @@ AI 半導體 Project **運算層的第二個樣板**（ASIC＋網通），複製
 |---|---|
 | `build_avgo.py` | 產生器（參數與公式；唯讀取用上游成品） |
 | `tp_v2.py` | v0.2 目標價與延伸期的共用函式（PL 延伸到 FY2032 的收斂法、Val 第 0 節 DCF＋Comparable、Sens 目標價參數；各公司資料夾各放一份相同內容） |
-| `dist/20261025_Broadcom模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261025_Broadcom模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_Broadcom模型_v0.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261025_Broadcom模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 avgo/build_avgo.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`、`markets/network/dist`、`skhynix/dist`、`tsmc/dist`、`markets/equipment/dist`、`nvidia/dist`；**不修改它們**。
 

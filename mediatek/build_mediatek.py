@@ -1,4 +1,4 @@
-# 聯發科（2454.TW）收支與估值模型 v0.1（AI 半導體 Project：運算層，手機 SoC＋智慧邊緣平台＋電源 IC＋AI ASIC；ASIC 樣板 avgo/、結構參考 mrvl/、amkr/）
+# 聯發科（2454.TW）收支與估值模型 v0.1.1（AI 半導體 Project：運算層，手機 SoC＋智慧邊緣平台＋電源 IC＋AI ASIC；ASIC 樣板 avgo/、結構參考 mrvl/、amkr/）
 # 用法：python3 mediatek/build_mediatek.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不平移。金額：十億新台幣（NT$B）；ASIC 每顆價格：千美元（US$K）；EPS：新台幣（基本）。
 # 口徑：歸屬母公司淨利（TIFRS）。AI ASIC 營收＝Google TPU（與其他 ASIC）顆數 × 聯發科份額 × 每顆營收（avgo 規格）× k_x × 匯率。
@@ -747,7 +747,7 @@ SO.column_dimensions["A"].width = 100; SO.column_dimensions["B"].width = 130
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("聯發科（2454.TW）收支與估值模型 v0.1（AI 半導體 Project：運算層，手機 SoC＋AI ASIC）　2026-10-25", True),
+lines = [("聯發科（2454.TW）收支與估值模型 v0.1.1（AI 半導體 Project：運算層，手機 SoC＋AI ASIC）　2026-10-25", True),
  ("版本：v0.1（初版）。ASIC 每顆規格（核心售價、HBM 代購）讀 Broadcom 模型（本專案權威），份額與 Broadcom、Marvell 合計不超過 100%；手機、智慧邊緣平台、電源 IC 用簡化成長率。本版未做先驗。", False),
  ("模型命題：聯發科的 AI ASIC 營收＝Google TPU 顆數（市場層）× 聯發科份額 × 每顆營收（Broadcom 模型規格）；FY2026 只有約 20 億美元，賣方卻估 FY2028 達 500 億美元。在 Broadcom 占 TPU 75%、Marvell 5% 的份額口徑下，聯發科最多拿到兩成 TPU，推得出多少 ASIC 營收與 EPS？", False),
  ("核心問題：以市場層 TPU 顆數與份額上限往前推，聯發科 FY2027–28 的 ASIC 營收與 EPS 離公司目標、賣方估計有多遠；差距要靠顆數、份額還是單價補上，現價約 39 倍前瞻 P/E 隱含哪一條路徑。", False), ("", False),
@@ -764,6 +764,25 @@ lines = [("聯發科（2454.TW）收支與估值模型 v0.1（AI 半導體 Proje
  ("已知限制：(1) 公司未揭露 ASIC 客戶、每顆單價、HBM 採購方式，TPU 份額與單價為 Assumed；(2) ASIC 份額受 avgo 的 Broadcom TPU 份額（CY2028 75%）限制，賣方路徑（FY2028 約 500 億美元）與本專案市場層口徑不相容，需由 avgo 或市場層修訂，不在本模型自改；(3) 第二顆 ASIC 單價數倍（賣方說法）只放 Sens；(4) FY2025 產品線占比為 Derived；(5) 3Q26 毛利與費用為指引值；(6) 十年 P/E 為手機 SoC 期，未含 ASIC 成長溢價；2016 EPS 未找到；(7) R4 產業部署路徑未建（Recon 預留列）。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
+
+
+# ---------------- v0.1.1：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00、14:17）；各頁只在現有最後一列之後追加，不位移既有列 ----------------
+_up = next(r for r in range(1, V.max_row + 1) if V.cell(r, 1).value == "上檔空間：加權目標價")
+GRADE_ROW = V.max_row + 2; REC_ROW = GRADE_ROW + 1
+V.cell(GRADE_ROW, 1, "上檔空間級距")
+V.cell(GRADE_ROW, 2, f'=IF(B{_up}>0.5,"大於 50%",IF(B{_up}>0.25,"25%–50%",IF(B{_up}>=0,"0%–25%",IF(B{_up}>=-0.25,"0%～−25%",IF(B{_up}>=-0.5,"−25%～−50%","小於 −50%")))))')
+V.cell(GRADE_ROW, 5, f"以「上檔空間：加權目標價」（B{_up}）分六級（Andy 2026-10-25 14:00）")
+V.cell(REC_ROW, 1, "投資建議")
+V.cell(REC_ROW, 2, f'=IF(B{_up}>0.5,"強力買進",IF(B{_up}>0.25,"買進",IF(B{_up}>=-0.25,"中立",IF(B{_up}>=-0.5,"放空","強力放空"))))')
+V.cell(REC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
+OBS = ['目標價 NT$2,057（DCF 1,846、Comparable 2,268 各半），比現價 4,010（2026-10-22）低 48.7%，級距 −25%～−50%；Comparable 單獨為 −43.4%。主因是倍數不是 EPS：本模型 12 個月後前瞻 EPS 119.49 比共識前瞻 EPS 103.48 高 15.5%，但同業（高通、博通、邁威爾、世芯、創意）前瞻 P/E 中位數 19.0 倍，現價隱含 38.8 倍、共識目標價 6,067 隱含 58.6 倍（比同業高 208.9%）；市場給聯發科的 AI ASIC 成長溢價，Comparable 未計入。', '情境分歧大：FY2028 EPS A／B／C 為 149.3／119.5／85.3，DCF 價格帶 1,012～2,466；C 情境（顆數 ×0.6、手機 −8%）FY2028 EPS 低於 FY2027 的 100.1。即使 A 情境 DCF 2,466 也比現價低 38.5%。', 'TPU 份額是最敏感變數：聯發科占 TPU −5pt 時 FY2027 EPS −13.2%、取上限 20% 時 +13.2%；營業費用彈性 0.6 時 −12.7%（Sens 頁）。下一個檢驗點是 3Q26 財報與法說（約 2026-10 底）的 ASIC 營收與客戶進度。']   # 重點觀察（與 README.md 相同文字；數字取自重算後的 Val／PL／Sens 頁）
+_rr = RD.max_row + 1
+RD.cell(_rr, 1, 'v0.1.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁末新增「上檔空間級距」「投資建議」兩列（Andy 2026-10-25 14:00、14:17 固定規則），README 頁末新增投資建議與重點觀察三點；既有儲存格位置與數值不變。')
+RD.cell(_rr + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"').font = Font(bold=True)
+for _j, _t in enumerate(OBS, 1): RD.cell(_rr + 1 + _j, 1, f"重點觀察 {_j}：" + _t)
+if os.environ.get("RATING_ROWMAP"):   # 除錯用：輸出新增列號（供撰寫 html.json）；CI 不設此變數
+    print("ROWMAP", GRADE_ROW, REC_ROW, _rr, _rr + 1, _rr + 2)
+
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

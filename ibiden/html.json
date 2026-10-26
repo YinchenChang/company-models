@@ -454,6 +454,35 @@
      ]
     },
     {
+     "type": "note",
+     "parts": [
+      "@Val!A109",
+      "：",
+      "@Val!B109"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!A110",
+      "：",
+      "@Val!B110",
+      "（依上檔空間固定規則）"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "重點觀察"
+    },
+    {
+     "type": "list",
+     "items": [
+      "@README!A22",
+      "@README!A23",
+      "@README!A24"
+     ]
+    },
+    {
      "type": "table",
      "caption": "@Val!A62",
      "head": [

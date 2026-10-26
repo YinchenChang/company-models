@@ -418,6 +418,13 @@ V.cell(t0 + 6, 1, "舊法說明")
 V.cell(t0 + 6, 2, (f"十年（2016–2025 年底）P/B 分位 × 各情境 {y1} 年底每股淨值：A 順利＝75 分位、B 平平＝中位數、C 不如預期＝25 分位（Andy 2026-10-25；C 一定最低）。"
                    "第 6 節的見頂／中段／谷底規則值不變（AI 投資地圖抽數用）。" + C.get("tp_bias", "")))
 T["old_end"] = t0 + 6
+# 樣板 v0.4.1：上檔空間級距、投資建議（Andy 2026-10-25 14:00、14:17）；放在 Val 現有最後一列之後（不位移既有列）
+_u = f"B{T['upw']}"
+T["grade"] = T["old_end"] + 2; T["rec"] = T["old_end"] + 3
+tset(T["grade"], "grade", "上檔空間級距", [f'=IF({_u}>0.5,"大於 50%",IF({_u}>0.25,"25%–50%",IF({_u}>=0,"0%–25%",IF({_u}>=-0.25,"0%～−25%",IF({_u}>=-0.5,"−25%～−50%","小於 −50%")))))', None, None], "@",
+     "以「上檔空間：加權目標價」分六級（Andy 2026-10-25 14:00）")
+tset(T["rec"], "rec", "投資建議", [f'=IF({_u}>0.5,"強力買進",IF({_u}>0.25,"買進",IF({_u}>=-0.25,"中立",IF({_u}>=-0.5,"放空","強力放空"))))', None, None], "@",
+     "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
 V.column_dimensions["A"].width = 36
 
 # ---------------- Sens（營收變動 × (1 − 變動營業費用率)；成本不隨價格變動，故為精確值）----------------
@@ -493,7 +500,7 @@ for i, (a, b) in enumerate(C["sources"] + [("markets/memory/market.py（共用�
     SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 60; SO.column_dimensions["B"].width = 120
 RD = wb.create_sheet("README", 0)
-lines = [(f"{C['name']} 收支與估值模型 {C['version']}（記憶體樣板 v0.4）　{C['date']}", True), ("模型命題：" + C["thesis"], False), ("", False),
+lines = [(f"{C['name']} 收支與估值模型 {C['version']}（記憶體樣板 v0.4.1）　{C['date']}", True), ("模型命題：" + C["thesis"], False), ("", False),
  ("驅動因子 → 推導量", True),
  ("Path（共用市場層）：一般 DRAM、NAND 合約價季增 → 季度指數（情境 A／B／C）；各公司依會計年度取平均，算年均價變動", False),
  ("Mkt（共用市場層）：加速器顆數 × 每顆 GB × 情境顆數係數（2028–29，與台積電、Advantest 同一套）→ 需求位元；MIN(需求, 供給（三情境相同）) → 出貨；× 單價（依情境）→ HBM 市場（日曆年）", False),
@@ -503,6 +510,11 @@ lines = [(f"{C['name']} 收支與估值模型 {C['version']}（記憶體樣板 v
  (f"情境：A＝{MKT.SCEN_DESC['A']}；B＝{MKT.SCEN_DESC['B']}；C＝{MKT.SCEN_DESC['C']}（目標價對應：A＝順利、B＝平平、C＝不如預期；{FYL.format(FADEY[0])}–{FYL.format(FADEY[-1])} 為收斂法）", False),
  (f"幣別單位：{U}；會計年度：{C['fy_desc']}", False), ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。", False), ("", False)] + [(t, False) for t in C["readme_extra"]]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
+# 樣板 v0.4.1：投資建議（公式，跟著 Val 數字變）與重點觀察三點（各公司 company.py 的 obs）；接在 README 現有最後一列之後
+assert len(C["obs"]) >= 3, "company.py 須有 obs（重點觀察至少三點）"
+_rr = len(lines) + 1
+RD.cell(_rr, 1, f'="投資建議："&Val!B{T["rec"]}&"（依上檔空間固定規則）"')
+for i, t in enumerate(C["obs"], 1): RD.cell(_rr + i, 1, f"重點觀察 {i}：{t}")
 RD.column_dimensions["A"].width = 170
 wb.save(sys.argv[2])
 print("saved", sys.argv[2])

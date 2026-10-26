@@ -1,8 +1,18 @@
-# nvidia/ — NVIDIA（NVDA）收支與估值模型 v0.2
+# nvidia/ — NVIDIA（NVDA）收支與估值模型 v0.2.1
 
 NVIDIA 的營收＝加速器顆數 × 每顆售價＋網通附掛。2027 年 ASIC 把 NVIDIA 的金額份額壓到約 75–80%，HBM 漲價壓毛利 2–3 個百分點。股價取決於 2028 年顆數持平之後，EPS 還能不能成長：現價約為 2027 年 EPS 的 13.5 倍，是低估，還是見頂前的折價。
 
 **核心問題：加速器顆數在 2028 年持平以後，NVIDIA 的 EPS 還能不能成長。**（命題的「2027 年」＝日曆年 2027＝FY2028；「2028 年顆數持平」＝CY2028＝FY2029，所以問題是 FY2030 EPS 相對 FY2029。）
+
+**投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 +19.4%，落在 −25%～+25%）。
+
+## 重點觀察
+
+1. 目標價 US$252（DCF 235、Comparable 269 各半），比現價 210.96（2026-10-23）高 19.4%，級距 0%–25%；Comparable 單獨為 +27.4%。上檔來自倍數不是 EPS：本模型 FY2028 EPS（情境加權）14.73 比共識 15.91 低 7.4%，但現價只有共識 FY2028 EPS 的 13.3 倍，低於同業（AMD、Broadcom、Marvell、台積電 ADR、Qualcomm）前瞻 P/E 中位數 19.6 倍；共識目標價 328.95 隱含 20.7 倍，與同業只差 5.4%。
+2. 情境分歧從 FY2029 起：FY2028 EPS 三情境 14.72～14.74 幾乎相同，FY2029 A／B／C 為 15.82／13.26／9.92、FY2030 為 18.36／16.18／11.43，DCF 價格帶 129～313。核心問題（CY2028 顆數持平後 EPS 能否成長）在 B 情境的答案是 FY2029 先降 10.0%、FY2030 再回升 22.0%。
+3. 最敏感的是 NVIDIA 顆數：顆數 ×0.9 時 FY2028 EPS −9.9%；ASIC 金額份額 +5pt 時 −6.6%；HBM／LPDDR 全額吸收時 −4.8%（Sens 頁）。下一個檢驗點是 Q3 FY27 財報（約 2026-11 下旬）：Data Center 營收對照 Q3 指引 1,080 億美元 ±2%，以及 Q4 指引。
+
+**自由現金流（v0.2.1，算力收支 2026-10-25 請求）：** PL 頁末新增「自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）」一列（三情境 × FY2027–FY2032；表頭在上一列），折舊、資本支出＝營收 × In 頁 `da_rev`（1.32%）、`cx_rev`（2.80%），比率取 FY2026 10-K 實績（D&A 2,843、資本支出 6,042、營收 215,938 百萬美元）。淨利為延伸表淨利（GAAP 扣除權益證券損益，近似公司新 non-GAAP）。情境 B：FY2027 213.8、FY2028 343.0 十億美元。
 
 AI 半導體 Project **運算層的第一個樣板**（之後 AVGO、AMD 複製）。獨立的 Python→Excel 產生器（比照 `advantest/`，openpyxl，LibreOffice 重算）。會計年度 FY(t)＝t−1 年 2 月～t 年 1 月，約等於日曆年 t−1（FY2027＝CY2026 … FY2030＝CY2029）；上游市場層是日曆年，FY(t) 直接取 CY(t−1)，**不做跨年加權**（11/12 落在同一日曆年，這是近似）。金額以十億美元為主。
 
@@ -11,9 +21,9 @@ AI 半導體 Project **運算層的第一個樣板**（之後 AVGO、AMD 複製�
 | `build_nvidia.py` | 產生器（參數與公式；唯讀取用上游成品） |
 | `accel_share.py` | 加速器金額份額的可重用函式（同一份顆數 × 各平台每顆價 → 各家金額與份額）；本 PR 只建在 `nvidia/` 內，之後 AVGO、AMD 模型匯入使用 |
 | `tp_v2.py` | v0.2 目標價與延伸期的共用函式（PL 延伸到 FY2032 的收斂法、Val 第 0 節 DCF＋Comparable、Sens 目標價參數；各公司資料夾各放一份相同內容） |
-| `dist/20261025_NVIDIA模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261025_NVIDIA模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_NVIDIA模型_v0.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261025_NVIDIA模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 nvidia/build_nvidia.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`、`markets/chip_bridge/dist`、`markets/network/dist`、`markets/equipment/dist`、`skhynix/dist`、`tsmc/dist`；**不修改它們**。共用工具只新增 `tools/cycle_position.py` 的 `classify_lag`／`excel_rule_lag` 兩個函式，設備股既有函式與行為不變。
 

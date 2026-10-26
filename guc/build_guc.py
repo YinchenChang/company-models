@@ -1,4 +1,4 @@
-# 創意電子（3443.TW）收支與估值模型 v0.1（AI 半導體 Project：運算層，ASIC 設計服務＋量產；台積電體系；樣板 mediatek/、結構參考世芯 alchip 分支、mrvl/）
+# 創意電子（3443.TW）收支與估值模型 v0.1.1（AI 半導體 Project：運算層，ASIC 設計服務＋量產；台積電體系；樣板 mediatek/、結構參考世芯 alchip 分支、mrvl/）
 # 用法：python3 guc/build_guc.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不平移。金額：十億新台幣（NT$B）；每顆價格：千美元（US$K）；EPS：新台幣（基本）。
 # 營收＝NRE（委託設計）＋量產（turnkey：晶圓、封裝、測試轉售，毛利率低）。本模型拆成四塊：
@@ -782,7 +782,7 @@ SO.column_dimensions["A"].width = 100; SO.column_dimensions["B"].width = 130
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("創意電子（3443.TW）收支與估值模型 v0.1（AI 半導體 Project：運算層，ASIC 設計服務＋量產；台積電體系）　2026-10-25", True),
+lines = [("創意電子（3443.TW）收支與估值模型 v0.1.1（AI 半導體 Project：運算層，ASIC 設計服務＋量產；台積電體系）　2026-10-25", True),
  ("版本：v0.1（初版）。CPU 顆數＝台積電模型的 Google TPU 顆數 × CPU 對 TPU 配比；其他 ASIC 顆數讀台積電模型、每顆核心售價讀 Broadcom 模型，份額與 Broadcom、Marvell、聯發科合計不超過 100%；車用與其他營收用簡化成長。本版未做先驗。", False),
  ("模型命題：創意的營收由 NRE 轉為 Google 自研 Arm CPU（Axion）的 turnkey 量產（晶圓與封裝轉售、毛利率低）。FY2026 營收約翻倍、3Q26 單季 187.5 億元；以 TPU 顆數 × CPU 配比推 CPU 顆數，再加其他 ASIC、車用與 NRE，FY2027–28 的營收與 EPS 有多少？現價約 90 倍前瞻 P/E 需要哪一條路徑？", False),
  ("核心問題：在市場層 TPU 顆數（CY2027 5.5 百萬顆）與 CPU 對 TPU 配比口徑下，創意 FY2027–28 的 CPU 顆數與 EPS 離法人估計（CPU 400 萬顆、FY2027 EPS 94–139 元）多遠；差距靠配比、份額還是車用；現價隱含的倍數與同業差多少。", False), ("", False),
@@ -802,6 +802,25 @@ lines = [("創意電子（3443.TW）收支與估值模型 v0.1（AI 半導體 Pr
  ("公司特有：CPU 對 TPU 配比 0.6／0.5／0.4；下一代 CPU 份額 100%／90%／70%、單價係數 1.2／1.1／1.0；其他 ASIC 份額 CY2027 6%／4%／2%、CY2028 起 8%／5%／2%；車用倍數 FY2027 4.0／3.0／2.0、FY2028 2.0／1.6／1.2；其他營收 FY2027 +15%／+8%／−5%、之後 +10%／+5%／0%；量產毛利率調整 +1／0／−2pt。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
+
+
+# ---------------- v0.1.1：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00、14:17）；各頁只在現有最後一列之後追加，不位移既有列 ----------------
+_up = next(r for r in range(1, V.max_row + 1) if V.cell(r, 1).value == "上檔空間：加權目標價")
+GRADE_ROW = V.max_row + 2; REC_ROW = GRADE_ROW + 1
+V.cell(GRADE_ROW, 1, "上檔空間級距")
+V.cell(GRADE_ROW, 2, f'=IF(B{_up}>0.5,"大於 50%",IF(B{_up}>0.25,"25%–50%",IF(B{_up}>=0,"0%–25%",IF(B{_up}>=-0.25,"0%～−25%",IF(B{_up}>=-0.5,"−25%～−50%","小於 −50%")))))')
+V.cell(GRADE_ROW, 5, f"以「上檔空間：加權目標價」（B{_up}）分六級（Andy 2026-10-25 14:00）")
+V.cell(REC_ROW, 1, "投資建議")
+V.cell(REC_ROW, 2, f'=IF(B{_up}>0.5,"強力買進",IF(B{_up}>0.25,"買進",IF(B{_up}>=-0.25,"中立",IF(B{_up}>=-0.5,"放空","強力放空"))))')
+V.cell(REC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
+OBS = ['目標價 NT$2,879（DCF 2,238、Comparable 3,521 各半），比現價 7,585（2026-10-22）低 62.0%，級距 小於 −50%；Comparable 單獨為 −53.6%。主因是倍數不是 EPS：本模型 12 個月後前瞻 EPS 122.95 比共識前瞻 EPS 81.28 高 51.3%，但同業（世芯、聯發科、博通、邁威爾）前瞻 P/E 中位數 28.6 倍，創意本身前瞻 P/E 約 103 倍（2026-10-08）、共識目標價 6,722 隱含 82.7 倍（比同業高 188.8%）；市場給創意的 Google CPU 成長溢價，Comparable 未計入。共識目標價本身也比現價低 11.4%。', '情境分歧最大：FY2028 EPS A／B／C 為 197.6／113.3／50.5，DCF 價格帶 662～3,748；即使 A 情境 DCF 3,748 也只有現價的 49%。', 'CPU 對 TPU 配比是 FY2027 EPS 最敏感的變數：配比 0.6 → 0.4 時 −16.4%、0.75 時 +12.3%；量產毛利率 ±3pt 對 EPS ±9.6%（Sens 頁）。下一個檢驗點是 3Q26 財報與法說（2026-10-29）。']   # 重點觀察（與 README.md 相同文字；數字取自重算後的 Val／PL／Sens 頁）
+_rr = RD.max_row + 1
+RD.cell(_rr, 1, 'v0.1.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁末新增「上檔空間級距」「投資建議」兩列（Andy 2026-10-25 14:00、14:17 固定規則），README 頁末新增投資建議與重點觀察三點；既有儲存格位置與數值不變。')
+RD.cell(_rr + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"').font = Font(bold=True)
+for _j, _t in enumerate(OBS, 1): RD.cell(_rr + 1 + _j, 1, f"重點觀察 {_j}：" + _t)
+if os.environ.get("RATING_ROWMAP"):   # 除錯用：輸出新增列號（供撰寫 html.json）；CI 不設此變數
+    print("ROWMAP", GRADE_ROW, REC_ROW, _rr, _rr + 1, _rr + 2)
+
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

@@ -1,8 +1,16 @@
-# mrvl/ — Marvell（MRVL）收支與估值模型 v0.2
+# mrvl/ — Marvell（MRVL）收支與估值模型 v0.2.1
 
 Marvell 的資料中心營收＝客製 XPU（市場層 ASIC 顆數 × Marvell 份額 × 每顆售價）＋光互連（AI 光模組數 × 每模組晶片組金額 × 份額）＋交換器與其他。公司一年內把 FY2028 營收展望從 $13B 上修到 $20B（2026-10-06 投資人日），市場層顆數推得出多少？
 
 **核心問題：以市場層顆數與光模組市場往前推，Marvell FY2028 營收與 EPS 離公司 $20B 展望與共識有多遠；差距要靠哪條產品線補上，現價隱含多少。**
+
+**投資建議：放空**（依上檔空間固定規則：加權目標價上檔空間 −44.0%，落在 −50%～−25%）。
+
+## 重點觀察
+
+1. 目標價 US$128（DCF 116、Comparable 140 各半），比現價 228.51（2026-10-23）低 44.0%，級距 −25%～−50%；Comparable 單獨為 −38.9%。主因是倍數：本模型 FY2028 EPS 6.52 比共識 7.33 低 11.1%，但現價隱含 31.2 倍共識 FY2028 EPS、共識目標價 341.44 隱含 46.6 倍，同業（Broadcom、NVIDIA、AMD、Astera Labs、Credo）前瞻 P/E 中位數 20.2 倍（共識隱含倍數高 130.7%）。
+2. 情境分歧從 FY2029 起：FY2028 EPS 三情境同為 6.52，FY2029 A／B／C 為 8.58／6.93／5.03，DCF 價格帶 71～147；即使 A 情境 FY2029 EPS 8.58 乘同業中位數 20.2 倍（約 173）也低於現價。
+3. FY2028 EPS 最敏感的是光互連：每模組光晶片組金額 ×0.8 時 −12.0%、光晶片組份額 −10pt 時 −9.5%；XPU 方面 TPU 份額 +5pt 可 +8.4%（Sens 頁）。下一個檢驗點是 Q3 FY27 財報（約 2026-11-30～12 月初）的資料中心營收與光互連成長。
 
 AI 半導體 Project 運算層模型，複製 `avgo/` 的結構（ASIC＋網通樣板）。**ASIC 每顆規格**（核心售價、HBM 代購比例、代購毛利率）讀 `avgo` 成品 In 頁（本專案權威，只讀）；本模型只加 Marvell 在 Trainium、其他 ASIC、TPU 的份額，並檢查 Broadcom＋Marvell 份額不超過 100%（Units 頁第 2 節）。
 
@@ -12,9 +20,9 @@ AI 半導體 Project 運算層模型，複製 `avgo/` 的結構（ASIC＋網通�
 |---|---|
 | `build_mrvl.py` | 產生器（參數與公式；唯讀取用上游成品） |
 | `tp_v2.py` | v0.2 目標價與延伸期的共用函式（PL 延伸到 FY2032 的收斂法、Val 第 0 節 DCF＋Comparable、Sens 目標價參數；各公司資料夾各放一份相同內容） |
-| `dist/20261025_邁威爾模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261025_邁威爾模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_邁威爾模型_v0.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
+| `dist/20261025_邁威爾模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
 
 建置：`python3 mrvl/build_mrvl.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`、`markets/network/dist`、`markets/equipment/dist`（經 `tools/cycle_position.py`）、`tsmc/dist`、`avgo/dist`；**不修改它們**。
 

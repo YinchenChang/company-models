@@ -1,15 +1,27 @@
-# besi/ — BESI（BE Semiconductor Industries，BESI.AS）收支與估值模型 v0.1
+# besi/ — BESI（BE Semiconductor Industries，BESI.AS）收支與估值模型 v0.1.1
 
 BESI 的盈餘由混合鍵合機的新機需求決定，分兩段。邏輯段（SoIC 類）由 AI 先進封裝晶圓 × 混合鍵合導入比例推得。HBM 段由 HBM 晶粒 × 混合鍵合占比 ÷ 機台產能推得，晶粒與占比的口徑與韓美相同。傳統貼合機、封裝、電鍍與 TC 鍵合歸為「主流業務」，隨設備市場循環。股價取決於兩件事：2027 年 CoWoS 增速放緩後，邏輯導入比例與 HBM4E／HBM5 的混合鍵合能否接棒；BESI 能否守住份額。
 
 這是 AI 半導體 Project 步驟 5（設備與材料）的一家公司。樣板是 `hanmi/`（鍵合設備）與 `advantest/`（設備股，統一循環規則）。產生器是獨立的 Python→Excel 程式（openpyxl）。會計年度＝日曆年。金額以百萬歐元（€M）為單位，EPS 以歐元計。
 
+**投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 −7.9%，落在 −25%～+25%）。
+
+## 重點觀察
+
+1. 目標價 €133.69（DCF 97.68、Comparable 169.71 各半），比現價 145.10（2026-10-23）低 7.9%，級距 0%～−25%；Comparable 單獨為 +17.0%。DCF 低是情境分歧造成：DCF 情境價值 A 158.4（現價的 1.09 倍）、B 82.4、C 44.8，B 的 FY2028 EPS 6.59 比 A 的 9.37 低 30%。
+2. 本模型 12 個月後前瞻 EPS 6.52 比共識前瞻 EPS 8.14 低 19.9%；共識目標價 270.57 隱含 33.2 倍，同業中位數 26.0 倍（倍數因素 +27.7%）。
+3. 最敏感的是邏輯（SoIC 類）混合鍵合導入速度：導入比例 ×0.7／×1.3 使 FY2027 EPS −22.0%／+22.0%，改走情境 B 路徑 −12.2%；HBM 混合鍵合取 Disco 低值 −7.2%。下一個檢驗事件是 Q4-26 財報（約 2027-02 下旬）的混合鍵合訂單（Q3-26 訂單 €342.6M）。
+
+## v0.1.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）
+
+- Val 頁最後新增「上檔空間級距」（第 123 列）與「投資建議」（第 124 列），依「上檔空間：加權目標價」固定規則（Andy 2026-10-25 14:00、14:17）；README 工作表最後新增投資建議（公式引用 Val）與重點觀察三點；HTML 估值章第一個區塊後顯示級距、投資建議與重點觀察。既有儲存格位置與數值不變（`tools/xlsx_diff.py` 對 v0.1 成品：只差新增列與版本字串）。
+
 | 檔案 | 內容 |
 |---|---|
 | `build_besi.py` | 產生器（參數與公式） |
-| `dist/20261025_BESI模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261025_BESI模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（格式見 `tools/company_html/README.md`） |
-| `dist/20261025_BESI模型_v0.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261025_BESI模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 建置分兩步：先跑 `python3 besi/build_besi.py raw.xlsx`，再跑 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序為 README、In、Q、Units、PL、Val、Recon、Sens、Sources。
 

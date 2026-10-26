@@ -1,4 +1,4 @@
-# Astera Labs（ALAB）收支與估值模型 v0.1（AI 半導體 Project：網通次產業內複製——PCIe／CXL 重定時器、Scorpio 交換晶片、AEC 模組；scale-up 互連）
+# Astera Labs（ALAB）收支與估值模型 v0.1.1（AI 半導體 Project：網通次產業內複製——PCIe／CXL 重定時器、Scorpio 交換晶片、AEC 模組；scale-up 互連）
 # 用法：python3 alab/build_alab.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年（12 月底結束）；上游市場層是日曆年，FY(t) 市場＝CY(t)（不需月數加權）。
 # 金額：十億美元（US$B）；EPS：美元；口徑：公司 non-GAAP（排除股票薪酬、併購費用與非現金公允價值調整）；十年 P/E 規則值用 GAAP 換算 EPS。
@@ -614,7 +614,7 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Astera Labs（ALAB）收支與估值模型 v0.1（AI 半導體 Project：網通次產業內複製——PCIe／CXL 重定時器、Scorpio 交換晶片、AEC 模組；scale-up 互連）　2026-10-25", True),
+lines = [("Astera Labs（ALAB）收支與估值模型 v0.1.1（AI 半導體 Project：網通次產業內複製——PCIe／CXL 重定時器、Scorpio 交換晶片、AEC 模組；scale-up 互連）　2026-10-25", True),
  ("版本：v0.1（2026-10-25 初版；三情境延伸到 FY2032、目標價＝DCF 與 Comparable 加權）。Astera Labs 在非 NVIDIA scale-up 交換晶片（Scorpio X）與 PCIe／CXL／AEC 的份額在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
  ("模型命題：Astera Labs 的 Scorpio X 營收＝非 NVIDIA scale-up 交換晶片市場（本專案網通模型：AMD、Trainium、其他 ASIC 顆數 × 每顆 scale-up 交換晶片內容）× Astera 有效份額；PCIe 與訊號調節（Aries 重定時器、Scorpio P、Taurus AEC、Leo CXL）＝AI 加速器顆數 × 每顆內容 × 份額。3Q26 指引季增約 40%、Scorpio 成為最大產品線：成長重心正由重定時器轉到 scale-up 交換晶片。現價約 64 倍共識 FY2026 EPS、40 倍 FY2027。", False),
  ("核心問題：現價隱含的 FY2028 EPS 需要 Scorpio X 在非 NVIDIA scale-up 交換晶片維持多少份額、PCIe 等業務流失多少才成立？非 NVIDIA 加速器顆數（AMD、Trainium、其他 ASIC）與 NVLink Fusion 的競爭是主要不確定性。", False), ("", False),
@@ -815,6 +815,25 @@ TPT = _tp_section(V, lambda s_, y: f"PL!{FCX[y]}{SUMR[(s_, 'eps')]}", [(2027, '2
     _rule_pe_range(V, 2), '#,##0.00',
     "本模型前瞻 EPS ÷ 共識前瞻 EPS − 1；共識前瞻 EPS＝In 頁 cons_feps（FY2028 共識為推導值）")
 TPS0, TPS_LAST = _tp_sens(SE, TPT)
+
+
+# ---------------- v0.1.1：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00、14:17）；各頁只在現有最後一列之後追加，不位移既有列 ----------------
+_up = next(r for r in range(1, V.max_row + 1) if V.cell(r, 1).value == "上檔空間：加權目標價")
+GRADE_ROW = V.max_row + 2; REC_ROW = GRADE_ROW + 1
+V.cell(GRADE_ROW, 1, "上檔空間級距")
+V.cell(GRADE_ROW, 2, f'=IF(B{_up}>0.5,"大於 50%",IF(B{_up}>0.25,"25%–50%",IF(B{_up}>=0,"0%–25%",IF(B{_up}>=-0.25,"0%～−25%",IF(B{_up}>=-0.5,"−25%～−50%","小於 −50%")))))')
+V.cell(GRADE_ROW, 5, f"以「上檔空間：加權目標價」（B{_up}）分六級（Andy 2026-10-25 14:00）")
+V.cell(REC_ROW, 1, "投資建議")
+V.cell(REC_ROW, 2, f'=IF(B{_up}>0.5,"強力買進",IF(B{_up}>0.25,"買進",IF(B{_up}>=-0.25,"中立",IF(B{_up}>=-0.5,"放空","強力放空"))))')
+V.cell(REC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
+OBS = ['目標價 US$132（DCF 105、Comparable 160 各半），比現價 257.16（2026-10-23）低 48.5%，級距 −25%～−50%；Comparable 單獨為 −37.9%。EPS 與倍數兩個因素都在：本模型 12 個月後前瞻 EPS 6.33 比共識 8.21 低 22.9%；同業（Credo、Marvell、Broadcom、Rambus、MACOM）前瞻 P/E 中位數 25.2 倍，現價隱含 31.3 倍共識 EPS、共識目標價 388.36 隱含 47.3 倍（比同業高 87.5%）；Comparable 未給 Astera 的成長溢價（本身前瞻 P/E 約 46 倍）。', '情境分歧從 FY2028 起：FY2027 EPS 三情境同為 6.90，FY2028 A／B／C 為 8.10／6.13／3.60，DCF 價格帶 52～139；Val 頁讀法：以同業約 25 倍計，現價隱含的 FY2028 EPS 比模型 A 高約三成，需要 Scorpio X 份額上升才達得到。', 'FY2027 EPS 最敏感的是 Scorpio X 份額（高 +18.7%、低 −14.0%）與 PCIe 等份額（高 +15.2%、低 −11.4%）；最大客戶 30% 轉單時 −12.8%（Sens 頁）。下一個檢驗點是 3Q26 財報（2026-11-03）的 Scorpio X 營收與客戶數。']   # 重點觀察（與 README.md 相同文字；數字取自重算後的 Val／PL／Sens 頁）
+_rr = RD.max_row + 1
+RD.cell(_rr, 1, 'v0.1.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁末新增「上檔空間級距」「投資建議」兩列（Andy 2026-10-25 14:00、14:17 固定規則），README 頁末新增投資建議與重點觀察三點；既有儲存格位置與數值不變。')
+RD.cell(_rr + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"').font = Font(bold=True)
+for _j, _t in enumerate(OBS, 1): RD.cell(_rr + 1 + _j, 1, f"重點觀察 {_j}：" + _t)
+if os.environ.get("RATING_ROWMAP"):   # 除錯用：輸出新增列號（供撰寫 html.json）；CI 不設此變數
+    print("ROWMAP", GRADE_ROW, REC_ROW, _rr, _rr + 1, _rr + 2)
+
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

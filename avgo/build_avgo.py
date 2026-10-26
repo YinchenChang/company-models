@@ -1,4 +1,4 @@
-# Broadcom（AVGO）收支與估值模型 v0.2（AI 半導體 Project：運算層第二個樣板，ASIC＋網通）
+# Broadcom（AVGO）收支與估值模型 v0.2.1（AI 半導體 Project：運算層第二個樣板，ASIC＋網通）
 # 用法：python3 avgo/build_avgo.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度 FY(t) 於 t 年 10 月底／11 月初結束（FY2026：2025-11-03～2026-11-01），10/12 落在日曆年 t，
 # 所以 FY(t) 直接對照 CY(t)，不做平移（NVIDIA 需平移一年，AVGO 不需）。金額：十億美元（US$B）；EPS：美元；口徑：公司 non-GAAP。
@@ -618,7 +618,7 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Broadcom（AVGO）收支與估值模型 v0.2（AI 半導體 Project：運算層第二個樣板，ASIC＋網通）　2026-10-25", True),
+lines = [("Broadcom（AVGO）收支與估值模型 v0.2.1（AI 半導體 Project：運算層第二個樣板，ASIC＋網通）　2026-10-25", True),
  ("版本：v0.1（初版）。ASIC 每顆規格（Broadcom 份額、核心售價、HBM 代購）在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
  ("模型命題：Broadcom 的 AI 營收＝各 XPU 平台的顆數 × Broadcom 份額 × 每顆售價（核心＋代購 HBM）＋網通附掛；2027–28 年的增量集中在 Anthropic、OpenAI 兩家靠融資部署的客戶。股價約 17 倍 FY2027 EPS：這個折價是在定價客戶信用風險，還是低估了營收？", False),
  ("核心問題：以市場層顆數往前推，Broadcom 的 AI 營收與 EPS 能否支撐公司展望（FY2027 約 115B、FY2028 約 230B）；差距要靠多少額外顆數補上。", False), ("", False),
@@ -693,6 +693,47 @@ RD.cell(len(lines) + 1, 1, "v0.2（2026-10-25）：(1) 目標價改為 DCF 與 C
         "v0.1.1 的「0. 目標價與上檔空間」改名「舊法：規則值情境加權（參考）」保留在 Val 頁末。(2) PL 頁末新增三情境延伸到 FY2032：FY2030 起為收斂法，非驅動因子推導（上游市場層只到 CY2029＝FY2029）。"
         "(3) 現價更新到 2026-10-23 收盤 321.68（markets/invest_map/data/prices.csv）。(4) 目標價參數放 In 頁末（黃底，Andy 可改）；Sens 頁新增 tp_r、tp_g、tp_w_dcf 對加權目標價的影響。FY2025–FY2029 既有數字不變。")
 RD.cell(len(lines) + 2, 1, "情境對應（v0.2 延伸期）：A＝順利（基準顆數）、B＝平平（CY2028 顆數 ×0.8、CY2029 ×0.85）、C＝不如預期（CY2028–29 ×0.6）；FY2026、FY2027 三情境相同，情境差從 FY2028 起。")
+
+
+# ---------------- v0.2.1：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00、14:17）；各頁只在現有最後一列之後追加，不位移既有列 ----------------
+
+# (A) 自由現金流（算力收支 2026-10-25 請求；地圖依列標籤「自由現金流」抽數）：In、PL、Sources 只在現有最後一列之後追加
+_ir = IN.max_row + 2
+IN.cell(_ir, 1, "N. 自由現金流假設（v0.2.1 新增；FY2025 實績為錨，各年營收 × 比率）").font = BOLD
+for _j, (_k, _it, _v, _s1) in enumerate((("da_rev", '折舊 ÷ 營收（只含不動產、廠房設備折舊；non-GAAP 淨利已排除無形資產攤銷，不再加回；自由現金流用）', '=0.574/63.887', 'Broadcom FY2025 年報數字（會計年度至 2025-11-02；8-K Exhibit 99.1 現金流量表，與 10-K 相同）：Depreciation 574 ÷ 營收 63,887（US$M）'),
+                                        ("cx_rev", '資本支出 ÷ 營收（購置不動產、廠房設備；自由現金流用）', '=0.623/63.887', '同上：Purchases of property, plant and equipment 623 ÷ 營收 63,887（US$M）')), 1):
+    IN.cell(_ir + _j, 1, _k); IN.cell(_ir + _j, 2, _it); IN.cell(_ir + _j, 3, "%"); IN.cell(_ir + _j, 5, _v); IN.cell(_ir + _j, 5).number_format = "0.00%"
+    IN.cell(_ir + _j, 7, "Verified"); IN.cell(_ir + _j, 8, _s1); IN.cell(_ir + _j, 9, '各年沿用 FY2025 比率（Assumed：比率不變）；FY2024 為 1.15%／1.06%（593、548 ÷ 51,574）')
+    wb.defined_names[_k] = DefinedName(_k, attr_text=f"In!$E${_ir + _j}")
+FCY = list(range(2026, 2033))
+_pr = PL.max_row + 2
+PL.cell(_pr, 1, "v0.2.1 新增：每年自由現金流＝淨利（延伸表）＋營收 × da_rev − 營收 × cx_rev（In 頁 N 節；FY2025 比率沿用）；不含營運資金變動。欄位：各情境 × 各年度").font = BOLD
+hdr(PL, _pr + 1, ["項目", "單位"] + [f"FY{y} {s}" for s in SC for y in FCY] + ["說明"])
+FCF_ROW = _pr + 2
+PL.cell(FCF_ROW, 1, "自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）"); PL.cell(FCF_ROW, 2, "US$B")
+for _j, (_s, _y) in enumerate([(s, y) for s in SC for y in FCY]):
+    _c = XC[_y]; _ni = XR[(_s, "ni")]; _rv = XR[(_s, "rev")]
+    PL.cell(FCF_ROW, 3 + _j, f"={_c}{_ni}+{_c}{_rv}*da_rev-{_c}{_rv}*cx_rev").number_format = "0.0"
+PL.cell(FCF_ROW, 3 + len(SC) * len(FCY), '淨利＝PL 延伸表「淨利（延伸表）」，non-GAAP（排除股票薪酬、無形資產攤銷等）：股票薪酬為非現金費用，排除後接近現金口徑；無形資產攤銷已不在淨利內，故折舊只加回不動產、廠房設備折舊')
+_sr = SO.max_row + 1
+for _j, (_a, _b) in enumerate([('自由現金流假設 da_rev、cx_rev：Broadcom FY2025 現金流量表 [Verified]', 'https://investors.broadcom.com/static-files/dd25b8a9-a65a-4125-b02b-b1a6eb154cde（8-K，2025-12-11：Depreciation 574、Amortization of intangible and right-of-use assets 8,201、資本支出 623、營收 63,887，US$M）；10-K：https://www.sec.gov/Archives/edgar/data/1730168/000173016825000121/avgo-20251102.htm'), ('自由現金流各年比率沿用 FY2025 [Assumed]', '折舊、資本支出占營收比例 FY2026 起不變；未含營運資金變動；淨利為 non-GAAP')]):
+    SO.cell(_sr + _j, 1, _a); SO.cell(_sr + _j, 2, _b)
+_up = next(r for r in range(1, V.max_row + 1) if V.cell(r, 1).value == "上檔空間：加權目標價")
+GRADE_ROW = V.max_row + 2; REC_ROW = GRADE_ROW + 1
+V.cell(GRADE_ROW, 1, "上檔空間級距")
+V.cell(GRADE_ROW, 2, f'=IF(B{_up}>0.5,"大於 50%",IF(B{_up}>0.25,"25%–50%",IF(B{_up}>=0,"0%–25%",IF(B{_up}>=-0.25,"0%～−25%",IF(B{_up}>=-0.5,"−25%～−50%","小於 −50%")))))')
+V.cell(GRADE_ROW, 5, f"以「上檔空間：加權目標價」（B{_up}）分六級（Andy 2026-10-25 14:00）")
+V.cell(REC_ROW, 1, "投資建議")
+V.cell(REC_ROW, 2, f'=IF(B{_up}>0.5,"強力買進",IF(B{_up}>0.25,"買進",IF(B{_up}>=-0.25,"中立",IF(B{_up}>=-0.5,"放空","強力放空"))))')
+V.cell(REC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
+OBS = ['目標價 US$341（DCF 325、Comparable 357 各半），比現價 321.68（2026-10-23）高 5.9%，級距 0%–25%；Comparable 單獨為 +10.9%。與共識目標價 529.1 的差距主要在倍數：本模型 FY2027 EPS 18.08 只比共識 19.40 低 6.8%，但共識目標價隱含 27.3 倍共識 EPS，比同業（NVIDIA、AMD、Marvell、Qualcomm、台積電 ADR）前瞻 P/E 中位數 19.6 倍高 39.1%；現價隱含 16.6 倍。', '情境分歧從 FY2028 起：FY2027 EPS 三情境同為 18.08，FY2028 A／B／C 為 21.03／17.84／14.82（B、C 低於 FY2027），DCF 價格帶 222～394；現價約為 B 情境 FY2028 EPS 的 18.0 倍。PL 頁末自由現金流（non-GAAP 淨利＋折舊 − 資本支出）B 情境 FY2027 約 88.8、FY2028 約 87.2 十億美元，與淨利幾乎相同（資本支出約為營收 1%）。', 'FY2027 EPS 最敏感的是 XPU 核心售價（±20% 對 EPS ±8.2%），其次是 TPU 份額（−15pt 時 −5.7%，聯發科版 TPU 放量）與 AI 網通（×0.8 時 −5.1%）（Sens 頁）。下一個檢驗點是 FY2026 第四季財報（約 2026-12 中旬）的 AI 半導體營收與下一季指引。']   # 重點觀察（與 README.md 相同文字；數字取自重算後的 Val／PL／Sens 頁）
+_rr = RD.max_row + 1
+RD.cell(_rr, 1, 'v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁末新增「上檔空間級距」「投資建議」兩列（Andy 2026-10-25 14:00、14:17 固定規則），README 頁末新增投資建議與重點觀察三點；既有儲存格位置與數值不變。另依算力收支 2026-10-25 請求，PL 頁末新增「自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）」一列（三情境 × 各年度），In 頁末新增 da_rev、cx_rev 兩個比率（最近完整會計年度實績）。')
+RD.cell(_rr + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"').font = Font(bold=True)
+for _j, _t in enumerate(OBS, 1): RD.cell(_rr + 1 + _j, 1, f"重點觀察 {_j}：" + _t)
+if os.environ.get("RATING_ROWMAP"):   # 除錯用：輸出新增列號（供撰寫 html.json）；CI 不設此變數
+    print("ROWMAP", GRADE_ROW, REC_ROW, _rr, _rr + 1, _rr + 2, FCF_ROW)
+
 
 order =["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
