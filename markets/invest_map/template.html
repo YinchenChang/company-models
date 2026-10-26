@@ -528,7 +528,7 @@ function paneHtml(pf,i){
 })();
 function openDrawer(tk,tab){
   const p=P[tk], v=V[tk], pf=PF[tk]; if(!p)return;
-  curTk=tk; lastFocus=document.activeElement;
+  curTk=tk; lastFocus=document.activeElement; track("profile",tk);
   const m=pf?pf.meta:{};
   const stats=[["產業位置",`${esc(p.seg)}`],["地位分數",`${f1(p.score)} · 第 ${p.rank} 名`],["可投資性",`<span class="pill ${esc(v.tier)}">${esc(v.tier)}</span> <span class="gate ${v.gate==="不通過"?"no":"ok"}">收支${v.gate==="不通過"?"不通過":"通過"}</span>`],["中心空間",v.cu==null?"—":`<span class="${cls(v.cu)}">${pct(v.cu)}</span>`]];
   $("#drawer").innerHTML=`<div class="dh"><div class="row1"><div><div class="sub">${esc(p.layer)} · ${m.listing||esc(p.tk)}</div><h2 id="dname">${esc(p.name)}</h2></div><button class="close" id="dclose">關閉 Esc</button></div>
@@ -565,6 +565,26 @@ function renderMethod(){
   </dl>`;
 }
 
+/* ---------- 造訪計數（只送到 Andy 自己的 Google 試算表，網站上不顯示；網址見 counter/endpoint.txt） ---------- */
+const CNT=/*__COUNTER__*/"";
+const track=(()=>{
+  let off=false, vid="na";
+  try{
+    const qs=new URLSearchParams(location.search);
+    if(qs.has("nocount"))localStorage.setItem("aimap_nocount","1");      // 網址加 ?nocount 後，此瀏覽器之後都不計
+    if(qs.get("count")==="on")localStorage.removeItem("aimap_nocount"); // ?count=on 恢復計數
+    off=localStorage.getItem("aimap_nocount")==="1";
+    vid=localStorage.getItem("aimap_vid")||"";
+    if(!vid){vid=Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem("aimap_vid",vid);}
+  }catch(_){}
+  const dev=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)?"mobile":"desktop";
+  let ref=""; try{ref=document.referrer?new URL(document.referrer).hostname:"";}catch(_){}
+  return (ev,t)=>{
+    if(!CNT||off||!/^https?:$/.test(location.protocol))return;
+    const q=new URLSearchParams({ev,t:t||"",vid,ref,dev,w:String(window.innerWidth||0),ver:D.meta.version});
+    try{fetch(CNT+"?"+q.toString(),{mode:"no-cors",keepalive:true,credentials:"omit"}).catch(()=>{});}catch(_){}
+  };
+})();
 /* ---------- tabs ---------- */
 const views=["map","position","invest","profiles","method"];
 function show(v,scrollTo){
@@ -573,7 +593,7 @@ function show(v,scrollTo){
   if(scrollTo){const el=document.getElementById("r-"+scrollTo); if(el){el.scrollIntoView({block:"center"}); el.querySelector("details")?.setAttribute("open","");}}
 }
 document.addEventListener("click",e=>{
-  const t=e.target.closest(".tab"); if(t){show(t.dataset.v);try{history.replaceState(null,"","#"+t.dataset.v)}catch(_){};return;}
+  const t=e.target.closest(".tab"); if(t){show(t.dataset.v);track("tab",t.dataset.v);try{history.replaceState(null,"","#"+t.dataset.v)}catch(_){};return;}
   const op=e.target.closest("[data-open]"); if(op){e.preventDefault();openDrawer(op.dataset.open);return;}
   if(e.target.closest("#dclose")||e.target.id==="scrim"){closeDrawer();return;}
   const dt=e.target.closest("[data-dt]"); if(dt&&curTk){const i=+dt.dataset.dt; document.querySelectorAll(".dtab[data-dt]").forEach(b=>b.setAttribute("aria-selected",+b.dataset.dt===i)); $("#dpane").innerHTML=(PF[curTk]||DT[i][1]===null)?paneHtml(PF[curTk],i):'<div class="pending">這家公司的檔案尚未完成。</div>'; decorateMix($("#dpane")); $("#dpane").parentElement.scrollTop=0; return;}
@@ -584,5 +604,6 @@ document.addEventListener("click",e=>{
 });
 renderMap();renderPosition();renderInvest();renderProfiles();renderMethod();
 show((location.hash||"").slice(1));
+track("view",views.find(x=>!$("#v-"+x).hidden)||"map");
 $("#foot").innerHTML=`算力收支 · 研究整理，非投資建議。數字來源與版本見「方法與來源」。資料活頁簿 ${esc(D.meta.book)}。`;
 </script>

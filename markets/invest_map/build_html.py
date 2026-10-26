@@ -139,7 +139,12 @@ def main():
     if nop:
         print("警告：尚無公司檔案", nop)
     tpl = open(os.path.join(HERE, "template.html"), encoding="utf-8").read()
-    html = tpl.replace("/*__DATA__*/null", json.dumps(data, ensure_ascii=False))
+    # 造訪計數器網址（Google Apps Script 網頁應用程式；counter/endpoint.txt，空白＝不計數）
+    ep = os.path.join(HERE, "counter", "endpoint.txt")
+    cnt = open(ep, encoding="utf-8").read().strip() if os.path.exists(ep) else ""
+    if cnt and not re.match(r"^https://script\.google\.com/macros/s/[\w-]+/exec$", cnt):
+        raise SystemExit(f"counter/endpoint.txt 格式不對：{cnt}")
+    html = tpl.replace("/*__DATA__*/null", json.dumps(data, ensure_ascii=False)).replace('/*__COUNTER__*/""', json.dumps(cnt))
     out = os.path.join(HERE, "dist", "index.html")
     with open(out, "w", encoding="utf-8") as f:
         f.write(html)
