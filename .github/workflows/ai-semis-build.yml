@@ -47,6 +47,7 @@ on:
       - 'wiwynn/**'
       - 'wistron/**'
       - 'unimicron/**'
+      - 'ajinomoto/**'
       - 'victory_giant/**'
       - 'mediatek/**'
       - 'gce/**'
@@ -110,6 +111,7 @@ on:
       - 'wiwynn/**'
       - 'wistron/**'
       - 'unimicron/**'
+      - 'ajinomoto/**'
       - 'victory_giant/**'
       - 'mediatek/**'
       - 'gce/**'
@@ -192,6 +194,7 @@ jobs:
             "mediatek|python3 mediatek/build_mediatek.py|mediatek/dist"
             "victory_giant|python3 victory_giant/build_victory_giant.py|victory_giant/dist"
             "unimicron|python3 unimicron/build_unimicron.py|unimicron/dist"
+            "ajinomoto|python3 ajinomoto/build_ajinomoto.py|ajinomoto/dist"
             "wistron|python3 wistron/build_wistron.py|wistron/dist"
             "wiwynn|python3 wiwynn/build_wiwynn.py|wiwynn/dist"
             "lite|python3 lite/build_lite.py|lite/dist"
