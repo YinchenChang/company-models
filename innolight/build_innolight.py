@@ -1,4 +1,4 @@
-# 中際旭創（300308.SZ／3308.HK）收支與估值模型 v0.2.1（AI 半導體 Project：網通次產業內複製——光模組）
+# 中際旭創（300308.SZ／3308.HK）收支與估值模型 v0.2.2（AI 半導體 Project：網通次產業內複製——光模組）
 # 用法：python3 innolight/build_innolight.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不做平移。金額：十億人民幣（RMB B）；市場：十億美元（US$B，讀 markets/network）；EPS：人民幣。
 # 口徑：中國會計準則；淨利＝歸屬母公司股東淨利。公司不給營收或獲利指引；FY2026 錨點＝1H26 實績＋2H26 假設（Q3 季報 10-31 前公布後更新）。
@@ -32,6 +32,15 @@ for r in openpyxl.load_workbook(NET_F, data_only=True)["Mkt"].iter_rows(min_row=
     if lab in ("  其中 CPO", "  其中可插拔", "AI IT 資本支出（加速器 × 每顆 IT capex）", "scale-out 光模組"):
         NETR[lab.strip()] = ([r[2 + j].value for j in range(4)], f"{rel(NET_F)}｜Mkt!C{r[0].row}:F{r[0].row}")
 assert len(NETR) == 4 and all(v is not None for k in NETR for v in NETR[k][0]), NETR.keys()
+# 網通 CPO 三情境（markets/network v0.2.3；Andy 2026-10-25 13:13：技術替代屬行業情境，A＝替代快、C＝慢，公司讀同字母）
+NETS = {}
+for r in openpyxl.load_workbook(NET_F, data_only=True)["Mkt"].iter_rows(min_row=4):
+    for s_ in ("A", "B", "C"):
+        for k_, l_ in (("mpl", f"  其中可插拔（情境 {s_}）"), ("mcp", f"  其中 CPO（情境 {s_}）")):
+            if r[0].value == l_:
+                NETS[(k_, s_)] = ([r[2 + j].value for j in range(4)], f"{rel(NET_F)}｜Mkt!C{r[0].row}:F{r[0].row}")
+assert len(NETS) == 6 and all(v is not None for k in NETS for v in NETS[k][0]), NETS.keys()
+NETR["其中可插拔"] = NETS[("mpl", "A")]; NETR["其中 CPO"] = NETS[("mcp", "A")]   # 情境 A 列（數值＝主表「其中可插拔」「其中 CPO」）
 TS = {}
 for r in openpyxl.load_workbook(TSMC_F, data_only=True)["In"].iter_rows(min_row=4):
     k = r[0].value
@@ -209,6 +218,7 @@ Q.freeze_panes = "B4"
 FYS = (2025, 2026, 2027, 2028, 2029); FC = {2025: "C", 2026: "D", 2027: "E", 2028: "F", 2029: "G"}
 BU = (2026, 2027, 2028, 2029)
 umx = lambda y, s: {2026: "1", 2027: "1", 2028: f"um28_{s}", 2029: f"um29_{s}"}[y]
+mk = lambda b, y, s: f"{b}_{y % 100}" if s == "A" else f"{b}{s}_{y % 100}"   # 網通 CPO 三情境：情境 A 讀 A 節，B、C 讀同字母列
 DEFP = dict(scn="A", rel="rel", cpo="cpo", pxr="pxr", gm="gm", mf="1", fx="fx", gn="g_oth", opxa="0")
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
@@ -227,8 +237,8 @@ def engine(ws, r0, title, **over):
     c_ = lambda y: FC[y]
     F = BU[1:]
     sec_("A. AI 營收（D 欄＝FY2026 校準年；E–G＝FY2027–FY2029）")
-    row("mpl", "AI 可插拔光模組市場 × 情境顆數係數", "US$B", {c_(y): f"=mpl_{y % 100}*{umx(y, s)}" + ("" if y == 2026 else f"*{P['mf']}") for y in BU})
-    row("mcp", "AI CPO 光學市場 × 情境顆數係數", "US$B", {c_(y): f"=mcp_{y % 100}*{umx(y, s)}" for y in BU})
+    row("mpl", "AI 可插拔光模組市場 × 情境顆數係數", "US$B", {c_(y): f"={mk('mpl', y, s)}*{umx(y, s)}" + ("" if y == 2026 else f"*{P['mf']}") for y in BU})
+    row("mcp", "AI CPO 光學市場 × 情境顆數係數", "US$B", {c_(y): f"={mk('mcp', y, s)}*{umx(y, s)}" for y in BU})
     row("fxr", "人民幣兌美元", "RMB", {c_(y): ("=fx" if y == 2026 else f"={P['fx']}") for y in BU}, fmt="0.00",
         note="FY2026 校準用基準匯率；Sens 只動 FY2027 起")
     row("sh0", "中際旭創可插拔有效份額（FY2026 校準）＝ AI 營收（美元）÷ 可插拔市場", "%", {"D": f"=a26_aiu/D{R['mpl']}"}, fmt="0.0%",
@@ -262,9 +272,9 @@ def engine(ws, r0, title, **over):
 
 # ---------------- PL ----------------
 PL = wb.create_sheet("PL")
-PL["A1"] = "PL — 中際旭創損益（RMB B）。FY2025A 實績、FY2026 錨點（1H26 實績＋2H26 假設），FY2027 起為模型。FY(t)＝CY(t)。三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2026–FY2027 三情境相同（顆數係數從 CY2028 開始）"
+PL["A1"] = "PL — 中際旭創損益（RMB B）。FY2025A 實績、FY2026 錨點（1H26 實績＋2H26 假設），FY2027 起為模型。FY(t)＝CY(t)。三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2026 三情境相同；FY2027 起三情境讀不同的網通 CPO 情境（A 替代快、C 慢），顆數係數從 CY2028 開始"
 PB = {}; r0 = 60
-SCN_T = {"A": "情境 A：基準（顆數係數 1.0）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85", "C": "情境 C：CY2028–29 顆數 ×0.6"}
+SCN_T = {"A": "情境 A：基準（顆數係數 1.0）；網通 CPO 情境 A（替代快）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85；網通 CPO 情境 B", "C": "情境 C：CY2028–29 顆數 ×0.6；網通 CPO 情境 C（替代慢）"}
 for s in SC:
     PB[s] = engine(PL, r0, SCN_T[s], scn=s)
     r0 = PB[s]["end"] + 2
@@ -329,7 +339,7 @@ for j, s in enumerate(SC):
 V.cell(11, 1, "現價 ÷ 共識未來 12 月 EPS（2/12 × FY2026＋10/12 × FY2027）"); V["B11"] = "=px/(cons_eps26*2/12+cons_eps27*10/12)"; V["B11"].number_format = "0.0"
 V.cell(12, 1, "現價 ÷ 52 週高點 − 1"); V["B12"] = "=px/px_hi-1"; V["B12"].number_format = "0%"
 V.cell(13, 1, "現價 ÷ 近 12 月 EPS（2H25＋1H26；推導）"); V["B13"] = "=px/((a25_ni-h1_ni/3.417+h1_ni)/sh_post)"; V["B13"].number_format = "0.0"
-V["E8"] = "FY2027 三情境相同（顆數係數從 CY2028 開始）"; V["E13"] = "1H25 歸母淨利＝1H26 ÷（1＋241.7%）"
+V["E8"] = "FY2027 三情境只差在網通 CPO 情境（顆數係數從 CY2028 開始）"; V["E13"] = "1H25 歸母淨利＝1H26 ÷（1＋241.7%）"
 V.cell(15, 1, "2. 循環位置（本模型營收最高年；FY(t)＝CY(t)）").font = BOLD
 hdr(V, 16, ["情境", "營收最高年（FY2026–FY2029）", "FY2027 判定", "規則倍數（P/E）", "見頂年是否未知", "說明"])
 for i, s in enumerate(SC, 17):
@@ -422,11 +432,11 @@ for nm, setting, ov in cases:
 for n, (nm, setting, ov) in enumerate(cases):
     put_case(5 + n, nm, setting, SB[nm], "")
 nn = 5 + len(cases)
-put_case(nn, "顆數情境 B", "CY2028 ×0.8、CY2029 ×0.85", PB["B"], "PL!")
-put_case(nn + 1, "顆數情境 C", "CY2028–29 ×0.6", PB["C"], "PL!")
+put_case(nn, "顆數情境 B", "CY2028 ×0.8、CY2029 ×0.85；CPO 情境 B", PB["B"], "PL!")
+put_case(nn + 1, "顆數情境 C", "CY2028–29 ×0.6；CPO 情境 C", PB["C"], "PL!")
 assert nn + 3 < 40
 SENS_N = len(cases)
-SE.cell(nn + 3, 1, "讀法：FY2027 三顆數情境相同；B、C 的差異從 FY2028 起。「美國限制」「份額流失」「降價」「毛利率」四案例對應市場隱含衰退的三條路徑（份額、單價、CPO 替代）；CPO 份額案例顯示 CPO 金額在 2029 年前仍小。")
+SE.cell(nn + 3, 1, "讀法：FY2027 三情境只差在網通 CPO 情境（A 替代快、C 慢）；顆數差異從 FY2028 起。「美國限制」「份額流失」「降價」「毛利率」四案例對應市場隱含衰退的三條路徑（份額、單價、CPO 替代）；CPO 份額案例顯示 CPO 金額在 2029 年前仍小。")
 SE.column_dimensions["A"].width = 30; SE.column_dimensions["B"].width = 56
 for c in "CDEFGHIJKL": SE.column_dimensions[c].width = 14
 
@@ -494,7 +504,7 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("中際旭創（300308.SZ／3308.HK）收支與估值模型 v0.2.1（AI 半導體 Project：網通次產業內複製——光模組）　2026-10-25", True),
+lines = [("中際旭創（300308.SZ／3308.HK）收支與估值模型 v0.2.2（AI 半導體 Project：網通次產業內複製——光模組）　2026-10-26", True),
  ("版本：v0.2.1（2026-10-25：補上檔空間級距、投資建議、重點觀察，數值不變）；v0.2（2026-10-25：三情境延伸到 FY2032、目標價＝DCF 與 Comparable 加權；v0.1 初版、v0.1.1 加規則值情境加權）。中際旭創在 AI 光模組的份額在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
  ("模型命題：中際旭創的 AI 營收＝AI 可插拔光模組市場（本專案網通模型）× 中際旭創份額 × 單價係數＋CPO 光學 × 中際旭創 CPO 份額；其他營收（國內、電信）另依成長率推。股價自高點腰斬、只約 12 倍共識未來 12 月 EPS：市場定價像是 2027 年就是獲利高點。", False),
  ("核心問題：市場隱含的 FY2028 EPS 遠低於模型——要成立，份額（新易盛、美國限制）、單價（每 Gb 降價）、CPO 替代三條路徑各要不利到什麼程度？", False), ("", False),
@@ -533,7 +543,7 @@ def add_target_price(V, imp, note, fmt, method, px_note):
 TP0 = add_target_price(V, {s: f"=D{VAL[s]}" for s in SC},
     {s: f'="第 3 節規則值：FY2027 EPS × "&TEXT(C{VAL[s]},"0.0")&"x（"&C{17 + SC.index(s)}&"）"' for s in SC}, "#,##0",
     "P/E：各情境 FY2027 EPS × 十年（2016–2025 年底）P/E 依循環位置取分位（以本模型營收最高年判定：A、B 中段＝中位數，C 見頂＝25 分位）；倍數只有 companiesmarketcap 一個來源、8 年（2018–2025）。"
-    "十年倍數多為 AI 前、公司規模較小時期的高倍數（2019 年約 98x），偏誤方向為高估；FY2027 三情境 EPS 相同，A、B 隱含價相同、C 只差在倍數；隱含價約為 FY2027 年底的價格、未折現，當作 12 個月目標價時偏高。",
+    "十年倍數多為 AI 前、公司規模較小時期的高倍數（2019 年約 98x），偏誤方向為高估；FY2027 三情境 EPS 只差在網通 CPO 情境，A、B 隱含價相近、C 另差在倍數；隱含價約為 FY2027 年底的價格、未折現，當作 12 個月目標價時偏高。",
     "現價＝In 頁 px（2026-10-23 收盤，A 股）")
 
 
@@ -722,7 +732,7 @@ TPT = _tp_section(V, lambda s_, y: f"PL!{FCX[y]}{SUMR[(s_, 'eps')]}", [(2027, "2
     "stockanalysis 預測頁：14 位平均 1,321、中位數 1,400（2026-10-25 擷取）；多數訂於 10 月股價下跌前",
     ("DCF：股東現金流＝EPS ×（1 − g／ROE），r＝10%、g＝4%、ROE 為近三年平均約 31%（再投資率約 13%），FY2027–32 明確期＋永續，FY2030 起為收斂法。"
      "Comparable：A 股光通訊同業（新易盛、天孚通信、光迅科技、華工科技、劍橋科技）前瞻 P/E 中位數；同業規模較小、部分價格日期為 8–9 月，"
-     "而新易盛只有約 13 倍，中位數偏高估。情境對應：顆數情境 A＝順利、B＝平平、C＝不如預期；FY2027 三情境 EPS 相同（差異從 CY2028 起）。"),
+     "而新易盛只有約 13 倍，中位數偏高估。情境對應：顆數情境 A＝順利、B＝平平、C＝不如預期；FY2027 三情境 EPS 只差在網通 CPO 情境（A＝CPO 替代快），顆數差異從 CY2028 起。"),
     _rule_pe_range(V), "#,##0.00",
     "本模型前瞻 EPS ÷ 共識前瞻 EPS − 1；共識前瞻 EPS＝In 頁 cons_feps（同花順 FY2027、FY2028 共識，與本模型同期間加權）")
 TPS0, TPS_LAST = _tp_sens(SE, TPT)
@@ -759,9 +769,9 @@ for _i, s in enumerate(SC):
 SO.cell(SO.max_row + 1, 1, "[Verified] 公司 FY2025 年報現金流量表（資料商轉載）：折舊與攤銷 819.47、購建長期資產現金 2,759.99（百萬元）；營收 382.4 億元——自由現金流比率錨點"); SO.cell(SO.max_row, 2, "https://quote.cfi.cn/xjll/14097/300308.html（現金流量表 2025 年報：購建固定資產、無形資產和其他長期資產支付的現金 275,999.47 萬元）；https://stockanalysis.com/quote/she/300308/financials/cash-flow-statement/（FY2025 折舊與攤銷 819.47 百萬元、資本支出 2,760 百萬元）；https://stock.10jqka.com.cn/20260331/c675646713.shtml（2025 年營收 382.4 億元）")
 SO.cell(SO.max_row + 1, 1, "[Assumed] 自由現金流：FY2026 起折舊 ÷ 營收、資本支出 ÷ 營收沿用 FY2025 比率（In 頁 fcf_da、fcf_capex）；不含營運資金變動"); SO.cell(SO.max_row, 2, "本模型假設")
 OBS = [
-       "目標價 ¥1,355（DCF 831、Comparable 1,879 各半），比現價 612.63（2026-10-23）高 121.2%，級距 大於 50%；Comparable 單獨為 +206.7%。主因是倍數不是 EPS：本模型 12 個月後前瞻 EPS 41.68 比共識前瞻 EPS 75.09 低 44.5%，但 A 股光通訊同業（新易盛、天孚、光迅、華工、劍橋）前瞻 P/E 中位數 45.1 倍，現價只隱含 12.1 倍（共識未來 12 月 EPS）、共識目標價 1,321 隱含 17.6 倍；Comparable 未扣同業規模較小、部分價格日期較舊的溢價，也未計美國限制風險。DCF 單獨也有 +35.7%（ROE 30.6% 高於折現率 10%）。",
-       "最敏感的是美國限制與份額：美國限制案例（份額相對值 2028 0.55）FY2028 EPS −39.1%、份額流失 −21.6%、降價快於模型 −19.4%、AI 市場 ×0.8 −19.1%；情境 C FY2028 EPS 29.17，比情境 A 的 49.78 低 41.4%，DCF 價格帶 498～1,049。",
-       "追蹤 3Q26 季報（10-31 前）：FY2026 錨點的 2H26（季增 15%、毛利率 47%）為假設。CPO 份額對 EPS 影響小（份額 0 時 FY2028 −2.0%），但網通 CPO 目前只有一條路徑、三情境相同，CPO 替代可插拔的風險待 markets/network 改版。"
+       "目標價 ¥1,343（DCF 823、Comparable 1,864 各半），比現價 612.63（2026-10-23）高 119.3%，級距 大於 50%；Comparable 單獨為 +204.2%。主因是倍數不是 EPS：本模型 12 個月後前瞻 EPS 41.34 比共識前瞻 EPS 75.09 低 44.9%，但 A 股光通訊同業（新易盛、天孚、光迅、華工、劍橋）前瞻 P/E 中位數 45.1 倍，現價只隱含 12.1 倍（共識未來 12 月 EPS）、共識目標價 1,321 隱含 17.6 倍；Comparable 未扣同業規模較小、部分價格日期較舊的溢價，也未計美國限制風險。DCF 單獨也有 +34.3%（ROE 30.6% 高於折現率 10%）。",
+       "最敏感的是美國限制與份額：美國限制案例（份額相對值 2028 0.55）FY2028 EPS −38.2%、份額流失 −21.2%、降價快於模型 −19.0%、AI 市場 ×0.8 −18.6%；情境 C FY2028 EPS 29.54，比情境 A 的 48.26 低 38.8%，DCF 價格帶 504～1,017。",
+       "追蹤 3Q26 季報（10-31 前）：FY2026 錨點的 2H26（季增 15%、毛利率 47%）為假設。網通 CPO 已改三情境（v0.2.2；A＝替代快、C＝慢）：CPO 快對中際旭創是減分，情境 A FY2028 EPS 由 49.78 降到 48.26（−3.1%）、C 由 29.17 升到 29.54（+1.2%）、B 不變；CPO 份額 0 時 FY2028 EPS −4.1%。"
       ]   # 重點觀察（與 README.md 相同文字）
 _n0 = RD.max_row
 RD.cell(_n0 + 1, 1, "v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（Val 頁 0.3 結論加「上檔空間級距」「投資建議」兩列、README 頁加重點觀察三點；數值不變，既有儲存格位置不變）。另在 PL 頁末新增「自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）」三情境列（FY2025A–FY2032；歸母淨利口徑；算力收支 2026-10-25 請求），In 頁末新增 fcf_da、fcf_capex（FY2025 年報比率 2.14%、7.22%）。")
@@ -770,6 +780,20 @@ for _i, _t in enumerate(OBS, 1): RD.cell(_n0 + 2 + _i, 1, f"重點觀察 {_i}：
 
 order =["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
+# ---------------- v0.2.2（2026-10-26）：網通 CPO 三情境（同字母）；In 頁在現有最後一列之後新增，不移動既有列 ----------------
+_ri = IN.max_row + 2
+IN.cell(_ri, 1, "網通 CPO 三情境（v0.2.2；markets/network v0.2.3：A＝替代快、B＝平平、C＝慢；情境 A 為上方 A 節，B、C 為下列，各再乘同字母情境顆數係數）").font = BOLD; _ri += 1
+for _kb, _lab, _kind in [('mpl', 'AI 可插拔光模組市場', 'mpl'), ('mcp', 'AI CPO 光學市場', 'mcp')]:
+    for _s in ("B", "C"):
+        for _j, _y in enumerate((26, 27, 28, 29)):
+            _k = f"{_kb}{_s}_{_y}"
+            IN.cell(_ri, 1, _k); IN.cell(_ri, 2, f"情境 {_s}：{_lab} CY20{_y}"); IN.cell(_ri, 3, "US$B")
+            IN.cell(_ri, 5, NETS[(_kind, _s)][0][_j]).font = BLUE
+            IN.cell(_ri, 7, "Derived"); IN.cell(_ri, 8, NETS[(_kind, _s)][1])
+            IN.cell(_ri, 9, f"網通模型 CPO 情境 {_s}（技術替代屬行業情境，公司讀同字母）" if _y == 26 else "同上")
+            wb.defined_names[_k] = DefinedName(_k, attr_text=f"In!$E${_ri}"); _ri += 1
+_n1 = RD.max_row
+RD.cell(_n1 + 1, 1, 'v0.2.2（2026-10-26）：網通模型 v0.2.3 的 CPO 滲透改三情境（A＝替代快、B＝平平、C＝慢），本模型 A／B／C 改讀同字母的可插拔與 CPO 市場（In 頁末新增 B、C 兩組；情境 A 沿用 A 節 mpl_／mcp_，數值改為網通情境 A）。CPO 快對中際旭創是減分（可插拔市場較小、CPO 份額只部分抵銷），所以 A 情境 EPS 降幅最大；FY2027 起三情境不再相同。其他輸入不變。')
 wb.save(sys.argv[1])
 if os.environ.get("INNOLIGHT_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

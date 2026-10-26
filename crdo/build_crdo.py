@@ -1,4 +1,4 @@
-# Credo（CRDO）收支與估值模型 v0.2.1（AI 半導體 Project：網通次產業內複製——主動電纜 AEC、SerDes、光 DSP）
+# Credo（CRDO）收支與估值模型 v0.2.2（AI 半導體 Project：網通次產業內複製——主動電纜 AEC、SerDes、光 DSP）
 # 用法：python3 crdo/build_crdo.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度：FY(t) 於 t 年 4 月底／5 月初結束（52／53 週；FY2026：2025-05-04～2026-05-02；FY2027：2026-05-03～2027-05-01）。
 #   FY(t) 有 8 個月落在日曆年 t−1（5–12 月）、4 個月落在 t（1–4 月）。上游市場層是日曆年，FY(t) 市場＝8/12 × CY(t−1)＋4/12 × CY(t)（月數加權）。
@@ -36,6 +36,15 @@ for r in openpyxl.load_workbook(NET_F, data_only=True)["Mkt"].iter_rows(min_row=
     if lab in NET_LABS:
         NETR[NET_LABS[lab]] = ([r[2 + j].value for j in range(4)], f"{rel(NET_F)}｜Mkt!C{r[0].row}:F{r[0].row}")
 assert len(NETR) == 4 and all(v is not None for k in NETR for v in NETR[k][0]), NETR.keys()
+# 網通 CPO 三情境（markets/network v0.2.3；Andy 2026-10-25 13:13：技術替代屬行業情境，A＝替代快、C＝慢，公司讀同字母）
+NETS = {}
+for r in openpyxl.load_workbook(NET_F, data_only=True)["Mkt"].iter_rows(min_row=4):
+    for s_ in ("A", "B", "C"):
+        for k_, l_ in (("mpl", f"  其中可插拔（情境 {s_}）"), ("mcp", f"  其中 CPO（情境 {s_}）")):
+            if r[0].value == l_:
+                NETS[(k_, s_)] = ([r[2 + j].value for j in range(4)], f"{rel(NET_F)}｜Mkt!C{r[0].row}:F{r[0].row}")
+assert len(NETS) == 6 and all(v is not None for k in NETS for v in NETS[k][0]), NETS.keys()
+NETR["pl"] = NETS[("mpl", "A")]   # 情境 A 列（數值＝主表「其中可插拔」）
 TS = {}
 for r in openpyxl.load_workbook(TSMC_F, data_only=True)["In"].iter_rows(min_row=4):
     k = r[0].value
@@ -252,10 +261,12 @@ Q.freeze_panes = "B4"
 FYS = (2025, 2026, 2027, 2028, 2029); FC = {2025: "C", 2026: "D", 2027: "E", 2028: "F", 2029: "G"}
 BU = (2027, 2028, 2029); F_ = (2028, 2029)
 umx = lambda cy, s: {2026: "1", 2027: "1", 2028: f"um28_{s}", 2029: f"um29_{s}"}[cy]
+mk = lambda b, y, s: f"{b}_{y % 100}" if s == "A" else f"{b}{s}_{y % 100}"   # 網通 CPO 三情境：情境 A 讀 A 節，B、C 讀同字母列
 def fymkt(base, y, s, mf):
     """FY(y) 市場＝w8 × CY(y−1)＋（1 − w8）× CY(y)；FY2028 起乘市場係數 mf"""
     a, b = y - 1, y
-    f = f"(w8*{base}_{a % 100}*{umx(a, s)}+(1-w8)*{base}_{b % 100}*{umx(b, s)})"
+    nm_ = lambda c: mk(base, c, s) if base == "mpl" else f"{base}_{c % 100}"   # 只有可插拔市場隨 CPO 情境
+    f = f"(w8*{nm_(a)}*{umx(a, s)}+(1-w8)*{nm_(b)}*{umx(b, s)})"
     return f"={f}" + ("" if y == 2027 or mf == "1" else f"*{mf}")
 DEFP = dict(scn="A", rela="rel_a", relo="rel_o", gm="gm", tx="tx", mf="1", gn="g_oth", opxa="0", phi="phi")
 def engine(ws, r0, title, **over):
@@ -283,7 +294,7 @@ def engine(ws, r0, title, **over):
     row("aec", "AEC 營收", "US$B", {"D": "=a26_aec", "E": "=a27_aec", **{c_(y): f"={c_(y)}{R['mcu']}*{c_(y)}{R['sha']}" for y in F_}})
     sec_("B. 光學（光 DSP、矽光 PIC、ZeroFlap 光學）")
     row("mpl", "AI 可插拔光模組市場（FY 加權）× 情境顆數係數", "US$B", {c_(y): fymkt("mpl", y, s, "1") for y in BU}, fmt="#,##0.00")
-    row("sho0", "Credo 光學有效份額（FY2027 校準）＝ 光學營收 ÷ 可插拔市場", "%", {"E": f"=a27_opt/E{R['mpl']}"}, fmt="0.00%")
+    row("sho0", "Credo 光學有效份額（FY2027 校準）＝ 光學營收 ÷ 可插拔市場", "%", {"E": "=a27_opt/" + fymkt("mpl", 2027, "B", "1")[1:]}, fmt="0.00%")
     row("relo", "光學有效份額相對值（÷ FY2027）", "x", {"E": "=1", **{c_(y): f"={P['relo']}_{y % 100}" for y in F_}}, fmt="0.00")
     row("opt", "光學營收", "US$B", {"D": "=a26_opt", "E": "=a27_opt", **{c_(y): f"={c_(y)}{R['mpl']}*$E${R['sho0']}*{c_(y)}{R['relo']}" for y in F_}})
     sec_("C. 其他營收與合計")
@@ -313,9 +324,9 @@ def engine(ws, r0, title, **over):
 
 # ---------------- PL ----------------
 PL = wb.create_sheet("PL")
-PL["A1"] = "PL — Credo 損益（US$B；non-GAAP）。FY2025A、FY2026A 實績、FY2027 錨點（1Q27 實績＋2Q27 指引＋2H27 依全年指引），FY2028 起為模型。FY(t) 截至 t 年 4 月底／5 月初。三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2027 三情境相同；FY2028 只有 4/12 落在 CY2028，B、C 的差異主要在 FY2029"
+PL["A1"] = "PL — Credo 損益（US$B；non-GAAP）。FY2025A、FY2026A 實績、FY2027 錨點（1Q27 實績＋2Q27 指引＋2H27 依全年指引），FY2028 起為模型。FY(t) 截至 t 年 4 月底／5 月初。三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2027 三情境相同；FY2028 起光學可插拔市場讀同字母網通 CPO 情境，FY2028 只有 4/12 落在 CY2028，顆數情境 B、C 的差異主要在 FY2029"
 PB = {}; r0 = 60
-SCN_T = {"A": "情境 A：基準（顆數係數 1.0）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85", "C": "情境 C：CY2028–29 顆數 ×0.6"}
+SCN_T = {"A": "情境 A：基準（顆數係數 1.0）；網通 CPO 情境 A（替代快）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85；網通 CPO 情境 B", "C": "情境 C：CY2028–29 顆數 ×0.6；網通 CPO 情境 C（替代慢）"}
 for s in SC:
     PB[s] = engine(PL, r0, SCN_T[s], scn=s)
     r0 = PB[s]["end"] + 2
@@ -493,8 +504,8 @@ for nm, setting, ov in cases:
 for n, (nm, setting, ov) in enumerate(cases):
     put_case(5 + n, nm, setting, SB[nm], "")
 nn = 5 + len(cases)
-put_case(nn, "顆數情境 B", "CY2028 ×0.8、CY2029 ×0.85", PB["B"], "PL!")
-put_case(nn + 1, "顆數情境 C", "CY2028–29 ×0.6", PB["C"], "PL!")
+put_case(nn, "顆數情境 B", "CY2028 ×0.8、CY2029 ×0.85；CPO 情境 B", PB["B"], "PL!")
+put_case(nn + 1, "顆數情境 C", "CY2028–29 ×0.6；CPO 情境 C", PB["C"], "PL!")
 assert nn + 3 < 40
 SENS_N = len(cases)
 SE.cell(nn + 3, 1, "讀法：FY2027 為錨點、各案例相同；顆數情境只影響 FY2028 的 4/12（CY2028），差異主要在 FY2029。「AEC 份額流失」「最大客戶流失」「AI 銅纜市場 ×0.8」是 FY2028 EPS 最大的三條不利路徑；FY2028 起稅率 17%（OECD 最低稅）影響較小；顆數情境 C 主要打在 FY2029。光學在 FY2029 前仍小於 AEC。")
@@ -569,7 +580,7 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Credo（CRDO）收支與估值模型 v0.2.1（AI 半導體 Project：網通次產業內複製——主動電纜 AEC、SerDes、光 DSP）　2026-10-25", True),
+lines = [("Credo（CRDO）收支與估值模型 v0.2.2（AI 半導體 Project：網通次產業內複製——主動電纜 AEC、SerDes、光 DSP）　2026-10-26", True),
  ("版本：v0.2（2026-10-25：三情境延伸到 FY2032、目標價＝DCF 與 Comparable 加權；v0.1 初版）。Credo 在 AI 銅纜（AEC）與光學的份額在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）。", False),
  ("模型命題：Credo 的 AEC 營收＝AI 銅纜市場（本專案網通模型：scale-up 背板與線纜＋scale-out DAC／AEC）× Credo 有效份額（AEC 滲透率 × Credo 占 AEC）；光學（光 DSP、矽光 PIC、ZeroFlap 光學）＝可插拔光模組市場 × 光學份額；線卡 PHY、重定時器與 SerDes IP 另依成長率推。股價自 52 週高點跌約 52%、只約 15 倍共識 FY2028 EPS：市場定價像是 AEC 成長在 FY2028 前後見頂。", False),
  ("核心問題：市場隱含的 FY2028 EPS 是否低於模型——要成立，AEC 份額（競爭、主動光纜自我替代）、客戶集中（前四大終端客戶占 84%）、銅轉光（AI 銅纜市場）三條路徑各要不利到什麼程度？", False), ("", False),
@@ -781,7 +792,7 @@ V.cell(GRADE_ROW, 5, f"以「上檔空間：加權目標價」（B{_up}）分六
 V.cell(REC_ROW, 1, "投資建議")
 V.cell(REC_ROW, 2, f'=IF(B{_up}>0.5,"強力買進",IF(B{_up}>0.25,"買進",IF(B{_up}>=-0.25,"中立",IF(B{_up}>=-0.5,"放空","強力放空"))))')
 V.cell(REC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
-OBS = ['目標價 US$196（DCF 101、Comparable 290 各半），比現價 147.29（2026-10-23）高 32.9%，級距 25%–50%；Comparable 單獨為 +97.0%。上檔全部來自倍數：本模型 12 個月後前瞻 EPS 8.40 比共識 9.69 低 13.3%，但現價只隱含 15.2 倍共識前瞻 EPS，同業（Astera Labs、Marvell、Broadcom、MACOM）前瞻 P/E 中位數 34.5 倍、共識目標價 279.09 隱含 28.8 倍；DCF 101 反而比現價低 31.2%，因 B、C 情境 FY2029 起 EPS 下滑（FY2032 B 7.64、C 3.69），且 ROE 無同口徑資料、取 20%。', '目標價對 DCF 權重最敏感：DCF 權重 0.3／0.7 時目標價 233.5／157.9（±19.3%），權重 0.7 時上檔空間只剩 +7.2%、落入中立。', 'FY2028 EPS 最敏感的是 AEC：最大客戶流失時 −24.5%、AEC 份額流失 −18.6%、AI 銅纜市場 ×0.8 時 −14.9%（Sens 頁）。下一個檢驗點是 2Q FY27 財報（約 2026-12 初）的 AEC 營收與最大客戶占比。']   # 重點觀察（與 README.md 相同文字；數字取自重算後的 Val／PL／Sens 頁）
+OBS = ['目標價 US$195（DCF 100、Comparable 289 各半），比現價 147.29（2026-10-23）高 32.1%，級距 25%–50%；Comparable 單獨為 +96.1%。上檔全部來自倍數：本模型 12 個月後前瞻 EPS 8.37 比共識 9.69 低 13.6%，但現價只隱含 15.2 倍共識前瞻 EPS，同業（Astera Labs、Marvell、Broadcom、MACOM）前瞻 P/E 中位數 34.5 倍、共識目標價 279.09 隱含 28.8 倍；DCF 100 反而比現價低 32.0%，因 B、C 情境 FY2029 起 EPS 下滑（FY2032 B 7.64、C 3.74），且 ROE 無同口徑資料、取 20%。', '目標價對 DCF 權重最敏感：DCF 權重 0.3／0.7 時目標價 232.2／156.8（±19.4%），權重 0.7 時上檔空間只剩 +6.4%、落入中立。', 'FY2028 EPS 最敏感的是 AEC：最大客戶流失時 −24.7%、AEC 份額流失 −18.7%、AI 銅纜市場 ×0.8 時 −15.0%（Sens 頁）。光學的可插拔市場改讀同字母網通 CPO 情境（v0.2.2），情境 A FY2028 EPS 9.20 → 9.11（−0.9%）、C 7.81 → 7.84（+0.4%）。下一個檢驗點是 2Q FY27 財報（約 2026-12 初）的 AEC 營收與最大客戶占比。']   # 重點觀察（與 README.md 相同文字；數字取自重算後的 Val／PL／Sens 頁）
 _rr = RD.max_row + 1
 RD.cell(_rr, 1, 'v0.2.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁末新增「上檔空間級距」「投資建議」兩列（Andy 2026-10-25 14:00、14:17 固定規則），README 頁末新增投資建議與重點觀察三點；既有儲存格位置與數值不變。')
 RD.cell(_rr + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"').font = Font(bold=True)
@@ -792,6 +803,20 @@ if os.environ.get("RATING_ROWMAP"):   # 除錯用：輸出新增列號（供撰�
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
+# ---------------- v0.2.2（2026-10-26）：網通 CPO 三情境（同字母）；In 頁在現有最後一列之後新增，不移動既有列 ----------------
+_ri = IN.max_row + 2
+IN.cell(_ri, 1, "網通 CPO 三情境（v0.2.2；markets/network v0.2.3：A＝替代快、B＝平平、C＝慢；情境 A 為上方 A 節，B、C 為下列，各再乘同字母情境顆數係數）").font = BOLD; _ri += 1
+for _kb, _lab, _kind in [('mpl', 'AI 可插拔光模組市場', 'mpl')]:
+    for _s in ("B", "C"):
+        for _j, _y in enumerate((26, 27, 28, 29)):
+            _k = f"{_kb}{_s}_{_y}"
+            IN.cell(_ri, 1, _k); IN.cell(_ri, 2, f"情境 {_s}：{_lab} CY20{_y}"); IN.cell(_ri, 3, "US$B")
+            IN.cell(_ri, 5, NETS[(_kind, _s)][0][_j]).font = BLUE
+            IN.cell(_ri, 7, "Derived"); IN.cell(_ri, 8, NETS[(_kind, _s)][1])
+            IN.cell(_ri, 9, f"網通模型 CPO 情境 {_s}（技術替代屬行業情境，公司讀同字母）" if _y == 26 else "同上")
+            wb.defined_names[_k] = DefinedName(_k, attr_text=f"In!$E${_ri}"); _ri += 1
+_n1 = RD.max_row
+RD.cell(_n1 + 1, 1, 'v0.2.2（2026-10-26）：網通模型 v0.2.3 的 CPO 滲透改三情境（A＝替代快、B＝平平、C＝慢），本模型光學的可插拔市場 A／B／C 改讀同字母列（In 頁末新增 B、C；情境 A 沿用 mpl_，數值改為網通情境 A）。光學有效份額以 FY2027 錨點 ÷ 情境 B 市場校準（三情境同一份額；B 的 CPO 路徑＝v0.2.1，故情境 B 數值不變），所以 CPO 快 → 光學營收較少。銅纜（AEC）市場不受 CPO 影響。其他輸入不變。')
 wb.save(sys.argv[1])
 if os.environ.get("CRDO_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

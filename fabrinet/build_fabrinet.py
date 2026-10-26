@@ -1,4 +1,4 @@
-# Fabrinet（FN，NYSE）收支與估值模型 v0.1.1（AI 半導體 Project：網通次產業內複製——光模組與光元件代工，樣板 cohr/）
+# Fabrinet（FN，NYSE）收支與估值模型 v0.1.2（AI 半導體 Project：網通次產業內複製——光模組與光元件代工，樣板 cohr/）
 # 用法：python3 fabrinet/build_fabrinet.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度：FY(t)＝t−1 年 7 月～t 年 6 月（6 月最後一個星期五結束）。FY(t) 一半落在 CY(t−1) 下半年、一半落在 CY(t) 上半年。
 #   市場模型是日曆年：FY2027 光模組＝CY2026 下半年（FY2027 Q1 指引推導＋Q2 假設）＋ hw × CY2027；FY2028＝（1 − hw）× CY2027 ＋ hw × CY2028；FY2029 同理。
@@ -37,6 +37,15 @@ for r in openpyxl.load_workbook(NET_F, data_only=True)["Mkt"].iter_rows(min_row=
     if lab in ("  其中 CPO", "  其中可插拔", "AI IT 資本支出（加速器 × 每顆 IT capex）"):
         NETR[lab.strip()] = ([r[2 + j].value for j in range(4)], f"{rel(NET_F)}｜Mkt!C{r[0].row}:F{r[0].row}")
 assert len(NETR) == 3 and all(v is not None for k in NETR for v in NETR[k][0]), NETR.keys()
+# 網通 CPO 三情境（markets/network v0.2.3；Andy 2026-10-25 13:13：技術替代屬行業情境，A＝替代快、C＝慢，公司讀同字母）
+NETS = {}
+for r in openpyxl.load_workbook(NET_F, data_only=True)["Mkt"].iter_rows(min_row=4):
+    for s_ in ("A", "B", "C"):
+        for k_, l_ in (("mpl", f"  其中可插拔（情境 {s_}）"), ("mcp", f"  其中 CPO（情境 {s_}）")):
+            if r[0].value == l_:
+                NETS[(k_, s_)] = ([r[2 + j].value for j in range(4)], f"{rel(NET_F)}｜Mkt!C{r[0].row}:F{r[0].row}")
+assert len(NETS) == 6 and all(v is not None for k in NETS for v in NETS[k][0]), NETS.keys()
+NETR["其中可插拔"] = NETS[("mpl", "A")]; NETR["其中 CPO"] = NETS[("mcp", "A")]   # 情境 A 列（數值＝主表「其中可插拔」「其中 CPO」）
 TS = {}
 for r in openpyxl.load_workbook(TSMC_F, data_only=True)["In"].iter_rows(min_row=4):
     k = r[0].value
@@ -81,7 +90,7 @@ for j, y in enumerate((26, 27, 28, 29)):
         "加速器顆數 × 每顆光學內容（scale-out 為主；2029 含 scale-up 光學）− CPO" if y == 26 else "同上")
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"mcp_{y}", f"AI CPO 光學市場 CY20{y}", "US$B", None, NETR["其中 CPO"][0][j], None, "Derived", NETR["其中 CPO"][1],
-        "共同封裝光學；網通模型只有一條 CPO 滲透路徑（替代速度為行業變數，三情境同一路徑 × 同字母顆數係數，不自訂）" if y == 26 else "同上")
+        "共同封裝光學；情境 A 列（網通 v0.2.3 起 CPO 滲透分三情境，替代速度為行業變數，B、C 見 In 頁末，各 × 同字母顆數係數，不自訂）" if y == 26 else "同上")
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"itc_{y}", f"AI IT 資本支出 CY20{y}", "US$B", None, NETR["AI IT 資本支出（加速器 × 每顆 IT capex）"][0][j], None, "Derived", NETR["AI IT 資本支出（加速器 × 每顆 IT capex）"][1], "Recon 用：Fabrinet 資料中心營收 ÷ AI IT 資本支出" if y == 26 else "同上")
 for j, y in enumerate((26, 27, 28, 29)):
@@ -297,6 +306,7 @@ Q.freeze_panes = "B4"
 FYS = (2025, 2026, 2027, 2028, 2029); FC = {2025: "C", 2026: "D", 2027: "E", 2028: "F", 2029: "G"}
 BU = (2026, 2027, 2028, 2029)
 umx = lambda y, s: {2026: "1", 2027: "1", 2028: f"um28_{s}", 2029: f"um29_{s}"}[y]
+mk = lambda b, y, s: f"{b}_{y % 100}" if s == "A" else f"{b}{s}_{y % 100}"   # 網通 CPO 三情境：情境 A 讀 A 節，B、C 讀同字母列
 DEFP = dict(pxr="pxr", mf="1", hw="hw", gd="g_dci", gh="g_hpc", h2d="h2_dci", h2h="h2_hpc", opxa="0", tx="tx")
 SCDEF = {"A": dict(rel="RHI", cpo="CPHI", gm="GMHI"), "B": dict(rel="rel", cpo="cpo", gm="gm"), "C": dict(rel="RLO", cpo="CPLO", gm="GMLO")}
 def engine(ws, r0, title, scn="B", **over):
@@ -316,8 +326,8 @@ def engine(ws, r0, title, scn="B", **over):
     c_ = lambda y: FC[y]
     F = BU[1:]
     sec_("A. 日曆年 AI 光學（本節 D–G 欄＝CY2026–CY2029；D 欄＝CY2026 校準年）")
-    row("mpl", "AI 可插拔光模組市場 × 情境顆數係數（日曆年）", "US$B", {c_(y): f"=mpl_{y % 100}*{umx(y, s)}" + ("" if y == 2026 else f"*{P['mf']}") for y in BU}, note="本節欄位為日曆年")
-    row("mcp", "AI CPO 光學市場 × 情境顆數係數（日曆年）", "US$B", {c_(y): f"=mcp_{y % 100}*{umx(y, s)}" for y in BU})
+    row("mpl", "AI 可插拔光模組市場 × 情境顆數係數（日曆年）", "US$B", {c_(y): f"={mk('mpl', y, s)}*{umx(y, s)}" + ("" if y == 2026 else f"*{P['mf']}") for y in BU}, note="本節欄位為日曆年")
+    row("mcp", "AI CPO 光學市場 × 情境顆數係數（日曆年）", "US$B", {c_(y): f"={mk('mcp', y, s)}*{umx(y, s)}" for y in BU})
     row("sh0", "Fabrinet 光模組有效份額（CY2026 校準）＝ CY2026 光模組與其他 ÷ 可插拔市場", "%", {"D": f"=tr_cy26/D{R['mpl']}"}, fmt="0.0%",
         note="Derived：CY2026 CPO 營收視為 0；代工營收含料件，屬「有效」份額")
     row("rel", "份額相對值（÷ CY2026）", "x", {"D": "=1", **{c_(y): f"={P['rel']}_{y % 100}" for y in F}}, fmt="0.00")
@@ -371,7 +381,7 @@ for nm, base, suf in (("GDLO", "g_dci", "_lo"), ("GHLO", "g_hpc", "_lo")):
 PL = wb.create_sheet("PL")
 PL["A1"] = "PL — Fabrinet 損益（US$B；non-GAAP）。FY2025A、FY2026A（錨點）為實績，FY2027 起為模型。FY(t)＝t−1 年 7 月～t 年 6 月。三情境各一個完整推導區塊（本頁下方），頂端為摘要。顆數係數從 CY2028 開始；FY2027 的情境差異只來自公司特有變數（份額、CPO 份額、毛利率）"
 PB = {}; r0 = 60
-SCN_T = {"A": "情境 A（順利）：顆數係數 1.0；份額、CPO 份額、毛利率取高值", "B": "情境 B（平平）：CY2028 顆數 ×0.8、CY2029 ×0.85；公司變數取基準", "C": "情境 C（不如預期）：CY2028–29 顆數 ×0.6；公司變數取低值"}
+SCN_T = {"A": "情境 A（順利）：顆數係數 1.0、網通 CPO 情境 A（替代快）；份額、CPO 份額、毛利率取高值", "B": "情境 B（平平）：CY2028 顆數 ×0.8、CY2029 ×0.85、網通 CPO 情境 B；公司變數取基準", "C": "情境 C（不如預期）：CY2028–29 顆數 ×0.6、網通 CPO 情境 C（替代慢）；公司變數取低值"}
 for s in SC:
     PB[s] = engine(PL, r0, SCN_T[s], scn=s)
     r0 = PB[s]["end"] + 2
@@ -441,7 +451,7 @@ for j, s in enumerate(SC):
 V.cell(22, 1, "現價 ÷ 共識未來 12 月 EPS（9/12 × FY2027＋3/12 × FY2028）"); V["B22"] = "=px/(cons_eps27*9/12+cons_eps28*3/12)"; V["B22"].number_format = "0.0"
 V.cell(23, 1, "現價 ÷ 52 週高點 − 1"); V["B23"] = "=px/px_hi-1"; V["B23"].number_format = "0%"
 V.cell(24, 1, "現價 ÷ FY2027 Q1 EPS 指引中點年化"); V["B24"] = "=px/(q1_eps*4)"; V["B24"].number_format = "0.0"
-V["E19"] = "FY2027 三情境差異只來自公司特有變數（顆數係數從 CY2028 開始）"; V["E24"] = "4.175 × 4"
+V["E19"] = "FY2027 三情境差異來自公司特有變數與網通 CPO 情境（顆數係數從 CY2028 開始）"; V["E24"] = "4.175 × 4"
 V.cell(26, 1, "2. 循環位置（本模型營收最高的會計年度）").font = BOLD
 hdr(V, 27, ["情境", "營收最高年（FY2026–FY2029）", "FY2027 判定", "規則倍數（P/E）", "見頂年是否未知", "說明"])
 for i, s in enumerate(SC, 28):
@@ -545,8 +555,8 @@ for nm, setting, ov in cases:
 for n, (nm, setting, ov) in enumerate(cases):
     put_case(5 + n, nm, setting, SB[nm], "")
 nn = 5 + len(cases)
-put_case(nn, "情境 A（全部）", "顆數 1.0＋份額、CPO、毛利率高值", PB["A"], "PL!")
-put_case(nn + 1, "情境 C（全部）", "CY2028–29 顆數 ×0.6＋公司變數低值", PB["C"], "PL!")
+put_case(nn, "情境 A（全部）", "顆數 1.0＋CPO 情境 A＋份額、CPO 份額、毛利率高值", PB["A"], "PL!")
+put_case(nn + 1, "情境 C（全部）", "CY2028–29 顆數 ×0.6＋CPO 情境 C＋公司變數低值", PB["C"], "PL!")
 assert nn + 3 < 40
 SENS_N = len(cases)
 SENS_LAST = nn + 1
@@ -624,7 +634,7 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("Fabrinet（FN，NYSE）收支與估值模型 v0.1.1（AI 半導體 Project：網通次產業內複製——光模組與光元件代工，樣板 Coherent）　2026-10-25", True),
+lines = [("Fabrinet（FN，NYSE）收支與估值模型 v0.1.2（AI 半導體 Project：網通次產業內複製——光模組與光元件代工，樣板 Coherent）　2026-10-26", True),
  ("版本：v0.1.1（2026-10-25：補上檔空間級距、投資建議、重點觀察，數值不變）；v0.1（2026-10-25 初版；三情境延伸到 FY2032、目標價＝DCF 與 Comparable 加權）。Fabrinet 的光模組有效份額口徑與中際旭創、Coherent 模型一致（光模組營收 ÷ 可插拔市場），Units 頁檢查與中際旭創相加低於 100%。", False),
  ("模型命題：Fabrinet 的資料中心營收＝AI 可插拔光模組市場（本專案網通模型）× Fabrinet 光模組有效份額（NVIDIA 等客戶代工）× 單價係數＋CPO 光學 × CPO 份額＋DCI＋HPC（乘同字母 AI 情境係數）；通訊基礎設施、車用工業另依成長率推。股價自 52 週高點 749 跌到約 315（−58%），只約 17 倍共識未來 12 月 EPS：市場在問 NVIDIA 光模組份額流失（占營收 27.6% → 16.3%）後，DCI、HPC 與新客戶能否接上成長。", False),
  ("核心問題：NVIDIA 份額下滑而 DCI、HPC 高成長——市場隱含的 FY2028 EPS 要多低，光模組份額、AI 市場、毛利率三條路徑各要不利到什麼程度？", False), ("", False),
@@ -843,9 +853,9 @@ V.cell(RC_ROW, 1, "投資建議")
 V.cell(RC_ROW, 2, '=IF(B42>0.5,"強力買進",IF(B42>0.25,"買進",IF(B42>=-0.25,"中立",IF(B42>=-0.5,"放空","強力放空"))))').number_format = "@"
 V.cell(RC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
 OBS = [
-       "目標價 US$361（DCF 332、Comparable 389 各半），比現價 314.94（2026-10-23）高 14.5%，級距 0%–25%；Comparable 單獨為 +23.5%。本模型 12 個月後前瞻 EPS 23.37 比共識前瞻 EPS 21.27 高 9.9%，但同業（Coherent、Lumentum、Jabil、Celestica、Flex）前瞻 P/E 中位數 16.7 倍，遠低於共識目標價 687.78 隱含的 32.3 倍（高 94.2%）；共識目標價比現價高 118.4%，與本模型的差距幾乎全在倍數。",
-       "情境分歧大：情境 A／C（含份額、CPO、毛利率）FY2028 EPS 比 B 高 22.1%／低 20.8%，DCF 價格帶 165～505；單一變數中計入 Pillar Two 補充稅 −9.5%、光模組份額流失 −7.7%、毛利率低（新廠爬坡）−6.9%。",
-       "追蹤 FY2027 Q1 財報（預估 2026-11-02）：資料中心內光模組、DCI、HPC 金額為推導值，NVIDIA 光模組營收未揭露。CPO 份額低／高時 FY2028 EPS −2.0%／+3.0%；網通 CPO 目前只有一條路徑、三情境相同，待 markets/network 改版。"
+       "目標價 US$373（DCF 350、Comparable 396 各半），比現價 314.94（2026-10-23）高 18.5%，級距 0%–25%；Comparable 單獨為 +25.9%。本模型 12 個月後前瞻 EPS 23.81 比共識前瞻 EPS 21.27 高 11.9%，但同業（Coherent、Lumentum、Jabil、Celestica、Flex）前瞻 P/E 中位數 16.7 倍，遠低於共識目標價 687.78 隱含的 32.3 倍（高 94.2%）；共識目標價比現價高 118.4%，與本模型的差距幾乎全在倍數。",
+       "情境分歧大：情境 A／C（含網通 CPO 情境、份額、CPO 份額、毛利率）FY2028 EPS 比 B 高 26.2%／低 20.7%，DCF 價格帶 164～564；單一變數中計入 Pillar Two 補充稅 −9.5%、光模組份額流失 −7.7%、毛利率低（新廠爬坡）−6.9%。",
+       "追蹤 FY2027 Q1 財報（預估 2026-11-02）：資料中心內光模組、DCI、HPC 金額為推導值，NVIDIA 光模組營收未揭露。網通 CPO 已改三情境（v0.1.2；A＝替代快、C＝慢）：Fabrinet 同時代工可插拔與 CPO（情境 A 取 CPO 份額高值），CPO 快淨為加分——情境 A FY2028 EPS 由 26.89 升到 27.81（+3.4%）、C 由 17.44 升到 17.48（+0.2%）、B 不變；CPO 份額低／高時 FY2028 EPS −2.0%／+3.0%。"
       ]   # 重點觀察（與 README.md 相同文字）
 _n0 = RD.max_row
 RD.cell(_n0 + 1, 1, "v0.1.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（Val 頁 0.3 結論加「上檔空間級距」「投資建議」兩列、README 頁加重點觀察三點；數值不變，既有儲存格位置不變）。")
@@ -854,6 +864,20 @@ for _i, _t in enumerate(OBS, 1): RD.cell(_n0 + 2 + _i, 1, f"重點觀察 {_i}：
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
+# ---------------- v0.1.2（2026-10-26）：網通 CPO 三情境（同字母）；In 頁在現有最後一列之後新增，不移動既有列 ----------------
+_ri = IN.max_row + 2
+IN.cell(_ri, 1, "網通 CPO 三情境（v0.1.2；markets/network v0.2.3：A＝替代快、B＝平平、C＝慢；情境 A 為上方 A 節，B、C 為下列，各再乘同字母情境顆數係數）").font = BOLD; _ri += 1
+for _kb, _lab, _kind in [('mpl', 'AI 可插拔光模組市場', 'mpl'), ('mcp', 'AI CPO 光學市場', 'mcp')]:
+    for _s in ("B", "C"):
+        for _j, _y in enumerate((26, 27, 28, 29)):
+            _k = f"{_kb}{_s}_{_y}"
+            IN.cell(_ri, 1, _k); IN.cell(_ri, 2, f"情境 {_s}：{_lab} CY20{_y}"); IN.cell(_ri, 3, "US$B")
+            IN.cell(_ri, 5, NETS[(_kind, _s)][0][_j]).font = BLUE
+            IN.cell(_ri, 7, "Derived"); IN.cell(_ri, 8, NETS[(_kind, _s)][1])
+            IN.cell(_ri, 9, f"網通模型 CPO 情境 {_s}（技術替代屬行業情境，公司讀同字母）" if _y == 26 else "同上")
+            wb.defined_names[_k] = DefinedName(_k, attr_text=f"In!$E${_ri}"); _ri += 1
+_n1 = RD.max_row
+RD.cell(_n1 + 1, 1, 'v0.1.2（2026-10-26）：網通模型 v0.2.3 的 CPO 滲透改三情境（A＝替代快、B＝平平、C＝慢），本模型 A／B／C 改讀同字母的可插拔與 CPO 市場（In 頁末新增 B、C 兩組；情境 A 沿用 A 節 mpl_／mcp_，數值改為網通情境 A）；FY2027 起三情境不再相同。其他輸入不變。')
 wb.save(sys.argv[1])
 if os.environ.get("FN_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

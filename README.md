@@ -15,7 +15,7 @@
 | `amazon/` | Amazon（AMZN） | `oracle/`（v0.2）→ MAG 共用引擎（Amazon v0.1b；共用文件見 `mag/`） | v0.2（Tokenomics v5.31） |
 | `alphabet/` | Alphabet（GOOGL） | `oracle/`（v0.2）→ 套用 Amazon 引擎（amazon@`41f9a54`，v0.2） | v0.2 |
 | `microsoft/` | Microsoft（MSFT） | `oracle/`（v0.2）→ 套用 Amazon 引擎（amazon@`41f9a54`，v0.2） | v0.2 |
-| `markets/` | 市場層（AI 半導體）：每 GW 晶片內容橋接表等，見 `markets/README.md` | 新建（AI 半導體 Project） | chip_bridge v0.2.1、network v0.2.2、equipment v0.1.3、overview v0.6（Tokenomics v20.1；memory v0.4） |
+| `markets/` | 市場層（AI 半導體）：每 GW 晶片內容橋接表等，見 `markets/README.md` | 新建（AI 半導體 Project） | chip_bridge v0.2.1、network v0.2.3、equipment v0.1.3、overview v0.6（Tokenomics v20.1；memory v0.4） |
 | `skhynix/` | SK 海力士（000660.KS） | 記憶體樣板 `tools/memory_model`（AI 半導體 Project） | v0.4.1（HBM 位元隨情境；Val 頁含十年倍數與規則值） |
 | `micron/` | 美光（MU） | 記憶體樣板（複製測試） | v0.3.1 |
 | `samsung/` | 三星電子（005930.KS） | 記憶體樣板（集團公司：只建模記憶體，其餘事業為輸入） | v0.2.1 |
@@ -27,7 +27,7 @@
 | `arista/` | Arista Networks（ANET）：AI 後端乙太網路交換器市場 × Arista 份額＋非 AI 的收支與 P/E 估值；三情境、FY2026 錨點、對帳、敏感度；Arista 份額為本專案權威；見 `arista/README.md` | 獨立產生器（比照 `nvidia/`、`avgo/`；AI 半導體 Project 網通系統端樣板） | v0.1（成品：`arista/dist/20261025_Arista模型_v0.2.1.xlsx`、`.html`） |
 | `delta/` | 台達電（2308）：部署 GW ×（AI 電源每 kW 內容 × 台達電份額＋液冷每 GW 營收）＋非 AI 的收支與 P/E 估值；三情境、FY2026 錨點、對帳、敏感度；AI 電源內容、份額、液冷每 GW 為本專案權威；見 `delta/README.md` | 獨立產生器（比照 `arista/`；AI 半導體 Project 電源與散熱樣板） | v0.1（成品：`delta/dist/20261025_台達電模型_v0.2.1.xlsx`、`.html`） |
 | `quanta/` | 廣達（2382）：部署 GW × 每 GW ODM 整櫃價值 × 廣達有效份額 ×（1 − 客供比例）＋非 AI 的收支與 P/E 估值；三情境、FY2026 錨點、對帳、敏感度；組裝市場、份額、ODM 每櫃價格、客供比例為本專案權威；見 `quanta/README.md` | 獨立產生器（比照 `delta/`；AI 半導體 Project 伺服器組裝樣板） | v0.1（成品：`quanta/dist/20261025_廣達模型_v0.2.1.xlsx`、`.html`） |
-| `innolight/` | 中際旭創（300308.SZ）：AI 可插拔光模組市場 × 中際旭創份額 × 單價係數＋CPO 光學 × CPO 份額＋其他營收的收支與 P/E 估值；三情境、FY2026 錨點（1H26 實績＋2H26 假設）、市場隱含 FY2028 EPS、對帳、敏感度；光模組份額為本專案權威；見 `innolight/README.md` | 獨立產生器（比照 `arista/`；AI 半導體 Project 網通次產業內複製——光模組） | v0.1（成品：`innolight/dist/20261025_中際旭創模型_v0.2.1.xlsx`、`.html`） |
+| `innolight/` | 中際旭創（300308.SZ）：AI 可插拔光模組市場 × 中際旭創份額 × 單價係數＋CPO 光學 × CPO 份額＋其他營收的收支與 P/E 估值；三情境、FY2026 錨點（1H26 實績＋2H26 假設）、市場隱含 FY2028 EPS、對帳、敏感度；光模組份額為本專案權威；見 `innolight/README.md` | 獨立產生器（比照 `arista/`；AI 半導體 Project 網通次產業內複製——光模組） | v0.2.2（成品：`innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx`、`.html`；網通 CPO 三情境同字母） |
 | `markets/overview/` | AI 半導體總覽儀表板 | 彙整橋接表、記憶體、網通、台積電模型；估值規則；記憶體三家 P/E 對照、美光買回加回 P/B；設備分頁（設備市場、Advantest、Disco；設備股共用循環位置規則） | v0.6 |
 | `ajinomoto/` | 味之素（2802.T）：ABF 增層膜（ファンクショナルマテリアルズ）＝加速器顆數 × 載板面積層數 × 份額 × 可出貨量上限 × 價格，其他事業以成長率推的收支與 P/E 估值；三情境、FY2026 錨點、DCF＋Comparable（食品同業）加權目標價、SOTP 與現價隱含 ABF 價值、對帳、敏感度；見 `ajinomoto/README.md` | 獨立產生器（比照 `ibiden/`、`dell/`；AI 半導體 Project 載板與 PCB 次產業的材料端） | v0.1（成品：`ajinomoto/dist/20261026_味之素模型_v0.1.xlsx`、`.html`） |
 | `kinsus/` | 景碩（3189.TW）：ABF 載板＝MIN（需求, 產能），需求含 NVIDIA CPU（Grace／Vera）載板、GPU 與 ASIC 加速器載板（與 Ibiden、欣興、南電同口徑）、其他 AI 與非 AI ABF；BT 與其他載板以情境年增推，晶碩（隱形眼鏡）扣非控制權益；三情境、FY2026 錨點、DCF（淨利＋折舊－資本支出）＋Comparable 加權目標價、對帳、敏感度；見 `kinsus/README.md` | 獨立產生器（比照 `nanya_pcb/`、`unimicron/`；AI 半導體 Project 載板與 PCB 次產業） | v0.1（成品：`kinsus/dist/20261026_景碩模型_v0.1.xlsx`、`.html`） |

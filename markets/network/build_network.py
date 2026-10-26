@@ -1,4 +1,4 @@
-# AI 網通市場模型 v0.2.2（AI 半導體 Project 步驟 3）
+# AI 網通市場模型 v0.2.3（AI 半導體 Project 步驟 3）
 # 用法：python3 markets/network/build_network.py raw.xlsx ；再以 LibreOffice headless 重算
 # 加速器顆數取自 markets/memory/market.py（與 HBM 市場同一份數量層）；每顆網通內容以 markets/chip_bridge v0.2 為錨
 import sys, os, json
@@ -63,8 +63,8 @@ sec("C. 每顆加速器 IT 資本支出（千美元；算網通 ÷ IT capex）")
 for p, (v, tag, src) in ITU.items():
     inp(f"it_{p}", f"{PLAT[p][0]} IT capex", "$K/顆", None, v, None, tag, src)
 sec("D. 技術轉換")
-for y, v in zip(YRS, (0.01, 0.03, 0.05, 0.08)):
-    inp(f"cpo_{y}", f"CPO 占 scale-out 光學金額 20{y}", "%", None, v, None, "Derived／Assumed", "LightCounting：2030 年 CPO 引擎約 $10B vs AI 光學約 $100B（約 10%）；Spectrum-X Photonics 2026-08 量產、放量 2027–28（TrendForce）" if y == 26 else "同上")
+for y in YRS:
+    inp(f"cpo_{y}", f"CPO 占 scale-out 光學金額 20{y}（Mkt 主表＝情境 A）", "%", None, f"=cpo_A_{y}", None, "Derived", "v0.2.3 起連到 F 節情境 A（v0.2.2 單一路徑 1%／3%／5%／8% 改為 F 節情境 B）" if y == 26 else "同上")
 for y, v in zip(YRS, (0.0, 0.0, 0.0, 0.2)):
     inp(f"suopt_{y}", f"scale-up 互連中光學占比 20{y}", "%", None, v, None, "Interested-party／Assumed", "NVLink 到 Rubin Ultra Kyber 全銅（The Register）；Feynman「銅與 CPO 都做」（2028 後）" if y == 26 else "同上")
 inp("su_cu", "scale-up 互連中銅纜（背板、線纜卡匣）占比", "%", 0.4, 0.6, 0.8, "Assumed", "其餘為交換匣電路板、電源、機構")
@@ -80,6 +80,13 @@ inp("rep_nv26", "NVIDIA 網通營收 2026（實際＋推估）", "$B", 68, 74, 8
 inp("rep_avgo26", "Broadcom AI 網通營收 2026", "$B", 16, 17.6, 20, "Derived", "Q2 FY26 AI 10.8 × 約 40%；Q3 16.7 × ≤27%；每季約 4.3–4.5")
 inp("rep_opt26", "AI 叢集光學市場 2026（LightCounting）", "$B", None, 26, None, "Interested-party", "LightCounting 2026-01：2025 16.5、2026 26（含 scale-up）")
 inp("rep_bern", "網通 ÷ AI 資料中心總 capex（Bernstein）", "%", None, 0.13, None, "Interested-party", "Bernstein 2025-11；IT 約占 75% → ÷ IT 約 17%")
+sec("F. CPO 滲透三情境（v0.2.3；技術替代屬行業情境：A＝替代快、B＝平平、C＝慢；下游公司 A／B／C 讀同字母）")
+CPO_SC = {"A": ((0.01, 0.05, 0.10, 0.16), "Assumed（Interested-party 錨）", "部署順利 → 新世代交換器（Spectrum-X／Quantum-X Photonics、Broadcom Bailly／Davisson）導入快：Citi 2026-03 估 scale-out CPO 交換器 2027 4 萬台、2028 約 10 萬台（Interested-party，賣方），以每埠光學約 $300–400 換算約 2027 $2–3B、2028 $6–8B，與本列 5%／10% 同級；區間 2028 8–14%"),
+          "B": ((0.01, 0.03, 0.05, 0.08), "Assumed（Interested-party 錨）", "＝v0.2.2 單一路徑：LightCounting 2030 年 CPO 約占 AI 光學 10%；Morgan Stanley 2026-06：2026–28 為可插拔、CPO／NPO、銅並存的過渡期，快速成長在 2028 年之後（Interested-party）；TrendForce 2026-07：CPO 交換器放量 2027–28；區間 2028 4–7%"),
+          "C": ((0.01, 0.02, 0.03, 0.05), "Assumed", "部署不如預期 → 客戶延用已驗證的可插拔（LPO／1.6T），CPO 良率（TSMC COUPE、SoIC 良率 50–60%，Morgan Stanley 轉述）與維修性問題拖延；Cignal AI 2026-05：CPO 對可插拔的初期影響很小、scale-out CPO 只占 1.6T 可插拔的一小部分；區間 2028 2–4%")}
+for s_, (vals, tag, src) in CPO_SC.items():
+    for y, v in zip(YRS, vals):
+        inp(f"cpo_{s_}_{y}", f"情境 {s_}：CPO 占 scale-out 光學金額 20{y}", "%", None, v, None, tag, src if y == 26 else "同上")
 R = {}
 r = 4
 for s in rows:
@@ -88,7 +95,9 @@ for s in rows:
     key, item, unit, lo, base, hi, tag, src = s
     IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
     for j, v in ((4, lo), (5, base), (6, hi)):
-        if v is not None: IN.cell(r, j, v).font = BLUE
+        if v is not None:
+            IN.cell(r, j, v)
+            if not (isinstance(v, str) and v.startswith("=")): IN.cell(r, j).font = BLUE
     IN.cell(r, 7, tag); IN.cell(r, 8, src)
     wb.defined_names[key] = DefinedName(key, attr_text=f"In!$E${r}")
     if lo is not None: wb.defined_names[key + "_lo"] = DefinedName(key + "_lo", attr_text=f"In!$D${r}")
@@ -180,6 +189,14 @@ mput("  差距", "%", [f"=C{MR['av']}/C{MR['avr']}-1"], fmt="0%")
 mput("NVIDIA＋Broadcom ÷ 市場", "%", [f"=({YC[y]}{MR['nv']}+{YC[y]}{MR['av']})/{YC[y]}{MR['tot']}" for y in YRS], key="nvav", fmt="0%", note="先驗 N3：Andy ≥50%")
 mput("光學：本模型 vs LightCounting（2026）", "$B", [f"=C{MR['opt']}", "=rep_opt26"], note="C＝本模型、D＝LightCounting AI 叢集光學（含 scale-up）")
 mput("  差距", "%", [f"=C{mr[0]-1}/D{mr[0]-1}-1"], fmt="0%")
+mr[0] += 1
+M.cell(mr[0], 1, "CPO 三情境（v0.2.3；A＝替代快、B＝平平、C＝慢；顆數為基準，下游再乘同字母情境顆數係數）").font = BOLD; mr[0] += 1
+for s_ in ("A", "B", "C"):
+    mput(f"CPO 占 scale-out 光學金額（情境 {s_}）", "%", [f"=cpo_{s_}_{y}" for y in YRS], fmt="0%", note="In 頁 F 節")
+    mput(f"  其中 CPO（情境 {s_}）", "$B", [f"={YC[y]}{MR['so_opt']}*cpo_{s_}_{y}" for y in YRS], key=f"cpo{s_}")
+    mput(f"  其中可插拔（情境 {s_}）", "$B", [f"={YC[y]}{MR['opt']}-{YC[y]}{MR[f'cpo{s_}']}" for y in YRS], key=f"plug{s_}",
+         note="光學合計三情境相同；CPO 只改變可插拔與 CPO 的拆分" if s_ == "A" else "")
+mput("核對：主表 CPO − 情境 A（應為 0）", "$B", [f"={YC[y]}{MR['cpo']}-{YC[y]}{MR['cpoA']}" for y in YRS], fmt="0.000")
 M.column_dimensions["A"].width = 44
 for c in "CDEF": M.column_dimensions[c].width = 10
 M.column_dimensions["G"].width = 60
@@ -212,13 +229,17 @@ srcs = [("markets/chip_bridge v0.2.1（每 GW 網通拆分）", "本 repo"), ("m
  ("LightCounting 2026-01 AI 叢集光學", "https://lightcounting.com/newsletter/en/january-2026-optics-for-ai-clusters-366"),
  ("LightCounting 2025-12 CPO", "https://lightcounting.com/newsletter/en/december-2025-aocs-dacs-linear-drive-pluggable-and-co-packaged-optics-320"),
  ("Cignal AI CPO 1Q26", "https://cignal.ai/2026/04/cpo-and-elsfp-1q26-update/"),
- ("TrendForce 2026-07-27（CPO 放量 2027–28）", "https://trendforce.com/presscenter/news/20260727-13151.html"),
+ ("TrendForce 2026-07-27（CPO 放量 2027–28；NVIDIA Spectrum-X CPO 出貨、Broadcom Bailly 量產）", "https://trendforce.com/presscenter/news/20260727-13151.html"),
+ ("Citi 2026-03-25（CPO 交換器台數 2025–28；華爾街見聞轉載，Interested-party）", "https://longportapp.cn/news/280493727"),
+ ("Morgan Stanley 2026-06（CPO 快速成長在 2028 年後；科技新報轉載，Interested-party）", "https://technews.tw/2026/06/11/ms-see-semianalysis-see-cpo/"),
+ ("Cignal AI 2026-05-12（CPO 對可插拔初期影響小）", "https://cignal.ai/?p=33678"),
  ("The Register 2026-04-05（NVLink 銅／光）", "https://www.theregister.com/2026/04/05/nvidia_optical_scale_up/"),
  ("Bernstein（Investing.com）", "https://www.investing.com/news/stock-market-news/how-much-does-a-gw-of-data-center-capacity-actually-cost-4314046")]
 for i, (a, b) in enumerate(srcs, 2): SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 50; SO.column_dimensions["B"].width = 120
 RD = wb.create_sheet("README", 0)
-lines = [("AI 網通市場模型 v0.2.2（AI 半導體 Project 步驟 3）　2026-10-23（Tokenomics v20.1）", True),
+lines = [("AI 網通市場模型 v0.2.3（AI 半導體 Project 步驟 3）　2026-10-26（Tokenomics v20.1）", True),
+ ("v0.2.3：CPO 滲透改三情境（In 頁 F 節 cpo_A／B／C；Mkt 頁末「CPO 三情境」）。依 Andy 2026-10-25 規則，技術替代屬行業情境：A＝替代快（2027 5%、2028 10%、2029 16%）、B＝平平（＝v0.2.2 單一路徑 3%／5%／8%）、C＝慢（2%／3%／5%）；2026 三情境皆 1%。A 與部署順利同向：部署順利時新世代交換器導入快、CPO 滲透高——這對可插拔光模組廠（中際旭創、新易盛、Coherent 模組、Fabrinet 代工）是減分，對 CPO 外部光源與雷射（Lumentum、Coherent）是加分；受害公司的 A 情境 EPS 不必最高。Mkt 主表（其中 CPO、其中可插拔）＝情境 A；光學合計、交換器、銅、網卡三情境相同，只有可插拔與 CPO 的拆分不同。", False),
  ("v0.2.2：Tokenomics 快照改 v20.1；IF_CapexIT、IF_GPUsPerGW 等五個名稱逐值與 v19.0 相同，只更新版本標籤與說明文字，數值不變。", False),
  ("v0.2.1：ITU 改讀 Tokenomics 快照、不取整（GB300、VR200、Rubin Ultra、Hopper）；網通金額不變。", False),
  ("模型命題：AI 網通的錢由「加速器顆數 × 每顆網通內容」決定；每顆內容隨 scale-up 域擴大（NVL72 → NVL576）與每 GPU 網卡頻寬倍增而上升，而 scale-up 的頻寬大多由便宜的銅承載，所以金額主體仍在 scale-out（交換器、光模組、網卡）。", False), ("", False),
