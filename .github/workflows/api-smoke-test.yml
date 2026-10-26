@@ -1,0 +1,31 @@
+# API 連線測試：只在 claude/api-smoke-test 分支的 PR 上執行，送一個極小請求，
+# 把結果（是否成功、模型名稱、用量）留言在 PR 上。不輸出金鑰。
+name: api-smoke-test
+on:
+  pull_request:
+    branches: [master, main]
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  smoke:
+    if: github.head_ref == 'claude/api-smoke-test'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Anthropic API (tiny request)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then echo "RESULT=secret 未讀到" > result.txt; exit 0; fi
+          code=$(curl -sS -o resp.json -w '%{http_code}' https://api.anthropic.com/v1/messages \
+            -H "x-api-key: $ANTHROPIC_API_KEY" -H "anthropic-version: 2023-06-01" -H "content-type: application/json" \
+            -d '{"model":"claude-haiku-5-5","max_tokens":10,"messages":[{"role":"user","content":"Reply with OK"}]}')
+          if [ "$code" = "200" ]; then
+            echo "RESULT=成功 HTTP 200｜model=$(jq -r .model resp.json)｜input=$(jq -r .usage.input_tokens resp.json) output=$(jq -r .usage.output_tokens resp.json)｜回覆=$(jq -r '.content[0].text' resp.json)" > result.txt
+          else
+            echo "RESULT=失敗 HTTP $code｜$(jq -c .error resp.json)" > result.txt
+          fi
+      - name: Comment result on PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --body "API smoke test：$(cat result.txt)"
