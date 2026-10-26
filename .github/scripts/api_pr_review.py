@@ -9,9 +9,9 @@ import os
 import urllib.error
 import urllib.request
 
-REPO = os.environ["REPO"]                      # 例：YinchenChang/Tokenomics
-PR = os.environ["PR_NUMBER"]
-GH_TOKEN = os.environ["GH_TOKEN"]
+REPO = os.environ.get("REPO", "")              # 例：YinchenChang/Tokenomics
+PR = os.environ.get("PR_NUMBER", "")
+GH_TOKEN = os.environ.get("GH_TOKEN", "")
 API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 MODEL = os.environ.get("REVIEW_MODEL", "claude-opus-5-5")
 MAX_CHARS = int(os.environ.get("REVIEW_MAX_CHARS", "120000"))   # 送出的變更內容上限（控制費用）
@@ -52,10 +52,14 @@ def collect():
     """回傳 (送出的文字, 被略過或截斷的檔案清單)。"""
     pr = gh(f"pulls/{PR}")
     files, page = [], 1
-    while page <= 10:                       # 最多 1,000 個檔
+    truncated_list = False
+    while True:                             # 最多 1,000 個檔（GitHub API 上限 3,000）
         batch = gh(f"pulls/{PR}/files?per_page=100&page={page}")
         files += batch
         if len(batch) < 100:
+            break
+        if page == 10:
+            truncated_list = True
             break
         page += 1
     parts = [f"# PR #{PR}：{pr['title']}\n\n## PR 說明\n{(pr.get('body') or '')[:8000]}\n"]
@@ -75,6 +79,8 @@ def collect():
             continue
         parts.append(block)
         used += len(block)
+    if truncated_list:
+        skipped.append("第 1,001 個以後的檔案（未讀取）")
     return "".join(parts), skipped
 
 
@@ -89,10 +95,21 @@ def call_claude(text):
         return json.load(r)
 
 
+def safe_comment(body):
+    """留言失敗也不讓工作流程失敗（只印到執行紀錄）。"""
+    try:
+        comment(body)
+    except Exception as e:
+        print(f"留言失敗：{type(e).__name__}: {e}")
+
+
 def main():
     header = "### API 自動核對（參考用，非 chat 端驗收）\n"
+    if not (REPO and PR and GH_TOKEN):
+        print("缺少 REPO／PR_NUMBER／GH_TOKEN，略過。")
+        return
     if not API_KEY:
-        comment(header + "未讀到 ANTHROPIC_API_KEY，略過。")
+        safe_comment(header + "未讀到 ANTHROPIC_API_KEY，略過。")
         return
     try:
         text, skipped = collect()
@@ -102,12 +119,13 @@ def main():
         foot = (f"\n\n---\n模型 `{resp.get('model')}`｜input {u.get('input_tokens')}｜"
                 f"output {u.get('output_tokens')} tokens")
         if skipped:
-            foot += "\n\n未送出核對：" + "；".join(skipped[:30])
-        comment(header + out + foot)
+            more = f"（另有 {len(skipped) - 30} 項未列）" if len(skipped) > 30 else ""
+            foot += f"\n\n未送出核對（共 {len(skipped)} 項）：" + "；".join(skipped[:30]) + more
+        safe_comment(header + out + foot)
     except urllib.error.HTTPError as e:
-        comment(header + f"呼叫失敗 HTTP {e.code}：{e.read()[:500].decode(errors='replace')}")
+        safe_comment(header + f"呼叫失敗 HTTP {e.code}：{e.read()[:500].decode(errors='replace')}")
     except Exception as e:  # 任何錯誤都不讓工作流程失敗
-        comment(header + f"執行錯誤：{type(e).__name__}: {e}")
+        safe_comment(header + f"執行錯誤：{type(e).__name__}: {e}")
 
 
 if __name__ == "__main__":
