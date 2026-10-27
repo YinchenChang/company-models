@@ -15,13 +15,14 @@ SIL = os.path.dirname(HERE)
 ROOT = os.path.dirname(SIL)
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 
-VERSION = "v0.1"
-DATE = "20261027"
+VERSION = "v0.1"   # 由 --version 覆寫
+DATE = "20261027"  # 由 --date 覆寫
 TK_SNAPSHOT = os.path.join(SIL, "data", "tokenomics_snapshot_v21.7.json")
 TK_OLD = os.path.join(ROOT, "markets", "chip_bridge", "data", "tokenomics_snapshot_v20.1.json")
 SEED = os.path.join(HERE, "seed", "seed_v0.1.json")
 CONFLICTS = os.path.join(HERE, "seed", "conflicts_v0.1.json")
 DECISIONS = os.path.join(HERE, "seed", "decisions_v0.1.json")
+import glob
 REF_SKH = os.path.join(ROOT, "skhynix", "dist")
 
 BLUE = Font(color="0000FF"); GREEN = Font(color="008000"); BOLD = Font(bold=True)
@@ -58,13 +59,34 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--base")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--version", help="新版版本號；省略且給 --base 時沿用 base 檔名的版本（CI 重建比對用）")
+    ap.add_argument("--date", help="省略且給 --base 時沿用 base 檔名的日期")
     a = ap.parse_args()
+    if a.base:
+        fn = os.path.basename(a.base)
+        if a.version is None and "_v" in fn:
+            a.version = "v" + fn.rsplit("_v", 1)[1].rsplit(".xlsx", 1)[0]
+        if a.date is None and fn[:8].isdigit():
+            a.date = fn[:8]
+    a.version = a.version or VERSION
+    a.date = a.date or DATE
+    globals()["VERSION"], globals()["DATE"] = a.version, a.date
     seed = json.load(open(SEED, encoding="utf-8"))
     base = load_base_inputs(a.base)
     tk = json.load(open(TK_SNAPSHOT, encoding="utf-8"))
     tk_old = json.load(open(TK_OLD, encoding="utf-8")) if os.path.exists(TK_OLD) else None
     conflicts = json.load(open(CONFLICTS, encoding="utf-8")) if os.path.exists(CONFLICTS) else []
-    decisions = json.load(open(DECISIONS, encoding="utf-8")) if os.path.exists(DECISIONS) else []
+    decisions = []
+    for f in sorted(glob.glob(os.path.join(HERE, "seed", "decisions_v*.json"))):
+        decisions += json.load(open(f, encoding="utf-8"))
+    # 新增的輸入列（各版 rows_added_v*.json）：接在指定節的最後一列之後，成為新的一節；base Excel 有值時以 Excel 為準
+    seed_rows = list(seed["rows"])
+    for f in sorted(glob.glob(os.path.join(HERE, "seed", "rows_added_v*.json"))):
+        ad = json.load(open(f, encoding="utf-8"))
+        idx = [i for i, rw in enumerate(seed_rows) if "sec" in rw]
+        start = next(i for i in idx if seed_rows[i]["sec"].startswith(ad["after_section_end"]))
+        nxt = next((i for i in idx if i > start), len(seed_rows))
+        seed_rows[nxt:nxt] = [{"sec": ad["section"]}] + ad["rows"]
 
     wb = openpyxl.Workbook()
     RD = wb.active; RD.title = "README"
@@ -77,7 +99,7 @@ def main():
     hdr(IN, 4, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源／說明", "Interface 名稱"])
     INROW = {}
     r = 5
-    for row in seed["rows"]:
+    for row in seed_rows:
         if "sec" in row:
             IN.cell(r, 1, row["sec"]).font = BOLD; r += 1; continue
         k = row["id"]
@@ -129,6 +151,35 @@ def main():
                  "R4 上線後，2026–2030 的部署 GW 三情境改讀算力收支（權威在算力收支，第 13 條），本頁的係數改為由部署路徑推導。")
     for col, w in zip("ABCDEFG", (6, 10, 46, 60, 14, 14, 50)):
         SC.column_dimensions[col].width = w
+
+    # ---------------- Units：平台別顆數（2026–2029；2029＝2028 ×（1＋平台別成長率）） ----------------
+    UN = None; UROW = {}
+    if "g29_bw" in INROW:
+        UN = wb.create_sheet("Units", index=wb.sheetnames.index("Path"))
+        UN["A1"] = "Units — 加速器平台別顆數（百萬顆；情境 A 基準）。2026–2028＝In 頁 M2；2029＝2028 ×（1＋In 頁 M5 平台別成長率）。情境 B、C 再乘 Scen 頁係數（2028–29）"
+        hdr(UN, 3, ["平台", "鍵", "2026", "2027", "2028", "2029", "2029 成長"])
+        r = 4
+        for g in seed["unit_groups"]:
+            k = g["key"]
+            UN.cell(r, 1, g["name"]); UN.cell(r, 2, k)
+            for j, y in enumerate((26, 27, 28)):
+                UN.cell(r, 3 + j, f"=u_{k}_{y}").font = GREEN
+            UN.cell(r, 6, f"=E{r}*(1+g29_{k})"); UN.cell(r, 7, f"=g29_{k}").number_format = "0%"
+            for j in range(3, 7): UN.cell(r, j).number_format = "0.00"
+            UROW[k] = r; r += 1
+        r0, r1 = 4, r - 1
+        UN.cell(r, 1, "合計（基準＝情境 A，未乘係數）").font = BOLD
+        for j in range(3, 7):
+            c = UN.cell(r, j, f"=SUM({'CDEF'[j-3]}{r0}:{'CDEF'[j-3]}{r1})"); c.number_format = "0.00"; c.fill = KEY
+        UN.cell(r, 7, f"=F{r}/E{r}-1").number_format = "0.0%"; UROW["tot"] = r; r += 1
+        for s_ in seed["scen"]:
+            UN.cell(r, 1, f"合計（情境 {s_}）")
+            UN.cell(r, 3, f"=C{UROW['tot']}"); UN.cell(r, 4, f"=D{UROW['tot']}")
+            UN.cell(r, 5, f"=E{UROW['tot']}*um28_{s_}"); UN.cell(r, 6, f"=F{UROW['tot']}*um29_{s_}")
+            for j in range(3, 7): UN.cell(r, j).number_format = "0.00"
+            UROW["tot" + s_] = r; r += 1
+        UN.column_dimensions["A"].width = 40
+        for col in "BCDEFG": UN.column_dimensions[col].width = 10
 
     # ---------------- TK_In：Tokenomics 鏡像（只讀） ----------------
     TKS = wb.create_sheet("TK_In")
@@ -241,6 +292,25 @@ def main():
         IF.cell(r, 9, f"Mkt!C{mr}:G{mr}")
         name(wb, nm_, f"Interface!$D${r}:$H${r}")
         IFNAMES.append(nm_); r += 1
+    if UN is not None:
+        r += 1
+        IF.cell(r, 1, "B2. 平台別顆數（Units 頁；欄 D–H＝2025–2029，2025 空白）").font = BOLD; r += 1
+        items = ([(f"SIF_UnitsPlat_{g['key']}", g["key"], f"{g['name']} 顆數（情境 A）") for g in seed["unit_groups"]]
+                 + [("SIF_UnitsPlat_Total", "tot", "加速器顆數合計（情境 A；含 2029）")]
+                 + [(f"SIF_UnitsPlat_Total_{s_}", "tot" + s_, f"加速器顆數合計（{s_}）") for s_ in seed["scen"]])
+        for nm_, key, lab in items:
+            ur = UROW[key]
+            IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, "百萬顆")
+            IF.cell(r, 4, "")
+            for j in range(4):
+                c = IF.cell(r, 5 + j, f"=Units!{'CDEF'[j]}{ur}"); c.font = GREEN; c.number_format = "0.00"
+            IF.cell(r, 9, f"Units!C{ur}:F{ur}")
+            name(wb, nm_, f"Interface!$D${r}:$H${r}")
+            IFNAMES.append(nm_); r += 1
+        IF.cell(r, 1, "SIF_UnitsGrowth29"); IF.cell(r, 2, "2029 加速器顆數年增（情境 A；平台別成長率加權）"); IF.cell(r, 3, "%")
+        c = IF.cell(r, 5, f"=Units!G{UROW['tot']}"); c.font = GREEN; c.number_format = "0.0%"
+        IF.cell(r, 9, f"Units!G{UROW['tot']}")
+        name(wb, "SIF_UnitsGrowth29", f"Interface!$E${r}"); IFNAMES.append("SIF_UnitsGrowth29"); r += 1
     r += 1
     IF.cell(r, 1, "C. Tokenomics 鏡像（只讀；權威在算力收支；本庫與 TK 一致由 Checks K3 檢查）").font = BOLD; r += 1
     hdr(IF, r, ["名稱", "項目", "單位", "低", "基準", "高", "", "來源位置"]); r += 1
@@ -304,6 +374,16 @@ def main():
     CK.cell(r, 1, "K3"); CK.cell(r, 2, "下游（chip_bridge 等）讀的 Tokenomics 快照與現行 TK 不同的格數")
     CK.cell(r, 3, f"={TK_DIFF_CELL}"); CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "治理（TK 一致）")
     CK.cell(r, 8, "WARN＝下游仍用舊版 TK；本庫已用現行版；差異明細見 TK_In 頁 M 欄"); r += 1
+    if UN is not None:
+        for j, y in enumerate((2026, 2027, 2028)):
+            CK.cell(r, 1, f"K4-{y}"); CK.cell(r, 2, f"{y} 平台別顆數合計（Units）＝ HBM 市場頁顆數合計（Mkt）")
+            CK.cell(r, 3, f"=Units!{'CDE'[j]}{UROW['tot']}"); CK.cell(r, 4, f"=Mkt!{'DEF'[j]}{MK['units']}")
+            CK.cell(r, 5, f"=C{r}-D{r}"); CK.cell(r, 6, f'=IF(ABS(E{r})<1E-9,"OK","ERROR")'); CK.cell(r, 7, "恆等式（結構）"); r += 1
+        for g in seed["unit_groups"]:
+            k = g["key"]
+            CK.cell(r, 1, f"K5-{k}"); CK.cell(r, 2, f"2029 成長率在區間內：{g['name']}")
+            CK.cell(r, 3, f"=g29_{k}"); CK.cell(r, 4, f'=g29_{k}_lo&"–"&g29_{k}_hi')
+            CK.cell(r, 6, f'=IF(AND(C{r}>=g29_{k}_lo,C{r}<=g29_{k}_hi),"OK","ERROR")'); CK.cell(r, 7, "驗證"); r += 1
     # G 治理：輸入列標記、來源、區間
     g0 = r
     CK.cell(r, 1, "G1"); CK.cell(r, 2, "In 頁輸入列缺標記")
@@ -311,13 +391,13 @@ def main():
     CK.cell(r, 6, f'=IF(C{r}=0,"OK","ERROR")'); CK.cell(r, 7, "治理"); r += 1
     CK.cell(r, 1, "G2"); CK.cell(r, 2, "In 頁輸入列缺來源")
     CK.cell(r, 3, f'=SUMPRODUCT((In!A5:A{IN_LAST}<>"")*(In!E5:E{IN_LAST}<>"")*(In!H5:H{IN_LAST}=""))')
-    CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "治理")
-    CK.cell(r, 8, "v0.1 搬入時即存在（market.py 原狀：2029 HBM 單價三列來源欄空白）；與 G3 一併於 v0.2 補齊（屆時下游 In 頁文字會跟著變）"); r += 1
+    CK.cell(r, 6, f'=IF(C{r}=0,"OK","ERROR")'); CK.cell(r, 7, "治理")
+    CK.cell(r, 8, "v0.2 起應為 0"); r += 1
     n_noint = sum(1 for k, v in INROW.items() if ("Assumed" in str(v[5]) or "Analogy" in str(v[5])) and not (v[3] and v[4]))
     CK.cell(r, 1, "G3"); CK.cell(r, 2, "標記含 Assumed／Analogy 但未給低／高區間的輸入列（Tokenomics 規則：一律給區間）")
     CK.cell(r, 3, f'=SUMPRODUCT((In!A5:A{IN_LAST}<>"")*(In!E5:E{IN_LAST}<>"")*(ISNUMBER(SEARCH("Assumed",In!G5:G{IN_LAST}))+ISNUMBER(SEARCH("Analogy",In!G5:G{IN_LAST}))>0)*((In!D5:D{IN_LAST}="")+(In!F5:F{IN_LAST}="")>0))')
-    CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "治理")
-    CK.cell(r, 8, f"v0.1 搬入時即存在（market.py 原狀，建置時 {n_noint} 列）；區間待補，排入 v0.2"); r += 1
+    CK.cell(r, 6, f'=IF(C{r}=0,"OK","ERROR")'); CK.cell(r, 7, "治理")
+    CK.cell(r, 8, f"v0.2 起應為 0（建置時 {n_noint} 列）"); r += 1
     keys = [k for k in INROW]
     CK.cell(r, 1, "G4"); CK.cell(r, 2, "In 頁鍵重複（建置時檢查）"); CK.cell(r, 3, len(keys) - len(set(keys)))
     CK.cell(r, 6, f'=IF(C{r}=0,"OK","ERROR")'); CK.cell(r, 7, "治理"); r += 1
@@ -356,12 +436,13 @@ def main():
         ("用途：AI 半導體各子產業的『唯一事實』——加速器顆數、HBM 與記憶體價格、網通內容、CoWoS、載板、伺服器組裝、電源散熱、設備等行業變數只有一個值；各公司模型只讀本庫 Interface 的 SIF_ 名稱。", False),
         ("與 Tokenomics 的分工：每 GW 硬體量、機架價、每 GW 資本支出、NonNV 比例、產業年度部署路徑（R4）權威在 Tokenomics／算力收支，本庫只在 TK_In 頁鏡像（綠字、不得修改）；晶片產業資訊（HBM 單價與容量、每顆內容、網通內容、份額、出貨顆數、ASIC 規格、晶圓與設備）權威在本庫（《情境卡產生規則》第 13 條）。", False),
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
+        ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("讀法：Scen（情境定義）→ In（藍字輸入）→ Path／Mkt（推導）→ Interface（下游取數）→ Checks（SGOV_Errors 須為 0）。", False),
         ("顏色：藍字＝輸入（本活頁簿擁有）；黑字＝公式；綠字＝跨頁或外部連結；淡黃底＝關鍵輸出；亮黃底＝待 Andy 決定或未定。", False),
         ("標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy 與 Assumed 一律給區間（v0.1 搬入列尚有缺區間者，見 Checks G3）。", False),
         ("Excel 優先：要改輸入，直接改 In 頁藍字；builder 重建時讀回（--base）。公式頁不要手改（重建時會被覆寫）。", False),
         ("取數規則（下游）：只取 SIF_ 具名範圍（含 SIF_TK_* 鏡像）；不得連結 In、Mkt 等內部頁；以 tools/export_snapshot.py 匯成版本固定快照，版本號寫入公司模型。", False),
-        ("版本命名：YYYYMMDD_Siliconomics_vX.Y.xlsx；model/CURRENT 記錄現行檔名。只改證據或標記為修補版；輸入值或公式改變為次版；Interface 名稱增刪為主版。", False),
+        ("版本命名：YYYYMMDD_Siliconomics_vX.Y.xlsx；model/CURRENT 記錄現行檔名。只改證據或標記為修補版；輸入值或公式改變為次版；Interface 名稱刪除或定義改變為主版（v1.0 前只新增名稱以次版處理）。", False),
     ]
     for i, (t, b) in enumerate(lines, 1):
         c = RD.cell(i, 1, t); c.alignment = WRAP

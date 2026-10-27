@@ -39,7 +39,8 @@ sec("A. 加速器顆數（markets/memory，與 HBM、網通同一份）")
 for k, nm, u, gb, tag, src in MEM.UNITS:
     for i, y in enumerate((26, 27, 28)):
         inp(f"u_{k}_{y}", f"{nm} 顆數 20{y}", "百萬顆", None, u[i], None, tag, ("markets/memory：" + src) if i == 0 else "同上")
-    inp(f"g29_{k}", f"{nm} 2029 顆數成長", "%", None, {"bw": -0.5, "hp": 0.0}.get(k, 0.15), None, "Assumed", "")
+    inp(f"g29_{k}", f"{nm} 2029 顆數成長", "%", MEM.G29[k]["lo"], MEM.G29[k]["base"], MEM.G29[k]["hi"], MEM.G29[k]["tag"],
+        f"Siliconomics {MEM.SIL_VERSION} SIF_g29_{k}（單一來源；2029 無平台別顆數預測，區間 ±10pt）" if k == MEM.UNITS[0][0] else "同上")
 for s, (v28, v29) in zip(SC, [MEM.SCEN_UNITS[s_] for s_ in SC]):   # 單一來源：markets/memory/market.py（HBM 需求位元用同一組）
     inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, v28, None, "Assumed", "A＝基準；B＝AI 資本支出消化；C＝明顯下修" if s == "A" else "")
     inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, v29, None, "Assumed", "")

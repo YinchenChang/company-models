@@ -1,0 +1,86 @@
+{
+ "after_section_end": "M4.",
+ "section": "M5. 2029 加速器顆數成長（平台別；v0.2 起單一來源，取代台積電與網通模型各自的寫死值、NAND 模型的合計年增）",
+ "rows": [
+  {
+   "id": "g29_bw",
+   "label": "NVIDIA Blackwell（B200／B300） 2029 顆數成長",
+   "unit": "%",
+   "lo": -0.7,
+   "base": -0.5,
+   "hi": -0.3,
+   "tag": "Assumed",
+   "src": "2029 無平台別顆數預測。基準沿用台積電模型 tsmc/build_tsmc.py 與網通模型的原值（Blackwell −50% 汰換、Hopper 0、其餘 +15%）；區間 ±10pt（Blackwell ±20pt）。R4 產業部署路徑上線後改由部署 GW 推導"
+  },
+  {
+   "id": "g29_rb",
+   "label": "NVIDIA Rubin 2029 顆數成長",
+   "unit": "%",
+   "lo": 0.05,
+   "base": 0.15,
+   "hi": 0.25,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g29_ru",
+   "label": "NVIDIA Rubin Ultra 2029 顆數成長",
+   "unit": "%",
+   "lo": 0.05,
+   "base": 0.15,
+   "hi": 0.25,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g29_hp",
+   "label": "NVIDIA Hopper（H200 等） 2029 顆數成長",
+   "unit": "%",
+   "lo": 0.0,
+   "base": 0.0,
+   "hi": 0.0,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g29_amd",
+   "label": "AMD Instinct 2029 顆數成長",
+   "unit": "%",
+   "lo": 0.05,
+   "base": 0.15,
+   "hi": 0.25,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g29_tpu",
+   "label": "Google TPU 2029 顆數成長",
+   "unit": "%",
+   "lo": 0.05,
+   "base": 0.15,
+   "hi": 0.25,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g29_trn",
+   "label": "AWS Trainium 2029 顆數成長",
+   "unit": "%",
+   "lo": 0.05,
+   "base": 0.15,
+   "hi": 0.25,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g29_oth",
+   "label": "其他 ASIC（MTIA、Maia、Ascend 等） 2029 顆數成長",
+   "unit": "%",
+   "lo": 0.05,
+   "base": 0.15,
+   "hi": 0.25,
+   "tag": "Assumed",
+   "src": "同上"
+  }
+ ]
+}

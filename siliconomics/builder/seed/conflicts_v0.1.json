@@ -264,9 +264,9 @@
   "b_loc": "markets/nand In g_u29；markets/memory hbm_dem29（HBM 位元）",
   "b_val": "29.15M（NAND g_u29 +10%）；HBM 位元 +30%",
   "kind": "行業變數（三處各自外推）",
-  "proposal": "本庫 v0.2 設單一 2029 顆數路徑（以平台別成長率為準，合計約 +13.8%），NAND 與 HBM 改由同一顆數 × 每顆容量推得；R4 上線後改由部署 GW 推導",
+  "proposal": "v0.2：本庫 In 頁 M5 節平台別 2029 成長率為單一來源（合計 +13.8%，30.15M）；台積電、網通改讀；NAND 的 g_u29 改讀 SIF_UnitsGrowth29（10% → 13.8%）；HBM 位元 +30% 為位元口徑，維持",
   "target": "v0.2",
-  "status": "待併入",
+  "status": "已併入 v0.2",
   "origin": "Siliconomics 盤點 2026-10-27"
  },
  {
