@@ -11,7 +11,7 @@
 4. 回測模式（mode=backtest）：把萃取值與 company.json 現值比對，量化準確率。
 5. 輸出 mag/extract/out/<請求名>.xlsx 與 .md 摘要；處理過的請求移到 mag/extract/requests/done/。
 
-只用標準函式庫＋openpyxl。不在任何對外請求使用使用者 email。
+只用標準函式庫＋openpyxl。對 SEC 只帶 GitHub 免回覆地址（Andy 2026-10-27 同意），不用個人信箱。
 """
 import glob
 import html
@@ -28,7 +28,8 @@ import urllib.request
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 MODELS = os.environ.get("EXTRACT_MODELS", "claude-opus-5-5,claude-sonnet-5-5").split(",")
-UA = "company-models research tool (github.com/YinchenChang/company-models)"
+# SEC 要求 User-Agent 附聯絡 email；Andy 2026-10-27 08:11 同意用 GitHub 免回覆地址（不用個人信箱）。
+UA = "company-models research tool YinchenChang@users.noreply.github.com"
 CIK = {"microsoft": 789019, "alphabet": 1652044, "amazon": 1018724}
 MAX_DOC_CHARS = 900_000          # 單份文件上限（約 25–30 萬 token，在 1M context 內）
 POLL_MAX_MIN = int(os.environ.get("POLL_MAX_MIN", "80"))

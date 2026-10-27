@@ -19,4 +19,4 @@
 - 同一份文件由 claude-opus-5-5 與 claude-sonnet-5-5 各萃取一次（Batch API，五折），逐欄比對。
 - 費用：每家每季約 US$0.5–1（Max 方案每月 API credit 支付）。
 - 限制：法說會內容（多數 `callFacts`）不在 SEC 文件中，會標「皆未找到」；ROLL_FIELDS 多為推導值，只回報原始數字與出處。
-- 對 SEC 的請求不帶使用者 email；每秒少於 10 次。
+- 對 SEC 的請求以 GitHub 免回覆地址 `YinchenChang@users.noreply.github.com` 作聯絡方式（SEC 要求；Andy 2026-10-27 同意，不用個人信箱）；每秒少於 10 次。
