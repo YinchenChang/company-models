@@ -589,7 +589,9 @@ def engine(eid, s, sheets, over=None, tag=""):
             "G": f"={t('cxit', 'E')}+{t('cxit', 'F')}", **{c: f"=({t('cx', c)}-{t('rfs', c)})*{t('itsh', c)}+{t('rfs', c)}" for c in FC}}
     cxit.update({VC[2023]: f"={t('cx', VC[2023])}*{t('itsh', 'C')}", **{VC[y]: f"={t('cxit', c)}" for y, c in VY.items()}})
     T.row("cxit", "  其中 IT 設備", "US$bn", cxit)
-    T.row("cxfac", "  其中機房", "US$bn", {VC[y]: f"={t('cx', VC[y])}-{t('cxit', VC[y])}" for y in range(2023, 2033)})
+    T.row("cxfac", "  其中機房（自建部分）", "US$bn", {**{VC[y]: f"={t('cx', VC[y])}-{t('cxit', VC[y])}" for y in range(2023, 2033)},
+                                               **{c: f"={t('cx', c)}-{t('cxit', c)}" for c in ["C", "D", "E", "F", "G"] + FC}})
+    T.row("cx_sh", "AI 資本支出占公司資本支出", "%", {c: f"={t('cx', c)}/«{eid}C.cx.{c}»" for c in ["C", "D", "E", "F", "G"] + FC}, "0.0%")
     rng = lambda key: f"«{T.id}.{key}.R»:«{T.id}.{key}.AA»"
     hrow = REG[(T.id, "hdr")][1]
     def daspec(key, f):
