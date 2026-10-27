@@ -89,6 +89,9 @@ SEGMENTS = [
      "AI半導體 次產業排序 v0.2.3：非 NVIDIA 機架內容全額；電源＋散熱 3–5% 為判斷，級距依 3–5% 給 25 [Derived]／[Assumed]"),
     ("server", "L3 IT 設備", "伺服器組裝", "{伺服器組裝}|殘差，未拆；ODM 附加價值約 1–3%", "伺服器組裝", 3, 25,
      "AI半導體 次產業排序 v0.2.3：橋接表殘差（匣級電路板含 PCB、匣級供電、NVIDIA／ODM 匣級加價），未拆；組裝廠附加價值 1–3% 為判斷 [Derived]"),
+    # v0.5.3（2026-10-27）：儲存與管理 0.8% 改為地圖上的一塊（原只寫在說明句、不顯示，地圖各塊加總 31.9 ≠ IT 32.2；Andy 10-27 發現）。
+    ("storage", "L3 IT 設備", "儲存與管理", "{儲存與管理}|機架外儲存、管理網路，未拆", "儲存與管理", 3, 25,
+     "AI半導體 次產業排序 v0.2.3：橋接表儲存與管理列（機架外儲存、管理網路），未拆、不建模；不可替代性 3 為判斷 [Derived]／[判斷]"),
     ("equipment", "L2 半導體製造與設備", "設備與材料", "約 7.5%（軸 B，不可與軸 A 相加）", 0.075, 1, 50, "AI半導體 次產業排序 v0.2.3（設備模型情境 A：2027 AI 相關設備 117.8B ÷ 1,565B）"),
 ]
 
@@ -111,8 +114,7 @@ SEGMENTS = [
      (_SH[mid][0] if isinstance(mid, str) else mid), irr, vc, b)
     for (k, ly, nm, txt, mid, irr, vc, b) in SEGMENTS
 ]
-SEG_STORAGE = _SH.get("儲存與管理", (None, ""))
-assert abs(sum(v for (k, ly, nm, t, v, *_ ) in SEGMENTS if ly == "L3 IT 設備") + (SEG_STORAGE[0] or 0) - 1) < 0.002, "L3 各塊加儲存應合計 100%"
+assert abs(sum(v for (k, ly, nm, t, v, *_ ) in SEGMENTS if ly == "L3 IT 設備") - 1) < 0.002, "L3 各塊（含儲存與管理）應合計 100%"
 SEG_BY_NAME = {s[2]: s for s in SEGMENTS}
 
 # 研究覆蓋公司（有模型者）的地位判斷：代號 → (次產業, 公司重要性 1–3, 市場位置 1–4, 地位依據, 標記)
