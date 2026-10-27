@@ -1,5 +1,11 @@
 # Siliconomics 變更紀錄
 
+## v0.5.2（2026-10-27；`model/20261027_Siliconomics_v0.5.2.xlsx`；Tokenomics v21.7）
+
+- 新增 In 頁 M16（24 列）：勝宏模型的每 GW PCB、台光電模型的每 GW CCL（2026 元件金額與 2027–29 指數），兩家改讀本庫（數值與文字不變）。
+- 新增 PGW 頁與 Interface `SIF_PCBperGW`、`SIF_CCLperGW`、`SIF_PCBMkt_*`、`SIF_CCLMkt_*`：每 GW PCB 450／682／792／877、CCL 350／528／609／663 US$M（2026–29）。
+- 報告：公司 ABF 滿足率改讀本庫缺口的試算（模型未改）；建議改研究缺口對價格溢價的對應（決策 S19）。
+
 ## v0.5.1（2026-10-27；`model/20261027_Siliconomics_v0.5.1.xlsx`；Tokenomics v21.7）
 
 - 新增 In 頁 M15（ABF 供需表輸入，28 列）：2025 ABF 產值（TPCA 77.2 億美元）、2026 年增、AI 占比、加速器占 AI 比、其他 AI 彈性、非 AI 年增、四家 2026 ABF 營收（供給權重）、Ibiden 與其他載板廠產能指數（新增，Assumed）；欣興、南電、景碩產能指數與味之素膜上限由公司模型移入（數值不變）。

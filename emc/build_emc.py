@@ -79,12 +79,9 @@ inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", 30.5, 32.0, 33.0, "Deriv
 
 sec("B. 每 GW 高速 CCL 金額與台光電份額（本專案權威：每 GW CCL 金額、台光電份額，規則第 13 條）")
 TOPDOWN = "由上而下（Assumed）：三項合計 2026 年約 US$350M／GW＝CCL 高階（M7 以上）市場約 US$8B ÷ 部署約 23 GW；市場量級取自 Prismark 2024 年 M7 以上 US$57 億、年增 40%（" + YD + "，源達證券轉引，Interested-party）"
-inp("cmp_26", "每 GW CCL：加速器／運算板（運算匣、加速器模組板）2026", "US$M/GW", 130, 190, 250, "Assumed", TOPDOWN,
-    "Morgan Stanley（經 Deep News 2026-09-23）：每架 CCL GB300 US$6,695、VR200 US$18,750（× 每 GW 架數＝45／76 百萬美元，口徑窄於本列，Interested-party）")
-inp("sw_26", "每 GW CCL：交換器板（NVLink 交換匣＋scale-out 800G／1.6T 交換器）2026", "US$M/GW", 60, 90, 120, "Assumed", "同上；公司：交換器占基礎設施營收 15–20%、AI 伺服器 55–60%（2Q26，凱基 2026-07-29 轉述）→ 交換器 ÷ AI 伺服器約 0.3",
-    "800G 主用 M8、1.6T 用 M8+，1.6T 2026 Q1 開始出貨（富果 2026-03-12）")
-inp("ubb_26", "每 GW CCL：UBB／中板／正交背板 2026", "US$M/GW", 40, 70, 100, "Assumed", "同上；中板 44 層（2×22）M9、Rubin Ultra 正交背板 78 層 M9（台光電 EM-896K3）（源達證券轉引 NVIDIA、JPM）",
-    "2026 年以 GB300 為主（無中板）；中板金額多數從 VR200 開始")
+inp("cmp_26", *SIL.row9("ccl_cmp_26")[1:])
+inp("sw_26", *SIL.row9("ccl_sw_26")[1:])
+inp("ubb_26", *SIL.row9("ccl_ubb_26")[1:])
 IDX = (("cmpx", "加速器／運算板", ((1.20, 1.45, 1.80), (1.30, 1.60, 2.00), (1.30, 1.70, 2.20)), "Analogy",
         "每架 CCL 張數：GB200／GB300 約 164 張、VR200 約 578 張（源達證券）→ 每 GW 張數 VR200 ÷ GB300＝2.1 倍；Morgan Stanley 每架金額 → 每 GW 1.68 倍（Interested-party）",
         "2026 年已含 22% Rubin，所以 2027 ÷ 2026 小於世代倍數；ASIC（TPU V6 → V8 每台 144 → 200 張，+39%）"),
@@ -93,8 +90,8 @@ IDX = (("cmpx", "加速器／運算板", ((1.20, 1.45, 1.80), (1.30, 1.60, 2.00)
        ("ubbx", "UBB／中板／背板", ((1.30, 1.80, 2.50), (1.50, 2.30, 3.00), (1.50, 2.60, 3.50)), "Assumed",
         "VR200 中板、Rubin Ultra 78 層正交背板、Feynman 預計 144 層（源達證券）", "Morgan Stanley：M9 以上單價為基準 12.1 倍、M8 為 M7 兩倍以上（Interested-party）"))
 for key, lab, vals, tag, s1, s2 in IDX:
-    for (lo, b, hi), y in zip(vals, (27, 28, 29)):
-        inp(f"{key}_{y}", f"每 GW CCL 金額指數：{lab} 20{y}（2026＝1）", "x", lo, b, hi, tag, s1 if y == 27 else "同上", s2 if y == 27 else "—")
+    for y in (27, 28, 29):
+        inp(f"{key}_{y}", *SIL.row9(f"ccl_{key}_{y}")[1:])
 for y, v in ((27, (0.85, 0.95, 1.05)), (28, (0.75, 0.90, 1.00)), (29, (0.70, 0.85, 1.00))):
     inp(f"rel_{y}", f"台光電份額 20{y} ÷ 2026（相對值）", "x", *v, "Assumed",
         "Prismark：台光電高速材料市占 2025 年 38.6%（經 uanalyze 2026-07-29）、無鹵高速 2024 年 40.1%；公司自估 2025 年超過 50%（富果 2026-03-12），Interested-party" if y == 27 else "同上",

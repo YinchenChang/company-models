@@ -97,12 +97,9 @@ inp("fx", "匯率（人民幣 ÷ 美元）", "RMB/US$", 6.50, 6.72, 7.00, "Verif
 sec("B. 每 GW AI 高速 PCB 金額與勝宏份額（本專案權威：每 GW PCB 金額、勝宏份額，規則第 13 條；與台光電的每 GW CCL 金額口徑分開）")
 TOPDOWN = ("由上而下（Assumed）：三項合計 2026 年約 US$450M／GW；量級檢查：Morgan Stanley 每架 PCB GB300 US$35.1K、VR200 US$116.7K（國金證券 2026-05 轉引，Interested-party）"
            "× 每 GW 架數＝237／473 百萬美元（只含 NVL72 機架內，不含 scale-out 交換器、光模組、ASIC 伺服器）；Prismark AI／HPC PCB 2024 年 US$6B（摩根大通 2026-06-11 轉引）")
-inp("cmp_26", "每 GW PCB：加速器卡／運算板（GPU／ASIC 模組 HDI、運算匣主板）2026", "US$M/GW", 200, 280, 360, "Assumed", TOPDOWN,
-    "國金證券：VR200 運算匣約 US$3,000、26 層（Morgan Stanley）或 24 層 6 階 HDI（TPCA），較 GB200／GB300 增加近 300%（Interested-party）")
-inp("sw_26", "每 GW PCB：交換器板（NVLink 交換匣＋scale-out 800G／1.6T 交換器、光模組板）2026", "US$M/GW", 80, 120, 160, "Assumed", "同上；交換匣 24 層 → 32 層（GB300 → VR200，國金證券轉引 Morgan Stanley）",
-    "公司：800G 交換器、1.6T 光模組 PCB 已量產（公司業績交流會，Interested-party）")
-inp("mid_26", "每 GW PCB：中板／正交背板／CPX 與其他（電源板等）2026", "US$M/GW", 30, 50, 80, "Assumed", "同上；VR200 新增 44 層（22＋22）中板、4 片 22 層 5 階 HDI CPX 板、ConnectX／BlueField 子卡；Kyber（Rubin Ultra）78 層 M9 正交背板（國金證券）",
-    "2026 年以 GB300 為主（無中板）；中板與 CPX 金額多數從 VR200 開始")
+inp("cmp_26", *SIL.row9("pcb_cmp_26")[1:])
+inp("sw_26", *SIL.row9("pcb_sw_26")[1:])
+inp("mid_26", *SIL.row9("pcb_mid_26")[1:])
 IDX = (("cmpx", "加速器卡／運算板", ((1.25, 1.50, 1.75), (1.35, 1.65, 2.00), (1.40, 1.80, 2.20)), "Analogy",
         "Morgan Stanley 每架 PCB（國金證券轉引）：VR200 ÷ GB300＝3.3 倍；× 每 GW 架數（4,052 ÷ 6,764）＝每 GW 2.0 倍；2026 年已含 22% Rubin → 2027 ÷ 2026 約 1.64 倍（含交換匣，本列取 1.50）",
         "Bernstein：AI 伺服器 PCB 含量較前一代約倍增（國金證券轉引，Interested-party）"),
@@ -111,8 +108,8 @@ IDX = (("cmpx", "加速器卡／運算板", ((1.25, 1.50, 1.75), (1.35, 1.65, 2.
        ("midx", "中板／背板／其他", ((1.40, 2.00, 2.60), (1.80, 3.00, 4.00), (2.00, 3.50, 5.00)), "Assumed",
         "VR200 中板與 CPX（2026 Q3 起）、Kyber 78 層正交背板（2027 起）；國金證券：Kyber 每架 PCB「十萬美元級」以上", "台光電模型 UBB／中板指數 2027 1.80、2028 2.30、2029 2.60（CCL 口徑）"))
 for key, lab, vals, tag, s1, s2 in IDX:
-    for (lo, b, hi), y in zip(vals, (27, 28, 29)):
-        inp(f"{key}_{y}", f"每 GW PCB 金額指數：{lab} 20{y}（2026＝1）", "x", lo, b, hi, tag, s1 if y == 27 else "同上", s2 if y == 27 else "—")
+    for y in (27, 28, 29):
+        inp(f"{key}_{y}", *SIL.row9(f"pcb_{key}_{y}")[1:])
 for y, v in ((27, (0.70, 0.90, 1.00)), (28, (0.60, 0.80, 1.00)), (29, (0.55, 0.75, 0.95)), ):
     inp(f"rel_{y}", f"勝宏份額 20{y} ÷ 2026（相對值）", "x", *v, "Assumed",
         "摩根大通：勝宏 AI／HPC PCB 份額 2024 年 1.7% → 1H25 13.8%（第一）、高階 HDI 44.6%（Prismark，Interested-party）；市場傳聞 Rubin 份額 55% → 30%（2026-07，公司否認，未證實）" if y == 27 else "同上",
