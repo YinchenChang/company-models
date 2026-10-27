@@ -4,7 +4,7 @@ name: mag-extract
 on:
   push:
     branches: [claude/mag-extract]
-    paths: ["mag/extract/requests/*.json", "mag/extract/extract_filings.py"]
+    paths: ["mag/extract/requests/*.json", "mag/extract/extract_filings.py", ".github/workflows/mag-extract.yml"]
 permissions:
   contents: write
 concurrency:
