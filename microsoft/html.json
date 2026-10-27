@@ -35,19 +35,27 @@
      "items": [
       [
        "投資建議",
-       "@Val!B41"
+       "@Val!B43"
       ],
       [
-       "@Val!A38",
-       "@Val!B38|sp1"
+       "@Val!A40",
+       "@Val!B40|sp1"
       ],
       [
-       "@Val!A34",
-       "@Val!B34|n2"
+       "@Val!A36",
+       "@Val!B36|n2"
       ],
       [
-       "@Val!A37",
-       "@Val!B37|n2"
+       "@Val!A47",
+       "@Val!B47|n2"
+      ],
+      [
+       "@Val!A49",
+       "@Val!B49"
+      ],
+      [
+       "@Val!A39",
+       "@Val!B39|n2"
       ],
       [
        "@CF!A5",
@@ -57,6 +65,12 @@
        "@CF!A6",
        "@CF!C6"
       ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A40"
      ]
     },
     {
@@ -113,100 +127,52 @@
      ],
      "rows": [
       [
-       "@In!B87",
-       "@In!D87|n0",
-       "@In!E87|n0",
-       "@In!F87|n0",
-       "@In!C87",
-       "@In!G87|tag"
+       "@In!B101",
+       "@In!D101|n0",
+       "@In!E101|n0",
+       "@In!F101|n0",
+       "@In!C101",
+       "@In!G101|tag"
       ],
       [
-       "@In!B92",
-       "@In!D92|n1",
-       "@In!E92|n1",
-       "@In!F92|n1",
-       "@In!C92",
-       "@In!G92|tag"
-      ],
-      [
-       "@In!B95",
-       "@In!D95|p0",
-       "@In!E95|p0",
-       "@In!F95|p0",
-       "@In!C95",
-       "@In!G95|tag"
-      ],
-      [
-       "@In!B96",
-       "@In!D96|p0",
-       "@In!E96|p0",
-       "@In!F96|p0",
-       "@In!C96",
-       "@In!G96|tag"
+       "@In!B106",
+       "@In!D106|n1",
+       "@In!E106|n1",
+       "@In!F106|n1",
+       "@In!C106",
+       "@In!G106|tag"
       ],
       [
        "@In!B112",
-       "@In!D112|n3",
-       "@In!E112|n3",
-       "@In!F112|n3",
+       "@In!D112|p0",
+       "@In!E112|p0",
+       "@In!F112|p0",
        "@In!C112",
        "@In!G112|tag"
       ],
       [
-       "@In!B108",
-       "@In!D108|p0",
-       "@In!E108|p0",
-       "@In!F108|p0",
-       "@In!C108",
-       "@In!G108|tag"
+       "@In!B113",
+       "@In!D113|p0",
+       "@In!E113|p0",
+       "@In!F113|p0",
+       "@In!C113",
+       "@In!G113|tag"
       ],
       [
-       "@In!B110",
-       "@In!D110|p0",
-       "@In!E110|p0",
-       "@In!F110|p0",
-       "@In!C110",
-       "@In!G110|tag"
+       "@In!B131",
+       "@In!D131|n3",
+       "@In!E131|n3",
+       "@In!F131|n3",
+       "@In!C131",
+       "@In!G131|tag"
       ],
       [
-       "@In!B121",
-       "@In!D121|n0",
-       "@In!E121|n0",
-       "@In!F121|n0",
-       "@In!C121",
-       "@In!G121|tag"
-      ],
-      [
-       "@In!B122",
-       "@In!D122|n0",
-       "@In!E122|n0",
-       "@In!F122|n0",
-       "@In!C122",
-       "@In!G122|tag"
-      ],
-      [
-       "@In!B124",
-       "@In!D124|n0",
-       "@In!E124|n0",
-       "@In!F124|n0",
-       "@In!C124",
-       "@In!G124|tag"
-      ],
-      [
-       "@In!B117",
-       "@In!D117|n1",
-       "@In!E117|n1",
-       "@In!F117|n1",
-       "@In!C117",
-       "@In!G117|tag"
-      ],
-      [
-       "@In!B81",
-       "@In!D81|n0",
-       "@In!E81|n0",
-       "@In!F81|n0",
-       "@In!C81",
-       "@In!G81|tag"
+       "@In!B127",
+       "@In!D127|p0",
+       "@In!E127|p0",
+       "@In!F127|p0",
+       "@In!C127",
+       "@In!G127|tag"
       ],
       [
        "@In!B129",
@@ -217,136 +183,240 @@
        "@In!G129|tag"
       ],
       [
-       "@In!B41",
-       "@In!D41|p2",
-       "@In!E41|p2",
-       "@In!F41|p2",
-       "@In!C41",
-       "@In!G41|tag"
+       "@In!B140",
+       "@In!D140|n0",
+       "@In!E140|n0",
+       "@In!F140|n0",
+       "@In!C140",
+       "@In!G140|tag"
       ],
       [
-       "@In!B42",
-       "@In!D42|p0",
-       "@In!E42|p0",
-       "@In!F42|p0",
-       "@In!C42",
-       "@In!G42|tag"
+       "@In!B141",
+       "@In!D141|n0",
+       "@In!E141|n0",
+       "@In!F141|n0",
+       "@In!C141",
+       "@In!G141|tag"
+      ],
+      [
+       "@In!B143",
+       "@In!D143|n0",
+       "@In!E143|n0",
+       "@In!F143|n0",
+       "@In!C143",
+       "@In!G143|tag"
+      ],
+      [
+       "@In!B136",
+       "@In!D136|n1",
+       "@In!E136|n1",
+       "@In!F136|n1",
+       "@In!C136",
+       "@In!G136|tag"
+      ],
+      [
+       "@In!B94",
+       "@In!D94|n0",
+       "@In!E94|n0",
+       "@In!F94|n0",
+       "@In!C94",
+       "@In!G94|tag"
+      ],
+      [
+       "@In!B149",
+       "@In!D149|p0",
+       "@In!E149|p0",
+       "@In!F149|p0",
+       "@In!C149",
+       "@In!G149|tag"
+      ],
+      [
+       "@In!B146",
+       "@In!D146|n0",
+       "@In!E146|n0",
+       "@In!F146|n0",
+       "@In!C146",
+       "@In!G146|tag"
+      ],
+      [
+       "@In!B39",
+       "@In!D39|n3",
+       "@In!E39|n3",
+       "@In!F39|n3",
+       "@In!C39",
+       "@In!G39|tag"
+      ],
+      [
+       "@In!B46",
+       "@In!D46|p2",
+       "@In!E46|p2",
+       "@In!F46|p2",
+       "@In!C46",
+       "@In!G46|tag"
+      ],
+      [
+       "@In!B47",
+       "@In!D47|p0",
+       "@In!E47|p0",
+       "@In!F47|p0",
+       "@In!C47",
+       "@In!G47|tag"
       ]
      ]
     },
     {
      "type": "table",
-     "caption": "@Thesis!A48",
+     "caption": "@Thesis!A53",
      "head": [
-      "@Thesis!A49",
-      "@Thesis!B49",
-      "@Thesis!F49",
-      "@Thesis!G49",
-      "@Thesis!H49",
-      "@Thesis!I49",
-      "@Thesis!J49",
-      "@Thesis!K49"
+      "@Thesis!A54",
+      "@Thesis!B54",
+      "@Thesis!F54",
+      "@Thesis!G54",
+      "@Thesis!H54",
+      "@Thesis!I54",
+      "@Thesis!J54",
+      "@Thesis!K54"
      ],
      "rows": [
       [
-       "@Thesis!A50",
-       "@Thesis!B50",
-       "@Thesis!F50|n0",
-       "@Thesis!G50|n0",
-       "@Thesis!H50|n0",
-       "@Thesis!I50|n0",
-       "@Thesis!J50|n0",
-       "@Thesis!K50|n0"
+       "@Thesis!A56",
+       "@Thesis!B56",
+       "@Thesis!F56|n0",
+       "@Thesis!G56|n0",
+       "@Thesis!H56|n0",
+       "@Thesis!I56|n0",
+       "@Thesis!J56|n0",
+       "@Thesis!K56|n0"
       ],
       [
-       "@Thesis!A53",
-       "@Thesis!B53",
-       "@Thesis!F53|n0",
-       "@Thesis!G53|n0",
-       "@Thesis!H53|n0",
-       "@Thesis!I53|n0",
-       "@Thesis!J53|n0",
-       "@Thesis!K53|n0"
+       "@Thesis!A57",
+       "@Thesis!B57",
+       "@Thesis!F57|n0",
+       "@Thesis!G57|n0",
+       "@Thesis!H57|n0",
+       "@Thesis!I57|n0",
+       "@Thesis!J57|n0",
+       "@Thesis!K57|n0"
       ],
       [
-       "@Thesis!A63",
-       "@Thesis!B63",
-       "@Thesis!F63|n2",
-       "@Thesis!G63|n2",
-       "@Thesis!H63|n2",
-       "@Thesis!I63|n2",
-       "@Thesis!J63|n2",
-       "@Thesis!K63|n2"
+       "@Thesis!A60",
+       "@Thesis!B60",
+       "@Thesis!F60|n0",
+       "@Thesis!G60|n0",
+       "@Thesis!H60|n0",
+       "@Thesis!I60|n0",
+       "@Thesis!J60|n0",
+       "@Thesis!K60|n0"
       ],
       [
-       "@Thesis!A64",
-       "@Thesis!B64",
-       "@Thesis!F64|n1",
-       "@Thesis!G64|n1",
-       "@Thesis!H64|n1",
-       "@Thesis!I64|n1",
-       "@Thesis!J64|n1",
-       "@Thesis!K64|n1"
+       "@Thesis!A71",
+       "@Thesis!B71",
+       "@Thesis!F71|n2",
+       "@Thesis!G71|n2",
+       "@Thesis!H71|n2",
+       "@Thesis!I71|n2",
+       "@Thesis!J71|n2",
+       "@Thesis!K71|n2"
       ],
       [
-       "@Thesis!A78",
-       "@Thesis!B78",
-       "@Thesis!F78|n1",
-       "@Thesis!G78|n1",
-       "@Thesis!H78|n1",
-       "@Thesis!I78|n1",
-       "@Thesis!J78|n1",
-       "@Thesis!K78|n1"
-      ],
-      [
-       "@Thesis!A81",
-       "@Thesis!B81",
-       "@Thesis!F81|n1",
-       "@Thesis!G81|n1",
-       "@Thesis!H81|n1",
-       "@Thesis!I81|n1",
-       "@Thesis!J81|n1",
-       "@Thesis!K81|n1"
-      ],
-      [
-       "@Thesis!A84",
-       "@Thesis!B84",
-       "@Thesis!F84|n1",
-       "@Thesis!G84|n1",
-       "@Thesis!H84|n1",
-       "@Thesis!I84|n1",
-       "@Thesis!J84|n1",
-       "@Thesis!K84|n1"
-      ],
-      [
-       "@Thesis!A85",
-       "@Thesis!B85",
-       "@Thesis!F85|n1",
-       "@Thesis!G85|n1",
-       "@Thesis!H85|n1",
-       "@Thesis!I85|n1",
-       "@Thesis!J85|n1",
-       "@Thesis!K85|n1"
+       "@Thesis!A72",
+       "@Thesis!B72",
+       "@Thesis!F72|n1",
+       "@Thesis!G72|n1",
+       "@Thesis!H72|n1",
+       "@Thesis!I72|n1",
+       "@Thesis!J72|n1",
+       "@Thesis!K72|n1"
       ],
       [
        "@Thesis!A86",
        "@Thesis!B86",
-       "@Thesis!F86|p1",
-       "@Thesis!G86|p1",
-       "@Thesis!H86|p1",
-       "@Thesis!I86|p1",
-       "@Thesis!J86|p1",
-       "@Thesis!K86|p1"
+       "@Thesis!F86|n1",
+       "@Thesis!G86|n1",
+       "@Thesis!H86|n1",
+       "@Thesis!I86|n1",
+       "@Thesis!J86|n1",
+       "@Thesis!K86|n1"
       ],
       [
-       "@Thesis!A88",
-       "@Thesis!B88",
-       "@Thesis!F88|sp1",
-       "@Thesis!G88|sp1",
-       "@Thesis!H88|sp1",
-       "@Thesis!I88|sp1",
-       "@Thesis!J88|sp1",
-       "@Thesis!K88|sp1"
+       "@Thesis!A89",
+       "@Thesis!B89",
+       "@Thesis!F89|n1",
+       "@Thesis!G89|n1",
+       "@Thesis!H89|n1",
+       "@Thesis!I89|n1",
+       "@Thesis!J89|n1",
+       "@Thesis!K89|n1"
+      ],
+      [
+       "@Thesis!A93",
+       "@Thesis!B93",
+       "@Thesis!F93|n1",
+       "@Thesis!G93|n1",
+       "@Thesis!H93|n1",
+       "@Thesis!I93|n1",
+       "@Thesis!J93|n1",
+       "@Thesis!K93|n1"
+      ],
+      [
+       "@Thesis!A94",
+       "@Thesis!B94",
+       "@Thesis!F94|n1",
+       "@Thesis!G94|n1",
+       "@Thesis!H94|n1",
+       "@Thesis!I94|n1",
+       "@Thesis!J94|n1",
+       "@Thesis!K94|n1"
+      ],
+      [
+       "@Thesis!A95",
+       "@Thesis!B95",
+       "@Thesis!F95|n1",
+       "@Thesis!G95|n1",
+       "@Thesis!H95|n1",
+       "@Thesis!I95|n1",
+       "@Thesis!J95|n1",
+       "@Thesis!K95|n1"
+      ],
+      [
+       "@Thesis!A96",
+       "@Thesis!B96",
+       "@Thesis!F96|p1",
+       "@Thesis!G96|p1",
+       "@Thesis!H96|p1",
+       "@Thesis!I96|p1",
+       "@Thesis!J96|p1",
+       "@Thesis!K96|p1"
+      ],
+      [
+       "@Thesis!A97",
+       "@Thesis!B97",
+       "@Thesis!F97|p1",
+       "@Thesis!G97|p1",
+       "@Thesis!H97|p1",
+       "@Thesis!I97|p1",
+       "@Thesis!J97|p1",
+       "@Thesis!K97|p1"
+      ],
+      [
+       "@Thesis!A99",
+       "@Thesis!B99",
+       "@Thesis!F99|p1",
+       "@Thesis!G99|p1",
+       "@Thesis!H99|p1",
+       "@Thesis!I99|p1",
+       "@Thesis!J99|p1",
+       "@Thesis!K99|p1"
+      ],
+      [
+       "@Thesis!A100",
+       "@Thesis!B100",
+       "@Thesis!F100|sp1",
+       "@Thesis!G100|sp1",
+       "@Thesis!H100|sp1",
+       "@Thesis!I100|sp1",
+       "@Thesis!J100|sp1",
+       "@Thesis!K100|sp1"
       ]
      ]
     }
@@ -359,19 +429,19 @@
    "blocks": [
     {
      "type": "pl",
-     "years": "@PL!D48:K48",
+     "years": "@PL!D52:K52",
      "metrics": [
       {
        "name": [
         "合併營收（",
-        "@PL!B63",
+        "@PL!B67",
         "）"
        ],
        "fmt": "n1",
        "rows": {
         "A": "@PL!D28:K28",
-        "B": "@PL!D63:K63",
-        "C": "@PL!D98:K98"
+        "B": "@PL!D67:K67",
+        "C": "@PL!D106:K106"
        },
        "chart": true
       },
@@ -380,8 +450,8 @@
        "fmt": "n1",
        "rows": {
         "A": "@PL!D23:K23",
-        "B": "@PL!D58:K58",
-        "C": "@PL!D93:K93"
+        "B": "@PL!D62:K62",
+        "C": "@PL!D101:K101"
        }
       },
       {
@@ -389,78 +459,92 @@
        "fmt": "n1",
        "rows": {
         "A": "@PL!D27:K27",
-        "B": "@PL!D62:K62",
-        "C": "@PL!D97:K97"
+        "B": "@PL!D66:K66",
+        "C": "@PL!D105:K105"
        }
       },
       {
-       "name": "@PL!A49",
+       "name": "@PL!A53",
        "fmt": "n1",
        "rows": {
         "A": "@PL!D14:K14",
-        "B": "@PL!D49:K49",
-        "C": "@PL!D84:K84"
+        "B": "@PL!D53:K53",
+        "C": "@PL!D92:K92"
        },
        "chart": true
-      },
-      {
-       "name": "@PL!A50",
-       "fmt": "n1",
-       "rows": {
-        "A": "@PL!D15:K15",
-        "B": "@PL!D50:K50",
-        "C": "@PL!D85:K85"
-       }
-      },
-      {
-       "name": "@PL!A52",
-       "fmt": "n1",
-       "rows": {
-        "A": "@PL!D17:K17",
-        "B": "@PL!D52:K52",
-        "C": "@PL!D87:K87"
-       }
       },
       {
        "name": "@PL!A54",
        "fmt": "n1",
        "rows": {
-        "A": "@PL!D19:K19",
+        "A": "@PL!D15:K15",
         "B": "@PL!D54:K54",
-        "C": "@PL!D89:K89"
+        "C": "@PL!D93:K93"
        }
       },
       {
-       "name": "@PL!A67",
+       "name": "@PL!A56",
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!D17:K17",
+        "B": "@PL!D56:K56",
+        "C": "@PL!D95:K95"
+       }
+      },
+      {
+       "name": "@PL!A58",
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!D19:K19",
+        "B": "@PL!D58:K58",
+        "C": "@PL!D97:K97"
+       }
+      },
+      {
+       "name": "@PL!A71",
        "fmt": "n1",
        "rows": {
         "A": "@PL!D32:K32",
-        "B": "@PL!D67:K67",
-        "C": "@PL!D102:K102"
+        "B": "@PL!D71:K71",
+        "C": "@PL!D110:K110"
        }
       },
       {
-       "name": "@PL!A72",
+       "name": "@PL!A76",
        "fmt": "p1",
        "rows": {
         "A": "@PL!D37:K37",
-        "B": "@PL!D72:K72",
-        "C": "@PL!D107:K107"
+        "B": "@PL!D76:K76",
+        "C": "@PL!D115:K115"
        },
        "chart": true,
        "ymin": "auto"
       },
       {
-       "name": [
-        "EPS（",
-        "@PL!B80",
-        "）"
-       ],
+       "name": "@PL!A78",
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!D39:K39",
+        "B": "@PL!D78:K78",
+        "C": "@PL!D117:K117"
+       }
+      },
+      {
+       "name": "@PL!A86",
        "fmt": "n2",
        "rows": {
-        "A": "@PL!D45:K45",
-        "B": "@PL!D80:K80",
-        "C": "@PL!D115:K115"
+        "A": "@PL!D47:K47",
+        "B": "@PL!D86:K86",
+        "C": "@PL!D125:K125"
+       }
+      },
+      {
+       "name": "@PL!A88",
+       "fmt": "n2",
+       "rows": {
+        "A": "@PL!D49:K49",
+        "B": "@PL!D88:K88",
+        "C": "@PL!D127:K127"
        },
        "chart": true
       }
@@ -468,52 +552,52 @@
     },
     {
      "type": "pl",
-     "years": "@CF!F43:K43",
+     "years": "@CF!F44:K44",
      "metrics": [
       {
-       "name": "@CF!A55",
+       "name": "@CF!A56",
        "fmt": "n1",
        "rows": {
         "A": "@CF!F27:K27",
-        "B": "@CF!F55:K55",
-        "C": "@CF!F83:K83"
+        "B": "@CF!F56:K56",
+        "C": "@CF!F85:K85"
        },
        "chart": true
       },
       {
-       "name": "@CF!A52",
+       "name": "@CF!A53",
        "fmt": "n1",
        "rows": {
         "A": "@CF!F24:K24",
-        "B": "@CF!F52:K52",
-        "C": "@CF!F80:K80"
+        "B": "@CF!F53:K53",
+        "C": "@CF!F82:K82"
        }
       },
       {
-       "name": "@CF!A58",
+       "name": "@CF!A59",
        "fmt": "n1",
        "rows": {
         "A": "@CF!F30:K30",
-        "B": "@CF!F58:K58",
-        "C": "@CF!F86:K86"
-       }
-      },
-      {
-       "name": "@CF!A60",
-       "fmt": "n1",
-       "rows": {
-        "A": "@CF!F32:K32",
-        "B": "@CF!F60:K60",
+        "B": "@CF!F59:K59",
         "C": "@CF!F88:K88"
        }
       },
       {
-       "name": "@Thesis!A86",
+       "name": "@CF!A61",
+       "fmt": "n1",
+       "rows": {
+        "A": "@CF!F32:K32",
+        "B": "@CF!F61:K61",
+        "C": "@CF!F90:K90"
+       }
+      },
+      {
+       "name": "@Thesis!A96",
        "fmt": "p1",
        "rows": {
-        "A": "@Thesis!F42:K42",
-        "B": "@Thesis!F86:K86",
-        "C": "@Thesis!F130:K130"
+        "A": "@Thesis!F47:K47",
+        "B": "@Thesis!F96:K96",
+        "C": "@Thesis!F145:K145"
        },
        "chart": true,
        "ymin": "auto"
@@ -569,18 +653,24 @@
    "intro": "@Val!A1",
    "blocks": [
     {
+     "type": "note",
+     "parts": [
+      "@Val!A2"
+     ]
+    },
+    {
      "type": "table",
-     "caption": "@Val!A32",
+     "caption": "@Val!A34",
      "head": [
-      "@Val!A33",
-      "@Val!B33",
-      "@Val!C33",
-      "@Val!D33",
-      "@Val!E33"
+      "@Val!A35",
+      "@Val!B35",
+      "@Val!C35",
+      "@Val!D35",
+      "@Val!E35"
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "34-48",
+      "rows": "36-53",
       "cols": [
        "A",
        "B",
@@ -596,32 +686,38 @@
        ""
       ],
       "row_fmt": {
-       "38": {
-        "B": "sp1"
-       },
-       "39": {
-        "B": "sp1"
-       },
        "40": {
-        "B": ""
+        "B": "sp1"
        },
        "41": {
+        "B": "sp1"
+       },
+       "42": {
         "B": ""
        },
        "43": {
+        "B": ""
+       },
+       "45": {
         "B": "sp1",
         "C": "sp1",
         "D": "sp1"
        },
-       "44": {
+       "46": {
         "C": ""
        },
-       "47": {
+       "48": {
+        "B": "sp1"
+       },
+       "49": {
+        "B": ""
+       },
+       "52": {
         "B": "x1",
         "C": "x1",
         "D": "x1"
        },
-       "48": {
+       "53": {
         "B": "x1"
        }
       }
@@ -633,34 +729,39 @@
      "fmt": "n0",
      "items": [
       {
-       "label": "@Val!A34",
-       "value": "@Val!B34",
+       "label": "@Val!A36",
+       "value": "@Val!B36",
        "series": 0
       },
       {
-       "label": "@Val!A13",
-       "value": "@Val!B13",
+       "label": "@Val!A14",
+       "value": "@Val!B14",
        "series": 1
       },
       {
-       "label": "@Val!A30",
-       "value": "@Val!B30",
+       "label": "@Val!A31",
+       "value": "@Val!B31",
        "series": 2
       },
       {
-       "label": "@Val!A45",
-       "value": "@Val!B45",
+       "label": "@Val!A47",
+       "value": "@Val!B47",
        "series": 1
       },
       {
-       "label": "@Val!A36",
-       "value": "@Val!B36",
+       "label": "@Val!A50",
+       "value": "@Val!B50",
+       "series": 1
+      },
+      {
+       "label": "@Val!A38",
+       "value": "@Val!B38",
        "series": 2
       }
      ],
      "ref": {
-      "label": "@Val!A37",
-      "value": "@Val!B37"
+      "label": "@Val!A39",
+      "value": "@Val!B39"
      }
     },
     {
@@ -675,7 +776,7 @@
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "7-14",
+      "rows": "7-15",
       "cols": [
        "A",
        "B",
@@ -696,20 +797,20 @@
         "C": "p1",
         "D": "p1"
        },
-       "11": {
-        "B": "n2",
-        "C": "n2",
-        "D": "n2"
-       },
        "12": {
         "B": "n2",
         "C": "n2",
         "D": "n2"
        },
        "13": {
-        "B": "n2"
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
        },
        "14": {
+        "B": "n2"
+       },
+       "15": {
         "B": "p2",
         "C": "p1"
        }
@@ -718,17 +819,17 @@
     },
     {
      "type": "table",
-     "caption": "@Val!A16",
+     "caption": "@Val!A17",
      "head": [
-      "@Val!A17",
-      "@Val!B17",
-      "@Val!C17",
-      "@Val!D17",
-      "@Val!E17"
+      "@Val!A18",
+      "@Val!B18",
+      "@Val!C18",
+      "@Val!D18",
+      "@Val!E18"
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "18-30",
+      "rows": "19-32",
       "cols": [
        "A",
        "B",
@@ -744,12 +845,12 @@
        "x1"
       ],
       "row_fmt": {
-       "29": {
+       "30": {
         "B": "n2",
         "C": "n2",
         "D": "n2"
        },
-       "30": {
+       "31": {
         "B": "n2"
        }
       }
@@ -758,9 +859,9 @@
     {
      "type": "note",
      "parts": [
-      "@Val!A49",
+      "@Val!A54",
       "：",
-      "@Val!B49"
+      "@Val!B54"
      ]
     },
     {
@@ -774,7 +875,7 @@
      ],
      "rowgen": {
       "sheet": "CF",
-      "rows": "5-11",
+      "rows": "5-12",
       "cols": [
        "A",
        "B",
@@ -792,6 +893,11 @@
         "B": "",
         "C": "",
         "D": ""
+       },
+       "12": {
+        "B": "n3",
+        "C": "n3",
+        "D": "n3"
        }
       }
      }
@@ -993,7 +1099,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準的變動（一次動一個驅動；三情境全部重算）",
      "sheet": "Sens",
-     "rows": "4-29",
+     "rows": "4-31",
      "label_col": "A",
      "value_col": "E",
      "fmt": "sp1"
@@ -1012,7 +1118,7 @@
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "4-29",
+      "rows": "4-31",
       "cols": [
        "A",
        "B",
@@ -1033,17 +1139,17 @@
     },
     {
      "type": "table",
-     "caption": "@Sens!A31",
+     "caption": "@Sens!A33",
      "head": [
-      "@Sens!A32",
-      "@Sens!B32",
-      "@Sens!C32",
-      "@Sens!D32",
-      "@Sens!E32"
+      "@Sens!A34",
+      "@Sens!B34",
+      "@Sens!C34",
+      "@Sens!D34",
+      "@Sens!E34"
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "33-41",
+      "rows": "35-44",
       "cols": [
        "A",
        "B",
@@ -1088,7 +1194,7 @@
       ],
       [
        "Tokenomics 快照版本",
-       "@In!H67"
+       "@In!H80"
       ],
       [
        "資料截止",
@@ -1103,7 +1209,7 @@
     {
      "type": "note",
      "parts": [
-      "@README!A36"
+      "@README!A38"
      ]
     },
     {
