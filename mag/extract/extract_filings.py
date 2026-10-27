@@ -116,6 +116,30 @@ def find_filings(company, period_end):
     return docs
 
 
+def read_local(path):
+    """讀 repo 內的文件：PDF 用 pdftotext -layout（保留表格欄位對齊），HTML 轉文字，其餘當純文字。"""
+    import subprocess
+    full = path if os.path.isabs(path) else f"{ROOT}/{path}"
+    low = full.lower()
+    if low.endswith(".pdf"):
+        return subprocess.run(["pdftotext", "-layout", full, "-"], capture_output=True, check=True).stdout.decode("utf-8", "replace")
+    raw = open(full, "rb").read().decode("utf-8", "replace")
+    return html_to_text(raw) if low.endswith((".htm", ".html")) else raw
+
+
+def drive_download(file_id, dest):
+    """下載 Drive 上「知道連結者可檢視」的檔案（只用於公開財報文件；需 Andy 先開放該資料夾的連結分享）。"""
+    url = f"https://drive.usercontent.google.com/download?id={file_id}&export=download&confirm=t"
+    req = urllib.request.Request(url, headers={"User-Agent": "company-models mag-extract"})
+    with urllib.request.urlopen(req, timeout=300) as r:
+        data = r.read()
+    if data[:5] != b"%PDF-" and b"<html" in data[:2000].lower():
+        raise RuntimeError(f"Drive 檔案 {file_id} 無法下載（可能未開放連結分享）")
+    os.makedirs(os.path.dirname(dest), exist_ok=True)
+    open(dest, "wb").write(data)
+    return dest
+
+
 # ---------- 欄位清單 ----------
 def field_list(company, target_q):
     co = json.load(open(f"{ROOT}/{company}/company.json", encoding="utf-8"))
@@ -337,14 +361,24 @@ def main():
         name = os.path.splitext(os.path.basename(path))[0]
         req = json.load(open(path, encoding="utf-8"))
         try:
-            docs = find_filings(req["company"], req["period_end"])
-            if not docs:
-                raise RuntimeError("EDGAR 上找不到該期 10-Q／10-K 或財報 8-K（可能尚未申報）")
             parts, meta = [], []
-            for lab, url, d in docs:
-                t = html_to_text(http_get(url))[:MAX_DOC_CHARS]
-                parts.append(f"\n\n===== 文件：{lab}（申報日 {d}）=====\n{t}")
-                meta.append((lab, url, d, len(t)))
+            local = list(req.get("files", []))
+            for i, fid in enumerate(req.get("drive_ids", [])):
+                local.append(drive_download(fid, f"{ROOT}/mag/extract/docs/_drive_{name}_{i}.pdf"))
+            if local:   # 本地文件模式（2026-10-27 起的主要模式：SEC 擋雲端 IP，改由 Andy 手動下載）
+                for path in local:
+                    t = read_local(path)[:MAX_DOC_CHARS]
+                    lab = os.path.basename(path)
+                    parts.append(f"\n\n===== 文件：{lab} =====\n{t}")
+                    meta.append((lab, path, req.get("filed", ""), len(t)))
+            else:       # EDGAR 直連模式（雲端 IP 目前被 SEC 擋；保留供可直連的環境使用）
+                docs = find_filings(req["company"], req["period_end"])
+                if not docs:
+                    raise RuntimeError("EDGAR 上找不到該期 10-Q／10-K 或財報 8-K（可能尚未申報）")
+                for lab, url, d in docs:
+                    t = html_to_text(http_get(url))[:MAX_DOC_CHARS]
+                    parts.append(f"\n\n===== 文件：{lab}（申報日 {d}）=====\n{t}")
+                    meta.append((lab, url, d, len(t)))
             co, fields = field_list(req["company"], req.get("target_q"))
             prompt = build_prompt(req, "".join(parts), fields)
             results, binfo = run_batch({m: (m, prompt) for m in MODELS})
