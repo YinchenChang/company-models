@@ -7,6 +7,8 @@ from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 import market as MEM
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import valuation_rule as VR
 
@@ -46,16 +48,16 @@ for s, (v28, v29) in zip(SC, [MEM.SCEN_UNITS[s_] for s_ in SC]):   # 單一來�
     inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, v29, None, "Assumed", "")
 sec("B. 每片 CoWoS 晶圓封裝數、每顆台積電內容")
 for p, (pp, ct, tag, src) in PP.items():
-    inp(f"pp_{p}", f"{p}：每片 CoWoS 封裝數", "顆／片", round(pp * 0.8, 1), pp, round(pp * 1.2, 1), tag, src)
+    inp(f"pp_{p}", *SIL.row8(f"cw_pp_{p}")[1:])
     inp(f"ct_{p}", f"{p}：每顆台積電內容（邏輯晶圓＋CoWoS）", "$K／顆", round(ct * 0.8, 2), ct, round(ct * 1.2, 2), tag, "同上")
-inp("cow_oth26", "其他 CoWoS 用途 2026（網通 ASIC、FPGA、中國 AI 晶片等）", "千片", None, 150, None, "Assumed", "MS 全球需求 139.4 萬片 − 本表加速器")
-inp("cow_oth_g", "其他 CoWoS 用途年增", "%", None, 0.25, None, "Assumed", "")
+inp("cow_oth26", *SIL.row8("cw_oth26")[1:])
+inp("cow_oth_g", *SIL.row8("cw_oth_g")[1:])
 sec("C. CoWoS 產能（台積電，月產能年底值，千片）")
-for y, v, src in ((25, 77.5, "TrendForce（工商時報）2025-12：7.5–8 萬"), (26, 130, "TrendForce 12–14 萬；Morgan Stanley 約 13 萬"), (27, 200, "Morgan Stanley 20 萬；KGI 17 萬"), (28, 260, "Morgan Stanley 26 萬"), (29, 320, "Assumed")):
-    inp(f"cap_end{y}", f"CoWoS 月產能 20{y} 年底", "千片／月", None, v, None, "Interested-party" if y < 29 else "Assumed", src)
-inp("osat", "委外封測（日月光、艾克爾）補充產能 ÷ 台積電", "%", 0.05, 0.10, 0.20, "Assumed", "日月光 CoWoP 等")
-inp("ms_dem26", "Morgan Stanley 全球 CoWoS 需求 2026", "千片", None, 1394, None, "Interested-party", "Morgan Stanley 2026-07")
-inp("ms_dem27", "Morgan Stanley 全球 CoWoS 需求 2027", "千片", None, 2509, None, "Interested-party", "Morgan Stanley 2026-09（2.694M 為較早版本）")
+for y in (25, 26, 27, 28, 29):
+    inp(f"cap_end{y}", *SIL.row8(f"cw_capend{y}")[1:])
+inp("osat", *SIL.row8("cw_osat")[1:])
+inp("ms_dem26", *SIL.row8("cw_msdem26")[1:])
+inp("ms_dem27", *SIL.row8("cw_msdem27")[1:])
 inp("hbm_gap27", "HBM 2027 需求缺口 ÷ 供給（markets/memory）", "%", None, 0.21, None, "Derived", "markets/memory Mkt：需求 7.10 EB vs 供給 5.86 EB")
 sec("D. 台積電營收")
 inp("fx", "美元兌新台幣（2027 起）", "NT$/US$", 30, 32, 33, "Assumed", "v0.1.1 標 Verified（當時 Q3 指引匯率）；4Q26 指引匯率為 31.8，2027 起未獲公司指引，數值不變")

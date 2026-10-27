@@ -11,6 +11,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import cycle_position as CP
 import valuation_rule as VR
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -98,17 +100,13 @@ for y in (27, 28, 29):
     inp(f"ibpp_{y}", f"ABF 價格溢價指數 20{y}（FY2026＝1；Ibiden 模型）", "x", IB[k][0], IB[k][1], IB[k][2], "Assumed", IB[k][3], "全市場短缺溢價；新產能到位後回落（Ibiden 模型）" if y == 27 else "同上")
     k = f"rel_{y}"
     inp(f"ibrel_{y}", f"Ibiden NVIDIA 份額 20{y} ÷ 2026（Ibiden 模型）", "x", None, IB[k][1], None, "Assumed", IB[k][3], "Units 頁份額合計檢查用")
-inp("ib_sh26", "Ibiden 占 NVIDIA 加速器載板 FY2026（Ibiden 模型假設）", "%", 0.70, 0.70, 0.80, "Interested-party", IB_V26[1] + "（列標籤：假設 FY2026 份額 70%）", "BofA（經 thebuildout 2026-03-26）：Ibiden 70–80%")
+inp("ib_sh26", "Ibiden 占 NVIDIA 加速器載板 FY2026（Ibiden 模型假設）", "%", *SIL.vals("abf_ibsh26"), "Interested-party", IB_V26[1] + "（列標籤：假設 FY2026 份額 70%）", "BofA（經 thebuildout 2026-03-26）：Ibiden 70–80%")
 inp("ib_w_ot", "Ibiden 非 NVIDIA 權重（份額 × 每顆金額，相對 NVIDIA；Ibiden 模型）", "x", IB["w_ot"][0], IB["w_ot"][1], IB["w_ot"][2], "Assumed", IB["w_ot"][3], "Units 頁：÷ v_ot 即 Ibiden 非 NVIDIA 份額")
-inp("v_ot", "非 NVIDIA 加速器每顆載板金額 ÷ NVIDIA", "x", 0.6, 0.8, 1.0, "Assumed", "TPU、Trainium、MI 系列封裝面積接近 GPU，但層數與 CoWoS 規格不同；量化：未找到", "Ibiden 權重 0.4 ÷ 0.8 ＝ Ibiden 非 NVIDIA 份額 50%（Units 頁合計檢查）")
-for y, v, lo, hi in ((26, 0.25, 0.20, 0.30), (27, 0.27, 0.22, 0.32), (28, 0.29, 0.22, 0.35), (29, 0.30, 0.22, 0.36)):
-    inp(f"sh_nv_{y}", f"欣興占 NVIDIA 加速器載板 20{y}", "%", lo, v, hi, "Assumed",
-        "市場分析：欣興約占 Blackwell 載板供應鏈 30%（口袋學堂 2026-07，未經公司確認，Interested-party）" if y == 26 else "Ibiden 份額相對值 0.95／0.88／0.85（Ibiden 模型）→ 由欣興、三星電機等分食",
-        "Encyclopedia of Stocks 2026-03-04：欣興 2025 年約 30% NVIDIA AI 載板顆數（Interested-party）；與 Ibiden 70% 合計不超過 100%（Units 頁）" if y == 26 else "光復二廠 2027、楊梅二廠 2028 量產，客戶全額預付（三立 2026-10-19，Interested-party）")
-for y, v in ((26, 0.30), (27, 0.31), (28, 0.32), (29, 0.33)):
-    inp(f"sh_ot_{y}", f"欣興占非 NVIDIA 加速器載板（金額）20{y}", "%", 0.22, v, 0.40, "Assumed",
-        "欣興為 ASIC（TPU、Trainium 等）主要載板廠之一（第三方研究，Interested-party）；量化：未找到" if y == 26 else "同上",
-        "合計檢查：Ibiden 50%＋欣興 30%＝80%，其餘為三星電機、景碩、南電、AT&S（Units 頁）" if y == 26 else "—")
+inp("v_ot", "非 NVIDIA 加速器每顆載板金額 ÷ NVIDIA", "x", *SIL.vals("abf_vot"), "Assumed", "TPU、Trainium、MI 系列封裝面積接近 GPU，但層數與 CoWoS 規格不同；量化：未找到", "Ibiden 權重 0.4 ÷ 0.8 ＝ Ibiden 非 NVIDIA 份額 50%（Units 頁合計檢查）")
+for y in (26, 27, 28, 29):
+    inp(f"sh_nv_{y}", *SIL.row9(f"abf_un_nv_{y}")[1:])
+for y in (26, 27, 28, 29):
+    inp(f"sh_ot_{y}", *SIL.row9(f"abf_un_ot_{y}")[1:])
 
 sec("C. FY2026 產品組合與 AI 占比（公司說法；Q2 組合推全年）")
 inp("mx_abf", "FY2026 ABF 載板 ÷ 營收", "%", 0.50, 0.53, 0.56, "Interested-party", CT2Q + "：2Q26 ABF 52%（季增 22%）→ 1Q26 約 49%；下半年 AI 占比升", FG4Q + "：4Q25 載板（ABF＋BT）59%")

@@ -15,6 +15,8 @@ sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 import cycle_position as CP
 import valuation_rule as VR
 import market as MEM
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -125,23 +127,18 @@ for y in (27, 28, 29):
     inp(f"ibpp_{y}", f"ABF 價格溢價指數 20{y}（FY2026＝1；Ibiden 模型）", "x", IB[k][0], IB[k][1], IB[k][2], "Assumed", IB[k][3], "全市場短缺溢價；新產能到位後回落（Ibiden 模型；欣興、南電模型同值）" if y == 27 else "同上")
     k = f"rel_{y}"
     inp(f"ibrel_{y}", f"Ibiden NVIDIA 份額 20{y} ÷ 2026（Ibiden 模型）", "x", None, IB[k][1], None, "Assumed", IB[k][3], "Units 頁份額合計檢查用")
-inp("ib_sh26", "Ibiden 占 NVIDIA 加速器載板 FY2026（Ibiden 模型假設）", "%", 0.70, 0.70, 0.80, "Interested-party", IB_V26[1] + "（列標籤：假設 FY2026 份額 70%）", "BofA：Ibiden 70–80%")
+inp("ib_sh26", "Ibiden 占 NVIDIA 加速器載板 FY2026（Ibiden 模型假設）", "%", *SIL.vals("abf_ibsh26"), "Interested-party", IB_V26[1] + "（列標籤：假設 FY2026 份額 70%）", "BofA：Ibiden 70–80%")
 inp("ib_w_ot", "Ibiden 非 NVIDIA 權重（份額 × 每顆金額，相對 NVIDIA；Ibiden 模型）", "x", IB["w_ot"][0], IB["w_ot"][1], IB["w_ot"][2], "Assumed", IB["w_ot"][3], "Units 頁：÷ v_ot 即 Ibiden 非 NVIDIA 份額")
-inp("v_ot", "非 NVIDIA 加速器每顆載板金額 ÷ NVIDIA（欣興、南電模型同值）", "x", 0.6, 0.8, 1.0, "Assumed", "TPU、Trainium、MI 系列封裝面積接近 GPU；量化：未找到", "與欣興、南電模型 v_ot 相同")
+inp("v_ot", "非 NVIDIA 加速器每顆載板金額 ÷ NVIDIA（欣興、南電模型同值）", "x", *SIL.vals("abf_vot"), "Assumed", "TPU、Trainium、MI 系列封裝面積接近 GPU；量化：未找到", "與欣興、南電模型 v_ot 相同")
 for y in (26, 27, 28, 29):
     inp(f"un_nv_{y}", f"欣興占 NVIDIA 加速器載板 20{y}（欣興模型）", "%", None, UNS[f"sh_nv_{y}"][0], None, "Assumed", UNS[f"sh_nv_{y}"][1], "Units 頁份額合計檢查用")
     inp(f"un_ot_{y}", f"欣興占非 NVIDIA 加速器載板（金額）20{y}（欣興模型）", "%", None, UNS[f"sh_ot_{y}"][0], None, "Assumed", UNS[f"sh_ot_{y}"][1], "同上")
     inp(f"np_nv_{y}", f"南電占 NVIDIA 加速器載板 20{y}（南電模型）", "%", None, NPS[f"sh_nv_{y}"][0], None, "Assumed", NPS[f"sh_nv_{y}"][1], "同上")
     inp(f"np_ot_{y}", f"南電占非 NVIDIA 加速器載板（金額）20{y}（南電模型）", "%", None, NPS[f"sh_ot_{y}"][0], None, "Assumed", NPS[f"sh_ot_{y}"][1], "同上")
-for y, v, lo, hi in ((26, 0.02, 0.01, 0.05), (27, 0.03, 0.01, 0.10), (28, 0.05, 0.02, 0.15), (29, 0.06, 0.02, 0.15)):
-    inp(f"sh_nv_{y}", f"景碩占 NVIDIA 加速器（GPU）載板 20{y}", "%", lo, v, hi, "Assumed",
-        GS8 + "：預估 AI GPU 載板市占未來幾季升到 20%；" + UDN9 + "：Rubin GPU 份額 15–20%（Interested-party）" if y == 26 else
-        "上游合計限制：Ibiden（70% × 相對值）＋欣興＋南電已占 94–97%，基準取剩餘空間（Units 頁）；高值取券商說法下緣",
-        BRO + "：Vera／Rubin 初期份額約 20%、2026 年底約 30%（說法；與上游份額衝突，見 README）" if y == 26 else "—")
-for y, v, lo, hi in ((26, 0.03, 0.02, 0.05), (27, 0.05, 0.02, 0.08), (28, 0.06, 0.03, 0.10), (29, 0.06, 0.03, 0.10)):
-    inp(f"sh_ot_{y}", f"景碩占非 NVIDIA 加速器載板（金額）20{y}", "%", lo, v, hi, "Assumed",
-        BRO + "：Google TPU、Meta 加速器 1Q26 起出貨，AWS Trainium 2H26 起" if y == 26 else "同上",
-        "合計檢查：Ibiden 50%＋欣興 30%＋南電 5%＝85%，其餘為三星電機、景碩、AT&S（Units 頁）" if y == 26 else "—")
+for y in (26, 27, 28, 29):
+    inp(f"sh_nv_{y}", *SIL.row9(f"abf_ks_nv_{y}")[1:])
+for y in (26, 27, 28, 29):
+    inp(f"sh_ot_{y}", *SIL.row9(f"abf_ks_ot_{y}")[1:])
 inp("cpu_r", "NVIDIA 自家 CPU（Grace／Vera）顆數 ÷ NVIDIA 加速器顆數", "x", 0.3, 0.4, 0.5, "Analogy",
     "GB200／VR200 NVL72 機櫃：每 2 顆 GPU 封裝配 1 顆 CPU（0.5）；HGX 系統用 x86 CPU（0）", "NVIDIA 機櫃與 HGX 出貨比例：未找到")
 inp("v_cpu", "每顆 NVIDIA CPU 載板金額 ÷ 每顆 NVIDIA 加速器載板金額", "x", 0.20, 0.30, 0.45, "Assumed", "Vera CPU 為單晶片（88 核），封裝面積小於 GPU；量化：未找到", "—")
