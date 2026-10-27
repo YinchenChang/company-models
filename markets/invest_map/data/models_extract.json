@@ -1,73 +1,83 @@
 {
  "NVDA": {
-  "model": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx",
+  "model": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 251.880296390576,
    "cell": "Val!B40",
-   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 235.04668098705,
    "cell": "Val!B23",
-   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 268.713911794101,
    "cell": "Val!B41",
-   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 328.95,
    "cell": "Val!B42",
-   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx"
   },
   "up": {
    "value": 0.193971825893893,
    "cell": "Val!B43",
-   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": 0.273767120753228,
    "cell": "Val!B44",
-   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx"
   },
   "old_rule": {
    "value": 467.571184194614,
    "cell": "Val!B170",
-   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx"
+  },
+  "tier6": {
+   "value": "0%–25%",
+   "cell": "Val!B178",
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B179",
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 128.622689303977,
    "cell": "Val!B47",
-   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 313.135963327362,
    "cell": "Val!C47",
-   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 210.96,
    "cell": "Val!B57",
-   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx",
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 14.3360648072478,
     "cell": "Val!B58",
-    "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+    "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx"
    },
    {
     "value": 14.3143835502728,
     "cell": "Val!C58",
-    "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+    "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx"
    },
    {
     "value": 14.3143835502728,
     "cell": "Val!D58",
-    "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+    "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -135,78 +145,88 @@
      "PL!G292"
     ]
    ],
-   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.xlsx"
+   "file": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx"
   }
  },
  "AVGO": {
-  "model": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx",
+  "model": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 340.643248720447,
    "cell": "Val!B40",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 324.563443935248,
    "cell": "Val!B23",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 356.723053505646,
    "cell": "Val!B41",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 529.1,
    "cell": "Val!B42",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx"
   },
   "up": {
    "value": 0.058950661279678,
    "cell": "Val!B43",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": 0.10893761970171,
    "cell": "Val!B44",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx"
   },
   "old_rule": {
    "value": 647.367676593253,
    "cell": "Val!B104",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx"
+  },
+  "tier6": {
+   "value": "0%–25%",
+   "cell": "Val!B112",
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B113",
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 221.914547314327,
    "cell": "Val!B47",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 394.262829032538,
    "cell": "Val!C47",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 321.68,
    "cell": "Val!B57",
-   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx",
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 15.2986582357877,
     "cell": "Val!B60",
-    "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+    "file": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx"
    },
    {
     "value": 18.0337295944568,
     "cell": "Val!C60",
-    "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+    "file": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx"
    },
    {
     "value": 21.7055999507111,
     "cell": "Val!D60",
-    "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+    "file": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -254,78 +274,88 @@
      "PL!G39"
     ]
    ],
-   "file": "avgo/dist/20261025_Broadcom模型_v0.2.xlsx"
+   "file": "avgo/dist/20261025_Broadcom模型_v0.2.1.xlsx"
   }
  },
  "AMD": {
-  "model": "amd/dist/20261025_AMD模型_v0.2.1.xlsx",
+  "model": "amd/dist/20261025_AMD模型_v0.2.2.xlsx",
   "v2": true,
   "tp": {
    "value": 177.104004476736,
    "cell": "Val!B40",
-   "file": "amd/dist/20261025_AMD模型_v0.2.1.xlsx"
+   "file": "amd/dist/20261025_AMD模型_v0.2.2.xlsx"
   },
   "tp_dcf": {
    "value": 152.105302426009,
    "cell": "Val!B23",
-   "file": "amd/dist/20261025_AMD模型_v0.2.1.xlsx"
+   "file": "amd/dist/20261025_AMD模型_v0.2.2.xlsx"
   },
   "tp_comp": {
    "value": 202.102706527462,
    "cell": "Val!B41",
-   "file": "amd/dist/20261025_AMD模型_v0.2.1.xlsx"
+   "file": "amd/dist/20261025_AMD模型_v0.2.2.xlsx"
   },
   "tp_cons": {
    "value": 637.61,
    "cell": "Val!B42",
-   "file": "amd/dist/20261025_AMD模型_v0.2.1.xlsx"
+   "file": "amd/dist/20261025_AMD模型_v0.2.2.xlsx"
   },
   "up": {
    "value": -0.657299861690947,
    "cell": "Val!B43",
-   "file": "amd/dist/20261025_AMD模型_v0.2.1.xlsx"
+   "file": "amd/dist/20261025_AMD模型_v0.2.2.xlsx"
   },
   "up_comp": {
    "value": -0.608926824188815,
    "cell": "Val!B44",
-   "file": "amd/dist/20261025_AMD模型_v0.2.1.xlsx"
+   "file": "amd/dist/20261025_AMD模型_v0.2.2.xlsx"
   },
   "old_rule": {
    "value": 471.572606000429,
    "cell": "Val!B57",
-   "file": "amd/dist/20261025_AMD模型_v0.2.1.xlsx"
+   "file": "amd/dist/20261025_AMD模型_v0.2.2.xlsx"
+  },
+  "tier6": {
+   "value": "小於 −50%",
+   "cell": "Val!B176",
+   "file": "amd/dist/20261025_AMD模型_v0.2.2.xlsx"
+  },
+  "rec": {
+   "value": "強力放空",
+   "cell": "Val!B177",
+   "file": "amd/dist/20261025_AMD模型_v0.2.2.xlsx"
   },
   "dcf_C": {
    "value": 120.521244989712,
    "cell": "Val!B47",
-   "file": "amd/dist/20261025_AMD模型_v0.2.1.xlsx"
+   "file": "amd/dist/20261025_AMD模型_v0.2.2.xlsx"
   },
   "dcf_A": {
    "value": 168.700716442662,
    "cell": "Val!C47",
-   "file": "amd/dist/20261025_AMD模型_v0.2.1.xlsx"
+   "file": "amd/dist/20261025_AMD模型_v0.2.2.xlsx"
   },
   "model_px": {
    "value": 516.79,
    "cell": "Val!B67",
-   "file": "amd/dist/20261025_AMD模型_v0.2.1.xlsx",
+   "file": "amd/dist/20261025_AMD模型_v0.2.2.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 45.3583223804264,
     "cell": "Val!B70",
-    "file": "amd/dist/20261025_AMD模型_v0.2.1.xlsx"
+    "file": "amd/dist/20261025_AMD模型_v0.2.2.xlsx"
    },
    {
     "value": 46.5036014186298,
     "cell": "Val!C70",
-    "file": "amd/dist/20261025_AMD模型_v0.2.1.xlsx"
+    "file": "amd/dist/20261025_AMD模型_v0.2.2.xlsx"
    },
    {
     "value": 52.3379022214164,
     "cell": "Val!D70",
-    "file": "amd/dist/20261025_AMD模型_v0.2.1.xlsx"
+    "file": "amd/dist/20261025_AMD模型_v0.2.2.xlsx"
    }
   ],
   "cash": {
@@ -373,73 +403,83 @@
      "PL!G47"
     ]
    ],
-   "file": "amd/dist/20261025_AMD模型_v0.2.1.xlsx"
+   "file": "amd/dist/20261025_AMD模型_v0.2.2.xlsx"
   }
  },
  "2454": {
-  "model": "mediatek/dist/20261025_聯發科模型_v0.1.xlsx",
+  "model": "mediatek/dist/20261025_聯發科模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 2056.72998586345,
    "cell": "Val!B39",
-   "file": "mediatek/dist/20261025_聯發科模型_v0.1.xlsx"
+   "file": "mediatek/dist/20261025_聯發科模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 1845.58121944081,
    "cell": "Val!B24",
-   "file": "mediatek/dist/20261025_聯發科模型_v0.1.xlsx"
+   "file": "mediatek/dist/20261025_聯發科模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 2267.8787522861,
    "cell": "Val!B40",
-   "file": "mediatek/dist/20261025_聯發科模型_v0.1.xlsx"
+   "file": "mediatek/dist/20261025_聯發科模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 6067,
    "cell": "Val!B41",
-   "file": "mediatek/dist/20261025_聯發科模型_v0.1.xlsx"
+   "file": "mediatek/dist/20261025_聯發科模型_v0.1.1.xlsx"
   },
   "up": {
    "value": -0.487099754148765,
    "cell": "Val!B42",
-   "file": "mediatek/dist/20261025_聯發科模型_v0.1.xlsx"
+   "file": "mediatek/dist/20261025_聯發科模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": -0.434444201424914,
    "cell": "Val!B43",
-   "file": "mediatek/dist/20261025_聯發科模型_v0.1.xlsx"
+   "file": "mediatek/dist/20261025_聯發科模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "−25%～−50%",
+   "cell": "Val!B134",
+   "file": "mediatek/dist/20261025_聯發科模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "放空",
+   "cell": "Val!B135",
+   "file": "mediatek/dist/20261025_聯發科模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 2466.10119459039,
    "cell": "Val!B23",
-   "file": "mediatek/dist/20261025_聯發科模型_v0.1.xlsx"
+   "file": "mediatek/dist/20261025_聯發科模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 1011.80776357573,
    "cell": "Val!D23",
-   "file": "mediatek/dist/20261025_聯發科模型_v0.1.xlsx"
+   "file": "mediatek/dist/20261025_聯發科模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 4010,
    "cell": "Val!B53",
-   "file": "mediatek/dist/20261025_聯發科模型_v0.1.xlsx",
+   "file": "mediatek/dist/20261025_聯發科模型_v0.1.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 26.8609260184507,
     "cell": "Val!B56",
-    "file": "mediatek/dist/20261025_聯發科模型_v0.1.xlsx"
+    "file": "mediatek/dist/20261025_聯發科模型_v0.1.1.xlsx"
    },
    {
     "value": 33.550784861034,
     "cell": "Val!C56",
-    "file": "mediatek/dist/20261025_聯發科模型_v0.1.xlsx"
+    "file": "mediatek/dist/20261025_聯發科模型_v0.1.1.xlsx"
    },
    {
     "value": 47.0213358819937,
     "cell": "Val!D56",
-    "file": "mediatek/dist/20261025_聯發科模型_v0.1.xlsx"
+    "file": "mediatek/dist/20261025_聯發科模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -542,78 +582,88 @@
      "PL!J41"
     ]
    ],
-   "file": "mediatek/dist/20261025_聯發科模型_v0.1.xlsx"
+   "file": "mediatek/dist/20261025_聯發科模型_v0.1.1.xlsx"
   }
  },
  "MRVL": {
-  "model": "mrvl/dist/20261025_邁威爾模型_v0.2.xlsx",
+  "model": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx",
   "v2": true,
   "tp": {
-   "value": 128.033003490757,
+   "value": 126.964605060311,
    "cell": "Val!B40",
-   "file": "mrvl/dist/20261025_邁威爾模型_v0.2.xlsx"
+   "file": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx"
   },
   "tp_dcf": {
-   "value": 116.434615986025,
+   "value": 115.156325013556,
    "cell": "Val!B23",
-   "file": "mrvl/dist/20261025_邁威爾模型_v0.2.xlsx"
+   "file": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx"
   },
   "tp_comp": {
-   "value": 139.63139099549,
+   "value": 138.772885107067,
    "cell": "Val!B41",
-   "file": "mrvl/dist/20261025_邁威爾模型_v0.2.xlsx"
+   "file": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx"
   },
   "tp_cons": {
    "value": 341.44,
    "cell": "Val!B42",
-   "file": "mrvl/dist/20261025_邁威爾模型_v0.2.xlsx"
+   "file": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx"
   },
   "up": {
-   "value": -0.439705030454872,
+   "value": -0.44438053012861,
    "cell": "Val!B43",
-   "file": "mrvl/dist/20261025_邁威爾模型_v0.2.xlsx"
+   "file": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx"
   },
   "up_comp": {
-   "value": -0.388948444289136,
+   "value": -0.392705417237467,
    "cell": "Val!B44",
-   "file": "mrvl/dist/20261025_邁威爾模型_v0.2.xlsx"
+   "file": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx"
   },
   "old_rule": {
-   "value": 203.164070486016,
+   "value": 202.512511941354,
    "cell": "Val!B57",
-   "file": "mrvl/dist/20261025_邁威爾模型_v0.2.xlsx"
+   "file": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx"
+  },
+  "tier6": {
+   "value": "−25%～−50%",
+   "cell": "Val!B150",
+   "file": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx"
+  },
+  "rec": {
+   "value": "放空",
+   "cell": "Val!B151",
+   "file": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx"
   },
   "dcf_C": {
-   "value": 71.0382339875876,
+   "value": 71.8838596724305,
    "cell": "Val!B47",
-   "file": "mrvl/dist/20261025_邁威爾模型_v0.2.xlsx"
+   "file": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx"
   },
   "dcf_A": {
-   "value": 147.390570408775,
+   "value": 142.565850043984,
    "cell": "Val!C47",
-   "file": "mrvl/dist/20261025_邁威爾模型_v0.2.xlsx"
+   "file": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx"
   },
   "model_px": {
    "value": 228.51,
    "cell": "Val!B68",
-   "file": "mrvl/dist/20261025_邁威爾模型_v0.2.xlsx",
+   "file": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
-    "value": 35.0518948698173,
+    "value": 35.4902365363848,
     "cell": "Val!B71",
-    "file": "mrvl/dist/20261025_邁威爾模型_v0.2.xlsx"
+    "file": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx"
    },
    {
     "value": 35.0518948698173,
     "cell": "Val!C71",
-    "file": "mrvl/dist/20261025_邁威爾模型_v0.2.xlsx"
+    "file": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx"
    },
    {
-    "value": 35.0518948698173,
+    "value": 34.8367595995155,
     "cell": "Val!D71",
-    "file": "mrvl/dist/20261025_邁威爾模型_v0.2.xlsx"
+    "file": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx"
    }
   ],
   "cash": {
@@ -627,18 +677,23 @@
     ],
     [
      "FY2028",
-     5.99570410099901,
+     5.92165086314068,
      "PL!E13"
     ],
     [
      "FY2029",
-     7.93342528515296,
+     7.74559679674414,
      "PL!F13"
     ],
     [
      "FY2030",
-     9.74267998627002,
+     9.43680271405498,
      "PL!G13"
+    ],
+    [
+     "FY2028",
+     5.99570410099901,
+     "PL!E26"
     ],
     [
      "FY2029",
@@ -651,83 +706,98 @@
      "PL!G26"
     ],
     [
+     "FY2028",
+     6.03273071992817,
+     "PL!E39"
+    ],
+    [
      "FY2029",
-     4.6507548136727,
+     4.69528912072097,
      "PL!F39"
     ],
     [
      "FY2030",
-     5.72317725437049,
+     5.79066864558978,
      "PL!G39"
     ]
    ],
-   "file": "mrvl/dist/20261025_邁威爾模型_v0.2.xlsx"
+   "file": "mrvl/dist/20261026_邁威爾模型_v0.2.2.xlsx"
   }
  },
  "3661": {
-  "model": "alchip/dist/20261025_世芯-KY模型_v0.1.xlsx",
+  "model": "alchip/dist/20261025_世芯-KY模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 5925.8607469146,
    "cell": "Val!B39",
-   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.xlsx"
+   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 3503.24912021027,
    "cell": "Val!B24",
-   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.xlsx"
+   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 8348.47237361892,
    "cell": "Val!B40",
-   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.xlsx"
+   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 5803.25,
    "cell": "Val!B41",
-   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.xlsx"
+   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.1.xlsx"
   },
   "up": {
    "value": 0.695525249474849,
    "cell": "Val!B42",
-   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.xlsx"
+   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": 1.38869023565634,
    "cell": "Val!B43",
-   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.xlsx"
+   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "大於 50%",
+   "cell": "Val!B134",
+   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "強力買進",
+   "cell": "Val!B135",
+   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 5691.23007584557,
    "cell": "Val!B23",
-   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.xlsx"
+   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 1226.24410533878,
    "cell": "Val!D23",
-   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.xlsx"
+   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 3495,
    "cell": "Val!B53",
-   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.xlsx",
+   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 10.3228369915973,
     "cell": "Val!B56",
-    "file": "alchip/dist/20261025_世芯-KY模型_v0.1.xlsx"
+    "file": "alchip/dist/20261025_世芯-KY模型_v0.1.1.xlsx"
    },
    {
     "value": 17.7756299231503,
     "cell": "Val!C56",
-    "file": "alchip/dist/20261025_世芯-KY模型_v0.1.xlsx"
+    "file": "alchip/dist/20261025_世芯-KY模型_v0.1.1.xlsx"
    },
    {
     "value": 33.7736275317948,
     "cell": "Val!D56",
-    "file": "alchip/dist/20261025_世芯-KY模型_v0.1.xlsx"
+    "file": "alchip/dist/20261025_世芯-KY模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -830,73 +900,83 @@
      "PL!J35"
     ]
    ],
-   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.xlsx"
+   "file": "alchip/dist/20261025_世芯-KY模型_v0.1.1.xlsx"
   }
  },
  "3443": {
-  "model": "guc/dist/20261025_創意模型_v0.1.xlsx",
+  "model": "guc/dist/20261025_創意模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 2879.20410090305,
    "cell": "Val!B39",
-   "file": "guc/dist/20261025_創意模型_v0.1.xlsx"
+   "file": "guc/dist/20261025_創意模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 2237.70940746845,
    "cell": "Val!B24",
-   "file": "guc/dist/20261025_創意模型_v0.1.xlsx"
+   "file": "guc/dist/20261025_創意模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 3520.69879433764,
    "cell": "Val!B40",
-   "file": "guc/dist/20261025_創意模型_v0.1.xlsx"
+   "file": "guc/dist/20261025_創意模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 6722.37,
    "cell": "Val!B41",
-   "file": "guc/dist/20261025_創意模型_v0.1.xlsx"
+   "file": "guc/dist/20261025_創意模型_v0.1.1.xlsx"
   },
   "up": {
    "value": -0.620408160724714,
    "cell": "Val!B42",
-   "file": "guc/dist/20261025_創意模型_v0.1.xlsx"
+   "file": "guc/dist/20261025_創意模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": -0.535834041616659,
    "cell": "Val!B43",
-   "file": "guc/dist/20261025_創意模型_v0.1.xlsx"
+   "file": "guc/dist/20261025_創意模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "小於 −50%",
+   "cell": "Val!B134",
+   "file": "guc/dist/20261025_創意模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "強力放空",
+   "cell": "Val!B135",
+   "file": "guc/dist/20261025_創意模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 3747.50613858769,
    "cell": "Val!B23",
-   "file": "guc/dist/20261025_創意模型_v0.1.xlsx"
+   "file": "guc/dist/20261025_創意模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 662.119943250375,
    "cell": "Val!D23",
-   "file": "guc/dist/20261025_創意模型_v0.1.xlsx"
+   "file": "guc/dist/20261025_創意模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 7585,
    "cell": "Val!B53",
-   "file": "guc/dist/20261025_創意模型_v0.1.xlsx",
+   "file": "guc/dist/20261025_創意模型_v0.1.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 38.3831148738787,
     "cell": "Val!B56",
-    "file": "guc/dist/20261025_創意模型_v0.1.xlsx"
+    "file": "guc/dist/20261025_創意模型_v0.1.1.xlsx"
    },
    {
     "value": 66.9239352280954,
     "cell": "Val!C56",
-    "file": "guc/dist/20261025_創意模型_v0.1.xlsx"
+    "file": "guc/dist/20261025_創意模型_v0.1.1.xlsx"
    },
    {
     "value": 150.316307710055,
     "cell": "Val!D56",
-    "file": "guc/dist/20261025_創意模型_v0.1.xlsx"
+    "file": "guc/dist/20261025_創意模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -999,61 +1079,71 @@
      "PL!J41"
     ]
    ],
-   "file": "guc/dist/20261025_創意模型_v0.1.xlsx"
+   "file": "guc/dist/20261025_創意模型_v0.1.1.xlsx"
   }
  },
  "000660": {
-  "model": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx",
+  "model": "skhynix/dist/20261025_SK海力士模型_v0.5.1.xlsx",
   "v2": true,
   "tp": {
    "value": 3087845.415541,
    "cell": "Val!B161",
-   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.1.xlsx"
   },
   "tp_dcf": {
    "value": 3709129.83314453,
    "cell": "Val!B146",
-   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.1.xlsx"
   },
   "tp_comp": {
    "value": 2466560.99793747,
    "cell": "Val!B162",
-   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.1.xlsx"
   },
   "tp_cons": {
    "value": 3096288,
    "cell": "Val!B163",
-   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.1.xlsx"
   },
   "up": {
    "value": 1.41804652744009,
    "cell": "Val!B164",
-   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.1.xlsx"
   },
   "up_comp": {
    "value": 0.931527797915011,
    "cell": "Val!B165",
-   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.1.xlsx"
   },
   "old_rule": {
    "value": 1392208.55280262,
    "cell": "Val!B176",
-   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.1.xlsx"
+  },
+  "tier6": {
+   "value": "大於 50%",
+   "cell": "Val!B184",
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.1.xlsx"
+  },
+  "rec": {
+   "value": "強力買進",
+   "cell": "Val!B185",
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.1.xlsx"
   },
   "dcf_A": {
    "value": 6513978.22849394,
    "cell": "Val!B145",
-   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.1.xlsx"
   },
   "dcf_C": {
    "value": 1308904.14697498,
    "cell": "Val!D145",
-   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.1.xlsx"
   },
   "model_px": {
    "value": 1277000,
    "cell": "In!E6",
-   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx",
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.1.xlsx",
    "date": "2026-10-23"
   },
   "cash": {
@@ -1111,61 +1201,71 @@
      "Y!L22"
     ]
    ],
-   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.xlsx"
+   "file": "skhynix/dist/20261025_SK海力士模型_v0.5.1.xlsx"
   }
  },
  "005930": {
-  "model": "samsung/dist/20261025_三星電子模型_v0.3.xlsx",
+  "model": "samsung/dist/20261025_三星電子模型_v0.3.1.xlsx",
   "v2": true,
   "tp": {
    "value": 477143.173864418,
    "cell": "Val!B161",
-   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.1.xlsx"
   },
   "tp_dcf": {
    "value": 486542.246351878,
    "cell": "Val!B146",
-   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.1.xlsx"
   },
   "tp_comp": {
    "value": 467744.101376957,
    "cell": "Val!B162",
-   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.1.xlsx"
   },
   "tp_cons": {
    "value": 478906,
    "cell": "Val!B163",
-   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.1.xlsx"
   },
   "up": {
    "value": 1.21412145644741,
    "cell": "Val!B164",
-   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.1.xlsx"
   },
   "up_comp": {
    "value": 1.17050627089075,
    "cell": "Val!B165",
-   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.1.xlsx"
   },
   "old_rule": {
    "value": 255831.994790815,
    "cell": "Val!B176",
-   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.1.xlsx"
+  },
+  "tier6": {
+   "value": "大於 50%",
+   "cell": "Val!B184",
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.1.xlsx"
+  },
+  "rec": {
+   "value": "強力買進",
+   "cell": "Val!B185",
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.1.xlsx"
   },
   "dcf_A": {
    "value": 818535.37839522,
    "cell": "Val!B145",
-   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.1.xlsx"
   },
   "dcf_C": {
    "value": 218882.499300042,
    "cell": "Val!D145",
-   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.1.xlsx"
   },
   "model_px": {
    "value": 215500,
    "cell": "In!E6",
-   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx",
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.1.xlsx",
    "date": "2026-10-23"
   },
   "cash": {
@@ -1223,61 +1323,71 @@
      "Y!L22"
     ]
    ],
-   "file": "samsung/dist/20261025_三星電子模型_v0.3.xlsx"
+   "file": "samsung/dist/20261025_三星電子模型_v0.3.1.xlsx"
   }
  },
  "MU": {
-  "model": "micron/dist/20261025_美光模型_v0.4.xlsx",
+  "model": "micron/dist/20261025_美光模型_v0.4.1.xlsx",
   "v2": true,
   "tp": {
    "value": 684.089469121124,
    "cell": "Val!B208",
-   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
+   "file": "micron/dist/20261025_美光模型_v0.4.1.xlsx"
   },
   "tp_dcf": {
    "value": 932.626083378287,
    "cell": "Val!B193",
-   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
+   "file": "micron/dist/20261025_美光模型_v0.4.1.xlsx"
   },
   "tp_comp": {
    "value": 435.552854863962,
    "cell": "Val!B209",
-   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
+   "file": "micron/dist/20261025_美光模型_v0.4.1.xlsx"
   },
   "tp_cons": {
    "value": 1560.57,
    "cell": "Val!B210",
-   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
+   "file": "micron/dist/20261025_美光模型_v0.4.1.xlsx"
   },
   "up": {
    "value": -0.220455279902998,
    "cell": "Val!B211",
-   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
+   "file": "micron/dist/20261025_美光模型_v0.4.1.xlsx"
   },
   "up_comp": {
    "value": -0.503671751052406,
    "cell": "Val!B212",
-   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
+   "file": "micron/dist/20261025_美光模型_v0.4.1.xlsx"
   },
   "old_rule": {
    "value": 348.754265504643,
    "cell": "Val!B223",
-   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
+   "file": "micron/dist/20261025_美光模型_v0.4.1.xlsx"
+  },
+  "tier6": {
+   "value": "0%～−25%",
+   "cell": "Val!B231",
+   "file": "micron/dist/20261025_美光模型_v0.4.1.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B232",
+   "file": "micron/dist/20261025_美光模型_v0.4.1.xlsx"
   },
   "dcf_A": {
    "value": 1714.01729481759,
    "cell": "Val!B192",
-   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
+   "file": "micron/dist/20261025_美光模型_v0.4.1.xlsx"
   },
   "dcf_C": {
    "value": 321.896486338575,
    "cell": "Val!D192",
-   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
+   "file": "micron/dist/20261025_美光模型_v0.4.1.xlsx"
   },
   "model_px": {
    "value": 877.55,
    "cell": "In!E5",
-   "file": "micron/dist/20261025_美光模型_v0.4.xlsx",
+   "file": "micron/dist/20261025_美光模型_v0.4.1.xlsx",
    "date": "2026-10-23"
   },
   "cash": {
@@ -1335,7 +1445,7 @@
      "Y!L22"
     ]
    ],
-   "file": "micron/dist/20261025_美光模型_v0.4.xlsx"
+   "file": "micron/dist/20261025_美光模型_v0.4.1.xlsx"
   }
  },
  "285A": {
@@ -1687,74 +1797,84 @@
   }
  },
  "ANET": {
-  "model": "arista/dist/20261025_Arista模型_v0.2.xlsx",
+  "model": "arista/dist/20261025_Arista模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 99.4630381559788,
    "cell": "Val!B40",
-   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+   "file": "arista/dist/20261025_Arista模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 87.244896541368,
    "cell": "Val!B23",
-   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+   "file": "arista/dist/20261025_Arista模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 111.68117977059,
    "cell": "Val!B41",
-   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+   "file": "arista/dist/20261025_Arista模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 243.59,
    "cell": "Val!B42",
-   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+   "file": "arista/dist/20261025_Arista模型_v0.2.1.xlsx"
   },
   "up": {
    "value": -0.422967812519703,
    "cell": "Val!B43",
-   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+   "file": "arista/dist/20261025_Arista模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": -0.352084586815631,
    "cell": "Val!B44",
-   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+   "file": "arista/dist/20261025_Arista模型_v0.2.1.xlsx"
   },
   "old_rule": {
    "value": 174.075889279442,
    "cell": "Val!B137",
-   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+   "file": "arista/dist/20261025_Arista模型_v0.2.1.xlsx"
+  },
+  "tier6": {
+   "value": "−25%～−50%",
+   "cell": "Val!B52",
+   "file": "arista/dist/20261025_Arista模型_v0.2.1.xlsx"
+  },
+  "rec": {
+   "value": "放空",
+   "cell": "Val!B53",
+   "file": "arista/dist/20261025_Arista模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 66.5504868771763,
    "cell": "Val!B47",
-   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+   "file": "arista/dist/20261025_Arista模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 101.884522283968,
    "cell": "Val!C47",
-   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+   "file": "arista/dist/20261025_Arista模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 172.37,
    "cell": "Val!B57",
-   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx",
+   "file": "arista/dist/20261025_Arista模型_v0.2.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 28.7824916250012,
     "cell": "Val!B60",
-    "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+    "file": "arista/dist/20261025_Arista模型_v0.2.1.xlsx"
    },
    {
     "value": 31.2852673835325,
     "cell": "Val!C60",
-    "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+    "file": "arista/dist/20261025_Arista模型_v0.2.1.xlsx"
    },
    {
     "value": 34.7046878144637,
     "cell": "Val!D60",
-    "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+    "file": "arista/dist/20261025_Arista模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -1802,78 +1922,88 @@
      "PL!G36"
     ]
    ],
-   "file": "arista/dist/20261025_Arista模型_v0.2.xlsx"
+   "file": "arista/dist/20261025_Arista模型_v0.2.1.xlsx"
   }
  },
  "300308": {
-  "model": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx",
+  "model": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx",
   "v2": true,
   "tp": {
-   "value": 1355.25565207254,
+   "value": 1343.19997585911,
    "cell": "Val!B39",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+   "file": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx"
   },
   "tp_dcf": {
-   "value": 831.458806236827,
+   "value": 822.809160101701,
    "cell": "Val!B24",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+   "file": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx"
   },
   "tp_comp": {
-   "value": 1879.05249790826,
+   "value": 1863.59079161651,
    "cell": "Val!B40",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+   "file": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx"
   },
   "tp_cons": {
    "value": 1321,
    "cell": "Val!B41",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+   "file": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx"
   },
   "up": {
-   "value": 1.21219276247089,
+   "value": 1.19251420246985,
    "cell": "Val!B42",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+   "file": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx"
   },
   "up_comp": {
-   "value": 2.0671898175216,
+   "value": 2.04195157210145,
    "cell": "Val!B43",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+   "file": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx"
   },
   "old_rule": {
-   "value": 2265.72535634618,
+   "value": 2256.55339542562,
    "cell": "Val!B133",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+   "file": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx"
+  },
+  "tier6": {
+   "value": "大於 50%",
+   "cell": "Val!B49",
+   "file": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx"
+  },
+  "rec": {
+   "value": "強力買進",
+   "cell": "Val!B50",
+   "file": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx"
   },
   "dcf_A": {
-   "value": 1049.4079271775,
+   "value": 1016.86051266929,
    "cell": "Val!B23",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+   "file": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx"
   },
   "dcf_C": {
-   "value": 498.176089619339,
+   "value": 503.748980706021,
    "cell": "Val!D23",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+   "file": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx"
   },
   "model_px": {
    "value": 612.63,
    "cell": "Val!B53",
-   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx",
+   "file": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
-    "value": 12.3059398917007,
+    "value": 12.6934617740031,
     "cell": "Val!B56",
-    "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+    "file": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx"
    },
    {
     "value": 15.4730418489938,
     "cell": "Val!C56",
-    "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+    "file": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx"
    },
    {
-    "value": 21.0008139851548,
+    "value": 20.7423904518959,
     "cell": "Val!D56",
-    "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+    "file": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx"
    }
   ],
   "cash": {
@@ -1887,33 +2017,38 @@
     ],
     [
      "FY2027",
-     55.674619462434,
+     54.8408048133568,
      "PL!E12"
     ],
     [
      "FY2028",
-     58.6401745797024,
+     56.8499339632135,
      "PL!F12"
     ],
     [
      "FY2029",
-     71.1339395621388,
+     68.9214152644512,
      "PL!G12"
     ],
     [
      "FY2030（收斂）",
-     83.6178959972778,
+     80.9813981806256,
      "PL!H12"
     ],
     [
      "FY2031（收斂）",
-     93.4638738881508,
+     90.4959694348297,
      "PL!I12"
     ],
     [
      "FY2032（收斂）",
-     99.0717063214398,
+     95.9257276009195,
      "PL!J12"
+    ],
+    [
+     "FY2027",
+     55.674619462434,
+     "PL!E24"
     ],
     [
      "FY2028",
@@ -1941,103 +2076,118 @@
      "PL!J24"
     ],
     [
+     "FY2027",
+     56.0915267869726,
+     "PL!E36"
+    ],
+    [
      "FY2028",
-     34.3616425595101,
+     34.7897444747355,
      "PL!F36"
     ],
     [
      "FY2029",
-     41.66436411542,
+     42.1610062627402,
      "PL!G36"
     ],
     [
      "FY2030（收斂）",
-     45.0755323751388,
+     45.5984329722963,
      "PL!H36"
     ],
     [
      "FY2031（收斂）",
-     45.6050721068062,
+     46.1263667901126,
      "PL!I36"
     ],
     [
      "FY2032（收斂）",
-     42.9389294297929,
+     43.4297484239214,
      "PL!J36"
     ]
    ],
-   "file": "innolight/dist/20261025_中際旭創模型_v0.2.xlsx"
+   "file": "innolight/dist/20261026_中際旭創模型_v0.2.2.xlsx"
   }
  },
  "COHR": {
-  "model": "cohr/dist/20261025_Coherent模型_v0.2.xlsx",
+  "model": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx",
   "v2": true,
   "tp": {
-   "value": 322.275820410306,
+   "value": 322.534682310793,
    "cell": "Val!B39",
-   "file": "cohr/dist/20261025_Coherent模型_v0.2.xlsx"
+   "file": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx"
   },
   "tp_dcf": {
-   "value": 206.323913093457,
+   "value": 207.045466025756,
    "cell": "Val!B24",
-   "file": "cohr/dist/20261025_Coherent模型_v0.2.xlsx"
+   "file": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx"
   },
   "tp_comp": {
-   "value": 438.227727727155,
+   "value": 438.02389859583,
    "cell": "Val!B40",
-   "file": "cohr/dist/20261025_Coherent模型_v0.2.xlsx"
+   "file": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx"
   },
   "tp_cons": {
    "value": 394.79,
    "cell": "Val!B41",
-   "file": "cohr/dist/20261025_Coherent模型_v0.2.xlsx"
+   "file": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx"
   },
   "up": {
-   "value": 0.540736340824717,
+   "value": 0.54197390787777,
    "cell": "Val!B42",
-   "file": "cohr/dist/20261025_Coherent模型_v0.2.xlsx"
+   "file": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx"
   },
   "up_comp": {
-   "value": 1.09507925480306,
+   "value": 1.09410478842965,
    "cell": "Val!B43",
-   "file": "cohr/dist/20261025_Coherent模型_v0.2.xlsx"
+   "file": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx"
   },
   "old_rule": {
-   "value": 319.789455314265,
+   "value": 319.571046584482,
    "cell": "Val!B53",
-   "file": "cohr/dist/20261025_Coherent模型_v0.2.xlsx"
+   "file": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx"
+  },
+  "tier6": {
+   "value": "大於 50%",
+   "cell": "Val!B49",
+   "file": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx"
+  },
+  "rec": {
+   "value": "強力買進",
+   "cell": "Val!B50",
+   "file": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx"
   },
   "dcf_A": {
-   "value": 272.648607825778,
+   "value": 275.410915866819,
    "cell": "Val!B23",
-   "file": "cohr/dist/20261025_Coherent模型_v0.2.xlsx"
+   "file": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx"
   },
   "dcf_C": {
-   "value": 126.539219389886,
+   "value": 126.00352198982,
    "cell": "Val!D23",
-   "file": "cohr/dist/20261025_Coherent模型_v0.2.xlsx"
+   "file": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx"
   },
   "model_px": {
    "value": 209.17,
    "cell": "Val!B64",
-   "file": "cohr/dist/20261025_Coherent模型_v0.2.xlsx",
+   "file": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
-    "value": 14.3003653070952,
+    "value": 14.3742045938465,
     "cell": "Val!B67",
-    "file": "cohr/dist/20261025_Coherent模型_v0.2.xlsx"
+    "file": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx"
    },
    {
     "value": 15.5454728565585,
     "cell": "Val!C67",
-    "file": "cohr/dist/20261025_Coherent模型_v0.2.xlsx"
+    "file": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx"
    },
    {
-    "value": 17.0280774878123,
+    "value": 16.9880250266399,
     "cell": "Val!D67",
-    "file": "cohr/dist/20261025_Coherent模型_v0.2.xlsx"
+    "file": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx"
    }
   ],
   "cash": {
@@ -2046,33 +2196,38 @@
    "values": [
     [
      "FY2027",
-     2.07656731774848,
+     2.06947608283373,
      "PL!E13"
     ],
     [
      "FY2028",
-     3.01700592753346,
+     3.00150777844569,
      "PL!F13"
     ],
     [
      "FY2029",
-     3.76215291091008,
+     3.77595755657229,
      "PL!G13"
     ],
     [
      "FY2030（收斂）",
-     4.35390843108136,
+     4.39287254378399,
      "PL!H13"
     ],
     [
      "FY2031（收斂）",
-     4.8269425673017,
+     4.88351192071864,
      "PL!I13"
     ],
     [
      "FY2032（收斂）",
-     5.11655912133981,
+     5.17652263596176,
      "PL!J13"
+    ],
+    [
+     "FY2027",
+     2.07656731774848,
+     "PL!E26"
     ],
     [
      "FY2028",
@@ -2100,103 +2255,118 @@
      "PL!J26"
     ],
     [
+     "FY2027",
+     2.08011293520586,
+     "PL!E39"
+    ],
+    [
      "FY2028",
-     2.53371450348873,
+     2.53968821153389,
      "PL!F39"
     ],
     [
      "FY2029",
-     2.52451267120249,
+     2.51799796856473,
      "PL!G39"
     ],
     [
      "FY2030（收斂）",
-     2.36850986059806,
+     2.35779778144662,
      "PL!H39"
     ],
     [
      "FY2031（收斂）",
-     2.22706349404752,
+     2.21484847580229,
      "PL!I39"
     ],
     [
      "FY2032（收斂）",
-     2.09686593593397,
+     2.08536502644769,
      "PL!J39"
     ]
    ],
-   "file": "cohr/dist/20261025_Coherent模型_v0.2.xlsx"
+   "file": "cohr/dist/20261026_Coherent模型_v0.2.2.xlsx"
   }
  },
  "LITE": {
-  "model": "lite/dist/20261025_Lumentum模型_v0.2.xlsx",
+  "model": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx",
   "v2": true,
   "tp": {
-   "value": 611.903536008153,
+   "value": 623.399886042049,
    "cell": "Val!B39",
-   "file": "lite/dist/20261025_Lumentum模型_v0.2.xlsx"
+   "file": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx"
   },
   "tp_dcf": {
-   "value": 375.752003266261,
+   "value": 387.083165964306,
    "cell": "Val!B24",
-   "file": "lite/dist/20261025_Lumentum模型_v0.2.xlsx"
+   "file": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx"
   },
   "tp_comp": {
-   "value": 848.055068750045,
+   "value": 859.716606119792,
    "cell": "Val!B40",
-   "file": "lite/dist/20261025_Lumentum模型_v0.2.xlsx"
+   "file": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx"
   },
   "tp_cons": {
    "value": 1165.03,
    "cell": "Val!B41",
-   "file": "lite/dist/20261025_Lumentum模型_v0.2.xlsx"
+   "file": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx"
   },
   "up": {
-   "value": -0.190785754515317,
+   "value": -0.175582361053666,
    "cell": "Val!B42",
-   "file": "lite/dist/20261025_Lumentum模型_v0.2.xlsx"
+   "file": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx"
   },
   "up_comp": {
-   "value": 0.121513771704834,
+   "value": 0.136935617810535,
    "cell": "Val!B43",
-   "file": "lite/dist/20261025_Lumentum模型_v0.2.xlsx"
+   "file": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx"
   },
   "old_rule": {
-   "value": 409.473484390874,
+   "value": 410.587041312467,
    "cell": "Val!B53",
-   "file": "lite/dist/20261025_Lumentum模型_v0.2.xlsx"
+   "file": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx"
+  },
+  "tier6": {
+   "value": "0%～−25%",
+   "cell": "Val!B49",
+   "file": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B50",
+   "file": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx"
   },
   "dcf_A": {
-   "value": 508.288681536241,
+   "value": 549.946697831986,
    "cell": "Val!B23",
-   "file": "lite/dist/20261025_Lumentum模型_v0.2.xlsx"
+   "file": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx"
   },
   "dcf_C": {
-   "value": 216.979769703727,
+   "value": 211.148558750336,
    "cell": "Val!D23",
-   "file": "lite/dist/20261025_Lumentum模型_v0.2.xlsx"
+   "file": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx"
   },
   "model_px": {
    "value": 756.17,
    "cell": "Val!B63",
-   "file": "lite/dist/20261025_Lumentum模型_v0.2.xlsx",
+   "file": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
-    "value": 24.0617307776236,
+    "value": 23.1065570578076,
     "cell": "Val!B66",
-    "file": "lite/dist/20261025_Lumentum模型_v0.2.xlsx"
+    "file": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx"
    },
    {
     "value": 26.592339455316,
     "cell": "Val!C66",
-    "file": "lite/dist/20261025_Lumentum模型_v0.2.xlsx"
+    "file": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx"
    },
    {
-    "value": 29.7178061482936,
+    "value": 30.1940247173205,
     "cell": "Val!D66",
-    "file": "lite/dist/20261025_Lumentum模型_v0.2.xlsx"
+    "file": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx"
    }
   ],
   "cash": {
@@ -2205,33 +2375,38 @@
    "values": [
     [
      "FY2027",
-     2.36234702533197,
+     2.39446885960868,
      "PL!E13"
     ],
     [
      "FY2028",
-     3.23753241693006,
+     3.37136481238245,
      "PL!F13"
     ],
     [
      "FY2029",
-     3.61639297547681,
+     3.85163354963238,
      "PL!G13"
     ],
     [
      "FY2030（收斂）",
-     4.05335095394294,
+     4.37867727105871,
      "PL!H13"
     ],
     [
      "FY2031（收斂）",
-     4.4198286365181,
+     4.80961883622837,
      "PL!I13"
     ],
     [
      "FY2032（收斂）",
-     4.68501835470918,
+     5.09819596640207,
      "PL!J13"
+    ],
+    [
+     "FY2027",
+     2.36234702533197,
+     "PL!E26"
     ],
     [
      "FY2028",
@@ -2259,103 +2434,118 @@
      "PL!J26"
     ],
     [
+     "FY2027",
+     2.34628610819361,
+     "PL!E39"
+    ],
+    [
      "FY2028",
-     2.62134536483855,
+     2.58000164367995,
      "PL!F39"
     ],
     [
      "FY2029",
-     2.24007473092597,
+     2.18555615890228,
      "PL!G39"
     ],
     [
      "FY2030（收斂）",
-     1.98370291510785,
+     1.92687044642924,
      "PL!H39"
     ],
     [
      "FY2031（收斂）",
-     1.81327987217939,
+     1.75757869032829,
      "PL!I39"
     ],
     [
      "FY2032（收斂）",
-     1.70727274119044,
+     1.65482793612448,
      "PL!J39"
     ]
    ],
-   "file": "lite/dist/20261025_Lumentum模型_v0.2.xlsx"
+   "file": "lite/dist/20261026_Lumentum模型_v0.2.2.xlsx"
   }
  },
  "300502": {
-  "model": "eoptolink/dist/20261025_新易盛模型_v0.2.xlsx",
+  "model": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx",
   "v2": true,
   "tp": {
-   "value": 797.810166290206,
+   "value": 791.558609426747,
    "cell": "Val!B39",
-   "file": "eoptolink/dist/20261025_新易盛模型_v0.2.xlsx"
+   "file": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx"
   },
   "tp_dcf": {
-   "value": 516.201544167434,
+   "value": 512.71543363703,
    "cell": "Val!B24",
-   "file": "eoptolink/dist/20261025_新易盛模型_v0.2.xlsx"
+   "file": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx"
   },
   "tp_comp": {
-   "value": 1079.41878841298,
+   "value": 1070.40178521646,
    "cell": "Val!B40",
-   "file": "eoptolink/dist/20261025_新易盛模型_v0.2.xlsx"
+   "file": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx"
   },
   "tp_cons": {
    "value": 460.89,
    "cell": "Val!B41",
-   "file": "eoptolink/dist/20261025_新易盛模型_v0.2.xlsx"
+   "file": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx"
   },
   "up": {
-   "value": 2.05674393214638,
+   "value": 2.03279160699903,
    "cell": "Val!B42",
-   "file": "eoptolink/dist/20261025_新易盛模型_v0.2.xlsx"
+   "file": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx"
   },
   "up_comp": {
-   "value": 3.13570417016467,
+   "value": 3.10115626519718,
    "cell": "Val!B43",
-   "file": "eoptolink/dist/20261025_新易盛模型_v0.2.xlsx"
+   "file": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx"
   },
   "old_rule": {
-   "value": 1150.67817266164,
+   "value": 1146.39392147938,
    "cell": "Val!B53",
-   "file": "eoptolink/dist/20261025_新易盛模型_v0.2.xlsx"
+   "file": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx"
+  },
+  "tier6": {
+   "value": "大於 50%",
+   "cell": "Val!B49",
+   "file": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx"
+  },
+  "rec": {
+   "value": "強力買進",
+   "cell": "Val!B50",
+   "file": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx"
   },
   "dcf_A": {
-   "value": 652.679488016086,
+   "value": 639.534641540191,
    "cell": "Val!B23",
-   "file": "eoptolink/dist/20261025_新易盛模型_v0.2.xlsx"
+   "file": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx"
   },
   "dcf_C": {
-   "value": 304.979041887906,
+   "value": 307.265758949729,
    "cell": "Val!D23",
-   "file": "eoptolink/dist/20261025_新易盛模型_v0.2.xlsx"
+   "file": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx"
   },
   "model_px": {
    "value": 261,
    "cell": "Val!B63",
-   "file": "eoptolink/dist/20261025_新易盛模型_v0.2.xlsx",
+   "file": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
-    "value": 9.00198974798375,
+    "value": 9.28509129395989,
     "cell": "Val!B66",
-    "file": "eoptolink/dist/20261025_新易盛模型_v0.2.xlsx"
+    "file": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx"
    },
    {
     "value": 11.3588075073479,
     "cell": "Val!C66",
-    "file": "eoptolink/dist/20261025_新易盛模型_v0.2.xlsx"
+    "file": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx"
    },
    {
-    "value": 15.6122021498554,
+    "value": 15.4180102984502,
     "cell": "Val!D66",
-    "file": "eoptolink/dist/20261025_新易盛模型_v0.2.xlsx"
+    "file": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx"
    }
   ],
   "cash": {
@@ -2369,33 +2559,38 @@
     ],
     [
      "FY2027",
-     36.2643645480721,
+     35.6741633277858,
      "PL!E12"
     ],
     [
      "FY2028",
-     40.417064469718,
+     39.184752037568,
      "PL!F12"
     ],
     [
      "FY2029",
-     49.7748570271037,
+     48.5257151962013,
      "PL!G12"
     ],
     [
      "FY2030（收斂）",
-     59.0833419186253,
+     57.8148994385059,
      "PL!H12"
     ],
     [
      "FY2031（收斂）",
-     66.380482812426,
+     65.08304387118,
      "PL!I12"
     ],
     [
      "FY2032（收斂）",
-     70.3633117811715,
+     68.9880265034508,
      "PL!J12"
+    ],
+    [
+     "FY2027",
+     36.2643645480721,
+     "PL!E24"
     ],
     [
      "FY2028",
@@ -2423,103 +2618,118 @@
      "PL!J24"
     ],
     [
+     "FY2027",
+     36.5594651582153,
+     "PL!E36"
+    ],
+    [
      "FY2028",
-     23.3044638102748,
+     23.5979865726625,
      "PL!F36"
     ],
     [
      "FY2029",
-     28.7450177392325,
+     29.0260904952269,
      "PL!G36"
     ],
     [
      "FY2030（收斂）",
-     31.4364825384388,
+     31.6861282427499,
      "PL!H36"
     ],
     [
      "FY2031（收斂）",
-     31.9896937903546,
+     32.2123752781558,
      "PL!I36"
     ],
     [
      "FY2032（收斂）",
-     30.119527076457,
+     30.3291902618944,
      "PL!J36"
     ]
    ],
-   "file": "eoptolink/dist/20261025_新易盛模型_v0.2.xlsx"
+   "file": "eoptolink/dist/20261026_新易盛模型_v0.2.2.xlsx"
   }
  },
  "2345": {
-  "model": "accton/dist/20261025_智邦模型_v0.2.xlsx",
+  "model": "accton/dist/20261025_智邦模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 2275.03974290026,
    "cell": "Val!B39",
-   "file": "accton/dist/20261025_智邦模型_v0.2.xlsx"
+   "file": "accton/dist/20261025_智邦模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 2583.68412988549,
    "cell": "Val!B23",
-   "file": "accton/dist/20261025_智邦模型_v0.2.xlsx"
+   "file": "accton/dist/20261025_智邦模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 1966.39535591504,
    "cell": "Val!B40",
-   "file": "accton/dist/20261025_智邦模型_v0.2.xlsx"
+   "file": "accton/dist/20261025_智邦模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 3500,
    "cell": "Val!B41",
-   "file": "accton/dist/20261025_智邦模型_v0.2.xlsx"
+   "file": "accton/dist/20261025_智邦模型_v0.2.1.xlsx"
   },
   "up": {
    "value": 0.281712531211416,
    "cell": "Val!B42",
-   "file": "accton/dist/20261025_智邦模型_v0.2.xlsx"
+   "file": "accton/dist/20261025_智邦模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": 0.107828369529599,
    "cell": "Val!B43",
-   "file": "accton/dist/20261025_智邦模型_v0.2.xlsx"
+   "file": "accton/dist/20261025_智邦模型_v0.2.1.xlsx"
   },
   "old_rule": {
    "value": 3452.51414467191,
    "cell": "Val!B56",
-   "file": "accton/dist/20261025_智邦模型_v0.2.xlsx"
+   "file": "accton/dist/20261025_智邦模型_v0.2.1.xlsx"
+  },
+  "tier6": {
+   "value": "25%–50%",
+   "cell": "Val!B51",
+   "file": "accton/dist/20261025_智邦模型_v0.2.1.xlsx"
+  },
+  "rec": {
+   "value": "買進",
+   "cell": "Val!B52",
+   "file": "accton/dist/20261025_智邦模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 1519.31098875966,
    "cell": "Val!B46",
-   "file": "accton/dist/20261025_智邦模型_v0.2.xlsx"
+   "file": "accton/dist/20261025_智邦模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 3280.27935446535,
    "cell": "Val!C46",
-   "file": "accton/dist/20261025_智邦模型_v0.2.xlsx"
+   "file": "accton/dist/20261025_智邦模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 1775,
    "cell": "Val!B66",
-   "file": "accton/dist/20261025_智邦模型_v0.2.xlsx",
+   "file": "accton/dist/20261025_智邦模型_v0.2.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 10.4931541139962,
     "cell": "Val!B69",
-    "file": "accton/dist/20261025_智邦模型_v0.2.xlsx"
+    "file": "accton/dist/20261025_智邦模型_v0.2.1.xlsx"
    },
    {
     "value": 13.2631241704461,
     "cell": "Val!C69",
-    "file": "accton/dist/20261025_智邦模型_v0.2.xlsx"
+    "file": "accton/dist/20261025_智邦模型_v0.2.1.xlsx"
    },
    {
     "value": 18.5396150744705,
     "cell": "Val!D69",
-    "file": "accton/dist/20261025_智邦模型_v0.2.xlsx"
+    "file": "accton/dist/20261025_智邦模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -2567,78 +2777,88 @@
      "PL!G39"
     ]
    ],
-   "file": "accton/dist/20261025_智邦模型_v0.2.xlsx"
+   "file": "accton/dist/20261025_智邦模型_v0.2.1.xlsx"
   }
  },
  "FN": {
-  "model": "fabrinet/dist/20261025_Fabrinet模型_v0.1.xlsx",
+  "model": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx",
   "v2": true,
   "tp": {
-   "value": 360.601895050031,
+   "value": 373.123198537049,
    "cell": "Val!B39",
-   "file": "fabrinet/dist/20261025_Fabrinet模型_v0.1.xlsx"
+   "file": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx"
   },
   "tp_dcf": {
-   "value": 332.160667627491,
+   "value": 349.794813826581,
    "cell": "Val!B24",
-   "file": "fabrinet/dist/20261025_Fabrinet模型_v0.1.xlsx"
+   "file": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx"
   },
   "tp_comp": {
-   "value": 389.043122472571,
+   "value": 396.451583247516,
    "cell": "Val!B40",
-   "file": "fabrinet/dist/20261025_Fabrinet模型_v0.1.xlsx"
+   "file": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx"
   },
   "tp_cons": {
    "value": 687.78,
    "cell": "Val!B41",
-   "file": "fabrinet/dist/20261025_Fabrinet模型_v0.1.xlsx"
+   "file": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx"
   },
   "up": {
-   "value": 0.144986013367724,
+   "value": 0.184743756071152,
    "cell": "Val!B42",
-   "file": "fabrinet/dist/20261025_Fabrinet模型_v0.1.xlsx"
+   "file": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx"
   },
   "up_comp": {
-   "value": 0.235292825530484,
+   "value": 0.258816229273881,
    "cell": "Val!B43",
-   "file": "fabrinet/dist/20261025_Fabrinet模型_v0.1.xlsx"
+   "file": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx"
   },
   "old_rule": {
-   "value": 406.817486657285,
+   "value": 408.001544364806,
    "cell": "Val!B53",
-   "file": "fabrinet/dist/20261025_Fabrinet模型_v0.1.xlsx"
+   "file": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx"
+  },
+  "tier6": {
+   "value": "0%–25%",
+   "cell": "Val!B49",
+   "file": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B50",
+   "file": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx"
   },
   "dcf_A": {
-   "value": 505.017972366452,
+   "value": 564.272676654932,
    "cell": "Val!B23",
-   "file": "fabrinet/dist/20261025_Fabrinet模型_v0.1.xlsx"
+   "file": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx"
   },
   "dcf_C": {
-   "value": 164.552284506867,
+   "value": 163.840959069597,
    "cell": "Val!D23",
-   "file": "fabrinet/dist/20261025_Fabrinet模型_v0.1.xlsx"
+   "file": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx"
   },
   "model_px": {
    "value": 314.94,
    "cell": "Val!B64",
-   "file": "fabrinet/dist/20261025_Fabrinet模型_v0.1.xlsx",
+   "file": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
-    "value": 11.710542658079,
+    "value": 11.3236532114761,
     "cell": "Val!B67",
-    "file": "fabrinet/dist/20261025_Fabrinet模型_v0.1.xlsx"
+    "file": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx"
    },
    {
     "value": 14.2924873870241,
     "cell": "Val!C67",
-    "file": "fabrinet/dist/20261025_Fabrinet模型_v0.1.xlsx"
+    "file": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx"
    },
    {
-    "value": 18.0560159269023,
+    "value": 18.0143639298774,
     "cell": "Val!D67",
-    "file": "fabrinet/dist/20261025_Fabrinet模型_v0.1.xlsx"
+    "file": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx"
    }
   ],
   "cash": {
@@ -2647,32 +2867,32 @@
    "values": [
     [
      "FY2027",
-     0.751154198577556,
+     0.757337324554131,
      "PL!E15"
     ],
     [
      "FY2028",
-     0.976241864599923,
+     1.00959661926187,
      "PL!F15"
     ],
     [
      "FY2029",
-     1.18775019760592,
+     1.28141328658721,
      "PL!G15"
     ],
     [
      "FY2030（收斂）",
-     1.37793982866459,
+     1.53028658732208,
      "PL!H15"
     ],
     [
      "FY2031（收斂）",
-     1.52959998691506,
+     1.72479965082466,
      "PL!I15"
     ],
     [
      "FY2032（收斂）",
-     1.62137598612996,
+     1.82828762987414,
      "PL!J15"
     ],
     [
@@ -2707,107 +2927,117 @@
     ],
     [
      "FY2027",
-     0.64153277588009,
+     0.64249172853023,
      "PL!E45"
     ],
     [
      "FY2028",
-     0.633158612967692,
+     0.634622573658518,
      "PL!F45"
     ],
     [
      "FY2029",
-     0.571146603852049,
+     0.569936475220296,
      "PL!G45"
     ],
     [
      "FY2030（收斂）",
-     0.513534392953894,
+     0.511110522478332,
      "PL!H45"
     ],
     [
      "FY2031（收斂）",
-     0.475276512042825,
+     0.472454809534054,
      "PL!I45"
     ],
     [
      "FY2032（收斂）",
-     0.452041842422224,
+     0.449392515917191,
      "PL!J45"
     ]
    ],
-   "file": "fabrinet/dist/20261025_Fabrinet模型_v0.1.xlsx"
+   "file": "fabrinet/dist/20261026_Fabrinet模型_v0.1.2.xlsx"
   }
  },
  "CRDO": {
-  "model": "crdo/dist/20261025_Credo模型_v0.2.xlsx",
+  "model": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx",
   "v2": true,
   "tp": {
-   "value": 195.696397392632,
+   "value": 194.503855731343,
    "cell": "Val!B39",
-   "file": "crdo/dist/20261025_Credo模型_v0.2.xlsx"
+   "file": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx"
   },
   "tp_dcf": {
-   "value": 101.296317943029,
+   "value": 100.161046567533,
    "cell": "Val!B24",
-   "file": "crdo/dist/20261025_Credo模型_v0.2.xlsx"
+   "file": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx"
   },
   "tp_comp": {
-   "value": 290.096476842235,
+   "value": 288.846664895152,
    "cell": "Val!B40",
-   "file": "crdo/dist/20261025_Credo模型_v0.2.xlsx"
+   "file": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx"
   },
   "tp_cons": {
    "value": 279.09,
    "cell": "Val!B41",
-   "file": "crdo/dist/20261025_Credo模型_v0.2.xlsx"
+   "file": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx"
   },
   "up": {
-   "value": 0.328646869391217,
+   "value": 0.320550313879711,
    "cell": "Val!B42",
-   "file": "crdo/dist/20261025_Credo模型_v0.2.xlsx"
+   "file": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx"
   },
   "up_comp": {
-   "value": 0.969559894373245,
+   "value": 0.96107451215393,
    "cell": "Val!B43",
-   "file": "crdo/dist/20261025_Credo模型_v0.2.xlsx"
+   "file": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx"
   },
   "old_rule": {
-   "value": 620.46087778403,
+   "value": 619.6489358636,
    "cell": "Val!B53",
-   "file": "crdo/dist/20261025_Credo模型_v0.2.xlsx"
+   "file": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx"
+  },
+  "tier6": {
+   "value": "25%–50%",
+   "cell": "Val!B129",
+   "file": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx"
+  },
+  "rec": {
+   "value": "買進",
+   "cell": "Val!B130",
+   "file": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx"
   },
   "dcf_A": {
-   "value": 143.3911150815,
+   "value": 139.248723511431,
    "cell": "Val!B23",
-   "file": "crdo/dist/20261025_Credo模型_v0.2.xlsx"
+   "file": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx"
   },
   "dcf_C": {
-   "value": 53.1251226501538,
+   "value": 53.662353127775,
    "cell": "Val!D23",
-   "file": "crdo/dist/20261025_Credo模型_v0.2.xlsx"
+   "file": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx"
   },
   "model_px": {
    "value": 147.29,
    "cell": "Val!B63",
-   "file": "crdo/dist/20261025_Credo模型_v0.2.xlsx",
+   "file": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
-    "value": 16.0181635221924,
+    "value": 16.1680750935303,
     "cell": "Val!B66",
-    "file": "crdo/dist/20261025_Credo模型_v0.2.xlsx"
+    "file": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx"
    },
    {
     "value": 17.3237158559513,
     "cell": "Val!C66",
-    "file": "crdo/dist/20261025_Credo模型_v0.2.xlsx"
+    "file": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx"
    },
    {
-    "value": 18.8609696700734,
+    "value": 18.7897743422103,
     "cell": "Val!D66",
-    "file": "crdo/dist/20261025_Credo模型_v0.2.xlsx"
+    "file": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx"
    }
   ],
   "cash": {
@@ -2821,27 +3051,27 @@
     ],
     [
      "FY2028",
-     1.8572897329199,
+     1.84006880707183,
      "PL!F13"
     ],
     [
      "FY2029",
-     2.06508090856179,
+     2.02199161477183,
      "PL!G13"
     ],
     [
      "FY2030（收斂）",
-     2.29022848333957,
+     2.22589795285517,
      "PL!H13"
     ],
     [
      "FY2031（收斂）",
-     2.48378259844177,
+     2.4049094569054,
      "PL!I13"
     ],
     [
      "FY2032（收斂）",
-     2.63280955434828,
+     2.54920402431973,
      "PL!J13"
     ],
     [
@@ -2871,102 +3101,112 @@
     ],
     [
      "FY2028",
-     1.57735106786184,
+     1.58332772433394,
      "PL!F39"
     ],
     [
      "FY2029",
-     1.16114967889419,
+     1.17169890931922,
      "PL!G39"
     ],
     [
      "FY2030（收斂）",
-     0.952995121729134,
+     0.963926560061299,
      "PL!H39"
     ],
     [
      "FY2031（收斂）",
-     0.840393757004792,
+     0.850963920855344,
      "PL!I39"
     ],
     [
      "FY2032（收斂）",
-     0.791263045056819,
+     0.801215260866878,
      "PL!J39"
     ]
    ],
-   "file": "crdo/dist/20261025_Credo模型_v0.2.xlsx"
+   "file": "crdo/dist/20261026_Credo模型_v0.2.2.xlsx"
   }
  },
  "ALAB": {
-  "model": "alab/dist/20261025_Astera Labs模型_v0.1.xlsx",
+  "model": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 132.485292978441,
    "cell": "Val!B39",
-   "file": "alab/dist/20261025_Astera Labs模型_v0.1.xlsx"
+   "file": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 105.344096190295,
    "cell": "Val!B24",
-   "file": "alab/dist/20261025_Astera Labs模型_v0.1.xlsx"
+   "file": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 159.626489766587,
    "cell": "Val!B40",
-   "file": "alab/dist/20261025_Astera Labs模型_v0.1.xlsx"
+   "file": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 388.36,
    "cell": "Val!B41",
-   "file": "alab/dist/20261025_Astera Labs模型_v0.1.xlsx"
+   "file": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx"
   },
   "up": {
    "value": -0.484813761944156,
    "cell": "Val!B42",
-   "file": "alab/dist/20261025_Astera Labs模型_v0.1.xlsx"
+   "file": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": -0.379271699461086,
    "cell": "Val!B43",
-   "file": "alab/dist/20261025_Astera Labs模型_v0.1.xlsx"
+   "file": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx"
   },
   "old_rule": {
    "value": 616.322122932452,
    "cell": "Val!B53",
-   "file": "alab/dist/20261025_Astera Labs模型_v0.1.xlsx"
+   "file": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "−25%～−50%",
+   "cell": "Val!B129",
+   "file": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "放空",
+   "cell": "Val!B130",
+   "file": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 138.732590060686,
    "cell": "Val!B23",
-   "file": "alab/dist/20261025_Astera Labs模型_v0.1.xlsx"
+   "file": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 52.3189901504964,
    "cell": "Val!D23",
-   "file": "alab/dist/20261025_Astera Labs模型_v0.1.xlsx"
+   "file": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 257.16,
    "cell": "Val!B63",
-   "file": "alab/dist/20261025_Astera Labs模型_v0.1.xlsx",
+   "file": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 31.7429444375456,
     "cell": "Val!B66",
-    "file": "alab/dist/20261025_Astera Labs模型_v0.1.xlsx"
+    "file": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx"
    },
    {
     "value": 41.9812962397928,
     "cell": "Val!C66",
-    "file": "alab/dist/20261025_Astera Labs模型_v0.1.xlsx"
+    "file": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx"
    },
    {
     "value": 71.5111184463339,
     "cell": "Val!D66",
-    "file": "alab/dist/20261025_Astera Labs模型_v0.1.xlsx"
+    "file": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -3059,61 +3299,71 @@
      "PL!J36"
     ]
    ],
-   "file": "alab/dist/20261025_Astera Labs模型_v0.1.xlsx"
+   "file": "alab/dist/20261025_Astera Labs模型_v0.1.1.xlsx"
   }
  },
  "2330": {
-  "model": "tsmc/dist/20261025_台積電模型_v0.3.xlsx",
+  "model": "tsmc/dist/20261025_台積電模型_v0.3.1.xlsx",
   "v2": true,
   "tp": {
    "value": 2446.02329898547,
    "cell": "Val!B94",
-   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.1.xlsx"
   },
   "tp_dcf": {
    "value": 2150.17798362528,
    "cell": "Val!B79",
-   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.1.xlsx"
   },
   "tp_comp": {
    "value": 2741.86861434566,
    "cell": "Val!B95",
-   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.1.xlsx"
   },
   "tp_cons": {
    "value": 3390.43,
    "cell": "Val!B96",
-   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.1.xlsx"
   },
   "up": {
    "value": 0.0255862888827967,
    "cell": "Val!B97",
-   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.1.xlsx"
   },
   "up_comp": {
    "value": 0.149630446266524,
    "cell": "Val!B98",
-   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.1.xlsx"
   },
   "old_rule": {
    "value": 3022.97680876707,
    "cell": "Val!B107",
-   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.1.xlsx"
+  },
+  "tier6": {
+   "value": "0%–25%",
+   "cell": "Val!B115",
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.1.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B116",
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.1.xlsx"
   },
   "dcf_A": {
    "value": 2769.08365296963,
    "cell": "Val!B78",
-   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.1.xlsx"
   },
   "dcf_C": {
    "value": 1495.88897703241,
    "cell": "Val!D78",
-   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.1.xlsx"
   },
   "model_px": {
    "value": 2385,
    "cell": "In!E135",
-   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx",
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.1.xlsx",
    "date": "2026-10-22"
   },
   "cash": {
@@ -3216,73 +3466,83 @@
      "PL!T12"
     ]
    ],
-   "file": "tsmc/dist/20261025_台積電模型_v0.3.xlsx"
+   "file": "tsmc/dist/20261025_台積電模型_v0.3.1.xlsx"
   }
  },
  "2449": {
-  "model": "kyec/dist/20261025_京元電模型_v0.2.xlsx",
+  "model": "kyec/dist/20261025_京元電模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 173.353091385714,
    "cell": "Val!B39",
-   "file": "kyec/dist/20261025_京元電模型_v0.2.xlsx"
+   "file": "kyec/dist/20261025_京元電模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 138.569693574456,
    "cell": "Val!B24",
-   "file": "kyec/dist/20261025_京元電模型_v0.2.xlsx"
+   "file": "kyec/dist/20261025_京元電模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 208.136489196973,
    "cell": "Val!B40",
-   "file": "kyec/dist/20261025_京元電模型_v0.2.xlsx"
+   "file": "kyec/dist/20261025_京元電模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 340.73,
    "cell": "Val!B41",
-   "file": "kyec/dist/20261025_京元電模型_v0.2.xlsx"
+   "file": "kyec/dist/20261025_京元電模型_v0.2.1.xlsx"
   },
   "up": {
    "value": -0.339607270911564,
    "cell": "Val!B42",
-   "file": "kyec/dist/20261025_京元電模型_v0.2.xlsx"
+   "file": "kyec/dist/20261025_京元電模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": -0.207099088773437,
    "cell": "Val!B43",
-   "file": "kyec/dist/20261025_京元電模型_v0.2.xlsx"
+   "file": "kyec/dist/20261025_京元電模型_v0.2.1.xlsx"
+  },
+  "tier6": {
+   "value": "−25%～−50%",
+   "cell": "Val!B49",
+   "file": "kyec/dist/20261025_京元電模型_v0.2.1.xlsx"
+  },
+  "rec": {
+   "value": "放空",
+   "cell": "Val!B50",
+   "file": "kyec/dist/20261025_京元電模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 170.590379660853,
    "cell": "Val!B23",
-   "file": "kyec/dist/20261025_京元電模型_v0.2.xlsx"
+   "file": "kyec/dist/20261025_京元電模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 85.7331075295227,
    "cell": "Val!D23",
-   "file": "kyec/dist/20261025_京元電模型_v0.2.xlsx"
+   "file": "kyec/dist/20261025_京元電模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 262.5,
    "cell": "Val!B53",
-   "file": "kyec/dist/20261025_京元電模型_v0.2.xlsx",
+   "file": "kyec/dist/20261025_京元電模型_v0.2.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 23.6574204702941,
     "cell": "Val!B56",
-    "file": "kyec/dist/20261025_京元電模型_v0.2.xlsx"
+    "file": "kyec/dist/20261025_京元電模型_v0.2.1.xlsx"
    },
    {
     "value": 29.0706910169746,
     "cell": "Val!C56",
-    "file": "kyec/dist/20261025_京元電模型_v0.2.xlsx"
+    "file": "kyec/dist/20261025_京元電模型_v0.2.1.xlsx"
    },
    {
     "value": 42.5352507344419,
     "cell": "Val!D56",
-    "file": "kyec/dist/20261025_京元電模型_v0.2.xlsx"
+    "file": "kyec/dist/20261025_京元電模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -3375,73 +3635,83 @@
      "PL!J42"
     ]
    ],
-   "file": "kyec/dist/20261025_京元電模型_v0.2.xlsx"
+   "file": "kyec/dist/20261025_京元電模型_v0.2.1.xlsx"
   }
  },
  "AMKR": {
-  "model": "amkr/dist/20261025_艾克爾模型_v0.2.xlsx",
+  "model": "amkr/dist/20261025_艾克爾模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 55.6688470720086,
    "cell": "Val!B39",
-   "file": "amkr/dist/20261025_艾克爾模型_v0.2.xlsx"
+   "file": "amkr/dist/20261025_艾克爾模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 36.005445355105,
    "cell": "Val!B24",
-   "file": "amkr/dist/20261025_艾克爾模型_v0.2.xlsx"
+   "file": "amkr/dist/20261025_艾克爾模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 75.3322487889122,
    "cell": "Val!B40",
-   "file": "amkr/dist/20261025_艾克爾模型_v0.2.xlsx"
+   "file": "amkr/dist/20261025_艾克爾模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 76.4,
    "cell": "Val!B41",
-   "file": "amkr/dist/20261025_艾克爾模型_v0.2.xlsx"
+   "file": "amkr/dist/20261025_艾克爾模型_v0.2.1.xlsx"
   },
   "up": {
    "value": 0.41651010361345,
    "cell": "Val!B42",
-   "file": "amkr/dist/20261025_艾克爾模型_v0.2.xlsx"
+   "file": "amkr/dist/20261025_艾克爾模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": 0.916851114221684,
    "cell": "Val!B43",
-   "file": "amkr/dist/20261025_艾克爾模型_v0.2.xlsx"
+   "file": "amkr/dist/20261025_艾克爾模型_v0.2.1.xlsx"
+  },
+  "tier6": {
+   "value": "25%–50%",
+   "cell": "Val!B49",
+   "file": "amkr/dist/20261025_艾克爾模型_v0.2.1.xlsx"
+  },
+  "rec": {
+   "value": "買進",
+   "cell": "Val!B50",
+   "file": "amkr/dist/20261025_艾克爾模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 48.947377231081,
    "cell": "Val!B23",
-   "file": "amkr/dist/20261025_艾克爾模型_v0.2.xlsx"
+   "file": "amkr/dist/20261025_艾克爾模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 22.0213163292156,
    "cell": "Val!D23",
-   "file": "amkr/dist/20261025_艾克爾模型_v0.2.xlsx"
+   "file": "amkr/dist/20261025_艾克爾模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 39.3,
    "cell": "Val!B53",
-   "file": "amkr/dist/20261025_艾克爾模型_v0.2.xlsx",
+   "file": "amkr/dist/20261025_艾克爾模型_v0.2.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 9.83148820051965,
     "cell": "Val!B56",
-    "file": "amkr/dist/20261025_艾克爾模型_v0.2.xlsx"
+    "file": "amkr/dist/20261025_艾克爾模型_v0.2.1.xlsx"
    },
    {
     "value": 12.1269265390294,
     "cell": "Val!C56",
-    "file": "amkr/dist/20261025_艾克爾模型_v0.2.xlsx"
+    "file": "amkr/dist/20261025_艾克爾模型_v0.2.1.xlsx"
    },
    {
     "value": 16.9590865715126,
     "cell": "Val!D56",
-    "file": "amkr/dist/20261025_艾克爾模型_v0.2.xlsx"
+    "file": "amkr/dist/20261025_艾克爾模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -3544,78 +3814,88 @@
      "PL!J44"
     ]
    ],
-   "file": "amkr/dist/20261025_艾克爾模型_v0.2.xlsx"
+   "file": "amkr/dist/20261025_艾克爾模型_v0.2.1.xlsx"
   }
  },
  "4062": {
-  "model": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx",
+  "model": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 5236.24114444144,
    "cell": "Val!B96",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 1931.24288735174,
    "cell": "Val!B81",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 8541.23940153114,
    "cell": "Val!B97",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 12432.35,
    "cell": "Val!B98",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx"
   },
   "up": {
    "value": -0.384840091113553,
    "cell": "Val!B99",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": 0.00343508006709858,
    "cell": "Val!B100",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx"
   },
   "old_rule": {
    "value": 9531.45203105499,
    "cell": "Val!B38",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx"
+  },
+  "tier6": {
+   "value": "−25%～−50%",
+   "cell": "Val!B109",
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx"
+  },
+  "rec": {
+   "value": "放空",
+   "cell": "Val!B110",
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 2378.3168940138,
    "cell": "Val!B80",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 1293.75775376326,
    "cell": "Val!D80",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 8512,
    "cell": "Val!B6",
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx",
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 38.8691947985097,
     "cell": "Val!B9",
-    "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+    "file": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx"
    },
    {
     "value": 46.1493005776475,
     "cell": "Val!C9",
-    "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+    "file": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx"
    },
    {
     "value": 56.7849915794509,
     "cell": "Val!D9",
-    "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+    "file": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -3663,78 +3943,88 @@
      "PL!G33"
     ]
    ],
-   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.xlsx"
+   "file": "ibiden/dist/20261025_Ibiden模型_v0.2.1.xlsx"
   }
  },
  "2383": {
-  "model": "emc/dist/20261025_台光電模型_v0.2.xlsx",
+  "model": "emc/dist/20261025_台光電模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 5477.38585591289,
    "cell": "Val!B118",
-   "file": "emc/dist/20261025_台光電模型_v0.2.xlsx"
+   "file": "emc/dist/20261025_台光電模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 4252.07225240972,
    "cell": "Val!B105",
-   "file": "emc/dist/20261025_台光電模型_v0.2.xlsx"
+   "file": "emc/dist/20261025_台光電模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 6702.69945941607,
    "cell": "Val!B119",
-   "file": "emc/dist/20261025_台光電模型_v0.2.xlsx"
+   "file": "emc/dist/20261025_台光電模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 7803,
    "cell": "Val!B120",
-   "file": "emc/dist/20261025_台光電模型_v0.2.xlsx"
+   "file": "emc/dist/20261025_台光電模型_v0.2.1.xlsx"
   },
   "up": {
    "value": 0.080352239825028,
    "cell": "Val!B121",
-   "file": "emc/dist/20261025_台光電模型_v0.2.xlsx"
+   "file": "emc/dist/20261025_台光電模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": 0.322031451561354,
    "cell": "Val!B122",
-   "file": "emc/dist/20261025_台光電模型_v0.2.xlsx"
+   "file": "emc/dist/20261025_台光電模型_v0.2.1.xlsx"
   },
   "old_rule": {
    "value": 2904.876796827,
    "cell": "Val!B36",
-   "file": "emc/dist/20261025_台光電模型_v0.2.xlsx"
+   "file": "emc/dist/20261025_台光電模型_v0.2.1.xlsx"
+  },
+  "tier6": {
+   "value": "0%–25%",
+   "cell": "Val!B131",
+   "file": "emc/dist/20261025_台光電模型_v0.2.1.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B132",
+   "file": "emc/dist/20261025_台光電模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 5427.59903574854,
    "cell": "Val!B104",
-   "file": "emc/dist/20261025_台光電模型_v0.2.xlsx"
+   "file": "emc/dist/20261025_台光電模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 2690.62334592878,
    "cell": "Val!D104",
-   "file": "emc/dist/20261025_台光電模型_v0.2.xlsx"
+   "file": "emc/dist/20261025_台光電模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 5070,
    "cell": "Val!B6",
-   "file": "emc/dist/20261025_台光電模型_v0.2.xlsx",
+   "file": "emc/dist/20261025_台光電模型_v0.2.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 16.9480814594698,
     "cell": "Val!B9",
-    "file": "emc/dist/20261025_台光電模型_v0.2.xlsx"
+    "file": "emc/dist/20261025_台光電模型_v0.2.1.xlsx"
    },
    {
     "value": 19.2241163523058,
     "cell": "Val!C9",
-    "file": "emc/dist/20261025_台光電模型_v0.2.xlsx"
+    "file": "emc/dist/20261025_台光電模型_v0.2.1.xlsx"
    },
    {
     "value": 24.4413555457443,
     "cell": "Val!D9",
-    "file": "emc/dist/20261025_台光電模型_v0.2.xlsx"
+    "file": "emc/dist/20261025_台光電模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -3782,73 +4072,83 @@
      "PL!G36"
     ]
    ],
-   "file": "emc/dist/20261025_台光電模型_v0.2.xlsx"
+   "file": "emc/dist/20261025_台光電模型_v0.2.1.xlsx"
   }
  },
  "3037": {
-  "model": "unimicron/dist/20261025_欣興模型_v0.1.xlsx",
+  "model": "unimicron/dist/20261025_欣興模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 726.786889845923,
    "cell": "Val!B39",
-   "file": "unimicron/dist/20261025_欣興模型_v0.1.xlsx"
+   "file": "unimicron/dist/20261025_欣興模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 388.529078400582,
    "cell": "Val!B24",
-   "file": "unimicron/dist/20261025_欣興模型_v0.1.xlsx"
+   "file": "unimicron/dist/20261025_欣興模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 1065.04470129126,
    "cell": "Val!B40",
-   "file": "unimicron/dist/20261025_欣興模型_v0.1.xlsx"
+   "file": "unimicron/dist/20261025_欣興模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 1317.37,
    "cell": "Val!B41",
-   "file": "unimicron/dist/20261025_欣興模型_v0.1.xlsx"
+   "file": "unimicron/dist/20261025_欣興模型_v0.1.1.xlsx"
   },
   "up": {
    "value": -0.330150331939242,
    "cell": "Val!B42",
-   "file": "unimicron/dist/20261025_欣興模型_v0.1.xlsx"
+   "file": "unimicron/dist/20261025_欣興模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": -0.0183919803767155,
    "cell": "Val!B43",
-   "file": "unimicron/dist/20261025_欣興模型_v0.1.xlsx"
+   "file": "unimicron/dist/20261025_欣興模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "−25%～−50%",
+   "cell": "Val!B133",
+   "file": "unimicron/dist/20261025_欣興模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "放空",
+   "cell": "Val!B134",
+   "file": "unimicron/dist/20261025_欣興模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 505.671690114389,
    "cell": "Val!B23",
-   "file": "unimicron/dist/20261025_欣興模型_v0.1.xlsx"
+   "file": "unimicron/dist/20261025_欣興模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 219.433206126356,
    "cell": "Val!D23",
-   "file": "unimicron/dist/20261025_欣興模型_v0.1.xlsx"
+   "file": "unimicron/dist/20261025_欣興模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 1085,
    "cell": "Val!B53",
-   "file": "unimicron/dist/20261025_欣興模型_v0.1.xlsx",
+   "file": "unimicron/dist/20261025_欣興模型_v0.1.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 35.6482207128376,
     "cell": "Val!B56",
-    "file": "unimicron/dist/20261025_欣興模型_v0.1.xlsx"
+    "file": "unimicron/dist/20261025_欣興模型_v0.1.1.xlsx"
    },
    {
     "value": 46.7449036681767,
     "cell": "Val!C56",
-    "file": "unimicron/dist/20261025_欣興模型_v0.1.xlsx"
+    "file": "unimicron/dist/20261025_欣興模型_v0.1.1.xlsx"
    },
    {
     "value": 67.6081071146056,
     "cell": "Val!D56",
-    "file": "unimicron/dist/20261025_欣興模型_v0.1.xlsx"
+    "file": "unimicron/dist/20261025_欣興模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -3941,73 +4241,83 @@
      "PL!J41"
     ]
    ],
-   "file": "unimicron/dist/20261025_欣興模型_v0.1.xlsx"
+   "file": "unimicron/dist/20261025_欣興模型_v0.1.1.xlsx"
   }
  },
  "8046": {
-  "model": "nanya_pcb/dist/20261025_南電模型_v0.1.xlsx",
+  "model": "nanya_pcb/dist/20261025_南電模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 906.795127517553,
    "cell": "Val!B39",
-   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.xlsx"
+   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 466.271766502681,
    "cell": "Val!B24",
-   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.xlsx"
+   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 1347.31848853243,
    "cell": "Val!B40",
-   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.xlsx"
+   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 1651.31,
    "cell": "Val!B41",
-   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.xlsx"
+   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.1.xlsx"
   },
   "up": {
    "value": -0.283165907100749,
    "cell": "Val!B42",
-   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.xlsx"
+   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": 0.065073903978202,
    "cell": "Val!B43",
-   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.xlsx"
+   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "−25%～−50%",
+   "cell": "Val!B133",
+   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "放空",
+   "cell": "Val!B134",
+   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 621.712946177112,
    "cell": "Val!B23",
-   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.xlsx"
+   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 262.218925758325,
    "cell": "Val!D23",
-   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.xlsx"
+   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 1265,
    "cell": "Val!B53",
-   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.xlsx",
+   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 35.2377877649962,
     "cell": "Val!B56",
-    "file": "nanya_pcb/dist/20261025_南電模型_v0.1.xlsx"
+    "file": "nanya_pcb/dist/20261025_南電模型_v0.1.1.xlsx"
    },
    {
     "value": 41.3238191442514,
     "cell": "Val!C56",
-    "file": "nanya_pcb/dist/20261025_南電模型_v0.1.xlsx"
+    "file": "nanya_pcb/dist/20261025_南電模型_v0.1.1.xlsx"
    },
    {
     "value": 54.2301432483398,
     "cell": "Val!D56",
-    "file": "nanya_pcb/dist/20261025_南電模型_v0.1.xlsx"
+    "file": "nanya_pcb/dist/20261025_南電模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -4110,73 +4420,83 @@
      "PL!J41"
     ]
    ],
-   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.xlsx"
+   "file": "nanya_pcb/dist/20261025_南電模型_v0.1.1.xlsx"
   }
  },
  "2368": {
-  "model": "gce/dist/20261025_金像電模型_v0.1.xlsx",
+  "model": "gce/dist/20261025_金像電模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 1267.21703750953,
    "cell": "Val!B40",
-   "file": "gce/dist/20261025_金像電模型_v0.1.xlsx"
+   "file": "gce/dist/20261025_金像電模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 1203.07405074342,
    "cell": "Val!B24",
-   "file": "gce/dist/20261025_金像電模型_v0.1.xlsx"
+   "file": "gce/dist/20261025_金像電模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 1331.36002427564,
    "cell": "Val!B41",
-   "file": "gce/dist/20261025_金像電模型_v0.1.xlsx"
+   "file": "gce/dist/20261025_金像電模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 1554,
    "cell": "Val!B42",
-   "file": "gce/dist/20261025_金像電模型_v0.1.xlsx"
+   "file": "gce/dist/20261025_金像電模型_v0.1.1.xlsx"
   },
   "up": {
    "value": 0.136517522430072,
    "cell": "Val!B43",
-   "file": "gce/dist/20261025_金像電模型_v0.1.xlsx"
+   "file": "gce/dist/20261025_金像電模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": 0.1940448648212,
    "cell": "Val!B44",
-   "file": "gce/dist/20261025_金像電模型_v0.1.xlsx"
+   "file": "gce/dist/20261025_金像電模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "0%–25%",
+   "cell": "Val!B118",
+   "file": "gce/dist/20261025_金像電模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B119",
+   "file": "gce/dist/20261025_金像電模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 1723.37833393069,
    "cell": "Val!B23",
-   "file": "gce/dist/20261025_金像電模型_v0.1.xlsx"
+   "file": "gce/dist/20261025_金像電模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 559.015397539126,
    "cell": "Val!D23",
-   "file": "gce/dist/20261025_金像電模型_v0.1.xlsx"
+   "file": "gce/dist/20261025_金像電模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 1115,
    "cell": "Val!B53",
-   "file": "gce/dist/20261025_金像電模型_v0.1.xlsx",
+   "file": "gce/dist/20261025_金像電模型_v0.1.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 12.3827220837058,
     "cell": "Val!B56",
-    "file": "gce/dist/20261025_金像電模型_v0.1.xlsx"
+    "file": "gce/dist/20261025_金像電模型_v0.1.1.xlsx"
    },
    {
     "value": 14.5634423923478,
     "cell": "Val!C56",
-    "file": "gce/dist/20261025_金像電模型_v0.1.xlsx"
+    "file": "gce/dist/20261025_金像電模型_v0.1.1.xlsx"
    },
    {
     "value": 24.6092026584734,
     "cell": "Val!D56",
-    "file": "gce/dist/20261025_金像電模型_v0.1.xlsx"
+    "file": "gce/dist/20261025_金像電模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -4279,73 +4599,83 @@
      "PL!J38"
     ]
    ],
-   "file": "gce/dist/20261025_金像電模型_v0.1.xlsx"
+   "file": "gce/dist/20261025_金像電模型_v0.1.1.xlsx"
   }
  },
  "300476": {
-  "model": "victory_giant/dist/20261025_勝宏科技模型_v0.1.xlsx",
+  "model": "victory_giant/dist/20261025_勝宏科技模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 322.84375955125,
    "cell": "Val!B39",
-   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.xlsx"
+   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 202.710178871507,
    "cell": "Val!B24",
-   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.xlsx"
+   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 442.977340230993,
    "cell": "Val!B40",
-   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.xlsx"
+   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 388.3,
    "cell": "Val!B41",
-   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.xlsx"
+   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.1.xlsx"
   },
   "up": {
    "value": 0.759558314537008,
    "cell": "Val!B42",
-   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.xlsx"
+   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": 1.414308590751,
    "cell": "Val!B43",
-   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.xlsx"
+   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "大於 50%",
+   "cell": "Val!B118",
+   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "強力買進",
+   "cell": "Val!B119",
+   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 287.368336896726,
    "cell": "Val!B23",
-   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.xlsx"
+   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 98.5490804433768,
    "cell": "Val!D23",
-   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.xlsx"
+   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 183.48,
    "cell": "Val!B53",
-   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.xlsx",
+   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 10.3179210906967,
     "cell": "Val!B56",
-    "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.xlsx"
+    "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.1.xlsx"
    },
    {
     "value": 12.7493197997776,
     "cell": "Val!C56",
-    "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.xlsx"
+    "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.1.xlsx"
    },
    {
     "value": 16.8927539302927,
     "cell": "Val!D56",
-    "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.xlsx"
+    "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -4438,78 +4768,88 @@
      "PL!J38"
     ]
    ],
-   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.xlsx"
+   "file": "victory_giant/dist/20261025_勝宏科技模型_v0.1.1.xlsx"
   }
  },
  "ASML": {
-  "model": "asml/dist/20261025_ASML模型_v0.2.xlsx",
+  "model": "asml/dist/20261025_ASML模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 1126.49336848612,
    "cell": "Val!B115",
-   "file": "asml/dist/20261025_ASML模型_v0.2.xlsx"
+   "file": "asml/dist/20261025_ASML模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 836.822198366269,
    "cell": "Val!B100",
-   "file": "asml/dist/20261025_ASML模型_v0.2.xlsx"
+   "file": "asml/dist/20261025_ASML模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 1416.16453860596,
    "cell": "Val!B116",
-   "file": "asml/dist/20261025_ASML模型_v0.2.xlsx"
+   "file": "asml/dist/20261025_ASML模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 2108,
    "cell": "Val!B117",
-   "file": "asml/dist/20261025_ASML模型_v0.2.xlsx"
+   "file": "asml/dist/20261025_ASML模型_v0.2.1.xlsx"
   },
   "up": {
    "value": -0.199478845589741,
    "cell": "Val!B118",
-   "file": "asml/dist/20261025_ASML模型_v0.2.xlsx"
+   "file": "asml/dist/20261025_ASML模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": 0.00637047939593849,
    "cell": "Val!B119",
-   "file": "asml/dist/20261025_ASML模型_v0.2.xlsx"
+   "file": "asml/dist/20261025_ASML模型_v0.2.1.xlsx"
   },
   "old_rule": {
    "value": 1829.12787571104,
    "cell": "Val!B6",
-   "file": "asml/dist/20261025_ASML模型_v0.2.xlsx"
+   "file": "asml/dist/20261025_ASML模型_v0.2.1.xlsx"
+  },
+  "tier6": {
+   "value": "0%～−25%",
+   "cell": "Val!B125",
+   "file": "asml/dist/20261025_ASML模型_v0.2.1.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B126",
+   "file": "asml/dist/20261025_ASML模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 1218.92294651359,
    "cell": "Val!B99",
-   "file": "asml/dist/20261025_ASML模型_v0.2.xlsx"
+   "file": "asml/dist/20261025_ASML模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 506.037679478892,
    "cell": "Val!D99",
-   "file": "asml/dist/20261025_ASML模型_v0.2.xlsx"
+   "file": "asml/dist/20261025_ASML模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 1407.2,
    "cell": "Val!B16",
-   "file": "asml/dist/20261025_ASML模型_v0.2.xlsx",
+   "file": "asml/dist/20261025_ASML模型_v0.2.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 21.6612650635404,
     "cell": "Val!B19",
-    "file": "asml/dist/20261025_ASML模型_v0.2.xlsx"
+    "file": "asml/dist/20261025_ASML模型_v0.2.1.xlsx"
    },
    {
     "value": 25.4336969695678,
     "cell": "Val!C19",
-    "file": "asml/dist/20261025_ASML模型_v0.2.xlsx"
+    "file": "asml/dist/20261025_ASML模型_v0.2.1.xlsx"
    },
    {
     "value": 34.0902575294582,
     "cell": "Val!D19",
-    "file": "asml/dist/20261025_ASML模型_v0.2.xlsx"
+    "file": "asml/dist/20261025_ASML模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -4567,78 +4907,88 @@
      "PL!G34"
     ]
    ],
-   "file": "asml/dist/20261025_ASML模型_v0.2.xlsx"
+   "file": "asml/dist/20261025_ASML模型_v0.2.1.xlsx"
   }
  },
  "AMAT": {
-  "model": "amat/dist/20261025_應用材料模型_v0.2.xlsx",
+  "model": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 351.972505028033,
    "cell": "Val!B136",
-   "file": "amat/dist/20261025_應用材料模型_v0.2.xlsx"
+   "file": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 252.909737668179,
    "cell": "Val!B122",
-   "file": "amat/dist/20261025_應用材料模型_v0.2.xlsx"
+   "file": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 451.035272387886,
    "cell": "Val!B137",
-   "file": "amat/dist/20261025_應用材料模型_v0.2.xlsx"
+   "file": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 627.83,
    "cell": "Val!B138",
-   "file": "amat/dist/20261025_應用材料模型_v0.2.xlsx"
+   "file": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx"
   },
   "up": {
    "value": -0.0669798933622297,
    "cell": "Val!B139",
-   "file": "amat/dist/20261025_應用材料模型_v0.2.xlsx"
+   "file": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": 0.195618896161293,
    "cell": "Val!B140",
-   "file": "amat/dist/20261025_應用材料模型_v0.2.xlsx"
+   "file": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx"
   },
   "old_rule": {
    "value": 309.834449680392,
    "cell": "Val!B47",
-   "file": "amat/dist/20261025_應用材料模型_v0.2.xlsx"
+   "file": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx"
+  },
+  "tier6": {
+   "value": "0%～−25%",
+   "cell": "Val!B146",
+   "file": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B147",
+   "file": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 355.116644723741,
    "cell": "Val!B121",
-   "file": "amat/dist/20261025_應用材料模型_v0.2.xlsx"
+   "file": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 160.769815499115,
    "cell": "Val!D121",
-   "file": "amat/dist/20261025_應用材料模型_v0.2.xlsx"
+   "file": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 377.24,
    "cell": "In!E139",
-   "file": "amat/dist/20261025_應用材料模型_v0.2.xlsx",
+   "file": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 19.0078456259592,
     "cell": "Val!B98",
-    "file": "amat/dist/20261025_應用材料模型_v0.2.xlsx"
+    "file": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx"
    },
    {
     "value": 21.4109633682497,
     "cell": "Val!C98",
-    "file": "amat/dist/20261025_應用材料模型_v0.2.xlsx"
+    "file": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx"
    },
    {
     "value": 27.042704446778,
     "cell": "Val!D98",
-    "file": "amat/dist/20261025_應用材料模型_v0.2.xlsx"
+    "file": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -4696,78 +5046,88 @@
      "PL!G31"
     ]
    ],
-   "file": "amat/dist/20261025_應用材料模型_v0.2.xlsx"
+   "file": "amat/dist/20261025_應用材料模型_v0.2.1.xlsx"
   }
  },
  "LRCX": {
-  "model": "lrcx/dist/20261025_科林研發模型_v0.2.xlsx",
+  "model": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 202.859992549315,
    "cell": "Val!B128",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.xlsx"
+   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 146.885495457259,
    "cell": "Val!B114",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.xlsx"
+   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 258.83448964137,
    "cell": "Val!B129",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.xlsx"
+   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 364.03,
    "cell": "Val!B130",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.xlsx"
+   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
   },
   "up": {
    "value": -0.118383343983856,
    "cell": "Val!B131",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.xlsx"
+   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": 0.124878268758672,
    "cell": "Val!B132",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.xlsx"
+   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
   },
   "old_rule": {
    "value": 154.25592051976,
    "cell": "Val!B6",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.xlsx"
+   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+  },
+  "tier6": {
+   "value": "0%～−25%",
+   "cell": "Val!B138",
+   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B139",
+   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 204.707244866818,
    "cell": "Val!B113",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.xlsx"
+   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 85.7603441123795,
    "cell": "Val!D113",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.xlsx"
+   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 230.1,
    "cell": "In!E124",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.xlsx",
+   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 21.5379763892016,
     "cell": "Val!B90",
-    "file": "lrcx/dist/20261025_科林研發模型_v0.2.xlsx"
+    "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
    },
    {
     "value": 22.9579321771224,
     "cell": "Val!C90",
-    "file": "lrcx/dist/20261025_科林研發模型_v0.2.xlsx"
+    "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
    },
    {
     "value": 26.3172065596767,
     "cell": "Val!D90",
-    "file": "lrcx/dist/20261025_科林研發模型_v0.2.xlsx"
+    "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -4810,78 +5170,88 @@
      "PL!G31"
     ]
    ],
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.xlsx"
+   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
   }
  },
  "KLAC": {
-  "model": "klac/dist/20261025_科磊模型_v0.2.xlsx",
+  "model": "klac/dist/20261025_科磊模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 121.381279915322,
    "cell": "Val!B129",
-   "file": "klac/dist/20261025_科磊模型_v0.2.xlsx"
+   "file": "klac/dist/20261025_科磊模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 94.1174779467372,
    "cell": "Val!B114",
-   "file": "klac/dist/20261025_科磊模型_v0.2.xlsx"
+   "file": "klac/dist/20261025_科磊模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 148.645081883907,
    "cell": "Val!B130",
-   "file": "klac/dist/20261025_科磊模型_v0.2.xlsx"
+   "file": "klac/dist/20261025_科磊模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 232.38,
    "cell": "Val!B131",
-   "file": "klac/dist/20261025_科磊模型_v0.2.xlsx"
+   "file": "klac/dist/20261025_科磊模型_v0.2.1.xlsx"
   },
   "up": {
    "value": -0.166394616335952,
    "cell": "Val!B132",
-   "file": "klac/dist/20261025_科磊模型_v0.2.xlsx"
+   "file": "klac/dist/20261025_科磊模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": 0.0208439110219556,
    "cell": "Val!B133",
-   "file": "klac/dist/20261025_科磊模型_v0.2.xlsx"
+   "file": "klac/dist/20261025_科磊模型_v0.2.1.xlsx"
   },
   "old_rule": {
    "value": 102.08226284068,
    "cell": "Val!B6",
-   "file": "klac/dist/20261025_科磊模型_v0.2.xlsx"
+   "file": "klac/dist/20261025_科磊模型_v0.2.1.xlsx"
+  },
+  "tier6": {
+   "value": "0%～−25%",
+   "cell": "Val!B139",
+   "file": "klac/dist/20261025_科磊模型_v0.2.1.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B140",
+   "file": "klac/dist/20261025_科磊模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 131.263035894743,
    "cell": "Val!B113",
-   "file": "klac/dist/20261025_科磊模型_v0.2.xlsx"
+   "file": "klac/dist/20261025_科磊模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 57.6757051396901,
    "cell": "Val!D113",
-   "file": "klac/dist/20261025_科磊模型_v0.2.xlsx"
+   "file": "klac/dist/20261025_科磊模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 145.61,
    "cell": "In!E55",
-   "file": "klac/dist/20261025_科磊模型_v0.2.xlsx",
+   "file": "klac/dist/20261025_科磊模型_v0.2.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 22.8867257114478,
     "cell": "Val!B90",
-    "file": "klac/dist/20261025_科磊模型_v0.2.xlsx"
+    "file": "klac/dist/20261025_科磊模型_v0.2.1.xlsx"
    },
    {
     "value": 24.6955828321939,
     "cell": "Val!C90",
-    "file": "klac/dist/20261025_科磊模型_v0.2.xlsx"
+    "file": "klac/dist/20261025_科磊模型_v0.2.1.xlsx"
    },
    {
     "value": 28.3250241917978,
     "cell": "Val!D90",
-    "file": "klac/dist/20261025_科磊模型_v0.2.xlsx"
+    "file": "klac/dist/20261025_科磊模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -4934,61 +5304,71 @@
      "PL!G34"
     ]
    ],
-   "file": "klac/dist/20261025_科磊模型_v0.2.xlsx"
+   "file": "klac/dist/20261025_科磊模型_v0.2.1.xlsx"
   }
  },
  "6857": {
-  "model": "advantest/dist/20261025_Advantest模型_v0.3.xlsx",
+  "model": "advantest/dist/20261025_Advantest模型_v0.3.1.xlsx",
   "v2": true,
   "tp": {
    "value": 23221.5916701459,
    "cell": "Val!B146",
-   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.1.xlsx"
   },
   "tp_dcf": {
    "value": 16539.4842804199,
    "cell": "Val!B131",
-   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.1.xlsx"
   },
   "tp_comp": {
    "value": 29903.6990598718,
    "cell": "Val!B147",
-   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.1.xlsx"
   },
   "tp_cons": {
    "value": 42686,
    "cell": "Val!B148",
-   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.1.xlsx"
   },
   "up": {
    "value": -0.281954493811198,
    "cell": "Val!B149",
-   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.1.xlsx"
   },
   "up_comp": {
    "value": -0.0753339808326582,
    "cell": "Val!B150",
-   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.1.xlsx"
   },
   "old_rule": {
    "value": 24494.453736442,
    "cell": "Val!B102",
-   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.1.xlsx"
+  },
+  "tier6": {
+   "value": "−25%～−50%",
+   "cell": "Val!B157",
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.1.xlsx"
+  },
+  "rec": {
+   "value": "放空",
+   "cell": "Val!B158",
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.1.xlsx"
   },
   "dcf_A": {
    "value": 23027.5344473547,
    "cell": "Val!B130",
-   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.1.xlsx"
   },
   "dcf_C": {
    "value": 7893.3662518531,
    "cell": "Val!D130",
-   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.1.xlsx"
   },
   "model_px": {
    "value": 32340,
    "cell": "Val!B92",
-   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx",
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.1.xlsx",
    "date": "2026-10-23"
   },
   "cash": {
@@ -5046,61 +5426,71 @@
      "PL!G34"
     ]
    ],
-   "file": "advantest/dist/20261025_Advantest模型_v0.3.xlsx"
+   "file": "advantest/dist/20261025_Advantest模型_v0.3.1.xlsx"
   }
  },
  "6146": {
-  "model": "disco/dist/20261025_Disco模型_v0.2.1.xlsx",
+  "model": "disco/dist/20261025_Disco模型_v0.2.2.xlsx",
   "v2": true,
   "tp": {
    "value": 40374.830353198,
    "cell": "Val!B107",
-   "file": "disco/dist/20261025_Disco模型_v0.2.1.xlsx"
+   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
   },
   "tp_dcf": {
    "value": 22991.0306364256,
    "cell": "Val!B92",
-   "file": "disco/dist/20261025_Disco模型_v0.2.1.xlsx"
+   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
   },
   "tp_comp": {
    "value": 57758.6300699703,
    "cell": "Val!B108",
-   "file": "disco/dist/20261025_Disco模型_v0.2.1.xlsx"
+   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
   },
   "tp_cons": {
    "value": 81575,
    "cell": "Val!B109",
-   "file": "disco/dist/20261025_Disco模型_v0.2.1.xlsx"
+   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
   },
   "up": {
    "value": -0.180871772099859,
    "cell": "Val!B110",
-   "file": "disco/dist/20261025_Disco模型_v0.2.1.xlsx"
+   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
   },
   "up_comp": {
    "value": 0.171812336578826,
    "cell": "Val!B111",
-   "file": "disco/dist/20261025_Disco模型_v0.2.1.xlsx"
+   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
   },
   "old_rule": {
    "value": 45104.6418701108,
    "cell": "Val!B63",
-   "file": "disco/dist/20261025_Disco模型_v0.2.1.xlsx"
+   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
+  },
+  "tier6": {
+   "value": "0%～−25%",
+   "cell": "Val!B118",
+   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B119",
+   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
   },
   "dcf_A": {
    "value": 27699.2516922566,
    "cell": "Val!B91",
-   "file": "disco/dist/20261025_Disco模型_v0.2.1.xlsx"
+   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
   },
   "dcf_C": {
    "value": 16343.6091101662,
    "cell": "Val!D91",
-   "file": "disco/dist/20261025_Disco模型_v0.2.1.xlsx"
+   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
   },
   "model_px": {
    "value": 49290,
    "cell": "Val!B53",
-   "file": "disco/dist/20261025_Disco模型_v0.2.1.xlsx",
+   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx",
    "date": "2026-10-23"
   },
   "cash": {
@@ -5158,78 +5548,88 @@
      "PL!G52"
     ]
    ],
-   "file": "disco/dist/20261025_Disco模型_v0.2.1.xlsx"
+   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
   }
  },
  "042700": {
-  "model": "hanmi/dist/20261025_韓美半導體模型_v0.2.1.xlsx",
+  "model": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx",
   "v2": true,
   "tp": {
    "value": 48379.3271291536,
    "cell": "Val!B111",
-   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.1.xlsx"
+   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx"
   },
   "tp_dcf": {
    "value": 27779.9388446329,
    "cell": "Val!B97",
-   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.1.xlsx"
+   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx"
   },
   "tp_comp": {
    "value": 68978.7154136744,
    "cell": "Val!B112",
-   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.1.xlsx"
+   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx"
   },
   "tp_cons": {
    "value": 271429,
    "cell": "Val!B113",
-   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.1.xlsx"
+   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx"
   },
   "up": {
    "value": -0.743345744672925,
    "cell": "Val!B114",
-   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.1.xlsx"
+   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx"
   },
   "up_comp": {
    "value": -0.634065170219234,
    "cell": "Val!B115",
-   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.1.xlsx"
+   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx"
   },
   "old_rule": {
    "value": 64078.0210298826,
    "cell": "Val!B6",
-   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.1.xlsx"
+   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx"
+  },
+  "tier6": {
+   "value": "小於 −50%",
+   "cell": "Val!B122",
+   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx"
+  },
+  "rec": {
+   "value": "強力放空",
+   "cell": "Val!B123",
+   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx"
   },
   "dcf_A": {
    "value": 36052.3054077951,
    "cell": "Val!B96",
-   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.1.xlsx"
+   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx"
   },
   "dcf_C": {
    "value": 16072.8325490973,
    "cell": "Val!D96",
-   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.1.xlsx"
+   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx"
   },
   "model_px": {
    "value": 188500,
    "cell": "In!E95",
-   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.1.xlsx",
+   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 79.7853869215432,
     "cell": "Val!B71",
-    "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.1.xlsx"
+    "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx"
    },
    {
     "value": 64.4297654842555,
     "cell": "Val!C71",
-    "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.1.xlsx"
+    "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx"
    },
    {
     "value": 93.5634177544364,
     "cell": "Val!D71",
-    "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.1.xlsx"
+    "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx"
    }
   ],
   "cash": {
@@ -5277,78 +5677,88 @@
      "PL!G31"
     ]
    ],
-   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.1.xlsx"
+   "file": "hanmi/dist/20261025_韓美半導體模型_v0.2.2.xlsx"
   }
  },
  "TER": {
-  "model": "ter/dist/20261025_泰瑞達模型_v0.1.xlsx",
+  "model": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 312.24974554145,
    "cell": "Val!B126",
-   "file": "ter/dist/20261025_泰瑞達模型_v0.1.xlsx"
+   "file": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 219.296780421947,
    "cell": "Val!B111",
-   "file": "ter/dist/20261025_泰瑞達模型_v0.1.xlsx"
+   "file": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 405.202710660952,
    "cell": "Val!B127",
-   "file": "ter/dist/20261025_泰瑞達模型_v0.1.xlsx"
+   "file": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 446.47,
    "cell": "Val!B128",
-   "file": "ter/dist/20261025_泰瑞達模型_v0.1.xlsx"
+   "file": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx"
   },
   "up": {
    "value": 0.0110077563265327,
    "cell": "Val!B129",
-   "file": "ter/dist/20261025_泰瑞達模型_v0.1.xlsx"
+   "file": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": 0.311972513067677,
    "cell": "Val!B130",
-   "file": "ter/dist/20261025_泰瑞達模型_v0.1.xlsx"
+   "file": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx"
   },
   "old_rule": {
    "value": 388.636638757835,
    "cell": "Val!B82",
-   "file": "ter/dist/20261025_泰瑞達模型_v0.1.xlsx"
+   "file": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "0%–25%",
+   "cell": "Val!B137",
+   "file": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B138",
+   "file": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 286.288346297943,
    "cell": "Val!B110",
-   "file": "ter/dist/20261025_泰瑞達模型_v0.1.xlsx"
+   "file": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 153.841873065318,
    "cell": "Val!D110",
-   "file": "ter/dist/20261025_泰瑞達模型_v0.1.xlsx"
+   "file": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 308.85,
    "cell": "Val!B73",
-   "file": "ter/dist/20261025_泰瑞達模型_v0.1.xlsx",
+   "file": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 18.5939170206604,
     "cell": "Val!B77",
-    "file": "ter/dist/20261025_泰瑞達模型_v0.1.xlsx"
+    "file": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx"
    },
    {
     "value": 21.8318746773079,
     "cell": "Val!C77",
-    "file": "ter/dist/20261025_泰瑞達模型_v0.1.xlsx"
+    "file": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx"
    },
    {
     "value": 25.0837547194733,
     "cell": "Val!D77",
-    "file": "ter/dist/20261025_泰瑞達模型_v0.1.xlsx"
+    "file": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -5406,78 +5816,88 @@
      "PL!G34"
     ]
    ],
-   "file": "ter/dist/20261025_泰瑞達模型_v0.1.xlsx"
+   "file": "ter/dist/20261025_泰瑞達模型_v0.1.1.xlsx"
   }
  },
  "BESI": {
-  "model": "besi/dist/20261025_BESI模型_v0.1.xlsx",
+  "model": "besi/dist/20261025_BESI模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 133.694918094684,
    "cell": "Val!B112",
-   "file": "besi/dist/20261025_BESI模型_v0.1.xlsx"
+   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 97.6798684202028,
    "cell": "Val!B97",
-   "file": "besi/dist/20261025_BESI模型_v0.1.xlsx"
+   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 169.709967769164,
    "cell": "Val!B113",
-   "file": "besi/dist/20261025_BESI模型_v0.1.xlsx"
+   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 270.57,
    "cell": "Val!B114",
-   "file": "besi/dist/20261025_BESI模型_v0.1.xlsx"
+   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
   },
   "up": {
    "value": -0.0786015293267841,
    "cell": "Val!B115",
-   "file": "besi/dist/20261025_BESI模型_v0.1.xlsx"
+   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": 0.169606945342277,
    "cell": "Val!B116",
-   "file": "besi/dist/20261025_BESI模型_v0.1.xlsx"
+   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
   },
   "old_rule": {
    "value": 188.684289175905,
    "cell": "Val!B6",
-   "file": "besi/dist/20261025_BESI模型_v0.1.xlsx"
+   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "0%～−25%",
+   "cell": "Val!B123",
+   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B124",
+   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 158.437607841848,
    "cell": "Val!B96",
-   "file": "besi/dist/20261025_BESI模型_v0.1.xlsx"
+   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 44.8181747206361,
    "cell": "Val!D96",
-   "file": "besi/dist/20261025_BESI模型_v0.1.xlsx"
+   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 145.1,
    "cell": "In!E117",
-   "file": "besi/dist/20261025_BESI模型_v0.1.xlsx",
+   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 15.4818056827966,
     "cell": "Val!B71",
-    "file": "besi/dist/20261025_BESI模型_v0.1.xlsx"
+    "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
    },
    {
     "value": 22.0301000380021,
     "cell": "Val!C71",
-    "file": "besi/dist/20261025_BESI模型_v0.1.xlsx"
+    "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
    },
    {
     "value": 44.5531951009238,
     "cell": "Val!D71",
-    "file": "besi/dist/20261025_BESI模型_v0.1.xlsx"
+    "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -5535,78 +5955,88 @@
      "PL!G31"
     ]
    ],
-   "file": "besi/dist/20261025_BESI模型_v0.1.xlsx"
+   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
   }
  },
  "6315": {
-  "model": "towa/dist/20261025_TOWA模型_v0.1.xlsx",
+  "model": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 1725.84500411319,
    "cell": "Val!B39",
-   "file": "towa/dist/20261025_TOWA模型_v0.1.xlsx"
+   "file": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 1015.40084456748,
    "cell": "Val!B24",
-   "file": "towa/dist/20261025_TOWA模型_v0.1.xlsx"
+   "file": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 2436.2891636589,
    "cell": "Val!B40",
-   "file": "towa/dist/20261025_TOWA模型_v0.1.xlsx"
+   "file": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 3300,
    "cell": "Val!B41",
-   "file": "towa/dist/20261025_TOWA模型_v0.1.xlsx"
+   "file": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx"
   },
   "up": {
    "value": -0.123046237747364,
    "cell": "Val!B42",
-   "file": "towa/dist/20261025_TOWA模型_v0.1.xlsx"
+   "file": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": 0.237951810802287,
    "cell": "Val!B43",
-   "file": "towa/dist/20261025_TOWA模型_v0.1.xlsx"
+   "file": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx"
   },
   "old_rule": {
    "value": 1478.20786366597,
    "cell": "Val!B120",
-   "file": "towa/dist/20261025_TOWA模型_v0.1.xlsx"
+   "file": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "0%～−25%",
+   "cell": "Val!B124",
+   "file": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B125",
+   "file": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 1353.80952589057,
    "cell": "Val!B23",
-   "file": "towa/dist/20261025_TOWA模型_v0.1.xlsx"
+   "file": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 759.567964433826,
    "cell": "Val!D23",
-   "file": "towa/dist/20261025_TOWA模型_v0.1.xlsx"
+   "file": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 1968,
    "cell": "Val!B110",
-   "file": "towa/dist/20261025_TOWA模型_v0.1.xlsx",
+   "file": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 17.1058004586462,
     "cell": "Val!B116",
-    "file": "towa/dist/20261025_TOWA模型_v0.1.xlsx"
+    "file": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx"
    },
    {
     "value": 20.3358792581671,
     "cell": "Val!C116",
-    "file": "towa/dist/20261025_TOWA模型_v0.1.xlsx"
+    "file": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx"
    },
    {
     "value": 27.5837580619691,
     "cell": "Val!D116",
-    "file": "towa/dist/20261025_TOWA模型_v0.1.xlsx"
+    "file": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -5664,78 +6094,88 @@
      "PL!G42"
     ]
    ],
-   "file": "towa/dist/20261025_TOWA模型_v0.1.xlsx"
+   "file": "towa/dist/20261025_TOWA模型_v0.1.1.xlsx"
   }
  },
  "7729": {
-  "model": "accretech/dist/20261025_東京精密模型_v0.1.xlsx",
+  "model": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 19528.0923097883,
    "cell": "Val!B40",
-   "file": "accretech/dist/20261025_東京精密模型_v0.1.xlsx"
+   "file": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 10189.1593268613,
    "cell": "Val!B24",
-   "file": "accretech/dist/20261025_東京精密模型_v0.1.xlsx"
+   "file": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 28867.0252927152,
    "cell": "Val!B41",
-   "file": "accretech/dist/20261025_東京精密模型_v0.1.xlsx"
+   "file": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 20900,
    "cell": "Val!B42",
-   "file": "accretech/dist/20261025_東京精密模型_v0.1.xlsx"
+   "file": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx"
   },
   "up": {
    "value": 0.258253370476048,
    "cell": "Val!B43",
-   "file": "accretech/dist/20261025_東京精密模型_v0.1.xlsx"
+   "file": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": 0.85998874308732,
    "cell": "Val!B44",
-   "file": "accretech/dist/20261025_東京精密模型_v0.1.xlsx"
+   "file": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx"
   },
   "old_rule": {
    "value": 11632.8169386252,
    "cell": "Val!B111",
-   "file": "accretech/dist/20261025_東京精密模型_v0.1.xlsx"
+   "file": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "25%–50%",
+   "cell": "Val!B115",
+   "file": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "買進",
+   "cell": "Val!B116",
+   "file": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 15099.5717537588,
    "cell": "Val!B23",
-   "file": "accretech/dist/20261025_東京精密模型_v0.1.xlsx"
+   "file": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 6136.30379041145,
    "cell": "Val!D23",
-   "file": "accretech/dist/20261025_東京精密模型_v0.1.xlsx"
+   "file": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 15520,
    "cell": "Val!B53",
-   "file": "accretech/dist/20261025_東京精密模型_v0.1.xlsx",
+   "file": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 14.4071266643782,
     "cell": "Val!B56",
-    "file": "accretech/dist/20261025_東京精密模型_v0.1.xlsx"
+    "file": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx"
    },
    {
     "value": 18.6866491016435,
     "cell": "Val!C56",
-    "file": "accretech/dist/20261025_東京精密模型_v0.1.xlsx"
+    "file": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx"
    },
    {
     "value": 27.6349596073239,
     "cell": "Val!D56",
-    "file": "accretech/dist/20261025_東京精密模型_v0.1.xlsx"
+    "file": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -5793,78 +6233,88 @@
      "PL!G34"
     ]
    ],
-   "file": "accretech/dist/20261025_東京精密模型_v0.1.xlsx"
+   "file": "accretech/dist/20261025_東京精密模型_v0.1.1.xlsx"
   }
  },
  "2317": {
-  "model": "foxconn/dist/20261025_鴻海模型_v0.2.xlsx",
+  "model": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 349.917288066706,
    "cell": "Val!B120",
-   "file": "foxconn/dist/20261025_鴻海模型_v0.2.xlsx"
+   "file": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 290.30634608678,
    "cell": "Val!B105",
-   "file": "foxconn/dist/20261025_鴻海模型_v0.2.xlsx"
+   "file": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 409.528230046632,
    "cell": "Val!B121",
-   "file": "foxconn/dist/20261025_鴻海模型_v0.2.xlsx"
+   "file": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 347.45,
    "cell": "Val!B122",
-   "file": "foxconn/dist/20261025_鴻海模型_v0.2.xlsx"
+   "file": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx"
   },
   "up": {
    "value": 0.428233828843698,
    "cell": "Val!B123",
-   "file": "foxconn/dist/20261025_鴻海模型_v0.2.xlsx"
+   "file": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": 0.671543796108702,
    "cell": "Val!B124",
-   "file": "foxconn/dist/20261025_鴻海模型_v0.2.xlsx"
+   "file": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx"
   },
   "old_rule": {
    "value": 261.429965980011,
    "cell": "Val!B38",
-   "file": "foxconn/dist/20261025_鴻海模型_v0.2.xlsx"
+   "file": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx"
+  },
+  "tier6": {
+   "value": "25%–50%",
+   "cell": "Val!B135",
+   "file": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx"
+  },
+  "rec": {
+   "value": "買進",
+   "cell": "Val!B136",
+   "file": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 347.21986500801,
    "cell": "Val!B104",
-   "file": "foxconn/dist/20261025_鴻海模型_v0.2.xlsx"
+   "file": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 209.885963820218,
    "cell": "Val!D104",
-   "file": "foxconn/dist/20261025_鴻海模型_v0.2.xlsx"
+   "file": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 245,
    "cell": "Val!B6",
-   "file": "foxconn/dist/20261025_鴻海模型_v0.2.xlsx",
+   "file": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 7.7982253785189,
     "cell": "Val!B9",
-    "file": "foxconn/dist/20261025_鴻海模型_v0.2.xlsx"
+    "file": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx"
    },
    {
     "value": 8.84294642285826,
     "cell": "Val!C9",
-    "file": "foxconn/dist/20261025_鴻海模型_v0.2.xlsx"
+    "file": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx"
    },
    {
     "value": 10.3832344183661,
     "cell": "Val!D9",
-    "file": "foxconn/dist/20261025_鴻海模型_v0.2.xlsx"
+    "file": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -5912,78 +6362,88 @@
      "PL!G39"
     ]
    ],
-   "file": "foxconn/dist/20261025_鴻海模型_v0.2.xlsx"
+   "file": "foxconn/dist/20261025_鴻海模型_v0.2.1.xlsx"
   }
  },
  "2382": {
-  "model": "quanta/dist/20261025_廣達模型_v0.2.xlsx",
+  "model": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 566.562292345012,
    "cell": "Val!B120",
-   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+   "file": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 644.262613388321,
    "cell": "Val!B105",
-   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+   "file": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 488.861971301704,
    "cell": "Val!B121",
-   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+   "file": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 427.84,
    "cell": "Val!B122",
-   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+   "file": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx"
   },
   "up": {
    "value": 0.75951022467395,
    "cell": "Val!B123",
-   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+   "file": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": 0.518204879818955,
    "cell": "Val!B124",
-   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+   "file": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx"
   },
   "old_rule": {
    "value": 490.548184039647,
    "cell": "Val!B42",
-   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+   "file": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx"
+  },
+  "tier6": {
+   "value": "大於 50%",
+   "cell": "Val!B135",
+   "file": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx"
+  },
+  "rec": {
+   "value": "強力買進",
+   "cell": "Val!B136",
+   "file": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 808.669116512409,
    "cell": "Val!B104",
-   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+   "file": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 404.067828743699,
    "cell": "Val!D104",
-   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+   "file": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 322,
    "cell": "Val!B6",
-   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx",
+   "file": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 6.20130758001893,
     "cell": "Val!B9",
-    "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+    "file": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx"
    },
    {
     "value": 7.67314718501047,
     "cell": "Val!C9",
-    "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+    "file": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx"
    },
    {
     "value": 10.2013340196073,
     "cell": "Val!D9",
-    "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+    "file": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -6031,73 +6491,83 @@
      "PL!G39"
     ]
    ],
-   "file": "quanta/dist/20261025_廣達模型_v0.2.xlsx"
+   "file": "quanta/dist/20261025_廣達模型_v0.2.1.xlsx"
   }
  },
  "3231": {
-  "model": "wistron/dist/20261025_緯創模型_v0.1.xlsx",
+  "model": "wistron/dist/20261025_緯創模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 355.133563866587,
    "cell": "Val!B39",
-   "file": "wistron/dist/20261025_緯創模型_v0.1.xlsx"
+   "file": "wistron/dist/20261025_緯創模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 396.964996103633,
    "cell": "Val!B24",
-   "file": "wistron/dist/20261025_緯創模型_v0.1.xlsx"
+   "file": "wistron/dist/20261025_緯創模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 313.30213162954,
    "cell": "Val!B40",
-   "file": "wistron/dist/20261025_緯創模型_v0.1.xlsx"
+   "file": "wistron/dist/20261025_緯創模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 268.71,
    "cell": "Val!B41",
-   "file": "wistron/dist/20261025_緯創模型_v0.1.xlsx"
+   "file": "wistron/dist/20261025_緯創模型_v0.1.1.xlsx"
   },
   "up": {
    "value": 0.869124020350456,
    "cell": "Val!B42",
-   "file": "wistron/dist/20261025_緯創模型_v0.1.xlsx"
+   "file": "wistron/dist/20261025_緯創模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": 0.648958587523894,
    "cell": "Val!B43",
-   "file": "wistron/dist/20261025_緯創模型_v0.1.xlsx"
+   "file": "wistron/dist/20261025_緯創模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "大於 50%",
+   "cell": "Val!B135",
+   "file": "wistron/dist/20261025_緯創模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "強力買進",
+   "cell": "Val!B136",
+   "file": "wistron/dist/20261025_緯創模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 495.513920018607,
    "cell": "Val!B23",
-   "file": "wistron/dist/20261025_緯創模型_v0.1.xlsx"
+   "file": "wistron/dist/20261025_緯創模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 252.685401446693,
    "cell": "Val!D23",
-   "file": "wistron/dist/20261025_緯創模型_v0.1.xlsx"
+   "file": "wistron/dist/20261025_緯創模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 190,
    "cell": "Val!B53",
-   "file": "wistron/dist/20261025_緯創模型_v0.1.xlsx",
+   "file": "wistron/dist/20261025_緯創模型_v0.1.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 5.73459540878722,
     "cell": "Val!B56",
-    "file": "wistron/dist/20261025_緯創模型_v0.1.xlsx"
+    "file": "wistron/dist/20261025_緯創模型_v0.1.1.xlsx"
    },
    {
     "value": 7.04625314810744,
     "cell": "Val!C56",
-    "file": "wistron/dist/20261025_緯創模型_v0.1.xlsx"
+    "file": "wistron/dist/20261025_緯創模型_v0.1.1.xlsx"
    },
    {
     "value": 9.20329847281653,
     "cell": "Val!D56",
-    "file": "wistron/dist/20261025_緯創模型_v0.1.xlsx"
+    "file": "wistron/dist/20261025_緯創模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -6190,73 +6660,83 @@
      "PL!J41"
     ]
    ],
-   "file": "wistron/dist/20261025_緯創模型_v0.1.xlsx"
+   "file": "wistron/dist/20261025_緯創模型_v0.1.1.xlsx"
   }
  },
  "6669": {
-  "model": "wiwynn/dist/20261025_緯穎模型_v0.1.xlsx",
+  "model": "wiwynn/dist/20261025_緯穎模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 3314.42332268005,
    "cell": "Val!B39",
-   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.xlsx"
+   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 3755.8437065858,
    "cell": "Val!B24",
-   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.xlsx"
+   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 2873.00293877431,
    "cell": "Val!B40",
-   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.xlsx"
+   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 2845.66,
    "cell": "Val!B41",
-   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.xlsx"
+   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.1.xlsx"
   },
   "up": {
    "value": 0.801317023195681,
    "cell": "Val!B42",
-   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.xlsx"
+   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": 0.56141464063821,
    "cell": "Val!B43",
-   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.xlsx"
+   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "大於 50%",
+   "cell": "Val!B135",
+   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "強力買進",
+   "cell": "Val!B136",
+   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 4736.90053655715,
    "cell": "Val!B23",
-   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.xlsx"
+   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 2411.99384333378,
    "cell": "Val!D23",
-   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.xlsx"
+   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 1840,
    "cell": "Val!B53",
-   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.xlsx",
+   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 6.3241394329679,
     "cell": "Val!B56",
-    "file": "wiwynn/dist/20261025_緯穎模型_v0.1.xlsx"
+    "file": "wiwynn/dist/20261025_緯穎模型_v0.1.1.xlsx"
    },
    {
     "value": 7.41498145303901,
     "cell": "Val!C56",
-    "file": "wiwynn/dist/20261025_緯穎模型_v0.1.xlsx"
+    "file": "wiwynn/dist/20261025_緯穎模型_v0.1.1.xlsx"
    },
    {
     "value": 9.25327211990428,
     "cell": "Val!D56",
-    "file": "wiwynn/dist/20261025_緯穎模型_v0.1.xlsx"
+    "file": "wiwynn/dist/20261025_緯穎模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -6349,7 +6829,7 @@
      "PL!J38"
     ]
    ],
-   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.xlsx"
+   "file": "wiwynn/dist/20261025_緯穎模型_v0.1.1.xlsx"
   }
  },
  "DELL": {
@@ -6507,69 +6987,79 @@
   }
  },
  "SMCI": {
-  "model": "smci/dist/20261025_美超微模型_v0.1.xlsx",
+  "model": "smci/dist/20261025_美超微模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 76.5884933063349,
    "cell": "Val!B39",
-   "file": "smci/dist/20261025_美超微模型_v0.1.xlsx"
+   "file": "smci/dist/20261025_美超微模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 77.9724873237205,
    "cell": "Val!B24",
-   "file": "smci/dist/20261025_美超微模型_v0.1.xlsx"
+   "file": "smci/dist/20261025_美超微模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 75.2044992889493,
    "cell": "Val!B40",
-   "file": "smci/dist/20261025_美超微模型_v0.1.xlsx"
+   "file": "smci/dist/20261025_美超微模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 43.27,
    "cell": "Val!B41",
-   "file": "smci/dist/20261025_美超微模型_v0.1.xlsx"
+   "file": "smci/dist/20261025_美超微模型_v0.1.1.xlsx"
   },
   "up": {
    "value": 1.32509087147343,
    "cell": "Val!B42",
-   "file": "smci/dist/20261025_美超微模型_v0.1.xlsx"
+   "file": "smci/dist/20261025_美超微模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": 1.28307526681692,
    "cell": "Val!B43",
-   "file": "smci/dist/20261025_美超微模型_v0.1.xlsx"
+   "file": "smci/dist/20261025_美超微模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "大於 50%",
+   "cell": "Val!B135",
+   "file": "smci/dist/20261025_美超微模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "強力買進",
+   "cell": "Val!B136",
+   "file": "smci/dist/20261025_美超微模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 128.129691755165,
    "cell": "Val!B23",
-   "file": "smci/dist/20261025_美超微模型_v0.1.xlsx"
+   "file": "smci/dist/20261025_美超微模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 31.419993199526,
    "cell": "Val!D23",
-   "file": "smci/dist/20261025_美超微模型_v0.1.xlsx"
+   "file": "smci/dist/20261025_美超微模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 32.94,
    "cell": "Val!B53",
-   "file": "smci/dist/20261025_美超微模型_v0.1.xlsx",
+   "file": "smci/dist/20261025_美超微模型_v0.1.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 3.83223508369036,
     "cell": "Val!B56",
-    "file": "smci/dist/20261025_美超微模型_v0.1.xlsx"
+    "file": "smci/dist/20261025_美超微模型_v0.1.1.xlsx"
    },
    {
     "value": 5.42567252852911,
     "cell": "Val!C56",
-    "file": "smci/dist/20261025_美超微模型_v0.1.xlsx"
+    "file": "smci/dist/20261025_美超微模型_v0.1.1.xlsx"
    },
    {
     "value": 9.2077412126532,
     "cell": "Val!D56",
-    "file": "smci/dist/20261025_美超微模型_v0.1.xlsx"
+    "file": "smci/dist/20261025_美超微模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -6667,78 +7157,88 @@
      "PL!J38"
     ]
    ],
-   "file": "smci/dist/20261025_美超微模型_v0.1.xlsx"
+   "file": "smci/dist/20261025_美超微模型_v0.1.1.xlsx"
   }
  },
  "2308": {
-  "model": "delta/dist/20261025_台達電模型_v0.2.xlsx",
+  "model": "delta/dist/20261025_台達電模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 1213.77022935506,
    "cell": "Val!B119",
-   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+   "file": "delta/dist/20261025_台達電模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 999.125303827978,
    "cell": "Val!B105",
-   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+   "file": "delta/dist/20261025_台達電模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 1428.41515488214,
    "cell": "Val!B120",
-   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+   "file": "delta/dist/20261025_台達電模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 2502.36,
    "cell": "Val!B121",
-   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+   "file": "delta/dist/20261025_台達電模型_v0.2.1.xlsx"
   },
   "up": {
    "value": -0.243756866445447,
    "cell": "Val!B122",
-   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+   "file": "delta/dist/20261025_台達電模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": -0.110021710353809,
    "cell": "Val!B123",
-   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+   "file": "delta/dist/20261025_台達電模型_v0.2.1.xlsx"
   },
   "old_rule": {
    "value": 1360.0134167175,
    "cell": "Val!B42",
-   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+   "file": "delta/dist/20261025_台達電模型_v0.2.1.xlsx"
+  },
+  "tier6": {
+   "value": "0%～−25%",
+   "cell": "Val!B134",
+   "file": "delta/dist/20261025_台達電模型_v0.2.1.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B135",
+   "file": "delta/dist/20261025_台達電模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 1234.67030966788,
    "cell": "Val!B104",
-   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+   "file": "delta/dist/20261025_台達電模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 639.329478515099,
    "cell": "Val!D104",
-   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+   "file": "delta/dist/20261025_台達電模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 1605,
    "cell": "Val!B6",
-   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx",
+   "file": "delta/dist/20261025_台達電模型_v0.2.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 20.8075999559417,
     "cell": "Val!B9",
-    "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+    "file": "delta/dist/20261025_台達電模型_v0.2.1.xlsx"
    },
    {
     "value": 24.4860094602926,
     "cell": "Val!C9",
-    "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+    "file": "delta/dist/20261025_台達電模型_v0.2.1.xlsx"
    },
    {
     "value": 31.8229567383198,
     "cell": "Val!D9",
-    "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+    "file": "delta/dist/20261025_台達電模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -6786,78 +7286,88 @@
      "PL!G39"
     ]
    ],
-   "file": "delta/dist/20261025_台達電模型_v0.2.xlsx"
+   "file": "delta/dist/20261025_台達電模型_v0.2.1.xlsx"
   }
  },
  "3017": {
-  "model": "avc/dist/20261025_奇鋐模型_v0.2.xlsx",
+  "model": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
-   "value": 3955.89398288466,
+   "value": 3965.52216912282,
    "cell": "Val!B119",
-   "file": "avc/dist/20261025_奇鋐模型_v0.2.xlsx"
+   "file": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
-   "value": 3027.16031088643,
+   "value": 3002.4945833605,
    "cell": "Val!B105",
-   "file": "avc/dist/20261025_奇鋐模型_v0.2.xlsx"
+   "file": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx"
   },
   "tp_comp": {
-   "value": 4884.62765488289,
+   "value": 4928.54975488515,
    "cell": "Val!B120",
-   "file": "avc/dist/20261025_奇鋐模型_v0.2.xlsx"
+   "file": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 4130,
    "cell": "Val!B121",
-   "file": "avc/dist/20261025_奇鋐模型_v0.2.xlsx"
+   "file": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx"
   },
   "up": {
-   "value": 0.257835924605614,
+   "value": 0.26089735107244,
    "cell": "Val!B122",
-   "file": "avc/dist/20261025_奇鋐模型_v0.2.xlsx"
+   "file": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx"
   },
   "up_comp": {
-   "value": 0.553140748770393,
+   "value": 0.567106440345038,
    "cell": "Val!B123",
-   "file": "avc/dist/20261025_奇鋐模型_v0.2.xlsx"
+   "file": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx"
   },
   "old_rule": {
-   "value": 2025.40760731771,
+   "value": 2031.07059401483,
    "cell": "Val!B75",
-   "file": "avc/dist/20261025_奇鋐模型_v0.2.xlsx"
+   "file": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx"
+  },
+  "tier6": {
+   "value": "25%–50%",
+   "cell": "Val!B134",
+   "file": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx"
+  },
+  "rec": {
+   "value": "買進",
+   "cell": "Val!B135",
+   "file": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx"
   },
   "dcf_A": {
-   "value": 3706.66757460072,
+   "value": 3745.4697247293,
    "cell": "Val!B104",
-   "file": "avc/dist/20261025_奇鋐模型_v0.2.xlsx"
+   "file": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx"
   },
   "dcf_C": {
-   "value": 2016.1990416386,
+   "value": 1834.66717881608,
    "cell": "Val!D104",
-   "file": "avc/dist/20261025_奇鋐模型_v0.2.xlsx"
+   "file": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 3145,
    "cell": "Val!B6",
-   "file": "avc/dist/20261025_奇鋐模型_v0.2.xlsx",
+   "file": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
-    "value": 14.9974621384136,
+    "value": 13.991254187646,
     "cell": "Val!B9",
-    "file": "avc/dist/20261025_奇鋐模型_v0.2.xlsx"
+    "file": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx"
    },
    {
     "value": 17.7151903159155,
     "cell": "Val!C9",
-    "file": "avc/dist/20261025_奇鋐模型_v0.2.xlsx"
+    "file": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx"
    },
    {
-    "value": 21.9276919665064,
+    "value": 24.1217446847802,
     "cell": "Val!D9",
-    "file": "avc/dist/20261025_奇鋐模型_v0.2.xlsx"
+    "file": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -6871,18 +7381,23 @@
     ],
     [
      "FY2027",
-     64.0422292145632,
+     68.5879465553677,
      "PL!E14"
     ],
     [
      "FY2028",
-     82.3130360209033,
+     88.2327362983229,
      "PL!F14"
     ],
     [
      "FY2029",
-     90.9781771788881,
+     94.1437978507718,
      "PL!G14"
+    ],
+    [
+     "FY2027",
+     64.0422292145632,
+     "PL!E28"
     ],
     [
      "FY2028",
@@ -6895,83 +7410,98 @@
      "PL!G28"
     ],
     [
+     "FY2027",
+     57.2236532033564,
+     "PL!E42"
+    ],
+    [
      "FY2028",
-     56.2980656198107,
+     51.1773363557854,
      "PL!F42"
     ],
     [
      "FY2029",
-     61.7700441187369,
+     56.2426474247612,
      "PL!G42"
     ]
    ],
-   "file": "avc/dist/20261025_奇鋐模型_v0.2.xlsx"
+   "file": "avc/dist/20261025_奇鋐模型_v0.2.1.xlsx"
   }
  },
  "2301": {
-  "model": "liteon/dist/20261025_光寶模型_v0.1.xlsx",
+  "model": "liteon/dist/20261025_光寶模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 423.952672244219,
    "cell": "Val!B40",
-   "file": "liteon/dist/20261025_光寶模型_v0.1.xlsx"
+   "file": "liteon/dist/20261025_光寶模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 318.74278572066,
    "cell": "Val!B24",
-   "file": "liteon/dist/20261025_光寶模型_v0.1.xlsx"
+   "file": "liteon/dist/20261025_光寶模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 529.162558767778,
    "cell": "Val!B41",
-   "file": "liteon/dist/20261025_光寶模型_v0.1.xlsx"
+   "file": "liteon/dist/20261025_光寶模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 314.25,
    "cell": "Val!B42",
-   "file": "liteon/dist/20261025_光寶模型_v0.1.xlsx"
+   "file": "liteon/dist/20261025_光寶模型_v0.1.1.xlsx"
   },
   "up": {
    "value": 0.659305957903009,
    "cell": "Val!B43",
-   "file": "liteon/dist/20261025_光寶模型_v0.1.xlsx"
+   "file": "liteon/dist/20261025_光寶模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": 1.07108633568602,
    "cell": "Val!B44",
-   "file": "liteon/dist/20261025_光寶模型_v0.1.xlsx"
+   "file": "liteon/dist/20261025_光寶模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "大於 50%",
+   "cell": "Val!B118",
+   "file": "liteon/dist/20261025_光寶模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "強力買進",
+   "cell": "Val!B119",
+   "file": "liteon/dist/20261025_光寶模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 530.780830267397,
    "cell": "Val!B23",
-   "file": "liteon/dist/20261025_光寶模型_v0.1.xlsx"
+   "file": "liteon/dist/20261025_光寶模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 120.896373289929,
    "cell": "Val!D23",
-   "file": "liteon/dist/20261025_光寶模型_v0.1.xlsx"
+   "file": "liteon/dist/20261025_光寶模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 255.5,
    "cell": "Val!B53",
-   "file": "liteon/dist/20261025_光寶模型_v0.1.xlsx",
+   "file": "liteon/dist/20261025_光寶模型_v0.1.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 8.45101282409093,
     "cell": "Val!B56",
-    "file": "liteon/dist/20261025_光寶模型_v0.1.xlsx"
+    "file": "liteon/dist/20261025_光寶模型_v0.1.1.xlsx"
    },
    {
     "value": 12.1632688910969,
     "cell": "Val!C56",
-    "file": "liteon/dist/20261025_光寶模型_v0.1.xlsx"
+    "file": "liteon/dist/20261025_光寶模型_v0.1.1.xlsx"
    },
    {
     "value": 18.6514271677786,
     "cell": "Val!D56",
-    "file": "liteon/dist/20261025_光寶模型_v0.1.xlsx"
+    "file": "liteon/dist/20261025_光寶模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -7074,73 +7604,83 @@
      "PL!J38"
     ]
    ],
-   "file": "liteon/dist/20261025_光寶模型_v0.1.xlsx"
+   "file": "liteon/dist/20261025_光寶模型_v0.1.1.xlsx"
   }
  },
  "3324": {
-  "model": "auras/dist/20261025_雙鴻模型_v0.1.xlsx",
+  "model": "auras/dist/20261025_雙鴻模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
    "value": 2768.77367482094,
    "cell": "Val!B39",
-   "file": "auras/dist/20261025_雙鴻模型_v0.1.xlsx"
+   "file": "auras/dist/20261025_雙鴻模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
    "value": 1978.64511707205,
    "cell": "Val!B24",
-   "file": "auras/dist/20261025_雙鴻模型_v0.1.xlsx"
+   "file": "auras/dist/20261025_雙鴻模型_v0.1.1.xlsx"
   },
   "tp_comp": {
    "value": 3558.90223256982,
    "cell": "Val!B40",
-   "file": "auras/dist/20261025_雙鴻模型_v0.1.xlsx"
+   "file": "auras/dist/20261025_雙鴻模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 1523,
    "cell": "Val!B41",
-   "file": "auras/dist/20261025_雙鴻模型_v0.1.xlsx"
+   "file": "auras/dist/20261025_雙鴻模型_v0.1.1.xlsx"
   },
   "up": {
    "value": 1.03586299619186,
    "cell": "Val!B42",
-   "file": "auras/dist/20261025_雙鴻模型_v0.1.xlsx"
+   "file": "auras/dist/20261025_雙鴻模型_v0.1.1.xlsx"
   },
   "up_comp": {
    "value": 1.61683987688957,
    "cell": "Val!B43",
-   "file": "auras/dist/20261025_雙鴻模型_v0.1.xlsx"
+   "file": "auras/dist/20261025_雙鴻模型_v0.1.1.xlsx"
+  },
+  "tier6": {
+   "value": "大於 50%",
+   "cell": "Val!B129",
+   "file": "auras/dist/20261025_雙鴻模型_v0.1.1.xlsx"
+  },
+  "rec": {
+   "value": "強力買進",
+   "cell": "Val!B130",
+   "file": "auras/dist/20261025_雙鴻模型_v0.1.1.xlsx"
   },
   "dcf_A": {
    "value": 3222.69589154185,
    "cell": "Val!B23",
-   "file": "auras/dist/20261025_雙鴻模型_v0.1.xlsx"
+   "file": "auras/dist/20261025_雙鴻模型_v0.1.1.xlsx"
   },
   "dcf_C": {
    "value": 700.059483037327,
    "cell": "Val!D23",
-   "file": "auras/dist/20261025_雙鴻模型_v0.1.xlsx"
+   "file": "auras/dist/20261025_雙鴻模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 1360,
    "cell": "Val!B62",
-   "file": "auras/dist/20261025_雙鴻模型_v0.1.xlsx",
+   "file": "auras/dist/20261025_雙鴻模型_v0.1.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 7.21515103431223,
     "cell": "Val!B65",
-    "file": "auras/dist/20261025_雙鴻模型_v0.1.xlsx"
+    "file": "auras/dist/20261025_雙鴻模型_v0.1.1.xlsx"
    },
    {
     "value": 11.5403358106482,
     "cell": "Val!C65",
-    "file": "auras/dist/20261025_雙鴻模型_v0.1.xlsx"
+    "file": "auras/dist/20261025_雙鴻模型_v0.1.1.xlsx"
    },
    {
     "value": 22.1728274504073,
     "cell": "Val!D65",
-    "file": "auras/dist/20261025_雙鴻模型_v0.1.xlsx"
+    "file": "auras/dist/20261025_雙鴻模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -7198,83 +7738,83 @@
      "PL!G42"
     ]
    ],
-   "file": "auras/dist/20261025_雙鴻模型_v0.1.xlsx"
+   "file": "auras/dist/20261025_雙鴻模型_v0.1.1.xlsx"
   }
  },
  "3653": {
-  "model": "jentech/dist/20261025_健策模型_v0.1.xlsx",
+  "model": "jentech/dist/20261025_健策模型_v0.1.1.xlsx",
   "v2": true,
   "tp": {
-   "value": 3889.06729451463,
+   "value": 3902.82839585769,
    "cell": "Val!B40",
-   "file": "jentech/dist/20261025_健策模型_v0.1.xlsx"
+   "file": "jentech/dist/20261025_健策模型_v0.1.1.xlsx"
   },
   "tp_dcf": {
-   "value": 3242.13010990001,
+   "value": 3247.2062316558,
    "cell": "Val!B24",
-   "file": "jentech/dist/20261025_健策模型_v0.1.xlsx"
+   "file": "jentech/dist/20261025_健策模型_v0.1.1.xlsx"
   },
   "tp_comp": {
-   "value": 4536.00447912924,
+   "value": 4558.45056005958,
    "cell": "Val!B41",
-   "file": "jentech/dist/20261025_健策模型_v0.1.xlsx"
+   "file": "jentech/dist/20261025_健策模型_v0.1.1.xlsx"
   },
   "tp_cons": {
    "value": 7204,
    "cell": "Val!B42",
-   "file": "jentech/dist/20261025_健策模型_v0.1.xlsx"
+   "file": "jentech/dist/20261025_健策模型_v0.1.1.xlsx"
   },
   "up": {
-   "value": -0.359296986076668,
+   "value": -0.3570299183101,
    "cell": "Val!B43",
-   "file": "jentech/dist/20261025_健策模型_v0.1.xlsx"
+   "file": "jentech/dist/20261025_健策模型_v0.1.1.xlsx"
   },
   "up_comp": {
-   "value": -0.252717548743124,
+   "value": -0.249019677090679,
    "cell": "Val!B44",
-   "file": "jentech/dist/20261025_健策模型_v0.1.xlsx"
+   "file": "jentech/dist/20261025_健策模型_v0.1.1.xlsx"
   },
   "tier6": {
    "value": "−25%～−50%",
    "cell": "Val!B45",
-   "file": "jentech/dist/20261025_健策模型_v0.1.xlsx"
+   "file": "jentech/dist/20261025_健策模型_v0.1.1.xlsx"
   },
   "rec": {
    "value": "放空",
    "cell": "Val!B46",
-   "file": "jentech/dist/20261025_健策模型_v0.1.xlsx"
+   "file": "jentech/dist/20261025_健策模型_v0.1.1.xlsx"
   },
   "dcf_A": {
-   "value": 5003.32825628371,
+   "value": 5032.79703125328,
    "cell": "Val!B23",
-   "file": "jentech/dist/20261025_健策模型_v0.1.xlsx"
+   "file": "jentech/dist/20261025_健策模型_v0.1.1.xlsx"
   },
   "dcf_C": {
-   "value": 1371.95946165303,
+   "value": 1351.67225447468,
    "cell": "Val!D23",
-   "file": "jentech/dist/20261025_健策模型_v0.1.xlsx"
+   "file": "jentech/dist/20261025_健策模型_v0.1.1.xlsx"
   },
   "model_px": {
    "value": 6070,
    "cell": "Val!B56",
-   "file": "jentech/dist/20261025_健策模型_v0.1.xlsx",
+   "file": "jentech/dist/20261025_健策模型_v0.1.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
-    "value": 23.7471324373802,
+    "value": 23.4055971877015,
     "cell": "Val!B59",
-    "file": "jentech/dist/20261025_健策模型_v0.1.xlsx"
+    "file": "jentech/dist/20261025_健策模型_v0.1.1.xlsx"
    },
    {
     "value": 36.3714269207137,
     "cell": "Val!C59",
-    "file": "jentech/dist/20261025_健策模型_v0.1.xlsx"
+    "file": "jentech/dist/20261025_健策模型_v0.1.1.xlsx"
    },
    {
-    "value": 59.8412452665061,
+    "value": 60.2522286640741,
     "cell": "Val!D59",
-    "file": "jentech/dist/20261025_健策模型_v0.1.xlsx"
+    "file": "jentech/dist/20261025_健策模型_v0.1.1.xlsx"
    }
   ],
   "cash": {
@@ -7288,32 +7828,32 @@
     ],
     [
      "FY2027",
-     27.4462012697105,
+     27.6418968706345,
      "PL!E13"
     ],
     [
      "FY2028",
-     37.4988571787717,
+     38.0460417452029,
      "PL!F13"
     ],
     [
      "FY2029",
-     45.1298888578713,
+     45.5987148273696,
      "PL!G13"
     ],
     [
      "FY2030（收斂）",
-     52.3000215039887,
+     52.6634860091645,
      "PL!H13"
     ],
     [
      "FY2031（收斂）",
-     58.0236755403386,
+     58.3230612522965,
      "PL!I13"
     ],
     [
      "FY2032（收斂）",
-     61.5050960727589,
+     61.8224449274343,
      "PL!J13"
     ],
     [
@@ -7333,335 +7873,400 @@
     ],
     [
      "FY2030（收斂）",
-     33.3984009191138,
+     33.4008871357888,
      "PL!H27"
     ],
     [
      "FY2031（收斂）",
-     35.1417779296369,
+     35.1472509401912,
      "PL!I27"
     ],
     [
      "FY2032（收斂）",
-     34.8638390979204,
+     34.8723769943851,
      "PL!J27"
     ],
     [
      "FY2027",
-     17.1719599674733,
+     17.1132512871961,
      "PL!E41"
     ],
     [
      "FY2028",
-     14.8808789608045,
+     14.7793757578573,
      "PL!F41"
     ],
     [
      "FY2029",
-     16.4895679683284,
+     16.3001891966789,
      "PL!G41"
     ],
     [
      "FY2030（收斂）",
-     16.5730364363213,
+     16.3258541280939,
      "PL!H41"
     ],
     [
      "FY2031（收斂）",
-     16.1344880856308,
+     15.8655246348734,
      "PL!I41"
     ],
     [
      "FY2032（收斂）",
-     15.1912410898554,
+     14.9380016562193,
      "PL!J41"
     ]
    ],
-   "file": "jentech/dist/20261025_健策模型_v0.1.xlsx"
+   "file": "jentech/dist/20261025_健策模型_v0.1.1.xlsx"
   }
  },
  "MSFT": {
-  "model": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx",
-  "rating": {
-   "value": "賣出",
-   "cell": "摘要",
-   "file": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx"
+  "model": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx",
+  "v2": true,
+  "seg_model": true,
+  "tp": {
+   "value": 388.947955859393,
+   "cell": "Val!B36",
+   "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
   },
-  "target": {
-   "value": 359.058838816622,
-   "cell": "摘要!C7",
-   "file": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx"
+  "tp_dcf": {
+   "value": 342.226290895507,
+   "cell": "Val!B14",
+   "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
   },
-  "price": {
-   "value": 529.76,
-   "cell": "摘要!C8",
-   "file": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx"
+  "tp_comp": {
+   "value": 435.669620823279,
+   "cell": "Val!B31",
+   "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
   },
-  "scen_lo": {
-   "value": 360.157606985669,
-   "cell": "摘要!C10",
-   "file": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx"
+  "tp_cons": {
+   "value": 603.43,
+   "cell": "Val!B38",
+   "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
   },
-  "scen_hi": {
-   "value": 380.564120769465,
-   "cell": "摘要!D10",
-   "file": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx"
+  "up": {
+   "value": -0.269718445626375,
+   "cell": "Val!B40",
+   "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
   },
-  "sentence": {
-   "value": "賣出：點位 $359.1，較現價 $529.76 低 32%；情境區間 $360.2–$380.6，方法區間 $353.5–$359.1；點位低於賣出門檻 $450.3 達 $91.2。",
-   "cell": "摘要",
-   "file": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx"
+  "up_comp": {
+   "value": -0.181994703673904,
+   "cell": "Val!B41",
+   "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
+  },
+  "tier6": {
+   "value": "−25%～−50%",
+   "cell": "Val!B42",
+   "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
+  },
+  "rec": {
+   "value": "放空",
+   "cell": "Val!B43",
+   "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
+  },
+  "dcf_A": {
+   "value": 382.117514595532,
+   "cell": "Val!B13",
+   "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
+  },
+  "dcf_C": {
+   "value": 298.502438692235,
+   "cell": "Val!D13",
+   "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
   },
   "model_px": {
-   "value": 529.76,
-   "cell": "輸入與假設!C345",
-   "file": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx",
-   "date": "2026-10-07"
+   "value": 532.6,
+   "cell": "Val!B39",
+   "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx",
+   "date": "2026-10-26"
   },
+  "pe_fy28": [
+   {
+    "value": 20.5072583433929,
+    "cell": "Val!B52",
+    "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
+   },
+   {
+    "value": 21.5922662527126,
+    "cell": "Val!C52",
+    "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
+   },
+   {
+    "value": 23.0164356912557,
+    "cell": "Val!D52",
+    "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
+   }
+  ],
   "cash": {
    "basis": "現金流",
-   "label": "營運缺口＋股利＋回購",
+   "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx",
+   "label": "自由現金流扣股利五年合計（情境 A／B／C）",
    "values": [
     [
-     "FY27",
-     -7.831738650858899,
-     "各期收支!C54＋C23＋C24"
+     "A",
+     378.566004075148,
+     "CF!B5"
     ],
     [
-     "FY28",
-     27.69042321877311,
-     "各期收支!D54＋D23＋D24"
+     "B",
+     273.965962224192,
+     "CF!C5"
     ],
     [
-     "FY29",
-     70.2014120854322,
-     "各期收支!E54＋E23＋E24"
-    ],
-    [
-     "FY30",
-     76.7439156414337,
-     "各期收支!F54＋F23＋F24"
-    ],
-    [
-     "FY31",
-     11.236114405704768,
-     "各期收支!G54＋G23＋G24"
+     "C",
+     151.420119937449,
+     "CF!D5"
     ]
-   ],
-   "file": "microsoft/dist/20261025_Microsoft收支模型_v0_2_2.xlsx"
+   ]
   }
  },
  "AMZN": {
-  "model": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx",
-  "rating": {
-   "value": "賣出",
-   "cell": "摘要",
-   "file": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx"
+  "model": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx",
+  "v2": true,
+  "seg_model": true,
+  "tp": {
+   "value": 210.788175534535,
+   "cell": "Val!B19",
+   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
   },
-  "target": {
-   "value": 201.7143092677,
-   "cell": "摘要!C7",
-   "file": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx"
+  "tp_dcf": {
+   "value": 150.742059513874,
+   "cell": "Val!B17",
+   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
   },
-  "price": {
-   "value": 259.92,
-   "cell": "摘要!C8",
-   "file": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx"
+  "tp_comp": {
+   "value": 270.834291555197,
+   "cell": "Val!B18",
+   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
   },
-  "scen_lo": {
-   "value": 201.136157296701,
-   "cell": "摘要!C10",
-   "file": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx"
+  "tp_cons": {
+   "value": 332.24,
+   "cell": "Val!B25",
+   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
   },
-  "scen_hi": {
-   "value": 212.333201378338,
-   "cell": "摘要!D10",
-   "file": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx"
+  "up": {
+   "value": -0.153767009777449,
+   "cell": "Val!B21",
+   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
   },
-  "sentence": {
-   "value": "賣出：點位 $201.7，較現價 $259.92 低 22%；情境區間 $201.1–$212.3，方法區間 $197.5–$201.7；點位低於賣出門檻 $220.9 達 $19.2。",
-   "cell": "摘要",
-   "file": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx"
+  "up_comp": {
+   "value": 0.0872949197285999,
+   "cell": "Val!B22",
+   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
+  },
+  "tier6": {
+   "value": "0%～−25%",
+   "cell": "Val!B23",
+   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B24",
+   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
+  },
+  "dcf_A": {
+   "value": 205.642582438018,
+   "cell": "Val!B5",
+   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
+  },
+  "dcf_C": {
+   "value": 118.729987132669,
+   "cell": "Val!D5",
+   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
   },
   "model_px": {
-   "value": 259.92,
-   "cell": "輸入與假設!C328",
-   "file": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx",
-   "date": "2026-10-07"
+   "value": 249.09,
+   "cell": "Val!B20",
+   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx",
+   "date": "2026-10-26"
   },
   "cash": {
    "basis": "現金流",
-   "label": "營運缺口＋股利＋回購",
+   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx",
+   "label": "自由現金流扣股利五年合計（情境 A／B／C）",
    "values": [
     [
-     "2026",
-     -122.819739543556,
-     "各期收支!C54＋C23＋C24"
+     "A",
+     192.924497963814,
+     "CF!B6"
     ],
     [
-     "2027",
-     -71.7668903303501,
-     "各期收支!D54＋D23＋D24"
+     "B",
+     10.1939914156684,
+     "CF!C6"
     ],
     [
-     "2028",
-     -34.1780056562004,
-     "各期收支!E54＋E23＋E24"
-    ],
-    [
-     "2029",
-     6.06434756848176,
-     "各期收支!F54＋F23＋F24"
-    ],
-    [
-     "2030",
-     -70.1412892196782,
-     "各期收支!G54＋G23＋G24"
+     "C",
+     -51.5941543670482,
+     "CF!D6"
     ]
-   ],
-   "file": "amazon/dist/20261025_Amazon收支模型_v0_2_2.xlsx"
+   ]
   }
  },
  "GOOGL": {
-  "model": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx",
-  "rating": {
-   "value": "賣出",
-   "cell": "摘要",
-   "file": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx"
+  "model": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx",
+  "v2": true,
+  "seg_model": true,
+  "tp": {
+   "value": 251.682246082838,
+   "cell": "Val!B8",
+   "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
   },
-  "target": {
-   "value": 146.09287356031,
-   "cell": "摘要!C7",
-   "file": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx"
+  "tp_dcf": {
+   "value": 184.588633613121,
+   "cell": "Val!B6",
+   "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
   },
-  "price": {
-   "value": 350.5,
-   "cell": "摘要!C8",
-   "file": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx"
+  "tp_comp": {
+   "value": 318.775858552555,
+   "cell": "Val!B7",
+   "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
   },
-  "scen_lo": {
-   "value": 122.889116020962,
-   "cell": "摘要!C10",
-   "file": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx"
+  "tp_cons": {
+   "value": 429.12,
+   "cell": "Val!B10",
+   "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
   },
-  "scen_hi": {
-   "value": 175.083617103409,
-   "cell": "摘要!D10",
-   "file": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx"
+  "up": {
+   "value": -0.205548465647608,
+   "cell": "Val!B11",
+   "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
   },
-  "sentence": {
-   "value": "賣出：點位 $146.1，較現價 $350.50 低 58%；情境區間 $122.9–$175.1，方法區間 $144.1–$146.1；點位低於賣出門檻 $297.9 達 $151.8。",
-   "cell": "摘要",
-   "file": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx"
+  "up_comp": {
+   "value": 0.00623692724922642,
+   "cell": "Val!B12",
+   "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
+  },
+  "tier6": {
+   "value": "0%～−25%",
+   "cell": "Val!B13",
+   "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
+  },
+  "rec": {
+   "value": "中立",
+   "cell": "Val!B14",
+   "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
+  },
+  "dcf_A": {
+   "value": 215.467673915755,
+   "cell": "Val!B102",
+   "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
+  },
+  "dcf_C": {
+   "value": 143.260133369341,
+   "cell": "Val!D102",
+   "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
   },
   "model_px": {
-   "value": 350.5,
-   "cell": "輸入與假設!C374",
-   "file": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx",
-   "date": "2026-10-07"
+   "value": 316.8,
+   "cell": "Val!B9",
+   "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx",
+   "date": "2026-10-26"
   },
   "cash": {
    "basis": "現金流",
-   "label": "營運缺口＋股利＋回購",
+   "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx",
+   "label": "自由現金流扣股利五年合計（情境 A／B／C）",
    "values": [
     [
-     "2026",
-     -61.98978043518981,
-     "各期收支!C54＋C23＋C24"
+     "A",
+     261.219357957903,
+     "CF!B6"
     ],
     [
-     "2027",
-     -11.3784090984568,
-     "各期收支!D54＋D23＋D24"
+     "B",
+     180.050215907833,
+     "CF!C6"
     ],
     [
-     "2028",
-     10.903788322521699,
-     "各期收支!E54＋E23＋E24"
-    ],
-    [
-     "2029",
-     23.13815127515624,
-     "各期收支!F54＋F23＋F24"
-    ],
-    [
-     "2030",
-     -67.601689194111,
-     "各期收支!G54＋G23＋G24"
+     "C",
+     29.8478349489597,
+     "CF!D6"
     ]
-   ],
-   "file": "alphabet/dist/20261025_Alphabet收支模型_v0_2_2.xlsx"
+   ]
   }
  },
  "ORCL": {
-  "model": "oracle/dist/20261022_Oracle收支模型_v0_3_1.xlsx",
-  "rating": {
-   "value": "賣出",
-   "cell": "摘要",
-   "file": "oracle/dist/20261022_Oracle收支模型_v0_3_1.xlsx"
+  "model": "oracle/dist/20261027_Oracle個股模型_v0.4.xlsx",
+  "v2": true,
+  "seg_model": true,
+  "tp": {
+   "value": 73.2244042213954,
+   "cell": "Val!C74",
+   "file": "oracle/dist/20261027_Oracle個股模型_v0.4.xlsx"
   },
-  "target": {
-   "value": 84.2399682943779,
-   "cell": "摘要!C7",
-   "file": "oracle/dist/20261022_Oracle收支模型_v0_3_1.xlsx"
+  "tp_dcf": {
+   "value": 41.7110850813839,
+   "cell": "Val!C72",
+   "file": "oracle/dist/20261027_Oracle個股模型_v0.4.xlsx"
   },
-  "price": {
-   "value": 129.13,
-   "cell": "摘要!C8",
-   "file": "oracle/dist/20261022_Oracle收支模型_v0_3_1.xlsx"
+  "tp_comp": {
+   "value": 104.737723361407,
+   "cell": "Val!C73",
+   "file": "oracle/dist/20261027_Oracle個股模型_v0.4.xlsx"
   },
-  "scen_lo": {
-   "value": 77.4146887294713,
-   "cell": "摘要!C10",
-   "file": "oracle/dist/20261022_Oracle收支模型_v0_3_1.xlsx"
+  "tp_cons": {
+   "value": 237.36,
+   "cell": "Val!C76",
+   "file": "oracle/dist/20261027_Oracle個股模型_v0.4.xlsx"
   },
-  "scen_hi": {
-   "value": 91.8887696680133,
-   "cell": "摘要!D10",
-   "file": "oracle/dist/20261022_Oracle收支模型_v0_3_1.xlsx"
+  "up": {
+   "value": -0.419130539255946,
+   "cell": "Val!C77",
+   "file": "oracle/dist/20261027_Oracle個股模型_v0.4.xlsx"
   },
-  "sentence": {
-   "value": "賣出：點位 $84.2，較現價 $129.13 低 35%；情境區間 $77.4–$91.9，方法區間 $78.7–$84.2；點位低於賣出門檻 $109.8 達 $25.5。",
-   "cell": "摘要",
-   "file": "oracle/dist/20261022_Oracle收支模型_v0_3_1.xlsx"
+  "up_comp": {
+   "value": -0.169143873065153,
+   "cell": "Val!C78",
+   "file": "oracle/dist/20261027_Oracle個股模型_v0.4.xlsx"
+  },
+  "tier6": {
+   "value": "−25%～−50%",
+   "cell": "Val!C79",
+   "file": "oracle/dist/20261027_Oracle個股模型_v0.4.xlsx"
+  },
+  "rec": {
+   "value": "放空",
+   "cell": "Val!C80",
+   "file": "oracle/dist/20261027_Oracle個股模型_v0.4.xlsx"
+  },
+  "dcf_A": {
+   "value": 57.0556956298768,
+   "cell": "Val!C30",
+   "file": "oracle/dist/20261027_Oracle個股模型_v0.4.xlsx"
+  },
+  "dcf_C": {
+   "value": 17.1600249327927,
+   "cell": "Val!E30",
+   "file": "oracle/dist/20261027_Oracle個股模型_v0.4.xlsx"
   },
   "model_px": {
-   "value": 129.13,
-   "cell": "輸入與假設!C175",
-   "file": "oracle/dist/20261022_Oracle收支模型_v0_3_1.xlsx",
-   "date": "2026-10-21"
+   "value": 126.06,
+   "cell": "Val!C4",
+   "file": "oracle/dist/20261027_Oracle個股模型_v0.4.xlsx",
+   "date": "2026-10-26"
   },
   "cash": {
    "basis": "現金流",
-   "label": "營運缺口＋股利",
+   "file": "oracle/dist/20261027_Oracle個股模型_v0.4.xlsx",
+   "label": "自由現金流扣股利五年合計（情境 A／B／C）",
    "values": [
     [
-     "FY27",
-     -25.8031832210438,
-     "各期收支!C50＋C23"
+     "A",
+     111.063429974721,
+     "CF!C4"
     ],
     [
-     "FY28",
-     -21.092435106089603,
-     "各期收支!D50＋D23"
+     "B",
+     72.7635612856036,
+     "CF!D4"
     ],
     [
-     "FY29",
-     23.651621864346698,
-     "各期收支!E50＋E23"
-    ],
-    [
-     "FY30",
-     9.698185939504679,
-     "各期收支!F50＋F23"
-    ],
-    [
-     "FY31",
-     8.114711151538419,
-     "各期收支!G50＋G23"
+     "C",
+     8.35347765600448,
+     "CF!E4"
     ]
-   ],
-   "file": "oracle/dist/20261022_Oracle收支模型_v0_3_1.xlsx"
+   ]
   }
  },
  "CRWV": {
@@ -7736,41 +8341,41 @@
   }
  },
  "NBIS": {
-  "model": "nebius/dist/20261022_Nebius收支模型_v0_5.xlsx",
+  "model": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx",
   "rating": {
    "value": "賣出",
    "cell": "摘要",
-   "file": "nebius/dist/20261022_Nebius收支模型_v0_5.xlsx"
+   "file": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx"
   },
   "target": {
    "value": 21.3792054477074,
    "cell": "摘要!C7",
-   "file": "nebius/dist/20261022_Nebius收支模型_v0_5.xlsx"
+   "file": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx"
   },
   "price": {
    "value": 249.87,
    "cell": "摘要!C8",
-   "file": "nebius/dist/20261022_Nebius收支模型_v0_5.xlsx"
+   "file": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx"
   },
   "scen_lo": {
    "value": 19.431647062533,
    "cell": "摘要!C10",
-   "file": "nebius/dist/20261022_Nebius收支模型_v0_5.xlsx"
+   "file": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx"
   },
   "scen_hi": {
    "value": 29.5289933777526,
    "cell": "摘要!D10",
-   "file": "nebius/dist/20261022_Nebius收支模型_v0_5.xlsx"
+   "file": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx"
   },
   "sentence": {
    "value": "賣出：點位 $21.4，較現價 $249.87 低 91%；情境區間 $19.4–$29.5，方法區間 $12.5–$21.4；點位低於賣出門檻 $212.4 達 $191.0。",
    "cell": "摘要",
-   "file": "nebius/dist/20261022_Nebius收支模型_v0_5.xlsx"
+   "file": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx"
   },
   "model_px": {
    "value": 249.87,
    "cell": "輸入與假設!C125",
-   "file": "nebius/dist/20261022_Nebius收支模型_v0_5.xlsx",
+   "file": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx",
    "date": "2026-10-06"
   },
   "cash": {
@@ -7803,7 +8408,7 @@
      "各期收支!G45"
     ]
    ],
-   "file": "nebius/dist/20261022_Nebius收支模型_v0_5.xlsx"
+   "file": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx"
   }
  },
  "WYFI": {

@@ -7,11 +7,11 @@ hq: 美國華盛頓州西雅圖 [外部・未經本專案檢核]
 founded: 1994 [外部・未經本專案檢核]
 employees: 約 1,595,000（2026Q2）[本專案：amazon_facts_20261008.json is.employees.2026q2]
 fiscal_year_end: 12 月底
-asof: 2026-10-25
+asof: 2026-10-27
 ---
 
 ## 一句話定位
-全球最大電商之一，同時經營最大的公有雲 AWS；AI 方面出租 GPU 與自研 Trainium 晶片算力，主要大客戶是 Anthropic 與 OpenAI。[外部・未經本專案檢核]
+全球最大電商之一，同時經營最大的公有雲 AWS；AI 方面出租 GPU 與自研 Trainium 晶片算力，主要大客戶是 Anthropic 與 OpenAI。[外部・未經本專案檢核] 本專案個股模型 v0.3 的命題是：AWS 的 AI 容量（Trainium＋NVIDIA）能否以高於資金成本的報酬變現，零售與廣告的現金流能否支應資本支出 [本專案：amazon/README.md 命題一句話]。
 
 ## 公司在做什麼
 - 電商：自營商品、第三方賣家服務（倉儲物流、抽成）、實體店，營收大但利潤率低 [外部・未經本專案檢核]。
@@ -22,13 +22,20 @@ asof: 2026-10-25
 ## 主要產品與營收占比
 | 產品／部門 | 內容（白話） | 營收占比 | 期間 | 標記 |
 |---|---|---|---|---|
-| 北美（North America） | 北美電商、廣告、訂閱、實體店 | 59.5%（4,263.1 億美元） | 2025 | [本專案：amazon_facts_20261008.json is.NA.rev.fy2025；Derived＝÷7,169.2 億] |
-| 國際（International） | 北美以外的同類業務 | 22.6%（1,618.9 億美元） | 2025 | [本專案：amazon_facts_20261008.json is.INTL.rev.fy2025；Derived] |
-| AWS | 雲端與 AI 算力出租 | 18.0%（1,287.3 億美元） | 2025 | [本專案：amazon_facts_20261008.json is.AWS.rev.fy2025；Derived] |
+| **North America**（分部） | 北美電商、第三方賣家服務、廣告、訂閱、實體店 | 59.5%（4,263.1 億美元）；1H26 57.7% | 2025；2026 上半年 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E5、Q!P5；Derived＝÷Q!E8、Q!P8] |
+| **International**（分部） | 北美以外的同類業務 | 22.6%（1,618.9 億美元）；1H26 21.5% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E6、Q!P6；Derived] |
+| **AWS**（分部） | 雲端與 AI 算力出租 | 18.0%（1,287.3 億美元）；1H26 20.9% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E7、Q!P7；Derived] |
+| 營收線：Online stores | 自營線上商品銷售 | 37.6%（2,692.9 億美元）；1H26 35.2% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E10、Q!P10；Derived] |
+| 營收線：Physical stores | Whole Foods 等實體店 | 3.1%（225.6 億美元）；1H26 3.0% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E11、Q!P11；Derived] |
+| 營收線：Third-party seller services | 第三方賣家的抽成、倉儲物流費 | 24.0%（1,721.6 億美元）；1H26 23.1% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E12、Q!P12；Derived] |
+| 營收線：Advertising services | 購物頁面等廣告 | 9.6%（686.4 億美元）；1H26 9.7% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E13、Q!P13；Derived] |
+| 營收線：Subscription services | Prime 等訂閱 | 6.9%（496.2 億美元）；1H26 7.1% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E14、Q!P14；Derived] |
+| 營收線：Other | 其他 | 0.8%（59.4 億美元）；1H26 0.9% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E15、Q!P15；Derived] |
+| 營收線：AWS | 與 AWS 分部相同 | 18.0%；1H26 20.9% | 2025；1H26 | [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E17、Q!P17；Derived] |
 
-- 三分部合計 7,169.2 億美元＝全公司營收，占比合計 100% [本專案：amazon_facts_20261008.json is.TOT.rev.fy2025]。
-- 依類別另看（已含在上面分部內）：廣告 686.4 億（9.6%）、訂閱 496.2 億美元（6.9%）[本專案：amazon_facts_20261008.json is.cat.ads.fy2025、is.cat.subs.fy2025；Derived]。
-- 獲利集中在 AWS：2025 年 AWS 營業利益 456.1 億，占全公司 799.8 億美元的 57% [本專案：amazon_facts_20261008.json is.AWS.oi.fy2025、is.TOT.oi.fy2025；Derived]。
+- 口徑：三個官方分部，以及 10-K 的七條營收線（零售六線合計＝北美＋國際，AWS 線＝AWS 分部）；合計 7,169.24 億（2025）、3,821.25 億美元（1H26）＝全公司營收，核對列為 0 [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E8、Q!P8、Q!E18、Q!E19、Q!E20]。
+- 獲利集中在 AWS：2025 年 AWS 營業利益 456.06 億美元，占全公司 799.75 億的 57%；1H26 AWS 營業利益 307.82 億，營業利益率 38.6% [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!E24、Q!E25、Q!P24、PL!E53；Derived]。
+- 廣告成長快：1H26 廣告營收 370.52 億美元，比 1H25 的 296.15 億增 25.1% [本專案：20261027_Amazon個股模型_v0.3.xlsx Q!P13、Q!N13；Derived]。
 
 ## 市場定位與產業位置
 - 雲端市占：本專案未建立。
@@ -55,7 +62,7 @@ asof: 2026-10-25
 | Microsoft（Azure） | 公有雲、AI 算力出租 | 市占本專案未建立；Azure FY2026 營收 1,019.4 億美元 | [本專案：microsoft_facts_20261008.json prod27.azure.fy2026] |
 | Alphabet（Google Cloud） | 公有雲、自研 TPU、Anthropic 也是其客戶 | 市占本專案未建立；Google Cloud 2025 營收 587.1 億美元 | [本專案：alphabet_facts_20261008.json is.rev.cloud.fy2025] |
 | Oracle（OCI） | AI 機房出租 | 市占本專案未建立；OCI FY2026 營收 181.0 億美元 | [本專案：oracle_facts_20261007.json is.rev.iaas.fy2026] |
-| CoreWeave | GPU 雲 | TTM 營收 75.9 億美元 | [本專案：20261022_Amazon收支模型_v0_2_1.xlsx 評價_可比公司!E5] |
+| CoreWeave | GPU 雲 | 企業價值 801.2 億美元、2027 前瞻 EV/EBITDA 4.81 倍（2026-10-21） | [本專案：20261027_Oracle個股模型_v0.4.xlsx Val!C35、Val!D35] |
 
 - 各家雲端營收期間不同，只能比量級 [判斷]。
 - Anthropic 同時向 Google（TPU）採購算力，客戶不是 AWS 獨占 [本專案：alphabet_facts_20261008.json rp.anthropic.cloudCommit]。
@@ -92,15 +99,16 @@ asof: 2026-10-25
 - 2026-07-30｜Q2 財報：營收 2,006.1 億美元；淨利 626.5 億主要來自 Anthropic 投資評價利益；資本支出指引上調至約 2,200 億美元 [本專案：amazon_facts_20261008.json is.TOT.rev.2026q2、guide.2026.capex；company.json latestQuarter]
 
 ## 需要觀察的事項
-- 對外 AI 產能比例｜公司未揭露，模型假設 80%；60% 時目標價 170.64、100% 時 218.08 美元 [本專案：20261022_Amazon收支模型_v0_2_1.xlsx 摘要!C21]｜2026-10-29 財報
-- AI ROIC 對資金成本｜模型 2029 對外 AI ROIC 7.4%，低於 WACC 12.5% 達 5.1 個百分點 [本專案：20261022_Amazon收支模型_v0_2_1.xlsx 摘要!C22]｜AWS 營業利益率與 AI 營收
-- FCF 與融資｜模型 2026 年 FCF −600 億美元，五期新債 1,926 億美元 [本專案：20261022_Amazon收支模型_v0_2_1.xlsx 摘要!C23]｜Q3 現金流量表
-- 終值占 EV｜117%（現金流前幾年為負，價值全靠終值）[本專案：20261022_Amazon收支模型_v0_2_1.xlsx 評價_DCF與目標價!C27]｜模型改版時
+- 對外 AI 報酬（命題核心）｜基準情境 FY2028 對外 AI ROIC 6.6%，低於 WACC 11.3%；要打平，機隊平均每 MW 價格 k 需約 1.21，模型基準為 0.99 [本專案：20261027_Amazon個股模型_v0.3.xlsx Thesis!I114、Val!B30、Thesis!I116、Thesis!I115]｜2026-10-29（美國時間）Q3 財報的 AWS 成長與 AI 營收說法
+- AWS 營業利益率（核心問題一）｜FY2028 基準 34.7%（樂觀 43.6%、保守 31.3%），2025 年為 35.4% [本專案：20261027_Amazon個股模型_v0.3.xlsx Val!C10、Val!B10、Val!D10、PL!D123]｜Q3 財報 AWS 營業利益率
+- 自由現金流（核心問題二）｜FY2028 自由現金流扣股利基準 −155.5 億美元；五年（2026–2030）合計基準 +101.9 億、保守 −515.9 億；基準需新增借款 292.8 億 [本專案：20261027_Amazon個股模型_v0.3.xlsx Val!C11、CF!C6、CF!D6、CF!C7]｜Q3 現金流量表與 2026 年資本支出約 2,200 億美元指引 [本專案：amazon_facts_20261008.json guide.2026.capex]
+- 新產能的每 MW 價格 k｜k 取價格軸低／高時，情境 B 目標價 178.98／263.98 美元（−10.3%／+32.4%），是敏感度最大的一項 [本專案：20261027_Amazon個股模型_v0.3.xlsx Sens!C5、Sens!C6]｜AWS AI 定價與 Trainium 承諾轉成營收的速度
+- 自用 AI 的讀法｜模型假設 AI 算力八成對外、自用較少；Andy 2026-10-27 定讀法 2（自用 AI 價值中性）為主值：加權目標價 210.79 美元，讀法 1（只計成本）189.47 美元；現價 249.09 美元（2026-10-26），兩種讀法的模型評級都是「中立」[本專案：20261027_Amazon個股模型_v0.3.xlsx Val!B19、Val!B33、Val!B20、Val!B24、Val!B35]｜財報對自用 AI（零售、Alexa 等）算力的說法
 - 客戶集中｜backlog 約一半可能來自兩家 AI 實驗室 [本專案：amazon_facts_20261008.json rel.rpoShare]｜Q3 10-Q 的 RPO 揭露
 
 ## 來源
-1. 本專案：/home/claude/company-models/amazon/dist/20261022_Amazon收支模型_v0_2_1.xlsx（摘要、評價_DCF與目標價、評價_可比公司）（2026-10-22）
+1. 本專案：/home/claude/company-models/amazon/dist/20261027_Amazon個股模型_v0.3.xlsx（Q、Thesis、PL、CF、Val、Sens）、amazon/README.md、amazon/docs/reports/20261027_amazon_v0.3_分部架構.md（2026-10-27）
 2. 本專案：/home/claude/company-models/amazon/data/amazon_facts_20261008.json、/home/claude/company-models/amazon/company.json（2026-10-08）
-3. 本專案：/home/claude/company-models/microsoft/data/microsoft_facts_20261008.json、/home/claude/company-models/alphabet/data/alphabet_facts_20261008.json、/home/claude/company-models/oracle/data/oracle_facts_20261007.json
+3. 本專案：/home/claude/company-models/microsoft/data/microsoft_facts_20261008.json、/home/claude/company-models/alphabet/data/alphabet_facts_20261008.json、/home/claude/company-models/oracle/data/oracle_facts_20261007.json、/home/claude/company-models/oracle/dist/20261027_Oracle個股模型_v0.4.xlsx（Val，CoreWeave 倍數）
 4. [Amazon Form 10-K FY2025（管理層名單）](https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm)（2026-01）
 5. [Amazon will share its Q3 2026 earnings on October 29（About Amazon）](https://www.aboutamazon.com/md/news/company-news/amazon-earnings-q3-2026-report)（2026-10）

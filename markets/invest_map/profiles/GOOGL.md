@@ -7,11 +7,11 @@ hq: 美國加州山景城 [外部・未經本專案檢核]
 founded: 1998（Google）；2015（Alphabet 控股架構） [外部・未經本專案檢核]
 employees: 約 198,933（2026Q2）[本專案：alphabet_facts_20261008.json op.emp.2026q2]
 fiscal_year_end: 12 月底
-asof: 2026-10-25
+asof: 2026-10-27
 ---
 
 ## 一句話定位
-靠搜尋與 YouTube 廣告賺錢的公司，同時經營三大雲之一 Google Cloud，並自研 AI 晶片 TPU；AI 方面既自用（Gemini、搜尋）也對外出租或出售 TPU 算力。[外部・未經本專案檢核]
+靠搜尋與 YouTube 廣告賺錢的公司，同時經營三大雲之一 Google Cloud，並自研 AI 晶片 TPU；AI 方面既自用（Gemini、搜尋）也對外出租或出售 TPU 算力。[外部・未經本專案檢核] 本專案個股模型 v0.3 的命題是：AI 改變搜尋之後 Search 的變現能否守住，同時 Google Cloud（含 TPU）能否把翻倍的資本支出變成營收 [本專案：alphabet/README.md 命題]。
 
 ## 公司在做什麼
 - 搜尋與廣告：使用者免費搜尋，廣告主按點擊付費；AI 摘要等新功能也放在搜尋裡 [外部・未經本專案檢核]。
@@ -22,15 +22,17 @@ asof: 2026-10-25
 ## 主要產品與營收占比
 | 產品／部門 | 內容（白話） | 營收占比 | 期間 | 標記 |
 |---|---|---|---|---|
-| 搜尋與其他 | 搜尋廣告、地圖等 | 55.7%（2,245.3 億美元） | 2025 | [本專案：alphabet_facts_20261008.json is.rev.search.fy2025；Derived＝÷4,028.4 億] |
-| YouTube 廣告 | 影音廣告 | 10.0%（403.7 億美元） | 2025 | [本專案：alphabet_facts_20261008.json is.rev.yt.fy2025；Derived] |
-| 聯播網（Network） | 放在第三方網站的廣告 | 7.4%（297.9 億美元） | 2025 | [本專案：alphabet_facts_20261008.json is.rev.network.fy2025；Derived] |
-| 訂閱、平台與裝置 | YouTube／Google One 訂閱、Play 商店、Pixel | 11.9%（480.3 億美元） | 2025 | [本專案：alphabet_facts_20261008.json is.rev.subs.fy2025；Derived] |
-| Google Cloud | 雲端與 AI 算力、Workspace | 14.6%（587.1 億美元） | 2025 | [本專案：alphabet_facts_20261008.json is.rev.cloud.fy2025；Derived] |
-| Other Bets | Waymo 等新事業 | 0.4%（15.4 億美元） | 2025 | [本專案：alphabet_facts_20261008.json is.rev.ob.fy2025；Derived] |
+| **Google Services**（分部） | 廣告與消費端訂閱、裝置 | 85.1%（3,427.2 億美元）；1H26 80.2% | 2025；2026 上半年 | [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!K9、Q!L9；Derived＝÷Q!K14、Q!L14] |
+| 　Search & other | 搜尋廣告、地圖等 | 55.7%（2,245.3 億美元）；1H26 53.8% | 2025；1H26 | [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!K5、Q!L5；Derived] |
+| 　YouTube ads | 影音廣告 | 10.0%（403.7 億美元）；1H26 9.1% | 2025；1H26 | [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!K6、Q!L6；Derived] |
+| 　Google Network | 放在第三方網站與 App 的廣告 | 7.4%（297.9 億美元）；1H26 6.2% | 2025；1H26 | [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!K7、Q!L7；Derived] |
+| 　Subscriptions, platforms, and devices | YouTube／Google One 訂閱、Play 商店、Pixel | 11.9%（480.3 億美元）；1H26 11.0% | 2025；1H26 | [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!K8、Q!L8；Derived] |
+| **Google Cloud**（分部） | 雲端與 AI 算力（含 TPU）、Workspace | 14.6%（587.1 億美元）；1H26 19.5% | 2025；1H26 | [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!K11、Q!L11；Derived] |
+| **Other Bets**（分部） | Waymo 等新事業 | 0.4%（15.4 億美元）；1H26 0.3% | 2025；1H26 | [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!K12、Q!L12；Derived] |
 
-- 另有避險損益 −1.3 億美元，合計 4,028.4 億美元＝全公司營收，占比合計 100% [本專案：alphabet_facts_20261008.json is.rev.hedge.fy2025、is.rev.total.fy2025]。
-- 成長最快的是 Cloud：近四季（2025Q3–2026Q2）營收 776.2 億美元、年增 57.8% [本專案：alphabet company.json mag.segments.cloud]。
+- 另有 Alphabet 層級避險損益 2025 年 −1.27 億、1H26 −0.74 億美元；合計 4,028.36 億（2025）、2,296.92 億美元（1H26）＝全公司營收，核對列為 0 [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!K13、Q!L13、Q!K14、Q!L14、Q!K15]。
+- 成長最快的是 Cloud：近四季（2025Q3–2026Q2）776.17 億美元，比前四季 491.92 億增 57.8%；2026Q2 單季 247.68 億美元 [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!M11、Q!N11、Q!I11；Derived]。
+- 分部營業利益 1H26：Google Services 801.33 億、Google Cloud 154.12 億、Other Bets −38.99 億美元 [本專案：20261027_Alphabet個股模型_v0.3.xlsx Q!L18、Q!L19、Q!L20]；Cloud 營業利益率 1H26 為 34.4% [本專案：20261027_Alphabet個股模型_v0.3.xlsx PL!E52]。
 - 公司未揭露 AI 營收 [本專案：alphabet company.json callFacts.aiRunRateNote]。
 
 ## 市場定位與產業位置
@@ -102,14 +104,15 @@ asof: 2026-10-25
 - 2026-07-22｜Q2 財報：營收 1,198.0 億美元、Cloud 年增 81.8%；2026 資本支出指引由 1,800–1,900 億上調至 1,950–2,050 億美元 [本專案：alphabet company.json latestQuarter、mag.segments.cloud；alphabet_facts_20261008.json guid.capex.2026.jul]
 
 ## 需要觀察的事項
-- 對外 AI 產能比例｜公司未揭露，模型假設 30%；10% 時目標價 99.27、50% 時 179.71 美元，是最大不確定 [本專案：20261022_Alphabet收支模型_v0_2_1.xlsx 摘要!C21]｜2026-10-28 財報
-- AI ROIC 對資金成本｜模型 2029 對外 AI ROIC 14.2% 對 WACC 11.6% [本專案：20261022_Alphabet收支模型_v0_2_1.xlsx 摘要!C22]｜Cloud 營業利益率
-- FCF 與買回｜模型 2026 年 FCF −41 億美元，2030 年買回被迫減少 [本專案：20261022_Alphabet收支模型_v0_2_1.xlsx 摘要!C23]｜Q3 現金流量表
-- 終值占 EV｜115% [本專案：20261022_Alphabet收支模型_v0_2_1.xlsx 評價_DCF與目標價!C27]｜模型改版時
+- Search 變現（命題核心）｜保守情境（AI 助理分流 20%、每次查詢變現 −10%）FY2028 Search & other 2,901 億美元，比基準 3,393 億少 14.5%；Google Services 營業利益率 32.1%（基準 35.8%）[本專案：20261027_Alphabet個股模型_v0.3.xlsx PL!I131、PL!I72、PL!I169、PL!I110；alphabet/README.md 重點觀察 2]｜2026-10-28（美國時間）Q3 財報的 Search 年增
+- Cloud 能否抵銷｜保守情境 FY2028 Google Cloud 營業利益比 2025 年增加 482 億美元，是 Services 營業利益損失 342 億的 141% [本專案：alphabet/README.md 重點觀察 2]｜Q3 財報的 Cloud 營收、營業利益率與 backlog
+- 自用 AI 的讀法｜AI 算力約七成自用（對外比例 30% 為模型假設）。Andy 2026-10-27 定讀法 2（自用 AI 價值中性）為主值：加權目標價 251.68 美元；讀法 1（只計成本）181.76 美元，是敏感度最大的一項 [本專案：20261027_Alphabet個股模型_v0.3.xlsx Val!B20、Val!B21、Sens!D4]｜財報對 AI 算力自用與 Cloud 配置的說法
+- AI 折舊進損益｜基準情境合併營業利益率（財報口徑）由 2025 年 32.0% 降到 FY2028 24.2% [本專案：20261027_Alphabet個股模型_v0.3.xlsx PL!D109、PL!I109]｜Q3 財報的折舊與 2026、2027 年資本支出指引
+- 現金與股東回饋｜五年（2026–2030）自由現金流扣股利：基準 1,800.5 億、保守 298.5 億美元，三情境都不需舉債 [本專案：20261027_Alphabet個股模型_v0.3.xlsx CF!C6、CF!D6、CF!C9]；現價 316.80 美元（2026-10-26），加權目標價上檔空間 −20.6%，模型評級「中立」[本專案：20261027_Alphabet個股模型_v0.3.xlsx Val!B9、Val!B11、Val!B14]｜Q3 現金流量表與回購是否恢復
 - Anthropic 集中度與 TPU 對外銷售認列｜[本專案：alphabet_facts_20261008.json rp.anthropic.rpoShare、guid.tpuRev]｜Q3 10-Q
 
 ## 來源
-1. 本專案：/home/claude/company-models/alphabet/dist/20261022_Alphabet收支模型_v0_2_1.xlsx（摘要、評價_DCF與目標價）（2026-10-22）
+1. 本專案：/home/claude/company-models/alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx（Q、PL、CF、Val、Sens）、alphabet/README.md、alphabet/docs/reports/20261027_alphabet_v0.3_分部架構.md（2026-10-27）
 2. 本專案：/home/claude/company-models/alphabet/data/alphabet_facts_20261008.json、/home/claude/company-models/alphabet/company.json、/home/claude/company-models/alphabet/data/peers_ads_20261009.json（2026-10-08／09）
 3. 本專案：/home/claude/company-models/amazon/data/amazon_facts_20261008.json、/home/claude/company-models/microsoft/data/microsoft_facts_20261008.json、/home/claude/company-models/oracle/data/oracle_facts_20261007.json
 4. [Alphabet 2026 委託書 DEF 14A（管理層名單）](https://www.sec.gov/Archives/edgar/data/0001652044/000130817926000342/goog2025_courtesy-pdf.pdf)（2026-04）
