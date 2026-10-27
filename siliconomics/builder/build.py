@@ -367,6 +367,89 @@ def main():
         DP.column_dimensions["A"].width = 36
         for col in "BCDEF": DP.column_dimensions[col].width = 10
 
+    # ---------------- ABF：ABF 載板供需表（v0.5.1；需求與供給皆為 2026＝1 的指數，缺口以 2026 外部缺口校準） ----------------
+    AB = None; ABROW = {}
+    if "abfm_25" in INROW and DP is not None:
+        AB = wb.create_sheet("ABF", index=wb.sheetnames.index("Path"))
+        AB["A1"] = ("ABF — 載板供需表。需求（面積 × 層數口徑，2026＝1）＝加速器（顆數 ×（NVIDIA 1、非 NVIDIA v_ot）×（1＋g_asp）^t）、其他 AI（AI IT 資本支出成長 ^ 彈性）、"
+                    "非 AI（年增 g_nai），以 2026 金額權重加總；供給＝各載板廠產能指數 × 2026 營收權重，再與味之素 ABF 膜可出貨量上限取小；"
+                    "缺口＝（1＋2026 外部缺口）× 需求 ÷ 有效供給 − 1。價格溢價不計入（只量）")
+        hdr(AB, 3, ["項目", "情境", "2026", "2027", "2028", "2029", "說明"])
+        COLS = {2026: "C", 2027: "D", 2028: "E", 2029: "F"}
+        NVK = ("bw", "rb", "ru", "hp"); OTK = ("amd", "tpu", "trn", "oth")
+        def cell(r, y, f, fmt="0.000", fill=None):
+            c = AB.cell(r, list(COLS).index(y) + 3, f); c.number_format = fmt
+            if fill: c.fill = fill
+            return c
+        r = 4
+        AB.cell(r, 1, "A. 需求").font = BOLD; r += 1
+        AB.cell(r, 1, "2026 ABF 載板產值（US$B）"); cell(r, 2026, "=abfm_25*(1+abfm_g26)", "0.00"); AB.cell(r, 7, "TPCA 2025 × 2026 年增"); ABROW["mkt"] = r; r += 1
+        AB.cell(r, 1, "2026 權重：加速器"); cell(r, 2026, "=abf_ai26*abf_accsh26", "0.0%"); ABROW["wacc"] = r; r += 1
+        AB.cell(r, 1, "2026 權重：其他 AI（交換器、CPU、網通）"); cell(r, 2026, "=abf_ai26*(1-abf_accsh26)", "0.0%"); ABROW["woai"] = r; r += 1
+        AB.cell(r, 1, "2026 權重：非 AI"); cell(r, 2026, "=1-abf_ai26", "0.0%"); ABROW["wnai"] = r; r += 1
+        for s_ in seed["scen"]:
+            AB.cell(r, 1, "加速器有效顆數（NVIDIA ＋ 非 NVIDIA × v_ot；百萬顆）"); AB.cell(r, 2, s_)
+            for y, col in COLS.items():
+                m = (f"*um{y % 100}_{s_}" if y >= 2028 else "")
+                cell(r, y, "=(" + "+".join(f"Units!{col}{UROW[k]}" for k in NVK) + "+abf_vot*(" + "+".join(f"Units!{col}{UROW[k]}" for k in OTK) + f")){m}", "0.00")
+            ABROW["equ" + s_] = r; r += 1
+        for s_ in seed["scen"]:
+            AB.cell(r, 1, "需求指數：加速器（× 面積層數）"); AB.cell(r, 2, s_)
+            for y, col in COLS.items():
+                cell(r, y, f"={col}{ABROW['equ' + s_]}/$C{ABROW['equ' + s_]}*(1+abf_gasp)^{y - 2026}")
+            ABROW["dacc" + s_] = r; r += 1
+        for s_ in seed["scen"]:
+            AB.cell(r, 1, "需求指數：其他 AI（AI IT 資本支出成長 ^ 彈性）"); AB.cell(r, 2, s_)
+            for y, col in COLS.items():
+                cell(r, y, f"=(Deploy!{col}{DROW['itc' + s_]}/Deploy!$C{DROW['itc' + s_]})^abf_oai_el")
+            ABROW["doai" + s_] = r; r += 1
+        AB.cell(r, 1, "需求指數：非 AI")
+        for y in COLS: cell(r, y, f"=(1+abf_gnai)^{y - 2026}")
+        ABROW["dnai"] = r; r += 1
+        for s_ in seed["scen"]:
+            AB.cell(r, 1, "需求指數合計（2026＝1）").font = BOLD; AB.cell(r, 2, s_)
+            for y, col in COLS.items():
+                cell(r, y, f"=$C${ABROW['wacc']}*{col}{ABROW['dacc' + s_]}+$C${ABROW['woai']}*{col}{ABROW['doai' + s_]}+$C${ABROW['wnai']}*{col}{ABROW['dnai']}", fill=KEY)
+            ABROW["dem" + s_] = r; r += 1
+        r += 1
+        AB.cell(r, 1, "B. 供給").font = BOLD; r += 1
+        MAK = [("Ibiden", "ib", "abfrev_ib26"), ("欣興", "un", "abfrev_un26"), ("南電", "np", "abfrev_np26"), ("景碩", "ks", "abfrev_ks26")]
+        wr = {}
+        for who, co, rv in MAK:
+            AB.cell(r, 1, f"2026 供給權重：{who}"); cell(r, 2026, f"={rv}/$C${ABROW['mkt']}", "0.0%"); wr[co] = r; r += 1
+        AB.cell(r, 1, "2026 供給權重：其他（三星電機、AT&S、Shinko、臻鼎等）")
+        cell(r, 2026, "=1-" + "-".join(f"C{wr[co]}" for _, co, _ in MAK), "0.0%"); wr["oth"] = r; r += 1
+        ABROW["woth"] = r - 1
+        for who, co, _ in MAK + [("其他", "oth", None)]:
+            AB.cell(r, 1, f"產能指數：{who}")
+            for y in COLS: cell(r, y, "=1" if y == 2026 else f"=abfcap_{co}_{y % 100}", "0.00")
+            ABROW["cap" + co] = r; r += 1
+        AB.cell(r, 1, "載板產能指數（加權）").font = BOLD
+        for y, col in COLS.items():
+            cell(r, y, "=" + "+".join(f"$C${wr[co]}*{col}{ABROW['cap' + co]}" for co in ("ib", "un", "np", "ks", "oth")), fill=KEY)
+        ABROW["sub"] = r; r += 1
+        AB.cell(r, 1, "味之素 ABF 膜可出貨量上限（2026＝1）")
+        for y in COLS: cell(r, y, "=1" if y == 2026 else f"=abffilm_{y % 100}", "0.00")
+        ABROW["film"] = r; r += 1
+        AB.cell(r, 1, "有效供給指數（取小）").font = BOLD
+        for y, col in COLS.items():
+            cell(r, y, f"=MIN({col}{ABROW['sub']},{col}{ABROW['film']})", fill=KEY)
+        ABROW["sup"] = r; AB.cell(r, 7, "膜上限低於載板產能時，膜為瓶頸"); r += 2
+        AB.cell(r, 1, "C. 缺口（缺口 ÷ 供給；2026 以外部缺口校準）").font = BOLD; r += 1
+        for s_ in seed["scen"]:
+            AB.cell(r, 1, "ABF 供需缺口").font = BOLD; AB.cell(r, 2, s_)
+            for y, col in COLS.items():
+                cell(r, y, f"=(1+abf_gap_26)*{col}{ABROW['dem' + s_]}/{col}{ABROW['sup']}-1", "0.0%", KEY)
+            ABROW["gap" + s_] = r; r += 1
+        AB.cell(r, 1, "對照：外部缺口（In 頁 abf_gap_*；兩來源中點）")
+        for y in (2026, 2027, 2028): cell(r, y, f"=abf_gap_{y % 100}", "0.0%")
+        ABROW["ext"] = r; r += 1
+        AB.cell(r, 1, "對照：外部缺口低／高")
+        for y in (2026, 2027, 2028): cell(r, y, f'=TEXT(abf_gap_{y % 100}_lo,"0%")&"–"&TEXT(abf_gap_{y % 100}_hi,"0%")', "@")
+        r += 1
+        AB.column_dimensions["A"].width = 52; AB.column_dimensions["G"].width = 40
+        for col in "BCDEF": AB.column_dimensions[col].width = 10
+
     # ---------------- Conflicts：跨模型同一變數不同值的登錄 ----------------
     CF = wb.create_sheet("Conflicts")
     CF["A1"] = ("Conflicts — 跨模型衝突登錄：同一個行業變數在兩個以上公司模型有不同值。本庫的任務是讓每個變數只有一個值；"
@@ -469,6 +552,19 @@ def main():
             for j in range(4):
                 c = IF.cell(r, 5 + j, f"=Deploy!{'CDEF'[j]}{dr}"); c.font = GREEN; c.number_format = "0.00"
             IF.cell(r, 9, f"Deploy!C{dr}:F{dr}")
+            name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
+    if AB is not None:
+        r += 1
+        IF.cell(r, 1, "B5. ABF 供需（ABF 頁；欄 E–H＝2026–2029）").font = BOLD; r += 1
+        items = ([(f"SIF_ABFDemIdx_{s_}", "dem" + s_, f"ABF 需求指數（{s_}；2026＝1）", "x") for s_ in seed["scen"]]
+                 + [("SIF_ABFSubCapIdx", "sub", "載板產能指數（加權；2026＝1）", "x"), ("SIF_ABFFilmIdx", "film", "味之素 ABF 膜上限（2026＝1）", "x"), ("SIF_ABFSupIdx", "sup", "有效供給指數", "x")]
+                 + [(f"SIF_ABFGap_{s_}", "gap" + s_, f"ABF 供需缺口（{s_}）", "%") for s_ in seed["scen"]])
+        for nm_, key, lab, unit in items:
+            ar = ABROW[key]
+            IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, unit)
+            for j in range(4):
+                c = IF.cell(r, 5 + j, f"=ABF!{'CDEF'[j]}{ar}"); c.font = GREEN; c.number_format = "0.0%" if unit == "%" else "0.000"
+            IF.cell(r, 9, f"ABF!C{ar}:F{ar}")
             name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
     r += 1
     IF.cell(r, 1, "C. Tokenomics 鏡像（只讀；權威在算力收支；本庫與 TK 一致由 Checks K3 檢查）").font = BOLD; r += 1
@@ -603,6 +699,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.5.1：新增 M15（ABF 供需表輸入：產值、AI 占比、權重、各廠產能指數、味之素膜上限；欣興、南電、景碩產能與味之素膜上限原在各公司模型）與 ABF 頁（需求、供給、缺口三情境）、Interface SIF_ABF*。", False),
         ("v0.5：新增 M13（加速器 ABF 載板份額、每顆金額路徑、供需缺口；原在 ibiden、unimicron、nanya_pcb、kinsus）、M14（CoWoS 每片封裝數、其他用途、台積電產能、委外補充；原在 tsmc），ShareTbl 的 ABF 載板份額表、Checks K6-abf、Interface SIF_ABFShareSum_*。", False),
         ("v0.4.1：新增 M12（CPO 光學金額份額：Lumentum、Coherent、中際旭創、新易盛、Fabrinet；原在各公司模型）與 ShareTbl 的 CPO 份額表、Checks K6-cpo、Interface SIF_CPOShareSum。", False),
         ("v0.4：新增 M8–M11（每顆網通內容、每顆 IT capex〔NVIDIA 世代改由 Tokenomics 推導〕、網通技術轉換與 CPO 三情境、2026 Rubin 占比 vr26；原在 markets/network 與 11 個公司模型）與 Deploy 頁（AI IT 資本支出、部署 GW 三情境）；橋接表改讀 Tokenomics v21.7。", False),
