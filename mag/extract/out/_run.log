@@ -1,11 +1,4 @@
-Traceback (most recent call last):
-  File "/home/runner/work/company-models/company-models/mag/extract/extract_filings.py", line 419, in <module>
-    main()
-  File "/home/runner/work/company-models/company-models/mag/extract/extract_filings.py", line 367, in main
-    req = json.load(open(path, encoding="utf-8"))
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/json/__init__.py", line 293, in load
-    return loads(fp.read(),
-                 ^^^^^^^^^
-  File "<frozen codecs>", line 322, in decode
-UnicodeDecodeError: 'utf-8' codec can't decode byte 0xd3 in position 10: invalid continuation byte
+batch msgbatch_01KrxtMKQJXimR9MpBXbC7yA
+批次未完成，保留請求 20261027_backtest_coreweave_2026Q2_r1 msgbatch_01KrxtMKQJXimR9MpBXbC7yA
+batch msgbatch_01A5PNnaDoFjPgLQe3qXbdcw
+批次未完成，保留請求 20261027_backtest_oracle_FY27Q1_r1 msgbatch_01A5PNnaDoFjPgLQe3qXbdcw
