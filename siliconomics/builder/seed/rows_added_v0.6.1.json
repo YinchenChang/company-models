@@ -1,0 +1,228 @@
+[
+ {
+  "after_section_end": "M18.",
+  "section": "M19. 液冷（機架內液冷＋分歧管：每架內容、內容調整、滲透率；奇鋐、雙鴻、健策份額。原在 avc、auras、jentech 與 markets/chip_bridge。台達電液冷多在機架外〔CDU、Liquid-to-Air〕，不屬本市場）",
+  "rows": [
+   {
+    "id": "lc_cool_gb",
+    "label": "GB300 每架機架內液冷（運算匣＋交換匣冷板等；不含 CDU、分歧管）",
+    "unit": "US$K",
+    "lo": 50,
+    "base": 50,
+    "hi": 50,
+    "tag": "Interested-party",
+    "src": "Morgan Stanley（Tom's Hardware）：GB300 約 $49,860、Vera Rubin 約 $56K",
+    "src2": "原在 markets/chip_bridge In 頁 cool（GB300 欄）；橋接表改讀本庫"
+   },
+   {
+    "id": "lc_cool_vr",
+    "label": "VR200 每架機架內液冷（不含 CDU、分歧管）",
+    "unit": "US$K",
+    "lo": 56,
+    "base": 56,
+    "hi": 56,
+    "tag": "Interested-party",
+    "src": "Morgan Stanley（Tom's Hardware）：GB300 約 $49,860、Vera Rubin 約 $56K",
+    "src2": "VR NVL144 US$55.7K；原在 markets/chip_bridge In 頁 cool（VR200 欄）"
+   },
+   {
+    "id": "lc_mani",
+    "label": "每架分歧管與快接頭（橋接表未含）",
+    "unit": "US$K",
+    "lo": 3,
+    "base": 6,
+    "hi": 10,
+    "tag": "Assumed",
+    "src": "公司：分歧管月產能 7,000 支，約供 3,000–4,000 架（優分析 2026-08-12）→ 每架約 2 支",
+    "src2": "分歧管單價：未找到"
+   },
+   {
+    "id": "lc_adj_27",
+    "label": "每架液冷內容 ÷ 橋接表 2027（Rubin 全液冷、ASIC 液冷；2026＝1）",
+    "unit": "x",
+    "lo": 1,
+    "base": 1.3,
+    "hi": 1.6,
+    "tag": "Assumed",
+    "src": "https://finance.ettoday.net/news/3220835：Vera Rubin 無風扇全液冷，液冷延伸到網卡、電源板、光模組，單架散熱價值提升（TrendForce，Interested-party）",
+    "src2": "Morgan Stanley BOM 只計運算匣與交換匣；大和：2027 ASIC 營收超過 GPU（時報 2026-08-13）"
+   },
+   {
+    "id": "lc_adj_28",
+    "label": "每架液冷內容 ÷ 橋接表 2028（Rubin 全液冷、ASIC 液冷；2026＝1）",
+    "unit": "x",
+    "lo": 1,
+    "base": 1.4,
+    "hi": 1.8,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "lc_adj_29",
+    "label": "每架液冷內容 ÷ 橋接表 2029（Rubin 全液冷、ASIC 液冷；2026＝1）",
+    "unit": "x",
+    "lo": 1,
+    "base": 1.4,
+    "hi": 1.8,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "lc_pen_26",
+    "label": "液冷滲透率 2026（部署 GW 中液冷占比）",
+    "unit": "%",
+    "lo": 0.45,
+    "base": 0.55,
+    "hi": 0.65,
+    "tag": "Assumed",
+    "src": "https://finance.ettoday.net/news/3220835：TrendForce AI 晶片液冷滲透率 2025 約 33%、2026 53%、2027 近 60%（以顆數計，Interested-party）",
+    "src2": "以 GW 計高於顆數計（液冷晶片功耗較高）；Trainium 3 先氣冷後液冷（TechNews 2026-04-29）。行業情境：FY2027 起 A＝高值、B＝基準、C＝低值（奇鋐、雙鴻模型與本庫 Rack 頁相同）"
+   },
+   {
+    "id": "lc_pen_27",
+    "label": "液冷滲透率 2027（部署 GW 中液冷占比）",
+    "unit": "%",
+    "lo": 0.6,
+    "base": 0.75,
+    "hi": 0.85,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "lc_pen_28",
+    "label": "液冷滲透率 2028（部署 GW 中液冷占比）",
+    "unit": "%",
+    "lo": 0.7,
+    "base": 0.85,
+    "hi": 0.95,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "lc_pen_29",
+    "label": "液冷滲透率 2029（部署 GW 中液冷占比）",
+    "unit": "%",
+    "lo": 0.75,
+    "base": 0.9,
+    "hi": 0.95,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "lc_tf_26",
+    "label": "TrendForce：AI 晶片液冷滲透率 2026（顆數）",
+    "unit": "%",
+    "lo": null,
+    "base": 0.53,
+    "hi": null,
+    "tag": "Interested-party",
+    "src": "https://finance.ettoday.net/news/3220835",
+    "src2": "—"
+   },
+   {
+    "id": "lc_tf_27",
+    "label": "TrendForce：AI 晶片液冷滲透率 2027（顆數）",
+    "unit": "%",
+    "lo": null,
+    "base": 0.6,
+    "hi": null,
+    "tag": "Interested-party",
+    "src": "https://finance.ettoday.net/news/3220835",
+    "src2": "「近 60%」"
+   },
+   {
+    "id": "lc_avsh_26",
+    "label": "奇鋐液冷有效份額 2026（奇鋐模型 FY2026 校準值：券商液冷占比 × 營收 ÷ 本庫液冷市場）",
+    "unit": "%",
+    "lo": null,
+    "base": 0.498927641116677,
+    "hi": null,
+    "tag": "Derived",
+    "src": "avc/dist Units 頁「奇鋐有效份額」CY2026；奇鋐錨點更新時同步更新",
+    "src2": "分子含部分 CDU（公司未拆），份額可能高估"
+   },
+   {
+    "id": "lc_avrel_27",
+    "label": "奇鋐液冷份額 2027 ÷ 2026（相對值）",
+    "unit": "x",
+    "lo": 0.85,
+    "base": 0.95,
+    "hi": 1.05,
+    "tag": "Assumed",
+    "src": "凱基 2026-08-05（網址見 Sources）：奇鋐為 CSP 與企業 GPU／ASIC 伺服器氣冷與液冷領導廠（未給份額，Interested-party）",
+    "src2": "對手：雙鴻、酷碼、台達電、Boyd、CoolIT；公司 2027 液冷產能再擴約 50%（優分析 2026-08-12）；份額數字：未找到。雙鴻模型的份額相對值取同一組值（A 高、B 基準、C 低）"
+   },
+   {
+    "id": "lc_avrel_28",
+    "label": "奇鋐液冷份額 2028 ÷ 2026（相對值）",
+    "unit": "x",
+    "lo": 0.75,
+    "base": 0.9,
+    "hi": 1.05,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "lc_avrel_29",
+    "label": "奇鋐液冷份額 2029 ÷ 2026（相對值）",
+    "unit": "x",
+    "lo": 0.7,
+    "base": 0.85,
+    "hi": 1.05,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "lc_aush_26",
+    "label": "雙鴻液冷有效份額 2026（雙鴻模型 FY2026 校準值）",
+    "unit": "%",
+    "lo": null,
+    "base": 0.15870077644017,
+    "hi": null,
+    "tag": "Derived",
+    "src": "auras/dist Units 頁「雙鴻有效份額」CY2026；雙鴻錨點更新時同步更新",
+    "src2": "分子含部分 CDU（公司未拆），份額可能高估"
+   },
+   {
+    "id": "lc_jtsh_27",
+    "label": "健策液冷冷板元件份額 2027（÷ 奇鋐模型液冷市場；MCL／MLCP；A 取高、C 取低）",
+    "unit": "%",
+    "lo": 0.003,
+    "base": 0.008,
+    "hi": 0.015,
+    "tag": "Assumed",
+    "src": "理財周刊 2026-08-05：微通道上蓋（MCL）已通過主要客戶驗證；市場傳 MLCP 獲 NVIDIA 認證（傳言，理財周刊 2026-08-05）",
+    "src2": "口袋學堂 2025-12-15：已出貨 AI 伺服器 GPU 水冷模組，2026 年更多型號量產（口袋學堂，Interested-party）；液冷營收：未找到"
+   },
+   {
+    "id": "lc_jtsh_28",
+    "label": "健策液冷冷板元件份額 2028（÷ 奇鋐模型液冷市場；MCL／MLCP；A 取高、C 取低）",
+    "unit": "%",
+    "lo": 0.006,
+    "base": 0.015,
+    "hi": 0.03,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "lc_jtsh_29",
+    "label": "健策液冷冷板元件份額 2029（÷ 奇鋐模型液冷市場；MCL／MLCP；A 取高、C 取低）",
+    "unit": "%",
+    "lo": 0.01,
+    "base": 0.025,
+    "hi": 0.045,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   }
+  ]
+ }
+]

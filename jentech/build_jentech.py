@@ -14,6 +14,8 @@ from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（液冷行業變數 v0.6.1 起單一來源）
 import cycle_position as CP
 import valuation_rule as VR
 import market as MEM
@@ -59,6 +61,9 @@ for r in openpyxl.load_workbook(AVC_F, data_only=True)["PL"].iter_rows(min_row=6
         AVC["sh"].append(([r[3 + j].value for j in range(4)], f"{rel(AVC_F)}｜PL!D{r[0].row}:G{r[0].row}"))
 assert len(AVC["lmk"]) == 3 and len(AVC["sh"]) == 3, {k: len(v) for k, v in AVC.items()}
 assert all(v is not None for k in AVC for x in AVC[k] for v in x[0]), AVC
+# AI 液冷市場只有一個值（Siliconomics Rack 頁）：奇鋐成品三情境必須與本庫相同
+for _s, (_v, _src) in zip(SC, AVC["lmk"]):
+    assert all(abs(a - b) < 1e-6 for a, b in zip(_v, SIL.NAMES[f"SIF_LiqMkt_{_s}"])), ("液冷市場與 Siliconomics 不一致", _s, _v, SIL.NAMES[f"SIF_LiqMkt_{_s}"])
 
 # ---------------- In ----------------
 IN = wb.active; IN.title = "In"
@@ -121,10 +126,8 @@ for y, v in ((27, (0.92, 0.97, 1.00)), (28, (0.85, 0.93, 1.00)), (29, (0.80, 0.9
     inp(f"rel_{y}", f"健策均熱片份額 20{y} ÷ 2026（相對值；情境 A 取高、B 基準、C 取低）", "x", *v, "Assumed",
         "可拆式上蓋（TR lid）結構複雜、單價數倍，新供應商可能切入（Assumed）；4Q26 小量送樣（優分析 2026-10-05）" if y == 27 else "同上",
         "對手份額：未找到" if y == 27 else "—")
-for y, v in ((27, (0.003, 0.008, 0.015)), (28, (0.006, 0.015, 0.030)), (29, (0.010, 0.025, 0.045))):
-    inp(f"lcs_{y}", f"健策液冷冷板元件份額 20{y}（÷ 奇鋐模型液冷市場；MCL／MLCP；A 取高、C 取低）", "%", *v, "Assumed",
-        MW + "：微通道上蓋（MCL）已通過主要客戶驗證；市場傳 MLCP 獲 NVIDIA 認證（傳言，理財周刊 2026-08-05）" if y == 27 else "同上",
-        PKT2 + "：已出貨 AI 伺服器 GPU 水冷模組，2026 年更多型號量產（口袋學堂，Interested-party）；液冷營收：未找到" if y == 27 else "—")
+for y in (27, 28, 29):
+    inp(f"lcs_{y}", *SIL.row9(f"lc_jtsh_{y}")[1:])   # Siliconomics M19
 for s, (vals, src) in zip(SC, AVC["lmk"]):
     for j, y in enumerate((26, 27, 28, 29)):
         inp(f"lmk{s}_{y}", f"情境 {s}：AI 液冷市場 20{y}（奇鋐模型，同字母情境）", "US$B", None, vals[j], None, "Derived", src,

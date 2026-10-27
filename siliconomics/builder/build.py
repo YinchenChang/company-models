@@ -299,6 +299,30 @@ def main():
                     col = "DEFG"[j]
                     ST.cell(r, 4 + j, f"=1-{col}{r-1}").number_format = "0.0%"
                 r += 2
+            if "lc_avsh_26" in INROW:
+                ST.cell(r, 1, "AI 液冷有效份額（欄 D–G＝2026／2027／2028／2029；分母＝Rack 頁 AI 液冷市場〔機架內＋分歧管〕；奇鋐相對值不隨情境，雙鴻與健策 A 高、B 基準、C 低）").font = BOLD; r += 1
+                for s_ in seed["scen"]:
+                    suf = {"A": "_hi", "B": "", "C": "_lo"}[s_]
+                    r_first = r
+                    for who, f26, fy, note in (("奇鋐", "=lc_avsh_26", "*lc_avrel_{y}", "lc_avsh_26 × lc_avrel_27／28／29（不隨情境）"),
+                                                ("雙鴻", "=lc_aush_26", "*lc_avrel_{y}" + suf, f"lc_aush_26 × lc_avrel_27／28／29{suf}"),
+                                                ("健策（MCL／MLCP 冷板元件）", "=0", None, f"lc_jtsh_27／28／29{suf}（2026 含在其他散熱）")):
+                        ST.cell(r, 1, f"AI 液冷（情境 {s_}）"); ST.cell(r, 2, who); ST.cell(r, 3, note)
+                        for j, y in enumerate((26, 27, 28, 29)):
+                            f = f26 if y == 26 else (f26 + fy.format(y=y) if fy else f"=lc_jtsh_{y}{suf}")
+                            ST.cell(r, 4 + j, f).number_format = "0.0%"
+                        r += 1
+                    ST.cell(r, 1, f"AI 液冷（情境 {s_}）"); ST.cell(r, 2, "合計").font = BOLD
+                    for j in range(4):
+                        col = "DEFG"[j]
+                        c = ST.cell(r, 4 + j, f"=SUM({col}{r_first}:{col}{r-1})"); c.number_format = "0.0%"; c.fill = KEY
+                    STROW["sum_lc" + s_] = r; r += 1
+                    ST.cell(r, 1, f"AI 液冷（情境 {s_}）"); ST.cell(r, 2, "餘額（酷碼、富世達、Boyd、CoolIT、Vertiv 等，未建模）")
+                    for j in range(4):
+                        col = "DEFG"[j]
+                        ST.cell(r, 4 + j, f"=1-{col}{r-1}").number_format = "0.0%"
+                    r += 2
+                ST.cell(r, 1, "註：台達電液冷營收多在機架外（CDU、Liquid-to-Air），不屬本市場，不入表（CF12）；奇鋐、雙鴻分子含部分 CDU，份額可能高估"); r += 2
             ST.cell(r, 1, "對照：凱基台達電份額（只作對照，不入表；CF11 待 Andy）"); ST.cell(r, 2, "2025-07 Blackwell PSU／2025-09 AI 伺服器電源")
             ST.cell(r, 4, "=pwr_kgi_0701").number_format = "0.0%"; ST.cell(r, 5, "=pwr_kgi_0926").number_format = "0.0%"; r += 2
             ST.column_dimensions["G"].width = 9
@@ -572,6 +596,25 @@ def main():
         RK.cell(r, 1, "本庫情境 A ÷ UBS")
         for y, col in ((2026, "C"), (2027, "D")): rc(r, y, f"={col}{RKROW['pwrA']}/{col}{RKROW['ubs']}", "0.00")
         RK.cell(r, 7, "UBS 高出約五到七成：口徑（是否含 BBU、HVDC、非 AI）未找到，只作對照"); r += 1
+        if "lc_pen_26" in INROW:
+            r += 1
+            RK.cell(r, 1, "D. AI 液冷市場（機架內液冷＋分歧管；avc、auras、jentech 同讀；不含 CDU、Liquid-to-Air 等機架外冷卻）").font = BOLD; r += 1
+            RK.cell(r, 1, "每 GW 液冷內容（US$M／GW）")
+            rc(r, 2026, "=((1-vr26)*TK_RacksPerGW_GB300*(lc_cool_gb+lc_mani)+vr26*TK_RacksPerGW_VR200*(lc_cool_vr+lc_mani))/1000", "#,##0.0")
+            for y in (2027, 2028, 2029): rc(r, y, f"=TK_RacksPerGW_VR200*(lc_cool_vr+lc_mani)*lc_adj_{y % 100}/1000", "#,##0.0")
+            RK.cell(r, 7, "每架機架內液冷（Morgan Stanley BOM）＋分歧管，× 每 GW 架數；2027 起 × 內容調整（Rubin 全液冷、ASIC 液冷）"); RKROW["lcpg"] = r; r += 1
+            for s_ in seed["scen"]:
+                suf = {"A": "_hi", "B": "", "C": "_lo"}[s_]
+                RK.cell(r, 1, "液冷滲透率（部署 GW 中液冷占比）"); RK.cell(r, 2, s_)
+                for y in COLS: rc(r, y, f"=lc_pen_{y % 100}" + ("" if y == 2026 else suf), "0.0%")
+                RKROW["lpen" + s_] = r; r += 1
+            for s_ in seed["scen"]:
+                RK.cell(r, 1, "AI 液冷市場（US$B）").font = BOLD; RK.cell(r, 2, s_)
+                for y, col in COLS.items(): rc(r, y, f"=Deploy!{col}{DROW['gw' + s_]}*{col}{RKROW['lpen' + s_]}*{col}{RKROW['lcpg']}/1000", "#,##0.00", KEY)
+                RKROW["lc" + s_] = r; r += 1
+            RK.cell(r, 1, "對照：TrendForce AI 晶片液冷滲透率（顆數口徑）")
+            rc(r, 2026, "=lc_tf_26", "0.0%"); rc(r, 2027, "=lc_tf_27", "0.0%")
+            RK.cell(r, 7, "以 GW 計高於顆數計（液冷晶片功耗較高）"); r += 1
         RK.column_dimensions["A"].width = 62; RK.column_dimensions["G"].width = 60
         for col in "BCDEF": RK.column_dimensions[col].width = 10
 
@@ -712,13 +755,26 @@ def main():
                  + [("SIF_SysValGB", "vgb", "每顆系統價值（GB300 世代）", "US$K"), ("SIF_SysValVR", "vvr", "每顆系統價值（Rubin 世代）", "US$K"),
                     ("SIF_SysUnitsGB", "ugb", "GB300 世代商用 GPU 顆數（情境 A）", "百萬顆"), ("SIF_SysUnitsVR", "uvr", "Rubin 世代商用 GPU 顆數（情境 A）", "百萬顆")]
                  + [(f"SIF_GPUSysMkt_{s_}", "sys" + s_, f"商用 GPU 系統市場（{s_}）", "US$B") for s_ in seed["scen"]]
-                 + [(f"SIF_PwrMkt_{s_}", "pwr" + s_, f"AI 電源市場（{s_}）", "US$B") for s_ in seed["scen"]])
+                 + [(f"SIF_PwrMkt_{s_}", "pwr" + s_, f"AI 電源市場（{s_}）", "US$B") for s_ in seed["scen"]]
+                 + ([("SIF_LiqPerGW", "lcpg", "每 GW 液冷內容（機架內＋分歧管）", "US$M/GW")]
+                    + [(f"SIF_LiqPen_{s_}", "lpen" + s_, f"液冷滲透率（{s_}）", "%") for s_ in seed["scen"]]
+                    + [(f"SIF_LiqMkt_{s_}", "lc" + s_, f"AI 液冷市場（{s_}）", "US$B") for s_ in seed["scen"]] if "lcpg" in RKROW else []))
         for nm_, key, lab, unit in items:
             kr = RKROW[key]
             IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, unit)
             for j in range(4):
                 c = IF.cell(r, 5 + j, f"=Rack!{'CDEF'[j]}{kr}"); c.font = GREEN; c.number_format = "#,##0.000"
             IF.cell(r, 9, f"Rack!C{kr}:F{kr}")
+            name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
+    if ST is not None and "sum_lcA" in STROW:
+        r += 1
+        IF.cell(r, 1, "B9. AI 液冷份額合計（ShareTbl 頁；欄 E–H＝2026–2029）").font = BOLD; r += 1
+        for s_ in seed["scen"]:
+            nm_ = f"SIF_LiqShareSum_{s_}"; sr = STROW["sum_lc" + s_]
+            IF.cell(r, 1, nm_); IF.cell(r, 2, f"奇鋐＋雙鴻＋健策液冷有效份額合計（{s_}）"); IF.cell(r, 3, "%")
+            for j in range(4):
+                c = IF.cell(r, 5 + j, f"=ShareTbl!{'DEFG'[j]}{sr}"); c.font = GREEN; c.number_format = "0.0%"
+            IF.cell(r, 9, f"ShareTbl!D{sr}:G{sr}")
             name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
     if ST is not None and "sum_pwrA" in STROW:
         r += 1
@@ -815,6 +871,12 @@ def main():
                 CK.cell(r, 1, f"K6-pwr{s_}{y}"); CK.cell(r, 2, f"AI 電源 {y} 台達電＋光寶有效份額合計 ≤ 100%（情境 {s_}）")
                 CK.cell(r, 3, f"=ShareTbl!{'DEFG'[j]}{STROW['sum_pwr' + s_]}"); CK.cell(r, 4, 1)
                 CK.cell(r, 6, f'=IF(C{r}<=1+1E-9,"OK","ERROR")'); CK.cell(r, 7, "驗證（加總受限）"); r += 1
+    if ST is not None and "sum_lcA" in STROW:
+        for s_ in seed["scen"]:
+            for j, y in enumerate((2026, 2027, 2028, 2029)):
+                CK.cell(r, 1, f"K6-lc{s_}{y}"); CK.cell(r, 2, f"AI 液冷 {y} 奇鋐＋雙鴻＋健策有效份額合計 ≤ 100%（情境 {s_}）")
+                CK.cell(r, 3, f"=ShareTbl!{'DEFG'[j]}{STROW['sum_lc' + s_]}"); CK.cell(r, 4, 1)
+                CK.cell(r, 6, f'=IF(C{r}<=1+1E-9,"OK","ERROR")'); CK.cell(r, 7, "驗證（加總受限）"); r += 1
     if RK is not None:
         CK.cell(r, 1, "K7"); CK.cell(r, 2, "Rack 頁：商用 GPU 系統市場 2026 ≤ AI IT 資本支出 2026（系統售價不應超過全部 IT 資本支出）")
         CK.cell(r, 3, f"=Rack!C{RKROW['sysA']}"); CK.cell(r, 4, f"=Deploy!C{DROW['itcA']}")
@@ -873,6 +935,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.6.1：新增 M19（液冷：機架內液冷每架內容〔原在 markets/chip_bridge〕、分歧管、內容調整、滲透率、TrendForce 對照、奇鋐與雙鴻 FY2026 份額快照與份額相對值、健策冷板元件份額；原在 avc、auras、jentech）、Rack 頁 D 節（AI 液冷市場三情境）、ShareTbl 的 AI 液冷份額表（CF04 加入雙鴻；CF12 台達電機架外液冷不屬本市場）、Checks K6-lc、Interface SIF_LiqPerGW、SIF_LiqPen_*、SIF_LiqMkt_*、SIF_LiqShareSum_*。", False),
         ("v0.6：新增 M17（AI 電源每 kW 內容、台達電與光寶份額路徑、凱基與 UBS 外部錨點；原在 delta、liteon）、M18（ODM 每櫃價格、緯穎 AI 占比單一值〔CF09〕；原在 quanta、wiwynn、wistron）與 Rack 頁（AI 伺服器組裝市場、商用 GPU 系統市場〔CF10：AMD 2026 計 GB300 世代、2027 起計 Rubin 世代〕、AI 電源市場）、ShareTbl 的 AI 電源份額表、Checks K6-pwr、K7、Interface SIF_AsmMkt_*、SIF_GPUSysMkt_*、SIF_PwrMkt_*、SIF_PwrShareSum_*。", False),
         ("v0.5.2：新增 M16（每 GW AI 高速 PCB 與 CCL 金額；原在 victory_giant、emc）與 PGW 頁、Interface SIF_PCBperGW、SIF_CCLperGW、SIF_PCBMkt_*、SIF_CCLMkt_*。", False),
         ("v0.5.1：新增 M15（ABF 供需表輸入：產值、AI 占比、權重、各廠產能指數、味之素膜上限；欣興、南電、景碩產能與味之素膜上限原在各公司模型）與 ABF 頁（需求、供給、缺口三情境）、Interface SIF_ABF*。", False),
