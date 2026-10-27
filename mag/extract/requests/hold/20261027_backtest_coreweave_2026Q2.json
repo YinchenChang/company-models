@@ -1,0 +1,8 @@
+{
+  "company": "coreweave",
+  "period_end": "2026-06-30",
+  "target_q": null,
+  "mode": "backtest",
+  "drive_ids": ["1L5viXizA31kc5XUpL7dQcKN3ET5Ylnlq"],
+  "_note": "回測：Andy 先前下載的 CoreWeave 2026Q2 10-Q（Drive MAG財報下載/coreweave_2026Q2_10-Q.pdf），與 coreweave/company.json 現值比對。待資料夾開放連結分享後移到 requests/ 觸發。"
+}
