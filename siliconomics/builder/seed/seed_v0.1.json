@@ -1,0 +1,1712 @@
+{
+ "note": "v0.1 種子：2026-10-27 自 markets/memory/market.py（main 4857b10）逐字搬入；v0.1 之後輸入由 Excel 擁有，本檔不再使用",
+ "quarters": [
+  "2025Q1",
+  "2025Q2",
+  "2025Q3",
+  "2025Q4",
+  "2026Q1",
+  "2026Q2",
+  "2026Q3",
+  "2026Q4",
+  "2027Q1",
+  "2027Q2",
+  "2027Q3",
+  "2027Q4",
+  "2028Q1",
+  "2028Q2",
+  "2028Q3",
+  "2028Q4",
+  "2029Q1",
+  "2029Q2",
+  "2029Q3",
+  "2029Q4"
+ ],
+ "scen": [
+  "A",
+  "B",
+  "C"
+ ],
+ "scen_desc": {
+  "A": "2027–28 高檔持平、2029 緩降（BofA、TrendForce 型）",
+  "B": "2027 Q2 見頂、2028 回落約一半、2029 溫和回升（Citi、Bernstein 型）",
+  "C": "2028 回到 2025 年價格水準、2029 自谷底回升（完整循環）"
+ },
+ "unit_groups": [
+  {
+   "key": "bw",
+   "name": "NVIDIA Blackwell（B200／B300）",
+   "tag": "Interested-party",
+   "src": "顆數：Morgan Stanley 2026-07（2026 5.4M）；AC Research 2027 約 2.4M；2028 Assumed。GB：B200 186、B300 288 組合 [Derived]"
+  },
+  {
+   "key": "rb",
+   "name": "NVIDIA Rubin",
+   "tag": "Interested-party",
+   "src": "2026：TrendForce 組合 Rubin 22% × 約 7.6M [Derived]；2027：Morgan Stanley 約 7.0M；2028 Assumed"
+  },
+  {
+   "key": "ru",
+   "name": "NVIDIA Rubin Ultra",
+   "tag": "Assumed",
+   "src": "時程 Assumed；GB：NVIDIA 1 TB／封裝"
+  },
+  {
+   "key": "hp",
+   "name": "NVIDIA Hopper（H200 等）",
+   "tag": "Interested-party",
+   "src": "TrendForce 2026 組合 Hopper 7%"
+  },
+  {
+   "key": "amd",
+   "name": "AMD Instinct",
+   "tag": "Interested-party／Assumed",
+   "src": "2027：Morgan Stanley MI455X 1.0M＋MI450 0.5M；其餘 Assumed"
+  },
+  {
+   "key": "tpu",
+   "name": "Google TPU",
+   "tag": "Interested-party",
+   "src": "MS 3.2／5.0、GF 4.5／8.84（2026／2027）取中間偏 MS；2028 Assumed"
+  },
+  {
+   "key": "trn",
+   "name": "AWS Trainium",
+   "tag": "Assumed",
+   "src": "年出貨未找到；GB：Trn2 96、Trn3 144"
+  },
+  {
+   "key": "oth",
+   "name": "其他 ASIC（MTIA、Maia、Ascend 等）",
+   "tag": "Derived／Assumed",
+   "src": "2027：JPMorgan ASIC 12.5M − TPU − Trainium"
+  }
+ ],
+ "rows": [
+  {
+   "sec": "M1. 記憶體價格路徑（季增，共用市場層 markets/memory）"
+  },
+  {
+   "id": "cq_1",
+   "label": "一般 DRAM 合約價季增 2025Q2",
+   "unit": "%",
+   "lo": null,
+   "base": -0.025,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "TrendForce 合約價：2Q25 0~−5%、3Q25 +10~15%、4Q25 實際 +45~50%、1Q26 實際約 +93~98%、2Q26 +58~63%、3Q26 +13~18%（MS 實際約 +15%）、4Q26 +10~15%"
+  },
+  {
+   "id": "cq_2",
+   "label": "一般 DRAM 合約價季增 2025Q3",
+   "unit": "%",
+   "lo": null,
+   "base": 0.125,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cq_3",
+   "label": "一般 DRAM 合約價季增 2025Q4",
+   "unit": "%",
+   "lo": null,
+   "base": 0.475,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cq_4",
+   "label": "一般 DRAM 合約價季增 2026Q1",
+   "unit": "%",
+   "lo": null,
+   "base": 0.95,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cq_5",
+   "label": "一般 DRAM 合約價季增 2026Q2",
+   "unit": "%",
+   "lo": null,
+   "base": 0.605,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cq_6",
+   "label": "一般 DRAM 合約價季增 2026Q3",
+   "unit": "%",
+   "lo": null,
+   "base": 0.155,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cq_7",
+   "label": "一般 DRAM 合約價季增 2026Q4",
+   "unit": "%",
+   "lo": null,
+   "base": 0.125,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqA_8",
+   "label": "一般 DRAM 合約價季增 2027Q1（A）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.03,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "BofA：2027 持平略降、2027 均價仍高於 2026；2028 溫和修正（年均約 −10%）；2029 Assumed 緩降"
+  },
+  {
+   "id": "cqA_9",
+   "label": "一般 DRAM 合約價季增 2027Q2（A）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.0,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqA_10",
+   "label": "一般 DRAM 合約價季增 2027Q3（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.02,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqA_11",
+   "label": "一般 DRAM 合約價季增 2027Q4（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.03,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqA_12",
+   "label": "一般 DRAM 合約價季增 2028Q1（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.03,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqA_13",
+   "label": "一般 DRAM 合約價季增 2028Q2（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.03,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqA_14",
+   "label": "一般 DRAM 合約價季增 2028Q3（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.02,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqA_15",
+   "label": "一般 DRAM 合約價季增 2028Q4（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.02,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqA_16",
+   "label": "一般 DRAM 合約價季增 2029Q1（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.03,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqA_17",
+   "label": "一般 DRAM 合約價季增 2029Q2（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.03,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqA_18",
+   "label": "一般 DRAM 合約價季增 2029Q3（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.02,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqA_19",
+   "label": "一般 DRAM 合約價季增 2029Q4（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.02,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqB_8",
+   "label": "一般 DRAM 合約價季增 2027Q1（B）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.05,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "Citi：2027 Q2 見頂；Bernstein：2028 DRAM $/GB −52.9%（本路徑 2028 年均約 −47%）；2029 Assumed 溫和回升"
+  },
+  {
+   "id": "cqB_9",
+   "label": "一般 DRAM 合約價季增 2027Q2（B）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.02,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqB_10",
+   "label": "一般 DRAM 合約價季增 2027Q3（B）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.08,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqB_11",
+   "label": "一般 DRAM 合約價季增 2027Q4（B）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.15,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqB_12",
+   "label": "一般 DRAM 合約價季增 2028Q1（B）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.25,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqB_13",
+   "label": "一般 DRAM 合約價季增 2028Q2（B）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.15,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqB_14",
+   "label": "一般 DRAM 合約價季增 2028Q3（B）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.1,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqB_15",
+   "label": "一般 DRAM 合約價季增 2028Q4（B）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.05,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqB_16",
+   "label": "一般 DRAM 合約價季增 2029Q1（B）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.05,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqB_17",
+   "label": "一般 DRAM 合約價季增 2029Q2（B）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.05,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqB_18",
+   "label": "一般 DRAM 合約價季增 2029Q3（B）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.03,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqB_19",
+   "label": "一般 DRAM 合約價季增 2029Q4（B）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.03,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "cqC_8",
+   "label": "一般 DRAM 合約價季增 2027Q1（C）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.05,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "Assumed：2028 年底回到約 2025Q4 水準（自高點約 −79%），比照 2019、2023 年谷底；2029 自谷底回升"
+  },
+  {
+   "id": "cqC_9",
+   "label": "一般 DRAM 合約價季增 2027Q2（C）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.02,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "cqC_10",
+   "label": "一般 DRAM 合約價季增 2027Q3（C）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.08,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "cqC_11",
+   "label": "一般 DRAM 合約價季增 2027Q4（C）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.15,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "cqC_12",
+   "label": "一般 DRAM 合約價季增 2028Q1（C）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.35,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "cqC_13",
+   "label": "一般 DRAM 合約價季增 2028Q2（C）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.3,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "cqC_14",
+   "label": "一般 DRAM 合約價季增 2028Q3（C）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.25,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "cqC_15",
+   "label": "一般 DRAM 合約價季增 2028Q4（C）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.2,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "cqC_16",
+   "label": "一般 DRAM 合約價季增 2029Q1（C）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.0,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "cqC_17",
+   "label": "一般 DRAM 合約價季增 2029Q2（C）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.05,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "cqC_18",
+   "label": "一般 DRAM 合約價季增 2029Q3（C）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.08,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "cqC_19",
+   "label": "一般 DRAM 合約價季增 2029Q4（C）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.1,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "nq_1",
+   "label": "NAND 合約價季增 2025Q2",
+   "unit": "%",
+   "lo": null,
+   "base": 0.0,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "TrendForce：1Q26 +85~90%、2Q26 +70~75%、3Q26 +10~15%（MS 實際約 +20%）、4Q26 +15~20%；2025Q2–Q4 為 Assumed"
+  },
+  {
+   "id": "nq_2",
+   "label": "NAND 合約價季增 2025Q3",
+   "unit": "%",
+   "lo": null,
+   "base": 0.05,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nq_3",
+   "label": "NAND 合約價季增 2025Q4",
+   "unit": "%",
+   "lo": null,
+   "base": 0.3,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nq_4",
+   "label": "NAND 合約價季增 2026Q1",
+   "unit": "%",
+   "lo": null,
+   "base": 0.875,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nq_5",
+   "label": "NAND 合約價季增 2026Q2",
+   "unit": "%",
+   "lo": null,
+   "base": 0.725,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nq_6",
+   "label": "NAND 合約價季增 2026Q3",
+   "unit": "%",
+   "lo": null,
+   "base": 0.15,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nq_7",
+   "label": "NAND 合約價季增 2026Q4",
+   "unit": "%",
+   "lo": null,
+   "base": 0.175,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqA_8",
+   "label": "NAND 合約價季增 2027Q1（A）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.03,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "TrendForce：2027 下半年供需平衡、價格面臨下修壓力"
+  },
+  {
+   "id": "nqA_9",
+   "label": "NAND 合約價季增 2027Q2（A）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.0,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqA_10",
+   "label": "NAND 合約價季增 2027Q3（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.05,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqA_11",
+   "label": "NAND 合約價季增 2027Q4（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.07,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqA_12",
+   "label": "NAND 合約價季增 2028Q1（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.05,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqA_13",
+   "label": "NAND 合約價季增 2028Q2（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.05,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqA_14",
+   "label": "NAND 合約價季增 2028Q3（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.05,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqA_15",
+   "label": "NAND 合約價季增 2028Q4（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.05,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqA_16",
+   "label": "NAND 合約價季增 2029Q1（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.03,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqA_17",
+   "label": "NAND 合約價季增 2029Q2（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.03,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqA_18",
+   "label": "NAND 合約價季增 2029Q3（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.03,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqA_19",
+   "label": "NAND 合約價季增 2029Q4（A）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.03,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqB_8",
+   "label": "NAND 合約價季增 2027Q1（B）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.05,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "Citi：2027 Q2 見頂；Bernstein：NAND $/GB 2028 −68.8%"
+  },
+  {
+   "id": "nqB_9",
+   "label": "NAND 合約價季增 2027Q2（B）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.02,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqB_10",
+   "label": "NAND 合約價季增 2027Q3（B）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.1,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqB_11",
+   "label": "NAND 合約價季增 2027Q4（B）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.2,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqB_12",
+   "label": "NAND 合約價季增 2028Q1（B）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.3,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqB_13",
+   "label": "NAND 合約價季增 2028Q2（B）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.25,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqB_14",
+   "label": "NAND 合約價季增 2028Q3（B）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.2,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqB_15",
+   "label": "NAND 合約價季增 2028Q4（B）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.1,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqB_16",
+   "label": "NAND 合約價季增 2029Q1（B）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.05,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqB_17",
+   "label": "NAND 合約價季增 2029Q2（B）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.05,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqB_18",
+   "label": "NAND 合約價季增 2029Q3（B）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.03,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqB_19",
+   "label": "NAND 合約價季增 2029Q4（B）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.03,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "nqC_8",
+   "label": "NAND 合約價季增 2027Q1（C）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.05,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "Assumed：回到約 2025 年水準"
+  },
+  {
+   "id": "nqC_9",
+   "label": "NAND 合約價季增 2027Q2（C）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.02,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "nqC_10",
+   "label": "NAND 合約價季增 2027Q3（C）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.1,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "nqC_11",
+   "label": "NAND 合約價季增 2027Q4（C）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.2,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "nqC_12",
+   "label": "NAND 合約價季增 2028Q1（C）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.35,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "nqC_13",
+   "label": "NAND 合約價季增 2028Q2（C）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.35,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "nqC_14",
+   "label": "NAND 合約價季增 2028Q3（C）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.25,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "nqC_15",
+   "label": "NAND 合約價季增 2028Q4（C）",
+   "unit": "%",
+   "lo": null,
+   "base": -0.2,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "nqC_16",
+   "label": "NAND 合約價季增 2029Q1（C）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.0,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "nqC_17",
+   "label": "NAND 合約價季增 2029Q2（C）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.05,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "nqC_18",
+   "label": "NAND 合約價季增 2029Q3（C）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.08,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "nqC_19",
+   "label": "NAND 合約價季增 2029Q4（C）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.1,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "sec": "M2. 加速器數量層（百萬顆）與每顆 HBM（GB）"
+  },
+  {
+   "id": "u_bw_26",
+   "label": "NVIDIA Blackwell（B200／B300） 顆數 2026",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 5.4,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "顆數：Morgan Stanley 2026-07（2026 5.4M）；AC Research 2027 約 2.4M；2028 Assumed。GB：B200 186、B300 288 組合 [Derived]"
+  },
+  {
+   "id": "u_bw_27",
+   "label": "NVIDIA Blackwell（B200／B300） 顆數 2027",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 2.4,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "u_bw_28",
+   "label": "NVIDIA Blackwell（B200／B300） 顆數 2028",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 0.5,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "g_bw_26",
+   "label": "NVIDIA Blackwell（B200／B300） 每顆 HBM 2026",
+   "unit": "GB",
+   "lo": null,
+   "base": 260,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "g_bw_27",
+   "label": "NVIDIA Blackwell（B200／B300） 每顆 HBM 2027",
+   "unit": "GB",
+   "lo": null,
+   "base": 280,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "g_bw_28",
+   "label": "NVIDIA Blackwell（B200／B300） 每顆 HBM 2028",
+   "unit": "GB",
+   "lo": null,
+   "base": 288,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "u_rb_26",
+   "label": "NVIDIA Rubin 顆數 2026",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 1.7,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "2026：TrendForce 組合 Rubin 22% × 約 7.6M [Derived]；2027：Morgan Stanley 約 7.0M；2028 Assumed"
+  },
+  {
+   "id": "u_rb_27",
+   "label": "NVIDIA Rubin 顆數 2027",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 7.0,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "u_rb_28",
+   "label": "NVIDIA Rubin 顆數 2028",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 7.0,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "g_rb_26",
+   "label": "NVIDIA Rubin 每顆 HBM 2026",
+   "unit": "GB",
+   "lo": null,
+   "base": 288,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "g_rb_27",
+   "label": "NVIDIA Rubin 每顆 HBM 2027",
+   "unit": "GB",
+   "lo": null,
+   "base": 288,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "g_rb_28",
+   "label": "NVIDIA Rubin 每顆 HBM 2028",
+   "unit": "GB",
+   "lo": null,
+   "base": 288,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "u_ru_26",
+   "label": "NVIDIA Rubin Ultra 顆數 2026",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 0.0,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "時程 Assumed；GB：NVIDIA 1 TB／封裝"
+  },
+  {
+   "id": "u_ru_27",
+   "label": "NVIDIA Rubin Ultra 顆數 2027",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 0.3,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "u_ru_28",
+   "label": "NVIDIA Rubin Ultra 顆數 2028",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 2.0,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g_ru_26",
+   "label": "NVIDIA Rubin Ultra 每顆 HBM 2026",
+   "unit": "GB",
+   "lo": null,
+   "base": 1024,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g_ru_27",
+   "label": "NVIDIA Rubin Ultra 每顆 HBM 2027",
+   "unit": "GB",
+   "lo": null,
+   "base": 1024,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g_ru_28",
+   "label": "NVIDIA Rubin Ultra 每顆 HBM 2028",
+   "unit": "GB",
+   "lo": null,
+   "base": 1024,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "u_hp_26",
+   "label": "NVIDIA Hopper（H200 等） 顆數 2026",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 0.5,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "TrendForce 2026 組合 Hopper 7%"
+  },
+  {
+   "id": "u_hp_27",
+   "label": "NVIDIA Hopper（H200 等） 顆數 2027",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 0.0,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "u_hp_28",
+   "label": "NVIDIA Hopper（H200 等） 顆數 2028",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 0.0,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "g_hp_26",
+   "label": "NVIDIA Hopper（H200 等） 每顆 HBM 2026",
+   "unit": "GB",
+   "lo": null,
+   "base": 141,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "g_hp_27",
+   "label": "NVIDIA Hopper（H200 等） 每顆 HBM 2027",
+   "unit": "GB",
+   "lo": null,
+   "base": 141,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "g_hp_28",
+   "label": "NVIDIA Hopper（H200 等） 每顆 HBM 2028",
+   "unit": "GB",
+   "lo": null,
+   "base": 141,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "u_amd_26",
+   "label": "AMD Instinct 顆數 2026",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 0.75,
+   "hi": null,
+   "tag": "Interested-party／Assumed",
+   "src": "2027：Morgan Stanley MI455X 1.0M＋MI450 0.5M；其餘 Assumed"
+  },
+  {
+   "id": "u_amd_27",
+   "label": "AMD Instinct 顆數 2027",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 1.5,
+   "hi": null,
+   "tag": "Interested-party／Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "u_amd_28",
+   "label": "AMD Instinct 顆數 2028",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 2.0,
+   "hi": null,
+   "tag": "Interested-party／Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g_amd_26",
+   "label": "AMD Instinct 每顆 HBM 2026",
+   "unit": "GB",
+   "lo": null,
+   "base": 288,
+   "hi": null,
+   "tag": "Interested-party／Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g_amd_27",
+   "label": "AMD Instinct 每顆 HBM 2027",
+   "unit": "GB",
+   "lo": null,
+   "base": 360,
+   "hi": null,
+   "tag": "Interested-party／Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g_amd_28",
+   "label": "AMD Instinct 每顆 HBM 2028",
+   "unit": "GB",
+   "lo": null,
+   "base": 432,
+   "hi": null,
+   "tag": "Interested-party／Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "u_tpu_26",
+   "label": "Google TPU 顆數 2026",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 3.85,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "MS 3.2／5.0、GF 4.5／8.84（2026／2027）取中間偏 MS；2028 Assumed"
+  },
+  {
+   "id": "u_tpu_27",
+   "label": "Google TPU 顆數 2027",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 5.5,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "u_tpu_28",
+   "label": "Google TPU 顆數 2028",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 7.0,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "g_tpu_26",
+   "label": "Google TPU 每顆 HBM 2026",
+   "unit": "GB",
+   "lo": null,
+   "base": 192,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "g_tpu_27",
+   "label": "Google TPU 每顆 HBM 2027",
+   "unit": "GB",
+   "lo": null,
+   "base": 250,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "g_tpu_28",
+   "label": "Google TPU 每顆 HBM 2028",
+   "unit": "GB",
+   "lo": null,
+   "base": 288,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上"
+  },
+  {
+   "id": "u_trn_26",
+   "label": "AWS Trainium 顆數 2026",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 2.0,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "年出貨未找到；GB：Trn2 96、Trn3 144"
+  },
+  {
+   "id": "u_trn_27",
+   "label": "AWS Trainium 顆數 2027",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 2.5,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "u_trn_28",
+   "label": "AWS Trainium 顆數 2028",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 3.0,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g_trn_26",
+   "label": "AWS Trainium 每顆 HBM 2026",
+   "unit": "GB",
+   "lo": null,
+   "base": 110,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g_trn_27",
+   "label": "AWS Trainium 每顆 HBM 2027",
+   "unit": "GB",
+   "lo": null,
+   "base": 144,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g_trn_28",
+   "label": "AWS Trainium 每顆 HBM 2028",
+   "unit": "GB",
+   "lo": null,
+   "base": 200,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "u_oth_26",
+   "label": "其他 ASIC（MTIA、Maia、Ascend 等） 顆數 2026",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 1.0,
+   "hi": null,
+   "tag": "Derived／Assumed",
+   "src": "2027：JPMorgan ASIC 12.5M − TPU − Trainium"
+  },
+  {
+   "id": "u_oth_27",
+   "label": "其他 ASIC（MTIA、Maia、Ascend 等） 顆數 2027",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 4.5,
+   "hi": null,
+   "tag": "Derived／Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "u_oth_28",
+   "label": "其他 ASIC（MTIA、Maia、Ascend 等） 顆數 2028",
+   "unit": "百萬顆",
+   "lo": null,
+   "base": 5.0,
+   "hi": null,
+   "tag": "Derived／Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g_oth_26",
+   "label": "其他 ASIC（MTIA、Maia、Ascend 等） 每顆 HBM 2026",
+   "unit": "GB",
+   "lo": null,
+   "base": 150,
+   "hi": null,
+   "tag": "Derived／Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g_oth_27",
+   "label": "其他 ASIC（MTIA、Maia、Ascend 等） 每顆 HBM 2027",
+   "unit": "GB",
+   "lo": null,
+   "base": 200,
+   "hi": null,
+   "tag": "Derived／Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "g_oth_28",
+   "label": "其他 ASIC（MTIA、Maia、Ascend 等） 每顆 HBM 2028",
+   "unit": "GB",
+   "lo": null,
+   "base": 250,
+   "hi": null,
+   "tag": "Derived／Assumed",
+   "src": "同上"
+  },
+  {
+   "sec": "M2b. 情境顆數係數（2028–29 加速器顆數 ÷ 情境 A 基準；與台積電、Advantest 模型同一套）"
+  },
+  {
+   "id": "um28_A",
+   "label": "情境 A：2028 顆數 ÷ 基準",
+   "unit": "x",
+   "lo": null,
+   "base": 1.0,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "A＝基準（定義為 1.0）；B＝AI 資本支出消化；C＝明顯下修。無外部預測可校準，B、C 區間皆 ±0.1；與 tsmc/build_tsmc.py 同值。HBM 需求位元、台積電 CoWoS 需求、Advantest 測試機需求用同一組係數"
+  },
+  {
+   "id": "um29_A",
+   "label": "情境 A：2029 顆數 ÷ 基準",
+   "unit": "x",
+   "lo": null,
+   "base": 1.0,
+   "hi": null,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "um28_B",
+   "label": "情境 B：2028 顆數 ÷ 基準",
+   "unit": "x",
+   "lo": 0.7,
+   "base": 0.8,
+   "hi": 0.9,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "um29_B",
+   "label": "情境 B：2029 顆數 ÷ 基準",
+   "unit": "x",
+   "lo": 0.75,
+   "base": 0.85,
+   "hi": 0.95,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "um28_C",
+   "label": "情境 C：2028 顆數 ÷ 基準",
+   "unit": "x",
+   "lo": 0.5,
+   "base": 0.6,
+   "hi": 0.7,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "id": "um29_C",
+   "label": "情境 C：2029 顆數 ÷ 基準",
+   "unit": "x",
+   "lo": 0.5,
+   "base": 0.6,
+   "hi": 0.7,
+   "tag": "Assumed",
+   "src": "同上"
+  },
+  {
+   "sec": "M3. HBM 市場"
+  },
+  {
+   "id": "hbm_mkt25",
+   "label": "HBM 市場 2025",
+   "unit": "$B",
+   "lo": 34,
+   "base": 35,
+   "hi": 35,
+   "tag": "Verified",
+   "src": "Micron TAM 約 $35B（2025-12 法說）；Yole 約 $34B"
+  },
+  {
+   "id": "hbm_g26",
+   "label": "2026 HBM 位元成長（推 2025 出貨位元）",
+   "unit": "%",
+   "lo": 0.6,
+   "base": 0.7,
+   "hi": 0.8,
+   "tag": "Interested-party",
+   "src": "TrendForce：2026 >70%"
+  },
+  {
+   "id": "hbm_gross",
+   "label": "出貨位元 ÷ 加速器裝載位元",
+   "unit": "x",
+   "lo": 1.0,
+   "base": 1.15,
+   "hi": 1.3,
+   "tag": "Assumed",
+   "src": "封裝良率損失、庫存與未列入的買方（Epoch：CoWoS-L 良率 65–95%）"
+  },
+  {
+   "id": "hbm_sup27",
+   "label": "2027 HBM 位元供給成長（三情境相同：產能已定）",
+   "unit": "%",
+   "lo": 0.5,
+   "base": 0.55,
+   "hi": 0.63,
+   "tag": "Interested-party",
+   "src": "TrendForce 2027 +50–60%；JPMorgan 2026–28 CAGR 63%"
+  },
+  {
+   "id": "hbm_sup28",
+   "label": "2028 HBM 位元供給成長（三情境相同）",
+   "unit": "%",
+   "lo": 0.3,
+   "base": 0.45,
+   "hi": 0.63,
+   "tag": "Assumed",
+   "src": "新廠 2028 才貢獻（TrendForce）；供給不隨需求情境變：2028 產能的設備與廠房在 2027 前已訂定，需求下修的結果是閒置產能與降價，不是減產"
+  },
+  {
+   "id": "hbm_p26",
+   "label": "HBM 混合單價 2026",
+   "unit": "$/GB",
+   "lo": 12.5,
+   "base": 14.6,
+   "hi": 16.0,
+   "tag": "Interested-party",
+   "src": "BofA $14.6/GB；DigiTimes HBM3E $12–12.8、HBM4 約 $16"
+  },
+  {
+   "id": "hbm_p27",
+   "label": "HBM 單價 2027 變動（三情境相同；年約已議定）",
+   "unit": "%",
+   "lo": 0.38,
+   "base": 0.8,
+   "hi": 1.21,
+   "tag": "Interested-party",
+   "src": "BofA +38%、JPM +54%、UBS +76–79%、TrendForce +121%；Micron：CY27 大部分已簽、大幅漲價"
+  },
+  {
+   "id": "hbm_p28_A",
+   "label": "HBM 單價 2028 變動（A）",
+   "unit": "%",
+   "lo": 0.0,
+   "base": 0.1,
+   "hi": 0.25,
+   "tag": "Interested-party",
+   "src": "JPMorgan 2028 +25%（上限）"
+  },
+  {
+   "id": "hbm_p28_B",
+   "label": "HBM 單價 2028 變動（B）",
+   "unit": "%",
+   "lo": -0.4,
+   "base": -0.25,
+   "hi": -0.1,
+   "tag": "Assumed",
+   "src": "一般 DRAM 大跌時 HBM 年約重議下修"
+  },
+  {
+   "id": "hbm_p28_C",
+   "label": "HBM 單價 2028 變動（C）",
+   "unit": "%",
+   "lo": -0.55,
+   "base": -0.4,
+   "hi": -0.25,
+   "tag": "Assumed",
+   "src": "完整谷底"
+  },
+  {
+   "id": "hbm_dem29",
+   "label": "2029 HBM 需求位元成長（情境 A 基準；B、C 再乘 um29）",
+   "unit": "%",
+   "lo": 0.2,
+   "base": 0.3,
+   "hi": 0.45,
+   "tag": "Assumed",
+   "src": "2029 無顆數預測；Micron：HBM 位元成長快於一般 DRAM 至 2028"
+  },
+  {
+   "id": "hbm_sup29",
+   "label": "2029 HBM 位元供給成長（三情境相同）",
+   "unit": "%",
+   "lo": 0.25,
+   "base": 0.35,
+   "hi": 0.5,
+   "tag": "Assumed",
+   "src": "P5、龍仁、M15X 等新廠 2028–29 投產"
+  },
+  {
+   "id": "hbm_p29_A",
+   "label": "HBM 單價 2029 變動（A）",
+   "unit": "%",
+   "lo": -0.15,
+   "base": -0.05,
+   "hi": 0.05,
+   "tag": "Assumed",
+   "src": ""
+  },
+  {
+   "id": "hbm_p29_B",
+   "label": "HBM 單價 2029 變動（B）",
+   "unit": "%",
+   "lo": -0.1,
+   "base": 0.0,
+   "hi": 0.1,
+   "tag": "Assumed",
+   "src": ""
+  },
+  {
+   "id": "hbm_p29_C",
+   "label": "HBM 單價 2029 變動（C）",
+   "unit": "%",
+   "lo": -0.1,
+   "base": 0.05,
+   "hi": 0.15,
+   "tag": "Assumed",
+   "src": "自谷底回升"
+  },
+  {
+   "sec": "M4. 對帳用（橋接表 v0.2、已發布）"
+  },
+  {
+   "id": "nv_dc26",
+   "label": "NVIDIA 資料中心營收 2026（約 FY27）",
+   "unit": "$B",
+   "lo": 340,
+   "base": 374,
+   "hi": 400,
+   "tag": "Verified／Assumed",
+   "src": "FY27 Q1 75.2、Q2 89.0（8-K）；Q3 指引總營收 108（資料中心取 100）；Q4 Assumed 110"
+  },
+  {
+   "id": "nv_content",
+   "label": "每顆 GPU 的 NVIDIA 內容（GB300）",
+   "unit": "$K",
+   "lo": 38,
+   "base": 42.8,
+   "hi": 48,
+   "tag": "Derived",
+   "src": "markets/chip_bridge v0.2（Tokenomics v19.0：GB300 機架基準價 $4.3M；v0.1 為 51.6）"
+  },
+  {
+   "id": "nv_hbm",
+   "label": "每顆 GPU HBM 金額（GB300）",
+   "unit": "$K",
+   "lo": 3.5,
+   "base": 4.46,
+   "hi": 4.9,
+   "tag": "Derived",
+   "src": "markets/chip_bridge v0.2（與 v0.1 相同）"
+  },
+  {
+   "id": "pub26_lo",
+   "label": "已發布 2026 HBM 市場（SK 海力士自估）",
+   "unit": "$B",
+   "lo": null,
+   "base": 54.6,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "Motley Fool／글로벌이코노믹 2026-09"
+  },
+  {
+   "id": "pub26_hi",
+   "label": "已發布 2026 HBM 市場（BofA）",
+   "unit": "$B",
+   "lo": null,
+   "base": 77.4,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "BofA 2026-08-07"
+  },
+  {
+   "id": "pub27",
+   "label": "已發布 2027 HBM 市場（BofA）",
+   "unit": "$B",
+   "lo": null,
+   "base": 152.8,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "BofA；JPMorgan 2027–28 為 160–282"
+  }
+ ]
+}

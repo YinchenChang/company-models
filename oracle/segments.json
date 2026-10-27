@@ -1,0 +1,27 @@
+{
+ "company": "Oracle",
+ "ticker": "ORCL",
+ "model_sheet": "PL",
+ "fiscal_year_end": "5 月（FY2026＝2025-06～2026-05）",
+ "official_segments": [
+  {"name": "Cloud and software（雲端與軟體）", "label": "分部：Cloud and software", "period": "FY2026", "value": 58.530, "unit": "US$B",
+   "source": "Oracle FY2026 10-K 附註 13（2026-06-22；分部營收＝雲端 33.989＋軟體 24.541；分部利潤 34.468）；oracle/data/oracle_facts_20261007.json seg.cs.margin.fy2026",
+   "note": "較舊的 10-K 稱 cloud and license；分部利潤只含直接成本（不含研發、管理、攤銷、重組、SBC、利息）"},
+  {"name": "Hardware（硬體）", "label": "分部：Hardware", "period": "FY2026", "value": 3.084, "unit": "US$B",
+   "source": "Oracle FY2026 10-K 附註 13；分部利潤 2.017"},
+  {"name": "Services（服務）", "label": "分部：Services", "period": "FY2026", "value": 5.743, "unit": "US$B",
+   "source": "Oracle FY2026 10-K 附註 13；分部利潤 1.533"}
+ ],
+ "revenue_lines": {
+  "source": "Oracle 財報新聞稿「Supplemental analysis of GAAP revenues」（Q4 FY26 2026-06-10、Q1 FY27 2026-09-10）",
+  "FY2026": {"Cloud Infrastructure（OCI）": 18.101, "Cloud Applications（SaaS）": 15.888, "Software license": 4.737, "Software support": 19.804, "Hardware": 3.084, "Services": 5.743, "合併營收": 67.357},
+  "FY27Q1": {"Cloud Infrastructure（OCI）": 7.388, "Cloud Applications（SaaS）": 4.219, "Software license": 0.655, "Software support": 4.895, "Hardware": 0.774, "Services": 1.414, "合併營收": 19.345}
+ },
+ "sublines": [
+  {"parent": "分部：Cloud and software", "labels": ["Cloud Infrastructure（OCI）", "Cloud Applications（SaaS）", "Software license", "Software support"], "kind": "官方營收線"},
+  {"parent": "Cloud Infrastructure（OCI）", "labels": ["OCI AI 算力（命題子列）", "OCI 其他（非 AI）（子列）"], "kind": "命題子列（合計＝OCI；公司未揭露 AI／非 AI 拆分，FY2027 起才有子列）"}
+ ],
+ "thesis_sublines": ["OCI AI 算力（命題子列）"],
+ "check_labels": ["檢查：分部合計 − 合併營收", "檢查：子列合計 − 母列（OCI 兩子列；Cloud and software 四營收線）", "檢查：營收線合計 − 合併營收"],
+ "history_checks": {"sheet": "Q", "labels": ["檢查：營收線合計 − 合併營收（應為 0）", "檢查：分部合計 − 合併營收（應為 0）", "檢查：分部利潤三項合計 − 公司揭露分部利潤合計（FY2026 38.018，應為 0）", "檢查：自由現金流 − 公司揭露值（應為 0）"]}
+}
