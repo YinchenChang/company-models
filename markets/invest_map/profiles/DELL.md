@@ -67,16 +67,16 @@ asof: 2026-10-25
 ## 前十大股東
 | 排名 | 股東 | 持股比例 | 標記 |
 |---|---|---|---|
-| 1 | Michael S. Dell（個人及其受益持有部分） | 40.9%（占全部流通股；投票權另計，Class A 為 10 票） | 4 [外部・未經本專案檢核：資料日 2026-04-27（proxy）] |
-| 2 | SLP Stockholders（Silver Lake 相關基金） | 7.4% | 4 [外部・未經本專案檢核：資料日 2026-04-27（proxy）] |
-| 3 | SLD Trust（Susan Lieberman Dell Separate Property Trust；Michael Dell 可能被視為受益所有人） | 4.8% | 4 [外部・未經本專案檢核：資料日 2026-04-27（proxy）] |
-| 4 | BlackRock, Inc. | 約 3.79%（proxy 載 3.5%，22,819,963 Class C，13G 2024-11） | 5, 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 5 | Vanguard Capital Management LLC | 約 2.99%（proxy 載 3.5%，22,512,097 Class C） | 5, 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 6 | State Street Corp | 約 2.16% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 7 | Bank of America Corp | 約 1.71% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 8 | JPMorgan Chase & Co | 約 1.64% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 9 | Vanguard Portfolio Management LLC | 約 1.21% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 10 | Geode Capital Management, LLC | 約 1.20% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
+| 1 | Michael S. Dell（個人及其受益持有部分） | 40.9%（占全部流通股；投票權另計，Class A 為 10 票） | [外部・未經本專案檢核：資料日 2026-04-27（proxy）；Dell Technologies 2026 Proxy Statement DEF 14A，2026-05-15] |
+| 2 | SLP Stockholders（Silver Lake 相關基金） | 7.4% | [外部・未經本專案檢核：資料日 2026-04-27（proxy）；Dell Technologies 2026 Proxy Statement DEF 14A，2026-05-15] |
+| 3 | SLD Trust（Susan Lieberman Dell Separate Property Trust；Michael Dell 可能被視為受益所有人） | 4.8% | [外部・未經本專案檢核：資料日 2026-04-27（proxy）；Dell Technologies 2026 Proxy Statement DEF 14A，2026-05-15] |
+| 4 | BlackRock, Inc. | 約 3.79%（proxy 載 3.5%，22,819,963 Class C，13G 2024-11） | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：DELL Institutional Ownership，2026 年，頁面註明 Q2 2026], [外部・未經本專案檢核：Dell Technologies 2026 Proxy Statement DEF 14A，2026-05-15] |
+| 5 | Vanguard Capital Management LLC | 約 2.99%（proxy 載 3.5%，22,512,097 Class C） | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：DELL Institutional Ownership，2026 年，頁面註明 Q2 2026], [外部・未經本專案檢核：Dell Technologies 2026 Proxy Statement DEF 14A，2026-05-15] |
+| 6 | State Street Corp | 約 2.16% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：DELL Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 7 | Bank of America Corp | 約 1.71% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：DELL Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 8 | JPMorgan Chase & Co | 約 1.64% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：DELL Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 9 | Vanguard Portfolio Management LLC | 約 1.21% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：DELL Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 10 | Geode Capital Management, LLC | 約 1.20% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：DELL Institutional Ownership，2026 年，頁面註明 Q2 2026] |
 
 - 口徑：Dell 為雙重／多類股權：Class A（每股 10 票）、Class B（每股 10 票，Silver Lake 持有）、Class C（每股 1 票，NYSE 掛牌 DELL）；2026/9/1 流通總數 635,812,750 股（Class C 315,433,188；Class A 276,744,341；Class B 43,635,221）。下表「持股比例」一律以「占全部流通普通股（A+B+C 合計）的經濟權益」為口徑：Michael Dell、Silver Lake（SLP）、SLD Trust 取自 proxy（2026/4/27 股數基礎，proxy 直接給出占全部流通股比例）；機構股東取自 13F（持有 Class C；比例為本檔以 635.8M 換算，僅供參考）。13F 第 3 名 Banque Cantonale Vaudoise 的來源資料顯示 16,209 股卻有 $6.99B 價值，明顯資料錯誤，已剔除（此為 insiderset 原列第 3 名）。Vanguard 13F 拆成兩實體。 [外部・未經本專案檢核]
 - 說明：排名 1–3 為 proxy 的 A／B／C 合計經濟權益；排名 4 起為 13F 的 Class C 持股。Michael Dell 對全體投票權的占比 proxy 未在上述表格直接列示，需以 proxy 另表核對；Morgan Stanley（7,074,450）與 FMR（5,654,576）為其後兩名。 [外部・未經本專案檢核]

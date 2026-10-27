@@ -74,16 +74,16 @@ asof: 2026-10-25
 ## 前十大股東
 | 排名 | 股東 | 持股比例 | 標記 |
 |---|---|---|---|
-| 1 | BlackRock, Inc. | 約 12.43% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 2 | Vanguard Capital Management LLC | 約 6.54% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 3 | Vanguard Portfolio Management LLC | 約 5.52% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 4 | State Street Corp | 約 4.66% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 5 | Invesco Ltd. | 約 4.27% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 6 | JPMorgan Chase & Co | 約 3.56% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 7 | Geode Capital Management, LLC | 約 2.94% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 8 | FMR LLC | 約 2.63% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 9 | Ameriprise Financial Inc | 約 1.74% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 10 | Van Eck Associates Corp | 約 1.67% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
+| 1 | BlackRock, Inc. | 約 12.43% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：TER Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 2 | Vanguard Capital Management LLC | 約 6.54% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：TER Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 3 | Vanguard Portfolio Management LLC | 約 5.52% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：TER Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 4 | State Street Corp | 約 4.66% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：TER Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 5 | Invesco Ltd. | 約 4.27% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：TER Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 6 | JPMorgan Chase & Co | 約 3.56% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：TER Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 7 | Geode Capital Management, LLC | 約 2.94% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：TER Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 8 | FMR LLC | 約 2.63% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：TER Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 9 | Ameriprise Financial Inc | 約 1.74% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：TER Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 10 | Van Eck Associates Corp | 約 1.67% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：TER Institutional Ownership，2026 年，頁面註明 Q2 2026] |
 
 - 口徑：13F 機構持股，資料日 2026-06-30（Q2 2026），來自 insiderset 彙整頁（依申報價值排序）；比例為本檔以 10-Q 封面流通股數 156,340,750（2026/7/27）換算，僅供參考。Vanguard 13F 拆成兩個申報實體，合計約 18.9M 股（約 12.1%）。proxy（來源 3）5% 以上持有人：The Vanguard Group 20,972,755 股 13.4%（13G，2025-06-30）、BlackRock 14,337,126 股 9.2%（13G，2023-12-29，已舊）、FMR LLC 7,910,777 股 5.1%。 [外部・未經本專案檢核]
 

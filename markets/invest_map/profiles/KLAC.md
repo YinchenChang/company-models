@@ -71,16 +71,16 @@ asof: 2026-10-25
 ## 前十大股東
 | 排名 | 股東 | 持股比例 | 標記 |
 |---|---|---|---|
-| 1 | BlackRock, Inc. | 約 9.67% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 2 | Vanguard Capital Management LLC | 約 6.54% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 3 | State Street Corp | 約 4.82% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 4 | Capital World Investors | 約 3.47% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 5 | Invesco Ltd. | 約 3.44% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 6 | FMR LLC | 約 3.30% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 7 | Vanguard Portfolio Management LLC | 約 3.02% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 8 | AllianceBernstein L.P. | 未計算（資料疑誤，見口徑說明） | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 9 | Geode Capital Management, LLC | 約 2.80% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 10 | Capital International Investors | 約 2.72% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
+| 1 | BlackRock, Inc. | 約 9.67% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 2 | Vanguard Capital Management LLC | 約 6.54% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 3 | State Street Corp | 約 4.82% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 4 | Capital World Investors | 約 3.47% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 5 | Invesco Ltd. | 約 3.44% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 6 | FMR LLC | 約 3.30% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 7 | Vanguard Portfolio Management LLC | 約 3.02% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 8 | AllianceBernstein L.P. | 未計算（資料疑誤，見口徑說明） | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 9 | Geode Capital Management, LLC | 約 2.80% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 10 | Capital International Investors | 約 2.72% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
 
 - 口徑：13F 機構持股，資料日 2026-06-30（Q2 2026），來自 insiderset 彙整頁（依申報價值排序）。KLA 於 2026/6/11 進行十比一股票分割（10-K 已追溯調整；2026/9/9 流通股 1,305,006,492 股）；持股比例為本檔以此股數換算，僅供參考。第 8 名 AllianceBernstein 的股數欄（7,470,622）與其申報價值 $11.00B 不相稱（以同頁其他持有人隱含股價 ≈ $300 估，應約 3,600 萬股），疑為來源資料錯誤，不計算比例，需以 13F 原檔核對。Vanguard 13F 拆成兩個申報實體。proxy（來源 3）5% 以上持有人：BlackRock 115,048,620 股 8.8%（13G 資料日 2023-12-31）、Vanguard Capital Management 98,224,210 股 7.5%。 [外部・未經本專案檢核]
 - 來源 4 的排序依申報價值；若第 8 名實際股數約 3,640 萬股，則排序按股數應介於第 8–9 名之間。 [外部・未經本專案檢核]

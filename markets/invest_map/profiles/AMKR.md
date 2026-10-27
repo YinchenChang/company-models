@@ -72,16 +72,16 @@ asof: 2026-10-25
 ## 前十大股東
 | 排名 | 股東 | 持股比例 | 標記 |
 |---|---|---|---|
-| 1 | Kim Family Group（Kim 家族與關聯實體，beneficial ownership） | 49.4%（proxy 計算基礎約 2.48 億股） | 4 [外部・未經本專案檢核：資料日 2026-03-20] |
-| 2 | BlackRock, Inc. | 約 4.96% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 3 | Vanguard Portfolio Management LLC | 約 3.92% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 4 | Dimensional Fund Advisors LP | 約 3.25% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 5 | Vanguard Capital Management LLC | 約 2.70% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 6 | JPMorgan Chase & Co | 約 2.30% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 7 | State Street Corp | 約 1.50% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 8 | AQR Capital Management LLC | 約 1.30% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 9 | Earnest Partners LLC | 約 1.15% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 10 | Geode Capital Management, LLC | 約 1.13% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
+| 1 | Kim Family Group（Kim 家族與關聯實體，beneficial ownership） | 49.4%（proxy 計算基礎約 2.48 億股） | [外部・未經本專案檢核：資料日 2026-03-20；Amkor 2026 Proxy Statement DEF 14A，2026-04-02] |
+| 2 | BlackRock, Inc. | 約 4.96% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 3 | Vanguard Portfolio Management LLC | 約 3.92% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 4 | Dimensional Fund Advisors LP | 約 3.25% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 5 | Vanguard Capital Management LLC | 約 2.70% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 6 | JPMorgan Chase & Co | 約 2.30% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 7 | State Street Corp | 約 1.50% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 8 | AQR Capital Management LLC | 約 1.30% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 9 | Earnest Partners LLC | 約 1.15% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 10 | Geode Capital Management, LLC | 約 1.13% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
 
 - 口徑：Amkor 為 Kim 家族控股，故先列 proxy beneficial ownership（2026-03-20，來源 4），再列 13F 機構持股前九名（資料日 2026-06-30，來自 insiderset 依申報價值排序；比例為本檔以 2026/6/30 流通股數 247,986 千股換算，僅供參考）。Kim Family Group 為家族成員與其關聯實體的合併申報（含 John T. Kim 103,050,118 股 41.6%、Susan Y. Kim 63,594,650 股 25.6%、915 Investments LP 29,594,980 股 11.9% 等，彼此有重疊，不可相加）。Vanguard 13F 拆成兩個申報實體。 [外部・未經本專案檢核]
 - proxy 的 5% 持有人表僅列 Kim Family Group 群；未見其他 5% 以上機構持有人（BlackRock 約 5% 邊緣）。 [外部・未經本專案檢核]

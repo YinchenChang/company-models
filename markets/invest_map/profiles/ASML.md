@@ -76,8 +76,8 @@ asof: 2026-10-25
 ## 前十大股東
 | 排名 | 股東 | 持股比例 | 標記 |
 |---|---|---|---|
-| 1 | BlackRock, Inc. | 6.83% | 7 [外部・未經本專案檢核：資料日 2026-02-18] |
-| 2 | Capital Research and Management Company | 5.09% | 7 [外部・未經本專案檢核：資料日 2026-02-18] |
+| 1 | BlackRock, Inc. | 6.83% | [外部・未經本專案檢核：ASML Share information（investor.asml.com），資料日期 2026-02-18] |
+| 2 | Capital Research and Management Company | 5.09% | [外部・未經本專案檢核：ASML Share information（investor.asml.com），資料日期 2026-02-18] |
 | 3–10 | 未達 3% 申報門檻，未找到 | — | — [外部・未經本專案檢核] |
 
 - 口徑：ASML 官網投資人頁彙整 SEC／AFM 申報（>3%）的主要股東，資料日期 2026-02-18，百分比以 2025-12-31 在外流通股 385,417,665 股計算（AFM 申報以含庫藏股的總發行股數計，可能略有差異）。公開僅有兩家持股逾 3%，無完整前十名。 [外部・未經本專案檢核]

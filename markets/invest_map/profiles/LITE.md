@@ -70,16 +70,16 @@ asof: 2026-10-25
 ## 前十大股東
 | 排名 | 股東 | 持股比例 | 標記 |
 |---|---|---|---|
-| 1 | BlackRock, Inc. | 約 10.23% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 2 | Vanguard Capital Management LLC | 約 5.66% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 3 | Vanguard Portfolio Management LLC | 約 4.56% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 4 | JPMorgan Chase & Co | 約 4.53% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 5 | FMR LLC | 約 3.92% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 6 | State Street Corp | 約 3.85% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 7 | Invesco Ltd. | 約 3.54% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 8 | Geode Capital Management, LLC | 約 2.50% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 9 | Arrowstreet Capital, Limited Partnership | 約 1.53% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 10 | Morgan Stanley | 約 1.46% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
+| 1 | BlackRock, Inc. | 約 10.23% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 2 | Vanguard Capital Management LLC | 約 5.66% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 3 | Vanguard Portfolio Management LLC | 約 4.56% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 4 | JPMorgan Chase & Co | 約 4.53% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 5 | FMR LLC | 約 3.92% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 6 | State Street Corp | 約 3.85% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 7 | Invesco Ltd. | 約 3.54% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 8 | Geode Capital Management, LLC | 約 2.50% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 9 | Arrowstreet Capital, Limited Partnership | 約 1.53% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 10 | Morgan Stanley | 約 1.46% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
 
 - 口徑：13F 機構持股，資料日 2026-06-30（Q2 2026），來自 insiderset 彙整頁（依申報價值排序）；比例為本檔以 10-K 封面流通股數 89.7 百萬股（2026/8/14，已四捨五入）換算，僅供參考。Vanguard 13F 拆成兩實體，合計約 9.17M 股（約 10.2%）。proxy（來源 3）5% 以上持有人：Vanguard Capital Management 5,252,142 股 5.8%（13G/A，2026-04-30）、BlackRock 5,240,774 股 5.8%。（proxy 的 BlackRock 股數低於 13F 的 9.18M，因兩者統計口徑與日期不同，原樣保留。） [外部・未經本專案檢核]
 

@@ -69,16 +69,16 @@ asof: 2026-10-25
 ## 前十大股東
 | 排名 | 股東 | 持股比例 | 標記 |
 |---|---|---|---|
-| 1 | BlackRock, Inc. | 約 13.46% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 2 | T. Rowe Price Associates | 約 5.42% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 3 | Vanguard Portfolio Management LLC | 約 5.30% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 4 | FMR LLC | 約 5.14% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 5 | Vanguard Capital Management LLC | 約 4.51% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 6 | JPMorgan Chase & Co | 約 4.40% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 7 | State Street Corp | 約 3.66% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 8 | Geode Capital Management, LLC | 約 2.99% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 9 | Invesco Ltd. | 約 2.50% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 10 | T. Rowe Price Investment Management, Inc. | 約 2.37% | 4 [外部・未經本專案檢核：資料日 2026-06-30] |
+| 1 | BlackRock, Inc. | 約 13.46% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：FN Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 2 | T. Rowe Price Associates | 約 5.42% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：FN Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 3 | Vanguard Portfolio Management LLC | 約 5.30% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：FN Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 4 | FMR LLC | 約 5.14% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：FN Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 5 | Vanguard Capital Management LLC | 約 4.51% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：FN Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 6 | JPMorgan Chase & Co | 約 4.40% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：FN Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 7 | State Street Corp | 約 3.66% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：FN Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 8 | Geode Capital Management, LLC | 約 2.99% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：FN Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 9 | Invesco Ltd. | 約 2.50% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：FN Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 10 | T. Rowe Price Investment Management, Inc. | 約 2.37% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：FN Institutional Ownership，2026 年，頁面註明 Q2 2026] |
 
 - 口徑：13F 機構持股，資料日 2026-06-30（Q2 2026），來自 insiderset 彙整頁（依申報價值排序）；比例為本檔以 10-K 封面流通普通股 35,834,864 股（2026/8/7）換算，僅供參考。Vanguard 13F 拆成兩個申報實體（合計 3,514,665 股，約 9.8%）。proxy（來源 3）的 5% 以上持有人（beneficial ownership）與 13F 數字因日期與口徑不同而有差異，原樣列於下方。 [外部・未經本專案檢核]
 - proxy 5% 持有人（來源 3）：BlackRock 3,852,554 股 10.75%（13G/A，2026-07-28）、Vanguard Portfolio Management 2,166,241 股 6.05%（13G，2026-04-28）、T. Rowe Price Associates 1,941,001 股 5.42%（13G/A，2026-07-08）、Vanguard Capital Management 1,881,214 股 5.25%、FMR LLC 1,841,854 股 5.14%。BlackRock 的 13F（4.82M）與 13G（3.85M）差異原因未查明。 [外部・未經本專案檢核]

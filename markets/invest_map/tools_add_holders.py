@@ -58,6 +58,7 @@ def holders(body, src):
             c += [""] * (len(hdr) - len(c))
             g = lambda i: c[i] if i is not None and i < len(c) else ""
             refs = g(isrc)
+            refs = re.sub(r"(?<!\[)\b(\d+)\b(?!\])", r"[\1]", refs) if re.fullmatch(r"[\d,，、 \[\]]+", refs or "x") else refs
             d = g(idt)
             t = tagify(refs, src).strip() if refs else "[外部・未經本專案檢核]"
             if d and "外部" in t and d not in t:

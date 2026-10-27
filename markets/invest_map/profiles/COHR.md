@@ -69,16 +69,16 @@ asof: 2026-10-25
 ## 前十大股東
 | 排名 | 股東 | 持股比例 | 標記 |
 |---|---|---|---|
-| 1 | BlackRock, Inc. | 約 8.43% | 4 [外部・未經本專案檢核：資料日 2026-06-30（見口徑說明）] |
-| 2 | Vanguard Capital Management LLC | 約 6.48% | 4 [外部・未經本專案檢核：資料日 同上] |
-| 3 | FMR LLC | 約 5.59% | 4 [外部・未經本專案檢核：資料日 同上] |
-| 4 | Vanguard Portfolio Management LLC | 約 5.09% | 4 [外部・未經本專案檢核：資料日 同上] |
-| 5 | State Street Corp | 約 4.36% | 4 [外部・未經本專案檢核：資料日 同上] |
-| 6 | NVIDIA Corp | 約 3.95% | 4 [外部・未經本專案檢核：資料日 同上] |
-| 7 | Invesco Ltd. | 約 3.77% | 4 [外部・未經本專案檢核：資料日 同上] |
-| 8 | Geode Capital Management, LLC | 約 2.68% | 4 [外部・未經本專案檢核：資料日 同上] |
-| 9 | Capital International Investors | 約 1.83% | 4 [外部・未經本專案檢核：資料日 同上] |
-| 10 | Morgan Stanley | 約 1.67% | 4 [外部・未經本專案檢核：資料日 同上] |
+| 1 | BlackRock, Inc. | 約 8.43% | [外部・未經本專案檢核：資料日 2026-06-30（見口徑說明）；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 2 | Vanguard Capital Management LLC | 約 6.48% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 3 | FMR LLC | 約 5.59% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 4 | Vanguard Portfolio Management LLC | 約 5.09% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 5 | State Street Corp | 約 4.36% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 6 | NVIDIA Corp | 約 3.95% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 7 | Invesco Ltd. | 約 3.77% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 8 | Geode Capital Management, LLC | 約 2.68% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 9 | Capital International Investors | 約 1.83% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 10 | Morgan Stanley | 約 1.67% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
 
 - 口徑：13F 機構持股（insiderset 彙整頁，頁面導言稱 2026-06-30（Q2 2026），但標題／FAQ 另有 Q3 2026 字樣，資料日不完全確定）；比例為本檔以 proxy 所載流通股數 196,934,659（2026/8/31）換算，僅供參考。Vanguard 13F 拆成兩實體。第 6 名 NVIDIA Corp 為 2026/3 私募投資（與上述策略協議一併）。proxy（來源 3）5% 以上持有人：Vanguard Capital Management 13,968,914 股 7.1%、BlackRock 12,978,940 股 6.6%、FMR LLC 11,006,110 股 5.6%（13G 申報）。 [外部・未經本專案檢核]
 

@@ -75,16 +75,16 @@ asof: 2026-10-25
 ## 前十大股東
 | 排名 | 股東 | 持股比例 | 標記 |
 |---|---|---|---|
-| 1 | BlackRock, Inc. | 約 10.63% | 3 [外部・未經本專案檢核：資料日 2026-06-30（見口徑說明）] |
-| 2 | Vanguard Capital Management LLC | 約 6.54% | 3 [外部・未經本專案檢核：資料日 同上] |
-| 3 | State Street Corp | 約 4.86% | 3 [外部・未經本專案檢核：資料日 同上] |
-| 4 | Invesco Ltd. | 約 4.19% | 3 [外部・未經本專案檢核：資料日 同上] |
-| 5 | JPMorgan Chase & Co | 約 3.63% | 3 [外部・未經本專案檢核：資料日 同上] |
-| 6 | Vanguard Portfolio Management LLC | 約 2.93% | 3 [外部・未經本專案檢核：資料日 同上] |
-| 7 | Geode Capital Management, LLC | 約 2.76% | 3 [外部・未經本專案檢核：資料日 同上] |
-| 8 | FMR LLC | 約 2.70% | 3 [外部・未經本專案檢核：資料日 同上] |
-| 9 | T. Rowe Price Associates | 約 1.97% | 3 [外部・未經本專案檢核：資料日 同上] |
-| 10 | Morgan Stanley | 約 1.54% | 3 [外部・未經本專案檢核：資料日 同上] |
+| 1 | BlackRock, Inc. | 約 10.63% | [外部・未經本專案檢核：資料日 2026-06-30（見口徑說明）；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 2 | Vanguard Capital Management LLC | 約 6.54% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 3 | State Street Corp | 約 4.86% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 4 | Invesco Ltd. | 約 4.19% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 5 | JPMorgan Chase & Co | 約 3.63% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 6 | Vanguard Portfolio Management LLC | 約 2.93% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 7 | Geode Capital Management, LLC | 約 2.76% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 8 | FMR LLC | 約 2.70% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 9 | T. Rowe Price Associates | 約 1.97% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 10 | Morgan Stanley | 約 1.54% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
 
 - 口徑：13F 機構持股（insiderset 彙整頁，頁面導言稱資料為 2026-06-30（Q2 2026），但標題與 FAQ 另有 Q3 2026 字樣，資料日不完全確定）。該頁無持股比例欄，比例為本檔以 10-Q 封面流通股數 1,249,171 千股（2026/10/20）換算，僅供參考。Vanguard 已拆成兩個 13F 申報實體。proxy（來源 4）5% 以上持有人：BlackRock 117,779,780 股 9.41%（13G 資料日 2023-12-31）、Vanguard Capital Management 93,575,293 股 7.48%。 [外部・未經本專案檢核]
 

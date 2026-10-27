@@ -69,16 +69,16 @@ asof: 2026-10-25
 ## 前十大股東
 | 排名 | 股東 | 持股比例 | 標記 |
 |---|---|---|---|
-| 1 | Applied Materials, Inc. | 9.00%（AFM）／9.04%（彙整） | 4, 5 [外部・未經本專案檢核：資料日 2025-04-14（AFM 交易日）] |
-| 2 | BlackRock, Inc. | 8.18% | 5 [外部・未經本專案檢核：資料日 彙整，約 2026-10] |
-| 3 | FMR LLC | 4.77% | 5 [外部・未經本專案檢核：資料日 同上] |
-| 4 | Vanguard Capital Management, LLC | 3.45% | 5 [外部・未經本專案檢核：資料日 同上] |
-| 5 | Fidelity International Ltd | 3.26% | 5 [外部・未經本專案檢核：資料日 同上] |
-| 6 | Amundi Asset Management SAS | 3.15% | 5 [外部・未經本專案檢核：資料日 同上] |
-| 7 | Sylebra Capital Limited | 2.98% | 5 [外部・未經本專案檢核：資料日 同上] |
-| 8 | T. Rowe Price Group, Inc. | 2.96% | 5 [外部・未經本專案檢核：資料日 同上] |
-| 9 | Richard Blickman（CEO） | 1.90% | 5 [外部・未經本專案檢核：資料日 同上] |
-| 10 | Norges Bank Investment Management | 1.62% | 5 [外部・未經本專案檢核：資料日 同上] |
+| 1 | Applied Materials, Inc. | 9.00%（AFM）／9.04%（彙整） | [外部・未經本專案檢核：資料日 2025-04-14（AFM 交易日）；AFM 登記：Applied Materials－BE Semiconductor Industries，交易日 2025-04-14], [外部・未經本專案檢核：Simply Wall St：BESI Ownership，2026-10-25 更新] |
+| 2 | BlackRock, Inc. | 8.18% | [外部・未經本專案檢核：資料日 彙整，約 2026-10；Simply Wall St：BESI Ownership，2026-10-25 更新] |
+| 3 | FMR LLC | 4.77% | [外部・未經本專案檢核：資料日 同上；Simply Wall St：BESI Ownership，2026-10-25 更新] |
+| 4 | Vanguard Capital Management, LLC | 3.45% | [外部・未經本專案檢核：資料日 同上；Simply Wall St：BESI Ownership，2026-10-25 更新] |
+| 5 | Fidelity International Ltd | 3.26% | [外部・未經本專案檢核：資料日 同上；Simply Wall St：BESI Ownership，2026-10-25 更新] |
+| 6 | Amundi Asset Management SAS | 3.15% | [外部・未經本專案檢核：資料日 同上；Simply Wall St：BESI Ownership，2026-10-25 更新] |
+| 7 | Sylebra Capital Limited | 2.98% | [外部・未經本專案檢核：資料日 同上；Simply Wall St：BESI Ownership，2026-10-25 更新] |
+| 8 | T. Rowe Price Group, Inc. | 2.96% | [外部・未經本專案檢核：資料日 同上；Simply Wall St：BESI Ownership，2026-10-25 更新] |
+| 9 | Richard Blickman（CEO） | 1.90% | [外部・未經本專案檢核：資料日 同上；Simply Wall St：BESI Ownership，2026-10-25 更新] |
+| 10 | Norges Bank Investment Management | 1.62% | [外部・未經本專案檢核：資料日 同上；Simply Wall St：BESI Ownership，2026-10-25 更新] |
 
 - 口徑：歐洲公司；AFM 大股東申報（>3%）僅 Applied Materials 為本次直接查到的申報（9.00%，交易日 2025-04-14）。其餘為 Simply Wall St 彙整（持股日期未逐一標示，價格日 2026-10-23），非 AFM 申報，僅供參考。 [外部・未經本專案檢核]
 

@@ -65,16 +65,16 @@ AI 伺服器品牌商：以買賣模式銷售含 NVIDIA、AMD GPU 的整機、�
 ## 前十大股東
 | 排名 | 股東 | 持股比例 | 標記 |
 |---|---|---|---|
-| 1 | Charles Liang & Sara Liu（創辦人夫婦，含選擇權 15,300,000＋72,540 股） | 13.4%（proxy 基礎）；以 6.57 億股換算約 12.5% | 4 [外部・未經本專案檢核：資料日 2026-01-31] |
-| 2 | BlackRock, Inc. | 約 7.26% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 3 | Vanguard Capital Management LLC | 約 5.53% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 4 | Vanguard Portfolio Management LLC | 約 5.00% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 5 | Jane Street Group, LLC | 約 4.38% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 6 | State Street Corp | 約 3.75% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 7 | UBS Group AG | 約 3.00% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 8 | Geode Capital Management, LLC | 約 2.36% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 9 | Invesco Ltd. | 約 1.78% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
-| 10 | Goldman Sachs Group Inc | 約 1.69% | 5 [外部・未經本專案檢核：資料日 2026-06-30] |
+| 1 | Charles Liang & Sara Liu（創辦人夫婦，含選擇權 15,300,000＋72,540 股） | 13.4%（proxy 基礎）；以 6.57 億股換算約 12.5% | [外部・未經本專案檢核：資料日 2026-01-31；Super Micro Computer 2026 Proxy Statement DEF 14A，2026-03-03] |
+| 2 | BlackRock, Inc. | 約 7.26% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 3 | Vanguard Capital Management LLC | 約 5.53% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 4 | Vanguard Portfolio Management LLC | 約 5.00% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 5 | Jane Street Group, LLC | 約 4.38% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 6 | State Street Corp | 約 3.75% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 7 | UBS Group AG | 約 3.00% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 8 | Geode Capital Management, LLC | 約 2.36% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 9 | Invesco Ltd. | 約 1.78% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 10 | Goldman Sachs Group Inc | 約 1.69% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
 
 - 口徑：先列 proxy beneficial ownership 的創辦人持股（Charles Liang 與 Sara Liu，2026-01-31 基礎、流通股 598,989,428 股，來源 4），再列 13F 機構前九名（資料日 2026-06-30，來自 insiderset 依申報價值排序；比例為本檔以 10-K 封面流通股 656,965,384 股（2026/7/31）換算，僅供參考）。Vanguard 13F 拆成兩實體，合計 69.2M 股（約 10.5%），與 proxy 載 The Vanguard Group 68,848,777 股 11.5%（13G/A，2025-10-31）相近。proxy 另載 BlackRock 41,338,350 股 6.9%（13G/A，2024-10-25，已舊）。Wally Liaw 持 15,546,165 股（2.6%，2026-01-31）；其後已離職並遭起訴（見 B），此處不列入排名。 [外部・未經本專案檢核]
 - 第 11 名為 Two Sigma Investments, LP 9,783,845 股（約 1.49%）。 [外部・未經本專案檢核]
