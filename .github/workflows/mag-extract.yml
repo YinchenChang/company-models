@@ -19,13 +19,15 @@ jobs:
       - uses: actions/setup-python@v6
         with: {python-version: "3.12"}
       - run: pip install openpyxl
-      - name: Probe SEC（診斷：狀態碼與出口 IP）
+      - name: Probe sources（診斷）
         run: |
           UA="company-models research tool YinchenChang@users.noreply.github.com"
           mkdir -p mag/extract/out
-          { echo "# SEC 連線診斷 $(date -u +%FT%TZ)"; echo "出口 IP：$(curl -s https://api.ipify.org)";
-            for u in https://data.sec.gov/submissions/CIK0000789019.json https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany\&CIK=789019 https://efts.sec.gov/LATEST/search-index?q=%22Microsoft%22; do
-              c=$(curl -s -o /tmp/b -w '%{http_code}' -A "$UA" -H "Accept-Encoding: identity" "$u"); echo "- $c $u｜$(head -c 200 /tmp/b | tr '\n' ' ')"; done; } > mag/extract/out/_sec_probe.md
+          { echo "# 來源連線診斷 $(date -u +%FT%TZ)"; echo "出口 IP：$(curl -s https://api.ipify.org)";
+            c=$(curl -s -o /tmp/b -w '%{http_code}' -A "$UA" https://data.sec.gov/submissions/CIK0000789019.json)
+            echo "- SEC $c｜$(sed -e 's/<[^>]*>/ /g' /tmp/b | tr -s ' \n' ' ' | head -c 700)"
+            for u in https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast https://abc.xyz/investor/ https://ir.aboutamazon.com/quarterly-results/default.aspx; do
+              c=$(curl -sL -o /tmp/b -w '%{http_code}' -A "Mozilla/5.0" "$u"); echo "- $c $u｜$(grep -o -i -E 'href=\"[^\"]*(10-?q|10q|10-k)[^\"]*\"' /tmp/b | head -5 | tr '\n' ' ')"; done; } > mag/extract/out/_sec_probe.md
       - name: Extract
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
