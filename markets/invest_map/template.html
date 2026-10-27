@@ -475,7 +475,7 @@ function renderProfiles(){
   const layers=[...new Set(D.position.map(p=>p.layer))].sort().reverse();
   const n=Object.keys(PF).length;
   let h=`<div class="head"><span class="label">視角 04</span><h2>公司檔案：先懂公司，再看數字</h2>
-  <p>每家一份背景資料：在做什麼、主要產品與營收占比、市場位置、管理層、同業競爭、近期重大事件與需要觀察的事項。點卡片開啟。主文不夾出處：滑鼠停在數字（虛線底）或 ⓘ 上可看資料出處，各頁底部也列出全部出處。已完成 ${n} / ${D.valuation.length} 家。</p></div>`;
+  <p>每家一份背景資料：在做什麼、主要產品與營收占比、市場位置、管理層、同業競爭、主要客戶與前十大股東、近期重大事件與需要觀察的事項。點卡片開啟。主文不夾出處：滑鼠停在數字（虛線底）或 ⓘ 上可看資料出處，各頁底部也列出全部出處。已完成 ${n} / ${D.valuation.length} 家。</p></div>`;
   layers.forEach(L=>{
     const list=D.position.filter(p=>p.layer===L).sort((a,b)=>b.score-a.score);
     h+=`<div class="grp">${esc(L)}</div><div class="pgrid">${list.map(p=>{const v=V[p.tk],pf=PF[p.tk];
@@ -484,7 +484,7 @@ function renderProfiles(){
   });
   $("#v-profiles").innerHTML=h;
 }
-const DT=[["概要",["公司在做什麼","主要產品與營收占比"]],["產業與競爭",["市場定位與產業位置","同業與競爭態勢"]],["管理層",["管理層與經營風格"]],["動態與觀察",["近期重大事件","需要觀察的事項"]],["個股模型",null],["來源",["來源"]]];
+const DT=[["概要",["公司在做什麼","主要產品與營收占比"]],["產業與競爭",["市場定位與產業位置","同業與競爭態勢"]],["客戶與股東",["主要客戶","前十大股東"]],["管理層",["管理層與經營風格"]],["動態與觀察",["近期重大事件","需要觀察的事項"]],["個股模型",null],["來源",["來源"]]];
 const MD=D.models||{};
 const modelUrl=m=>location.protocol==="file:"?`../../../${m.folder}/dist/${m.file}`:`models/${m.folder}/${encodeURIComponent(m.file)}`;
 function modelPane(tk){const m=MD[tk], v=V[tk];
