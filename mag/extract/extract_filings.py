@@ -371,11 +371,11 @@ def main():
             for i, fid in enumerate(req.get("drive_ids", [])):
                 local.append(drive_download(fid, f"{ROOT}/mag/extract/docs/_drive_{name}_{i}.pdf"))
             if local:   # 本地文件模式（2026-10-27 起的主要模式：SEC 擋雲端 IP，改由 Andy 手動下載）
-                for path in local:
-                    t = read_local(path)[:MAX_DOC_CHARS]
-                    lab = os.path.basename(path)
+                for doc in local:   # 不可用 path：外層迴圈的請求檔路徑（曾因覆蓋而把 PDF 搬成請求檔）
+                    t = read_local(doc)[:MAX_DOC_CHARS]
+                    lab = os.path.basename(doc)
                     parts.append(f"\n\n===== 文件：{lab} =====\n{t}")
-                    meta.append((lab, path, req.get("filed", ""), len(t)))
+                    meta.append((lab, doc, req.get("filed", ""), len(t)))
             else:       # EDGAR 直連模式（雲端 IP 目前被 SEC 擋；保留供可直連的環境使用）
                 docs = find_filings(req["company"], req["period_end"])
                 if not docs:
