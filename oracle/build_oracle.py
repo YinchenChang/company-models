@@ -458,6 +458,24 @@ for j, s in enumerate(SC): TH.cell(RP + 4, 3 + j, f"=G{TR[s]['rev']}/oai_annual"
 TH.cell(RP + 5, 1, "模型 FY2029 OCI（含非 AI）÷ 公司 OCI 路徑 FY2029（114）"); TH.cell(RP + 5, 2, "x")
 for j, s in enumerate(SC): TH.cell(RP + 5, 3 + j, f"=G{TR[s]['oci']}/go2029").number_format = "0.00"
 RPO_ROWS = (RP + 2, RP + 5)
+# 命題答案摘要（核心問題：FY2029 OCI 營收與營業利益率 vs 資本支出與租約、資金缺口）
+SM = RP + 7
+TH.cell(SM, 1, "命題答案摘要（FY2029；核心問題）").font = BOLD
+hdr(TH, SM + 1, ["項目", "單位", "情境 A", "情境 B", "情境 C", "說明"])
+SUMQ = [("OCI 營收 FY2029（含非 AI）", "US$B", lambda s: f"=G{TR[s]['oci']}", "#,##0.0", "公司路徑 114"),
+        ("其中 OCI AI 算力營收 FY2029", "US$B", lambda s: f"=G{TR[s]['rev']}", "#,##0.0", ""),
+        ("OCI AI 營業利益率 FY2029（含 AI 折舊、租金）", "%", lambda s: f"=G{TR[s]['om']}", "0.0%", ""),
+        ("OCI（含非 AI）營業利益率 FY2029", "%", lambda s: f"=G{TR[s]['ocim']}", "0.0%", ""),
+        ("AI 資本支出累計 FY2027–FY2029", "US$B", lambda s: f"=E{TR[s]['cx']}+F{TR[s]['cx']}+G{TR[s]['cx']}", "#,##0.0", ""),
+        ("AI 機房租金 FY2029", "US$B", lambda s: f"=G{TR[s]['rent']}", "#,##0.0", "未起租 288B 起租"),
+        ("AI 增量 ROIC FY2029", "%", lambda s: f"=G{TR[s]['roic']}", "0.0%", "對照 WACC（Val 頁）"),
+        ("收支關卡：FY2027–FY2031 自由現金流扣股利", "US$B", lambda s: f"=CF!{'CDE'[SC.index(s)]}4", "#,##0.0", "CF 頁")]
+for i, (lab, unit, f, fmt, note) in enumerate(SUMQ):
+    rr_ = SM + 2 + i
+    TH.cell(rr_, 1, lab); TH.cell(rr_, 2, unit); TH.cell(rr_, 6, note)
+    for j, s in enumerate(SC):
+        TH.cell(rr_, 3 + j, f(s)).number_format = fmt
+SUM_ROWS = (SM + 1, SM + 1 + len(SUMQ))
 TH.column_dimensions["A"].width = 66; TH.column_dimensions["B"].width = 14
 for c in "CDEFGHIJ": TH.column_dimensions[c].width = 12
 TH.column_dimensions["K"].width = 70
@@ -1031,5 +1049,5 @@ order = ["README", "In", "Q", "Thesis", "Seg", "PL", "CF", "Val", "Recon", "Sens
 wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])
 if os.environ.get("ORCL_ROWMAP"):
-    json.dump({"TR": TR, "SR": SR, "PR": PR_, "CR": CR_, "VAL": VAL, "GATE": GATE, "CHK": [CHK_SEG, CHK_SUB, CHK_SUM], "RPO": RPO_ROWS, "SENS": SENS_ROWS, "CAL": CAL, "SGC": SGC},
+    json.dump({"TR": TR, "SR": SR, "PR": PR_, "CR": CR_, "VAL": VAL, "GATE": GATE, "CHK": [CHK_SEG, CHK_SUB, CHK_SUM], "RPO": RPO_ROWS, "SUM": SUM_ROWS, "SENS": SENS_ROWS, "CAL": CAL, "SGC": SGC},
               open(os.environ["ORCL_ROWMAP"], "w"), ensure_ascii=False, indent=1)
