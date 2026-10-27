@@ -1,90 +1,76 @@
 # 記憶體市場層（共用）：季度價格路徑（情境 A／B／C）、加速器數量層、HBM 市場。
-# 各公司模型（tools/memory_model/build.py）引用本檔，確保所有記憶體公司用同一組市場假設。
-QUARTERS = [f"{y}Q{q}" for y in (2025, 2026, 2027, 2028, 2029) for q in (1, 2, 3, 4)]  # Path!C..V
-NQ = len(QUARTERS)
-SCEN = ("A", "B", "C")
-SCEN_DESC = {"A": "2027–28 高檔持平、2029 緩降（BofA、TrendForce 型）",
-             "B": "2027 Q2 見頂、2028 回落約一半、2029 溫和回升（Citi、Bernstein 型）",
-             "C": "2028 回到 2025 年價格水準、2029 自谷底回升（完整循環）"}
+# 各公司模型（tools/memory_model/build.py 等 38 個建檔程式）引用本檔，確保所有公司用同一組市場假設。
+# 2026-10-27 起（Siliconomics v0.1）：本檔不再持有任何數值。所有輸入（季價、顆數、每顆 HBM、情境係數、HBM 市場參數、對帳參考）
+# 由 AI 半導體產業基準庫 Siliconomics 的 Excel 擁有，經 siliconomics/tools/export_snapshot.py 匯成快照；本檔只讀快照、
+# 以原有的 Python 名稱（UNITS、SCEN_UNITS、CONV_* …）提供給下游，並保留 write() 的公式結構（Siliconomics 的 Path／Mkt 頁也用同一份）。
+# 要改數值：改 Siliconomics Excel 的 In 頁 → 重建、重算 → 重新匯出快照 → 更新 siliconomics/data/CURRENT_SNAPSHOT。
+import json, os
 
-# 加速器顆數的情境係數（2028、2029 年 ÷ 情境 A 基準）：與 tsmc/build_tsmc.py、advantest 同一套，由這裡單一來源提供
-SCEN_UNITS = {"A": (1.0, 1.0), "B": (0.8, 0.85), "C": (0.6, 0.6)}
-# 低／高（Assumed 區間；A 為基準定義，不給區間）
-SCEN_UNITS_RNG = {"B": ((0.7, 0.9), (0.75, 0.95)), "C": ((0.5, 0.7), (0.5, 0.7))}
+_SIL = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "siliconomics", "data")
+SNAPSHOT_FILE = open(os.path.join(_SIL, "CURRENT_SNAPSHOT"), encoding="utf-8").read().strip()
+SNAP = json.load(open(os.path.join(_SIL, SNAPSHOT_FILE), encoding="utf-8"))
+SIL_VERSION = SNAP["source"]["version"]
+_ROWS = SNAP["rows"]
+# Excel 不分整數與浮點數；下游有把數值寫進說明文字者（例如「× 1.0／1.0」），故依單位還原原本的型別：
+# 比例、倍數、百萬顆、單價一律浮點數；GB、$B、$K 為整數值時用整數（與 2026-10-27 前 market.py 的寫法相同）
+_FLOAT_UNITS = {"%", "x", "百萬顆", "$/GB"}
+for _r in _ROWS:
+    if "id" in _r:
+        for _f in ("lo", "base", "hi"):
+            _x = _r[_f]
+            if isinstance(_x, (int, float)) and not isinstance(_x, bool):
+                _r[_f] = float(_x) if _r["unit"] in _FLOAT_UNITS else (int(_x) if float(_x).is_integer() else _x)
+_V = {r["id"]: r for r in _ROWS if "id" in r}
+
+QUARTERS = [f"{y}Q{q}" for y in (2025, 2026, 2027, 2028, 2029) for q in (1, 2, 3, 4)]  # Path!C..V（結構，非數值）
+NQ = len(QUARTERS)
+SCEN = tuple(SNAP["scen"])
+SCEN_DESC = dict(SNAP["scen_desc"])
+
+
+def _b(k):
+    return _V[k]["base"]
+
+
+# 加速器顆數的情境係數（2028、2029 年 ÷ 情境 A 基準）：tsmc、advantest 等同一套，由 Siliconomics 單一來源提供
+SCEN_UNITS = {s: (_b(f"um28_{s}"), _b(f"um29_{s}")) for s in SCEN}
+SCEN_UNITS_RNG = {s: ((_V[f"um28_{s}"]["lo"], _V[f"um28_{s}"]["hi"]), (_V[f"um29_{s}"]["lo"], _V[f"um29_{s}"]["hi"]))
+                  for s in SCEN if _V[f"um28_{s}"]["lo"] is not None}
+
 
 def qcol(i):  # 0..15 → Path 欄
     return chr(ord("C") + i)
 
-# 價格季增（QoQ）：2025Q2–2026Q4 共用；2027Q1–2028Q4 依情境
-CONV_COMMON = [-0.025, 0.125, 0.475, 0.95, 0.605, 0.155, 0.125]
-CONV_SRC = "TrendForce 合約價：2Q25 0~−5%、3Q25 +10~15%、4Q25 實際 +45~50%、1Q26 實際約 +93~98%、2Q26 +58~63%、3Q26 +13~18%（MS 實際約 +15%）、4Q26 +10~15%"
-CONV_S = {"A": [0.03, 0.0, -0.02, -0.03, -0.03, -0.03, -0.02, -0.02, -0.03, -0.03, -0.02, -0.02],
-          "B": [0.05, 0.02, -0.08, -0.15, -0.25, -0.15, -0.10, -0.05, 0.05, 0.05, 0.03, 0.03],
-          "C": [0.05, 0.02, -0.08, -0.15, -0.35, -0.30, -0.25, -0.20, 0.0, 0.05, 0.08, 0.10]}
-CONV_S_SRC = {"A": "BofA：2027 持平略降、2027 均價仍高於 2026；2028 溫和修正（年均約 −10%）；2029 Assumed 緩降",
-              "B": "Citi：2027 Q2 見頂；Bernstein：2028 DRAM $/GB −52.9%（本路徑 2028 年均約 −47%）；2029 Assumed 溫和回升",
-              "C": "Assumed：2028 年底回到約 2025Q4 水準（自高點約 −79%），比照 2019、2023 年谷底；2029 自谷底回升"}
-NAND_COMMON = [0.0, 0.05, 0.30, 0.875, 0.725, 0.15, 0.175]
-NAND_SRC = "TrendForce：1Q26 +85~90%、2Q26 +70~75%、3Q26 +10~15%（MS 實際約 +20%）、4Q26 +15~20%；2025Q2–Q4 為 Assumed"
-NAND_S = {"A": [0.03, 0.0, -0.05, -0.07, -0.05, -0.05, -0.05, -0.05, -0.03, -0.03, -0.03, -0.03],
-          "B": [0.05, 0.02, -0.10, -0.20, -0.30, -0.25, -0.20, -0.10, 0.05, 0.05, 0.03, 0.03],
-          "C": [0.05, 0.02, -0.10, -0.20, -0.35, -0.35, -0.25, -0.20, 0.0, 0.05, 0.08, 0.10]}
-NAND_S_SRC = {"A": "TrendForce：2027 下半年供需平衡、價格面臨下修壓力",
-              "B": "Citi：2027 Q2 見頂；Bernstein：NAND $/GB 2028 −68.8%",
-              "C": "Assumed：回到約 2025 年水準"}
 
-UNITS = [
- ("bw", "NVIDIA Blackwell（B200／B300）", (5.4, 2.4, 0.5), (260, 280, 288), "Interested-party", "顆數：Morgan Stanley 2026-07（2026 5.4M）；AC Research 2027 約 2.4M；2028 Assumed。GB：B200 186、B300 288 組合 [Derived]"),
- ("rb", "NVIDIA Rubin", (1.7, 7.0, 7.0), (288, 288, 288), "Interested-party", "2026：TrendForce 組合 Rubin 22% × 約 7.6M [Derived]；2027：Morgan Stanley 約 7.0M；2028 Assumed"),
- ("ru", "NVIDIA Rubin Ultra", (0.0, 0.3, 2.0), (1024, 1024, 1024), "Assumed", "時程 Assumed；GB：NVIDIA 1 TB／封裝"),
- ("hp", "NVIDIA Hopper（H200 等）", (0.5, 0.0, 0.0), (141, 141, 141), "Interested-party", "TrendForce 2026 組合 Hopper 7%"),
- ("amd", "AMD Instinct", (0.75, 1.5, 2.0), (288, 360, 432), "Interested-party／Assumed", "2027：Morgan Stanley MI455X 1.0M＋MI450 0.5M；其餘 Assumed"),
- ("tpu", "Google TPU", (3.85, 5.5, 7.0), (192, 250, 288), "Interested-party", "MS 3.2／5.0、GF 4.5／8.84（2026／2027）取中間偏 MS；2028 Assumed"),
- ("trn", "AWS Trainium", (2.0, 2.5, 3.0), (110, 144, 200), "Assumed", "年出貨未找到；GB：Trn2 96、Trn3 144"),
- ("oth", "其他 ASIC（MTIA、Maia、Ascend 等）", (1.0, 4.5, 5.0), (150, 200, 250), "Derived／Assumed", "2027：JPMorgan ASIC 12.5M − TPU − Trainium"),
-]
+CONV_COMMON = [_b(f"cq_{i}") for i in range(1, 8)]
+CONV_SRC = _V["cq_1"]["src"]
+CONV_S = {s: [_b(f"cq{s}_{i}") for i in range(8, 20)] for s in SCEN}
+CONV_S_SRC = {s: _V[f"cq{s}_8"]["src"] for s in SCEN}
+NAND_COMMON = [_b(f"nq_{i}") for i in range(1, 8)]
+NAND_SRC = _V["nq_1"]["src"]
+NAND_S = {s: [_b(f"nq{s}_{i}") for i in range(8, 20)] for s in SCEN}
+NAND_S_SRC = {s: _V[f"nq{s}_8"]["src"] for s in SCEN}
+
+UNITS = [(g["key"], g["name"], tuple(_b(f"u_{g['key']}_{y}") for y in (26, 27, 28)),
+          tuple(_b(f"g_{g['key']}_{y}") for y in (26, 27, 28)), g["tag"], g["src"]) for g in SNAP["unit_groups"]]
+
+_REF_SEC = "M4."  # 對帳用參考（ref_inputs）；其餘節為 inputs()
+
+
+def _replay(sec, inp, want_ref):
+    on = False
+    for r in _ROWS:
+        if "sec" in r:
+            on = r["sec"].startswith(_REF_SEC) == want_ref
+            if on:
+                sec(r["sec"])
+            continue
+        if on:
+            inp(r["id"], r["label"], r["unit"], r["lo"], r["base"], r["hi"], r["tag"], r["src"])
+
 
 def inputs(sec, inp):
-    sec("M1. 記憶體價格路徑（季增，共用市場層 markets/memory）")
-    for i, v in enumerate(CONV_COMMON):
-        inp(f"cq_{i+1}", f"一般 DRAM 合約價季增 {QUARTERS[i+1]}", "%", None, v, None, "Interested-party", CONV_SRC if i == 0 else "同上")
-    for s in SCEN:
-        for i, v in enumerate(CONV_S[s]):
-            inp(f"cq{s}_{i+8}", f"一般 DRAM 合約價季增 {QUARTERS[i+8]}（{s}）", "%", None, v, None, "Interested-party" if s != "C" else "Assumed", CONV_S_SRC[s] if i == 0 else "同上")
-    for i, v in enumerate(NAND_COMMON):
-        inp(f"nq_{i+1}", f"NAND 合約價季增 {QUARTERS[i+1]}", "%", None, v, None, "Interested-party", NAND_SRC if i == 0 else "同上")
-    for s in SCEN:
-        for i, v in enumerate(NAND_S[s]):
-            inp(f"nq{s}_{i+8}", f"NAND 合約價季增 {QUARTERS[i+8]}（{s}）", "%", None, v, None, "Interested-party" if s != "C" else "Assumed", NAND_S_SRC[s] if i == 0 else "同上")
-    sec("M2. 加速器數量層（百萬顆）與每顆 HBM（GB）")
-    for k, nm, u, gb, tag, src in UNITS:
-        for i, y in enumerate((26, 27, 28)):
-            inp(f"u_{k}_{y}", f"{nm} 顆數 20{y}", "百萬顆", None, u[i], None, tag, src if i == 0 else "同上")
-        for i, y in enumerate((26, 27, 28)):
-            inp(f"g_{k}_{y}", f"{nm} 每顆 HBM 20{y}", "GB", None, gb[i], None, tag, "同上")
-    sec("M2b. 情境顆數係數（2028–29 加速器顆數 ÷ 情境 A 基準；與台積電、Advantest 模型同一套）")
-    for sc in SCEN:
-        for n, y in enumerate((28, 29)):
-            rng = SCEN_UNITS_RNG.get(sc)
-            lo, hi = (rng[n] if rng else (None, None))
-            inp(f"um{y}_{sc}", f"情境 {sc}：20{y} 顆數 ÷ 基準", "x", lo, SCEN_UNITS[sc][n], hi, "Assumed",
-                ("A＝基準（定義為 1.0）；B＝AI 資本支出消化；C＝明顯下修。無外部預測可校準，B、C 區間皆 ±0.1；與 tsmc/build_tsmc.py 同值。HBM 需求位元、台積電 CoWoS 需求、Advantest 測試機需求用同一組係數" if (sc == "A" and y == 28) else "同上"))
-    sec("M3. HBM 市場")
-    inp("hbm_mkt25", "HBM 市場 2025", "$B", 34, 35, 35, "Verified", "Micron TAM 約 $35B（2025-12 法說）；Yole 約 $34B")
-    inp("hbm_g26", "2026 HBM 位元成長（推 2025 出貨位元）", "%", 0.6, 0.7, 0.8, "Interested-party", "TrendForce：2026 >70%")
-    inp("hbm_gross", "出貨位元 ÷ 加速器裝載位元", "x", 1.0, 1.15, 1.3, "Assumed", "封裝良率損失、庫存與未列入的買方（Epoch：CoWoS-L 良率 65–95%）")
-    inp("hbm_sup27", "2027 HBM 位元供給成長（三情境相同：產能已定）", "%", 0.50, 0.55, 0.63, "Interested-party", "TrendForce 2027 +50–60%；JPMorgan 2026–28 CAGR 63%")
-    inp("hbm_sup28", "2028 HBM 位元供給成長（三情境相同）", "%", 0.30, 0.45, 0.63, "Assumed", "新廠 2028 才貢獻（TrendForce）；供給不隨需求情境變：2028 產能的設備與廠房在 2027 前已訂定，需求下修的結果是閒置產能與降價，不是減產")
-    inp("hbm_p26", "HBM 混合單價 2026", "$/GB", 12.5, 14.6, 16.0, "Interested-party", "BofA $14.6/GB；DigiTimes HBM3E $12–12.8、HBM4 約 $16")
-    inp("hbm_p27", "HBM 單價 2027 變動（三情境相同；年約已議定）", "%", 0.38, 0.80, 1.21, "Interested-party", "BofA +38%、JPM +54%、UBS +76–79%、TrendForce +121%；Micron：CY27 大部分已簽、大幅漲價")
-    inp("hbm_p28_A", "HBM 單價 2028 變動（A）", "%", 0.0, 0.10, 0.25, "Interested-party", "JPMorgan 2028 +25%（上限）")
-    inp("hbm_p28_B", "HBM 單價 2028 變動（B）", "%", -0.40, -0.25, -0.10, "Assumed", "一般 DRAM 大跌時 HBM 年約重議下修")
-    inp("hbm_p28_C", "HBM 單價 2028 變動（C）", "%", -0.55, -0.40, -0.25, "Assumed", "完整谷底")
-    inp("hbm_dem29", "2029 HBM 需求位元成長（情境 A 基準；B、C 再乘 um29）", "%", 0.20, 0.30, 0.45, "Assumed", "2029 無顆數預測；Micron：HBM 位元成長快於一般 DRAM 至 2028")
-    inp("hbm_sup29", "2029 HBM 位元供給成長（三情境相同）", "%", 0.25, 0.35, 0.50, "Assumed", "P5、龍仁、M15X 等新廠 2028–29 投產")
-    inp("hbm_p29_A", "HBM 單價 2029 變動（A）", "%", -0.15, -0.05, 0.05, "Assumed", "")
-    inp("hbm_p29_B", "HBM 單價 2029 變動（B）", "%", -0.10, 0.0, 0.10, "Assumed", "")
-    inp("hbm_p29_C", "HBM 單價 2029 變動（C）", "%", -0.10, 0.05, 0.15, "Assumed", "自谷底回升")
+    _replay(sec, inp, False)
 
 def write(wb, hdr, Font):
     """寫 Path、Mkt 兩頁；回傳參照表"""
@@ -175,11 +161,6 @@ def write(wb, hdr, Font):
     M.column_dimensions["H"].width = 50
     return {"path": ref, "mk": MK}
 
+
 def ref_inputs(sec, inp):
-    sec("M4. 對帳用（橋接表 v0.2、已發布）")
-    inp("nv_dc26", "NVIDIA 資料中心營收 2026（約 FY27）", "$B", 340, 374, 400, "Verified／Assumed", "FY27 Q1 75.2、Q2 89.0（8-K）；Q3 指引總營收 108（資料中心取 100）；Q4 Assumed 110")
-    inp("nv_content", "每顆 GPU 的 NVIDIA 內容（GB300）", "$K", 38, 42.8, 48, "Derived", "markets/chip_bridge v0.2（Tokenomics v19.0：GB300 機架基準價 $4.3M；v0.1 為 51.6）")
-    inp("nv_hbm", "每顆 GPU HBM 金額（GB300）", "$K", 3.5, 4.46, 4.9, "Derived", "markets/chip_bridge v0.2（與 v0.1 相同）")
-    inp("pub26_lo", "已發布 2026 HBM 市場（SK 海力士自估）", "$B", None, 54.6, None, "Interested-party", "Motley Fool／글로벌이코노믹 2026-09")
-    inp("pub26_hi", "已發布 2026 HBM 市場（BofA）", "$B", None, 77.4, None, "Interested-party", "BofA 2026-08-07")
-    inp("pub27", "已發布 2027 HBM 市場（BofA）", "$B", None, 152.8, None, "Interested-party", "BofA；JPMorgan 2027–28 為 160–282")
+    _replay(sec, inp, True)
