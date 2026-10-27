@@ -31,7 +31,13 @@ CASES = [
     ("「OCI AI 以外」利潤率 m_sw", "−3pt／+3pt", {"m_adj": -0.03}, {"m_adj": 0.03}),
     ("未分攤費用年增", "2%／6%", {"un_g": 0.02}, {"un_g": 0.06}),
     ("客戶出資覆蓋比", "22.2%／37%", {"prepay_cov": 0.222}, {"prepay_cov": 0.37}),
-    ("Beta（WACC）", "1.5／2.0", {"beta": 1.5}, {"beta": 2.0}),
+    ("Beta（Blume 調整後）", "1.2／2.0", {"beta": 1.2}, {"beta": 2.0}),
+    ("WACC", "−1pt／+1pt", {"wacc_adj": -0.01}, {"wacc_adj": 0.01}),
+    ("股權風險溢酬 ERP", "4%／6%", {"erp": 0.04}, {"erp": 0.06}),
+    ("稅前債務成本 kd", "5.0%／8.11%（2046 長債）", {"kd": 0.05}, {"kd": 0.0811}),
+    ("永續期 RONIC", "＝WACC／WACC＋5pt", {"ronic_adj": 0.0}, {"ronic_adj": 0.05}),
+    ("未分攤費用 FY27 Q2–Q4 水準", "Q1 實績 ×1.00（v0.4 原預設）／×1.35", {"un_rr": 1.0}, {"un_rr": 1.35}),
+    ("傳統業務倍數", "6.6x／10.8x", {"mult_leg": 6.6}, {"mult_leg": 10.8}),
     ("永續成長率 g", "2%／4%", {"tp_g": 0.02}, {"tp_g": 0.04}),
     ("分部倍數（OCI 與其餘業務）", "×0.8／×1.2", {"mult_adj": 0.8}, {"mult_adj": 1.2}),
     ("DCF 權重", "30%／70%", {"w_dcf": 0.3}, {"w_dcf": 0.7}),
@@ -61,12 +67,15 @@ def main():
     jobs = int(sys.argv[sys.argv.index("--jobs") + 1]) if "--jobs" in sys.argv else 4
     tmp = tempfile.mkdtemp(prefix="orcl_sens_")
     try:
-        tasks = [("base", {})] + [(f"c{i}_{side}", ov) for i, (_, _, lo, hi) in enumerate(CASES) for side, ov in (("lo", lo), ("hi", hi))]
+        GRID = [(w, g) for w in (-0.01, 0.0, 0.01) for g in (0.02, 0.03, 0.04)]
+        tasks = [("base", {})] + [(f"c{i}_{side}", ov) for i, (_, _, lo, hi) in enumerate(CASES) for side, ov in (("lo", lo), ("hi", hi))] \
+            + [(f"g_{i}", {"wacc_adj": w, "tp_g": g}) for i, (w, g) in enumerate(GRID)]
         with ThreadPoolExecutor(jobs) as ex:
             res = dict(zip([t for t, _ in tasks], ex.map(lambda t: run(t[1], t[0], tmp), tasks)))
         out = {"date": datetime.date.today().isoformat(), "base": res["base"], "cases": []}
         for i, (lab, setting, lo, hi) in enumerate(CASES):
             out["cases"].append({"label": lab, "setting": setting, "lo": res[f"c{i}_lo"], "hi": res[f"c{i}_hi"], "lo_ovr": lo, "hi_ovr": hi})
+        out["grid"] = [{"wacc_adj": w, "tp_g": g, "tp": res[f"g_{i}"]["tp"]} for i, (w, g) in enumerate(GRID)]
         json.dump(out, open(os.path.join(HERE, "data", "sens_v04.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         print("base tp", res["base"]["tp"])
         for c in out["cases"]:

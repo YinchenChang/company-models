@@ -26,20 +26,20 @@
      "type": "kv",
      "items": [
       [
-       "@Val!A67",
-       "@Val!C67"
+       "@Val!A78",
+       "@Val!C78"
       ],
       [
-       "@Val!A61",
-       "@Val!C61|n2"
+       "@Val!A72",
+       "@Val!C72|n2"
       ],
       [
-       "@Val!A62",
-       "@Val!C62|n2"
+       "@Val!A73",
+       "@Val!C73|n2"
       ],
       [
-       "@Val!A64",
-       "@Val!C64|sp1"
+       "@Val!A75",
+       "@Val!C75|sp1"
       ],
       [
        "@CF!A4",
@@ -206,13 +206,13 @@
        ]
       ],
       [
-       "@In!B84",
+       "@In!B90",
        [
-        "@In!E84|n1",
+        "@In!E90|n1",
         " ",
-        "@In!C84"
+        "@In!C90"
        ],
-       "@In!G84|tag",
+       "@In!G90|tag",
        [
         "AI 資本支出（FY2028）：",
         "@Thesis!F60|n1"
@@ -232,39 +232,39 @@
        ]
       ],
       [
-       "@In!B73",
+       "@In!B77",
        [
-        "@In!E73|p1",
+        "@In!E77|p1",
         " ",
-        "@In!C73"
+        "@In!C77"
        ],
-       "@In!G73|tag",
+       "@In!G77|tag",
        [
         "雲端與軟體分部利潤（FY2029）：",
         "@PL!F63|n1"
        ]
       ],
       [
-       "@In!B65",
+       "@In!B69",
        [
-        "@In!E65|p1",
+        "@In!E69|p1",
         " ",
-        "@In!C65"
+        "@In!C69"
        ],
-       "@In!G65|tag",
+       "@In!G69|tag",
        [
         "SaaS 營收（FY2032）：",
         "@PL!I53|n1"
        ]
       ],
       [
-       "@In!B85",
+       "@In!B91",
        [
-        "@In!E85|p1",
+        "@In!E91|p1",
         " ",
-        "@In!C85"
+        "@In!C91"
        ],
-       "@In!G85|tag",
+       "@In!G91|tag",
        [
         "客戶預付流入（FY2028）：",
         "@CF!E53|n1"
@@ -744,67 +744,67 @@
      "fmt": "n1",
      "items": [
       {
-       "label": "@Val!A61",
-       "value": "@Val!C61",
+       "label": "@Val!A72",
+       "value": "@Val!C72",
        "series": 0
       },
       {
-       "label": "@Val!A59",
-       "value": "@Val!C59",
+       "label": "@Val!A70",
+       "value": "@Val!C70",
        "series": 1
       },
       {
-       "label": "@Val!A60",
-       "value": "@Val!C60",
+       "label": "@Val!A71",
+       "value": "@Val!C71",
        "series": 2
       },
       {
-       "label": "@Val!A63",
-       "value": "@Val!C63",
+       "label": "@Val!A74",
+       "value": "@Val!C74",
        "series": 1
       }
      ],
      "ref": {
-      "label": "@Val!A62",
-      "value": "@Val!C62"
+      "label": "@Val!A73",
+      "value": "@Val!C73"
      }
     },
     {
      "type": "table",
      "grid": true,
      "head": [
-      "@Val!A56",
-      "@Val!C56",
-      "@Val!D56",
-      "@Val!E56"
+      "@Val!A67",
+      "@Val!C67",
+      "@Val!D67",
+      "@Val!E67"
      ],
      "rows": [
       [
-       "@Val!A57",
-       "@Val!C57:E57|n2"
+       "@Val!A68",
+       "@Val!C68:E68|n2"
       ],
       [
-       "@Val!A28",
-       "@Val!C28:E28|n2"
+       "@Val!A30",
+       "@Val!C30:E30|n2"
       ],
       [
-       "@Val!A52",
-       "@Val!C52:E52|n2"
+       "@Val!A62",
+       "@Val!C62:E62|n2"
       ]
      ]
     },
     {
      "type": "table",
-     "caption": "@Val!A55",
+     "caption": "@Val!A66",
      "grid": true,
      "head": [
-      "@Val!A58",
-      "@Val!C58",
-      "@Val!F58"
+      "@Val!A69",
+      "@Val!C69",
+      "@Val!F69"
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "59-72",
+      "rows": "70-84",
       "cols": [
        "A",
        "C",
@@ -816,22 +816,22 @@
        ""
       ],
       "row_fmt": {
-       "64": {
+       "75": {
         "C": "sp1"
        },
-       "65": {
+       "76": {
         "C": "sp1"
        },
-       "71": {
+       "82": {
         "C": "sp1"
        },
-       "72": {
+       "83": {
         "C": "p1"
        },
-       "66": {
+       "77": {
         "C": ""
        },
-       "67": {
+       "78": {
         "C": ""
        }
       }
@@ -850,7 +850,7 @@
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "16-28",
+      "rows": "18-30",
       "cols": [
        "A",
        "B",
@@ -866,17 +866,17 @@
        "n1"
       ],
       "row_fmt": {
-       "25": {
+       "27": {
         "C": "p1",
         "D": "p1",
         "E": "p1"
        },
-       "27": {
+       "29": {
         "C": "n2",
         "D": "n2",
         "E": "n2"
        },
-       "28": {
+       "30": {
         "C": "n2",
         "D": "n2",
         "E": "n2"
@@ -918,7 +918,7 @@
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "33-34,37-41",
+      "rows": "35-36,39-43",
       "cols": [
        "A",
        "B",
@@ -939,14 +939,14 @@
      "type": "table",
      "grid": true,
      "head": [
-      "@Val!A43",
-      "@Val!C43",
-      "@Val!D43",
-      "@Val!E43"
+      "@Val!A45",
+      "@Val!C45",
+      "@Val!D45",
+      "@Val!E45"
      ],
      "rowgen": {
       "sheet": "Val",
-      "rows": "44-53",
+      "rows": "46-64",
       "cols": [
        "A",
        "C",
@@ -960,22 +960,27 @@
        "n1"
       ],
       "row_fmt": {
-       "50": {
+       "60": {
         "C": "n3",
         "D": "n3",
         "E": "n3"
        },
-       "51": {
+       "61": {
         "C": "n2",
         "D": "n2",
         "E": "n2"
        },
-       "52": {
+       "62": {
         "C": "n2",
         "D": "n2",
         "E": "n2"
        },
-       "53": {
+       "64": {
+        "C": "p1",
+        "D": "p1",
+        "E": "p1"
+       },
+       "55": {
         "C": "p1",
         "D": "p1",
         "E": "p1"
@@ -986,9 +991,9 @@
     {
      "type": "note",
      "parts": [
-      "@Val!A74",
+      "@Val!A86",
       "：",
-      "@Val!C74"
+      "@Val!C86"
      ]
     }
    ]
@@ -1120,7 +1125,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準：輸入取低值",
      "sheet": "Sens",
-     "rows": "4-23",
+     "rows": "4-29",
      "label_col": "A",
      "value_col": "D",
      "fmt": "sp1"
@@ -1129,7 +1134,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準：輸入取高值",
      "sheet": "Sens",
-     "rows": "4-23",
+     "rows": "4-29",
      "label_col": "A",
      "value_col": "F",
      "fmt": "sp1"
@@ -1153,7 +1158,7 @@
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "4-23",
+      "rows": "4-29",
       "cols": [
        "A",
        "B",
@@ -1175,6 +1180,33 @@
        "sp1",
        "p1",
        "p1",
+       "n1",
+       "n1"
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "caption": "@Sens!A35",
+     "grid": true,
+     "head": [
+      "@Sens!A36",
+      "@Sens!C36",
+      "@Sens!D36",
+      "@Sens!E36"
+     ],
+     "rowgen": {
+      "sheet": "Sens",
+      "rows": "37-39",
+      "cols": [
+       "A",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "n1",
        "n1",
        "n1"
       ]
