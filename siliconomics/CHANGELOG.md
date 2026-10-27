@@ -5,7 +5,7 @@
 - 新增 In 頁 M6（加速器每顆售價 `pa_*`、ASIC 核心價 `core_*`、HBM 代購比例 `f_hbm`；原在 nvidia、avgo）與 M7（ASIC 設計服務份額：Broadcom `sh_*`、Marvell `msh_*`、聯發科 `mtk_*`、世芯 `al*`；原在 avgo、mrvl、mediatek、alchip），數值與文字逐字搬入；In 頁新增 J 欄第二來源。
 - 新增 ShareTbl 頁（TPU、其他 ASIC、Trainium 三情境的設計夥伴份額合計與餘額）、Checks K6（合計 ≤ 100%，全部 OK）、Interface `SIF_ASICShareSum_*`。
 - 新增 `siliconomics/reader.py`；nvidia、avgo、mrvl、mediatek、alchip 改以 `inp(*SIL.row9(鍵))` 讀本庫。下游 57 個目標重建：五家模型逐格不變；tsmc、network、nand 只有一格來源文字（拿掉版本號，之後升版不再改動下游文字）；第二輪全部相同。
-- 衝突：CF14 釐清為公司營收口徑差（非衝突）；CF13 兩組價格已同處，口徑待 Andy；CF19 份額表與加總檢查已建，數值待 Andy。
+- 衝突：CF14 釐清為公司營收口徑差（非衝突）；CF13 兩組價格已同處，口徑待 Andy；CF19 份額表與加總檢查已建，數值維持模型路徑（Andy 15:09 同意）。
 
 ## v0.2（2026-10-27；`model/20261027_Siliconomics_v0.2.xlsx`；Tokenomics v21.7）
 
