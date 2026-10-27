@@ -4,6 +4,8 @@
 # 口徑：歸屬母公司淨利（合併淨利 − 非控制權益；富世達為子公司）。
 import sys, os, glob
 import openpyxl
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -74,7 +76,7 @@ for j, y in enumerate((26, 27, 28, 29)):
         "加速器顆數 × 每顆 IT capex（含 ASIC）；本模型以此除以每 GW IT 資本支出得到部署 GW" if y == 26 else "同上")
 inp("itpg_gb", "每 GW IT 資本支出（GB300）", "US$B", None, BR["capit"][0], None, "Derived", BR["capit"][2], "Tokenomics v20.1 IF_CapexIT（經橋接表；唯讀）")
 inp("itpg_vr", "每 GW IT 資本支出（VR200；2027 起）", "US$B", None, BR["capit"][1], None, "Derived", BR["capit"][2], "同上；Rubin Ultra 與 ASIC 機架未另訂（Assumed：同 VR200）")
-inp("vr26", "2026 年部署中 Rubin 世代占比（混合每 GW 數值用）", "%", 0.15, 0.22, 0.30, "Interested-party", "TrendForce 2026 組合 Rubin 22%（經 markets/memory；與 delta 模型相同）", "公司 2Q26 法說：GPU 量在 3Q 末放大，Vera Rubin 下半年推出（時報 2026-06-02 股東會）")
+inp("vr26", "2026 年部署中 Rubin 世代占比（混合每 GW 數值用）", "%", *SIL.vals("vr26"), "Interested-party", "TrendForce 2026 組合 Rubin 22%（經 markets/memory；與 delta 模型相同）", "公司 2Q26 法說：GPU 量在 3Q 末放大，Vera Rubin 下半年推出（時報 2026-06-02 股東會）")
 inp("racks_gb", "每 GW 機架數（GB300）", "架", None, BR["racks"][0], None, "Derived", BR["racks"][2], "Tokenomics（經橋接表）")
 inp("racks_vr", "每 GW 機架數（VR200）", "架", None, BR["racks"][1], None, "Derived", BR["racks"][2], "同上")
 inp("cool_gb", "GB300 每架機架內液冷（運算匣＋交換匣，橋接表）", "US$K", None, BR["cool"][0], None, "Interested-party", BR["cool"][2], "Morgan Stanley（經 Tom's Hardware 2025-11-05）：GB300 NVL72 冷卻 BOM US$49.9K；不含 CDU、分歧管")

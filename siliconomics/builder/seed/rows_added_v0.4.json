@@ -1,0 +1,837 @@
+[
+ {
+  "after_section_end": "M7.",
+  "section": "M8. 每顆加速器網通內容（美元；原在 markets/network In 頁 B 節，數值與文字逐字搬入）",
+  "rows": [
+   {
+    "id": "c_GB_su_sw",
+    "label": "GB300 NVL72（Blackwell）：scale-up 交換晶片",
+    "unit": "$/顆",
+    "lo": 1194,
+    "base": 1493,
+    "hi": 1792,
+    "tag": "Derived",
+    "src": "橋接表 v0.2.1 GB300（Tokenomics v20.1，與 v19.0 相同：機架基準價 $4.3M；v0.1 為 $5.0M）：NVLink 交換晶片 0.727、交換匣其他 0.727、機架外 scale-out 2.909、機架內網卡＋DPU 1.278（$B/GW）÷ 每 GW 487,008 顆；機架外依 交換器 45%／光模組 35%／銅 20% 拆——v0.1 初版 35／50／15 使 2026 光學 41.8B，高於 LightCounting 26B 61%，改以 LightCounting 與光模組廠營收加總（約 26–30B）校準 [Derived]。合計約 $11.6K（v0.1 $13.0K）；Bernstein GB200 約 $10.7K（第二來源）"
+   },
+   {
+    "id": "c_GB_su_ic",
+    "label": "GB300 NVL72（Blackwell）：scale-up 互連與交換匣其他（銅背板、線纜、電路板、機構）",
+    "unit": "$/顆",
+    "lo": 1194,
+    "base": 1493,
+    "hi": 1792,
+    "tag": "Derived",
+    "src": "同上"
+   },
+   {
+    "id": "c_GB_so_sw",
+    "label": "GB300 NVL72（Blackwell）：scale-out 交換器",
+    "unit": "$/顆",
+    "lo": 2150,
+    "base": 2688,
+    "hi": 3226,
+    "tag": "Derived",
+    "src": "同上"
+   },
+   {
+    "id": "c_GB_so_opt",
+    "label": "GB300 NVL72（Blackwell）：scale-out 光模組",
+    "unit": "$/顆",
+    "lo": 1672,
+    "base": 2090,
+    "hi": 2508,
+    "tag": "Derived",
+    "src": "同上"
+   },
+   {
+    "id": "c_GB_so_cu",
+    "label": "GB300 NVL72（Blackwell）：scale-out 銅纜（DAC／AEC）",
+    "unit": "$/顆",
+    "lo": 956,
+    "base": 1195,
+    "hi": 1434,
+    "tag": "Derived",
+    "src": "同上"
+   },
+   {
+    "id": "c_GB_nic",
+    "label": "GB300 NVL72（Blackwell）：網卡／DPU（SuperNIC）",
+    "unit": "$/顆",
+    "lo": 2099,
+    "base": 2624,
+    "hi": 3149,
+    "tag": "Derived",
+    "src": "同上"
+   },
+   {
+    "id": "c_VR_su_sw",
+    "label": "VR200 NVL72（Rubin）：scale-up 交換晶片",
+    "unit": "$/顆",
+    "lo": 2334,
+    "base": 2917,
+    "hi": 3500,
+    "tag": "Derived",
+    "src": "橋接表 v0.2 VR200 ÷ 每 GW 291,744 顆；NVLink 6 交換晶片 36 顆（GB300 的 2 倍）、ConnectX-9 每架 144 顆；機架外拆分同上（45／35／20）。合計約 $24.5K"
+   },
+   {
+    "id": "c_VR_su_ic",
+    "label": "VR200 NVL72（Rubin）：scale-up 互連與交換匣其他（銅背板、線纜、電路板、機構）",
+    "unit": "$/顆",
+    "lo": 2334,
+    "base": 2917,
+    "hi": 3500,
+    "tag": "Derived",
+    "src": "同上"
+   },
+   {
+    "id": "c_VR_so_sw",
+    "label": "VR200 NVL72（Rubin）：scale-out 交換器",
+    "unit": "$/顆",
+    "lo": 4201,
+    "base": 5251,
+    "hi": 6301,
+    "tag": "Derived",
+    "src": "同上"
+   },
+   {
+    "id": "c_VR_so_opt",
+    "label": "VR200 NVL72（Rubin）：scale-out 光模組",
+    "unit": "$/顆",
+    "lo": 3267,
+    "base": 4084,
+    "hi": 4901,
+    "tag": "Derived",
+    "src": "同上"
+   },
+   {
+    "id": "c_VR_so_cu",
+    "label": "VR200 NVL72（Rubin）：scale-out 銅纜（DAC／AEC）",
+    "unit": "$/顆",
+    "lo": 1867,
+    "base": 2334,
+    "hi": 2801,
+    "tag": "Derived",
+    "src": "同上"
+   },
+   {
+    "id": "c_VR_nic",
+    "label": "VR200 NVL72（Rubin）：網卡／DPU（SuperNIC）",
+    "unit": "$/顆",
+    "lo": 5600,
+    "base": 7000,
+    "hi": 8400,
+    "tag": "Derived",
+    "src": "同上"
+   },
+   {
+    "id": "c_RU_su_sw",
+    "label": "Rubin Ultra（MGX 單架／NVL576）：scale-up 交換晶片",
+    "unit": "$/顆",
+    "lo": 3500,
+    "base": 4375,
+    "hi": 5250,
+    "tag": "Assumed",
+    "src": "scale-up 為 VR200 的 1.5 倍（NVL576 兩層 NVLink）；scale-out 同 VR200"
+   },
+   {
+    "id": "c_RU_su_ic",
+    "label": "Rubin Ultra（MGX 單架／NVL576）：scale-up 互連與交換匣其他（銅背板、線纜、電路板、機構）",
+    "unit": "$/顆",
+    "lo": 3500,
+    "base": 4375,
+    "hi": 5250,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_RU_so_sw",
+    "label": "Rubin Ultra（MGX 單架／NVL576）：scale-out 交換器",
+    "unit": "$/顆",
+    "lo": 4201,
+    "base": 5251,
+    "hi": 6301,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_RU_so_opt",
+    "label": "Rubin Ultra（MGX 單架／NVL576）：scale-out 光模組",
+    "unit": "$/顆",
+    "lo": 3267,
+    "base": 4084,
+    "hi": 4901,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_RU_so_cu",
+    "label": "Rubin Ultra（MGX 單架／NVL576）：scale-out 銅纜（DAC／AEC）",
+    "unit": "$/顆",
+    "lo": 1867,
+    "base": 2334,
+    "hi": 2801,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_RU_nic",
+    "label": "Rubin Ultra（MGX 單架／NVL576）：網卡／DPU（SuperNIC）",
+    "unit": "$/顆",
+    "lo": 5600,
+    "base": 7000,
+    "hi": 8400,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_HP_su_sw",
+    "label": "Hopper HGX（8 GPU）：scale-up 交換晶片",
+    "unit": "$/顆",
+    "lo": 240,
+    "base": 300,
+    "hi": 360,
+    "tag": "Assumed",
+    "src": "NVSwitch 機內；400G InfiniBand 每 GPU 1 埠；合計約 $8K"
+   },
+   {
+    "id": "c_HP_su_ic",
+    "label": "Hopper HGX（8 GPU）：scale-up 互連與交換匣其他（銅背板、線纜、電路板、機構）",
+    "unit": "$/顆",
+    "lo": 80,
+    "base": 100,
+    "hi": 120,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_HP_so_sw",
+    "label": "Hopper HGX（8 GPU）：scale-out 交換器",
+    "unit": "$/顆",
+    "lo": 2016,
+    "base": 2520,
+    "hi": 3024,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_HP_so_opt",
+    "label": "Hopper HGX（8 GPU）：scale-out 光模組",
+    "unit": "$/顆",
+    "lo": 1568,
+    "base": 1960,
+    "hi": 2352,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_HP_so_cu",
+    "label": "Hopper HGX（8 GPU）：scale-out 銅纜（DAC／AEC）",
+    "unit": "$/顆",
+    "lo": 896,
+    "base": 1120,
+    "hi": 1344,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_HP_nic",
+    "label": "Hopper HGX（8 GPU）：網卡／DPU（SuperNIC）",
+    "unit": "$/顆",
+    "lo": 1600,
+    "base": 2000,
+    "hi": 2400,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_AMD8_su_sw",
+    "label": "AMD MI355（8 GPU 伺服器）：scale-up 交換晶片",
+    "unit": "$/顆",
+    "lo": 240,
+    "base": 300,
+    "hi": 360,
+    "tag": "Analogy",
+    "src": "比照 Hopper HGX"
+   },
+   {
+    "id": "c_AMD8_su_ic",
+    "label": "AMD MI355（8 GPU 伺服器）：scale-up 互連與交換匣其他（銅背板、線纜、電路板、機構）",
+    "unit": "$/顆",
+    "lo": 80,
+    "base": 100,
+    "hi": 120,
+    "tag": "Analogy",
+    "src": "同上"
+   },
+   {
+    "id": "c_AMD8_so_sw",
+    "label": "AMD MI355（8 GPU 伺服器）：scale-out 交換器",
+    "unit": "$/顆",
+    "lo": 2016,
+    "base": 2520,
+    "hi": 3024,
+    "tag": "Analogy",
+    "src": "同上"
+   },
+   {
+    "id": "c_AMD8_so_opt",
+    "label": "AMD MI355（8 GPU 伺服器）：scale-out 光模組",
+    "unit": "$/顆",
+    "lo": 1568,
+    "base": 1960,
+    "hi": 2352,
+    "tag": "Analogy",
+    "src": "同上"
+   },
+   {
+    "id": "c_AMD8_so_cu",
+    "label": "AMD MI355（8 GPU 伺服器）：scale-out 銅纜（DAC／AEC）",
+    "unit": "$/顆",
+    "lo": 896,
+    "base": 1120,
+    "hi": 1344,
+    "tag": "Analogy",
+    "src": "同上"
+   },
+   {
+    "id": "c_AMD8_nic",
+    "label": "AMD MI355（8 GPU 伺服器）：網卡／DPU（SuperNIC）",
+    "unit": "$/顆",
+    "lo": 1600,
+    "base": 2000,
+    "hi": 2400,
+    "tag": "Analogy",
+    "src": "同上"
+   },
+   {
+    "id": "c_AMDR_su_sw",
+    "label": "AMD Helios（MI455X 機架）：scale-up 交換晶片",
+    "unit": "$/顆",
+    "lo": 1867,
+    "base": 2334,
+    "hi": 2801,
+    "tag": "Analogy",
+    "src": "VR200 的 0.8 倍（UALink／乙太網路 scale-up）"
+   },
+   {
+    "id": "c_AMDR_su_ic",
+    "label": "AMD Helios（MI455X 機架）：scale-up 互連與交換匣其他（銅背板、線纜、電路板、機構）",
+    "unit": "$/顆",
+    "lo": 1867,
+    "base": 2334,
+    "hi": 2801,
+    "tag": "Analogy",
+    "src": "同上"
+   },
+   {
+    "id": "c_AMDR_so_sw",
+    "label": "AMD Helios（MI455X 機架）：scale-out 交換器",
+    "unit": "$/顆",
+    "lo": 3361,
+    "base": 4201,
+    "hi": 5041,
+    "tag": "Analogy",
+    "src": "同上"
+   },
+   {
+    "id": "c_AMDR_so_opt",
+    "label": "AMD Helios（MI455X 機架）：scale-out 光模組",
+    "unit": "$/顆",
+    "lo": 2614,
+    "base": 3267,
+    "hi": 3920,
+    "tag": "Analogy",
+    "src": "同上"
+   },
+   {
+    "id": "c_AMDR_so_cu",
+    "label": "AMD Helios（MI455X 機架）：scale-out 銅纜（DAC／AEC）",
+    "unit": "$/顆",
+    "lo": 1494,
+    "base": 1867,
+    "hi": 2240,
+    "tag": "Analogy",
+    "src": "同上"
+   },
+   {
+    "id": "c_AMDR_nic",
+    "label": "AMD Helios（MI455X 機架）：網卡／DPU（SuperNIC）",
+    "unit": "$/顆",
+    "lo": 4480,
+    "base": 5600,
+    "hi": 6720,
+    "tag": "Analogy",
+    "src": "同上"
+   },
+   {
+    "id": "c_TPU_su_sw",
+    "label": "Google TPU：scale-up 交換晶片",
+    "unit": "$/顆",
+    "lo": 640,
+    "base": 800,
+    "hi": 960,
+    "tag": "Assumed",
+    "src": "ICI 互連＋光學電路交換（OCS）；合計約 $5K"
+   },
+   {
+    "id": "c_TPU_su_ic",
+    "label": "Google TPU：scale-up 互連與交換匣其他（銅背板、線纜、電路板、機構）",
+    "unit": "$/顆",
+    "lo": 960,
+    "base": 1200,
+    "hi": 1440,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_TPU_so_sw",
+    "label": "Google TPU：scale-out 交換器",
+    "unit": "$/顆",
+    "lo": 640,
+    "base": 800,
+    "hi": 960,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_TPU_so_opt",
+    "label": "Google TPU：scale-out 光模組",
+    "unit": "$/顆",
+    "lo": 1200,
+    "base": 1500,
+    "hi": 1800,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_TPU_so_cu",
+    "label": "Google TPU：scale-out 銅纜（DAC／AEC）",
+    "unit": "$/顆",
+    "lo": 240,
+    "base": 300,
+    "hi": 360,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_TPU_nic",
+    "label": "Google TPU：網卡／DPU（SuperNIC）",
+    "unit": "$/顆",
+    "lo": 320,
+    "base": 400,
+    "hi": 480,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_TRN_su_sw",
+    "label": "AWS Trainium：scale-up 交換晶片",
+    "unit": "$/顆",
+    "lo": 480,
+    "base": 600,
+    "hi": 720,
+    "tag": "Assumed",
+    "src": "NeuronLink＋EFA；合計約 $4K"
+   },
+   {
+    "id": "c_TRN_su_ic",
+    "label": "AWS Trainium：scale-up 互連與交換匣其他（銅背板、線纜、電路板、機構）",
+    "unit": "$/顆",
+    "lo": 640,
+    "base": 800,
+    "hi": 960,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_TRN_so_sw",
+    "label": "AWS Trainium：scale-out 交換器",
+    "unit": "$/顆",
+    "lo": 640,
+    "base": 800,
+    "hi": 960,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_TRN_so_opt",
+    "label": "AWS Trainium：scale-out 光模組",
+    "unit": "$/顆",
+    "lo": 960,
+    "base": 1200,
+    "hi": 1440,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_TRN_so_cu",
+    "label": "AWS Trainium：scale-out 銅纜（DAC／AEC）",
+    "unit": "$/顆",
+    "lo": 240,
+    "base": 300,
+    "hi": 360,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_TRN_nic",
+    "label": "AWS Trainium：網卡／DPU（SuperNIC）",
+    "unit": "$/顆",
+    "lo": 240,
+    "base": 300,
+    "hi": 360,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_ASIC_su_sw",
+    "label": "其他 ASIC：scale-up 交換晶片",
+    "unit": "$/顆",
+    "lo": 480,
+    "base": 600,
+    "hi": 720,
+    "tag": "Assumed",
+    "src": "比照 Trainium"
+   },
+   {
+    "id": "c_ASIC_su_ic",
+    "label": "其他 ASIC：scale-up 互連與交換匣其他（銅背板、線纜、電路板、機構）",
+    "unit": "$/顆",
+    "lo": 640,
+    "base": 800,
+    "hi": 960,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_ASIC_so_sw",
+    "label": "其他 ASIC：scale-out 交換器",
+    "unit": "$/顆",
+    "lo": 640,
+    "base": 800,
+    "hi": 960,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_ASIC_so_opt",
+    "label": "其他 ASIC：scale-out 光模組",
+    "unit": "$/顆",
+    "lo": 960,
+    "base": 1200,
+    "hi": 1440,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_ASIC_so_cu",
+    "label": "其他 ASIC：scale-out 銅纜（DAC／AEC）",
+    "unit": "$/顆",
+    "lo": 240,
+    "base": 300,
+    "hi": 360,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "c_ASIC_nic",
+    "label": "其他 ASIC：網卡／DPU（SuperNIC）",
+    "unit": "$/顆",
+    "lo": 240,
+    "base": 300,
+    "hi": 360,
+    "tag": "Assumed",
+    "src": "同上"
+   }
+  ]
+ },
+ {
+  "after_section_end": "M8.",
+  "section": "M9. 每顆加速器 IT 資本支出（千美元；NVIDIA 世代由 Tokenomics 推導，其餘 Assumed；原在 markets/network C 節）",
+  "rows": [
+   {
+    "id": "it_GB",
+    "label": "GB300 NVL72（Blackwell） IT capex",
+    "unit": "$K/顆",
+    "lo": null,
+    "base": "=TK_CapexIT_GB300/TK_GPUsPerGW_GB300*1000000",
+    "hi": null,
+    "tag": "Derived",
+    "src": "Tokenomics（TK_In 頁鏡像）IF_CapexIT ÷ IF_GPUsPerGW（GB300，基準成本情境）；v0.4 起改為公式（原寫死 v20.1 值，基準與 v21.7 相同）"
+   },
+   {
+    "id": "it_VR",
+    "label": "VR200 NVL72（Rubin） IT capex",
+    "unit": "$K/顆",
+    "lo": null,
+    "base": "=TK_CapexIT_VR200/TK_GPUsPerGW_VR200*1000000",
+    "hi": null,
+    "tag": "Derived",
+    "src": "Tokenomics（TK_In 頁鏡像）IF_CapexIT ÷ IF_GPUsPerGW（VR200，基準成本情境）；v0.4 起改為公式（原寫死 v20.1 值，基準與 v21.7 相同）"
+   },
+   {
+    "id": "it_RU",
+    "label": "Rubin Ultra（MGX 單架／NVL576） IT capex",
+    "unit": "$K/顆",
+    "lo": null,
+    "base": "=TK_CapexIT_RU/TK_GPUsPerGW_RU*1000000",
+    "hi": null,
+    "tag": "Derived",
+    "src": "Tokenomics（TK_In 頁鏡像）IF_CapexIT ÷ IF_GPUsPerGW（RU，基準成本情境）；v0.4 起改為公式（原寫死 v20.1 值，基準與 v21.7 相同）"
+   },
+   {
+    "id": "it_HP",
+    "label": "Hopper HGX（8 GPU） IT capex",
+    "unit": "$K/顆",
+    "lo": null,
+    "base": "=TK_CapexIT_H100/TK_GPUsPerGW_H100*1000000",
+    "hi": null,
+    "tag": "Derived",
+    "src": "Tokenomics（TK_In 頁鏡像）IF_CapexIT ÷ IF_GPUsPerGW（H100，基準成本情境）；v0.4 起改為公式（原寫死 v20.1 值，基準與 v21.7 相同）"
+   },
+   {
+    "id": "it_AMD8",
+    "label": "AMD MI355（8 GPU 伺服器） IT capex",
+    "unit": "$K/顆",
+    "lo": 30,
+    "base": 40,
+    "hi": 50,
+    "tag": "Assumed",
+    "src": "Assumed：AMD MI355 8 GPU 伺服器每顆 IT capex 無公開值；比照 Hopper HGX 量級（Tokenomics H100 約 38K）上調；區間 30–50（v0.4 補）"
+   },
+   {
+    "id": "it_AMDR",
+    "label": "AMD Helios（MI455X 機架） IT capex",
+    "unit": "$K/顆",
+    "lo": 80,
+    "base": 100,
+    "hi": 120,
+    "tag": "Assumed",
+    "src": "VR200 的約 0.8 倍"
+   },
+   {
+    "id": "it_TPU",
+    "label": "Google TPU IT capex",
+    "unit": "$K/顆",
+    "lo": 15,
+    "base": 25,
+    "hi": 35,
+    "tag": "Assumed",
+    "src": "Assumed：TPU、Trainium、其他 ASIC 每顆 IT capex＝伺服器與機架總價 ÷ 顆數，無公開值；量級約為 GB300（Tokenomics 約 66K）的 0.3–0.4 倍；區間 v0.4 補"
+   },
+   {
+    "id": "it_TRN",
+    "label": "AWS Trainium IT capex",
+    "unit": "$K/顆",
+    "lo": 12,
+    "base": 20,
+    "hi": 30,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "it_ASIC",
+    "label": "其他 ASIC IT capex",
+    "unit": "$K/顆",
+    "lo": 12,
+    "base": 20,
+    "hi": 30,
+    "tag": "Assumed",
+    "src": "同上"
+   }
+  ]
+ },
+ {
+  "after_section_end": "M9.",
+  "section": "M10. 網通技術轉換與 CPO 三情境（原在 markets/network D、F 節；技術替代屬行業情境，A＝替代快）",
+  "rows": [
+   {
+    "id": "suopt_26",
+    "label": "scale-up 互連中光學占比 2026",
+    "unit": "%",
+    "lo": 0,
+    "base": 0,
+    "hi": 0,
+    "tag": "Interested-party／Assumed",
+    "src": "NVLink 到 Rubin Ultra Kyber 全銅（The Register）；Feynman「銅與 CPO 都做」（2028 後）。區間（v0.4 補）：2028 0–5%、2029 10–30%"
+   },
+   {
+    "id": "suopt_27",
+    "label": "scale-up 互連中光學占比 2027",
+    "unit": "%",
+    "lo": 0,
+    "base": 0,
+    "hi": 0,
+    "tag": "Interested-party／Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "suopt_28",
+    "label": "scale-up 互連中光學占比 2028",
+    "unit": "%",
+    "lo": 0,
+    "base": 0,
+    "hi": 0.05,
+    "tag": "Interested-party／Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "suopt_29",
+    "label": "scale-up 互連中光學占比 2029",
+    "unit": "%",
+    "lo": 0.1,
+    "base": 0.2,
+    "hi": 0.3,
+    "tag": "Interested-party／Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "su_cu",
+    "label": "scale-up 互連中銅纜（背板、線纜卡匣）占比",
+    "unit": "%",
+    "lo": 0.4,
+    "base": 0.6,
+    "hi": 0.8,
+    "tag": "Assumed",
+    "src": "其餘為交換匣電路板、電源、機構"
+   },
+   {
+    "id": "cpo_A_26",
+    "label": "情境 A：CPO 占 scale-out 光學金額 2026",
+    "unit": "%",
+    "lo": 0.007,
+    "base": 0.01,
+    "hi": 0.014,
+    "tag": "Assumed（Interested-party 錨）",
+    "src": "部署順利 → 新世代交換器（Spectrum-X／Quantum-X Photonics、Broadcom Bailly／Davisson）導入快：Citi 2026-03 估 scale-out CPO 交換器 2027 4 萬台、2028 約 10 萬台（Interested-party，賣方），以每埠光學約 $300–400 換算約 2027 $2–3B、2028 $6–8B，與本列 5%／10% 同級；區間 2028 8–14%。區間（v0.4 補）：各年基準 ×0.7–×1.4"
+   },
+   {
+    "id": "cpo_A_27",
+    "label": "情境 A：CPO 占 scale-out 光學金額 2027",
+    "unit": "%",
+    "lo": 0.035,
+    "base": 0.05,
+    "hi": 0.07,
+    "tag": "Assumed（Interested-party 錨）",
+    "src": "同上"
+   },
+   {
+    "id": "cpo_A_28",
+    "label": "情境 A：CPO 占 scale-out 光學金額 2028",
+    "unit": "%",
+    "lo": 0.07,
+    "base": 0.1,
+    "hi": 0.14,
+    "tag": "Assumed（Interested-party 錨）",
+    "src": "同上"
+   },
+   {
+    "id": "cpo_A_29",
+    "label": "情境 A：CPO 占 scale-out 光學金額 2029",
+    "unit": "%",
+    "lo": 0.112,
+    "base": 0.16,
+    "hi": 0.224,
+    "tag": "Assumed（Interested-party 錨）",
+    "src": "同上"
+   },
+   {
+    "id": "cpo_B_26",
+    "label": "情境 B：CPO 占 scale-out 光學金額 2026",
+    "unit": "%",
+    "lo": 0.007,
+    "base": 0.01,
+    "hi": 0.014,
+    "tag": "Assumed（Interested-party 錨）",
+    "src": "＝v0.2.2 單一路徑：LightCounting 2030 年 CPO 約占 AI 光學 10%；Morgan Stanley 2026-06：2026–28 為可插拔、CPO／NPO、銅並存的過渡期，快速成長在 2028 年之後（Interested-party）；TrendForce 2026-07：CPO 交換器放量 2027–28；區間 2028 4–7%"
+   },
+   {
+    "id": "cpo_B_27",
+    "label": "情境 B：CPO 占 scale-out 光學金額 2027",
+    "unit": "%",
+    "lo": 0.021,
+    "base": 0.03,
+    "hi": 0.042,
+    "tag": "Assumed（Interested-party 錨）",
+    "src": "同上"
+   },
+   {
+    "id": "cpo_B_28",
+    "label": "情境 B：CPO 占 scale-out 光學金額 2028",
+    "unit": "%",
+    "lo": 0.035,
+    "base": 0.05,
+    "hi": 0.07,
+    "tag": "Assumed（Interested-party 錨）",
+    "src": "同上"
+   },
+   {
+    "id": "cpo_B_29",
+    "label": "情境 B：CPO 占 scale-out 光學金額 2029",
+    "unit": "%",
+    "lo": 0.056,
+    "base": 0.08,
+    "hi": 0.112,
+    "tag": "Assumed（Interested-party 錨）",
+    "src": "同上"
+   },
+   {
+    "id": "cpo_C_26",
+    "label": "情境 C：CPO 占 scale-out 光學金額 2026",
+    "unit": "%",
+    "lo": 0.007,
+    "base": 0.01,
+    "hi": 0.014,
+    "tag": "Assumed",
+    "src": "部署不如預期 → 客戶延用已驗證的可插拔（LPO／1.6T），CPO 良率（TSMC COUPE、SoIC 良率 50–60%，Morgan Stanley 轉述）與維修性問題拖延；Cignal AI 2026-05：CPO 對可插拔的初期影響很小、scale-out CPO 只占 1.6T 可插拔的一小部分；區間 2028 2–4%"
+   },
+   {
+    "id": "cpo_C_27",
+    "label": "情境 C：CPO 占 scale-out 光學金額 2027",
+    "unit": "%",
+    "lo": 0.014,
+    "base": 0.02,
+    "hi": 0.028,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "cpo_C_28",
+    "label": "情境 C：CPO 占 scale-out 光學金額 2028",
+    "unit": "%",
+    "lo": 0.021,
+    "base": 0.03,
+    "hi": 0.042,
+    "tag": "Assumed",
+    "src": "同上"
+   },
+   {
+    "id": "cpo_C_29",
+    "label": "情境 C：CPO 占 scale-out 光學金額 2029",
+    "unit": "%",
+    "lo": 0.035,
+    "base": 0.05,
+    "hi": 0.07,
+    "tag": "Assumed",
+    "src": "同上"
+   }
+  ]
+ },
+ {
+  "after_section_end": "M10.",
+  "section": "M11. 部署組合（2026 年 Rubin 世代占比；原分別寫在 11 個公司模型，值相同）",
+  "rows": [
+   {
+    "id": "vr26",
+    "label": "2026 年部署中 Rubin 世代占比（混合每 GW IT 資本支出等用）",
+    "unit": "%",
+    "lo": 0.15,
+    "base": 0.22,
+    "hi": 0.3,
+    "tag": "Interested-party",
+    "src": "TrendForce 2026 組合 Rubin 22%（經 markets/memory）；原在台達電、廣達、奇鋐、雙鴻、健策、台光電、勝宏、光寶等模型各自寫入，值相同",
+    "src2": "v0.4 起單一來源"
+   }
+  ]
+ }
+]

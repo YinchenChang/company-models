@@ -5,6 +5,8 @@
 # 加速器顆數、情境係數與 CoWoS 片數口徑唯讀取自 tsmc/dist；AI IT 資本支出取自 markets/network/dist；每 GW IT 資本支出取自 markets/chip_bridge/dist。
 import sys, os, glob
 import openpyxl
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -90,6 +92,7 @@ for j, y in enumerate((26, 27, 28, 29)):
     inp(f"itc_{y}", f"AI IT 資本支出 20{y}（Recon 用：部署 GW）", "US$B", None, ITC[0][j], None, "Derived", ITC[1] if j == 0 else "同上", "加速器顆數 × 每顆 IT capex" if j == 0 else "同上")
 inp("capit_gb", "每 GW IT 資本支出（GB300；2026 用）", "US$B", None, CAPIT[0], None, "Derived", CAPIT[2], "Tokenomics v20.1 IF_CapexIT（經橋接表；唯讀）")
 inp("capit_vr", "每 GW IT 資本支出（VR200；2027 起）", "US$B", None, CAPIT[1], None, "Derived", CAPIT[2], "同上")
+inp("vr26", "2026 年部署中 Rubin 世代占比（混合每 GW IT 資本支出用）", "%", *SIL.vals("vr26"), "Interested-party", SIL.V["vr26"]["src"], "Siliconomics In 頁 M11（v0.4 起；CF22：與台達電、廣達等同一混合口徑）")
 inp("tam_gw", "OSAT 先進封裝可服務市場 ÷ 每 GW 部署（Recon 用）", "US$B/GW", None, 0.5, None, "Interested-party", IDAY + "：約 US$0.5B／GW installed（公司投資人日 2026-05-21）", "第二來源：未找到")
 
 sec("B. AI 先進封裝（2.5D、HDFO、AI 測試）：營收＝顆數 × 後段委外比例 × Amkor 份額 × 每顆封測金額（FY2026 以公司「三倍」說法校準）")
@@ -434,7 +437,7 @@ for key, lab, unit, f, fmt, note in (
         ("v", "每顆封測金額", "US$／顆", lambda y: f"=PL!{FC[y]}{A_['v']}", "#,##0", "FY2026 校準；之後隨封裝面積"),
         ("ai", "Amkor AI 先進封裝營收", "US$M", lambda y: f"=PL!{FC[y]}{A_['ai']}", "#,##0", "顆數 × 委外 × 份額 × 每顆金額"),
         ("pu", "每顆加速器的 Amkor AI 營收", "US$／顆", lambda y: f"=PL!{FC[y]}{A_['pu']}", "#,##0.0", ""),
-        ("gw", "部署 GW（AI IT 資本支出 ÷ 每 GW IT 資本支出）", "GW", lambda y: f"=itc_{y % 100}/" + ("capit_gb" if y == 2026 else "capit_vr"), "0.0", "2026 用 GB300、2027 起用 VR200"),
+        ("gw", "部署 GW（AI IT 資本支出 ÷ 每 GW IT 資本支出）", "GW", lambda y: f"=itc_{y % 100}/" + ("(capit_gb*(1-vr26)+capit_vr*vr26)" if y == 2026 else "capit_vr"), "0.0", "2026 依 vr26 混合 GB300 與 VR200（v0.4 起，與其他模型同口徑）、2027 起用 VR200"),
         ("tam", "OSAT 先進封裝市場（GW × US$0.5B）", "US$M", lambda y: f"={cyc(y)}{{gw}}*tam_gw*1000", "#,##0", "公司投資人日口徑（Interested-party）"),
         ("tsh", "Amkor AI 營收 ÷ OSAT 先進封裝市場", "%", lambda y: f"={cyc(y)}{{ai}}/{cyc(y)}{{tam}}", "0.0%", "隱含市占（對照用）")):
     UN.cell(ur, 1, lab); UN.cell(ur, 2, unit)

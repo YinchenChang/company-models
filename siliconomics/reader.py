@@ -35,3 +35,9 @@ def row8(k):
 
 def row9(k):
     return row8(k) + (V[k].get("src2", ""),)
+
+
+def vals(k):
+    """(低, 基準, 高)：只取數值、保留呼叫端自己的標籤與說明時用"""
+    r = V[k]
+    return (r["lo"], r["base"], r["hi"])

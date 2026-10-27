@@ -249,9 +249,9 @@
   "b_loc": "Tokenomics v21.7（機架價低端 7.8→7.5）",
   "b_val": "32.00",
   "kind": "TK 版本落差",
-  "proposal": "本庫已用 v21.7；chip_bridge 於 v0.3 改讀本庫 SIF_TK_*（基準值不變，只影響敏感度欄）",
+  "proposal": "橋接表 v0.2.2 改讀本庫 TK v21.7 快照與 R1 三個契約名稱；VR200 低成本欄機架價 7.5、IT／總資本支出 32.00／42.21（基準不變）",
   "target": "v0.3",
-  "status": "待併入",
+  "status": "已併入 v0.4",
   "origin": "Siliconomics Checks K3"
  },
  {
@@ -310,7 +310,7 @@
   "b_val": "NVIDIA、Broadcom CPO 份額未建模",
   "kind": "份額表（無加總檢查）",
   "proposal": "本庫建 CPO 份額表（含 NVIDIA、Broadcom 交換器端；Fabrinet 代工另列不加總），合計＝100%",
-  "target": "v0.3",
+  "target": "v0.4.1",
   "status": "待併入",
   "origin": "Siliconomics 盤點 2026-10-27 (i)"
  },
@@ -324,9 +324,9 @@
   "b_loc": "amkr",
   "b_val": "24.25",
   "kind": "行業變數（兩算法）",
-  "proposal": "本庫設單一部署 GW 路徑（R4 上線前以 network 算法為準），各模型改讀",
+  "proposal": "vr26（2026 Rubin 占比 22%）移入本庫 M11，7 個模型改讀；Amkor 部署 GW 改用同一混合口徑（2026 24.25 → 23.40，只影響 Recon 頁 TAM 對照）；本庫 Deploy 頁發布 SIF_DeployGW_A／B／C",
   "target": "v0.2",
-  "status": "待併入",
+  "status": "已併入 v0.4",
   "origin": "Siliconomics 盤點 2026-10-27"
  }
 ]

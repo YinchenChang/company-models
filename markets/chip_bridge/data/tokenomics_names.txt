@@ -1,5 +1,0 @@
-IF_RacksPerGW
-IF_GPUsPerGW
-IF_CapexIT
-IF_CapexFacility
-IF_CapexTotal

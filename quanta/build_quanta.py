@@ -4,6 +4,8 @@
 # 口徑：歸屬母公司淨利。業外收益與稅前利益：公開摘要未找到，以「淨利 ÷ 營業利益」一個係數涵蓋業外、稅與非控制權益。
 import sys, os, glob
 import openpyxl
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -64,7 +66,7 @@ for j, y in enumerate((26, 27, 28, 29)):
         "加速器顆數 × 每顆 IT capex（含 ASIC）；本模型以此除以每 GW IT 資本支出得到部署 GW（與台達電模型同口徑）" if y == 26 else "同上")
 inp("itpg_gb", "每 GW IT 資本支出（GB300）", "US$B", None, BR["capit"][0], None, "Derived", BR["capit"][2], "Tokenomics v20.1 IF_CapexIT（經橋接表；唯讀）")
 inp("itpg_vr", "每 GW IT 資本支出（VR200；2027 起）", "US$B", None, BR["capit"][1], None, "Derived", BR["capit"][2], "同上；Rubin Ultra 與 ASIC 機架未另訂（Assumed：同 VR200）")
-inp("vr26", "2026 年部署中 Rubin 世代占比（混合用）", "%", 0.15, 0.22, 0.30, "Interested-party", "TrendForce 2026 組合 Rubin 22%（經 markets/memory）", "廣達：Vera Rubin 4Q26 小量、1Q27 放量（財報狗 2026-10-08）")
+inp("vr26", "2026 年部署中 Rubin 世代占比（混合用）", "%", *SIL.vals("vr26"), "Interested-party", "TrendForce 2026 組合 Rubin 22%（經 markets/memory）", "廣達：Vera Rubin 4Q26 小量、1Q27 放量（財報狗 2026-10-08）")
 inp("racks_gb", "每 GW 機架數（GB300）", "架", None, BR["racks"][0], None, "Derived", BR["racks"][2], "Tokenomics IF_RacksPerGW（經橋接表）")
 inp("racks_vr", "每 GW 機架數（VR200）", "架", None, BR["racks"][1], None, "Derived", BR["racks"][2], "同上")
 inp("rack_gb", "整櫃買方價格（GB300，Tokenomics）", "US$M/架", None, BR["rack"][0], None, "Derived", BR["rack"][2], "Recon 用：ODM 價 ÷ 買方價")

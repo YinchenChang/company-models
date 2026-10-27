@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 VERSION = "v0.1"   # 由 --version 覆寫
 DATE = "20261027"  # 由 --date 覆寫
 TK_SNAPSHOT = os.path.join(SIL, "data", "tokenomics_snapshot_v21.7.json")
-TK_OLD = os.path.join(ROOT, "markets", "chip_bridge", "data", "tokenomics_snapshot_v20.1.json")
+TK_OLD = os.path.join(SIL, "data", "tokenomics_snapshot_v21.7.json")   # 下游（chip_bridge）實際讀的 TK 快照；v0.4 起與本庫同一份
 SEED = os.path.join(HERE, "seed", "seed_v0.1.json")
 CONFLICTS = os.path.join(HERE, "seed", "conflicts_v0.1.json")
 DECISIONS = os.path.join(HERE, "seed", "decisions_v0.1.json")
@@ -273,6 +273,42 @@ def main():
     for col, w in zip("ABCDEFGHIJKLM", (22, 34, 26, 9, 9, 9, 10, 20, 34, 9, 9, 9, 8)):
         TKS.column_dimensions[col].width = w
 
+    # ---------------- Deploy：AI IT 資本支出與部署 GW（2026–2029；情境 A／B／C） ----------------
+    DP = None; DROW = {}
+    if "vr26" in INROW and UN is not None and "it_GB" in INROW:
+        DP = wb.create_sheet("Deploy", index=wb.sheetnames.index("Path"))
+        DP["A1"] = ("Deploy — AI IT 資本支出＝Σ 平台顆數（Units 頁）× 每顆 IT capex（In 頁 M9）× 情境顆數係數；部署 GW＝AI IT 資本支出 ÷ 每 GW IT 資本支出"
+                    "（Tokenomics IF_CapexIT；2026 依 vr26 混合 GB300 與 VR200，2027 起 VR200）。公式與 markets/network、各公司模型相同；R4 產業部署路徑上線後改讀算力收支")
+        hdr(DP, 3, ["項目", "情境", "2026", "2027", "2028", "2029"])
+        T2P = {"bw": "GB", "rb": "VR", "ru": "RU", "hp": "HP", "tpu": "TPU", "trn": "TRN", "oth": "ASIC"}
+        def plat(k, y):
+            return ("AMD8" if y == 2026 else "AMDR") if k == "amd" else T2P[k]
+        COLS = {2026: "C", 2027: "D", 2028: "E", 2029: "F"}
+        r = 4
+        DP.cell(r, 1, "AI IT 資本支出（基準，未乘係數）").font = BOLD
+        for y, col in COLS.items():
+            c = DP.cell(r, list(COLS).index(y) + 3, "=" + "+".join(f"Units!{col}{UROW[g['key']]}*it_{plat(g['key'], y)}" for g in seed["unit_groups"]))
+            c.number_format = "0.0"
+        DROW["itc"] = r; r += 1
+        for s_ in seed["scen"]:
+            DP.cell(r, 1, "AI IT 資本支出 × 情境顆數係數"); DP.cell(r, 2, s_)
+            for y, col in COLS.items():
+                f = f"={col}{DROW['itc']}" + (f"*um{y % 100}_{s_}" if y >= 2028 else "")
+                DP.cell(r, list(COLS).index(y) + 3, f).number_format = "0.0"
+            DROW["itc" + s_] = r; r += 1
+        DP.cell(r, 1, "每 GW IT 資本支出（$B／GW）")
+        DP.cell(r, 3, "=TK_CapexIT_GB300*(1-vr26)+TK_CapexIT_VR200*vr26").number_format = "0.00"
+        for y in (2027, 2028, 2029):
+            DP.cell(r, list(COLS).index(y) + 3, "=TK_CapexIT_VR200").number_format = "0.00"
+        DROW["itpg"] = r; r += 1
+        for s_ in seed["scen"]:
+            DP.cell(r, 1, "部署 GW（IT 電力）").font = BOLD; DP.cell(r, 2, s_)
+            for y, col in COLS.items():
+                c = DP.cell(r, list(COLS).index(y) + 3, f"={col}{DROW['itc' + s_]}/{col}{DROW['itpg']}"); c.number_format = "0.0"; c.fill = KEY
+            DROW["gw" + s_] = r; r += 1
+        DP.column_dimensions["A"].width = 36
+        for col in "BCDEF": DP.column_dimensions[col].width = 10
+
     # ---------------- Conflicts：跨模型同一變數不同值的登錄 ----------------
     CF = wb.create_sheet("Conflicts")
     CF["A1"] = ("Conflicts — 跨模型衝突登錄：同一個行業變數在兩個以上公司模型有不同值。本庫的任務是讓每個變數只有一個值；"
@@ -362,6 +398,19 @@ def main():
                 c = IF.cell(r, 5 + j, f"=ShareTbl!{'DEF'[j]}{sr}"); c.font = GREEN; c.number_format = "0%"
             IF.cell(r, 9, f"ShareTbl!D{sr}:F{sr}")
             name(wb, nm_, f"Interface!$E${r}:$G${r}"); IFNAMES.append(nm_); r += 1
+    if DP is not None:
+        r += 1
+        IF.cell(r, 1, "B4. AI IT 資本支出與部署 GW（Deploy 頁；欄 E–H＝2026–2029）").font = BOLD; r += 1
+        items = ([(f"SIF_AIITCapex_{s_}", "itc" + s_, f"AI IT 資本支出（{s_}）", "$B") for s_ in seed["scen"]]
+                 + [("SIF_ITCapexPerGW", "itpg", "每 GW IT 資本支出（2026 依 vr26 混合）", "$B/GW")]
+                 + [(f"SIF_DeployGW_{s_}", "gw" + s_, f"部署 GW（{s_}）", "GW") for s_ in seed["scen"]])
+        for nm_, key, lab, unit in items:
+            dr = DROW[key]
+            IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, unit)
+            for j in range(4):
+                c = IF.cell(r, 5 + j, f"=Deploy!{'CDEF'[j]}{dr}"); c.font = GREEN; c.number_format = "0.00"
+            IF.cell(r, 9, f"Deploy!C{dr}:F{dr}")
+            name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
     r += 1
     IF.cell(r, 1, "C. Tokenomics 鏡像（只讀；權威在算力收支；本庫與 TK 一致由 Checks K3 檢查）").font = BOLD; r += 1
     hdr(IF, r, ["名稱", "項目", "單位", "低", "基準", "高", "", "來源位置"]); r += 1
@@ -495,6 +544,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.4：新增 M8–M11（每顆網通內容、每顆 IT capex〔NVIDIA 世代改由 Tokenomics 推導〕、網通技術轉換與 CPO 三情境、2026 Rubin 占比 vr26；原在 markets/network 與 11 個公司模型）與 Deploy 頁（AI IT 資本支出、部署 GW 三情境）；橋接表改讀 Tokenomics v21.7。", False),
         ("讀法：Scen（情境定義）→ In（藍字輸入）→ Path／Mkt（推導）→ Interface（下游取數）→ Checks（SGOV_Errors 須為 0）。", False),
         ("顏色：藍字＝輸入（本活頁簿擁有）；黑字＝公式；綠字＝跨頁或外部連結；淡黃底＝關鍵輸出；亮黃底＝待 Andy 決定或未定。", False),
         ("標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy 與 Assumed 一律給區間（v0.1 搬入列尚有缺區間者，見 Checks G3）。", False),

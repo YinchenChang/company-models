@@ -1,5 +1,12 @@
 # Siliconomics 變更紀錄
 
+## v0.4（2026-10-27；`model/20261027_Siliconomics_v0.4.xlsx`；Tokenomics v21.7）
+
+- 新增 In 頁 M8（每顆加速器網通內容 54 列）、M9（每顆 IT capex 9 列；GB300、VR200、Rubin Ultra、Hopper 改為 TK_In 公式 IF_CapexIT ÷ IF_GPUsPerGW）、M10（scale-up 光學占比、銅占比、CPO 三情境 12 列）、M11（vr26：2026 Rubin 占比 22%），原在 markets/network 與 11 個公司模型；Assumed 列補區間（非 NVIDIA 每顆 IT capex、scale-up 光學、CPO 三情境 ×0.7–×1.4）。
+- 新增 Deploy 頁與 Interface `SIF_AIITCapex_*`、`SIF_ITCapexPerGW`、`SIF_DeployGW_*`（2026–2029；情境 A 23.4／41.6／52.8／60.1 GW）。
+- 橋接表 v0.2.2：改讀本庫 TK v21.7 快照與 R1 三個契約名稱（CF17）；只有 VR200 低成本欄變動（機架價 7.8 → 7.5）。Checks K3 歸零。
+- 下游：network 改讀 M8–M10；台達電、廣達、奇鋐、台光電、勝宏、光寶、金像電的 vr26 改讀 M11；Amkor 部署 GW 改用 vr26 混合口徑（CF22，2026 24.25 → 23.40，只影響 Recon）。重建 57 個目標：目標價與上檔空間全部不變（差異 < 1e-12）；其餘差異為橋接表檔名文字、In 頁區間、Dell 低端敏感度（隨 VR200 低成本機架價）；第二輪全部相同。
+
 ## v0.3（2026-10-27；`model/20261027_Siliconomics_v0.3.xlsx`；Tokenomics v21.7）
 
 - 新增 In 頁 M6（加速器每顆售價 `pa_*`、ASIC 核心價 `core_*`、HBM 代購比例 `f_hbm`；原在 nvidia、avgo）與 M7（ASIC 設計服務份額：Broadcom `sh_*`、Marvell `msh_*`、聯發科 `mtk_*`、世芯 `al*`；原在 avgo、mrvl、mediatek、alchip），數值與文字逐字搬入；In 頁新增 J 欄第二來源。

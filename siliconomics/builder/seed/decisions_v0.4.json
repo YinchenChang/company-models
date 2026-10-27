@@ -1,0 +1,11 @@
+[
+ {
+  "id": "S14",
+  "cat": "範圍",
+  "item": "v0.4 範圍",
+  "decision": "(1) markets/network 的每顆網通內容、每顆 IT capex、技術轉換、CPO 三情境移入 M8–M10（NVIDIA 世代每顆 IT capex 改為 TK_In 公式）；Assumed 列補區間（每顆 IT capex 非 NVIDIA、scale-up 光學占比、CPO 三情境 ×0.7–×1.4）；(2) vr26 移入 M11；(3) Deploy 頁：AI IT 資本支出、每 GW IT 資本支出、部署 GW 三情境；(4) 橋接表改讀 TK v21.7 與 R1 契約名稱（CF17）；(5) Amkor 部署 GW 改用混合口徑（CF22）。CPO 份額表（CF21）延到 v0.4.1",
+  "date": "2026-10-27",
+  "quote": "（工程類分段；區間值屬判斷類預設）",
+  "status": "預設、可撤回"
+ }
+]
