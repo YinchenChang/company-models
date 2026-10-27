@@ -1116,7 +1116,7 @@ HJ = {
     "question": "FY2029 的 AI 增量營業利益能否覆蓋 AI 資本支出的資金成本（AI 增量 ROIC 對 WACC），且自由現金流不需停止回購",
     "scenarios": [{"key": s, "name": SCN[s]} for s in SC],
     "sections": [
-        {"id": "thesis", "title": "命題與核心問題", "intro": "@README!A4", "blocks": [
+        {"id": "thesis", "title": "命題與核心問題", "blocks": [
             {"type": "list", "items": ["@README!A5", "@README!A6", "@README!A7"]},
             {"type": "kv", "items": [["投資建議", "@Val!B41"], ["@Val!A38", "@Val!B38|sp1"], ["@Val!A34", "@Val!B34|n2"], ["@Val!A37", "@Val!B37|n2"],
                                      ["@CF!A5", "@CF!C5|n1"], ["@CF!A6", "@CF!C6"]]},
@@ -1154,7 +1154,7 @@ HJ = {
             {"type": "note", "parts": ["@Val!A49", "：", "@Val!B49"]},
             {"type": "table", "caption": "@CF!A2", "head": ["@CF!A4", "@CF!B4", "@CF!C4", "@CF!D4"],
              "rowgen": {"sheet": "CF", "rows": "5-11", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"], "row_fmt": {"6": {"B": "", "C": "", "D": ""}}}}]},
-        {"id": "recon", "title": "對帳：共識、指引與 v0.2.2", "intro": "@Recon!A1", "blocks": [
+        {"id": "recon", "title": "對帳：共識、指引與前一版", "intro": "@Recon!A1", "blocks": [
             {"type": "table", "head": ["@Recon!A3", "@Recon!B3", "@Recon!C3", "@Recon!D3", "@Recon!E3", "@Recon!F3"],
              "rowgen": {"sheet": "Recon", "rows": f"4-{rc[0] - 1}", "cols": ["A", "B", "C", "D", "E", "F"], "fmts": ["", "n1", "n1", "n1", "sp1", ""], "row_fmt": RCF}},
             {"type": "table", "caption": "官方分部對帳（Q 頁核對列，實績應為零）", "head": ["@Q!A3", "@Q!J3", "@Q!K3", "@Q!L3", "@Q!M3"],
