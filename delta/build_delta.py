@@ -1,4 +1,4 @@
-# 台達電（2308）收支與估值模型 v0.2（AI 半導體 Project：電源與散熱次產業樣板）
+# 台達電（2308）個股模型 v0.2（AI 半導體 Project：電源與散熱次產業樣板）
 # 用法：python3 delta/build_delta.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不平移。金額：十億新台幣（NT$B）；市場與每 kW 內容以美元輸入、以匯率 fx 換算；EPS：新台幣。
 # 口徑：歸屬母公司淨利（公司揭露的「稅後淨利」＝稅前 − 所得稅 − 非控制權益）。
@@ -88,9 +88,22 @@ inp("ai_25", "2025 年 AI 相關營收 ÷ 營收（讀為不含液冷）", "%", 
 inp("ai_26", "2026 年 AI 相關營收 ÷ 營收（讀為不含液冷）", "%", 0.25, 0.26, 0.28, "Interested-party", TR2Q26 + "：CFO「一定超過 25%」；BigGo 摘要：朝 28% 目標", "讀法（Assumed）：AI 相關＝AI 電源，不含液冷；另一讀法見 Sens「AI 相關含液冷」")
 inp("lc_25", "2025 年液冷營收 ÷ 營收", "%", None, 0.10, None, "Interested-party", TR2Q26 + "：液冷約占 2025 年營收 10%", "數位時代：約 9%")
 inp("lc_26", "2026 年液冷營收 ÷ 營收", "%", 0.12, 0.125, 0.13, "Interested-party", TR2Q26 + "：2026 年超過 12%", TN1012 + "：液冷產品可望超過 12%")
-inp("g_nai27", "非 AI 營收年增 2027", "%", 0.0, 0.06, 0.10, "Assumed", "2026 錨點非 AI 約 +15%（Q 頁；含非 AI 資料中心、電源零組件）；自動化 2Q26 +15% 但虧損、交通衰退（2Q26 法說）", "2025：自動化 +5%、交通 −16%（4Q25 法說簡報）")
-inp("g_nai28", "非 AI 營收年增 2028", "%", 0.0, 0.05, 0.10, "Assumed", "同上", "—")
-inp("g_nai29", "非 AI 營收年增 2029", "%", 0.0, 0.04, 0.08, "Assumed", "同上", "—")
+sec("C2. 營收分部（官方四大事業群：電源及零組件、交通、自動化、基礎設施；v0.3 依個股模型原則重建）")
+AR25 = "台達電 2025 年報（英文版 p.136，2026-03-30）：電源及零組件 50%、交通 7%、自動化 10%、基礎設施 33%（經 BESSmanufacturers 摘錄）"
+FT926 = "FTNN 2026-10-12（台達電 9 月營收公告）：電源及零組件 51%、基礎設施 35%、自動化 8%、交通 6%"
+for k, nm, v25, v26, lo26, hi26 in (("pe", "電源及零組件", 0.50, 0.51, 0.50, 0.53), ("mo", "交通", 0.07, 0.06, 0.05, 0.07), ("au", "自動化", 0.10, 0.08, 0.07, 0.09)):
+    inp(f"s25_{k}", f"2025 年{nm} ÷ 營收", "%", None, v25, None, "Verified", AR25, "四捨五入值；基礎設施＝1 − 其餘")
+    inp(f"s26_{k}", f"2026 年{nm} ÷ 營收", "%", lo26, v26, hi26, "Interested-party", FT926 + "（9 月或前三季比重，文中未區分；全年 Assumed 同此）",
+        "理財周刊 2026-08-05：2Q26 電源及零組件 962.96 億（約 52.6%）、基礎設施 629.38 億（約 34.3%）" if k == "pe" else "—")
+inp("s25_inf", "2025 年基礎設施 ÷ 營收", "%", None, "=1-s25_pe-s25_mo-s25_au", None, "Derived", "1 − 其餘三事業群（公司 33%）", "—")
+inp("s26_inf", "2026 年基礎設施 ÷ 營收", "%", None, "=1-s26_pe-s26_mo-s26_au", None, "Derived", "1 − 其餘三事業群（公司 35%）", "2Q26 基礎設施年增約 78%、營業利益年增約 121%（理財周刊 2026-08-05）")
+for k, nm, vals, s1, s2 in (
+        ("pe", "電源及零組件：非 AI（一般伺服器電源、消費與工業電源、零組件）", ((0.0, 0.05, 0.10), (0.0, 0.04, 0.08), (0.0, 0.03, 0.06)), "2Q26 電源及零組件年增約 50%（含 AI 電源；BigGo 法說摘要）", "AI 電源（命題子列）另由部署 GW × 每 kW × 份額推導"),
+        ("inf", "基礎設施：非液冷（資料中心 UPS 與電力、通訊電源、樓宇自動化、儲能）", ((0.03, 0.09, 0.15), (0.0, 0.07, 0.12), (0.0, 0.06, 0.10)), "2Q26 基礎設施年增約 78%（含液冷；理財周刊 2026-08-05）；資料中心與液冷需求、擴廠（BigGo）", "液冷（命題子列）另由部署 GW × 每 GW 液冷營收推導"),
+        ("au", "自動化", ((0.0, 0.05, 0.10), (0.0, 0.05, 0.10), (0.0, 0.04, 0.08)), "2Q26 自動化年增約 15% 但虧損；記憶體供給改善後下半年轉盈（BigGo 法說摘要）", "2025 自動化 +5%（4Q25 法說簡報）"),
+        ("mo", "交通（電動車）", ((-0.10, 0.0, 0.10), (-0.05, 0.02, 0.10), (-0.05, 0.02, 0.10)), "交通 2026 年衰退、持續虧損，全年表現不佳；長期趨勢不變（BigGo 法說摘要）", "2025 交通 −16%（4Q25 法說簡報）")):
+    for y, v in zip((27, 28, 29), vals):
+        inp(f"g_{k}{y}", f"{nm}年增 20{y}", "%", *v, "Assumed", s1 if y == 27 else "同上", s2 if y == 27 else "—")
 
 sec("D. 毛利率")
 inp("d_ai", "AI 電源毛利率高於其他營收的幅度", "pt", 0.04, 0.08, 0.12, "Assumed", "券商：18kW PSU 與 HVDC 電源櫃毛利率約 50%（旺得富 2026-10-01，Interested-party）；公司整體 1H26 36.3%", "部門別毛利率未揭露：未找到；電源及零組件 2025 部門利益率 20.1% vs 基礎設施 15.6%（4Q25 法說簡報）")
@@ -235,6 +248,12 @@ Q.cell(27, 1, "FY2026 營收 ÷ 券商（10-01，3Q 前）− 1"); Q["B27"] = "=
 Q.cell(28, 1, "FY2026 EPS ÷ 券商（本土 10-01）− 1"); Q["B28"] = "=F15/b_eps26a-1"
 Q.cell(29, 1, "非 AI 營收 FY2026 年增"); Q["B29"] = "=F19/B19-1"
 for rr in range(24, 30): Q[f"B{rr}"].number_format = "0.0%" if rr != 26 else "0.00"
+Q.cell(31, 1, "營收分部（官方四大事業群；v0.3）").font = BOLD
+for rr, k, nm in ((32, "pe", "電源及零組件"), (33, "mo", "交通"), (34, "au", "自動化"), (35, "inf", "基礎設施")):
+    qrow(rr, nm, {"B": f"=B4*s25_{k}"}, ann=f"=F4*s26_{k}", tag="Verified（FY2025）／Interested-party（FY2026）", s1="營收 × 事業群比重（In 頁 C2 節）", s2="1H26、3Q26 各事業群金額：未全取得（2Q26 電源及零組件、基礎設施見 In 頁）")
+qrow(36, "檢查：分部合計 − 合併營收", {"B": "=B32+B33+B34+B35-B4"}, ann="=F32+F33+F34+F35-F4", tag="Derived", s1="應為 0", s2="—")
+for nm, rr in (("pe", 32), ("mo", 33), ("au", 34), ("inf", 35)):
+    defname(f"a25_{nm}", f"Q!$B${rr}"); defname(f"a26_{nm}", f"Q!$F${rr}")
 for nm, rr in (("rev", 4), ("gp", 5), ("opx", 7), ("oi", 8), ("nop", 10), ("pt", 11), ("ni", 12), ("sh", 14), ("eps", 15), ("aip", 17), ("lc", 18), ("nai", 19), ("aipx", 20), ("naix", 21)):
     defname(f"a25_{nm}", f"Q!$B${rr}"); defname(f"a26_{nm}", f"Q!$F${rr}")
 Q.column_dimensions["A"].width = 60
@@ -246,7 +265,7 @@ Q.freeze_panes = "B4"
 FYS = (2025, 2026, 2027, 2028, 2029); FC = {2025: "C", 2026: "D", 2027: "E", 2028: "F", 2029: "G"}
 BU = (2026, 2027, 2028, 2029)
 umx = lambda y, s: {2026: "1", 2027: "1", 2028: f"um28_{s}", 2029: f"um29_{s}"}[y]
-DEFP = dict(scn="A", rel="rel", pkw="pkw", lcr="lcr", mf="1", gn="g_nai", d="d_ai", opxa="0", aip="aip", nai="nai")
+DEFP = dict(scn="A", rel="rel", pkw="pkw", lcr="lcr", mf="1", gsuf="", d="d_ai", opxa="0", aip="aip", nai="nai")
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
     ws.cell(r0, 1, title).font = BOLD
@@ -278,8 +297,18 @@ def engine(ws, r0, title, **over):
     row("lpg0", "液冷每 GW 營收（FY2026 校準）", "NT$B/GW", {"D": f"=a26_lc/D{R['gw']}"}, fmt="0.000")
     row("lrel", "液冷每 GW 相對值（÷ FY2026）", "x", {"D": "=1", **{c_(y): f"={P['lcr']}_{y % 100}" for y in BU[1:]}}, fmt="0.00")
     row("lc", "液冷營收", "NT$B", {"C": "=a25_lc", **{c_(y): f"={c_(y)}{R['gw']}*$D${R['lpg0']}*{c_(y)}{R['lrel']}" for y in BU}}, fmt="#,##0.0")
-    row("nai", "非 AI 營收", "NT$B", {"C": f"=a25_{P['nai']}", "D": f"=a26_{P['nai']}", **{c_(y): f"={c_(y - 1)}{r}*(1+{P['gn']}{y % 100})" for y in BU[1:]}}, fmt="#,##0.0")
-    row("rev", "營收", "NT$B", {c_(y): f"={c_(y)}{R['aip']}+{c_(y)}{R['lc']}+{c_(y)}{R['nai']}" for y in FYS}, fmt="#,##0.0")
+    gs = lambda k, y: f"g_{k}{P['gsuf']}{y % 100}"
+    row("pen", "電源及零組件：非 AI", "NT$B", {"C": f"=a25_pe-a25_{P['aip']}", "D": f"=a26_pe-a26_{P['aip']}", **{c_(y): f"={c_(y - 1)}{r}*(1+{gs('pe', y)})" for y in BU[1:]}}, fmt="#,##0.0",
+        note="AI 電源（上列）為本分部的命題子列；FY2025、FY2026＝分部 − AI 電源")
+    row("pe", "電源及零組件", "NT$B", {c_(y): f"={c_(y)}{R['aip']}+{c_(y)}{R['pen']}" for y in FYS}, fmt="#,##0.0", note="＝AI 電源＋非 AI")
+    row("infn", "基礎設施：非液冷", "NT$B", {"C": "=a25_inf-a25_lc", "D": "=a26_inf-a26_lc", **{c_(y): f"={c_(y - 1)}{r}*(1+{gs('inf', y)})" for y in BU[1:]}}, fmt="#,##0.0",
+        note="液冷（上列）為本分部的命題子列（Assumed：液冷全部歸基礎設施）")
+    row("inf", "基礎設施", "NT$B", {c_(y): f"={c_(y)}{R['lc']}+{c_(y)}{R['infn']}" for y in FYS}, fmt="#,##0.0", note="＝液冷＋非液冷")
+    row("au", "自動化", "NT$B", {"C": "=a25_au", "D": "=a26_au", **{c_(y): f"={c_(y - 1)}{r}*(1+{gs('au', y)})" for y in BU[1:]}}, fmt="#,##0.0")
+    row("mo", "交通", "NT$B", {"C": "=a25_mo", "D": "=a26_mo", **{c_(y): f"={c_(y - 1)}{r}*(1+{gs('mo', y)})" for y in BU[1:]}}, fmt="#,##0.0")
+    row("nai", "非 AI 營收（電源非 AI＋基礎設施非液冷＋自動化＋交通）", "NT$B", {c_(y): f"={c_(y)}{R['pen']}+{c_(y)}{R['infn']}+{c_(y)}{R['au']}+{c_(y)}{R['mo']}" for y in FYS}, fmt="#,##0.0")
+    row("rev", "營收", "NT$B", {c_(y): f"={c_(y)}{R['pe']}+{c_(y)}{R['inf']}+{c_(y)}{R['au']}+{c_(y)}{R['mo']}" for y in FYS}, fmt="#,##0.0", note="＝四大事業群合計")
+    row("chk", "檢查：分部合計 − 合併營收（FY2025 實績、FY2026 錨點）", "NT$B", {"C": f"=C{R['rev']}-a25_rev", "D": f"=D{R['rev']}-a26_rev"}, fmt="0.000")
     row("g", "營收年增", "%", {c_(y): f"={c_(y)}{R['rev']}/{c_(y - 1)}{R['rev']}-1" for y in FYS[1:]}, fmt="0.0%")
     row("aish", "AI 電源 ÷ 營收", "%", {c_(y): f"={c_(y)}{R['aip']}/{c_(y)}{R['rev']}" for y in FYS}, fmt="0.0%")
     row("aall", "AI 電源＋液冷 ÷ 營收", "%", {c_(y): f"=({c_(y)}{R['aip']}+{c_(y)}{R['lc']})/{c_(y)}{R['rev']}" for y in FYS}, fmt="0.0%")
@@ -305,7 +334,7 @@ def engine(ws, r0, title, **over):
 # ---------------- PL ----------------
 PL = wb.create_sheet("PL")
 PL["A1"] = "PL — 台達電損益（十億新台幣；EPS 新台幣；歸屬母公司）。FY2025A 實績、FY2026 錨點（1H26 實績＋3Q26 營收實績＋假設），FY2027 起為模型。FY(t)＝CY(t)。三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2026–FY2027 三情境相同（顆數係數從 CY2028 開始）"
-PB = {}; r0 = 60
+PB = {}; r0 = 80
 SCN_T = {"A": "情境 A：基準（顆數係數 1.0）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85", "C": "情境 C：CY2028–29 顆數 ×0.6"}
 for s in SC:
     PB[s] = engine(PL, r0, SCN_T[s], scn=s)
@@ -314,7 +343,7 @@ hdr(PL, 3, ["情境／項目", "單位", "FY2025A", "FY2026（錨點）", "FY202
 sr = 4; SUMR = {}
 for s in SC:
     PL.cell(sr, 1, f"情境 {s}").font = BOLD; sr += 1
-    for key, lab, unit, fmt in (("rev", "營收", "NT$B", "#,##0.0"), ("g", "  營收年增", "%", "0.0%"), ("aip", "  AI 電源營收", "NT$B", "#,##0.0"), ("lc", "  液冷營收", "NT$B", "#,##0.0"),
+    for key, lab, unit, fmt in (("rev", "營收", "NT$B", "#,##0.0"), ("g", "  營收年增", "%", "0.0%"), ("aip", "  AI 電源營收", "NT$B", "#,##0.0"), ("lc", "  液冷營收", "NT$B", "#,##0.0"), ("pe", "  電源及零組件", "NT$B", "#,##0.0"), ("inf", "  基礎設施", "NT$B", "#,##0.0"), ("au", "  自動化", "NT$B", "#,##0.0"), ("mo", "  交通", "NT$B", "#,##0.0"),
                                 ("nai", "  非 AI 營收", "NT$B", "#,##0.0"), ("aall", "  AI 電源＋液冷 ÷ 營收", "%", "0.0%"), ("gm", "毛利率", "%", "0.0%"), ("oim", "營業利益率", "%", "0.0%"),
                                 ("ni", "歸屬母公司淨利", "NT$B", "#,##0.0"), ("eps", "EPS", "NT$", "0.00"), ("epsg", "  EPS 年增", "%", "0.0%")):
         PL.cell(sr, 1, lab); PL.cell(sr, 2, unit)
@@ -327,7 +356,7 @@ PL.cell(sr, 1, "核對（應為 0）：FY2026 模型營收 − 錨點；FY2026 �
 PL.cell(sr, 1, "  情境 A：營收差（NT$B）"); PL[f"D{sr}"] = f"=D{PB['A']['rev']}-a26_rev"; PL[f"D{sr}"].number_format = "0.0000"; CHK_ROW = sr; sr += 1
 PL.cell(sr, 1, "  情境 A：AI 電源差（NT$B）"); PL[f"D{sr}"] = f"=D{PB['A']['aip']}-a26_aip"; PL[f"D{sr}"].number_format = "0.0000"; sr += 1
 PL.cell(sr, 1, "  情境 A：毛利差（NT$B）"); PL[f"D{sr}"] = f"=D{PB['A']['gmn']}*D{PB['A']['rev']}+d_ai*D{PB['A']['aip']}-a26_gp"; PL[f"D{sr}"].number_format = "0.0000"
-assert sr < 60, sr
+assert sr < 80, sr
 PL.column_dimensions["A"].width = 62; PL.column_dimensions["B"].width = 12; PL.column_dimensions["H"].width = 70
 for c in "CDEFG": PL.column_dimensions[c].width = 14
 
@@ -469,16 +498,20 @@ cases = [("份額流失（低）", "份額相對值 2027 0.85、2028 0.70、2029
          ("電源內容 低", "每 kW：2026 380、2027 500、2028–29 550", dict(pkw="PKLO")), ("電源內容 高", "每 kW：2026 520、2027 700、2028 800、2029 850", dict(pkw="PKHI")),
          ("液冷每 GW 低", "相對值 0.9／0.85／0.8", dict(lcr="LCLO")), ("液冷每 GW 高", "相對值 1.3／1.4／1.5", dict(lcr="LCHI")),
          ("AI 部署 ×0.8", "FY2027 起 AI IT 資本支出 ×0.8", dict(mf="mf_lo")), ("AI 部署 ×1.2", "×1.2", dict(mf="mf_hi")),
-         ("非 AI 成長 低", "2027–29 0%", dict(gn="GNLO")), ("非 AI 成長 高", "2027 +10%、2028 +10%、2029 +8%", dict(gn="GNHI")),
+         ("非 AI 分部成長 低", "四條非 AI 分部成長率取低值", dict(gsuf="LO")), ("非 AI 分部成長 高", "四條非 AI 分部成長率取高值", dict(gsuf="HI")),
          ("AI 毛利率差距 4pt", "AI 電源毛利率只高 4 個百分點", dict(d="d_ai_lo")), ("AI 毛利率差距 12pt", "高 12 個百分點", dict(d="d_ai_hi")),
          ("營業費用率 +2pt", "營業費用額外 +2% × 營收", dict(opxa="opx_adj_hi")),
          ("AI 相關含液冷（讀法）", "FY2026 AI 電源＝營收 ×（26% − 12.5%）；份額分子變小", dict(aip="aipx", nai="naix"))]
-for nm, base, suf in (("RLO", "rel", "_lo"), ("RHI", "rel", "_hi"), ("PKLO", "pkw", "_lo"), ("PKHI", "pkw", "_hi"), ("LCLO", "lcr", "_lo"), ("LCHI", "lcr", "_hi"), ("GNLO", "g_nai", "_lo"), ("GNHI", "g_nai", "_hi")):
+for nm, base, suf in (("RLO", "rel", "_lo"), ("RHI", "rel", "_hi"), ("PKLO", "pkw", "_lo"), ("PKHI", "pkw", "_hi"), ("LCLO", "lcr", "_lo"), ("LCHI", "lcr", "_hi")):
     for y in (26, 27, 28, 29):
-        if base in ("rel", "lcr", "g_nai") and y == 26: continue
-        src = f"{base}{y}{suf}" if base == "g_nai" else f"{base}_{y}{suf}"
-        target = f"{nm}{y}" if base == "g_nai" else f"{nm}_{y}"
+        if base in ("rel", "lcr") and y == 26: continue
+        src = f"{base}_{y}{suf}"
+        target = f"{nm}_{y}"
         wb.defined_names[target] = DefinedName(target, attr_text=wb.defined_names[src].attr_text)
+for k in ("pe", "inf", "au", "mo"):   # 分部成長的低／高別名（Sens 用）：g_peLO27 等
+    for nm, suf in (("LO", "_lo"), ("HI", "_hi")):
+        for y in (27, 28, 29):
+            wb.defined_names[f"g_{k}{nm}{y}"] = DefinedName(f"g_{k}{nm}{y}", attr_text=wb.defined_names[f"g_{k}{y}{suf}"].attr_text)
 def put_case(i, name, setting, R, pre):
     SE.cell(i, 1, name); SE.cell(i, 2, setting)
     for c, key, y, fmt in (("C", "rev", 2027, "#,##0.0"), ("D", "aip", 2027, "#,##0.0"), ("E", "gm", 2027, "0.0%"), ("F", "eps", 2027, "0.00"),
@@ -567,14 +600,14 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("台達電（2308）收支與估值模型 v0.1.1（AI 半導體 Project：電源與散熱次產業樣板）　2026-10-25", True),
- ("版本：v0.1.1（2026-10-25：Val 新增第 0 節「目標價與上檔空間」、In 新增情境權重 tp_wA／tp_wB／tp_wC；其餘數值與 v0.1 相同）。v0.1（初版）：AI 電源每 kW 內容、台達電份額、液冷每 GW 營收在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）；奇鋐等散熱廠之後讀這條液冷線。", False),
+lines = [("台達電（2308）個股模型 v0.3（AI 半導體 Project：電源與散熱次產業樣板）　2026-10-28", True),
+ ("版本：v0.3（2026-10-28：依個股模型原則重建營收層——營收列改為官方四大事業群〔電源及零組件、交通、自動化、基礎設施〕，AI 電源為電源及零組件子列、液冷為基礎設施子列，分部合計＝合併營收；非 AI 單一成長率改為四條分部成長率）；v0.2.x（2026-10-25～27：目標價、級距、Siliconomics 改讀）；v0.1.1（2026-10-25：Val 新增第 0 節「目標價與上檔空間」、In 新增情境權重 tp_wA／tp_wB／tp_wC；其餘數值與 v0.1 相同）。v0.1（初版）：AI 電源每 kW 內容、台達電份額、液冷每 GW 營收在本模型 Units 頁建立，為本專案權威資料（規則第 13 條）；奇鋐等散熱廠之後讀這條液冷線。", False),
  ("模型命題：台達電的 AI 營收＝部署 GW（AI IT 資本支出 ÷ 每 GW IT 資本支出）×（AI 電源每 kW 內容 × 台達電份額＋液冷每 GW 營收）。800V HVDC 把交流轉直流移到機架外，每 GW 可做的金額變大；同時光寶、Flex、中國廠追趕份額。股價兩週跌約兩成後，約 22–28 倍未來 12 月 EPS。", False),
  ("核心問題：每 kW 電源內容上升（800V）能不能抵銷份額流失與零組件成本，讓 AI 營收在 2027–28 年維持高成長；現價隱含的路徑合不合理。", False), ("", False),
  ("會計年度＝日曆年，FY(t)＝CY(t)，不平移。預測期 FY2027–FY2029（三年）。金額：十億新台幣；市場以美元計、以匯率換算。口徑：歸屬母公司淨利。", False), ("", False),
  ("驅動因子 → 推導量（全部唯讀上游，不修改）", True),
  ("AI 電源營收：markets/network 的 AI IT 資本支出 × 情境顆數係數 ÷ 每 GW IT 資本支出（Tokenomics，經橋接表）＝部署 GW；× 每 kW 電源內容（凱基推導、2028 起 Assumed）× 匯率 × 台達電有效份額（FY2026 以公司 AI 相關占比校準）× 份額相對值（Assumed）。", False),
- ("液冷營收：FY2026 以公司液冷占比校準每 GW 營收 × 相對值（Assumed）。非 AI：FY2026 殘差 × 成長率（Assumed）。毛利率：AI 電源比其他營收高 d_ai（Assumed），其他毛利率為 FY2026 殘差（Derived）。營業費用：彈性 phi（Derived）。", False),
+ ("液冷營收：FY2026 以公司液冷占比校準每 GW 營收 × 相對值（Assumed）。營收分部：電源及零組件＝AI 電源＋非 AI（年增 5／4／3%）；基礎設施＝液冷＋非液冷（年增 9／7／6%）；自動化（5／5／4%）；交通（0／2／2%）；皆 Assumed，FY2025、FY2026 依公司事業群比重（50／7／10／33%、51／6／8／35%）。毛利率：AI 電源比其他營收高 d_ai（Assumed），其他毛利率為 FY2026 殘差（Derived）。營業費用：彈性 phi（Derived）。", False),
  ("校準：FY2026 ＝ 1H26 實績＋3Q26 營收實績＋假設（4Q 季增、毛利率、營業費用率）。不用券商數字（只在 Recon 對帳）。", False),
  ("估值：現價 ÷ FY2027、FY2028 EPS；十年 P/E 規則值（單一資料商來源）× FY2027 EPS；循環位置以本模型營收最高年判定（台達電不套設備股見頂年）。", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。公司原文＝法說簡報與逐字稿；券商皆未具名或單一來源。", False),
