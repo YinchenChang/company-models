@@ -87,7 +87,7 @@ def collect():
 def call_claude(text):
     req = urllib.request.Request(
         "https://api.anthropic.com/v1/messages",
-        data=json.dumps({"model": MODEL, "max_tokens": 4000, "system": SYSTEM,
+        data=json.dumps({"model": MODEL, "max_tokens": 12000, "system": SYSTEM,
                          "messages": [{"role": "user", "content": text}]}).encode(),
         headers={"x-api-key": API_KEY, "anthropic-version": "2023-06-01",
                  "content-type": "application/json"})

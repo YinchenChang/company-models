@@ -65,6 +65,7 @@ def snapshot_drift():
 
 
 # ---------- B. 公司檔案 vs 儲存格 ----------
+HOW = {}        # 儲存格值的來源統計：原檔／原檔（git 歷史）／同模型最新版／找不到
 STALE = set()   # (公司, 引用檔名, 同模型最新版)：公司檔案引用的模型版本已落後
 TAG = re.compile(r"\[本專案：([^\]]+)\]")
 XLSX = re.compile(r"([^\s：；，、（）\[\]]+\.xlsx)")
@@ -101,7 +102,13 @@ def _from_history(name):
     return dest
 
 
-STEM = re.compile(r"^(?:\d{8}_)?(.+?)_v[\d._]+\.xlsx$")
+
+
+def ver_tuple(n):
+    m = re.search(r"_v([\d._]+)\.xlsx$", n)
+    nums = tuple(int(x) for x in re.findall(r"\d+", m.group(1))) if m else ()
+    d = re.match(r"^(\d{8})_", n)
+    return nums, d.group(1) if d else ""
 
 
 def find_xlsx(name):
@@ -114,7 +121,8 @@ def find_xlsx(name):
                 continue
             _index.setdefault(os.path.basename(f), []).append(f)
     m = STEM.match(name)
-    newest = max([n for n in _index if m and (STEM.match(n) or [None, None])[1] == m.group(1)] or [None], key=lambda x: x or "")
+    cands = [n for n in _index if m and (STEM.match(n) or [None, None])[1] == m.group(1)]
+    newest = max(cands, key=ver_tuple) if cands else None   # 依版本數值比較（v10 > v9），不是字串比較
     if name in _index:
         return _index[name][0], "原檔", newest
     h = _from_history(name)
@@ -160,7 +168,10 @@ def profile_items(path):
             if not last_file:
                 continue
             fp, how, newest = find_xlsx(last_file)
-            if newest and newest != last_file:
+            found_cells = CELL.findall(t)
+            if found_cells:
+                HOW[how.split("（")[0].split(" ")[0]] = HOW.get(how.split("（")[0].split(" ")[0], 0) + len(found_cells)
+            if newest and newest != last_file and found_cells and ver_tuple(newest) > ver_tuple(last_file):
                 STALE.add((os.path.basename(path)[:-3], last_file, newest))
             for sh, ref in CELL.findall(t):
                 key = f"{last_file} {sh}!{ref}" + ("" if how.startswith("原檔") else f"〔{how}〕")
@@ -280,11 +291,14 @@ def main():
     tally = {}
     for r in rows:
         tally[r[0]] = tally.get(r[0], 0) + 1
-    lag = [d for d in drift if d["changed"] and d["changed"] != 0]
+    lag = [d for d in drift if isinstance(d["changed"], int) and d["changed"] > 0]
+    nocmp = [d for d in drift if isinstance(d["changed"], str)]
     md = [f"# 跨模型數字一致性檢查｜{day}", "",
-          f"- A. Tokenomics 快照：{len(drift)} 份，基準 {latest}；數值已落後的 {len(lag)} 份：" + "、".join(f"{d['folder']}（{d['file'][20:-5]}：{d['changed']}{'' if isinstance(d['changed'], str) else ' 項'}）" for d in lag),
+          f"- A. Tokenomics 快照：{len(drift)} 份，基準 {latest}；數值已落後 {len(lag)} 份：" + ("、".join(f"{d['folder']}（{d['file'][20:-5]}：{d['changed']} 項）" for d in lag) or "無")
+          + (f"；格式不同無法比對 {len(nocmp)} 份：" + "、".join(f"{d['folder']}（{d['file'][20:-5]}）" for d in nocmp) if nocmp else ""),
           f"- B. 公司檔案 {len(per)} 份、引用儲存格的句子 {n_items} 句；判定：" + "、".join(f"{k} {v}" for k, v in sorted(tally.items(), key=lambda x: order.get(x[0], 2))),
-          f"- 公司檔案引用的模型版本已落後：{len({x[0] for x in STALE})} 家（明細見「引用版本落後」頁；比對時已從 git 歷史取出原引用版本）",
+          f"- 引用版本落後：上述 {len(per)} 份中有 {len({x[0] for x in STALE} & set(per))} 份引用的模型檔已有新版（明細見「引用版本落後」頁）",
+          "- 儲存格值來源：" + "、".join(f"{k} {v} 格" for k, v in sorted(HOW.items())),
           f"- 估計費用約 US${cost:.2f}（{MODEL}，Batch 五折）", "", "詳見同名 xlsx。判定只作人工複核的優先順序。"]
     open(f"{HERE}/out/{day}.md", "w", encoding="utf-8").write("\n".join(md) + "\n")
     print("\n".join(md))
