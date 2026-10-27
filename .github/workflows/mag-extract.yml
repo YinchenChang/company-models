@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with: {python-version: "3.12"}
-      - run: pip install openpyxl && sudo apt-get install -y -qq poppler-utils >/dev/null
+      - run: pip install openpyxl && (sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils) >/dev/null
       - name: Probe sources（診斷）
         run: |
           mkdir -p mag/extract/out
