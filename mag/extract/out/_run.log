@@ -1,4 +1,4 @@
-batch msgbatch_01KrxtMKQJXimR9MpBXbC7yA
-批次未完成，保留請求 20261027_backtest_coreweave_2026Q2_r1 msgbatch_01KrxtMKQJXimR9MpBXbC7yA
-batch msgbatch_01A5PNnaDoFjPgLQe3qXbdcw
-批次未完成，保留請求 20261027_backtest_oracle_FY27Q1_r1 msgbatch_01A5PNnaDoFjPgLQe3qXbdcw
+批次 msgbatch_01KrxtMKQJXimR9MpBXbC7yA 已 10.3 小時未完成，取消並改用一般 API
+20261027_backtest_coreweave_2026Q2_r1 {'total': 166, 'both': 86, 'agree': 84, 'disagree': 2, 'one': 7, 'none': 73, 'bt_n': 91, 'bt_ok': 87}
+批次 msgbatch_01A5PNnaDoFjPgLQe3qXbdcw 已 9.0 小時未完成，取消並改用一般 API
+20261027_backtest_oracle_FY27Q1_r1 {'total': 169, 'both': 48, 'agree': 47, 'disagree': 1, 'one': 12, 'none': 109, 'bt_n': 57, 'bt_ok': 50}
