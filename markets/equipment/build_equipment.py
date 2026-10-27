@@ -6,6 +6,8 @@ import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 
 BLUE = Font(color="0000FF"); GREEN = Font(color="007A33"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 WRAP = Alignment(wrap_text=True, vertical="top")
@@ -60,7 +62,9 @@ IN["A1"] = "In — 輸入（藍字＝本模型輸入；綠字＝讀自其他模�
 IN["A2"] = "每個數字附兩個來源（來源1、來源2）；找不到第二來源者寫「未找到」。SemiAnalysis 未使用。標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy、Assumed 給低／高區間。"
 hdr(IN, 3, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源1", "來源2／備註"])
 rows = []
-sec = lambda t: rows.append(("sec", t)); inp = lambda *a: rows.append(a)
+sec = lambda t: rows.append(("sec", t))
+def inp(*a):   # v0.7 起，行業輸入（Siliconomics M20：鍵加前綴 eq_）一律改讀本庫快照；公司資本支出與設備占比仍在本模型
+    rows.append((a[0], *SIL.row9("eq_" + a[0])[1:]) if ("eq_" + a[0]) in SIL.V else a)
 
 SEMI_URL = "SEMI 2026-07-14 年中預測新聞稿 https://www.semi.org/en/semi-press-release/global-semiconductor-equipment-sales-forecast-to-reach-a-record-229-billion-dollars-in-2028-semi-reports"
 SEMI_2 = "轉載：PR Newswire／Semiconductor Digest（同一原始發布，非獨立來源）；SEMI 為設備商協會，傾向樂觀（Interested-party）"

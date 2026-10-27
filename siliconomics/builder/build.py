@@ -618,6 +618,68 @@ def main():
         RK.column_dimensions["A"].width = 62; RK.column_dimensions["G"].width = 60
         for col in "BCDEF": RK.column_dimensions[col].width = 10
 
+    # ---------------- Equip：SEMI 設備路徑、SoC 測試機市場（v0.7） ----------------
+    EQ = None; EQROW = {}
+    if "eq_s_wfe_26" in INROW and "ts_mk_soc26" in INROW and UN is not None:
+        EQ = wb.create_sheet("Equip", index=wb.sheetnames.index("Path"))
+        EQ["A1"] = ("Equip — (1) SEMI 設備分項路徑（2026 新聞稿值；2025 由年增回推；2027、2028 年增連乘，測試與封裝 2027 為 2026、2028 的幾何內插；2029 × (1＋g29)）；"
+                    "(2) SoC 測試機市場三情境＝AI（加速器顆數 × 每顆測試時間係數 × 每加權顆支出，以 CY2026 公司市場校準）＋非 AI；(3) 測試 ÷ WFE（CF15）。"
+                    "記憶體測試機市場依 DRAM 設備支出（公司資本支出推導，markets/equipment），留在 advantest 模型")
+        hdr(EQ, 3, ["項目", "情境", "2025", "2026", "2027", "2028", "2029", "說明"])
+        YC = {2025: "C", 2026: "D", 2027: "E", 2028: "F", 2029: "G"}
+        def ec(r, y, f, fmt="0.00", fill=None):
+            c = EQ.cell(r, list(YC).index(y) + 3, f); c.number_format = fmt
+            if fill: c.fill = fill
+            return c
+        r = 4
+        EQ.cell(r, 1, "A. SEMI 設備分項（US$B；SEMI 為設備商協會，Interested-party）").font = BOLD; r += 1
+        for k, nm in (("dram", "DRAM 設備"), ("nand", "NAND 設備"), ("fd", "代工與邏輯設備"), ("wfe", "晶圓前段設備（WFE）")):
+            EQ.cell(r, 1, f"SEMI {nm}")
+            ec(r, 2025, f"=eq_s_{k}_26/(1+eq_g_{k}_26)"); ec(r, 2026, f"=eq_s_{k}_26"); ec(r, 2027, f"=D{r}*(1+eq_g_{k}_27)")
+            ec(r, 2028, f"=E{r}*(1+eq_g_{k}_28)"); ec(r, 2029, f"=F{r}*(1+eq_g29)")
+            EQROW[k] = r; r += 1
+        for k, nm in (("test", "測試設備"), ("pkg", "組裝與封裝設備")):
+            EQ.cell(r, 1, f"SEMI {nm}")
+            ec(r, 2025, f"=eq_s_{k}_26/(1+eq_g_{k}_26)"); ec(r, 2026, f"=eq_s_{k}_26"); ec(r, 2027, f"=SQRT(eq_s_{k}_26*eq_s_{k}_28)")
+            ec(r, 2028, f"=eq_s_{k}_28"); ec(r, 2029, f"=F{r}*(1+eq_g29)")
+            EQ.cell(r, 8, "2027 幾何內插（Derived；SEMI 年中預測未給 2027）"); EQROW[k] = r; r += 1
+        EQ.cell(r, 1, "SEMI 設備合計（WFE＋測試＋封裝）").font = BOLD
+        for y, col in YC.items(): ec(r, y, f"={col}{EQROW['wfe']}+{col}{EQROW['test']}+{col}{EQROW['pkg']}", fill=KEY)
+        EQROW["tot"] = r; r += 2
+        EQ.cell(r, 1, "B. SoC 測試機市場（日曆年，US$B）").font = BOLD; r += 1
+        PL_ = ("bw", "rb", "ru", "hp", "amd", "tpu", "trn", "oth")
+        for s_ in seed["scen"]:
+            EQ.cell(r, 1, "測試時間加權顆數（百萬顆）"); EQ.cell(r, 2, s_)
+            for y in (2026, 2027, 2028, 2029):
+                col = "CDEF"[y - 2026]
+                m = (f"*um{y % 100}_{s_}" if y >= 2028 else "")
+                ec(r, y, "=(" + "+".join(f"Units!{col}{UROW[k]}*ts_tt_{k}" for k in PL_) + f"){m}", "0.000")
+            EQROW["wu" + s_] = r; r += 1
+        EQ.cell(r, 1, "每加權顆測試支出（以 CY2026 校準；US$B／百萬顆）")
+        ec(r, 2026, f"=(ts_mk_soc26-ts_nonai26)/D{EQROW['wuA']}", "0.0000"); EQ.cell(r, 8, "（公司 CY2026 SoC 市場 − 非 AI）÷ 加權顆數；平行測試效率提升基準為 0"); EQROW["cw"] = r; r += 1
+        EQ.cell(r, 1, "非 AI SoC 測試機市場")
+        for y in (2026, 2027, 2028, 2029): ec(r, y, f"=ts_nonai26*(1+ts_g_nonai)^{y - 2026}")
+        EQROW["nai"] = r; r += 1
+        for s_ in seed["scen"]:
+            EQ.cell(r, 1, "SoC 測試機市場").font = BOLD; EQ.cell(r, 2, s_)
+            ec(r, 2025, "=ts_mk_soc25")
+            for y in (2026, 2027, 2028, 2029):
+                col = YC[y]
+                ec(r, y, f"=$D${EQROW['cw']}*{col}{EQROW['wu' + s_]}+{col}{EQROW['nai']}", fill=KEY)
+            EQROW["soc" + s_] = r; r += 1
+        r += 1
+        EQ.cell(r, 1, "C. 測試 ÷ WFE（CF15；泰瑞達長期 7–9% 是其 ATE 口徑，SEMI 測試設備另含探針台、分選機等）").font = BOLD; r += 1
+        EQ.cell(r, 1, "SEMI 測試設備 ÷ SEMI WFE")
+        for y, col in YC.items(): ec(r, y, f"={col}{EQROW['test']}/{col}{EQROW['wfe']}", "0.0%")
+        EQROW["r_semi"] = r; r += 1
+        EQ.cell(r, 1, "SoC 測試機市場（情境 A）÷ SEMI WFE")
+        for y, col in YC.items(): ec(r, y, f"={col}{EQROW['socA']}/{col}{EQROW['wfe']}", "0.0%")
+        EQROW["r_soc"] = r; r += 1
+        EQ.cell(r, 1, "對照：泰瑞達測試 ÷ WFE 長期區間")
+        ec(r, 2026, '=TEXT(ts_tw_lo,"0%")&"–"&TEXT(ts_tw_hi,"0%")', "@"); r += 1
+        EQ.column_dimensions["A"].width = 52; EQ.column_dimensions["H"].width = 60
+        for col in "BCDEFG": EQ.column_dimensions[col].width = 10
+
     # ---------------- Conflicts：跨模型同一變數不同值的登錄 ----------------
     CF = wb.create_sheet("Conflicts")
     CF["A1"] = ("Conflicts — 跨模型衝突登錄：同一個行業變數在兩個以上公司模型有不同值。本庫的任務是讓每個變數只有一個值；"
@@ -766,6 +828,30 @@ def main():
                 c = IF.cell(r, 5 + j, f"=Rack!{'CDEF'[j]}{kr}"); c.font = GREEN; c.number_format = "#,##0.000"
             IF.cell(r, 9, f"Rack!C{kr}:F{kr}")
             name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
+    if EQ is not None:
+        r += 1
+        IF.cell(r, 1, "B10. 設備（Equip 頁；SEMI 分項欄 D–H＝2025–2029；SoC 測試機市場 E–H＝2026–2029）").font = BOLD; r += 1
+        for k, nm in (("dram", "DRAM"), ("nand", "NAND"), ("fd", "FoundryLogic"), ("wfe", "WFE"), ("test", "Test"), ("pkg", "Pkg"), ("tot", "Total")):
+            nm_ = f"SIF_SEMI_{nm}"; er = EQROW[k]
+            IF.cell(r, 1, nm_); IF.cell(r, 2, f"SEMI 設備：{nm}"); IF.cell(r, 3, "US$B")
+            for j in range(5):
+                c = IF.cell(r, 4 + j, f"=Equip!{'CDEFG'[j]}{er}"); c.font = GREEN; c.number_format = "0.00"
+            IF.cell(r, 9, f"Equip!C{er}:G{er}")
+            name(wb, nm_, f"Interface!$D${r}:$H${r}"); IFNAMES.append(nm_); r += 1
+        for s_ in seed["scen"]:
+            nm_ = f"SIF_TestSoCMkt_{s_}"; er = EQROW["soc" + s_]
+            IF.cell(r, 1, nm_); IF.cell(r, 2, f"SoC 測試機市場（{s_}；2025 為公司值）"); IF.cell(r, 3, "US$B")
+            for j in range(5):
+                c = IF.cell(r, 4 + j, f"=Equip!{'CDEFG'[j]}{er}"); c.font = GREEN; c.number_format = "0.000"
+            IF.cell(r, 9, f"Equip!C{er}:G{er}")
+            name(wb, nm_, f"Interface!$D${r}:$H${r}"); IFNAMES.append(nm_); r += 1
+        for key, nm_, lab in (("r_semi", "SIF_TestWFE_SEMI", "SEMI 測試 ÷ SEMI WFE"), ("r_soc", "SIF_TestWFE_SoC", "SoC 測試機（A）÷ SEMI WFE")):
+            er = EQROW[key]
+            IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, "%")
+            for j in range(5):
+                c = IF.cell(r, 4 + j, f"=Equip!{'CDEFG'[j]}{er}"); c.font = GREEN; c.number_format = "0.0%"
+            IF.cell(r, 9, f"Equip!C{er}:G{er}")
+            name(wb, nm_, f"Interface!$D${r}:$H${r}"); IFNAMES.append(nm_); r += 1
     if ST is not None and "sum_lcA" in STROW:
         r += 1
         IF.cell(r, 1, "B9. AI 液冷份額合計（ShareTbl 頁；欄 E–H＝2026–2029）").font = BOLD; r += 1
@@ -877,6 +963,12 @@ def main():
                 CK.cell(r, 1, f"K6-lc{s_}{y}"); CK.cell(r, 2, f"AI 液冷 {y} 奇鋐＋雙鴻＋健策有效份額合計 ≤ 100%（情境 {s_}）")
                 CK.cell(r, 3, f"=ShareTbl!{'DEFG'[j]}{STROW['sum_lc' + s_]}"); CK.cell(r, 4, 1)
                 CK.cell(r, 6, f'=IF(C{r}<=1+1E-9,"OK","ERROR")'); CK.cell(r, 7, "驗證（加總受限）"); r += 1
+    if EQ is not None:
+        for j, y in enumerate((2026, 2027, 2028)):
+            col = "DEF"[j]
+            CK.cell(r, 1, f"K8-{y}"); CK.cell(r, 2, f"{y} SoC 測試機市場（A）÷ SEMI WFE 在泰瑞達長期區間內（7–9%；CF15）")
+            CK.cell(r, 3, f"=Equip!{col}{EQROW['r_soc']}"); CK.cell(r, 4, '=TEXT(ts_tw_lo,"0%")&"–"&TEXT(ts_tw_hi,"0%")')
+            CK.cell(r, 6, f'=IF(AND(C{r}>=ts_tw_lo,C{r}<=ts_tw_hi),"OK","WARN")'); CK.cell(r, 7, "驗證（量級；口徑不同，只列 WARN）"); r += 1
     if RK is not None:
         CK.cell(r, 1, "K7"); CK.cell(r, 2, "Rack 頁：商用 GPU 系統市場 2026 ≤ AI IT 資本支出 2026（系統售價不應超過全部 IT 資本支出）")
         CK.cell(r, 3, f"=Rack!C{RKROW['sysA']}"); CK.cell(r, 4, f"=Deploy!C{DROW['itcA']}")
@@ -935,6 +1027,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.7：新增 M20（設備市場層的行業輸入：SEMI 年中預測、2029 外推、其他晶圓廠設備成長與 2025 資本支出、設備情境係數、AI 分類、券商 WFE；原在 markets/equipment）、M21（測試設備：SoC／記憶體測試機市場錨點、非 AI SoC、每顆測試時間係數、HBM 權重、泰瑞達測試 ÷ WFE 區間；原在 advantest、ter）與 Equip 頁（SEMI 分項路徑、SoC 測試機市場三情境、測試 ÷ WFE〔CF15〕）、Checks K8、Interface SIF_SEMI_*、SIF_TestSoCMkt_*、SIF_TestWFE_*。", False),
         ("v0.6.1：新增 M19（液冷：機架內液冷每架內容〔原在 markets/chip_bridge〕、分歧管、內容調整、滲透率、TrendForce 對照、奇鋐與雙鴻 FY2026 份額快照與份額相對值、健策冷板元件份額；原在 avc、auras、jentech）、Rack 頁 D 節（AI 液冷市場三情境）、ShareTbl 的 AI 液冷份額表（CF04 加入雙鴻；CF12 台達電機架外液冷不屬本市場）、Checks K6-lc、Interface SIF_LiqPerGW、SIF_LiqPen_*、SIF_LiqMkt_*、SIF_LiqShareSum_*。", False),
         ("v0.6：新增 M17（AI 電源每 kW 內容、台達電與光寶份額路徑、凱基與 UBS 外部錨點；原在 delta、liteon）、M18（ODM 每櫃價格、緯穎 AI 占比單一值〔CF09〕；原在 quanta、wiwynn、wistron）與 Rack 頁（AI 伺服器組裝市場、商用 GPU 系統市場〔CF10：AMD 2026 計 GB300 世代、2027 起計 Rubin 世代〕、AI 電源市場）、ShareTbl 的 AI 電源份額表、Checks K6-pwr、K7、Interface SIF_AsmMkt_*、SIF_GPUSysMkt_*、SIF_PwrMkt_*、SIF_PwrShareSum_*。", False),
         ("v0.5.2：新增 M16（每 GW AI 高速 PCB 與 CCL 金額；原在 victory_giant、emc）與 PGW 頁、Interface SIF_PCBperGW、SIF_CCLperGW、SIF_PCBMkt_*、SIF_CCLMkt_*。", False),

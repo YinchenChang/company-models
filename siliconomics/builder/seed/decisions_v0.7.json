@@ -1,0 +1,11 @@
+[
+ {
+  "id": "S22",
+  "cat": "範圍",
+  "item": "v0.7：設備市場層行業輸入與測試設備",
+  "decision": "(1) M20：markets/equipment 的行業輸入（SEMI 年中預測、2029 外推、其他晶圓廠設備成長與 2025 資本支出、設備情境係數 B／C、AI 分類、券商 WFE 對照）移入本庫，equipment 改讀；三大記憶體廠與台積電資本支出、設備占比屬公司變數，留在 equipment。(2) M21：Advantest 的測試市場錨點、非 AI SoC、每顆測試時間係數、HBM 權重與泰瑞達測試 ÷ WFE 區間移入本庫。(3) Equip 頁：SEMI 分項路徑、SoC 測試機市場三情境、測試 ÷ WFE（CF15）；泰瑞達建檔時核對 Advantest 成品的 SoC 市場與本庫一致",
+  "date": "2026-10-28",
+  "quote": "Andy 2026-10-28 06:45「請繼續」",
+  "status": "預設、可撤回"
+ }
+]
