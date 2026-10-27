@@ -4,7 +4,8 @@
 供建置代理填 company.json 前、Andy 與 chat 端核對時使用。**不改 company.json**；候選值不是模型數值。
 
 流程：
-1. 讀 mag/extract/requests/*.json（每檔一個請求，見 README），由 SEC EDGAR 取得指定期間的 10-Q／10-K 與財報 8-K 附件。
+1. 讀 mag/extract/requests/*.json（每檔一個請求，見 README）。主要模式：讀 Andy 下載到 Drive `MAG財報下載/` 的文件（drive_ids）或 repo 內檔案（files）；
+   兩者皆無時才連 SEC EDGAR（GitHub 雲端 IP 目前被 SEC 擋，2026-10-27）。
 2. 欄位清單直接從 <公司>/company.json 讀：latestQuarter、ytdActual、callFacts、quarterly.actuals[目標季]、
    以及 calendar_q.py → ROLL_FIELDS；說明取自 scripts/fields_doc.py。附「上次值」只作口徑參考。
 3. 同一份文件由兩個模型各自萃取一次（Batch API，五折），逐欄比對；不一致者標「需確認」。
@@ -364,7 +365,9 @@ def write_outputs(name, req, docs, fields, results, usage_total, batch_info):
     for m in MODELS:
         u = results.get(m, ("", {}))[1]
         s.append([m, u.get("input_tokens"), u.get("output_tokens"), batch_info.get("id"), batch_info.get("processing_status")])
-    s.append(["估計費用（Batch 五折；Opus 2/10、Sonnet 1/5 美元每百萬 token）", round(usage_total, 3)])
+    std = batch_info.get("via") == "standard"
+    s.append([("估計費用（一般 API；Opus 4/20、Sonnet 2/10 美元每百萬 token；批次逾時改走）" if std else
+               "估計費用（Batch 五折；Opus 2/10、Sonnet 1/5 美元每百萬 token）"), round(usage_total, 3)])
     os.makedirs(f"{ROOT}/mag/extract/out", exist_ok=True)
     wb.save(f"{ROOT}/mag/extract/out/{name}.xlsx")
 

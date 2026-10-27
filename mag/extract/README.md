@@ -23,6 +23,7 @@
 ## 設計
 - 欄位清單由 `<公司>/company.json` 自動產生：`latestQuarter`、`ytdActual`、`callFacts`、`quarterly.actuals[target_q]`、`calendar_q.py → ROLL_FIELDS`；說明取 `scripts/fields_doc.py`。
 - 同一份文件由 claude-opus-5-5 與 claude-sonnet-5-5 各萃取一次（Batch API，五折），逐欄比對。
-- 費用：每家每季約 US$0.5–1（Max 方案每月 API credit 支付）。
+- 費用：每份 10-Q 約 US$0.5–0.8（Batch）；Batch 逾 6 小時未完成時自動取消改走一般 API，約為 2 倍（2026-10-27 回測 CoreWeave 1.54、Oracle 0.95）。Max 方案每月 API credit 支付。
+- 回測範圍：`target_q` 為 null 時不含 `quarterly.actuals` 季度層；正式季度滾動請填 `target_q`。
 - 限制：法說會內容（多數 `callFacts`）不在 SEC 文件中，會標「皆未找到」；ROLL_FIELDS 多為推導值，只回報原始數字與出處。
 - 對 SEC 的請求以 GitHub 免回覆地址 `YinchenChang@users.noreply.github.com` 作聯絡方式（SEC 要求；Andy 2026-10-27 同意，不用個人信箱）；每秒少於 10 次。

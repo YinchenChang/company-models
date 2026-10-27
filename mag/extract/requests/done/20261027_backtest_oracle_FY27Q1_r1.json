@@ -6,6 +6,6 @@
   "drive_ids": [
     "1UhPubfM2DF8vVsuTJ9wMk_ATjyMB1v4r"
   ],
-  "_note": "回測：Andy 先前下載的 Oracle 1Q27 10-Q（Drive MAG財報下載/oracle_FY27Q1_10-Q.pdf），與 oracle/company.json 現值比對。待資料夾開放連結分享後移到 requests/ 觸發。｜r1：回測隱藏上次值（避免抄答案灌水）。",
+  "_note": "回測：Andy 先前下載的 Oracle 1Q27 10-Q（Drive MAG財報下載/oracle_FY27Q1_10-Q.pdf），與 oracle/company.json 現值比對。｜r1：回測隱藏上次值（避免抄答案灌水）。（2026-10-28 已完成：Batch 逾時取消，改走一般 API）",
   "batch_id": "msgbatch_01A5PNnaDoFjPgLQe3qXbdcw"
 }
