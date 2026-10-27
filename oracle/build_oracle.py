@@ -106,6 +106,7 @@ inp("lam", "成長型資本支出提前比例 λ（次期新增產能的設備�
 sec("E. 命題：租賃（未起租 288B；沿用 v0.3.1 leases.uncommenced）")
 inp("lease_unc", "未起租租賃承諾（未折現）", "US$B", None, 288.0, None, "Interested-party", Q10 + " 附註 6（" + FACTS + " lease.uncommenced.fy27q1）", "FY27Q2 至 FY2029 起租、期限 15–19 年")
 inp("lease_q", "未起租租約起租季數（FY27Q2 起平均）", "季", None, 11, None, "Interested-party", Q10 + " 附註 6：FY27Q2 至 FY2029 起租", "沿用 v0.3.1")
+inp("lease_q0", "FY2027 年底已起租季數（FY27Q2 起每季一批）", "季", None, 3, None, "Derived", "FY27Q2、Q3、Q4 三季", "之後每年＋4 季，至 lease_q 為止")
 inp("lease_term", "未起租租約期限（直線付租）", "年", 15, 17, 19, "Assumed", "沿用 v0.3.1：區間中點 17 年", "11 季平均起租（FY27Q2–FY29Q4）；三情境相同（合約性，不隨 MW 縮放）")
 inp("oplease_q1", "營業租賃負債（FY27Q1 末）", "US$B", None, 34.621, None, "Interested-party", Q10 + "（" + FACTS + " bs.opLease.fy27q1）", "—")
 inp("finlease_q1", "融資租賃負債（FY27Q1 末；列入淨負債與 WACC 的負債）", "US$B", None, 9.185, None, "Interested-party", Q10 + "（" + FACTS + " bs.finLease.fy27q1）", "修正一：列入淨負債（F6）")
@@ -161,6 +162,7 @@ inp("cash_q1", "現金與有價證券（FY27Q1 末）", "US$B", None, "=cashonly
 inp("min_cash", "最低現金", "US$B", None, 10, None, "Assumed", "沿用 v0.3.1 defaults.minCash", "循環額度 10 不列入")
 inp("lev_max", "投資級上限：（借款＋租賃負債）÷（EBITDA＋租金）", "x", 4.0, 4.5, 5.0, "Assumed", "沿用 v0.3.1 defaults.debtEbitdaMax（租賃調整後）", "只限制新增投資級債；超過走股權再走高息債")
 inp("eq_cap", "每年新股上限（占市值）", "%", None, 0.05, None, "Assumed", "沿用 v0.3.1 defaults.eqCapPct", "Q1 FY27 已用 ATM 發行 19.9（不計入模型期）")
+inp("eq_tol", "「需要新股或高息債」判定門檻（技術容忍值）", "US$B", None, 0.05, None, "Assumed", "低於此額視為不需要", "—")
 inp("eq_disc", "新股發行折價", "%", None, 0.10, None, "Assumed", "沿用 v0.3.1 defaults.eqDisc", "—")
 inp("dps_q", "普通股每季股利", "US$／股", None, 0.50, None, "Interested-party", PR_Q1 + "（Q1 FY27 宣告）", "不回購（沿用 v0.3.1；授權餘額 6.3）")
 inp("pref_q1", "特別股股利（Q1 FY27）", "US$B", None, 0.081, None, "Interested-party", Q10 + "（" + FACTS + " is.prefDiv.fy27q1）", "—")
@@ -193,8 +195,16 @@ inp("eb_crwv", "CoreWeave 2027 年共識 EBITDA", "US$B", None, 16.656, None, "I
 inp("ev_nbis", "Nebius 企業價值（2026-10-21）", "US$B", None, 48.79, None, "Interested-party", "oracle/data/oracle_facts_20261022.json val.peer.nbis", "—")
 inp("eb_nbis", "Nebius 2027 年共識 EBITDA", "US$B", None, 6.194, None, "Interested-party", "nebius/data/consensus_nbis_20261007.json FY27（MarketScreener）", "—")
 inp("mult_oci", "OCI AI 前瞻 EV/EBITDA（neocloud 同業中位數；修正一起只作對照列）", "x", 4.81, "=MEDIAN(Val!D61:D62)", 7.88, "Derived", "CoreWeave、Nebius：EV（2026-10-21）÷ 2027 年共識 EBITDA（Val 頁同業表）", "第三家同業（IREN、WhiteFiber）EBITDA 共識：未找到；v0.3.1 為 6x [Assumed]")
-inp("mult_sw", "其餘業務（軟體、硬體、服務）前瞻 EV/EBITDA（軟體同業中位數）", "x", 10.8, "=MEDIAN(Val!D65:D69)", 15.59, "Derived", "Microsoft、SAP、Salesforce、Adobe、ServiceNow NTM EV/EBITDA（2026-10-07；Val 頁同業表）", "硬體與服務以軟體倍數計（偏高，影響小，見報告第 5 節）")
-inp("mult_leg", "傳統業務（授權、支援、硬體、服務）前瞻 EV/EBITDA", "x", 6.6, "=MEDIAN(Val!D68,Val!D69)", 10.8, "Derived", "軟體同業中成熟、低成長的兩家（Salesforce 10.8、Adobe 6.6）中位數；修正一（F2／核對意見 3）", "高成長的 SaaS 與 OCI 非 AI 仍用軟體中位數")
+inp("pm_msft", "Microsoft NTM EV/EBITDA", "x", None, 15.59, None, "Derived", FACTS + " val.peer.msft（2026-10-07；EV ÷ 共識 EBITDA 時間加權）", "2026-10-22 找不到新值")
+inp("pm_sap", "SAP NTM EV/EBITDA", "x", None, 15.02, None, "Derived", FACTS + " val.peer.sap（2026-10-07）", "同上")
+inp("pm_crm", "Salesforce NTM EV/EBITDA", "x", None, 10.8, None, "Derived", FACTS + " val.peer.crm（2026-10-07）", "同上")
+inp("pm_adbe", "Adobe NTM EV/EBITDA", "x", None, 6.6, None, "Derived", FACTS + " val.peer.adbe（2026-10-07）", "同上")
+inp("pm_now", "ServiceNow NTM EV/EBITDA", "x", None, 20.65, None, "Derived", FACTS + " val.peer.now（2026-10-07）", "同上")
+inp("mult_sw", "其餘業務（軟體、硬體、服務）前瞻 EV/EBITDA（軟體同業中位數）", "x", 10.8, "=MEDIAN(pm_msft,pm_sap,pm_crm,pm_adbe,pm_now)", 15.59, "Derived", "Microsoft、SAP、Salesforce、Adobe、ServiceNow NTM EV/EBITDA（2026-10-07；Val 頁同業表）", "硬體與服務以軟體倍數計（偏高，影響小，見報告第 5 節）")
+inp("mult_leg", "傳統業務（授權、支援、硬體、服務）前瞻 EV/EBITDA", "x", 7.5, "=MEDIAN(pm_crm,pm_adbe)", 10.5, "Derived", "軟體同業中成熟、低成長的兩家（Salesforce 10.8、Adobe 6.6）中位數；修正一（F2／核對意見 3）", "高成長的 SaaS 與 OCI 非 AI 仍用軟體中位數")
+inp("split_mode", "其餘業務 EBITDA 拆分法（0＝成長型與傳統同利潤率 m_sw；1＝授權＋支援 m_ls、成長型以 Q1 推得）", "—", None, 0, None, "Assumed", "第二次核對意見 5：替代拆法列 Sens", "—")
+inp("m_ls", "授權＋支援利潤率（split_mode＝1 時）", "%", None, 0.85, None, "Assumed", "第二次核對意見 5（支援為高利潤率維護合約）", "—")
+inp("ai_floor", "OCI AI 企業價值取下限 0（1＝是；敏感度用）", "—", None, 0, None, "Assumed", "第二次核對意見 5：情境 C 的負值 AI 腿是否截為 0", "預設 0（保留價值毀損）")
 inp("mult_adj", "分部倍數調整係數（敏感度用；基準 1）", "x", 0.8, 1.0, 1.2, "Assumed", "敏感度 ±20%", "—")
 
 sec("K. 共識與公司指引（只作 Recon 對帳，不作校準）")
@@ -209,6 +219,7 @@ for y, cx, fc in ((2027, 93.961, -37.32), (2028, 100.962, -32.56), (2029, 84.848
 for y, v in ((2027, 32), (2028, 73), (2029, 114), (2030, 144)):
     inp(f"go{y}", f"公司 OCI 營收路徑 FY{y}", "US$B", None, v, None, "Interested-party", "Oracle Q4 FY26 新聞稿（2026-06-10；" + FACTS + " guide.ociPath.fy26pr）", "2025-10 分析師日：FY30 OCI 166、總營收 225" if y == 2030 else "—")
 inp("g_rev27", "公司 FY2027 營收指引（下限）", "US$B", None, 90, None, "Interested-party", PR_Q1, "—")
+inp("rpo_1336", "RPO 中 13–36 個月認列的比例", "%", None, 0.37, None, "Interested-party", Q10 + "（" + FACTS + " rpo.split.fy27q1）", "12 個月內 13%、37–60 個月 34%、其後 16%")
 inp("rpo", "剩餘履約義務 RPO（FY27Q1 末）", "US$B", None, 664, None, "Interested-party", Q10 + "：12 個月內 13%、13–36 個月 37%、37–60 個月 34%、其後 16%", "OpenAI 約占一半（二手，Moody's 判斷）")
 inp("oai_annual", "Oracle–OpenAI 合約年額（約 $300bn ÷ 5 年）", "US$B／年", None, 60, None, "Interested-party", "WSJ 轉述（The Register 2025-09-11），未經當事方證實", "只作對照")
 inp("tp_v031", "v0.3.1 基準目標價（加權）", "US$", 77.4, 84.2, 91.9, "Derived", "oracle/legacy_v0.3 交接檔 v0.3.1：保守 77.4／基準 84.2／積極 91.9（賣出）", "Recon v0.4 vs v0.3.1")
@@ -407,11 +418,13 @@ for s in SC:
     v = {c: f"={c}{rl}*{c}{rox}*{c}{R['L']}/1000" for c in "CDFGHIJ"}; v["E"] = f"=C{r}+D{r}"
     put(TH, nr("opex"), "AI 營運費用（電費、維護、人員、稅與保險；不含折舊、租金）", "US$B", v, "#,##0.00", "延誤後在役 MW × 每 MW 營運費用")
     full = "lease_unc/lease_term"
-    v = {"C": "=0", "D": f"={full}*MIN(1+2+3,lease_q*(lease_q+1)/2)/(lease_q*4)", "E": "=D{}", "F": f"={full}*MIN(4+5+6+7,lease_q*4)/(lease_q*4)", "G": f"={full}*MIN(8+9+10+11,lease_q*4)/(lease_q*4)"}
-    for c in "HIJ": v[c] = f"={full}"
+    SQ = lambda m: f"IF({m}<=lease_q,({m})*(({m})+1)/2,lease_q*(lease_q+1)/2+(({m})-lease_q)*lease_q)"
+    v = {"C": "=0", "D": f"={full}*{SQ('lease_q0')}/(lease_q*4)", "E": "=D{}"}
+    for k_, c in enumerate("FGHIJ", 1):
+        v[c] = f"={full}*({SQ(f'lease_q0+4*{k_}')}-{SQ(f'lease_q0+4*{k_ - 1}')})/(lease_q*4)"
     for c in "FGHIJ": v[c] += f"+MAX(0,{c}{ra}-cap_B)*{full}/(cap_B-mw_q1)"
     rr = nr("rent"); v["E"] = f"=D{rr}"
-    put(TH, rr, "AI 機房租金（未起租 288B 依序起租＋超過已簽範圍的新租約）", "US$B", v, "#,##0.00", "11 季平均起租、17 年直線；平均在役超過 cap_B 的部分以同一每 MW 租金加計（修正一）")
+    put(TH, rr, "AI 機房租金（未起租 288B 依序起租＋超過已簽範圍的新租約）", "US$B", v, "#,##0.00", "lease_q 季平均起租（第 j 季已起租 MIN(j, lease_q)／lease_q）、lease_term 年直線；平均在役超過 cap_B 的部分以同一每 MW 租金加計（修正一）")
     # 資本支出
     v = {"C": f"=capex_q1-nonai_cx*(q1_rev-C{R['rev']})", "E": f"=capex_g27-nonai_cx*(Seg!D{{tot}}-E{R['rev']})"}
     rcx = nr("cxg")
@@ -482,10 +495,10 @@ RP = CAL + 6
 TH.cell(RP, 1, "RPO 轉換檢查（命題的對照列；不作校準）").font = BOLD
 hdr(TH, RP + 1, ["項目", "單位", "A", "B", "C", "說明"])
 TH.cell(RP + 2, 1, "RPO 13–36 個月部分的年化認列（約 FY2028Q2–FY2030Q1）"); TH.cell(RP + 2, 2, "US$B／年")
-for j, s in enumerate(SC): TH.cell(RP + 2, 3 + j, "=rpo*0.37/2").number_format = "#,##0.0"
+for j, s in enumerate(SC): TH.cell(RP + 2, 3 + j, "=rpo*rpo_1336/2").number_format = "#,##0.0"
 TH.cell(RP + 2, 6, "RPO 含所有合約（OCI、SaaS、支援）；OpenAI 約一半（二手）")
 TH.cell(RP + 3, 1, "模型 FY2029 OCI AI 營收 ÷ RPO 年化認列"); TH.cell(RP + 3, 2, "x")
-for j, s in enumerate(SC): TH.cell(RP + 3, 3 + j, f"=G{TR[s]['rev']}/(rpo*0.37/2)").number_format = "0.00"
+for j, s in enumerate(SC): TH.cell(RP + 3, 3 + j, f"=G{TR[s]['rev']}/(rpo*rpo_1336/2)").number_format = "0.00"
 TH.cell(RP + 4, 1, "模型 FY2029 OCI AI 營收 ÷ OpenAI 合約年額 60"); TH.cell(RP + 4, 2, "x")
 for j, s in enumerate(SC): TH.cell(RP + 4, 3 + j, f"=G{TR[s]['rev']}/oai_annual").number_format = "0.00"
 TH.cell(RP + 5, 1, "模型 FY2029 OCI（含非 AI）÷ 公司 OCI 路徑 FY2029（114）"); TH.cell(RP + 5, 2, "x")
@@ -699,12 +712,16 @@ for s in SC:
     crow_("da", "折舊與攤銷", {c: f"=PL!{c}{P['da']}" for c in "CDEFGHI"})
     crow_("sbc", "SBC（非現金）", {c: f"=PL!{c}{P['sbc']}" for c in "CDEFGHI"})
     crow_("ppin", "客戶預付流入（AI 資本支出 × 覆蓋比）", {"D": f"=prepay_cov*Thesis!D{T['cx']}", **{yc(y): f"=prepay_cov*Thesis!{tc(y)}{T['cx']}" for y in range(2028, 2033)}}, note="FY2027 只計 Q2–Q4（Q1 實績 11.363 已在營運現金流）")
-    v = {"D": "=prepay_open/prepay_yrs*0.75"}
-    for i, y in enumerate(range(2028, 2033)):
-        c = yc(y)
-        prev = "+".join(f"{x}{F('ppin')}" for x in "DEFGHI"[: "DEFGHI".index(c)])
-        v[c] = f"=prepay_open/prepay_yrs*{1 if y < 2032 else 0.25}+({prev})/prepay_yrs"
-    crow_("pprec", "預付認列（非現金營收，自營運現金扣除）", v, note="期初餘額與新流入皆 5 年直線（次年起）")
+    v = {}
+    CC = "DEFGHI"
+    for i, c in enumerate(CC):
+        e_ = "+".join(f"{x}{F('L')}" for x in CC[: i + 1]); s_ = "+".join(f"{x}{F('L')}" for x in CC[:i]) or "0"
+        f_ = f"=prepay_open/prepay_yrs*MAX(0,MIN({e_},prepay_yrs)-MIN({s_},prepay_yrs))"
+        for j, x in enumerate(CC[:i]):
+            k_ = i - j
+            f_ += f"+{x}{F('ppin')}/prepay_yrs*MAX(0,MIN({k_},prepay_yrs)-MIN({k_ - 1},prepay_yrs))"
+        v[c] = f_
+    crow_("pprec", "預付認列（非現金營收，自營運現金扣除）", v, note="期初餘額自 FY27Q2 起、各年新流入自次年起，皆依 prepay_yrs 年直線（一般化）")
     crow_("cfo", "營運現金流", {"C": "=Q!L28", "D": f"=cfo_q1+(D{F('ni')}-Q!I27)+(D{F('da')}-Q!I24)+(D{F('sbc')}-sbc_q1)+D{F('ppin')}-D{F('pprec')}",
                                **{yc(y): f"={yc(y)}{F('ni')}+{yc(y)}{F('da')}+{yc(y)}{F('sbc')}+{yc(y)}{F('ppin')}-{yc(y)}{F('pprec')}" for y in range(2028, 2033)}},
          note="FY2027＝Q1 實績 23.103＋Q2–Q4；營運資金變動除預付外不建模")
@@ -726,10 +743,10 @@ for s in SC:
     frac = {"D": "6/11*0.5", "E": "7/11", "F": "1", "G": "1", "H": "1", "I": "1"}
     for c in "DEFGHI":
         y = 2026 + "CDEFGHI".index(c)
-        CF[f"{c}{F('lease')}"] = f"=lease_on+Thesis!{tc(y)}{T['rent']}/(lease_unc/lease_term)*{full}*(1-(1+lease_r)^-lease_term)/lease_r" if False else f"=lease_on+MIN(1,{ {'D':'3/lease_q','E':'7/lease_q','F':'11/lease_q','G':'11/lease_q','H':'11/lease_q','I':'11/lease_q'}[c] })*{full}*(1-(1+lease_r)^-lease_term)/lease_r"
+        CF[f"{c}{F('lease')}"] = f"=lease_on+Thesis!{tc(y)}{T['rent']}/(lease_unc/lease_term)*{full}*(1-(1+lease_r)^-lease_term)/lease_r" if False else f"=lease_on+MIN(1,(lease_q0+4*{"DEFGHI".index(c)})/lease_q)*{full}*(1-(1+lease_r)^-lease_term)/lease_r"
         CF[f"{c}{F('lease')}"].number_format = "#,##0.0"
     CF.cell(F("lease"), 1, "租賃負債（在帳＋已起租的未起租租約現值，期末）"); CF.cell(F("lease"), 2, "US$B")
-    CF.cell(F("lease"), 10, "期末已起租比例：FY27 3/11、FY28 7/11、FY29 起 11/11；在帳部分持平（判斷）")
+    CF.cell(F("lease"), 10, "期末已起租比例＝MIN(1,(lease_q0＋4 × 年數)÷ lease_q)；在帳部分持平（判斷）")
     crow_("cap", "投資級債可新增額度", {c: f"=MAX(0,lev_max*{c}{F('ebr')}/{c}{F('L')}-{c}{F('lease')}-({'debt_q1' if c == 'D' else chr(ord(c)-1)+str(F('igc'))}+{'0' if c == 'D' else ''}))" for c in "DEFGHI"},
          note="lev_max ×（EBITDA＋租金，年化）− 租賃負債 − 既有借款")
     for c in "DEFGHI":
@@ -766,7 +783,7 @@ for j, s in enumerate(SC):
     CF[f"{c}{GATE+2}"] = f"=SUM(D{C_['eq']}:H{C_['eq']})"
     CF[f"{c}{GATE+3}"] = f"=SUM(D{C_['hy']}:H{C_['hy']})"
     CF[f"{c}{GATE+4}"] = f"=MAX(D{C_['lev']}:H{C_['lev']})"
-    CF[f"{c}{GATE+5}"] = f'=IF({c}{GATE+2}+{c}{GATE+3}>0.05,"需要","不需要")'
+    CF[f"{c}{GATE+5}"] = f'=IF({c}{GATE+2}+{c}{GATE+3}>eq_tol,"需要","不需要")'
     CF[f"{c}{GATE+6}"] = f"=SUM(D{C_['fcf']}:H{C_['fcf']})"
     CF[f"{c}{GATE+7}"] = f"={c}{GATE}-(" + "+".join(f"{x}{C_['fcfd']}" for x in "DEFGH") + ")"
     for x in range(GATE, GATE + 8):
@@ -790,11 +807,11 @@ def vrow(row, lab, unit, val, fmt="#,##0.00", note=None):
         V.cell(row, 3, val).number_format = fmt
     if note: V.cell(row, 6, note)
 vrow(4, "現價（2026-10-26 收盤）", "US$", "=px", note="In 頁 px（stockanalysis.com）")
-vrow(5, "股權成本 ke（CAPM：rf＋β × ERP；β 為 Blume 調整）", "%", "=rf+beta*erp+wacc_adj", "0.00%", "wacc_adj 為敏感度調整（基準 0）")
+vrow(5, "股權成本 ke（CAPM：rf＋β × ERP；β 為 Blume 調整）", "%", "=rf+beta*erp", "0.00%")
 vrow(6, "稅後債務成本（約 10 年期）", "%", "=kd*(1-etr)", "0.00%")
 vrow(7, "股權市值（現價 × 流通股）", "US$B", "=px*sh_out", "#,##0.0")
 vrow(8, "負債（借款本金＋融資租賃，FY27Q1 末）", "US$B", "=debt_q1+finlease_q1", "#,##0.0")
-vrow(9, "WACC", "%", "=(C7*C5+C8*C6)/(C7+C8)", "0.00%", "修正一（F4）：Blume β、約 10 年期 kd、負債含融資租賃（強制轉換特別股視為股權）")
+vrow(9, "WACC（＋wacc_adj，敏感度用，基準 0）", "%", "=(C7*C5+C8*C6)/(C7+C8)+wacc_adj", "0.00%", "修正一（F4）：Blume β、約 10 年期 kd、負債含融資租賃（強制轉換特別股視為股權）")
 vrow(10, "淨借款（借款＋融資租賃 − 現金，FY27Q1 末）", "US$B", "=debt_q1+finlease_q1-cash_q1", "#,##0.0", "修正一：含融資租賃（F6）")
 vrow(11, "完全稀釋股數（流通＋選擇權＋強制轉換特別股）", "十億股", "=sh_out+opt_dil+mcps_sh", "0.000")
 vrow(12, "目標價時點距評價日", "年", "=(tp_date-val_date)/365.25", "0.000", "In 頁 val_date → tp_date")
@@ -867,15 +884,13 @@ OCI_PEERS = (r - 2, r - 1)
 V.cell(r, 1, "  第三家（IREN、WhiteFiber）：EBITDA 共識未找到——不符合「至少 3 家」規格；本版 OCI AI 主值改用 DCF，倍數只作對照").font = GREY; r += 1
 V.cell(r, 1, "其餘業務同業（軟體）：NTM EV/EBITDA（SBC 加回口徑）").font = GREY; r += 1
 SW0 = r
-for nm, tk, m in (("Microsoft", "MSFT", 15.59), ("SAP", "SAP", 15.02), ("Salesforce", "CRM", 10.8), ("Adobe", "ADBE", 6.6), ("ServiceNow", "NOW", 20.65)):
-    V.cell(r, 1, nm); V.cell(r, 2, tk); c = V.cell(r, 4, m); c.font = BLUE; c.number_format = "0.00"
+for nm, tk, m in (("Microsoft", "MSFT", "=pm_msft"), ("SAP", "SAP", "=pm_sap"), ("Salesforce", "CRM", "=pm_crm"), ("Adobe", "ADBE", "=pm_adbe"), ("ServiceNow", "NOW", "=pm_now")):
+    V.cell(r, 1, nm); V.cell(r, 2, tk); c = V.cell(r, 4, m); c.number_format = "0.00"
     V.cell(r, 5, "2026-10-07"); V.cell(r, 6, f"oracle/data/oracle_facts_20261007.json val.peer.{tk.lower()}（EV ÷ 共識 EBITDA 時間加權，Derived；2026-10-22 找不到新值）"); r += 1
 SW_PEERS = (SW0, r - 1)
 for _r in range(4, IN.max_row + 1):
     k_ = IN.cell(_r, 1).value
     if k_ == "mult_oci" and "mult_oci" not in OVR: IN.cell(_r, 5).value = f"=MEDIAN(Val!D{OCI_PEERS[0]}:D{OCI_PEERS[1]})"
-    if k_ == "mult_sw" and "mult_sw" not in OVR: IN.cell(_r, 5).value = f"=MEDIAN(Val!D{SW_PEERS[0]}:D{SW_PEERS[1]})"
-    if k_ == "mult_leg" and "mult_leg" not in OVR: IN.cell(_r, 5).value = f"=MEDIAN(Val!D{SW0+2},Val!D{SW0+3})"
 r += 1
 hdr(V, r, ["項目", "單位"] + [f"情境 {s}" for s in SC] + ["說明"]); r += 1
 SO_ = {}
@@ -894,12 +909,15 @@ for k, y in enumerate(range(2029, 2033), 1):
 vr("ai_tv", "  OCI AI 永續價值（FY2032 年底；穩態汰換、RONIC＝WACC）", "US$B",
    lambda s: f"=(Thesis!J{TR[s]['ebitda']}-Thesis!J{TR[s]['conn']}*cx_vr200/life_ai/1000)*(1-etr)*(1+tp_g)*(1-tp_g/ronic)/(wacc-tp_g)", "#,##0.0")
 vr("ev_oci", "OCI AI 企業價值（AI 模組 DCF，FY2028 年底；主值）", "US$B",
-   lambda s: "=" + "+".join(f"{col(s)}{SO_[f'aif{y}']}/(1+wacc)^{k - 0.5}" for k, y in enumerate(range(2029, 2033), 1)) + f"+{col(s)}{SO_['ai_tv']}/(1+wacc)^4", "#,##0.0",
+   lambda s: "=IF(ai_floor=1,MAX(0,§),§)".replace("§", "+".join(f"{col(s)}{SO_[f'aif{y}']}/(1+wacc)^{k - 0.5}" for k, y in enumerate(range(2029, 2033), 1)) + f"+{col(s)}{SO_['ai_tv']}/(1+wacc)^4"), "#,##0.0",
    note="修正一（F3）：同一 WACC；FY2029–FY2032 期中折現到 FY2028 年底")
 vr("ev_ocim", "  對照：OCI AI 企業價值（× neocloud 倍數 mult_oci）", "US$B", lambda s: f"={col(s)}{SO_['e_oci']}*mult_oci*mult_adj", "#,##0.0", note="v0.4 原主值；只作對照")
 vr("e_rest", "FY2029 其餘業務調整後 EBITDA（合併調整後 EBITDA − OCI AI；SBC 加回）", "US$B", lambda s: f"=PL!F{PR_[s]['aebitda']}-{col(s)}{SO_['e_oci']}", note="SBC 加回（與同業倍數同口徑，F2）")
+vr("mg", "  成長型利潤率（split_mode＝0：m_sw；＝1：由 Q1 分部利潤扣授權＋支援 m_ls 後推得）", "%",
+   lambda s: f"=IF(split_mode=1,((m_sw+m_adj)*(Q!I11-Thesis!C{TR['B']['rev']})-m_ls*(q1_lic+q1_sup))/(q1_saas+Thesis!C{TR['B']['oth']}),m_sw+m_adj)", "0.0%")
+vr("ml", "  授權＋支援利潤率（split_mode＝0：m_sw；＝1：m_ls）", "%", lambda s: "=IF(split_mode=1,m_ls,m_sw+m_adj)", "0.0%")
 vr("g_sh", "  其中成長型（SaaS＋OCI 非 AI）占比（依分部利潤貢獻分攤）", "%",
-   lambda s: f"=(m_sw+m_adj)*(PL!F{PR_[s]['saas']}+PL!F{PR_[s]['oth']})/((m_sw+m_adj)*(PL!F{PR_[s]['saas']}+PL!F{PR_[s]['oth']}+PL!F{PR_[s]['lic']}+PL!F{PR_[s]['sup']})+m_hw*PL!F{PR_[s]['hw']}+m_svc*PL!F{PR_[s]['svc']})", "0.0%")
+   lambda s: f"={col(s)}{SO_['mg']}*(PL!F{PR_[s]['saas']}+PL!F{PR_[s]['oth']})/({col(s)}{SO_['mg']}*(PL!F{PR_[s]['saas']}+PL!F{PR_[s]['oth']})+{col(s)}{SO_['ml']}*(PL!F{PR_[s]['lic']}+PL!F{PR_[s]['sup']})+m_hw*PL!F{PR_[s]['hw']}+m_svc*PL!F{PR_[s]['svc']})", "0.0%")
 vr("ev_g", "成長型企業價值（× 軟體同業中位數 mult_sw）", "US$B", lambda s: f"={col(s)}{SO_['e_rest']}*{col(s)}{SO_['g_sh']}*mult_sw*mult_adj", "#,##0.0")
 vr("ev_l", "傳統業務企業價值（授權、支援、硬體、服務 × mult_leg）", "US$B", lambda s: f"={col(s)}{SO_['e_rest']}*(1-{col(s)}{SO_['g_sh']})*mult_leg*mult_adj", "#,##0.0", note="修正一：成熟軟體倍數（Salesforce、Adobe 中位數）")
 vr("ev", "企業價值（FY2028 年底）", "US$B", lambda s: f"={col(s)}{SO_['ev_oci']}+{col(s)}{SO_['ev_g']}+{col(s)}{SO_['ev_l']}", "#,##0.0")
@@ -1026,7 +1044,7 @@ if SENS:
         for c in (3, 5, 8, 9, 10, 11): SE.cell(rr, c).font = BLUE
         rr += 1
     SENS_ROWS = (4, rr - 1)
-    SE.cell(rr + 1, 1, "檢查：重算基準加權目標價 − Val 頁加權目標價（應為 0）"); SE.cell(rr + 1, 3, f"={SENS['base']['tp']}-Val!C{CON['tp']}").number_format = "0.0000"
+    SE.cell(rr + 1, 1, "快照檢查：data/sens_v04.json 的基準加權目標價（建置時重算的快照值）− Val 頁現值（應為 0；不為 0＝Sens 已過期，重跑 scripts/sens_v04.py）"); SE.cell(rr + 1, 3, f"={SENS['base']['tp']}-Val!C{CON['tp']}").number_format = "0.0000"
     SENS_CHK = rr + 1
     if SENS.get("grid"):
         g0 = rr + 5
