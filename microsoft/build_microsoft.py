@@ -132,6 +132,8 @@ inp("days_yr", "每年天數", "天", None, 365, None, "Assumed", "—", "—")
 inp("t_roll", "評價日 → 目標價時點（年）", "年", None, "=(roll_d2-roll_d1)/days_yr", None, "Derived", "2026-06-30 → 2027-10-27", "DCF 每股以 WACC 推到目標價時點（已決定事項 12 沿用），並扣除期間股利（修正一 F6）")
 inp("roll_div_q", "評價日到目標價時點之間、FY2028 已付的股利季數", "季", None, 1, None, "Derived", "FY2028 第一季股利約 2027-09 支付，早於 2027-10-27", "—")
 inp("q_per_yr", "每年季數", "季", None, 4, None, "Verified", "—", "—")
+inp("stub_d0", "SOTP 淨現金日（FY2027 年底 2027-06-30）", "日期", None, "=DATE(2027,6,30)", None, "Verified", "FY2027 年底", "—")
+inp("t_stub", "SOTP 淨現金日 → 目標價時點（年）", "年", None, "=(roll_d2-stub_d0)/days_yr", None, "Derived", "2027-06-30 → 2027-10-27", "修正三：此期間的非 AI 自由現金流既不在 FY2027 年底淨現金、也不在目標價時點 NTM EBITDA 倍數內，SOTP 補加")
 inp("fy28_end", "FY2028 年底", "日期", None, "=DATE(2028,6,30)", None, "Verified", "財年 6 月結束", "—")
 inp("w_ntm28", "目標價時點的未來 12 個月中 FY2028 的比重", "x", None, "=(fy28_end-roll_d2)/days_yr", None, "Derived", "2027-10-27 起 12 個月：FY2028 約 0.68、FY2029 約 0.32", "SOTP 用 NTM EBITDA")
 inp("w_dcf", "目標價中 DCF 的權重（其餘為分部加總 SOTP）", "%", 0.3, 0.5, 0.7, "Assumed", "[判斷] 預設：工作單 20261027 第 2 節（與 AI半導體 DCF＋Comparable 各半一致；Comparable 在分部層做）", "Andy 可改")
@@ -212,7 +214,9 @@ for s, v in (("A", 30), ("B", 20), ("C", 10)):
     inp(f"cop_add_{s}", f"Copilot 每年淨增座席 FY2027–FY2029（情境 {s}）", "百萬席", None, v, None, "Assumed", "FY2026 淨增約 25 百萬（5 → 30，Assumed 起點）", "FY2030 起 × cop_tail")
 inp("cop_tail", "Copilot FY2030 起淨增相對前期的比例", "x", None, 0.5, None, "Assumed", "無：滲透率上升後放緩", "—")
 inp("internal_ai_reading", "自用 AI 讀法（2＝主值：自用 AI MW 以 k＝1 計影子效益；1＝敏感度：自用 AI 只計成本）", "代碼", 1, 2, None, "Assumed",
-    "共同修正工作單 F1（chat 端預設：讀法 2 為主值、讀法 1 為敏感度；Andy 待決）", "影子效益＝MAX(0, 自用在役 MW × 每 MW 持有成本（k＝1）− Copilot × 核心利益率)：扣 Copilot 已計的部分，避免重複")
+    "共同修正工作單 F1；Andy 2026-10-27 15:03 決定讀法 2 為主值、讀法 1 為敏感度", "影子效益＝MAX(0, 評價日後新增的自用在役 MW（相對 FY2026 平均）× 每 MW 持有成本（k＝1）− Copilot 增量 × 核心利益率)：扣 Copilot 已計的部分，避免重複")
+inp("shadow_base", "影子效益的 FY2026 自用 MW 基準（1＝FY2026 平均，主值；0＝FY2026 年底）", "代碼", 0, 1, None, "Assumed",
+    "修正三：FY2026 核心利益率反映的是 FY2026 平均自用 MW（約 1,310），不是年底 1,800；下半年新增的約 490 MW 尚未反映在利益率內", "Sens 判斷預設表：年底基準")
 
 sec("F. 產品線成長路徑：近一年年增（FY2026 對 FY2025，8-K 重編口徑）線性收斂到長期值（FY2032 到達）")
 inp("n_conv", "收斂年數", "年", None, 6, None, "Assumed", "與 AI半導體 v2 DCF 明確期（到 FY2032）一致", "—")
@@ -426,7 +430,7 @@ class Block:
     def __init__(self, s, title, route, P=None, V=None, base=None):
         self.s = s; self.title = title; self.route = route
         self.P = dict(pace="pace", cap=None, ls=f"ls_{s}", kmult=None, ext="ext_sh", life="life_it", g_azo="glt_azo", cop_add=f"cop_add_{s}",
-                      cop_px="cop_px", g_srch="glt_srch", g_xbox="glt_xbox", dm="dm_seg", chip="chip_f", reading="internal_ai_reading")
+                      cop_px="cop_px", g_srch="glt_srch", g_xbox="glt_xbox", dm="dm_seg", chip="chip_f", reading="internal_ai_reading", sbase="shadow_base", floor="other")
         self.P.update(P or {})
         self.P = {k_: (v_.replace("{s}", s) if isinstance(v_, str) else v_) for k_, v_ in self.P.items()}
         self.V = dict(wacc="wacc", g="g_tv", ronic="ronic_prem", mm=None, m_sw="m_sw", m_cloud="m_cloud", m_ads="m_ads", m_game="m_game", m_pc="m_pc", m_ai="m_ai", oai="oai_v")
@@ -556,7 +560,9 @@ def engine(b, val=True, ops=True):
               note="只換 IT、機房不換；FY2024 欄含 FY2024 以前全部（視同 FY2024 投入）；舊機隊在年限到期後停止折舊，汰換後的新 IT 另計折舊（不重複）")
         b.row(t, "cap_it0", "AI IT 資本支出（公式）", "US$B", lambda y: f"({R('add_own', y)}+{R('refresh', y)})*{R('cxit_add', y)}/1000" if y >= 2027 else f"{R('add_own', y)}*{R('cxit_add', y)}/1000")
         b.row(t, "cap_fac", "AI 機房資本支出（自建比例 × IF_CapexFacility）", "US$B", lambda y: f"{R('add_own', y)}*self_build*tk_cxfac/1000")
-        b.row(t, "cap_it", "AI IT 資本支出", "US$B", lambda y: R("cap_it0", y))
+        b.row(t, "floor_amt", "FY2027 補足到公司指引下限的差額（公司指引 − 公式 AI 資本支出 − 非 AI 資本支出）", "US$B",
+              lambda y: f"MAX(0,capex_floor27-{R('cap_it0', y)}-{R('cap_fac', y)}-{R('nacx', y)})", years=[2027])
+        b.row(t, "cap_it", "AI IT 資本支出", "US$B", lambda y: R("cap_it0", y) + (f"+{R('floor_amt', y)}" if (y == 2027 and P["floor"] == "ai") else ""))
         b.row(t, "ai_capex", "AI 資本支出合計", "US$B", lambda y: f"{R('cap_it', y)}+{R('cap_fac', y)}", note="FY2026 以前為依 MW 估計的值（非公司揭露）")
         b.row(t, "dep_it", "AI IT 折舊（半年慣例、年限 life_it）", "US$B", lambda y: dep_formula(b, "cap_it", y, P["life"]) if y >= 2026 else None)
         b.row(t, "dep_fac", "AI 機房折舊（年限 life_fac）", "US$B", lambda y: dep_formula(b, "cap_fac", y, "life_fac") if y >= 2026 else None)
@@ -608,8 +614,8 @@ def engine(b, val=True, ops=True):
                          else f"{R('m0', 2026, True)}+{P['dm']}"), fmt="0.0%", years=FY26P,
               note="FY2026：(分部營業利益＋AI 營運成本＋AI 折舊 − Azure AI 營收) ÷ (分部營收 − Azure AI 營收)；之後固定（＋dm_seg）")
         b.row(p, "ai_oi", "Agents and Infra 營業利益", "US$B",
-              lambda y: qa("ai_oi", y) if y <= 2026 else f"{R('m0', y)}*({R('ai_seg', y)}-{R('azai', y)})+{R('azai', y)}-({R('c_own', y)}+{R('c_rent', y)}+{R('c_fac', y)})-{R('ai_da', y)}",
-              years=PY, note="＝核心利益率 ×（分部營收 − Azure AI）＋ Azure AI 營收 − AI 營運成本 − AI 折舊：AI 資本支出經折舊進分部營業利益")
+              lambda y: qa("ai_oi", y) if y <= 2026 else f"{R('m0', y)}*({R('ai_seg', y)}-{R('azai', y)})+{R('azai', y)}-({R('c_own', y)}+{R('c_rent', y)}+{R('c_fac', y)})-{R('ai_da', y)}-{R('floor_dep', y)}",
+              years=PY, note="修正三：另扣 FY2027 補足差額的折舊；＝核心利益率 ×（分部營收 − Azure AI）＋ Azure AI 營收 − AI 營運成本 − AI 折舊：AI 資本支出經折舊進分部營業利益")
         b.row(p, "m_dc", "Devices and Consumer 營業利益率", "%", lambda y: f"{qa('dc_oi', 2026)}/{qa('dc', 2026)}" if y == 2026 else f"{R('m_dc', 2026, True)}+{P['dm']}",
               fmt="0.0%", years=FY26P, note="FY2026 實績後固定（＋dm_seg）")
         b.row(p, "dc_oi", "Devices and Consumer 營業利益", "US$B", lambda y: qa("dc_oi", y) if y <= 2026 else f"{R('dc', y)}*{R('m_dc', y)}", years=PY)
@@ -632,9 +638,9 @@ def engine(b, val=True, ops=True):
         b.row(p, "eps_g", "EPS 年增（評價口徑）", "%", lambda y: f"{R('eps', y)}/{R('eps', y - 1)}-1", fmt="0.0%", years=FY26P)
         # ---------------- Thesis 第二段：AI 增量報酬（需 Copilot 與核心利益率）----------------
         b.row(t, "t_cop", "Copilot 營收（Seg）", "US$B", lambda y: R("cop", y), years=FY26P)
-        b.row(t, "shadow_full", "自用 AI 影子效益（讀法 2 金額）＝MAX(0, 評價日後新增自用 MW（平均）× 持有成本（k＝1）− Copilot 增量 × 核心利益率)", "US$B",
-              lambda y: f"MAX(0,(({R('inner', y - 1)}+{R('inner', y)})/2-{R('inner', 2026, True)})*{R('hold_w', y)}/1000-({R('t_cop', y)}-{R('t_cop', 2026, True)})*{R('m0', y)})", years=FCY,
-              note="修正二：FY2026 既有自用 MW 的效益已在 FY2026 校準的核心利益率內，只計之後新增的自用 MW；Copilot 只扣高於 FY2026 的增量")
+        b.row(t, "shadow_full", "自用 AI 影子效益（讀法 2 金額）＝MAX(0,（當年平均自用 MW − FY2026 平均自用 MW）× 持有成本（k＝1）− Copilot 增量 × 核心利益率)", "US$B",
+              lambda y: f"MAX(0,(({R('inner', y - 1)}+{R('inner', y)})/2-({P['sbase']}*({R('inner', 2025, True)}+{R('inner', 2026, True)})/2+(1-{P['sbase']})*{R('inner', 2026, True)}))*{R('hold_w', y)}/1000-({R('t_cop', y)}-{R('t_cop', 2026, True)})*{R('m0', y)})", years=FCY,
+              note="修正二：FY2026 已反映在核心利益率內的自用 MW 不再計；修正三：基準改 FY2026 平均自用 MW（核心利益率以 FY2026 全年校準）；Copilot 只扣高於 FY2026 的增量")
         b.row(t, "shadow", "自用 AI 影子效益（依讀法開關 internal_ai_reading）", "US$B", lambda y: f"{sw}*{R('shadow_full', y)}", years=FCY)
         b.row(t, "ai_ebit", "AI 增量營業利益（評價口徑）＝Azure AI EBITDA＋Copilot × 核心利益率＋影子效益 − 自用 AI 營運成本 − AI 折舊", "US$B",
               lambda y: f"{R('azai_ebitda', y)}+{R('t_cop', y)}*{R('m0', y)}+{R('shadow', y)}-{R('int_cost', y)}-{R('ai_da', y)}", years=FCY)
@@ -656,6 +662,9 @@ def engine(b, val=True, ops=True):
         b.row(c, "c_ni", "淨利（財報口徑）", "US$B", lambda y: R("ni", y), years=FCY)
         b.row(c, "nada", "非 AI 折舊攤銷", "US$B", lambda y: f"{qa('da', 2026)}-{R('ai_da', 2026)}" if y == 2026 else f"{R('nada', y - 1)}*(1-1/life_nonai)+({R('nacx', y)}" + (f"+{R('floor_x', y)}" if y == 2027 else "") + ")/life_nonai",
               years=FY26P, note="FY2026＝公司 D&A − AI 折舊估計（C17）")
+        b.row(c, "floor_dep", "  其中 FY2027 補足差額的折舊（非 AI 遞減法：差額 ÷ 年限 ×（1 − 1／年限）^（年度 − 2027））", "US$B",
+              lambda y: f"{R('floor_x', 2027, True)}/life_nonai*(1-1/life_nonai)^({R('yr', y)}-2027)", years=FCY,
+              note="修正三：核心利益率固定，補足差額的折舊須另由 Agents and Infra 營業利益扣除")
         b.row(c, "da", "折舊攤銷合計（AI＋非 AI）", "US$B", lambda y: f"{R('ai_da', y)}+{R('nada', y)}", years=FY26P)
         b.row(c, "sbc", "股票薪酬（現金流量表加回；DCF 視為現金成本）", "US$B", lambda y: f"{R('tot', y)}*sbc_r", years=FCY)
         b.row(c, "wc", "營運資金變動", "US$B", lambda y: "wc27" if y == 2027 else "wc_f", years=FCY, note="C14：首期＝上一年度實績；之後 wc_f")
@@ -663,8 +672,8 @@ def engine(b, val=True, ops=True):
         b.row(c, "aicx", "AI 資本支出（Thesis）", "US$B", lambda y: R("ai_capex", y), years=FCY)
         b.row(c, "nacx", "非 AI 資本支出（各線營收 × 比例）", "US$B",
               lambda y: f"{R('azo', y)}*cx_azo+{R('m365', y)}*cx_m365+{R('lic', y)}*cx_lic+({R('ind', y)}+{R('fro', y)})*cx_ind+{R('srch', y)}*cx_srch+({R('xbox', y)}+{R('win', y)})*cx_dev", years=FY26P)
-        b.row(c, "floor_x", "FY2027 補足到公司指引下限的其他資本支出（不增 AI MW；依非 AI 年限折舊）", "US$B",
-              lambda y: f"MAX(0,capex_floor27-{R('aicx', y)}-{R('nacx', y)})",
+        b.row(c, "floor_x", "FY2027 補足到公司指引下限的其他資本支出（不增 AI MW；非 AI 遞減法每年 1／年限折舊，折舊由 Agents and Infra 營業利益扣除）", "US$B",
+              lambda y: R("floor_amt", y) if P["floor"] == "other" else "0",
               years=[2027], note="修正二：補足差額不再當 AI IT（v0.3 修正一有折舊卻無 MW 與收入）；FY2026 公司口徑 145.3 比模型估計 116.4 多 28.9，推定含 AI 以外的資料中心與未拆分項目")
         b.row(c, "capex", "資本支出合計（公司口徑，含融資租賃）", "US$B", lambda y: f"Q!M{QR['capex_co']}" if y == 2026 else f"{R('aicx', y)}+{R('nacx', y)}" + (f"+{R('floor_x', y)}" if y == 2027 else ""), years=FY26P,
               note="新的融資租賃在取得時視同現金（偏保守，v0.2.2 口徑）；FY2026 為公司法說值")
@@ -750,7 +759,10 @@ def engine(b, val=True, ops=True):
             b.row(v, "n" + ek, f"分部加總：{lab}（NTM EBITDA × 倍數）", "US$B",
                   (lambda ek_, m_: lambda y: f"(w_ntm28*{R(ek_, 2028)}+(1-w_ntm28)*{R(ek_, 2029)})*{m_}{mm}")(ek, m), scalar=True)
         b.row(v, "sev", "分部加總 EV（目標價時點）", "US$B", lambda y: R("ne_aimod") + "+" + "+".join(R("n" + ek) for ek, _, _ in SOTP), scalar=True)
-        b.row(v, "sbr", "加：淨現金（FY2027 年底）＋OpenAI 持股 − 在帳融資租賃負債", "US$B", lambda y: f"{R('netcash', 2027)}+{V['oai']}-{R('fl_bal', 2027)}", scalar=True,
+        b.row(v, "stub", "加：FY2027 年底 → 目標價時點的非 AI 自由現金流（FY2028 評價用自由現金流 − AI 模組自由現金流）× t_stub", "US$B",
+              lambda y: f"({R('fcf_val', 2028)}-{R('ai_fcf', 2028)})*t_stub", scalar=True,
+              note="修正三：非 AI 各線用目標價時點 NTM EBITDA，此段現金流不在 EV 也不在淨現金；AI 模組已含 FY2028 全年")
+        b.row(v, "sbr", "加：淨現金（FY2027 年底）＋OpenAI 持股 − 在帳融資租賃負債＋期間非 AI 自由現金流", "US$B", lambda y: f"{R('netcash', 2027)}+{V['oai']}-{R('fl_bal', 2027)}+{R('stub')}", scalar=True,
               note="同業 EV 含租賃；Microsoft EBITDA 已扣營業租金、未扣融資租賃折舊 → 減融資租賃負債")
         b.row(v, "sotp", "分部加總每股價值（目標價時點；FY2027 年底稀釋股數，扣 FY2028 第一季股利）", "US$",
               lambda y: f"({R('sev')}+{R('sbr')})/({R('sh_end', 2027)}+dil_gap)-{R('dps', 2028)}*roll_div_q/q_per_yr", fmt="#,##0.00", scalar=True,
@@ -883,7 +895,7 @@ for k, lab, m in SOTPL:
     if m:
         VW[f"E{r_}"] = f"={m}"; VW[f"E{r_}"].number_format = "0.00"
 vset("sev", "分部加總 EV", sc3("sev"), "#,##0.0", "US$B")
-vset("sbr", "加：淨現金（FY2027 年底）＋OpenAI 持股 − 在帳融資租賃負債", sc3("sbr"), "#,##0.0")
+vset("sbr", "加：淨現金（FY2027 年底）＋OpenAI 持股 − 在帳融資租賃負債＋期間非 AI 自由現金流", sc3("sbr"), "#,##0.0", "期間＝FY2027 年底 → 目標價時點（修正三）")
 vset("sotp", "分部加總每股價值（目標價時點）", sc3("sotp"), "#,##0.00", "÷ FY2027 年底稀釋股數；扣 FY2028 第一季股利（修正二）")
 r_sotp = VR_["sotp"]
 vset("comp", "Comparable 目標價（市場主流同業法）", [f"=w_A*B{r_sotp}+w_B*C{r_sotp}+w_C*D{r_sotp}"], "#,##0.00", "＝分部加總（SOTP）情境加權；同業倍數見 In 頁 B 節與 E 欄")
@@ -898,7 +910,7 @@ vset("px", "現價（2026-10-26 收盤）", ["=px"], "#,##0.00", "StockAnalysis�
 vset("up", "上檔空間：加權目標價", [f"={B3('tp')}/px-1"], "0.0%", "目標價 ÷ 現價 − 1")
 vset("upc", "上檔空間：Comparable 目標價", [f"={B3('comp')}/px-1"], "0.0%")
 UP = B3("up")
-vset("grade", "上檔空間級距", [f'=IF({UP}>0.5,"大於 50%",IF({UP}>0.25,"25%–50%",IF({UP}>=0,"0%–25%",IF({UP}>=-0.25,"0%～−25%",IF({UP}>=-0.5,"−25%～−50%","小於 −50%")))))'], "@",
+vset("grade", "上檔空間級距", [f'=IF({UP}>=0.5,"≥ +50%",IF({UP}>=0.25,"+25%～+50%",IF({UP}>=0,"0%～+25%",IF({UP}>-0.25,"−25%～0%",IF({UP}>-0.5,"−50%～−25%","≤ −50%")))))'], "@",
      "以「上檔空間：加權目標價」分六級（Andy 2026-10-25 14:00）")
 RECF = lambda x: f'IF({x}>=0.5,"強力買進",IF({x}>=0.25,"買進",IF({x}>-0.25,"中立",IF({x}>-0.5,"放空","強力放空"))))'
 vset("rec", "投資建議", ["=" + RECF(UP)], "@", "五級固定規則：≥ +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、≤ −50% 強力放空")
@@ -917,7 +929,7 @@ vset("meth", "目標價方法", None, "@")
 VW[f"B{VR_['meth']}"] = ("DCF：評價用自由現金流（營業現金流 − 股票薪酬 − 公司口徑資本支出＋自用 AI 影子效益稅後），WACC（CAPM：rf 5.00%（2026-10-26）、Blume β、ERP 5%；kd＝rf＋10 年期 AAA 利差；負債含融資租賃），"
                          "FY2027–FY2032 明確期（FY2029 後 MW 新增速度收斂），永續期 NOPAT ×（1 − g ÷ WACC）÷（WACC − g），g 3%；評價日 2026-06-30，以 WACC 推到 2027-10-27 並扣期間股利。"
                          "SOTP：AI 基礎設施模組 DCF；Azure 其他 13.82×（非 AI 雲端 8 家）、M365 cloud／授權／產業／Frontier 10.8×（企業軟體 5 家，不含 MSFT）、搜尋與廣告 9.11×（6 家）、"
-                         "XBOX 12.63×（遊戲 3 家 TTM）、Windows 14.47×（PC 3 家 TTM），乘目標價時點 NTM EBITDA（股票薪酬加回）；加淨現金與 OpenAI 持股（25% × 852 ×（1 − 20%））、減在帳融資租賃負債。")
+                         "XBOX 12.63×（遊戲 3 家 TTM）、Windows 14.47×（PC 3 家 TTM），乘目標價時點 NTM EBITDA（股票薪酬加回）；加 FY2027 年底淨現金、FY2027 年底到目標價時點的非 AI 自由現金流與 OpenAI 持股（25% × 852 ×（1 − 20%））、減在帳融資租賃負債。")
 for k in ("dcftp", "comp", "tp"):
     VW[f"B{VR_[k]}"].fill = KEY
 for cc in range(1, 6): VW.cell(VR_["rec"], cc).fill = KEY
@@ -972,6 +984,10 @@ ALT = [
     ("C 情境 k 改用長約低端（k_long_lo，v0.2.2 價格軸低）", {"C": (dict(kmult="(k_long_lo/k_C)"), {})}, None),
     ("永續期改用 FY2032 評價用自由現金流 ×（1＋g）", {s: ({}, dict(ronic="0", g="g_tv")) for s in SC}, "tvalt"),
     ("非 AI 各線改用 Microsoft 自身倍數 15.67×", {s: ({}, dict(m_sw="m_own", m_cloud="m_own", m_ads="m_own", m_game="m_own", m_pc="m_own")) for s in SC}, None),
+    ("讀法 1 且 MW 速度改 Epoch 可辨識站點（與 Sens「讀法 1」比較＝讀法 1 下的容量效果）", {s: (dict(reading="1", pace="pace_epoch", cap="cap_epoch"), {}) for s in SC}, None),
+    ("影子效益基準改 FY2026 年底自用 MW（修正二口徑）", {s: (dict(sbase="0"), {}) for s in SC}, None),
+    ("FY2027 補足差額不計（資本支出低於公司指引）", {s: (dict(floor="none"), {}) for s in SC}, None),
+    ("FY2027 補足差額改列 AI IT（修正一口徑）", {s: (dict(floor="ai"), {}) for s in SC}, None),
     ("OpenAI 持股 27%（重組時比例）", {s: ({}, dict(oai="(oai_stake_hi*oai_val*(1-liq_disc))")) for s in SC}, None),
     ("OpenAI 持股 27%、無流動性折價", {s: ({}, dict(oai="(oai_stake_hi*oai_val)")) for s in SC}, None),
 ]
@@ -1108,7 +1124,7 @@ rrow("① 評價權重 old_w → w_dcf（用 v0.2.2 的兩條腿）", "=w_dcf*ol
 rrow("② DCF 腿：v0.2.2 DCF → v0.3 基準情境 DCF（× 50%）", f"=w_dcf*(Val!$C${VR_['dcf12']}-old_dcf)", None, "營收結構（分部＋產品線）、AI 折舊進損益與稅、資本支出路徑、永續期口徑")
 rrow("③ 倍數腿：v0.2.2 EV/EBITDA → v0.3 基準情境 SOTP（× 50%）", f"=(1-w_dcf)*(Val!$C${VR_['sotp']}-old_ev)", None, "產品線 EBITDA × 各同業倍數（取代 AI 6×／非 AI 加權倍數）")
 rrow("④ 情境加權：基準情境 → A 25%／B 50%／C 25%", f"=Val!$B${VR_['tp']}-Val!$C${VR_['tps']}", None, "v0.2.2 以基準情境為點位")
-rrow("v0.3 加權目標價（修正二）", f"=Val!$B${VR_['tp']}", None, "—")
+rrow("v0.3 加權目標價（修正三）", f"=Val!$B${VR_['tp']}", None, "—")
 rrow("檢查：v0.2.2 ＋ ①＋②＋③＋④ − v0.3（應為 0）", f"=B{r0}+B{r0 + 1}+B{r0 + 2}+B{r0 + 3}+B{r0 + 4}-B{r0 + 5}", None, "—", fmt="0.000")
 RC_V22 = r0
 for cc in range(1, 7): RC.cell(r0 + 6, cc).fill = CHK
@@ -1196,7 +1212,7 @@ for j in range(3):
     RD.cell(35, 2 + j, f"=Val!{'BCD'[j]}{VR_['tps']}").number_format = "#,##0.00"
 RD["A37"] = "與 v0.2.2 的差異：v0.2.2 沿用 CoreWeave 架構（對外 AI MW × 每 MW 收入＋其餘業務成長率線、融資瀑布）；v0.3 改為官方兩分部、八條產品線，命題只驅動 Azure AI 與 Copilot 兩條子列，AI 資本支出經折舊進分部營業利益；評價改 DCF 50%＋SOTP 50%、情境 25／50／25。拆解見 Recon 第 5 節。"
 RD["A38"] = "已知限制：AI 在役 MW、對外比例、Copilot 營收與座席歷史、產品線利潤公司皆未揭露（Assumed，給區間）；FY27Q1 財報（2026-10-28）未納入，將以 v0.3.1 滾入；Tokenomics 維持 v21.4。"
-RD["A40"] = "修正一（2026-10-27，獨立核對後）：收支關卡範圍公式誤加 FY2032（改為首年起五年並加核對列）；自用 AI 讀法 2 為主值；DCF 扣股票薪酬、減融資租賃負債、扣期間股利；SOTP 的 AI 腿改用模組 DCF；WACC 改 Blume β、10 年期 kd、負債含融資租賃；FY2029 後 MW 新增速度收斂；汰換時更新在役世代。修正二（2026-10-27，第二次核對後；Andy 確認讀法 2 為主值）：影子效益只計評價日後新增的自用 MW、只扣 Copilot 增量；SOTP 的 AI 模組改以 FY2028 起現金流折到 FY2027 年底（避免與 FY2027 年底淨現金重複）並扣 FY2028 第一季股利、改用稀釋股數；FY2027 補足到指引下限的資本支出改列其他資本支出（不增 AI MW）；FY2032 MW 增量＝g × 前一年在役 MW；加 ERP 敏感度。前後對照見報告第 9、10 節。"
+RD["A40"] = "修正一（2026-10-27，獨立核對後）：收支關卡範圍公式誤加 FY2032（改為首年起五年並加核對列）；自用 AI 讀法 2 為主值；DCF 扣股票薪酬、減融資租賃負債、扣期間股利；SOTP 的 AI 腿改用模組 DCF；WACC 改 Blume β、10 年期 kd、負債含融資租賃；FY2029 後 MW 新增速度收斂；汰換時更新在役世代。修正二（2026-10-27，第二次核對後；Andy 2026-10-27 15:03 決定讀法 2 為主值）：影子效益只計評價日後新增的自用 MW、只扣 Copilot 增量；SOTP 的 AI 模組改以 FY2028 起現金流折到 FY2027 年底（避免與 FY2027 年底淨現金重複）並扣 FY2028 第一季股利、改用稀釋股數；FY2027 補足到指引下限的資本支出改列其他資本支出（不增 AI MW）；FY2032 MW 增量＝g × 前一年在役 MW；加 ERP 敏感度。修正三（第三次核對後）：影子效益基準改 FY2026 平均自用 MW；SOTP 補加 FY2027 年底到目標價時點的非 AI 自由現金流；FY2027 補足差額的折舊由營業利益扣除。前後對照見報告第 9、10、11 節。"
 RD["A39"] = "建置：python3 microsoft/build_microsoft.py raw.xlsx → soffice --headless --calc --convert-to xlsx → microsoft/dist/；HTML：python3 tools/company_html/build_company_html.py microsoft"
 for r_ in (37, 38, 39, 40):
     RD.cell(r_, 1).alignment = WRAP
