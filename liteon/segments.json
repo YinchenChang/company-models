@@ -1,0 +1,14 @@
+{
+ "company": "光寶科",
+ "ticker": "2301.TW",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "雲端及物聯網（Cloud & AIoT）", "label": "雲端及物聯網", "period": "2Q26", "value": 28.9, "unit": "NT$B", "source": "Lite-On Q2 2026 法說簡報（Investing.com 2026-07-31 摘要）；FY2025 占 45%（公司法說）"},
+  {"name": "光電（Opto-electronics）", "label": "光電", "period": "2Q26", "value": 8.0, "unit": "NT$B", "source": "同上；FY2025 占 17%"},
+  {"name": "資訊及消費性電子（IT & Consumer Electronics）", "label": "資訊及消費性電子", "period": "2Q26", "value": 15.8, "unit": "NT$B", "source": "同上；FY2025 占 38%"}
+ ],
+ "sublines": [
+  {"parent": "雲端及物聯網（Cloud & AIoT）", "labels": ["AI 相關營收（＝AI 電源 ÷（1 − 非電源占比））", "雲端及物聯網：非 AI"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收（FY2025 實績、FY2026 錨點）"]
+}
