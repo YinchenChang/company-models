@@ -1,5 +1,12 @@
 # Siliconomics 變更紀錄
 
+## v0.7（2026-10-28；`model/20261028_Siliconomics_v0.7.xlsx`；Tokenomics v21.7）
+
+- 新增 In 頁 M20（55 列）：markets/equipment 的行業輸入（SEMI 2026-07 年中預測、2029 外推 g29、其他晶圓廠設備成長與 2025 資本支出、設備情境係數 B／C、AI 相關分類、券商 WFE 對照），equipment 改讀；三大記憶體廠與台積電資本支出、設備占比仍在 equipment（公司變數）。
+- 新增 In 頁 M21（18 列）：Advantest 的測試機市場錨點、非 AI SoC、每顆測試時間係數、HBM 權重，泰瑞達的測試 ÷ WFE 長期區間 7–9%。
+- 新增 Equip 頁：SEMI 分項路徑（WFE 116.9／143.9／175.3／200.0／216.0 US$B，2025–29）、SoC 測試機市場三情境（A 11.0／15.4／17.3／19.2）、測試 ÷ WFE；Checks K8（CF15，SoC ÷ SEMI WFE 7.6／8.8／8.6%，全部在 7–9% 內）。
+- 下游：58 個目標逐格相同。決策 S22。
+
 ## v0.6.1（2026-10-27；`model/20261027_Siliconomics_v0.6.1.xlsx`；Tokenomics v21.7）
 
 - 新增 In 頁 M19（液冷，20 列）：機架內液冷每架內容 `lc_cool_gb`／`lc_cool_vr`（50／56 千美元，原在 markets/chip_bridge）、分歧管 `lc_mani`、內容調整 `lc_adj_*`、滲透率 `lc_pen_*`（行業情境：FY2027 起 A 高、B 基準、C 低）、TrendForce 對照（原在 avc）、奇鋐與雙鴻 FY2026 份額快照、奇鋐份額相對值（雙鴻原即讀同一組）、健策冷板元件份額（原在 jentech）。

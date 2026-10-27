@@ -221,7 +221,7 @@
   "kind": "行業變數（測試市場）",
   "proposal": "本庫設測試市場路徑並以測試 ÷ WFE 7–10% 為檢查區間；Advantest、泰瑞達同讀",
   "target": "v0.6",
-  "status": "待併入",
+  "status": "已併入 v0.7（Equip 頁：SoC 測試機市場三情境單一值、SEMI 分項路徑、測試 ÷ WFE；Checks K8：SoC 測試機 ÷ SEMI WFE 2026–28＝7.6／8.8／8.6%，在泰瑞達 7–9% 內。記憶體測試機依 DRAM 設備支出，留在 Advantest 模型；SoC＋記憶體合計比值見報告）",
   "origin": "算力收支 2026-10-25 C15"
  },
  {

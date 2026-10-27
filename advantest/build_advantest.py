@@ -9,6 +9,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 import market as MEM
 sys.path.insert(0, os.path.join(ROOT, "tools"))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 import cycle_position as CP
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
@@ -64,7 +66,9 @@ IN = wb.active; IN.title = "In"
 IN["A1"] = "In — 輸入（藍字；基準欄 E，低 D、高 F）。金額：十億日圓（¥B）、十億美元（US$B）；顆數：百萬顆。每個輸入附兩個來源（來源2 找不到者寫「未找到」）；公司原文算一個"
 IN["A2"] = "標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy、Assumed 給低／高區間。SemiAnalysis 未使用。公司原文（advantest.com）在建置環境無法開啟，數字取自搜尋引擎對公司文件的摘錄，並與第二來源交叉；原文待人工複核"
 hdr(IN, 3, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源1", "來源2／說明"])
-rows = []; sec = lambda t: rows.append(("sec", t)); inp = lambda *a: rows.append(a)
+rows = []; sec = lambda t: rows.append(("sec", t))
+def inp(*a):   # v0.7 起，測試市場的行業輸入（Siliconomics M21：鍵加前綴 ts_）改讀本庫快照
+    rows.append((a[0], *SIL.row9("ts_" + a[0])[1:]) if ("ts_" + a[0]) in SIL.V else a)
 
 CO = "公司"
 sec("A. 加速器顆數（markets/memory 與 HBM、台積電模型同一份；情境係數讀台積電模型成品，不另訂）")

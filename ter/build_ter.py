@@ -8,6 +8,8 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 import cycle_position as CP
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
@@ -41,6 +43,9 @@ for r in ws_.iter_rows(min_row=40):
         else:           # CY2026..CY2029 在 C..F
             ADV[k][s] = ([r[2 + j].value for j in range(4)], f"{rel(ADV_F)}｜PL!C{r[0].row}:F{r[0].row}")
 assert all(n_[k] == 3 for k in n_), n_
+# CF15：SoC 測試機市場只有一個值（Siliconomics Equip 頁）；Advantest 成品三情境 CY2026–29 必須與本庫相同
+for _s in SC:
+    assert all(abs(a - b) < 1e-6 for a, b in zip(ADV["soc"][_s][0], SIL.NAMES[f"SIF_TestSoCMkt_{_s}"][1:])), ("SoC 測試機市場與 Siliconomics 不一致", _s, ADV["soc"][_s][0], SIL.NAMES[f"SIF_TestSoCMkt_{_s}"])
 ADVIN = {}
 for r in wa["In"].iter_rows(min_row=4):
     if r[0].value: ADVIN[r[0].value] = (r[4].value, r[3].value, r[5].value, f"{rel(ADV_F)}｜In!E{r[0].row}")
@@ -67,7 +72,9 @@ IN = wb.active; IN.title = "In"
 IN["A1"] = "In — 輸入（藍字；基準欄 E，低 D、高 F）。金額：百萬美元（US$M），市場規模為十億美元（US$B）。每個輸入附兩個來源（來源2 找不到者寫「未找到」）；公司 SEC 原文算一個"
 IN["A2"] = "標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy、Assumed 給低／高區間。SemiAnalysis 未使用。公司原文（SEC 8-K 新聞稿、10-Q、10-K）在建置環境可開啟"
 hdr(IN, 3, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源1", "來源2／說明"])
-rows = []; sec = lambda t: rows.append(("sec", t)); inp = lambda *a: rows.append(a)
+rows = []; sec = lambda t: rows.append(("sec", t))
+def inp(*a):   # v0.7 起，泰瑞達測試 ÷ WFE 區間（Siliconomics M21：ts_tw_lo／ts_tw_hi）改讀本庫快照
+    rows.append((a[0], *SIL.row9("ts_" + a[0])[1:]) if a[0] in ("tw_lo", "tw_hi") else a)
 
 sec("A. 測試機市場（讀 Advantest 模型成品；與 Advantest 同一份市場，不另估）")
 inp("mk_soc25", "SoC 測試機市場 CY2025", "US$B", None, ADVIN["mk_soc25"][0], None, "Interested-party", ADVIN["mk_soc25"][3], "Advantest（測試機廠）自估；與 Advantest 模型同一值")
