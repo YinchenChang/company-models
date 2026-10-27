@@ -865,6 +865,7 @@ for s in "ABC":
 V["A1"] = "Val — 目標價（約 12 個月後，2027-10-27）＝DCF 50%＋分部加總（SOTP）50%；情境權重 A 25%／B 50%／C 25%（In 頁，黃底＝判斷題）。分部加總即本模型的 Comparable（在分部層做）"
 V["A2"] = "DCF：無槓桿自由現金流（NOPAT＋折舊 − 資本支出＋營運資金；股權報酬不加回）以 WACC 折現到評價日 2026-06-30（期中慣例），終值＝NOPAT(FY2033) ×(1 − g ÷ RONIC) ÷ (WACC − g)，再以 ke 推到目標時點。SOTP：目標時點 NTM EBITDA × 同業 NTM EV/EBITDA"
 VR_ = {}
+SENS = json.load(open(A.sens, encoding="utf-8")) if A.sens else {}
 r = 4
 def vput(key, label, vals, fmt="#,##0.00", note=None, bold=False, fill=None):
     global r
@@ -992,6 +993,9 @@ vput("pess", "悲觀情境價（C 情境 DCF）", [f"=D{VR_['dcf12']}"], "#,##0.
 vput("scen", "情境目標價（A／B／C；DCF 與分部加總加權）", S3(lambda s: "=w_dcf*{0}{1}+(1-w_dcf)*{0}{2}".format("BCD"["ABC".index(s)], VR_["dcf12"], VR_["sotp"])), "#,##0.00")
 vput("scenup", "情境上檔空間（A／B／C）", S3(lambda s: "={0}{1}/px-1".format("BCD"["ABC".index(s)], VR_["scen"])), "0.0%")
 vput("tvsh2", "DCF 終值占 EV（A／B／C）", S3(lambda s: "={0}{1}".format("BCD"["ABC".index(s)], VR_["tvsh"])), "0.0%")
+_r2 = SENS.get("rd2|高") if "SENS" in globals() else None
+vput("rd2tp", "讀法 2（自用 AI 增量投資價值中性，C16）加權目標價與上檔空間", [round(_r2["tp"], 6) if _r2 else None, f"=B{r}/px-1" if _r2 else None], ["#,##0.00", "0.0%"],
+     note="以 rd2＝1 整本重算的值（make_v03.sh；Sens 頁同列）；主值取讀法 1 或 2 待 Andy 決定（v0.2.2 主值＝讀法 1）")
 vput("meth", "目標價方法", ["DCF（無槓桿 FCF、WACC、終值價值驅動）50%＋分部加總（各分部同業 NTM EV/EBITDA）50%；情境 25／50／25"], "@")
 vput("wsum", "檢查：情境權重合計（應為 1）", ["=ROUND(tp_wA+tp_wB+tp_wC,6)"], "0.000")
 assert r <= CONC + 18, r
@@ -1065,7 +1069,6 @@ SENS_CASES = [
     ("ks_px", "k：現貨價格（高＝GCP 牌價）", None, "hi", "2.82 → 4.858 US$/GPU-hr"),
     ("tpu_f", "TPU 係數（收入與資本支出雙邊 × 0.7）", "lo", None, "C2 敏感度；同時改 tpu_cf"),
     ("life_it", "AI IT 折舊年限", "lo", "hi", "5／7 年"),
-    ("svc_sh", "自用 AI 成本歸 Services 比例", "lo", "hi", "40%／80%"),
     ("dC", "Search 情境 C 分流幅度", "lo", "hi", "10%／30%（只影響 C 情境）"),
     ("gl_search", "Search 長期成長", "lo", "hi", "5%／11%"),
     ("inc_m", "Search 差額增量 EBITDA 率", "lo", "hi", "60%／80%"),
@@ -1086,7 +1089,6 @@ SENS_CASES = [
 SE["A1"] = "Sens — 一次改一個輸入（In 頁低／高值），整本活頁簿以 LibreOffice 重算後的加權目標價（Val 頁「目標價（DCF 與 Comparable 加權）」）；由 alphabet/make_v03.sh 產生，建置時寫入（數值）"
 SE["A2"] = "相對基準＝情境目標價 ÷ 基準加權目標價 − 1；龍捲風依絕對值排序（HTML）。基準與各案例的其他輸入相同"
 hdr(SE, 3, ["驅動", "設定", "方向", "加權目標價", "相對基準", "鍵", "說明"])
-SENS = json.load(open(A.sens, encoding="utf-8")) if A.sens else {}
 r = 4
 SE_ROWS = []
 for key, lab, lo, hi, note in SENS_CASES:
