@@ -68,6 +68,8 @@ def main():
             a.version = "v" + fn.rsplit("_v", 1)[1].rsplit(".xlsx", 1)[0]
         if a.date is None and fn[:8].isdigit():
             a.date = fn[:8]
+    if a.base and (a.version is None or a.date is None):
+        sys.exit("--base 的檔名不是 YYYYMMDD_Siliconomics_vX.Y.xlsx 時，必須明給 --version 與 --date（避免 README／Interface 版本標示錯誤）")
     a.version = a.version or VERSION
     a.date = a.date or DATE
     globals()["VERSION"], globals()["DATE"] = a.version, a.date
