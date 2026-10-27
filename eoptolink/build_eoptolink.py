@@ -11,6 +11,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import cycle_position as CP
 import valuation_rule as VR
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -106,9 +108,9 @@ inp("us_27", "美國限制情境：份額相對值 2027（Sens 用）", "x", Non
     "新易盛境外營收占 97.92%（1H26，西南證券轉引公司）；泰國產能不必然豁免（美國價值含量門檻）")
 inp("us_28", "美國限制情境：份額相對值 2028（Sens 用）", "x", None, 0.55, None, "Assumed", "同上；與中際旭創模型相同", "—")
 inp("us_29", "美國限制情境：份額相對值 2029（Sens 用）", "x", None, 0.50, None, "Assumed", "同上", "—")
-inp("cpo_27", "新易盛占 CPO 光學金額 2027", "%", 0.0, 0.05, 0.20, "Assumed", N928 + "：NPO 預計 2027 年批量交付、2028 年規模化供應（公司說法經媒體轉載，Interested-party）", "中際旭創模型 2027–29 為 10%／15%／20%；兩家合計 15–35%")
-inp("cpo_28", "新易盛占 CPO 光學金額 2028", "%", 0.0, 0.10, 0.25, "Assumed", "同上", "—")
-inp("cpo_29", "新易盛占 CPO 光學金額 2029", "%", 0.0, 0.15, 0.30, "Assumed", "同上", "—")
+inp("cpo_27", *SIL.row9("cposh_eoptolink_27")[1:])
+inp("cpo_28", *SIL.row9("cposh_eoptolink_28")[1:])
+inp("cpo_29", *SIL.row9("cposh_eoptolink_29")[1:])
 inp("pxr_27", "單價係數 2027（相對網通模型每顆內容；基準 1）", "x", 0.90, 1.0, 1.05, "Assumed", "網通模型每顆光學內容已含世代單價；本係數只在 Sens 動（降價快於模型）", "與中際旭創模型相同")
 inp("pxr_28", "單價係數 2028", "x", 0.80, 1.0, 1.05, "Assumed", "同上", "—")
 inp("pxr_29", "單價係數 2029", "x", 0.72, 1.0, 1.05, "Assumed", "同上", "—")

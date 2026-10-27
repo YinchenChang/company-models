@@ -311,7 +311,7 @@
   "kind": "份額表（無加總檢查）",
   "proposal": "本庫建 CPO 份額表（含 NVIDIA、Broadcom 交換器端；Fabrinet 代工另列不加總），合計＝100%",
   "target": "v0.4.1",
-  "status": "待併入",
+  "status": "已併入 v0.4.1（M12＋ShareTbl＋K6；數值維持各公司模型，四家模組與雷射廠合計 50／65／75%（含 Fabrinet 為 55／75／90%），餘額 50／35／25% 為交換器端自製與其他，未建模）",
   "origin": "Siliconomics 盤點 2026-10-27 (i)"
  },
  {

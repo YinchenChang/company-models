@@ -23,6 +23,13 @@ SEED = os.path.join(HERE, "seed", "seed_v0.1.json")
 CONFLICTS = os.path.join(HERE, "seed", "conflicts_v0.1.json")
 DECISIONS = os.path.join(HERE, "seed", "decisions_v0.1.json")
 import glob
+
+
+def _vkey(f):
+    """依版本號排序 seed 檔（v0.4 在 v0.4.1 之前；字串排序會顛倒）"""
+    import re as _re
+    m = _re.search(r"_v([0-9.]+)\.json$", f)
+    return tuple(int(x) for x in m.group(1).split(".")) if m else (0,)
 REF_SKH = os.path.join(ROOT, "skhynix", "dist")
 
 BLUE = Font(color="0000FF"); GREEN = Font(color="008000"); BOLD = Font(bold=True)
@@ -79,11 +86,11 @@ def main():
     tk_old = json.load(open(TK_OLD, encoding="utf-8")) if os.path.exists(TK_OLD) else None
     conflicts = json.load(open(CONFLICTS, encoding="utf-8")) if os.path.exists(CONFLICTS) else []
     decisions = []
-    for f in sorted(glob.glob(os.path.join(HERE, "seed", "decisions_v*.json"))):
+    for f in sorted(glob.glob(os.path.join(HERE, "seed", "decisions_v*.json")), key=_vkey):
         decisions += json.load(open(f, encoding="utf-8"))
     # 新增的輸入列（各版 rows_added_v*.json）：接在指定節的最後一列之後，成為新的一節；base Excel 有值時以 Excel 為準
     seed_rows = list(seed["rows"])
-    for f in sorted(glob.glob(os.path.join(HERE, "seed", "rows_added_v*.json"))):
+    for f in sorted(glob.glob(os.path.join(HERE, "seed", "rows_added_v*.json")), key=_vkey):
         blocks = json.load(open(f, encoding="utf-8"))
         for ad in (blocks if isinstance(blocks, list) else [blocks]):
             idx = [i for i, rw in enumerate(seed_rows) if "sec" in rw]
@@ -217,6 +224,29 @@ def main():
             for j in range(3):
                 col = "DEF"[j]
                 ST.cell(r, 4 + j, f"=1-{col}{r-1}").number_format = "0%"
+            r += 2
+        if "cposh_lite_27" in INROW:
+            ST.cell(r, 1, "CPO 光學金額份額（欄 D–F＝2027／2028／2029；Fabrinet 為代工，與模組廠重疊，不計入合計）").font = BOLD; r += 1
+            CPO_CO = [("Lumentum", "lite"), ("Coherent", "cohr"), ("中際旭創", "innolight"), ("新易盛", "eoptolink")]
+            r_first = r
+            for who, co in CPO_CO:
+                ST.cell(r, 1, "CPO 光學"); ST.cell(r, 2, who); ST.cell(r, 3, f"cposh_{co}_27／28／29")
+                for j, y in enumerate((27, 28, 29)):
+                    c = ST.cell(r, 4 + j, f"=cposh_{co}_{y}"); c.font = GREEN; c.number_format = "0%"
+                r += 1
+            ST.cell(r, 1, "CPO 光學"); ST.cell(r, 2, "合計（模組與雷射廠）").font = BOLD
+            for j in range(3):
+                col = "DEF"[j]
+                c = ST.cell(r, 4 + j, f"=SUM({col}{r_first}:{col}{r-1})"); c.number_format = "0%"; c.fill = KEY
+            STROW["sum_cpo"] = r; r += 1
+            ST.cell(r, 1, "CPO 光學"); ST.cell(r, 2, "餘額（NVIDIA、Broadcom 交換器端自製光引擎與其他，未建模）")
+            for j in range(3):
+                col = "DEF"[j]
+                ST.cell(r, 4 + j, f"=1-{col}{r-1}").number_format = "0%"
+            r += 1
+            ST.cell(r, 1, "CPO 光學"); ST.cell(r, 2, "Fabrinet（代工；參考，不計入）"); ST.cell(r, 3, "cposh_fabrinet_27／28／29")
+            for j, y in enumerate((27, 28, 29)):
+                c = ST.cell(r, 4 + j, f"=cposh_fabrinet_{y}"); c.font = GREEN; c.number_format = "0%"
             r += 2
         ST.column_dimensions["A"].width = 30; ST.column_dimensions["B"].width = 26; ST.column_dimensions["C"].width = 34
         for col in "DEF": ST.column_dimensions[col].width = 9
@@ -389,11 +419,11 @@ def main():
         name(wb, "SIF_UnitsGrowth29", f"Interface!$E${r}"); IFNAMES.append("SIF_UnitsGrowth29"); r += 1
     if ST is not None:
         r += 1
-        IF.cell(r, 1, "B3. ASIC 設計服務份額合計（ShareTbl 頁；欄 E–G＝2026–2028）").font = BOLD; r += 1
-        for code, lab in [("tpu", "Google TPU"), ("oth", "其他 ASIC")] + [("trn" + s_, f"AWS Trainium（情境 {s_}）") for s_ in seed["scen"]]:
-            nm_ = f"SIF_ASICShareSum_{code}"
+        IF.cell(r, 1, "B3. 份額合計（ShareTbl 頁；欄 E–G＝ASIC 2026–2028、CPO 2027–2029）").font = BOLD; r += 1
+        for code, lab in [("tpu", "Google TPU"), ("oth", "其他 ASIC")] + [("trn" + s_, f"AWS Trainium（情境 {s_}）") for s_ in seed["scen"]] + ([("cpo", "CPO 光學（2027–2029）")] if "sum_cpo" in STROW else []):
+            nm_ = f"SIF_ASICShareSum_{code}" if code != "cpo" else "SIF_CPOShareSum"
             sr = STROW["sum_" + code]
-            IF.cell(r, 1, nm_); IF.cell(r, 2, f"{lab} 設計夥伴份額合計"); IF.cell(r, 3, "%")
+            IF.cell(r, 1, nm_); IF.cell(r, 2, f"{lab} {'光學金額份額合計' if code == 'cpo' else '設計夥伴份額合計'}"); IF.cell(r, 3, "%")
             for j in range(3):
                 c = IF.cell(r, 5 + j, f"=ShareTbl!{'DEF'[j]}{sr}"); c.font = GREEN; c.number_format = "0%"
             IF.cell(r, 9, f"ShareTbl!D{sr}:F{sr}")
@@ -485,9 +515,9 @@ def main():
             CK.cell(r, 3, f"=g29_{k}"); CK.cell(r, 4, f'=g29_{k}_lo&"–"&g29_{k}_hi')
             CK.cell(r, 6, f'=IF(AND(C{r}>=g29_{k}_lo,C{r}<=g29_{k}_hi),"OK","ERROR")'); CK.cell(r, 7, "驗證"); r += 1
     if ST is not None:
-        for code, lab in [("tpu", "Google TPU"), ("oth", "其他 ASIC")] + [("trn" + s_, f"AWS Trainium（情境 {s_}）") for s_ in seed["scen"]]:
-            for j, y in enumerate((2026, 2027, 2028)):
-                CK.cell(r, 1, f"K6-{code}{y}"); CK.cell(r, 2, f"{lab} {y} 設計夥伴份額合計 ≤ 100%")
+        for code, lab in [("tpu", "Google TPU"), ("oth", "其他 ASIC")] + [("trn" + s_, f"AWS Trainium（情境 {s_}）") for s_ in seed["scen"]] + ([("cpo", "CPO 光學（模組與雷射廠）")] if "sum_cpo" in STROW else []):
+            for j, y in enumerate((2027, 2028, 2029) if code == "cpo" else (2026, 2027, 2028)):
+                CK.cell(r, 1, f"K6-{code}{y}"); CK.cell(r, 2, f"{lab} {y} {'光學金額份額合計' if code == 'cpo' else '設計夥伴份額合計'} ≤ 100%")
                 CK.cell(r, 3, f"=ShareTbl!{'DEF'[j]}{STROW['sum_' + code]}"); CK.cell(r, 4, 1)
                 CK.cell(r, 6, f'=IF(C{r}<=1+1E-9,"OK","ERROR")'); CK.cell(r, 7, "驗證（加總受限）"); r += 1
     # G 治理：輸入列標記、來源、區間
@@ -544,6 +574,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.4.1：新增 M12（CPO 光學金額份額：Lumentum、Coherent、中際旭創、新易盛、Fabrinet；原在各公司模型）與 ShareTbl 的 CPO 份額表、Checks K6-cpo、Interface SIF_CPOShareSum。", False),
         ("v0.4：新增 M8–M11（每顆網通內容、每顆 IT capex〔NVIDIA 世代改由 Tokenomics 推導〕、網通技術轉換與 CPO 三情境、2026 Rubin 占比 vr26；原在 markets/network 與 11 個公司模型）與 Deploy 頁（AI IT 資本支出、部署 GW 三情境）；橋接表改讀 Tokenomics v21.7。", False),
         ("讀法：Scen（情境定義）→ In（藍字輸入）→ Path／Mkt（推導）→ Interface（下游取數）→ Checks（SGOV_Errors 須為 0）。", False),
         ("顏色：藍字＝輸入（本活頁簿擁有）；黑字＝公式；綠字＝跨頁或外部連結；淡黃底＝關鍵輸出；亮黃底＝待 Andy 決定或未定。", False),

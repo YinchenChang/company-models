@@ -14,6 +14,8 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 import cycle_position as CP
 import valuation_rule as VR
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 import market as MEM
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
@@ -104,9 +106,9 @@ inp("rel_27", "光模組有效份額 CY2027 ÷ CY2026（相對值）", "x", 0.80
     TENK + "：NVIDIA 占營收 FY2025 27.6% → FY2026 16.3%（客戶自建與多供應商分散；高值＝新客戶專案、低值＝NVIDIA 份額續降）")
 inp("rel_28", "光模組有效份額 CY2028 ÷ CY2026", "x", 0.70, 1.00, 1.25, "Assumed", "同上；Building 10（約 200 萬平方呎）2027 年初完工，產能由約 55–58 億美元增至 85–93 億美元（公司）", "—")
 inp("rel_29", "光模組有效份額 CY2029 ÷ CY2026", "x", 0.60, 0.95, 1.30, "Assumed", "同上", "—")
-inp("cpo_27", "Fabrinet 占 CPO 光學金額 CY2027", "%", 0.0, 0.05, 0.15, "Assumed", "Webull 法說會逐字稿（網址見 Sources）：與少數客戶開發 CPO 並已在生產元件，尚未全量；NPO 比 CPO 更近（公司）", "Fabrinet CPO 營收：未找到")
-inp("cpo_28", "Fabrinet 占 CPO 光學金額 CY2028", "%", 0.02, 0.10, 0.20, "Assumed", "同上", "中際旭創、Coherent 模型同期 15%；代工與模組廠份額有重疊")
-inp("cpo_29", "Fabrinet 占 CPO 光學金額 CY2029", "%", 0.05, 0.15, 0.25, "Assumed", "同上", "—")
+inp("cpo_27", *SIL.row9("cposh_fabrinet_27")[1:])
+inp("cpo_28", *SIL.row9("cposh_fabrinet_28")[1:])
+inp("cpo_29", *SIL.row9("cposh_fabrinet_29")[1:])
 inp("pxr_27", "單價係數 CY2027（相對網通模型每顆內容；基準 1）", "x", 0.90, 1.0, 1.05, "Assumed", "網通模型每顆光學內容已含世代單價；本係數只在 Sens 動（降價快於模型）", "代工價格為成本加成；料件降價直接降營收（公司未揭露價格）")
 inp("pxr_28", "單價係數 CY2028", "x", 0.80, 1.0, 1.05, "Assumed", "同上（與中際旭創、Coherent 模型相同）", "—")
 inp("pxr_29", "單價係數 CY2029", "x", 0.72, 1.0, 1.05, "Assumed", "同上", "—")
