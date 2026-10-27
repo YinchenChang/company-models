@@ -10,6 +10,8 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 import cycle_position as CP
 import valuation_rule as VR
 
@@ -135,7 +137,7 @@ inp("keep", "客供部分保留的毛利比例（相對買賣模式）", "x", 0.
 
 sec("C. 營收結構錨點（公司揭露比例 × 營收）")
 inp("ais_25", "2025 年 AI 伺服器 ÷ 營收", "%", 0.48, 0.50, 0.52, "Interested-party", UANFEB + "：2025 AI 約占五成，AI 與通用伺服器各半（公司）", KGI + "：2025 52%（凱基）")
-inp("ais_26", "2026 年 AI 伺服器 ÷ 營收", "%", 0.45, 0.48, 0.52, "Interested-party", UAN0910 + "：3Q26 ASIC 與通用伺服器出貨各半、4Q26 ASIC 超越（公司）；2026 年 AI 比重「超過 50%」（公司，2026-02）", KGI + "：2026F 46%（凱基 07-28；3Q 營收實績前）")
+inp("ais_26", "2026 年 AI 伺服器 ÷ 營收", "%", *SIL.vals("asm_wyai_26"), "Interested-party", UAN0910 + "：3Q26 ASIC 與通用伺服器出貨各半、4Q26 ASIC 超越（公司）；2026 年 AI 比重「超過 50%」（公司，2026-02）", KGI + "：2026F 46%（凱基 07-28；3Q 營收實績前）")
 inp("g_nai27", "通用伺服器（非 AI）年增 2027", "%", -0.10, 0.05, 0.15, "Assumed", UDN0921 + "：北美 CSP 通用伺服器需求強、Agentic AI 帶動（高盛）", MW0909 + "：記憶體代採購使通用伺服器營收縮小（理財周刊）")
 inp("g_nai28", "通用伺服器年增 2028", "%", -0.05, 0.03, 0.10, "Assumed", "同上", "—")
 inp("g_nai29", "通用伺服器年增 2029", "%", -0.05, 0.03, 0.08, "Assumed", "同上", "—")

@@ -72,13 +72,13 @@ for s in SC:
 inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", 30.5, 32.0, 33.0, "Derived", "公司 2Q26 法說換算 NT$183.2B ≈ US$5.6B（隱含約 32.7）", "2026 年初 31.4（〈台幣〉開紅盤，uanalyze）；10-23 收盤：未找到")
 
 sec("B. AI 電源內容與台達電份額（本專案為權威：每架電源與液冷內容、台達電份額，規則第 13 條）")
-inp("pkw_26", "AI 電源內容（機架電源櫃、PSU、BBU、HVDC 電源櫃）2026", "US$/kW", 380, 450, 520, "Derived", KGI + "：GB300 每架 PSU US$60–70K ÷ 136kW＝440–515；GB200 35–40K ÷ 120kW＝290–330（Interested-party）", "2026 年以 GB300 為主（公司：Blackwell 遠大於 Rubin）")
-inp("pkw_27", "AI 電源內容 2027（VR200）", "US$/kW", 500, 600, 700, "Derived", KGI + "：VR200 每架 PSU 超過 US$150K ÷ 約 250kW＝600 以上", "每 GW 4,052 架（Tokenomics）→ 每架約 247kW，與 250kW 相符")
-inp("pkw_28", "AI 電源內容 2028（800V HVDC 放量）", "US$/kW", 550, 680, 800, "Assumed", "公司：±400V、800V 3Q26 量產、2027 才有量；券商估 ±400V、800V 電源櫃占 2027 營收 5–10%（旺得富 2026-10-01，Interested-party）", "800V 把交流轉直流移到機架外電源櫃與 SST：每 kW 內容上升（Assumed）")
-inp("pkw_29", "AI 電源內容 2029", "US$/kW", 550, 720, 850, "Assumed", "同上", "—")
-inp("rel_27", "台達電 AI 電源份額 2027 ÷ 2026（相對值）", "x", 0.85, 0.95, 1.0, "Assumed", KGI + "：Blackwell 平台 AI 伺服器 PSU 台達電約 70%；光寶、Flex 追趕（Interested-party）", "公司 2Q26 法說：Rubin 110kW PSU「領先」；對手：麥格米特、歐陸通（中國）、Vertiv、Flex（BigGo 摘要）")
-inp("rel_28", "台達電 AI 電源份額 2028 ÷ 2026", "x", 0.70, 0.90, 1.0, "Assumed", "同上", "—")
-inp("rel_29", "台達電 AI 電源份額 2029 ÷ 2026", "x", 0.65, 0.85, 1.0, "Assumed", "同上", "—")
+inp("pkw_26", *SIL.row9("pwr_pkw_26")[1:])   # Siliconomics M17
+inp("pkw_27", *SIL.row9("pwr_pkw_27")[1:])   # Siliconomics M17
+inp("pkw_28", *SIL.row9("pwr_pkw_28")[1:])   # Siliconomics M17
+inp("pkw_29", *SIL.row9("pwr_pkw_29")[1:])   # Siliconomics M17
+inp("rel_27", *SIL.row9("pwr_drel_27")[1:])   # Siliconomics M17
+inp("rel_28", *SIL.row9("pwr_drel_28")[1:])   # Siliconomics M17
+inp("rel_29", *SIL.row9("pwr_drel_29")[1:])   # Siliconomics M17
 inp("lcr_27", "台達電液冷每 GW 營收 2027 ÷ 2026", "x", 0.9, 1.10, 1.3, "Assumed", "橋接表：機架內液冷 GB300 US$50K → VR200 US$56K／架（每 kW 下降：架數 6,764 → 4,052）", "公司：液冷占營收 2025 約 10% → 2026 超過 12%；Liquid-to-Air 使用期比市場預期長（2Q26 法說）")
 inp("lcr_28", "台達電液冷每 GW 營收 2028 ÷ 2026", "x", 0.85, 1.15, 1.4, "Assumed", "同上", "—")
 inp("lcr_29", "台達電液冷每 GW 營收 2029 ÷ 2026", "x", 0.8, 1.20, 1.5, "Assumed", "同上", "—")
@@ -120,9 +120,9 @@ inp("b_eps27a", "券商 FY2027 EPS（本土，2026-10-01）", "NT$", None, 80.8,
 inp("b_eps27b", "券商 FY2027 EPS（美系，2026-05-04）", "NT$", None, 65.1, None, "Interested-party", "CMoney 2026-05-04；2028 EPS 98.5", "—")
 inp("b_eps27c", "券商 FY2027 EPS（投顧研究團隊，2026-10-12）", "NT$", None, 62.68, None, "Interested-party", "Yahoo 新聞 2026-10-12（台達電 Q3 營收與 337 調查）：2027 營收 1.05 兆、EPS 62.68、38x", "—")
 inp("b_rev27", "券商 FY2027 營收", "NT$B", None, 1050.0, None, "Interested-party", "同上", "鉅亨：「2027 上看兆元」")
-inp("ubs_26", "UBS：全球 AI 伺服器電源市場 2026", "US$B", None, 17.7, None, "Interested-party", "TechNews 2026-10-12（引述 UBS；2027 38.2、2025–2030 年複合成長約 69%；網址見 Sources）", "口徑（是否含 BBU、HVDC、非 NVIDIA）：未找到")
-inp("ubs_27", "UBS：全球 AI 伺服器電源市場 2027", "US$B", None, 38.2, None, "Interested-party", "同上", "—")
-inp("kgi_sh", "凱基：Blackwell 平台 AI 伺服器 PSU 台達電份額", "%", None, 0.70, None, "Interested-party", "凱基 Power supply sector（2025-07-01；網址見 Sources）", "第二個量化來源：未找到")
+inp("ubs_26", *SIL.row9("pwr_ubs_26")[1:])   # Siliconomics M17
+inp("ubs_27", *SIL.row9("pwr_ubs_27")[1:])   # Siliconomics M17
+inp("kgi_sh", *SIL.row9("pwr_kgi_0701")[1:])   # Siliconomics M17（CF11 待 Andy：與 pwr_kgi_0926 並列，只作 Recon）
 inp("pe_fair_andy", "Andy 先驗：合理 P/E", "x", None, 25, None, "Assumed", "先驗_Andy_台達電_20261024 D10b（Drive；不在本 repo）", "只作對照")
 
 sec("H. 價格與估值")

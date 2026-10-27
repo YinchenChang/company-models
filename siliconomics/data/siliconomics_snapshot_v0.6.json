@@ -1,8 +1,8 @@
 {
  "source": {
-  "file": "20261027_Siliconomics_v0.5.2.xlsx",
-  "version": "v0.5.2",
-  "sha256": "7837d54af229c860d0a433ae95b841d5149c294fb3fabcfa5d23b5358c9fd3cf",
+  "file": "20261027_Siliconomics_v0.6.xlsx",
+  "version": "v0.6",
+  "sha256": "fb811eb3eb2e63f6b382735248c561396c03bc5198664e3e5e372d6b37dd6b5c",
   "note": "Siliconomics 快照；下游只讀本檔。SGOV_Errors 須為 0"
  },
  "scen": [
@@ -4615,6 +4615,221 @@
    "tag": "Assumed",
    "src": "同上",
    "src2": "—"
+  },
+  {
+   "sec": "M17. AI 電源（每 kW 內容、台達電與光寶份額路徑、外部份額錨點；原在 delta、liteon。FY2026 有效份額為公司模型校準值的快照，公司錨點留在公司模型）"
+  },
+  {
+   "id": "pwr_pkw_26",
+   "label": "AI 電源內容（機架電源櫃、PSU、BBU、HVDC 電源櫃）2026",
+   "unit": "US$/kW",
+   "lo": 380,
+   "base": 450,
+   "hi": 520,
+   "tag": "Derived",
+   "src": "https://www.kgi.com.hk/en/-/media/files/kgishk/research-reports/tw-reports/power-supply-industry_01072025.pdf：GB300 每架 PSU US$60–70K ÷ 136kW＝440–515；GB200 35–40K ÷ 120kW＝290–330（Interested-party）",
+   "src2": "2026 年以 GB300 為主（公司：Blackwell 遠大於 Rubin）"
+  },
+  {
+   "id": "pwr_pkw_27",
+   "label": "AI 電源內容 2027（VR200）",
+   "unit": "US$/kW",
+   "lo": 500,
+   "base": 600,
+   "hi": 700,
+   "tag": "Derived",
+   "src": "https://www.kgi.com.hk/en/-/media/files/kgishk/research-reports/tw-reports/power-supply-industry_01072025.pdf：VR200 每架 PSU 超過 US$150K ÷ 約 250kW＝600 以上",
+   "src2": "每 GW 4,052 架（Tokenomics）→ 每架約 247kW，與 250kW 相符"
+  },
+  {
+   "id": "pwr_pkw_28",
+   "label": "AI 電源內容 2028（800V HVDC 放量）",
+   "unit": "US$/kW",
+   "lo": 550,
+   "base": 680,
+   "hi": 800,
+   "tag": "Assumed",
+   "src": "公司：±400V、800V 3Q26 量產、2027 才有量；券商估 ±400V、800V 電源櫃占 2027 營收 5–10%（旺得富 2026-10-01，Interested-party）",
+   "src2": "800V 把交流轉直流移到機架外電源櫃與 SST：每 kW 內容上升（Assumed）"
+  },
+  {
+   "id": "pwr_pkw_29",
+   "label": "AI 電源內容 2029",
+   "unit": "US$/kW",
+   "lo": 550,
+   "base": 720,
+   "hi": 850,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "pwr_drel_27",
+   "label": "台達電 AI 電源份額 2027 ÷ 2026（相對值）",
+   "unit": "x",
+   "lo": 0.85,
+   "base": 0.95,
+   "hi": 1,
+   "tag": "Assumed",
+   "src": "https://www.kgi.com.hk/en/-/media/files/kgishk/research-reports/tw-reports/power-supply-industry_01072025.pdf：Blackwell 平台 AI 伺服器 PSU 台達電約 70%；光寶、Flex 追趕（Interested-party）",
+   "src2": "公司 2Q26 法說：Rubin 110kW PSU「領先」；對手：麥格米特、歐陸通（中國）、Vertiv、Flex（BigGo 摘要）"
+  },
+  {
+   "id": "pwr_drel_28",
+   "label": "台達電 AI 電源份額 2028 ÷ 2026",
+   "unit": "x",
+   "lo": 0.7,
+   "base": 0.9,
+   "hi": 1,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "pwr_drel_29",
+   "label": "台達電 AI 電源份額 2029 ÷ 2026",
+   "unit": "x",
+   "lo": 0.65,
+   "base": 0.85,
+   "hi": 1,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "pwr_lrel_27",
+   "label": "光寶 AI 電源份額 2027 ÷ 2026（相對值；情境 A 取高、B 基準、C 取低）",
+   "unit": "x",
+   "lo": 0.85,
+   "base": 1,
+   "hi": 1.1,
+   "tag": "Assumed",
+   "src": "凱基 2025-09：台達電 AI 伺服器電源市占約 60–65%、長期略降；光寶為第二梯隊，新增美系雲端客戶，PSU 與 BBU 4Q25 出貨（Interested-party）",
+   "src2": "公司：800V HVDC Power Rack 2026-11 小量、1Q27 放量；110kW Power Shelf、BBU 驗證量產；新 CSP 客戶長期目標每家每年 10 億美元（富果 2026-07-31）"
+  },
+  {
+   "id": "pwr_lrel_28",
+   "label": "光寶 AI 電源份額 2028 ÷ 2026（相對值；情境 A 取高、B 基準、C 取低）",
+   "unit": "x",
+   "lo": 0.8,
+   "base": 1,
+   "hi": 1.2,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "pwr_lrel_29",
+   "label": "光寶 AI 電源份額 2029 ÷ 2026（相對值；情境 A 取高、B 基準、C 取低）",
+   "unit": "x",
+   "lo": 0.75,
+   "base": 1,
+   "hi": 1.25,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "pwr_dsh_26",
+   "label": "台達電 AI 電源有效份額 2026（台達電模型 FY2026 校準值：公司 AI 相關營收 ÷ 本庫 AI 電源市場）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.583671939396773,
+   "hi": null,
+   "tag": "Derived",
+   "src": "delta/dist Units 頁「台達電有效份額」CY2026（公司揭露 AI 相關占比 × 營收 ÷（部署 GW × 每 kW 內容））；台達電 3Q26 錨點更新時同步更新",
+   "src2": "凱基 Blackwell PSU 約 70%（2025-07）、AI 伺服器電源 60–65%（2025-09）只作對照：本值分母含 ASIC 機架、HVDC、BBU"
+  },
+  {
+   "id": "pwr_lsh_26",
+   "label": "光寶 AI 電源有效份額 2026（光寶模型 FY2026 校準值：AI 相關營收 ×（1 − 非電源占比）÷ 本庫 AI 電源市場）",
+   "unit": "%",
+   "lo": null,
+   "base": 0.176143316327046,
+   "hi": null,
+   "tag": "Derived",
+   "src": "liteon/dist Units 頁「光寶有效份額」CY2026；光寶 3Q26 錨點更新時同步更新",
+   "src2": "光寶為第二梯隊（凱基 2025-09，份額數字未找到）"
+  },
+  {
+   "id": "pwr_kgi_0701",
+   "label": "凱基：Blackwell 平台 AI 伺服器 PSU 台達電份額",
+   "unit": "%",
+   "lo": null,
+   "base": 0.7,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "凱基 Power supply sector（2025-07-01；網址見 Sources）",
+   "src2": "第二個量化來源：未找到"
+  },
+  {
+   "id": "pwr_kgi_0926",
+   "label": "凱基：台達電 AI 伺服器電源市占（中點）",
+   "unit": "%",
+   "lo": 0.6,
+   "base": 0.625,
+   "hi": 0.65,
+   "tag": "Interested-party",
+   "src": "https://www.kgi.com.hk/zh-hk/-/media/files/kgishk/research-reports/tw-reports/power-supply-sector_20250926e.pdf：約 60–65%，長期略降",
+   "src2": "光寶與 Flex 為第二梯隊（份額數字：未找到）"
+  },
+  {
+   "id": "pwr_ubs_26",
+   "label": "UBS：全球 AI 伺服器電源市場 2026",
+   "unit": "US$B",
+   "lo": null,
+   "base": 17.7,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "TechNews 2026-10-12（引述 UBS；2027 38.2、2025–2030 年複合成長約 69%；網址見 Sources）",
+   "src2": "口徑（是否含 BBU、HVDC、非 NVIDIA）：未找到"
+  },
+  {
+   "id": "pwr_ubs_27",
+   "label": "UBS：全球 AI 伺服器電源市場 2027",
+   "unit": "US$B",
+   "lo": null,
+   "base": 38.2,
+   "hi": null,
+   "tag": "Interested-party",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "sec": "M18. AI 伺服器組裝（ODM 每櫃價格、緯穎 AI 占比；原在 quanta、wiwynn、wistron。商用 GPU 系統市場由 TK 機架價 ÷ 每架 GPU 數推導，見 Rack 頁）"
+  },
+  {
+   "id": "asm_odm_gb",
+   "label": "ODM 每櫃價格 GB300",
+   "unit": "US$M/架",
+   "lo": 3.6,
+   "base": 4,
+   "hi": 4.3,
+   "tag": "Interested-party",
+   "src": "https://www.ctee.com.tw/news/20261008700747-430201：GB300 ASP 約 US$4M（法人，未具名）",
+   "src2": "FTNN 2026-10-09 同值；上限＝Tokenomics 買方價 4.3"
+  },
+  {
+   "id": "asm_odm_vr",
+   "label": "ODM 每櫃價格 VR200",
+   "unit": "US$M/架",
+   "lo": 6.5,
+   "base": 6.75,
+   "hi": 7,
+   "tag": "Interested-party",
+   "src": "https://www.ctee.com.tw/news/20261008700747-430201：VR ASP 估 US$6.5–7M（法人）",
+   "src2": "FTNN 2026-10-09 同值；Tokenomics 買方價 8.4"
+  },
+  {
+   "id": "asm_wyai_26",
+   "label": "2026 年緯穎 AI 伺服器 ÷ 緯穎營收（CF09 單一值；緯穎、緯創模型同讀）",
+   "unit": "%",
+   "lo": 0.45,
+   "base": 0.48,
+   "hi": 0.52,
+   "tag": "Interested-party",
+   "src": "優分析 2026-09-10（公司說明）：3Q26 ASIC 與通用伺服器出貨各半、4Q26 ASIC 超越（公司）；2026 年 AI 比重「超過 50%」（公司，2026-02）",
+   "src2": "凱基 2026-07-28 報告：2026F 46%（凱基 07-28；3Q 營收實績前）"
   }
  ],
  "names": {
@@ -4937,6 +5152,33 @@
    0.5,
    0.43
   ],
+  "SIF_AsmMkt_A": [
+   634.616531285011,
+   1139.08069210867,
+   1443.91777166882,
+   1644.85062257439
+  ],
+  "SIF_AsmMkt_B": [
+   634.616531285011,
+   1139.08069210867,
+   1155.13421733506,
+   1398.12302918823
+  ],
+  "SIF_AsmMkt_C": [
+   634.616531285011,
+   1139.08069210867,
+   866.350663001294,
+   986.910373544631
+  ],
+  "SIF_asm_odm_gb": 4,
+  "SIF_asm_odm_gb_hi": 4.3,
+  "SIF_asm_odm_gb_lo": 3.6,
+  "SIF_asm_odm_vr": 6.75,
+  "SIF_asm_odm_vr_hi": 7,
+  "SIF_asm_odm_vr_lo": 6.5,
+  "SIF_asm_wyai_26": 0.48,
+  "SIF_asm_wyai_26_hi": 0.52,
+  "SIF_asm_wyai_26_lo": 0.45,
   "SIF_CCLMkt_A": [
    8.18983831472237,
    21.9686689732486,
@@ -5411,6 +5653,24 @@
   "SIF_g29_trn": 0.15,
   "SIF_g29_trn_hi": 0.25,
   "SIF_g29_trn_lo": 0.05,
+  "SIF_GPUSysMkt_A": [
+   595.486111111111,
+   1170,
+   1313.19444444444,
+   1490.76388888889
+  ],
+  "SIF_GPUSysMkt_B": [
+   595.486111111111,
+   1170,
+   1050.55555555556,
+   1267.14930555556
+  ],
+  "SIF_GPUSysMkt_C": [
+   595.486111111111,
+   1170,
+   787.916666666667,
+   894.458333333333
+  ],
   "SIF_g_amd_26": 288,
   "SIF_g_amd_26_hi": 288,
   "SIF_g_amd_26_lo": 288,
@@ -5756,6 +6016,12 @@
   "SIF_nv_hbm": 4.46,
   "SIF_nv_hbm_hi": 4.9,
   "SIF_nv_hbm_lo": 3.5,
+  "SIF_ODMValPerGW": [
+   27.1209,
+   27.351,
+   27.351,
+   27.351
+  ],
   "SIF_pa_amd": 30,
   "SIF_pa_amd_hi": 45,
   "SIF_pa_amd_lo": 20,
@@ -5831,6 +6097,80 @@
   "SIF_pub26_hi": 77.4,
   "SIF_pub26_lo": 54.6,
   "SIF_pub27": 152.8,
+  "SIF_PwrMkt_A": [
+   10.5297921189288,
+   24.9880594956382,
+   35.8986539700486,
+   43.2997860500003
+  ],
+  "SIF_PwrMkt_B": [
+   10.5297921189288,
+   24.9880594956382,
+   28.7189231760389,
+   36.8048181425002
+  ],
+  "SIF_PwrMkt_C": [
+   10.5297921189288,
+   24.9880594956382,
+   21.5391923820292,
+   25.9798716300002
+  ],
+  "SIF_PwrShareSum_A": [
+   0.759815255723819,
+   0.748245990386685,
+   0.736676725049551,
+   0.716300293896065
+  ],
+  "SIF_PwrShareSum_B": [
+   0.759815255723819,
+   0.73063165875398,
+   0.701448061784142,
+   0.672264464814303
+  ],
+  "SIF_PwrShareSum_C": [
+   0.759815255723819,
+   0.704210161304923,
+   0.666219398518733,
+   0.628228635732542
+  ],
+  "SIF_pwr_drel_27": 0.95,
+  "SIF_pwr_drel_27_hi": 1,
+  "SIF_pwr_drel_27_lo": 0.85,
+  "SIF_pwr_drel_28": 0.9,
+  "SIF_pwr_drel_28_hi": 1,
+  "SIF_pwr_drel_28_lo": 0.7,
+  "SIF_pwr_drel_29": 0.85,
+  "SIF_pwr_drel_29_hi": 1,
+  "SIF_pwr_drel_29_lo": 0.65,
+  "SIF_pwr_dsh_26": 0.583671939396773,
+  "SIF_pwr_kgi_0701": 0.7,
+  "SIF_pwr_kgi_0926": 0.625,
+  "SIF_pwr_kgi_0926_hi": 0.65,
+  "SIF_pwr_kgi_0926_lo": 0.6,
+  "SIF_pwr_lrel_27": 1,
+  "SIF_pwr_lrel_27_hi": 1.1,
+  "SIF_pwr_lrel_27_lo": 0.85,
+  "SIF_pwr_lrel_28": 1,
+  "SIF_pwr_lrel_28_hi": 1.2,
+  "SIF_pwr_lrel_28_lo": 0.8,
+  "SIF_pwr_lrel_29": 1,
+  "SIF_pwr_lrel_29_hi": 1.25,
+  "SIF_pwr_lrel_29_lo": 0.75,
+  "SIF_pwr_lsh_26": 0.176143316327046,
+  "SIF_pwr_pkw_26": 450,
+  "SIF_pwr_pkw_26_hi": 520,
+  "SIF_pwr_pkw_26_lo": 380,
+  "SIF_pwr_pkw_27": 600,
+  "SIF_pwr_pkw_27_hi": 700,
+  "SIF_pwr_pkw_27_lo": 500,
+  "SIF_pwr_pkw_28": 680,
+  "SIF_pwr_pkw_28_hi": 800,
+  "SIF_pwr_pkw_28_lo": 550,
+  "SIF_pwr_pkw_29": 720,
+  "SIF_pwr_pkw_29_hi": 850,
+  "SIF_pwr_pkw_29_lo": 550,
+  "SIF_pwr_ubs_26": 17.7,
+  "SIF_pwr_ubs_27": 38.2,
   "SIF_sh_oth_26": 0.35,
   "SIF_sh_oth_26_hi": 0.5,
   "SIF_sh_oth_26_lo": 0.2,
@@ -5864,6 +6204,30 @@
   "SIF_su_cu": 0.6,
   "SIF_su_cu_hi": 0.8,
   "SIF_su_cu_lo": 0.4,
+  "SIF_SysUnitsGB": [
+   6.65,
+   2.4,
+   0.5,
+   0.25
+  ],
+  "SIF_SysUnitsVR": [
+   1.7,
+   8.8,
+   11,
+   12.65
+  ],
+  "SIF_SysValGB": [
+   59.7222222222222,
+   59.7222222222222,
+   59.7222222222222,
+   59.7222222222222
+  ],
+  "SIF_SysValVR": [
+   116.666666666667,
+   116.666666666667,
+   116.666666666667,
+   116.666666666667
+  ],
   "SIF_TK_CapexFacility_GB200": 12.67,
   "SIF_TK_CapexFacility_GB200_hi": 16.186,
   "SIF_TK_CapexFacility_GB200_lo": 10.212,

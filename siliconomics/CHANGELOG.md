@@ -1,5 +1,13 @@
 # Siliconomics 變更紀錄
 
+## v0.6（2026-10-27；`model/20261027_Siliconomics_v0.6.xlsx`；Tokenomics v21.7）
+
+- 新增 In 頁 M17（AI 電源，16 列）：每 kW 電源內容 `pwr_pkw_26–29`、台達電份額相對值 `pwr_drel_*`、光寶份額相對值 `pwr_lrel_*`（原在 delta、liteon，數值與文字逐字搬入）、FY2026 有效份額快照 `pwr_dsh_26`／`pwr_lsh_26`（Derived，公司模型校準值）、凱基兩個錨點 `pwr_kgi_0701`（70%）／`pwr_kgi_0926`（62.5%）、UBS 市場 `pwr_ubs_26／27`。
+- 新增 In 頁 M18（AI 伺服器組裝，3 列）：ODM 每櫃價格 `asm_odm_gb`／`asm_odm_vr`（原在 quanta）、緯穎 2026 AI 占比 `asm_wyai_26`＝48%（CF09：以緯穎模型為準，緯創原 55%）。
+- 新增 Rack 頁：AI 伺服器組裝市場（ODM 價）、商用 GPU 系統市場（CF10：AMD 2026 MI355 計 GB300 世代、2027 起 MI450 計 Rubin 世代；2026＝595.5）、AI 電源市場；ShareTbl 新增 AI 電源份額表（三情境），Checks K6-pwr、K7。
+- 下游：delta、liteon、quanta、wiwynn 改讀（數值不變）；**戴爾**改用同一世代分組（2026 系統市場 638.2 → 595.5，FY2028 EPS +3.5%、目標價 +3.1%，中立不變）；**緯創**改讀緯穎 48%（FY2027 EPS −1.5%、目標價 −1.6%，強力買進不變）。
+- CF11 待 Andy：只建份額表，凱基兩個值只作對照；試算見報告。液冷（CF04、CF12）移到 v0.6.1。決策 S20。
+
 ## 工程（2026-10-27）
 
 - 新增 `tools/cascade.sh`：升版後本機下游批次重建（清單直接取自 CI 工作流程，與 CI 同順序、同比對；跑兩輪，第二輪須全部相同）。

@@ -9,6 +9,8 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 import cycle_position as CP
 import valuation_rule as VR
 
@@ -33,14 +35,21 @@ for r in openpyxl.load_workbook(TSMC_F, data_only=True)["In"].iter_rows(min_row=
     k = r[0].value
     if k and (str(k).startswith("um") or str(k).startswith("u_") or str(k).startswith("g29_")):
         TS[k] = (r[4].value, r[0].row)
-GCL = ("bw", "hp"); VCL = ("rb", "ru", "amd")          # 商用 GPU：Blackwell／Hopper 用 GB300 每顆價值；Rubin／Rubin Ultra／AMD 用 VR200
+GCL = ("bw", "hp"); VCL = ("rb", "ru", "amd")          # 商用 GPU：Blackwell／Hopper 用 GB300 每顆價值；Rubin／Rubin Ultra 用 VR200；AMD 2026（MI355）計 GB300、2027 起（MI450 整櫃）計 VR200（Siliconomics Rack 頁，CF10）
 assert all(f"um{y}_{s}" in TS for y in (28, 29) for s in SC), TS.keys()
 assert all(f"u_{p}_{y}" in TS for p in GCL + VCL for y in (26, 27, 28)) and all(f"g29_{p}" in TS for p in GCL + VCL), TS.keys()
 def units(plats):
     u = {y: sum(TS[f"u_{p}_{y}"][0] for p in plats) for y in (26, 27, 28)}
     u[29] = sum(TS[f"u_{p}_28"][0] * (1 + TS[f"g29_{p}"][0]) for p in plats)
     return u
-UG = units(GCL); UV = units(VCL)
+UG = units(GCL); UV = units(("rb", "ru")); UA = units(("amd",))
+UG[26] += UA[26]
+for y in (27, 28, 29): UV[y] += UA[y]
+# CF10：商用 GPU 系統市場只有一個值（Siliconomics Rack 頁）；本模型的世代分組必須重現同一市場（情境 A，未四捨五入）
+def _chk_mkt():
+    for j, y in enumerate((26, 27, 28, 29)):
+        _m = UG[y] * BR["rack"][0][1] / BR["gpu_n"][0][1] * 1000 + UV[y] * BR["rack"][0][4] / BR["gpu_n"][0][4] * 1000
+        assert abs(_m - SIL.NAMES["SIF_GPUSysMkt_A"][j]) < 1e-6, ("商用 GPU 系統市場與 Siliconomics 不一致", y, _m, SIL.NAMES["SIF_GPUSysMkt_A"][j])
 U_SRC = f"{rel(TSMC_F)}｜In!E{TS['u_bw_26'][1]}:E{TS['g29_amd'][1]}"
 BR = {}
 for r in openpyxl.load_workbook(BR_F, data_only=True)["In"].iter_rows(min_row=4):
@@ -48,6 +57,7 @@ for r in openpyxl.load_workbook(BR_F, data_only=True)["In"].iter_rows(min_row=4)
     if k in ("rack", "gpu_n"):
         BR[k] = ([r[j].value for j in range(3, 9)], r[0].row)
 assert len(BR) == 2, BR.keys()
+_chk_mkt()
 BR_SRC = f"{rel(BR_F)}｜In!D{BR['rack'][1]}:I{BR['rack'][1]}（機架單價）÷ In!E{BR['gpu_n'][1]}（每架 GPU 數）"
 def pu(j):   # 每顆系統價值（US$K/顆）＝機架單價（US$M）÷ 每架 GPU 數 × 1000；j：0–2 GB300 低基高、3–5 VR200 低基高
     return round(BR["rack"][0][j] / BR["gpu_n"][0][j] * 1000, 6)
@@ -89,10 +99,10 @@ URLNAME = {K4: "Dell 8-K 4Q FY26（2026-02-26）", K1: "Dell 8-K 1Q FY27（2026-
 
 sec("A. 加速器顆數與每顆系統價值（讀 tsmc、markets/chip_bridge 成品；情境 A 基準，B／C 依同字母顆數係數縮放）")
 for y in (26, 27, 28, 29):
-    inp(f"ug_{y}", f"GB300 級商用 GPU 顆數 CY20{y}（Blackwell＋Hopper）", "百萬顆", None, round(UG[y], 6), None, "Derived", U_SRC if y == 26 else "同上",
-        "tsmc 成品 u_bw、u_hp；CY2029＝CY2028 × (1＋各類成長)" if y == 26 else "同上")
+    inp(f"ug_{y}", f"GB300 級商用 GPU 顆數 CY20{y}（Blackwell＋Hopper" + ("＋AMD MI355）" if y == 26 else "）"), "百萬顆", None, round(UG[y], 6), None, "Derived", U_SRC if y == 26 else "同上",
+        "tsmc 成品 u_bw、u_hp（2026 另含 u_amd）；CY2029＝CY2028 × (1＋各類成長)；世代分組與 Siliconomics Rack 頁、美超微模型相同（CF10）" if y == 26 else "同上")
 for y in (26, 27, 28, 29):
-    inp(f"uv_{y}", f"VR200 級商用 GPU 顆數 CY20{y}（Rubin＋Rubin Ultra＋AMD Instinct）", "百萬顆", None, round(UV[y], 6), None, "Derived", U_SRC if y == 26 else "同上",
+    inp(f"uv_{y}", f"VR200 級商用 GPU 顆數 CY20{y}（Rubin＋Rubin Ultra" + ("）" if y == 26 else "＋AMD MI450）"), "百萬顆", None, round(UV[y], 6), None, "Derived", U_SRC if y == 26 else "同上",
         "tsmc 成品 u_rb、u_ru、u_amd；Google TPU、Trainium 與其他 ASIC 不含（雲端自建，Dell 不是主要供應商）" if y == 26 else "同上")
 for s in SC:
     inp(f"um28_{s}", f"情境 {s}：CY2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um28_{s}'][1]}", "A＝順利（基準）；B＝平平；C＝不如預期；與台積電、廣達、緯穎模型同字母")
@@ -371,7 +381,7 @@ hdr(UN, 3, ["項目", "單位", "CY2026（FY2027）", "CY2027（FY2028）", "CY2
 ur = 4; UR = {}
 for key, lab, unit, f, fmt, note in (
         ("ug", "GB300 級 GPU 顆數（Blackwell＋Hopper）", "百萬顆", lambda y: f"=PL!{FC[y]}{A_['ug']}", "0.00", "tsmc 成品"),
-        ("uv", "VR200 級 GPU 顆數（Rubin＋Rubin Ultra＋AMD）", "百萬顆", lambda y: f"=PL!{FC[y]}{A_['uv']}", "0.00", "tsmc 成品"),
+        ("uv", "VR200 級 GPU 顆數（Rubin＋Rubin Ultra；2027 起＋AMD）", "百萬顆", lambda y: f"=PL!{FC[y]}{A_['uv']}", "0.00", "tsmc 成品"),
         ("vg", "每顆系統價值 GB300 級", "US$K/顆", lambda y: "=v_gb", "0.0", "橋接表機架價 ÷ 72"),
         ("vv", "每顆系統價值 VR200 級", "US$K/顆", lambda y: "=v_vr", "0.0", "同上"),
         ("mkt", "商用 GPU 系統市場（整櫃售價）", "US$B", lambda y: f"=PL!{FC[y]}{A_['mkt']}", "#,##0.0", "OEM／整櫃售價口徑（含 GPU）"),
@@ -695,7 +705,7 @@ lines = [("Dell Technologies（DELL US）收支與估值模型 v0.1（AI 半導�
  ("重點觀察 1：" + OBS[0], False), ("重點觀察 2：" + OBS[1], False), ("重點觀察 3：" + OBS[2], False),
  ("會計年度：FY(t)＝t−1 年 2 月～t 年 1 月底，FY(t) 直接取 CY(t−1)（FY2027≈CY2026、FY2030≈CY2029）。金額：十億美元。口徑：non-GAAP（公司指引、共識、同業倍數一致）；GAAP EPS 只在 Q 頁對照。", False), ("", False),
  ("驅動因子 → 推導量（全部唯讀上游，不修改）", True),
- ("AI 伺服器營收：tsmc 成品的 Blackwell＋Hopper（GB300 級）與 Rubin＋Rubin Ultra＋AMD（VR200 級）顆數 × 同字母情境係數 × 每顆系統價值（橋接表 Tokenomics v20.1 機架價 ÷ 72：GB300 約 59.7、VR200 約 116.7 千美元）＝商用 GPU 系統市場；× Dell 份額（FY2027 校準）× 份額相對值（Assumed）× 情境份額乘數（FY2029 起）。", False),
+ ("AI 伺服器營收：tsmc 成品的 Blackwell＋Hopper（GB300 級；2026 另含 AMD MI355）與 Rubin＋Rubin Ultra（VR200 級；2027 起另含 AMD MI450）顆數（世代分組與 Siliconomics Rack 頁、美超微模型相同，CF10） × 同字母情境係數 × 每顆系統價值（橋接表 Tokenomics v20.1 機架價 ÷ 72：GB300 約 59.7、VR200 約 116.7 千美元）＝商用 GPU 系統市場；× Dell 份額（FY2027 校準）× 份額相對值（Assumed）× 情境份額乘數（FY2029 起）。", False),
  ("非 AI：傳統伺服器與網通、儲存、CSG 依成長率推（Assumed，不隨 AI 情境）。營業利益：AI 營益率＝FY2027 殘差（ISG 營業利益 − 非 AI 營益率 16% × 非 AI 營收）＋ai_dm（FY2029 起加情境變動）；非 AI ISG、CSG 營益率為 Assumed。淨利＝分部營業利益 × 淨利係數；股數每年 −3%（回購）。", False),
  ("校準：FY2027 ＝ 公司全年指引（營收、AI 營收、non-GAAP EPS）＋1H FY27 實績＋2H 假設。不用券商數字（只在 Recon 對帳）。", False),
  ("估值：Val 第 0 節目標價＝0.5 × DCF 目標價（股東現金流＝EPS ×（1 − g／ROE），ROE 用預設 20%，FY2027 只計一個月，r 10%、g 4%，三情境權重 0.3／0.5／0.2）＋0.5 × Comparable 目標價（HPE、Supermicro、Lenovo、HP Inc.、NetApp 前瞻 P/E 中位數 × 12 個月後前瞻 EPS；不含 A 股）；另列 Comparable 單獨目標價、市場共識目標價、差距拆解與上檔空間級距。十年 P/E 規則值 × FY2027 EPS 保留為參考（不是目標價）。本版未做先驗，無 Andy 合理 P/E 對照。", False),
