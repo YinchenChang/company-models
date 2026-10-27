@@ -1,0 +1,991 @@
+ticker,metric,year,value,source_url,note
+000660.KS,PB,2016,1.33,repo:skhynix/dist（Val 十年表（companiesmarketcap、marketcapof（2016–24）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+000660.KS,PB,2017,1.595,repo:skhynix/dist（Val 十年表（companiesmarketcap、marketcapof（2016–24）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+000660.KS,PB,2018,0.8916,repo:skhynix/dist（Val 十年表（companiesmarketcap、marketcapof（2016–24）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+000660.KS,PB,2019,1.34,repo:skhynix/dist（Val 十年表（companiesmarketcap、marketcapof（2016–24）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+000660.KS,PB,2020,1.56,repo:skhynix/dist（Val 十年表（companiesmarketcap、marketcapof（2016–24）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+000660.KS,PB,2021,1.45,repo:skhynix/dist（Val 十年表（companiesmarketcap、marketcapof（2016–24）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+000660.KS,PB,2022,0.815,repo:skhynix/dist（Val 十年表（companiesmarketcap、marketcapof（2016–24）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+000660.KS,PB,2023,1.85,repo:skhynix/dist（Val 十年表（companiesmarketcap、marketcapof（2016–24）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+000660.KS,PB,2024,1.62,repo:skhynix/dist（Val 十年表（companiesmarketcap、marketcapof（2016–24）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+000660.KS,PB,2025,3.86,repo:skhynix/dist（Val 十年表（companiesmarketcap、marketcapof（2016–24）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+000988.SZ,PE,2016,58.5,https://companiesmarketcap.com/huagong-tech/pe-ratio/,
+000988.SZ,PE,2017,44.9,https://companiesmarketcap.com/huagong-tech/pe-ratio/,
+000988.SZ,PE,2018,42.6,https://companiesmarketcap.com/huagong-tech/pe-ratio/,
+000988.SZ,PE,2019,39.5,https://companiesmarketcap.com/huagong-tech/pe-ratio/,
+000988.SZ,PE,2020,41.7,https://companiesmarketcap.com/huagong-tech/pe-ratio/,
+000988.SZ,PE,2021,35.9,https://companiesmarketcap.com/huagong-tech/pe-ratio/,
+000988.SZ,PE,2022,18.0,https://companiesmarketcap.com/huagong-tech/pe-ratio/,
+000988.SZ,PE,2023,29.5,https://companiesmarketcap.com/huagong-tech/pe-ratio/,
+000988.SZ,PE,2024,36.8,https://companiesmarketcap.com/huagong-tech/pe-ratio/,
+000988.SZ,PE,2025,54.9,https://companiesmarketcap.com/huagong-tech/pe-ratio/,
+002281.SZ,PE,2021,28.72,https://stockanalysis.com/quote/she/002281/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+002281.SZ,PE,2022,18.04,https://stockanalysis.com/quote/she/002281/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+002281.SZ,PE,2023,36.56,https://stockanalysis.com/quote/she/002281/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+002281.SZ,PE,2024,62.61,https://stockanalysis.com/quote/she/002281/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+002281.SZ,PE,2025,59.63,https://stockanalysis.com/quote/she/002281/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+002463.SZ,PE,2021,29.57,https://stockanalysis.com/quote/she/002463/financials/ratios/,stockanalysis; 2016-2020 not shown; companiesmarketcap page not found
+002463.SZ,PE,2022,16.58,https://stockanalysis.com/quote/she/002463/financials/ratios/,stockanalysis; 2016-2020 not shown; companiesmarketcap page not found
+002463.SZ,PE,2023,27.91,https://stockanalysis.com/quote/she/002463/financials/ratios/,stockanalysis; 2016-2020 not shown; companiesmarketcap page not found
+002463.SZ,PE,2024,29.4,https://stockanalysis.com/quote/she/002463/financials/ratios/,stockanalysis; 2016-2020 not shown; companiesmarketcap page not found
+002463.SZ,PE,2025,36.79,https://stockanalysis.com/quote/she/002463/financials/ratios/,stockanalysis; 2016-2020 not shown; companiesmarketcap page not found
+002916.SZ,PE,,,,NOT FOUND: companiesmarketcap slugs shennan-circuits/shennan-circuit/shenzhen-shennan-circuits/shennan-circuits-co all failed; stockanalysis szse/002916 failed; web search found no page
+002938.SZ,PE,2021,29.69,https://stockanalysis.com/quote/she/002938/financials/ratios/,stockanalysis FY2021-2025 (FY21/22 end Jan 1); CMC has no page found
+002938.SZ,PE,2022,12.66,https://stockanalysis.com/quote/she/002938/financials/ratios/,
+002938.SZ,PE,2023,15.71,https://stockanalysis.com/quote/she/002938/financials/ratios/,
+002938.SZ,PE,2024,23.27,https://stockanalysis.com/quote/she/002938/financials/ratios/,
+002938.SZ,PE,2025,31.24,https://stockanalysis.com/quote/she/002938/financials/ratios/,
+005930.KS,PB,2016,1.27,repo:samsung/dist（Val 十年表（companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+005930.KS,PB,2017,1.59,repo:samsung/dist（Val 十年表（companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+005930.KS,PB,2018,1.04,repo:samsung/dist（Val 十年表（companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+005930.KS,PB,2019,1.41,repo:samsung/dist（Val 十年表（companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+005930.KS,PB,2020,1.97,repo:samsung/dist（Val 十年表（companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+005930.KS,PB,2021,1.73,repo:samsung/dist（Val 十年表（companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+005930.KS,PB,2022,1.04,repo:samsung/dist（Val 十年表（companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+005930.KS,PB,2023,1.43,repo:samsung/dist（Val 十年表（companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+005930.KS,PB,2024,0.8865,repo:samsung/dist（Val 十年表（companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+005930.KS,PB,2025,1.96,repo:samsung/dist（Val 十年表（companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+005930.KS,PE,2016,9.15,https://companiesmarketcap.com/samsung/pe-ratio/,
+005930.KS,PE,2017,6.95,https://companiesmarketcap.com/samsung/pe-ratio/,
+005930.KS,PE,2018,5.06,https://companiesmarketcap.com/samsung/pe-ratio/,
+005930.KS,PE,2019,15.3,https://companiesmarketcap.com/samsung/pe-ratio/,
+005930.KS,PE,2020,19.1,https://companiesmarketcap.com/samsung/pe-ratio/,
+005930.KS,PE,2021,12.5,https://companiesmarketcap.com/samsung/pe-ratio/,
+005930.KS,PE,2022,6.5,https://companiesmarketcap.com/samsung/pe-ratio/,
+005930.KS,PE,2023,36.1,https://companiesmarketcap.com/samsung/pe-ratio/,
+005930.KS,PE,2024,10.6,https://companiesmarketcap.com/samsung/pe-ratio/,
+005930.KS,PE,2025,18.2,https://companiesmarketcap.com/samsung/pe-ratio/,
+009150.KS,PE,2016,115,https://companiesmarketcap.com/samsung-electro-mechanics/pe-ratio/,page is for 009155.KS (preferred); 2016=115 depressed earnings
+009150.KS,PE,2017,18.2,https://companiesmarketcap.com/samsung-electro-mechanics/pe-ratio/,page is for 009155.KS (preferred); 2016=115 depressed earnings
+009150.KS,PE,2018,4.18,https://companiesmarketcap.com/samsung-electro-mechanics/pe-ratio/,page is for 009155.KS (preferred); 2016=115 depressed earnings
+009150.KS,PE,2019,6.52,https://companiesmarketcap.com/samsung-electro-mechanics/pe-ratio/,page is for 009155.KS (preferred); 2016=115 depressed earnings
+009150.KS,PE,2020,10.4,https://companiesmarketcap.com/samsung-electro-mechanics/pe-ratio/,page is for 009155.KS (preferred); 2016=115 depressed earnings
+009150.KS,PE,2021,8.18,https://companiesmarketcap.com/samsung-electro-mechanics/pe-ratio/,page is for 009155.KS (preferred); 2016=115 depressed earnings
+009150.KS,PE,2022,4.69,https://companiesmarketcap.com/samsung-electro-mechanics/pe-ratio/,page is for 009155.KS (preferred); 2016=115 depressed earnings
+009150.KS,PE,2023,12.6,https://companiesmarketcap.com/samsung-electro-mechanics/pe-ratio/,page is for 009155.KS (preferred); 2016=115 depressed earnings
+009150.KS,PE,2024,6.28,https://companiesmarketcap.com/samsung-electro-mechanics/pe-ratio/,page is for 009155.KS (preferred); 2016=115 depressed earnings
+009150.KS,PE,2025,12.4,https://companiesmarketcap.com/samsung-electro-mechanics/pe-ratio/,page is for 009155.KS (preferred); 2016=115 depressed earnings
+042700.KS,PE,2016,23.2,https://companiesmarketcap.com/hanmi-semiconductor/pe-ratio/,
+042700.KS,PE,2017,55.0,https://companiesmarketcap.com/hanmi-semiconductor/pe-ratio/,
+042700.KS,PE,2018,7.16,https://companiesmarketcap.com/hanmi-semiconductor/pe-ratio/,
+042700.KS,PE,2019,19.7,https://companiesmarketcap.com/hanmi-semiconductor/pe-ratio/,
+042700.KS,PE,2020,17.2,https://companiesmarketcap.com/hanmi-semiconductor/pe-ratio/,
+042700.KS,PE,2021,34.8,https://companiesmarketcap.com/hanmi-semiconductor/pe-ratio/,
+042700.KS,PE,2022,12.1,https://companiesmarketcap.com/hanmi-semiconductor/pe-ratio/,
+042700.KS,PE,2023,21.8,https://companiesmarketcap.com/hanmi-semiconductor/pe-ratio/,
+042700.KS,PE,2024,51.5,https://companiesmarketcap.com/hanmi-semiconductor/pe-ratio/,
+042700.KS,PE,2025,56.5,https://companiesmarketcap.com/hanmi-semiconductor/pe-ratio/,
+0522.HK,PE,2021,10.97,https://stockanalysis.com/quote/hkg/0522/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+0522.HK,PE,2022,8.76,https://stockanalysis.com/quote/hkg/0522/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+0522.HK,PE,2023,43.17,https://stockanalysis.com/quote/hkg/0522/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+0522.HK,PE,2024,90.35,https://stockanalysis.com/quote/hkg/0522/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+0522.HK,PE,2025,35.87,https://stockanalysis.com/quote/hkg/0522/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+0981.HK,PE,2016,18.6,https://companiesmarketcap.com/smic/pe-ratio/,2022/2023 not on source
+0981.HK,PE,2017,34.6,https://companiesmarketcap.com/smic/pe-ratio/,2022/2023 not on source
+0981.HK,PE,2018,19.7,https://companiesmarketcap.com/smic/pe-ratio/,2022/2023 not on source
+0981.HK,PE,2019,34.1,https://companiesmarketcap.com/smic/pe-ratio/,2022/2023 not on source
+0981.HK,PE,2020,26.2,https://companiesmarketcap.com/smic/pe-ratio/,2022/2023 not on source
+0981.HK,PE,2021,10.9,https://companiesmarketcap.com/smic/pe-ratio/,2022/2023 not on source
+0981.HK,PE,2024,68.1,https://companiesmarketcap.com/smic/pe-ratio/,2022/2023 not on source
+0981.HK,PE,2025,115,https://companiesmarketcap.com/smic/pe-ratio/,2022/2023 not on source
+0992.HK,PE,2016,-41.6,https://companiesmarketcap.com/lenovo/pe-ratio/,source has no 2025 row; shows a 2026 row =7.53 (not recorded); negative = loss years
+0992.HK,PE,2017,8.67,https://companiesmarketcap.com/lenovo/pe-ratio/,source has no 2025 row; shows a 2026 row =7.53 (not recorded); negative = loss years
+0992.HK,PE,2018,-21.1,https://companiesmarketcap.com/lenovo/pe-ratio/,source has no 2025 row; shows a 2026 row =7.53 (not recorded); negative = loss years
+0992.HK,PE,2019,13.0,https://companiesmarketcap.com/lenovo/pe-ratio/,source has no 2025 row; shows a 2026 row =7.53 (not recorded); negative = loss years
+0992.HK,PE,2020,6.83,https://companiesmarketcap.com/lenovo/pe-ratio/,source has no 2025 row; shows a 2026 row =7.53 (not recorded); negative = loss years
+0992.HK,PE,2021,12.3,https://companiesmarketcap.com/lenovo/pe-ratio/,source has no 2025 row; shows a 2026 row =7.53 (not recorded); negative = loss years
+0992.HK,PE,2022,5.25,https://companiesmarketcap.com/lenovo/pe-ratio/,source has no 2025 row; shows a 2026 row =7.53 (not recorded); negative = loss years
+0992.HK,PE,2023,7.09,https://companiesmarketcap.com/lenovo/pe-ratio/,source has no 2025 row; shows a 2026 row =7.53 (not recorded); negative = loss years
+0992.HK,PE,2024,12.7,https://companiesmarketcap.com/lenovo/pe-ratio/,source has no 2025 row; shows a 2026 row =7.53 (not recorded); negative = loss years
+2269.T,PE,2016,18.3,https://companiesmarketcap.com/meiji-holdings/pe-ratio/,
+2269.T,PE,2017,19.0,https://companiesmarketcap.com/meiji-holdings/pe-ratio/,
+2269.T,PE,2018,16.3,https://companiesmarketcap.com/meiji-holdings/pe-ratio/,
+2269.T,PE,2019,18.4,https://companiesmarketcap.com/meiji-holdings/pe-ratio/,
+2269.T,PE,2020,14.7,https://companiesmarketcap.com/meiji-holdings/pe-ratio/,
+2269.T,PE,2021,14.3,https://companiesmarketcap.com/meiji-holdings/pe-ratio/,
+2269.T,PE,2022,10.2,https://companiesmarketcap.com/meiji-holdings/pe-ratio/,
+2269.T,PE,2023,12.1,https://companiesmarketcap.com/meiji-holdings/pe-ratio/,
+2269.T,PE,2024,18.3,https://companiesmarketcap.com/meiji-holdings/pe-ratio/,
+2269.T,PE,2025,17.5,https://companiesmarketcap.com/meiji-holdings/pe-ratio/,
+2301.TW,PE,2016,12,repo:liteon/dist（Val 十年表（自算（digrin 12 月未調整價格 ÷ 年度 EPS）、HiStock（12 月 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2301.TW,PE,2017,35.9292,repo:liteon/dist（Val 十年表（自算（digrin 12 月未調整價格 ÷ 年度 EPS）、HiStock（12 月 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2301.TW,PE,2018,11.8713,repo:liteon/dist（Val 十年表（自算（digrin 12 月未調整價格 ÷ 年度 EPS）、HiStock（12 月 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2301.TW,PE,2019,12.2457,repo:liteon/dist（Val 十年表（自算（digrin 12 月未調整價格 ÷ 年度 EPS）、HiStock（12 月 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2301.TW,PE,2020,11.5545,repo:liteon/dist（Val 十年表（自算（digrin 12 月未調整價格 ÷ 年度 EPS）、HiStock（12 月 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2301.TW,PE,2021,10.7528,repo:liteon/dist（Val 十年表（自算（digrin 12 月未調整價格 ÷ 年度 EPS）、HiStock（12 月 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2301.TW,PE,2022,10.8485,repo:liteon/dist（Val 十年表（自算（digrin 12 月未調整價格 ÷ 年度 EPS）、HiStock（12 月 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2301.TW,PE,2023,18.2131,repo:liteon/dist（Val 十年表（自算（digrin 12 月未調整價格 ÷ 年度 EPS）、HiStock（12 月 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2301.TW,PE,2024,18.8139,repo:liteon/dist（Val 十年表（自算（digrin 12 月未調整價格 ÷ 年度 EPS）、HiStock（12 月 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2301.TW,PE,2025,25.2867,repo:liteon/dist（Val 十年表（自算（digrin 12 月未調整價格 ÷ 年度 EPS）、HiStock（12 月 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2303.TW,PE,2016,10.6,https://companiesmarketcap.com/united-microelectronics/pe-ratio/,
+2303.TW,PE,2017,11.8,https://companiesmarketcap.com/united-microelectronics/pe-ratio/,
+2303.TW,PE,2018,12.8,https://companiesmarketcap.com/united-microelectronics/pe-ratio/,
+2303.TW,PE,2019,14.1,https://companiesmarketcap.com/united-microelectronics/pe-ratio/,
+2303.TW,PE,2020,15.1,https://companiesmarketcap.com/united-microelectronics/pe-ratio/,
+2303.TW,PE,2021,10.9,https://companiesmarketcap.com/united-microelectronics/pe-ratio/,
+2303.TW,PE,2022,4.68,https://companiesmarketcap.com/united-microelectronics/pe-ratio/,
+2303.TW,PE,2023,9.38,https://companiesmarketcap.com/united-microelectronics/pe-ratio/,
+2303.TW,PE,2024,10.6,https://companiesmarketcap.com/united-microelectronics/pe-ratio/,
+2303.TW,PE,2025,14.9,https://companiesmarketcap.com/united-microelectronics/pe-ratio/,
+2308.TW,PE,2016,17.2,repo:delta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2308.TW,PE,2017,16.4,repo:delta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2308.TW,PE,2018,15.3,repo:delta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2308.TW,PE,2019,14.9,repo:delta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2308.TW,PE,2020,23.8,repo:delta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2308.TW,PE,2021,24.4,repo:delta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2308.TW,PE,2022,21.3,repo:delta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2308.TW,PE,2023,23.5,repo:delta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2308.TW,PE,2024,31.5,repo:delta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2308.TW,PE,2025,41.5,repo:delta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2313.TW,PE,2021,10.14,https://stockanalysis.com/quote/tpe/2313/financials/ratios/,stockanalysis free tier shows only FY2021-2025; CMC has no page
+2313.TW,PE,2022,6.63,https://stockanalysis.com/quote/tpe/2313/financials/ratios/,
+2313.TW,PE,2023,20.22,https://stockanalysis.com/quote/tpe/2313/financials/ratios/,
+2313.TW,PE,2024,14.92,https://stockanalysis.com/quote/tpe/2313/financials/ratios/,
+2313.TW,PE,2025,16.90,https://stockanalysis.com/quote/tpe/2313/financials/ratios/,
+2317.TW,PE,2016,8.3203,repo:foxconn/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2317.TW,PE,2017,11.3426,repo:foxconn/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2317.TW,PE,2018,7.6585,repo:foxconn/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2317.TW,PE,2019,9.7317,repo:foxconn/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2317.TW,PE,2020,11.417,repo:foxconn/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2317.TW,PE,2021,9.5891,repo:foxconn/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2317.TW,PE,2022,9.2823,repo:foxconn/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2317.TW,PE,2023,9.8926,repo:foxconn/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2317.TW,PE,2024,16.456,repo:foxconn/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2317.TW,PE,2025,16.868,repo:foxconn/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2330.TW,PE,2016,13.05,repo:tsmc/dist（Val 十年表（FullRatio、companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2330.TW,PE,2017,16.255,repo:tsmc/dist（Val 十年表（FullRatio、companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2330.TW,PE,2018,15.165,repo:tsmc/dist（Val 十年表（FullRatio、companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2330.TW,PE,2019,24.56,repo:tsmc/dist（Val 十年表（FullRatio、companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2330.TW,PE,2020,29.705,repo:tsmc/dist（Val 十年表（FullRatio、companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2330.TW,PE,2021,28.19,repo:tsmc/dist（Val 十年表（FullRatio、companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2330.TW,PE,2022,11.57,repo:tsmc/dist（Val 十年表（FullRatio、companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2330.TW,PE,2023,19.38,repo:tsmc/dist（Val 十年表（FullRatio、companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2330.TW,PE,2024,28.76,repo:tsmc/dist（Val 十年表（FullRatio、companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2330.TW,PE,2025,28.665,repo:tsmc/dist（Val 十年表（FullRatio、companiesmarketcap、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2345.TW,PE,2016,11.4,repo:accton/dist（Val 十年表（companiesmarketcap（年底 P/E）、Goodinfo（年底收盤 ÷ EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2345.TW,PE,2017,18.6,repo:accton/dist（Val 十年表（companiesmarketcap（年底 P/E）、Goodinfo（年底收盤 ÷ EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2345.TW,PE,2018,17.1495,repo:accton/dist（Val 十年表（companiesmarketcap（年底 P/E）、Goodinfo（年底收盤 ÷ EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2345.TW,PE,2019,17.5776,repo:accton/dist（Val 十年表（companiesmarketcap（年底 P/E）、Goodinfo（年底收盤 ÷ EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2345.TW,PE,2020,33.2701,repo:accton/dist（Val 十年表（companiesmarketcap（年底 P/E）、Goodinfo（年底收盤 ÷ EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2345.TW,PE,2021,29.7028,repo:accton/dist（Val 十年表（companiesmarketcap（年底 P/E）、Goodinfo（年底收盤 ÷ EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2345.TW,PE,2022,15.6089,repo:accton/dist（Val 十年表（companiesmarketcap（年底 P/E）、Goodinfo（年底收盤 ÷ EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2345.TW,PE,2023,32.204,repo:accton/dist（Val 十年表（companiesmarketcap（年底 P/E）、Goodinfo（年底收盤 ÷ EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2345.TW,PE,2024,35.4851,repo:accton/dist（Val 十年表（companiesmarketcap（年底 P/E）、Goodinfo（年底收盤 ÷ EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2345.TW,PE,2025,25.1716,repo:accton/dist（Val 十年表（companiesmarketcap（年底 P/E）、Goodinfo（年底收盤 ÷ EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2356.TW,PE,2021,13.69,https://stockanalysis.com/quote/tpe/2356/financials/ratios/,stockanalysis free tier shows only FY2021-2025; CMC has no page
+2356.TW,PE,2022,15.37,https://stockanalysis.com/quote/tpe/2356/financials/ratios/,
+2356.TW,PE,2023,30.90,https://stockanalysis.com/quote/tpe/2356/financials/ratios/,
+2356.TW,PE,2024,24.73,https://stockanalysis.com/quote/tpe/2356/financials/ratios/,
+2356.TW,PE,2025,17.70,https://stockanalysis.com/quote/tpe/2356/financials/ratios/,
+2368.TW,PE,2016,40,repo:gce/dist（Val 十年表（自算（digrin 12 月未調整收盤 ÷ 年度 EPS）、MarketScreener（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2368.TW,PE,2018,31.1905,repo:gce/dist（Val 十年表（自算（digrin 12 月未調整收盤 ÷ 年度 EPS）、MarketScreener（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2368.TW,PE,2019,69.375,repo:gce/dist（Val 十年表（自算（digrin 12 月未調整收盤 ÷ 年度 EPS）、MarketScreener（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2368.TW,PE,2020,13.2199,repo:gce/dist（Val 十年表（自算（digrin 12 月未調整收盤 ÷ 年度 EPS）、MarketScreener（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2368.TW,PE,2021,13.4045,repo:gce/dist（Val 十年表（自算（digrin 12 月未調整收盤 ÷ 年度 EPS）、MarketScreener（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2368.TW,PE,2022,9.8881,repo:gce/dist（Val 十年表（自算（digrin 12 月未調整收盤 ÷ 年度 EPS）、MarketScreener（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2368.TW,PE,2023,30.0845,repo:gce/dist（Val 十年表（自算（digrin 12 月未調整收盤 ÷ 年度 EPS）、MarketScreener（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2368.TW,PE,2024,20.9136,repo:gce/dist（Val 十年表（自算（digrin 12 月未調整收盤 ÷ 年度 EPS）、MarketScreener（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2368.TW,PE,2025,35.2925,repo:gce/dist（Val 十年表（自算（digrin 12 月未調整收盤 ÷ 年度 EPS）、MarketScreener（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2382.TW,PE,2016,12.3018,repo:quanta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2382.TW,PE,2017,13.5476,repo:quanta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2382.TW,PE,2018,11.1969,repo:quanta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2382.TW,PE,2019,13.3157,repo:quanta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2382.TW,PE,2020,10.7718,repo:quanta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2382.TW,PE,2021,9.7338,repo:quanta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2382.TW,PE,2022,8.9636,repo:quanta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2382.TW,PE,2023,21.0086,repo:quanta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2382.TW,PE,2024,18.114,repo:quanta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2382.TW,PE,2025,13.7423,repo:quanta/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2383.TW,PE,2017,11.6266,repo:emc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2383.TW,PE,2018,11.9891,repo:emc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2383.TW,PE,2019,13.5108,repo:emc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2383.TW,PE,2020,13.857,repo:emc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2383.TW,PE,2021,16.8485,repo:emc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2383.TW,PE,2022,11.2205,repo:emc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2383.TW,PE,2023,23.3639,repo:emc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2383.TW,PE,2024,22.2222,repo:emc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2383.TW,PE,2025,39.4768,repo:emc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2408.TW,PB,2016,1.56,https://companiesmarketcap.com/nanya-technology/pb-ratio/,
+2408.TW,PB,2017,1.58,https://companiesmarketcap.com/nanya-technology/pb-ratio/,
+2408.TW,PB,2018,1.02,https://companiesmarketcap.com/nanya-technology/pb-ratio/,
+2408.TW,PB,2019,1.68,https://companiesmarketcap.com/nanya-technology/pb-ratio/,
+2408.TW,PB,2020,1.73,https://companiesmarketcap.com/nanya-technology/pb-ratio/,
+2408.TW,PB,2021,1.40,https://companiesmarketcap.com/nanya-technology/pb-ratio/,
+2408.TW,PB,2022,0.8726,https://companiesmarketcap.com/nanya-technology/pb-ratio/,
+2408.TW,PB,2023,1.45,https://companiesmarketcap.com/nanya-technology/pb-ratio/,
+2408.TW,PB,2024,0.5778,https://companiesmarketcap.com/nanya-technology/pb-ratio/,
+2408.TW,PB,2025,3.74,https://companiesmarketcap.com/nanya-technology/pb-ratio/,
+2449.TW,PE,2016,9.8438,repo:kyec/dist（Val 十年表（年底收盤 ÷ 當年 EPS（Yahoo Finance 12 月收盤 × 1.05、玩股網／HiStock EPS）、stockanalysis 年度 P/E、HiStock 12 月本益比））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2449.TW,PE,2017,16.0907,repo:kyec/dist（Val 十年表（年底收盤 ÷ 當年 EPS（Yahoo Finance 12 月收盤 × 1.05、玩股網／HiStock EPS）、stockanalysis 年度 P/E、HiStock 12 月本益比））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2449.TW,PE,2018,15.8143,repo:kyec/dist（Val 十年表（年底收盤 ÷ 當年 EPS（Yahoo Finance 12 月收盤 × 1.05、玩股網／HiStock EPS）、stockanalysis 年度 P/E、HiStock 12 月本益比））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2449.TW,PE,2019,15.0795,repo:kyec/dist（Val 十年表（年底收盤 ÷ 當年 EPS（Yahoo Finance 12 月收盤 × 1.05、玩股網／HiStock EPS）、stockanalysis 年度 P/E、HiStock 12 月本益比））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2449.TW,PE,2020,11.702,repo:kyec/dist（Val 十年表（年底收盤 ÷ 當年 EPS（Yahoo Finance 12 月收盤 × 1.05、玩股網／HiStock EPS）、stockanalysis 年度 P/E、HiStock 12 月本益比））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2449.TW,PE,2021,11.3773,repo:kyec/dist（Val 十年表（年底收盤 ÷ 當年 EPS（Yahoo Finance 12 月收盤 × 1.05、玩股網／HiStock EPS）、stockanalysis 年度 P/E、HiStock 12 月本益比））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2449.TW,PE,2022,6.4322,repo:kyec/dist（Val 十年表（年底收盤 ÷ 當年 EPS（Yahoo Finance 12 月收盤 × 1.05、玩股網／HiStock EPS）、stockanalysis 年度 P/E、HiStock 12 月本益比））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2449.TW,PE,2023,17.8407,repo:kyec/dist（Val 十年表（年底收盤 ÷ 當年 EPS（Yahoo Finance 12 月收盤 × 1.05、玩股網／HiStock EPS）、stockanalysis 年度 P/E、HiStock 12 月本益比））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2449.TW,PE,2024,17.9005,repo:kyec/dist（Val 十年表（年底收盤 ÷ 當年 EPS（Yahoo Finance 12 月收盤 × 1.05、玩股網／HiStock EPS）、stockanalysis 年度 P/E、HiStock 12 月本益比））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2449.TW,PE,2025,27.6563,repo:kyec/dist（Val 十年表（年底收盤 ÷ 當年 EPS（Yahoo Finance 12 月收盤 × 1.05、玩股網／HiStock EPS）、stockanalysis 年度 P/E、HiStock 12 月本益比））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2454.TW,PE,2016,9.22,repo:mediatek/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2454.TW,PE,2017,15.7473,repo:mediatek/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2454.TW,PE,2018,14.4038,repo:mediatek/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2454.TW,PE,2019,25.8953,repo:mediatek/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2454.TW,PE,2020,24.7099,repo:mediatek/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2454.TW,PE,2021,14.7825,repo:mediatek/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2454.TW,PE,2022,7.6546,repo:mediatek/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2454.TW,PE,2023,20.0618,repo:mediatek/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2454.TW,PE,2024,20.7723,repo:mediatek/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2454.TW,PE,2025,21.5571,repo:mediatek/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2801.T,PE,2016,34.4,https://companiesmarketcap.com/kikkoman/pe-ratio/,2023/2024 values (145
+2801.T,PE,2017,25.4,https://companiesmarketcap.com/kikkoman/pe-ratio/,2023/2024 values (145
+2801.T,PE,2018,32.4,https://companiesmarketcap.com/kikkoman/pe-ratio/,2023/2024 values (145
+2801.T,PE,2019,38.2,https://companiesmarketcap.com/kikkoman/pe-ratio/,2023/2024 values (145
+2801.T,PE,2020,31.2,https://companiesmarketcap.com/kikkoman/pe-ratio/,2023/2024 values (145
+2801.T,PE,2021,39.9,https://companiesmarketcap.com/kikkoman/pe-ratio/,2023/2024 values (145
+2801.T,PE,2022,39.5,https://companiesmarketcap.com/kikkoman/pe-ratio/,2023/2024 values (145
+2801.T,PE,2023,145,https://companiesmarketcap.com/kikkoman/pe-ratio/,2023/2024 values (145
+2801.T,PE,2024,161,https://companiesmarketcap.com/kikkoman/pe-ratio/,2023/2024 values (145
+2801.T,PE,2025,21.8,https://companiesmarketcap.com/kikkoman/pe-ratio/,2023/2024 values (145
+2802.T,PE,2016,18.6,repo:ajinomoto/dist（Val 十年表（採用 P/E（companiesmarketcap）、companiesmarketcap、stockanalysis（次年 3 月底）））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2802.T,PE,2017,21.1,repo:ajinomoto/dist（Val 十年表（採用 P/E（companiesmarketcap）、companiesmarketcap、stockanalysis（次年 3 月底）））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2802.T,PE,2018,16.4,repo:ajinomoto/dist（Val 十年表（採用 P/E（companiesmarketcap）、companiesmarketcap、stockanalysis（次年 3 月底）））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2802.T,PE,2019,30.2,repo:ajinomoto/dist（Val 十年表（採用 P/E（companiesmarketcap）、companiesmarketcap、stockanalysis（次年 3 月底）））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2802.T,PE,2020,54.9,repo:ajinomoto/dist（Val 十年表（採用 P/E（companiesmarketcap）、companiesmarketcap、stockanalysis（次年 3 月底）））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2802.T,PE,2021,21.74,repo:ajinomoto/dist（Val 十年表（採用 P/E（companiesmarketcap）、companiesmarketcap、stockanalysis（次年 3 月底）））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2802.T,PE,2022,24.9067,repo:ajinomoto/dist（Val 十年表（採用 P/E（companiesmarketcap）、companiesmarketcap、stockanalysis（次年 3 月底）））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2802.T,PE,2023,28.15,repo:ajinomoto/dist（Val 十年表（採用 P/E（companiesmarketcap）、companiesmarketcap、stockanalysis（次年 3 月底）））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2802.T,PE,2024,58.0667,repo:ajinomoto/dist（Val 十年表（採用 P/E（companiesmarketcap）、companiesmarketcap、stockanalysis（次年 3 月底）））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2802.T,PE,2025,38.78,repo:ajinomoto/dist（Val 十年表（採用 P/E（companiesmarketcap）、companiesmarketcap、stockanalysis（次年 3 月底）））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+2809.T,PE,2021,16.73,https://stockanalysis.com/quote/tyo/2809/financials/ratios/,stockanalysis; fiscal year ends Nov 30 not calendar year-end; only 2021-2025 shown
+2809.T,PE,2022,21.22,https://stockanalysis.com/quote/tyo/2809/financials/ratios/,stockanalysis; fiscal year ends Nov 30 not calendar year-end; only 2021-2025 shown
+2809.T,PE,2023,27.22,https://stockanalysis.com/quote/tyo/2809/financials/ratios/,stockanalysis; fiscal year ends Nov 30 not calendar year-end; only 2021-2025 shown
+2809.T,PE,2024,22.32,https://stockanalysis.com/quote/tyo/2809/financials/ratios/,stockanalysis; fiscal year ends Nov 30 not calendar year-end; only 2021-2025 shown
+2809.T,PE,2025,19.54,https://stockanalysis.com/quote/tyo/2809/financials/ratios/,stockanalysis; fiscal year ends Nov 30 not calendar year-end; only 2021-2025 shown
+285A.T,PB,2025,6.56,https://companiesmarketcap.com/kioxia-holdings-corporation/pb-ratio/,only 2025 year-end available (IPO Dec 2024; 2020 shown N/A)
+2897.T,PE,2016,19.5,https://companiesmarketcap.com/nissin-foods/pe-ratio/,source also has 2026 row=18.8
+2897.T,PE,2017,25.5,https://companiesmarketcap.com/nissin-foods/pe-ratio/,source also has 2026 row=18.8
+2897.T,PE,2018,23.9,https://companiesmarketcap.com/nissin-foods/pe-ratio/,source also has 2026 row=18.8
+2897.T,PE,2019,38.0,https://companiesmarketcap.com/nissin-foods/pe-ratio/,source also has 2026 row=18.8
+2897.T,PE,2020,31.0,https://companiesmarketcap.com/nissin-foods/pe-ratio/,source also has 2026 row=18.8
+2897.T,PE,2021,20.1,https://companiesmarketcap.com/nissin-foods/pe-ratio/,source also has 2026 row=18.8
+2897.T,PE,2022,24.2,https://companiesmarketcap.com/nissin-foods/pe-ratio/,source also has 2026 row=18.8
+2897.T,PE,2023,26.5,https://companiesmarketcap.com/nissin-foods/pe-ratio/,source also has 2026 row=18.8
+2897.T,PE,2024,23.1,https://companiesmarketcap.com/nissin-foods/pe-ratio/,source also has 2026 row=18.8
+2897.T,PE,2025,16.5,https://companiesmarketcap.com/nissin-foods/pe-ratio/,source also has 2026 row=18.8
+300308.SZ,PE,2018,29,repo:innolight/dist（Val 十年表（companiesmarketcap（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300308.SZ,PE,2019,98.4,repo:innolight/dist（Val 十年表（companiesmarketcap（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300308.SZ,PE,2020,56.4,repo:innolight/dist（Val 十年表（companiesmarketcap（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300308.SZ,PE,2021,49.5,repo:innolight/dist（Val 十年表（companiesmarketcap（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300308.SZ,PE,2022,24.4,repo:innolight/dist（Val 十年表（companiesmarketcap（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300308.SZ,PE,2023,56,repo:innolight/dist（Val 十年表（companiesmarketcap（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300308.SZ,PE,2024,27.7,repo:innolight/dist（Val 十年表（companiesmarketcap（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300308.SZ,PE,2025,64.5,repo:innolight/dist（Val 十年表（companiesmarketcap（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300394.SZ,PE,2021,46.65,https://stockanalysis.com/quote/she/300394/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+300394.SZ,PE,2022,24.71,https://stockanalysis.com/quote/she/300394/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+300394.SZ,PE,2023,49.52,https://stockanalysis.com/quote/she/300394/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+300394.SZ,PE,2024,37.67,https://stockanalysis.com/quote/she/300394/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+300394.SZ,PE,2025,78.24,https://stockanalysis.com/quote/she/300394/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+300476.SZ,PE,2016,33.8,repo:victory_giant/dist（Val 十年表（companiesmarketcap（年底 P/E）、自算（stockanalysis 年底市值 ÷ 歸母淨利）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300476.SZ,PE,2017,30.9,repo:victory_giant/dist（Val 十年表（companiesmarketcap（年底 P/E）、自算（stockanalysis 年底市值 ÷ 歸母淨利）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300476.SZ,PE,2018,21.4,repo:victory_giant/dist（Val 十年表（companiesmarketcap（年底 P/E）、自算（stockanalysis 年底市值 ÷ 歸母淨利）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300476.SZ,PE,2019,25.9,repo:victory_giant/dist（Val 十年表（companiesmarketcap（年底 P/E）、自算（stockanalysis 年底市值 ÷ 歸母淨利）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300476.SZ,PE,2020,30.4,repo:victory_giant/dist（Val 十年表（companiesmarketcap（年底 P/E）、自算（stockanalysis 年底市值 ÷ 歸母淨利）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300476.SZ,PE,2021,36.5878,repo:victory_giant/dist（Val 十年表（companiesmarketcap（年底 P/E）、自算（stockanalysis 年底市值 ÷ 歸母淨利）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300476.SZ,PE,2022,13.9701,repo:victory_giant/dist（Val 十年表（companiesmarketcap（年底 P/E）、自算（stockanalysis 年底市值 ÷ 歸母淨利）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300476.SZ,PE,2023,23.4301,repo:victory_giant/dist（Val 十年表（companiesmarketcap（年底 P/E）、自算（stockanalysis 年底市值 ÷ 歸母淨利）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300476.SZ,PE,2024,32.8118,repo:victory_giant/dist（Val 十年表（companiesmarketcap（年底 P/E）、自算（stockanalysis 年底市值 ÷ 歸母淨利）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300476.SZ,PE,2025,58.6156,repo:victory_giant/dist（Val 十年表（companiesmarketcap（年底 P/E）、自算（stockanalysis 年底市值 ÷ 歸母淨利）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+300502.SZ,PE,2016,110,https://companiesmarketcap.com/eoptolink-technology/pe-ratio/,
+300502.SZ,PE,2017,82.4,https://companiesmarketcap.com/eoptolink-technology/pe-ratio/,
+300502.SZ,PE,2018,194,https://companiesmarketcap.com/eoptolink-technology/pe-ratio/,
+300502.SZ,PE,2019,59.2,https://companiesmarketcap.com/eoptolink-technology/pe-ratio/,
+300502.SZ,PE,2020,54.5,https://companiesmarketcap.com/eoptolink-technology/pe-ratio/,
+300502.SZ,PE,2021,40.8,https://companiesmarketcap.com/eoptolink-technology/pe-ratio/,
+300502.SZ,PE,2022,18.6,https://companiesmarketcap.com/eoptolink-technology/pe-ratio/,
+300502.SZ,PE,2023,70.8,https://companiesmarketcap.com/eoptolink-technology/pe-ratio/,
+300502.SZ,PE,2024,41.9,https://companiesmarketcap.com/eoptolink-technology/pe-ratio/,
+300502.SZ,PE,2025,65.0,https://companiesmarketcap.com/eoptolink-technology/pe-ratio/,
+3017.TW,PE,2016,10.3292,repo:avc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3017.TW,PE,2017,12.9084,repo:avc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3017.TW,PE,2018,12.5622,repo:avc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3017.TW,PE,2019,15.369,repo:avc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3017.TW,PE,2020,12.1956,repo:avc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3017.TW,PE,2021,10.743,repo:avc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3017.TW,PE,2022,9.5076,repo:avc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3017.TW,PE,2023,23.8483,repo:avc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3017.TW,PE,2024,29.3729,repo:avc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3017.TW,PE,2025,30.7098,repo:avc/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3035.TW,PE,2021,51.39,https://stockanalysis.com/quote/tpe/3035/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+3035.TW,PE,2022,14.43,https://stockanalysis.com/quote/tpe/3035/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+3035.TW,PE,2023,55.83,https://stockanalysis.com/quote/tpe/3035/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+3035.TW,PE,2024,60.29,https://stockanalysis.com/quote/tpe/3035/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+3035.TW,PE,2025,60.74,https://stockanalysis.com/quote/tpe/3035/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+3037.TW,PE,2017,53.6071,repo:unimicron/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3037.TW,PE,2018,18.3957,repo:unimicron/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3037.TW,PE,2019,17.625,repo:unimicron/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3037.TW,PE,2020,22.1845,repo:unimicron/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3037.TW,PE,2021,24.6119,repo:unimicron/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3037.TW,PE,2022,5.773,repo:unimicron/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3037.TW,PE,2023,22.1175,repo:unimicron/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3037.TW,PE,2024,42.0078,repo:unimicron/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3037.TW,PE,2025,50.25,repo:unimicron/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3044.TW,PE,2021,11.17,https://stockanalysis.com/quote/tpe/3044/financials/ratios/,stockanalysis source (only 2021-2025 shown
+3044.TW,PE,2022,7.97,https://stockanalysis.com/quote/tpe/3044/financials/ratios/,stockanalysis source (only 2021-2025 shown
+3044.TW,PE,2023,16.91,https://stockanalysis.com/quote/tpe/3044/financials/ratios/,stockanalysis source (only 2021-2025 shown
+3044.TW,PE,2024,12.38,https://stockanalysis.com/quote/tpe/3044/financials/ratios/,stockanalysis source (only 2021-2025 shown
+3044.TW,PE,2025,16.32,https://stockanalysis.com/quote/tpe/3044/financials/ratios/,stockanalysis source (only 2021-2025 shown
+3110.T,PE,2016,57.0,https://companiesmarketcap.com/nitto-boseki/pe-ratio/,P/E very high (>100) in 2020
+3110.T,PE,2017,65.5,https://companiesmarketcap.com/nitto-boseki/pe-ratio/,
+3110.T,PE,2018,38.4,https://companiesmarketcap.com/nitto-boseki/pe-ratio/,
+3110.T,PE,2019,45.7,https://companiesmarketcap.com/nitto-boseki/pe-ratio/,
+3110.T,PE,2020,154,https://companiesmarketcap.com/nitto-boseki/pe-ratio/,
+3110.T,PE,2021,92.4,https://companiesmarketcap.com/nitto-boseki/pe-ratio/,
+3110.T,PE,2022,80.4,https://companiesmarketcap.com/nitto-boseki/pe-ratio/,
+3110.T,PE,2023,131,https://companiesmarketcap.com/nitto-boseki/pe-ratio/,
+3110.T,PE,2024,379,https://companiesmarketcap.com/nitto-boseki/pe-ratio/,
+3110.T,PE,2025,57.8,https://companiesmarketcap.com/nitto-boseki/pe-ratio/,
+3189.TW,PE,2016,14.2116,repo:kinsus/dist（Val 十年表（兩來源平均 P/E、stockanalysis、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3189.TW,PE,2017,49.2727,repo:kinsus/dist（Val 十年表（兩來源平均 P/E、stockanalysis、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3189.TW,PE,2018,55.8974,repo:kinsus/dist（Val 十年表（兩來源平均 P/E、stockanalysis、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3189.TW,PE,2020,66.8595,repo:kinsus/dist（Val 十年表（兩來源平均 P/E、stockanalysis、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3189.TW,PE,2021,27.2198,repo:kinsus/dist（Val 十年表（兩來源平均 P/E、stockanalysis、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3189.TW,PE,2022,6.7675,repo:kinsus/dist（Val 十年表（兩來源平均 P/E、stockanalysis、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3189.TW,PE,2023,929.9718,repo:kinsus/dist（Val 十年表（兩來源平均 P/E、stockanalysis、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3189.TW,PE,2024,930.7959,repo:kinsus/dist（Val 十年表（兩來源平均 P/E、stockanalysis、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3189.TW,PE,2025,45.4046,repo:kinsus/dist（Val 十年表（兩來源平均 P/E、stockanalysis、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3231.TW,PE,2016,13.3,https://companiesmarketcap.com/wistron-corporation/pe-ratio/,
+3231.TW,PE,2017,10.7,https://companiesmarketcap.com/wistron-corporation/pe-ratio/,
+3231.TW,PE,2018,7.51,https://companiesmarketcap.com/wistron-corporation/pe-ratio/,
+3231.TW,PE,2019,8.85,https://companiesmarketcap.com/wistron-corporation/pe-ratio/,
+3231.TW,PE,2020,7.88,https://companiesmarketcap.com/wistron-corporation/pe-ratio/,
+3231.TW,PE,2021,6.54,https://companiesmarketcap.com/wistron-corporation/pe-ratio/,
+3231.TW,PE,2022,6.75,https://companiesmarketcap.com/wistron-corporation/pe-ratio/,
+3231.TW,PE,2023,22.8,https://companiesmarketcap.com/wistron-corporation/pe-ratio/,
+3231.TW,PE,2024,16.5,https://companiesmarketcap.com/wistron-corporation/pe-ratio/,
+3231.TW,PE,2025,16.3,https://companiesmarketcap.com/wistron-corporation/pe-ratio/,
+3324.TWO,PE,2017,19.9454,repo:auras/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3324.TWO,PE,2018,33.7586,repo:auras/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3324.TWO,PE,2019,18.7874,repo:auras/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3324.TWO,PE,2020,16.6149,repo:auras/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3324.TWO,PE,2021,15.3732,repo:auras/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3324.TWO,PE,2022,10.0809,repo:auras/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3324.TWO,PE,2023,24.6674,repo:auras/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3324.TWO,PE,2024,31.8067,repo:auras/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3324.TWO,PE,2025,35.7848,repo:auras/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3443.TW,PE,2016,16.9,repo:guc/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3443.TW,PE,2017,35.3,repo:guc/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3443.TW,PE,2018,26.4256,repo:guc/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3443.TW,PE,2019,48.9257,repo:guc/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3443.TW,PE,2020,51.685,repo:guc/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3443.TW,PE,2021,52.5307,repo:guc/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3443.TW,PE,2022,22.7746,repo:guc/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3443.TW,PE,2023,65.6815,repo:guc/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3443.TW,PE,2024,51.7578,repo:guc/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3443.TW,PE,2025,74.2211,repo:guc/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3653.TW,PE,2016,20.4741,repo:jentech/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3653.TW,PE,2017,30.4566,repo:jentech/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3653.TW,PE,2018,16.9631,repo:jentech/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3653.TW,PE,2019,35.8015,repo:jentech/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3653.TW,PE,2020,29.9274,repo:jentech/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3653.TW,PE,2021,41.4878,repo:jentech/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3653.TW,PE,2022,19.3791,repo:jentech/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3653.TW,PE,2023,46.7366,repo:jentech/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3653.TW,PE,2024,63.3585,repo:jentech/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3653.TW,PE,2025,74.5169,repo:jentech/dist（Val 十年表（Goodinfo（年底收盤 ÷ 當年 EPS）、stockanalysis（年度 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3661.TW,PE,2017,16.5,repo:alchip/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3661.TW,PE,2018,15.8754,repo:alchip/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3661.TW,PE,2019,31.5847,repo:alchip/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3661.TW,PE,2020,44.4641,repo:alchip/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3661.TW,PE,2021,46.8988,repo:alchip/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3661.TW,PE,2022,30.2867,repo:alchip/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3661.TW,PE,2023,71.3128,repo:alchip/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3661.TW,PE,2024,39.7123,repo:alchip/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3661.TW,PE,2025,50.5686,repo:alchip/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+3711.TW,PE,2016,9.23,https://companiesmarketcap.com/ase-group/pe-ratio/,page is for NYSE ADR ASX (same company as 3711.TW; no separate TW page found)
+3711.TW,PE,2017,11.7,https://companiesmarketcap.com/ase-group/pe-ratio/,page is for NYSE ADR ASX (same company as 3711.TW; no separate TW page found)
+3711.TW,PE,2018,9.07,https://companiesmarketcap.com/ase-group/pe-ratio/,page is for NYSE ADR ASX (same company as 3711.TW; no separate TW page found)
+3711.TW,PE,2019,28.4,https://companiesmarketcap.com/ase-group/pe-ratio/,page is for NYSE ADR ASX (same company as 3711.TW; no separate TW page found)
+3711.TW,PE,2020,11.6,https://companiesmarketcap.com/ase-group/pe-ratio/,page is for NYSE ADR ASX (same company as 3711.TW; no separate TW page found)
+3711.TW,PE,2021,6.92,https://companiesmarketcap.com/ase-group/pe-ratio/,page is for NYSE ADR ASX (same company as 3711.TW; no separate TW page found)
+3711.TW,PE,2022,5.72,https://companiesmarketcap.com/ase-group/pe-ratio/,page is for NYSE ADR ASX (same company as 3711.TW; no separate TW page found)
+3711.TW,PE,2023,18.6,https://companiesmarketcap.com/ase-group/pe-ratio/,page is for NYSE ADR ASX (same company as 3711.TW; no separate TW page found)
+3711.TW,PE,2024,20.8,https://companiesmarketcap.com/ase-group/pe-ratio/,page is for NYSE ADR ASX (same company as 3711.TW; no separate TW page found)
+3711.TW,PE,2025,26.6,https://companiesmarketcap.com/ase-group/pe-ratio/,page is for NYSE ADR ASX (same company as 3711.TW; no separate TW page found)
+4004.T,PE,2022,11.88,https://stockanalysis.com/quote/tyo/4004/financials/ratios/,stockanalysis FY2021-2025; 2021 and 2023 shown '-' (losses); CMC says no P/E data
+4004.T,PE,2024,9.87,https://stockanalysis.com/quote/tyo/4004/financials/ratios/,
+4004.T,PE,2025,40.68,https://stockanalysis.com/quote/tyo/4004/financials/ratios/,
+4062.T,PE,2016,44.1,repo:ibiden/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+4062.T,PE,2018,35.3,repo:ibiden/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+4062.T,PE,2019,137,repo:ibiden/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+4062.T,PE,2020,55.2,repo:ibiden/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+4062.T,PE,2021,53.1,repo:ibiden/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+4062.T,PE,2022,40.7,repo:ibiden/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+4062.T,PE,2023,26.8,repo:ibiden/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+4062.T,PE,2024,57.2,repo:ibiden/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+4062.T,PE,2025,33.6,repo:ibiden/dist（Val 年底 P/E 列）,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+4063.T,PE,2016,14.1,https://companiesmarketcap.com/shin-etsu-chemical/pe-ratio/,
+4063.T,PE,2017,20.0,https://companiesmarketcap.com/shin-etsu-chemical/pe-ratio/,
+4063.T,PE,2018,15.3,https://companiesmarketcap.com/shin-etsu-chemical/pe-ratio/,
+4063.T,PE,2019,11.6,https://companiesmarketcap.com/shin-etsu-chemical/pe-ratio/,
+4063.T,PE,2020,12.8,https://companiesmarketcap.com/shin-etsu-chemical/pe-ratio/,
+4063.T,PE,2021,24.5,https://companiesmarketcap.com/shin-etsu-chemical/pe-ratio/,
+4063.T,PE,2022,14.6,https://companiesmarketcap.com/shin-etsu-chemical/pe-ratio/,
+4063.T,PE,2023,11.5,https://companiesmarketcap.com/shin-etsu-chemical/pe-ratio/,
+4063.T,PE,2024,24.0,https://companiesmarketcap.com/shin-etsu-chemical/pe-ratio/,
+4063.T,PE,2025,15.7,https://companiesmarketcap.com/shin-etsu-chemical/pe-ratio/,
+4186.T,PE,,,https://companiesmarketcap.com/tokyo-ohka-kogyo/pe-ratio/,NOT FOUND: companiesmarketcap page exists but says no historical P/E data
+4186.T,PE,2021,15.39,https://stockanalysis.com/quote/tyo/4186/financials/ratios/,stockanalysis source (only 2021-2025); companiesmarketcap has no historical data
+4186.T,PE,2022,12.25,https://stockanalysis.com/quote/tyo/4186/financials/ratios/,stockanalysis source (only 2021-2025); companiesmarketcap has no historical data
+4186.T,PE,2023,29.62,https://stockanalysis.com/quote/tyo/4186/financials/ratios/,stockanalysis source (only 2021-2025); companiesmarketcap has no historical data
+4186.T,PE,2024,18.77,https://stockanalysis.com/quote/tyo/4186/financials/ratios/,stockanalysis source (only 2021-2025); companiesmarketcap has no historical data
+4186.T,PE,2025,20.87,https://stockanalysis.com/quote/tyo/4186/financials/ratios/,stockanalysis source (only 2021-2025); companiesmarketcap has no historical data
+4938.TW,PE,2016,6.05,https://companiesmarketcap.com/pegatron/pe-ratio/,
+4938.TW,PE,2017,7.90,https://companiesmarketcap.com/pegatron/pe-ratio/,
+4938.TW,PE,2018,7.78,https://companiesmarketcap.com/pegatron/pe-ratio/,
+4938.TW,PE,2019,6.53,https://companiesmarketcap.com/pegatron/pe-ratio/,
+4938.TW,PE,2020,6.56,https://companiesmarketcap.com/pegatron/pe-ratio/,
+4938.TW,PE,2021,7.17,https://companiesmarketcap.com/pegatron/pe-ratio/,
+4938.TW,PE,2022,9.70,https://companiesmarketcap.com/pegatron/pe-ratio/,
+4938.TW,PE,2023,13.5,https://companiesmarketcap.com/pegatron/pe-ratio/,
+4938.TW,PE,2024,13.7,https://companiesmarketcap.com/pegatron/pe-ratio/,
+4938.TW,PE,2025,12.7,https://companiesmarketcap.com/pegatron/pe-ratio/,
+4958.TW,PE,2021,9.84,https://stockanalysis.com/quote/tpe/4958/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+4958.TW,PE,2022,6.99,https://stockanalysis.com/quote/tpe/4958/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+4958.TW,PE,2023,16.64,https://stockanalysis.com/quote/tpe/4958/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+4958.TW,PE,2024,12.48,https://stockanalysis.com/quote/tpe/4958/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+4958.TW,PE,2025,21.75,https://stockanalysis.com/quote/tpe/4958/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+603083.SS,PE,2021,49.65,https://stockanalysis.com/quote/sha/603083/financials/ratios/,stockanalysis; 2016-2020 not shown
+603083.SS,PE,2022,16.75,https://stockanalysis.com/quote/sha/603083/financials/ratios/,stockanalysis; 2016-2020 not shown
+603083.SS,PE,2023,106.43,https://stockanalysis.com/quote/sha/603083/financials/ratios/,stockanalysis; 2016-2020 not shown
+603083.SS,PE,2024,65.29,https://stockanalysis.com/quote/sha/603083/financials/ratios/,stockanalysis; 2016-2020 not shown
+603083.SS,PE,2025,165.13,https://stockanalysis.com/quote/sha/603083/financials/ratios/,stockanalysis; 2016-2020 not shown
+6146.T,PE,2016,12.3,https://companiesmarketcap.com/disco-corp/pe-ratio/,
+6146.T,PE,2017,22.0,https://companiesmarketcap.com/disco-corp/pe-ratio/,
+6146.T,PE,2018,19.5,https://companiesmarketcap.com/disco-corp/pe-ratio/,
+6146.T,PE,2019,18.4,https://companiesmarketcap.com/disco-corp/pe-ratio/,
+6146.T,PE,2020,25.7,https://companiesmarketcap.com/disco-corp/pe-ratio/,
+6146.T,PE,2021,30.4,https://companiesmarketcap.com/disco-corp/pe-ratio/,
+6146.T,PE,2022,17.8,https://companiesmarketcap.com/disco-corp/pe-ratio/,
+6146.T,PE,2023,19.0,https://companiesmarketcap.com/disco-corp/pe-ratio/,
+6146.T,PE,2024,71.0,https://companiesmarketcap.com/disco-corp/pe-ratio/,
+6146.T,PE,2025,26.3,https://companiesmarketcap.com/disco-corp/pe-ratio/,
+6213.TW,PE,2021,17.29,https://stockanalysis.com/quote/tpe/6213/financials/ratios/,stockanalysis free tier shows only FY2021-2025; CMC has no page
+6213.TW,PE,2022,14.20,https://stockanalysis.com/quote/tpe/6213/financials/ratios/,
+6213.TW,PE,2023,45.49,https://stockanalysis.com/quote/tpe/6213/financials/ratios/,
+6213.TW,PE,2024,34.76,https://stockanalysis.com/quote/tpe/6213/financials/ratios/,
+6213.TW,PE,2025,27.28,https://stockanalysis.com/quote/tpe/6213/financials/ratios/,
+6239.TW,PE,2021,8.41,https://stockanalysis.com/quote/tpe/6239/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+6239.TW,PE,2022,6.81,https://stockanalysis.com/quote/tpe/6239/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+6239.TW,PE,2023,13.16,https://stockanalysis.com/quote/tpe/6239/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+6239.TW,PE,2024,13.43,https://stockanalysis.com/quote/tpe/6239/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+6239.TW,PE,2025,23.09,https://stockanalysis.com/quote/tpe/6239/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+6257.TW,PE,2021,9.53,https://stockanalysis.com/quote/tpe/6257/financials/ratios/,stockanalysis; 2016-2020 not shown
+6257.TW,PE,2022,7.31,https://stockanalysis.com/quote/tpe/6257/financials/ratios/,stockanalysis; 2016-2020 not shown
+6257.TW,PE,2023,17.14,https://stockanalysis.com/quote/tpe/6257/financials/ratios/,stockanalysis; 2016-2020 not shown
+6257.TW,PE,2024,11.78,https://stockanalysis.com/quote/tpe/6257/financials/ratios/,stockanalysis; 2016-2020 not shown
+6257.TW,PE,2025,18.88,https://stockanalysis.com/quote/tpe/6257/financials/ratios/,stockanalysis; 2016-2020 not shown
+6274.TWO,PE,2021,14.58,https://stockanalysis.com/quote/tpex/6274/financials/ratios/,stockanalysis source (only 2021-2025 shown
+6274.TWO,PE,2022,10.97,https://stockanalysis.com/quote/tpex/6274/financials/ratios/,stockanalysis source (only 2021-2025 shown
+6274.TWO,PE,2023,41.46,https://stockanalysis.com/quote/tpex/6274/financials/ratios/,stockanalysis source (only 2021-2025 shown
+6274.TWO,PE,2024,17.79,https://stockanalysis.com/quote/tpex/6274/financials/ratios/,stockanalysis source (only 2021-2025 shown
+6274.TWO,PE,2025,40.96,https://stockanalysis.com/quote/tpex/6274/financials/ratios/,stockanalysis source (only 2021-2025 shown
+6315.T,PE,2016,8.85,https://companiesmarketcap.com/towa-corporation/pe-ratio/,
+6315.T,PE,2017,11.6,https://companiesmarketcap.com/towa-corporation/pe-ratio/,
+6315.T,PE,2018,10.8,https://companiesmarketcap.com/towa-corporation/pe-ratio/,
+6315.T,PE,2019,18.5,https://companiesmarketcap.com/towa-corporation/pe-ratio/,
+6315.T,PE,2020,45.8,https://companiesmarketcap.com/towa-corporation/pe-ratio/,
+6315.T,PE,2021,19.2,https://companiesmarketcap.com/towa-corporation/pe-ratio/,
+6315.T,PE,2022,7.49,https://companiesmarketcap.com/towa-corporation/pe-ratio/,
+6315.T,PE,2023,7.02,https://companiesmarketcap.com/towa-corporation/pe-ratio/,
+6315.T,PE,2024,39.1,https://companiesmarketcap.com/towa-corporation/pe-ratio/,
+6315.T,PE,2025,13.4,https://companiesmarketcap.com/towa-corporation/pe-ratio/,
+6525.T,PE,2024,43.55,https://stockanalysis.com/quote/tyo/6525/financials/ratios/,stockanalysis; FY ends Mar 31
+6525.T,PE,2025,15.65,https://stockanalysis.com/quote/tyo/6525/financials/ratios/,stockanalysis; FY ends Mar 31
+6669.TW,PE,2019,16.0177,repo:wiwynn/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、Goodinfo））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+6669.TW,PE,2020,13.2972,repo:wiwynn/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、Goodinfo））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+6669.TW,PE,2021,21.2717,repo:wiwynn/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、Goodinfo））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+6669.TW,PE,2022,9.4105,repo:wiwynn/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、Goodinfo））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+6669.TW,PE,2023,25.8977,repo:wiwynn/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、Goodinfo））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+6669.TW,PE,2024,20.15,repo:wiwynn/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、Goodinfo））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+6669.TW,PE,2025,16.1528,repo:wiwynn/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、Goodinfo））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+6857.T,PE,2016,23.9,https://companiesmarketcap.com/advantest/pe-ratio/,source has no 2025 row
+6857.T,PE,2017,22.8,https://companiesmarketcap.com/advantest/pe-ratio/,source has no 2025 row
+6857.T,PE,2018,19.6,https://companiesmarketcap.com/advantest/pe-ratio/,source has no 2025 row
+6857.T,PE,2019,8.10,https://companiesmarketcap.com/advantest/pe-ratio/,source has no 2025 row
+6857.T,PE,2020,15.1,https://companiesmarketcap.com/advantest/pe-ratio/,source has no 2025 row
+6857.T,PE,2021,26.2,https://companiesmarketcap.com/advantest/pe-ratio/,source has no 2025 row
+6857.T,PE,2022,21.1,https://companiesmarketcap.com/advantest/pe-ratio/,source has no 2025 row
+6857.T,PE,2023,16.8,https://companiesmarketcap.com/advantest/pe-ratio/,source has no 2025 row
+6857.T,PE,2024,76.3,https://companiesmarketcap.com/advantest/pe-ratio/,source has no 2025 row
+688183.SS,PE,2021,43.94,https://stockanalysis.com/quote/sha/688183/financials/ratios/,stockanalysis free tier FY2021-2025; 2023 shown as '-' (loss); CMC has no page
+688183.SS,PE,2022,24.75,https://stockanalysis.com/quote/sha/688183/financials/ratios/,
+688183.SS,PE,2024,96.54,https://stockanalysis.com/quote/sha/688183/financials/ratios/,
+688183.SS,PE,2025,53.50,https://stockanalysis.com/quote/sha/688183/financials/ratios/,
+6920.T,PE,2022,58.61,https://stockanalysis.com/quote/tyo/6920/financials/ratios/,stockanalysis; FY ends Jun 30
+6920.T,PE,2023,42.15,https://stockanalysis.com/quote/tyo/6920/financials/ratios/,stockanalysis; FY ends Jun 30
+6920.T,PE,2024,55.10,https://stockanalysis.com/quote/tyo/6920/financials/ratios/,stockanalysis; FY ends Jun 30
+6920.T,PE,2025,20.68,https://stockanalysis.com/quote/tyo/6920/financials/ratios/,stockanalysis; FY ends Jun 30
+7729.T,PE,2022,9.25,https://stockanalysis.com/quote/tyo/7729/financials/ratios/,"stockanalysis; FISCAL YEAR END MARCH (year col = FYE calendar year, e.g. 2022=Mar-2022), NOT calendar year-end; CMC page not found"
+7729.T,PE,2023,8.82,https://stockanalysis.com/quote/tyo/7729/financials/ratios/,"stockanalysis; FISCAL YEAR END MARCH (year col = FYE calendar year, e.g. 2022=Mar-2022), NOT calendar year-end; CMC page not found"
+7729.T,PE,2024,25.38,https://stockanalysis.com/quote/tyo/7729/financials/ratios/,"stockanalysis; FISCAL YEAR END MARCH (year col = FYE calendar year, e.g. 2022=Mar-2022), NOT calendar year-end; CMC page not found"
+7729.T,PE,2025,12.57,https://stockanalysis.com/quote/tyo/7729/financials/ratios/,"stockanalysis; FISCAL YEAR END MARCH (year col = FYE calendar year, e.g. 2022=Mar-2022), NOT calendar year-end; CMC page not found"
+8035.T,PE,2016,12.0,https://companiesmarketcap.com/tokyo-electron/pe-ratio/,source has no 2025 row
+8035.T,PE,2017,13.8,https://companiesmarketcap.com/tokyo-electron/pe-ratio/,source has no 2025 row
+8035.T,PE,2018,13.2,https://companiesmarketcap.com/tokyo-electron/pe-ratio/,source has no 2025 row
+8035.T,PE,2019,9.33,https://companiesmarketcap.com/tokyo-electron/pe-ratio/,source has no 2025 row
+8035.T,PE,2020,15.4,https://companiesmarketcap.com/tokyo-electron/pe-ratio/,source has no 2025 row
+8035.T,PE,2021,27.0,https://companiesmarketcap.com/tokyo-electron/pe-ratio/,source has no 2025 row
+8035.T,PE,2022,20.5,https://companiesmarketcap.com/tokyo-electron/pe-ratio/,source has no 2025 row
+8035.T,PE,2023,15.3,https://companiesmarketcap.com/tokyo-electron/pe-ratio/,source has no 2025 row
+8035.T,PE,2024,47.7,https://companiesmarketcap.com/tokyo-electron/pe-ratio/,source has no 2025 row
+8046.TW,PE,2019,95.7292,repo:nanya_pcb/dist（Val 十年表（兩來源平均 P/E、stockanalysis、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+8046.TW,PE,2020,32.0988,repo:nanya_pcb/dist（Val 十年表（兩來源平均 P/E、stockanalysis、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+8046.TW,PE,2021,34.9253,repo:nanya_pcb/dist（Val 十年表（兩來源平均 P/E、stockanalysis、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+8046.TW,PE,2022,7.557,repo:nanya_pcb/dist（Val 十年表（兩來源平均 P/E、stockanalysis、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+8046.TW,PE,2023,27.9422,repo:nanya_pcb/dist（Val 十年表（兩來源平均 P/E、stockanalysis、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+8046.TW,PE,2024,410.8612,repo:nanya_pcb/dist（Val 十年表（兩來源平均 P/E、stockanalysis、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+8046.TW,PE,2025,80.0282,repo:nanya_pcb/dist（Val 十年表（兩來源平均 P/E、stockanalysis、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+8150.TW,PE,2021,7.16,https://stockanalysis.com/quote/tpe/8150/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+8150.TW,PE,2022,7.23,https://stockanalysis.com/quote/tpe/8150/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+8150.TW,PE,2023,16.23,https://stockanalysis.com/quote/tpe/8150/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+8150.TW,PE,2024,16.06,https://stockanalysis.com/quote/tpe/8150/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+8150.TW,PE,2025,66.22,https://stockanalysis.com/quote/tpe/8150/financials/ratios/,stockanalysis FY-end (companiesmarketcap page unavailable); only 2021-2025 shown
+8155.TWO,PE,2021,21.16,https://stockanalysis.com/quote/tpex/8155/financials/ratios/,stockanalysis; 2016-2020 not shown
+8155.TWO,PE,2022,9.36,https://stockanalysis.com/quote/tpex/8155/financials/ratios/,stockanalysis; 2016-2020 not shown
+8155.TWO,PE,2023,38.88,https://stockanalysis.com/quote/tpex/8155/financials/ratios/,stockanalysis; 2016-2020 not shown
+8155.TWO,PE,2024,25.88,https://stockanalysis.com/quote/tpex/8155/financials/ratios/,stockanalysis; 2016-2020 not shown
+8155.TWO,PE,2025,24.88,https://stockanalysis.com/quote/tpex/8155/financials/ratios/,stockanalysis; 2016-2020 not shown
+AAOI,PE,2016,13.0,https://companiesmarketcap.com/applied-optoelectronics/pe-ratio/,2020 not shown by source; losses 2018-2025; 2022 value <1 (-0.80) broken-looking
+AAOI,PE,2017,9.77,https://companiesmarketcap.com/applied-optoelectronics/pe-ratio/,2020 not shown by source; losses 2018-2025; 2022 value <1 (-0.80) broken-looking
+AAOI,PE,2018,-154,https://companiesmarketcap.com/applied-optoelectronics/pe-ratio/,2020 not shown by source; losses 2018-2025; 2022 value <1 (-0.80) broken-looking
+AAOI,PE,2019,-3.60,https://companiesmarketcap.com/applied-optoelectronics/pe-ratio/,2020 not shown by source; losses 2018-2025; 2022 value <1 (-0.80) broken-looking
+AAOI,PE,2021,-2.54,https://companiesmarketcap.com/applied-optoelectronics/pe-ratio/,2020 not shown by source; losses 2018-2025; 2022 value <1 (-0.80) broken-looking
+AAOI,PE,2022,-0.7975,https://companiesmarketcap.com/applied-optoelectronics/pe-ratio/,2020 not shown by source; losses 2018-2025; 2022 value <1 (-0.80) broken-looking
+AAOI,PE,2023,-10.9,https://companiesmarketcap.com/applied-optoelectronics/pe-ratio/,2020 not shown by source; losses 2018-2025; 2022 value <1 (-0.80) broken-looking
+AAOI,PE,2024,-8.61,https://companiesmarketcap.com/applied-optoelectronics/pe-ratio/,2020 not shown by source; losses 2018-2025; 2022 value <1 (-0.80) broken-looking
+AAOI,PE,2025,-53.6,https://companiesmarketcap.com/applied-optoelectronics/pe-ratio/,2020 not shown by source; losses 2018-2025; 2022 value <1 (-0.80) broken-looking
+ALAB,PE,2024,-77.0,https://companiesmarketcap.com/astera-labs/pe-ratio/,IPO 2024; 2024 negative
+ALAB,PE,2025,127,https://companiesmarketcap.com/astera-labs/pe-ratio/,
+AMAT,PE,2016,18.6,https://companiesmarketcap.com/applied-materials/pe-ratio/,
+AMAT,PE,2017,14.7,https://companiesmarketcap.com/applied-materials/pe-ratio/,
+AMAT,PE,2018,9.20,https://companiesmarketcap.com/applied-materials/pe-ratio/,
+AMAT,PE,2019,20.0,https://companiesmarketcap.com/applied-materials/pe-ratio/,
+AMAT,PE,2020,21.0,https://companiesmarketcap.com/applied-materials/pe-ratio/,
+AMAT,PE,2021,23.5,https://companiesmarketcap.com/applied-materials/pe-ratio/,
+AMAT,PE,2022,12.7,https://companiesmarketcap.com/applied-materials/pe-ratio/,
+AMAT,PE,2023,19.6,https://companiesmarketcap.com/applied-materials/pe-ratio/,
+AMAT,PE,2024,18.6,https://companiesmarketcap.com/applied-materials/pe-ratio/,
+AMAT,PE,2025,29.5,https://companiesmarketcap.com/applied-materials/pe-ratio/,
+AMD,PE,2016,-18.6,https://companiesmarketcap.com/amd/pe-ratio/,
+AMD,PE,2017,343,https://companiesmarketcap.com/amd/pe-ratio/,
+AMD,PE,2018,54.3,https://companiesmarketcap.com/amd/pe-ratio/,
+AMD,PE,2019,153,https://companiesmarketcap.com/amd/pe-ratio/,
+AMD,PE,2020,44.1,https://companiesmarketcap.com/amd/pe-ratio/,
+AMD,PE,2021,55.1,https://companiesmarketcap.com/amd/pe-ratio/,
+AMD,PE,2022,72.8,https://companiesmarketcap.com/amd/pe-ratio/,
+AMD,PE,2023,283,https://companiesmarketcap.com/amd/pe-ratio/,
+AMD,PE,2024,118,https://companiesmarketcap.com/amd/pe-ratio/,
+AMD,PE,2025,80.2,https://companiesmarketcap.com/amd/pe-ratio/,
+AMKR,PE,2016,14.8449,repo:amkr/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+AMKR,PE,2017,8.9151,repo:amkr/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+AMKR,PE,2018,11.8387,repo:amkr/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+AMKR,PE,2019,25.15,repo:amkr/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+AMKR,PE,2020,10.4357,repo:amkr/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+AMKR,PE,2021,9.1559,repo:amkr/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+AMKR,PE,2022,7.5053,repo:amkr/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+AMKR,PE,2023,22.3438,repo:amkr/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+AMKR,PE,2024,17.7825,repo:amkr/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+AMKR,PE,2025,26.21,repo:amkr/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、自算））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+ANET,PE,2016,37.53,repo:arista/dist（Val 十年表（companiesmarketcap（年底 P/E）、Macrotrends（12 月 31 日 ÷ TTM GAAP EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+ANET,PE,2017,43.43,repo:arista/dist（Val 十年表（companiesmarketcap（年底 P/E）、Macrotrends（12 月 31 日 ÷ TTM GAAP EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+ANET,PE,2018,25.855,repo:arista/dist（Val 十年表（companiesmarketcap（年底 P/E）、Macrotrends（12 月 31 日 ÷ TTM GAAP EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+ANET,PE,2019,18.61,repo:arista/dist（Val 十年表（companiesmarketcap（年底 P/E）、Macrotrends（12 月 31 日 ÷ TTM GAAP EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+ANET,PE,2020,35.585,repo:arista/dist（Val 十年表（companiesmarketcap（年底 P/E）、Macrotrends（12 月 31 日 ÷ TTM GAAP EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+ANET,PE,2021,53.45,repo:arista/dist（Val 十年表（companiesmarketcap（年底 P/E）、Macrotrends（12 月 31 日 ÷ TTM GAAP EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+ANET,PE,2022,27.96,repo:arista/dist（Val 十年表（companiesmarketcap（年底 P/E）、Macrotrends（12 月 31 日 ÷ TTM GAAP EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+ANET,PE,2023,35.375,repo:arista/dist（Val 十年表（companiesmarketcap（年底 P/E）、Macrotrends（12 月 31 日 ÷ TTM GAAP EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+ANET,PE,2024,48.6,repo:arista/dist（Val 十年表（companiesmarketcap（年底 P/E）、Macrotrends（12 月 31 日 ÷ TTM GAAP EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+ANET,PE,2025,46.8,repo:arista/dist（Val 十年表（companiesmarketcap（年底 P/E）、Macrotrends（12 月 31 日 ÷ TTM GAAP EPS）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+ASM.AS,PE,2023,30.5,https://companiesmarketcap.com/asm-international/pe-ratio/,
+ASM.AS,PE,2024,39.8,https://companiesmarketcap.com/asm-international/pe-ratio/,page only lists 2023-2024 in range
+ASML,PE,2016,27.3,https://companiesmarketcap.com/asml/pe-ratio/,
+ASML,PE,2017,28.4,https://companiesmarketcap.com/asml/pe-ratio/,
+ASML,PE,2018,20.4,https://companiesmarketcap.com/asml/pe-ratio/,
+ASML,PE,2019,41.0,https://companiesmarketcap.com/asml/pe-ratio/,
+ASML,PE,2020,46.9,https://companiesmarketcap.com/asml/pe-ratio/,
+ASML,PE,2021,46.1,https://companiesmarketcap.com/asml/pe-ratio/,
+ASML,PE,2022,36.2,https://companiesmarketcap.com/asml/pe-ratio/,
+ASML,PE,2023,34.6,https://companiesmarketcap.com/asml/pe-ratio/,
+ASML,PE,2024,33.4,https://companiesmarketcap.com/asml/pe-ratio/,
+ASML,PE,2025,37.5,https://companiesmarketcap.com/asml/pe-ratio/,
+ATS.VI,PE,2016,7.69,https://companiesmarketcap.com/ats-austria-technologie-systemtechnik/pe-ratio/,FY Mar; negative = loss years
+ATS.VI,PE,2017,-15.0,https://companiesmarketcap.com/ats-austria-technologie-systemtechnik/pe-ratio/,FY Mar; negative = loss years
+ATS.VI,PE,2018,14.2,https://companiesmarketcap.com/ats-austria-technologie-systemtechnik/pe-ratio/,FY Mar; negative = loss years
+ATS.VI,PE,2019,6.97,https://companiesmarketcap.com/ats-austria-technologie-systemtechnik/pe-ratio/,FY Mar; negative = loss years
+ATS.VI,PE,2020,41.7,https://companiesmarketcap.com/ats-austria-technologie-systemtechnik/pe-ratio/,FY Mar; negative = loss years
+ATS.VI,PE,2021,28.3,https://companiesmarketcap.com/ats-austria-technologie-systemtechnik/pe-ratio/,FY Mar; negative = loss years
+ATS.VI,PE,2022,20.6,https://companiesmarketcap.com/ats-austria-technologie-systemtechnik/pe-ratio/,FY Mar; negative = loss years
+ATS.VI,PE,2023,9.33,https://companiesmarketcap.com/ats-austria-technologie-systemtechnik/pe-ratio/,FY Mar; negative = loss years
+ATS.VI,PE,2024,-13.9,https://companiesmarketcap.com/ats-austria-technologie-systemtechnik/pe-ratio/,FY Mar; negative = loss years
+ATS.VI,PE,2025,6.94,https://companiesmarketcap.com/ats-austria-technologie-systemtechnik/pe-ratio/,FY Mar; negative = loss years
+AVGO,PE,2016,-34.4,https://companiesmarketcap.com/broadcom/pe-ratio/,2018 value 7.16 and 2024 182 look anomalous (one-offs); 2016 negative
+AVGO,PE,2017,46.1,https://companiesmarketcap.com/broadcom/pe-ratio/,
+AVGO,PE,2018,7.16,https://companiesmarketcap.com/broadcom/pe-ratio/,
+AVGO,PE,2019,40.3,https://companiesmarketcap.com/broadcom/pe-ratio/,
+AVGO,PE,2020,59.8,https://companiesmarketcap.com/broadcom/pe-ratio/,
+AVGO,PE,2021,39.4,https://companiesmarketcap.com/broadcom/pe-ratio/,
+AVGO,PE,2022,19.6,https://companiesmarketcap.com/broadcom/pe-ratio/,
+AVGO,PE,2023,32.3,https://companiesmarketcap.com/broadcom/pe-ratio/,
+AVGO,PE,2024,182,https://companiesmarketcap.com/broadcom/pe-ratio/,
+AVGO,PE,2025,70.6,https://companiesmarketcap.com/broadcom/pe-ratio/,
+BESI.AS,PE,2016,12.14,https://www.macrotrends.net/stocks/charts/BESIY/be-semiconductor-industries/pe-ratio,macrotrends (BESIY ADR); 2025 not shown
+BESI.AS,PE,2017,12.33,https://www.macrotrends.net/stocks/charts/BESIY/be-semiconductor-industries/pe-ratio,macrotrends (BESIY ADR); 2025 not shown
+BESI.AS,PE,2018,8.01,https://www.macrotrends.net/stocks/charts/BESIY/be-semiconductor-industries/pe-ratio,macrotrends (BESIY ADR); 2025 not shown
+BESI.AS,PE,2019,27.37,https://www.macrotrends.net/stocks/charts/BESIY/be-semiconductor-industries/pe-ratio,macrotrends (BESIY ADR); 2025 not shown
+BESI.AS,PE,2020,26.94,https://www.macrotrends.net/stocks/charts/BESIY/be-semiconductor-industries/pe-ratio,macrotrends (BESIY ADR); 2025 not shown
+BESI.AS,PE,2021,18.62,https://www.macrotrends.net/stocks/charts/BESIY/be-semiconductor-industries/pe-ratio,macrotrends (BESIY ADR); 2025 not shown
+BESI.AS,PE,2022,18.21,https://www.macrotrends.net/stocks/charts/BESIY/be-semiconductor-industries/pe-ratio,macrotrends (BESIY ADR); 2025 not shown
+BESI.AS,PE,2023,60.96,https://www.macrotrends.net/stocks/charts/BESIY/be-semiconductor-industries/pe-ratio,macrotrends (BESIY ADR); 2025 not shown
+BESI.AS,PE,2024,53.84,https://www.macrotrends.net/stocks/charts/BESIY/be-semiconductor-industries/pe-ratio,macrotrends (BESIY ADR); 2025 not shown
+CIEN,PE,2016,46.9,https://companiesmarketcap.com/ciena/pe-ratio/,2017 P/E 2.37 suspicious (tax-benefit-inflated earnings)
+CIEN,PE,2017,2.37,https://companiesmarketcap.com/ciena/pe-ratio/,2017 P/E 2.37 suspicious (tax-benefit-inflated earnings)
+CIEN,PE,2018,-14.2,https://companiesmarketcap.com/ciena/pe-ratio/,2017 P/E 2.37 suspicious (tax-benefit-inflated earnings)
+CIEN,PE,2019,26.0,https://companiesmarketcap.com/ciena/pe-ratio/,2017 P/E 2.37 suspicious (tax-benefit-inflated earnings)
+CIEN,PE,2020,22.6,https://companiesmarketcap.com/ciena/pe-ratio/,2017 P/E 2.37 suspicious (tax-benefit-inflated earnings)
+CIEN,PE,2021,23.9,https://companiesmarketcap.com/ciena/pe-ratio/,2017 P/E 2.37 suspicious (tax-benefit-inflated earnings)
+CIEN,PE,2022,50.0,https://companiesmarketcap.com/ciena/pe-ratio/,2017 P/E 2.37 suspicious (tax-benefit-inflated earnings)
+CIEN,PE,2023,26.2,https://companiesmarketcap.com/ciena/pe-ratio/,2017 P/E 2.37 suspicious (tax-benefit-inflated earnings)
+CIEN,PE,2024,146,https://companiesmarketcap.com/ciena/pe-ratio/,2017 P/E 2.37 suspicious (tax-benefit-inflated earnings)
+CIEN,PE,2025,272,https://companiesmarketcap.com/ciena/pe-ratio/,2017 P/E 2.37 suspicious (tax-benefit-inflated earnings)
+CLS,PE,2016,12.3,https://companiesmarketcap.com/celestica/pe-ratio/,
+CLS,PE,2017,14.2,https://companiesmarketcap.com/celestica/pe-ratio/,
+CLS,PE,2018,12.2,https://companiesmarketcap.com/celestica/pe-ratio/,
+CLS,PE,2019,15.9,https://companiesmarketcap.com/celestica/pe-ratio/,
+CLS,PE,2020,16.8,https://companiesmarketcap.com/celestica/pe-ratio/,
+CLS,PE,2021,13.4,https://companiesmarketcap.com/celestica/pe-ratio/,
+CLS,PE,2022,9.55,https://companiesmarketcap.com/celestica/pe-ratio/,
+CLS,PE,2023,14.4,https://companiesmarketcap.com/celestica/pe-ratio/,
+CLS,PE,2024,25.4,https://companiesmarketcap.com/celestica/pe-ratio/,
+CLS,PE,2025,40.9,https://companiesmarketcap.com/celestica/pe-ratio/,
+COHR,PE,2016,26.825,repo:cohr/dist（Val 十年表（companiesmarketcap（年底 P/E）、macrotrends（12 月底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+COHR,PE,2017,34.935,repo:cohr/dist（Val 十年表（companiesmarketcap（年底 P/E）、macrotrends（12 月底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+COHR,PE,2018,18.64,repo:cohr/dist（Val 十年表（companiesmarketcap（年底 P/E）、macrotrends（12 月底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+COHR,PE,2020,43.44,repo:cohr/dist（Val 十年表（companiesmarketcap（年底 P/E）、macrotrends（12 月底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+COHR,PE,2021,30.15,repo:cohr/dist（Val 十年表（companiesmarketcap（年底 P/E）、macrotrends（12 月底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+COHR,PE,2025,158,repo:cohr/dist（Val 十年表（companiesmarketcap（年底 P/E）、macrotrends（12 月底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+COHU,PE,2016,111,https://companiesmarketcap.com/cohu/pe-ratio/,
+COHU,PE,2017,18.1,https://companiesmarketcap.com/cohu/pe-ratio/,
+COHU,PE,2018,-28.7,https://companiesmarketcap.com/cohu/pe-ratio/,
+COHU,PE,2019,-13.5,https://companiesmarketcap.com/cohu/pe-ratio/,
+COHU,PE,2020,-112,https://companiesmarketcap.com/cohu/pe-ratio/,
+COHU,PE,2021,10.9,https://companiesmarketcap.com/cohu/pe-ratio/,
+COHU,PE,2022,15.9,https://companiesmarketcap.com/cohu/pe-ratio/,
+COHU,PE,2023,60.0,https://companiesmarketcap.com/cohu/pe-ratio/,
+COHU,PE,2024,-17.8,https://companiesmarketcap.com/cohu/pe-ratio/,
+COHU,PE,2025,-14.6,https://companiesmarketcap.com/cohu/pe-ratio/,
+CRDO,PE,2023,-92.7,https://companiesmarketcap.com/credo-technology/pe-ratio/,IPO 2022; source starts 2023
+CRDO,PE,2024,-456,https://companiesmarketcap.com/credo-technology/pe-ratio/,IPO 2022; source starts 2023
+CRDO,PE,2025,118,https://companiesmarketcap.com/credo-technology/pe-ratio/,IPO 2022; source starts 2023
+CSCO,PE,2016,11.0,https://companiesmarketcap.com/cisco/pe-ratio/,2018 inflated by tax-reform charge
+CSCO,PE,2017,15.6,https://companiesmarketcap.com/cisco/pe-ratio/,2018 inflated by tax-reform charge
+CSCO,PE,2018,95.6,https://companiesmarketcap.com/cisco/pe-ratio/,2018 inflated by tax-reform charge
+CSCO,PE,2019,15.8,https://companiesmarketcap.com/cisco/pe-ratio/,2018 inflated by tax-reform charge
+CSCO,PE,2020,15.7,https://companiesmarketcap.com/cisco/pe-ratio/,2018 inflated by tax-reform charge
+CSCO,PE,2021,21.0,https://companiesmarketcap.com/cisco/pe-ratio/,2018 inflated by tax-reform charge
+CSCO,PE,2022,15.8,https://companiesmarketcap.com/cisco/pe-ratio/,2018 inflated by tax-reform charge
+CSCO,PE,2023,14.4,https://companiesmarketcap.com/cisco/pe-ratio/,2018 inflated by tax-reform charge
+CSCO,PE,2024,24.8,https://companiesmarketcap.com/cisco/pe-ratio/,2018 inflated by tax-reform charge
+CSCO,PE,2025,28.9,https://companiesmarketcap.com/cisco/pe-ratio/,2018 inflated by tax-reform charge
+DELL,PE,2019,3.815,repo:dell/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、Macrotrends））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+DELL,PE,2020,9.255,repo:dell/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、Macrotrends））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+DELL,PE,2021,6.57,repo:dell/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、Macrotrends））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+DELL,PE,2022,13.695,repo:dell/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、Macrotrends））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+DELL,PE,2023,19.22,repo:dell/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、Macrotrends））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+DELL,PE,2024,17.975,repo:dell/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、Macrotrends））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+DELL,PE,2025,16.5,repo:dell/dist（Val 十年表（兩來源平均 P/E、companiesmarketcap、Macrotrends））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+ETN,PE,2016,13.1,https://companiesmarketcap.com/eaton/pe-ratio/,
+ETN,PE,2017,10.0,https://companiesmarketcap.com/eaton/pe-ratio/,
+ETN,PE,2018,12.1,https://companiesmarketcap.com/eaton/pe-ratio/,
+ETN,PE,2019,16.2,https://companiesmarketcap.com/eaton/pe-ratio/,
+ETN,PE,2020,31.6,https://companiesmarketcap.com/eaton/pe-ratio/,
+ETN,PE,2021,30.2,https://companiesmarketcap.com/eaton/pe-ratio/,
+ETN,PE,2022,24.4,https://companiesmarketcap.com/eaton/pe-ratio/,
+ETN,PE,2023,29.2,https://companiesmarketcap.com/eaton/pe-ratio/,
+ETN,PE,2024,34.4,https://companiesmarketcap.com/eaton/pe-ratio/,
+ETN,PE,2025,30.3,https://companiesmarketcap.com/eaton/pe-ratio/,
+FLEX,PE,2016,20.2,https://companiesmarketcap.com/flex/pe-ratio/,2019 -223 loss/distortion
+FLEX,PE,2017,13.7,https://companiesmarketcap.com/flex/pe-ratio/,2019 -223 loss/distortion
+FLEX,PE,2018,23.1,https://companiesmarketcap.com/flex/pe-ratio/,2019 -223 loss/distortion
+FLEX,PE,2019,-223,https://companiesmarketcap.com/flex/pe-ratio/,2019 -223 loss/distortion
+FLEX,PE,2020,16.3,https://companiesmarketcap.com/flex/pe-ratio/,2019 -223 loss/distortion
+FLEX,PE,2021,6.72,https://companiesmarketcap.com/flex/pe-ratio/,2019 -223 loss/distortion
+FLEX,PE,2022,8.99,https://companiesmarketcap.com/flex/pe-ratio/,2019 -223 loss/distortion
+FLEX,PE,2023,13.4,https://companiesmarketcap.com/flex/pe-ratio/,2019 -223 loss/distortion
+FLEX,PE,2024,15.1,https://companiesmarketcap.com/flex/pe-ratio/,2019 -223 loss/distortion
+FLEX,PE,2025,26.4,https://companiesmarketcap.com/flex/pe-ratio/,2019 -223 loss/distortion
+FN,PE,2016,16.7,repo:fabrinet/dist（Val 十年表（companiesmarketcap（年底 P/E）、macrotrends（12 月底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+FN,PE,2017,12.105,repo:fabrinet/dist（Val 十年表（companiesmarketcap（年底 P/E）、macrotrends（12 月底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+FN,PE,2018,18.515,repo:fabrinet/dist（Val 十年表（companiesmarketcap（年底 P/E）、macrotrends（12 月底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+FN,PE,2019,20.36,repo:fabrinet/dist（Val 十年表（companiesmarketcap（年底 P/E）、macrotrends（12 月底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+FN,PE,2020,23.185,repo:fabrinet/dist（Val 十年表（companiesmarketcap（年底 P/E）、macrotrends（12 月底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+FN,PE,2021,25.395,repo:fabrinet/dist（Val 十年表（companiesmarketcap（年底 P/E）、macrotrends（12 月底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+FN,PE,2022,20.13,repo:fabrinet/dist（Val 十年表（companiesmarketcap（年底 P/E）、macrotrends（12 月底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+FN,PE,2023,27.35,repo:fabrinet/dist（Val 十年表（companiesmarketcap（年底 P/E）、macrotrends（12 月底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+FN,PE,2024,24.4,repo:fabrinet/dist（Val 十年表（companiesmarketcap（年底 P/E）、macrotrends（12 月底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+FN,PE,2025,43.3,repo:fabrinet/dist（Val 十年表（companiesmarketcap（年底 P/E）、macrotrends（12 月底 P/E）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+FORM,PE,2016,-280,https://companiesmarketcap.com/formfactor/pe-ratio/,2016 -280 near-zero earnings
+FORM,PE,2017,27.9,https://companiesmarketcap.com/formfactor/pe-ratio/,
+FORM,PE,2018,10.1,https://companiesmarketcap.com/formfactor/pe-ratio/,
+FORM,PE,2019,49.9,https://companiesmarketcap.com/formfactor/pe-ratio/,
+FORM,PE,2020,41.8,https://companiesmarketcap.com/formfactor/pe-ratio/,
+FORM,PE,2021,42.7,https://companiesmarketcap.com/formfactor/pe-ratio/,
+FORM,PE,2022,34.2,https://companiesmarketcap.com/formfactor/pe-ratio/,
+FORM,PE,2023,39.0,https://companiesmarketcap.com/formfactor/pe-ratio/,
+FORM,PE,2024,48.9,https://companiesmarketcap.com/formfactor/pe-ratio/,
+FORM,PE,2025,79.7,https://companiesmarketcap.com/formfactor/pe-ratio/,
+GFS,PE,2021,-138,https://companiesmarketcap.com/globalfoundries/pe-ratio/,
+GFS,PE,2022,20.2,https://companiesmarketcap.com/globalfoundries/pe-ratio/,
+GFS,PE,2023,32.9,https://companiesmarketcap.com/globalfoundries/pe-ratio/,
+GFS,PE,2024,-89.4,https://companiesmarketcap.com/globalfoundries/pe-ratio/,
+GFS,PE,2025,21.8,https://companiesmarketcap.com/globalfoundries/pe-ratio/,
+GLW,PE,2016,5.3,https://companiesmarketcap.com/corning/pe-ratio/,2016 5.30 inflated earnings (one-off gain)
+GLW,PE,2017,-35.8,https://companiesmarketcap.com/corning/pe-ratio/,2016 5.30 inflated earnings (one-off gain)
+GLW,PE,2018,20.1,https://companiesmarketcap.com/corning/pe-ratio/,2016 5.30 inflated earnings (one-off gain)
+GLW,PE,2019,22.2,https://companiesmarketcap.com/corning/pe-ratio/,2016 5.30 inflated earnings (one-off gain)
+GLW,PE,2020,58.3,https://companiesmarketcap.com/corning/pe-ratio/,2016 5.30 inflated earnings (one-off gain)
+GLW,PE,2021,24.9,https://companiesmarketcap.com/corning/pe-ratio/,2016 5.30 inflated earnings (one-off gain)
+GLW,PE,2022,18.8,https://companiesmarketcap.com/corning/pe-ratio/,2016 5.30 inflated earnings (one-off gain)
+GLW,PE,2023,42.8,https://companiesmarketcap.com/corning/pe-ratio/,2016 5.30 inflated earnings (one-off gain)
+GLW,PE,2024,79.3,https://companiesmarketcap.com/corning/pe-ratio/,2016 5.30 inflated earnings (one-off gain)
+GLW,PE,2025,47.1,https://companiesmarketcap.com/corning/pe-ratio/,2016 5.30 inflated earnings (one-off gain)
+HPE,PE,2016,5.58,https://companiesmarketcap.com/hewlett-packard-enterprise/pe-ratio/,2020 not listed; 2025=-480 broken (>|500| nearly
+HPE,PE,2017,54.0,https://companiesmarketcap.com/hewlett-packard-enterprise/pe-ratio/,2020 not listed; 2025=-480 broken (>|500| nearly
+HPE,PE,2018,9.07,https://companiesmarketcap.com/hewlett-packard-enterprise/pe-ratio/,2020 not listed; 2025=-480 broken (>|500| nearly
+HPE,PE,2019,16.8,https://companiesmarketcap.com/hewlett-packard-enterprise/pe-ratio/,2020 not listed; 2025=-480 broken (>|500| nearly
+HPE,PE,2021,5.42,https://companiesmarketcap.com/hewlett-packard-enterprise/pe-ratio/,2020 not listed; 2025=-480 broken (>|500| nearly
+HPE,PE,2022,22.5,https://companiesmarketcap.com/hewlett-packard-enterprise/pe-ratio/,2020 not listed; 2025=-480 broken (>|500| nearly
+HPE,PE,2023,10.4,https://companiesmarketcap.com/hewlett-packard-enterprise/pe-ratio/,2020 not listed; 2025=-480 broken (>|500| nearly
+HPE,PE,2024,10.8,https://companiesmarketcap.com/hewlett-packard-enterprise/pe-ratio/,2020 not listed; 2025=-480 broken (>|500| nearly
+HPE,PE,2025,-480,https://companiesmarketcap.com/hewlett-packard-enterprise/pe-ratio/,2020 not listed; 2025=-480 broken (>|500| nearly
+HPQ,PE,2016,7.42,https://companiesmarketcap.com/hp/pe-ratio/,
+HPQ,PE,2017,10.5,https://companiesmarketcap.com/hp/pe-ratio/,
+HPQ,PE,2018,4.76,https://companiesmarketcap.com/hp/pe-ratio/,
+HPQ,PE,2019,7.81,https://companiesmarketcap.com/hp/pe-ratio/,
+HPQ,PE,2020,9.98,https://companiesmarketcap.com/hp/pe-ratio/,
+HPQ,PE,2021,5.75,https://companiesmarketcap.com/hp/pe-ratio/,
+HPQ,PE,2022,7.68,https://companiesmarketcap.com/hp/pe-ratio/,
+HPQ,PE,2023,8.16,https://companiesmarketcap.com/hp/pe-ratio/,
+HPQ,PE,2024,10.7,https://companiesmarketcap.com/hp/pe-ratio/,
+HPQ,PE,2025,8.05,https://companiesmarketcap.com/hp/pe-ratio/,
+INTC,PE,2016,13.6,https://companiesmarketcap.com/intel/pe-ratio/,
+INTC,PE,2017,19.0,https://companiesmarketcap.com/intel/pe-ratio/,
+INTC,PE,2018,8.84,https://companiesmarketcap.com/intel/pe-ratio/,
+INTC,PE,2019,11.0,https://companiesmarketcap.com/intel/pe-ratio/,
+INTC,PE,2020,9.04,https://companiesmarketcap.com/intel/pe-ratio/,
+INTC,PE,2021,9.75,https://companiesmarketcap.com/intel/pe-ratio/,
+INTC,PE,2022,12.9,https://companiesmarketcap.com/intel/pe-ratio/,
+INTC,PE,2023,127,https://companiesmarketcap.com/intel/pe-ratio/,outlier: depressed earnings
+INTC,PE,2024,-4.58,https://companiesmarketcap.com/intel/pe-ratio/,
+INTC,PE,2025,-461,https://companiesmarketcap.com/intel/pe-ratio/,outlier: near-zero loss denominator
+JBL,PE,2016,19.9,https://companiesmarketcap.com/jabil/pe-ratio/,
+JBL,PE,2017,42.3,https://companiesmarketcap.com/jabil/pe-ratio/,
+JBL,PE,2018,26.8,https://companiesmarketcap.com/jabil/pe-ratio/,
+JBL,PE,2019,30.4,https://companiesmarketcap.com/jabil/pe-ratio/,
+JBL,PE,2020,29.4,https://companiesmarketcap.com/jabil/pe-ratio/,
+JBL,PE,2021,13.8,https://companiesmarketcap.com/jabil/pe-ratio/,
+JBL,PE,2022,9.6,https://companiesmarketcap.com/jabil/pe-ratio/,
+JBL,PE,2023,21.2,https://companiesmarketcap.com/jabil/pe-ratio/,
+JBL,PE,2024,13.6,https://companiesmarketcap.com/jabil/pe-ratio/,
+JBL,PE,2025,35.0,https://companiesmarketcap.com/jabil/pe-ratio/,
+KLAC,PE,2016,123,https://companiesmarketcap.com/kla/pe-ratio/,values look broken (>100 almost every year
+KLAC,PE,2017,222,https://companiesmarketcap.com/kla/pe-ratio/,values look broken (>100 almost every year
+KLAC,PE,2018,88.7,https://companiesmarketcap.com/kla/pe-ratio/,values look broken (>100 almost every year
+KLAC,PE,2019,231,https://companiesmarketcap.com/kla/pe-ratio/,values look broken (>100 almost every year
+KLAC,PE,2020,279,https://companiesmarketcap.com/kla/pe-ratio/,values look broken (>100 almost every year
+KLAC,PE,2021,211,https://companiesmarketcap.com/kla/pe-ratio/,values look broken (>100 almost every year
+KLAC,PE,2022,150,https://companiesmarketcap.com/kla/pe-ratio/,values look broken (>100 almost every year
+KLAC,PE,2023,289,https://companiesmarketcap.com/kla/pe-ratio/,values look broken (>100 almost every year
+KLAC,PE,2024,262,https://companiesmarketcap.com/kla/pe-ratio/,values look broken (>100 almost every year
+KLAC,PE,2025,352,https://companiesmarketcap.com/kla/pe-ratio/,values look broken (>100 almost every year
+KLIC,PE,2016,15.8,https://companiesmarketcap.com/kulicke-and-soffa-industries/pe-ratio/,2024 355 and 2025 negative; 2019 88.8 distorted by earnings dip
+KLIC,PE,2017,56.4,https://companiesmarketcap.com/kulicke-and-soffa-industries/pe-ratio/,
+KLIC,PE,2018,9.35,https://companiesmarketcap.com/kulicke-and-soffa-industries/pe-ratio/,
+KLIC,PE,2019,88.8,https://companiesmarketcap.com/kulicke-and-soffa-industries/pe-ratio/,
+KLIC,PE,2020,21.0,https://companiesmarketcap.com/kulicke-and-soffa-industries/pe-ratio/,
+KLIC,PE,2021,7.84,https://companiesmarketcap.com/kulicke-and-soffa-industries/pe-ratio/,
+KLIC,PE,2022,8.01,https://companiesmarketcap.com/kulicke-and-soffa-industries/pe-ratio/,
+KLIC,PE,2023,58.4,https://companiesmarketcap.com/kulicke-and-soffa-industries/pe-ratio/,
+KLIC,PE,2024,355,https://companiesmarketcap.com/kulicke-and-soffa-industries/pe-ratio/,
+KLIC,PE,2025,-37.7,https://companiesmarketcap.com/kulicke-and-soffa-industries/pe-ratio/,
+LITE,PE,2016,161,https://companiesmarketcap.com/lumentum/pe-ratio/,
+LITE,PE,2017,32.6,https://companiesmarketcap.com/lumentum/pe-ratio/,
+LITE,PE,2018,27.5,https://companiesmarketcap.com/lumentum/pe-ratio/,
+LITE,PE,2019,-1000,https://companiesmarketcap.com/lumentum/pe-ratio/,"source shows only bound ""< -1000""; recorded as -1000"
+LITE,PE,2020,37.8,https://companiesmarketcap.com/lumentum/pe-ratio/,
+LITE,PE,2021,20.5,https://companiesmarketcap.com/lumentum/pe-ratio/,
+LITE,PE,2022,130,https://companiesmarketcap.com/lumentum/pe-ratio/,
+LITE,PE,2023,-13.3,https://companiesmarketcap.com/lumentum/pe-ratio/,
+LITE,PE,2024,-10.9,https://companiesmarketcap.com/lumentum/pe-ratio/,
+LITE,PE,2025,103,https://companiesmarketcap.com/lumentum/pe-ratio/,
+LRCX,PE,2016,15.1,https://companiesmarketcap.com/lam-research/pe-ratio/,
+LRCX,PE,2017,15.9,https://companiesmarketcap.com/lam-research/pe-ratio/,
+LRCX,PE,2018,6.83,https://companiesmarketcap.com/lam-research/pe-ratio/,
+LRCX,PE,2019,19.4,https://companiesmarketcap.com/lam-research/pe-ratio/,
+LRCX,PE,2020,21.9,https://companiesmarketcap.com/lam-research/pe-ratio/,
+LRCX,PE,2021,21.3,https://companiesmarketcap.com/lam-research/pe-ratio/,
+LRCX,PE,2022,11.0,https://companiesmarketcap.com/lam-research/pe-ratio/,
+LRCX,PE,2023,29.7,https://companiesmarketcap.com/lam-research/pe-ratio/,
+LRCX,PE,2024,21.7,https://companiesmarketcap.com/lam-research/pe-ratio/,
+LRCX,PE,2025,34.9,https://companiesmarketcap.com/lam-research/pe-ratio/,
+MKC,PE,2016,21.4,https://companiesmarketcap.com/mc-cormick/pe-ratio/,source missing 2021
+MKC,PE,2017,23.7,https://companiesmarketcap.com/mc-cormick/pe-ratio/,source missing 2021
+MKC,PE,2018,17.4,https://companiesmarketcap.com/mc-cormick/pe-ratio/,source missing 2021
+MKC,PE,2019,28.9,https://companiesmarketcap.com/mc-cormick/pe-ratio/,source missing 2021
+MKC,PE,2020,31.2,https://companiesmarketcap.com/mc-cormick/pe-ratio/,source missing 2021
+MKC,PE,2023,26.0,https://companiesmarketcap.com/mc-cormick/pe-ratio/,source missing 2021
+MKC,PE,2024,25.6,https://companiesmarketcap.com/mc-cormick/pe-ratio/,source missing 2021
+MRVL,PE,2016,62.1,https://companiesmarketcap.com/marvell/pe-ratio/,many negative years (GAAP losses from acquisition amortization)
+MRVL,PE,2017,25.9,https://companiesmarketcap.com/marvell/pe-ratio/,
+MRVL,PE,2018,53.9,https://companiesmarketcap.com/marvell/pe-ratio/,
+MRVL,PE,2019,-38.1,https://companiesmarketcap.com/marvell/pe-ratio/,
+MRVL,PE,2020,21.0,https://companiesmarketcap.com/marvell/pe-ratio/,
+MRVL,PE,2021,-163,https://companiesmarketcap.com/marvell/pe-ratio/,
+MRVL,PE,2022,-229,https://companiesmarketcap.com/marvell/pe-ratio/,
+MRVL,PE,2023,-92.2,https://companiesmarketcap.com/marvell/pe-ratio/,
+MRVL,PE,2024,-64.8,https://companiesmarketcap.com/marvell/pe-ratio/,
+MRVL,PE,2025,29.4,https://companiesmarketcap.com/marvell/pe-ratio/,
+MTSI,PE,2016,154,https://companiesmarketcap.com/macom/pe-ratio/,
+MTSI,PE,2017,-10.5,https://companiesmarketcap.com/macom/pe-ratio/,
+MTSI,PE,2018,-6.69,https://companiesmarketcap.com/macom/pe-ratio/,
+MTSI,PE,2019,-4.47,https://companiesmarketcap.com/macom/pe-ratio/,
+MTSI,PE,2020,-141,https://companiesmarketcap.com/macom/pe-ratio/,
+MTSI,PE,2021,29.1,https://companiesmarketcap.com/macom/pe-ratio/,
+MTSI,PE,2022,13.3,https://companiesmarketcap.com/macom/pe-ratio/,
+MTSI,PE,2023,88.5,https://companiesmarketcap.com/macom/pe-ratio/,
+MTSI,PE,2024,-92.8,https://companiesmarketcap.com/macom/pe-ratio/,
+MTSI,PE,2025,78.6,https://companiesmarketcap.com/macom/pe-ratio/,
+MU,PB,2016,1.29,repo:micron/dist（markets/overview/datasets/mult_hist.json（美光 P/B；與美光模型 Val 同源））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+MU,PB,2017,1.78,repo:micron/dist（markets/overview/datasets/mult_hist.json（美光 P/B；與美光模型 Val 同源））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+MU,PB,2018,1.79,repo:micron/dist（markets/overview/datasets/mult_hist.json（美光 P/B；與美光模型 Val 同源））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+MU,PB,2019,1.33,repo:micron/dist（markets/overview/datasets/mult_hist.json（美光 P/B；與美光模型 Val 同源））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+MU,PB,2020,1.27,repo:micron/dist（markets/overview/datasets/mult_hist.json（美光 P/B；與美光模型 Val 同源））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+MU,PB,2021,1.83,repo:micron/dist（markets/overview/datasets/mult_hist.json（美光 P/B；與美光模型 Val 同源））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+MU,PB,2022,1.22,repo:micron/dist（markets/overview/datasets/mult_hist.json（美光 P/B；與美光模型 Val 同源））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+MU,PB,2023,1.72,repo:micron/dist（markets/overview/datasets/mult_hist.json（美光 P/B；與美光模型 Val 同源））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+MU,PB,2024,2.35,repo:micron/dist（markets/overview/datasets/mult_hist.json（美光 P/B；與美光模型 Val 同源））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+MU,PB,2025,2.46,repo:micron/dist（markets/overview/datasets/mult_hist.json（美光 P/B；與美光模型 Val 同源））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+NESN.SW,PE,2016,25.2,https://companiesmarketcap.com/nestle/pe-ratio/,
+NESN.SW,PE,2017,34.0,https://companiesmarketcap.com/nestle/pe-ratio/,
+NESN.SW,PE,2018,23.2,https://companiesmarketcap.com/nestle/pe-ratio/,
+NESN.SW,PE,2019,24.0,https://companiesmarketcap.com/nestle/pe-ratio/,
+NESN.SW,PE,2020,22.3,https://companiesmarketcap.com/nestle/pe-ratio/,
+NESN.SW,PE,2021,20.6,https://companiesmarketcap.com/nestle/pe-ratio/,
+NESN.SW,PE,2022,31.7,https://companiesmarketcap.com/nestle/pe-ratio/,
+NESN.SW,PE,2023,21.8,https://companiesmarketcap.com/nestle/pe-ratio/,
+NESN.SW,PE,2024,18.8,https://companiesmarketcap.com/nestle/pe-ratio/,
+NESN.SW,PE,2025,21.4,https://companiesmarketcap.com/nestle/pe-ratio/,
+NTAP,PE,2016,25.4,https://companiesmarketcap.com/netapp/pe-ratio/,
+NTAP,PE,2017,19.0,https://companiesmarketcap.com/netapp/pe-ratio/,
+NTAP,PE,2018,43.4,https://companiesmarketcap.com/netapp/pe-ratio/,
+NTAP,PE,2019,13.0,https://companiesmarketcap.com/netapp/pe-ratio/,
+NTAP,PE,2020,19.1,https://companiesmarketcap.com/netapp/pe-ratio/,
+NTAP,PE,2021,19.9,https://companiesmarketcap.com/netapp/pe-ratio/,
+NTAP,PE,2022,8.37,https://companiesmarketcap.com/netapp/pe-ratio/,
+NTAP,PE,2023,26.0,https://companiesmarketcap.com/netapp/pe-ratio/,
+NTAP,PE,2024,20.4,https://companiesmarketcap.com/netapp/pe-ratio/,
+NTAP,PE,2025,18.4,https://companiesmarketcap.com/netapp/pe-ratio/,
+NVDA,PE,2016,24.4,repo:nvidia/dist（Val 十年表（Macrotrends（1 月 31 日 ÷ TTM GAAP EPS）、fullratio（日曆年年底 P/E，僅參考）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+NVDA,PE,2017,38.51,repo:nvidia/dist（Val 十年表（Macrotrends（1 月 31 日 ÷ TTM GAAP EPS）、fullratio（日曆年年底 P/E，僅參考）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+NVDA,PE,2018,48.56,repo:nvidia/dist（Val 十年表（Macrotrends（1 月 31 日 ÷ TTM GAAP EPS）、fullratio（日曆年年底 P/E，僅參考）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+NVDA,PE,2019,22.51,repo:nvidia/dist（Val 十年表（Macrotrends（1 月 31 日 ÷ TTM GAAP EPS）、fullratio（日曆年年底 P/E，僅參考）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+NVDA,PE,2020,52.075,repo:nvidia/dist（Val 十年表（Macrotrends（1 月 31 日 ÷ TTM GAAP EPS）、fullratio（日曆年年底 P/E，僅參考）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+NVDA,PE,2021,73.455,repo:nvidia/dist（Val 十年表（Macrotrends（1 月 31 日 ÷ TTM GAAP EPS）、fullratio（日曆年年底 P/E，僅參考）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+NVDA,PE,2022,60.98,repo:nvidia/dist（Val 十年表（Macrotrends（1 月 31 日 ÷ TTM GAAP EPS）、fullratio（日曆年年底 P/E，僅參考）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+NVDA,PE,2023,114.67,repo:nvidia/dist（Val 十年表（Macrotrends（1 月 31 日 ÷ TTM GAAP EPS）、fullratio（日曆年年底 P/E，僅參考）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+NVDA,PE,2024,51.61,repo:nvidia/dist（Val 十年表（Macrotrends（1 月 31 日 ÷ TTM GAAP EPS）、fullratio（日曆年年底 P/E，僅參考）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+NVDA,PE,2025,40.78,repo:nvidia/dist（Val 十年表（Macrotrends（1 月 31 日 ÷ TTM GAAP EPS）、fullratio（日曆年年底 P/E，僅參考）、標記／說明））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+QCOM,PE,2016,15.5,https://companiesmarketcap.com/qualcomm/pe-ratio/,2022 not on source
+QCOM,PE,2017,-18.4,https://companiesmarketcap.com/qualcomm/pe-ratio/,2022 not on source
+QCOM,PE,2018,30.4,https://companiesmarketcap.com/qualcomm/pe-ratio/,2022 not on source
+QCOM,PE,2019,21.9,https://companiesmarketcap.com/qualcomm/pe-ratio/,2022 not on source
+QCOM,PE,2020,23.1,https://companiesmarketcap.com/qualcomm/pe-ratio/,2022 not on source
+QCOM,PE,2021,19.0,https://companiesmarketcap.com/qualcomm/pe-ratio/,2022 not on source
+QCOM,PE,2023,20.0,https://companiesmarketcap.com/qualcomm/pe-ratio/,2022 not on source
+QCOM,PE,2024,15.9,https://companiesmarketcap.com/qualcomm/pe-ratio/,2022 not on source
+QCOM,PE,2025,34.8,https://companiesmarketcap.com/qualcomm/pe-ratio/,2022 not on source
+RMBS,PE,2016,197,https://companiesmarketcap.com/rambus/pe-ratio/,negative = loss years; 2021 and 2016 extreme
+RMBS,PE,2017,-83.6,https://companiesmarketcap.com/rambus/pe-ratio/,negative = loss years; 2021 and 2016 extreme
+RMBS,PE,2018,-5.15,https://companiesmarketcap.com/rambus/pe-ratio/,negative = loss years; 2021 and 2016 extreme
+RMBS,PE,2019,-16.8,https://companiesmarketcap.com/rambus/pe-ratio/,negative = loss years; 2021 and 2016 extreme
+RMBS,PE,2020,-45.9,https://companiesmarketcap.com/rambus/pe-ratio/,negative = loss years; 2021 and 2016 extreme
+RMBS,PE,2021,173,https://companiesmarketcap.com/rambus/pe-ratio/,negative = loss years; 2021 and 2016 extreme
+RMBS,PE,2022,-298,https://companiesmarketcap.com/rambus/pe-ratio/,negative = loss years; 2021 and 2016 extreme
+RMBS,PE,2023,22.2,https://companiesmarketcap.com/rambus/pe-ratio/,negative = loss years; 2021 and 2016 extreme
+RMBS,PE,2024,31.8,https://companiesmarketcap.com/rambus/pe-ratio/,negative = loss years; 2021 and 2016 extreme
+RMBS,PE,2025,42.9,https://companiesmarketcap.com/rambus/pe-ratio/,negative = loss years; 2021 and 2016 extreme
+SMCI,PE,2016,16.46,repo:smci/dist（Val 十年表（兩來源平均 P/E、Macrotrends、fullratio））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+SMCI,PE,2017,18.005,repo:smci/dist（Val 十年表（兩來源平均 P/E、Macrotrends、fullratio））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+SMCI,PE,2018,26.28,repo:smci/dist（Val 十年表（兩來源平均 P/E、Macrotrends、fullratio））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+SMCI,PE,2019,13.82,repo:smci/dist（Val 十年表（兩來源平均 P/E、Macrotrends、fullratio））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+SMCI,PE,2020,21.375,repo:smci/dist（Val 十年表（兩來源平均 P/E、Macrotrends、fullratio））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+SMCI,PE,2021,16.37,repo:smci/dist（Val 十年表（兩來源平均 P/E、Macrotrends、fullratio））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+SMCI,PE,2022,7.485,repo:smci/dist（Val 十年表（兩來源平均 P/E、Macrotrends、fullratio））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+SMCI,PE,2023,21.185,repo:smci/dist（Val 十年表（兩來源平均 P/E、Macrotrends、fullratio））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+SMCI,PE,2024,40.355,repo:smci/dist（Val 十年表（兩來源平均 P/E、Macrotrends、fullratio））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+SMCI,PE,2025,28.605,repo:smci/dist（Val 十年表（兩來源平均 P/E、Macrotrends、fullratio））,本專案模型 Val 頁十年倍數（已校對；年度值為各來源平均）
+SNDK,PB,2025,3.41,https://companiesmarketcap.com/sandisk/pb-ratio/,source lists 2024 N/A; recent spin-off
+SU.PA,PE,2016,16.2,https://companiesmarketcap.com/schneider-electric/pe-ratio/,
+SU.PA,PE,2017,12.7,https://companiesmarketcap.com/schneider-electric/pe-ratio/,
+SU.PA,PE,2018,10.5,https://companiesmarketcap.com/schneider-electric/pe-ratio/,
+SU.PA,PE,2019,16.4,https://companiesmarketcap.com/schneider-electric/pe-ratio/,
+SU.PA,PE,2020,23.3,https://companiesmarketcap.com/schneider-electric/pe-ratio/,
+SU.PA,PE,2021,24.6,https://companiesmarketcap.com/schneider-electric/pe-ratio/,
+SU.PA,PE,2022,18.6,https://companiesmarketcap.com/schneider-electric/pe-ratio/,
+SU.PA,PE,2023,22.3,https://companiesmarketcap.com/schneider-electric/pe-ratio/,
+SU.PA,PE,2024,29.7,https://companiesmarketcap.com/schneider-electric/pe-ratio/,
+SU.PA,PE,2025,27.1,https://companiesmarketcap.com/schneider-electric/pe-ratio/,
+TER,PE,2016,-115,https://companiesmarketcap.com/teradyne/pe-ratio/,2016 negative -115 looks odd for profitable year
+TER,PE,2017,31.2,https://companiesmarketcap.com/teradyne/pe-ratio/,2016 negative -115 looks odd for profitable year
+TER,PE,2018,12.5,https://companiesmarketcap.com/teradyne/pe-ratio/,2016 negative -115 looks odd for profitable year
+TER,PE,2019,23.6,https://companiesmarketcap.com/teradyne/pe-ratio/,2016 negative -115 looks odd for profitable year
+TER,PE,2020,24.9,https://companiesmarketcap.com/teradyne/pe-ratio/,2016 negative -115 looks odd for profitable year
+TER,PE,2021,26.0,https://companiesmarketcap.com/teradyne/pe-ratio/,2016 negative -115 looks odd for profitable year
+TER,PE,2022,19.1,https://companiesmarketcap.com/teradyne/pe-ratio/,2016 negative -115 looks odd for profitable year
+TER,PE,2023,36.9,https://companiesmarketcap.com/teradyne/pe-ratio/,2016 negative -115 looks odd for profitable year
+TER,PE,2024,37.0,https://companiesmarketcap.com/teradyne/pe-ratio/,2016 negative -115 looks odd for profitable year
+TER,PE,2025,55.5,https://companiesmarketcap.com/teradyne/pe-ratio/,2016 negative -115 looks odd for profitable year
+TSM,PE,2016,11.6,https://companiesmarketcap.com/tsmc/pe-ratio/,
+TSM,PE,2017,14.8,https://companiesmarketcap.com/tsmc/pe-ratio/,
+TSM,PE,2018,14.2,https://companiesmarketcap.com/tsmc/pe-ratio/,
+TSM,PE,2019,23.5,https://companiesmarketcap.com/tsmc/pe-ratio/,
+TSM,PE,2020,28.3,https://companiesmarketcap.com/tsmc/pe-ratio/,
+TSM,PE,2021,27.2,https://companiesmarketcap.com/tsmc/pe-ratio/,
+TSM,PE,2022,11.2,https://companiesmarketcap.com/tsmc/pe-ratio/,
+TSM,PE,2023,19.3,https://companiesmarketcap.com/tsmc/pe-ratio/,
+TSM,PE,2024,28.8,https://companiesmarketcap.com/tsmc/pe-ratio/,
+TSM,PE,2025,28.3,https://companiesmarketcap.com/tsmc/pe-ratio/,
+TTMI,PE,2016,37.9,https://companiesmarketcap.com/ttm-technologies/pe-ratio/,
+TTMI,PE,2017,12.8,https://companiesmarketcap.com/ttm-technologies/pe-ratio/,
+TTMI,PE,2018,5.79,https://companiesmarketcap.com/ttm-technologies/pe-ratio/,
+TTMI,PE,2019,38.6,https://companiesmarketcap.com/ttm-technologies/pe-ratio/,
+TTMI,PE,2020,7.80,https://companiesmarketcap.com/ttm-technologies/pe-ratio/,
+TTMI,PE,2021,29.2,https://companiesmarketcap.com/ttm-technologies/pe-ratio/,
+TTMI,PE,2022,16.2,https://companiesmarketcap.com/ttm-technologies/pe-ratio/,
+TTMI,PE,2024,45.0,https://companiesmarketcap.com/ttm-technologies/pe-ratio/,
+TTMI,PE,2025,39.9,https://companiesmarketcap.com/ttm-technologies/pe-ratio/,
+VRT,PE,2019,-35.1,https://companiesmarketcap.com/vertiv-holdings/pe-ratio/,source starts 2019 (listed 2020 via SPAC)
+VRT,PE,2020,-16.8,https://companiesmarketcap.com/vertiv-holdings/pe-ratio/,source starts 2019 (listed 2020 via SPAC)
+VRT,PE,2021,73.2,https://companiesmarketcap.com/vertiv-holdings/pe-ratio/,source starts 2019 (listed 2020 via SPAC)
+VRT,PE,2022,68.1,https://companiesmarketcap.com/vertiv-holdings/pe-ratio/,source starts 2019 (listed 2020 via SPAC)
+VRT,PE,2023,39.6,https://companiesmarketcap.com/vertiv-holdings/pe-ratio/,source starts 2019 (listed 2020 via SPAC)
+VRT,PE,2024,86.0,https://companiesmarketcap.com/vertiv-holdings/pe-ratio/,source starts 2019 (listed 2020 via SPAC)
+VRT,PE,2025,46.6,https://companiesmarketcap.com/vertiv-holdings/pe-ratio/,source starts 2019 (listed 2020 via SPAC)
+WDC,PB,2016,1.82,https://companiesmarketcap.com/western-digital/pb-ratio/,
+WDC,PB,2017,2.10,https://companiesmarketcap.com/western-digital/pb-ratio/,
+WDC,PB,2018,0.9859,https://companiesmarketcap.com/western-digital/pb-ratio/,
+WDC,PB,2019,2.01,https://companiesmarketcap.com/western-digital/pb-ratio/,
+WDC,PB,2020,1.71,https://companiesmarketcap.com/western-digital/pb-ratio/,
+WDC,PB,2021,1.69,https://companiesmarketcap.com/western-digital/pb-ratio/,
+WDC,PB,2022,0.8272,https://companiesmarketcap.com/western-digital/pb-ratio/,
+WDC,PB,2023,1.55,https://companiesmarketcap.com/western-digital/pb-ratio/,
+WDC,PB,2024,1.70,https://companiesmarketcap.com/western-digital/pb-ratio/,
+WDC,PB,2025,8.77,https://companiesmarketcap.com/western-digital/pb-ratio/,
