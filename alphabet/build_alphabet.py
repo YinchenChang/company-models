@@ -122,7 +122,9 @@ inp("spacex", "SpaceX 持股公允價值（上市、限售）", "US$B", None, 94
 inp("oth_eq", "其他有價權益證券", "US$B", None, 7.089, None, "Derived", "有價權益證券 87.063＋14.126 − SpaceX 94.1（" + V22 + "）")
 
 sec("C. 折現率與目標價規則")
-inp("rf", "無風險利率（10 年美債，2026-10-07）", "%", None, 0.0528, None, "Verified", fs("val.rf.10y"), V22)
+inp("rf", "無風險利率（10 年美債，2026-10-26）", "%", None, 0.05, None, "Verified",
+    "美國財政部每日殖利率曲線（Daily Treasury Par Yield Curve Rates，10 Yr）https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value_month=202610（2026-10-27 讀取）：10-26 5.00%、10-23 5.00%、10-22 4.96%",
+    "與 Amazon v0.3 同一輸入（跨模型一致）；修正前 5.28%（2026-10-07，" + fs("val.rf.10y") + "）")
 inp("beta_sa", "原始 β：StockAnalysis 5 年月資料（Yahoo、MarketBeat 同值）", "x", None, 1.21, None, "Verified", fs("val.beta.sa"), V22)
 inp("beta_gf", "原始 β：GuruFocus 3 年", "x", None, 1.3669, None, "Verified", fs("val.beta.gurufocus"), "與 StockAnalysis 不同資料商、不同期間（C13）")
 inp("blume_a", "Blume 調整係數（β 調整＝a × 原始 β＋(1 − a)）", "x", None, 0.67, None, "Derived", "Blume（1971）；Bloomberg 調整 β 同式（修正一 F4）")
