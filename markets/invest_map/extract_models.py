@@ -278,15 +278,17 @@ def main():
         b = Book(dist_xlsx(folder))
         if "摘要" not in b.wb.sheetnames and "Val" in b.wb.sheetnames:
             # v0.6（2026-10-27）：依「個股模型原則」重建的模型（MAG v0.3、Oracle v0.4）沿用估值 v2 列標籤；
-            # 收支關卡讀 CF 頁「收支關卡：自由現金流扣股利（五年合計）」的 A／B／C 三情境合計（任一情境為負即不通過，與半導體「各情境皆正」同嚴格）
+            # 收支關卡讀 CF 頁「收支關卡：自由現金流扣股利（五年合計）」基準情境 B（A、C 列在說明）
             out[tk] = {"model": b.rel, "v2": True, "seg_model": True, **semis_v2(b)}
             ws = b.wb["CF"]
             for row in ws.iter_rows():
                 if isinstance(row[0].value, str) and row[0].value.startswith("收支關卡：自由現金流扣股利（五年合計）"):
                     nums = [(c.coordinate, c.value) for c in row[1:] if isinstance(c.value, (int, float))][:3]
+                    # 關卡依基準情境 B 的五年合計（Andy 10-25：模型期間現金收支合計 < 0 即入不敷出）；A、C 寫進列名供對照
+                    (ca, va), (cb, vb), (cc, vc) = nums
                     out[tk]["cash"] = {"basis": "現金流", "file": b.rel,
-                                       "label": "自由現金流扣股利五年合計（情境 A／B／C）",
-                                       "values": [(sc, v, f"CF!{c}") for sc, (c, v) in zip(("A", "B", "C"), nums)]}
+                                       "label": f"自由現金流扣股利五年合計（基準情境 B；A {va:,.1f}、C {vc:,.1f}）",
+                                       "values": [("情境 B 五年合計", vb, f"CF!{cb}")]}
                     break
             else:
                 raise KeyError(f"{b.rel} CF 頁找不到收支關卡列")

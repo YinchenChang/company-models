@@ -7925,17 +7925,17 @@
   "v2": true,
   "seg_model": true,
   "tp": {
-   "value": 388.947955859393,
+   "value": 385.56245022499,
    "cell": "Val!B36",
    "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
   },
   "tp_dcf": {
-   "value": 342.226290895507,
+   "value": 327.560443006287,
    "cell": "Val!B14",
    "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
   },
   "tp_comp": {
-   "value": 435.669620823279,
+   "value": 443.564457443694,
    "cell": "Val!B31",
    "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
   },
@@ -7945,17 +7945,17 @@
    "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
   },
   "up": {
-   "value": -0.269718445626375,
+   "value": -0.276075008965471,
    "cell": "Val!B40",
    "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
   },
   "up_comp": {
-   "value": -0.181994703673904,
+   "value": -0.16717150310985,
    "cell": "Val!B41",
    "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
   },
   "tier6": {
-   "value": "−25%～−50%",
+   "value": "−50%～−25%",
    "cell": "Val!B42",
    "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
   },
@@ -7965,12 +7965,12 @@
    "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
   },
   "dcf_A": {
-   "value": 382.117514595532,
+   "value": 367.625505810519,
    "cell": "Val!B13",
    "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
   },
   "dcf_C": {
-   "value": 298.502438692235,
+   "value": 283.645287089587,
    "cell": "Val!D13",
    "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
   },
@@ -7982,17 +7982,17 @@
   },
   "pe_fy28": [
    {
-    "value": 20.5072583433929,
+    "value": 21.4378552335586,
     "cell": "Val!B52",
     "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
    },
    {
-    "value": 21.5922662527126,
+    "value": 22.6238128268353,
     "cell": "Val!C52",
     "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
    },
    {
-    "value": 23.0164356912557,
+    "value": 24.1904520965288,
     "cell": "Val!D52",
     "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx"
    }
@@ -8000,22 +8000,12 @@
   "cash": {
    "basis": "現金流",
    "file": "microsoft/dist/20261027_Microsoft個股模型_v0.3.xlsx",
-   "label": "自由現金流扣股利五年合計（情境 A／B／C）",
+   "label": "自由現金流扣股利五年合計（基準情境 B；A 375.6、C 148.3）",
    "values": [
     [
-     "A",
-     378.566004075148,
-     "CF!B5"
-    ],
-    [
-     "B",
-     273.965962224192,
+     "情境 B 五年合計",
+     270.92548377809,
      "CF!C5"
-    ],
-    [
-     "C",
-     151.420119937449,
-     "CF!D5"
     ]
    ]
   }
@@ -8025,17 +8015,17 @@
   "v2": true,
   "seg_model": true,
   "tp": {
-   "value": 210.788175534535,
+   "value": 215.578882385843,
    "cell": "Val!B19",
    "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
   },
   "tp_dcf": {
-   "value": 150.742059513874,
+   "value": 149.602058726717,
    "cell": "Val!B17",
    "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
   },
   "tp_comp": {
-   "value": 270.834291555197,
+   "value": 281.55570604497,
    "cell": "Val!B18",
    "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
   },
@@ -8045,12 +8035,12 @@
    "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
   },
   "up": {
-   "value": -0.153767009777449,
+   "value": -0.134534174853092,
    "cell": "Val!B21",
    "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
   },
   "up_comp": {
-   "value": 0.0872949197285999,
+   "value": 0.130337251776344,
    "cell": "Val!B22",
    "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
   },
@@ -8065,12 +8055,12 @@
    "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
   },
   "dcf_A": {
-   "value": 205.642582438018,
+   "value": 205.037948524346,
    "cell": "Val!B5",
    "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
   },
   "dcf_C": {
-   "value": 118.729987132669,
+   "value": 117.352344636521,
    "cell": "Val!D5",
    "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
   },
@@ -8083,22 +8073,12 @@
   "cash": {
    "basis": "現金流",
    "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx",
-   "label": "自由現金流扣股利五年合計（情境 A／B／C）",
+   "label": "自由現金流扣股利五年合計（基準情境 B；A 205.5、C -43.2）",
    "values": [
     [
-     "A",
-     192.924497963814,
-     "CF!B6"
-    ],
-    [
-     "B",
-     10.1939914156684,
+     "情境 B 五年合計",
+     19.0072988716234,
      "CF!C6"
-    ],
-    [
-     "C",
-     -51.5941543670482,
-     "CF!D6"
     ]
    ]
   }
@@ -8108,17 +8088,17 @@
   "v2": true,
   "seg_model": true,
   "tp": {
-   "value": 251.682246082838,
+   "value": 258.700923108513,
    "cell": "Val!B8",
    "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
   },
   "tp_dcf": {
-   "value": 184.588633613121,
+   "value": 200.385004407418,
    "cell": "Val!B6",
    "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
   },
   "tp_comp": {
-   "value": 318.775858552555,
+   "value": 317.016841809608,
    "cell": "Val!B7",
    "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
   },
@@ -8128,12 +8108,12 @@
    "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
   },
   "up": {
-   "value": -0.205548465647608,
+   "value": -0.183393550793835,
    "cell": "Val!B11",
    "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
   },
   "up_comp": {
-   "value": 0.00623692724922642,
+   "value": 0.000684475409117313,
    "cell": "Val!B12",
    "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
   },
@@ -8148,13 +8128,13 @@
    "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
   },
   "dcf_A": {
-   "value": 215.467673915755,
-   "cell": "Val!B102",
+   "value": 231.264044710052,
+   "cell": "Val!B109",
    "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
   },
   "dcf_C": {
-   "value": 143.260133369341,
-   "cell": "Val!D102",
+   "value": 159.056504163638,
+   "cell": "Val!D109",
    "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx"
   },
   "model_px": {
@@ -8166,22 +8146,12 @@
   "cash": {
    "basis": "現金流",
    "file": "alphabet/dist/20261027_Alphabet個股模型_v0.3.xlsx",
-   "label": "自由現金流扣股利五年合計（情境 A／B／C）",
+   "label": "自由現金流扣股利五年合計（基準情境 B；A 261.2、C 29.8）",
    "values": [
     [
-     "A",
-     261.219357957903,
-     "CF!B6"
-    ],
-    [
-     "B",
+     "情境 B 五年合計",
      180.050215907833,
      "CF!C6"
-    ],
-    [
-     "C",
-     29.8478349489597,
-     "CF!D6"
     ]
    ]
   }
@@ -8249,22 +8219,12 @@
   "cash": {
    "basis": "現金流",
    "file": "oracle/dist/20261027_Oracle個股模型_v0.4.xlsx",
-   "label": "自由現金流扣股利五年合計（情境 A／B／C）",
+   "label": "自由現金流扣股利五年合計（基準情境 B；A 111.1、C 8.4）",
    "values": [
     [
-     "A",
-     111.063429974721,
-     "CF!C4"
-    ],
-    [
-     "B",
+     "情境 B 五年合計",
      72.7635612856036,
      "CF!D4"
-    ],
-    [
-     "C",
-     8.35347765600448,
-     "CF!E4"
     ]
    ]
   }

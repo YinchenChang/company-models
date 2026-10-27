@@ -24,7 +24,7 @@ from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 VERSION = "v0.6"
-DATE = "20261026"
+DATE = "20261027"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
 YELLOW = PatternFill("solid", fgColor="FFF2CC")

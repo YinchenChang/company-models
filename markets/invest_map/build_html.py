@@ -122,7 +122,7 @@ def main():
     data = {
         "meta": {"version": os.path.basename(src).split("_")[-1].replace(".xlsx", ""),
                  "book": os.path.basename(src), "tk_file": snap["file"], "tk_version": snap["version"],
-                 "tk_commit": snap["commit"][:7], "cm_commit": cm, "built": "2026-10-26",
+                 "tk_commit": snap["commit"][:7], "cm_commit": cm, "built": "2026-10-27",
                  "price_date": "半導體：各模型現價（2026-10-22／23）；雲端與模型商：2026-10-23 收盤",
                  "pages": "https://yinchenchang.github.io/company-models/",
                  "private_models": {k: os.path.basename(glob.glob(os.path.join(ROOT, k, "dist", "*.html"))[0])
