@@ -1,0 +1,24 @@
+{
+ "company": "Microsoft",
+ "ticker": "MSFT",
+ "fiscal_year_end": "6 月（FY2026＝2025-07～2026-06）",
+ "model_sheet": "PL",
+ "note": "FY2027 起的官方報告分部（8-K 2026-09-02 附件 99.1「FY27 Segments and Investor Metrics」重編 FY2025–FY2026 各季）；舊三分部（Productivity and Business Processes、Intelligent Cloud、More Personal Computing）列在 Q 頁對照。產品線為公司固定揭露的八條（重編口徑）。命題子列：Azure ＝ Azure AI＋Azure 其他；Microsoft 365 cloud ＝ M365 基礎＋Copilot（子列合計＝母列由 PL 頁核對列檢查）。",
+ "official_segments": [
+  {"name": "Agents and Infra", "label": "Agents and Infra", "period": "FY2026", "value": 268.127, "unit": "US$B", "source": "8-K 2026-09-02 附件 99.1（Segment History as Restated）；事實總帳 seg27.ai.rev.fy2026", "date": "2026-09-02"},
+  {"name": "Devices and Consumer", "label": "Devices and Consumer", "period": "FY2026", "value": 63.712, "unit": "US$B", "source": "8-K 2026-09-02 附件 99.1（Segment History as Restated）；事實總帳 seg27.dc.rev.fy2026", "date": "2026-09-02"}
+ ],
+ "consolidated": {"period": "FY2026", "value": 331.839, "unit": "US$B", "source": "Form 10-K FY2026（2026-07-29）；事實總帳 is.rev.fy2026"},
+ "sublines": [
+  {"parent": "Agents and Infra", "labels": ["Azure", "Microsoft 365 cloud", "Productivity and server licensing", "Industry solutions", "Frontier and support services"], "kind": "產品線（公司揭露）"},
+  {"parent": "Devices and Consumer", "labels": ["Search and advertising", "XBOX", "Windows OEM and devices"], "kind": "產品線（公司揭露）"},
+  {"parent": "Azure", "labels": ["Azure AI（命題子列）", "Azure 其他"], "kind": "命題子列（Thesis：在役對外 AI MW × 每 MW 年收入）"},
+  {"parent": "Microsoft 365 cloud", "labels": ["M365 基礎（不含 Copilot）", "Copilot（命題子列）"], "kind": "命題子列（付費座席 × 月費）"}
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收（三情境，實績期另比對公司值）",
+  "檢查：產品線合計 − 分部（三情境，實績期另比對公司值）",
+  "檢查：命題子列合計 − 母列（Azure、Microsoft 365 cloud；三情境）",
+  "檢查：分部營業利益合計 − 合併營業利益（三情境；實績期比對公司值）"
+ ]
+}
