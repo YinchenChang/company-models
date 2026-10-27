@@ -83,7 +83,7 @@ def _from_history(name):
     dest = f"{HERE}/_hist/{name}"
     if os.path.exists(dest):
         return dest
-    r = subprocess.run(["git", "-C", ROOT, "log", "--all", "--format=%H", "--name-only", "--diff-filter=AMR", "--", f"*{name}"],
+    r = subprocess.run(["git", "-c", "core.quotepath=off", "-C", ROOT, "log", "--all", "--format=%H", "--name-only", "--diff-filter=AMR", "--", f"*{name}"],
                        capture_output=True, text=True)
     sha, path = None, None
     for line in r.stdout.splitlines():

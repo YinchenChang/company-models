@@ -32,7 +32,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           mkdir -p /tmp/cc && cp -r tools/consistency/out /tmp/cc/
           if [ "${GITHUB_REF_NAME}" = "claude/consistency" ]; then
-            git add tools/consistency/out && git commit -m "consistency: 檢查結果 $(date -u +%F)" && git push
+            git add tools/consistency/out && git commit -m "consistency: 檢查結果 $(date -u +%F)" && git pull -q --rebase && git push
           else
             git fetch origin consistency-results && git checkout -B consistency-results origin/consistency-results || git checkout --orphan consistency-results
             git rm -rq --cached . >/dev/null 2>&1 || true
