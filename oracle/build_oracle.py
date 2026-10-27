@@ -132,9 +132,9 @@ inp("un_g", "未分攤費用（研發、管理、攤銷、SBC 等）年增（FY2
 inp("sbc_q1", "股份基礎給付 SBC（Q1 FY27）", "US$B", None, 1.127, None, "Interested-party", Q10 + "（" + FACTS + " is.sbc.fy27q1）", "FY2026 4.811")
 inp("amort", "無形資產攤銷（年）", "US$B", None, "=(3.358-3.2)*4", None, "Derived", "Q1 FY27 D&A 3.358 − 折舊 3.200（" + FACTS + " is.da／dep.fy27q1）× 4", "FY2026 1.671，逐年下降；各年沿用 Q1 年化（偏高）")
 inp("dep_q1", "PP&E 折舊（Q1 FY27）", "US$B", None, 3.2, None, "Interested-party", Q10 + "（" + FACTS + " dep.fy27q1）", "—")
-inp("nonai_dep_q", "非 AI 折舊（每季）", "US$B", None, "=3.129/4", None, "Derived", K10 + "：FY2024（AI 規模化前）折舊 3.129 ÷ 4", "Q1 其餘折舊視為 AI 在役設備")
+inp("nonai_dep_q", "非 AI 折舊（每季）", "US$B", None, "=3.129/4", None, "Derived", K10 + "：FY2024（AI 規模化前）折舊 3.129 ÷ 4", "Q1 其餘折舊視為 AI 在役設備；FY2028 起隨非 AI 營收等比例")
 inp("cip_q1", "在建工程（FY27Q1 末；視為 AI 設備，FY27 Q2–Q4 起投入使用）", "US$B", None, 48.546, None, "Interested-party", Q10 + "（" + FACTS + " bs.cip.fy27q1）", "判斷：Q1 末之前的支出不是已在 Q1 折舊內，就是在建工程")
-inp("nonai_cx", "非 AI 資本支出 ÷ 非 AI 營收", "%", 0.05, 0.08, 0.12, "Assumed", "FY2024 資本支出 6.866 ÷ 營收 52.961＝13%（含早期 OCI 擴建）", "非 AI 折舊設為等於非 AI 資本支出（穩態）")
+inp("nonai_cx", "非 AI 資本支出 ÷ 非 AI 營收", "%", 0.05, 0.08, 0.12, "Assumed", "FY2024 資本支出 6.866 ÷ 營收 52.961＝13%（含早期 OCI 擴建）", "非 AI 折舊另以 FY2024 水準隨非 AI 營收等比例（不隨本參數變動）")
 
 sec("I. 現金流、融資（沿用 v0.3.1 defaults；FY27 以 Q1 實績＋指引為錨）")
 inp("capex_g27", "FY2027 資本支出（公司指引中點）", "US$B", 90, 92.5, 95, "Interested-party", "Q1 FY27 法說：FY27 資本支出 90–95（二手逐字稿；" + FACTS + " guide.fy27.capex）", "C10：近期以實績＋公司指引為錨；FY2028 起由命題推導")
@@ -602,8 +602,8 @@ for s in SC:
     PL[f"C{R['eps']}"].font = BLUE
     prow("epsg", "  EPS 年增", {c: f"={c}{R['eps']}/{p}{R['eps']}-1" for c, p in zip("DEFGHI", "CDEFGH")}, "0.0%", unit="%")
     v = {"C": "=Q!L24", "D": f"=Q!I24+Thesis!D{T['dep']}+nonai_dep_q*3+amort*0.75"}
-    for y in range(2028, 2033): v[yc(y)] = f"=Thesis!{tc(y)}{T['dep']}+nonai_cx*({yc(y)}{R['rev']}-Thesis!{tc(y)}{T['rev']})+amort"
-    prow("da", "折舊與攤銷（D&A）", v, note="AI 折舊（Thesis）＋非 AI 折舊（＝非 AI 資本支出，穩態）＋無形資產攤銷")
+    for y in range(2028, 2033): v[yc(y)] = f"=Thesis!{tc(y)}{T['dep']}+nonai_dep_q*({yc(y)}{R['rev']}-Thesis!{tc(y)}{T['rev']})/(q1_rev-Thesis!C{T['rev']})+amort"
+    prow("da", "折舊與攤銷（D&A）", v, note="AI 折舊（Thesis）＋非 AI 折舊（FY2024 水準每季 0.782，隨非 AI 營收相對 Q1 等比例）＋無形資產攤銷")
     prow("sbc", "股份基礎給付（SBC）", {"C": "=Q!L25", "D": "=sbc_q1*(1+3*un_rr)", **{yc(y): f"={yc(y-1)}{r}*(1+un_g)" for y in range(2028, 2033)}})
     prow("ebitda", "EBITDA（營業利益＋D&A）", {c: f"={c}{R['oi']}+{c}{R['da']}" for c in "CDEFGHI"})
     prow("aebitda", "調整後 EBITDA（＋SBC；共識與同業口徑）", {c: f"={c}{R['ebitda']}+{c}{R['sbc']}" for c in "CDEFGHI"})
@@ -1026,7 +1026,7 @@ lines = [
     (f'="投資建議："&Val!C{CON["rec"]}&"（加權目標價 US$"&TEXT({tp},"0.0")&"，現價 US$"&TEXT(px,"0.00")&"〔2026-10-26〕，上檔空間 "&TEXT({up},"+0.0%;-0.0%")&"）"', True),
     (f'="重點觀察 1：情境 B 的 FY2029 OCI 營收 "&TEXT(PL!F{B_["oci"]},"0.0")&" 十億美元（其中 AI 算力 "&TEXT(PL!F{B_["ai"]},"0.0")&"），只有公司路徑 114 的 "&TEXT(Thesis!D{RPO_ROWS[1]},"0%")&"；OCI AI 營業利益率 "&TEXT(Thesis!G{TB["om"]},"0.0%")&"，AI 增量 ROIC "&TEXT(Thesis!G{TB["roic"]},"0.0%")&"，對照 WACC "&TEXT(wacc,"0.0%")&"。"', False),
     (f'="重點觀察 2：收支關卡（FY2027–FY2031 自由現金流扣股利合計）情境 A／B／C 為 "&TEXT(CF!C{GATE},"0")&"／"&TEXT(CF!D{GATE},"0")&"／"&TEXT(CF!E{GATE},"0")&" 十億美元；情境 B 需新增投資級債 "&TEXT(CF!D{GATE+1},"0")&"、新股 "&TEXT(CF!D{GATE+2},"0")&"、高息債 "&TEXT(CF!D{GATE+3},"0")&"，調整後槓桿峰值 "&TEXT(CF!D{GATE+4},"0.00")&" 倍。"', False),
-    (f'="重點觀察 3：DCF 情境加權 "&TEXT(Val!C{CON["dcf"]},"0.0")&"、分部加總 "&TEXT(Val!C{CON["comp"]},"0.0")&"（OCI AI 只占分部企業價值的 "&TEXT(Val!D{SO_["oci_sh"]},"0%")&"）：價值主要來自軟體與支援的現金流，AI 擴張本身接近不創造價值；市場共識目標價 "&TEXT(cons_tp,"0")&"，高出本模型 "&TEXT(cons_tp/{tp}-1,"0%")&"。"', False),
+    (f'="重點觀察 3：DCF 情境加權 "&TEXT(Val!C{CON["dcf"]},"0.0")&"、分部加總 "&TEXT(Val!C{CON["comp"]},"0.0")&"（OCI AI 只占分部企業價值的 "&TEXT(Val!D{SO_["oci_sh"]},"0%")&"）。兩法差距來自 AI 擴張：同業倍數把 OCI AI 的 EBITDA 當成價值，但 DCF 扣掉 AI 折舊與汰換後，AI 增量報酬低於資金成本；市場共識目標價 "&TEXT(cons_tp,"0")&"，高出本模型 "&TEXT(cons_tp/{tp}-1,"0%")&"。"', False),
     ("", False),
     ("會計年度：FY(t)＝t−1 年 6 月～t 年 5 月。FY2027＝Q1 實績（2026-06～08）＋Q2–Q4 模型；延伸到 FY2032。金額十億美元，MW 為 IT 口徑。", False),
     ("營收分部層：官方報告分部（10-K 附註 13）＝Cloud and software（雲端與軟體）、Hardware、Services；其下營收線（新聞稿）＝Cloud Infrastructure（OCI）、Cloud Applications（SaaS）、Software license、Software support（以上屬 Cloud and software）、Hardware、Services。命題子列：OCI＝OCI AI 算力（命題模組）＋OCI 其他（非 AI，成長路徑）；子列合計＝母列（PL 頁核對列）。", False),
