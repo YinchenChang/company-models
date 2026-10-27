@@ -54,14 +54,22 @@ NAND_S_SRC = {s: _V[f"nq{s}_8"]["src"] for s in SCEN}
 UNITS = [(g["key"], g["name"], tuple(_b(f"u_{g['key']}_{y}") for y in (26, 27, 28)),
           tuple(_b(f"g_{g['key']}_{y}") for y in (26, 27, 28)), g["tag"], g["src"]) for g in SNAP["unit_groups"]]
 
-_REF_SEC = "M4."  # 對帳用參考（ref_inputs）；其餘節為 inputs()
+# 2029 平台別顆數成長（Siliconomics v0.2 起單一來源；tsmc、network 讀這裡）與合計年增（nand 讀這裡）
+G29 = {g["key"]: _V[f"g29_{g['key']}"] for g in SNAP["unit_groups"] if f"g29_{g['key']}" in _V}
+G_U29 = SNAP["names"].get("SIF_UnitsGrowth29")
+
+# 各記憶體公司模型 In 頁重播的節：inputs() 只放 M1–M3（市場層），ref_inputs() 只放 M4（對帳參考）；
+# M5 起的節（例如 2029 平台別成長）不寫進記憶體公司模型，由需要的模型經上面的名稱取用
+_INPUT_SECS = ("M1.", "M2.", "M2b.", "M3.")
+_REF_SECS = ("M4.",)
 
 
 def _replay(sec, inp, want_ref):
     on = False
+    want = _REF_SECS if want_ref else _INPUT_SECS
     for r in _ROWS:
         if "sec" in r:
-            on = r["sec"].startswith(_REF_SEC) == want_ref
+            on = r["sec"].startswith(want)
             if on:
                 sec(r["sec"])
             continue

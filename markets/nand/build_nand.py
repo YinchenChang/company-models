@@ -56,7 +56,7 @@ for i, y in enumerate((26, 27, 28)):
 for s in SC:
     for n, y in enumerate((28, 29)):
         inp(f"um{y}_{s}", f"情境 {s}：20{y} 顆數 ÷ 基準", "x", None, MEM.SCEN_UNITS[s][n], None, "Derived", f"{MEMSRC} SCEN_UNITS['{s}'][{n}]", "A＝1.0；B、C 為 Assumed（markets/memory）；CY2030 沿用 2029 係數" if (s == "A" and y == 28) else "同上")
-inp("g_u29", "2029 加速器顆數年增（情境 A 基準；B、C 再乘 um29）", "%", 0.0, 0.10, 0.25, "Assumed", "上游無 2029 顆數；markets/memory 以 HBM 需求位元 +30% 外推（hbm_dem29），顆數增速低於位元（每顆容量上升）", "三情境同一基準，情境差異只來自 um29（不自訂行業路徑）")
+inp("g_u29", "2029 加速器顆數年增（情境 A 基準；B、C 再乘 um29）", "%", 0.0, MEM.G_U29, 0.25, "Derived", f"Siliconomics {MEM.SIL_VERSION} SIF_UnitsGrowth29：平台別 2029 成長率（M5 節）加權，與台積電、網通模型同一路徑（v0.2 起；原 Assumed 10%）；低／高沿用原區間供敏感度", "三情境同一基準，情境差異只來自 um29（不自訂行業路徑）")
 inp("g_u30", "2030 加速器顆數年增（情境 A 基準；B、C 再乘 um29）", "%", -0.05, 0.05, 0.15, "Assumed", "上游只到 2029；收斂到低個位數成長", "同上")
 for y, (lo, b, hi) in zip((26, 27, 28, 29, 30), ((24, 30, 36), (27, 34, 41), (32, 40, 48), (37, 46, 55), (42, 52, 62))):
     inp(f"tb_{y}", f"每顆加速器帶動的企業級 SSD 容量 20{y}", "TB／顆", lo, b, hi, "Assumed",

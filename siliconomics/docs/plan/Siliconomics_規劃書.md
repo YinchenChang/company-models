@@ -39,12 +39,13 @@
 
 | 段 | 內容 | 下游數值 | 狀態 |
 |---|---|---|---|
-| v0.1 | 骨架（README、Scen、In、Path、Mkt、TK_In、Conflicts、Checks、Decisions、DB_Evidence、Interface）；Tokenomics v21.7 鏡像；`markets/memory/market.py` 的全部輸入搬入、`market.py` 改讀快照；跨模型衝突登錄；CI | **不變**（58 個目標逐格相同） | 本版 |
-| v0.2 | 補齊 v0.1 搬入列的區間與來源（Checks G2、G3 歸零）；加速器顆數延伸 2029–2032 的共用規則（取代台積電、NAND、網通各自的 2029 外推）；ASIC 每顆規格（由 `avgo/` 移入）；Trainium、AMD 份額等運算層衝突定值 | 運算、記憶體、網通、代工下游會變（逐項列在 PR） | 下一段 |
-| v0.3 | 網通（`markets/network` 輸入移入：每顆網通內容、CPO 三情境、銅轉光）與每 GW 晶片內容橋接表（`markets/chip_bridge`，同時改讀 TK v21.7 的機架價三名稱） | 網通與光模組下游 | |
-| v0.4 | 載板與 PCB（ABF 需求、供需缺口、Ibiden／欣興／南電／景碩份額表合計 ≤ 100%）；CoWoS 供需（`tsmc/` 的行業部分） | 載板、材料、代工 | |
-| v0.5 | 伺服器組裝、電源、散熱（組裝市場與 ODM 每櫃價、客供比例、AI 電源每 kW 與份額表、液冷每 GW 與滲透率、份額表） | 組裝、電源、散熱下游 | |
-| v0.6 | 設備（`markets/equipment` 輸入、測試 ÷ WFE、混合鍵合）與 NAND | 設備、NAND | |
+| v0.1 | 骨架（README、Scen、In、Path、Mkt、TK_In、Conflicts、Checks、Decisions、DB_Evidence、Interface）；Tokenomics v21.7 鏡像；`markets/memory/market.py` 的全部輸入搬入、`market.py` 改讀快照；跨模型衝突登錄；CI | **不變**（58 個目標逐格相同） | 完成（PR #180） |
+| v0.2 | 補齊 Assumed 列區間與缺來源（G2、G3 升為 ERROR）；2029 平台別顆數成長改為單一來源（CF18：台積電、網通改讀；NAND 2029 顆數年增 10% → 13.8%） | NAND、SanDisk、Kioxia 數值變動；其餘只有 In 頁文字與區間 | 本版 |
+| v0.3 | 運算層：ASIC 每顆規格（由 `avgo/`、nvidia `pa_*` 移入，CF13、CF14）、部署 GW 單一路徑（CF22）、TPU 設計服務份額表（CF19） | 運算與 ASIC 下游 | 下一段 |
+| v0.4 | 網通（`markets/network` 輸入移入：每顆網通內容、CPO 三情境與 CPO 份額表 CF21、銅轉光）與每 GW 晶片內容橋接表（改讀 TK v21.7 機架價三名稱，CF17） | 網通與光模組下游 | |
+| v0.5 | 載板與 PCB（ABF 缺口 CF03、GPU 載板份額表 CF20）；CoWoS 供需 | 載板、材料、代工 | |
+| v0.6 | 伺服器組裝、電源、散熱（CF04、CF09–CF12） | 組裝、電源、散熱下游 | |
+| v0.7 | 設備（測試 ÷ WFE CF15、混合鍵合）與 NAND 輸入 | 設備、NAND | |
 | R4 | 算力收支產業部署路徑三情境上線後，情境係數改由部署 GW 推導，並延伸到 2032 | 全部 | 待算力收支（預計 10-31 後） |
 
 ## 5. 待 Andy 判斷（預設照做、可撤回）
@@ -56,5 +57,5 @@
 
 ## 6. 已知限制（v0.1）
 
-- In 頁 50 列標記為 Assumed／Analogy 但沒有區間、2 列沒有來源文字——都是 `market.py` 原狀，為了證明搬移不改任何數值，v0.1 不動，v0.2 補齊。
+- v0.1 搬入時 In 頁 50 列 Assumed 缺區間、2 列缺來源（`market.py` 原狀）；v0.2 已補齊。
 - 只有記憶體與顆數層在本庫；其餘子產業的行業變數仍在各公司模型，衝突暫列 Conflicts 頁。

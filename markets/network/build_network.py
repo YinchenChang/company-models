@@ -54,7 +54,8 @@ sec("A. 加速器顆數（2026–2028 取自 markets/memory；2029 為成長率�
 for k, nm, u, gb, tag, src in MEM.UNITS:
     for i, y in enumerate((26, 27, 28)):
         inp(f"u_{k}_{y}", f"{nm} 顆數 20{y}", "百萬顆", None, u[i], None, tag, ("markets/memory/market.py：" + src) if i == 0 else "同上")
-    inp(f"g29_{k}", f"{nm} 2029 顆數成長", "%", None, {"bw": -0.5, "hp": 0.0}.get(k, 0.15), None, "Assumed", "2029 無顆數預測")
+    inp(f"g29_{k}", f"{nm} 2029 顆數成長", "%", MEM.G29[k]["lo"], MEM.G29[k]["base"], MEM.G29[k]["hi"], MEM.G29[k]["tag"],
+        f"Siliconomics {MEM.SIL_VERSION} SIF_g29_{k}（單一來源；2029 無平台別顆數預測，區間 ±10pt）" if k == MEM.UNITS[0][0] else "同上")
 sec("B. 每顆加速器網通內容（美元）")
 for p, (nm, vals, tag, src) in PLAT.items():
     for (ck, cn), v in zip(COMP, vals):
