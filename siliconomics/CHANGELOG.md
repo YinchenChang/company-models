@@ -1,5 +1,12 @@
 # Siliconomics 變更紀錄
 
+## v0.6.1（2026-10-27；`model/20261027_Siliconomics_v0.6.1.xlsx`；Tokenomics v21.7）
+
+- 新增 In 頁 M19（液冷，20 列）：機架內液冷每架內容 `lc_cool_gb`／`lc_cool_vr`（50／56 千美元，原在 markets/chip_bridge）、分歧管 `lc_mani`、內容調整 `lc_adj_*`、滲透率 `lc_pen_*`（行業情境：FY2027 起 A 高、B 基準、C 低）、TrendForce 對照（原在 avc）、奇鋐與雙鴻 FY2026 份額快照、奇鋐份額相對值（雙鴻原即讀同一組）、健策冷板元件份額（原在 jentech）。
+- Rack 頁新增 D 節 AI 液冷市場：情境 A 4.5／11.6／17.6／20.1 US$B（2026–29）；ShareTbl 新增 AI 液冷份額表（CF04，奇鋐＋雙鴻＋健策合計 54.5–65.8%）與 Checks K6-lc。
+- CF12：市場定義為機架內液冷＋分歧管；台達電液冷多在機架外（CDU、Liquid-to-Air），不屬本市場，原「台達電＋奇鋐＝115%」是兩個市場相加。機架外冷卻市場未建。
+- 下游：橋接表、avc、auras、jentech 改讀；數值不變（avc、auras 只有 In 頁來源文字）。決策 S21。
+
 ## v0.6（2026-10-27；`model/20261027_Siliconomics_v0.6.xlsx`；Tokenomics v21.7）
 
 - 新增 In 頁 M17（AI 電源，16 列）：每 kW 電源內容 `pwr_pkw_26–29`、台達電份額相對值 `pwr_drel_*`、光寶份額相對值 `pwr_lrel_*`（原在 delta、liteon，數值與文字逐字搬入）、FY2026 有效份額快照 `pwr_dsh_26`／`pwr_lsh_26`（Derived，公司模型校準值）、凱基兩個錨點 `pwr_kgi_0701`（70%）／`pwr_kgi_0926`（62.5%）、UBS 市場 `pwr_ubs_26／27`。

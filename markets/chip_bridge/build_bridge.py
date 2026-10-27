@@ -1,5 +1,7 @@
 # 每 GW 晶片內容橋接表（步驟 0）建檔程式：openpyxl 寫公式，之後由 LibreOffice 重算
-import json, os
+import json, os, sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "siliconomics"))
+import reader as SIL   # Siliconomics 快照（機架內液冷每架內容 v0.6.1 起為本庫單一值）
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment
 from openpyxl.utils import get_column_letter as L
@@ -57,7 +59,7 @@ rows = [
  ("nvsw","NVLink 交換匣＋背板 ÷ 機架","%",0.04,0.05,0.06,0.04,0.05,0.06,"Derived","Wing VC：NVIDIA 內容 >92%（含 NVLink）− 運算匣約 87% ≈ 5%"),
  ("nvsw_chip","交換匣中交換晶片占比","%",0.4,0.5,0.6,0.4,0.5,0.6,"Assumed","GB300 18 顆、VR200 36 顆 NVLink 交換晶片（NVIDIA）"),
  ("nonnv","非 NVIDIA 機架內容 ÷ 機架","%",0.05,0.07,0.08,0.05,0.07,0.08,"Interested-party","Wing VC：電源架、匯流排、冷板、鋼構、線纜、整合合計 <8%"),
- ("cool","其中：機架內液冷","$K/架",50,50,50,56,56,56,"Interested-party","Morgan Stanley（Tom's Hardware）：GB300 約 $49,860、Vera Rubin 約 $56K"),
+ ("cool","其中：機架內液冷","$K/架",*SIL.vals("lc_cool_gb"),*SIL.vals("lc_cool_vr"),"Interested-party","Morgan Stanley（Tom's Hardware）：GB300 約 $49,860、Vera Rubin 約 $56K"),
 ]
 R = {}
 r = 4

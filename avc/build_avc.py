@@ -90,19 +90,13 @@ for j, y in enumerate((26, 27, 28, 29)):
         "只作對帳（台達電液冷多在機架外：CDU、Liquid-to-Air），不進本模型計算" if y == 26 else "同上")
 
 sec("B. 液冷內容、滲透率與奇鋐份額（每架液冷內容取自橋接表；分歧管、內容調整、滲透率、份額為本模型 Assumed）")
-inp("mani", "每架分歧管與快接頭（橋接表未含）", "US$K", 3.0, 6.0, 10.0, "Assumed", "公司：分歧管月產能 7,000 支，約供 3,000–4,000 架（優分析 2026-08-12）→ 每架約 2 支", "分歧管單價：未找到")
-for y, lo, b, hi in ((27, 1.0, 1.3, 1.6), (28, 1.0, 1.4, 1.8), (29, 1.0, 1.4, 1.8)):
-    inp(f"lcadj_{y}", f"每架液冷內容 ÷ 橋接表 20{y}（Rubin 全液冷、ASIC 液冷；2026＝1）", "x", lo, b, hi, "Assumed",
-        ETTF + "：Vera Rubin 無風扇全液冷，液冷延伸到網卡、電源板、光模組，單架散熱價值提升（TrendForce，Interested-party）" if y == 27 else "同上",
-        "Morgan Stanley BOM 只計運算匣與交換匣；大和：2027 ASIC 營收超過 GPU（時報 2026-08-13）" if y == 27 else "—")
-for y, lo, b, hi in ((26, 0.45, 0.55, 0.65), (27, 0.60, 0.75, 0.85), (28, 0.70, 0.85, 0.95), (29, 0.75, 0.90, 0.95)):
-    inp(f"lpen_{y}", f"液冷滲透率 20{y}（部署 GW 中液冷占比）", "%", lo, b, hi, "Assumed",
-        ETTF + "：TrendForce AI 晶片液冷滲透率 2025 約 33%、2026 53%、2027 近 60%（以顆數計，Interested-party）" if y == 26 else "同上",
-        "以 GW 計高於顆數計（液冷晶片功耗較高）；Trainium 3 先氣冷後液冷（TechNews 2026-04-29）" if y == 26 else "—")
-for y, lo, b, hi in ((27, 0.85, 0.95, 1.05), (28, 0.75, 0.90, 1.05), (29, 0.70, 0.85, 1.05)):
-    inp(f"rel_{y}", f"奇鋐液冷份額 20{y} ÷ 2026（相對值）", "x", lo, b, hi, "Assumed",
-        "凱基 2026-08-05（網址見 Sources）：奇鋐為 CSP 與企業 GPU／ASIC 伺服器氣冷與液冷領導廠（未給份額，Interested-party）" if y == 27 else "同上",
-        "對手：雙鴻、酷碼、台達電、Boyd、CoolIT；公司 2027 液冷產能再擴約 50%（優分析 2026-08-12）；份額數字：未找到" if y == 27 else "—")
+inp("mani", *SIL.row9("lc_mani")[1:])   # Siliconomics M19
+for y in (27, 28, 29):
+    inp(f"lcadj_{y}", *SIL.row9(f"lc_adj_{y}")[1:])   # Siliconomics M19
+for y in (26, 27, 28, 29):
+    inp(f"lpen_{y}", *SIL.row9(f"lc_pen_{y}")[1:])   # Siliconomics M19（行業情境：FY2027 起 A 高、B 基準、C 低）
+for y in (27, 28, 29):
+    inp(f"rel_{y}", *SIL.row9(f"lc_avrel_{y}")[1:])   # Siliconomics M19
 for y, lo, b, hi in ((27, 0.60, 0.75, 0.90), (28, 0.45, 0.65, 0.85), (29, 0.40, 0.60, 0.80)):
     inp(f"acr_{y}", f"AI 氣冷每 GW 營收 20{y} ÷ 2026（相對值）", "x", lo, b, hi, "Assumed",
         "氣冷轉液冷：液冷滲透率上升，每 GW 氣冷金額下降（本模型推論）" if y == 27 else "同上",
@@ -155,8 +149,8 @@ inp("b_eps27citi", "花旗 FY2027 EPS（2026-08-13 前後）", "NT$", None, 153.
 inp("b_eps28gs", "高盛 FY2028 EPS（2026-10-19）", "NT$", None, 195.18, None, "Interested-party", TN1019, "—")
 inp("b_gm27", "花旗 FY2027 毛利率（2026-09-19）", "%", None, 0.349, None, "Interested-party", "經濟日報 2026-09-19（花旗）", "高盛 33.4%、凱基 33.8%")
 inp("b_lc27", "凱基：2027 年液冷 ÷ 營收（超過）", "%", None, 0.50, None, "Interested-party", KGI08, "大和：2027 液冷滲透率超過 50%")
-inp("tf_pen26", "TrendForce：AI 晶片液冷滲透率 2026（顆數）", "%", None, 0.53, None, "Interested-party", ETTF, "—")
-inp("tf_pen27", "TrendForce：AI 晶片液冷滲透率 2027（顆數）", "%", None, 0.60, None, "Interested-party", ETTF, "「近 60%」")
+inp("tf_pen26", *SIL.row9("lc_tf_26")[1:])   # Siliconomics M19
+inp("tf_pen27", *SIL.row9("lc_tf_27")[1:])   # Siliconomics M19
 
 sec("H. 價格與估值")
 inp("px", "股價（2026-10-22 收盤）", "NT$", None, 3145, None, "Interested-party", "HiStock、鉅亨（10-22 收盤 3,145，−2.78%）", "FinLab（10-24 更新）仍為 10-22 收盤；10-23 收盤：未找到")

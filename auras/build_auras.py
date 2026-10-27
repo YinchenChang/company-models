@@ -12,6 +12,8 @@ from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（液冷行業變數 v0.6.1 起單一來源）
 import cycle_position as CP
 import valuation_rule as VR
 import market as MEM
@@ -58,9 +60,13 @@ AW = openpyxl.load_workbook(AVC_F, data_only=True)
 AV = {}   # 奇鋐模型 In 頁的液冷內容、滲透率、份額相對值（低／基準／高）；兩家散熱廠用同一液冷市場口徑
 for r in AW["In"].iter_rows(min_row=4):
     k = r[0].value
-    if k and (k == "mani" or str(k).startswith(("lcadj_", "lpen_", "rel_", "vr26", "fx"))):
+    if k and str(k).startswith(("vr26", "fx")):
         AV[k] = (r[3].value, r[4].value, r[5].value, f"{rel(AVC_F)}｜In!D{r[0].row}:F{r[0].row}")
-assert all(k in AV for k in ("mani", "vr26", "fx", "lcadj_27", "lcadj_28", "lcadj_29", "lpen_26", "lpen_27", "lpen_28", "lpen_29", "rel_27", "rel_28", "rel_29")), AV.keys()
+assert all(k in AV for k in ("vr26", "fx")), AV.keys()
+# 液冷內容、滲透率、份額相對值：v0.6.1 起讀 Siliconomics M19（與奇鋐模型同一值）
+for k, sk in ([("mani", "lc_mani")] + [(f"lcadj_{y}", f"lc_adj_{y}") for y in (27, 28, 29)] + [(f"lpen_{y}", f"lc_pen_{y}") for y in (26, 27, 28, 29)]
+              + [(f"rel_{y}", f"lc_avrel_{y}") for y in (27, 28, 29)]):
+    AV[k] = (*SIL.vals(sk), f"siliconomics｜SIF_{sk}")
 AVSH = None
 for r in AW["Units"].iter_rows(min_row=4):
     if r[0].value == "奇鋐有效份額":
@@ -106,13 +112,13 @@ for s in SC:
 inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", AV["fx"][0], AV["fx"][1], AV["fx"][2], "Derived", AV["fx"][3], "與奇鋐、台達電模型相同")
 
 sec("B. 液冷內容、滲透率（讀奇鋐模型 In 頁：兩家用同一液冷市場口徑）與雙鴻份額相對值")
-inp("mani", "每架分歧管與快接頭（橋接表未含）", "US$K", *AV["mani"][:3], "Assumed", AV["mani"][3], "奇鋐模型的假設（唯讀）；雙鴻另做機架分歧管（Vera Rubin inner／rack manifold，經濟日報 2026-09-18）")
+inp("mani", "每架分歧管與快接頭（橋接表未含）", "US$K", *AV["mani"][:3], "Assumed", AV["mani"][3], "Siliconomics M19（與奇鋐模型同一值）；雙鴻另做機架分歧管（Vera Rubin inner／rack manifold，經濟日報 2026-09-18）")
 for y in (27, 28, 29):
     inp(f"lcadj_{y}", f"每架液冷內容 ÷ 橋接表 20{y}（Rubin 全液冷、ASIC 液冷；2026＝1）", "x", *AV[f"lcadj_{y}"][:3], "Assumed", AV[f"lcadj_{y}"][3],
-        "奇鋐模型的假設（唯讀）：TrendForce 稱 Vera Rubin 全液冷提高單架散熱價值（Interested-party）；本模型三情境用基準值，區間只在 Sens" if y == 27 else "同上")
+        "Siliconomics M19（與奇鋐模型同一值）：TrendForce 稱 Vera Rubin 全液冷提高單架散熱價值（Interested-party）；本模型三情境用基準值，區間只在 Sens" if y == 27 else "同上")
 for y in (26, 27, 28, 29):
     inp(f"lpen_{y}", f"液冷滲透率 20{y}（部署 GW 中液冷占比）", "%", *AV[f"lpen_{y}"][:3], "Assumed", AV[f"lpen_{y}"][3],
-        "奇鋐模型的假設（唯讀；TrendForce 以顆數計 2026 53%、2027 近 60%）。技術替代屬行業情境：FY2027 起 A 取高值、B 基準、C 低值；FY2026 三情境皆基準" if y == 26 else "同上")
+        "Siliconomics M19（與奇鋐模型同一值；TrendForce 以顆數計 2026 53%、2027 近 60%）。技術替代屬行業情境：FY2027 起 A 取高值、B 基準、C 低值；FY2026 三情境皆基準" if y == 26 else "同上")
 for y in (27, 28, 29):
     inp(f"rel_{y}", f"雙鴻液冷份額 20{y} ÷ 2026（相對值）", "x", *AV[f"rel_{y}"][:3], "Assumed", AV[f"rel_{y}"][3] + "（區間與奇鋐相同）",
         "公司特有：A 取高值（三個 ASIC 液冷專案 3Q／4Q26 量產、Vera Rubin 分歧管）、B 基準（與奇鋐相同的份額流失斜率：酷碼、台達電、富世達等追趕）、C 低值；凱基 2026-08-07：雙鴻為台灣前三大散熱廠（未給份額，Interested-party）；份額數字：未找到" if y == 27 else "同上")
