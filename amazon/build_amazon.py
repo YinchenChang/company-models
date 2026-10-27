@@ -92,7 +92,7 @@ S_TK = src("Tokenomics v21.4 快照（amazon/data/tokenomics_snapshot_v21.4.json
 S_KEV = src("k 證據（amazon/data/kevidence_amazon_20261008.json；Silicon Data H100 指數、AWS p5 牌價）", "2026-10-08", "amazon/data/kevidence_amazon_20261008.json", "Verified")
 S_EPOCH = src("Epoch AI 資料中心目錄（New Carlisle、Ridgeland、Madison）", "2026-10-05", "https://epoch.ai/data/ai-data-centers/directory/", "Analogy")
 S_V01A = src("v0.1a 資料報告（AI 在役 MW、對外比例、世代占比的推導）", "2026-10-08", "amazon/docs/reports/20261008_amazon_v0.1a_資料.md", "Derived")
-S_V022 = src("v0.2.2 交接檔（MW 速度、k 規格、WACC、持股、同業倍數；本版沿用）", "2026-10-25", "amazon/legacy_v0.2/docs_handoff_v0_2_2.md（搬移前：amazon/docs/handoff/20261025_Amazon收支模型_交接檔_v0_2_2.md）", "Derived")
+S_V022 = src("v0.2.2 交接檔（MW 速度、k 規格、WACC、持股、同業倍數；本版沿用）", "2026-10-25", "amazon/docs/handoff/20261025_Amazon收支模型_交接檔_v0_2_2.md；引擎 amazon/legacy_v0.2/", "Derived")
 S_PEERC = src("共用非 AI 雲端同業檔（ORCL、IBM、SAP、CRM、NOW、AKAM、EQIX、DOCN；StockAnalysis EV ÷ MarketScreener NTM EBITDA）", "2026-10-07", "amazon/data/peers_cloud_20261008.json", "Derived")
 S_PEERA = src("共用數位廣告同業檔（META、PINS、TTD、APP、RDDT、SNAP）", "2026-10-07", "amazon/data/peers_ads_20261009.json", "Derived")
 S_PEERR = src("零售同業（WMT、COST、TGT；事實總帳 val.peer.retail.*）", "2026-10-07", "amazon/data/amazon_facts_20261008.json", "Derived")
@@ -152,8 +152,8 @@ inp("ext_sh", "對外比例（AI MW 中租給客戶的比例）", "%", 0.6, 0.8,
 inp("long_sh", "長約占對外容量比例", "%", 0.7, 0.8, 0.9, "Assumed", "沿用 v0.2.2（pricing.longShare）", "Anthropic Trainium2 三站＋OpenAI 兩筆占多數")
 inp("p_spot", "H100 現貨價（Silicon Data 指數）", "US$/GPU-hr", None, 2.82, None, "Verified", S_KEV, "2026-10-06；MAG 三家共用（C1）")
 inp("p_list", "AWS p5.48xlarge 隨需（每 GPU 小時）", "US$/GPU-hr", None, 6.88, None, "Verified", S_KEV, "公開牌價（賣價，非成交價）；k 高軸")
-inp("p_long", "長約等值價格（判斷倍數 0.75 × v5.27 VR200 成本 12.762）", "US$m/MW-年", None, 9.5715, None, "Assumed", "沿用 v0.2.2（kspec.py long.base）", "判斷值，不是觀察到的市場價格")
-inp("p_long_lo", "長約等值價格下緣（判斷倍數 0.55 × 12.762）", "US$m/MW-年", None, 7.0191, None, "Assumed", "沿用 v0.2.2（kspec.py long.low）", "Anthropic 下限 0.22–0.45 只作對照")
+inp("p_long", "長約等值價格（判斷倍數 0.75 × v5.27 VR200 成本 12.762）", "US$m/MW-年", None, 9.5715, None, "Assumed", "沿用 v0.2.2（legacy_v0.2/kspec.py long.base）", "判斷值，不是觀察到的市場價格")
+inp("p_long_lo", "長約等值價格下緣（判斷倍數 0.55 × 12.762）", "US$m/MW-年", None, 7.0191, None, "Assumed", "沿用 v0.2.2（legacy_v0.2/kspec.py long.low）", "Anthropic 下限 0.22–0.45 只作對照")
 for code, nm in (("h100", "H100"), ("gb200", "GB200"), ("gb300", "GB300"), ("vr200", "VR200")):
     inp(f"tk_he_{code}", f"Tokenomics IF_HoldEcon｜{GEN[nm]}（每 MW 年持有成本，經濟口徑、基準）", "US$m/MW-年", None, tk("IF_HoldEcon", nm), None, "Derived", S_TK, "WACC 10% 下的打平持有成本（資本回收年金＋營運費用）")
 for code, nm in (("h100", "H100"), ("gb200", "GB200"), ("gb300", "GB300"), ("vr200", "VR200")):
@@ -165,8 +165,8 @@ inp("tk_fac", "Tokenomics L1_FacCapexMW（每 MW 機房資本支出）", "US$m/M
 inp("tk_life", "AI IT 設備折舊年限（Tokenomics IF_DeprLifeIT）", "年", 5, tk("IF_DeprLifeIT", "H100"), 7, "Derived", S_TK, "管理層口述伺服器 5–6 年（事實總帳 guide.server.life）")
 inp("fac_life", "機房折舊年限", "年", 15, 20, 30, "Assumed", "沿用 v0.2.2（AI 機房 20 年）", "管理層：資料中心建築 30 年以上")
 inp("tk_pq", "Tokenomics L1_RevGW_PQ_VR200（模型商每 MW 年實收 P×Q；只作上限檢查）", "US$m/MW-年", 36.2296, SNAP["items"]["L1_RevGW_PQ_VR200"]["values"], 78.4975, "Derived", S_TK, "上限，不得作預測")
-inp("k_long", "k_長約＝長約等值價格 ÷ 目前 VR200 IF_HoldEcon", "x", "=p_long_lo/tk_he_vr200", "=p_long/tk_he_vr200", None, "Derived", "kspec.py（v0.2.1 起隨目前快照重算）", "v0.2.2 為 0.783／0.574")
-inp("k_spot", "k_現貨＝現貨價 ÷ IF_GPUhrEcon｜H100", "x", None, "=p_spot/tk_gpuhr", "=p_list/tk_gpuhr", "Derived", "kspec.py（三家一致，C1）", "高＝AWS 牌價（v0.2.2 價格軸高）")
+inp("k_long", "k_長約＝長約等值價格 ÷ 目前 VR200 IF_HoldEcon", "x", "=p_long_lo/tk_he_vr200", "=p_long/tk_he_vr200", None, "Derived", "legacy_v0.2/kspec.py（v0.2.1 起隨目前快照重算）", "v0.2.2 為 0.783／0.574")
+inp("k_spot", "k_現貨＝現貨價 ÷ IF_GPUhrEcon｜H100", "x", None, "=p_spot/tk_gpuhr", "=p_list/tk_gpuhr", "Derived", "legacy_v0.2/kspec.py（三家一致，C1）", "高＝AWS 牌價（v0.2.2 價格軸高）")
 inp("k_A", "情境 A：新產能 k（價格軸高：現貨改用 AWS 牌價）", "x", None, "=long_sh*k_long+(1-long_sh)*k_spot_hi", None, "Derived", "沿用 v0.2.2 價格軸（pricing.kSpot.high）", "")
 inp("k_B", "情境 B：k（價格軸基準：長約 80% × k_長約＋現貨 20% × k_現貨）", "x", None, "=long_sh*k_long+(1-long_sh)*k_spot", None, "Derived", "沿用 v0.2.2（C1 混合 k）", "期初機隊三情境皆用本列")
 inp("k_C", "情境 C：新產能 k（價格軸低：長約下緣）", "x", None, "=long_sh*k_long_lo+(1-long_sh)*k_spot", None, "Derived", "沿用 v0.2.2 價格軸（pricing.kLong.low）", "")
@@ -247,7 +247,7 @@ inp("g26q3_oilo", "公司指引 2026Q3 營業利益下緣", "US$bn", None, 22.5,
 inp("g26q3_oihi", "公司指引 2026Q3 營業利益上緣", "US$bn", None, 26.5, None, "Interested-party", S_PR26Q2, "")
 
 sec("I. v0.2.2 對照（Recon 差異拆解用）")
-inp("v022_tp", "v0.2.2 基準目標價（讀法 1；2026-10-25）", "US$", None, 201.71, None, "Derived", "legacy_v0.2（v0.2.2 交接檔）", "讀法 2 為 220.09；三情境 212.33／201.71／201.14 皆賣出")
+inp("v022_tp", "v0.2.2 基準目標價（讀法 1；2026-10-25）", "US$", None, 201.71, None, "Derived", "docs/handoff（v0.2.2 交接檔）", "讀法 2 為 220.09；三情境 212.33／201.71／201.14 皆賣出")
 inp("v022_px", "v0.2.2 現價（2026-10-07）", "US$", None, 259.92, None, "Verified", "legacy_v0.2", "")
 
 INROW = {}
@@ -1123,4 +1123,109 @@ wb.save(OUT)
 ROWMAP = {"REG": {f"{a}|{b}": v for (a, b), v in REG.items()}, "INROW": INROW, "QR": QR, "VR": VR, "SENS_LAST": SENS_LAST, "SENS_CHK": SENS_CHK, "RECON_LAST": RECON_LAST}
 if os.environ.get("AMZN_ROWMAP"):
     json.dump(ROWMAP, open(os.environ["AMZN_ROWMAP"], "w"), ensure_ascii=False, indent=1)
+
+
+# =====================================================================================
+# html.json（tools/company_html 展示層設定；列號取自本產生器，文字不含手寫數字）
+# =====================================================================================
+def html_config():
+    rr = lambda s, blk, key: REG[(E_[s][blk], key)][1]
+    ir = lambda k: INROW[k]
+    hp = REG[(E_["B"]["L"], "hdr")][1]
+
+    def drv(key, fmt, out_label, blk, okey, ocol, ofmt, direction):
+        sh = {"T": "Thesis", "S": "Seg", "L": "PL", "C": "CF", "V": "Val"}[blk]
+        return [f"@In!B{ir(key)}", [f"@In!E{ir(key)}|{fmt}", " ", f"@In!C{ir(key)}"], f"@In!G{ir(key)}|tag",
+                [out_label, f"@{sh}!{ocol}{rr('B', blk, okey)}|{ofmt}"], direction]
+    pl_metric = lambda name, key, fmt, chart=True, ymin=None, sheet="PL", blk="L": {
+        "name": name, "fmt": fmt, "rows": {s: f"@{sheet}!G{rr(s, blk, key)}:M{rr(s, blk, key)}" for s in SC}, "chart": chart, **({"ymin": ymin} if ymin else {})}
+    vfmt = {5: "n2", 6: "n2", 7: "n2", 8: "p0", 9: "p0", 10: "p1", 11: "n1", 12: "p1", 13: "n2", 14: "n1"}
+    rec_fmt = {}
+    for r_ in range(4, RECON_LAST + 1):
+        lab = str(RC.cell(r_, 1).value or "")
+        if "EPS" in lab or "目標價" in lab or "差異" in lab or "（1）" in lab or "（2）" in lab or "（3）" in lab:
+            rec_fmt[str(r_)] = {c: "n2" for c in "BCDE"}
+        if "所需 k" in lab:
+            rec_fmt[str(r_)] = {c: "n3" for c in "CDE"}
+        if "上限檢查" in lab:
+            rec_fmt[str(r_)] = {c: "p1" for c in "CDE"}
+        if "上檔空間" in lab:
+            rec_fmt[str(r_)] = {"B": "sp1"}
+    return {
+        "company": "Amazon",
+        "ticker": "AMZN",
+        "thesis": "@README!A3",
+        "question": "FY2028 AWS 營業利益率與自由現金流（扣股利後）是否轉正並維持",
+        "scenarios": [{"key": "A", "name": "情境 A（樂觀）"}, {"key": "B", "name": "情境 B（基準）"}, {"key": "C", "name": "情境 C（保守）"}],
+        "sections": [
+            {"id": "thesis", "title": "命題與核心問題", "intro": "@README!A2", "blocks": [
+                {"type": "kv", "items": [["結論", "@README!A5"], ["命題答案", "@README!A6"], ["三情境", "@Thesis!A2"], ["估值方法", "@Val!B31"]]},
+                {"type": "h3", "text": "重點觀察"},
+                {"type": "list", "items": ["@README!A7", "@README!A8", "@README!A9"]}]},
+            {"id": "drivers", "title": "驅動因子 → 推導量", "intro": "標記沿用 Excel：Verified、Interested-party、Analogy、Assumed、Derived。輸入取自 In 頁，推導量取自情境 B（FY2028）。",
+             "blocks": [
+                {"type": "table", "head": ["輸入", "基準值", "標記", "推導量（情境 B）", "因果方向"], "rows": [
+                    drv("mw_open", "n0", "對外 AI 在役 MW（FY2028 年底）：", "T", "mw", "I", "n0", "期初在役容量是命題模組的起點；公司未揭露，取第三方估計"),
+                    drv("pace_B", "n1", "新增 AI 總 MW（FY2027）：", "T", "addT", "H", "n0", "資本支出指引換成實體產能；除以對外比例得到含自用的總容量"),
+                    drv("ext_sh", "p0", "自用 AI 成本淨額（FY2028）：", "T", "int_cost", "I", "n1", "對外比例越低，自用容量的成本越多落在零售分部"),
+                    drv("k_B", "n3", "AWS AI 營收（FY2028）：", "T", "rev", "I", "n1", "每 MW 年收入＝持有成本 × k；k 由現貨與長約價格證據推算"),
+                    drv("tk_he_vr200", "n2", "新增產能每 MW 年收入（FY2028）：", "T", "rpm_new", "I", "n2", "新世代持有成本較高，新增產能的每 MW 收入隨世代上升"),
+                    drv("tk_cx_vr200", "n2", "AI 資本支出（FY2028）：", "T", "cx", "I", "n1", "新增總 MW 乘每 MW 的設備與自建機房成本，加上汰換"),
+                    drv("tk_life", "n0", "AI 折舊（FY2028）：", "T", "da", "I", "n1", "資本支出依年限提列折舊，進入分部營業利益"),
+                    drv("g_awso_lt", "p0", "AWS 其他營收（FY2028）：", "T", "awso", "I", "n1", "非人工智慧雲端由近期年增收斂到長期值"),
+                    drv("m_ad", "p0", "北美營業利益（FY2028）：", "L", "oi_na", "I", "n1", "廣告利潤率決定零售分部利潤的來源；零售本業利益率為殘差"),
+                    drv("g_ad", "p0", "廣告營收（FY2028）：", "S", "rev_ad", "I", "n1", "廣告是零售分部利益率的主要驅動"),
+                    drv("wacc", "p1", "DCF 情境價值（情境 B）：", "V", "dcf12", "C", "n2", "折現率由資本資產定價模型計算，沿用前版輸入"),
+                ]},
+                {"type": "h3", "text": "各頁因果"},
+                {"type": "list", "items": ["@README!A12", "@README!A13", "@README!A14", "@README!A15", "@README!A16"]}]},
+            {"id": "pl", "title": "三情境損益", "intro": "@PL!A1", "blocks": [
+                {"type": "pl", "years": f"@PL!G{hp}:M{hp}", "metrics": [
+                    pl_metric("合併營收（十億美元）", "tot", "n0"),
+                    pl_metric("AWS 營收（十億美元）", "aws", "n0"),
+                    pl_metric("其中 AWS AI（命題子列）", "aws_ai", "n0", chart=False),
+                    pl_metric("AWS 營業利益率", "m_aws", "p1", ymin="auto"),
+                    pl_metric("合併營業利益（十億美元）", "oi", "n0", chart=False),
+                    pl_metric("每股盈餘（美元）", "eps", "n2"),
+                    pl_metric("自由現金流（十億美元）", "fcf", "n0", sheet="CF", blk="C", ymin="auto"),
+                    pl_metric("對外人工智慧投入資本報酬率", "roic", "p1", chart=False, sheet="Thesis", blk="T")]},
+                {"type": "table", "caption": "分部核對（三情境絕對值合計，應為零）", "grid": True, "head": [f"@PL!A5", *[f"@PL!{c}5" for c in "CDEFGHIJKLM"]],
+                 "rowgen": {"sheet": "PL", "rows": "6-10", "cols": ["A"] + list("CDEFGHIJKLM"), "fmts": [""] + ["n3"] * 11}}]},
+            {"id": "valuation", "title": "估值", "intro": "@Val!A1", "blocks": [
+                {"type": "table", "caption": "@Val!A3", "head": ["@Val!A4", "@Val!B4", "@Val!C4", "@Val!D4", "@Val!E4"],
+                 "rowgen": {"sheet": "Val", "rows": "5-14", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n2", "n2", "n2", ""],
+                            "row_fmt": {str(k): {c: f for c in "BCD"} for k, f in vfmt.items()}}},
+                {"type": "table", "head": ["@Val!A16", "@Val!B16", "@Val!E16"],
+                 "rowgen": {"sheet": "Val", "rows": "17-30", "cols": ["A", "B", "E"], "fmts": ["", "n2", ""],
+                            "row_fmt": {"21": {"B": "sp1"}, "22": {"B": "sp1"}, "26": {"B": "sp1"}, "29": {"B": "n1"}, "30": {"B": "p2"}}}},
+                {"type": "bars", "title": "目標價與現價", "fmt": "n0", "items": [
+                    {"label": "@Val!A19", "value": "@Val!B19", "series": 0}, {"label": "@Val!A17", "value": "@Val!B17", "series": 1},
+                    {"label": "@Val!A18", "value": "@Val!B18", "series": 2}, {"label": "@Val!A25", "value": "@Val!B25", "series": 1}],
+                 "ref": {"label": "@Val!A20", "value": "@Val!B20"}},
+                {"type": "table", "caption": "收支關卡", "head": ["@CF!A5", "@CF!B5", "@CF!C5", "@CF!D5", "@CF!E5"],
+                 "rowgen": {"sheet": "CF", "rows": "6-10", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n1", "n1", "n1", "n1"]}},
+                {"type": "note", "parts": ["@Val!A31", "：", "@Val!B31"]}]},
+            {"id": "recon", "title": "對帳：共識、指引與前版", "intro": "@Recon!A1", "blocks": [
+                {"type": "table", "head": [f"@Recon!{c}3" for c in "ABCDEFH"],
+                 "rowgen": {"sheet": "Recon", "rows": f"4-{RECON_LAST}", "cols": list("ABCDEFH"), "fmts": ["", "n1", "n1", "n1", "n1", "sp1", ""], "row_fmt": rec_fmt}}]},
+            {"id": "sens", "title": "敏感度", "intro": "@Sens!A1", "blocks": [
+                {"type": "tornado", "title": "情境 B 目標價相對基準的變動（一次動一個輸入）", "sheet": "Sens", "rows": f"5-{SENS_LAST}", "label_col": "A", "value_col": "D", "fmt": "sp1"},
+                {"type": "table", "collapse": True, "summary": "展開：全部案例的目標價、AWS 營業利益率、每股盈餘與收支關卡",
+                 "head": [f"@Sens!{c}3" for c in "ABCDEFGH"],
+                 "rowgen": {"sheet": "Sens", "rows": f"4-{SENS_LAST}", "cols": list("ABCDEFGH"), "fmts": ["", "", "n2", "sp1", "p1", "n2", "n1", ""]}},
+                {"type": "note", "parts": ["@Sens!A" + str(SENS_CHK), "：", "@Sens!C" + str(SENS_CHK) + "|n3"]}]},
+            {"id": "status", "title": "資料狀態", "blocks": [
+                {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"],
+                                         ["Tokenomics 快照", [f"@In!H{ir('tk_he_h100')}", "；本版維持，下次季度滾動時升級"]]]},
+                {"type": "h3", "text": "資料範圍"},
+                {"type": "list", "items": ["@Q!A1", "@Q!A2", "@In!A2"]},
+                {"type": "h3", "text": "已知限制"},
+                {"type": "note", "parts": ["@README!A20"]},
+                {"type": "h3", "text": "「未找到」清單"},
+                {"type": "scan", "needle": "未找到", "collapse": True, "summary": "展開：標為「未找到」的項目", "sheets": {"Recon": ["A"], "In": ["B"]}, "empty": "沒有標為未找到的項目。"}]},
+        ]}
+
+
+if os.environ.get("AMZN_WRITE_HTMLJSON") or len(sys.argv) <= 1:
+    json.dump(html_config(), open(os.path.join(HERE, "html.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print(OUT)
