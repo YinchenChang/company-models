@@ -194,7 +194,8 @@ inp("colo_sh", "機房租用比例（第三方託管）", "%", 0.1, 0.2, 0.3, "I
 inp("rent_rec", "租用機房年租金 ÷ 機房資本支出（資本回收係數，C22）", "%", None, 0.10, None, "Assumed", "對照表 r1 C22", "")
 inp("rent_mw", "每 MW 年機房租金（攤到全部 AI MW）＝租用比例 × 機房成本 × 回收係數", "US$m/MW-年", None, "=colo_sh*tk_fac*rent_rec", None, "Derived", "上列", "")
 inp("capex_g26", "2026 現金資本支出指引（下限）", "US$bn", None, 220, None, "Interested-party", S_CALL, "上調自約 200；首期 AI 資本支出＝MAX(MW 公式, 指引 − 上半年實際 − 非 AI)")
-inp("internal_ai_reading", "自用 AI 讀法（2＝讀法 2 主值：自用 MW 以 k＝1 計影子效益、價值中性；1＝讀法 1：只計成本）", "1/2", 1, 2, None, "Assumed", "修正一（F1；對照表 r1 C16，chat 端預設讀法 2 為主值）", "讀法 1 列 Sens 與 Val 第 0 節")
+inp("internal_ai_reading", "自用 AI 讀法（2＝讀法 2 主值：自用 MW 以 k＝1 計影子效益、價值中性；1＝讀法 1：只計成本）", "1/2", 1, 2, None, "Assumed", "修正一（F1；對照表 r1 C16；Andy 2026-10-27 15:03 決定讀法 2 為主值）", "讀法 1 列 Sens 與 Val 第 0 節")
+inp("cip_lag", "實績期 AI 在建（CIP）轉入在役的延後年數", "年", 1, 1, 2, "Assumed", "修正三（獨立核對：AWS 折舊 2024→2025→1H26 年化 13.3→21.5→30.7）", "Sens：2 年")
 inp("ai_rr", "公司 AI 營收年化（AWS AI run-rate，>25）", "US$bn", None, fv("aws.aiRunRate.2026q2"), None, "Interested-party", S_PR26Q2, "只作 Recon 驗證列（C3）；不用於校準")
 KEYFILL |= {"pace_A", "pace_B", "pace_C", "ext_sh"}
 
@@ -259,6 +260,7 @@ inp("g26q3_mid", "公司指引 2026Q3 營收中點（2H26 零售營收校準目�
 
 sec("I. v0.2.2 對照（Recon 差異拆解用）")
 inp("v022_tp", "v0.2.2 基準目標價（讀法 1；2026-10-25）", "US$", None, 201.71, None, "Derived", "docs/handoff（v0.2.2 交接檔）", "讀法 2 為 220.09；三情境 212.33／201.71／201.14 皆賣出")
+inp("v022_tp2", "v0.2.2 基準目標價（讀法 2；2026-10-25）", "US$", None, 220.09, None, "Derived", "docs/handoff（v0.2.2 交接檔）", "自用 MW 以 k＝1 計影子收入")
 inp("v022_px", "v0.2.2 現價（2026-10-07）", "US$", None, 259.92, None, "Verified", "legacy_v0.2", "")
 inp("v022_wdcf", "v0.2.2 評價權重：DCF", "%", None, 0.45, None, "Derived", "legacy_v0.2", "分部 EV/EBITDA 55%")
 
@@ -595,11 +597,11 @@ def engine(eid, s, sheets, over=None, tag=""):
                                                "E": f"={t('itsh', 'F')}", **{c: f"={t('cx_add', c)}/({t('cx_add', c)}+tk_fac*(1-colo_sh))" for c in ["F", "G"] + FC}}, "0.0%")
     cx = {"C": "=«Q.cxn.D»-cx_rt*«Q.rt.D»-cx_awso*" + t("awso", "C"), "D": "=«Q.cxn.E»-cx_rt*«Q.rt.E»-cx_awso*" + t("awso", "D"),
           "E": "=«Q.cxn.P»-cx_rt*«Q.rt.P»-cx_awso*" + t("awso", "E"),
-          "F": f"=MAX({t('addT', 'F')}*({t('cx_add', 'F')}+tk_fac*(1-colo_sh))/1000,capex_g26-«Q.cxn.P»-{t('nonai_f', 'F')})", "G": f"={t('cx', 'E')}+{t('cx', 'F')}"}
+          "F": f"=capex_g26-«Q.cxn.P»-{t('nonai_f', 'F')}", "G": f"={t('cx', 'E')}+{t('cx', 'F')}"}
     cx.update({c: f"={t('addT', c)}*({t('cx_add', c)}+tk_fac*(1-colo_sh))/1000+{t('rfs', c)}" for c in FC})
     cx.update({VC[2023]: f"=«Q.cxn.C»-cx_rt*«Q.rt.C»-cx_awso*(«Q.aws.C»-mw_ye23/2*{P('rpm_open')}/1000)", **{VC[y]: f"={t('cx', c)}" for y, c in VY.items()}})
     T.row("cx", "AI 資本支出（現金，含自用）", "US$bn", cx, bold=True,
-          note="實績＝公司資本支出淨額 − 非 AI（零售 cx_rt、AWS 其他 cx_awso）；2H26＝MAX(MW 公式, 指引 220 − 上半年 − 非 AI)；之後＝新增 MW ×（IT＋自建機房）＋汰換")
+          note="實績＝公司資本支出淨額 − 非 AI（零售 cx_rt、AWS 其他 cx_awso）；2H26＝指引 220 − 上半年 − 非 AI（修正三：FY2026 現金資本支出錨定指引；2H26 新增 MW 部分由上半年在建資本支出支應）；之後＝新增 MW ×（IT＋自建機房）＋汰換")
     life = P("tk_life")
     rfs = {c: f"=SUMPRODUCT(--({yrs(T)}={YEAR[c]}-{life}),{T.t('addT', 'R')[:-2]}R»:«{T.id}.addT.AA»)*{t('cx_add', c)}/1000" for c in FC}
     T.row("rfs", "IT 汰換（折舊年限前新增的總 MW × 當年 IT 每 MW）", "US$bn", rfs)
@@ -609,8 +611,18 @@ def engine(eid, s, sheets, over=None, tag=""):
            "F": f"={t('cx', 'F')}", "G": f"={t('cx_dep', 'E')}+{t('cx_dep', 'F')}", **{c: f"={t('cx', c)}" for c in FC}}
     cxd.update({VC[y]: f"={t('cx_dep', c)}" for y, c in VY.items()})
     T.row("cx_dep", "AI 資本支出：折舊基礎（實績期以新增在役 MW × 每 MW 成本為上限）", "US$bn", cxd,
-          note="修正二：實績期超出新增在役 MW 的 AI 資本支出不提折舊、不計入 AI 投入資本（視為在建或非 AI；Assumed）")
-    T.row("cx_cip", "  實績期未轉為在役 MW 的 AI 資本支出（不提折舊）", "US$bn", {c: f"={t('cx', c)}-{t('cx_dep', c)}" for c in ["C", "D", "E", "F", "G"] + FC})
+          note="實績期以新增在役 MW × 每 MW 成本為上限；超出部分見下列在建（修正三：延後轉入在役後提列折舊）")
+    cipd = {c: f"={t('cx', c)}-{t('cx_dep', c)}" for c in ["C", "D", "E", "F", "G"] + FC}
+    cipd.update({VC[y]: f"={t('cx', VC[y])}-{t('cx_dep', VC[y])}" for y in range(2023, 2033)})
+    T.row("cx_cip", "  在建（CIP）：實績期超出新增在役 MW 成本的 AI 資本支出", "US$bn", cipd,
+          note="修正三：視為在建，延後 cip_lag 年轉入在役後提列折舊（仍計入 AI 投入資本）；AWS 分部折舊 2024→2025→1H26 年化 13.3→21.5→30.7 支持此處理")
+    cipit = {VC[y]: f"={t('cx_cip', VC[y])}*{t('itsh', 'C' if y <= 2025 else 'E')}" for y in range(2023, 2033)}
+    T.row("cip_it", "  在建中 IT 設備（依支出年份）", "US$bn", cipit)
+    def shift(key):
+        return {VC[y]: f"=SUMPRODUCT(--({yrs(T)}={y}-{P('cip_lag')}),«{T.id}.{key}.R»:«{T.id}.{key}.AA»)" for y in range(2023, 2033)}
+    T.row("cip_it_s", "  在建轉入在役：IT（依轉入年份）", "US$bn", shift("cip_it"))
+    cipfs = {VC[y]: f"=SUMPRODUCT(--({yrs(T)}={y}-{P('cip_lag')}),«{T.id}.cx_cip.R»:«{T.id}.cx_cip.AA»)-{t('cip_it_s', VC[y])}" for y in range(2023, 2033)}
+    T.row("cip_fac_s", "  在建轉入在役：機房（依轉入年份）", "US$bn", cipfs)
     cxit = {"C": f"={t('cx_dep', 'C')}*{t('itsh', 'C')}", "D": f"={t('cx_dep', 'D')}*{t('itsh', 'D')}", "E": f"={t('cx_dep', 'E')}*{t('itsh', 'E')}", "F": f"={t('cx_dep', 'F')}*{t('itsh', 'F')}",
             "G": f"={t('cxit', 'E')}+{t('cxit', 'F')}", **{c: f"=({t('cx_dep', c)}-{t('rfs', c)})*{t('itsh', c)}+{t('rfs', c)}" for c in FC}}
     cxit.update({VC[2023]: f"={t('cx_dep', VC[2023])}*{t('itsh', 'C')}", **{VC[y]: f"={t('cxit', c)}" for y, c in VY.items()}})
@@ -625,11 +637,11 @@ def engine(eid, s, sheets, over=None, tag=""):
         d.update({c: f"={t(key, VC[y])}" for y, c in VY.items()})
         d.update({"N": f"={t(key, 'D')}/2", "O": f"={t(key, 'D')}/2", "E": f"={t(key, 'G')}/2", "F": f"={t(key, 'G')}/2"})
         return d
-    T.row("da_it", "AI IT 折舊", "US$bn", daspec("da_it", f"=SUMPRODUCT(--({yrs(T)}<{{y}}),--({yrs(T)}>={{y}}-{life}),{rng('cxit')})/{life}"))
-    T.row("da_fac", "AI 機房折舊", "US$bn", daspec("da_fac", f"=SUMPRODUCT(--({yrs(T)}<{{y}}),{rng('cxfac')})/{P('fac_life')}"))
+    T.row("da_it", "AI IT 折舊（含在建轉入）", "US$bn", daspec("da_it", f"=(SUMPRODUCT(--({yrs(T)}<{{y}}),--({yrs(T)}>={{y}}-{life}),{rng('cxit')})+SUMPRODUCT(--({yrs(T)}<{{y}}),--({yrs(T)}>={{y}}-{life}),{rng('cip_it_s')}))/{life}"))
+    T.row("da_fac", "AI 機房折舊（含在建轉入）", "US$bn", daspec("da_fac", f"=(SUMPRODUCT(--({yrs(T)}<{{y}}),{rng('cxfac')})+SUMPRODUCT(--({yrs(T)}<{{y}}),{rng('cip_fac_s')}))/{P('fac_life')}"))
     dd = {c: f"={t('da_it', c)}+{t('da_fac', c)}" for c in ALL + [VC[y] for y in range(2023, 2033)]}
     T.row("da", "AI 折舊合計（對外 → AWS；自用 → 零售分部）", "US$bn", dd, bold=True)
-    ppe = {VC[y]: f"=SUM(«{T.id}.cx_dep.R»:{t('cx_dep', VC[y])})-SUM(«{T.id}.da.R»:{t('da', VC[y])})" for y in range(2023, 2033)}
+    ppe = {VC[y]: f"=SUM(«{T.id}.cx.R»:{t('cx', VC[y])})-SUM(«{T.id}.da.R»:{t('da', VC[y])})" for y in range(2023, 2033)}
     ppe.update({c: f"={t('ppe', VC[y])}" for y, c in VY.items()})
     T.row("ppe", "AI 淨 PP&E（期末）", "US$bn", ppe)
     T.sec("5. AWS AI 營業利益、自用 AI 成本、AWS 其他")
@@ -836,9 +848,9 @@ def engine(eid, s, sheets, over=None, tag=""):
     V.row("nopat", "NOPAT＝營業利益（評價口徑，含自用 AI 影子效益）×（1 − 稅率）", "US$bn", {c: f"={l('oi_v', c)}*(1-tax)" for c in FC})
     V.row("da", "＋分部折舊攤銷", "US$bn", {c: f"={l('da', c)}" for c in FC})
     V.row("cx", "− 資本支出", "US$bn", {c: f"={k_('cx', c)}" for c in FC})
-    V.row("lease", "融資租賃本金（不扣：融資租賃負債已列入淨負債，修正二）", "US$bn", {c: f"={k_('lease', c)}" for c in FC})
+    V.row("lease", "− 新增融資租賃資產（以融資租賃本金代理；非現金取得，修正三）", "US$bn", {c: f"={k_('lease', c)}" for c in FC})
     V.row("oth", "＋其他營運項目", "US$bn", {c: f"={k_('oth', c)}" for c in FC})
-    V.row("ufcf", "FCFF（SBC 不加回，視同現金成本）", "US$bn", {c: f"={v('nopat', c)}+{v('da', c)}-{v('cx', c)}+{v('oth', c)}" for c in FC}, bold=True)
+    V.row("ufcf", "FCFF（SBC 不加回，視同現金成本）", "US$bn", {c: f"={v('nopat', c)}+{v('da', c)}-{v('cx', c)}-{v('lease', c)}+{v('oth', c)}" for c in FC}, bold=True)
     V.row("df", "折現因子（期中）", "x", {c: f"=1/(1+{P('wacc')})^({YEAR[c]}-2026-0.5)" for c in FC}, "0.0000")
     V.row("pv", "現值", "US$bn", {c: f"={v('ufcf', c)}*{v('df', c)}" for c in FC})
     V.row("spv", "明確期現值合計", "US$bn", {"C": f"=SUM({v('pv', 'H')}:{v('pv', 'M')})"})
@@ -985,7 +997,7 @@ vrow(29, "gate1", "收支關卡（引用 CF 頁）：自由現金流扣股利五
 vrow(30, "wacc", "WACC／ke／g", {"B": "=wacc", "C": "=ke", "D": "=tg"}, "0.00%")
 V.cell(31, 1, "目標價方法")
 V_R1 = 32
-V["B31"] = ("DCF：FCFF＝NOPAT（評價口徑，含讀法 2 自用 AI 影子效益）＋分部折舊 − 資本支出＋其他營運項目（SBC 不加回、股數用流通股數；融資租賃負債列淨負債，本金不另扣），WACC（CAPM：β Blume 調整、rf 2026-10-26、"
+V["B31"] = ("DCF：FCFF＝NOPAT（評價口徑，含讀法 2 自用 AI 影子效益）＋分部折舊 − 資本支出＋其他營運項目（SBC 不加回、股數用流通股數；融資租賃負債列淨負債；另以融資租賃本金代理非現金取得的租賃資產扣除），WACC（CAPM：β Blume 調整、rf 2026-10-26、"
             "kd＝rf＋AA 利差、D 含類債務），FY2027–FY2032 期中折現，永續價值＝FY2033 NOPAT ×（1 − g ÷ RONIC）÷（WACC − g），RONIC＝WACC；2030–2032 新增 MW 收斂到 g；淨負債含融資租賃與融資義務；持股加回。"
             "分部加總：廣告、零售本業、AWS 其他＝未來 12 個月 EBITDA（SBC 加回口徑，與同業倍數一致）× 同業 NTM EV/EBITDA 中位數；AWS AI＝自身 DCF（EBITDA − 稅 − AI 資本支出含汰換；FY2028 起，FY2027 已在 2027 年底淨負債中）；減 2027 年底淨負債（含類債務）、加持股，÷ 稀釋股數。")
 for k in ("tps",):
@@ -1069,17 +1081,19 @@ rec("2026Q3 營業利益指引中點 vs 模型隱含 Q3（2H26 × 2025Q3 占 2H2
 rec("AWS AI 年化營收（評價日 2026-06-30）vs 公司「>25」", "=ai_rr", lambda s: "=mw_open*rpm_open/1000", "2026Q2 法說", "C3：不回頭改 MW 或 k，差距本身是發現")
 rec("要對上公司說法：所需 k（MW 不變）", None, lambda s: "=ai_rr*1000/(mw_open*he_open)", "", "對照 k_B（In 頁）", fmt="0.000", gap=False)
 rec("要對上公司說法：所需對外 MW（k 不變）", None, lambda s: "=ai_rr*1000/rpm_open", "", "對照期初 2,080 MW", fmt="#,##0", gap=False)
-rec("替代：期初 k 對上公司 run-rate 時的情境 B 目標價變動（每股）", None, lambda s: "=Sens!C15-Sens!C4", "Sens 頁案例", "不作主值（共同規則第 4 節：不以公司說法反推 k）；AWS 其他的成長起點已改用 FY2025 年增，不受此分拆影響", fmt="0.00", gap=False)
+rec("替代：期初 k 對上公司 run-rate 時的情境 B 目標價變動（每股）", None, lambda s: "=Sens!C16-Sens!C4", "Sens 頁案例", "不作主值（共同規則第 4 節：不以公司說法反推 k）；AWS 其他的成長起點已改用 FY2025 年增，不受此分拆影響", fmt="0.00", gap=False)
 rec("上限檢查：FY2028 每 MW 年收入 ÷ Tokenomics P×Q（VR200）", None, lambda s: f"={tk_(s, 'T', 'pq_chk', 'I')}", "Tokenomics v21.4", "上限，不得作預測", fmt="0.0%", gap=False)
 rsec("D. v0.3 vs v0.2.2：目標價差異拆解")
-r1 = rec("v0.2.2 基準目標價（讀法 1；現價 259.92，2026-10-07）", "=v022_tp", None, "legacy_v0.2", fmt="0.00", gap=False)
-r2 = rec("v0.3 加權目標價", "=Val!B19", None, "Val 頁", fmt="0.00", gap=False)
+r1 = rec("v0.2.2 基準目標價（讀法 2；現價 259.92，2026-10-07）", "=v022_tp2", None, "legacy_v0.2", "讀法 1 為 201.71", fmt="0.00", gap=False)
+r2 = rec("v0.3 加權目標價（讀法 2，主值）", "=Val!B19", None, "Val 頁", fmt="0.00", gap=False)
 r3 = rec("總差異", f"=B{r2}-B{r1}", None, "", fmt="0.00", gap=False)
 r4 = rec("（1）評價權重：DCF 45%＋分部 55% → 各半（以情境 B 計）", f"={tk_('B', 'V', 'tp', 'C')}-{tk_('B', 'V', 'tp4555', 'C')}", None, "", "方法變更", fmt="0.00", gap=False)
 r5 = rec("（2）情境加權（v0.2.2 以基準情境為目標價）", f"=Val!B19-{tk_('B', 'V', 'tp', 'C')}", None, "", "方法變更", fmt="0.00", gap=False)
 r6 = rec("（3）其餘：營收結構改官方分部、AI 折舊與自用 AI 成本進分部營業利益、DCF 永續法（RONIC）、分部加總口徑、現價與日期", f"=B{r3}-B{r4}-B{r5}", None, "",
          "未再細分：v0.2.2 引擎（legacy_v0.2）與本版結構不同，無法逐項替換重算", fmt="0.00", gap=False)
-rec("v0.2.2 上檔空間（基準 ÷ 當時現價 − 1）", "=v022_tp/v022_px-1", None, "", "v0.2.2 評等：賣出（舊三級口徑）", fmt="0.0%", gap=False)
+rec("另列：讀法差異 v0.3（讀法 2 − 讀法 1，加權）", "=Val!B19-Val!B33", None, "Val 頁", "Andy 2026-10-27 15:03 決定讀法 2 為主值", fmt="0.00", gap=False)
+rec("另列：讀法差異 v0.2.2（讀法 2 − 讀法 1，基準）", "=v022_tp2-v022_tp", None, "legacy_v0.2", "", fmt="0.00", gap=False)
+rec("v0.2.2 上檔空間（讀法 2 基準 ÷ 當時現價 − 1）", "=v022_tp2/v022_px-1", None, "", "v0.2.2 評等：賣出（舊三級口徑）", fmt="0.0%", gap=False)
 RC.column_dimensions["A"].width = 64
 for c in "BCDEF": RC.column_dimensions[c].width = 13
 RC.column_dimensions["G"].width = 40; RC.column_dimensions["H"].width = 60
@@ -1095,6 +1109,7 @@ CASES = [("新產能 k 低（價格軸低 k_C）", "k_長約 0.574 混合", {"kn
          ("AI IT 折舊 5 年", "Tokenomics 6 年 → 5", {"tk_life": "tk_life_lo"}, "命題"), ("AI IT 折舊 7 年", "6 → 7", {"tk_life": "tk_life_hi"}, "命題"),
          ("自研晶片係數 0.7（收入與資本支出）", "C2 敏感度", {"cf_chip": "cf_chip_lo", "cf_cx": "cf_cx_lo"}, "命題"),
          ("自用 AI 讀法 1（只計成本）", "C16；主值為讀法 2", {"internal_ai_reading": "1"}, "命題"),
+         ("實績期 AI 在建延後 2 年轉入在役", "預設 1 年（修正三）", {"cip_lag": "cip_lag_hi"}, "命題"),
          ("期初 k 對上公司 AI run-rate（>25）", "期初每 MW 收入＝ai_rr ÷ 期初 MW（k 約 1.23）；只作對照", {"rpm_open": "(ai_rr*1000/mw_open)"}, "命題"),
          ("AWS 其他長期成長 5%", "g_awso_lt 低", {"g_awso_lt": "g_awso_lt_lo"}, "業務"), ("AWS 其他長期成長 11%", "g_awso_lt 高", {"g_awso_lt": "g_awso_lt_hi"}, "業務"),
          ("廣告利益率 40%", "m_ad 低", {"m_ad": "m_ad_lo"}, "業務"), ("廣告利益率 60%", "m_ad 高", {"m_ad": "m_ad_hi"}, "業務"),
@@ -1124,7 +1139,7 @@ for n, (nm_, st, ov, cat) in enumerate(CASES, 1):
     e = engine(f"X{n:02d}", "B", SB, ov, tag=f"｜Sens 案例：{nm_}")
     sens_row(4 + n, nm_, st, e, cat)
 SENS_LAST = 4 + len(CASES)
-assert str(SE.cell(15, 1).value).startswith("期初 k"), SE.cell(15, 1).value
+assert str(SE.cell(16, 1).value).startswith("期初 k"), SE.cell(15, 1).value
 SE.cell(SENS_LAST + 2, 1, "檢查：Sens 基準區塊目標價 − Val 情境 B 目標價（應為 0）")
 SE.cell(SENS_LAST + 2, 3, f"={base['V'].t('tp', 'C')}-C4").number_format = "0.000000"
 for col in range(1, 9): SE.cell(SENS_LAST + 2, col).fill = CHK
