@@ -29,18 +29,16 @@ def nums(ws, r):
 
 
 n_chk = 0
-for sh in ("Q", "Seg", "PL"):
+for sh in ("Q", "Seg", "PL", "CF", "Val"):
     ws = wb[sh]
     for r in rows_with(ws, "檢查："):
+        if "應為 1" in str(ws.cell(r, 1).value): continue
         vs = nums(ws, r)
         n_chk += 1
         if any(abs(v) > 1e-6 for v in vs):
             fail.append(f"{sh}!A{r}「{ws.cell(r, 1).value}」有非零值 {[round(v, 6) for v in vs if abs(v) > 1e-6][:5]}")
-print(f"核對列：{n_chk} 列（Q、Seg、PL；含三情境）")
+print(f"核對列：{n_chk} 列（Q、Seg、PL、CF、Val；含三情境）")
 cf = wb["CF"]
-for r in rows_with(cf, "檢查："):
-    vs = nums(cf, r)
-    if any(abs(v) > 1e-6 for v in vs): fail.append(f"CF!A{r} 非零 {vs}")
 V = wb["Val"]
 need = ["目標價（DCF 與 Comparable 加權）", "上檔空間：加權目標價", "投資建議", "上檔空間級距", "DCF 目標價（情境加權）", "Comparable 目標價（市場主流同業法）",
         "價格帶（DCF 不如預期～順利）", "現價（2026-10-26 收盤）", "市場共識目標價"]

@@ -18,15 +18,17 @@ def met(name, key, fmt, chart=False, sheet="PL", d=PR, ymin=None):
     if chart: m["chart"] = True
     if ymin: m["ymin"] = ymin
     return m
-conc0 = VR["tpdcf"]; conc1 = VR["wsum"]
+conc0 = VR["tpdcf"]; conc1 = VR["chk_rd"]
 rowfmt_conc = {}
 for k in ("up", "upc", "scenup", "tvsh2"):
     rowfmt_conc[str(VR[k])] = {"B": "sp1", "C": "sp1", "D": "sp1"}
 rowfmt_conc[str(VR["tier"])] = {"B": ""}; rowfmt_conc[str(VR["rec"])] = {"B": ""}; rowfmt_conc[str(VR["meth"])] = {"B": ""}
-rowfmt_conc[str(VR["rd2tp"])] = {"B": "n2", "C": "sp1"}; rowfmt_conc[str(VR["wsum"])] = {"B": "n2"}
+for k in ("tp_r2", "tp_r1"): rowfmt_conc[str(VR[k])] = {"B": "n2", "C": "sp1", "D": ""}
+for k in ("tp_dcf12", "tp_sotp12"): rowfmt_conc[str(VR[k])] = {"B": "n2", "C": "n2"}
+rowfmt_conc[str(VR["wsum"])] = {"B": "n2"}; rowfmt_conc[str(VR["chk_rd"])] = {"B": "n3"}
 dsum0, dsum1 = VR["pvx"], VR["dcf12"]
 sotp0 = VR["s_yt"]; sotp1 = VR["simp"]
-rf_s = {str(VR["tvsh"]): {"B": "p1", "C": "p1", "D": "p1"}, str(VR["shv"]): {"B": "n3", "C": "n3", "D": "n3"}}
+rf_s = {str(VR["tvsh"]): {"B": "p1", "C": "p1", "D": "p1"}, str(VR["shv"]): {"B": "n3", "C": "n3", "D": "n3"}, str(VR["ppref"]): {"B": "n2", "C": "n2", "D": "n2"}}
 rf_t = {str(VR["ssh"]): {"B": "n3", "C": "n3", "D": "n3"}, str(VR["simp"]): {"B": "x1", "C": "x1", "D": "x1"}}
 gate = rm["GATE"]
 r1 = find("Recon", "1. 合併層"); r2 = find("Recon", "2. 逐分部"); r3 = find("Recon", "3. v0.3"); rend = find("Recon", "其餘：")
@@ -78,10 +80,10 @@ cfg = {
        {"label": "@Val!A" + str(VR["tpdcf"]), "value": "@Val!B" + str(VR["tpdcf"]), "series": 0},
        {"label": "@Val!A" + str(VR["tpcomp"]), "value": "@Val!B" + str(VR["tpcomp"]), "series": 1},
        {"label": "@Val!A" + str(VR["tp"]), "value": "@Val!B" + str(VR["tp"]), "series": 2},
-       {"label": "@Val!A" + str(VR["rd2tp"]), "value": "@Val!B" + str(VR["rd2tp"]), "series": 1},
+       {"label": "@Val!A" + str(VR["tp_r1"]), "value": "@Val!B" + str(VR["tp_r1"]), "series": 1},
        {"label": "@Val!A" + str(VR["cons"]), "value": "@Val!B" + str(VR["cons"]), "series": 0}],
      "ref": {"label": "@Val!A" + str(VR["px"]), "value": "@Val!B" + str(VR["px"])}},
-    {"type": "kv", "items": [["@Val!A" + str(VR[k]), "@Val!B" + str(VR[k]) + "|" + f] for k, f in (("emkt", "n0"), ("ke", "p2"), ("kdat", "p2"), ("wacc", "p2"))]},
+    {"type": "kv", "items": [["@Val!A" + str(VR[k]), "@Val!B" + str(VR[k]) + "|" + f] for k, f in (("emkt", "n0"), ("dmkt", "n1"), ("ke", "p2"), ("kdat", "p2"), ("wacc", "p2"), ("ronic", "p2"), ("ai_pv", "n1"), ("ai_tv", "n1"), ("ai_v", "n1"))]},
     {"type": "table", "caption": "DCF 彙總（三情境）", "head": ["項目", "情境 A", "情境 B", "情境 C"],
      "rowgen": {"sheet": "Val", "rows": f"{dsum0}-{dsum1}", "cols": ["A", "B", "C", "D"], "fmts": ["", "n1", "n1", "n1"], "row_fmt": rf_s}},
     {"type": "table", "caption": "分部加總（目標時點 NTM EBITDA × 同業倍數）", "head": ["分部／產品線", "情境 A", "情境 B", "情境 C", "倍數", "EV：A", "EV：B", "EV：C"],
