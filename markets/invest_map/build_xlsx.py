@@ -434,7 +434,7 @@ def main():
         if m.get("v2"):
             # 估值 v2（地圖 v0.4，2026-10-25）：中心＝模型「目標價（DCF 與 Comparable 加權）」；
             # 下檔＝C 情境 DCF 價值（推到 12 個月後，即價格帶下緣）。對照欄＝模型內的舊法規則值情境加權價（參考）。
-            method = "加權目標價（DCF 50%＋Comparable 50%）"
+            method = "加權目標價（DCF 50%＋分部加總 50%）" if m.get("seg_model") else "加權目標價（DCF 50%＋Comparable 50%）"
             c1 = m["tp"]
             b1 = m["dcf_C"]
             if "old_rule" in m:
