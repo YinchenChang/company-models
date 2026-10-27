@@ -1006,8 +1006,10 @@ for lab, key in (("North America", "na"), ("International", "intl"), ("AWS", "aw
             "公司不揭露 AI 營收" if key == "aws_ai" else "", gap=False)
 rsec("C. 公司指引與說法（驗證列；不用於校準）")
 rec("FY2026 現金資本支出 vs 指引約 220", "=capex_g26", lambda s: f"={tk_(s, 'C', 'cx', 'G')}", "2026Q2 法說（二手逐字稿）", "2H26 AI 資本支出取 MAX(MW 公式, 指引下限)")
-rec("2026Q3 營收指引中點 vs 模型 2H26 ÷ 2", "=(g26q3_lo+g26q3_hi)/2", lambda s: f"={tk_(s, 'L', 'tot', 'F')}/2", "2026Q2 新聞稿", "Q4 季節性高於 Q3，2H ÷ 2 應高於 Q3 指引")
-rec("2026Q3 營業利益指引中點 vs 模型 2H26 ÷ 2", "=(g26q3_oilo+g26q3_oihi)/2", lambda s: f"={tk_(s, 'L', 'oi', 'F')}/2", "2026Q2 新聞稿", "同上")
+rec("2026Q3 營收指引中點 vs 模型隱含 Q3（2H26 × 2025Q3 占 2H25 比例）", "=(g26q3_lo+g26q3_hi)/2", lambda s: f"={tk_(s, 'L', 'tot', 'F')}*«Q.tot.J»/«Q.tot.O»", "2026Q2 新聞稿",
+    "指引 197–202（含 Prime Day 時點約 −400bp、匯率 −80bp）；季節比例為 Derived")
+rec("2026Q3 營業利益指引中點 vs 模型隱含 Q3（2H26 × 2025Q3 占 2H25 比例）", "=(g26q3_oilo+g26q3_oihi)/2", lambda s: f"={tk_(s, 'L', 'oi', 'F')}*«Q.oi.J»/«Q.oi.O»", "2026Q2 新聞稿",
+    "指引 22.5–26.5；2025Q3 營業利益含 FTC 和解等一次性費用，比例偏低")
 rec("AWS AI 年化營收（評價日 2026-06-30）vs 公司「>25」", "=ai_rr", lambda s: "=mw_open*rpm_open/1000", "2026Q2 法說", "C3：不回頭改 MW 或 k，差距本身是發現")
 rec("要對上公司說法：所需 k（MW 不變）", None, lambda s: "=ai_rr*1000/(mw_open*he_open)", "", "對照 k_B（In 頁）", fmt="0.000", gap=False)
 rec("要對上公司說法：所需對外 MW（k 不變）", None, lambda s: "=ai_rr*1000/rpm_open", "", "對照期初 2,080 MW", fmt="#,##0", gap=False)
