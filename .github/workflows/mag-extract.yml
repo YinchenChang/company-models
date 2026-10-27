@@ -19,14 +19,6 @@ jobs:
       - uses: actions/setup-python@v6
         with: {python-version: "3.12"}
       - run: pip install openpyxl && (sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils) >/dev/null
-      - name: Probe sources（診斷）
-        run: |
-          mkdir -p mag/extract/out
-          { echo "# 來源連線診斷 $(date -u +%FT%TZ)"; echo "出口 IP：$(curl -s https://api.ipify.org)";
-            for ua in "YinchenChang YinchenChang@users.noreply.github.com" "company-models YinchenChang@users.noreply.github.com"; do
-              for enc in "gzip, deflate" "identity"; do
-                c=$(curl -s --compressed -o /tmp/b -w '%{http_code}' -A "$ua" -H "Accept-Encoding: $enc" -H "Host: data.sec.gov" https://data.sec.gov/submissions/CIK0000789019.json)
-                echo "- SEC $c｜UA=$ua｜Accept-Encoding=$enc"; done; done; } > mag/extract/out/_sec_probe.md
       - name: Extract
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}

@@ -191,14 +191,15 @@ def field_list(company, target_q):
 # ---------- 呼叫模型 ----------
 SYSTEM = """你是財報資料萃取員。只根據提供的 SEC 文件原文萃取，不得推估、不得用記憶補值。
 單位：金額一律 US$ 十億（bn），保留原文精度換算（例：$12,345 million → 12.345）；比例用小數（17.7% → 0.177）；股數用十億股；MW 用 MW。
-「上次值」只用來對齊口徑與單位，不可抄寫。文件沒有直接揭露的欄位，value 填 null，並在 note 說明（例如「法說才有」「需由 X 與 Y 推算：X=…，Y=…」）。
+若欄位清單附「上次值」，只用來對齊口徑與單位，不可抄寫。文件沒有直接揭露的欄位，value 填 null，並在 note 說明（例如「法說才有」「需由 X 與 Y 推算：X=…，Y=…」）。
 ROLL_FIELDS 類欄位多為推導值或排程：只在文件直接揭露時填 value；否則 value 為 null，把可用的原始數字與出處寫在 note。
 每筆附：doc（文件標籤）、loc（表名或段落標題，便於翻找）、quote（原文中含該數字的片段，15 字以內）。
 只輸出一個 JSON 陣列，不要其他文字：[{"path":…,"value":數字或null,"unit":…,"doc":…,"loc":…,"quote":…,"note":…}]，path 必須逐一對應欄位清單，不可增減。"""
 
 
 def build_prompt(req, docs_text, fields):
-    flist = "\n".join(f"- {f['path']}｜{f['group']}｜上次值={json.dumps(f['prior'], ensure_ascii=False)[:200]}｜{f['desc'][:160]}"
+    hide = req.get("mode") == "backtest"     # 回測時上次值就是答案，必須隱藏，否則準確率會被抄寫灌水
+    flist = "\n".join(f"- {f['path']}｜{f['group']}｜" + ("" if hide else f"上次值={json.dumps(f['prior'], ensure_ascii=False)[:200]}｜") + f"{f['desc'][:160]}"
                       for f in fields)
     return (f"公司：{req['company']}；目標期間：期末 {req['period_end']}（模型季度 {req.get('target_q')}）。\n"
             f"## 欄位清單（{len(fields)} 項）\n{flist}\n\n## 文件\n{docs_text}")
@@ -213,19 +214,23 @@ def api(path, body=None, method="GET"):
         return r.read().decode()
 
 
-def run_batch(prompts):
-    """prompts：{custom_id: (model, prompt)} → {custom_id: (文字, usage)}。Batch API，逾時則回傳已完成部分。"""
-    reqs = [{"custom_id": cid, "params": {"model": m, "max_tokens": 32000, "system": SYSTEM,
-                                         "messages": [{"role": "user", "content": p}]}}
-            for cid, (m, p) in prompts.items()]
-    b = json.loads(api("messages/batches", {"requests": reqs}, "POST"))
+def run_batch(prompts, batch_id=None):
+    """prompts：{custom_id: (model, prompt)} → ({custom_id: (文字, usage)}, 批次資訊)。
+    batch_id 有值時只續接取回該批次（不重送）。逾時未完成時回傳空結果與批次資訊，由呼叫端保留請求以便下次續接。"""
+    if batch_id:
+        b = json.loads(api(f"messages/batches/{batch_id}"))
+    else:
+        reqs = [{"custom_id": cid, "params": {"model": m, "max_tokens": 32000, "system": SYSTEM,
+                                             "messages": [{"role": "user", "content": p}]}}
+                for cid, (m, p) in prompts.items()]
+        b = json.loads(api("messages/batches", {"requests": reqs}, "POST"))
     print("batch", b["id"])
     t0 = time.time()
     while b["processing_status"] != "ended" and time.time() - t0 < POLL_MAX_MIN * 60:
         time.sleep(30)
         b = json.loads(api(f"messages/batches/{b['id']}"))
     out = {}
-    if b.get("results_url"):
+    if b["processing_status"] == "ended" and b.get("results_url"):
         for line in api(f"messages/batches/{b['id']}/results").splitlines():
             r = json.loads(line)
             res = r["result"]
@@ -381,7 +386,18 @@ def main():
                     meta.append((lab, url, d, len(t)))
             co, fields = field_list(req["company"], req.get("target_q"))
             prompt = build_prompt(req, "".join(parts), fields)
-            results, binfo = run_batch({m: (m, prompt) for m in MODELS})
+            results, binfo = run_batch({m: (m, prompt) for m in MODELS}, req.get("batch_id"))
+            if binfo.get("processing_status") != "ended":     # 未完成：記下批次編號、保留請求，下次執行續接
+                req["batch_id"] = binfo["id"]
+                json.dump(req, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+                os.makedirs(f"{ROOT}/mag/extract/out", exist_ok=True)
+                open(f"{ROOT}/mag/extract/out/{name}.md", "w", encoding="utf-8").write(
+                    f"# 萃取處理中｜{name}\n\n批次 {binfo['id']} 尚未完成（{binfo.get('processing_status')}）；請求已記下批次編號，下次執行會續接取回，不重送。\n")
+                print("批次未完成，保留請求", name, binfo["id"])
+                continue
+            os.makedirs(f"{ROOT}/mag/extract/out/raw", exist_ok=True)   # 原始輸出存檔（除錯用）
+            for m in MODELS:
+                open(f"{ROOT}/mag/extract/out/raw/{name}_{m}.txt", "w", encoding="utf-8").write(results.get(m, ("", {}))[0])
             price = {"opus": (2, 10), "sonnet": (1, 5), "haiku": (0.05, 0.25)}
             cost = 0.0
             for m in MODELS:
