@@ -10,6 +10,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import cycle_position as CP
 import valuation_rule as VR
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -82,9 +84,9 @@ inp("rel_29", "可插拔份額 2029 ÷ 2026", "x", 0.60, 0.85, 1.05, "Assumed", 
 inp("us_27", "美國限制情境：份額相對值 2027（Sens 用）", "x", None, 0.90, None, "Assumed", "https://hao.cnyes.com/post/262773：花旗認為短期嚴格執行機率低；中國廠供美國大型雲端高速光模組約 60–70%", "泰國產能不必然豁免（美國價值含量門檻 65%，2029 起 75%）")
 inp("us_28", "美國限制情境：份額相對值 2028（Sens 用）", "x", None, 0.55, None, "Assumed", "同上", "—")
 inp("us_29", "美國限制情境：份額相對值 2029（Sens 用）", "x", None, 0.50, None, "Assumed", "同上", "—")
-inp("cpo_27", "中際旭創占 CPO 光學金額 2027", "%", 0.0, 0.10, 0.30, "Assumed", "公司 10-23 公告：NPO、XPO 與部分重點客戶聯合研發並送樣（中華網轉載）", "CPO 光引擎與外部雷射多由雷射廠供應（Lumentum、天孚等；網通比對 N4b）")
-inp("cpo_28", "中際旭創占 CPO 光學金額 2028", "%", 0.0, 0.15, 0.35, "Assumed", "同上", "—")
-inp("cpo_29", "中際旭創占 CPO 光學金額 2029", "%", 0.0, 0.20, 0.40, "Assumed", "同上", "—")
+inp("cpo_27", *SIL.row9("cposh_innolight_27")[1:])
+inp("cpo_28", *SIL.row9("cposh_innolight_28")[1:])
+inp("cpo_29", *SIL.row9("cposh_innolight_29")[1:])
 inp("pxr_27", "單價係數 2027（相對網通模型每顆內容；基準 1）", "x", 0.90, 1.0, 1.05, "Assumed", "網通模型每顆光學內容已含世代單價；本係數只在 Sens 動（降價快於模型）", "公司 10-23：價格體系健康、競爭有序（Interested-party）")
 inp("pxr_28", "單價係數 2028", "x", 0.80, 1.0, 1.05, "Assumed", "同上", "—")
 inp("pxr_29", "單價係數 2029", "x", 0.72, 1.0, 1.05, "Assumed", "同上", "—")

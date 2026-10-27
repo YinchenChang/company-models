@@ -1,0 +1,11 @@
+[
+ {
+  "id": "S15",
+  "cat": "範圍",
+  "item": "v0.4.1 CPO 份額表（CF21）",
+  "decision": "五家光學廠的 CPO 光學金額份額（cposh_*，2027–2029）移入 In 頁 M12，數值與文字逐字搬入；ShareTbl 新增 CPO 份額表（四家模組與雷射廠加總 50／65／75%（含 Fabrinet 為 55／75／90%），Fabrinet 為代工、與模組廠重疊，列示不加總），Checks K6-cpo（合計 ≤ 100%）、Interface SIF_CPOShareSum。NVIDIA、Broadcom 交換器端份額不自訂，以餘額列示（50／35／25%）",
+  "date": "2026-10-27",
+  "quote": "（工程類分段；份額值沿用公司模型，未重估）",
+  "status": "預設、可撤回"
+ }
+]

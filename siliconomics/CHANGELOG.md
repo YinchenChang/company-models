@@ -1,5 +1,12 @@
 # Siliconomics 變更紀錄
 
+## v0.4.1（2026-10-27；`model/20261027_Siliconomics_v0.4.1.xlsx`；Tokenomics v21.7）
+
+- 新增 In 頁 M12：CPO 光學金額份額 `cposh_*`（Lumentum、Coherent、中際旭創、新易盛、Fabrinet，2027–2029，15 列），原在五個公司模型，數值與文字逐字搬入（CF21）。
+- ShareTbl 新增 CPO 份額表：四家模組與雷射廠合計 50／65／75%，餘額 50／35／25%（NVIDIA、Broadcom 交換器端自製光引擎與其他，未建模）；Fabrinet 為代工、與模組廠重疊，列示不加總（含 Fabrinet 的舊口徑為 55／75／90%）。Checks K6-cpo（合計 ≤ 100%，全部 OK）、Interface `SIF_CPOShareSum`。
+- 下游：lite、cohr、innolight、eoptolink、fabrinet 的 `cpo_27`–`cpo_29` 改以 `SIL.row9("cposh_…")` 讀本庫（鍵名與文字不變）。
+- builder：seed 檔改依版本號排序（字串排序會把 v0.4.1 排在 v0.4 之前）。
+
 ## v0.4（2026-10-27；`model/20261027_Siliconomics_v0.4.xlsx`；Tokenomics v21.7）
 
 - 新增 In 頁 M8（每顆加速器網通內容 54 列）、M9（每顆 IT capex 9 列；GB300、VR200、Rubin Ultra、Hopper 改為 TK_In 公式 IF_CapexIT ÷ IF_GPUsPerGW）、M10（scale-up 光學占比、銅占比、CPO 三情境 12 列）、M11（vr26：2026 Rubin 占比 22%），原在 markets/network 與 11 個公司模型；Assumed 列補區間（非 NVIDIA 每顆 IT capex、scale-up 光學、CPO 三情境 ×0.7–×1.4）。

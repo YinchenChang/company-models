@@ -12,6 +12,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import cycle_position as CP
 import valuation_rule as VR
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -99,9 +101,9 @@ inp("rel_27", "可插拔有效份額 CY2027 ÷ CY2026（相對值）", "x", 0.90
     LC + "：LightCounting 2025 光模組排名新易盛首次超過 Coherent 升到第二（Interested-party）")
 inp("rel_28", "可插拔有效份額 CY2028 ÷ CY2026", "x", 0.85, 1.15, 1.35, "Assumed", "同上；1.6T 放量較三個月前預期提前（公司）", "中際旭創模型同期份額相對值 0.90（新易盛、Coherent 搶 1.6T）")
 inp("rel_29", "可插拔有效份額 CY2029 ÷ CY2026", "x", 0.80, 1.15, 1.40, "Assumed", "同上", "—")
-inp("cpo_27", "Coherent 占 CPO 光學金額 CY2027", "%", 0.0, 0.10, 0.25, "Assumed", F4 + "：CPO 營收自 2026 年 12 月季開始、scale-up CPO 自 CY2027 下半年；與 NVIDIA 合作超高功率 CW 雷射（公司）", "CPO、NPO 等整合光學增量市場逾 150 億美元（公司說法，Interested-party）")
-inp("cpo_28", "Coherent 占 CPO 光學金額 CY2028", "%", 0.0, 0.15, 0.30, "Assumed", "同上", "—")
-inp("cpo_29", "Coherent 占 CPO 光學金額 CY2029", "%", 0.0, 0.20, 0.35, "Assumed", "同上", "—")
+inp("cpo_27", *SIL.row9("cposh_cohr_27")[1:])
+inp("cpo_28", *SIL.row9("cposh_cohr_28")[1:])
+inp("cpo_29", *SIL.row9("cposh_cohr_29")[1:])
 inp("pxr_27", "單價係數 CY2027（相對網通模型每顆內容；基準 1）", "x", 0.90, 1.0, 1.05, "Assumed", "網通模型每顆光學內容已含世代單價；本係數只在 Sens 動（降價快於模型）", F4 + "：長約含固定價格與最低採購承諾（公司）")
 inp("pxr_28", "單價係數 CY2028", "x", 0.80, 1.0, 1.05, "Assumed", "同上（與中際旭創模型相同）", "—")
 inp("pxr_29", "單價係數 CY2029", "x", 0.72, 1.0, 1.05, "Assumed", "同上", "—")

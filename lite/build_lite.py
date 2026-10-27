@@ -13,6 +13,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import cycle_position as CP
 import valuation_rule as VR
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -115,9 +117,9 @@ inp("mrel_29", "光模組份額 CY2029 ÷ CY2026", "x", 0.60, 1.0, 1.30, "Assume
 inp("ocsk_27", "OCS 每顆 TPU 營收 CY2027 ÷ CY2026（相對值）", "x", 1.2, 1.6, 2.0, "Assumed", ZK + "：2H CY2026 OCS 約 4 億美元（追上原展望、未超前）；FY2027 第一季首度超過 1 億美元（公司）", PPT + "：多年期、數十億美元的 OCS 採購協議（公司）")
 inp("ocsk_28", "OCS 每顆 TPU 營收 CY2028 ÷ CY2026", "x", 1.2, 1.8, 2.4, "Assumed", "2H CY2026 年化 8 億美元 ÷ CY2026 約 5 億美元 ≈ 1.6（推導）", KGI + "：Coherent 把 OCS 市場規模由 20 億上調到 40 億美元（Interested-party）")
 inp("ocsk_29", "OCS 每顆 TPU 營收 CY2029 ÷ CY2026", "x", 1.0, 1.8, 2.4, "Assumed", "同上；Coherent 等競爭者加入（下壓）", "—")
-inp("cpo_27", "Lumentum 占 CPO 光學金額 CY2027", "%", 0.10, 0.25, 0.35, "Assumed", CRUX + "：外部光源／超高功率雷射數億美元訂單 1H CY2027 交貨（公司）", KGI + "：超高功率雷射 2026 年約 5 千萬美元，目標 FY2027 第三季單季逾 1 億美元（凱基轉述）")
-inp("cpo_28", "Lumentum 占 CPO 光學金額 CY2028", "%", 0.10, 0.25, 0.35, "Assumed", MB + "：scale-up 超高功率雷射 2H CY2027 大量出貨、供 2028 年部署（公司）", "網通模型 scale-up 光學 CY2029 才開始（20%），NPO 可能早於此：低估風險")
-inp("cpo_29", "Lumentum 占 CPO 光學金額 CY2029", "%", 0.10, 0.20, 0.30, "Assumed", "同上", "—")
+inp("cpo_27", *SIL.row9("cposh_lite_27")[1:])
+inp("cpo_28", *SIL.row9("cposh_lite_28")[1:])
+inp("cpo_29", *SIL.row9("cposh_lite_29")[1:])
 
 sec("D. CY2026 錨點的產品拆分（公司只揭露元件／系統；以下為 Assumed，雷射晶片＝殘差）")
 inp("ocs_1h", "OCS 營收 1H CY2026（FY2026 第三、四季）", "US$B", 0.06, 0.10, 0.14, "Assumed", ZK + "：FY2026 第四季 OCS 出貨較第三季倍增（公司）", "金額：未找到")
