@@ -47,7 +47,8 @@ def http_get(url, binary=False):
             if e.code in (429, 503) and attempt < 2:
                 time.sleep(5 * (attempt + 1))
                 continue
-            raise
+            body = e.read()[:400].decode("utf-8", errors="replace")
+            raise RuntimeError(f"HTTP {e.code} {url}｜回應開頭：{body}") from None
         finally:
             time.sleep(0.2)   # SEC 公平存取：每秒少於 10 次
 
