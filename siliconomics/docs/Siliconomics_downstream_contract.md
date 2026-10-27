@@ -1,4 +1,4 @@
-# Siliconomics 下游資料契約 v0.4.1（2026-10-27；對應 Siliconomics v0.4.1、Tokenomics v21.7）
+# Siliconomics 下游資料契約 v0.5（2026-10-27；對應 Siliconomics v0.5、Tokenomics v21.7）
 
 適用對象：`company-models` 內 AI 半導體 Project 的市場層（`markets/*`）與公司模型（每家公司一個資料夾），以及其他專案取用晶片產業資料時（經 Drive `00-共用情境/交流/`）。
 
@@ -28,5 +28,6 @@
 | v0.3 | 2026-10-27 | 新增輸入 `SIF_pa_*`、`SIF_core_*`、`SIF_f_hbm`、`SIF_sh_*`、`SIF_msh_*`、`SIF_mtk_*`、`SIF_al*`（35 個）；推導 `SIF_ASICShareSum_*`（5 列） | 新增 `siliconomics/reader.py`（`row8`／`row9`／`V`／`NAMES`）；nvidia、avgo、mrvl、mediatek、alchip 改讀；取數規則第 2 條：公司建檔程式可直接 import reader，不必經 market.py |
 | v0.4 | 2026-10-27 | 新增輸入 `SIF_c_*`（54）、`SIF_it_*`（9）、`SIF_suopt_*`、`SIF_su_cu`、`SIF_cpo_*`（12）、`SIF_vr26`；推導 `SIF_AIITCapex_*`、`SIF_ITCapexPerGW`、`SIF_DeployGW_*` | 新增 `reader.vals()`；markets/chip_bridge 改讀 `siliconomics/data/tokenomics_snapshot_v21.7.json`（本專案唯一一份 TK 快照） |
 | v0.4.1 | 2026-10-27 | 新增輸入 `SIF_cposh_*`（15 個，CPO 光學金額份額 2027–2029）；推導 `SIF_CPOShareSum`（四家模組與雷射廠合計，不含 Fabrinet） | lite、cohr、innolight、eoptolink、fabrinet 改讀 `SIL.row9("cposh_<公司>_<年>")` |
+| v0.5 | 2026-10-27 | 新增輸入 `SIF_abf_*`（37 個：Ibiden 份額與相對值、非 NVIDIA 權重、`v_ot`、`g_asp`、`pp_*`、欣興／南電／景碩份額、外部缺口）、`SIF_cw_*`（20 個：CoWoS 每片封裝數、其他用途、年底月產能、委外補充、MS 需求）；推導 `SIF_ABFShareSum_nv`、`SIF_ABFShareSum_ot`（2026–2029） | ibiden、unimicron、nanya_pcb、kinsus、tsmc 改讀；份額不同的公司以 `row9`，保留自家文字者以 `vals` |
 
 版本號：只改證據、標記、文字為修補版（v0.1.x）；輸入值或公式改變為次版（v0.x）；Interface 名稱刪除或定義改變為主版（v1.0 前只新增名稱以次版處理）。

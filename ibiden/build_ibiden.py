@@ -9,6 +9,8 @@ from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import cycle_position as CP
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -75,21 +77,18 @@ for s in SC:
     inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
 
 sec("B. Ibiden 份額與每顆載板金額（本專案權威：晶片商載板份額，規則第 13 條）")
-inp("w_ot", "非 NVIDIA 加速器的權重（Ibiden 份額 × 每顆載板金額，相對 NVIDIA）", "x", 0.2, 0.4, 0.6, "Assumed",
-    "公開資料只有 NVIDIA 份額：BofA（經 thebuildout 2026-03-26）Ibiden 占 GPU 載板 70–80%；高階 FC-BGA 整體約 35%（" + DG + "）", "ASIC 多由欣興、Shinko、AT&S 等分食（第三方研究，Interested-party）；每顆 ASIC 載板金額相對 GPU：未找到")
+inp("w_ot", *SIL.row9("abf_wot_ib")[1:])
 inp("ai_e", "FY2026 AI 伺服器載板 ÷ 電子事業營收", "%", 0.55, 0.65, 0.75, "Assumed",
     "公司未揭露：未找到（決算短信只說「生成 AI 伺服器向け・汎用サーバー向け高機能 IC パッケージ基板」帶動）", "semi-connect 2026：AI 高階載板營收多數為 NVIDIA 向（估計，Interested-party）")
-inp("g_asp", "每顆載板金額年增（面積、層數）", "%", 0.10, 0.18, 0.22, "Analogy",
-    TOMS + "：Ibiden 路線圖 2026 年 90×90 mm、2028 年 110×110 mm；每片 AI 伺服器載板的 SAP 負荷 2026 年為 2024 年 1.8 倍、2028 年 2.5 倍（→ 2026→2028 年約 +18%／年）",
-    DG + "：ABF 載板平均單價 2024 $65 → 2025 $82（+26%，全品項）")
-inp("rel_27", "Ibiden 份額 2027 ÷ 2026（相對值）", "x", 0.85, 0.95, 1.00, "Assumed", "第三方研究：欣興 2025 年拿到 NVIDIA AI 載板約 30% 顆數（Encyclopedia of Stocks 2026-03-04）", "三星電機獲 NVIDIA 載板擴產合作（Hardware Busters 2026）")
-inp("rel_28", "Ibiden 份額 2028 ÷ 2026", "x", 0.75, 0.88, 1.00, "Assumed", "同上；競爭者擴產：欣興 2026 資本支出 NT$340 億、景碩 3 年 NT$235 億（" + TOMS + "）", "—")
-inp("rel_29", "Ibiden 份額 2029 ÷ 2026", "x", 0.70, 0.85, 1.00, "Assumed", "同上", "—")
+inp("g_asp", *SIL.row9("abf_gasp")[1:])
+inp("rel_27", *SIL.row9("abf_ibrel_27")[1:])
+inp("rel_28", *SIL.row9("abf_ibrel_28")[1:])
+inp("rel_29", *SIL.row9("abf_ibrel_29")[1:])
 
 sec("C. 短缺溢價（價格指數；2026＝1）與 AI 載板利潤率")
-inp("pp_27", "價格溢價指數 2027", "x", 0.95, 1.00, 1.05, "Assumed", TOMS + "（未具名供應鏈分析）：ABF 供需缺口 2026 下半年約 10%、2027 約 21%、2028 超過 40%", "BofA：短缺延續到 2028（經 thebuildout）")
-inp("pp_28", "價格溢價指數 2028", "x", 0.85, 0.95, 1.05, "Assumed", "Ibiden 產能 2028 年為 2024 年 2.5–2.8 倍（公司路線圖，Interested-party；" + DG + "、" + TOMS + "）", "欣興、景碩、三星電機同時擴產（同上）")
-inp("pp_29", "價格溢價指數 2029", "x", 0.75, 0.90, 1.00, "Assumed", "同上：新產能到位後溢價回落", "—")
+inp("pp_27", *SIL.row9("abf_pp_27")[1:])
+inp("pp_28", *SIL.row9("abf_pp_28")[1:])
+inp("pp_29", *SIL.row9("abf_pp_29")[1:])
 inp("m_ne", "電子事業非 AI 部分營業利益率", "%", 0.10, 0.15, 0.20, "Assumed", "FY2024 電子事業營益率 13.6%（26.8 ÷ 197.2，AI 比重較低時；" + TAN25 + "）", "FY2025 18.6%（45.2 ÷ 243.3）")
 inp("g_ne", "電子事業非 AI 營收年增（通用伺服器、PC 載板等）", "%", 0.00, 0.05, 0.10, "Assumed", STD + "：通用伺服器市場緩步成長", "PC：未找到")
 

@@ -1,5 +1,13 @@
 # Siliconomics 變更紀錄
 
+## v0.5（2026-10-27；`model/20261027_Siliconomics_v0.5.xlsx`；Tokenomics v21.7）
+
+- 新增 In 頁 M13（加速器 ABF 載板，37 列）：Ibiden 2026 份額 70% 與 2027–29 相對值、非 NVIDIA 權重、`v_ot`、每顆載板金額年增 `g_asp`、價格溢價指數 `pp_*`、欣興／南電／景碩的 NVIDIA 與非 NVIDIA 份額（原在 ibiden、unimicron、nanya_pcb、kinsus），以及單一外部 ABF 缺口路徑 `abf_gap_26–28`＝9／24／37%（CF03 部分併入）。
+- 新增 In 頁 M14（CoWoS，20 列）：每片晶圓封裝數（10 個平台）、其他 CoWoS 用途、台積電年底月產能 2025–29、委外補充、MS 需求（原在 tsmc）；Assumed 列補區間、兩列補來源欄（基準不變）。
+- ShareTbl 新增兩張 ABF 載板份額表（NVIDIA 側合計 99.0–99.6%、非 NVIDIA 側 88.0–89.5%）、Checks K6-abf、Interface `SIF_ABFShareSum_nv`／`_ot`（CF20 表已建，景碩份額待 Andy）。
+- 留在公司模型：每顆載板金額 `v26`（以 Ibiden 營收 ÷ 70% 校準）、每顆台積電內容 `ct_*`（公司營收變數）。
+- 下游：ibiden、unimicron、nanya_pcb、kinsus、tsmc 改讀本庫。
+
 ## v0.4.1（2026-10-27；`model/20261027_Siliconomics_v0.4.1.xlsx`；Tokenomics v21.7）
 
 - 新增 In 頁 M12：CPO 光學金額份額 `cposh_*`（Lumentum、Coherent、中際旭創、新易盛、Fabrinet，2027–2029，15 列），原在五個公司模型，數值與文字逐字搬入（CF21）。
