@@ -632,7 +632,8 @@ def engine(b, val=True, ops=True):
         b.row(c, "dil", "稀釋加權股數", "十億股", lambda y: "sh_dil26" if y == 2026 else f"({R('sh_end', y - 1)}+{R('sh_end', y)})/2+dil_gap", fmt="0.000", years=CY)
         b.row(c, "gate", "自由現金流扣股利（FY2027–FY2031 合計，本情境）", "US$B", lambda y: f"SUM({R('fcfd', 2027)}:{R('fcfd', 2031)})", scalar=True)
         b.row(c, "need", "是否需要舉債或停止回購（FY2027–FY2031）", "文字",
-              lambda y: f'IF(SUM({R("nd", 2027)}:{R("nd", 2031)})>0.05,"需要舉債 "&TEXT(SUM({R("nd", 2027)}:{R("nd", 2031)}),"0.0")&" 十億美元",IF(SUM({R("bb", 2027)}:{R("bb", 2031)})<5*bb_target-0.05,"不需舉債，但回購減少 "&TEXT(5*bb_target-SUM({R("bb", 2027)}:{R("bb", 2031)}),"0.0")&" 十億美元","不需舉債、回購不減"))',
+              lambda y: (f'IF(SUM({R("nd", 2027)}:{R("nd", 2031)})>0.05,"需要舉債 "&TEXT(SUM({R("nd", 2027)}:{R("nd", 2031)}),"0.0")&" 十億美元","不需舉債")&"；"&'
+                         f'IF(SUM({R("bb", 2027)}:{R("bb", 2031)})<5*bb_target-0.05,"回購較每年 "&TEXT(bb_target,"0.0")&" 的目標少 "&TEXT(5*bb_target-SUM({R("bb", 2027)}:{R("bb", 2031)}),"0.0")&" 十億美元（"&TEXT(COUNTIF({R("bb", 2027)}:{R("bb", 2031)},"<"&(bb_target-0.05)),"0")&" 年減少）","回購不減")'),
               fmt="@", scalar=True)
     if val:
         v = "val"
