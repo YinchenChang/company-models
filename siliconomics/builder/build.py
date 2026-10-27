@@ -450,6 +450,42 @@ def main():
         AB.column_dimensions["A"].width = 52; AB.column_dimensions["G"].width = 40
         for col in "BCDEF": AB.column_dimensions[col].width = 10
 
+    # ---------------- PGW：每 GW AI 高速 PCB 與 CCL 金額（v0.5.2） ----------------
+    PG = None; PGROW = {}
+    if "pcb_cmp_26" in INROW and DP is not None:
+        PG = wb.create_sheet("PGW", index=wb.sheetnames.index("Path"))
+        PG["A1"] = ("PGW — 每 GW AI 高速 PCB 與 CCL 金額（US$M／GW，不含價格指數）＝ 2026 元件金額 × 2027–29 指數；市場＝每 GW × 部署 GW（Deploy 頁）。"
+                    "PCB 口徑權威原在勝宏模型、CCL 口徑原在台光電模型；兩者口徑不同，不可相加")
+        hdr(PG, 3, ["項目", "情境", "2026", "2027", "2028", "2029", "說明"])
+        COLS = {2026: "C", 2027: "D", 2028: "E", 2029: "F"}
+        r = 4
+        for pre, ttl, comps in (("pcb", "PCB", (("cmp", "cmpx", "加速器卡／運算板"), ("sw", "swx", "交換器板"), ("mid", "midx", "中板／背板／其他"))),
+                                ("ccl", "CCL", (("cmp", "cmpx", "加速器／運算板"), ("sw", "swx", "交換器板"), ("ubb", "ubbx", "UBB／中板／背板")))):
+            PG.cell(r, 1, f"每 GW {ttl}").font = BOLD; r += 1
+            r0 = r
+            for c, cx, lab in comps:
+                PG.cell(r, 1, f"每 GW {ttl}：{lab}")
+                for y, col in COLS.items():
+                    f = f"={pre}_{c}_26" if y == 2026 else f"={pre}_{c}_26*{pre}_{cx}_{y % 100}"
+                    PG.cell(r, list(COLS).index(y) + 3, f).number_format = "#,##0"
+                r += 1
+            PG.cell(r, 1, f"每 GW {ttl} 合計（US$M／GW）").font = BOLD
+            for y, col in COLS.items():
+                c_ = PG.cell(r, list(COLS).index(y) + 3, f"=SUM({col}{r0}:{col}{r-1})"); c_.number_format = "#,##0"; c_.fill = KEY
+            PGROW[pre] = r; r += 1
+            for s_ in seed["scen"]:
+                PG.cell(r, 1, f"AI 高速 {ttl} 市場（不含價格指數；US$B）"); PG.cell(r, 2, s_)
+                for y, col in COLS.items():
+                    PG.cell(r, list(COLS).index(y) + 3, f"={col}{PGROW[pre]}*Deploy!{col}{DROW['gw' + s_]}/1000").number_format = "0.0"
+                PGROW[pre + "m" + s_] = r; r += 1
+            r += 1
+        PG.cell(r, 1, "每 GW PCB ÷ 每 GW CCL")
+        for y, col in COLS.items():
+            PG.cell(r, list(COLS).index(y) + 3, f"={col}{PGROW['pcb']}/{col}{PGROW['ccl']}").number_format = "0.00"
+        PGROW["ratio"] = r; r += 1
+        PG.column_dimensions["A"].width = 44; PG.column_dimensions["G"].width = 30
+        for col in "BCDEF": PG.column_dimensions[col].width = 10
+
     # ---------------- Conflicts：跨模型同一變數不同值的登錄 ----------------
     CF = wb.create_sheet("Conflicts")
     CF["A1"] = ("Conflicts — 跨模型衝突登錄：同一個行業變數在兩個以上公司模型有不同值。本庫的任務是讓每個變數只有一個值；"
@@ -565,6 +601,19 @@ def main():
             for j in range(4):
                 c = IF.cell(r, 5 + j, f"=ABF!{'CDEF'[j]}{ar}"); c.font = GREEN; c.number_format = "0.0%" if unit == "%" else "0.000"
             IF.cell(r, 9, f"ABF!C{ar}:F{ar}")
+            name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
+    if PG is not None:
+        r += 1
+        IF.cell(r, 1, "B6. 每 GW PCB／CCL（PGW 頁；欄 E–H＝2026–2029）").font = BOLD; r += 1
+        items = ([("SIF_PCBperGW", "pcb", "每 GW AI 高速 PCB 金額（US$M／GW）", "US$M/GW"), ("SIF_CCLperGW", "ccl", "每 GW 高速 CCL 金額（US$M／GW）", "US$M/GW")]
+                 + [(f"SIF_PCBMkt_{s_}", "pcbm" + s_, f"AI 高速 PCB 市場（{s_}；不含價格指數）", "US$B") for s_ in seed["scen"]]
+                 + [(f"SIF_CCLMkt_{s_}", "cclm" + s_, f"AI 高速 CCL 市場（{s_}；不含價格指數）", "US$B") for s_ in seed["scen"]])
+        for nm_, key, lab, unit in items:
+            pr = PGROW[key]
+            IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, unit)
+            for j in range(4):
+                c = IF.cell(r, 5 + j, f"=PGW!{'CDEF'[j]}{pr}"); c.font = GREEN; c.number_format = "#,##0.0"
+            IF.cell(r, 9, f"PGW!C{pr}:F{pr}")
             name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
     r += 1
     IF.cell(r, 1, "C. Tokenomics 鏡像（只讀；權威在算力收支；本庫與 TK 一致由 Checks K3 檢查）").font = BOLD; r += 1
@@ -699,6 +748,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.5.2：新增 M16（每 GW AI 高速 PCB 與 CCL 金額；原在 victory_giant、emc）與 PGW 頁、Interface SIF_PCBperGW、SIF_CCLperGW、SIF_PCBMkt_*、SIF_CCLMkt_*。", False),
         ("v0.5.1：新增 M15（ABF 供需表輸入：產值、AI 占比、權重、各廠產能指數、味之素膜上限；欣興、南電、景碩產能與味之素膜上限原在各公司模型）與 ABF 頁（需求、供給、缺口三情境）、Interface SIF_ABF*。", False),
         ("v0.5：新增 M13（加速器 ABF 載板份額、每顆金額路徑、供需缺口；原在 ibiden、unimicron、nanya_pcb、kinsus）、M14（CoWoS 每片封裝數、其他用途、台積電產能、委外補充；原在 tsmc），ShareTbl 的 ABF 載板份額表、Checks K6-abf、Interface SIF_ABFShareSum_*。", False),
         ("v0.4.1：新增 M12（CPO 光學金額份額：Lumentum、Coherent、中際旭創、新易盛、Fabrinet；原在各公司模型）與 ShareTbl 的 CPO 份額表、Checks K6-cpo、Interface SIF_CPOShareSum。", False),
