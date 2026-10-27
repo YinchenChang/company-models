@@ -21,13 +21,12 @@ jobs:
       - run: pip install openpyxl
       - name: Probe sources（診斷）
         run: |
-          UA="company-models research tool YinchenChang@users.noreply.github.com"
           mkdir -p mag/extract/out
           { echo "# 來源連線診斷 $(date -u +%FT%TZ)"; echo "出口 IP：$(curl -s https://api.ipify.org)";
-            c=$(curl -s -o /tmp/b -w '%{http_code}' -A "$UA" https://data.sec.gov/submissions/CIK0000789019.json)
-            echo "- SEC $c｜$(sed -e 's/<[^>]*>/ /g' /tmp/b | tr -s ' \n' ' ' | head -c 700)"
-            for u in https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast https://abc.xyz/investor/ https://ir.aboutamazon.com/quarterly-results/default.aspx; do
-              c=$(curl -sL -o /tmp/b -w '%{http_code}' -A "Mozilla/5.0" "$u"); echo "- $c $u｜$(grep -o -i -E 'href=\"[^\"]*(10-?q|10q|10-k)[^\"]*\"' /tmp/b | head -5 | tr '\n' ' ')"; done; } > mag/extract/out/_sec_probe.md
+            for ua in "YinchenChang YinchenChang@users.noreply.github.com" "company-models YinchenChang@users.noreply.github.com"; do
+              for enc in "gzip, deflate" "identity"; do
+                c=$(curl -s --compressed -o /tmp/b -w '%{http_code}' -A "$ua" -H "Accept-Encoding: $enc" -H "Host: data.sec.gov" https://data.sec.gov/submissions/CIK0000789019.json)
+                echo "- SEC $c｜UA=$ua｜Accept-Encoding=$enc"; done; done; } > mag/extract/out/_sec_probe.md
       - name: Extract
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
