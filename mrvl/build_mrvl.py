@@ -72,6 +72,8 @@ NET["  其中可插拔"] = NETS[("mpl", "A")]   # 情境 A 列（數值＝主表
 GBT = {"trn": (110, 144, 200)}   # markets/memory UNITS（與台積電模型同一份；Trainium 每顆 HBM）
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 import market as MEM
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 for k, nm, u_, gb, tag, src in MEM.UNITS:
     if k in XP:
         GBT[k] = gb
@@ -121,16 +123,11 @@ inp("core_trn", "Trainium 每顆核心售價（不含 HBM）＝ 每顆 − CY202
 for k in ("tpu", "oth"):
     for y in (26, 27, 28):
         inp(f"av_{k}_{y}", f"Broadcom 占 {PNAME[k]} 顆數 CY20{y}（對照；份額加總檢查用）", "%", None, AV[f"sh_{k}_{y}"][0][1], None, "Assumed", AV[f"sh_{k}_{y}"][1], "Broadcom 模型；Marvell＋Broadcom 不得超過 100%（建置時檢查）")
-MSH = {("trn", 26): (0.05, 0.10, 0.20), ("trn", 27): (0.05, 0.10, 0.20), ("trn", 28): (0.0, 0.08, 0.20),
-       ("oth", 26): (0.02, 0.05, 0.10), ("oth", 27): (0.03, 0.06, 0.12), ("oth", 28): (0.08, 0.15, 0.25),
-       ("tpu", 26): (0.0, 0.0, 0.02), ("tpu", 27): (0.0, 0.0, 0.05), ("tpu", 28): (0.0, 0.05, 0.15)}
-MSRC = {"trn": ("Marvell 供應 Trainium 2、Inferentia；Trainium 3 主供應商為世芯（Alchip），Marvell 做 Trainium 2.5（Dolphin Research 2026-03-06，二手）", "各世代份額未揭露：未找到"),
-        "oth": ("Microsoft：Maia 由 Marvell 設計，Maia 300 自 CY2027 起多 GW 部署（Motley Fool／Webull 轉述 Nadella，二手）；新 Tier 1 XPU 於 FY2028 量產（公司，Q4 FY26 法說）", "其他 ASIC 含 MTIA、昇騰等非 Marvell 晶片；Broadcom 占 35%／55%／55%"),
-        "tpu": ("Google：擴大合作（2026-07，客製處理器與相關晶片）；認股權證協議（歸屬上限 $120B），主要營收影響在 FY2029 起（投資人日，二手）", "Google 案是否為 TPU 平台：未找到（可能為 Axion CPU 或其他）；Broadcom 占 TPU 75%（CY2028）")}
+# msh_* 份額：Siliconomics In 頁 M7（v0.3 起單一來源；數值與文字由本檔原寫死值逐字搬入）
 for k in XP:
     for y in (26, 27, 28):
-        lo, b_, hi = MSH[(k, y)]
-        inp(f"msh_{k}_{y}", f"Marvell 占 {PNAME[k]} 顆數 CY20{y}" + ("（CY2029 沿用）" if y == 28 else ""), "%", lo, b_, hi, "Assumed", MSRC[k][0] if y == 26 else "同上", MSRC[k][1] if y == 26 else "—")
+        _r = SIL.V[f"msh_{k}_{y}"]; lo, b_, hi = _r["lo"], _r["base"], _r["hi"]
+        inp(*SIL.row9(f"msh_{k}_{y}"))
         if k != "trn":
             assert AV[f"sh_{k}_{y}"][0][1] + hi <= 1.0 + 1e-9, (k, y)    # Broadcom＋Marvell（高）≤ 100%
 inp("pfc", "CY2027 起 XPU 核心售價係數（Sens 用；基準 1）", "x", 0.8, 1.0, 1.2, "Assumed", "無：新世代核心單價變化未揭露", "Sens 用 ±20%")

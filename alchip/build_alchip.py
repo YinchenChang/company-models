@@ -13,6 +13,8 @@ sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 import cycle_position as CP
 import valuation_rule as VR
 import market as MEM
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -104,18 +106,11 @@ lo, b_, hi = AV["m_hbm"][0]
 inp("m_hbm", "代購 HBM 的毛利率（只在 f_al > 0 時有作用）", "x", lo, b_, hi, "Assumed", AV["m_hbm"][1], "沿用 Broadcom 模型")
 for y in (26, 27, 28):
     inp(f"mv_trn_{y}", f"Marvell 占 AWS Trainium 顆數 CY20{y}（份額加總檢查用）", "%", None, MV[f"msh_trn_{y}"][0][1], None, "Assumed", MV[f"msh_trn_{y}"][1], "Marvell 模型；Marvell（基準）＋世芯（高）≤ 100%（建置時檢查）")
-ALS = {26: {"B": (0.20, 0.30, 0.40)},
-       27: {"A": (0.40, 0.55, 0.75), "B": (0.40, 0.50, 0.75), "C": (0.30, 0.40, 0.75)},
-       28: {"A": (0.35, 0.55, 0.85), "B": (0.30, 0.45, 0.85), "C": (0.20, 0.35, 0.85)}}
-ALSRC = ("公司：3 奈米 AI 加速器 5 月底量產、6 月出貨給北美雲端客戶（2Q26 新聞稿）；Trainium 3 主供應商為世芯（Marvell 模型引 Dolphin Research，二手）",
-         "CY2026 份額只用於校準（k_x 吸收）；CY2027 起 A 最有利、C 最不利；高值以 1 − Marvell 基準為上限")
-for y, d in ALS.items():
-    for s, (lo, b_, hi) in d.items():
-        key = "al_trn_26" if y == 26 else f"al{y}_{s}"
-        lab = f"世芯占 AWS Trainium 顆數 CY20{y}" + ("（三情境相同，校準年）" if y == 26 else f"（情境 {s}" + ("；CY2029 沿用）" if y == 28 else "）"))
-        src2 = ALSRC[1] if (y == 26 or s == "A") else ("CY2028 為 Trainium 4（2 奈米）換代；世芯負責後段設計（法說），2028 份額未揭露：未找到" if y == 28 else "—")
-        inp(key, lab, "%", lo, b_, hi, "Assumed", ALSRC[0] if y == 26 else "同上", src2)
-        assert MV[f"msh_trn_{y}"][0][1] + hi <= 1.0 + 1e-9, (y, s)   # Marvell（基準）＋世芯（高）≤ 100%
+# 世芯占 Trainium 份額：Siliconomics In 頁 M7（v0.3 起單一來源；數值與文字由本檔原寫死值逐字搬入）
+for key in ["al_trn_26"] + [f"al{y}_{s}" for y in (27, 28) for s in ("A", "B", "C")]:
+    y = 26 if key == "al_trn_26" else int(key[2:4])
+    inp(*SIL.row9(key))
+    assert MV[f"msh_trn_{y}"][0][1] + SIL.V[key]["hi"] <= 1.0 + 1e-9, key   # Marvell（基準）＋世芯（高）≤ 100%
 PFC = {"A": 1.5, "B": 1.2, "C": 1.0}
 for s in SC:
     inp(f"pfc_{s}", f"CY2028 起每顆營收係數（2 奈米 Trainium 4；情境 {s}）", "x", 0.8 if s == "A" else None, PFC[s], 2.5 if s == "A" else None, "Assumed",

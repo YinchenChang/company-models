@@ -4,6 +4,8 @@
 # 口徑：歸屬母公司淨利（TIFRS）。AI ASIC 營收＝Google TPU（與其他 ASIC）顆數 × 聯發科份額 × 每顆營收（avgo 規格）× k_x × 匯率。
 import sys, os, glob
 import openpyxl
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -101,14 +103,11 @@ for k in XP:
     for y in (26, 27, 28):
         inp(f"av_{k}_{y}", f"Broadcom 占 {PNAME[k]} 顆數 CY20{y}（份額加總檢查用）", "%", None, AV[f"sh_{k}_{y}"][0][1], None, "Assumed", AV[f"sh_{k}_{y}"][1], "Broadcom 模型；Broadcom＋Marvell＋聯發科（高）≤ 100%（建置時檢查）")
         inp(f"mv_{k}_{y}", f"Marvell 占 {PNAME[k]} 顆數 CY20{y}（份額加總檢查用）", "%", None, MV[f"msh_{k}_{y}"][0][1], None, "Assumed", MV[f"msh_{k}_{y}"][1], "Marvell 模型")
-MSH = {("tpu", 26): (0.03, 0.05, 0.10), ("tpu", 27): (0.08, 0.15, 0.20), ("tpu", 28): (0.10, 0.18, 0.20),
-       ("oth", 26): (0.0, 0.0, 0.02), ("oth", 27): (0.0, 0.0, 0.03), ("oth", 28): (0.0, 0.0, 0.05)}
-MSRC = {"tpu": ("公司：與一家美國大型雲端客戶合作的第一顆 AI 加速器 ASIC 於 4Q26 量產；第二顆 2028 年量產（2Q26 講稿）；客戶名稱公司未揭露", "凱基 2026-07-23：v8x Zebrafish（4Q26 起）、v9 Humufish（4Q27 起）為 Google TPU（Interested-party）；高值受 avgo、mrvl 份額限制（1 − Broadcom − Marvell 基準）"),
-        "oth": ("公司：與其他多家客戶接觸中、資料中心有望取得更多設計案（2Q26 講稿）", "第二客戶與量產時點：未找到；基準 0，只放 Sens")}
+# mtk_* 份額：Siliconomics In 頁 M7（v0.3 起單一來源；數值與文字由本檔原寫死值逐字搬入）
 for k in XP:
     for y in (26, 27, 28):
-        lo, b_, hi = MSH[(k, y)]
-        inp(f"mtk_{k}_{y}", f"聯發科占 {PNAME[k]} 顆數 CY20{y}" + ("（CY2029 沿用）" if y == 28 else ""), "%", lo, b_, hi, "Assumed", MSRC[k][0] if y == 26 else "同上", MSRC[k][1] if y == 26 else "—")
+        _r = SIL.V[f"mtk_{k}_{y}"]; lo, b_, hi = _r["lo"], _r["base"], _r["hi"]
+        inp(*SIL.row9(f"mtk_{k}_{y}"))
         assert AV[f"sh_{k}_{y}"][0][1] + MV[f"msh_{k}_{y}"][0][1] + hi <= 1.0 + 1e-9, (k, y)   # Broadcom＋Marvell（基準）＋聯發科（高）≤ 100%
 inp("pfc", "CY2028 起 ASIC 核心售價係數（第二顆 ASIC；Sens 用；基準 1）", "x", 0.8, 1.0, 2.0, "Assumed", "經濟日報 2026-05-03 轉述高盛：下一代 ASIC 平均單價為現行數倍（Interested-party）；凱基：v9 單價至少 +200%", "基準沿用 Broadcom 模型規格（不另訂）；高值 2.0 只放 Sens")
 inp("uf", "聯發科 ASIC 顆數係數（Sens 用；CY2027 起）", "x", 0.8, 1.0, 1.2, "Assumed", "無", "±20%")

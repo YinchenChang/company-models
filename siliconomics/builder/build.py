@@ -51,7 +51,7 @@ def load_base_inputs(path):
         k = ws.cell(r, 1).value
         if not k or ws.cell(r, 3).value is None and ws.cell(r, 5).value is None:
             continue
-        out[k] = tuple(ws.cell(r, c).value for c in (4, 5, 6, 7, 8))
+        out[k] = tuple(ws.cell(r, c).value for c in (4, 5, 6, 7, 8, 10))
     return out
 
 
@@ -82,11 +82,12 @@ def main():
     # 新增的輸入列（各版 rows_added_v*.json）：接在指定節的最後一列之後，成為新的一節；base Excel 有值時以 Excel 為準
     seed_rows = list(seed["rows"])
     for f in sorted(glob.glob(os.path.join(HERE, "seed", "rows_added_v*.json"))):
-        ad = json.load(open(f, encoding="utf-8"))
-        idx = [i for i, rw in enumerate(seed_rows) if "sec" in rw]
-        start = next(i for i in idx if seed_rows[i]["sec"].startswith(ad["after_section_end"]))
-        nxt = next((i for i in idx if i > start), len(seed_rows))
-        seed_rows[nxt:nxt] = [{"sec": ad["section"]}] + ad["rows"]
+        blocks = json.load(open(f, encoding="utf-8"))
+        for ad in (blocks if isinstance(blocks, list) else [blocks]):
+            idx = [i for i, rw in enumerate(seed_rows) if "sec" in rw]
+            start = next(i for i in idx if seed_rows[i]["sec"].startswith(ad["after_section_end"]))
+            nxt = next((i for i in idx if i > start), len(seed_rows))
+            seed_rows[nxt:nxt] = [{"sec": ad["section"]}] + ad["rows"]
 
     wb = openpyxl.Workbook()
     RD = wb.active; RD.title = "README"
@@ -96,20 +97,21 @@ def main():
     # ---------------- In：藍字輸入（Excel 擁有） ----------------
     IN["A1"] = "In — 產業輸入（藍字＝輸入，由本活頁簿擁有；要改值直接改本頁，builder 重建時讀回）。每列具名範圍＝鍵（指向 E 欄），另有 _lo／_hi（D、F 欄）"
     IN["A2"] = "標記：Verified／Interested-party（寫明是誰）／Analogy／Assumed（給低／高區間）／Derived（寫明換算）。v0.1 內容由 markets/memory/market.py 逐字搬入（數值、標記、來源文字不變）"
-    hdr(IN, 4, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源／說明", "Interface 名稱"])
+    hdr(IN, 4, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源／說明", "Interface 名稱", "第二來源／說明"])
     INROW = {}
     r = 5
     for row in seed_rows:
         if "sec" in row:
             IN.cell(r, 1, row["sec"]).font = BOLD; r += 1; continue
         k = row["id"]
-        lo, v, hi, tag, src = base.get(k, (row["lo"], row["base"], row["hi"], row["tag"], row["src"]))
+        lo, v, hi, tag, src, src2 = base.get(k, (row["lo"], row["base"], row["hi"], row["tag"], row["src"], row.get("src2", "")))
         IN.cell(r, 1, k); IN.cell(r, 2, row["label"]); IN.cell(r, 3, row["unit"])
         for j, x in ((4, lo), (5, v), (6, hi)):
             if x is not None:
                 c = IN.cell(r, j, x); c.font = BLUE
                 if row["unit"] == "%": c.number_format = "0.0%"
         IN.cell(r, 7, tag); IN.cell(r, 8, src); IN.cell(r, 9, "SIF_" + k)
+        if src2: IN.cell(r, 10, src2)
         name(wb, k, f"In!$E${r}")
         if lo is not None: name(wb, k + "_lo", f"In!$D${r}")
         if hi is not None: name(wb, k + "_hi", f"In!$F${r}")
@@ -123,7 +125,7 @@ def main():
         IN.cell(r, 1, "grp_" + g["key"]); IN.cell(r, 2, g["name"]); IN.cell(r, 7, g["tag"]); IN.cell(r, 8, g["src"])
         r += 1
     IN_LAST = r - 1
-    for col, w in zip("ABCDEFGHI", (14, 52, 8, 9, 10, 9, 18, 70, 18)):
+    for col, w in zip("ABCDEFGHIJ", (14, 52, 8, 9, 10, 9, 18, 70, 18, 50)):
         IN.column_dimensions[col].width = w
 
     # ---------------- Path、Mkt：記憶體價格路徑與 HBM 市場（公式與 markets/memory/market.py write() 同一份） ----------------
@@ -180,6 +182,42 @@ def main():
             UROW["tot" + s_] = r; r += 1
         UN.column_dimensions["A"].width = 40
         for col in "BCDEFG": UN.column_dimensions[col].width = 10
+
+    # ---------------- ShareTbl：ASIC 設計服務份額表（同一平台各設計夥伴份額加總 ≤ 100%） ----------------
+    ST = None; STROW = {}
+    if "sh_tpu_26" in INROW:
+        ST = wb.create_sheet("ShareTbl", index=wb.sheetnames.index("Path"))
+        ST["A1"] = ("ShareTbl — ASIC 設計服務顆數份額表（基準值；In 頁 M7）。同一平台各設計夥伴份額加總須 ≤ 100%，餘額＝客戶自行設計或未建模的夥伴。"
+                    "Trainium 的世芯份額隨情境（公司特有：A 最有利、C 最不利），三情境各列一次")
+        hdr(ST, 3, ["平台", "夥伴", "鍵（2026／2027／2028）", "2026", "2027", "2028", "說明"])
+        r = 4
+        TBL = [("Google TPU", [("Broadcom", "sh_tpu_{y}"), ("Marvell", "msh_tpu_{y}"), ("聯發科", "mtk_tpu_{y}")], "tpu"),
+               ("其他 ASIC（MTIA、Maia、OpenAI 等）", [("Broadcom", "sh_oth_{y}"), ("Marvell", "msh_oth_{y}"), ("聯發科", "mtk_oth_{y}")], "oth")]
+        for s_ in seed["scen"]:
+            TBL.append((f"AWS Trainium（情境 {s_}）", [("Marvell", "msh_trn_{y}"), ("世芯", "al_{y}x" + s_)], "trn" + s_))
+        def kk(pat, y, s_=None):
+            if pat.startswith("al_"):
+                return "al_trn_26" if y == 26 else f"al{y}_{pat[-1]}"
+            return pat.format(y=y)
+        for plat, parts, code in TBL:
+            r_first = r
+            for who, pat in parts:
+                ST.cell(r, 1, plat); ST.cell(r, 2, who); ST.cell(r, 3, "／".join(kk(pat, y) for y in (26, 27, 28)))
+                for j, y in enumerate((26, 27, 28)):
+                    c = ST.cell(r, 4 + j, "=" + kk(pat, y)); c.font = GREEN; c.number_format = "0%"
+                r += 1
+            ST.cell(r, 1, plat); ST.cell(r, 2, "合計").font = BOLD
+            for j in range(3):
+                col = "DEF"[j]
+                c = ST.cell(r, 4 + j, f"=SUM({col}{r_first}:{col}{r-1})"); c.number_format = "0%"; c.fill = KEY
+            STROW["sum_" + code] = r; r += 1
+            ST.cell(r, 1, plat); ST.cell(r, 2, "餘額（客戶自行設計或未建模）")
+            for j in range(3):
+                col = "DEF"[j]
+                ST.cell(r, 4 + j, f"=1-{col}{r-1}").number_format = "0%"
+            r += 2
+        ST.column_dimensions["A"].width = 30; ST.column_dimensions["B"].width = 26; ST.column_dimensions["C"].width = 34
+        for col in "DEF": ST.column_dimensions[col].width = 9
 
     # ---------------- TK_In：Tokenomics 鏡像（只讀） ----------------
     TKS = wb.create_sheet("TK_In")
@@ -311,6 +349,17 @@ def main():
         c = IF.cell(r, 5, f"=Units!G{UROW['tot']}"); c.font = GREEN; c.number_format = "0.0%"
         IF.cell(r, 9, f"Units!G{UROW['tot']}")
         name(wb, "SIF_UnitsGrowth29", f"Interface!$E${r}"); IFNAMES.append("SIF_UnitsGrowth29"); r += 1
+    if ST is not None:
+        r += 1
+        IF.cell(r, 1, "B3. ASIC 設計服務份額合計（ShareTbl 頁；欄 E–G＝2026–2028）").font = BOLD; r += 1
+        for code, lab in [("tpu", "Google TPU"), ("oth", "其他 ASIC")] + [("trn" + s_, f"AWS Trainium（情境 {s_}）") for s_ in seed["scen"]]:
+            nm_ = f"SIF_ASICShareSum_{code}"
+            sr = STROW["sum_" + code]
+            IF.cell(r, 1, nm_); IF.cell(r, 2, f"{lab} 設計夥伴份額合計"); IF.cell(r, 3, "%")
+            for j in range(3):
+                c = IF.cell(r, 5 + j, f"=ShareTbl!{'DEF'[j]}{sr}"); c.font = GREEN; c.number_format = "0%"
+            IF.cell(r, 9, f"ShareTbl!D{sr}:F{sr}")
+            name(wb, nm_, f"Interface!$E${r}:$G${r}"); IFNAMES.append(nm_); r += 1
     r += 1
     IF.cell(r, 1, "C. Tokenomics 鏡像（只讀；權威在算力收支；本庫與 TK 一致由 Checks K3 檢查）").font = BOLD; r += 1
     hdr(IF, r, ["名稱", "項目", "單位", "低", "基準", "高", "", "來源位置"]); r += 1
@@ -384,6 +433,12 @@ def main():
             CK.cell(r, 1, f"K5-{k}"); CK.cell(r, 2, f"2029 成長率在區間內：{g['name']}")
             CK.cell(r, 3, f"=g29_{k}"); CK.cell(r, 4, f'=g29_{k}_lo&"–"&g29_{k}_hi')
             CK.cell(r, 6, f'=IF(AND(C{r}>=g29_{k}_lo,C{r}<=g29_{k}_hi),"OK","ERROR")'); CK.cell(r, 7, "驗證"); r += 1
+    if ST is not None:
+        for code, lab in [("tpu", "Google TPU"), ("oth", "其他 ASIC")] + [("trn" + s_, f"AWS Trainium（情境 {s_}）") for s_ in seed["scen"]]:
+            for j, y in enumerate((2026, 2027, 2028)):
+                CK.cell(r, 1, f"K6-{code}{y}"); CK.cell(r, 2, f"{lab} {y} 設計夥伴份額合計 ≤ 100%")
+                CK.cell(r, 3, f"=ShareTbl!{'DEF'[j]}{STROW['sum_' + code]}"); CK.cell(r, 4, 1)
+                CK.cell(r, 6, f'=IF(C{r}<=1+1E-9,"OK","ERROR")'); CK.cell(r, 7, "驗證（加總受限）"); r += 1
     # G 治理：輸入列標記、來源、區間
     g0 = r
     CK.cell(r, 1, "G1"); CK.cell(r, 2, "In 頁輸入列缺標記")
@@ -437,6 +492,7 @@ def main():
         ("與 Tokenomics 的分工：每 GW 硬體量、機架價、每 GW 資本支出、NonNV 比例、產業年度部署路徑（R4）權威在 Tokenomics／算力收支，本庫只在 TK_In 頁鏡像（綠字、不得修改）；晶片產業資訊（HBM 單價與容量、每顆內容、網通內容、份額、出貨顆數、ASIC 規格、晶圓與設備）權威在本庫（《情境卡產生規則》第 13 條）。", False),
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
+        ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
         ("讀法：Scen（情境定義）→ In（藍字輸入）→ Path／Mkt（推導）→ Interface（下游取數）→ Checks（SGOV_Errors 須為 0）。", False),
         ("顏色：藍字＝輸入（本活頁簿擁有）；黑字＝公式；綠字＝跨頁或外部連結；淡黃底＝關鍵輸出；亮黃底＝待 Andy 決定或未定。", False),
         ("標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy 與 Assumed 一律給區間（v0.1 搬入列尚有缺區間者，見 Checks G3）。", False),
