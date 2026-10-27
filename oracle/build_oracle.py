@@ -443,7 +443,7 @@ TH.cell(CAL + 4, 1, "對照：Q1 OCI 非 AI 殘差占 OCI 比例（v0.3.1 區間
 for x in range(CAL, CAL + 2): TH[f"C{x}"].number_format = "#,##0.000"
 M_SW_CELL = f"Thesis!C{CAL+2}"
 for _r in range(4, IN.max_row + 1):
-    if IN.cell(_r, 1).value == "m_sw": IN.cell(_r, 5).value = "=" + M_SW_CELL
+    if IN.cell(_r, 1).value == "m_sw" and "m_sw" not in OVR: IN.cell(_r, 5).value = "=" + M_SW_CELL
 # RPO 轉換檢查
 RP = CAL + 6
 TH.cell(RP, 1, "RPO 轉換檢查（命題的對照列；不作校準）").font = BOLD
@@ -839,8 +839,8 @@ for nm, tk, m in (("Microsoft", "MSFT", 15.59), ("SAP", "SAP", 15.02), ("Salesfo
     V.cell(r, 5, "2026-10-07"); V.cell(r, 6, f"oracle/data/oracle_facts_20261007.json val.peer.{tk.lower()}（EV ÷ 共識 EBITDA 時間加權，Derived；2026-10-22 找不到新值）"); r += 1
 SW_PEERS = (SW0, r - 1)
 for _r in range(4, IN.max_row + 1):
-    if IN.cell(_r, 1).value == "mult_oci": IN.cell(_r, 5).value = f"=MEDIAN(Val!D{OCI_PEERS[0]}:D{OCI_PEERS[1]})"
-    if IN.cell(_r, 1).value == "mult_sw": IN.cell(_r, 5).value = f"=MEDIAN(Val!D{SW_PEERS[0]}:D{SW_PEERS[1]})"
+    if IN.cell(_r, 1).value == "mult_oci" and "mult_oci" not in OVR: IN.cell(_r, 5).value = f"=MEDIAN(Val!D{OCI_PEERS[0]}:D{OCI_PEERS[1]})"
+    if IN.cell(_r, 1).value == "mult_sw" and "mult_sw" not in OVR: IN.cell(_r, 5).value = f"=MEDIAN(Val!D{SW_PEERS[0]}:D{SW_PEERS[1]})"
 r += 1
 hdr(V, r, ["項目", "單位"] + [f"情境 {s}" for s in SC] + ["說明"]); r += 1
 SO_ = {}
