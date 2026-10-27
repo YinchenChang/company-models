@@ -15,6 +15,7 @@
 | `amazon/` | Amazon（AMZN） | `oracle/`（v0.2）→ MAG 共用引擎（Amazon v0.1b；共用文件見 `mag/`） | v0.2（Tokenomics v5.31） |
 | `alphabet/` | Alphabet（GOOGL） | `oracle/`（v0.2）→ 套用 Amazon 引擎（amazon@`41f9a54`，v0.2） | v0.2 |
 | `microsoft/` | Microsoft（MSFT） | `oracle/`（v0.2）→ 套用 Amazon 引擎（amazon@`41f9a54`，v0.2） | v0.2 |
+| `siliconomics/` | **AI 半導體產業基準庫 Siliconomics**（比照 Tokenomics）：行業變數唯一值（加速器顆數、HBM、記憶體價格路徑；其餘子產業分段併入）、Tokenomics 鏡像、跨模型衝突登錄；下游經 `siliconomics/data/` 快照取數（`markets/memory/market.py` 已改讀）；見 `siliconomics/README.md` | 新建（AI 半導體 Project） | v0.1 |
 | `markets/` | 市場層（AI 半導體）：每 GW 晶片內容橋接表等，見 `markets/README.md` | 新建（AI 半導體 Project） | chip_bridge v0.2.1、network v0.2.3、equipment v0.1.3、overview v0.6（Tokenomics v20.1；memory v0.4） |
 | `skhynix/` | SK 海力士（000660.KS） | 記憶體樣板 `tools/memory_model`（AI 半導體 Project） | v0.4.1（HBM 位元隨情境；Val 頁含十年倍數與規則值） |
 | `micron/` | 美光（MU） | 記憶體樣板（複製測試） | v0.3.1 |
