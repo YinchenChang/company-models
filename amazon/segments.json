@@ -1,0 +1,30 @@
+{
+ "company": "Amazon",
+ "ticker": "AMZN",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "North America", "label": "North America", "period": "FY2025", "value": 426.305, "unit": "US$bn", "source": "Form 10-K 2025（2026-02-06）附註：Segment Information"},
+  {"name": "International", "label": "International", "period": "FY2025", "value": 161.894, "unit": "US$bn", "source": "Form 10-K 2025（2026-02-06）附註：Segment Information"},
+  {"name": "AWS", "label": "AWS", "period": "FY2025", "value": 128.725, "unit": "US$bn", "source": "Form 10-K 2025（2026-02-06）附註：Segment Information"}
+ ],
+ "revenue_lines": {
+  "_note": "10-K 營收類別（Net sales by groups of similar products and services）；零售六線合計＝North America＋International，AWS 線＝AWS 分部；FY2025 合計 716.924",
+  "period": "FY2025",
+  "values": {"Online stores": 269.287, "Physical stores": 22.561, "Third-party seller services": 172.162, "Advertising services": 68.635,
+             "Subscription services": 49.619, "Other": 5.935, "AWS": 128.725},
+  "source": "Form 10-K 2025（2026-02-06）"
+ },
+ "sublines": [
+  {"parent": "AWS", "labels": ["AWS AI（命題子列）", "AWS 其他"], "thesis": true,
+   "note": "命題子列：AWS AI＝對外 AI 在役 MW × 每 MW 年收入（Thesis 頁）；AWS 其他＝AWS − AWS AI（實績為分拆估計）；子列合計＝AWS 由 PL 頁核對列保證"},
+  {"parent": "North America＋International（零售營收線）", "labels": ["Online stores", "Physical stores", "Third-party seller services", "Advertising services", "Subscription services", "Other"],
+   "thesis": false, "note": "營收線不分地區揭露；合計＝North America＋International（核對列）"}
+ ],
+ "check_labels": [
+  "檢查：零售營收線合計 − (North America＋International)",
+  "檢查：AWS AI＋AWS 其他 − AWS",
+  "檢查：營收線合計（含 AWS）− 合併營收",
+  "檢查：分部合計 − 合併營收",
+  "檢查：分部營業利益合計 − 合併營業利益"
+ ]
+}
