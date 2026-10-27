@@ -114,6 +114,7 @@ def ver_tuple(n):
 def find_xlsx(name):
     """回傳 (路徑, 來源說明, 最新版檔名)。優先用工作樹中的原檔；否則從 git 歷史取原檔；都沒有才用同模型最新版（儲存格位置可能已移動）。"""
     global _index
+    name = os.path.basename(name)   # 出處標記有時寫成含路徑（例 skhynix/dist/…xlsx）
     if _index is None:
         _index = {}
         for f in glob.glob(f"{ROOT}/**/*.xlsx", recursive=True):
