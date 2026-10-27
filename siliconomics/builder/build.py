@@ -677,6 +677,17 @@ def main():
         EQROW["r_soc"] = r; r += 1
         EQ.cell(r, 1, "對照：泰瑞達測試 ÷ WFE 長期區間")
         ec(r, 2026, '=TEXT(ts_tw_lo,"0%")&"–"&TEXT(ts_tw_hi,"0%")', "@"); r += 1
+        if "hbm_hbp_25" in INROW:
+            r += 1
+            EQ.cell(r, 1, "D. 混合鍵合占 HBM 工序比例（行業技術情境：CY2028 起 A 高、B 基準、C 低；disco、hanmi、besi 同讀）").font = BOLD; r += 1
+            for s_ in seed["scen"]:
+                suf = {"A": "_hi", "B": "", "C": "_lo"}[s_]
+                EQ.cell(r, 1, "混合鍵合占 HBM 工序比例"); EQ.cell(r, 2, s_)
+                for y in YC: ec(r, y, f"=hbm_hbp_{y % 100}" + (suf if y >= 2028 else ""), "0.0%")
+                EQROW["hbp" + s_] = r; r += 1
+            EQ.cell(r, 1, "HBM 平均堆疊層數（基準）")
+            for y in YC: ec(r, y, f"=hbm_stk_{y % 100}", "0.0")
+            EQROW["stk"] = r; r += 1
         EQ.column_dimensions["A"].width = 52; EQ.column_dimensions["H"].width = 60
         for col in "BCDEFG": EQ.column_dimensions[col].width = 10
 
@@ -845,7 +856,8 @@ def main():
                 c = IF.cell(r, 4 + j, f"=Equip!{'CDEFG'[j]}{er}"); c.font = GREEN; c.number_format = "0.000"
             IF.cell(r, 9, f"Equip!C{er}:G{er}")
             name(wb, nm_, f"Interface!$D${r}:$H${r}"); IFNAMES.append(nm_); r += 1
-        for key, nm_, lab in (("r_semi", "SIF_TestWFE_SEMI", "SEMI 測試 ÷ SEMI WFE"), ("r_soc", "SIF_TestWFE_SoC", "SoC 測試機（A）÷ SEMI WFE")):
+        for key, nm_, lab in ((("r_semi", "SIF_TestWFE_SEMI", "SEMI 測試 ÷ SEMI WFE"), ("r_soc", "SIF_TestWFE_SoC", "SoC 測試機（A）÷ SEMI WFE"))
+                              + tuple((f"hbp{s_}", f"SIF_HBMHybrid_{s_}", f"混合鍵合占 HBM 工序比例（{s_}）") for s_ in seed["scen"] if f"hbp{s_}" in EQROW)):
             er = EQROW[key]
             IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, "%")
             for j in range(5):
@@ -1027,6 +1039,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.7.1：新增 M22（HBM 堆疊技術：核心晶粒容量、堆疊層數、混合鍵合占比 2025–2030；原在 disco，hanmi、besi 同讀）、M23（NAND 市場輸入：每顆加速器企業級 SSD 容量、2025 位元基期與應用結構、各應用與供給位元年增、各廠季營收、份額年變動；原在 markets/nand）、Equip 頁 D 節、Interface SIF_HBMHybrid_*。", False),
         ("v0.7：新增 M20（設備市場層的行業輸入：SEMI 年中預測、2029 外推、其他晶圓廠設備成長與 2025 資本支出、設備情境係數、AI 分類、券商 WFE；原在 markets/equipment）、M21（測試設備：SoC／記憶體測試機市場錨點、非 AI SoC、每顆測試時間係數、HBM 權重、泰瑞達測試 ÷ WFE 區間；原在 advantest、ter）與 Equip 頁（SEMI 分項路徑、SoC 測試機市場三情境、測試 ÷ WFE〔CF15〕）、Checks K8、Interface SIF_SEMI_*、SIF_TestSoCMkt_*、SIF_TestWFE_*。", False),
         ("v0.6.1：新增 M19（液冷：機架內液冷每架內容〔原在 markets/chip_bridge〕、分歧管、內容調整、滲透率、TrendForce 對照、奇鋐與雙鴻 FY2026 份額快照與份額相對值、健策冷板元件份額；原在 avc、auras、jentech）、Rack 頁 D 節（AI 液冷市場三情境）、ShareTbl 的 AI 液冷份額表（CF04 加入雙鴻；CF12 台達電機架外液冷不屬本市場）、Checks K6-lc、Interface SIF_LiqPerGW、SIF_LiqPen_*、SIF_LiqMkt_*、SIF_LiqShareSum_*。", False),
         ("v0.6：新增 M17（AI 電源每 kW 內容、台達電與光寶份額路徑、凱基與 UBS 外部錨點；原在 delta、liteon）、M18（ODM 每櫃價格、緯穎 AI 占比單一值〔CF09〕；原在 quanta、wiwynn、wistron）與 Rack 頁（AI 伺服器組裝市場、商用 GPU 系統市場〔CF10：AMD 2026 計 GB300 世代、2027 起計 Rubin 世代〕、AI 電源市場）、ShareTbl 的 AI 電源份額表、Checks K6-pwr、K7、Interface SIF_AsmMkt_*、SIF_GPUSysMkt_*、SIF_PwrMkt_*、SIF_PwrShareSum_*。", False),

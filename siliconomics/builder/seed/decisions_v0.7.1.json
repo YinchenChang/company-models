@@ -1,0 +1,11 @@
+[
+ {
+  "id": "S23",
+  "cat": "範圍",
+  "item": "v0.7.1：HBM 堆疊技術與 NAND 市場輸入",
+  "decision": "(1) M22：Disco 模型的核心晶粒容量、堆疊層數、混合鍵合占 HBM 工序比例（2025–2030）移入本庫，disco 改讀，hanmi、besi 由讀 Disco 成品改讀本庫；Equip 頁 D 節列三情境混合鍵合比例。Disco 的 hb_on、hb_eff（混合鍵合對 Disco 裝置支出的影響）、dlt、g_tail 屬公司模型，留在原處。(2) M23：markets/nand 的行業輸入（每顆加速器企業級 SSD 容量、位元基期與應用結構、各應用與供給位元年增、各廠季營收、份額年變動）移入本庫；前五大占比（公式）、SanDisk 與 Kioxia 指引、合資群份額情境留在 markets/nand",
+  "date": "2026-10-28",
+  "quote": "Andy 2026-10-28 06:45「請繼續」",
+  "status": "預設、可撤回"
+ }
+]

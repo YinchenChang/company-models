@@ -7,6 +7,8 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 import cycle_position as CP
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
@@ -45,6 +47,9 @@ def in_keys(f, prefixes):
 MS = {m: in_keys(f, ("sh2",)) for m, f in (("sk", SKH_F), ("ss", SS_F), ("mu", MU_F))}
 for m in MS: assert all(f"sh{y % 100}" in MS[m] for y in YRS), m
 DS = in_keys(DSC_F, ("den_", "stk_", "hbp_"))
+# v0.7.1：晶粒容量、堆疊層數、混合鍵合占比改讀 Siliconomics M22（與 Disco 模型同一值）
+for _k in [k for k in DS if k.startswith(("den_", "stk_", "hbp_"))]:
+    DS[_k] = (SIL.vals("hbm_" + _k), f"siliconomics｜SIF_hbm_{_k}")
 assert all(f"{p}_{y}" in DS for p in ("den", "stk", "hbp") for y in range(25, 31))
 
 ws_ = openpyxl.load_workbook(EQ_F, data_only=True)["Mkt"]
