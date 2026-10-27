@@ -7,6 +7,8 @@ import openpyxl
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 import market as MEM
 sys.path.insert(0, os.path.join(ROOT, "tools"))
@@ -63,7 +65,9 @@ IN = wb.active; IN.title = "In"
 IN["A1"] = "In — 輸入（藍字；基準欄 E，低 D、高 F）。金額：十億日圓（¥B）；HBM 位元：EB；CoWoS：千片。每個輸入附標記與來源；找不到者寫「未找到」，公司未揭露者寫「公司不揭露」"
 IN["A2"] = "標記：Verified（公司文件、交易所資料）／Interested-party（寫明是誰、立場）／Analogy（寫明對照與差異）／Assumed（一律給低／高區間）／Derived（寫明換算）。SemiAnalysis 未使用。公司原文（disco.co.jp）以網頁擷取工具讀取文字（建置環境的 curl 被擋）；表格欄位錯置處以算術核對，原文版面待人工複核"
 hdr(IN, 3, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源1", "來源2／說明"])
-rows = []; sec = lambda t: rows.append(("sec", t)); inp = lambda *a: rows.append(a)
+rows = []; sec = lambda t: rows.append(("sec", t))
+def inp(*a):   # Siliconomics v0.7.1 起，行業輸入（鍵加前綴 hbm_）改讀本庫快照
+    rows.append((a[0], *SIL.row9("hbm_" + a[0])[1:]) if (a[0].startswith(("den_", "stk_", "hbp_"))) and ("hbm_" + a[0]) in SIL.V else a)
 CO = "公司"
 FR425 = "公司 2026年3月期 決算短信（2026-04-22，fr20260422.pdf）"
 FR1022 = "公司 2027年3月期 第2四半期決算短信（2026-10-22，fr20261022.pdf）"

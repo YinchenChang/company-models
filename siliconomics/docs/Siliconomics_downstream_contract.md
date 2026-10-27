@@ -1,4 +1,4 @@
-# Siliconomics 下游資料契約 v0.7（2026-10-28；對應 Siliconomics v0.7、Tokenomics v21.7）
+# Siliconomics 下游資料契約 v0.7.1（2026-10-28；對應 Siliconomics v0.7.1、Tokenomics v21.7）
 
 適用對象：`company-models` 內 AI 半導體 Project 的市場層（`markets/*`）與公司模型（每家公司一個資料夾），以及其他專案取用晶片產業資料時（經 Drive `00-共用情境/交流/`）。
 
@@ -34,5 +34,6 @@
 | v0.6 | 2026-10-27 | 新增輸入 `SIF_pwr_*`（16 個：每 kW 內容、台達電與光寶份額相對值、FY2026 有效份額快照、凱基與 UBS 錨點）、`SIF_asm_*`（3 個：ODM 每櫃價格、緯穎 AI 占比）；推導 `SIF_ODMValPerGW`、`SIF_AsmMkt_*`、`SIF_SysValGB`／`VR`、`SIF_SysUnitsGB`／`VR`、`SIF_GPUSysMkt_*`、`SIF_PwrMkt_*`、`SIF_PwrShareSum_*`（2026–2029） | delta、liteon、quanta 改讀 `row9`；wiwynn、wistron 讀 `vals("asm_wyai_26")`；dell、smci 建檔時核對 `SIF_GPUSysMkt_A`，liteon 核對 `pwr_dsh_26` 與台達電成品一致（不一致即建檔失敗） |
 | v0.6.1 | 2026-10-27 | 新增輸入 `SIF_lc_*`（20 個：機架內液冷每架內容、分歧管、內容調整、滲透率、TrendForce 對照、奇鋐與雙鴻 FY2026 份額快照、奇鋐份額相對值、健策冷板元件份額）；推導 `SIF_LiqPerGW`、`SIF_LiqPen_*`、`SIF_LiqMkt_*`、`SIF_LiqShareSum_*`（2026–2029） | markets/chip_bridge 的 `cool` 改讀 `vals`；avc、jentech 改讀 `row9`；auras 改讀 `vals`（雙鴻份額相對值＝`lc_avrel_*`）；jentech 建檔時核對 `SIF_LiqMkt_*` |
 | v0.7 | 2026-10-28 | 新增輸入 `SIF_eq_*`（55 個：SEMI 年中預測、2029 外推、其他晶圓廠設備成長與 2025 資本支出、設備情境係數、AI 分類、券商 WFE）、`SIF_ts_*`（18 個：測試機市場錨點、非 AI SoC、每顆測試時間係數、HBM 權重、泰瑞達區間）；推導 `SIF_SEMI_*`（2025–2029）、`SIF_TestSoCMkt_*`、`SIF_TestWFE_SEMI`、`SIF_TestWFE_SoC` | markets/equipment、advantest、ter 的 `inp` 遇到本庫有的鍵（加前綴 `eq_`／`ts_`）自動改讀 `row9`；ter 建檔時核對 Advantest 成品的 SoC 測試機市場 |
+| v0.7.1 | 2026-10-28 | 新增輸入 `SIF_hbm_*`（18 個：核心晶粒容量、堆疊層數、混合鍵合占比 2025–2030）、`SIF_nd_*`（61 個：NAND 市場輸入）；推導 `SIF_HBMHybrid_*`（2025–2029） | disco、markets/nand 的 `inp` 遇到本庫鍵（前綴 `hbm_`／`nd_`）改讀 `row9`；hanmi、besi 由讀 Disco 成品改讀 `vals` |
 
 版本號：只改證據、標記、文字為修補版（v0.1.x）；輸入值或公式改變為次版（v0.x）；Interface 名稱刪除或定義改變為主版（v1.0 前只新增名稱以次版處理）。

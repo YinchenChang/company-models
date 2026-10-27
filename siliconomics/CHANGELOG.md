@@ -1,5 +1,11 @@
 # Siliconomics 變更紀錄
 
+## v0.7.1（2026-10-28；`model/20261028_Siliconomics_v0.7.1.xlsx`；Tokenomics v21.7）
+
+- 新增 In 頁 M22（18 列）：HBM 核心晶粒容量、堆疊層數、混合鍵合占 HBM 工序比例（2025–2030），原在 disco；disco 改讀，hanmi、besi 由讀 Disco 成品改讀本庫。Equip 頁 D 節：混合鍵合比例三情境（2028 A 15%／B 5%／C 0%；2029 30／15／5%）。
+- 新增 In 頁 M23（61 列）：markets/nand 的行業輸入（每顆加速器企業級 SSD 容量、2025 位元基期與應用結構、各應用與供給位元年增、各廠季營收、份額年變動），nand 改讀；前五大占比公式、公司指引、合資群份額情境留在 nand。
+- 下游數值不變（besi、hanmi 只有 In 頁來源文字）。決策 S23。
+
 ## v0.7（2026-10-28；`model/20261028_Siliconomics_v0.7.xlsx`；Tokenomics v21.7）
 
 - 新增 In 頁 M20（55 列）：markets/equipment 的行業輸入（SEMI 2026-07 年中預測、2029 外推 g29、其他晶圓廠設備成長與 2025 資本支出、設備情境係數 B／C、AI 相關分類、券商 WFE 對照），equipment 改讀；三大記憶體廠與台積電資本支出、設備占比仍在 equipment（公司變數）。

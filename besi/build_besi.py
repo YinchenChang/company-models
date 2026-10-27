@@ -8,6 +8,8 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 import cycle_position as CP
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
@@ -44,6 +46,9 @@ def in_keys(f, prefixes):
             out[k] = ((r[3].value, r[4].value, r[5].value), f"{rel(f)}｜In!D{r[0].row}:F{r[0].row}")
     return out
 DS = in_keys(DSC_F, ("den_", "stk_", "hbp_", "g_tail"))
+# v0.7.1：晶粒容量、堆疊層數、混合鍵合占比改讀 Siliconomics M22（與 Disco 模型同一值）
+for _k in [k for k in DS if k.startswith(("den_", "stk_", "hbp_"))]:
+    DS[_k] = (SIL.vals("hbm_" + _k), f"siliconomics｜SIF_hbm_{_k}")
 assert all(f"{p}_{y}" in DS for p in ("den", "stk", "hbp") for y in range(25, 31)) and "g_tail" in DS
 TI = in_keys(TSMC_F, ("um28_", "um29_"))
 assert all(f"um{y}_{s}" in TI for y in (28, 29) for s in SC)

@@ -9,6 +9,8 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 import market as MEM
 
@@ -35,7 +37,9 @@ IN = wb.active; IN.title = "In"
 IN["A1"] = "In — NAND 市場層輸入（藍字；基準 E 欄，低 D、高 F）。金額：十億美元（$B）；位元：EB（10^18 位元組）；顆數：百萬顆。每個輸入附標記與來源；找不到者寫「未找到」"
 IN["A2"] = "標記：Verified／Interested-party（寫明是誰）／Analogy／Assumed（給低／高區間）／Derived（寫明換算）。價格路徑、加速器顆數、情境顆數係數取自 markets/memory/market.py（單一來源，本頁只抄錄並標示來源；改 markets/memory 後重建本檔）。SemiAnalysis 未使用"
 hdr(IN, 3, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源1", "來源2／說明"])
-rows = []; sec = lambda t: rows.append(("sec", t)); inp = lambda *a: rows.append(a)
+rows = []; sec = lambda t: rows.append(("sec", t))
+def inp(*a):   # Siliconomics v0.7.1 起，行業輸入（鍵加前綴 nd_）改讀本庫快照
+    rows.append((a[0], *SIL.row9("nd_" + a[0])[1:]) if (True) and ("nd_" + a[0]) in SIL.V else a)
 MEMSRC = "markets/memory/market.py"
 TF0818 = "TrendForce 2026-08-18（2Q26 NAND 前五大營收排名）https://www.trendforce.com/presscenter/news/20260818-13186.html"
 
