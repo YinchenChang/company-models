@@ -7,7 +7,7 @@ from openpyxl.utils import get_column_letter as L
 # ---------------- Tokenomics 取數 ----------------
 # 契約名稱（IF_）：取自版本固定快照（tools/tokenomics/import_tokenomics.py 產生；Tokenomics 唯讀）
 HERE = os.path.dirname(os.path.abspath(__file__))
-SNAPSHOT = os.path.join(HERE, "data", "tokenomics_snapshot_v20.1.json")
+SNAPSHOT = os.path.join(os.path.dirname(os.path.dirname(HERE)), "siliconomics", "data", "tokenomics_snapshot_v21.7.json")   # v0.2.2 起讀 Siliconomics 的 TK 快照（本專案單一份）
 _snap = json.load(open(SNAPSHOT, encoding="utf-8"))
 _gen = {g["code"]: g["name"] for g in _snap["source"]["generations"]}
 def tk(name):
@@ -15,30 +15,25 @@ def tk(name):
     v = _snap["items"][name]["values"]
     return tuple(v[_gen[g]][c] for g in ("GB300", "VR200") for c in ("低成本", "基準", "高成本"))
 
-# 非契約儲存格，待 R1（Interface 新增 IF_RackPrice／IF_ScaleOutShare／IF_StoragePerGPU 後改讀快照）。
-# 欄序同 tk()：GB300 低／基準／高、VR200 低／基準／高。
-NON_CONTRACT_R1 = {
-    "rack": (4.0, 4.3, 5.0, 7.8, 8.4, 9.1),            # Spec_Rack E11:F13，$M/架
-    "so":   (0.05, 0.10, 0.15, 0.05, 0.10, 0.15),      # Inputs D13:F13，Scale-out 網路 ÷ 機架價格
-    "stor": (300, 500, 800, 300, 500, 800),            # Inputs D14:F14，$/GPU
-}
+# R1 已上線（Tokenomics v21.0 起 IF_RackPrice／IF_ScaleOutShare／IF_StoragePerGPU）：v0.2.2 起改讀契約名稱，不再抄錄
+NON_CONTRACT_R1 = {"rack": tk("IF_RackPrice"), "so": tk("IF_ScaleOutShare"), "stor": tk("IF_StoragePerGPU")}
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 wb = openpyxl.Workbook()
 
 # ---------------- In：輸入 ----------------
 ws = wb.active; ws.title = "In"
-ws["A1"] = "In — 輸入（藍字）。基準欄＝E（GB300）、H（VR200）。Tokenomics 列取自 v20.1（model/20261023_Tokenomics_v20.1.xlsx，SHA-256 027fef9e…d607；五個 IF_ 名稱逐值與 v19.0 相同）"
+ws["A1"] = f"In — 輸入（藍字）。基準欄＝E（GB300）、H（VR200）。Tokenomics 列取自 {_snap['source']['file']}（{_snap['source']['version']}，經 siliconomics/data 快照；八個 IF_ 名稱）"
 hdr = ["鍵", "項目", "單位", "GB300 低", "GB300 基準", "GB300 高", "VR200 低", "VR200 基準", "VR200 高", "標記", "來源／說明"]
 for j, h in enumerate(hdr, 1):
     c = ws.cell(3, j, h); c.font = BOLD; c.fill = HDR
 rows = [
- ("sec","A. Tokenomics v20.1（算力收支；只讀不改；五個 IF_ 名稱與 v19.0 逐值相同）"),
- ("rack","機架單價","$M/架",*NON_CONTRACT_R1["rack"],"TK","Spec_Rack E11:F13（非 Interface 具名範圍；已提修改申請 R1）"),
+ ("sec",f"A. Tokenomics {_snap['source']['version']}（算力收支；只讀不改；R1 三名稱 v21.0 起為契約名稱）"),
+ ("rack","機架單價","$M/架",*NON_CONTRACT_R1["rack"],"TK","IF_RackPrice（v21.0 起契約名稱；v21.3 VR200 低成本 7.8→7.5）"),
  ("racks","每 GW 機架數","架",*tk("IF_RacksPerGW"),"TK","IF_RacksPerGW"),
  ("gpus","每 GW GPU 數","顆",*tk("IF_GPUsPerGW"),"TK","IF_GPUsPerGW"),
- ("so","Scale-out 網路 ÷ 機架價格","%",*NON_CONTRACT_R1["so"],"TK","Inputs D13:F13（Analogy；非 Interface，R1）"),
- ("stor","儲存與管理","$/GPU",*NON_CONTRACT_R1["stor"],"TK","Inputs D14:F14（Assumed；非 Interface，R1）"),
+ ("so","Scale-out 網路 ÷ 機架價格","%",*NON_CONTRACT_R1["so"],"TK","IF_ScaleOutShare（Analogy；v21.0 起契約名稱）"),
+ ("stor","儲存與管理","$/GPU",*NON_CONTRACT_R1["stor"],"TK","IF_StoragePerGPU（Assumed；v21.0 起契約名稱）"),
  ("capit","每 GW 資本支出 — IT 設備","$B",*tk("IF_CapexIT"),"TK","IF_CapexIT"),
  ("capfac","每 GW 資本支出 — 廠房","$B",*tk("IF_CapexFacility"),"TK","IF_CapexFacility"),
  ("captot","每 GW 資本支出 — 合計","$B",*tk("IF_CapexTotal"),"TK","IF_CapexTotal"),
@@ -269,7 +264,8 @@ for col in "BCDEFGHIJKLM": se.column_dimensions[col].width = 13
 # ---------------- README ----------------
 rd = wb.create_sheet("README", 0)
 lines = [
- ("每 GW 晶片內容橋接表（AI 半導體專案 步驟 0）v0.2.1　2026-10-23", True),
+ ("每 GW 晶片內容橋接表（AI 半導體專案 步驟 0）v0.2.2　2026-10-27", True),
+ ("v0.2.2：Tokenomics 快照改讀 Siliconomics 的 v21.7（siliconomics/data/tokenomics_snapshot_v21.7.json，本專案單一份）；機架價、scale-out 比率、每 GPU 儲存改讀 v21.0 起的契約名稱 IF_RackPrice、IF_ScaleOutShare、IF_StoragePerGPU（R1 已上線，不再抄錄）。基準值全部不變；只有 VR200 低成本欄變動：機架價 7.8 → 7.5（Tokenomics v21.3）、IT 與總資本支出 33.27 → 32.00、43.49 → 42.21 $B／GW。", False),
  ("v0.2.1：Tokenomics 快照改 v20.1（v19.0→v20.1 為 LifeSelf 主口徑與 L1_PriceReqBE 的 L 改動，與本表使用的名稱無關）；IF_CapexIT、IF_CapexFacility、IF_CapexTotal、IF_GPUsPerGW、IF_RacksPerGW 逐值相同，只更新版本標籤與說明文字，數值不變。", False),
  ("模型命題：買方每投入 1 GW 的資料中心資本支出，晶片內容（運算、HBM、非 HBM 記憶體、網通晶片、代工）各分到多少，作為後續 HBM、網通、台積電模型的共同分母。", False),
  ("", False),
@@ -294,7 +290,7 @@ rd.column_dimensions["A"].width = 160
 rq = wb.create_sheet("Requests")
 rq["A1"] = "給算力收支的修改申請與回饋（由算力收支決定是否升版）"; rq["A1"].font = BOLD
 reqs = [
- ("R1", "工程類（建議）", "Interface 新增 IF_RackPrice（Spec_Rack 第 11–13 列）、IF_ScaleOutShare（Inputs 第 13 列）、IF_StoragePerGPU（Inputs 第 14 列），使下游不必讀非契約儲存格。數值不變。"),
+ ("R1", "已上線（Tokenomics v21.0；本表 v0.2.2 起改讀）", "Interface 新增 IF_RackPrice（Spec_Rack 第 11–13 列）、IF_ScaleOutShare（Inputs 第 13 列）、IF_StoragePerGPU（Inputs 第 14 列），使下游不必讀非契約儲存格。數值不變。"),
  ("R2", "判斷類（提請注意，不建議本版改）", "VR200 機架價 8.4 以 MS 2026-05 BOM 為底。之後兩個方向相反的訊息：LPDDR5X 減半（54→28 TB，約 −$0.34M/架）與 2027 HBM4 合約價約翻倍（若全額轉嫁約 +$1.4M/架，+17%）。淨效果視 NVIDIA 吸收比例而定；建議在步驟 2 HBM 市場模型完成後再提數值。"),
  ("F1", "回饋（摘要數字）", "每顆加速器 HBM 金額：GB300 約 $4.5K、VR200 2026 價約 $4.8K、2027 價約 $10.4K；每 GW HBM：$2.17B／$1.40B／$3.03B；HBM ÷ IT capex：5.8%／3.7%／8.0%（見 Bridge）。VR200 每 GW 的 HBM 位元（約 84 PB）低於 GB300（約 140 PB），因每 GW GPU 數少 40%、每顆容量相同。"),
 ]

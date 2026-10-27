@@ -8,6 +8,8 @@ from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 import market as MEM
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照：每顆網通內容、每顆 IT capex、技術轉換、CPO 三情境（v0.4 起單一來源）
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 wb = openpyxl.Workbook()
@@ -18,27 +20,10 @@ def hdr(ws, row, labels):
 COMP = [("su_sw", "scale-up 交換晶片"), ("su_ic", "scale-up 互連與交換匣其他（銅背板、線纜、電路板、機構）"), ("so_sw", "scale-out 交換器"),
         ("so_opt", "scale-out 光模組"), ("so_cu", "scale-out 銅纜（DAC／AEC）"), ("nic", "網卡／DPU（SuperNIC）")]
 # 每顆加速器網通內容（美元）：su_sw, su_ic, so_sw, so_opt, so_cu, nic
-PLAT = {
- "GB":   ("GB300 NVL72（Blackwell）", (1493, 1493, 2688, 2090, 1195, 2624), "Derived", "橋接表 v0.2.1 GB300（Tokenomics v20.1，與 v19.0 相同：機架基準價 $4.3M；v0.1 為 $5.0M）：NVLink 交換晶片 0.727、交換匣其他 0.727、機架外 scale-out 2.909、機架內網卡＋DPU 1.278（$B/GW）÷ 每 GW 487,008 顆；機架外依 交換器 45%／光模組 35%／銅 20% 拆——v0.1 初版 35／50／15 使 2026 光學 41.8B，高於 LightCounting 26B 61%，改以 LightCounting 與光模組廠營收加總（約 26–30B）校準 [Derived]。合計約 $11.6K（v0.1 $13.0K）；Bernstein GB200 約 $10.7K（第二來源）"),
- "VR":   ("VR200 NVL72（Rubin）", (2917, 2917, 5251, 4084, 2334, 7000), "Derived", "橋接表 v0.2 VR200 ÷ 每 GW 291,744 顆；NVLink 6 交換晶片 36 顆（GB300 的 2 倍）、ConnectX-9 每架 144 顆；機架外拆分同上（45／35／20）。合計約 $24.5K"),
- "RU":   ("Rubin Ultra（MGX 單架／NVL576）", (4375, 4375, 5251, 4084, 2334, 7000), "Assumed", "scale-up 為 VR200 的 1.5 倍（NVL576 兩層 NVLink）；scale-out 同 VR200"),
- "HP":   ("Hopper HGX（8 GPU）", (300, 100, 2520, 1960, 1120, 2000), "Assumed", "NVSwitch 機內；400G InfiniBand 每 GPU 1 埠；合計約 $8K"),
- "AMD8": ("AMD MI355（8 GPU 伺服器）", (300, 100, 2520, 1960, 1120, 2000), "Analogy", "比照 Hopper HGX"),
- "AMDR": ("AMD Helios（MI455X 機架）", (2334, 2334, 4201, 3267, 1867, 5600), "Analogy", "VR200 的 0.8 倍（UALink／乙太網路 scale-up）"),
- "TPU":  ("Google TPU", (800, 1200, 800, 1500, 300, 400), "Assumed", "ICI 互連＋光學電路交換（OCS）；合計約 $5K"),
- "TRN":  ("AWS Trainium", (600, 800, 800, 1200, 300, 300), "Assumed", "NeuronLink＋EFA；合計約 $4K"),
- "ASIC": ("其他 ASIC", (600, 800, 800, 1200, 300, 300), "Assumed", "比照 Trainium"),
-}
-# 每顆 IT capex（$K）＝ IF_CapexIT（$B）÷ IF_GPUsPerGW × 1e6，取自橋接表的 Tokenomics 快照（基準成本情境），完整精度不取整。
-_snap = json.load(open(os.path.join(ROOT, "markets", "chip_bridge", "data", "tokenomics_snapshot_v20.1.json"), encoding="utf-8"))
-_gen = {g["code"]: g["name"] for g in _snap["source"]["generations"]}
-def itu(code):
-    capex = _snap["items"]["IF_CapexIT"]["values"][_gen[code]]["基準"]
-    gpus = _snap["items"]["IF_GPUsPerGW"]["values"][_gen[code]]["基準"]
-    return capex / gpus * 1e6
-ITU = {"GB": (itu("GB300"), "Derived", "Tokenomics v20.1（與 v19.0 相同）IF_CapexIT 32.237 $B ÷ 487,008（v5.27 為 37.445）"), "VR": (itu("VR200"), "Derived", "37.586 ÷ 291,744"),
-       "RU": (itu("RU"), "Derived", "50.086 ÷ 194,760"), "HP": (itu("H100"), "Derived", "27.510 ÷ 718,048"), "AMD8": (40, "Assumed", ""),
-       "AMDR": (100, "Assumed", "VR200 的約 0.8 倍"), "TPU": (25, "Assumed", ""), "TRN": (20, "Assumed", ""), "ASIC": (20, "Assumed", "")}
+PLAT_NAME = {"GB": "GB300 NVL72（Blackwell）", "VR": "VR200 NVL72（Rubin）", "RU": "Rubin Ultra（MGX 單架／NVL576）", "HP": "Hopper HGX（8 GPU）",
+             "AMD8": "AMD MI355（8 GPU 伺服器）", "AMDR": "AMD Helios（MI455X 機架）", "TPU": "Google TPU", "TRN": "AWS Trainium", "ASIC": "其他 ASIC"}
+# 每顆加速器網通內容（美元）與每顆 IT capex：Siliconomics In 頁 M8、M9（v0.4 起；原寫死於本檔，數值與文字逐字搬入）
+PLAT = {p: (nm, tuple(SIL.base(f"c_{p}_{ck}") for ck, _ in COMP), SIL.V[f"c_{p}_su_sw"]["tag"], SIL.V[f"c_{p}_su_sw"]["src"]) for p, nm in PLAT_NAME.items()}
 TYPE2PLAT = {"bw": {y: "GB" for y in (26, 27, 28, 29)}, "rb": {y: "VR" for y in (26, 27, 28, 29)}, "ru": {y: "RU" for y in (26, 27, 28, 29)},
              "hp": {y: "HP" for y in (26, 27, 28, 29)}, "amd": {26: "AMD8", 27: "AMDR", 28: "AMDR", 29: "AMDR"},
              "tpu": {y: "TPU" for y in (26, 27, 28, 29)}, "trn": {y: "TRN" for y in (26, 27, 28, 29)}, "oth": {y: "ASIC" for y in (26, 27, 28, 29)}}
@@ -57,18 +42,18 @@ for k, nm, u, gb, tag, src in MEM.UNITS:
     inp(f"g29_{k}", f"{nm} 2029 顆數成長", "%", MEM.G29[k]["lo"], MEM.G29[k]["base"], MEM.G29[k]["hi"], MEM.G29[k]["tag"],
         f"Siliconomics SIF_g29_{k}（單一來源；2029 無平台別顆數預測，區間 ±10pt）" if k == MEM.UNITS[0][0] else "同上")
 sec("B. 每顆加速器網通內容（美元）")
-for p, (nm, vals, tag, src) in PLAT.items():
-    for (ck, cn), v in zip(COMP, vals):
-        inp(f"c_{p}_{ck}", f"{nm}：{cn}", "$/顆", round(v * 0.8), v, round(v * 1.2), tag, src if ck == "su_sw" else "同上")
+for p in PLAT:
+    for ck, cn in COMP:
+        inp(*SIL.row8(f"c_{p}_{ck}"))
 sec("C. 每顆加速器 IT 資本支出（千美元；算網通 ÷ IT capex）")
-for p, (v, tag, src) in ITU.items():
-    inp(f"it_{p}", f"{PLAT[p][0]} IT capex", "$K/顆", None, v, None, tag, src)
+for p in PLAT:
+    inp(*SIL.row8(f"it_{p}"))
 sec("D. 技術轉換")
 for y in YRS:
     inp(f"cpo_{y}", f"CPO 占 scale-out 光學金額 20{y}（Mkt 主表＝情境 A）", "%", None, f"=cpo_A_{y}", None, "Derived", "v0.2.3 起連到 F 節情境 A（v0.2.2 單一路徑 1%／3%／5%／8% 改為 F 節情境 B）" if y == 26 else "同上")
-for y, v in zip(YRS, (0.0, 0.0, 0.0, 0.2)):
-    inp(f"suopt_{y}", f"scale-up 互連中光學占比 20{y}", "%", None, v, None, "Interested-party／Assumed", "NVLink 到 Rubin Ultra Kyber 全銅（The Register）；Feynman「銅與 CPO 都做」（2028 後）" if y == 26 else "同上")
-inp("su_cu", "scale-up 互連中銅纜（背板、線纜卡匣）占比", "%", 0.4, 0.6, 0.8, "Assumed", "其餘為交換匣電路板、電源、機構")
+for y in YRS:
+    inp(*SIL.row8(f"suopt_{y}"))
+inp(*SIL.row8("su_cu"))
 sec("E. 廠商歸屬（對帳用，Assumed）")
 inp("nv_su_ic", "NVIDIA 平台 scale-up 互連計入 NVIDIA 營收比例", "%", 0.3, 0.5, 0.7, "Assumed", "交換匣含線纜卡匣；背板由 ODM／Amphenol 供應")
 inp("nv_so_sw", "NVIDIA 平台 scale-out 交換器中 NVIDIA 份額", "%", 0.35, 0.45, 0.55, "Interested-party／Assumed", "Dell'Oro：Celestica（白牌）第一、NVIDIA 第二、Arista 第三")
@@ -82,12 +67,9 @@ inp("rep_avgo26", "Broadcom AI 網通營收 2026", "$B", 16, 17.6, 20, "Derived"
 inp("rep_opt26", "AI 叢集光學市場 2026（LightCounting）", "$B", None, 26, None, "Interested-party", "LightCounting 2026-01：2025 16.5、2026 26（含 scale-up）")
 inp("rep_bern", "網通 ÷ AI 資料中心總 capex（Bernstein）", "%", None, 0.13, None, "Interested-party", "Bernstein 2025-11；IT 約占 75% → ÷ IT 約 17%")
 sec("F. CPO 滲透三情境（v0.2.3；技術替代屬行業情境：A＝替代快、B＝平平、C＝慢；下游公司 A／B／C 讀同字母）")
-CPO_SC = {"A": ((0.01, 0.05, 0.10, 0.16), "Assumed（Interested-party 錨）", "部署順利 → 新世代交換器（Spectrum-X／Quantum-X Photonics、Broadcom Bailly／Davisson）導入快：Citi 2026-03 估 scale-out CPO 交換器 2027 4 萬台、2028 約 10 萬台（Interested-party，賣方），以每埠光學約 $300–400 換算約 2027 $2–3B、2028 $6–8B，與本列 5%／10% 同級；區間 2028 8–14%"),
-          "B": ((0.01, 0.03, 0.05, 0.08), "Assumed（Interested-party 錨）", "＝v0.2.2 單一路徑：LightCounting 2030 年 CPO 約占 AI 光學 10%；Morgan Stanley 2026-06：2026–28 為可插拔、CPO／NPO、銅並存的過渡期，快速成長在 2028 年之後（Interested-party）；TrendForce 2026-07：CPO 交換器放量 2027–28；區間 2028 4–7%"),
-          "C": ((0.01, 0.02, 0.03, 0.05), "Assumed", "部署不如預期 → 客戶延用已驗證的可插拔（LPO／1.6T），CPO 良率（TSMC COUPE、SoIC 良率 50–60%，Morgan Stanley 轉述）與維修性問題拖延；Cignal AI 2026-05：CPO 對可插拔的初期影響很小、scale-out CPO 只占 1.6T 可插拔的一小部分；區間 2028 2–4%")}
-for s_, (vals, tag, src) in CPO_SC.items():
-    for y, v in zip(YRS, vals):
-        inp(f"cpo_{s_}_{y}", f"情境 {s_}：CPO 占 scale-out 光學金額 20{y}", "%", None, v, None, tag, src if y == 26 else "同上")
+for s_ in ("A", "B", "C"):   # Siliconomics In 頁 M10（v0.4 起）
+    for y in YRS:
+        inp(*SIL.row8(f"cpo_{s_}_{y}"))
 R = {}
 r = 4
 for s in rows:
