@@ -63,6 +63,30 @@ asof: 2026-10-25
 
 - OpenAI 同時向 Microsoft、Amazon 等多家採購算力，Oracle 不是唯一供應商 [本專案：amazon_facts_20261008.json contract.openai.nv]。
 
+## 主要客戶
+- 財報口徑：10-K 風險因子稱「在某些 OCI 產品中，我們集中於數家大型客戶」（"more concentrated among a number of large customers"），未給百分比；RPO 組成與客戶別在擷取範圍內未找到。 [外部・未經本專案檢核：Oracle FY2026 Form 10-K，2026-06]
+- 具名客戶／關係：
+- OpenAI：2025-09 財報期間披露約 3,000 億美元、約 5 年（每年約 600 億）的算力合約，屬 Stargate 計畫。 [外部・未經本專案檢核：Tom Tunguz：OpenAI hardware spending 2025-2035，日期未載]
+- Meta：2025-09 路透報導洽談約 200 億美元 AI 雲端合約（是否簽約、後續金額：本次未取得最終確認）。 [外部・未經本專案檢核：Reuters via TradingView：Oracle eyes $20 billion AI cloud com，2025-09]
+- 本次搜尋未取得其他（例如 xAI）的可靠來源，標示未找到。 [外部・未經本專案檢核]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | Larry Ellison（創辦人，經濟權；非 13F） | 約 40%（媒體引述，未對照 proxy 原表） | [外部・未經本專案檢核：資料日 2026 proxy（日期未詳）；Revenue Memo：Who owns Oracle，2026-10-14 更新] |
+| 2 | BlackRock Inc. | 4.81% | [外部・未經本專案檢核：Yahoo Finance ORCL holders，資料日 2026-06-30] |
+| 3 | Vanguard Capital Management LLC | 3.70% | [外部・未經本專案檢核：Yahoo Finance ORCL holders，資料日 2026-06-30] |
+| 4 | State Street Corporation | 2.60% | [外部・未經本專案檢核：Yahoo Finance ORCL holders，資料日 2026-06-30] |
+| 5 | Vanguard Portfolio Management LLC | 1.89% | [外部・未經本專案檢核：Yahoo Finance ORCL holders，資料日 2026-06-30] |
+| 6 | Capital Research Global Investors | 1.31% | [外部・未經本專案檢核：Yahoo Finance ORCL holders，資料日 2026-06-30] |
+| 7 | Geode Capital Management | 1.30% | [外部・未經本專案檢核：Yahoo Finance ORCL holders，資料日 2026-06-30] |
+| 8 | Morgan Stanley | 1.01% | [外部・未經本專案檢核：Yahoo Finance ORCL holders，資料日 2026-06-30] |
+| 9 | FMR, LLC | 0.86% | [外部・未經本專案檢核：Yahoo Finance ORCL holders，資料日 2026-06-30] |
+| 10 | Norges Bank | 0.83% | [外部・未經本專案檢核：Yahoo Finance ORCL holders，資料日 2026-06-30] |
+
+- 口徑：(a) 創辦人 Larry Ellison：媒體引用 proxy，約 40%、約 11.7 億股（revenuememo，2026-10-14 更新，無確切 proxy 日期）；2026 DEF 14A 稱其為最大股東，截至 2026-09-21 已質押 4.13 億股。（受益所有權表本次未能擷取。）(b) 機構：Yahoo Finance 13F，2026-06-30，% 占流通股；整體內部人 38.39%、機構 43.38%。 [外部・未經本專案檢核：Oracle 2026 DEF 14A，2026-09-25；Revenue Memo：Who owns Oracle，2026-10-14 更新；Yahoo Finance ORCL holders，資料日 2026-06-30]
+- 註：Bank of America 0.79%（23.95M）為第 11。Ellison 之外的個人（如 Safra Catz）依 proxy 另計，未取得。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-09｜FT 報導 OpenAI 對投資人稱 9 月底年化營收接近 500 億美元，低於先前流傳的約 700 億｜市場質疑 Oracle 的 OpenAI 合約，股價走弱 [外部新聞：Benzinga（轉述 FT）]
 - 2026-09-24｜對新墨西哥 Project Jupiter（2.45 GW）發出不可抗力通知，天然氣管線延後｜交付時程風險 [本專案：oracle_facts_20261007.json event.jupiter.fm]

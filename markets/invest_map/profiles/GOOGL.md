@@ -62,6 +62,38 @@ asof: 2026-10-25
 - 各家雲端營收期間不同，只能比量級 [判斷]。
 - TPU 對外銷售讓 Google 也成為 AI 晶片供應者，與 NVIDIA 形成部分競爭 [外部・未經本專案檢核]。
 
+## 主要客戶
+- 財報口徑：未見單一客戶占營收比重揭露（本次擷取的新聞稿與 ARS 風險因子段無此項；10-K 原文未完整檢閱，標示為「未找到」而非「不存在」）。 [外部・未經本專案檢核]
+- 具名客戶／關係：
+- Anthropic：2026-05 報導 Anthropic 承諾約 2,000 億美元的 Google Cloud 與晶片（TPU）容量；Google 並持有 Anthropic 約 14% 股權（2026-04 交易前，上限 15%）。 [外部・未經本專案檢核：Idaho Business Review：Anthropic commits $200B Google Cloud，2026-05-06；Anthropic funding（revenuememo），日期未載]
+- Meta：本次搜尋出現 Meta 與 Google Cloud 合約的標題，但內容未取得，標示未找到。 [外部・未經本專案檢核]
+- Gemini Enterprise：Fortune 100 近 90% 使用（無個別公司名）。 [外部・未經本專案檢核：Startup Fortune：Google Cloud grew 82% in Q2 2026, $514B back，2026-07-23]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | Larry Page | Class B 46.5%；總投票權 27.4% | [外部・未經本專案檢核：Alphabet DEF 14A 2026，2026-04-24；記錄日 2026-04-06] |
+| 2 | Sergey Brin | Class B 42.9%；總投票權 25.3% | [外部・未經本專案檢核：Alphabet DEF 14A 2026，2026-04-24；記錄日 2026-04-06] |
+| 3 | BlackRock | Class A 6.1%；總投票權 2.5% | [外部・未經本專案檢核：Alphabet DEF 14A 2026，2026-04-24；記錄日 2026-04-06] |
+| 排名 | 股東 | 持股比例 | 來源編號 [外部・未經本專案檢核：資料日 資料日期] |
+| --- | --- | --- | --- [外部・未經本專案檢核] |
+| 1 | BlackRock Inc. | 6.69% | [外部・未經本專案檢核：Yahoo Finance GOOG holders，資料日 2026-06-30] |
+| 2 | Vanguard Capital Management LLC | 5.55% | [外部・未經本專案檢核：Yahoo Finance GOOG holders，資料日 2026-06-30] |
+| 3 | State Street Corporation | 3.45% | [外部・未經本專案檢核：Yahoo Finance GOOG holders，資料日 2026-06-30] |
+| 4 | JPMorgan Chase & Co | 2.49% | [外部・未經本專案檢核：Yahoo Finance GOOG holders，資料日 2026-06-30] |
+| 5 | FMR, LLC | 2.21% | [外部・未經本專案檢核：Yahoo Finance GOOG holders，資料日 2026-06-30] |
+| 6 | Geode Capital Management | 2.08% | [外部・未經本專案檢核：Yahoo Finance GOOG holders，資料日 2026-06-30] |
+| 7 | Vanguard Portfolio Management LLC | 1.42% | [外部・未經本專案檢核：Yahoo Finance GOOG holders，資料日 2026-06-30] |
+| 8 | Norges Bank | 1.35% | [外部・未經本專案檢核：Yahoo Finance GOOG holders，資料日 2026-06-30] |
+| 9 | Morgan Stanley | 1.31% | [外部・未經本專案檢核：Yahoo Finance GOOG holders，資料日 2026-06-30] |
+| 10 | Invesco Ltd. | 1.20% | [外部・未經本專案檢核：Yahoo Finance GOOG holders，資料日 2026-06-30] |
+
+- 口徑：Alphabet 為雙層股權（Class A 一票、Class B 十票、Class C 無票）。(a) 投票權／經濟權：依 2026 proxy（記錄日 2026-04-06）；(b) 機構 13F：Yahoo Finance（GOOG 頁，資料日 2026-06-30，% 為占流通股、含各類股）。 [外部・未經本專案檢核]
+- (a) 依 proxy（Class A+B，不含 Class C） [外部・未經本專案檢核：Alphabet DEF 14A 2026，2026-04-24；記錄日 2026-04-06]
+- Vanguard：proxy 無列；其 13G/A 曾報 493,782,758 股 Class A，2026-03-26 揭露自 2026-01-12 起因內部重組不再合併申報。 [外部・未經本專案檢核：Alphabet DEF 14A 2026，2026-04-24；記錄日 2026-04-06]
+- (b) 13F 機構（Yahoo，2026-06-30） [外部・未經本專案檢核：Yahoo Finance GOOG holders，資料日 2026-06-30]
+- 註：Page 與 Brin 為經濟權與投票權的實質最大股東（含 Class A+B 合計經濟權比例未在本次擷取到，標示未找到）；上表(b)為機構口徑，兩者不可直接排名合併。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10｜SpaceX 算力租約起租，每月約 9.2 億美元至 2029-06｜短期用租的補產能，Cloud 利潤率受壓 [本專案：alphabet_facts_20261008.json rent.spacex]
 - 2026-10-28｜Q3 財報盤後發布（預定）｜下一個驗證點 [外部新聞：days.to（稱公司 IR 已確認）]

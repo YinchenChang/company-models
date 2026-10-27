@@ -64,6 +64,31 @@ AI 模型公司（位於 AI 金流的最上游）：自研 GPT 系列大模型�
 - 營收口徑不同：Anthropic 經雲端市集的銷售以總額認列 [本專案：Anthropic收支模型_v0_1_5.xlsx Revenue!B67]；OpenAI 9 月底 50bn 為淨額口徑 [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C142]，兩家季營收不能直接比大小。
 - 價格競爭：2026-07～09 OpenAI 五次調價，中、低層降幅最大（Luna 輸入由 1 降至 0.1 美元）[本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C29–C33、C115、C23]。
 
+## 主要客戶
+- 財報口徑：不適用（未上市）。收入來源為消費者訂閱、API 用量、企業方案；單一客戶集中度無公開資料（未找到）。 [外部・未經本專案檢核]
+- 具名「供應商／算力夥伴」（OpenAI 為買方，與本欄「客戶」方向相反，供產業鏈對照）： [外部・未經本專案檢核：Tom Tunguz：OpenAI hardware spending 2025-2035，日期未載]
+- Microsoft：約 2,500 億美元 Azure 增量承諾（2025-10）；Microsoft 並為股東（見 C）及 OpenAI 的 API／產品通路。 [外部・未經本專案檢核]
+- Oracle：約 3,000 億美元（約 5 年，Stargate）。 [外部・未經本專案檢核]
+- Broadcom：約 3,500 億美元（估計值，10 GW 自研加速器）。 [外部・未經本專案檢核]
+- Nvidia：至少 10 GW，Nvidia 擬投資最高 1,000 億美元。 [外部・未經本專案檢核]
+- AMD：6 GW、約 900 億美元潛在硬體營收。 [外部・未經本專案檢核]
+- AWS：380 億美元、7 年（2025-11-03）。 [外部・未經本專案檢核]
+- CoreWeave：合計 224 億美元（至約 2029）。 [外部・未經本專案檢核]
+- 銷售通路：Amazon Bedrock 已上架 OpenAI 模型（GPT-5.6，依 Amazon Q2 電話會議摘要）。 [外部・未經本專案檢核：Webull：Amazon Q2 2026 earnings call transcript，日期未載]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | Microsoft | 約 27%（資本重組完成時，公司聲明；後續稀釋後未公開） | [外部・未經本專案檢核：OpenAI：Our structure，資本重組完成 2025-10-28] |
+| 2 | OpenAI Foundation（非營利） | 26%（同上，公司聲明）＋認股權證 | [外部・未經本專案檢核：OpenAI：Our structure，資本重組完成 2025-10-28] |
+| 3 | SoftBank | 約 13%（媒體，2026-10-01；累計投資 646 億美元） | [外部・未經本專案檢核：Crypto Briefing：SoftBank closes final OpenAI tranche，2026-10] |
+| 4 | Amazon | 承諾投資 500 億美元（首期 150 億，餘附條件；比例未公開） | [外部・未經本專案檢核：Yahoo Finance：OpenAI closes $122bn funding round at $852bn v，2026-04-01] |
+| 5 | Nvidia | 投資 300 億美元（比例未公開） | [外部・未經本專案檢核：Yahoo Finance：OpenAI closes $122bn funding round at $852bn v，2026-04-01；Crypto Briefing：SoftBank closes final OpenAI tranche，2026-10] |
+| — | 員工與其他投資人（含 Thrive 等） | 合計 47%（資本重組時，未細分） | [外部・未經本專案檢核：OpenAI：Our structure，資本重組完成 2025-10-28] |
+
+- 口徑：未上市，無股東名冊公開；以下為公司聲明與媒體報導，並非完整前十大。OpenAI 官網（資本重組完成時）：OpenAI Foundation 26%、Microsoft 約 27%、現任與前任員工及其他投資人合計 47%；Foundation 另有一份認股權證（15 年內股價漲逾 10 倍時可再取得股份）。之後的融資（2026-04-01 結束的 1,220 億美元、估值 8,520 億美元）已稀釋上述比例，稀釋後比例未找到。 [外部・未經本專案檢核：OpenAI：Our structure，資本重組完成 2025-10-28；Yahoo Finance：OpenAI closes $122bn funding round at $852bn v，2026-04-01]
+- 註：以上比例時點不一、無法加總，且 2026 年新增融資後的稀釋比例未找到；排名 4、5 僅依投資金額，非持股比例排名。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-09｜Bloomberg 報導 OpenAI 預期年底年化營收達 70bn 以上；前一日 FT 報導公司告訴投資人 9 月底年化營收接近 50bn，與先前流傳的 70bn 差距來自是否比照 Anthropic 以總額計雲端通路營收 [外部新聞：Teleborsa 引 Bloomberg；AI Weekly 引 FT]
 - 2026-10-07｜ChatGPT 開始推出 GPT-6（付費方案先用，Free／Go 次日搭配 GPT-6 Luna）[外部新聞：AI Weekly 引 TechCrunch]

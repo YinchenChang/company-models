@@ -65,6 +65,25 @@ AI 模型公司（位於 AI 金流的最上游）：自研 Claude 系列大模�
 - 營收口徑：Anthropic 雲端市集營收以總額認列 [本專案：Anthropic收支模型_v0_1_5.xlsx Revenue!B67]，與 OpenAI 淨額口徑不能直接比大小。
 - 價格競爭：Opus 5.5 降價 20%、Haiku 5.5 較前代降 90% [本專案：Anthropic收支模型_v0_1_5.xlsx SRC_ANT!E162–E163]。
 
+## 主要客戶
+- 財報口徑：未公開。報導稱 2025 年約 47% 營收經由 Amazon 與 Google（兩者同時是投資人與供應商）。 [外部・未經本專案檢核：Revenue Memo：Anthropic funding，2026] 客戶集中度需待公開 S-1。
+- 具名關係（多為算力供應商，同時是通路／股東）：
+- Amazon／AWS：2026-04-20 承諾十年逾 1,000 億美元、最高 5 GW Trainium 等；Bedrock 為 Claude 通路。 [外部・未經本專案檢核]
+- Google：2026-05 報導承諾約 2,000 億美元 Google Cloud 與 TPU 容量。 [外部・未經本專案檢核：Idaho Business Review：Anthropic commits $200B Google Cloud，2026-05-06]
+- Microsoft／Nvidia：2025-11 分別承諾投資最高 50 億、100 億美元（Azure 採購承諾金額未找到）。 [外部・未經本專案檢核：Revenue Memo：Anthropic funding，2026]
+- 終端客戶（企業開發者等）未找到具名且有來源的清單。 [外部・未經本專案檢核]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | Google | 約 14%（2026-04 交易前；上限 15%；現值未公開） | [外部・未經本專案檢核：資料日 2025 初法院文件／2026-04；Allocations：Anthropic S-1 cap table…，2026-06；Revenue Memo：Anthropic funding，2026] |
+| 2 | Amazon | 比例未公開；累計投資約 80–130 億美元（來源不一），另有最高 200 億里程碑；2026-04 申報文件估其持股價值 742 億美元 | [外部・未經本專案檢核：資料日 2026-04；Allocations：Anthropic S-1 cap table…，2026-06；Revenue Memo：Anthropic funding，2026] |
+| 3 | 其餘：Series H 共同領投 Altimeter、Dragoneer、Greenoaks、Sequoia；Series G 的 GIC、Coatue、D.E. Shaw；Series F 的 ICONIQ、Fidelity、Lightspeed；Menlo Ventures、Spark Capital；Microsoft、Nvidia（承諾最高 50 億、100 億美元） | 均未公開 | [外部・未經本專案檢核：資料日 2025–2026；Allocations：Anthropic S-1 cap table…，2026-06；Revenue Memo：Anthropic funding，2026] |
+
+- 口徑：未上市，無股東名冊公開；以下為媒體報導，且未提供完整持股比例。創辦人（Dario、Daniela Amodei）持股從未公開；另有 Long-Term Benefit Trust 持有特殊類別股份選任部分董事。 [外部・未經本專案檢核：Revenue Memo：Anthropic funding，2026；Allocations：Anthropic S-1 cap table…，2026-06]
+- 融資：Series G 2026-02 300 億美元／估值 3,800 億；Series H 2026-05-28 650 億美元／估值 9,650 億美元（post-money）；累計逾 1,200 億美元。IPO 目標估值報導逾 2 兆美元。 [外部・未經本專案檢核：Revenue Memo：Anthropic funding，2026；Futurum：Anthropic files for IPO，2026-06-02；Mitrade：Anthropic has committed more than $100 billion to AW，2026-09-07]
+- 註：Amazon 累計金額各來源不一（80 億 vs 約 130 億），未能調和。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-20｜WSJ 轉述草擬 S-1：上半年營收 16.3bn、淨損 80.7bn（約 72bn 非現金）、已鎖定算力承諾 >600bn、談判中再約 150bn；兩家客戶占上半年營收約兩成 [本專案：Anthropic收支模型_v0_1_5.xlsx SRC_ANT!E384、E395–E396、E406–E407、E409]；[外部新聞：investingLive 引 WSJ]
 - 2026-10-14｜告訴投資人 Q3 營收 16.8bn（季增約 45%），連續第二季獲利 [本專案：Anthropic收支模型_v0_1_5.xlsx SRC_ANT!E388–E389]；[外部新聞：The Star 引 Reuters／FT]

@@ -59,6 +59,32 @@ asof: 2026-10-25
 - 三家雲端營收期間不同（Microsoft 為 FY2026 至 6 月，其他為曆年 2025），只能看量級，不能直接算市占 [判斷]。
 - OpenAI 不再獨家使用 Azure，可在其他雲端提供產品 [本專案：microsoft_facts_20261008.json oai.ip]。
 
+## 主要客戶
+- 財報口徑：FY26 10-K 風險因子稱「we have a long-term strategic partnership with OpenAI」，並稱部分 AI 夥伴同時是競爭者與重要 Azure 客戶；無單一客戶占營收 % 的揭露（節錄所見，僅提到「substantial revenue from government contracts」）。 [外部・未經本專案檢核：Microsoft FY2026 Form 10-K，2026-07]
+- Commercial RPO：2026-06-30 為 6,780 億美元（+84% y/y；FY25 為 3,680 億）；12 個月內到期約 2,030 億（約 30%）；加權期間 2.3 年（含 OpenAI）。CFO Amy Hood：排除 OpenAI 後 commercial RPO +25%。 [外部・未經本專案檢核：Microsoft 8-K Q4 FY26 earnings release exhibit 99.1，2026-07-29；Webull/Benzinga：Microsoft's Backlog Just Hit $678B，2026-07-30；Regards of Wall Street：MSFT RPO Tracker，2026-07-29 更新]
+- 投資人推估（Benzinga，非公司揭露）：OpenAI 約占 RPO 2,180 億美元、約 32%。 [外部・未經本專案檢核：Webull/Benzinga：Microsoft's Backlog Just Hit $678B，2026-07-30]
+- 具名客戶／關係：
+- OpenAI：2025-10 重組後承諾追加 2,500 億美元 Azure 服務（來源 [外部・未經本專案檢核：Tom Tunguz：OpenAI hardware spending 2025-2035，日期未載]，Tom Tunguz 彙整，期間未披露）；Microsoft 同時持有 OpenAI 約 27% 股權。 [外部・未經本專案檢核：OpenAI：Our structure，日期未載]
+- Anthropic：2025-11 Microsoft 承諾投資最高 50 億美元，Anthropic 向 Azure 採購算力（Azure 承諾金額本次搜尋未取得，標示未找到）。 [外部・未經本專案檢核：Anthropic funding（revenuememo），日期未載]
+- Nebius：Microsoft 為 Nebius 的專用算力客戶（約 174 億美元至 2031），Microsoft 於此為買方而非賣方。 [外部・未經本專案檢核：Nasdaq：Nebius has $40 billion in customer commitments，日期未載]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | BlackRock Inc. | 8.18% | [外部・未經本專案檢核：Yahoo Finance MSFT holders，資料日 2026-06-30] |
+| 2 | Vanguard Capital Management LLC | 6.53% | [外部・未經本專案檢核：Yahoo Finance MSFT holders，資料日 2026-06-30] |
+| 3 | State Street Corporation | 4.25% | [外部・未經本專案檢核：Yahoo Finance MSFT holders，資料日 2026-06-30] |
+| 4 | Geode Capital Management | 2.55% | [外部・未經本專案檢核：Yahoo Finance MSFT holders，資料日 2026-06-30] |
+| 5 | FMR, LLC | 2.50% | [外部・未經本專案檢核：Yahoo Finance MSFT holders，資料日 2026-06-30] |
+| 6 | Vanguard Portfolio Management LLC | 2.27% | [外部・未經本專案檢核：Yahoo Finance MSFT holders，資料日 2026-06-30] |
+| 7 | JPMorgan Chase & Co. | 1.82% | [外部・未經本專案檢核：Yahoo Finance MSFT holders，資料日 2026-06-30] |
+| 8 | Morgan Stanley | 1.72% | [外部・未經本專案檢核：Yahoo Finance MSFT holders，資料日 2026-06-30] |
+| 9 | Norges Bank | 1.38% | [外部・未經本專案檢核：Yahoo Finance MSFT holders，資料日 2026-06-30] |
+| 10 | Invesco Ltd. | 1.35% | [外部・未經本專案檢核：Yahoo Finance MSFT holders，資料日 2026-06-30] |
+
+- 口徑：Yahoo Finance 13F 機構持股（% 為占流通股），資料日期 2026-06-30；機構合計 75.79%，內部人 0.08%。（Vanguard 因內部重組分為 Vanguard Capital Management 與 Vanguard Portfolio Management 兩個申報實體，分列。） [外部・未經本專案檢核：Yahoo Finance MSFT holders，資料日 2026-06-30]
+- 註：此表僅含機構 13F；個人大股東（如 Steve Ballmer、Bill Gates）依 proxy 另計，本次未取得其最新 proxy 數字，標示為未找到。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-07｜公告 FY27Q1 財報於 2026-10-28 盤後發布｜下一個驗證點 [外部新聞：Finviz（PR Newswire）]
 - 2026-09-15｜季度股利調高至 0.98 美元（+8%）｜回饋政策延續 [本專案：microsoft_facts_20261008.json sh.dpsQ.fy27q1]

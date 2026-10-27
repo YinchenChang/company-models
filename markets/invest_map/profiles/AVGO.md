@@ -57,6 +57,28 @@ asof: 2026-10-25
 
 - 模型假設 Broadcom 在 Google TPU 的份額由 90%（2026）降到 75%（2028）[本專案：Broadcom模型_v0.1.xlsx Units!C5:E5]。
 
+## 主要客戶
+- 財報集中度原文口徑（10-Q Q3 FY2026）：「Direct sales to one semiconductor solutions customer, which is a distributor, accounted for 50% and 46% of our net revenue for the fiscal quarter and three fiscal quarters ended August 2, 2026, respectively, and 32% and 30% … for [the prior-year periods].」「We believe aggregate sales to our top five end customers, through all channels, accounted for approximately 55% and 50% of our net revenue for the fiscal quarter and three fiscal quarters ended August 2, 2026, respectively, and approximately 40% … [prior year].」 [外部・未經本專案檢核：Broadcom Form 10-Q，期間至 2026-08-02，2026-09-10]
+- FY2025 10-K 口徑：經銷商銷售占淨營收 48%（FY2025 與 FY2024 均同）；前五大終端客戶（所有通路合計）約占淨營收 40%（FY2025 與 FY2024 均同）。 [外部・未經本專案檢核：Broadcom Form 10-K，FY2025（期間至 2025-11-02），2025-12-18]
+- 公司在 10-K／10-Q 中不具名主要客戶，僅稱「leading frontier AI labs」、OEM、CM 與經銷商。 [外部・未經本專案檢核]
+- 公開已知具名客戶：未找到可引用的來源。本次對 Broadcom 法說會逐字稿的搜尋因全域搜尋額度用盡而未完成，也未取得含客戶名稱的官方文件；市場普遍認為客製 XPU 客戶包含 Google、Meta、ByteDance、OpenAI、Anthropic 等，但此為外界說法，未經本次查證，請勿當作已證實。 [外部・未經本專案檢核：unite.ai：Broadcom Posts Record Q3 Revenue as AI Chip Sales R，2026-09；該文未列客戶名稱]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | BlackRock Inc. | 8.34% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AVGO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 2 | Vanguard Capital Management LLC | 6.48% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AVGO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 3 | State Street Corporation | 4.12% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AVGO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 4 | FMR, LLC | 3.02% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AVGO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 5 | Vanguard Portfolio Management LLC | 2.66% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AVGO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 6 | Capital World Investors | 2.55% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AVGO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 7 | Geode Capital Management, LLC | 2.44% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AVGO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 8 | Capital Research Global Investors | 2.37% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AVGO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 9 | JPMorgan Chase & Co | 1.99% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AVGO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 10 | T. Rowe Price Associates Inc | 1.74% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AVGO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+
+- 口徑：13F 機構持股（資料日 2026/6/30；Yahoo Finance，% Out = 占流通在外股數）。Yahoo 摘要：內部人 1.92%、機構 79.71%、機構家數 6,265。對照 2026 proxy（受益所有權，資料日 2026/2/24，流通股 4,735,602,612）：The Vanguard Group 468,544,898 股（9.9%）、BlackRock 347,023,720 股（7.3%）；Henry Samueli 85,559,569 股（1.8%）；全體董事與高管 89,467,014 股（1.9%）。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-08｜傳 Broadcom 與 OpenAI 進行晶片融資的初步洽談｜客戶融資擴大 [外部新聞：Bloomberg]
 - 2026-10-02｜傳 Broadcom 開始籌組 Anthropic 晶片融資｜同上 [外部新聞：Bloomberg]

@@ -57,6 +57,28 @@ asof: 2026-10-25
 - 本專案網通模型：AI scale-out 交換器市場 2026 US$32.1B → 2027 61.1B [本專案：先驗比對_Arista_20261024.md 資料表（markets/network v0.2.2）]。
 - 乙太網路占 AI 後端比例假設 2026 75% → 2029 85%，InfiniBand 縮小 [本專案：arista/README.md 驅動因子]。
 
+## 主要客戶
+- 財報集中度原文口徑（FY2025 10-K；10-Q 風險因子重述）：「Historically, a limited number of customers have accounted for a significant portion of our revenue. Two of our customers accounted for more than 10% of our total revenue in each of the last three years. Sales to one end customer represented 16%, 15%, and 21% of our total revenue, and sales to the other end customer represented 26%, 20%, and 18% of our total revenue for the years ended December 31, 2025, 2024, and 2023, respectively.」即 FY2025 兩家終端客戶分別占 16% 與 26%（合計約 42%）。 [外部・未經本專案檢核：Arista Form 10-K，FY2025（期間至 2025-12-31），2026-02-17；Arista Form 10-Q，期間至 2026-06-30，2026-08-05]
+- Q2 2026 10-Q 未提供新一季單一客戶百分比（在 10-Q 中僅重述年度數字）。 [外部・未經本專案檢核]
+- 財報未在 10-K／10-Q 中具名這兩家客戶（本次全文搜尋 Microsoft、Meta 在 FY2025 10-K 無出現）。 [外部・未經本專案檢核]
+- 公開已知具名客戶：未找到可引用來源。外界與 Arista 過往揭露普遍指出最大兩家為 Microsoft 與 Meta，並有 Oracle、Google、Amazon 等雲端客戶，但本次搜尋額度用盡、財報亦未具名，故僅供線索，不可視為已證實。 [外部・未經本專案檢核：Arista Form 10-K，FY2025（期間至 2025-12-31），2026-02-17]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | BlackRock Inc. | 7.25% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance ANET Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 2 | Vanguard Capital Management LLC | 5.45% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance ANET Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 3 | State Street Corporation | 3.82% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance ANET Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 4 | FMR, LLC | 3.75% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance ANET Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 5 | Geode Capital Management, LLC | 2.18% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance ANET Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 6 | Vanguard Portfolio Management LLC | 2.05% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance ANET Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 7 | T. Rowe Price Associates Inc | 1.84% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance ANET Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 8 | Morgan Stanley | 1.56% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance ANET Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 9 | Cresset Asset Management, LLC | 1.54% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance ANET Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 10 | Capital Research Global Investors | 1.04% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance ANET Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+
+- 口徑：13F 機構持股（資料日 2026/6/30；Yahoo Finance，% Out = 占流通在外股數）。Yahoo 摘要：內部人 17.25%、機構 73.36%（占流通 88.65%）、機構家數 3,171。13F 表不含個人／家族信託的大股東。對照 2026 proxy（受益所有權，資料日 2026/4/2，流通股 1,259,169,438）：The Bechtolsheim Family Trust 183,799,896 股（14.6%）、BlackRock 73,684,608 股（5.9%）、Jayshree Ullal 29,300,817 股（2.3%）。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-22｜股價單日大跌；媒體歸因於前波漲多獲利了結、執行長與財務長依預定計畫賣股、多家目標價下修 [外部新聞：TradingKey]
 - 2026-10-21｜TD Cowen 目標價由 250 下修到 205 美元 [本專案：先驗比對_Arista_20261024.md 資料表]

@@ -56,6 +56,41 @@ AI 加速器（GPU）與整櫃系統的最大供應商，靠「加速器顆數 �
 - ASIC 顆數 2027 年已過半（JPMorgan 54%），但金額只占約 14–19% [本專案：先驗比對_NVDA_20261023.md N5b]。
 - 本專案市場層 NVIDIA 顆數 CY2027 到 CY2028 持平（9.7M→9.5M）[本專案：先驗比對_NVDA_20261023.md 資料表]。
 
+## 主要客戶
+- 直接客戶（direct customers）集中度，10-Q 原文口徑（占總營收）：
+- Q2 FY27：「one direct customer represented 16% of total revenue, which was primarily attributable to the Compute & Networking segment.」FY27 上半年：「three direct customers represented 16%, 15%, and 13% of total revenue」，均主要屬 Compute & Networking。去年同期 Q2 FY26 為兩家 23% 與 16%；FY26 上半年 20% 與 15%。 [外部・未經本專案檢核：NVIDIA Form 10-Q，期間至 2026-07-26，2026 年 8 月下旬]
+- Q1 FY27：三家直接客戶分別占 21%、17%、16%（Q1 FY26 為 16%、14%）。 [外部・未經本專案檢核：NVIDIA Form 10-Q，期間至 2026-04-26，2026 年 5 月]
+- 應收帳款集中度：2026/7/26 五家直接客戶占應收 22%、14%、13%、11%、10%（2026/4/26 為三家 30%、18%、16%）。 [外部・未經本專案檢核：NVIDIA Form 10-Q，期間至 2026-07-26，2026 年 8 月下旬；NVIDIA Form 10-Q，期間至 2026-04-26，2026 年 5 月]
+- 間接客戶：10-Q 稱營收集中於少數直接與間接客戶，部分間接客戶個別占營收 10% 以上；並估計「one AI research and deployment company」透過向 NVIDIA 客戶購買雲端服務，貢獻了「meaningful amount」營收。直接客戶多為系統整合商與經銷商，間接客戶含 CSP、AI clouds、AI model makers、企業與公部門。 [外部・未經本專案檢核：NVIDIA Form 10-Q，期間至 2026-07-26，2026 年 8 月下旬]
+- 結構性說明：Q1 FY27 CFO 稱 Hyperscaler 約占 Data Center 營收 50%；Q2 FY27 Hyperscale 48,710 ÷ Data Center 89,023 ≈ 55%（本檔計算）。 [外部・未經本專案檢核：NVIDIA Form 10-Q，期間至 2026-04-26，2026 年 5 月；NVIDIA Q2 FY27 CFO Commentary（8-K），2026-08-26]
+- 10-Q 未具名直接客戶（Customer A/B…）；外部媒體曾推測為鴻海/Foxconn、Quanta、Wistron、Dell、Supermicro 等 ODM/OEM（推測，未獲 NVIDIA 證實，本次未取得可引用的原文來源）。 [外部・未經本專案檢核]
+- 公開具名客戶／合作對象（Q2 FY27 法說會逐字稿，2026/8/26） [外部・未經本專案檢核：NVIDIA Q2 FY2027 Earnings Call 逐字稿，2026-08-26]：
+- AWS：宣布本季起額外部署 200 萬顆 GPU 與 Vera CPU。 [外部・未經本專案檢核]
+- Oracle（OCI）：Vera CPU 首批出貨的 lead partner。 [外部・未經本專案檢核]
+- SpaceXAI：與 OCI 並列 Vera CPU lead partner。 [外部・未經本專案檢核]
+- OpenAI：現有與規劃承諾約 12 GW NVIDIA Compute，含 4.25 GW Portsmouth 站點。 [外部・未經本專案檢核]
+- CoreWeave、Nebius、Nscale：neocloud，NVIDIA 稱協助其建立基礎設施業務；Nebius 預計為 Groq 3 LPX 系統量產首批客戶。 [外部・未經本專案檢核]
+- 區域 neocloud：Firebird、Cassava Technologies、GMI Cloud、Yotta、Neysa、Firmus、YTL AI Cloud。 [外部・未經本專案檢核]
+- 企業/主權：Bristol Myers Squibb（Vera Rubin AI factory）、Roche、Lilly、Samsung Electronics（cuLitho）、Hudson River Trading、Jane Street、Noetra（日本）、LG、Hyundai Motor Group。 [外部・未經本專案檢核]
+- Anthropic、Meta、Google（Gemini）、xAI(Grok)：逐字稿僅列為在 NVIDIA 上運行的模型，未稱為購買方。Microsoft 未出現在該逐字稿。 [外部・未經本專案檢核]
+- 結論：未找到 NVIDIA 官方揭露各客戶占營收具名比例。 [外部・未經本專案檢核]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | BlackRock Inc. | 8.06% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance NVDA Holders，資料截至 2026-06-30，擷取日 2026-10-27；InsiderSet NVDA Institutional Ownership，13F 2026-06-30，擷取日 2026-10-27] |
+| 2 | Vanguard Capital Management LLC | 6.39% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance NVDA Holders，資料截至 2026-06-30，擷取日 2026-10-27；InsiderSet NVDA Institutional Ownership，13F 2026-06-30，擷取日 2026-10-27] |
+| 3 | FMR, LLC（Fidelity） | 4.26% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance NVDA Holders，資料截至 2026-06-30，擷取日 2026-10-27；InsiderSet NVDA Institutional Ownership，13F 2026-06-30，擷取日 2026-10-27] |
+| 4 | State Street Corporation | 4.19% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance NVDA Holders，資料截至 2026-06-30，擷取日 2026-10-27；InsiderSet NVDA Institutional Ownership，13F 2026-06-30，擷取日 2026-10-27] |
+| 5 | Geode Capital Management, LLC | 2.52% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance NVDA Holders，資料截至 2026-06-30，擷取日 2026-10-27；InsiderSet NVDA Institutional Ownership，13F 2026-06-30，擷取日 2026-10-27] |
+| 6 | Vanguard Portfolio Management LLC | 2.15% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance NVDA Holders，資料截至 2026-06-30，擷取日 2026-10-27；InsiderSet NVDA Institutional Ownership，13F 2026-06-30，擷取日 2026-10-27] |
+| 7 | JPMorgan Chase & Co | 1.86% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance NVDA Holders，資料截至 2026-06-30，擷取日 2026-10-27；InsiderSet NVDA Institutional Ownership，13F 2026-06-30，擷取日 2026-10-27] |
+| 8 | T. Rowe Price Associates Inc | 1.53% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance NVDA Holders，資料截至 2026-06-30，擷取日 2026-10-27；InsiderSet NVDA Institutional Ownership，13F 2026-06-30，擷取日 2026-10-27] |
+| 9 | Morgan Stanley | 1.48% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance NVDA Holders，資料截至 2026-06-30，擷取日 2026-10-27；InsiderSet NVDA Institutional Ownership，13F 2026-06-30，擷取日 2026-10-27] |
+| 10 | Invesco Ltd. | 1.37% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance NVDA Holders，資料截至 2026-06-30，擷取日 2026-10-27；InsiderSet NVDA Institutional Ownership，13F 2026-06-30，擷取日 2026-10-27] |
+
+- 口徑：13F 機構持股（資料日期 2026/6/30，Yahoo Finance 整理，% Out = 占流通在外股數）。同一集團下 Vanguard 分為兩個申報主體，已照原表列示。Yahoo 另列：內部人持股 4.01%、機構持股 71.41%、機構家數 7,703。創辦人 Jensen Huang 為內部人，未列在該 13F 表，最新 proxy beneficial ownership 比例本次未查。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-19｜在德國投資高峰會與德國政府簽署「實體 AI」合作備忘錄，並宣布在歐洲投資新創與研究機構｜歐洲主權 AI 需求 [外部新聞：The Next Web]
 - 2026-10-14｜IDC 報告指 NVIDIA 在中國 AI 晶片的份額於 2026 上半年明顯下滑，本土晶片（華為等）替代｜中國營收難回升 [外部新聞：GuruFocus 引 IDC]

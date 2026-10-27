@@ -60,6 +60,30 @@ asof: 2026-10-25
 - 各家雲端營收期間不同，只能比量級 [判斷]。
 - Anthropic 同時向 Google（TPU）採購算力，客戶不是 AWS 獨占 [本專案：alphabet_facts_20261008.json rp.anthropic.cloudCommit]。
 
+## 主要客戶
+- 財報口徑：10-K 節錄未見單一客戶集中度揭露（未找到，非確認不存在）；僅提及中國賣家與供應商占部分營收／零組件的重要比重。 [外部・未經本專案檢核：Amazon FY2025 Form 10-K，2026-02]
+- AWS backlog：2026-06-30 約 4,960 億美元（3 月底約 3,640 億）。 [外部・未經本專案檢核：Webull：Amazon Q2 2026 earnings call transcript，2026-07/08；Mitrade：Anthropic has committed more than $100 billion to AW，2026-09-07]
+- 具名客戶／關係：
+- Anthropic：2026-04-20 承諾十年內對 AWS 支出逾 1,000 億美元，涵蓋最高 5 GW 的 Amazon 自研晶片（Graviton、Trainium2–4）；約占 AWS backlog 五分之一；Amazon 另今年投入 100 億美元，並有最高 150 億美元依算力交付里程碑的資金安排。 [外部・未經本專案檢核：Mitrade：Anthropic has committed more than $100 billion to AW，2026-09-07]
+- OpenAI：2025-11-03 簽 7 年、380 億美元協議（Nvidia GB200/GB300，EC2 UltraServers）；2026 年 Amazon 承諾向 OpenAI 投資 500 億美元（首期 150 億，其餘附條件）；Q2 財報電話會稱 OpenAI 與 Anthropic 皆為 Trainium 多年、多 GW 承諾。 [外部・未經本專案檢核：Webull：Amazon Q2 2026 earnings call transcript，2026-07/08；Tom Tunguz：OpenAI hardware spending 2025-2035，日期未載；Yahoo Finance：OpenAI closes $122bn funding round，2026-04-01]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | Jeff Bezos | 8.80% | [外部・未經本專案檢核：Yahoo Finance：Who owns Amazon?，表資料日 2026-02-24] |
+| 2 | BlackRock | 6.84% | [外部・未經本專案檢核：Yahoo Finance：Who owns Amazon?，表資料日 2026-02-24] |
+| 3 | Vanguard Capital Management | 5.87% | [外部・未經本專案檢核：Yahoo Finance：Who owns Amazon?，表資料日 2026-02-24] |
+| 4 | State Street | 3.63% | [外部・未經本專案檢核：Yahoo Finance：Who owns Amazon?，表資料日 2026-02-24] |
+| 5 | FMR | 3.33% | [外部・未經本專案檢核：Yahoo Finance：Who owns Amazon?，表資料日 2026-02-24] |
+| 6 | Geode Capital Management | 2.17% | [外部・未經本專案檢核：Yahoo Finance：Who owns Amazon?，表資料日 2026-02-24] |
+| 7 | Morgan Stanley | 1.62% | [外部・未經本專案檢核：Yahoo Finance：Who owns Amazon?，表資料日 2026-02-24] |
+| 8 | JPMorgan Chase | 1.57% | [外部・未經本專案檢核：Yahoo Finance：Who owns Amazon?，表資料日 2026-02-24] |
+| 9 | Vanguard Portfolio Management | 1.18% | [外部・未經本專案檢核：Yahoo Finance：Who owns Amazon?，表資料日 2026-02-24] |
+| 10 | T. Rowe Price Associates | 1.14% | [外部・未經本專案檢核：Yahoo Finance：Who owns Amazon?，表資料日 2026-02-24] |
+
+- 口徑：2026 年 proxy（日期 2026-02-24）所列大股東，經 Yahoo Finance 文章彙整；Bezos 為創辦人／執行董事長，列個人持股。 [外部・未經本專案檢核：Yahoo Finance：Who owns Amazon?，表資料日 2026-02-24]
+- 註：同篇文內文提到 2026-05 中 Yahoo 資料中 Vanguard Capital 約 6.8%，與表中 5.87% 不一致，兩者口徑／日期不同，未能調和。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026Q2 後｜對 OpenAI 再投入 213 億，合計 500 億美元到位｜客戶即股東，關聯交易需留意 [本專案：amazon_facts_20261008.json rel.oai.invested]
 - 2026-10-29｜Q3 財報盤後發布（預定）｜下一個驗證點 [外部新聞：About Amazon]

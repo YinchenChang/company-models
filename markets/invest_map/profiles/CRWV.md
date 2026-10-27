@@ -58,6 +58,40 @@ AI 算力雲（neocloud）：向 NVIDIA 買 GPU、向房東租機房，把整櫃
 - 本專案判讀：CRWV 的 TTM EV/Sales 約為同業中位數的四成，但折價來自同業仍在爬坡、CRWV 租約負債與客戶集中，不能直接解讀為便宜 [本專案：CoreWeave收支模型_v4_12.xlsx 評價_可比公司!A13–A14]。
 - 大型雲端業者（AWS、Azure、Google Cloud）也自建 GPU 叢集，是 neocloud 的替代選項 [外部・未經本專案檢核]。
 
+## 主要客戶
+- 財報口徑（2026 Q2 10-Q，客戶僅以字母代稱，字母可能與前期不同）：Customer A 占 Q2 營收 36%（2025 Q2：71%；上半年 40% vs 72%）；Customer B 26%（上半年 23%）；Customer C 10%。應收帳款：2026-06-30 Customer A、B 各 32%；2025-12-31 Customer A 68%、D 11%。 [外部・未經本專案檢核：CoreWeave Form 10-Q（2026-06-30），2026-08]
+- 具名客戶／關係（未經 10-Q 對應到字母）：
+- Microsoft：2024 年占營收 62%，前三大客戶合計 77%（2025 的占比本次未取得）。 [外部・未經本專案檢核：The Next Platform：CoreWeave takes as much financial engineer，2026-04-09]
+- OpenAI：合約合計 224 億美元（2025-03 的 119 億、後續擴約，期間至約 2029）。 [外部・未經本專案檢核：The Next Platform：CoreWeave takes as much financial engineer，2026-04-09；Tom Tunguz：OpenAI hardware spending 2025-2035，日期未載]
+- Meta：142 億美元（2025-09，至 2031-12），另加 210 億美元（至 2032-12）；Meta 約占 backlog 40.1%、OpenAI 約 25.5%，兩者合占近三分之二（作者計算，2026 初 backlog 878 億美元時）。 [外部・未經本專案檢核：The Next Platform：CoreWeave takes as much financial engineer，2026-04-09]
+- 2026 Q2 新聞稿所列新客戶／擴約：Bentley Systems、Caterpillar、Grammarly、Isomorphic Labs、Sunday Robotics；Cognition、Databricks、Hudson River Trading、Periodic Labs、Rescale、Runway ML。 [外部・未經本專案檢核：CoreWeave Reports Strong Second Quarter 2026 Results，2026-08-11]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | Michael Intrator | 總投票權 38.70%；Class B 54.93%；Class A 1.19% | [外部・未經本專案檢核：資料日 2026-04-15；sec-api：CoreWeave ownership and votes（彙整 2026 DEF 14A），日期未載] |
+| 2 | Brian Venturo | 總投票權 20.30%；Class B 28.89% | [外部・未經本專案檢核：資料日 2026-04-15；sec-api：CoreWeave ownership and votes（彙整 2026 DEF 14A），日期未載] |
+| 3 | Brannin McBee | 總投票權 14.59%；Class B 20.96% | [外部・未經本專案檢核：資料日 2026-04-15；sec-api：CoreWeave ownership and votes（彙整 2026 DEF 14A），日期未載] |
+| 4 | Magnetar Financial（旗下基金） | 總投票權 5.34%；Class A 17.07% | [外部・未經本專案檢核：資料日 2026-04-15；sec-api：CoreWeave ownership and votes（彙整 2026 DEF 14A），日期未載] |
+| 5 | NVIDIA Corporation | 總投票權 3.27%；Class A 10.66% | [外部・未經本專案檢核：資料日 2026-04-15；sec-api：CoreWeave ownership and votes（彙整 2026 DEF 14A），日期未載] |
+| 排名 | 股東 | 持股比例 | 來源編號 [外部・未經本專案檢核：資料日 資料日期] |
+| --- | --- | --- | --- [外部・未經本專案檢核] |
+| 1 | Magnetar Financial LLC | 11.35% | [外部・未經本專案檢核：Yahoo Finance CRWV holders，資料日 2026-06-30] |
+| 2 | Nvidia Corp | 10.29% | [外部・未經本專案檢核：Yahoo Finance CRWV holders，資料日 2026-06-30] |
+| 3 | BlackRock Inc. | 5.25% | [外部・未經本專案檢核：Yahoo Finance CRWV holders，資料日 2026-06-30] |
+| 4 | Goldman Sachs Group | 3.95% | [外部・未經本專案檢核：Yahoo Finance CRWV holders，資料日 2026-06-30] |
+| 5 | Vanguard Portfolio Management LLC | 3.72% | [外部・未經本專案檢核：Yahoo Finance CRWV holders，資料日 2026-06-30] |
+| 6 | Vanguard Capital Management LLC | 3.44% | [外部・未經本專案檢核：Yahoo Finance CRWV holders，資料日 2026-06-30] |
+| 7 | Jane Street Group | 3.03% | [外部・未經本專案檢核：Yahoo Finance CRWV holders，資料日 2026-06-30] |
+| 8 | Invesco Ltd. | 2.70% | [外部・未經本專案檢核：Yahoo Finance CRWV holders，資料日 2026-06-30] |
+| 9 | Alyeska Investment Group | 2.37% | [外部・未經本專案檢核：Yahoo Finance CRWV holders，資料日 2026-06-30] |
+| 10 | Value Aligned Research Advisors | 2.37% | [外部・未經本專案檢核：Yahoo Finance CRWV holders，資料日 2026-06-30] |
+
+- 口徑：雙層股權（Class A 一票；Class B 十票，創辦人持有）。(a) 2026 proxy（記錄日 2026-04-15）受益所有權：含投票權；(b) Yahoo 13F（2026-06-30，% 占 Class A 流通股；與 13G 的基準不同）。 [外部・未經本專案檢核]
+- (a) 依投票權（proxy，sec-api 彙整） [外部・未經本專案檢核：sec-api：CoreWeave ownership and votes（彙整 2026 DEF 14A），日期未載]
+- (b) 13F 機構（Yahoo，2026-06-30） [外部・未經本專案檢核：Yahoo Finance CRWV holders，資料日 2026-06-30]
+- 註：Class B 約占股數 16.8%、占投票權約 66.9%（2026-07-31，10-Q 封面）。13G 基準不同：Magnetar 14.9% of Class A（2026-04-30）、NVIDIA 11.5%（2026-01-23）、Intrator 10.1%（2026-08-14）。Yahoo 與 proxy 的百分比不可直接互比。 [外部・未經本專案檢核：sec-api：CoreWeave ownership and votes（彙整 2026 DEF 14A），日期未載]
+
 ## 近期重大事件
 - 2026-10-22｜股價單日跌逾 10%、收 $55.60，創 52 週新低；當週 Bernstein 下調評等的報導與融資疑慮並陳 [外部新聞：GuruFocus；Motley Fool]
 - 2026-10-20｜SpaceX 法說稱 AI 算力價格接近每瓦 30–50 美元區間上緣，賣方視為租價支撐；Piper Sandler 將目標價由 $153 降至 $124 [外部新聞：Tiger Brokers]

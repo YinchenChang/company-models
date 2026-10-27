@@ -58,6 +58,29 @@ asof: 2026-10-25
 - 本專案網通模型：AI 銅纜市場 CY2026 US$26.0B → CY2027 51.1B（+97%）→ CY2028 +16%、CY2029 +2.5% [本專案：Credo模型_v0.2.xlsx In!E5、In!E6、In!H84]。比對檔記錄的網通模型 v0.1 為 2026 約 28B → 2027 約 52B（版本不同，兩者並列）[本專案：先驗比對_網通_20261008.md 模型後補充 N6]。
 - 網通模型的銅纜市場以 NVIDIA 平台為主，Credo 客戶以 ASIC 與超大規模業者為主，份額校準吸收了這個口徑差 [本專案：crdo/README.md 最大限制]。
 
+## 主要客戶
+- 財報集中度原文口徑（占營收／應收帳款百分比）：
+- 10-Q FQ1 2027（三個月）：Customer A 營收 43%（去年同季 50%）、Customer B 28%（35%）；應收帳款 2026/8/1：Customer A 57%、Customer B 28%（Customer C <10%）；2026/5/2：A 53%、B 20%、C 19%。原文：「Historically, a relatively small number of customers have accounted for a significant portion of the Company’s revenue. The particular customers which account for revenue concentration have varied from period-to-period…」 [外部・未經本專案檢核：Credo Form 10-Q，期間至 2026-08-01，2026-09-02]
+- 10-K FY2026：Customer A 49%（FY2025 67%、FY2024 39%）；Customer B 32%（FY2025 與 FY2024 均 <10%）；Customer C FY2024 15%；應收帳款 2026/5/2：A 53%、B 20%、C 19%（2025/5/3：A 86%）。 [外部・未經本專案檢核：Credo Form 10-K，FY2026（期間至 2026-05-02），2026-06-15]
+- 客戶在財報中未具名（Customer A/B/C）。 [外部・未經本專案檢核]
+- 公開可引用的具名關係：FY2026 10-K 敘述中提到與 Microsoft 共同開發並開源 switch cable 實作（雙 ToR 架構）、與 Oracle 共同開發 ZeroFlap Optics。這是產品共同開發的敘述，不代表這兩家即為 Customer A/B，亦無營收占比。其他外界說法（如 Amazon、xAI、Meta 等）：未找到可引用來源（搜尋額度用盡，未查證）。 [外部・未經本專案檢核：Credo Form 10-K，FY2026（期間至 2026-05-02），2026-06-15]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | BlackRock Inc. | 9.45% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance CRDO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 2 | Vanguard Portfolio Management LLC | 4.37% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance CRDO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 3 | Vanguard Capital Management LLC | 3.96% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance CRDO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 4 | Point72 Asset Management, L.P. | 3.27% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance CRDO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 5 | State Street Corporation | 2.25% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance CRDO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 6 | Geode Capital Management, LLC | 1.72% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance CRDO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 7 | T. Rowe Price Associates Inc | 1.42% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance CRDO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 8 | Jennison Associates LLC | 1.41% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance CRDO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 9 | SRS Investment Management, LLC | 1.37% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance CRDO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 10 | Bank of America Corporation | 1.16% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance CRDO Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+
+- 口徑：13F 機構持股（資料日 2026/6/30；Yahoo Finance，% Out = 占流通在外股數）。Yahoo 摘要：內部人 9.15%、機構 73.81%、機構家數 1,318。對照 2026 proxy（受益所有權，流通股 187,869,136）：BlackRock 14,401,548 股（7.7%，依 2026/7/27 的 13G/A）；Pantas Sutardja 5,890,494 股（3.14%）、Lawrence Cheng 5,861,028 股（3.12%）、Job Lam 2,922,110 股（1.56%）；全體董事與 NEO 17,014,593 股（9.06%）。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-23｜單日跌約 9%：MaxLinear 法說稱要搶 1.6T AEC 市場；執行長、技術長依預定計畫賣股；第三方研究稱部分雲端業者高速電纜部署可能延後 [外部新聞：TradingKey；Stocktwits]
 - 2026-10-12｜發表 1.6T 主動光纜（最長 50 公尺），2027 年才商業出貨；次日股價跌約 5% [外部新聞：GuruFocus]
