@@ -266,18 +266,28 @@
     },
     {
      "type": "table",
-     "caption": "@Thesis!A53",
+     "caption": "@Thesis!A52",
      "head": [
-      "@Thesis!A54",
-      "@Thesis!B54",
-      "@Thesis!F54",
-      "@Thesis!G54",
-      "@Thesis!H54",
-      "@Thesis!I54",
-      "@Thesis!J54",
-      "@Thesis!K54"
+      "@Thesis!A53",
+      "@Thesis!B53",
+      "@Thesis!F53",
+      "@Thesis!G53",
+      "@Thesis!H53",
+      "@Thesis!I53",
+      "@Thesis!J53",
+      "@Thesis!K53"
      ],
      "rows": [
+      [
+       "@Thesis!A55",
+       "@Thesis!B55",
+       "@Thesis!F55|n0",
+       "@Thesis!G55|n0",
+       "@Thesis!H55|n0",
+       "@Thesis!I55|n0",
+       "@Thesis!J55|n0",
+       "@Thesis!K55|n0"
+      ],
       [
        "@Thesis!A56",
        "@Thesis!B56",
@@ -289,64 +299,74 @@
        "@Thesis!K56|n0"
       ],
       [
-       "@Thesis!A57",
-       "@Thesis!B57",
-       "@Thesis!F57|n0",
-       "@Thesis!G57|n0",
-       "@Thesis!H57|n0",
-       "@Thesis!I57|n0",
-       "@Thesis!J57|n0",
-       "@Thesis!K57|n0"
+       "@Thesis!A59",
+       "@Thesis!B59",
+       "@Thesis!F59|n0",
+       "@Thesis!G59|n0",
+       "@Thesis!H59|n0",
+       "@Thesis!I59|n0",
+       "@Thesis!J59|n0",
+       "@Thesis!K59|n0"
       ],
       [
-       "@Thesis!A60",
-       "@Thesis!B60",
-       "@Thesis!F60|n0",
-       "@Thesis!G60|n0",
-       "@Thesis!H60|n0",
-       "@Thesis!I60|n0",
-       "@Thesis!J60|n0",
-       "@Thesis!K60|n0"
+       "@Thesis!A70",
+       "@Thesis!B70",
+       "@Thesis!F70|n2",
+       "@Thesis!G70|n2",
+       "@Thesis!H70|n2",
+       "@Thesis!I70|n2",
+       "@Thesis!J70|n2",
+       "@Thesis!K70|n2"
       ],
       [
        "@Thesis!A71",
        "@Thesis!B71",
-       "@Thesis!F71|n2",
-       "@Thesis!G71|n2",
-       "@Thesis!H71|n2",
-       "@Thesis!I71|n2",
-       "@Thesis!J71|n2",
-       "@Thesis!K71|n2"
+       "@Thesis!F71|n1",
+       "@Thesis!G71|n1",
+       "@Thesis!H71|n1",
+       "@Thesis!I71|n1",
+       "@Thesis!J71|n1",
+       "@Thesis!K71|n1"
       ],
       [
-       "@Thesis!A72",
-       "@Thesis!B72",
-       "@Thesis!F72|n1",
-       "@Thesis!G72|n1",
-       "@Thesis!H72|n1",
-       "@Thesis!I72|n1",
-       "@Thesis!J72|n1",
-       "@Thesis!K72|n1"
+       "@Thesis!A84",
+       "@Thesis!B84",
+       "@Thesis!F84|n1",
+       "@Thesis!G84|n1",
+       "@Thesis!H84|n1",
+       "@Thesis!I84|n1",
+       "@Thesis!J84|n1",
+       "@Thesis!K84|n1"
       ],
       [
-       "@Thesis!A86",
-       "@Thesis!B86",
-       "@Thesis!F86|n1",
-       "@Thesis!G86|n1",
-       "@Thesis!H86|n1",
-       "@Thesis!I86|n1",
-       "@Thesis!J86|n1",
-       "@Thesis!K86|n1"
+       "@Thesis!A87",
+       "@Thesis!B87",
+       "@Thesis!F87|n1",
+       "@Thesis!G87|n1",
+       "@Thesis!H87|n1",
+       "@Thesis!I87|n1",
+       "@Thesis!J87|n1",
+       "@Thesis!K87|n1"
       ],
       [
-       "@Thesis!A89",
-       "@Thesis!B89",
-       "@Thesis!F89|n1",
-       "@Thesis!G89|n1",
-       "@Thesis!H89|n1",
-       "@Thesis!I89|n1",
-       "@Thesis!J89|n1",
-       "@Thesis!K89|n1"
+       "@Thesis!A91",
+       "@Thesis!B91",
+       "@Thesis!F91|n1",
+       "@Thesis!G91|n1",
+       "@Thesis!H91|n1",
+       "@Thesis!I91|n1",
+       "@Thesis!J91|n1",
+       "@Thesis!K91|n1"
+      ],
+      [
+       "@Thesis!A92",
+       "@Thesis!B92",
+       "@Thesis!F92|n1",
+       "@Thesis!G92|n1",
+       "@Thesis!H92|n1",
+       "@Thesis!I92|n1",
+       "@Thesis!J92|n1",
+       "@Thesis!K92|n1"
       ],
       [
        "@Thesis!A93",
@@ -361,32 +381,22 @@
       [
        "@Thesis!A94",
        "@Thesis!B94",
-       "@Thesis!F94|n1",
-       "@Thesis!G94|n1",
-       "@Thesis!H94|n1",
-       "@Thesis!I94|n1",
-       "@Thesis!J94|n1",
-       "@Thesis!K94|n1"
+       "@Thesis!F94|p1",
+       "@Thesis!G94|p1",
+       "@Thesis!H94|p1",
+       "@Thesis!I94|p1",
+       "@Thesis!J94|p1",
+       "@Thesis!K94|p1"
       ],
       [
        "@Thesis!A95",
        "@Thesis!B95",
-       "@Thesis!F95|n1",
-       "@Thesis!G95|n1",
-       "@Thesis!H95|n1",
-       "@Thesis!I95|n1",
-       "@Thesis!J95|n1",
-       "@Thesis!K95|n1"
-      ],
-      [
-       "@Thesis!A96",
-       "@Thesis!B96",
-       "@Thesis!F96|p1",
-       "@Thesis!G96|p1",
-       "@Thesis!H96|p1",
-       "@Thesis!I96|p1",
-       "@Thesis!J96|p1",
-       "@Thesis!K96|p1"
+       "@Thesis!F95|p1",
+       "@Thesis!G95|p1",
+       "@Thesis!H95|p1",
+       "@Thesis!I95|p1",
+       "@Thesis!J95|p1",
+       "@Thesis!K95|p1"
       ],
       [
        "@Thesis!A97",
@@ -399,24 +409,14 @@
        "@Thesis!K97|p1"
       ],
       [
-       "@Thesis!A99",
-       "@Thesis!B99",
-       "@Thesis!F99|p1",
-       "@Thesis!G99|p1",
-       "@Thesis!H99|p1",
-       "@Thesis!I99|p1",
-       "@Thesis!J99|p1",
-       "@Thesis!K99|p1"
-      ],
-      [
-       "@Thesis!A100",
-       "@Thesis!B100",
-       "@Thesis!F100|sp1",
-       "@Thesis!G100|sp1",
-       "@Thesis!H100|sp1",
-       "@Thesis!I100|sp1",
-       "@Thesis!J100|sp1",
-       "@Thesis!K100|sp1"
+       "@Thesis!A98",
+       "@Thesis!B98",
+       "@Thesis!F98|sp1",
+       "@Thesis!G98|sp1",
+       "@Thesis!H98|sp1",
+       "@Thesis!I98|sp1",
+       "@Thesis!J98|sp1",
+       "@Thesis!K98|sp1"
       ]
      ]
     }
@@ -552,52 +552,52 @@
     },
     {
      "type": "pl",
-     "years": "@CF!F44:K44",
+     "years": "@CF!F45:K45",
      "metrics": [
       {
-       "name": "@CF!A56",
+       "name": "@CF!A58",
        "fmt": "n1",
        "rows": {
-        "A": "@CF!F27:K27",
-        "B": "@CF!F56:K56",
-        "C": "@CF!F85:K85"
+        "A": "@CF!F28:K28",
+        "B": "@CF!F58:K58",
+        "C": "@CF!F88:K88"
        },
        "chart": true
       },
       {
-       "name": "@CF!A53",
+       "name": "@CF!A55",
        "fmt": "n1",
        "rows": {
-        "A": "@CF!F24:K24",
-        "B": "@CF!F53:K53",
-        "C": "@CF!F82:K82"
-       }
-      },
-      {
-       "name": "@CF!A59",
-       "fmt": "n1",
-       "rows": {
-        "A": "@CF!F30:K30",
-        "B": "@CF!F59:K59",
-        "C": "@CF!F88:K88"
+        "A": "@CF!F25:K25",
+        "B": "@CF!F55:K55",
+        "C": "@CF!F85:K85"
        }
       },
       {
        "name": "@CF!A61",
        "fmt": "n1",
        "rows": {
-        "A": "@CF!F32:K32",
+        "A": "@CF!F31:K31",
         "B": "@CF!F61:K61",
-        "C": "@CF!F90:K90"
+        "C": "@CF!F91:K91"
        }
       },
       {
-       "name": "@Thesis!A96",
+       "name": "@CF!A63",
+       "fmt": "n1",
+       "rows": {
+        "A": "@CF!F33:K33",
+        "B": "@CF!F63:K63",
+        "C": "@CF!F93:K93"
+       }
+      },
+      {
+       "name": "@Thesis!A94",
        "fmt": "p1",
        "rows": {
-        "A": "@Thesis!F47:K47",
-        "B": "@Thesis!F96:K96",
-        "C": "@Thesis!F145:K145"
+        "A": "@Thesis!F46:K46",
+        "B": "@Thesis!F94:K94",
+        "C": "@Thesis!F142:K142"
        },
        "chart": true,
        "ymin": "auto"
@@ -1099,7 +1099,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準的變動（一次動一個驅動；三情境全部重算）",
      "sheet": "Sens",
-     "rows": "4-31",
+     "rows": "4-33",
      "label_col": "A",
      "value_col": "E",
      "fmt": "sp1"
@@ -1118,7 +1118,7 @@
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "4-31",
+      "rows": "4-33",
       "cols": [
        "A",
        "B",
@@ -1139,17 +1139,17 @@
     },
     {
      "type": "table",
-     "caption": "@Sens!A33",
+     "caption": "@Sens!A35",
      "head": [
-      "@Sens!A34",
-      "@Sens!B34",
-      "@Sens!C34",
-      "@Sens!D34",
-      "@Sens!E34"
+      "@Sens!A36",
+      "@Sens!B36",
+      "@Sens!C36",
+      "@Sens!D36",
+      "@Sens!E36"
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "35-44",
+      "rows": "37-46",
       "cols": [
        "A",
        "B",
