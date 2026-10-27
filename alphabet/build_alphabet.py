@@ -142,6 +142,7 @@ inp("cons_tp", "市場共識目標價（平均）", "US$", None, 429.12, None, "
 inp("mb_ttm", "分部利益率起點改用近四季（1＝是；0＝1H26）", "x", None, 0, 1, "Assumed", "判斷：預設 1H26（利潤率擴張中、與評價日機隊同時點）；1＝v0.2.2 的近四季口徑", "", judg=True)
 inp("rd2", "讀法 2：自用 AI 增量投資價值中性（1＝評價時排除自用 AI 增量成本與資本支出；0＝讀法 1：照計成本）", "x", None, 0, 1, "Assumed",
     "對照表 r1 C16：讀法 1（自用 AI 只計成本，v0.2.2 主值）／讀法 2（自用 AI 價值中性）；主值待 Andy 決定", "只影響評價（DCF、SOTP）；損益表與現金流照實計入自用 AI 成本", judg=True)
+inp("sbc_add", "DCF 加回股權報酬（1＝是；Sens 用）", "x", None, 0, 1, "Assumed", "判斷：股權報酬視為真實成本、不加回（稀釋已在股數 dil）；1＝加回（稅後）", "", judg=True)
 inp("tv_alt", "終值改用 FY2032 無槓桿自由現金流 ×(1＋g)（1＝是；Sens 用）", "x", None, 0, 1, "Assumed", "判斷：基準用價值驅動公式（ronic）；1＝替代口徑", "", judg=True)
 
 sec("C2. 分部加總（SOTP）倍數：同業 NTM EV/EBITDA（沿用 v0.2.2 共用同業檔，基準日 2026-10-07；中位數在 Val 頁計算）")
@@ -908,7 +909,7 @@ for s in "ABC":
         if note: V.cell(r, 5, note)
         D[key] = r; r += 1
     drow("ebit", "營業利益（EBIT）", lambda p: f"=PL!{COL[p]}{P['oi']}")
-    drow("nopat", "NOPAT＝(EBIT＋讀法 2 加回的自用 AI 增量成本) ×(1 − 稅率)", lambda p: f"=({VC[p]}{D['ebit']}+rd2*Thesis!{COL[p]}{T['int_cost']})*(1-tax)",
+    drow("nopat", "NOPAT＝(EBIT＋讀法 2 加回的自用 AI 增量成本＋sbc_add × 股權報酬) ×(1 − 稅率)", lambda p: f"=({VC[p]}{D['ebit']}+rd2*Thesis!{COL[p]}{T['int_cost']}+sbc_add*PL!{COL[p]}{P['sbc']})*(1-tax)",
          note="讀法 2（rd2＝1）：自用 AI 增量營運、租金與折舊不計入評價")
     drow("da", "＋折舊（讀法 2 扣除自用 AI 折舊）", lambda p: f"=PL!{COL[p]}{P['da']}-rd2*Thesis!{COL[p]}{T['da_int']}")
     drow("cx", "− 資本支出（讀法 2 扣除自用 AI 資本支出）", lambda p: f"=CF!{COL[p]}{C['cx']}-rd2*(1-ext_sh)*Thesis!{COL[p]}{T['cx_ai']}")
@@ -1085,6 +1086,7 @@ SENS_CASES = [
     ("bb_t", "回購目標", "lo", "hi", "0／45.7（2025 全年）"),
     ("rd2", "讀法 2：自用 AI 增量投資價值中性（C16）", None, "hi", "讀法 1 → 讀法 2"),
     ("mb_ttm", "分部利益率起點改用近四季", None, "hi", "1H26 → 近四季（v0.2.2 口徑）"),
+    ("sbc_add", "DCF 加回股權報酬", None, "hi", "不加回 → 加回（稅後）"),
 ]
 SE["A1"] = "Sens — 一次改一個輸入（In 頁低／高值），整本活頁簿以 LibreOffice 重算後的加權目標價（Val 頁「目標價（DCF 與 Comparable 加權）」）；由 alphabet/make_v03.sh 產生，建置時寫入（數值）"
 SE["A2"] = "相對基準＝情境目標價 ÷ 基準加權目標價 − 1；龍捲風依絕對值排序（HTML）。基準與各案例的其他輸入相同"
@@ -1170,7 +1172,7 @@ RD["A6"] = (f'="重點觀察 1：目標價 "&TEXT({VB("tp")},"0")&"＝DCF "&TEXT
 RD["A7"] = (f'="重點觀察 2：C 情境 FY2028 Search & other "&TEXT(PL!I{PC_["search"]},"0.0")&"（比 B 少 "&TEXT(1-PL!I{PC_["search"]}/PL!I{PB_["search"]},"0.0%")'
             f'&"），Google Services 營業利益率 "&TEXT(PL!I{PC_["om_gs"]},"0.0%")&"（B "&TEXT(PL!I{PB_["om_gs"]},"0.0%")&"）；同年 Cloud AI 營收 "&TEXT(PL!I{PB_["ai"]},"0.0")'
             f'&"、Google Cloud 營業利益 "&TEXT(PL!I{PB_["oi_cl"]},"0.0")&"，Cloud 營業利益比 FY2025 增加 "&TEXT(PL!I{PB_["oi_cl"]}-PL!D{PB_["oi_cl"]},"0.0")'
-            f'&"，抵銷 C 情境 Services 營業利益損失 "&TEXT(PL!I{PB_["oi_gs"]}-PL!I{PC_["oi_gs"]},"0.0")&" 的 "&TEXT((PL!I{PB_["oi_cl"]}-PL!D{PB_["oi_cl"]})/(PL!I{PB_["oi_gs"]}-PL!I{PC_["oi_gs"]}),"0%")&"。"')
+            f'&"，是 C 情境 Services 營業利益損失 "&TEXT(PL!I{PB_["oi_gs"]}-PL!I{PC_["oi_gs"]},"0.0")&" 的 "&TEXT((PL!I{PB_["oi_cl"]}-PL!D{PB_["oi_cl"]})/(PL!I{PB_["oi_gs"]}-PL!I{PC_["oi_gs"]}),"0%")&"（Cloud 的成長足以抵銷搜尋被侵蝕的利潤）。"')
 G_ = f"CF!C{GATE}"
 RD["A8"] = (f'="重點觀察 3：AI 折舊進損益——情境 B 新增 AI 折舊 FY2028 "&TEXT(PL!I{PB_["da_ai"]},"0.0")&"，合併營業利益率由 FY2025 "&TEXT(PL!D{PB_["om"]},"0.0%")&" 變為 FY2028 "&TEXT(PL!I{PB_["om"]},"0.0%")'
             f'&"；收支關卡（FY2026–2030 自由現金流扣股利合計）B "&TEXT({G_},"0.0")&"，"&CF!C{GATE + 3}&"。"')
@@ -1193,7 +1195,7 @@ for t in ("營收主軸由「AI 雲端 MW × 每 MW 收入＋其餘成長率線�
           "AI 資本支出接到折舊與分部營業利益（對外 → Cloud、自用 → Services 與 Alphabet 層級），不只接現金。",
           "評價由 DCF 45%＋EV/EBITDA 55%（錨定 2029）改為 DCF 50%＋分部加總 50%（各分部同業倍數）；評等改五級（上檔空間）。",
           "融資瀑布、站點、租賃承諾、RPO 等 CRWV 頁面移除（舊引擎保留在 legacy_v0.2/）。"):
-    RD.cell(r, 1, "・" + t); r += 1
+    RD.cell(r, 1, t); r += 1
 r += 1
 RD.cell(r, 1, "工作表：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources。藍字＝輸入、黑字＝公式；黃底＝判斷題。建置：bash alphabet/make_v03.sh").font = BOLD; r += 1
 RD.cell(r, 1, "數字標記：Verified（經查核）／Interested-party（公司或賣方自述）／Analogy／Assumed（給區間）／Derived（換算）。本模型是研究整理，不是投資建議以外的保證。")

@@ -19,5 +19,6 @@ cp "$WD/out/raw.xlsx" "alphabet/dist/$OUTNAME"
 python3 alphabet/check_v03.py "alphabet/dist/$OUTNAME"
 SEGCHECK="${SEGCHECK:-tools/segment_check/check_segments.py}"
 if [ -f "$SEGCHECK" ]; then python3 "$SEGCHECK" alphabet; else echo "（略過 segment_check：$SEGCHECK 不存在）"; fi
+python3 alphabet/gen_html_json.py "alphabet/dist/$OUTNAME" "$WD/rowmap.json" alphabet/html.json
 python3 tools/company_html/build_company_html.py alphabet
 python3 tools/company_html/check_company_html.py alphabet
