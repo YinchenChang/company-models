@@ -40,9 +40,9 @@
 | 段 | 內容 | 下游數值 | 狀態 |
 |---|---|---|---|
 | v0.1 | 骨架（README、Scen、In、Path、Mkt、TK_In、Conflicts、Checks、Decisions、DB_Evidence、Interface）；Tokenomics v21.7 鏡像；`markets/memory/market.py` 的全部輸入搬入、`market.py` 改讀快照；跨模型衝突登錄；CI | **不變**（58 個目標逐格相同） | 完成（PR #180） |
-| v0.2 | 補齊 Assumed 列區間與缺來源（G2、G3 升為 ERROR）；2029 平台別顆數成長改為單一來源（CF18：台積電、網通改讀；NAND 2029 顆數年增 10% → 13.8%） | NAND、SanDisk、Kioxia 數值變動；其餘只有 In 頁文字與區間 | 本版 |
-| v0.3 | 運算層：ASIC 每顆規格（由 `avgo/`、nvidia `pa_*` 移入，CF13、CF14）、部署 GW 單一路徑（CF22）、TPU 設計服務份額表（CF19） | 運算與 ASIC 下游 | 下一段 |
-| v0.4 | 網通（`markets/network` 輸入移入：每顆網通內容、CPO 三情境與 CPO 份額表 CF21、銅轉光）與每 GW 晶片內容橋接表（改讀 TK v21.7 機架價三名稱，CF17） | 網通與光模組下游 | |
+| v0.2 | 補齊 Assumed 列區間與缺來源（G2、G3 升為 ERROR）；2029 平台別顆數成長改為單一來源（CF18：台積電、網通改讀；NAND 2029 顆數年增 10% → 13.8%） | NAND、SanDisk、Kioxia 數值變動；其餘只有 In 頁文字與區間 | 完成（PR #181） |
+| v0.3 | 運算層：加速器每顆售價與 ASIC 核心價（M6，CF13、CF14）、ASIC 設計服務份額表（M7、ShareTbl，CF19）；部署 GW（CF22）依賴網通，移到 v0.4 | 不變（只搬位置） | 本版 |
+| v0.4 | 部署 GW 單一路徑（CF22）＋網通（`markets/network` 輸入移入：每顆網通內容、CPO 三情境與 CPO 份額表 CF21、銅轉光）與每 GW 晶片內容橋接表（改讀 TK v21.7 機架價三名稱，CF17） | 網通與光模組下游 | |
 | v0.5 | 載板與 PCB（ABF 缺口 CF03、GPU 載板份額表 CF20）；CoWoS 供需 | 載板、材料、代工 | |
 | v0.6 | 伺服器組裝、電源、散熱（CF04、CF09–CF12） | 組裝、電源、散熱下游 | |
 | v0.7 | 設備（測試 ÷ WFE CF15、混合鍵合）與 NAND 輸入 | 設備、NAND | |

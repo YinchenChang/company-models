@@ -10,6 +10,8 @@ sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import market as MEM
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 import cycle_position as CP
 import valuation_rule as VR
 import accel_share as AS
@@ -191,10 +193,8 @@ inp("th_sh_lo", "命題：2027 年 NVIDIA 金額份額（下緣）", "%", None, 
 inp("th_sh_hi", "命題：2027 年 NVIDIA 金額份額（上緣）", "%", None, 0.80, None, "Interested-party", "同上", "—")
 
 sec("J. 各家每顆加速器金額（份額計算用；模組層級，與 NVIDIA 的 GPU 模組價同一口徑）")
-inp("pa_amd", "AMD Instinct 每顆", "US$K", 20, 30, 45, "Interested-party", "MI355X：HSBC 約 $23K（自 $25K 下修）、其他報導 $20–25K；MI455X 無官方價，部落格 $15–50K（finviz、gpusmith、MikeLongTerm；賣方有目標價誘因）", "第二來源：以上三者互相一致於 $20–25K（MI355X）；MI455X 無獨立來源")
-inp("pa_tpu", "Google TPU 每顆", "US$K", 8, 12, 18, "Assumed", "無：每顆 ASP 未找到（只有租用價代理：Ironwood $1.03–1.60／小時，SemiAnalysis，不可單獨使用）", "未找到")
-inp("pa_trn", "AWS Trainium 每顆", "US$K", 5, 8, 12, "Assumed", "無：每顆 ASP 未找到", "Maia 200 約為 NVIDIA（逾 $30K）的 30–40%＝$9–12K（二手，cryptobriefing）作量級參照")
-inp("pa_oth", "其他 ASIC 每顆", "US$K", 5, 8, 12, "Assumed", "無：未找到（Maia、MTIA 皆無 ASP）", "同上")
+for _k in ("pa_amd", "pa_tpu", "pa_trn", "pa_oth"):   # 加速器每顆售價：Siliconomics In 頁 M6（v0.3 起）
+    inp(*SIL.row9(_k))
 inp("dsh", "ASIC 金額份額變動（Sens 用；NVIDIA 份額 ±）", "pt", None, 0.05, None, "Assumed", "無", "Sens 用 ±5 個百分點")
 inp("uk", "NVIDIA 顆數係數（Sens 用；FY2028 起乘以所有 NVIDIA 世代顆數）", "x", 0.9, 1.0, 1.1, "Assumed", "無", "±10%")
 

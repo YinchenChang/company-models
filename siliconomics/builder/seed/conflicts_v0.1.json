@@ -189,9 +189,9 @@
   "b_loc": "avgo Units（另用一組 ASIC 每顆價）；候選母體、先驗比對 NVDA N5c",
   "b_val": "6.36；文件 3–6",
   "kind": "推導值 vs 文件區間",
-  "proposal": "本庫只留一組加速器每顆價（nvidia pa_* 與 avgo core_* 合併為 ASIC 每顆規格），AMD 份額由同一顆數層推導；候選母體文字更新",
-  "target": "v0.2",
-  "status": "待併入",
+  "proposal": "v0.3 已把兩組價格放在同一處（In 頁 M6：nvidia 的整顆售價 pa_* 與 avgo 的核心價 core_*＋HBM 代購比例 f_hbm）。仍待選定市場金額口徑：(a) 整顆售價 pa_*（現行 nvidia、amd：AMD 2027 份額 6.70%）；(b) 核心 × k_x＋全部 HBM（現行 avgo：6.36%）。預設 (a)，avgo 的份額展示改讀 (a)；影響只在份額與市場總額的展示，不影響各公司營收",
+  "target": "v0.3（位置）／待定（口徑）",
+  "status": "待 Andy",
   "origin": "算力收支 2026-10-25 C13"
  },
  {
@@ -204,9 +204,9 @@
   "b_loc": "alchip Units!C9（不含 HBM）",
   "b_val": "2.5",
   "kind": "口徑（含／不含 HBM）",
-  "proposal": "本庫 ASIC 每顆規格分列核心售價與 HBM 代購比例，兩家依各自是否轉手 HBM 讀同一組數；差異應只剩 HBM",
+  "proposal": "兩家都由同一組 pa_trn（M6）與 2026 HBM 價推得核心價 6.394K；差異來自 Marvell 計入 60% HBM 代購營收、世芯只計設計與量產服務——是公司營收口徑，不是行業變數衝突。保留兩家各自口徑",
   "target": "v0.2",
-  "status": "待併入",
+  "status": "已釐清（v0.3）",
   "origin": "算力收支 2026-10-25 C14"
  },
  {
@@ -279,9 +279,9 @@
   "b_loc": "賣方路徑（聯發科 2028 約 51%）",
   "b_val": "需聯發科 51",
   "kind": "模型 vs 賣方（模型間一致）",
-  "proposal": "本庫建 TPU 設計服務份額表（合計＝100%，加總檢查）；預設維持模型路徑（Broadcom 為主），賣方 51% 列為聯發科高情境證據",
-  "target": "v0.2",
-  "status": "待 Andy",
+  "proposal": "v0.3 已建 TPU、其他 ASIC、Trainium（三情境）份額表與加總檢查（ShareTbl、Checks K6；TPU 95／95／98%）。數值維持模型路徑（Broadcom 90／80／75%、聯發科 5／15／18%、Marvell 0／0／5%）；賣方路徑（聯發科 2028 約 51%，Broadcom 需降至約 26%）列為聯發科高情境證據。Andy 2026-10-27 15:09：「先這樣，我也沒有更好的數字」",
+  "target": "v0.3",
+  "status": "已定（v0.3）",
   "origin": "AI半導體 索引 2026-10-25 待判斷 (1)"
  },
  {

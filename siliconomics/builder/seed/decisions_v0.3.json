@@ -1,0 +1,29 @@
+[
+ {
+  "id": "S11",
+  "cat": "範圍",
+  "item": "v0.3 範圍",
+  "decision": "v0.3（運算層第一段）：(1) 加速器每顆售價（nvidia pa_*）、ASIC 核心價與 HBM 代購比例（avgo core_*、f_hbm）移入 In 頁 M6；(2) ASIC 設計服務份額（Broadcom、Marvell、聯發科、世芯）移入 M7，新增 ShareTbl 頁與加總檢查 K6。原模型改讀本庫，數值與文字逐字搬入（下游應不變）。部署 GW 單一路徑（CF22）依賴網通市場層，與網通一起在 v0.4 做",
+  "date": "2026-10-27",
+  "quote": "（工程類）",
+  "status": "生效"
+ },
+ {
+  "id": "S12",
+  "cat": "工程",
+  "item": "共用讀取模組",
+  "decision": "新增 siliconomics/reader.py（row8／row9／V／NAMES），各公司建檔程式以 inp(*SIL.row9(鍵)) 讀本庫輸入；In 頁新增 J 欄「第二來源／說明」以容納公司模型的第二來源欄",
+  "date": "2026-10-27",
+  "quote": "（工程類）",
+  "status": "生效"
+ },
+ {
+  "id": "S13",
+  "cat": "數值",
+  "item": "CF19 TPU 設計服務份額",
+  "decision": "維持模型路徑（Broadcom 90／80／75%、聯發科 5／15／18%、Marvell 0／0／5%，2026–28）；賣方路徑列為聯發科高情境證據",
+  "date": "2026-10-27 15:09",
+  "quote": "先這樣，我也沒有更好的數字",
+  "status": "生效"
+ }
+]

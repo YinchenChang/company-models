@@ -41,7 +41,8 @@ def read(xlsx):
             rows.append({"sec": a})
             continue
         rows.append(dict(id=a, label=ws.cell(r, 2).value, unit=ws.cell(r, 3).value, lo=ws.cell(r, 4).value,
-                         base=ws.cell(r, 5).value, hi=ws.cell(r, 6).value, tag=ws.cell(r, 7).value, src=ws.cell(r, 8).value or ""))
+                         base=ws.cell(r, 5).value, hi=ws.cell(r, 6).value, tag=ws.cell(r, 7).value, src=ws.cell(r, 8).value or "",
+                         src2=ws.cell(r, 10).value or ""))
     sc = wb["Scen"]
     scen, desc = [], {}
     for r in range(4, 7):

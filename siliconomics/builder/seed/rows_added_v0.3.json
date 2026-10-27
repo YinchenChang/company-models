@@ -1,0 +1,399 @@
+[
+ {
+  "after_section_end": "M5.",
+  "section": "M6. 加速器每顆售價與 ASIC 核心價（v0.3 起單一來源；原在 nvidia／avgo 模型 In 頁，數值與文字逐字搬入）",
+  "rows": [
+   {
+    "id": "pa_amd",
+    "label": "AMD Instinct 每顆",
+    "unit": "US$K",
+    "lo": 20,
+    "base": 30,
+    "hi": 45,
+    "tag": "Interested-party",
+    "src": "MI355X：HSBC 約 $23K（自 $25K 下修）、其他報導 $20–25K；MI455X 無官方價，部落格 $15–50K（finviz、gpusmith、MikeLongTerm；賣方有目標價誘因）",
+    "src2": "第二來源：以上三者互相一致於 $20–25K（MI355X）；MI455X 無獨立來源"
+   },
+   {
+    "id": "pa_tpu",
+    "label": "Google TPU 每顆",
+    "unit": "US$K",
+    "lo": 8,
+    "base": 12,
+    "hi": 18,
+    "tag": "Assumed",
+    "src": "無：每顆 ASP 未找到（只有租用價代理：Ironwood $1.03–1.60／小時，SemiAnalysis，不可單獨使用）",
+    "src2": "未找到"
+   },
+   {
+    "id": "pa_trn",
+    "label": "AWS Trainium 每顆",
+    "unit": "US$K",
+    "lo": 5,
+    "base": 8,
+    "hi": 12,
+    "tag": "Assumed",
+    "src": "無：每顆 ASP 未找到",
+    "src2": "Maia 200 約為 NVIDIA（逾 $30K）的 30–40%＝$9–12K（二手，cryptobriefing）作量級參照"
+   },
+   {
+    "id": "pa_oth",
+    "label": "其他 ASIC 每顆",
+    "unit": "US$K",
+    "lo": 5,
+    "base": 8,
+    "hi": 12,
+    "tag": "Assumed",
+    "src": "無：未找到（Maia、MTIA 皆無 ASP）",
+    "src2": "同上"
+   },
+   {
+    "id": "core_tpu",
+    "label": "TPU 每顆核心售價（Broadcom 營收，不含 HBM；2026 基準）",
+    "unit": "US$K",
+    "lo": 6,
+    "base": 8,
+    "hi": 11,
+    "tag": "Assumed",
+    "src": "無：每顆 ASP 未揭露。NVIDIA 模型 pa_tpu（含 HBM）8–12–18K；192 GB × 2026 HBM 價約 2.8K",
+    "src2": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx｜In!E146（含 HBM 的對照值）"
+   },
+   {
+    "id": "core_oth",
+    "label": "其他 ASIC 每顆核心售價（Broadcom 營收，不含 HBM；2026 基準）",
+    "unit": "US$K",
+    "lo": 4,
+    "base": 6,
+    "hi": 9,
+    "tag": "Assumed",
+    "src": "無：未揭露。Maia 200 約為 NVIDIA 的 30–40%＝$9–12K（二手，含 HBM）作量級參照",
+    "src2": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx｜In!E148（含 HBM 的對照值）"
+   },
+   {
+    "id": "f_hbm",
+    "label": "HBM 由 Broadcom 代購並計入營收的比例",
+    "unit": "x",
+    "lo": 0.3,
+    "base": 0.6,
+    "hi": 1,
+    "tag": "Assumed",
+    "src": "公司：毛利率下滑來自「記憶體含量高的 XPU」占比上升（Q3 FY26 法說，二手）→ 至少部分 HBM 經 Broadcom 轉售",
+    "src2": "第二來源：未找到。客戶自購 HBM（consigned）的比例未揭露"
+   }
+  ]
+ },
+ {
+  "after_section_end": "M6.",
+  "section": "M7. ASIC 設計服務顆數份額（v0.3 起單一來源；原在 avgo、mrvl、mediatek、alchip 模型 In 頁；加總檢查見 ShareTbl 頁）",
+  "rows": [
+   {
+    "id": "sh_tpu_26",
+    "label": "Broadcom 占 Google TPU 顆數 2026",
+    "unit": "%",
+    "lo": 0.8,
+    "base": 0.9,
+    "hi": 1,
+    "tag": "Assumed",
+    "src": "Broadcom 為 TPU 主要設計夥伴（Ironwood／v7、v8i 量產；法說）；Google 與 MediaTek 另有合作（Counterpoint 2026-01，二手）",
+    "src2": "各家份額未揭露：未找到"
+   },
+   {
+    "id": "sh_tpu_27",
+    "label": "Broadcom 占 Google TPU 顆數 2027",
+    "unit": "%",
+    "lo": 0.6,
+    "base": 0.8,
+    "hi": 0.9,
+    "tag": "Assumed",
+    "src": "同上；MediaTek 版 TPU 放量的時點未揭露",
+    "src2": "Anthropic 2027 年約 5 GW 的 TPU v8i（公司說法，Interested-party）屬 Broadcom"
+   },
+   {
+    "id": "sh_tpu_28",
+    "label": "Broadcom 占 Google TPU 顆數 2028（2029 沿用）",
+    "unit": "%",
+    "lo": 0.5,
+    "base": 0.75,
+    "hi": 0.9,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "sh_oth_26",
+    "label": "Broadcom 占「其他 ASIC」顆數 2026",
+    "unit": "%",
+    "lo": 0.2,
+    "base": 0.35,
+    "hi": 0.5,
+    "tag": "Assumed",
+    "src": "其他 ASIC＝MTIA（Broadcom）、OpenAI 客製（Broadcom，2026 Q3 開始出貨）、Maia（非 Broadcom）、昇騰（華為）等",
+    "src2": "XPU 客戶 6 家：Google、Anthropic、OpenAI、Meta＋2 家未具名（法說，二手）"
+   },
+   {
+    "id": "sh_oth_27",
+    "label": "Broadcom 占「其他 ASIC」顆數 2027",
+    "unit": "%",
+    "lo": 0.4,
+    "base": 0.55,
+    "hi": 0.7,
+    "tag": "Assumed",
+    "src": "OpenAI 2027 年 1.3 GW、Meta 至 2028 年共 3 GW（公司說法，Interested-party）",
+    "src2": "—"
+   },
+   {
+    "id": "sh_oth_28",
+    "label": "Broadcom 占「其他 ASIC」顆數 2028（2029 沿用）",
+    "unit": "%",
+    "lo": 0.4,
+    "base": 0.55,
+    "hi": 0.7,
+    "tag": "Assumed",
+    "src": "OpenAI 2028 年 5 GW 以上（公司說法）",
+    "src2": "—"
+   },
+   {
+    "id": "msh_trn_26",
+    "label": "Marvell 占 AWS Trainium 顆數 CY2026",
+    "unit": "%",
+    "lo": 0.05,
+    "base": 0.1,
+    "hi": 0.2,
+    "tag": "Assumed",
+    "src": "Marvell 供應 Trainium 2、Inferentia；Trainium 3 主供應商為世芯（Alchip），Marvell 做 Trainium 2.5（Dolphin Research 2026-03-06，二手）",
+    "src2": "各世代份額未揭露：未找到"
+   },
+   {
+    "id": "msh_trn_27",
+    "label": "Marvell 占 AWS Trainium 顆數 CY2027",
+    "unit": "%",
+    "lo": 0.05,
+    "base": 0.1,
+    "hi": 0.2,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "msh_trn_28",
+    "label": "Marvell 占 AWS Trainium 顆數 CY2028（CY2029 沿用）",
+    "unit": "%",
+    "lo": 0,
+    "base": 0.08,
+    "hi": 0.2,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "msh_oth_26",
+    "label": "Marvell 占 其他 ASIC（MTIA、Maia、Ascend 等） 顆數 CY2026",
+    "unit": "%",
+    "lo": 0.02,
+    "base": 0.05,
+    "hi": 0.1,
+    "tag": "Assumed",
+    "src": "Microsoft：Maia 由 Marvell 設計，Maia 300 自 CY2027 起多 GW 部署（Motley Fool／Webull 轉述 Nadella，二手）；新 Tier 1 XPU 於 FY2028 量產（公司，Q4 FY26 法說）",
+    "src2": "其他 ASIC 含 MTIA、昇騰等非 Marvell 晶片；Broadcom 占 35%／55%／55%"
+   },
+   {
+    "id": "msh_oth_27",
+    "label": "Marvell 占 其他 ASIC（MTIA、Maia、Ascend 等） 顆數 CY2027",
+    "unit": "%",
+    "lo": 0.03,
+    "base": 0.06,
+    "hi": 0.12,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "msh_oth_28",
+    "label": "Marvell 占 其他 ASIC（MTIA、Maia、Ascend 等） 顆數 CY2028（CY2029 沿用）",
+    "unit": "%",
+    "lo": 0.08,
+    "base": 0.15,
+    "hi": 0.25,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "msh_tpu_26",
+    "label": "Marvell 占 Google TPU 顆數 CY2026",
+    "unit": "%",
+    "lo": 0,
+    "base": 0,
+    "hi": 0.02,
+    "tag": "Assumed",
+    "src": "Google：擴大合作（2026-07，客製處理器與相關晶片）；認股權證協議（歸屬上限 $120B），主要營收影響在 FY2029 起（投資人日，二手）",
+    "src2": "Google 案是否為 TPU 平台：未找到（可能為 Axion CPU 或其他）；Broadcom 占 TPU 75%（CY2028）"
+   },
+   {
+    "id": "msh_tpu_27",
+    "label": "Marvell 占 Google TPU 顆數 CY2027",
+    "unit": "%",
+    "lo": 0,
+    "base": 0,
+    "hi": 0.05,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "msh_tpu_28",
+    "label": "Marvell 占 Google TPU 顆數 CY2028（CY2029 沿用）",
+    "unit": "%",
+    "lo": 0,
+    "base": 0.05,
+    "hi": 0.15,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "mtk_tpu_26",
+    "label": "聯發科占 Google TPU 顆數 CY2026",
+    "unit": "%",
+    "lo": 0.03,
+    "base": 0.05,
+    "hi": 0.1,
+    "tag": "Assumed",
+    "src": "公司：與一家美國大型雲端客戶合作的第一顆 AI 加速器 ASIC 於 4Q26 量產；第二顆 2028 年量產（2Q26 講稿）；客戶名稱公司未揭露",
+    "src2": "凱基 2026-07-23：v8x Zebrafish（4Q26 起）、v9 Humufish（4Q27 起）為 Google TPU（Interested-party）；高值受 avgo、mrvl 份額限制（1 − Broadcom − Marvell 基準）"
+   },
+   {
+    "id": "mtk_tpu_27",
+    "label": "聯發科占 Google TPU 顆數 CY2027",
+    "unit": "%",
+    "lo": 0.08,
+    "base": 0.15,
+    "hi": 0.2,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "mtk_tpu_28",
+    "label": "聯發科占 Google TPU 顆數 CY2028（CY2029 沿用）",
+    "unit": "%",
+    "lo": 0.1,
+    "base": 0.18,
+    "hi": 0.2,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "mtk_oth_26",
+    "label": "聯發科占 其他 ASIC（MTIA、Maia、Ascend 等） 顆數 CY2026",
+    "unit": "%",
+    "lo": 0,
+    "base": 0,
+    "hi": 0.02,
+    "tag": "Assumed",
+    "src": "公司：與其他多家客戶接觸中、資料中心有望取得更多設計案（2Q26 講稿）",
+    "src2": "第二客戶與量產時點：未找到；基準 0，只放 Sens"
+   },
+   {
+    "id": "mtk_oth_27",
+    "label": "聯發科占 其他 ASIC（MTIA、Maia、Ascend 等） 顆數 CY2027",
+    "unit": "%",
+    "lo": 0,
+    "base": 0,
+    "hi": 0.03,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "mtk_oth_28",
+    "label": "聯發科占 其他 ASIC（MTIA、Maia、Ascend 等） 顆數 CY2028（CY2029 沿用）",
+    "unit": "%",
+    "lo": 0,
+    "base": 0,
+    "hi": 0.05,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "al_trn_26",
+    "label": "世芯占 AWS Trainium 顆數 CY2026（三情境相同，校準年）",
+    "unit": "%",
+    "lo": 0.2,
+    "base": 0.3,
+    "hi": 0.4,
+    "tag": "Assumed",
+    "src": "公司：3 奈米 AI 加速器 5 月底量產、6 月出貨給北美雲端客戶（2Q26 新聞稿）；Trainium 3 主供應商為世芯（Marvell 模型引 Dolphin Research，二手）",
+    "src2": "CY2026 份額只用於校準（k_x 吸收）；CY2027 起 A 最有利、C 最不利；高值以 1 − Marvell 基準為上限"
+   },
+   {
+    "id": "al27_A",
+    "label": "世芯占 AWS Trainium 顆數 CY2027（情境 A）",
+    "unit": "%",
+    "lo": 0.4,
+    "base": 0.55,
+    "hi": 0.75,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "CY2026 份額只用於校準（k_x 吸收）；CY2027 起 A 最有利、C 最不利；高值以 1 − Marvell 基準為上限"
+   },
+   {
+    "id": "al27_B",
+    "label": "世芯占 AWS Trainium 顆數 CY2027（情境 B）",
+    "unit": "%",
+    "lo": 0.4,
+    "base": 0.5,
+    "hi": 0.75,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "al27_C",
+    "label": "世芯占 AWS Trainium 顆數 CY2027（情境 C）",
+    "unit": "%",
+    "lo": 0.3,
+    "base": 0.4,
+    "hi": 0.75,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "al28_A",
+    "label": "世芯占 AWS Trainium 顆數 CY2028（情境 A；CY2029 沿用）",
+    "unit": "%",
+    "lo": 0.35,
+    "base": 0.55,
+    "hi": 0.85,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "CY2026 份額只用於校準（k_x 吸收）；CY2027 起 A 最有利、C 最不利；高值以 1 − Marvell 基準為上限"
+   },
+   {
+    "id": "al28_B",
+    "label": "世芯占 AWS Trainium 顆數 CY2028（情境 B；CY2029 沿用）",
+    "unit": "%",
+    "lo": 0.3,
+    "base": 0.45,
+    "hi": 0.85,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "CY2028 為 Trainium 4（2 奈米）換代；世芯負責後段設計（法說），2028 份額未揭露：未找到"
+   },
+   {
+    "id": "al28_C",
+    "label": "世芯占 AWS Trainium 顆數 CY2028（情境 C；CY2029 沿用）",
+    "unit": "%",
+    "lo": 0.2,
+    "base": 0.35,
+    "hi": 0.85,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "CY2028 為 Trainium 4（2 奈米）換代；世芯負責後段設計（法說），2028 份額未揭露：未找到"
+   }
+  ]
+ }
+]

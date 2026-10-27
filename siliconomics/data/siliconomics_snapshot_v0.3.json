@@ -1,8 +1,8 @@
 {
  "source": {
-  "file": "20261027_Siliconomics_v0.2.xlsx",
-  "version": "v0.2",
-  "sha256": "1cf917aff429cbdef6ca8d48676a5641698fded4423a844cafca81dc4842919e",
+  "file": "20261027_Siliconomics_v0.3.xlsx",
+  "version": "v0.3",
+  "sha256": "0380b860b6055bebee2d897dbae68d35dbbbaee5fb24ddbf968da6e394bc0faa",
   "note": "Siliconomics 快照；下游只讀本檔。SGOV_Errors 須為 0"
  },
  "scen": [
@@ -77,7 +77,8 @@
    "base": -0.025,
    "hi": null,
    "tag": "Interested-party",
-   "src": "TrendForce 合約價：2Q25 0~−5%、3Q25 +10~15%、4Q25 實際 +45~50%、1Q26 實際約 +93~98%、2Q26 +58~63%、3Q26 +13~18%（MS 實際約 +15%）、4Q26 +10~15%"
+   "src": "TrendForce 合約價：2Q25 0~−5%、3Q25 +10~15%、4Q25 實際 +45~50%、1Q26 實際約 +93~98%、2Q26 +58~63%、3Q26 +13~18%（MS 實際約 +15%）、4Q26 +10~15%",
+   "src2": ""
   },
   {
    "id": "cq_2",
@@ -87,7 +88,8 @@
    "base": 0.125,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cq_3",
@@ -97,7 +99,8 @@
    "base": 0.475,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cq_4",
@@ -107,7 +110,8 @@
    "base": 0.95,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cq_5",
@@ -117,7 +121,8 @@
    "base": 0.605,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cq_6",
@@ -127,7 +132,8 @@
    "base": 0.155,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cq_7",
@@ -137,7 +143,8 @@
    "base": 0.125,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqA_8",
@@ -147,7 +154,8 @@
    "base": 0.03,
    "hi": null,
    "tag": "Interested-party",
-   "src": "BofA：2027 持平略降、2027 均價仍高於 2026；2028 溫和修正（年均約 −10%）；2029 Assumed 緩降"
+   "src": "BofA：2027 持平略降、2027 均價仍高於 2026；2028 溫和修正（年均約 −10%）；2029 Assumed 緩降",
+   "src2": ""
   },
   {
    "id": "cqA_9",
@@ -157,7 +165,8 @@
    "base": 0,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqA_10",
@@ -167,7 +176,8 @@
    "base": -0.02,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqA_11",
@@ -177,7 +187,8 @@
    "base": -0.03,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqA_12",
@@ -187,7 +198,8 @@
    "base": -0.03,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqA_13",
@@ -197,7 +209,8 @@
    "base": -0.03,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqA_14",
@@ -207,7 +220,8 @@
    "base": -0.02,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqA_15",
@@ -217,7 +231,8 @@
    "base": -0.02,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqA_16",
@@ -227,7 +242,8 @@
    "base": -0.03,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqA_17",
@@ -237,7 +253,8 @@
    "base": -0.03,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqA_18",
@@ -247,7 +264,8 @@
    "base": -0.02,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqA_19",
@@ -257,7 +275,8 @@
    "base": -0.02,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqB_8",
@@ -267,7 +286,8 @@
    "base": 0.05,
    "hi": null,
    "tag": "Interested-party",
-   "src": "Citi：2027 Q2 見頂；Bernstein：2028 DRAM $/GB −52.9%（本路徑 2028 年均約 −47%）；2029 Assumed 溫和回升"
+   "src": "Citi：2027 Q2 見頂；Bernstein：2028 DRAM $/GB −52.9%（本路徑 2028 年均約 −47%）；2029 Assumed 溫和回升",
+   "src2": ""
   },
   {
    "id": "cqB_9",
@@ -277,7 +297,8 @@
    "base": 0.02,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqB_10",
@@ -287,7 +308,8 @@
    "base": -0.08,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqB_11",
@@ -297,7 +319,8 @@
    "base": -0.15,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqB_12",
@@ -307,7 +330,8 @@
    "base": -0.25,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqB_13",
@@ -317,7 +341,8 @@
    "base": -0.15,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqB_14",
@@ -327,7 +352,8 @@
    "base": -0.1,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqB_15",
@@ -337,7 +363,8 @@
    "base": -0.05,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqB_16",
@@ -347,7 +374,8 @@
    "base": 0.05,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqB_17",
@@ -357,7 +385,8 @@
    "base": 0.05,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqB_18",
@@ -367,7 +396,8 @@
    "base": 0.03,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqB_19",
@@ -377,7 +407,8 @@
    "base": 0.03,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqC_8",
@@ -387,7 +418,8 @@
    "base": 0.05,
    "hi": 0.1,
    "tag": "Assumed",
-   "src": "Assumed：2028 年底回到約 2025Q4 水準（自高點約 −79%），比照 2019、2023 年谷底；2029 自谷底回升。區間（v0.2）：2027 各季 ±5pt、2028–29 各季 ±10pt，表示路徑形狀的不確定（Assumed），不是另一個情境"
+   "src": "Assumed：2028 年底回到約 2025Q4 水準（自高點約 −79%），比照 2019、2023 年谷底；2029 自谷底回升。區間（v0.2）：2027 各季 ±5pt、2028–29 各季 ±10pt，表示路徑形狀的不確定（Assumed），不是另一個情境",
+   "src2": ""
   },
   {
    "id": "cqC_9",
@@ -397,7 +429,8 @@
    "base": 0.02,
    "hi": 0.07,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqC_10",
@@ -407,7 +440,8 @@
    "base": -0.08,
    "hi": -0.03,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqC_11",
@@ -417,7 +451,8 @@
    "base": -0.15,
    "hi": -0.1,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqC_12",
@@ -427,7 +462,8 @@
    "base": -0.35,
    "hi": -0.25,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqC_13",
@@ -437,7 +473,8 @@
    "base": -0.3,
    "hi": -0.2,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqC_14",
@@ -447,7 +484,8 @@
    "base": -0.25,
    "hi": -0.15,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqC_15",
@@ -457,7 +495,8 @@
    "base": -0.2,
    "hi": -0.1,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqC_16",
@@ -467,7 +506,8 @@
    "base": 0,
    "hi": 0.1,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqC_17",
@@ -477,7 +517,8 @@
    "base": 0.05,
    "hi": 0.15,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqC_18",
@@ -487,7 +528,8 @@
    "base": 0.08,
    "hi": 0.18,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "cqC_19",
@@ -497,7 +539,8 @@
    "base": 0.1,
    "hi": 0.2,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nq_1",
@@ -507,7 +550,8 @@
    "base": 0,
    "hi": null,
    "tag": "Interested-party",
-   "src": "TrendForce：1Q26 +85~90%、2Q26 +70~75%、3Q26 +10~15%（MS 實際約 +20%）、4Q26 +15~20%；2025Q2–Q4 為 Assumed"
+   "src": "TrendForce：1Q26 +85~90%、2Q26 +70~75%、3Q26 +10~15%（MS 實際約 +20%）、4Q26 +15~20%；2025Q2–Q4 為 Assumed",
+   "src2": ""
   },
   {
    "id": "nq_2",
@@ -517,7 +561,8 @@
    "base": 0.05,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nq_3",
@@ -527,7 +572,8 @@
    "base": 0.3,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nq_4",
@@ -537,7 +583,8 @@
    "base": 0.875,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nq_5",
@@ -547,7 +594,8 @@
    "base": 0.725,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nq_6",
@@ -557,7 +605,8 @@
    "base": 0.15,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nq_7",
@@ -567,7 +616,8 @@
    "base": 0.175,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqA_8",
@@ -577,7 +627,8 @@
    "base": 0.03,
    "hi": null,
    "tag": "Interested-party",
-   "src": "TrendForce：2027 下半年供需平衡、價格面臨下修壓力"
+   "src": "TrendForce：2027 下半年供需平衡、價格面臨下修壓力",
+   "src2": ""
   },
   {
    "id": "nqA_9",
@@ -587,7 +638,8 @@
    "base": 0,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqA_10",
@@ -597,7 +649,8 @@
    "base": -0.05,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqA_11",
@@ -607,7 +660,8 @@
    "base": -0.07,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqA_12",
@@ -617,7 +671,8 @@
    "base": -0.05,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqA_13",
@@ -627,7 +682,8 @@
    "base": -0.05,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqA_14",
@@ -637,7 +693,8 @@
    "base": -0.05,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqA_15",
@@ -647,7 +704,8 @@
    "base": -0.05,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqA_16",
@@ -657,7 +715,8 @@
    "base": -0.03,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqA_17",
@@ -667,7 +726,8 @@
    "base": -0.03,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqA_18",
@@ -677,7 +737,8 @@
    "base": -0.03,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqA_19",
@@ -687,7 +748,8 @@
    "base": -0.03,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqB_8",
@@ -697,7 +759,8 @@
    "base": 0.05,
    "hi": null,
    "tag": "Interested-party",
-   "src": "Citi：2027 Q2 見頂；Bernstein：NAND $/GB 2028 −68.8%"
+   "src": "Citi：2027 Q2 見頂；Bernstein：NAND $/GB 2028 −68.8%",
+   "src2": ""
   },
   {
    "id": "nqB_9",
@@ -707,7 +770,8 @@
    "base": 0.02,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqB_10",
@@ -717,7 +781,8 @@
    "base": -0.1,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqB_11",
@@ -727,7 +792,8 @@
    "base": -0.2,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqB_12",
@@ -737,7 +803,8 @@
    "base": -0.3,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqB_13",
@@ -747,7 +814,8 @@
    "base": -0.25,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqB_14",
@@ -757,7 +825,8 @@
    "base": -0.2,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqB_15",
@@ -767,7 +836,8 @@
    "base": -0.1,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqB_16",
@@ -777,7 +847,8 @@
    "base": 0.05,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqB_17",
@@ -787,7 +858,8 @@
    "base": 0.05,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqB_18",
@@ -797,7 +869,8 @@
    "base": 0.03,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqB_19",
@@ -807,7 +880,8 @@
    "base": 0.03,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqC_8",
@@ -817,7 +891,8 @@
    "base": 0.05,
    "hi": 0.1,
    "tag": "Assumed",
-   "src": "Assumed：回到約 2025 年水準。區間（v0.2）：2027 各季 ±5pt、2028–29 各季 ±10pt，表示路徑形狀的不確定（Assumed），不是另一個情境"
+   "src": "Assumed：回到約 2025 年水準。區間（v0.2）：2027 各季 ±5pt、2028–29 各季 ±10pt，表示路徑形狀的不確定（Assumed），不是另一個情境",
+   "src2": ""
   },
   {
    "id": "nqC_9",
@@ -827,7 +902,8 @@
    "base": 0.02,
    "hi": 0.07,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqC_10",
@@ -837,7 +913,8 @@
    "base": -0.1,
    "hi": -0.05,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqC_11",
@@ -847,7 +924,8 @@
    "base": -0.2,
    "hi": -0.15,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqC_12",
@@ -857,7 +935,8 @@
    "base": -0.35,
    "hi": -0.25,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqC_13",
@@ -867,7 +946,8 @@
    "base": -0.35,
    "hi": -0.25,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqC_14",
@@ -877,7 +957,8 @@
    "base": -0.25,
    "hi": -0.15,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqC_15",
@@ -887,7 +968,8 @@
    "base": -0.2,
    "hi": -0.1,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqC_16",
@@ -897,7 +979,8 @@
    "base": 0,
    "hi": 0.1,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqC_17",
@@ -907,7 +990,8 @@
    "base": 0.05,
    "hi": 0.15,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqC_18",
@@ -917,7 +1001,8 @@
    "base": 0.08,
    "hi": 0.18,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "nqC_19",
@@ -927,7 +1012,8 @@
    "base": 0.1,
    "hi": 0.2,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "sec": "M2. 加速器數量層（百萬顆）與每顆 HBM（GB）"
@@ -940,7 +1026,8 @@
    "base": 5.4,
    "hi": null,
    "tag": "Interested-party",
-   "src": "顆數：Morgan Stanley 2026-07（2026 5.4M）；AC Research 2027 約 2.4M；2028 Assumed。GB：B200 186、B300 288 組合 [Derived]"
+   "src": "顆數：Morgan Stanley 2026-07（2026 5.4M）；AC Research 2027 約 2.4M；2028 Assumed。GB：B200 186、B300 288 組合 [Derived]",
+   "src2": ""
   },
   {
    "id": "u_bw_27",
@@ -950,7 +1037,8 @@
    "base": 2.4,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "u_bw_28",
@@ -960,7 +1048,8 @@
    "base": 0.5,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_bw_26",
@@ -970,7 +1059,8 @@
    "base": 260,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_bw_27",
@@ -980,7 +1070,8 @@
    "base": 280,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_bw_28",
@@ -990,7 +1081,8 @@
    "base": 288,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "u_rb_26",
@@ -1000,7 +1092,8 @@
    "base": 1.7,
    "hi": null,
    "tag": "Interested-party",
-   "src": "2026：TrendForce 組合 Rubin 22% × 約 7.6M [Derived]；2027：Morgan Stanley 約 7.0M；2028 Assumed"
+   "src": "2026：TrendForce 組合 Rubin 22% × 約 7.6M [Derived]；2027：Morgan Stanley 約 7.0M；2028 Assumed",
+   "src2": ""
   },
   {
    "id": "u_rb_27",
@@ -1010,7 +1103,8 @@
    "base": 7,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "u_rb_28",
@@ -1020,7 +1114,8 @@
    "base": 7,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_rb_26",
@@ -1030,7 +1125,8 @@
    "base": 288,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_rb_27",
@@ -1040,7 +1136,8 @@
    "base": 288,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_rb_28",
@@ -1050,7 +1147,8 @@
    "base": 288,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "u_ru_26",
@@ -1060,7 +1158,8 @@
    "base": 0,
    "hi": 0,
    "tag": "Assumed",
-   "src": "時程 Assumed；GB：NVIDIA 1 TB／封裝。區間（v0.2）：顆數 2027 0–0.6、2028 1.0–3.0（Assumed：時程提前／延後一年）"
+   "src": "時程 Assumed；GB：NVIDIA 1 TB／封裝。區間（v0.2）：顆數 2027 0–0.6、2028 1.0–3.0（Assumed：時程提前／延後一年）",
+   "src2": ""
   },
   {
    "id": "u_ru_27",
@@ -1070,7 +1169,8 @@
    "base": 0.3,
    "hi": 0.6,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "u_ru_28",
@@ -1080,7 +1180,8 @@
    "base": 2,
    "hi": 3,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_ru_26",
@@ -1090,7 +1191,8 @@
    "base": 1024,
    "hi": null,
    "tag": "Interested-party",
-   "src": "NVIDIA：Rubin Ultra 每封裝 1 TB HBM（產品路線圖，v0.2 標記由 Assumed 改為 Interested-party：規格為公司公布，不是假設）"
+   "src": "NVIDIA：Rubin Ultra 每封裝 1 TB HBM（產品路線圖，v0.2 標記由 Assumed 改為 Interested-party：規格為公司公布，不是假設）",
+   "src2": ""
   },
   {
    "id": "g_ru_27",
@@ -1100,7 +1202,8 @@
    "base": 1024,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_ru_28",
@@ -1110,7 +1213,8 @@
    "base": 1024,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "u_hp_26",
@@ -1120,7 +1224,8 @@
    "base": 0.5,
    "hi": null,
    "tag": "Interested-party",
-   "src": "TrendForce 2026 組合 Hopper 7%"
+   "src": "TrendForce 2026 組合 Hopper 7%",
+   "src2": ""
   },
   {
    "id": "u_hp_27",
@@ -1130,7 +1235,8 @@
    "base": 0,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "u_hp_28",
@@ -1140,7 +1246,8 @@
    "base": 0,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_hp_26",
@@ -1150,7 +1257,8 @@
    "base": 141,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_hp_27",
@@ -1160,7 +1268,8 @@
    "base": 141,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_hp_28",
@@ -1170,7 +1279,8 @@
    "base": 141,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "u_amd_26",
@@ -1180,7 +1290,8 @@
    "base": 0.75,
    "hi": 0.9,
    "tag": "Interested-party／Assumed",
-   "src": "2027：Morgan Stanley MI455X 1.0M＋MI450 0.5M；其餘 Assumed。區間（v0.2）：顆數 2026 0.6–0.9、2027 1.2–1.8、2028 1.5–2.5；每顆 HBM 以 MI355X 288、MI450 432 為上下限"
+   "src": "2027：Morgan Stanley MI455X 1.0M＋MI450 0.5M；其餘 Assumed。區間（v0.2）：顆數 2026 0.6–0.9、2027 1.2–1.8、2028 1.5–2.5；每顆 HBM 以 MI355X 288、MI450 432 為上下限",
+   "src2": ""
   },
   {
    "id": "u_amd_27",
@@ -1190,7 +1301,8 @@
    "base": 1.5,
    "hi": 1.8,
    "tag": "Interested-party／Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "u_amd_28",
@@ -1200,7 +1312,8 @@
    "base": 2,
    "hi": 2.5,
    "tag": "Interested-party／Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_amd_26",
@@ -1210,7 +1323,8 @@
    "base": 288,
    "hi": 288,
    "tag": "Interested-party／Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_amd_27",
@@ -1220,7 +1334,8 @@
    "base": 360,
    "hi": 432,
    "tag": "Interested-party／Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_amd_28",
@@ -1230,7 +1345,8 @@
    "base": 432,
    "hi": 432,
    "tag": "Interested-party／Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "u_tpu_26",
@@ -1240,7 +1356,8 @@
    "base": 3.85,
    "hi": null,
    "tag": "Interested-party",
-   "src": "MS 3.2／5.0、GF 4.5／8.84（2026／2027）取中間偏 MS；2028 Assumed"
+   "src": "MS 3.2／5.0、GF 4.5／8.84（2026／2027）取中間偏 MS；2028 Assumed",
+   "src2": ""
   },
   {
    "id": "u_tpu_27",
@@ -1250,7 +1367,8 @@
    "base": 5.5,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "u_tpu_28",
@@ -1260,7 +1378,8 @@
    "base": 7,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_tpu_26",
@@ -1270,7 +1389,8 @@
    "base": 192,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_tpu_27",
@@ -1280,7 +1400,8 @@
    "base": 250,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_tpu_28",
@@ -1290,7 +1411,8 @@
    "base": 288,
    "hi": null,
    "tag": "Interested-party",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "u_trn_26",
@@ -1300,7 +1422,8 @@
    "base": 2,
    "hi": 2.5,
    "tag": "Assumed",
-   "src": "年出貨未找到；GB：Trn2 96、Trn3 144。區間（v0.2）：顆數 2026 1.5–2.5、2027 2.0–3.5、2028 2.0–4.0；每顆 HBM 以 Trn2 96、Trn3 144、下一代 256 為界"
+   "src": "年出貨未找到；GB：Trn2 96、Trn3 144。區間（v0.2）：顆數 2026 1.5–2.5、2027 2.0–3.5、2028 2.0–4.0；每顆 HBM 以 Trn2 96、Trn3 144、下一代 256 為界",
+   "src2": ""
   },
   {
    "id": "u_trn_27",
@@ -1310,7 +1433,8 @@
    "base": 2.5,
    "hi": 3.5,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "u_trn_28",
@@ -1320,7 +1444,8 @@
    "base": 3,
    "hi": 4,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_trn_26",
@@ -1330,7 +1455,8 @@
    "base": 110,
    "hi": 144,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_trn_27",
@@ -1340,7 +1466,8 @@
    "base": 144,
    "hi": 144,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_trn_28",
@@ -1350,7 +1477,8 @@
    "base": 200,
    "hi": 256,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "u_oth_26",
@@ -1360,7 +1488,8 @@
    "base": 1,
    "hi": 1.5,
    "tag": "Derived／Assumed",
-   "src": "2027：JPMorgan ASIC 12.5M − TPU − Trainium。區間（v0.2）：顆數 2026 0.5–1.5、2027 3.0–6.0、2028 3.5–7.0；每顆 HBM ±50 GB"
+   "src": "2027：JPMorgan ASIC 12.5M − TPU − Trainium。區間（v0.2）：顆數 2026 0.5–1.5、2027 3.0–6.0、2028 3.5–7.0；每顆 HBM ±50 GB",
+   "src2": ""
   },
   {
    "id": "u_oth_27",
@@ -1370,7 +1499,8 @@
    "base": 4.5,
    "hi": 6,
    "tag": "Derived／Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "u_oth_28",
@@ -1380,7 +1510,8 @@
    "base": 5,
    "hi": 7,
    "tag": "Derived／Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_oth_26",
@@ -1390,7 +1521,8 @@
    "base": 150,
    "hi": 200,
    "tag": "Derived／Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_oth_27",
@@ -1400,7 +1532,8 @@
    "base": 200,
    "hi": 250,
    "tag": "Derived／Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g_oth_28",
@@ -1410,7 +1543,8 @@
    "base": 250,
    "hi": 300,
    "tag": "Derived／Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "sec": "M2b. 情境顆數係數（2028–29 加速器顆數 ÷ 情境 A 基準；與台積電、Advantest 模型同一套）"
@@ -1423,7 +1557,8 @@
    "base": 1,
    "hi": null,
    "tag": "Derived",
-   "src": "A＝基準（定義為 1.0）；B＝AI 資本支出消化；C＝明顯下修。無外部預測可校準，B、C 區間皆 ±0.1；與 tsmc/build_tsmc.py 同值。HBM 需求位元、台積電 CoWoS 需求、Advantest 測試機需求用同一組係數。情境 A 為定義值 1.0（v0.2 標記由 Assumed 改為 Derived；B、C 仍為 Assumed，區間 ±0.1）"
+   "src": "A＝基準（定義為 1.0）；B＝AI 資本支出消化；C＝明顯下修。無外部預測可校準，B、C 區間皆 ±0.1；與 tsmc/build_tsmc.py 同值。HBM 需求位元、台積電 CoWoS 需求、Advantest 測試機需求用同一組係數。情境 A 為定義值 1.0（v0.2 標記由 Assumed 改為 Derived；B、C 仍為 Assumed，區間 ±0.1）",
+   "src2": ""
   },
   {
    "id": "um29_A",
@@ -1433,7 +1568,8 @@
    "base": 1,
    "hi": null,
    "tag": "Derived",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "um28_B",
@@ -1443,7 +1579,8 @@
    "base": 0.8,
    "hi": 0.9,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "um29_B",
@@ -1453,7 +1590,8 @@
    "base": 0.85,
    "hi": 0.95,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "um28_C",
@@ -1463,7 +1601,8 @@
    "base": 0.6,
    "hi": 0.7,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "um29_C",
@@ -1473,7 +1612,8 @@
    "base": 0.6,
    "hi": 0.7,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "sec": "M3. HBM 市場"
@@ -1486,7 +1626,8 @@
    "base": 35,
    "hi": 35,
    "tag": "Verified",
-   "src": "Micron TAM 約 $35B（2025-12 法說）；Yole 約 $34B"
+   "src": "Micron TAM 約 $35B（2025-12 法說）；Yole 約 $34B",
+   "src2": ""
   },
   {
    "id": "hbm_g26",
@@ -1496,7 +1637,8 @@
    "base": 0.7,
    "hi": 0.8,
    "tag": "Interested-party",
-   "src": "TrendForce：2026 >70%"
+   "src": "TrendForce：2026 >70%",
+   "src2": ""
   },
   {
    "id": "hbm_gross",
@@ -1506,7 +1648,8 @@
    "base": 1.15,
    "hi": 1.3,
    "tag": "Assumed",
-   "src": "封裝良率損失、庫存與未列入的買方（Epoch：CoWoS-L 良率 65–95%）"
+   "src": "封裝良率損失、庫存與未列入的買方（Epoch：CoWoS-L 良率 65–95%）",
+   "src2": ""
   },
   {
    "id": "hbm_sup27",
@@ -1516,7 +1659,8 @@
    "base": 0.55,
    "hi": 0.63,
    "tag": "Interested-party",
-   "src": "TrendForce 2027 +50–60%；JPMorgan 2026–28 CAGR 63%"
+   "src": "TrendForce 2027 +50–60%；JPMorgan 2026–28 CAGR 63%",
+   "src2": ""
   },
   {
    "id": "hbm_sup28",
@@ -1526,7 +1670,8 @@
    "base": 0.45,
    "hi": 0.63,
    "tag": "Assumed",
-   "src": "新廠 2028 才貢獻（TrendForce）；供給不隨需求情境變：2028 產能的設備與廠房在 2027 前已訂定，需求下修的結果是閒置產能與降價，不是減產"
+   "src": "新廠 2028 才貢獻（TrendForce）；供給不隨需求情境變：2028 產能的設備與廠房在 2027 前已訂定，需求下修的結果是閒置產能與降價，不是減產",
+   "src2": ""
   },
   {
    "id": "hbm_p26",
@@ -1536,7 +1681,8 @@
    "base": 14.6,
    "hi": 16,
    "tag": "Interested-party",
-   "src": "BofA $14.6/GB；DigiTimes HBM3E $12–12.8、HBM4 約 $16"
+   "src": "BofA $14.6/GB；DigiTimes HBM3E $12–12.8、HBM4 約 $16",
+   "src2": ""
   },
   {
    "id": "hbm_p27",
@@ -1546,7 +1692,8 @@
    "base": 0.8,
    "hi": 1.21,
    "tag": "Interested-party",
-   "src": "BofA +38%、JPM +54%、UBS +76–79%、TrendForce +121%；Micron：CY27 大部分已簽、大幅漲價"
+   "src": "BofA +38%、JPM +54%、UBS +76–79%、TrendForce +121%；Micron：CY27 大部分已簽、大幅漲價",
+   "src2": ""
   },
   {
    "id": "hbm_p28_A",
@@ -1556,7 +1703,8 @@
    "base": 0.1,
    "hi": 0.25,
    "tag": "Interested-party",
-   "src": "JPMorgan 2028 +25%（上限）"
+   "src": "JPMorgan 2028 +25%（上限）",
+   "src2": ""
   },
   {
    "id": "hbm_p28_B",
@@ -1566,7 +1714,8 @@
    "base": -0.25,
    "hi": -0.1,
    "tag": "Assumed",
-   "src": "一般 DRAM 大跌時 HBM 年約重議下修"
+   "src": "一般 DRAM 大跌時 HBM 年約重議下修",
+   "src2": ""
   },
   {
    "id": "hbm_p28_C",
@@ -1576,7 +1725,8 @@
    "base": -0.4,
    "hi": -0.25,
    "tag": "Assumed",
-   "src": "完整谷底"
+   "src": "完整谷底",
+   "src2": ""
   },
   {
    "id": "hbm_dem29",
@@ -1586,7 +1736,8 @@
    "base": 0.3,
    "hi": 0.45,
    "tag": "Assumed",
-   "src": "2029 無顆數預測；Micron：HBM 位元成長快於一般 DRAM 至 2028"
+   "src": "2029 無顆數預測；Micron：HBM 位元成長快於一般 DRAM 至 2028",
+   "src2": ""
   },
   {
    "id": "hbm_sup29",
@@ -1596,7 +1747,8 @@
    "base": 0.35,
    "hi": 0.5,
    "tag": "Assumed",
-   "src": "P5、龍仁、M15X 等新廠 2028–29 投產"
+   "src": "P5、龍仁、M15X 等新廠 2028–29 投產",
+   "src2": ""
   },
   {
    "id": "hbm_p29_A",
@@ -1606,7 +1758,8 @@
    "base": -0.05,
    "hi": 0.05,
    "tag": "Assumed",
-   "src": "Assumed：2029 無外部預測；供給新廠（P5、龍仁、M15X）投產下單價緩降"
+   "src": "Assumed：2029 無外部預測；供給新廠（P5、龍仁、M15X）投產下單價緩降",
+   "src2": ""
   },
   {
    "id": "hbm_p29_B",
@@ -1616,7 +1769,8 @@
    "base": 0,
    "hi": 0.1,
    "tag": "Assumed",
-   "src": "Assumed：2029 無外部預測；2028 已下修後持平"
+   "src": "Assumed：2029 無外部預測；2028 已下修後持平",
+   "src2": ""
   },
   {
    "id": "hbm_p29_C",
@@ -1626,7 +1780,8 @@
    "base": 0.05,
    "hi": 0.15,
    "tag": "Assumed",
-   "src": "自谷底回升"
+   "src": "自谷底回升",
+   "src2": ""
   },
   {
    "sec": "M4. 對帳用（橋接表 v0.2、已發布）"
@@ -1639,7 +1794,8 @@
    "base": 374,
    "hi": 400,
    "tag": "Verified／Assumed",
-   "src": "FY27 Q1 75.2、Q2 89.0（8-K）；Q3 指引總營收 108（資料中心取 100）；Q4 Assumed 110"
+   "src": "FY27 Q1 75.2、Q2 89.0（8-K）；Q3 指引總營收 108（資料中心取 100）；Q4 Assumed 110",
+   "src2": ""
   },
   {
    "id": "nv_content",
@@ -1649,7 +1805,8 @@
    "base": 42.8,
    "hi": 48,
    "tag": "Derived",
-   "src": "markets/chip_bridge v0.2（Tokenomics v19.0：GB300 機架基準價 $4.3M；v0.1 為 51.6）"
+   "src": "markets/chip_bridge v0.2（Tokenomics v19.0：GB300 機架基準價 $4.3M；v0.1 為 51.6）",
+   "src2": ""
   },
   {
    "id": "nv_hbm",
@@ -1659,7 +1816,8 @@
    "base": 4.46,
    "hi": 4.9,
    "tag": "Derived",
-   "src": "markets/chip_bridge v0.2（與 v0.1 相同）"
+   "src": "markets/chip_bridge v0.2（與 v0.1 相同）",
+   "src2": ""
   },
   {
    "id": "pub26_lo",
@@ -1669,7 +1827,8 @@
    "base": 54.6,
    "hi": null,
    "tag": "Interested-party",
-   "src": "Motley Fool／글로벌이코노믹 2026-09"
+   "src": "Motley Fool／글로벌이코노믹 2026-09",
+   "src2": ""
   },
   {
    "id": "pub26_hi",
@@ -1679,7 +1838,8 @@
    "base": 77.4,
    "hi": null,
    "tag": "Interested-party",
-   "src": "BofA 2026-08-07"
+   "src": "BofA 2026-08-07",
+   "src2": ""
   },
   {
    "id": "pub27",
@@ -1689,7 +1849,8 @@
    "base": 152.8,
    "hi": null,
    "tag": "Interested-party",
-   "src": "BofA；JPMorgan 2027–28 為 160–282"
+   "src": "BofA；JPMorgan 2027–28 為 160–282",
+   "src2": ""
   },
   {
    "sec": "M5. 2029 加速器顆數成長（平台別；v0.2 起單一來源，取代台積電與網通模型各自的寫死值、NAND 模型的合計年增）"
@@ -1702,7 +1863,8 @@
    "base": -0.5,
    "hi": -0.3,
    "tag": "Assumed",
-   "src": "2029 無平台別顆數預測。基準沿用台積電模型 tsmc/build_tsmc.py 與網通模型的原值（Blackwell −50% 汰換、Hopper 0、其餘 +15%）；區間 ±10pt（Blackwell ±20pt）。R4 產業部署路徑上線後改由部署 GW 推導"
+   "src": "2029 無平台別顆數預測。基準沿用台積電模型 tsmc/build_tsmc.py 與網通模型的原值（Blackwell −50% 汰換、Hopper 0、其餘 +15%）；區間 ±10pt（Blackwell ±20pt）。R4 產業部署路徑上線後改由部署 GW 推導",
+   "src2": ""
   },
   {
    "id": "g29_rb",
@@ -1712,7 +1874,8 @@
    "base": 0.15,
    "hi": 0.25,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g29_ru",
@@ -1722,7 +1885,8 @@
    "base": 0.15,
    "hi": 0.25,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g29_hp",
@@ -1732,7 +1896,8 @@
    "base": 0,
    "hi": 0,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g29_amd",
@@ -1742,7 +1907,8 @@
    "base": 0.15,
    "hi": 0.25,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g29_tpu",
@@ -1752,7 +1918,8 @@
    "base": 0.15,
    "hi": 0.25,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g29_trn",
@@ -1762,7 +1929,8 @@
    "base": 0.15,
    "hi": 0.25,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
   },
   {
    "id": "g29_oth",
@@ -1772,12 +1940,456 @@
    "base": 0.15,
    "hi": 0.25,
    "tag": "Assumed",
-   "src": "同上"
+   "src": "同上",
+   "src2": ""
+  },
+  {
+   "sec": "M6. 加速器每顆售價與 ASIC 核心價（v0.3 起單一來源；原在 nvidia／avgo 模型 In 頁，數值與文字逐字搬入）"
+  },
+  {
+   "id": "pa_amd",
+   "label": "AMD Instinct 每顆",
+   "unit": "US$K",
+   "lo": 20,
+   "base": 30,
+   "hi": 45,
+   "tag": "Interested-party",
+   "src": "MI355X：HSBC 約 $23K（自 $25K 下修）、其他報導 $20–25K；MI455X 無官方價，部落格 $15–50K（finviz、gpusmith、MikeLongTerm；賣方有目標價誘因）",
+   "src2": "第二來源：以上三者互相一致於 $20–25K（MI355X）；MI455X 無獨立來源"
+  },
+  {
+   "id": "pa_tpu",
+   "label": "Google TPU 每顆",
+   "unit": "US$K",
+   "lo": 8,
+   "base": 12,
+   "hi": 18,
+   "tag": "Assumed",
+   "src": "無：每顆 ASP 未找到（只有租用價代理：Ironwood $1.03–1.60／小時，SemiAnalysis，不可單獨使用）",
+   "src2": "未找到"
+  },
+  {
+   "id": "pa_trn",
+   "label": "AWS Trainium 每顆",
+   "unit": "US$K",
+   "lo": 5,
+   "base": 8,
+   "hi": 12,
+   "tag": "Assumed",
+   "src": "無：每顆 ASP 未找到",
+   "src2": "Maia 200 約為 NVIDIA（逾 $30K）的 30–40%＝$9–12K（二手，cryptobriefing）作量級參照"
+  },
+  {
+   "id": "pa_oth",
+   "label": "其他 ASIC 每顆",
+   "unit": "US$K",
+   "lo": 5,
+   "base": 8,
+   "hi": 12,
+   "tag": "Assumed",
+   "src": "無：未找到（Maia、MTIA 皆無 ASP）",
+   "src2": "同上"
+  },
+  {
+   "id": "core_tpu",
+   "label": "TPU 每顆核心售價（Broadcom 營收，不含 HBM；2026 基準）",
+   "unit": "US$K",
+   "lo": 6,
+   "base": 8,
+   "hi": 11,
+   "tag": "Assumed",
+   "src": "無：每顆 ASP 未揭露。NVIDIA 模型 pa_tpu（含 HBM）8–12–18K；192 GB × 2026 HBM 價約 2.8K",
+   "src2": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx｜In!E146（含 HBM 的對照值）"
+  },
+  {
+   "id": "core_oth",
+   "label": "其他 ASIC 每顆核心售價（Broadcom 營收，不含 HBM；2026 基準）",
+   "unit": "US$K",
+   "lo": 4,
+   "base": 6,
+   "hi": 9,
+   "tag": "Assumed",
+   "src": "無：未揭露。Maia 200 約為 NVIDIA 的 30–40%＝$9–12K（二手，含 HBM）作量級參照",
+   "src2": "nvidia/dist/20261025_NVIDIA模型_v0.2.1.xlsx｜In!E148（含 HBM 的對照值）"
+  },
+  {
+   "id": "f_hbm",
+   "label": "HBM 由 Broadcom 代購並計入營收的比例",
+   "unit": "x",
+   "lo": 0.3,
+   "base": 0.6,
+   "hi": 1,
+   "tag": "Assumed",
+   "src": "公司：毛利率下滑來自「記憶體含量高的 XPU」占比上升（Q3 FY26 法說，二手）→ 至少部分 HBM 經 Broadcom 轉售",
+   "src2": "第二來源：未找到。客戶自購 HBM（consigned）的比例未揭露"
+  },
+  {
+   "sec": "M7. ASIC 設計服務顆數份額（v0.3 起單一來源；原在 avgo、mrvl、mediatek、alchip 模型 In 頁；加總檢查見 ShareTbl 頁）"
+  },
+  {
+   "id": "sh_tpu_26",
+   "label": "Broadcom 占 Google TPU 顆數 2026",
+   "unit": "%",
+   "lo": 0.8,
+   "base": 0.9,
+   "hi": 1,
+   "tag": "Assumed",
+   "src": "Broadcom 為 TPU 主要設計夥伴（Ironwood／v7、v8i 量產；法說）；Google 與 MediaTek 另有合作（Counterpoint 2026-01，二手）",
+   "src2": "各家份額未揭露：未找到"
+  },
+  {
+   "id": "sh_tpu_27",
+   "label": "Broadcom 占 Google TPU 顆數 2027",
+   "unit": "%",
+   "lo": 0.6,
+   "base": 0.8,
+   "hi": 0.9,
+   "tag": "Assumed",
+   "src": "同上；MediaTek 版 TPU 放量的時點未揭露",
+   "src2": "Anthropic 2027 年約 5 GW 的 TPU v8i（公司說法，Interested-party）屬 Broadcom"
+  },
+  {
+   "id": "sh_tpu_28",
+   "label": "Broadcom 占 Google TPU 顆數 2028（2029 沿用）",
+   "unit": "%",
+   "lo": 0.5,
+   "base": 0.75,
+   "hi": 0.9,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "sh_oth_26",
+   "label": "Broadcom 占「其他 ASIC」顆數 2026",
+   "unit": "%",
+   "lo": 0.2,
+   "base": 0.35,
+   "hi": 0.5,
+   "tag": "Assumed",
+   "src": "其他 ASIC＝MTIA（Broadcom）、OpenAI 客製（Broadcom，2026 Q3 開始出貨）、Maia（非 Broadcom）、昇騰（華為）等",
+   "src2": "XPU 客戶 6 家：Google、Anthropic、OpenAI、Meta＋2 家未具名（法說，二手）"
+  },
+  {
+   "id": "sh_oth_27",
+   "label": "Broadcom 占「其他 ASIC」顆數 2027",
+   "unit": "%",
+   "lo": 0.4,
+   "base": 0.55,
+   "hi": 0.7,
+   "tag": "Assumed",
+   "src": "OpenAI 2027 年 1.3 GW、Meta 至 2028 年共 3 GW（公司說法，Interested-party）",
+   "src2": "—"
+  },
+  {
+   "id": "sh_oth_28",
+   "label": "Broadcom 占「其他 ASIC」顆數 2028（2029 沿用）",
+   "unit": "%",
+   "lo": 0.4,
+   "base": 0.55,
+   "hi": 0.7,
+   "tag": "Assumed",
+   "src": "OpenAI 2028 年 5 GW 以上（公司說法）",
+   "src2": "—"
+  },
+  {
+   "id": "msh_trn_26",
+   "label": "Marvell 占 AWS Trainium 顆數 CY2026",
+   "unit": "%",
+   "lo": 0.05,
+   "base": 0.1,
+   "hi": 0.2,
+   "tag": "Assumed",
+   "src": "Marvell 供應 Trainium 2、Inferentia；Trainium 3 主供應商為世芯（Alchip），Marvell 做 Trainium 2.5（Dolphin Research 2026-03-06，二手）",
+   "src2": "各世代份額未揭露：未找到"
+  },
+  {
+   "id": "msh_trn_27",
+   "label": "Marvell 占 AWS Trainium 顆數 CY2027",
+   "unit": "%",
+   "lo": 0.05,
+   "base": 0.1,
+   "hi": 0.2,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "msh_trn_28",
+   "label": "Marvell 占 AWS Trainium 顆數 CY2028（CY2029 沿用）",
+   "unit": "%",
+   "lo": 0,
+   "base": 0.08,
+   "hi": 0.2,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "msh_oth_26",
+   "label": "Marvell 占 其他 ASIC（MTIA、Maia、Ascend 等） 顆數 CY2026",
+   "unit": "%",
+   "lo": 0.02,
+   "base": 0.05,
+   "hi": 0.1,
+   "tag": "Assumed",
+   "src": "Microsoft：Maia 由 Marvell 設計，Maia 300 自 CY2027 起多 GW 部署（Motley Fool／Webull 轉述 Nadella，二手）；新 Tier 1 XPU 於 FY2028 量產（公司，Q4 FY26 法說）",
+   "src2": "其他 ASIC 含 MTIA、昇騰等非 Marvell 晶片；Broadcom 占 35%／55%／55%"
+  },
+  {
+   "id": "msh_oth_27",
+   "label": "Marvell 占 其他 ASIC（MTIA、Maia、Ascend 等） 顆數 CY2027",
+   "unit": "%",
+   "lo": 0.03,
+   "base": 0.06,
+   "hi": 0.12,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "msh_oth_28",
+   "label": "Marvell 占 其他 ASIC（MTIA、Maia、Ascend 等） 顆數 CY2028（CY2029 沿用）",
+   "unit": "%",
+   "lo": 0.08,
+   "base": 0.15,
+   "hi": 0.25,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "msh_tpu_26",
+   "label": "Marvell 占 Google TPU 顆數 CY2026",
+   "unit": "%",
+   "lo": 0,
+   "base": 0,
+   "hi": 0.02,
+   "tag": "Assumed",
+   "src": "Google：擴大合作（2026-07，客製處理器與相關晶片）；認股權證協議（歸屬上限 $120B），主要營收影響在 FY2029 起（投資人日，二手）",
+   "src2": "Google 案是否為 TPU 平台：未找到（可能為 Axion CPU 或其他）；Broadcom 占 TPU 75%（CY2028）"
+  },
+  {
+   "id": "msh_tpu_27",
+   "label": "Marvell 占 Google TPU 顆數 CY2027",
+   "unit": "%",
+   "lo": 0,
+   "base": 0,
+   "hi": 0.05,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "msh_tpu_28",
+   "label": "Marvell 占 Google TPU 顆數 CY2028（CY2029 沿用）",
+   "unit": "%",
+   "lo": 0,
+   "base": 0.05,
+   "hi": 0.15,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "mtk_tpu_26",
+   "label": "聯發科占 Google TPU 顆數 CY2026",
+   "unit": "%",
+   "lo": 0.03,
+   "base": 0.05,
+   "hi": 0.1,
+   "tag": "Assumed",
+   "src": "公司：與一家美國大型雲端客戶合作的第一顆 AI 加速器 ASIC 於 4Q26 量產；第二顆 2028 年量產（2Q26 講稿）；客戶名稱公司未揭露",
+   "src2": "凱基 2026-07-23：v8x Zebrafish（4Q26 起）、v9 Humufish（4Q27 起）為 Google TPU（Interested-party）；高值受 avgo、mrvl 份額限制（1 − Broadcom − Marvell 基準）"
+  },
+  {
+   "id": "mtk_tpu_27",
+   "label": "聯發科占 Google TPU 顆數 CY2027",
+   "unit": "%",
+   "lo": 0.08,
+   "base": 0.15,
+   "hi": 0.2,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "mtk_tpu_28",
+   "label": "聯發科占 Google TPU 顆數 CY2028（CY2029 沿用）",
+   "unit": "%",
+   "lo": 0.1,
+   "base": 0.18,
+   "hi": 0.2,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "mtk_oth_26",
+   "label": "聯發科占 其他 ASIC（MTIA、Maia、Ascend 等） 顆數 CY2026",
+   "unit": "%",
+   "lo": 0,
+   "base": 0,
+   "hi": 0.02,
+   "tag": "Assumed",
+   "src": "公司：與其他多家客戶接觸中、資料中心有望取得更多設計案（2Q26 講稿）",
+   "src2": "第二客戶與量產時點：未找到；基準 0，只放 Sens"
+  },
+  {
+   "id": "mtk_oth_27",
+   "label": "聯發科占 其他 ASIC（MTIA、Maia、Ascend 等） 顆數 CY2027",
+   "unit": "%",
+   "lo": 0,
+   "base": 0,
+   "hi": 0.03,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "mtk_oth_28",
+   "label": "聯發科占 其他 ASIC（MTIA、Maia、Ascend 等） 顆數 CY2028（CY2029 沿用）",
+   "unit": "%",
+   "lo": 0,
+   "base": 0,
+   "hi": 0.05,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "al_trn_26",
+   "label": "世芯占 AWS Trainium 顆數 CY2026（三情境相同，校準年）",
+   "unit": "%",
+   "lo": 0.2,
+   "base": 0.3,
+   "hi": 0.4,
+   "tag": "Assumed",
+   "src": "公司：3 奈米 AI 加速器 5 月底量產、6 月出貨給北美雲端客戶（2Q26 新聞稿）；Trainium 3 主供應商為世芯（Marvell 模型引 Dolphin Research，二手）",
+   "src2": "CY2026 份額只用於校準（k_x 吸收）；CY2027 起 A 最有利、C 最不利；高值以 1 − Marvell 基準為上限"
+  },
+  {
+   "id": "al27_A",
+   "label": "世芯占 AWS Trainium 顆數 CY2027（情境 A）",
+   "unit": "%",
+   "lo": 0.4,
+   "base": 0.55,
+   "hi": 0.75,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "CY2026 份額只用於校準（k_x 吸收）；CY2027 起 A 最有利、C 最不利；高值以 1 − Marvell 基準為上限"
+  },
+  {
+   "id": "al27_B",
+   "label": "世芯占 AWS Trainium 顆數 CY2027（情境 B）",
+   "unit": "%",
+   "lo": 0.4,
+   "base": 0.5,
+   "hi": 0.75,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "al27_C",
+   "label": "世芯占 AWS Trainium 顆數 CY2027（情境 C）",
+   "unit": "%",
+   "lo": 0.3,
+   "base": 0.4,
+   "hi": 0.75,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "—"
+  },
+  {
+   "id": "al28_A",
+   "label": "世芯占 AWS Trainium 顆數 CY2028（情境 A；CY2029 沿用）",
+   "unit": "%",
+   "lo": 0.35,
+   "base": 0.55,
+   "hi": 0.85,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "CY2026 份額只用於校準（k_x 吸收）；CY2027 起 A 最有利、C 最不利；高值以 1 − Marvell 基準為上限"
+  },
+  {
+   "id": "al28_B",
+   "label": "世芯占 AWS Trainium 顆數 CY2028（情境 B；CY2029 沿用）",
+   "unit": "%",
+   "lo": 0.3,
+   "base": 0.45,
+   "hi": 0.85,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "CY2028 為 Trainium 4（2 奈米）換代；世芯負責後段設計（法說），2028 份額未揭露：未找到"
+  },
+  {
+   "id": "al28_C",
+   "label": "世芯占 AWS Trainium 顆數 CY2028（情境 C；CY2029 沿用）",
+   "unit": "%",
+   "lo": 0.2,
+   "base": 0.35,
+   "hi": 0.85,
+   "tag": "Assumed",
+   "src": "同上",
+   "src2": "CY2028 為 Trainium 4（2 奈米）換代；世芯負責後段設計（法說），2028 份額未揭露：未找到"
   }
  ],
  "names": {
   "SGOV_Errors": 0,
   "SGOV_Warn": 2,
+  "SIF_al27_A": 0.55,
+  "SIF_al27_A_hi": 0.75,
+  "SIF_al27_A_lo": 0.4,
+  "SIF_al27_B": 0.5,
+  "SIF_al27_B_hi": 0.75,
+  "SIF_al27_B_lo": 0.4,
+  "SIF_al27_C": 0.4,
+  "SIF_al27_C_hi": 0.75,
+  "SIF_al27_C_lo": 0.3,
+  "SIF_al28_A": 0.55,
+  "SIF_al28_A_hi": 0.85,
+  "SIF_al28_A_lo": 0.35,
+  "SIF_al28_B": 0.45,
+  "SIF_al28_B_hi": 0.85,
+  "SIF_al28_B_lo": 0.3,
+  "SIF_al28_C": 0.35,
+  "SIF_al28_C_hi": 0.85,
+  "SIF_al28_C_lo": 0.2,
+  "SIF_al_trn_26": 0.3,
+  "SIF_al_trn_26_hi": 0.4,
+  "SIF_al_trn_26_lo": 0.2,
+  "SIF_ASICShareSum_oth": [
+   0.4,
+   0.61,
+   0.7
+  ],
+  "SIF_ASICShareSum_tpu": [
+   0.95,
+   0.95,
+   0.98
+  ],
+  "SIF_ASICShareSum_trnA": [
+   0.4,
+   0.65,
+   0.63
+  ],
+  "SIF_ASICShareSum_trnB": [
+   0.4,
+   0.6,
+   0.53
+  ],
+  "SIF_ASICShareSum_trnC": [
+   0.4,
+   0.5,
+   0.43
+  ],
+  "SIF_core_oth": 6,
+  "SIF_core_oth_hi": 9,
+  "SIF_core_oth_lo": 4,
+  "SIF_core_tpu": 8,
+  "SIF_core_tpu_hi": 11,
+  "SIF_core_tpu_lo": 6,
   "SIF_cqA_10": -0.02,
   "SIF_cqA_11": -0.03,
   "SIF_cqA_12": -0.03,
@@ -1845,6 +2457,9 @@
   "SIF_cq_5": 0.605,
   "SIF_cq_6": 0.155,
   "SIF_cq_7": 0.125,
+  "SIF_f_hbm": 0.6,
+  "SIF_f_hbm_hi": 1,
+  "SIF_f_hbm_lo": 0.3,
   "SIF_g29_amd": 0.15,
   "SIF_g29_amd_hi": 0.25,
   "SIF_g29_amd_lo": 0.05,
@@ -2068,6 +2683,51 @@
    8.5016070125,
    11.477169466875
   ],
+  "SIF_msh_oth_26": 0.05,
+  "SIF_msh_oth_26_hi": 0.1,
+  "SIF_msh_oth_26_lo": 0.02,
+  "SIF_msh_oth_27": 0.06,
+  "SIF_msh_oth_27_hi": 0.12,
+  "SIF_msh_oth_27_lo": 0.03,
+  "SIF_msh_oth_28": 0.15,
+  "SIF_msh_oth_28_hi": 0.25,
+  "SIF_msh_oth_28_lo": 0.08,
+  "SIF_msh_tpu_26": 0,
+  "SIF_msh_tpu_26_hi": 0.02,
+  "SIF_msh_tpu_26_lo": 0,
+  "SIF_msh_tpu_27": 0,
+  "SIF_msh_tpu_27_hi": 0.05,
+  "SIF_msh_tpu_27_lo": 0,
+  "SIF_msh_tpu_28": 0.05,
+  "SIF_msh_tpu_28_hi": 0.15,
+  "SIF_msh_tpu_28_lo": 0,
+  "SIF_msh_trn_26": 0.1,
+  "SIF_msh_trn_26_hi": 0.2,
+  "SIF_msh_trn_26_lo": 0.05,
+  "SIF_msh_trn_27": 0.1,
+  "SIF_msh_trn_27_hi": 0.2,
+  "SIF_msh_trn_27_lo": 0.05,
+  "SIF_msh_trn_28": 0.08,
+  "SIF_msh_trn_28_hi": 0.2,
+  "SIF_msh_trn_28_lo": 0,
+  "SIF_mtk_oth_26": 0,
+  "SIF_mtk_oth_26_hi": 0.02,
+  "SIF_mtk_oth_26_lo": 0,
+  "SIF_mtk_oth_27": 0,
+  "SIF_mtk_oth_27_hi": 0.03,
+  "SIF_mtk_oth_27_lo": 0,
+  "SIF_mtk_oth_28": 0,
+  "SIF_mtk_oth_28_hi": 0.05,
+  "SIF_mtk_oth_28_lo": 0,
+  "SIF_mtk_tpu_26": 0.05,
+  "SIF_mtk_tpu_26_hi": 0.1,
+  "SIF_mtk_tpu_26_lo": 0.03,
+  "SIF_mtk_tpu_27": 0.15,
+  "SIF_mtk_tpu_27_hi": 0.2,
+  "SIF_mtk_tpu_27_lo": 0.08,
+  "SIF_mtk_tpu_28": 0.18,
+  "SIF_mtk_tpu_28_hi": 0.2,
+  "SIF_mtk_tpu_28_lo": 0.1,
   "SIF_nqA_10": -0.05,
   "SIF_nqA_11": -0.07,
   "SIF_nqA_12": -0.05,
@@ -2144,9 +2804,39 @@
   "SIF_nv_hbm": 4.46,
   "SIF_nv_hbm_hi": 4.9,
   "SIF_nv_hbm_lo": 3.5,
+  "SIF_pa_amd": 30,
+  "SIF_pa_amd_hi": 45,
+  "SIF_pa_amd_lo": 20,
+  "SIF_pa_oth": 8,
+  "SIF_pa_oth_hi": 12,
+  "SIF_pa_oth_lo": 5,
+  "SIF_pa_tpu": 12,
+  "SIF_pa_tpu_hi": 18,
+  "SIF_pa_tpu_lo": 8,
+  "SIF_pa_trn": 8,
+  "SIF_pa_trn_hi": 12,
+  "SIF_pa_trn_lo": 5,
   "SIF_pub26_hi": 77.4,
   "SIF_pub26_lo": 54.6,
   "SIF_pub27": 152.8,
+  "SIF_sh_oth_26": 0.35,
+  "SIF_sh_oth_26_hi": 0.5,
+  "SIF_sh_oth_26_lo": 0.2,
+  "SIF_sh_oth_27": 0.55,
+  "SIF_sh_oth_27_hi": 0.7,
+  "SIF_sh_oth_27_lo": 0.4,
+  "SIF_sh_oth_28": 0.55,
+  "SIF_sh_oth_28_hi": 0.7,
+  "SIF_sh_oth_28_lo": 0.4,
+  "SIF_sh_tpu_26": 0.9,
+  "SIF_sh_tpu_26_hi": 1,
+  "SIF_sh_tpu_26_lo": 0.8,
+  "SIF_sh_tpu_27": 0.8,
+  "SIF_sh_tpu_27_hi": 0.9,
+  "SIF_sh_tpu_27_lo": 0.6,
+  "SIF_sh_tpu_28": 0.75,
+  "SIF_sh_tpu_28_hi": 0.9,
+  "SIF_sh_tpu_28_lo": 0.5,
   "SIF_TK_CapexFacility_GB200": 12.67,
   "SIF_TK_CapexFacility_GB200_hi": 16.186,
   "SIF_TK_CapexFacility_GB200_lo": 10.212,

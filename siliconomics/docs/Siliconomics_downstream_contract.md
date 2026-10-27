@@ -1,4 +1,4 @@
-# Siliconomics 下游資料契約 v0.2（2026-10-27；對應 Siliconomics v0.2、Tokenomics v21.7）
+# Siliconomics 下游資料契約 v0.3（2026-10-27；對應 Siliconomics v0.3、Tokenomics v21.7）
 
 適用對象：`company-models` 內 AI 半導體 Project 的市場層（`markets/*`）與公司模型（每家公司一個資料夾），以及其他專案取用晶片產業資料時（經 Drive `00-共用情境/交流/`）。
 
@@ -25,5 +25,6 @@
 |---|---|---|---|
 | v0.1 | 2026-10-27 | `SIF_` 輸入 161 個（＋ `_lo`／`_hi`）、推導 20 列、`SIF_TK_*` 鏡像；`SGOV_Errors`、`SGOV_Warn` | 由 `markets/memory/market.py` 逐字搬入（加速器顆數、每顆 HBM、情境係數、DRAM／NAND 季價、HBM 市場、對帳參考）；`market.py` 改讀快照，38 個下游建檔程式不需修改、重建後逐格相同 |
 | v0.2 | 2026-10-27 | 新增輸入 `SIF_g29_*`（8 個，2029 平台別顆數成長）；新增推導 `SIF_UnitsPlat_*`（平台別、合計、A／B／C 合計，2026–2029）、`SIF_UnitsGrowth29`；既有名稱的基準值不變，Assumed 列補 `_lo`／`_hi` | `market.py` 新增 `G29`、`G_U29`；tsmc、network 讀 `G29`，nand 讀 `G_U29` |
+| v0.3 | 2026-10-27 | 新增輸入 `SIF_pa_*`、`SIF_core_*`、`SIF_f_hbm`、`SIF_sh_*`、`SIF_msh_*`、`SIF_mtk_*`、`SIF_al*`（35 個）；推導 `SIF_ASICShareSum_*`（5 列） | 新增 `siliconomics/reader.py`（`row8`／`row9`／`V`／`NAMES`）；nvidia、avgo、mrvl、mediatek、alchip 改讀；取數規則第 2 條：公司建檔程式可直接 import reader，不必經 market.py |
 
 版本號：只改證據、標記、文字為修補版（v0.1.x）；輸入值或公式改變為次版（v0.x）；Interface 名稱刪除或定義改變為主版（v1.0 前只新增名稱以次版處理）。

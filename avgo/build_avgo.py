@@ -12,6 +12,8 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 sys.path.insert(0, os.path.join(ROOT, "nvidia"))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))   # 本資料夾的 tp_v2.py 優先
 import market as MEM
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 import cycle_position as CP
 import tp_v2 as TP
 import accel_share as AS          # 加速器金額份額的可重用函式（NVIDIA 模型建立；AVGO 為 ASIC 側）
@@ -99,15 +101,8 @@ for k in XP:
         inp(f"gb_{k}_{y}", f"{PNAME[k]} 每顆 HBM 20{y}", "GB", None, gb[i], None, "Interested-party" if k == "tpu" else "Derived／Assumed", "markets/memory/market.py UNITS", "2029 沿用 2028" if i == 0 else "同上")
 
 sec("B. ASIC 每顆規格（本專案為權威，規則第 13 條）：Broadcom 在各平台的顆數份額、每顆核心售價（不含 HBM）、HBM 由 Broadcom 代購的比例")
-inp("sh_tpu_26", "Broadcom 占 Google TPU 顆數 2026", "%", 0.80, 0.90, 1.0, "Assumed", "Broadcom 為 TPU 主要設計夥伴（Ironwood／v7、v8i 量產；法說）；Google 與 MediaTek 另有合作（Counterpoint 2026-01，二手）", "各家份額未揭露：未找到")
-inp("sh_tpu_27", "Broadcom 占 Google TPU 顆數 2027", "%", 0.60, 0.80, 0.90, "Assumed", "同上；MediaTek 版 TPU 放量的時點未揭露", "Anthropic 2027 年約 5 GW 的 TPU v8i（公司說法，Interested-party）屬 Broadcom")
-inp("sh_tpu_28", "Broadcom 占 Google TPU 顆數 2028（2029 沿用）", "%", 0.50, 0.75, 0.90, "Assumed", "同上", "—")
-inp("sh_oth_26", "Broadcom 占「其他 ASIC」顆數 2026", "%", 0.20, 0.35, 0.50, "Assumed", "其他 ASIC＝MTIA（Broadcom）、OpenAI 客製（Broadcom，2026 Q3 開始出貨）、Maia（非 Broadcom）、昇騰（華為）等", "XPU 客戶 6 家：Google、Anthropic、OpenAI、Meta＋2 家未具名（法說，二手）")
-inp("sh_oth_27", "Broadcom 占「其他 ASIC」顆數 2027", "%", 0.40, 0.55, 0.70, "Assumed", "OpenAI 2027 年 1.3 GW、Meta 至 2028 年共 3 GW（公司說法，Interested-party）", "—")
-inp("sh_oth_28", "Broadcom 占「其他 ASIC」顆數 2028（2029 沿用）", "%", 0.40, 0.55, 0.70, "Assumed", "OpenAI 2028 年 5 GW 以上（公司說法）", "—")
-inp("core_tpu", "TPU 每顆核心售價（Broadcom 營收，不含 HBM；2026 基準）", "US$K", 6, 8, 11, "Assumed", "無：每顆 ASP 未揭露。NVIDIA 模型 pa_tpu（含 HBM）8–12–18K；192 GB × 2026 HBM 價約 2.8K", NVP["pa_tpu"][1] + "（含 HBM 的對照值）")
-inp("core_oth", "其他 ASIC 每顆核心售價（Broadcom 營收，不含 HBM；2026 基準）", "US$K", 4, 6, 9, "Assumed", "無：未揭露。Maia 200 約為 NVIDIA 的 30–40%＝$9–12K（二手，含 HBM）作量級參照", NVP["pa_oth"][1] + "（含 HBM 的對照值）")
-inp("f_hbm", "HBM 由 Broadcom 代購並計入營收的比例", "x", 0.3, 0.6, 1.0, "Assumed", "公司：毛利率下滑來自「記憶體含量高的 XPU」占比上升（Q3 FY26 法說，二手）→ 至少部分 HBM 經 Broadcom 轉售", "第二來源：未找到。客戶自購 HBM（consigned）的比例未揭露")
+for _k in ("sh_tpu_26", "sh_tpu_27", "sh_tpu_28", "sh_oth_26", "sh_oth_27", "sh_oth_28", "core_tpu", "core_oth", "f_hbm"):   # Siliconomics In 頁 M6、M7（v0.3 起）
+    inp(*SIL.row9(_k))
 inp("m_hbm", "代購 HBM 的毛利率", "x", 0.0, 0.10, 0.20, "Assumed", "無：未揭露；轉售料件通常低加成", "第二來源：未找到")
 inp("pfc", "2027 年起 XPU 核心售價係數（Sens 用；基準 1）", "x", 0.8, 1.0, 1.2, "Assumed", "無：新一代（TPU v8、MTIA 新世代）核心單價變化未揭露", "Sens 用 ±20%")
 
