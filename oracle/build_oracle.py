@@ -173,7 +173,7 @@ inp("capex_q1", "資本支出（Q1 FY27）", "US$B", None, 28.499, None, "Intere
 inp("div_q1", "股利支付（普通股＋特別股，Q1 FY27）", "US$B", None, 1.565, None, "Interested-party", Q10, "—")
 
 sec("J. 評價（沿用 v0.3.1 CAPM 輸入；權重為判斷預設）")
-inp("rf", "無風險利率（美國 10 年期公債）", "%", None, 0.0512, None, "Verified", "美國財政部票面殖利率曲線 2026-10-20（" + "oracle/data/oracle_facts_20261022.json val.ust10.treasury.20261020）", "沿用 v0.3.1")
+inp("rf", "無風險利率（美國 10 年期公債，2026-10-26）", "%", None, 0.05, None, "Verified", "美國財政部 10 年期公債殖利率 2026-10-26：5.00%（與 Amazon v0.3 同一輸入，跨模型一致；修正一追加）", "v0.4 初版為 2026-10-20 的 5.12%（oracle/data/oracle_facts_20261022.json val.ust10.treasury.20261020）")
 inp("beta_r1", "原始 Beta 來源 1（5 年；Seeking Alpha／Yahoo）", "x", None, 1.77, None, "Interested-party", FACTS + " val.beta.sa／val.beta.yahoo（2026-10-07）", "兩站同值，視為一個來源")
 inp("beta_r2", "原始 Beta 來源 2（5 年月資料）", "x", None, 1.712, None, "Interested-party", "oracle/data/oracle_facts_20261022.json val.beta.cand1（2026-10 初）", "—")
 inp("beta", "Beta（Blume 調整：0.67 × 原始＋0.33，兩來源中位數）", "x", 1.2, "=MEDIAN(0.67*beta_r1+0.33,0.67*beta_r2+0.33)", 2.0, "Derived", "修正一（F4）：v0.4 原為原始 1.77", "Sens：1.5／2.0")
