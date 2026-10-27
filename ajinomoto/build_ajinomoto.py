@@ -12,6 +12,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import cycle_position as CP
 import valuation_rule as VR
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 
 BLUE = Font(color="0000FF"); BOLD = Font(bold=True); HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -123,10 +125,8 @@ for y, (lo, b, hi) in ((27, (0.95, 1.00, 1.00)), (28, (0.88, 0.97, 1.00)), (29, 
     inp(f"rel_{y}", f"味之素 ABF 份額 20{y} ÷ 2026（相對值）", "x", lo, b, hi, "Assumed",
         EDGX + "：味之素逾 95%、積水化學約 5%（媒體，Interested-party）" if y == 27 else "同上；" + TF26 + "：市占逾 95%",
         PAL + "：高階 AI 用約 100%（Interested-party）" if y == 27 else "中國廠與積水化學認證進度：未找到")
-for y, (lo, b, hi) in ((27, (1.15, 1.30, 1.45)), (28, (1.30, 1.55, 1.85)), (29, (1.45, 1.80, 2.25))):
-    inp(f"cap_{y}", f"ABF 可出貨量上限 20{y}（FY2026 出貨量＝1）", "x", lo, b, hi, "Assumed",
-        TF25 + "：2030 年前投資 250 億日圓、ABF 產能 +50%（公司說法，Interested-party）；岐阜新廠 2032 年投產（" + TF26 + "）" if y == 27 else "同上",
-        "基準約 +22%／年：FY2025 電子材料營收 +31%（漲價前）、1Q FY26 FM 營收 +54%（含部分漲價與匯率），實際出貨成長快於公司 +50%／五年的說法；低值＝公司說法的速度、高值＝不設限" if y == 27 else "—")
+for y in (27, 28, 29):
+    inp(f"cap_{y}", *SIL.row9(f"abffilm_{y}")[1:])
 for y, (lo, b, hi) in ((27, (1.00, 1.12, 1.20)), (28, (0.95, 1.15, 1.30)), (29, (0.90, 1.12, 1.30))):
     inp(f"pp_{y}", f"ABF 價格指數 20{y}（FY2026 平均＝1）", "x", lo, b, hi, "Assumed",
         EDGX + "：2026-05 宣布約 30% 漲價，逐客戶適用（FY2026 只反映部分）" if y == 27 else ("同上；供需缺口 2027 約 21%、2028 約 42%（" + EDGX + "引用的供應鏈分析）" if y == 28 else "新產能到位、競爭者認證後溢價回落"),

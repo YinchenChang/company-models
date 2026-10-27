@@ -1,5 +1,12 @@
 # Siliconomics 變更紀錄
 
+## v0.5.1（2026-10-27；`model/20261027_Siliconomics_v0.5.1.xlsx`；Tokenomics v21.7）
+
+- 新增 In 頁 M15（ABF 供需表輸入，28 列）：2025 ABF 產值（TPCA 77.2 億美元）、2026 年增、AI 占比、加速器占 AI 比、其他 AI 彈性、非 AI 年增、四家 2026 ABF 營收（供給權重）、Ibiden 與其他載板廠產能指數（新增，Assumed）；欣興、南電、景碩產能指數與味之素膜上限由公司模型移入（數值不變）。
+- 新增 ABF 頁：需求指數、載板產能指數、膜上限、有效供給、缺口三情境；Interface `SIF_ABFDemIdx_*`、`SIF_ABFSubCapIdx`、`SIF_ABFFilmIdx`、`SIF_ABFSupIdx`、`SIF_ABFGap_*`。情境 A 缺口 2027／28／29＝15.6／11.0／12.3%。
+- 下游：unimicron、nanya_pcb、kinsus 的 `cap_*`、ajinomoto 的 `cap_*` 改讀本庫；各公司滿足率未改讀本庫缺口（待 Andy）。
+- 決策 S17（Andy 18:07：CF20 景碩份額待本表後確認，目前照預設）、S18。
+
 ## v0.5（2026-10-27；`model/20261027_Siliconomics_v0.5.xlsx`；Tokenomics v21.7）
 
 - 新增 In 頁 M13（加速器 ABF 載板，37 列）：Ibiden 2026 份額 70% 與 2027–29 相對值、非 NVIDIA 權重、`v_ot`、每顆載板金額年增 `g_asp`、價格溢價指數 `pp_*`、欣興／南電／景碩的 NVIDIA 與非 NVIDIA 份額（原在 ibiden、unimicron、nanya_pcb、kinsus），以及單一外部 ABF 缺口路徑 `abf_gap_26–28`＝9／24／37%（CF03 部分併入）。
