@@ -8,6 +8,7 @@ on:
   push:
     paths:
       - 'markets/**'
+      - 'siliconomics/**'
       - 'tools/memory_model/**'
       - 'tools/xlsx_diff.py'
       - 'tools/cycle_position.py'
@@ -73,6 +74,7 @@ on:
   pull_request:
     paths:
       - 'markets/**'
+      - 'siliconomics/**'
       - 'tools/memory_model/**'
       - 'tools/xlsx_diff.py'
       - 'tools/cycle_position.py'
@@ -159,6 +161,7 @@ jobs:
           mkdir -p build/raw build/out
           # 名稱｜建檔指令（輸出檔路徑接在最後）｜成品所在資料夾
           targets=(
+            "siliconomics|python3 siliconomics/builder/build.py --base siliconomics/model/$(cat siliconomics/model/CURRENT) --out|siliconomics/model"
             "bridge|python3 markets/chip_bridge/build_bridge.py|markets/chip_bridge/dist"
             "network|python3 markets/network/build_network.py|markets/network/dist"
             "equipment|python3 markets/equipment/build_equipment.py|markets/equipment/dist"
@@ -248,6 +251,9 @@ jobs:
           fi
           echo "全部模型重建後錯誤格 0、與 dist 逐格相同"
 
+      - name: Siliconomics 快照與現行活頁簿一致
+        run: |
+          python3 siliconomics/tools/export_snapshot.py --check siliconomics/data/$(cat siliconomics/data/CURRENT_SNAPSHOT)
       - name: HTML 展示層檢核（重現性、抽數、無手寫數字、自含）
         run: |
           # 以 dist 內已提交的 xlsx 產生 HTML，須與已提交的 HTML 逐位元組相同；並逐一回頭比對 xlsx 重算值
