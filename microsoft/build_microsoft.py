@@ -106,7 +106,9 @@ inp("dps_27", "FY2027 每股股利（付現）", "US$", None, "=dps_q0+3*dps_q1"
 inp("dps_g", "每股股利年增（FY2028 起）", "%", 0.05, 0.08, 0.10, "Interested-party", V22 + "（defaults.dividend.growth；2026-09 宣告 +8%）", "—")
 
 sec("B. 折現率與評價參數（WACC 沿用 v0.2.2 的 CAPM 輸入；權重為 [判斷] 預設，Andy 可改）")
-inp("rf", "無風險利率（10 年美債，2026-10-07）", "%", None, F["val.ust10"]["value"], None, "Verified", FX + "｜val.ust10（U.S. Treasury）", V22)
+inp("rf", "無風險利率（10 年美債，2026-10-26）", "%", None, 0.05, None, "Verified",
+    "U.S. Treasury 10 年期殖利率 2026-10-26：5.00%（修正一：chat 端統一 MAG＋Oracle 個股模型的同一輸入，與 Amazon v0.3 相同）",
+    FX + "｜val.ust10：2026-10-07 為 5.28%（v0.2.2 與 v0.3 初版）")
 inp("beta_sa", "原始 β：StockAnalysis（5 年月資料；Yahoo 同值，推測同源，算 1 個）", "x", None, F["val.beta.sa"]["value"], None, "Verified", FX + "｜val.beta.sa（2026-10-08）", "C13：獨立來源")
 inp("beta_gf", "原始 β：GuruFocus（3 年）", "x", None, F["val.beta.gurufocus"]["value"], None, "Verified", FX + "｜val.beta.gurufocus（2026-10-08）", "C13：獨立來源")
 inp("blume_w", "Blume 調整：原始 β 權重（其餘向 1 收斂）", "x", None, 0.67, None, "Assumed", "共同修正工作單 F4（2026-10-27）：0.67 × 原始 β＋0.33", "—")
@@ -908,7 +910,7 @@ vset("band", "價格帶（DCF 不如預期～順利）", [f"=D{r_dcf12}", f"=B{r
 vset("pe28", "現價 ÷ FY2028 EPS（模型）", [f"=px/{BL[s].ref('eps', 2028)}" for s in SC], "0.0", "A／B／C；評價口徑 EPS（讀法 2）")
 vset("tpe28", "加權目標價 ÷ FY2028 EPS（基準）", [f"={B3('tp')}/{BL['B'].ref('eps', 2028)}"], "0.0")
 vset("meth", "目標價方法", None, "@")
-VW[f"B{VR_['meth']}"] = ("DCF：評價用自由現金流（營業現金流 − 股票薪酬 − 公司口徑資本支出＋自用 AI 影子效益稅後），WACC（CAPM：rf 5.28%、Blume β、ERP 5%；kd＝rf＋10 年期 AAA 利差；負債含融資租賃），"
+VW[f"B{VR_['meth']}"] = ("DCF：評價用自由現金流（營業現金流 − 股票薪酬 − 公司口徑資本支出＋自用 AI 影子效益稅後），WACC（CAPM：rf 5.00%（2026-10-26）、Blume β、ERP 5%；kd＝rf＋10 年期 AAA 利差；負債含融資租賃），"
                          "FY2027–FY2032 明確期（FY2029 後 MW 新增速度收斂），永續期 NOPAT ×（1 − g ÷ WACC）÷（WACC − g），g 3%；評價日 2026-06-30，以 WACC 推到 2027-10-27 並扣期間股利。"
                          "SOTP：AI 基礎設施模組 DCF；Azure 其他 13.82×（非 AI 雲端 8 家）、M365 cloud／授權／產業／Frontier 10.8×（企業軟體 5 家，不含 MSFT）、搜尋與廣告 9.11×（6 家）、"
                          "XBOX 12.63×（遊戲 3 家 TTM）、Windows 14.47×（PC 3 家 TTM），乘目標價時點 NTM EBITDA（股票薪酬加回）；加淨現金與 OpenAI 持股（25% × 852 ×（1 − 20%））、減在帳融資租賃負債。")
