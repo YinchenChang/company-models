@@ -1,0 +1,26 @@
+{
+ "company": "Alphabet",
+ "ticker": "GOOGL",
+ "model_sheet": "PL",
+ "note": "官方報告分部（Form 10-K FY2025 附註 15 分部資訊；經查核）：Google Services、Google Cloud、Other Bets；另有 Alphabet-level activities（避險損益營收與未分攤費用，含 Google DeepMind 一般 AI 模型開發），不是應報導分部，但列在分部對帳中。產品線＝財報新聞稿與 10-K 附註 2 的營收拆分。命題子列：Google Cloud ＝ Cloud AI（MW × 每 MW 收入）＋ TPU 系統銷售 ＋ Cloud 其他。金額 US$B。",
+ "official_segments": [
+  {"name": "Google Services", "label": "Google Services", "period": "FY2025", "value": 342.721, "unit": "US$B",
+   "source": "Alphabet Form 10-K FY2025（2026-02-05）附註 15；data/alphabet_facts_20261008.json is.rev.gs.fy2025"},
+  {"name": "Google Cloud", "label": "Google Cloud", "period": "FY2025", "value": 58.705, "unit": "US$B",
+   "source": "同上；is.rev.cloud.fy2025"},
+  {"name": "Other Bets", "label": "Other Bets", "period": "FY2025", "value": 1.537, "unit": "US$B",
+   "source": "同上；is.rev.ob.fy2025"},
+  {"name": "Alphabet-level activities（避險損益營收）", "label": "Hedging gains (losses)", "period": "FY2025", "value": -0.127, "unit": "US$B",
+   "source": "同上；is.rev.hedge.fy2025（合併營收 402.836＝三分部＋避險）"}
+ ],
+ "sublines": [
+  {"parent": "Google Services", "labels": ["Google Search & other", "YouTube ads", "Google Network", "Google subscriptions, platforms, and devices"]},
+  {"parent": "Google Cloud", "labels": ["Cloud AI（命題子列）", "TPU 系統銷售（命題子列）", "Cloud 其他（命題子列）"], "thesis": true}
+ ],
+ "check_labels": [
+  "檢查：產品線合計 − Google Services",
+  "檢查：Cloud 子列合計 − Google Cloud",
+  "檢查：分部合計＋避險 − 合併營收",
+  "檢查：分部營業利益合計 − 合併營業利益"
+ ]
+}
