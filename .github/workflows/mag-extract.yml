@@ -1,0 +1,35 @@
+# MAG 財報萃取（API 版，2026-10-27 起；說明見 mag/extract/README.md）
+# push 到 claude/mag-extract 且 requests/ 有新請求時執行；結果 commit 回同一分支（GITHUB_TOKEN 推送不會再觸發）。
+name: mag-extract
+on:
+  push:
+    branches: [claude/mag-extract]
+    paths: ["mag/extract/requests/*.json", "mag/extract/docs/**", "mag/extract/extract_filings.py", ".github/workflows/mag-extract.yml"]
+permissions:
+  contents: write
+concurrency:
+  group: mag-extract
+  cancel-in-progress: false
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with: {python-version: "3.12"}
+      - run: pip install openpyxl && (sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils) >/dev/null
+      - name: Extract
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          mkdir -p mag/extract/out
+          set -o pipefail
+          python3 -u mag/extract/extract_filings.py 2>&1 | tee mag/extract/out/_run.log
+      - name: Commit outputs
+        if: always()   # 失敗也提交記錄檔與已完成的結果（chat 端讀不到 Actions 紀錄）
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A mag/extract
+          git diff --cached --quiet || (git commit -m "mag-extract: 萃取結果 $(date -u +%F)" && git pull -q --rebase -X theirs && git push)

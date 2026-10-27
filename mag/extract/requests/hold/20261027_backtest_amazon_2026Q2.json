@@ -1,0 +1,7 @@
+{
+  "company": "amazon",
+  "period_end": "2026-06-30",
+  "target_q": null,
+  "mode": "backtest",
+  "_note": "回測：以已申報的 2026-06-30 季文件萃取，與 company.json 現值比對"
+}
