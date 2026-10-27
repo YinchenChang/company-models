@@ -120,20 +120,27 @@ sec("A. 價格、股數與共識目標價")
 inp("px", "AMZN 現價（2026-10-26 收盤）", "US$", None, 249.09, None, "Verified", f"{S_PX}；{S_PXY}", "前收 248.00（10-23）；市值約 2.69T（Yahoo 盤中）")
 inp("sh_out", "流通股數（2026-07-22，10-Q 封面）", "十億股", None, round(FACTS["sh.out.20260722"]["value"] / 1000, 6), None, "Verified", S_10Q, "10,786,313,572 股")
 inp("sh_awd", "未歸屬股份獎勵（2026-06-30）", "十億股", None, fv("sh.awards.2026q2"), None, "Verified", S_10Q, "244 百萬股")
-inp("sh_val", "評價用稀釋股數＝流通股數＋未歸屬獎勵", "十億股", None, "=sh_out+sh_awd", None, "Derived", "沿用 v0.2.2（valuation.shares 11.030）", "目標價 ÷ 本列")
+inp("sh_val", "分部加總用稀釋股數＝流通股數＋未歸屬獎勵（倍數為 SBC 加回口徑，故計入稀釋）", "十億股", None, "=sh_out+sh_awd", None, "Derived", "修正一（F2）", "DCF 視 SBC 為現金成本，改用流通股數 sh_out，不另計稀釋")
 inp("cons_tp", "市場共識目標價（S&P Global，60 位平均）", "US$", 230, 332.24, 405, "Interested-party", S_FC, "中位數 330；Strong Buy 42、Buy 16、Hold 2（2026-10）；MarketBeat 2026-10-07 平均 322.86（獨立彙整）")
 
 sec("B. 折現率（CAPM；沿用 v0.2.2 輸入，現價更新）")
-inp("rf", "無風險利率（10 年美債）", "%", None, 0.0528, None, "Verified", S_UST, "沿用 v0.2.2（2026-10-07）；本輪未更新")
-inp("beta", "Beta（獨立來源平均：StockAnalysis 5 年月 1.46、GuruFocus 3 年 1.567）", "x", 1.46, 1.5135, 1.567, "Derived", "沿用 v0.2.2（對照表 r1 C13）", "Alpha Spread 0.78、MarketBeat 1.45 口徑未說明，不計入")
+inp("rf", "無風險利率（10 年美債，2026-10-26）", "%", None, 0.05, None, "Verified", S_UST, "美國財政部每日殖利率曲線：10-26 5.00%、10-23 5.00%、10-22 4.96%（v0.2.2 用 10-07 5.28%）")
+inp("beta_sa", "原始 Beta：StockAnalysis 5 年月資料（Yahoo 同值，推測同源）", "x", None, 1.46, None, "Verified", "沿用 v0.2.2（事實總帳 val.beta.sa）", "")
+inp("beta_gf", "原始 Beta：GuruFocus 3 年", "x", None, 1.567, None, "Verified", "沿用 v0.2.2（事實總帳 val.beta.gurufocus）", "不同資料商、不同期間（C13 獨立來源）")
+inp("beta", "Beta（Blume 調整 0.67 × 原始＋0.33，兩個獨立來源的中位數）", "x", "=MIN(0.67*beta_sa+0.33,0.67*beta_gf+0.33)", "=MEDIAN(0.67*beta_sa+0.33,0.67*beta_gf+0.33)", "=MAX(0.67*beta_sa+0.33,0.67*beta_gf+0.33)", "Derived", "修正一（F4）", "v0.2.2 為原始平均 1.5135")
 inp("erp", "股權風險溢酬", "%", 0.04, 0.05, 0.06, "Assumed", "沿用 v0.2.2（對照表預設 10）", "")
-inp("kd_new", "稅前債務成本（2026-07 新發 2066 票據有效利率）", "%", None, 0.0633, None, "Interested-party", S_10Q, "期後事項：固定票面 4.60%–6.25%、有效 4.67%–6.33%")
+inp("kd_new", "新增借款利率（2026-07 新發 2066 票據有效利率；只用於利息費用）", "%", None, 0.0633, None, "Interested-party", S_10Q, "期後事項：固定票面 4.60%–6.25%、有效 4.67%–6.33%")
+inp("kd_spr", "AA 級公司債約 10 年期利差（相對 10 年美債）", "%", 0.005, 0.0065, 0.01, "Assumed", "修正一（F4）：kd＝約 10 年期公司債殖利率", "Amazon 各期票據的 10 年期殖利率：未找到（本輪網路搜尋額度用盡）")
+inp("kd", "稅前債務成本（WACC 用）＝rf＋利差", "%", None, "=rf+kd_spr", None, "Derived", "修正一（F4）", "")
 inp("tax", "稅率（2023–2025 有效稅率平均）", "%", 0.135, "=AVERAGE(«Q.etr.C»,«Q.etr.D»,«Q.etr.E»)", 0.23, "Derived", S_10K, "18.96%、13.50%、19.61%；沿用 v0.2.2（17.36%）；2026 上半年不含一次性項目 23%")
 inp("debt_q2", "債務面額（2026-06-30）", "US$bn", None, fv("debt.face.2026q2"), None, "Verified", S_10Q, "附註 5")
+inp("fl_pv", "融資租賃負債現值（2026-06-30）", "US$bn", None, fv("lease.finPV.2026q2"), None, "Verified", S_10Q, "附註 4")
+inp("fin_obl", "融資義務（financing obligations，2026-06-30）", "US$bn", None, fv("lease.finObl.2026q2"), None, "Verified", S_10Q, "")
+inp("fin_debt", "類債務（融資租賃＋融資義務；淨負債與 WACC 的 D 皆計入，模型期間持平）", "US$bn", None, "=fl_pv+fin_obl", None, "Derived", "修正一（F6、核對第 4 點）", "")
 inp("ke", "股權成本＝rf＋β × ERP", "%", None, "=rf+beta*erp", None, "Derived", "CAPM", "")
-inp("wacc", "WACC＝E/(D+E) × ke＋D/(D+E) × kd ×（1 − 稅率）；E＝現價 × 流通股數", "%", None, "=px*sh_out/(px*sh_out+debt_q2)*ke+debt_q2/(px*sh_out+debt_q2)*kd_new*(1-tax)", None, "Derived", "沿用 v0.2.2 口徑（v0.2.2 為 12.5%）", "")
+inp("wacc", "WACC＝E/(D+E) × ke＋D/(D+E) × kd ×（1 − 稅率）；E＝現價 × 流通股數；D＝債務面額＋類債務", "%", None, "=px*sh_out/(px*sh_out+debt_q2+fin_debt)*ke+(debt_q2+fin_debt)/(px*sh_out+debt_q2+fin_debt)*kd*(1-tax)", None, "Derived", "修正一（F4）", "v0.2.2 為 12.5%")
 inp("tg", "永續成長率 g", "%", 0.02, 0.03, 0.04, "Assumed", "工作單第 2 節（g 3%）", "")
-inp("ronic", "永續期新投資報酬率（RONIC；預設＝WACC：永續成長不創造價值）", "%", None, "=wacc", 0.20, "Assumed", "判斷（報告第 5 節）", "高值 20%＝永續成長創造價值（Sens）")
+inp("ronic", "永續期新投資報酬率（RONIC；預設＝WACC：永續成長不創造價值）", "%", None, "=wacc", "=wacc+0.05", "Assumed", "判斷（報告第 5 節；F5）", "高值＝WACC＋5pt（Sens）")
 inp("w_dcf", "目標價中 DCF 的權重；其餘為分部加總（SOTP）", "%", None, 0.5, None, "Assumed", "工作單第 2 節（[判斷] 預設 DCF 50%＋分部加總 50%）", "Andy 可改")
 for s, w in (("A", 0.25), ("B", 0.5), ("C", 0.25)):
     inp(f"w_{s}", f"情境權重 {SCN[s]}", "%", None, w, None, "Assumed", "工作單第 2 節（[判斷] 預設 A 25%／B 50%／C 25%）", "三者合計 100%")
@@ -187,7 +194,7 @@ inp("colo_sh", "機房租用比例（第三方託管）", "%", 0.1, 0.2, 0.3, "I
 inp("rent_rec", "租用機房年租金 ÷ 機房資本支出（資本回收係數，C22）", "%", None, 0.10, None, "Assumed", "對照表 r1 C22", "")
 inp("rent_mw", "每 MW 年機房租金（攤到全部 AI MW）＝租用比例 × 機房成本 × 回收係數", "US$m/MW-年", None, "=colo_sh*tk_fac*rent_rec", None, "Derived", "上列", "")
 inp("capex_g26", "2026 現金資本支出指引（下限）", "US$bn", None, 220, None, "Interested-party", S_CALL, "上調自約 200；首期 AI 資本支出＝MAX(MW 公式, 指引 − 上半年實際 − 非 AI)")
-inp("rd2", "自用 AI 讀法（0＝讀法 1：只計成本；1＝讀法 2：自用 MW 以 k＝1 計影子效益）", "0/1", None, 0, 1, "Assumed", "對照表 r1 C16（主值待 Andy 決定）", "讀法 2 列 Sens")
+inp("internal_ai_reading", "自用 AI 讀法（2＝讀法 2 主值：自用 MW 以 k＝1 計影子效益、價值中性；1＝讀法 1：只計成本）", "1/2", 1, 2, None, "Assumed", "修正一（F1；對照表 r1 C16，chat 端預設讀法 2 為主值）", "讀法 1 列 Sens 與 Val 第 0 節")
 inp("ai_rr", "公司 AI 營收年化（AWS AI run-rate，>25）", "US$bn", None, fv("aws.aiRunRate.2026q2"), None, "Interested-party", S_PR26Q2, "只作 Recon 驗證列（C3）；不用於校準")
 KEYFILL |= {"pace_A", "pace_B", "pace_C", "ext_sh"}
 
@@ -198,7 +205,7 @@ inp("cx_awso", "AWS 其他資本支出 ÷ AWS 其他營收", "%", 0.15, 0.20, 0.
 sec("E. 零售各營收線（10-K 營收類別；北美＋國際）")
 for k, nm, b, lo, hi in (("os", "Online stores", 0.05, 0.03, 0.07), ("ps", "Physical stores", 0.03, 0.01, 0.05), ("sp", "Third-party seller services", 0.07, 0.05, 0.09),
                          ("ad", "Advertising services", 0.10, 0.07, 0.13), ("sub", "Subscription services", 0.07, 0.05, 0.09), ("ot", "Other", 0.05, 0.02, 0.08)):
-    inp(f"g_{k}", f"{nm} 長期年增（2030 起）", "%", lo, b, hi, "Assumed", "判斷（報告第 5 節）", "2H26＝2H25 ×（1＋1H26 年增）；2027–2030 由 1H26 年增線性收斂到本列")
+    inp(f"g_{k}", f"{nm} 長期年增（2030 起）", "%", lo, b, hi, "Assumed", "判斷（報告第 5 節）", "2H26＝2H25 ×（1＋2H25 年增）× 校準係數（隱含 2026Q3＝指引中點）；2027–2030 由 2H25 年增線性收斂到本列")
 inp("m_ad", "廣告營業利益率（分攤到北美／國際的方法：見 PL 頁）", "%", 0.40, 0.50, 0.60, "Assumed", "沿用 v0.2.2（廣告 EBITDA 率 50%，分部未揭露）", "數位廣告同業 META、GOOGL EBITDA 率 50%–60%；零售本業利益率＝分部利益扣廣告利潤後的殘差")
 inp("step_na", "北美零售本業利益率每年改善（2027–2030）", "pt", 0.0, 0.003, 0.006, "Assumed", "判斷：1H26 對 1H25 改善約 0.5pt（Q 頁推導）", "")
 inp("step_in", "國際零售本業利益率每年改善（2027–2030）", "pt", -0.003, 0.0, 0.003, "Assumed", "判斷：1H26 對 1H25 約 −0.3pt", "")
@@ -208,17 +215,18 @@ sec("F. 公司層與現金")
 inp("sbc_r", "股份基礎給付 ÷ 營收（近四季）", "%", None, "=«Q.sbc.Q»/«Q.tot.Q»", None, "Derived", S_PR26Q2, "SBC 計入費用；DCF 不加回（視同現金成本）")
 inp("oth_r", "營運現金其他項目 ÷ 營收（營運現金流 −（淨利 − 業外淨額 ×（1 − 稅率））− 分部 D&A − SBC；2023–2025 平均）", "%", -0.005, "=AVERAGE(" + ",".join(f"(«Q.cfo.{c}»-(«Q.ni.{c}»-«Q.nonop.{c}»*(1-«Q.etr.{c}»))-«Q.da_seg.{c}»-«Q.sbc.{c}»)/«Q.tot.{c}»" for c in "CDE") + ")", 0.02, "Derived", S_10K,
     "0.6%／0.7%／2.3%；扣除業外（持股評價利益為非現金）；影音內容與營業租賃資產攤銷與其現金支出相抵，CFO 只加回分部 D&A")
-inp("wc_2h26", "首期營運資金（2H26＝2H25 實際，C14）", "US$bn", None, fv("cf.wcChg.2h2025"), None, "Derived", S_10Q, "10-K 全年 − 10-Q 上半年（事實總帳 cf.wcChg.2h2025）")
 inp("lease_pr", "融資租賃本金償還（每年）", "US$bn", 1.5, 1.6, 3.0, "Assumed", S_10K, "2023 4.384、2024 2.043、2025 1.557")
 inp("sh_g", "稀釋股數年增（無回購，SBC 稀釋）", "%", 0.0, 0.008, 0.015, "Derived", S_XBRL, "稀釋加權股數 2024→2025 +1.0%、2025→1H26 +0.6%（半年）")
 inp("kd_book", "既有債務平均利率（1H26 利息費用 × 2 ÷ 平均債務面額）", "%", None, "=«Q.intx.P»*2/((«Q.debt.E»+«Q.debt.M»)/2)", None, "Derived", S_10Q, "既有 133.0 以本列計息；新增借款以 kd_new")
 inp("y_cash", "現金與有價證券收益率（2026Q2 利息收入 × 4 ÷ 期末現金）", "%", None, "=«Q.inti.M»*4/«Q.cash.M»", None, "Derived", S_10Q, "")
 inp("cash_q2", "現金、約當現金與有價證券（2026-06-30）", "US$bn", None, fv("bs.cashMs.2026q2"), None, "Verified", S_10Q, "")
 inp("min_cash", "最低現金（低於即舉債）", "US$bn", 30, 50, 80, "Assumed", "沿用 v0.2.2（minCash 50）", "")
-inp("iss_2h26", "2026 下半年已發行債券（2026-07 美元 25.0＋2026-09 英鎊 £3.25B ≈ 4.25）", "US$bn", None, "=25+4.25", None, "Interested-party", f"{S_10Q}（期後事項）；{S_424}", "")
+inp("iss_usd", "2026-07 美元票據", "US$bn", None, fv("debt.postQ2.usd202607"), None, "Interested-party", f"{S_10Q}（期後事項）", "")
+inp("iss_gbp", "2026-09 英鎊票據（£bn）", "£bn", None, 3.25, None, "Interested-party", S_424, "5.200% 2029 £1.25B、5.550% 2032 £1.0B、6.250% 2038 £1.0B、6.650% 2045 £1.0B")
+inp("fx_gbp", "英鎊匯率（US$／£；事實總帳換算值 4.25 ÷ 3.25）", "US$/£", None, round(fv("debt.postQ2.gbp202609") / 3.25, 6), None, "Derived", S_424, "")
+inp("iss_2h26", "2026 下半年已發行債券＝美元＋英鎊 × 匯率", "US$bn", None, "=iss_usd+iss_gbp*fx_gbp", None, "Derived", "上列", "")
+inp("iss_t", "2H26 新發債券的平均流通期間（年；7 月與 9 月發行）", "年", None, 0.25, None, "Assumed", "修正一（F6：公式內寫死改為鍵）", "")
 inp("inv_2h26", "2026 下半年策略投資（OpenAI 承諾 35.0 的期後補足 21.3）", "US$bn", None, 21.3, None, "Interested-party", S_10Q, "Anthropic 尚可動用的 15.0 融資額度依里程碑，不列")
-inp("pd_sh", "Prime Day 移入 2026Q2 的時點影響（Q3 指引約 400bp）", "%", 0.03, 0.04, 0.05, "Interested-party", S_PR26Q2, "2026Q3 營收指引年增 9%–12% 含 Prime Day 時點影響約 400bp")
-inp("pd_amt", "Prime Day 時點影響金額（＝pd_sh × 2025Q3 合併營收）", "US$bn", None, "=pd_sh*«Q.tot.J»", None, "Derived", S_PR26Q2, "2H26 自 Online stores、Third-party seller services 扣除；FY2026 全年不受影響")
 inp("dps", "每股股利", "US$", None, 0, None, "Verified", S_10Q, "Amazon 未發放現金股利；2023–2026H1 無回購（授權剩 6.1B）")
 
 sec("G. 持股（分部加總與 DCF 都加；預測期業外評價損益設 0）")
@@ -228,6 +236,7 @@ inp("oai_val", "OpenAI 投後估值（投前 730＋該輪 110）", "US$bn", None
 inp("oai_sh", "Amazon 持有 OpenAI 比例（投入 50 ÷ 840）", "%", None, 0.0595, None, "Derived", "沿用 v0.2.2", "資本結構（PBC＋基金會）可能使比例不同")
 inp("liq_disc", "持股流動性折價", "%", 0.0, 0.2, 0.4, "Assumed", "工作單第 2 節（20%）", "")
 inp("m_ai", "AWS AI 的 EV/EBITDA 倍數", "x", 4, 6, 10, "Assumed", "沿用 v0.2.2（對照表 D6：跨 CRWV／Nebius／Oracle 可比）", "CRWV TTM 25.0×、ORCL 16.5×（只作對照）；已知可能偏低，Sens 10×")
+inp("ai_leg", "分部加總中 AWS AI 的評價法（1＝自身 DCF，主值；0＝EBITDA × m_ai 倍數，對照）", "0/1", 0, 1, None, "Assumed", "修正一（F3）", "AI 是資本密集業務，EBITDA 倍數忽略汰換與成長資本支出")
 inp("m_x", "分部倍數乘數（Sens 用；基準 1）", "x", 0.8, 1.0, 1.2, "Assumed", "Sens", "")
 
 sec("H. 市場共識（只作 Recon 對照，不校準）")
@@ -245,10 +254,12 @@ inp("g26q3_lo", "公司指引 2026Q3 營收下緣", "US$bn", None, 197.0, None, 
 inp("g26q3_hi", "公司指引 2026Q3 營收上緣", "US$bn", None, 202.0, None, "Interested-party", S_PR26Q2, "")
 inp("g26q3_oilo", "公司指引 2026Q3 營業利益下緣", "US$bn", None, 22.5, None, "Interested-party", S_PR26Q2, "")
 inp("g26q3_oihi", "公司指引 2026Q3 營業利益上緣", "US$bn", None, 26.5, None, "Interested-party", S_PR26Q2, "")
+inp("g26q3_mid", "公司指引 2026Q3 營收中點（2H26 零售營收校準目標）", "US$bn", None, "=(g26q3_lo+g26q3_hi)/2", None, "Derived", S_PR26Q2, "含 Prime Day 移入 Q2 的時點影響約 −400bp、匯率 −80bp")
 
 sec("I. v0.2.2 對照（Recon 差異拆解用）")
 inp("v022_tp", "v0.2.2 基準目標價（讀法 1；2026-10-25）", "US$", None, 201.71, None, "Derived", "docs/handoff（v0.2.2 交接檔）", "讀法 2 為 220.09；三情境 212.33／201.71／201.14 皆賣出")
 inp("v022_px", "v0.2.2 現價（2026-10-07）", "US$", None, 259.92, None, "Verified", "legacy_v0.2", "")
+inp("v022_wdcf", "v0.2.2 評價權重：DCF", "%", None, 0.45, None, "Derived", "legacy_v0.2", "分部 EV/EBITDA 55%")
 
 INROW = {}
 r = 4
@@ -492,18 +503,20 @@ def engine(eid, s, sheets, over=None, tag=""):
 
     # ---------------- Seg（一）：零售各營收線與地區分攤 ----------------
     S = Blk(f"{eid}S", sheets["Seg"], f"Seg｜{nm}：營收分部層（官方分部 North America、International、AWS；10-K 營收線）")
-    S.sec("1. 零售各營收線（2H26＝2H25 ×（1＋2H25 年增）− Prime Day 時點；2027–2030 年增由 2H25 年增線性收斂到長期值；2031–2032＝長期值）")
+    S.sec("1. 零售各營收線（2H26＝2H25 ×（1＋2H25 年增）× 校準係數；2027–2030 年增由 2H25 年增線性收斂到長期值；2031–2032＝長期值）")
     for k, lab, _ in LINES:
         cells = {c: f"=«Q.{k}.{QM[c]}»" for c in HIST}
-        cells["F"] = f"={S.t('rev_' + k, 'O')}*(1+{S.t('g_' + k, 'F')})" + (f"-pd_amt*«Q.{k}.O»/(«Q.os.O»+«Q.sp.O»)" if k in ("os", "sp") else "")
+        cells["F"] = f"={S.t('rev_' + k, 'O')}*(1+{S.t('g_' + k, 'F')})*{S.t('cal', 'F')}"
         cells["G"] = f"={S.t('rev_' + k, 'E')}+{S.t('rev_' + k, 'F')}"
         for y, c in FUT:
             cells[c] = f"={S.t('rev_' + k, PREV[c])}*(1+{S.t('g_' + k, c)})"
         S.row("rev_" + k, lab, "US$bn", cells, note="Q 頁實績；預測＝前期 ×（1＋年增）")
         g = {"E": f"={S.t('rev_' + k, 'E')}/{S.t('rev_' + k, 'N')}-1", "F": f"={S.t('rev_' + k, 'O')}/(«Q.{k}.F»+«Q.{k}.G»)-1", "G": f"={S.t('rev_' + k, 'G')}/{S.t('rev_' + k, 'D')}-1"}
         g.update(fade(S, "g_" + k, P(f"g_{k}"), "F"))
-        S.row("g_" + k, f"  {lab} 年增", "%", g, "0.0%", note=f"E＝1H26 對 1H25（含 Prime Day 移入 Q2）；F＝2H25 對 2H24（2H26 成長基準，Derived）；收斂到 In 頁 g_{k}"
-              + ("；2H26 另扣 Prime Day 時點（pd_amt，按 2H25 比例分攤到 Online stores 與 Third-party seller services）" if k in ("os", "sp") else ""))
+        S.row("g_" + k, f"  {lab} 年增", "%", g, "0.0%", note=f"E＝1H26 對 1H25（含 Prime Day 移入 Q2）；F＝2H25 對 2H24（2H26 成長基準，Derived）；收斂到 In 頁 g_{k}")
+    S.row("cal", "2H26 零售營收校準係數（使隱含 2026Q3 營收＝指引中點）", "x",
+          {"F": f"=(g26q3_mid*«Q.tot.O»/«Q.tot.J»-«{eid}T.rev.F»-«{eid}T.awso.F»)/(" + "+".join(f"{S.t('rev_' + k, 'O')}*(1+{S.t('g_' + k, 'F')})" for k, _, _ in LINES) + ")"},
+          "0.0000", note="2H26 合併營收目標＝Q3 指引中點 ÷（2025Q3 占 2H25 比例）；AWS 由命題模組決定，零售六線同比例校準（Prime Day 時點已含在指引中）")
     S.row("rt", "零售營收線合計（＝North America＋International）", "US$bn", {c: "=" + "+".join(S.t("rev_" + k, c) for k, _, _ in LINES) for c in ALL}, bold=True)
     sh = {c: f"=«Q.na.{QM[c]}»/(«Q.na.{QM[c]}»+«Q.intl.{QM[c]}»)" for c in HIST}
     sh.update({"F": f"={S.t('na_sh', 'O')}", "G": f"={S.t('na', 'G')}/{S.t('rt', 'G')}", **{c: f"={S.t('na_sh', 'G')}" for c in FC}})
@@ -522,7 +535,10 @@ def engine(eid, s, sheets, over=None, tag=""):
     t = T.t
     T.sec("1. 容量（對外 AI 在役 MW-IT；期末）")
     mw = {"C": "=mw_ye24", "D": "=mw_ye25", "N": "=(mw_ye24+mw_ye25)/2", "O": "=mw_ye25", "E": "=mw_open", "F": f"={t('mw', 'E')}+{P('pace')}*0.5", "G": f"={t('mw', 'F')}"}
-    mw.update({c: f"={t('mw', PREV[c])}+{P('pace')}" for c in FC})
+    mw.update({c: f"={t('mw', PREV[c])}+{t('pace_y', c)}" for c in FC})
+    py = {c: f"={P('pace')}" for c in "HIJ"}
+    py.update({c: f"={P('pace')}+(«{eid}T.mw.J»*{P('tg')}-{P('pace')})*{n}/3" for n, c in enumerate("KLM", 1)})
+    T.row("pace_y", "對外 AI MW 每年新增（2030–2032 線性收斂到 FY2029 年底 MW × g，F5）", "MW/年", py, "#,##0", note="終值不落在建置高峰（共同修正 F5）")
     T.row("mw", "對外 AI 在役 MW（期末）", "MW", mw, "#,##0", note="期初 2026-06-30＝In 頁 mw_open；每年新增＝In 頁 pace（情境）；歷史年底值只用於分拆與折舊年份", key_fill=True)
     avg = {"C": "=(mw_ye23+mw_ye24)/2", "D": f"=({t('mw', 'C')}+{t('mw', 'D')})/2", "N": f"=({t('mw', 'C')}+{t('mw', 'N')})/2", "O": f"=({t('mw', 'N')}+{t('mw', 'O')})/2",
            "E": f"=({t('mw', 'D')}+{t('mw', 'E')})/2", "F": f"=({t('mw', 'E')}+{t('mw', 'F')})/2", "G": f"=({t('mwavg', 'E')}+{t('mwavg', 'F')})/2"}
@@ -555,9 +571,10 @@ def engine(eid, s, sheets, over=None, tag=""):
     nav = {"F": f"={t('newc', 'F')}/2", **{c: f"=({t('newc', PREV[c])}+{t('newc', c)})/2" for c in FC}}
     T.row("newavg", "新增產能平均在役 MW（期間）", "MW", nav, "#,##0")
     T.sec("3. AWS AI 損益（收入端不乘 IF_Util：MW-year 計價）")
-    rev = {c: f"={t('mwavg', c)}*rpm_open*{t('len', c)}/1000" for c in HIST}
-    rev.update({"F": f"=(mw_open*rpm_open+{t('newavg', 'F')}*{t('rpm_new', 'F')})*{t('len', 'F')}/1000", "G": f"={t('rev', 'E')}+{t('rev', 'F')}",
-                **{c: f"=(mw_open*rpm_open+{t('newavg', c)}*{t('rpm_new', c)})/1000" for c in FC}})
+    ro = P("rpm_open")
+    rev = {c: f"={t('mwavg', c)}*{ro}*{t('len', c)}/1000" for c in HIST}
+    rev.update({"F": f"=(mw_open*{ro}+{t('newavg', 'F')}*{t('rpm_new', 'F')})*{t('len', 'F')}/1000", "G": f"={t('rev', 'E')}+{t('rev', 'F')}",
+                **{c: f"=(mw_open*{ro}+{t('newavg', c)}*{t('rpm_new', c)})/1000" for c in FC}})
     T.row("rev", "AWS AI 營收（命題子列）", "US$bn", rev, bold=True, note="實績欄為分拆估計（期初 k，Derived），不是公司揭露值")
     T.row("rpm_fleet", "全機隊每 MW 年收入", "US$m/MW-年", {c: f"={t('rev', c)}*1000/({t('mwavg', c)}*{t('len', c)})" for c in ALL}, "0.000")
     opx = {c: f"={t('mwavg', c)}/{P('ext_sh')}*(ox_open+rent_mw)*{t('len', c)}/1000" for c in HIST}
@@ -568,9 +585,9 @@ def engine(eid, s, sheets, over=None, tag=""):
     awso = {c: f"={t('aws_act', c)}-{t('rev', c)}" for c in HIST}
     awso.update({"F": f"={t('awso', 'O')}*(1+{t('awso_g', 'F')})", "G": f"={t('awso', 'E')}+{t('awso', 'F')}", **{c: f"={t('awso', PREV[c])}*(1+{t('awso_g', c)})" for c in FC}})
     T.row("awso", "AWS 其他營收（非 AI 雲端）", "US$bn", awso, bold=True, note="實績＝AWS 實績 − AWS AI 分拆估計（殘差，Derived）")
-    ag = {"E": f"={t('awso', 'E')}/{t('awso', 'N')}-1", "F": f"={t('awso_g', 'E')}", "G": f"={t('awso', 'G')}/{t('awso', 'D')}-1"}
-    ag.update(fade(T, "awso_g", P("g_awso_lt")))
-    T.row("awso_g", "  AWS 其他年增", "%", ag, "0.0%", note="E＝1H26 對 1H25（Derived；含 AI 低估的可能）；收斂到 g_awso_lt")
+    ag = {"D": f"={t('awso', 'D')}/{t('awso', 'C')}-1", "E": f"={t('awso', 'E')}/{t('awso', 'N')}-1", "F": f"={t('awso_g', 'D')}", "G": f"={t('awso', 'G')}/{t('awso', 'D')}-1"}
+    ag.update(fade(T, "awso_g", P("g_awso_lt"), "F"))
+    T.row("awso_g", "  AWS 其他年增", "%", ag, "0.0%", note="起點＝FY2025 年增（D 欄，Derived）；1H26 年增（E 欄）受 AI 分拆低估影響偏高，只列不用；收斂到 g_awso_lt")
     T.sec("4. AI 資本支出（現金）→ 折舊（IT 6 年、機房 20 年；次年起提列）")
     T.row("nonai_f", "2H26 非 AI 資本支出（零售＋AWS 其他）", "US$bn", {"F": f"=cx_rt*{S.t('rt', 'F')}+cx_awso*{t('awso', 'F')}"})
     T.row("itsh", "AI 資本支出中 IT 比例", "%", {"C": "=tk_cx_h100/(tk_cx_h100+tk_fac*(1-colo_sh))", "D": "=tk_cx_h100/(tk_cx_h100+tk_fac*(1-colo_sh))",
@@ -579,7 +596,7 @@ def engine(eid, s, sheets, over=None, tag=""):
           "E": "=«Q.cxn.P»-cx_rt*«Q.rt.P»-cx_awso*" + t("awso", "E"),
           "F": f"=MAX({t('addT', 'F')}*({t('cx_add', 'F')}+tk_fac*(1-colo_sh))/1000,capex_g26-«Q.cxn.P»-{t('nonai_f', 'F')})", "G": f"={t('cx', 'E')}+{t('cx', 'F')}"}
     cx.update({c: f"={t('addT', c)}*({t('cx_add', c)}+tk_fac*(1-colo_sh))/1000+{t('rfs', c)}" for c in FC})
-    cx.update({VC[2023]: f"=«Q.cxn.C»-cx_rt*«Q.rt.C»-cx_awso*(«Q.aws.C»-mw_ye23/2*rpm_open/1000)", **{VC[y]: f"={t('cx', c)}" for y, c in VY.items()}})
+    cx.update({VC[2023]: f"=«Q.cxn.C»-cx_rt*«Q.rt.C»-cx_awso*(«Q.aws.C»-mw_ye23/2*{P('rpm_open')}/1000)", **{VC[y]: f"={t('cx', c)}" for y, c in VY.items()}})
     T.row("cx", "AI 資本支出（現金，含自用）", "US$bn", cx, bold=True,
           note="實績＝公司資本支出淨額 − 非 AI（零售 cx_rt、AWS 其他 cx_awso）；2H26＝MAX(MW 公式, 指引 220 − 上半年 − 非 AI)；之後＝新增 MW ×（IT＋自建機房）＋汰換")
     life = P("tk_life")
@@ -610,11 +627,13 @@ def engine(eid, s, sheets, over=None, tag=""):
     T.row("ebitda", "AWS AI EBITDA＝營收 − 對外比例 × 營運成本", "US$bn", {c: f"={t('rev', c)}-{P('ext_sh')}*{t('opex', c)}" for c in ALL})
     T.row("ebit", "AWS AI 營業利益＝EBITDA − 對外比例 × AI 折舊", "US$bn", {c: f"={t('ebitda', c)}-{P('ext_sh')}*{t('da', c)}" for c in ALL}, bold=True)
     T.row("ebit_m", "  AWS AI 營業利益率", "%", {c: f"={t('ebit', c)}/{t('rev', c)}" for c in ALL}, "0.0%")
-    shd = {c: f"={P('rd2')}*(1-{P('ext_sh')})/{P('ext_sh')}*{t('mwavg', c)}*he_open*{t('len', c)}/1000" for c in HIST}
-    shd.update({c: f"={P('rd2')}*(1-{P('ext_sh')})/{P('ext_sh')}*(mw_open*he_open+{t('newavg', c)}*{t('he_new', c)})*{t('len', c)}/1000" for c in ["F"] + FC})
+    rd = f"IF({P('internal_ai_reading')}=2,1,0)"
+    shd = {c: 0 for c in HIST}
+    shd.update({c: f"={rd}*(1-{P('ext_sh')})/{P('ext_sh')}*(mw_open*he_open+{t('newavg', c)}*{t('he_new', c)})*{t('len', c)}/1000" for c in ["F"] + FC})
     shd["G"] = f"={t('shadow', 'E')}+{t('shadow', 'F')}"
-    T.row("shadow", "自用 AI 影子效益（讀法 2：自用 MW × HoldEcon × k＝1；讀法 1 為 0）", "US$bn", shd, note="In 頁 rd2＝0 時為 0（C16 主值待 Andy 決定）")
-    T.row("int_cost", "自用 AI 成本淨額（營運＋折舊 −影子效益；分攤到北美／國際）", "US$bn", {c: f"=(1-{P('ext_sh')})*({t('opex', c)}+{t('da', c)})-{t('shadow', c)}" for c in ALL})
+    T.row("shadow", "自用 AI 影子效益（讀法 2：自用 MW × HoldEcon × k＝1；讀法 1 為 0；非財報營收）", "US$bn", shd,
+          note="In 頁 internal_ai_reading＝2（主值）；只進評價口徑（NOPAT、EPS 評價口徑、分部加總零售本業）；實績欄為 0")
+    T.row("int_cost", "自用 AI 成本（營運＋折舊；分攤到北美／國際，財報口徑）", "US$bn", {c: f"=(1-{P('ext_sh')})*({t('opex', c)}+{t('da', c)})" for c in ALL})
     T.row("aws_oi_act", "AWS 營業利益（實績，Q 頁）", "US$bn", {c: f"=«Q.oi_aws.{QM[c]}»" for c in HIST})
     oe = {c: f"={t('aws_oi_act', c)}-{t('ebit', c)}" for c in HIST}
     oe.update({"F": f"={t('awso', 'F')}*{t('awso_m', 'F')}", "G": f"={t('awso_ebit', 'E')}+{t('awso_ebit', 'F')}", **{c: f"={t('awso', c)}*{t('awso_m', c)}" for c in FC}})
@@ -703,6 +722,8 @@ def engine(eid, s, sheets, over=None, tag=""):
     oit.update({c: f"={l('oi_na', c)}+{l('oi_in', c)}+{l('oi_aws', c)}+{l('unal', c)}" for c in ["F", "G"] + FC})
     L.row("oi", "合併營業利益", "US$bn", oit, bold=True)
     L.row("chk_oi", f"檢查（情境 {s}）：分部營業利益合計 − 合併營業利益", "US$bn", {c: f"={l('oi_na', c)}+{l('oi_in', c)}+{l('oi_aws', c)}+{l('unal', c)}-{l('oi', c)}" for c in ALL}, check=True)
+    L.row("shadow", "自用 AI 影子效益（讀法 2；非財報營收；按北美比例分攤到北美／國際）", "US$bn", {c: f"={T.t('shadow', c)}" for c in ALL}, note="營收列與分部對帳不動")
+    L.row("oi_v", "營業利益（評價口徑＝合併營業利益＋自用 AI 影子效益）", "US$bn", {c: f"={l('oi', c)}+{l('shadow', c)}" for c in ALL})
     for k, a, b_ in (("m_na", "oi_na", "na"), ("m_in", "oi_in", "intl"), ("m_aws", "oi_aws", "aws"), ("m_ai", "oi_aws_ai", "aws_ai"), ("m_oi", "oi", "tot")):
         lab = {"m_na": "North America 營業利益率", "m_in": "International 營業利益率", "m_aws": "AWS 營業利益率", "m_ai": "AWS AI 營業利益率", "m_oi": "合併營業利益率"}[k]
         L.row(k, lab, "%", {c: f"={l(a, c)}/{l(b_, c)}" for c in ALL}, "0.0%", key_fill=(k == "m_aws"))
@@ -741,7 +762,9 @@ def engine(eid, s, sheets, over=None, tag=""):
     shs = {"C": "=«Q.shd.D»", "D": "=«Q.shd.E»", "E": "=(«Q.shd.L»+«Q.shd.M»)/2", "G": f"=«Q.shd.M»*(1+{P('sh_g')}*0.25)", "F": f"={l('sh', 'G')}"}
     shs.update({c: f"={l('sh', PREV[c])}*(1+{P('sh_g')})" for c in FC})
     L.row("sh", "稀釋加權股數", "十億股", shs, "#,##0.000", note="無回購；SBC 稀釋每年 sh_g")
-    L.row("eps", "EPS（稀釋）", "US$", {c: f"={l('ni', c)}/{l('sh', c)}" for c in ["C", "D", "E", "G"] + FC}, "0.00", bold=True, key_fill=True)
+    L.row("ni_v", "淨利（評價口徑＝淨利＋影子效益 ×（1 − 稅率））", "US$bn", {c: f"={l('ni', c)}+{l('shadow', c)}*(1-tax)" for c in ALL})
+    L.row("eps", "EPS（評價口徑，稀釋）", "US$", {c: f"={l('ni_v', c)}/{l('sh', c)}" for c in ["C", "D", "E", "G"] + FC}, "0.00", bold=True, key_fill=True)
+    L.row("eps_fin", "EPS（財報口徑，稀釋）", "US$", {c: f"={l('ni', c)}/{l('sh', c)}" for c in ["C", "D", "E", "G"] + FC}, "0.00")
     L.row("eps_x", "EPS（不含業外其他，近似：扣除業外其他 ×（1 − 稅率））", "US$", {c: f"=({l('ni', c)}-{l('nonop', c)}*(1-tax))/{l('sh', c)}" for c in ["C", "D", "E", "G"] + FC}, "0.00",
           note="對照 S&P 調整後 EPS；2026 上半年業外含 Anthropic 評價利益約 69")
     L.row("eps_g", "EPS 年增", "%", {c: f"={l('eps', c)}/{l('eps', PREV[c])}-1" for c in FC}, "0.0%")
@@ -757,8 +780,8 @@ def engine(eid, s, sheets, over=None, tag=""):
     sb.update({c: f"=sbc_r*{S.t('tot', c)}" for c in ["F"] + FC}); sb["G"] = f"={k_('sbc', 'E')}+{k_('sbc', 'F')}"
     C.row("sbc", "股份基礎給付（加回）", "US$bn", sb)
     ot = {c: f"=«Q.cfo.{QM[c]}»-{k_('ni', c)}-{k_('da', c)}-{k_('sbc', c)}" for c in ["C", "D", "E"]}
-    ot.update({"F": f"=wc_2h26+oth_r*{S.t('tot', 'F')}", **{c: f"=oth_r*{S.t('tot', c)}" for c in FC}}); ot["G"] = f"={k_('oth', 'E')}+{k_('oth', 'F')}"
-    C.row("oth", "其他營運項目（營運資金、影音內容與租賃現金支出、非現金業外）", "US$bn", ot, note="2H26 含首期營運資金（C14）；實績含持股評價利益的扣除")
+    ot.update({c: f"=oth_r*{S.t('tot', c)}" for c in ["F"] + FC}); ot["G"] = f"={k_('oth', 'E')}+{k_('oth', 'F')}"
+    C.row("oth", "其他營運項目（營運資金、影音內容與租賃現金支出、非現金業外）", "US$bn", ot, note="oth_r 已含營運資金（修正一：不再另加 2H25 營運資金，避免重複）；實績含持股評價利益的扣除")
     cf = {c: f"=«Q.cfo.{QM[c]}»" for c in ["C", "D", "E"]}
     cf.update({c: f"={k_('ni', c)}+{k_('da', c)}+{k_('sbc', c)}+{k_('oth', c)}" for c in ["F"] + FC}); cf["G"] = f"={k_('cfo', 'E')}+{k_('cfo', 'F')}"
     C.row("cfo", "營運現金流", "US$bn", cf, bold=True)
@@ -789,17 +812,19 @@ def engine(eid, s, sheets, over=None, tag=""):
     C.row("debt", "期末債務面額", "US$bn", de)
     C.row("nd", "淨負債（債務 − 現金；負值＝淨現金）", "US$bn", {c: f"={k_('debt', c)}-{k_('cash', c)}" for c in ["D", "E", "F", "G"] + FC})
     C.row("intx", "利息費用（既有債務 × kd_book＋新增債務 × kd_new）", "US$bn",
-          {"F": "=debt_q2*kd_book*0.5+iss_2h26*kd_new*0.25", **{c: f"=debt_q2*kd_book+({k_('debt', PREV[c])}-debt_q2)*kd_new" for c in FC}})
+          {"F": "=debt_q2*kd_book*0.5+iss_2h26*kd_new*iss_t", **{c: f"=debt_q2*kd_book+({k_('debt', PREV[c])}-debt_q2)*kd_new" for c in FC}})
     C.row("inti", "利息收入（期初現金 × y_cash）", "US$bn", {"F": "=cash_q2*y_cash*0.5", **{c: f"={k_('cash', PREV[c])}*y_cash" for c in FC}})
     C.row("gate", "收支關卡（本情境）：自由現金流扣股利 FY2026–FY2030 合計", "US$bn", {"G": f"=SUM({k_('fcfd', 'G')}:{k_('fcfd', 'K')})"}, bold=True, key_fill=True)
     C.row("borrow5", "FY2026–FY2030 新增借款合計（不含已發行債券）", "US$bn", {"G": f"=SUM({k_('borrow', 'G')}:{k_('borrow', 'K')})"})
+    C.row("chk_gate", f"檢查（情境 {s}）：收支關卡＝首年起五年自由現金流扣股利（逐欄加總）", "US$bn",
+          {"G": f"={k_('gate', 'G')}-(" + "+".join(k_('fcfd', c) for c in "GHIJK") + ")"}, check=True)
     C.close()
 
     # ---------------- Val ----------------
     V = Blk(f"{eid}V", sheets["Val"], f"Val｜{nm}：DCF（FCFF，WACC）與分部加總（SOTP，同業 EV/EBITDA）")
     v = V.t
     V.sec("DCF（基準日 2026-12-31；FY2027–FY2032 期中折現；永續價值＝FY2033 NOPAT ×（1 − g ÷ RONIC）÷（WACC − g））")
-    V.row("nopat", "NOPAT＝合併營業利益 ×（1 − 稅率）", "US$bn", {c: f"={l('oi', c)}*(1-tax)" for c in FC})
+    V.row("nopat", "NOPAT＝營業利益（評價口徑，含自用 AI 影子效益）×（1 − 稅率）", "US$bn", {c: f"={l('oi_v', c)}*(1-tax)" for c in FC})
     V.row("da", "＋分部折舊攤銷", "US$bn", {c: f"={l('da', c)}" for c in FC})
     V.row("cx", "− 資本支出", "US$bn", {c: f"={k_('cx', c)}" for c in FC})
     V.row("lease", "− 融資租賃本金", "US$bn", {c: f"={k_('lease', c)}" for c in FC})
@@ -812,23 +837,38 @@ def engine(eid, s, sheets, over=None, tag=""):
     V.row("pvtv", "永續價值現值", "US$bn", {"C": f"={v('tv', 'C')}/(1+{P('wacc')})^6"})
     V.row("ev", "企業價值（EV）", "US$bn", {"C": f"={v('spv', 'C')}+{v('pvtv', 'C')}"})
     V.row("tvsh", "永續價值占 EV", "%", {"C": f"={v('pvtv', 'C')}/{v('ev', 'C')}"}, "0.0%")
-    V.row("nd26", "− 淨負債（2026 年底）", "US$bn", {"C": f"={k_('nd', 'G')}"})
+    V.row("nd26", "− 淨負債（2026 年底，含融資租賃與融資義務）", "US$bn", {"C": f"={k_('nd', 'G')}+fin_debt"})
     V.row("hold", "＋持股：(Anthropic 估值 × 比例＋OpenAI 估值 × 比例) ×（1 − 流動性折價）", "US$bn",
           {"C": f"=(ant_val*{P('ant_sh')}+oai_val*oai_sh)*(1-{P('liq_disc')})"})
     V.row("eq", "股權價值", "US$bn", {"C": f"={v('ev', 'C')}-{v('nd26', 'C')}+{v('hold', 'C')}"})
-    V.row("ps", "每股價值（2026-12-31；÷ 稀釋股數 sh_val）", "US$", {"C": f"={v('eq', 'C')}/sh_val"}, "0.00")
-    V.row("dcf12", "DCF 情境價值推到目標價時點（×（1＋ke）^tp_yf）", "US$", {"C": f"={v('ps', 'C')}*(1+ke)^tp_yf"}, "0.00", bold=True)
-    V.sec("分部加總（SOTP；目標價時點的未來 12 個月 EBITDA ≈ 0.25 × FY2027＋0.75 × FY2028）× 同業 NTM EV/EBITDA 中位數")
-    for k, lab, mult in (("ads", "廣告", f"m_ads*{P('m_x')}"), ("rt", "零售本業", f"m_retail*{P('m_x')}"), ("awso", "AWS 其他（非 AI 雲端）", f"m_cloud*{P('m_x')}"), ("ai", "AWS AI", P("m_ai"))):
-        V.row("e_" + k, f"{lab}：未來 12 個月 EBITDA", "US$bn", {"C": f"=0.25*{l('e_' + k, 'H')}+0.75*{l('e_' + k, 'I')}"})
+    V.row("ps", "每股價值（2026-12-31；÷ 流通股數 sh_out：SBC 已視為現金成本，不另計稀釋）", "US$", {"C": f"={v('eq', 'C')}/sh_out"}, "0.00")
+    V.row("dcf12", "DCF 情境價值推到目標價時點（×（1＋ke）^tp_yf − 期間股利）", "US$", {"C": f"={v('ps', 'C')}*(1+ke)^tp_yf-dps*tp_yf"}, "0.00", bold=True)
+    V.sec("分部加總（SOTP）：目標價時點的未來 12 個月 EBITDA（FY2027 權重 1 − tp_yf、FY2028 權重 tp_yf）× 同業 NTM EV/EBITDA 中位數；EBITDA 用 SBC 加回口徑（與同業倍數同口徑，SBC 按營收比例分攤）；AWS AI 用自身 DCF（F3）")
+    sbcw = lambda num, c: f"{k_('sbc', c)}*{num}/{S.t('tot', c)}"
+    fw = lambda f: f"=(1-tp_yf)*({f('H')})+tp_yf*({f('I')})"
+    for k, lab, mult, extra in (("ads", "廣告", f"m_ads*{P('m_x')}", lambda c: sbcw(S.t('rev_ad', c), c)),
+                                ("rt", "零售本業（讀法 2：加回自用 AI 營運成本，自用 AI 價值中性）", f"m_retail*{P('m_x')}",
+                                 lambda c: sbcw(f"({S.t('rt', c)}-{S.t('rev_ad', c)})", c) + f"+{rd}*(1-{P('ext_sh')})*{T.t('opex', c)}"),
+                                ("awso", "AWS 其他（非 AI 雲端）", f"m_cloud*{P('m_x')}", lambda c: sbcw(S.t('aws_o', c), c))):
+        V.row("e_" + k, f"{lab}：未來 12 個月 EBITDA（SBC 加回）", "US$bn", {"C": fw(lambda c, k=k, extra=extra: f"{l('e_' + k, c)}+{extra(c)}")})
         V.row("m_" + k, f"{lab}：倍數", "x", {"C": f"={mult}"}, "0.00")
         V.row("ev_" + k, f"{lab}：EV", "US$bn", {"C": f"={v('e_' + k, 'C')}*{v('m_' + k, 'C')}"})
+    V.row("ai_fcf", "AWS AI 自由現金流＝AI EBITDA − 稅 × AI 營業利益 − 對外比例 × AI 資本支出（含汰換）", "US$bn",
+          {c: f"={T.t('ebitda', c)}-tax*{T.t('ebit', c)}-{P('ext_sh')}*{T.t('cx', c)}" for c in FC})
+    V.row("ai_pv", "  現值（WACC，期中）", "US$bn", {c: f"={v('ai_fcf', c)}*{v('df', c)}" for c in FC})
+    V.row("ai_tv", "  永續價值（2032 年底）＝FY2033 AI NOPAT ×（1 − g ÷ RONIC）÷（WACC − g）", "US$bn",
+          {"C": f"={T.t('ebit', 'M')}*(1-tax)*(1+{P('tg')})*(1-{P('tg')}/{P('ronic')})/({P('wacc')}-{P('tg')})"})
+    V.row("ev_ai_d", "AWS AI：EV（自身 DCF，推到目標價時點）", "US$bn", {"C": f"=(SUM({v('ai_pv', 'H')}:{v('ai_pv', 'M')})+{v('ai_tv', 'C')}/(1+{P('wacc')})^6)*(1+{P('wacc')})^tp_yf"})
+    V.row("e_ai", "對照：AWS AI 未來 12 個月 EBITDA", "US$bn", {"C": fw(lambda c: l('e_ai', c))})
+    V.row("ev_ai_m", "對照：AWS AI EV（EBITDA × m_ai 倍數）", "US$bn", {"C": f"={v('e_ai', 'C')}*{P('m_ai')}"})
+    V.row("ev_ai", "AWS AI：採用 EV（ai_leg＝1：自身 DCF；0：倍數）", "US$bn", {"C": f"=IF({P('ai_leg')}=1,{v('ev_ai_d', 'C')},{v('ev_ai_m', 'C')})"})
     V.row("sev", "分部 EV 合計", "US$bn", {"C": "=" + "+".join(v("ev_" + k, "C") for k in ("ads", "rt", "awso", "ai"))})
-    V.row("nd27", "− 淨負債（2027 年底）", "US$bn", {"C": f"={k_('nd', 'H')}"})
+    V.row("nd27", "− 淨負債（2027 年底，含融資租賃與融資義務）", "US$bn", {"C": f"={k_('nd', 'H')}+fin_debt"})
     V.row("seq", "股權價值（＋持股）", "US$bn", {"C": f"={v('sev', 'C')}-{v('nd27', 'C')}+{v('hold', 'C')}"})
     V.row("sotp", "分部加總每股價值（目標價時點）", "US$", {"C": f"={v('seq', 'C')}/sh_val"}, "0.00", bold=True)
     V.row("tp", "情境目標價＝w_dcf × DCF＋（1 − w_dcf）× 分部加總", "US$", {"C": f"={P('w_dcf')}*{v('dcf12', 'C')}+(1-{P('w_dcf')})*{v('sotp', 'C')}"}, "0.00", bold=True, key_fill=True)
-    V.row("tp4555", "對照：v0.2.2 權重（DCF 45%＋分部 55%）", "US$", {"C": f"=0.45*{v('dcf12', 'C')}+0.55*{v('sotp', 'C')}"}, "0.00")
+    V.row("tp4555", "對照：v0.2.2 權重（DCF 45%＋分部 55%）", "US$", {"C": f"=v022_wdcf*{v('dcf12', 'C')}+(1-v022_wdcf)*{v('sotp', 'C')}"}, "0.00")
+    V.row("sotp_aim", "對照：分部加總每股價值（AWS AI 用 EBITDA × 倍數）", "US$", {"C": f"=({v('seq', 'C')}-{v('ev_ai', 'C')}+{v('ev_ai_m', 'C')})/sh_val"}, "0.00")
     V.close()
     return {"S": S, "T": T, "L": L, "C": C, "V": V}
 
@@ -880,7 +920,8 @@ for j, s in enumerate(SC):
     CFS.cell(7, 2 + j, f"={tk_(s, 'C', 'borrow5', 'G')}").number_format = "#,##0.0"
 CFS.cell(8, 1, "是否需要舉債")
 for j, s in enumerate(SC):
-    CFS.cell(8, 2 + j, f'=IF({openpyxl.utils.get_column_letter(2 + j)}7>0,"需要舉債","不需要（現金足以支應）")')
+    _c = openpyxl.utils.get_column_letter(2 + j)
+    CFS.cell(8, 2 + j, f'=IF({_c}7>=1,"需要舉債",IF({_c}7>0,"幾乎不需要（新增借款少於 1）","不需要（現金足以支應）"))')
 CFS["F8"] = "已發行的 2026 下半年債券 29.25 不計；現金低於最低現金 50 時舉債"
 CFS.cell(9, 1, "回購是否需停止")
 for j in range(3):
@@ -891,6 +932,9 @@ for j, s in enumerate(SC):
 for r_ in range(6, 11):
     for col in range(1, 7): CFS.cell(r_, col).fill = KEY if r_ == 6 else PatternFill()
 REG[("CFX", "gate")] = ("CF", 6)
+CFS.cell(11, 1, "檢查：收支關卡＝首年起五年自由現金流扣股利（逐欄加總；三情境絕對值合計）")
+CFS["B11"] = "=" + "+".join(f"ABS({tk_(s, 'C', 'chk_gate', 'G')})" for s in SC); CFS["B11"].number_format = "0.000"
+for col in range(1, 7): CFS.cell(11, col).fill = CHK
 
 # ---------------- Val 第 0 節 ----------------
 V = SH["Val"]
@@ -931,15 +975,17 @@ vrow(28, "band", "價格帶（DCF 不如預期～順利）", {"B": '=TEXT(D5,"#,
 vrow(29, "gate1", "收支關卡（引用 CF 頁）：自由現金流扣股利五年合計（情境加權）", {"B": "=CF!E6"}, "#,##0.0")
 vrow(30, "wacc", "WACC／ke／g", {"B": "=wacc", "C": "=ke", "D": "=tg"}, "0.00%")
 V.cell(31, 1, "目標價方法")
-V["B31"] = ("DCF：FCFF＝NOPAT＋分部折舊 − 資本支出 − 融資租賃本金＋其他營運項目（SBC 不加回），WACC（CAPM，沿用 v0.2.2 輸入、現價更新），FY2027–FY2032 期中折現，"
-            "永續價值＝FY2033 NOPAT ×（1 − g ÷ RONIC）÷（WACC − g），RONIC 預設＝WACC；淨負債為模型 2026 年底值；持股（Anthropic、OpenAI）加回。"
-            "Comparable（分部加總）：目標價時點未來 12 個月 EBITDA（0.25 × FY2027＋0.75 × FY2028）× 同業 NTM EV/EBITDA 中位數（零售、數位廣告、非 AI 雲端；AWS AI 6×），減 2027 年底淨負債、加持股。")
+V_R1 = 32
+V["B31"] = ("DCF：FCFF＝NOPAT（評價口徑，含讀法 2 自用 AI 影子效益）＋分部折舊 − 資本支出 − 融資租賃本金＋其他營運項目（SBC 不加回、股數用流通股數），WACC（CAPM：β Blume 調整、rf 2026-10-26、"
+            "kd＝rf＋AA 利差、D 含類債務），FY2027–FY2032 期中折現，永續價值＝FY2033 NOPAT ×（1 − g ÷ RONIC）÷（WACC − g），RONIC＝WACC；2030–2032 新增 MW 收斂到 g；淨負債含融資租賃與融資義務；持股加回。"
+            "分部加總：廣告、零售本業、AWS 其他＝未來 12 個月 EBITDA（SBC 加回口徑，與同業倍數一致）× 同業 NTM EV/EBITDA 中位數；AWS AI＝自身 DCF（EBITDA − 稅 − AI 資本支出含汰換）；減 2027 年底淨負債（含類債務）、加持股，÷ 稀釋股數。")
 for k in ("tps",):
     for c in "BCD": V[f"{c}{VR[k]}"].fill = KEY
 for k in ("tpw", "upw", "rec"):
     for c in "AB": V[f"{c}{VR[k]}"].fill = KEY
 # 同業倍數表
-P0 = 34
+RD1 = {}
+P0 = 40
 V.cell(P0, 1, "同業 NTM EV/EBITDA（StockAnalysis EV ÷ MarketScreener NTM EBITDA 共識，2026-10-07；沿用 v0.2.2 共用同業檔，本輪未更新）").font = BOLD
 hdr(V, P0 + 1, ["同業", "代號", "NTM EV/EBITDA", "組別", "來源", "標記"])
 PEERS = [("retail", "Walmart", "WMT", 17.72), ("retail", "Costco", "COST", 25.33), ("retail", "Target", "TGT", 8.77),
@@ -991,10 +1037,11 @@ for y in (2026, 2027, 2028):
     rec(f"FY{y} 營收", f"=c_rev{yy}", lambda s, c=c: f"={tk_(s, 'L', 'tot', c)}", "MarketScreener", "FY2026 模型含 1H 實績")
     if y < 2028:
         rec(f"FY{y} 營收（S&P）", f"=c_sprev{yy}", lambda s, c=c: f"={tk_(s, 'L', 'tot', c)}", "S&P Global（StockAnalysis，2026-10-26）")
-    rec(f"FY{y} EBITDA", f"=c_ebitda{yy}", lambda s, c=c: f"={tk_(s, 'L', 'ebitda', c)}", "MarketScreener", "模型＝營業利益＋分部折舊（不含影音內容與營業租賃資產攤銷約 25／年），口徑低於供應商")
+    rec(f"FY{y} EBITDA", f"=c_ebitda{yy}", lambda s, c=c: f"={tk_(s, 'L', 'ebitda', c)}", "MarketScreener",
+        "模型＝營業利益（財報口徑）＋分部 PP&E 折舊；差距約一半是折舊口徑（不含影音內容與營業租賃資產攤銷，約 25／年），約一半是 SBC（供應商 EBITDA 多為 SBC 加回，約 22–29／年）")
     rec(f"FY{y} 營業利益（EBIT）", f"=c_ebit{yy}", lambda s, c=c: f"={tk_(s, 'L', 'oi', c)}", "MarketScreener")
-    rec(f"FY{y} 淨利（GAAP）", f"=c_ni{yy}", lambda s, c=c: f"={tk_(s, 'L', 'ni', c)}", "MarketScreener", "FY2026 含上半年 Anthropic 評價利益")
-    rec(f"FY{y} EPS（GAAP）", f"=c_eps{yy}", lambda s, c=c: f"={tk_(s, 'L', 'eps', c)}", "MarketScreener", fmt="0.00")
+    rec(f"FY{y} 淨利（GAAP）", f"=c_ni{yy}", lambda s, c=c: f"={tk_(s, 'L', 'ni', c)}", "MarketScreener", "財報口徑；FY2026 含上半年 Anthropic 評價利益")
+    rec(f"FY{y} EPS（GAAP）vs 模型財報口徑 EPS", f"=c_eps{yy}", lambda s, c=c: f"={tk_(s, 'L', 'eps_fin', c)}", "MarketScreener", fmt="0.00")
     if y < 2028:
         rec(f"FY{y} EPS（調整後，S&P）vs 模型不含業外 EPS", f"=c_speps{yy}", lambda s, c=c: f"={tk_(s, 'L', 'eps_x', c)}", "S&P Global（2026-10-26）", "模型扣除業外其他（近似）", fmt="0.00")
     rec(f"FY{y} 資本支出", f"=c_capex{yy}", lambda s, c=c: f"={tk_(s, 'C', 'cx', c)}", "MarketScreener")
@@ -1013,6 +1060,7 @@ rec("2026Q3 營業利益指引中點 vs 模型隱含 Q3（2H26 × 2025Q3 占 2H2
 rec("AWS AI 年化營收（評價日 2026-06-30）vs 公司「>25」", "=ai_rr", lambda s: "=mw_open*rpm_open/1000", "2026Q2 法說", "C3：不回頭改 MW 或 k，差距本身是發現")
 rec("要對上公司說法：所需 k（MW 不變）", None, lambda s: "=ai_rr*1000/(mw_open*he_open)", "", "對照 k_B（In 頁）", fmt="0.000", gap=False)
 rec("要對上公司說法：所需對外 MW（k 不變）", None, lambda s: "=ai_rr*1000/rpm_open", "", "對照期初 2,080 MW", fmt="#,##0", gap=False)
+rec("替代：期初 k 對上公司 run-rate 時的情境 B 目標價變動（每股）", None, lambda s: "=Sens!C15-Sens!C4", "Sens 頁案例", "不作主值（共同規則第 4 節：不以公司說法反推 k）；AWS 其他的成長起點已改用 FY2025 年增，不受此分拆影響", fmt="0.00", gap=False)
 rec("上限檢查：FY2028 每 MW 年收入 ÷ Tokenomics P×Q（VR200）", None, lambda s: f"={tk_(s, 'T', 'pq_chk', 'I')}", "Tokenomics v21.4", "上限，不得作預測", fmt="0.0%", gap=False)
 rsec("D. v0.3 vs v0.2.2：目標價差異拆解")
 r1 = rec("v0.2.2 基準目標價（讀法 1；現價 259.92，2026-10-07）", "=v022_tp", None, "legacy_v0.2", fmt="0.00", gap=False)
@@ -1037,16 +1085,18 @@ CASES = [("新產能 k 低（價格軸低 k_C）", "k_長約 0.574 混合", {"kn
          ("MW 速度 × 0.75", "對外 AI MW 每年新增 −25%", {"pace": "(pace_B*0.75)"}, "命題"), ("MW 速度 × 1.25", "+25%", {"pace": "(pace_B*1.25)"}, "命題"),
          ("AI IT 折舊 5 年", "Tokenomics 6 年 → 5", {"tk_life": "tk_life_lo"}, "命題"), ("AI IT 折舊 7 年", "6 → 7", {"tk_life": "tk_life_hi"}, "命題"),
          ("自研晶片係數 0.7（收入與資本支出）", "C2 敏感度", {"cf_chip": "cf_chip_lo", "cf_cx": "cf_cx_lo"}, "命題"),
-         ("自用 AI 讀法 2（影子效益 k＝1）", "C16", {"rd2": "rd2_hi"}, "命題"),
+         ("自用 AI 讀法 1（只計成本）", "C16；主值為讀法 2", {"internal_ai_reading": "1"}, "命題"),
+         ("期初 k 對上公司 AI run-rate（>25）", "期初每 MW 收入＝ai_rr ÷ 期初 MW（k 約 1.23）；只作對照", {"rpm_open": "(ai_rr*1000/mw_open)"}, "命題"),
          ("AWS 其他長期成長 5%", "g_awso_lt 低", {"g_awso_lt": "g_awso_lt_lo"}, "業務"), ("AWS 其他長期成長 11%", "g_awso_lt 高", {"g_awso_lt": "g_awso_lt_hi"}, "業務"),
          ("廣告利益率 40%", "m_ad 低", {"m_ad": "m_ad_lo"}, "業務"), ("廣告利益率 60%", "m_ad 高", {"m_ad": "m_ad_hi"}, "業務"),
          ("廣告長期成長 7%", "g_ad 低", {"g_ad": "g_ad_lo"}, "業務"), ("廣告長期成長 13%", "g_ad 高", {"g_ad": "g_ad_hi"}, "業務"),
          ("北美零售利益率年改善 0", "step_na 低", {"step_na": "step_na_lo"}, "業務"), ("北美零售利益率年改善 0.6pt", "step_na 高", {"step_na": "step_na_hi"}, "業務"),
          ("WACC −1pt", "", {"wacc": "(wacc-0.01)"}, "評價"), ("WACC +1pt", "", {"wacc": "(wacc+0.01)"}, "評價"),
          ("永續成長 g 2%", "", {"tg": "tg_lo"}, "評價"), ("永續成長 g 4%", "", {"tg": "tg_hi"}, "評價"),
-         ("RONIC 20%（永續成長創造價值）", "預設 RONIC＝WACC", {"ronic": "ronic_hi"}, "評價"),
+         ("RONIC＝WACC＋5pt", "預設 RONIC＝WACC（F5）", {"ronic": "ronic_hi"}, "評價"),
          ("分部倍數 × 0.8", "零售、廣告、非 AI 雲端", {"m_x": "m_x_lo"}, "評價"), ("分部倍數 × 1.2", "", {"m_x": "m_x_hi"}, "評價"),
-         ("AWS AI 倍數 10×", "預設 6×", {"m_ai": "m_ai_hi"}, "評價"),
+         ("AWS AI 腿改用 EBITDA × 6×", "預設：AI 自身 DCF（F3）", {"ai_leg": "0"}, "評價"),
+         ("AWS AI 腿改用 EBITDA × 10×", "", {"ai_leg": "0", "m_ai": "m_ai_hi"}, "評價"),
          ("Anthropic 持股 15%", "預設 18%", {"ant_sh": "ant_sh_lo"}, "評價"), ("Anthropic 持股 21%", "", {"ant_sh": "ant_sh_hi"}, "評價"),
          ("DCF 權重 30%", "預設 50%", {"w_dcf": "0.3"}, "評價"), ("DCF 權重 70%", "", {"w_dcf": "0.7"}, "評價")]
 CUR["Sens"] = 60
@@ -1064,13 +1114,45 @@ for n, (nm_, st, ov, cat) in enumerate(CASES, 1):
     e = engine(f"X{n:02d}", "B", SB, ov, tag=f"｜Sens 案例：{nm_}")
     sens_row(4 + n, nm_, st, e, cat)
 SENS_LAST = 4 + len(CASES)
+assert str(SE.cell(15, 1).value).startswith("期初 k"), SE.cell(15, 1).value
 SE.cell(SENS_LAST + 2, 1, "檢查：Sens 基準區塊目標價 − Val 情境 B 目標價（應為 0）")
 SE.cell(SENS_LAST + 2, 3, f"={base['V'].t('tp', 'C')}-C4").number_format = "0.000000"
 for col in range(1, 9): SE.cell(SENS_LAST + 2, col).fill = CHK
 SENS_CHK = SENS_LAST + 2
 SE.cell(SENS_LAST + 3, 1, "讀法：相對基準＝案例目標價 ÷ 基準目標價 − 1；每列只動一個輸入（自研晶片係數同時動收入與資本支出）。")
+G0 = SENS_LAST + 5
+SE.cell(G0, 1, "WACC × 永續成長 g 網格（情境 B 目標價；F4）").font = BOLD
+hdr(SE, G0 + 1, ["WACC 調整", "g 2%", "g 3%（基準）", "g 4%"])
+GRID = {}
+for i, (wl, wx) in enumerate((("WACC −1pt", "(wacc-0.01)"), ("WACC（基準）", "wacc"), ("WACC +1pt", "(wacc+0.01)"))):
+    SE.cell(G0 + 2 + i, 1, wl)
+    for j, gx in enumerate(("tg_lo", "tg", "tg_hi")):
+        e = engine(f"G{i}{j}", "B", SB, {"wacc": wx, "tg": gx}, tag=f"｜Sens 網格：{wl}、g {('2%', '3%', '4%')[j]}")
+        SE.cell(G0 + 2 + i, 2 + j, f"={e['V'].t('tp', 'C')}").number_format = "0.00"
+R0 = G0 + 7
+SE.cell(R0, 1, "自用 AI 讀法 1（只計成本）三情境（主值為讀法 2）").font = BOLD
+hdr(SE, R0 + 1, ["情境", "目標價", "DCF", "分部加總"])
+for i, s_ in enumerate(SC):
+    e = engine(f"R1{s_}", s_, SB, {"internal_ai_reading": "1"}, tag="｜讀法 1")
+    SE.cell(R0 + 2 + i, 1, SCN[s_])
+    for j, k in enumerate(("tp", "dcf12", "sotp")):
+        SE.cell(R0 + 2 + i, 2 + j, f"={e['V'].t(k, 'C')}").number_format = "0.00"
+    RD1[s_] = R0 + 2 + i
+assert R0 + 5 < 60, R0
 SE.column_dimensions["A"].width = 40; SE.column_dimensions["B"].width = 30
 for c in "CDEFG": SE.column_dimensions[c].width = 14
+
+# Val 第 0 節：讀法 1 並列（F1）
+V.cell(V_R1, 1, "讀法 1（自用 AI 只計成本）情境目標價")
+for j, s_ in enumerate(SC):
+    V.cell(V_R1, 2 + j, f"=Sens!B{RD1[s_]}").number_format = "0.00"
+V.cell(V_R1, 5, "Sens 頁讀法 1 區塊；主值為讀法 2（In 頁 internal_ai_reading＝2）")
+V.cell(V_R1 + 1, 1, "讀法 1：加權目標價"); V.cell(V_R1 + 1, 2, f"=w_A*B{V_R1}+w_B*C{V_R1}+w_C*D{V_R1}").number_format = "0.00"
+V.cell(V_R1 + 2, 1, "讀法 1：上檔空間"); V.cell(V_R1 + 2, 2, f"=B{V_R1 + 1}/px-1").number_format = "0.0%"
+V.cell(V_R1 + 3, 1, "讀法 1：投資建議")
+V.cell(V_R1 + 3, 2, f'=IF(B{V_R1 + 2}>=0.5,"強力買進",IF(B{V_R1 + 2}>=0.25,"買進",IF(B{V_R1 + 2}>-0.25,"中立",IF(B{V_R1 + 2}>-0.5,"放空","強力放空"))))')
+V.cell(V_R1 + 4, 1, "自用 AI 讀法（主值）"); V.cell(V_R1 + 4, 2, "=internal_ai_reading").number_format = "0"
+V.cell(V_R1 + 4, 5, "2＝讀法 2（價值中性）；讀法 1 下 AI 容量越大目標價越低，讀法 2 下容量對目標價大致中性")
 
 # ---------------- Sources ----------------
 SO = wb.create_sheet("Sources")
@@ -1092,12 +1174,12 @@ lines = [
     ('="投資建議："&Val!B24&"（加權目標價 US$"&TEXT(Val!B19,"0.00")&"，現價 US$"&TEXT(px,"0.00")&"〔2026-10-26〕，上檔空間 "&TEXT(Val!B21,"+0.0%;-0.0%")&"；依五級固定規則）"', True),
     (f'="命題答案（情境 B）：FY2028 對外 AI ROIC "&TEXT({B_("T", "roic", "I")},"0.0%")&"，低於 WACC "&TEXT(wacc,"0.0%")&"；打平所需機隊平均 k "&TEXT({B_("T", "k_be", "I")},"0.00")&"，模型 k "&TEXT({B_("T", "k_eff", "I")},"0.00")&"。FY2028 AWS 營業利益率 "&TEXT({B_("L", "m_aws", "I")},"0.0%")&"（FY2025 "&TEXT({B_("L", "m_aws", "D")},"0.0%")&"）；FY2028 自由現金流扣股利 "&TEXT({B_("C", "fcfd", "I")},"#,##0.0")&"；收支關卡（FY2026–FY2030 合計，情境加權）"&TEXT(CF!E6,"#,##0.0")&"。"', False),
     (f'="重點觀察 1：目標價 US$"&TEXT(Val!B19,"0.00")&"＝DCF "&TEXT(Val!B17,"0.00")&"（永續價值占 EV "&TEXT(Val!C8,"0%")&"）與分部加總 "&TEXT(Val!B18,"0.00")&" 各半；DCF 低是因為 WACC "&TEXT(wacc,"0.0%")&" 下，2027–2029 的 AI 資本支出（情境 B FY2027 "&TEXT({B_("C", "cx", "H")},"#,##0")&"）讓 FCFF 為負，而 AI 增量報酬低於資金成本。"', False),
-    (f'="重點觀察 2：分部加總中 AWS 其他（非 AI 雲端）占 "&TEXT({B_("V", "ev_awso", "C")}/{B_("V", "sev", "C")},"0%")&"、廣告占 "&TEXT({B_("V", "ev_ads", "C")}/{B_("V", "sev", "C")},"0%")&"；零售本業 EBITDA 扣除自用 AI 成本後僅 "&TEXT({B_("V", "e_rt", "C")},"#,##0")&"，廣告利潤（m_ad 50%）幾乎是零售分部的全部利潤。"', False),
+    (f'="重點觀察 2：分部加總中 AWS 其他（非 AI 雲端）占 "&TEXT({B_("V", "ev_awso", "C")}/{B_("V", "sev", "C")},"0%")&"、廣告占 "&TEXT({B_("V", "ev_ads", "C")}/{B_("V", "sev", "C")},"0%")&"；零售本業未來 12 個月 EBITDA（SBC 加回）僅 "&TEXT({B_("V", "e_rt", "C")},"#,##0")&"，廣告利潤（m_ad 50%）幾乎是零售分部的全部利潤；AWS AI 以自身 DCF 計只值 "&TEXT({B_("V", "ev_ai", "C")},"#,##0")&"。"', False),
     (f'="重點觀察 3：三情境目標價 A "&TEXT(Val!B7,"0")&"／B "&TEXT(Val!C7,"0")&"／C "&TEXT(Val!D7,"0")&"；新產能 k 是最大的命題驅動（Sens：k_C "&TEXT(Sens!D5,"+0%;-0%")&"、k_A "&TEXT(Sens!D6,"+0%;-0%")&"），對外比例 ±20pt 為 "&TEXT(Sens!D7,"+0%;-0%")&"／"&TEXT(Sens!D8,"+0%;-0%")&"；市場共識目標價 "&TEXT(cons_tp,"0")&"。"', False),
     ("", False),
     ("驅動 → 推導對照表（每頁輸入、推導量、因果方向）", True),
     ("In → Thesis：對外 AI MW（期初 2,080 MW、每年新增 pace）× Tokenomics IF_HoldEcon × k → AWS AI 營收；新增 MW ÷ 對外比例 ×（IT＋自建機房成本）→ AI 資本支出 → IT 6 年／機房 20 年折舊 → AWS AI 營業利益（對外）與自用 AI 成本（零售）。", False),
-    ("In → Seg：零售六條營收線（2H26＝2H25 ×（1＋1H26 年增），之後收斂到長期年增）→ 零售合計 × 北美比例 → North America／International；AWS＝AWS AI＋AWS 其他（殘差起算、收斂到 8%）。", False),
+    ("In → Seg：零售六條營收線（2H26＝2H25 ×（1＋2H25 年增）× 校準係數〔隱含 2026Q3＝指引中點〕，之後收斂到長期年增）→ 零售合計 × 北美比例 → North America／International；AWS＝AWS AI＋AWS 其他（殘差起算、收斂到 8%）。", False),
     ("Seg、Thesis → PL：北美／國際營業利益＝廣告營收 × 50%＋零售本業營收 × 本業利益率（實績殘差＋每年改善）− 自用 AI 成本；AWS 營業利益＝AWS AI＋AWS 其他 × 近四季利益率 → 合併營業利益 → 利息（CF）、稅 17.4% → 淨利 → EPS。", False),
     ("PL → CF：淨利＋分部折舊＋SBC＋其他 − 資本支出（AI＋AWS 其他 20%＋零售 5.9%）− 融資租賃本金 → 自由現金流；股利 0、回購 0；現金低於 50 即舉債 → 利息費用回到 PL。", False),
     ("PL、CF → Val：DCF（FCFF、WACC、RONIC 永續）＋分部加總（廣告、零售本業、AWS 其他、AWS AI × 同業倍數）＋持股（Anthropic、OpenAI）→ 情境目標價 → 情境加權 → 上檔空間 → 投資建議。", False),
@@ -1196,8 +1278,8 @@ def html_config():
                  "rowgen": {"sheet": "Val", "rows": "5-14", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n2", "n2", "n2", ""],
                             "row_fmt": {str(k): {c: f for c in "BCD"} for k, f in vfmt.items()}}},
                 {"type": "table", "head": ["@Val!A16", "@Val!B16", "@Val!E16"],
-                 "rowgen": {"sheet": "Val", "rows": "17-30", "cols": ["A", "B", "E"], "fmts": ["", "n2", ""],
-                            "row_fmt": {"21": {"B": "sp1"}, "22": {"B": "sp1"}, "26": {"B": "sp1"}, "29": {"B": "n1"}, "30": {"B": "p2"}}}},
+                 "rowgen": {"sheet": "Val", "rows": "17-30,33-36", "cols": ["A", "B", "E"], "fmts": ["", "n2", ""],
+                            "row_fmt": {"21": {"B": "sp1"}, "22": {"B": "sp1"}, "26": {"B": "sp1"}, "29": {"B": "n1"}, "30": {"B": "p2"}, "34": {"B": "sp1"}}}},
                 {"type": "bars", "title": "目標價與現價", "fmt": "n0", "items": [
                     {"label": "@Val!A19", "value": "@Val!B19", "series": 0}, {"label": "@Val!A17", "value": "@Val!B17", "series": 1},
                     {"label": "@Val!A18", "value": "@Val!B18", "series": 2}, {"label": "@Val!A25", "value": "@Val!B25", "series": 1}],
