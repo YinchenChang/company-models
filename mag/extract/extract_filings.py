@@ -33,6 +33,7 @@ UA = "company-models research tool YinchenChang@users.noreply.github.com"
 CIK = {"microsoft": 789019, "alphabet": 1652044, "amazon": 1018724}
 MAX_DOC_CHARS = 900_000          # 單份文件上限（約 25–30 萬 token，在 1M context 內）
 POLL_MAX_MIN = int(os.environ.get("POLL_MAX_MIN", "80"))
+STALE_BATCH_H = float(os.environ.get("STALE_BATCH_H", "6"))   # 續接時批次超過此時數仍未完成，就取消改走一般 API
 
 
 # ---------- 抓文件 ----------
@@ -219,6 +220,13 @@ def run_batch(prompts, batch_id=None):
     batch_id 有值時只續接取回該批次（不重送）。逾時未完成時回傳空結果與批次資訊，由呼叫端保留請求以便下次續接。"""
     if batch_id:
         b = json.loads(api(f"messages/batches/{batch_id}"))
+        age_h = (time.time() - time.mktime(time.strptime(b["created_at"][:19], "%Y-%m-%dT%H:%M:%S")) + time.timezone) / 3600
+        if b["processing_status"] != "ended" and age_h > STALE_BATCH_H:
+            # 批次異常緩慢：取消（未處理的請求不計費），改用一般 API 串流逐則送出（價格為 Batch 的 2 倍）
+            print(f"批次 {batch_id} 已 {age_h:.1f} 小時未完成，取消並改用一般 API")
+            api(f"messages/batches/{batch_id}/cancel", {}, "POST")
+            out = {cid: stream_message(m, p) for cid, (m, p) in prompts.items()}
+            return out, {"id": batch_id, "processing_status": "ended", "via": "standard"}
     else:
         reqs = [{"custom_id": cid, "params": {"model": m, "max_tokens": 32000, "system": SYSTEM,
                                              "messages": [{"role": "user", "content": p}]}}
@@ -240,6 +248,29 @@ def run_batch(prompts, batch_id=None):
             else:
                 out[r["custom_id"]] = (f"__error__ {json.dumps(res)[:500]}", {})
     return out, b
+
+
+def stream_message(model, prompt):
+    """一般 API（非 Batch）以串流取回一則回覆，回傳 (文字, usage)。長輸出用串流避免逾時。"""
+    body = {"model": model, "max_tokens": 32000, "system": SYSTEM, "stream": True,
+            "messages": [{"role": "user", "content": prompt}]}
+    req = urllib.request.Request("https://api.anthropic.com/v1/messages", data=json.dumps(body).encode(),
+                                 headers={"x-api-key": API_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json"})
+    text, usage = [], {}
+    with urllib.request.urlopen(req, timeout=1800) as r:
+        for raw in r:
+            line = raw.decode("utf-8", "replace").strip()
+            if not line.startswith("data:"):
+                continue
+            ev = json.loads(line[5:])
+            t = ev.get("type")
+            if t == "content_block_delta" and ev["delta"].get("type") == "text_delta":
+                text.append(ev["delta"]["text"])
+            elif t == "message_start":
+                usage.update(ev["message"].get("usage", {}))
+            elif t == "message_delta":
+                usage.update(ev.get("usage", {}))
+    return "".join(text), usage
 
 
 def parse_json_array(text):
@@ -399,6 +430,8 @@ def main():
             for m in MODELS:
                 open(f"{ROOT}/mag/extract/out/raw/{name}_{m}.txt", "w", encoding="utf-8").write(results.get(m, ("", {}))[0])
             price = {"opus": (2, 10), "sonnet": (1, 5), "haiku": (0.05, 0.25)}
+            if binfo.get("via") == "standard":
+                price = {k: (a * 2, b * 2) for k, (a, b) in price.items()}
             cost = 0.0
             for m in MODELS:
                 u = results.get(m, ("", {}))[1]
