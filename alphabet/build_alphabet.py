@@ -154,7 +154,7 @@ inp("dps_tgt", "評價日到目標時點的每股股利（推到目標價時扣�
 inp("t_px0", "現價日（2026-10-26）的年份小數", "年", None, 2026.82, None, "Derived", "回購均價 ＝ 現價 × (1＋ke)^(期中 − 本值)")
 inp("mb_ttm", "分部利益率起點改用近四季（1＝是；0＝1H26）", "x", None, 0, 1, "Assumed", "判斷：預設 1H26（利潤率擴張中、與評價日機隊同時點）；1＝v0.2.2 的近四季口徑", "", judg=True)
 inp("internal_ai_reading", "自用 AI 讀法（2＝主值：自用 AI 價值中性，計影子效益；1＝敏感度：只計成本）", "x", 1, 2, None, "Assumed",
-    "修正一 F1（chat 端預設，已向 Andy 提出）：自用增量 MW × Tokenomics IF_HoldEcon（k＝1）＝自用 AI 影子效益（非財報營收），進評價口徑 NOPAT、FCF、EPS；對照表 r1 C16",
+    "修正一 F1；Andy 2026-10-27 15:03 決定讀法 2 為主值：自用增量 MW × Tokenomics IF_HoldEcon（k＝1）＝自用 AI 影子效益（非財報營收），進評價口徑 NOPAT、FCF、EPS；對照表 r1 C16",
     "營收列與分部對帳不動；Val 頁兩種讀法的目標價並列（皆為活公式）", judg=True)
 inp("sbc_add", "DCF 加回股權報酬（1＝是；Sens 用）", "x", None, 0, 1, "Assumed", "判斷：股權報酬視為真實成本、不加回（稀釋已在股數 dil）；1＝加回（稅後）", "", judg=True)
 inp("tv_alt", "終值改用 FY2032 無槓桿自由現金流 ×(1＋g)（1＝是；Sens 用）", "x", None, 0, 1, "Assumed", "判斷：基準用價值驅動公式（ronic）；1＝替代口徑", "", judg=True)
@@ -199,8 +199,9 @@ inp("mix0_b2", "期初機隊：GB200 錨（Trillium v6e、GB200／B200）", "%",
 inp("mix0_b3", "期初機隊：GB300 錨（Ironwood）", "%", None, 0.30, None, "Assumed", V22 + "（Ironwood 30%）", "C2")
 inp("am_26", "2026 新增中 GB300 錨占比（Ironwood＋GB300；其餘 VR200 錨）", "%", None, 1.0, None, "Assumed", V22 + "（2026 Ironwood 75%＋GB300 25%）")
 inp("am_28", "2028 起新增中 VR200 錨占比（下一代 TPU＋VR200；其餘 GB300 錨）", "%", None, 1.0, None, "Assumed", V22 + "（2028 起下一代 TPU 75%＋VR200 25%）")
-inp("cip_lag", "AI 資本支出到在役的時間差（年；1＝在建工程即 2H26 新增 MW，之後各年支出次年才折舊）", "年", 0, 1, None, "Assumed",
-    "修正二：在建工程 122.8 視為 2H26–2027 上線 MW 的來源（不另增 MW），新支出經在建工程一年後在役折舊，避免與在建工程折舊重複", "0＝修正一口徑（支出當年即折舊）", judg=True)
+inp("cip_lag", "AI 資本支出到在役的時間差（年；0＝支出當年即依 phi_0 折舊）", "年", None, 0, 1, "Assumed",
+    "修正三：資本支出仍依 MW 路徑足額支付 2H26、FY2027 的新增 MW，在建工程 122.8 是另一筆已付資產（照原時程折舊、不另增 MW）→ 時間差取 0 才不會少提折舊",
+    "1＝修正二口徑（在建工程視為新增 MW 來源但資本支出未相應減少，約 58 的資產少提折舊）", judg=True)
 inp("conv_mw", "FY2029 起 MW 新增速度收斂年數（到 FY2032 只剩 g × 期初 MW）", "年", None, 4, None, "Assumed", "修正一 F5：終值不得落在建置高峰", judg=True)
 inp("am_27", "2027 新增中 GB300 錨占比（Ironwood＋GB300；其餘 VR200 錨）", "%", None, 0.5, None, "Assumed", V22 + "（2027 Ironwood 40%＋GB300 10%）", "2026 新增全為 GB300 錨（Ironwood 75%＋GB300 25%）；2028 起全為 VR200 錨（下一代 TPU＋VR200）")
 inp("tpu_sh", "TPU 占 AI MW 比例", "%", None, 0.75, None, "Derived", "Epoch 2025 年新增功耗 TPU 約 77%（" + V22 + " pricing.mixNote）", "只在 TPU 係數不等於 1 時有作用")
@@ -1005,9 +1006,10 @@ for s in "ABC":
     drow("obf", "− Other Bets 自由現金流（營業利益 ×(1 − 稅率)＋折舊 − 資本支出；改以 Waymo 估值計）", lambda p: f"=PL!{COL[p]}{P['oi_ob']}*(1-tax)+PL!{COL[p]}{P['d_ob']}-Seg!{COL[p]}{SR[s]['cxo']}",
          note="修正二：與分部加總一致，Other Bets 以 ob_val 計，不在 DCF 現金流內")
     drow("ufcf", "無槓桿自由現金流（財報口徑，不含 Other Bets）", lambda p: f"={VC[p]}{D['nopat']}+{VC[p]}{D['da']}-{VC[p]}{D['cx']}+{VC[p]}{D['wc']}-{VC[p]}{D['obf']}", note="股權報酬視為現金成本（修正一 F2）")
-    drow("tvn", "終值用 NOPAT（加回基礎折舊、排除 Other Bets）", lambda p: f"={VC[p]}{D['nopat']}+Thesis!{COL[p]}{T['da_b']}*(1-tax)-PL!{COL[p]}{P['oi_ob']}*(1-tax)",
-         note="修正二：評價日在役資產於 FY2033 前攤完，終值不再帶基礎折舊")
-    drow("shd", "自用 AI 影子效益（稅後；讀法 2 加入）", lambda p: f"=PL!{COL[p]}{P['shadow']}*(1-tax)")
+    drow("tvn", "終值用 NOPAT（排除 Other Bets）", lambda p: f"={VC[p]}{D['nopat']}-PL!{COL[p]}{P['oi_ob']}*(1-tax)",
+         note="修正三：基礎折舊在 FY2032 仍約 11.4（約 54.5 未攤完）→ 保留在終值 NOPAT")
+    drow("shd", "自用 AI 影子效益＋算力租金加回（稅後；讀法 2 加入）", lambda p: f"=(PL!{COL[p]}{P['shadow']}+Thesis!{COL[p]}{T['rent']})*(1-tax)",
+         note="修正三：租用算力（SpaceX）與自有自用 MW 同樣以價值中性計，與分部加總一致")
     drow("t", "折現年數（評價日 2026-06-30 起，期中）", lambda p: "=t_2h" if p == "2H" else f"={PY[p]}-2026", "0.00")
     drow("df", "折現因子 1 ÷ (1＋WACC)^年數", lambda p: f"=1/(1+wacc)^{VC[p]}{D['t']}", "0.0000")
     drow("pv", "現值（財報口徑）", lambda p: f"={VC[p]}{D['ufcf']}*{VC[p]}{D['df']}")
@@ -1028,8 +1030,8 @@ vput("ev", "企業價值 EV（主值，依 internal_ai_reading）", S3(lambda s:
 vput("tvsh", "  其中：終值占 EV（主值）", S3(lambda s: f"=({X3(s)}{VR_['pvtv']}+(internal_ai_reading=2)*{X3(s)}{VR_['pvstv']})/{X3(s)}{VR_['ev']}"), "0.0%")
 vput("nc0", "＋淨現金（評價日：現金 − 債務 − 融資租賃）", ["=cash_0-debt_0-fin_lease"] * 3)
 vput("hold", "＋持股（Anthropic × 比例 ×(1 − 折價)＋SpaceX＋其他上市權益證券）", ["=ant_val*ant_stake*(1-illiq)+spacex+oth_eq"] * 3)
-vput("dl", "− 類債（應計罰款＋非控制權益）", ["=fines+nci"] * 3)
-vput("obv", "＋Other Bets（Waymo 估值 × 持股 ×(1 − 折價)）", ["=ob_val"] * 3, note="修正二：DCF 現金流已排除 Other Bets")
+vput("dl", "− 類債（應計罰款）", ["=fines"] * 3, note="修正三：非控制權益 7.1（主要為 Waymo 少數股東）不再扣除——Waymo 已以 Alphabet 持股 × 投後估值計（投後估值含 Waymo 自身現金）")
+vput("obv", "＋Other Bets（Waymo 估值 × 持股 ×(1 − 折價)）", ["=ob_val"] * 3, note="DCF 現金流排除全部 Other Bets；非 Waymo 的 Other Bets 以價值 0、虧損 0 計")
 _tt = DC["A"]["t"]
 vput("ppref", "− 特別股股利現值（轉換前，以 ke 折現）", [f"=pref_2H/(1+ke)^$F${_tt}+pref_27/(1+ke)^$H${_tt}+pref_28/(1+ke)^$I${_tt}+pref_29/(1+ke)^$J${_tt}"] * 3,
      note="修正一：強制轉換特別股 2029-05 轉股前的股利屬特別股股東")
@@ -1106,12 +1108,18 @@ for j, s in enumerate("ABC"):
     V.cell(r, 2 + j, f"={NTT('int_opex')}+{NTT('rent')}").number_format = "#,##0.00"
     V.cell(r, 6 + j, f"={COLS3[j]}{r}*mult_adsx").number_format = "#,##0.0"
 V.cell(r, 5, "修正二：與 Amazon v0.3 同法（自用 AI 的資本成本不在 EBITDA，故不加影子效益）"); VR_["s_sh"] = r; r += 1
-vput("sev2", "分部加總 EV（讀法 2）", [f"=B{VR_['sev1']}+F{VR_['s_sh']}", f"=C{VR_['sev1']}+G{VR_['s_sh']}", f"=D{VR_['sev1']}+H{VR_['s_sh']}"], "#,##0.0")
+V.cell(r, 1, "＋自用 AI 新增資產帳面淨值（FY2027 年底；讀法 2 價值中性＝按帳面）")
+_nbv = (f"=(1-ext_sh)*(cip_0+Thesis!F{T['cx_ai']}+Thesis!H{T['cx_ai']})-(Thesis!F{T['da_int']}+Thesis!H{T['da_int']})")
+for j, s in enumerate("ABC"):
+    V.cell(r, 6 + j, _nbv).number_format = "#,##0.0"
+V.cell(r, 5, "修正三：FY2027 年底淨現金已扣 2H26–FY2027 自用 AI 資本支出與在建工程自用部分，讀法 2 下這些資產按帳面計"); VR_["s_nbv"] = r; r += 1
+vput("sev2", "分部加總 EV（讀法 2）", [f"=B{VR_['sev1']}+F{VR_['s_sh']}+F{VR_['s_nbv']}", f"=C{VR_['sev1']}+G{VR_['s_sh']}+G{VR_['s_nbv']}", f"=D{VR_['sev1']}+H{VR_['s_sh']}+H{VR_['s_nbv']}"], "#,##0.0")
 vput("sev", "分部加總 EV（主值）", S3(lambda s: f"=IF(internal_ai_reading=2,{X3(s)}{VR_['sev2']},{X3(s)}{VR_['sev1']})"), "#,##0.0", bold=True)
 vput("sebt", "  分部 NTM EBITDA 合計（含 Cloud AI；主值）", S3(lambda s: f"=SUM({X3(s)}{SOTP0}:{X3(s)}{SOTP1})+(internal_ai_reading=2)*{X3(s)}{VR_['s_sh']}"), "#,##0.0")
 vput("aicmp", "  對照：Cloud AI 以 mult_ai 倍數計的 EV（不進加總）", [f"=B{VR_['s_ai']}*mult_ai", f"=C{VR_['s_ai']}*mult_ai", f"=D{VR_['s_ai']}*mult_ai"], "#,##0.0",
      note='="AI 模組 DCF − 倍數版＝"&TEXT(F' + str(VR_["s_ai"]) + '-B' + str(r) + ',"0.0")')
-vput("snc", "＋淨現金（FY2027 年底，CF 頁；減融資租賃）", S3(lambda s: f"=CF!H{CR[s]['nc']}-fin_lease"), note="含 2H26–FY2027 的自由現金流、股利與回購")
+vput("snc", "＋淨現金（FY2027 年底，CF 頁；減融資租賃；加回 2H26–FY2027 Other Bets 現金流）", S3(lambda s: f"=CF!H{CR[s]['nc']}-fin_lease-(F{DC[s]['obf']}+H{DC[s]['obf']})"),
+     note="修正三：Other Bets 以 Waymo 估值計，期間虧損不再從淨現金扣（與 DCF 一致）")
 vput("shold", "＋持股（同 DCF＋2H26–FY2027 已付 Anthropic 出資，按成本）", [f"=B{VR_['hold']}+anth_2H+anth_27"] * 3, note="修正一：出資已自淨現金扣除，持股價值同步增加")
 vput("sdl", "− 類債", [f"=B{VR_['dl']}"] * 3)
 vput("ssh", "股數（FY2027 年底稀釋＋強制轉換特別股）", S3(lambda s: f"=PL!H{PR_[s]['she']}+conv_sh"), "0.000")
@@ -1242,7 +1250,7 @@ SENS_CASES = [
     ("mb_ttm", "分部利益率起點改用近四季", None, "hi", "1H26 → 近四季（v0.2.2 口徑）"),
     ("sbc_add", "DCF 加回股權報酬", None, "hi", "不加回 → 加回（稅後）"),
     ("waymo_stake", "Alphabet 持有 Waymo 比例", "lo", "hi", "60%／80%"),
-    ("cip_lag", "資本支出當年即折舊（修正一口徑）", "lo", None, "時間差 1 年 → 0"),
+    ("cip_lag", "資本支出延後一年折舊（修正二口徑）", None, "hi", "時間差 0 → 1 年"),
 ]
 SE["A1"] = "Sens — 一次改一個輸入（In 頁低／高值），整本活頁簿以 LibreOffice 重算後的加權目標價（Val 頁「目標價（DCF 與 Comparable 加權）」）；由 alphabet/make_v03.sh 產生，建置時寫入（數值）"
 SE["A2"] = "相對基準＝情境目標價 ÷ 基準加權目標價 − 1；龍捲風依絕對值排序（HTML）。基準與各案例的其他輸入相同"
@@ -1282,7 +1290,7 @@ for i, (k, setting, lab) in enumerate(ATT):
 rr = RC_ATT + 1 + len(ATT)
 RC.cell(rr, 1, "自用 AI 讀法 1 → 讀法 2（活公式：Val 頁兩讀法目標價之差）")
 RC.cell(rr, 2, f"=Val!B{VR_['tp_r2']}-Val!B{VR_['tp_r1']}").number_format = "#,##0.00"
-RC.cell(rr, 3, "主值為讀法 2（Andy 2026-10-27 確認）")
+RC.cell(rr, 3, "主值為讀法 2（Andy 2026-10-27 15:03 決定）")
 rr += 1
 RC.cell(rr, 1, "其餘：營收結構（分部＋Search 情境軸）、AI 折舊與自用 AI 成本進分部損益、DCF 終值口徑（價值驅動）、SOTP 以各分部同業倍數取代 EV/EBITDA 錨定 2029、情境定義改為 Search")
 RC.cell(rr, 2, f"=B{RCV['dif']}-" + "-".join(f"N(B{RC_ATT + 1 + i})" for i in range(len(ATT) + 1))).number_format = "#,##0.00"
