@@ -77,8 +77,8 @@ for s in SC:
 inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", 30.5, 32.0, 33.0, "Derived", "與台達電模型相同（公司換算隱含約 32.7）", "先驗比對用 32.7（只影響美元換算的市場與每 GW）")
 
 sec("B. 組裝價格、廣達份額與客供（本專案為權威：NVIDIA 整櫃組裝份額、每櫃 ODM 價格、客供比例，規則第 13 條）")
-inp("odm_gb", "ODM 每櫃價格 GB300", "US$M/架", 3.6, 4.0, 4.3, "Interested-party", CTEE + "：GB300 ASP 約 US$4M（法人，未具名）", "FTNN 2026-10-09 同值；上限＝Tokenomics 買方價 4.3")
-inp("odm_vr", "ODM 每櫃價格 VR200", "US$M/架", 6.5, 6.75, 7.0, "Interested-party", CTEE + "：VR ASP 估 US$6.5–7M（法人）", "FTNN 2026-10-09 同值；Tokenomics 買方價 8.4")
+inp("odm_gb", *SIL.row9("asm_odm_gb")[1:])   # Siliconomics M18
+inp("odm_vr", *SIL.row9("asm_odm_vr")[1:])   # Siliconomics M18
 inp("vpg_28", "每 GW ODM 整櫃價值 2028 ÷ 2027（Rubin Ultra）", "x", 0.85, 1.0, 1.2, "Assumed", "Rubin Ultra（Kyber）每櫃價格與每 GW 架數：未找到", "每 GW 價值 GB300 約 27.1B → VR200 約 27.4B（4.0 × 6,764 vs 6.75 × 4,052）：換世代時每 GW 大致持平")
 inp("vpg_29", "每 GW ODM 整櫃價值 2029 ÷ 2027", "x", 0.85, 1.0, 1.2, "Assumed", "同上", "—")
 inp("rel_27", "廣達 AI 伺服器有效份額 2027 ÷ 2026（相對值）", "x", 0.85, 1.0, 1.1, "Assumed", UDN0910 + "：美系券商 8 月調查 鴻海約 2,600 櫃、廣達 2,500–2,550、緯創 2,300–2,400（Interested-party，單一來源）", "公司：前五大 CSP 為主，Neocloud GPU 與 CSP ASIC 專案小量出貨（2Q26 法說）；Neocloud 繞過 OEM 找 ODM（FTNN 2026-10-09）")

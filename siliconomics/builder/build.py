@@ -276,6 +276,32 @@ def main():
                     ST.cell(r, 4 + j, f"=1-{col}{r-1}").number_format = "0.0%"
                 r += 2
             ST.column_dimensions["G"].width = 9
+        if "pwr_dsh_26" in INROW:
+            ST.cell(r, 1, "AI 電源有效份額（欄 D–G＝2026／2027／2028／2029；分母＝Rack 頁 AI 電源市場；2026＝公司模型校準值，之後 × 份額相對值；光寶相對值隨情境：A 高、B 基準、C 低）").font = BOLD; r += 1
+            for s_ in seed["scen"]:
+                suf = {"A": "_hi", "B": "", "C": "_lo"}[s_]
+                r_first = r
+                ST.cell(r, 1, f"AI 電源（情境 {s_}）"); ST.cell(r, 2, "台達電"); ST.cell(r, 3, "pwr_dsh_26 × pwr_drel_27／28／29（不隨情境）")
+                for j, y in enumerate((26, 27, 28, 29)):
+                    c = ST.cell(r, 4 + j, "=pwr_dsh_26" + ("" if y == 26 else f"*pwr_drel_{y}")); c.number_format = "0.0%"
+                r += 1
+                ST.cell(r, 1, f"AI 電源（情境 {s_}）"); ST.cell(r, 2, "光寶"); ST.cell(r, 3, f"pwr_lsh_26 × pwr_lrel_27／28／29{suf}")
+                for j, y in enumerate((26, 27, 28, 29)):
+                    c = ST.cell(r, 4 + j, "=pwr_lsh_26" + ("" if y == 26 else f"*pwr_lrel_{y}{suf}")); c.number_format = "0.0%"
+                r += 1
+                ST.cell(r, 1, f"AI 電源（情境 {s_}）"); ST.cell(r, 2, "合計").font = BOLD
+                for j in range(4):
+                    col = "DEFG"[j]
+                    c = ST.cell(r, 4 + j, f"=SUM({col}{r_first}:{col}{r-1})"); c.number_format = "0.0%"; c.fill = KEY
+                STROW["sum_pwr" + s_] = r; r += 1
+                ST.cell(r, 1, f"AI 電源（情境 {s_}）"); ST.cell(r, 2, "餘額（Flex、群電、康舒、Vertiv、麥格米特等，未建模）")
+                for j in range(4):
+                    col = "DEFG"[j]
+                    ST.cell(r, 4 + j, f"=1-{col}{r-1}").number_format = "0.0%"
+                r += 2
+            ST.cell(r, 1, "對照：凱基台達電份額（只作對照，不入表；CF11 待 Andy）"); ST.cell(r, 2, "2025-07 Blackwell PSU／2025-09 AI 伺服器電源")
+            ST.cell(r, 4, "=pwr_kgi_0701").number_format = "0.0%"; ST.cell(r, 5, "=pwr_kgi_0926").number_format = "0.0%"; r += 2
+            ST.column_dimensions["G"].width = 9
         ST.column_dimensions["A"].width = 30; ST.column_dimensions["B"].width = 26; ST.column_dimensions["C"].width = 34
         for col in "DEF": ST.column_dimensions[col].width = 9
 
@@ -486,6 +512,69 @@ def main():
         PG.column_dimensions["A"].width = 44; PG.column_dimensions["G"].width = 30
         for col in "BCDEF": PG.column_dimensions[col].width = 10
 
+    # ---------------- Rack：AI 伺服器組裝、商用 GPU 系統、AI 電源市場（v0.6） ----------------
+    RK = None; RKROW = {}
+    if "pwr_pkw_26" in INROW and "asm_odm_gb" in INROW and DP is not None:
+        RK = wb.create_sheet("Rack", index=wb.sheetnames.index("Path"))
+        RK["A1"] = ("Rack — 機架層市場（2026–2029；情境 A／B／C）：(1) AI 伺服器組裝市場（ODM 價）＝部署 GW × 每 GW 架數（Tokenomics）× ODM 每櫃價格；"
+                    "(2) 商用 GPU 系統市場（OEM／整櫃售價，含 GPU）＝商用 GPU 顆數 × 每顆系統價值（Tokenomics 機架價 ÷ 每架 GPU 數）；"
+                    "(3) AI 電源市場＝部署 GW × 每 kW 電源內容。2026 部署依 vr26 混合 GB300 與 VR200，2027 起 VR200（ASIC 機架假設每 GW 價值相同）")
+        hdr(RK, 3, ["項目", "情境", "2026", "2027", "2028", "2029", "說明"])
+        COLS = {2026: "C", 2027: "D", 2028: "E", 2029: "F"}
+        def rc(r, y, f, fmt="#,##0.00", fill=None):
+            c = RK.cell(r, list(COLS).index(y) + 3, f); c.number_format = fmt
+            if fill: c.fill = fill
+            return c
+        r = 4
+        RK.cell(r, 1, "A. AI 伺服器組裝市場（ODM 價；quanta、foxconn、wistron、wiwynn 同讀）").font = BOLD; r += 1
+        RK.cell(r, 1, "每 GW ODM 整櫃價值（US$B／GW）")
+        rc(r, 2026, "=(TK_RacksPerGW_GB300*asm_odm_gb*(1-vr26)+TK_RacksPerGW_VR200*asm_odm_vr*vr26)/1000")
+        for y in (2027, 2028, 2029): rc(r, y, "=TK_RacksPerGW_VR200*asm_odm_vr/1000")
+        RK.cell(r, 7, "Tokenomics 每 GW 架數 × ODM 每櫃價格（In 頁 M18）"); RKROW["vpg"] = r; r += 1
+        for s_ in seed["scen"]:
+            RK.cell(r, 1, "AI 伺服器組裝市場（US$B）").font = BOLD; RK.cell(r, 2, s_)
+            for y, col in COLS.items(): rc(r, y, f"=Deploy!{col}{DROW['gw' + s_]}*{col}{RKROW['vpg']}", "#,##0.0", KEY)
+            RKROW["asm" + s_] = r; r += 1
+        r += 1
+        RK.cell(r, 1, "B. 商用 GPU 系統市場（OEM／整櫃售價；dell、smci 同讀；CF10）").font = BOLD; r += 1
+        RK.cell(r, 1, "每顆系統價值：GB300 世代（US$K／顆）")
+        for y in COLS: rc(r, y, "=TK_RackPrice_GB300/(TK_GPUsPerGW_GB300/TK_RacksPerGW_GB300)*1000")
+        RK.cell(r, 7, "Tokenomics 機架價 ÷ 每架 GPU 數；HGX 八卡與 AMD MI355 以同值近似（Analogy）"); RKROW["vgb"] = r; r += 1
+        RK.cell(r, 1, "每顆系統價值：Rubin 世代（US$K／顆）")
+        for y in COLS: rc(r, y, "=TK_RackPrice_VR200/(TK_GPUsPerGW_VR200/TK_RacksPerGW_VR200)*1000")
+        RK.cell(r, 7, "Rubin Ultra 與 AMD MI450 整櫃以 VR200 同值近似（Analogy）"); RKROW["vvr"] = r; r += 1
+        def ucell(k, col): return f"Units!{col}{UROW[k]}"
+        RK.cell(r, 1, "GB300 世代商用 GPU 顆數（Blackwell＋Hopper；2026 另含 AMD MI355；百萬顆，情境 A）")
+        for y, col in COLS.items():
+            rc(r, y, "=" + "+".join(ucell(k, col) for k in ("bw", "hp")) + (f"+{ucell('amd', col)}" if y == 2026 else ""), "0.000")
+        RK.cell(r, 7, "世代分組依 AMD 實際產品：2026 MI355（八卡，GB300 世代）、2027 起 MI450 Helios 整櫃（Rubin 世代）"); RKROW["ugb"] = r; r += 1
+        RK.cell(r, 1, "Rubin 世代商用 GPU 顆數（Rubin＋Rubin Ultra；2027 起另含 AMD MI450；百萬顆，情境 A）")
+        for y, col in COLS.items():
+            rc(r, y, "=" + "+".join(ucell(k, col) for k in ("rb", "ru")) + (f"+{ucell('amd', col)}" if y >= 2027 else ""), "0.000")
+        RKROW["uvr"] = r; r += 1
+        for s_ in seed["scen"]:
+            RK.cell(r, 1, "商用 GPU 系統市場（US$B）").font = BOLD; RK.cell(r, 2, s_)
+            for y, col in COLS.items():
+                m = (f"*um{y % 100}_{s_}" if y >= 2028 else "")
+                rc(r, y, f"=({col}{RKROW['ugb']}*{col}{RKROW['vgb']}+{col}{RKROW['uvr']}*{col}{RKROW['vvr']}){m}", "#,##0.0", KEY)
+            RKROW["sys" + s_] = r; r += 1
+        r += 1
+        RK.cell(r, 1, "C. AI 電源市場（delta、liteon 同讀）").font = BOLD; r += 1
+        RK.cell(r, 1, "AI 電源每 kW 內容（US$/kW）")
+        for y in COLS: rc(r, y, f"=pwr_pkw_{y % 100}", "#,##0")
+        RK.cell(r, 7, "機架電源櫃、PSU、BBU、HVDC 電源櫃（In 頁 M17）"); RKROW["pkw"] = r; r += 1
+        for s_ in seed["scen"]:
+            RK.cell(r, 1, "AI 電源市場（US$B）").font = BOLD; RK.cell(r, 2, s_)
+            for y, col in COLS.items(): rc(r, y, f"=Deploy!{col}{DROW['gw' + s_]}*{col}{RKROW['pkw']}/1000", "#,##0.00", KEY)
+            RKROW["pwr" + s_] = r; r += 1
+        RK.cell(r, 1, "對照：UBS 全球 AI 伺服器電源市場（US$B；口徑未找到）")
+        rc(r, 2026, "=pwr_ubs_26", "#,##0.0"); rc(r, 2027, "=pwr_ubs_27", "#,##0.0"); RKROW["ubs"] = r; r += 1
+        RK.cell(r, 1, "本庫情境 A ÷ UBS")
+        for y, col in ((2026, "C"), (2027, "D")): rc(r, y, f"={col}{RKROW['pwrA']}/{col}{RKROW['ubs']}", "0.00")
+        RK.cell(r, 7, "UBS 高出約五到七成：口徑（是否含 BBU、HVDC、非 AI）未找到，只作對照"); r += 1
+        RK.column_dimensions["A"].width = 62; RK.column_dimensions["G"].width = 60
+        for col in "BCDEF": RK.column_dimensions[col].width = 10
+
     # ---------------- Conflicts：跨模型同一變數不同值的登錄 ----------------
     CF = wb.create_sheet("Conflicts")
     CF["A1"] = ("Conflicts — 跨模型衝突登錄：同一個行業變數在兩個以上公司模型有不同值。本庫的任務是讓每個變數只有一個值；"
@@ -615,6 +704,32 @@ def main():
                 c = IF.cell(r, 5 + j, f"=PGW!{'CDEF'[j]}{pr}"); c.font = GREEN; c.number_format = "#,##0.0"
             IF.cell(r, 9, f"PGW!C{pr}:F{pr}")
             name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
+    if RK is not None:
+        r += 1
+        IF.cell(r, 1, "B7. 機架層市場（Rack 頁；欄 E–H＝2026–2029）").font = BOLD; r += 1
+        items = ([("SIF_ODMValPerGW", "vpg", "每 GW ODM 整櫃價值", "US$B/GW")]
+                 + [(f"SIF_AsmMkt_{s_}", "asm" + s_, f"AI 伺服器組裝市場（ODM 價；{s_}）", "US$B") for s_ in seed["scen"]]
+                 + [("SIF_SysValGB", "vgb", "每顆系統價值（GB300 世代）", "US$K"), ("SIF_SysValVR", "vvr", "每顆系統價值（Rubin 世代）", "US$K"),
+                    ("SIF_SysUnitsGB", "ugb", "GB300 世代商用 GPU 顆數（情境 A）", "百萬顆"), ("SIF_SysUnitsVR", "uvr", "Rubin 世代商用 GPU 顆數（情境 A）", "百萬顆")]
+                 + [(f"SIF_GPUSysMkt_{s_}", "sys" + s_, f"商用 GPU 系統市場（{s_}）", "US$B") for s_ in seed["scen"]]
+                 + [(f"SIF_PwrMkt_{s_}", "pwr" + s_, f"AI 電源市場（{s_}）", "US$B") for s_ in seed["scen"]])
+        for nm_, key, lab, unit in items:
+            kr = RKROW[key]
+            IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, unit)
+            for j in range(4):
+                c = IF.cell(r, 5 + j, f"=Rack!{'CDEF'[j]}{kr}"); c.font = GREEN; c.number_format = "#,##0.000"
+            IF.cell(r, 9, f"Rack!C{kr}:F{kr}")
+            name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
+    if ST is not None and "sum_pwrA" in STROW:
+        r += 1
+        IF.cell(r, 1, "B8. AI 電源份額合計（ShareTbl 頁；欄 E–H＝2026–2029）").font = BOLD; r += 1
+        for s_ in seed["scen"]:
+            nm_ = f"SIF_PwrShareSum_{s_}"; sr = STROW["sum_pwr" + s_]
+            IF.cell(r, 1, nm_); IF.cell(r, 2, f"台達電＋光寶 AI 電源有效份額合計（{s_}）"); IF.cell(r, 3, "%")
+            for j in range(4):
+                c = IF.cell(r, 5 + j, f"=ShareTbl!{'DEFG'[j]}{sr}"); c.font = GREEN; c.number_format = "0.0%"
+            IF.cell(r, 9, f"ShareTbl!D{sr}:G{sr}")
+            name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
     r += 1
     IF.cell(r, 1, "C. Tokenomics 鏡像（只讀；權威在算力收支；本庫與 TK 一致由 Checks K3 檢查）").font = BOLD; r += 1
     hdr(IF, r, ["名稱", "項目", "單位", "低", "基準", "高", "", "來源位置"]); r += 1
@@ -694,6 +809,16 @@ def main():
                 CK.cell(r, 1, f"K6-{code}{y}"); CK.cell(r, 2, f"{lab} {y} {'光學金額份額合計' if code == 'cpo' else ('載板份額合計' if code.startswith('abf') else '設計夥伴份額合計')} ≤ 100%")
                 CK.cell(r, 3, f"=ShareTbl!{'DEFG'[j]}{STROW['sum_' + code]}"); CK.cell(r, 4, 1)
                 CK.cell(r, 6, f'=IF(C{r}<=1+1E-9,"OK","ERROR")'); CK.cell(r, 7, "驗證（加總受限）"); r += 1
+    if ST is not None and "sum_pwrA" in STROW:
+        for s_ in seed["scen"]:
+            for j, y in enumerate((2026, 2027, 2028, 2029)):
+                CK.cell(r, 1, f"K6-pwr{s_}{y}"); CK.cell(r, 2, f"AI 電源 {y} 台達電＋光寶有效份額合計 ≤ 100%（情境 {s_}）")
+                CK.cell(r, 3, f"=ShareTbl!{'DEFG'[j]}{STROW['sum_pwr' + s_]}"); CK.cell(r, 4, 1)
+                CK.cell(r, 6, f'=IF(C{r}<=1+1E-9,"OK","ERROR")'); CK.cell(r, 7, "驗證（加總受限）"); r += 1
+    if RK is not None:
+        CK.cell(r, 1, "K7"); CK.cell(r, 2, "Rack 頁：商用 GPU 系統市場 2026 ≤ AI IT 資本支出 2026（系統售價不應超過全部 IT 資本支出）")
+        CK.cell(r, 3, f"=Rack!C{RKROW['sysA']}"); CK.cell(r, 4, f"=Deploy!C{DROW['itcA']}")
+        CK.cell(r, 6, f'=IF(C{r}<=D{r}+1E-9,"OK","ERROR")'); CK.cell(r, 7, "驗證（量級）"); r += 1
     # G 治理：輸入列標記、來源、區間
     g0 = r
     CK.cell(r, 1, "G1"); CK.cell(r, 2, "In 頁輸入列缺標記")
@@ -748,6 +873,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.6：新增 M17（AI 電源每 kW 內容、台達電與光寶份額路徑、凱基與 UBS 外部錨點；原在 delta、liteon）、M18（ODM 每櫃價格、緯穎 AI 占比單一值〔CF09〕；原在 quanta、wiwynn、wistron）與 Rack 頁（AI 伺服器組裝市場、商用 GPU 系統市場〔CF10：AMD 2026 計 GB300 世代、2027 起計 Rubin 世代〕、AI 電源市場）、ShareTbl 的 AI 電源份額表、Checks K6-pwr、K7、Interface SIF_AsmMkt_*、SIF_GPUSysMkt_*、SIF_PwrMkt_*、SIF_PwrShareSum_*。", False),
         ("v0.5.2：新增 M16（每 GW AI 高速 PCB 與 CCL 金額；原在 victory_giant、emc）與 PGW 頁、Interface SIF_PCBperGW、SIF_CCLperGW、SIF_PCBMkt_*、SIF_CCLMkt_*。", False),
         ("v0.5.1：新增 M15（ABF 供需表輸入：產值、AI 占比、權重、各廠產能指數、味之素膜上限；欣興、南電、景碩產能與味之素膜上限原在各公司模型）與 ABF 頁（需求、供給、缺口三情境）、Interface SIF_ABF*。", False),
         ("v0.5：新增 M13（加速器 ABF 載板份額、每顆金額路徑、供需缺口；原在 ibiden、unimicron、nanya_pcb、kinsus）、M14（CoWoS 每片封裝數、其他用途、台積電產能、委外補充；原在 tsmc），ShareTbl 的 ABF 載板份額表、Checks K6-abf、Interface SIF_ABFShareSum_*。", False),

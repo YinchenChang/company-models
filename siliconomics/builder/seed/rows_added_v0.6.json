@@ -1,0 +1,223 @@
+[
+ {
+  "after_section_end": "M16.",
+  "section": "M17. AI 電源（每 kW 內容、台達電與光寶份額路徑、外部份額錨點；原在 delta、liteon。FY2026 有效份額為公司模型校準值的快照，公司錨點留在公司模型）",
+  "rows": [
+   {
+    "id": "pwr_pkw_26",
+    "label": "AI 電源內容（機架電源櫃、PSU、BBU、HVDC 電源櫃）2026",
+    "unit": "US$/kW",
+    "lo": 380,
+    "base": 450,
+    "hi": 520,
+    "tag": "Derived",
+    "src": "https://www.kgi.com.hk/en/-/media/files/kgishk/research-reports/tw-reports/power-supply-industry_01072025.pdf：GB300 每架 PSU US$60–70K ÷ 136kW＝440–515；GB200 35–40K ÷ 120kW＝290–330（Interested-party）",
+    "src2": "2026 年以 GB300 為主（公司：Blackwell 遠大於 Rubin）"
+   },
+   {
+    "id": "pwr_pkw_27",
+    "label": "AI 電源內容 2027（VR200）",
+    "unit": "US$/kW",
+    "lo": 500,
+    "base": 600,
+    "hi": 700,
+    "tag": "Derived",
+    "src": "https://www.kgi.com.hk/en/-/media/files/kgishk/research-reports/tw-reports/power-supply-industry_01072025.pdf：VR200 每架 PSU 超過 US$150K ÷ 約 250kW＝600 以上",
+    "src2": "每 GW 4,052 架（Tokenomics）→ 每架約 247kW，與 250kW 相符"
+   },
+   {
+    "id": "pwr_pkw_28",
+    "label": "AI 電源內容 2028（800V HVDC 放量）",
+    "unit": "US$/kW",
+    "lo": 550,
+    "base": 680,
+    "hi": 800,
+    "tag": "Assumed",
+    "src": "公司：±400V、800V 3Q26 量產、2027 才有量；券商估 ±400V、800V 電源櫃占 2027 營收 5–10%（旺得富 2026-10-01，Interested-party）",
+    "src2": "800V 把交流轉直流移到機架外電源櫃與 SST：每 kW 內容上升（Assumed）"
+   },
+   {
+    "id": "pwr_pkw_29",
+    "label": "AI 電源內容 2029",
+    "unit": "US$/kW",
+    "lo": 550,
+    "base": 720,
+    "hi": 850,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "pwr_drel_27",
+    "label": "台達電 AI 電源份額 2027 ÷ 2026（相對值）",
+    "unit": "x",
+    "lo": 0.85,
+    "base": 0.95,
+    "hi": 1,
+    "tag": "Assumed",
+    "src": "https://www.kgi.com.hk/en/-/media/files/kgishk/research-reports/tw-reports/power-supply-industry_01072025.pdf：Blackwell 平台 AI 伺服器 PSU 台達電約 70%；光寶、Flex 追趕（Interested-party）",
+    "src2": "公司 2Q26 法說：Rubin 110kW PSU「領先」；對手：麥格米特、歐陸通（中國）、Vertiv、Flex（BigGo 摘要）"
+   },
+   {
+    "id": "pwr_drel_28",
+    "label": "台達電 AI 電源份額 2028 ÷ 2026",
+    "unit": "x",
+    "lo": 0.7,
+    "base": 0.9,
+    "hi": 1,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "pwr_drel_29",
+    "label": "台達電 AI 電源份額 2029 ÷ 2026",
+    "unit": "x",
+    "lo": 0.65,
+    "base": 0.85,
+    "hi": 1,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "pwr_lrel_27",
+    "label": "光寶 AI 電源份額 2027 ÷ 2026（相對值；情境 A 取高、B 基準、C 取低）",
+    "unit": "x",
+    "lo": 0.85,
+    "base": 1,
+    "hi": 1.1,
+    "tag": "Assumed",
+    "src": "凱基 2025-09：台達電 AI 伺服器電源市占約 60–65%、長期略降；光寶為第二梯隊，新增美系雲端客戶，PSU 與 BBU 4Q25 出貨（Interested-party）",
+    "src2": "公司：800V HVDC Power Rack 2026-11 小量、1Q27 放量；110kW Power Shelf、BBU 驗證量產；新 CSP 客戶長期目標每家每年 10 億美元（富果 2026-07-31）"
+   },
+   {
+    "id": "pwr_lrel_28",
+    "label": "光寶 AI 電源份額 2028 ÷ 2026（相對值；情境 A 取高、B 基準、C 取低）",
+    "unit": "x",
+    "lo": 0.8,
+    "base": 1,
+    "hi": 1.2,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "pwr_lrel_29",
+    "label": "光寶 AI 電源份額 2029 ÷ 2026（相對值；情境 A 取高、B 基準、C 取低）",
+    "unit": "x",
+    "lo": 0.75,
+    "base": 1,
+    "hi": 1.25,
+    "tag": "Assumed",
+    "src": "同上",
+    "src2": "—"
+   },
+   {
+    "id": "pwr_dsh_26",
+    "label": "台達電 AI 電源有效份額 2026（台達電模型 FY2026 校準值：公司 AI 相關營收 ÷ 本庫 AI 電源市場）",
+    "unit": "%",
+    "lo": null,
+    "base": 0.583671939396773,
+    "hi": null,
+    "tag": "Derived",
+    "src": "delta/dist Units 頁「台達電有效份額」CY2026（公司揭露 AI 相關占比 × 營收 ÷（部署 GW × 每 kW 內容））；台達電 3Q26 錨點更新時同步更新",
+    "src2": "凱基 Blackwell PSU 約 70%（2025-07）、AI 伺服器電源 60–65%（2025-09）只作對照：本值分母含 ASIC 機架、HVDC、BBU"
+   },
+   {
+    "id": "pwr_lsh_26",
+    "label": "光寶 AI 電源有效份額 2026（光寶模型 FY2026 校準值：AI 相關營收 ×（1 − 非電源占比）÷ 本庫 AI 電源市場）",
+    "unit": "%",
+    "lo": null,
+    "base": 0.176143316327046,
+    "hi": null,
+    "tag": "Derived",
+    "src": "liteon/dist Units 頁「光寶有效份額」CY2026；光寶 3Q26 錨點更新時同步更新",
+    "src2": "光寶為第二梯隊（凱基 2025-09，份額數字未找到）"
+   },
+   {
+    "id": "pwr_kgi_0701",
+    "label": "凱基：Blackwell 平台 AI 伺服器 PSU 台達電份額",
+    "unit": "%",
+    "lo": null,
+    "base": 0.7,
+    "hi": null,
+    "tag": "Interested-party",
+    "src": "凱基 Power supply sector（2025-07-01；網址見 Sources）",
+    "src2": "第二個量化來源：未找到"
+   },
+   {
+    "id": "pwr_kgi_0926",
+    "label": "凱基：台達電 AI 伺服器電源市占（中點）",
+    "unit": "%",
+    "lo": 0.6,
+    "base": 0.625,
+    "hi": 0.65,
+    "tag": "Interested-party",
+    "src": "https://www.kgi.com.hk/zh-hk/-/media/files/kgishk/research-reports/tw-reports/power-supply-sector_20250926e.pdf：約 60–65%，長期略降",
+    "src2": "光寶與 Flex 為第二梯隊（份額數字：未找到）"
+   },
+   {
+    "id": "pwr_ubs_26",
+    "label": "UBS：全球 AI 伺服器電源市場 2026",
+    "unit": "US$B",
+    "lo": null,
+    "base": 17.7,
+    "hi": null,
+    "tag": "Interested-party",
+    "src": "TechNews 2026-10-12（引述 UBS；2027 38.2、2025–2030 年複合成長約 69%；網址見 Sources）",
+    "src2": "口徑（是否含 BBU、HVDC、非 NVIDIA）：未找到"
+   },
+   {
+    "id": "pwr_ubs_27",
+    "label": "UBS：全球 AI 伺服器電源市場 2027",
+    "unit": "US$B",
+    "lo": null,
+    "base": 38.2,
+    "hi": null,
+    "tag": "Interested-party",
+    "src": "同上",
+    "src2": "—"
+   }
+  ]
+ },
+ {
+  "after_section_end": "M17.",
+  "section": "M18. AI 伺服器組裝（ODM 每櫃價格、緯穎 AI 占比；原在 quanta、wiwynn、wistron。商用 GPU 系統市場由 TK 機架價 ÷ 每架 GPU 數推導，見 Rack 頁）",
+  "rows": [
+   {
+    "id": "asm_odm_gb",
+    "label": "ODM 每櫃價格 GB300",
+    "unit": "US$M/架",
+    "lo": 3.6,
+    "base": 4,
+    "hi": 4.3,
+    "tag": "Interested-party",
+    "src": "https://www.ctee.com.tw/news/20261008700747-430201：GB300 ASP 約 US$4M（法人，未具名）",
+    "src2": "FTNN 2026-10-09 同值；上限＝Tokenomics 買方價 4.3"
+   },
+   {
+    "id": "asm_odm_vr",
+    "label": "ODM 每櫃價格 VR200",
+    "unit": "US$M/架",
+    "lo": 6.5,
+    "base": 6.75,
+    "hi": 7,
+    "tag": "Interested-party",
+    "src": "https://www.ctee.com.tw/news/20261008700747-430201：VR ASP 估 US$6.5–7M（法人）",
+    "src2": "FTNN 2026-10-09 同值；Tokenomics 買方價 8.4"
+   },
+   {
+    "id": "asm_wyai_26",
+    "label": "2026 年緯穎 AI 伺服器 ÷ 緯穎營收（CF09 單一值；緯穎、緯創模型同讀）",
+    "unit": "%",
+    "lo": 0.45,
+    "base": 0.48,
+    "hi": 0.52,
+    "tag": "Interested-party",
+    "src": "優分析 2026-09-10（公司說明）：3Q26 ASIC 與通用伺服器出貨各半、4Q26 ASIC 超越（公司）；2026 年 AI 比重「超過 50%」（公司，2026-02）",
+    "src2": "凱基 2026-07-28 報告：2026F 46%（凱基 07-28；3Q 營收實績前）"
+   }
+  ]
+ }
+]

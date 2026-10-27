@@ -9,6 +9,8 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 import cycle_position as CP
 import valuation_rule as VR
 
@@ -142,7 +144,7 @@ for y, v, lo, hi in ((27, 1.0, 0.8, 1.1), (28, 0.95, 0.7, 1.1), (29, 0.9, 0.65, 
 sec("D. 營收結構錨點與非 AI 成長")
 inp("nsv_26", "2026 年非伺服器（筆電、桌機、顯示器等）÷ 合併營收", "%", 0.13, 0.15, 0.18, "Interested-party", KGI05 + "：2026F 伺服器占營收 85%（凱基）", CNY2Q + "：2H26 PC 出貨約減 15%（1H 提前拉貨），營收降幅較小（公司）")
 inp("gen_26", "FY2026 緯創本體一般伺服器與交換器營收", "NT$B", 80, 150, 250, "Assumed", KGI05 + "：交換器 2026 營收成長十倍以上至 NT$160–180 億；一般伺服器需求優於預期（凱基）", "本體一般伺服器金額：未找到；本體 AI 系統＝本體營收 − 基板 − 一般伺服器 − 非伺服器（殘差）")
-inp("wai_26", "2026 年緯穎 AI 伺服器 ÷ 緯穎營收", "%", 0.50, 0.55, 0.65, "Interested-party", FUGW + "：2025 AI 約 50%、2026 略高於 50%（緯穎 4Q25 法說）", "3Q26 緯穎營收季增約 56%（月營收），新平台放量，2H 比重可能較高")
+inp("wai_26", "2026 年緯穎 AI 伺服器 ÷ 緯穎營收", "%", *SIL.vals("asm_wyai_26"), "Interested-party", "siliconomics｜SIF_asm_wyai_26（CF09：與緯穎模型同一值，以緯穎模型的公司說明與凱基 46% 為準）", FUGW + "：2025 AI 約 50%、2026 略高於 50%（緯穎 4Q25 法說；v0.6 前本模型取 55%）")
 inp("g_gen27", "本體一般伺服器與交換器年增 2027", "%", 0.0, 0.20, 0.40, "Assumed", CNY2Q + "：交換器 2027 年新客戶、持續成長（公司）", "—")
 inp("g_gen28", "本體一般伺服器與交換器年增 2028", "%", -0.05, 0.10, 0.25, "Assumed", "同上", "—")
 inp("g_gen29", "本體一般伺服器與交換器年增 2029", "%", -0.05, 0.08, 0.20, "Assumed", "同上", "—")

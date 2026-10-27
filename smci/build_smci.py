@@ -9,6 +9,8 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 import cycle_position as CP
 import valuation_rule as VR
 
@@ -49,6 +51,10 @@ for r in openpyxl.load_workbook(BR_F, data_only=True)["In"].iter_rows(min_row=4)
     if k in ("rack", "gpu_n"):
         BR[k] = (r[4].value, r[7].value, f"{rel(BR_F)}｜In!E{r[0].row}（GB300）、H{r[0].row}（VR200）")
 assert len(BR) == 2, BR.keys()
+# CF10：商用 GPU 系統市場只有一個值（Siliconomics Rack 頁）；本模型的世代分組與每顆系統價值必須重現同一市場（情境 A）
+for j, y in enumerate((26, 27, 28, 29)):
+    _m = OLD[y] * BR["rack"][0] / BR["gpu_n"][0] * 1000 + NEW[y] * BR["rack"][1] / BR["gpu_n"][1] * 1000
+    assert abs(_m - SIL.NAMES["SIF_GPUSysMkt_A"][j]) < 1e-6, ("商用 GPU 系統市場與 Siliconomics 不一致", y, _m, SIL.NAMES["SIF_GPUSysMkt_A"][j])
 
 # ---------------- In ----------------
 IN = wb.active; IN.title = "In"

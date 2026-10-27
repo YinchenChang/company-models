@@ -57,9 +57,9 @@ DWB = openpyxl.load_workbook(DLT_F, data_only=True)
 DPK = {}
 for r in DWB["In"].iter_rows(min_row=4):
     k = r[0].value
-    if k in ("pkw_26", "pkw_27", "pkw_28", "pkw_29", "fx"):
+    if k in ("fx",):
         DPK[k] = ((r[3].value, r[4].value, r[5].value), r[6].value, f"{rel(DLT_F)}｜In!D{r[0].row}:F{r[0].row}")
-assert len(DPK) == 5 and all(v is not None for k in DPK for v in DPK[k][0]), DPK
+assert len(DPK) == 1 and all(v is not None for k in DPK for v in DPK[k][0]), DPK
 DU = {}
 for r in DWB["Units"].iter_rows(min_row=4):
     lab = r[0].value
@@ -67,6 +67,8 @@ for r in DWB["Units"].iter_rows(min_row=4):
         if lab == want:
             DU[key] = ([r[2 + j].value for j in range(4)], f"{rel(DLT_F)}｜Units!C{r[0].row}:F{r[0].row}")
 assert len(DU) == 4 and all(v is not None for k in DU for v in DU[k][0]), DU
+# Siliconomics M17 的台達電 FY2026 有效份額是台達電模型校準值的快照：兩者必須相同（台達電錨點更新時，先更新本庫）
+assert abs(DU["sh"][0][0] - SIL.base("pwr_dsh_26")) < 1e-9, ("Siliconomics pwr_dsh_26 與 delta/dist 不一致", DU["sh"][0][0], SIL.base("pwr_dsh_26"))
 
 # ---------------- In ----------------
 IN = wb.active; IN.title = "In"
@@ -104,16 +106,14 @@ for s in SC:
 inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", *DPK["fx"][0], "Derived", DPK["fx"][2], "與台達電模型相同（唯讀）；10-23 收盤：未找到")
 
 sec("B. AI 電源內容（口徑與台達電一致：唯讀 delta/dist In 頁）與光寶份額")
-PKTAG = "唯讀台達電模型成品（本專案 AI 電源每 kW 內容權威；含機架電源櫃、PSU、BBU、HVDC 電源櫃）"
+PKTAG = "Siliconomics 快照 In 頁 M17（本專案 AI 電源每 kW 內容唯一值；含機架電源櫃、PSU、BBU、HVDC 電源櫃；口徑與台達電模型相同）"
 for y, lab in ((26, "2026"), (27, "2027（VR200）"), (28, "2028（800V HVDC 放量）"), (29, "2029")):
-    inp(f"pkw_{y}", f"AI 電源內容 {lab}（台達電模型）", "US$/kW", *DPK[f"pkw_{y}"][0], DPK[f"pkw_{y}"][1], DPK[f"pkw_{y}"][2],
-        PKTAG if y == 26 else "同上；低／高亦取自台達電模型（Sens 用）")
+    inp(f"pkw_{y}", f"AI 電源內容 {lab}（台達電模型）", "US$/kW", *SIL.vals(f"pwr_pkw_{y}"), SIL.V[f"pwr_pkw_{y}"]["tag"], f"siliconomics｜SIF_pwr_pkw_{y}",
+        PKTAG if y == 26 else "同上；低／高亦取自本庫（Sens 用）")
 inp("x_np", "AI 相關營收中非電源部分（液冷 CDU、Sidecar、AI 光電等）占比", "%", 0.0, 0.10, 0.25, "Assumed",
     "公司：液冷 120kW CDU、Sidecar 2Q26 起出貨（富果 2026-07-31 法說摘要）；凱基 2025-09：光寶 2026 年液冷營收目標約 5%（Interested-party）", "只影響份額（分子）與光寶＋台達電份額合計，不影響營收（非電源部分隨 AI 電源同比例成長，Assumed）")
-for y, v in ((27, (0.85, 1.00, 1.10)), (28, (0.80, 1.00, 1.20)), (29, (0.75, 1.00, 1.25))):
-    inp(f"rel_{y}", f"光寶 AI 電源份額 20{y} ÷ 2026（相對值；情境 A 取高、B 基準、C 取低）", "x", *v, "Assumed",
-        "凱基 2025-09：台達電 AI 伺服器電源市占約 60–65%、長期略降；光寶為第二梯隊，新增美系雲端客戶，PSU 與 BBU 4Q25 出貨（Interested-party）" if y == 27 else "同上",
-        "公司：800V HVDC Power Rack 2026-11 小量、1Q27 放量；110kW Power Shelf、BBU 驗證量產；新 CSP 客戶長期目標每家每年 10 億美元（富果 2026-07-31）" if y == 27 else "—")
+for y in (27, 28, 29):
+    inp(f"rel_{y}", *SIL.row9(f"pwr_lrel_{y}")[1:])   # Siliconomics M17
 
 sec("C. 營收結構錨點（公司揭露比例 × 營收）")
 inp("ai_25", "2025 年 AI 相關營收 ÷ 營收", "%", 0.20, 0.21, 0.23, "Interested-party", UAFY + "：AI 相關營收超過 20%（公司，達標）", FUGFY + "：2025 年 AI 占比超過 20%；雲端與物聯網 45%、光電 17%、資訊與消費電子 38%")
@@ -157,7 +157,7 @@ for j, y in enumerate((26, 27, 28, 29)):
     inp(f"d_sh{y}", f"台達電模型：台達電 AI 電源有效份額 20{y}", "%", None, DU["sh"][0][j], None, "Derived", DU["sh"][1], "唯讀台達電成品（三情境相同：份額相對值不隨情境變動）" if y == 26 else "同上")
     inp(f"d_pmk{y}", f"台達電模型：AI 電源市場 20{y}（情境 A）", "US$B", None, DU["pmk"][0][j], None, "Derived", DU["pmk"][1], "唯讀台達電成品（Recon：與本模型情境 A 應相同）" if y == 26 else "同上")
     inp(f"d_aip{y}", f"台達電模型：台達電 AI 電源營收 20{y}（情境 A）", "US$B", None, DU["aip"][0][j], None, "Derived", DU["aip"][1], "唯讀台達電成品" if y == 26 else "同上")
-inp("kgi_dsh", "凱基：台達電 AI 伺服器電源市占（中點）", "%", 0.60, 0.625, 0.65, "Interested-party", KGI + "：約 60–65%，長期略降", "光寶與 Flex 為第二梯隊（份額數字：未找到）")
+inp("kgi_dsh", *SIL.row9("pwr_kgi_0926")[1:])   # Siliconomics M17（CF11 待 Andy）
 
 sec("H. 價格與估值")
 inp("px", "股價（2026-10-22 收盤，臺灣證交所）", "NT$", None, 255.5, None, "Interested-party", SA + "：10-22 255.50（−3.04%）、前收 263.50", "nstock（網址見 Sources 頁）：10-22 255.5（成交 7,003 張；HiStock 同值）；10-23 收盤：未找到")
