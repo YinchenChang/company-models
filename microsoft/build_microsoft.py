@@ -399,6 +399,7 @@ class Block:
         self.P = dict(pace="pace", cap="1E+9", ls=f"ls_{s}", kmult="1", ext="ext_sh", life="life_it", g_azo="glt_azo", cop_add=f"cop_add_{s}",
                       cop_px="cop_px", g_srch="glt_srch", g_xbox="glt_xbox", dm="dm_seg", chip="chip_f")
         self.P.update(P or {})
+        self.P = {k_: v_.replace("{s}", s) for k_, v_ in self.P.items()}
         self.V = dict(wacc="wacc", g="g_tv", ronic="ronic_prem", mm="1", m_sw="m_sw", m_cloud="m_cloud", m_ads="m_ads", m_game="m_game", m_pc="m_pc", m_ai="m_ai", oai="oai_v")
         self.V.update(V or {})
         self.R = dict(base.R) if base else {}
@@ -528,7 +529,8 @@ def engine(b, val=True, ops=True):
         b.row(g, "azure", "Azure", "US$B", lambda y: f"{R('s_azai', y)}+{R('azo', y)}", years=SY)
         b.row(g, "seats", "  Copilot 付費座席（年底）", "百萬席",
               lambda y: f"cop_s{y % 100}" if y <= 2026 else f"{R('seats', y - 1)}+IF({y}<=2029,{P['cop_add']},{P['cop_add']}*cop_tail)", fmt="#,##0")
-        b.row(g, "cop", "  Copilot（命題子列：平均座席 × 月費 × 12）", "US$B", lambda y: f"({R('seats', y - 1)}+{R('seats', y)})/2*{P['cop_px']}*12/1000", years=SY)
+        b.row(g, "cop", "  Copilot（命題子列：平均座席 × 月費 × 12）", "US$B", lambda y: f"({R('seats', y - 1)}+{R('seats', y)})/2*{'cop_px' if y <= 2026 else P['cop_px']}*12/1000", years=SY,
+              note="實績期用基準月費（拆分是估計）；敏感度只改預測期")
         b.row(g, "m365b", "  M365 基礎（不含 Copilot；FY2025–26＝實績 − Copilot 估計）", "US$B",
               lambda y: f"{qa('m365', y)}-{R('cop', y)}" if y <= 2026 else f"{R('m365b', y - 1)}*(1+{R('g_m365b', y)})", years=SY)
         b.row(g, "g_m365b", "    年增（近一年 → 長期值）", "%", gpath(b, "m365b", "glt_m365b"), fmt="0.0%", years=[y for y in YRS if y >= 2026])
@@ -823,6 +825,7 @@ SW = WS["Sens"]
 SW["A1"] = "Sens — 一次動一個驅動，三情境全部重算後的加權目標價（DCF 50%＋SOTP 50%、情境 25／50／25）；下方列 70 起為各案例的完整引擎區塊（與主模型同一個函式）"
 hdr(SW, 3, ["案例", "驅動", "加權目標價", "相對基準", "相對基準 %", "說明"])
 TP_BASE = "Val!$B$34"
+# README 以案例名稱找「WACC −1pt」列
 CASES = [
     ("k −15%", "命題：每 MW 價格 k", dict(kmult="0.85"), {}, "三情境 k 同乘 0.85"),
     ("k +15%", "命題：每 MW 價格 k", dict(kmult="1.15"), {}, "三情境 k 同乘 1.15"),
@@ -832,8 +835,10 @@ CASES = [
     ("MW 速度 +20%", "命題：MW 速度", dict(pace="pace*1.2"), {}, "每年 +3,033"),
     ("AI IT 折舊 5 年", "命題：AI 折舊年限", dict(life="life_it_lo"), {}, "折舊與汰換提前"),
     ("AI IT 折舊 7 年", "命題：AI 折舊年限", dict(life="life_it_hi"), {}, "—"),
-    ("Copilot 月費 18 美元", "命題：Copilot", dict(cop_px="cop_px_lo"), {}, "牌價 30、基準實收 25"),
-    ("Copilot 月費 30 美元", "命題：Copilot", dict(cop_px="cop_px_hi"), {}, "—"),
+    ("Copilot 座席淨增 −50%", "命題：Copilot 座席", dict(cop_add="cop_add_{s}*0.5"), {}, "各情境每年淨增座席減半"),
+    ("Copilot 座席淨增 +50%", "命題：Copilot 座席", dict(cop_add="cop_add_{s}*1.5"), {}, "—"),
+    ("Copilot 月費 18 美元", "命題：Copilot 月費", dict(cop_px="cop_px_lo"), {}, "牌價 30、基準實收 25（預測期）"),
+    ("Copilot 月費 30 美元", "命題：Copilot 月費", dict(cop_px="cop_px_hi"), {}, "—"),
     ("Azure 其他長期年增 5%", "業務：Azure 其他成長", dict(g_azo="glt_azo_lo"), {}, "基準 8%"),
     ("Azure 其他長期年增 12%", "業務：Azure 其他成長", dict(g_azo="glt_azo_hi"), {}, "—"),
     ("搜尋與廣告長期年增 4%", "業務：Search and advertising", dict(g_srch="glt_srch_lo"), {}, "基準 7%"),
@@ -1027,7 +1032,8 @@ RD["A5"] = (f'="① 命題答案：FY2029 基準情境 AI 增量 ROIC "&TEXT({RB
             f'&" 個百分點；樂觀 "&TEXT({BL["A"].ref("roic", 2029)},"0.0%")&"、保守 "&TEXT({BL["C"].ref("roic", 2029)},"0.0%")&"）。AI 折舊從 FY2026 的 "&TEXT({RB.ref("ai_da", 2026)},"0.0")&" 升到 FY2029 的 "&TEXT({RB.ref("ai_da", 2029)},"0.0")&" 十億美元，營業利益率 FY2029 為 "&TEXT({RB.ref("oim", 2029)},"0.0%")&"（FY2026 "&TEXT({RB.ref("oim", 2026)},"0.0%")&"）。"')
 RD["A6"] = (f'="② 收支關卡：基準情境 FY2027–FY2031 自由現金流扣股利合計 "&TEXT(CF!C5,"#,##0.0")&" 十億美元（樂觀 "&TEXT(CF!B5,"#,##0.0")&"、保守 "&TEXT(CF!D5,"#,##0.0")&"）；"&CF!C6&"。"')
 RD["A7"] = (f'="③ 評價：加權目標價 "&TEXT(Val!B34,"#,##0")&" 美元，較現價 "&TEXT(px,"#,##0.00")&" "&TEXT(Val!B38,"+0.0%;-0.0%")&"；DCF "&TEXT(Val!B13,"#,##0")&"（永續價值占 "&TEXT(Val!C8,"0%")&"）、分部加總 "&TEXT(Val!B30,"#,##0")'
-            f'&"；市場共識 "&TEXT(cons_tp,"#,##0")&"。現價隱含的折現率低於模型 WACC "&TEXT(wacc,"0.0%")&"（WACC −1pt 時目標價 "&TEXT(Sens!C{CASE_ROWS[18]},"#,##0")&"）。"')
+            f'&"；市場共識 "&TEXT(cons_tp,"#,##0")&"。差距來自：AI 資本支出使 FY2027 自由現金流接近 0（基準 "&TEXT({RB.ref("fcf", 2027)},"0.0")&"），WACC "&TEXT(wacc,"0.0%")&"（−1pt 時目標價 "&TEXT(Sens!C{CASE_ROWS[[c_[0] for c_ in CASES].index("WACC −1pt")]},"#,##0")&"）；'
+            f'同業倍數低於 Microsoft 自身 NTM EV/EBITDA "&TEXT(m_own,"0.0")&"×（非 AI 各線改用自身倍數時目標價 "&TEXT(Sens!C{ALT_ROWS[3]},"#,##0")&"）。"')
 RD["A8"] = '="投資建議："&Val!B41&"（上檔空間 "&TEXT(Val!B38,"+0.0%;-0.0%")&"；五級固定規則：≥ +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、≤ −50% 強力放空）"'
 RD["A9"] = '="收支關卡（地圖）：CF 頁「收支關卡：自由現金流扣股利（五年合計）」基準 "&TEXT(CF!C5,"#,##0.0")&" 十億美元"'
 for r_ in range(3, 10):
