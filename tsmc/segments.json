@@ -1,0 +1,16 @@
+{
+ "company": "台積電",
+ "ticker": "2330.TW",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "HPC", "label": "高效能運算（HPC）", "period": "3Q26", "value": 0.68, "unit": "營收比重", "source": "台積電 3Q26 Management Report：Net Revenue by Platform"},
+  {"name": "Smartphone", "label": "智慧型手機", "period": "3Q26", "value": 0.21, "unit": "營收比重", "source": "同上"},
+  {"name": "IoT", "label": "物聯網", "period": "3Q26", "value": 0.04, "unit": "營收比重", "source": "同上"},
+  {"name": "Automotive", "label": "車用", "period": "3Q26", "value": 0.04, "unit": "營收比重", "source": "同上"},
+  {"name": "DCE", "label": "消費性電子（DCE）", "period": "3Q26", "value": 0.01, "unit": "營收比重", "source": "同上"},
+  {"name": "Others", "label": "其他", "period": "3Q26", "value": 0.02, "unit": "營收比重", "source": "同上"}
+ ],
+ "sublines": [{"parent": "HPC", "labels": ["HPC：AI 相關（＝AI 相關營收列）", "HPC：非 AI"]}],
+ "check_labels": ["檢查：平台合計 − 營收", "檢查：2025 平台合計 − 2025 營收"],
+ "note": "台積電沒有 IFRS 應報導部門以外的分部（單一晶圓代工部門）；公司固定揭露的平台別營收為市場比較口徑"
+}
