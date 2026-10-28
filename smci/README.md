@@ -16,6 +16,11 @@
 
 **投資建議：強力買進**（依上檔空間固定規則：加權目標價上檔空間 +132.5%，落在 大於 +50%）。
 
+## v0.1.2（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 目標價 US$76.6（DCF 78.0、Comparable 75.2 各半），比現價 32.94（2026-10-23）高 132.5%，級距大於 50%；Comparable 單獨為 128.3%。主因是倍數與 EPS 兩者：同業（Dell、HPE、緯穎、廣達、緯創）前瞻 P/E 中位數 11.7 倍，現價隱含只有 7.1 倍、共識目標價 43.27 隱含 9.3 倍（比同業低 21%），Comparable 未計美超微的治理與會計折價；本模型 12 個月後前瞻 EPS 6.41（GAAP）也比共識前瞻 EPS 4.67（non-GAAP，期間約早一年）高 37.4%。
@@ -32,9 +37,9 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_smci.py` | 產生器（參數與公式；上游成品唯讀） |
-| `dist/20261025_美超微模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_美超微個股模型_v0.1.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_美超微模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261028_美超微個股模型_v0.1.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 建置：先執行 `python3 smci/build_smci.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。
 

@@ -1,0 +1,26 @@
+{
+ "company": "SK hynix",
+ "ticker": "000660.KS",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "單一應報導部門（記憶體）",
+   "label": "記憶體營收",
+   "period": "2025Q1",
+   "value": 17.639,
+   "unit": "兆韓元",
+   "source": "SK 海力士季度財報（單一應報導部門）"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "單一應報導部門（記憶體）",
+   "labels": [
+    "DRAM（含 HBM）",
+    "NAND"
+   ]
+  }
+ ],
+ "check_labels": [],
+ "note": "單一應報導部門；DRAM／NAND 為推估季拆分（公司只揭露比重），HBM 在 Y 頁。"
+}

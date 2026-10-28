@@ -6,6 +6,11 @@ Coherent 的資料中心營收＝AI 可插拔光模組市場（`markets/network`
 
 **投資建議：強力買進**（依上檔空間固定規則：加權目標價上檔空間 +54.2%，落在 大於 +50%；級距 大於 50%）。
 
+## v0.2.3（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 目標價 US$323（DCF 207、Comparable 438 各半），比現價 209.17（2026-10-23）高 54.2%，級距 大於 50%；Comparable 單獨為 +109.4%。主因是 Comparable 的倍數：DCF 207 與現價相當（−1.0%），本模型 12 個月後前瞻 EPS 14.24 只比共識前瞻 EPS 13.07 高 8.9%（本模型含 4／12 的 FY2029）；美股光通訊同業前瞻 P/E 中位數 30.8 倍，與共識目標價 394.79 隱含的 30.2 倍相近，但現價只隱含 21.4 倍共識未來 12 月 EPS——共識目標價本身也比現價高 88.7%。
@@ -19,9 +24,9 @@ Coherent 的資料中心營收＝AI 可插拔光模組市場（`markets/network`
 | 檔案 | 內容 |
 |---|---|
 | `build_cohr.py` | 產生器（參數與公式；上游成品唯讀） |
-| `dist/20261026_Coherent模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_Coherent個股模型_v0.2.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261026_Coherent模型_v0.2.2.html` | HTML 展示層（數字全部由 xlsx 重算值抽出） |
+| `dist/20261028_Coherent個股模型_v0.2.3.html` | HTML 展示層（數字全部由 xlsx 重算值抽出） |
 
 建置：`python3 cohr/build_cohr.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序為 README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用的上游如下，本模型**不修改它們**：
 

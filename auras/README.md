@@ -8,6 +8,11 @@
 
 **投資建議：強力買進**（依上檔空間固定規則：加權目標價上檔空間 +103.6%，落在 大於 +50%）。
 
+## v0.1.2（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 目標價 NT$2,769（DCF 1,979、Comparable 3,559 各半），比現價 1,360（2026-10-22）高 103.6%，級距大於 50%；Comparable 單獨為 161.7%。主因是 EPS 與倍數兩者：本模型 12 個月後前瞻 EPS 123.7 比共識前瞻 EPS 74.3 高 66.4%（兩者期間差約一年；FY2027 B 101.6 比共識 77.97 高 30.4%），同業（奇鋐、健策、Vertiv、台達電）前瞻 P/E 中位數 28.8 倍也高於現價隱含 18.3 倍與共識目標價 1,523 隱含的 20.5 倍；Comparable 未扣雙鴻相對奇鋐的份額折價（雙鴻自身前瞻 P/E 17.3 倍）。
@@ -19,9 +24,9 @@ AI 半導體 Project 電源與散熱次產業，樣板＝`avc/`（奇鋐）。**
 | 檔案 | 內容 |
 |---|---|
 | `build_auras.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_雙鴻模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；重建逐格一致） |
+| `dist/20261028_雙鴻個股模型_v0.1.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；重建逐格一致） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_雙鴻模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
+| `dist/20261028_雙鴻個股模型_v0.1.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
 
 建置：`python3 auras/build_auras.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、機架內液冷）、`tsmc/dist`（情境顆數係數）、`markets/memory/market.py`（SCEN_UNITS，建置時核對）、`avc/dist`（In 頁液冷假設、Units 頁奇鋐份額）、`tools/cycle_position.py`、`tools/valuation_rule.py`；**不修改它們**。
 

@@ -6,6 +6,11 @@ Astera Labs 的 Scorpio X 營收＝非 NVIDIA scale-up 交換晶片市場（`mar
 
 **投資建議：放空**（依上檔空間固定規則：加權目標價上檔空間 −48.5%，落在 −50%～−25%）。
 
+## v0.1.2（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 目標價 US$132（DCF 105、Comparable 160 各半），比現價 257.16（2026-10-23）低 48.5%，級距 −25%～−50%；Comparable 單獨為 −37.9%。EPS 與倍數兩個因素都在：本模型 12 個月後前瞻 EPS 6.33 比共識 8.21 低 22.9%；同業（Credo、Marvell、Broadcom、Rambus、MACOM）前瞻 P/E 中位數 25.2 倍，現價隱含 31.3 倍共識 EPS、共識目標價 388.36 隱含 47.3 倍（比同業高 87.5%）；Comparable 未給 Astera 的成長溢價（本身前瞻 P/E 約 46 倍）。
@@ -19,9 +24,9 @@ AI 半導體 Project **網通次產業內複製（scale-up 互連：重定時器
 | 檔案 | 內容 |
 |---|---|
 | `build_alab.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_Astera Labs模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261028_Astera Labs個股模型_v0.1.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_Astera Labs模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261028_Astera Labs個股模型_v0.1.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 alab/build_alab.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（scale-up 交換晶片、加速器顆數、每顆 scale-up 交換晶片內容、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`、`tools/valuation_rule.py`（只用規則函式）；**不修改它們**。
 

@@ -6,6 +6,11 @@ Dell 是企業與 neocloud 的 AI 伺服器品牌，也是 PC 大廠。ISG 部�
 
 **投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 −19.7%，落在 −25%～+25%）。
 
+## v0.1.1（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 目標價 US$367（DCF 412、Comparable 321 各半），比現價 456.44（2026-10-23）低 19.7%，級距 0%～−25%；Comparable 單獨為 −29.6%。主因是倍數不是 EPS：本模型 12 個月後前瞻 EPS 28.54 只比共識前瞻 EPS 28.14 高 1.4%，但同業（HPE、Supermicro、Lenovo、HP Inc.、NetApp）前瞻 P/E 中位數 11.3 倍，現價隱含 16.2 倍、共識目標價 593 隱含 21.1 倍（比同業高 87%）；市場給 Dell 的 AI 份額溢價，Comparable 未計入。
@@ -22,9 +27,9 @@ AI 伺服器品牌次產業的第一家。`smci/` 尚未在 main，所以樣板�
 | 檔案 | 內容 |
 |---|---|
 | `build_dell.py` | 產生器（參數與公式；上游成品唯讀） |
-| `dist/20261025_戴爾模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_戴爾個股模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_戴爾模型_v0.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261028_戴爾個股模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 建置：先執行 `python3 dell/build_dell.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。
 

@@ -6,6 +6,11 @@
 
 **投資建議：強力買進**（依上檔空間固定規則：加權目標價上檔空間 +76.0%，落在 大於 +50%）。
 
+## v0.1.2（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 目標價人民幣 322.84（DCF 202.71、Comparable 442.98 各半），比現價 183.48（2026-10-23）高 76.0%，級距大於 50%；Comparable 單獨為 +141.4%。主因是倍數不是 EPS：本模型前瞻 EPS 14.39 比共識前瞻 EPS 12.36 高 16.4%，但 A 股 PCB 同業（沪电、深南、生益电子、鹏鼎）前瞻 P/E 中位數 30.8 倍、共識目標價 388.30 隱含 31.4 倍，現價只隱含 14.8 倍；DCF 單獨僅 +10.5%，上檔空間主要來自 Comparable，市場對份額（Rubin 份額傳聞）與擴產的折價未計入 Comparable。
@@ -19,9 +24,9 @@ AI 半導體 Project 載板與 PCB 次產業，樣板 `emc/`（台光電）。�
 | 檔案 | 內容 |
 |---|---|
 | `build_victory_giant.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_勝宏科技模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_勝宏科技個股模型_v0.1.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_勝宏科技模型_v0.1.1.html` | HTML 展示層（數字全由 xlsx 重算值抽出） |
+| `dist/20261028_勝宏科技個股模型_v0.1.2.html` | HTML 展示層（數字全由 xlsx 重算值抽出） |
 
 建置：`python3 victory_giant/build_victory_giant.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`emc/dist`（台光電每 GW CCL 金額，只在 Recon）、`tools/cycle_position.py`、`tools/valuation_rule.py`；**不修改它們**。
 

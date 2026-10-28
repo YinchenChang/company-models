@@ -1,0 +1,44 @@
+{
+ "company": "dell",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "ISG",
+   "label": "ISG 營收",
+   "period": "FY2026A",
+   "value": 60.826,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  },
+  {
+   "name": "CSG",
+   "label": "CSG 營收（商用＋消費）",
+   "period": "FY2026A",
+   "value": 50.984,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  },
+  {
+   "name": "其他業務",
+   "label": "其他業務（營收 − ISG − CSG）",
+   "period": "FY2026A",
+   "value": 1.72799999999999,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "ISG",
+   "labels": [
+    "AI 伺服器（AI-Optimized Servers）",
+    "傳統伺服器與網通",
+    "儲存"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ],
+ "note": "其他業務為差額"
+}

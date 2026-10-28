@@ -4,6 +4,11 @@
 
 **投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 −16.6%，落在 −25%～+25%）。
 
+## v0.2.2（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 目標價 US$121（DCF 94、Comparable 149 各半），比現價 145.61（2026-10-23）低 16.6%，級距 0%～−25%；Comparable 單獨為 +2.1%。DCF 比現價低 35.4%，因情境 B、C 的 EPS 在 FY2029 後依收斂法下滑（C 的 FY2032 EPS 3.56 只有 FY2027 5.19 的 69%），不是 ROE（近三年 92.0%）。
@@ -21,9 +26,9 @@ AI 半導體 Project 步驟 5（設備與材料）的量測與檢測公司。樣
 | 檔案 | 內容 |
 |---|---|
 | `build_klac.py` | 產生器（參數與公式） |
-| `dist/20261025_科磊模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_科磊個股模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定 |
-| `dist/20261025_科磊模型_v0.2.1.html` | HTML 展示層（單頁自含，數字全部由 xlsx 抽出） |
+| `dist/20261028_科磊個股模型_v0.2.2.html` | HTML 展示層（單頁自含，數字全部由 xlsx 抽出） |
 
 **建置。** 先執行 `python3 klac/build_klac.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序為 README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/equipment/dist`（三情境的 WFE 分項、先進封裝、設備總額、見頂年度）與 `tools/cycle_position.py`，不修改它們。
 

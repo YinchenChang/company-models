@@ -1,0 +1,44 @@
+{
+ "company": "fabrinet",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "資料中心",
+   "label": "資料中心",
+   "period": "FY2025A",
+   "value": 1.579729074,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  },
+  {
+   "name": "通訊基礎設施",
+   "label": "通訊基礎設施（電信系統、衛星通訊、電信元件）",
+   "period": "FY2025A",
+   "value": 1.049733389,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  },
+  {
+   "name": "車用、工業與其他",
+   "label": "車用、工業與其他（EV 充電、LiDAR、工業雷射、醫療）",
+   "period": "FY2025A",
+   "value": 0.789864537,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "資料中心",
+   "labels": [
+    "光模組與其他（資料中心 − DCI − HPC）",
+    "DCI（資料中心互連）",
+    "HPC（高效能運算）"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ],
+ "note": "公司揭露的終端市場營收類別（單一應報導部門）"
+}

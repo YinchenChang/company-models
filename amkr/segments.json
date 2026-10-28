@@ -1,0 +1,29 @@
+{
+ "company": "amkr",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "單一應報導部門",
+   "label": "營收",
+   "period": "FY2025A",
+   "value": 6708,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "單一應報導部門",
+   "labels": [
+    "通訊（手機、平板）",
+    "運算（資料中心、基礎設施、PC、儲存）",
+    "車用、工業與其他",
+    "消費"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ],
+ "note": "終端市場別營收（公司揭露比重 × 營收）"
+}

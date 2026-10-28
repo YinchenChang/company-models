@@ -1,0 +1,34 @@
+{
+ "company": "mediatek",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "單一應報導部門",
+   "label": "營收",
+   "period": "FY2025A",
+   "value": 595.966,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "單一應報導部門",
+   "labels": [
+    "手機",
+    "智慧邊緣平台（含 AI ASIC）",
+    "電源 IC"
+   ]
+  },
+  {
+   "parent": "智慧邊緣平台（含 AI ASIC）",
+   "labels": [
+    "其中 AI ASIC（資料中心）"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ],
+ "note": "產品線別營收"
+}

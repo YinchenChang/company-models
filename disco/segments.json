@@ -1,0 +1,27 @@
+{
+ "company": "Disco",
+ "ticker": "6146.T",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "單一應報導部門（精密加工裝置與工具）",
+   "label": "營收",
+   "period": "FY2023",
+   "value": null,
+   "unit": "十億日圓",
+   "source": "Disco 有價證券報告書（單一應報導部門）"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "單一應報導部門（精密加工裝置與工具）",
+   "labels": [
+    "精密加工裝置",
+    "精密加工ツール（消耗品）",
+    "その他"
+   ]
+  }
+ ],
+ "check_labels": [],
+ "note": "製品別只有構成比（Q 頁第 15–19 列，百分比取整），無金額，故不設分部金額核對列。"
+}

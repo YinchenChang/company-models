@@ -8,6 +8,11 @@
 
 **投資建議：強力買進**（依上檔空間固定規則：加權目標價上檔空間 +80.1%，落在 大於 +50%）。
 
+## v0.1.2（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 目標價 NT$3,314（DCF 3,756、Comparable 2,873 各半），比現價 1,840（2026-10-22）高 80.1%，級距大於 50%；Comparable 單獨為 56.1%。主因是 EPS 不是倍數：本模型 12 個月後前瞻 EPS 249.4 比共識前瞻 EPS 160.3 高 55.6%（兩者期間差約一年；FY2027 EPS 240.7 也比共識 196.2 高 22.7%），同業（廣達、緯創、鴻海、Supermicro、Celestica）前瞻 P/E 中位數 11.5 倍與現價隱含 11.5 倍相同；DCF 比 Comparable 高 30.7%，因 ROE 37.5% 使再投資率只有 10.7%（DCF 偏高估）。
@@ -23,9 +28,9 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_wiwynn.py` | 產生器（參數與公式；上游成品唯讀） |
-| `dist/20261025_緯穎模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_緯穎個股模型_v0.1.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_緯穎模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261028_緯穎個股模型_v0.1.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 建置：先執行 `python3 wiwynn/build_wiwynn.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。
 

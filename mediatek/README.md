@@ -6,6 +6,11 @@
 
 **投資建議：放空**（依上檔空間固定規則：加權目標價上檔空間 −48.7%，落在 −50%～−25%）。
 
+## v0.1.2（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 目標價 NT$2,057（DCF 1,846、Comparable 2,268 各半），比現價 4,010（2026-10-22）低 48.7%，級距 −25%～−50%；Comparable 單獨為 −43.4%。主因是倍數不是 EPS：本模型 12 個月後前瞻 EPS 119.49 比共識前瞻 EPS 103.48 高 15.5%，但同業（高通、博通、邁威爾、世芯、創意）前瞻 P/E 中位數 19.0 倍，現價隱含 38.8 倍、共識目標價 6,067 隱含 58.6 倍（比同業高 208.9%）；市場給聯發科的 AI ASIC 成長溢價，Comparable 未計入。
@@ -19,9 +24,9 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_mediatek.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_聯發科模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_聯發科個股模型_v0.1.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_聯發科模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
+| `dist/20261028_聯發科個股模型_v0.1.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
 
 建置：先跑 `python3 mediatek/build_mediatek.py raw.xlsx`，再跑 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序為 README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用的上游為 `tsmc/dist`（TPU 與其他 ASIC 顆數、2029 成長、情境係數）、`avgo/dist`（ASIC 規格、Broadcom 份額、HBM 價格路徑）、`mrvl/dist`（Marvell 份額）、`tools/cycle_position.py`（只用規則函式）與 `tools/valuation_rule.py`；**不修改它們**。
 

@@ -6,6 +6,11 @@ Credo 的 AEC 營收＝AI 銅纜市場（`markets/network`：scale-up 背板與�
 
 **投資建議：買進**（依上檔空間固定規則：加權目標價上檔空間 +32.1%，落在 +25%～+50%）。
 
+## v0.2.3（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 目標價 US$195（DCF 100、Comparable 289 各半），比現價 147.29（2026-10-23）高 32.1%，級距 25%–50%；Comparable 單獨為 +96.1%。上檔全部來自倍數：本模型 12 個月後前瞻 EPS 8.37 比共識 9.69 低 13.6%，但現價只隱含 15.2 倍共識前瞻 EPS，同業（Astera Labs、Marvell、Broadcom、MACOM）前瞻 P/E 中位數 34.5 倍、共識目標價 279.09 隱含 28.8 倍；DCF 100 反而比現價低 32.0%，因 B、C 情境 FY2029 起 EPS 下滑（FY2032 B 7.64、C 3.74），且 ROE 無同口徑資料、取 20%。
@@ -19,9 +24,9 @@ AI 半導體 Project **網通次產業內複製（主動電纜、SerDes、光 DS
 | 檔案 | 內容 |
 |---|---|
 | `build_crdo.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261026_Credo模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261028_Credo個股模型_v0.2.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261026_Credo模型_v0.2.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261028_Credo個股模型_v0.2.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 crdo/build_crdo.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI 銅纜、scale-out 銅纜、可插拔光模組、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`、`tools/valuation_rule.py`（只用規則函式）；**不修改它們**。
 

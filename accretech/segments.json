@@ -1,0 +1,27 @@
+{
+ "company": "accretech",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "半導體製造裝置（SPE）",
+   "label": "SPE 營收",
+   "period": "FY25 Q1",
+   "value": 23.5,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  },
+  {
+   "name": "計測機器",
+   "label": "計測營收",
+   "period": "FY25 Q1",
+   "value": 7.3,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ],
+ "note": "分部營收取整到億日圓，核對取整到十億日圓"
+}

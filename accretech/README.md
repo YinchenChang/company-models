@@ -6,6 +6,11 @@
 
 **投資建議：買進**（依上檔空間固定規則：加權目標價上檔空間 +25.8%，落在 +25%～+50%）。
 
+## v0.1.2（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 目標價 ¥19,528（DCF 10,189、Comparable 28,867 各半），比現價 15,520（2026-10-23）高 25.8%，級距 25%–50%；Comparable 單獨為 +86.0%。主因是 Comparable 的倍數：同業（Disco、東京威力科創、Advantest、Lasertec、Kokusai Electric）前瞻 P/E 中位數 34.0 倍，東京精密自身前瞻 P/E 只有 21.9 倍、現價隱含 18.3 倍 12 個月後前瞻 EPS（849），Comparable 未扣本公司長期低於同業的折價；EPS 只比共識前瞻 EPS 801 高 5.9%。DCF 反而比現價低 34.3%（ROE 13.9%、再投資率 28.7%）。
@@ -21,8 +26,8 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_accretech.py` | 產生器（openpyxl 寫公式） |
-| `dist/20261025_東京精密模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
-| `dist/20261025_東京精密模型_v0.1.1.html` | HTML 展示層（`html.json` 設定；數字全部取自 xlsx） |
+| `dist/20261028_東京精密個股模型_v0.1.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_東京精密個股模型_v0.1.2.html` | HTML 展示層（`html.json` 設定；數字全部取自 xlsx） |
 
 建置：`python3 accretech/build_accretech.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序是 README、In、Q、Hist、PL、Val、Recon、Sens、Sources（比照 `disco/`）。
 
