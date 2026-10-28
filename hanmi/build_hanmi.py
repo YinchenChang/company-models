@@ -715,6 +715,15 @@ if os.environ.get("G1_ROWS"): print("G1ROWS", "hanmi", "grade", _G, "rec", _G + 
 if os.environ.get("V2_ROWS"):
     print("V2", V2T, V2EXT)
 
+
+# ---------------- 分部原則第 3 條（2026-10-28）：核對列與宣告（追加於工作表最後，不位移既有列，數值不變） ----------------
+import os as _os2, sys as _sys2
+_sys2.path.insert(0, _os2.path.join(_os2.path.dirname(_os2.path.dirname(_os2.path.abspath(__file__))), "tools", "segment_check"))
+from addrow import add_check
+add_check(Q, seg_rows=[15, 16, 17], total_row=4, cols="B", rnd=3, note="分部原則第 3 條（2026-10-28 追加）：客戶別營收（FY2024 事業報告）；分部宣告見 segments.json")
+RD.cell(RD.max_row + 1, 1, "v0.2.3（2026-10-28）：分部原則重建（數值不變）。Q 頁最後追加核對列「檢查：分部合計 − 合併營收」；官方分部與子列宣告見 segments.json。")
+if isinstance(RD.cell(1, 1).value, str): RD.cell(1, 1).value = RD.cell(1, 1).value.replace("v0.2.2", "v0.2.3")
+
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])

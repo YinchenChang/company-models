@@ -1,0 +1,27 @@
+{
+ "company": "crdo",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "單一應報導部門",
+   "label": "營收",
+   "period": "FY2025A",
+   "value": 0.436775,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "單一應報導部門",
+   "labels": [
+    "光學營收（光 DSP、矽光 PIC、ZeroFlap 光學）",
+    "其他 IC 與 IP（＝FY2026 營收 × oth_s × 成長）",
+    "AEC（＝營收 − 光學 − 其他；殘差）"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ]
+}

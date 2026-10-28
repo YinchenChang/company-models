@@ -6,6 +6,11 @@ Marvell 的資料中心營收＝客製 XPU（市場層 ASIC 顆數 × Marvell �
 
 **投資建議：放空**（依上檔空間固定規則：加權目標價上檔空間 −44.4%，落在 −50%～−25%）。
 
+## v0.2.3（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 目標價 US$127（DCF 115、Comparable 139 各半），比現價 228.51（2026-10-23）低 44.4%，級距 −25%～−50%；Comparable 單獨為 −39.3%。主因是倍數：本模型 FY2028 EPS（情境加權）6.50 比共識 7.33 低 11.3%，但現價隱含 31.2 倍共識 FY2028 EPS、共識目標價 341.44 隱含 46.6 倍，同業（Broadcom、NVIDIA、AMD、Astera Labs、Credo）前瞻 P/E 中位數 20.2 倍（共識隱含倍數高 130.7%）。
@@ -20,9 +25,9 @@ AI 半導體 Project 運算層模型，複製 `avgo/` 的結構（ASIC＋網通�
 |---|---|
 | `build_mrvl.py` | 產生器（參數與公式；唯讀取用上游成品） |
 | `tp_v2.py` | v0.2 目標價與延伸期的共用函式（PL 延伸到 FY2032 的收斂法、Val 第 0 節 DCF＋Comparable、Sens 目標價參數；各公司資料夾各放一份相同內容） |
-| `dist/20261026_邁威爾模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_邁威爾個股模型_v0.2.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261026_邁威爾模型_v0.2.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
+| `dist/20261028_邁威爾個股模型_v0.2.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
 
 建置：`python3 mrvl/build_mrvl.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`、`markets/network/dist`、`markets/equipment/dist`（經 `tools/cycle_position.py`）、`tsmc/dist`、`avgo/dist`；**不修改它們**。
 

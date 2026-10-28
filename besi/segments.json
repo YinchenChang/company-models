@@ -1,0 +1,18 @@
+{
+ "company": "BE Semiconductor Industries",
+ "ticker": "BESI",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "單一應報導部門",
+   "label": "營收",
+   "period": "FY2024",
+   "value": 607.5,
+   "unit": "EUR M",
+   "source": "BESI 年報（單一應報導部門）"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [],
+ "note": "單一應報導部門、模型未拆產品線，無需核對列；混合鍵合為營收驅動因子（PL 頁）。"
+}

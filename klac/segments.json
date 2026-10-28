@@ -1,0 +1,35 @@
+{
+ "company": "klac",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "半導體製程控制",
+   "label": "事業別：半導體製程控制（含服務）",
+   "period": "FQ3-25（2025-01～03）",
+   "value": 2738.8,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  },
+  {
+   "name": "特殊半導體製程（SPTS）",
+   "label": "事業別：特殊半導體製程（SPTS）",
+   "period": "FQ3-25（2025-01～03）",
+   "value": 156.5,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  },
+  {
+   "name": "PCB 與元件檢測",
+   "label": "事業別：PCB 與元件檢測",
+   "period": "FQ3-25（2025-01～03）",
+   "value": 168.6,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ],
+ "note": "含第 10 列匯率影響等（營收 − 三事業，Derived）"
+}

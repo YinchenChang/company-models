@@ -716,6 +716,15 @@ lines = [("Dell Technologies（DELL US）收支與估值模型 v0.1（AI 半導�
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
 
+
+# ---------------- 分部原則第 3 條（2026-10-28）：核對列與宣告（追加於工作表最後，不位移既有列，數值不變） ----------------
+import os as _os2, sys as _sys2
+_sys2.path.insert(0, _os2.path.join(_os2.path.dirname(_os2.path.dirname(_os2.path.abspath(__file__))), "tools", "segment_check"))
+from addrow import add_check
+add_check(Q, seg_rows=[7, 8, 9], total_row=10, cols="BCDE", rnd=3, note="分部原則第 3 條（2026-10-28 追加）：其他業務為差額；分部宣告見 segments.json")
+RD.cell(RD.max_row + 1, 1, "v0.1.1（2026-10-28）：分部原則重建（數值不變）。Q 頁最後追加核對列「檢查：分部合計 − 合併營收」；官方分部與子列宣告見 segments.json。")
+if isinstance(RD.cell(1, 1).value, str): RD.cell(1, 1).value = RD.cell(1, 1).value.replace("v0.1", "v0.1.1")
+
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])

@@ -1,0 +1,38 @@
+{
+ "company": "mrvl",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "資料中心",
+   "label": "資料中心",
+   "period": "FY2026A（～2026-01-31）",
+   "value": 6.1003,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  },
+  {
+   "name": "通訊與其他",
+   "label": "通訊與其他（企業網通、電信、消費、車用／工業）",
+   "period": "FY2026A（～2026-01-31）",
+   "value": 2.0943,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "資料中心",
+   "labels": [
+    "資料中心：客製（XPU＋XPU attach）",
+    "資料中心：交換器",
+    "資料中心：AEC 與 retimer",
+    "資料中心：儲存與其他",
+    "資料中心：光互連（＝資料中心 − 上列；Derived）"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ],
+ "note": "終端市場別（單一應報導部門）"
+}

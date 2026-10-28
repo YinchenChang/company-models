@@ -1,0 +1,9 @@
+{
+ "company": "Lam Research", "ticker": "LRCX", "model_sheet": "Q",
+ "official_segments": [
+  {"name": "單一應報導部門", "label": "營收", "period": "FY2025", "value": 18.436, "unit": "US$B", "source": "Lam FY2025 10-K（單一應報導部門；營收依系統／CSBG 揭露）"}
+ ],
+ "sublines": [{"parent": "單一應報導部門", "labels": ["系統營收（新的先進製程設備）", "客戶支援與其他（CSBG：服務、備件、升級、Reliant 成熟製程設備）"]}],
+ "check_labels": ["檢查：系統＋CSBG − 營收（應為 0）"],
+ "note": "Lam 為單一應報導部門；AI 相關需求反映在系統營收的代工／記憶體占比（Q 頁第 24–30 列）。"
+}
