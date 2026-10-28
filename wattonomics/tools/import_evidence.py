@@ -16,7 +16,7 @@ A46 B22 A50 A54 A55 A57 A59 A63 A64 A65 A69 B7 A72 A73 A74 A75 A76 A81 A82 A84 A
 B2 B4 B6 B23 B24 B33 B44 B45 B46 B48 D25 B49 B51 B58 B63 B64 B65 B67 B70 B72 D15 D2 D3 D5 D6 D8 D11 D13 D14 D16 D17 D19 D20 D21 D22 D23 D24""".split())
 NOTE = {
     "A33": "方向寫反：營運者＝SpaceX／xAI、使用者＝Google（B#49）；不計入 Google 營運者 GW",
-    "A19": "上限 1 GW（無再 1 GW 選擇權）", "A45": "標記改 Interested-party（GW 數為 Anthropic 自述／The Information）",
+    "A19": "H 段更正（取代 C 段『全案上限 1 GW』）：$30B Azure 確定採購（GW 未揭露）＋額外至多 1 GW（上限）", "A45": "標記改 Interested-party（GW 數為 Anthropic 自述／The Information）",
     "A21": "差額原因另含耐用年限 15→25 年", "B3": "近 90 天簽 3 GW（含 AWS 2 GW），非 >3 GW",
     "B47": "946 MW-IT 屬實；1,531 MW（2027）無出處，刪除", "A116": "數值屬實；『不含中國』無出處，中國買家晶片可能在 Other 內",
     "A16": "as_of 2026-05-15", "A58": "Entergy 7 座燃氣電廠；租金起付日不在原文；2030 前 2 GW 屬實",
@@ -25,6 +25,21 @@ NOTE = {
     "A30": "原頁被擋；標記統一為 Interested-party（A／B 兩段原不一致）", "B30": "同 A#30（標記已統一）",
     "A79": "Epoch 交叉屬實；10-K 原頁被擋", "A83": "10-K 被擋", "A72": "屬實（設施）；首棟已延到 2027-08（B#10）",
 }
+
+
+PRE = {"A_us_cloud.csv": "A", "B_labs_china_totals.csv": "B", "B_delay.csv": "D"}
+
+
+def h_notes():
+    """H 段（10-28 API 旗標人工複核）更正理由：{A18: [...]}；併入 cnote"""
+    out = {}
+    p = os.path.join(RAW, "H_corrections.csv")
+    if os.path.exists(p):
+        for c in csv.DictReader(open(p, encoding="utf-8-sig")):
+            pre = PRE.get(c["file"])
+            if pre:
+                out.setdefault(f"{pre}{c['row']}", []).append(c["reason"] if c["field"] in ("(none)", "(note)") else f"{c['field']}：{c['reason']}")
+    return out
 
 
 def verdict(i):
@@ -37,6 +52,7 @@ def verdict(i):
 
 def main():
     rows = []
+    HN = h_notes()
     for pre, fn in (("A", "A_us_cloud.csv"), ("B", "B_labs_china_totals.csv"), ("D", "B_delay.csv")):
         with open(os.path.join(RAW, fn), encoding="utf-8-sig") as f:
             rd = list(csv.reader(f))
@@ -54,7 +70,8 @@ def main():
             if i in ("A30", "B30"):   # 同一份 Broadcom 8-K：統一為 Interested-party（原頁被擋未核；GW 數為 Broadcom／Anthropic 揭露的合約上限）
                 tag = "[Interested-party]（統一；原 A 段 Interested-party、B 段 Verified）"
             rows.append(dict(id=f"{pre}#{n}", key=i, player=player, claim=claim, value=val, basis=basis, as_of=d.get("as_of", ""),
-                             tag=tag, url=d.get("url", ""), verdict=verdict(i), cnote=NOTE.get(i, "")))
+                             tag=tag, url=d.get("url", ""), verdict=verdict(i),
+                             cnote="；".join(x for x in (NOTE.get(i, ""), ("H 段（10-28）：" + "；".join(HN[i])) if i in HN else "") if x)))
     json.dump(rows, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
     from collections import Counter
     print(f"{OUT}：{len(rows)} 列；", dict(Counter(r["verdict"] for r in rows)))

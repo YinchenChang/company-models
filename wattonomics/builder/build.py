@@ -14,14 +14,15 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 GL = os.path.dirname(HERE)
 ROOT = os.path.dirname(GL)
-VERSION = "v0.1.1"
+VERSION = "v0.1.2"
 DATE = "20261028"
 TK_SNAPSHOT = os.path.join(ROOT, "siliconomics", "data", "tokenomics_snapshot_v21.7.json")
 SIL_DIR = os.path.join(ROOT, "siliconomics", "data")
 SEED = os.path.join(HERE, "seed", "seed_v0.1.json")
 TK_EXTRA = os.path.join(HERE, "seed", "tk_extra_v21.7.json")   # 快照未含、直接讀 Tokenomics 活頁簿的名稱（R1 裁定）
 EVID = os.path.join(HERE, "seed", "evidence_v0.1.json")         # tools/import_evidence.py 由 evidence_raw 產生
-FUND = os.path.join(HERE, "seed", "funding_v0.1.1.json")        # tools/import_funding.py 由 F_funding.csv、P_facility_power.csv 產生（附 G 段判定）
+FUND = os.path.join(HERE, "seed", "funding_v0.1.2.json")        # tools/import_funding.py 由 F_funding.csv、P_facility_power.csv 產生（附 G 段判定）
+CAMPUS_ADD = os.path.join(HERE, "seed", "campus_v0.1.2_add.json")   # v0.1.2 起新增的 T2 園區列（園區候選回查＋獨立抽查後合併；值之後由 Excel 讀回）
 SEG = os.path.join(ROOT, "markets", "invest_map", "data", "segments_ai_semis_v0.2.3.csv")   # AI半導體 次產業比例（最新版）
 SEG_COMMIT = "5dea5c8"
 
@@ -77,6 +78,12 @@ def main():
     a.version = a.version or VERSION
     a.date = a.date or DATE
     seed = json.load(open(SEED, encoding="utf-8"))
+    if os.path.exists(CAMPUS_ADD):
+        add = json.load(open(CAMPUS_ADD, encoding="utf-8"))
+        have = {c["key"] for c in seed["campus"]}
+        assert not have & {c["key"] for c in add["campus"]}, "新增園區鍵與既有重複"
+        seed["campus"] += add["campus"]
+        seed["sources"] += [x for x in add.get("sources", []) if x["id"] not in {y["id"] for y in seed["sources"]}]
     base = load_base_inputs(a.base)
     tk = json.load(open(TK_SNAPSHOT, encoding="utf-8"))
     tkx = json.load(open(TK_EXTRA, encoding="utf-8"))
@@ -1207,7 +1214,7 @@ def main():
     FCR["self_unit"] = r; r += 2
     FC.cell(r, 1, "實物量（每 IT GW）").font = BOLD; r += 1
     for k, lab, f, unit in (("q_fac", "設施電力", None, "GW"), ("q_gen", "備援發電機", "=fac_gen_mult", "GW"), ("q_self", "自建發電（有自建者）", "=self_gw", "GW"),
-                            ("q_xfmr", "主變壓器（判斷值；P50 例子不支持此基準）", "=xfmr_gva", "GVA")):
+                            ("q_xfmr", "主變壓器（含一台退出備援；P#50 ModulEdge、ComEd 例）", "=xfmr_gva", "GVA")):
         FC.cell(r, 1, "　" + lab); FC.cell(r, 3, unit)
         for y in YEARS:
             FC.cell(r, YEARS.index(y) + 4, f if f else f"=Players!{YC[y]}{FACR}").number_format = "0.00"
