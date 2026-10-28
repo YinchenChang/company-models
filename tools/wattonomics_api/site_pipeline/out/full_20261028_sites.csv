@@ -1,0 +1,131 @@
+﻿name,location,player,operator,user,seed
+"Stargate UAE / UAE-US AI Campus, Abu Dhabi","Abu Dhabi, Abu Dhabi, UAE",G42 / OpenAI / Oracle,Khazna Data Centers (G42),OpenAI,True
+"Microsoft Fairwater Atlanta, Fayetteville","Fayetteville, Georgia, USA",Microsoft,Microsoft,"OpenAI, Microsoft, Mistral, xAI",True
+"Microsoft Fairwater Wisconsin, Mount Pleasant","Mount Pleasant, Wisconsin, USA",Microsoft,Microsoft,"OpenAI, Microsoft AI",True
+Stargate Abilene Campus 1,"Abilene, Texas, USA",Oracle / OpenAI / Crusoe,"Crusoe (developer), Oracle (tenant)",OpenAI,True
+Crusoe Abilene Campus 2 (Microsoft),"Abilene, Texas, USA",Microsoft / Crusoe,Crusoe,Microsoft,True
+Google Mesa AI Campus,"Mesa, Arizona, USA",Alphabet/Google,Google,Google,True
+"AWS Project Rainier, New Carlisle","New Carlisle, Indiana, USA",Amazon/AWS,Amazon,Anthropic,True
+AWS Ridgeland Campus,"Ridgeland, Mississippi, USA",Amazon/AWS,Amazon,Anthropic (推測),True
+"AWS Madison Mega Site, Canton","Canton, Madison County, Mississippi, USA",Amazon/AWS,Amazon,Anthropic (推測),True
+"Cipher Black Pearl, Winkler County","Winkler County (Wink area), Texas, USA",Cipher Mining / Amazon,Cipher Mining,Amazon,True
+"Meta Prometheus, New Albany","New Albany, Ohio, USA",Meta,Meta,Meta,True
+"Meta Hyperion, Richland Parish","Rayville / Holly Ridge, Louisiana, USA",Meta / Blue Owl,Meta–Blue Owl JV (80/20),Meta,True
+Meta El Paso Data Center,"El Paso, Texas, USA",Meta / BlackRock,Meta–BlackRock JV,Meta,True
+Crusoe–Lancium Childress AI Campus,"Childress, Texas, USA",Crusoe / Lancium,Crusoe,未具名超大規模雲（Meta 合約相關）,True
+"Stargate Frontier, Shackelford County","Albany area, Shackelford County, Texas, USA",Oracle / OpenAI / Vantage,"Vantage Data Centers (developer), Oracle (tenant)",OpenAI,True
+"Project Jupiter, Doña Ana County","Santa Teresa, Doña Ana County, New Mexico, USA",Oracle / OpenAI / STACK / BorderPlex,"STACK / BorderPlex (developer), Oracle (tenant)",OpenAI,True
+"Stargate Lighthouse, Port Washington","Port Washington, Wisconsin, USA",Oracle / OpenAI / Vantage,"Vantage (developer), Oracle (tenant)",OpenAI,True
+"Stargate Michigan 'The Barn', Saline Township","Saline Township, Michigan, USA",Oracle / OpenAI / Related Digital / Blackstone,"Related Digital (developer), Oracle (tenant)",OpenAI,True
+"Galaxy Helios, Dickens County","Afton / Dickens County, Texas, USA",Galaxy Digital / CoreWeave,Galaxy Digital,CoreWeave,True
+Applied Digital Polaris Forge 1,"Ellendale, North Dakota, USA",Applied Digital / CoreWeave,Applied Digital,CoreWeave,True
+Core Scientific Denton Campus,"Denton, Texas, USA",Core Scientific / CoreWeave,Core Scientific,CoreWeave,True
+CoreWeave Kenilworth Campus,"Kenilworth, New Jersey, USA",CoreWeave,CoreWeave,未揭露,True
+CoreWeave Lancaster Campus,"Lancaster, Pennsylvania, USA",CoreWeave / Blue Owl,CoreWeave,未揭露,True
+Nebius Lappeenranta AI Campus,"Lappeenranta, South Karelia, Finland",Nebius,Nebius,未揭露,True
+Nebius Independence Campus,"Independence, Missouri, USA",Nebius,Nebius,未揭露,True
+Nebius Vineland Campus,"Vineland, New Jersey, USA",Nebius / Microsoft,Nebius (build-to-suit),Microsoft,True
+IREN Childress Campus (Horizon 1–4),"Childress, Texas, USA",IREN / Microsoft,IREN,Microsoft,True
+Lambda Kansas City AI Factory,"Kansas City, Missouri, USA",Lambda,Lambda,單一客戶（未具名）,True
+Nscale Loughton AI Campus,"Loughton, Essex, UK",Nscale,Nscale,Microsoft（已退出）,True
+Nscale–Ionic Digital Ingleside Campus,"Ingleside, Texas, USA",Nscale / Microsoft,Nscale,Microsoft,True
+Start Campus SINES Data Campus (SIN01/SIN02),"Sines, Alentejo, Portugal",Start Campus / Nscale / Microsoft,Start Campus (Nscale 為 SIN01 租戶),Microsoft（經 Nscale）,True
+Nscale–Aker Narvik Campus (ex-Stargate Norway),"Narvik (Kvandal), Nordland, Norway",Nscale / Aker / Microsoft,Nscale–Aker JV,Microsoft（OpenAI 經 Microsoft 租用）,True
+"Stargate UK, Cobalt Park","Cobalt Park, Newcastle upon Tyne, England, UK",OpenAI / Nscale,Nscale,OpenAI（專案已暫停）,True
+TeraWulf Lake Mariner,"Somerset, New York, USA",TeraWulf / Fluidstack / Google,TeraWulf,Fluidstack → Anthropic,True
+Hut 8 River Bend Campus,"West Feliciana Parish, Louisiana, USA",Hut 8 / Fluidstack / Google,Hut 8,Fluidstack → Anthropic,True
+TeraWulf Kentucky Campus,"Kentucky, USA",TeraWulf / Anthropic,TeraWulf,Anthropic,True
+Riot Platforms Rockdale,"Rockdale, Texas, USA",Riot Platforms,Riot Platforms,Anthropic（Bloomberg 指認）,True
+Hut 8 Nueces County Campus,"Nueces County, Texas, USA",Hut 8 / Lambda / Nvidia,Lambda,Anthropic,True
+Volta Infra Norway Campus,Norway（站址未揭露）,Volta Infra,Volta Infra,Anthropic,True
+Nexus Hubbard Campus,"Hubbard, Hill County, Texas, USA",Nexus / Anthropic / Google,Nexus,Anthropic,True
+"xAI Colossus 2, Memphis / Southaven","Memphis, Tennessee / Southaven, Mississippi, USA",SpaceX / xAI,SpaceX (xAI),xAI、Anthropic,True
+"xAI Colossus 1, Memphis","Memphis, Tennessee, USA",SpaceX / xAI,SpaceX (xAI),Anthropic（全部容量）,True
+Stargate Milam County (SB Energy),"Milam County, Texas, USA",SoftBank / SB Energy / OpenAI,SB Energy,OpenAI,True
+Stargate Lordstown Campus,"Lordstown, Ohio, USA",SoftBank / OpenAI / Oracle,SoftBank,OpenAI,True
+PORTS-Pike Technology Campus (Ports Pike),"Piketon, Pike County, Ohio, USA",SB Energy / OpenAI / Nvidia,SB Energy（持有並營運，20 年租約）,OpenAI,True
+MGX–Mistral Paris-region 1.4GW AI Campus (Fouju),"Fouju, Seine-et-Marne, Île-de-France, France",MGX / Bpifrance / Nvidia / Mistral,MGX 等合資,Mistral 等,True
+Reliance–Brookfield–Digital Realty Visakhapatnam AI Campus,"Visakhapatnam, Andhra Pradesh, India",Reliance / Brookfield / Digital Realty,Digital Connexion JV,未揭露,True
+Humain Al Sa'ad AI Campus (6 GW master plan),"East Riyadh, Riyadh Province, Saudi Arabia",Humain (PIF) / AWS / Nvidia / AMD,Humain,Together AI、AWS AI Zone 等,True
+Humain Dammam AI Data Center,"Dammam, Eastern Province, Saudi Arabia",Humain (PIF) / Groq / Aramco Digital,Humain,Together AI 等,True
+Google–AdaniConneX Visakhapatnam AI Hub,"Visakhapatnam, Andhra Pradesh, India",Google / AdaniConneX / Airtel,AdaniConneX,Google,False
+Reliance Jamnagar AI Campus,"Jamnagar, Gujarat, India",Reliance Industries (Jio),Reliance,Meta（部分追蹤源）,False
+Fermi America HyperGrid / Project Matador,"Carson County (near Amarillo), Texas, USA",Fermi America,Fermi America,未揭露,False
+New Era Lea County AI Campus,"Caprock, Lea County, New Mexico, USA",New Era Energy & Digital,New Era Energy & Digital,未揭露,False
+OpenAI Project Camellia (Effingham County),"Rincon, Effingham County, Georgia, USA",OpenAI,OpenAI,OpenAI,False
+Meta Lebanon Campus,"Lebanon, Indiana, USA",Meta,Meta,Meta,False
+Meta Los Lunas Campus,"Los Lunas, New Mexico, USA",Meta,Meta,Meta,False
+Google Armstrong County (Goodnight) Campus,"Claude, Armstrong County, Texas, USA",Google / Crusoe,Crusoe（開發）→ Google,Google,False
+Google Haskell County Campuses,"Haskell County, Texas, USA",Google / Intersect / TPG Rise Climate,Google,Google,False
+"Google Project Tembo, Cheyenne","Cheyenne, Wyoming, USA",Google,Google,Google,False
+Google West Memphis Campus,"West Memphis, Arkansas, USA",Google / Entergy Arkansas,Google,Google,False
+Google Council Bluffs Southlands Campus,"Council Bluffs, Iowa, USA",Google,Google,Google,False
+"Google Project Zodiac, Fort Wayne","Fort Wayne, Indiana, USA",Google,Google,Google,False
+"AWS Susquehanna Campus, Salem Township","Salem Township, Pennsylvania, USA",Amazon/AWS / Talen,Amazon,Amazon,False
+AWS Hobart Campus,"Hobart, Indiana, USA",Amazon/AWS,Amazon,Amazon,False
+AWS North Creek Technology Campus (Louisa/Mineral),"Louisa County, Virginia, USA",Amazon/AWS,Amazon,Amazon,False
+"AWS Project Galaxy, Sidney","Sidney, Ohio, USA",Amazon/AWS,Amazon,Amazon,False
+Amazon Pecos County Campus (GW Ranch),"Fort Stockton, Pecos County, Texas, USA",Amazon/AWS,Amazon,Amazon,False
+"AWS Project Spectrum, Comanche Peak","Hood / Somervell Counties, Texas, USA",Amazon/AWS / Vistra,Amazon,Amazon,False
+Microsoft Pecos Data Center Campus,"Pecos, Texas, USA",Microsoft,Microsoft,Microsoft,False
+Poolside Project Horizon,"Pecos County (Fort Stockton), Texas, USA",Poolside AI,Poolside AI,Poolside AI,False
+Crusoe Victoria AI Factory,"Victoria, Texas, USA",Crusoe,Crusoe,未揭露,False
+Core Scientific Pecos AI Campus,"Pecos, Texas, USA",Core Scientific,Core Scientific,未揭露,False
+Cloverleaf Project Open Sky,"Piedmont, Oklahoma, USA",Cloverleaf Infrastructure,Cloverleaf Infrastructure,未揭露,False
+Stratos AI Data Center Campus,"Lucin, Utah, USA",O'Leary Digital,O'Leary Digital,未揭露,False
+Homer City Energy Campus,"Homer City, Pennsylvania, USA",Homer City Redevelopment,Homer City Redevelopment,未揭露,False
+TeraWulf/Fluidstack Abernathy Campus,"Abernathy, Texas, USA",TeraWulf / Fluidstack / Google,TeraWulf JV,Fluidstack → Anthropic（推測）,False
+Cipher Barber Lake Campus,"Colorado City, Texas, USA",Cipher Mining / Fluidstack / Google,Cipher Mining,Fluidstack → Anthropic（推測）,False
+Applied Digital Polaris Forge 2,"Harwood, North Dakota, USA",Applied Digital,Applied Digital,美國超大規模雲（未具名）,False
+Crusoe–Tallgrass Cheyenne AI Campus,"Cheyenne, Wyoming, USA",Crusoe / Tallgrass,Crusoe,未揭露,False
+Nscale Monarch Compute Campus,"West Virginia, USA",Nscale,Nscale,Microsoft 等,False
+IREN Sweetwater Campus,"Sweetwater, Texas, USA",IREN,IREN,未揭露,False
+Wonder Valley AI Data Center Park,"Greenview, Alberta, Canada",O'Leary Ventures,O'Leary Ventures,未揭露,False
+Bell AI Fabric Kamloops,"Kamloops, British Columbia, Canada",Bell Canada,Bell Canada,Cohere 等,False
+Khazna Ajman AI Data Center,"Ajman, UAE",Khazna (G42),Khazna,未揭露,False
+DataVolt Oxagon AI Campus,"Oxagon, NEOM, Tabuk, Saudi Arabia",DataVolt,DataVolt,未揭露,False
+Qai–Brookfield Qatar AI Compute Center,"Doha, Qatar",Qai (QIA) / Brookfield,Qai–Brookfield JV,未揭露,False
+Brookfield Cambrai AI Campus,"Cambrai, Hauts-de-France, France",Brookfield,Brookfield,未揭露,False
+Fluidstack France 1GW AI Supercomputer,France（站址未揭露）,Fluidstack,Fluidstack,未揭露,False
+Mistral–EcoDataCenter Borlänge,"Borlänge, Dalarna, Sweden",Mistral AI / EcoDataCenter,EcoDataCenter,Mistral AI,False
+QTS Cambois Campus (North East AI Growth Zone),"Cambois, Blyth, Northumberland, UK",QTS (Blackstone),QTS,未揭露,False
+Elsham Tech Park AI Campus,"Elsham, North Lincolnshire, UK",Greystoke,Elsham Tech Park Ltd,未揭露,False
+Sesterce Jämsä AI Campus,"Jämsä, Finland",Sesterce,Sesterce,未揭露,False
+Brookfield Strängnäs AI Campus,"Strängnäs, Sweden",Brookfield,Brookfield,未揭露,False
+Schwarz Digits Datacenter Lübbenau,"Lübbenau, Brandenburg, Germany",Schwarz Group (STACKIT),Schwarz Digits,STACKIT / 歐洲企業,False
+Merlin / Edged Navalmoral de la Mata Campus,"Navalmoral de la Mata, Extremadura, Spain",Merlin Properties / Edged Energy,Edged,未揭露,False
+QTS Calatorao (Project Rodes),"Calatorao, Aragón, Spain",QTS (Blackstone),QTS,未揭露,False
+Microsoft Aragón AI Campus,"Aragón, Spain",Microsoft,Microsoft,Microsoft,False
+Eni–MGX–G42 Ferrera Erbognone AI Campus,"Ferrera Erbognone, Lombardy, Italy",Eni / MGX / G42,Eni–MGX JV,未揭露,False
+GreenScale Tonstad Campus,"Tonstad (Sirdal), Agder, Norway",GreenScale,GreenScale,未揭露,False
+ByteDance Ulanqab Jining AI Cluster,"Jining District, Ulanqab, Inner Mongolia, China",ByteDance,ByteDance / 本地 IDC 供應商,ByteDance,False
+"Envision Galaxy Base, Ulanqab","Ulanqab, Inner Mongolia, China",Envision / Tencent,Envision,Tencent 等,False
+DeepSeek Ulanqab AI Campus,"Ulanqab, Inner Mongolia, China",DeepSeek,DeepSeek,DeepSeek,False
+Huawei Cloud Ulanqab Data Centers,"Ulanqab, Inner Mongolia, China",Huawei,Huawei Cloud,Huawei 及客戶,False
+Alibaba Cloud Zhangbei Data Center Park,"Zhangbei, Zhangjiakou, Hebei, China",Alibaba Cloud,Alibaba Cloud,Alibaba,False
+Huawei Cloud Gui'an Data Center,"Gui'an New Area, Guizhou, China",Huawei,Huawei Cloud,Huawei 及客戶,False
+Yotta D2 AI Supercluster,"Greater Noida, Uttar Pradesh, India",Yotta Data Services,Yotta,Yotta Shakti Cloud 客戶,False
+NTT DATA / Neysa Telangana AI Cluster,"Hyderabad, Telangana, India",NTT DATA / Neysa,NTT DATA,Neysa,False
+CtrlS Chandanvelly AI Campus,"Chandanvelly, Hyderabad, Telangana, India",CtrlS Datacenters,CtrlS,未揭露,False
+SoftBank Hokkaido Tomakomai AI Data Center,"Tomakomai, Hokkaido, Japan",SoftBank / IDC Frontier,SoftBank / IDC Frontier,SoftBank 自用及外部客戶,False
+SoftBank Sakai AI Data Center (ex-Sharp plant),"Sakai, Osaka, Japan",SoftBank,SoftBank,SoftBank / OpenAI 合資（SB OpenAI Japan）,False
+BitGrid–S2 Akita AI Data Center,"Akita Prefecture, Japan",BitGrid / S2 / Mubadala,BitGrid–S2,未揭露,False
+SK Group–AWS Ulsan AI Data Center,"Mipo National Industrial Complex, Ulsan, South Korea",SK Group / AWS,SK Group / SK Telecom,AWS AI Zone,False
+"Stargate Korea (SK Telecom–OpenAI), Southwest Korea","Jeolla region (southwest), South Korea",SK Telecom / OpenAI / SK hynix,SK Telecom–OpenAI JV,OpenAI,False
+Foxconn Kaohsiung AI Factory,"Kaohsiung, Taiwan",Foxconn (Hon Hai) / Nvidia,Foxconn,Nvidia、Foxconn 客戶,False
+YTL Green Data Center Park (Nvidia AI campus),"Kulai, Johor, Malaysia",YTL Power International / Nvidia,YTL,Nvidia 等,False
+Racks Central Johor AI Campus (RCJM1–4),"Pasir Gudang, Johor, Malaysia",Racks Central / ESR (CAF II),Racks Central,未揭露,False
+Nxera–TM Johor AI Campus,"Johor–Singapore SEZ, Johor, Malaysia",Telekom Malaysia / Nxera (Singtel),Nxera,未揭露,False
+"Vantage JHB1 (ex-Yondr), Sedenak","Sedenak Tech Park, Johor, Malaysia",Vantage Data Centers,Vantage,超大規模雲（未具名）,False
+DayOne Johor Campus (Nusajaya / Kempas),"Gelang Patah / Kempas, Johor, Malaysia",DayOne,DayOne,超大規模雲（未具名）,False
+Firmus Malaysia AI Factories,Malaysia,Firmus Technologies,Firmus,OpenAI,False
+Galaxy Data Center Banchang Campus,"Rayong, Thailand",Galaxy Data Center,Galaxy Data Center,未揭露,False
+"NEXTDC S7 AI Campus, Eastern Creek","Eastern Creek, Western Sydney, New South Wales, Australia",NEXTDC / OpenAI,NEXTDC,OpenAI（MOU）,False
+"Firmus Project Southgate, Launceston","Launceston, Tasmania, Australia",Firmus / Nvidia / CDC,Firmus,OpenAI、Nvidia DGX Cloud,False
+Firmus–CDC Southgate Melbourne AI Factory,"Melbourne, Victoria, Australia",Firmus / CDC Data Centres / Nvidia,Firmus / CDC,Nvidia DGX Cloud,False
+Rio AI City,"Rio de Janeiro, Brazil",Elea Data Centers / Oracle / Nvidia,Elea,未揭露,False
+Scala AI City,"Eldorado do Sul, Rio Grande do Sul, Brazil",Scala Data Centers,Scala,未揭露,False
+ByteDance/TikTok Pecém Data Center,"Pecém, Ceará, Brazil",ByteDance / Casa dos Ventos,Casa dos Ventos（開發）,ByteDance,False
+"Stargate Argentina, Patagonia","Patagonia, Argentina",OpenAI / Sur Energy,Sur Energy,OpenAI,False
+CloudHQ Querétaro Campus,"Querétaro, Mexico",CloudHQ,CloudHQ,超大規模雲（未具名）,False
+Microsoft–G42 Olkaria AI Campus,"Naivasha (Olkaria), Nakuru County, Kenya",Microsoft / G42,G42 / EcoCloud,Microsoft,False
