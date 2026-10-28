@@ -1,0 +1,12 @@
+{
+ "company": "Alchip Technologies",
+ "ticker": "3661.TW",
+ "model_sheet": "Q",
+ "official_segments": [
+  {"name": "單一應報導部門", "label": "單一營運部門（ASIC 設計服務）營收", "period": "FY2025", "value": 30.926, "unit": "NT$B", "source": "公司 FY2025 財報"}
+ ],
+ "sublines": [
+  {"parent": "單一應報導部門", "labels": ["HPC 與 AI ASIC", "消費性", "利基與網通"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收"]
+}

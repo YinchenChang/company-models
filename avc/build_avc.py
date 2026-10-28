@@ -337,7 +337,9 @@ def engine(ws, r0, title, **over):
     row("air", "AI 氣冷與機構營收", "NT$B", {"C": "=a25_air", **{c_(y): f"={c_(y)}{R['gw']}*$D${R['apg0']}*{c_(y)}{R['arel']}" for y in BU}}, fmt="#,##0.0")
     row("gen", "一般伺服器與網通營收", "NT$B", {"C": "=a25_gen", "D": f"=a26_{P['gen']}", **{c_(y): f"={c_(y - 1)}{r}*(1+{P['gg']}_{y % 100})" for y in BU[1:]}}, fmt="#,##0.0")
     row("nai", "非伺服器營收（3C、系統、富世達）", "NT$B", {"C": "=a25_nai", "D": "=a26_nai", **{c_(y): f"={c_(y - 1)}{r}*(1+{P['gn']}_{y % 100})" for y in BU[1:]}}, fmt="#,##0.0")
+    row("srvt", "伺服器與網通營收（液冷＋AI 氣冷與機構＋一般伺服器與網通）", "NT$B", {c_(y): f"={c_(y)}{R['lc']}+{c_(y)}{R['air']}+{c_(y)}{R['gen']}" for y in FYS}, fmt="#,##0.0")
     row("rev", "營收", "NT$B", {c_(y): f"={c_(y)}{R['lc']}+{c_(y)}{R['air']}+{c_(y)}{R['gen']}+{c_(y)}{R['nai']}" for y in FYS}, fmt="#,##0.0")
+    row("segchk", "檢查：分部合計 − 合併營收", "NT$B", {c_(y): f"=ROUND({c_(y)}{R['srvt']}+{c_(y)}{R['nai']}-{c_(y)}{R['rev']},6)" for y in FYS}, fmt="0.000")
     row("g", "營收年增", "%", {c_(y): f"={c_(y)}{R['rev']}/{c_(y - 1)}{R['rev']}-1" for y in FYS[1:]}, fmt="0.0%")
     row("lcsh", "液冷 ÷ 營收", "%", {c_(y): f"={c_(y)}{R['lc']}/{c_(y)}{R['rev']}" for y in FYS}, fmt="0.0%")
     row("aish", "AI（液冷＋氣冷與機構）÷ 營收", "%", {c_(y): f"=({c_(y)}{R['lc']}+{c_(y)}{R['air']})/{c_(y)}{R['rev']}" for y in FYS}, fmt="0.0%")
@@ -842,6 +844,8 @@ RD.cell(rn, 1, f'="投資建議："&Val!B{GR + 1}&"（依上檔空間固定規�
 OBS_ROW = rn + 1
 for i_, t_ in enumerate(OBS, 1):
     RD.cell(rn + i_, 1, f"重點觀察 {i_}：" + t_)
+
+RD.cell(RD.max_row + 1, 1, "v0.2.2（2026-10-28）：分部原則重建（數值不變）。PL 推導區塊新增「伺服器與網通營收」母列（液冷、AI 氣冷與機構、一般伺服器與網通為子列；公司揭露 2025 年伺服器與網通約 52%，凱基轉述）與核對列「分部合計 − 合併營收」；非伺服器（3C、系統、富世達）為另一母列。EPS、目標價不變。")
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]

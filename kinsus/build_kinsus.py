@@ -375,6 +375,7 @@ def engine(ws, r0, title, **over):
     row("bt", "BT 與其他載板（情境別年增；公司特有）", "NT$B", {"D": "=a26_bt", **{FC[y]: f"={FC[y - 1]}{r}*(1+{p('gbt', y)})" for y in F3}}, "#,##0.00", note="BT 成長以漲價為主；記憶體占 BT 需求逾五成")
     row("lens", "晶碩（隱形眼鏡）", "NT$B", {"C": "=a25_lens", "D": "=a26_lens", **{FC[y]: f"={FC[y - 1]}{r}*(1+{P['glens']})" for y in F3}}, "#,##0.00", note="與 AI 無關；三情境相同")
     row("rev", "營收", "NT$B", {"C": "=a25_rev", **{FC[y]: f"={FC[y]}{R['abf']}+{FC[y]}{R['bt']}+{FC[y]}{R['lens']}" for y in BU}}, "#,##0.0")
+    row("segchk", "檢查：分部合計（ABF＋BT 與其他＋晶碩）− 合併營收（FY2026 錨點起）", "NT$B", {FC[y]: f"={FC[y]}{R['abf']}+{FC[y]}{R['bt']}+{FC[y]}{R['lens']}-{FC[y]}{R['rev']}" for y in BU}, "0.000")
     row("g", "營收年增", "%", {FC[y]: f"={FC[y]}{R['rev']}/{FC[y - 1]}{R['rev']}-1" for y in FYS[1:]}, "0.0%")
     row("abfsh", "ABF ÷ 營收", "%", {FC[y]: f"={FC[y]}{R['abf']}/{FC[y]}{R['rev']}" for y in BU}, "0.0%")
     row("aish", "AI 載板 ÷ 營收", "%", {FC[y]: f"={FC[y]}{R['aisub']}/{FC[y]}{R['rev']}" for y in BU}, "0.0%", note="高盛：2026 年約 10%、2027 年 15–20%（公司口徑）")

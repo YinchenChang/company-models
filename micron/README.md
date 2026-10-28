@@ -12,6 +12,12 @@
 2. 本模型比共識保守：FY2028 前瞻 EPS（情境加權）157.33 比共識 201.1 低 21.8%、FY2028 年底每股淨值比共識 418.4 低 30.8%；情境 DCF 價值 A 1,714、B 708、C 322（現價的 1.95／0.81／0.37 倍），分歧集中在 FY2028 以後的 DRAM 價格路徑。
 3. FY2028 B 營業利益對一般 DRAM 收入最敏感（±20% → ±16.5%），NAND ±30% → ±8.3%、HBM ±30% → ±6.5%；DCF 權重改 0.3／0.7 使加權目標價 −14.5%／+14.5%。下一個檢驗事件是 FQ1 FY2027 財報（約 2026-12 下旬）的 DRAM 合約價與 HBM 出貨。
 
+## v0.4.2（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁第 20 列起新增官方報告分部 CMBU／CDBU／MCBU／AEBU（FQ1-25～FQ4-26 實績，8-K 財報新聞稿；FQ3-25 為 FY2025 全年減其他三季 [Derived]）與核對列「檢查：分部合計 − 合併營收」（每季 ≤ 0.008）。共用工具 `tools/memory_model/build.py` 新增選用區塊 `segments`（未設定的 SK 海力士、三星不受影響）。
+- 推估年度仍以技術別（一般 DRAM／HBM／NAND）推估、不拆分部；HBM 屬 CMBU。分部宣告見 `segments.json`。
+- 損益、EPS、目標價與 v0.4.1 相同（`tools/xlsx_diff.py`：只差新增列與 README 文字）。
+
 ## v0.4.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）
 
 - Val 頁最後新增「上檔空間級距」（第 231 列）與「投資建議」（第 232 列），依「上檔空間：加權目標價」固定規則（Andy 2026-10-25 14:00、14:17）（共用工具 `tools/memory_model/build.py` 樣板 v0.4.1；三家一起）；README 工作表最後新增投資建議（公式引用 Val）與重點觀察三點；HTML 估值章第一個區塊後顯示級距、投資建議與重點觀察。既有儲存格位置與數值不變（`tools/xlsx_diff.py` 對 v0.4 成品：只差新增列與版本字串）。
@@ -19,7 +25,7 @@
 | 檔案 | 內容 |
 |---|---|
 | `company.py` | 設定檔（只放參數） |
-| `dist/20261025_美光模型_v0.4.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_美光個股模型_v0.4.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 
 建置：`python3 tools/memory_model/build.py micron/company.py raw.xlsx`，再以 LibreOffice headless 重算。
 
@@ -49,7 +55,7 @@ Val 頁底部新增「十年倍數與規則值」區塊（`tools/valuation_rule.
 
 ## HTML 展示層
 
-`html.json`（頁面設定）與 `dist/20261025_美光模型_v0.4.1.html`（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格；十年分位的規則值取自 `markets/overview/datasets/valuation.json`，頁內標明）。產生與檢核見 `tools/company_html/README.md`；xlsx 或 `html.json` 變動後須重建 HTML 一併提交。
+`html.json`（頁面設定）與 `dist/20261028_美光個股模型_v0.4.2.html`（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格；十年分位的規則值取自 `markets/overview/datasets/valuation.json`，頁內標明）。產生與檢核見 `tools/company_html/README.md`；xlsx 或 `html.json` 變動後須重建 HTML 一併提交。
 
 ## v0.3 變更（2026-10-23）
 

@@ -1,0 +1,14 @@
+{
+ "company": "Micron",
+ "ticker": "MU",
+ "model_sheet": "Q",
+ "official_segments": [
+  {"name": "CMBU", "label": "CMBU 雲端記憶體（含 HBM）", "period": "FY2026", "value": 43.085, "unit": "US$B", "source": "8-K 財報新聞稿 FQ1-26／FQ2-26／FQ3-26／FQ4-26 合計；FY2026 10-K 第 1 項 43.09"},
+  {"name": "CDBU", "label": "CDBU 核心資料中心", "period": "FY2026", "value": 37.592, "unit": "US$B", "source": "同上；10-K 37.59"},
+  {"name": "MCBU", "label": "MCBU 行動與用戶端", "period": "FY2026", "value": 36.601, "unit": "US$B", "source": "同上；10-K 36.60"},
+  {"name": "AEBU", "label": "AEBU 車用與嵌入式", "period": "FY2026", "value": 15.886, "unit": "US$B", "source": "同上；10-K 15.89"}
+ ],
+ "sublines": [],
+ "check_labels": ["檢查：分部合計 − 合併營收"],
+ "note": "推估年度以技術別（一般 DRAM／HBM／NAND）推估，不拆分部；HBM 屬 CMBU。"
+}

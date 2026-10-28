@@ -900,6 +900,22 @@ RD.cell(_n0 + 1, 1, "v0.2.1（2026-10-25）：補上檔空間級距、投資建�
 RD.cell(_n0 + 2, 1, f'="投資建議："&Val!B{RC_ROW}&"（依上檔空間固定規則）"').font = BOLD
 for _i, _t in enumerate(OBS, 1): RD.cell(_n0 + 2 + _i, 1, f"重點觀察 {_i}：" + _t)
 
+# ---------------- v0.2.2（2026-10-28）：分部原則重建（Q 頁第 40 列起追加；不位移既有列，數值不變） ----------------
+Q.cell(40, 1, "官方報告分部與測試類別（2025Q3；分部原則第 3 條）").font = BOLD
+_S = "公司 3Q25 法說（富果研究整理，2025-11-28）"
+for _r, _lab, _v, _tag, _s1 in (
+        (41, "營運部門營收（測試服務約 97%）2025Q3", 9.2905, "Verified", "公司 4Q25 Investor update：3Q25 營收 9,290.5 百萬元；測試服務約占 97%"),
+        (42, "  成品測試", "=B41*0.582", "Interested-party", _S + "：58.2%（比重；金額為推得）"),
+        (43, "  晶圓測試", "=B41*0.304", "Interested-party", _S + "：30.4%"),
+        (44, "  預燒", "=B41*0.09", "Interested-party", _S + "：9.0%"),
+        (45, "  封裝及其他", "=B41*0.024", "Interested-party", _S + "：2.4%"),
+        (46, "檢查：分部合計 − 合併營收", "=B42+B43+B44+B45-D26", "Derived", "測試類別合計 − 本頁季資料 3Q25 營收；應約為 0")):
+    Q.cell(_r, 1, _lab); Q[f"B{_r}"] = _v; Q[f"B{_r}"].number_format = "#,##0.000"
+    if not (isinstance(_v, str) and _v.startswith("=")): Q[f"B{_r}"].font = BLUE
+    Q.cell(_r, 7, _tag); Q.cell(_r, 8, _s1)
+_rr = RD.max_row + 1
+RD.cell(_rr, 1, "v0.2.2（2026-10-28）：分部原則重建（數值不變）。Q 頁第 40 列起追加 2025Q3 營運部門營收、測試類別子列（成品測試 58.2%、晶圓測試 30.4%、預燒 9.0%、封裝及其他 2.4%，公司法說）與核對列「分部合計 − 合併營收」。公司年度測試類別金額未取得；推估年仍以 AI 加速器測試／非 AI 拆分。")
+RD.cell(1, 1).value = RD.cell(1, 1).value.replace("v0.2.1", "v0.2.2")
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])

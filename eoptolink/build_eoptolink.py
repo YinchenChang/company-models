@@ -805,6 +805,18 @@ RD.cell(_n0 + 2, 1, f'="投資建議："&Val!B{RC_ROW}&"（依上檔空間固定
 for _i, _t in enumerate(OBS, 1): RD.cell(_n0 + 2 + _i, 1, f"重點觀察 {_i}：" + _t)
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
+# ---------------- v0.2.3（2026-10-28）：分部原則重建（Q 頁第 30 列起追加；不位移既有列，數值不變） ----------------
+Q.cell(30, 1, "官方報告產品別（FY2025 年報；分部原則第 3 條）").font = BOLD
+for _r, _lab, _v, _tag, _note in (
+        (31, "光互聯產品營收（含 AI 與國內、電信）", "=B4*0.997", "Verified", "每日經濟新聞轉載公司 FY2025 年報：光互聯產品占營收 99.7%（金額為推得）"),
+        (32, "其他產品營收（差額）", "=B4-B31", "Derived", "合併營收 − 光互聯產品"),
+        (33, "檢查：分部合計 − 合併營收", "=ROUND(B31+B32-B4,6)", "Derived", "應為 0；PL 的 AI 營收屬光互聯產品，推估年以 AI／其他拆分")):
+    _v2 = float(_v) if not _v.startswith("=") else _v
+    Q.cell(_r, 1, _lab); Q[f"B{_r}"] = _v2; Q[f"B{_r}"].number_format = "#,##0.000"
+    if not isinstance(_v2, str): Q[f"B{_r}"].font = BLUE
+    Q.cell(_r, 8, _tag); Q.cell(_r, 9, _note)
+RD.cell(RD.max_row + 1, 1, "v0.2.3（2026-10-28）：分部原則重建（數值不變）。Q 頁第 30 列起追加 FY2025 年報產品別：光互聯產品（約 99.7%）、其他（差額）與核對列「分部合計 − 合併營收」；AI 營收屬光互聯產品，推估年仍以 AI／其他拆分。")
+RD.cell(1, 1).value = RD.cell(1, 1).value.replace("v0.2.2", "v0.2.3")
 wb._sheets = [wb[n] for n in order]
 # ---------------- v0.2.2（2026-10-26）：網通 CPO 三情境（同字母）；In 頁在現有最後一列之後新增，不移動既有列 ----------------
 _ri = IN.max_row + 2

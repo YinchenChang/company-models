@@ -1,0 +1,15 @@
+{
+ "company": "味之素",
+ "ticker": "2802.T",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "調味料・食品", "label": "調味料・食品營收", "period": "FY2025", "value": 936.926, "unit": "¥B", "source": "味之素 FY2025 決算短信 セグメント情報（Q 頁）"},
+  {"name": "冷凍食品", "label": "冷凍食品營收", "period": "FY2025", "value": 290.308, "unit": "¥B", "source": "同上"},
+  {"name": "ヘルスケア等（含 FM／ABF）", "label": "ヘルスケア等營收（FM＋其他ヘルスケア等）", "period": "FY2025", "value": 341.504, "unit": "¥B", "source": "同上；FM 102.5（ABF 屬 FM）"},
+  {"name": "その他", "label": "その他營收（含公司合計與各事業加總的四捨五入差）", "period": "FY2025", "value": 14.981, "unit": "¥B", "source": "同上"}
+ ],
+ "sublines": [
+  {"parent": "ヘルスケア等（含 FM／ABF）", "labels": ["ファンクショナルマテリアルズ（FM）營收", "ヘルスケア等（扣除 FM）營收"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收"]
+}

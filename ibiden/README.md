@@ -8,6 +8,9 @@ Ibiden 的 AI 伺服器載板營收＝AI 加速器顆數（`markets/network`）�
 
 **投資建議：放空**（依上檔空間固定規則：加權目標價上檔空間 −38.5%，落在 −50%～−25%）。
 
+
+- **營收分部（v0.3，分部原則）**：官方セグメント 電子（子列 AI 伺服器載板、非 AI）／陶瓷／其他三列原已存在，補分部合計核對列（FY2025 與公司合計差 0.001，四捨五入）與 `segments.json`；EPS 與目標價不變。
+
 ## 重點觀察
 
 1. 目標價 ¥5,236（DCF 1,931、Comparable 8,541 各半），比現價 8,512（2026-10-23）低 38.5%，級距 −25%～−50%；Comparable 單獨為 +0.3%。主因是 DCF 不是 EPS：本模型 12 個月後前瞻 EPS 202.0 比共識前瞻 EPS 180.9 高 11.7%，但 ROE 近三年平均 8.6% 低於折現率 10%，再投資率 46% 使成長不創造價值，DCF 比現價低 77.3%；Comparable 端同業前瞻 P/E 中位數 42.3 倍、現價 ÷ 共識前瞻 EPS 47.0 倍、共識目標價 12,432 隱含 68.7 倍。ROE 用的是 AI 載板放量前的年度，DCF 對 ABF 漲價路徑的反映有限，待 Andy 判斷。
@@ -21,9 +24,9 @@ AI 半導體 Project **載板與 PCB 次產業的樣板**。**Ibiden 在 AI 加�
 | 檔案 | 內容 |
 |---|---|
 | `build_ibiden.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_Ibiden模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261028_Ibiden個股模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_Ibiden模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261028_Ibiden個股模型_v0.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 ibiden/build_ibiden.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（加速器顆數、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`（規則函式）；**不修改它們**。
 

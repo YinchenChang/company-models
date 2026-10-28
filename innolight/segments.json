@@ -1,0 +1,28 @@
+{
+ "company": "Zhongji Innolight",
+ "ticker": "300308.SZ",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "光通信收發模組",
+   "label": "光通信收發模組營收（含 AI 與國內、電信）",
+   "period": "FY2025",
+   "value": 37.457,
+   "unit": "RMB B",
+   "source": "公司 FY2025 年報產品構成（華爾街見聞轉載）"
+  },
+  {
+   "name": "其他",
+   "label": "其他產品營收（差額）",
+   "period": "FY2025",
+   "value": null,
+   "unit": "RMB B",
+   "source": "合併營收 − 主產品（Derived）"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ],
+ "note": "PL 的 AI 營收屬光通信收發模組；推估年以 AI／其他拆分。"
+}

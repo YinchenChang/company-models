@@ -1,0 +1,35 @@
+{
+ "company": "南電",
+ "ticker": "8046.TW",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "name": "ABF 載板",
+   "label": "ABF 載板營收 ＝ MIN（需求, 產能）",
+   "period": "FY2026（錨點）",
+   "value": 34.306,
+   "unit": "NT$B",
+   "source": "南電法說產品別 ABF／BT／PCB；FY2026 錨點見 Q 頁"
+  },
+  {
+   "name": "BT 載板",
+   "label": "BT 載板（情境別年增；公司特有）",
+   "period": "FY2026（錨點）",
+   "value": 18.927,
+   "unit": "NT$B",
+   "source": "南電法說產品別 ABF／BT／PCB；FY2026 錨點見 Q 頁"
+  },
+  {
+   "name": "PCB",
+   "label": "PCB（一般電路板）",
+   "period": "FY2026（錨點）",
+   "value": 5.915,
+   "unit": "NT$B",
+   "source": "南電法說產品別 ABF／BT／PCB；FY2026 錨點見 Q 頁"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計（ABF＋BT＋PCB）− 合併營收（FY2026 錨點起）"
+ ]
+}

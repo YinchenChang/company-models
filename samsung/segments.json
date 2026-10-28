@@ -1,0 +1,16 @@
+{
+ "company": "Samsung Electronics",
+ "ticker": "005930.KS",
+ "model_sheet": "Q",
+ "official_segments": [
+  {"name": "DX", "label": "DX（裝置體驗：MX／網路、VD／DA）", "period": "2026Q2", "value": 48.0, "unit": "兆韓元", "source": "三星 2026Q2 IR 簡報（分部營收含內部銷售）"},
+  {"name": "DS", "label": "DS（裝置解決方案）", "period": "2026Q2", "value": 127.5, "unit": "兆韓元", "source": "同上"},
+  {"name": "SDC", "label": "SDC（三星顯示器）", "period": "2026Q2", "value": 7.5, "unit": "兆韓元", "source": "同上"},
+  {"name": "Harman", "label": "Harman", "period": "2026Q2", "value": 4.6, "unit": "兆韓元", "source": "同上"}
+ ],
+ "sublines": [
+  {"parent": "DS", "labels": ["記憶體營收"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收"],
+ "note": "三星不揭露內部抵銷，抵銷列為差額（Derived）；推估季不拆分部。"
+}

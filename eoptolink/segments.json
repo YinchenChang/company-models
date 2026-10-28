@@ -1,0 +1,28 @@
+{
+ "company": "Eoptolink",
+ "ticker": "300502.SZ",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "光互聯產品",
+   "label": "光互聯產品營收（含 AI 與國內、電信）",
+   "period": "FY2025",
+   "value": 24.767,
+   "unit": "RMB B",
+   "source": "公司 FY2025 年報（每日經濟新聞轉載）：占 99.7%"
+  },
+  {
+   "name": "其他",
+   "label": "其他產品營收（差額）",
+   "period": "FY2025",
+   "value": null,
+   "unit": "RMB B",
+   "source": "合併營收 − 主產品（Derived）"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ],
+ "note": "PL 的 AI 營收屬光互聯產品；推估年以 AI／其他拆分。"
+}

@@ -1,0 +1,50 @@
+{
+ "company": "欣興",
+ "ticker": "3037.TW",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "name": "IC 載板（ABF＋BT）",
+   "label": "載板營收（ABF＋BT）",
+   "period": "FY2026（錨點）",
+   "value": 116.726,
+   "unit": "NT$B",
+   "source": "欣興 4Q25 法說產品別：IC 載板 59%、HDI 27%、PCB 11%、FPC 2%（股感 2026-03）；FY2026 錨點金額見 Q 頁"
+  },
+  {
+   "name": "HDI／PCB（公司分 HDI 27%、PCB 11%，本模型合併）",
+   "label": "HDI／PCB 營收（AI＋非 AI）",
+   "period": "FY2026（錨點）",
+   "value": 58.363,
+   "unit": "NT$B",
+   "source": "欣興 4Q25 法說產品別：IC 載板 59%、HDI 27%、PCB 11%、FPC 2%（股感 2026-03）；FY2026 錨點金額見 Q 頁"
+  },
+  {
+   "name": "軟板與其他（FPC）",
+   "label": "軟板與其他",
+   "period": "FY2026（錨點）",
+   "value": 13.179,
+   "unit": "NT$B",
+   "source": "欣興 4Q25 法說產品別：IC 載板 59%、HDI 27%、PCB 11%、FPC 2%（股感 2026-03）；FY2026 錨點金額見 Q 頁"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "IC 載板（ABF＋BT）",
+   "labels": [
+    "ABF 載板營收 ＝ MIN（需求, 產能）",
+    "BT 載板"
+   ]
+  },
+  {
+   "parent": "HDI／PCB（公司分 HDI 27%、PCB 11%，本模型合併）",
+   "labels": [
+    "AI HDI／PCB",
+    "非 AI HDI／PCB"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收（FY2026 錨點起）"
+ ]
+}

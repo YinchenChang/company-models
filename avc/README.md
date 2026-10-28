@@ -12,6 +12,11 @@
 
 **投資建議：買進**（依上檔空間固定規則：加權目標價上檔空間 +26.1%，落在 +25%～+50%）。
 
+## v0.2.2（2026-10-28）：分部原則重建（數值不變）
+
+- PL 三個推導區塊新增母列「伺服器與網通營收」（液冷、AI 氣冷與機構、一般伺服器與網通為子列；公司產品別：2025 年伺服器與網通約 52%）與核對列「檢查：分部合計 − 合併營收」（全為 0）；「非伺服器營收（3C、系統、富世達）」為另一母列。
+- 三情境 EPS、目標價、投資建議與 v0.2.1 相同；新增列使推導區塊以下列號位移（html.json 已對應）。分部宣告見 `segments.json`。
+
 ## 重點觀察
 
 1. 目標價 NT$3,966（DCF 3,002、Comparable 4,929 各半），比現價 3,145（2026-10-22）高 26.1%，級距 25%–50%；Comparable 單獨為 56.7%。主因是 EPS：本模型 12 個月後前瞻 EPS 179.1 比共識前瞻 EPS 132.6 高 35.1%（兩者期間差約一年；FY2027 B 163.2 比高盛 154.8 高 5.4%），同業（雙鴻、健策、Vertiv、台達電）前瞻 P/E 中位數 27.5 倍略高於現價隱含 23.7 倍；DCF 只有前瞻 EPS 的 16.8 倍、比現價低 4.5%，上檔空間全由 Comparable 拉動。
@@ -23,9 +28,9 @@ AI 半導體 Project 電源與散熱次產業，樣板＝`delta/`。每架機架
 | 檔案 | 內容 |
 |---|---|
 | `build_avc.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_奇鋐模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261028_奇鋐個股模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_奇鋐模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261028_奇鋐個股模型_v0.2.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 avc/build_avc.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、機架內液冷）、`tsmc/dist`（情境顆數係數）、`delta/dist`（台達電液冷營收，只作 Recon）；**不修改它們**。
 

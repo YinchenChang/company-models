@@ -152,7 +152,7 @@ inp("ft_oth", "其他產品（BT、PCB）營收增量的現金毛利率", "%", 0
 for y, v, lo, hi in ((27, 14.0, 6.0, 20.0), (28, 18.0, 6.0, 24.0), (29, 12.0, 6.0, 20.0)):
     inp(f"cx{y}", f"資本支出 FY20{y}（三情境相同；公司特有）", "NT$B", lo, v, hi, "Assumed",
         KGI + "：2025–28 年資本支出約 US$12.8 億（約 416 億新台幣；七家載板廠第六）" if y == 27 else "同上",
-        "公司：2026 年約 40 億，新廠待董事會決議（" + FG1Q + "）" if y == 27 else "—")
+        "公司：2026 年約 40 億（" + FG1Q + "）；高階載板新廠 468 億已於 2026-08-07 董事會通過（工商時報 2026-08-07，時程未揭露），本模型 2027–29 基準合計 440 億，約為新廠規模（CF01）" if y == 27 else "—")
 inp("capex26", "FY2026 資本支出（公司計畫）", "NT$B", None, 4.0, None, "Interested-party", FG1Q + "：2026 年約 40 億", "TTM 至 2026-06：19.3 億（stockanalysis 現金流量表）")
 inp("da26", "FY2026 折舊攤提", "NT$B", None, 7.1, None, "Interested-party", "stockanalysis 現金流量表：TTM 至 2026-06 71.0 億", "研究報告 C：2026 年 71 億、2028 年 58 億（" + BRO + "）")
 inp("life", "新增資產平均折舊年限", "年", 6, 8, 10, "Assumed", "載板設備與廠房混合；與欣興模型同值", "會計年限：未找到")
@@ -337,6 +337,7 @@ def engine(ws, r0, title, **over):
     row("bt", "BT 載板（情境別年增；公司特有）", "NT$B", {"D": "=a26_bt", **{FC[y]: f"={FC[y - 1]}{r}*(1+{p('gbt', y)})" for y in F3}}, "#,##0.00", note="BT 成長以漲價為主")
     row("pcb", "PCB（一般電路板）", "NT$B", {"D": "=a26_pcb", **{FC[y]: f"={FC[y - 1]}{r}*(1+{P['gpcb']})" for y in F3}}, "#,##0.00")
     row("rev", "營收", "NT$B", {"C": "=a25_rev", **{FC[y]: f"={FC[y]}{R['abf']}+{FC[y]}{R['bt']}+{FC[y]}{R['pcb']}" for y in BU}}, "#,##0.0")
+    row("segchk", "檢查：分部合計（ABF＋BT＋PCB）− 合併營收（FY2026 錨點起）", "NT$B", {FC[y]: f"={FC[y]}{R['abf']}+{FC[y]}{R['bt']}+{FC[y]}{R['pcb']}-a26_rev" if y == 2026 else f"={FC[y]}{R['abf']}+{FC[y]}{R['bt']}+{FC[y]}{R['pcb']}-{FC[y]}{R['rev']}" for y in BU}, "0.000")
     row("g", "營收年增", "%", {FC[y]: f"={FC[y]}{R['rev']}/{FC[y - 1]}{R['rev']}-1" for y in FYS[1:]}, "0.0%")
     row("abfsh", "ABF ÷ 營收", "%", {FC[y]: f"={FC[y]}{R['abf']}/{FC[y]}{R['rev']}" for y in BU}, "0.0%")
     row("aish", "AI 載板 ÷ 營收", "%", {FC[y]: f"={FC[y]}{R['aisub']}/{FC[y]}{R['rev']}" for y in BU}, "0.0%", note="公司：1Q26 網通 49%、AI 與 HPC 16%（應用別口徑不同）")

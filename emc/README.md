@@ -10,6 +10,9 @@
 
 **投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 +8.0%，落在 −25%～+25%）。
 
+
+- **營收分部（v0.3，分部原則）**：公司應用別 基礎設施（子列 AI、非 AI）／行動裝置／車用、工業及其他（`segments.json`）；2025 以 4Q25 比例代理（67.5／22.5），2026 基礎設施 75%、行動裝置 18%（4Q25 與 2H26 之間，Assumed）；非 AI 拆分比例固定在 FY2026；EPS 與目標價不變。
+
 ## 重點觀察
 
 1. 目標價 NT$5,477（DCF 4,252、Comparable 6,703 各半），比現價 5,070（2026-10-22）高 8.0%，級距 0%–25%；Comparable 單獨為 +32.2%。DCF 比現價低 16.1%、Comparable 高 32.2%，兩者相抵；本模型前瞻 EPS 254.18 比共識前瞻 EPS 168.32 高 51.0%（共識取自 2026-09-04 快取、期間早約一年），同業（台燿、聯茂、金像電）前瞻 P/E 中位數 26.4 倍，共識目標價 7,803 隱含 46.4 倍。
@@ -23,9 +26,9 @@ AI 半導體 Project 載板與 PCB 次產業（樣板 `ibiden/`）的第一家�
 | 檔案 | 內容 |
 |---|---|
 | `build_emc.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_台光電模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261028_台光電個股模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_台光電模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261028_台光電個股模型_v0.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 emc/build_emc.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）、`tools/valuation_rule.py`；**不修改它們**。
 
