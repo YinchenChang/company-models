@@ -1,0 +1,389 @@
+Q3 2026 Earnings
+
+
+October 28, 2026
+Q3 2026 Earnings
+
+
+
+
+                          Note About Forward-Looking Statements
+                            and Non-GAAP Financial Measures
+
+                   This presentation may contain forward-looking statements regarding our business, operations, and
+                   financial performance. Such statements are based on current expectations and assumptions that are
+                   subject to a number of risks and uncertainties. Actual results could differ materially. Please refer to our
+                   Forms 10-K and 10-Q, including the risk factors. We undertake no obligation to update any forward-looking
+                   statement, except as required by law. Given these risks and uncertainties, investors are cautioned not to
+                   place undue reliance on such forward-looking statements.
+
+                   We present both GAAP and non-GAAP financial measures in this presentation. A reconciliation of
+                   non-GAAP to GAAP measures is included in this presentation and in the most recent earnings press
+                   release, which is distributed and available to the public through our Investor Relations website located at
+                   abc.xyz/investor.
+ Q3 2026 Earnings
+
+
+
+                    Accelerating AI innovation and shipping momentum
+
+  Gemini 3.6 Flash and     Gemini 3.7    Gemini 3.8 Flash &     Gemini 4           Gemini 4
+    3.5 Flash Cyber          Flash        3.8 Flash Cyber        Argon             Carbon
+
+
+
+
+ Jul                                                                                             Oct
+2026                                                                                             2026
+
+
+           Gemini 3.5         Omni 1.1          Lyria 3.5      Gemini 3.8 Live &      Nano
+           Transcribe          Flash                          Extended Thinking     Banana 2.1
+
+
+
+                                                                                   Nano Banana 2.1
+  Q3 2026 Earnings
+
+
+
+
+                                                    Earnings Highlights
+
+
+
+
+   +25%                      +12%                   +103%                 1B+                 ~32B                   150M
+Q3 Y/Y revenue growth        Q3 Y/Y revenue             Q3 Y/Y          Gemini App              Tokens per          YouTube Music and
+    to ~$128B; now          growth in Search;       revenue growth   monthly active users   minute, up 40% Q/Q     Premium subscribers,
+  half-trillion annual   Fastest growth in Search                                                                     including trials
+   revenue run rate         queries in 5 years
+
+
+
+
+                                                                                             Across 1P models,
+      Alphabet             Search & Other Ads        Google Cloud        Gemini App         including Gemini via         YouTube
+                                                                                              direct API usage
+Q3 2026 Earnings
+
+
+
+
+in Millions, except Percentages and EPS; unaudited
+
+                                                                Q3'25     Q3'26       Y/Y
+
+                 Revenues                                      $102,346   $127,577   25%
+                  Costs and Expenses:
+
+                     Cost of Revenues                           41,369     51,419    24%
+
+                     Research and Development                    15,151    20,640    36%
+
+                     Sales and Marketing                         7,205     8,804     22%
+
+                     General and Administrative                  7,393     6,138     (17%)
+
+                 Total Costs and Expenses                       71,118    87,001     22%
+                 Income from operations                         31,228    40,576     30%
+                  Other income (expense), net                   12,759     (8,221)    NM
+
+                  Income before income taxes                    43,987     32,355    (26%)
+
+                  Provision for income taxes                     9,008     5,887     (35%)
+
+                  Preferred stock dividends                        -        298      N/A
+
+                 Net income available to common stockholders   $34,979    $26,170    (25%)
+                 Diluted EPS per Common Share                   $2.87      $2.12     (26%)
+
+
+  **NM = Not Meaningful
+Q3 2026 Earnings
+
+
+
+
+in Millions, except Percentages; unaudited
+
+
+
+
+                     $130,000                $127,577                            $50,000
+
+
+
+
+                                                        Operating Income ($MM)
+                     $120,000                                                                        $40,576
+                                                                                 $40,000
+                                  $102,346
+    Revenues ($MM)
+
+
+
+
+                     $110,000                                                              $31,228
+                                                                                 $30,000
+                     $100,000
+
+                                                                                 $20,000
+                     $90,000
+
+                                                                                 $10,000
+                     $80,000
+
+
+                     $70,000                                                          $0
+                                   Q3’25      Q3’26                                        Q3’25     Q3’26
+
+
+                     Y/Y Growth    +16%       +25%                      Operating Margin   30.5%      31.8%
+Q3 2026 Earnings
+
+
+
+
+in Millions, except Percentages; unaudited
+
+
+
+
+                           Total TAC        Other Cost of Revenues                                        Research & Development       Sales & Marketing     General & Administrative
+
+
+                              $55,000                                $51,419                               $55,000
+
+
+
+
+                                                                               Operating Expenses ($MM)
+  Cost of Revenues ($MM)
+
+
+
+
+                              $45,000                                                                      $45,000
+                                                         $41,369
+                                                                     $35,053                                                                               $35,582
+                              $35,000                    $26,493                                           $35,000                                         $6,138
+                                                                                                                                   $29,749
+                                                                                                                                   $7,393
+                              $25,000                                                                      $25,000                                         $8,804
+
+                                                                                                                                   $7,205
+                              $15,000                                                                       $15,000
+                                                                     $16,366                                                       $15,151                 $20,640
+                                                         $14,876
+
+                                       $0                                                                         $0
+                                                          Q3’25      Q3’26                                                         Q3’25                    Q3’26
+                           Y/Y Growth                     +13%        +24%                                Y/Y Growth               +28%                     +20%
+Q3 2026 Earnings
+
+
+
+
+in Millions, except Percentages; unaudited
+
+
+
+                                                                             Subscriptions,
+           Google Search & Other   YouTube Ads    Google Network
+                                                                             Platforms & Devices
+
+
+                   $100,000                                                                                                 $40,000             $39,157
+                                                               $96,302
+
+
+
+
+                                                                                                   Operating Income ($MM)
+                                        $87,052                                                                                       $33,527
+                                                               $14,290            +11% Y/Y
+ Revenues ($MM)
+
+
+
+
+                   $80,000              $12,870                                    +1% Y/Y                                  $30,000
+                                                                   $7,455
+
+                                                                   $11,207        +9% Y/Y
+                                         $7,354
+
+                   $60,000              $10,261                                                                             $20,000
+
+                                                               $63,350            +12% Y/Y
+                                        $56,567
+
+                   $40,000                                                                                                  $10,000
+                                         Q3’25                     Q3’26                                                              Q3’25     Q3’26
+                  Y/Y Growth              +14%                      +11%                            Operating Margin                  38.5%     40.7%
+Q3 2026 Earnings
+
+
+
+
+in Millions, except Percentages; unaudited
+
+
+
+
+                        $35,000
+                                                                                 $12,500
+                                              $30,709                                               $11,121
+
+
+
+
+                                                        Operating Income ($MM)
+                        $30,000
+      Revenues ($MM)
+
+
+
+
+                                                                                 $10,000
+
+
+                         $25,000                                                  $7,500
+
+
+
+                        $20,000                                                   $5,000
+
+                                    $15,157                                                $3,594
+
+                         $15,000                                                  $2,500
+                                    Q3’25     Q3’26                                        Q3’25    Q3’26
+
+                       Y/Y Growth   +34%      +103%     Operating Margin                   23.7%    36.2%
+Q3 2026 Earnings
+
+
+
+
+Comprehensive full-stack integration from purpose-built silicon to open software and support
+
+
+  Open Software and Support                                                                                     v7 Rack
+            Frameworks                     Inference Engine                         Support
+         Native support for JAX,        High-throughput vLLM, SGLang         Post-sales product support
+         PyTorch & XLA compiler            & model serving engines                  and warranty
+
+
+
+
+  System Components
+
+              TPU Trays                        TPU Racks                            TPU Pods
+       Four proprietary chips on one        16 TPU machines with             144 TPU racks with 3 optical
+            liquid-cooled board                battery backup                       switch racks
+
+
+
+
+  Purpose-built Hardware
+
+       Compute (TPU, CPU)                       Storage                           Networking
+     Custom TPUs & high-performance                                      Optical Circuit Switches, Datacenter
+                                           HBM and other memory
+               host CPUs                                                  Network & ultra-low latency ICI
+Q3 2026 Earnings
+
+
+
+
+in Millions, except Percentages; unaudited
+
+
+
+                                                                                         $51,355
+                    Capital Expenditures ($MM)
+
+
+
+
+                                                                               $44,924
+
+
+
+
+                                                                     $35,674
+
+
+
+
+                                                 $23,953   $27,851
+
+
+
+                                                 Q3’25     Q4’25     Q1’26     Q2’26     Q3’26
+
+
+                    Y/Y Growth                    +83%     +95%      +107%     +100%     +114%
+Q3 2026 Earnings
+
+
+
+
+in Millions, except Percentages; unaudited
+
+
+
+
+                                                                  Q3'25                Q4'25      Q1'26     Q2'26       Q3'26     Q3’26 Y/Y
+
+  Net cash provided by operating activities                       48,414               52,402    45,790      39,069    42,290      (13%)
+
+  Purchases of property and equipment                            (23,953)             (27,851)   (35,674)   (44,924)   (51,355)     114%
+
+  Free Cash Flow                                                 $24,461              $24,551    $10,116    ($5,855)   ($9,065)    NM**
+
+  Trailing Twelve Months Free Cash Flow                          $73,552              $73,266    $64,429    $53,273    $19,747     (73%)
+
+
+
+
+  *Non-GAAP measure. See following slide for reconciliation of GAAP to Non-GAAP measures
+
+  **NM = Not Meaningful
+Q3 2026 Earnings
+
+
+
+
+in Millions, except Percentages; unaudited
+We provide non-GAAP free cash flow for the current quarter and trailing twelve months (“TTM”) because it is a liquidity measure
+that provides useful information to management and investors about the amount of cash generated by the business that can be
+used for strategic opportunities, including investing in our business and acquisitions, and to strengthen our balance sheet.
+
+   ● Free cash flow: We define free cash flow as net cash provided by operating activities less capital expenditures.
+   ● TTM free cash flow: We define trailing twelve months free cash flow as net cash provided by operating activities less
+     capital expenditures for the most recent twelve consecutive months.
+
+
+Reconciliation of GAAP to Non-GAAP Financial Information
+
+ in millions; unaudited                               Q4’24        Q1’25           Q2’25           Q3’25          Q4’25            Q1’26      Q2’26       Q3’26
+  Net cash provided from operating activities         39,113       36,150          27,747          48,414         52,402           45,790      39,069     42,290
+
+  Less: purchases of property and equipment           (14,276)     (17,197)       (22,446)        (23,953)        (27,851)        (35,674)    (44,924)    (51,355)
+
+  Free Cash Flow                                      24,837        18,953          5,301          24,461         24,551           10,116      (5,855)    (9,065)
+
+
+
+  Net cash provided from operating activities - TTM                                               151,424         164,713         174,353     185,675     179,551
+
+  Less: purchases of property and equipment - TTM                                                 (77,872)        (91,447)        (109,924)   (132,402)   (159,804)
+
+  Free Cash Flow - TTM                                                                             73,552         73,266           64,429      53,273      19,747
+
+
+
+ *TTM = Trailing Twelve Months
+
