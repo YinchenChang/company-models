@@ -74,6 +74,16 @@ def to_text(data, ctype):
 
 def fetch(url):
     """回傳 (狀態, 文字)。狀態 ok 或「無法取得（原因）」。一律不重試、不改用其他管道。"""
+    u = (url or "").strip()
+    if not u.lower().startswith(("http://", "https://")):
+        # repo 內部來源（如 /root/company-models/microsoft/data/x.json 或相對路徑）：改讀 checkout 中的檔案
+        rel = re.sub(r"^/?root/(company-models|Tokenomics)/", "", u).lstrip("/")
+        p = os.path.join(os.environ.get("GITHUB_WORKSPACE", "."), rel)
+        if rel and os.path.isfile(p):
+            with open(p, "rb") as fh:
+                return "ok", to_text(fh.read(25_000_000), "text/plain")
+        return "無法取得（非網址，repo 內找不到）", ""
+    url = u
     host = urllib.parse.urlparse(url).netloc.lower()
     ua = C.SEC_UA if host.endswith("sec.gov") else C.WEB_UA
     req = urllib.request.Request(url, headers={"User-Agent": ua, "Accept": "*/*"})
