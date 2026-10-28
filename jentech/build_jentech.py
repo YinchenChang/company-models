@@ -99,7 +99,7 @@ for k, lab in GRP:
 for s in SC:
     inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝順利（基準）；B＝平平；C＝不如預期；與台積電、奇鋐模型相同（＝markets/memory SCEN_UNITS，建置時核對）")
     inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
-inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", 30.5, 32.0, 33.0, "Derived", "與奇鋐、台達電、金像電模型相同（avc/dist In 頁 fx＝32.0）", "鉅亨 2026-05-22 頁面 32.508（只作參考）")
+inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", *SIL.vals("fx_twd"), "Derived", "與奇鋐、台達電、金像電模型相同（avc/dist In 頁 fx＝32.0）", "鉅亨 2026-05-22 頁面 32.508（只作參考）")
 
 sec("B. 每顆加速器均熱片／上蓋／加強環金額（美元；可拆式上蓋滲透為技術替代：A 取高值＝快、C 取低值＝慢）")
 inp("asp_bw", "Blackwell（B200／B300）每顆均熱片＋加強環", "US$/顆", 30, 35, 40, "Interested-party", MW + "：Blackwell Ultra 均熱片約 US$30（理財周刊 2026-08-05）", "加強環另計 US$5（Assumed）；第二來源：未找到")

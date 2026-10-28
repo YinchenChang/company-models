@@ -8,6 +8,8 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))   # 本資料夾的 tp_v2.py
 import cycle_position as CP
 import tp_v2 as TP
@@ -96,7 +98,7 @@ for j, y in enumerate((26, 27, 28, 29)):
 for s in SC:
     inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、Arista、廣達模型相同）")
     inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
-inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", 29.0, 32.0, 33.0, "Assumed", "與 quanta/ 模型相同 32.0", "份額在 FY2026 以同一匯率校準，匯率只在 FY2027 起變動時才影響結果")
+inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", 29.0, SIL.base("fx_twd"), 33.0, "Assumed", "與 quanta/ 模型相同 32.0", "份額在 FY2026 以同一匯率校準，匯率只在 FY2027 起變動時才影響結果")
 
 sec("B. 乙太網路占比、白牌占比與智邦份額（本專案為權威：白牌交換器廠份額，規則第 13 條）")
 inp("eth_26", "乙太網路 ÷ AI 後端交換器（金額）2026", "%", 0.70, 0.75, 0.80, "Assumed", "與 arista/ 模型同值；Dell'Oro 2026-03-10：2025 年乙太網路占 AI 叢集交換器三分之二以上（Interested-party）", "IDC 2Q26：800GbE 占資料中心交換器營收 41.2%（Interested-party）")

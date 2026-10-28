@@ -1,8 +1,8 @@
 {
  "source": {
-  "file": "20261028_Siliconomics_v0.8.1.xlsx",
-  "version": "v0.8.1",
-  "sha256": "939ba1ba70498f13b2febfe34059a4bab98164fc634af901ce69c5be39dd897e",
+  "file": "20261028_Siliconomics_v0.8.2.xlsx",
+  "version": "v0.8.2",
+  "sha256": "01357356d1cc0e3602706b6be3e610d2a3a14d412228de58a0299049b6099187",
   "note": "Siliconomics 快照；下游只讀本檔。SGOV_Errors 須為 0"
  },
  "scen": [
@@ -7095,6 +7095,42 @@
    "tag": "Interested-party",
    "src": "緯穎 4Q25 法說：ASIC 約占 AI 伺服器九成（公司）",
    "src2": "凱基：2026F ASIC 91%、2027F 88%；原在 wiwynn（asic_mix）；ShareTbl 用於 ASIC 傾斜係數"
+  },
+  {
+   "sec": "M26. 共用匯率（新台幣、人民幣、韓元；日圓不共用：Ibiden ¥152、Advantest ¥150、Kioxia ¥160 為公司財測前提，屬公司變數）"
+  },
+  {
+   "id": "fx_twd",
+   "label": "匯率：新台幣 ÷ 美元（2026–2029 共用）",
+   "unit": "NT$/US$",
+   "lo": 30.5,
+   "base": 32,
+   "hi": 33,
+   "tag": "Assumed",
+   "src": "台達電 2Q26 法說換算 NT$183.2B ≈ US$5.6B（隱含約 32.7）；2026 年初 31.4；鉅亨 2026-10-23 收盤 USD/TWD 32.508",
+   "src2": "v0.8.2 前：多數台廠模型 32.0、欣興／南電／景碩 32.5；台積電、聯發科、創意、世芯、智邦保留自己的低／高區間（公司指引或敏感度用）"
+  },
+  {
+   "id": "fx_rmb",
+   "label": "匯率：人民幣 ÷ 美元（2026–2029 共用）",
+   "unit": "RMB/US$",
+   "lo": 6.5,
+   "base": 6.72,
+   "hi": 7,
+   "tag": "Verified",
+   "src": "中國經濟網 2026-10-16：人民幣兌美元中間價 6.7220",
+   "src2": "v0.8.2 前：勝宏 6.72、中際旭創與新易盛 7.1（較舊）；區間為 2025–26 波動範圍（Assumed）"
+  },
+  {
+   "id": "fx_krw",
+   "label": "匯率：韓元 ÷ 美元（2026–2028 平均）",
+   "unit": "KRW/USD",
+   "lo": 1350,
+   "base": 1420,
+   "hi": 1500,
+   "tag": "Derived",
+   "src": "SK 海力士 Q2 2026 營收 79.32 兆韓元 ≈ US$55.2B → 約 1,437",
+   "src2": "原在 skhynix company.py；三星、韓美、markets/equipment 同值"
   }
  ],
  "names": {
@@ -8035,6 +8071,15 @@
   "SIF_eq_s_tot_26": 165.9,
   "SIF_eq_s_tot_28": 229.5,
   "SIF_eq_s_wfe_26": 143.9,
+  "SIF_fx_krw": 1420,
+  "SIF_fx_krw_hi": 1500,
+  "SIF_fx_krw_lo": 1350,
+  "SIF_fx_rmb": 6.72,
+  "SIF_fx_rmb_hi": 7,
+  "SIF_fx_rmb_lo": 6.5,
+  "SIF_fx_twd": 32,
+  "SIF_fx_twd_hi": 33,
+  "SIF_fx_twd_lo": 30.5,
   "SIF_f_hbm": 0.6,
   "SIF_f_hbm_hi": 1,
   "SIF_f_hbm_lo": 0.3,

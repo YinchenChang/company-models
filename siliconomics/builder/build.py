@@ -1116,6 +1116,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.8.2：新增 M26（共用匯率：新台幣 32.0、人民幣 6.72、韓元 1,420；台、陸、韓 21 個模型改讀；日圓為公司財測前提，不共用）。", False),
         ("v0.8.1：新增 M25（AI 伺服器組裝：廣達、鴻海、緯創本體、緯穎 FY2026 有效份額快照與 2027–29 份額相對值、緯穎 ASIC 比重；原在 quanta、foxconn、wistron、wiwynn）、ShareTbl 的組裝份額表（含緯穎 ASIC 傾斜係數）、Checks K6-asm、Interface SIF_AsmShareSum、SIF_AsmWyTilt、SIF_AsmShare_wy；CF23 登錄（緯創模型的緯穎份額路徑與緯穎模型不同）。", False),
         ("v0.8：新增 M24（HBM 營收份額：SK 海力士、三星、美光 2025–2029；原在各公司 company.py）、ShareTbl 的 HBM 份額表、Checks K6-hbm、Interface SIF_HBMShareSum；台積電的 HBM 2027 缺口改讀 SIF_HBM_GapEB_A ÷ SIF_HBM_SupplyEB（原手打 21%）。", False),
         ("v0.7.1：新增 M22（HBM 堆疊技術：核心晶粒容量、堆疊層數、混合鍵合占比 2025–2030；原在 disco，hanmi、besi 同讀）、M23（NAND 市場輸入：每顆加速器企業級 SSD 容量、2025 位元基期與應用結構、各應用與供給位元年增、各廠季營收、份額年變動；原在 markets/nand）、Equip 頁 D 節、Interface SIF_HBMHybrid_*。", False),

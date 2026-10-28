@@ -92,7 +92,7 @@ inp("racks_vr", "每 GW 機架數（VR200）", "架", None, BR["racks"][1], None
 for s in SC:
     inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝順利（基準）；B＝平平（AI 資本支出消化）；C＝不如預期（明顯下修）；與台積電、台光電模型相同")
     inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
-inp("fx", "匯率（人民幣 ÷ 美元）", "RMB/US$", 6.50, 6.72, 7.00, "Verified", "中國經濟網 2026-10-16：中間價 6.7220（網址見 Sources 頁）", "10-09 中間價 6.7330（中國經濟網）；10-23 中間價：未找到")
+inp("fx", "匯率（人民幣 ÷ 美元）", "RMB/US$", *SIL.vals("fx_rmb"), "Verified", "中國經濟網 2026-10-16：中間價 6.7220（網址見 Sources 頁）", "10-09 中間價 6.7330（中國經濟網）；10-23 中間價：未找到")
 
 sec("B. 每 GW AI 高速 PCB 金額與勝宏份額（本專案權威：每 GW PCB 金額、勝宏份額，規則第 13 條；與台光電的每 GW CCL 金額口徑分開）")
 TOPDOWN = ("由上而下（Assumed）：三項合計 2026 年約 US$450M／GW；量級檢查：Morgan Stanley 每架 PCB GB300 US$35.1K、VR200 US$116.7K（國金證券 2026-05 轉引，Interested-party）"

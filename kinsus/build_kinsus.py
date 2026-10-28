@@ -217,7 +217,7 @@ inp("fpe", "前瞻 P/E（stockanalysis，價格日期 2026-10-22）", "x", None,
 inp("pe_ttm", "近 12 月 P/E（stockanalysis，10-22）", "x", None, 166.14, None, "Interested-party", SA, "近 12 月 EPS 5.93")
 inp("cons_feps", "共識前瞻 12 月 EPS（stockanalysis 頁面價格 986 ÷ 前瞻 P/E）", "NT$", None, "=986/fpe", None, "Derived", SA, "直接數字：未找到")
 inp("cons_tp", "市場共識目標價（賣方平均）", "NT$", None, 1092.15, None, "Interested-party", SA + "：13 位分析師平均 1,092.15（頁面價格日期 2026-10-22）", "10 月：永豐 1,280、玉山 1,270（" + WR10 + "）；高盛 1,125（2026-08-04）")
-inp("fx", "匯率", "NT$／US$", None, 32.5, None, "Interested-party", "與欣興、南電模型同值", "—")
+inp("fx", "匯率", "NT$／US$", None, SIL.base("fx_twd"), None, "Assumed", "Siliconomics SIF_fx_twd（全庫共用；v0.8.2 前本模型取 32.5）", "—")
 REV5 = [33.336, 42.441, 26.832, 30.535, 39.351]
 NI5 = [3.859, 6.977, 0.04752, 0.04889, 1.596]
 inp("nim5", "近五年平均淨利率（FY2021–25；十年平均的參考）", "%", None, "=AVERAGE(" + ",".join(f"{n}/{v}" for n, v in zip(NI5, REV5)) + ")", None, "Derived",

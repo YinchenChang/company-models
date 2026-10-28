@@ -74,7 +74,7 @@ inp("rack_vr", "整櫃買方價格（VR200，Tokenomics）", "US$M/架", None, B
 for s in SC:
     inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、NVIDIA、Arista、台達電模型相同）")
     inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
-inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", 30.5, 32.0, 33.0, "Derived", "與台達電模型相同（公司換算隱含約 32.7）", "先驗比對用 32.7（只影響美元換算的市場與每 GW）")
+inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", *SIL.vals("fx_twd"), "Derived", "與台達電模型相同（公司換算隱含約 32.7）", "先驗比對用 32.7（只影響美元換算的市場與每 GW）")
 
 sec("B. 組裝價格、廣達份額與客供（本專案為權威：NVIDIA 整櫃組裝份額、每櫃 ODM 價格、客供比例，規則第 13 條）")
 inp("odm_gb", *SIL.row9("asm_odm_gb")[1:])   # Siliconomics M18

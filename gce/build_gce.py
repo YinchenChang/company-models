@@ -105,7 +105,7 @@ inp("racks_vr", "每 GW 機架數（VR200）", "架", None, BR["racks"][1], None
 for s in SC:
     inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝順利（基準）；B＝平平；C＝不如預期；與台積電、勝宏模型相同（＝markets/memory SCEN_UNITS，建置時核對）")
     inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
-inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", 30.5, 32.0, 33.0, "Derived", "與台光電、台達電、廣達模型相同（emc/dist In 頁 fx＝32.0）", "10-23 收盤：未找到")
+inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", *SIL.vals("fx_twd"), "Derived", "與台光電、台達電、廣達模型相同（emc/dist In 頁 fx＝32.0）", "10-23 收盤：未找到")
 
 sec("B. 每 GW AI 高速 PCB 金額（口徑與勝宏一致：唯讀 victory_giant/dist Units 頁）與金像電份額")
 VGTAG = "唯讀勝宏模型成品（本專案每 GW PCB 金額權威；2026 Assumed、之後 × 世代指數 Analogy／Assumed）"

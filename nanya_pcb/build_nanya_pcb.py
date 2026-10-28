@@ -188,7 +188,7 @@ inp("fpe", "前瞻 P/E（stockanalysis，價格日期 2026-09-07）", "x", None,
 inp("pe_ttm", "近 12 月 P/E（財報狗，10-22）", "x", None, 148.7, None, "Interested-party", "財報狗 2026-10-22", "HiStock 148.65")
 inp("cons_feps", "共識前瞻 12 月 EPS（stockanalysis 頁面價格 1,050 ÷ 前瞻 P/E）", "NT$", None, "=1050/fpe", None, "Derived", SA, "以頁面同日價格推算（不用 10-22 現價）；直接數字：未找到")
 inp("cons_tp", "市場共識目標價（賣方平均）", "NT$", None, 1651.31, None, "Interested-party", SA + "：14 位分析師平均 1,651.31（頁面價格日期 2026-09-07）", "10 月：美銀 2,000、大和 2,460；凱基 2026-07：1,480")
-inp("fx", "匯率", "NT$／US$", None, 32.5, None, "Interested-party", "與欣興模型同值（鉅亨報價框 USD/TWD 32.508，2026-10）", "—")
+inp("fx", "匯率", "NT$／US$", None, SIL.base("fx_twd"), None, "Assumed", "Siliconomics SIF_fx_twd（全庫共用；v0.8.2 前本模型取 32.5）", "—")
 REV5 = [52.228, 64.647, 42.253, 32.283, 40.173]
 NI5 = [10.582, 19.416, 5.817, 0.204, 1.947]
 inp("nim5", "近五年平均淨利率（FY2021–25；十年平均的參考）", "%", None, "=AVERAGE(" + ",".join(f"{n}/{v}" for n, v in zip(NI5, REV5)) + ")", None, "Derived",

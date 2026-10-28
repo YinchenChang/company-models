@@ -75,7 +75,7 @@ inp("racks_vr", "每 GW 機架數（VR200）", "架", None, BR["racks"][1], None
 for s in SC:
     inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、NVIDIA、台達電、Ibiden 模型相同）")
     inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
-inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", 30.5, 32.0, 33.0, "Derived", "與台達電、廣達模型相同（台達電 2Q26 法說換算約 32.7；2026 年初 31.4）", "10-23 收盤：未找到")
+inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", *SIL.vals("fx_twd"), "Derived", "與台達電、廣達模型相同（台達電 2Q26 法說換算約 32.7；2026 年初 31.4）", "10-23 收盤：未找到")
 
 sec("B. 每 GW 高速 CCL 金額與台光電份額（本專案權威：每 GW CCL 金額、台光電份額，規則第 13 條）")
 TOPDOWN = "由上而下（Assumed）：三項合計 2026 年約 US$350M／GW＝CCL 高階（M7 以上）市場約 US$8B ÷ 部署約 23 GW；市場量級取自 Prismark 2024 年 M7 以上 US$57 億、年增 40%（" + YD + "，源達證券轉引，Interested-party）"
