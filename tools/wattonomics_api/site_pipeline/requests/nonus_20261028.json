@@ -1,0 +1,4 @@
+{"max_sites": 150, "expand": true, "use_seeds": false, "target_sites": 140,
+ "exclude_from": ["tools/wattonomics_api/site_pipeline/out/full_20261028_sites.csv"],
+ "focus": "第二輪：美國以外的 AI 資料中心園區（第一輪以美國為主）。配額約：中東 25、歐洲（含英國、北歐）35、亞洲（日本、韓國、台灣、印度、東南亞、澳洲）45、中國 15、拉美與非洲 15；美國只補第一輪漏掉、≥300MW 的 AI 專用園區（≤10 個）。只列實體園區，不列公司總量、晶片或算力採購合約。",
+ "searches_per_site": 5, "expand_searches": 30, "cost_cap_usd": 30}

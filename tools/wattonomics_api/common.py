@@ -2,8 +2,8 @@
 
 - 呼叫 Anthropic API：Batch（五折）為主；批次逾 STALE_BATCH_H（預設 6）小時未完成就取消，未完成的請求改走一般 API。
 - 用量：每次執行寫 usage.json（input／output tokens、web search 次數、估計 US$）。
-- 預算：本批工具（evidence_audit、site_pipeline、weekly_monitor）累計上限 BATCH_BUDGET_USD（預設 85）；
-  另以 PRIOR_SPEND_USD（本批以外已用，repo variable API_PRIOR_SPEND_USD）＋本批累計，接近 HARD_STOP_USD（預設 140）即停。
+- 預算：本批工具（evidence_audit、site_pipeline、weekly_monitor）累計上限 BATCH_BUDGET_USD（預設 140；Andy 10-28 17:19 同意 A／B／C 後由 85 放寬）；
+  另以 PRIOR_SPEND_USD（本批以外已用，repo variable API_PRIOR_SPEND_USD）＋本批累計，接近 HARD_STOP_USD（預設 190）即停。
   累計值由所有遠端分支上的 tools/wattonomics_api/*/out/**/usage*.json 加總（checkout 需 fetch-depth: 0）。
 - 任何請求都不帶使用者 email；SEC 一律用 GitHub 免回覆地址當聯絡方式。
 
@@ -28,8 +28,8 @@ POLL_MAX_MIN = int(os.environ.get("POLL_MAX_MIN", "200"))
 # 美元／百萬 token：一般 API（Batch 為一半）。Sonnet 5.5 單價沿用 tools/consistency/README.md 的 [Verified] 價目（2026-10-27）。
 PRICE_STD = {"opus": (4, 20), "sonnet": (2, 10), "haiku": (0.1, 0.5)}
 SEARCH_USD = 10 / 1000          # web search 每次 US$0.01（Batch 同價）
-BATCH_BUDGET_USD = float(os.environ.get("BATCH_BUDGET_USD", "85"))
-HARD_STOP_USD = float(os.environ.get("HARD_STOP_USD", "140"))
+BATCH_BUDGET_USD = float(os.environ.get("BATCH_BUDGET_USD", "140"))
+HARD_STOP_USD = float(os.environ.get("HARD_STOP_USD", "190"))
 PRIOR_SPEND_USD = float(os.environ.get("PRIOR_SPEND_USD") or "0")
 SAFETY_USD = 5.0                # 距 HARD_STOP 留的緩衝
 
