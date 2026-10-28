@@ -220,15 +220,25 @@ jobs:
           cache: pip
           cache-dependency-path: anthropic/requirements-dev.txt
       - run: |
-          sudo apt-get update -q
-          sudo apt-get install -y -q libreoffice-calc
+          set -o pipefail
+          (sudo apt-get update -q && sudo apt-get install -y -q libreoffice-calc) 2>&1 | tee apt.log
       - run: pip install -r requirements-dev.txt
       - name: 取 OpenAI v0.6 活頁簿（OAI_Link 快照來源；D20：分支 claude/openai-s6-release，合併後改取 main 的 CURRENT）
         run: |
           if git fetch --depth 1 origin claude/openai-s6-release && git show FETCH_HEAD:openai/model/20261008_OpenAI_v0.6.xlsx > build_out_oai.xlsx; then echo "OpenAI v0.6（s6-release）";
           else git fetch --depth 1 origin main && git show FETCH_HEAD:openai/model/$(git show FETCH_HEAD:openai/model/CURRENT) > build_out_oai.xlsx; fi
       - name: 以現行檔為底稿重建（Excel 優先；冪等）
-        run: python builder/build.py --tk-dir tokenomics-master --oai-xlsx build_out_oai.xlsx --out build_out/$(cat model/CURRENT) --base model/$(cat model/CURRENT) --date "$(date -u +%F)"
+        run: |
+          set -o pipefail
+          python builder/build.py --tk-dir tokenomics-master --oai-xlsx build_out_oai.xlsx --out build_out/$(cat model/CURRENT) --base model/$(cat model/CURRENT) --date "$(date -u +%F)" 2>&1 | tee build.log
+      - name: 失敗診斷（把錯誤最後 60 行寫成註記；Actions 紀錄經代理讀不到，註記可讀）
+        if: failure()
+        run: |
+          for f in build.log apt.log; do
+            [ -f "$f" ] || continue
+            msg=$(tail -n 60 "$f" | sed -e 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+            echo "::error title=rebuild ${f}::${msg}"
+          done
       - uses: actions/upload-artifact@v4
         with:
           name: rebuilt-model
