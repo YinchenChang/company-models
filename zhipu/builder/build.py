@@ -13,6 +13,7 @@ Tokenomics 快照（TK_Link）與 OpenAI v0.6 快照（OAI_Link）。
 from __future__ import annotations
 
 import argparse
+import shutil
 import json
 import re
 import sys
@@ -417,7 +418,7 @@ def main():
     if a.no_lo:
         raw.replace(a.out)
     else:
-        lo_recalc(raw, Path(tempfile.mkdtemp())).replace(a.out)
+        shutil.move(str(lo_recalc(raw, Path(tempfile.mkdtemp()))), str(a.out))  # 跨磁碟可用（/tmp 可能與工作目錄不同磁碟）
     json.dump(dict(summary, tk_file=snap["file"], tk_sha=snap["sha"], oai_file=oai["file"], oai_sha=oai["sha"], e6=e6, oai_refs=oref),
               open(outdir / "build_summary.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("saved", a.out, summary, "e6", e6, "oai_refs", oref)

@@ -6,6 +6,7 @@
 輸出經 LibreOffice 重算後才寫到 --out（內含快取值；engine 仍會強制重算）。同目錄寫 restore_log.txt、leafmap.csv、build_summary.json。
 """
 import argparse
+import shutil
 import csv
 import json
 import sys
@@ -680,7 +681,7 @@ def main():
     if a.no_lo:
         raw.replace(a.out)
     else:
-        lo_recalc(raw, Path(tempfile.mkdtemp())).replace(a.out)
+        shutil.move(str(lo_recalc(raw, Path(tempfile.mkdtemp()))), str(a.out))  # 跨磁碟可用（/tmp 可能與工作目錄不同磁碟）
     with open(outdir / "leafmap.csv", "w", newline="", encoding="utf-8-sig") as f:
         w = csv.writer(f)
         w.writerow(["v0.5 路徑", "v0.5 值", "去處類別", "去處", "理由／備註"])

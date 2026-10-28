@@ -14,6 +14,7 @@ Python 只產生結構（公式文字）；參數一律來自 data/*.yaml 或 To
 from __future__ import annotations
 
 import argparse
+import shutil
 import datetime as dt
 import importlib
 import json
@@ -524,7 +525,7 @@ def main():
     if a.no_lo:
         raw.replace(a.out)
     else:
-        lo_recalc(raw, Path(tempfile.mkdtemp())).replace(a.out)
+        shutil.move(str(lo_recalc(raw, Path(tempfile.mkdtemp()))), str(a.out))  # 跨磁碟可用（/tmp 可能與工作目錄不同磁碟）
     json.dump(dict(summary, stage=STAGE, modules=[m.__name__ for m in mods], tk_file=snap["file"], tk_sha=snap["sha"], oai_file=oai["file"],
                    oai_sha256=oai["sha256"], oai_commit=oai["commit"], scan={k: v for k, v in ctx.scan.items()}, checks=ids),
               open(outdir / "build_summary.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
