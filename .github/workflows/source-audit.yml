@@ -33,6 +33,7 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           MAX_USD: ${{ github.event.inputs.max_usd || '3' }}
           MAX_GROUPS: ${{ github.event.inputs.max_groups || '10' }}
+          WAVE: "150"
         run: python3 tools/source_audit/audit.py
       - name: Commit results
         if: always()
