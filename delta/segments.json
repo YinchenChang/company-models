@@ -1,0 +1,16 @@
+{
+ "company": "台達電",
+ "ticker": "2308.TW",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "電源及零組件（Power Electronics）", "label": "電源及零組件", "period": "FY2025", "value": 0.50, "unit": "營收比重", "source": "台達電 2025 年報 p.136"},
+  {"name": "交通（Mobility）", "label": "交通", "period": "FY2025", "value": 0.07, "unit": "營收比重", "source": "同上"},
+  {"name": "自動化（Automation）", "label": "自動化", "period": "FY2025", "value": 0.10, "unit": "營收比重", "source": "同上"},
+  {"name": "基礎設施（Infrastructure）", "label": "基礎設施", "period": "FY2025", "value": 0.33, "unit": "營收比重", "source": "同上"}
+ ],
+ "sublines": [
+  {"parent": "電源及零組件（Power Electronics）", "labels": ["AI 電源營收", "電源及零組件：非 AI"]},
+  {"parent": "基礎設施（Infrastructure）", "labels": ["液冷營收", "基礎設施：非液冷"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收（FY2025 實績、FY2026 錨點）"]
+}
