@@ -42,9 +42,11 @@ class Usage:
                   "requests_batch": 0, "requests_standard": 0, "est_usd": 0.0,
                   "started_utc": dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")}
 
-    def add(self, u, via="batch", model=MODEL):
+    def add(self, u, via="batch", model=None):
         if not u:
             return
+        model = model or MODEL           # 請求檔可指定 model（執行時改 common.MODEL）
+        self.d["model"] = model
         pi, po = next(v for k, v in PRICE_STD.items() if k in model)
         f = 0.5 if via == "batch" else 1.0
         it = u.get("input_tokens", 0) or 0
