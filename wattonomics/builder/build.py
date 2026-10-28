@@ -248,7 +248,7 @@ def main():
             v = B(k, 8 + j, cp.get(f))
             if v is not None and v != "":
                 c = IN.cell(r, 8 + j, v); c.font = BLUE
-        if not cp.get("inc"):
+        if not B(k, 14, cp.get("inc")):
             for j in range(1, 8): IN.cell(r, j).font = Font(color="808080")
         CAMP.append((k, r)); r += 1
     IN_LAST = r - 1
@@ -1628,6 +1628,8 @@ def main():
         ("v0.1 範圍：C0、C1、延遲管線（D0–D2）、WIF_ 輸出；C2–C7 自 v0.2 起。第 2 階段：填入 evidence_raw 證據（只用 C 段判屬實或已更正的列；DB_Evidence 頁列全部證據與判定），延遲參數依 B_delay 校準。", False),
         ("第 3 階段：新增 CapexGW 頁（甲2：資本支出推得 GW；MSFT、GOOGL、AMZN、META、ORCL、CRWV、NBIS 2027 起進主路徑）；Interface 另出 _SiteOnly（只有 甲）；WIF_Coverage_<yyyy>。下游取用 2027 年後數值前看覆蓋率。", True),
         ("v0.1.1（改名 Wattonomics／瓦帳）：新增 Funding（玩家 × 年資金來源、循環融資 17 條）、FundRaw（F 段證據＋G 段判定）、Facility（每 IT GW 廠房拆分與市場層、自建發電）、SegIn（AI半導體 次產業比例鏡像）、Spend（年 × 項目市場金額）；C1 加廣義口徑（資本支出＋尚未起租變化）；Interface 增 WIF_Funding_*、WIF_Spend_*、WIF_Facility_*。", True),
+        ("v0.1.2：套用 H 段（API 旗標人工複核）更正——證據檔 79 筆、In 輸入 19 格（cp_msft_abl 改 336＋336 MW-IT、xfmr_gva 2.1／2.67／3.15、fac_gen_px 低 0.5），FundRaw F#31、F#199、F#222 改不採用（採購或投資存量，非融資）；"
+         "園區候選（S 段 409 列，site_pipeline）經 API 回查與 I 段未參與代理開原文抽查後合併：新增 17 列（計入 13 列）、更正既有 20 列（Fairwater 拆分、Ports Pike 首批 800 MW 至 2031、Humain 1.7 GW 提前到 2027、Milam 308＋445、Jupiter 已知延遲刪除）、3 列改計入（Stargate UAE、Colossus 2、Mistral 96 MW）。Hyperion 5 GW、SoftBank 苫小牧依判斷題預設不入。", True),
         ("顏色：藍字＝輸入；黑字＝公式；綠字＝跨頁或外部鏡像；淡黃底＝關鍵輸出；亮黃底＝待證據或預設待決。", False),
         ("Excel 優先：要改輸入，直接改 In 頁藍字；builder 重建時讀回（--base）。公式頁不要手改。下游只讀 Interface 的 WIF_ 名稱（經快照）。", False),
         ("版本命名：YYYYMMDD_Wattonomics_vX.Y.xlsx；model/CURRENT 記錄現行檔名；data/CURRENT_SNAPSHOT 指向現行快照。", False),

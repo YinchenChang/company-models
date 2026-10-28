@@ -72,6 +72,25 @@ def main():
             rows.append(dict(id=f"{pre}#{n}", key=i, player=player, claim=claim, value=val, basis=basis, as_of=d.get("as_of", ""),
                              tag=tag, url=d.get("url", ""), verdict=verdict(i),
                              cnote="；".join(x for x in (NOTE.get(i, ""), ("H 段（10-28）：" + "；".join(HN[i])) if i in HN else "") if x)))
+    # S 段（園區候選，v0.1.2）：判定＝API 回查（Sonnet）；合併入 T2 的列另經 I 段人工開原文核對（I_review_sites.md）
+    sp = os.path.join(RAW, "S_sites.csv")
+    if os.path.exists(sp):
+        api = {}
+        with open(os.path.join(RAW, "S_sites_audit.csv"), encoding="utf-8-sig") as f:
+            for a in csv.DictReader(f):
+                api[int(a["line"])] = a
+        ir = open(os.path.join(RAW, "I_review_sites.md"), encoding="utf-8").read() if os.path.exists(os.path.join(RAW, "I_review_sites.md")) else ""
+        import re
+        icited = {int(x) for x in re.findall(r"S#(\d+)", ir)}
+        with open(sp, encoding="utf-8-sig") as f:
+            rd = list(csv.reader(f))
+        h = rd[0]
+        for n, row in enumerate(rd[1:], 2):
+            d = dict(zip(h, row)); a = api.get(n, {})
+            rows.append(dict(id=f"S#{n}", key=f"S{n}", player=d.get("player", ""), claim=f"{d.get('player')}｜{d.get('site_or_scope')}｜{d.get('metric')}",
+                             value=f"{d.get('value')} {d.get('unit')}".strip(), basis=d.get("basis", ""), as_of=d.get("as_of", ""), tag=d.get("tag", ""),
+                             url=d.get("url", ""), verdict="API：" + (a.get("verdict") or "未判定"),
+                             cnote="；".join(x for x in ((a.get("note") or "")[:200], "I 段已開原文核對（I_review_sites.md）" if n in icited else "") if x)))
     json.dump(rows, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
     from collections import Counter
     print(f"{OUT}：{len(rows)} 列；", dict(Counter(r["verdict"] for r in rows)))

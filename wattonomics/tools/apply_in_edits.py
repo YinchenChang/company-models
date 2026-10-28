@@ -32,7 +32,7 @@ def main(src, edits, out):
         cur = ws.cell(r, c).value
         if not same(cur, e["old"]):
             sys.exit(f"停止：{e['key']} {e['col']}{r} 現值 {cur!r} ≠ old {e['old']!r}")
-        ws.cell(r, c).value = num(e["new"]) if e["col"] not in ("E", "G") else e["new"]
+        ws.cell(r, c).value = None if e["new"] == "" else (num(e["new"]) if e["col"] not in ("C", "E", "G") else e["new"])
         print(f"{e['key']} {e['col']}{r}: {cur!r} → {ws.cell(r, c).value!r}"); n += 1
     wb.save(out)
     print(f"{out}：{n} 格")
