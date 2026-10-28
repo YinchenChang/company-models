@@ -22,7 +22,7 @@ NOTE = {
     "A16": "as_of 2026-05-15", "A58": "Entergy 7 座燃氣電廠；租金起付日不在原文；2030 前 2 GW 屬實",
     "B16": "全園 8 IT-GW；NVIDIA 首期 4.25 IT-GW、3.75 為選擇權；2028 起分期", "B36": "首期 2027H2、2028 初全部交付",
     "D12": "低值依據不成立；中值 30 月屬實", "D7": "措辭：『許多案子』渦輪不是卡關項",
-    "A30": "原頁被擋；A 標 Interested-party、B 標 Verified 待統一", "B30": "同 A#30",
+    "A30": "原頁被擋；標記統一為 Interested-party（A／B 兩段原不一致）", "B30": "同 A#30（標記已統一）",
     "A79": "Epoch 交叉屬實；10-K 原頁被擋", "A83": "10-K 被擋", "A72": "屬實（設施）；首棟已延到 2027-08（B#10）",
 }
 
@@ -50,8 +50,11 @@ def main():
             else:
                 claim = f"{d.get('player')}｜{d.get('site_or_scope') or d.get('site_or_contract')}｜{d.get('metric')}"
                 val = f"{d.get('value')} {d.get('unit')}".strip(); player = d.get("player", ""); basis = d.get("basis", "")
+            tag = d.get("tag", "")
+            if i in ("A30", "B30"):   # 同一份 Broadcom 8-K：統一為 Interested-party（原頁被擋未核；GW 數為 Broadcom／Anthropic 揭露的合約上限）
+                tag = "[Interested-party]（統一；原 A 段 Interested-party、B 段 Verified）"
             rows.append(dict(id=f"{pre}#{n}", key=i, player=player, claim=claim, value=val, basis=basis, as_of=d.get("as_of", ""),
-                             tag=d.get("tag", ""), url=d.get("url", ""), verdict=verdict(i), cnote=NOTE.get(i, "")))
+                             tag=tag, url=d.get("url", ""), verdict=verdict(i), cnote=NOTE.get(i, "")))
     json.dump(rows, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
     from collections import Counter
     print(f"{OUT}：{len(rows)} 列；", dict(Counter(r["verdict"] for r in rows)))

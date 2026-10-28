@@ -165,7 +165,9 @@ def main():
     FYE = {}
     for p, o in seed["capex"].items():
         if p.startswith("_"): continue
-        scalar(dict(key=f"fye_{p}", label=f"{PN[p]} 財年結束月", unit="月", base=o["fye"], tag="Verified", src=o["src"], note="company.json calendar.fiscalYearEndMonth（Meta：曆年）"))
+        fsrc = seed.get("fye_src", {}).get(p, o["src"])
+        scalar(dict(key=f"fye_{p}", label=f"{PN[p]} 財年結束月", unit="月", base=o["fye"], tag="Verified", src=fsrc,
+                    note=("company.json calendar.fiscalYearEndMonth" if p != "meta" else "Meta 財年＝曆年（A#63 8-K Ex.99.1 期末 2026-09-30 為第三季）")))
         FYE[p] = f"fye_{p}"
     S_LAST = r - 1
 
@@ -395,7 +397,7 @@ def main():
     OBS = {p for p in PK if f"obs_{p}" in INROW or f"obschip_{p}" in INROW}
     CAMPSUM = lambda p, y: f'SUMIFS(Pipeline!$L${{c0}}:$L${{c1}},Pipeline!$C${{c0}}:$C${{c1}},"{p}",Pipeline!$Q${{c0}}:$Q${{c1}},1,Pipeline!$P${{c0}}:$P${{c1}},{y})'
     PLAYER_CELLS = []   # (row, col, formula template needing c0/c1)
-    RNG = {"neo": {2025: "rng25_neo"}, "cn": {2025: "rng25_cn", 2026: "rng26_cn"}, "oth": {2025: "rng25_oth"}}
+    RNG = {"neo": {2025: "rng25_neo"}, "cn": {2025: "rng25_cn", 2026: "rng26_cn"}}
     for p in PK:
         ir = INROW[f"mw_{p}"]
         PL.cell(r, 1, PN[p]).font = BOLD; PL.cell(r, 2, p); PL.cell(r, 14, f"In 第 {ir} 列；口徑＝In!C{ir}")
@@ -411,7 +413,10 @@ def main():
         for i, y in enumerate(YEARS):
             c = YC[y]; inref = f"In!${IC[y]}${ir}"; col = i + 4
             pc = YC.get(y - 1); nc = YC.get(y + 1)
-            PL.cell(rows["in"], col, f'=IF({inref}="","",IF(In!$C${ir}="設施",{inref}/1000/{c}${FACR},{inref}/1000))').number_format = "0.000"
+            if p == "oth" and y == 2025 and "other_incl_china" in INROW:
+                PL.cell(rows["in"], col, f'=IF({inref}<>"",{inref}/1000,IF(other_incl_china=1,oth_excn,oth_full)/1000)').number_format = "0.000"
+            else:
+                PL.cell(rows["in"], col, f'=IF({inref}="","",IF(In!$C${ir}="設施",{inref}/1000/{c}${FACR},{inref}/1000))').number_format = "0.000"
             if p in CHIP:
                 cref = f"In!${IC[y]}${CHIP[p]}"
                 PL.cell(rows["chip"], col, f'=IF({cref}="","",{cref}*{MULT[p][0]}/1000)').number_format = "0.000"
@@ -462,7 +467,9 @@ def main():
             if p in OBS and any(sc.get("key") == f"obs_{p}" and sc.get("lo") is not None for sc in seed["scalars"]):
                 lo = f'IF({c}{rows["f"]}=2,{T}-(obs_{p}-obs_{p}_lo)/1000,{lo})'
                 hi = f'IF({c}{rows["f"]}=2,{T}+(obs_{p}_hi-obs_{p})/1000,{hi})'
-            if p in RNG and y in RNG[p]:
+            if p == "oth" and y == 2025 and "other_incl_china" in INROW:
+                lo = "IF(other_incl_china=1,oth_excn_lo,oth_full_lo)/1000"; hi = "IF(other_incl_china=1,oth_excn_hi,oth_full_hi)/1000"
+            elif p in RNG and y in RNG[p]:
                 nm_ = RNG[p][y]; div = f"/{c}${FACR}" if p in ("cn", "oth") else ""
                 lo = f"{nm_}_lo/1000{div}"; hi = f"{nm_}_hi/1000{div}"
             PL.cell(rows["lo"], col, f'=IF({T}="","",{lo})').number_format = "0.000"
@@ -558,8 +565,9 @@ def main():
     CR0 = r
     for k, ir in CAMP:
         PP.cell(r, 1, k); PP.cell(r, 2, f"=In!B{ir}").font = GREEN
-        for j, col in ((3, "H"), (4, "I"), (5, "J"), (7, "N"), (8, "K"), (9, "L"), (10, "M"), (19, "O")):
+        for j, col in ((3, "H"), (4, "I"), (5, "J"), (7, "N"), (8, "K"), (9, "L"), (19, "O")):
             PP.cell(r, j, f'=IF(In!{col}{ir}="","",In!{col}{ir})').font = GREEN
+        PP.cell(r, 10, f"=N(In!M{ir})").font = GREEN   # 已知延遲月：一律數值（空白＝0；文字 "" 在比較中會被當成大於 0）
         PP.cell(r, 6, f"=In!C{ir}").font = GREEN
         PP.cell(r, 11, f'=IF(OR(H{r}="",I{r}=""),9999,H{r}+I{r}/12)').number_format = "0.000"
         PP.cell(r, 12, f'=IF(E{r}="",0,IF(F{r}="設施",E{r}/1000/INDEX(Players!$D${FACR}:$M${FACR},1,MAX(1,MIN(10,H{r}-2022))),E{r}/1000*g_ITtoFac))').number_format = "0.000"
@@ -671,7 +679,7 @@ def main():
 
     # ================= CapexGW：甲2 資本支出推得 GW =================
     CX["A1"] = ("CapexGW — 甲2：資本支出推得 GW（MSFT、GOOGL、AMZN、META、ORCL、CRWV、NBIS）。財年資本支出（In Y2；個股模型 annualEstimates／指引，MAG 讀現行檔：microsoft 2026-10-11、"
-                "alphabet 2026-10-09、amazon 2026-10-08 版，PR #190 未合併）→ 補值（最早年前取最早值；最後年後 ×（1＋cap_g_ext））→ 曆年（財年結束月拆分）→ × AI 占比 → "
+                "alphabet 2026-10-09、amazon 2026-10-08 版，PR #190 未合併）→ 補值（最早已知年之前不回填，留空並跳過該年 甲2；最後年後 ×（1＋cap_g_ext））→ 曆年（財年結束月拆分）→ × AI 占比 → "
                 "當年 GW 資金＝IT 占比 × 當年＋廠房占比 ×（w0 當年＋w1 前一年＋w2 前兩年；lag_bldg）→ ÷ 每 IT GW 合計資本支出（TK IF_CapexTotal 世代加權；NonNV × 持有比 × VR200）＝年新增 IT GW。"
                 "[Derived]；輸入為 Interested-party／共識")
     CX["A2"] = "主路徑：2024–2026 用 甲（Players：園區＋實測）；2027 起本頁七家改用 甲2，其餘玩家仍用 甲。Decisions GL01-19、GL01-21（廠房多由房東出資者可能低估）"
@@ -717,10 +725,11 @@ def main():
             CX.cell(rows["N"], col, f'=IF({IN_}<>"",{IN_},' + (f"{nc}{rows['N']})" if nc else '"")'))
             prevfy = f"{pc}{rows['fy']}" if pc else '""'
             prevcnt = f"{pc}{rows['cnt']}" if pc else "0"
-            CX.cell(rows["fy"], col, f'=IF({IN_}<>"",{IN_},IF({prevcnt}>0,{prevfy}*(1+cap_g_ext),{c}{rows["N"]}))').number_format = "0.0"
-            nfy = f"{nc}{rows['fy']}" if nc else f"{c}{rows['fy']}*(1+cap_g_ext)"
-            CX.cell(rows["cy"], col, f"={c}{rows['fy']}*{fye}/12+{nfy}*(12-{fye})/12").number_format = "0.0"
-            CX.cell(rows["ai"], col, f"={c}{rows['cy']}*{aik}").number_format = "0.0"
+            CX.cell(rows["fy"], col, f'=IF({IN_}<>"",{IN_},IF({prevcnt}>0,{prevfy}*(1+cap_g_ext),""))').number_format = "0.0"
+            FY_ = f"{c}{rows['fy']}"
+            nfy = f"{nc}{rows['fy']}" if nc else f'IF({FY_}="","",{FY_}*(1+cap_g_ext))'
+            CX.cell(rows["cy"], col, f'=IF(OR({FY_}="",AND({fye}<12,{nfy}="")),"",{FY_}*{fye}/12+IF({fye}<12,{nfy},0)*(12-{fye})/12)').number_format = "0.0"
+            CX.cell(rows["ai"], col, f'=IF({c}{rows["cy"]}="","",{c}{rows["cy"]}*{aik})').number_format = "0.0"
             nnv = f"Players!{c}{PR[p]['nnv']}"
             CX.cell(rows["pit"], col, f"=(1-{nnv})*{c}${XIT}+{nnv}*TK_NonNV_Hold_{PLAT[p]}*TK_CapexIT_VR200").number_format = "0.00"
             CX.cell(rows["pfac"], col, f"=(1-{nnv})*{c}${XFAC}+{nnv}*TK_NonNV_Hold_{PLAT[p]}*TK_CapexFacility_VR200").number_format = "0.00"
@@ -730,16 +739,19 @@ def main():
             else: terms.append(f"{XW[1]}*{c}{rows['ai']}")
             if YC.get(y - 2): terms.append(f"{XW[2]}*{YC[y - 2]}{rows['ai']}")
             else: terms.append(f"{XW[2]}*{c}{rows['ai']}")
-            CX.cell(rows["fund"], col, f"={PIT}/({PIT}+{PFA})*{c}{rows['ai']}+{PFA}/({PIT}+{PFA})*(" + "+".join(terms) + ")").number_format = "0.0"
-            cc = CX.cell(rows["gw"], col, f"={c}{rows['fund']}/({PIT}+{PFA})"); cc.number_format = "0.000"; cc.fill = KEY
-            CX.cell(rows["s_ailo"], col, f"={c}{rows['gw']}*{aik}_lo/{aik}").number_format = "0.000"
-            CX.cell(rows["s_aihi"], col, f"={c}{rows['gw']}*{aik}_hi/{aik}").number_format = "0.000"
+            need = [f"{c}{rows['ai']}", f"{(YC.get(y - 1) or c)}{rows['ai']}", f"{(YC.get(y - 2) or c)}{rows['ai']}"]
+            miss = "OR(" + ",".join(f'{x}=""' for x in need) + ")"
+            CX.cell(rows["fund"], col, f'=IF({miss},"",{PIT}/({PIT}+{PFA})*{c}{rows["ai"]}+{PFA}/({PIT}+{PFA})*(' + "+".join(terms) + "))").number_format = "0.0"
+            cc = CX.cell(rows["gw"], col, f'=IF({c}{rows["fund"]}="","",{c}{rows["fund"]}/({PIT}+{PFA}))'); cc.number_format = "0.000"; cc.fill = KEY
+            G_ = f"{c}{rows['gw']}"
+            CX.cell(rows["s_ailo"], col, f'=IF({G_}="","",{G_}*{aik}_lo/{aik})').number_format = "0.000"
+            CX.cell(rows["s_aihi"], col, f'=IF({G_}="","",{G_}*{aik}_hi/{aik})').number_format = "0.000"
             for sx in ("lo", "hi"):
                 W = XWV[sx]
-                tt = [f"{W[0]}*{c}{rows['ai']}", f"{W[1]}*{(YC.get(y - 1) or c)}{rows['ai']}", f"{W[2]}*{(YC.get(y - 2) or c)}{rows['ai']}"]
-                CX.cell(rows["s_lag" + sx], col, f"=({PIT}/({PIT}+{PFA})*{c}{rows['ai']}+{PFA}/({PIT}+{PFA})*(" + "+".join(tt) + f"))/({PIT}+{PFA})").number_format = "0.000"
+                tt = [f"{W[0]}*{need[0]}", f"{W[1]}*{need[1]}", f"{W[2]}*{need[2]}"]
+                CX.cell(rows["s_lag" + sx], col, f'=IF({miss},"",({PIT}/({PIT}+{PFA})*{c}{rows["ai"]}+{PFA}/({PIT}+{PFA})*(' + "+".join(tt) + f"))/({PIT}+{PFA}))").number_format = "0.000"
             CX.cell(rows["site"], col, f"=Players!{c}{PR[p]['add']}").font = GREEN
-            CX.cell(rows["main"], col, f"=IF({y}>=2027,{c}{rows['gw']},{c}{rows['site']})").number_format = "0.000"
+            CX.cell(rows["main"], col, f'=IF(AND({y}>=2027,{G_}<>""),{G_},{c}{rows["site"]})').number_format = "0.000"
             if pc is None:
                 CX.cell(rows["ye"], col, f"=N(Players!{c}{PR[p]['tk']})").number_format = "0.000"
             else:
@@ -747,7 +759,7 @@ def main():
         XR[p] = rows; r += 1
     CX.cell(r, 1, "七家合計").font = BOLD; r += 1
     XT = {}
-    for k, lab in (("gw", "甲2 年新增 IT GW"), ("site", "甲 年新增 IT GW"), ("adj", "主路徑調整（2027–2029：甲2 − 甲）"),
+    for k, lab in (("gw", "甲2 年新增 IT GW（缺值以 甲 代入）"), ("site", "甲 年新增 IT GW"), ("adj", "主路徑調整（2027–2029：甲2 − 甲）"),
                    ("s_ailo", "敏感度：甲2 年新增（AI 占比 低）"), ("s_aihi", "敏感度：甲2 年新增（AI 占比 高）"),
                    ("s_laglo", "敏感度：甲2 年新增（lag_bldg 低）"), ("s_laghi", "敏感度：甲2 年新增（lag_bldg 高）")):
         CX.cell(r, 1, lab)
@@ -755,8 +767,10 @@ def main():
             c = YC[y]
             if k == "adj":
                 f = f"=IF(AND({y}>=2027,{y}<=2029),{c}{XT['gw']}-{c}{XT['site']},0)"
-            else:
+            elif k == "site":
                 f = "=" + "+".join(f"{c}{XR[p][k]}" for p in CAPP)
+            else:   # 甲2 缺值（資本支出最早已知年之前）以 甲 代入
+                f = "=" + "+".join(f'IF({c}{XR[p][k]}="",{c}{XR[p]["site"]},{c}{XR[p][k]})' for p in CAPP)
             CX.cell(r, YEARS.index(y) + 4, f).number_format = "0.000"
         XT[k] = r; r += 1
     CX_LAST = r
@@ -1129,7 +1143,7 @@ def main():
         CK.cell(r, 1, f"K10-{y}"); CK.cell(r, 2, f"Matrix {y}：未分配欄 ≥ 0（分配不超過營運者年底 GW）")
         CK.cell(r, 3, f'=COUNTIF(Matrix!{L(UNC)}{m["r0"]}:{L(UNC)}{m["r1"]},"<-1E-9")')
         CK.cell(r, 6, f'=IF(C{r}=0,"OK","ERROR")'); CK.cell(r, 7, "驗證"); r += 1
-    for nm_, p, y in (("rng25_neo", "neo", 2025), ("rng25_cn", "cn", 2025), ("rng26_cn", "cn", 2026), ("rng25_oth", "oth", 2025),
+    for nm_, p, y in (("rng25_neo", "neo", 2025), ("rng25_cn", "cn", 2025), ("rng26_cn", "cn", 2026),
                       ("ovr25_googl", "googl", 2025), ("ovr25_amzn", "amzn", 2025)):
         CK.cell(r, 1, f"K11-{nm_}"); CK.cell(r, 2, f"{nm_} 基準＝Players {p} {y} 年底（區間列與基準一致；設施 ÷ IF_FacilityGW）")
         div = f"/Players!{YC[y]}${FACR}" if p in ("cn", "oth") else ""
@@ -1161,6 +1175,16 @@ def main():
     CK.cell(r, 1, "K17"); CK.cell(r, 2, "甲2 年新增 < 0 的格數（七家 × 年）")
     CK.cell(r, 3, "=" + "+".join(f'COUNTIF(CapexGW!D{XR[p]["gw"]}:M{XR[p]["gw"]},"<0")' for p in XR))
     CK.cell(r, 6, f'=IF(C{r}=0,"OK","ERROR")'); CK.cell(r, 7, "驗證"); r += 1
+    CK.cell(r, 1, "K18"); CK.cell(r, 2, "D1 園區延遲總量（Σ 納入且 asof 後上線的園區 GW ×（t D1 延後 − t D0）× 12，GW·月）> 0（防延遲失效；獨立核對第 1 節）")
+    CK.cell(r, 3, f"=SUMPRODUCT(Pipeline!L{CR0}:L{CR1},Pipeline!Q{CR0}:Q{CR1},(Pipeline!K{CR0}:K{CR1}>asof)*1,"
+                  f"((Pipeline!J{CR0}:J{CR1}>0)+(Pipeline!J{CR0}:J{CR1}<=0)*dly_d1_s)*(Pipeline!O{CR0}:O{CR1}-Pipeline!M{CR0}:M{CR1})*12)")
+    CK.cell(r, 4, f'=SUMPRODUCT(ISTEXT(Pipeline!J{CR0}:J{CR1})*1)')
+    CK.cell(r, 6, f'=IF(AND(C{r}>0,D{r}=0),"OK","ERROR")'); CK.cell(r, 7, "驗證")
+    CK.cell(r, 8, "D 欄＝J 欄為文字的格數（須為 0）"); r += 1
+    for y in (2027, 2029):
+        CK.cell(r, 1, f"K19-{y}"); CK.cell(r, 2, f"{y}：SiteOnly D1 < D0（園區＋殘差延遲有作用）")
+        CK.cell(r, 3, f"=Deploy!{YC[y]}{DR['yeAD1_SO']}"); CK.cell(r, 4, f"=Deploy!{YC[y]}{DR['yeAD0_SO']}")
+        CK.cell(r, 6, f'=IF(C{r}<D{r}-1E-6,"OK","ERROR")'); CK.cell(r, 7, "驗證"); r += 1
     CK.cell(r, 1, "K9"); CK.cell(r, 2, "Deploy：各需求情景 2032 年底 D0 ≥ D1 ≥ D2（情景差額為負時可能不成立）")
     CK.cell(r, 3, "=" + "+".join(f"(Deploy!M{DR['ye' + s + 'D0' + x]}<Deploy!M{DR['ye' + s + 'D1' + x]}-1E-9)+(Deploy!M{DR['ye' + s + 'D1' + x]}<Deploy!M{DR['ye' + s + 'D2' + x]}-1E-9)" for s in SCEN for x in ("", "_SO")))
     CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "驗證"); r += 1

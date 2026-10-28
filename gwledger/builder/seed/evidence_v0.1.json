@@ -371,10 +371,10 @@
 "value": "3500 MW",
 "basis": "unknown",
 "as_of": "2026-04-06",
-"tag": "[Interested-party]",
+"tag": "[Interested-party]（統一；原 A 段 Interested-party、B 段 Verified）",
 "url": "https://www.boardroomalpha.com/sec/avgo-8-k-2026-04-06-0001193125-26-144028",
 "verdict": "無法核對",
-"cnote": "原頁被擋；A 標 Interested-party、B 標 Verified 待統一"
+"cnote": "原頁被擋；標記統一為 Interested-party（A／B 兩段原不一致）"
 },
 {
 "id": "A#31",
@@ -1892,10 +1892,10 @@
 "value": "3.5 GW",
 "basis": "unknown",
 "as_of": "2026-04-06",
-"tag": "Verified（Broadcom 8-K）",
+"tag": "[Interested-party]（統一；原 A 段 Interested-party、B 段 Verified）",
 "url": "https://www.boardroomalpha.com/sec/avgo-8-k-2026-04-06-0001193125-26-144028",
 "verdict": "無法核對",
-"cnote": "同 A#30"
+"cnote": "同 A#30（標記已統一）"
 },
 {
 "id": "B#31",

@@ -245,13 +245,13 @@
    "key": "cn_tot26",
    "label": "中國資料中心總容量 2026 年底",
    "unit": "GW",
-   "lo": 40,
+   "lo": 36,
    "base": 40,
-   "hi": 40,
+   "hi": 44,
    "tag": "Analogy",
    "src": "SRC_GL_201",
    "basis": "未說明",
-   "note": "B#51（屬實；Rystad）；單一來源，低＝高＝基準（區間待證據；中國總區間見 rng26_cn）"
+   "note": "B#51（屬實；Rystad）；單一來源（Rystad），區間 ±10% [Assumed]；Players 用基準"
   },
   {
    "key": "cn_tot30",
@@ -259,35 +259,35 @@
    "unit": "GW",
    "lo": 60,
    "base": 60,
-   "hi": 60,
+   "hi": 70,
    "tag": "Analogy",
    "src": "SRC_GL_201",
    "basis": "未說明",
-   "note": "B#51（屬實；Rystad >60 GW 取下限）；單一來源，低＝高＝基準（區間待證據；中國總區間見 rng26_cn）"
+   "note": "B#51（屬實；Rystad >60 GW 取下限）；單一來源（Rystad），區間 60–70（Rystad「>60」） [Assumed]；Players 用基準"
   },
   {
    "key": "cn_sh26",
    "label": "中國 AI／HPC 占比 2026",
    "unit": "%",
-   "lo": 0.39,
+   "lo": 0.351,
    "base": 0.39,
-   "hi": 0.39,
+   "hi": 0.429,
    "tag": "Analogy",
    "src": "SRC_GL_201",
    "basis": "—",
-   "note": "B#51（屬實；Rystad）；單一來源，低＝高＝基準（區間待證據；中國總區間見 rng26_cn）"
+   "note": "B#51（屬實；Rystad）；單一來源（Rystad），區間 ±10% [Assumed]；Players 用基準"
   },
   {
    "key": "cn_sh30",
    "label": "中國 AI／HPC 占比 2030",
    "unit": "%",
-   "lo": 0.48,
+   "lo": 0.432,
    "base": 0.48,
-   "hi": 0.48,
+   "hi": 0.528,
    "tag": "Analogy",
    "src": "SRC_GL_201",
    "basis": "—",
-   "note": "B#51（屬實；Rystad）。中國 2027–30＝2026 年底 × (容量 × 占比) 比值，容量幾何內插、占比線性內插 [Assumed]；單一來源，低＝高＝基準（區間待證據；中國總區間見 rng26_cn）"
+   "note": "B#51（屬實；Rystad）。中國 2027–30＝2026 年底 × (容量 × 占比) 比值，容量幾何內插、占比線性內插 [Assumed]；單一來源（Rystad），區間 ±10% [Assumed]；Players 用基準"
   },
   {
    "sec": "S2. 基建延遲參數（D0 準時；D1 基準延遲；D2 嚴重延遲）"
@@ -542,13 +542,13 @@
    "key": "msft_guardian",
    "label": "Microsoft AI 容量反證（Guardian 估，2026-08）",
    "unit": "MW",
-   "lo": 1200,
+   "lo": 1000,
    "base": 1200,
-   "hi": 1200,
+   "hi": 1500,
    "tag": "Analogy",
    "src": "SRC_GL_203",
    "basis": "未說明",
-   "note": "D#24 補充（C 段屬實）：Guardian 估約 1.2 GW，對照公司稱 5 GW；Microsoft 稱估計不準。只放寬 2025 區間下緣，不改基準"
+   "note": "D#24 補充（C 段屬實）：Guardian 估約 1.2 GW，對照公司稱 5 GW；Microsoft 稱估計不準。單點報導，區間 1.0–1.5 [Assumed]；Players 以基準 1.2 放寬 2025 區間下緣，不改基準"
   },
   {
    "key": "rng25_neo",
@@ -587,16 +587,40 @@
    "note": "B_summary 第 2 節：12–16 GW（B#51 Rystad 40 GW × 39%＝15.6；SemiAnalysis >24 GW 總量只佐證）；chat 端指示基準 14；基準須＝Y1 mw_cn 2026"
   },
   {
-   "key": "rng25_oth",
-   "label": "其他（主權、企業、學研）2025 年底區間（設施）",
-   "unit": "MW",
-   "lo": 1800,
-   "base": 2400,
-   "hi": 3000,
+   "key": "other_incl_china",
+   "label": "開關：Epoch『Other』是否含中國買家晶片（1＝含 → 『其他』用扣除中國後的 oth_excn；0＝不含 → 用 oth_full）",
+   "unit": "開關",
+   "lo": 0,
+   "base": 1,
+   "hi": 1,
    "tag": "Assumed",
    "src": "SRC_GL_203",
-   "basis": "設施",
-   "note": "C 段 6.2（Epoch Other 扣新雲）；基準須＝Y1 mw_oth 2025"
+   "basis": "—",
+   "note": "C 段 A#116：Epoch 擁有者表沒有中國類，中國買家的 NVIDIA／AMD 晶片很可能在 Other；GW 帳另有中國列（Rystad），不扣會重複。Decisions GL01-22"
+  },
+  {
+   "key": "oth_full",
+   "label": "『其他』2025 年底（Epoch Other 扣新雲；不扣中國）",
+   "unit": "MW",
+   "lo": 1500,
+   "base": 2000,
+   "hi": 2500,
+   "tag": "Assumed",
+   "src": "SRC_GL_203",
+   "basis": "IT",
+   "note": "C 段 6.2：1.8–3.0 GW 設施 ÷ 1.2＝1.5–2.5 IT（原基準 2.4 設施＝2.0 IT）"
+  },
+  {
+   "key": "oth_excn",
+   "label": "『其他』2025 年底（扣除中國部分；無法拆分，[Assumed]）",
+   "unit": "MW",
+   "lo": 500,
+   "base": 1000,
+   "hi": 2000,
+   "tag": "Assumed",
+   "src": "SRC_GL_203",
+   "basis": "IT",
+   "note": "Epoch Other 中的中國 NVIDIA／AMD 部分無證據可拆（已搜尋：中國 2025 NVIDIA 晶片功耗未找到；B#57 H200 40 萬顆為 2026 許可）。基準降為 1.0（0.5–2.0）IT GW（chat 端核對指示 4）"
   },
   {
    "sec": "S4. 合約與目標（對照用，不進加總）"
@@ -821,13 +845,11 @@
    }
   },
   "oth": {
-   "basis": "設施",
+   "basis": "IT",
    "tag": "Assumed",
    "src": "SRC_GL_203",
-   "note": "C 段 6.2：Epoch Other 扣新雲 1.8–3.0 GW 設施取中點；之後持平（待證據）",
-   "y": {
-    "2025": 2400
-   }
+   "note": "2025 由 S3b other_incl_china 開關選 oth_excn（1.0）或 oth_full（2.0）IT GW（Players 公式）；之後持平（待證據）",
+   "y": {}
   },
   "oai": {
    "basis": "IT",
@@ -854,12 +876,14 @@
    "fye": 6,
    "tag": "Interested-party",
    "src": "SRC_GL_011",
-   "note": "MarketScreener 共識（現金 PP&E 增添，不含融資租賃）FY26 實際 115.9、FY27–29 預估；PR #190（MSFT v0.3）未合併，讀現行 company.json／data",
+   "note": "MarketScreener 共識（現金 PP&E 增添，不含融資租賃）FY26 實際 115.9、FY27–29 預估；PR #190（MSFT v0.3）未合併，讀現行 company.json／data；FY2024 44.477、FY2025 64.551＝10-K 現金 PP&E 增添（microsoft/data/microsoft_facts_20261008.json cf.capex.fy2024／fy2025，Verified）",
    "y": {
     "2026": 115.948,
     "2027": 192.827,
     "2028": 216.787,
-    "2029": 251.173
+    "2029": 251.173,
+    "2024": 44.477,
+    "2025": 64.551
    }
   },
   "googl": {
@@ -878,30 +902,32 @@
    "fye": 12,
    "tag": "Interested-party",
    "src": "SRC_GL_031",
-   "note": "2026 指引約 220（現金淨額，法說）；2027–28 MarketScreener 共識；全公司（含非 AWS）；PR #190 未合併",
+   "note": "2026 指引約 220（現金淨額，法說）；2027–28 MarketScreener 共識；全公司（含非 AWS）；PR #190 未合併；2025 實際 128.32＝現金淨額（amazon/company.json mag.cashflow.fy.fy2025.capexNet，與指引同口徑）",
    "y": {
     "2026": 220,
     "2027": 275.063,
-    "2028": 292.927
+    "2028": 292.927,
+    "2025": 128.32
    }
   },
   "orcl": {
    "fye": 5,
    "tag": "Interested-party",
    "src": "SRC_GL_041",
-   "note": "FY26 55.7（共識表實際）；FY27 指引 90–95 中點 92.5；FY28–29 共識；PR #190（ORCL v0.4）未合併",
+   "note": "FY26 55.7（共識表實際）；FY27 指引 90–95 中點 92.5；FY28–29 共識；PR #190（ORCL v0.4）未合併；FY2025 21.215＝10-K 現金資本支出（oracle/data/oracle_facts_20261007.json cf.capex.fy2025，Verified）",
    "y": {
     "2026": 55.663,
     "2027": 92.5,
     "2028": 100.962,
-    "2029": 84.848
+    "2029": 84.848,
+    "2025": 21.215
    }
   },
   "crwv": {
    "fye": 12,
    "tag": "Interested-party",
    "src": "SRC_GL_051",
-   "note": "2026 指引 35–39 中點 37；2027–28 MarketScreener 共識",
+   "note": "2026 指引 35–39 中點 37；2027–28 MarketScreener 共識；2025 實際未在 repo（CoreWeave 10-K 原頁被擋），留空：甲2 需要 2025 的年份跳過（改用 甲）",
    "y": {
     "2026": 37,
     "2027": 46.476,
@@ -912,11 +938,12 @@
    "fye": 12,
    "tag": "Interested-party",
    "src": "SRC_GL_061",
-   "note": "2026 指引 20–25 中點 22.5；2027–28 MarketScreener 共識",
+   "note": "2026 指引 20–25 中點 22.5；2027–28 MarketScreener 共識；2025 實際 4.066＝20-F 現金資本支出（nebius/data/nebius_facts_20261007.json cf.capexCash.fy25，Verified）",
    "y": {
     "2026": 22.5,
     "2027": 27.243,
-    "2028": 38.39
+    "2028": 38.39,
+    "2025": 4.066
    }
   },
   "wyfi": {
@@ -930,7 +957,7 @@
    "fye": 12,
    "tag": "Interested-party",
    "src": "SRC_GL_200",
-   "note": "A#63（屬實）：2026 135–145 中點 140（含融資租賃本金）；Hyperion、El Paso 為 80/20 合資，資本支出不在 Meta 帳上",
+   "note": "A#63（屬實）：2026 135–145 中點 140（含融資租賃本金）；Hyperion、El Paso 為 80/20 合資，資本支出不在 Meta 帳上；2025 實際未在 repo，留空：甲2 需要 2025 的年份跳過（改用 甲）",
    "y": {
     "2026": 140
    }
@@ -1371,7 +1398,7 @@
    "key": "cp_neo_iren",
    "name": "IREN Childress H3–4（Microsoft）",
    "op": "neo",
-   "user": "oth",
+   "user": "msft",
    "mw": 100,
    "basis": "IT",
    "year": 2026,
@@ -1381,7 +1408,7 @@
    "sec": 0,
    "tag": "Interested-party",
    "src": "SRC_GL_200",
-   "note": "A#104（屬實；2026Q4 目標）"
+   "note": "A#104（屬實；2026Q4 目標）；使用者＝Microsoft（與 T1 al_neo_msft 一致）"
   },
   {
    "key": "cp_neo_iren27",
@@ -2045,6 +2072,33 @@
    "date": "2026-10-28",
    "quote": "工程發現",
    "status": "預設、可撤回"
+  },
+  {
+   "id": "GL01-22",
+   "cat": "工程",
+   "item": "『其他』與中國重複",
+   "decision": "Epoch Other 可能含中國買家晶片（C 段 A#116）；中國 NVIDIA 部分無證據可拆，開關 other_incl_china 基準＝1，『其他』2025 年底取 oth_excn 1.0（0.5–2.0）IT GW [Assumed]；設 0 時回到 oth_full 2.0（1.5–2.5）",
+   "date": "2026-10-28",
+   "quote": "獨立核對第 7 節；chat 端指示 4",
+   "status": "預設、可撤回"
+  },
+  {
+   "id": "GL01-23",
+   "cat": "工程",
+   "item": "甲2 缺值年份",
+   "decision": "資本支出最早已知年之前不回填：曆年資本支出所需財年值缺漏即留空，該年 甲2 跳過（主路徑改用 甲）。2025 實際：MSFT（FY2024–25）、AMZN、ORCL、NBIS 由 repo 事實總帳補入；CRWV、META 2025 實際 repo 未有，留空",
+   "date": "2026-10-28",
+   "quote": "獨立核對第 2 節；chat 端指示 3",
+   "status": "執行"
+  },
+  {
+   "id": "GL01-24",
+   "cat": "修正",
+   "item": "Pipeline 已知延遲月空白",
+   "decision": "Pipeline J 欄改 =N(In!M…)；原公式空白回傳文字 \"\"，SUMPRODUCT 中 (J>0) 判為 TRUE，D1／D2 園區延遲從未套用（獨立核對第 1 節）。Checks K18：D1 園區延遲 GW·月 > 0",
+   "date": "2026-10-28",
+   "quote": "獨立核對 /tmp/claude-0/gw_review_excel.md",
+   "status": "執行"
   }
  ],
  "chip": {
@@ -2278,5 +2332,15 @@
    "src": "SRC_GL_004",
    "note": "結構：中國國內自用"
   }
- ]
+ ],
+ "fye_src": {
+  "msft": "SRC_GL_010",
+  "googl": "SRC_GL_020",
+  "amzn": "SRC_GL_030",
+  "orcl": "SRC_GL_040",
+  "crwv": "SRC_GL_050",
+  "nbis": "SRC_GL_060",
+  "wyfi": "SRC_GL_070",
+  "meta": "SRC_GL_200"
+ }
 }
