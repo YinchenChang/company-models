@@ -3,6 +3,7 @@
 輸入：tools/tk_attribution.py 的 JSON（LibreOffice 重算結果）、v0.6.1／v0.6.2 活頁簿的 TK_Link。差額、百分比與占比為本檔內的 Excel 公式。
 用法：python3 tools/make_v062_report.py --attr <json> --old model/archive/<v0.6.1>.xlsx --new model/<v0.6.2>.xlsx --out docs/reports/20261022_v0.6.2_TK同步_對照.xlsx"""
 import argparse
+import shutil
 import json
 import sys
 import tempfile
@@ -190,7 +191,7 @@ def main():
     tmp = Path(tempfile.mkdtemp()) / a.out.name
     out.save(tmp)
     a.out.parent.mkdir(parents=True, exist_ok=True)
-    lo_recalc(tmp, Path(tempfile.mkdtemp())).replace(a.out)
+    shutil.move(str(lo_recalc(tmp, Path(tempfile.mkdtemp()))), str(a.out))  # 跨磁碟可用（/tmp 可能與工作目錄不同磁碟）
     print("saved", a.out)
 
 
