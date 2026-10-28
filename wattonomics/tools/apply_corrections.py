@@ -58,9 +58,7 @@ def main(corr_path):
         rows = files.setdefault(fn, load(fn)); h = rows[0]
         if fld in ("(none)", "(note)"):
             log.append((fn, n, fld, "維持", c["reason"])); continue
-        if (fn, n) in COMPOSITE:
-            if (fn, n) in done_comp:
-                log.append((fn, n, fld, "併入同列複合更正", c["reason"])); continue
+        if (fn, n) in COMPOSITE and "/" in fld:   # 只有複合欄位走 COMPOSITE；同列其他欄位照一般規則
             spec = COMPOSITE[(fn, n)]; row = rows[n - 1]
             st = "套用"
             for k, v in spec["check"].items():

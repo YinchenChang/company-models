@@ -64,8 +64,8 @@ P_facility_power.csv,2,metric,套用,原文未稱 shell-and-core
 P_facility_power.csv,2,quote_or_paraphrase,套用,原文無『不含 IT』
 P_facility_power.csv,3,basis,套用,原文未定義 IT 瓦
 P_facility_power.csv,5,basis,套用,原文未說明 IT 或設施
-P_facility_power.csv,5,low/high,併入同列複合更正,原文找不到
-P_facility_power.csv,5,as_of,併入同列複合更正,原文 2026-07-24
+P_facility_power.csv,5,low/high,套用,原文找不到
+P_facility_power.csv,5,as_of,套用,原文 2026-07-24
 P_facility_power.csv,16,basis,套用,原文未指明 IT
 P_facility_power.csv,16,quote_or_paraphrase,套用（節錄比對）,原文無此句
 P_facility_power.csv,17,basis,套用,同 P#16
