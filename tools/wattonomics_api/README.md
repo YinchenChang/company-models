@@ -56,8 +56,8 @@
 | 冒煙測試估計 | 5 列 ≈ US$0.05–0.3 | 3 園區 ≈ US$0.3–0.5 | 1 玩家 ≈ US$0.2 |
 
 預算機制（`common.py`）：
-- **本批上限 US$85**（`BATCH_BUDGET_USD`）：每次執行前加總所有遠端分支上 `tools/wattonomics_api/*/out/**/usage*.json` 的 `est_usd`（同 blob 只算一次），本次可用＝min(請求上限, 85－已用, 140－5－本批以外已用－已用)。
-- **累計停止線 US$140**（`HARD_STOP_USD`，含 5 美元緩衝）：本批以外已用的 credit 用 repo variable `API_PRIOR_SPEND_USD` 設定；未設時 workflow 預設 40（Andy 10-28：本期 200 剩約 160）。代理無法經代理伺服器設定 repo variable，改值時直接改 workflow 的預設。
+- **本批上限 US$140**（`BATCH_BUDGET_USD`；10-28 17:19 Andy 同意跑 A 美國以外園區擴充、B Opus 交叉回查、C Q3 財報萃取後由 85 放寬）：每次執行前加總所有遠端分支上 `tools/wattonomics_api/*/out/**/usage*.json` 的 `est_usd`（同 blob 只算一次），本次可用＝min(請求上限, 140－已用, 190－5－本批以外已用－已用)。
+- **累計停止線 US$190**（`HARD_STOP_USD`，含 5 美元緩衝；本期額度 200）：本批以外已用的 credit 用 repo variable `API_PRIOR_SPEND_USD` 設定；未設時 workflow 預設 80（Andy 10-28 17:17：剩約 100；本批當時已用約 20 → 本批以外約 80）。代理無法經代理伺服器設定 repo variable，改值時直接改 workflow 的預設。
 - 送出前按事前估計截量：evidence_audit 從最後的網址往前砍；site_pipeline／weekly_monitor 依「每則估計 × 則數」減少園區或玩家。被砍的在摘要標出。
 - 估計是事前推估，實際以 usage.json（API 回傳的 token 與搜尋次數）為準；Batch 中途不能停，單次實際費用可能略高於上限。
 - 三個工作流程共用 concurrency group `wattonomics-api-budget`，一次只跑一個，預算不會重複計算。
