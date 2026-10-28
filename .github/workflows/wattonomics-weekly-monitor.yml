@@ -41,7 +41,7 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          PRIOR_SPEND_USD: ${{ vars.API_PRIOR_SPEND_USD }}
+          PRIOR_SPEND_USD: ${{ vars.API_PRIOR_SPEND_USD || '40' }}
           MON_PLAYERS: ${{ inputs.players }}
           MON_WEEK_START: ${{ inputs.week_start }}
           MON_SEARCHES: ${{ inputs.searches }}

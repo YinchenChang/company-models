@@ -57,7 +57,7 @@
 
 預算機制（`common.py`）：
 - **本批上限 US$85**（`BATCH_BUDGET_USD`）：每次執行前加總所有遠端分支上 `tools/wattonomics_api/*/out/**/usage*.json` 的 `est_usd`（同 blob 只算一次），本次可用＝min(請求上限, 85－已用, 140－5－本批以外已用－已用)。
-- **累計停止線 US$140**（`HARD_STOP_USD`，含 5 美元緩衝）：本批以外已用的 credit 用 repo variable `API_PRIOR_SPEND_USD` 設定（未設＝0）；**Andy 或 chat 端應在正式全量前，把 Console 上已用金額填進這個 variable**。
+- **累計停止線 US$140**（`HARD_STOP_USD`，含 5 美元緩衝）：本批以外已用的 credit 用 repo variable `API_PRIOR_SPEND_USD` 設定；未設時 workflow 預設 40（Andy 10-28：本期 200 剩約 160）。代理無法經代理伺服器設定 repo variable，改值時直接改 workflow 的預設。
 - 送出前按事前估計截量：evidence_audit 從最後的網址往前砍；site_pipeline／weekly_monitor 依「每則估計 × 則數」減少園區或玩家。被砍的在摘要標出。
 - 估計是事前推估，實際以 usage.json（API 回傳的 token 與搜尋次數）為準；Batch 中途不能停，單次實際費用可能略高於上限。
 - 三個工作流程共用 concurrency group `wattonomics-api-budget`，一次只跑一個，預算不會重複計算。
