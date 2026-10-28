@@ -320,6 +320,8 @@ def engine(ws, r0, title, **over):
     sec_("C. 報告值（FY2025A、FY2026 為實績與錨點；FY2027 起為由下而上）")
     row("rev", "營收", "US$B", {"C": "=a25_rev", "D": "=a26_rev", **{c_(y): f"={c_(y)}{R['ai']}+{c_(y)}{R['nai']}+{c_(y)}{R['sw']}" for y in BU[1:]}})
     row("bur", "  由下而上營收（FY2026 應等於錨點）", "US$B", {c_(y): f"={c_(y)}{R['ai']}+{c_(y)}{R['nai']}+{c_(y)}{R['sw']}" for y in BU})
+    row("semi", "半導體解決方案營收（AI 半導體＋非 AI 半導體）", "US$B", {c_(y): f"={c_(y)}{R['ai']}+{c_(y)}{R['nai']}" for y in FYS}, note="官方分部 Semiconductor solutions")
+    row("segchk", "檢查：分部合計 − 合併營收（FY2025 實績、FY2026 錨點起）", "US$B", {c_(y): f"={c_(y)}{R['semi']}+{c_(y)}{R['sw']}-{c_(y)}{R['rev']}" for y in FYS}, fmt="0.000")
     row("g", "營收年增", "%", {c_(y): f"={c_(y)}{R['rev']}/{c_(y - 1)}{R['rev']}-1" for y in FYS[1:]}, fmt="0.0%")
     row("aish", "AI ÷ 營收", "%", {c_(y): f"={c_(y)}{R['ai']}/{c_(y)}{R['rev']}" for y in FYS}, fmt="0.0%")
     row("gpo", "毛利：網通＋非 AI＋軟體＋代購 HBM", "US$B", {c_(y): f"=gm_net*{c_(y)}{R['net']}+gm_nai*{c_(y)}{R['nai']}+gm_sw*{c_(y)}{R['sw']}+{P['mh']}*{c_(y)}{R['xh']}" for y in BU})

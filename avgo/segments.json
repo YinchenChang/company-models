@@ -1,0 +1,13 @@
+{
+ "company": "Broadcom",
+ "ticker": "AVGO",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "Semiconductor solutions", "label": "半導體解決方案營收（AI 半導體＋非 AI 半導體）", "period": "FY2025", "value": 36.858, "unit": "US$B", "source": "Broadcom 10-K FY2025 分部資訊（In 頁 a25_ai＋a25_nai）"},
+  {"name": "Infrastructure software", "label": "基礎架構軟體", "period": "FY2025", "value": 27.029, "unit": "US$B", "source": "同上"}
+ ],
+ "sublines": [
+  {"parent": "Semiconductor solutions", "labels": ["AI 半導體營收", "非 AI 半導體"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收（FY2025 實績、FY2026 錨點起）"]
+}

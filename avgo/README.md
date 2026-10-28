@@ -22,9 +22,9 @@ AI 半導體 Project **運算層的第二個樣板**（ASIC＋網通），複製
 |---|---|
 | `build_avgo.py` | 產生器（參數與公式；唯讀取用上游成品） |
 | `tp_v2.py` | v0.2 目標價與延伸期的共用函式（PL 延伸到 FY2032 的收斂法、Val 第 0 節 DCF＋Comparable、Sens 目標價參數；各公司資料夾各放一份相同內容） |
-| `dist/20261025_Broadcom模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261028_Broadcom個股模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_Broadcom模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261028_Broadcom個股模型_v0.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 avgo/build_avgo.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`、`markets/network/dist`、`skhynix/dist`、`tsmc/dist`、`markets/equipment/dist`、`nvidia/dist`；**不修改它們**。
 
