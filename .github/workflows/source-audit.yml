@@ -7,6 +7,7 @@ on:
     inputs:
       max_usd: {description: "累計花費上限（美元，含先前各次）", default: "40"}
       max_groups: {description: "本次最多幾組（0 = 不限）", default: "0"}
+      recover_since: {description: "先取回此時間（UTC ISO）之後未寫入的批次結果；空白＝不取回", default: ""}
   push:
     branches: [claude/source-audit]
     paths: ["tools/source_audit/audit.py", ".github/workflows/source-audit.yml"]
@@ -34,6 +35,7 @@ jobs:
           MAX_USD: ${{ github.event.inputs.max_usd || '3' }}
           MAX_GROUPS: ${{ github.event.inputs.max_groups || '10' }}
           WAVE: "150"
+          RECOVER_SINCE: ${{ github.event.inputs.recover_since || '' }}
         run: python3 tools/source_audit/audit.py
       - name: Commit results
         if: always()
@@ -42,6 +44,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           [ -d tools/source_audit/out ] || exit 0
           mkdir -p /tmp/sa && cp -r tools/source_audit/out /tmp/sa/
+          rm -rf tools/source_audit/out   # 已複製到 /tmp/sa；先移除，避免切分支時與分支上的同名檔衝突
           git fetch -q origin source-audit-results && git checkout -B source-audit-results origin/source-audit-results || git checkout --orphan source-audit-results
           git rm -rq --cached . >/dev/null 2>&1 || true
           mkdir -p tools/source_audit && rm -rf tools/source_audit/out && cp -r /tmp/sa/out tools/source_audit/
