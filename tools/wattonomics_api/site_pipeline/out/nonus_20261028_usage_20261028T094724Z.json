@@ -1,0 +1,19 @@
+{
+  "tool": "site_pipeline",
+  "run": "nonus_20261028",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 7342674,
+  "output_tokens": 337841,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "web_search_requests": 463,
+  "requests_batch": 130,
+  "requests_standard": 0,
+  "est_usd": 13.6619,
+  "started_utc": "2026-10-28T09:47:24Z",
+  "finished_utc": "2026-10-28T10:00:34Z",
+  "status": "done",
+  "sites": 125,
+  "sites_queried": 125,
+  "rows": 345
+}

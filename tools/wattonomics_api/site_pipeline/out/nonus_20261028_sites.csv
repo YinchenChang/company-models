@@ -1,0 +1,126 @@
+﻿name,location,player,operator,user,seed
+"SDAIA Hexagon Data Center, Riyadh","Riyadh, Riyadh Province, Saudi Arabia",SDAIA (Saudi Data & AI Authority),SDAIA,Saudi government AI workloads,False
+Humain–AirTrunk Riyadh Hyperscale AI Campus,"Riyadh, Riyadh Province, Saudi Arabia",Humain / AirTrunk,AirTrunk (Humain JV),未公布,False
+Humain–MIS Riyadh AI Data Center (250MW design-build),"Riyadh, Riyadh Province, Saudi Arabia",Humain / Al Moammar Information Systems (MIS),Humain,Humain (national AI compute),False
+"AWS–Humain AI Zone, Riyadh","Riyadh, Riyadh Province, Saudi Arabia",Humain / AWS,Humain,AWS 與 Humain 客戶,False
+"Aramco Digital–Groq Inference Data Center, Dammam","Dammam, Eastern Province, Saudi Arabia",Aramco Digital / Groq,Groq / Aramco Digital,GroqCloud 推論客戶,False
+xAI–Humain 500MW Saudi AI Data Center,"站址未公布, Saudi Arabia",xAI / Humain / Nvidia,Humain,xAI,False
+Khazna Ankara AI-Ready Data Center (Başkent OIZ),"Ankara, Ankara Province, Türkiye",Khazna Data Centers (G42),Khazna,未公布,False
+Google–Turkcell Turkey Hyperscale AI Campus,"Istanbul, Marmara, Türkiye",Google Cloud / Turkcell,Turkcell,Google Cloud,False
+Mega Or Beit Shemesh AI Data Center,"Beit Shemesh, Jerusalem District, Israel",Mega Or (Mega DC) / Nebius,Mega DC,Nebius,False
+Nvidia Mevo Carmel AI Data Center,"Mevo Carmel Industry Park (near Yokneam), Northern District, Israel",Nvidia / Mega Or DC,Nvidia（Mega DC 建造出租）,Nvidia（內部 R&D 與超級電腦）,False
+"Cassava–Vodafone–Elsewedy Egypt AI Data Center, Cairo","Cairo, Egypt",Cassava Technologies / Vodafone Business / Elsewedy Electric / Nvidia,Cassava Technologies,未公布,False
+Mubbadrah Oman 400MW AI Data Center,"站址未公布, Oman",Mubbadrah Investment / Sustopia Capital / Vela Tech,未公布,Crusoe（潛在包租方）,False
+Yamna Salalah AI Data Center,"Salalah, Dhofar, Oman",Yamna,Yamna,未公布,False
+Asprofin Qatar Hyperscale AI Data Center,"Doha, Qatar",Asprofin Bank Corporation,Asprofin,未公布,False
+"SoftBank–Sesterce Bosquel AI Campus, Bosquel","Bosquel, Hauts-de-France, France",SoftBank Group,SoftBank–Sesterce JV (SoftBank majority),,False
+"SoftBank Bouchain AI Data Center (ex-EDF power plant), Bouchain","Bouchain, Hauts-de-France, France",SoftBank Group / EDF,SoftBank,,False
+"Port of Dunkirk AI Data Center Site (Large Industry Zone), Dunkirk","Dunkirk, Hauts-de-France, France",Port of Dunkirk Authority / RTE (developer to be selected),,,False
+"Teesworks AI Growth Zone Data Centre Campus, Teesside","Redcar / Middlesbrough, England, UK",Teesworks Ltd / UK DSIT,,,False
+"Culham AI Growth Zone Data Centre, Culham","Culham, Oxfordshire, England, UK",UK Atomic Energy Authority (private partner via EOI),,,False
+"DataVita DV3 – CoreWeave Lanarkshire AI Growth Zone, Airdrie/Chapelhall","Chapelhall, North Lanarkshire, Scotland, UK",DataVita / CoreWeave,DataVita,CoreWeave,False
+"Prosperity Parc AI Data Centre (North Wales AI Growth Zone), Anglesey","Holyhead, Anglesey, Wales, UK",Stena Line (Prosperity Parc),,,False
+"Trawsfynydd AI Data Centre Site (North Wales AI Growth Zone), Trawsfynydd","Trawsfynydd, Gwynedd, Wales, UK",UK Government / former nuclear site redevelopment,,,False
+Vantage South Wales AI Growth Zone Campus (Bridgend / Bro Tathan / Newport),"Bridgend, Wales, UK",Vantage Data Centers,Vantage Data Centers,Nebius (CWL1),False
+"Ark Longcross Park AI Campus, Chertsey","Chertsey, Surrey, England, UK",Ark Data Centres,Ark Data Centres,Nebius,False
+"Pantheon AI Campus, Topusko","Topusko, Sisak-Moslavina, Croatia",Pantheon Atlas LLC,Pantheon AI,,False
+Black Sea AI Gigafactory (Cernavodă Phase I / Doicești Phase II),"Cernavodă, Constanța, Romania",Romanian Government (Ministry of Energy / ADR),,,False
+"Spain AI Gigafactory (SETT–Telefónica–ACS–Santander), Móra la Nova","Móra la Nova, Tarragona, Catalonia, Spain",SETT / Telefónica / ACS / Santander / Multiverse,Spanish gigafactory consortium,,False
+Meta Talavera de la Reina Data Center Campus,"Talavera de la Reina, Toledo, Castilla-La Mancha, Spain",Meta,Meta,Meta,False
+"PPC–AWS Agios Dimitrios Data Center, Kozani","Agios Dimitrios, Kozani, Western Macedonia, Greece",PPC Group / AWS,AWS (IT equipment); PPC (facility),AWS,False
+Nscale–Aker Korgen AI Data Center,"Korgen, Nordland, Norway",Nscale / Aker,Nscale,,False
+Compute Nordic–Cerebras Mikkeli AI Data Center,"Mikkeli, South Savo, Finland",Compute Nordic / Cerebras Systems,Compute Nordic,Cerebras,False
+APL Group Varkaus Hyperscale Campus,"Varkaus, North Savo, Finland",APL Group,APL Group,,False
+Prime Data Centers Esbjerg Campus,"Esbjerg, South Denmark, Denmark",Prime Data Centers,Prime Data Centers,,False
+HSCALE Settimo Milan Campuses (MXP1/MXP2),"Settimo Milanese, Lombardy, Italy",HSCALE (Bain Capital / Aquila),HSCALE,,False
+Google Kronstorf Data Center,"Kronstorf, Upper Austria, Austria",Google,Google,Google,False
+"Microsoft Poland AI Expansion, Warsaw","Warsaw (Masovian), Poland",Microsoft,Microsoft,Microsoft,False
+Google Hamina AI Data Center Campus,"Hamina, Kymenlaakso, Finland",Google,Google,Google,False
+atNorth Kouvola Mega Site,"Kouvola, Kymenlaakso, Finland",atNorth,atNorth,,False
+atNorth Ølgod Mega Site,"Ølgod, Southern Denmark, Denmark",atNorth,atNorth,,False
+atNorth Sollefteå Mega Site,"Sollefteå, Västernorrland, Sweden",atNorth,atNorth,,False
+atNorth Haugaland Mega Site,"Haugaland, Rogaland, Norway",atNorth,atNorth,,False
+"Digital Valley Campus, Picassent","Picassent, Valencia, Spain",Digital Valley Campus developer (undisclosed),,,False
+EdgeMode GDC Alberche Campus,"Toledo area, Castilla-La Mancha, Spain",EdgeMode,EdgeMode,,False
+"AWS Aragón Data Center Campuses, Huesca/Zaragoza","Huesca / Zaragoza, Aragón, Spain",Amazon Web Services,AWS,AWS,False
+"Lefdal Mine Datacenter, Nordfjord","Måløy / Nordfjord, Vestland, Norway",Lefdal Mine Holding,Lefdal Mine Datacenter,,False
+"AirTrunk TOK1 Campus, Inzai","Inzai, Chiba, Japan",AirTrunk (Blackstone),AirTrunk,,False
+EdgeConneX Greater Osaka AI Campus,"Greater Osaka, Osaka, Japan",EdgeConneX / Kagoya Asset Management,EdgeConneX,,False
+"Nanto Campus (GigaStream Toyama), Nanto","Nanto, Toyama, Japan",GigaStream Toyama / Nanto City,,,False
+Goodman Tsukuba Tech Central Campus (TY005),"Tsukuba, Ibaraki, Japan",Goodman Group,Goodman,,False
+KDDI Sakai AI Data Center (ex-Sharp Sakai plant),"Sakai, Osaka, Japan",KDDI / Sharp,KDDI,KDDI (GB200 GPU cloud),False
+"AirTrunk OSK2 Campus, East Osaka","East Osaka, Osaka, Japan",AirTrunk (Blackstone),AirTrunk,,False
+NFD Korea Dangjin Songsan AI Campus,"Dangjin, South Chungcheong, South Korea",NFD Korea / EFD / DL E&C,NFD Korea,,False
+"Donghae AI Data Center Campus (GS Group), Bukpyeong","Donghae, Gangwon, South Korea",GS Group,Donghae AI 3rd Campus Co.,,False
+SGC Energy–OCI Gunsan AI Data Center,"Gunsan, North Jeolla, South Korea",SGC Energy / OCI,,,False
+Naver GAK Sejong Campus (Cloud Ring),"Sejong, South Korea",Naver / Nvidia,Naver Cloud,Naver (HyperCLOVA X),False
+Hyundai Saemangeum AI Data Center,"Saemangeum, North Jeolla, South Korea",Hyundai Motor Group / Nvidia,Hyundai Motor Group,Hyundai (autonomous-driving AI training),False
+"Solaseado Data Center Park (National AI Computing Center), Haenam","Haenam, South Jeolla, South Korea",Samsung SDS consortium (KOACC) / Korean government,KOACC,"Korean government, enterprises, academia and research institutes",False
+Microsoft Taiwan North AI Cloud Region,"Taipei / New Taipei, Taiwan",Microsoft,Microsoft,Microsoft Azure,False
+Google Changhua Campus,"Changhua, Taiwan",Google,Google,Google,False
+"TCS HyperVault AI Campus, Hyderabad","Hyderabad, Telangana, India",TCS HyperVault,HyperVault AI Data Center Ltd,OpenAI (100 MW anchor),False
+Yotta Navi Mumbai AI Campus (NM2),"Navi Mumbai, Maharashtra, India",Yotta Data Services,Yotta,AI and cloud customers (Nvidia GB300),False
+"AdaniConneX Taloja AI Campus, Navi Mumbai","Navi Mumbai, Maharashtra, India",AdaniConneX (Adani–EdgeConneX),AdaniConneX,"CoreWeave (240 MW, Vera Rubin)",False
+Submer Bhopal AI Campus,"Bhopal, Madhya Pradesh, India",Submer,Submer,,False
+PDG MU2 Navi Mumbai Campus,"Navi Mumbai, Maharashtra, India",Princeton Digital Group,Princeton Digital Group,,False
+AdaniConneX Pune Campus,"Pune, Maharashtra, India",AdaniConneX (Adani–EdgeConneX),AdaniConneX,,False
+Firmus–DayOne Batam Nvidia DSX AI Factory Campus (Kabil),"Batam, Riau Islands, Indonesia",Firmus / DayOne / Nvidia,DayOne,"Firmus (AI-native customers, up to 170,000 Nvidia GPUs)",False
+"BDx CGK4 AI Campus, Jatiluhur","Jatiluhur, West Java, Indonesia",BDx Data Centers,BDx,,False
+RangeIDC–Equator Gate Nongsa AI Data Center,"Nongsa, Batam, Indonesia",RangeIDC / Equator Gate System,,,False
+"AirTrunk Johor Campus (JHB1–JHB4), Iskandar Puteri","Iskandar Puteri, Johor, Malaysia",AirTrunk (Blackstone),AirTrunk,Hyperscale cloud and AI customers,False
+Princeton Digital Group JH1 Sedenak Campus,"Sedenak, Johor, Malaysia",Princeton Digital Group,Princeton Digital Group,AI GB200 supercomputer tenant,False
+"Bridge Data Centres MY06 Campus, Johor","Johor, Malaysia",Bridge Data Centres (Bain Capital),Bridge Data Centres,,False
+Digital Edge–B.Grimm Chonburi AI Campus (EEC),"Chonburi, Thailand",Digital Edge / B.Grimm Power,Digital Edge,,False
+"NTT Bangkok 4 Campus, Chonburi","Chonburi, Thailand",NTT Global Data Centers,NTT GDC,,False
+Gorilla Technology Korat AI Campus,"Korat (Nakhon Ratchasima), Thailand",Gorilla Technology Group,Gorilla Technology,,False
+"True Internet DC Thailand AI Campus, Chonburi","Chonburi, Thailand",True Internet Data Center,True IDC,,False
+Google Chonburi (TH-1) Data Center,"Chonburi (WHA Eastern Industrial Estate, EEC), Thailand",Google,Google,Google Cloud (Bangkok region),False
+"SGI-HCM AI Data Center Campus, Tan Phu Trung","Ho Chi Minh City, Vietnam",Kinh Bac City (KBC) / Accelerated Infrastructure Capital (AIC),AIC / KBC,,False
+Viettel Tan Phu Trung Hyperscale AI Data Center,"Ho Chi Minh City, Vietnam",Viettel,Viettel,,False
+"CMC Hyperscale Data Center, Saigon Hi-Tech Park","Ho Chi Minh City, Vietnam",CMC Corporation,CMC,,False
+DAMAC Laguna AI Data Center,"Laguna, Philippines",DAMAC Digital,DAMAC Digital,,False
+Jurong Island Low-Carbon Data Centre Park,"Jurong Island, Singapore",JTC / NUS,,,False
+"AirTrunk SYD3 Campus, Eastern Creek","Eastern Creek, Sydney, New South Wales, Australia",AirTrunk (Blackstone),AirTrunk,Cloud and AI customers,False
+"AirTrunk MEL2 Campus, Mickleham","Mickleham, Melbourne, Victoria, Australia",AirTrunk (Blackstone),AirTrunk,,False
+CDC Marsden Park Campus,"Marsden Park, Sydney, New South Wales, Australia",CDC Data Centres,CDC,Hyperscale cloud customers,False
+"CDC Gregadoo Campus, Wagga Wagga","Gregadoo, Wagga Wagga, New South Wales, Australia",CDC Data Centres,CDC,,False
+IREN Bundey Campus,"Bundey, South Australia, Australia",IREN,IREN,,False
+"GreenSquareDC SYD1 Campus, Norwest","Norwest, Sydney, New South Wales, Australia",GreenSquareDC (Partners Group),GreenSquareDC,"Sharon AI (about 8,200 Blackwell Ultra GPUs)",False
+"GreenSquareDC Spotswood Campus, Melbourne","Spotswood, Melbourne, Victoria, Australia",GreenSquareDC (Partners Group),GreenSquareDC,,False
+Macquarie Park Data Centre Campus (IC3 Super West),"Macquarie Park, Sydney, New South Wales, Australia",Macquarie Technology Group,Macquarie Data Centres,Hyperscalers and neoclouds (GPU workloads),False
+"Datagrid AI Factory, Southland","Invercargill, Southland, New Zealand",Datagrid New Zealand,Datagrid,,False
+"China Mobile Hohhot Intelligent Computing Center, Horinger New Area","Hohhot, Inner Mongolia, China",China Mobile,China Mobile,China Mobile Cloud; AI training and inference serving the Beijing-Tianjin-Hebei region,False
+"Huawei Cloud Horinger Data Center, Hohhot","Horinger, Hohhot, Inner Mongolia, China",Huawei,Huawei Cloud,Huawei Cloud,False
+VNET Ulanqab Bayin Super Intelligent Computing Base,"Ulanqab, Inner Mongolia, China",VNET Group,VNET Group,"ByteDance (reported, unconfirmed)",False
+Kuaishou Smart Cloud Ulanqab Campus (Bayin second campus),"Ulanqab, Inner Mongolia, China",Kuaishou,Kuaishou (self-built),Kuaishou,False
+"ByteDance Volcano Engine Taihang Computing Center II, Guangling Big Data Park","Datong, Shanxi, China",ByteDance / Volcano Engine,Volcano Engine,ByteDance (Doubao training and inference),False
+ByteDance Volcano Engine Horinger AI Training Cluster,"Horinger, Hohhot, Inner Mongolia, China",ByteDance / Volcano Engine,Volcano Engine,ByteDance,False
+Jinko Power Zhongwei Green AI Data Center,"Zhongwei, Ningxia, China",Jinko Power (Jinko Solar) / Zhongwei government,Jinko Power,unknown,False
+China Telecom Lin-gang International Data Center Phase 2,"Lin-gang Special Area, Shanghai, China",China Telecom,China Telecom (Tianyi Cloud),"AI, cloud and cross-border data services; tenants not disclosed",False
+Alibaba–China Telecom Shaoguan AI Computing Center,"Shaoguan, Guangdong, China",China Telecom / Alibaba Cloud,China Telecom,Alibaba Cloud (Zhenwu chips; training and inference),False
+Chindata–HEC Shaoguan Qujiang Zero-Carbon Compute Campus,"Qujiang Economic Development Zone, Shaoguan, Guangdong, China",Chindata / HEC Group,Chindata,unknown,False
+Huawei Cloud East China (Wuhu) Data Center,"Wuhu, Anhui, China",Huawei,Huawei Cloud,Huawei Cloud,False
+Tencent Tianjin AI Data Center,"Tianjin, China",Tencent,Tencent,Tencent,False
+"Qingyang Data Center Cluster – Capitalonline 10,000-GPU AI Cluster","Qingyang, Gansu, China",Capitalonline Data Service / China Mobile / Kingsoft Cloud,Capitalonline,"Kimi, GLM and DeepSeek (inference)",False
+China Unicom Xining AI Computing Data Center,"Xining, Qinghai, China",China Unicom,China Unicom,"Domestic-chip AI training and inference (T-Head, MetaX, Biren and others)",False
+China Telecom Inner Mongolia Information Park,"Hohhot, Inner Mongolia, China",China Telecom,China Telecom,China Telecom cloud and AI computing,False
+Meta Sturgeon County AI Data Centre Campus (Edmonton region),"Sturgeon County, Alberta, Canada",Meta,Meta,Meta,False
+Bell AI Fabric Saskatchewan Campus (Regina),"near Regina, Saskatchewan, Canada",Bell Canada (BCE),Bell AI Fabric,"Bell AI Fabric customers (e.g., Cohere)",False
+Synapse Data Center Olds 1GW Campus,"Olds, Alberta, Canada",Synapse Data Center Inc.,Synapse Data Center Inc.,unknown,False
+"Mihta Askiy Data Center (Woodland Cree), Peace River","near Peace River, Alberta, Canada",Woodland Cree First Nation / Sovereign Digital Infrastructure,Sovereign Digital Infrastructure,unknown,False
+Beacon AI Centers Foothills Campus,"Foothills County (near High River), Alberta, Canada",Beacon AI Centers / Nadia Partners,Beacon AI Centers,unknown,False
+BUZZ HPC Greater Toronto AI Campus,"Greater Toronto Area, Ontario, Canada",HIVE Digital Technologies (BUZZ HPC),BUZZ HPC,unknown,False
+QScale Q01 Lévis AI Campus,"Lévis, Québec, Canada",QScale,QScale,HPE (anchor customer),False
+"Nexus AI Factory Morocco (Naver–Nvidia 500MW), Nouaceur","Nouaceur (Casablanca area), Morocco",Nexus Core Systems / Naver Cloud / Nvidia / Lloyds Capital,Naver Cloud (platform operator) / Nexus Core Systems,EMEA sovereign AI customers,False
+Igoudar Dakhla Data Center (500MW renewable),"Dakhla, Dakhla-Oued Ed-Dahab, Morocco (Western Sahara)",Government of Morocco (Ministries of Digital Transition and Energy Transition),unknown,unknown,False
+Kasi Cloud Lekki Campus,"Lekki, Lagos, Nigeria",Kasi Cloud / Nigeria Sovereign Investment Authority,Kasi Cloud,unknown,False
+ODATA BG03 Tenjo AI Campus,"Tenjo, Cundinamarca, Colombia",ODATA (Aligned Data Centers),ODATA,hyperscalers / AI,False
+Ascenty Sumaré AI Campus,"Sumaré, São Paulo, Brazil",Ascenty (Digital Realty),Ascenty,hyperscalers / AI,False
+"Matrix Data Center Campus, Sulphur Springs","Sulphur Springs, Texas, USA",MSB Global Services (CyrusOne evaluating as replacement),MSB Global Services,unknown (GB300-class AI/HPC tenants),False
+Tract Buckeye Technology Park,"Buckeye, Arizona, USA",Tract,Tract,unknown,False
+Joule High Performance Compute Data Center Campus,"Millard County, Utah, USA",Joule Capital Partners,Joule Capital Partners,unknown,False
+Creekstone Delta Gigasite,"Delta, Utah, USA",Creekstone Energy,Creekstone Energy,unknown,False
+Sailfish Comanche Circle AI Campus,"Tolar, Texas, USA",Sailfish Digital Ventures,Sailfish Digital Ventures,unknown,False
+Data City Texas,"Laredo, Texas, USA",Energy Abundance Development Corp.,Energy Abundance Development Corp.,unknown,False
+"Caldwell Valley AI Campus (Tract / PowerHouse), Uhland","Uhland, Caldwell County, Texas, USA",Tract / PowerHouse Data Centers,Tract,unknown,False
+Anthropic Cedar Creek Data Center and Gas Plant Campus,"Cedar Creek, Bastrop County, Texas, USA",Anthropic / BlackChamber Partners / Pacifico Energy,BlackChamber Partners (proposed),Anthropic,False
