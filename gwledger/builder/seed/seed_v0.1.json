@@ -200,6 +200,96 @@
    "note": "工作單 Deploy：2029 年增率線性收斂到長期成長率（chat 端第 2 階段指示）"
   },
   {
+   "sec": "S1b. 甲2 資本支出推得 GW（MSFT、GOOGL、AMZN、META、ORCL、CRWV、NBIS；2027 起主路徑）"
+  },
+  {
+   "key": "ai_sh",
+   "label": "資本支出 AI 占比（全公司資本支出中用於 AI 資料中心的比例；各家未覆寫者）",
+   "unit": "%",
+   "lo": 0.75,
+   "base": 0.85,
+   "hi": 0.95,
+   "tag": "Assumed",
+   "src": "SRC_GL_004",
+   "basis": "—",
+   "note": "chat 端第 3 階段指示 1；依證據逐家覆寫見 ai_<玩家>"
+  },
+  {
+   "key": "ai_amzn",
+   "label": "Amazon 資本支出 AI 占比覆寫（AWS 占淨增加比）",
+   "unit": "%",
+   "lo": 0.6,
+   "base": 0.68,
+   "hi": 0.75,
+   "tag": "Derived",
+   "src": "SRC_GL_030",
+   "basis": "—",
+   "note": "amazon/company.json mag.capex.netAddBySegFY FY2025：AWS 96.5 ÷ 全公司 142.4＝0.68（零售物流非 AI）；AWS 內 AI 占比未知，以 AWS 占比代（偏高）"
+  },
+  {
+   "key": "cap_g_ext",
+   "label": "個股模型最後一年之後的資本支出年增（甲2 外推）",
+   "unit": "%",
+   "lo": 0.0,
+   "base": 0.1,
+   "hi": 0.15,
+   "tag": "Assumed",
+   "src": "SRC_GL_004",
+   "basis": "—",
+   "note": "共識只到 FY28–FY29（Meta 只有 2026 指引）；之後以本值外推，基準＝g_lt；最早一年之前取最早值"
+  },
+  {
+   "sec": "S1c. 中國 2027 年後路徑（Rystad：容量 × AI 占比，幾何／線性內插；2031–32 用 g_lt）"
+  },
+  {
+   "key": "cn_tot26",
+   "label": "中國資料中心總容量 2026 年底",
+   "unit": "GW",
+   "lo": 40,
+   "base": 40,
+   "hi": 40,
+   "tag": "Analogy",
+   "src": "SRC_GL_201",
+   "basis": "未說明",
+   "note": "B#51（屬實；Rystad）；單一來源，低＝高＝基準（區間待證據；中國總區間見 rng26_cn）"
+  },
+  {
+   "key": "cn_tot30",
+   "label": "中國資料中心總容量 2030",
+   "unit": "GW",
+   "lo": 60,
+   "base": 60,
+   "hi": 60,
+   "tag": "Analogy",
+   "src": "SRC_GL_201",
+   "basis": "未說明",
+   "note": "B#51（屬實；Rystad >60 GW 取下限）；單一來源，低＝高＝基準（區間待證據；中國總區間見 rng26_cn）"
+  },
+  {
+   "key": "cn_sh26",
+   "label": "中國 AI／HPC 占比 2026",
+   "unit": "%",
+   "lo": 0.39,
+   "base": 0.39,
+   "hi": 0.39,
+   "tag": "Analogy",
+   "src": "SRC_GL_201",
+   "basis": "—",
+   "note": "B#51（屬實；Rystad）；單一來源，低＝高＝基準（區間待證據；中國總區間見 rng26_cn）"
+  },
+  {
+   "key": "cn_sh30",
+   "label": "中國 AI／HPC 占比 2030",
+   "unit": "%",
+   "lo": 0.48,
+   "base": 0.48,
+   "hi": 0.48,
+   "tag": "Analogy",
+   "src": "SRC_GL_201",
+   "basis": "—",
+   "note": "B#51（屬實；Rystad）。中國 2027–30＝2026 年底 × (容量 × 占比) 比值，容量幾何內插、占比線性內插 [Assumed]；單一來源，低＝高＝基準（區間待證據；中國總區間見 rng26_cn）"
+  },
+  {
    "sec": "S2. 基建延遲參數（D0 準時；D1 基準延遲；D2 嚴重延遲）"
   },
   {
@@ -597,7 +687,7 @@
   },
   {
    "key": "tgt_xai_27",
-   "label": "xAI 2027 年底目標（Musk「接近 10 GW」；未納入）",
+   "label": "xAI 2027 年底宣稱（Musk「接近 10 GW」；不入主路徑，只作 Compare 敏感度）",
    "unit": "GW",
    "lo": null,
    "base": 10,
@@ -605,7 +695,7 @@
    "tag": "Interested-party",
    "src": "SRC_GL_201",
    "basis": "未說明",
-   "note": "B#46（屬實；Musk 自稱 20 GW 不會達成）；未入 Players（待決）"
+   "note": "B#46（屬實為引述正確；Interested-party 單一說法，SpaceX 剛上市；Musk 自稱 20 GW 不會達成）。主路徑 xAI 2027 起＝2026 年底 2 GW＋T2 園區（無）；Compare 頁列『主路徑＋xAI 宣稱增量』"
   },
   {
    "key": "tgt_msft_32",
@@ -724,7 +814,7 @@
    "basis": "設施",
    "tag": "Assumed（2025）／Derived（2026）",
    "src": "SRC_GL_203",
-   "note": "2025：C 段 6.2 基準 10（8–12）GW 設施；2026：B_summary 12–16 取 14（chat 端指示）；2027 起持平（待證據）",
+   "note": "2025：C 段 6.2 基準 10（8–12）GW 設施；2026：B_summary 12–16 取 14（chat 端指示）；2027–30 由 S1c Rystad 路徑、2031–32 用 g_lt（Players 公式，[Assumed]）",
    "y": {
     "2025": 10000,
     "2026": 14000
@@ -1928,6 +2018,33 @@
    "date": "2026-10-28",
    "quote": "工程",
    "status": "執行"
+  },
+  {
+   "id": "GL01-19",
+   "cat": "工程",
+   "item": "甲2 資本支出推得 GW",
+   "decision": "曆年資本支出＝財年值依財年結束月拆分（缺值：最早年之前取最早值；最後年之後 ×（1＋cap_g_ext））；AI 資本支出＝× AI 占比；當年 GW 所需資金＝AI 資本支出 × IT 占比 ＋ 廠房占比 ×（w0 × 當年＋w1 × 前一年＋w2 × 前兩年）（建物提前 lag_bldg 入帳）；年新增 IT GW＝上述 ÷ 每 IT GW 合計資本支出（TK IF_CapexTotal 世代加權，NonNV × 持有比 × VR200）。主路徑：2027–2029 七家年新增改用 甲2（差額套用均勻型延遲比例），2030–32 用 g_lt 收斂規則",
+   "date": "2026-10-28",
+   "quote": "chat 端第 3 階段指示 1、2",
+   "status": "預設、可撤回"
+  },
+  {
+   "id": "GL01-20",
+   "cat": "工程",
+   "item": "覆蓋率",
+   "decision": "GIF_Coverage_<yyyy>＝MIN(1, 有證據支撐的年新增〔SiteOnly 路徑：輸入、晶片、觀測、內插、T2 園區、中國 Rystad；A、D0〕÷ 主路徑年新增〔A、D0〕)；主路徑年新增 ≤ 0 時＝1",
+   "date": "2026-10-28",
+   "quote": "chat 端第 3 階段指示 4",
+   "status": "預設、可撤回"
+  },
+  {
+   "id": "GL01-21",
+   "cat": "待決",
+   "item": "甲2 的廠房與租賃",
+   "decision": "甲2 一律 ÷ IF_CapexTotal（含廠房）。CoreWeave、Oracle 的建物多由房東出資、Microsoft 融資租賃不在資本支出：這些公司的 甲2 可能低估 GW（若只 ÷ IF_CapexIT，約高 1.3 倍）。是否按公司設定廠房自有比例，待 Andy 判斷",
+   "date": "2026-10-28",
+   "quote": "工程發現",
+   "status": "預設、可撤回"
   }
  ],
  "chip": {

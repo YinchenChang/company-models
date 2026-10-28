@@ -1,5 +1,7 @@
 # GW 帳（GW Ledger）— 全市場 AI 資料中心 GW 唯一基準事實
 
+> **下游取用 2027 年後數值前看覆蓋率**（`GIF_Coverage_<yyyy>`＝有證據支撐的新增 GW ÷ 主路徑新增 GW；< 0.5 時 Checks WARN）。2027 起主路徑七家（MSFT、GOOGL、AMZN、META、ORCL、CRWV、NBIS）由資本支出推得（甲2），純站點證據版另出 `_SiteOnly`。
+
 算力收支 R4「產業部署路徑」的實作：市場總 GW、各玩家 GW（營運者／使用者）、部署管線與基建延遲情景的**唯一事實** Excel。每 GW 係數只讀 Tokenomics（TK）快照（快照未含的 `IF_FacilityGW` 直接讀 TK 活頁簿 Interface 第 8 列，`builder/seed/tk_extra_v21.7.json`）、加速器顆數與情景係數只讀 Siliconomics 快照，不重估兩者權威的量。
 
 | 項目 | 內容 |
@@ -76,8 +78,9 @@ GW 帳的單位一律用 **TK GW＝IT 關鍵電力**，另列設施電力（× T
 | Players | 玩家 × 年 IT GW（甲：公告路徑；輸入→晶片換算→觀測→內插→園區延伸），低／高、年平均、年新增、新納入存量、設施 GW；規則見 Decisions GL01-03 |
 | Matrix | 營運者 × 使用者（2025–2027 年底；In T1 逐筆分配），無揭露者在未分配欄 |
 | Pipeline | 園區＋未分園區殘差 × D0／D1／D2 |
+| CapexGW | 甲2：七家資本支出（個股模型 annualEstimates／指引）× AI 占比（`ai_sh` 0.75／0.85／0.95，Amazon 0.68）÷ TK `IF_CapexTotal`（世代加權，NonNV × 持有比；建物提前 `lag_bldg`）＝年新增 IT GW；敏感度列 |
 | Deploy | 需求 A／B／C × 延遲 D0／D1／D2；2030–32 年底 GW 年增率由 2029 線性收斂到 `g_lt`（0.10，0.05–0.15）|
-| C0、C1、Compare | 對帳與並列 |
-| Interface | `GIF_MktGW_YE／Avg／Add_<A|B|C>_<D0|D1|D2>_<yyyy>`、`GIF_ShippedNotOnline_<A|B|C>_<D1|D2>_<yyyy>`、`GIF_PlayerGW_YE_<player>_<yyyy>`，2024–2032 |
+| C0、C1、Compare | 對帳與並列；C1 七家 2027 起標「同源（不對帳）」；Compare 含 xAI 宣稱（不入主路徑）、AI 占比、lag 敏感度 |
+| Interface | `GIF_Coverage_<yyyy>`；`GIF_MktGW_YE／Avg／Add_<A|B|C>_<D0|D1|D2>_<yyyy>`、`GIF_ShippedNotOnline_<A|B|C>_<D1|D2>_<yyyy>`、`GIF_PlayerGW_YE_<player>_<yyyy>`（主路徑），同名加 `_SiteOnly` 後綴＝只有 甲；2024–2032 |
 | Checks | 錯誤格 0、Matrix 列和＝欄和＝總量、Pipeline D0＝Players（0.01 GW）、殘差恆等、延遲單調、In 標記與來源、`GGOV_Errors`＝0 |
 | Decisions、DB_Evidence、Sources、Requests | 決策（GL01-01 起）、證據、來源 ID、對 TK／Siliconomics 的請求 |

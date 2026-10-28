@@ -90,6 +90,7 @@ def main():
     PL = wb.create_sheet("Players")
     MX = wb.create_sheet("Matrix")
     PP = wb.create_sheet("Pipeline")
+    CX = wb.create_sheet("CapexGW")
     DP = wb.create_sheet("Deploy")
     C0 = wb.create_sheet("C0")
     C1 = wb.create_sheet("C1")
@@ -441,6 +442,11 @@ def main():
             Lr, LYr, Nr, NYr, CP_ = (f"{c}{rows[x]}" for x in ("L", "LY", "N", "NY", "cp"))
             prevv = f"{pc}{rows['tk']}" if pc else '""'
             ext = f'IF({prevv}<>"",{prevv}+{CP_},"")' if pc else '""'
+            if p == "cn" and 2027 <= y <= 2030:
+                ext = (f'IF({YC[2026]}{rows["tk"]}="","",{YC[2026]}{rows["tk"]}*(cn_tot26*(cn_tot30/cn_tot26)^(({y}-2026)/4))*(cn_sh26+(cn_sh30-cn_sh26)*({y}-2026)/4)'
+                       f'/(cn_tot26*cn_sh26))')
+            elif p == "cn" and y > 2030:
+                ext = f'IF({prevv}<>"",{prevv}*(1+g_lt),"")'
             cc = PL.cell(rows["tk"], col, f'=IF({K}<>"",{K},IF(AND({Lr}<>"",{Nr}<>""),{Lr}+({Nr}-{Lr})*({y}-{LYr})/({NYr}-{LYr}),{ext}))')
             cc.number_format = "0.000"; cc.fill = KEY
             PL.cell(rows["f"], col, f'=IF({IN_}<>"",1,IF({CH_}<>"",5,IF({K}<>"",2,IF(AND({Lr}<>"",{Nr}<>""),3,IF({c}{rows["tk"]}<>"",4,0)))))')
@@ -663,10 +669,104 @@ def main():
     PP.column_dimensions["A"].width = 40; PP.column_dimensions["B"].width = 26
     for col in "CDEFGHIJKLMNOPQRS": PP.column_dimensions[col].width = 9
 
-    # ================= Deploy：需求情景 × 延遲情景 =================
-    DP["A1"] = ("Deploy — 市場總 GW（年底、年平均、年新增）× 需求情景 A／B／C × 延遲 D0／D1／D2。需求情景只改年新增：2024–2027 各情景＝Pipeline D0；"
-                "2028–29＝Pipeline D0 年新增 × SIF_UnitsCoef_*；2030–32＝前年年底 × g，g＝年底 GW 年增率，由 2029 值線性收斂到 g_lt（2032 達 g_lt；Decisions GL01-18）。"
-                "情景差額（相對 Pipeline D0 年新增）視為年內均勻上線，套用 Pipeline C 節的延遲比例")
+    # ================= CapexGW：甲2 資本支出推得 GW =================
+    CX["A1"] = ("CapexGW — 甲2：資本支出推得 GW（MSFT、GOOGL、AMZN、META、ORCL、CRWV、NBIS）。財年資本支出（In Y2；個股模型 annualEstimates／指引，MAG 讀現行檔：microsoft 2026-10-11、"
+                "alphabet 2026-10-09、amazon 2026-10-08 版，PR #190 未合併）→ 補值（最早年前取最早值；最後年後 ×（1＋cap_g_ext））→ 曆年（財年結束月拆分）→ × AI 占比 → "
+                "當年 GW 資金＝IT 占比 × 當年＋廠房占比 ×（w0 當年＋w1 前一年＋w2 前兩年；lag_bldg）→ ÷ 每 IT GW 合計資本支出（TK IF_CapexTotal 世代加權；NonNV × 持有比 × VR200）＝年新增 IT GW。"
+                "[Derived]；輸入為 Interested-party／共識")
+    CX["A2"] = "主路徑：2024–2026 用 甲（Players：園區＋實測）；2027 起本頁七家改用 甲2，其餘玩家仍用 甲。Decisions GL01-19、GL01-21（廠房多由房東出資者可能低估）"
+    hdr(CX, 3, ["項目", "玩家", "單位"] + [str(y) for y in YEARS] + ["說明"])
+    r = 4
+    CX.cell(r, 1, "廠房提前入帳權重 w0／w1／w2（lag_bldg）")
+    CX.cell(r, 4, "=MAX(0,1-lag_bldg/12)"); CX.cell(r, 5, "=MAX(0,MIN(lag_bldg/12,2-lag_bldg/12))"); CX.cell(r, 6, "=MAX(0,MIN(1,lag_bldg/12-1))")
+    XW = (f"CapexGW!$D${r}", f"CapexGW!$E${r}", f"CapexGW!$F${r}"); r += 1
+    XWV = {}
+    for sx, nm_ in (("lo", "lag_bldg_lo"), ("hi", "lag_bldg_hi")):
+        CX.cell(r, 1, f"敏感度：w0／w1／w2（{nm_}）")
+        CX.cell(r, 4, f"=MAX(0,1-{nm_}/12)"); CX.cell(r, 5, f"=MAX(0,MIN({nm_}/12,2-{nm_}/12))"); CX.cell(r, 6, f"=MAX(0,MIN(1,{nm_}/12-1))")
+        XWV[sx] = (f"CapexGW!$D${r}", f"CapexGW!$E${r}", f"CapexGW!$F${r}"); r += 1
+    CX.cell(r, 1, "NVIDIA 每 IT GW IT capex（世代加權）"); CX.cell(r, 3, "US$B")
+    for y in YEARS:
+        c = YC[y]; CX.cell(r, YEARS.index(y) + 4, "=" + "+".join(f"Players!{c}{MIXR[g]}*TK_CapexIT_{g}" for g in GENS)).number_format = "0.00"
+    XIT = r; r += 1
+    CX.cell(r, 1, "NVIDIA 每 IT GW 廠房 capex（世代加權）"); CX.cell(r, 3, "US$B")
+    for y in YEARS:
+        c = YC[y]; CX.cell(r, YEARS.index(y) + 4, "=" + "+".join(f"Players!{c}{MIXR[g]}*TK_CapexFacility_{g}" for g in GENS)).number_format = "0.00"
+    XFAC = r; r += 2
+    PLAT = {p_["key"]: p_["nnv_plat"] for p_ in P}
+    CAPP = ["msft", "googl", "amzn", "meta", "orcl", "crwv", "nbis"]
+    XR = {}
+    for p in CAPP:
+        cr = INROW[f"cap_{p}"]; fye = FYE.get(p, "12"); aik = f"ai_{p}" if f"ai_{p}" in INROW else "ai_sh"
+        CX.cell(r, 1, PN[p]).font = BOLD; CX.cell(r, 2, p); CX.cell(r, 14, f"In 第 {cr} 列（財年）；AI 占比＝{aik}；財年結束月＝{fye}")
+        r += 1
+        rows = {}
+        for k, lab, unit in (("in", "財年資本支出（In Y2）", "US$B"), ("cnt", "　已知值累計個數", "—"), ("N", "　下一已知值", "US$B"), ("fy", "財年資本支出（補值）", "US$B"),
+                             ("cy", "曆年資本支出", "US$B"), ("ai", "曆年 AI 資本支出", "US$B"), ("pit", "每 IT GW IT capex", "US$B"), ("pfac", "每 IT GW 廠房 capex", "US$B"),
+                             ("fund", "當年上線 GW 的資金（廠房提前入帳）", "US$B"), ("gw", "甲2 年新增 IT GW", "GW"), ("site", "甲 年新增 IT GW（Players）", "GW"),
+                             ("main", "主路徑 年新增 IT GW（2027 起＝甲2）", "GW"), ("ye", "主路徑 年底 IT GW", "GW"),
+                             ("s_ailo", "敏感度：甲2 年新增（AI 占比 低）", "GW"), ("s_aihi", "敏感度：甲2 年新增（AI 占比 高）", "GW"),
+                             ("s_laglo", "敏感度：甲2 年新增（lag_bldg 低）", "GW"), ("s_laghi", "敏感度：甲2 年新增（lag_bldg 高）", "GW")):
+            rows[k] = r; CX.cell(r, 1, "　" + lab); CX.cell(r, 2, f"{p}_{k}"); CX.cell(r, 3, unit); r += 1
+        for i, y in enumerate(YEARS):
+            c = YC[y]; col = i + 4; pc = YC.get(y - 1); nc = YC.get(y + 1)
+            inref = f"In!{IC[y]}{cr}"
+            CX.cell(rows["in"], col, f'=IF({inref}="","",{inref})').font = GREEN
+            IN_ = f"{c}{rows['in']}"
+            CX.cell(rows["cnt"], col, f'=({IN_}<>"")' + (f"+{pc}{rows['cnt']}" if pc else "")).number_format = "0"
+            CX.cell(rows["N"], col, f'=IF({IN_}<>"",{IN_},' + (f"{nc}{rows['N']})" if nc else '"")'))
+            prevfy = f"{pc}{rows['fy']}" if pc else '""'
+            prevcnt = f"{pc}{rows['cnt']}" if pc else "0"
+            CX.cell(rows["fy"], col, f'=IF({IN_}<>"",{IN_},IF({prevcnt}>0,{prevfy}*(1+cap_g_ext),{c}{rows["N"]}))').number_format = "0.0"
+            nfy = f"{nc}{rows['fy']}" if nc else f"{c}{rows['fy']}*(1+cap_g_ext)"
+            CX.cell(rows["cy"], col, f"={c}{rows['fy']}*{fye}/12+{nfy}*(12-{fye})/12").number_format = "0.0"
+            CX.cell(rows["ai"], col, f"={c}{rows['cy']}*{aik}").number_format = "0.0"
+            nnv = f"Players!{c}{PR[p]['nnv']}"
+            CX.cell(rows["pit"], col, f"=(1-{nnv})*{c}${XIT}+{nnv}*TK_NonNV_Hold_{PLAT[p]}*TK_CapexIT_VR200").number_format = "0.00"
+            CX.cell(rows["pfac"], col, f"=(1-{nnv})*{c}${XFAC}+{nnv}*TK_NonNV_Hold_{PLAT[p]}*TK_CapexFacility_VR200").number_format = "0.00"
+            PIT, PFA = f"{c}{rows['pit']}", f"{c}{rows['pfac']}"
+            terms = [f"{XW[0]}*{c}{rows['ai']}"]
+            if YC.get(y - 1): terms.append(f"{XW[1]}*{YC[y - 1]}{rows['ai']}")
+            else: terms.append(f"{XW[1]}*{c}{rows['ai']}")
+            if YC.get(y - 2): terms.append(f"{XW[2]}*{YC[y - 2]}{rows['ai']}")
+            else: terms.append(f"{XW[2]}*{c}{rows['ai']}")
+            CX.cell(rows["fund"], col, f"={PIT}/({PIT}+{PFA})*{c}{rows['ai']}+{PFA}/({PIT}+{PFA})*(" + "+".join(terms) + ")").number_format = "0.0"
+            cc = CX.cell(rows["gw"], col, f"={c}{rows['fund']}/({PIT}+{PFA})"); cc.number_format = "0.000"; cc.fill = KEY
+            CX.cell(rows["s_ailo"], col, f"={c}{rows['gw']}*{aik}_lo/{aik}").number_format = "0.000"
+            CX.cell(rows["s_aihi"], col, f"={c}{rows['gw']}*{aik}_hi/{aik}").number_format = "0.000"
+            for sx in ("lo", "hi"):
+                W = XWV[sx]
+                tt = [f"{W[0]}*{c}{rows['ai']}", f"{W[1]}*{(YC.get(y - 1) or c)}{rows['ai']}", f"{W[2]}*{(YC.get(y - 2) or c)}{rows['ai']}"]
+                CX.cell(rows["s_lag" + sx], col, f"=({PIT}/({PIT}+{PFA})*{c}{rows['ai']}+{PFA}/({PIT}+{PFA})*(" + "+".join(tt) + f"))/({PIT}+{PFA})").number_format = "0.000"
+            CX.cell(rows["site"], col, f"=Players!{c}{PR[p]['add']}").font = GREEN
+            CX.cell(rows["main"], col, f"=IF({y}>=2027,{c}{rows['gw']},{c}{rows['site']})").number_format = "0.000"
+            if pc is None:
+                CX.cell(rows["ye"], col, f"=N(Players!{c}{PR[p]['tk']})").number_format = "0.000"
+            else:
+                CX.cell(rows["ye"], col, f"=IF({y}>=2027,{pc}{rows['ye']}+{c}{rows['main']},N(Players!{c}{PR[p]['tk']}))").number_format = "0.000"
+        XR[p] = rows; r += 1
+    CX.cell(r, 1, "七家合計").font = BOLD; r += 1
+    XT = {}
+    for k, lab in (("gw", "甲2 年新增 IT GW"), ("site", "甲 年新增 IT GW"), ("adj", "主路徑調整（2027–2029：甲2 − 甲）"),
+                   ("s_ailo", "敏感度：甲2 年新增（AI 占比 低）"), ("s_aihi", "敏感度：甲2 年新增（AI 占比 高）"),
+                   ("s_laglo", "敏感度：甲2 年新增（lag_bldg 低）"), ("s_laghi", "敏感度：甲2 年新增（lag_bldg 高）")):
+        CX.cell(r, 1, lab)
+        for y in YEARS:
+            c = YC[y]
+            if k == "adj":
+                f = f"=IF(AND({y}>=2027,{y}<=2029),{c}{XT['gw']}-{c}{XT['site']},0)"
+            else:
+                f = "=" + "+".join(f"{c}{XR[p][k]}" for p in CAPP)
+            CX.cell(r, YEARS.index(y) + 4, f).number_format = "0.000"
+        XT[k] = r; r += 1
+    CX_LAST = r
+    CX.column_dimensions["A"].width = 44; CX.column_dimensions["N"].width = 50
+
+    # ================= Deploy：需求情景 × 延遲情景（主路徑＋SiteOnly） =================
+    DP["A1"] = ("Deploy — 市場總 GW（年底、年平均、年新增）× 需求情景 A／B／C × 延遲 D0／D1／D2。主路徑：2024–2026＝Pipeline（甲：園區＋實測）；2027–2029 七家改用 甲2"
+                "（CapexGW，差額視為年內均勻上線並套用 Pipeline C 節延遲比例）；SiteOnly＝只有 甲。需求情景：2028–29 年新增 × SIF_UnitsCoef_*；2030–32 年新增＝前年年底 × g，"
+                "g＝年底 GW 年增率由 2029 值線性收斂到 g_lt（GL01-07）。")
+    DP["A2"] = "下游取用 2027 年後數值前看覆蓋率（GIF_Coverage_<yyyy>：有證據支撐的新增 GW ÷ 主路徑新增 GW；< 0.5 時 Checks WARN）"
     hdr(DP, 3, ["項目", "情景", "延遲"] + [str(y) for y in YEARS] + ["說明"])
     r = 4; DR = {}
     def drow(key, lab, s, D, fy, fmt="0.000", fill=None):
@@ -676,43 +776,51 @@ def main():
             cc = DP.cell(r, YEARS.index(y) + 4, fy(y)); cc.number_format = fmt
             if fill: cc.fill = fill
         DR[key] = r; r += 1
-    drow("pipeadd", "Pipeline D0 年新增（淨）", "", "D0", lambda y: f"=Pipeline!{YC[y]}{PA['addD0']}")
+    drow("pipeadd", "Pipeline D0 年新增（淨；甲）", "", "D0", lambda y: f"=Pipeline!{YC[y]}{PA['addD0']}")
+    drow("adj", "甲2 調整（CapexGW；2027–2029）", "", "D0", lambda y: f"=CapexGW!{YC[y]}{XT['adj']}")
     drow("stk", "新納入存量", "", "", lambda y: f"=Pipeline!{YC[y]}{AGG['stk']}")
     r += 1
-    for s in SCEN:
-        DP.cell(r, 1, f"需求情景 {s}").font = BOLD; r += 1
-        gk = "g" + s; ak = "add" + s
-        # 列順：add（r）、g（r＋1）、dl（r＋2）。2030–32：年新增＝前年年底（情景 D0）× g；g 為年底 GW 年增率，由 2029 線性收斂到 g_lt
-        ra_, rg_, rd_ = r, r + 1, r + 2
-        def yeprev(y):
-            return f"(Pipeline!{YC[y - 1]}{PA['yeD0']}+SUM($E${rd_}:{YC[y - 1]}{rd_}))"
-        def fadd(y, s=s):
-            c = YC[y]
-            if y == 2023: return "=0"
-            if y <= 2027: return f"={c}{DR['pipeadd']}"
-            if y <= 2029: return f"={c}{DR['pipeadd']}*{sv('SIF_UnitsCoef_' + s, y)}"
-            return f"={yeprev(y)}*{c}{rg_}"
-        drow(ak, "年新增（需求情景，D0）", s, "D0", fadd)
-        def fg(y, s=s):
-            if y < 2029: return '=""'
-            if y == 2029: return f"=IFERROR({YC[2029]}{ra_}/{yeprev(2029)},g_lt)"
-            return f"=${YC[2029]}${rg_}+(g_lt-${YC[2029]}${rg_})*({y}-2029)/3"
-        drow(gk, "年底 GW 年增率 g（2029＝情景年新增 ÷ 2028 年底；2030–32 線性收斂到 g_lt）", s, "", fg, "0.0%")
-        drow("dl" + s, "情景差額（相對 Pipeline D0 年新增）", s, "", lambda y, s=s: "=0" if y == 2023 else f"={YC[y]}{DR['add' + s]}-{YC[y]}{DR['pipeadd']}")
-        for D in DLY:
-            def fye(z, s=s, D=D):
-                return f"=Pipeline!{YC[z]}{PA['ye' + D]}+SUMPRODUCT($E${DR['dl' + s]}:$M${DR['dl' + s]},Pipeline!$E${FRAC[D][z]}:$M${FRAC[D][z]})"
-            drow(f"ye{s}{D}", "年底上線 IT GW", s, D, fye, fill=KEY)
-            DP.cell(DR[f"ye{s}{D}"], 1).font = BOLD
-        for D in DLY:
-            drow(f"avg{s}{D}", "年平均 IT GW", s, D, lambda y, s=s, D=D: '=""' if y == 2023 else f"=({YC[y - 1]}{DR['ye' + s + D]}+{YC[y]}{DR['ye' + s + D]})/2")
-        for D in DLY:
-            drow(f"na{s}{D}", "年新增 IT GW（淨，不含新納入存量）", s, D,
-                 lambda y, s=s, D=D: "=0" if y == 2023 else f"={YC[y]}{DR['ye' + s + D]}-{YC[y - 1]}{DR['ye' + s + D]}-{YC[y]}{DR['stk']}")
-        for D in ("D1", "D2"):
-            drow(f"sno{s}{D}", "已出貨未上線 IT GW（相對 D0）", s, D, lambda y, s=s, D=D: f"={YC[y]}{DR['ye' + s + 'D0']}-{YC[y]}{DR['ye' + s + D]}")
-        r += 1
-    DP.cell(r, 1, "對外發布：A-D0、B-D1、C-D2 三條與基準 A-D1（規劃書第 4 節）；Interface 全部 9 組皆輸出").font = BOLD
+    VAR = (("", "主路徑", True), ("_SO", "SiteOnly（只有 甲）", False))
+    for sfx, vlab, use_adj in VAR:
+        DP.cell(r, 1, f"■ {vlab}").font = Font(bold=True, size=12); r += 1
+        for s in SCEN:
+            DP.cell(r, 1, f"需求情景 {s}（{vlab}）").font = BOLD; r += 1
+            ra_, rg_, rd_ = r, r + 1, r + 2
+            def yeprev(y):
+                return f"(Pipeline!{YC[y - 1]}{PA['yeD0']}+SUM($E${rd_}:{YC[y - 1]}{rd_}))"
+            def fadd(y, s=s, use_adj=use_adj):
+                c = YC[y]
+                base_ = f"({c}${DR['pipeadd']}+{c}${DR['adj']})" if use_adj else f"{c}${DR['pipeadd']}"
+                if y == 2023: return "=0"
+                if y <= 2027: return f"={base_}"
+                if y <= 2029: return f"={base_}*{sv('SIF_UnitsCoef_' + s, y)}"
+                return f"={yeprev(y)}*{c}{rg_}"
+            drow(f"add{s}{sfx}", "年新增（需求情景，D0）", s, "D0", fadd)
+            def fg(y):
+                if y < 2029: return '=""'
+                if y == 2029: return f"=IFERROR({YC[2029]}{ra_}/{yeprev(2029)},g_lt)"
+                return f"=${YC[2029]}${rg_}+(g_lt-${YC[2029]}${rg_})*({y}-2029)/3"
+            drow(f"g{s}{sfx}", "年底 GW 年增率 g（2029＝情景年新增 ÷ 2028 年底；2030–32 線性收斂到 g_lt）", s, "", fg, "0.0%")
+            drow(f"dl{s}{sfx}", "差額（相對 Pipeline D0 年新增；均勻上線）", s, "", lambda y, s=s, sfx=sfx: "=0" if y == 2023 else f"={YC[y]}{DR['add' + s + sfx]}-{YC[y]}${DR['pipeadd']}")
+            for D in DLY:
+                def fye(z, s=s, D=D, sfx=sfx):
+                    return f"=Pipeline!{YC[z]}{PA['ye' + D]}+SUMPRODUCT($E${DR['dl' + s + sfx]}:$M${DR['dl' + s + sfx]},Pipeline!$E${FRAC[D][z]}:$M${FRAC[D][z]})"
+                drow(f"ye{s}{D}{sfx}", "年底上線 IT GW", s, D, fye, fill=KEY)
+                DP.cell(DR[f"ye{s}{D}{sfx}"], 1).font = BOLD
+            for D in DLY:
+                drow(f"avg{s}{D}{sfx}", "年平均 IT GW", s, D, lambda y, s=s, D=D, sfx=sfx: '=""' if y == 2023 else f"=({YC[y - 1]}{DR['ye' + s + D + sfx]}+{YC[y]}{DR['ye' + s + D + sfx]})/2")
+            for D in DLY:
+                drow(f"na{s}{D}{sfx}", "年新增 IT GW（淨，不含新納入存量）", s, D,
+                     lambda y, s=s, D=D, sfx=sfx: "=0" if y == 2023 else f"={YC[y]}{DR['ye' + s + D + sfx]}-{YC[y - 1]}{DR['ye' + s + D + sfx]}-{YC[y]}${DR['stk']}")
+            for D in ("D1", "D2"):
+                drow(f"sno{s}{D}{sfx}", "已出貨未上線 IT GW（相對 D0）", s, D, lambda y, s=s, D=D, sfx=sfx: f"={YC[y]}{DR['ye' + s + 'D0' + sfx]}-{YC[y]}{DR['ye' + s + D + sfx]}")
+            r += 1
+    DP.cell(r, 1, "覆蓋率（有證據支撐的年新增 ÷ 主路徑年新增；A、D0；MIN 1；主路徑 ≤ 0 時＝1）").font = BOLD
+    for y in YEARS:
+        c = YC[y]
+        DP.cell(r, YEARS.index(y) + 4, f'=IF({y}<=2026,1,IF({c}{DR["naAD0"]}<=0,1,MIN(1,MAX(0,{c}{DR["naAD0_SO"]})/{c}{DR["naAD0"]})))').number_format = "0.00"
+    DR["cov"] = r; r += 2
+    DP.cell(r, 1, "對外發布：A-D0、B-D1、C-D2 三條與基準 A-D1（規劃書第 4 節）；Interface 主路徑與 SiteOnly 各 9 組皆輸出").font = BOLD
     DP_LAST = r + 1
     DP.column_dimensions["A"].width = 46
     for col in "BC": DP.column_dimensions[col].width = 6
@@ -779,6 +887,8 @@ def main():
     C1["A1"] = ("C1 — 資本支出對帳：GW 帳推算＝Σ 世代 新增 IT GW × TK IF_CapexIT（每 IT GW；上線年入帳）＋ IF_CapexFacility（提前 lag_bldg 月入帳）；"
                 "非 NVIDIA 部分＝持有比 IF_NonNV_Hold_* × VR200 每 GW；＋非 AI 資本支出（In Y3）；曆年按財年結束月換算成財年 vs 個股模型（In Y2）。"
                 "第一個已知年的存量不計資本支出；2031–32 廠房缺次年上線量，偏低")
+    C1["A2"] = ("MSFT、GOOGL、AMZN、META、ORCL、CRWV、NBIS 2027 起標『同源（不對帳）』：主路徑 2027 起的 GW 由同一份資本支出推得（CapexGW 甲2），再與資本支出比對是循環；"
+                "只有 2024–2026（GW 來自園區與實測）做真對帳。本頁比值仍以 甲（SiteOnly）計算，供參考")
     hdr(C1, 3, ["項目", "玩家", "單位"] + [str(y) for y in YEARS] + ["可能原因／說明"])
     r = 4
     C1.cell(r, 1, "廠房提前入帳權重（lag_bldg 月 → l＝月/12；0≤l≤2）").font = BOLD; r += 1
@@ -851,44 +961,67 @@ def main():
         for y in YEARS:
             c = YC[y]
             C1.cell(r, YEARS.index(y) + 4,
+                    '="同源（不對帳）"' if (p in ("msft", "googl", "amzn", "meta", "orcl", "crwv", "nbis") and y >= 2027) else
                     f'=IF({c}{rg}="","無個股值",IF({c}{re_}=0,"GW 帳無新增",IF(AND(In!$E${cr}="Verified",FALSE),IF(ABS({c}{rg}-1)<=tolband,"對得上","偏差"),"證據不足（"&IF(ABS({c}{rg}-1)<=tolband,"帶內","帶外")&"）")))')
         C1R[p] = dict(gl=re_, model=rf, ratio=rg, st=r); r += 2
     C1_LAST = r
     C1.column_dimensions["A"].width = 44; C1.column_dimensions["N"].width = 70
     for y in YEARS: C1.column_dimensions[YC[y]].width = 13
 
-    # ================= Compare：GW 帳 vs Siliconomics 成本等值 GW =================
-    CP["A1"] = ("Compare — GW 帳年新增 IT GW（實體；營運者加總）vs Siliconomics SIF_DeployGW_A/B/C（成本等值 IT GW：AI IT 資本支出 ÷ 每 IT GW IT capex；出貨年）。"
-                "兩者口徑不同，只並列、不校準")
+    # ================= Compare：GW 帳 vs Siliconomics 成本等值 GW；敏感度 =================
+    CP["A1"] = ("Compare — GW 帳年新增 IT GW（主路徑與 SiteOnly）vs Siliconomics SIF_DeployGW_A/B/C（成本等值 IT GW：AI IT 資本支出 ÷ 每 IT GW IT capex；出貨年）。"
+                "兩者口徑不同，只並列、不校準。下半部為敏感度（xAI 宣稱、AI 占比、lag_bldg）")
     hdr(CP, 3, ["項目", "情景", "延遲"] + [str(y) for y in YEARS] + ["說明"])
     r = 4; CPR = {}
     for s in SCEN:
         CP.cell(r, 1, f"Siliconomics 部署 GW（成本等值）"); CP.cell(r, 2, s)
         for y in (2026, 2027, 2028, 2029): CP.cell(r, YEARS.index(y) + 4, f"={sv('SIF_DeployGW_' + s, y)}").number_format = "0.00"
-        CP.cell(r, 14, "SIL_In（IT 電力；規劃書 r1：標籤正確，原第 6 節問題 2 撤回）")
+        CP.cell(r, 14, "SIL_In（IT 電力；規劃書 r1）")
         CPR["sil" + s] = r; r += 1
-        for D in ("D0", "D1"):
-            CP.cell(r, 1, "GW 帳 年新增 IT GW（淨）"); CP.cell(r, 2, s); CP.cell(r, 3, D)
-            for y in YEARS: CP.cell(r, YEARS.index(y) + 4, f"=Deploy!{YC[y]}{DR['na' + s + D]}").number_format = "0.00"
-            CPR[f"gl{s}{D}"] = r; r += 1
-        CP.cell(r, 1, "差額（GW 帳 D0 − Siliconomics）"); CP.cell(r, 2, s)
-        for y in (2026, 2027, 2028, 2029):
-            c = YC[y]; CP.cell(r, YEARS.index(y) + 4, f"={c}{CPR['gl' + s + 'D0']}-{c}{CPR['sil' + s]}").number_format = "0.00"
-        CPR["d" + s] = r; r += 1
-        CP.cell(r, 1, "比值（GW 帳 D0 ÷ Siliconomics）"); CP.cell(r, 2, s)
-        for y in (2026, 2027, 2028, 2029):
-            c = YC[y]; CP.cell(r, YEARS.index(y) + 4, f'=IF(N({c}{CPR["sil" + s]})=0,"",{c}{CPR["gl" + s + "D0"]}/{c}{CPR["sil" + s]})').number_format = "0.00"
-        r += 2
-    for t_ in ("差額原因（v0.1 第 2 階段）：",
-              "1. 出貨年 ≠ 上線年：Siliconomics 是出貨（資本支出）年的成本等值 GW；GW 帳 D0 是公告上線年，2027 年後只計有站點與上線年月的園區（Decisions GL01-13），未列站點的合約不計。",
-              "2. 覆蓋：中國 2027 起持平、Microsoft／Google／Amazon 2027 年後只有 T2 園區延伸；Meta 自建以外的租用、xAI 2027 目標（S4）都未計入。",
+        for sfx, vl in (("", "主路徑"), ("_SO", "SiteOnly")):
+            for D in ("D0", "D1"):
+                CP.cell(r, 1, f"GW 帳 年新增 IT GW（淨；{vl}）"); CP.cell(r, 2, s); CP.cell(r, 3, D)
+                for y in YEARS: CP.cell(r, YEARS.index(y) + 4, f"=Deploy!{YC[y]}{DR['na' + s + D + sfx]}").number_format = "0.00"
+                CPR[f"gl{s}{D}{sfx}"] = r; r += 1
+            CP.cell(r, 1, f"比值（GW 帳 D0 {vl} ÷ Siliconomics）"); CP.cell(r, 2, s)
+            for y in (2026, 2027, 2028, 2029):
+                c = YC[y]; CP.cell(r, YEARS.index(y) + 4, f'=IF(N({c}{CPR["sil" + s]})=0,"",{c}{CPR["gl" + s + "D0" + sfx]}/{c}{CPR["sil" + s]})').number_format = "0.00"
+            CPR["r" + s + sfx] = r; r += 1
+        r += 1
+    CP.cell(r, 1, "敏感度（需求 A、D0 年底 IT GW；主路徑）").font = BOLD; r += 1
+    CP.cell(r, 1, "主路徑 年底 IT GW"); CP.cell(r, 2, "A"); CP.cell(r, 3, "D0")
+    for y in YEARS: CP.cell(r, YEARS.index(y) + 4, f"=Deploy!{YC[y]}{DR['yeAD0']}").number_format = "0.00"
+    SB = r; r += 1
+    xi = INROW["tgt_xai_27"]
+    CP.cell(r, 1, "主路徑 ＋ xAI 宣稱增量（2027 年底 10 GW − 主路徑 xAI；2028 起持平）"); CP.cell(r, 2, "A"); CP.cell(r, 3, "D0")
+    for y in YEARS:
+        c = YC[y]
+        f = f"={c}{SB}" if y < 2027 else f"={c}{SB}+MAX(0,tgt_xai_27-N(Players!{YC[2027]}{PR['xai']['tk']}))"
+        CP.cell(r, YEARS.index(y) + 4, f).number_format = "0.00"
+    CP.cell(r, 14, f"In 第 {xi} 列（B#46；Interested-party 單一說法，不入主路徑）"); CPR["sxai"] = r; r += 1
+    for k, lab in (("s_ailo", "AI 占比 低（ai_sh_lo、ai_amzn_lo）"), ("s_aihi", "AI 占比 高"), ("s_laglo", "lag_bldg 低（12 月）"), ("s_laghi", "lag_bldg 高（24 月）")):
+        CP.cell(r, 1, f"主路徑（{lab}）"); CP.cell(r, 2, "A"); CP.cell(r, 3, "D0")
+        for y in YEARS:
+            c = YC[y]
+            if y < 2027:
+                f = f"={c}{SB}"
+            else:
+                zs = [z for z in (2027, 2028, 2029) if z <= y]
+                f = f"={c}{SB}+" + "+".join(f"(CapexGW!{YC[z]}{XT[k]}-CapexGW!{YC[z]}{XT['gw']})" for z in zs)
+            CP.cell(r, YEARS.index(y) + 4, f).number_format = "0.00"
+        CP.cell(r, 14, "2027–2029 甲2 年新增差額累加（2030 起不再傳遞到收斂規則，近似）"); CPR[k] = r; r += 1
+    r += 1
+    for t_ in ("差額原因（v0.1 第 3 階段）：",
+              "1. 出貨年 ≠ 上線年：Siliconomics 是出貨（資本支出）年的成本等值 GW；GW 帳是上線年，建物提前 lag_bldg 入帳。",
+              "2. 覆蓋：SiteOnly 只有站點證據（雲端大廠不公布遠期園區；『未找到』不等於『不存在』），2027 起主路徑七家改用 甲2（CapexGW）。其餘玩家（xAI、新雲、主權、其他）仍只有 甲。",
               "3. 成本等值 vs 實體：Siliconomics 以 NVIDIA 每 GW 成本換算 ASIC 支出，ASIC 實體 GW 被低估約 0.3–4.3 GW（2026；規劃書第 6 節第 1 點）。",
-              "4. 中國：Siliconomics 顆數含中國出貨（H200 等），GW 帳中國為 Rystad 容量 × AI 占比，口徑不同。"):
+              "4. 中國：Siliconomics 顆數含中國出貨（H200 等），GW 帳中國為 Rystad 容量 × AI 占比。"):
         CP.cell(r, 1, t_); r += 1
     CP_LAST = r
     CP.column_dimensions["A"].width = 40; CP.column_dimensions["N"].width = 60
 
     # ================= Interface：GIF_ =================
+    IF["A3"] = "下游取用 2027 年後數值前看覆蓋率（GIF_Coverage_<yyyy>）"; IF["A3"].font = Font(bold=True, color="C00000")
     IF["A1"] = ("Interface — 下游唯一連結點（GIF_ 具名範圍；經 gwledger/tools/export_snapshot.py 匯成快照）。每格一個名稱：<前綴>_<yyyy>，2024–2032。"
                 "單位一律 IT GW（＝TK GW，IT 關鍵電力）；設施電力＝× IF_FacilityGW")
     IF["A2"] = f"版本：GW 帳 {a.version}（{a.date}）；Tokenomics {src['version']}；Siliconomics {ssrc['version']}"
@@ -903,23 +1036,37 @@ def main():
             name(wb, nm_, f"Interface!${get_column_letter(4 + j)}${r}"); GIF.append(nm_)
         IF.cell(r, 13, f"{sheet}!{YC[2024]}{row}:{YC[2032]}{row}")
         r += 1
-    IF.cell(r, 1, "A. 市場總 GW（需求情景 × 延遲）").font = BOLD; r += 1
-    for s in SCEN:
-        for D in DLY:
-            irow(f"GIF_MktGW_YE_{s}_{D}", f"年底上線（{s}／{D}）", "Deploy", DR[f"ye{s}{D}"])
-    for s in SCEN:
-        for D in DLY:
-            irow(f"GIF_MktGW_Avg_{s}_{D}", f"年平均（{s}／{D}）", "Deploy", DR[f"avg{s}{D}"])
-    for s in SCEN:
-        for D in DLY:
-            irow(f"GIF_MktGW_Add_{s}_{D}", f"年新增（淨；{s}／{D}）", "Deploy", DR[f"na{s}{D}"])
-    IF.cell(r, 1, "B. 已出貨未上線（相對 D0）").font = BOLD; r += 1
-    for s in SCEN:
-        for D in ("D1", "D2"):
-            irow(f"GIF_ShippedNotOnline_{s}_{D}", f"已出貨未上線（{s}／{D}）", "Deploy", DR[f"sno{s}{D}"])
-    IF.cell(r, 1, "C. 玩家年底上線 IT GW（甲：公告路徑；營運者口徑；空白＝未知）").font = BOLD; r += 1
+    IF.cell(r, 1, "下游取用 2027 年後數值前看覆蓋率（GIF_Coverage_<yyyy>）").font = Font(bold=True, color="C00000"); r += 1
+    IF.cell(r, 1, "0. 覆蓋率（有證據支撐的年新增 ÷ 主路徑年新增）").font = BOLD; r += 1
+    IF.cell(r, 1, "GIF_Coverage"); IF.cell(r, 2, "覆蓋率（A、D0；< 0.5 時 Checks WARN）"); IF.cell(r, 3, "比")
+    for j, y in enumerate(OUTY):
+        c = IF.cell(r, 4 + j, f"=Deploy!{YC[y]}{DR['cov']}"); c.font = GREEN; c.number_format = "0.00"
+        name(wb, f"GIF_Coverage_{y}", f"Interface!${get_column_letter(4 + j)}${r}"); GIF.append(f"GIF_Coverage_{y}")
+    IF.cell(r, 13, f"Deploy!{YC[2024]}{DR['cov']}:{YC[2032]}{DR['cov']}"); IFCOV = r; r += 1
+    for sfx, nsfx, vlab in (("", "", "主路徑"), ("_SO", "_SiteOnly", "SiteOnly：只有 甲")):
+        IF.cell(r, 1, f"A{nsfx}. 市場總 GW（{vlab}；需求情景 × 延遲）").font = BOLD; r += 1
+        for s in SCEN:
+            for D in DLY:
+                irow(f"GIF_MktGW_YE_{s}_{D}{nsfx}", f"年底上線（{s}／{D}；{vlab}）", "Deploy", DR[f"ye{s}{D}{sfx}"])
+        for s in SCEN:
+            for D in DLY:
+                irow(f"GIF_MktGW_Avg_{s}_{D}{nsfx}", f"年平均（{s}／{D}；{vlab}）", "Deploy", DR[f"avg{s}{D}{sfx}"])
+        for s in SCEN:
+            for D in DLY:
+                irow(f"GIF_MktGW_Add_{s}_{D}{nsfx}", f"年新增（淨；{s}／{D}；{vlab}）", "Deploy", DR[f"na{s}{D}{sfx}"])
+        IF.cell(r, 1, f"B{nsfx}. 已出貨未上線（{vlab}；相對 D0）").font = BOLD; r += 1
+        for s in SCEN:
+            for D in ("D1", "D2"):
+                irow(f"GIF_ShippedNotOnline_{s}_{D}{nsfx}", f"已出貨未上線（{s}／{D}；{vlab}）", "Deploy", DR[f"sno{s}{D}{sfx}"])
+    IF.cell(r, 1, "C. 玩家年底上線 IT GW（主路徑：七家 2027 起＝甲2 累加；營運者口徑；空白＝未知）").font = BOLD; r += 1
     for p in PK:
-        irow(f"GIF_PlayerGW_YE_{p}", PN[p], "Players", PR[p]["tk"])
+        if p in XR:
+            irow(f"GIF_PlayerGW_YE_{p}", PN[p] + "（主路徑）", "CapexGW", XR[p]["ye"])
+        else:
+            irow(f"GIF_PlayerGW_YE_{p}", PN[p], "Players", PR[p]["tk"])
+    IF.cell(r, 1, "C_SiteOnly. 玩家年底上線 IT GW（只有 甲）").font = BOLD; r += 1
+    for p in PK:
+        irow(f"GIF_PlayerGW_YE_{p}_SiteOnly", PN[p] + "（SiteOnly）", "Players", PR[p]["tk"])
     IF_LAST = r
     IF.column_dimensions["A"].width = 30; IF.column_dimensions["B"].width = 44; IF.column_dimensions["M"].width = 22
 
@@ -929,6 +1076,7 @@ def main():
     r = 4
     maxr = {"In": IN_LAST + 2, "TK_In": TK_LAST + 2, "SIL_In": 60, "Players": PL_LAST + 2, "Matrix": MX_LAST + 2, "Pipeline": PP_LAST + 2,
             "Deploy": DP_LAST + 2, "C0": C0_LAST + 2, "C1": C1_LAST + 2, "Compare": CP_LAST + 2, "Interface": IF_LAST + 2}
+    maxr['CapexGW'] = CX_LAST + 2
     for sh, mr in maxr.items():
         CK.cell(r, 1, f"E-{sh}"); CK.cell(r, 2, f"{sh} 頁錯誤格數")
         CK.cell(r, 3, f"=SUMPRODUCT(ISERROR({sh}!A1:T{mr})*1)")
@@ -1003,8 +1151,18 @@ def main():
     CK.cell(r, 8, "只檢查說明欄第一個引用（主要依據）"); r += 1
     CK.cell(r, 1, "K14"); CK.cell(r, 2, "DB_Evidence 列數（evidence_raw 全部列）")
     CK.cell(r, 3, len(evv)); CK.cell(r, 6, f'=IF(C{r}>0,"OK","WARN")'); CK.cell(r, 7, "治理（證據）"); r += 1
+    CK.cell(r, 1, "K15"); CK.cell(r, 2, "覆蓋率（GIF_Coverage）< 0.5 的年數（2024–2032）")
+    CK.cell(r, 3, f'=COUNTIF(Interface!D{IFCOV}:L{IFCOV},"<0.5")'); CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "治理（覆蓋）")
+    CK.cell(r, 8, "WARN＝該年主路徑新增多半無站點證據（甲2 或收斂規則推得）；下游取用前看覆蓋率"); r += 1
+    for y in (2024, 2025, 2026):
+        CK.cell(r, 1, f"K16-{y}"); CK.cell(r, 2, f"{y}：主路徑＝SiteOnly（2026 以前只用 甲）")
+        CK.cell(r, 3, f"=Deploy!{YC[y]}{DR['yeAD0']}"); CK.cell(r, 4, f"=Deploy!{YC[y]}{DR['yeAD0_SO']}")
+        CK.cell(r, 5, f"=C{r}-D{r}"); CK.cell(r, 6, f'=IF(ABS(E{r})<1E-9,"OK","ERROR")'); CK.cell(r, 7, "恆等式"); r += 1
+    CK.cell(r, 1, "K17"); CK.cell(r, 2, "甲2 年新增 < 0 的格數（七家 × 年）")
+    CK.cell(r, 3, "=" + "+".join(f'COUNTIF(CapexGW!D{XR[p]["gw"]}:M{XR[p]["gw"]},"<0")' for p in XR))
+    CK.cell(r, 6, f'=IF(C{r}=0,"OK","ERROR")'); CK.cell(r, 7, "驗證"); r += 1
     CK.cell(r, 1, "K9"); CK.cell(r, 2, "Deploy：各需求情景 2032 年底 D0 ≥ D1 ≥ D2（情景差額為負時可能不成立）")
-    CK.cell(r, 3, "=" + "+".join(f"(Deploy!M{DR['ye' + s + 'D0']}<Deploy!M{DR['ye' + s + 'D1']}-1E-9)+(Deploy!M{DR['ye' + s + 'D1']}<Deploy!M{DR['ye' + s + 'D2']}-1E-9)" for s in SCEN))
+    CK.cell(r, 3, "=" + "+".join(f"(Deploy!M{DR['ye' + s + 'D0' + x]}<Deploy!M{DR['ye' + s + 'D1' + x]}-1E-9)+(Deploy!M{DR['ye' + s + 'D1' + x]}<Deploy!M{DR['ye' + s + 'D2' + x]}-1E-9)" for s in SCEN for x in ("", "_SO")))
     CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "驗證"); r += 1
     a0, a1 = 5, IN_LAST
     CK.cell(r, 1, "G1"); CK.cell(r, 2, "In 頁輸入列缺標記")
@@ -1100,6 +1258,7 @@ def main():
         ("單位（規劃書 r1）：主口徑 IT GW＝TK GW（IT 關鍵電力）；設施電力＝IT × TK IF_FacilityGW（1.2）。公司標設施者 ÷ IF_FacilityGW；口徑未說明者基準取 IT 讀法，Players 另列設施讀法；Epoch 晶片功耗 × k_chip2it。", False),
         ("頁面：README｜In 輸入｜TK_In、SIL_In 鏡像（綠字）｜Players 玩家 × 年｜Matrix 營運者 × 使用者｜Pipeline 園區管線 × 延遲｜Deploy 市場總 GW 需求 × 延遲｜C0 由下而上 vs 第三方｜C1 資本支出對帳｜Compare 與 Siliconomics 成本等值 GW｜Interface GIF_｜Checks｜Decisions｜DB_Evidence｜Sources｜Requests。", False),
         ("v0.1 範圍：C0、C1、延遲管線（D0–D2）、GIF_ 輸出；C2–C7 自 v0.2 起。第 2 階段：填入 evidence_raw 證據（只用 C 段判屬實或已更正的列；DB_Evidence 頁列全部證據與判定），延遲參數依 B_delay 校準。", False),
+        ("第 3 階段：新增 CapexGW 頁（甲2：資本支出推得 GW；MSFT、GOOGL、AMZN、META、ORCL、CRWV、NBIS 2027 起進主路徑）；Interface 另出 _SiteOnly（只有 甲）；GIF_Coverage_<yyyy>。下游取用 2027 年後數值前看覆蓋率。", True),
         ("顏色：藍字＝輸入；黑字＝公式；綠字＝跨頁或外部鏡像；淡黃底＝關鍵輸出；亮黃底＝待證據或預設待決。", False),
         ("Excel 優先：要改輸入，直接改 In 頁藍字；builder 重建時讀回（--base）。公式頁不要手改。下游只讀 Interface 的 GIF_ 名稱（經快照）。", False),
         ("版本命名：YYYYMMDD_GWLedger_vX.Y.xlsx；model/CURRENT 記錄現行檔名；data/CURRENT_SNAPSHOT 指向現行快照。", False),
