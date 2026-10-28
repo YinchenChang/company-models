@@ -1,0 +1,13 @@
+{
+ "company": "鴻海",
+ "ticker": "2317.TW",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "雲端網路產品", "label": "雲端網路產品（官方產品類別＝AI 伺服器＋雲端網路非 AI）", "period": "FY2025", "value": 0.40, "unit": "營收比重", "source": "鴻海 4Q25 法說（富果）：雲端網路 40%、消費智能 38%、電腦終端 15%、元件及其他 7%"},
+  {"name": "消費智能產品", "label": "消費智能（iPhone 等）", "period": "FY2025", "value": 0.38, "unit": "營收比重", "source": "同上"},
+  {"name": "電腦終端產品", "label": "電腦終端", "period": "FY2025", "value": 0.15, "unit": "營收比重", "source": "同上"},
+  {"name": "元件及其他", "label": "元件及其他", "period": "FY2025", "value": 0.07, "unit": "營收比重", "source": "同上"}
+ ],
+ "sublines": [{"parent": "雲端網路產品", "labels": ["AI 伺服器營收", "雲端網路非 AI（網通、一般伺服器）"]}],
+ "check_labels": ["檢查：四大產品類別合計 − 合併營收（FY2025 實績、FY2026 錨點）"]
+}

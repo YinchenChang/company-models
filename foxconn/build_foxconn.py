@@ -1,4 +1,4 @@
-# 鴻海精密（2317）收支與估值模型 v0.2（AI 半導體 Project：伺服器組裝次產業，樣板＝quanta/）
+# 鴻海精密（2317）個股模型 v0.3（AI 半導體 Project：伺服器組裝次產業，樣板＝quanta/）
 # 用法：python3 foxconn/build_foxconn.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不平移。金額：十億新台幣（NT$B）；整櫃價格與市場以美元輸入、以匯率 fx 換算；EPS：新台幣。
 # 口徑：歸屬母公司淨利。集團公司：比照三星只拆「雲端網路產品」中的 AI 伺服器做細；雲端網路的非 AI 部分（網通、一般伺服器）、
@@ -328,6 +328,11 @@ def engine(ws, r0, title, **over):
         row(k, lab, "NT$B", {"C": f"=a25_{k}", "D": f"=a26_{k}", **{c_(y): f"={c_(y - 1)}{r}*(1+{P[g]}{y % 100})" for y in BU[1:]}}, fmt="#,##0.0")
     row("nai", "非 AI 營收合計", "NT$B", {c_(y): f"=SUM({c_(y)}{R['cn']}:{c_(y)}{R['co']})" for y in FYS}, fmt="#,##0.0")
     row("rev", "營收", "NT$B", {c_(y): f"={c_(y)}{R['ai']}+{c_(y)}{R['nai']}" for y in FYS}, fmt="#,##0.0")
+    row("cl", "雲端網路產品（官方產品類別＝AI 伺服器＋雲端網路非 AI）", "NT$B", {c_(y): f"={c_(y)}{R['ai']}+{c_(y)}{R['cn']}" for y in FYS}, fmt="#,##0.0",
+        note="官方四大產品類別：雲端網路產品、消費智能產品（上列「消費智能」）、電腦終端產品（「電腦終端」）、元件及其他")
+    row("chk", "檢查：四大產品類別合計 − 合併營收（FY2025 實績、FY2026 錨點）", "NT$B",
+        {"C": f"=C{R['cl']}+C{R['ce']}+C{R['pc']}+C{R['co']}-a25_rev", "D": f"=D{R['cl']}+D{R['ce']}+D{R['pc']}+D{R['co']}-a26_rev",
+         **{c_(y): f"={c_(y)}{R['cl']}+{c_(y)}{R['ce']}+{c_(y)}{R['pc']}+{c_(y)}{R['co']}-{c_(y)}{R['rev']}" for y in BU[1:]}}, fmt="0.000")
     row("g", "營收年增", "%", {c_(y): f"={c_(y)}{R['rev']}/{c_(y - 1)}{R['rev']}-1" for y in FYS[1:]}, fmt="0.0%")
     row("aish", "AI 伺服器 ÷ 營收", "%", {c_(y): f"={c_(y)}{R['ai']}/{c_(y)}{R['rev']}" for y in FYS}, fmt="0.0%")
     row("clsh", "雲端網路產品 ÷ 營收", "%", {c_(y): f"=({c_(y)}{R['ai']}+{c_(y)}{R['cn']})/{c_(y)}{R['rev']}" for y in FYS}, fmt="0.0%")
@@ -360,7 +365,7 @@ def engine(ws, r0, title, **over):
 # ---------------- PL ----------------
 PL = wb.create_sheet("PL")
 PL["A1"] = "PL — 鴻海損益（十億新台幣；EPS 新台幣；歸屬母公司）。FY2025A 實績、FY2026 錨點（1H26 實績＋3Q26 營收實績＋假設），FY2027 起為模型。FY(t)＝CY(t)。三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2026–FY2027 三情境相同（顆數係數從 CY2028 開始）"
-PB = {}; r0 = 60
+PB = {}; r0 = 75
 SCN_T = {"A": "情境 A：基準（顆數係數 1.0）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85", "C": "情境 C：CY2028–29 顆數 ×0.6"}
 for s in SC:
     PB[s] = engine(PL, r0, SCN_T[s], scn=s)
@@ -370,6 +375,7 @@ sr = 4; SUMR = {}
 for s in SC:
     PL.cell(sr, 1, f"情境 {s}").font = BOLD; sr += 1
     for key, lab, unit, fmt in (("rev", "營收", "NT$B", "#,##0.0"), ("g", "  營收年增", "%", "0.0%"), ("ai", "  AI 伺服器營收", "NT$B", "#,##0.0"),
+                                ("cl", "  雲端網路產品", "NT$B", "#,##0.0"), ("ce", "  消費智能產品", "NT$B", "#,##0.0"), ("pc", "  電腦終端產品", "NT$B", "#,##0.0"), ("co", "  元件及其他", "NT$B", "#,##0.0"),
                                 ("nai", "  非 AI 營收", "NT$B", "#,##0.0"), ("aish", "  AI 伺服器 ÷ 營收", "%", "0.0%"), ("gp", "毛利", "NT$B", "#,##0.0"),
                                 ("gm", "毛利率", "%", "0.00%"), ("oim", "營業利益率", "%", "0.00%"),
                                 ("ni", "歸屬母公司淨利", "NT$B", "#,##0.0"), ("eps", "EPS", "NT$", "0.00"), ("epsg", "  EPS 年增", "%", "0.0%")):
@@ -383,7 +389,7 @@ PL.cell(sr, 1, "核對（應為 0）：FY2026 模型營收 − 錨點；FY2026 �
 PL.cell(sr, 1, "  情境 A：營收差（NT$B）"); PL[f"D{sr}"] = f"=D{PB['A']['rev']}-a26_rev"; PL[f"D{sr}"].number_format = "0.0000"; CHK_ROW = sr; sr += 1
 PL.cell(sr, 1, "  情境 A：AI 伺服器差（NT$B）"); PL[f"D{sr}"] = f"=D{PB['A']['ai']}-a26_ai"; PL[f"D{sr}"].number_format = "0.0000"; sr += 1
 PL.cell(sr, 1, "  情境 A：毛利差（NT$B；以 FY2027 公式套用 FY2026）"); PL[f"D{sr}"] = f"=D{PB['A']['gmn']}*D{PB['A']['nai']}+D{PB['A']['gai']}-a26_gp"; PL[f"D{sr}"].number_format = "0.0000"
-assert sr < 60, sr
+assert sr < 75, sr
 PL.column_dimensions["A"].width = 62; PL.column_dimensions["B"].width = 12; PL.column_dimensions["H"].width = 70
 for c in "CDEFG": PL.column_dimensions[c].width = 14
 
@@ -636,8 +642,8 @@ SO.column_dimensions["A"].width = 90; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("鴻海精密（2317）收支與估值模型 v0.1.1（AI 半導體 Project：伺服器組裝次產業，樣板＝廣達）　2026-10-25", True),
- ("版本：v0.1.1（2026-10-25：Val 新增第 0 節「目標價與上檔空間」、In 新增情境權重 tp_wA／tp_wB／tp_wC；其餘數值與 v0.1 相同）。v0.1（初版）：AI 伺服器組裝市場與 ODM 每櫃價格讀廣達模型（本專案權威，規則第 13 條），與廣達同口徑；本模型只決定鴻海份額、客供與其他事業。", False),
+lines = [("鴻海精密（2317）個股模型 v0.3（AI 半導體 Project：伺服器組裝次產業，樣板＝廣達）　2026-10-28", True),
+ ("版本：v0.3（2026-10-28：依個股模型原則補上官方四大產品類別——新增「雲端網路產品」＝AI 伺服器＋雲端網路非 AI 與四類合計核對列，數值不變）；v0.2.x（2026-10-25～27）；v0.1.1（2026-10-25：Val 新增第 0 節「目標價與上檔空間」、In 新增情境權重 tp_wA／tp_wB／tp_wC；其餘數值與 v0.1 相同）。v0.1（初版）：AI 伺服器組裝市場與 ODM 每櫃價格讀廣達模型（本專案權威，規則第 13 條），與廣達同口徑；本模型只決定鴻海份額、客供與其他事業。", False),
  ("模型命題：鴻海是集團公司，AI 伺服器營收＝部署 GW（AI IT 資本支出 ÷ 每 GW IT 資本支出）× 每 GW ODM 整櫃價值 × 鴻海有效份額 ×（1 − 客供比例），2026 年約占營收三成；其餘七成（iPhone、網通與一般伺服器、電腦、元件）以簡化成長率推。AI 伺服器拉高營收與營業利益，但業外損失、稅率上升與少數股權使淨利 ÷ 營業利益從 0.73 降到約 0.66。市場約 10 倍未來 12 月 EPS。", False),
  ("核心問題：AI 伺服器份額（NVIDIA 整櫃最大組裝廠）能不能在客供上升下撐住營業利益成長，以及淨利 ÷ 營業利益能不能穩在 0.66 左右；約 10 倍未來 12 月 P/E 隱含什麼路徑。", False), ("", False),
  ("會計年度＝日曆年，FY(t)＝CY(t)，不平移。預測期 FY2027–FY2029（三年）。金額：十億新台幣；整櫃價格與市場以美元計、以匯率換算。口徑：歸屬母公司淨利。", False), ("", False),
