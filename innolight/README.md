@@ -6,6 +6,11 @@
 
 **投資建議：強力買進**（依上檔空間固定規則：加權目標價上檔空間 +119.3%，落在 大於 +50%；級距 大於 50%）。
 
+## v0.2.3（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁第 30 列起追加 FY2025 年報產品別：光通信收發模組（約 97.95%）、其他（差額）與核對列「檢查：分部合計 − 合併營收」。只在既有最後一列之後追加，不位移既有列。
+- AI 營收屬光通信收發模組；推估年仍以 AI／其他拆分。分部宣告見 `segments.json`。
+
 ## 重點觀察
 
 1. 目標價 ¥1,343（DCF 823、Comparable 1,864 各半），比現價 612.63（2026-10-23）高 119.3%，級距 大於 50%；Comparable 單獨為 +204.2%。主因是倍數不是 EPS：本模型 12 個月後前瞻 EPS 41.34 比共識前瞻 EPS 75.09 低 44.9%，但 A 股光通訊同業（新易盛、天孚、光迅、華工、劍橋）前瞻 P/E 中位數 45.1 倍，現價只隱含 12.1 倍（共識未來 12 月 EPS）、共識目標價 1,321 隱含 17.6 倍；Comparable 未扣同業規模較小、部分價格日期較舊的溢價，也未計美國限制風險。DCF 單獨也有 +34.3%（ROE 30.6% 高於折現率 10%）。
@@ -17,9 +22,9 @@ AI 半導體 Project **網通次產業內複製（光模組）**，比照 `arist
 | 檔案 | 內容 |
 |---|---|
 | `build_innolight.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261026_中際旭創模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261028_中際旭創個股模型_v0.2.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261026_中際旭創模型_v0.2.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261028_中際旭創個股模型_v0.2.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 innolight/build_innolight.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（可插拔光模組、CPO、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`（只用規則函式）；**不修改它們**。
 

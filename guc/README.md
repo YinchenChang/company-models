@@ -6,6 +6,11 @@
 
 **投資建議：強力放空**（依上檔空間固定規則：加權目標價上檔空間 −62.0%，落在 小於 −50%）。
 
+## v0.1.2（2026-10-28）：分部原則重建（數值不變）
+
+- 創意為單一應報導部門。Q 頁第 33 列起追加 FY2025 部門營收、營收類別子列（NRE 約 34%、Turnkey 約 64%，經濟日報 2026-01-31 轉述）與核對列「檢查：分部合計 − 合併營收」。只在既有最後一列之後追加，不位移既有列。
+- 推估年仍以 Google CPU／AI ASIC／車用／其他拆分，不拆 NRE／Turnkey。分部宣告見 `segments.json`。
+
 ## 重點觀察
 
 1. 目標價 NT$2,879（DCF 2,238、Comparable 3,521 各半），比現價 7,585（2026-10-22）低 62.0%，級距 小於 −50%；Comparable 單獨為 −53.6%。主因是倍數不是 EPS：本模型 12 個月後前瞻 EPS 122.95 比共識前瞻 EPS 81.28 高 51.3%，但同業（世芯、聯發科、博通、邁威爾）前瞻 P/E 中位數 28.6 倍，創意本身前瞻 P/E 約 103 倍（2026-10-08）、共識目標價 6,722 隱含 82.7 倍（比同業高 188.8%）；市場給創意的 Google CPU 成長溢價，Comparable 未計入。共識目標價本身也比現價低 11.4%。
@@ -26,9 +31,9 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_guc.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_創意模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_創意個股模型_v0.1.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_創意模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
+| `dist/20261028_創意個股模型_v0.1.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
 
 建置：先跑 `python3 guc/build_guc.py raw.xlsx`，再跑 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序為 README、In、Q、Units、PL、Val、Recon、Sens、Sources。
 

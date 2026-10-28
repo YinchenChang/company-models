@@ -152,6 +152,40 @@ for k in QROWS:
     Q[f"{TOT}{QR[k]}"] = f"=SUM({b0}{QR[k]}:{b1}{QR[k]})" if k != "opm" else f"={TOT}{QR['op']}/{TOT}{QR['rev']}"
     Q[f"{TOT}{QR[k]}"].number_format = "0.0%" if k == "opm" else "0.00"
 Q.cell(18, 1, C.get("q_note", ""))
+# 官方報告分部（v0.4.1 樣板，選用）：實績季的分部營收與核對列「分部合計 − 合併營收」（分部原則第 3 條）。
+# 推估季不拆分部（模型以技術別 DRAM／NAND 推估）；分部列只放公司已揭露的實績。
+SEG = C.get("segments")
+if SEG:
+    r0 = 20
+    Q.cell(r0, 1, SEG["title"]).font = BOLD
+    rows_ = []
+    for j, (lab, vals) in enumerate(SEG["rows"]):
+        r = r0 + 1 + j; rows_.append(r); Q.cell(r, 1, lab)
+        for i, v in enumerate(vals):
+            if v is None: continue
+            cell = Q[f"{QC[i]}{r}"]; cell.value = v; cell.number_format = "0.000"
+            if isinstance(v, (int, float)): cell.font = BLUE
+        if all(vals[i] is not None for i in range(len(qs) - 4, len(qs))):
+            Q[f"{TOT}{r}"] = f"=SUM({b0}{r}:{b1}{r})"; Q[f"{TOT}{r}"].number_format = "0.000"
+    rc = r0 + 1 + len(SEG["rows"])
+    tot_ok = lambda i: True
+    if SEG.get("total"):   # 合併營收另列（記憶體營收≠合併營收的集團公司，如三星）
+        lab, vals = SEG["total"]; Q.cell(rc, 1, lab)
+        for i, v in enumerate(vals):
+            if v is not None:
+                Q[f"{QC[i]}{rc}"] = v; Q[f"{QC[i]}{rc}"].font = BLUE; Q[f"{QC[i]}{rc}"].number_format = "0.000"
+        tot_row = rc; tot_ok = lambda i: vals[i] is not None; rc += 1
+    else:
+        tot_row = QR["rev"]
+    Q.cell(rc, 1, SEG["check_label"])
+    full = [i for i in range(len(qs)) if tot_ok(i) and all(SEG["rows"][j][1][i] is not None for j in range(len(rows_)))]
+    for i in full:
+        c = QC[i]
+        Q[f"{c}{rc}"] = "=" + "+".join(f"{c}{r}" for r in rows_) + f"-{c}{tot_row}"; Q[f"{c}{rc}"].number_format = "0.000"
+    if not SEG.get("total"):
+        Q[f"{TOT}{rc}"] = "=" + "+".join(f"{TOT}{r}" for r in rows_) + f"-{TOT}{tot_row}"; Q[f"{TOT}{rc}"].number_format = "0.000"
+    for j, line in enumerate(SEG.get("notes", [])):
+        Q.cell(rc + 1 + j, 1, line)
 Q.column_dimensions["A"].width = 30
 for c in QC + [TOT]: Q.column_dimensions[c].width = 11
 

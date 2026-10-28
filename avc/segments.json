@@ -1,0 +1,14 @@
+{
+ "company": "Asia Vital Components",
+ "ticker": "3017.TW",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "伺服器與網通", "label": "伺服器與網通營收（液冷＋AI 氣冷與機構＋一般伺服器與網通）", "period": "FY2025", "value": 72.61, "unit": "NT$B", "source": "營收 1,396.39 億 × 52%（凱基 2026-08-12 轉述公司產品別比重；Interested-party）"},
+  {"name": "非伺服器", "label": "非伺服器營收（3C、系統、富世達）", "period": "FY2025", "value": 67.03, "unit": "NT$B", "source": "營收 − 伺服器與網通（Derived）"}
+ ],
+ "sublines": [
+  {"parent": "伺服器與網通", "labels": ["液冷營收", "AI 氣冷與機構營收", "一般伺服器與網通營收"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收"],
+ "note": "公司以產品別揭露營收比重；FY2025 液冷與 AI 氣冷拆分為 Assumed。"
+}

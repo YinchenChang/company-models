@@ -6,6 +6,11 @@
 
 **投資建議：強力買進**（依上檔空間固定規則：加權目標價上檔空間 +69.6%，落在 大於 +50%）。
 
+## v0.1.2（2026-10-28）：分部原則重建（數值不變）
+
+- 世芯為單一應報導部門。Q 頁第 33 列起追加 FY2025 部門營收、應用別子列（HPC 與 AI ASIC 83%、消費性 12%、利基與網通 4%，公司財報新聞稿）與核對列「檢查：分部合計 − 合併營收」。只在既有最後一列之後追加，不位移既有列。
+- 公司未揭露 NRE／量產金額；推估年仍以 Trainium 量產／其他拆分。分部宣告見 `segments.json`。
+
 ## 重點觀察
 
 1. 目標價 NT$5,926（DCF 3,503、Comparable 8,348 各半），比現價 3,495（2026-10-22）高 69.6%，級距 大於 50%；Comparable 單獨為 +138.9%。主因是倍數：本模型 12 個月後前瞻 EPS 215.44 只比共識前瞻 EPS 203.79 高 5.7%，但同業（創意、智原、聯發科、博通、邁威爾）前瞻 P/E 中位數 38.8 倍，現價只隱含 17.2 倍、共識目標價 5,803 隱含 28.5 倍（比同業低 26.5%）；DCF 3,503 與現價幾乎相同（+0.2%），上檔全部來自 Comparable，而 Comparable 未扣世芯單一客戶集中與 turnkey 低毛利的折價，偏高估。
@@ -19,9 +24,9 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_alchip.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_世芯-KY模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_世芯-KY個股模型_v0.1.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_世芯-KY模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
+| `dist/20261028_世芯-KY個股模型_v0.1.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
 
 建置：先跑 `python3 alchip/build_alchip.py raw.xlsx`，再跑 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序為 README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用的上游有：
 - `tsmc/dist`：Trainium 顆數、2029 成長、情境係數
