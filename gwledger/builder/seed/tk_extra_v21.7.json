@@ -1,0 +1,46 @@
+{
+ "_note": "Tokenomics 快照 v21.7 未含 IF_FacilityGW；GW 帳直接讀 Tokenomics 活頁簿 Interface 第 8 列（Requests R1 裁定，2026-10-28）。只讀，不改 Tokenomics",
+ "source": {
+  "file": "20261025_Tokenomics_v21.7.xlsx",
+  "repo": "YinchenChang/Tokenomics",
+  "path": "model/20261025_Tokenomics_v21.7.xlsx",
+  "commit": "730b6a5",
+  "cells": "Interface!C8:Q8",
+  "read": "2026-10-28"
+ },
+ "items": {
+  "IF_FacilityGW": {
+   "label": "每 IT GW 對應設施電力",
+   "unit": "GW",
+   "kind": "gen_cost",
+   "ref": "Interface!C8:Q8",
+   "values": {
+    "Hopper H100": {
+     "低成本": 1.1,
+     "基準": 1.2,
+     "高成本": 1.3
+    },
+    "GB200 NVL72": {
+     "低成本": 1.1,
+     "基準": 1.2,
+     "高成本": 1.3
+    },
+    "GB300 NVL72": {
+     "低成本": 1.1,
+     "基準": 1.2,
+     "高成本": 1.3
+    },
+    "VR200 NVL72": {
+     "低成本": 1.1,
+     "基準": 1.2,
+     "高成本": 1.3
+    },
+    "Rubin Ultra（MGX NVL 單架，72 GPU）": {
+     "低成本": 1.1,
+     "基準": 1.2,
+     "高成本": 1.3
+    }
+   }
+  }
+ }
+}
