@@ -161,8 +161,77 @@ def parse(text):
         return None
 
 
+import hashlib
+
+
+def cid(gid):
+    return "g" + hashlib.sha1(gid.encode()).hexdigest()[:20]   # 由組別決定（可從 API 取回舊批次結果）
+
+
+def fetch_results(bid, ids):
+    out, spent = [], 0.0
+    for line in api(f"messages/batches/{bid}/results").splitlines():
+        if not line.strip():
+            continue
+        it = json.loads(line)
+        g = ids.get(it["custom_id"])
+        if g is None:
+            continue
+        rec = dict(gid=g["gid"], scope=g["scope"], ok=False, results=[], cost=0.0, searches=0, fetches=0, stop="", batch=bid)
+        if it["result"]["type"] == "succeeded":
+            msg = it["result"]["message"]
+            c, s, f = cost(msg.get("usage"))
+            text = "".join(x.get("text", "") for x in msg["content"] if x.get("type") == "text")
+            res = parse(text)
+            rec.update(cost=c, searches=s, fetches=f, stop=msg.get("stop_reason", ""), ok=res is not None, results=res or [], raw=text[-600:])
+            spent += c
+        else:
+            rec["stop"] = it["result"]["type"]
+        out.append(rec)
+    return out, spent
+
+
+def recover(gs, since):
+    """取回 since 之後建立、尚未寫入 state 的批次結果（工作流程中途失敗時用）。
+    舊版 custom_id 為波次內序號 g0000…：依建立順序，以「當時的待做清單」逐波對回；新版為組別雜湊。"""
+    seen = set()
+    if os.path.exists(STATE):
+        for line in open(STATE, encoding="utf-8"):
+            b = json.loads(line).get("batch")
+            if b:
+                seen.add(b)
+    bl, after = [], None
+    while True:
+        q = "messages/batches?limit=100" + (f"&after_id={after}" if after else "")
+        r = json.loads(api(q))
+        bl += r.get("data", [])
+        if not r.get("has_more"):
+            break
+        after = r["last_id"]
+    bl = sorted([b for b in bl if b["created_at"] >= since and b["processing_status"] == "ended" and b["id"] not in seen], key=lambda b: b["created_at"])
+    done, _ = load_state()
+    todo = [g for g in gs if g["gid"] not in done]
+    byc = {cid(g["gid"]): g for g in gs}
+    i, total = 0, 0.0
+    for b in bl:
+        n = sum(b["request_counts"].values())
+        first = json.loads(api(f"messages/batches/{b['id']}/results").splitlines()[0])["custom_id"]
+        if first in byc:
+            ids = byc
+        else:
+            ids = {f"g{k:04d}": g for k, g in enumerate(todo[i:i + n])}
+            i += n
+        recs, c = fetch_results(b["id"], ids)
+        total += c
+        with open(STATE, "a", encoding="utf-8") as f:
+            for r in recs:
+                f.write(json.dumps(r, ensure_ascii=False) + "\n")
+        print(f"取回批次 {b['id']}（{b['created_at']}）：{len(recs)} 組、{c:.2f} 美元", flush=True)
+    return total
+
+
 def run_wave(wave):
-    ids = {f"g{i:04d}": g for i, g in enumerate(wave)}
+    ids = {cid(g["gid"]): g for g in wave}
     reqs = [{"custom_id": k, "params": {"model": MODEL, "max_tokens": 6000, "system": SYS, "tools": TOOLS,
                                        "messages": [{"role": "user", "content": prompt(g)}]}} for k, g in ids.items()]
     b = json.loads(api("messages/batches", {"requests": reqs}, "POST"))
@@ -175,24 +244,7 @@ def run_wave(wave):
         api(f"messages/batches/{b['id']}/cancel", {}, "POST")
         print("逾時，已取消", flush=True)
         return [], 0.0
-    out, spent = [], 0.0
-    for line in api(f"messages/batches/{b['id']}/results").splitlines():
-        if not line.strip():
-            continue
-        it = json.loads(line)
-        g = ids[it["custom_id"]]
-        rec = dict(gid=g["gid"], scope=g["scope"], ok=False, results=[], cost=0.0, searches=0, fetches=0, stop="")
-        if it["result"]["type"] == "succeeded":
-            msg = it["result"]["message"]
-            c, s, f = cost(msg.get("usage"))
-            text = "".join(x.get("text", "") for x in msg["content"] if x.get("type") == "text")
-            res = parse(text)
-            rec.update(cost=c, searches=s, fetches=f, stop=msg.get("stop_reason", ""), ok=res is not None, results=res or [], raw=text[-600:])
-            spent += c
-        else:
-            rec["stop"] = it["result"]["type"]
-        out.append(rec)
-    return out, spent
+    return fetch_results(b["id"], ids)
 
 
 # ---------- 主程式 ----------
@@ -211,6 +263,8 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     rows = collect()
     gs = groups(rows)
+    if os.environ.get("RECOVER_SINCE") and API_KEY:
+        recover(gs, os.environ["RECOVER_SINCE"])
     done, spent_before = load_state()
     todo = [g for g in gs if g["gid"] not in done]
     if MAX_GROUPS:
