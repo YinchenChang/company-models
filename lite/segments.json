@@ -1,0 +1,11 @@
+{
+ "company": "Lumentum",
+ "ticker": "LITE",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "Components", "label": "元件營收（Components）", "period": "FY2026", "value": 2.0056, "unit": "US$B", "source": "Lumentum 4Q FY26 新聞稿（8-K Ex.99.1）：產品類別 Components 2,005.6、Systems 1,008.4（US$M）；單一報告分部"},
+  {"name": "Systems", "label": "系統營收（Systems）", "period": "FY2026", "value": 1.0084, "unit": "US$B", "source": "同上"}
+ ],
+ "sublines": [],
+ "check_labels": ["檢查：元件＋系統 − 合併營收"]
+}

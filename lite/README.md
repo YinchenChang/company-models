@@ -6,6 +6,9 @@ Lumentum 的雷射晶片營收＝高速光模組數量（`markets/network` 可�
 
 **投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 −17.6%，落在 −25%～+25%；級距 0%～−25%）。
 
+
+- **營收分部（v0.3，分部原則）**：公司產品類別 Components／Systems（`segments.json`）；FY2025、FY2026 用新聞稿實績，FY2027 起元件＝雷射晶片＋電信與 DCI＋CPO＋工業與 3D 感測一半，系統＝光模組＋OCS＋工業與 3D 感測一半（與 Recon 頁口徑相同）；EPS 與目標價不變。
+
 ## 重點觀察
 
 1. 目標價 US$623（DCF 387、Comparable 860 各半），比現價 756.17（2026-10-23）低 17.6%，級距 0%～−25%；Comparable 單獨為 +13.7%。DCF 拉低：DCF 單獨 −48.8%（ROE 用預設 20%），而本模型 12 個月後前瞻 EPS 29.30 比共識前瞻 EPS 23.60 高 24.2%（共識 FY2028 只有單一來源）；共識目標價 1,165.03 隱含 49.4 倍，比同業中位數 29.3 倍高 68.3%，市場給 EML／CW 雷射供給缺口的溢價，Comparable 未計入。
@@ -19,9 +22,9 @@ AI 半導體 Project **網通次產業內複製（雷射與光元件）**，樣�
 | 檔案 | 內容 |
 |---|---|
 | `build_lite.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261026_Lumentum模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；重建逐格一致） |
+| `dist/20261028_Lumentum個股模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；重建逐格一致） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261026_Lumentum模型_v0.2.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
+| `dist/20261028_Lumentum個股模型_v0.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出） |
 
 建置：`python3 lite/build_lite.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（可插拔光模組、CPO、Google TPU 顆數、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`、`tools/valuation_rule.py`；**不修改它們**。
 

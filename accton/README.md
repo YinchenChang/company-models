@@ -6,6 +6,9 @@
 
 **投資建議：買進**（依上檔空間固定規則：加權目標價上檔空間 +28.2%，落在 +25%～+50%；級距 25%–50%）。
 
+
+- **營收分部（v0.3，分部原則）**：公司產品別 網路交換器（子列 AI 交換器、非 AI 交換器）／網路應用產品／接取與其他（`segments.json`）；FY2025 用公司前三季 34%／63%／2%，非 AI 內的交換器比例固定在 FY2025 結構；EPS 與目標價不變。
+
 ## 重點觀察
 
 1. 目標價 NT$2,275（DCF 2,584、Comparable 1,966 各半），比現價 1,775（2026-10-22）高 28.2%，級距 25%–50%；Comparable 單獨為 +10.8%。主因是 DCF 不是 EPS：本模型 12 個月後前瞻 EPS 138.6 比共識前瞻 EPS 162.3 低 14.6%，在同業前瞻 P/E 中位數 14.2 倍下 Comparable 只高一成；DCF 單獨 +45.6%，因 ROE 44.8% 遠高於折現率 10%（可發放比例 91%），而現價只有 FY2027 EPS 的 12.0 倍。共識目標價 3,500 隱含 21.6 倍，比同業高 52.0%。
@@ -18,9 +21,9 @@ AI 半導體 Project 網通系統端（比照 `arista/` 樣板；台股寫法比
 |---|---|
 | `build_accton.py` | 產生器（參數與公式；唯讀取用上游成品） |
 | `tp_v2.py` | v0.2 目標價與延伸期的共用函式（PL 延伸到 FY2032 的收斂法、Val 第 0 節 DCF＋Comparable、Sens 目標價參數；各公司資料夾各放一份相同內容） |
-| `dist/20261025_智邦模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261028_智邦個股模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_智邦模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261028_智邦個股模型_v0.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 accton/build_accton.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用的上游：`markets/network/dist`（scale-out 交換器市場、Trainium／ASIC／AMD 顆數與 scale-up 每顆內容、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`tools/cycle_position.py`（只用規則函式）。**本模型不修改上游。**
 

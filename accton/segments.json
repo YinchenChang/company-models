@@ -1,0 +1,14 @@
+{
+ "company": "智邦",
+ "ticker": "2345.TW",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "網路交換器", "label": "網路交換器營收（AI 資料中心＋非 AI）", "period": "FY2025", "value": 84.43, "unit": "NT$B", "source": "公司法說產品別（富果摘要）：2025 前三季網路交換器 34%、網路應用產品 63%、接取 2%；× FY2025 營收 248.32"},
+  {"name": "網路應用產品", "label": "網路應用產品營收", "period": "FY2025", "value": 156.44, "unit": "NT$B", "source": "同上 63%"},
+  {"name": "接取與其他", "label": "接取與其他營收（＝非 AI − 非 AI 交換器）", "period": "FY2025", "value": 7.45, "unit": "NT$B", "source": "同上（接取 2% 與其他）"}
+ ],
+ "sublines": [
+  {"parent": "網路交換器", "labels": ["AI 交換器營收", "網路交換器：非 AI（企業、電信、前端）"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收（FY2025 實績起）"]
+}

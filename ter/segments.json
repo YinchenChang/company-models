@@ -1,0 +1,14 @@
+{
+ "company": "Teradyne",
+ "ticker": "TER",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "Semiconductor Test", "label": "半導體測試營收", "period": "FY2025", "value": 2523.8, "unit": "US$M", "source": "Teradyne 10-K FY2025 分部資訊（Q 頁）"},
+  {"name": "Product Test", "label": "Product Test 營收", "period": "FY2025", "value": 358.0, "unit": "US$M", "source": "同上"},
+  {"name": "Robotics", "label": "機器人營收（不隨 AI 情境）", "period": "FY2025", "value": 308.3, "unit": "US$M", "source": "同上"}
+ ],
+ "sublines": [
+  {"parent": "Semiconductor Test", "labels": ["SoC 測試機營收", "記憶體測試機營收", "IST 營收（隨 SoC 市場）"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收（FY2025 實績、FY2026 錨點；四捨五入到百萬美元）"]
+}

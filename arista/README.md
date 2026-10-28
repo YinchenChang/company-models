@@ -6,6 +6,9 @@ Arista 的 AI 營收＝AI 後端 scale-out 交換器市場（`markets/network`�
 
 **投資建議：放空**（依上檔空間固定規則：加權目標價上檔空間 −42.3%，落在 −50%～−25%；級距 −25%～−50%）。
 
+
+- **營收分部（v0.3，分部原則）**：單一報告分部，依公司營收線 Product（子列 AI、非 AI 產品）／Service（`segments.json`）；FY2025 Product 7,576.9、Service 1,428.8 百萬美元（新聞稿），服務以年增推、非 AI 產品為差額；EPS 與目標價不變。
+
 ## 重點觀察
 
 1. 目標價 US$99.5（DCF 87.2、Comparable 111.7 各半），比現價 172.37（2026-10-23）低 42.3%，級距 −25%～−50%；Comparable 單獨為 −35.2%。主因是倍數不是 EPS：本模型 12 個月後前瞻 EPS 5.53 比共識前瞻 EPS 4.65 高 12.6%（期間差約一年），但同業（Cisco、Ciena、Celestica、HPE、Credo）前瞻 P/E 中位數 20.2 倍，現價隱含 37.1 倍、共識目標價 243.59 隱含 52.4 倍（比同業高 159%）；市場給 Arista 的 AI 乙太網路份額與高毛利溢價，Comparable 未計入。DCF 87.2 更低，因 ROE 雖有 28.6%，B 情境 FY2028 EPS 5.51 幾乎不成長（+0.8%）。
@@ -18,9 +21,9 @@ AI 半導體 Project **網通系統端的樣板**（AVGO 為網通晶片端）�
 |---|---|
 | `build_arista.py` | 產生器（參數與公式；唯讀取用上游成品） |
 | `tp_v2.py` | v0.2 目標價與延伸期的共用函式（PL 延伸到 FY2032 的收斂法、Val 第 0 節 DCF＋Comparable、Sens 目標價參數；各公司資料夾各放一份相同內容） |
-| `dist/20261025_Arista模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261028_Arista個股模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_Arista模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261028_Arista個股模型_v0.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 arista/build_arista.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（scale-out 交換器市場、AI IT 資本支出）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）；**不修改它們**。不依賴 #93（`avgo/`）。
 
