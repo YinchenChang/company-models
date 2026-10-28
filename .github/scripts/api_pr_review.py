@@ -99,7 +99,7 @@ def collect():
         xtext, xdone, xnotes = xlsx_pr_diff.build(files, pr["base"]["sha"], pr["head"]["sha"], max_chars=min(xbudget, MAX_CHARS - used))
         if xtext:
             parts.append("\n# Excel 變動（程式逐格比較新舊版的計算值與公式）\n" + xtext)
-        skipped = [x for x in skipped if x.split("（")[0] not in xdone] + xnotes
+        skipped = [x for x in skipped if x.rsplit("（", 1)[0] not in xdone] + xnotes   # 檔名本身可能含全形括號
     except Exception as e:
         skipped.append(f"Excel 變動比較失敗（{type(e).__name__}: {e}）")
     return "".join(parts), skipped

@@ -2,9 +2,12 @@
 
 為什麼：模型 PR 的核心是 xlsx，過去自動核對只看文字檔，xlsx 一律略過。
 做法：
-1. 找出 PR 新增或修改的 xlsx（略過 archive/、_待刪除/）。
-2. 找它的「舊版」：修改→同路徑的 base 版；改名→原路徑；新增→base 中同資料夾、同模型名（去掉日期與版本號）
-   的最新版，或 PR 同時移走的舊版。找不到舊版則只報錯誤格與基本統計。
+1. 找出 PR 新增或修改的 xlsx（略過 archive/、_待刪除、/legacy）。
+2. 找它的「舊版」：修改→同路徑的 base 版；改名→原路徑；新增→base 中同資料夾或其 archive/ 內、同模型名
+   （去掉日期與版本號）的最新版；若模型名也改了（例 Kioxia模型→Kioxia個股模型），同資料夾在 PR 中被移走的
+   xlsx 只有一個時以它為舊版。找不到舊版則只報錯誤格與基本統計。
+   列對齊：依列標籤（A–D 欄第一個文字格，兩版皆唯一時）；同一列號的標籤改名時，該列改依列號逐格比較。
+   計算值讀檔內快取值：若公式格大量沒有快取值（未經 Excel／LibreOffice 重算），輸出會警示。
 3. 逐格比較兩版的計算值（openpyxl data_only）與公式文字，輸出：工作表、儲存格、列標籤、舊值 → 新值；
    公式有變的另列。新版另報錯誤格（#REF! 等）。
 只讀，不改任何檔案；git 取檔用 `git fetch --depth=1 origin <sha>` 與 `git show`。
@@ -122,7 +125,7 @@ def aligned(vals, forms, wb, dup=frozenset()):
         col = re.sub(r"\d", "", coord)
         r = int(re.sub(r"\D", "", coord))
         t = lab.get((sh, r))
-        return (sh, f"［{t[:60]}］" if t and count[(sh, t)] == 1 and (sh, t) not in dup else f"列{r}", col)
+        return (sh, f"［{t}］" if t and count[(sh, t)] == 1 and (sh, t) not in dup else f"列{r}", col)
     kv, kf, where = {}, {}, {}
     for (sh, c), v in vals.items():
         k = key(sh, c); kv[k] = v; where[k] = f"{sh}!{c}"
@@ -152,15 +155,41 @@ def diff_pair(new_b, old_b, max_lines):
     if added or gone:
         lines.append(f"工作表：新增 {added or '無'}；移除 {gone or '無'}")
     lines.append(f"新版錯誤格：{len(errs)}" + ("（" + "、".join(f"{a}!{c}={v}" for (a, c), v in errs[:10]) + "）" if errs else ""))
-    rows_new = {(k[0], k[1]) for k in nk if k[1].startswith("［")}
-    rows_old = {(k[0], k[1]) for k in ok if k[1].startswith("［")}
-    add_rows, del_rows = sorted(rows_new - rows_old), sorted(rows_old - rows_new)
+    def rownum(where, k):
+        w = where.get(k, "")
+        return int(re.sub(r"\D", "", w.split("!")[-1])) if "!" in w else None
+    rows_new = {(k[0], k[1]): rownum(nwhere, k) for k in nk if k[1].startswith("［")}
+    rows_old = {(k[0], k[1]): rownum(owhere, k) for k in ok if k[1].startswith("［")}
+    add_rows = sorted(set(rows_new) - set(rows_old))
+    del_rows = sorted(set(rows_old) - set(rows_new))
+    # 同表、同列號、標籤不同 → 視為標籤改名，改依列號比較（不當成整列新增／移除）
+    renamed = []
+    del_by_pos = {(sh, rows_old[(sh, t)]): (sh, t) for sh, t in del_rows}
+    for sh, t in list(add_rows):
+        old = del_by_pos.get((sh, rows_new[(sh, t)]))
+        if old:
+            renamed.append((old, (sh, t), rows_new[(sh, t)]))
+            add_rows.remove((sh, t))
+            del_rows.remove(old)
+    ren_old = {(o[0], o[1]): f"列{r}" for o, _, r in renamed}
+    ren_new = {(n[0], n[1]): f"列{r}" for _, n, r in renamed}
+    def rekey(d, m):
+        return {((k[0], m[(k[0], k[1])], k[2]) if (k[0], k[1]) in m else k): v for k, v in d.items()}
+    ok, okf, owhere = rekey(ok, ren_old), rekey(okf, ren_old), rekey(owhere, ren_old)
+    nk, nkf, nwhere = rekey(nk, ren_new), rekey(nkf, ren_new), rekey(nwhere, ren_new)
+    if renamed:
+        lines.append(f"標籤改名的列（依列號逐格比較）：{len(renamed)}：" + "、".join(f"{o[0]}{o[1][:30]}→{n[1][:30]}" for o, n, _ in renamed[:20]))
+    nofc = sum(1 for k, f in nkf.items() if isinstance(f, str) and f.startswith("=") and nk.get(k) is None)
+    nform = sum(1 for f in nkf.values() if isinstance(f, str) and f.startswith("="))
+    if nform and nofc / nform > 0.05:
+        lines.append(f"**警示：新版 {nofc}/{nform} 個公式格沒有快取值（可能未經 Excel／LibreOffice 重算），計算結果的比較不可靠。**")
     if add_rows or del_rows:
         lines.append(f"新增的列（依列標籤）：{len(add_rows)}" + ("：" + "、".join(f"{a}{t}" for a, t in add_rows[:30]) if add_rows else "")
                      + f"；移除的列：{len(del_rows)}" + ("：" + "、".join(f"{a}{t}" for a, t in del_rows[:30]) if del_rows else ""))
     num_in, num_out, txt, form, by_sheet = [], [], [], [], {}
+    skip_rows = set(add_rows) | set(del_rows)
     for k in set(nk) | set(ok):
-        if (k[0], k[1]) in set(add_rows) | set(del_rows):
+        if (k[0], k[1]) in skip_rows:
             continue   # 整列新增／移除：上面已列，不再逐格列
         a, b = ok.get(k), nk.get(k)
         fa, fb = okf.get(k), nkf.get(k)
@@ -191,12 +220,12 @@ def diff_pair(new_b, old_b, max_lines):
         lines.append(f"\n#### {title}：{len(rows)} 格" + ("" if n == len(rows) else f"（只列幅度最大的 {n}）"))
         for rank, k, a, b, pct in rows[:n]:
             d = 6 if fmt(a) != fmt(b) else 12   # 6 位有效數字看不出差異時改顯示 12 位
-            lines.append(f"- {where(k)}{k[1] if k[1].startswith('［') else ''}：{fmt(a, d)} → {fmt(b, d)}（變動率 {pct}）")
+            lines.append(f"- {where(k)}{(k[1][:40] + '］') if k[1].startswith('［') and len(k[1]) > 41 else (k[1] if k[1].startswith('［') else '')}：{fmt(a, d)} → {fmt(b, d)}（變動率 {pct}）")
         budget = max(budget - n, 40)
     if txt:
         lines.append(f"\n#### 文字或型別變動：{len(txt)} 格" + ("" if len(txt) <= 40 else "（只列前 40）"))
         for k, a, b in sorted(txt, key=lambda x: where(x[0]))[:40]:
-            lines.append(f"- {where(k)}{k[1] if k[1].startswith('［') else ''}：{fmt(a)} → {fmt(b)}")
+            lines.append(f"- {where(k)}{(k[1][:40] + '］') if k[1].startswith('［') and len(k[1]) > 41 else (k[1] if k[1].startswith('［') else '')}：{fmt(a)} → {fmt(b)}")
     if form:
         lines.append(f"\n#### 公式文字變動：{len(form)} 格" + ("" if len(form) <= 50 else "（只列前 50）"))
         for k, fa, fb in sorted(form, key=lambda x: where(x[0]))[:50]:
@@ -243,7 +272,8 @@ def build(files, base_sha, head_sha, max_chars=60000, max_lines=150):
             continue
         block = head + body + "\n"
         if used + len(block) > max_chars:
-            block = block[: max(0, max_chars - used)] + "\n…（Excel 變動超過上限，以下截斷）\n"
+            tail = "\n…（Excel 變動超過上限，以下截斷）\n"
+            block = block[: max(0, max_chars - used - len(tail))] + tail
             parts.append(block)
             done.add(path)
             notes.append(f"{path}（Excel 變動部分截斷）")
