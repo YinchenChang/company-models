@@ -100,8 +100,23 @@ def expand(seed_list, req, usage, cap):
               "messages": [{"role": "user", "content": msg}]}
     if cap < 2:
         raise RuntimeError("預算不足以執行擴充段（需約 US$1–2）")
-    m = C.standard_message(params, usage)
-    sites = C.parse_jsonl(C.text_of(m))
+    if req.get("regions"):
+        # 分區擴充走 Batch（每區一則）：一般 API 長搜尋（30 次、32k 輸出）在 GitHub runner 上會被斷線（10-28 nonus 首跑）
+        bp = {}
+        for i, rg in enumerate(req["regions"]):
+            m2 = msg.replace(f"目標數量：{target} 個（100–150 之間）。", f"本則只負責區域：{rg['name']}；目標數量：{rg['target']} 個。")
+            if rg.get("focus"):
+                m2 += f"\n\n## 本區重點\n{rg['focus']}"
+            bp[f"r{i}"] = {"model": C.MODEL, "max_tokens": 16000, "system": SYS_EXPAND,
+                           "tools": [C.web_search_tool(min(int(rg.get("searches", n)), MAX_EXPAND_SEARCH))],
+                           "messages": [{"role": "user", "content": m2}]}
+        res, state = C.run_requests(bp, usage, None, poll_max_min=300)
+        sites = []
+        for cid in sorted(res):
+            sites += C.parse_jsonl(res[cid] or "")
+    else:
+        m = C.standard_message(params, usage)
+        sites = C.parse_jsonl(C.text_of(m))
     norm = lambda x: re.sub(r"\W+", "", str(x).lower())
     have = {norm(x) for x in excl}
     dedup = {}
