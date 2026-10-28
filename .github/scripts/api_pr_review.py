@@ -90,8 +90,13 @@ def collect():
     # Excel：以逐格差異取代「二進位略過」（2026-10-28 起）
     try:
         import xlsx_pr_diff
-        room = max(20000, MAX_CHARS - used)
-        xtext, xdone, xnotes = xlsx_pr_diff.build(files, pr["base"]["sha"], pr["head"]["sha"], max_chars=min(room, 80000))
+        # Excel 優先：PR 的核心多半是 xlsx。文字 diff 已用滿時，先擠掉部分文字檔，讓總量仍不超過 MAX_CHARS
+        xbudget = min(80000, max(20000, MAX_CHARS - used))
+        while used + xbudget > MAX_CHARS and len(parts) > 1:
+            dropped = parts.pop()
+            used -= len(dropped)
+            skipped.append(dropped.split("\n")[1].replace("## 檔案：", "")[:80] + "（為 Excel 變動讓出額度，未送出）")
+        xtext, xdone, xnotes = xlsx_pr_diff.build(files, pr["base"]["sha"], pr["head"]["sha"], max_chars=min(xbudget, MAX_CHARS - used))
         if xtext:
             parts.append("\n# Excel 變動（程式逐格比較新舊版的計算值與公式）\n" + xtext)
         skipped = [x for x in skipped if x.split("（")[0] not in xdone] + xnotes
