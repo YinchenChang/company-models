@@ -142,6 +142,10 @@ for y, v in ((27, (-0.05, 0.05, 0.10)), (28, (-0.05, 0.03, 0.08)), (29, (-0.05, 
     inp(f"g_nai{y}", f"非 AI 營收年增 20{y}", "%", *v, "Assumed",
         "產能優先給 AI 與高階板（Assumed）" if y == 27 else "同上", "—")
 
+inp("srv25", "2025 年伺服器營收 ÷ 營收（3Q25 代理）", "%", 0.75, 0.80, 0.82, "Interested-party", "富果 3Q25 法說摘要（2025-11-28）：伺服器（一般型與 AI）80%、網通 10%、筆電 7%、其他 3%（公司簡報）", "全年比例未揭露，以 3Q25 代理（2024 同期伺服器 68%）")
+inp("net25", "2025 年網通營收 ÷ 營收（3Q25 代理）", "%", 0.08, 0.10, 0.12, "Interested-party", "同上", "—")
+inp("srv26", "2026 年伺服器營收 ÷ 營收", "%", 0.75, 0.78, 0.82, "Interested-party", "理財周刊 2026-08-28：現階段伺服器 78%、網通約 15%，合計逾 90%", "分部原則 v0.2：營收列改為伺服器／網通／筆電與其他（公司應用別）")
+inp("net26", "2026 年網通營收 ÷ 營收", "%", 0.12, 0.15, 0.18, "Interested-party", "同上", "AI 網通＝AI 相關 × 交換器板 ÷ 三項合計（每 GW 金額）")
 sec("E. 毛利率")
 inp("d_ai", "AI 相關（高層數 AI 伺服器板、800G 交換器板）毛利率高於其他營收的幅度", "pt", 0.06, 0.10, 0.14, "Assumed",
     "部門別毛利率未揭露：未找到；毛利率 FY2024 29.3% → FY2025 32.8% → 1H26 34.7%，同期 AI 占比由約兩成升至約五成", "泰國廠由一般伺服器板轉 AI 高單價板（優分析 2026-09-09）")
@@ -343,6 +347,14 @@ def engine(ws, r0, title, **over):
     row("bind", "產能是否受限", "", {c_(y): f'=IF({c_(y)}{R["aid"]}>{c_(y)}{R["rcap"]}-{c_(y)}{R["nai"]}+0.0001,"受限","未受限")' for y in BU[1:]}, fmt="General")
     row("rev", "營收", "NT$B", {c_(y): f"={c_(y)}{R['ai']}+{c_(y)}{R['nai']}" for y in FYS}, fmt="#,##0.0")
     row("g", "營收年增", "%", {c_(y): f"={c_(y)}{R['rev']}/{c_(y - 1)}{R['rev']}-1" for y in FYS[1:]}, fmt="0.0%")
+    row("aisrv", "  伺服器：AI（加速器卡、運算板、中板背板）", "NT$B", {c_(y): f"={c_(y)}{R['ai']}*({c_(y)}{R['vcmp']}+{c_(y)}{R['vmid']})/{c_(y)}{R['pgw']}" for y in BU}, fmt="#,##0.0", note="AI 相關依每 GW 金額組成拆分")
+    row("ainet", "  網通：AI（交換器板）", "NT$B", {c_(y): f"={c_(y)}{R['ai']}*{c_(y)}{R['vsw']}/{c_(y)}{R['pgw']}" for y in BU}, fmt="#,##0.0")
+    row("nsrv", "  伺服器：一般型", "NT$B", {"D": f"=srv26*D{R['rev']}-D{R['aisrv']}", **{c_(y): f"={c_(y)}{R['nai']}*$D{r}/$D{R['nai']}" for y in BU[1:]}}, fmt="#,##0.0", note="FY2026＝伺服器占比 × 營收 − AI；之後占非 AI 比例固定")
+    row("nnet", "  網通：非 AI", "NT$B", {"D": f"=net26*D{R['rev']}-D{R['ainet']}", **{c_(y): f"={c_(y)}{R['nai']}*$D{r}/$D{R['nai']}" for y in BU[1:]}}, fmt="#,##0.0")
+    row("srvs", "伺服器營收（一般型＋AI）", "NT$B", {"C": f"=srv25*C{R['rev']}", **{c_(y): f"={c_(y)}{R['aisrv']}+{c_(y)}{R['nsrv']}" for y in BU}}, fmt="#,##0.0", note="公司應用別：伺服器")
+    row("nets", "網通營收", "NT$B", {"C": f"=net25*C{R['rev']}", **{c_(y): f"={c_(y)}{R['ainet']}+{c_(y)}{R['nnet']}" for y in BU}}, fmt="#,##0.0", note="公司應用別：網通")
+    row("nbo", "筆電與其他營收（＝營收 − 伺服器 − 網通）", "NT$B", {c_(y): f"={c_(y)}{R['rev']}-{c_(y)}{R['srvs']}-{c_(y)}{R['nets']}" for y in FYS}, fmt="#,##0.0", note="公司應用別：筆電、其他")
+    row("segchk", "檢查：分部合計 − 合併營收；非 AI 拆分 − 非 AI", "NT$B", {"C": f"=C{R['srvs']}+C{R['nets']}+C{R['nbo']}-C{R['rev']}", **{c_(y): f"=ROUND({c_(y)}{R['nsrv']}+{c_(y)}{R['nnet']}+{c_(y)}{R['nbo']}-{c_(y)}{R['nai']},9)" for y in BU}}, fmt="0.000")
     row("aish", "AI 相關 ÷ 營收", "%", {c_(y): f"={c_(y)}{R['ai']}/{c_(y)}{R['rev']}" for y in FYS}, fmt="0.0%")
     row("util", "需求面 ÷ 產能上限（AI 需求面＋非 AI）", "%", {c_(y): f"=({c_(y)}{R['aid']}+{c_(y)}{R['nai']})/{c_(y)}{R['rcap']}" for y in BU}, fmt="0.0%",
         note="大於 100%＝需求超過產能（營收由產能決定）")

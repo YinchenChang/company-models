@@ -8,6 +8,9 @@
 
 **投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 −6.7%，落在 −25%～+25%）。
 
+
+- **營收分部（v0.3，分部原則）**：官方分部 半導體系統／AGS 服務／其他（含顯示器）（`segments.json`）。原「出口管制與中國調整」改為依半導體系統、AGS 營收比例分攤進兩個分部（調整前的需求推導列保留）；分部合計＝合併營收，FY2025、FY2026 錨點對帳列為 0；EPS 與目標價不變。
+
 ## 重點觀察
 
 1. 目標價 US$352（DCF 253、Comparable 451 各半），比現價 377.24（2026-10-23）低 6.7%，級距 0%～−25%；Comparable 單獨為 +19.6%。兩法差距大：DCF 比現價低 33.0%，因情境 B、C 的 EPS 在 FY2028 後依收斂法持平或下滑（B 的 FY2032 EPS 16.01 低於 FY2027 的 16.48），不是 ROE（近三年 41.4%）；本模型前瞻 EPS 17.55 比共識 FY2027 EPS 18.49 低 5.1%（期間晚一年）。
@@ -21,9 +24,9 @@ AI 半導體 Project 步驟 5（設備與材料）的第三家公司，結構比
 | 檔案 | 內容 |
 |---|---|
 | `build_amat.py` | 產生器（參數與公式） |
-| `dist/20261025_應用材料模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_應用材料個股模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（格式見 `tools/company_html/README.md`） |
-| `dist/20261025_應用材料模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格） |
+| `dist/20261028_應用材料個股模型_v0.3.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出並標註來源儲存格） |
 
 建置：`python3 amat/build_amat.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。唯讀取用 `markets/equipment/dist`（各終端市場設備支出三情境、見頂年度、SEMI 對帳值）與 `tools/cycle_position.py`；不修改它們。算力假設（GW、每 GW capex）不直接讀，經設備市場模型間接使用。
 

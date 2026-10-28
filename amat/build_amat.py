@@ -272,12 +272,15 @@ def engine(ws, r0, title, **over):
         {col[y]: f"={P['mfl']}*{col[y]}{R['fl_f']}/$D{R['fl_f']}+{P['mdr']}*{col[y]}{R['dr_f']}/$D{R['dr_f']}+{P['mnd']}*{col[y]}{R['nd_f']}/$D{R['nd_f']}" for y in range(2026, 2030)},
         "0.000", "Σ 權重 × FY 市場 ÷ FY2026 市場")
     ws.cell(r, 1, "C. 損益（US$M；FY2025 實績、FY2026 錨點＝前三季實績＋第四季指引、FY2027 起模型）").font = BOLD; r += 1
-    row("ss", "半導體系統營收", "US$M", {"C": "=a25_ss", "D": "=an_ss", **{col[y]: f"=$D{r}*{col[y]}{R['idx']}*{P['sf']}" for y in range(2027, 2030)}}, note="FY2027 起＝FY2026 錨點 × 需求指數 × 份額係數")
-    row("ags", "AGS 服務營收", "US$M", {"C": "=a25_ags", "D": "=an_ags", **{col[y]: f"={col[y-1]}{r}*(1+{gags})" for y in range(2027, 2030)}})
-    row("oth", "其他（含顯示器）營收", "US$M", {"C": "=a25_oth", "D": "=an_oth", **{col[y]: f"={col[y-1]}{r}*(1+{goth})" for y in range(2027, 2030)}})
-    row("adj", "出口管制與中國調整", "US$M", {"C": 0, "D": 0, **{col[y]: f"=-{P['affv']}*{aff}-{P['cn']}*cn_sh*({col[y]}{R['ss']}+{col[y]}{R['ags']})" for y in range(2027, 2030)}},
+    row("ss0", "半導體系統：需求推導（調整前）", "US$M", {"C": "=a25_ss", "D": "=an_ss", **{col[y]: f"=$D{r}*{col[y]}{R['idx']}*{P['sf']}" for y in range(2027, 2030)}}, note="FY2027 起＝FY2026 錨點 × 需求指數 × 份額係數")
+    row("ags0", "AGS：成長路徑（調整前）", "US$M", {"C": "=a25_ags", "D": "=an_ags", **{col[y]: f"={col[y-1]}{r}*(1+{gags})" for y in range(2027, 2030)}})
+    row("adj", "出口管制與中國調整（依半導體系統、AGS 營收比例分攤到兩分部）", "US$M", {"C": 0, "D": 0, **{col[y]: f"=-{P['affv']}*{aff}-{P['cn']}*cn_sh*({col[y]}{R['ss0']}+{col[y]}{R['ags0']})" for y in range(2027, 2030)}},
         note="關係企業規則恢復（情境 C 或 Sens）；中國下修只在 Sens")
-    row("rev", "營收", "US$M", {col[y]: f"={col[y]}{R['ss']}+{col[y]}{R['ags']}+{col[y]}{R['oth']}+{col[y]}{R['adj']}" for y in YRS})
+    row("ss", "半導體系統營收", "US$M", {col[y]: f"={col[y]}{R['ss0']}+{col[y]}{R['adj']}*{col[y]}{R['ss0']}/({col[y]}{R['ss0']}+{col[y]}{R['ags0']})" for y in YRS}, note="官方分部 Semiconductor Systems")
+    row("ags", "AGS 服務營收", "US$M", {col[y]: f"={col[y]}{R['ags0']}+{col[y]}{R['adj']}*{col[y]}{R['ags0']}/({col[y]}{R['ss0']}+{col[y]}{R['ags0']})" for y in YRS}, note="官方分部 Applied Global Services")
+    row("oth", "其他（含顯示器）營收", "US$M", {"C": "=a25_oth", "D": "=an_oth", **{col[y]: f"={col[y-1]}{r}*(1+{goth})" for y in range(2027, 2030)}}, note="官方：Corporate and Other（含顯示器）")
+    row("rev", "營收", "US$M", {col[y]: f"={col[y]}{R['ss']}+{col[y]}{R['ags']}+{col[y]}{R['oth']}" for y in YRS})
+    row("chk", "檢查：分部合計 − 合併營收（FY2025 實績、FY2026 錨點）", "US$M", {"C": f"=C{R['ss']}+C{R['ags']}+C{R['oth']}-a25_rev", "D": f"=D{R['ss']}+D{R['ags']}+D{R['oth']}-an_rev"}, "#,##0.0")
     row("gm", "non-GAAP 毛利率", "%", {"C": "=a25_gp/a25_rev", "D": "=an_gp/an_rev", **{col[y]: f"=1-({P['cF']}+{P['cv']}*{col[y]}{R['rev']})/{col[y]}{R['rev']}" for y in range(2027, 2030)}}, "0.0%", "營業成本＝固定＋變動×營收（兩點推導）")
     row("gp", "non-GAAP 毛利", "US$M", {col[y]: f"={col[y]}{R['rev']}*{col[y]}{R['gm']}" for y in YRS})
     row("opx", "non-GAAP 營業費用", "US$M", {"C": "=opex25", "D": "=opex26", **{col[y]: f"={P['oF']}+{P['ov']}*{col[y]}{R['rev']}" for y in range(2027, 2030)}}, note="固定＋變動×營收（兩點推導）")
@@ -287,7 +290,7 @@ def engine(ws, r0, title, **over):
     row("sh", "稀釋股數", "百萬股", {"C": "=a25_sh", "D": "=an_sh", **{col[y]: f"=$D{r}*(1-{P['bb']})^{y-2026}" for y in range(2027, 2030)}}, "#,##0.0")
     row("eps", "non-GAAP 稀釋 EPS", "US$", {"C": "=a25_eps", "D": "=an_eps", **{col[y]: f"={col[y]}{R['ni']}/{col[y]}{R['sh']}" for y in range(2027, 2030)}}, "0.00",
         "FY2026＝前三季實績 EPS 合計＋第四季指引 EPS")
-    row("shr", "半導體系統 ÷ FY 晶圓前段市場（隱含份額）", "%", {col[y]: f"={col[y]}{R['ss']}/1000/({col[y]}{R['fl_f']}+{col[y]}{R['dr_f']}+{col[y]}{R['nd_f']})" for y in range(2026, 2030)}, "0.0%",
+    row("shr", "半導體系統 ÷ FY 晶圓前段市場（隱含份額）", "%", {col[y]: f"={col[y]}{R['ss0']}/1000/({col[y]}{R['fl_f']}+{col[y]}{R['dr_f']}+{col[y]}{R['nd_f']})" for y in range(2026, 2030)}, "0.0%",
         "檢驗用；FY2027 起等於 FY2026 份額 × 份額係數 × 組合效果")
     R["end"] = r
     return R

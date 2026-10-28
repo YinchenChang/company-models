@@ -1,0 +1,13 @@
+{
+ "company": "Advantest",
+ "ticker": "6857.T",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "テストシステム（Test System）", "label": "測試系統事業營收（SoC＋記憶體＋其他系統）", "period": "FY2025", "value": 1019.4, "unit": "¥B", "source": "Advantest FY2025 決算（事業別：SoC 767.4、記憶體 171.5、其他系統 80.5；Q 頁）"},
+  {"name": "サービス他（Services, Support and Others）", "label": "服務、支援與其他營收", "period": "FY2025", "value": 109.2, "unit": "¥B", "source": "同上"}
+ ],
+ "sublines": [
+  {"parent": "テストシステム（Test System）", "labels": ["SoC 測試機營收", "記憶體測試機營收", "其他系統營收"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收（FY2025 實績）"]
+}

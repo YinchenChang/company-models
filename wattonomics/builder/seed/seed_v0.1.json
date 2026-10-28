@@ -687,7 +687,7 @@
   },
   {
    "key": "ctr_msft_ant",
-   "label": "Anthropic–Azure 合約上限",
+   "label": "Anthropic–Azure：$30B 確定（GW 未揭露）＋額外至多 1 GW（上限）",
    "unit": "GW",
    "lo": null,
    "base": 1,

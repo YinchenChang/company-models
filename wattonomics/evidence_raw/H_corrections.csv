@@ -1,0 +1,82 @@
+﻿file,row,field,old,new,reason,url
+A_us_cloud.csv,18,value,900,700,900 MW 是 Crusoe 現場發電廠容量；Bloomberg 報 Microsoft 承租 700 MW（Excel In!J189 cp_msft_abl 900→700）,https://w.media/microsoft-to-add-900-mw-to-ai-campus-in-abilene-texas/ ; https://www.shopifreaks.com/microsoft-agrees-to-rent-a-700-megawatt-texas-data-center-that-oracle-and-openai-walked-away-from/
+A_us_cloud.csv,18,quote_or_paraphrase,公司聲明 900 MW；第二來源標題為 700 MW → 數字待核（可能為 IT 與設施差異）,Crusoe：900 MW 為園區專用現場電廠；記者導言『add some 900 MW』；Bloomberg（2026-03-24）：Microsoft 承租 700 MW；全站 2.1 GW、首棟 2027 年中,C 段判屬實有誤；以原文為準,https://w.media/microsoft-to-add-900-mw-to-ai-campus-in-abilene-texas/
+A_us_cloud.csv,19,unit,MW（上限，另有選擇權再 1 GW）,MW（$30B Azure 之外的額外承諾，上限 up to 1 GW；$30B 對應 GW 未揭露）,原文 'and to contract additional compute capacity up to one gigawatt'；C 段『全案上限 1 GW』有誤,https://www.anthropic.com/news/microsoft-nvidia-anthropic-announce-strategic-partnerships
+A_us_cloud.csv,19,metric,contracted,option（上限）,1 GW 為上限承諾，非確定量,https://computeprices.com/deals/anthropic-microsoft-azure-2025-11
+A_us_cloud.csv,19,quote_or_paraphrase,…一手頁…抓取被擋（未獲授權），未核原文,一手頁已核：$30B Azure＋額外至多 1 GW（NVIDIA GB／VR，initially up to one gigawatt）,一手頁可讀,https://www.anthropic.com/news/microsoft-nvidia-anthropic-announce-strategic-partnerships
+A_us_cloud.csv,29,(none),,,維持；1000 為 'well over a gigawatt' 下限，unit 已註明,https://www.anthropic.com/news/expanding-our-use-of-google-cloud-tpus-and-services
+A_us_cloud.csv,37,site_or_scope,全公司電力容量目標,AWS 電力容量目標,原文 'AWS remains on pace to double its power capacity',https://fortune.com/2026/07/30/andy-jassy-amazon-capex-demand-aws-pga-tour/
+A_us_cloud.csv,37,quote_or_paraphrase,本人說：2027 年底電力容量為 2025 的兩倍…,記者轉述 Jassy（非逐字）：AWS 2027 年底電力容量為 2025 的兩倍…,無引號，屬轉述,https://fortune.com/2026/07/30/andy-jassy-amazon-capex-demand-aws-pga-tour/
+A_us_cloud.csv,7,quote_or_paraphrase,記者引知情人士，非公司揭露；全部負載；不含向 CoreWeave 等租用,Bloomberg 報導（AI Weekly 轉述；消息來源提醒路線圖可能變動），非公司揭露；自有＋租賃；口徑未定義；不含 neocloud,措辭；原文無『知情人士』『全部負載』,https://aiweekly.co/alerts/microsoft-plans-to-grow-data-center-capacity-from-12gw-to-38gw-by-2032-a-third
+A_us_cloud.csv,56,quote_or_paraphrase,…1 GW 原為 SemiAnalysis 估，後為 Meta 自述目標…,Zuckerberg 2025-07『coming online in 26』屬實（Register）；1 GW 為 SemiAnalysis 估；主來源被擋，『後為 Meta 自述目標』未核,主來源 cryptobriefing 被擋（未繞過）,https://www.theregister.com/2025/07/15/meta_datacenter_build_plan/
+A_us_cloud.csv,61,as_of,2026-03-16,2026-03,來源只寫 Announced Mar 2026,https://computeprices.com/deals/meta-nebius-2026-03
+A_us_cloud.csv,61,tag,[Interested-party],[Interested-party]（第三方彙整引 Nebius 新聞稿）,出處性質,https://computeprices.com/deals/meta-nebius-2026-03
+A_us_cloud.csv,70,unit,MW（原約 2 GW 擴建）,MW（原規劃園區擴至約 2 GW；現上限 1.2 GW，取消增量約 0.8 GW；B#8 引 Bloomberg 為 600 MW）,2 GW 為園區總目標非擴建量,https://www.techradar.com/pro/oracle-and-openai-drop-plans-for-mega-stargate-ai-us-data-center
+A_us_cloud.csv,70,expected_online,取消；容量改由 Microsoft 承租 900 MW,取消；鄰近 Crusoe 園區由 Microsoft 承租 700 MW（Bloomberg）,同 A#18,https://www.shopifreaks.com/microsoft-agrees-to-rent-a-700-megawatt-texas-data-center-that-oracle-and-openai-walked-away-from/
+A_us_cloud.csv,70,as_of,2026-03-06,2026-03,TechRadar 2026-03-09，原文無 3/6,https://www.techradar.com/pro/oracle-and-openai-drop-plans-for-mega-stargate-ai-us-data-center
+B_delay.csv,5,tag,Verified（LBNL Queued Up 2026，經 Core Insights Review 轉述）,Analogy（LBNL 經第三方轉述；52＝約 4.3 年〔2018–24〕、60＝>5 年下限〔2025 完工〕、84＝PJM 平均 >7 年）,數值屬實但為下限／不同統計,https://www.coradvisors.net/2026/08/data-center-grid-connection-problems.html
+B_delay.csv,10,note,兩年前最大機型約 3 年；2025 平均約 5 年、部分 7 年…,low 36＝兩年前最強機型最多約 3 年（歷史值）；60、84 為 2025 現況（EPRI）,low 非現行值,https://oenergetice.cz/en/electricity/gas-turbine-manufacturers-expand-capacity-but-lead-times-continue-to-lengthen
+B_delay.csv,10,metric,平均等待,最強機型平均等待（EPRI）,範圍為最強機型,https://oenergetice.cz/en/electricity/gas-turbine-manufacturers-expand-capacity-but-lead-times-continue-to-lengthen
+B_delay.csv,12,high_months,60,36,原文最高為 GSU 144 週（約 33 月）；60 無出處，改 [Assumed],https://powermag.com/transformers-in-2026-shortage-scramble-or-self-inflicted-crisis/
+B_delay.csv,12,note,平均 128 週；2025 供給缺口約 30%；2020 年前 24–30 個月,平均 128 週（約 30 月）、GSU 144 週；2025 缺口約 30%；low 24／high 36 為 [Assumed]；經紀商稱 12–14 月（Interested-party）,『2020 年前 24–30 個月』不在原文,https://powermag.com/transformers-in-2026-shortage-scramble-or-self-inflicted-crisis/
+B_delay.csv,18,as_of,2026-03-02,（頁面無日期）,原文無此日期,https://www.datacenterdynamics.com/en/news/coreweave-deploys-16000-gpus-at-delayed-data-center-in-denton-texas/
+B_delay.csv,18,note,原指引 2025 年底 250MW；2026-03 部分運轉、Q2 簡報稱年中全園區；第三方開發商落後；用戶同意延後合約日期 [月數 Derived],"第三方開發商落後、客戶同意修改合約日期；12 月底 >16,000 GPU；MW、原指引、年中全園區不在本頁 [月數 Assumed]（In!G23 應刪 Denton）",原文找不到,https://www.datacenterdynamics.com/en/news/coreweave-deploys-16000-gpus-at-delayed-data-center-in-denton-texas/
+B_delay.csv,19,metric,首期 50MW 工期,首期 50MW 延遲（實際 10–11 月 − 目標 4 月）,6／7 為延遲量非工期,https://newsletter.semianalysis.com/p/stop-saying-half-of-2026-us-datacenter?open=false
+B_delay.csv,21,metric,Q3 2026 目標未見上線,Q3 2026 目標；至 9-12 無試運轉公告（官方未改期、不視為延遲）,原文明言不視為延遲,https://thegulftape.com/articles/stargate-uae
+B_delay.csv,21,note,…Reuters 稱設計改為分散多站 [月數 Assumed],…Reuters 分散多站指 5 GW 園區，第一期繼續施工（有修改）；G42 稱如期 [月數 Assumed],範圍誤植,https://thegulftape.com/articles/stargate-uae
+B_delay.csv,23,tag,Interested-party（Jassy 本人說）,Interested-party（Jassy 本人說 several quarters）；月數 Derived（2–4 季）,月數非原話,https://www.latitudemedia.com/news/power-is-aws-single-biggest-constraint/
+B_labs_china_totals.csv,4,quote_or_paraphrase,「low double-digit」GW 於 2027；數值 11 為 Assumed 中點。備忘錄另稱 2030 規劃 30GW,Epoch：low double-digit GW（2027）；11 為 Assumed 中點；30 GW（2030）出自 taekim 備忘錄（2026-04-08），非 Epoch,出處拆分,https://epoch.ai/gradient-updates/frontier-labs-dont-use-most-ai-compute ; https://taekim.substack.com/p/exclusive-openai-highlights-massive
+B_labs_china_totals.csv,4,tag,Interested-party（OpenAI 投資人備忘錄，二手：Bloomberg/Epoch 引）,Interested-party（OpenAI 內部預測，Epoch 引；備忘錄經 Tae Kim）,無 Bloomberg,https://epoch.ai/gradient-updates/frontier-labs-dont-use-most-ai-compute
+B_labs_china_totals.csv,8,quote_or_paraphrase,記者推論：擴建被否決；本體 1.2GW 不受影響,ledger 引 Bloomberg：600MW 擴建因融資談判停滯取消（2026-03）；1.2GW 上限出自 TechRadar（A#70）；與 TechRadar 推得約 0.8 GW 並列,出處錯置,https://www.regardsofwallstreet.com/data/ai-deals/entity/openai
+B_labs_china_totals.csv,8,as_of,2026-03-06,2026-03,原文僅月份,https://www.regardsofwallstreet.com/data/ai-deals/entity/openai
+B_labs_china_totals.csv,16,metric,contracted,initial_phase（NVIDIA 信用支持首期；OpenAI 租約全園 8 IT-GW）,4.25 為首期，非簽約量,https://nvidianews.nvidia.com/news/nvidia-guarantees-sb-energy-s-ports-pike-technology-campus-in-ohio-to-exclusively-host-nvidia-ai-compute
+B_labs_china_totals.csv,16,expected_online,2028 起分期（首期 800MW 2028）,2028 起分期,800MW 不在原文,https://nvidianews.nvidia.com/news/nvidia-guarantees-sb-energy-s-ports-pike-technology-campus-in-ohio-to-exclusively-host-nvidia-ai-compute
+B_labs_china_totals.csv,20,tag,Verified（CoreWeave 8-K）,Verified（$6.5B 至 2031-05-31，8-K）＋ledger 轉述（$11.9B 5 年、$4B 至 2029）,API 稱 2031 找不到有誤：8-K 有,https://www.sec.gov/Archives/edgar/data/1769628/000119312525216497/d17274d8k.htm
+B_labs_china_totals.csv,27,delay_note,至 2026-09-12 無試運轉公告；Reuters：園區改為分散多站設計,至 2026-09-12 無試運轉公告；Reuters 分散多站指 5 GW 園區，第一期繼續（有修改）；G42 稱如期,範圍誤植,https://thegulftape.com/articles/stargate-uae
+B_labs_china_totals.csv,27,quote_or_paraphrase,…Epoch 預測 2026-12-01 200MW IT,1GW 叢集位於 5GW 園區內，數字為巢狀不可相加（Epoch 預測未核到出處）,兩來源皆無 Epoch,https://gulfnews.com/business/markets/stargate-uae-first-phase-of-200mw-to-complete-by-2026-1.500310364
+B_labs_china_totals.csv,30,tag,Verified（Broadcom 8-K）,Interested-party（Broadcom 8-K 前瞻自述；與 A#30 統一）,承諾量為公司自述,https://www.boardroomalpha.com/sec/avgo-8-k-2026-04-06-0001193125-26-144028
+B_labs_china_totals.csv,30,quote_or_paraphrase,S-1：Broadcom 五年設備租賃 $161.2B；2026 部分上線、2027 起更多,8-K：2027 起約 3.5 GW、取決於 Anthropic 商業成功；$161.2B 租賃出自 TNW（2026-09-29）,出處錯置,https://www.boardroomalpha.com/sec/avgo-8-k-2026-04-06-0001193125-26-144028
+B_labs_china_totals.csv,33,site_or_contract,Azure $30B（Nvidia GB/VR 至多 1GW）,Azure $30B 確定採購＋額外 NVIDIA GB/VR 至多 1GW,1 GW 為額外承諾（C 段判屬實有誤）,https://www.anthropic.com/news/microsoft-nvidia-anthropic-announce-strategic-partnerships
+B_labs_china_totals.csv,33,metric,contracted,option（上限）,up to,https://www.anthropic.com/news/microsoft-nvidia-anthropic-announce-strategic-partnerships
+B_labs_china_totals.csv,34,tag,Verified（SpaceX S-1，Reuters 轉述）＋Interested-party,Interested-party（Anthropic 公告）＋Reuters 轉述 SpaceX S-1,二手轉述非 Verified；Colossus II 有據（Reuters）,https://finance.yahoo.com/sectors/technology/articles/anthropic-nears-first-quarterly-profit-000422401.html
+B_labs_china_totals.csv,34,quote_or_paraphrase,$1.25B／月至 2029-05；招股書：至 2029 上限 $84.5B；>22 萬顆 GPU,$1.25B／月至 2029-05（Reuters）；>22 萬顆 GPU（Anthropic）；$84.5B 未核到出處,$84.5B 兩來源皆無,https://www.anthropic.com/news/higher-limits-spacex
+B_labs_china_totals.csv,37,expected_online,未載,96MW 2027-12；全部 2028-06,原文有,https://www.datacenterdynamics.com/en/news/riot-platforms-agrees-191mw-20-year-lease-agreement-with-anthropic-worth-91bn-report/
+B_labs_china_totals.csv,64,value,1600,1200–1600（一季落後 1600；兩季落後 1200）,1600 為情境值,https://epoch.ai/gradient-updates/frontier-labs-dont-use-most-ai-compute
+B_labs_china_totals.csv,64,expected_online,2026 年約 3 倍成長,（刪除；原文為 2025 年約 3 倍）,年份誤植,https://epoch.ai/gradient-updates/frontier-labs-dont-use-most-ai-compute
+F_funding.csv,31,item,vendor_financing,compute_purchase（Microsoft 為付款方）,租用算力承諾非 Microsoft 資金來源；Excel FundRaw!O33 1→0,https://www.datacenterknowledge.com/ai-data-centers/microsoft-neocloud-deals-cross-60-billion-in-ai-spending-frenzy
+F_funding.csv,31,tag,[Interested-party],[報導]（Bloomberg；Nscale 金額為匿名來源）,出處性質,https://www.datacenterknowledge.com/ai-data-centers/microsoft-neocloud-deals-cross-60-billion-in-ai-spending-frenzy
+F_funding.csv,179,value,52.0,45.0,19+19+約 7＝45（SA 引 The Information 'roughly $45B'）；55 為首期 100 尚缺額；持股 40% 兩來源說法不一,https://datacenterdynamics.com/en/news/openai-and-softbank-to-both-invest-19bn-in-stargate-report ; https://seekingalpha.com/news/4397804-openai-softbank-to-each-commit-19b-to-stargate-project-report
+F_funding.csv,182,value,0.0,（空白，未量化）,原文無美元金額,https://newsroom.amd.com/news/amd-and-openai-announce-strategic-partnership-to-d/
+F_funding.csv,182,tag,[Verified],[Interested-party],AMD 自家新聞稿；歸屬另綁股價與里程碑,https://newsroom.amd.com/news/amd-and-openai-announce-strategic-partnership-to-d/
+F_funding.csv,194,item,jv_offbalance,capex_commitment（結構未揭露）,原文無 JV／表外,https://www.anthropic.com/news/anthropic-invests-50-billion-in-american-ai-infrastructure
+F_funding.csv,196,item,net_debt_change,cash_level,20.28 為期末現金與短投存量,https://thenextweb.com/news/anthropic-ipo-prospectus-42bn-loss-518bn-compute
+F_funding.csv,196,value,-20.28,20.28,正值存量,https://thenextweb.com/news/anthropic-ipo-prospectus-42bn-loss-518bn-compute
+F_funding.csv,199,item,vendor_financing,compute_purchase（Anthropic 為付款方）,採購非融資；Excel FundRaw!O201 1→0；撤回 G 段『刪除至 2029-05』（原文有）,https://finance.yahoo.com/sectors/technology/articles/anthropic-nears-first-quarterly-profit-000422401.html
+F_funding.csv,199,tag,[Verified],[Derived]（Reuters 轉述 SpaceX S-1；年化 15 為上限，爬坡期減免）,二手＋推算,https://finance.yahoo.com/sectors/technology/articles/anthropic-nears-first-quarterly-profit-000422401.html
+F_funding.csv,215,tag,[Interested-party],[報導]（AI Weekly 引 Bloomberg；Series E 為背景敘述）,非公司公告,https://aiweekly.co/alerts/crusoe-closes-3b-round-at-30b-valuation-tripling-series-e
+F_funding.csv,221,item,vendor_financing,customer_contract（Microsoft 租用 IREN GPU）,合約營收非融資；與 F#31 重複,https://www.datacenterknowledge.com/ai-data-centers/microsoft-neocloud-deals-cross-60-billion-in-ai-spending-frenzy
+F_funding.csv,221,detail,Microsoft 9.7 GPU 雲端合約（預付約 1.9）；NVIDIA 認股權證最多 2.1,Microsoft 9.7 GPU 雲端合約；NVIDIA 認股權證最多 2.1（TNW 2026-05-10）；預付 1.9 另附出處（見 F#220）,預付不在兩來源,https://thenextweb.com/news/nvidia-40bn-ai-equity-investments-2026
+F_funding.csv,226,item,vendor_financing,investment_stock_nonmkt（非上市證券存量）,投資組合存量≠供應商融資；連帶 F#222 同口徑（Excel O224＝1）,https://www.artiverse.ca/nvidias-ai-investment-portfolio-hits-99-billion/
+F_funding.csv,226,detail,非上市證券 51.2＋上市 42.8（報導）,非上市證券 51.157（其中非上市權益 47.898）；另上市權益 42.783（兩者口徑不同不相加）；來源自稱多為 AI 生成，應以 10-Q 核,口徑混加,https://www.artiverse.ca/nvidias-ai-investment-portfolio-hits-99-billion/
+F_funding.csv,227,(none),,,維持；Goldman 250／400 為五家（含 Microsoft），tag 可改第三方數據（LSEG）,https://wdez.com/2026/07/29/hyperscaler-debt-binge-pushes-yields-up-as-investor-demand-cools/
+P_facility_power.csv,2,basis,per IT MW,未說明,原文未定義範圍,https://www.datacentres.com/news/data-centre-construction-costs-11m-per-mw
+P_facility_power.csv,2,metric,shell-and-core 每 MW,整體建造成本每 MW（範圍未說明）,原文未稱 shell-and-core,https://www.datacentres.com/news/data-centre-construction-costs-11m-per-mw
+P_facility_power.csv,2,quote_or_paraphrase,轉述：2025 10.7、2026 預估 11.3；矽谷／東京 >15；不含 IT,轉述：2026 預估 11.3（+6%）；矽谷／東京 >15；2025 10.7 為 [Derived] 反推；是否含 IT 未說明,原文無『不含 IT』,https://www.datacentres.com/news/data-centre-construction-costs-11m-per-mw
+P_facility_power.csv,3,basis,per IT MW (typical 60MW design),未說明（typical 60MW design）,原文未定義 IT 瓦,https://www.turnerandtownsend.com/insights/data-centre-construction-cost-index-2026-27/
+P_facility_power.csv,5,basis,per IT MW,未說明（1 GW 園區）,原文未說明 IT 或設施,https://www.coradvisors.net/2026/06/ai-data-center-development-costs-2026.html
+P_facility_power.csv,5,low/high,13／15,13／15 [Assumed],原文找不到,https://www.coradvisors.net/2026/06/ai-data-center-development-costs-2026.html
+P_facility_power.csv,5,as_of,2026-05,2026-07,原文 2026-07-24,https://www.coradvisors.net/2026/06/ai-data-center-development-costs-2026.html
+P_facility_power.csv,16,basis,per IT MW,未說明（建造預算每 MW；100MW 設施）,原文未指明 IT,https://axis-intelligence.com/ai-data-center-cost-per-mw/
+P_facility_power.csv,16,quote_or_paraphrase,…作者自稱與總數未完全對齊,…（比例合計 91–103%，為核對者觀察）,原文無此句,https://axis-intelligence.com/ai-data-center-cost-per-mw/
+P_facility_power.csv,17,basis,per IT MW,未說明（建造預算每 MW；100MW 設施）,同 P#16,https://axis-intelligence.com/ai-data-center-cost-per-mw/
+P_facility_power.csv,18,basis,per IT MW,未說明（建造預算每 MW；100MW 設施）,同 P#16,https://axis-intelligence.com/ai-data-center-cost-per-mw/
+P_facility_power.csv,27,low/high,0.8／1.2,0.5／1.2 [Assumed]（low 參考 Groww 單機 2–3MW $0.5–2M＝0.17–1.0 $M/MW 設備價＋安裝）,"原文只有 1,000/kW；Excel In!H67 選擇性 0.8→0.5",https://www.latitudemedia.com/news/the-data-center-boom-is-a-diesel-generator-boom/ ; https://digest.groww.in/p/the-real-cost-of-building-an-ai-data-9b7
+P_facility_power.csv,29,high/tag,0.5；[Interested-party] Microsoft（經 Data Centre Magazine）,0.5 [Assumed]；記者轉述 Microsoft,high 與單位原文無,https://datacentremagazine.com/news/microsoft-inside-the-worlds-first-ai-superfactory
+P_facility_power.csv,44,tag,[Interested-party] Bloom,[Interested-party] Bloom（經 IWR 報導）；2026-04-13 公告日見第二來源,as_of 有據，維持,https://www.jaredwatkins.com/research/datacenters/behind-meter-power/bloom-energy-sofc/
+P_facility_power.csv,50,low,1.8,2.1,ComEd 4×100MVA ÷（225 設施 ÷1.2）≈2.13；225 為全場需求,https://www.renewableenergyworld.com/hydro-power/dams-civil-structures/comed-debuts-100mva-transformers-at-new-hyperscale-data-center/
+P_facility_power.csv,50,base,2.0,2.67,4×40＝160 MVA／60 MW IT（一台退出仍滿足 88.4 MVA）；3×40 不符 N-1；Excel In!I80,https://www.moduledge.com/blog/data-center-substation-design-ai-loads
+P_facility_power.csv,50,high,3.2,3.15,3×63＝189／60＝3.15；Excel In!J80,https://www.moduledge.com/blog/data-center-substation-design-ai-loads
+P_facility_power.csv,68,low,18,25,18% 為 2025 實績；2026 為 >25%（下限）,https://cdnfinance.technews.tw/2026/10/12/delta-electronics-q3-revenue-nears-200-billion-record-high-q4-double-digit-growth
+P_facility_power.csv,68,high,25,28 [Assumed],>25% 為下限,https://cdnfinance.technews.tw/2026/10/12/delta-electronics-q3-revenue-nears-200-billion-record-high-q4-double-digit-growth
+P_facility_power.csv,68,quote_or_paraphrase,轉述：2025 18%→2026 >25%；…,"轉述：2025 實績 18%；2026 預期 >25%（下限）；液冷 >12%；Q3 1,970.59 億 +31.1%",口徑,https://cdnfinance.technews.tw/2026/10/12/delta-electronics-q3-revenue-nears-200-billion-record-high-q4-double-digit-growth
+B_labs_china_totals.csv,20,(note),,,"API『至 2029–2031 找不到』有誤（8-K：$6.5B through May 31, 2031）",https://www.sec.gov/Archives/edgar/data/1769628/000119312525216497/d17274d8k.htm

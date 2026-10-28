@@ -12,6 +12,9 @@
 
 **投資建議：強力買進**（依上檔空間固定規則：加權目標價上檔空間 +76.0%，落在 大於 +50%）。
 
+
+- **營收分部（v0.3，分部原則）**：公司產品別 雲端伺服器（子列 AI 伺服器、一般伺服器）／筆電／其他（`segments.json`）。2025 用凱基 2026-08-13 產品組合（伺服器 71%、筆電 22%），2026 用伺服器 85%、筆電 11%；之後筆電、一般伺服器各有年增（Assumed），其他為非 AI 的差額；非 AI 合計路徑不變，EPS 與目標價不變。
+
 ## 重點觀察
 
 1. 目標價 NT$566.6（DCF 644.3、Comparable 488.9 各半），比現價 322（2026-10-22）高 76.0%，級距大於 50%；Comparable 單獨為 51.8%。主因是 EPS 不是倍數：本模型 12 個月後前瞻 EPS 43.00 比共識前瞻 EPS 28.56 高 50.6%（兩者期間差約一年；FY2027 EPS 43.61 也比法人 10-08 的 32.09 高 35.9%），同業（緯創、緯穎、鴻海、英業達、Super Micro）前瞻 P/E 中位數 11.4 倍與現價隱含 11.3 倍幾乎相同；DCF（ROE 27.2%、再投資率 14.7%）比 Comparable 高 31.8%，再把目標價往上拉。
@@ -23,9 +26,9 @@ AI 半導體 Project **伺服器組裝次產業的樣板**。AI 伺服器組裝�
 | 檔案 | 內容 |
 |---|---|
 | `build_quanta.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_廣達模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261028_廣達個股模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_廣達模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261028_廣達個股模型_v0.3.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 quanta/build_quanta.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數、整櫃買方價格）、`tsmc/dist`（情境顆數係數）、`markets/equipment/dist`（經 `tools/cycle_position.py`，只用規則函式）；**不修改它們**。
 

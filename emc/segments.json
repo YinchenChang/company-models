@@ -1,0 +1,14 @@
+{
+ "company": "台光電",
+ "ticker": "2383.TW",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "基礎設施", "label": "基礎設施營收（AI＋非 AI）", "period": "FY2026（錨點）", "value": 154.32, "unit": "NT$B", "source": "公司應用別（富果法說摘要）：4Q25 基礎設施 65–70%、行動裝置 20–25%、車用工業及其他 5–10%；2H26 基礎設施 80% 以上"},
+  {"name": "行動裝置", "label": "行動裝置營收", "period": "FY2026（錨點）", "value": 37.04, "unit": "NT$B", "source": "同上"},
+  {"name": "車用、工業及其他", "label": "車用、工業及其他營收（差額）", "period": "FY2026（錨點）", "value": 14.40, "unit": "NT$B", "source": "同上"}
+ ],
+ "sublines": [
+  {"parent": "基礎設施", "labels": ["AI 相關營收 ＝ MIN（需求面、產能上限 − 非 AI）", "基礎設施：非 AI（一般伺服器、低軌衛星等）"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收"]
+}

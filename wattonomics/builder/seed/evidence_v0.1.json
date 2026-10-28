@@ -75,7 +75,7 @@
 "tag": "[Interested-party]",
 "url": "https://aiweekly.co/alerts/microsoft-plans-to-grow-data-center-capacity-from-12gw-to-38gw-by-2032-a-third",
 "verdict": "屬實",
-"cnote": ""
+"cnote": "H 段（10-28）：quote_or_paraphrase：措辭；原文無『知情人士』『全部負載』"
 },
 {
 "id": "A#8",
@@ -212,26 +212,26 @@
 "key": "A18",
 "player": "Microsoft",
 "claim": "Microsoft｜Abilene, TX（Crusoe 鄰近園區）｜contracted",
-"value": "900 MW",
+"value": "700 MW",
 "basis": "unknown",
 "as_of": "2026-03-30",
 "tag": "[Interested-party]",
 "url": "https://w.media/microsoft-to-add-900-mw-to-ai-campus-in-abilene-texas/",
 "verdict": "屬實",
-"cnote": ""
+"cnote": "H 段（10-28）：value：900 MW 是 Crusoe 現場發電廠容量；Bloomberg 報 Microsoft 承租 700 MW（Excel In!J189 cp_msft_abl 900→700）；quote_or_paraphrase：C 段判屬實有誤；以原文為準"
 },
 {
 "id": "A#19",
 "key": "A19",
 "player": "Microsoft",
-"claim": "Microsoft｜Anthropic 於 Azure 的算力承諾｜contracted",
-"value": "1000 MW（上限，另有選擇權再 1 GW）",
+"claim": "Microsoft｜Anthropic 於 Azure 的算力承諾｜option（上限）",
+"value": "1000 MW（$30B Azure 之外的額外承諾，上限 up to 1 GW；$30B 對應 GW 未揭露）",
 "basis": "unknown",
 "as_of": "2025-11-18",
 "tag": "[Interested-party]",
 "url": "https://computeprices.com/deals/anthropic-microsoft-azure-2025-11",
 "verdict": "小誤（已更正）",
-"cnote": "上限 1 GW（無再 1 GW 選擇權）"
+"cnote": "H 段更正（取代 C 段『全案上限 1 GW』）：$30B Azure 確定採購（GW 未揭露）＋額外至多 1 GW（上限）；H 段（10-28）：unit：原文 'and to contract additional compute capacity up to one gigawatt'；C 段『全案上限 1 GW』有誤；metric：1 GW 為上限承諾，非確定量；quote_or_paraphrase：一手頁可讀"
 },
 {
 "id": "A#20",
@@ -361,7 +361,7 @@
 "tag": "[Interested-party]",
 "url": "https://www.anthropic.com/news/expanding-our-use-of-google-cloud-tpus-and-services",
 "verdict": "屬實",
-"cnote": ""
+"cnote": "H 段（10-28）：維持；1000 為 'well over a gigawatt' 下限，unit 已註明"
 },
 {
 "id": "A#30",
@@ -458,14 +458,14 @@
 "id": "A#37",
 "key": "A37",
 "player": "Amazon/AWS",
-"claim": "Amazon/AWS｜全公司電力容量目標｜planned",
+"claim": "Amazon/AWS｜AWS 電力容量目標｜planned",
 "value": "2.0 倍（2027 年底 ÷ 2025 年底）",
 "basis": "unknown",
 "as_of": "2026-07-30",
 "tag": "[Interested-party]",
 "url": "https://fortune.com/2026/07/30/andy-jassy-amazon-capex-demand-aws-pga-tour/",
 "verdict": "屬實",
-"cnote": ""
+"cnote": "H 段（10-28）：site_or_scope：原文 'AWS remains on pace to double its power capacity'；quote_or_paraphrase：無引號，屬轉述"
 },
 {
 "id": "A#38",
@@ -712,7 +712,7 @@
 "tag": "[Interested-party]",
 "url": "https://cryptobriefing.com/meta-prometheus-supercluster-ohio-ai-training/",
 "verdict": "未抽查",
-"cnote": ""
+"cnote": "H 段（10-28）：quote_or_paraphrase：主來源 cryptobriefing 被擋（未繞過）"
 },
 {
 "id": "A#57",
@@ -773,11 +773,11 @@
 "claim": "Meta｜Nebius 合約｜contracted",
 "value": "MW（未揭露）",
 "basis": "unknown",
-"as_of": "2026-03-16",
-"tag": "[Interested-party]",
+"as_of": "2026-03",
+"tag": "[Interested-party]（第三方彙整引 Nebius 新聞稿）",
 "url": "https://computeprices.com/deals/meta-nebius-2026-03",
 "verdict": "未抽查",
-"cnote": ""
+"cnote": "H 段（10-28）：as_of：來源只寫 Announced Mar 2026；tag：出處性質"
 },
 {
 "id": "A#62",
@@ -888,13 +888,13 @@
 "key": "A70",
 "player": "Oracle",
 "claim": "Oracle｜Abilene 擴建（取消）｜planned",
-"value": "0 MW（原約 2 GW 擴建）",
+"value": "0 MW（原規劃園區擴至約 2 GW；現上限 1.2 GW，取消增量約 0.8 GW；B#8 引 Bloomberg 為 600 MW）",
 "basis": "unknown",
-"as_of": "2026-03-06",
+"as_of": "2026-03",
 "tag": "[Interested-party]",
 "url": "https://www.techradar.com/pro/oracle-and-openai-drop-plans-for-mega-stargate-ai-us-data-center",
 "verdict": "未抽查",
-"cnote": ""
+"cnote": "H 段（10-28）：unit：2 GW 為園區總目標非擴建量；expected_online：同 A#18；as_of：TechRadar 2026-03-09，原文無 3/6"
 },
 {
 "id": "A#71",
@@ -1554,10 +1554,10 @@
 "value": "11（low double-digit 中點） GW",
 "basis": "unknown",
 "as_of": "2026-04-09",
-"tag": "Interested-party（OpenAI 投資人備忘錄，二手：Bloomberg/Epoch 引）",
+"tag": "Interested-party（OpenAI 內部預測，Epoch 引；備忘錄經 Tae Kim）",
 "url": "https://epoch.ai/gradient-updates/frontier-labs-dont-use-most-ai-compute",
 "verdict": "屬實",
-"cnote": ""
+"cnote": "H 段（10-28）：quote_or_paraphrase：出處拆分；tag：無 Bloomberg"
 },
 {
 "id": "B#5",
@@ -1605,11 +1605,11 @@
 "claim": "Oracle×OpenAI｜Stargate Abilene 擴建（約 600MW）｜planned",
 "value": "0 MW",
 "basis": "unknown",
-"as_of": "2026-03-06",
+"as_of": "2026-03",
 "tag": "Interested-party（Bloomberg 報導，二手）",
 "url": "https://www.regardsofwallstreet.com/data/ai-deals/entity/openai",
 "verdict": "未抽查",
-"cnote": ""
+"cnote": "H 段（10-28）：quote_or_paraphrase：出處錯置；as_of：原文僅月份"
 },
 {
 "id": "B#9",
@@ -1706,14 +1706,14 @@
 "id": "B#16",
 "key": "B16",
 "player": "SB Energy×OpenAI",
-"claim": "SB Energy×OpenAI｜Ports Pike 園區 OH（Nvidia 擔保）｜contracted",
+"claim": "SB Energy×OpenAI｜Ports Pike 園區 OH（Nvidia 擔保）｜initial_phase（NVIDIA 信用支持首期；OpenAI 租約全園 8 IT-GW）",
 "value": "4.25 GW",
 "basis": "IT",
 "as_of": "2026-08-17",
 "tag": "Interested-party（Nvidia 新聞稿）",
 "url": "https://nvidianews.nvidia.com/news/nvidia-guarantees-sb-energy-s-ports-pike-technology-campus-in-ohio-to-exclusively-host-nvidia-ai-compute",
 "verdict": "小誤（已更正）",
-"cnote": "全園 8 IT-GW；NVIDIA 首期 4.25 IT-GW、3.75 為選擇權；2028 起分期"
+"cnote": "全園 8 IT-GW；NVIDIA 首期 4.25 IT-GW、3.75 為選擇權；2028 起分期；H 段（10-28）：metric：4.25 為首期，非簽約量；expected_online：800MW 不在原文"
 },
 {
 "id": "B#17",
@@ -1762,10 +1762,10 @@
 "value": "MW（未揭露）",
 "basis": "unknown",
 "as_of": "2025-09-25",
-"tag": "Verified（CoreWeave 8-K）",
+"tag": "Verified（$6.5B 至 2031-05-31，8-K）＋ledger 轉述（$11.9B 5 年、$4B 至 2029）",
 "url": "https://www.regardsofwallstreet.com/data/ai-deals/entity/openai",
 "verdict": "未抽查",
-"cnote": ""
+"cnote": "H 段（10-28）：tag：API 稱 2031 找不到有誤：8-K 有；API『至 2029–2031 找不到』有誤（8-K：$6.5B through May 31, 2031）"
 },
 {
 "id": "B#21",
@@ -1856,7 +1856,7 @@
 "tag": "Interested-party（G42）；延遲：報導",
 "url": "https://thegulftape.com/articles/stargate-uae",
 "verdict": "未抽查",
-"cnote": ""
+"cnote": "H 段（10-28）：delay_note：範圍誤植；quote_or_paraphrase：兩來源皆無 Epoch"
 },
 {
 "id": "B#28",
@@ -1895,7 +1895,7 @@
 "tag": "[Interested-party]（統一；原 A 段 Interested-party、B 段 Verified）",
 "url": "https://www.boardroomalpha.com/sec/avgo-8-k-2026-04-06-0001193125-26-144028",
 "verdict": "無法核對",
-"cnote": "同 A#30（標記已統一）"
+"cnote": "同 A#30（標記已統一）；H 段（10-28）：tag：承諾量為公司自述；quote_or_paraphrase：出處錯置"
 },
 {
 "id": "B#31",
@@ -1927,14 +1927,14 @@
 "id": "B#33",
 "key": "B33",
 "player": "Microsoft×Anthropic",
-"claim": "Microsoft×Anthropic｜Azure $30B（Nvidia GB/VR 至多 1GW）｜contracted",
+"claim": "Microsoft×Anthropic｜Azure $30B 確定採購＋額外 NVIDIA GB/VR 至多 1GW｜option（上限）",
 "value": "1 GW",
 "basis": "unknown",
 "as_of": "2025-11-18",
 "tag": "Interested-party（公司公告）；招股書金額 $31.4B（報導轉述）",
 "url": "https://www.anthropic.com/news/microsoft-nvidia-anthropic-announce-strategic-partnerships",
 "verdict": "屬實",
-"cnote": ""
+"cnote": "H 段（10-28）：site_or_contract：1 GW 為額外承諾（C 段判屬實有誤）；metric：up to"
 },
 {
 "id": "B#34",
@@ -1944,10 +1944,10 @@
 "value": ">300 MW",
 "basis": "unknown",
 "as_of": "2026-05-06",
-"tag": "Verified（SpaceX S-1，Reuters 轉述）＋Interested-party",
+"tag": "Interested-party（Anthropic 公告）＋Reuters 轉述 SpaceX S-1",
 "url": "https://www.anthropic.com/news/higher-limits-spacex",
 "verdict": "無法核對",
-"cnote": ""
+"cnote": "H 段（10-28）：tag：二手轉述非 Verified；Colossus II 有據（Reuters）；quote_or_paraphrase：$84.5B 兩來源皆無"
 },
 {
 "id": "B#35",
@@ -1986,7 +1986,7 @@
 "tag": "Interested-party（報導）",
 "url": "https://www.datacenterdynamics.com/en/news/riot-platforms-agrees-191mw-20-year-lease-agreement-with-anthropic-worth-91bn-report/",
 "verdict": "未抽查",
-"cnote": ""
+"cnote": "H 段（10-28）：expected_online：原文有"
 },
 {
 "id": "B#38",
@@ -2331,13 +2331,13 @@
 "key": "B64",
 "player": "全球 AI（Epoch）",
 "claim": "全球 AI（Epoch）｜運行中算力｜market_total",
-"value": "1600 萬 H100e",
+"value": "1200–1600（一季落後 1600；兩季落後 1200） 萬 H100e",
 "basis": "n/a",
 "as_of": "2025-12-31",
 "tag": "Analogy（Epoch）",
 "url": "https://epoch.ai/gradient-updates/frontier-labs-dont-use-most-ai-compute",
 "verdict": "屬實",
-"cnote": ""
+"cnote": "H 段（10-28）：value：1600 為情境值；expected_online：年份誤植"
 },
 {
 "id": "B#65",
@@ -2503,10 +2503,10 @@
 "value": "52／60／84 月",
 "basis": "",
 "as_of": "2026-08-04",
-"tag": "Verified（LBNL Queued Up 2026，經 Core Insights Review 轉述）",
+"tag": "Analogy（LBNL 經第三方轉述；52＝約 4.3 年〔2018–24〕、60＝>5 年下限〔2025 完工〕、84＝PJM 平均 >7 年）",
 "url": "https://www.coradvisors.net/2026/08/data-center-grid-connection-problems.html",
 "verdict": "屬實",
-"cnote": ""
+"cnote": "H 段（10-28）：tag：數值屬實但為下限／不同統計"
 },
 {
 "id": "D#6",
@@ -2564,14 +2564,14 @@
 "id": "D#10",
 "key": "D10",
 "player": "全球",
-"claim": "燃氣渦輪（全產業）｜全球｜平均等待",
+"claim": "燃氣渦輪（全產業）｜全球｜最強機型平均等待（EPRI）",
 "value": "36／60／84 月",
 "basis": "",
 "as_of": "2025-09-10",
 "tag": "Analogy（EPRI 數據，oEnergetice 轉述）",
 "url": "https://oenergetice.cz/en/electricity/gas-turbine-manufacturers-expand-capacity-but-lead-times-continue-to-lengthen",
 "verdict": "未抽查",
-"cnote": ""
+"cnote": "H 段（10-28）：note：low 非現行值；metric：範圍為最強機型"
 },
 {
 "id": "D#11",
@@ -2591,13 +2591,13 @@
 "key": "D12",
 "player": "美國",
 "claim": "變壓器（電力）｜美國｜交期",
-"value": "24／30／60 月",
+"value": "24／30／36 月",
 "basis": "",
 "as_of": "2026-01-02",
 "tag": "Analogy（Wood Mackenzie Q2 2025 調查，POWER 轉述）",
 "url": "https://powermag.com/transformers-in-2026-shortage-scramble-or-self-inflicted-crisis/",
 "verdict": "小誤（已更正）",
-"cnote": "低值依據不成立；中值 30 月屬實"
+"cnote": "低值依據不成立；中值 30 月屬實；H 段（10-28）：high_months：原文最高為 GSU 144 週（約 33 月）；60 無出處，改 [Assumed]；note：『2020 年前 24–30 個月』不在原文"
 },
 {
 "id": "D#13",
@@ -2671,24 +2671,24 @@
 "claim": "專案整體延遲（案例）｜美國 CoreWeave Denton（Core Scientific）｜首期延後",
 "value": "3／6／6 月",
 "basis": "",
-"as_of": "2026-03-02",
+"as_of": "（頁面無日期）",
 "tag": "Interested-party（CoreWeave 法說）＋Analogy（Epoch）",
 "url": "https://www.datacenterdynamics.com/en/news/coreweave-deploys-16000-gpus-at-delayed-data-center-in-denton-texas/",
 "verdict": "無法核對",
-"cnote": ""
+"cnote": "H 段（10-28）：as_of：原文無此日期；note：原文找不到"
 },
 {
 "id": "D#19",
 "key": "D19",
 "player": "美國 Nebius／DataOne 新澤西",
-"claim": "專案整體延遲（案例）｜美國 Nebius／DataOne 新澤西｜首期 50MW 工期",
+"claim": "專案整體延遲（案例）｜美國 Nebius／DataOne 新澤西｜首期 50MW 延遲（實際 10–11 月 − 目標 4 月）",
 "value": "6／7／7 月",
 "basis": "",
 "as_of": "2026-06-18",
 "tag": "Analogy（SemiAnalysis，只佐證，單一來源）",
 "url": "https://newsletter.semianalysis.com/p/stop-saying-half-of-2026-us-datacenter?open=false",
 "verdict": "屬實",
-"cnote": ""
+"cnote": "H 段（10-28）：metric：6／7 為延遲量非工期"
 },
 {
 "id": "D#20",
@@ -2707,14 +2707,14 @@
 "id": "D#21",
 "key": "D21",
 "player": "UAE Stargate 第一期 200MW",
-"claim": "專案整體延遲（案例）｜UAE Stargate 第一期 200MW｜Q3 2026 目標未見上線",
+"claim": "專案整體延遲（案例）｜UAE Stargate 第一期 200MW｜Q3 2026 目標；至 9-12 無試運轉公告（官方未改期、不視為延遲）",
 "value": "1／3／6 月",
 "basis": "",
 "as_of": "2026-09-12",
 "tag": "Interested-party（Mubadala 目標）＋報導",
 "url": "https://thegulftape.com/articles/stargate-uae",
 "verdict": "屬實",
-"cnote": ""
+"cnote": "H 段（10-28）：metric：原文明言不視為延遲；note：範圍誤植"
 },
 {
 "id": "D#22",
@@ -2737,10 +2737,10 @@
 "value": "6／9／12 月",
 "basis": "",
 "as_of": "2025-08-05",
-"tag": "Interested-party（Jassy 本人說）",
+"tag": "Interested-party（Jassy 本人說 several quarters）；月數 Derived（2–4 季）",
 "url": "https://www.latitudemedia.com/news/power-is-aws-single-biggest-constraint/",
 "verdict": "屬實",
-"cnote": ""
+"cnote": "H 段（10-28）：tag：月數非原話"
 },
 {
 "id": "D#24",

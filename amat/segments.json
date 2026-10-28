@@ -1,0 +1,12 @@
+{
+ "company": "Applied Materials",
+ "ticker": "AMAT",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "Semiconductor Systems", "label": "半導體系統營收", "period": "FY2025", "value": 21438.5, "unit": "US$M", "source": "AMAT 10-K FY2025 與季度新聞稿（2026 重編後口徑；Q 頁）"},
+  {"name": "Applied Global Services", "label": "AGS 服務營收", "period": "FY2025", "value": 5744.2, "unit": "US$M", "source": "同上"},
+  {"name": "Corporate and Other（含顯示器）", "label": "其他（含顯示器）營收", "period": "FY2025", "value": 1185.3, "unit": "US$M", "source": "同上"}
+ ],
+ "sublines": [],
+ "check_labels": ["檢查：分部合計 − 合併營收（FY2025 實績、FY2026 錨點）"]
+}

@@ -331,7 +331,9 @@ def engine(ws, r0, title, P0=None, **over):
     g_o = {2026: "g_oth_26", **{y: f"g_oth_{s}" for y in (2027, 2028, 2029)}}; g_s = {2026: "g_svc_26", **{y: f"g_svc_{s}" for y in (2027, 2028, 2029)}}
     row("roth", "其他系統營收", "¥B", {"C": "=a25_oth", **{fy(y): f"={fy(y-1)}{r}*(1+{g_o[y]})" for y in range(2026, 2030)}}, fmt="#,##0.0")
     row("rsvc", "服務、支援與其他營收", "¥B", {"C": "=a25_svc", **{fy(y): f"={fy(y-1)}{r}*(1+{g_s[y]})" for y in range(2026, 2030)}}, fmt="#,##0.0")
-    row("rev", "營收", "¥B", {fy(y): f"={fy(y)}{R['rsoc']}+{fy(y)}{R['rmem']}+{fy(y)}{R['roth']}+{fy(y)}{R['rsvc']}" for y in range(2025, 2030)}, fmt="#,##0.0")
+    row("rts", "測試系統事業營收（SoC＋記憶體＋其他系統）", "¥B", {fy(y): f"={fy(y)}{R['rsoc']}+{fy(y)}{R['rmem']}+{fy(y)}{R['roth']}" for y in range(2025, 2030)}, fmt="#,##0.0", note="官方分部 テストシステム（FY2025 起兩分部）")
+    row("rev", "營收", "¥B", {fy(y): f"={fy(y)}{R['rts']}+{fy(y)}{R['rsvc']}" for y in range(2025, 2030)}, fmt="#,##0.0")
+    row("chk", "檢查：分部合計 − 合併營收（FY2025 實績）", "¥B", {"C": f"=C{R['rts']}+C{R['rsvc']}-a25_rev"}, fmt="0.0")
     row("ssh", "SoC 占營收", "%", {fy(y): f"={fy(y)}{R['rsoc']}/{fy(y)}{R['rev']}" for y in range(2025, 2030)}, fmt="0.0%")
     adj = {2026: "0", 2027: "0", 2028: "gm_adj_C28" if s == "C" else "0", 2029: "gm_adj_C29" if s == "C" else "0"}
     row("gm", "毛利率", "%", {"C": "=a25_gp/a25_rev", **{fy(y): f"=gm_a+gm_b*{fy(y)}{R['ssh']}+{adj[y]}" for y in range(2026, 2030)}}, fmt="0.0%", note="截距＋斜率×SoC 占比（兩點推導）")
