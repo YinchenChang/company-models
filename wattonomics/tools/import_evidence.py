@@ -1,5 +1,5 @@
-# 把 gwledger/evidence_raw/*.csv 整理成 builder/seed/evidence_v0.1.json（DB_Evidence 頁的來源），附 C 段獨立核對判定。
-# 用法：python3 gwledger/tools/import_evidence.py
+# 把 wattonomics/evidence_raw/*.csv 整理成 builder/seed/evidence_v0.1.json（DB_Evidence 頁的來源），附 C 段獨立核對判定。
+# 用法：python3 wattonomics/tools/import_evidence.py
 # 列識別：A#n＝A_us_cloud.csv 第 n 行；B#n＝B_labs_china_totals.csv 第 n 行；D#n＝B_delay.csv 第 n 行（第 1 行為表頭）。
 # 判定依 evidence_raw/C_review.md（以它為準）；C 段未列者為「未抽查」。
 import csv, json, os

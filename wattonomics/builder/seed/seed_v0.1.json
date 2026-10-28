@@ -768,6 +768,228 @@
    "src": "SRC_GL_030",
    "basis": "—",
    "note": "amazon/company.json leases.facts.notCommenced（10-Q）"
+  },
+  {
+   "sec": "S7. 廠房資本支出拆分（每 IT GW，US$B；合計＝TK IF_CapexFacility 12.67；P_facility_power.md 建議表，G 段核對）"
+  },
+  {
+   "key": "fac_dist",
+   "label": "配電（中低壓開關、廠內變壓器、PDU、母線、電纜）",
+   "unit": "$B/IT GW",
+   "lo": 2.0,
+   "base": 2.55,
+   "hi": 3.4,
+   "tag": "Derived",
+   "src": "SRC_GL_301",
+   "basis": "—",
+   "note": "P#10（McKinsey 電力 37.5% × 配電 55%）、P#19；G 段 §5 屬實"
+  },
+  {
+   "key": "fac_gen_mult",
+   "label": "備援發電機裝置容量倍數（GW genset ／ IT GW）",
+   "unit": "x",
+   "lo": 0,
+   "base": 1.6,
+   "hi": 2.4,
+   "tag": "Assumed",
+   "src": "SRC_GL_302",
+   "basis": "—",
+   "note": "G 段 P28 建議：手冊含 20–25% 餘裕與機械負載為 1.5–1.9×（未加 N+1），基準 1.6；低 0＝Fairwater Atlanta 不設發電機（P#29）；高 2.4＝2N。原 P 段 1.4"
+  },
+  {
+   "key": "fac_gen_px",
+   "label": "備援發電機單價（$M／MW genset）",
+   "unit": "$M/MW",
+   "lo": 0.8,
+   "base": 1.0,
+   "hi": 1.2,
+   "tag": "Analogy",
+   "src": "SRC_GL_301",
+   "basis": "—",
+   "note": "P#27（NREL；G 段屬實）"
+  },
+  {
+   "key": "fac_ups",
+   "label": "UPS 與電池",
+   "unit": "$B/IT GW",
+   "lo": 0.5,
+   "base": 0.75,
+   "hi": 1.5,
+   "tag": "Derived",
+   "src": "SRC_GL_301",
+   "basis": "—",
+   "note": "備援合計 16.9% × 12.67 ≈ 2.14 扣 genset 1.40（G 段 §5 屬實）"
+  },
+  {
+   "key": "fac_cool",
+   "label": "冷卻（冷卻塔、冰水機、乾冷器、CDU、液冷管路）",
+   "unit": "$B/IT GW",
+   "lo": 1.5,
+   "base": 1.9,
+   "hi": 3.5,
+   "tag": "Derived",
+   "src": "SRC_GL_301",
+   "basis": "—",
+   "note": "P#11（McKinsey 15%）；Epoch 約 1.9；G 段：AI 液冷園區高值（3.5–5.2）機率不低"
+  },
+  {
+   "key": "fac_bldg",
+   "label": "建築（核心殼體與結構）",
+   "unit": "$B/IT GW",
+   "lo": 1.4,
+   "base": 1.7,
+   "hi": 2.3,
+   "tag": "Derived",
+   "src": "SRC_GL_301",
+   "basis": "—",
+   "note": "P#12（McKinsey 13.5%；標籤順序對應為推定，G 段 §5）"
+  },
+  {
+   "key": "fac_labor",
+   "label": "施工人工與工程設計",
+   "unit": "$B/IT GW",
+   "lo": 2.4,
+   "base": 2.95,
+   "hi": 3.4,
+   "tag": "Derived",
+   "src": "SRC_GL_301",
+   "basis": "—",
+   "note": "P#13（McKinsey 22–25%）"
+  },
+  {
+   "key": "fac_prof0",
+   "label": "其他專業服務（試運轉、顧問、許可；未扣 genset 調整前）",
+   "unit": "$B/IT GW",
+   "lo": 0.6,
+   "base": 0.9,
+   "hi": 1.3,
+   "tag": "Derived",
+   "src": "SRC_GL_301",
+   "basis": "—",
+   "note": "P#14（McKinsey 5–10%）；Facility 頁實際值＝本值 −（genset 新基準 − 原 1.40）（G 段建議由其他項吸收，chat 端指示『差額從其他扣』）"
+  },
+  {
+   "key": "fac_net",
+   "label": "網路、消防、安防、BMS",
+   "unit": "$B/IT GW",
+   "lo": 0.25,
+   "base": 0.3,
+   "hi": 0.9,
+   "tag": "Derived",
+   "src": "SRC_GL_301",
+   "basis": "—",
+   "note": "McKinsey 網路 2–3%（G 段 §5 屬實）"
+  },
+  {
+   "key": "fac_land",
+   "label": "土地",
+   "unit": "$B/IT GW",
+   "lo": 0.05,
+   "base": 0.2,
+   "hi": 0.9,
+   "tag": "Derived",
+   "src": "SRC_GL_301",
+   "basis": "—",
+   "note": "P#23（Epoch 土地＋併網 <1%）"
+  },
+  {
+   "key": "fac_gen_px0",
+   "label": "原 P 段 genset 金額基準（1.4 GW × 1.0）",
+   "unit": "$B/IT GW",
+   "lo": 1.4,
+   "base": 1.4,
+   "hi": 1.4,
+   "tag": "Derived",
+   "src": "SRC_GL_301",
+   "basis": "—",
+   "note": "P_facility_power.md 第 1 節拆分表；用於計算 genset 調整差額"
+  },
+  {
+   "sec": "S8. 自建發電與實物量（自建發電不在 12.67 內）"
+  },
+  {
+   "key": "self_gw",
+   "label": "自建發電容量（GW gen ／ IT GW；僅有自建的園區）",
+   "unit": "x",
+   "lo": 1.1,
+   "base": 1.44,
+   "hi": 1.8,
+   "tag": "Assumed",
+   "src": "SRC_GL_301",
+   "basis": "—",
+   "note": "P#38（設施 1.2 × 備用 1.2；G 段算術屬實）"
+  },
+  {
+   "key": "self_px",
+   "label": "自建發電單價（$M／MW gen）",
+   "unit": "$M/MW",
+   "lo": 0.8,
+   "base": 1.6,
+   "hi": 2.2,
+   "tag": "Analogy",
+   "src": "SRC_GL_301",
+   "basis": "—",
+   "note": "P#32–35（CCGT 1.5–2.5、航改 1.2–2.2、表後燃機／往復機 0.8–1.2）；基準使 1.44 × 1.6＝2.3 $B（P.md 第 2 節 1.2／2.3／3.2）"
+  },
+  {
+   "key": "self_sh",
+   "label": "新增 IT GW 中自建發電的比例",
+   "unit": "%",
+   "lo": 0.1,
+   "base": 0.2,
+   "hi": 0.35,
+   "tag": "Assumed",
+   "src": "SRC_GL_004",
+   "basis": "—",
+   "note": "chat 端 v0.1.1 指示 4；佐證：P#39 Cleanview 表後規劃 90 GW、運轉 2 GW（延遲大）"
+  },
+  {
+   "key": "xfmr_gva",
+   "label": "主變壓器裝置容量（GVA ／ IT GW；含一台退出備援）",
+   "unit": "GVA",
+   "lo": 1.8,
+   "base": 2.0,
+   "hi": 3.2,
+   "tag": "Assumed",
+   "src": "SRC_GL_302",
+   "basis": "—",
+   "note": "G 段 P50：基準 2.0 不是由所列例子算出（ModulEdge 例為 2.67、3.15；ComEd 225 MW 為全場需求非 IT）；判斷值，G 段建議約 2.5"
+  },
+  {
+   "key": "btm_plan",
+   "label": "美國表後自建發電：規劃",
+   "unit": "GW",
+   "lo": 5,
+   "base": 90,
+   "hi": 90,
+   "tag": "Analogy",
+   "src": "SRC_GL_301",
+   "basis": "—",
+   "note": "P#39（Cleanview 59 案；G 段屬實）；延遲佐證"
+  },
+  {
+   "key": "btm_run",
+   "label": "美國表後自建發電：運轉中",
+   "unit": "GW",
+   "lo": 2,
+   "base": 2,
+   "hi": 3.2,
+   "tag": "Analogy",
+   "src": "SRC_GL_301",
+   "basis": "—",
+   "note": "P#39：運轉約 2 GW（2.2%）；2026 年底 2.8–3.2；延遲佐證"
+  },
+  {
+   "key": "spend_nnv_hold",
+   "label": "Spend：非 NVIDIA 每 GW IT capex ÷ VR200（無 NonNV 平台組合，取 TK 持有比平均）",
+   "unit": "x",
+   "lo": 0.5,
+   "base": 0.67,
+   "hi": 0.85,
+   "tag": "Derived",
+   "src": "SRC_GL_001",
+   "basis": "—",
+   "note": "TK IF_NonNV_Hold：AMD 0.85、TPU 0.70、Trn 0.61、OAI 0.80、Ascend 0.55、Maia 0.50 平均 0.67；持有比借用為 IT capex 比（近似，規劃書第 6 節第 1 點）"
   }
  ],
  "mw": {
@@ -1767,7 +1989,7 @@
   {
    "id": "SRC_GL_000",
    "path": "—",
-   "desc": "待證據（gwledger/evidence_raw 由查證代理產出，chat 端複核後入 In）"
+   "desc": "待證據（wattonomics/evidence_raw 由查證代理產出，chat 端複核後入 In）"
   },
   {
    "id": "SRC_GL_001",
@@ -1786,7 +2008,7 @@
   },
   {
    "id": "SRC_GL_004",
-   "path": "gwledger/docs/workorders/20261028_GWLedger_v0.1.md",
+   "path": "wattonomics/docs/workorders/20261028_Wattonomics_v0.1.md",
    "desc": "v0.1 工作單"
   },
   {
@@ -1881,33 +2103,53 @@
   },
   {
    "id": "SRC_GL_200",
-   "path": "gwledger/evidence_raw/A_us_cloud.csv",
+   "path": "wattonomics/evidence_raw/A_us_cloud.csv",
    "desc": "A 段美國雲與新雲證據（列號 A#n＝第 n 行）"
   },
   {
    "id": "SRC_GL_201",
-   "path": "gwledger/evidence_raw/B_labs_china_totals.csv",
+   "path": "wattonomics/evidence_raw/B_labs_china_totals.csv",
    "desc": "B 段實驗室、中國、主權、第三方總量（B#n）"
   },
   {
    "id": "SRC_GL_202",
-   "path": "gwledger/evidence_raw/B_delay.csv",
+   "path": "wattonomics/evidence_raw/B_delay.csv",
    "desc": "B 段基建延遲（D#n）"
   },
   {
    "id": "SRC_GL_203",
-   "path": "gwledger/evidence_raw/C_review.md",
+   "path": "wattonomics/evidence_raw/C_review.md",
    "desc": "C 段獨立核對（判定以此為準）"
   },
   {
    "id": "SRC_GL_204",
-   "path": "gwledger/evidence_raw/B_summary.md",
+   "path": "wattonomics/evidence_raw/B_summary.md",
    "desc": "B 段摘要（營運者 × 使用者關係、延遲建議）"
   },
   {
    "id": "SRC_GL_205",
-   "path": "gwledger/evidence_raw/A_us_cloud.md",
+   "path": "wattonomics/evidence_raw/A_us_cloud.md",
    "desc": "A 段摘要（各家最佳估計）"
+  },
+  {
+   "id": "SRC_GL_300",
+   "path": "wattonomics/evidence_raw/F_funding.csv",
+   "desc": "F 段融資證據（F#n）"
+  },
+  {
+   "id": "SRC_GL_301",
+   "path": "wattonomics/evidence_raw/P_facility_power.csv、P_facility_power.md",
+   "desc": "P 段廠房與發電（P#n；第 1 節拆分表）"
+  },
+  {
+   "id": "SRC_GL_302",
+   "path": "wattonomics/evidence_raw/G_review_funding_facility.md",
+   "desc": "G 段獨立核對（F、P 判定與更正，以此為準）"
+  },
+  {
+   "id": "SRC_GL_303",
+   "path": "markets/invest_map/data/segments_ai_semis_v0.2.3.csv（commit 5dea5c8）",
+   "desc": "AI半導體 次產業『GB300 對照 ÷ IT』比例（Spend 頁 IT capex 拆分）"
   }
  ],
  "decisions": [
@@ -2099,6 +2341,51 @@
    "date": "2026-10-28",
    "quote": "獨立核對 /tmp/claude-0/gw_review_excel.md",
    "status": "執行"
+  },
+  {
+   "id": "GL11-01",
+   "cat": "工程",
+   "item": "改名",
+   "decision": "gwledger → wattonomics（瓦帳）；具名範圍 GIF_ → WIF_、GGOV_ → WGOV_；Excel 檔名 YYYYMMDD_Wattonomics_vX.Y.xlsx；快照 wattonomics_snapshot_v*.json；舊 v0.1 檔移 model/archive、data/archive",
+   "date": "2026-10-28",
+   "quote": "Andy 10-28 14:07 同意",
+   "status": "執行"
+  },
+  {
+   "id": "GL11-02",
+   "cat": "工程",
+   "item": "資金來源比例（支付順序）",
+   "decision": "分母＝資本支出（有含融資租賃口徑者取之，否則現金口徑）；依序：內部現金＝MIN(營運現金流, 現金資本支出)；融資租賃；股權＝MIN(股權募資, 餘額)；債＝MIN(債＋GPU 債＋定期貸款＋私募信貸, 餘額)；其餘＝現金水位或未揭露。CoreWeave 2025 債約 55%（殘差），IPO 14.5%（G 段 §4）。另列『外部融資組成』（債／股／租賃占當期外部募資）",
+   "date": "2026-10-28",
+   "quote": "G 段 §4；chat 端 v0.1.1 指示 2",
+   "status": "預設、可撤回"
+  },
+  {
+   "id": "GL11-03",
+   "cat": "工程",
+   "item": "Funding 期間與重複",
+   "decision": "每家 2024、2025、2026（最新期：MSFT／ORCL FY2026、Alphabet／Amazon／CoreWeave／Nebius／xAI 2026H1、Meta 9M2026、OpenAI／Anthropic 2026 迄今）；期後事件與指引另列，不進比例。xAI：過橋 20 為再融資、不與債 25 重複；xAI 段資本支出 12.7 不與合併 20.7 重複。Anthropic：SPV 35 已完成、36 洽談中分列。存量（尚未起租、承諾、合資曝險、淨負債水位）不進比例",
+   "date": "2026-10-28",
+   "quote": "G 段 §1、§4",
+   "status": "執行"
+  },
+  {
+   "id": "GL11-04",
+   "cat": "工程",
+   "item": "Facility genset 調整",
+   "decision": "genset 基準 1.6 × 1.0 $M/MW＝1.60（原 1.40），差額 0.20 從『其他專業服務』扣（0.90 → 0.70），使拆分合計仍＝TK IF_CapexFacility；殘差列『其他／未拆』＝TK − Σ 各項",
+   "date": "2026-10-28",
+   "quote": "G 段 P28、§5；chat 端指示 4",
+   "status": "預設、可撤回"
+  },
+  {
+   "id": "GL11-05",
+   "cat": "工程",
+   "item": "Spend 拆分",
+   "decision": "每 IT GW IT capex＝(1 − 市場 NonNV 比) × NVIDIA 世代加權 IF_CapexIT ＋ NonNV 比 × spend_nnv_hold × VR200 IF_CapexIT；再依 AI半導體 次產業『GB300 對照 ÷ IT』比例（v0.2.3，合計 100%）拆成 8 項。比例為 NVIDIA 平台橋接表，套到 ASIC 為近似。新增 GW 取主路徑 A／D0 年新增",
+   "date": "2026-10-28",
+   "quote": "chat 端 v0.1.1 指示 5",
+   "status": "預設、可撤回"
   }
  ],
  "chip": {
@@ -2342,5 +2629,126 @@
   "nbis": "SRC_GL_060",
   "wyfi": "SRC_GL_070",
   "meta": "SRC_GL_200"
- }
+ },
+ "circular": [
+  [
+   "NVIDIA",
+   "OpenAI",
+   "股權 30（2026-03）；Ohio 首期擔保最多 105（記者轉述、未簽）",
+   "OpenAI 經 Oracle、Microsoft、CoreWeave、SB Energy 部署 NVIDIA 系統",
+   "F#181、F#180"
+  ],
+  [
+   "NVIDIA",
+   "新雲（CoreWeave、Nebius、Nscale、IREN）",
+   "股權／預付認股權證：CoreWeave 2.0、Nebius 2.0；CoreWeave 未售容量擔保 6.3",
+   "新雲以 GPU 擔保債購 NVIDIA GPU，租給 Microsoft、Meta、OpenAI",
+   "F#154、F#167、F#158"
+  ],
+  [
+   "NVIDIA",
+   "xAI",
+   "股權最多 2（2025-10）；參與 Series E",
+   "SPV 債購 NVIDIA GPU 租給 xAI",
+   "F#203（未抽查）、F#202（未抽查）"
+  ],
+  [
+   "NVIDIA",
+   "Anthropic",
+   "最多 10（2025-11）",
+   "Anthropic 承諾 Azure 30（NVIDIA 系統）",
+   "F#188（未抽查）"
+  ],
+  [
+   "AMD",
+   "OpenAI",
+   "最多 1.6 億股認股權證，隨 GW 歸屬",
+   "OpenAI 買 6 GW MI450",
+   "F#182（未抽查）"
+  ],
+  [
+   "AMD",
+   "Anthropic",
+   "最多 5 股權",
+   "超過 20 的算力供應",
+   "F.md 第三節（未抽查）"
+  ],
+  [
+   "Microsoft",
+   "OpenAI",
+   "出資 11.9（承諾 13），持股約 27%",
+   "OpenAI 承諾增量 Azure 250",
+   "F#32、F#33（未抽查）"
+  ],
+  [
+   "Microsoft",
+   "Anthropic",
+   "最多 5",
+   "Anthropic 承諾 Azure 30",
+   "F#188（未抽查）"
+  ],
+  [
+   "Microsoft",
+   "neocloud",
+   "對 neocloud 合約 >60（Nscale 約 23、IREN 9.7）",
+   "新雲以合約擔保舉債",
+   "F#31（屬實）"
+  ],
+  [
+   "Amazon",
+   "OpenAI",
+   "50（15＋13.7＋期後 21.3）",
+   "OpenAI 承諾 AWS 38＋100（約 2 GW Trainium）",
+   "F#80（屬實）"
+  ],
+  [
+   "Amazon",
+   "Anthropic",
+   "已投 18，剩餘額度 15",
+   "Anthropic 承諾 AWS >100、最多 5 GW",
+   "F#81（屬實）"
+  ],
+  [
+   "Google",
+   "Anthropic",
+   "帳面約 124（無法核對）；即時 10＋條件 30",
+   "Anthropic 承諾 Google Cloud 111.1；TPU 經 SPV 35（另 36 洽談中）租給 Anthropic；Google 租約擔保 2.4 GW、最多 44",
+   "F#56、F#58（屬實）、F#190、F#191（更正）"
+  ],
+  [
+   "Broadcom",
+   "Anthropic",
+   "租賃融資最多 42；SPV 優先層殘值支持",
+   "Anthropic 買 Broadcom 製 TPU",
+   "F#192（屬實）"
+  ],
+  [
+   "SoftBank",
+   "OpenAI",
+   "累計約 64.6；其中 30 由 40 過橋貸款支付",
+   "SoftBank 為 Stargate 與 SB Energy（Ohio）開發方",
+   "F#183（屬實）"
+  ],
+  [
+   "Oracle",
+   "OpenAI",
+   "—（承租開發商站點；開發商債 >70 靠 Oracle 租約擔保）",
+   "OpenAI 約占 Oracle 剩餘履約義務一半（S&P）",
+   "F#132、F#134、F#136（屬實）、F#133（更正：記者報導）"
+  ],
+  [
+   "SpaceX（xAI）",
+   "Anthropic",
+   "—",
+   "Anthropic 每月 1.25 租 Colossus，90 天可終止",
+   "F#199（更正：Interested-party）"
+  ],
+  [
+   "NVIDIA、AMD、Broadcom",
+   "Meta",
+   "表達認購 Meta 股票最多 5（非約束）",
+   "Meta 向它們買晶片",
+   "F#107（屬實）"
+  ]
+ ]
 }
