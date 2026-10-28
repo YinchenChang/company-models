@@ -279,6 +279,7 @@ def engine(ws, r0, title, **over):
     row("cer", "陶瓷事業營收", "¥B", {"C": "=q25_cer", "D": "=q26_cer", **{c_(y): f"={c_(y - 1)}{r}*(1+{P['gcer']})" for y in BU[1:]}})
     row("oth", "其他事業營收", "¥B", {"C": "=q25_oth", "D": "=q26_oth", **{c_(y): f"={c_(y - 1)}{r}*(1+{P['goth']})" for y in BU[1:]}})
     row("rev", "營收", "¥B", {c_(y): f"={c_(y)}{R['e']}+{c_(y)}{R['cer']}+{c_(y)}{R['oth']}" for y in FYS})
+    row("segchk", "檢查：分部合計 − 合併營收（FY2025 實績、FY2026 錨點）", "¥B", {"C": f"=C{R['e']}+C{R['cer']}+C{R['oth']}-q25_rev", "D": f"=D{R['e']}+D{R['cer']}+D{R['oth']}-q26_rev"}, fmt="0.000")
     row("g", "營收年增", "%", {c_(y): f"={c_(y)}{R['rev']}/{c_(y - 1)}{R['rev']}-1" for y in FYS[1:]}, fmt="0.0%")
     row("aish", "AI 伺服器載板 ÷ 營收", "%", {c_(y): f"={c_(y)}{R['ai']}/{c_(y)}{R['rev']}" for y in BU}, fmt="0.0%")
     row("ceroi", "陶瓷＋其他事業營業利益＋調整", "¥B", {"C": "=q25_oi-q25_eoi", "D": "=q26_oi-q26_eoi",

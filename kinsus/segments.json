@@ -1,0 +1,35 @@
+{
+ "company": "景碩",
+ "ticker": "3189.TW",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "name": "ABF 載板",
+   "label": "ABF 載板營收 ＝ MIN（需求, 產能）",
+   "period": "FY2026（錨點）",
+   "value": 22.859,
+   "unit": "NT$B",
+   "source": "景碩產品別 ABF／BT；合併子公司晶碩；FY2026 錨點見 Q 頁"
+  },
+  {
+   "name": "BT 與其他載板",
+   "label": "BT 與其他載板（情境別年增；公司特有）",
+   "period": "FY2026（錨點）",
+   "value": 23.266,
+   "unit": "NT$B",
+   "source": "景碩產品別 ABF／BT；合併子公司晶碩；FY2026 錨點見 Q 頁"
+  },
+  {
+   "name": "晶碩（隱形眼鏡，合併子公司）",
+   "label": "晶碩（隱形眼鏡）",
+   "period": "FY2026（錨點）",
+   "value": 8.301,
+   "unit": "NT$B",
+   "source": "景碩產品別 ABF／BT；合併子公司晶碩；FY2026 錨點見 Q 頁"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計（ABF＋BT 與其他＋晶碩）− 合併營收（FY2026 錨點起）"
+ ]
+}

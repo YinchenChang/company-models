@@ -1,0 +1,43 @@
+{
+ "company": "Ibiden",
+ "ticker": "4062.T",
+ "model_sheet": "PL",
+ "official_segments": [
+  {
+   "name": "電子（Electronics）",
+   "label": "電子事業營收",
+   "period": "FY2025",
+   "value": 243.316,
+   "unit": "¥B",
+   "source": "Ibiden 決算短信 FY2025 セグメント別売上高（Q 頁）"
+  },
+  {
+   "name": "陶瓷（Ceramic）",
+   "label": "陶瓷事業營收",
+   "period": "FY2025",
+   "value": 82.554,
+   "unit": "¥B",
+   "source": "Ibiden 決算短信 FY2025 セグメント別売上高（Q 頁）"
+  },
+  {
+   "name": "其他（Other）",
+   "label": "其他事業營收",
+   "period": "FY2025",
+   "value": 90.33,
+   "unit": "¥B",
+   "source": "Ibiden 決算短信 FY2025 セグメント別売上高（Q 頁）"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "電子（Electronics）",
+   "labels": [
+    "AI 伺服器載板營收",
+    "電子事業非 AI 營收（通用伺服器、PC 等）"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收（FY2025 實績、FY2026 錨點）"
+ ]
+}

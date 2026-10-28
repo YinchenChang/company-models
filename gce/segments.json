@@ -1,0 +1,15 @@
+{
+ "company": "金像電",
+ "ticker": "2368.TW",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "伺服器（一般型與 AI）", "label": "伺服器營收（一般型＋AI）", "period": "FY2026（錨點）", "value": 82.22, "unit": "NT$B", "source": "公司應用別：理財周刊 2026-08-28 伺服器 78%、網通 15%；富果 3Q25 法說摘要：伺服器 80%、網通 10%、筆電 7%、其他 3%"},
+  {"name": "網通", "label": "網通營收", "period": "FY2026（錨點）", "value": 15.81, "unit": "NT$B", "source": "同上"},
+  {"name": "筆電與其他", "label": "筆電與其他營收（＝營收 − 伺服器 − 網通）", "period": "FY2026（錨點）", "value": 7.38, "unit": "NT$B", "source": "同上（差額）"}
+ ],
+ "sublines": [
+  {"parent": "伺服器（一般型與 AI）", "labels": ["伺服器：AI（加速器卡、運算板、中板背板）", "伺服器：一般型"]},
+  {"parent": "網通", "labels": ["網通：AI（交換器板）", "網通：非 AI"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收；非 AI 拆分 − 非 AI"]
+}
