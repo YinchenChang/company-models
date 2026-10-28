@@ -10,6 +10,8 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 import cycle_position as CP
 import valuation_rule as VR
 
@@ -76,7 +78,7 @@ for k, nm in PLAT:
 for s in SC:
     inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、Advantest、台達電模型相同）")
     inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
-inp("fx", "匯率（新台幣 ÷ 美元；只用於每顆美元換算的顯示）", "NT$/US$", 30.5, 32.0, 33.0, "Derived", "與台達電、台光電模型相同", "不影響營收與 EPS")
+inp("fx", "匯率（新台幣 ÷ 美元；只用於每顆美元換算的顯示）", "NT$/US$", *SIL.vals("fx_twd"), "Derived", "與台達電、台光電模型相同", "不影響營收與 EPS")
 
 sec("B. 每顆測試時間（含 burn-in）係數與京元電曝險（Blackwell＝1.0；NVIDIA 曝險＝1.0）")
 TT = (("bw", 1.0, 1.0, 1.0, "基準世代（定義為 1.0）"),

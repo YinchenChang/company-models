@@ -25,7 +25,7 @@ CONFIG = {
  ],
  "inputs": [
   (S, "A. 匯率、股價"),
-  ("fx", "美元兌韓元", "KRW/USD", 1350, 1420, 1500, "Derived", "同 SK 海力士"),
+  ("fx", "美元兌韓元", "KRW/USD", *_SIL.vals("fx_krw"), "Derived", "同 SK 海力士"),
   ("px", "普通股股價（2026-10-23 收盤）", "KRW", None, 215500, None, "Verified", "markets/invest_map/data/prices.csv（tradersunion，單一來源）；MarketScreener 2026-10-23 收盤 215,500（第二來源，本次核對）；v0.2.2 為 10-08 的 262,000"),
   (S, "B. 基準年剩餘季度（公司指引＋TrendForce）"),
   ("q3_db", "Q3 DRAM 位元季增", "%", 0.03, 0.05, 0.07, "Verified", "公司 Q2 法說：中個位數"),

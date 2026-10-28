@@ -69,7 +69,7 @@ inp("cool_vr", "VR200 每架機架內液冷（冷板等，橋接表）", "US$K",
 for s in SC:
     inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、NVIDIA、Arista 模型相同）")
     inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
-inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", 30.5, 32.0, 33.0, "Derived", "公司 2Q26 法說換算 NT$183.2B ≈ US$5.6B（隱含約 32.7）", "2026 年初 31.4（〈台幣〉開紅盤，uanalyze）；10-23 收盤：未找到")
+inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", *SIL.vals("fx_twd"), "Derived", "公司 2Q26 法說換算 NT$183.2B ≈ US$5.6B（隱含約 32.7）", "2026 年初 31.4（〈台幣〉開紅盤，uanalyze）；10-23 收盤：未找到")
 
 sec("B. AI 電源內容與台達電份額（本專案為權威：每架電源與液冷內容、台達電份額，規則第 13 條）")
 inp("pkw_26", *SIL.row9("pwr_pkw_26")[1:])   # Siliconomics M17

@@ -173,7 +173,7 @@ inp("fpe", "前瞻 P/E（stockanalysis，10-22）", "x", None, 42.28, None, "Int
 inp("pe_ttm", "近 12 月 P/E（stockanalysis，10-22）", "x", None, 70.74, None, "Interested-party", SA, "HiStock 72.24")
 inp("cons_feps", "共識前瞻 12 月 EPS（現價 ÷ 前瞻 P/E）", "NT$", None, "=px/fpe", None, "Derived", SA, "直接數字：未找到")
 inp("cons_tp", "市場共識目標價（賣方平均）", "NT$", None, 1317.37, None, "Interested-party", SA + "：19 位分析師平均 1,317.37（2026-10-22 擷取）", "本土法人 1,500（三立 2026-10-19）；FactSet 2026-06：1,000")
-inp("fx", "匯率", "NT$／US$", None, 32.5, None, "Interested-party", "鉅亨報價框：USD/TWD 32.508（2026-10）", "—")
+inp("fx", "匯率", "NT$／US$", None, SIL.base("fx_twd"), None, "Assumed", "Siliconomics SIF_fx_twd（全庫共用；v0.8.2 前本模型取 32.5）", "鉅亨報價框：USD/TWD 32.508（2026-10）")
 inp("tgt_abf_gap27", "ABF 供需缺口 2027（外資報告）", "%", None, 0.27, None, "Interested-party", SINO1Q + "：2026 年 8%、2027 年 27%、2028 年 35%", "Tom's Hardware（經 Ibiden 模型）：2027 約 21%")
 REV5 = [104.563, 140.489, 104.036, 115.373, 131.241]
 NI5 = [13.222, 29.619, 11.980, 5.082, 6.673]

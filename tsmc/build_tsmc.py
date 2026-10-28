@@ -62,7 +62,7 @@ _hg = SIL.NAMES["SIF_HBM_GapEB_A"][2] / SIL.NAMES["SIF_HBM_SupplyEB"][2]   # 202
 inp("hbm_gap27", "HBM 2027 需求缺口 ÷ 供給（Siliconomics）", "%", None, _hg, None, "Derived",
     f"Siliconomics SIF_HBM_GapEB_A ÷ SIF_HBM_SupplyEB（2027）：需求 {SIL.NAMES['SIF_HBM_DemandGrossEB'][2]:.2f} EB vs 供給 {SIL.NAMES['SIF_HBM_SupplyEB'][2]:.2f} EB")
 sec("D. 台積電營收")
-inp("fx", "美元兌新台幣（2027 起）", "NT$/US$", 30, 32, 33, "Assumed", "v0.1.1 標 Verified（當時 Q3 指引匯率）；4Q26 指引匯率為 31.8，2027 起未獲公司指引，數值不變")
+inp("fx", "美元兌新台幣（2027 起）", "NT$/US$", 30, SIL.base("fx_twd"), 33, "Assumed", "v0.1.1 標 Verified（當時 Q3 指引匯率）；4Q26 指引匯率為 31.8，2027 起未獲公司指引，數值不變")
 inp("rev25", "營收 2025", "$B", None, 122.43, None, "Verified", "四季加總")
 PR3 = "公司：3Q26 新聞稿 pr.tsmc.com/english/news/3346（6-K a3q26e）｜媒體：見 Sources 頁"
 inp("rev26_1q", "營收 1Q26", "$B", None, 35.90, None, "Verified", "公司：1Q26 新聞稿；NT$1,134.10B")

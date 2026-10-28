@@ -24,7 +24,7 @@ CONFIG = {
  ],
  "inputs": [
   (S, "A. 匯率、股價"),
-  ("fx", "美元兌韓元（2026–2028 平均）", "KRW/USD", 1350, 1420, 1500, "Derived", "Q2 2026 營收 79.32 兆 ≈ US$55.2B → 約 1,437"),
+  ("fx", "美元兌韓元（2026–2028 平均）", "KRW/USD", *_SIL.vals("fx_krw"), "Derived", "Q2 2026 營收 79.32 兆 ≈ US$55.2B → 約 1,437"),
   ("px", "股價（2026-10-23 收盤）", "KRW", None, 1277000, None, "Verified", "markets/invest_map/data/prices.csv（tradersunion、digrin；Yonhap 當日 +4.4%）；MarketScreener 2026-10-23 收盤同（v0.4.2 為 10-07 收盤 1,723,000）"),
   (S, "B. 基準年剩餘季度（公司指引＋TrendForce）"),
   ("q3_db", "Q3 DRAM 位元季增", "%", 0.08, 0.10, 0.12, "Verified", "公司 Q2 法說：約 +10%"),

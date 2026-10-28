@@ -84,7 +84,7 @@ inp("cool_vr", "VR200 每架機架內液冷（橋接表）", "US$K", None, BR["c
 for s in SC:
     inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、NVIDIA、台達電模型相同）")
     inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
-inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", 30.5, 32.0, 33.0, "Derived", "與 delta 模型相同（公司 2Q26 法說換算隱含約 32.7）", "凱基 2026-08-12：市值 NT$1,148bn ≈ US$33.6bn（隱含約 34.2，口徑待查）")
+inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", *SIL.vals("fx_twd"), "Derived", "與 delta 模型相同（公司 2Q26 法說換算隱含約 32.7）", "凱基 2026-08-12：市值 NT$1,148bn ≈ US$33.6bn（隱含約 34.2，口徑待查）")
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"dlc_{y}", f"台達電液冷營收 20{y}（台達電模型，情境 A；Recon 用）", "US$B", None, DLC[0][j], None, "Derived", DLC[1],
         "只作對帳（台達電液冷多在機架外：CDU、Liquid-to-Air），不進本模型計算" if y == 26 else "同上")

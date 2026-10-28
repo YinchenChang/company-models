@@ -13,6 +13,8 @@ from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.dont_write_bytecode = True      # 不在上游資料夾寫入 __pycache__（上游唯讀）
 sys.path.insert(0, os.path.join(ROOT, "tools"))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 import cycle_position as CP
 import valuation_rule as VR
@@ -203,7 +205,7 @@ inp("opx_adj", "營業費用額外占營收比（Sens 用；基準 0）", "pt", 
 inp("nonop_f", "營業外淨額（每年）", "NT$B", 0.2, 0.5, 0.8, "Assumed", "FY2025 約 0.09、1H26 約 0.27（Derived）", "現金增加帶動利息收入：金額未找到")
 inp("tax", "有效稅率（FY2027 起）", "%", 0.12, 0.15, 0.20, "Assumed", "FY2025 約 15.1%（Derived）", "—")
 inp("sh_g", "加權股數年變動", "%", -0.005, 0.0, 0.005, "Assumed", "FY2021–25 約 134–135M（stockanalysis 推得）", "—")
-inp("fx", "匯率（FY2027 起；美元營收換算）", "NT$/US$", 30.0, 32.0, 34.0, "Assumed", "與聯發科、世芯、台積電模型相同假設", "車用與其他營收以新台幣成長率推，未另換算")
+inp("fx", "匯率（FY2027 起；美元營收換算）", "NT$/US$", 30.0, SIL.base("fx_twd"), 34.0, "Assumed", "與聯發科、世芯、台積電模型相同假設", "車用與其他營收以新台幣成長率推，未另換算")
 
 sec("G. 公司說法、共識與券商（只作 Recon 對帳，不作校準）")
 inp("co_gm26", "公司：FY2026 毛利率 20% 以上", "%", None, 0.20, None, "Interested-party", UAG, "下限值")
