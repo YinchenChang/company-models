@@ -84,7 +84,12 @@ def main():
         row = {hdr[c - 1]: FD.cell(r, c).value for c in range(1, len(hdr) + 1) if hdr[c - 1]}
         add("funding", player=row["鍵"], player_name=row["玩家"], year=row["期間"], period=row["期間標籤"],
             values={k: (None if v == "" else v) for k, v in row.items() if k not in ("玩家", "鍵", "期間", "期間標籤")},
-            unit="USD B（% 欄為比例）", tag="Derived（輸入見 FundRaw 標記）", src="SRC_GL_300／SRC_GL_302")
+            unit="USD B（% 欄為比例）", tag="Derived（輸入見 FundRaw 標記）", src="SRC_GL_300／SRC_GL_302",
+            default_view="gross",
+            gross={"external": row.get("【總額】外部資金"), "external_pct": row.get("【總額】外部 ÷ 資本支出"), "ocf_pct": row.get("【總額】營業現金流 ÷ 資本支出"),
+                   "debt_pct": row.get("【總額】債 ÷ 資本支出"), "equity_pct": row.get("【總額】股 ÷ 資本支出"), "lease_jv_pct": row.get("【總額】租賃＋表外 ÷ 資本支出")},
+            payment_order={"internal_pct": row.get("內部現金 %"), "lease_pct": row.get("融資租賃 %"), "equity_pct": row.get("股權 %"), "debt_pct": row.get("債 %"), "other_pct": row.get("其餘 %")},
+            note="gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）")
     FR = wb["FundRaw"]
     for r in range(4, FR.max_row + 1):
         if FR.cell(r, 1).value is None: continue

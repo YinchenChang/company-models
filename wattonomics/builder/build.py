@@ -1069,6 +1069,9 @@ def main():
     FD["A1"] = ("Funding — 玩家 × 期間（2024、2025、2026 最新期；USD B）的資本支出與資金來源。數值以 SUMIFS 由 FundRaw（只取採用＝1）彙總；空白＝未揭露或未採用。"
                 "資金來源比例＝支付順序（Decisions GL11-02）：內部現金 → 融資租賃 → 股權 → 債 → 其餘（現金水位／未揭露）；表外與尚未起租另列，不進分母")
     FD["A2"] = "期間標籤見 FundRaw 與 import_funding.py BUCKET（財年：Microsoft 7–6 月、Oracle 6–5 月）；期後事件與指引（post／guide）另列於下方"
+    FD["A3"] = ("兩種口徑：【支付順序】假設資本支出先由營業現金流支付、再依序租賃→股權→債，所以營業現金流足以支付時外部資金比例為 0（外部資金被排在營業現金流之後，例如 GOOGL 2025 發債 64.6、"
+                "META 2025 發債 30 與 Hyperion 27.3 都不出現）；【總額】＝期間外部資金全額（發債＋定期貸款＋GPU 債＋私募信貸＋新增融資租賃＋表外合資＋股權）÷ 資本支出，與營業現金流 ÷ 資本支出並列，"
+                "兩者合計可 > 100%（多出的部分用於回饋、現金水位或期後）。互動頁預設顯示總額口徑")
     FITEMS = [("ocf", "營業現金流", ["ocf"]), ("capex_cash", "現金資本支出", ["capex_cash"]), ("fin_lease", "新增融資租賃", ["fin_lease_new"]),
               ("capex_fl", "含融資租賃資本支出", ["capex_incl_fl"]), ("fcf", "自由現金流", ["fcf"]),
               ("bond", "公司債", ["bond_issue"]), ("term", "定期貸款", ["term_loan"]), ("gpu", "GPU 擔保債", ["gpu_debt"]), ("pc", "私募信貸", ["private_credit"]),
@@ -1077,10 +1080,12 @@ def main():
               ("eq", "股權募資", ["equity_round"]), ("vf", "供應商融資／策略投資", ["vendor_financing"]), ("bb", "買回＋股利", ["buyback_div"]),
               ("talks", "洽談中（不計入）", ["gpu_debt_talks"]), ("refi", "再融資（不重複計入）", ["bridge_refi"])]
     hdr(FD, 4, ["玩家", "鍵", "期間", "期間標籤"] + [x[1] for x in FITEMS] + ["資本支出（分母）", "內部現金", "融資租賃", "股權", "債", "其餘",
-                                                     "內部現金 %", "融資租賃 %", "股權 %", "債 %", "其餘 %", "外部募資合計", "債 ÷ 外部", "股 ÷ 外部", "租賃 ÷ 外部"])
+                                                     "內部現金 %", "融資租賃 %", "股權 %", "債 %", "其餘 %", "外部募資合計", "債 ÷ 外部", "股 ÷ 外部", "租賃 ÷ 外部",
+                                                     "【總額】外部資金", "【總額】外部 ÷ 資本支出", "【總額】營業現金流 ÷ 資本支出", "【總額】債 ÷ 資本支出", "【總額】股 ÷ 資本支出", "【總額】租賃＋表外 ÷ 資本支出"])
     FCOL = {k: get_column_letter(5 + i) for i, (k, _, _) in enumerate(FITEMS)}
     base_ = 5 + len(FITEMS)
-    RC = {k: get_column_letter(base_ + i) for i, k in enumerate(("den", "s_int", "s_fl", "s_eq", "s_debt", "s_res", "p_int", "p_fl", "p_eq", "p_debt", "p_res", "ext", "x_debt", "x_eq", "x_fl"))}
+    RC = {k: get_column_letter(base_ + i) for i, k in enumerate(("den", "s_int", "s_fl", "s_eq", "s_debt", "s_res", "p_int", "p_fl", "p_eq", "p_debt", "p_res", "ext", "x_debt", "x_eq", "x_fl",
+                                                                 "g_ext", "g_extr", "g_ocfr", "g_debtr", "g_eqr", "g_flr"))}
     r = 5; FDR = {}
     FPL = [("msft", "Microsoft"), ("googl", "Alphabet"), ("amzn", "Amazon"), ("meta", "Meta"), ("orcl", "Oracle"), ("crwv", "CoreWeave"), ("nbis", "Nebius"),
            ("xai", "xAI（SpaceX）"), ("oai", "OpenAI"), ("ant", "Anthropic")]
@@ -1107,6 +1112,15 @@ def main():
             FD[f"{RC['ext']}{r}"] = f'={V("bond")}+{V("term")}+{V("gpu")}+{V("pc")}+{V("eq")}+{V("fin_lease")}'
             for x_, k_ in (("x_debt", f'{V("bond")}+{V("term")}+{V("gpu")}+{V("pc")}'), ("x_eq", V("eq")), ("x_fl", V("fin_lease"))):
                 c = FD.cell(r, openpyxl.utils.column_index_from_string(RC[x_]), f'=IF(N({RC["ext"]}{r})=0,"",({k_})/{RC["ext"]}{r})'); c.number_format = "0%"
+            # 總額口徑：期間外部資金全額（不排序）÷ 資本支出；營業現金流 ÷ 資本支出
+            FL_ = f'IF(AND({CF_}<>"",{CC_}<>""),MAX(0,{CF_}-{CC_}),{V("fin_lease")})'
+            FD[f"{RC['g_ext']}{r}"] = f'={V("bond")}+{V("term")}+{V("gpu")}+{V("pc")}+{FL_}+{V("jv")}+{V("eq")}'
+            for k_, num in (("g_extr", f"{RC['g_ext']}{r}"), ("g_ocfr", f'{FCOL["ocf"]}{r}'), ("g_debtr", f'({V("bond")}+{V("term")}+{V("gpu")}+{V("pc")})'),
+                            ("g_eqr", V("eq")), ("g_flr", f'({FL_}+{V("jv")})')):
+                cond = f'OR({D}="",N({D})=0' + (f',{FCOL["ocf"]}{r}=""' if k_ == "g_ocfr" else "") + ")"
+                c = FD.cell(r, openpyxl.utils.column_index_from_string(RC[k_]), f'=IF({cond},"",{num}/{D})'); c.number_format = "0%"
+                if k_ in ("g_extr", "g_ocfr"): c.fill = KEY
+            FD[f"{RC['g_ext']}{r}"].number_format = "0.0"
             for k in ("den", "s_int", "s_fl", "s_eq", "s_debt", "s_res", "ext"):
                 FD[f"{RC[k]}{r}"].number_format = "0.0"
             FDR[(pk, b)] = r; r += 1
@@ -1363,7 +1377,8 @@ def main():
     FUNDN = []
     for (pk, b), fr in FDR.items():
         for k, cl in (("capex", RC["den"]), ("int_pct", RC["p_int"]), ("lease_pct", RC["p_fl"]), ("equity_pct", RC["p_eq"]), ("debt_pct", RC["p_debt"]),
-                      ("other_pct", RC["p_res"]), ("ocf", FCOL["ocf"]), ("fcf", FCOL["fcf"]), ("lnc", FCOL["lnc"]), ("debt_raised", None), ("equity_raised", FCOL["eq"])):
+                      ("other_pct", RC["p_res"]), ("gross_ext", RC["g_ext"]), ("gross_ext_pct", RC["g_extr"]), ("gross_ocf_pct", RC["g_ocfr"]),
+                      ("gross_debt_pct", RC["g_debtr"]), ("gross_equity_pct", RC["g_eqr"]), ("gross_lease_jv_pct", RC["g_flr"]), ("ocf", FCOL["ocf"]), ("fcf", FCOL["fcf"]), ("lnc", FCOL["lnc"]), ("debt_raised", None), ("equity_raised", FCOL["eq"])):
             nm_ = f"WIF_Funding_{pk}_{b}_{k}"
             IF.cell(r, 1, nm_); IF.cell(r, 2, PN[pk]); IF.cell(r, 3, int(b)); IF.cell(r, 5, k)
             if cl is None:
@@ -1500,6 +1515,11 @@ def main():
     fr = FDR.get(("ant", "2026"))
     CK.cell(r, 3, f"=N(Funding!{FCOL['talks']}{fr})" if fr else 0); CK.cell(r, 4, f"=N(Funding!{FCOL['gpu']}{fr})" if fr else 0)
     CK.cell(r, 6, f'=IF(AND(C{r}=36,D{r}=35),"OK","ERROR")'); CK.cell(r, 7, "驗證（G 段 F191）"); r += 1
+    for pk, b, need in (("googl", "2025", 64.564), ("meta", "2025", 30 + 27.3)):
+        fr = FDR.get((pk, b))
+        CK.cell(r, 1, f"K28-{pk}{b}"); CK.cell(r, 2, f"Funding 總額口徑 {pk} {b} 外部資金 ≥ {need}（GOOGL 發債 F#43；META 發債 F#98＋Hyperion F#101）")
+        CK.cell(r, 3, f"=Funding!{RC['g_ext']}{fr}"); CK.cell(r, 4, need)
+        CK.cell(r, 6, f'=IF(C{r}>=D{r}-1E-6,"OK","ERROR")'); CK.cell(r, 7, "驗證（核對要求）"); r += 1
     CK.cell(r, 1, "K27"); CK.cell(r, 2, "循環融資表列數＝17（F.md 第三節）")
     CK.cell(r, 3, CIRC1 - CIRC0 + 1); CK.cell(r, 6, f'=IF(C{r}=17,"OK","ERROR")'); CK.cell(r, 7, "結構"); r += 1
     CK.cell(r, 1, "K9"); CK.cell(r, 2, "Deploy：各需求情景 2032 年底 D0 ≥ D1 ≥ D2（情景差額為負時可能不成立）")

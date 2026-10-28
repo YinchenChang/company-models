@@ -35,7 +35,7 @@
 ```bash
 python3 wattonomics/builder/build.py --out build/raw/<YYYYMMDD>_Wattonomics_v0.1.xlsx
 soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir wattonomics/model build/raw/<檔名>.xlsx
-python3 wattonomics/tools/export_snapshot.py wattonomics/model/<檔名>.xlsx wattonomics/data/gwledger_snapshot_v0.1.json
+python3 wattonomics/tools/export_snapshot.py wattonomics/model/<檔名>.xlsx wattonomics/data/wattonomics_snapshot_v0.1.json
 python3 wattonomics/tools/check.py wattonomics/model/<檔名>.xlsx   # 錯誤格 0、Checks 全過、標記齊全
 ```
 `wattonomics/README.md` 寫入規劃書第 3、4 節的對帳鏈與延遲情景規格（Andy 10-28 固定規格）。
@@ -46,4 +46,4 @@ python3 wattonomics/tools/check.py wattonomics/model/<檔名>.xlsx   # 錯誤格
 - Checks 不過 → 不交。
 
 ## 5. 交付
-分支 `claude/gwledger-v0.1`；PR 說明列：玩家表摘要、2025／2026／2027 年底市場 GW（D0／D1／D2）、C0 與 C1 對帳狀態表、與 Siliconomics 成本等值 GW 的差。
+分支 `claude/gwledger-v0.1`（v0.1 已合併；v0.1.1 起為 `claude/wattonomics-v0.1.1`）；PR 說明列：玩家表摘要、2025／2026／2027 年底市場 GW（D0／D1／D2）、C0 與 C1 對帳狀態表、與 Siliconomics 成本等值 GW 的差。

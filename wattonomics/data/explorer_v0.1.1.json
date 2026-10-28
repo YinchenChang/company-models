@@ -1,7 +1,7 @@
 {
 "source": {
 "file": "20261028_Wattonomics_v0.1.1.xlsx",
-"sha256": "0b774c2890d8f10ece110739bf28904eede4bfe31c8c36057c1c426ed0a9c900",
+"sha256": "7687c5b0e2ac4ff3ba6b74c9b6691fb887bf5967b37f533673799df068f01c50",
 "note": "Wattonomics（瓦帳）互動頁取數；扁平紀錄，kind 欄區分種類；單位 IT GW（＝TK GW）；下游取用 2027 年後數值前看 coverage",
 "wgov_errors": 0
 },
@@ -7873,11 +7873,34 @@
 "外部募資合計": 24.395,
 "債 ÷ 外部": 1,
 "股 ÷ 外部": 0,
-"租賃 ÷ 外部": 0
+"租賃 ÷ 外部": 0,
+"【總額】外部資金": 24.395,
+"【總額】外部 ÷ 資本支出": null,
+"【總額】營業現金流 ÷ 資本支出": null,
+"【總額】債 ÷ 資本支出": null,
+"【總額】股 ÷ 資本支出": null,
+"【總額】租賃＋表外 ÷ 資本支出": null
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 24.395,
+"external_pct": null,
+"ocf_pct": null,
+"debt_pct": null,
+"equity_pct": null,
+"lease_jv_pct": null
+},
+"payment_order": {
+"internal_pct": null,
+"lease_pct": null,
+"equity_pct": null,
+"debt_pct": null,
+"other_pct": null
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -7918,11 +7941,34 @@
 "外部募資合計": 20.511,
 "債 ÷ 外部": 0,
 "股 ÷ 外部": 0,
-"租賃 ÷ 外部": 1
+"租賃 ÷ 外部": 1,
+"【總額】外部資金": 20.511,
+"【總額】外部 ÷ 資本支出": 0.241129999294632,
+"【總額】營業現金流 ÷ 資本支出": 1.60073828501564,
+"【總額】債 ÷ 資本支出": 0,
+"【總額】股 ÷ 資本支出": 0,
+"【總額】租賃＋表外 ÷ 資本支出": 0.241129999294632
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 20.511,
+"external_pct": 0.241129999294632,
+"ocf_pct": 1.60073828501564,
+"debt_pct": 0,
+"equity_pct": 0,
+"lease_jv_pct": 0.241129999294632
+},
+"payment_order": {
+"internal_pct": 0.758870000705368,
+"lease_pct": 0.241129999294632,
+"equity_pct": 0,
+"debt_pct": 0,
+"other_pct": 0
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -7963,11 +8009,34 @@
 "外部募資合計": 0,
 "債 ÷ 外部": null,
 "股 ÷ 外部": null,
-"租賃 ÷ 外部": null
+"租賃 ÷ 外部": null,
+"【總額】外部資金": 24.608,
+"【總額】外部 ÷ 資本支出": 0.175076126241498,
+"【總額】營業現金流 ÷ 資本支出": 1.30150971854634,
+"【總額】債 ÷ 資本支出": 0,
+"【總額】股 ÷ 資本支出": 0,
+"【總額】租賃＋表外 ÷ 資本支出": 0.175076126241498
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 24.608,
+"external_pct": 0.175076126241498,
+"ocf_pct": 1.30150971854634,
+"debt_pct": 0,
+"equity_pct": 0,
+"lease_jv_pct": 0.175076126241498
+},
+"payment_order": {
+"internal_pct": 0.824923873758502,
+"lease_pct": 0.175076126241498,
+"equity_pct": 0,
+"debt_pct": 0,
+"other_pct": 0
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8008,11 +8077,34 @@
 "外部募資合計": 0,
 "債 ÷ 外部": null,
 "股 ÷ 外部": null,
-"租賃 ÷ 外部": null
+"租賃 ÷ 外部": null,
+"【總額】外部資金": 0,
+"【總額】外部 ÷ 資本支出": null,
+"【總額】營業現金流 ÷ 資本支出": null,
+"【總額】債 ÷ 資本支出": null,
+"【總額】股 ÷ 資本支出": null,
+"【總額】租賃＋表外 ÷ 資本支出": null
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 0,
+"external_pct": null,
+"ocf_pct": null,
+"debt_pct": null,
+"equity_pct": null,
+"lease_jv_pct": null
+},
+"payment_order": {
+"internal_pct": null,
+"lease_pct": null,
+"equity_pct": null,
+"debt_pct": null,
+"other_pct": null
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8053,11 +8145,34 @@
 "外部募資合計": 64.564,
 "債 ÷ 外部": 1,
 "股 ÷ 外部": 0,
-"租賃 ÷ 外部": 0
+"租賃 ÷ 外部": 0,
+"【總額】外部資金": 64.564,
+"【總額】外部 ÷ 資本支出": 0.706026441545376,
+"【總額】營業現金流 ÷ 資本支出": 1.80118538607062,
+"【總額】債 ÷ 資本支出": 0.706026441545376,
+"【總額】股 ÷ 資本支出": 0,
+"【總額】租賃＋表外 ÷ 資本支出": 0
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 64.564,
+"external_pct": 0.706026441545376,
+"ocf_pct": 1.80118538607062,
+"debt_pct": 0.706026441545376,
+"equity_pct": 0,
+"lease_jv_pct": 0
+},
+"payment_order": {
+"internal_pct": 1,
+"lease_pct": 0,
+"equity_pct": 0,
+"debt_pct": 0,
+"other_pct": 0
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8098,11 +8213,34 @@
 "外部募資合計": 84.75,
 "債 ÷ 外部": 0,
 "股 ÷ 外部": 1,
-"租賃 ÷ 外部": 0
+"租賃 ÷ 外部": 0,
+"【總額】外部資金": 84.75,
+"【總額】外部 ÷ 資本支出": 1.05151492592868,
+"【總額】營業現金流 ÷ 資本支出": 1.05286731680687,
+"【總額】債 ÷ 資本支出": 0,
+"【總額】股 ÷ 資本支出": 1.05151492592868,
+"【總額】租賃＋表外 ÷ 資本支出": 0
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 84.75,
+"external_pct": 1.05151492592868,
+"ocf_pct": 1.05286731680687,
+"debt_pct": 0,
+"equity_pct": 1.05151492592868,
+"lease_jv_pct": 0
+},
+"payment_order": {
+"internal_pct": 1,
+"lease_pct": 0,
+"equity_pct": 0,
+"debt_pct": 0,
+"other_pct": 0
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8143,11 +8281,34 @@
 "外部募資合計": 0,
 "債 ÷ 外部": null,
 "股 ÷ 外部": null,
-"租賃 ÷ 外部": null
+"租賃 ÷ 外部": null,
+"【總額】外部資金": 0,
+"【總額】外部 ÷ 資本支出": null,
+"【總額】營業現金流 ÷ 資本支出": null,
+"【總額】債 ÷ 資本支出": null,
+"【總額】股 ÷ 資本支出": null,
+"【總額】租賃＋表外 ÷ 資本支出": null
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 0,
+"external_pct": null,
+"ocf_pct": null,
+"debt_pct": null,
+"equity_pct": null,
+"lease_jv_pct": null
+},
+"payment_order": {
+"internal_pct": null,
+"lease_pct": null,
+"equity_pct": null,
+"debt_pct": null,
+"other_pct": null
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8188,11 +8349,34 @@
 "外部募資合計": 15,
 "債 ÷ 外部": 1,
 "股 ÷ 外部": 0,
-"租賃 ÷ 外部": 0
+"租賃 ÷ 外部": 0,
+"【總額】外部資金": 17.911,
+"【總額】外部 ÷ 資本支出": 0.136484519663799,
+"【總額】營業現金流 ÷ 資本支出": 1.06311770846827,
+"【總額】債 ÷ 資本支出": 0.114302260898721,
+"【總額】股 ÷ 資本支出": 0,
+"【總額】租賃＋表外 ÷ 資本支出": 0.0221822587650784
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 17.911,
+"external_pct": 0.136484519663799,
+"ocf_pct": 1.06311770846827,
+"debt_pct": 0.114302260898721,
+"equity_pct": 0,
+"lease_jv_pct": 0.0221822587650784
+},
+"payment_order": {
+"internal_pct": 0.977817741234922,
+"lease_pct": 0.0221822587650784,
+"equity_pct": 0,
+"debt_pct": 0,
+"other_pct": 0
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8233,11 +8417,34 @@
 "外部募資合計": 55.928,
 "債 ÷ 外部": 0.961951079959949,
 "股 ÷ 外部": 0,
-"租賃 ÷ 外部": 0.0380489200400515
+"租賃 ÷ 外部": 0.0380489200400515,
+"【總額】外部資金": 55.928,
+"【總額】外部 ÷ 資本支出": 0.568154574452955,
+"【總額】營業現金流 ÷ 資本支出": 0.725522664011865,
+"【總額】債 ÷ 資本支出": 0.546536906479205,
+"【總額】股 ÷ 資本支出": 0,
+"【總額】租賃＋表外 ÷ 資本支出": 0.02161766797375
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 55.928,
+"external_pct": 0.568154574452955,
+"ocf_pct": 0.725522664011865,
+"debt_pct": 0.546536906479205,
+"equity_pct": 0,
+"lease_jv_pct": 0.02161766797375
+},
+"payment_order": {
+"internal_pct": 0.725522664011865,
+"lease_pct": 0.02161766797375,
+"equity_pct": 0,
+"debt_pct": 0.252859668014385,
+"other_pct": 0
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8278,11 +8485,34 @@
 "外部募資合計": 0,
 "債 ÷ 外部": null,
 "股 ÷ 外部": null,
-"租賃 ÷ 外部": null
+"租賃 ÷ 外部": null,
+"【總額】外部資金": 0,
+"【總額】外部 ÷ 資本支出": null,
+"【總額】營業現金流 ÷ 資本支出": null,
+"【總額】債 ÷ 資本支出": null,
+"【總額】股 ÷ 資本支出": null,
+"【總額】租賃＋表外 ÷ 資本支出": null
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 0,
+"external_pct": null,
+"ocf_pct": null,
+"debt_pct": null,
+"equity_pct": null,
+"lease_jv_pct": null
+},
+"payment_order": {
+"internal_pct": null,
+"lease_pct": null,
+"equity_pct": null,
+"debt_pct": null,
+"other_pct": null
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8323,11 +8553,34 @@
 "外部募資合計": 30,
 "債 ÷ 外部": 1,
 "股 ÷ 外部": 0,
-"租賃 ÷ 外部": 0
+"租賃 ÷ 外部": 0,
+"【總額】外部資金": 57.3,
+"【總額】外部 ÷ 資本支出": 0.793463961780793,
+"【總額】營業現金流 ÷ 資本支出": 1.6035449698816,
+"【總額】債 ÷ 資本支出": 0.415426158000415,
+"【總額】股 ÷ 資本支出": 0,
+"【總額】租賃＋表外 ÷ 資本支出": 0.378037803780378
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 57.3,
+"external_pct": 0.793463961780793,
+"ocf_pct": 1.6035449698816,
+"debt_pct": 0.415426158000415,
+"equity_pct": 0,
+"lease_jv_pct": 0.378037803780378
+},
+"payment_order": {
+"internal_pct": 1,
+"lease_pct": 0,
+"equity_pct": 0,
+"debt_pct": 0,
+"other_pct": 0
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8368,11 +8621,34 @@
 "外部募資合計": 25,
 "債 ÷ 外部": 1,
 "股 ÷ 外部": 0,
-"租賃 ÷ 外部": 0
+"租賃 ÷ 外部": 0,
+"【總額】外部資金": 41.769,
+"【總額】外部 ÷ 資本支出": 0.486682046979866,
+"【總額】營業現金流 ÷ 資本支出": 1.12874021252796,
+"【總額】債 ÷ 資本支出": 0.291293810589113,
+"【總額】股 ÷ 資本支出": 0,
+"【總額】租賃＋表外 ÷ 資本支出": 0.195388236390753
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 41.769,
+"external_pct": 0.486682046979866,
+"ocf_pct": 1.12874021252796,
+"debt_pct": 0.291293810589113,
+"equity_pct": 0,
+"lease_jv_pct": 0.195388236390753
+},
+"payment_order": {
+"internal_pct": 0.96773629753915,
+"lease_pct": 0.03226370246085,
+"equity_pct": 0,
+"debt_pct": 0,
+"other_pct": 0
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8413,11 +8689,34 @@
 "外部募資合計": 0,
 "債 ÷ 外部": null,
 "股 ÷ 外部": null,
-"租賃 ÷ 外部": null
+"租賃 ÷ 外部": null,
+"【總額】外部資金": 0,
+"【總額】外部 ÷ 資本支出": null,
+"【總額】營業現金流 ÷ 資本支出": null,
+"【總額】債 ÷ 資本支出": null,
+"【總額】股 ÷ 資本支出": null,
+"【總額】租賃＋表外 ÷ 資本支出": null
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 0,
+"external_pct": null,
+"ocf_pct": null,
+"debt_pct": null,
+"equity_pct": null,
+"lease_jv_pct": null
+},
+"payment_order": {
+"internal_pct": null,
+"lease_pct": null,
+"equity_pct": null,
+"debt_pct": null,
+"other_pct": null
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8458,11 +8757,34 @@
 "外部募資合計": 0,
 "債 ÷ 外部": null,
 "股 ÷ 外部": null,
-"租賃 ÷ 外部": null
+"租賃 ÷ 外部": null,
+"【總額】外部資金": 15,
+"【總額】外部 ÷ 資本支出": null,
+"【總額】營業現金流 ÷ 資本支出": null,
+"【總額】債 ÷ 資本支出": null,
+"【總額】股 ÷ 資本支出": null,
+"【總額】租賃＋表外 ÷ 資本支出": null
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 15,
+"external_pct": null,
+"ocf_pct": null,
+"debt_pct": null,
+"equity_pct": null,
+"lease_jv_pct": null
+},
+"payment_order": {
+"internal_pct": null,
+"lease_pct": null,
+"equity_pct": null,
+"debt_pct": null,
+"other_pct": null
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8503,11 +8825,34 @@
 "外部募資合計": 48,
 "債 ÷ 外部": 0.895833333333333,
 "股 ÷ 外部": 0.104166666666667,
-"租賃 ÷ 外部": 0
+"租賃 ÷ 外部": 0,
+"【總額】外部資金": 104,
+"【總額】外部 ÷ 資本支出": 1.86838654043081,
+"【總額】營業現金流 ÷ 資本支出": 0.574474965416884,
+"【總額】債 ÷ 資本支出": 0.772505973447353,
+"【總額】股 ÷ 資本支出": 0.0898262759822503,
+"【總額】租賃＋表外 ÷ 資本支出": 1.0060542910012
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 104,
+"external_pct": 1.86838654043081,
+"ocf_pct": 0.574474965416884,
+"debt_pct": 0.772505973447353,
+"equity_pct": 0.0898262759822503,
+"lease_jv_pct": 1.0060542910012
+},
+"payment_order": {
+"internal_pct": 0.574474965416884,
+"lease_pct": 0,
+"equity_pct": 0.0898262759822503,
+"debt_pct": 0.335698758600866,
+"other_pct": 0
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8548,11 +8893,34 @@
 "外部募資合計": 7.018,
 "債 ÷ 外部": 1,
 "股 ÷ 外部": 0,
-"租賃 ÷ 外部": 0
+"租賃 ÷ 外部": 0,
+"【總額】外部資金": 7.018,
+"【總額】外部 ÷ 資本支出": 0.806481268673868,
+"【總額】營業現金流 ÷ 資本支出": 0.315904389795449,
+"【總額】債 ÷ 資本支出": 0.806481268673868,
+"【總額】股 ÷ 資本支出": 0,
+"【總額】租賃＋表外 ÷ 資本支出": 0
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 7.018,
+"external_pct": 0.806481268673868,
+"ocf_pct": 0.315904389795449,
+"debt_pct": 0.806481268673868,
+"equity_pct": 0,
+"lease_jv_pct": 0
+},
+"payment_order": {
+"internal_pct": 0.315904389795449,
+"lease_pct": 0,
+"equity_pct": 0,
+"debt_pct": 0.684095610204551,
+"other_pct": 0
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8593,11 +8961,34 @@
 "外部募資合計": 13.32,
 "債 ÷ 外部": 0.888063063063063,
 "股 ÷ 外部": 0.111936936936937,
-"租賃 ÷ 外部": 0
+"租賃 ÷ 外部": 0,
+"【總額】外部資金": 13.32,
+"【總額】外部 ÷ 資本支出": 1.29207488602192,
+"【總額】營業現金流 ÷ 資本支出": 0.296634009118246,
+"【總額】債 ÷ 資本支出": 1.14744398098749,
+"【總額】股 ÷ 資本支出": 0.144630905034436,
+"【總額】租賃＋表外 ÷ 資本支出": 0
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 13.32,
+"external_pct": 1.29207488602192,
+"ocf_pct": 0.296634009118246,
+"debt_pct": 1.14744398098749,
+"equity_pct": 0.144630905034436,
+"lease_jv_pct": 0
+},
+"payment_order": {
+"internal_pct": 0.296634009118246,
+"lease_pct": 0,
+"equity_pct": 0.144630905034436,
+"debt_pct": 0.558735085847318,
+"other_pct": 0
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8638,11 +9029,34 @@
 "外部募資合計": 19.729,
 "債 ÷ 外部": 0.848851943839019,
 "股 ÷ 外部": 0.151148056160981,
-"租賃 ÷ 外部": 0
+"租賃 ÷ 外部": 0,
+"【總額】外部資金": 19.729,
+"【總額】外部 ÷ 資本支出": 1.39753488701565,
+"【總額】營業現金流 ÷ 資本支出": 0.259474392576326,
+"【總額】債 ÷ 資本支出": 1.18630020542608,
+"【總額】股 ÷ 資本支出": 0.211234681589573,
+"【總額】租賃＋表外 ÷ 資本支出": 0
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 19.729,
+"external_pct": 1.39753488701565,
+"ocf_pct": 0.259474392576326,
+"debt_pct": 1.18630020542608,
+"equity_pct": 0.211234681589573,
+"lease_jv_pct": 0
+},
+"payment_order": {
+"internal_pct": 0.259474392576326,
+"lease_pct": 0,
+"equity_pct": 0.211234681589573,
+"debt_pct": 0.529290925834101,
+"other_pct": 0
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8683,11 +9097,34 @@
 "外部募資合計": 0,
 "債 ÷ 外部": null,
 "股 ÷ 外部": null,
-"租賃 ÷ 外部": null
+"租賃 ÷ 外部": null,
+"【總額】外部資金": 0,
+"【總額】外部 ÷ 資本支出": 0,
+"【總額】營業現金流 ÷ 資本支出": null,
+"【總額】債 ÷ 資本支出": 0,
+"【總額】股 ÷ 資本支出": 0,
+"【總額】租賃＋表外 ÷ 資本支出": 0
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 0,
+"external_pct": 0,
+"ocf_pct": null,
+"debt_pct": 0,
+"equity_pct": 0,
+"lease_jv_pct": 0
+},
+"payment_order": {
+"internal_pct": null,
+"lease_pct": 0,
+"equity_pct": 0,
+"debt_pct": 0,
+"other_pct": 1
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8728,11 +9165,34 @@
 "外部募資合計": 9.149,
 "債 ÷ 外部": 0.474150180347579,
 "股 ÷ 外部": 0.525849819652421,
-"租賃 ÷ 外部": 0
+"租賃 ÷ 外部": 0,
+"【總額】外部資金": 9.149,
+"【總額】外部 ÷ 資本支出": 1.12533825338253,
+"【總額】營業現金流 ÷ 資本支出": null,
+"【總額】債 ÷ 資本支出": 0.533579335793358,
+"【總額】股 ÷ 資本支出": 0.591758917589176,
+"【總額】租賃＋表外 ÷ 資本支出": 0
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 9.149,
+"external_pct": 1.12533825338253,
+"ocf_pct": null,
+"debt_pct": 0.533579335793358,
+"equity_pct": 0.591758917589176,
+"lease_jv_pct": 0
+},
+"payment_order": {
+"internal_pct": null,
+"lease_pct": 0,
+"equity_pct": 0.591758917589176,
+"debt_pct": 0.408241082410824,
+"other_pct": 0
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8748,7 +9208,7 @@
 "自由現金流": -13.9,
 "公司債": null,
 "定期貸款": null,
-"GPU 擔保債": null,
+"GPU 擔保債": 16,
 "私募信貸": null,
 "淨負債變化": null,
 "尚未起租租賃承諾（期末存量）": null,
@@ -8763,21 +9223,44 @@
 "內部現金": 6.8,
 "融資租賃": 0,
 "股權": 0,
-"債": 0,
-"其餘": 13.9,
+"債": 13.9,
+"其餘": 0,
 "內部現金 %": 0.328502415458937,
 "融資租賃 %": 0,
 "股權 %": 0,
-"債 %": 0,
-"其餘 %": 0.671497584541063,
-"外部募資合計": 0,
-"債 ÷ 外部": null,
-"股 ÷ 外部": null,
-"租賃 ÷ 外部": null
+"債 %": 0.671497584541063,
+"其餘 %": 0,
+"外部募資合計": 16,
+"債 ÷ 外部": 1,
+"股 ÷ 外部": 0,
+"租賃 ÷ 外部": 0,
+"【總額】外部資金": 16,
+"【總額】外部 ÷ 資本支出": 0.772946859903382,
+"【總額】營業現金流 ÷ 資本支出": 0.328502415458937,
+"【總額】債 ÷ 資本支出": 0.772946859903382,
+"【總額】股 ÷ 資本支出": 0,
+"【總額】租賃＋表外 ÷ 資本支出": 0
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 16,
+"external_pct": 0.772946859903382,
+"ocf_pct": 0.328502415458937,
+"debt_pct": 0.772946859903382,
+"equity_pct": 0,
+"lease_jv_pct": 0
+},
+"payment_order": {
+"internal_pct": 0.328502415458937,
+"lease_pct": 0,
+"equity_pct": 0,
+"debt_pct": 0.671497584541063,
+"other_pct": 0
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8818,11 +9301,34 @@
 "外部募資合計": 100,
 "債 ÷ 外部": 0.25,
 "股 ÷ 外部": 0.75,
-"租賃 ÷ 外部": 0
+"租賃 ÷ 外部": 0,
+"【總額】外部資金": 100,
+"【總額】外部 ÷ 資本支出": 3.50877192982456,
+"【總額】營業現金流 ÷ 資本支出": 0.121754385964912,
+"【總額】債 ÷ 資本支出": 0.87719298245614,
+"【總額】股 ÷ 資本支出": 2.63157894736842,
+"【總額】租賃＋表外 ÷ 資本支出": 0
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 100,
+"external_pct": 3.50877192982456,
+"ocf_pct": 0.121754385964912,
+"debt_pct": 0.87719298245614,
+"equity_pct": 2.63157894736842,
+"lease_jv_pct": 0
+},
+"payment_order": {
+"internal_pct": 0.121754385964912,
+"lease_pct": 0,
+"equity_pct": 0.878245614035088,
+"debt_pct": 0,
+"other_pct": 0
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8863,11 +9369,34 @@
 "外部募資合計": 0,
 "債 ÷ 外部": null,
 "股 ÷ 外部": null,
-"租賃 ÷ 外部": null
+"租賃 ÷ 外部": null,
+"【總額】外部資金": 0,
+"【總額】外部 ÷ 資本支出": null,
+"【總額】營業現金流 ÷ 資本支出": null,
+"【總額】債 ÷ 資本支出": null,
+"【總額】股 ÷ 資本支出": null,
+"【總額】租賃＋表外 ÷ 資本支出": null
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 0,
+"external_pct": null,
+"ocf_pct": null,
+"debt_pct": null,
+"equity_pct": null,
+"lease_jv_pct": null
+},
+"payment_order": {
+"internal_pct": null,
+"lease_pct": null,
+"equity_pct": null,
+"debt_pct": null,
+"other_pct": null
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8908,11 +9437,34 @@
 "外部募資合計": 122,
 "債 ÷ 外部": 0,
 "股 ÷ 外部": 1,
-"租賃 ÷ 外部": 0
+"租賃 ÷ 外部": 0,
+"【總額】外部資金": 227,
+"【總額】外部 ÷ 資本支出": null,
+"【總額】營業現金流 ÷ 資本支出": null,
+"【總額】債 ÷ 資本支出": null,
+"【總額】股 ÷ 資本支出": null,
+"【總額】租賃＋表外 ÷ 資本支出": null
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 227,
+"external_pct": null,
+"ocf_pct": null,
+"debt_pct": null,
+"equity_pct": null,
+"lease_jv_pct": null
+},
+"payment_order": {
+"internal_pct": null,
+"lease_pct": null,
+"equity_pct": null,
+"debt_pct": null,
+"other_pct": null
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8953,11 +9505,34 @@
 "外部募資合計": 0,
 "債 ÷ 外部": null,
 "股 ÷ 外部": null,
-"租賃 ÷ 外部": null
+"租賃 ÷ 外部": null,
+"【總額】外部資金": 0,
+"【總額】外部 ÷ 資本支出": null,
+"【總額】營業現金流 ÷ 資本支出": null,
+"【總額】債 ÷ 資本支出": null,
+"【總額】股 ÷ 資本支出": null,
+"【總額】租賃＋表外 ÷ 資本支出": null
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 0,
+"external_pct": null,
+"ocf_pct": null,
+"debt_pct": null,
+"equity_pct": null,
+"lease_jv_pct": null
+},
+"payment_order": {
+"internal_pct": null,
+"lease_pct": null,
+"equity_pct": null,
+"debt_pct": null,
+"other_pct": null
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -8998,11 +9573,34 @@
 "外部募資合計": 130,
 "債 ÷ 外部": 0.269230769230769,
 "股 ÷ 外部": 0.730769230769231,
-"租賃 ÷ 外部": 0
+"租賃 ÷ 外部": 0,
+"【總額】外部資金": 130,
+"【總額】外部 ÷ 資本支出": null,
+"【總額】營業現金流 ÷ 資本支出": null,
+"【總額】債 ÷ 資本支出": null,
+"【總額】股 ÷ 資本支出": null,
+"【總額】租賃＋表外 ÷ 資本支出": null
 },
 "unit": "USD B（% 欄為比例）",
 "tag": "Derived（輸入見 FundRaw 標記）",
 "src": "SRC_GL_300／SRC_GL_302",
+"default_view": "gross",
+"gross": {
+"external": 130,
+"external_pct": null,
+"ocf_pct": null,
+"debt_pct": null,
+"equity_pct": null,
+"lease_jv_pct": null
+},
+"payment_order": {
+"internal_pct": null,
+"lease_pct": null,
+"equity_pct": null,
+"debt_pct": null,
+"other_pct": null
+},
+"note": "gross＝期間外部資金全額 ÷ 資本支出（預設顯示）；payment_order＝支付順序（外部資金排在營業現金流之後）",
 "kind": "funding"
 },
 {
@@ -13069,6 +13667,24 @@
 "url": "https://wdez.com/2026/07/29/hyperscaler-debt-binge-pushes-yields-up-as-investor-demand-cools/",
 "verdict": "屬實",
 "correction": null,
+"used": 1,
+"src": "SRC_GL_300",
+"kind": "funding_raw"
+},
+{
+"id": "F#205b",
+"player": "xai",
+"period": "CY2025",
+"bucket": "2025",
+"item": "gpu_debt",
+"value": 16,
+"unit": "USD B",
+"detail": "xAI 段 2025 新增債務 16（GPU）；由 F#205 detail 拆出",
+"tag": "[Verified]",
+"source": "SpaceX S-1（Yahoo 轉述）",
+"url": "https://finance.yahoo.com/markets/stocks/articles/financials-look-reckless-lifting-xai-000608351.html",
+"verdict": "屬實",
+"correction": "由 F#205（G 段屬實）拆出；F#200–202 未抽查維持不採用",
 "used": 1,
 "src": "SRC_GL_300",
 "kind": "funding_raw"

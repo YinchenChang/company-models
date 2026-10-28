@@ -3843,6 +3843,23 @@
 "use": 1
 },
 {
+"id": "F#205b",
+"player": "xAI（SpaceX）",
+"pkey": "xai",
+"period": "CY2025",
+"bucket": "2025",
+"item": "gpu_debt",
+"value": 16.0,
+"unit": "USD B",
+"detail": "xAI 段 2025 新增債務 16（GPU）；由 F#205 detail 拆出",
+"tag": "[Verified]",
+"source": "SpaceX S-1（Yahoo 轉述）",
+"url": "https://finance.yahoo.com/markets/stocks/articles/financials-look-reckless-lifting-xai-000608351.html",
+"verdict": "屬實",
+"gnote": "由 F#205（G 段屬實）拆出；F#200–202 未抽查維持不採用",
+"use": 1
+},
+{
 "id": "G:msft_lnc0",
 "player": "Microsoft",
 "pkey": "msft",

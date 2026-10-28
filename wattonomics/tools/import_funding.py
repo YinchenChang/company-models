@@ -137,6 +137,10 @@ def main():
         rows.append(dict(id=f"F#{n}", player=player, pkey=PKEY.get(player, ""), period=d["period"], bucket=str(bucket(player, d["period"])),
                          item=item, value=val, unit=d["unit"], detail=fx.get("detail", d["detail"]), tag=fx.get("tag", d["tag"]),
                          source=fx.get("source_title", d["source_title"]), url=fx.get("url", d["url"]), verdict=v, gnote=fx.get("note", ""), use=use))
+    # xAI 2025：S-1 新增債務 16（F#205 detail；G 段 F205 屬實）建成 GPU 債項目，標記照原列
+    f205 = next(e for e in rows if e["id"] == "F#205")
+    rows.append(dict(f205, id="F#205b", item="gpu_debt", value=16.0, detail="xAI 段 2025 新增債務 16（GPU）；由 F#205 detail 拆出",
+                     gnote="由 F#205（G 段屬實）拆出；F#200–202 未抽查維持不採用"))
     # 期初存量（G 段 §1 正文所載，供『尚未起租變化』）：Microsoft 2025-06 為 92.7（F27）；Oracle FY26 末 260（F129）；Amazon 2025 年底 96.4（F77 detail）
     for pk, player, period, b, val, note in (("msft", "Microsoft", "2025-06-30", "2025", 92.7, "G 段 F27：前一年 6 月為 92.7（btw.media 引 10-K）"),
                                               ("orcl", "Oracle", "2026-05-31", "2026", 260.0, "G 段 F129：FY26 末 260（Reuters）"),

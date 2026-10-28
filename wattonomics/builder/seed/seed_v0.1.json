@@ -2301,7 +2301,7 @@
    "id": "GL01-20",
    "cat": "工程",
    "item": "覆蓋率",
-   "decision": "GIF_Coverage_<yyyy>＝MIN(1, 有證據支撐的年新增〔SiteOnly 路徑：輸入、晶片、觀測、內插、T2 園區、中國 Rystad；A、D0〕÷ 主路徑年新增〔A、D0〕)；主路徑年新增 ≤ 0 時＝1",
+   "decision": "WIF_Coverage_<yyyy>＝MIN(1, 有證據支撐的年新增〔SiteOnly 路徑：輸入、晶片、觀測、內插、T2 園區、中國 Rystad；A、D0〕÷ 主路徑年新增〔A、D0〕)；主路徑年新增 ≤ 0 時＝1",
    "date": "2026-10-28",
    "quote": "chat 端第 3 階段指示 4",
    "status": "預設、可撤回"
