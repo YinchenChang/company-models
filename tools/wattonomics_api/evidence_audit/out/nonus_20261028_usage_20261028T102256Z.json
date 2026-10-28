@@ -1,0 +1,26 @@
+{
+  "tool": "evidence_audit",
+  "run": "nonus_20261028",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1345626,
+  "output_tokens": 111928,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "web_search_requests": 0,
+  "requests_batch": 251,
+  "requests_standard": 0,
+  "est_usd": 1.9053,
+  "started_utc": "2026-10-28T10:22:56Z",
+  "finished_utc": "2026-10-28T10:34:23Z",
+  "status": "done",
+  "rows": 345,
+  "urls": 288,
+  "verdicts": {
+    "不符": 8,
+    "口徑不同": 59,
+    "小誤": 145,
+    "原文找不到": 47,
+    "無法取得": 49,
+    "屬實": 37
+  }
+}
