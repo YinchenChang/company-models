@@ -1,0 +1,271 @@
+<title>Wattonomics 瓦帳</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+/* Layout: 單線圖式（single-line diagram）——由上而下三段母線：GW → 資本支出與資金 → 花費去向；控制列固定在頂部 */
+:root{
+  --bg:#f2f4f2; --panel:#ffffff; --ink:#16211d; --muted:#5b6862; --rule:#d5dbd7;
+  --amber:#b97800; --amber-soft:#f6e7c4; --teal:#1f6a6e; --teal-soft:#d6e8e7; --warn:#a33a2a; --ok:#2f7a45;
+  --d0:#16211d; --d1:#b97800; --d2:#a33a2a;
+  --f-display:"Barlow Condensed","Noto Sans TC",system-ui,sans-serif;
+  --f-body:"Noto Sans TC",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1513; --panel:#161e1b; --ink:#e3e9e6; --muted:#9aa7a1; --rule:#2a3531;
+  --amber:#f0b429; --amber-soft:#3a2f12; --teal:#5fb3b5; --teal-soft:#16302f; --warn:#e2725e; --ok:#6cc08a;
+  --d0:#e3e9e6; --d1:#f0b429; --d2:#e2725e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1513; --panel:#161e1b; --ink:#e3e9e6; --muted:#9aa7a1; --rule:#2a3531;
+  --amber:#f0b429; --amber-soft:#3a2f12; --teal:#5fb3b5; --teal-soft:#16302f; --warn:#e2725e; --ok:#6cc08a;
+  --d0:#e3e9e6; --d1:#f0b429; --d2:#e2725e; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px;display:grid;gap:28px}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;letter-spacing:.01em;text-wrap:balance;margin:0}
+h1{font-size:2.6rem;line-height:1}
+h2{font-size:1.55rem}
+h3{font-size:1.15rem}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.lede{max-width:68ch;color:var(--muted);margin:6px 0 0}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+header.top{display:grid;gap:10px}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--rule);padding-block:10px;display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center}
+.seg{display:flex;gap:0;border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.seg button{font:500 .85rem var(--f-body);background:var(--panel);color:var(--ink);border:0;border-right:1px solid var(--rule);padding:6px 10px;cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg button:focus-visible,select:focus-visible,.prow:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.ctl{display:flex;gap:8px;align-items:center;font-size:.85rem;color:var(--muted)}
+select{font:500 .9rem var(--f-mono);background:var(--panel);color:var(--ink);border:1px solid var(--rule);border-radius:4px;padding:5px 8px}
+.chip{font:500 .75rem var(--f-mono);padding:3px 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.chip.warn{color:var(--warn)} .chip.ok{color:var(--ok)}
+.bus{display:grid;gap:14px;border-left:3px solid var(--amber);padding-left:16px}
+.bus>.head{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.stat{background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:10px 12px;display:grid;gap:2px}
+.stat .v{font:500 1.6rem var(--f-mono);font-variant-numeric:tabular-nums}
+.stat .k{font-size:.78rem;color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:14px;min-width:0}
+.chart{width:100%;overflow-x:auto}
+.chart svg{display:block;width:100%;height:auto;min-width:560px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.8rem;color:var(--muted)}
+.legend i{display:inline-block;width:18px;height:0;border-top:2px solid;vertical-align:middle;margin-right:6px}
+.twocol{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:14px}
+@media (max-width:820px){.twocol{grid-template-columns:minmax(0,1fr)}}
+table{border-collapse:collapse;width:100%;font-size:.85rem}
+.tbl{overflow-x:auto}
+th,td{padding:7px 8px;border-bottom:1px solid var(--rule);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal}
+th{font:500 .72rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.prow{cursor:pointer}
+.prow:hover{background:var(--teal-soft)}
+.prow[aria-selected="true"]{background:var(--amber-soft)}
+.gwbar{display:inline-block;height:8px;background:var(--teal);border-radius:1px;vertical-align:middle;margin-left:6px}
+.detail{display:grid;gap:12px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:.85rem}
+.kv dt{color:var(--muted)} .kv dd{margin:0;text-align:right}
+.campus{display:grid;gap:6px;font-size:.82rem}
+.campus .row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:baseline;border-bottom:1px dashed var(--rule);padding-bottom:4px}
+.tag{font:400 .68rem var(--f-mono);color:var(--muted);border:1px solid var(--rule);border-radius:3px;padding:0 4px;margin-left:4px}
+.delay{color:var(--warn);font-family:var(--f-mono);font-size:.75rem}
+.spend{display:grid;gap:4px}
+.srow{display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr) 92px;gap:10px;align-items:center;font-size:.85rem;padding:5px 0;border-bottom:1px solid var(--rule)}
+.srow .track{height:14px;background:var(--bg);border-radius:2px;overflow:hidden}
+.srow .fill{height:100%;background:var(--teal)}
+.srow.fac .fill{background:var(--amber)}
+.srow.gen .fill{background:var(--warn)}
+.srow .tick{grid-column:2/4;display:flex;flex-wrap:wrap;gap:4px}
+.tk{font:400 .7rem var(--f-mono);background:var(--bg);border:1px solid var(--rule);border-radius:3px;padding:1px 5px;color:var(--muted)}
+.grp{font:600 1rem var(--f-display);margin-top:10px;color:var(--muted);letter-spacing:.04em}
+@media (max-width:520px){.srow{grid-template-columns:minmax(0,1fr) 80px}.srow .track{grid-column:1/3;order:3}.srow .tick{grid-column:1/3}}
+.note{font-size:.8rem;color:var(--muted);max-width:90ch}
+footer{display:grid;gap:6px;font-size:.78rem;color:var(--muted);border-top:1px solid var(--rule);padding-top:14px}
+@media (prefers-reduced-motion:no-preference){.fill{transition:width .35s ease}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">算力收支 · 全市場 GW 唯一基準事實 · 單位 IT GW（＝Tokenomics GW）</div>
+    <h1>Wattonomics 瓦帳</h1>
+    <p class="lede">誰在蓋多少 AI 算力、何時上線、花了多少錢、錢從哪裡來、最後流到哪些零件與機組。資料來自 Wattonomics Excel 的匯出檔；每個數字都可在 Excel 追到輸入與來源標記。</p>
+  </header>
+
+  <div class="bar" role="toolbar" aria-label="情境與年份">
+    <div class="ctl">需求
+      <div class="seg" id="segScen"></div></div>
+    <div class="ctl">基建延遲
+      <div class="seg" id="segDelay"></div></div>
+    <div class="ctl"><label for="selYear">年份</label>
+      <select id="selYear"></select></div>
+    <span id="covChip" class="chip"></span>
+  </div>
+
+  <section class="bus" aria-labelledby="h1s">
+    <div class="head"><div class="eyebrow">母線 1</div><h2 id="h1s">市場上線 GW</h2></div>
+    <div class="stats" id="stats"></div>
+    <div class="card">
+      <div class="legend" id="legend"></div>
+      <div class="chart" id="mktChart"></div>
+      <p class="note">實線＝主路徑（2027 起大廠以資本支出推得 GW）；虛線＝只算有具體園區與上線日的部分。覆蓋率低於 0.5 的年份，數字多半來自推算而非已公告的園區。</p>
+    </div>
+  </section>
+
+  <section class="bus" aria-labelledby="h2s">
+    <div class="head"><div class="eyebrow">母線 2</div><h2 id="h2s">主要玩家：GW、資本支出、資金來源</h2></div>
+    <div class="twocol">
+      <div class="card tbl">
+        <table id="ptab"><thead><tr>
+          <th>玩家（營運者）</th><th id="thGW">年底 IT GW</th><th>資本支出 $B</th><th>其中 AI $B</th><th>外部資金 ÷ 資本支出</th>
+        </tr></thead><tbody></tbody></table>
+        <p class="note">點選一列看園區、目標 GW 與時點、融資細項。外部資金＝發債、貸款、GPU 擔保債、融資租賃、表外合資、股權（總額口徑，最近一期；2026 多為部分期間，見期間標籤）。</p>
+      </div>
+      <div class="card detail" id="detail" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="bus" aria-labelledby="h3s">
+    <div class="head"><div class="eyebrow">母線 3</div><h2 id="h3s">錢花到哪裡</h2><span class="note" id="spendNote"></span></div>
+    <div class="card spend" id="spend"></div>
+    <p class="note">IT 設備依 AI半導體 次產業比例（GB300 對照）拆分，ASIC 借用同一比例為近似；廠房依每 IT GW 12.67B 拆分（[Derived]）；自建發電不在廠房內，另列。標籤為各環節代表公司，僅為名單，金額不是公司營收。</p>
+  </section>
+
+  <footer>
+    <div id="srcline"></div>
+    <div>標記：Derived＝由其他量換算；Interested-party＝公司或利害關係方自述；Analogy＝類比估計；Assumed＝無直接證據的假設。2027 年後與覆蓋率偏低的年份請以區間看待。</div>
+  </footer>
+</div>
+
+<script>
+const D = __DATA__;
+const YEARS = ["2024","2025","2026","2027","2028","2029","2030","2031","2032"];
+const SCEN = [["A","順利"],["B","平平"],["C","不如預期"]];
+const DELAY = [["D0","準時"],["D1","基準延遲"],["D2","嚴重延遲"]];
+const FAC = 1.2; // TK IF_FacilityGW 基準
+const ORDER = ["googl","msft","amzn","meta","orcl","xai","crwv","oai","nbis","neo","wyfi","ant","sov","cn","oth"];
+const SHORT = {googl:"Google",msft:"Microsoft",amzn:"Amazon",meta:"Meta",orcl:"Oracle",xai:"SpaceX／xAI",crwv:"CoreWeave",oai:"OpenAI／Stargate 自建",nbis:"Nebius",neo:"其他新雲",wyfi:"WhiteFiber",ant:"Anthropic 自建",sov:"主權 AI",cn:"中國",oth:"其他"};
+const USERN = {msft:"Microsoft",oai:"OpenAI",ant:"Anthropic",googl:"Google",xai:"xAI",meta:"Meta",oth:"其他",amzn:"Amazon"};
+const SPEND = [
+ ["IT 設備","it",[
+  ["it_compute","運算晶片",["NVDA","AVGO","AMD","2454 聯發科","MRVL","3661 世芯","3443 創意"]],
+  ["it_memory","記憶體（HBM 等）",["SK 海力士","三星","MU","SNDK"]],
+  ["it_network","網通與光模組",["ANET","中際旭創","COHR","LITE","新易盛","2345 智邦","CRDO"]],
+  ["it_foundry","代工與封測",["2330 台積電","3711 日月光","2449 京元電","AMKR"]],
+  ["it_substrate","載板與 PCB",["Ibiden","2383 台光電","3037 欣興","8046 南電"]],
+  ["it_power_thermal","機架內電源與散熱",["2308 台達電","3017 奇鋐","2301 光寶","3324 雙鴻","VRT"]],
+  ["it_server","伺服器組裝",["2317 鴻海","2382 廣達","3231 緯創","6669 緯穎","DELL","SMCI"]],
+  ["it_storage","儲存與管理",[]]]],
+ ["廠房（每 IT GW 12.67B 拆分）","fac",[
+  ["fac_dist","配電（開關、變壓器、PDU、母線）",["ETN","Schneider","ABB","Hitachi Energy","1519 華城","1503 士電","1513 中興電"]],
+  ["fac_gen","備援發電機",["CAT","CMI","Rolls-Royce mtu"]],
+  ["fac_ups","UPS 與電池",["VRT","Schneider","ETN","2308 台達電"]],
+  ["fac_cool","冷卻（冰水機、冷卻塔、CDU）",["VRT","Schneider"]],
+  ["fac_bldg","建築",[]],
+  ["fac_labor","施工人工與設計",["PWR"]],
+  ["fac_prof","其他專業服務",[]],
+  ["fac_net","網路、消防、控制",[]],
+  ["fac_land","土地",[]],
+  ["fac_resid","其他／未拆",[]]]],
+ ["自建發電（不在廠房內）","gen",[
+  ["self_gen","燃機、往復機、燃料電池",["GEV","Siemens Energy","MHI","CAT","BE"]]]]
+];
+const S = {scen:"A",delay:"D1",year:"2026",player:"googl"};
+try{const s=JSON.parse(localStorage.getItem("wx_state")||"null"); if(s) Object.assign(S,s);}catch(e){}
+const save=()=>{try{localStorage.setItem("wx_state",JSON.stringify(S))}catch(e){}};
+const fmt=(v,d=1)=>v==null||isNaN(v)?"—":Number(v).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct=v=>v==null||isNaN(v)?"—":Math.round(v*100)+"%";
+const el=(t,a={},h="")=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);if(h)e.innerHTML=h;return e};
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+function seg(id,opts,key){const box=document.getElementById(id);box.innerHTML="";
+ opts.forEach(([v,l])=>{const b=el("button",{type:"button","aria-pressed":String(S[key]===v)},`${v} ${l}`);b.onclick=()=>{S[key]=v;save();render()};box.append(b)});}
+function mk(path){return D.mkt[`${path}|${S.scen}|${S.delay}`]||{}}
+
+function render(){
+ seg("segScen",SCEN,"scen"); seg("segDelay",DELAY,"delay");
+ const sel=document.getElementById("selYear"); if(!sel.options.length){YEARS.forEach(y=>sel.append(el("option",{value:y},y)));sel.onchange=()=>{S.year=sel.value;save();render()}}
+ sel.value=S.year;
+ const cov=D.cov[S.year]; const chip=document.getElementById("covChip");
+ chip.className="chip "+(cov!=null&&cov<0.5?"warn":"ok");
+ chip.textContent=`${S.year} 覆蓋率 ${cov==null?"—":cov.toFixed(2)}${cov!=null&&cov<0.5?"・多為推算":""}`;
+ stats(); chart(); table(); detail(); spend();
+ document.getElementById("srcline").textContent=`資料：${D.src}（sha256 ${D.sha}…）・需求情景 A／B／C 僅影響 2028 年起的顆數係數`;
+}
+function stats(){
+ const m=mk("main"), y=S.year, py=String(+y-1);
+ const gw=m[y], add=(m[y]!=null&&m[py]!=null)?m[y]-m[py]:null;
+ const d0=D.mkt[`main|${S.scen}|D0`][y];
+ const sp=D.spend.total?D.spend.total[y]:null;
+ const items=[
+  [fmt(gw),`${y} 年底上線 IT GW（${S.scen}・${S.delay}）`],
+  [fmt(gw==null?null:gw*FAC),"換算設施電力 GW（×1.2）"],
+  [fmt(add),`${y} 年底較前一年增加 IT GW${y==="2025"?"（含新納入統計的存量 10.1）":""}`],
+  [fmt(d0!=null&&gw!=null?d0-gw:null),"相對準時，尚未上線的 GW（晶片等電）"],
+  [fmt(sp,0),`${y} 年花費 $B（A・準時口徑）`]];
+ const box=document.getElementById("stats");box.innerHTML="";
+ items.forEach(([v,k])=>box.append(el("div",{class:"stat"},`<span class="v">${v}</span><span class="k">${k}</span>`)));
+}
+function chart(){
+ const W=760,H=300,L=48,R=16,T=14,B=30;
+ const series=[["main","D0","--d0",""],["main","D1","--d1",""],["main","D2","--d2",""],["site_only",S.delay,"--muted","5 4"]];
+ let max=0; series.forEach(([p,d])=>{const s=D.mkt[`${p}|${S.scen}|${d}`];YEARS.forEach(y=>{if(s&&s[y]>max)max=s[y]})});
+ max=Math.ceil(max/25)*25||25;
+ const x=i=>L+i*(W-L-R)/(YEARS.length-1), yv=v=>T+(H-T-B)*(1-v/max);
+ let g="";
+ for(let v=0;v<=max;v+=25){g+=`<line x1="${L}" x2="${W-R}" y1="${yv(v)}" y2="${yv(v)}" stroke="${css('--rule')}" stroke-width="1"/><text x="${L-6}" y="${yv(v)+4}" text-anchor="end" font-size="11" fill="${css('--muted')}" font-family="IBM Plex Mono,monospace">${v}</text>`}
+ YEARS.forEach((y,i)=>{const cv=D.cov[y];
+  if(cv!=null&&cv<0.5) g+=`<rect x="${x(i)-((W-L-R)/(YEARS.length-1))/2}" y="${T}" width="${(W-L-R)/(YEARS.length-1)}" height="${H-T-B}" fill="${css('--amber-soft')}" opacity=".55"/>`;
+  g+=`<text x="${x(i)}" y="${H-10}" text-anchor="middle" font-size="11" fill="${y===S.year?css('--ink'):css('--muted')}" font-weight="${y===S.year?600:400}" font-family="IBM Plex Mono,monospace">${y}</text>`});
+ g+=`<line x1="${x(YEARS.indexOf(S.year))}" x2="${x(YEARS.indexOf(S.year))}" y1="${T}" y2="${H-B}" stroke="${css('--amber')}" stroke-width="1.5"/>`;
+ series.forEach(([p,d,c,dash])=>{const s=D.mkt[`${p}|${S.scen}|${d}`];if(!s)return;
+  const pts=YEARS.map((y,i)=>s[y]==null?null:[x(i),yv(s[y])]).filter(Boolean);
+  const w=(p==="main"&&d===S.delay)?3:1.6;
+  g+=`<polyline fill="none" stroke="${css(c)}" stroke-width="${w}" ${dash?`stroke-dasharray="${dash}"`:""} points="${pts.map(q=>q.join(",")).join(" ")}"/>`;
+  if(p==="main"&&d===S.delay){const i=YEARS.indexOf(S.year);if(s[S.year]!=null)g+=`<circle cx="${x(i)}" cy="${yv(s[S.year])}" r="4.5" fill="${css(c)}"/><text x="${x(i)+8}" y="${yv(s[S.year])-8}" font-size="12" fill="${css('--ink')}" font-family="IBM Plex Mono,monospace">${fmt(s[S.year])}</text>`}});
+ document.getElementById("mktChart").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="市場上線 IT GW，2024 至 2032 年，三種延遲情景">${g}</svg>`;
+ document.getElementById("legend").innerHTML=DELAY.map(([d,l],k)=>`<span><i style="border-color:var(--${d.toLowerCase()})"></i>${d} ${l}</span>`).join("")+`<span><i style="border-color:var(--muted);border-top-style:dashed"></i>只算有日期的園區（${S.delay}）</span><span><i style="border-top:10px solid var(--amber-soft);width:12px"></i>覆蓋率 &lt; 0.5</span>`;
+}
+function latestFund(p){const f=D.fund.filter(r=>r.player===p&&r.gross&&r.gross.external_pct!=null).sort((a,b)=>b.year-a.year);return f[0]}
+function table(){
+ const pg=D.pgw.main, y=S.year; const tb=document.querySelector("#ptab tbody"); tb.innerHTML="";
+ document.getElementById("thGW").textContent=`${y} 年底 IT GW`;
+ const max=Math.max(...ORDER.map(p=>(pg[p]||{})[y]||0));
+ ORDER.forEach(p=>{if(!pg[p])return; const v=pg[p][y];
+  const cx=(D.capex_calendar[p]||{})[y], ai=(D.capex_ai[p]||{})[y], f=latestFund(p);
+  const tr=el("tr",{class:"prow",tabindex:"0","aria-selected":String(S.player===p)},
+   `<td>${SHORT[p]||p}</td><td class="num">${fmt(v,2)}<span class="gwbar" style="width:${max?Math.round(60*(v||0)/max):0}px"></span></td><td class="num">${fmt(cx,0)}</td><td class="num">${fmt(ai,0)}</td><td class="num">${f?pct(f.gross.external_pct)+` <span class="tag">${f.period}</span>`:"—"}</td>`);
+  const pick=()=>{S.player=p;save();render()}; tr.onclick=pick; tr.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();pick()}};
+  tb.append(tr)});
+}
+function detail(){
+ const p=S.player, box=document.getElementById("detail"), pg=D.pgw.main[p]||{}, so=D.pgw.site_only[p]||{};
+ const cps=D.campus.filter(c=>c.operator===p).sort((a,b)=>(+a.online_year*12+ +a.online_month)-(+b.online_year*12+ +b.online_month));
+ const tot=cps.filter(c=>Number(c.included)===1).reduce((s,c)=>s+(+c.mw||0),0);
+ const last=cps.length?cps[cps.length-1]:null;
+ const f=D.fund.filter(r=>r.player===p).sort((a,b)=>b.year-a.year).find(r=>r.values&&Object.values(r.values).some(v=>v!=null&&v!==0));
+ let h=`<div><div class="eyebrow">${D.pname[p]||p}</div><h3>${SHORT[p]||p}</h3></div>`;
+ h+=`<dl class="kv"><dt>年底 IT GW 2025／2026／2027</dt><dd class="num">${fmt(pg["2025"],2)}／${fmt(pg["2026"],2)}／${fmt(pg["2027"],2)}</dd>`;
+ h+=`<dt>2029 年底（主路徑／只算園區）</dt><dd class="num">${fmt(pg["2029"],2)}／${fmt(so["2029"],2)}</dd>`;
+ h+=`<dt>已列園區合計</dt><dd class="num">${fmt(tot/1000,2)} GW${last?`，最後一期 ${last.online_year}-${String(last.online_month).padStart(2,"0")}`:""}</dd></dl>`;
+ if(cps.length){h+=`<div><div class="eyebrow">園區與上線時點</div><div class="campus">`+cps.map(c=>{const u=c.user&&c.user!=="None"?`使用者 ${USERN[c.user]||c.user}`:"自用";
+   const dl=c.known_delay_m&&c.known_delay_m!=="None"&&+c.known_delay_m>0?`<span class="delay">已延 ${c.known_delay_m} 月</span>`:"";
+   return `<div class="row"><span>${c.name_} <span class="tag">${c.tag}</span> ${dl}<br><span class="note">${u}${Number(c.power_secured)===1?"・電力已確保":""}${Number(c.included)!==1?"・未計入":""}</span></span><span class="num">${fmt(+c.mw,0)} MW</span><span class="num">${c.online_year}-${String(c.online_month).padStart(2,"0")}</span></div>`}).join("")+`</div></div>`}
+ else h+=`<p class="note">本專案尚未列入此玩家的個別園區；GW 來自晶片擁有量換算或資本支出推算。</p>`;
+ if(f){const v=f.values,keys=["營業現金流","含融資租賃資本支出","自由現金流","公司債","定期貸款","GPU 擔保債","新增融資租賃","表外合資曝險（當期出資／債）","股權募資","尚未起租租賃承諾（期末存量）","合資最大損失曝險（存量）","買回＋股利"];
+  h+=`<div><div class="eyebrow">資金（${f.period}，US$B）</div><dl class="kv">`+keys.filter(k=>v[k]!=null).map(k=>`<dt>${k}</dt><dd class="num">${fmt(v[k],1)}</dd>`).join("")+
+   `<dt>外部資金 ÷ 資本支出</dt><dd class="num">${pct(f.gross.external_pct)}</dd><dt>營業現金流 ÷ 資本支出</dt><dd class="num">${pct(f.gross.ocf_pct)}</dd></dl></div>`}
+ box.innerHTML=h;
+}
+function spend(){
+ const y=S.year, box=document.getElementById("spend"); box.innerHTML="";
+ const tot=D.spend.total?D.spend.total[y]:null;
+ document.getElementById("spendNote").textContent=`${y} 年合計 ${fmt(tot,0)} $B・需求 A、準時（D0）、以上線年計`;
+ let max=0; SPEND.forEach(([,,it])=>it.forEach(([k])=>{const v=(D.spend[k]||{})[y];if(v>max)max=v}));
+ SPEND.forEach(([g,cls,items])=>{const sub=items.reduce((s,[k])=>s+((D.spend[k]||{})[y]||0),0);
+  box.append(el("div",{class:"grp"},`${g}　<span class="num">${fmt(sub,0)} $B</span>`));
+  items.forEach(([k,l,t])=>{const v=(D.spend[k]||{})[y]; if(v==null)return;
+   const r=el("div",{class:"srow "+cls},`<span>${l}</span><span class="track"><span class="fill" style="display:block;width:${max?100*v/max:0}%"></span></span><span class="num" style="text-align:right">${fmt(v,1)}<span class="note"> ${tot?pct(v/tot):""}</span></span>`+(t.length?`<span class="tick">${t.map(s=>`<span class="tk">${s}</span>`).join("")}</span>`:""));
+   box.append(r)})});
+}
+render();
+</script>
