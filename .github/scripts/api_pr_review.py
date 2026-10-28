@@ -7,7 +7,10 @@
 import json
 import os
 import urllib.error
+import sys
 import urllib.request
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 REPO = os.environ.get("REPO", "")              # 例：YinchenChang/Tokenomics
 PR = os.environ.get("PR_NUMBER", "")
@@ -25,6 +28,9 @@ SYSTEM = """你是「未參與製作的獨立核對者」，核對 Andy 研究 r
 2. 推導：比值、換算、單位、口徑（例如 IT MW 與設施 MW、FP8 與 FP4、年化與全年）是否一致。
 3. 來源標記：[Verified]／[Interested-party]／[Analogy]／[Assumed]／[Derived] 是否與內容相符；Assumed 或 Analogy 是否誤寫成精確點估計。
 4. 文件與程式不一致、過時說明、版本號或日期前後矛盾。
+5. 若附有「Excel 變動」：(a) PR 說明或報告宣稱的變動（改了哪些輸入、數值、目標價）是否與實際儲存格變動一致；
+   (b) 有沒有說明沒提到、卻實際改變的輸入格或重要結果（「預期外變動」）；(c) 新版錯誤格；
+   (d) 輸入值變動能否解釋計算結果的方向與大小（例：輸入調高、結果卻下降要指出）。列標籤只是同列 A–D 欄的文字，可能不精確。
 輸出格式（Markdown）：
 **結論**：一句話（未發現問題／發現 N 項需確認）。
 **發現**：表格，欄位為 嚴重度（高／中／低）｜位置（檔名與行或段落）｜問題｜依據或驗算。沒有就寫「無」。
@@ -81,6 +87,16 @@ def collect():
         used += len(block)
     if truncated_list:
         skipped.append("第 1,001 個以後的檔案（未讀取）")
+    # Excel：以逐格差異取代「二進位略過」（2026-10-28 起）
+    try:
+        import xlsx_pr_diff
+        room = max(20000, MAX_CHARS - used)
+        xtext, xdone, xnotes = xlsx_pr_diff.build(files, pr["base"]["sha"], pr["head"]["sha"], max_chars=min(room, 80000))
+        if xtext:
+            parts.append("\n# Excel 變動（程式逐格比較新舊版的計算值與公式）\n" + xtext)
+        skipped = [x for x in skipped if x.split("（")[0] not in xdone] + xnotes
+    except Exception as e:
+        skipped.append(f"Excel 變動比較失敗（{type(e).__name__}: {e}）")
     return "".join(parts), skipped
 
 
