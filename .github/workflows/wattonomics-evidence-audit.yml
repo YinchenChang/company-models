@@ -1,0 +1,57 @@
+# Wattonomics 證據逐列回查（API 版，2026-10-28 起；說明見 tools/wattonomics_api/README.md）
+# 觸發：(1) push 到 claude/wattonomics-audit 且 requests/ 有請求檔（mag/extract 慣例）；
+#       (2) 手動 workflow_dispatch（須本檔已在預設分支），以輸入參數產生請求檔。
+# 結果 commit 到 claude/wattonomics-audit（不寫 main）；分支有 PR 時留言摘要。參考用，不阻擋合併。
+name: wattonomics-evidence-audit
+on:
+  push:
+    branches: [claude/wattonomics-audit]
+    paths: ["tools/wattonomics_api/evidence_audit/requests/*.json", "tools/wattonomics_api/evidence_audit/audit.py",
+            "tools/wattonomics_api/common.py", ".github/workflows/wattonomics-evidence-audit.yml"]
+  workflow_dispatch:
+    inputs:
+      max_rows: {description: "只跑前 N 列（冒煙測試填 5；空＝全部約 510 列）", required: false, default: "5"}
+      files: {description: "只跑這些 csv（逗號分隔檔名；空＝全部）", required: false, default: ""}
+      cost_cap_usd: {description: "本次費用上限 US$", required: false, default: "1"}
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+concurrency:
+  group: wattonomics-api-budget   # 三個工具共用：避免同時執行時重複計算預算
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v5
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v6
+        with: {python-version: "3.12"}
+      - run: (sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils) >/dev/null
+      - name: Request from dispatch inputs
+        if: github.event_name == 'workflow_dispatch'
+        env: {MAX_ROWS: "${{ inputs.max_rows }}", FILES: "${{ inputs.files }}", CAP: "${{ inputs.cost_cap_usd }}"}
+        run: |
+          python3 - <<'PY'
+          import json, os, time
+          d = "tools/wattonomics_api/evidence_audit/requests"; os.makedirs(d, exist_ok=True)
+          req = {"max_rows": int(os.environ["MAX_ROWS"]) if os.environ["MAX_ROWS"].strip() else None,
+                 "files": [x.strip() for x in os.environ["FILES"].split(",") if x.strip()],
+                 "cost_cap_usd": float(os.environ["CAP"] or 1)}
+          json.dump(req, open(f"{d}/{time.strftime('%Y%m%d_%H%M')}_dispatch.json", "w"), indent=2)
+          PY
+      - name: Audit
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PRIOR_SPEND_USD: ${{ vars.API_PRIOR_SPEND_USD }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p tools/wattonomics_api/evidence_audit/out
+          set -o pipefail
+          python3 -u tools/wattonomics_api/evidence_audit/audit.py 2>&1 | tee tools/wattonomics_api/evidence_audit/out/_run.log
+      - name: Commit outputs
+        if: always()
+        run: |
+          .github/scripts/wattonomics_commit.sh tools/wattonomics_api/evidence_audit claude/wattonomics-audit "wattonomics evidence-audit: 回查結果 $(date -u +%F)"

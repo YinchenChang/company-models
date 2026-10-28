@@ -1,0 +1,55 @@
+# Wattonomics 每週變動監測（API 版，2026-10-28 起；說明見 tools/wattonomics_api/README.md）
+# 觸發：(1) 排程 每週一 01:00 UTC＝09:00 台北（在預設分支執行，須本檔已合併）；
+#       (2) push 到 claude/wattonomics-monitor-test 且 requests/ 有請求檔；(3) 手動 workflow_dispatch。
+# 2026-11-10（台北）之後自動停止：monitor.py 內判斷日期，不呼叫 API（API credit 到期）。
+# 結果 commit 到固定分支 wattonomics-monitor（不寫 main）。參考用，不阻擋合併。
+name: wattonomics-weekly-monitor
+on:
+  schedule:
+    - cron: "0 1 * * 1"
+  push:
+    branches: [claude/wattonomics-monitor-test]
+    paths: ["tools/wattonomics_api/weekly_monitor/requests/*.json", "tools/wattonomics_api/weekly_monitor/monitor.py",
+            "tools/wattonomics_api/common.py", ".github/workflows/wattonomics-weekly-monitor.yml"]
+  workflow_dispatch:
+    inputs:
+      players: {description: "只跑這些玩家（逗號分隔，例 Microsoft,Oracle；空＝全部 11 組）", required: false, default: ""}
+      week_start: {description: "週一日期 YYYY-MM-DD（空＝上一週）", required: false, default: ""}
+      searches: {description: "每玩家 web search 上限（≤8）", required: false, default: "6"}
+permissions:
+  contents: write
+concurrency:
+  group: wattonomics-api-budget
+  cancel-in-progress: false
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    steps:
+      - name: Stop after credit expiry
+        id: gate
+        run: |
+          today=$(TZ=Asia/Taipei date +%F)
+          if [[ "$today" > "2026-11-10" ]]; then echo "已過 2026-11-10，停止"; echo "run=false" >> "$GITHUB_OUTPUT"; else echo "run=true" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/checkout@v5
+        if: steps.gate.outputs.run == 'true'
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v6
+        if: steps.gate.outputs.run == 'true'
+        with: {python-version: "3.12"}
+      - name: Monitor
+        if: steps.gate.outputs.run == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PRIOR_SPEND_USD: ${{ vars.API_PRIOR_SPEND_USD }}
+          MON_PLAYERS: ${{ inputs.players }}
+          MON_WEEK_START: ${{ inputs.week_start }}
+          MON_SEARCHES: ${{ inputs.searches }}
+        run: |
+          mkdir -p tools/wattonomics_api/weekly_monitor/out
+          set -o pipefail
+          python3 -u tools/wattonomics_api/weekly_monitor/monitor.py 2>&1 | tee tools/wattonomics_api/weekly_monitor/out/_run.log
+      - name: Commit outputs
+        if: always() && steps.gate.outputs.run == 'true'
+        run: |
+          .github/scripts/wattonomics_commit.sh tools/wattonomics_api/weekly_monitor wattonomics-monitor "wattonomics monitor: 本週變動清單 $(date -u +%F)"
