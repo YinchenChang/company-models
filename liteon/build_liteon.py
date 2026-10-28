@@ -1,4 +1,4 @@
-# 光寶科（2301.TW）收支與估值模型 v0.1.1（AI 半導體 Project：電源與散熱次產業；AI 伺服器電源 PSU、電源櫃、BBU）
+# 光寶科（2301.TW）個股模型 v0.2（AI 半導體 Project：電源與散熱次產業；AI 伺服器電源 PSU、電源櫃、BBU）
 # 用法：python3 liteon/build_liteon.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不平移。金額：十億新台幣（NT$B）；AI 電源市場以美元計、以匯率 fx 換算；EPS：新台幣。
 # 口徑：歸屬母公司淨利（IFRS）。樣板：delta/（台達電：部署 GW × 每 kW 電源內容 × 份額）。
@@ -118,10 +118,30 @@ for y in (27, 28, 29):
 sec("C. 營收結構錨點（公司揭露比例 × 營收）")
 inp("ai_25", "2025 年 AI 相關營收 ÷ 營收", "%", 0.20, 0.21, 0.23, "Interested-party", UAFY + "：AI 相關營收超過 20%（公司，達標）", FUGFY + "：2025 年 AI 占比超過 20%；雲端與物聯網 45%、光電 17%、資訊與消費電子 38%")
 inp("ai_26", "2026 年 AI 相關營收 ÷ 營收", "%", 0.30, 0.31, 0.35, "Interested-party", FUG2Q + "：AI 相關產品 2026 年超過 30%（公司）；BBU 約占雲端營收 20–25%", FUGFY + "：2026 年目標 30% 以上、長期 50% 以上")
-for y, v in ((27, (-0.03, 0.03, 0.06)), (28, (-0.03, 0.03, 0.06)), (29, (-0.03, 0.03, 0.06))):
-    inp(f"g_nai{y}", f"非 AI 營收年增 20{y}（一般雲端電源、光電、資訊與消費電子、車用）", "%", *v, "Assumed",
-        "公司 2026 指引：資訊產品 −6～−8%、手機 −4～−5%（記憶體短缺）；工控、標準電源、邊緣運算擴充（富果 2026-02-25）" if y == 27 else "同上",
-        "FY2026 非 AI 由錨點反推（Q 頁）；Denselight（新加坡 InP，持股 21%）2027–28 年貢獻未計入（Assumed：不另計）" if y == 27 else "—")
+sec("C2. 營收分部（官方三大事業群：雲端及物聯網、光電、資訊及消費性電子；v0.2 依個股模型原則重建）")
+SL = "Investing.com 2026-07-31（Lite-On Q2 2026 slides 摘要）：2Q26 Cloud and AIoT 289 億（55%，季增 26%）、Opto-electronics 80 億（季增 12%）、IT and Consumer Electronics 158 億（季增 18%）"
+inp("s25_cl", "2025 年雲端及物聯網 ÷ 營收", "%", None, 0.45, None, "Interested-party", FUGFY + "：2025 年雲端與物聯網 45%、光電 17%、資訊與消費電子 38%（公司法說）", "月營收新聞稿 2025-12：雲端及物聯網 46%、光電 14%、資訊及消費性電子 40%（單月，旺得富 2026-01-08）")
+inp("s25_op", "2025 年光電 ÷ 營收", "%", None, 0.17, None, "Interested-party", "同上", "—")
+inp("s25_ic", "2025 年資訊及消費性電子 ÷ 營收", "%", None, "=1-s25_cl-s25_op", None, "Derived", "1 − 雲端及物聯網 − 光電（公司 38%）", "公司比例為四捨五入值，合計 100%")
+inp("q2_cl", "2Q26 雲端及物聯網營收", "NT$B", None, 28.9, None, "Verified", SL, "公司：2Q26 營收 527 億，雲端及物聯網占 55%（富果 2026-07-31）")
+inp("q2_op", "2Q26 光電營收", "NT$B", None, 8.0, None, "Verified", SL, "—")
+inp("q2_ic", "2Q26 資訊及消費性電子營收", "NT$B", None, 15.8, None, "Verified", SL, "三事業群合計 527 億＝合併營收 52.703（差 0）")
+inp("g1_cl", "2Q26 雲端及物聯網季增", "%", None, 0.26, None, "Verified", SL, "1Q26＝2Q26 ÷（1＋季增）（Derived）")
+inp("g1_op", "2Q26 光電季增", "%", None, 0.12, None, "Verified", SL, "同上")
+inp("g1_ic", "2Q26 資訊及消費性電子季增", "%", None, 0.18, None, "Verified", SL, "同上；1Q26 三者合計 434.7 億 vs 公司 434.07 億（季增四捨五入，差額併入資訊及消費性電子）")
+inp("s2h_cl", "3Q、4Q26 雲端及物聯網 ÷ 營收", "%", 0.53, 0.55, 0.58, "Assumed", "沿用 2Q26 55%；3Q26 各事業群營收：未找到（月營收新聞稿未取得）", "公司：雲端運算全年年增超過 70%（富果 2026-07-31）")
+inp("s2h_op", "3Q、4Q26 光電 ÷ 營收", "%", 0.14, 0.152, 0.16, "Assumed", "沿用 2Q26 15.2%（80 ÷ 527）", "—")
+for y, v in ((27, (0.0, 0.05, 0.10)), (28, (0.0, 0.05, 0.10)), (29, (0.0, 0.05, 0.10))):
+    inp(f"g_cn{y}", f"雲端及物聯網：非 AI 部分年增 20{y}（一般伺服器與網通電源、車用、工控與 IoT）", "%", *v, "Assumed",
+        "公司 2026：工控、標準電源、邊緣運算擴充；車用電源（富果 2026-02-25）" if y == 27 else "同上", "FY2026 由錨點反推（雲端及物聯網 − AI 相關）" if y == 27 else "—")
+for y, v in ((27, (0.0, 0.05, 0.10)), (28, (0.0, 0.05, 0.10)), (29, (0.0, 0.05, 0.10))):
+    inp(f"g_op{y}", f"光電年增 20{y}（光耦合器、感測、AI 伺服器與交換器指示燈）", "%", *v, "Assumed",
+        "公司：高階光耦合器用於工控、新能源與 AI 電能（technews 2026-03-10）；2Q26 季增 12%" if y == 27 else "同上",
+        "Denselight（新加坡 InP，持股 21%，權益法）不併入營收" if y == 27 else "—")
+for y, v in ((27, (-0.05, 0.0, 0.05)), (28, (-0.05, 0.0, 0.05)), (29, (-0.05, 0.0, 0.05))):
+    inp(f"g_ic{y}", f"資訊及消費性電子年增 20{y}（PC 與遊戲機電源、低軌衛星與高階電源、影像）", "%", *v, "Assumed",
+        "公司 2026 指引：資訊產品 −6～−8%、手機 −4～−5%（記憶體短缺）；下半年持平（富果 2026-07-31）" if y == 27 else "同上",
+        "低軌衛星高階電源 2026 年增一倍以上（Investing.com 2026-07-31，Interested-party）" if y == 27 else "—")
 
 sec("D. 毛利率")
 inp("d_ai", "AI 相關毛利率高於其他營收的幅度", "pt", 0.08, 0.12, 0.16, "Assumed",
@@ -215,9 +235,10 @@ for nm, base, suf in (("RLO", "rel", "_lo"), ("RHI", "rel", "_hi"), ("GULO", "gm
     alias(nm, base, suf)
 for nm, suf in (("PKLO", "_lo"), ("PKHI", "_hi")):
     alias(nm, "pkw", suf, years=(26, 27, 28, 29))
-for nm, suf in (("GNLO", "_lo"), ("GNHI", "_hi")):
-    for y in (27, 28, 29):
-        wb.defined_names[f"{nm}{y}"] = DefinedName(f"{nm}{y}", attr_text=wb.defined_names[f"g_nai{y}{suf}"].attr_text)
+for seg in ("cn", "op", "ic"):   # 分部成長的低／高別名（Sens 用）：g_cnLO27 等
+    for nm, suf in (("LO", "_lo"), ("HI", "_hi")):
+        for y in (27, 28, 29):
+            wb.defined_names[f"g_{seg}{nm}{y}"] = DefinedName(f"g_{seg}{nm}{y}", attr_text=wb.defined_names[f"g_{seg}{y}{suf}"].attr_text)
 
 # ---------------- Q：實績與 FY2026 錨點 ----------------
 Q = wb.create_sheet("Q")
@@ -260,6 +281,17 @@ Q.cell(27, 1, "FY2026 營收 ÷ 共識（MarketScreener）− 1"); Q["B27"] = "=
 Q.cell(28, 1, "FY2026 EPS ÷ 共識（MarketScreener）− 1"); Q["B28"] = "=F15/cons_eps26-1"
 Q.cell(29, 1, "非 AI 營收 FY2026 年增"); Q["B29"] = "=F19/B19-1"
 for rr in range(24, 30): Q[f"B{rr}"].number_format = "0.0%" if rr != 26 else "0.00"
+Q.cell(31, 1, "營收分部（官方三大事業群；v0.2）").font = BOLD
+qrow(32, "雲端及物聯網", {"B": "=B4*s25_cl", "C": "=q2_cl/(1+g1_cl)+q2_cl", "D": "=D4*s2h_cl", "E": "=E4*s2h_cl"}, tag="Interested-party／Verified／Assumed",
+     s1="FY2025＝營收 × 公司比例；1H26＝2Q26 實績＋2Q26 ÷（1＋季增）", s2="3Q、4Q26 比例 Assumed（In 頁 s2h_cl）")
+qrow(33, "光電", {"B": "=B4*s25_op", "C": "=q2_op/(1+g1_op)+q2_op", "D": "=D4*s2h_op", "E": "=E4*s2h_op"}, tag="Interested-party／Verified／Assumed", s1="同上", s2="同上")
+qrow(34, "資訊及消費性電子", {"B": "=B4*s25_ic", "C": "=C4-C32-C33", "D": "=D4-D32-D33", "E": "=E4-E32-E33"}, tag="Derived",
+     s1="FY2025＝營收 × 公司比例；1H26 與 3Q、4Q＝營收 − 其餘兩事業群（1H26 公司值 158＋季增 18% 推得 291.9 億，差 0.6 億為季增四捨五入）", s2="—")
+qrow(35, "檢查：分部合計 − 合併營收", {c: f"={c}32+{c}33+{c}34-{c}4" for c in "BCDE"}, tag="Derived", s1="應為 0", s2="—")
+qrow(36, "雲端及物聯網：AI 相關（＝第 17 列）", {"B": "=B17"}, ann="=F17", tag="Derived", s1="AI 相關全部歸雲端及物聯網（Assumed：AI 光電金額小，未拆）", s2="—")
+qrow(37, "雲端及物聯網：非 AI（＝雲端及物聯網 − AI 相關）", {"B": "=B32-B36"}, ann="=F32-F36", tag="Derived", s1="—", s2="一般伺服器與網通電源、車用、工控、IoT")
+for nm, rr in (("cl", 32), ("op", 33), ("ic", 34), ("cn", 37)):
+    defname(f"a25_{nm}", f"Q!$B${rr}"); defname(f"a26_{nm}", f"Q!$F${rr}")
 for nm, rr in (("rev", 4), ("gp", 5), ("opx", 7), ("oi", 8), ("nop", 10), ("pt", 11), ("ni", 12), ("sh", 14), ("eps", 15), ("ai", 17), ("aip", 18), ("nai", 19)):
     defname(f"a25_{nm}", f"Q!$B${rr}"); defname(f"a26_{nm}", f"Q!$F${rr}")
 Q.column_dimensions["A"].width = 60
@@ -274,7 +306,7 @@ BU = (2026, 2027, 2028, 2029)
 umx = lambda y, s: {2026: "1", 2027: "1", 2028: f"um28_{s}", 2029: f"um29_{s}"}[y]
 # 情境與行業一致：A＝份額相對值、AI 毛利率額外改善取高值；B＝基準；C＝取低值（每 kW 內容、非 AI 成長各情境相同）
 SCN_P = {"A": dict(rel="RHI", gmu="GUHI"), "B": dict(), "C": dict(rel="RLO", gmu="GULO")}
-DEFP = dict(scn="B", pkw="pkw", rel="rel", mf="1", gn="g_nai", d="d_ai", gmu="gmu", opxa="0", phi="phi", nir="nir_f")
+DEFP = dict(scn="B", pkw="pkw", rel="rel", mf="1", gsuf="", d="d_ai", gmu="gmu", opxa="0", phi="phi", nir="nir_f")
 YH = ["項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "FY2030（收斂）", "FY2031（收斂）", "FY2032（收斂）", "說明"]
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
@@ -305,9 +337,16 @@ def engine(ws, r0, title, **over):
     row("aip", "AI 電源營收", "NT$B", {"C": "=a25_aip", **{c_(y): f"={c_(y)}{R['pmn']}*{c_(y)}{R['sh']}" for y in BU}}, fmt="#,##0.0")
     row("ai", "AI 相關營收（＝AI 電源 ÷（1 − 非電源占比））", "NT$B", {"C": "=a25_ai", **{c_(y): f"={c_(y)}{R['aip']}/(1-x_np)" for y in BU}}, fmt="#,##0.0",
         note="非電源部分（液冷、AI 光電）隨 AI 電源同比例成長（Assumed）")
-    sec_("B. 非 AI 與合計")
-    row("nai", "非 AI 營收", "NT$B", {"C": "=a25_nai", "D": "=a26_nai", **{c_(y): f"={c_(y - 1)}{r}*(1+{P['gn']}{y % 100})" for y in BU[1:]}}, fmt="#,##0.0")
-    row("rev", "營收", "NT$B", {c_(y): f"={c_(y)}{R['ai']}+{c_(y)}{R['nai']}" for y in FYS}, fmt="#,##0.0")
+    sec_("B. 營收分部（官方三大事業群）與合計")
+    gs = lambda seg, y: f"g_{seg}{P['gsuf']}{y % 100}"
+    row("cn", "  雲端及物聯網：非 AI", "NT$B", {"C": "=a25_cn", "D": "=a26_cn", **{c_(y): f"={c_(y - 1)}{r}*(1+{gs('cn', y)})" for y in BU[1:]}}, fmt="#,##0.0",
+        note="一般伺服器與網通電源、車用、工控、IoT；AI 相關（上列）為本分部的命題子列")
+    row("cl", "雲端及物聯網", "NT$B", {c_(y): f"={c_(y)}{R['ai']}+{c_(y)}{R['cn']}" for y in FYS}, fmt="#,##0.0", note="＝AI 相關＋非 AI（子列合計＝分部）")
+    row("op", "光電", "NT$B", {"C": "=a25_op", "D": "=a26_op", **{c_(y): f"={c_(y - 1)}{r}*(1+{gs('op', y)})" for y in BU[1:]}}, fmt="#,##0.0")
+    row("ic", "資訊及消費性電子", "NT$B", {"C": "=a25_ic", "D": "=a26_ic", **{c_(y): f"={c_(y - 1)}{r}*(1+{gs('ic', y)})" for y in BU[1:]}}, fmt="#,##0.0")
+    row("nai", "非 AI 營收（雲端非 AI＋光電＋資訊及消費性電子）", "NT$B", {c_(y): f"={c_(y)}{R['cn']}+{c_(y)}{R['op']}+{c_(y)}{R['ic']}" for y in FYS}, fmt="#,##0.0")
+    row("rev", "營收", "NT$B", {c_(y): f"={c_(y)}{R['cl']}+{c_(y)}{R['op']}+{c_(y)}{R['ic']}" for y in FYS}, fmt="#,##0.0", note="＝三大事業群合計")
+    row("chk", "檢查：分部合計 − 合併營收（FY2025 實績、FY2026 錨點）", "NT$B", {"C": f"=C{R['rev']}-a25_rev", "D": f"=D{R['rev']}-a26_rev"}, fmt="0.000")
     row("g", "營收年增", "%", {c_(y): f"={c_(y)}{R['rev']}/{c_(y - 1)}{R['rev']}-1" for y in FYS[1:]}, fmt="0.0%")
     row("aish", "AI 相關 ÷ 營收", "%", {c_(y): f"={c_(y)}{R['ai']}/{c_(y)}{R['rev']}" for y in FYS}, fmt="0.0%")
     row("pgw", "每 GW 光寶 AI 相關營收", "US$M/GW", {c_(y): f"={c_(y)}{R['ai']}/fx/{c_(y)}{R['gw']}*1000" for y in BU}, fmt="#,##0")
@@ -350,7 +389,7 @@ def engine(ws, r0, title, **over):
 PL = wb.create_sheet("PL")
 PL["A1"] = "PL — 光寶科損益（十億新台幣；EPS 新台幣；歸屬母公司）。FY2025A 實績、FY2026 錨點（1H26 財報＋3Q26 月營收＋假設），FY2027 起為模型。FY(t)＝CY(t)。三情境各一個完整推導區塊（本頁下方），頂端為摘要。顆數係數從 CY2028 開始；份額相對值、AI 毛利率額外改善從 FY2027 起依情境取高／基準／低值"
 PL["A2"] = "灰底＝FY2030–FY2032 收斂法（上游只到 2029）：營收年增線性收斂到 fade_g、淨利率線性收斂到 fade_m（In 頁 J 節），非驅動因子推導"
-PB = {}; r0 = 60
+PB = {}; r0 = 75
 SCN_T = {"A": "情境 A（順利）：顆數基準（tsmc 係數 A＝1.0）；份額相對值、AI 毛利率額外改善取高值",
          "B": "情境 B（平平）：tsmc 係數 B（CY2028 ×0.8、CY2029 ×0.85）；公司特有變數取基準",
          "C": "情境 C（不如預期）：tsmc 係數 C（CY2028–29 ×0.6）；份額相對值、AI 毛利率額外改善取低值"}
@@ -360,6 +399,7 @@ for s in SC:
 hdr(PL, 3, ["情境／項目"] + YH[1:])
 sr = 4; SUMR = {}
 SUMK = (("rev", "營收", "NT$B", "#,##0.0"), ("g", "  營收年增", "%", "0.0%"), ("ai", "  AI 相關營收（AI 電源、BBU、液冷）", "NT$B", "#,##0.0"),
+        ("cl", "  雲端及物聯網", "NT$B", "#,##0.0"), ("cn", "    其中非 AI", "NT$B", "#,##0.0"), ("op", "  光電", "NT$B", "#,##0.0"), ("ic", "  資訊及消費性電子", "NT$B", "#,##0.0"),
         ("nai", "  非 AI 營收", "NT$B", "#,##0.0"), ("aish", "  AI 相關 ÷ 營收", "%", "0.0%"), ("gm", "毛利率", "%", "0.0%"), ("oim", "營業利益率", "%", "0.0%"),
         ("ni", "歸屬母公司淨利", "NT$B", "#,##0.0"), ("nim", "  淨利率", "%", "0.0%"), ("eps", "EPS", "NT$", "0.00"), ("epsg", "  EPS 年增", "%", "0.0%"))
 LONGK = ("rev", "g", "ni", "nim", "eps", "epsg")
@@ -382,7 +422,7 @@ for lab, f in (("  三情境：營收差（NT$B）", "+".join(f"ABS(D{PB[s]['rev
                ("  情境 B：AI 相關差（NT$B）", f"D{PB['B']['ai']}-a26_ai"),
                ("  情境 B：毛利差（NT$B）", f"D{PB['B']['gma']}*D{PB['B']['ai']}+D{PB['B']['gmn']}*D{PB['B']['nai']}-a26_gp")):
     PL.cell(sr, 1, lab); PL[f"D{sr}"] = "=" + f; PL[f"D{sr}"].number_format = "0.0000"; CHK.append(sr); sr += 1
-assert sr < 60, sr
+assert sr < 75, sr
 PL.column_dimensions["A"].width = 62; PL.column_dimensions["B"].width = 10; PL.column_dimensions["K"].width = 70
 for c in "CDEFGHIJ": PL.column_dimensions[c].width = 13
 
@@ -571,7 +611,7 @@ cases = [("份額流失（低）", "份額相對值 2027 0.85、2028 0.80、2029
          ("AI 部署 ×0.8", "FY2027 起 AI IT 資本支出 ×0.8", dict(mf="mf_lo")), ("AI 部署 ×1.2", "×1.2", dict(mf="mf_hi")),
          ("AI 毛利率差距 8pt", "AI 相關毛利率只高 8 個百分點", dict(d="d_ai_lo")), ("AI 毛利率差距 16pt", "高 16 個百分點", dict(d="d_ai_hi")),
          ("AI 毛利率額外改善 低", "2027 −1pt、2028 −1.5pt、2029 −2pt", dict(gmu="GULO")), ("AI 毛利率額外改善 高", "2027 +1pt、2028 +1.5pt、2029 +2pt", dict(gmu="GUHI")),
-         ("非 AI 成長 低", "2027–29 −3%", dict(gn="GNLO")), ("非 AI 成長 高", "2027–29 +6%", dict(gn="GNHI")),
+         ("非 AI 分部成長 低", "雲端非 AI、光電 0%；資訊及消費性電子 −5%（2027–29）", dict(gsuf="LO")), ("非 AI 分部成長 高", "雲端非 AI、光電 +10%；資訊及消費性電子 +5%", dict(gsuf="HI")),
          ("營業費用率 +1pt", "營業費用額外 +1% × 營收", dict(opxa="opx_adj_hi")),
          ("營業費用彈性 1.0", "基準 0.7", dict(phi="phi_hi")),
          ("淨利 ÷ 稅前 0.73", "基準 0.76", dict(nir="nir_f_lo")), ("淨利 ÷ 稅前 0.78", "", dict(nir="nir_f_hi"))]
@@ -663,6 +703,14 @@ for lab, ref, mdl, src in (("12 個月後的前瞻 EPS（情境加權）vs 共�
                            ("Comparable 目標價 vs 市場共識目標價", "=cons_tp", f"=Val!B{T['comptp']}", "同上")):
     RC.cell(rr_, 1, lab); RC.cell(rr_, 2, ref).number_format = "0.00"; RC.cell(rr_, 3, mdl).number_format = "0.00"
     RC.cell(rr_, 4, f"=C{rr_}/B{rr_}-1").number_format = "0.0%"; RC.cell(rr_, 9, src); RC.cell(rr_, 10, "共識只作對帳，不作校準"); rr_ += 1
+RC.cell(rr_, 1, "F. 營收分部（v0.2：官方三大事業群；共識的分部預估：未找到）").font = BOLD; rr_ += 1
+rec("FY2026 雲端及物聯網年增 vs 公司「雲端運算全年年增超過 70%」", 0.70, lambda s: f"=PL!D{PB[s]['cl']}/PL!C{PB[s]['cl']}-1", "富果 2026-07-31（公司法說，Interested-party）",
+    "口徑不同：公司說的是雲端運算（雲端及物聯網的一部分）；FY2026 雲端及物聯網年增由錨點推得", fmt="0.0%", pt=True)
+for lab, v, note in (("2Q26 雲端及物聯網營業利益率（實績）", "=6.9/28.9", "營業利益 69 億、季增 102%"), ("2Q26 光電營業利益率（實績）", "=0.729/8.0", "營業利益 7.29 億"),
+                     ("2Q26 資訊及消費性電子營業利益率（實績）", "=1.4/15.8", "營業利益 14 億"),
+                     ("2Q26 三事業群營業利益合計 − 合併營業利益（未分攤，NT$B）", "=6.9+0.729+1.4-8.203", "負向未分攤費用；本模型營業利益仍由合併毛利率與費用推導，分部利益只作對帳")):
+    RC.cell(rr_, 1, lab); RC.cell(rr_, 2, v).number_format = "0.0%" if "率" in lab else "0.00"
+    RC.cell(rr_, 9, "Investing.com 2026-07-31（Lite-On Q2 2026 slides 摘要）"); RC.cell(rr_, 10, note); rr_ += 1
 RECON_LAST = rr_ - 1
 RC.column_dimensions["A"].width = 70
 for c in "BCDEFGH": RC.column_dimensions[c].width = 12
@@ -693,14 +741,14 @@ SO.column_dimensions["A"].width = 100; SO.column_dimensions["B"].width = 130
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("光寶科（2301.TW）收支與估值模型 v0.1.1（AI 半導體 Project：電源與散熱次產業；AI 伺服器電源 PSU、電源櫃、BBU）　2026-10-25", True),
- ("版本：v0.1.1（2026-10-25：補上檔空間級距、投資建議、重點觀察，數值不變）；v0.1（初版）。AI 電源每 kW 內容沿用台達電模型（delta/dist In 頁，本專案權威，口徑一致），本模型只建光寶份額；Units 與 Recon 頁核對光寶＋台達電份額合計。", False),
+lines = [("光寶科（2301.TW）個股模型 v0.2（AI 半導體 Project：電源與散熱次產業；AI 伺服器電源 PSU、電源櫃、BBU）　2026-10-28", True),
+ ("版本：v0.2（2026-10-28：依個股模型原則重建營收層——營收列改為官方三大事業群〔雲端及物聯網、光電、資訊及消費性電子〕，AI 相關為雲端及物聯網的子列，分部合計＝合併營收；非 AI 單一成長率改為三條分部成長率；每 kW 內容改讀 Siliconomics）；v0.1.1（2026-10-25：補上檔空間級距、投資建議、重點觀察，數值不變）；v0.1（初版）。AI 電源每 kW 內容沿用台達電模型（delta/dist In 頁，本專案權威，口徑一致），本模型只建光寶份額；Units 與 Recon 頁核對光寶＋台達電份額合計。", False),
  ("模型命題：光寶科的 AI 營收＝部署 GW（AI IT 資本支出 ÷ 每 GW IT 資本支出）× AI 電源每 kW 內容（台達電模型）× 光寶份額 ÷（1 − 非電源占比）；非 AI（一般雲端電源、光電、資訊與消費電子、車用）約占七成，另設低成長。AI 相關營收 2025 年約兩成、2026 年約三成，毛利率高於其他業務，使 AI 部署成為 EPS 的主要驅動。", False),
  ("核心問題：光寶在台達電主導的 AI 電源市場（800V HVDC 電源櫃、BBU、新 CSP 客戶）能不能把有效份額由約一成八往上拉；消費電子衰退與零組件成本會吃掉多少；現價約 20 倍前瞻 P/E 隱含什麼路徑。", False), ("", False),
  ("會計年度＝日曆年，FY(t)＝CY(t)，不平移。預測期 FY2027–FY2029 由驅動因子推導，FY2030–FY2032 為收斂法。金額：十億新台幣；市場以美元計、以匯率 32.0 換算（與台達電模型相同）。口徑：歸屬母公司淨利（IFRS）。", False), ("", False),
  ("驅動因子 → 推導量（全部唯讀上游，不修改）", True),
  ("AI 營收：markets/network 的 AI IT 資本支出 × 同字母顆數係數（tsmc；＝markets/memory SCEN_UNITS）÷ 每 GW IT 資本支出（Tokenomics，經橋接表）＝部署 GW；× 每 kW 電源內容（台達電模型 450 → 600 → 680 → 720 美元）× 匯率 × 光寶有效份額（FY2026 以公司 AI 相關占比校準）× 份額相對值（Assumed）÷（1 − 非電源占比）。", False),
- ("非 AI：FY2026 殘差 × 成長率（Assumed，+3%）。毛利率：AI 相關比其他營收高 d_ai 12pt（Assumed，依 2Q26 雲端部門營益率約 24% vs 其他約 5–6%），其他毛利率為 FY2026 殘差（Derived）；另加 AI 毛利率額外改善（情境 A 高、C 低）。營業費用：彈性 phi 0.7（Assumed）。淨利 ÷ 稅前 0.76（1H26 實績）。", False),
+ ("營收分部：雲端及物聯網＝AI 相關（命題模組）＋非 AI（FY2026 錨點 × 年增 5%，Assumed）；光電＝FY2026 錨點 × 年增 5%（Assumed）；資訊及消費性電子＝FY2026 錨點 × 年增 0%（Assumed，公司 2026 資訊產品 −6～−8%、低軌衛星電源倍增）。FY2026 各事業群＝1H26 實績（2Q26 簡報＋季增）＋3Q、4Q 依 2Q26 比例（Assumed）。毛利率：AI 相關比其他營收高 d_ai 12pt（Assumed，依 2Q26 雲端部門營益率約 24% vs 其他約 5–6%），其他毛利率為 FY2026 殘差（Derived）；另加 AI 毛利率額外改善（情境 A 高、C 低）。營業費用：彈性 phi 0.7（Assumed）。淨利 ÷ 稅前 0.76（1H26 實績）。", False),
  ("校準：FY2026 ＝ 1H26 財報＋3Q26 月營收實績（1–9 月累計 − 1H26）＋假設（3Q、4Q 毛利率 26%、營業費用率 11.8%、4Q 季增 3%）。3Q26 財報與法說預計 2026-10-30 前後，截至 2026-10-25 尚未公布。不用券商數字（只在 Recon 對帳）。", False),
  ("估值：Val 第 0 節目標價＝0.5 × DCF 目標價（股東現金流＝EPS ×（1 − g／ROE），FY2027–32 明確期＋永續，r 10%、g 4%，三情境權重 0.3／0.5／0.2，負值取 0）＋0.5 × Comparable 目標價（台達電、Vertiv、Eaton、Flex 前瞻 P/E 中位數 × 12 個月後前瞻 EPS；不放 A 股）；另列 Comparable 單獨目標價、市場共識目標價與差距拆解。十年 P/E 規則值 × FY2027 EPS 保留為參考（不是目標價）。本版未做先驗，無 Andy 合理 P/E 對照。", False),
  ("預估期間：FY2027–FY2029 由驅動因子推導；FY2030 起為收斂法，非驅動因子推導（營收年增由 FY2029 線性收斂到 fade_g、淨利率收斂到 fade_m，FY2032 達到；PL 頁灰底）。十年平均淨利率 6.5%（wearn 2016–2025，單一來源）。", False),
