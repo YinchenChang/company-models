@@ -1449,84 +1449,84 @@
   }
  },
  "285A": {
-  "model": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx",
+  "model": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx",
   "v2": true,
   "tp": {
    "value": 22465.1722139785,
    "cell": "Val!B49",
-   "file": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx"
+   "file": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx"
   },
   "tp_dcf": {
    "value": 24568.5526928403,
    "cell": "Val!B24",
-   "file": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx"
+   "file": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx"
   },
   "tp_comp": {
    "value": 20361.7917351166,
    "cell": "Val!B50",
-   "file": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx"
+   "file": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx"
   },
   "tp_cons": {
    "value": 36929.23,
    "cell": "Val!B51",
-   "file": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx"
+   "file": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx"
   },
   "up": {
    "value": 0.761283591844647,
    "cell": "Val!B52",
-   "file": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx"
+   "file": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx"
   },
   "up_comp": {
    "value": 0.596377243051088,
    "cell": "Val!B53",
-   "file": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx"
+   "file": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx"
   },
   "old_rule": {
    "value": 13291.9681066088,
    "cell": "Val!B155",
-   "file": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx"
+   "file": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx"
   },
   "tier6": {
    "value": "大於 50%",
    "cell": "Val!B54",
-   "file": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx"
+   "file": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx"
   },
   "rec": {
    "value": "強力買進",
    "cell": "Val!B55",
-   "file": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx"
+   "file": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx"
   },
   "dcf_A": {
    "value": 46431.2968003417,
    "cell": "Val!B23",
-   "file": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx"
+   "file": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx"
   },
   "dcf_C": {
    "value": 8833.83073895014,
    "cell": "Val!D23",
-   "file": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx"
+   "file": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx"
   },
   "model_px": {
    "value": 12755,
    "cell": "Val!B82",
-   "file": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx",
+   "file": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 2.24510620485138,
     "cell": "Val!B86",
-    "file": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx"
+    "file": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx"
    },
    {
     "value": 8.77671181108547,
     "cell": "Val!C86",
-    "file": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx"
+    "file": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx"
    },
    {
     "value": 21.2926520289577,
     "cell": "Val!D86",
-    "file": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx"
+    "file": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx"
    }
   ],
   "cash": {
@@ -1536,196 +1536,196 @@
     [
      "FY2026",
      5543.90962182168,
-     "PL!D9"
+     "PL!D13"
     ],
     [
      "FY2027",
      7663.30488355814,
-     "PL!E9"
+     "PL!E13"
     ],
     [
      "FY2028",
      7680.6685000248,
-     "PL!F9"
+     "PL!F13"
     ],
     [
      "FY2029",
      8136.32672507112,
-     "PL!G9"
+     "PL!G13"
     ],
     [
      "FY2026",
      5558.93012937714,
-     "PL!D19"
+     "PL!D27"
     ],
     [
      "FY2027",
      6351.52273563095,
-     "PL!E19"
+     "PL!E27"
     ],
     [
      "FY2028",
      2120.97736181967,
-     "PL!F19"
+     "PL!F27"
     ],
     [
      "FY2029",
      2778.98816826302,
-     "PL!G19"
+     "PL!G27"
     ],
     [
      "FY2026",
      5532.19942954856,
-     "PL!D29"
+     "PL!D41"
     ],
     [
      "FY2027",
      6073.03622378553,
-     "PL!E29"
+     "PL!E41"
     ],
     [
      "FY2028",
      888.696562503859,
-     "PL!F29"
+     "PL!F41"
     ],
     [
      "FY2029",
      1036.17823134727,
-     "PL!G29"
+     "PL!G41"
     ],
     [
      "FY2026",
      1270,
-     "PL!D51"
+     "PL!D73"
     ],
     [
      "FY2027",
      1620.94709392694,
-     "PL!E51"
+     "PL!E73"
     ],
     [
      "FY2028",
      1810.76252789474,
-     "PL!F51"
+     "PL!F73"
     ],
     [
      "FY2029",
      1934.47733567311,
-     "PL!G51"
+     "PL!G73"
     ],
     [
      "FY2027",
      1619.24486946275,
-     "PL!E87"
+     "PL!E120"
     ],
     [
      "FY2028",
      1827.48525991439,
-     "PL!F87"
+     "PL!F120"
     ],
     [
      "FY2029",
      1996.37986574014,
-     "PL!G87"
+     "PL!G120"
     ],
     [
      "FY2027",
      1617.57141767621,
-     "PL!E123"
+     "PL!E167"
     ],
     [
      "FY2028",
      1802.42801187235,
-     "PL!F123"
+     "PL!F167"
     ],
     [
      "FY2029",
      1967.55730343423,
-     "PL!G123"
+     "PL!G167"
     ]
    ],
-   "file": "kioxia/dist/20261025_Kioxia模型_v0.1.xlsx"
+   "file": "kioxia/dist/20261028_Kioxia個股模型_v0.2.xlsx"
   }
  },
  "SNDK": {
-  "model": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx",
+  "model": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx",
   "v2": true,
   "tp": {
    "value": 954.642410125009,
    "cell": "Val!B49",
-   "file": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx"
+   "file": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx"
   },
   "tp_dcf": {
    "value": 1142.35407989709,
    "cell": "Val!B24",
-   "file": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx"
+   "file": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx"
   },
   "tp_comp": {
    "value": 766.930740352925,
    "cell": "Val!B50",
-   "file": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx"
+   "file": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx"
   },
   "tp_cons": {
    "value": 2144,
    "cell": "Val!B51",
-   "file": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx"
+   "file": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx"
   },
   "up": {
    "value": -0.228902037814101,
    "cell": "Val!B52",
-   "file": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx"
+   "file": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx"
   },
   "up_comp": {
    "value": -0.380523298827229,
    "cell": "Val!B53",
-   "file": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx"
+   "file": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx"
   },
   "old_rule": {
    "value": 456.06461830986,
    "cell": "Val!B155",
-   "file": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx"
+   "file": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx"
   },
   "tier6": {
    "value": "0%～−25%",
    "cell": "Val!B54",
-   "file": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx"
+   "file": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!B55",
-   "file": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx"
+   "file": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx"
   },
   "dcf_A": {
    "value": 2279.65762914944,
    "cell": "Val!B23",
-   "file": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx"
+   "file": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx"
   },
   "dcf_C": {
    "value": 493.729904251831,
    "cell": "Val!D23",
-   "file": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx"
+   "file": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx"
   },
   "model_px": {
    "value": 1238.03,
    "cell": "Val!B82",
-   "file": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx",
+   "file": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 3.58391898877174,
     "cell": "Val!B86",
-    "file": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx"
+    "file": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx"
    },
    {
     "value": 5.63953403261639,
     "cell": "Val!C86",
-    "file": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx"
+    "file": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx"
    },
    {
     "value": 6.34880343836453,
     "cell": "Val!D86",
-    "file": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx"
+    "file": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx"
    }
   ],
   "cash": {
@@ -1735,65 +1735,65 @@
     [
      "FY2027",
      37.1620311113885,
-     "PL!E9"
+     "PL!E13"
     ],
     [
      "FY2028",
      43.2313797247516,
-     "PL!F9"
+     "PL!F13"
     ],
     [
      "FY2029",
      44.2983742512942,
-     "PL!G9"
+     "PL!G13"
     ],
     [
      "FY2027",
      37.5940149119885,
-     "PL!E19"
+     "PL!E27"
     ],
     [
      "FY2028",
      28.6388634026903,
-     "PL!F19"
+     "PL!F27"
     ],
     [
      "FY2029",
      12.2309061927977,
-     "PL!G19"
+     "PL!G27"
     ],
     [
      "FY2027",
      37.2860243364101,
-     "PL!E29"
+     "PL!E41"
     ],
     [
      "FY2028",
      25.6774988932947,
-     "PL!F29"
+     "PL!F41"
     ],
     [
      "FY2029",
      4.36219609025055,
-     "PL!G29"
+     "PL!G41"
     ],
     [
      "FY2027",
      3.615,
-     "PL!E51"
+     "PL!E73"
     ],
     [
      "FY2028",
      6.903,
-     "PL!F51"
+     "PL!F73"
     ],
     [
      "FY2029",
      7.06801719410518,
-     "PL!G51"
+     "PL!G73"
     ]
    ],
-   "file": "sndk/dist/20261025_SanDisk模型_v0.1.xlsx"
+   "file": "sndk/dist/20261028_SanDisk個股模型_v0.2.xlsx"
   }
  },
  "ANET": {
