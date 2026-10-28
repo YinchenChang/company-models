@@ -1,0 +1,17 @@
+{
+  "tool": "weekly_monitor",
+  "run": "smoke_oracle",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 35981,
+  "output_tokens": 715,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "web_search_requests": 4,
+  "requests_batch": 1,
+  "requests_standard": 0,
+  "est_usd": 0.0796,
+  "started_utc": "2026-10-28T07:36:56Z",
+  "finished_utc": "2026-10-28T07:39:29Z",
+  "status": "done",
+  "items": 0
+}
