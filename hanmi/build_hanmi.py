@@ -422,7 +422,7 @@ for n, (nm, setting, ov) in enumerate(cases):
     put_case(5 + n, nm, setting, SB[nm])
 nn = 5 + len(cases)
 put_case(nn, "顆數情境 B", "2028 ×0.8、2029 ×0.85；混合鍵合基準；份額與其他成長 B", PB["B"], "PL!")
-put_case(nn + 1, "顆數情境 C", "2028–29 ×0.6；混合鍵合高值；份額回落、毛利率下調", PB["C"], "PL!")
+put_case(nn + 1, "顆數情境 C", "2028–29 ×0.6；混合鍵合低值（導入慢）；份額回落、毛利率下調", PB["C"], "PL!")
 SENS_LAST = nn + 1
 SE.cell(nn + 3, 1, "讀法：鍵合機比產能早一年買，FY2027 的需求看 CY2027→2028 的產能增量，所以顆數情境（2028 起）直接影響 FY2027。晶粒容量的影響大，是因為同樣位元下，容量提高會減少需要鍵合的晶粒數；校準係數 k 由 FY2025–26 兩年營收推得，各案例內重算。")
 SE.column_dimensions["A"].width = 40; SE.column_dimensions["B"].width = 40

@@ -1,8 +1,8 @@
 {
  "source": {
-  "file": "20261028_Siliconomics_v0.8.2.xlsx",
-  "version": "v0.8.2",
-  "sha256": "01357356d1cc0e3602706b6be3e610d2a3a14d412228de58a0299049b6099187",
+  "file": "20261028_Siliconomics_v0.8.3.xlsx",
+  "version": "v0.8.3",
+  "sha256": "86253373d4b342b8c960c80be79cc45e5a5f4a6059cb6e29275f629fdd42eecb",
   "note": "Siliconomics 快照；下游只讀本檔。SGOV_Errors 須為 0"
  },
  "scen": [
@@ -3438,7 +3438,7 @@
    "base": 0.88,
    "hi": 1,
    "tag": "Assumed",
-   "src": "同上；競爭者擴產：欣興 2026 資本支出 NT$340 億、景碩 3 年 NT$235 億（Tom's Hardware：The state of ABF substrates in 2026）",
+   "src": "同上；競爭者擴產：欣興 2026 資本支出 NT$537 億（欣興模型 In 頁，2026-10 較新；Tom's Hardware 早期報導 NT$340 億已過時，CF02）、景碩 3 年 NT$235 億（Tom's Hardware：The state of ABF substrates in 2026）",
    "src2": "—"
   },
   {

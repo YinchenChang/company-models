@@ -1,11 +1,11 @@
-# GW 帳核對程式：重算後活頁簿的錯誤格 0、Checks 全過（GGOV_Errors＝0）、In 頁標記與來源齊全、具名範圍可解析、快照一致（給快照時）。
-# 用法：python3 gwledger/tools/check.py <重算後的 GWLedger xlsx> [<snapshot.json>]
+# GW 帳核對程式：重算後活頁簿的錯誤格 0、Checks 全過（WGOV_Errors＝0）、In 頁標記與來源齊全、具名範圍可解析、快照一致（給快照時）。
+# 用法：python3 wattonomics/tools/check.py <重算後的 Wattonomics xlsx> [<snapshot.json>]
 # 任何 ERROR 以代碼 1 結束；WARN 只列出。
 import json, os, sys
 import openpyxl
 
 ERRS = ("#REF!", "#VALUE!", "#DIV/0!", "#NAME?", "#N/A", "#NUM!", "#NULL!", "Err:")
-REQUIRED = ["README", "In", "Players", "CapexGW", "Matrix", "Pipeline", "Deploy", "C0", "C1", "Compare", "TK_In", "SIL_In", "Interface", "Checks",
+REQUIRED = ["README", "In", "Players", "CapexGW", "Funding", "FundRaw", "Facility", "SegIn", "Spend", "Matrix", "Pipeline", "Deploy", "C0", "C1", "Compare", "TK_In", "SIL_In", "Interface", "Checks",
             "Decisions", "DB_Evidence", "Sources"]
 TAGS = ("Verified", "Interested-party", "Analogy", "Assumed", "Derived", "待證據")
 
@@ -47,8 +47,8 @@ def main():
     def val(nm):
         sh, ref = names[nm].split("!")
         return wb[sh.strip("'")][ref.replace("$", "")].value
-    ge = val("GGOV_Errors")
-    if ge != 0: bad.append(f"GGOV_Errors＝{ge}")
+    ge = val("WGOV_Errors")
+    if ge != 0: bad.append(f"WGOV_Errors＝{ge}")
     if ce: bad.append(f"Checks ERROR {len(ce)}")
     # 4) In 頁標記與來源（獨立於 Excel 公式再檢一次）
     ws = wb["In"]; src_ids = {wb["Sources"].cell(r, 1).value for r in range(4, wb["Sources"].max_row + 1)}
@@ -63,8 +63,8 @@ def main():
         elif sid not in src_ids: nbad += 1; print(f"  In!F{r} 來源 ID 不在 Sources：{sid}")
         if tag == "待證據": pend += 1
     if ntag or nsrc or nbad: bad.append(f"In 標記缺 {ntag}、來源缺 {nsrc}、無效 {nbad}")
-    # 5) GIF_ 名稱
-    gif = [n for n in names if n.startswith("GIF_")]
+    # 5) WIF_ 名稱
+    gif = [n for n in names if n.startswith("WIF_")]
     for n in gif:
         v = val(n)
         if isinstance(v, str) and v.startswith(ERRS): bad.append(f"{n} 錯誤")
@@ -77,9 +77,9 @@ def main():
     # 7) 固定規格（Andy 2026-10-28）：README 須含對帳鏈與延遲情景規格
     rd = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "README.md")
     txt = open(rd, encoding="utf-8").read() if os.path.exists(rd) else ""
-    for kw in ("### 對帳鏈", "### 基建延遲情景", "| C0 |", "| C7 |", "D0 準時", "D1 基準延遲", "D2 嚴重延遲", "IT 關鍵電力", "IF_FacilityGW", "k_chip2it", "下游取用 2027 年後數值前看覆蓋率"):
-        if kw not in txt: bad.append(f"gwledger/README.md 缺固定規格：{kw}")
-    print(f"{os.path.basename(x)}：頁面 {len(wb.sheetnames)}、具名範圍 {len(names)}（GIF_ {len(gif)}）、Checks {len(rows)} 項（OK {nok}／WARN {len(cw)}／ERROR {len(ce)}）、"
+    for kw in ("### 對帳鏈", "### 基建延遲情景", "| C0 |", "| C7 |", "D0 準時", "D1 基準延遲", "D2 嚴重延遲", "IT 關鍵電力", "IF_FacilityGW", "k_chip2it", "下游取用 2027 年後數值前看覆蓋率", "Wattonomics（瓦帳）＝全市場 GW 唯一基準事實", "舊名 GW 帳／gwledger"):
+        if kw not in txt: bad.append(f"wattonomics/README.md 缺固定規格：{kw}")
+    print(f"{os.path.basename(x)}：頁面 {len(wb.sheetnames)}、具名範圍 {len(names)}（WIF_ {len(gif)}）、Checks {len(rows)} 項（OK {nok}／WARN {len(cw)}／ERROR {len(ce)}）、"
           f"In 輸入列 {nrow}（待證據 {pend}）、錯誤格 {nerr}")
     if bad:
         print("不通過：", "；".join(bad)); sys.exit(1)
