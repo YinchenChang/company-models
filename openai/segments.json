@@ -1,0 +1,19 @@
+{
+ "company": "OpenAI",
+ "ticker": "OpenAI",
+ "model_sheet": "Revenue",
+ "official_segments": [
+  {
+   "name": "訂閱（消費與企業）",
+   "label": "三、訂閱營收（$B＝人數 × 實收 ARPU × 12 ÷ 1000）",
+   "source": "未上市：公司與媒體揭露的營收組成（原則第 5 條）"
+  },
+  {
+   "name": "API",
+   "label": "五、API 營收、總額、Microsoft 分成與淨額",
+   "source": "同上"
+  }
+ ],
+ "sublines": [],
+ "check_labels": []
+}

@@ -60,6 +60,32 @@ asof: 2026-10-25
 - 本專案假設後段委外比例由 2026 年 50% 升到 2028 年 60%，理由是 Rubin 世代 CoWoS 吃緊與美國產能需求 [本專案：艾克爾模型_v0.2.xlsx In!E31:E33、I32]。
 - 亞利桑那營收可能部分替代亞洲既有產能（Apple 晶片改在美國封裝），模型當作增量處理 [本專案：amkr/README.md 最大限制]。
 
+## 主要客戶
+- 10-K 口徑：前十大客戶合計占 2025 年淨銷售 72%；「Direct sales to Apple and Qualcomm accounted for 29.8% and 11.1% of our net sales」（2025）。2026 Q3 前十大客戶占 66%（Q3 2025 為 73%）（來源 1、3）。 [外部・未經本專案檢核]
+- 具名客戶：
+- Apple Inc.——直接客戶，2025 年占淨銷售 29.8%（來源 1）。 [外部・未經本專案檢核]
+- Qualcomm Incorporated——直接客戶，2025 年占 11.1%（來源 1）。 [外部・未經本專案檢核]
+- Astera Labs, Inc.——第三方彙整頁稱其以 Amkor 進行 IC 組裝與測試，營收占比未揭露（來源 6，第三方，可信度中低）。 [外部・未經本專案檢核]
+- 其餘前十大客戶未具名。 [外部・未經本專案檢核]
+- 關聯方：Kim 家族為控制股東（見 C），10-K 另有與其相關的關聯交易章節，未逐項萃取。 [外部・未經本專案檢核]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | Kim Family Group（Kim 家族與關聯實體，beneficial ownership） | 49.4%（proxy 計算基礎約 2.48 億股） | [外部・未經本專案檢核：資料日 2026-03-20；Amkor 2026 Proxy Statement DEF 14A，2026-04-02] |
+| 2 | BlackRock, Inc. | 約 4.96% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 3 | Vanguard Portfolio Management LLC | 約 3.92% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 4 | Dimensional Fund Advisors LP | 約 3.25% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 5 | Vanguard Capital Management LLC | 約 2.70% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 6 | JPMorgan Chase & Co | 約 2.30% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 7 | State Street Corp | 約 1.50% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 8 | AQR Capital Management LLC | 約 1.30% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 9 | Earnest Partners LLC | 約 1.15% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 10 | Geode Capital Management, LLC | 約 1.13% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMKR Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+
+- 口徑：Amkor 為 Kim 家族控股，故先列 proxy beneficial ownership（2026-03-20，來源 4），再列 13F 機構持股前九名（資料日 2026-06-30，來自 insiderset 依申報價值排序；比例為本檔以 2026/6/30 流通股數 247,986 千股換算，僅供參考）。Kim Family Group 為家族成員與其關聯實體的合併申報（含 John T. Kim 103,050,118 股 41.6%、Susan Y. Kim 63,594,650 股 25.6%、915 Investments LP 29,594,980 股 11.9% 等，彼此有重疊，不可相加）。Vanguard 13F 拆成兩個申報實體。 [外部・未經本專案檢核]
+- proxy 的 5% 持有人表僅列 Kim Family Group 群；未見其他 5% 以上機構持有人（BlackRock 約 5% 邊緣）。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-26（預定）｜第三季財報；指引營收 US$1,950–2,050M、毛利率 18.5–19.5%、EPS US$0.72–0.82 [本專案：艾克爾模型_v0.2.xlsx In!D99:F99、H83、D101:F101]
 - 2026-10｜股價 10 月以來約 −26%，10-23 收盤 US$39.30，原因本專案未找到 [本專案：艾克爾模型_v0.2.xlsx In!E115、I115]

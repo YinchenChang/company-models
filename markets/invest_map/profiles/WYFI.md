@@ -57,6 +57,31 @@ asof: 2026-10-25
 - 市占：本專案未建立。WYFI 市值 759.4m（2026-10-07），約為 CRWV 的 1.5% [本專案：WhiteFiber收支模型_v0_2.xlsx 來源!B11–B12]（[Derived]）。
 - 託管業務與 APLD、CORZ 等「房東」競爭，雲端業務與大型 neocloud 競爭，兩邊規模都明顯較小 [外部・未經本專案檢核]。
 
+## 主要客戶
+- 財報口徑（FY2025 10-K）：「Initial Customer」約占 2025 營收 70.7%（2024 年為 96.6%）；DNA Fund 約 11.5%（2024 年無營收）；資料中心業務（MTL-1、MTL-3）無單一客戶逾 50%；2025-12-31 服務 15 家客戶，冰島 2025 年有 21 家客戶。 [外部・未經本專案檢核：WhiteFiber FY2025 Form 10-K，2026-03]
+- 具名客戶／關係（2026 Q2 新聞稿與電話會議）： [外部・未經本專案檢核：MarketBeat：WhiteFiber Q2 earnings call highlights，2026-08-12；Stock Titan：WhiteFiber reports Q4 and full year 2025 results，2026-03-26]
+- Nscale：NC-1（北卡）10 年期 40 MW 合約，預計約 8.65 億美元；背後有未具名投資等級承租方。 [外部・未經本專案檢核]
+- Cerebras：MTL-3 colocation。 [外部・未經本專案檢核]
+- Baseten：3 年期 1,392 顆 NVIDIA B300（約 1.65 億美元）；Prime Intellect：3 年期 576 顆 Vera Rubin 200（約 1.08 億美元）；另一未具名既有客戶：5 年期 576 顆 B300（冰島，約 8,750 萬美元）。 [外部・未經本專案檢核]
+- Bit Digital 為母公司／控股股東（見 C），並非一般客戶。 [外部・未經本專案檢核]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | Bit Digital, Inc. | 70.7% | [外部・未經本專案檢核：Simply Wall St：WhiteFiber ownership，約 2026-03-26] |
+| 2 | Situational Awareness LP | 4.59% | [外部・未經本專案檢核：Simply Wall St：WhiteFiber ownership，約 2026-03-26] |
+| 3 | Clearfield Capital Management LP | 3.43% | [外部・未經本專案檢核：Simply Wall St：WhiteFiber ownership，約 2026-03-26] |
+| 4 | BlackRock, Inc. | 2.07% | [外部・未經本專案檢核：Simply Wall St：WhiteFiber ownership，約 2026-03-26] |
+| 5 | T. Rowe Price Group | 1.57% | [外部・未經本專案檢核：Simply Wall St：WhiteFiber ownership，約 2026-03-26] |
+| 6 | Balyasny Asset Management | 1.2% | [外部・未經本專案檢核：Simply Wall St：WhiteFiber ownership，約 2026-03-26] |
+| 7 | AWM Investment Company | 0.86% | [外部・未經本專案檢核：Simply Wall St：WhiteFiber ownership，約 2026-03-26] |
+| 8 | Geode Capital Management | 0.67% | [外部・未經本專案檢核：Simply Wall St：WhiteFiber ownership，約 2026-03-26] |
+| 9 | Citadel Advisors | 0.65% | [外部・未經本專案檢核：Simply Wall St：WhiteFiber ownership，約 2026-03-26] |
+| 10 | Centerbook Partners | 0.64% | [外部・未經本專案檢核：Simply Wall St：WhiteFiber ownership，約 2026-03-26] |
+
+- 口徑：Simply Wall St 彙整（頁面更新 2026-03-26；非 Yahoo，因 Yahoo WYFI 頁無資料）。控股股東 Bit Digital 為公司內部關聯持股。 [外部・未經本專案檢核：Simply Wall St：WhiteFiber ownership，約 2026-03-26]
+- 註：資料較舊（約 7 個月前）。Yahoo Finance 的 WYFI holders 頁於本次抓取時出錯，未取得；Bit Digital 最新持股建議再對 10-Q／13D 核對。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-14｜股價跌 6.95% 至 $13.53，查無公司公告；同日 CoreWeave 因債券殖利率飆升跌 13%，AI 基礎設施股同步下挫，美國 9 月 CPI 高於預期 [外部新聞：Kalkine]
 - 2026-10-08｜股價跌 8.2%，10 月以來隨 neocloud 類股走弱 [外部新聞：MarketBeat]

@@ -1,0 +1,19 @@
+{
+ "company": "Anthropic",
+ "ticker": "Anthropic",
+ "model_sheet": "Revenue",
+ "official_segments": [
+  {
+   "name": "訂閱",
+   "label": "六、訂閱營收（$B＝人數（M）× 實收月費 × 12 ÷ 1000）",
+   "source": "未上市：媒體揭露的營收組成（原則第 5 條）"
+  },
+  {
+   "name": "API",
+   "label": "七、API 營收（$B＝計費 token（T）× 組合有效單價 ÷ 1000）",
+   "source": "同上"
+  }
+ ],
+ "sublines": [],
+ "check_labels": []
+}

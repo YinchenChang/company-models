@@ -60,6 +60,31 @@ asof: 2026-10-25
 - 與 CRWV 相比，Nebius 財務槓桿低：本專案以 TTM 至 Q2 計 Nebius 為淨現金約 0.46bn [本專案：Nebius收支模型_v0_5.xlsx 評價_可比公司!C10]；差異主要來自預付款與可轉債為主的融資組合 [本專案：同檔 來源 頁]。
 - 大型雲端業者自建 GPU 叢集與其他 neocloud 爭奪同一批 AI 實驗室客戶 [外部・未經本專案檢核]。
 
+## 主要客戶
+- 財報口徑：sec-api 彙整稱 Nebius 的 20-F 未揭露客戶集中度 %；但 Nasdaq／Motley Fool 文章稱 2026 Q2 有三家未具名客戶分別占營收 24%、21%、14%（二手說法，未對照原始文件）。 [外部・未經本專案檢核：sec-api：Nebius financial analysis（FY2025 分部彙整，20-F 2026-04-3，日期未載；Nasdaq：Nebius has $40 billion in customer commitments，2026-08]
+- 具名客戶／關係：
+- Microsoft：專用算力約 174 億美元至 2031（若加購服務可達約 194 億），無論使用與否皆付費，含約 70 億美元預付款。 [外部・未經本專案檢核：Nasdaq：Nebius has $40 billion in customer commitments，2026-08]
+- Meta：2025-11 約 30 億美元五年合約；2026-03 另有 120 億美元專用算力（2027 年初起），並可再追加最高 150 億美元。 [外部・未經本專案檢核：Nasdaq：Nebius has $40 billion in customer commitments，2026-08]
+- 其他：2026 Q2 新簽約含 Reflection、Cohere（每筆平均逾 10 億美元）。 [外部・未經本專案檢核：Nasdaq：Nebius has $40 billion in customer commitments，2026-08]
+- Nvidia：2026-03 以 20 億美元認購 21,065,936 股 Class A 的預付認股權證（供應商兼投資人）。 [外部・未經本專案檢核：sec-api：Nebius financial analysis（FY2025 分部彙整，20-F 2026-04-3，日期未載]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | Arkady Volozh（創辦人／CEO） | 10.7% | [外部・未經本專案檢核：資料日 約 2026-10；Simply Wall St：Nebius ownership（Frankfurt 頁），2026-10-18 更新] |
+| 2 | The Goldman Sachs Group | 4.65% | [外部・未經本專案檢核：資料日 約 2026-10；Simply Wall St：Nebius ownership（Frankfurt 頁），2026-10-18 更新] |
+| 3 | BlackRock | 4.21% | [外部・未經本專案檢核：資料日 約 2026-10；Simply Wall St：Nebius ownership（Frankfurt 頁），2026-10-18 更新] |
+| 4 | Vladimir Ivanov | 3.58% | [外部・未經本專案檢核：資料日 約 2026-10；Simply Wall St：Nebius ownership（Frankfurt 頁），2026-10-18 更新] |
+| 5 | Orbis Investment Management | 2.37% | [外部・未經本專案檢核：資料日 約 2026-10；Simply Wall St：Nebius ownership（Frankfurt 頁），2026-10-18 更新] |
+| 6 | Value Aligned Research Advisors | 2.23% | [外部・未經本專案檢核：資料日 約 2026-10；Simply Wall St：Nebius ownership（Frankfurt 頁），2026-10-18 更新] |
+| 7 | Accel Management Co | 2.16% | [外部・未經本專案檢核：資料日 約 2026-10；Simply Wall St：Nebius ownership（Frankfurt 頁），2026-10-18 更新] |
+| 8 | Invesco Capital Management | 2.14% | [外部・未經本專案檢核：資料日 約 2026-10；Simply Wall St：Nebius ownership（Frankfurt 頁），2026-10-18 更新] |
+| 9 | Bank of America | 2.13% | [外部・未經本專案檢核：資料日 約 2026-10；Simply Wall St：Nebius ownership（Frankfurt 頁），2026-10-18 更新] |
+| 10 | Fred Alger Management | 2.09% | [外部・未經本專案檢核：資料日 約 2026-10；Simply Wall St：Nebius ownership（Frankfurt 頁），2026-10-18 更新] |
+
+- 口徑：Simply Wall St 彙整（含個人與機構，資料頁更新 2026-10-18，股價日 2026-10-16；各持股的具體申報日不詳），並對照 Yahoo 13F（2026-06-30）。雙層股權（Class A/Class B，創辦人 Volozh 的類別與投票權：本次未找到）。 [外部・未經本專案檢核：Simply Wall St：Nebius ownership（Frankfurt 頁），2026-10-18 更新；Yahoo Finance NBIS holders，資料日 2026-06-30]
+- 註：Yahoo 13F（2026-06-30）前五為 BlackRock 5.25%（11.53M）、Goldman 4.47%（9.8M）、Invesco 3.16%、Orbis Allan Gray 2.96%、Bank of America 2.80%；與 Simply Wall St 的比例因分母與更新日不同而有差異。 [外部・未經本專案檢核：Yahoo Finance NBIS holders，資料日 2026-06-30] Nvidia 的預付認股權證不在 13F 中。已發行股數約 271.9M（2026-06-30）。 [外部・未經本專案檢核：sec-api：Nebius financial analysis（FY2025 分部彙整，20-F 2026-04-3，日期未載]
+
 ## 近期重大事件
 - 2026-10-22｜取得 Citi 3.5bn 美元 364 天期擔保信用額度（SOFR＋2.75%，最高 3.50%）；營運長稱約 40bn 長約可作擔保、後續仍需更多融資；股價盤中跌 6.8% [外部新聞：Invezz；TheStreet]
 - 2026-10-21｜開始公開 GPU 現貨價格；營收長稱算力價格上漲快於預期。Piper Sandler 目標價降 22% 至 $185 [外部新聞：TheStreet；Invezz]

@@ -60,6 +60,28 @@ asof: 2026-10-25
 - CPO 光學市場 CY2026 US$0.3B → CY2029 5.9B，模型假設 Coherent 拿 10%／15%／20% [本專案：Coherent模型_v0.2.xlsx Units!C5、Units!F5；In!E31:E33]。
 - 份額相對值假設 1.10／1.15／1.15（磷化銦產能倍增、1.6T 提前）；新易盛、中際旭創搶 1.6T 是下行路徑 [本專案：cohr/README.md 驅動因子；Coherent模型_v0.2.xlsx Sens!B5]。
 
+## 主要客戶
+- 10-K 口徑（Note 20 Major Customers）：「One major customer accounted for 20%, 10%, and 10% of consolidated revenue during fiscal 2026, 2025 and 2024, respectively. A second major customer accounted for 12% of consolidated revenue during fiscal 2026. A third major customer accounted for 12% of consolidated revenue during fiscal 2025.」營收主要來自 Datacenter & Communications 分部；均不具名（來源 1）。 [外部・未經本專案檢核]
+- 具名關係：
+- NVIDIA Corporation——2026/3/2 簽署多年期策略協議（含 multi-billion-dollar 採購承諾，及先進雷射與光網路產品的未來產能取用權），同日 NVIDIA 以每股 $256.80 認購 7,788,161 股、投資 $20 億（來源 1）。10-K 未說明 NVIDIA 是否為上述 20%／12% 客戶，故不可據此認定占比。 [外部・未經本專案檢核]
+- 其餘 hyperscaler／設備商客戶：未找到（本檔嘗試 10-K 全文搜尋，僅 NVIDIA 具名；網路搜尋額度已用盡，未能取得第三方佐證）。 [外部・未經本專案檢核]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | BlackRock, Inc. | 約 8.43% | [外部・未經本專案檢核：資料日 2026-06-30（見口徑說明）；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 2 | Vanguard Capital Management LLC | 約 6.48% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 3 | FMR LLC | 約 5.59% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 4 | Vanguard Portfolio Management LLC | 約 5.09% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 5 | State Street Corp | 約 4.36% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 6 | NVIDIA Corp | 約 3.95% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 7 | Invesco Ltd. | 約 3.77% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 8 | Geode Capital Management, LLC | 約 2.68% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 9 | Capital International Investors | 約 1.83% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+| 10 | Morgan Stanley | 約 1.67% | [外部・未經本專案檢核：資料日 同上；insiderset：COHR Institutional Ownership，2026 年，頁面日期標示不一致] |
+
+- 口徑：13F 機構持股（insiderset 彙整頁，頁面導言稱 2026-06-30（Q2 2026），但標題／FAQ 另有 Q3 2026 字樣，資料日不完全確定）；比例為本檔以 proxy 所載流通股數 196,934,659（2026/8/31）換算，僅供參考。Vanguard 13F 拆成兩實體。第 6 名 NVIDIA Corp 為 2026/3 私募投資（與上述策略協議一併）。proxy（來源 3）5% 以上持有人：Vanguard Capital Management 13,968,914 股 7.1%、BlackRock 12,978,940 股 6.6%、FMR LLC 11,006,110 股 5.6%（13G 申報）。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-22｜光通訊股隨晶片股重挫，Coherent 單日跌約 12%；媒體歸因於科技股賣壓與財報前觀望，非公司本身利空 [外部新聞：24/7 Wall St.]
 - 2026-10-14｜公布 FY2027 第一季財報日為 2026-11-04 盤後 [外部新聞：Earnings Whispers]

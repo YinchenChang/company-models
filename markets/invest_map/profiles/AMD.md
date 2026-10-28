@@ -59,6 +59,34 @@ AI 加速器（GPU）市場中 NVIDIA 以外的第二大 GPU 供應商，同時�
 - AMD 與 NVIDIA 模型用同一份顆數與每顆價，所以份額可互相加總 [本專案：AMD模型_v0.2.1.xlsx Recon!J29]。
 - 伺服器 CPU（與 Intel、Arm 架構自研 CPU 競爭）的份額：本專案未建立。
 
+## 主要客戶
+- 財報客戶集中度揭露：AMD 近年 10-K／10-Q 未列出「某客戶占營收 x%」的具名百分比（已在 FY2025 10-K 與 Q2 2026 10-Q 全文搜尋，僅有風險因子）。原文：「We depend on a small number of customers for a substantial portion of our business and we expect that a small number of customers will continue to account for a significant part of our revenue and receivables in the future.」國際銷售（以直接購買客戶的帳單地點）占 Q2 2026 營收 70%、上半年 72%。 [外部・未經本專案檢核：AMD Form 10-Q，期間至 2026-06-27，2026-08-05]
+- 公開已知客戶／合作對象：
+- OpenAI：2025 年 10 月（及 2026 年 2 月）發行認股權證，可購最多 1.6 億股 AMD 普通股，行使價 0.01 美元，依 OpenAI 及其關聯方採購 AMD Instinct GPU 的里程碑與股價目標分批生效；Q2 2026 新聞稿列為 Helios 機櫃部署方。 [外部・未經本專案檢核：AMD Form 10-Q，期間至 2026-06-27，2026-08-05；AMD Reports Second Quarter 2026 Financial Results（轉載），2026-08-05]
+- Meta：同樣獲得 1.6 億股的 Instinct 採購里程碑認股權證（10-Q 原文）；列為 Helios 部署方。 [外部・未經本專案檢核：AMD Form 10-Q，期間至 2026-06-27，2026-08-05；AMD Reports Second Quarter 2026 Financial Results（轉載），2026-08-05]
+- Anthropic：Q2 2026 新聞稿揭露策略合作，部署最高 2 GW 的 MI450 系列 GPU（Helios 機櫃），並多年期合作以 Claude 最佳化 Instinct GPU 與 ROCm。 [外部・未經本專案檢核：AMD Reports Second Quarter 2026 Financial Results（轉載），2026-08-05]
+- Microsoft：擴大合作，在 Azure 大規模部署 Helios 機櫃，新增兩個 EPYC VM 系列並擴大 Pensando DPU 部署；另為 Xbox Series S/X 的 semi-custom SoC 客戶。 [外部・未經本專案檢核：AMD Reports Second Quarter 2026 Financial Results（轉載），2026-08-05；AMD Form 10-K，FY2025（期間至 2025-12-27），2026-02-04]
+- Sony：PlayStation 5 的 semi-custom SoC 客戶（10-K 產品描述）。 [外部・未經本專案檢核：AMD Form 10-K，FY2025（期間至 2025-12-27），2026-02-04]
+- Oracle、HUMAIN、Cirrascale、Tensorwave、Vultr：新聞稿列為 Helios 部署方（僅列名，無金額）。 [外部・未經本專案檢核：AMD Reports Second Quarter 2026 Financial Results（轉載），2026-08-05]
+- Cerebras、Cisco：合作夥伴（非主要採購方）。 [外部・未經本專案檢核：AMD Reports Second Quarter 2026 Financial Results（轉載），2026-08-05]
+- 提醒：以上均無官方營收占比；Valve Steam Machine 亦採 AMD semi-custom（10-K）。 [外部・未經本專案檢核：AMD Form 10-K，FY2025（期間至 2025-12-27），2026-02-04]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | BlackRock Inc. | 9.21% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AMD Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 2 | Vanguard Capital Management LLC | 6.52% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AMD Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 3 | State Street Corporation | 4.56% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AMD Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 4 | Invesco Ltd. | 3.26% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AMD Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 5 | JPMorgan Chase & Co | 2.47% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AMD Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 6 | Geode Capital Management, LLC | 2.42% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AMD Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 7 | Vanguard Portfolio Management LLC | 2.32% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AMD Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 8 | T. Rowe Price Associates Inc | 2.20% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AMD Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 9 | FMR, LLC | 1.57% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AMD Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 10 | Morgan Stanley | 1.49% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance AMD Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+
+- 口徑：13F 機構持股（資料日 2026/6/30；Yahoo Finance，% Out = 占流通在外股數）。Yahoo 摘要：內部人 0.42%、機構 75.32%、機構家數 5,139。對照 2026 proxy（受益所有權，資料日 2026/3/19，流通股 1,630,338,779）：Vanguard Group 142,442,745 股（8.8%）、BlackRock 124,945,206 股（7.7%，依 2024/2/1 的 13G/A）。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-07｜MI455 加速器與 Helios 整櫃（使用 HBM4）開始出貨｜MI450 世代的售價是模型最敏感的變數之一 [外部新聞：Cryptopolitan]
 - 2026-09-28｜宣布以全股票約 US$8.2B 收購 AI 研究實驗室 World Labs（李飛飛共同創辦），預計 2026 年底前完成｜股數稀釋，模型未納入 [外部新聞：Northeast Times]

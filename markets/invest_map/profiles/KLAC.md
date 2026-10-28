@@ -62,6 +62,29 @@ asof: 2026-10-25
 - 強度上升是 KLA 特有的成長來源：本專案取每年 +2.95%（由公司 2030 模型推得）；不提升／加倍使 FY2028 EPS −3.9%／+3.5% [本專案：klac/README.md 驅動因子 1、敏感度]。
 - 公司未說明 150bp 提升的分母，本專案解讀為「製程控制營收 ÷ WFE」[本專案：科磊模型_v0.2.xlsx In!I15]。
 
+## 主要客戶
+- 10-K 口徑：「the following customers each accounted for more than 10% of total revenues, primarily in the Semiconductor Process Control segment」——FY2026、FY2025、FY2024 三年均只列 Taiwan Semiconductor Manufacturing Company Limited。百分比在 10-K 文字層未顯示（原文以表格圖形呈現，無法由文字萃取），故 TSMC 精確占比：未找到（僅知 >10%）（來源 1）。 [外部・未經本專案檢核]
+- 風險因子另指出 foundry/logic 客戶的新訂單近年占總訂單相當大比例（來源 1）。 [外部・未經本專案檢核]
+- 國際營收占比：FY2026 約 87%，FY2025、FY2024 為 89%；China 占 30%（FY2026）、33%（FY2025）、43%（FY2024）（來源 1）。 [外部・未經本專案檢核]
+- 具名客戶：Taiwan Semiconductor Manufacturing Company——唯一被點名的 >10% 客戶（來源 1）。其他具名客戶：未找到（嘗試 10-K 全文搜尋 Samsung、SK hynix、Micron、Intel，均無揭露）。 [外部・未經本專案檢核]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | BlackRock, Inc. | 約 9.67% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 2 | Vanguard Capital Management LLC | 約 6.54% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 3 | State Street Corp | 約 4.82% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 4 | Capital World Investors | 約 3.47% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 5 | Invesco Ltd. | 約 3.44% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 6 | FMR LLC | 約 3.30% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 7 | Vanguard Portfolio Management LLC | 約 3.02% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 8 | AllianceBernstein L.P. | 未計算（資料疑誤，見口徑說明） | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 9 | Geode Capital Management, LLC | 約 2.80% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 10 | Capital International Investors | 約 2.72% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：KLAC Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+
+- 口徑：13F 機構持股，資料日 2026-06-30（Q2 2026），來自 insiderset 彙整頁（依申報價值排序）。KLA 於 2026/6/11 進行十比一股票分割（10-K 已追溯調整；2026/9/9 流通股 1,305,006,492 股）；持股比例為本檔以此股數換算，僅供參考。第 8 名 AllianceBernstein 的股數欄（7,470,622）與其申報價值 $11.00B 不相稱（以同頁其他持有人隱含股價 ≈ $300 估，應約 3,600 萬股），疑為來源資料錯誤，不計算比例，需以 13F 原檔核對。Vanguard 13F 拆成兩個申報實體。proxy（來源 3）5% 以上持有人：BlackRock 115,048,620 股 8.8%（13G 資料日 2023-12-31）、Vanguard Capital Management 98,224,210 股 7.5%。 [外部・未經本專案檢核]
+- 來源 4 的排序依申報價值；若第 8 名實際股數約 3,640 萬股，則排序按股數應介於第 8–9 名之間。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-28（預定）｜FY2027 第一季財報（盤後）｜指引營收 US$4.0B±0.2B、GAAP EPS US$1.14 [本專案：科磊模型_v0.2.xlsx Q!A2、B32、B34]
 - 2026-10-23｜收盤 US$145.61；10-22 單日 −9.5%，原因本專案未查明 [本專案：科磊模型_v0.2.xlsx In!E55、I55]

@@ -63,6 +63,26 @@ asof: 2026-10-25
 - 矽光模組只需 1–4 顆 CW 雷射，EML 方案要 8 顆；模型假設每模組雷射數 5.5 → 4.8 顆（CY2026→CY2029）[本專案：Lumentum模型_v0.2.xlsx In!H32；Units!C5、Units!F5]。
 - 中國 EML 廠追趕、Coherent 擴產是份額下壓因素 [本專案：Lumentum模型_v0.2.xlsx In!I41]。
 
+## 主要客戶
+- 10-K 口徑：「net revenue from a single end customer which represented 10% or more of our total net revenue」——Customer A：FY2026 26.6%、FY2025 15.4%、FY2024 18.9%；Customer B：FY2026 15.0%、FY2025 16.0%、FY2024 11.4%。均不具名（來源 1）。 [外部・未經本專案檢核]
+- 具名客戶：未找到。10-K 全文僅 NVIDIA 出現 2 次，但為產品相容或供應關係用語，未將其指為 Customer A／B；10-K 另提到 Huawei 出口管制，已全面停止出貨（來源 1）。本任務網路搜尋額度已用盡，未能取得第三方具名佐證；嘗試過 10-K 全文關鍵字搜尋（Google／Alphabet、Ciena、Cisco、Nokia、Apple、NVIDIA）。 [外部・未經本專案檢核]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | BlackRock, Inc. | 約 10.23% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 2 | Vanguard Capital Management LLC | 約 5.66% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 3 | Vanguard Portfolio Management LLC | 約 4.56% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 4 | JPMorgan Chase & Co | 約 4.53% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 5 | FMR LLC | 約 3.92% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 6 | State Street Corp | 約 3.85% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 7 | Invesco Ltd. | 約 3.54% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 8 | Geode Capital Management, LLC | 約 2.50% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 9 | Arrowstreet Capital, Limited Partnership | 約 1.53% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 10 | Morgan Stanley | 約 1.46% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：LITE Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+
+- 口徑：13F 機構持股，資料日 2026-06-30（Q2 2026），來自 insiderset 彙整頁（依申報價值排序）；比例為本檔以 10-K 封面流通股數 89.7 百萬股（2026/8/14，已四捨五入）換算，僅供參考。Vanguard 13F 拆成兩實體，合計約 9.17M 股（約 10.2%）。proxy（來源 3）5% 以上持有人：Vanguard Capital Management 5,252,142 股 5.8%（13G/A，2026-04-30）、BlackRock 5,240,774 股 5.8%。（proxy 的 BlackRock 股數低於 13F 的 9.18M，因兩者統計口徑與日期不同，原樣保留。） [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-22｜光通訊股隨晶片股重挫，Lumentum 單日跌約 9%；媒體提到執行長稱資料中心光元件多年售罄，但仍未擋住賣壓 [外部新聞：24/7 Wall St.]
 - 2026-10-12｜單日跌 9.8%：Broadcom 執行長陳福陽週末談話質疑 AI 投資預期過高；此前公司稱 2029 年產能幾乎售罄、股價剛創新高 [外部新聞：The Motley Fool]

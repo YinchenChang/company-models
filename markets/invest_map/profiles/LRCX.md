@@ -61,6 +61,33 @@ asof: 2026-10-25
 - 本專案基準份額固定在 CY2026；份額漂移 ±2%／年只在敏感度（FY2028 EPS ±2.7%）[本專案：lrcx/README.md 驅動因子 1、敏感度]。
 - 先進封裝營收公司稱 +70% 以上 [本專案：先驗比對_設備材料_20261022.md E3，Interested-party]。
 
+## 主要客戶
+- 10-K 口徑：「In fiscal year 2026, four customers accounted for approximately 16%, 15%, 12%, and 12% of total revenues」；FY2025 兩家客戶約 17% 與 15%；FY2024 一家客戶約 17%；其餘客戶均未達 10%。以上均不具名（來源 1）。 [外部・未經本專案檢核]
+- 應收帳款集中度：2026/6/28 有五家客戶分別約占應收帳款 20%、16%、15%、11%、10%（來源 1）。 [外部・未經本專案檢核]
+- 非美國銷售占總營收約 93%（FY2024–FY2026）（來源 1）；Sep 2026 季為 92%（來源 2）。10-Q 未再揭露客戶集中度百分比。 [外部・未經本專案檢核]
+- 具名客戶：
+- Micron Technology, Inc.——10-K 列為 FY2024–FY2026 最重要客戶之一（來源 1）。 [外部・未經本專案檢核]
+- Samsung Electronics Company, Ltd.——同上（來源 1）。 [外部・未經本專案檢核]
+- SK hynix Inc.——同上（來源 1）。 [外部・未經本專案檢核]
+- Taiwan Semiconductor Manufacturing Company——同上（來源 1）。 [外部・未經本專案檢核]
+- 10-K 僅點名這四家為 significant customers，未對應到 16%／15%／12%／12% 的個別比例。 [外部・未經本專案檢核]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | BlackRock, Inc. | 約 10.63% | [外部・未經本專案檢核：資料日 2026-06-30（見口徑說明）；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 2 | Vanguard Capital Management LLC | 約 6.54% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 3 | State Street Corp | 約 4.86% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 4 | Invesco Ltd. | 約 4.19% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 5 | JPMorgan Chase & Co | 約 3.63% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 6 | Vanguard Portfolio Management LLC | 約 2.93% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 7 | Geode Capital Management, LLC | 約 2.76% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 8 | FMR LLC | 約 2.70% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 9 | T. Rowe Price Associates | 約 1.97% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+| 10 | Morgan Stanley | 約 1.54% | [外部・未經本專案檢核：資料日 同上；insiderset：LRCX Institutional Ownership，2026 年，頁面未標發布日] |
+
+- 口徑：13F 機構持股（insiderset 彙整頁，頁面導言稱資料為 2026-06-30（Q2 2026），但標題與 FAQ 另有 Q3 2026 字樣，資料日不完全確定）。該頁無持股比例欄，比例為本檔以 10-Q 封面流通股數 1,249,171 千股（2026/10/20）換算，僅供參考。Vanguard 已拆成兩個 13F 申報實體。proxy（來源 4）5% 以上持有人：BlackRock 117,779,780 股 9.41%（13G 資料日 2023-12-31）、Vanguard Capital Management 93,575,293 股 7.48%。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-23｜收盤 US$230.10 [本專案：科林研發模型_v0.2.xlsx In!E124]
 - 2026-10-21｜FY2027 第一季：營收 US$8.22B、毛利率 52.3%、營業利益率 40.0%、EPS US$2.19；中國占 35%；12 月季指引營收 US$8.6B±0.4B、EPS US$2.33±0.15 [本專案：科林研發模型_v0.2.xlsx Q!G6、G9、G14、G18、G24；In!E110、E113]

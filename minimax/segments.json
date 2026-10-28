@@ -1,0 +1,19 @@
+{
+ "company": "MiniMax",
+ "ticker": "00100",
+ "model_sheet": "Revenue",
+ "official_segments": [
+  {
+   "name": "開放平台及企業服務",
+   "label": "一、企業端：開放平台及企業服務（API、Coding／Token／M Plan）",
+   "source": "招股書、2026 中報"
+  },
+  {
+   "name": "AI 原生產品",
+   "label": "二、消費端：AI 原生產品（Talkie／星野、海螺、Agent、Audio）",
+   "source": "同上"
+  }
+ ],
+ "sublines": [],
+ "check_labels": []
+}

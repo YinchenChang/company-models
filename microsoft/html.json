@@ -1,0 +1,1244 @@
+{
+ "company": "Microsoft",
+ "ticker": "MSFT",
+ "thesis": "@README!A3",
+ "question": "FY2029 的 AI 增量營業利益能否覆蓋 AI 資本支出的資金成本（AI 增量 ROIC 對 WACC），且自由現金流不需停止回購",
+ "scenarios": [
+  {
+   "key": "A",
+   "name": "情境 A（樂觀）"
+  },
+  {
+   "key": "B",
+   "name": "情境 B（基準）"
+  },
+  {
+   "key": "C",
+   "name": "情境 C（保守）"
+  }
+ ],
+ "sections": [
+  {
+   "id": "thesis",
+   "title": "命題與核心問題",
+   "blocks": [
+    {
+     "type": "list",
+     "items": [
+      "@README!A5",
+      "@README!A6",
+      "@README!A7"
+     ]
+    },
+    {
+     "type": "kv",
+     "items": [
+      [
+       "投資建議",
+       "@Val!B43"
+      ],
+      [
+       "@Val!A40",
+       "@Val!B40|sp1"
+      ],
+      [
+       "@Val!A36",
+       "@Val!B36|n2"
+      ],
+      [
+       "@Val!A47",
+       "@Val!B47|n2"
+      ],
+      [
+       "@Val!A49",
+       "@Val!B49"
+      ],
+      [
+       "@Val!A39",
+       "@Val!B39|n2"
+      ],
+      [
+       "@CF!A5",
+       "@CF!C5|n1"
+      ],
+      [
+       "@CF!A6",
+       "@CF!C6"
+      ]
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A40"
+     ]
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Thesis!A2"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "drivers",
+   "title": "驅動因子 → 推導量",
+   "intro": "@Thesis!A1",
+   "blocks": [
+    {
+     "type": "table",
+     "head": [
+      "@README!A12",
+      "@README!B12",
+      "@README!C12",
+      "@README!D12",
+      "@README!E12"
+     ],
+     "rowgen": {
+      "sheet": "README",
+      "rows": "13-21",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "",
+       "",
+       "",
+       "n2"
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "caption": "主要輸入（In 頁；標記沿用 Excel）",
+     "head": [
+      "@In!B3",
+      "@In!D3",
+      "@In!E3",
+      "@In!F3",
+      "@In!C3",
+      "@In!G3"
+     ],
+     "rows": [
+      [
+       "@In!B103",
+       "@In!D103|n0",
+       "@In!E103|n0",
+       "@In!F103|n0",
+       "@In!C103",
+       "@In!G103|tag"
+      ],
+      [
+       "@In!B108",
+       "@In!D108|n1",
+       "@In!E108|n1",
+       "@In!F108|n1",
+       "@In!C108",
+       "@In!G108|tag"
+      ],
+      [
+       "@In!B114",
+       "@In!D114|p0",
+       "@In!E114|p0",
+       "@In!F114|p0",
+       "@In!C114",
+       "@In!G114|tag"
+      ],
+      [
+       "@In!B115",
+       "@In!D115|p0",
+       "@In!E115|p0",
+       "@In!F115|p0",
+       "@In!C115",
+       "@In!G115|tag"
+      ],
+      [
+       "@In!B133",
+       "@In!D133|n3",
+       "@In!E133|n3",
+       "@In!F133|n3",
+       "@In!C133",
+       "@In!G133|tag"
+      ],
+      [
+       "@In!B129",
+       "@In!D129|p0",
+       "@In!E129|p0",
+       "@In!F129|p0",
+       "@In!C129",
+       "@In!G129|tag"
+      ],
+      [
+       "@In!B131",
+       "@In!D131|p0",
+       "@In!E131|p0",
+       "@In!F131|p0",
+       "@In!C131",
+       "@In!G131|tag"
+      ],
+      [
+       "@In!B142",
+       "@In!D142|n0",
+       "@In!E142|n0",
+       "@In!F142|n0",
+       "@In!C142",
+       "@In!G142|tag"
+      ],
+      [
+       "@In!B143",
+       "@In!D143|n0",
+       "@In!E143|n0",
+       "@In!F143|n0",
+       "@In!C143",
+       "@In!G143|tag"
+      ],
+      [
+       "@In!B145",
+       "@In!D145|n0",
+       "@In!E145|n0",
+       "@In!F145|n0",
+       "@In!C145",
+       "@In!G145|tag"
+      ],
+      [
+       "@In!B138",
+       "@In!D138|n1",
+       "@In!E138|n1",
+       "@In!F138|n1",
+       "@In!C138",
+       "@In!G138|tag"
+      ],
+      [
+       "@In!B96",
+       "@In!D96|n0",
+       "@In!E96|n0",
+       "@In!F96|n0",
+       "@In!C96",
+       "@In!G96|tag"
+      ],
+      [
+       "@In!B152",
+       "@In!D152|p0",
+       "@In!E152|p0",
+       "@In!F152|p0",
+       "@In!C152",
+       "@In!G152|tag"
+      ],
+      [
+       "@In!B148",
+       "@In!D148|n0",
+       "@In!E148|n0",
+       "@In!F148|n0",
+       "@In!C148",
+       "@In!G148|tag"
+      ],
+      [
+       "@In!B39",
+       "@In!D39|n3",
+       "@In!E39|n3",
+       "@In!F39|n3",
+       "@In!C39",
+       "@In!G39|tag"
+      ],
+      [
+       "@In!B46",
+       "@In!D46|p2",
+       "@In!E46|p2",
+       "@In!F46|p2",
+       "@In!C46",
+       "@In!G46|tag"
+      ],
+      [
+       "@In!B47",
+       "@In!D47|p0",
+       "@In!E47|p0",
+       "@In!F47|p0",
+       "@In!C47",
+       "@In!G47|tag"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Thesis!A53",
+     "head": [
+      "@Thesis!A54",
+      "@Thesis!B54",
+      "@Thesis!F54",
+      "@Thesis!G54",
+      "@Thesis!H54",
+      "@Thesis!I54",
+      "@Thesis!J54",
+      "@Thesis!K54"
+     ],
+     "rows": [
+      [
+       "@Thesis!A56",
+       "@Thesis!B56",
+       "@Thesis!F56|n0",
+       "@Thesis!G56|n0",
+       "@Thesis!H56|n0",
+       "@Thesis!I56|n0",
+       "@Thesis!J56|n0",
+       "@Thesis!K56|n0"
+      ],
+      [
+       "@Thesis!A57",
+       "@Thesis!B57",
+       "@Thesis!F57|n0",
+       "@Thesis!G57|n0",
+       "@Thesis!H57|n0",
+       "@Thesis!I57|n0",
+       "@Thesis!J57|n0",
+       "@Thesis!K57|n0"
+      ],
+      [
+       "@Thesis!A60",
+       "@Thesis!B60",
+       "@Thesis!F60|n0",
+       "@Thesis!G60|n0",
+       "@Thesis!H60|n0",
+       "@Thesis!I60|n0",
+       "@Thesis!J60|n0",
+       "@Thesis!K60|n0"
+      ],
+      [
+       "@Thesis!A71",
+       "@Thesis!B71",
+       "@Thesis!F71|n2",
+       "@Thesis!G71|n2",
+       "@Thesis!H71|n2",
+       "@Thesis!I71|n2",
+       "@Thesis!J71|n2",
+       "@Thesis!K71|n2"
+      ],
+      [
+       "@Thesis!A72",
+       "@Thesis!B72",
+       "@Thesis!F72|n1",
+       "@Thesis!G72|n1",
+       "@Thesis!H72|n1",
+       "@Thesis!I72|n1",
+       "@Thesis!J72|n1",
+       "@Thesis!K72|n1"
+      ],
+      [
+       "@Thesis!A86",
+       "@Thesis!B86",
+       "@Thesis!F86|n1",
+       "@Thesis!G86|n1",
+       "@Thesis!H86|n1",
+       "@Thesis!I86|n1",
+       "@Thesis!J86|n1",
+       "@Thesis!K86|n1"
+      ],
+      [
+       "@Thesis!A89",
+       "@Thesis!B89",
+       "@Thesis!F89|n1",
+       "@Thesis!G89|n1",
+       "@Thesis!H89|n1",
+       "@Thesis!I89|n1",
+       "@Thesis!J89|n1",
+       "@Thesis!K89|n1"
+      ],
+      [
+       "@Thesis!A93",
+       "@Thesis!B93",
+       "@Thesis!F93|n1",
+       "@Thesis!G93|n1",
+       "@Thesis!H93|n1",
+       "@Thesis!I93|n1",
+       "@Thesis!J93|n1",
+       "@Thesis!K93|n1"
+      ],
+      [
+       "@Thesis!A94",
+       "@Thesis!B94",
+       "@Thesis!F94|n1",
+       "@Thesis!G94|n1",
+       "@Thesis!H94|n1",
+       "@Thesis!I94|n1",
+       "@Thesis!J94|n1",
+       "@Thesis!K94|n1"
+      ],
+      [
+       "@Thesis!A95",
+       "@Thesis!B95",
+       "@Thesis!F95|n1",
+       "@Thesis!G95|n1",
+       "@Thesis!H95|n1",
+       "@Thesis!I95|n1",
+       "@Thesis!J95|n1",
+       "@Thesis!K95|n1"
+      ],
+      [
+       "@Thesis!A96",
+       "@Thesis!B96",
+       "@Thesis!F96|p1",
+       "@Thesis!G96|p1",
+       "@Thesis!H96|p1",
+       "@Thesis!I96|p1",
+       "@Thesis!J96|p1",
+       "@Thesis!K96|p1"
+      ],
+      [
+       "@Thesis!A97",
+       "@Thesis!B97",
+       "@Thesis!F97|p1",
+       "@Thesis!G97|p1",
+       "@Thesis!H97|p1",
+       "@Thesis!I97|p1",
+       "@Thesis!J97|p1",
+       "@Thesis!K97|p1"
+      ],
+      [
+       "@Thesis!A99",
+       "@Thesis!B99",
+       "@Thesis!F99|p1",
+       "@Thesis!G99|p1",
+       "@Thesis!H99|p1",
+       "@Thesis!I99|p1",
+       "@Thesis!J99|p1",
+       "@Thesis!K99|p1"
+      ],
+      [
+       "@Thesis!A100",
+       "@Thesis!B100",
+       "@Thesis!F100|sp1",
+       "@Thesis!G100|sp1",
+       "@Thesis!H100|sp1",
+       "@Thesis!I100|sp1",
+       "@Thesis!J100|sp1",
+       "@Thesis!K100|sp1"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pl",
+   "title": "三情境損益（分部 → 合併）",
+   "intro": "@PL!A1",
+   "blocks": [
+    {
+     "type": "pl",
+     "years": "@PL!D52:K52",
+     "metrics": [
+      {
+       "name": [
+        "合併營收（",
+        "@PL!B67",
+        "）"
+       ],
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!D28:K28",
+        "B": "@PL!D67:K67",
+        "C": "@PL!D106:K106"
+       },
+       "chart": true
+      },
+      {
+       "name": "Agents and Infra",
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!D23:K23",
+        "B": "@PL!D62:K62",
+        "C": "@PL!D101:K101"
+       }
+      },
+      {
+       "name": "Devices and Consumer",
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!D27:K27",
+        "B": "@PL!D66:K66",
+        "C": "@PL!D105:K105"
+       }
+      },
+      {
+       "name": "@PL!A53",
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!D14:K14",
+        "B": "@PL!D53:K53",
+        "C": "@PL!D92:K92"
+       },
+       "chart": true
+      },
+      {
+       "name": "@PL!A54",
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!D15:K15",
+        "B": "@PL!D54:K54",
+        "C": "@PL!D93:K93"
+       }
+      },
+      {
+       "name": "@PL!A56",
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!D17:K17",
+        "B": "@PL!D56:K56",
+        "C": "@PL!D95:K95"
+       }
+      },
+      {
+       "name": "@PL!A58",
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!D19:K19",
+        "B": "@PL!D58:K58",
+        "C": "@PL!D97:K97"
+       }
+      },
+      {
+       "name": "@PL!A71",
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!D32:K32",
+        "B": "@PL!D71:K71",
+        "C": "@PL!D110:K110"
+       }
+      },
+      {
+       "name": "@PL!A76",
+       "fmt": "p1",
+       "rows": {
+        "A": "@PL!D37:K37",
+        "B": "@PL!D76:K76",
+        "C": "@PL!D115:K115"
+       },
+       "chart": true,
+       "ymin": "auto"
+      },
+      {
+       "name": "@PL!A78",
+       "fmt": "n1",
+       "rows": {
+        "A": "@PL!D39:K39",
+        "B": "@PL!D78:K78",
+        "C": "@PL!D117:K117"
+       }
+      },
+      {
+       "name": "@PL!A86",
+       "fmt": "n2",
+       "rows": {
+        "A": "@PL!D47:K47",
+        "B": "@PL!D86:K86",
+        "C": "@PL!D125:K125"
+       }
+      },
+      {
+       "name": "@PL!A88",
+       "fmt": "n2",
+       "rows": {
+        "A": "@PL!D49:K49",
+        "B": "@PL!D88:K88",
+        "C": "@PL!D127:K127"
+       },
+       "chart": true
+      }
+     ]
+    },
+    {
+     "type": "pl",
+     "years": "@CF!F46:K46",
+     "metrics": [
+      {
+       "name": "@CF!A60",
+       "fmt": "n1",
+       "rows": {
+        "A": "@CF!F29:K29",
+        "B": "@CF!F60:K60",
+        "C": "@CF!F91:K91"
+       },
+       "chart": true
+      },
+      {
+       "name": "@CF!A57",
+       "fmt": "n1",
+       "rows": {
+        "A": "@CF!F26:K26",
+        "B": "@CF!F57:K57",
+        "C": "@CF!F88:K88"
+       }
+      },
+      {
+       "name": "@CF!A63",
+       "fmt": "n1",
+       "rows": {
+        "A": "@CF!F32:K32",
+        "B": "@CF!F63:K63",
+        "C": "@CF!F94:K94"
+       }
+      },
+      {
+       "name": "@CF!A65",
+       "fmt": "n1",
+       "rows": {
+        "A": "@CF!F34:K34",
+        "B": "@CF!F65:K65",
+        "C": "@CF!F96:K96"
+       }
+      },
+      {
+       "name": "@Thesis!A96",
+       "fmt": "p1",
+       "rows": {
+        "A": "@Thesis!F47:K47",
+        "B": "@Thesis!F96:K96",
+        "C": "@Thesis!F145:K145"
+       },
+       "chart": true,
+       "ymin": "auto"
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@PL!A2",
+     "head": [
+      "@PL!A3",
+      "@PL!D3",
+      "@PL!E3",
+      "@PL!F3",
+      "@PL!G3",
+      "@PL!H3",
+      "@PL!I3",
+      "@PL!J3",
+      "@PL!K3"
+     ],
+     "rowgen": {
+      "sheet": "PL",
+      "rows": "4-7",
+      "cols": [
+       "A",
+       "D",
+       "E",
+       "F",
+       "G",
+       "H",
+       "I",
+       "J",
+       "K"
+      ],
+      "fmts": [
+       "",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3",
+       "n3"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "valuation",
+   "title": "估值",
+   "intro": "@Val!A1",
+   "blocks": [
+    {
+     "type": "note",
+     "parts": [
+      "@Val!A2"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@Val!A34",
+     "head": [
+      "@Val!A35",
+      "@Val!B35",
+      "@Val!C35",
+      "@Val!D35",
+      "@Val!E35"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "36-53",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "n2",
+       "n2",
+       "n2",
+       ""
+      ],
+      "row_fmt": {
+       "40": {
+        "B": "sp1"
+       },
+       "41": {
+        "B": "sp1"
+       },
+       "42": {
+        "B": ""
+       },
+       "43": {
+        "B": ""
+       },
+       "45": {
+        "B": "sp1",
+        "C": "sp1",
+        "D": "sp1"
+       },
+       "46": {
+        "C": ""
+       },
+       "48": {
+        "B": "sp1"
+       },
+       "49": {
+        "B": ""
+       },
+       "52": {
+        "B": "x1",
+        "C": "x1",
+        "D": "x1"
+       },
+       "53": {
+        "B": "x1"
+       }
+      }
+     }
+    },
+    {
+     "type": "bars",
+     "title": "目標價與現價",
+     "fmt": "n0",
+     "items": [
+      {
+       "label": "@Val!A36",
+       "value": "@Val!B36",
+       "series": 0
+      },
+      {
+       "label": "@Val!A14",
+       "value": "@Val!B14",
+       "series": 1
+      },
+      {
+       "label": "@Val!A31",
+       "value": "@Val!B31",
+       "series": 2
+      },
+      {
+       "label": "@Val!A47",
+       "value": "@Val!B47",
+       "series": 1
+      },
+      {
+       "label": "@Val!A50",
+       "value": "@Val!B50",
+       "series": 1
+      },
+      {
+       "label": "@Val!A38",
+       "value": "@Val!B38",
+       "series": 2
+      }
+     ],
+     "ref": {
+      "label": "@Val!A39",
+      "value": "@Val!B39"
+     }
+    },
+    {
+     "type": "table",
+     "caption": "@Val!A5",
+     "head": [
+      "@Val!A6",
+      "@Val!B6",
+      "@Val!C6",
+      "@Val!D6",
+      "@Val!E6"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "7-15",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1",
+       ""
+      ],
+      "row_fmt": {
+       "8": {
+        "B": "p1",
+        "C": "p1",
+        "D": "p1"
+       },
+       "12": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "13": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "14": {
+        "B": "n2"
+       },
+       "15": {
+        "B": "p2",
+        "C": "p1"
+       }
+      }
+     }
+    },
+    {
+     "type": "table",
+     "caption": "@Val!A17",
+     "head": [
+      "@Val!A18",
+      "@Val!B18",
+      "@Val!C18",
+      "@Val!D18",
+      "@Val!E18"
+     ],
+     "rowgen": {
+      "sheet": "Val",
+      "rows": "19-32",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1",
+       "x1"
+      ],
+      "row_fmt": {
+       "30": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "31": {
+        "B": "n2"
+       }
+      }
+     }
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@Val!A54",
+      "：",
+      "@Val!B54"
+     ]
+    },
+    {
+     "type": "table",
+     "caption": "@CF!A2",
+     "head": [
+      "@CF!A4",
+      "@CF!B4",
+      "@CF!C4",
+      "@CF!D4"
+     ],
+     "rowgen": {
+      "sheet": "CF",
+      "rows": "5-12",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1"
+      ],
+      "row_fmt": {
+       "6": {
+        "B": "",
+        "C": "",
+        "D": ""
+       },
+       "12": {
+        "B": "n3",
+        "C": "n3",
+        "D": "n3"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "recon",
+   "title": "對帳：共識、指引與前一版",
+   "intro": "@Recon!A1",
+   "blocks": [
+    {
+     "type": "table",
+     "head": [
+      "@Recon!A3",
+      "@Recon!B3",
+      "@Recon!C3",
+      "@Recon!D3",
+      "@Recon!E3",
+      "@Recon!F3"
+     ],
+     "rowgen": {
+      "sheet": "Recon",
+      "rows": "4-44",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "n1",
+       "n1",
+       "n1",
+       "sp1",
+       ""
+      ],
+      "row_fmt": {
+       "11": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "12": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "13": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "21": {
+        "B": "p1",
+        "C": "p1",
+        "D": "p1"
+       },
+       "22": {
+        "B": "p1",
+        "C": "p1",
+        "D": "p1"
+       },
+       "26": {
+        "B": "p1",
+        "C": "p1",
+        "D": "p1"
+       },
+       "44": {
+        "B": "n3",
+        "C": "n3",
+        "D": "n3"
+       }
+      }
+     }
+    },
+    {
+     "type": "table",
+     "caption": "官方分部對帳（Q 頁核對列，實績應為零）",
+     "head": [
+      "@Q!A3",
+      "@Q!J3",
+      "@Q!K3",
+      "@Q!L3",
+      "@Q!M3"
+     ],
+     "rows": [
+      [
+       "@Q!A5",
+       "@Q!J5|n3",
+       "@Q!K5|n3",
+       "@Q!L5|n3",
+       "@Q!M5|n3"
+      ],
+      [
+       "@Q!A6",
+       "@Q!J6|n3",
+       "@Q!K6|n3",
+       "@Q!L6|n3",
+       "@Q!M6|n3"
+      ],
+      [
+       "@Q!A7",
+       "@Q!J7|n3",
+       "@Q!K7|n3",
+       "@Q!L7|n3",
+       "@Q!M7|n3"
+      ],
+      [
+       "@Q!A8",
+       "@Q!J8|n3",
+       "@Q!K8|n3",
+       "@Q!L8|n3",
+       "@Q!M8|n3"
+      ],
+      [
+       "@Q!A9",
+       "@Q!J9|n3",
+       "@Q!K9|n3",
+       "@Q!L9|n3",
+       "@Q!M9|n3"
+      ],
+      [
+       "@Q!A10",
+       "@Q!J10|n3",
+       "@Q!K10|n3",
+       "@Q!L10|n3",
+       "@Q!M10|n3"
+      ],
+      [
+       "@Q!A12",
+       "@Q!J12|n3",
+       "@Q!K12|n3",
+       "@Q!L12|n3",
+       "@Q!M12|n3"
+      ],
+      [
+       "@Q!A13",
+       "@Q!J13|n3",
+       "@Q!K13|n3",
+       "@Q!L13|n3",
+       "@Q!M13|n3"
+      ],
+      [
+       "@Q!A14",
+       "@Q!J14|n3",
+       "@Q!K14|n3",
+       "@Q!L14|n3",
+       "@Q!M14|n3"
+      ],
+      [
+       "@Q!A15",
+       "@Q!J15|n3",
+       "@Q!K15|n3",
+       "@Q!L15|n3",
+       "@Q!M15|n3"
+      ],
+      [
+       "@Q!A18",
+       "@Q!J18|n3",
+       "@Q!K18|n3",
+       "@Q!L18|n3",
+       "@Q!M18|n3"
+      ],
+      [
+       "@Q!A19",
+       "@Q!J19|n3",
+       "@Q!K19|n3",
+       "@Q!L19|n3",
+       "@Q!M19|n3"
+      ],
+      [
+       "@Q!A24",
+       "@Q!J24|n3",
+       "@Q!K24|n3",
+       "@Q!L24|n3",
+       "@Q!M24|n3"
+      ],
+      [
+       "@Q!A44",
+       "@Q!J44|n3",
+       "@Q!K44|n3",
+       "@Q!L44|n3",
+       "@Q!M44|n3"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sens",
+   "title": "敏感度",
+   "intro": "@Sens!A1",
+   "blocks": [
+    {
+     "type": "tornado",
+     "title": "加權目標價相對基準的變動（一次動一個驅動；三情境全部重算）",
+     "sheet": "Sens",
+     "rows": "4-33",
+     "label_col": "A",
+     "value_col": "E",
+     "fmt": "sp1"
+    },
+    {
+     "type": "table",
+     "collapse": true,
+     "summary": "展開：全部案例的加權目標價",
+     "head": [
+      "@Sens!A3",
+      "@Sens!B3",
+      "@Sens!C3",
+      "@Sens!D3",
+      "@Sens!E3",
+      "@Sens!F3"
+     ],
+     "rowgen": {
+      "sheet": "Sens",
+      "rows": "4-33",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F"
+      ],
+      "fmts": [
+       "",
+       "",
+       "n2",
+       "n2",
+       "sp1",
+       ""
+      ]
+     }
+    },
+    {
+     "type": "table",
+     "caption": "@Sens!A35",
+     "head": [
+      "@Sens!A36",
+      "@Sens!B36",
+      "@Sens!C36",
+      "@Sens!D36",
+      "@Sens!E36"
+     ],
+     "rowgen": {
+      "sheet": "Sens",
+      "rows": "37-50",
+      "cols": [
+       "A",
+       "B",
+       "C",
+       "D",
+       "E"
+      ],
+      "fmts": [
+       "",
+       "",
+       "n2",
+       "n2",
+       "sp1"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "status",
+   "title": "資料狀態",
+   "blocks": [
+    {
+     "type": "kv",
+     "items": [
+      [
+       "模型版本",
+       [
+        "$version",
+        "（",
+        "$date",
+        "）"
+       ]
+      ],
+      [
+       "來源 xlsx",
+       "$xlsx"
+      ],
+      [
+       "來源 xlsx 的雜湊指紋（取代建置 commit）",
+       "$sha"
+      ],
+      [
+       "Tokenomics 快照版本",
+       "@In!H82"
+      ],
+      [
+       "資料截止",
+       "@README!A1"
+      ]
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "已知限制"
+    },
+    {
+     "type": "note",
+     "parts": [
+      "@README!A38"
+     ]
+    },
+    {
+     "type": "h3",
+     "text": "「未找到」清單"
+    },
+    {
+     "type": "scan",
+     "needle": "未找到",
+     "collapse": true,
+     "summary": "展開：標為未找到的輸入與來源",
+     "sheets": {
+      "In": [
+       "B",
+       "H",
+       "I"
+      ],
+      "Recon": [
+       "A",
+       "F"
+      ],
+      "Sources": [
+       "A",
+       "B"
+      ]
+     },
+     "empty": "沒有標為未找到的項目。"
+    }
+   ]
+  }
+ ]
+}

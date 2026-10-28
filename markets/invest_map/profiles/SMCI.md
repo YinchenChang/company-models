@@ -56,6 +56,29 @@ AI 伺服器品牌商：以買賣模式銷售含 NVIDIA、AMD GPU 的整機、�
 - Dell、HPE 與 ODM 直供爭取 neocloud 與企業訂單；本專案假設份額相對值 FY2028 0.95、FY2029 0.92（情境 B）[本專案：美超微模型_v0.1.xlsx In!E34:E35，Assumed]。
 - 價格競爭與 GPU 轉手比重上升是毛利率下檔；液冷與整體方案是上檔 [本專案：美超微模型_v0.1.xlsx In!H42]。
 
+## 主要客戶
+- 10-K 口徑：「We had one customer account for 10% or more of our net sales in fiscal year 2026, four customers account for 10% or more of our net sales in fiscal year 2025, and one customer account for 10% or more of net sales in fiscal year 2024.」數字：FY2026 一家客戶占 28.1%；FY2025 四家客戶分別占 20.9%、11.5%、11.3%、11.1%；FY2024 一家客戶占 20.0%。均不具名（來源 1）。 [外部・未經本專案檢核]
+- 銷售對象：leading internet data center 與 cloud 客戶、大型企業與 OEM（來源 1）。 [外部・未經本專案檢核]
+- 具名關係（供應端）：10-K 提到 NVIDIA（Blackwell／Blackwell Ultra、GB300 NVL72、HGX B300 等平台，及 Vera Rubin 平台）、Intel、AMD 為關鍵平台供應商；Foxconn、Quanta、Wiwynn 在 10-K 中亦出現（多為競爭或製造生態說明）。這些是供應商／生態夥伴而非營收客戶（來源 1）。 [外部・未經本專案檢核]
+- 具名終端客戶：未找到可驗證的一手或第三方來源（申報文件均不具名；本任務網路搜尋額度已用盡）。10-K 另披露 2026/3/19 美國 SDNY 起訴三名與公司相關人士（含前 SVP 兼董事 Yih-Shyan (Wally) Liaw）涉嫌出口管制共謀，公司未被列為被告，並收到 SEC 與大陪審團傳票，涉及「certain customers, including one customer that is the subject of the allegations」，客戶未具名（來源 1）。 [外部・未經本專案檢核]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | Charles Liang & Sara Liu（創辦人夫婦，含選擇權 15,300,000＋72,540 股） | 13.4%（proxy 基礎）；以 6.57 億股換算約 12.5% | [外部・未經本專案檢核：資料日 2026-01-31；Super Micro Computer 2026 Proxy Statement DEF 14A，2026-03-03] |
+| 2 | BlackRock, Inc. | 約 7.26% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 3 | Vanguard Capital Management LLC | 約 5.53% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 4 | Vanguard Portfolio Management LLC | 約 5.00% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 5 | Jane Street Group, LLC | 約 4.38% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 6 | State Street Corp | 約 3.75% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 7 | UBS Group AG | 約 3.00% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 8 | Geode Capital Management, LLC | 約 2.36% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 9 | Invesco Ltd. | 約 1.78% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+| 10 | Goldman Sachs Group Inc | 約 1.69% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：SMCI Institutional Ownership，2026 年，頁面註明 Q2 2026] |
+
+- 口徑：先列 proxy beneficial ownership 的創辦人持股（Charles Liang 與 Sara Liu，2026-01-31 基礎、流通股 598,989,428 股，來源 4），再列 13F 機構前九名（資料日 2026-06-30，來自 insiderset 依申報價值排序；比例為本檔以 10-K 封面流通股 656,965,384 股（2026/7/31）換算，僅供參考）。Vanguard 13F 拆成兩實體，合計 69.2M 股（約 10.5%），與 proxy 載 The Vanguard Group 68,848,777 股 11.5%（13G/A，2025-10-31）相近。proxy 另載 BlackRock 41,338,350 股 6.9%（13G/A，2024-10-25，已舊）。Wally Liaw 持 15,546,165 股（2.6%，2026-01-31）；其後已離職並遭起訴（見 B），此處不列入排名。 [外部・未經本專案檢核]
+- 第 11 名為 Two Sigma Investments, LP 9,783,845 股（約 1.49%）。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-20｜1Q FY27 初步營運更新：營收 US$185～195 億、毛利率 12.0–12.5%，都高於原指引；全年指引 US$650～720 億未調整 [本專案：美超微模型_v0.1.xlsx In!H44、H45、I33，來源公司公告]
 - 2026-10-15｜任命 Mark Long 為財務長，即日生效；David Weigand 卸任財務長、協助交接 [外部新聞：Supermicro 新聞稿]

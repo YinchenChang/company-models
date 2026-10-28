@@ -58,6 +58,28 @@ asof: 2026-10-25
 - SanDisk 與 Kioxia 共用晶圓廠，成本年降假設相同（14%／12%／10%）[本專案：SanDisk模型_v0.1.xlsx README!A16]。
 - SK 海力士＋Solidigm 晶圓投片約 −10%，但 QLC 企業級 SSD 出貨季增約 40% [本專案：NAND市場模型_v0.1.xlsx Sup!D5]。
 
+## 主要客戶
+- 財報集中度原文口徑：FY2026 10-K：「For 2026, 2025 and 2024, no single customer accounted for more than 10% of the Company’s net revenue. For 2026, 2025, and 2024, the Company’s top 10 customers accounted for 44%, 40% and 41% of the Company’s net revenue, respectively.」應收帳款：2026/7/3 淨應收約 47 億美元，三家客戶合計約占 19%（原文「three customers accounted for approximately 19%…」後續文字被截斷，細節請查 10-K）。 [外部・未經本專案檢核：Sandisk Form 10-K，FY2026（期間至 2026-07-03），2026-08-17]
+- Q3 FY2026 10-Q：前十大客戶占淨營收 46%（Q3 單季）與 41%（前九個月）；2025 同期為 41% 與 43%。「For the three months ended April 3, 2026, one customer accounted for more than 10%…，and for the three months ended March 28, 2025, a different customer accounted for more than 10%」；前九個月兩個期間皆無單一客戶超過 10%。 [外部・未經本專案檢核：Sandisk Form 10-Q，Q3 FY2026（期間至 2026-04-03），2026-05-01]
+- 財報客戶類型：電腦製造商與 OEM、雲端服務商、經銷商、轉售商與零售商，未具名。 [外部・未經本專案檢核]
+- 公開已知具名客戶：未找到可引用來源（本次搜尋額度用盡；10-K 內僅提到供應與合資夥伴 Kioxia／Flash Ventures，那是供應端而非客戶）。 [外部・未經本專案檢核：Sandisk Form 10-K，FY2026（期間至 2026-07-03），2026-08-17]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | BlackRock Inc. | 7.12% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance SNDK Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 2 | Vanguard Capital Management LLC | 6.69% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance SNDK Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 3 | FMR, LLC | 5.44% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance SNDK Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 4 | State Street Corporation | 4.10% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance SNDK Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 5 | Invesco Ltd. | 3.88% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance SNDK Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 6 | JPMorgan Chase & Co | 2.73% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance SNDK Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 7 | Geode Capital Management, LLC | 2.48% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance SNDK Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 8 | Vanguard Portfolio Management LLC | 2.43% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance SNDK Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 9 | Clear Street Group Inc. | 2.06% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance SNDK Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 10 | Situational Awareness LP | 1.73% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance SNDK Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+
+- 口徑：13F 機構持股（資料日 2026/6/30；Yahoo Finance，% Out = 占流通在外股數）。Yahoo 摘要：內部人 1.09%、機構 82.69%、機構家數 2,346。對照 2026 proxy（受益所有權，約 2026 年 8–10 月，proxy 2026/10/6 提交）：Vanguard Capital Management 11,000,476 股（7.6%）、BlackRock 8,825,007 股（6.1%）、FMR LLC 7,861,064 股（5.4%）、Jane Street Group 7,409,437 股（5.1%）。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-09-29｜公告 FQ1 FY27 財報日為 2026-10-29 [本專案：SanDisk模型_v0.1.xlsx Sources!A4]
 - 2026-09-21｜媒體報導將納入 S&P 100 指數 [外部新聞：TipRanks]

@@ -61,6 +61,29 @@ asof: 2026-10-25
 - 本專案以「份額加總不超過 100%」檢查各家：CY2028 Google TPU 為 Broadcom 75%＋Marvell 5%＋聯發科 18%＝98% [本專案：20261025_Broadcom模型_v0.2.xlsx Units!E5；聯發科模型_v0.1.xlsx Units!E13]。
 - 線性直驅（LPO，不用 DSP 的光模組）是光互連的替代技術；比例 +10pt 使 FY2028 EPS −6.4% [本專案：mrvl/README.md 敏感度]。
 
+## 主要客戶
+- 財報集中度原文口徑（10-Q Q2 FY2027，占總營收 ≥10% 的客戶）：Direct Customer：Customer A 16%（Q2 FY2027）、16%（去年同季）、16%（上半年）、16%（去年同期上半年）；Distributor：Distributor A 44%（Q2 FY2027）、34%（去年同季）、45%（上半年）、35%（去年同期上半年）。 [外部・未經本專案檢核：Marvell Form 10-Q，期間至 2026-08-01，2026-08-28]
+- FY2026 10-K：Customer A 14%（FY2025 13%、FY2024 低於 10%）；Distributor A 37%（FY2025 34%、FY2024 24%）。 [外部・未經本專案檢核：Marvell Form 10-K，FY2026（期間至 2026-01-31），2026-03-11]
+- 客戶認股權證：FY2025 發行給一家客戶最多 420 萬股、行使價 87.77 美元，依該客戶達成合格產品營收里程碑歸屬，列為營收減項（已歸屬 120 萬股，至 2026/8/1）；FY2026 另發給一家客戶最多 100 萬股、行使價 87.00 美元（尚無歸屬）。10-Q 未具名客戶。 [外部・未經本專案檢核：Marvell Form 10-Q，期間至 2026-08-01，2026-08-28]
+- 財報未具名 Customer A 與 Distributor A。 [外部・未經本專案檢核]
+- 公開已知具名客戶：本次未找到可引用來源（財報不具名；因全域搜尋額度用盡，無法查閱法說會或新聞稿）。市場普遍稱 Marvell 的 custom silicon／光互連客戶含 Amazon（AWS）、Microsoft、Google、Meta 等，但未經本次查證，僅供線索，不可當作已證實。10-K 競爭者名單提及 Alchip、Astera Labs、Broadcom、Cisco、Credo、GUC、Lightmatter、MACOM、MediaTek、Nvidia 等（為競爭者，非客戶）。 [外部・未經本專案檢核：Marvell Form 10-K，FY2026（期間至 2026-01-31），2026-03-11]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | BlackRock Inc. | 9.77% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance MRVL Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 2 | Vanguard Capital Management LLC | 6.60% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance MRVL Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 3 | FMR, LLC | 6.49% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance MRVL Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 4 | State Street Corporation | 4.77% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance MRVL Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 5 | Invesco Ltd. | 3.45% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance MRVL Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 6 | Geode Capital Management, LLC | 2.41% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance MRVL Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 7 | Vanguard Portfolio Management LLC | 2.40% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance MRVL Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 8 | Goldman Sachs Group Inc | 1.68% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance MRVL Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 9 | Norges Bank | 1.62% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance MRVL Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+| 10 | JPMorgan Chase & Co | 1.58% | [外部・未經本專案檢核：資料日 2026/6/30；Yahoo Finance MRVL Holders，13F 至 2026-06-30，擷取日 2026-10-27] |
+
+- 口徑：13F 機構持股（資料日 2026/6/30；Yahoo Finance，% Out = 占流通在外股數）。Yahoo 摘要：內部人 0.50%、機構 81.73%、機構家數 2,969。對照 2026 proxy（受益所有權，資料日 2026/1/31）：FMR LLC 126,698,928 股（14.95%）、The Vanguard Group 79,610,185 股（9.40%）、BlackRock 60,534,116 股（7.14%）。proxy 的 FMR 比例較 Yahoo 13F 高（Yahoo 僅計 FMR, LLC 6.49%），因申報主體與日期不同，請以口徑為準。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-10-06｜投資人日把 FY2028 營收展望上修到 US$20B、資料中心 18B；FY2029 客製逾 12B [本專案：邁威爾模型_v0.2.xlsx Recon!B6、Recon!B7、Recon!B9]；公司展望一年內由 13B 上修五次 [本專案：邁威爾模型_v0.2.xlsx Recon!J6]｜投資人日目標高於市場預期 [外部新聞：KSL]
 - 2026-08-27｜FY2027 Q2 財報：營收 US$2.74B、資料中心 2.17B；Q3 指引 3.15B、毛利率 58% [本專案：邁威爾模型_v0.2.xlsx Q!D4、Q!D5、Q!E4、Q!E16]

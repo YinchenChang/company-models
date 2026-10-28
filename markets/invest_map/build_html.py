@@ -10,6 +10,8 @@ import re
 import os
 import shutil
 import subprocess
+
+SEG_MODELS = ("MSFT", "GOOGL", "AMZN", "ORCL")  # v0.6：依個股模型原則重建，現價與日期取模型
 import tempfile
 
 import openpyxl
@@ -97,7 +99,7 @@ def main():
         p = prices[tk]
         valuation.append({
             "tk": tk, "name": d["公司"], "layer": d["層級"], "seg": d["次產業"], "method": d["方法"],
-            "ccy": p["幣別"], "price": num(d["採用價"]), "price_date": sources.get(tk, {}).get("date", p["模型價日期"]),
+            "ccy": p["幣別"], "price": num(d["採用價"]), "price_date": (p["模型價日期"] if tk in SEG_MODELS and p["模型價日期"] else sources.get(tk, {}).get("date", p["模型價日期"])),
             "price_src": sources.get(tk, {}).get("source", ""), "price_n": sources.get(tk, {}).get("sources_count", ""),
             "model_px": num(p["模型內現價"]), "model_date": p["模型價日期"], "move": num(d["模型價日以來漲跌"]),
             "flag": d["價格變動旗標"] or "",
@@ -122,8 +124,8 @@ def main():
     data = {
         "meta": {"version": os.path.basename(src).split("_")[-1].replace(".xlsx", ""),
                  "book": os.path.basename(src), "tk_file": snap["file"], "tk_version": snap["version"],
-                 "tk_commit": snap["commit"][:7], "cm_commit": cm, "built": "2026-10-26",
-                 "price_date": "半導體：各模型現價（2026-10-22／23）；雲端與模型商：2026-10-23 收盤",
+                 "tk_commit": snap["commit"][:7], "cm_commit": cm, "built": "2026-10-27",
+                 "price_date": "半導體：各模型現價（2026-10-22／23）；Microsoft、Alphabet、Amazon、Oracle：模型現價（2026-10-26 收盤）；其餘雲端與模型商：2026-10-23 收盤",
                  "pages": "https://yinchenchang.github.io/company-models/",
                  "private_models": {k: os.path.basename(glob.glob(os.path.join(ROOT, k, "dist", "*.html"))[0])
                                     for k in ("openai", "anthropic") if glob.glob(os.path.join(ROOT, k, "dist", "*.html"))}},

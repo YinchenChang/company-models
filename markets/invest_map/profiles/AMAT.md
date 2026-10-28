@@ -62,6 +62,29 @@ asof: 2026-10-25
 
 - 份額可能的上方：環繞式閘極（GAA）、背面供電、先進封裝；下方：中國國產替代與 Lam、TEL、KLA 競爭。本專案基準份額不變，只在敏感度 ±5% [本專案：應用材料模型_v0.2.xlsx In!I93；amat/README.md 對帳（Recon）第 2 點]。
 
+## 主要客戶
+- 10-K／10-Q 口徑：「two customers accounted for approximately X% and Y%, respectively, of our net revenue」，不具名。 [外部・未經本專案檢核]
+- FY2026 前九個月（至 2026/7/26）：兩家客戶約 20% 與 14%；其他客戶均未超過 10%（來源 2）。 [外部・未經本專案檢核]
+- FY2025：約 19% 與 15%；FY2024：約 12% 與 11%；FY2023：約 19% 與 15%（來源 1）。 [外部・未經本專案檢核]
+- 公開已知的具名主要客戶：未找到可靠的一手來源。AMAT 的 10-K／10-Q 未點名任何客戶（以代碼比對 10-K 全文，未出現 TSMC、Samsung、SK hynix、Micron 等名稱，僅 Intel 出現 1 次且非客戶揭露）。第三方網站（jaredwatkins.com，自述可能不完整、非申報文件）稱 TSMC、Intel、Samsung、SK hynix、Micron 為客戶，可信度低，僅供線索，需另以 AMAT 法說或產業報導佐證（來源 7）。嘗試過：10-K 全文關鍵字搜尋、10-Q、政策風險網站 policyrisk.com（只有不具名的 19%／15%）（來源 8）。 [外部・未經本專案檢核]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | BlackRock, Inc. | 約 10.11% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMAT Institutional Ownership（13F Q2 2026），2026 年，頁面未標發布日] |
+| 2 | Vanguard Capital Management LLC | 約 6.53% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMAT Institutional Ownership（13F Q2 2026），2026 年，頁面未標發布日] |
+| 3 | State Street Corp | 約 4.82% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMAT Institutional Ownership（13F Q2 2026），2026 年，頁面未標發布日] |
+| 4 | Invesco Ltd. | 約 3.56% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMAT Institutional Ownership（13F Q2 2026），2026 年，頁面未標發布日] |
+| 5 | Capital Research Global Investors | 約 2.79% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMAT Institutional Ownership（13F Q2 2026），2026 年，頁面未標發布日] |
+| 6 | Geode Capital Management, LLC | 約 2.77% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMAT Institutional Ownership（13F Q2 2026），2026 年，頁面未標發布日] |
+| 7 | Vanguard Portfolio Management LLC | 約 2.34% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMAT Institutional Ownership（13F Q2 2026），2026 年，頁面未標發布日] |
+| 8 | Morgan Stanley | 約 1.70% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMAT Institutional Ownership（13F Q2 2026），2026 年，頁面未標發布日] |
+| 9 | JPMorgan Chase & Co | 約 1.75% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMAT Institutional Ownership（13F Q2 2026），2026 年，頁面未標發布日] |
+| 10 | T. Rowe Price Associates | 約 1.59% | [外部・未經本專案檢核：資料日 2026-06-30；insiderset：AMAT Institutional Ownership（13F Q2 2026），2026 年，頁面未標發布日] |
+
+- 口徑：13F 機構持股（資料日 2026-06-30，Q2 2026），來自 insiderset.com 彙整頁（依申報價值排序；該頁無持股比例欄，以下比例為本檔自行以 10-Q 封面流通股數 793,597,443（2026/7/26）換算，僅供參考）。Vanguard 自 2026 年起 13F 拆成 Vanguard Capital Management 與 Vanguard Portfolio Management 兩個申報實體，合計約 70.4M 股（約 8.9%）。proxy（來源 5）列 5% 以上持有人：BlackRock 76,811,130 股 9.69%（13G，資料日 2023-12-31）、The Vanguard Group 74,116,511 股 9.35%（13G，2023-12-29），已較舊。 [外部・未經本專案檢核]
+- 注意：來源 6 的排序依申報價值，第 8、9 名股數順序與價值順序略有出入（Morgan Stanley 價值較高但股數較少），原樣保留。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-11-12（預定）｜FY2026 第四季財報｜換成實績並給 FY2027 第一季指引 [本專案：amat/README.md 資料狀態]
 - 2026-11-09｜BIS 關係企業規則暫停期到期｜若恢復，公司估年營收約少 US$600M [本專案：應用材料模型_v0.2.xlsx In!E95、H96]

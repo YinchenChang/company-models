@@ -56,6 +56,28 @@ AI 伺服器內部連接晶片商：PCIe 重定時器起家，成長重心正轉
 - NVLink Fusion 若開放第三方交換晶片，會改變 Scorpio X 的分母；乙太網路 scale-up 可能搶 UALink／PCIe 架構 [本專案：alab/README.md 最大限制；Astera Labs模型_v0.1.xlsx In!I103]。
 - 公司稱採用其平台的設計案，每顆加速器內容逾 1,000 美元；本專案以全部非 NVIDIA 加速器為分母，FY2028 只約 195 美元 [本專案：Astera Labs模型_v0.1.xlsx Recon!B15、Recon!C15]。
 
+## 主要客戶
+- 財報集中度原文口徑（占營收 ≥10% 的客戶；10-Q Q2 2026）：Customer A 29%（Q2 2026）、27%（Q2 2025）、29%（上半年 2026）、20%（上半年 2025）；Customer B 25%（Q2 2026）、<10%（Q2 2025）、21%（上半年 2026）；Customer C 15%、13%、17%（上半年 2026）、19%（上半年 2025）；Customer D 13%、24%、13%（上半年 2026）、23%（上半年 2025）；Customer E <10%（Q2 2026）、11%（Q2 2025）；Customer F <10%（Q2 2026）、12%（Q2 2025）、<10%（上半年 2026）、15%（上半年 2025）。公司註明：列示客戶中有些是為其終端客戶代購的製造夥伴，終端客戶可能在製造夥伴間調整出貨量，故個別直接客戶的集中度可能波動。 [外部・未經本專案檢核：Astera Labs Form 10-Q，期間至 2026-06-30，2026-08-05]
+- FY2025 10-K（占營收 ≥10%）：Customer A 20%、B 20%（FY2024 11%）、C 17%、D 16%（FY2024 24%、FY2023 37%）、E 11%；FY2024：Customer F 36%、D 24%、B 11%；FY2023：D 37%、F 24%、G 18%。應收帳款集中度 2025/12/31：Customer C 14%、D 27%、E 28%。 [外部・未經本專案檢核：Astera Labs Form 10-K，FY2025，2026-02-20]
+- 所有客戶皆未具名（Customer A–G）。 [外部・未經本專案檢核]
+- 公開已知具名客戶：未找到可引用來源（10-K 僅稱「shipping millions of devices across leading hyperscalers」；本次因搜尋額度用盡，無法查證法說會／新聞稿）。外界常見說法為 Amazon/AWS（曾發行認股權證予客戶，S-1 時期）、Microsoft、Google、Meta 及 NVIDIA 平台生態，但未經查證，不可視為已證實。 [外部・未經本專案檢核：Astera Labs Form 10-Q，期間至 2026-06-30，2026-08-05；Astera Labs Form 10-K，FY2025，2026-02-20]
+
+## 前十大股東
+| 排名 | 股東 | 持股比例 | 標記 |
+|---|---|---|---|
+| 1 | FMR LLC | 14.32% | [外部・未經本專案檢核：資料日 2026/6/30；InsiderSet ALAB Institutional Ownership（13F 2026-06-30），擷取日 2026-10-27] |
+| 2 | BlackRock, Inc. | 7.89% | [外部・未經本專案檢核：資料日 2026/6/30；InsiderSet ALAB Institutional Ownership（13F 2026-06-30），擷取日 2026-10-27] |
+| 3 | Vanguard Portfolio Management LLC | 4.55% | [外部・未經本專案檢核：資料日 2026/6/30；InsiderSet ALAB Institutional Ownership（13F 2026-06-30），擷取日 2026-10-27] |
+| 4 | Vanguard Capital Management LLC | 3.88% | [外部・未經本專案檢核：資料日 2026/6/30；InsiderSet ALAB Institutional Ownership（13F 2026-06-30），擷取日 2026-10-27] |
+| 5 | Invesco Ltd. | 2.83% | [外部・未經本專案檢核：資料日 2026/6/30；InsiderSet ALAB Institutional Ownership（13F 2026-06-30），擷取日 2026-10-27] |
+| 6 | State Street Corp | 2.12% | [外部・未經本專案檢核：資料日 2026/6/30；InsiderSet ALAB Institutional Ownership（13F 2026-06-30），擷取日 2026-10-27] |
+| 7 | Geode Capital Management, LLC | 1.61% | [外部・未經本專案檢核：資料日 2026/6/30；InsiderSet ALAB Institutional Ownership（13F 2026-06-30），擷取日 2026-10-27] |
+| 8 | T. Rowe Price Associates Inc | 1.39% | [外部・未經本專案檢核：資料日 2026/6/30；InsiderSet ALAB Institutional Ownership（13F 2026-06-30），擷取日 2026-10-27] |
+| 9 | Van Eck Associates Corp | 1.29% | [外部・未經本專案檢核：資料日 2026/6/30；InsiderSet ALAB Institutional Ownership（13F 2026-06-30），擷取日 2026-10-27] |
+| 10 | 未找到（BCV 一列數據異常已剔除） | — | — [外部・未經本專案檢核] |
+
+- 口徑：13F 機構持股（資料日 2026/6/30，InsiderSet 彙整）。InsiderSet 該頁不提供占流通股比例（其「Portfolio %」是該機構投資組合中配置 ALAB 的比重，非占 ALAB 股本），故下表「持股比例」為本檔以 2026/6/30 流通股 173,485 千股（10-Q 資產負債表）自行計算，標註為估算。Yahoo Finance 的 ALAB 持股頁無法載入（Nasdaq 頁亦無資料）。Banque Cantonale Vaudoise 一列數據（5,539 股卻報 26.75 億美元）明顯有誤，已剔除，因此僅列 9 家。對照 2026 proxy（受益所有權，資料日 2026/3/1，流通股 171,246,523）：FMR LLC 關係企業 23,498,437 股（13.7%）、Vanguard 12,049,223 股（7.0%）、BlackRock 10,507,515 股（6.1%）；董事與高管合計 17,751,334 股（10.4%），其中 Jitendra Mohan 7,789,805 股（4.5%）、Sanjay Gajendra 7,433,347 股（4.3%）、Manuel Alba 1,923,361 股（1.1%）。 [外部・未經本專案檢核]
+
 ## 近期重大事件
 - 2026-09-21｜半導體類股反彈，股價單日漲約 12%；執行長在花旗會議稱 Scorpio X 已對主要客戶量產出貨 [外部新聞：TIKR]
 - 2026-09-10｜d-Matrix 採用 NVIDIA NVLink Fusion，Astera Labs 為連接夥伴，系統預計 2027 年底進 NVIDIA MGX 機架 [外部新聞：TIKR]
