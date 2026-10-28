@@ -1,0 +1,55 @@
+# Wattonomics 全球 AI 園區候選表（API 版，2026-10-28 起；說明見 tools/wattonomics_api/README.md）
+# 觸發：(1) push 到 claude/wattonomics-sites 且 requests/ 有請求檔；(2) 手動 workflow_dispatch（須本檔已在預設分支）。
+# 結果 commit 到 claude/wattonomics-sites（不寫 main、不寫 Excel）；分支有 PR 時留言摘要。參考用，不阻擋合併。
+name: wattonomics-site-pipeline
+on:
+  push:
+    branches: [claude/wattonomics-sites]
+    paths: ["tools/wattonomics_api/site_pipeline/requests/*.json", "tools/wattonomics_api/site_pipeline/sites.py",
+            "tools/wattonomics_api/common.py", ".github/workflows/wattonomics-site-pipeline.yml"]
+  workflow_dispatch:
+    inputs:
+      max_sites: {description: "園區數上限（冒煙測試填 3；正式 150）", required: false, default: "3"}
+      expand: {description: "是否用 web search 擴充到 100–150 個（true／false）", required: false, default: "false"}
+      searches_per_site: {description: "每園區 web search 上限（≤8）", required: false, default: "3"}
+      cost_cap_usd: {description: "本次費用上限 US$", required: false, default: "1"}
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+concurrency:
+  group: wattonomics-api-budget
+  cancel-in-progress: false
+jobs:
+  sites:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v5
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v6
+        with: {python-version: "3.12"}
+      - name: Request from dispatch inputs
+        if: github.event_name == 'workflow_dispatch'
+        env: {N: "${{ inputs.max_sites }}", EXP: "${{ inputs.expand }}", S: "${{ inputs.searches_per_site }}", CAP: "${{ inputs.cost_cap_usd }}"}
+        run: |
+          python3 - <<'PY'
+          import json, os, time
+          d = "tools/wattonomics_api/site_pipeline/requests"; os.makedirs(d, exist_ok=True)
+          req = {"max_sites": int(os.environ["N"] or 3), "expand": os.environ["EXP"].strip().lower() == "true",
+                 "searches_per_site": int(os.environ["S"] or 3), "cost_cap_usd": float(os.environ["CAP"] or 1)}
+          json.dump(req, open(f"{d}/{time.strftime('%Y%m%d_%H%M')}_dispatch.json", "w"), indent=2)
+          PY
+      - name: Sites
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PRIOR_SPEND_USD: ${{ vars.API_PRIOR_SPEND_USD || '40' }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p tools/wattonomics_api/site_pipeline/out
+          set -o pipefail
+          python3 -u tools/wattonomics_api/site_pipeline/sites.py 2>&1 | tee tools/wattonomics_api/site_pipeline/out/_run.log
+      - name: Commit outputs
+        if: always()
+        run: |
+          .github/scripts/wattonomics_commit.sh tools/wattonomics_api/site_pipeline claude/wattonomics-sites "wattonomics site-pipeline: 園區候選表 $(date -u +%F)"
