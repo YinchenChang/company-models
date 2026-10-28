@@ -14,13 +14,14 @@
 |---|---|
 | `build_kioxia.py` | 產生器（README、In、Q、Units、PL、Val、Recon、Sens、Sources；結構比照 `sndk/`） |
 | `html.json` | HTML 展示層設定（七章；`tools/company_html`） |
-| `dist/20261025_Kioxia模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
-| `dist/20261025_Kioxia模型_v0.1.html` | 單頁 HTML（數字皆標註來源儲存格） |
+| `dist/20261028_Kioxia個股模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_Kioxia個股模型_v0.2.html` | 單頁 HTML（數字皆標註來源儲存格） |
 
 建置：`python3 kioxia/build_kioxia.py raw.xlsx` → `soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML"` → 改名放 `dist/`；`python3 tools/company_html/build_company_html.py kioxia`、`check_company_html.py kioxia`。
 
 ## 驅動因子 → 推導量
 
+- **營收分部（v0.2，分部原則）**：官方分部 SSD 與儲存／智慧裝置／其他（`segments.json`）。FY2025 各季取公司決算轉載（第二季由占比換算，Derived）；其他＝營收 − 兩主分部。FY2026 第一季為實績，之後＝營收 × SSD 與儲存占比、其他占比（In 頁，Assumed），智慧裝置為差額。命題子列「SSD 與儲存：AI 相關」＝SSD 與儲存 × markets/nand 的 AI 企業級 SSD 占（企業級＋PC）SSD 位元（會計年度 ≈ 0.75 × 當年＋0.25 × 次年）。分部拆分不改合併營收與 EPS；核對列（季、年）皆為 0。
 - **Units**：`markets/nand/dist` 的 Kioxia 季度營收（市場營收 × 份額，美元）與位元，三情境同字母。份額由市場層提供（2026Q3 由公司第二季指引 ¥2,390B ÷ 162 ÷ 公司口徑係數推得；2027 起依合資群份額年變動），與 `sndk/` 讀同一組列，兩家份額合計＝市場層合資群份額。
 - **PL**：營收＝市場層 × 公司口徑係數 1.030（含其他營收）× 匯率 160；營業成本＝位元 × 每 EB 成本（日圓；以第二季指引校準：營收 − 營業利益 − 推估營業費用 70，之後每年 ×(1 − 成本年降)）；淨利＝（營業利益＋業外 −15／季＋淨現金收益）×(1 − 32%)；自由現金流＝淨利＋折舊 320 − 資本支出（¥450B／¥470B）；股東回饋＝20% × FCF（以買回計）。
 - 會計年度 4 月到隔年 3 月（FY2026 ≈ CY2026Q2–CY2027Q1）；FY2026＝第一季實績＋第二季指引＋第三、四季推導。前瞻 EPS 依月份調整：12 個月後（約 2027-10）的未來 12 月＝5／12 FY2027＋7／12 FY2028。每股數字為 2026-10-01 一股分三股後（流通 1,644.0 百萬股）。
