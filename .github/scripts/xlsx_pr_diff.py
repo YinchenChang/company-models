@@ -134,6 +134,12 @@ def aligned(vals, forms, wb, dup=frozenset()):
     return kv, kf, where
 
 
+def short(k, n=40):
+    """顯示用：把「［標籤］」截成 n 字以內並保留成對括號。"""
+    t = k[1:-1] if k.startswith("［") and k.endswith("］") else k
+    return "［" + (t if len(t) <= n else t[: n - 1] + "…") + "］"
+
+
 def diff_pair(new_b, old_b, max_lines):
     nv, ov = load(new_b, True), load(old_b, True)
     nf, of = load(new_b, False), load(old_b, False)
@@ -178,14 +184,14 @@ def diff_pair(new_b, old_b, max_lines):
     ok, okf, owhere = rekey(ok, ren_old), rekey(okf, ren_old), rekey(owhere, ren_old)
     nk, nkf, nwhere = rekey(nk, ren_new), rekey(nkf, ren_new), rekey(nwhere, ren_new)
     if renamed:
-        lines.append(f"標籤改名的列（依列號逐格比較）：{len(renamed)}：" + "、".join(f"{o[0]}{o[1][:30]}→{n[1][:30]}" for o, n, _ in renamed[:20]))
+        lines.append(f"標籤改名或同位置替換的列（依列號逐格比較；若實為替換，下列數值變動是兩個不同項目的差，不是調整）：{len(renamed)}：" + "、".join(f"{o[0]}{short(o[1])}→{short(n[1])}" for o, n, _ in renamed[:20]))
     nofc = sum(1 for k, f in nkf.items() if isinstance(f, str) and f.startswith("=") and nk.get(k) is None)
     nform = sum(1 for f in nkf.values() if isinstance(f, str) and f.startswith("="))
     if nform and nofc / nform > 0.05:
         lines.append(f"**警示：新版 {nofc}/{nform} 個公式格沒有快取值（可能未經 Excel／LibreOffice 重算），計算結果的比較不可靠。**")
     if add_rows or del_rows:
-        lines.append(f"新增的列（依列標籤）：{len(add_rows)}" + ("：" + "、".join(f"{a}{t}" for a, t in add_rows[:30]) if add_rows else "")
-                     + f"；移除的列：{len(del_rows)}" + ("：" + "、".join(f"{a}{t}" for a, t in del_rows[:30]) if del_rows else ""))
+        lines.append(f"新增的列（依列標籤）：{len(add_rows)}" + ("：" + "、".join(f"{a}{short(t)}" for a, t in add_rows[:30]) if add_rows else "")
+                     + f"；移除的列：{len(del_rows)}" + ("：" + "、".join(f"{a}{short(t)}" for a, t in del_rows[:30]) if del_rows else ""))
     num_in, num_out, txt, form, by_sheet = [], [], [], [], {}
     skip_rows = set(add_rows) | set(del_rows)
     for k in set(nk) | set(ok):
@@ -273,7 +279,8 @@ def build(files, base_sha, head_sha, max_chars=60000, max_lines=150):
         block = head + body + "\n"
         if used + len(block) > max_chars:
             tail = "\n…（Excel 變動超過上限，以下截斷）\n"
-            block = block[: max(0, max_chars - used - len(tail))] + tail
+            room = max_chars - used
+            block = (block[: room - len(tail)] + tail) if room > len(tail) else ""
             parts.append(block)
             done.add(path)
             notes.append(f"{path}（Excel 變動部分截斷）")

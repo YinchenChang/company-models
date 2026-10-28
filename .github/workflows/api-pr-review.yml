@@ -5,7 +5,7 @@
 # - 用 secrets.ANTHROPIC_API_KEY（Max 方案每月 API credit），結果留言在 PR。
 # - 參考用，不阻擋合併（與 CLAUDE.md「CI 不阻擋」一致）；錯誤只留言，工作流程不失敗。
 # - 費用控制：送文字 diff，xlsx 改送逐格差異（.github/scripts/xlsx_pr_diff.py，2026-10-28 起；其他二進位略過），總量上限 REVIEW_MAX_CHARS
-#   （2026-10-28 由 120,000 調為 160,000、逾時 15→25 分，因加入 Excel 變動；每次約多 US$0.1–0.3）。
+#   （2026-10-28 由 120,000 調為 160,000、逾時 15→25 分，因加入 Excel 變動；推估每次多 0–40,000 字元，以 Opus 5.5 輸入 US$4／百萬 token、約 1–1.5 字元／token 計約 US$0.1–0.2）。
 # - concurrency 放在 job 層：只有真正執行的核對才互相取消；一般留言（job 被 if 略過）不會取消進行中的核對。
 name: api-pr-review
 on:
