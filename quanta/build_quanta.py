@@ -81,9 +81,9 @@ inp("odm_gb", *SIL.row9("asm_odm_gb")[1:])   # Siliconomics M18
 inp("odm_vr", *SIL.row9("asm_odm_vr")[1:])   # Siliconomics M18
 inp("vpg_28", "每 GW ODM 整櫃價值 2028 ÷ 2027（Rubin Ultra）", "x", 0.85, 1.0, 1.2, "Assumed", "Rubin Ultra（Kyber）每櫃價格與每 GW 架數：未找到", "每 GW 價值 GB300 約 27.1B → VR200 約 27.4B（4.0 × 6,764 vs 6.75 × 4,052）：換世代時每 GW 大致持平")
 inp("vpg_29", "每 GW ODM 整櫃價值 2029 ÷ 2027", "x", 0.85, 1.0, 1.2, "Assumed", "同上", "—")
-inp("rel_27", "廣達 AI 伺服器有效份額 2027 ÷ 2026（相對值）", "x", 0.85, 1.0, 1.1, "Assumed", UDN0910 + "：美系券商 8 月調查 鴻海約 2,600 櫃、廣達 2,500–2,550、緯創 2,300–2,400（Interested-party，單一來源）", "公司：前五大 CSP 為主，Neocloud GPU 與 CSP ASIC 專案小量出貨（2Q26 法說）；Neocloud 繞過 OEM 找 ODM（FTNN 2026-10-09）")
-inp("rel_28", "廣達份額 2028 ÷ 2026", "x", 0.75, 0.95, 1.1, "Assumed", "同上；台灣組裝產能 2028 再翻倍（公司）", "—")
-inp("rel_29", "廣達份額 2029 ÷ 2026", "x", 0.70, 0.90, 1.1, "Assumed", "同上", "—")
+inp("rel_27", "廣達 AI 伺服器有效份額 2027 ÷ 2026（相對值）", "x", *SIL.vals("asm_qurel_27"), "Assumed", UDN0910 + "：美系券商 8 月調查 鴻海約 2,600 櫃、廣達 2,500–2,550、緯創 2,300–2,400（Interested-party，單一來源）", "公司：前五大 CSP 為主，Neocloud GPU 與 CSP ASIC 專案小量出貨（2Q26 法說）；Neocloud 繞過 OEM 找 ODM（FTNN 2026-10-09）")
+inp("rel_28", "廣達份額 2028 ÷ 2026", "x", *SIL.vals("asm_qurel_28"), "Assumed", "同上；台灣組裝產能 2028 再翻倍（公司）", "—")
+inp("rel_29", "廣達份額 2029 ÷ 2026", "x", *SIL.vals("asm_qurel_29"), "Assumed", "同上", "—")
 inp("cs_27", "客供比例 2027（AI 毛額價值中改為客戶供料、不計營收的比例）", "%", 0.0, 0.10, 0.25, "Assumed", FUGLE + "：3Q26 起部分高價關鍵料件改客供，GPU 與 ASIC 客戶都有；比重仍低（公司）", KGI + "：2H26 客供比重小，營益率持平 1H26")
 inp("cs_28", "客供比例 2028", "%", 0.0, 0.20, 0.40, "Assumed", "同上；公司與客戶協商轉換以提高利潤率（Taipei Times 2026-05-15）", "—")
 inp("cs_29", "客供比例 2029", "%", 0.0, 0.25, 0.50, "Assumed", "同上", "—")

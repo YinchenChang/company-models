@@ -345,6 +345,34 @@ def main():
                 ST.cell(r, 4 + j, f"=1-{col}{r-1}").number_format = "0.0%"
             r += 2
             ST.column_dimensions["H"].width = 9
+        if "asm_qush_26" in INROW:
+            KS = ("bw", "rb", "ru", "hp", "amd", "tpu", "trn", "oth")
+            def un(k, y): return f"u_{k}_{y}" if y <= 28 else f"u_{k}_28*(1+g29_{k})"
+            def usum(ks, y): return "(" + "+".join(un(k, y) for k in ks) + ")"
+            ST.cell(r, 1, "AI 伺服器組裝有效份額（欄 D–G＝2026／2027／2028／2029；分母＝Rack 頁 AI 伺服器組裝市場〔ODM 價〕；2026＝公司模型校準快照，之後 × 份額相對值；不隨情境）").font = BOLD; r += 1
+            ST.cell(r, 1, "AI 伺服器組裝"); ST.cell(r, 2, "緯穎 ASIC 傾斜係數（x）"); ST.cell(r, 3, "asm_wyam ×（Trainium＋其他 ASIC 顆數指數 ÷ 全部顆數指數）＋（1 − asm_wyam）")
+            for j, y in enumerate((26, 27, 28, 29)):
+                f = "=1" if y == 26 else f"=asm_wyam*({usum(('trn', 'oth'), y)}/{usum(('trn', 'oth'), 26)})/({usum(KS, y)}/{usum(KS, 26)})+(1-asm_wyam)"
+                ST.cell(r, 4 + j, f).number_format = "0.000"
+            STROW["asm_tilt"] = r; r += 1
+            r_first = r
+            for who, k in (("廣達", "qu"), ("鴻海", "fx"), ("緯創本體", "wi"), ("緯穎（× ASIC 傾斜）", "wy")):
+                ST.cell(r, 1, "AI 伺服器組裝"); ST.cell(r, 2, who); ST.cell(r, 3, f"asm_{k}sh_26 × asm_{k}rel_27／28／29" + (" × 傾斜係數" if k == "wy" else ""))
+                for j, y in enumerate((26, 27, 28, 29)):
+                    f = f"=asm_{k}sh_26" + ("" if y == 26 else f"*asm_{k}rel_{y}") + (f"*{'DEFG'[j]}{STROW['asm_tilt']}" if k == "wy" and y > 26 else "")
+                    ST.cell(r, 4 + j, f).number_format = "0.0%"
+                r += 1
+            ST.cell(r, 1, "AI 伺服器組裝"); ST.cell(r, 2, "合計").font = BOLD
+            for j in range(4):
+                col = "DEFG"[j]
+                c = ST.cell(r, 4 + j, f"=SUM({col}{r_first}:{col}{r-1})"); c.number_format = "0.0%"; c.fill = KEY
+            STROW["sum_asm"] = r; r += 1
+            ST.cell(r, 1, "AI 伺服器組裝"); ST.cell(r, 2, "餘額（英業達、Celestica、Dell、美超微、HPE 等，未建模）")
+            for j in range(4):
+                col = "DEFG"[j]
+                ST.cell(r, 4 + j, f"=1-{col}{r-1}").number_format = "0.0%"
+            r += 1
+            ST.cell(r, 1, "註：Dell、美超微以整櫃售價計（Rack 頁 B 節商用 GPU 系統市場），分母不同，不入本表；緯創模型自算的緯穎份額路徑與本表不同（CF23）"); r += 2
         ST.column_dimensions["A"].width = 30; ST.column_dimensions["B"].width = 26; ST.column_dimensions["C"].width = 34
         for col in "DEF": ST.column_dimensions[col].width = 9
 
@@ -893,6 +921,17 @@ def main():
                 c = IF.cell(r, 5 + j, f"=ShareTbl!{'DEFG'[j]}{sr}"); c.font = GREEN; c.number_format = "0.0%"
             IF.cell(r, 9, f"ShareTbl!D{sr}:G{sr}")
             name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
+    if ST is not None and "sum_asm" in STROW:
+        r += 1
+        IF.cell(r, 1, "B11. AI 伺服器組裝份額（ShareTbl 頁；欄 E–H＝2026–2029）").font = BOLD; r += 1
+        for nm_, lab, sr, fm in (("SIF_AsmShareSum", "廣達＋鴻海＋緯創本體＋緯穎組裝有效份額合計", STROW["sum_asm"], "0.0%"),
+                                 ("SIF_AsmWyTilt", "緯穎 ASIC 傾斜係數", STROW["asm_tilt"], "0.000"),
+                                 ("SIF_AsmShare_wy", "緯穎組裝有效份額（× ASIC 傾斜）", STROW["sum_asm"] - 1, "0.0%")):
+            IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, "x" if "Tilt" in nm_ else "%")
+            for j in range(4):
+                c = IF.cell(r, 5 + j, f"=ShareTbl!{'DEFG'[j]}{sr}"); c.font = GREEN; c.number_format = fm
+            IF.cell(r, 9, f"ShareTbl!D{sr}:G{sr}")
+            name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
     if ST is not None and "sum_hbm" in STROW:
         r += 1
         IF.cell(r, 1, "B10. HBM 營收份額合計（ShareTbl 頁；欄 D–H＝2025–2029）").font = BOLD; r += 1
@@ -1003,6 +1042,11 @@ def main():
                 CK.cell(r, 1, f"K6-lc{s_}{y}"); CK.cell(r, 2, f"AI 液冷 {y} 奇鋐＋雙鴻＋健策有效份額合計 ≤ 100%（情境 {s_}）")
                 CK.cell(r, 3, f"=ShareTbl!{'DEFG'[j]}{STROW['sum_lc' + s_]}"); CK.cell(r, 4, 1)
                 CK.cell(r, 6, f'=IF(C{r}<=1+1E-9,"OK","ERROR")'); CK.cell(r, 7, "驗證（加總受限）"); r += 1
+    if ST is not None and "sum_asm" in STROW:
+        for j, y in enumerate((2026, 2027, 2028, 2029)):
+            CK.cell(r, 1, f"K6-asm{y}"); CK.cell(r, 2, f"AI 伺服器組裝 {y} 廣達＋鴻海＋緯創本體＋緯穎有效份額合計 ≤ 100%")
+            CK.cell(r, 3, f"=ShareTbl!{'DEFG'[j]}{STROW['sum_asm']}"); CK.cell(r, 4, 1)
+            CK.cell(r, 6, f'=IF(C{r}<=1+1E-9,"OK","ERROR")'); CK.cell(r, 7, "驗證（加總受限）"); r += 1
     if ST is not None and "sum_hbm" in STROW:
         for j, y in enumerate((2025, 2026, 2027, 2028, 2029)):
             CK.cell(r, 1, f"K6-hbm{y}"); CK.cell(r, 2, f"HBM {y} SK 海力士＋三星＋美光營收份額合計 ≤ 100%")
@@ -1072,6 +1116,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.8.1：新增 M25（AI 伺服器組裝：廣達、鴻海、緯創本體、緯穎 FY2026 有效份額快照與 2027–29 份額相對值、緯穎 ASIC 比重；原在 quanta、foxconn、wistron、wiwynn）、ShareTbl 的組裝份額表（含緯穎 ASIC 傾斜係數）、Checks K6-asm、Interface SIF_AsmShareSum、SIF_AsmWyTilt、SIF_AsmShare_wy；CF23 登錄（緯創模型的緯穎份額路徑與緯穎模型不同）。", False),
         ("v0.8：新增 M24（HBM 營收份額：SK 海力士、三星、美光 2025–2029；原在各公司 company.py）、ShareTbl 的 HBM 份額表、Checks K6-hbm、Interface SIF_HBMShareSum；台積電的 HBM 2027 缺口改讀 SIF_HBM_GapEB_A ÷ SIF_HBM_SupplyEB（原手打 21%）。", False),
         ("v0.7.1：新增 M22（HBM 堆疊技術：核心晶粒容量、堆疊層數、混合鍵合占比 2025–2030；原在 disco，hanmi、besi 同讀）、M23（NAND 市場輸入：每顆加速器企業級 SSD 容量、2025 位元基期與應用結構、各應用與供給位元年增、各廠季營收、份額年變動；原在 markets/nand）、Equip 頁 D 節、Interface SIF_HBMHybrid_*。", False),
         ("v0.7：新增 M20（設備市場層的行業輸入：SEMI 年中預測、2029 外推、其他晶圓廠設備成長與 2025 資本支出、設備情境係數、AI 分類、券商 WFE；原在 markets/equipment）、M21（測試設備：SoC／記憶體測試機市場錨點、非 AI SoC、每顆測試時間係數、HBM 權重、泰瑞達測試 ÷ WFE 區間；原在 advantest、ter）與 Equip 頁（SEMI 分項路徑、SoC 測試機市場三情境、測試 ÷ WFE〔CF15〕）、Checks K8、Interface SIF_SEMI_*、SIF_TestSoCMkt_*、SIF_TestWFE_*。", False),

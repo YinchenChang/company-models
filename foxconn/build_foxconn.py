@@ -9,6 +9,8 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
+sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
+import reader as SIL   # Siliconomics 快照（行業變數單一來源）
 import cycle_position as CP
 import valuation_rule as VR
 
@@ -103,9 +105,9 @@ inp("odm_gb", "ODM 每櫃價格 GB300（廣達模型）", "US$M/架", QU["odm_gb
 inp("odm_vr", "ODM 每櫃價格 VR200（廣達模型）", "US$M/架", QU["odm_vr"][0], QU["odm_vr"][1], QU["odm_vr"][2], "Derived", QU["odm_vr"][3], "同上")
 inp("vpg_28", "每 GW ODM 整櫃價值 2028 ÷ 2027（Rubin Ultra；廣達模型）", "x", QU["vpg_28"][0], QU["vpg_28"][1], QU["vpg_28"][2], "Assumed", QU["vpg_28"][3], "廣達模型的 Assumed：Rubin Ultra 每櫃價格與每 GW 架數未找到")
 inp("vpg_29", "每 GW ODM 整櫃價值 2029 ÷ 2027（廣達模型）", "x", QU["vpg_29"][0], QU["vpg_29"][1], QU["vpg_29"][2], "Assumed", QU["vpg_29"][3], "同上")
-inp("rel_27", "鴻海 AI 伺服器有效份額 2027 ÷ 2026（相對值）", "x", 0.85, 1.0, 1.15, "Assumed", "公司：Vera Rubin 市占目標五成、ASIC 市佔目標四成以上（2Q26 法說，富果）", UDN0827 + "：法人預期鴻海 VR200 整體市占 40% 以上、部分客戶超過 50%（Interested-party）")
-inp("rel_28", "鴻海份額 2028 ÷ 2026", "x", 0.75, 1.0, 1.15, "Assumed", "同上；廣達、緯創同時擴產（廣達模型假設廣達份額 0.95）", "—")
-inp("rel_29", "鴻海份額 2029 ÷ 2026", "x", 0.70, 0.95, 1.15, "Assumed", "同上", "—")
+inp("rel_27", "鴻海 AI 伺服器有效份額 2027 ÷ 2026（相對值）", "x", *SIL.vals("asm_fxrel_27"), "Assumed", "公司：Vera Rubin 市占目標五成、ASIC 市佔目標四成以上（2Q26 法說，富果）", UDN0827 + "：法人預期鴻海 VR200 整體市占 40% 以上、部分客戶超過 50%（Interested-party）")
+inp("rel_28", "鴻海份額 2028 ÷ 2026", "x", *SIL.vals("asm_fxrel_28"), "Assumed", "同上；廣達、緯創同時擴產（廣達模型假設廣達份額 0.95）", "—")
+inp("rel_29", "鴻海份額 2029 ÷ 2026", "x", *SIL.vals("asm_fxrel_29"), "Assumed", "同上", "—")
 inp("cs_27", "客供比例 2027（AI 毛額價值中改為客戶供料、不計營收的比例）", "%", 0.0, 0.10, 0.25, "Assumed", FUG2 + "：客供目前主要用於 ASIC 專案，未來 GPU 與 ASIC 都可能採用、占比逐步提升（公司；未給比例）", CNY1 + "：1Q26 雲端網路因營收認列模式改變低於預期、不影響獲利（公司）；與廣達模型同值")
 inp("cs_28", "客供比例 2028", "%", 0.0, 0.20, 0.40, "Assumed", "同上", "—")
 inp("cs_29", "客供比例 2029", "%", 0.0, 0.25, 0.50, "Assumed", "同上", "—")
