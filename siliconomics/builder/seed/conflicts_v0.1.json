@@ -328,5 +328,20 @@
   "target": "v0.2",
   "status": "已併入 v0.4",
   "origin": "Siliconomics 盤點 2026-10-27"
+ },
+ {
+  "id": "CF23",
+  "sub": "伺服器組裝",
+  "var": "緯穎 AI 有效份額路徑（2027–29）",
+  "unit": "%",
+  "a_loc": "wistron PL「緯穎 AI 有效份額」（wsh0 × wrel_*）",
+  "a_val": "3.42／3.42／3.42／3.25（2026–29）",
+  "b_loc": "wiwynn PL「緯穎有效份額」（sh0 × rel × ASIC 傾斜係數）；本庫 ShareTbl",
+  "b_val": "3.45／4.99／5.09／4.89",
+  "kind": "同一變數、兩模型不同路徑",
+  "proposal": "單一來源應為緯穎模型（含 ASIC 傾斜與客供）：緯創模型的緯穎部分改讀緯穎模型，或至少 wrel 改讀本庫緯穎份額相對值。會改變緯創 EPS；v0.8.1 只登錄並試算，預設暫不改",
+  "target": "待 Andy",
+  "status": "待 Andy（v0.8.1 已試算；預設暫不改）",
+  "origin": "Siliconomics v0.8.1 盤點"
  }
 ]

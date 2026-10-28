@@ -36,5 +36,6 @@
 | v0.7 | 2026-10-28 | 新增輸入 `SIF_eq_*`（55 個：SEMI 年中預測、2029 外推、其他晶圓廠設備成長與 2025 資本支出、設備情境係數、AI 分類、券商 WFE）、`SIF_ts_*`（18 個：測試機市場錨點、非 AI SoC、每顆測試時間係數、HBM 權重、泰瑞達區間）；推導 `SIF_SEMI_*`（2025–2029）、`SIF_TestSoCMkt_*`、`SIF_TestWFE_SEMI`、`SIF_TestWFE_SoC` | markets/equipment、advantest、ter 的 `inp` 遇到本庫有的鍵（加前綴 `eq_`／`ts_`）自動改讀 `row9`；ter 建檔時核對 Advantest 成品的 SoC 測試機市場 |
 | v0.7.1 | 2026-10-28 | 新增輸入 `SIF_hbm_*`（18 個：核心晶粒容量、堆疊層數、混合鍵合占比 2025–2030）、`SIF_nd_*`（61 個：NAND 市場輸入）；推導 `SIF_HBMHybrid_*`（2025–2029） | disco、markets/nand 的 `inp` 遇到本庫鍵（前綴 `hbm_`／`nd_`）改讀 `row9`；hanmi、besi 由讀 Disco 成品改讀 `vals` |
 | v0.8 | 2026-10-28 | 新增輸入 `SIF_hbmsh_*`（15 個：SK 海力士、三星、美光 HBM 營收份額 2025–2029）；推導 `SIF_HBMShareSum`（2025–2029） | skhynix、samsung、micron 的 company.py 以 `vals` 讀 sh25–sh29（標籤與來源文字留在公司檔）；tsmc 的 `hbm_gap27` 改由 `SIF_HBM_GapEB_A ÷ SIF_HBM_SupplyEB` 推得 |
+| v0.8.1 | 2026-10-28 | 新增輸入 `SIF_asm_*`（17 個：廣達、鴻海、緯創本體、緯穎 FY2026 有效份額快照與 2027–29 份額相對值、緯穎 ASIC 比重）；推導 `SIF_AsmShareSum`、`SIF_AsmWyTilt`、`SIF_AsmShare_wy`（2026–2029） | quanta、foxconn、wistron 的 `rel_*`，wiwynn 的 `rel_*`、`asic_mix` 改以 `vals` 讀（標籤與來源文字留在公司檔） |
 
 版本號：只改證據、標記、文字為修補版（v0.1.x）；輸入值或公式改變為次版（v0.x）；Interface 名稱刪除或定義改變為主版（v1.0 前只新增名稱以次版處理）。
