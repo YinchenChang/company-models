@@ -14,6 +14,9 @@ ABF 營收＝MIN（需求, 產能）。需求由三部分組成：
 
 **投資建議：放空**（依上檔空間固定規則：加權目標價上檔空間 −33.0%，落在 −50%～−25%）。
 
+
+- **營收分部（v0.2，分部原則）**：公司產品別 IC 載板（子列 ABF、BT）／HDI 與 PCB（公司分列 HDI 27%、PCB 11%，本模型合併）／軟板與其他（`segments.json`）；新增母列與核對列（FY2026 錨點起）；EPS 與目標價不變。
+
 ## 重點觀察
 
 1. 目標價 NT$727（DCF 389、Comparable 1,065 各半），比現價 1,085（2026-10-22）低 33.0%，級距 −25%～−50%；Comparable 單獨為 −1.8%。主因是 DCF 不是 EPS：本模型前瞻 EPS 24.54 只比共識前瞻 EPS 25.66 低 4.4%，同業前瞻 P/E 中位數 43.4 倍與現價 ÷ 共識前瞻 EPS 42.3 倍相近；DCF 用每股（淨利＋折舊 − 資本支出），擴產期 FY2027 情境 A 每股現金流 9.16 只有 EPS 27.51 的 33%，DCF 比現價低 64.2%（改用 EPS ×（1 − g／ROE）只有 249，因 ROE 8.6% 低於折現率 10%）。
@@ -30,9 +33,9 @@ AI 半導體 Project 載板與 PCB 次產業的第二個模型，樣板為 `ibid
 | 檔案 | 內容 |
 |---|---|
 | `build_unimicron.py` | 產生器（參數與公式；上游成品唯讀） |
-| `dist/20261025_欣興模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_欣興個股模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章） |
-| `dist/20261025_欣興模型_v0.1.1.html` | HTML 展示層（數字全部由 xlsx 抽出） |
+| `dist/20261028_欣興個股模型_v0.2.html` | HTML 展示層（數字全部由 xlsx 抽出） |
 
 建置分兩步：先執行 `python3 unimicron/build_unimicron.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。
 

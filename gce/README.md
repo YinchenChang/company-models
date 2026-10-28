@@ -6,6 +6,9 @@
 
 **投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 +13.7%，落在 −25%～+25%）。
 
+
+- **營收分部（v0.2，分部原則）**：公司應用別 伺服器（子列 AI、一般型）／網通（子列 AI、非 AI）／筆電與其他（`segments.json`）；2025 用 3Q25 比例（80／10／10），2026 用公司說法 78／15；AI 依每 GW 金額組成拆成伺服器與網通，非 AI 拆分比例固定在 FY2026；EPS 與目標價不變。
+
 ## 重點觀察
 
 1. 目標價 NT$1,267（DCF 1,203、Comparable 1,331 各半），比現價 1,115（2026-10-22）高 13.7%，級距 0%–25%；Comparable 單獨為 +19.4%。兩法接近；與共識目標價 1,554 的差距在倍數：本模型前瞻 EPS 72.00 比共識前瞻 EPS 56.97 高 26.4%（期間約晚一年），但同業（健鼎、華通、臻鼎-KY、博智、TTM）前瞻 P/E 中位數只有 18.5 倍，共識目標價隱含 27.3 倍。
@@ -19,9 +22,9 @@ AI 半導體 Project 載板與 PCB 次產業，樣板 `victory_giant/`（勝宏�
 | 檔案 | 內容 |
 |---|---|
 | `build_gce.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_金像電模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_金像電個股模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_金像電模型_v0.1.1.html` | HTML 展示層（數字全由 xlsx 重算值抽出） |
+| `dist/20261028_金像電個股模型_v0.2.html` | HTML 展示層（數字全由 xlsx 重算值抽出） |
 
 建置：`python3 gce/build_gce.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（AI IT 資本支出）、`markets/chip_bridge/dist`（每 GW IT 資本支出、每 GW 機架數）、`tsmc/dist`（情境顆數係數）、`markets/memory/market.py`（SCEN_UNITS，核對用）、`victory_giant/dist`（每 GW PCB 金額）、`emc/dist`（台光電每 GW CCL 金額，只在 Recon）、`tools/cycle_position.py`、`tools/valuation_rule.py`；**不修改它們**。
 
