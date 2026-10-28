@@ -1,4 +1,7 @@
 # SK 海力士設定檔（樣板 v0.2）。只放參數；結構在 tools/memory_model/build.py 與 markets/memory/market.py
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "siliconomics"))
+import reader as _SIL   # HBM 營收份額 sh25–sh29 讀 Siliconomics M24（v0.8 起；數值權威在本庫 In 頁）
 S = "sec"
 CONFIG = {
  "name": "SK 海力士", "version": "v0.5", "date": "2026-10-25",
@@ -42,10 +45,10 @@ CONFIG = {
   ("cb_2", "一般 DRAM 位元成長 第 2 年", "%", 0.10, 0.15, 0.19, "Interested-party", "BofA 2028 供給 +19%"),
   ("nb_1", "NAND 位元成長 第 1 年", "%", 0.15, 0.20, 0.25, "Verified", "Micron：產業 2027 中 20% 段"),
   ("nb_2", "NAND 位元成長 第 2 年", "%", 0.15, 0.20, 0.25, "Verified", "同上"),
-  ("sh25", "HBM 營收市占 2025", "%", 0.55, 0.58, 0.62, "Interested-party", "Counterpoint 3Q25 57%；出貨 62%"),
-  ("sh26", "HBM 營收市占 2026", "%", 0.48, 0.52, 0.56, "Interested-party", "Counterpoint Q1 58%、Q2 50%；IDC Q1 56.4%"),
-  ("sh27", "HBM 營收市占 2027", "%", 0.38, 0.42, 0.48, "Interested-party", "UBS 2027 位元：SK 39%、三星 41%、美光 20%"),
-  ("sh28", "HBM 營收市占 2028", "%", 0.35, 0.40, 0.45, "Assumed", ""),
+  ("sh25", "HBM 營收市占 2025", "%", *_SIL.vals("hbmsh_skh_25"), "Interested-party", "Counterpoint 3Q25 57%；出貨 62%"),
+  ("sh26", "HBM 營收市占 2026", "%", *_SIL.vals("hbmsh_skh_26"), "Interested-party", "Counterpoint Q1 58%、Q2 50%；IDC Q1 56.4%"),
+  ("sh27", "HBM 營收市占 2027", "%", *_SIL.vals("hbmsh_skh_27"), "Interested-party", "UBS 2027 位元：SK 39%、三星 41%、美光 20%"),
+  ("sh28", "HBM 營收市占 2028", "%", *_SIL.vals("hbmsh_skh_28"), "Assumed", ""),
   ("other_y", "其他營收（每年）", "兆韓元", None, 1.6, None, "Verified", ""),
   ("w_c", "成本權重：一般 DRAM", "%", None, 0.45, None, "Assumed", ""),
   ("w_h", "成本權重：HBM", "%", None, 0.30, None, "Assumed", "HBM 每位元耗晶圓約 DDR5 的 3 倍（Micron）"),
@@ -63,7 +66,7 @@ CONFIG = {
   ("cap_2", "資本支出 2028", "兆韓元", 60, 71.2, 85, "Interested-party", "MarketScreener 共識 71.2"),
   ("cb_3", "一般 DRAM 位元成長 第 3 年（2029）", "%", 0.10, 0.15, 0.20, "Assumed", "龍仁一廠 2027 起投產"),
   ("nb_3", "NAND 位元成長 第 3 年", "%", 0.15, 0.20, 0.25, "Assumed", ""),
-  ("sh29", "HBM 營收市占 2029", "%", 0.35, 0.40, 0.45, "Assumed", ""),
+  ("sh29", "HBM 營收市占 2029", "%", *_SIL.vals("hbmsh_skh_29"), "Assumed", ""),
   ("cap_3", "資本支出 2029", "兆韓元", 60, 75, 90, "Assumed", "龍仁 2–6 期"),
   ("dps_3", "每股股利 2029", "KRW", None, 5800, None, "Assumed", "延續成長"),
   ("nm_op_q", "非記憶體事業每季營業利益（基準年推估季）", "—", None, 0, None, "Verified", "純記憶體公司，無"),

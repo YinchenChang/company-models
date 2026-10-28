@@ -58,7 +58,9 @@ for y in (25, 26, 27, 28, 29):
 inp("osat", *SIL.row8("cw_osat")[1:])
 inp("ms_dem26", *SIL.row8("cw_msdem26")[1:])
 inp("ms_dem27", *SIL.row8("cw_msdem27")[1:])
-inp("hbm_gap27", "HBM 2027 需求缺口 ÷ 供給（markets/memory）", "%", None, 0.21, None, "Derived", "markets/memory Mkt：需求 7.10 EB vs 供給 5.86 EB")
+_hg = SIL.NAMES["SIF_HBM_GapEB_A"][2] / SIL.NAMES["SIF_HBM_SupplyEB"][2]   # 2027（欄序 2025..2029）
+inp("hbm_gap27", "HBM 2027 需求缺口 ÷ 供給（Siliconomics）", "%", None, _hg, None, "Derived",
+    f"Siliconomics SIF_HBM_GapEB_A ÷ SIF_HBM_SupplyEB（2027）：需求 {SIL.NAMES['SIF_HBM_DemandGrossEB'][2]:.2f} EB vs 供給 {SIL.NAMES['SIF_HBM_SupplyEB'][2]:.2f} EB")
 sec("D. 台積電營收")
 inp("fx", "美元兌新台幣（2027 起）", "NT$/US$", 30, 32, 33, "Assumed", "v0.1.1 標 Verified（當時 Q3 指引匯率）；4Q26 指引匯率為 31.8，2027 起未獲公司指引，數值不變")
 inp("rev25", "營收 2025", "$B", None, 122.43, None, "Verified", "四季加總")
