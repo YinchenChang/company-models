@@ -194,10 +194,10 @@
 "position": "中段 → 中位數",
 "multiple": 21.97,
 "basis_label": "2027 EPS（A）",
-"basis": 137.6,
-"implied_px": 3023,
+"basis": 137.67,
+"implied_px": 3025,
 "vs_px": 0.268,
-"px_multiple": 17.33
+"px_multiple": 17.32
 },
 {
 "company": "台積電",
@@ -214,10 +214,10 @@
 "position": "25 分位（區間下緣）",
 "multiple": 15.44,
 "basis_label": "2027 EPS（A）",
-"basis": 137.6,
-"implied_px": 2125,
+"basis": 137.67,
+"implied_px": 2126,
 "vs_px": -0.109,
-"px_multiple": 17.33
+"px_multiple": 17.32
 },
 {
 "company": "台積電",
@@ -234,10 +234,10 @@
 "position": "75 分位（區間上緣）",
 "multiple": 28.49,
 "basis_label": "2027 EPS（A）",
-"basis": 137.6,
-"implied_px": 3920,
-"vs_px": 0.644,
-"px_multiple": 17.33
+"basis": 137.67,
+"implied_px": 3922,
+"vs_px": 0.645,
+"px_multiple": 17.32
 },
 {
 "company": "美光（P/E）",
