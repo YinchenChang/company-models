@@ -1,0 +1,14 @@
+{
+ "company": "廣達",
+ "ticker": "2382.TW",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "雲端伺服器（Cloud computing）", "label": "雲端伺服器營收（AI＋一般伺服器）", "period": "FY2025", "value": 1507.8, "unit": "NT$B", "source": "凱基 2026-08-13 廣達報告產品組合 71%（公司簡介：伺服器約 70%）× 2025 營收 2,123.7"},
+  {"name": "筆電（Notebook）", "label": "筆電營收", "period": "FY2025", "value": 467.2, "unit": "NT$B", "source": "同上 22%（公司簡介：20–25%）"},
+  {"name": "其他（EV、穿戴、物聯網等）", "label": "其他營收（EV、穿戴、物聯網等；＝非 AI − 筆電 − 一般伺服器）", "period": "FY2025", "value": 148.7, "unit": "NT$B", "source": "差額（凱基：EV 3%、穿戴物聯網等 3%）"}
+ ],
+ "sublines": [
+  {"parent": "雲端伺服器（Cloud computing）", "labels": ["AI 伺服器營收", "雲端伺服器：一般伺服器"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收"]
+}

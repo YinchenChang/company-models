@@ -1,0 +1,15 @@
+{
+ "company": "TOWA",
+ "ticker": "6315.T",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "半導体製造装置事業", "label": "半導體製造裝置事業營收（AI 封膠＋非 AI 封膠＋其他半導體）", "period": "FY2025", "value": 40.39, "unit": "¥B", "source": "TOWA FY2025 決算說明資料（2026-05）事業別營收"},
+  {"name": "新事業（TSS 等）", "label": "新事業（TSS 等）", "period": "FY2025", "value": 9.47, "unit": "¥B", "source": "同上"},
+  {"name": "ファインプラスチック成形品（醫療器材）", "label": "醫療器材", "period": "FY2025", "value": 2.48, "unit": "¥B", "source": "同上"},
+  {"name": "レーザ加工装置", "label": "雷射", "period": "FY2025", "value": 2.00, "unit": "¥B", "source": "同上"}
+ ],
+ "sublines": [
+  {"parent": "半導体製造装置事業", "labels": ["AI 封膠合計", "非 AI 封膠設備與模具", "其他半導體（切割等）"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收（FY2025 實績；差額為公司數字四捨五入）"]
+}

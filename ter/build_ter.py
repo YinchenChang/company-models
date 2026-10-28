@@ -331,6 +331,8 @@ def engine(ws, r0, title, **over):
     row("trob", "機器人稅前利益", "US$M", {"C": "=a25_trob", "D": "=f26_trob", **{fy(y): f"={fy(y)}{R['rrob']}*rm_{y}{P['rm']}" for y in F}})
     row("corp", "公司與沖銷", "US$M", {"C": "=a25_corp", "D": "=f26_corp", **{fy(y): "=corp" for y in F}})
     row("rev", "營收", "US$M", {fy(y): f"={fy(y)}{R['rtest']}+{fy(y)}{R['rrob']}" for y in range(2025, 2030)})
+    row("chk", "檢查：分部合計 − 合併營收（FY2025 實績、FY2026 錨點；四捨五入到百萬美元）", "US$M", {"C": f"=ROUND(C{R['rsemi']}+C{R['rpt']}+C{R['rrob']}-a25_rev,0)", "D": f"=ROUND(D{R['rsemi']}+D{R['rpt']}+D{R['rrob']}-f26_rev,0)"}, fmt="#,##0.0",
+        note="FY2025 分部合計 3,190.1 vs 公司合併營收 3,190.0：季度分部數字四捨五入差 0.1")
     row("pti", "稅前利益", "US$M", {fy(y): f"={fy(y)}{R['ttest']}+{fy(y)}{R['trob']}+{fy(y)}{R['corp']}" for y in range(2025, 2030)})
     row("pm", "稅前利益率", "%", {fy(y): f"={fy(y)}{R['pti']}/{fy(y)}{R['rev']}" for y in range(2025, 2030)}, fmt="0.0%")
     row("tax", "所得稅", "US$M", {"C": "=a25_tax", "D": "=f26_tax", **{fy(y): f"={fy(y)}{R['pti']}*{P['etr']}" for y in F}})

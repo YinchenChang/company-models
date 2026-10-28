@@ -1,0 +1,13 @@
+{
+ "company": "Arista Networks",
+ "ticker": "ANET",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "Product", "label": "產品營收（AI＋非 AI 產品）", "period": "FY2025", "value": 7.5769, "unit": "US$B", "source": "Arista 4Q25 新聞稿（2026-02-12）損益表：Product 7,576.9 US$M（單一報告分部，營收線揭露）"},
+  {"name": "Service", "label": "服務營收", "period": "FY2025", "value": 1.4288, "unit": "US$B", "source": "同上：Service 1,428.8 US$M"}
+ ],
+ "sublines": [
+  {"parent": "Product", "labels": ["AI 營收", "產品：非 AI（園區、企業、路由等；＝非 AI − 服務）"]}
+ ],
+ "check_labels": ["檢查：產品＋服務 − 合併營收"]
+}

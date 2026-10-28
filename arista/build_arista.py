@@ -74,6 +74,9 @@ inp("rel_29", "Arista 份額 2029 ÷ 2026", "x", 0.65, 0.88, 1.05, "Assumed", "�
 
 sec("C. 非 AI 營收（雲端前端、企業、園區、服務）")
 inp("g_nai27", "非 AI 營收年增 2027", "%", 0.03, 0.10, 0.15, "Assumed", "2026 錨點非 AI 約 9.1（營收指引 12.6 − AI 目標 3.5）；2025 約 7.4（9.0 − AI 約 1.63）→ 2026 約 +23%（Derived，含記憶體缺貨下的提前拉貨可能）", "園區目標 2026 至少 1.25（公司，Interested-party）")
+inp("svc25", "FY2025 服務營收", "US$B", None, 1.4288, None, "Verified", "Arista 4Q25 新聞稿（2026-02-12）：FY2025 Product 7,576.9、Service 1,428.8（US$M）", "分部原則：單一分部，公司固定揭露產品／服務兩條營收線")
+for y_, (lo_, b_, hi_) in ((26, (0.15, 0.22, 0.28)), (27, (0.10, 0.15, 0.20)), (28, (0.06, 0.10, 0.15)), (29, (0.05, 0.08, 0.12))):
+    inp(f"g_svc{y_}", f"服務營收年增 20{y_}", "%", lo_, b_, hi_, "Assumed", "FY2025 +27.7%（1,119.1 → 1,428.8；Arista 新聞稿）；服務隨裝機量與維護合約遞延認列", "非 AI 產品＝非 AI − 服務（差額）")
 inp("g_nai28", "非 AI 營收年增 2028", "%", 0.02, 0.08, 0.12, "Assumed", "同上", "—")
 inp("g_nai29", "非 AI 營收年增 2029", "%", 0.02, 0.06, 0.10, "Assumed", "同上", "—")
 inp("ai25", "2025 年 AI 營收（參考）", "US$B", 1.5, 1.63, 1.8, "Derived", "Next Platform 2026-02-13：以 2026 目標倒推約 1.63（公司稱超過 1.5 目標）", "公司：2025 年 AI 目標 1.5 已超越（法說）")
@@ -225,6 +228,10 @@ def engine(ws, r0, title, **over):
     sec_("B. 非 AI 與合計")
     row("nai", "非 AI 營收", "US$B", {"C": "=a25_nai", "D": "=a26_nai", **{c_(y): f"={c_(y - 1)}{r}*(1+{P['gn']}{y % 100})" for y in BU[1:]}})
     row("rev", "營收", "US$B", {"C": "=a25_rev", **{c_(y): f"={c_(y)}{R['ai']}+{c_(y)}{R['nai']}" for y in BU}})
+    row("svc", "服務營收", "US$B", {"C": "=svc25", **{c_(y): f"={c_(y - 1)}{r}*(1+g_svc{y % 100})" for y in BU}}, note="公司營收線：Service")
+    row("npd", "  產品：非 AI（園區、企業、路由等；＝非 AI − 服務）", "US$B", {c_(y): f"={c_(y)}{R['nai']}-{c_(y)}{R['svc']}" for y in FYS})
+    row("prd", "產品營收（AI＋非 AI 產品）", "US$B", {c_(y): f"={c_(y)}{R['ai']}+{c_(y)}{R['npd']}" for y in FYS}, note="公司營收線：Product")
+    row("segchk", "檢查：產品＋服務 − 合併營收", "US$B", {c_(y): f"={c_(y)}{R['prd']}+{c_(y)}{R['svc']}-{c_(y)}{R['rev']}" for y in FYS}, fmt="0.000")
     row("g", "營收年增", "%", {c_(y): f"={c_(y)}{R['rev']}/{c_(y - 1)}{R['rev']}-1" for y in FYS[1:]}, fmt="0.0%")
     row("aish", "AI ÷ 營收", "%", {c_(y): f"={c_(y)}{R['ai']}/{c_(y)}{R['rev']}" for y in FYS}, fmt="0.0%")
     sec_("C. 損益")

@@ -6,6 +6,9 @@
 
 **投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 +1.1%，落在 −25%～+25%）。
 
+
+- **營收分部（v0.2，分部原則）**：官方分部 Semiconductor Test（子列 SoC、記憶體、IST）／Product Test／Robotics（`segments.json`）；新增分部合計 − 合併營收核對列（FY2025 季度分項四捨五入差 0.1，取整到百萬美元後為 0）；EPS 與目標價不變。
+
 ## 重點觀察
 
 1. 目標價 US$312（DCF 219、Comparable 405 各半），比現價 308.85（2026-10-23）高 1.1%，級距 0%–25%；Comparable 單獨為 +31.2%。兩法分歧大：同業（Advantest、KLA、Cohu、FormFactor、應用材料）前瞻 P/E 中位數 28.2 倍 × 12 個月後前瞻 EPS 14.38 得 405，DCF 只有 219（比現價低 29.0%）；本模型前瞻 EPS 比共識 FY2027 EPS 11.30 高 27.3%（期間約早一年），共識目標價 446.47 隱含 39.5 倍。
@@ -19,9 +22,9 @@ AI 半導體 Project 步驟 5（設備與材料）的第二家測試機公司。
 | 檔案 | 內容 |
 |---|---|
 | `build_ter.py` | 產生器（參數與公式） |
-| `dist/20261025_泰瑞達模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；重建逐格比對差異 0） |
+| `dist/20261028_泰瑞達個股模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；重建逐格比對差異 0） |
 | `html.json` | HTML 展示層設定（格式見 `tools/company_html/README.md`） |
-| `dist/20261025_泰瑞達模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261028_泰瑞達個股模型_v0.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 **建置。** 先執行 `python3 ter/build_ter.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序為 README、In、Q、Units、PL、Val、Recon、Sens、Sources。
 

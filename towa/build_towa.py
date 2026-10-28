@@ -340,7 +340,9 @@ def engine(ws, r0, title, **over):
                        ("ts", "新事業（TSS 等）", False), ("md", "醫療器材", False), ("ls", "雷射", False)):
         row(k, lab, "¥B", {FYC[y]: f"={FYC[y]}{R[k + 'd']}*{mult(y, ai)}" for y in Y5}, fmt="#,##0.00")
     row("eai", "AI 封膠合計", "¥B", {FYC[y]: f"={FYC[y]}{R['eh']}+{FYC[y]}{R['el']}" for y in Y5}, fmt="#,##0.00")
-    row("rev", "營收", "¥B", {FYC[y]: f"={FYC[y]}{R['eai']}+{FYC[y]}{R['mn']}+{FYC[y]}{R['os']}+{FYC[y]}{R['ts']}+{FYC[y]}{R['md']}+{FYC[y]}{R['ls']}" + ("+seg_adj" if y == 2025 else "") for y in Y5}, fmt="#,##0.00", note="FY2026＝錨點營收")
+    row("semi", "半導體製造裝置事業營收（AI 封膠＋非 AI 封膠＋其他半導體）", "¥B", {FYC[y]: f"={FYC[y]}{R['eai']}+{FYC[y]}{R['mn']}+{FYC[y]}{R['os']}" for y in Y5}, fmt="#,##0.00", note="官方分部 半導体製造装置事業")
+    row("rev", "營收", "¥B", {FYC[y]: f"={FYC[y]}{R['semi']}+{FYC[y]}{R['ts']}+{FYC[y]}{R['md']}+{FYC[y]}{R['ls']}" + ("+seg_adj" if y == 2025 else "") for y in Y5}, fmt="#,##0.00", note="FY2026＝錨點營收")
+    row("segchk", "檢查：分部合計 − 合併營收（FY2025 實績；差額為公司數字四捨五入）", "¥B", {"C": f"=C{R['semi']}+C{R['ts']}+C{R['md']}+C{R['ls']}-a25_rev"}, fmt="0.000")
     row("aish", "AI 封膠占營收", "%", {FYC[y]: f"={FYC[y]}{R['eai']}/{FYC[y]}{R['rev']}" for y in Y5}, fmt="0.0%")
     row("oi", "營業利益", "¥B", {"C": "=a25_oi", "D": f"=D{R['aoi']}", **{FYC[y]: f"=$D{r}+({P['im']}+{ima})*({FYC[y]}{R['rev']}-$D{R['rev']})" for y in range(2027, 2030)}}, fmt="#,##0.00",
         note="FY2027 起＝FY2026 營業利益＋增量營益率 ×（營收 − FY2026 營收）")
@@ -366,8 +368,8 @@ hdr(PL, 3, ["情境／項目", "單位", "FY2025A", "FY2026", "FY2027", "FY2028"
 sr = 4; SUMR = {}
 for s in SC:
     PL.cell(sr, 1, f"情境 {s}（{SCN[s]}）").font = BOLD; sr += 1
-    for key, lab, unit, fmt in (("rev", "營收", "¥B", "#,##0.0"), ("eai", "  AI 封膠（HBM＋2.5D）", "¥B", "#,##0.0"), ("mn", "  非 AI 封膠設備與模具", "¥B", "#,##0.0"),
-                                ("os", "  其他半導體（切割等）", "¥B", "#,##0.0"), ("ts", "  新事業（TSS 等）", "¥B", "#,##0.0"), ("ls", "  雷射", "¥B", "#,##0.0"),
+    for key, lab, unit, fmt in (("rev", "營收", "¥B", "#,##0.0"), ("semi", "  半導體製造裝置事業", "¥B", "#,##0.0"), ("eai", "    AI 封膠（HBM＋2.5D）", "¥B", "#,##0.0"), ("mn", "    非 AI 封膠設備與模具", "¥B", "#,##0.0"),
+                                ("os", "    其他半導體（切割等）", "¥B", "#,##0.0"), ("ts", "  新事業（TSS 等）", "¥B", "#,##0.0"), ("md", "  醫療器材", "¥B", "#,##0.0"), ("ls", "  雷射", "¥B", "#,##0.0"),
                                 ("aish", "AI 封膠占營收", "%", "0.0%"), ("oi", "營業利益", "¥B", "#,##0.0"), ("oim", "營業利益率", "%", "0.0%"),
                                 ("ni", "淨利", "¥B", "#,##0.00"), ("eps", "EPS", "¥", "#,##0.0"), ("revd", "對照：營收（只用驅動，無錨點）", "¥B", "#,##0.0")):
         PL.cell(sr, 1, lab); PL.cell(sr, 2, unit)

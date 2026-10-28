@@ -6,6 +6,9 @@ AI 半導體 Project 步驟 5（設備與材料）的第一家公司樣板。獨
 
 **投資建議：放空**（依上檔空間固定規則：加權目標價上檔空間 −28.2%，落在 −50%～−25%）。
 
+
+- **營收分部（v0.4，分部原則）**：官方兩分部 テストシステム（子列 SoC、記憶體、其他系統）／サービス他（`segments.json`）；新增測試系統事業母列與核對列；EPS 與目標價不變。
+
 ## 重點觀察
 
 1. 目標價 ¥23,222（DCF 16,539、Comparable 29,904 各半），比現價 32,340（2026-10-23）低 28.2%，級距 −25%～−50%；Comparable 單獨為 −7.5%。主因是 DCF：DCF 目標價比現價低 48.9%（A 情境 23,028 也只有現價的 0.71 倍），r 10%、g 4% 下 FY2027 EPS 1,139 只值約 20 倍，而現價隱含 29.3 倍 12 個月後前瞻 EPS（1,104）；ROE 35.9% 高於折現率，DCF 偏低不是 ROE 造成。EPS 也不是主因：本模型前瞻 EPS 比共識 913.5 高 20.8%（共識期間早約一年半）；同業前瞻 P/E 中位數 27.1 倍，共識目標價 42,686 隱含 46.7 倍（比同業高 72%）。
@@ -20,9 +23,9 @@ AI 半導體 Project 步驟 5（設備與材料）的第一家公司樣板。獨
 | 檔案 | 內容 |
 |---|---|
 | `build_advantest.py` | 產生器（參數與公式） |
-| `dist/20261025_Advantest模型_v0.3.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261028_Advantest個股模型_v0.4.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（頁面結構與要抽的儲存格；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_Advantest模型_v0.3.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出，標註來源儲存格；CI 檢核） |
+| `dist/20261028_Advantest個股模型_v0.4.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出，標註來源儲存格；CI 檢核） |
 
 建置：`python3 advantest/build_advantest.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`、`tsmc/dist`、`skhynix/dist`、`markets/equipment/dist`；不修改它們。
 

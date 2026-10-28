@@ -6,6 +6,9 @@
 
 **投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 −12.3%，落在 −25%～+25%）。
 
+
+- **營收分部（v0.2，分部原則）**：官方事業 半導體製造裝置（子列 AI 封膠、非 AI 封膠設備與模具、其他半導體）／新事業（TSS 等）／醫療器材／雷射（`segments.json`）；新增半導體母列、核對列，醫療器材單列於摘要；EPS 與目標價不變。
+
 ## 重點觀察
 
 1. 目標價 ¥1,726（DCF 1,015、Comparable 2,436 各半），比現價 1,968（2026-10-23）低 12.3%，級距 0%～−25%；Comparable 單獨為 +23.8%。DCF 只有現價的 0.52 倍：ROE 近三年平均 10.9% 只略高於折現率 10%，再投資率 36.7%，股東現金流只有 EPS 的六成多。
@@ -75,8 +78,8 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_towa.py` | 產生器（openpyxl 寫公式） |
-| `dist/20261025_TOWA模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
-| `dist/20261025_TOWA模型_v0.1.1.html`、`html.json` | HTML 展示層（tools/company_html） |
+| `dist/20261028_TOWA個股模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_TOWA個股模型_v0.2.html`、`html.json` | HTML 展示層（tools/company_html） |
 
 建置：`python3 towa/build_towa.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序是 README、In、Q、Hist、PL、Val、Recon、Sens、Sources。
 
