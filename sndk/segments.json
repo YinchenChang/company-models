@@ -1,0 +1,14 @@
+{
+ "company": "SanDisk",
+ "ticker": "SNDK",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "Datacenter", "label": "資料中心", "period": "FY2026", "value": 5.153, "unit": "US$B", "source": "SanDisk 10-K FY2026（2026-07-03 止）營收依終端市場；FQ4 FY26 新聞稿（8-K 2026-08-05）"},
+  {"name": "Edge", "label": "邊緣", "period": "FY2026", "value": 12.160, "unit": "US$B", "source": "同上"},
+  {"name": "Consumer", "label": "消費", "period": "FY2026", "value": 2.935, "unit": "US$B", "source": "同上"}
+ ],
+ "sublines": [
+  {"parent": "Datacenter", "labels": ["資料中心：AI 相關", "資料中心：非 AI"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 營收（季）", "檢查：分部合計 − 合併營收（年；FY2026 另比 10-K 分部）"]
+}

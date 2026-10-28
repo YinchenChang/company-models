@@ -14,8 +14,8 @@
 |---|---|
 | `build_sndk.py` | 產生器（README、In、Q、Units、PL、Val、Recon、Sens、Sources） |
 | `html.json` | HTML 展示層設定（七章；`tools/company_html`） |
-| `dist/20261025_SanDisk模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
-| `dist/20261025_SanDisk模型_v0.1.html` | 單頁 HTML（數字皆標註來源儲存格） |
+| `dist/20261028_SanDisk個股模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_SanDisk個股模型_v0.2.html` | 單頁 HTML（數字皆標註來源儲存格） |
 
 建置：`python3 sndk/build_sndk.py raw.xlsx` → `soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML"` → 改名放 `dist/`；`python3 tools/company_html/build_company_html.py sndk`、`check_company_html.py sndk`。
 
@@ -23,6 +23,7 @@
 
 - **Units**：`markets/nand/dist` 的 SanDisk 季度營收（市場營收 × 份額）與位元（季度出貨 × 份額），三情境同字母。份額由市場層提供（2026Q3 由公司 FQ1 FY27 指引推得；2027 起依合資群份額年變動），本檔不另訂；與 `kioxia/` 讀同一組列，兩家份額合計＝市場層合資群份額。
 - **PL**：營收＝市場層 × 公司口徑係數（≈1.0）；營業成本＝位元 × 每 EB 成本（FQ1 FY27 以指引毛利率 84% 校準，之後每年 ×(1 − 成本年降)）；營業費用＝固定（以指引 0.594 校準）＋變動；淨利＝（營業利益＋淨現金收益）× (1 − 15%)；自由現金流＝淨利＋折舊 − 資本支出（含合資群分攤，約營收 6%）；買回＝50% × FCF。
+- **營收分部（v0.2，分部原則）**：官方終端市場分部 資料中心／邊緣／消費（`segments.json`）。實績季取 10-Q、10-K（FQ1、FQ4 由累計相減，Derived）；預測季＝營收 × 資料中心占比、消費占比（In 頁，Assumed，FY2027 38%／6%、FY2028 42%／6%、FY2029 45%／6%），邊緣為差額。命題子列「資料中心：AI 相關」＝資料中心 × markets/nand 的 AI 企業級 SSD 占企業級 SSD 位元（會計年度取前後兩日曆年平均）。分部拆分不改合併營收與 EPS；核對列（季、年）皆為 0。
 - 會計年度約 6 月底結束（FY2027 ≈ CY2026Q3–CY2027Q2）；前瞻 EPS 依月份調整：12 個月後（約 2027-10）的未來 12 月＝8／12 FY2028＋4／12 FY2029。
 
 ## 情境對照表

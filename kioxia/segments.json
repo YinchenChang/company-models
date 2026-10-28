@@ -1,0 +1,14 @@
+{
+ "company": "Kioxia",
+ "ticker": "285A.T",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "SSD & Storage", "label": "SSD 與儲存", "period": "FY2026 1Q", "value": 1174.7, "unit": "¥B", "source": "Kioxia FY2026 第一季決算（2026-08）；FY2025 第四季 600.3（blocksandfiles 2026-05-21 轉載）"},
+  {"name": "Smart Devices", "label": "智慧裝置", "period": "FY2026 1Q", "value": 525.7, "unit": "¥B", "source": "同上；FY2025 第四季 337.3"},
+  {"name": "Other", "label": "其他", "period": "FY2026 1Q", "value": 66.7, "unit": "¥B", "source": "同上；零售與對 SanDisk 銷售"}
+ ],
+ "sublines": [
+  {"parent": "SSD & Storage", "labels": ["SSD 與儲存：AI 相關", "SSD 與儲存：非 AI"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 營收（季）", "檢查：分部合計 − 合併營收（年）"]
+}

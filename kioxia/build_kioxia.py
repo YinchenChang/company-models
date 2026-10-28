@@ -52,6 +52,13 @@ for r in wn["Ann"].iter_rows():
     if r[0].value == "Kioxia＋SanDisk（合資群）份額":
         JVSH[SC[len(JVSH)]] = ([r[3 + j].value for j in range(6)], r[0].row)
 assert len(JVSH) == 3
+AIS = {}                                       # 情境 → [AI 企業級, 非 AI 企業級, PC]（CY2025..CY2030）, 列
+for r in wn["Ann"].iter_rows():
+    lab_ = r[0].value
+    if lab_ == "  需求：AI 企業級 SSD": AIS[SC[len(AIS)]] = [[r[3 + j].value for j in range(6)], None, None, r[0].row]
+    if lab_ == "  需求：非 AI 企業級 SSD" and AIS: AIS[SC[len(AIS) - 1]][1] = [r[3 + j].value for j in range(6)]
+    if lab_ == "  需求：PC" and AIS: AIS[SC[len(AIS) - 1]][2] = [r[3 + j].value for j in range(6)]
+assert len(AIS) == 3 and all(v[1] and v[2] for v in AIS.values())
 wm = openpyxl.load_workbook(MU_F, data_only=True)
 MUV = wm["Val"]
 def mu_hist(title):
@@ -86,6 +93,15 @@ for k, (rv, gp, op, ni) in QA25.items():
     inp(f"p{k}_gp", f"FY2025 第{k}季毛利", U, None, gp, None, "Interested-party", SA, "")
     inp(f"p{k}_op", f"FY2025 第{k}季營業利益", U, None, op, None, tag, src, "四季合計 869.0（公司 870.4，取整差）")
     inp(f"p{k}_ni", f"FY2025 第{k}季淨利", U, None, ni, None, tag, src, "四季合計 554.5（公司 554.5）")
+SEGQ = {1: (217.4, 79.0, "blocksandfiles 2025-08-11（轉載 FY2025 第一季決算；分部 46.3 為其他）", "Interested-party"),
+        2: (246.6, 156.9, "longportapp（轉載 FY2025 第二季決算）：SSD 與儲存占 55%、智慧裝置占 35% × 營收 448.3（Derived）", "Derived"),
+        3: (300.4, 186.3, "blocksandfiles 2026-02-13（轉載 FY2025 第三季決算；其他 57.0）", "Interested-party"),
+        4: (600.3, 337.3, "blocksandfiles 2026-05-21（轉載 FY2025 第四季決算；其他 65.2）", "Interested-party")}
+for k, (ss_, sd_, src_, tg_) in SEGQ.items():
+    inp(f"p{k}_ss", f"FY2025 第{k}季營收：SSD 與儲存", U, None, ss_, None, tg_, src_, "官方分部：SSD & Storage（企業級、資料中心、PC 用 SSD）")
+    inp(f"p{k}_sd", f"FY2025 第{k}季營收：智慧裝置", U, None, sd_, None, tg_, src_, "官方分部：Smart Devices（手機、車用等嵌入式）")
+inp("q1_ss", "FY2026 第一季營收：SSD 與儲存", U, None, 1174.7, None, "Verified", ER, "")
+inp("q1_sd", "FY2026 第一季營收：智慧裝置", U, None, 525.7, None, "Verified", ER, "其他 66.7（零售、對 SanDisk 銷售）＝營收 − 兩主分部")
 inp("q1_rev", "FY2026 第一季營收（2026-04～06）", U, None, 1767.1, None, "Verified", ER, "SSD 與儲存 1,174.7、智慧裝置 525.7、其他 66.7；平均匯率 160 日圓")
 inp("q1_gp", "FY2026 第一季毛利", U, None, 1380.1, None, "Interested-party", SA + "：1,380,066 百萬日圓", "財報摘要未列毛利")
 inp("q1_op", "FY2026 第一季營業利益", U, None, 1270.0, None, "Verified", ER, "含訴訟損失準備 36.6、股份報酬 19.4（non-GAAP 加回）")
@@ -109,6 +125,9 @@ inp("ox_var", "營業費用變動率（÷ 營收）", "%", 0.005, 0.01, 0.02, "A
 inp("ox_g", "營業費用固定部分年增", "%", 0.05, 0.10, 0.15, "Assumed", "研發（BiCS10、CBA）與人事", "")
 inp("nonop_q", "每季業外淨額（利息、匯兌等；FY2026 第三季起）", U, -40, -15, 0, "Assumed", ER + "：第一季稅前 − 營業利益＝−35.3；第二季指引 −20.0", "2026 年第一季已提前償還長期借款 ¥433.2B")
 inp("tax", "有效稅率", "%", 0.28, 0.32, 0.35, "Derived", ER + "：第一季淨利 842.2 ÷ 稅前 1,234.7 → 稅率 31.8%；第二季指引 1,270 ÷ 1,870 → 32.1%", "")
+for y, (lo_, b_, hi_) in ((2026, (0.60, 0.66, 0.72)), (2027, (0.60, 0.68, 0.76)), (2028, (0.60, 0.70, 0.78)), (2029, (0.60, 0.70, 0.78))):
+    inp(f"sssh_{y % 100}", f"FY{y} SSD 與儲存占營收" + ("（第二至四季）" if y == 2026 else ""), "%", lo_, b_, hi_, "Assumed", "FY2025 第一至四季依序 63%、55%、55%、60%；FY2026 第一季 66.5%（Verified）", "低＝回到 FY2025 水準；分部拆分不影響合併營收與 EPS")
+    inp(f"otsh_{y % 100}", f"FY{y} 其他占營收", "%", 0.03, 0.04, 0.06, "Assumed", "FY2026 第一季 3.8%；FY2025 第四季 6.5%（含對 SanDisk 銷售）", "智慧裝置＝1 − SSD 與儲存 − 其他（Derived）")
 inp("rf", "淨現金收益率", "%", 0.0, 0.01, 0.02, "Assumed", "日圓利率", "")
 
 sec("C. 資本、股東回饋（2026-06-30 資產負債表；股數為分割後）")
@@ -196,6 +215,17 @@ for kind, lab, unit in (("rev", "營收", "$B"), ("bit", "位元", "EB"), ("jv",
 UN.column_dimensions["A"].width = 36; UN.column_dimensions["AA"].width = 70
 UCOL = {q: GL(3 + i) for i, q in enumerate(CYQS)}
 assert UCOL["2026Q2"] == "H" and UR[("rev", "A")] == 4
+UN.cell(ur + 1, 1, "AI 企業級 SSD 占（企業級＋PC）SSD 位元需求（日曆年；markets/nand Ann 頁）").font = BOLD
+hdr(UN, ur + 2, ["項目", "單位"] + [f"CY{y}" for y in range(2025, 2031)] + ["來源"])
+AIR = {}
+for i, s in enumerate(SC):
+    a_, n_, pc_, srow = AIS[s]; rr_ = ur + 3 + i
+    UN.cell(rr_, 1, f"AI ÷（企業級＋PC）SSD（情境 {s}）"); UN.cell(rr_, 2, "%")
+    for j in range(6):
+        c = UN.cell(rr_, 3 + j, float(a_[j]) / (float(a_[j]) + float(n_[j]) + float(pc_[j]))); c.font = BLUE; c.number_format = "0.0%"
+    UN.cell(rr_, 9, f"{rel(NAND_F)}｜Ann!D{srow}:I{srow} ÷（同列＋下一列＋PC 列）"); AIR[s] = rr_
+AICOL = {y: GL(3 + y - 2025) for y in range(2025, 2031)}
+aiw = lambda fy, s: f"(0.75*Units!{AICOL[fy]}{AIR[s]}+0.25*Units!{AICOL[fy + 1]}{AIR[s]})"
 
 # ---------------- Q：季度實績 ----------------
 Q = wb.create_sheet("Q")
@@ -240,6 +270,13 @@ def engine(ws, r0, title, s, **over):
     row("um", "市場層營收（TrendForce 口徑，美元，同字母情境）", "$B", {QC[q]: f"=Units!{uc(q)}{UR[('rev', s)]}*{p['shm']}" + (f"*{p['pxm']}" if nq(q) > 0 else "") for q in QL}, fmt="#,##0.000", note="markets/nand；Sens 可乘份額係數、價格係數（第三季起）")
     row("bit", "位元（市場層；同字母）", "EB", {QC[q]: f"=Units!{uc(q)}{UR[('bit', s)]}*{p['shm']}" for q in QL}, fmt="#,##0.000")
     row("rev", "營收", U, {A1: "=q1_rev", G2: "=g2_rev", **{QC[q]: f"={QC[q]}{R['um']}*kx_k*{p['fx']}" for q in DQ}}, note="第一季實績、第二季公司指引；之後＝市場層 × 公司口徑係數 × 匯率")
+    fyc = lambda q: q[0] % 100
+    row("ss", "SSD 與儲存", U, {A1: "=q1_ss", **{QC[q]: f"={QC[q]}{R['rev']}*sssh_{fyc(q)}" for q in QL if q != (2026, 1)}}, note="官方分部；第一季實績，之後＝營收 × 占比（In）")
+    row("ai", "  SSD 與儲存：AI 相關（＝SSD 與儲存 × AI 企業級 SSD 占比）", U, {QC[q]: f"={QC[q]}{R['ss']}*{aiw(q[0], s)}" for q in QL}, note="命題子列（Derived）：會計年度（4 月起）≈ 0.75 × 當年＋0.25 × 次年；假設公司 SSD 組合與產業（企業級＋PC）相同")
+    row("ssn", "  SSD 與儲存：非 AI", U, {QC[q]: f"={QC[q]}{R['ss']}-{QC[q]}{R['ai']}" for q in QL})
+    row("ot", "其他", U, {A1: "=q1_rev-q1_ss-q1_sd", **{QC[q]: f"={QC[q]}{R['rev']}*otsh_{fyc(q)}" for q in QL if q != (2026, 1)}}, note="官方分部（零售、對 SanDisk 銷售）；實績＝營收 − 兩主分部")
+    row("sd", "智慧裝置", U, {A1: "=q1_sd", **{QC[q]: f"={QC[q]}{R['rev']}-{QC[q]}{R['ss']}-{QC[q]}{R['ot']}" for q in QL if q != (2026, 1)}}, note="官方分部；預測季＝營收 − SSD 與儲存 − 其他")
+    row("qchk", "檢查：分部合計 − 營收（季）", U, {QC[q]: f"={QC[q]}{R['ss']}+{QC[q]}{R['sd']}+{QC[q]}{R['ot']}-{QC[q]}{R['rev']}" for q in QL}, fmt="0.000")
     rcogs = rr[0] + 1
     row("uc", "每 EB 營業成本（第二季以指引校準，之後每年 × (1 − 成本年降)）", "¥B/EB", {A1: f"={A1}{rcogs}/{A1}{R['bit']}", G2: f"={G2}{rcogs}/{G2}{R['bit']}",
         **{QC[q]: f"=${ref}{rr[0]}*(1-{cd})^({nq(q)}/4)" for q in DQ}}, fmt="0.00")
@@ -256,6 +293,11 @@ def engine(ws, r0, title, s, **over):
     qs = lambda fy, key: f"=SUM({QC[(fy, 1)]}{R[key]}:{QC[(fy, 4)]}{R[key]})"
     F3 = (2027, 2028, 2029)
     row("yrev", "營收", U, {"C": "=a25_rev", **{FYC[y]: qs(y, "rev") for y in FYS}}, note="FY2026＝第一季實績＋第二季指引＋第三、四季推導")
+    row("yss", "營收：SSD 與儲存", U, {"C": "=p1_ss+p2_ss+p3_ss+p4_ss", **{FYC[y]: qs(y, "ss") for y in FYS}})
+    row("yai", "  SSD 與儲存：AI 相關", U, {"C": f"=C{rr[0] - 1}*{aiw(2025, s)}", **{FYC[y]: qs(y, "ai") for y in FYS}})
+    row("ysd", "營收：智慧裝置", U, {"C": "=p1_sd+p2_sd+p3_sd+p4_sd", **{FYC[y]: qs(y, "sd") for y in FYS}})
+    row("yot", "營收：其他", U, {"C": f"=a25_rev-C{R['yss']}-C{rr[0] - 1}", **{FYC[y]: qs(y, "ot") for y in FYS}}, note="FY2025＝營收 − 兩主分部（含報導值進位差約 0.1）")
+    row("ychk", "檢查：分部合計 − 合併營收（年）", U, {FYC[y]: f"={FYC[y]}{R['yss']}+{FYC[y]}{R['ysd']}+{FYC[y]}{R['yot']}-{FYC[y]}{R['yrev']}" for y in FYC}, fmt="0.000")
     row("ycogs", "營業成本", U, {"C": "=a25_rev-(p1_gp+p2_gp+p3_gp+p4_gp)", **{FYC[y]: qs(y, "cogs") for y in FYS}})
     row("ygm", "毛利率", "%", {FYC[y]: f"=1-{FYC[y]}{R['ycogs']}/{FYC[y]}{R['yrev']}" for y in FYC}, fmt="0.0%")
     row("yox", "營業費用", U, {FYC[y]: qs(y, "ox") for y in FYS})
@@ -284,14 +326,14 @@ def engine(ws, r0, title, s, **over):
 PL = wb.create_sheet("PL")
 PL["A1"] = f"PL — {NAME} 損益（¥B；FY2025 實績；FY2026＝第一季實績＋第二季指引＋第三、四季推導；FY2027–FY2029 由市場層 markets/nand 驅動；FY2030–FY2032 收斂法見底部）"
 TITLES = {s: f"情境 {s}（{SCN[s]}）：markets/nand 情境 {s}（價格路徑 {s}、2028–29 顆數係數 {s}、合資群份額 {s}）；每位元成本年降 cd_{s}" for s in SC}
-PB = {}; r0 = 40; TITLER = {}
+PB = {}; r0 = 56; TITLER = {}
 for s in SC:
     TITLER[s] = r0; PB[s] = engine(PL, r0, TITLES[s], s); r0 = PB[s]["end"] + 2
 hdr(PL, 3, ["情境／項目", "單位", "FY2025A", "FY2026", "FY2027", "FY2028", "FY2029", "說明"])
 sr = 4; SUMR = {}
 for s in SC:
     PL.cell(sr, 1, f"情境 {s}（{SCN[s]}）").font = BOLD; sr += 1
-    for key, lab, unit, fmt in (("yrev", "營收", U, "#,##0"), ("ygm", "毛利率", "%", "0.0%"), ("yop", "營業利益", U, "#,##0"), ("yom", "營業利益率", "%", "0.0%"),
+    for key, lab, unit, fmt in (("yrev", "營收", U, "#,##0"), ("yss", "  SSD 與儲存", U, "#,##0"), ("yai", "    SSD 與儲存：AI 相關", U, "#,##0"), ("ysd", "  智慧裝置", U, "#,##0"), ("yot", "  其他", U, "#,##0"), ("ygm", "毛利率", "%", "0.0%"), ("yop", "營業利益", U, "#,##0"), ("yom", "營業利益率", "%", "0.0%"),
                                 ("yni", "淨利", U, "#,##0"), ("eps", "EPS", PXU, EF), ("bv", "每股淨值", PXU, EF), ("fcf", "自由現金流", U, "#,##0")):
         PL.cell(sr, 1, lab); PL.cell(sr, 2, unit)
         for y, c in FYC.items():
@@ -300,7 +342,7 @@ for s in SC:
         SUMR[(s, key)] = sr; sr += 1
     sr += 1
 PL.cell(sr, 1, "核對：三情境 FY2025、第一季、第二季 − 實績與指引（應為 0）"); PL[f"D{sr}"] = "=" + "+".join(f"D{PB[s]['chk']}" for s in SC); PL[f"D{sr}"].number_format = "0.000"; PL_CHK = sr
-assert sr < 38
+assert sr < 54
 PL.column_dimensions["A"].width = 58; PL.column_dimensions["B"].width = 10; PL.column_dimensions["T"].width = 60
 for c in "CDEFGHIJKLMNOPQR": PL.column_dimensions[c].width = 12
 
