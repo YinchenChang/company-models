@@ -95,6 +95,23 @@ for y, v in ((27, 0.12), (28, 0.08), (29, 0.05)):
 for s, vals in zip(SC, ((0.12, 0.10, 0.08), (0.12, 0.05, 0.03), (0.12, 0.0, -0.03))):
     for y, v in zip((27, 28, 29), vals):
         inp(f"na{y}_{s}", f"非 AI 營收成長 20{y}（{s}）", "%", None, v, None, "Assumed", "公司 2024–29 全公司 CAGR 約 25%、AI 約 55–59% → 非 AI 約 10–15%" if (y == 27 and s == "A") else "")
+sec("D2. 依平台營收（官方報告口徑：HPC、智慧型手機、物聯網、車用、DCE、其他；v0.4 依個股模型原則）")
+MR = "公司 Management Report（investor.tsmc.com）：Net Revenue by Platform"
+PLAT_S = (("hpc", "高效能運算（HPC）"), ("sp", "智慧型手機"), ("iot", "物聯網"), ("au", "車用"), ("dce", "消費性電子（DCE）"))
+for k, nm in PLAT_S:
+    v25 = {"hpc": 0.58, "sp": 0.29, "iot": 0.05, "au": 0.05, "dce": 0.01}[k]
+    inp(f"pf25_{k}", f"{nm} 占營收 2025", "%", None, v25, None, "Verified", "公司 4Q25 法說逐字稿（CFO）：2025 年 HPC 58%、智慧型手機 29%、IoT 5%、車用 5%、DCE 1%")
+    for q, vals in ((1, {"hpc": 0.61, "sp": 0.26, "iot": 0.06, "au": 0.04, "dce": 0.01}), (2, {"hpc": 0.66, "sp": 0.22, "iot": 0.05, "au": 0.04, "dce": 0.01}),
+                    (3, {"hpc": 0.68, "sp": 0.21, "iot": 0.04, "au": 0.04, "dce": 0.01})):
+        inp(f"pf26_{q}q_{k}", f"{nm} 占營收 {q}Q26", "%", None, vals[k], None, "Verified", MR + f"（{q}Q26）")
+inp("pf25_oth", "其他 占營收 2025", "%", None, "=1-pf25_hpc-pf25_sp-pf25_iot-pf25_au-pf25_dce", None, "Derived", "1 − 其餘五平台（公司 2%）")
+for q in (1, 2, 3):
+    inp(f"pf26_{q}q_oth", f"其他 占營收 {q}Q26", "%", None, f"=1-pf26_{q}q_hpc-pf26_{q}q_sp-pf26_{q}q_iot-pf26_{q}q_au-pf26_{q}q_dce", None, "Derived", f"1 − 其餘五平台（公司 2%）")
+for k, nm, v, src in (("hpc", "HPC：非 AI（CPU、PC、一般伺服器、其他 HPC）", 0.01, "2025 HPC +48%（含 AI）；PC、CPU 轉 N2／A16（Assumed）"),
+                      ("sp", "智慧型手機", -0.02, "2025 +11%（HPC +48%），占比 2025 29% → 3Q26 21%（公司）"),
+                      ("iot", "物聯網", 0.0, "2025 +15%（公司）"), ("au", "車用", 0.02, "2025 +34%（公司）；3Q26 季增 23%"),
+                      ("dce", "消費性電子（DCE）", -0.03, "2025 持平（公司）；3Q26 季減 12%"), ("oth", "其他", 0.0, "—")):
+    inp(f"dp_{k}", f"{nm} 年增相對非 AI 基準成長的差距（2027–29）", "pt", round(v - 0.02, 3), v, round(v + 0.02, 3), "Assumed", src + "；各平台年增＝非 AI 基準成長 na（情境別）＋差距")
 sec("E. 利潤率、資本支出、股本、估值")
 inp("gm26", "毛利率 2026（四季以新台幣營收加權）", "%", None, "=(ntd26_1q*gm26_1q+ntd26_2q*gm26_2q+ntd26_3q*gm26_3q+ntd26_4q*gm26_4q)/ntd26", None, "Derived", "v0.1.1 為 66%")
 inp("opm26", "營業利益率 2026（四季以新台幣營收加權）", "%", None, "=(ntd26_1q*opm26_1q+ntd26_2q*opm26_2q+ntd26_3q*opm26_3q+ntd26_4q*opm26_4q)/ntd26", None, "Derived", "")
@@ -234,6 +251,32 @@ for col, lab, s, y in cols:
         PL[f"{col}{rr}"].number_format = "0.0%" if k in ("aish", "gm") else ("0.0" if k != "pe_px" else "0.0\"x\"")
 PL.column_dimensions["A"].width = 44
 for c in "BCDEFGHIJK": PL.column_dimensions[c].width = 10
+# v0.4：依平台營收（第 26 列起；接在既有列之後，不移動既有儲存格）
+PFR = {k: 27 + i for i, k in enumerate(["hpc", "hpc_ai", "hpc_n", "sp", "iot", "au", "dce", "oth", "chk"])}
+PFL = {"hpc": "高效能運算（HPC）", "hpc_ai": "  HPC：AI 相關（＝AI 相關營收列）", "hpc_n": "  HPC：非 AI", "sp": "智慧型手機", "iot": "物聯網", "au": "車用",
+       "dce": "消費性電子（DCE）", "oth": "其他", "chk": "檢查：平台合計 − 營收"}
+PL.cell(26, 1, "依平台營收（官方報告口徑；十億美元）。2026＝各季營收 × 平台比重（4Q26 用指引中點 × 3Q26 比重）；2027 起各平台＝前一年 ×（1＋非 AI 基準成長＋平台差距）；AI 相關全部歸 HPC").font = BOLD
+for k, rr in PFR.items(): PL.cell(rr, 1, PFL[k])
+def pf26(k):
+    return "=" + "+".join(f"rev26_{q}q*pf26_{min(q, 3)}q_{k}" for q in (1, 2, 3, 4))
+for col, lab, s, y in cols:
+    if y == 26:
+        PL[f"{col}{PFR['hpc']}"] = pf26("hpc")
+        PL[f"{col}{PFR['hpc_n']}"] = f"={col}{PFR['hpc']}-{col}{PFR['hpc_ai']}"
+        for k in ("sp", "iot", "au", "dce", "oth"): PL[f"{col}{PFR[k]}"] = pf26(k)
+    else:
+        prev = "B" if y == 27 else [c[0] for c in cols if c[2] == s and c[3] == y - 1][0]
+        PL[f"{col}{PFR['hpc_n']}"] = f"={prev}{PFR['hpc_n']}*(1+na{y}_{s}+dp_hpc)"
+        PL[f"{col}{PFR['hpc']}"] = f"={col}{PFR['hpc_ai']}+{col}{PFR['hpc_n']}"
+        for k in ("sp", "iot", "au", "dce", "oth"): PL[f"{col}{PFR[k]}"] = f"={prev}{PFR[k]}*(1+na{y}_{s}+dp_{k})"
+        PL[f"{col}{PR['nonai']}"] = "=" + "+".join(f"{col}{PFR[k]}" for k in ("hpc_n", "sp", "iot", "au", "dce", "oth"))
+    PL[f"{col}{PFR['hpc_ai']}"] = f"={col}{PR['ai']}"
+    PL[f"{col}{PFR['chk']}"] = f"={col}{PFR['hpc']}+" + "+".join(f"{col}{PFR[k]}" for k in ("sp", "iot", "au", "dce", "oth")) + f"-{col}{PR['rev']}"
+    for k, rr in PFR.items(): PL[f"{col}{rr}"].number_format = "0.00"
+PL.cell(37, 1, "2025 實績（依平台；十億美元＝2025 營收 × 公司比重）").font = BOLD
+for i, (k, nm) in enumerate(PLAT_S + (("oth", "其他"),)):
+    PL.cell(38 + i, 1, f"2025：{nm}"); PL[f"B{38 + i}"] = f"=rev25*pf25_{k}"; PL[f"B{38 + i}"].number_format = "0.00"
+PL.cell(44, 1, "檢查：2025 平台合計 − 2025 營收"); PL["B44"] = "=SUM(B38:B43)-rev25"; PL["B44"].number_format = "0.000"
 PL.cell(18, 1, "註：B 欄 2026 ＝1–3Q 實績＋4Q 指引中點（匯率、營業費用、淨利比用 2026 專屬參數）；非 AI 營收＝營收 − AI（由下而上）。2027 起兩者分開推。")
 # v0.3：2030–2032 收斂法欄（L–T，接在既有欄之後；上游顆數只到 2029，非驅動因子推導）＋營收年增、淨利率兩列（第 20、21 列）
 FADEFILL = PatternFill("solid", fgColor="E7E6E6")
@@ -450,11 +493,11 @@ srcs = [("台積電 2Q26 新聞稿", "https://pr.tsmc.com/english/news/3326"),
 for i, (a, b) in enumerate(srcs, 2): SO.cell(i, 1, a); SO.cell(i, 2, b)
 SO.column_dimensions["A"].width = 44; SO.column_dimensions["B"].width = 130
 RD = wb.create_sheet("README", 0)
-lines = [("台積電模型 v0.3.1（AI 半導體 Project 步驟 4）　2026-10-25　2026 年改為 1–3Q 實績＋4Q 指引中點；2027 起假設未變", True),
+lines = [("台積電個股模型 v0.4（AI 半導體 Project 步驟 4）　2026-10-28　營收層改依官方平台（HPC、智慧型手機、IoT、車用、DCE、其他），AI 為 HPC 子列", True),
  ("模型命題：台積電在 AI 算力中的意義是供給上限而非分到的金額比例——AI 加速器只占其營收約兩成；2027 年加速器出貨受 HBM 而非 CoWoS 限制，台積電的獲利成長由「AI 顆數 × 每顆內容 × 漲價」與「非 AI 八成的穩定成長」共同決定。", False), ("", False),
  ("驅動因子 → 推導量", True),
  ("CoWoS：加速器顆數（markets/memory）÷ 每片封裝數 → CoWoS 需求；月產能年均 × 12 × (1＋委外) → 可用產能；需求 ÷ 產能 → 是否為瓶頸；與 HBM 缺口比較", False),
- ("PL：顆數 × 每顆台積電內容（橋接表）× 價格調升 × (1＋其他 AI) → AI 營收；非 AI 前一年 × (1＋成長)；× 毛利率 − 營業費用 → 營業利益 → 淨利 → EPS", False),
+ ("PL：顆數 × 每顆台積電內容（橋接表）× 價格調升 × (1＋其他 AI) → AI 營收（HPC 子列）；非 AI 分為 HPC 非 AI、智慧型手機、IoT、車用、DCE、其他（PL 第 26 列起；2026 依各季平台比重，2027 起前一年 ×（1＋非 AI 基準成長＋平台差距））；× 毛利率 − 營業費用 → 營業利益 → 淨利 → EPS", False),
  ("情境：A 基準；B 2028 顆數 −20%、毛利率降至 58%；C 2028 顆數 −40%、毛利率 54%（AI 資本支出明顯下修）", False),
  ("Val：EPS × P/E（15x、10 年中位 20.5x、10 年最高 32.7x）", False), ("Recon、Sens：見各頁", False), ("", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。", False),
