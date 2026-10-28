@@ -1,4 +1,7 @@
 # 美光設定檔（樣板 v0.2 複製測試）。只放參數
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "siliconomics"))
+import reader as _SIL   # HBM 營收份額 sh25–sh29 讀 Siliconomics M24（v0.8 起；數值權威在本庫 In 頁）
 S = "sec"
 GM = [38.4, 36.8, 37.7, 44.7, 56.0, 74.4, 84.6, 86.8]
 REV = [8.709, 8.053, 9.301, 11.315, 13.643, 23.860, 41.456, 54.229]
@@ -32,10 +35,10 @@ CONFIG = {
   ("cb_2", "一般 DRAM 位元成長 FY28", "%", 0.10, 0.15, 0.20, "Verified／Derived", "同上"),
   ("nb_1", "NAND 位元成長 FY27", "%", 0.12, 0.18, 0.25, "Verified", "美光：產業 CY27 中 20% 段；美光供給低於產業"),
   ("nb_2", "NAND 位元成長 FY28", "%", 0.15, 0.20, 0.25, "Verified", "同上"),
-  ("sh25", "HBM 營收市占 2025", "%", 0.18, 0.21, 0.22, "Interested-party", "Counterpoint 3Q25 21%；美光：與 DRAM 市占相當"),
-  ("sh26", "HBM 營收市占 2026", "%", 0.17, 0.19, 0.21, "Interested-party", "Counterpoint Q1 21%、Q2 18%"),
-  ("sh27", "HBM 營收市占 2027", "%", 0.17, 0.20, 0.23, "Interested-party", "UBS 2027 位元 20%"),
-  ("sh28", "HBM 營收市占 2028", "%", 0.17, 0.20, 0.23, "Assumed", ""),
+  ("sh25", "HBM 營收市占 2025", "%", *_SIL.vals("hbmsh_mu_25"), "Interested-party", "Counterpoint 3Q25 21%；美光：與 DRAM 市占相當"),
+  ("sh26", "HBM 營收市占 2026", "%", *_SIL.vals("hbmsh_mu_26"), "Interested-party", "Counterpoint Q1 21%、Q2 18%"),
+  ("sh27", "HBM 營收市占 2027", "%", *_SIL.vals("hbmsh_mu_27"), "Interested-party", "UBS 2027 位元 20%"),
+  ("sh28", "HBM 營收市占 2028", "%", *_SIL.vals("hbmsh_mu_28"), "Assumed", ""),
   ("other_y", "其他營收（每年）", "十億美元", None, 0.7, None, "Derived", "FY26 營收 − DRAM − NAND"),
   ("w_c", "成本權重：一般 DRAM", "%", None, 0.50, None, "Assumed", ""),
   ("w_h", "成本權重：HBM", "%", None, 0.22, None, "Assumed", "HBM 3:1 晶圓（美光）"),
@@ -53,7 +56,7 @@ CONFIG = {
   ("cap_2", "資本支出 FY28", "十億美元", 50, 60, 75, "Assumed", ""),
   ("cb_3", "一般 DRAM 位元成長 FY29", "%", 0.10, 0.15, 0.20, "Assumed", ""),
   ("nb_3", "NAND 位元成長 FY29", "%", 0.15, 0.20, 0.25, "Assumed", ""),
-  ("sh29", "HBM 營收市占 2029", "%", 0.17, 0.20, 0.23, "Assumed", ""),
+  ("sh29", "HBM 營收市占 2029", "%", *_SIL.vals("hbmsh_mu_29"), "Assumed", ""),
   ("cap_3", "資本支出 FY29", "十億美元", 50, 60, 75, "Assumed", ""),
   ("dps_3", "每股股利 FY29", "USD", None, 0.85, None, "Assumed", ""),
   ("nm_op_q", "非記憶體事業每季營業利益（基準年推估季）", "—", None, 0, None, "Verified", "純記憶體公司，無"),

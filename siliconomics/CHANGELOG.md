@@ -1,5 +1,12 @@
 # Siliconomics 變更紀錄
 
+## v0.8（2026-10-28；`model/20261028_Siliconomics_v0.8.xlsx`；Tokenomics v21.7）
+
+- 新增 In 頁 M24（15 列）：SK 海力士、三星、美光 HBM 營收份額 2025–2029（基準與低／高、標記、來源逐字搬入；原在各 company.py），三家改讀本庫。
+- ShareTbl 新增 HBM 份額表、Checks K6-hbm（合計 2025 96%、2026–29 100%；餘額為長鑫等）、Interface `SIF_HBMShareSum`。
+- 台積電模型的 HBM 2027 需求缺口 ÷ 供給由手打 21% 改讀本庫推導值（21.0%；只在 CoWoS 對照列）。
+- 下游數值不變。決策 S24。
+
 ## v0.7.1（2026-10-28；`model/20261028_Siliconomics_v0.7.1.xlsx`；Tokenomics v21.7）
 
 - 新增 In 頁 M22（18 列）：HBM 核心晶粒容量、堆疊層數、混合鍵合占 HBM 工序比例（2025–2030），原在 disco；disco 改讀，hanmi、besi 由讀 Disco 成品改讀本庫。Equip 頁 D 節：混合鍵合比例三情境（2028 A 15%／B 5%／C 0%；2029 30／15／5%）。

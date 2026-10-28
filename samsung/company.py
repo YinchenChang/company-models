@@ -1,4 +1,7 @@
 # 三星電子設定檔（記憶體樣板 v0.3；集團公司，只建模記憶體事業，其餘事業為輸入）
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "siliconomics"))
+import reader as _SIL   # HBM 營收份額 sh25–sh29 讀 Siliconomics M24（v0.8 起；數值權威在本庫 In 頁）
 S = "sec"
 Z = lambda k, nm: (k, nm, "兆韓元", None, 0, None, "Verified", "")
 CONFIG = {
@@ -46,11 +49,11 @@ CONFIG = {
   ("nb_1", "NAND 位元成長 2027", "%", 0.10, 0.15, 0.20, "Assumed", ""),
   ("nb_2", "NAND 位元成長 2028", "%", 0.12, 0.18, 0.22, "Assumed", ""),
   ("nb_3", "NAND 位元成長 2029", "%", 0.12, 0.18, 0.22, "Assumed", ""),
-  ("sh25", "HBM 營收市占 2025", "%", 0.15, 0.17, 0.22, "Interested-party", "Counterpoint 2Q25 15%、3Q25 22%"),
-  ("sh26", "HBM 營收市占 2026", "%", 0.25, 0.29, 0.33, "Interested-party", "Counterpoint 1Q26 21%、2Q26 33%；下半年 HBM4 放量"),
-  ("sh27", "HBM 營收市占 2027", "%", 0.33, 0.38, 0.41, "Interested-party", "UBS 2027 位元 41%（SK 39%、美光 20%）；與 SK 42%、美光 20% 加總約 100%"),
-  ("sh28", "HBM 營收市占 2028", "%", 0.35, 0.40, 0.45, "Assumed", "公司目標：HBM 份額向 DRAM 份額（約 39%）靠攏"),
-  ("sh29", "HBM 營收市占 2029", "%", 0.35, 0.40, 0.45, "Assumed", ""),
+  ("sh25", "HBM 營收市占 2025", "%", *_SIL.vals("hbmsh_ss_25"), "Interested-party", "Counterpoint 2Q25 15%、3Q25 22%"),
+  ("sh26", "HBM 營收市占 2026", "%", *_SIL.vals("hbmsh_ss_26"), "Interested-party", "Counterpoint 1Q26 21%、2Q26 33%；下半年 HBM4 放量"),
+  ("sh27", "HBM 營收市占 2027", "%", *_SIL.vals("hbmsh_ss_27"), "Interested-party", "UBS 2027 位元 41%（SK 39%、美光 20%）；與 SK 42%、美光 20% 加總約 100%"),
+  ("sh28", "HBM 營收市占 2028", "%", *_SIL.vals("hbmsh_ss_28"), "Assumed", "公司目標：HBM 份額向 DRAM 份額（約 39%）靠攏"),
+  ("sh29", "HBM 營收市占 2029", "%", *_SIL.vals("hbmsh_ss_29"), "Assumed", ""),
   ("other_y", "其他記憶體營收", "兆韓元", None, 0, None, "Derived", "DRAM＋NAND 已涵蓋"),
   ("w_c", "成本權重：一般 DRAM", "%", None, 0.55, None, "Assumed", ""),
   ("w_h", "成本權重：HBM", "%", None, 0.15, None, "Assumed", ""),
