@@ -14,7 +14,7 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 GL = os.path.dirname(HERE)
 ROOT = os.path.dirname(GL)
-VERSION = "v0.1.2"
+VERSION = "v0.1.3"
 DATE = "20261028"
 TK_SNAPSHOT = os.path.join(ROOT, "siliconomics", "data", "tokenomics_snapshot_v21.7.json")
 SIL_DIR = os.path.join(ROOT, "siliconomics", "data")
@@ -22,7 +22,7 @@ SEED = os.path.join(HERE, "seed", "seed_v0.1.json")
 TK_EXTRA = os.path.join(HERE, "seed", "tk_extra_v21.7.json")   # 快照未含、直接讀 Tokenomics 活頁簿的名稱（R1 裁定）
 EVID = os.path.join(HERE, "seed", "evidence_v0.1.json")         # tools/import_evidence.py 由 evidence_raw 產生
 FUND = os.path.join(HERE, "seed", "funding_v0.1.2.json")        # tools/import_funding.py 由 F_funding.csv、P_facility_power.csv 產生（附 G 段判定）
-CAMPUS_ADD = os.path.join(HERE, "seed", "campus_v0.1.2_add.json")   # v0.1.2 起新增的 T2 園區列（園區候選回查＋獨立抽查後合併；值之後由 Excel 讀回）
+CAMPUS_ADD = sorted(__import__("glob").glob(os.path.join(HERE, "seed", "campus_v*_add.json")))   # v0.1.2 起新增的 T2 園區列（各版一檔；園區候選回查＋獨立抽查後合併；值之後由 Excel 讀回）
 SEG = os.path.join(ROOT, "markets", "invest_map", "data", "segments_ai_semis_v0.2.3.csv")   # AI半導體 次產業比例（最新版）
 SEG_COMMIT = "5dea5c8"
 
@@ -78,8 +78,8 @@ def main():
     a.version = a.version or VERSION
     a.date = a.date or DATE
     seed = json.load(open(SEED, encoding="utf-8"))
-    if os.path.exists(CAMPUS_ADD):
-        add = json.load(open(CAMPUS_ADD, encoding="utf-8"))
+    for fp in CAMPUS_ADD:
+        add = json.load(open(fp, encoding="utf-8"))
         have = {c["key"] for c in seed["campus"]}
         assert not have & {c["key"] for c in add["campus"]}, "新增園區鍵與既有重複"
         seed["campus"] += add["campus"]
@@ -1630,6 +1630,7 @@ def main():
         ("v0.1.1（改名 Wattonomics／瓦帳）：新增 Funding（玩家 × 年資金來源、循環融資 17 條）、FundRaw（F 段證據＋G 段判定）、Facility（每 IT GW 廠房拆分與市場層、自建發電）、SegIn（AI半導體 次產業比例鏡像）、Spend（年 × 項目市場金額）；C1 加廣義口徑（資本支出＋尚未起租變化）；Interface 增 WIF_Funding_*、WIF_Spend_*、WIF_Facility_*。", True),
         ("v0.1.2：套用 H 段（API 旗標人工複核）更正——證據檔 79 筆、In 輸入 19 格（cp_msft_abl 改 336＋336 MW-IT、xfmr_gva 2.1／2.67／3.15、fac_gen_px 低 0.5），FundRaw F#31、F#199、F#222 改不採用（採購或投資存量，非融資）；"
          "園區候選（S 段 409 列，site_pipeline）經 API 回查與 I 段未參與代理開原文抽查後合併：新增 17 列（計入 13 列）、更正既有 20 列（Fairwater 拆分、Ports Pike 首批 800 MW 至 2031、Humain 1.7 GW 提前到 2027、Milam 308＋445、Jupiter 已知延遲刪除）、3 列改計入（Stargate UAE、Colossus 2、Mistral 96 MW）。Hyperion 5 GW、SoftBank 苫小牧依判斷題預設不入。", True),
+        ("v0.1.3：第二輪美國以外園區候選（T 段 345 列，site_pipeline 分區 Batch）經 API 回查與 I2 段未參與代理開原文抽查後合併：新增 10 列（計入 5：Nebius Beit Shemesh、Google Kronstorf、DataVita DV1 擴建、Meta Sturgeon 250＋720 設施）；Humain 兩列加註風險（只有公司目標支持）；主權玩家名稱更新。", True),
         ("顏色：藍字＝輸入；黑字＝公式；綠字＝跨頁或外部鏡像；淡黃底＝關鍵輸出；亮黃底＝待證據或預設待決。", False),
         ("Excel 優先：要改輸入，直接改 In 頁藍字；builder 重建時讀回（--base）。公式頁不要手改。下游只讀 Interface 的 WIF_ 名稱（經快照）。", False),
         ("版本命名：YYYYMMDD_Wattonomics_vX.Y.xlsx；model/CURRENT 記錄現行檔名；data/CURRENT_SNAPSHOT 指向現行快照。", False),
