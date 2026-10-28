@@ -1,0 +1,159 @@
+{
+ "_note": "GW 帳 v0.1 首建種子（只用於首建；之後各版以 --base 讀回 Excel In 頁）。只放 repo 內已有、帶來源的值；其餘列留空、標記『待證據』。",
+ "years": [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032],
+ "players": [
+  {"key": "msft", "name": "Microsoft（自有＋融資租賃 AI 在役）", "nnv_plat": "Maia"},
+  {"key": "googl", "name": "Alphabet（Google；TPU＋NVIDIA）", "nnv_plat": "TPU"},
+  {"key": "amzn", "name": "Amazon（AWS；Trainium＋NVIDIA）", "nnv_plat": "Trn"},
+  {"key": "orcl", "name": "Oracle（OCI）", "nnv_plat": "AMD"},
+  {"key": "crwv", "name": "CoreWeave", "nnv_plat": "AMD"},
+  {"key": "nbis", "name": "Nebius", "nnv_plat": "AMD"},
+  {"key": "wyfi", "name": "WhiteFiber（雲端）", "nnv_plat": "AMD"},
+  {"key": "meta", "name": "Meta", "nnv_plat": "AMD"},
+  {"key": "xai", "name": "xAI", "nnv_plat": "AMD"},
+  {"key": "oai", "name": "OpenAI（自建）", "nnv_plat": "OAI"},
+  {"key": "ant", "name": "Anthropic（自建）", "nnv_plat": "TPU"},
+  {"key": "neo", "name": "其他新雲合計（Lambda、Crusoe、Nscale、IREN 等）", "nnv_plat": "AMD"},
+  {"key": "sov", "name": "主權 AI 合計（中國以外）", "nnv_plat": "AMD"},
+  {"key": "cn", "name": "中國合計（昇騰、H20 等）", "nnv_plat": "Ascend"},
+  {"key": "oth", "name": "其他（企業自建等）", "nnv_plat": "AMD"}
+ ],
+ "users": [
+  {"key": "self", "name": "自用"}, {"key": "oai", "name": "OpenAI"}, {"key": "ant", "name": "Anthropic"},
+  {"key": "xai", "name": "xAI"}, {"key": "meta", "name": "Meta"}, {"key": "oth", "name": "其他"}
+ ],
+ "scalars": [
+  {"sec": "S1. 單位換算與共用參數"},
+  {"key": "gIT_vr200", "label": "每 TK GW（設施）含 IT GW：VR200", "unit": "x", "lo": null, "base": 0.9198, "hi": null, "tag": "Derived", "src": "SRC_GL_003", "basis": "—", "note": "規劃書第 3 節『VR200 每 GW 含 919.8 MW IT』；TK v21.7 快照未含 IF_FacilityGW（見 Requests R1）"},
+  {"key": "gIT_oth", "label": "每 TK GW（設施）含 IT GW：其他世代與非 NVIDIA", "unit": "x", "lo": 0.8333, "base": 0.9198, "hi": 0.95, "tag": "Assumed", "src": "SRC_GL_004", "basis": "—", "note": "工作單第 0 節：其他世代先沿用 VR200 值；低＝PUE 1.2 讀法（舊 TK IF_FacilityGW 1.2），高 0.95"},
+  {"key": "asof", "label": "評價時點（小數年；2026-10-28）", "unit": "年", "lo": null, "base": 2026.825, "hi": null, "tag": "Derived", "src": "SRC_GL_004", "basis": "—", "note": "2026 ＋（9 ＋ 28/31）÷ 12；延遲只作用於此時點之後的上線量"},
+  {"key": "tolband", "label": "對帳容許帶（±）", "unit": "%", "lo": 0.10, "base": 0.15, "hi": 0.20, "tag": "Assumed", "src": "SRC_GL_003", "basis": "—", "note": "規劃書 G6 預設 ±15%"},
+  {"key": "lag_bldg", "label": "建物資本支出提前入帳月數", "unit": "月", "lo": 12, "base": 18, "hi": 24, "tag": "Assumed", "src": "SRC_GL_004", "basis": "—", "note": "工作單 C1：12–24 月；基準取中點（佔位）"},
+  {"key": "g_lt", "label": "長期年新增 GW 成長率（2030–2032 收斂目標）", "unit": "%", "lo": 0.0, "base": 0.10, "hi": 0.20, "tag": "Assumed", "src": "SRC_GL_004", "basis": "—", "note": "工作單 Deploy：2029 年增率線性收斂到長期成長率；佔位值，待決"},
+  {"sec": "S2. 基建延遲參數（D0 準時、D1 基準延遲、D2 嚴重延遲；佔位值）"},
+  {"key": "dly_d1_m", "label": "D1：動工→上線延遲（各瓶頸中位數；佔位）", "unit": "月", "lo": 3, "base": 6, "hi": 9, "tag": "Assumed", "src": "SRC_GL_005", "basis": "—", "note": "【佔位】待 B_delay.csv 證據校準；已知延遲較大者取已知延遲"},
+  {"key": "dly_d2_bind", "label": "D2：併網與發電機組綁定比例（佔位）", "unit": "%", "lo": 0.20, "base": 0.35, "hi": 0.50, "tag": "Assumed", "src": "SRC_GL_005", "basis": "—", "note": "【佔位】D2＝D1 延遲之上，綁定比例的新 GW 再延 dly_d2_m"},
+  {"key": "dly_d2_m", "label": "D2：綁定部分再延月數（佔位）", "unit": "月", "lo": 12, "base": 12, "hi": 12, "tag": "Assumed", "src": "SRC_GL_005", "basis": "—", "note": "【佔位】規劃書第 4 節：再延 12 個月"},
+  {"sec": "S3. 玩家最新觀測（年底值未知時，觀測所在年的計算值取觀測值）"},
+  {"key": "obs_msft", "label": "Microsoft 最新 AI 在役 MW-IT（FY26 末）", "unit": "MW", "lo": 3500, "base": 4500, "hi": 5500, "tag": "Derived／Assumed", "src": "SRC_GL_010", "basis": "IT", "note": "microsoft/company.json mag.mw.aiOpenIT（自有＋融資租賃；三法交叉，未用營收）"},
+  {"key": "obsd_msft", "label": "Microsoft 觀測時點", "unit": "年", "lo": null, "base": 2026.5, "hi": null, "tag": "Verified", "src": "SRC_GL_010", "basis": "—", "note": "FY26 年底 2026-06-30"},
+  {"key": "obs_googl", "label": "Alphabet 最新 AI 在役 MW-IT（2026Q2）", "unit": "MW", "lo": 5012, "base": 6338, "hi": 7891, "tag": "Derived／Assumed", "src": "SRC_GL_020", "basis": "IT", "note": "alphabet/company.json mag.ai.mwInService（Epoch 晶片功耗 × IT/TDP 1.65，第三方為主）"},
+  {"key": "obsd_googl", "label": "Alphabet 觀測時點", "unit": "年", "lo": null, "base": 2026.5, "hi": null, "tag": "Verified", "src": "SRC_GL_020", "basis": "—", "note": "2026-06-30"},
+  {"key": "obs_amzn", "label": "Amazon 最新 AI 在役 MW-IT（2026Q2）", "unit": "MW", "lo": 2000, "base": 2600, "hi": 3300, "tag": "Derived／Assumed", "src": "SRC_GL_030", "basis": "IT", "note": "amazon/company.json mag.mw.aiInServiceIT（第三方估計）"},
+  {"key": "obsd_amzn", "label": "Amazon 觀測時點", "unit": "年", "lo": null, "base": 2026.5, "hi": null, "tag": "Verified", "src": "SRC_GL_030", "basis": "—", "note": "2026-06-30"},
+  {"key": "obs_orcl", "label": "Oracle 最新已連網 MW-IT（FY27Q1 末）", "unit": "MW", "lo": null, "base": 2543, "hi": null, "tag": "Derived", "src": "SRC_GL_040", "basis": "IT", "note": "oracle/company.json fleet.openMw（FY26 末 1,835＋Q1 交付 850 ÷ 1.2）"},
+  {"key": "obsd_orcl", "label": "Oracle 觀測時點", "unit": "年", "lo": null, "base": 2026.667, "hi": null, "tag": "Verified", "src": "SRC_GL_040", "basis": "—", "note": "2026-08-31"},
+  {"key": "obs_crwv", "label": "CoreWeave 最新 active power MW（2026Q2）", "unit": "MW", "lo": null, "base": 1500, "hi": null, "tag": "Interested-party", "src": "SRC_GL_050", "basis": "IT", "note": "coreweave/company.json callFacts.activeGw 1.5 GW；mwBasis＝IT [Assumed]"},
+  {"key": "obsd_crwv", "label": "CoreWeave 觀測時點", "unit": "年", "lo": null, "base": 2026.5, "hi": null, "tag": "Verified", "src": "SRC_GL_050", "basis": "—", "note": "2026-06-30（2026 年底已有指引值，本觀測不進計算）"},
+  {"sec": "S4. 合約與租賃（對照用，不進加總）"},
+  {"key": "ctr_crwv", "label": "CoreWeave 已簽約電力（contracted）", "unit": "GW", "lo": null, "base": 4.2, "hi": null, "tag": "Interested-party", "src": "SRC_GL_050", "basis": "IT", "note": "coreweave/company.json callFacts.contractedGw；powered land 1.5 GW"},
+  {"key": "ctr_nbis", "label": "Nebius 2026 年底已簽約電力目標（contractedPowerGW）", "unit": "GW", "lo": null, "base": 5.0, "hi": null, "tag": "Interested-party", "src": "SRC_GL_061", "basis": "未說明", "note": "nebius/data/consensus_nbis_20261007.json companyGuidance.FY26.contractedPowerGW；已簽 >3.5 GW"},
+  {"key": "ctr_orcl", "label": "Oracle 合約 MW-IT 上限（基準）", "unit": "MW", "lo": 6284, "base": 8778, "hi": 8778, "tag": "Derived", "src": "SRC_GL_040", "basis": "IT", "note": "oracle/company.json scenarios.mwPath.contracted（含 Stargate 五站第三方估計 8.1 GW 設施 ÷ 1.2）"},
+  {"key": "lease_nc_msft", "label": "Microsoft 未起租租約（FY26 末）", "unit": "$B", "lo": null, "base": 329.1, "hi": null, "tag": "Verified", "src": "SRC_GL_010", "basis": "—", "note": "microsoft/company.json mag.leases.notCommenced（10-K）"},
+  {"key": "lease_nc_googl", "label": "Alphabet 未起租租約（2026Q2）", "unit": "$B", "lo": null, "base": 85.2, "hi": null, "tag": "Verified", "src": "SRC_GL_020", "basis": "—", "note": "alphabet/company.json mag.balance.leases.uncommenced（10-Q）"},
+  {"key": "lease_nc_amzn", "label": "Amazon 未起租租約（2026Q2）", "unit": "$B", "lo": null, "base": 137.214, "hi": null, "tag": "Verified", "src": "SRC_GL_030", "basis": "—", "note": "amazon/company.json leases.facts.notCommenced（10-Q）"}
+ ],
+ "mw": {
+  "_doc": "玩家年底上線 MW（營運者口徑；2023–2026 實際或最新，2027–2032 公告路徑）",
+  "msft": {"basis": "IT", "tag": "Derived／Assumed", "src": "SRC_GL_010", "note": "texts.mwYearEndNotes：FY 末（6 月）自有 AI 約 900（FY24）、約 2,300（FY25）置於該曆年欄，年底值偏低；2026 由最新觀測（FY26 末 4,500）帶入", "y": {"2024": 900, "2025": 2300}},
+  "googl": {"basis": "IT", "tag": "Derived／Assumed", "src": "SRC_GL_020", "note": "texts.mwYearEndNotes：Epoch 晶片功耗（TPU＋NVIDIA MW TDP）× IT/TDP 1.65；2023 (287＋98)×1.65、2024 (991＋307)×1.65、2025 AI 在役 4,873；2026 由最新觀測帶入", "y": {"2023": 635, "2024": 2142, "2025": 4873}},
+  "amzn": {"basis": "IT", "tag": "Derived／Assumed", "src": "SRC_GL_030", "note": "texts.mwYearEndNotes：2025 在役 AI 1,800；2023、2024＝對外 120、360 ÷ 對外比例 0.8；2026 由最新觀測帶入", "y": {"2023": 150, "2024": 450, "2025": 1800}},
+  "orcl": {"basis": "IT", "tag": "Derived", "src": "SRC_GL_040", "note": "scenarios.mwPath.note：FY27 末（2027-05）已連網 4,668 置於 2027 欄（模型路徑，非公司公告）；2026 由最新觀測 2,543 帶入", "y": {"2027": 4668}},
+  "crwv": {"basis": "IT", "tag": "Verified（2023–25）／Interested-party（2026、2030）", "src": "SRC_GL_050", "note": "texts.mwYearEndNotes（10-K、S-1、法說）；2026 年底 yeActiveGw 1.85 GW、2030 gw2030 8 GW 為公司目標；mwBasis＝IT [Assumed]", "y": {"2023": 70, "2024": 360, "2025": 850, "2026": 1850, "2030": 8000}},
+  "nbis": {"basis": "未說明", "tag": "Interested-party", "src": "SRC_GL_060", "note": "2025 active 約 170 MW（公司稱 IT）；2026 年底 connected 目標 0.8–1.0 GW 取中點 900（口徑不明；Nebius 模型以 ÷1.2 讀為 750 IT）。整列以『未說明』兩讀（2025 值實為 IT，誤差 < 0.03 GW）", "y": {"2025": 170, "2026": 900}},
+  "wyfi": {"basis": "IT", "tag": "Derived", "src": "SRC_GL_070", "note": "scenarios.mwPath：2025 冰島 5.5（10-Q）；2026、2027 由合約 GPU 數換算的已連網路徑", "y": {"2025": 5.5, "2026": 14.574, "2027": 16.548}}
+ },
+ "capex": {
+  "_doc": "個股模型資本支出（公司財年；欄＝財年；fye＝財年結束月）",
+  "msft": {"fye": 6, "tag": "Interested-party", "src": "SRC_GL_011", "note": "MarketScreener 共識（現金 PP&E 增添，不含融資租賃）FY26 實際 115.9、FY27–29 預估；PR #190（MSFT v0.3）未合併，讀現行 company.json／data", "y": {"2026": 115.948, "2027": 192.827, "2028": 216.787, "2029": 251.173}},
+  "googl": {"fye": 12, "tag": "Interested-party", "src": "SRC_GL_021", "note": "2025 實際 91.4（現金購置）；2026 指引 195–205 中點 200（法說）；2027–28 MarketScreener 共識；PR #190 未合併", "y": {"2025": 91.447, "2026": 200, "2027": 300.979, "2028": 339.451}},
+  "amzn": {"fye": 12, "tag": "Interested-party", "src": "SRC_GL_031", "note": "2026 指引約 220（現金淨額，法說）；2027–28 MarketScreener 共識；全公司（含非 AWS）；PR #190 未合併", "y": {"2026": 220, "2027": 275.063, "2028": 292.927}},
+  "orcl": {"fye": 5, "tag": "Interested-party", "src": "SRC_GL_041", "note": "FY26 55.7（共識表實際）；FY27 指引 90–95 中點 92.5；FY28–29 共識；PR #190（ORCL v0.4）未合併", "y": {"2026": 55.663, "2027": 92.5, "2028": 100.962, "2029": 84.848}},
+  "crwv": {"fye": 12, "tag": "Interested-party", "src": "SRC_GL_051", "note": "2026 指引 35–39 中點 37；2027–28 MarketScreener 共識", "y": {"2026": 37, "2027": 46.476, "2028": 50.129}},
+  "nbis": {"fye": 12, "tag": "Interested-party", "src": "SRC_GL_061", "note": "2026 指引 20–25 中點 22.5；2027–28 MarketScreener 共識", "y": {"2026": 22.5, "2027": 27.243, "2028": 38.39}},
+  "wyfi": {"fye": 12, "tag": "待證據", "src": "SRC_GL_000", "note": "共識資本支出未取得（consensus_wyfi_20261008.json annualEstimates 空白）", "y": {}}
+ },
+ "nnv": {
+  "_doc": "玩家非 NVIDIA 占比覆寫（空白＝市場 NonNV 比例）",
+  "googl": {"base": 0.753, "tag": "Derived", "src": "SRC_GL_020", "note": "texts.mwFacts：Epoch 2025 年底 TPU 2,223 MW ÷（2,223＋730）"},
+  "amzn": {"base": 0.670, "tag": "Derived", "src": "SRC_GL_030", "note": "texts.mwYearEndNotes：Trainium2 約 1,220 ÷（1,220＋600）"},
+  "crwv": {"base": 0, "tag": "Derived", "src": "SRC_GL_050", "note": "fleet.generations 僅 NVIDIA 世代"},
+  "nbis": {"base": 0, "tag": "Derived", "src": "SRC_GL_060", "note": "fleet.generations 僅 NVIDIA 世代"},
+  "wyfi": {"base": 0, "tag": "Derived", "src": "SRC_GL_070", "note": "fleet.generations 僅 NVIDIA 世代"}
+ },
+ "shares": {
+  "_doc": "營運者 → 使用者分攤（未填＝未分配）",
+  "msft": {"u": {"self": 0.4}, "lo": 0.25, "hi": 0.5, "tag": "Assumed", "src": "SRC_GL_010", "note": "自用＝1 − mag.mw.externalShare 0.6（0.5–0.75）；對外部分的使用者拆分待證據"},
+  "googl": {"u": {"self": 0.7}, "tag": "Assumed", "src": "SRC_GL_020", "note": "自用＝1 − 對外 30%（texts.mwYearEndNotes、scenarios.mwPath.note）；對外使用者（含 Anthropic）待證據"},
+  "amzn": {"u": {"self": 0.2}, "tag": "Assumed", "src": "SRC_GL_030", "note": "自用＝1 − mag.mw.externalShare 0.8（0.7–0.9）；對外使用者（含 Anthropic）待證據"},
+  "meta": {"u": {"meta": 1}, "tag": "Derived", "src": "SRC_GL_004", "note": "結構：自建自用（工作單 Matrix 欄定義）"},
+  "xai": {"u": {"xai": 1}, "tag": "Derived", "src": "SRC_GL_004", "note": "結構：自建自用"},
+  "oai": {"u": {"oai": 1}, "tag": "Derived", "src": "SRC_GL_004", "note": "結構：自建自用"},
+  "ant": {"u": {"ant": 1}, "tag": "Derived", "src": "SRC_GL_004", "note": "結構：自建自用"}
+ },
+ "usertotals": [
+  {"key": "usr_oai", "label": "OpenAI 使用算力年底 GW（報導／模型）", "basis": "未說明", "tag": "Interested-party", "src": "SRC_GL_080", "note": "2025 年底 1.9（Friar；openai Checks B116 SRC）；2026 年底 4.6（3.5–5.7，openai Inputs B284 口徑三 [Assumed]）", "y": {"2025": 1.9, "2026": 4.6}},
+  {"key": "usr_ant", "label": "Anthropic 使用算力年底 GW（報導）", "basis": "未說明", "tag": "Interested-party", "src": "SRC_GL_090", "note": "anthropic Compute B174：2025 約 1.4、2026 約 5、2027 約 10（媒體轉述投資人資料）", "y": {"2025": 1.4, "2026": 5, "2027": 10}}
+ ],
+ "thirdparty": [
+  {"key": "tp_epoch", "label": "Epoch AI 全球 AI 資料中心容量（年底）", "basis": "未說明"},
+  {"key": "tp_iea", "label": "IEA 資料中心用電／容量（AI 部分）", "basis": "未說明"},
+  {"key": "tp_semi", "label": "SemiAnalysis 資料中心模型（AI 容量）", "basis": "未說明"}
+ ],
+ "mix": {
+  "_doc": "新增 GW 世代組合（NVIDIA 內部占比，合計 1）與非 NVIDIA 比例；Derived 列為公式（讀 SIL_In）",
+  "nv": {
+   "H100": {"2023": 1, "2024": 1, "2025": 0.1},
+   "GB200": {"2025": 0.7},
+   "GB300": {"2025": 0.2}
+  },
+  "tag_nv": "Assumed（2023–25）／Derived（2026–29）／Assumed（2030–32 沿用 2029）",
+  "src_nv": "SRC_GL_100",
+  "note_nv": "2023–24 Hopper（工作單第 2 節）；2025 依 CoreWeave 2025 新增組合 GB200 70%／GB300 20%／H200 10%（Analogy）；2026 GB300＝1−SIL_vr26、VR200＝SIL_vr26；2027–29 Rubin Ultra＝ru ÷（rb＋ru）（Siliconomics Units）；2030–32 沿用 2029"
+ },
+ "campus": [
+  {"key": "cp_msft_fw_wi", "name": "Fairwater Wisconsin", "op": "msft", "user": "oai", "mw": 369, "basis": "IT", "tag": "Interested-party", "src": "SRC_GL_010", "note": "texts.mwFacts（Epoch AI，在役）；上線年月待證據", "year": null, "month": null, "delay": null, "inc": 0},
+  {"key": "cp_msft_fw_atl", "name": "Fairwater Atlanta", "op": "msft", "user": "oai", "mw": 636, "basis": "IT", "tag": "Interested-party", "src": "SRC_GL_010", "note": "texts.mwFacts（Epoch AI，在役）；上線年月待證據", "year": null, "month": null, "delay": null, "inc": 0},
+  {"key": "cp_amzn_nc", "name": "New Carlisle（Rainier）", "op": "amzn", "user": "ant", "mw": 910, "basis": "IT", "tag": "Interested-party", "src": "SRC_GL_030", "note": "mag.mw.epochSites（Epoch AI）；上線年月待證據", "year": null, "month": null, "delay": null, "inc": 0},
+  {"key": "cp_amzn_rl", "name": "Ridgeland", "op": "amzn", "user": "ant", "mw": 228, "basis": "IT", "tag": "Interested-party", "src": "SRC_GL_030", "note": "mag.mw.epochSites；上線年月待證據", "year": null, "month": null, "delay": null, "inc": 0},
+  {"key": "cp_amzn_md", "name": "Madison", "op": "amzn", "user": "ant", "mw": 284, "basis": "IT", "tag": "Interested-party", "src": "SRC_GL_030", "note": "mag.mw.epochSites；上線年月待證據", "year": null, "month": null, "delay": null, "inc": 0},
+  {"key": "cp_orcl_abl", "name": "Stargate Abilene（已交付部分）", "op": "orcl", "user": "oai", "mw": 515, "basis": "IT", "tag": "Derived", "src": "SRC_GL_040", "note": "scenarios.mwPath.note：已交付 Abilene 515；上線年月待證據", "year": null, "month": null, "delay": null, "inc": 0},
+  {"key": "cp_orcl_sg5", "name": "Stargate 五站合計（Oracle 承租，第三方估計）", "op": "orcl", "user": "oai", "mw": 8100, "basis": "設施", "tag": "Interested-party", "src": "SRC_GL_040", "note": "texts.mwFacts：第三方估計 8.1 GW（設施）；分站上線年月待證據", "year": null, "month": null, "delay": null, "inc": 0}
+ ],
+ "sources": [
+  {"id": "SRC_GL_000", "path": "—", "desc": "待證據（gwledger/evidence_raw 由查證代理產出，chat 端複核後入 In）"},
+  {"id": "SRC_GL_001", "path": "siliconomics/data/tokenomics_snapshot_v21.7.json", "desc": "Tokenomics v21.7 快照（TK_In 鏡像）"},
+  {"id": "SRC_GL_002", "path": "siliconomics/data/CURRENT_SNAPSHOT → siliconomics_snapshot_v0.7.1.json", "desc": "Siliconomics 快照（SIL_In 鏡像）"},
+  {"id": "SRC_GL_003", "path": "docs/plan/20261028_全市場GW帳_規劃.md", "desc": "GW 帳規劃書（第 3 節單位、G6 容許帶）"},
+  {"id": "SRC_GL_004", "path": "gwledger/docs/workorders/20261028_GWLedger_v0.1.md", "desc": "v0.1 工作單"},
+  {"id": "SRC_GL_005", "path": "（chat 端 2026-10-28 建置指示：延遲參數佔位值）", "desc": "D1 3／6／9 月；D2 綁定 0.2／0.35／0.5、再延 12 月（佔位，待 B_delay.csv 校準）"},
+  {"id": "SRC_GL_010", "path": "microsoft/company.json", "desc": "texts.mwYearEndNotes、texts.mwFacts、mag.mw（aiOpenIT、externalShare）、mag.leases.notCommenced"},
+  {"id": "SRC_GL_011", "path": "microsoft/data/consensus_msft_20261008.json", "desc": "annualEstimates.capex（MarketScreener）"},
+  {"id": "SRC_GL_020", "path": "alphabet/company.json", "desc": "texts.mwYearEndNotes、texts.mwFacts、mag.ai.mwInService、mag.balance.leases"},
+  {"id": "SRC_GL_021", "path": "alphabet/data/consensus_googl_20261008.json", "desc": "annualEstimates.capex、companyGuidance.2026"},
+  {"id": "SRC_GL_030", "path": "amazon/company.json", "desc": "texts.mwYearEndNotes、mag.mw（aiInServiceIT、externalShare、epochSites）、leases.facts"},
+  {"id": "SRC_GL_031", "path": "amazon/data/consensus_amzn_20261008.json", "desc": "annualEstimates.capex、companyGuidance.FY2026.cashCapex"},
+  {"id": "SRC_GL_040", "path": "oracle/company.json", "desc": "scenarios.mwPath、fleet.openMw、texts.mwFacts"},
+  {"id": "SRC_GL_041", "path": "oracle/data/consensus_orcl_20261022.json", "desc": "annualEstimates.capex、companyGuidance.FY27 capex"},
+  {"id": "SRC_GL_050", "path": "coreweave/company.json", "desc": "texts.mwYearEndNotes、callFacts（activeGw、yeActiveGw、gw2030、contractedGw）、meta.mwBasis、fleet"},
+  {"id": "SRC_GL_051", "path": "coreweave/data/consensus_crwv_20260925.json", "desc": "annualEstimates.capex、companyGuidance.FY26"},
+  {"id": "SRC_GL_060", "path": "nebius/company.json", "desc": "texts.mwYearEndNotes、nebius.mw（connectedYE26）、scenarios.mwPath、fleet"},
+  {"id": "SRC_GL_061", "path": "nebius/data/consensus_nbis_20261007.json", "desc": "companyGuidance.FY26（contractedPowerGW、capex）、annualEstimates.capex"},
+  {"id": "SRC_GL_070", "path": "whitefiber/company.json", "desc": "scenarios.mwPath、texts.mwYearEndNotes、fleet"},
+  {"id": "SRC_GL_080", "path": "openai/model/20261025_OpenAI_v0.6.3.xlsx", "desc": "Inputs B284（2026 年底 GW 口徑三）、Checks B116（2025 年底 1.9）"},
+  {"id": "SRC_GL_090", "path": "anthropic/model/20261024_Anthropic_v0.1.5.xlsx", "desc": "Compute B174（報導年底 GW）"},
+  {"id": "SRC_GL_100", "path": "coreweave/company.json fleet.openMix；siliconomics 快照 SIF_vr26、SIF_UnitsPlat_*", "desc": "世代組合"}
+ ],
+ "decisions": [
+  {"id": "GL01-01", "cat": "工程", "item": "TK GW 主口徑", "decision": "TK GW＝設施電力；IT 讀法 ÷ g（gIT_vr200 0.9198；其他世代 gIT_oth）。g 依年度世代組合加權（v0.1 各世代同值，數值無影響）", "date": "2026-10-28", "quote": "工作單第 0 節", "status": "執行"},
+  {"id": "GL01-02", "cat": "工程", "item": "口徑未說明的兩讀", "decision": "基準取 IT 讀法（÷ g）；Players 另列設施讀法（不 ÷ g）的市場合計", "date": "2026-10-28", "quote": "工作單第 0 節（CoreWeave mwBasis 先例）", "status": "執行"},
+  {"id": "GL01-03", "cat": "工程", "item": "年底值缺漏", "decision": "Players 計算值：有輸入取輸入；無輸入而最新觀測落在該年取觀測值；兩個已知值之間線性內插；最後已知值之後持平沿用；第一個已知值之前留空。每格旗標 1 輸入／2 觀測／3 內插／4 沿用", "date": "2026-10-28", "quote": "工作單未規定（工程細節）", "status": "預設、可撤回"},
+  {"id": "GL01-04", "cat": "工程", "item": "財年 MW 時點", "decision": "Microsoft（6 月）、Oracle（5 月）財年末 MW 置於該財年結束的曆年欄，年底值偏低；資本支出則以財年月數拆成曆年", "date": "2026-10-28", "quote": "工作單未規定", "status": "預設、可撤回"},
+  {"id": "GL01-05", "cat": "工程", "item": "Pipeline 結構", "decision": "園區列（有上線年月且納入＝1 才計入）＋各玩家各年『未分園區』殘差列（＝Players 年新增 − 該年已列園區）；殘差在該年均勻上線（觀測年則到觀測時點為止）；玩家第一個已知年為存量，不延遲。D0 彙總與 Players 恆等", "date": "2026-10-28", "quote": "工作單 Pipeline、Checks", "status": "執行"},
+  {"id": "GL01-06", "cat": "工程", "item": "延遲情景機制", "decision": "延遲只作用於評價時點（asof）之後的上線量；D1 延遲＝MAX(已知延遲, dly_d1_m)；D2＝D1 之上綁定比例 dly_d2_bind 再延 dly_d2_m 月", "date": "2026-10-28", "quote": "規劃書第 4 節；chat 端佔位值", "status": "預設、可撤回"},
+  {"id": "GL01-07", "cat": "工程", "item": "需求情景", "decision": "2024–2027 各情景同 Pipeline；2028–29 年新增 × SIF_UnitsCoef_*；2030–32 年新增按 2029 年增率線性收斂到 g_lt（2032 達 g_lt）；年底＝2023 存量＋累計年新增", "date": "2026-10-28", "quote": "工作單 Deploy", "status": "執行"},
+  {"id": "GL01-08", "cat": "工程", "item": "C1 推算資本支出", "decision": "IF_CapexTotal 拆為 IT（上線年入帳）與廠房（提前 lag_bldg 月，按月數比例分攤到前 1–2 年）；非 NVIDIA 部分 IT＝持有比 × VR200 IT capex（借用持有比，近似）；第一個已知年的存量不計資本支出", "date": "2026-10-28", "quote": "工作單 C1；規劃書第 6 節第 1 點", "status": "預設、可撤回"},
+  {"id": "GL01-09", "cat": "工程", "item": "Matrix", "decision": "加『未分配』欄，使列和恆等於 Players；使用者合計與報導值（OpenAI、Anthropic）只作對照", "date": "2026-10-28", "quote": "工作單 Matrix", "status": "執行"},
+  {"id": "GL01-10", "cat": "工程", "item": "對帳狀態", "decision": "雙方皆 Verified 才判『對得上／偏差』，否則『證據不足』並附比值是否在容許帶", "date": "2026-10-28", "quote": "規劃書第 3 節", "status": "執行"}
+ ]
+}
