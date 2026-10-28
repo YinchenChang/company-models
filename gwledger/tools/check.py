@@ -77,7 +77,7 @@ def main():
     # 7) 固定規格（Andy 2026-10-28）：README 須含對帳鏈與延遲情景規格
     rd = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "README.md")
     txt = open(rd, encoding="utf-8").read() if os.path.exists(rd) else ""
-    for kw in ("### 對帳鏈", "### 基建延遲情景", "| C0 |", "| C7 |", "D0 準時", "D1 基準延遲", "D2 嚴重延遲", "919.8"):
+    for kw in ("### 對帳鏈", "### 基建延遲情景", "| C0 |", "| C7 |", "D0 準時", "D1 基準延遲", "D2 嚴重延遲", "IT 關鍵電力", "IF_FacilityGW", "k_chip2it"):
         if kw not in txt: bad.append(f"gwledger/README.md 缺固定規格：{kw}")
     print(f"{os.path.basename(x)}：頁面 {len(wb.sheetnames)}、具名範圍 {len(names)}（GIF_ {len(gif)}）、Checks {len(rows)} 項（OK {nok}／WARN {len(cw)}／ERROR {len(ce)}）、"
           f"In 輸入列 {nrow}（待證據 {pend}）、錯誤格 {nerr}")

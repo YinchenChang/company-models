@@ -60,7 +60,7 @@ def main():
     fn = os.path.basename(x)
     ver = fn.split("_v")[-1].rsplit(".xlsx", 1)[0] if "_v" in fn else "?"
     snap = dict(source=dict(file=fn, version="v" + ver, sha256=hashlib.sha256(open(x, "rb").read()).hexdigest(),
-                            unit="TK GW（設施電力）", years=list(range(2024, 2033)),
+                            unit="IT GW（＝TK GW，IT 關鍵電力；設施＝× IF_FacilityGW）", years=list(range(2024, 2033)),
                             note="GW 帳快照；下游只讀本檔。GGOV_Errors 須為 0；名稱格式 <前綴>_<yyyy>；空白＝未知"),
                 rows=rows, names=names)
     json.dump(snap, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
