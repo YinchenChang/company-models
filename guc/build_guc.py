@@ -824,6 +824,21 @@ if os.environ.get("RATING_ROWMAP"):   # 除錯用：輸出新增列號（供撰�
     print("ROWMAP", GRADE_ROW, REC_ROW, _rr, _rr + 1, _rr + 2)
 
 
+# ---------------- v0.1.2（2026-10-28）：分部原則重建（Q 頁第 33 列起追加；不位移既有列，數值不變） ----------------
+Q.cell(33, 1, "官方報告分部與營收類別（FY2025；分部原則第 3 條）").font = BOLD
+for _r, _lab, _v, _tag, _s1, _s2 in (
+        (34, "單一營運部門（ASIC 設計服務）營收", 34.141, "Verified", "公司 FY2025 財報：單一應報導部門", "與第 4 列 FY2025 營收同一數字（公司揭露）"),
+        (35, "  委託設計（NRE）", "=B34*0.34", "Interested-party", "經濟日報 2026-01-31（萬寶週刊）：NRE 約占 34%", "比重為媒體轉述公司數字；金額為推得"),
+        (36, "  量產（Turnkey）", "=B34*0.64", "Interested-party", "同上：Turnkey 約占 64%", "本模型的 Google CPU、AI ASIC、車用量產皆屬 Turnkey；推估年不拆 NRE／Turnkey"),
+        (37, "  其他（差額）", "=B34-B35-B36", "Derived", "—", "原文未說明其餘約 2%"),
+        (38, "檢查：分部合計 − 合併營收", "=B34-B4", "Derived", "—", "應為 0")):
+    Q.cell(_r, 1, _lab); Q[f"B{_r}"] = _v; Q[f"B{_r}"].number_format = "#,##0.000"
+    if not (isinstance(_v, str) and _v.startswith("=")): Q[f"B{_r}"].font = BLUE
+    Q.cell(_r, 8, _tag); Q.cell(_r, 9, _s1); Q.cell(_r, 10, _s2)
+_rr = RD.max_row + 1
+RD.cell(_rr, 1, "v0.1.2（2026-10-28）：分部原則重建（數值不變）。創意為單一應報導部門；Q 頁第 33 列起追加 FY2025 部門營收、營收類別（NRE 約 34%、Turnkey 約 64%，經濟日報轉述）與核對列「分部合計 − 合併營收」。推估年仍以 Google CPU／AI ASIC／車用／其他拆分，不拆 NRE／Turnkey。")
+RD.cell(1, 1).value = RD.cell(1, 1).value.replace("v0.1.1", "v0.1.2")
+
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 wb.save(sys.argv[1])
