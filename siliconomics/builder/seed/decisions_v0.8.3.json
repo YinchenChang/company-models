@@ -1,0 +1,11 @@
+[
+ {
+  "id": "S27",
+  "cat": "治理",
+  "item": "v0.8.3：衝突登錄清理",
+  "decision": "文件類衝突結案：CF02（Ibiden 對照改以欣興 537 億為準，只改來源文字）、CF05（AMD README 已一致）、CF06（韓美 Sens 情境 C 標籤更正）、CF07（BESI README 更正）、CF08（Lam README 25 倍）、CF16（Drive 候選母體 v0.2.4 狀態欄）。CF01（南電新廠資本支出）屬公司變數，移到南電分部重建處理。G5 待處理項目 10 → 4（CF03、CF11、CF13、CF23，皆待 Andy；CF03 狀態補上「待 Andy」字首以便計數）",
+  "date": "2026-10-28",
+  "quote": "Andy 2026-10-28 14:33「請盤點一下Siliconomics的工作排程，並繼續做下去」",
+  "status": "預設、可撤回"
+ }
+]

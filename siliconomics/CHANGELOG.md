@@ -1,5 +1,10 @@
 # Siliconomics 變更紀錄
 
+## v0.8.3（2026-10-28；`model/20261028_Siliconomics_v0.8.3.xlsx`；Tokenomics v21.7）
+
+- 衝突登錄清理（修補版：只改文字）：CF02（Ibiden 份額相對值 `abf_ibrel_28` 的來源改以欣興 2026 資本支出 537 億為準）、CF05（AMD README 已一致）、CF06（韓美 Sens 情境 C 標籤更正為「混合鍵合低值（導入慢）」）、CF07（besi/README.md 跨模型注意更正）、CF08（lrcx/README.md 25 倍）、CF16（Drive 候選母體 v0.2.4）結案；CF01 移到南電分部重建；CF03 狀態補「待 Andy」字首。Checks G5：10 → 4（CF03、CF11、CF13、CF23）。
+- 下游：Ibiden In 頁 1 格來源文字、韓美 Sens 1 格標籤；數值不變。決策 S27。
+
 ## v0.8.2（2026-10-28；`model/20261028_Siliconomics_v0.8.2.xlsx`；Tokenomics v21.7）
 
 - 新增 In 頁 M26（3 列）：共用匯率 新台幣 32.0（30.5–33.0）、人民幣 6.72（6.50–7.00；2026-10-16 中間價）、韓元 1,420（1,350–1,500）。台廠 15 個、陸廠 3 個、韓廠 3 個模型改讀；日圓不共用（Ibiden ¥152、Advantest ¥150、Kioxia ¥160 為公司財測前提）。
