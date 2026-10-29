@@ -143,6 +143,21 @@ def drive_download(file_id, dest):
 
 
 # ---------- 欄位清單 ----------
+def field_list_from_file(path):
+    """欄位清單檔（2026-10-29 起）：不依賴 company.json，供 v0.3 架構的 MAG、新建模型（例：SpaceX）使用。
+    檔案為 JSON 陣列：[{"path": 欄位鍵, "desc": 說明（含單位）, "group": 分組（可省）, "prior": 上次值（可省）}]。"""
+    rows = json.load(open(f"{ROOT}/{path}", encoding="utf-8"))
+    fields = []
+    for r in rows:
+        if not r.get("path"):
+            raise ValueError(f"欄位清單檔有缺 path 的列：{r}")
+        fields.append({"path": r["path"], "group": r.get("group", "fields_file"),
+                       "prior": r.get("prior"), "desc": r.get("desc", "")})
+    if len({f["path"] for f in fields}) != len(fields):
+        raise ValueError("欄位清單檔的 path 有重複")
+    return None, fields
+
+
 def field_list(company, target_q):
     co = json.load(open(f"{ROOT}/{company}/company.json", encoding="utf-8"))
     sys.path.insert(0, f"{ROOT}/{company}")
@@ -406,7 +421,7 @@ def main():
                 local.append(drive_download(fid, f"{ROOT}/mag/extract/docs/_drive_{name}_{i}.pdf"))
             if local:   # 本地文件模式（2026-10-27 起的主要模式：SEC 擋雲端 IP，改由 Andy 手動下載）
                 for doc in local:   # 不可用 path：外層迴圈的請求檔路徑（曾因覆蓋而把 PDF 搬成請求檔）
-                    t = read_local(doc)[:MAX_DOC_CHARS]
+                    t = read_local(doc)[:int(req.get("max_doc_chars", MAX_DOC_CHARS))]
                     lab = os.path.basename(doc)
                     parts.append(f"\n\n===== 文件：{lab} =====\n{t}")
                     meta.append((lab, doc, req.get("filed", ""), len(t)))
@@ -418,7 +433,10 @@ def main():
                     t = html_to_text(http_get(url))[:MAX_DOC_CHARS]
                     parts.append(f"\n\n===== 文件：{lab}（申報日 {d}）=====\n{t}")
                     meta.append((lab, url, d, len(t)))
-            co, fields = field_list(req["company"], req.get("target_q"))
+            if req.get("fields_file"):   # 欄位清單檔優先（v0.3 架構與新建模型沒有 company.json）
+                co, fields = field_list_from_file(req["fields_file"])
+            else:
+                co, fields = field_list(req["company"], req.get("target_q"))
             prompt = build_prompt(req, "".join(parts), fields)
             results, binfo = run_batch({m: (m, prompt) for m in MODELS}, req.get("batch_id"))
             if binfo.get("processing_status") != "ended":     # 未完成：記下批次編號、保留請求，下次執行續接

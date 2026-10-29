@@ -17,6 +17,8 @@
    - `company`：company-models 中有 `company.json`＋`calendar_q.py` 的公司資料夾（MAG 三家，亦可 coreweave、oracle 等同架構模型）；`period_end`：該季期末日（EDGAR reportDate）；
    - `target_q`：`quarterly.actuals` 的季度鍵（Microsoft 用 FYyyQn，另兩家用 yyyyQn）；
    - `mode`：`live`（新季）或 `backtest`（已申報季，與 company.json 現值比對準確率）。
+   - `fields_file`（2026-10-29 起，可省）：repo 內欄位清單檔路徑（JSON 陣列，每列 `path`、`desc`，可加 `group`、`prior`）。有此鍵時不讀 company.json，供 v0.3 架構的 MAG 與新建模型（例：SpaceX）使用；`company` 只作標籤。
+   - `max_doc_chars`（可省）：單份文件字元上限，預設 900,000；S-1 等長文件可調高，但兩份以上文件合計須留在 1M context 內（約 4 字元／token）。
 2. 工作流程 `mag-extract`（push 觸發）自動執行，結果 commit 回同一分支：
    `mag/extract/out/<請求名>.xlsx`（候選值頁：紅＝兩模型不同、黃＝只一個找到）與 `.md` 摘要；請求檔移到 `requests/done/`。
 
