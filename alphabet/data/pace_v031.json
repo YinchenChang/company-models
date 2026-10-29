@@ -1,0 +1,16 @@
+{
+ "pace": 6228.3,
+ "pace_tpu1": 5208.6,
+ "pace_check": {
+  "gap": 0.0003,
+  "q4_formula": 68.047
+ },
+ "pace_tpu1_check": {
+  "gap": 0.0006,
+  "q4_formula": 68.046
+ },
+ "pace_h2": 5291.7,
+ "pace_g195": 5667.2,
+ "pace_g205": 6789.5,
+ "note": "C10 v0.3.1：FY2026＝9M 實績＋Q4 公式＝指引中點（alphabet/calib_pace_v031.py；四捨五入到 0.1 MW／年後的落差見 *_check.gap）"
+}
