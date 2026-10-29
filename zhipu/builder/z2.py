@@ -389,7 +389,7 @@ def build(wb, D, tk_cells):
     ]
     for k, zh, col, sk, fm, mlab, nmx in recon:
         src = "年報" if col == "D" else "中期公告"
-        V.add(f"官方{zh}分部（{src}）", "RMB 億", {col: f"={S(sk)}"}, f"{S(sk)}；官方報告分部（部署方式）", key=f"sr_{k}_o")
+        V.add(f"官方分部：{zh}（{src}）", "RMB 億", {col: f"={S(sk)}"}, f"{S(sk)}；官方報告分部（部署方式）", key=f"sr_{k}_o")
         V.add(mlab, "RMB 億", {col: fm.replace("=", "=", 1)}, "", key=f"sr_{k}_m")
         V.add(f"對帳差額：{zh}（模型或子項加總 − 官方）", "RMB 億", {col: f"={col}«V.sr_{k}_m»-{col}«V.sr_{k}_o»"},
               "財報千元四捨五入至億元四位小數，容許微小差；超過 Inputs 容差即為差異", key=f"sr_{k}_d", name=nmx, name_col=col)
