@@ -7,6 +7,9 @@ OpenAI 收支模型（v0.6，建置中）。2026-10-07 由 `YinchenChang/openai-
 - 本地建置：`pip install -r requirements-dev.txt`；`python3 builder/build.py --tk-dir <Tokenomics> --out model/<檔名>.xlsx --base model/<現行>.xlsx`；測試 `python3 -m pytest tests/parity`。
 - 需要 LibreOffice Calc（Ubuntu：`apt-get install -y --no-install-recommends libreoffice-calc-nogui`）。
 
+## v0.6.4：口徑一 Q2 GW 採 B／C 段、D2 推導式、衍生值移 Inputs（Tokenomics v21.7）
+- 口徑一 Q2 季平均 GW 2.26（2.17–2.35）；`PxQ` 新增第 8.4 節（D2 推導式，候選因子）與第九節（Microsoft 10-Q 對照）；SRC_OAI_141–143 退役、改為 Inputs 公式列；`TK_Link` 改取 v21.7。建置：`python3 builder/build.py --tk-dir <Tokenomics checkout@8309fdb> --out model/20261029_OpenAI_v0.6.4.xlsx --base model/archive/20261025_OpenAI_v0.6.3.xlsx --date 2026-10-29 --tk-date 2026-10-29`。範圍外變動比較：`python3 tools/diff_v064.py <v0.6.3> <v0.6.4>`。報告 `docs/reports/20261029_v0.6.4.md`。
+
 ## v0.6.3：PxQ 比值 2026 三口徑（Tokenomics v21.4）
 - `PxQ` 頁 11 欄：2025 指數／線性 + 2026 口徑一（Q2 年化營收÷Q2 季平均 GW，主）／口徑二（FY2026 營收÷全年平均 GW）／口徑三（9 月底 run-rate÷年底 GW）× 低／基準／高；新增 Fairwater 六情境（第七節）與 GW 路線 token 帳（第八節）。建置：`python3 builder/build.py --tk-dir <Tokenomics checkout> --out model/20261025_OpenAI_v0.6.3.xlsx --base model/archive/20261022_OpenAI_v0.6.2.xlsx --date 2026-10-25 --tk-date 2026-10-25`。報告 `docs/reports/20261025_v0.6.3.md`。
 

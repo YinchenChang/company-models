@@ -990,6 +990,7 @@ def p6_rows(R: Recorder):
       status="v0.6.1 新增（P×Q）", note="工作單：誤差 >0.5% 須說明；PxQ 頁對帳表用此值標示『差異』；區間不適用（低＝高）", meta=False)
     R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 0.005, 0.005
     p6_rows_v063(R)
+    p6_rows_v064(R)
 
 
 A_SEG = "Tokenomics docs/evidence/20261024_OpenAI2026GW_A段/OpenAI2026GW_A段.xlsx（PR #160；master 693792f）"
@@ -1003,22 +1004,6 @@ def p6_rows_v063(R: Recorder):
     """v0.6.3（工作單 20261025）：PxQ 三口徑所需的營收出處（SRC_OAI_141 起）、口徑一／三 GW、J7 站點 GW、GW 路線 token 帳輸入（INP_289 起）。擷取日 2026-10-25（讀自 Tokenomics 證據檔，未重讀原網頁）。"""
     S, I = R.src, R.inp
     ex = "（讀自 Tokenomics 證據檔 2026-10-25；本模型未重讀原網頁）"
-    S("v0.6.3/PxQ/口徑一營收", "營收：2026 Q2 年化（不含廣告）", vlit=26.3, unit="$B",
-      scope="2026 Q2 營收年化：WSJ 報導 Q2 營收 $6.7B（×4＝26.8，含廣告）減廣告年化 0.5（Tokenomics Cap_In E186，Assumed 0.3–0.8）＝26.3；即 Tokenomics Cap_In E187『m 分子營收』Q2 年化（Derived）",
-      date="2026-08-18", tag="Interested-party", source=WSJ_Q2_SRC + "；26.3 取自 Tokenomics v21.4 Cap_In E187", use="PxQ 口徑一（Q2 年化營收 ÷ Q2 季平均 GW）營收；Fairwater 對照區塊",
-      note="工作單 20261025 J5 與 W2-3" + ex + "；WSJ 季營收為『知情人士』轉述、未經公司確認；扣除廣告 0.5 為 Tokenomics 的 Assumed，本列不補區間（廣告區間 0.3–0.8 → 26.0–26.5）")
-    R.src_rows[-1]["cl"] = dict(grade="2", stance="利害關係方（原始數字）／報導", why="營收數字出自知情人士轉述 WSJ，未經公司確認；誘因為募資與估值敘事", hand="二手")
-    S("v0.6.3/PxQ/口徑一營收", "營收：2026 Q2 年化（WSJ 季營收 6.7 × 4；含廣告；對照）", vlit=26.8, unit="$B",
-      scope="WSJ 報導 2026 Q2 營收 $6.7B 的年化（×4；含廣告）；對照列＝SRC_OAI_005 × 4（算術，常數 4 不得寫入公式，故登錄本列）",
-      date="2026-08-18", tag="Interested-party", source=WSJ_Q2_SRC, use="PxQ Fairwater 對照區塊（營收 268 億的倍數）",
-      note="工作單 20261025 J5『268 億為對照列』" + ex)
-    R.src_rows[-1]["cl"] = dict(grade="2", stance="利害關係方（原始數字）／報導", why="營收數字出自知情人士轉述 WSJ，未經公司確認；誘因為募資與估值敘事", hand="二手")
-    S("v0.6.3/PxQ/口徑二營收", "營收：FY2026 預測（不含廣告）", vlit=35, unit="$B",
-      scope="FY2026 營收預測 36（FT 2026-09-18，7 月投資人簡報；＝SRC_OAI_043 管理層目標，含廣告）減廣告 1.0（Tokenomics Cap_In F186，Assumed 0.5–1.5）＝35；即 Tokenomics Cap_In F187『m 分子營收』FY2026 預測",
-      date="2026-09-18", tag="Interested-party", source="FT 2026-09-18（7 月投資人簡報，管理層目標 36；見 SRC_OAI_043）；35 取自 Tokenomics v21.4 Cap_In F187（Derived）。證據：" + A_SEG + "『比值』B8",
-      use="PxQ 口徑二（FY2026 營收 ÷ 全年平均 GW）營收",
-      note="工作單 20261025 J5 與 W2-3" + ex + "。Andy 提供的『市場傳聞 360 億』＝本列含廣告版本（SRC_OAI_043 管理層目標 36，出處為 FT，非傳聞）；SRC_OAI_043 改為 PxQ 4.6 對照用途。管理層預測，非實績")
-    R.src_rows[-1]["cl"] = dict(grade="2", stance="利害關係方", why="管理層內部預測：誘因為募資與議價，傾向呈現成長", hand="二手")
     S("v0.6.3/PxQ/口徑三營收", "營收 run-rate：2026 年 9 月底（FT，OpenAI 淨額口徑）", vlit=50, unit="$B",
       scope="年化 run-rate（非全年營收）：9 月底約 $50B（FT，OpenAI 淨額口徑）；Bloomberg 8 月 >$40B；各口徑不可直接比",
       date="2026-09", tag="Interested-party", source="FT、Bloomberg 經 FutureSearch https://futuresearch.ai/openai-financial-forecast/ （run-rate 8 月 >40B（Bloomberg）、9 月底約 50B（FT）；原文未讀）。證據：" + A_SEG + "『證據表』R01、『比值』B9",
@@ -1032,16 +1017,20 @@ def p6_rows_v063(R: Recorder):
       note="工作單 20261025 J7：照 Tokenomics SRC_DEM_011 原紀錄抄錄；Checks 驗與 TK_SRC_DEM_011 相等。Q2 當期值：已搜尋，未找到（A 段 T02；2026-04 之後無新值）")
     R.src_rows[-1]["cl"] = dict(grade="1", stance="利害關係方", why="OpenAI 自己公告的用量：誘因為宣傳成長與用戶規模", hand="一手")
     base = "v0.6.3/PxQ"
-    I(base + "/口徑一 GW", "口徑一：2026 Q2 季平均上線 GW：基準", unit="GW", vlit=2.34, tag="Derived", decision="工作單 20261025 J2",
-      status="v0.6.3 新增（P×Q）", meta=False,
-      note="基準取 J7『中占比 × Epoch 日期』Q2 季平均 2.34（Epoch 追蹤站點增量加在 Friar 2025 年底 1.9 GW 上；GW 為下界）；低取 J7 最低 2.21（低占比＋晚）；高取 A 段 Q2 季平均上緣 3.3（六情境最大 3.325）。出處：" + J7_XLSX + "；" + A_SEG + "『換算』K24。電力口徑：IT（Epoch 假設 Friar 報 IT）")
-    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 2.21, 3.3
-    I(base + "/口徑一 GW", "口徑一：2026 Q2 季平均上線 GW：低情境", unit="GW", vlit=2.21, tag="Derived", decision="工作單 20261025 J2", status="v0.6.3 新增（P×Q）", meta=False,
-      note="三欄情境之低端（＝基準列區間下緣；J7 低占比＋晚日期 2.2055；情境值，低＝高＝值）")
-    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 2.21, 2.21
-    I(base + "/口徑一 GW", "口徑一：2026 Q2 季平均上線 GW：高情境", unit="GW", vlit=3.3, tag="Derived", decision="工作單 20261025 J2", status="v0.6.3 新增（P×Q）", meta=False,
-      note="三欄情境之高端（＝基準列區間上緣；A 段六情境 Q2 季平均最大 3.325＝高＋線性；情境值，低＝高＝值）")
-    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 3.3, 3.3
+    W1NOTE = ("B 段 Fairwater 占比 f＝0.4／0.65／0.9（判斷區間，Assumed；其他站沿用 J7 低占比、Epoch 晚日期）→ 2.17／2.26／2.35（完整值 2.261 為中心；B 段 README 表）；"
+              "C 段（Microsoft FY27 Q1，10-29）確認不改。舊值 2.34（J7 中占比＋晚）、2.21、3.3（A 段六情境上緣）見 v0.6.3 與本頁 J7 列。"
+              "出處：Tokenomics `docs/evidence/20261025_決定變數_B段/決定變數_B段.xlsx`『Fairwater』頁（PR #168）、`20261029_決定變數_C段/`（PR #187；master 8309fdb）。")
+    I(base + "/口徑一 GW", "口徑一：2026 Q2 季平均上線 GW：基準", unit="GW", vlit=2.26, tag="Derived", decision="工作單 20261025 J2；20261029 W1",
+      status="v0.6.3 新增（P×Q）；v0.6.4 W1 改值", meta=False, note=W1NOTE + "電力口徑：IT（Epoch 假設 Friar 報 IT）。")
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 2.17, 2.35
+    I(base + "/口徑一 GW", "口徑一：2026 Q2 季平均上線 GW：低情境", unit="GW", vlit=2.17, tag="Derived", decision="工作單 20261025 J2；20261029 W1",
+      status="v0.6.3 新增（P×Q）；v0.6.4 W1 改值", meta=False,
+      note="三欄情境之低端（＝基準列區間下緣；f＝0.4，取兩位小數 2.17；情境值，低＝高＝值）。" + W1NOTE)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 2.17, 2.17
+    I(base + "/口徑一 GW", "口徑一：2026 Q2 季平均上線 GW：高情境", unit="GW", vlit=2.35, tag="Derived", decision="工作單 20261025 J2；20261029 W1",
+      status="v0.6.3 新增（P×Q）；v0.6.4 W1 改值", meta=False,
+      note="三欄情境之高端（＝基準列區間上緣；f＝0.9，取兩位小數 2.35；情境值，低＝高＝值）。" + W1NOTE)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 2.35, 2.35
     I(base + "/口徑三 GW", "口徑三：2026 年底上線 GW：基準", unit="GW", vlit=4.6, tag="Assumed", decision="工作單 20261025 J4", status="v0.6.3 新增（P×Q）", meta=False,
       note="A 段三情境：基準 4.6＝以 2027『low double-digit』11 GW（OpenAI 投資人備忘錄，Bloomberg 2026-04-09）做幾何插值（4.57）；低 3.5＝OpenAI 對 Anthropic 2026 年底的估計中點（Analogy）；高 5.7＝Friar 3 倍／年延續。出處：" + A_SEG + "『換算』B7、B17、B19。年底時點、非平均；年底世代組合暫用 2026 年組合（待 Project 判斷）")
     R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 3.5, 5.7
@@ -1059,8 +1048,9 @@ def p6_rows_v063(R: Recorder):
     for lab, v, cell, full in (("低占比", 1.11, "B19", 1.1143), ("高占比", 1.06, "B21", 1.0601)):
         I(base + "/J7 2025 GW", "J7 2025 平均上線 GW（站點分布估）：" + lab, unit="GW", vlit=v, tag="Derived", decision="工作單 20261025 J6", status="v0.6.3 新增（P×Q）", meta=False,
           note=f"取自 {J7_XLSX} {cell}（完整值 {full}，取兩位小數）；同一批站點的 2025 時間分布估 2025 平均 GW，低於 TK 內插 1.128 與線性 1.25；只作對照列，不進主序列、不改 INP_276 開關（J6）")
-    I(base + "/2025 比值上緣", "2025 回本比值：上緣情境（A 段表 E）", unit="倍", vlit=1.397, tag="Derived", decision="工作單 20261025 W2-5", status="v0.6.3 新增（P×Q）", meta=False,
-      note="A 段『比值』表 E：2025 基準區間 1.118／1.239／1.397 之上緣（" + A_SEG + "『比值』D57）。1.118、1.239 為本頁 2025 線性／指數內插計得；1.397 與營收 13.07、h 9.353 相合者為平均 GW 約 1.0（13.07÷9.353÷1.0），起源不在證據檔明述，待 Project 確認；只用於持平門檻表")
+    I(base + "/2025 比值上緣", "2025 回本比值：上緣情境（A 段表 E）", unit="倍", vlit=1.397, tag="Derived", decision="工作單 20261025 W2-5；20261029 W3", status="v0.6.3 新增（P×Q）；v0.6.4 W3 改註記", meta=False,
+      note="＝1 ÷ Tokenomics `L1_LReqFleet_Full_Lo`（v21.4／v21.7 皆 0.7156），即 2025 平均 GW 取低端 1.0 時的比值（13.07 ÷（1.0 × 9.353））；A 段『比值』E57 點名該名稱。"
+           "本模型不得讀 `L1_`，故為手抄 Derived；TK 改值時不會自動跟著動，換 TK 快照時以 check 確認。1.118、1.239 為本頁 2025 線性／指數內插計得；只用於持平門檻表。出處：" + A_SEG + "『比值』D57")
     R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 1.397, 1.397
     I(base + "/需求面 token", "ChatGPT 每日則數：2026 Q2", unit="B 則/日", vlit=3.6, tag="Assumed", decision="工作單 20261025 J7", status="v0.6.3 新增（P×Q）", meta=False,
       note="＝SRC_OAI_100（2.5B 則／日，2025-07）× 週活 1.0B ÷ 0.7B（Tokenomics Cap_In E197 Derived，區間 3.2–3.8）；2026 官方新值與 3.6 的出處：已搜尋，未找到（A 段 T05）；照 Tokenomics Cap_In D197:F197 抄錄，本模型不讀 TK 的 Cap_In")
@@ -1074,6 +1064,87 @@ def p6_rows_v063(R: Recorder):
     I(base + "/證據對帳容許誤差", "證據對帳容許相對誤差（A 段／J7／token 帳）", unit="比例", vlit=0.01, tag="Decision", decision="工作單 20261025 W3、W4", status="v0.6.3 新增（P×Q）", meta=False,
       note="工作單：W3 對帳 2.10／1.99 容差 1%；W4 新增對帳列容差 1%；PxQ 第六節 6B 與第八節用此值標示『差異』；區間不適用（低＝高）")
     R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 0.01, 0.01
+
+
+B_SEG = "Tokenomics docs/evidence/20261025_決定變數_B段/（決定變數_B段.xlsx『token帳』『輸入』頁；PR #168）"
+C_SEG = "Tokenomics docs/evidence/20261029_決定變數_C段/（PR #187；master 8309fdb）"
+
+
+def p6_rows_v064(R: Recorder):
+    """v0.6.4（工作單 20261029）：W2 D2 推導式的輸入（SRC_OAI 2 列、Inputs 9 列）、W4 自 SRC_OAI_141–143 移入 Inputs 的 6 列（以公式表示）、W6 Microsoft 10-Q 對照列。
+    公式值以 {INP:名稱}／{SRC:指標}／{INPF:名稱}／{INPG:名稱} 佔位，finalize_ids 之後才換成最終 ID／低高欄儲存格。"""
+    S, I = R.src, R.inp
+    ex = "（讀自 Tokenomics 證據檔 2026-10-29；本模型未重讀原網頁）"
+    # ── W2：Codex 份額（SRC_OAI；來源等級依 source_rules 初評）──
+    arx = ("OpenAI（研究團隊）arXiv 2606.26959〈The Shift to Agentic AI: Evidence from Codex〉（2026-06-25；作者多為 OpenAI 員工，兩位學者為 OpenAI 付費顧問；推廣 Codex 的誘因）。"
+           "證據：" + B_SEG + "T03")
+    S("v0.6.4/PxQ/D2 Codex 份額", "Codex 占（Codex＋ChatGPT）輸出 token：組織用戶（截至 2026-06-11 前 28 天窗口）", vlit=0.633, unit="比例",
+      scope="Business／Enterprise 方案用戶；截至 2026-06-11 前 28 天窗口（非單日時點）；圖說定義為 Codex 輸出 token 占兩者合計的比例，讀作彙總比（論文未明說）；無絕對 token 量、未提 API",
+      date="2026-06-25", tag="Interested-party", source=arx, use="PxQ 第 8.4 節 D2 推導式（候選因子；不進基準 token 帳）",
+      note="工作單 20261029 W2" + ex)
+    R.src_rows[-1]["cl"] = dict(grade="1", stance="利害關係方", why="OpenAI 研究團隊論文（作者多為 OpenAI 員工，兩位學者為 OpenAI 付費顧問）：誘因為呈現 Codex 採用成長", hand="一手")   # r1：B 段證據原稿已讀原文
+    S("v0.6.4/PxQ/D2 Codex 份額", "Codex 占（Codex＋ChatGPT）輸出 token：個人用戶（含免費；截至 2026-06-11 前 28 天窗口）", vlit=0.165, unit="比例",
+      scope="Free／Go／Plus／Pro 個人用戶；截至 2026-06-11 前 28 天窗口；彙總比或平均值未明（同上）；無絕對 token 量、未提 API",
+      date="2026-06-25", tag="Interested-party", source=arx, use="PxQ 第 8.4 節 D2 推導式（候選因子；不進基準 token 帳）",
+      note="工作單 20261029 W2" + ex)
+    R.src_rows[-1]["cl"] = dict(grade="1", stance="利害關係方", why="OpenAI 研究團隊論文（作者多為 OpenAI 員工，兩位學者為 OpenAI 付費顧問）：誘因為呈現 Codex 採用成長", hand="一手")   # r1：B 段證據原稿已讀原文
+    # ── W6：Microsoft 10-Q 對照（不參與任何計算）──
+    S("v0.6.4/PxQ/Microsoft 10-Q 對照", "Microsoft FY27 Q1（2026-07～09）來自 OpenAI 的營收（含分潤）", vlit=10.0, unit="$B", subject="Microsoft",
+      scope="Microsoft 全公司當季來自 OpenAI 的營收（inclusive of revenue-sharing payments；約占 Microsoft 總營收 10.8%）；未拆 Azure 消費與分潤，也沒有站點；"
+            "是全公司營收，不可換算成 Fairwater 占比或 GW（C 段 C1）",
+      date="2026-10-28", tag="Interested-party",
+      source="Microsoft FY27 Q1 10-Q 關係人附註（ASC 850 強制揭露，誤報誘因較低；一手）。證據：" + C_SEG + "C02",
+      use="PxQ 對照列（不參與任何計算；成本面對照）",
+      note="工作單 20261029 W6；C 段 README 待判斷 C1：只作對照註記，不當算力成本輸入" + ex)
+    R.src_rows[-1]["cl"] = dict(grade="1", stance="利害關係方", why="Microsoft 依 ASC 850 關係人強制揭露：誤報誘因較低", hand="一手")   # r1：C 段 C02 已獨立核對一手
+    # ── W2：D2 推導式輸入（Inputs）──
+    base = "v0.6.4/PxQ"
+    I(base + "/D2 w", "組織用戶占 ChatGPT token 的比例 w：基準", unit="比例", vlit=0.2, tag="Assumed", decision="工作單 20261029 W2", status="v0.6.4 新增（P×Q 8.4）", meta=False,
+      note="B 段 token帳『輸入』B53–B55（低 0.1／基準 0.2／高 0.3）；無來源（企業收入占比 >40%〔OpenAI 2026-04-08〕不等於 token 占比）。出處：" + B_SEG)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 0.1, 0.3
+    I(base + "/D2 w", "組織用戶占 ChatGPT token 的比例 w：低情境", unit="比例", vlit=0.1, tag="Assumed", decision="工作單 20261029 W2", status="v0.6.4 新增（P×Q 8.4）", meta=False,
+      note="三欄情境之低端（＝基準列區間下緣；情境值，低＝高＝值）")
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 0.1, 0.1
+    I(base + "/D2 w", "組織用戶占 ChatGPT token 的比例 w：高情境", unit="比例", vlit=0.3, tag="Assumed", decision="工作單 20261029 W2", status="v0.6.4 新增（P×Q 8.4）", meta=False,
+      note="三欄情境之高端（＝基準列區間上緣；情境值，低＝高＝值）")
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 0.3, 0.3
+    I(base + "/D2 時點比", "Codex 用量時點比：Q2 平均 ÷ 截至 06-11 的 28 天窗口", unit="比例", vlit=0.7, tag="Assumed", decision="工作單 20261029 W2", status="v0.6.4 新增（P×Q 8.4）", meta=False,
+      note="B 段 token帳『輸入』B56＝0.7（Codex 週活 4/8 逾 300 萬 → 4/21 逾 400 萬 → 6/2 逾 500 萬〔OpenAI〕；月增約 70% 時 Q2 平均低於 06-11 窗口）。B 段未給區間，低＝高＝值（不自行補值）。出處：" + B_SEG)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 0.7, 0.7
+    I(base + "/D2 k", "Codex 輸入／輸出比相對 ChatGPT 的倍數 k：基準", unit="倍", vlit=1, tag="Assumed", decision="工作單 20261029 W2", status="v0.6.4 新增（P×Q 8.4）", meta=False,
+      note="B 段 token帳『輸入』B57＝1（份額以輸出 token 計；k＝1 即總 token 比＝輸出 token 比）；敏感度 2（代理式編碼上下文重複讀入，k 可能 >1）。出處：" + B_SEG)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 1, 2
+    I(base + "/D2 k", "Codex 輸入／輸出比相對 ChatGPT 的倍數 k：敏感度", unit="倍", vlit=2, tag="Assumed", decision="工作單 20261029 W2", status="v0.6.4 新增（P×Q 8.4）", meta=False,
+      note="B 段 token帳『輸入』B58＝2；敏感度情境值（＝基準列區間上緣；低＝高＝值）")
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 2, 2
+    I(base + "/D2 D3", "A 段候選 D3 每則 token（第 8.4 節第 6 列用）", unit="tok", vlit=6000, tag="Assumed", decision="工作單 20261029 W2", status="v0.6.4 新增（P×Q 8.4）", meta=False,
+      note="A 段 token帳缺口『輸入』B31：D3 每則 token 低 4,000／基準 6,000／高 11,000；A 段基準組合用 6,000。D2 以 TK 每則 token（INP_305）為底，與 D3 不是獨立因子，不可疊加。出處：" + TOK_A_XLSX)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 4000, 11000
+    # ── W4：衍生值自 SRC_OAI_141–143 移入 Inputs（公式）──
+    b4 = "v0.6.4/PxQ/W4"
+    d4 = "工作單 20261029 W4"
+    st4 = "v0.6.4 新增（W4：自 SRC_OAI_141–143 移入）"
+    cap = "照 Tokenomics 原紀錄抄錄，本模型不讀 TK 的 Cap_In。"
+    I(b4, "廣告營收年化：2026 Q2", unit="$B", vlit=0.5, tag="Assumed", decision=d4, status=st4, meta=False,
+      note="＝Tokenomics Cap_In E186（Assumed，區間 0.3–0.8）；" + cap + "廣告為假設，非原始訊息，故自 SRC_OAI 移入 Inputs。")
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 0.3, 0.8
+    I(b4, "廣告營收：FY2026", unit="$B", vlit=1.0, tag="Assumed", decision=d4, status=st4, meta=False,
+      note="＝Tokenomics Cap_In F186（Assumed，區間 0.5–1.5）；" + cap)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 0.5, 1.5
+    I(b4, "每年季數（定義常數）", unit="季", vlit=4, tag="Decision", decision=d4 + "；E6", status=st4, meta=False,
+      note="定義常數（E6：公式內不得有常數 4）；區間不適用（低＝高）")
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = 4, 4
+    me = "{INP:營收：2026 Q2 年化（含廣告；對照）}"
+    I(b4, "營收：2026 Q2 年化（含廣告；對照）", unit="$B", vlit="={SRC:營收：2026 Q2}*{INP:每年季數（定義常數）}", tag="Derived", decision=d4, status=st4, meta=False,
+      note="＝SRC_OAI『營收：2026 Q2』（WSJ 2026-08-18 報導 Q2 營收 $6.7B；知情人士轉述、未經公司確認）× 每年季數＝26.8（含廣告；對照，原 SRC_OAI_142）。低＝高＝值。出處：" + WSJ_Q2_SRC)
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = "=" + me, "=" + me
+    I(b4, "營收：2026 Q2 年化（不含廣告）", unit="$B", vlit="=" + me + "-{INP:廣告營收年化：2026 Q2}", tag="Derived", decision=d4, status=st4, meta=False,
+      note="＝上一列（含廣告）− 廣告年化 Q2＝26.3；即 Tokenomics Cap_In E187『m 分子營收』Q2 年化（原 SRC_OAI_141）。低＝含廣告 − 廣告高端（0.8）、高＝含廣告 − 廣告低端（0.3），即 26.0–26.5（廣告區間反向帶出）。PxQ 口徑一營收")
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = "=" + me + "-{INPG:廣告營收年化：2026 Q2}", "=" + me + "-{INPF:廣告營收年化：2026 Q2}"
+    I(b4, "營收：FY2026 預測（不含廣告）", unit="$B", vlit="={SRC:管理層營收目標：2026}-{INP:廣告營收：FY2026}", tag="Derived", decision=d4, status=st4, meta=False,
+      note="＝SRC_OAI『管理層營收目標：2026』（FT 2026-09-18，7 月投資人簡報，含廣告 36）− 廣告 FY2026＝35；即 Tokenomics Cap_In F187『m 分子營收』FY2026 預測（原 SRC_OAI_143）。"
+           "低＝36 − 廣告高端（1.5）、高＝36 − 廣告低端（0.5），即 34.5–35.5。管理層預測，非實績。PxQ 口徑二營收")
+    R.inp_rows[-1]["lo"], R.inp_rows[-1]["hi"] = "={SRC:管理層營收目標：2026}-{INPG:廣告營收：FY2026}", "={SRC:管理層營收目標：2026}-{INPF:廣告營收：FY2026}"
 
 
 def coverage_report(R: Recorder):
@@ -1124,6 +1195,22 @@ def finalize_ids(R: Recorder, write_registry=True):
         for r in rows:
             r["id"] = mapping[r["id"]]
         rows.sort(key=lambda r: r["id"])
+    # v0.6.4：Inputs 公式值的佔位換成最終 ID／儲存格（{INP:名稱}→INP_nnn；{SRC:指標}→SRC_OAI_nnn；{INPF:名稱}／{INPG:名稱}→該列低／高欄儲存格）
+    src_by = {r["metric"]: r["id"] for r in R.src_rows}
+    inp_by = {r["name"]: r["id"] for r in R.inp_rows}
+    row_of = {r["id"]: 5 + i for i, r in enumerate(R.inp_rows)}
+    ph = _re.compile(r"\{(INP|SRC|INPF|INPG):([^}]+)\}")
+
+    def _sub(m):
+        kind, name = m.groups()
+        if kind == "SRC":
+            return src_by[name]
+        iid = inp_by[name]
+        return iid if kind == "INP" else f"Inputs!${'F' if kind == 'INPF' else 'G'}${row_of[iid]}"
+    for r in R.inp_rows:
+        for k in ("value", "lo", "hi"):
+            if isinstance(r[k], str) and r[k].startswith("=") and "{" in r[k]:
+                r[k] = ph.sub(_sub, r[k])
     allmap = {**out["SRC"], **out["INP"]}
     pat = _re.compile(r"(SRC_OAI_\d{3}|INP_\d{3})")
     R.dest = {p: (k, pat.sub(lambda m: allmap.get(m.group(1), m.group(1)), ref), why) for p, (k, ref, why) in R.dest.items()}

@@ -39,8 +39,8 @@ def write_defaults(wb, defaults: dict):
     ws.sheet_state = "hidden"
 
 
-def merge(new_defaults: dict, base_path, log_path=None):
-    """回傳 (最終值, matched, kept, unmatched_ids)。"""
+def merge(new_defaults: dict, base_path, log_path=None, retired=()):
+    """回傳 (最終值, matched, kept, unmatched_ids)。retired：id_registry 內已退役的 ID（底稿有、本次依工作單移除者）；不算 unmatched，另列於記錄檔。"""
     cur, old = read_defaults(base_path)
     final, kept, matched, lines = dict(new_defaults), 0, 0, []
     for key, newv in new_defaults.items():
@@ -50,9 +50,12 @@ def merge(new_defaults: dict, base_path, log_path=None):
                 final[key] = cur[key]
                 kept += 1
                 lines.append(f"{key}: code default {newv!r} (previous {old[key]!r}) -> Excel {cur[key]!r} kept")
-    unmatched = [k for k in cur if k not in new_defaults]
+    retired = set(retired)
+    unmatched = [k for k in cur if k not in new_defaults and k[1] not in retired]
+    retired_hit = sorted({k[1] for k in cur if k not in new_defaults and k[1] in retired})
     if log_path:
         open(log_path, "w", encoding="utf-8").write(
             f"matched: {matched}; Excel value kept over code default: {kept}; unmatched: {len(unmatched)}\n" + "\n".join(lines)
-            + "\n-- unmatched --\n" + "\n".join(map(str, unmatched)))
+            + "\n-- unmatched --\n" + "\n".join(map(str, unmatched))
+            + "\n-- retired ids removed by work order (not counted as unmatched) --\n" + "\n".join(retired_hit))
     return final, matched, kept, unmatched

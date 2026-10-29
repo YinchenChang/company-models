@@ -2,6 +2,18 @@
 
 每次同步記錄：Excel 版本、工作包、commit 與變動摘要。
 
+## 20261029_OpenAI_v0.6.4.xlsx — v0.6.4（口徑一 Q2 GW 採 B／C 段、D2 推導式、衍生值移 Inputs、TK 快照 v21.7）
+
+- **r1（獨立核對後，同版不升版，只改文字與來源欄，數值不變）**：PxQ X227 說明改與 INP_303 同義；SRC_OAI_146／147／148 列層級覆寫為等級 1／一手並改立場說明；Checks C175 標籤去掉『v0.6.3』（編號不變）；W6 年化欄註明『顯示用，不參與計算』。
+- **W1** 口徑一 Q2 季平均 GW（INP_289–291）：2.34／2.21／3.3 → **2.26／2.17／2.35**（Tokenomics B 段 Fairwater 占比 f＝0.4／0.65／0.9；C 段 10-29 確認不改）。倍數 0.999／0.959／0.921、比值 1.237／1.188／1.142。J7 六情境列（INP_295–300）不改。PxQ 第八節 X228 的 (A)(B) 欄改取 INP_297（證據原 GW 2.34），(C) 欄與 4.1 區塊隨本模型基準；X232 (A) 核對改為『同式、同 GW』；X205、Checks C175 預期值改 0.959／0.96。
+- **W2** PxQ 新增第 8.4 節 D2 推導式（Codex 份額 × ChatGPT token 量；候選因子，不進基準 token 帳）：新增 SRC_OAI_146–147（arXiv 2606.26959 份額 0.633／0.165）、INP_308–314（w 三列、時點比、k 兩列、D3 6,000）；(A) 證據重現欄對 B 段 token帳 B14:D19、B34 全 OK（5.071、7.606；token 帳 k＝1 為 1.857／1.769／1.689，k＝2 為 1.666／1.530／1.414）。基準 token 帳 X236 (A)(B) 2.0966／1.9876 不變、(C) 隨 W1 1.9365→1.8703。
+- **W3** INP_303（1.397）值不變，註記改為『＝1 ÷ Tokenomics `L1_LReqFleet_Full_Lo`（0.7156）』，刪『起源待確認』。
+- **W4** SRC_OAI_141–143 退役（`id_registry.json`）；改為 Inputs 公式列 INP_315–320（廣告 Q2／FY2026、每年季數、含廣告 26.8、不含廣告 26.3、FY2026 預測 35；Derived 列的低／高由廣告區間反向帶出）。口徑一／二營收與 v0.6.3 逐格相同。
+- **W5** `TK_Link` 改取 Tokenomics master `8309fdb`（CURRENT＝`20261025_Tokenomics_v21.7.xlsx`）：88 名數值與 v21.4 逐名相同（check_tk_snapshot OK 88／DIFF 0／MISSING 2〔`IF_PxEffMix_Lo／_Hi`〕）。
+- **W6** SRC_OAI_148（Microsoft FY27 Q1 自 OpenAI 營收 10.0，10-Q 關係人附註）；PxQ 第九節只顯示、不參與任何計算。
+- builder：`preserve.merge` 新增 `retired` 參數（已退役 ID 不算 unmatched）；Inputs 公式佔位 `{INP:}`／`{SRC:}`／`{INPF:}`／`{INPG:}`（`finalize_ids` 後換成最終 ID）。Checks 新增 C178–C180，C164 標籤改為 v21.7（編號不變）。工具 `tools/diff_v064.py`（範圍外變動比較）。
+- 測試：test_builder 新增 `test_w1_scope1_gw_values`、`test_w2_d2_derivation_matches_b_segment`、`test_w4_derived_revenue_inputs`；scenarios.yaml 新增 bd–bf、期望值更新。`dist/` 重產，v0.6.3 移 `dist/_待刪除/`；v0.6.3 xlsx 移 `model/archive/`。報告：`docs/reports/20261029_v0.6.4.md`；PR #235。
+
 ## 20261025_OpenAI_v0.6.3.xlsx — v0.6.3（PxQ 比值 2026 三口徑、TK 快照 v21.4、GW 路線 token 帳）
 
 - `TK_Link` 改取 Tokenomics master `693792f`（CURRENT＝`20261024_Tokenomics_v21.4.xlsx`）：88 名有值、2 名待提供（`IF_PxEffMix_Lo／_Hi`）。check_tk_snapshot（v19.0 快照 vs v21.4）OK 53／DIFF 35／MISSING 2。除 PxQ 以外各頁計算邏輯不改。
