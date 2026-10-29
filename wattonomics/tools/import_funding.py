@@ -155,6 +155,7 @@ def main():
         if n == 205: item = "capex_ai_seg"     # xAI 段資本支出（合併數另列 F207），避免與合併資本支出重複
         if n == 209: item = "bridge_refi"       # 過橋 20：再融資，與 F214 債 25 不重複（G 段 §4）
         if n == 103: item = "jv_exposure"       # 合資最大損失曝險（存量），不與當期表外出資相加
+        if n == 58: item = "jv_exposure"        # v0.1.3：Google 對第三方站點租約擔保最大曝險（或有、存量），不是 Alphabet 的資金來源（9M2026 期間後會落入 2026 桶）
         if n in (28, 54, 105): item = "commitments"   # 採購／合約承諾（存量），不是融資
         if n == 204: item = "valuation"         # 併購估值，不是募資
         if item == "net_debt_change" and "水位" in d["detail"]: item = "net_debt_level"
