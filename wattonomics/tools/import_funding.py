@@ -7,7 +7,7 @@ import csv, json, os, re
 
 WT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW = os.path.join(WT, "evidence_raw")
-OUT = os.path.join(WT, "builder", "seed", "funding_v0.1.3.json")
+OUT = os.path.join(WT, "builder", "seed", "funding_v0.1.4.json")
 
 
 def rng(s):
@@ -63,8 +63,8 @@ H_DROP = {
 }
 H_ITEM = {222: "investment_stock_nonmkt"}
 
-# Q 段（v0.1.3，2026Q3／FY27Q1 財報）：F#228–246 由 Andy 下載的（F#247–254 Amazon 由公司新聞稿） 10-Q、新聞稿、法說逐字稿取數，經未參與代理核對（evidence_raw/Q_review_2026q3.md）
-Q_TRUE = rng("228–246 247–254")   # 247–254：Amazon 2026Q3 新聞稿（Q_review 第三節：屬實 7、小誤 1 已改 tag）
+# Q 段（v0.1.3–v0.1.4，2026Q3／FY27Q1 財報）：F#228–246 由 Andy 下載的（F#247–254 Amazon 由公司新聞稿） 10-Q、新聞稿、法說逐字稿取數，經未參與代理核對（evidence_raw/Q_review_2026q3.md）
+Q_TRUE = rng("228–246 247–254 255–257")   # 247–254：Amazon 2026Q3 新聞稿（Q_review 第三節：屬實 7、小誤 1 已改 tag）；255–257：Amazon、Meta 逐字稿（第四節：屬實 1、小誤 2 已改）
 # 被 Q 段取代（同期間較新或實收口徑）：Alphabet 2026H1 各列與 8 月發債（併入 9M2026 現金流量表）、F#51 股權公告 84.75（含未動用 ATM，改用實收 61.933）、
 # F#55 2026 指引（Q2 法說，Q3 重申另列）；Microsoft F#29 曆年 175（改 170）、F#30 FY27Q1 指引（已有實績）
 Q_SUPERSEDED = {44: "9M2026", 45: "9M2026", 46: "9M2026", 47: "9M2026", 48: "9M2026", 49: "9M2026（8 月發債已在 9M 現金流量表內）",
@@ -157,6 +157,7 @@ def main():
         item = H_ITEM.get(n, fx.get("item", d["item"])).split("（")[0].strip()   # H 段 item 帶括號說明，比對用前段
         if n == 205: item = "capex_ai_seg"     # xAI 段資本支出（合併數另列 F207），避免與合併資本支出重複
         if n == 209: item = "bridge_refi"       # 過橋 20：再融資，與 F214 債 25 不重複（G 段 §4）
+        # v0.1.4：F#257 Meta 債務總額為存量 debt_level（不在 FITEMS，不進淨負債變化加總；只列 FundRaw）
         if n == 103: item = "jv_exposure"       # 合資最大損失曝險（存量），不與當期表外出資相加
         if n == 58: item = "jv_exposure"        # v0.1.3：Google 對第三方站點租約擔保最大曝險（或有、存量），不是 Alphabet 的資金來源（9M2026 期間後會落入 2026 桶）
         if n in (28, 54, 105): item = "commitments"   # 採購／合約承諾（存量），不是融資

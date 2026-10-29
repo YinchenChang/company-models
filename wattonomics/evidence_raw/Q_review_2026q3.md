@@ -122,3 +122,49 @@
 ### 判定統計
 
 共 8 列：屬實 7、小誤 1（第 248 列，標記 [Interested-party] 應改為 [Derived]）、錯誤 0、無法核對 0。
+
+## 四、第三批：Amazon、Meta 2026Q3 逐字稿（F_funding 第 255–257 列）
+
+- 核對者：獨立核對代理（未參與製作）；日期：2026-10-30
+- 原文：Amazon 2026Q3 法說逐字稿（/tmp/amzn_tr.txt，非空白段 158 段）、Meta 2026Q3 法說逐字稿（/tmp/meta_tr.txt，非空白段 221 段），都由 Andy 下載的 docx 轉成純文字。段落位置以 python 去掉空白行後重新編號（0 起算），沒有沿用 CSV 引文。
+- 通話日期：Amazon 第 7 段寫 "as of today, October 29, 2026"，與第 255、256 列 doc_date 2026-10-29 相符。Meta 逐字稿全文**沒有通話日期**：第 9 段只寫 "assumptions as of today"，全文唯一的日期線索是第 45 段「August 2026」、第 125 段 "Earlier this month"、第 179 段 "late September"、第 75 段 "late January 2027"。第 257 列 doc_date 留空、來源欄註「逐字稿未載日期」，處理正確。
+
+| 列號 | 項目 | CSV 值 | 文件所載（≤25 字引文與段落） | 判定 | 備註 |
+|---|---|---|---|---|---|
+| 255 | Amazon 2026-09-30 cloud_backlog | 578 | "Backlog is $578 billion, growing triple digits"（Amazon 第 13 段） | 屬實 | 「年增三位數、分散」都有原文（同段 "well-diversified"）。Q3 現金資本支出 75.9 出自第 61 段 "cash CapEx, which was $75.9 billion in Q3"，CSV 引文沒有列這段，建議補上。77.259 − 1.381 = 75.878 ≈ 75.9，算術正確。標記 [Interested-party] 正確。 |
+| 256 | Amazon CY2027 capex_cash | 220 | "expect to spend meaningfully more in 2027"（Amazon 第 31 段） | 小誤（更正值與 detail） | 引文與段落相符，同段有 "still expect 2026 cash CapEx of approximately $220 billion"。AWS 成長：第 33 段 "grow north of 40% in each of 2027 and in 2028"，第 79 段也有相同說法，相符。容量：第 89 段 "hundreds of megawatts or sometimes up to a gigawatt"；"very good visibility into 2027 and 2028 and some of 2029"。detail 寫「2027–2029 能見度高」，對 2029 說得太滿（原文是 "some of 2029"）。值 220 的寫法容易被誤讀，見下節。 |
+| 257 | Meta 2026-09-30 net_debt_change | 83.7 | "$82.4 billion in cash … $83.7 billion in debt"（Meta 第 47 段） | 小誤（更正 item 與 detail；值不變） | 83.7、82.4、"including principal payments on finance leases, were $34.9 billion"、"Free cash flow was negative $2.1 billion" 都在第 47 段，相符；FCF −2.1 與 F#95 的「Q3 −2.12」一致。無表決權股：第 73 段 "today we announced plans to create a new class of non-voting capital stock"，第 127 段 "usable for capital raising, employee compensation, acquisitions"、"do not have any specific financing plans to announce"，相符。2027 資本支出：第 142 段 "until we get to the Q4 call"，相符（另見第 71 段 "still developing our budget and capacity plans for next year"）。問題有三：①值 83.7 是**存量**，item 卻寫成 net_debt_change（流量），見下節；②「含短期」逐字稿沒有說，屬推論，無法由本文件核對；③「無具體融資計畫」只是通話當時的說法，見下節的時序分析。 |
+
+### 第 256 列：「220 只作下限」是否會被誤讀
+
+- **會被誤讀。** `tools/import_funding.py` 的 `ym()` 把 CY2027 解析成 2027-01～2027-12，因此這列會落在 post 區（期後事件與指引）。讀者在 post 區會看到「Amazon CY2027 現金資本支出 220」，與第 254 列「CY2026 220」數字相同，很容易讀成「2027 持平」，意思正好與原文 "meaningfully more" 相反。下限的意思只寫在 detail 括號內，任何只讀 value 欄的程式或圖表都看不到。
+- 第 238 列也用「over 50（下限）」的寫法，但那是公司**自己給的數字**的下限；第 256 列的 220 是 2026 的指引，被借來當 2027 的下限，性質不同。
+- **建議**（擇一，以甲為優先）：
+  - 甲、仿照第 182 列，value 改為「（空白，未量化）」，detail 改為：「指引：2027 現金資本支出將 meaningfully more（較 2026 約 220 明顯增加，未給數字；> 220 為推論下限，不入數值）；另稱 AWS 2027、2028 各年營收成長可望 40% 以上；對 2027、2028 及部分 2029 的大塊容量（數百 MW，有時達 1 GW）能見度很好」。
+  - 乙、若一定要放數值，item 改為 `capex_cash_floor`（不在 FITEMS 內，不會被加總），value 220，detail 開頭寫「下限（非估計）：> 2026 指引 220」。
+
+### 第 257 列：item、淨負債算術與第 100 列
+
+- **算術**：83.7 − 82.4 = 1.3，「淨負債約 1.3」正確。
+- **與第 100 列比較**：第 100 列以長期借款 80.922 對照現金約 82，得到淨現金約 +1.1（「約 0」）；第 257 列以 83.7 對照 82.4，得到淨負債約 1.3。兩者都是「約 0」，量級上不矛盾，但**正負號相反**。差異來自債務口徑：83.7 − 80.922 = 2.778。CSV 把這個差額解釋為「含短期」，但逐字稿沒有說明 83.7 的組成，需要以 10-Q 資產負債表（短期債或一年內到期長期債）核對。在核對之前，建議 detail 寫「口徑差 2.8 待 10-Q 核對」，不寫「含短期」。
+- **item 錯誤會造成重複加總**：83.7 是 9-30 的債務存量，不是變化量。period 2026-09-30 經 `ym()` 解析為 2026-09，會落在 Meta 2026 區（9M2026，2026-01～2026-09）。一旦採用，Funding 表「淨負債變化」欄會把第 100 列的 22.178 與這列的 83.7 加總成 105.9，數字錯誤。目前因為未判定所以不採用，但採用前必須先更正 item。建議 item 改為 `debt_level`（或與既有的 `cash_level` 並列的存量 item；兩者都不在 FITEMS 內，不會被加總）。
+- **建議的 detail 全文**：「9-30 債務 83.7（CFO 口徑；10-Q 長期借款 80.922 見 F#100，差 2.8 的組成待 10-Q 核對）；現金與有價證券 82.4 → 淨負債約 1.3（F#100 口徑為淨現金約 1.1，兩者都約 0）；Q3 單季含融資租賃本金資本支出 34.9、FCF −2.1；宣布新設無表決權股（股票股利 1:1，預計 2027-01 下旬交易），用途含募資、員工薪酬、併購；通話當時稱『目前無具體融資計畫』，其後 10-26 FWP 即定價 37.5（F#106、F#107）；2027 資本支出指引待 Q4 法說」。引文欄建議補上「today we announced plans to create a new class（第 73 段）；until we get to the Q4 call（第 142 段）」。
+
+### Meta 逐字稿與 F#106、F#107（2026-10-26 FWP）的時間先後
+
+- 逐字稿沒有日期，所以無法直接排序，只能用內容推算。
+- FWP（F#107）已提到「2027Q1 起最多 60 的 Class C ATM」。Class C 就是逐字稿第 73 段「today we announced」的新股類別，因此 FWP 不可能早於宣布日。另外，F#97 的 2026 資本支出指引 135–145 也以 d116268dfwp 為來源，與逐字稿第 69 段 "narrowed from our prior outlook of $130 billion-$145 billion" 相同，可見 10-26 時 Q3 指引已經公開。
+- 逐字稿第 127 段說 "do not have any specific financing plans to announce at this time"。這句話只有在通話**早於** FWP 啟動與定價時才說得通（定價結果：遠期出售 25、特別股 12.5，合計 37.5）。
+- **結論**：時序一致，條件是 Meta 法說日**不晚於 2026-10-26**，而且在募資啟動之前。如果法說其實在 10-26 之後（例如與 10-Q 同為 10-29），「今天宣布新股類別」和「無具體融資計畫」都會與已定價的 37.5 矛盾，那就要懷疑這份逐字稿的版本或來源。另外要注意：F#92–100 的 10-Q doc_date 是 10-29，F#95 的第二來源 beancount 網址日期是 2026/10/21。法說、新聞稿、10-Q 的先後目前無法由現有文件確認。
+- 建議：第 257 列 doc_date 維持空白，detail 或來源欄加註「通話日期未載；依 FWP 10-26 已引用 Class C，推定不晚於 2026-10-26」。請 Andy 由 Meta IR 新聞稿或 8-K（Item 2.02）的日期補上確切日期。本次核對無法取得 FWP 原文，SEC 網址的讀取請求逾時，所以 F#106、F#107 的日期沿用 G 段已核對的 2026-10-26。
+
+### 判定統計
+
+共 3 列：屬實 1（第 255 列）、小誤 2（第 256 列：值 220 改為空白或改 item；detail「2027–2029」改為「2027、2028 及部分 2029」。第 257 列：item 改為存量 item 以免與 F#100 重複加總；「含短期」改為「待 10-Q 核對」；補註融資時序）、錯誤 0、無法核對 0（第 257 列「含短期」一處由逐字稿無法核對）。
+
+### 第四節製作方更正紀錄（2026-10-30，非核對者撰寫）
+
+- 第 256 列：值 220 → 「（空白，未量化）」，detail 依建議甲改寫（表中「CSV 值 220」為更正前狀態）。
+- 第 257 列：item `net_debt_change` → `debt_level`（存量；不進 Funding 淨負債變化加總），detail 依建議改寫（表中 item 為更正前狀態）。
+- 第 255 列：引文補第 61 段。
+- 判定統計「無法核對 0」指列判定；第 257 列「含短期」一處屬 detail 內未能由逐字稿核對的說法，已在 detail 改為「差 2.8 的組成待 10-Q 核對」。
