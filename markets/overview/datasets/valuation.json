@@ -14,10 +14,10 @@
 "position": "見頂年 → 25 分位",
 "multiple": 1.33,
 "basis_label": "2027 年底每股淨值（A）",
-"basis": 941774.35,
-"implied_px": 1252559.9,
-"vs_px": -0.019,
-"px_multiple": 1.36
+"basis": 930303.3,
+"implied_px": 1237303.4,
+"vs_px": -0.031,
+"px_multiple": 1.37
 },
 {
 "company": "SK 海力士",
@@ -34,10 +34,10 @@
 "position": "中段 → 中位數",
 "multiple": 1.48,
 "basis_label": "2027 年底每股淨值（A）",
-"basis": 941774.35,
-"implied_px": 1393826.0,
-"vs_px": 0.091,
-"px_multiple": 1.36
+"basis": 930303.3,
+"implied_px": 1376848.9,
+"vs_px": 0.078,
+"px_multiple": 1.37
 },
 {
 "company": "SK 海力士",
@@ -54,10 +54,10 @@
 "position": "谷底 → 75 分位",
 "multiple": 1.61,
 "basis_label": "2028 年底每股淨值（C）",
-"basis": 1094692.47,
-"implied_px": 1762454.9,
-"vs_px": 0.38,
-"px_multiple": 1.17
+"basis": 1102356.97,
+"implied_px": 1774794.7,
+"vs_px": 0.39,
+"px_multiple": 1.16
 },
 {
 "company": "三星電子",
@@ -374,10 +374,10 @@
 "position": "見頂年 → 25 分位",
 "multiple": 5.99,
 "basis_label": "2027 EPS（A）",
-"basis": 550035.78,
-"implied_px": 3294714.3,
-"vs_px": 1.58,
-"px_multiple": 2.32
+"basis": 617759.34,
+"implied_px": 3700378.4,
+"vs_px": 1.898,
+"px_multiple": 2.07
 },
 {
 "company": "SK 海力士（P/E）",
@@ -394,10 +394,10 @@
 "position": "中段 → 中位數",
 "multiple": 9.57,
 "basis_label": "2027 EPS（A）",
-"basis": 550035.78,
-"implied_px": 5263842.4,
-"vs_px": 3.122,
-"px_multiple": 2.32
+"basis": 617759.34,
+"implied_px": 5911956.9,
+"vs_px": 3.63,
+"px_multiple": 2.07
 },
 {
 "company": "SK 海力士（P/E）",
@@ -414,10 +414,10 @@
 "position": "谷底 → 75 分位",
 "multiple": 16.2,
 "basis_label": "2028 EPS（C）",
-"basis": 195351.01,
-"implied_px": 3164686.4,
-"vs_px": 1.478,
-"px_multiple": 6.54
+"basis": 222213.49,
+"implied_px": 3599858.5,
+"vs_px": 1.819,
+"px_multiple": 5.75
 },
 {
 "company": "三星電子（P/E）",
