@@ -1,4 +1,4 @@
-# Microsoft（MSFT）個股模型 v0.3.1 — 命題＋官方營收分部 → 損益表
+# Microsoft（MSFT）個股模型 v0.3.2 — 命題＋官方營收分部 → 損益表
 
 更新日 2026-10-29（v0.3.1 季度滾動：工作單 `mag/docs/workorders/20261029_MAG_v0.3.1_季度滾動_2026Q3.md`；架構工作單 `mag/docs/workorders/20261027_MAG_v0.3_個股模型重建_分部架構.md`；固定規格 `docs/plan/個股模型原則_命題加營收分部.md`）。資料截至 **FY27Q1**（2026-09-30；財報 2026-10-28：新聞稿、IR 財務報表、10-Q、FY27Q2 展望簡報、法說）。評價日 2026-09-30、目標價時點 2027-10-29。財年結束於 6/30（FY2027＝2026-07～2027-06）。金額十億美元（US$B）。
 
@@ -36,8 +36,8 @@
 | `check_v03.py` | 成品核對：公式錯誤 0、核對列 0、C10 對帳落差 0、固定列標籤、拆解 JSON 未過期 |
 | `facts_fy27q1.py` | FY27Q1 事實總帳：新聞稿 docx 與 IR 財務報表 xlsx（必要時 10-Q）兩次讀取核對 → `data/microsoft_facts_FY27Q1_20261029.json` |
 | `attrib_v031.py` | C10 重解（割線法，每次整本重算）與 v0.3 → v0.3.1 變動拆解 → `data/attrib_v031_20261029.json` |
-| `dist/20261029_Microsoft個股模型_v0.3.1.xlsx` | 成品（LibreOffice headless 重算，公式錯誤 0） |
-| `dist/20261029_Microsoft個股模型_v0.3.1.html` | HTML 展示層（`tools/company_html`；數字全由 xlsx 抽出） |
+| `dist/20261029_Microsoft個股模型_v0.3.2.xlsx` | 成品（v0.3.2＝v0.3.1 數值＋In 頁情境驅動對照）（LibreOffice headless 重算，公式錯誤 0） |
+| `dist/20261029_Microsoft個股模型_v0.3.2.html` | HTML 展示層（`tools/company_html`；數字全由 xlsx 抽出） |
 | `html.json` | HTML 設定（由產生器寫出，列號與 xlsx 一致） |
 | `segments.json` | 官方分部宣告（`tools/segment_check/check_segments.py microsoft`） |
 | `data/` | 事實總帳（SEC 一手 v0.1a 起＋FY27Q1）、k 證據、共識、同業倍數、Tokenomics v21.7 快照（v21.4 快照保留供拆解重現） |
@@ -76,6 +76,11 @@ bash microsoft/make_v03.sh          # SENS=1 時先重跑 C10 重解與變動拆
 README → In（輸入一鍵一列、標記與區間）→ Q（FY25Q2–FY27Q1 八季、FY2026 四季合計、FY2027 年初至今與 FY2025、FY2026 年度值，核對列 0）→ Thesis → Seg → PL（最上方四列三情境核對列）→ CF（最上方收支關卡表與核對列）→ Val（0. 目標價；列 70 起各情境明細）→ Recon（共識、指引、FY27Q1 實績對 v0.3、v0.3 → v0.3.1 拆解、v0.3.1 vs v0.2.2）→ Sens（30 個案例的龍捲風＋判斷預設替代；列 80 起各案例完整引擎區塊）→ Sources。
 
 地圖抽數用的列標籤：Val「目標價（DCF 與 Comparable 加權）」「DCF 目標價（情境加權）」「Comparable 目標價（市場主流同業法）」（＝分部加總 SOTP）「市場共識目標價」「現價（2026-10-28 收盤）」「上檔空間：加權目標價」「上檔空間級距」「投資建議」「DCF 情境價值推到 12 個月後（A／B／C）」；CF「收支關卡：自由現金流扣股利（五年合計）」（B／C／D 欄＝A／B／C 情境）。
+
+## v0.3.2（2026-10-29，呈現修正，數值不變）
+- In 頁 D／F 欄名改「敏感度低」「敏感度高」（只用於 Sens 頁，不進目標價）；頁尾新增「J. 情境驅動對照」：長約占比、k、Copilot 淨增、情境權重，情境 A／B／C 三欄並排（只引用上方各列）。
+- HTML「主要輸入」拆成「情境驅動」與「單一參數區間」兩張表。規格見 `mag/README.md`；核對 `mag/check_in_layout.py`。
+- 與 v0.3.1 逐格比對：只有 In 頁 A1、D3、F3 與新增一節不同，其餘 10 頁全部相同（加權目標價 384.10 不變）。v0.3.1 成品移 `dist/_待刪除/`。
 
 ## 與 v0.3 的差異（v0.3.1）
 

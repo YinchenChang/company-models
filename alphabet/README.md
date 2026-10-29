@@ -1,4 +1,4 @@
-# alphabet/ — Alphabet（GOOGL）個股模型 v0.3.1（命題＋營收分部；2026Q3 季度滾動）
+# alphabet/ — Alphabet（GOOGL）個股模型 v0.3.2（命題＋營收分部；2026Q3 季度滾動；v0.3.2 呈現修正、數值同 v0.3.1）
 
 **命題（一句話）：** AI 改變搜尋之後，Google Search 的變現能否守住，同時 Google Cloud（含 TPU）能否把翻倍的資本支出變成營收；加計 AI 折舊與 2026 年股權發行後，每股價值是否高於現價。
 
@@ -38,6 +38,11 @@
 - 融資瀑布、站點、租賃承諾、RPO 等 CRWV 頁面移除；舊引擎保留在 `legacy_v0.2/`（未刪），舊成品在 `dist/_待刪除/`。
 - 目標價：v0.2.2 讀法 1 加權 147.54 → v0.3 初版 135.28 → 修正一 251.68 → 修正二 253.30 → 修正三 258.70（讀法 1 → 2 +64.3；見報告「修正三」）。
 
+## v0.3.2（2026-10-29，呈現修正，數值不變）
+- In 頁 D／F 欄名改「敏感度低」「敏感度高」（只用於 Sens 頁，不進目標價）；頁尾新增「J. 情境驅動對照」：Search 查詢分流、每次查詢變現變動、情境權重，情境 A／B／C 三欄並排（只引用上方各列）。
+- HTML驅動因子一節新增「情境驅動」與「單一參數區間」兩張表（v0.3.1 沒有輸入表）。規格見 `mag/README.md`；核對 `mag/check_in_layout.py`。
+- 與 v0.3.1 逐格比對：只有 In 頁 A1、D3、F3 與新增一節不同，其餘各頁全部相同（加權目標價 258.21 不變）。v0.3.1 成品移 `dist/_待刪除/`。
+
 ## v0.3.1（2026-10-29）相對 v0.3 的差異
 - Q 頁 2024Q4–2026Q3；FY2026＝9M 實績＋Q4 模型；評價日 2026-09-30、目標日 2027-10-29；2026Q3 事實總帳 `data/alphabet_facts_2026q3.json`（`facts_2026q3.py`，兩讀核對 67 項一致）。
 - Tokenomics v21.4 → v21.7（只有 `IF_NonNV_Hold_TPU` 改變）；TPU 係數改讀 Tokenomics（舊 C2 口徑列 Sens）。
@@ -57,7 +62,7 @@
 | `gen_html_json.py` | 由列號對照產生 `html.json`（勿手改 html.json） |
 | `make_v03.sh` | 一次跑完：事實總帳 → （C10）→（敏感度）→ 建置 → 重算 → 核對 → segment_check → HTML |
 | `segments.json` | 官方分部宣告（`tools/segment_check/check_segments.py alphabet` 通過） |
-| `dist/20261029_Alphabet個股模型_v0.3.1.xlsx`／`.html` | 成品（LibreOffice 重算，公式錯誤 0；HTML 檢核通過） |
+| `dist/20261029_Alphabet個股模型_v0.3.2.xlsx`／`.html` | 成品（LibreOffice 重算，公式錯誤 0；HTML 檢核通過） |
 | `data/` | 事實總帳（SEC 一手＋2026Q3 新聞稿）、Tokenomics v21.7 快照、k 證據、共識、同業倍數、C10 解、敏感度結果；舊版在 `data/_待刪除/` |
 | `docs/reports/20261029_alphabet_v0.3.1_季度滾動.md` | 本版報告（結論、變動拆解、新季 vs 模型、指引與 C10、Tokenomics、收支關卡、預設、資料缺口、待決） |
 | `legacy_v0.2/` | v0.2.2 MAG 共用引擎（保留不刪） |
