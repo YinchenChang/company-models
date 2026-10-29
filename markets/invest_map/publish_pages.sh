@@ -25,9 +25,11 @@ for tk, m in d.get("models", {}).items():
 print("模型 HTML：", len(d.get("models", {})), "份")
 PY
 # Wattonomics（瓦帳）互動頁：wattonomics/index.html（Andy 2026-10-30 要求公司內可開；與地圖同一 Pages 站，地圖重發時一併帶上）
-WV=$(sed -E 's/.*_v([0-9.]+)\.xlsx/\1/' "$ROOT/wattonomics/model/CURRENT")
+WV=$(head -1 "$ROOT/wattonomics/model/CURRENT" | sed -nE 's/.*_v([0-9.]+)\.xlsx$/\1/p')
+WX="$ROOT/wattonomics/data/explorer_v$WV.json"
+[ -n "$WV" ] && [ -f "$WX" ] || { echo "停止：找不到 Wattonomics explorer（CURRENT 版本＝「$WV」）；不發布，避免覆寫後少了 wattonomics/ 頁" >&2; exit 1; }
 mkdir -p "$TMP/wattonomics"
-python3 "$ROOT/wattonomics/explorer/build_page.py" "$ROOT/wattonomics/data/explorer_v$WV.json" "$TMP/wattonomics/index.html"
+python3 "$ROOT/wattonomics/explorer/build_page.py" "$WX" "$TMP/wattonomics/index.html"
 # build_page.py 產出的是 artifact 片段；補上完整文件骨架（doctype、charset、viewport），公司瀏覽器才不會亂碼
 python3 - "$TMP/wattonomics/index.html" <<'PY'
 import sys
