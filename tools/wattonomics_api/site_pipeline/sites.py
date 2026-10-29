@@ -10,6 +10,7 @@
 請求檔 tools/wattonomics_api/site_pipeline/requests/<名>.json：
   {"max_sites": 150, "expand": true, "target_sites": 130, "sites": [], "searches_per_site": 5,
    "expand_searches": 25, "cost_cap_usd": 25, "evidence_dir": null}
+  第二輪（美國以外擴充）：加 "exclude_from": ["<上一輪 out/*_sites.csv>"]（已有園區不再列）、"focus": "<擴充重點>"、"use_seeds": false
   冒煙測試：{"max_sites": 3, "expand": false, "searches_per_site": 3, "cost_cap_usd": 1}
 """
 import csv
@@ -84,17 +85,44 @@ def expand(seed_list, req, usage, cap):
     n = min(int(req.get("expand_searches", 25)), MAX_EXPAND_SEARCH)
     target = int(req.get("target_sites", 130))
     seed_txt = "\n".join(f"- {s['name']}｜{s['player']}｜營運 {s['operator']}｜使用 {s['user']}" for s in seed_list)
+    excl = []
+    for p in req.get("exclude_from") or []:
+        with open(os.path.join(C.ROOT, p), encoding="utf-8-sig") as f:
+            excl += [r["name"] for r in csv.DictReader(f) if r.get("name")]
+    msg = f"目標數量：{target} 個（100–150 之間）。"
+    if req.get("focus"):
+        msg += f"\n\n## 本輪重點\n{req['focus']}"
+    if excl:
+        msg += f"\n\n## 已有清單（{len(excl)} 個；不要再列，也不要列其分期或別名）\n" + "\n".join(f"- {x}" for x in excl)
+    msg += f"\n\n## 種子（{len(seed_list)} 筆）\n{seed_txt}" if seed_list else "\n\n## 種子\n（本輪不給種子，全部由 web search 找）"
     params = {"model": C.MODEL, "max_tokens": 32000, "system": SYS_EXPAND,
               "tools": [C.web_search_tool(n)],
-              "messages": [{"role": "user", "content": f"目標數量：{target} 個（100–150 之間）。\n\n## 種子（{len(seed_list)} 筆）\n{seed_txt}"}]}
+              "messages": [{"role": "user", "content": msg}]}
     if cap < 2:
         raise RuntimeError("預算不足以執行擴充段（需約 US$1–2）")
-    m = C.standard_message(params, usage)
-    sites = C.parse_jsonl(C.text_of(m))
+    if req.get("regions"):
+        # 分區擴充走 Batch（每區一則）：一般 API 長搜尋（30 次、32k 輸出）在 GitHub runner 上會被斷線（10-28 nonus 首跑）
+        bp = {}
+        for i, rg in enumerate(req["regions"]):
+            m2 = msg.replace(f"目標數量：{target} 個（100–150 之間）。", f"本則只負責區域：{rg['name']}；目標數量：{rg['target']} 個。")
+            if rg.get("focus"):
+                m2 += f"\n\n## 本區重點\n{rg['focus']}"
+            bp[f"r{i}"] = {"model": C.MODEL, "max_tokens": 16000, "system": SYS_EXPAND,
+                           "tools": [C.web_search_tool(min(int(rg.get("searches", n)), MAX_EXPAND_SEARCH))],
+                           "messages": [{"role": "user", "content": m2}]}
+        res, state = C.run_requests(bp, usage, None, poll_max_min=300)
+        sites = []
+        for cid in sorted(res):
+            sites += C.parse_jsonl(res[cid] or "")
+    else:
+        m = C.standard_message(params, usage)
+        sites = C.parse_jsonl(C.text_of(m))
+    norm = lambda x: re.sub(r"\W+", "", str(x).lower())
+    have = {norm(x) for x in excl}
     dedup = {}
     for s in sites:
-        k = re.sub(r"\W+", "", str(s.get("name", "")).lower())
-        if k:
+        k = norm(s.get("name", ""))
+        if k and k not in have:
             dedup.setdefault(k, s)
     return list(dedup.values())
 
@@ -170,7 +198,7 @@ def main():
             elif req.get("sites"):
                 sites = [s if isinstance(s, dict) else {"name": s} for s in req["sites"]]
             else:
-                sd = seeds(ev)
+                sd = seeds(ev) if req.get("use_seeds", True) else []
                 print("種子", len(sd))
                 sites = expand(sd, req, usage, cap) if req.get("expand", True) else \
                     [{"name": s["name"], "player": s["player"], "operator": s["operator"], "user": s["user"], "seed": True} for s in sd]

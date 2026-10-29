@@ -9,6 +9,7 @@
   {"evidence_dir": null, "files": [], "max_rows": null, "cost_cap_usd": 15}
   - evidence_dir：預設 wattonomics/evidence_raw，找不到用 gwledger/evidence_raw
   - files：只跑這些 csv（檔名）；空＝全部
+  - model：本次用的模型（預設 claude-sonnet-5-5；交叉回查用 claude-opus-5-5，單價見 common.PRICE_STD）
   - max_rows：只取前 N 列（冒煙測試用，例 5）
 輸出 out/<名>.csv、out/<名>.md、out/<名>_usage_<時間>.json；請求檔移到 requests/done/。
 """
@@ -241,6 +242,7 @@ def main():
     for path in sorted(glob.glob(f"{HERE}/requests/*.json")):
         name = os.path.splitext(os.path.basename(path))[0]
         req = json.load(open(path, encoding="utf-8"))
+        C.MODEL = req.get("model") or os.environ.get("WATT_MODEL", "claude-sonnet-5-5")   # 交叉回查可指定另一模型（例 claude-opus-5-5）
         stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
         usage = C.Usage(TOOL, name)
         try:

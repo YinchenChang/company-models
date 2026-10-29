@@ -188,7 +188,7 @@
   - 循環信用額度 4（2024）；
   - BofA 0.52（2026-07）。
 - **表外：**
-  - Stargate 股本 52：OpenAI 19、SoftBank 19、Oracle＋MGX 約 7；其餘以債務支應。
+  - Stargate 股本 45（H 段更正：原寫 52；19＋19＋約 7＝45，SA 引 The Information「roughly $45B」；DCD 的 55 為首期 100 中尚缺額）：OpenAI 19、SoftBank 19、Oracle＋MGX 約 7；其餘以債務支應。
   - Ohio 10 GW：NVIDIA 擔保首期最多 105（WSJ）。
 - **支付來源：** 2026 年約 90% 以上是股權。其中 NVIDIA、Amazon 的投資一部分回流為算力購買。
 - **風險點：**
@@ -327,6 +327,6 @@
 | OpenAI 2026 年現金餘額 | — | 未找到；repo 有 2026Q1 末約 73，記者轉述 |
 | xAI 2024 年資本支出 | — | 未找到 |
 | Anthropic 公開版 S-1 | 「Anthropic public S-1 filing October 2026」 | 只有機密草稿的媒體轉述 |
-| Stargate 整體資本結構的現況 | — | 只有 2025-01 的 52 股本報導 |
+| Stargate 整體資本結構的現況 | — | 只有 2025-01 的 45 股本報導（H 段更正，原寫 52） |
 | Microsoft Bloomberg「12 GW」對應的租賃金額 | — | 未找到 |
 | Oracle Michigan 案替代出資者 | — | 只讀到標題（Capital Brief） |
