@@ -44,7 +44,7 @@
    "delay": null,
    "inc": 1,
    "sec": 0,
-   "tag": "Interested-party",
+   "tag": "Derived",
    "src": "SRC_GL_208",
    "note": "T#39、T#40、T#42；I2 段部分確認：NPM 40−24＝16 MW-IT；CoreWeave 承租擴建部分已證實；DV1 對應中度把握"
   },
@@ -76,9 +76,9 @@
    "delay": null,
    "inc": 1,
    "sec": 0,
-   "tag": "Interested-party",
+   "tag": "Derived",
    "src": "SRC_GL_208",
-   "note": "T#292、T#293、T#294；I2 段：Meta 發言人『2–3 年內上線』→ 2029-07；設施取電口徑"
+   "note": "T#292、T#293、T#294；I2 段：Meta 發言人『2–3 年內上線』→ 2029-07；設施取電口徑；720＝970 − 250 [Derived]"
   },
   {
    "key": "cpx_crwv_dv3",
