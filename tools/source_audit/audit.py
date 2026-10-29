@@ -23,10 +23,19 @@ import urllib.request
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "out")
-STATE = os.path.join(OUT, "state.jsonl")
+# 指定範圍的單次複核（2026-10-29 起）：push 觸發時讀 push_config.json；AUDIT_RUN 給定時，進度與結果另存（不與全量複核共用花費上限）
+_CFG = os.path.join(HERE, "push_config.json")
+if os.environ.get("GITHUB_EVENT_NAME") == "push" and os.path.exists(_CFG):
+    for _k, _v in json.load(open(_CFG, encoding="utf-8")).items():
+        os.environ[_k] = str(_v)
+AUDIT_RUN = os.environ.get("AUDIT_RUN", "").strip()
+AUDIT_SCOPE = {x.strip() for x in os.environ.get("AUDIT_SCOPE", "").split(",") if x.strip()}
+AUDIT_KEYS = {x.strip() for x in os.environ.get("AUDIT_KEYS", "").split(",") if x.strip()}
+SUFFIX = f"_{AUDIT_RUN}" if AUDIT_RUN else ""
+STATE = os.path.join(OUT, f"state{SUFFIX}.jsonl")
 API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 MODEL = os.environ.get("AUDIT_MODEL", "claude-sonnet-5-5")
-MAX_USD = float(os.environ.get("MAX_USD", "40"))
+MAX_USD = float(os.environ.get("MAX_USD", "40"))   # push_config（上方）已先寫入環境變數
 MAX_GROUPS = int(os.environ.get("MAX_GROUPS", "0") or 0)      # 0 = 不限（試跑時設小數字）
 WAVE = int(os.environ.get("WAVE", "60"))
 POLL_MAX_MIN = int(os.environ.get("POLL_MAX_MIN", "120"))
@@ -81,6 +90,28 @@ def collect():
             if any(t in str(r[6] or "") for t in TAGS) and _num(r[4]) and src and not INHERITED.match(src):
                 rows.append(dict(scope=d, file=os.path.basename(x), key=str(r[0]), label=str(r[1] or ""), unit=str(r[2] or ""),
                                  lo=r[3], base=r[4], hi=r[5], tag=str(r[6]), src=src))
+    # 未上市模型（OpenAI、Anthropic 等）的原始資料頁 SRC_*：欄 A 鍵、B 項目、C 值、F 單位、J 出處、Q 標記
+    for x in sorted(glob.glob(f"{ROOT}/*/dist/*.xlsx")):
+        d = os.path.relpath(x, ROOT).split("/")[0]
+        files = sorted(glob.glob(f"{ROOT}/{d}/dist/*.xlsx"))
+        if x != files[-1]:
+            continue
+        try:
+            wb = openpyxl.load_workbook(x, read_only=True, data_only=True)
+        except Exception:
+            continue
+        for sh in [n for n in wb.sheetnames if n.startswith("SRC_")]:
+            for r in wb[sh].iter_rows(min_row=4, values_only=True):
+                if not r or len(r) < 17 or not str(r[0] or "").startswith("SRC_"):
+                    continue
+                src = str(r[9] or "").strip()
+                if any(t in str(r[16] or "") for t in TAGS) and _num(r[2]) and src and not INHERITED.match(src):
+                    rows.append(dict(scope=d, file=os.path.basename(x), key=str(r[0]), label=str(r[1] or ""), unit=str(r[5] or ""),
+                                     lo=r[3], base=r[2], hi=r[4], tag=str(r[16]), src=src))
+    if AUDIT_SCOPE:
+        rows = [r for r in rows if r["scope"] in AUDIT_SCOPE]
+    if AUDIT_KEYS:
+        rows = [r for r in rows if r["key"] in AUDIT_KEYS]
     return rows
 
 
@@ -345,14 +376,14 @@ def report(rows, gs, spent):
         d.column_dimensions[c].width = w
     d.freeze_panes = "A2"
     d.auto_filter.ref = d.dimensions
-    wb.save(os.path.join(OUT, "source_audit.xlsx"))
+    wb.save(os.path.join(OUT, f"source_audit{SUFFIX}.xlsx"))
     md = ["# 來源複核結果", "", f"- 應核對 {total} 列，已核對 {len(out)} 列；累計花費約 {spent:.2f} 美元（上限 {MAX_USD}）；搜尋 {searches} 次、擷取 {fetches} 次。", ""]
     md += [f"- {v}：{cnt.get(v, 0)}" for v in VERDICTS]
     md += ["", "## 不符與部分相符", "", "| 判定 | 模型 | 鍵 | 項目 | 基準 | 來源上的數字 | 說明 |", "|---|---|---|---|---|---|---|"]
     for r in out:
         if r["verdict"] in ("不符", "部分相符"):
             md.append(f"| {r['verdict']} | {r['scope']} | {r['key']} | {r['label']} | {r['base']} {r['unit']} | {r['source_value']} | {r['note']} |")
-    open(os.path.join(OUT, "source_audit.md"), "w", encoding="utf-8").write("\n".join(md) + "\n")
+    open(os.path.join(OUT, f"source_audit{SUFFIX}.md"), "w", encoding="utf-8").write("\n".join(md) + "\n")
     print("\n".join(md[:10]))
 
 
