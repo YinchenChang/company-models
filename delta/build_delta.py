@@ -832,6 +832,11 @@ for i_, t_ in enumerate(OBS, 1):
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
+# 相對倍數調整（Andy 2026-10-27「照建議做」；tools/relative_multiple.py，2026-10-29 接入）
+import os, sys  # noqa: E401
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
+import relative_multiple as RMX  # noqa: E402
+RMX.apply(wb, "delta")
 wb.save(sys.argv[1])
 if os.environ.get("DELTA_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

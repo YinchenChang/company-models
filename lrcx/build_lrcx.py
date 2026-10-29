@@ -765,6 +765,11 @@ for k_, o_ in enumerate(OBS, 1):
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
+# 相對倍數調整（Andy 2026-10-27「照建議做」；tools/relative_multiple.py，2026-10-29 接入）
+import os, sys  # noqa: E401
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
+import relative_multiple as RMX  # noqa: E402
+RMX.apply(wb, "lrcx")
 wb.save(sys.argv[1])
 if os.environ.get("LRCX_ROWS"):
     print("IN", {k: INROW[k] for k in ("h1s", "drift", "cn_sh", "cutC", "g_cs27", "gm_b", "tax", "bb", "px", "pk_A", "dramA_26", "tp_wA")})

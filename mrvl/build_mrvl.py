@@ -802,6 +802,11 @@ for _kb, _lab, _kind in [('plug', 'AI 後端可插拔光模組市場', 'mpl')]:
             wb.defined_names[_k] = DefinedName(_k, attr_text=f"In!$E${_ri}"); _ri += 1
 _n1 = RD.max_row
 RD.cell(_n1 + 1, 1, 'v0.2.2（2026-10-26）：網通模型 v0.2.3 的 CPO 滲透改三情境（A＝替代快、B＝平平、C＝慢），本模型光互連的可插拔光模組市場 A／B／C 改讀同字母列（In 頁末新增 B、C；情境 A 沿用 plug_，數值改為網通情境 A）。CPO 快 → 可插拔模組數較少 → 光 DSP 營收較少；FY2027（≈CY2026）三情境相同。其他輸入不變。')
+# 相對倍數調整（Andy 2026-10-27「照建議做」；tools/relative_multiple.py，2026-10-29 接入）
+import os, sys  # noqa: E401
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
+import relative_multiple as RMX  # noqa: E402
+RMX.apply(wb, "mrvl")
 wb.save(sys.argv[1])
 if os.environ.get("MRVL_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

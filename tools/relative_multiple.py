@@ -166,3 +166,138 @@ def add_block(wb, ws, own, peers, metric="PE", comp_ref=None, pxfmt="#,##0", own
     R["last"] = last
     R["title"] = r0
     return R
+
+
+# ---- 一次接入（2026-10-29）：各建檔程式在 wb.save 之前呼叫 RM.apply(wb, "<資料夾>") ----
+MEMORY_PB = ("skhynix", "samsung", "micron", "kioxia", "sndk")   # 記憶體用前瞻 P/B，其餘前瞻 P/E
+_TS = os.path.join(HERE, "target_summary")
+
+
+def _universe():
+    with open(os.path.join(_TS, "universe.csv"), encoding="utf-8") as f:
+        return {r["folder"]: r for r in csv.DictReader(f)}
+
+
+def _peers(folder):
+    with open(os.path.join(_TS, "peers.csv"), encoding="utf-8") as f:
+        return [(r["name"], r["ticker"]) for r in csv.DictReader(f) if r["folder"] == folder]
+
+
+def apply(wb, folder):
+    """把相對倍數調整接入一個公司模型：
+    (1) Val 頁最後加「0.5 相對倍數調整」區塊（同業取 tools/target_summary/peers.csv，本公司代號取 universe.csv）；
+    (2) 加權目標價公式中的 Comparable 改讀 tp_comp_adj；
+    (3) Sens 頁中「＝Comparable 目標價」的引用格改讀 tp_comp_adj（敏感度與加權目標價同口徑）。
+    「Comparable 目標價（市場主流同業法）」「上檔空間：Comparable 目標價」、Recon 的 Comparable 對帳維持不調整（Andy 2026-10-25）。"""
+    import re
+    V = wb["Val"]
+    tpw = comp = None
+    for r in range(1, V.max_row + 1):
+        a, b = str(V.cell(r, 1).value or ""), V.cell(r, 2).value
+        if a.startswith("目標價（DCF 與 Comparable 加權）") and isinstance(b, str) and "tp_w_dcf" in b:
+            m = re.search(r"\(1-tp_w_dcf\)\*\$?B\$?(\d+)", b)
+            assert m, (folder, b)
+            tpw, comp = r, int(m.group(1))
+            break
+    assert tpw, f"{folder}：Val 頁找不到加權目標價公式"
+    u = _universe()[folder]
+    peers = _peers(folder)
+    assert peers, f"{folder}：peers.csv 無同業"
+    fmt = V.cell(tpw, 2).number_format or "#,##0"
+    R = add_block(wb, V, own=u["own_ticker"], peers=peers, metric="PB" if folder in MEMORY_PB else "PE",
+                  comp_ref=f"Val!$B${comp}", pxfmt=fmt, own_name=u["公司"])
+    V.cell(tpw, 2).value = re.sub(r"\(1-tp_w_dcf\)\*\$?B\$?\d+", "(1-tp_w_dcf)*tp_comp_adj", V.cell(tpw, 2).value)
+    rx = re.compile(rf"^=Val!\$?B\$?{comp}$")                                   # 「Comparable 目標價」欄直接引用
+    rx_w = re.compile(rf"(\(1-[^()]*\)\*)Val!\$?B\$?{comp}(?!\d)")                  # 公式內的（1 − 權重）× Comparable
+    n_sens = 0
+    if "Sens" in wb.sheetnames:
+        S = wb["Sens"]
+        for row in S.iter_rows():
+            for c in row:
+                if not isinstance(c.value, str):
+                    continue
+                if rx.match(c.value):
+                    c.value = "=tp_comp_adj"
+                    n_sens += 1
+                    for up in range(1, 12):
+                        h = S.cell(c.row - up, c.column) if c.row - up >= 1 else None
+                        if h is not None and h.value == "Comparable 目標價":
+                            h.value = "Comparable 目標價（相對倍數調整後）"
+                            break
+                elif rx_w.search(c.value):
+                    c.value = rx_w.sub(r"\1tp_comp_adj", c.value)
+                    n_sens += 1
+    R.update(tpw=tpw, comp=comp, n_sens=n_sens)
+    if "README" in wb.sheetnames:
+        _obs1(wb, V, tpw, comp, fmt)
+        ws = wb["README"]
+        ws.cell(ws.max_row + 2, 1,
+                f"2026-10-29：加權目標價中的 Comparable 改用相對倍數調整後的值（Val 第 0.5 節：同業前瞻倍數中位數 × 本公司 10 年相對同業的倍數比，"
+                f"Bloomberg 前瞻倍數；Andy 2026-10-27「照建議做」、10-29 資料取回）。「Comparable 目標價（市場主流同業法）」維持不調整。重點觀察 1 的第一句已改為公式；重點觀察 2、3 與其他說明中的目標價與上檔空間數字為調整前撰寫，以 Val 頁為準。")
+    return R
+
+
+def _xl_text(t):
+    """長文字切成 ≤ 200 字的字串常數，以 & 串接（Excel 公式內字串常數上限 255 字）。"""
+    t = t.replace('"', '""')
+    return "&".join(f'"{t[i:i + 200]}"' for i in range(0, len(t), 200)) or '""'
+
+
+def _obs1(wb, V, tpw, comp, fmt):
+    """README「重點觀察 1」第一句（目標價、上檔空間、級距）改為公式，數字隨重算更新；原說明保留並標明為調整前撰寫。"""
+    import re
+    ws = wb["README"]
+    cell = None
+    for row in ws.iter_rows():
+        for c in row:
+            if isinstance(c.value, str) and c.value.startswith(("重點觀察 1：", "1. 加權目標價")):
+                cell = c
+                break
+        if cell:
+            break
+    if cell is None:
+        return
+    lab = {}
+    for r in range(1, V.max_row + 1):
+        a = str(V.cell(r, 1).value or "")
+        for k, p in (("dcf", "DCF 目標價（情境加權）"), ("up", "上檔空間：加權目標價"), ("upc", "上檔空間：Comparable 目標價"),
+                     ("tier", "上檔空間級距"), ("rec", "投資建議")):
+            if k not in lab and a.startswith(p) and V.cell(r, 2).value is not None:
+                lab[k] = r
+    if len(lab) < 5:
+        return
+    t = cell.value
+    head = "重點觀察 1：" if t.startswith("重點觀察 1：") else "1. "
+    if head == "1. ":
+        t = "重點觀察 1：" + t[len("1. 加權"):]
+    m = re.match(r"重點觀察 1：目標價\s*([^\d\s（]*)\s*[\d,\.]+", t)
+    cur = m.group(1) if m else ""
+    d = re.search(r"現價\s*[\d,\.]+（([^）]+)）", t)
+    pxd = f"（{d.group(1)}）" if d else ""
+    i = t.find("Comparable 單獨為")
+    j = t.find("。", i) if i >= 0 else -1
+    if j < 0 and head == "1. ":          # 健策型：第一個逗號段之後的說明保留
+        j = t.find("），") + 1 if "），" in t[:80] else t.find("，", t.find("上檔空間"))
+    rest = t[j + 1:].strip() if j >= 0 else t[len("重點觀察 1："):]
+    nf = fmt if fmt and fmt != "General" else "#,##0"
+    pct = '"0.0%"'
+    sp = '"+0.0%;−0.0%"'
+    B = lambda k: f"Val!$B${lab[k]}"
+    pre = f"(tp_w_dcf*{B('dcf')}+(1-tp_w_dcf)*Val!$B${comp})/px-1"
+    parts = [_xl_text(f"{head}目標價 {cur}"), f'TEXT(Val!$B${tpw},"{nf}")',
+             _xl_text("（DCF "), f'TEXT({B("dcf")},"{nf}")', _xl_text("、Comparable（相對倍數調整後）"), f'TEXT(tp_comp_adj,"{nf}")',
+             _xl_text("；DCF 權重 "), 'TEXT(tp_w_dcf,"0%")', _xl_text("），比現價 "), f'TEXT(px,"{nf}")', _xl_text(pxd or " "),
+             f'IF({B("up")}>=0,"高 "&TEXT({B("up")},{pct}),"低 "&TEXT(-{B("up")},{pct}))',
+             _xl_text("，級距 "), B("tier"), _xl_text("、投資建議 "), B("rec"),
+             _xl_text("。相對倍數調整係數 "), 'TEXT(rm_factor,"0.00")',
+             _xl_text("（本公司 10 年前瞻倍數中位數 ÷ 同業的中位數，夾在 0.5–2.0；Val 第 0.5 節），調整前加權上檔空間 "),
+             f"TEXT({pre},{sp})", _xl_text("；Comparable 單獨（市場主流同業法、未調整）為 "), f"TEXT({B('upc')},{sp})", _xl_text("。")]
+    if rest:
+        parts.append(_xl_text("以下為 2026-10-29 相對倍數調整前撰寫的說明，其中數字為調整前：" + rest))
+    f = "=" + "&".join(parts)
+    cell.value = f
+    for row in ws.iter_rows():      # README 開頭若有寫死的投資建議行，改為公式
+        for c in row:
+            if isinstance(c.value, str) and c.value.startswith("投資建議："):
+                c.value = (f'="投資建議："&{B("rec")}&"（依上檔空間固定規則；加權目標價 {cur}"&TEXT(Val!$B${tpw},"{nf}")'
+                           f'&"、上檔空間 "&TEXT({B("up")},{sp})&"、級距 "&{B("tier")}&"；見 Val 第 0 節與第 0.5 節）"')

@@ -795,5 +795,10 @@ for k_, o_ in enumerate(OBS, 1):
 
 order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
+# 相對倍數調整（Andy 2026-10-27「照建議做」；tools/relative_multiple.py，2026-10-29 接入）
+import os, sys  # noqa: E401
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
+import relative_multiple as RMX  # noqa: E402
+RMX.apply(wb, "amat")
 wb.save(sys.argv[1])
 print("PB", {s: (PB[s]["ss"], PB[s]["rev"], PB[s]["eps"], PB[s]["idx"]) for s in SC}, "SUMR", SUMR[("A", "rev")], SUMR[("C", "eps")], "VAL", VAL, "FR", FR, "SENS_LAST", SENS_LAST, "RECON_LAST", RECON_LAST)
