@@ -550,5 +550,10 @@ _rr = len(lines) + 1
 RD.cell(_rr, 1, f'="投資建議："&Val!B{T["rec"]}&"（依上檔空間固定規則）"')
 for i, t in enumerate(C["obs"], 1): RD.cell(_rr + i, 1, f"重點觀察 {i}：{t}")
 RD.column_dimensions["A"].width = 170
+# 相對倍數調整（Andy 2026-10-27「照建議做」；tools/relative_multiple.py，2026-10-29 接入）
+import os, sys  # noqa: E401
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "tools"))
+import relative_multiple as RMX  # noqa: E402
+RMX.apply(wb, os.path.basename(os.path.dirname(os.path.abspath(sys.argv[1]))))
 wb.save(sys.argv[2])
 print("saved", sys.argv[2])

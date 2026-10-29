@@ -99,9 +99,9 @@ YHDR = ["項目", "單位"] + [f"FY{y}" + ("A" if y <= 2026 else "") for y in YR
 # In：輸入（一列一鍵；E＝基準、D＝低、F＝高）
 # =====================================================================================
 IN = WS["In"]
-IN["A1"] = "In — 輸入（v0.3.1：FY27Q1 實績滾入）（藍字＝輸入、黑字＝由其他輸入推得）。基準欄 E，低 D、高 F；金額十億美元（US$B），MW＝IT 關鍵電力。標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy、Assumed 一律給區間"
+IN["A1"] = "In — 輸入（v0.3.1：FY27Q1 實績滾入；v0.3.2：加「情境驅動對照」、欄名改敏感度低／高，數值不變）（藍字＝輸入、黑字＝由其他輸入推得）。基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」；金額十億美元（US$B），MW＝IT 關鍵電力。標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy、Assumed 一律給區間"
 IN["A2"] = "「沿用 v0.2.2」＝MAG v0.2.2（2026-10-25，PR #105）已核准的參數與證據，原出處見來源欄；SEC 一手數字取自 microsoft/data/microsoft_facts_20261008.json（v0.1a 起的事實總帳）；FY27Q1 取自 microsoft/data/microsoft_facts_FY27Q1_20261029.json（財報新聞稿與 IR 財務報表兩次讀取核對）"
-hdr(IN, 3, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源1", "來源2／說明"])
+hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源1", "來源2／說明"])
 ROWS = []
 sec = lambda t: ROWS.append(("sec", t))
 inp = lambda *a: ROWS.append(a)
@@ -373,6 +373,21 @@ for srow in ROWS:
         for c in range(1, 10): IN.cell(r, c).fill = KEY
     IR[key] = r; r += 1
 assert not SETS, f"--set 的鍵不存在：{list(SETS)}"
+# v0.3.2：情境驅動對照（只引用上方各列；三情境並排，與上方「敏感度低／高」欄分開）
+r += 1
+IN.cell(r, 1, "J. 情境驅動對照（三情境並排，進主模型的加權目標價；本節只引用上方各列，修改請改上方藍字。上方「敏感度低／高」欄只用於 Sens 頁，不進目標價）").font = BOLD; r += 1
+hdr(IN, r, ["鍵", "項目", "單位", "情境 A（樂觀）", "情境 B（基準）", "情境 C（保守）", "標記", "說明"]); SCN_HDR = r; r += 1
+SCN_ROWS = {}
+for key, item, unit, ks, fmt, note in (
+        ("scn_ls", "長約占比", "%", ("ls_A", "ls_B", "ls_C"), "0.0%", "長約 × k_長約＋其餘 × k_現貨 → 混合 k"),
+        ("scn_k", "k（每 MW 實收 ÷ Tokenomics 持有成本）", "x", ("k_A", "k_B", "k_C"), "0.000", "三情境 MW 路徑相同，差在變現"),
+        ("scn_cop", "Copilot 每年淨增座席 FY2027–FY2029", "百萬席", ("cop_add_A", "cop_add_B", "cop_add_C"), "0", "FY2030 起 × cop_tail"),
+        ("scn_w", "情境權重", "%", ("w_A", "w_B", "w_C"), "0%", "[判斷] 黃底，Andy 可改")):
+    IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
+    for j, k_ in zip((4, 5, 6), ks):
+        IN.cell(r, j, f"=E{IR[k_]}").number_format = fmt
+    IN.cell(r, 7, "Derived"); IN.cell(r, 8, "引用 In 頁 " + "／".join(ks) + "；" + note)
+    SCN_ROWS[key] = r; r += 1
 for c_, w in zip("ABCDEFGHI", [14, 60, 12, 10, 12, 10, 16, 80, 70]):
     IN.column_dimensions[c_].width = w
 IN.freeze_panes = "D4"
@@ -1472,10 +1487,13 @@ HJ = {
         {"id": "drivers", "title": "驅動因子 → 推導量", "intro": "@Thesis!A1", "blocks": [
             {"type": "table", "head": ["@README!A12", "@README!B12", "@README!C12", "@README!D12", "@README!E12"],
              "rowgen": {"sheet": "README", "rows": f"{RD_DRV[0]}-{RD_DRV[1]}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "", "", "", "n2"]}},
-            {"type": "table", "caption": "主要輸入（In 頁；標記沿用 Excel）", "head": ["@In!B3", "@In!D3", "@In!E3", "@In!F3", "@In!C3", "@In!G3"],
+            {"type": "table", "caption": "情境驅動（三情境並排，進加權目標價；In 頁 J 節）", "head": [f"@In!B{SCN_HDR}", f"@In!D{SCN_HDR}", f"@In!E{SCN_HDR}", f"@In!F{SCN_HDR}", f"@In!C{SCN_HDR}", f"@In!G{SCN_HDR}"],
+             "rows": [[f"@In!B{SCN_ROWS[k]}", f"@In!D{SCN_ROWS[k]}|{f}", f"@In!E{SCN_ROWS[k]}|{f}", f"@In!F{SCN_ROWS[k]}|{f}", f"@In!C{SCN_ROWS[k]}", f"@In!G{SCN_ROWS[k]}|tag"]
+                      for k, f in (("scn_ls", "p0"), ("scn_k", "n3"), ("scn_cop", "n0"), ("scn_w", "p0"))]},
+            {"type": "table", "caption": "單一參數區間（In 頁；基準進主模型，敏感度低／高只用於敏感度頁、不進目標價；三情境共用）", "head": ["@In!B3", "@In!D3", "@In!E3", "@In!F3", "@In!C3", "@In!G3"],
              "rows": [[f"@In!B{IR[k]}", f"@In!D{IR[k]}|{f}", f"@In!E{IR[k]}|{f}", f"@In!F{IR[k]}|{f}", f"@In!C{IR[k]}", f"@In!G{IR[k]}|tag"]
-                      for k, f in (("mw_ext_26", "n0"), ("pace", "n1"), ("ext_sh", "p0"), ("self_build", "p0"), ("k_B", "n3"), ("ls_A", "p0"), ("ls_C", "p0"),
-                                   ("cop_s26", "n0"), ("cop_px", "n0"), ("cop_add_B", "n0"), ("capex_floor27", "n1"), ("life_it", "n0"), ("glt_azo", "p0"), ("internal_ai_reading", "n0"), ("beta", "n3"), ("wacc", "p2"), ("g_tv", "p0"))]},
+                      for k, f in (("mw_ext_26", "n0"), ("pace", "n1"), ("ext_sh", "p0"), ("self_build", "p0"),
+                                   ("cop_s26", "n0"), ("cop_px", "n0"), ("capex_floor27", "n1"), ("life_it", "n0"), ("glt_azo", "p0"), ("internal_ai_reading", "n0"), ("beta", "n3"), ("wacc", "p2"), ("g_tv", "p0"))]},
             {"type": "table", "caption": f"@Thesis!A{yrow('B', 'yr') - 2}", "head": [f"@Thesis!{c_}{yrow('B', 'yr') - 1}" for c_ in "ABFGHIJK"],
              "rows": [[f"@Thesis!A{yrow('B', k)}", f"@Thesis!B{yrow('B', k)}"] + [f"@Thesis!{col(y)}{yrow('B', k)}|{f}" for y in FCY]
                       for k, f in (("pace", "n0"), ("ext", "n0"), ("own", "n0"), ("rev_mw", "n2"), ("azai", "n1"), ("ai_capex", "n1"), ("ai_da", "n1"), ("shadow", "n1"), ("ai_ebit", "n1"), ("nppe", "n1"))]
