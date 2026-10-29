@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """產生 OpenAI 收支模型 Excel（v0.6-P1）。
 
-用法：python3 builder/build.py --tk-dir <Tokenomics repo（master model/CURRENT；v0.6.3＝v21.4）> --out model/<YYYYMMDD>_OpenAI_v0.6.3.xlsx [--base <前一版>] [--date 2026-10-25] [--tk-date 2026-10-08]
+用法：python3 builder/build.py --tk-dir <Tokenomics repo（master model/CURRENT；v0.6.4＝v21.7）> --out model/<YYYYMMDD>_OpenAI_v0.6.4.xlsx [--base <前一版>] [--date 2026-10-29] [--tk-date 2026-10-08]
   --base：前一版 xlsx；有給時依 Excel 優先規則保留 Excel 內已改過的藍字輸入（builder/preserve.py）。
 輸出經 LibreOffice 重算後才寫到 --out（內含快取值；engine 仍會強制重算）。同目錄寫 restore_log.txt、leafmap.csv、build_summary.json。
 """
@@ -29,7 +29,7 @@ import p4  # noqa: E402
 import p5  # noqa: E402
 import p6  # noqa: E402
 
-VERSION = "v0.6.3"
+VERSION = "v0.6.4"
 KIND_LABEL = {"SRC": "SRC_OAI", "INP": "Inputs", "FORMULA": "公式（後續工作包）", "DUP": "重複併入", "SKIP": "不遷入", "TK": "不遷入；改取 TK_Link"}
 SRC_COLS = ["SRC_ID", "指標", "數值", "低", "高", "單位", "口徑", "適用對象", "日期", "出處（v0.5 原文）", "來源等級", "立場", "立場說明",
             "一手／二手", "狀態", "取代者", "v0.5 標記", "查核狀態（v0.5 chk）", "v0.5 路徑", "模型使用位置", "備註",
@@ -564,12 +564,12 @@ def p6_checks(R, P6, S, rowof):
     return [
         ("P×Q：比值恆等式（比值 − 營收÷成本）平方和（主序列；應＝0）", "=SUMPRODUCT(PXQ_Identity,PXQ_Identity)", 0, "tol", "實際 m×L ÷ 所需 m×L ＝ 營收 ÷ 算力成本（Q 與牌價約掉）"),
         ("P×Q：FY2025 營收兩來源相等（SRC_OAI_002 − TK_SRC_DEM_007，$B）", f"={S('營收：FY2025')}-TK_SRC_DEM_007", 0, "tol", "13.07"),
-        ("v0.6.3：TK_Link 為單一快照，版本＝v21.4", "=TK_Version", "v21.4", "eq", "v0.6.2 起 TK_PxQ 併入 TK_Link；v0.6.3 換快照至 Tokenomics v21.4（master 693792f）"),
+        ("v0.6.4：TK_Link 為單一快照，版本＝v21.7", "=TK_Version", "v21.7", "eq", "v0.6.2 起 TK_PxQ 併入 TK_Link；v0.6.3 換快照至 v21.4（master 693792f）；v0.6.4 換快照至 Tokenomics v21.7（master 8309fdb；本模型讀取的 88 名數值與 v21.4 逐名相同）"),
         ("v0.6.2：TK_Link 已取值名稱數（63 原名＋25 併入／新增）", '=COUNTIF(TK_Link!$F$10:$F$200,"OK")', 88, "eq", "原 63 名＋P×Q 取數名稱 22＋RNG_ 3；IF_HoldEcon、SRC_DEM_004／006–009 原已在 63 名內"),
         ("v0.6.2：TK_Link 檔案 SHA-256 已記錄（非空）", "=IF(LEN(TK_FileSHA256)=64,1,0)", 1, "eq", "Tokenomics 檔案 SHA-256（64 位十六進位）"),
         ("v0.6.2 對照：研發 GW 占（研發＋推論）比，本模型 2025", "=INDEX(CMP_RDGW,1)/(INDEX(CMP_RDGW,1)+INDEX(CMP_InfGW,1))", None, "info",
          "口徑對應 Tokenomics Q1（研發 GW ÷ 研發＋服務 GW）；本模型研發 GW 為殘差（2026 起）、2025 為訓練支出 ÷ 合約價"),
-        ("v0.6.2 對照：TK IF_AllocQ1（R1，支出路線；v11.0／v12.0 起口徑改變，原 v5.26＝0.636）", "=TK_IF_AllocQ1", None, "info", "v19.0＝0.184；v21.4 見 TK_Link"),
+        ("v0.6.2 對照：TK IF_AllocQ1（R1，支出路線；v11.0／v12.0 起口徑改變，原 v5.26＝0.636）", "=TK_IF_AllocQ1", None, "info", "v19.0＝0.184；現行快照（v21.7）見 TK_Link"),
         ("v0.6.2 對照：TK IF_AllocQ1 區間下限（RNG_IF_AllocQ1_Lo）", "=TK_RNG_IF_AllocQ1_Lo", None, "info", "v13.0 起視為區間"),
         ("v0.6.2 對照：TK IF_AllocQ1 區間上限（RNG_IF_AllocQ1_Hi）", "=TK_RNG_IF_AllocQ1_Hi", None, "info", "v13.0 起視為區間"),
         ("v0.6.2：Tokenomics 區間時效旗標 RNG_StaleFlag＝『一致』", '=IF(TK_RNG_StaleFlag="一致",1,0)', 1, "eq", "使用 IF_AllocQ1 區間前須確認（Tokenomics 規定）；不一致時此列 ERR"),
@@ -589,11 +589,14 @@ def p6_checks(R, P6, S, rowof):
         ("v0.6.3 P×Q 比值：口徑一 低／基準／高", "=TEXT(PxQ!$D$9,\"0.00\")&\" / \"&TEXT(PxQ!$E$9,\"0.00\")&\" / \"&TEXT(PxQ!$F$9,\"0.00\")", None, "info", "Q2 年化營收 ÷ Q2 季平均 GW"),
         ("v0.6.3 P×Q 比值：口徑二 基準", "=PxQ!$E$10", None, "info", "FY2026 營收 ÷ 全年平均 GW"),
         ("v0.6.3 P×Q 比值：口徑三 基準", "=PxQ!$E$11", None, "info", "9 月底 run-rate ÷ 年底 GW"),
-        ("v0.6.3 P×Q 倍數（對 2025 主值）：口徑一／二／三 基準", "=TEXT(PxQ!$E$15,\"0.00\")&\" / \"&TEXT(PxQ!$E$16,\"0.00\")&\" / \"&TEXT(PxQ!$E$17,\"0.00\")", None, "info", "預期 0.93／0.96／0.90"),
+        ("v0.6.3 P×Q 倍數（對 2025 主值）：口徑一／二／三 基準", "=TEXT(PxQ!$E$15,\"0.00\")&\" / \"&TEXT(PxQ!$E$16,\"0.00\")&\" / \"&TEXT(PxQ!$E$17,\"0.00\")", None, "info", "預期 0.96／0.96／0.90（v0.6.4 W1：口徑一基準 GW 2.26）"),
         ("P×Q 比值：2025 指數內插", f"=PxQ!$D${rw['m_ratio']}", None, "info", "A 段 1.239"),
         ("P×Q 比值：2025 線性內插", f"=PxQ!$E${rw['m_ratio']}", None, "info", "A 段 1.118"),
         ("P×Q 對照：2025 雲端支出（Epoch 16）÷（GW × h），指數內插", f"=PxQ!$D${rw['x_mult']}", None, "info", "不進主序列"),
         ("P×Q 對照：2026 支出（Brockman 50）÷（GW × h），口徑二基準 GW", f"=PxQ!$J${rw['x_mult']}", None, "info", "不進主序列"),
+        ("v0.6.4 W2：第 8.4 節 D2 推導式（證據重現欄）超出容許誤差的項數", "=PXQ_D2ReconBad", 0, "eq", "容許誤差 INP_307（1%）；對 B 段 token帳 B10:D19、B34（Tokenomics 證據檔）"),
+        ("v0.6.4 W2：D2 Codex T／日，Q2 平均（w 基準、k＝1）", f"=PxQ!$E${rw['d2_q2']}", None, "info", "B 段 5.071；候選因子，不進基準 token 帳"),
+        ("v0.6.4 W2：token 帳加入 D2 後 (A) 證據重現（w 基準、k＝1）", f"=PxQ!$E${rw['d2_la1']}", None, "info", "B 段 1.769；基準 token 帳（8.3 節）不變"),
     ]
 
 
@@ -607,7 +610,8 @@ def sheet_readme(wb, snap, date, summary, tkdate=None):
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構，重建時保留 Excel 內已改過的藍字。"),
         ("SRC_OAI", f"{summary['src']} 列；v0.5『已取得的原始訊息』逐筆遷入（Interested-party／Verified）。"),
         ("TK_Link", f"單一快照（v0.6.2 起；TK_PxQ 併入，TKQ_ 前綴退役）：Tokenomics {snap['version']}（{snap['file']}），master 提交 {snap['sha'][:7]}，讀取日 {tkdate or date}；{summary['tk_ok']} 個名稱有值、{summary['tk_pending']} 個待 Tokenomics 提供。"),
-        ("PxQ", "v0.6.3 P×Q 與回本比值：實際 m×L ÷ 所需 m×L（＝營收 ÷ 算力成本）；11 欄＝2025 指數／線性 + 2026 三口徑（Q2 年化營收÷Q2 季平均 GW；FY2026 營收÷全年平均 GW；9 月底 run-rate÷年底 GW）× 低／基準／高；頂部主輸出（比值、倍數、持平門檻）、中間量、敏感度 4.1–4.7、外部支出對照、證據對帳（6B）、Fairwater 六情境（J7）、GW 路線 token 帳（具名範圍 PXQ_*）。"),
+        ("PxQ", "v0.6.4（v0.6.3 起）P×Q 與回本比值：實際 m×L ÷ 所需 m×L（＝營收 ÷ 算力成本）；11 欄＝2025 指數／線性 + 2026 三口徑（Q2 年化營收÷Q2 季平均 GW；FY2026 營收÷全年平均 GW；9 月底 run-rate÷年底 GW）× 低／基準／高；頂部主輸出（比值、倍數、持平門檻）、中間量、敏感度 4.1–4.7、外部支出對照、證據對帳（6B）、Fairwater 六情境（J7）、GW 路線 token 帳（具名範圍 PXQ_*）；v0.6.4 新增第 8.4 節 D2 推導式（Codex 份額 × ChatGPT token 量；候選因子，不進基準 token 帳）與第九節 Microsoft 10-Q 對照。"),
+        ("v0.6.4 變動", "W1 口徑一 Q2 季平均 GW 2.34→2.26（2.17–2.35；Tokenomics B 段 Fairwater 占比 f＝0.4／0.65／0.9）；W2 PxQ 第 8.4 節 D2 推導式；W3 INP_303 註記；W4 SRC_OAI_141–143 移入 Inputs（公式）；W5 TK_Link 快照 v21.4→v21.7；W6 Microsoft FY27 Q1 10-Q 對照。"),
         ("Inputs", f"{summary['inp']} 列；v0.5 Assumed／Analogy／Decision 項目（長表）。"),
         ("Map_v05", f"v0.5 JSON {summary['leaves']} 個葉節點的去處。"),
         ("Demand", "P2 需求：訂閱各方案人數、每日任務數 × 每任務 token、API 任務數與計費 token；token 量（層級 × 付費／免費，具名範圍 DEM_Tok_*，供 P3）。"),
@@ -654,7 +658,9 @@ def main():
         for col, k in zip("EFG", ("value", "lo", "hi")):
             defaults[("Inputs", r["id"], col)] = blank(r[k])
     if a.base:
-        final, matched, kept, unmatched = preserve.merge(defaults, a.base, outdir / "restore_log.txt")
+        reg_ = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+        retired_ids = reg_.get("retired", {}).get("SRC", []) + reg_.get("retired", {}).get("INP", [])
+        final, matched, kept, unmatched = preserve.merge(defaults, a.base, outdir / "restore_log.txt", retired=retired_ids)
     else:
         final, matched, kept, unmatched = dict(defaults), 0, 0, []
         (outdir / "restore_log.txt").write_text("matched: 0; Excel value kept over code default: 0; unmatched: 0\n（首次建置，無底稿）\n", encoding="utf-8")

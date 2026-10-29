@@ -49,6 +49,8 @@ def test_src_and_inputs_values_equal_json(R):
     eng = Engine(current_model_path())
     for r in R.src_rows + R.inp_rows:
         if r["value"] != "":
+            if isinstance(r["value"], str) and r["value"].startswith("="):      # v0.6.4 W4：公式值的列另測（test_w4_*）
+                continue
             assert _same(eng.get_name(r["id"]), r["value"]), r["id"]
 
 
@@ -202,8 +204,8 @@ def test_pxq_not_fed_back():
                     assert "PxQ!" not in c.value and "PXQ_" not in c.value, f"{ws.title}!{c.coordinate}"
 
 
-def test_tk_link_single_snapshot_v21_4():
-    """v0.6.3：TK_Link 為單一 Tokenomics v21.4 快照（v0.6.2 起單一快照；v0.6.3 換版 v19.0→v21.4）（88 名有值、待提供 2 名）；TK_PxQ 頁與 TKQ_ 名稱已退役；前 63 名列位與 v0.6.1 相同（名稱、列序不變）。"""
+def test_tk_link_single_snapshot_v21_7():
+    """v0.6.4：TK_Link 為單一 Tokenomics v21.7 快照（v0.6.2 起單一快照；v0.6.3 換版 v19.0→v21.4；v0.6.4 換版 v21.4→v21.7，88 名數值逐名不變）（88 名有值、待提供 2 名）；TK_PxQ 頁與 TKQ_ 名稱已退役；前 63 名列位與 v0.6.1 相同（名稱、列序不變）。"""
     import openpyxl
     root = Path(__file__).resolve().parents[2]
     old = openpyxl.load_workbook(root / "model" / "archive" / "20261022_OpenAI_v0.6.1.xlsx", data_only=True)["TK_Link"]
@@ -211,7 +213,7 @@ def test_tk_link_single_snapshot_v21_4():
     assert "TK_PxQ" not in new.sheetnames
     assert not any(n.startswith("TKQ_") for n in new.defined_names)
     cur = new["TK_Link"]
-    assert cur["B4"].value == "v21.4"
+    assert cur["B4"].value == "v21.7"
     n = 0
     for r in range(10, 200):
         if old.cell(r, 1).value is None:
@@ -241,12 +243,12 @@ def test_pxq_three_scope_structure():
     hdr = [ws.cell(5, c).value for c in range(4, 15)]
     assert hdr[:2] == ["2025 指數內插", "2025 線性內插"]
     assert [h for h in hdr[2:]] == [f"口徑{z} {lv}" for z in "一二三" for lv in ("低", "基準", "高")]
-    base = {1: (9, 2.34, 26.3), 2: (10, 3.0, 35.0), 3: (11, 4.6, 50.0)}
+    base = {1: (9, 2.26, 26.3), 2: (10, 3.0, 35.0), 3: (11, 4.6, 50.0)}      # v0.6.4 W1：口徑一基準 GW 2.34→2.26
     for s, (r, gw, rev) in base.items():
         assert abs(ws.cell(r, 8).value - gw) < 1e-9 and abs(ws.cell(r, 10).value - rev) < 1e-9
     r25 = ws["F12"].value
     assert abs(r25 - 1.239) < 0.001
-    for s, mult in ((1, 0.93), (2, 0.96), (3, 0.90)):
+    for s, mult in ((1, 0.959), (2, 0.96), (3, 0.90)):
         assert abs(ws.cell(14 + s, 5).value - mult) < 0.01 * mult + 0.005, (s, ws.cell(14 + s, 5).value)
     # 持平門檻（A 段表）
     expect = {21: (2.4014, 2.1669, 1.9218), 22: (3.1958, 2.8837, 2.5575), 23: (4.5654, 4.1196, 3.6536)}
@@ -284,3 +286,60 @@ def test_pxq_recon_6b_clean():
     wb = openpyxl.load_workbook(current_model_path(), data_only=True)
     sheet, rng = wb.defined_names["PXQ_ReconBad"].attr_text.split("!")
     assert wb["PxQ"][rng.replace("$", "")].value == 0
+
+
+def test_w1_scope1_gw_values():
+    """v0.6.4 W1：口徑一 Q2 季平均 GW 基準／低／高＝2.26／2.17／2.35（INP_289–291）；J7 列 INP_297 不改（2.34）。"""
+    import openpyxl
+    wb = openpyxl.load_workbook(current_model_path(), data_only=True)
+    ws = wb["Inputs"]
+    got = {ws.cell(r, 1).value: [ws.cell(r, c).value for c in (5, 6, 7)] for r in range(5, ws.max_row + 1)}
+    assert got["INP_289"] == [2.26, 2.17, 2.35]
+    assert got["INP_290"] == [2.17, 2.17, 2.17] and got["INP_291"] == [2.35, 2.35, 2.35]
+    assert got["INP_297"][0] == 2.34
+    px = wb["PxQ"]
+    for c, exp in zip((4, 5, 6), (0.999, 0.959, 0.921)):          # B 段 README：倍數 0.999／0.959／0.921
+        assert abs(px.cell(15, c).value - exp) < 0.01 * exp, (c, px.cell(15, c).value)
+
+
+def test_w2_d2_derivation_matches_b_segment():
+    """v0.6.4 W2：第 8.4 節（A 證據重現）對 B 段 token帳：第 5 列 3.531／5.071／6.610、第 6 列 7.606、token 帳 k＝1 為 1.857／1.769／1.689，k＝2 為 1.666／1.530／1.414（容差 1%）；對帳項數 0；基準 token 帳 (A)(B) 不變。"""
+    import openpyxl
+    wb = openpyxl.load_workbook(current_model_path(), data_only=True)
+    ws = wb["PxQ"]
+    rows = {str(ws.cell(r, 2).value).split(" ")[0]: r for r in range(290, ws.max_row + 1) if ws.cell(r, 1).value and str(ws.cell(r, 2).value)[:2] in ("1.", "2a", "2b", "3.", "4.", "5.", "5′", "6.", "7a", "7b", "7c", "7d")}
+    def vals(key):
+        return [ws.cell(rows[key], c).value for c in (4, 5, 6)]
+    for key, exp in (("5.", (3.531, 5.071, 6.610)), ("5′.", (7.063, 10.141, 13.220)), ("7a.", (1.857, 1.769, 1.689)), ("7b.", (1.666, 1.530, 1.414)), ("3.", (0.3503, 0.5030, 0.6558))):
+        for g, e in zip(vals(key), exp):
+            assert abs(g / e - 1) <= 0.01, (key, g, e)
+    assert abs(vals("6.")[1] / 7.606 - 1) <= 0.01
+    sheet, rng = wb.defined_names["PXQ_D2ReconBad"].attr_text.split("!")
+    assert ws[rng.replace("$", "")].value == 0
+    led = [c.value for c in ws[wb.defined_names["PXQ_TokLedger"].attr_text.split("!")[1].replace("$", "")][0]]
+    assert abs(led[0] / 2.0966 - 1) < 0.001 and abs(led[1] / 1.9876 - 1) < 0.001
+    assert abs(led[2] / (1.9365 * 2.26 / 2.34) - 1) < 0.001       # (C)＝v0.6.3 值 × 2.26 ÷ 2.34
+
+
+def test_w4_derived_revenue_inputs():
+    """v0.6.4 W4：SRC_OAI_141–143 退役並移入 Inputs（公式）；基準值與 v0.6.3 相同（26.8／26.3／35）；SRC_OAI_144、145 不動。"""
+    import json
+    import openpyxl
+    root = Path(__file__).resolve().parents[2]
+    reg = json.loads((root / "builder" / "id_registry.json").read_text(encoding="utf-8"))
+    assert {"SRC_OAI_141", "SRC_OAI_142", "SRC_OAI_143"} <= set(reg["retired"]["SRC"])
+    wf = openpyxl.load_workbook(current_model_path())
+    wv = openpyxl.load_workbook(current_model_path(), data_only=True)
+    assert not any(n in wf.defined_names for n in ("SRC_OAI_141", "SRC_OAI_142", "SRC_OAI_143"))
+    assert "SRC_OAI_144" in wf.defined_names and "SRC_OAI_145" in wf.defined_names
+    want = {"營收：2026 Q2 年化（含廣告；對照）": 26.8, "營收：2026 Q2 年化（不含廣告）": 26.3, "營收：FY2026 預測（不含廣告）": 35.0}
+    seen = 0
+    for r in range(5, wf["Inputs"].max_row + 1):
+        nme = wf["Inputs"].cell(r, 2).value
+        if nme in want:
+            seen += 1
+            assert str(wf["Inputs"].cell(r, 5).value).startswith("="), nme
+            assert abs(wv["Inputs"].cell(r, 5).value - want[nme]) < 1e-9, nme
+    assert seen == 3
+    for r in range(5, wf["SRC_OAI"].max_row + 1):
+        assert wf["SRC_OAI"].cell(r, 1).value not in ("SRC_OAI_141", "SRC_OAI_142", "SRC_OAI_143")

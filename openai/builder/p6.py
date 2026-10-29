@@ -40,7 +40,7 @@ class PxQ:
         self.mask = None
         self.deferred = []
         ws = self.ws
-        title(ws, "PxQ — P×Q 與回本比值：實際 m×L ÷ 所需 m×L（＝營收 ÷ 算力成本）的年度序列（v0.6.3：2026 三口徑）",
+        title(ws, "PxQ — P×Q 與回本比值：實際 m×L ÷ 所需 m×L（＝營收 ÷ 算力成本）的年度序列（v0.6.4：2026 三口徑）",
               "每 GW 參數只取 TK_Link（Tokenomics 單一快照，TK_）；公司層級（平均上線 GW、世代組合、營收）取本模型。看的不是回本的絕對數字，而是實際 ÷ 所需的比值趨勢（Andy 2026-10-22）。",
               "m＝付費服務 token 的實收單價 ÷ 有效牌價（有效牌價＝表列 ×（1 − d），d＝TK_IF_Disc）；L 取壽命期價格係數（判斷題 1 預設）。比值中 Q 與牌價約掉，Q 只決定 m×L 的水準。"
               "欄 D–N＝2025 指數／線性內插 + 2026 三口徑 × 低／基準／高（口徑一：Q2 年化營收 ÷ Q2 季平均 GW；口徑二：FY2026 營收 ÷ 全年平均 GW；口徑三：9 月底 run-rate ÷ 年底 GW）。$B＝十億美元；Q 單位 M tok（百萬 token）／年。")
@@ -125,8 +125,9 @@ def build_p6(wb, R, S, I, nm, snapq):
     c_min, c_bt, c_day = I("每年分鐘數"), I("單位換算：B token → T token"), I("每年天數")
     y25, y26 = "INP_005", "INP_006"
     s_rev25 = S("營收：FY2025")
-    s_q2, s_q2wsj = S("營收：2026 Q2 年化（不含廣告）"), S("營收：2026 Q2 年化（WSJ 季營收 6.7 × 4；含廣告；對照）")
-    s_fy, s_rr, s_mgmt = S("營收：FY2026 預測（不含廣告）"), S("營收 run-rate：2026 年 9 月底（FT，OpenAI 淨額口徑）"), S("管理層營收目標：2026")
+    # v0.6.4 W4：Q2 年化（含／不含廣告）與 FY2026 預測（不含廣告）由 SRC_OAI_141–143 移入 Inputs（公式）
+    s_q2, s_q2wsj = I("營收：2026 Q2 年化（不含廣告）"), I("營收：2026 Q2 年化（含廣告；對照）")
+    s_fy, s_rr, s_mgmt = I("營收：FY2026 預測（不含廣告）"), S("營收 run-rate：2026 年 9 月底（FT，OpenAI 淨額口徑）"), S("管理層營收目標：2026")
     rev_src = {0: s_rev25, 1: s_q2, 2: s_fy, 3: s_rr}
     s_ep16, s_bro50 = S("算力（雲端）支出：2025（媒體報導，經 Epoch 引用）"), S("算力支出：2026（Brockman 證詞）")
     s_serve50 = S("對外服務占算力比：2025（Epoch：研發與推論約各半）")
@@ -147,9 +148,9 @@ def build_p6(wb, R, S, I, nm, snapq):
         return f"={gwin[SCOPE[i]][LEVEL[i]]}"
     X.add("平均上線 GW（口徑一＝Q2 季平均；口徑二＝全年平均；口徑三＝年底時點）", "GW", gw_f, "gw",
           "2025：OpenAI 官方端點（2024 年底 0.6、2025 年底 1.9；Interested-party；電力口徑未明）內插——指數＝(端點差)÷ln(端點比)，線性＝端點平均（Derived）；"
-          "口徑一：J7 站點由下而上（Derived）；口徑二：Inputs（Assumed，Andy『約 3 GW』）；口徑三：A 段年底三情境（Assumed）。官方未公布 2026 年上線 GW", fmt=NUM3, name="PXQ_GW")
+          "口徑一：B 段 Fairwater 占比 f 換算（f＝0.4／0.65／0.9；Derived；v0.6.4 W1，原 J7 中占比＋晚 2.34）；口徑二：Inputs（Assumed，Andy『約 3 GW』）；口徑三：A 段年底三情境（Assumed）。官方未公布 2026 年上線 GW", fmt=NUM3, name="PXQ_GW")
     X.add("營收（基準）", "$B", lambda i, c: f"={rev_src[SCOPE[i]]}", "rev",
-          "2025＝SRC_OAI（13.07，Checks 驗等於 TK_SRC_DEM_007）；口徑一＝Q2 年化 26.3（不含廣告）；口徑二＝FY2026 預測 35（不含廣告）；口徑三＝9 月底 run-rate 50（二手，非全年營收）。"
+          "2025＝SRC_OAI（13.07，Checks 驗等於 TK_SRC_DEM_007）；口徑一＝Q2 年化 26.3（不含廣告；Inputs 公式，v0.6.4 W4 起）；口徑二＝FY2026 預測 35（不含廣告；Inputs 公式）；口徑三＝9 月底 run-rate 50（二手，非全年營收）。"
           "三者皆為 Interested-party 或二手報導，標記照 SRC_OAI", fmt=NUM2, name="PXQ_Rev")
 
     # ═══ 二、世代參數表 ═══
@@ -328,7 +329,7 @@ def build_p6(wb, R, S, I, nm, snapq):
     rec("持平門檻 口徑一（2025 比值 1.397）", "GW", 1.9218, "=F{t_be1}", A + "D58")
     rec("持平門檻 口徑二（2025 比值 1.397）", "GW", 2.5575, "=F{t_be2}", A + "D59")
     rec("持平門檻 口徑三（2025 比值 1.397）", "GW", 3.6536, "=F{t_be3}", A + "D60")
-    rec("口徑一基準倍數（2.34 GW、263 億）≈0.93", "倍", 0.93, "=E{t_mu1}", "工作單 20261025 驗收 3（J7 中占比＋晚 0.926）", NUM2)
+    rec("口徑一基準倍數（2.26 GW、263 億）≈0.96", "倍", 0.959, "=E{t_mu1}", "B 段 README（f＝0.65：倍數 0.959）；v0.6.4 W1（原 2.34 GW、0.93）", NUM3)
     rec("口徑二基準倍數（3.0 GW、350 億）≈0.96", "倍", 0.96, "=E{t_mu2}", "工作單 20261025 驗收 3", NUM2)
     rec("口徑三基準倍數（4.6 GW、500 億）≈0.90", "倍", 0.90, "=E{t_mu3}", "工作單 20261025 驗收 3（A 段 4.57 GW 為 0.901）", NUM2)
     for k, (lab, v) in enumerate((("低占比＋晚", 0.98249), ("低占比＋早", 0.90648), ("中占比＋晚", 0.92599), ("中占比＋早", 0.83742), ("高占比＋晚", 0.85707), ("高占比＋早", 0.76092))):
@@ -336,7 +337,7 @@ def build_p6(wb, R, S, I, nm, snapq):
     rec("2025 站點估比值（低占比，GW 1.11）", "倍", 1.2541, "=E{y25_1}", J + "C19", NUM3)
     rec("2025 站點估比值（高占比，GW 1.06）", "倍", 1.3182, "=E{y25_2}", J + "C21", NUM3)
     X.line("對帳超出容許誤差（6B）的項數", "rc_bad", {"E": f'=COUNTIF(G{ev[0]}:G{ev[-1]},"差異")'},
-           note="逐項說明見報告：超出者是否來自 Tokenomics 快照差異（A 段／J7 用 TK v21.2，本模型用 v21.4）或證據值取整")
+           note="逐項說明見報告：超出者是否來自 Tokenomics 快照差異（A 段／J7 用 TK v21.2，本模型用 v21.7）或證據值取整")
     nm(wb, "PXQ_ReconBad", f"PxQ!$E${X.rows['rc_bad']}")
 
     # ═══ 七、Fairwater 條件（J7）與 2025 站點估對照（J6）═══
@@ -369,7 +370,9 @@ def build_p6(wb, R, S, I, nm, snapq):
     # ═══ 八、GW 路線 token 帳 ═══
     X.section("八、GW 路線 token 帳（2026 Q2，口徑一基準）＝Q（口徑一基準 GW）÷ 需求面付費 token（API 時點值年化 ＋ ChatGPT 付費 token）；＝1 表示完全閉合")
     X.hdr(["8.1 項目", "單位", "(A) 交接檔組合 × 折減 0.85（證據重現）", "(B) 交接檔組合 × 重解比 0.806（證據重現）", "(C) 本模型基準（V1 組合、INP_287 讀法）"], "w_hdr")
-    X.line("口徑一基準 Q2 季平均 GW", "w_gw", {c: "=$G${m_gw}" for c in "DEF"}, fmt_map={c: NUM3 for c in "DEF"}, unit="GW")
+    X.line("口徑一基準 Q2 季平均 GW（(A)(B) 用證據原 GW〔J7 中占比＋晚〕，(C) 用本模型基準）", "w_gw", {"D": f"={fwin[2]}", "E": f"={fwin[2]}", "F": "=$G${m_gw}"},
+           fmt_map={c: NUM3 for c in "DEF"}, unit="GW",
+           note="v0.6.4 W1：token帳缺口 A 段的 (A)(B) 是以 J7 中占比＋晚 2.34 GW 算的證據重現，故 D、E 欄固定取 INP_297（J7 列不改）；F 欄 (C) 隨口徑一基準 GW（INP_289，v0.6.4＝2.26）")
     X.line("每 GW 付費年產能（世代加權，未乘生產折減）", "w_cap0", {
         "D": "=SUMPRODUCT($G${pv_sh_Hopper}:$G${pv_sh_Custom},$E$%d:$E$%d)" % (g1, g6),
         "E": "=SUMPRODUCT($G${pv_sh_Hopper}:$G${pv_sh_Custom},$E$%d:$E$%d)" % (g1, g6),
@@ -380,8 +383,8 @@ def build_p6(wb, R, S, I, nm, snapq):
     X.line("Q（M tok／年）＝GW × 服務占比 ×（1 − 免費占比）× 每 GW 付費年產能 × 折減 × 實際利用率", "w_Q", {
         c: "=%s{w_gw}*TK_IF_ServeShare*(1-TK_IF_FreeShare)*%s{w_cap0}*%s{w_der}*TK_IF_UtilActual" % (c, c, c) for c in "DEF"}, fmt_map={c: SCI for c in "DEF"}, unit="M tok/年",
            note="與 PxQ 主序列 Q 同式（GW 路線＝P×Q 的 Q 所用口徑）；(C) 應等於主序列口徑一基準欄的 Q")
-    X.line("核對：（Q −（4.1 預覽基準 Q／主序列 Q））÷ 該 Q（應＝0；相對差）", "w_Qchk", {"D": "=(D{w_Q}-$G${pv_Q})/$G${pv_Q}", "F": "=(F{w_Q}-$G${m_Q})/$G${m_Q}"}, fmt_map={"D": "0.0E+00", "F": "0.0E+00"}, unit="比例",
-           note="(A) 對 4.1 預覽基準區塊（交接檔組合＋一律 0.85）；(C) 對主序列；Checks 驗證")
+    X.line("核對：（Q −（4.1 預覽基準 Q／主序列 Q））÷ 該 Q（應＝0；相對差）", "w_Qchk", {"D": "=(D{w_Q}-$G${pv_Q}*D{w_gw}/$G${m_gw})/($G${pv_Q}*D{w_gw}/$G${m_gw})", "F": "=(F{w_Q}-$G${m_Q})/$G${m_Q}"}, fmt_map={"D": "0.0E+00", "F": "0.0E+00"}, unit="比例",
+           note="(A) 對 4.1 預覽基準區塊（交接檔組合＋一律 0.85）：4.1 區塊的 GW 為本模型基準（口徑一），(A) 用證據原 GW（INP_297），故比較『同式、同 GW』——4.1 區塊 Q × (A) 的 GW ÷ 本模型基準 GW（Q 與 GW 成正比；v0.6.4 W1 工程類改寫）；(C) 對主序列；Checks 驗證")
     X.hdr(["8.2 需求面付費 token（2026 Q2，年化）", "單位", "(A)", "(B)", "(C)"], "w_hdr2")
     X.line("API 付費 token＝每分鐘處理 token（時點值）× 每年分鐘數 → M tok／年", "w_api", {
         c: f"={s_api}*{c_min}/{c_bt}*{mt}" for c in "DEF"}, fmt_map={c: SCI for c in "DEF"}, unit="M tok/年",
@@ -405,6 +408,77 @@ def build_p6(wb, R, S, I, nm, snapq):
     X.line("VR200 每 GW P×Q 營收的 GW 路線折算", "w_vr", {"D": "未建"},
            note="TK `IFW_`／`IF_` 名稱中沒有 VR200 P×Q 營收（`IF_RevGW*`／`IFW_RevGW*` 為理論營收上限，不含 m、服務占比、免費占比）；"
                 "只有 `L1_RevGW_PQ_VR200`（本模型不得讀 `L1_`）。照工作單不建，列入報告『TK 缺 IF 名稱』")
+
+    # ═══ 8.4 D2 推導式（v0.6.4 W2；候選因子，不進基準 token 帳）═══
+    wsel = [I("組織用戶占 ChatGPT token 的比例 w：" + k) for k in ("低情境", "基準", "高情境")]
+    tratio, kb, k2, d3in = I("Codex 用量時點比"), I("Codex 輸入／輸出比相對 ChatGPT 的倍數 k：基準"), I("Codex 輸入／輸出比相對 ChatGPT 的倍數 k：敏感度"), I("A 段候選 D3 每則 token")
+    s_org = S("Codex 占（Codex＋ChatGPT）輸出 token：組織用戶（截至 2026-06-11 前 28 天窗口）")
+    s_per = S("Codex 占（Codex＋ChatGPT）輸出 token：個人用戶（含免費；截至 2026-06-11 前 28 天窗口）")
+    s_msft = S("Microsoft FY27 Q1（2026-07～09）來自 OpenAI 的營收（含分潤）")
+    qpy = I("每年季數（定義常數）")
+    R84 = lambda key: X.rows[key]  # noqa: E731
+    X.hdr(["8.4 D2 推導式（候選因子；只作對照，不進基準 token 帳）", "單位", "w 低", "w 基準", "w 高", "證據 w 低", "證據 w 基準", "證據 w 高", "最大相對差", "判定（容差＝INP_307）"], "d_hdr")
+    ev84 = []
+
+    def d2line(label, key, fn, unit, fmt, evid=None, note="", only=None):
+        """fn(col, k)→公式；evid＝(低,基準,高) 證據值（B 段 xlsx）；only＝只比對的欄索引清單。"""
+        cells = {c: fn(c, k) for k, c in enumerate("DEF")}
+        fm = {c: fmt for c in "DEF"}
+        r = X.r
+        if evid:
+            idx = only if only is not None else [0, 1, 2]
+            for k, c in enumerate("GHI"):
+                if k in idx:
+                    cells[c] = evid[k]
+                    fm[c] = fmt
+            terms = ",".join(f"ABS(({'DEF'[k]}{r}-{'GHI'[k]}{r})/{'GHI'[k]}{r})" for k in idx)
+            cells["J"] = f"=MAX({terms})" if len(idx) > 1 else f"={terms}"
+            cells["K"] = f'=IF(J{r}<={tol2},"OK","差異")'
+            fm["J"] = "0.00%"
+            ev84.append(r)
+        X.line(label, key, cells, note=note, fmt_map=fm, unit=unit)
+
+    d2line("1. ChatGPT 全部 token／日（T，含免費）＝每日則數 × 每則 token ÷ (B→T)", "d2_T", lambda c, k: f"={d_msg}*{d_tok}/{c_bt}", "T tok/日", NUM3,
+           evid=(14.4, 14.4, 14.4), note="TK 口徑（Alloc_In／Cap_In 抄錄值 INP_304、INP_305）；與 w 無關")
+    d2line("2a. 個人用戶 Codex／ChatGPT 輸出比 ＝ s ÷（1 − s）", "d2_rp", lambda c, k: f"={s_per}/(1-{s_per})", "倍", NUM3,
+           note="s＝SRC_OAI 個人用戶 Codex 占輸出 token 份額（0.165）")
+    d2line("2b. 組織用戶 Codex／ChatGPT 輸出比 ＝ s ÷（1 − s）", "d2_ro", lambda c, k: f"={s_org}/(1-{s_org})", "倍", NUM3,
+           note="s＝SRC_OAI 組織用戶 Codex 占輸出 token 份額（0.633）")
+    d2line("3. 加權 Codex／ChatGPT 比 ＝（1 − w）× 個人比 ＋ w × 組織比", "d2_wr",
+           lambda c, k: f"=(1-{wsel[k]})*{c}{R84('d2_rp')}+{wsel[k]}*{c}{R84('d2_ro')}", "倍", "0.0000", evid=(0.350324, 0.503043, 0.655762),
+           note="w＝組織用戶占 ChatGPT token 的比例（低／基準／高＝0.1／0.2／0.3；Assumed）；B 段 token帳 B14:D14")
+    d2line("4. Codex T／日，截至 06-11 的 28 天窗口（k＝1）＝第 1 列 × 第 3 列 × k", "d2_28",
+           lambda c, k: f"={c}{R84('d2_T')}*{c}{R84('d2_wr')}*{kb}", "T tok/日", NUM3, evid=(5.044664, 7.243819, 9.442973), note="B 段 token帳 B15:D15")
+    d2line("5. Codex T／日，Q2 平均（k＝1）＝第 4 列 × 時點比", "d2_q2",
+           lambda c, k: f"={c}{R84('d2_28')}*{tratio}", "T tok/日", NUM3, evid=(3.531265, 5.070673, 6.610081),
+           note="B 段 token帳 B16:D16（W2 驗收：5.071）。D2 以 TK 每則 token（INP_305）為底")
+    d2line("5′. Codex T／日，Q2 平均（k＝2；敏感度）＝第 5 列 × k 敏感度 ÷ k 基準", "d2_q2k2",
+           lambda c, k: f"={c}{R84('d2_q2')}*{k2}/{kb}", "T tok/日", NUM3, evid=(7.062529, 10.141346, 13.220163), note="B 段 token帳 B17:D17")
+    d2line("6. 每則 token 改用 D3 時的 Codex T／日（k＝1）＝第 5 列 × D3 ÷ 每則 token", "d2_d3",
+           lambda c, k: f"={c}{R84('d2_q2')}*{d3in}/{d_tok}", "T tok/日", NUM3, evid=(None, 7.606010, None), only=[1],
+           note="B 段 token帳 B34（w 基準；W2 驗收：7.606）。D2 與 D3 不是獨立因子，不可疊加")
+    d2line("7a. token 帳（加入 D2 後）(A) 證據重現，k＝1 ＝Q ÷（需求面付費 token ＋ D2 年化）", "d2_la1",
+           lambda c, k: f"=$D${R84('w_Q')}/($D${R84('w_D')}+{c}{R84('d2_q2')}*{c_day}*{mt})", "倍", NUM3, evid=(1.856946, 1.768801, 1.688645),
+           note="B 段 token帳 B18:D18（W2 驗收：1.857／1.769／1.689）。D2 年化＝T／日 × 每年天數 × (T→M)")
+    d2line("7b. token 帳（加入 D2 後）(A) 證據重現，k＝2", "d2_la2",
+           lambda c, k: f"=$D${R84('w_Q')}/($D${R84('w_D')}+{c}{R84('d2_q2k2')}*{c_day}*{mt})", "倍", NUM3, evid=(1.666450, 1.529636, 1.413583),
+           note="B 段 token帳 B19:D19（W2 驗收：1.666／1.530／1.414）")
+    d2line("7c. token 帳（加入 D2 後）(C) 本模型基準欄，k＝1（隨 W1；只顯示）", "d2_lc1",
+           lambda c, k: f"=$F${R84('w_Q')}/($F${R84('w_D')}+{c}{R84('d2_q2')}*{c_day}*{mt})", "倍", NUM3,
+           note="(C)＝本模型基準口徑（V1 組合、口徑一基準 GW 2.26）；不是證據重現，無證據值")
+    d2line("7d. token 帳（加入 D2 後）(C) 本模型基準欄，k＝2（隨 W1；只顯示）", "d2_lc2",
+           lambda c, k: f"=$F${R84('w_Q')}/($F${R84('w_D')}+{c}{R84('d2_q2k2')}*{c_day}*{mt})", "倍", NUM3, note="同上")
+    X.line("8.4 對帳超出容許誤差的項數", "d2_bad", {"E": f'=COUNTIF(K{ev84[0]}:K{ev84[-1]},"差異")'}, note="Checks 驗證；證據＝B 段 token帳 B10:D19、B34（Derived）")
+    nm(wb, "PXQ_D2ReconBad", f"PxQ!$E${X.rows['d2_bad']}")
+    put(ws, f"B{X.r}", "8.　說明：D2 以 TK 每則 token 為底，與 D3（每則 token）不是獨立因子，不可疊加；C 段（10-29）無新用量數字，基準 token 帳（X236、X240）不變，D2 只作候選因子。"
+        "A 段『D2 基準 8 T／日』在本模型內沒有任何列使用，未新增；若要比較，用第 5 列（每則 4,000）或第 6 列（每則 6,000）。", F_NOTE)
+    X.r += 2
+
+    # ═══ 九、對照（W6；不參與任何計算）═══
+    X.section("九、對照列（Microsoft 10-Q；只顯示，不參與任何計算、不進任何比值或檢查期望值）")
+    X.hdr(["項目", "單位", "當季", "年化（× 每年季數；顯示）"], "ms_hdr")
+    X.line("Microsoft FY27 Q1（2026-07～09）來自 OpenAI 的營收（含分潤；10-Q 關係人附註）", "ms_rev", {"D": f"={s_msft}", "E": f"=D{X.r}*{qpy}"}, fmt_map={"D": NUM2, "E": NUM2}, unit="$B",
+           note="C 段 C02（PR #187）；全公司營收、含分潤，未拆 Azure 消費；不可換算成 Fairwater 占比或 GW（C 段 C1）；只作成本面對照，不當算力成本輸入")
 
     # ═══ 頂部主輸出 ═══
     rows = X.rows
