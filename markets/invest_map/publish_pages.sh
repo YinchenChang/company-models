@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # 把 dist/index.html 發布到 gh-pages 分支（GitHub Pages：https://yinchenchang.github.io/company-models/）
+# 另發布 Siliconomics 展示層：https://yinchenchang.github.io/company-models/siliconomics/
 # 每次以只含網站檔案的全新歷史覆寫 gh-pages（成品分支，不保留歷史；原始碼歷史在 main）。
 # 用法：bash markets/invest_map/publish_pages.sh
 set -euo pipefail
@@ -24,6 +25,8 @@ for tk, m in d.get("models", {}).items():
         shutil.copy2(x, os.path.join(dst, m["xlsx"]))
 print("模型 HTML：", len(d.get("models", {})), "份")
 PY
+# Siliconomics 展示層：發布時由 model/CURRENT 的 xlsx 直接產生（不另存 HTML 副本，避免與 xlsx 不同步）
+python3 "$ROOT/siliconomics/tools/build_html.py" "$TMP/siliconomics/index.html"
 printf '# AI 投資地圖（GitHub Pages 發布分支）\n\n本分支只放網站成品，由 main 的 `markets/invest_map/publish_pages.sh` 產生（來源 %s）。研究整理，非投資建議。\n' "$SHA" > "$TMP/README.md"
 cd "$TMP"
 git init -q -b gh-pages
