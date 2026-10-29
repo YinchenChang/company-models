@@ -23,8 +23,8 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.6.2"
-DATE = "20261028"
+VERSION = "v0.6.3"
+DATE = "20261029"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
 YELLOW = PatternFill("solid", fgColor="FFF2CC")
@@ -190,6 +190,7 @@ _add_semis()
 MAP_EXTRA = []  # OpenAI、Anthropic 已納入 POSITION（2026-10-25 Andy：未上市也放，可投資性寫「未上市」）
 
 PARAMS = [
+    ("gate_tol", 50, "收支關卡容忍帶（US$B，只用於 MSFT／GOOGL／AMZN／ORCL）：五年合計在 −gate_tol～0 視為 0、不變號（2026-10-29 MAG 串建議預設，待 Andy 決定）"),
     ("w_irr", 0.40, "地位分數權重：不可替代性"),
     ("w_pos", 0.35, "地位分數權重：市場位置"),
     ("w_vc", 0.25, "地位分數權重：價值鏈分量"),
@@ -525,7 +526,10 @@ def main():
         we.cell(i, 31, sum(vals)).font = BLUE
         we.cell(i, 32, min(vals)).font = BLUE
         we.cell(i, 33, f"[Derived] {cash['file']} {cells[0]}…{cells[-1]}")
-        we.cell(i, 34, f'=IF(AB{i}="淨利",IF(AF{i}>0,"通過（淨利）","不通過"),IF(AE{i}<0,"不通過","通過（現金流）"))')
+        if tk in ("MSFT", "GOOGL", "AMZN", "ORCL"):   # 容忍帶（2026-10-29，待 Andy）：|B| < gate_tol 不變號
+            we.cell(i, 34, f'=IF(AE{i}<-gate_tol,"不通過",IF(AE{i}<0,"通過（容忍帶內，接近 0）","通過（現金流）"))')
+        else:
+            we.cell(i, 34, f'=IF(AB{i}="淨利",IF(AF{i}>0,"通過（淨利）","不通過"),IF(AE{i}<0,"不通過","通過（現金流）"))')
         # v0.5.1（Andy 2026-10-26）：收支不足只壓過「買進以上」（與未估值）；放空、強力放空、中立維持原評價——現金流缺口加重放空理由
         we.cell(i, 35, f'=IF(S{i}="未上市","未上市",IF(AND(AH{i}="不通過",OR(S{i}="強力買進",S{i}="買進",S{i}="未估值")),"收支不足",S{i}))')
 
