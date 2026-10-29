@@ -2,7 +2,7 @@
  "source": {
   "file": "20261030_Wattonomics_v0.1.3.xlsx",
   "version": "v0.1.3",
-  "sha256": "76823b941043543e43e4c03a5892667932a9fc7f5335bcbd672d96802851f488",
+  "sha256": "f7ec403f8c0fec4bc5ef291c6b334a80c520987b6ebe167efffaa1da5105298a",
   "unit": "IT GW（＝TK GW，IT 關鍵電力；設施＝× IF_FacilityGW）",
   "years": [
    2024,
@@ -4177,7 +4177,7 @@
    "unit": "MW",
    "tag": "Interested-party",
    "src": "SRC_GL_201",
-   "note": "S#158、S#160（I 段：Humain 執行長稱全國 2027 年達 1.7 GW；1",
+   "note": "S#158、S#160（I 段核對：Humain 執行長稱全國 2027 年達 1.7 GW；Al Sa'ad 一期 1 GW 2027 交付；1,500＝1.7 GW − 首期 200）；2030 餘量見 cp_sov_hum3；I2 段：只有公司目標支持，個別站點證據多在 2028 以後或無日期 → 僅公司目標、站點證據不足",
    "kind": 4,
    "values": [
     "sov",

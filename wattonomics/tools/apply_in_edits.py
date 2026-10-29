@@ -27,7 +27,9 @@ def main(src, edits, out):
     ws = wb["In"]
     rowof = {ws.cell(r, 1).value: r for r in range(5, ws.max_row + 1) if ws.cell(r, 1).value}
     n = 0
-    for e in csv.DictReader(open(edits, encoding="utf-8-sig")):
+    for i, e in enumerate(csv.DictReader(open(edits, encoding="utf-8-sig")), 2):
+        if None in e or any(v is None for v in e.values()):
+            sys.exit(f"停止：{edits} 第 {i} 列欄數與表頭不符（含逗號的欄位要加引號）")
         r = rowof[e["key"]]; c = column_index_from_string(e["col"])
         cur = ws.cell(r, c).value
         if not same(cur, e["old"]):
