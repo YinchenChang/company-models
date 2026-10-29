@@ -378,6 +378,23 @@ def build(wb, D, tk_cells):
     V.add("本模型 2H26 有效單價 ÷ TK 混合單價（Sol）", "倍", {"L": "=L«V.ep_sol»/L«V.tk_mix»"}, "口徑：本模型含快取、輸出占比與折扣；只列差距", key="tk_ratio_sol")
     V.add("本模型 2H26 有效單價 ÷ TK 中國合格前緣（Luna）", "倍", {"L": "=L«V.ep_luna»/L«V.tk_front»"}, "同上", key="tk_ratio_luna")
 
+    V.section("七、官方分部對帳（部署方式；v0.1.2）：年報／中期公告的官方分部 vs 模型列與子項加總（差額 = 模型或子項加總 − 官方）")
+    tolr = I("seg_recon_tol")
+    recon = [
+        ("on25", "FY2025 本地化部署", "D", "rev_onprem_fy25", "=D«V.onprem»", "模型：本地化部署分部列（②＋③＋④）2025 欄", "REV_SegGap_OnPrem2025"),
+        ("cl25", "FY2025 雲端部署", "D", "rev_cloud_fy25", "=D«V.cloud»", "模型：雲端營收列（①）2025 欄", "REV_SegGap_Cloud2025"),
+        ("on1h", "1H2026 本地化部署", "K", "rev_onprem_1h26",
+         "=" + "+".join(S(k) for k in ("rev_agent_1h26", "rev_gpllm_1h26", "rev_techsvc_1h26")), "子項加總：②＋③＋④ 中期值（SRC_ZP_171＋173＋175；模型為年度制，1H 不對模型年度值）", "REV_SegGap_OnPrem1H26"),
+        ("cl1h", "1H2026 雲端部署", "K", "rev_cloud_1h26", "=" + S("rev_api_1h26"), "子項：①開放平台及 API 中期值（SRC_ZP_169）", "REV_SegGap_Cloud1H26"),
+    ]
+    for k, zh, col, sk, fm, mlab, nmx in recon:
+        src = "年報" if col == "D" else "中期公告"
+        V.add(f"官方{zh}分部（{src}）", "RMB 億", {col: f"={S(sk)}"}, f"{S(sk)}；官方報告分部（部署方式）", key=f"sr_{k}_o")
+        V.add(mlab, "RMB 億", {col: fm.replace("=", "=", 1)}, "", key=f"sr_{k}_m")
+        V.add(f"對帳差額：{zh}（模型或子項加總 − 官方）", "RMB 億", {col: f"={col}«V.sr_{k}_m»-{col}«V.sr_{k}_o»"},
+              "財報千元四捨五入至億元四位小數，容許微小差；超過 Inputs 容差即為差異", key=f"sr_{k}_d", name=nmx, name_col=col)
+        V.add(f"判定：{zh}（|差額| ≤ 分部對帳容差 → OK，否則 差異）", "文字", {col: f'=IF(ABS({col}«V.sr_{k}_d»)<={tolr},"OK","差異")'}, "", key=f"sr_{k}_j")
+
     for ws, w in ((Dm.ws, 54), (V.ws, 60)):
         ws.column_dimensions["A"].width = 7
         ws.column_dimensions["B"].width = w
@@ -456,6 +473,11 @@ def checks(D, Z, summary, snap, e6, oref):
         ("對照：OpenAI v0.6 2030 每 VR 等值 GW 差額（$B/GW）", "=INDEX(OAI_COST_PropGap_VR,1,6)", None, "info", "OAI_Link；只並排（Z5 HTML）"),
         ("預覽：2030 營收總額（截頂後，RMB 億）", "=INDEX(REV_GrossCapped,1,6)", None, "info", ""),
         ("預覽：2030 token 合計（T）", "=INDEX(DEM_Tok_Total,1,6)", None, "info", "供 Z3"),
+        # ── v0.1.2 官方分部（部署方式）對帳
+        ("v0.1.2 分部對帳：FY2025 本地化部署（模型 − 年報）絕對差 ≤ 容差", "=REV_SegGap_OnPrem2025", 0, "tolinp", "Revenue 第七節；容差 Inputs seg_recon_tol"),
+        ("v0.1.2 分部對帳：FY2025 雲端部署（模型 − 年報）絕對差 ≤ 容差", "=REV_SegGap_Cloud2025", 0, "tolinp", "同上"),
+        ("v0.1.2 分部對帳：1H2026 本地化部署（②＋③＋④ − 中期公告）絕對差 ≤ 容差", "=REV_SegGap_OnPrem1H26", 0, "tolinp", "同上；SRC_ZP_178 對 171＋173＋175"),
+        ("v0.1.2 分部對帳：1H2026 雲端部署（① − 中期公告）絕對差 ≤ 容差", "=REV_SegGap_Cloud1H26", 0, "tolinp", "同上；SRC_ZP_179 對 169"),
     ]
     return rows
 
