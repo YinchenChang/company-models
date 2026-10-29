@@ -89,9 +89,9 @@ SE = wb.create_sheet("Sens"); SO = wb.create_sheet("Sources")
 
 # =====================================================================================================
 # In：輸入（一列一鍵；E＝基準，D＝低，F＝高）
-IN["A1"] = "In — 輸入（藍字；基準欄 E，低 D、高 F）。金額 US$B；每股 US$；股數十億股；MW＝IT MW。標記：Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律給低／高區間）"
+IN["A1"] = "In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」〔v0.3.2〕）。金額 US$B；每股 US$；股數十億股；MW＝IT MW。標記：Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律給低／高區間）"
 IN["A2"] = "「沿用 v0.2.2」＝MAG v0.2.2 已核准的參數（原出處：alphabet/legacy_v0.2/company.json、kspec.py、data/kevidence_alphabet_20261008.json；對照表 r1 C1–C23）。v0.3.1：Tokenomics 升級 v21.7（data/tokenomics_snapshot_v21.7.json）、2026Q3 實績（data/alphabet_facts_2026q3.json）、評價日 2026-09-30。黃底＝判斷題（Andy 可改）"
-hdr(IN, 3, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源", "說明"])
+hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "說明"])
 ROWS = []
 def sec(t): ROWS.append(("sec", t))
 def inp(key, item, unit, lo, base, hi, tag, src, note="", judg=False):
@@ -393,6 +393,19 @@ for row in ROWS:
     if lo is not None: dn(key + "_lo", f"In!$D${r}")
     if hi is not None: dn(key + "_hi", f"In!$F${r}")
     IN_ROW[key] = r
+    r += 1
+# v0.3.2：情境驅動對照（只引用上方各列；三情境並排，與上方「敏感度低／高」欄分開）
+r += 1
+IN.cell(r, 1, "J. 情境驅動對照（三情境並排，進主模型的加權目標價；本節只引用上方各列，修改請改上方藍字。上方「敏感度低／高」欄只用於 Sens 頁，不進目標價）").font = BOLD; r += 1
+hdr(IN, r, ["鍵", "項目", "單位", "情境 A（樂觀）", "情境 B（基準）", "情境 C（保守）", "標記", "說明"]); r += 1
+for key, item, unit, ks, fmt, note in (
+        ("scn_d", "Search 查詢分流 FY2030 達到（負值＝回流）", "%", ("dA", None, "dC"), "0.0%", "情境 B＝近四季成長收斂，不另加調整（0）"),
+        ("scn_m", "Search 每次查詢變現變動 FY2030 達到", "%", ("mA", None, "mC"), "0.0%", "情境 B＝近四季成長收斂，不另加調整（0）"),
+        ("scn_w", "情境權重", "%", ("tp_wA", "tp_wB", "tp_wC"), "0%", "[判斷] 黃底，Andy 可改")):
+    IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
+    for j, k_ in zip((4, 5, 6), ks):
+        IN.cell(r, j, f"=E{IN_ROW[k_]}" if k_ else 0).number_format = fmt
+    IN.cell(r, 7, "Derived"); IN.cell(r, 8, "引用 In 頁 " + "／".join(k_ for k_ in ks if k_) + "；" + note)
     r += 1
 for col, w in zip("ABCDEFGHI", [14, 64, 12, 10, 11, 10, 16, 90, 80]): IN.column_dimensions[col].width = w
 IN.freeze_panes = "D4"

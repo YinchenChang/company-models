@@ -1,4 +1,4 @@
-# Microsoft v0.3.1 成品核對：公式錯誤 0、Q／Seg／PL／CF／Val／Recon 頁「檢查：」列全為 0、C10 對帳落差（基準情境）≈ 0、固定列標籤存在、
+# Microsoft v0.3.1／v0.3.2 成品核對：公式錯誤 0、Q／Seg／PL／CF／Val／Recon 頁「檢查：」列全為 0、C10 對帳落差（基準情境）≈ 0、固定列標籤存在、
 # 變動拆解 JSON 的最後一步＝本檔加權目標價。用法：python3 microsoft/check_v03.py <重算後的 xlsx>；失敗時非零結束。
 import json
 import os

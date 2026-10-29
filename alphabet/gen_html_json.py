@@ -40,6 +40,9 @@ th_fmt = {str(T["permw"]): {c: "n2" for c in "EFGHIJKLM"}, str(T["ai_em"]): {c: 
 seg_rows = ",".join(str(PB[k]) for k in ("search", "yt", "net", "subs", "gs", "ai", "tpu", "co", "cloud", "ob", "hedge", "rev", "oi_gs", "oi_cl", "oi_ob", "oi_abc", "oi", "om", "da", "da_ai", "ni", "eps", "epsx"))
 seg_fmt = {str(PB["om"]): {c: "p1" for c in "CDEFGHIJKLM"}, str(PB["eps"]): {c: "n2" for c in "CDEFGHIJKLM"}, str(PB["epsx"]): {c: "n2" for c in "CDEFGHIJKLM"}}
 cf_rows = ",".join(str(CR["B"][k]) for k in ("cfo", "cx_ai", "cx_na", "cx", "fcf", "div", "pref", "fcfd", "anth", "bb", "plug", "cend", "dend", "nc"))
+INK = {str(wb["In"].cell(r, 1).value): r for r in range(4, wb["In"].max_row + 1) if wb["In"].cell(r, 1).value}
+SCN_H = find("In", "J. 情境驅動對照") + 1
+SCN = {k: INK[k] for k in ("scn_d", "scn_m", "scn_w")}
 cfg = {
  "company": "Alphabet",
  "ticker": "GOOGL",
@@ -54,6 +57,12 @@ cfg = {
   {"id": "drivers", "title": "驅動因子 → 推導量", "intro": "@Thesis!A1", "blocks": [
     {"type": "table", "caption": "驅動 → 推導對照表", "head": ["頁", "輸入", "推導量", "因果方向"],
      "rowgen": {"sheet": "README", "rows": f"{find('README', '頁') + 1}-{find('README', 'Sens', 1, find('README', '頁'))}", "cols": ["A", "B", "C", "D"]}},
+    {"type": "table", "caption": "情境驅動（三情境並排，進加權目標價；In 頁 J 節）", "head": [f"@In!{c}{SCN_H}" for c in "BDEFCG"],
+     "rows": [[f"@In!B{SCN[k]}", f"@In!D{SCN[k]}|{f}", f"@In!E{SCN[k]}|{f}", f"@In!F{SCN[k]}|{f}", f"@In!C{SCN[k]}", f"@In!G{SCN[k]}|tag"] for k, f in (("scn_d", "p0"), ("scn_m", "p0"), ("scn_w", "p0"))]},
+    {"type": "table", "caption": "單一參數區間（In 頁；基準進主模型，敏感度低／高只用於敏感度頁、不進目標價；三情境共用）", "head": ["@In!B3", "@In!D3", "@In!E3", "@In!F3", "@In!C3", "@In!G3"],
+     "rows": [[f"@In!B{INK[k]}", f"@In!D{INK[k]}|{f}", f"@In!E{INK[k]}|{f}", f"@In!F{INK[k]}|{f}", f"@In!C{INK[k]}", f"@In!G{INK[k]}|tag"]
+              for k, f in (("mw_q2", "n0"), ("pace", "n0"), ("ext_sh", "p0"), ("long_sh", "p0"), ("tpu_f", "n2"), ("capex_g", "n0"), ("life_it", "n0"),
+                           ("gl_search", "p0"), ("gl_yt", "p0"), ("gl_co", "p0"), ("internal_ai_reading", "n0"), ("beta", "n3"), ("g_tv", "p0"), ("w_dcf", "p0"))]},
     {"type": "table", "caption": "命題模組的價格與起始值", "head": ["項目", "單位", "數值"],
      "rowgen": {"sheet": "Thesis", "rows": f"{T['k_long']}-{T['m_co']}", "cols": ["A", "B", "C"], "fmts": ["", "", "n3"],
                 "row_fmt": {str(T[k]): {"C": "p1"} for k in ("g0_co", "m_co_ttm", "m_co_1h", "m_co")} | {str(T[k]): {"C": "n2"} for k in ("permw0", "opex0")} | {str(T[k]): {"C": "n1"} for k in ("ai_ttm", "ai_pttm", "ai_ttm_e")}}},
