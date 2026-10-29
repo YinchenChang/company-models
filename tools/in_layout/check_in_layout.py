@@ -12,7 +12,7 @@
 #      每格是 =E<列> 公式，引用 H 欄「引用 In 頁 k1／k2／k3；…」所列鍵的列（情境 B 無專屬輸入時可填常數 0）。
 #   3. 上方所有情境專屬列都必須被這一節引用（不能漏列）；情境權重列鍵為 scn_w，合計＝1。
 #   4. 本節純展示：其他工作表與 In 頁上方的公式、定義名稱都不得引用本節。
-#   5.（警告，不判失敗）Sens、Recon、In 以外工作表的公式不應直接讀 In 頁 D／F 欄（敏感度低／高）或 *_lo／*_hi 名稱：
+#   5.（警告，不判失敗）Sens、Recon、In 以外工作表的公式不應直接讀 In 頁 D／F 欄（敏感度低／高），含指向 D／F 的定義名稱（以實際指向判定，不看名稱字尾）：
 #      情境值應拆成情境專屬列（例如 g27_A／g27_B／g27_C）並列入對照；共識區間、舊版對照等非主模型用途可保留，於模型 README 說明。
 # 用法：
 #   python3 tools/in_layout/check_in_layout.py <成品 xlsx>      # 單檔；不符即失敗（結束碼 1）
@@ -40,9 +40,15 @@ WARN_SKIP = {"In", "Sens", "Recon"}
 
 
 def lohi_uses(wbf, last):
-    """Sens／Recon／In 以外讀敏感度低／高欄的公式格（第 5 項警告）"""
-    names = {n for n in wbf.defined_names.keys() if re.search(r"_(lo|hi)$", n)}
-    pat_n = re.compile(r"(?<![A-Za-z0-9_])(" + "|".join(sorted(map(re.escape, names), key=len, reverse=True)) + r")(?![A-Za-z0-9_(])") if names else None
+    """Sens／Recon／In 以外讀敏感度低／高欄的公式格（第 5 項警告）：
+    定義名稱以「實際指向 In!$D$n 或 In!$F$n（n < 情境驅動對照）」認定，不看名稱字尾；另加直接寫 In!D／F 的公式。"""
+    names = set()
+    for n, dn_ in wbf.defined_names.items():
+        for t, ref in dn_.destinations:
+            m = re.fullmatch(r"\$?([A-Z]{1,3})\$?(\d+)", ref)
+            if t == "In" and m and m.group(1) in ("D", "F") and int(m.group(2)) < last:
+                names.add(n)
+    pat_n = re.compile(r"(?<![A-Za-z0-9_.])(" + "|".join(sorted(map(re.escape, names), key=len, reverse=True)) + r")(?![A-Za-z0-9_(])", re.I) if names else None
     hits = []
     for sh in wbf.worksheets:
         if sh.title in WARN_SKIP:
@@ -52,7 +58,8 @@ def lohi_uses(wbf, last):
                 f = c.value
                 if not (isinstance(f, str) and f.startswith("=")):
                     continue
-                if (pat_n and pat_n.search(f)) or any(int(x) < last for x in re.findall(r"In!\$?[DF]\$?(\d+)", f)):
+                f2 = re.sub(r'"[^"]*"', "", f)  # 不看字串常數
+                if (pat_n and pat_n.search(f2)) or any(int(x) < last for x in re.findall(r"In!\$?[DF]\$?(\d+)(?![\d:])", f2)):
                     hits.append(f"{sh.title}!{c.coordinate}")
     return hits
 
