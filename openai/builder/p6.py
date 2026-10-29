@@ -365,7 +365,7 @@ def build_p6(wb, R, S, I, nm, snapq):
             "D": f"={y25in[k]}", "E": "=$D${m_rev}/(D{y25_%d}*$D${m_h})" % (k + 1), "F": "=E{y25_%d}/$D${m_ratio}" % (k + 1)},
             note="Derived；對照列，不進主序列、不改 INP_276 開關（J6：1.128 偏高、基準 1.239 偏保守）", fmt_map={"D": NUM2, "E": NUM3, "F": NUM3}, unit="GW")
     X.line("2025 比值上緣（A 段表 E；Inputs）", "y25_hi", {"E": f"={r25hi}"}, fmt_map={"E": NUM3}, unit="倍",
-           note="Derived（A 段『比值』D57＝1.397）；與 2025 平均 GW 約 1.0 相合（營收 13.07 ÷ 持有成本 9.353），起源待 Project 確認；只用於頂部持平門檻表")
+           note="Derived（A 段『比值』D57＝1.397）；＝1 ÷ Tokenomics `L1_LReqFleet_Full_Lo`（v21.4／v21.7 皆 0.7156），即 2025 平均 GW 取低端 1.0 時的比值（13.07 ÷（1.0 × 9.353））；本模型不得讀 `L1_`，故為手抄 Derived，換 TK 快照時以 check 確認；只用於頂部持平門檻表（同 Inputs INP_303 說明）")
 
     # ═══ 八、GW 路線 token 帳 ═══
     X.section("八、GW 路線 token 帳（2026 Q2，口徑一基準）＝Q（口徑一基準 GW）÷ 需求面付費 token（API 時點值年化 ＋ ChatGPT 付費 token）；＝1 表示完全閉合")
@@ -478,7 +478,7 @@ def build_p6(wb, R, S, I, nm, snapq):
     X.section("九、對照列（Microsoft 10-Q；只顯示，不參與任何計算、不進任何比值或檢查期望值）")
     X.hdr(["項目", "單位", "當季", "年化（× 每年季數；顯示）"], "ms_hdr")
     X.line("Microsoft FY27 Q1（2026-07～09）來自 OpenAI 的營收（含分潤；10-Q 關係人附註）", "ms_rev", {"D": f"={s_msft}", "E": f"=D{X.r}*{qpy}"}, fmt_map={"D": NUM2, "E": NUM2}, unit="$B",
-           note="C 段 C02（PR #187）；全公司營收、含分潤，未拆 Azure 消費；不可換算成 Fairwater 占比或 GW（C 段 C1）；只作成本面對照，不當算力成本輸入")
+           note="年化欄為顯示用，不參與計算。C 段 C02（PR #187）；全公司營收、含分潤，未拆 Azure 消費；不可換算成 Fairwater 占比或 GW（C 段 C1）；只作成本面對照，不當算力成本輸入")
 
     # ═══ 頂部主輸出 ═══
     rows = X.rows

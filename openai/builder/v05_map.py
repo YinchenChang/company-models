@@ -1082,10 +1082,12 @@ def p6_rows_v064(R: Recorder):
       scope="Business／Enterprise 方案用戶；截至 2026-06-11 前 28 天窗口（非單日時點）；圖說定義為 Codex 輸出 token 占兩者合計的比例，讀作彙總比（論文未明說）；無絕對 token 量、未提 API",
       date="2026-06-25", tag="Interested-party", source=arx, use="PxQ 第 8.4 節 D2 推導式（候選因子；不進基準 token 帳）",
       note="工作單 20261029 W2" + ex)
+    R.src_rows[-1]["cl"] = dict(grade="1", stance="利害關係方", why="OpenAI 研究團隊論文（作者多為 OpenAI 員工，兩位學者為 OpenAI 付費顧問）：誘因為呈現 Codex 採用成長", hand="一手")   # r1：B 段證據原稿已讀原文
     S("v0.6.4/PxQ/D2 Codex 份額", "Codex 占（Codex＋ChatGPT）輸出 token：個人用戶（含免費；截至 2026-06-11 前 28 天窗口）", vlit=0.165, unit="比例",
       scope="Free／Go／Plus／Pro 個人用戶；截至 2026-06-11 前 28 天窗口；彙總比或平均值未明（同上）；無絕對 token 量、未提 API",
       date="2026-06-25", tag="Interested-party", source=arx, use="PxQ 第 8.4 節 D2 推導式（候選因子；不進基準 token 帳）",
       note="工作單 20261029 W2" + ex)
+    R.src_rows[-1]["cl"] = dict(grade="1", stance="利害關係方", why="OpenAI 研究團隊論文（作者多為 OpenAI 員工，兩位學者為 OpenAI 付費顧問）：誘因為呈現 Codex 採用成長", hand="一手")   # r1：B 段證據原稿已讀原文
     # ── W6：Microsoft 10-Q 對照（不參與任何計算）──
     S("v0.6.4/PxQ/Microsoft 10-Q 對照", "Microsoft FY27 Q1（2026-07～09）來自 OpenAI 的營收（含分潤）", vlit=10.0, unit="$B", subject="Microsoft",
       scope="Microsoft 全公司當季來自 OpenAI 的營收（inclusive of revenue-sharing payments；約占 Microsoft 總營收 10.8%）；未拆 Azure 消費與分潤，也沒有站點；"
@@ -1094,6 +1096,7 @@ def p6_rows_v064(R: Recorder):
       source="Microsoft FY27 Q1 10-Q 關係人附註（ASC 850 強制揭露，誤報誘因較低；一手）。證據：" + C_SEG + "C02",
       use="PxQ 對照列（不參與任何計算；成本面對照）",
       note="工作單 20261029 W6；C 段 README 待判斷 C1：只作對照註記，不當算力成本輸入" + ex)
+    R.src_rows[-1]["cl"] = dict(grade="1", stance="利害關係方", why="Microsoft 依 ASC 850 關係人強制揭露：誤報誘因較低", hand="一手")   # r1：C 段 C02 已獨立核對一手
     # ── W2：D2 推導式輸入（Inputs）──
     base = "v0.6.4/PxQ"
     I(base + "/D2 w", "組織用戶占 ChatGPT token 的比例 w：基準", unit="比例", vlit=0.2, tag="Assumed", decision="工作單 20261029 W2", status="v0.6.4 新增（P×Q 8.4）", meta=False,
