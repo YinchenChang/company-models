@@ -530,7 +530,7 @@ class Block:
         self.s = s; self.title = title; self.route = route
         self.P = dict(pace="pace", cap=None, ls=f"ls_{s}", kmult=None, ext="ext_sh", life="life_it", g_azo="glt_azo", cop_add=f"cop_add_{s}",
                       cop_px="cop_px", g_srch="glt_srch", g_xbox="glt_xbox", dm="dm_seg", chip="chip_f", reading="internal_ai_reading", sbase="shadow_base", floor="other",
-                      nonnv="nonnv", nv_out="nv_out_mai", nv_hold="nv_hold_mai", a_mai="a_mai")
+                      nonnv="nonnv", nv_out="nv_out_mai", nv_hold="nv_hold_mai", a_mai="a_mai", win27=None)
         self.P.update(P or {})
         self.P = {k_: (v_.replace("{s}", s) if isinstance(v_, str) else v_) for k_, v_ in self.P.items()}
         self.V = dict(wacc="wacc", g="g_tv", ronic="ronic_prem", mm=None, m_sw="m_sw", m_cloud="m_cloud", m_ads="m_ads", m_game="m_game", m_pc="m_pc", m_ai="m_ai", oai="oai_v",
@@ -715,7 +715,8 @@ def engine(b, val=True, ops=True):
                 if y <= 2026:
                     return qa(k_, y)
                 if y == 2027 and Q1ON:
-                    return f"{q1(k_)}+({qa(k_, 2026)}-{q0(k_)})*(1+{R('g_' + k_, 2027)})"
+                    g27 = P["win27"] if (k_ == "win" and P["win27"]) else R("g_" + k_, 2027)
+                    return f"{q1(k_)}+({qa(k_, 2026)}-{q0(k_)})*(1+{g27})"
                 return f"{R(k_, y - 1)}*(1+{R('g_' + k_, y)})"
             return f
         for k, lab, glt in (("lic", "Productivity and server licensing", "glt_lic"), ("ind", "Industry solutions", "glt_ind"), ("fro", "Frontier and support services", "glt_fro")):
@@ -1137,6 +1138,7 @@ ALT = [
     ("影子效益基準改 FY2026 年底自用 MW（修正二口徑）", {s: (dict(sbase="0"), {}) for s in SC}, None),
     ("FY2027 補足差額不計（資本支出低於公司指引）", {s: (dict(floor="none"), {}) for s in SC}, None),
     ("FY2027 補足差額改列 AI IT（修正一口徑）", {s: (dict(floor="ai"), {}) for s in SC}, None),
+    ("Windows OEM and devices FY2027 第二至第四季套用指引（年減 35%；之後依收斂路徑）", {s: (dict(win27="g_q2_win"), {}) for s in SC}, None),
     ("NonNV 舊口徑（Maia 以 GB300 × 1.0；C10 依此重解）", {s: (dict(nonnv="0", pace="pace_nv0"), {}) for s in SC}, None),
     ("NonNV 舊口徑（Maia 以 GB300 × 1.0；MW 速度不重解）", {s: (dict(nonnv="0"), {}) for s in SC}, None),
     ("目標價時點改 2028-01-27（工作單字面「目標價日 +1 季」）", {s: ({}, dict(t_roll="((tgt_alt-roll_d1)/days_yr)", w_ntm="((fy28_end-tgt_alt)/days_yr)", t_stub="((tgt_alt-stub_d0)/days_yr)", rdq="2")) for s in SC}, None),
@@ -1262,9 +1264,10 @@ rrow("FY27Q1 實績 vs 指引中點：Agents and Infra", f"={q1('ai')}", "=g_q1_
 rrow("FY27Q1 實績 vs 指引中點：Devices and Consumer", f"={q1('dc')}", "=g_q1_dc", "搜尋與廣告、XBOX 優於預期；Windows OEM 低於預期")
 rrow("FY27Q1 實績 vs 指引：Azure 年增", f"={F['q.azure27.growth.fy27q1']['value']}", "=g_q1_az", "—", fmt="0.0%", pct=False)
 rrow("FY27Q1 實績 vs 指引：資本支出（公司口徑）", f"={q1('capex_co')}", "=g_q1_cx", "低於指引：第三方產能交付延後（法說）")
-rrow("Agents and Infra：FY2027 模型第二至第四季平均 vs FY27Q2 指引中點", f"=({B_.ref('ai_seg', 2027)}-{q1('ai')})/3", "=g_q2_ai", "季內成長使 Q2 低於三季平均屬拆法")
-rrow("Devices and Consumer：第二至第四季平均 vs FY27Q2 指引中點", f"=({B_.ref('dc', 2027)}-{q1('dc')})/3", "=g_q2_dc", "XBOX 第二季旺季（季節性）")
-rrow("合併營收：第二至第四季平均 vs FY27Q2 指引中點", f"=({B_.ref('tot', 2027)}-{q1('rev')})/3", "=g_q2_rev", "—")
+for k_, lab_, gk_, n_ in (("ai", "Agents and Infra", "g_q2_ai", "模型年增為第二至第四季合計對 FY2026 同期；指引為 Q2 中點對 FY26Q2"), ("dc", "Devices and Consumer", "g_q2_dc", "XBOX 第二季旺季；Windows 見下"),
+                          ("rev", "合併營收", "g_q2_rev", "—")):
+    mk_ = {"ai": "ai_seg", "dc": "dc", "rev": "tot"}[k_]
+    rrow(f"{lab_}：第二至第四季年增（模型）vs FY27Q2 指引中點年增", f"=({B_.ref(mk_, 2027)}-{q1(k_)})/({qa(k_, 2026)}-{q0(k_)})-1", f"={gk_}/Q!$F${QR[k_]}-1", n_, fmt="0.0%", pct=False)
 rrow("Azure：第二至第四季年增（模型）vs FY27Q2 指引中點（cc）", f"=({B_.ref('azure', 2027)}-{q1('azure')})/({qa('azure', 2026)}-{q0('azure')})-1", "=g_q2_az", "觀點：Azure AI 由 MW 路徑推得（不以 Azure 營收回推，C3）", fmt="0.0%", pct=False)
 rrow("Windows OEM and devices：第二至第四季年增（模型）vs FY27Q2 指引（mid-thirties 衰退）", f"=({B_.ref('win', 2027)}-{q1('win')})/({qa('win', 2026)}-{q0('win')})-1", "=g_q2_win",
      "觀點：非命題產品線依 FY2026 年增收斂，未套用季度指引（指引只作對照）；差額約 3–4 十億美元營收", fmt="0.0%", pct=False)
