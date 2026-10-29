@@ -14,14 +14,15 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 GL = os.path.dirname(HERE)
 ROOT = os.path.dirname(GL)
-VERSION = "v0.1.1"
+VERSION = "v0.1.2"
 DATE = "20261028"
 TK_SNAPSHOT = os.path.join(ROOT, "siliconomics", "data", "tokenomics_snapshot_v21.7.json")
 SIL_DIR = os.path.join(ROOT, "siliconomics", "data")
 SEED = os.path.join(HERE, "seed", "seed_v0.1.json")
 TK_EXTRA = os.path.join(HERE, "seed", "tk_extra_v21.7.json")   # 快照未含、直接讀 Tokenomics 活頁簿的名稱（R1 裁定）
 EVID = os.path.join(HERE, "seed", "evidence_v0.1.json")         # tools/import_evidence.py 由 evidence_raw 產生
-FUND = os.path.join(HERE, "seed", "funding_v0.1.1.json")        # tools/import_funding.py 由 F_funding.csv、P_facility_power.csv 產生（附 G 段判定）
+FUND = os.path.join(HERE, "seed", "funding_v0.1.2.json")        # tools/import_funding.py 由 F_funding.csv、P_facility_power.csv 產生（附 G 段判定）
+CAMPUS_ADD = os.path.join(HERE, "seed", "campus_v0.1.2_add.json")   # v0.1.2 起新增的 T2 園區列（園區候選回查＋獨立抽查後合併；值之後由 Excel 讀回）
 SEG = os.path.join(ROOT, "markets", "invest_map", "data", "segments_ai_semis_v0.2.3.csv")   # AI半導體 次產業比例（最新版）
 SEG_COMMIT = "5dea5c8"
 
@@ -77,6 +78,12 @@ def main():
     a.version = a.version or VERSION
     a.date = a.date or DATE
     seed = json.load(open(SEED, encoding="utf-8"))
+    if os.path.exists(CAMPUS_ADD):
+        add = json.load(open(CAMPUS_ADD, encoding="utf-8"))
+        have = {c["key"] for c in seed["campus"]}
+        assert not have & {c["key"] for c in add["campus"]}, "新增園區鍵與既有重複"
+        seed["campus"] += add["campus"]
+        seed["sources"] += [x for x in add.get("sources", []) if x["id"] not in {y["id"] for y in seed["sources"]}]
     base = load_base_inputs(a.base)
     tk = json.load(open(TK_SNAPSHOT, encoding="utf-8"))
     tkx = json.load(open(TK_EXTRA, encoding="utf-8"))
@@ -241,7 +248,7 @@ def main():
             v = B(k, 8 + j, cp.get(f))
             if v is not None and v != "":
                 c = IN.cell(r, 8 + j, v); c.font = BLUE
-        if not cp.get("inc"):
+        if not B(k, 14, cp.get("inc")):
             for j in range(1, 8): IN.cell(r, j).font = Font(color="808080")
         CAMP.append((k, r)); r += 1
     IN_LAST = r - 1
@@ -1207,7 +1214,7 @@ def main():
     FCR["self_unit"] = r; r += 2
     FC.cell(r, 1, "實物量（每 IT GW）").font = BOLD; r += 1
     for k, lab, f, unit in (("q_fac", "設施電力", None, "GW"), ("q_gen", "備援發電機", "=fac_gen_mult", "GW"), ("q_self", "自建發電（有自建者）", "=self_gw", "GW"),
-                            ("q_xfmr", "主變壓器（判斷值；P50 例子不支持此基準）", "=xfmr_gva", "GVA")):
+                            ("q_xfmr", "主變壓器（含一台退出備援；P#50 ModulEdge、ComEd 例）", "=xfmr_gva", "GVA")):
         FC.cell(r, 1, "　" + lab); FC.cell(r, 3, unit)
         for y in YEARS:
             FC.cell(r, YEARS.index(y) + 4, f if f else f"=Players!{YC[y]}{FACR}").number_format = "0.00"
@@ -1621,6 +1628,8 @@ def main():
         ("v0.1 範圍：C0、C1、延遲管線（D0–D2）、WIF_ 輸出；C2–C7 自 v0.2 起。第 2 階段：填入 evidence_raw 證據（只用 C 段判屬實或已更正的列；DB_Evidence 頁列全部證據與判定），延遲參數依 B_delay 校準。", False),
         ("第 3 階段：新增 CapexGW 頁（甲2：資本支出推得 GW；MSFT、GOOGL、AMZN、META、ORCL、CRWV、NBIS 2027 起進主路徑）；Interface 另出 _SiteOnly（只有 甲）；WIF_Coverage_<yyyy>。下游取用 2027 年後數值前看覆蓋率。", True),
         ("v0.1.1（改名 Wattonomics／瓦帳）：新增 Funding（玩家 × 年資金來源、循環融資 17 條）、FundRaw（F 段證據＋G 段判定）、Facility（每 IT GW 廠房拆分與市場層、自建發電）、SegIn（AI半導體 次產業比例鏡像）、Spend（年 × 項目市場金額）；C1 加廣義口徑（資本支出＋尚未起租變化）；Interface 增 WIF_Funding_*、WIF_Spend_*、WIF_Facility_*。", True),
+        ("v0.1.2：套用 H 段（API 旗標人工複核）更正——證據檔 79 筆、In 輸入 19 格（cp_msft_abl 改 336＋336 MW-IT、xfmr_gva 2.1／2.67／3.15、fac_gen_px 低 0.5），FundRaw F#31、F#199、F#222 改不採用（採購或投資存量，非融資）；"
+         "園區候選（S 段 409 列，site_pipeline）經 API 回查與 I 段未參與代理開原文抽查後合併：新增 17 列（計入 13 列）、更正既有 20 列（Fairwater 拆分、Ports Pike 首批 800 MW 至 2031、Humain 1.7 GW 提前到 2027、Milam 308＋445、Jupiter 已知延遲刪除）、3 列改計入（Stargate UAE、Colossus 2、Mistral 96 MW）。Hyperion 5 GW、SoftBank 苫小牧依判斷題預設不入。", True),
         ("顏色：藍字＝輸入；黑字＝公式；綠字＝跨頁或外部鏡像；淡黃底＝關鍵輸出；亮黃底＝待證據或預設待決。", False),
         ("Excel 優先：要改輸入，直接改 In 頁藍字；builder 重建時讀回（--base）。公式頁不要手改。下游只讀 Interface 的 WIF_ 名稱（經快照）。", False),
         ("版本命名：YYYYMMDD_Wattonomics_vX.Y.xlsx；model/CURRENT 記錄現行檔名；data/CURRENT_SNAPSHOT 指向現行快照。", False),

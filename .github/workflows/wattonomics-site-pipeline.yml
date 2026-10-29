@@ -43,7 +43,7 @@ jobs:
       - name: Sites
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          PRIOR_SPEND_USD: ${{ vars.API_PRIOR_SPEND_USD || '40' }}
+          PRIOR_SPEND_USD: ${{ vars.API_PRIOR_SPEND_USD || '80' }}
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p tools/wattonomics_api/site_pipeline/out

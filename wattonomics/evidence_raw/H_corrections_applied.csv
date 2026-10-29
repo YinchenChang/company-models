@@ -1,0 +1,82 @@
+file,row,field,status,reason
+A_us_cloud.csv,18,value,套用,900 MW 是 Crusoe 現場發電廠容量；Bloomberg 報 Microsoft 承租 700 MW（Excel In!J189 cp_msft_abl 900→700）
+A_us_cloud.csv,18,quote_or_paraphrase,套用,C 段判屬實有誤；以原文為準
+A_us_cloud.csv,19,unit,套用,原文 'and to contract additional compute capacity up to one gigawatt'；C 段『全案上限 1 GW』有誤
+A_us_cloud.csv,19,metric,套用,1 GW 為上限承諾，非確定量
+A_us_cloud.csv,19,quote_or_paraphrase,套用（節錄比對）,一手頁可讀
+A_us_cloud.csv,29,(none),維持,維持；1000 為 'well over a gigawatt' 下限，unit 已註明
+A_us_cloud.csv,37,site_or_scope,套用,原文 'AWS remains on pace to double its power capacity'
+A_us_cloud.csv,37,quote_or_paraphrase,套用（節錄比對）,無引號，屬轉述
+A_us_cloud.csv,7,quote_or_paraphrase,套用,措辭；原文無『知情人士』『全部負載』
+A_us_cloud.csv,56,quote_or_paraphrase,套用（節錄比對）,主來源 cryptobriefing 被擋（未繞過）
+A_us_cloud.csv,61,as_of,套用,來源只寫 Announced Mar 2026
+A_us_cloud.csv,61,tag,套用,出處性質
+A_us_cloud.csv,70,unit,套用,2 GW 為園區總目標非擴建量
+A_us_cloud.csv,70,expected_online,套用,同 A#18
+A_us_cloud.csv,70,as_of,套用,TechRadar 2026-03-09，原文無 3/6
+B_delay.csv,5,tag,套用,數值屬實但為下限／不同統計
+B_delay.csv,10,note,套用（節錄比對）,low 非現行值
+B_delay.csv,10,metric,套用,範圍為最強機型
+B_delay.csv,12,high_months,套用,原文最高為 GSU 144 週（約 33 月）；60 無出處，改 [Assumed]
+B_delay.csv,12,note,套用,『2020 年前 24–30 個月』不在原文
+B_delay.csv,18,as_of,套用,原文無此日期
+B_delay.csv,18,note,套用,原文找不到
+B_delay.csv,19,metric,套用,6／7 為延遲量非工期
+B_delay.csv,21,metric,套用,原文明言不視為延遲
+B_delay.csv,21,note,套用（節錄比對）,範圍誤植
+B_delay.csv,23,tag,套用,月數非原話
+B_labs_china_totals.csv,4,quote_or_paraphrase,套用,出處拆分
+B_labs_china_totals.csv,4,tag,套用,無 Bloomberg
+B_labs_china_totals.csv,8,quote_or_paraphrase,套用,出處錯置
+B_labs_china_totals.csv,8,as_of,套用,原文僅月份
+B_labs_china_totals.csv,16,metric,套用,4.25 為首期，非簽約量
+B_labs_china_totals.csv,16,expected_online,套用,800MW 不在原文
+B_labs_china_totals.csv,20,tag,套用,API 稱 2031 找不到有誤：8-K 有
+B_labs_china_totals.csv,27,delay_note,套用,範圍誤植
+B_labs_china_totals.csv,27,quote_or_paraphrase,套用（節錄比對）,兩來源皆無 Epoch
+B_labs_china_totals.csv,30,tag,套用,承諾量為公司自述
+B_labs_china_totals.csv,30,quote_or_paraphrase,套用,出處錯置
+B_labs_china_totals.csv,33,site_or_contract,套用,1 GW 為額外承諾（C 段判屬實有誤）
+B_labs_china_totals.csv,33,metric,套用,up to
+B_labs_china_totals.csv,34,tag,套用,二手轉述非 Verified；Colossus II 有據（Reuters）
+B_labs_china_totals.csv,34,quote_or_paraphrase,套用,$84.5B 兩來源皆無
+B_labs_china_totals.csv,37,expected_online,套用,原文有
+B_labs_china_totals.csv,64,value,套用,1600 為情境值
+B_labs_china_totals.csv,64,expected_online,套用,年份誤植
+F_funding.csv,31,item,套用,租用算力承諾非 Microsoft 資金來源；Excel FundRaw!O33 1→0
+F_funding.csv,31,tag,套用,出處性質
+F_funding.csv,179,value,套用,19+19+約 7＝45（SA 引 The Information 'roughly $45B'）；55 為首期 100 尚缺額；持股 40% 兩來源說法不一
+F_funding.csv,182,value,套用,原文無美元金額
+F_funding.csv,182,tag,套用,AMD 自家新聞稿；歸屬另綁股價與里程碑
+F_funding.csv,194,item,套用,原文無 JV／表外
+F_funding.csv,196,item,套用,20.28 為期末現金與短投存量
+F_funding.csv,196,value,套用,正值存量
+F_funding.csv,199,item,套用,採購非融資；Excel FundRaw!O201 1→0；撤回 G 段『刪除至 2029-05』（原文有）
+F_funding.csv,199,tag,套用,二手＋推算
+F_funding.csv,215,tag,套用,非公司公告
+F_funding.csv,221,item,套用,合約營收非融資；與 F#31 重複
+F_funding.csv,221,detail,套用,預付不在兩來源
+F_funding.csv,226,item,套用,投資組合存量≠供應商融資；連帶 F#222 同口徑（Excel O224＝1）
+F_funding.csv,226,detail,套用,口徑混加
+F_funding.csv,227,(none),維持,維持；Goldman 250／400 為五家（含 Microsoft），tag 可改第三方數據（LSEG）
+P_facility_power.csv,2,basis,套用,原文未定義範圍
+P_facility_power.csv,2,metric,套用,原文未稱 shell-and-core
+P_facility_power.csv,2,quote_or_paraphrase,套用,原文無『不含 IT』
+P_facility_power.csv,3,basis,套用,原文未定義 IT 瓦
+P_facility_power.csv,5,basis,套用,原文未說明 IT 或設施
+P_facility_power.csv,5,low/high,套用,原文找不到
+P_facility_power.csv,5,as_of,套用,原文 2026-07-24
+P_facility_power.csv,16,basis,套用,原文未指明 IT
+P_facility_power.csv,16,quote_or_paraphrase,套用（節錄比對）,原文無此句
+P_facility_power.csv,17,basis,套用,同 P#16
+P_facility_power.csv,18,basis,套用,同 P#16
+P_facility_power.csv,27,low/high,套用,"原文只有 1,000/kW；Excel In!H67 選擇性 0.8→0.5"
+P_facility_power.csv,29,high/tag,套用,high 與單位原文無
+P_facility_power.csv,44,tag,套用,as_of 有據，維持
+P_facility_power.csv,50,low,套用,ComEd 4×100MVA ÷（225 設施 ÷1.2）≈2.13；225 為全場需求
+P_facility_power.csv,50,base,套用,4×40＝160 MVA／60 MW IT（一台退出仍滿足 88.4 MVA）；3×40 不符 N-1；Excel In!I80
+P_facility_power.csv,50,high,套用,3×63＝189／60＝3.15；Excel In!J80
+P_facility_power.csv,68,low,套用,18% 為 2025 實績；2026 為 >25%（下限）
+P_facility_power.csv,68,high,套用,>25% 為下限
+P_facility_power.csv,68,quote_or_paraphrase,套用（節錄比對）,口徑
+B_labs_china_totals.csv,20,(note),維持,"API『至 2029–2031 找不到』有誤（8-K：$6.5B through May 31, 2031）"

@@ -1,0 +1,67 @@
+key,col,old,new,source,reason
+cp_msft_abl,J,900,700,H_review A#18,Bloomberg：Microsoft 承租 700 MW；900 MW 為 Crusoe 現場電廠（發電側）
+cp_msft_abl,G,,A#18（H 段更正：Bloomberg 2026-03-24 Microsoft 承租 700 MW，口徑未說明；900 MW 為 Crusoe 現場電廠）；首棟 2027 年中；全站分期未揭露，整筆放首棟月（偏早）,H_review A#18,說明欄
+xfmr_gva,H,1.8,2.1,H_review P#50,ComEd 4×100 MVA ÷（225÷1.2）IT ≈ 2.13
+xfmr_gva,I,2,2.67,H_review P#50,ModulEdge 60 MW IT、一台退出：4×40＝160 MVA → 2.67
+xfmr_gva,J,3.2,3.15,H_review P#50,ModulEdge 3×63＝189 MVA → 3.15
+xfmr_gva,E,,Derived,H_review P#50,由 P#50 例子算出（ModulEdge、ComEd）
+xfmr_gva,G,,P#50（H 段更正）：ModulEdge 60 MW IT 一台退出 4×40＝160 MVA → 2.67、3×63 → 3.15；ComEd 4×100 MVA ÷ 187.5 MW IT ≈ 2.13；只影響 Facility 實物量顯示,H_review P#50,說明欄
+fac_gen_px,H,0.8,0.5,H_review P#27（選擇性）,Groww 單機 2–3 MW $0.5–2M＝0.17–1.0 $M/MW 設備價＋安裝；低值 [Assumed]
+fac_gen_px,E,,Analogy（基準）／Assumed（區間）,H_review P#27,基準 NREL 1.0；區間自設
+fac_gen_px,G,,P#27（NREL 約 $1,000/kW；G 段屬實）；區間 0.5／1.2 [Assumed]（H 段：low 參考 Groww 單機設備價＋安裝）,H_review P#27,說明欄
+dly_d1_m,G,,D#16 Oracle 部分站 12、D#19 Nebius NJ 首期延遲 6–7（實際 10–11 月對目標 4 月）；low 3 [Assumed]（H 段：刪除 Denton D#18，原頁無月數）,H_review D#18／D#19,說明欄
+dly_d2_bind,G,,D#2、D#3（大負載併網 48 月以上）、D#5（發電側併網 48–60 月，LBNL 轉述；84 為 PJM 平均）、D#7、D#8（渦輪 ≥36 月）、D#11（升壓變壓器 37 月）長於建物工期 D#14；反證 D#25（表後發電）、D#7（許多案子渦輪不卡關）→ 不高於 50%,H_review D#5,說明欄
+ctr_msft_ant,G,,A#19、B#33（H 段更正：$30B Azure 確定採購，GW 未揭露；另加額外至多 1 GW，上限、非確定量；取代 C 段『全案上限 1 GW』）；2026-11 至 2033-05 付款；上線量未揭露,H_review A#19,說明欄
+usr_oai,G,,2025 1.9（B#2 Friar，屬實）；2026 約 5（B#6 第三方 5–6，屬實）；2027 11（B#4 Epoch『low double-digit GW』屬實；11 為 [Assumed] 中點）,H_review B#4,說明欄
+al_googl_ant,G,,A#29（屬實）：TPU『well over a gigawatt』2026 上線，1 GW 為 >1 GW 的下限；Broadcom 3.5 GW（A#30 無法核對、設施由他方營運）不入,H_review A#29,說明欄
+cp_oai_pp1,G,,B#16（C／H 段更正：OpenAI 租約全園 8.0 GW-IT（20 年）；4.25 IT-GW 為 NVIDIA 信用支持首期；未簽 3.75 屬 NVIDIA 選擇權；2028 起分期）；三年均分 [Assumed],H_review B#16,說明欄
+cp_oai_pp2,G,,B#16（C／H 段更正：OpenAI 租約全園 8.0 GW-IT（20 年）；4.25 IT-GW 為 NVIDIA 信用支持首期；未簽 3.75 屬 NVIDIA 選擇權；2028 起分期）；三年均分 [Assumed],H_review B#16,說明欄
+cp_oai_pp3,G,,B#16（C／H 段更正：OpenAI 租約全園 8.0 GW-IT（20 年）；4.25 IT-GW 為 NVIDIA 信用支持首期；未簽 3.75 屬 NVIDIA 選擇權；2028 起分期）；三年均分 [Assumed],H_review B#16,說明欄
+cpx_sov_uae,G,,B#27（未抽查）；D#21：至 2026-09-12 無試運轉公告，官方未改期（H 段：不視為延遲）；不入（只用 C 段屬實或已更正列）,H_review D#21,說明欄
+cp_msft_atl,J,636,321,I_review_sites B,Epoch：B1–2 321 MW-IT 2025-10；其餘 315 另列 cp_msft_atl2（2026-06）
+cp_msft_atl,L,11,10,I_review_sites B,Epoch 2025-10
+cp_msft_atl,G,,A#15、S#5（I 段核對：Epoch B1–2 321 MW-IT 於 2025-10；636 至 2026-06 達成，增量 315 見 cp_msft_atl2）；公司 2025-11-12 宣布上線；使用者 OpenAI、Microsoft 等（不可分離）,I_review_sites B,說明欄
+cp_msft_wi1,L,6,4,I_review_sites B,一期 2026-04-16 上線（S#12）
+cp_msft_wi1,G,,A#16、S#12（I 段核對：一期 2026-04-16 已上線，369 MW-IT 屬實）；06 一期完工,I_review_sites B,說明欄
+cp_msft_wi2,J,1894,1526,I_review_sites B,Epoch：368 @2027-02 另列 cp_msft_wi2a；餘 1,526 @2028-05
+cp_msft_wi2,G,,A#17（屬實；Epoch 預測 2028-05-13）；I 段：其中 368 MW-IT 2027-02 另列 cp_msft_wi2a,I_review_sites B,說明欄
+cp_msft_abl,J,700,336,I_review_sites B,兩棟各 336 MW-IT；第二棟另列 cp_msft_abl2
+cp_msft_abl,C,未說明,IT,I_review_sites B,S#24–26 寫 MW-IT
+cp_msft_abl,G,,A#18、S#24–26（H 段：900 為 Crusoe 現場電廠；I 段核對：兩棟 × 336 MW-IT，首棟 2027 年中；第二棟見 cp_msft_abl2）,I_review_sites B,說明欄
+cp_oai_pp1,J,1417,800,I_review_sites B,OpenAI：first 800 MW available in 2028
+cp_oai_pp1,G,,B#16、S#148–150（I 段核對：OpenAI『first 800 megawatts … 2028』；SB Energy S-1/A 1–9 號樓 4,248 MW-IT 最後 RFS 2031）；OpenAI 租約全園 8.0 GW-IT,I_review_sites B,說明欄
+cp_oai_pp2,J,1417,1149,I_review_sites B,餘 3,448 均分 2029–2031 [Assumed]
+cp_oai_pp2,G,,同 cp_oai_pp1；首批後餘 3,448 MW-IT 在 2029–2031 均分 [Assumed]（S-1/A 最後 RFS 2031）,I_review_sites B,說明欄
+cp_oai_pp3,J,1416,1149,I_review_sites B,同上
+cp_oai_pp3,G,,同 cp_oai_pp2；第 4 段見 cp_oai_pp4（2031）,I_review_sites B,說明欄
+cp_sov_hum1,L,6,12,I_review_sites B,至 2026-09 無運作確認；執行長稱年底前上線
+cp_sov_hum1,G,,B#58、S#163（I 段核對：至 2026-09-27 無 Riyadh／Dammam 運作確認；執行長稱年底前上線約 250 MW；保留 200）,I_review_sites B,說明欄
+cp_sov_hum2,J,1700,1500,I_review_sites B,執行長：全國 2027 年達 1.7 GW；增量約 1,450–1,500
+cp_sov_hum2,K,2030,2027,I_review_sites B,2027 年底
+cp_sov_hum2,G,,S#158、S#160（I 段核對：Humain 執行長稱全國 2027 年達 1.7 GW；Al Sa'ad 一期 1 GW 2027 交付；1,500＝1.7 GW − 首期 200）；2030 餘量見 cp_sov_hum3,I_review_sites B,說明欄
+cp_orcl_sal,J,1400,1383,I_review_sites B,MPSC 合約負載 1,383 MW
+cp_orcl_jup,M,12,,I_review_sites B,無來源支持 12 月；Oracle 稱照時程（D1 改用一般延遲比例）
+cp_orcl_jup,G,,A#73（屬實，設施）；I 段核對：無來源支持『延遲 12 月』；Oracle 稱照時程，但天然氣管線晚約 6 個月、已發不可抗力通知（F#133）→ 已知延遲欄留空，D1／D2 依一般比例,I_review_sites B,說明欄
+cp_meta_pro4,L,9,7,I_review_sites B,Epoch 時間線 2028-07
+cpx_sov_uae,L,9,12,I_review_sites C,S#4：2026Q4
+cpx_sov_uae,N,0,1,I_review_sites C,I 段確認
+cpx_sov_uae,G,,B#27、S#4（I 段確認：200 MW 2026Q4；至 9-12 無試運轉公告，官方未改期）,I_review_sites C,說明欄
+cpx_xai_c2,L,12,3,I_review_sites C,1,531 MW-IT @2027Q1（DCD 轉述 Epoch）
+cpx_xai_c2,N,0,1,I_review_sites C,I 段確認 1,531 有一手出處
+cpx_xai_c2,G,,B#47、S#134–135（I 段確認：Colossus 2 1,531 MW-IT @2027Q1（Epoch 預測），946 已運轉 → 增量 585）,I_review_sites C,說明欄
+cpx_sov_mis,J,1400,96,I_review_sites C,2028 初只有 Mistral 96 MW
+cpx_sov_mis,L,12,3,I_review_sites C,2028 初
+cpx_sov_mis,N,0,1,I_review_sites C,I 段確認
+cpx_sov_mis,G,,B#61、S#153–155（I 段確認：2028 初 Mistral 96 MW（可擴至 200）；Phase 2 2030–2033、其餘 1,304 不入）,I_review_sites C,說明欄
+cpx_oai_milam,J,857,308,I_review_sites B,S-1/A Milam 1 308 MW-IT
+cpx_oai_milam,K,2026,2027,I_review_sites B,首棟 2026-10 交付殼體；308 上線時點 [Assumed] 2027-06
+cpx_oai_milam,L,10,6,I_review_sites B,同上
+cpx_oai_milam,N,0,1,I_review_sites B,S-1/A 一手申報
+cpx_oai_milam,G,,B#14、S#142–144（I 段核對：SB Energy S-1/A Milam 1 308、Milam 2 445 MW-IT，最後 RFS 皆 2028；全站 1.2 GW；上線月 [Assumed]）；Milam 2 見 cp_oai_milam2,I_review_sites B,說明欄
+cpx_nbis_mo,J,1200,200,I_review_sites B,首棟 200 MW；其餘 2029 後
+cpx_nbis_mo,G,,A#100、S#82–83（I 段：首棟 200 MW，時點未揭露最早 2027；其餘 1,000 在 2029 後）；不入,I_review_sites B,說明欄
+cpx_nbis_lpr,G,,A#99、S#81（I 段：310 為完工容量，2027 只有首期、量未揭露）；不入,I_review_sites B,說明欄
+cpx_crwv_lan,J,300,100,I_review_sites B,初期 100 MW；300 為擴充潛力無時程
+cpx_crwv_lan,G,,A#92、S#79–80（I 段：初期 100 MW；300 為擴充潛力無時程）；不入,I_review_sites B,說明欄
+cpx_neo_nexus,G,,B#41、S#130–131（I 段：TDLR 工期至 2027-10，首棟 2027 啟用；MW 未揭露，500 為 FT 轉述舊目標）；不入,I_review_sites B,說明欄
+cpx_amzn_cip,G,,A#48、S#42–43（I 段：約 300 MW gross（設施），首批 2026-08 提前交付、全站 2026Q4；216 IT 只能標 Derived）；不入,I_review_sites B,說明欄
