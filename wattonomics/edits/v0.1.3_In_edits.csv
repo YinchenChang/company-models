@@ -1,0 +1,3 @@
+key,col,old,new,source,reason
+cp_sov_hum1,G,,B#58、S#163（I 段：至 2026-09-27 無 Riyadh／Dammam 運作確認；執行長稱年底前上線約 250 MW；保留 200）；I2 段：只有公司目標支持，MIS Riyadh 工單 1 僅 50 MW、2026-10-01 才收到 → 可能滑到 2027（風險）,I2_review_sites C,說明欄
+cp_sov_hum2,G,,"S#158、S#160（I 段核對：Humain 執行長稱全國 2027 年達 1.7 GW；1,500＝1.7 GW − 首期 200）；2030 餘量見 cp_sov_hum3；I2 段：只有公司目標支持，個別站點證據都較晚（Al-Saad 100 MW 一期 2028-10、二期 2029-01；MIS 250 MW 只收到工單 1）→ 僅公司目標、站點證據不足（v0.1.2 所寫「Al Sa'ad 一期 1 GW 2027 交付」依 I2 段刪除）",I2_review_sites C（另恢復 v0.1.2 edits 第 41 列因未加引號被截斷的文字）,說明欄
