@@ -34,7 +34,7 @@
 | `scripts/make_html_json.py` | 由建置列號對照產生 `html.json` |
 | `data/` | 事實總帳（v0.1a SEC 一手、v0.3.1 增補）、共識、Tokenomics v21.4 快照（v19.0 保留） |
 | `legacy_v0.3/` | v0.3.1 舊引擎（CRWV 樣板：HTML＋Excel 雙引擎、company.json、驗證腳本），保留不刪 |
-| `dist/_待刪除/` | v0.3.1 舊成品 |
+| `dist/_待刪除/` | v0.4、v0.3.1 舊成品 |
 
 ## 建置
 

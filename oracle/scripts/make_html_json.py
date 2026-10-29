@@ -53,7 +53,7 @@ cfg = {
             {"type": "table", "caption": "情境驅動（三情境並排，進加權目標價；In 頁情境驅動對照）", "head": [f"@In!{c}{SCN_H}" for c in "BDEFCG"],
              "rows": [[f"@In!B{INR[k]}", f"@In!D{INR[k]}|{f}", f"@In!E{INR[k]}|{f}", f"@In!F{INR[k]}|{f}", f"@In!C{INR[k]}", f"@In!G{INR[k]}|tag"]
                       for k, f in (("scn_pace", "n0"), ("scn_cap", "n0"), ("scn_delay", "n0"), ("scn_w", "p0"))]},
-            {"type": "table", "head": ["輸入", "基準值", "標記", "推導量（情境 B）"], "rows": [
+            {"type": "table", "caption": "驅動 → 推導量（情境 B 基準值；敏感度低／高只用於敏感度頁、不進目標價）", "head": ["輸入", "基準值", "標記", "推導量（情境 B）"], "rows": [
                 drv("pace_B", "n0", "已連網 AI MW（FY2029 年底）：", f"@Thesis!G{TB['conn']}|n0"),
                 drv("delay_B", "n0", "計費 MW（FY2029）：", f"@Thesis!G{TB['bill']}|n0"),
                 drv("k_mix", "n3", "每 MW 年收入（FY2029）：", f"@Thesis!G{TB['pm']}|n2"),

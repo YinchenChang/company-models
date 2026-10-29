@@ -1,19 +1,37 @@
 # 個股模型 In 頁版面核對（全 repo 共用；固定規格見 docs/plan/個股模型原則_命題加營收分部.md 第 8 節；
 # Andy 2026-10-29 14:26 同意、15:03 指示套用到其他適用的個股）。
 #
-# 適用：In 頁有「低／基準／高」三欄、且有情境專屬輸入列（項目以「情境 A：」開頭、含「（情境 A）」或「情境權重 A」等）的模型。
+# 適用：In 頁有「低／基準／高」三欄、且有情境專屬列的模型。情境專屬列的判定（is_scn）：
+#   (a) 鍵名含一個獨立的情境字母 A／B／C（前一字元為底線、小寫或數字或在開頭，後一字元為底線、數字或結尾），
+#       且把該字母換成另一個情境字母後的鍵也存在（同族兄弟，例如 tp_wA／tp_wB、cqA_x／cqB_x、dA／dC、pace_A／pace_C）；或
+#   (b) 項目文字以「情境 A：」或「情境 A（…）：」開頭，或含「（情境 A）」「情境權重 A」（只有單一情境的列，例如 gm_adj_C28）。
+#   只在其他文字中提到情境（例如「收斂法情境 B 的 FY2032 營收年增」「台達電模型，情境 A」）不算。
 # 規格：
 #   1. In!D3／F3 欄名為「敏感度低」「敏感度高」（只用於 Sens 頁，不進目標價）。
 #   2. In 頁最後有一節，A 欄文字含「情境驅動對照」：下一列表頭 D／E／F＝情境 A／B／C；其下每列一個情境驅動，三欄並排，
 #      每格是 =E<列> 公式，引用 H 欄「引用 In 頁 k1／k2／k3；…」所列鍵的列（情境 B 無專屬輸入時可填常數 0）。
-#   3. 上方所有情境專屬輸入列都必須被這一節引用（不能漏列）；情境權重列鍵為 scn_w，合計＝1。
+#   3. 上方所有情境專屬列都必須被這一節引用（不能漏列）；情境權重列鍵為 scn_w，合計＝1。
+#   4. 本節純展示：其他工作表與 In 頁上方的公式、定義名稱都不得引用本節。
 # 用法：
 #   python3 tools/in_layout/check_in_layout.py <成品 xlsx>      # 單檔；不符即失敗（結束碼 1）
 #   python3 tools/in_layout/check_in_layout.py --all [--md 報告.md]  # 掃描全部 */dist/*.xlsx，只報告（結束碼 0）
 import glob, os, re, sys
 import openpyxl
 
-SCN_PAT = re.compile(r"^情境 ?[ABC][：:]|（情境 ?[ABC]）|情境權重 ?[ABC]\b|情境權重 ?[ABC]$")
+LAB_PAT = re.compile(r"^情境 ?[ABC][：:]|^情境 ?[ABC]（[^）]*）[：:]|（情境 ?[ABC]）|情境權重 ?[ABC](?![A-Za-z])")
+KEY_OK = re.compile(r"^[A-Za-z0-9_]+$")
+
+
+def is_scn(key, label, keys):
+    if KEY_OK.match(key):
+        for i, ch in enumerate(key):
+            if ch not in "ABC":
+                continue
+            prev_ok = i == 0 or key[i - 1] == "_" or key[i - 1].islower() or key[i - 1].isdigit()
+            next_ok = i == len(key) - 1 or key[i + 1] == "_" or key[i + 1].isdigit()
+            if prev_ok and next_ok and any(key[:i] + o + key[i + 1:] in keys for o in "ABC" if o != ch):
+                return True
+    return bool(LAB_PAT.search(label))
 
 
 def check(path):
@@ -29,7 +47,7 @@ def check(path):
     sec = [r for r in range(4, ws.max_row + 1) if "情境驅動對照" in str(ws.cell(r, 1).value or "")]
     last = (sec[0] if sec else ws.max_row + 1)
     keyrow = {str(wf.cell(r, 1).value): r for r in range(4, last) if wf.cell(r, 1).value}
-    scn_rows = {r for r in range(4, last) if SCN_PAT.search(str(ws.cell(r, 2).value or ""))}
+    scn_rows = {r for r in range(4, last) if wf.cell(r, 1).value and is_scn(str(wf.cell(r, 1).value), str(ws.cell(r, 2).value or ""), keyrow)}
     if not scn_rows:
         return False, [], 0
     fail = []
@@ -62,9 +80,32 @@ def check(path):
         fail.append("缺情境權重列 scn_w")
     elif all(isinstance(x, (int, float)) for x in rows["scn_w"]) and abs(sum(rows["scn_w"]) - 1) > 1e-9:
         fail.append(f"情境權重合計應為 1：{rows['scn_w']}")
+    # 4. 本節純展示：不得被引用
+    wbf = wf.parent
+    sec_rows = set(range(sec[0], ws.max_row + 1))
+    bad = []
+    for sh in wbf.worksheets:
+        for row in sh.iter_rows():
+            for c in row:
+                f = c.value
+                if not (isinstance(f, str) and f.startswith("=")):
+                    continue
+                if sh.title == "In" and c.row in sec_rows:
+                    continue
+                rows_ = [int(x) for x in re.findall(r"In!\$?[A-Z]{1,3}\$?(\d+)", f)]
+                if sh.title == "In":
+                    rows_ += [int(x) for x in re.findall(r"(?<![A-Za-z!_$])\$?[A-Z]{1,3}\$?(\d+)(?![\d(])", f)]
+                if any(x in sec_rows for x in rows_):
+                    bad.append(f"{sh.title}!{c.coordinate}")
+    for name, dn_ in wbf.defined_names.items():
+        for t, ref in dn_.destinations:
+            if t == "In" and any(int(x) in sec_rows for x in re.findall(r"\$?[A-Z]{1,3}\$?(\d+)", ref)):
+                bad.append(f"定義名稱 {name}")
+    if bad:
+        fail.append("情境驅動對照被引用（應為純展示）：" + "、".join(bad[:8]))
     miss = sorted(scn_rows - refd)
     if miss:
-        fail.append("情境專屬輸入列未列入對照：" + "、".join(f"{wf.cell(x, 1).value}（第 {x} 列）" for x in miss))
+        fail.append("情境專屬列未列入對照：" + "、".join(f"{wf.cell(x, 1).value}（第 {x} 列）" for x in miss))
     return True, fail, len(scn_rows)
 
 
@@ -100,7 +141,7 @@ def main(argv):
         for f in fail:
             print("  -", f)
         return 1
-    print(f"In 頁版面核對通過（情境專屬輸入 {n} 列皆已列入對照）")
+    print(f"In 頁版面核對通過（情境專屬 {n} 列皆已列入對照）")
     return 0
 
 
