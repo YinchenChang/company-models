@@ -50,6 +50,11 @@ def _num(v):
     return isinstance(v, (int, float)) and not isinstance(v, bool)
 
 
+def _vkey(path):
+    """以自然排序比較版本（v0.6.10 排在 v0.6.4 之後；字典序會排錯）。"""
+    return [int(t) if t.isdigit() else t for t in re.split(r"(\d+)", os.path.basename(path))]
+
+
 def collect():
     rows = []
     sys.path.insert(0, os.path.join(ROOT, "siliconomics"))
@@ -71,7 +76,7 @@ def collect():
         d = os.path.relpath(x, ROOT).split("/")[0]
         if d == "siliconomics":
             continue
-        files = sorted(glob.glob(f"{ROOT}/{d}/dist/*.xlsx"))
+        files = sorted(glob.glob(f"{ROOT}/{d}/dist/*.xlsx"), key=_vkey)
         if x != files[-1]:
             continue
         try:
@@ -90,10 +95,11 @@ def collect():
             if any(t in str(r[6] or "") for t in TAGS) and _num(r[4]) and src and not INHERITED.match(src):
                 rows.append(dict(scope=d, file=os.path.basename(x), key=str(r[0]), label=str(r[1] or ""), unit=str(r[2] or ""),
                                  lo=r[3], base=r[4], hi=r[5], tag=str(r[6]), src=src))
-    # 未上市模型（OpenAI、Anthropic 等）的原始資料頁 SRC_*：欄 A 鍵、B 項目、C 值、F 單位、J 出處、Q 標記
+    # 各模型 dist 最新 xlsx 的原始資料頁 SRC_*（目前只有未上市模型 OpenAI、Anthropic 等有）：
+    # 欄 A 鍵、B 項目、C 值、D 低、E 高、F 單位、J 出處、Q 標記（OpenAI builder 的 SRC_OAI 版面）
     for x in sorted(glob.glob(f"{ROOT}/*/dist/*.xlsx")):
         d = os.path.relpath(x, ROOT).split("/")[0]
-        files = sorted(glob.glob(f"{ROOT}/{d}/dist/*.xlsx"))
+        files = sorted(glob.glob(f"{ROOT}/{d}/dist/*.xlsx"), key=_vkey)
         if x != files[-1]:
             continue
         try:

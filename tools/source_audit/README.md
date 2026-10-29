@@ -10,6 +10,6 @@
 - 判定由模型產生，「不符」與「部分相符」須由維護串打開來源確認後才改模型。
 
 ## 指定範圍複核（2026-10-29 起）
-- 對象另含未上市模型 dist xlsx 的 `SRC_*` 原始資料頁（OpenAI 的 `SRC_OAI` 等；欄 A 鍵、C 值、J 出處、Q 標記）。
+- 對象另含各模型 dist 最新 xlsx 的 `SRC_*` 原始資料頁（目前只有未上市模型，如 OpenAI 的 `SRC_OAI`；欄 A 鍵、B 項目、C 值、D 低、E 高、F 單位、J 出處、Q 標記）。最新檔以版本自然排序判定。
 - 環境變數：`AUDIT_SCOPE`（模型資料夾，逗號分隔）、`AUDIT_KEYS`（鍵，逗號分隔）、`AUDIT_RUN`（本次標籤）。給 `AUDIT_RUN` 時進度與結果另存為 `out/state_<標籤>.jsonl`、`source_audit_<標籤>.xlsx／.md`，花費上限只計本標籤，不與全量複核共用。
-- 因 GitHub Actions API 經代理被擋，chat 端以 push 觸發：在分支 `claude/source-audit` 放 `tools/source_audit/push_config.json`（例：`{"AUDIT_RUN": "openai_v064", "AUDIT_SCOPE": "openai", "AUDIT_KEYS": "SRC_OAI_005,SRC_OAI_146", "MAX_USD": 8, "MAX_GROUPS": 0}`），push 時程式讀它覆寫環境變數。
+- 因 GitHub Actions API 經代理被擋，chat 端以 push 觸發：在分支 `claude/source-audit` 放 `tools/source_audit/push_config.json`（例：`{"AUDIT_RUN": "openai_v064", "AUDIT_SCOPE": "openai", "AUDIT_KEYS": "SRC_OAI_005,SRC_OAI_146", "MAX_USD": 8, "MAX_GROUPS": 0}`），push 時程式逐鍵覆寫環境變數（未列的鍵沿用 workflow 預設：push 時 `MAX_USD` 3、`MAX_GROUPS` 10，所以設定檔應寫明這兩鍵）。`workflow_dispatch` 未提供這三個輸入，指定範圍複核目前只走 push 設定檔。
