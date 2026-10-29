@@ -143,9 +143,9 @@ inp("cpu_r", "NVIDIA 自家 CPU（Grace／Vera）顆數 ÷ NVIDIA 加速器顆�
     "GB200／VR200 NVL72 機櫃：每 2 顆 GPU 封裝配 1 顆 CPU（0.5）；HGX 系統用 x86 CPU（0）", "NVIDIA 機櫃與 HGX 出貨比例：未找到")
 inp("v_cpu", "每顆 NVIDIA CPU 載板金額 ÷ 每顆 NVIDIA 加速器載板金額", "x", 0.20, 0.30, 0.45, "Assumed", "Vera CPU 為單晶片（88 核），封裝面積小於 GPU；量化：未找到", "—")
 for y, v, lo, hi in ((26, 0.35, 0.25, 0.50), (27, 0.70, 0.50, 0.90), (28, 0.75, 0.50, 1.00), (29, 0.70, 0.45, 1.00)):
-    inp(f"sh_cpu_{y}", f"景碩占 NVIDIA CPU（Grace／Vera）載板 20{y}", "%", lo, v, hi, "Interested-party" if y <= 27 else "Assumed",
+    inp(f"sh_cpu_{y}", f"景碩占 NVIDIA CPU（Grace／Vera）載板 20{y}", "%", lo, v, hi, "Interested-party" if y == 26 else "Assumed",
         UDN4 + "：美系 AI 客戶 CPU 供應份額由 10% 升到 50%" if y == 26 else (GS8 + "：公司法說表達目標拿下 Vera CPU 載板 100% 份額；" + UDN9 + "：2027 年 80–100%" if y == 27 else "同上；2028 年後第二供應商（Ibiden）可能回補，基準略降"),
-        "年平均（上半年 10% 起跳）" if y == 26 else ("公司與券商說法，基準取下緣以下" if y == 27 else "—"))
+        "年平均（上半年 10% 起跳）" if y == 26 else ("公司與券商說法 80–100%（Interested-party），基準 70% 為打折後的模型取值（2026-10-28 來源複核：改標 Assumed）" if y == 27 else "—"))
 
 sec("C. FY2026 產品組合與 AI 占比（公司未按季揭露；券商與法說摘要推全年）")
 inp("mx_abf", "FY2026 ABF 載板 ÷ 營收", "%", 0.36, 0.42, 0.46, "Interested-party", MDJ1 + "：ABF 約 30–40%、BT 約 35–40%、隱形眼鏡 15–20%", FG25 + "：2Q25 ABF 約 40%；2026 年 ABF 漲幅大於 BT（" + GS8 + "）")

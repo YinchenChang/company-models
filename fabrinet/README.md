@@ -8,6 +8,11 @@ Fabrinet 是光模組與光元件代工廠（NVIDIA 光模組、DCI 相干模組
 
 **投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 +18.5%，落在 −25%～+25%；級距 0%–25%）。
 
+## v0.1.3（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 目標價 US$373（DCF 350、Comparable 396 各半），比現價 314.94（2026-10-23）高 18.5%，級距 0%–25%；Comparable 單獨為 +25.9%。本模型 12 個月後前瞻 EPS 23.81 比共識前瞻 EPS 21.27 高 11.9%，但同業（Coherent、Lumentum、Jabil、Celestica、Flex）前瞻 P/E 中位數 16.7 倍，遠低於共識目標價 687.78 隱含的 32.3 倍（高 94.2%）；共識目標價比現價高 118.4%，與本模型的差距幾乎全在倍數。
@@ -21,9 +26,9 @@ Fabrinet 是光模組與光元件代工廠（NVIDIA 光模組、DCI 相干模組
 | 檔案 | 內容 |
 |---|---|
 | `build_fabrinet.py` | 產生器（參數與公式；上游成品唯讀） |
-| `dist/20261026_Fabrinet模型_v0.1.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_Fabrinet個股模型_v0.1.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261026_Fabrinet模型_v0.1.2.html` | HTML 展示層（數字全部由 xlsx 重算值抽出） |
+| `dist/20261028_Fabrinet個股模型_v0.1.3.html` | HTML 展示層（數字全部由 xlsx 重算值抽出） |
 
 建置：`python3 fabrinet/build_fabrinet.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序為 README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用的上游如下，本模型**不修改它們**：
 

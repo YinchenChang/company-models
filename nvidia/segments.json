@@ -1,0 +1,27 @@
+{
+ "company": "nvidia",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "Data Center",
+   "label": "Data Center 營收（公司揭露，四捨五入到 0.1）",
+   "period": "FY26 Q1（2025-02～04）",
+   "value": 39.1,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  },
+  {
+   "name": "Edge Computing",
+   "label": "Edge Computing 營收（＝營收 − Data Center）",
+   "period": "FY26 Q1（2025-02～04）",
+   "value": 4.962,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  }
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ],
+ "note": "Edge Computing 為差額"
+}

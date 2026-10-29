@@ -31,8 +31,9 @@ sotp0 = VR["s_yt"]; sotp1 = VR["simp"]
 rf_s = {str(VR["tvsh"]): {"B": "p1", "C": "p1", "D": "p1"}, str(VR["shv"]): {"B": "n3", "C": "n3", "D": "n3"}, str(VR["ppref"]): {"B": "n2", "C": "n2", "D": "n2"}}
 rf_t = {str(VR["ssh"]): {"B": "n3", "C": "n3", "D": "n3"}, str(VR["simp"]): {"B": "x1", "C": "x1", "D": "x1"}}
 gate = rm["GATE"]
-r1 = find("Recon", "1. 合併層"); r2 = find("Recon", "2. 逐分部"); r3 = find("Recon", "3. v0.3"); rend = find("Recon", "其餘：")
+r1 = find("Recon", "1. 合併層"); r2 = find("Recon", "2. 逐分部"); r3 = find("Recon", "3. v0.3"); rend = find("Recon", "檢查：(a)")
 se_end = max(x[3] for x in rm["SE_ROWS"])
+thh = T["adds"] - 1
 th_rows = ",".join(str(T[k]) for k in ("end_ext", "avg_ext", "ai_rev", "permw", "ai_ebitda", "ai_em", "capchk", "cx_ai", "cx_rev", "da_ai", "da_ext", "da_int", "int_cost"))
 th_fmt = {str(T["permw"]): {c: "n2" for c in "EFGHIJKLM"}, str(T["ai_em"]): {c: "p1" for c in "EFGHIJKLM"}, str(T["capchk"]): {c: "p1" for c in "EFGHIJKLM"},
           str(T["cx_rev"]): {c: "n2" for c in "EFGHIJKLM"}, str(T["end_ext"]): {c: "n0" for c in "EFGHIJKLM"}, str(T["avg_ext"]): {c: "n0" for c in "EFGHIJKLM"}}
@@ -48,15 +49,15 @@ cfg = {
  "sections": [
   {"id": "thesis", "title": "命題與核心問題", "blocks": [
     {"type": "kv", "items": [["投資建議", "@README!A5"], ["重點觀察一", "@README!A6"], ["重點觀察二", "@README!A7"], ["重點觀察三", "@README!A8"]]},
-    {"type": "h3", "text": "與舊版（收支模型）的差異"},
-    {"type": "list", "items": [f"@README!A{r}" for r in range(find("README", "與 v0.2.2 的差異") + 1, find("README", "與 v0.2.2 的差異") + 6)]}]},
+    {"type": "h3", "text": "與上一版的差異（季度滾動）"},
+    {"type": "list", "items": [f"@README!A{r}" for r in range(find("README", "與 v0.3 的差異") + 1, find("README", "與 v0.3 的差異") + 6)]}]},
   {"id": "drivers", "title": "驅動因子 → 推導量", "intro": "@Thesis!A1", "blocks": [
     {"type": "table", "caption": "驅動 → 推導對照表", "head": ["頁", "輸入", "推導量", "因果方向"],
      "rowgen": {"sheet": "README", "rows": f"{find('README', '頁') + 1}-{find('README', 'Sens', 1, find('README', '頁'))}", "cols": ["A", "B", "C", "D"]}},
     {"type": "table", "caption": "命題模組的價格與起始值", "head": ["項目", "單位", "數值"],
      "rowgen": {"sheet": "Thesis", "rows": f"{T['k_long']}-{T['m_co']}", "cols": ["A", "B", "C"], "fmts": ["", "", "n3"],
                 "row_fmt": {str(T[k]): {"C": "p1"} for k in ("g0_co", "m_co_ttm", "m_co_1h", "m_co")} | {str(T[k]): {"C": "n2"} for k in ("permw0", "opex0")} | {str(T[k]): {"C": "n1"} for k in ("ai_ttm", "ai_pttm", "ai_ttm_e")}}},
-    {"type": "table", "caption": "命題模組：AI 容量、Cloud AI、AI 資本支出與折舊（三情境相同）", "head": ["項目", "單位", "@Thesis!E22", "@Thesis!F22", "@Thesis!G22", "@Thesis!H22", "@Thesis!I22", "@Thesis!J22", "@Thesis!K22", "@Thesis!L22", "@Thesis!M22"],
+    {"type": "table", "caption": "命題模組：AI 容量、Cloud AI、AI 資本支出與折舊（三情境相同）", "head": ["項目", "單位"] + [f"@Thesis!{c}{thh}" for c in "EFGHIJKLM"],
      "rowgen": {"sheet": "Thesis", "rows": th_rows, "cols": ["A", "B", "E", "F", "G", "H", "I", "J", "K", "L", "M"], "fmts": ["", "", "n1", "n1", "n1", "n1", "n1", "n1", "n1", "n1", "n1"], "row_fmt": th_fmt}},
     {"type": "note", "parts": ["@Seg!A2"]}]},
   {"id": "pl", "title": "三情境損益", "intro": "@PL!A2", "blocks": [
@@ -104,7 +105,7 @@ cfg = {
     {"type": "kv", "items": [["@Sens!A" + str(rm["SE_BASE"]), "@Sens!D" + str(rm["SE_BASE"]) + "|n2"], ["@Sens!A" + str(rm["SE_STALE"]), "@Sens!D" + str(rm["SE_STALE"]) + "|n2"]]}]},
   {"id": "status", "title": "資料狀態", "blocks": [
     {"type": "kv", "items": [["模型版本", ["$version", "（", "$date", "）"]], ["來源 xlsx", "$xlsx"], ["來源 xlsx 的雜湊指紋", "$sha"],
-                             ["Tokenomics 快照", "@Sources!B11"]]},
+                             ["Tokenomics 快照", "@Sources!B" + str(find("Sources", "Tokenomics 快照", 2))]]},
     {"type": "h3", "text": "資料與口徑"},
     {"type": "list", "items": ["@Q!A1", "@Q!A2", "@In!A2", "@Sens!A2"]},
     {"type": "h3", "text": "「未找到」清單"},

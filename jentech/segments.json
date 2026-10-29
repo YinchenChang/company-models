@@ -1,0 +1,27 @@
+{
+ "company": "jentech",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "單一應報導部門",
+   "label": "營收",
+   "period": "FY2025A",
+   "value": 20.276,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "單一應報導部門",
+   "labels": [
+    "AI 加速器均熱片營收（＝營收 × AI 占比）",
+    "其他散熱營收（＝營收 ×（散熱占比 − AI 占比））",
+    "導線架、精密沖壓與其他（＝營收 ×（1 − 散熱占比））"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "company": "Global Unichip",
+ "ticker": "3443.TW",
+ "model_sheet": "Q",
+ "official_segments": [
+  {"name": "單一應報導部門", "label": "單一營運部門（ASIC 設計服務）營收", "period": "FY2025", "value": 34.141, "unit": "NT$B", "source": "公司 FY2025 財報"}
+ ],
+ "sublines": [
+  {"parent": "單一應報導部門", "labels": ["委託設計（NRE）", "量產（Turnkey）"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收"]
+}

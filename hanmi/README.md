@@ -6,6 +6,11 @@
 
 **投資建議：強力放空**（依上檔空間固定規則：加權目標價上檔空間 −74.3%，落在 小於 −50%）。
 
+## v0.2.3（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 目標價 ₩48,379（DCF 27,780、Comparable 68,979 各半），比現價 188,500（2026-10-23）低 74.3%，級距 小於 −50%；Comparable 單獨為 −63.4%。主因 EPS 與倍數都有：本模型 12 個月後前瞻 EPS 2,662 比共識前瞻 EPS 約 5,000 低 46.8%；現價隱含 70.8 倍前瞻 EPS，同業（BESI、ASMPT、Kulicke & Soffa、Disco）中位數 25.9 倍、共識目標價 271,429 隱含 54.3 倍（比同業高 109%）。DCF 低不是 ROE（39.2%）造成，而是 FY2028 起 TC 鍵合需求回落（FY2027 EPS 3,098 → A 情境 FY2028 2,363）。
@@ -19,9 +24,9 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_hanmi.py` | 產生器（參數與公式） |
-| `dist/20261025_韓美半導體模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_韓美半導體個股模型_v0.2.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（格式見 `tools/company_html/README.md`） |
-| `dist/20261025_韓美半導體模型_v0.2.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261028_韓美半導體個股模型_v0.2.3.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 建置分兩步：先跑 `python3 hanmi/build_hanmi.py raw.xlsx`，再跑 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序為 README、In、Q、Units、PL、Val、Recon、Sens、Sources。
 

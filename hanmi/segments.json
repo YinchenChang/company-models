@@ -1,0 +1,28 @@
+{
+ "company": "hanmi",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "單一應報導部門",
+   "label": "營收",
+   "period": "FY2024",
+   "value": 5589,
+   "unit": "同模型 Q 頁",
+   "source": "見模型 Q 頁該列來源欄"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "單一應報導部門",
+   "labels": [
+    "SK 海力士",
+    "美光",
+    "其他（中國、OSAT 等）"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收"
+ ],
+ "note": "客戶別營收（FY2024 事業報告）"
+}

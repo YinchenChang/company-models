@@ -1,5 +1,12 @@
 # Siliconomics 變更紀錄
 
+## v0.8.4（2026-10-29；`model/20261029_Siliconomics_v0.8.4.xlsx`；Tokenomics v21.7）
+
+- 來源複核（API，2026-10-28；結果在分支 `source-audit-results`）後的修補版：只改標記、來源文字與 2029 價格路徑的區間，輸入基準值全部不變。
+  - DRAM／NAND 情境季價路徑 `cqA_*`、`cqB_*`、`nqA_*`、`nqB_*`：2027–28（第 8–15 列）由 Interested-party 改標 Derived（標示來源只有年度或半年數字，逐季為本庫拆分）；2029（第 16–19 列）改標 Assumed，區間取情境 A、B 同季值（標示來源只涵蓋到 2028）。
+  - `ts_mk_soc26`、`ts_mk_mem26`：來源改為 Advantest 2026-07-29 決算說明原文（SoC 105–115 億、記憶體 25–30 億美元）；原寫「4/27 簡報」為誤植（4/27 為 87–95 億）。
+- 下游：見報告 `docs/reports/20261029_v0.8.4.md`。決策 S28。
+
 ## v0.8.3（2026-10-28；`model/20261028_Siliconomics_v0.8.3.xlsx`；Tokenomics v21.7）
 
 - 衝突登錄清理（修補版：只改文字）：CF02（Ibiden 份額相對值 `abf_ibrel_28` 的來源改以欣興 2026 資本支出 537 億為準）、CF05（AMD README 已一致）、CF06（韓美 Sens 情境 C 標籤更正為「混合鍵合低值（導入慢）」）、CF07（besi/README.md 跨模型注意更正）、CF08（lrcx/README.md 25 倍）、CF16（Drive 候選母體 v0.2.4）結案；CF01 移到南電分部重建；CF03 狀態補「待 Andy」字首。Checks G5：10 → 4（CF03、CF11、CF13、CF23）。

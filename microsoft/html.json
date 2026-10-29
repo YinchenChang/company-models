@@ -127,52 +127,28 @@
      ],
      "rows": [
       [
-       "@In!B103",
-       "@In!D103|n0",
-       "@In!E103|n0",
-       "@In!F103|n0",
-       "@In!C103",
-       "@In!G103|tag"
+       "@In!B117",
+       "@In!D117|n0",
+       "@In!E117|n0",
+       "@In!F117|n0",
+       "@In!C117",
+       "@In!G117|tag"
       ],
       [
-       "@In!B108",
-       "@In!D108|n1",
-       "@In!E108|n1",
-       "@In!F108|n1",
-       "@In!C108",
-       "@In!G108|tag"
+       "@In!B122",
+       "@In!D122|n1",
+       "@In!E122|n1",
+       "@In!F122|n1",
+       "@In!C122",
+       "@In!G122|tag"
       ],
       [
-       "@In!B114",
-       "@In!D114|p0",
-       "@In!E114|p0",
-       "@In!F114|p0",
-       "@In!C114",
-       "@In!G114|tag"
-      ],
-      [
-       "@In!B115",
-       "@In!D115|p0",
-       "@In!E115|p0",
-       "@In!F115|p0",
-       "@In!C115",
-       "@In!G115|tag"
-      ],
-      [
-       "@In!B133",
-       "@In!D133|n3",
-       "@In!E133|n3",
-       "@In!F133|n3",
-       "@In!C133",
-       "@In!G133|tag"
-      ],
-      [
-       "@In!B129",
-       "@In!D129|p0",
-       "@In!E129|p0",
-       "@In!F129|p0",
-       "@In!C129",
-       "@In!G129|tag"
+       "@In!B130",
+       "@In!D130|p0",
+       "@In!E130|p0",
+       "@In!F130|p0",
+       "@In!C130",
+       "@In!G130|tag"
       ],
       [
        "@In!B131",
@@ -183,120 +159,134 @@
        "@In!G131|tag"
       ],
       [
-       "@In!B142",
-       "@In!D142|n0",
-       "@In!E142|n0",
-       "@In!F142|n0",
-       "@In!C142",
-       "@In!G142|tag"
+       "@In!B153",
+       "@In!D153|n3",
+       "@In!E153|n3",
+       "@In!F153|n3",
+       "@In!C153",
+       "@In!G153|tag"
       ],
       [
-       "@In!B143",
-       "@In!D143|n0",
-       "@In!E143|n0",
-       "@In!F143|n0",
-       "@In!C143",
-       "@In!G143|tag"
+       "@In!B149",
+       "@In!D149|p0",
+       "@In!E149|p0",
+       "@In!F149|p0",
+       "@In!C149",
+       "@In!G149|tag"
       ],
       [
-       "@In!B145",
-       "@In!D145|n0",
-       "@In!E145|n0",
-       "@In!F145|n0",
-       "@In!C145",
-       "@In!G145|tag"
+       "@In!B151",
+       "@In!D151|p0",
+       "@In!E151|p0",
+       "@In!F151|p0",
+       "@In!C151",
+       "@In!G151|tag"
       ],
       [
-       "@In!B138",
-       "@In!D138|n1",
-       "@In!E138|n1",
-       "@In!F138|n1",
-       "@In!C138",
-       "@In!G138|tag"
+       "@In!B162",
+       "@In!D162|n0",
+       "@In!E162|n0",
+       "@In!F162|n0",
+       "@In!C162",
+       "@In!G162|tag"
       ],
       [
-       "@In!B96",
-       "@In!D96|n0",
-       "@In!E96|n0",
-       "@In!F96|n0",
-       "@In!C96",
-       "@In!G96|tag"
+       "@In!B163",
+       "@In!D163|n0",
+       "@In!E163|n0",
+       "@In!F163|n0",
+       "@In!C163",
+       "@In!G163|tag"
       ],
       [
-       "@In!B152",
-       "@In!D152|p0",
-       "@In!E152|p0",
-       "@In!F152|p0",
-       "@In!C152",
-       "@In!G152|tag"
+       "@In!B165",
+       "@In!D165|n0",
+       "@In!E165|n0",
+       "@In!F165|n0",
+       "@In!C165",
+       "@In!G165|tag"
       ],
       [
-       "@In!B148",
-       "@In!D148|n0",
-       "@In!E148|n0",
-       "@In!F148|n0",
-       "@In!C148",
-       "@In!G148|tag"
+       "@In!B158",
+       "@In!D158|n1",
+       "@In!E158|n1",
+       "@In!F158|n1",
+       "@In!C158",
+       "@In!G158|tag"
       ],
       [
-       "@In!B39",
-       "@In!D39|n3",
-       "@In!E39|n3",
-       "@In!F39|n3",
-       "@In!C39",
-       "@In!G39|tag"
+       "@In!B110",
+       "@In!D110|n0",
+       "@In!E110|n0",
+       "@In!F110|n0",
+       "@In!C110",
+       "@In!G110|tag"
       ],
       [
-       "@In!B46",
-       "@In!D46|p2",
-       "@In!E46|p2",
-       "@In!F46|p2",
-       "@In!C46",
-       "@In!G46|tag"
+       "@In!B172",
+       "@In!D172|p0",
+       "@In!E172|p0",
+       "@In!F172|p0",
+       "@In!C172",
+       "@In!G172|tag"
       ],
       [
-       "@In!B47",
-       "@In!D47|p0",
-       "@In!E47|p0",
-       "@In!F47|p0",
-       "@In!C47",
-       "@In!G47|tag"
+       "@In!B168",
+       "@In!D168|n0",
+       "@In!E168|n0",
+       "@In!F168|n0",
+       "@In!C168",
+       "@In!G168|tag"
+      ],
+      [
+       "@In!B50",
+       "@In!D50|n3",
+       "@In!E50|n3",
+       "@In!F50|n3",
+       "@In!C50",
+       "@In!G50|tag"
+      ],
+      [
+       "@In!B57",
+       "@In!D57|p2",
+       "@In!E57|p2",
+       "@In!F57|p2",
+       "@In!C57",
+       "@In!G57|tag"
+      ],
+      [
+       "@In!B58",
+       "@In!D58|p0",
+       "@In!E58|p0",
+       "@In!F58|p0",
+       "@In!C58",
+       "@In!G58|tag"
       ]
      ]
     },
     {
      "type": "table",
-     "caption": "@Thesis!A53",
+     "caption": "@Thesis!A56",
      "head": [
-      "@Thesis!A54",
-      "@Thesis!B54",
-      "@Thesis!F54",
-      "@Thesis!G54",
-      "@Thesis!H54",
-      "@Thesis!I54",
-      "@Thesis!J54",
-      "@Thesis!K54"
+      "@Thesis!A57",
+      "@Thesis!B57",
+      "@Thesis!F57",
+      "@Thesis!G57",
+      "@Thesis!H57",
+      "@Thesis!I57",
+      "@Thesis!J57",
+      "@Thesis!K57"
      ],
      "rows": [
       [
-       "@Thesis!A56",
-       "@Thesis!B56",
-       "@Thesis!F56|n0",
-       "@Thesis!G56|n0",
-       "@Thesis!H56|n0",
-       "@Thesis!I56|n0",
-       "@Thesis!J56|n0",
-       "@Thesis!K56|n0"
-      ],
-      [
-       "@Thesis!A57",
-       "@Thesis!B57",
-       "@Thesis!F57|n0",
-       "@Thesis!G57|n0",
-       "@Thesis!H57|n0",
-       "@Thesis!I57|n0",
-       "@Thesis!J57|n0",
-       "@Thesis!K57|n0"
+       "@Thesis!A59",
+       "@Thesis!B59",
+       "@Thesis!F59|n0",
+       "@Thesis!G59|n0",
+       "@Thesis!H59|n0",
+       "@Thesis!I59|n0",
+       "@Thesis!J59|n0",
+       "@Thesis!K59|n0"
       ],
       [
        "@Thesis!A60",
@@ -309,64 +299,44 @@
        "@Thesis!K60|n0"
       ],
       [
-       "@Thesis!A71",
-       "@Thesis!B71",
-       "@Thesis!F71|n2",
-       "@Thesis!G71|n2",
-       "@Thesis!H71|n2",
-       "@Thesis!I71|n2",
-       "@Thesis!J71|n2",
-       "@Thesis!K71|n2"
+       "@Thesis!A63",
+       "@Thesis!B63",
+       "@Thesis!F63|n0",
+       "@Thesis!G63|n0",
+       "@Thesis!H63|n0",
+       "@Thesis!I63|n0",
+       "@Thesis!J63|n0",
+       "@Thesis!K63|n0"
       ],
       [
-       "@Thesis!A72",
-       "@Thesis!B72",
-       "@Thesis!F72|n1",
-       "@Thesis!G72|n1",
-       "@Thesis!H72|n1",
-       "@Thesis!I72|n1",
-       "@Thesis!J72|n1",
-       "@Thesis!K72|n1"
+       "@Thesis!A76",
+       "@Thesis!B76",
+       "@Thesis!F76|n2",
+       "@Thesis!G76|n2",
+       "@Thesis!H76|n2",
+       "@Thesis!I76|n2",
+       "@Thesis!J76|n2",
+       "@Thesis!K76|n2"
       ],
       [
-       "@Thesis!A86",
-       "@Thesis!B86",
-       "@Thesis!F86|n1",
-       "@Thesis!G86|n1",
-       "@Thesis!H86|n1",
-       "@Thesis!I86|n1",
-       "@Thesis!J86|n1",
-       "@Thesis!K86|n1"
+       "@Thesis!A77",
+       "@Thesis!B77",
+       "@Thesis!F77|n1",
+       "@Thesis!G77|n1",
+       "@Thesis!H77|n1",
+       "@Thesis!I77|n1",
+       "@Thesis!J77|n1",
+       "@Thesis!K77|n1"
       ],
       [
-       "@Thesis!A89",
-       "@Thesis!B89",
-       "@Thesis!F89|n1",
-       "@Thesis!G89|n1",
-       "@Thesis!H89|n1",
-       "@Thesis!I89|n1",
-       "@Thesis!J89|n1",
-       "@Thesis!K89|n1"
-      ],
-      [
-       "@Thesis!A93",
-       "@Thesis!B93",
-       "@Thesis!F93|n1",
-       "@Thesis!G93|n1",
-       "@Thesis!H93|n1",
-       "@Thesis!I93|n1",
-       "@Thesis!J93|n1",
-       "@Thesis!K93|n1"
-      ],
-      [
-       "@Thesis!A94",
-       "@Thesis!B94",
-       "@Thesis!F94|n1",
-       "@Thesis!G94|n1",
-       "@Thesis!H94|n1",
-       "@Thesis!I94|n1",
-       "@Thesis!J94|n1",
-       "@Thesis!K94|n1"
+       "@Thesis!A92",
+       "@Thesis!B92",
+       "@Thesis!F92|n1",
+       "@Thesis!G92|n1",
+       "@Thesis!H92|n1",
+       "@Thesis!I92|n1",
+       "@Thesis!J92|n1",
+       "@Thesis!K92|n1"
       ],
       [
        "@Thesis!A95",
@@ -379,44 +349,74 @@
        "@Thesis!K95|n1"
       ],
       [
-       "@Thesis!A96",
-       "@Thesis!B96",
-       "@Thesis!F96|p1",
-       "@Thesis!G96|p1",
-       "@Thesis!H96|p1",
-       "@Thesis!I96|p1",
-       "@Thesis!J96|p1",
-       "@Thesis!K96|p1"
-      ],
-      [
-       "@Thesis!A97",
-       "@Thesis!B97",
-       "@Thesis!F97|p1",
-       "@Thesis!G97|p1",
-       "@Thesis!H97|p1",
-       "@Thesis!I97|p1",
-       "@Thesis!J97|p1",
-       "@Thesis!K97|p1"
-      ],
-      [
        "@Thesis!A99",
        "@Thesis!B99",
-       "@Thesis!F99|p1",
-       "@Thesis!G99|p1",
-       "@Thesis!H99|p1",
-       "@Thesis!I99|p1",
-       "@Thesis!J99|p1",
-       "@Thesis!K99|p1"
+       "@Thesis!F99|n1",
+       "@Thesis!G99|n1",
+       "@Thesis!H99|n1",
+       "@Thesis!I99|n1",
+       "@Thesis!J99|n1",
+       "@Thesis!K99|n1"
       ],
       [
        "@Thesis!A100",
        "@Thesis!B100",
-       "@Thesis!F100|sp1",
-       "@Thesis!G100|sp1",
-       "@Thesis!H100|sp1",
-       "@Thesis!I100|sp1",
-       "@Thesis!J100|sp1",
-       "@Thesis!K100|sp1"
+       "@Thesis!F100|n1",
+       "@Thesis!G100|n1",
+       "@Thesis!H100|n1",
+       "@Thesis!I100|n1",
+       "@Thesis!J100|n1",
+       "@Thesis!K100|n1"
+      ],
+      [
+       "@Thesis!A101",
+       "@Thesis!B101",
+       "@Thesis!F101|n1",
+       "@Thesis!G101|n1",
+       "@Thesis!H101|n1",
+       "@Thesis!I101|n1",
+       "@Thesis!J101|n1",
+       "@Thesis!K101|n1"
+      ],
+      [
+       "@Thesis!A102",
+       "@Thesis!B102",
+       "@Thesis!F102|p1",
+       "@Thesis!G102|p1",
+       "@Thesis!H102|p1",
+       "@Thesis!I102|p1",
+       "@Thesis!J102|p1",
+       "@Thesis!K102|p1"
+      ],
+      [
+       "@Thesis!A103",
+       "@Thesis!B103",
+       "@Thesis!F103|p1",
+       "@Thesis!G103|p1",
+       "@Thesis!H103|p1",
+       "@Thesis!I103|p1",
+       "@Thesis!J103|p1",
+       "@Thesis!K103|p1"
+      ],
+      [
+       "@Thesis!A105",
+       "@Thesis!B105",
+       "@Thesis!F105|p1",
+       "@Thesis!G105|p1",
+       "@Thesis!H105|p1",
+       "@Thesis!I105|p1",
+       "@Thesis!J105|p1",
+       "@Thesis!K105|p1"
+      ],
+      [
+       "@Thesis!A106",
+       "@Thesis!B106",
+       "@Thesis!F106|sp1",
+       "@Thesis!G106|sp1",
+       "@Thesis!H106|sp1",
+       "@Thesis!I106|sp1",
+       "@Thesis!J106|sp1",
+       "@Thesis!K106|sp1"
       ]
      ]
     }
@@ -552,52 +552,52 @@
     },
     {
      "type": "pl",
-     "years": "@CF!F46:K46",
+     "years": "@CF!F47:K47",
      "metrics": [
       {
-       "name": "@CF!A60",
+       "name": "@CF!A62",
        "fmt": "n1",
        "rows": {
-        "A": "@CF!F29:K29",
-        "B": "@CF!F60:K60",
-        "C": "@CF!F91:K91"
+        "A": "@CF!F30:K30",
+        "B": "@CF!F62:K62",
+        "C": "@CF!F94:K94"
        },
        "chart": true
       },
       {
-       "name": "@CF!A57",
+       "name": "@CF!A59",
        "fmt": "n1",
        "rows": {
-        "A": "@CF!F26:K26",
-        "B": "@CF!F57:K57",
-        "C": "@CF!F88:K88"
-       }
-      },
-      {
-       "name": "@CF!A63",
-       "fmt": "n1",
-       "rows": {
-        "A": "@CF!F32:K32",
-        "B": "@CF!F63:K63",
-        "C": "@CF!F94:K94"
+        "A": "@CF!F27:K27",
+        "B": "@CF!F59:K59",
+        "C": "@CF!F91:K91"
        }
       },
       {
        "name": "@CF!A65",
        "fmt": "n1",
        "rows": {
-        "A": "@CF!F34:K34",
+        "A": "@CF!F33:K33",
         "B": "@CF!F65:K65",
-        "C": "@CF!F96:K96"
+        "C": "@CF!F97:K97"
        }
       },
       {
-       "name": "@Thesis!A96",
+       "name": "@CF!A67",
+       "fmt": "n1",
+       "rows": {
+        "A": "@CF!F35:K35",
+        "B": "@CF!F67:K67",
+        "C": "@CF!F99:K99"
+       }
+      },
+      {
+       "name": "@Thesis!A102",
        "fmt": "p1",
        "rows": {
-        "A": "@Thesis!F47:K47",
-        "B": "@Thesis!F96:K96",
-        "C": "@Thesis!F145:K145"
+        "A": "@Thesis!F50:K50",
+        "B": "@Thesis!F102:K102",
+        "C": "@Thesis!F154:K154"
        },
        "chart": true,
        "ymin": "auto"
@@ -921,7 +921,7 @@
      ],
      "rowgen": {
       "sheet": "Recon",
-      "rows": "4-44",
+      "rows": "4-80",
       "cols": [
        "A",
        "B",
@@ -939,12 +939,12 @@
        ""
       ],
       "row_fmt": {
-       "11": {
+       "5": {
         "B": "n2",
         "C": "n2",
         "D": "n2"
        },
-       "12": {
+       "6": {
         "B": "n2",
         "C": "n2",
         "D": "n2"
@@ -954,12 +954,22 @@
         "C": "n2",
         "D": "n2"
        },
-       "21": {
+       "14": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "15": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "23": {
         "B": "p1",
         "C": "p1",
         "D": "p1"
        },
-       "22": {
+       "25": {
         "B": "p1",
         "C": "p1",
         "D": "p1"
@@ -969,7 +979,77 @@
         "C": "p1",
         "D": "p1"
        },
-       "44": {
+       "27": {
+        "B": "p1",
+        "C": "p1",
+        "D": "p1"
+       },
+       "28": {
+        "B": "p1",
+        "C": "p1",
+        "D": "p1"
+       },
+       "29": {
+        "B": "p1",
+        "C": "p1",
+        "D": "p1"
+       },
+       "30": {
+        "B": "p1",
+        "C": "p1",
+        "D": "p1"
+       },
+       "34": {
+        "B": "p1",
+        "C": "p1",
+        "D": "p1"
+       },
+       "47": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "48": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "49": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "50": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "51": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "52": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "53": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "54": {
+        "B": "n2",
+        "C": "n2",
+        "D": "n2"
+       },
+       "55": {
+        "B": "n3",
+        "C": "n3",
+        "D": "n3"
+       },
+       "80": {
         "B": "n3",
         "C": "n3",
         "D": "n3"
@@ -1080,11 +1160,11 @@
        "@Q!M24|n3"
       ],
       [
-       "@Q!A44",
-       "@Q!J44|n3",
-       "@Q!K44|n3",
-       "@Q!L44|n3",
-       "@Q!M44|n3"
+       "@Q!A45",
+       "@Q!J45|n3",
+       "@Q!K45|n3",
+       "@Q!L45|n3",
+       "@Q!M45|n3"
       ]
      ]
     }
@@ -1099,7 +1179,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準的變動（一次動一個驅動；三情境全部重算）",
      "sheet": "Sens",
-     "rows": "4-33",
+     "rows": "4-35",
      "label_col": "A",
      "value_col": "E",
      "fmt": "sp1"
@@ -1118,7 +1198,7 @@
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "4-33",
+      "rows": "4-35",
       "cols": [
        "A",
        "B",
@@ -1139,17 +1219,17 @@
     },
     {
      "type": "table",
-     "caption": "@Sens!A35",
+     "caption": "@Sens!A37",
      "head": [
-      "@Sens!A36",
-      "@Sens!B36",
-      "@Sens!C36",
-      "@Sens!D36",
-      "@Sens!E36"
+      "@Sens!A38",
+      "@Sens!B38",
+      "@Sens!C38",
+      "@Sens!D38",
+      "@Sens!E38"
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "37-50",
+      "rows": "39-57",
       "cols": [
        "A",
        "B",
@@ -1194,7 +1274,7 @@
       ],
       [
        "Tokenomics 快照版本",
-       "@In!H82"
+       "@In!H96"
       ],
       [
        "資料截止",

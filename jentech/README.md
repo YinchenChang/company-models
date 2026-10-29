@@ -8,6 +8,11 @@
 
 **投資建議：放空**（依上檔空間固定規則；加權目標價 NT$3,903，上檔空間 −35.7%，級距 −25%～−50%）。
 
+## v0.1.2（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 加權目標價 NT$3,903，上檔空間 −35.7%（級距 −25%～−50%），主因是倍數而非 EPS：本模型 12 個月後前瞻 EPS 176.8 元比共識前瞻 EPS 107.7 元高 64%（EPS 因素 +64%），但同業前瞻 P/E 中位數只有 25.8x（奇鋐 27.0x、雙鴻 17.3x、Vertiv 24.5x、台達電 30.5x），市場共識目標價 7,204 元隱含 66.9x（倍數因素 +159%）；Comparable 未給健策均熱片寡占溢價，DCF（3,247 元，ROE 24% 使再投資率 16%）也低於 Comparable（4,558 元）。
@@ -19,9 +24,9 @@ AI 半導體 Project 電源與散熱次產業，樣板＝`avc/`（奇鋐）；Va
 | 檔案 | 內容 |
 |---|---|
 | `build_jentech.py` | 產生器（參數與公式；唯讀取用上游成品） |
-| `dist/20261025_健策模型_v0.1.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；重建逐格一致） |
+| `dist/20261028_健策個股模型_v0.1.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；重建逐格一致） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_健策模型_v0.1.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；檢核全過） |
+| `dist/20261028_健策個股模型_v0.1.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；檢核全過） |
 
 建置：`python3 jentech/build_jentech.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/network/dist`（Units 頁加速器顆數）、`tsmc/dist`（情境顆數係數）、`avc/dist`（PL 頁同字母情境的 AI 液冷市場與奇鋐份額）；**不修改它們**。`auras/`（雙鴻）未在 main，依工作單讀奇鋐模型的液冷市場口徑。
 

@@ -121,7 +121,7 @@ inp("a_eps", "FY2025 基本 EPS（分割後換算＝228.16 ÷ 2）", "¥", None,
 
 sec("G. 價格與市場資料（只作 Val、Recon 對照）")
 inp("px", "股價（2026-10-23 收盤，分割後）", "¥", None, 8512, None, "Interested-party", "markets/invest_map/data/prices.csv：株探、松井證券（兩來源核對；v0.2 更新）", "v0.1.1 為 10-16 收盤 9,764（stockanalysis）；前瞻 P/E 隱含 EPS 仍以 9,764 計（In 頁 cons_feps）")
-inp("pe_fwd_sa", "前瞻 P/E（stockanalysis）", "x", None, 53.97, None, "Interested-party", "stockanalysis（口徑：未來 12 個月共識，頁面未明示）", "第二來源：未找到")
+inp("pe_fwd_sa", "前瞻 P/E（stockanalysis）", "x", None, 53.97, None, "Interested-party", "stockanalysis 2026-10-16 取值（股價 9,764；口徑：未來 12 個月共識，頁面未明示；隨股價每日變動）", "第二來源：未找到")
 inp("pe_ttm", "近 12 月 P/E", "x", None, 83.85, None, "Interested-party", "stockanalysis", "—")
 inp("pe_fair_andy", "Andy 先驗：合理 P/E", "x", None, 25, None, "Assumed", "先驗_Andy_Ibiden_20261024 I10b（Drive；不在本 repo）", "只作對照")
 inp("tgt30_rev", "公司 FY2030 目標營收", "¥B", None, 1000, None, "Interested-party", "Quartr FY2025 摘要（AI 摘要；營收數字有誤處未採用）", "第二來源：未找到")

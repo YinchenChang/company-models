@@ -1,0 +1,13 @@
+{
+ "company": "King Yuan Electronics",
+ "ticker": "2449.TW",
+ "model_sheet": "Q",
+ "official_segments": [
+  {"name": "營運部門（測試服務為主）", "label": "營運部門營收（測試服務約 97%）2025Q3", "period": "2025Q3", "value": 9.2905, "unit": "NT$B", "source": "公司 4Q25 Investor update"}
+ ],
+ "sublines": [
+  {"parent": "營運部門（測試服務為主）", "labels": ["成品測試", "晶圓測試", "預燒", "封裝及其他"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收"],
+ "note": "測試類別比重取自 3Q25 法說（年度金額未取得）；推估年以 AI 加速器測試／非 AI 拆分。"
+}

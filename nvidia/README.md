@@ -6,6 +6,11 @@ NVIDIA 的營收＝加速器顆數 × 每顆售價＋網通附掛。2027 年 ASI
 
 **投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 +19.4%，落在 −25%～+25%）。
 
+## v0.2.2（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 目標價 US$252（DCF 235、Comparable 269 各半），比現價 210.96（2026-10-23）高 19.4%，級距 0%–25%；Comparable 單獨為 +27.4%。上檔來自倍數不是 EPS：本模型 FY2028 EPS（情境加權）14.73 比共識 15.91 低 7.4%，但現價只有共識 FY2028 EPS 的 13.3 倍，低於同業（AMD、Broadcom、Marvell、台積電 ADR、Qualcomm）前瞻 P/E 中位數 19.6 倍；共識目標價 328.95 隱含 20.7 倍，與同業只差 5.4%。
@@ -21,9 +26,9 @@ AI 半導體 Project **運算層的第一個樣板**（之後 AVGO、AMD 複製�
 | `build_nvidia.py` | 產生器（參數與公式；唯讀取用上游成品） |
 | `accel_share.py` | 加速器金額份額的可重用函式（同一份顆數 × 各平台每顆價 → 各家金額與份額）；本 PR 只建在 `nvidia/` 內，之後 AVGO、AMD 模型匯入使用 |
 | `tp_v2.py` | v0.2 目標價與延伸期的共用函式（PL 延伸到 FY2032 的收斂法、Val 第 0 節 DCF＋Comparable、Sens 目標價參數；各公司資料夾各放一份相同內容） |
-| `dist/20261025_NVIDIA模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
+| `dist/20261028_NVIDIA個股模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格；CI 逐格比對） |
 | `html.json` | HTML 展示層設定（七章；格式見 `tools/company_html/README.md`） |
-| `dist/20261025_NVIDIA模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
+| `dist/20261028_NVIDIA個股模型_v0.2.2.html` | HTML 展示層（單頁自含；數字全由 xlsx 重算值抽出；CI 檢核） |
 
 建置：`python3 nvidia/build_nvidia.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表：README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/memory/market.py`、`markets/chip_bridge/dist`、`markets/network/dist`、`markets/equipment/dist`、`skhynix/dist`、`tsmc/dist`；**不修改它們**。共用工具只新增 `tools/cycle_position.py` 的 `classify_lag`／`excel_rule_lag` 兩個函式，設備股既有函式與行為不變。
 

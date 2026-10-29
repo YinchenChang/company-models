@@ -1,0 +1,51 @@
+{
+ "company": "AMD",
+ "ticker": "AMD",
+ "model_sheet": "Q",
+ "official_segments": [
+  {
+   "name": "Data Center",
+   "label": "Data Center",
+   "period": "Q1 2025",
+   "value": 3.674,
+   "unit": "US$B",
+   "source": "AMD 8-K 季度財報（Q 頁）"
+  },
+  {
+   "name": "Client",
+   "label": "Client",
+   "period": "Q1 2025",
+   "value": 2.294,
+   "unit": "US$B",
+   "source": "AMD 8-K 季度財報（Q 頁）"
+  },
+  {
+   "name": "Gaming",
+   "label": "Gaming",
+   "period": "Q1 2025",
+   "value": 0.647,
+   "unit": "US$B",
+   "source": "AMD 8-K 季度財報（Q 頁）"
+  },
+  {
+   "name": "Embedded",
+   "label": "Embedded",
+   "period": "Q1 2025",
+   "value": 0.823,
+   "unit": "US$B",
+   "source": "AMD 8-K 季度財報（Q 頁）"
+  }
+ ],
+ "sublines": [
+  {
+   "parent": "Data Center",
+   "labels": [
+    "其中：資料中心 GPU（Instinct；Assumed 拆分）",
+    "其中：資料中心非 GPU（EPYC CPU、DPU、FPGA 等）"
+   ]
+  }
+ ],
+ "check_labels": [
+  "檢查：營收 − 各段合計（應為 0）"
+ ]
+}

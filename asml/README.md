@@ -4,6 +4,11 @@ ASML 是 EUV 唯一供應者，營收由晶圓廠的微影設備支出與裝機�
 
 **投資建議：中立**（依上檔空間固定規則：加權目標價上檔空間 −19.9%，落在 −25%～+25%）。
 
+## v0.2.2（2026-10-28）：分部原則重建（數值不變）
+
+- Q 頁最後追加核對列「檢查：分部合計 − 合併營收」（共用工具 `tools/segment_check/addrow.py`；不位移既有列）。官方分部與子列宣告見 `segments.json`。
+- EPS、目標價、投資建議與前版相同。
+
 ## 重點觀察
 
 1. 目標價 €1,126（DCF 837、Comparable 1,416 各半），比現價 1,407.2（2026-10-23）低 19.9%，級距 0%～−25%；Comparable 單獨為 +0.6%。差距來自 DCF（比現價低 40.5%）：情境 B、C 的 EPS 在 FY2028–29 後依收斂法持平或下滑（B 的 FY2032 EPS 50.29 低於 FY2027 的 52.64），不是 ROE（近三年 56.1%，遠高於折現率 10%）；本模型前瞻 EPS 54.95 只比共識 55.93 低 1.7%，共識目標價 2,108 隱含 37.7 倍、同業前瞻 P/E 中位數 25.8 倍，EUV 獨占溢價 Comparable 未計入。
@@ -17,9 +22,9 @@ AI 半導體 Project 步驟 5（設備與材料）。獨立的 Python→Excel �
 | 檔案 | 內容 |
 |---|---|
 | `build_asml.py` | 產生器（參數與公式） |
-| `dist/20261025_ASML模型_v0.2.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261028_ASML個股模型_v0.2.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 | `html.json` | HTML 展示層設定（格式見 `tools/company_html/README.md`） |
-| `dist/20261025_ASML模型_v0.2.1.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
+| `dist/20261028_ASML個股模型_v0.2.2.html` | HTML 展示層（單頁自含；數字全部由 xlsx 重算值抽出） |
 
 建置：`python3 asml/build_asml.py raw.xlsx`，再執行 `soffice --headless --calc --convert-to xlsx --outdir dist raw.xlsx`。工作表依序是 README、In、Q、Units、PL、Val、Recon、Sens、Sources。唯讀取用 `markets/equipment/dist`（晶圓前段設備三情境分項、各情境見頂年度、SEMI WFE）與 `tools/cycle_position.py`；不修改它們。算力假設不自行重估，只經由設備市場模型間接使用。
 
