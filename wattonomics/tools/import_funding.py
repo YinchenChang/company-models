@@ -7,7 +7,7 @@ import csv, json, os, re
 
 WT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW = os.path.join(WT, "evidence_raw")
-OUT = os.path.join(WT, "builder", "seed", "funding_v0.1.3.json")
+OUT = os.path.join(WT, "builder", "seed", "funding_v0.1.4.json")
 
 
 def rng(s):
