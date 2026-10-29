@@ -41,7 +41,7 @@ print(f"核對列：{n_chk} 列（Q、Seg、PL、CF、Val；含三情境）")
 cf = wb["CF"]
 V = wb["Val"]
 need = ["目標價（DCF 與 Comparable 加權）", "上檔空間：加權目標價", "投資建議", "上檔空間級距", "DCF 目標價（情境加權）", "Comparable 目標價（市場主流同業法）",
-        "價格帶（DCF 不如預期～順利）", "現價（2026-10-26 收盤）", "市場共識目標價"]
+        "價格帶（DCF 不如預期～順利）", "現價（2026-10-28 收盤）", "市場共識目標價"]
 labs = {V.cell(r, 1).value: r for r in range(1, V.max_row + 1)}
 for n in need:
     if n not in labs: fail.append(f"Val 缺列「{n}」")

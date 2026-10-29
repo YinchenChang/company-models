@@ -45,7 +45,7 @@
     },
     {
      "type": "h3",
-     "text": "與舊版（收支模型）的差異"
+     "text": "與上一版的差異（季度滾動）"
     },
     {
      "type": "list",
@@ -934,7 +934,7 @@
      ],
      "rowgen": {
       "sheet": "Recon",
-      "rows": "41-48",
+      "rows": "41-51",
       "cols": [
        "A",
        "B",
@@ -958,7 +958,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準的變動（一次改一個輸入，整本重算）",
      "sheet": "Sens",
-     "rows": "4-48",
+     "rows": "4-55",
      "label_col": "A",
      "value_col": "E",
      "fmt": "sp1"
@@ -976,7 +976,7 @@
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "4-48",
+      "rows": "4-55",
       "cols": [
        "A",
        "B",
@@ -997,12 +997,12 @@
      "type": "kv",
      "items": [
       [
-       "@Sens!A50",
-       "@Sens!D50|n2"
+       "@Sens!A57",
+       "@Sens!D57|n2"
       ],
       [
-       "@Sens!A51",
-       "@Sens!D51|n2"
+       "@Sens!A58",
+       "@Sens!D58|n2"
       ]
      ]
     }
@@ -1034,7 +1034,7 @@
       ],
       [
        "Tokenomics 快照",
-       "@Sources!B11"
+       "@Sources!B12"
       ]
      ]
     },
