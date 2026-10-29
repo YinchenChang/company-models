@@ -31,3 +31,10 @@ echo siliconomics_snapshot_vX.Y.json > siliconomics/data/CURRENT_SNAPSHOT
 - 下游只讀 Interface 的 `SIF_` 名稱（經快照）；不得連結 In、Mkt 等內部頁。
 - Tokenomics 權威的量（每 GW 顆數、機架數、機架價、功率、每 GW 資本支出、NonNV 比例、產業部署路徑）只在 `TK_In` 頁鏡像；Tokenomics 升版時重抽快照、重建，Checks K3 列出下游仍用舊版的格數。
 - 本 repo 為公開 repo：不得放 Andy 的個人情境、先驗或校準紀錄。
+
+## 網頁版（展示層）
+
+- 線上版：https://yinchenchang.github.io/company-models/siliconomics/ （GitHub Pages，公司內可直接開啟；Andy 2026-10-30 要求，比照 AI 投資地圖）。
+- 產生：`python3 siliconomics/tools/build_html.py <輸出.html>`（讀 `model/CURRENT`）；`markets/invest_map/publish_pages.sh` 發布時自動產生，不在 repo 另存 HTML。數字全部取自重算後的 xlsx，程式不做計算；每格 title 標註來源儲存格。
+- Siliconomics 升版合併後，重跑 `publish_pages.sh` 即更新線上版。
+
