@@ -93,8 +93,12 @@ def main():
     if prev:
         ws = openpyxl.load_workbook(prev, data_only=True)["目標價總表"]
         hd = [c.value for c in ws[2]]
-        ix = (lambda n, d: hd.index(n) if n in hd else d)
-        iu, ir, iff = ix("上檔空間：加權", 9), ix("投資建議（固定規則）", 15), ix("模型檔案", 22)
+        need = ("上檔空間：加權", "投資建議（固定規則）", "模型檔案")
+        if all(n in hd for n in need):
+            iu, ir, iff = (hd.index(n) for n in need)
+        else:   # v0.2.3 手工版的固定欄位；其他版面直接報錯，不靜默讀錯欄
+            assert len(hd) < 30, f"--prev 表頭無法辨識：{hd}"
+            iu, ir, iff = 9, 15, 22
         for r in ws.iter_rows(min_row=3, values_only=True):
             if r[1]:
                 P[r[1]] = {"up": r[iu], "rec": r[ir], "file": r[iff]}
@@ -242,11 +246,6 @@ def main():
     rm["A1"] = ("相對倍數調整試算（只作參考，未進目標價）：Comparable 目標倍數＝同業中位數 × 本公司 10 年中位數 ÷ 同業 10 年中位數的中位數，"
                 f"夾在 [{RM.RM_LO}, {RM.RM_HI}]；有效年數 < {RM.MIN_YEARS} 或有效同業 < {RM.MIN_PEERS} 時係數＝1。")
     rm["A1"].font = BOLD
-    rm["A2"] = (f"{VDATE} 改用 Bloomberg 前瞻倍數（BEST_PE_RATIO／記憶體 BEST_PX_BPS_RATIO，BF＝未來 12 個月；2015-12～2026-10 月底資料，Andy 10-29 取回）："
-                "每年窗口（前一年 11 月～當年 10 月）取月值中位數，再取 2017–2026 十個窗口的中位數。口徑與 Comparable（現在的同業前瞻倍數）一致，"
-                "10-27 落後 P/E 試算的谷底年度雜訊已排除。敏感度：近 5 年窗（2022–2026、門檻 4 年）與 10 年窗的投資建議 54 檔中 42 檔相同；"
-                "兩種窗口都翻轉的 14 檔可視為穩健訊號，只有一種窗口翻轉者見 R 欄起。仍未進目標價：接入各建檔程式待 repo 寫入權限。")
-    rm["A2"].alignment = Alignment(wrap_text=True)
     H3 = ["公司", "市場", "代號", "倍數", "本公司 10 年中位數", "本公司有效年數", "納入同業家數", "同業 10 年中位數的中位數", "原始比值", "係數",
           "上檔空間：加權（模型）", "上檔空間：加權（試算）", "投資建議（模型）", "投資建議（試算）", "是否翻轉", "同業（有效年數）",
           "敏感度：近 5 年窗係數", "敏感度：近 5 年窗投資建議", "兩種窗口是否都翻轉", "對照：10-27 落後代理係數"]
@@ -255,6 +254,7 @@ def main():
         c.font = BOLD
         c.fill = HDR
     hist = RM.load()
+    TR = []
     hist_old = RM.load(os.path.join(ROOT, "tools", "data", "rel_mult_hist.csv"))
     peers_by = {}
     pf = os.path.join(HERE, "peers.csv")
@@ -277,6 +277,7 @@ def main():
         so = RM.summary(r["own_ticker"], peers_by.get(r["folder"], []), met, hist_old)
         RM.YEARS = y0
         f10, f5 = rec(r["up"]) != rec(new_up), rec(r["up"]) != rec(up5)
+        TR.append((rec(r["up"]), rec(new_up), rec(up5)))
         vals = [r["公司"], r["市場"], r["own_ticker"], "P/B" if met == "PB" else "P/E", s["own_med"], s["own_n"], s["n_peers"], s["peer_med"],
                 s["raw"], s["factor"], r["up"], new_up, rec(r["up"]), rec(new_up), "是" if f10 else "否", "、".join(pinfo),
                 s5["factor"], rec(up5), "是" if (f10 and f5) else ("只有一種" if (f10 or f5) else "否"), so["factor"]]
@@ -288,6 +289,21 @@ def main():
                 c.number_format = "0.0%"
             if j == 15 and v == "是":
                 c.fill = KEY
+    ORD = ["強力放空", "放空", "中立", "買進", "強力買進"]
+    n = len(TR)
+    f10 = sum(1 for a, b, c in TR if b != a)
+    f5 = sum(1 for a, b, c in TR if c != a)
+    both = [(a, b, c) for a, b, c in TR if b != a and c != a]
+    same_dir = sum(1 for a, b, c in both if (ORD.index(b) - ORD.index(a)) * (ORD.index(c) - ORD.index(a)) > 0)
+    same_rec = sum(1 for a, b, c in both if b == c)
+    agree = sum(1 for a, b, c in TR if b == c)
+    rm["A2"] = (f"{VDATE} 改用 Bloomberg 前瞻倍數（BEST_PE_RATIO／記憶體 BEST_PX_BPS_RATIO，BF＝未來 12 個月；2015-12 起月底資料，"
+                "最後一點為抓取當日的最新值、非 10 月月底）：每年窗口（前一年 11 月～當年 10 月）取月值中位數，再取 2017–2026 十個窗口的中位數。"
+                "口徑與 Comparable（現在的同業前瞻倍數）一致，10-27 落後 P/E 試算的谷底年度雜訊已排除。"
+                f"結果：10 年窗翻轉 {f10} 檔、近 5 年窗（2022–2026、門檻 4 年）翻轉 {f5} 檔；兩種窗口都翻轉 {len(both)} 檔，"
+                f"其中方向相同 {same_dir} 檔、翻到同一評等 {same_rec} 檔（其餘只差一級）；兩種窗口評等相同 {agree}／{n} 檔。"
+                "敏感度在 Q–T 欄（S 欄＝兩種窗口是否都翻轉）。尚未進目標價（下一步：接入各建檔程式）。")
+    rm["A2"].alignment = Alignment(wrap_text=True)
     rm.column_dimensions["A"].width = 14
     rm.column_dimensions["P"].width = 70
 
