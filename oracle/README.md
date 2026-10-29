@@ -1,4 +1,6 @@
-# Oracle（ORCL）個股模型 v0.4（命題＋營收分部架構）
+# Oracle（ORCL）個股模型 v0.4.1（命題＋營收分部架構）
+
+**v0.4.1（2026-10-29，呈現修正，數值不變）：** In 頁欄名改「敏感度低／高」、頁尾加「L. 情境驅動對照」（併網速度、合約容量上限、建設延誤、情境權重，A／B／C 三欄並排）；HTML 驅動因子一節新增情境驅動表。規格：個股模型原則第 8 節；核對 `tools/in_layout/check_in_layout.py`。與 v0.4 逐格比對只有 In 頁 A1、D3、F3 與新增一節不同；v0.4 成品移 `dist/_待刪除/`。
 
 **命題（一句話）**：OCI 已簽約的 backlog（RPO 約 6,640 億美元，約一半來自 OpenAI／Stargate）能否以高於資金成本的報酬轉成營收與現金，同時不把資產負債表撐破。
 
@@ -25,8 +27,8 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_oracle.py` | 獨立 Python → Excel 產生器（openpyxl，全部活公式；藍字輸入、黑字公式） |
-| `dist/20261027_Oracle個股模型_v0.4.xlsx` | LibreOffice headless 重算後的成品（公式錯誤 0） |
-| `dist/20261027_Oracle個股模型_v0.4.html`、`html.json` | `tools/company_html/build_company_html.py oracle` 產生；`check_company_html.py` 通過 |
+| `dist/20261029_Oracle個股模型_v0.4.1.xlsx` | LibreOffice headless 重算後的成品（公式錯誤 0） |
+| `dist/20261029_Oracle個股模型_v0.4.1.html`、`html.json` | `tools/company_html/build_company_html.py oracle` 產生；`check_company_html.py` 通過 |
 | `segments.json` | 官方分部宣告；`tools/segment_check/check_segments.py oracle` 通過 |
 | `scripts/sens_v04.py` | 敏感度：一次動一個輸入，完整重算（寫 `data/sens_v04.json`，再建置時寫入 Sens 頁） |
 | `scripts/make_html_json.py` | 由建置列號對照產生 `html.json` |
@@ -40,7 +42,8 @@
 python3 oracle/scripts/sens_v04.py --jobs 6          # 敏感度（有改公式或輸入時才需重跑）
 ORCL_ROWMAP=/tmp/rowmap.json python3 oracle/build_oracle.py /tmp/raw.xlsx
 soffice --headless --calc --convert-to xlsx --outdir /tmp/out /tmp/raw.xlsx
-cp /tmp/out/raw.xlsx oracle/dist/20261027_Oracle個股模型_v0.4.xlsx
+cp /tmp/out/raw.xlsx oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx
+python3 tools/in_layout/check_in_layout.py oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx
 python3 oracle/scripts/make_html_json.py /tmp/rowmap.json
 python3 tools/company_html/build_company_html.py oracle && python3 tools/company_html/check_company_html.py oracle
 python3 tools/segment_check/check_segments.py oracle

@@ -1,4 +1,4 @@
-# Oracle（ORCL）個股模型 v0.4（命題＋營收分部架構；docs/plan/個股模型原則_命題加營收分部.md）
+# Oracle（ORCL）個股模型 v0.4.1（v0.4.1＝v0.4＋In 頁情境驅動對照，數值不變；命題＋營收分部架構；docs/plan/個股模型原則_命題加營收分部.md）
 # 用法：python3 oracle/build_oracle.py raw.xlsx ；再以 LibreOffice headless 重算：
 #   soffice --headless --calc --convert-to xlsx --outdir oracle/dist raw.xlsx
 # 會計年度 FY(t)＝t−1 年 6 月～t 年 5 月（FY2027＝2026-06～2027-05）。金額：十億美元（US$B），MW 為 IT 口徑（MW-IT）。
@@ -47,9 +47,9 @@ def tkv(name, g):
 # In
 # =====================================================================================
 IN = wb.active; IN.title = "In"
-IN["A1"] = "In — 輸入（藍字＝輸入；黑字＝公式；基準欄 E，低 D、高 F）。金額：十億美元（US$B）；MW＝IT 口徑（MW-IT）；每 MW 金額：百萬美元／MW·年（＝US$B／GW·年）"
+IN["A1"] = "In — 輸入（藍字＝輸入；黑字＝公式；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」〔v0.4.1〕）。金額：十億美元（US$B）；MW＝IT 口徑（MW-IT）；每 MW 金額：百萬美元／MW·年（＝US$B／GW·年）"
 IN["A2"] = "標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy、Assumed 給低／高區間。SemiAnalysis 未使用。「沿用 v0.3.1」＝沿用 oracle/legacy_v0.3 舊引擎 company.json 已核准的參數（原出處見來源欄）"
-hdr(IN, 3, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源1", "來源2／說明"])
+hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源1", "來源2／說明"])
 rows = []; sec = lambda t: rows.append(("sec", t)); inp = lambda *a: rows.append(a)
 PR_Q1 = "Oracle Q1 FY27 財報新聞稿（8-K 2026-09-10 附件 99.1）"
 K10 = "Oracle FY2026 10-K（2026-06-22；附註 13 分部）"
@@ -225,6 +225,7 @@ inp("oai_annual", "Oracle–OpenAI 合約年額（約 $300bn ÷ 5 年）", "US$B
 inp("tp_v031", "v0.3.1 基準目標價（加權）", "US$", 77.4, 84.2, 91.9, "Derived", "oracle/legacy_v0.3 交接檔 v0.3.1：保守 77.4／基準 84.2／積極 91.9（賣出）", "Recon v0.4 vs v0.3.1")
 
 base_vals = {}
+IR_O = {}
 r = 4
 for srow in rows:
     if srow[0] == "sec":
@@ -246,6 +247,21 @@ for srow in rows:
     if hi is not None: dn(key + "_hi", f"In!$F${r}")
     if key in ("w_dcf", "wA", "wB", "wC"):
         for c in range(1, 10): IN.cell(r, c).fill = KEY
+    IR_O[key] = r
+    r += 1
+# v0.4.1：情境驅動對照（規格 docs/plan/個股模型原則_命題加營收分部.md 第 8 節；只引用上方各列）
+r += 1
+IN.cell(r, 1, "L. 情境驅動對照（三情境並排，進主模型的加權目標價；本節只引用上方各列，修改請改上方藍字。上方「敏感度低／高」欄只用於 Sens 頁，不進目標價）").font = BOLD; r += 1
+hdr(IN, r, ["鍵", "項目", "單位", "情境 A（樂觀）", "情境 B（基準）", "情境 C（保守）", "標記", "說明"]); r += 1
+for key, item, unit, ks, fmt, note in (
+        ("scn_pace", "併網速度", "MW-IT／年", ("pace_A", "pace_B", "pace_C"), "#,##0", "C 的合約容量上限與速度同時下修"),
+        ("scn_cap", "合約容量上限（已簽站點）", "MW-IT", ("cap_A", "cap_B", "cap_C"), "#,##0", "—"),
+        ("scn_delay", "建設延誤（計費路徑後移月數）", "月", ("delay_A", "delay_B", "delay_C"), "0", "—"),
+        ("scn_w", "情境權重", "%", ("wA", "wB", "wC"), "0%", "[判斷] 黃底，Andy 可改")):
+    IN.cell(r, 1, key); IN.cell(r, 2, item); IN.cell(r, 3, unit)
+    for j, k_ in zip((4, 5, 6), ks):
+        IN.cell(r, j, f"=E{IR_O[k_]}").number_format = fmt
+    IN.cell(r, 7, "Derived"); IN.cell(r, 8, "引用 In 頁 " + "／".join(ks) + "；" + note)
     r += 1
 for col, w in zip("ABCDEFGHI", [14, 60, 12, 10, 11, 10, 18, 80, 70]): IN.column_dimensions[col].width = w
 IN.freeze_panes = "D4"

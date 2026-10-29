@@ -10,4 +10,5 @@ MAG＝三大雲的母公司（Microsoft、Amazon、Alphabet），以整家公司
 - In 頁 D／F 欄名為「敏感度低」「敏感度高」：只用於 Sens 頁（一次動一個參數），**不進目標價**；主模型只用 E 欄「基準」。
 - 情境 A／B／C 的驅動（MSFT：長約占比、k、Copilot 淨增；GOOGL：Search 查詢分流、每次查詢變現；AMZN 依其命題）與情境權重，集中在 In 頁最後一節「J. 情境驅動對照」：D／E／F＝情境 A／B／C 三欄並排，只引用上方各列（修改改上方藍字），權重列鍵 `scn_w`。
 - HTML「驅動因子」一節分兩張表：「情境驅動（三情境並排，進加權目標價）」與「單一參數區間（敏感度低／基準／敏感度高；只用於敏感度頁）」，不混放。
-- 核對程式 `mag/check_in_layout.py <xlsx>`，各家 `make_v03.sh` 必跑。
+- 核對程式 `mag/check_in_layout.py <xlsx>`（轉呼叫全 repo 共用的 `tools/in_layout/check_in_layout.py`），各家 `make_v03.sh` 必跑。
+- 2026-10-29 15:03 起本規格升為全 repo 個股模型原則第 8 節（`docs/plan/個股模型原則_命題加營收分部.md`），以該節為準。
