@@ -21,6 +21,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 import relative_multiple as RM  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+VER, VDATE = "v0.2.5", "2026-10-29"   # 每次升版改這裡
 BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -91,9 +92,16 @@ def main():
     P = {}
     if prev:
         ws = openpyxl.load_workbook(prev, data_only=True)["目標價總表"]
+        hd = [c.value for c in ws[2]]
+        need = ("上檔空間：加權", "投資建議（固定規則）", "模型檔案")
+        if all(n in hd for n in need):
+            iu, ir, iff = (hd.index(n) for n in need)
+        else:   # v0.2.3 手工版的固定欄位；其他版面直接報錯，不靜默讀錯欄
+            assert len(hd) < 30, f"--prev 表頭無法辨識：{hd}"
+            iu, ir, iff = 9, 15, 22
         for r in ws.iter_rows(min_row=3, values_only=True):
             if r[1]:
-                P[r[1]] = {"up": r[9], "rec": r[15], "file": r[22]}
+                P[r[1]] = {"up": r[iu], "rec": r[ir], "file": r[iff]}
     rows = []
     for u in U:
         m = read_model(u["folder"])
@@ -106,13 +114,13 @@ def main():
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "目標價總表"
-    ws["A1"] = ("AI半導體 目標價總表 v0.2.4（2026-10-27；DCF 50%＋Comparable 50%；數字取自 company-models main 各模型 dist 的 Val 頁，"
+    ws["A1"] = (f"AI半導體 目標價總表 {VER}（{VDATE}；DCF 50%＋Comparable 50%；數字取自 company-models main 各模型 dist 的 Val 頁，"
                 "重點觀察取自 README 頁；由 tools/target_summary/build_summary.py 產生）")
     ws["A1"].font = BOLD
     H = ["次產業", "公司", "代號", "市場", "幣別", "現價", "DCF 目標價", "Comparable 目標價", "加權目標價", "市場共識目標價",
          "上檔空間：加權", "上檔空間：Comparable", "上檔空間：市場共識", "加權 ÷ 共識 − 1", "DCF ÷ 現價",
          "上檔空間級距（六級）", "投資建議（固定規則）", "模型 Val 頁投資建議", "級距與建議一致",
-         "前版（v0.2.3）上檔空間：加權", "前版投資建議", "與前版相比",
+         "前版上檔空間：加權", "前版投資建議", "與前版相比",
          "本模型前瞻 EPS ÷ 共識前瞻 EPS − 1", "穩健度：共識 EPS 下加權目標價", "穩健度：共識 EPS 下上檔空間", "穩健度：共識 EPS 下投資建議", "穩健度：評等是否相同",
          "重點觀察 1", "重點觀察 2", "重點觀察 3", "模型檔案"]
     for j, h in enumerate(H, 1):
@@ -238,17 +246,16 @@ def main():
     rm["A1"] = ("相對倍數調整試算（只作參考，未進目標價）：Comparable 目標倍數＝同業中位數 × 本公司 10 年中位數 ÷ 同業 10 年中位數的中位數，"
                 f"夾在 [{RM.RM_LO}, {RM.RM_HI}]；有效年數 < {RM.MIN_YEARS} 或有效同業 < {RM.MIN_PEERS} 時係數＝1。")
     rm["A1"].font = BOLD
-    rm["A2"] = ("2026-10-27 試算結論：以年底「落後」P/E（companiesmarketcap、stockanalysis 與本專案模型十年表）作代理，雜訊過大——"
-                "盈餘谷底年度會把落後 P/E 拉高（景碩、Ibiden 係數觸及上限 2.0），且「現在的前瞻同業倍數 × 歷史落後比值」口徑不一致（台積電 1.87、NVIDIA 1.62）；"
-                "15 檔評等翻轉中多數是資料造成的偽訊號，因此不套用。待 Bloomberg 前瞻 P/E 十年月資料（抓取單已擴充到全部本公司與同業）取得後重算。")
-    rm["A2"].alignment = Alignment(wrap_text=True)
     H3 = ["公司", "市場", "代號", "倍數", "本公司 10 年中位數", "本公司有效年數", "納入同業家數", "同業 10 年中位數的中位數", "原始比值", "係數",
-          "上檔空間：加權（模型）", "上檔空間：加權（試算）", "投資建議（模型）", "投資建議（試算）", "是否翻轉", "同業（有效年數）"]
+          "上檔空間：加權（模型）", "上檔空間：加權（試算）", "投資建議（模型）", "投資建議（試算）", "是否翻轉", "同業（有效年數）",
+          "敏感度：近 5 年窗係數", "敏感度：近 5 年窗投資建議", "兩種窗口是否都翻轉", "對照：10-27 落後代理係數"]
     for j, h in enumerate(H3, 1):
         c = rm.cell(4, j, h)
         c.font = BOLD
         c.fill = HDR
     hist = RM.load()
+    TR = []
+    hist_old = RM.load(os.path.join(ROOT, "tools", "data", "rel_mult_hist.csv"))
     peers_by = {}
     pf = os.path.join(HERE, "peers.csv")
     for p in csv.DictReader(open(pf, encoding="utf-8")):
@@ -259,30 +266,78 @@ def main():
         new_up = 0.5 * (r["dcf"] / r["px"] - 1) + 0.5 * (r["comp"] * s["factor"] / r["px"] - 1)
         pinfo = []
         for nm, t in peers_by.get(r["folder"], []):
-            n = len([1 for y, (v, _) in hist.get((RM.norm(t), met), {}).items() if 2016 <= y <= 2025 and RM._valid(v, met)])
+            n = len([1 for y, (v, _) in hist.get((RM.norm(t), met), {}).items() if y in RM.YEARS and RM._valid(v, met)])
             pinfo.append(f"{nm}（{n}）")
+        y0, m0 = RM.YEARS, RM.MIN_YEARS
+        RM.YEARS, RM.MIN_YEARS = y0[-5:], 4
+        s5 = RM.summary(r["own_ticker"], peers_by.get(r["folder"], []), met, hist)
+        RM.YEARS, RM.MIN_YEARS = y0, m0
+        up5 = 0.5 * (r["dcf"] / r["px"] - 1) + 0.5 * (r["comp"] * s5["factor"] / r["px"] - 1)
+        RM.YEARS = list(range(2016, 2026))
+        so = RM.summary(r["own_ticker"], peers_by.get(r["folder"], []), met, hist_old)
+        RM.YEARS = y0
+        f10, f5 = rec(r["up"]) != rec(new_up), rec(r["up"]) != rec(up5)
+        TR.append((rec(r["up"]), rec(new_up), rec(up5)))
         vals = [r["公司"], r["市場"], r["own_ticker"], "P/B" if met == "PB" else "P/E", s["own_med"], s["own_n"], s["n_peers"], s["peer_med"],
-                s["raw"], s["factor"], r["up"], new_up, rec(r["up"]), rec(new_up), "是" if rec(r["up"]) != rec(new_up) else "否", "、".join(pinfo)]
+                s["raw"], s["factor"], r["up"], new_up, rec(r["up"]), rec(new_up), "是" if f10 else "否", "、".join(pinfo),
+                s5["factor"], rec(up5), "是" if (f10 and f5) else ("只有一種" if (f10 or f5) else "否"), so["factor"]]
         for j, v in enumerate(vals, 1):
             c = rm.cell(i, j, v)
-            if j in (5, 8, 9, 10):
+            if j in (5, 8, 9, 10, 17, 20):
                 c.number_format = "0.00"
             if j in (11, 12):
                 c.number_format = "0.0%"
             if j == 15 and v == "是":
                 c.fill = KEY
+    ORD = ["強力放空", "放空", "中立", "買進", "強力買進"]
+    n = len(TR)
+    f10 = sum(1 for a, b, c in TR if b != a)
+    f5 = sum(1 for a, b, c in TR if c != a)
+    both = [(a, b, c) for a, b, c in TR if b != a and c != a]
+    same_dir = sum(1 for a, b, c in both if (ORD.index(b) - ORD.index(a)) * (ORD.index(c) - ORD.index(a)) > 0)
+    same_rec = sum(1 for a, b, c in both if b == c)
+    agree = sum(1 for a, b, c in TR if b == c)
+    rm["A2"] = (f"{VDATE} 改用 Bloomberg 前瞻倍數（BEST_PE_RATIO／記憶體 BEST_PX_BPS_RATIO，BF＝未來 12 個月；2015-12 起月底資料，"
+                "最後一點為抓取當日的最新值、非 10 月月底）：每年窗口（前一年 11 月～當年 10 月）取月值中位數，再取 2017–2026 十個窗口的中位數。"
+                "口徑與 Comparable（現在的同業前瞻倍數）一致，10-27 落後 P/E 試算的谷底年度雜訊已排除。"
+                f"結果：10 年窗翻轉 {f10} 檔、近 5 年窗（2022–2026、門檻 4 年）翻轉 {f5} 檔；兩種窗口都翻轉 {len(both)} 檔，"
+                f"其中方向相同 {same_dir} 檔、翻到同一評等 {same_rec} 檔（其餘只差一級）；兩種窗口評等相同 {agree}／{n} 檔。"
+                "敏感度在 Q–T 欄（S 欄＝兩種窗口是否都翻轉）。尚未進目標價（下一步：接入各建檔程式）。")
+    rm["A2"].alignment = Alignment(wrap_text=True)
     rm.column_dimensions["A"].width = 14
     rm.column_dimensions["P"].width = 70
 
+    # ---- 前瞻倍數年度窗口中位數（試算的輸入，供核對） ----
+    dv = wb.create_sheet("前瞻倍數資料")
+    dv["A1"] = ("試算輸入：tools/data/fwd_mult_hist.csv。每格＝該窗口（前一年 11 月～當年 10 月）Bloomberg 月底前瞻倍數的中位數；"
+                "有效月數 < 6 的窗口留空。P/E 有效區間 0 < 值 ≤ 200、P/B 0 < 值 ≤ 20（逐月套用）。")
+    dv["A1"].font = BOLD
+    hh = ["代號", "倍數"] + [str(y) for y in RM.YEARS] + ["有效窗口數", "10 年中位數"]
+    for j, h in enumerate(hh, 1):
+        c = dv.cell(3, j, h)
+        c.font = BOLD
+        c.fill = HDR
+    for i, (k, d) in enumerate(sorted(hist.items()), 4):
+        dv.cell(i, 1, k[0])
+        dv.cell(i, 2, "P/B" if k[1] == "PB" else "P/E")
+        vv = []
+        for j, y in enumerate(RM.YEARS, 3):
+            if y in d and RM._valid(d[y][0], k[1]):
+                dv.cell(i, j, d[y][0]).number_format = "0.00"
+                vv.append(d[y][0])
+        dv.cell(i, 3 + len(RM.YEARS), len(vv))
+        if vv:
+            dv.cell(i, 4 + len(RM.YEARS), sorted(vv)[len(vv) // 2] if len(vv) % 2 else sum(sorted(vv)[len(vv) // 2 - 1:len(vv) // 2 + 1]) / 2).number_format = "0.00"
+
     ex = wb.create_sheet("說明")
     for k, t in enumerate([
-        "AI半導體 目標價總表 v0.2.4（2026-10-27）",
+        f"AI半導體 目標價總表 {VER}（{VDATE}）",
         "來源：各模型 dist 的 Val 頁（「目標價（DCF 與 Comparable 加權）」等列，標籤與 markets/invest_map/extract_models.py 相同）；重點觀察取自 README 頁。",
         "現價＝加權目標價 ÷（1＋上檔空間：加權目標價）（模型 Val 頁的現價，與模型一致）。",
         "穩健度（新增）：加權目標價 ×（共識前瞻 EPS ÷ 本模型前瞻 EPS），即把 EPS 換成共識口徑、倍數與方法不變。[Derived] 近似——DCF 與 Comparable 約與 EPS 成正比；"
         "本模型的「12 個月後前瞻 EPS」比共識前瞻 EPS 晚約一年，成長股的差距有一部分是期間差，所以本欄偏保守。用途：看評等是否主要靠 EPS 假設撐起來。",
         "市場別分布（新增）：各市場評等分布與買進率；台股另依次產業拆分。",
-        "相對倍數試算（新增，未套用）：見該頁第 2 列結論。資料檔 tools/data/rel_mult_hist.csv、規則 tools/relative_multiple.py。",
+        "相對倍數試算（未套用）：見該頁第 2 列結論。資料檔 tools/data/fwd_mult_hist.csv（Bloomberg 前瞻倍數年度窗口中位數；10-27 落後代理 rel_mult_hist.csv 保留對照）、規則 tools/relative_multiple.py。",
         "投資建議固定規則（Andy 2026-10-25 14:17）：> +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、< −50% 強力放空。",
     ], 1):
         ex.cell(k, 1, t)
