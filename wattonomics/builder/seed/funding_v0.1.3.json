@@ -1152,9 +1152,9 @@
 "tag": "[Interested-party]",
 "source": "2026Q1–Q2 新聞稿（8-K 99.1；repo 同檔）",
 "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000024/amzn-20260630xex991.htm",
-"verdict": "屬實",
+"verdict": "由 Q 段取代：9M2026（F#247）",
 "gnote": "",
-"use": 1
+"use": 0
 },
 {
 "id": "F#70",
@@ -1169,9 +1169,9 @@
 "tag": "[Derived]",
 "source": "2026Q1–Q2 新聞稿（8-K 99.1；repo 同檔）",
 "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000024/amzn-20260630xex991.htm",
-"verdict": "屬實",
+"verdict": "由 Q 段取代：9M2026（F#248）",
 "gnote": "",
-"use": 1
+"use": 0
 },
 {
 "id": "F#71",
@@ -1186,9 +1186,9 @@
 "tag": "[Interested-party]",
 "source": "2026Q1–Q2 新聞稿（8-K 99.1；repo 同檔）",
 "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000024/amzn-20260630xex991.htm",
-"verdict": "屬實",
+"verdict": "由 Q 段取代：9M2026（F#249）",
 "gnote": "",
-"use": 1
+"use": 0
 },
 {
 "id": "F#72",
@@ -1203,9 +1203,9 @@
 "tag": "[Derived]",
 "source": "2026Q1–Q2 新聞稿（8-K 99.1；repo 同檔）",
 "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000024/amzn-20260630xex991.htm",
-"verdict": "屬實",
+"verdict": "由 Q 段取代：9M2026（F#251）",
 "gnote": "",
-"use": 1
+"use": 0
 },
 {
 "id": "F#73",
@@ -1237,16 +1237,16 @@
 "tag": "[Interested-party]",
 "source": "IFR",
 "url": "https://www.ifre.com/bonds/2397565/amazon-makes-market-history-with-largest-corporate-bond-sale-ever",
-"verdict": "屬實",
+"verdict": "由 Q 段取代：9M2026 長期借款收入 115.1 已含（F#253）",
 "gnote": "",
-"use": 1
+"use": 0
 },
 {
 "id": "F#75",
 "player": "Amazon",
 "pkey": "amzn",
 "period": "2026-07-08",
-"bucket": "post",
+"bucket": "2026",
 "item": "bond_issue",
 "value": 25.0,
 "unit": "USD B",
@@ -1254,9 +1254,9 @@
 "tag": "[Interested-party]",
 "source": "TNW（Bloomberg）",
 "url": "https://thenextweb.com/news/amazon-25-billion-bond-sale-ai",
-"verdict": "屬實",
+"verdict": "由 Q 段取代：9M2026 長期借款收入 115.1 已含（F#253）",
 "gnote": "",
-"use": 1
+"use": 0
 },
 {
 "id": "F#76",
@@ -1322,16 +1322,16 @@
 "tag": "[Interested-party]",
 "source": "MarketBeat：Amazon Q2 Earnings Call Highlights（Jassy）",
 "url": "https://www.marketbeat.com/instant-alerts/amazoncom-q2-earnings-call-highlights-2026-07-30/",
-"verdict": "小誤（已更正）",
+"verdict": "由 Q 段取代：Q3 新聞稿重申（F#254）",
 "gnote": "G 段更正：出處改為 2026Q2 法說（MarketBeat 摘要），新聞稿無資本支出展望",
-"use": 1
+"use": 0
 },
 {
 "id": "F#80",
 "player": "Amazon",
 "pkey": "amzn",
 "period": "2026-07",
-"bucket": "post",
+"bucket": "2026",
 "item": "vendor_financing",
 "value": 50.0,
 "unit": "USD B",
@@ -4166,6 +4166,142 @@
 "use": 1
 },
 {
+"id": "F#247",
+"player": "Amazon",
+"pkey": "amzn",
+"period": "9M2026",
+"bucket": "2026",
+"item": "ocf",
+"value": 113.841,
+"unit": "USD B",
+"detail": "營運現金流（Q3 單季 42.422；去年同期 9M 85.055）",
+"tag": "[Interested-party]",
+"source": "Amazon 2026Q3 財報新聞稿（8-K 99.1；Amazon IR）",
+"url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+"verdict": "Q 段核對",
+"gnote": "",
+"use": 1
+},
+{
+"id": "F#248",
+"player": "Amazon",
+"pkey": "amzn",
+"period": "9M2026",
+"bucket": "2026",
+"item": "capex_cash",
+"value": 172.188,
+"unit": "USD B",
+"detail": "資本支出淨額＝PP&E 購置 175.670 − 出售與獎勵 3.482（Q3 單季購置 77.259）",
+"tag": "[Derived]",
+"source": "Amazon 2026Q3 財報新聞稿（8-K 99.1；Amazon IR）",
+"url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+"verdict": "Q 段核對",
+"gnote": "",
+"use": 1
+},
+{
+"id": "F#249",
+"player": "Amazon",
+"pkey": "amzn",
+"period": "9M2026",
+"bucket": "2026",
+"item": "fin_lease_new",
+"value": 3.6,
+"unit": "USD B",
+"detail": "融資租賃取得 PP&E（淨重估與修改）；Q3 單季 1.472；H1 2.128（F#71）",
+"tag": "[Interested-party]",
+"source": "Amazon 2026Q3 財報新聞稿（8-K 99.1；Amazon IR）",
+"url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+"verdict": "Q 段核對",
+"gnote": "",
+"use": 1
+},
+{
+"id": "F#250",
+"player": "Amazon",
+"pkey": "amzn",
+"period": "9M2026",
+"bucket": "2026",
+"item": "capex_incl_fl",
+"value": 175.788,
+"unit": "USD B",
+"detail": "＝淨額 172.188＋融資租賃取得 3.600",
+"tag": "[Derived]",
+"source": "Amazon 2026Q3 財報新聞稿（8-K 99.1；Amazon IR）",
+"url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+"verdict": "Q 段核對",
+"gnote": "",
+"use": 1
+},
+{
+"id": "F#251",
+"player": "Amazon",
+"pkey": "amzn",
+"period": "9M2026",
+"bucket": "2026",
+"item": "fcf",
+"value": -58.347,
+"unit": "USD B",
+"detail": "＝OCF 113.841 − 資本支出淨額 172.188；TTM 至 2026-09 為 −42.357（公司稱 outflow 42.4）",
+"tag": "[Derived]",
+"source": "Amazon 2026Q3 財報新聞稿（8-K 99.1；Amazon IR）",
+"url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+"verdict": "Q 段核對",
+"gnote": "",
+"use": 1
+},
+{
+"id": "F#252",
+"player": "Amazon",
+"pkey": "amzn",
+"period": "9M2026",
+"bucket": "2026",
+"item": "buyback_div",
+"value": 0.0,
+"unit": "USD B",
+"detail": "現金流量表無買回、股利列（2026 未買回、無股利）",
+"tag": "[Interested-party]",
+"source": "Amazon 2026Q3 財報新聞稿（8-K 99.1；Amazon IR）",
+"url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+"verdict": "Q 段核對",
+"gnote": "",
+"use": 1
+},
+{
+"id": "F#253",
+"player": "Amazon",
+"pkey": "amzn",
+"period": "9M2026",
+"bucket": "2026",
+"item": "bond_issue",
+"value": 115.1,
+"unit": "USD B",
+"detail": "長期借款收入（含 3 月 53.8、7 月 25 等；Q3 單季 48.102）；還款 2.759；短期借款收入 20.693、還款 19.609（另列不計）；9-30 長期借款帳面 173.125",
+"tag": "[Interested-party]",
+"source": "Amazon 2026Q3 財報新聞稿（8-K 99.1；Amazon IR）",
+"url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+"verdict": "Q 段核對",
+"gnote": "",
+"use": 1
+},
+{
+"id": "F#254",
+"player": "Amazon",
+"pkey": "amzn",
+"period": "CY2026",
+"bucket": "guide",
+"item": "capex_cash",
+"value": 220.0,
+"unit": "USD B",
+"detail": "指引：2026 現金資本支出約 220 不變（Q3 新聞稿重申）",
+"tag": "[Interested-party]",
+"source": "Amazon 2026Q3 財報新聞稿（8-K 99.1；Amazon IR）",
+"url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+"verdict": "Q 段核對",
+"gnote": "",
+"use": 1
+},
+{
 "id": "F#205b",
 "player": "xAI（SpaceX）",
 "pkey": "xai",
@@ -5419,9 +5555,9 @@
 "2025-12"
 ],
 "2026": [
-"2026H1",
+"9M2026",
 "2026-01",
-"2026-06"
+"2026-09"
 ]
 },
 "Meta": {
