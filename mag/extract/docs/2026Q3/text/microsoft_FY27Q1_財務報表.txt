@@ -1,0 +1,317 @@
+=== sheet Splash
+ | Microsoft Financial Data - FY27Q1 |  |  | 
+ | This file contains downloadable content that corresponds to Microsoft's Investor Relations portal at http://www.microsoft.com/investor. Click a link below to navigate to that section of the workbook. Each sheet contains a link back to this main page.
+ |  |  | 
+ | Current Financial Statements |  |  | Trended Historical Financial Statements
+ | Income Statements |  |  | Quarterly Income Statements
+ | Comprehensive Income Statements |  |  | Segment History
+ | Balance Sheets |  |  | Products & Services History
+ | Cash Flows |  |  | Yearly Income Statements
+ | Segment Results |  |  | Return of Cash to Shareholders
+ | Product and Service Offerings |  |  | Capital Expenditure
+ | Metrics |  |  | 
+ | We adopted new accounting standards related to revenue recognition and leases effective July 1, 2017. The prior periods presented here have been restated to reflect adoption of these new standards. |  |  | 
+ | We have recast certain prior period amounts on our consolidated cash flows statements to conform to the current period presentation. The recast of these prior period amounts had no impact on our consolidated balance sheets, consolidated income statements, or net cash from (used in) operations, investing, or financing on our consolidated cash flows statements. |  |  | 
+ | We have recast certain prior period amounts to conform to the way we internally manage and monitor our business, which reflects the fiscal year 2027 changes to our segments announced in September 2026. The recast of these prior period amounts had no impact on our consolidated balance sheets, consolidated income statements, or consolidated cash flows statements. |  |  | 
+=== sheet Income Statements
+MICROSOFT CORPORATION |  |  |  |  | Back to Main | 
+INCOME STATEMENTS |  |  |  |  |  | 
+(In millions, except per share amounts) (Unaudited) |  |  |  |  |  | 
+ | Three Months Ended September 30, |  |  |  |  | 
+ | 2026 |  | 2025 |  |  | 
+Revenue: |  |  |  |  |  | 
+   Product | 14631 |  | 15922 |  |  | 
+   Service and other | 77648 |  | 61751 |  |  | 
+  Total revenue | 92279 |  | 77673 |  |  | 
+Cost of revenue: |  |  |  |  |  | 
+   Product | 2471 |  | 2922 |  |  | 
+   Service and other | 27249 |  | 21121 |  |  | 
+      Total cost of revenue | 29720 |  | 24043 |  |  | 
+      Gross margin | 62559 |  | 53630 |  |  | 
+Research and development  | 9047 |  | 8146 |  |  | 
+Sales and marketing | 5716 |  | 5717 |  |  | 
+General and administrative  | 1881 |  | 1806 |  |  | 
+Operating income | 45915 |  | 37961 |  |  | 
+Other income (expense), net | 38 |  | -3660 |  |  | 
+Income before income taxes | 45953 |  | 34301 |  |  | 
+Provision for income taxes | 9324 |  | 6554 |  |  | 
+Net income | 36629 |  | 27747 |  |  | 
+Earnings per share: |  |  |  |  |  | 
+   Basic | 4.93 |  | 3.73 |  |  | 
+   Diluted | 4.92 |  | 3.72 |  |  | 
+Weighted average shares outstanding: |  |  |  |  |  | 
+   Basic | 7426 |  | 7433 |  |  | 
+   Diluted | 7446 |  | 7466 |  |  | 
+=== sheet Comprehensive Income
+MICROSOFT CORPORATION |  |  |  |  | Back to Main | 
+COMPREHENSIVE INCOME STATEMENTS |  |  |  |  |  | 
+(In millions) (Unaudited) |  |  |  |  |  | 
+ | Three Months Ended September 30, |  |  |  |  | 
+ | 2026 |  | 2025 |  |  | 
+Net income | 36629 |  | 27747 |  |  | 
+Other comprehensive income (loss), net of tax: |  |  |  |  |  | 
+  Net change related to derivatives | 3 |  | -3 |  |  | 
+  Net change related to investments | -559 |  | 687 |  |  | 
+  Translation adjustments and other | -17 |  | -98 |  |  | 
+    Other comprehensive income (loss) | -573 |  | 586 |  |  | 
+Comprehensive income | 36056 |  | 28333 |  |  | 
+=== sheet Balance Sheets
+MICROSOFT CORPORATION |  |  |  |  |  | Back to Main
+BALANCE SHEETS |  |  |  |  |  | 
+(In millions) (Unaudited) |  |  |  |  |  | 
+ | September 30,
+2026 |  | June 30, 2026 |  |  | 
+Assets |  |  |  |  |  | 
+Current assets: |  |  |  |  |  | 
+   Cash and cash equivalents | 20281 |  | 20935 |  |  | 
+   Short-term investments | 44228 |  | 55908 |  |  | 
+      Total cash, cash equivalents, and short-term investments | 64509 |  | 76843 |  |  | 
+   Accounts receivable, net of allowance for doubtful
+      accounts of $728 and $1,040 | 62084 |  | 80876 |  |  | 
+   Inventories | 1835 |  | 1397 |  |  | 
+   Other current assets | 57709 |  | 48594 |  |  | 
+      Total current assets | 186137 |  | 207710 |  |  | 
+Property and equipment, net of accumulated
+   depreciation of $127,208 and $118,691 | 346844 |  | 313076 |  |  | 
+Operating lease right-of-use assets | 30178 |  | 24177 |  |  | 
+Equity and other investments | 37808 |  | 36348 |  |  | 
+Goodwill | 119646 |  | 119651 |  |  | 
+Intangible assets, net | 17751 |  | 18609 |  |  | 
+Other long-term assets | 41039 |  | 38805 |  |  | 
+            Total assets | 779403 |  | 758376 |  |  | 
+Liabilities and stockholders' equity |  |  |  |  |  | 
+Current liabilities: |  |  |  |  |  | 
+   Accounts payable | 42625 |  | 42416 |  |  | 
+   Current portion of long-term debt | 4391 |  | 9227 |  |  | 
+   Accrued compensation | 10156 |  | 14945 |  |  | 
+   Short-term income taxes | 1447 |  | 2534 |  |  | 
+   Short-term unearned revenue | 66866 |  | 72965 |  |  | 
+   Other current liabilities | 26483 |  | 26738 |  |  | 
+      Total current liabilities | 151968 |  | 168825 |  |  | 
+Long-term debt | 31090 |  | 31067 |  |  | 
+Long-term income taxes | 29235 |  | 28647 |  |  | 
+Long-term unearned revenue | 2697 |  | 2747 |  |  | 
+Deferred income taxes | 3174 |  | 3054 |  |  | 
+Operating lease liabilities | 21719 |  | 16532 |  |  | 
+Other long-term liabilities | 69011 |  | 65117 |  |  | 
+         Total liabilities | 308894 |  | 315989 |  |  | 
+Commitments and contingencies |  |  |  |  |  | 
+Stockholders' equity: |  |  |  |  |  | 
+   Common stock and paid-in capital - shares authorized 
+      24,000; outstanding 7,427 and 7,427 | 119571 |  | 117406 |  |  | 
+   Retained earnings | 354795 |  | 328265 |  |  | 
+   Accumulated other comprehensive loss | -3857 |  | -3284 |  |  | 
+         Total stockholders' equity | 470509 |  | 442387 |  |  | 
+            Total liabilities and stockholders' equity | 779403 |  | 758376 |  |  | 
+=== sheet Cash Flows
+MICROSOFT CORPORATION |  |  | Back to Main | 
+CASH FLOWS STATEMENTS |  |  |  | 
+(In millions) (Unaudited) |  |  |  | 
+ | Three Months Ended September 30, |  |  | 
+ | 2026 | 2025 |  | 
+Operations |  |  |  | 
+Net income | 36629 | 27747 |  | 
+Adjustments to reconcile net income to net cash from operations: |  |  |  | 
+  Depreciation, amortization, and other | 11744 | 8147 |  | 
+  Stock-based compensation expense | 3134 | 2983 |  | 
+  Net recognized losses (gains) on investments and derivatives | -231 | 3907 |  | 
+  Deferred income taxes | 4609 | 2491 |  | 
+  Changes in operating assets and liabilities: |  |  |  | 
+    Accounts receivable | 17104 | 16490 |  | 
+    Inventories | -436 | -192 |  | 
+    Other current assets | -1903 | -1162 |  | 
+    Other long-term assets | -6389 | -394 |  | 
+    Accounts payable | 525 | -614 |  | 
+    Unearned revenue | -5942 | -5418 |  | 
+    Income taxes | -556 | -2944 |  | 
+    Other current liabilities | -4528 | -5507 |  | 
+    Other long-term liabilities | 4240 | -477 |  | 
+        Net cash from operations | 58000 | 45057 |  | 
+Financing |  |  |  | 
+Repayments of debt | -4850 | 0 |  | 
+Common stock issued | 598 | 689 |  | 
+Common stock repurchased | -4379 | -5650 |  | 
+Common stock cash dividends paid | -6757 | -6169 |  | 
+Other, net | -1252 | -669 |  | 
+        Net cash used in financing | -16640 | -11799 |  | 
+Investing |  |  |  | 
+Additions to property and equipment | -39367 | -19394 |  | 
+Acquisition of companies, net of cash acquired and divestitures, 
+  and purchases of intangible and other assets | -397 | -578 |  | 
+Purchases of investments | -5394 | -17671 |  | 
+Maturities of investments | 5672 | 6031 |  | 
+Sales of investments | 10470 | 3262 |  | 
+Other, net | -12949 | -6209 |  | 
+        Net cash used in investing | -41965 | -34559 |  | 
+Effect of foreign exchange rates on cash and cash equivalents | -49 | -92 |  | 
+Net change in cash and cash equivalents | -654 | -1393 |  | 
+Cash and cash equivalents, beginning of period | 20935 | 30242 |  | 
+Cash and cash equivalents, end of period | 20281 | 28849 |  | 
+We have recast certain prior period amounts to conform to the current period presentation. |  |  |  | 
+=== sheet Segment Results
+MICROSOFT CORPORATION |  |  |  |  |  |  | Back to Main
+SEGMENT RESULTS |  |  |  |  |  |  | 
+(In millions) (Unaudited) |  |  |  |  |  |  | 
+ | Three Months Ended September 30, |  |  |  |  |  | 
+ | 2026 |  | 2025 |  |  |  | 
+Agents and Infra |  |  |  |  |  |  | 
+Revenue | 76795 |  | 61672 |  |  |  | 
+Cost of revenue  | 23887 |  | 17701 |  |  |  | 
+Operating expenses | 12350 |  | 11253 |  |  |  | 
+  Operating income | 40558 |  | 32718 |  |  |  | 
+Devices and Consumer |  |  |  |  |  |  | 
+Revenue | 15484 |  | 16001 |  |  |  | 
+Cost of revenue  | 5833 |  | 6342 |  |  |  | 
+Operating expenses | 4294 |  | 4416 |  |  |  | 
+  Operating income | 5357 |  | 5243 |  |  |  | 
+Total |  |  |  |  |  |  | 
+Revenue | 92279 |  | 77673 |  |  |  | 
+Cost of revenue  | 29720 |  | 24043 |  |  |  | 
+Operating expenses | 16644 |  | 15669 |  |  |  | 
+  Operating income | 45915 |  | 37961 |  |  |  | 
+We have recast certain prior period amounts to conform to the way we internally manage and monitor our business, which reflects the fiscal year 2027 changes to our segments announced in September 2026. |  |  |  |  |  |  | 
+=== sheet Product and Service Offerings
+MICROSOFT CORPORATION |  |  |  |  | Back to Main | 
+PRODUCT AND SERVICE OFFERINGS REVENUE |  |  |  |  |  | 
+(In millions) (Unaudited) |  |  |  |  |  | 
+ | Three Months Ended September 30, |  |  |  |  | 
+ | 2026 |  | 2025 |  |  | 
+Azure | 33165 |  | 22384 |  |  | 
+Microsoft 365 cloud | 27778 |  | 23694 |  |  | 
+Productivity and server licensing | 8407 |  | 8678 |  |  | 
+Search and advertising | 6554 |  | 5942 |  |  | 
+XBOX | 5379 |  | 5508 |  |  | 
+Industry solutions | 5337 |  | 4894 |  |  | 
+Windows OEM and devices | 3551 |  | 4551 |  |  | 
+Frontier and support services | 2108 |  | 2022 |  |  | 
+  Total revenue | 92279 |  | 77673 |  |  | 
+We have recast certain prior period amounts to conform to the way we internally manage and monitor our business, which reflects the fiscal year 2027 changes to our segments announced in September 2026. |  |  |  |  |  | 
+=== sheet Metrics
+ | Investor Metrics |  |  |  |  |  |  |  |  | Back to Main |  |  | 
+ | (in billions, except for percentages) |  | Q1'26 | Q2'26 | Q3'26 | Q4'26 | FY26 | Q1'27 |  |  |  |  | 
+ | Agents and Infra |  |  |  |  |  |  |  |  |  |  |  | 
+ |  | Commercial bookings growth (y/y)* | 112% / 111% | 230% / 228% | -4% / -6% | 10% / 11% | 0.8300000000000001 | -12% / -11% |  |  |  |  | 
+ |  | Commercial remaining performance obligation | 392 | 625 | 627 | 678 | 678 | 677 |  |  |  |  | 
+ |  | Microsoft Cloud revenue | 49.1 | 51.5 | 54.5 | 59.3 | 214.4 | 63.9 |  |  |  |  | 
+ |  | Microsoft Cloud revenue growth (y/y)* | 26% / 25% | 26% / 24% | 29% / 25% | 27% / 27% | 27% / 25% | 30% / 31% |  |  |  |  | 
+ |  | Microsoft Cloud gross margin percentage | 0.68 | 0.67 | 0.66 | 0.65 | 0.66 | 0.66 |  |  |  |  | 
+ |  | Azure revenue growth (y/y)* | 40% / 39% | 39% / 38% | 40% / 39% | 0.42 | 0.4 | 48% / 48% |  |  |  |  | 
+ |  | Microsoft 365 commercial cloud revenue growth (y/y)* | 18% / 15% | 17% / 15% | 20% / 16% | 16% / 15% | 18% / 15% | 17% / 18% |  |  |  |  | 
+ |  | Microsoft 365 commercial seat growth (y/y) | 0.07 | 0.07 | 0.06 | 0.07 | 0.07 | 0.05 |  |  |  |  | 
+ |  | Microsoft 365 consumer cloud revenue growth (y/y)* | 26% / 25% | 29% / 27% | 33% / 29% | 24% / 22% | 28% / 26% | 17% / 16% |  |  |  |  | 
+ |  | Industry solutions cloud revenue growth (y/y)* | 11% / 9% | 12% / 10% | 14% / 10% | 11% / 9% | 12% / 10% | 10% / 10% |  |  |  |  | 
+ | Devices and Consumer |  |  |  |  |  |  |  |  |  |  |  | 
+ |  | Search and advertising revenue (ex TAC) growth (y/y)* | 16% / 15% | 13% / 12% | 14% / 11% | 13% / 12% | 14% / 12% | 12% / 12% |  |  |  |  | 
+ |  | XBOX content and services revenue growth (y/y)* | 1% / 0% | -5% / -6% | -5% / -7% | -10% / -10% | -5% / -6% | -2% / -1% |  |  |  |  | 
+ |  | Windows OEM and devices revenue growth (y/y)* | 5% / 5% | -1% / -1% | -2% / -3% | -7% / -8% | -1% / -2% | -22% / -22% |  |  |  |  | 
+ |  | * Includes non-GAAP constant currency growth (GAAP% / Constant Currency%) |  |  |  |  |  |  |  |  |  |  | 
+ |  | Certain amounts have been rounded for presentation purposes |  |  |  |  |  |  |  |  |  |  | 
+ |  | Reconciliation of GAAP and non-GAAP financial measures are available in the Earnings Release Slides (http://aka.ms/slidesfy27q1) |  |  |  |  |  |  |  |  |  |  | 
+ |  | We have recast certain prior period amounts to conform to the way we internally manage and monitor our business, which reflects the fiscal year 2027 changes to our segments announced in September 2026. |  |  |  |  |  |  |  |  |  |  | 
+=== sheet Quarterly Income Statements
+Microsoft Corporation |  |  | Back to Main |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Quarterly Income Statements |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+(In millions, except per share amounts) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  | Q1-16 | Q2-16 | Q3-16 | Q4-16 | Q1-17 | Q2-17 | Q3-17 | Q4-17 | Q1-18 | Q2-18 | Q3-18 | Q4-18 | Q1-19 | Q2-19 | Q3-19 | Q4-19 | Q1-20 | Q2-20 | Q3-20 | Q4-20 | Q1-21 | Q2-21 | Q3-21 | Q4-21 | Q1-22 | Q2-22 | Q3-22 | Q4-22 | Q1-23 | Q2-23 | Q3-23 | Q4-23 | Q1-24 | Q2-24 | Q3-24 | Q4-24 | Q1-25 | Q2-25 | Q3-25 | Q4-25 | Q1-26 | Q2-26 | Q3-26 | Q4-26 | Q1-27
+Revenue: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+   Product |  |  | 15750 | 19431 | 15307 | 16848 | 14968 | 18273 | 14513 | 16057 | 14298 | 17926 | 15114 | 17159 | 17299 | 16219 | 15448 | 17103 | 15768 | 18255 | 15871 | 18147 | 15803 | 19460 | 16873 | 18938 | 16631 | 20779 | 17366 | 17956 | 15741 | 16517 | 15588 | 16853 | 15535 | 18941 | 17080 | 13217 | 15272 | 16219 | 15319 | 17136 | 15922 | 16451 | 15089 | 17234 | 14631
+   Service and other |  |  | 5160 | 5822 | 6210 | 6626 | 6960 | 7553 | 8699 | 9548 | 10240 | 10992 | 11705 | 12926 | 11785 | 16252 | 15123 | 16614 | 17287 | 18651 | 19150 | 19886 | 21351 | 23616 | 24833 | 27214 | 28686 | 30949 | 31994 | 33909 | 34381 | 36230 | 37269 | 39336 | 40982 | 43079 | 44778 | 51510 | 50313 | 53413 | 54747 | 59305 | 61751 | 64822 | 67797 | 72773 | 77648
+      Total revenue |  |  | 20910 | 25253 | 21517 | 23474 | 21928 | 25826 | 23212 | 25605 | 24538 | 28918 | 26819 | 30085 | 29084 | 32471 | 30571 | 33717 | 33055 | 36906 | 35021 | 38033 | 37154 | 43076 | 41706 | 46152 | 45317 | 51728 | 49360 | 51865 | 50122 | 52747 | 52857 | 56189 | 56517 | 62020 | 61858 | 64727 | 65585 | 69632 | 70066 | 76441 | 77673 | 81273 | 82886 | 90007 | 92279
+Cost of revenue: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+   Product |  |  | 4035 | 6268 | 3801 | 3776 | 3581 | 5378 | 3075 | 3141 | 2980 | 5498 | 3425 | 3517 | 3649 | 5885 | 3441 | 3298 | 3305 | 4966 | 3376 | 4370 | 3597 | 6058 | 4277 | 4287 | 3792 | 6331 | 4584 | 4357 | 4302 | 5690 | 3941 | 3871 | 3531 | 5964 | 4339 | 1438 | 3294 | 3856 | 3037 | 3314 | 2922 | 3505 | 2733 | 2938 | 2471
+   Service and other |  |  | 3172 | 3604 | 3921 | 4203 | 4263 | 4523 | 4985 | 5315 | 5298 | 5566 | 5844 | 6225 | 6256 | 6538 | 6729 | 7114 | 7101 | 7392 | 7599 | 7969 | 7405 | 8136 | 8768 | 9704 | 9854 | 10629 | 11031 | 12072 | 11150 | 11798 | 12187 | 12924 | 12771 | 13659 | 14166 | 18246 | 16805 | 17943 | 18882 | 20700 | 21121 | 22473 | 24095 | 26587 | 27249
+      Total cost of revenue |  |  | 7207 | 9872 | 7722 | 7979 | 7844 | 9901 | 8060 | 8456 | 8278 | 11064 | 9269 | 9742 | 9905 | 12423 | 10170 | 10412 | 10406 | 12358 | 10975 | 12339 | 11002 | 14194 | 13045 | 13991 | 13646 | 16960 | 15615 | 16429 | 15452 | 17488 | 16128 | 16795 | 16302 | 19623 | 18505 | 19684 | 20099 | 21799 | 21919 | 24014 | 24043 | 25978 | 26828 | 29525 | 29720
+      Gross margin |  |  | 13703 | 15381 | 13795 | 15495 | 14084 | 15925 | 15152 | 17149 | 16260 | 17854 | 17550 | 20343 | 19179 | 20048 | 20401 | 23305 | 22649 | 24548 | 24046 | 25694 | 26152 | 28882 | 28661 | 32161 | 31671 | 34768 | 33745 | 35436 | 34670 | 35259 | 36729 | 39394 | 40215 | 42397 | 43353 | 45043 | 45486 | 47833 | 48147 | 52427 | 53630 | 55295 | 56058 | 60482 | 62559
+Research and development  |  |  | 2962 | 2900 | 2980 | 3146 | 3106 | 3062 | 3355 | 3514 | 3574 | 3504 | 3715 | 3933 | 3977 | 4070 | 4316 | 4513 | 4565 | 4603 | 4887 | 5214 | 4926 | 4899 | 5204 | 5687 | 5599 | 5758 | 6306 | 6849 | 6628 | 6844 | 6984 | 6739 | 6659 | 7142 | 7653 | 8056 | 7544 | 7917 | 8198 | 8829 | 8146 | 8504 | 8915 | 9997 | 9047
+Sales and marketing |  |  | 3341 | 3954 | 3398 | 3942 | 3218 | 4079 | 3872 | 4292 | 3812 | 4562 | 4335 | 4760 | 4098 | 4588 | 4565 | 4962 | 4337 | 4933 | 4911 | 5417 | 4231 | 4947 | 5082 | 5857 | 4547 | 5379 | 5595 | 6304 | 5126 | 5679 | 5750 | 6204 | 5187 | 6246 | 6207 | 6816 | 5717 | 6440 | 6212 | 7285 | 5717 | 6584 | 6814 | 7595 | 5716
+General and administrative  |  |  | 1084 | 1038 | 1140 | 1301 | 1045 | 879 | 1202 | 1355 | 1166 | 1109 | 1208 | 1271 | 1149 | 1132 | 1179 | 1425 | 1061 | 1121 | 1273 | 1656 | 1119 | 1139 | 1327 | 1522 | 1287 | 1384 | 1480 | 1749 | 1398 | 2337 | 1643 | 2197 | 1474 | 1977 | 1912 | 2246 | 1673 | 1823 | 1737 | 1990 | 1806 | 1932 | 1931 | 2287 | 1881
+Impairment and restructuring |  |  | 0 | 0 | 0 | 1110 | 0 | 0 | 0 | 306 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+Operating income |  |  | 6316 | 7489 | 6277 | 5996 | 6715 | 7905 | 6723 | 7682 | 7708 | 8679 | 8292 | 10379 | 9955 | 10258 | 10341 | 12405 | 12686 | 13891 | 12975 | 13407 | 15876 | 17897 | 17048 | 19095 | 20238 | 22247 | 20364 | 20534 | 21518 | 20399 | 22352 | 24254 | 26895 | 27032 | 27581 | 27925 | 30552 | 31653 | 32000 | 34323 | 37961 | 38275 | 38398 | 40603 | 45915
+Other income (expense), net |  |  | -295 | -176 | -212 | 244 | 112 | 117 | 371 | 276 | 276 | 490 | 349 | 301 | 266 | 127 | 145 | 191 | 0 | 194 | -132 | 15 | 248 | 440 | 188 | 310 | 286 | 268 | -174 | -47 | 54 | -60 | 321 | 473 | 389 | -506 | -854 | -675 | -283 | -2288 | -623 | -1707 | -3660 | 9971 | 942 | 3444 | 38
+Income before income taxes |  |  | 6021 | 7313 | 6065 | 6240 | 6827 | 8022 | 7094 | 7958 | 7984 | 9169 | 8641 | 10680 | 10221 | 10385 | 10486 | 12596 | 12686 | 14085 | 12843 | 13422 | 16124 | 18337 | 17236 | 19405 | 20524 | 22515 | 20190 | 20487 | 21572 | 20339 | 22673 | 24727 | 27284 | 26526 | 26727 | 27250 | 30269 | 29365 | 31377 | 32616 | 34301 | 48246 | 39340 | 44047 | 45953
+Provision for (benefit from) income taxes |  |  | 952 | 1375 | 1760 | 1013 | 1160 | 1755 | 1608 | -111 | 1408 | 15471 | 1217 | 1807 | 1397 | 1965 | 1677 | -591 | 2008 | 2436 | 2091 | 2220 | 2231 | 2874 | 1779 | 2947 | 19 | 3750 | 3462 | 3747 | 4016 | 3914 | 4374 | 4646 | 4993 | 4656 | 4788 | 5214 | 5602 | 5257 | 5553 | 5383 | 6554 | 9788 | 7562 | 8281 | 9324
+Net income (loss) |  |  | 5069 | 5938 | 4305 | 5227 | 5667 | 6267 | 5486 | 8069 | 6576 | -6302 | 7424 | 8873 | 8824 | 8420 | 8809 | 13187 | 10678 | 11649 | 10752 | 11202 | 13893 | 15463 | 15457 | 16458 | 20505 | 18765 | 16728 | 16740 | 17556 | 16425 | 18299 | 20081 | 22291 | 21870 | 21939 | 22036 | 24667 | 24108 | 25824 | 27233 | 27747 | 38458 | 31778 | 35766 | 36629
+Earnings (loss) per share: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+   Basic |  |  | 0.63 | 0.75 | 0.55 | 0.67 | 0.73 | 0.81 | 0.71 | 1.05 | 0.85 | -0.82 | 0.96 | 1.15 | 1.15 | 1.09 | 1.15 | 1.72 | 1.4 | 1.53 | 1.41 | 1.48 | 1.84 | 2.05 | 2.05 | 2.19 | 2.73 | 2.5 | 2.23 | 2.24 | 2.35 | 2.2 | 2.46 | 2.7 | 3 | 2.94 | 2.95 | 2.96 | 3.32 | 3.24 | 3.47 | 3.66 | 3.73 | 5.18 | 4.28 | 4.82 | 4.93
+   Diluted |  |  | 0.63 | 0.74 | 0.54 | 0.66 | 0.72 | 0.8 | 0.7 | 1.03 | 0.84 | -0.82 | 0.95 | 1.14 | 1.14 | 1.08 | 1.14 | 1.71 | 1.38 | 1.51 | 1.4 | 1.46 | 1.82 | 2.03 | 2.03 | 2.17 | 2.71 | 2.48 | 2.22 | 2.23 | 2.35 | 2.2 | 2.45 | 2.69 | 2.99 | 2.93 | 2.94 | 2.95 | 3.3 | 3.23 | 3.46 | 3.65 | 3.72 | 5.16 | 4.27 | 4.81 | 4.92
+=== sheet Segment History
+Microsoft Corporation |  |  | Back to Main |  |  |  |  |  |  |  |  | 
+Segment Results |  |  |  |  |  |  |  |  |  |  |  | 
+(In millions) |  |  |  |  |  |  |  |  |  |  |  | 
+Agents and Infra | Q1-26 | Q2-26 | Q3-26 | Q4-26 | Fiscal Year 2026 |  | Q1-27 | Q2-27 | Q3-27 | Q4-27 | Fiscal Year 2027 | 
+Revenue | 61672 | 64441 | 67438 | 74576 | 268127 |  | 76795 |  |  |  | 76795 | 
+Cost of revenue  | 17701 | 19307 | 20949 | 23460 | 81417 |  | 23887 |  |  |  | 23887 | 
+Operating expenses | 11253 | 11967 | 12741 | 14384 | 50345 |  | 12350 |  |  |  | 12350 | 
+  Operating income | 32718 | 33167 | 33748 | 36732 | 136365 |  | 40558 |  |  |  | 40558 | 
+Devices and Consumer | Q1-26 | Q2-26 | Q3-26 | Q4-26 | Fiscal Year 2026 |  | Q1-27 | Q2-27 | Q3-27 | Q4-27 | Fiscal Year 2027 | 
+Revenue | 16001 | 16832 | 15448 | 15431 | 63712 |  | 15484 |  |  |  | 15484 | 
+Cost of revenue  | 6342 | 6671 | 5879 | 6065 | 24957 |  | 5833 |  |  |  | 5833 | 
+Operating expenses | 4416 | 5053 | 4919 | 5495 | 19883 |  | 4294 |  |  |  | 4294 | 
+  Operating income | 5243 | 5108 | 4650 | 3871 | 18872 |  | 5357 |  |  |  | 5357 | 
+Total | Q1-26 | Q2-26 | Q3-26 | Q4-26 | Fiscal Year 2026 |  | Q1-27 | Q2-27 | Q3-27 | Q4-27 | Fiscal Year 2027 | 
+Revenue | 77673 | 81273 | 82886 | 90007 | 331839 |  | 92279 |  |  |  | 92279 | 
+Cost of revenue  | 24043 | 25978 | 26828 | 29525 | 106374 |  | 29720 |  |  |  | 29720 | 
+Operating expenses | 15669 | 17020 | 17660 | 19879 | 70228 |  | 16644 |  |  |  | 16644 | 
+  Operating income | 37961 | 38275 | 38398 | 40603 | 155237 |  | 45915 |  |  |  | 45915 | 
+We have recast certain prior period amounts to conform to the way we internally manage and monitor our business, which reflects the fiscal year 2027 changes to our segments announced in September 2026. |  |  |  |  |  |  |  |  |  |  |  | 
+=== sheet Products & Services History
+Microsoft Corporation |  |  | Back to Main |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Revenue - Significant Product and Service Offerings |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+(In millions) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Revenue | Q1-25 | Q2-25 | Q3-25 | Q4-25 | Fiscal Year 2025 |  | Q1-26 | Q2-26 | Q3-26 | Q4-26 | Fiscal Year 2026 |  | Q1-27 | Q2-27 | Q3-27 | Q4-27 | Fiscal Year 2027
+Azure | 16021 | 17337 | 18540 | 20712 | 72610 |  | 22384 | 24129 | 26008 | 29417 | 101938 |  | 33165 |  |  |  | 33165
+Microsoft 365 cloud | 20017 | 20686 | 20967 | 22935 | 84605 |  | 23694 | 24466 | 25418 | 26721 | 100299 |  | 27778 |  |  |  | 27778
+Productivity and server licensing | 8051 | 8307 | 8731 | 10302 | 35391 |  | 8678 | 8814 | 8760 | 11033 | 37285 |  | 8407 |  |  |  | 8407
+Search and advertising | 5159 | 5773 | 5437 | 5802 | 22171 |  | 5942 | 6393 | 6065 | 6435 | 24835 |  | 6554 |  |  |  | 6554
+XBOX | 5621 | 6581 | 5721 | 5532 | 23455 |  | 5508 | 5958 | 5341 | 4983 | 21790 |  | 5379 |  |  |  | 5379
+Industry solutions | 4459 | 4544 | 4579 | 4835 | 18417 |  | 4894 | 4994 | 5165 | 5292 | 20345 |  | 5337 |  |  |  | 5337
+Windows OEM and devices | 4329 | 4512 | 4145 | 4329 | 17315 |  | 4551 | 4481 | 4042 | 4013 | 17087 |  | 3551 |  |  |  | 3551
+Frontier and support services | 1928 | 1892 | 1946 | 1994 | 7760 |  | 2022 | 2038 | 2087 | 2113 | 8260 |  | 2108 |  |  |  | 2108
+  Total | 65585 | 69632 | 70066 | 76441 | 281724 |  | 77673 | 81273 | 82886 | 90007 | 331839 |  | 92279 |  |  |  | 92279
+We have recast certain prior period amounts to conform to the way we internally manage and monitor our business, which reflects the fiscal year 2027 changes to our segments announced in September 2026. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+=== sheet Yearly Income Statements
+Microsoft Corporation |  |  | Back to Main |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Yearly Income Statements |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+(In millions, except per share amounts) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  | FY16 | FY17 | FY18 | FY19 | FY20 | FY21 | FY22 | FY23 | FY24 | FY25 | FY26 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Revenue: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+   Product |  |  | 67336 | 63811 | 64497 | 66069 | 68041 | 71074 | 72732 | 64699 | 64773 | 63946 | 64696 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+   Service and other |  |  | 23818 | 32760 | 45863 | 59774 | 74974 | 97014 | 125538 | 147216 | 180349 | 217778 | 267143 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+      Total revenue |  |  | 91154 | 96571 | 110360 | 125843 | 143015 | 168088 | 198270 | 211915 | 245122 | 281724 | 331839 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Cost of revenue: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+   Product |  |  | 17880 | 15175 | 15420 | 16273 | 16017 | 18219 | 19064 | 17804 | 15272 | 13501 | 12098 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+   Service and other |  |  | 14900 | 19086 | 22933 | 26637 | 30061 | 34013 | 43586 | 48059 | 58842 | 74330 | 94276 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+      Total cost of revenue |  |  | 32780 | 34261 | 38353 | 42910 | 46078 | 52232 | 62650 | 65863 | 74114 | 87831 | 106374 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+      Gross margin |  |  | 58374 | 62310 | 72007 | 82933 | 96937 | 115856 | 135620 | 146052 | 171008 | 193893 | 225465 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Research and development  |  |  | 11988 | 13037 | 14726 | 16876 | 19269 | 20716 | 24512 | 27195 | 29510 | 32488 | 35562 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Sales and marketing |  |  | 14635 | 15461 | 17469 | 18213 | 19598 | 20117 | 21825 | 22759 | 24456 | 25654 | 26710 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+General and administrative  |  |  | 4563 | 4481 | 4754 | 4885 | 5111 | 5107 | 5900 | 7575 | 7609 | 7223 | 7956 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Impairment and restructuring |  |  | 1110 | 306 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Operating income |  |  | 26078 | 29025 | 35058 | 42959 | 52959 | 69916 | 83383 | 88523 | 109433 | 128528 | 155237 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Other income (expense), net |  |  | -439 | 876 | 1416 | 729 | 77 | 1186 | 333 | 788 | -1646 | -4901 | 10697 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Income before income taxes |  |  | 25639 | 29901 | 36474 | 43688 | 53036 | 71102 | 83716 | 89311 | 107787 | 123627 | 165934 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Provision for income taxes |  |  | 5100 | 4412 | 19903 | 4448 | 8755 | 9831 | 10978 | 16950 | 19651 | 21795 | 32185 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Net income |  |  | 20539 | 25489 | 16571 | 39240 | 44281 | 61271 | 72738 | 72361 | 88136 | 101832 | 133749 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Earnings per share: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+   Basic |  |  | 2.59 | 3.29 | 2.15 | 5.11 | 5.82 | 8.12 | 9.7 | 9.72 | 11.86 | 13.7 | 18 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+   Diluted |  |  | 2.56 | 3.25 | 2.13 | 5.06 | 5.76 | 8.05 | 9.65 | 9.68 | 11.8 | 13.64 | 17.95 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+=== sheet Return of Cash to Shareholders
+Microsoft Corporation |  | Back to Main |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Return of Cash to Shareholders |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+(In billions, except per share amounts) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  | FY10 | FY11 | FY12 | FY13 | FY14 | FY15 | FY16 | FY17 | FY18 | FY19 | FY20 | FY21 | FY22 | FY23 | FY24 | FY25 | FY26 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Yearly |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Dividend Per Share |  | 0.52 | 0.64 | 0.8 | 0.92 | 1.12 | 1.24 | 1.44 | 1.56 | 1.68 | 1.84 | 2.04 | 2.24 | 2.48 | 2.72 | 3 | 3.32 | 3.64 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Total Dividends |  | 4.539 | 5.403 | 6.72 | 7.695 | 9.27 | 10.05 | 11.331 | 12.048 | 12.916 | 14.101 | 15.483 | 16.871 | 18.55 | 20.23 | 22.295 | 24.676 | 27.033 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Share Buyback |  | 10.836 | 11.458 | 4 | 4.607 | 6.409 | 13.209 | 14.8 | 10.283 | 8.6 | 16.799 | 19.688 | 22.97 | 28.033 | 18.4 | 11.96 | 13 | 16.719 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  | Q2-05 | Q3-05 | Q4-05 | Q1-06 | Q2-06 | Q3-06 | Q4-06 | Q1-07 | Q2-07 | Q3-07 | Q4-07 | Q1-08 | Q2-08 | Q3-08 | Q4-08 | Q1-09 | Q2-09 | Q3-09 | Q4-09 | Q1-10 | Q2-10 | Q3-10 | Q4-10 | Q1-11 | Q2-11 | Q3-11 | Q4-11 | Q1-12 | Q2-12 | Q3-12 | Q4-12 | Q1-13 | Q2-13 | Q3-13 | Q4-13 | Q1-14 | Q2-14 | Q3-14 | Q4-14 | Q1-15 | Q2-15 | Q3-15 | Q4-15 | Q1-16 | Q2-16 | Q3-16 | Q4-16 | Q1-17 | Q2-17 | Q3-17 | Q4-17 | Q1-18 | Q2-18 | Q3-18 | Q4-18 | Q1-19 | Q2-19 | Q3-19 | Q4-19 | Q1-20 | Q2-20 | Q3-20 | Q4-20 | Q1-21 | Q2-21 | Q3-21 | Q4-21 | Q1-22 | Q2-22 | Q3-22 | Q4-22 | Q1-23 | Q2-23 | Q3-23 | Q4-23 | Q1-24 | Q2-24 | Q3-24 | Q4-24 | Q1-25 | Q2-25 | Q3-25 | Q4-25 | Q1-26 | Q2-26 | Q3-26 | Q4-26 | Q1-27
+Quarterly |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Dividend Per Share |  | 0.08 | 0.08 | 0.08 | 0.08 | 0.09 | 0.09 | 0.09 | 0.1 | 0.1 | 0.1 | 0.1 | 0.11 | 0.11 | 0.11 | 0.11 | 0.13 | 0.13 | 0.13 | 0.13 | 0.13 | 0.13 | 0.13 | 0.13 | 0.16 | 0.16 | 0.16 | 0.16 | 0.2 | 0.2 | 0.2 | 0.2 | 0.23 | 0.23 | 0.23 | 0.23 | 0.28 | 0.28 | 0.28 | 0.28 | 0.31 | 0.31 | 0.31 | 0.31 | 0.36 | 0.36 | 0.36 | 0.36 | 0.39 | 0.39 | 0.39 | 0.39 | 0.42 | 0.42 | 0.42 | 0.42 | 0.46 | 0.46 | 0.46 | 0.46 | 0.51 | 0.51 | 0.51 | 0.51 | 0.56 | 0.56 | 0.56 | 0.56 | 0.62 | 0.62 | 0.62 | 0.62 | 0.68 | 0.68 | 0.68 | 0.68 | 0.75 | 0.75 | 0.75 | 0.75 | 0.83 | 0.83 | 0.83 | 0.83 | 0.91 | 0.91 | 0.91 | 0.91 | 0.98
+Total Dividends |  | 0.868 | 0.86 | 0.857 | 0.846 | 0.926 | 0.916 | 0.897 | 0.98 | 0.978 | 0.952 | 0.938 | 1.034 | 1.023 | 1.02 | 0.998 | 1.157 | 1.155 | 1.158 | 1.157 | 1.152 | 1.139 | 1.13 | 1.118 | 1.363 | 1.349 | 1.35 | 1.341 | 1.683 | 1.683 | 1.678 | 1.676 | 1.933 | 1.925 | 1.921 | 1.916 | 2.332 | 2.322 | 2.309 | 2.307 | 2.547 | 2.532 | 2.496 | 2.475 | 2.868 | 2.842 | 2.821 | 2.8 | 3.024 | 3.012 | 3.009 | 3.003 | 3.238 | 3.232 | 3.226 | 3.22 | 3.544 | 3.526 | 3.521 | 3.51 | 3.886 | 3.876 | 3.865 | 3.856 | 4.23 | 4.221 | 4.214 | 4.206 | 4.652 | 4.645 | 4.632 | 4.621 | 5.066 | 5.059 | 5.054 | 5.051 | 5.574 | 5.573 | 5.574 | 5.574 | 6.17 | 6.169 | 6.169 | 6.168 | 6.762 | 6.756 | 6.758 | 6.757 | 7.279
+Share Buyback |  | 0.655 | 2.42 | 4.302 | 3.029 | 7.666 | 4.879 | 4.175 | 6.965 | 6.037 | 6.744 | 7.367 | 2.348 | 4.081 | 1.02 | 4.975 | 5.966 | 2.234 | 0 | 0 | 1.445 | 3.583 | 2 | 3.808 | 4 | 5 | 0.827 | 1.631 | 1 | 1 | 1 | 1 | 1 | 1.607 | 1 | 1 | 1.5 | 2 | 1.791 | 1.118 | 2 | 2 | 5 | 4.209 | 4 | 3.6 | 3.6 | 3.6 | 3.55 | 3.533 | 1.6 | 1.6 | 1.6 | 1.8 | 3.1 | 2.1 | 2.6 | 6.1 | 3.899 | 4.2 | 4 | 4.6 | 6 | 5.088 | 5.27 | 5.75 | 5.75 | 6.2 | 6.2 | 6.233 | 7.8 | 7.8 | 4.6 | 4.6 | 4.6 | 4.6 | 3.56 | 2.8 | 2.8 | 2.8 | 2.8 | 3.5 | 3.5 | 3.2 | 3.955 | 5.964 | 3.4 | 3.4 | 2.925
+=== sheet CapEx
+Microsoft Corporation  | Back to Main |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Capital Expenditures Including Assets Acquired Under Capital Leases  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+(In billions) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Q1-16 | Q2-16 | Q3-16 | Q4-16 | Fiscal Year 2016 |  | Q1-17 | Q2-17 | Q3-17 | Q4-17 | Fiscal Year 2017 |  | Q1-18 | Q2-18 | Q3-18 | Q4-18 | Fiscal Year 2018 |  | Q1-19 | Q2-19 | Q3-19 | Q4-19 | Fiscal Year 2019 |  | Q1-20 | Q2-20 | Q3-20 | Q4-20 | Fiscal Year 2020 |  | Q1-21 | Q2-21 | Q3-21 | Q4-21 | Fiscal Year 2021 |  | Q1-22 | Q2-22 | Q3-22 | Q4-22 | Fiscal Year 2022 |  | Q1-23 | Q2-23 | Q3-23 | Q4-23 | Fiscal Year 2023 |  | Q1-24 | Q2-24 | Q3-24 | Q4-24 | Fiscal Year 2024 |  | Q1-25 | Q2-25 | Q3-25 | Q4-25 | Fiscal Year 2025 |  | Q1-26 | Q2-26 | Q3-26 | Q4-26 | Fiscal Year 2026 |  | Q1-27 | Q2-27 | Q3-27 | Q4-27 | Fiscal Year 2027
+Capital expenditures including assets acquired under capital leases | 1.5 | 2 | 2.3 | 3.1 | 8.9 |  | 2.3 | 2.5 | 2.1 | 3.3 | 10.2 |  | 2.7 | 3.3 | 3.5 | 4.1 | 13.6 |  | 4.3 | 3.9 | 3.4 | 5.3 | 16.9 |  | 4.8 | 4.5 | 3.9 | 5.8 | 19 |  | 5.5 | 5.4 | 6 | 7.3 | 24.2 |  | 7.4 | 6.8 | 6.3 | 8.7 | 29.2 |  | 6.6 | 6.8 | 7.8 | 10.7 | 31.9 |  | 11.2 | 11.5 | 14 | 19 | 55.7 |  | 20 | 22.6 | 21.4 | 24.2 | 88.2 |  | 34.9 | 37.5 | 31.9 | 41 | 145.3 |  | 45.2 |  |  |  | 45.2

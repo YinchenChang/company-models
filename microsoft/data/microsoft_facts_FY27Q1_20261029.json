@@ -1,0 +1,2015 @@
+{
+ "_readme": "Microsoft FY27Q1 事實總帳（MAG v0.3.1 季度滾動，2026-10-29）。每筆附來源檔名＋表名／頁、標記；check＝第二次獨立讀取（不同文件或同文件不同表）的值與是否一致。金額 USD M。",
+ "asOf": "2026-10-29",
+ "company": "Microsoft",
+ "ticker": "MSFT",
+ "latestFiled": "FY27Q1（2026-09-30；10-Q 2026-10-28）",
+ "sources": {
+  "A": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+  "B": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+  "C": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+  "D": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+  "E": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）"
+ },
+ "mismatches": [
+  {
+   "id": "q.openaiGain.fy27q1",
+   "a": 272,
+   "b": null,
+   "explained": "口徑不同（稅前 272 vs 稅後 207），不比值"
+  },
+  {
+   "id": "capexFL.finLease.fy27q1",
+   "a": 7400,
+   "b": 5192,
+   "explained": "口徑不同：法說 7.4（資本支出口徑）vs 10-Q 使用權資產 5.192；取法說值（資本支出口徑），列資料缺口"
+  }
+ ],
+ "groups": {
+  "1_分部與產品線": [
+   {
+    "id": "q.seg27.ai.rev.fy27q1",
+    "item": "季度分部 Agents and Infra：Revenue",
+    "value": 76795.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "SEGMENT RESULTS 表（新聞稿第 7 頁附表）",
+    "tag": "Interested-party",
+    "note": "新聞稿未經查核；10-Q 附註分部表同值",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Segment History 工作表 Q1-27 欄",
+     "value": 76795,
+     "match": true
+    }
+   },
+   {
+    "id": "q.seg27.ai.cogs.fy27q1",
+    "item": "季度分部 Agents and Infra：Cost of revenue",
+    "value": 23887.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "SEGMENT RESULTS 表（新聞稿第 7 頁附表）",
+    "tag": "Interested-party",
+    "note": "新聞稿未經查核；10-Q 附註分部表同值",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Segment History 工作表 Q1-27 欄",
+     "value": 23887,
+     "match": true
+    }
+   },
+   {
+    "id": "q.seg27.ai.opex.fy27q1",
+    "item": "季度分部 Agents and Infra：Operating expenses",
+    "value": 12350.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "SEGMENT RESULTS 表（新聞稿第 7 頁附表）",
+    "tag": "Interested-party",
+    "note": "新聞稿未經查核；10-Q 附註分部表同值",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Segment History 工作表 Q1-27 欄",
+     "value": 12350,
+     "match": true
+    }
+   },
+   {
+    "id": "q.seg27.ai.oi.fy27q1",
+    "item": "季度分部 Agents and Infra：Operating income",
+    "value": 40558.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "SEGMENT RESULTS 表（新聞稿第 7 頁附表）",
+    "tag": "Interested-party",
+    "note": "新聞稿未經查核；10-Q 附註分部表同值",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Segment History 工作表 Q1-27 欄",
+     "value": 40558,
+     "match": true
+    }
+   },
+   {
+    "id": "q.seg27.dc.rev.fy27q1",
+    "item": "季度分部 Devices and Consumer：Revenue",
+    "value": 15484.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "SEGMENT RESULTS 表（新聞稿第 7 頁附表）",
+    "tag": "Interested-party",
+    "note": "新聞稿未經查核；10-Q 附註分部表同值",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Segment History 工作表 Q1-27 欄",
+     "value": 15484,
+     "match": true
+    }
+   },
+   {
+    "id": "q.seg27.dc.cogs.fy27q1",
+    "item": "季度分部 Devices and Consumer：Cost of revenue",
+    "value": 5833.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "SEGMENT RESULTS 表（新聞稿第 7 頁附表）",
+    "tag": "Interested-party",
+    "note": "新聞稿未經查核；10-Q 附註分部表同值",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Segment History 工作表 Q1-27 欄",
+     "value": 5833,
+     "match": true
+    }
+   },
+   {
+    "id": "q.seg27.dc.opex.fy27q1",
+    "item": "季度分部 Devices and Consumer：Operating expenses",
+    "value": 4294.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "SEGMENT RESULTS 表（新聞稿第 7 頁附表）",
+    "tag": "Interested-party",
+    "note": "新聞稿未經查核；10-Q 附註分部表同值",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Segment History 工作表 Q1-27 欄",
+     "value": 4294,
+     "match": true
+    }
+   },
+   {
+    "id": "q.seg27.dc.oi.fy27q1",
+    "item": "季度分部 Devices and Consumer：Operating income",
+    "value": 5357.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "SEGMENT RESULTS 表（新聞稿第 7 頁附表）",
+    "tag": "Interested-party",
+    "note": "新聞稿未經查核；10-Q 附註分部表同值",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Segment History 工作表 Q1-27 欄",
+     "value": 5357,
+     "match": true
+    }
+   },
+   {
+    "id": "q.prod27.azure.fy27q1",
+    "item": "季度產品線營收：Azure",
+    "value": 33165.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "PRODUCT AND SERVICE OFFERINGS REVENUE 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Products & Services History 工作表 Q1-27 欄",
+     "value": 33165,
+     "match": true
+    }
+   },
+   {
+    "id": "q.prod27.m365cloud.fy27q1",
+    "item": "季度產品線營收：Microsoft 365 cloud",
+    "value": 27778.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "PRODUCT AND SERVICE OFFERINGS REVENUE 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Products & Services History 工作表 Q1-27 欄",
+     "value": 27778,
+     "match": true
+    }
+   },
+   {
+    "id": "q.prod27.licensing.fy27q1",
+    "item": "季度產品線營收：Productivity and server licensing",
+    "value": 8407.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "PRODUCT AND SERVICE OFFERINGS REVENUE 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Products & Services History 工作表 Q1-27 欄",
+     "value": 8407,
+     "match": true
+    }
+   },
+   {
+    "id": "q.prod27.searchads.fy27q1",
+    "item": "季度產品線營收：Search and advertising",
+    "value": 6554.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "PRODUCT AND SERVICE OFFERINGS REVENUE 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Products & Services History 工作表 Q1-27 欄",
+     "value": 6554,
+     "match": true
+    }
+   },
+   {
+    "id": "q.prod27.xbox.fy27q1",
+    "item": "季度產品線營收：XBOX",
+    "value": 5379.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "PRODUCT AND SERVICE OFFERINGS REVENUE 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Products & Services History 工作表 Q1-27 欄",
+     "value": 5379,
+     "match": true
+    }
+   },
+   {
+    "id": "q.prod27.industry.fy27q1",
+    "item": "季度產品線營收：Industry solutions",
+    "value": 5337.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "PRODUCT AND SERVICE OFFERINGS REVENUE 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Products & Services History 工作表 Q1-27 欄",
+     "value": 5337,
+     "match": true
+    }
+   },
+   {
+    "id": "q.prod27.windows.fy27q1",
+    "item": "季度產品線營收：Windows OEM and devices",
+    "value": 3551.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "PRODUCT AND SERVICE OFFERINGS REVENUE 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Products & Services History 工作表 Q1-27 欄",
+     "value": 3551,
+     "match": true
+    }
+   },
+   {
+    "id": "q.prod27.frontier.fy27q1",
+    "item": "季度產品線營收：Frontier and support services",
+    "value": 2108.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "PRODUCT AND SERVICE OFFERINGS REVENUE 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Products & Services History 工作表 Q1-27 欄",
+     "value": 2108,
+     "match": true
+    }
+   },
+   {
+    "id": "q.seg27.ai.rev.fy26q1.chk",
+    "item": "FY26Q1 分部營收（本季新聞稿前期欄）：Agents and Infra",
+    "value": 61672.0,
+    "unit": "USD M",
+    "period": "FY26Q1",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "SEGMENT RESULTS 表 2025 欄",
+    "tag": "Interested-party",
+    "note": "與 8-K 2026-09-02 重編值對照",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Segment History Q1-26 欄",
+     "value": 61672,
+     "match": true
+    }
+   },
+   {
+    "id": "q.seg27.dc.rev.fy26q1.chk",
+    "item": "FY26Q1 分部營收（本季新聞稿前期欄）：Devices and Consumer",
+    "value": 16001.0,
+    "unit": "USD M",
+    "period": "FY26Q1",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "SEGMENT RESULTS 表 2025 欄",
+    "tag": "Interested-party",
+    "note": "與 8-K 2026-09-02 重編值對照",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Segment History Q1-26 欄",
+     "value": 16001,
+     "match": true
+    }
+   }
+  ],
+  "2_合併損益": [
+   {
+    "id": "q.rev.fy27q1",
+    "item": "季度 Total revenue",
+    "value": 92279.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "INCOME STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Quarterly Income Statements 工作表 Q1-27 欄",
+     "value": 92279,
+     "match": true
+    }
+   },
+   {
+    "id": "q.cogs.fy27q1",
+    "item": "季度 Total cost of revenue",
+    "value": 29720.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "INCOME STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Quarterly Income Statements 工作表 Q1-27 欄",
+     "value": 29720,
+     "match": true
+    }
+   },
+   {
+    "id": "q.gm.fy27q1",
+    "item": "季度 Gross margin",
+    "value": 62559.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "INCOME STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Quarterly Income Statements 工作表 Q1-27 欄",
+     "value": 62559,
+     "match": true
+    }
+   },
+   {
+    "id": "q.rd.fy27q1",
+    "item": "季度 Research and development",
+    "value": 9047.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "INCOME STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Quarterly Income Statements 工作表 Q1-27 欄",
+     "value": 9047,
+     "match": true
+    }
+   },
+   {
+    "id": "q.sm.fy27q1",
+    "item": "季度 Sales and marketing",
+    "value": 5716.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "INCOME STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Quarterly Income Statements 工作表 Q1-27 欄",
+     "value": 5716,
+     "match": true
+    }
+   },
+   {
+    "id": "q.ga.fy27q1",
+    "item": "季度 General and administrative",
+    "value": 1881.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "INCOME STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Quarterly Income Statements 工作表 Q1-27 欄",
+     "value": 1881,
+     "match": true
+    }
+   },
+   {
+    "id": "q.oi.fy27q1",
+    "item": "季度 Operating income",
+    "value": 45915.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "INCOME STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Quarterly Income Statements 工作表 Q1-27 欄",
+     "value": 45915,
+     "match": true
+    }
+   },
+   {
+    "id": "q.oie.fy27q1",
+    "item": "季度 Other income (expense), net",
+    "value": 38.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "INCOME STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Quarterly Income Statements 工作表 Q1-27 欄",
+     "value": 38,
+     "match": true
+    }
+   },
+   {
+    "id": "q.pretax.fy27q1",
+    "item": "季度 Income before income taxes",
+    "value": 45953.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "INCOME STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Quarterly Income Statements 工作表 Q1-27 欄",
+     "value": 45953,
+     "match": true
+    }
+   },
+   {
+    "id": "q.tax.fy27q1",
+    "item": "季度 Provision for income taxes",
+    "value": 9324.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "INCOME STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Quarterly Income Statements 工作表 Q1-27 欄",
+     "value": 9324,
+     "match": true
+    }
+   },
+   {
+    "id": "q.ni.fy27q1",
+    "item": "季度 Net income",
+    "value": 36629.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "INCOME STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Quarterly Income Statements 工作表 Q1-27 欄",
+     "value": 36629,
+     "match": true
+    }
+   },
+   {
+    "id": "q.epsDil.fy27q1",
+    "item": "季度稀釋 EPS",
+    "value": 4.92,
+    "unit": "USD／股",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "INCOME STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Quarterly Income Statements（Diluted）",
+     "value": 4.92,
+     "match": true
+    }
+   },
+   {
+    "id": "q.sharesDilW.fy27q1",
+    "item": "季度稀釋加權股數",
+    "value": 7446.0,
+    "unit": "百萬股",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "INCOME STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+     "loc": "10-Q 損益表（Diluted 加權股數）",
+     "value": 7446.0,
+     "match": true
+    }
+   },
+   {
+    "id": "q.sharesBasicW.fy27q1",
+    "item": "季度基本加權股數",
+    "value": 7426.0,
+    "unit": "百萬股",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "INCOME STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "q.openaiGain.fy27q1",
+    "item": "OpenAI 投資淨利得（稅前，業外）",
+    "value": 272,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 3（Other income (expense), net 說明）",
+    "tag": "Interested-party",
+    "note": "10-Q：「$272 million of net gains」；稅後對淨利 +207（新聞稿非 GAAP 調節）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+     "loc": "新聞稿 Non-GAAP Definition：淨利 +207、EPS +0.03（稅後口徑，不同口徑不比）",
+     "value": null,
+     "match": false,
+     "explained": "口徑不同（稅前 272 vs 稅後 207），不比值"
+    }
+   },
+   {
+    "id": "q.oie.exOAI.fy27q1",
+    "item": "業外收支（不含 OpenAI）",
+    "value": -234,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+    "loc": "CFO 致詞",
+    "tag": "Interested-party",
+    "note": "「other income and expense was negative $234 million」",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx＋mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+     "loc": "業外 +38 − OpenAI 稅前利得 272＝−234",
+     "value": -234,
+     "match": true
+    }
+   }
+  ],
+  "3_現金流量": [
+   {
+    "id": "q.cf.ocf.fy27q1",
+    "item": "季度現金流量：Net cash from operations",
+    "value": 58000.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "CASH FLOWS STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Cash Flows 工作表 B 欄",
+     "value": 58000,
+     "match": true
+    }
+   },
+   {
+    "id": "q.cf.da.fy27q1",
+    "item": "季度現金流量：Depreciation, amortization, and other",
+    "value": 11744.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "CASH FLOWS STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Cash Flows 工作表 B 欄",
+     "value": 11744,
+     "match": true
+    }
+   },
+   {
+    "id": "q.cf.sbc.fy27q1",
+    "item": "季度現金流量：Stock-based compensation expense",
+    "value": 3134.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "CASH FLOWS STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Cash Flows 工作表 B 欄",
+     "value": 3134,
+     "match": true
+    }
+   },
+   {
+    "id": "q.cf.capex.fy27q1",
+    "item": "季度現金流量：Additions to property and equipment",
+    "value": -39367.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "CASH FLOWS STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Cash Flows 工作表 B 欄",
+     "value": -39367,
+     "match": true
+    }
+   },
+   {
+    "id": "q.cf.buyback.fy27q1",
+    "item": "季度現金流量：Common stock repurchased",
+    "value": -4379.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "CASH FLOWS STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Cash Flows 工作表 B 欄",
+     "value": -4379,
+     "match": true
+    }
+   },
+   {
+    "id": "q.cf.div.fy27q1",
+    "item": "季度現金流量：Common stock cash dividends paid",
+    "value": -6757.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "CASH FLOWS STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Cash Flows 工作表 B 欄",
+     "value": -6757,
+     "match": true
+    }
+   },
+   {
+    "id": "q.cf.debtRepay.fy27q1",
+    "item": "季度現金流量：Repayments of debt",
+    "value": -4850.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "CASH FLOWS STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Cash Flows 工作表 B 欄",
+     "value": -4850,
+     "match": true
+    }
+   },
+   {
+    "id": "q.cf.deftax.fy27q1",
+    "item": "季度現金流量：Deferred income taxes",
+    "value": 4609.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "CASH FLOWS STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Cash Flows 工作表 B 欄",
+     "value": 4609,
+     "match": true
+    }
+   },
+   {
+    "id": "q.cf.invGain.fy27q1",
+    "item": "季度現金流量：Net recognized losses (gains)",
+    "value": -231.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "CASH FLOWS STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Cash Flows 工作表 B 欄",
+     "value": -231,
+     "match": true
+    }
+   },
+   {
+    "id": "q.cf.finOther.fy27q1",
+    "item": "季度現金流量：Other, net",
+    "value": -1252.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "CASH FLOWS STATEMENTS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Cash Flows 工作表 B 欄",
+     "value": -1252,
+     "match": true
+    }
+   },
+   {
+    "id": "q.cf.wc.fy27q1",
+    "item": "季度營運資產與負債變動合計（九項）",
+    "value": 2115.0,
+    "unit": "USD M",
+    "period": "FY27Q1",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "CASH FLOWS 表 Changes in operating assets and liabilities 九項加總",
+    "tag": "Derived",
+    "note": "C14：FY2027 剩餘三季的營運資金＝FY2026 全年 − FY26Q1（前一年度同期實績）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Cash Flows 工作表同九項加總",
+     "value": 2115,
+     "match": true
+    }
+   },
+   {
+    "id": "q.cf.wc.fy26q1",
+    "item": "季度營運資產與負債變動合計（九項）",
+    "value": -218.0,
+    "unit": "USD M",
+    "period": "FY26Q1",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "CASH FLOWS 表 Changes in operating assets and liabilities 九項加總",
+    "tag": "Derived",
+    "note": "C14：FY2027 剩餘三季的營運資金＝FY2026 全年 − FY26Q1（前一年度同期實績）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Cash Flows 工作表同九項加總",
+     "value": -218,
+     "match": true
+    }
+   },
+   {
+    "id": "q.cf.flPrincipal.fy27q1",
+    "item": "融資租賃本金（融資現金流）",
+    "value": 1000,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 12 租賃補充現金流（Financing cash flows from finance leases）",
+    "tag": "Interested-party",
+    "note": "10-Q 未經查核",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+     "loc": "同表（Operating cash flows from finance leases 769 為利息）",
+     "value": 1000.0,
+     "match": true
+    }
+   }
+  ],
+  "4_資本支出": [
+   {
+    "id": "capexFL.fy27q1",
+    "item": "資本支出（含融資租賃取得資產；公司口徑）",
+    "value": 45200.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+    "loc": "CapEx 工作表 Q1-27",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+     "loc": "CFO：「Capital expenditures were $45.2 billion」",
+     "value": 45200,
+     "match": true
+    }
+   },
+   {
+    "id": "capexFL.finLease.fy27q1",
+    "item": "其中融資租賃",
+    "value": 7400,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+    "loc": "CFO：「finance leases were $7.4 billion」",
+    "tag": "Interested-party",
+    "note": "10-Q 附註 12 以融資租賃取得的使用權資產 5,192（不同口徑：公司資本支出口徑在起租時計全額本金）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+     "loc": "10-Q 附註 12 Right-of-use assets obtained in exchange for lease obligations：Finance leases",
+     "value": 5192,
+     "match": false,
+     "explained": "口徑不同：法說 7.4（資本支出口徑）vs 10-Q 使用權資產 5.192；取法說值（資本支出口徑），列資料缺口"
+    }
+   },
+   {
+    "id": "capex.cashPPE.fy27q1",
+    "item": "現金 PP&E",
+    "value": 39367,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "CASH FLOWS 表 Additions to property and equipment",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+     "loc": "CFO：「cash paid for P, P, and E was $39.4 billion」",
+     "value": 39400,
+     "match": true
+    }
+   },
+   {
+    "id": "capexFL.fy2026.chk",
+    "item": "FY2026 公司口徑資本支出（本季 xlsx 回查）",
+    "value": 145300.0,
+    "unit": "USD M",
+    "period": "FY2026",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+    "loc": "CapEx 工作表 Fiscal Year 2026",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "microsoft/data/microsoft_facts_20261008.json",
+     "loc": "capexFL.fy2026",
+     "value": 145300,
+     "match": true
+    }
+   },
+   {
+    "id": "capexFL.fy25q2",
+    "item": "公司口徑資本支出 Q2-25（Q 頁八季窗口補值）",
+    "value": 22600.0,
+    "unit": "USD M",
+    "period": "Q2-25",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+    "loc": "CapEx 工作表 Q2-25",
+    "tag": "Interested-party",
+    "note": "Q 頁窗口 FY25Q2–FY27Q1；facts v0.1a 只收 FY25Q4 起",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "capexFL.fy25q3",
+    "item": "公司口徑資本支出 Q3-25（Q 頁八季窗口補值）",
+    "value": 21400.0,
+    "unit": "USD M",
+    "period": "Q3-25",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+    "loc": "CapEx 工作表 Q3-25",
+    "tag": "Interested-party",
+    "note": "Q 頁窗口 FY25Q2–FY27Q1；facts v0.1a 只收 FY25Q4 起",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   }
+  ],
+  "5_資產負債": [
+   {
+    "id": "bs.cashSti.fy27q1",
+    "item": "資產負債表：Total cash, cash equivalents, and short-term investments（2026-09-30）",
+    "value": 64509.0,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "BALANCE SHEETS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Balance Sheets 工作表 B 欄",
+     "value": 64509,
+     "match": true
+    }
+   },
+   {
+    "id": "bs.debtCur.fy27q1",
+    "item": "資產負債表：Current portion of long-term debt（2026-09-30）",
+    "value": 4391.0,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "BALANCE SHEETS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Balance Sheets 工作表 B 欄",
+     "value": 4391,
+     "match": true
+    }
+   },
+   {
+    "id": "bs.debtLT.fy27q1",
+    "item": "資產負債表：Long-term debt（2026-09-30）",
+    "value": 31090.0,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "BALANCE SHEETS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Balance Sheets 工作表 B 欄",
+     "value": 31090,
+     "match": true
+    }
+   },
+   {
+    "id": "bs.ppe.fy27q1",
+    "item": "資產負債表：Property and equipment（2026-09-30）",
+    "value": 346844.0,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "BALANCE SHEETS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Balance Sheets 工作表 B 欄",
+     "value": 346844,
+     "match": true
+    }
+   },
+   {
+    "id": "bs.equity.fy27q1",
+    "item": "資產負債表：Total stockholders' equity（2026-09-30）",
+    "value": 470509.0,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "BALANCE SHEETS 表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Balance Sheets 工作表 B 欄",
+     "value": 470509,
+     "match": true
+    }
+   },
+   {
+    "id": "sh.out.fy27q1",
+    "item": "期末流通股數（2026-09-30）",
+    "value": 7427,
+    "unit": "百萬股",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "BALANCE SHEETS 表（outstanding 7,427 and 7,427）",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+     "loc": "10-Q 資產負債表股數",
+     "value": 7427.0,
+     "match": true
+    }
+   },
+   {
+    "id": "debt.face.fy27q1",
+    "item": "長期債務面額合計（含一年內到期）",
+    "value": 41269.0,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 9 到期表 Total",
+    "tag": "Interested-party",
+    "note": "面額；帳面值 4,391＋31,090＝35,481",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "microsoft/data/microsoft_facts_20261008.json＋mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+     "loc": "FY2026 面額 46,136 − 本季償還 4,850＝41,286（差 17 推定匯率）",
+     "value": 41286,
+     "match": true
+    }
+   },
+   {
+    "id": "debt.maturity.fy2027.q1",
+    "item": "債務到期 FY2027（剩餘三季）",
+    "value": 4400,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 9 到期表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "debt.maturity.fy2028.q1",
+    "item": "債務到期 FY2028",
+    "value": 0,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 9 到期表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "debt.maturity.fy2029.q1",
+    "item": "債務到期 FY2029",
+    "value": 1988,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 9 到期表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "debt.maturity.fy2030.q1",
+    "item": "債務到期 FY2030",
+    "value": 0,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 9 到期表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "debt.maturity.fy2031.q1",
+    "item": "債務到期 FY2031",
+    "value": 500,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 9 到期表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "debt.maturity.after.q1",
+    "item": "債務到期 FY2032 以後合計",
+    "value": 34381,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 9 到期表 Thereafter",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "lease.finLiab.fy27q1",
+    "item": "融資租賃負債合計（2026-09-30）",
+    "value": 70973,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 12 補充資產負債資訊（Total finance lease liabilities）",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+     "loc": "10-Q 附註 12 到期表：付款 95,246 − 設算利息 24,273",
+     "value": 70973,
+     "match": true
+    }
+   },
+   {
+    "id": "lease.maturity.fin.fy2027.q1",
+    "item": "融資租賃付款 FY2027（未折現）（剩餘三季）",
+    "value": 6006,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 12 到期表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "lease.maturity.fin.fy2028.q1",
+    "item": "融資租賃付款 FY2028（未折現）",
+    "value": 8163,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 12 到期表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "lease.maturity.fin.fy2029.q1",
+    "item": "融資租賃付款 FY2029（未折現）",
+    "value": 7433,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 12 到期表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "lease.maturity.fin.fy2030.q1",
+    "item": "融資租賃付款 FY2030（未折現）",
+    "value": 7323,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 12 到期表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "lease.maturity.fin.fy2031.q1",
+    "item": "融資租賃付款 FY2031（未折現）",
+    "value": 7300,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 12 到期表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "lease.notCommenced.fy27q1",
+    "item": "尚未起租的租賃（主要為資料中心）",
+    "value": 364600,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 12（not yet commenced of $364.6 billion）",
+    "tag": "Interested-party",
+    "note": "FY2026 年底 329.1；FY2027–FY2034 起租",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   }
+  ],
+  "6_股東回饋": [
+   {
+    "id": "roc.div.fy27q1",
+    "item": "季度股利（宣告口徑）",
+    "value": 7279.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+    "loc": "Return of Cash to Shareholders 工作表 Q1-27",
+    "tag": "Interested-party",
+    "note": "現金流量表付現 6,757（付上季宣告的 0.91）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "roc.bb.fy27q1",
+    "item": "季度回購（計畫內）",
+    "value": 2925.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+    "loc": "Return of Cash to Shareholders 工作表 Q1-27",
+    "tag": "Interested-party",
+    "note": "另扣稅買回 1.5（10-Q 附註 14）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+     "loc": "10-Q：「6 million shares … for $2.9 billion」",
+     "value": 2900,
+     "match": true
+    }
+   },
+   {
+    "id": "roc.total.fy27q1",
+    "item": "股利＋回購合計",
+    "value": 10204.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+    "loc": "同上加總",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+     "loc": "新聞稿：「returned $10.2 billion」",
+     "value": 10200,
+     "match": true
+    }
+   },
+   {
+    "id": "roc.dps.fy27q1",
+    "item": "每股季度股利（FY27 第一次宣告）",
+    "value": 0.98,
+    "unit": "USD／股",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+    "loc": "Return of Cash 工作表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "microsoft/data/microsoft_facts_20261008.json",
+     "loc": "sh.dpsQ.fy27q1",
+     "value": 0.98,
+     "match": true
+    }
+   },
+   {
+    "id": "bb.authRemain.fy27q1",
+    "item": "回購授權剩餘",
+    "value": 37700,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 14",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   }
+  ],
+  "7_指標與AI": [
+   {
+    "id": "rpo.commercial.fy27q1",
+    "item": "商用 RPO",
+    "value": 677000,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+    "loc": "Metrics 工作表 Q1'27",
+    "tag": "Interested-party",
+    "note": "年增 73%；加權存續 2.3 年、約 30% 於 12 個月內認列（法說）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+     "loc": "10-Q 附註 11：commercial portion $677 billion",
+     "value": 677000,
+     "match": true
+    }
+   },
+   {
+    "id": "rpo.total.fy27q1",
+    "item": "全公司 RPO",
+    "value": 683000,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 11",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "msCloud.rev.fy27q1",
+    "item": "Microsoft Cloud 營收",
+    "value": 63900.0,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+    "loc": "Metrics 工作表",
+    "tag": "Interested-party",
+    "note": "年增 30%（cc 31%）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+     "loc": "新聞稿：「Microsoft Cloud revenue was $63.9 billion」",
+     "value": 63900,
+     "match": true
+    }
+   },
+   {
+    "id": "msCloud.gm.fy27q1",
+    "item": "Microsoft Cloud 毛利率",
+    "value": 0.66,
+    "unit": "比率",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+    "loc": "Metrics 工作表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+     "loc": "CFO：「declined year-over-year to 66%」",
+     "value": 0.66,
+     "match": true
+    }
+   },
+   {
+    "id": "q.azure27.growth.fy27q1",
+    "item": "Azure 年增（新口徑）",
+    "value": 0.48,
+    "unit": "比率",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "新聞稿：「Azure revenue increased 48%」",
+    "tag": "Interested-party",
+    "note": "cc 48%",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+     "loc": "Metrics 工作表（'48% / 48%'）",
+     "value": 0.48,
+     "match": true
+    }
+   },
+   {
+    "id": "q.azure27.growth.calc.fy27q1",
+    "item": "Azure 年增（金額計算）",
+    "value": 0.4816386704789135,
+    "unit": "比率",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_新聞稿.docx",
+    "loc": "產品線表 33,165 ÷ 22,384 − 1",
+    "tag": "Derived",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "m365.seatGrowth.fy27q1",
+    "item": "M365 商用付費座席年增",
+    "value": 0.05,
+    "unit": "比率",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q1_財務報表.xlsx",
+    "loc": "Metrics 工作表",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+     "loc": "CFO：「Paid M365 commercial seats grew 5%」",
+     "value": 0.05,
+     "match": true
+    }
+   },
+   {
+    "id": "oai.stake.fy27q1",
+    "item": "OpenAI 持股（as-converted）",
+    "value": 0.24,
+    "unit": "比率（約）",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 1（approximate 24% interest on an as-converted basis）",
+    "tag": "Interested-party",
+    "note": "FY2026 10-K 約 25%；單一來源（10-Q）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "oai.rev.fy27q1",
+    "item": "來自 OpenAI 的營收（含分潤）",
+    "value": 10000,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 1（關係人揭露）",
+    "tag": "Interested-party",
+    "note": "應收 OpenAI 7.2（6-30 為 6.0）；只作驗證列，不回推 k（C3）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "oai.funded.fy27q1",
+    "item": "OpenAI 投資承諾／已撥付",
+    "value": 12000,
+    "unit": "USD M",
+    "period": "2026-09-30",
+    "source": "mag/extract/docs/2026Q3/text/microsoft_FY27Q1_10-Q.txt",
+    "loc": "10-Q 附註 1（commitments $13.0 billion, $12.0 billion funded）",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "call.foundry.fy27q1",
+    "item": "Foundry 營收年增（倍）",
+    "value": 3,
+    "unit": "倍（>）",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+    "loc": "法說",
+    "tag": "Interested-party",
+    "note": "「revenue more than tripling year over year」；客戶 >120,000",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "call.copilotDau.fy27q1",
+    "item": "M365 Copilot 日活躍用戶季增",
+    "value": 0.5,
+    "unit": "比率（約）",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+    "loc": "法說",
+    "tag": "Interested-party",
+    "note": "「Daily users are up nearly 50 percent quarter over quarter」；付費座席本季未揭露",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "call.newDC.fy27q1",
+    "item": "本季新增資料中心",
+    "value": 24,
+    "unit": "座",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+    "loc": "法說",
+    "tag": "Interested-party",
+    "note": "「adding 24 new data centers across five continents」",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "call.shortLived.fy27q1",
+    "item": "短期資產（CPU／GPU）占資本支出",
+    "value": 0.75,
+    "unit": "比率（約）",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+    "loc": "法說",
+    "tag": "Interested-party",
+    "note": "「Roughly three quarters of our capex was for short-lived assets」",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "call.maia200.fy27q1",
+    "item": "Maia 200 每瓦 token（相對）",
+    "value": 1.7,
+    "unit": "倍（至多）",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+    "loc": "法說",
+    "tag": "Interested-party",
+    "note": "「up to 1.7 times more tokens per watt」（Teams、Copilot）；已安裝首批 Vera Rubin",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "call.fcf.fy27q1",
+    "item": "自由現金流（公司說法）",
+    "value": 18600,
+    "unit": "USD M",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+    "loc": "法說",
+    "tag": "Interested-party",
+    "note": "「free cash flow was $18.6 billion」＝營業現金流 58.0 − 現金 PP&E 39.4",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "call.capacity.fy27q1",
+    "item": "產能限制",
+    "value": null,
+    "unit": "文字",
+    "period": "FY27Q1（季末 2026-09-30）",
+    "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+    "loc": "法說",
+    "tag": "Interested-party",
+    "note": "「Customer demand continues to exceed available supply」（Q2 指引段）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   }
+  ],
+  "8_指引": [
+   {
+    "id": "guid.fy27q2.rev",
+    "item": "FY27Q2 營收",
+    "value": [
+     96000,
+     97100
+    ],
+    "unit": "USD M",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "年增 18–19%；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.rev.ai",
+    "item": "FY27Q2 Agents and Infra 營收",
+    "value": [
+     80100,
+     80700
+    ],
+    "unit": "USD M",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "年增 24–25%；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.rev.dc",
+    "item": "FY27Q2 Devices and Consumer 營收",
+    "value": [
+     15900,
+     16400
+    ],
+    "unit": "USD M",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.cogs",
+    "item": "FY27Q2 營業成本",
+    "value": [
+     32700,
+     32900
+    ],
+    "unit": "USD M",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "含自願離職方案估計；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.opex",
+    "item": "FY27Q2 營業費用",
+    "value": [
+     18500,
+     18600
+    ],
+    "unit": "USD M",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "年增 9%；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.oie",
+    "item": "FY27Q2 業外（不含 OpenAI）",
+    "value": -300,
+    "unit": "USD M",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "含資料中心融資租賃利息；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.etr",
+    "item": "FY27Q2 有效稅率",
+    "value": 0.2,
+    "unit": "比率",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.capex",
+    "item": "FY27Q2 資本支出（下限）",
+    "value": 50000,
+    "unit": "USD M（下限）",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "over $50 billion；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.azure",
+    "item": "FY27Q2 Azure 年增（cc）",
+    "value": [
+     0.49,
+     0.5
+    ],
+    "unit": "比率",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "部分第三方 GPU 服務合約延到下半年；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.m365c",
+    "item": "FY27Q2 M365 商用雲年增（cc）",
+    "value": 0.19,
+    "unit": "比率（約）",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "匯率使報告成長少不到 1pt；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.m365cons",
+    "item": "FY27Q2 M365 消費雲年增",
+    "value": "low-teens",
+    "unit": "文字",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.lic",
+    "item": "FY27Q2 Productivity and server licensing",
+    "value": "decline mid- to high-single digits",
+    "unit": "文字",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.ind",
+    "item": "FY27Q2 Industry solutions cloud",
+    "value": "growth mid- to high-single digits",
+    "unit": "文字",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.fro",
+    "item": "FY27Q2 Frontier and support services",
+    "value": "growth low- to mid-single digits",
+    "unit": "文字",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.srch",
+    "item": "FY27Q2 Search and advertising ex TAC",
+    "value": "growth low-double digits",
+    "unit": "文字",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "整體搜尋與廣告營收成長相近；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.xbox",
+    "item": "FY27Q2 XBOX content and services",
+    "value": "growth mid- to high-single digits",
+    "unit": "文字",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "硬體年減；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.win",
+    "item": "FY27Q2 Windows OEM and devices",
+    "value": "decline mid-thirties",
+    "unit": "文字",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "法說：此趨勢延續本財年其餘各季；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.opm",
+    "item": "FY27Q2 營業利益率",
+    "value": "down slightly year-over-year",
+    "unit": "文字",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27q2.msCloudGM",
+    "item": "FY27Q2 Microsoft Cloud 毛利率",
+    "value": 0.65,
+    "unit": "比率（約）",
+    "period": "FY27Q2（2026-10～12）",
+    "source": "mag/extract/docs/2026Q3/microsoft_FY27Q2_展望簡報.pptx",
+    "loc": "展望簡報第 3–4 頁（圖片）",
+    "tag": "Interested-party",
+    "note": "；法說 CFO 指引段同值（兩讀一致）",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.cy26.capex",
+    "item": "曆年 2026 資本支出（公司口徑）",
+    "value": 170000,
+    "unit": "USD M（約）",
+    "period": "CY2026",
+    "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+    "loc": "CFO：「for the calendar year, spend should be approximately $170 billion due to the 3P capacity delays」",
+    "tag": "Interested-party",
+    "note": "前次（FY26Q4 法說）約 175；減少原因為第三方產能交付延到 FY27 下半年",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29",
+    "check": {
+     "source": "microsoft/data/microsoft_facts_20261008.json＋本表",
+     "loc": "FY26Q3 31.9＋FY26Q4 41.0＋FY27Q1 45.2＋FY27Q2 隱含 51.9＝170.0（Q2 指引 over 50 吻合）",
+     "value": 170000,
+     "match": true
+    }
+   },
+   {
+    "id": "guid.fy27.h2capex",
+    "item": "FY27 下半年資本支出",
+    "value": "accelerate",
+    "unit": "文字",
+    "period": "FY27H2",
+    "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+    "loc": "CFO：「In the second half of the fiscal year, we currently expect CapEx spend to accelerate」",
+    "tag": "Interested-party",
+    "note": "主要為 CPU（含記憶體與儲存漲價）、GPU 及延後的第三方產能",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27.fcf",
+    "item": "FY27 自由現金流",
+    "value": "positive",
+    "unit": "文字",
+    "period": "FY2027",
+    "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+    "loc": "CFO：「remain free cash flow positive in FY27」",
+    "tag": "Interested-party",
+    "note": "另稱會在適當時機取得額外資金來源",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "guid.fy27.revAccel.m365",
+    "item": "M365 商用雲全年",
+    "value": "accelerate through the year",
+    "unit": "文字",
+    "period": "FY2027",
+    "source": "FY27Q1 法說逐字稿（2026-10-28；不在 repo，chat 端提供）",
+    "loc": "CFO",
+    "tag": "Interested-party",
+    "note": "",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   },
+   {
+    "id": "capex.fy27.derived.q1",
+    "item": "FY2027 資本支出推估（公司口徑）",
+    "value": 204200,
+    "unit": "USD M",
+    "period": "FY2027",
+    "source": "本表推導",
+    "loc": "上半年＝Q1 45.2＋Q2 隱含 51.9＝97.1；下半年＝前次推估 102.1＋延後的第三方產能約 5.0（曆年 175 → 170）＝107.1",
+    "tag": "Derived",
+    "note": "低＝下半年同上半年 97.1（合計 194.2）；高＝下半年較上半年加速 20%（116.5，合計 213.6）。前次推估（v0.3）204.2",
+    "docDate": "2026-10-28",
+    "retrieved": "2026-10-29"
+   }
+  ]
+ }
+}
