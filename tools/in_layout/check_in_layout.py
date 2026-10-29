@@ -12,6 +12,8 @@
 #      每格是 =E<列> 公式，引用 H 欄「引用 In 頁 k1／k2／k3；…」所列鍵的列（情境 B 無專屬輸入時可填常數 0）。
 #   3. 上方所有情境專屬列都必須被這一節引用（不能漏列）；情境權重列鍵為 scn_w，合計＝1。
 #   4. 本節純展示：其他工作表與 In 頁上方的公式、定義名稱都不得引用本節。
+#   5.（警告，不判失敗）Sens、Recon、In 以外工作表的公式不應直接讀 In 頁 D／F 欄（敏感度低／高），含指向 D／F 的定義名稱（以實際指向判定，不看名稱字尾）：
+#      情境值應拆成情境專屬列（例如 g27_A／g27_B／g27_C）並列入對照；共識區間、舊版對照等非主模型用途可保留，於模型 README 說明。
 # 用法：
 #   python3 tools/in_layout/check_in_layout.py <成品 xlsx>      # 單檔；不符即失敗（結束碼 1）
 #   python3 tools/in_layout/check_in_layout.py --all [--md 報告.md]  # 掃描全部 */dist/*.xlsx，只報告（結束碼 0）
@@ -34,28 +36,58 @@ def is_scn(key, label, keys):
     return bool(LAB_PAT.search(label))
 
 
+WARN_SKIP = {"In", "Sens", "Recon"}
+
+
+def lohi_uses(wbf, last):
+    """Sens／Recon／In 以外讀敏感度低／高欄的公式格（第 5 項警告）：
+    定義名稱以「實際指向 In!$D$n 或 In!$F$n（n < 情境驅動對照）」認定，不看名稱字尾；另加直接寫 In!D／F 的公式。"""
+    names = set()
+    for n, dn_ in wbf.defined_names.items():
+        for t, ref in dn_.destinations:
+            m = re.fullmatch(r"\$?([A-Z]{1,3})\$?(\d+)", ref)
+            if t == "In" and m and m.group(1) in ("D", "F") and int(m.group(2)) < last:
+                names.add(n)
+    pat_n = re.compile(r"(?<![A-Za-z0-9_.])(" + "|".join(sorted(map(re.escape, names), key=len, reverse=True)) + r")(?![A-Za-z0-9_(])", re.I) if names else None
+    hits = []
+    for sh in wbf.worksheets:
+        if sh.title in WARN_SKIP:
+            continue
+        for row in sh.iter_rows():
+            for c in row:
+                f = c.value
+                if not (isinstance(f, str) and f.startswith("=")):
+                    continue
+                f2 = re.sub(r'"[^"]*"', "", f)  # 不看字串常數
+                if (pat_n and pat_n.search(f2)) or any(int(x) < last for x in re.findall(r"In!\$?[DF]\$?(\d+)(?![\d:])", f2)):
+                    hits.append(f"{sh.title}!{c.coordinate}")
+    return hits
+
+
 def check(path):
-    """回傳 (適用, 失敗清單, 情境專屬列數)"""
+    """回傳 (適用, 失敗清單, 情境專屬列數, 警告清單)"""
     wbv = openpyxl.load_workbook(path, data_only=True)
     if "In" not in wbv.sheetnames:
-        return False, [], 0
+        return False, [], 0, []
     ws = wbv["In"]
     wf = openpyxl.load_workbook(path, data_only=False)["In"]
     hdr = [str(ws.cell(3, c).value or "") for c in (4, 5, 6)]
     if hdr[1] != "基準":
-        return False, [], 0
+        return False, [], 0, []
     sec = [r for r in range(4, ws.max_row + 1) if "情境驅動對照" in str(ws.cell(r, 1).value or "")]
     last = (sec[0] if sec else ws.max_row + 1)
     keyrow = {str(wf.cell(r, 1).value): r for r in range(4, last) if wf.cell(r, 1).value}
     scn_rows = {r for r in range(4, last) if wf.cell(r, 1).value and is_scn(str(wf.cell(r, 1).value), str(ws.cell(r, 2).value or ""), keyrow)}
     if not scn_rows:
-        return False, [], 0
+        return False, [], 0, []
     fail = []
+    lh = lohi_uses(wf.parent, last)
+    warn = [f"{len(lh)} 格讀敏感度低／高欄（Sens／Recon 以外）：" + "、".join(lh[:6]) + ("…" if len(lh) > 6 else "")] if lh else []
     if hdr[0] != "敏感度低" or hdr[2] != "敏感度高":
         fail.append(f"In!D3／F3 應為「敏感度低」「敏感度高」：{hdr[0]}／{hdr[2]}")
     if len(sec) != 1:
         fail.append(f"「情境驅動對照」一節應恰好一個：{len(sec)}")
-        return True, fail, len(scn_rows)
+        return True, fail, len(scn_rows), warn
     h = sec[0] + 1
     if [str(ws.cell(h, c).value or "")[:4] for c in (4, 5, 6)] != ["情境 A", "情境 B", "情境 C"]:
         fail.append(f"情境驅動對照表頭 D／E／F 應為情境 A／B／C：{[ws.cell(h, c).value for c in (4, 5, 6)]}")
@@ -106,7 +138,7 @@ def check(path):
     miss = sorted(scn_rows - refd)
     if miss:
         fail.append("情境專屬列未列入對照：" + "、".join(f"{wf.cell(x, 1).value}（第 {x} 列）" for x in miss))
-    return True, fail, len(scn_rows)
+    return True, fail, len(scn_rows), warn
 
 
 def main(argv):
@@ -120,19 +152,22 @@ def main(argv):
                 continue
             x = xs[-1]
             try:
-                app, fail, n = check(x)
+                app, fail, n, warn = check(x)
             except Exception as e:  # 讀檔失敗也列出
-                app, fail, n = True, [f"讀檔失敗：{e}"], 0
+                app, fail, n, warn = True, [f"讀檔失敗：{e}"], 0, []
             co = os.path.basename(os.path.dirname(d))
             if app:
-                res.append((co, os.path.basename(x), n, "符合" if not fail else "不符", "；".join(fail)[:200]))
-        lines = ["| 資料夾 | 成品 | 情境專屬列 | 結果 | 說明 |", "|---|---|---|---|---|"] + [f"| `{a}` | {b} | {c} | {d} | {e} |" for a, b, c, d, e in res]
+                nw = int(re.match(r"(\d+)", warn[0]).group(1)) if warn else 0
+                res.append((co, os.path.basename(x), n, "符合" if not fail else "不符", nw, "；".join(fail)[:200]))
+        lines = ["| 資料夾 | 成品 | 情境專屬列 | 結果 | 讀低／高欄（警告） | 說明 |", "|---|---|---|---|---|---|"] + [f"| `{a}` | {b} | {c} | {d} | {w} | {e} |" for a, b, c, d, w, e in res]
         print("\n".join(lines))
-        print(f"\n適用 {len(res)} 檔；符合 {sum(1 for x in res if x[3] == '符合')}、不符 {sum(1 for x in res if x[3] != '符合')}")
+        print(f"\n適用 {len(res)} 檔；符合 {sum(1 for x in res if x[3] == '符合')}、不符 {sum(1 for x in res if x[3] != '符合')}；有第 5 項警告 {sum(1 for x in res if x[4])} 檔")
         if md:
             open(md, "w", encoding="utf-8").write("\n".join(lines) + "\n")
         return 0
-    app, fail, n = check(argv[0])
+    app, fail, n, warn = check(argv[0])
+    for w in warn:
+        print("警告（第 5 項，不判失敗）：" + w)
     if not app:
         print("In 頁版面核對：不適用（無 In 頁三欄或無情境專屬輸入列）")
         return 0
