@@ -101,11 +101,35 @@ def groups(rows):
         if g["scope"] != "siliconomics":
             per.setdefault(g["scope"], []).append(g)
     rr = []
+    if os.environ.get("ORDER") == "upside":
+        # 2026-10-29（Andy「續跑來源複核」）：額度不足以跑完時，先核對評等最極端的公司（|加權上檔空間| 大者），
+        # 因為這些公司的投資建議最依賴輸入值；同一公司內維持原順序。讀不到上檔空間者排最後。
+        up = _upside()
+        for sc in sorted(per, key=lambda d: -abs(up.get(d, 0.0))):
+            rr += per[sc]
+        return sil + rr
     k = 0
     while any(k < len(v) for v in per.values()):
         rr += [v[k] for v in per.values() if k < len(v)]
         k += 1
     return sil + rr
+
+
+def _upside():
+    """各公司 dist xlsx 的 Val 頁「上檔空間：加權目標價」（快取值）。"""
+    import openpyxl
+    out = {}
+    for x in glob.glob(f"{ROOT}/*/dist/*.xlsx"):
+        d = os.path.relpath(x, ROOT).split("/")[0]
+        try:
+            ws = openpyxl.load_workbook(x, read_only=True, data_only=True)["Val"]
+        except Exception:
+            continue
+        for r in ws.iter_rows(values_only=True):
+            if r and str(r[0] or "").startswith("上檔空間：加權目標價") and _num(r[1] if len(r) > 1 else None):
+                out[d] = float(r[1])
+                break
+    return out
 
 
 # ---------- API ----------
