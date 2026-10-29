@@ -5,7 +5,7 @@
 #   (1) 穩健度欄：把加權目標價換成「共識前瞻 EPS」口徑後的上檔空間與投資建議（[Derived] 近似：DCF 與 Comparable 都約與 EPS 成正比，
 #       故 目標價 × 共識前瞻 EPS ÷ 本模型前瞻 EPS；兩者期間可能差約一年，見各模型 Recon）；
 #   (2) 「市場別分布」頁：各市場的評等分布、買進率，以及台股依次產業拆分（診斷評等是否偏向特定市場）；
-#   (3) 「相對倍數試算」頁：Comparable 改用「同業中位數 × 本公司 10 年相對同業倍數比」的試算（只作參考，未進目標價）。
+#   (3) 「相對倍數調整」頁：Comparable 改用「同業中位數 × 本公司 10 年相對同業倍數比」（2026-10-29 起已進加權目標價），列調整前後與敏感度。
 import csv
 import glob
 import math
@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 import relative_multiple as RM  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VER, VDATE = "v0.2.5", "2026-10-29"   # 每次升版改這裡
+VER, VDATE = "v0.2.6", "2026-10-29"   # 每次升版改這裡
 BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7")
 KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -241,13 +241,13 @@ def main():
     md.column_dimensions["A"].width = 34
     md.column_dimensions["E"].width = 60
 
-    # ---- 相對倍數試算（未進目標價） ----
-    rm = wb.create_sheet("相對倍數試算")
-    rm["A1"] = ("相對倍數調整試算（只作參考，未進目標價）：Comparable 目標倍數＝同業中位數 × 本公司 10 年中位數 ÷ 同業 10 年中位數的中位數，"
+    # ---- 相對倍數調整（2026-10-29 起已進目標價） ----
+    rm = wb.create_sheet("相對倍數調整")
+    rm["A1"] = ("相對倍數調整（2026-10-29 起已進加權目標價；各模型 Val 第 0.5 節）：Comparable 目標倍數＝同業中位數 × 本公司 10 年中位數 ÷ 同業 10 年中位數的中位數，"
                 f"夾在 [{RM.RM_LO}, {RM.RM_HI}]；有效年數 < {RM.MIN_YEARS} 或有效同業 < {RM.MIN_PEERS} 時係數＝1。")
     rm["A1"].font = BOLD
     H3 = ["公司", "市場", "代號", "倍數", "本公司 10 年中位數", "本公司有效年數", "納入同業家數", "同業 10 年中位數的中位數", "原始比值", "係數",
-          "上檔空間：加權（模型）", "上檔空間：加權（試算）", "投資建議（模型）", "投資建議（試算）", "是否翻轉", "同業（有效年數）",
+          "上檔空間：加權（調整前）", "上檔空間：加權（調整後＝模型）", "投資建議（調整前）", "投資建議（調整後＝模型）", "是否翻轉", "同業（有效年數）",
           "敏感度：近 5 年窗係數", "敏感度：近 5 年窗投資建議", "兩種窗口是否都翻轉", "對照：10-27 落後代理係數"]
     for j, h in enumerate(H3, 1):
         c = rm.cell(4, j, h)
@@ -263,7 +263,10 @@ def main():
     for i, r in enumerate(sorted(rows, key=lambda r: (r["市場"], -r["up"])), 5):
         met = "PB" if r["folder"] in ("skhynix", "samsung", "micron", "kioxia", "sndk") else "PE"
         s = RM.summary(r["own_ticker"], peers_by.get(r["folder"], []), met, hist)
+        # 2026-10-29 起已接入模型：r["up"] 已含調整；「調整前」以 Comparable（市場主流同業法）重算
+        pre_up = 0.5 * (r["dcf"] / r["px"] - 1) + 0.5 * (r["comp"] / r["px"] - 1)
         new_up = 0.5 * (r["dcf"] / r["px"] - 1) + 0.5 * (r["comp"] * s["factor"] / r["px"] - 1)
+        assert abs(new_up - r["up"]) < 1e-6, (r["公司"], new_up, r["up"])
         pinfo = []
         for nm, t in peers_by.get(r["folder"], []):
             n = len([1 for y, (v, _) in hist.get((RM.norm(t), met), {}).items() if y in RM.YEARS and RM._valid(v, met)])
@@ -276,10 +279,10 @@ def main():
         RM.YEARS = list(range(2016, 2026))
         so = RM.summary(r["own_ticker"], peers_by.get(r["folder"], []), met, hist_old)
         RM.YEARS = y0
-        f10, f5 = rec(r["up"]) != rec(new_up), rec(r["up"]) != rec(up5)
-        TR.append((rec(r["up"]), rec(new_up), rec(up5)))
+        f10, f5 = rec(pre_up) != rec(new_up), rec(pre_up) != rec(up5)
+        TR.append((rec(pre_up), rec(new_up), rec(up5)))
         vals = [r["公司"], r["市場"], r["own_ticker"], "P/B" if met == "PB" else "P/E", s["own_med"], s["own_n"], s["n_peers"], s["peer_med"],
-                s["raw"], s["factor"], r["up"], new_up, rec(r["up"]), rec(new_up), "是" if f10 else "否", "、".join(pinfo),
+                s["raw"], s["factor"], pre_up, new_up, rec(pre_up), rec(new_up), "是" if f10 else "否", "、".join(pinfo),
                 s5["factor"], rec(up5), "是" if (f10 and f5) else ("只有一種" if (f10 or f5) else "否"), so["factor"]]
         for j, v in enumerate(vals, 1):
             c = rm.cell(i, j, v)
@@ -302,14 +305,14 @@ def main():
                 "口徑與 Comparable（現在的同業前瞻倍數）一致，10-27 落後 P/E 試算的谷底年度雜訊已排除。"
                 f"結果：10 年窗翻轉 {f10} 檔、近 5 年窗（2022–2026、門檻 4 年）翻轉 {f5} 檔；兩種窗口都翻轉 {len(both)} 檔，"
                 f"其中方向相同 {same_dir} 檔、翻到同一評等 {same_rec} 檔（其餘只差一級）；兩種窗口評等相同 {agree}／{n} 檔。"
-                "敏感度在 Q–T 欄（S 欄＝兩種窗口是否都翻轉）。尚未進目標價（下一步：接入各建檔程式）。")
+                "敏感度在 Q–T 欄（S 欄＝兩種窗口是否都翻轉）。「調整前」＝DCF 與 Comparable（市場主流同業法）各半。")
     rm["A2"].alignment = Alignment(wrap_text=True)
     rm.column_dimensions["A"].width = 14
     rm.column_dimensions["P"].width = 70
 
-    # ---- 前瞻倍數年度窗口中位數（試算的輸入，供核對） ----
+    # ---- 前瞻倍數年度窗口中位數（調整的輸入，供核對） ----
     dv = wb.create_sheet("前瞻倍數資料")
-    dv["A1"] = ("試算輸入：tools/data/fwd_mult_hist.csv。每格＝該窗口（前一年 11 月～當年 10 月）Bloomberg 月底前瞻倍數的中位數；"
+    dv["A1"] = ("相對倍數調整的輸入：tools/data/fwd_mult_hist.csv。每格＝該窗口（前一年 11 月～當年 10 月）Bloomberg 月底前瞻倍數的中位數；"
                 "有效月數 < 6 的窗口留空。P/E 有效區間 0 < 值 ≤ 200、P/B 0 < 值 ≤ 20（逐月套用）。")
     dv["A1"].font = BOLD
     hh = ["代號", "倍數"] + [str(y) for y in RM.YEARS] + ["有效窗口數", "10 年中位數"]
@@ -337,7 +340,7 @@ def main():
         "穩健度（新增）：加權目標價 ×（共識前瞻 EPS ÷ 本模型前瞻 EPS），即把 EPS 換成共識口徑、倍數與方法不變。[Derived] 近似——DCF 與 Comparable 約與 EPS 成正比；"
         "本模型的「12 個月後前瞻 EPS」比共識前瞻 EPS 晚約一年，成長股的差距有一部分是期間差，所以本欄偏保守。用途：看評等是否主要靠 EPS 假設撐起來。",
         "市場別分布（新增）：各市場評等分布與買進率；台股另依次產業拆分。",
-        "相對倍數試算（未套用）：見該頁第 2 列結論。資料檔 tools/data/fwd_mult_hist.csv（Bloomberg 前瞻倍數年度窗口中位數；10-27 落後代理 rel_mult_hist.csv 保留對照）、規則 tools/relative_multiple.py。",
+        "相對倍數調整（2026-10-29 起已進目標價）：見該頁第 2 列。資料檔 tools/data/fwd_mult_hist.csv（Bloomberg 前瞻倍數年度窗口中位數；10-27 落後代理 rel_mult_hist.csv 保留對照）、規則 tools/relative_multiple.py。",
         "投資建議固定規則（Andy 2026-10-25 14:17）：> +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、< −50% 強力放空。",
     ], 1):
         ex.cell(k, 1, t)

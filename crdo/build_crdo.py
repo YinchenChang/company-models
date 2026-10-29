@@ -826,6 +826,11 @@ for _kb, _lab, _kind in [('mpl', 'AI 可插拔光模組市場', 'mpl')]:
             wb.defined_names[_k] = DefinedName(_k, attr_text=f"In!$E${_ri}"); _ri += 1
 _n1 = RD.max_row
 RD.cell(_n1 + 1, 1, 'v0.2.2（2026-10-26）：網通模型 v0.2.3 的 CPO 滲透改三情境（A＝替代快、B＝平平、C＝慢），本模型光學的可插拔市場 A／B／C 改讀同字母列（In 頁末新增 B、C；情境 A 沿用 mpl_，數值改為網通情境 A）。光學有效份額以 FY2027 錨點 ÷ 情境 B 市場校準（三情境同一份額；B 的 CPO 路徑＝v0.2.1，故情境 B 數值不變），所以 CPO 快 → 光學營收較少。銅纜（AEC）市場不受 CPO 影響。其他輸入不變。')
+# 相對倍數調整（Andy 2026-10-27「照建議做」；tools/relative_multiple.py，2026-10-29 接入）
+import os, sys  # noqa: E401
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
+import relative_multiple as RMX  # noqa: E402
+RMX.apply(wb, "crdo")
 wb.save(sys.argv[1])
 if os.environ.get("CRDO_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
