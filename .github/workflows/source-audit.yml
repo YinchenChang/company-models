@@ -1,5 +1,5 @@
 # 來源複核（API 版，2026-10-28 起；說明見 tools/source_audit/README.md）
-# 手動執行（workflow_dispatch）；push 到 claude/source-audit 只試跑 10 組。
+# 手動執行（workflow_dispatch）；push 到 claude/source-audit 只試跑 10 組，或依該分支 tools/source_audit/push_config.json 做指定範圍複核（2026-10-29 起）。
 # 結果與進度（state.jsonl）commit 到固定分支 source-audit-results（不寫 main），重跑時接續、累計花費不超過 max_usd。
 name: source-audit
 on:
@@ -10,7 +10,7 @@ on:
       recover_since: {description: "先取回此時間（UTC ISO）之後未寫入的批次結果；空白＝不取回", default: ""}
   push:
     branches: [claude/source-audit]
-    paths: ["tools/source_audit/audit.py", ".github/workflows/source-audit.yml"]
+    paths: ["tools/source_audit/audit.py", "tools/source_audit/push_config.json", ".github/workflows/source-audit.yml"]
 permissions:
   contents: write
 concurrency:
@@ -27,8 +27,10 @@ jobs:
       - run: pip install openpyxl
       - name: Restore previous progress
         run: |
-          git fetch -q origin source-audit-results && git show origin/source-audit-results:tools/source_audit/out/state.jsonl > /tmp/state.jsonl 2>/dev/null || true
-          mkdir -p tools/source_audit/out && [ -s /tmp/state.jsonl ] && cp /tmp/state.jsonl tools/source_audit/out/ || true
+          # 取回結果分支整個 out/（含各次指定範圍複核的 state_<AUDIT_RUN>.jsonl 與結果檔；提交步驟會以 out/ 整體覆蓋結果分支）
+          git fetch -q origin source-audit-results && git checkout origin/source-audit-results -- tools/source_audit/out 2>/dev/null || true
+          git reset -q tools/source_audit/out 2>/dev/null || true
+          mkdir -p tools/source_audit/out
       - name: Audit
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
