@@ -34,7 +34,9 @@ def recalc(raw):
 def tp_of(xlsx, rowmap):
     rm = json.load(open(rowmap, encoding="utf-8"))
     wb = openpyxl.load_workbook(xlsx, data_only=True)
-    return wb["Val"].cell(rm["VR"]["tp"], 2).value
+    cf = wb["CF"]
+    return {"tp": wb["Val"].cell(rm["VR"]["tp"], 2).value, "gateB": cf.cell(rm["GATE"], 3).value,
+            "cx27B": cf[f"H{rm['CR']['B']['cx']}"].value}
 
 
 def run(name, sets):
@@ -53,7 +55,15 @@ def lohi(key, which):
 
 
 jobs = {"base|base": []}
+PACE0 = json.load(open(os.path.join(HERE, "data", "pace_v031.json"), encoding="utf-8"))
 for key, side, val, _r in rm["SE_ROWS"]:
+    if key == "c10_win":                                 # C10 下半年視窗
+        jobs[f"{key}|{side}"] = [("pace", PACE0["pace_h2"])]
+        continue
+    if key == "c10_g":                                   # C10 指引區間兩端（指引與速度同改）
+        g = 195 if side == "低" else 205
+        jobs[f"{key}|{side}"] = [("capex_g", g), ("pace", PACE0[f"pace_g{g}"])]
+        continue
     if key == "tpu_fo":                                  # TPU 收入改按產出比（資本支出仍用持有比）
         jobs[f"{key}|{side}"] = [("tpu_f", IN.cell(row["tpu_out"], 5).value)]
         continue
@@ -76,6 +86,7 @@ res = {}
 with ThreadPoolExecutor(max_workers=int(os.environ.get("JOBS", "4"))) as ex:
     futs = {k: ex.submit(run, f"c{i:02d}", sets) for i, (k, sets) in enumerate(jobs.items())}
     for k, f in futs.items():
-        res[k] = {"tp": f.result(), "set": jobs[k]}
-        print(k, jobs[k], round(res[k]["tp"], 2), flush=True)
+        o = f.result()
+        res[k] = {**o, "set": jobs[k]}
+        print(k, jobs[k], round(o["tp"], 2), round(o["gateB"], 1), round(o["cx27B"], 1), flush=True)
 json.dump(res, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)

@@ -475,7 +475,7 @@ qrow(r, "capex", "資本支出（購置不動產與設備）", "cf.capex", neg=T
 qrow(r, "fcf", "自由現金流（公司定義：營運現金流 − 資本支出）", "cf.fcf"); r += 1
 qrow(r, "chk_fcf", "檢查：營運現金流 − 資本支出 − 自由現金流", formula=lambda c: f"{c}{QR['cfo']}-{c}{QR['capex']}-{c}{QR['fcf']}", fmt="0.000", tag="—", src="—"); r += 1
 qrow(r, "bb", "回購", "cf.buyback", neg=True); r += 1
-qrow(r, "div", "普通股股利", "cf.div", neg=True); r += 1
+qrow(r, "div", "股利（普通＋特別股）", "cf.div", neg=True); r += 1
 r += 1
 Q.cell(r, 1, "核對彙總（實績必須為 0）").font = BOLD; r += 1
 QCHK = ["chk_gs", "chk_rev", "chk_oi", "chk_cost", "chk_pt", "chk_ni", "chk_fcf"]
@@ -1280,7 +1280,9 @@ RC.column_dimensions["H"].width = 70
 SENS_CASES = [
     ("internal_ai_reading", "自用 AI 讀法 1（只計成本；C16）", "lo", None, "讀法 2 → 讀法 1"),
     ("ext_sh", "對外比例（C23）", 0.10, 0.50, "10%／50%（±20pt；總 MW 不變）"),
-    ("pace", "AI MW 新增速度", "lo", "hi", "v0.2.2 保守／積極速度"),
+    ("pace", "AI MW 新增速度", "lo", "hi", "基準 × 2/3／× 1.5"),
+    ("c10_win", "C10 校準視窗改用下半年（Q4 公式 × 2＝指引 − 上半年）", None, "hi", f"FY2026 全年 → 2H26 平均季速：速度 {PACE['pace']:,.1f} → {PACE.get('pace_h2', 0):,.1f}"),
+    ("c10_g", "C10 指引取區間兩端（195／205）", "lo", "hi", f"中點 200 → 195／205：速度 {PACE.get('pace_g195', 0):,.1f}／{PACE.get('pace_g205', 0):,.1f}"),
     ("kl_px", "k：長約價格（低＝判斷倍數 0.60）", "lo", None, "長約 0.75 → 0.60"),
     ("ks_px", "k：現貨價格（高＝GCP 牌價）", None, "hi", "2.82 → 4.858 US$/GPU-hr"),
     ("tpu_f", "TPU 係數（收入與資本支出雙邊；Tokenomics 低端／舊 C2 口徑）", "lo", "hi", "0.70 → 0.65／1.0（同時改 tpu_cf；pace 不重解）"),
@@ -1313,7 +1315,7 @@ SENS_CASES = [
 ]
 SE["A1"] = "Sens — 一次改一個輸入（In 頁低／高值），整本活頁簿以 LibreOffice 重算後的加權目標價（Val 頁「目標價（DCF 與 Comparable 加權）」）；由 alphabet/make_v03.sh 產生，建置時寫入（數值）"
 SE["A2"] = "相對基準＝情境目標價 ÷ 基準加權目標價 − 1；龍捲風依絕對值排序（HTML）。基準與各案例的其他輸入相同"
-hdr(SE, 3, ["驅動", "設定", "方向", "加權目標價", "相對基準", "鍵", "說明"])
+hdr(SE, 3, ["驅動", "設定", "方向", "加權目標價", "相對基準", "鍵", "說明", "收支關卡 B（五年）", "FY2027 資本支出（B）"])
 r = 4
 SE_ROWS = []
 for key, lab, lo, hi, note in SENS_CASES:
@@ -1325,10 +1327,14 @@ for key, lab, lo, hi, note in SENS_CASES:
             c = SE.cell(r, 4, res["tp"]); c.number_format = "#,##0.00"; c.font = BLUE
             SE.cell(r, 5, f"=D{r}/Val!$B${VR_['tp']}-1").number_format = "+0.0%;-0.0%;0.0%"
         SE.cell(r, 7, "重算值（make_v03.sh）")
+        if res is not None and "gateB" in res:
+            for cc, kk in ((8, "gateB"), (9, "cx27B")):
+                c = SE.cell(r, cc, res[kk]); c.number_format = "#,##0.0"; c.font = BLUE
         SE_ROWS.append((key, side, val, r)); r += 1
 SE_END = r - 1
 r += 1
-SE.cell(r, 1, "基準加權目標價（Val 頁）"); SE.cell(r, 4, f"=Val!B{VR_['tp']}").number_format = "#,##0.00"; SE_BASE = r; r += 1
+SE.cell(r, 1, "基準加權目標價（Val 頁）"); SE.cell(r, 4, f"=Val!B{VR_['tp']}").number_format = "#,##0.00"; SE_BASE = r
+SE.cell(r, 8, f"=CF!C{GATE}").number_format = "#,##0.0"; SE.cell(r, 9, f"=CF!H{CR['B']['cx']}").number_format = "#,##0.0"; r += 1
 SE.cell(r, 1, "敏感度重算時的基準值（應與上一列相同；不同表示敏感度已過期）")
 if "base|base" in SENS:
     c = SE.cell(r, 4, SENS["base|base"]["tp"]); c.number_format = "#,##0.00"; c.font = BLUE

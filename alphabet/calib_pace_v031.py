@@ -11,7 +11,7 @@ os.makedirs(WD, exist_ok=True)
 BUILD = os.path.join(HERE, "build_alphabet.py")
 
 
-def resid(pace, extra):
+def resid(pace, extra, target=None):
     name = f"p{abs(hash((pace, tuple(extra)))) % 10**8}"
     raw = os.path.join(WD, name + ".xlsx"); rmf = os.path.join(WD, name + ".json")
     cmd = [sys.executable, BUILD, raw, "--set", f"pace={pace}"] + sum((["--set", e] for e in extra), [])
@@ -25,16 +25,18 @@ def resid(pace, extra):
     th, sg, inn = wb["Thesis"], wb["Seg"], wb["In"]
     g = inn.cell(rm["IN_ROW"]["capex_g"], 5).value; c9 = inn.cell(rm["IN_ROW"]["capex_1h"], 5).value
     q4 = th[f"F{rm['T']['cx_ai_f']}"].value + sg[f"F{rm['SR']['B']['cxn']}"].value
+    if target == "h2":                     # 下半年視窗：Q4 公式 × 2＝指引 − 上半年實績（80.598），即以 2H 平均季速校準
+        return (g - 80.598) / 2 - q4, q4
     return g - c9 - q4, q4
 
 
-def solve(extra, x0=4159.67, x1=6500.0):
-    f0, _ = resid(x0, extra); f1, _ = resid(x1, extra)
+def solve(extra, x0=4159.67, x1=6500.0, target=None):
+    f0, _ = resid(x0, extra, target); f1, _ = resid(x1, extra, target)
     for _ in range(8):
         if abs(f1) < 1e-4: break
         x2 = x1 - f1 * (x1 - x0) / (f1 - f0)
         x0, f0 = x1, f1
-        x1 = round(x2, 2); f1, q4 = resid(x1, extra)
+        x1 = round(x2, 2); f1, q4 = resid(x1, extra, target)
         print(f"  pace {x1:.2f} → 落差 {f1:+.4f}", flush=True)
     return round(x1, 1)
 
@@ -45,6 +47,10 @@ res["pace_tpu1"] = solve(["tpu_f=1", "tpu_cf=1"])
 for k, extra in (("pace", []), ("pace_tpu1", ["tpu_f=1", "tpu_cf=1"])):
     f, q4 = resid(res[k], extra)
     res[k + "_check"] = {"gap": round(f, 4), "q4_formula": round(q4, 3)}
+# C10 的判斷替代（Sens 頁）：下半年視窗、指引區間兩端
+res["pace_h2"] = solve([], target="h2")
+res["pace_g195"] = solve(["capex_g=195"])
+res["pace_g205"] = solve(["capex_g=205"])
 res["note"] = "C10 v0.3.1：FY2026＝9M 實績＋Q4 公式＝指引中點（alphabet/calib_pace_v031.py；四捨五入到 0.1 MW／年後的落差見 *_check.gap）"
 json.dump(res, open(os.path.join(HERE, "data", "pace_v031.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print(res)
