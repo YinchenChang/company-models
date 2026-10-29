@@ -14,7 +14,7 @@
 | Siliconomics 快照 | `siliconomics/data/CURRENT_SNAPSHOT` 指向者 |
 | 規劃書 | `docs/plan/20261028_全市場GW帳_規劃.md` |
 | 工作單 | `wattonomics/docs/workorders/` |
-| 證據（查證代理產出，chat 端複核後才入 In） | `wattonomics/evidence_raw/`；`tools/import_evidence.py` → `builder/seed/evidence_v0.1.json`（DB_Evidence，附 C 段判定）；`tools/import_funding.py` → `builder/seed/funding_v0.1.1.json`（FundRaw、Facility，附 G 段判定與更正） |
+| 證據（查證代理產出，chat 端複核後才入 In） | `wattonomics/evidence_raw/`；`tools/import_evidence.py` → `builder/seed/evidence_v0.1.json`（DB_Evidence，附 C 段判定）；`tools/import_funding.py` → `builder/seed/funding_v<版>.json`（FundRaw、Facility，附 G／H／Q 段判定與更正） |
 | 互動頁取數 | `data/explorer_v*.json`（`tools/export_explorer.py`；扁平紀錄，含標記與來源 ID） |
 | AI半導體 次產業比例 | `markets/invest_map/data/segments_ai_semis_v0.2.3.csv`（SegIn 頁鏡像；Spend 拆分） |
 
@@ -40,6 +40,7 @@ python3 wattonomics/tools/check.py wattonomics/model/<檔名>.xlsx wattonomics/d
 - Excel 是唯一事實來源；`builder/` 只產生公式頁與格式，計算一律為 Excel 公式。`builder/seed/` 只用於 v0.1 首建。
 - 輸入（In 頁藍字）由 Excel 擁有；每列有標記（Verified／Interested-party／Analogy／Assumed／Derived／待證據）、來源 ID（Sources 頁）、口徑（IT／設施／未說明）。Assumed 與 Analogy 純量一律給低／基準／高。
 - 單位（規劃書 r1，Requests R1 裁定）：主口徑 **IT GW＝TK GW（IT 關鍵電力）**；設施電力＝IT × TK `IF_FacilityGW`（基準 1.2，1.1–1.3）。公司標設施者 ÷ `IF_FacilityGW`；口徑未說明者基準取 IT 讀法，Players 另列設施讀法；Epoch 晶片功耗 × `k_chip2it`（[Analogy] 1.65／1.85／2.08）。
+- 季報滾動（Q 段，v0.1.3 起）：新一季財報列附在 F_funding.csv 末尾，交未參與代理開原文核對（`evidence_raw/Q_review_<季>.md`）後才列入 `Q_TRUE`；同期間較舊或已含在新期間現金流量表內的列（例如上半年各列、期內個別發債）列入 `Q_SUPERSEDED`（採用＝0，保留作事件紀錄）；`BUCKET` 的 2026 期間標籤隨之改（例如 2026H1 → 9M2026）。
 - 證據：只用 `evidence_raw/C_review.md` 判「屬實」或已更正的列；「錯誤」「無法核對」「未抽查」的站點列在 In T2 但納入＝0。
 - TK 或 Siliconomics 權威的量需要改值 → 停，寫進 Requests 頁。
 - 下游只讀 Interface 的 `WIF_` 名稱（經快照）。
