@@ -166,7 +166,7 @@ def check(path, groups=None):
         stem = re.split(r"[（(｜]", lab)[0].strip()
         hint = [r for r, kt, txt in rows if len(stem) >= 3 and stem in txt]
         hs = ("疑似案例列（項目文字相符，但未寫鍵）：第 " + "、".join(map(str, hint[:4])) + " 列") if hint else ""
-        if REF_HINT.search(k) or any(w in lab for w in ("共識", "指引", "目標價", "證據")):
+        if REF_HINT.search(k) or re.search(r"共識|證據|v\d+\.\d[\d.]*\s*基準目標價", lab):
             hs = (hs + "；" if hs else "") + "疑似對照用（共識／指引／舊版目標價／證據）：可在 In 頁註明「不進模型」或 Sens 頁寫豁免"
         res["missing"].append((k, lab, d, e, f, "無案例、無豁免", hs))
     return res
