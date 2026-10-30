@@ -1,0 +1,4856 @@
+{
+ "meta": {
+  "generated_by": "spacex/facts_v02.py",
+  "sources": {
+   "B": "mag/extract/docs/2026Q3/spacex_424B4.pdf",
+   "Q2": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf",
+   "Q3": "mag/extract/docs/2026Q3/spacex_2026Q3_10-Q.pdf"
+  },
+  "transcripts": {
+   "T3": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫）",
+   "T2": "2026Q2 法說逐字稿（2026-07；Andy 提供，未入庫）"
+  },
+  "transcripts_reread": 21,
+  "note": "法說逐字稿不入庫；guide.* 只存數字與短句"
+ },
+ "items": [
+  {
+   "id": "b.recast",
+   "item": "424B4：合併財報對所有列示期間追溯重編，納入 xAI（2026-02-02）與 X Holdings（2025-03-28）歷史結果（共同控制）",
+   "value": 1,
+   "unit": "是",
+   "period": "all",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 17 頁 Basis of Presentation",
+   "quote": "The consolidated financial statements of SpaceX have been retrospectively recast for all periods presented to include (i) the historical results of X.AI Holdings Corp., which was acquired by SpaceX, e",
+   "docDate": "",
+   "tag": "[Verified]",
+   "note": "G5：比較期已重編 → 10-Q 2026Q3 的 9M2025 與 424B4 FY2025 同為含 xAI／X 的合併口徑，可相減得 2025Q4"
+  },
+  {
+   "id": "seg.space.rev.fy2025",
+   "item": "Space：營收（FY2025）",
+   "value": 4086.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 133 頁 MD&A Segment Results Space 表",
+   "quote": "Revenue $ 4,086 $ 3,796 $ 290 7.6 %",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "原文取代 v0.1 二手值（G5）",
+   "check": {
+    "value": 4086.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 28 頁 Prospectus Summary 文字句",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.space.rev.fy2024",
+   "item": "Space：營收（FY2024）",
+   "value": 3796.0,
+   "unit": "USD M",
+   "period": "fy2024",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 133 頁 MD&A Segment Results Space 表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 3796.0,
+    "source": "同表 2025 欄 − $ Change 欄",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.space.ebit.fy2025",
+   "item": "Space：營業利益（損失）（FY2025）",
+   "value": -657.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 133 頁 MD&A Segment Results Space 表",
+   "quote": "Income (loss) from operations $ (657) $ 21 $ (678) NM",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "原文取代 v0.1 二手值（G5）",
+   "check": {
+    "value": -657.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 28 頁 Prospectus Summary 文字句",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.space.ebit.fy2024",
+   "item": "Space：營業利益（損失）（FY2024）",
+   "value": 21.0,
+   "unit": "USD M",
+   "period": "fy2024",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 133 頁 MD&A Segment Results Space 表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 21.0,
+    "source": "同表 2025 欄 − $ Change 欄",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.conn.rev.fy2025",
+   "item": "Connectivity：營收（FY2025）",
+   "value": 11387.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 134 頁 MD&A Segment Results Connectivity 表",
+   "quote": "Revenue $ 11,387 $ 7,599 $ 3,788 49.8 %",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "原文取代 v0.1 二手值（G5）",
+   "check": {
+    "value": 11387.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 29 頁 Prospectus Summary 文字句",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.conn.rev.fy2024",
+   "item": "Connectivity：營收（FY2024）",
+   "value": 7599.0,
+   "unit": "USD M",
+   "period": "fy2024",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 134 頁 MD&A Segment Results Connectivity 表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 7599.0,
+    "source": "同表 2025 欄 − $ Change 欄",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.conn.ebit.fy2025",
+   "item": "Connectivity：營業利益（損失）（FY2025）",
+   "value": 4423.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 134 頁 MD&A Segment Results Connectivity 表",
+   "quote": "Income from operations $ 4,423 $ 2,006 $ 2,417 120.4 %",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "原文取代 v0.1 二手值（G5）",
+   "check": {
+    "value": 4423.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 29 頁 Prospectus Summary 文字句",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.conn.ebit.fy2024",
+   "item": "Connectivity：營業利益（損失）（FY2024）",
+   "value": 2006.0,
+   "unit": "USD M",
+   "period": "fy2024",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 134 頁 MD&A Segment Results Connectivity 表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 2006.0,
+    "source": "同表 2025 欄 − $ Change 欄",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.si.rev.fy2025",
+   "item": "SI（424B4 稱 AI）：營收（FY2025）",
+   "value": 3201.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 135 頁 MD&A Segment Results AI 表",
+   "quote": "Revenue $ 3,201 $ 2,620 $ 581 22.2 %",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "原文取代 v0.1 二手值（G5）",
+   "check": {
+    "value": 3201.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 29 頁 Prospectus Summary 文字句",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.si.rev.fy2024",
+   "item": "SI（424B4 稱 AI）：營收（FY2024）",
+   "value": 2620.0,
+   "unit": "USD M",
+   "period": "fy2024",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 135 頁 MD&A Segment Results AI 表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 2620.0,
+    "source": "同表 2025 欄 − $ Change 欄",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.si.ebit.fy2025",
+   "item": "SI（424B4 稱 AI）：營業利益（損失）（FY2025）",
+   "value": -6355.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 135 頁 MD&A Segment Results AI 表",
+   "quote": "Loss from operations $ (6,355) $ (1,561) $ (4,794) 307.1 %",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "原文取代 v0.1 二手值（G5）",
+   "check": {
+    "value": -6355.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 29 頁 Prospectus Summary 文字句",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.si.ebit.fy2024",
+   "item": "SI（424B4 稱 AI）：營業利益（損失）（FY2024）",
+   "value": -1561.0,
+   "unit": "USD M",
+   "period": "fy2024",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 135 頁 MD&A Segment Results AI 表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": -1561.0,
+    "source": "同表 2025 欄 − $ Change 欄",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.total.rev.fy2025",
+   "item": "合併營收（FY2025）",
+   "value": 18674.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 131 頁 MD&A 合併損益表",
+   "quote": "Revenue $ 18,674 $ 14,015 $ 4,659 33.2 %",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 18674.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 47 頁 Summary 合併損益資料（第 3 欄）",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.total.rev.fy2024",
+   "item": "合併營收（FY2024）",
+   "value": 14015.0,
+   "unit": "USD M",
+   "period": "fy2024",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 131 頁 MD&A 合併損益表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 14015.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 47 頁 Summary（第 4 欄）",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.total.ebit.fy2025",
+   "item": "合併營業利益（損失）（FY2025）",
+   "value": -2589.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 131 頁 MD&A 合併損益表",
+   "quote": "Income (loss) from operations (2,589) 466 (3,055) NM",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": -2589.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 47 頁 Summary 合併損益資料（第 3 欄）",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.total.ebit.fy2024",
+   "item": "合併營業利益（損失）（FY2024）",
+   "value": 466.0,
+   "unit": "USD M",
+   "period": "fy2024",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 131 頁 MD&A 合併損益表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 466.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 47 頁 Summary（第 4 欄）",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.space.adjEbitda.fy2025",
+   "item": "Space：分部調整後 EBITDA（FY2025）",
+   "value": 653.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 115 頁 MD&A Segment Adjusted EBITDA 文字句",
+   "quote": "Space Segment Adjusted EBITDA for 2025 decreased by $501 million to $653 million compared to $1,154 million in",
+   "docDate": "2026-06",
+   "tag": "[Interested-party]",
+   "note": "非 GAAP；原文取代 v0.1（SI 為衍生值）",
+   "check": {
+    "value": 653.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 分部營運資料表",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.space.adjEbitda.fy2024",
+   "item": "Space：分部調整後 EBITDA（FY2024）",
+   "value": 1154.0,
+   "unit": "USD M",
+   "period": "fy2024",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 115 頁 MD&A 文字句",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Interested-party]",
+   "note": "",
+   "check": {
+    "value": 1154.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 分部營運資料表",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.conn.adjEbitda.fy2025",
+   "item": "Connectivity：分部調整後 EBITDA（FY2025）",
+   "value": 7168.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 116 頁 MD&A Segment Adjusted EBITDA 文字句",
+   "quote": "Connectivity Segment Adjusted EBITDA for 2025 increased by $3,319 million to $7,168 million compared to $3,849 million in",
+   "docDate": "2026-06",
+   "tag": "[Interested-party]",
+   "note": "非 GAAP；原文取代 v0.1（SI 為衍生值）",
+   "check": {
+    "value": 7168.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 分部營運資料表",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.conn.adjEbitda.fy2024",
+   "item": "Connectivity：分部調整後 EBITDA（FY2024）",
+   "value": 3849.0,
+   "unit": "USD M",
+   "period": "fy2024",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 116 頁 MD&A 文字句",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Interested-party]",
+   "note": "",
+   "check": {
+    "value": 3849.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 分部營運資料表",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.si.adjEbitda.fy2025",
+   "item": "SI（424B4 稱 AI）：分部調整後 EBITDA（FY2025）",
+   "value": -1237.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 116 頁 MD&A Segment Adjusted EBITDA 文字句",
+   "quote": "AI Segment Adjusted EBITDA for 2025 decreased by $1,584 million to $(1,237) million compared to $347 million in 2",
+   "docDate": "2026-06",
+   "tag": "[Interested-party]",
+   "note": "非 GAAP；原文取代 v0.1（SI 為衍生值）",
+   "check": {
+    "value": -1237.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 50 頁 Summary 分部營運資料表",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.si.adjEbitda.fy2024",
+   "item": "SI（424B4 稱 AI）：分部調整後 EBITDA（FY2024）",
+   "value": 347.0,
+   "unit": "USD M",
+   "period": "fy2024",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 116 頁 MD&A 文字句",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Interested-party]",
+   "note": "",
+   "check": {
+    "value": 347.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 50 頁 Summary 分部營運資料表",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.total.adjEbitda.fy2025",
+   "item": "合併調整後 EBITDA（FY2025）",
+   "value": 6584.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 28 頁 Prospectus Summary",
+   "quote": "of $(1,943) million and Adjusted EBITDA of $1,127 million. In 2025, we generated revenue on a consolidated basis of $18,674 million, loss from operations of $(2,589) million and Adjusted EBITDA of $6,",
+   "docDate": "2026-06",
+   "tag": "[Interested-party]",
+   "note": "",
+   "check": {
+    "value": 6584.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 103 頁 Business 概要同句",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.total.adjEbitda.fy2024",
+   "item": "合併調整後 EBITDA（FY2024，三分部加總）",
+   "value": 5350.0,
+   "unit": "USD M",
+   "period": "fy2024",
+   "source": "424B4 三分部文字句加總",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": "FY2024 合併數未見原句；分部合計＝合併（2026 各期成立）"
+  },
+  {
+   "id": "seg.space.capex.fy2025",
+   "item": "Space：資本支出（FY2025）",
+   "value": 3832.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 116 頁 MD&A Capital Expenditures 表",
+   "quote": "Space $ 1,052 $ 759 $ 3,832 $ 2,032 $ 1,497",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "v0.1 A 段審查判 3,832 為媒體混用而改「未取得」；424B4 原文確為 3,832（與 9M2026 Space 資本支出 3,832 數字相同屬巧合）",
+   "check": {
+    "value": 3832.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 116 頁 MD&A 文字句",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.space.capex.fy2024",
+   "item": "Space：資本支出（FY2024）",
+   "value": 2032.0,
+   "unit": "USD M",
+   "period": "fy2024",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 116 頁 MD&A Capital Expenditures 表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 2032.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 116 頁 MD&A 文字句",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.conn.capex.fy2025",
+   "item": "Connectivity：資本支出（FY2025）",
+   "value": 4178.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 116 頁 MD&A Capital Expenditures 表",
+   "quote": "Connectivity 1,332 814 4,178 3,498 2,455",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "v0.1 標「待核」，原文相符，解除",
+   "check": {
+    "value": 4178.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 117 頁 MD&A 文字句",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.conn.capex.fy2024",
+   "item": "Connectivity：資本支出（FY2024）",
+   "value": 3498.0,
+   "unit": "USD M",
+   "period": "fy2024",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 116 頁 MD&A Capital Expenditures 表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 3498.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 117 頁 MD&A 文字句",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.si.capex.fy2025",
+   "item": "SI（424B4 稱 AI）：資本支出（FY2025）",
+   "value": 12727.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 116 頁 MD&A Capital Expenditures 表",
+   "quote": "AI 7,723 2,567 12,727 5,633 463",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 12727.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 117 頁 MD&A 文字句",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.si.capex.fy2024",
+   "item": "SI（424B4 稱 AI）：資本支出（FY2024）",
+   "value": 5633.0,
+   "unit": "USD M",
+   "period": "fy2024",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 116 頁 MD&A Capital Expenditures 表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 5633.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 117 頁 MD&A 文字句",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.total.capex.fy2025",
+   "item": "資本支出合計（FY2025）",
+   "value": 20737.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 116 頁 MD&A Capital Expenditures 表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 20737.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 資本支出表",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.total.capex.fy2024",
+   "item": "資本支出合計（FY2024）",
+   "value": 11163.0,
+   "unit": "USD M",
+   "period": "fy2024",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 116 頁 MD&A Capital Expenditures 表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 11163.0,
+    "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 資本支出表",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.space.launchSvc.pct.fy2025",
+   "item": "Space：Launch Services 占 Space 營收（FY2025）",
+   "value": 63.0,
+   "unit": "%",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 122 頁 Description of Our Segments 收入占比表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 63.0,
+    "source": "同表 100% − Launch & Development 37.0%",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.space.launchSvc.fy2025",
+   "item": "Space：Launch Services（FY2025，衍生＝營收 × 63.0%）",
+   "value": 2574.2,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "424B4 占比 × Space 營收",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": "占比四捨五入到 0.1%，誤差 ±2；Connectivity、SI 的 FY2025 子列 424B4 未揭露（已搜尋 MD&A 分部段與 Business，只有增量）"
+  },
+  {
+   "id": "seg.space.launchDev.fy2025",
+   "item": "Space：Launch & Development（FY2025，衍生＝營收 − Launch Services）",
+   "value": 1511.8,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "同上",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": "",
+   "check": {
+    "value": 1511.8,
+    "source": "營收 × 37.0%",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.si.kpi.gw.fy2025",
+   "item": "SI：名目算力（2025-12-31，期末）",
+   "value": 0.8,
+   "unit": "GW",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 分部營運資料表 Nameplate compute draw",
+   "quote": "Nameplate compute draw (in gigawatts) (1) 1 0.3 0.8 0.3 0",
+   "docDate": "2026-06",
+   "tag": "[Interested-party]",
+   "note": "公司自訂 KPI；v0.1 用內插 0.8（2025）與判斷 0.15（2024）",
+   "check": {
+    "value": 0.8,
+    "source": "同列以第二種讀法（逐字切分）",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.si.kpi.gw.fy2024",
+   "item": "SI：名目算力（2024-12-31，期末）",
+   "value": 0.3,
+   "unit": "GW",
+   "period": "fy2024",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 分部營運資料表 Nameplate compute draw",
+   "quote": "Nameplate compute draw (in gigawatts) (1) 1 0.3 0.8 0.3 0",
+   "docDate": "2026-06",
+   "tag": "[Interested-party]",
+   "note": "公司自訂 KPI；v0.1 用內插 0.8（2025）與判斷 0.15（2024）",
+   "check": {
+    "value": 0.3,
+    "source": "同列以第二種讀法（逐字切分）",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.conn.kpi.subs.fy2025",
+   "item": "Connectivity：Starlink 訂戶（期末，百萬）（FY2025）",
+   "value": 8.9,
+   "unit": "百萬戶",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 分部營運資料表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "seg.conn.kpi.arpu.fy2025",
+   "item": "Connectivity：Starlink ARPU（每月，美元）（FY2025）",
+   "value": 81.0,
+   "unit": "USD/月",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 分部營運資料表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Interested-party]",
+   "note": "",
+   "check": {
+    "value": 81,
+    "source": "MD&A Key Business Metrics 文字句（$91 → $81）",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.space.kpi.launchTot.fy2025",
+   "item": "Space：發射次數合計（FY2025）",
+   "value": 170.0,
+   "unit": "次",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 分部營運資料表",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.cfo.fy2025",
+   "item": "營業現金流（FY2025）",
+   "value": 6785.0,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 48 頁 Summary 現金流量資料",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "bs.cash.20251231.b",
+   "item": "現金及約當現金（2025-12-31；424B4）",
+   "value": 24747.0,
+   "unit": "USD M",
+   "period": "20251231",
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 資產負債資料",
+   "quote": "",
+   "docDate": "2026-06",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 24747.0,
+    "source": "10-Q 2026Q3 資產負債表比較欄（v0.1 事實總帳 bs.cash.20251231）",
+    "ok": true
+   }
+  },
+  {
+   "id": "seg.space.rev.2025q4",
+   "item": "Space：營收（2025Q4，衍生）",
+   "value": 809.0,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（424B4）− 9M2025（10-Q 2026Q3 比較欄）",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.space.ebit.2025q4",
+   "item": "Space：營業利益（2025Q4，衍生）",
+   "value": -476.0,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（424B4）− 9M2025（10-Q 2026Q3 比較欄）",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.space.adjEbitda.2025q4",
+   "item": "Space：分部調整後 EBITDA（2025Q4，衍生）",
+   "value": -150.0,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（424B4）− 9M2025（10-Q 2026Q3 比較欄）",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.space.capex.2025q4",
+   "item": "Space：資本支出（2025Q4，衍生）",
+   "value": 1014.0,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（424B4）− 9M2025（10-Q 2026Q3 比較欄）",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.conn.rev.2025q4",
+   "item": "Connectivity：營收（2025Q4，衍生）",
+   "value": 3228.0,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（424B4）− 9M2025（10-Q 2026Q3 比較欄）",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.conn.ebit.2025q4",
+   "item": "Connectivity：營業利益（2025Q4，衍生）",
+   "value": 1276.0,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（424B4）− 9M2025（10-Q 2026Q3 比較欄）",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.conn.adjEbitda.2025q4",
+   "item": "Connectivity：分部調整後 EBITDA（2025Q4，衍生）",
+   "value": 2045.0,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（424B4）− 9M2025（10-Q 2026Q3 比較欄）",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.conn.capex.2025q4",
+   "item": "Connectivity：資本支出（2025Q4，衍生）",
+   "value": 1227.0,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（424B4）− 9M2025（10-Q 2026Q3 比較欄）",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.si.rev.2025q4",
+   "item": "SI（424B4 稱 AI）：營收（2025Q4，衍生）",
+   "value": 923.0,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（424B4）− 9M2025（10-Q 2026Q3 比較欄）",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.si.ebit.2025q4",
+   "item": "SI（424B4 稱 AI）：營業利益（2025Q4，衍生）",
+   "value": -2173.0,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（424B4）− 9M2025（10-Q 2026Q3 比較欄）",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.si.adjEbitda.2025q4",
+   "item": "SI（424B4 稱 AI）：分部調整後 EBITDA（2025Q4，衍生）",
+   "value": -424.0,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（424B4）− 9M2025（10-Q 2026Q3 比較欄）",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.si.capex.2025q4",
+   "item": "SI（424B4 稱 AI）：資本支出（2025Q4，衍生）",
+   "value": 4650.0,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（424B4）− 9M2025（10-Q 2026Q3 比較欄）",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.total.rev.2025q4",
+   "item": "合計：營收（2025Q4，衍生）",
+   "value": 4960.0,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（424B4）− 9M2025（10-Q 2026Q3 比較欄）",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.total.ebit.2025q4",
+   "item": "合計：營業利益（2025Q4，衍生）",
+   "value": -1373.0,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（424B4）− 9M2025（10-Q 2026Q3 比較欄）",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.total.adjEbitda.2025q4",
+   "item": "合計：分部調整後 EBITDA（2025Q4，衍生）",
+   "value": 1471.0,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（424B4）− 9M2025（10-Q 2026Q3 比較欄）",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.total.capex.2025q4",
+   "item": "合計：資本支出（2025Q4，衍生）",
+   "value": 6891.0,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（424B4）− 9M2025（10-Q 2026Q3 比較欄）",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.space.launchSvc.2025q4",
+   "item": "Space：launchSvc（2025Q4，衍生）",
+   "value": 518.2,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（衍生）− 9M2025",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.space.launchDev.2025q4",
+   "item": "Space：launchDev（2025Q4，衍生）",
+   "value": 290.8,
+   "unit": "USD M",
+   "period": "2025q4",
+   "source": "FY2025（衍生）− 9M2025",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "seg.si.kpi.gw.2025q4",
+   "item": "SI：名目算力（2025-12-31）",
+   "value": 0.8,
+   "unit": "GW",
+   "period": "2025q4",
+   "source": "同 seg.si.kpi.gw.fy2025",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "q2q.seg.space.rev.2026q2",
+   "item": "Space：營收（2026q2；2026Q2 10-Q）",
+   "value": 962.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Revenue $ 962 $ 4,291 $ 2,561 $ 7,814",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 962.0,
+    "source": "v0.1 事實總帳 seg.space.rev.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.rev.2026q2",
+   "item": "Connectivity：營收（2026q2；2026Q2 10-Q）",
+   "value": 4291.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Revenue $ 962 $ 4,291 $ 2,561 $ 7,814",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 4291.0,
+    "source": "v0.1 事實總帳 seg.conn.rev.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.rev.2026q2",
+   "item": "SI（424B4 稱 AI）：營收（2026q2；2026Q2 10-Q）",
+   "value": 2561.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Revenue $ 962 $ 4,291 $ 2,561 $ 7,814",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 2561.0,
+    "source": "v0.1 事實總帳 seg.si.rev.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.rev.2026q2",
+   "item": "合計：營收（2026q2；2026Q2 10-Q）",
+   "value": 7814.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Revenue $ 962 $ 4,291 $ 2,561 $ 7,814",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 7814.0,
+    "source": "v0.1 事實總帳 seg.total.rev.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.ebit.2026q2",
+   "item": "Space：營業利益（2026q2；2026Q2 10-Q）",
+   "value": -542.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Income (loss) from operations (542) 1,656 (1,257) (143)",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": -542.0,
+    "source": "v0.1 事實總帳 seg.space.ebit.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.ebit.2026q2",
+   "item": "Connectivity：營業利益（2026q2；2026Q2 10-Q）",
+   "value": 1656.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Income (loss) from operations (542) 1,656 (1,257) (143)",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1656.0,
+    "source": "v0.1 事實總帳 seg.conn.ebit.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.ebit.2026q2",
+   "item": "SI（424B4 稱 AI）：營業利益（2026q2；2026Q2 10-Q）",
+   "value": -1257.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Income (loss) from operations (542) 1,656 (1,257) (143)",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": -1257.0,
+    "source": "v0.1 事實總帳 seg.si.ebit.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.ebit.2026q2",
+   "item": "合計：營業利益（2026q2；2026Q2 10-Q）",
+   "value": -143.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Income (loss) from operations (542) 1,656 (1,257) (143)",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": -143.0,
+    "source": "v0.1 事實總帳 seg.total.ebit.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.da.2026q2",
+   "item": "Space：折舊攤銷（2026q2；2026Q2 10-Q）",
+   "value": 158.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Depreciation and amortization $ 158 $ 805 $ 1,885 $ 2,848",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 158.0,
+    "source": "v0.1 事實總帳 seg.space.da.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.da.2026q2",
+   "item": "Connectivity：折舊攤銷（2026q2；2026Q2 10-Q）",
+   "value": 805.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Depreciation and amortization $ 158 $ 805 $ 1,885 $ 2,848",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 805.0,
+    "source": "v0.1 事實總帳 seg.conn.da.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.da.2026q2",
+   "item": "SI（424B4 稱 AI）：折舊攤銷（2026q2；2026Q2 10-Q）",
+   "value": 1885.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Depreciation and amortization $ 158 $ 805 $ 1,885 $ 2,848",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1885.0,
+    "source": "v0.1 事實總帳 seg.si.da.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.da.2026q2",
+   "item": "合計：折舊攤銷（2026q2；2026Q2 10-Q）",
+   "value": 2848.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Depreciation and amortization $ 158 $ 805 $ 1,885 $ 2,848",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 2848.0,
+    "source": "v0.1 事實總帳 seg.total.da.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.sbc.2026q2",
+   "item": "Space：股權報酬（一般）（2026q2；2026Q2 10-Q）",
+   "value": 179.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Share-based compensation $ 179 $ 136 $ 516 $ 831",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 179.0,
+    "source": "v0.1 事實總帳 seg.space.sbc.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.sbc.2026q2",
+   "item": "Connectivity：股權報酬（一般）（2026q2；2026Q2 10-Q）",
+   "value": 136.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Share-based compensation $ 179 $ 136 $ 516 $ 831",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 136.0,
+    "source": "v0.1 事實總帳 seg.conn.sbc.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.sbc.2026q2",
+   "item": "SI（424B4 稱 AI）：股權報酬（一般）（2026q2；2026Q2 10-Q）",
+   "value": 516.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Share-based compensation $ 179 $ 136 $ 516 $ 831",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 516.0,
+    "source": "v0.1 事實總帳 seg.si.sbc.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.sbc.2026q2",
+   "item": "合計：股權報酬（一般）（2026q2；2026Q2 10-Q）",
+   "value": 831.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Share-based compensation $ 179 $ 136 $ 516 $ 831",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 831.0,
+    "source": "v0.1 事實總帳 seg.total.sbc.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.capex.2026q2",
+   "item": "Space：資本支出（2026q2；2026Q2 10-Q）",
+   "value": 1174.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Capital expenditures $ 1,174 $ 1,367 $ 15,828 $ 18,369",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1174.0,
+    "source": "v0.1 事實總帳 seg.space.capex.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.capex.2026q2",
+   "item": "Connectivity：資本支出（2026q2；2026Q2 10-Q）",
+   "value": 1367.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Capital expenditures $ 1,174 $ 1,367 $ 15,828 $ 18,369",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1367.0,
+    "source": "v0.1 事實總帳 seg.conn.capex.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.capex.2026q2",
+   "item": "SI（424B4 稱 AI）：資本支出（2026q2；2026Q2 10-Q）",
+   "value": 15828.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Capital expenditures $ 1,174 $ 1,367 $ 15,828 $ 18,369",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 15828.0,
+    "source": "v0.1 事實總帳 seg.si.capex.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.capex.2026q2",
+   "item": "合計：資本支出（2026q2；2026Q2 10-Q）",
+   "value": 18369.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 18 Segments 表",
+   "quote": "Capital expenditures $ 1,174 $ 1,367 $ 15,828 $ 18,369",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 18369.0,
+    "source": "v0.1 事實總帳 seg.total.capex.2026q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.rev.1h2026",
+   "item": "Space：營收（1h2026；2026Q2 10-Q）",
+   "value": 1581.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Revenue $ 1,581 $ 7,548 $ 3,379 $ 12,508",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1581,
+    "source": "v0.1 事實總帳 seg.space.rev.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.rev.1h2026",
+   "item": "Connectivity：營收（1h2026；2026Q2 10-Q）",
+   "value": 7548.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Revenue $ 1,581 $ 7,548 $ 3,379 $ 12,508",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 7548,
+    "source": "v0.1 事實總帳 seg.conn.rev.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.rev.1h2026",
+   "item": "SI（424B4 稱 AI）：營收（1h2026；2026Q2 10-Q）",
+   "value": 3379.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Revenue $ 1,581 $ 7,548 $ 3,379 $ 12,508",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 3379,
+    "source": "v0.1 事實總帳 seg.si.rev.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.rev.1h2026",
+   "item": "合計：營收（1h2026；2026Q2 10-Q）",
+   "value": 12508.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Revenue $ 1,581 $ 7,548 $ 3,379 $ 12,508",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 12508,
+    "source": "v0.1 事實總帳 seg.total.rev.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.ebit.1h2026",
+   "item": "Space：營業利益（1h2026；2026Q2 10-Q）",
+   "value": -1204.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Income (loss) from operations (1,204) 2,844 (3,726) (2,086)",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": -1204,
+    "source": "v0.1 事實總帳 seg.space.ebit.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.ebit.1h2026",
+   "item": "Connectivity：營業利益（1h2026；2026Q2 10-Q）",
+   "value": 2844.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Income (loss) from operations (1,204) 2,844 (3,726) (2,086)",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 2844,
+    "source": "v0.1 事實總帳 seg.conn.ebit.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.ebit.1h2026",
+   "item": "SI（424B4 稱 AI）：營業利益（1h2026；2026Q2 10-Q）",
+   "value": -3726.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Income (loss) from operations (1,204) 2,844 (3,726) (2,086)",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": -3726,
+    "source": "v0.1 事實總帳 seg.si.ebit.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.ebit.1h2026",
+   "item": "合計：營業利益（1h2026；2026Q2 10-Q）",
+   "value": -2086.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Income (loss) from operations (1,204) 2,844 (3,726) (2,086)",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": -2086,
+    "source": "v0.1 事實總帳 seg.total.ebit.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.da.1h2026",
+   "item": "Space：折舊攤銷（1h2026；2026Q2 10-Q）",
+   "value": 324.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Depreciation and amortization $ 324 $ 1,588 $ 3,378 $ 5,290",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 324,
+    "source": "v0.1 事實總帳 seg.space.da.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.da.1h2026",
+   "item": "Connectivity：折舊攤銷（1h2026；2026Q2 10-Q）",
+   "value": 1588.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Depreciation and amortization $ 324 $ 1,588 $ 3,378 $ 5,290",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1588,
+    "source": "v0.1 事實總帳 seg.conn.da.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.da.1h2026",
+   "item": "SI（424B4 稱 AI）：折舊攤銷（1h2026；2026Q2 10-Q）",
+   "value": 3378.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Depreciation and amortization $ 324 $ 1,588 $ 3,378 $ 5,290",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 3378,
+    "source": "v0.1 事實總帳 seg.si.da.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.da.1h2026",
+   "item": "合計：折舊攤銷（1h2026；2026Q2 10-Q）",
+   "value": 5290.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Depreciation and amortization $ 324 $ 1,588 $ 3,378 $ 5,290",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 5290,
+    "source": "v0.1 事實總帳 seg.total.da.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.sbc.1h2026",
+   "item": "Space：股權報酬（一般）（1h2026；2026Q2 10-Q）",
+   "value": 324.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Share-based compensation $ 324 $ 252 $ 894 $ 1,470",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 324,
+    "source": "v0.1 事實總帳 seg.space.sbc.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.sbc.1h2026",
+   "item": "Connectivity：股權報酬（一般）（1h2026；2026Q2 10-Q）",
+   "value": 252.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Share-based compensation $ 324 $ 252 $ 894 $ 1,470",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 252,
+    "source": "v0.1 事實總帳 seg.conn.sbc.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.sbc.1h2026",
+   "item": "SI（424B4 稱 AI）：股權報酬（一般）（1h2026；2026Q2 10-Q）",
+   "value": 894.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Share-based compensation $ 324 $ 252 $ 894 $ 1,470",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 894,
+    "source": "v0.1 事實總帳 seg.si.sbc.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.sbc.1h2026",
+   "item": "合計：股權報酬（一般）（1h2026；2026Q2 10-Q）",
+   "value": 1470.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Share-based compensation $ 324 $ 252 $ 894 $ 1,470",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1470,
+    "source": "v0.1 事實總帳 seg.total.sbc.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.capex.1h2026",
+   "item": "Space：資本支出（1h2026；2026Q2 10-Q）",
+   "value": 2226.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Capital expenditures $ 2,226 $ 2,699 $ 23,551 $ 28,476",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 2226,
+    "source": "v0.1 事實總帳 seg.space.capex.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.capex.1h2026",
+   "item": "Connectivity：資本支出（1h2026；2026Q2 10-Q）",
+   "value": 2699.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Capital expenditures $ 2,226 $ 2,699 $ 23,551 $ 28,476",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 2699,
+    "source": "v0.1 事實總帳 seg.conn.capex.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.capex.1h2026",
+   "item": "SI（424B4 稱 AI）：資本支出（1h2026；2026Q2 10-Q）",
+   "value": 23551.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Capital expenditures $ 2,226 $ 2,699 $ 23,551 $ 28,476",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 23551,
+    "source": "v0.1 事實總帳 seg.si.capex.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.capex.1h2026",
+   "item": "合計：資本支出（1h2026；2026Q2 10-Q）",
+   "value": 28476.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Capital expenditures $ 2,226 $ 2,699 $ 23,551 $ 28,476",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 28476,
+    "source": "v0.1 事實總帳 seg.total.capex.1h2026（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.rev.2025q2",
+   "item": "Space：營收（2025q2；2026Q2 10-Q）",
+   "value": 746.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Revenue $ 746 $ 2,588 $ 737 $ 4,071",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 746,
+    "source": "v0.1 事實總帳 seg.space.rev.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.rev.2025q2",
+   "item": "Connectivity：營收（2025q2；2026Q2 10-Q）",
+   "value": 2588.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Revenue $ 746 $ 2,588 $ 737 $ 4,071",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 2588,
+    "source": "v0.1 事實總帳 seg.conn.rev.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.rev.2025q2",
+   "item": "SI（424B4 稱 AI）：營收（2025q2；2026Q2 10-Q）",
+   "value": 737.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Revenue $ 746 $ 2,588 $ 737 $ 4,071",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 737,
+    "source": "v0.1 事實總帳 seg.si.rev.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.rev.2025q2",
+   "item": "合計：營收（2025q2；2026Q2 10-Q）",
+   "value": 4071.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Revenue $ 746 $ 2,588 $ 737 $ 4,071",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 4071,
+    "source": "v0.1 事實總帳 seg.total.rev.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.ebit.2025q2",
+   "item": "Space：營業利益（2025q2；2026Q2 10-Q）",
+   "value": -369.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Income (loss) from operations (369) 923 (1,524) (970)",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": -369,
+    "source": "v0.1 事實總帳 seg.space.ebit.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.ebit.2025q2",
+   "item": "Connectivity：營業利益（2025q2；2026Q2 10-Q）",
+   "value": 923.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Income (loss) from operations (369) 923 (1,524) (970)",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 923,
+    "source": "v0.1 事實總帳 seg.conn.ebit.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.ebit.2025q2",
+   "item": "SI（424B4 稱 AI）：營業利益（2025q2；2026Q2 10-Q）",
+   "value": -1524.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Income (loss) from operations (369) 923 (1,524) (970)",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": -1524,
+    "source": "v0.1 事實總帳 seg.si.ebit.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.ebit.2025q2",
+   "item": "合計：營業利益（2025q2；2026Q2 10-Q）",
+   "value": -970.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Income (loss) from operations (369) 923 (1,524) (970)",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": -970,
+    "source": "v0.1 事實總帳 seg.total.ebit.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.da.2025q2",
+   "item": "Space：折舊攤銷（2025q2；2026Q2 10-Q）",
+   "value": 146.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Depreciation and amortization $ 146 $ 569 $ 811 $ 1,526",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 146,
+    "source": "v0.1 事實總帳 seg.space.da.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.da.2025q2",
+   "item": "Connectivity：折舊攤銷（2025q2；2026Q2 10-Q）",
+   "value": 569.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Depreciation and amortization $ 146 $ 569 $ 811 $ 1,526",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 569,
+    "source": "v0.1 事實總帳 seg.conn.da.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.da.2025q2",
+   "item": "SI（424B4 稱 AI）：折舊攤銷（2025q2；2026Q2 10-Q）",
+   "value": 811.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Depreciation and amortization $ 146 $ 569 $ 811 $ 1,526",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 811,
+    "source": "v0.1 事實總帳 seg.si.da.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.da.2025q2",
+   "item": "合計：折舊攤銷（2025q2；2026Q2 10-Q）",
+   "value": 1526.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Depreciation and amortization $ 146 $ 569 $ 811 $ 1,526",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1526,
+    "source": "v0.1 事實總帳 seg.total.da.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.sbc.2025q2",
+   "item": "Space：股權報酬（一般）（2025q2；2026Q2 10-Q）",
+   "value": 125.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Share-based compensation $ 125 $ 91 $ 247 $ 463",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 125,
+    "source": "v0.1 事實總帳 seg.space.sbc.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.sbc.2025q2",
+   "item": "Connectivity：股權報酬（一般）（2025q2；2026Q2 10-Q）",
+   "value": 91.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Share-based compensation $ 125 $ 91 $ 247 $ 463",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 91,
+    "source": "v0.1 事實總帳 seg.conn.sbc.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.sbc.2025q2",
+   "item": "SI（424B4 稱 AI）：股權報酬（一般）（2025q2；2026Q2 10-Q）",
+   "value": 247.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Share-based compensation $ 125 $ 91 $ 247 $ 463",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 247,
+    "source": "v0.1 事實總帳 seg.si.sbc.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.sbc.2025q2",
+   "item": "合計：股權報酬（一般）（2025q2；2026Q2 10-Q）",
+   "value": 463.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Share-based compensation $ 125 $ 91 $ 247 $ 463",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 463,
+    "source": "v0.1 事實總帳 seg.total.sbc.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.capex.2025q2",
+   "item": "Space：資本支出（2025q2；2026Q2 10-Q）",
+   "value": 946.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Capital expenditures $ 946 $ 1,130 $ 749 $ 2,825",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 946,
+    "source": "v0.1 事實總帳 seg.space.capex.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.capex.2025q2",
+   "item": "Connectivity：資本支出（2025q2；2026Q2 10-Q）",
+   "value": 1130.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Capital expenditures $ 946 $ 1,130 $ 749 $ 2,825",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1130,
+    "source": "v0.1 事實總帳 seg.conn.capex.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.capex.2025q2",
+   "item": "SI（424B4 稱 AI）：資本支出（2025q2；2026Q2 10-Q）",
+   "value": 749.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Capital expenditures $ 946 $ 1,130 $ 749 $ 2,825",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 749,
+    "source": "v0.1 事實總帳 seg.si.capex.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.capex.2025q2",
+   "item": "合計：資本支出（2025q2；2026Q2 10-Q）",
+   "value": 2825.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 32 頁 附註 18 Segments 表",
+   "quote": "Capital expenditures $ 946 $ 1,130 $ 749 $ 2,825",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 2825,
+    "source": "v0.1 事實總帳 seg.total.capex.2025q2（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.rev.1h2025",
+   "item": "Space：營收（1h2025；2026Q2 10-Q）",
+   "value": 1611.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Revenue $ 1,611 $ 5,062 $ 1,465 $ 8,138",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1611,
+    "source": "v0.1 事實總帳 seg.space.rev.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.rev.1h2025",
+   "item": "Connectivity：營收（1h2025；2026Q2 10-Q）",
+   "value": 5062.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Revenue $ 1,611 $ 5,062 $ 1,465 $ 8,138",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 5062,
+    "source": "v0.1 事實總帳 seg.conn.rev.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.rev.1h2025",
+   "item": "SI（424B4 稱 AI）：營收（1h2025；2026Q2 10-Q）",
+   "value": 1465.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Revenue $ 1,611 $ 5,062 $ 1,465 $ 8,138",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1465,
+    "source": "v0.1 事實總帳 seg.si.rev.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.rev.1h2025",
+   "item": "合計：營收（1h2025；2026Q2 10-Q）",
+   "value": 8138.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Revenue $ 1,611 $ 5,062 $ 1,465 $ 8,138",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 8138,
+    "source": "v0.1 事實總帳 seg.total.rev.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.ebit.1h2025",
+   "item": "Space：營業利益（1h2025；2026Q2 10-Q）",
+   "value": -439.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Income (loss) from operations (439) 1,956 (2,460) (943)",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": -439,
+    "source": "v0.1 事實總帳 seg.space.ebit.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.ebit.1h2025",
+   "item": "Connectivity：營業利益（1h2025；2026Q2 10-Q）",
+   "value": 1956.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Income (loss) from operations (439) 1,956 (2,460) (943)",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1956,
+    "source": "v0.1 事實總帳 seg.conn.ebit.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.ebit.1h2025",
+   "item": "SI（424B4 稱 AI）：營業利益（1h2025；2026Q2 10-Q）",
+   "value": -2460.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Income (loss) from operations (439) 1,956 (2,460) (943)",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": -2460,
+    "source": "v0.1 事實總帳 seg.si.ebit.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.ebit.1h2025",
+   "item": "合計：營業利益（1h2025；2026Q2 10-Q）",
+   "value": -943.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Income (loss) from operations (439) 1,956 (2,460) (943)",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": -943,
+    "source": "v0.1 事實總帳 seg.total.ebit.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.da.1h2025",
+   "item": "Space：折舊攤銷（1h2025；2026Q2 10-Q）",
+   "value": 308.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Depreciation and amortization $ 308 $ 1,078 $ 1,584 $ 2,970",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 308,
+    "source": "v0.1 事實總帳 seg.space.da.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.da.1h2025",
+   "item": "Connectivity：折舊攤銷（1h2025；2026Q2 10-Q）",
+   "value": 1078.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Depreciation and amortization $ 308 $ 1,078 $ 1,584 $ 2,970",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1078,
+    "source": "v0.1 事實總帳 seg.conn.da.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.da.1h2025",
+   "item": "SI（424B4 稱 AI）：折舊攤銷（1h2025；2026Q2 10-Q）",
+   "value": 1584.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Depreciation and amortization $ 308 $ 1,078 $ 1,584 $ 2,970",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1584,
+    "source": "v0.1 事實總帳 seg.si.da.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.da.1h2025",
+   "item": "合計：折舊攤銷（1h2025；2026Q2 10-Q）",
+   "value": 2970.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Depreciation and amortization $ 308 $ 1,078 $ 1,584 $ 2,970",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 2970,
+    "source": "v0.1 事實總帳 seg.total.da.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.sbc.1h2025",
+   "item": "Space：股權報酬（一般）（1h2025；2026Q2 10-Q）",
+   "value": 233.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Share-based compensation $ 233 $ 166 $ 295 $ 694",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 233,
+    "source": "v0.1 事實總帳 seg.space.sbc.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.sbc.1h2025",
+   "item": "Connectivity：股權報酬（一般）（1h2025；2026Q2 10-Q）",
+   "value": 166.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Share-based compensation $ 233 $ 166 $ 295 $ 694",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 166,
+    "source": "v0.1 事實總帳 seg.conn.sbc.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.sbc.1h2025",
+   "item": "SI（424B4 稱 AI）：股權報酬（一般）（1h2025；2026Q2 10-Q）",
+   "value": 295.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Share-based compensation $ 233 $ 166 $ 295 $ 694",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 295,
+    "source": "v0.1 事實總帳 seg.si.sbc.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.sbc.1h2025",
+   "item": "合計：股權報酬（一般）（1h2025；2026Q2 10-Q）",
+   "value": 694.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Share-based compensation $ 233 $ 166 $ 295 $ 694",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 694,
+    "source": "v0.1 事實總帳 seg.total.sbc.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.capex.1h2025",
+   "item": "Space：資本支出（1h2025；2026Q2 10-Q）",
+   "value": 1705.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Capital expenditures $ 1,705 $ 1,944 $ 3,316 $ 6,965",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1705,
+    "source": "v0.1 事實總帳 seg.space.capex.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.capex.1h2025",
+   "item": "Connectivity：資本支出（1h2025；2026Q2 10-Q）",
+   "value": 1944.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Capital expenditures $ 1,705 $ 1,944 $ 3,316 $ 6,965",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1944,
+    "source": "v0.1 事實總帳 seg.conn.capex.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.capex.1h2025",
+   "item": "SI（424B4 稱 AI）：資本支出（1h2025；2026Q2 10-Q）",
+   "value": 3316.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Capital expenditures $ 1,705 $ 1,944 $ 3,316 $ 6,965",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 3316,
+    "source": "v0.1 事實總帳 seg.si.capex.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.total.capex.1h2025",
+   "item": "合計：資本支出（1h2025；2026Q2 10-Q）",
+   "value": 6965.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 33 頁 附註 18 Segments 表",
+   "quote": "Capital expenditures $ 1,705 $ 1,944 $ 3,316 $ 6,965",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 6965,
+    "source": "v0.1 事實總帳 seg.total.capex.1h2025（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.launchSvc.2026q2",
+   "item": "Space：launchSvc（2026q2；2026Q2 10-Q 附註 3）",
+   "value": 648.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 648.0,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.launchSvc.2025q2",
+   "item": "Space：launchSvc（2025q2；2026Q2 10-Q 附註 3）",
+   "value": 490.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 490,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.launchSvc.1h2026",
+   "item": "Space：launchSvc（1h2026；2026Q2 10-Q 附註 3）",
+   "value": 978.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 978,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.launchSvc.1h2025",
+   "item": "Space：launchSvc（1h2025；2026Q2 10-Q 附註 3）",
+   "value": 1056.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1056,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.launchDev.2026q2",
+   "item": "Space：launchDev（2026q2；2026Q2 10-Q 附註 3）",
+   "value": 314.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 314.0,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.launchDev.2025q2",
+   "item": "Space：launchDev（2025q2；2026Q2 10-Q 附註 3）",
+   "value": 256.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 256,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.launchDev.1h2026",
+   "item": "Space：launchDev（1h2026；2026Q2 10-Q 附註 3）",
+   "value": 603.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 603,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.space.launchDev.1h2025",
+   "item": "Space：launchDev（1h2025；2026Q2 10-Q 附註 3）",
+   "value": 555.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 555,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.consumer.2026q2",
+   "item": "Connectivity：consumer（2026q2；2026Q2 10-Q 附註 3）",
+   "value": 2485.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 2485.0,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.consumer.2025q2",
+   "item": "Connectivity：consumer（2025q2；2026Q2 10-Q 附註 3）",
+   "value": 1721.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1721,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.consumer.1h2026",
+   "item": "Connectivity：consumer（1h2026；2026Q2 10-Q 附註 3）",
+   "value": 4633.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 4633,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.consumer.1h2025",
+   "item": "Connectivity：consumer（1h2025；2026Q2 10-Q 附註 3）",
+   "value": 3213.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 3213,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.entGov.2026q2",
+   "item": "Connectivity：entGov（2026q2；2026Q2 10-Q 附註 3）",
+   "value": 1806.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1806.0,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.entGov.2025q2",
+   "item": "Connectivity：entGov（2025q2；2026Q2 10-Q 附註 3）",
+   "value": 867.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 867,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.entGov.1h2026",
+   "item": "Connectivity：entGov（1h2026；2026Q2 10-Q 附註 3）",
+   "value": 2915.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 2915,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.conn.entGov.1h2025",
+   "item": "Connectivity：entGov（1h2025；2026Q2 10-Q 附註 3）",
+   "value": 1849.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 1849,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.ads.2026q2",
+   "item": "SI（424B4 稱 AI）：ads（2026q2；2026Q2 10-Q 附註 3）",
+   "value": 367.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 367.0,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.ads.2025q2",
+   "item": "SI（424B4 稱 AI）：ads（2025q2；2026Q2 10-Q 附註 3）",
+   "value": 426.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 426,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.ads.1h2026",
+   "item": "SI（424B4 稱 AI）：ads（1h2026；2026Q2 10-Q 附註 3）",
+   "value": 710.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 710,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.ads.1h2025",
+   "item": "SI（424B4 稱 AI）：ads（1h2025；2026Q2 10-Q 附註 3）",
+   "value": 870.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 870,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.siSI.2026q2",
+   "item": "SI（424B4 稱 AI）：siSI（2026q2；2026Q2 10-Q 附註 3）",
+   "value": 2194.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 2194.0,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.siSI.2025q2",
+   "item": "SI（424B4 稱 AI）：siSI（2025q2；2026Q2 10-Q 附註 3）",
+   "value": 311.0,
+   "unit": "USD M",
+   "period": "2025q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 311,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.siSI.1h2026",
+   "item": "SI（424B4 稱 AI）：siSI（1h2026；2026Q2 10-Q 附註 3）",
+   "value": 2669.0,
+   "unit": "USD M",
+   "period": "1h2026",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 2669,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.siSI.1h2025",
+   "item": "SI（424B4 稱 AI）：siSI（1h2025；2026Q2 10-Q 附註 3）",
+   "value": 595.0,
+   "unit": "USD M",
+   "period": "1h2025",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 收入拆分表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 595,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.seg.si.kpi.gw.2026q2",
+   "item": "SI：名目算力（2026-06-30；2026Q2 10-Q）",
+   "value": 1.4,
+   "unit": "GW",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 37 頁 MD&A Key Business Metrics",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Interested-party]",
+   "note": "",
+   "check": {
+    "value": 1.4,
+    "source": "v0.1 事實總帳（新聞稿）",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.cust.B.pct.2026q2",
+   "item": "客戶 B 占合併營收（2026Q2；全屬 AI／SI）",
+   "value": 19.5,
+   "unit": "%",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 15 頁 附註 3 Concentration of risk",
+   "quote": "Customer B 19.5 % * 12.2 % *",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.cust.B.rev.2026q2",
+   "item": "客戶 B 營收（2026Q2，衍生＝19.5% × 合併營收）",
+   "value": 1524,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "附註 3 衍生",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": "÷ AI S&I 2,194＝69.5%（v0.1 用 1.526 ÷ 2.194＝69.6%，一致）"
+  },
+  {
+   "id": "q2q.backlog.20260630",
+   "item": "Backlog（2026-06-30）",
+   "value": 47461.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 14 頁 附註 3 Backlog",
+   "quote": "Backlog totaled 13 Table of Contents $47,461 million as of June 30, 2026, of which $14,286 million was",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.debt.spacexNotes.principal.20260630",
+   "item": "債務：SpaceX Notes（本金，2026-06-30）",
+   "value": 25000.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 18 頁 附註 9 Debt 表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.debt.otherFin.principal.20260630",
+   "item": "債務：Other financings (1)（本金，2026-06-30）",
+   "value": 13406.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 18 頁 附註 9 Debt 表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.debt.totalDebt.principal.20260630",
+   "item": "債務：Total debt（本金，2026-06-30）",
+   "value": 38433.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 18 頁 附註 9 Debt 表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.debt.finLease.principal.20260630",
+   "item": "債務：Finance lease liability（本金，2026-06-30）",
+   "value": 1079.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 18 頁 附註 9 Debt 表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.debt.failedSLB.total.20260630",
+   "item": "失敗售後租回（Valor）債務合計（2026-06-30＝流動＋非流動）",
+   "value": 13329.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 22 頁 附註 9 Other Financings",
+   "quote": "ailed sale-leaseback transactions. As a result, the Company recorded the related debt of $2,039 million and $11,290 million within Debt and finance leases, curr",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 13329.0,
+    "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 17 Valor 段",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.debt.failedSLB.repaid.2026q3",
+   "item": "失敗售後租回本金 Q3 淨減少（6-30 13,329 − 9-30 12,897；Q3 未見新增交易）",
+   "value": 432.0,
+   "unit": "USD M",
+   "period": "2026q3",
+   "source": "2026Q2 10-Q 附註 9 − 2026Q3 10-Q 附註 9",
+   "quote": "",
+   "docDate": "",
+   "tag": "[Derived]",
+   "note": "v0.1 資料缺口（9M 失敗售後租回本金償還未單獨揭露）部分補上：Q3 約 432；1H 因 4 月新增交易無法拆"
+  },
+  {
+   "id": "q2q.debt.maturity.2026H2",
+   "item": "債務本金到期（2026-06-30 表）：2026H2",
+   "value": 944.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 22 頁 附註 9 到期表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.debt.maturity.2027",
+   "item": "債務本金到期（2026-06-30 表）：2027",
+   "value": 2402.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 22 頁 附註 9 到期表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.debt.maturity.2028",
+   "item": "債務本金到期（2026-06-30 表）：2028",
+   "value": 2867.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 22 頁 附註 9 到期表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.debt.maturity.2029",
+   "item": "債務本金到期（2026-06-30 表）：2029",
+   "value": 3422.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 22 頁 附註 9 到期表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.debt.maturity.2030",
+   "item": "債務本金到期（2026-06-30 表）：2030",
+   "value": 3597.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 22 頁 附註 9 到期表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.debt.maturity.thereafter",
+   "item": "債務本金到期（2026-06-30 表）：thereafter",
+   "value": 25201.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 22 頁 附註 9 到期表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.debt.maturity.total",
+   "item": "債務本金到期（2026-06-30 表）：total",
+   "value": 38433.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 22 頁 附註 9 到期表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.commit.uncond.2026H2",
+   "item": "不可取消承諾（2026-06-30 表）：2026H2",
+   "value": 2728.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 28 頁 附註 16 Unconditional Obligations",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.commit.uncond.2027",
+   "item": "不可取消承諾（2026-06-30 表）：2027",
+   "value": 22244.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 28 頁 附註 16 Unconditional Obligations",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.commit.uncond.2028",
+   "item": "不可取消承諾（2026-06-30 表）：2028",
+   "value": 2172.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 28 頁 附註 16 Unconditional Obligations",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.commit.uncond.2029",
+   "item": "不可取消承諾（2026-06-30 表）：2029",
+   "value": 809.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 28 頁 附註 16 Unconditional Obligations",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.commit.uncond.2030",
+   "item": "不可取消承諾（2026-06-30 表）：2030",
+   "value": 2.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 28 頁 附註 16 Unconditional Obligations",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.commit.uncond.thereafter",
+   "item": "不可取消承諾（2026-06-30 表）：thereafter",
+   "value": 0.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 28 頁 附註 16 Unconditional Obligations",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.commit.uncond.total",
+   "item": "不可取消承諾（2026-06-30 表）：total",
+   "value": 27955.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 28 頁 附註 16 Unconditional Obligations",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.sbc.total.2026q2",
+   "item": "股權報酬合計（2026Q2；附註 14 依科目）",
+   "value": 831.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 28 頁 附註 14",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 831.0,
+    "source": "附註 18 分部股權報酬合計",
+    "ok": true
+   }
+  },
+  {
+   "id": "q2q.debt.spacexNotes.eir.20260630",
+   "item": "SpaceX Notes 有效利率（2026-06-30）",
+   "value": 6.03,
+   "unit": "%",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 18 頁 附註 9",
+   "quote": "nd July 15 of each year, beginning on January 15, 2027. The effective interest rate on the SpaceX Notes was 6.030% as of June 30, 2026. Principal Repayments. SpaceX",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.is.intExpRP.2026q2",
+   "item": "利息費用中的 Valor 關係人部分（2026Q2）",
+   "value": 327.0,
+   "unit": "USD M",
+   "period": "2026q2",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 17",
+   "quote": "pectively, in the Company’s consolidated balance sheet, and $327 million and $513 million in Interest expense for the three and six months ended June 30, 2026 in the Company’s consolidated",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": ""
+  },
+  {
+   "id": "q2q.bs.cash.20260630",
+   "item": "現金及約當現金（2026-06-30）",
+   "value": 93522.0,
+   "unit": "USD M",
+   "period": "20260630",
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 5 頁 資產負債表",
+   "quote": "",
+   "docDate": "2026-07",
+   "tag": "[Verified]",
+   "note": "",
+   "check": {
+    "value": 93522,
+    "source": "v0.1 事實總帳（Q3 新聞稿／10-Q 比較）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.capex.2026q4.lo",
+   "item": "2026Q4 合併資本支出指引：下緣",
+   "value": 35.0,
+   "unit": "USD B",
+   "period": "2026q4",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 8 頁",
+   "quote": "range of $35 billion to $40 billion",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "CFO；G1 中值 37.5（Interested-party）",
+   "check": {
+    "value": 35.0,
+    "source": "逐字稿重讀（第 8 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.capex.2026q4.hi",
+   "item": "2026Q4 合併資本支出指引：上緣",
+   "value": 40.0,
+   "unit": "USD B",
+   "period": "2026q4",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 8 頁",
+   "quote": "range of $35 billion to $40 billion",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "",
+   "check": {
+    "value": 40.0,
+    "source": "逐字稿重讀（第 8 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.gw.ye2026.lo",
+   "item": "2026 年底名目算力指引：下緣",
+   "value": 2.5,
+   "unit": "GW",
+   "period": "20261231",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 8 頁",
+   "quote": "in the range of 2.5 to 3 gigawatts",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "CFO；Musk 同段亦稱 2.5 to 3 GW（第 3 頁）；G1 中值 2.75",
+   "check": {
+    "value": 2.5,
+    "source": "逐字稿重讀（第 8 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.gw.ye2026.hi",
+   "item": "2026 年底名目算力指引：上緣",
+   "value": 3.0,
+   "unit": "GW",
+   "period": "20261231",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 8 頁",
+   "quote": "in the range of 2.5 to 3 gigawatts",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "",
+   "check": {
+    "value": 3.0,
+    "source": "逐字稿重讀（第 8 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.gw.ye2026.musk",
+   "item": "2026 年底名目算力（Musk 第二讀：maybe 2.5 to 3 GW）",
+   "value": 3.0,
+   "unit": "GW",
+   "period": "20261231",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 3 頁",
+   "quote": "maybe 2.5 to 3 GW",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "第二讀（上緣）",
+   "check": {
+    "value": 3.0,
+    "source": "逐字稿重讀（第 3 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.gw.oct2026",
+   "item": "2026-10 底名目算力（nearly 2 GW）",
+   "value": 2.0,
+   "unit": "GW",
+   "period": "20261031",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 8 頁",
+   "quote": "nearly 2 GW of nameplate compute",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "Recon",
+   "check": {
+    "value": 2.0,
+    "source": "逐字稿重讀（第 8 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.rev.2027q1.lo",
+   "item": "2027Q1 合併營收指引：下緣",
+   "value": 33.0,
+   "unit": "USD B",
+   "period": "2027q1",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 8 頁",
+   "quote": "range of $33 billion to $37 billion",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "G2：只作校準檢查",
+   "check": {
+    "value": 33.0,
+    "source": "逐字稿重讀（第 8 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.rev.2027q1.hi",
+   "item": "2027Q1 合併營收指引：上緣",
+   "value": 37.0,
+   "unit": "USD B",
+   "period": "2027q1",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 8 頁",
+   "quote": "range of $33 billion to $37 billion",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "",
+   "check": {
+    "value": 37.0,
+    "source": "逐字稿重讀（第 8 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.arr.dec2026",
+   "item": "2026 年 12 月 ARR（＝12 月單月營收 × 12）",
+   "value": 100.0,
+   "unit": "USD B",
+   "period": "202612",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 8 頁",
+   "quote": "$100 billion in ARR by the end",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "G2；定義：annualized revenue based on the month of December",
+   "check": {
+    "value": 100.0,
+    "source": "逐字稿重讀（第 8 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.arr.dec2026.q2call",
+   "item": "2026 年 12 月 ARR（Q2 法說第二讀）",
+   "value": 100.0,
+   "unit": "USD B",
+   "period": "202612",
+   "source": "2026Q2 法說逐字稿（2026-07；Andy 提供，未入庫） 第 7 頁",
+   "quote": "$100 billion of ARR",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "第二讀",
+   "check": {
+    "value": 100.0,
+    "source": "逐字稿重讀（第 7 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.gw.add2027",
+   "item": "2027 新增名目算力（Musk：高度有信心）",
+   "value": 10.0,
+   "unit": "GW",
+   "period": "2027",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 3 頁",
+   "quote": "incremental 10 GW of compute online",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "G3：不入基準，只作 Sens 管理層路徑案",
+   "check": {
+    "value": 10.0,
+    "source": "逐字稿重讀（第 3 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.gw.ye2027",
+   "item": "2027 年底名目算力（Musk：13 GW）",
+   "value": 13.0,
+   "unit": "GW",
+   "period": "20271231",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 10 頁",
+   "quote": "so 13GW total",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "第二讀：第 3 頁「less than 13 GW」",
+   "check": {
+    "value": 13.0,
+    "source": "逐字稿重讀（第 10 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.gw.ye2027.b",
+   "item": "2027 年底名目算力（第二讀：surprised if less than 13 GW）",
+   "value": 13.0,
+   "unit": "GW",
+   "period": "20271231",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 3 頁",
+   "quote": "less than 13 GW of compute",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "",
+   "check": {
+    "value": 13.0,
+    "source": "逐字稿重讀（第 3 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.gw.ye2027.stretch",
+   "item": "2027 年 SI 算力 20 GW 以上（機率上升）",
+   "value": 20.0,
+   "unit": "GW",
+   "period": "2027",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 10 頁",
+   "quote": "some number over 20 GW",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "只作 Recon",
+   "check": {
+    "value": 20.0,
+    "source": "逐字稿重讀（第 10 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.cursor.equity",
+   "item": "Cursor 收購股權價值（法說口徑）",
+   "value": 60.0,
+   "unit": "USD B",
+   "period": "2026-08-14",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 8 頁",
+   "quote": "of the $60 billion equity value",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "G6：只列 Recon（10-Q GAAP 對價 42.474＋收購後服務期 23.376 為不同口徑）",
+   "check": {
+    "value": 60.0,
+    "source": "逐字稿重讀（第 8 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.cursor.retention",
+   "item": "Cursor 留任與替換獎酬（法說口徑）",
+   "value": 23.0,
+   "unit": "USD B",
+   "period": "2026-08-14",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 8 頁",
+   "quote": "$23 billion was attributed toward",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "約三年認列（roughly the next three-year）；10-Q 收購後服務期 23.376、加權 2.8 年",
+   "check": {
+    "value": 23.0,
+    "source": "逐字稿重讀（第 8 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.backlog.total",
+   "item": "Backlog（法說，2026-09-30）",
+   "value": 63.0,
+   "unit": "USD B",
+   "period": "20260930",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 8 頁",
+   "quote": "backlog totaling $63 billion",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "G7：Recon（10-Q 62.959）",
+   "check": {
+    "value": 63.0,
+    "source": "逐字稿重讀（第 8 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.backlog.deferred",
+   "item": "Backlog 中已列遞延收入",
+   "value": 17.5,
+   "unit": "USD B",
+   "period": "20260930",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 8 頁",
+   "quote": "$17.5 billion was recognized as",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "G7",
+   "check": {
+    "value": 17.5,
+    "source": "逐字稿重讀（第 8 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.backlog.1y",
+   "item": "Backlog 一年內認列",
+   "value": 42.0,
+   "unit": "USD B",
+   "period": "20260930",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 8 頁",
+   "quote": "Approximately $42 billion of this backlog",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "G7（10-Q：約 67% 一年內）",
+   "check": {
+    "value": 42.0,
+    "source": "逐字稿重讀（第 8 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.price.perWatt.hi",
+   "item": "算力定價：略高於每瓦 30–50 美元區間上緣",
+   "value": 50.0,
+   "unit": "USD/W",
+   "period": "2026q3",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 7 頁",
+   "quote": "slightly above the high end",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "只作 Recon（口徑未說明：合約總價 ÷ 瓦？）",
+   "check": {
+    "value": 50.0,
+    "source": "逐字稿重讀（第 7 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.gw.ye2026.q2call",
+   "item": "2026 年底名目算力（Q2 法說：over 2 GW）",
+   "value": 2.0,
+   "unit": "GW",
+   "period": "20261231",
+   "source": "2026Q2 法說逐字稿（2026-07；Andy 提供，未入庫） 第 6 頁",
+   "quote": "end this year at over 2 GW",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "v0.1 Recon 的二手值，現以逐字稿原文代替",
+   "check": {
+    "value": 2.0,
+    "source": "逐字稿重讀（第 6 頁）",
+    "ok": true
+   }
+  },
+  {
+   "id": "guide.gm.q4",
+   "item": "2026Q4 合併毛利率：回到與 2026Q2 一致（Q3 有一次性利益與客戶組合）",
+   "value": null,
+   "unit": "文字",
+   "period": "",
+   "source": "2026Q3 法說逐字稿（2026-10-20；Andy 提供，未入庫） 第 8 頁",
+   "quote": "more consistent with the second quarter",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "G4：k0 以 2026Q2 校準列 Sens"
+  },
+  {
+   "id": "guide.capex.q2call",
+   "item": "Q2 法說：下兩季資本支出與 Q2 相近（已被 Q3 法說 35–40 取代）",
+   "value": null,
+   "unit": "文字",
+   "period": "",
+   "source": "2026Q2 法說逐字稿（2026-07；Andy 提供，未入庫） 第 9 頁",
+   "quote": "very similar to the current quarter",
+   "docDate": "",
+   "tag": "[Interested-party]",
+   "note": "v0.1 未取得；只作紀錄"
+  }
+ ],
+ "checks": [
+  {
+   "id": "b.recast 第二處（Summary 財務資料前言）",
+   "value": 1,
+   "second": 1,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 47 頁",
+   "ok": true
+  },
+  {
+   "id": "seg.space.rev.fy2025",
+   "value": 4086.0,
+   "second": 4086.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 28 頁 Prospectus Summary 文字句",
+   "ok": true
+  },
+  {
+   "id": "seg.space.rev.fy2024",
+   "value": 3796.0,
+   "second": 3796.0,
+   "source": "同表 2025 欄 − $ Change 欄",
+   "ok": true
+  },
+  {
+   "id": "seg.space.ebit.fy2025",
+   "value": -657.0,
+   "second": -657.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 28 頁 Prospectus Summary 文字句",
+   "ok": true
+  },
+  {
+   "id": "seg.space.ebit.fy2024",
+   "value": 21.0,
+   "second": 21.0,
+   "source": "同表 2025 欄 − $ Change 欄",
+   "ok": true
+  },
+  {
+   "id": "seg.conn.rev.fy2025",
+   "value": 11387.0,
+   "second": 11387.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 29 頁 Prospectus Summary 文字句",
+   "ok": true
+  },
+  {
+   "id": "seg.conn.rev.fy2024",
+   "value": 7599.0,
+   "second": 7599.0,
+   "source": "同表 2025 欄 − $ Change 欄",
+   "ok": true
+  },
+  {
+   "id": "seg.conn.ebit.fy2025",
+   "value": 4423.0,
+   "second": 4423.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 29 頁 Prospectus Summary 文字句",
+   "ok": true
+  },
+  {
+   "id": "seg.conn.ebit.fy2024",
+   "value": 2006.0,
+   "second": 2006.0,
+   "source": "同表 2025 欄 − $ Change 欄",
+   "ok": true
+  },
+  {
+   "id": "seg.si.rev.fy2025",
+   "value": 3201.0,
+   "second": 3201.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 29 頁 Prospectus Summary 文字句",
+   "ok": true
+  },
+  {
+   "id": "seg.si.rev.fy2024",
+   "value": 2620.0,
+   "second": 2620.0,
+   "source": "同表 2025 欄 − $ Change 欄",
+   "ok": true
+  },
+  {
+   "id": "seg.si.ebit.fy2025",
+   "value": -6355.0,
+   "second": -6355.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 29 頁 Prospectus Summary 文字句",
+   "ok": true
+  },
+  {
+   "id": "seg.si.ebit.fy2024",
+   "value": -1561.0,
+   "second": -1561.0,
+   "source": "同表 2025 欄 − $ Change 欄",
+   "ok": true
+  },
+  {
+   "id": "seg.total.rev.fy2025",
+   "value": 18674.0,
+   "second": 18674.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 47 頁 Summary 合併損益資料（第 3 欄）",
+   "ok": true
+  },
+  {
+   "id": "seg.total.rev.fy2024",
+   "value": 14015.0,
+   "second": 14015.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 47 頁 Summary（第 4 欄）",
+   "ok": true
+  },
+  {
+   "id": "seg.total.ebit.fy2025",
+   "value": -2589.0,
+   "second": -2589.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 47 頁 Summary 合併損益資料（第 3 欄）",
+   "ok": true
+  },
+  {
+   "id": "seg.total.ebit.fy2024",
+   "value": 466.0,
+   "second": 466.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 47 頁 Summary（第 4 欄）",
+   "ok": true
+  },
+  {
+   "id": "seg.space.adjEbitda.fy2025",
+   "value": 653.0,
+   "second": 653.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 分部營運資料表",
+   "ok": true
+  },
+  {
+   "id": "seg.space.adjEbitda.fy2024",
+   "value": 1154.0,
+   "second": 1154.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 分部營運資料表",
+   "ok": true
+  },
+  {
+   "id": "seg.conn.adjEbitda.fy2025",
+   "value": 7168.0,
+   "second": 7168.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 分部營運資料表",
+   "ok": true
+  },
+  {
+   "id": "seg.conn.adjEbitda.fy2024",
+   "value": 3849.0,
+   "second": 3849.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 分部營運資料表",
+   "ok": true
+  },
+  {
+   "id": "seg.si.adjEbitda.fy2025",
+   "value": -1237.0,
+   "second": -1237.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 50 頁 Summary 分部營運資料表",
+   "ok": true
+  },
+  {
+   "id": "seg.si.adjEbitda.fy2024",
+   "value": 347.0,
+   "second": 347.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 50 頁 Summary 分部營運資料表",
+   "ok": true
+  },
+  {
+   "id": "seg.total.adjEbitda.fy2025",
+   "value": 6584.0,
+   "second": 6584.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 103 頁 Business 概要同句",
+   "ok": true
+  },
+  {
+   "id": "seg.space.capex.fy2025",
+   "value": 3832.0,
+   "second": 3832.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 116 頁 MD&A 文字句",
+   "ok": true
+  },
+  {
+   "id": "seg.space.capex.fy2024",
+   "value": 2032.0,
+   "second": 2032.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 116 頁 MD&A 文字句",
+   "ok": true
+  },
+  {
+   "id": "seg.conn.capex.fy2025",
+   "value": 4178.0,
+   "second": 4178.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 117 頁 MD&A 文字句",
+   "ok": true
+  },
+  {
+   "id": "seg.conn.capex.fy2024",
+   "value": 3498.0,
+   "second": 3498.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 117 頁 MD&A 文字句",
+   "ok": true
+  },
+  {
+   "id": "seg.si.capex.fy2025",
+   "value": 12727.0,
+   "second": 12727.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 117 頁 MD&A 文字句",
+   "ok": true
+  },
+  {
+   "id": "seg.si.capex.fy2024",
+   "value": 5633.0,
+   "second": 5633.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 117 頁 MD&A 文字句",
+   "ok": true
+  },
+  {
+   "id": "seg.total.capex.fy2025",
+   "value": 20737.0,
+   "second": 20737.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 資本支出表",
+   "ok": true
+  },
+  {
+   "id": "seg.total.capex.fy2024",
+   "value": 11163.0,
+   "second": 11163.0,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 49 頁 Summary 資本支出表",
+   "ok": true
+  },
+  {
+   "id": "seg.space.launchSvc.pct.fy2025",
+   "value": 63.0,
+   "second": 63.0,
+   "source": "同表 100% − Launch & Development 37.0%",
+   "ok": true
+  },
+  {
+   "id": "seg.space.launchDev.fy2025",
+   "value": 1511.8,
+   "second": 1511.8,
+   "source": "營收 × 37.0%",
+   "ok": true
+  },
+  {
+   "id": "seg.si.kpi.gw.fy2025",
+   "value": 0.8,
+   "second": 0.8,
+   "source": "同列以第二種讀法（逐字切分）",
+   "ok": true
+  },
+  {
+   "id": "seg.si.kpi.gw.fy2024",
+   "value": 0.3,
+   "second": 0.3,
+   "source": "同列以第二種讀法（逐字切分）",
+   "ok": true
+  },
+  {
+   "id": "seg.si.kpi.gw.2026q1（424B4 1.0 vs v0.1 Q2 新聞稿 1.0）",
+   "value": 1.0,
+   "second": 1.0,
+   "source": "424B4 vs Q2 新聞稿",
+   "ok": true
+  },
+  {
+   "id": "seg.conn.kpi.arpu.fy2025",
+   "value": 81.0,
+   "second": 81,
+   "source": "MD&A Key Business Metrics 文字句（$91 → $81）",
+   "ok": true
+  },
+  {
+   "id": "bs.cash.20251231.b",
+   "value": 24747.0,
+   "second": 24747.0,
+   "source": "10-Q 2026Q3 資產負債表比較欄（v0.1 事實總帳 bs.cash.20251231）",
+   "ok": true
+  },
+  {
+   "id": "recon.rev.fy2025（三分部合計 − 合併）",
+   "value": 18674.0,
+   "second": 18674.0,
+   "source": "分部對帳",
+   "ok": true
+  },
+  {
+   "id": "recon.ebit.fy2025（三分部合計 − 合併）",
+   "value": -2589.0,
+   "second": -2589.0,
+   "source": "分部對帳",
+   "ok": true
+  },
+  {
+   "id": "recon.adjEbitda.fy2025（三分部合計 − 合併）",
+   "value": 6584.0,
+   "second": 6584.0,
+   "source": "分部對帳",
+   "ok": true
+  },
+  {
+   "id": "recon.capex.fy2025（三分部合計 − 合併）",
+   "value": 20737.0,
+   "second": 20737.0,
+   "source": "分部對帳",
+   "ok": true
+  },
+  {
+   "id": "recon.rev.fy2024（三分部合計 − 合併）",
+   "value": 14015.0,
+   "second": 14015.0,
+   "source": "分部對帳",
+   "ok": true
+  },
+  {
+   "id": "recon.ebit.fy2024（三分部合計 − 合併）",
+   "value": 466.0,
+   "second": 466.0,
+   "source": "分部對帳",
+   "ok": true
+  },
+  {
+   "id": "recon.adjEbitda.fy2024（三分部合計 − 合併）",
+   "value": 5350.0,
+   "second": 5350.0,
+   "source": "分部對帳",
+   "ok": true
+  },
+  {
+   "id": "recon.capex.fy2024（三分部合計 − 合併）",
+   "value": 11163.0,
+   "second": 11163.0,
+   "source": "分部對帳",
+   "ok": true
+  },
+  {
+   "id": "recon.rev.2025q4（三分部合計 − 合併）",
+   "value": 4960.0,
+   "second": 4960.0,
+   "source": "分部對帳",
+   "ok": true
+  },
+  {
+   "id": "recon.ebit.2025q4（三分部合計 − 合併）",
+   "value": -1373.0,
+   "second": -1373.0,
+   "source": "分部對帳",
+   "ok": true
+  },
+  {
+   "id": "recon.adjEbitda.2025q4（三分部合計 − 合併）",
+   "value": 1471.0,
+   "second": 1471.0,
+   "source": "分部對帳",
+   "ok": true
+  },
+  {
+   "id": "recon.capex.2025q4（三分部合計 − 合併）",
+   "value": 6891.0,
+   "second": 6891.0,
+   "source": "分部對帳",
+   "ok": true
+  },
+  {
+   "id": "recon.space.子列.fy2025（衍生子列合計 − Space）",
+   "value": 4086.0,
+   "second": 4086.0,
+   "source": "子列對帳",
+   "ok": true
+  },
+  {
+   "id": "424B4 2025Q1 合併營收 vs Q2 新聞稿 1H2025 − 2025Q2（同為重編口徑）",
+   "value": 4067.0,
+   "second": 4067,
+   "source": "mag/extract/docs/2026Q3/spacex_424B4.pdf 第 47 頁",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.rev.2026q2",
+   "value": 962.0,
+   "second": 962.0,
+   "source": "v0.1 事實總帳 seg.space.rev.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.rev.2026q2",
+   "value": 4291.0,
+   "second": 4291.0,
+   "source": "v0.1 事實總帳 seg.conn.rev.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.rev.2026q2",
+   "value": 2561.0,
+   "second": 2561.0,
+   "source": "v0.1 事實總帳 seg.si.rev.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.rev.2026q2",
+   "value": 7814.0,
+   "second": 7814.0,
+   "source": "v0.1 事實總帳 seg.total.rev.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.ebit.2026q2",
+   "value": -542.0,
+   "second": -542.0,
+   "source": "v0.1 事實總帳 seg.space.ebit.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.ebit.2026q2",
+   "value": 1656.0,
+   "second": 1656.0,
+   "source": "v0.1 事實總帳 seg.conn.ebit.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.ebit.2026q2",
+   "value": -1257.0,
+   "second": -1257.0,
+   "source": "v0.1 事實總帳 seg.si.ebit.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.ebit.2026q2",
+   "value": -143.0,
+   "second": -143.0,
+   "source": "v0.1 事實總帳 seg.total.ebit.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.da.2026q2",
+   "value": 158.0,
+   "second": 158.0,
+   "source": "v0.1 事實總帳 seg.space.da.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.da.2026q2",
+   "value": 805.0,
+   "second": 805.0,
+   "source": "v0.1 事實總帳 seg.conn.da.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.da.2026q2",
+   "value": 1885.0,
+   "second": 1885.0,
+   "source": "v0.1 事實總帳 seg.si.da.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.da.2026q2",
+   "value": 2848.0,
+   "second": 2848.0,
+   "source": "v0.1 事實總帳 seg.total.da.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.sbc.2026q2",
+   "value": 179.0,
+   "second": 179.0,
+   "source": "v0.1 事實總帳 seg.space.sbc.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.sbc.2026q2",
+   "value": 136.0,
+   "second": 136.0,
+   "source": "v0.1 事實總帳 seg.conn.sbc.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.sbc.2026q2",
+   "value": 516.0,
+   "second": 516.0,
+   "source": "v0.1 事實總帳 seg.si.sbc.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.sbc.2026q2",
+   "value": 831.0,
+   "second": 831.0,
+   "source": "v0.1 事實總帳 seg.total.sbc.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.capex.2026q2",
+   "value": 1174.0,
+   "second": 1174.0,
+   "source": "v0.1 事實總帳 seg.space.capex.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.capex.2026q2",
+   "value": 1367.0,
+   "second": 1367.0,
+   "source": "v0.1 事實總帳 seg.conn.capex.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.capex.2026q2",
+   "value": 15828.0,
+   "second": 15828.0,
+   "source": "v0.1 事實總帳 seg.si.capex.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.capex.2026q2",
+   "value": 18369.0,
+   "second": 18369.0,
+   "source": "v0.1 事實總帳 seg.total.capex.2026q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.rev.1h2026",
+   "value": 1581.0,
+   "second": 1581,
+   "source": "v0.1 事實總帳 seg.space.rev.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.rev.1h2026",
+   "value": 7548.0,
+   "second": 7548,
+   "source": "v0.1 事實總帳 seg.conn.rev.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.rev.1h2026",
+   "value": 3379.0,
+   "second": 3379,
+   "source": "v0.1 事實總帳 seg.si.rev.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.rev.1h2026",
+   "value": 12508.0,
+   "second": 12508,
+   "source": "v0.1 事實總帳 seg.total.rev.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.ebit.1h2026",
+   "value": -1204.0,
+   "second": -1204,
+   "source": "v0.1 事實總帳 seg.space.ebit.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.ebit.1h2026",
+   "value": 2844.0,
+   "second": 2844,
+   "source": "v0.1 事實總帳 seg.conn.ebit.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.ebit.1h2026",
+   "value": -3726.0,
+   "second": -3726,
+   "source": "v0.1 事實總帳 seg.si.ebit.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.ebit.1h2026",
+   "value": -2086.0,
+   "second": -2086,
+   "source": "v0.1 事實總帳 seg.total.ebit.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.da.1h2026",
+   "value": 324.0,
+   "second": 324,
+   "source": "v0.1 事實總帳 seg.space.da.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.da.1h2026",
+   "value": 1588.0,
+   "second": 1588,
+   "source": "v0.1 事實總帳 seg.conn.da.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.da.1h2026",
+   "value": 3378.0,
+   "second": 3378,
+   "source": "v0.1 事實總帳 seg.si.da.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.da.1h2026",
+   "value": 5290.0,
+   "second": 5290,
+   "source": "v0.1 事實總帳 seg.total.da.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.sbc.1h2026",
+   "value": 324.0,
+   "second": 324,
+   "source": "v0.1 事實總帳 seg.space.sbc.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.sbc.1h2026",
+   "value": 252.0,
+   "second": 252,
+   "source": "v0.1 事實總帳 seg.conn.sbc.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.sbc.1h2026",
+   "value": 894.0,
+   "second": 894,
+   "source": "v0.1 事實總帳 seg.si.sbc.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.sbc.1h2026",
+   "value": 1470.0,
+   "second": 1470,
+   "source": "v0.1 事實總帳 seg.total.sbc.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.capex.1h2026",
+   "value": 2226.0,
+   "second": 2226,
+   "source": "v0.1 事實總帳 seg.space.capex.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.capex.1h2026",
+   "value": 2699.0,
+   "second": 2699,
+   "source": "v0.1 事實總帳 seg.conn.capex.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.capex.1h2026",
+   "value": 23551.0,
+   "second": 23551,
+   "source": "v0.1 事實總帳 seg.si.capex.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.capex.1h2026",
+   "value": 28476.0,
+   "second": 28476,
+   "source": "v0.1 事實總帳 seg.total.capex.1h2026（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.rev.2025q2",
+   "value": 746.0,
+   "second": 746,
+   "source": "v0.1 事實總帳 seg.space.rev.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.rev.2025q2",
+   "value": 2588.0,
+   "second": 2588,
+   "source": "v0.1 事實總帳 seg.conn.rev.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.rev.2025q2",
+   "value": 737.0,
+   "second": 737,
+   "source": "v0.1 事實總帳 seg.si.rev.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.rev.2025q2",
+   "value": 4071.0,
+   "second": 4071,
+   "source": "v0.1 事實總帳 seg.total.rev.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.ebit.2025q2",
+   "value": -369.0,
+   "second": -369,
+   "source": "v0.1 事實總帳 seg.space.ebit.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.ebit.2025q2",
+   "value": 923.0,
+   "second": 923,
+   "source": "v0.1 事實總帳 seg.conn.ebit.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.ebit.2025q2",
+   "value": -1524.0,
+   "second": -1524,
+   "source": "v0.1 事實總帳 seg.si.ebit.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.ebit.2025q2",
+   "value": -970.0,
+   "second": -970,
+   "source": "v0.1 事實總帳 seg.total.ebit.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.da.2025q2",
+   "value": 146.0,
+   "second": 146,
+   "source": "v0.1 事實總帳 seg.space.da.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.da.2025q2",
+   "value": 569.0,
+   "second": 569,
+   "source": "v0.1 事實總帳 seg.conn.da.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.da.2025q2",
+   "value": 811.0,
+   "second": 811,
+   "source": "v0.1 事實總帳 seg.si.da.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.da.2025q2",
+   "value": 1526.0,
+   "second": 1526,
+   "source": "v0.1 事實總帳 seg.total.da.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.sbc.2025q2",
+   "value": 125.0,
+   "second": 125,
+   "source": "v0.1 事實總帳 seg.space.sbc.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.sbc.2025q2",
+   "value": 91.0,
+   "second": 91,
+   "source": "v0.1 事實總帳 seg.conn.sbc.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.sbc.2025q2",
+   "value": 247.0,
+   "second": 247,
+   "source": "v0.1 事實總帳 seg.si.sbc.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.sbc.2025q2",
+   "value": 463.0,
+   "second": 463,
+   "source": "v0.1 事實總帳 seg.total.sbc.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.capex.2025q2",
+   "value": 946.0,
+   "second": 946,
+   "source": "v0.1 事實總帳 seg.space.capex.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.capex.2025q2",
+   "value": 1130.0,
+   "second": 1130,
+   "source": "v0.1 事實總帳 seg.conn.capex.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.capex.2025q2",
+   "value": 749.0,
+   "second": 749,
+   "source": "v0.1 事實總帳 seg.si.capex.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.capex.2025q2",
+   "value": 2825.0,
+   "second": 2825,
+   "source": "v0.1 事實總帳 seg.total.capex.2025q2（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.rev.1h2025",
+   "value": 1611.0,
+   "second": 1611,
+   "source": "v0.1 事實總帳 seg.space.rev.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.rev.1h2025",
+   "value": 5062.0,
+   "second": 5062,
+   "source": "v0.1 事實總帳 seg.conn.rev.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.rev.1h2025",
+   "value": 1465.0,
+   "second": 1465,
+   "source": "v0.1 事實總帳 seg.si.rev.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.rev.1h2025",
+   "value": 8138.0,
+   "second": 8138,
+   "source": "v0.1 事實總帳 seg.total.rev.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.ebit.1h2025",
+   "value": -439.0,
+   "second": -439,
+   "source": "v0.1 事實總帳 seg.space.ebit.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.ebit.1h2025",
+   "value": 1956.0,
+   "second": 1956,
+   "source": "v0.1 事實總帳 seg.conn.ebit.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.ebit.1h2025",
+   "value": -2460.0,
+   "second": -2460,
+   "source": "v0.1 事實總帳 seg.si.ebit.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.ebit.1h2025",
+   "value": -943.0,
+   "second": -943,
+   "source": "v0.1 事實總帳 seg.total.ebit.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.da.1h2025",
+   "value": 308.0,
+   "second": 308,
+   "source": "v0.1 事實總帳 seg.space.da.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.da.1h2025",
+   "value": 1078.0,
+   "second": 1078,
+   "source": "v0.1 事實總帳 seg.conn.da.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.da.1h2025",
+   "value": 1584.0,
+   "second": 1584,
+   "source": "v0.1 事實總帳 seg.si.da.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.da.1h2025",
+   "value": 2970.0,
+   "second": 2970,
+   "source": "v0.1 事實總帳 seg.total.da.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.sbc.1h2025",
+   "value": 233.0,
+   "second": 233,
+   "source": "v0.1 事實總帳 seg.space.sbc.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.sbc.1h2025",
+   "value": 166.0,
+   "second": 166,
+   "source": "v0.1 事實總帳 seg.conn.sbc.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.sbc.1h2025",
+   "value": 295.0,
+   "second": 295,
+   "source": "v0.1 事實總帳 seg.si.sbc.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.sbc.1h2025",
+   "value": 694.0,
+   "second": 694,
+   "source": "v0.1 事實總帳 seg.total.sbc.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.capex.1h2025",
+   "value": 1705.0,
+   "second": 1705,
+   "source": "v0.1 事實總帳 seg.space.capex.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.capex.1h2025",
+   "value": 1944.0,
+   "second": 1944,
+   "source": "v0.1 事實總帳 seg.conn.capex.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.capex.1h2025",
+   "value": 3316.0,
+   "second": 3316,
+   "source": "v0.1 事實總帳 seg.si.capex.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.total.capex.1h2025",
+   "value": 6965.0,
+   "second": 6965,
+   "source": "v0.1 事實總帳 seg.total.capex.1h2025（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.launchSvc.2026q2",
+   "value": 648.0,
+   "second": 648.0,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.launchSvc.2025q2",
+   "value": 490.0,
+   "second": 490,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.launchSvc.1h2026",
+   "value": 978.0,
+   "second": 978,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.launchSvc.1h2025",
+   "value": 1056.0,
+   "second": 1056,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.launchDev.2026q2",
+   "value": 314.0,
+   "second": 314.0,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.launchDev.2025q2",
+   "value": 256.0,
+   "second": 256,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.launchDev.1h2026",
+   "value": 603.0,
+   "second": 603,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.space.launchDev.1h2025",
+   "value": 555.0,
+   "second": 555,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.consumer.2026q2",
+   "value": 2485.0,
+   "second": 2485.0,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.consumer.2025q2",
+   "value": 1721.0,
+   "second": 1721,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.consumer.1h2026",
+   "value": 4633.0,
+   "second": 4633,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.consumer.1h2025",
+   "value": 3213.0,
+   "second": 3213,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.entGov.2026q2",
+   "value": 1806.0,
+   "second": 1806.0,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.entGov.2025q2",
+   "value": 867.0,
+   "second": 867,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.entGov.1h2026",
+   "value": 2915.0,
+   "second": 2915,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.conn.entGov.1h2025",
+   "value": 1849.0,
+   "second": 1849,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.ads.2026q2",
+   "value": 367.0,
+   "second": 367.0,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.ads.2025q2",
+   "value": 426.0,
+   "second": 426,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.ads.1h2026",
+   "value": 710.0,
+   "second": 710,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.ads.1h2025",
+   "value": 870.0,
+   "second": 870,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.siSI.2026q2",
+   "value": 2194.0,
+   "second": 2194.0,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.siSI.2025q2",
+   "value": 311.0,
+   "second": 311,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.siSI.1h2026",
+   "value": 2669.0,
+   "second": 2669,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.siSI.1h2025",
+   "value": 595.0,
+   "second": 595,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.seg.si.kpi.gw.2026q2",
+   "value": 1.4,
+   "second": 1.4,
+   "source": "v0.1 事實總帳（新聞稿）",
+   "ok": true
+  },
+  {
+   "id": "q2q.debt 組成合計（Notes＋X 27＋其他融資 ＝ 債務合計）",
+   "value": 38433.0,
+   "second": 38433.0,
+   "source": "附註 9 同表",
+   "ok": true
+  },
+  {
+   "id": "q2q.debt.failedSLB.total.20260630",
+   "value": 13329.0,
+   "second": 13329.0,
+   "source": "mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf 第 31 頁 附註 17 Valor 段",
+   "ok": true
+  },
+  {
+   "id": "q2q.debt.maturity 合計 ＝ 各年相加 ＝ 債務合計",
+   "value": 38433.0,
+   "second": 38433.0,
+   "source": "附註 9",
+   "ok": true
+  },
+  {
+   "id": "q2q.commit 合計",
+   "value": 27955.0,
+   "second": 27955.0,
+   "source": "附註 16",
+   "ok": true
+  },
+  {
+   "id": "q2q.sbc.total.2026q2",
+   "value": 831.0,
+   "second": 831.0,
+   "source": "附註 18 分部股權報酬合計",
+   "ok": true
+  },
+  {
+   "id": "q2q.bs.cash.20260630",
+   "value": 93522.0,
+   "second": 93522,
+   "source": "v0.1 事實總帳（Q3 新聞稿／10-Q 比較）",
+   "ok": true
+  },
+  {
+   "id": "guide.capex.2026q4.lo",
+   "value": 35.0,
+   "second": 35.0,
+   "source": "逐字稿重讀（第 8 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.capex.2026q4.hi",
+   "value": 40.0,
+   "second": 40.0,
+   "source": "逐字稿重讀（第 8 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.gw.ye2026.lo",
+   "value": 2.5,
+   "second": 2.5,
+   "source": "逐字稿重讀（第 8 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.gw.ye2026.hi",
+   "value": 3.0,
+   "second": 3.0,
+   "source": "逐字稿重讀（第 8 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.gw.ye2026.musk",
+   "value": 3.0,
+   "second": 3.0,
+   "source": "逐字稿重讀（第 3 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.gw.oct2026",
+   "value": 2.0,
+   "second": 2.0,
+   "source": "逐字稿重讀（第 8 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.rev.2027q1.lo",
+   "value": 33.0,
+   "second": 33.0,
+   "source": "逐字稿重讀（第 8 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.rev.2027q1.hi",
+   "value": 37.0,
+   "second": 37.0,
+   "source": "逐字稿重讀（第 8 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.arr.dec2026",
+   "value": 100.0,
+   "second": 100.0,
+   "source": "逐字稿重讀（第 8 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.arr.dec2026.q2call",
+   "value": 100.0,
+   "second": 100.0,
+   "source": "逐字稿重讀（第 7 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.gw.add2027",
+   "value": 10.0,
+   "second": 10.0,
+   "source": "逐字稿重讀（第 3 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.gw.ye2027",
+   "value": 13.0,
+   "second": 13.0,
+   "source": "逐字稿重讀（第 10 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.gw.ye2027.b",
+   "value": 13.0,
+   "second": 13.0,
+   "source": "逐字稿重讀（第 3 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.gw.ye2027.stretch",
+   "value": 20.0,
+   "second": 20.0,
+   "source": "逐字稿重讀（第 10 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.cursor.equity",
+   "value": 60.0,
+   "second": 60.0,
+   "source": "逐字稿重讀（第 8 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.cursor.retention",
+   "value": 23.0,
+   "second": 23.0,
+   "source": "逐字稿重讀（第 8 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.backlog.total",
+   "value": 63.0,
+   "second": 63.0,
+   "source": "逐字稿重讀（第 8 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.backlog.deferred",
+   "value": 17.5,
+   "second": 17.5,
+   "source": "逐字稿重讀（第 8 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.backlog.1y",
+   "value": 42.0,
+   "second": 42.0,
+   "source": "逐字稿重讀（第 8 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.price.perWatt.hi",
+   "value": 50.0,
+   "second": 50.0,
+   "source": "逐字稿重讀（第 7 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.gw.ye2026.q2call",
+   "value": 2.0,
+   "second": 2.0,
+   "source": "逐字稿重讀（第 6 頁）",
+   "ok": true
+  },
+  {
+   "id": "guide.gw.ye2026 兩讀（CFO 上緣 vs Musk 上緣）",
+   "value": 3.0,
+   "second": 3.0,
+   "source": "逐字稿第 8 頁 vs 第 3 頁",
+   "ok": true
+  },
+  {
+   "id": "guide.gw.ye2027 兩讀",
+   "value": 13.0,
+   "second": 13.0,
+   "source": "逐字稿第 10 頁 vs 第 3 頁",
+   "ok": true
+  },
+  {
+   "id": "guide.arr 兩讀（Q3 法說 vs Q2 法說）",
+   "value": 100.0,
+   "second": 100.0,
+   "source": "兩次法說",
+   "ok": true
+  }
+ ],
+ "recon": [
+  {
+   "period": "fy2025",
+   "line": "rev",
+   "segSum": 18674.0,
+   "total": 18674.0,
+   "diff": 0.0
+  },
+  {
+   "period": "fy2025",
+   "line": "ebit",
+   "segSum": -2589.0,
+   "total": -2589.0,
+   "diff": 0.0
+  },
+  {
+   "period": "fy2025",
+   "line": "adjEbitda",
+   "segSum": 6584.0,
+   "total": 6584.0,
+   "diff": 0.0
+  },
+  {
+   "period": "fy2025",
+   "line": "capex",
+   "segSum": 20737.0,
+   "total": 20737.0,
+   "diff": 0.0
+  },
+  {
+   "period": "fy2024",
+   "line": "rev",
+   "segSum": 14015.0,
+   "total": 14015.0,
+   "diff": 0.0
+  },
+  {
+   "period": "fy2024",
+   "line": "ebit",
+   "segSum": 466.0,
+   "total": 466.0,
+   "diff": 0.0
+  },
+  {
+   "period": "fy2024",
+   "line": "adjEbitda",
+   "segSum": 5350.0,
+   "total": 5350.0,
+   "diff": 0.0
+  },
+  {
+   "period": "fy2024",
+   "line": "capex",
+   "segSum": 11163.0,
+   "total": 11163.0,
+   "diff": 0.0
+  },
+  {
+   "period": "2025q4",
+   "line": "rev",
+   "segSum": 4960.0,
+   "total": 4960.0,
+   "diff": 0.0
+  },
+  {
+   "period": "2025q4",
+   "line": "ebit",
+   "segSum": -1373.0,
+   "total": -1373.0,
+   "diff": 0.0
+  },
+  {
+   "period": "2025q4",
+   "line": "adjEbitda",
+   "segSum": 1471.0,
+   "total": 1471.0,
+   "diff": 0.0
+  },
+  {
+   "period": "2025q4",
+   "line": "capex",
+   "segSum": 6891.0,
+   "total": 6891.0,
+   "diff": 0.0
+  }
+ ]
+}

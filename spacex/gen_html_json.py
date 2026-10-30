@@ -33,10 +33,13 @@ sotp0 = VR["s_cn"]; sotp1 = VR["mkt_imp"]
 rf_s = {str(VR["tvsh"]): {"B": "p1", "C": "p1", "D": "p1"}, str(VR["shv"]): {"B": "n3", "C": "n3", "D": "n3"}}
 rf_t = {str(VR["ssh"]): {"B": "n3", "C": "n3", "D": "n3"}, str(VR["simp"]): {"B": "x1", "C": "x1", "D": "x1"}, str(VR["mkt_imp"]): {"B": "x1"}}
 gate = rm["GATE"]
-r1 = find("Recon", "1. 合併層"); r2 = find("Recon", "2. 逐分部"); r3 = find("Recon", "3. S2"); r4 = find("Recon", "4. 每 GW")
+r1 = find("Recon", "1. 合併層"); r2 = find("Recon", "2. 逐分部"); r3 = find("Recon", "3. S2"); r4 = find("Recon", "4. 每 GW"); r5 = find("Recon", "5. 法說")
+r5_end = max(r for r in range(r5, wb["Recon"].max_row + 1) if wb["Recon"].cell(r, 1).value)
 se_end = max(x[3] for x in rm["SE_ROWS"])
 _se = wb["Sens"]
-tor_rows = ",".join(str(x[3]) for x in rm["SE_ROWS"] if isinstance(_se.cell(x[3], 5).value, (int, float)) and abs(_se.cell(x[3], 5).value) >= 0.0005)
+_tv = [abs(_se.cell(x[3], 5).value) for x in rm["SE_ROWS"] if isinstance(_se.cell(x[3], 5).value, (int, float))]
+_thr = max(0.0005, max(_tv) / 5000)   # 長條寬度＝變動 ÷ 最大 × 50%，以兩位小數輸出；太小的案例畫不出寬度，只列在全表
+tor_rows = ",".join(str(x[3]) for x in rm["SE_ROWS"] if isinstance(_se.cell(x[3], 5).value, (int, float)) and abs(_se.cell(x[3], 5).value) >= _thr)
 thh = rm["TH_HDR"]
 th_keys = ("end", "avg_ext", "avg_int", "he_fl", "si_inv", "si_cash", "si_fin", "da_ai", "da_b", "int_opex", "shadow", "int_cost")
 th_rows = ",".join(str(T[k]) for k in th_keys)
@@ -58,12 +61,12 @@ cfg = {
  "company": "SpaceX",
  "ticker": "SPCX",
  "thesis": "@README!A3",
- "question": "FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金、失敗售後租回本金與以其他融資取得之不動產設備）",
+ "question": "FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以其他融資取得之不動產設備；Valor 失敗售後租回本金列融資、不扣）",
  "scenarios": [{"key": "A", "name": "情境 A（算力租金維持高檔、Starlink 增長快）"}, {"key": "B", "name": "情境 B（租金向持有成本部分收斂；基準）"}, {"key": "C", "name": "情境 C（租金收斂到持有成本、Starlink 增長放緩）"}],
  "sections": [
   {"id": "thesis", "title": "命題與核心問題", "blocks": [
     {"type": "kv", "items": [["投資建議", "@README!A5"], ["重點觀察一", "@README!A6"], ["重點觀察二", "@README!A7"], ["重點觀察三", "@README!A8"]]},
-    {"type": "h3", "text": "本版要點（首版）"},
+    {"type": "h3", "text": "本版要點（本版）"},
     {"type": "list", "items": [f"@README!A{r}" for r in range(find("README", "本版要點") + 1, find("README", "本版要點") + 6)]}]},
   {"id": "drivers", "title": "驅動因子 → 推導量", "intro": "@Thesis!A1", "blocks": [
     {"type": "table", "caption": "驅動 → 推導對照表", "head": ["頁", "輸入", "推導量", "因果方向"],
@@ -72,7 +75,7 @@ cfg = {
      "rows": [[f"@In!B{SCN[k]}", f"@In!D{SCN[k]}|{f}", f"@In!E{SCN[k]}|{f}", f"@In!F{SCN[k]}|{f}", f"@In!C{SCN[k]}", f"@In!G{SCN[k]}|tag"] for k, f in (("scn_k", "n2"), ("scn_n", "n1"), ("scn_w", "p0"))]},
     {"type": "table", "caption": "單一參數區間（In 頁；基準進主模型，敏感度低／高只用於敏感度頁、不進目標價；三情境共用）", "head": ["@In!B3", "@In!D3", "@In!E3", "@In!F3", "@In!C3", "@In!G3"],
      "rows": [[f"@In!B{INK[k]}", f"@In!D{INK[k]}|{f}", f"@In!E{INK[k]}|{f}", f"@In!F{INK[k]}|{f}", f"@In!C{INK[k]}", f"@In!G{INK[k]}|tag"]
-              for k, f in (("ext_sh", "p0"), ("pace", "n2"), ("selfb", "p0"), ("g27_nr", "p0"), ("gl_nr", "p0"), ("m_cn", "p1"), ("cx_cn", "p1"), ("g_arpu", "p1"),
+              for k, f in (("cx_q4", "n1"), ("gw_ye26", "n2"), ("ext_sh", "p0"), ("pace", "n2"), ("selfb", "p0"), ("g27_nr", "p0"), ("gl_nr", "p0"), ("m_cn", "p1"), ("cx_cn", "p1"), ("g_arpu", "p1"),
                            ("m_spl", "p0"), ("nl_27", "n0"), ("tax", "p0"), ("internal_ai_reading", "n0"), ("beta", "n2"), ("g_tv", "p0"), ("w_dcf", "p0"), ("evs_space", "x1"))]},
     {"type": "table", "caption": "命題模組的校準與起始值", "head": ["項目", "單位", "數值"],
      "rowgen": {"sheet": "Thesis", "rows": f"{T['he0']}-{T['ppe_gw']}", "cols": ["A", "B", "C"], "fmts": ["", "", "n2"],
@@ -121,7 +124,11 @@ cfg = {
     {"type": "table", "caption": "@Recon!A" + str(r3), "head": ["項目", "情境 A", "情境 B", "情境 C", "說明"],
      "rowgen": {"sheet": "Recon", "rows": f"{r3 + 2}-{r4 - 2}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n2", "n2", "n2", ""]}},
     {"type": "table", "caption": "@Recon!A" + str(r4), "head": ["項目", "數值", "說明"],
-     "rowgen": {"sheet": "Recon", "rows": f"{r4 + 1}-{r4 + 3}", "cols": ["A", "B", "E"], "fmts": ["", "n1", ""]}}]},
+     "rowgen": {"sheet": "Recon", "rows": f"{r4 + 1}-{r4 + 4}", "cols": ["A", "B", "E"], "fmts": ["", "n1", ""]}},
+    {"type": "table", "caption": "@Recon!A" + str(r5), "head": ["項目", "情境 A", "情境 B", "情境 C", "說明"],
+     "rowgen": {"sheet": "Recon", "rows": f"{r5 + 2}-{r5_end}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "n2", "n2", "n2", ""],
+                "row_fmt": {str(r): {"B": "", "C": "", "D": ""} for r in range(r5 + 2, r5_end + 1) if isinstance(wb["Recon"].cell(r, 2).value, str)}
+                           | {str(r): {"B": "sp1", "C": "sp1", "D": "sp1"} for r in range(r5 + 2, r5_end + 1) if "÷ 換算中值 − 1" in str(wb["Recon"].cell(r, 1).value)}}}]},
   {"id": "sens", "title": "敏感度", "intro": "@Sens!A1", "blocks": [
     {"type": "tornado", "title": "加權目標價相對基準的變動（一次改一個輸入，整本重算；變動極小的案例只列在下方全表）", "sheet": "Sens", "rows": tor_rows, "label_col": "A", "value_col": "E", "fmt": "sp1"},
     {"type": "table", "collapse": True, "summary": "展開：全部案例", "head": ["驅動", "設定", "方向", "加權目標價", "相對基準"],

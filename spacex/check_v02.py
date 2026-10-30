@@ -1,5 +1,5 @@
-# SpaceX 個股模型 v0.1 成品核對：公式錯誤 0、Q／Seg／PL／CF／Val 核對列 0（含分部對帳、子列合計、命題子列合計）、敏感度未過期、固定列標籤存在。
-# 用法：python3 spacex/check_v01.py <重算後的 xlsx>；失敗時非零結束。
+# SpaceX 個股模型 v0.2 成品核對：公式錯誤 0、Q／Seg／PL／CF／Val 核對列 0（含分部對帳、子列合計、命題子列合計）、敏感度未過期、固定列標籤存在。
+# 用法：python3 spacex/check_v02.py <重算後的 xlsx>；失敗時非零結束。
 import sys
 import openpyxl
 
@@ -56,6 +56,19 @@ for r in range(1, se.max_row + 1):
         d = se.cell(r, 5).value
         if not isinstance(d, (int, float)) or abs(d) > 1e-6:
             fail.append(f"Sens 敏感度已過期或缺：基準差 {d}")
+# 二修：pace 的敏感度低／高（建置時以 Python 重算 Space＋Connectivity Q4 資本支出）須與重算後模型一致
+IN = wb["In"]; K = {IN.cell(r, 1).value: r for r in range(4, IN.max_row + 1) if IN.cell(r, 1).value}
+TH = wb["Thesis"]
+q4c = next((TH.cell(r, 6).value for r in range(1, TH.max_row + 1) if str(TH.cell(r, 1).value or "").startswith("Q4 26 SI 現金資本支出")), None)
+cg = next((TH.cell(r, 3).value for r in range(1, TH.max_row + 1) if str(TH.cell(r, 1).value or "").startswith("每 GW 投資（2026 新增")), None)
+if "si_sh_cx" not in K and q4c is not None:
+    E_ = lambda k, c=5: IN.cell(K[k], c).value
+    x = E_("cx_q4") - q4c
+    for c, cx in ((4, E_("cx_q4", 4)), (6, E_("cx_q4", 6))):
+        want = 4 * (cx - x + E_("ppefin_9m") / 3) / cg
+        if abs(E_("pace", c) - want) > 5e-4: fail.append(f"In pace 敏感度欄 {c} {E_('pace', c)} ≠ 模型同一拆法 {want:.4f}")
+    if abs(E_("si_cx_rr") - (q4c + E_("ppefin_9m") / 3)) > 1e-9: fail.append("si_cx_rr ≠ Q4 SI 現金資本支出＋以融資取得 PP&E 季均")
+    print(f"pace 一致性：Space＋Connectivity Q4 {x:.4f}；pace 低／基準／高 {E_('pace', 4):.4f}／{E_('pace'):.4f}／{E_('pace', 6):.4f}")
 tp = V.cell(labs["目標價（DCF 與 Comparable 加權）"], 2).value
 up = V.cell(labs["上檔空間：加權目標價"], 2).value
 rec = V.cell(labs["投資建議"], 2).value
