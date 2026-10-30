@@ -74,3 +74,12 @@
 - 說明文字：a4 `c2_tkled`、a5 第八節標題不再寫死「約 6.26」；README 加「v0.1.5 更新」。公式、具名範圍數、公式格數不變。
 - HTML：「①之三」改名 v0.1.3＋v0.1.4＋v0.1.5，前端加 v0.1.5 摘要與 10 名稱新舊值表；η 各版本小表加 v0.1.4（v19.1）、v0.1.5（v21.2）欄；`tools/html_scenarios.yaml` 加 `tk14_back`、`v014`。dist 改 `20261024_Anthropic收支模型_v0_1_5.html／.xlsx`，v0.1.4 dist 檔已 git rm。
 - 報告 `docs/reports/20261024_v0.1.5.md`＋`_對照.xlsx`（`tools/make_report_v015.py`）。
+
+## v0.1.6 正式公開 S-1（2026-10-31；Excel `model/20261031_Anthropic_v0.1.6.xlsx`；v0.1.5 移至 `model/archive/`；分支 `claude/anthropic-v0.1.6`）
+- 工作單 `docs/workorders/20261031_anthropic_v0.1.6_S1正式版.md`。commit 見 git log「anthropic v0.1.6 步驟 1–4」。
+- W1：SRC_ANT_410–464（55 列；Anthropic, PBC Form S-1，2026-10-26，CIK 0002130357）。年度／上半年營收、算力與基礎設施費用、營業損益、6-30 現金、NRR 直讀 S-1（Verified；期中未經查核）；季度、Note 8 營收成本、營業現金流、承諾三段、逐家金額、集中度經二手轉載（Interested-party；sec.gov 擋自動工具）。草擬版 31 列只在備註註明對應正式列，值不改。not_found +5。
+- W2：Revenue h1act 改讀正式 S-1 上半年 16.286（Inputs INP_195 `s1f_switch`；0＝v0.1.5 逐格重現）；INP_196 `s1f_warn_threshold`（5%）。2026 營收 49.900 → 49.886；每 VR 等值 GW 差額 2026–2030 −5.377／−4.915／−2.702／＋5.373／＋11.595（v0.1.5：−5.365／−4.910／−2.698／＋5.379／＋11.602）；覆蓋率 2030 1.804；累計外部資金需求 0；現金谷底 84.16。
+- W3：`builder/a6.py` Cost 第二十四節（K281–K332；只對照，Checks f1_iso＝0）：(a) S-1 上半年算力費用 8.945 vs 模型合約實付折半 +44%、含自建 +137%；自建資本支出為 S-1 年化資本支出 17.3 倍；(b) 營收成本 2.773 vs 模型 2025 推論 3.23（−14%）；(c) η_2026H1＝0.604（基準 0.525 不改）、B 情境對差額與覆蓋率影響 0；(d) 承諾三段 832.0 vs 模型新合約 598.3（−28%）。Checks C157–C181。
+- 規模：公式格 7,609、具名範圍 1,358、SRC_ANT 464、Inputs 192；CHK_Errors 0、CHK_Warnings 2。parity 情境 +4（ia–id）；test_builder +2。
+- HTML：新增「①之四 v0.1.6 更新了什麼」；⑦ OpenAI 並排加 2026 每 GW 營收（42.58 vs OAI_Link v0.6 23.66；OpenAI v0.6.4 為 21.89，文字並列）；`tools/html_scenarios.yaml` 加 `s1f_off` 群組與 `v015`，歷史情境加 `s1f_off`。dist 改 `20261031_Anthropic收支模型_v0_1_6.html／.xlsx`（v0.1.5 dist git rm）。
+- 報告 `docs/reports/20261031_v0.1.6.md`＋`_對照.xlsx`（`tools/make_report_v016.py`）。
