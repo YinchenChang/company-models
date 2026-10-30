@@ -142,6 +142,7 @@ ROLL_FIELDS = [
     ('首期一次性金額', 'defaults.atm', 'ATM 募資（首期）'),
     ('首期一次性金額', 'scenarios.leaseHighPath[0]', '表外現金租金（首期；三情境依此路徑按比例）'),
     ('首期一次性金額', 'rpo.bucketWeights[0]', 'RPO 排程權重（首期）'),
+    ('首期一次性金額', 'segments.ytd', '年初至今各營運分部營收（6-K 分部表；v0.5.2）'),
     ('期初餘額', 'defaults.cash', '期初現金'),
     ('期初餘額', 'debt.instruments', '既有債務本金（各工具餘額）'),
     ('期初餘額', 'debt.convertible', '評價日後新發可轉債本金'),

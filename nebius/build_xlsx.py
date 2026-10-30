@@ -1979,6 +1979,104 @@ vrow("全年 EPS（加回 SBC）", "US$",
                 else f"=({COLS[i]}{ni_v}+{SBCY}*{inref('模型期長度（年）', i)})/{COLS[i]}{shr_v}"),
      USD, BLACK, "＝(淨利＋SBC)÷股數；NOL 狀態無現金稅，SBC 全額加回")
 r += 1
+# ---------------------------------------------------------------------
+# v0.5.2：營收分部（官方營運分部；個股模型原則第 2–3 條，company.json → segments）。
+# 只新增列（接在本頁最後，不位移既有列）；總營收與目標價不變。模型期：Avride、TripleTen、沖銷＝年化金額 × 模型期長度 [Assumed]，
+# Nebius AI cloud＝總營收 − 三者（命題模組 MW × 每 MW 收入對應此分部）；全年口徑首期＝年初至今實際＋模型期。
+SG = CO.get('segments')
+if SG:
+    SGN = SG['names']; SKEYS = ['aiCloud', 'avride', 'tripleTen', 'elim']
+    assert SG['ytd']['throughQuarter'] == CO['calendar']['latestQuarterFiled'], "segments.ytd.throughQuarter 須＝calendar.latestQuarterFiled（滾動後未更新分部年初至今）"
+    assert abs(sum(SG['ytd'][k] for k in SKEYS) - SG['ytd']['total']) < 1e-6 and abs(SG['ytd']['total'] - YA['revenue']) < 1e-6, "segments.ytd 分部合計須＝total＝ytdActual.revenue"
+    for j, per in enumerate(SG['hist']['periods']):
+        _v = [SG['hist'][k][j] for k in SKEYS]
+        if None not in _v:
+            assert abs(sum(_v) - SG['hist']['total'][j]) < 1e-6, f"segments.hist {per}：分部合計 ≠ 合併營收"
+    RR = SG['runRate']
+
+    def _rr_note(k):
+        x = RR[k]
+        return f"[Assumed] 基準 {_n(x['base'])}（{x['basis']}）；區間 {_n(x['lo'])}–{_n(x['hi'])}（只列，不進目標價）"
+
+    # 區段一：全年口徑（主列；列名＝官方分部名稱）
+    r = section(ws, r, "營收分部｜全年口徑（官方營運分部；«FY0»）")
+    r = period_header(ws, r)
+    n_fy = r; n_md = n_fy + 7  # 全年區 6 列＋空列；模型期區：區段標題、表頭、3 列年化假設、4 列分部、核對
+    md_rows = {k: n_md + 2 + 3 + i for i, k in enumerate(SKEYS)}  # 模型期分部列列號
+    for i, k in enumerate(SKEYS):
+        vrow(SGN[k], "US$bn", (lambda k: lambda c: (f"={_n(SG['ytd'][k])}+{COLS[c]}{md_rows[k]}" if c == 0 else f"={COLS[c]}{md_rows[k]}"))(k), NUM, BLACK,
+             "«P0»＝«YTD» 實際（6-K 分部表）＋模型期；" + ("命題模組（MW × 每 MW 收入）對應本分部" if k == 'aiCloud' else "模型期為年化假設 × 期間長度（見下方模型期區）"))
+    seg_fy = [VR[SGN[k]] for k in SKEYS]
+    vrow("分部合計（含沖銷）", "US$bn", lambda c: "=" + "+".join(f"{COLS[c]}{x}" for x in seg_fy), NUM, BLACK, bold=True)
+    vrow("檢查：分部合計 − 合併營收（全年）", "US$bn", lambda c: f"=ROUND({COLS[c]}{VR['分部合計（含沖銷）']}-{COLS[c]}{fy_rev},6)", '0.000000', BLACK,
+         "應為 0；合併營收＝上方「全年總營收」")
+    assert r == n_fy + 6, (r, n_fy)
+    r += 1
+    # 區段二：模型期（«P0» 欄只含«STUBW»）
+    r = section(ws, r, "營收分部｜模型期（«P0» 欄只含«STUBW»；Nebius AI cloud＝總營收 − 其餘分部）")
+    r = period_header(ws, r)
+    rr_rows = {}
+    for k in ['avride', 'tripleTen', 'elim']:
+        nm = f"分部假設｜{SGN[k]} 年化營收"
+        ws.cell(row=r, column=1, value=nm).font = BLACK
+        ws.cell(row=r, column=2, value="US$bn／年").font = SMALL
+        c = ws.cell(row=r, column=3, value=RR[k]['base']); c.font = BLUE; c.number_format = '0.0000'; c.border = BOX
+        ws.cell(row=r, column=9, value=_rr_note(k)).font = SMALL
+        rr_rows[k] = r; r += 1
+    for k in ['aiCloud', 'avride', 'tripleTen', 'elim']:
+        assert r == md_rows[k], (k, r, md_rows[k])
+        if k == 'aiCloud':
+            vrow(SGN[k], "US$bn", lambda c: f"={COLS[c]}{rev_v}-" + "-".join(f"{COLS[c]}{md_rows[x]}" for x in ['avride', 'tripleTen', 'elim']), NUM, BLACK,
+                 "＝總營收（算力收入＋非算力服務）− Avride − TripleTen − 沖銷；算力收入以合併營收校準，故其餘分部自其中拆出")
+        else:
+            vrow(SGN[k], "US$bn", (lambda k: lambda c: f"=$C${rr_rows[k]}*{inref('模型期長度（年）', c)}")(k), NUM, BLACK, "＝年化假設 × 模型期長度")
+    vrow("檢查：分部合計 − 合併營收（模型期）", "US$bn",
+         lambda c: f"=ROUND(" + "+".join(f"{COLS[c]}{md_rows[x]}" for x in SKEYS) + f"-{COLS[c]}{rev_v},6)", '0.000000', BLACK, "應為 0；合併營收＝上方「總營收」")
+    r += 1
+    # 區段三：歷史（公司揭露值）
+    H = SG['hist']; hp = H['periods'] + [f"«YTDL»"]
+    r = section(ws, r, f"營收分部｜歷史（公司揭露值；6-K 分部表）")
+    r = period_header(ws, r, cols=hp)
+    hist_rows = {}
+    def _hv(k, j):
+        if j < len(H['periods']):
+            return H[k][j]
+        return SG['ytd'][k]
+    for k in SKEYS + ['total']:
+        nm = "合併營收（公司揭露）" if k == 'total' else SGN[k]
+        ws.cell(row=r, column=1, value=nm).font = BOLD if k == 'total' else BLACK
+        ws.cell(row=r, column=2, value="US$bn").font = SMALL
+        for j in range(len(hp)):
+            v = _hv(k, j)
+            if v is None:
+                continue
+            c = ws.cell(row=r, column=3 + j, value=v); c.font = BLUE; c.number_format = '0.0000'; c.border = BOX
+        if k == 'aiCloud':
+            ws.cell(row=r, column=9, value=f"{H['tag']}；2025Q3 分部名稱為「Nebius（core AI infrastructure）」").font = SMALL
+        if k == 'total':
+            ws.cell(row=r, column=9, value="«YTDL» 欄＝『輸入與假設』年初至今實際營收（見下方核對）").font = SMALL
+        hist_rows[k] = r; r += 1
+    ws.cell(row=r, column=1, value="檢查：分部合計 − 合併營收（歷史）").font = BLACK
+    ws.cell(row=r, column=2, value="US$bn").font = SMALL
+    for j in range(len(hp)):
+        if all(_hv(k, j) is not None for k in SKEYS):
+            c = ws.cell(row=r, column=3 + j, value=f"=ROUND(" + "+".join(f"{COLS[j]}{hist_rows[k]}" for k in SKEYS) + f"-{COLS[j]}{hist_rows['total']},6)")
+            c.number_format = '0.000000'; c.border = BOX; c.font = BLACK
+    _gap = [H['periods'][j] for j in range(len(H['periods'])) if any(H[k][j] is None for k in SKEYS)]
+    ws.cell(row=r, column=9, value="應為 0（公司揭露值）" + (f"；{'、'.join(_gap)} 未揭露 Avride、TripleTen、沖銷金額，不核對（見下方「資料缺口」）" if _gap else "")).font = SMALL
+    r += 1
+    ws.cell(row=r, column=1, value="核對：«YTDL» 揭露合併營收 − 模型年初至今實際營收").font = BLACK
+    ws.cell(row=r, column=2, value="US$bn").font = SMALL
+    c = ws.cell(row=r, column=3 + len(H['periods']), value=f"=ROUND({COLS[len(H['periods'])]}{hist_rows['total']}-{H_REV},6)"); c.number_format = '0.000000'; c.border = BOX; c.font = BLACK
+    ws.cell(row=r, column=9, value="應為 0").font = SMALL
+    r += 1
+    ws.cell(row=r, column=1, value="資料缺口").font = SMALL
+    ws.cell(row=r, column=9, value=H['gapNote']).font = SMALL
+    r += 1
+    ws.cell(row=r, column=1, value="來源").font = SMALL
+    ws.cell(row=r, column=9, value="；".join(f"{p}：{x}" for p, x in zip(H['periods'], H['sources']))).font = SMALL
+    r += 1
+r += 1
 PL = "'損益'!"
 ws = wb.create_sheet("評價_DCF與目標價")
 ws.column_dimensions["A"].width = 42

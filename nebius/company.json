@@ -44,7 +44,8 @@
   "debt.convertibles": "FY26Q2",
   "defaults.otherEbitda[0]": "FY26Q2",
   "valuation.holdings": "FY26Q2",
-  "valuation.debtLike": "FY26Q2"
+  "valuation.debtLike": "FY26Q2",
+  "segments.ytd": "FY26Q2"
  },
  "ytdActual": {
   "throughQuarter": "FY26Q2",
@@ -2128,6 +2129,99 @@
     "ref": "ct.q2.acvPerMW",
     "mapTo": "新欄位"
    }
+  }
+ },
+ "segments": {
+  "_note": "官方營運分部（v0.5.2；個股模型原則第 2–3 條）。公司於 6-K 附件 99.1「Operating and Financial Review and Prospects」的 Revenues by operating segment 揭露三個分部：Nebius AI cloud、Avride、TripleTen，另列分部間沖銷（Eliminations）；分部合計＋沖銷＝合併營收。金額 US$bn。模型的算力收入（MW × 每 MW 收入）以合併營收校準（latestQuarter.revenue × 4），故其輸出＝合併營收；模型期 Avride、TripleTen、沖銷取最近一期年化金額 [Assumed]，Nebius AI cloud＝合併營收 − 其餘（命題模組對應 AI cloud）。總營收、目標價不受影響。",
+  "names": {
+   "aiCloud": "Nebius AI cloud",
+   "avride": "Avride",
+   "tripleTen": "TripleTen",
+   "elim": "分部間沖銷"
+  },
+  "latestPeriod": "FY26Q2",
+  "hist": {
+   "periods": [
+    "2025Q3",
+    "2025Q4",
+    "2026Q1",
+    "2026Q2"
+   ],
+   "aiCloud": [
+    0.1311,
+    0.2142,
+    0.3897,
+    0.5749
+   ],
+   "avride": [
+    0.0002,
+    null,
+    0.0009,
+    0.001
+   ],
+   "tripleTen": [
+    0.0162,
+    null,
+    0.0116,
+    0.01
+   ],
+   "elim": [
+    -0.0014,
+    null,
+    -0.0032,
+    -0.0036
+   ],
+   "total": [
+    0.1461,
+    0.2277,
+    0.399,
+    0.5823
+   ],
+   "sources": [
+    "6-K 2025-11 附件 99.1：Operating and Financial Review and Prospects（Q3 2025；分部名稱當時為「Nebius（core AI infrastructure）」）https://www.sec.gov/Archives/edgar/data/1513845/000110465925110831/tm2531034d1_ex99-1.htm",
+    "6-K 2026-02-12 附件 99.2：Shareholder Letter Q4'25（只揭露核心 AI cloud 營收 214.2 與合併營收 227.7；TripleTen 約 6%、Avride「immaterial」，未給金額）https://www.sec.gov/Archives/edgar/data/1513845/000110465926013946/tm266173d1_ex99-2.htm",
+    "6-K 2026-05-20 附件 99.1：Operating and Financial Review and Prospects（Q1 2026）https://www.sec.gov/Archives/edgar/data/0001513845/000110465926064092/nbis-20260331xex99d1.htm",
+    "6-K 2026-08-12 附件 99.1：Operating and Financial Review and Prospects（Q2 2026，Revenues by operating segment）https://www.sec.gov/Archives/edgar/data/0001513845/000110465926094844/nbis-20260812xex99d1.htm"
+   ],
+   "tag": "[Interested-party]（公司自述，未經查核季報）",
+   "gapNote": "2025Q4 與 FY2025 的 Avride、TripleTen、沖銷金額：Q4 股東信與新聞稿未揭露（只有 AI cloud 214.2 與合併 227.7）；FY2025 20-F 分部附註本輪未能讀到（SEC 頁面擷取截斷）。FY2025 AI cloud＝9M 266.2＋Q4 214.2＝480.4 [Derived]；其餘三項合計 49.4 [Derived]。找不到 ≠ 不存在：下一輪以 20-F 附註補齊。"
+  },
+  "ytd": {
+   "throughQuarter": "FY26Q2",
+   "aiCloud": 0.9646,
+   "avride": 0.0019,
+   "tripleTen": 0.0216,
+   "elim": -0.0068,
+   "total": 0.9813,
+   "source": "6-K 2026-08-12 附件 99.1：Operating and Financial Review and Prospects（Q2 2026，Revenues by operating segment）https://www.sec.gov/Archives/edgar/data/0001513845/000110465926094844/nbis-20260812xex99d1.htm（six months ended June 30, 2026 欄）"
+  },
+  "runRate": {
+   "_note": "模型期 Avride、TripleTen、分部間沖銷的年化金額（US$bn／年，乘以模型期長度）[Assumed]：基準＝Q2 2026 單季 × 4，持平；lo／hi 為區間（只列，不進目標價）。AI cloud＝合併營收 − 三者，總營收不變。",
+   "avride": {
+    "base": 0.004,
+    "lo": 0.002,
+    "hi": 0.008,
+    "basis": "Q2 1.0 × 4；lo＝Q1 前水準一半、hi＝倍增（Robotaxi 商轉初期，規模仍小）"
+   },
+   "tripleTen": {
+    "base": 0.04,
+    "lo": 0.03,
+    "hi": 0.0464,
+    "basis": "Q2 10.0 × 4；lo＝年減 25%（Q2 年減 19%）、hi＝Q1 11.6 × 4"
+   },
+   "elim": {
+    "base": -0.0144,
+    "lo": -0.0128,
+    "hi": -0.0144,
+    "basis": "Q2 −3.6 × 4；區間取 Q1 −3.2 × 4 至 Q2 −3.6 × 4"
+   }
+  },
+  "shareLatest": {
+   "aiCloud": 0.9873,
+   "avride": 0.0017,
+   "tripleTen": 0.0172,
+   "elim": -0.0062,
+   "basis": "Q2 2026 各分部 ÷ 合併營收 582.3（574.9／1.0／10.0／−3.6）[Derived]；只作對照"
   }
  }
 }

@@ -253,6 +253,13 @@ F = [
  ('tokenomics.currentFile', '取數時 Tokenomics model/CURRENT 的檔名', '文字', K),
  ('tokenomics.names', '引用的 Tokenomics 名稱（只限 IF_、L1_；清單檔 data/tokenomics_names.txt）', '清單', C),
  ('tokenomics.optional', '其中 Tokenomics 尚未提供時記為 missing 的名稱（目前無）', '清單', C),
+ ('segments._note', '營運分部區段的說明（v0.5.2；個股模型原則第 2–3 條；不進程式）', '文字', K),
+ ('segments.names', '官方營運分部的列名稱（鍵 aiCloud／avride／tripleTen／elim；Excel『損益』分部列與 segments.json 的 label 使用同一名稱）', '物件（文字）', M),
+ ('segments.latestPeriod', '分部資料的最近一期（FYyyQn）', '文字', M),
+ ('segments.hist', '歷史各季分部營收（公司揭露值；periods、各分部、合併營收 total、來源 sources、標記、缺口說明 gapNote；null＝未揭露）；Excel『損益』「營收分部｜歷史」區與核對列讀此', '物件（US$bn）', M),
+ ('segments.ytd', '年初至今各分部營收（throughQuarter 須＝calendar.latestQuarterFiled；total 須＝ytdActual.revenue，建置時檢查）；Excel 全年口徑分部列的首期實際部分', '物件（US$bn）', M),
+ ('segments.runRate', '模型期非命題分部（Avride、TripleTen、分部間沖銷）的年化金額 base／lo／hi 與依據 [Assumed]；base 進 Excel（× 模型期長度），lo／hi 只列', '物件（US$bn／年）', C),
+ ('segments.shareLatest', '最近一期各分部占合併營收比例（只作對照）', '物件（比例）', M),
  ('nebius._readme', 'Nebius 資料草稿區段的說明（v0.1a 產出；v0.1b 步驟 1 已搬移可對應既有欄位者，本區只留後續步驟會用的欄位）', '文字', M),
  ('nebius.files', 'Nebius 事實總帳、每 MW 推導、共識資料檔的路徑', '物件（路徑）', M),
  ('nebius.debt', 'Nebius 可轉債（八檔）、資產擔保融資、其他債務草稿；格式同上', '物件', M),
@@ -347,7 +354,7 @@ SECT = [('meta', '基本資料'), ('calendar', '期間與日期（v4.5）'), ('a
         ('rpo', '已簽約未認列營收（RPO）'), ('leases', '租約'), ('debt', '既有債務'), ('latestQuarter', '最新一季財報數字（10-Q）'),
         ('callFacts', '法說會與期後事項'), ('scenarios', '三個擴張情境'), ('legacy', '舊版對照值'),
         ('defaults', '預設假設（畫面上可調的輸入）'), ('valuation', '評價參數'), ('methodology', '評價方法與評等門檻'), ('peers', '同業比較（Comps）'),
-        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('priceCheck', '單價對照（v0.2；只用於簡報，不進入計算）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('tokenomics', 'Tokenomics 取數層（v0.2a；快照檔、版本與引用名稱）'), ('pricing', '每 MW 收入的公司因素：定價倍數 k、長約占比、證據表（v0.2a）'), ('fleet', '世代組合（v0.2a；收入錨加權）'), ('companyCheck', '公司實況驗證（已決定事項 15；v0.2a 第 2 輪）'), ('nebius', 'Nebius 資料草稿（v0.1a；引擎尚未讀取）')]
+        ('quarterly', '季度層（v4.4）'), ('varianceReasons', '差異原因（v4.4）'), ('priceCheck', '單價對照（v0.2；只用於簡報，不進入計算）'), ('texts', '公司特有的說明文字（v4.5；隨資料更新）'), ('tokenomics', 'Tokenomics 取數層（v0.2a；快照檔、版本與引用名稱）'), ('pricing', '每 MW 收入的公司因素：定價倍數 k、長約占比、證據表（v0.2a）'), ('fleet', '世代組合（v0.2a；收入錨加權）'), ('companyCheck', '公司實況驗證（已決定事項 15；v0.2a 第 2 輪）'), ('nebius', 'Nebius 資料草稿（v0.1a；引擎尚未讀取）'), ('segments', '官方營運分部（v0.5.2；個股模型原則第 2–3 條）')]
 out, shown = ['**填表慣例**',
                '- 金額單位是**十億美元（US$bn）**，例如 4.653 代表 46.53 億美元；另有標示的例外：每股（US$）、每 MW 建置成本（百萬美元／MW，US$m/MW）、股數（十億股，bn）。',
                '- 「比例」寫成小數（0.25＝25%）；標示「%」的欄位寫成百分點（25＝25%）。兩種寫法沿用既有程式，不可混用。',
