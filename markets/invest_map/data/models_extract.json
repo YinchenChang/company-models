@@ -8303,73 +8303,73 @@
   }
  },
  "SPCX": {
-  "model": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx",
+  "model": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx",
   "v2": true,
   "seg_model": true,
   "tp": {
-   "value": 28.7577743745996,
+   "value": 34.8251633063131,
    "cell": "Val!B8",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
   },
   "tp_dcf": {
-   "value": 18.8053057016316,
+   "value": 23.367739552796,
    "cell": "Val!B6",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
   },
   "tp_comp": {
-   "value": 38.7102430475677,
+   "value": 46.2825870598302,
    "cell": "Val!B7",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
   },
   "tp_cons": {
    "value": 244.97,
    "cell": "Val!B10",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
   },
   "up": {
-   "value": -0.800140563106542,
+   "value": -0.757973706954527,
    "cell": "Val!B11",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
   },
   "up_comp": {
-   "value": -0.73097336126508,
+   "value": -0.67834743860011,
    "cell": "Val!B12",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
   },
   "tier6": {
    "value": "小於 −50%",
    "cell": "Val!B13",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
   },
   "rec": {
    "value": "強力放空",
    "cell": "Val!B14",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
   },
   "dcf_A": {
-   "value": 29.261933462817,
+   "value": 41.5816290182842,
    "cell": "Val!B132",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
   },
   "dcf_C": {
-   "value": 9.79778196704681,
+   "value": 7.79637899149342,
    "cell": "Val!D132",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
   },
   "model_px": {
    "value": 143.89,
    "cell": "Val!B9",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx",
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx",
    "date": "2026-10-29"
   },
   "cash": {
    "basis": "現金流",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx",
-   "label": "自由現金流五年合計（收支關卡口徑）（基準情境 B；A -42.7、C -114.6）",
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx",
+   "label": "自由現金流五年合計（收支關卡口徑）（基準情境 B；A -177.6、C -302.2）",
    "values": [
     [
      "情境 B 五年合計",
-     -84.1312698258872,
+     -249.692961761454,
      "CF!C6"
     ]
    ]
