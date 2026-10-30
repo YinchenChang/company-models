@@ -1,0 +1,262 @@
+{
+ "_readme": "META 市場共識資料檔（Meta v0.1 工作單 A 段第 3 項）。2026-10-30 以 WebSearch／WebFetch 取得，數字為擷取當時頁面值，逐筆附來源。金額 US$bn（每股 US$）。年度＝日曆年（Meta 財年＝日曆年）。模型端只讀。",
+ "company": "Meta Platforms",
+ "ticker": "META",
+ "asOf": "2026-10-28",
+ "retrieved": "2026-10-30",
+ "fiscalYearEnd": "12 月；最新已公布季 2026Q3（財報 2026-10-21）",
+ "tagLegend": {
+  "Verified": "可公開查證的事實（公司公布數字、收盤價）",
+  "Interested-party": "賣方分析師預估或彙整：有利益關係（Meta 2026-10-26 的 25B 普通股遠期出售與 12.5B 強制轉換特別股，承銷含 Morgan Stanley、Goldman Sachs 等覆蓋券商），數字是意見而非事實"
+ },
+ "sourceIndependence": "MarketBeat 目標價與評等為自行彙整；TipRanks 只計近三個月評等；valueinvesting.io 未載資料來源與日期；MarketScreener 年度預估屬 S&P Capital IQ 系，頁面報價日 2026-10-08（Q3 財報前）。三個目標價來源樣本數不同（58／45／71），不視為彼此獨立的驗證。",
+ "priceReference": {
+  "close": 612.49,
+  "date": "2026-10-28",
+  "tag": "Verified",
+  "source": "StockScan 歷史股價頁（10-28 列跌 1.24%；頁首 612.49、跌 7.70）",
+  "url": "https://stockscan.io/stocks/META/price-history",
+  "crossCheck": [
+   {
+    "close": 612.49,
+    "source": "Digrin 價格頁（2026-10 月值，頁首現價）",
+    "url": "https://www.digrin.com/stocks/detail/META/price"
+   },
+   {
+    "close": 620.19,
+    "date": "2026-10-27",
+    "source": "TipRanks 歷史股價（10-27 收盤；620.19 − 7.70 ＝ 612.49 相符）",
+    "url": "https://www.tipranks.com/stocks/meta/historical-prices"
+   },
+   {
+    "close": 612.5,
+    "source": "InvestSmart 頁首（日期依澳洲時區標示，僅作旁證）",
+    "url": "https://www.investsmart.com.au/security/nasdaq/meta/meta-platforms/share-price"
+   }
+  ],
+  "note": "M8 原定 2026-10-29 收盤；2026-10-30 讀取時所有可讀網頁都未出現有日期的 10-29 收盤（StockScan 表格止於 10-28，TipRanks 止於 10-27），依工作單改用 10-28 收盤（工程處理）。TipRanks 預測頁另顯示「最新價 570.05」但無日期，若為 10-29 收盤則較 10-28 跌約 6.9%，未能以第二來源核實，不採用，列入待查。"
+ },
+ "priceTarget": {
+  "mean": 833.12,
+  "low": 650.0,
+  "high": 1000.0,
+  "analysts": 58,
+  "consensusRating": "Moderate Buy（2.91）",
+  "source": "MarketBeat（自行彙整）",
+  "url": "https://www.marketbeat.com/stocks/NASDAQ/META/Forecast/",
+  "pageUpdated": "2026-10-22",
+  "retrieved": "2026-10-30",
+  "tag": "Interested-party",
+  "crossCheck": [
+   {
+    "mean": 851.15,
+    "low": 580.0,
+    "high": 1000.0,
+    "analysts": 45,
+    "consensusRating": "Strong Buy（Buy 39、Hold 6、Sell 0；近三個月）",
+    "source": "TipRanks",
+    "url": "https://www.tipranks.com/stocks/meta/forecast",
+    "pageUpdated": "2026-10-28"
+   },
+   {
+    "mean": 841.37,
+    "median": 841.5,
+    "low": 671.1,
+    "high": 1065.75,
+    "analysts": 71,
+    "consensusRating": "BUY（Strong Buy 21、Buy 42、Hold 8）",
+    "source": "valueinvesting.io（未載日期與來源）",
+    "url": "https://www.valueinvesting.io/META/estimates"
+   }
+  ],
+  "note": "MarketBeat 平均 833.12 為現價 612.49 的 1.36 倍；同頁另一處引 791.86（舊值），已排除"
+ },
+ "ratings": {
+  "strongBuy": 3,
+  "buy": 47,
+  "hold": 8,
+  "sell": 0,
+  "total": 58,
+  "source": "MarketBeat",
+  "url": "https://www.marketbeat.com/stocks/NASDAQ/META/Forecast/",
+  "retrieved": "2026-10-30",
+  "tag": "Interested-party"
+ },
+ "recentActions": [
+  {
+   "date": "2026-10-28",
+   "firm": "TD Cowen（John Blackledge）",
+   "rating": "Buy",
+   "target": 850.0,
+   "source": "TipRanks"
+  },
+  {
+   "date": "2026-10-27",
+   "firm": "Canaccord Genuity（Maria Ripps）",
+   "rating": "Buy",
+   "target": 950.0,
+   "source": "TipRanks"
+  },
+  {
+   "date": "2026-10-27",
+   "firm": "Scotiabank（Nat Schindler）",
+   "rating": "Hold",
+   "target": 650.0,
+   "source": "TipRanks；MarketBeat 10-22 列 600→650"
+  },
+  {
+   "date": "2026-10-26",
+   "firm": "Piper Sandler（Thomas Champion）",
+   "rating": "Buy",
+   "target": 850.0,
+   "source": "TipRanks"
+  },
+  {
+   "date": "2026-10-22",
+   "firm": "BMO Capital Markets（Brian Pitz）",
+   "rating": "Market Perform",
+   "target": 685.0,
+   "source": "MarketBeat（580→685）"
+  },
+  {
+   "date": "2026-10-22",
+   "firm": "RBC（Brad Erickson）",
+   "rating": "Outperform",
+   "target": 800.0,
+   "source": "MarketBeat（770→800）"
+  },
+  {
+   "date": "2026-10-22",
+   "firm": "UBS（Stephen Ju）",
+   "rating": "Outperform",
+   "target": 920.0,
+   "source": "MarketBeat"
+  }
+ ],
+ "recentActionsMeta": {
+  "tag": "Interested-party",
+  "retrieved": "2026-10-30"
+ },
+ "annualEstimates": {
+  "definition": "MarketScreener 年度共識（S&P Capital IQ 系）；EBITDA 口徑未說明（2025 實際 122.319 ＝ 營業利益 83.276 ＋ 折舊攤銷 18.616 ＋ SBC 20.427 恰好相符 → 含 SBC 加回，與 GOOGL 檔同口徑）；資本支出＝購置不動產與設備（不含融資租賃本金）。頁面報價日 2026-10-08，早於 Q3 財報（10-21），未反映 Q3 法律費用 9.9B 與指引調整。",
+  "source": "MarketScreener",
+  "url": "https://www.marketscreener.com/quote/stock/META-PLATFORMS-INC-41645324/finances",
+  "pageQuoteDate": "2026-10-08",
+  "retrieved": "2026-10-30",
+  "tag": "Interested-party",
+  "2025": {
+   "revenue": 200.966,
+   "ebitda": 122.319,
+   "ebit": 83.276,
+   "netIncome": 60.458,
+   "eps": 23.49,
+   "capex": 69.691,
+   "fcf": 43.585,
+   "netDebt": -22.848,
+   "note": "實際數（與公司 FY2025 新聞稿相同）"
+  },
+  "2026": {
+   "revenue": 254.117,
+   "ebitda": 144.544,
+   "ebit": 86.862,
+   "netIncome": 80.27,
+   "eps": 31.04,
+   "capex": 139.19,
+   "fcf": -7.076,
+   "netDebt": 21.772
+  },
+  "2027": {
+   "revenue": 306.527,
+   "ebitda": 180.579,
+   "ebit": 104.105,
+   "netIncome": 87.748,
+   "eps": 34.07,
+   "capex": 193.057,
+   "fcf": -23.398,
+   "netDebt": 61.697
+  },
+  "2028": {
+   "revenue": 363.046,
+   "ebitda": 221.948,
+   "ebit": 124.141,
+   "netIncome": 101.65,
+   "eps": 39.53,
+   "capex": 209.324,
+   "fcf": 8.281,
+   "netDebt": 82.131
+  }
+ },
+ "annualEstimatesAlt": {
+  "source": "valueinvesting.io（頁面標「This Year／Next Year」，推定為 2026／2027；未載日期）",
+  "url": "https://www.valueinvesting.io/META/estimates",
+  "retrieved": "2026-10-30",
+  "tag": "Interested-party",
+  "2026": {
+   "revenue": 257.78,
+   "eps": 33.59
+  },
+  "2027": {
+   "revenue": 308.08,
+   "eps": 35.56
+  },
+  "note": "2026 營收 257.78 與「前三季實際 181.712 ＋ Q4 指引 73–76」＝ 254.7–257.7 的上緣相近；EPS 33.59 高於前三季 GAAP 20.44 ＋ Q4 共識 8.35 ＝ 28.79，推測為排除一次性項目的口徑（未說明）"
+ },
+ "quarterlyEstimates": {
+  "2026Q4": {
+   "revenue": 74.93,
+   "revenueRange": [
+    72.03,
+    76.06
+   ],
+   "eps": 8.35,
+   "epsRange": [
+    6.84,
+    9.66
+   ]
+  },
+  "source": "TipRanks（頁面寫「下一季」，依頁面日期 10-28 推定為 2026Q4）",
+  "url": "https://www.tipranks.com/stocks/meta/forecast",
+  "retrieved": "2026-10-30",
+  "tag": "Interested-party"
+ },
+ "companyGuidance": {
+  "2026Q4revenue": {
+   "low": 73,
+   "high": 76
+  },
+  "2026totalExpenses": {
+   "low": 175,
+   "high": 179
+  },
+  "2026capexInclFinanceLeases": {
+   "low": 135,
+   "high": 145,
+   "prior": {
+    "low": 130,
+    "high": 145
+   }
+  },
+  "2026Q4taxRate": {
+   "low": 15,
+   "high": 17,
+   "unit": "%"
+  },
+  "2026RLloss": {
+   "low": 18,
+   "high": 19
+  },
+  "2027RLloss": {
+   "approx": 15
+  },
+  "2027capex": "未給數字，Q4 法說提供",
+  "source": "Meta 2026Q3 財報新聞稿（8-K 附件 99.1）與法說",
+  "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066700/meta-09302026xexhibit991.htm",
+  "tag": "Interested-party",
+  "vsConsensus": "Q4 營收指引中點 74.5 vs TipRanks Q4 共識 74.93：共識在指引上半部"
+ },
+ "notFound": [
+  "2026-10-29 收盤價（兩個來源）：已搜尋 StockScan、Digrin、TipRanks 歷史頁、Macrotrends（止於 2024）、InvestSmart、heygotrade 每日新聞（最新 10-23）——未找到有日期的 10-29 收盤",
+  "Q3 財報後（10-21 以後）的年度營收、EBITDA 共識：MarketScreener 可讀頁面報價日為 10-08；Yahoo Finance 分析頁未出現在搜尋結果；StockAnalysis 預測頁未出現在搜尋結果",
+  "分部（FoA／RL）層級共識：未找到公開來源"
+ ]
+}
