@@ -1,5 +1,5 @@
-# SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2：命題模組＋官方營收分部 → 損益表（docs/plan/個股模型原則_命題加營收分部.md）
-# 工作單：spacex/docs/workorders/20261030_SpaceX_v0.2_原文換版與法說指引.md（v0.1：20261030_SpaceX_v0.1_個股模型.md）
+# SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.1：命題模組＋官方營收分部 → 損益表（docs/plan/個股模型原則_命題加營收分部.md）
+# 工作單：spacex/docs/workorders/20261030_SpaceX_v0.2.1_一致性小修.md；20261030_SpaceX_v0.2_原文換版與法說指引.md（v0.1：20261030_SpaceX_v0.1_個股模型.md）
 # v0.2：424B4／2026Q2 10-Q 原文換版（facts_v02.py）、2026Q3 法說指引（G1 Q4 資本支出與年底 GW 入基準；G3 FY2027–28 pace 改用指引年化）、
 #       v0.1 遺留兩處小修（SOTP 自用 AI 營運成本、SOTP 融資租賃重扣）。環境變數 SPCX_STAGE＝0–6 只供目標價歸因瀑布逐項套用（預設全部套用）。
 # 架構範本：alphabet/build_alphabet.py（Alphabet v0.3.2）；SI 算力命題參考 OpenAI v0.6.4（MW 錨定）與 CoreWeave（算力出租）。
@@ -29,10 +29,10 @@ FD = json.load(open(os.path.join(HERE, "data", "spacex_facts_2026q3.json"), enco
 F = {it["id"]: it for it in FD["items"]}
 FD2 = json.load(open(os.path.join(HERE, "data", "spacex_facts_v02.json"), encoding="utf-8"))     # v0.2：424B4、2026Q2 10-Q、法說指引（同鍵以本檔為準）
 F.update({it["id"]: it for it in FD2["items"]})
-STAGE = int(os.environ.get("SPCX_STAGE", "99"))   # 歸因瀑布：1 讀法 2 加回小修、2 融資租賃重扣小修、3 G5 原文、4 G1 Q4 資本支出、5 G1 年底 GW、6 G3 pace（9M 占比）、7 pace 改用 Q4 拆法（二修）（預設全部）
-G2C = os.path.join(HERE, "data", "g2cal_v02_20261030.json")
+STAGE = int(os.environ.get("SPCX_STAGE", "99"))   # 歸因瀑布：1 讀法 2 加回小修、2 融資租賃重扣小修、3 G5 原文、4 G1 Q4 資本支出、5 G1 年底 GW、6 G3 pace（9M 占比）、7 pace 改用 Q4 拆法（二修）、8 v0.2.1 pace 季速改 ÷(1 − fin_sh)、9 v0.2.1 pace 分母改 FY2027 世代組合（預設全部）
+G2C = os.path.join(HERE, "data", "g2cal_v021_20261030.json")   # v0.2.1 重解（pace 改變 FY2027 營收）
 G2CAL = json.load(open(G2C, encoding="utf-8")) if (os.path.exists(G2C) and not os.environ.get("SPCX_NO_G2CAL")) else None   # G2 校準 k0（g2cal_v02.py 解出；只用於 Sens）
-VER = "v0.2"
+VER = "v0.2.1"
 TKV = "v21.7"
 TK = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 GEN = {x["code"]: x["name"] for x in TK["source"]["generations"]}
@@ -232,6 +232,9 @@ inp("mix0_b3", "評價日機隊：GB300 錨", "%", None, 0.3, None, "Assumed", "
 inp("am_27", "2027 新增中 GB300 錨占比（其餘 VR200 錨）", "%", None, 0.5, None, "Assumed", "同 Alphabet（2026 新增全為 GB300 錨；2028 起全為 VR200 錨）")
 inp("selfb", "自建機房比例（不計機房資本支出的比例＝租用）", "%", 0.75, 0.9, 1.0, "Assumed", "判斷：Colossus 1／2 為自建（Memphis）；PP&E 資料中心基礎設施 6.333 偏低，可能部分租用", judg=True)
 cxgw26 = tk("IF_CapexIT", "GB300") + 0.9 * tk("IF_CapexFacility", "VR200")
+AM27 = 0.5   # 與 In am_27 基準相同（am_27 無敏感度區間）
+cxgw27 = AM27 * tk("IF_CapexIT", "GB300") + (1 - AM27) * tk("IF_CapexIT", "VR200") + 0.9 * tk("IF_CapexFacility", "VR200")
+FIN_SH = round(fb("cf.ppeFin.9m2026") / (fb("seg.si.capex.9m2026") + fb("cf.ppeFin.9m2026")), 4)   # 與 In fin_sh 相同
 def _spcn_q4():
     """Q4 26 Space＋Connectivity 資本支出（與 Seg 頁 Q4 26 公式相同，以 Python 重算；只用於 pace 的敏感度低／高數值，check_v02 以重算後模型比對）"""
     rpl0 = fb("seg.space.launchSvc.9m2026") / fv("seg.space.kpi.launchCust.9m2026")
@@ -242,14 +245,28 @@ def _spcn_q4():
     return sp * fb("seg.space.capex.9m2026") / fb("seg.space.rev.9m2026") + cn * fb("seg.conn.capex.9m2026") / fb("seg.conn.rev.9m2026")
 SPCN_Q4 = _spcn_q4()
 _cxm = (fv("guide.capex.2026q4.lo") + fv("guide.capex.2026q4.hi")) / 2
-if STAGE >= 7:   # 二修（chat 端 10-30）：FY2027–28 pace 與 Q4 同一拆法——Q4 SI 現金資本支出（cx_q4 − Space − Connectivity）＋以融資取得 PP&E 季均
+def pace_of(cx):
+    """v0.2.1 第 3 點：pace 的基準參考值與敏感度低／高由同一函式產生（與 In pace、si_cx_rr 的 Excel 公式同式；check_v02 以重算後模型比對）。
+    STAGE ≥ 8：SI 投資季速＝(cx − Space − Connectivity) ÷ (1 − fin_sh)；STAGE ≥ 9：分母＝FY2027 新增世代組合每 GW 投資；7：二修（＋以融資取得 PP&E 季均、÷ GB300）"""
+    q4c = cx - SPCN_Q4
+    rr = q4c / (1 - FIN_SH) if STAGE >= 8 else q4c + fb("cf.ppeFin.9m2026") / 3
+    return 4 * rr / (cxgw27 if STAGE >= 9 else cxgw26)
+PACE_DEN = "cxgw27" if STAGE >= 9 else "cxgw26"
+if STAGE >= 8:   # v0.2.1 第 1 點：以融資取得 PP&E 與 Q4 同法（÷(1 − fin_sh)，融資比例隨建置規模放大），不再加 9M 季均 1.307
+    inp("si_cx_rr", "SI 投資季速（v0.2.1：Q4 26 SI 投資＝Q4 SI 現金資本支出〔cx_q4 − Space − Connectivity〕÷ (1 − fin_sh)）", "US$B/季", None, "=q4cash/(1-fin_sh)", None, "Derived",
+        "v0.2.1（chat 端 10-30）：與 Thesis Q4 26 SI 投資同式——(37.5 − Space、Connectivity Q4 26 資本支出 3.437) ÷ (1 − 8.93%)＝37.40；以融資取得 PP&E 隨建置規模放大",
+        "q4cash＝Thesis 頁 Q4 26 SI 現金資本支出；v0.2 為 q4cash＋以融資取得 PP&E 9M 季均 1.307（35.37）")
+    _pnote = ("低／高＝Q4 指引 35／40 以同一式推得（build_spacex.pace_of 產生、check_v02 與重算後模型比對；只動 pace，不動 Q4；cx_q4 案兩者同動）")
+elif STAGE >= 7:   # 二修（chat 端 10-30）：FY2027–28 pace 與 Q4 同一拆法——Q4 SI 現金資本支出（cx_q4 − Space − Connectivity）＋以融資取得 PP&E 季均
     inp("si_cx_rr", "SI 投資季速（G3 二修：Q4 26 SI 現金資本支出〔cx_q4 − Space − Connectivity〕＋以其他融資取得 PP&E 季均）", "US$B/季", None, "=q4cash+ppefin_9m/3", None, "Derived",
         "G3（chat 端 10-30 二修）：與 Q4 26 同一拆法——37.5 − Space、Connectivity Q4 26 資本支出 3.437＝34.063（隱含 SI 90.8%）＋以其他融資取得 PP&E 9M 3.921 ÷ 3（審查第 3 條）",
         "q4cash＝Thesis 頁 Q4 26 SI 現金資本支出；一修用 9M26 SI 占比 83.2%（31.2）、v0.1 用 2026Q3 SI 資本支出 16.444")
-    _rr = _cxm - SPCN_Q4 + fb("cf.ppeFin.9m2026") / 3
-    _plo = round(4 * (fv("guide.capex.2026q4.lo") - SPCN_Q4 + fb("cf.ppeFin.9m2026") / 3) / cxgw26, 4)
-    _phi = round(4 * (fv("guide.capex.2026q4.hi") - SPCN_Q4 + fb("cf.ppeFin.9m2026") / 3) / cxgw26, 4)
     _pnote = "低／高＝Q4 指引 35／40 以同一拆法（− Space、Connectivity 3.437）推得（只動 pace，不動 Q4；cx_q4 案兩者同動）"
+if STAGE >= 7:
+    _rr = None
+    pace0 = round(pace_of(_cxm), 4)
+    _plo = round(pace_of(fv("guide.capex.2026q4.lo")), 4)
+    _phi = round(pace_of(fv("guide.capex.2026q4.hi")), 4)
 elif STAGE >= 6:
     inp("si_cx_rr", "SI 投資季速（G3：Q4 指引中值 × SI 占比＋以其他融資取得 PP&E 季均）", "US$B/季", None, "=cx_q4*si_sh_cx+ppefin_9m/3", None, "Derived",
         "G3：37.5 × 9M26 SI 占合併資本支出 83.2%＋以其他融資取得 PP&E 9M 3.921 ÷ 3（審查第 3 條：含以融資取得之 PP&E）", "v0.1＝2026Q3 SI 資本支出 16.444＋1.307＝17.751")
@@ -260,13 +277,14 @@ else:
         "10-Q 附註 18：2026Q3 SI 資本支出 16.444＋以其他融資取得 PP&E 9M 3.921 ÷ 3（審查第 3 條：含以融資取得之 PP&E）", "以融資取得之 PP&E 未分分部，推定全屬 SI")
     _rr = fb("seg.si.capex.2026q3") + fb("cf.ppeFin.9m2026") / 3
     _plo = _phi = None; _pnote = "低／高＝× 2/3／× 1.5"
-pace0 = round(4 * _rr / cxgw26, 4)
-inp("pace", "SI 名目算力每年新增（FY2027–FY2028；三情境相同）", "GW/年", _plo if _plo is not None else round(pace0 * 2 / 3, 4), "=4*si_cx_rr/(cit_b3+selfb*cfac)",
+if _rr is not None: pace0 = round(4 * _rr / cxgw26, 4)
+inp("pace", "SI 名目算力每年新增（FY2027–FY2028；三情境相同）", "GW/年", _plo if _plo is not None else round(pace0 * 2 / 3, 4), f"=4*si_cx_rr/{PACE_DEN}",
     _phi if _phi is not None else round(pace0 * 1.5, 4), "Derived",
-    "審查第 3 條＋G3：SI 投資季速 × 4 ÷ Tokenomics 每 GW 資本支出（GB300 錨 IT＋自建 × 機房）",
+    ("審查第 3 條＋G3＋v0.2.1：SI 投資季速 × 4 ÷ FY2027 新增世代組合每 GW 投資（Thesis cxgw27：am_27 × GB300 IT＋(1 − am_27) × VR200 IT＋自建 × 機房；與 FY2027 SI 投資同一來源）"
+     if STAGE >= 9 else "審查第 3 條＋G3：SI 投資季速 × 4 ÷ Tokenomics 每 GW 資本支出（GB300 錨 IT＋自建 × 機房）"),
     f"基準約 {pace0:.3f}；Q4 26 新增改由 gw_ye26 給定（G1）；{_pnote}")
 inp("conv_mw", "FY2029 起新增速度收斂年數（到 FY2032 只剩 g × 期初 GW）", "年", None, 4, None, "Assumed", "同 Alphabet 修正一 F5：終值不得落在建置高峰", judg=True)
-inp("fin_sh", "SI 投資中以其他融資取得（非現金）比例", "%", None, round(fb("cf.ppeFin.9m2026") / (fb("seg.si.capex.9m2026") + fb("cf.ppeFin.9m2026")), 4), None, "Derived",
+inp("fin_sh", "SI 投資中以其他融資取得（非現金）比例", "%", None, FIN_SH, None, "Derived",
     "9M26：3.921 ÷ (SI 資本支出 39.995＋3.921)", "預測期 SI 投資按本比例拆現金資本支出與融資取得；收支關卡兩者都扣（審查第 2 條）")
 for code, nm in (("H100", "h"), ("GB200", "b2"), ("GB300", "b3"), ("VR200", "vr")):
     inp(f"he_{nm}", f"IF_HoldEcon｜{code}（每 MW 年持有成本，經濟口徑）", "US$m/MW-年", tk("IF_HoldEcon")[GEN[code]]["低成本"], tk("IF_HoldEcon", code), tk("IF_HoldEcon")[GEN[code]]["高成本"], "Derived",
@@ -298,7 +316,7 @@ inp("conv_k", "k 收斂年數（Q4 26 校準值 → 情境值）", "年", 2, 4, 
     "Sens：2／6 年；另列「k 不收斂」一案（conv_k 極大，k 維持 k0）。注意：k0 隨 Tokenomics 持有成本重新校準、FY2030 k 為固定值，故持有成本同時推動營收")
 inp("k0_ovr", "G2 校準 k0（0＝不用；Sens 高＝使情境 B 的 2027Q1 合併營收＝指引中值 35 的 k0，三情境同一 k0）", "x", None, 0,
     round(G2CAL["k0"], 4) if G2CAL else None, "Derived",
-    "chat 端 10-30 二修：G2 只作 Sens，不改基準；k0 由 spacex/g2cal_v02.py 以整本重算解出（data/g2cal_v02_20261030.json）",
+    "chat 端 10-30 二修：G2 只作 Sens，不改基準；k0 由 spacex/g2cal_v02.py 以整本重算解出（data/g2cal_v021_20261030.json；v0.2.1 重解）",
     "FY2030 k 仍為 1.6／1.25／1.0；另列「G2 校準＋k 不收斂」一案（k0 維持到 FY2030）", judg=True)
 inp("k0_cal", "k0 校準季（3＝2026Q3，基準；2＝2026Q2，G4 Sens）", "季", 2, 3, None, "Assumed",
     "G4：維持 2026Q3；CFO 稱 Q3 有一次性利益與客戶組合、Q4 毛利率回到 Q2 水準（2026Q3 法說逐字稿第 8 頁：「" + F["guide.gm.q4"]["quote"] + "」）",
@@ -627,6 +645,8 @@ tscal("m_so0", "SI 其他 EBITDA 率（2026Q3 校準：(SI 調整後 EBITDA − 
       "=(sie_q3-(rent_q3-ext_sh*avg_gw_q3*opex0/4))/(si_q3-rent_q3)", "0.0%", "對外出租 EBITDA＝營收 − 對外 GW × Tokenomics 營運費用；殘差含 Grok 訓練人力、評價日自用 GW 營運")
 tscal("m_so", "SI 其他 EBITDA 率（預測期採用）", "%", "=m_so0+m_so_adj", "0.0%")
 tscal("cxgw26", "每 GW 投資（2026 新增：GB300 錨 IT＋自建 × 機房）", "US$B/GW", "=cit_b3+selfb*cfac", "0.00", "Tokenomics IF_CapexIT｜GB300＋selfb × IF_CapexFacility")
+tscal("cxgw27", "每 GW 投資（FY2027 新增世代組合：am_27 × GB300 錨 IT＋(1 − am_27) × VR200 錨 IT＋自建 × 機房）", "US$B/GW", "=am_27*cit_b3+(1-am_27)*cit_vr+selfb*cfac", "0.00",
+      "v0.2.1：pace 分母（與 FY2027 SI 投資同一來源）→ FY2027 SI 投資＝4 × Q4 26 SI 投資（mgmt_gw27＝0 時）")
 tscal("ppe_gw", "對照：PP&E（伺服器與網通＋資料中心基礎設施，2026-09-30）÷ 名目算力", "US$B/GW",
       f"=({fb('ppe.servers.20260930')}+{fb('ppe.dcInfra.20260930')})/gw_0", "0.00", "毛額 43.206＋6.333 ÷ 1.7；含 Hopper 舊機隊、機房可能部分租用 → 低於 Tokenomics")
 r += 1
@@ -648,7 +668,7 @@ _v = {"2H": "=gw_ye26-gw_0" if STAGE >= 5 else "=pace*0.25", 27: f"=IF(mgmt_gw27
 for p in (29, 30, 31, 32):
     _v[p] = f"=pace+(g_tv*{COL[prevp(p)]}{END_R}-pace)*MIN(1,({PY[p]}-2028)/conv_mw)"
 tput("adds", "SI 名目算力新增（FY2029 起收斂到 g × 期初 GW）", "GW", _v,
-     note="Q4 26＝gw_ye26 − gw_0（G1 指引）；FY2027–28＝pace（G3：Q4 指引年化 × SI 占比 ÷ 每 GW 投資；mgmt_gw27＝1 時 FY2027＝13 − 2026 年底）；FY2029–32 線性收斂（同 Alphabet 修正一 F5）")
+     note="Q4 26＝gw_ye26 − gw_0（G1 指引）；FY2027–28＝pace（G3／v0.2.1：4 × Q4 26 SI 投資 ÷ FY2027 世代組合每 GW 投資；mgmt_gw27＝1 時 FY2027＝13 − 2026 年底）；FY2029–32 線性收斂（同 Alphabet 修正一 F5）")
 for b, nm in BK:
     v = {"1H": f"=gw_0*{MIX0[b]}"}
     for p in FC:
@@ -696,6 +716,8 @@ tput("si_inv", "SI 投資合計（現金資本支出＋以其他融資取得）"
 tput("si_cash", "  其中：SI 現金資本支出（×(1 − fin_sh)）", "US$B", {**{p: f"={COL[p]}{T['si_inv']}*(1-fin_sh)" for p in FC}, "1H": "=" + QA("capex_si", "1H"), "26": f"=E{r}+F{r}"}, "#,##0.00")
 tput("si_fin", "  其中：以其他融資取得 PP&E（× fin_sh；非現金）", "US$B", {**{p: f"={COL[p]}{T['si_inv']}*fin_sh" for p in FC}, "1H": "=ppefin_9m", "26": f"=E{r}+F{r}"}, "#,##0.00")
 tput("inv_gw", "  對照：SI 投資 ÷ 新增 GW", "US$B/GW", {p: f"=IF({COL[p]}{T['adds']}>0,({COL[p]}{T['cx_it']}+{COL[p]}{T['cx_fac']})/{COL[p]}{T['adds']},0)" for p in FC}, "0.00")
+if STAGE >= 4:
+    tput("inv27chk", "  對照：FY2027 SI 投資 ÷ (4 × Q4 26 SI 投資) − 1（v0.2.1：基準應為 0；管理層路徑案不適用）", "%", {27: f"=H{T['si_inv']}/(4*F{T['q4inv']})-1"}, "0.00%")
 r += 1
 TH.cell(r, 1, "D. 新增 AI 折舊（在建工程與新增投資依年限直線攤提；評價日在役資產的折舊見 E 節基礎折舊）").font = BOLD; r += 1
 tput("cip_it", "在建工程轉入（SI）：IT（2026 年度批次）", "US$B", {"2H": "=cip_0*cip_si*cip_it"}, "#,##0.00", note="同 Alphabet 修正三：在建工程為已付資產，照時程折舊、不另增 GW（判斷題）")
@@ -1414,7 +1436,7 @@ SENS_CASES = [
 ] + ([("k0_ovr", "G2 校準：k0 使 2027Q1 合併營收＝35（情境 B）", None, "hi", f"k0 1.87 → {G2CAL['k0']:.2f}（三情境同一 k0；FY2030 k 不變）"),
       ("k0_ovr_flat", "G2 校準＋k 不收斂（k0_ovr、conv_k）", None, "hi", f"k0 {G2CAL['k0']:.2f} 維持到 FY2030（conv_k 極大）")] if G2CAL else []) + [
     ("ext_sh", "對外出租占比", "lo", "hi", "72% → 60%／85%（審查第 4 條區間）"),
-    ("pace", "SI 名目算力新增速度", "lo", "hi", "基準 × 2/3／× 1.5"),
+    ("pace", "SI 名目算力新增速度（只動 pace，不動 Q4）", "lo", "hi", f"{pace0:.2f} → {_plo:.2f}／{_phi:.2f}（Q4 指引 35／40 以同一式推得）" if _plo is not None else "基準 × 2/3／× 1.5"),
     ("selfb", "自建機房比例", "lo", "hi", "90% → 75%／100%"),
     ("k30_B", "情境 B 的 FY2030 k", "lo", "hi", "1.25 → 1.0／1.5（只影響情境 B）"),
     ("m_so_adj", "SI 其他 EBITDA 率", "lo", "hi", "校準值 ±10pt"),
@@ -1531,7 +1553,7 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = "SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2（2026-10-30；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = "SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.1（2026-10-30；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = ("命題：SI 分部的算力投入（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW）能否由 SI 營收（對外算力出租＋Grok／Cursor／X）回本；"
             "Connectivity（Starlink）現金流與 IPO 資金能支撐多久；加計 AI 折舊與 Cursor 收購獎酬後的每股價值是否高於現價。")
 RD["A4"] = "核心問題：FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以融資取得 PP&E；Valor 失敗售後租回本金列融資，不扣）。"
@@ -1559,9 +1581,11 @@ for row in DRV:
     for j, v in enumerate(row, 1): RD.cell(r, j, v)
     r += 1
 r += 1
-RD.cell(r, 1, "本版要點（v0.2）").font = BOLD; r += 1
-for t in ("原文換版（G5）：FY2025 改用 424B4 原文（Space 資本支出 3.832 確認、Connectivity 4.178 解除待核、SI 調整後 EBITDA −1.237）；2025Q4＝FY2025 − 9M25；名目算力 2024 年底 0.3（v0.1 判斷 0.15）。",
-          "法說指引入基準（G1）：2026Q4 合併資本支出 37.5（35–40 中值）、2026 年底名目算力 2.75 GW（2.5–3 中值）；FY2027–28 pace＝(Q4 SI 現金資本支出 34.06〔37.5 − Space − Connectivity〕＋以融資取得 PP&E 1.307) × 4 ÷ Tokenomics 每 GW 投資＝3.24 GW／年（G3，二修與 Q4 同一拆法）。",
+RD.cell(r, 1, "本版要點（v0.2.1；其下為 v0.2）").font = BOLD; r += 1
+for t in ("v0.2.1 一致性小修：pace 的 SI 投資季速改與 Q4 同法＝Q4 SI 現金資本支出 ÷ (1 − fin_sh)（不再加 9M 以融資取得 PP&E 季均）；分母改 FY2027 新增世代組合每 GW 投資（am_27 GB300／VR200 各半），FY2027 SI 投資＝4 × Q4 26 SI 投資；In 頁 pace 低／高由 build 同一函式產生、check_v02 比對。",
+          "G2（2027Q1 營收指引只校準、不硬套）：Andy 2026-10-30 同意（原為預設）。",
+          "原文換版（G5）：FY2025 改用 424B4 原文（Space 資本支出 3.832 確認、Connectivity 4.178 解除待核、SI 調整後 EBITDA −1.237）；2025Q4＝FY2025 − 9M25；名目算力 2024 年底 0.3（v0.1 判斷 0.15）。",
+          "法說指引入基準（G1）：2026Q4 合併資本支出 37.5（35–40 中值）、2026 年底名目算力 2.75 GW（2.5–3 中值）；FY2027–28 pace 以 Q4 SI 投資年化（G3；v0.2 二修與 Q4 同一拆法，v0.2.1 統一融資算法與分母）。",
           "只作檢查或對照：2027Q1 營收指引 33–37 與 12 月 ARR 1,000 億（G2，Recon 第 5 節）；Musk 2027 年底 13 GW 只列 Sens 管理層路徑案（G3）；k0 以 2026Q2 校準列 Sens（G4）；Cursor、backlog 列 Recon（G6、G7）。",
           "v0.1 遺留小修：分部加總讀法 2 刪除無對應扣除的自用 AI 營運成本加回（讀法 1 改扣）；FY2027 年底淨現金只扣融資租賃年底餘額（不再重扣已付本金）。",
           "沿用 v0.1：官方三分部與子列、SI S&I 以 Customer B 衍生 72% 拆命題子列、k 情境軸、收支關卡口徑（Valor 本金列融資、不扣）、Tesla 合併不建模、EchoStar 頻譜價值中性（G8）。"):
