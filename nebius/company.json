@@ -2,7 +2,7 @@
  "meta": {
   "company": "Nebius",
   "ticker": "NBIS",
-  "updateDate": "2026-10-22",
+  "updateDate": "2026-10-30",
   "priceDate": "2026-10-06",
   "sourceOrderNote": "時序先 Q2 6-K 財報與股東信（8/12），再期後 6-K（7/10 資產擔保融資、8 月可轉債與以股換債）。入帳數字聽 6-K 財報（未經查核）與經查核 20-F；指引聽股東信；法說會只有二手轉述者標明。Q1／Q2 季末 active MW 未揭露，不以營收反推。",
   "consensusFile": "data/consensus_nbis_20261007.json"
@@ -2187,7 +2187,6 @@
    "gapNote": "2025Q4 與 FY2025 的 Avride、TripleTen、沖銷金額：Q4 股東信與新聞稿未揭露（只有 AI cloud 214.2 與合併 227.7）；FY2025 20-F 分部附註本輪未能讀到（SEC 頁面擷取截斷）。FY2025 AI cloud＝9M 266.2＋Q4 214.2＝480.4 [Derived]；其餘三項合計 49.4 [Derived]。找不到 ≠ 不存在：下一輪以 20-F 附註補齊。"
   },
   "ytd": {
-   "throughQuarter": "FY26Q2",
    "aiCloud": 0.9646,
    "avride": 0.0019,
    "tripleTen": 0.0216,
