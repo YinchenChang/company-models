@@ -1,4 +1,4 @@
-# alphabet/ — Alphabet（GOOGL）個股模型 v0.3.2（命題＋營收分部；2026Q3 季度滾動；v0.3.2 呈現修正、數值同 v0.3.1）
+# alphabet/ — Alphabet（GOOGL）個股模型 v0.3.3（命題＋營收分部；2026Q3 季度滾動；v0.3.2 呈現修正、v0.3.3 敏感度覆蓋，數值同 v0.3.1）
 
 **命題（一句話）：** AI 改變搜尋之後，Google Search 的變現能否守住，同時 Google Cloud（含 TPU）能否把翻倍的資本支出變成營收；加計 AI 折舊與 2026 年股權發行後，每股價值是否高於現價。
 
@@ -38,6 +38,12 @@
 - 融資瀑布、站點、租賃承諾、RPO 等 CRWV 頁面移除；舊引擎保留在 `legacy_v0.2/`（未刪），舊成品在 `dist/_待刪除/`。
 - 目標價：v0.2.2 讀法 1 加權 147.54 → v0.3 初版 135.28 → 修正一 251.68 → 修正二 253.30 → 修正三 258.70（讀法 1 → 2 +64.3；見報告「修正三」）。
 
+## v0.3.3（2026-10-30，敏感度覆蓋，基準數值不變）
+- 依個股模型原則第 9 節補齊 Sens 案例：In 頁 66 個有低／高區間的鍵全部有案例或合格豁免（`tools/sens_coverage/check_sens_coverage.py --require-keycol` 通過，`make_v03.sh` 每次執行）。新增 29 個鍵的案例（56 列），含 **IF_HoldEcon 四世代同時取低／高（鍵 `he_all`）**：低 244.36（−5.4%，上檔 −24.8%，仍為中立、離放空門檻 243.67 只差 0.69）、高 294.85（+14.2%，中立）。
+- 鍵欄：`c10_g` 列加 `capex_g`（該案同時改指引與速度）、`tpu_f` 列加 `tpu_cf`；`tpu_out` 以「收入係數改用產出比低／高端」一案涵蓋（`tpu_out` 本身不進公式）。
+- 豁免 3 個（Sens!A2，含理由與重算值）：`svc_sh`、`m_yt`（結構上恆為 0）、`ob_oi`（±0.0002%）。`c_eps26_sa`（共識 EPS）In 頁說明欄寫「只作對照，不進模型」（只被 Recon 引用）。
+- 與 v0.3.2 逐格比對：只有 In 頁 A1（版本字串）與 I244（c_eps26_sa 說明）、Sens 頁不同；Recon 引用 Sens 的格公式列號改變但值相同；其餘各頁全部相同（加權目標價 258.21、評等中立不變）。敏感度結果 `data/sens_v033_20261030.json`（原 60 個結果逐一相同）；v0.3.2 成品與 `sens_v031_20261029.json` 移 `_待刪除/`。報告 `docs/reports/20261030_MAG_Oracle_敏感度補齊.md`。
+
 ## v0.3.2（2026-10-29，呈現修正，數值不變）
 - In 頁 D／F 欄名改「敏感度低」「敏感度高」（只用於 Sens 頁，不進目標價）；頁尾新增「J. 情境驅動對照」：Search 查詢分流、每次查詢變現變動、情境權重，情境 A／B／C 三欄並排（只引用上方各列）。
 - HTML驅動因子一節新增「情境驅動」與「單一參數區間」兩張表（v0.3.1 沒有輸入表）。規格見 `mag/README.md`；核對 `mag/check_in_layout.py`。
@@ -57,12 +63,12 @@
 | `facts_2026q3.py` | 2026Q3 新聞稿與簡報 → `data/alphabet_facts_2026q3.json`（兩讀核對，不一致即失敗） |
 | `calib_pace_v031.py` | C10：解 AI MW 速度使 FY2026 資本支出＝指引中點 → `data/pace_v031.json` |
 | `q3cf_v03.py` | 變動拆解用：v0.3 對 2026Q3 的模型值與隱含輸入 → `data/q3cf_v03_2026q3.json` |
-| `sens_v03.py` | 敏感度與拆解鏈：一次改一個 In 頁輸入、整本 LibreOffice 重算，結果寫 `data/sens_v031_20261029.json` |
+| `sens_v03.py` | 敏感度與拆解鏈：一次改一個 In 頁輸入、整本 LibreOffice 重算，結果寫 `data/sens_v033_20261030.json`（v0.3.3 起含 he_all 等全部有區間的鍵） |
 | `check_v03.py` | 成品核對：公式錯誤 0、Q／Seg／PL／CF／Val 核對列 0、敏感度未過期、固定列標籤存在 |
 | `gen_html_json.py` | 由列號對照產生 `html.json`（勿手改 html.json） |
 | `make_v03.sh` | 一次跑完：事實總帳 → （C10）→（敏感度）→ 建置 → 重算 → 核對 → segment_check → HTML |
 | `segments.json` | 官方分部宣告（`tools/segment_check/check_segments.py alphabet` 通過） |
-| `dist/20261029_Alphabet個股模型_v0.3.2.xlsx`／`.html` | 成品（LibreOffice 重算，公式錯誤 0；HTML 檢核通過） |
+| `dist/20261030_Alphabet個股模型_v0.3.3.xlsx`／`.html` | 成品（LibreOffice 重算，公式錯誤 0；HTML 檢核通過） |
 | `data/` | 事實總帳（SEC 一手＋2026Q3 新聞稿）、Tokenomics v21.7 快照、k 證據、共識、同業倍數、C10 解、敏感度結果；舊版在 `data/_待刪除/` |
 | `docs/reports/20261029_alphabet_v0.3.1_季度滾動.md` | 本版報告（結論、變動拆解、新季 vs 模型、指引與 C10、Tokenomics、收支關卡、預設、資料缺口、待決） |
 | `legacy_v0.2/` | v0.2.2 MAG 共用引擎（保留不刪） |
@@ -70,7 +76,7 @@
 ## 建置
 ```
 bash alphabet/make_v03.sh                         # 沿用已提交的敏感度結果
-SENS=1 JOBS=6 bash alphabet/make_v03.sh           # 重跑敏感度與拆解鏈（約 56 次整本重算）
+SENS=1 JOBS=6 bash alphabet/make_v03.sh           # 重跑敏感度與拆解鏈（約 120 次整本重算）
 CALIB=1 SENS=1 JOBS=6 bash alphabet/make_v03.sh   # 改了資本支出相關輸入時，先重解 C10 速度
 ```
 `tools/segment_check/check_segments.py` 尚未在 main 時，以 `SEGCHECK=<路徑>` 指定（來源分支 `claude/geguxing-model-principle`）。

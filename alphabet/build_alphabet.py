@@ -89,7 +89,7 @@ SE = wb.create_sheet("Sens"); SO = wb.create_sheet("Sources")
 
 # =====================================================================================================
 # In：輸入（一列一鍵；E＝基準，D＝低，F＝高）
-IN["A1"] = "In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」〔v0.3.2〕）。金額 US$B；每股 US$；股數十億股；MW＝IT MW。標記：Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律給低／高區間）"
+IN["A1"] = "In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」〔v0.3.3〕）。金額 US$B；每股 US$；股數十億股；MW＝IT MW。標記：Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律給低／高區間）"
 IN["A2"] = "「沿用 v0.2.2」＝MAG v0.2.2 已核准的參數（原出處：alphabet/legacy_v0.2/company.json、kspec.py、data/kevidence_alphabet_20261008.json；對照表 r1 C1–C23）。v0.3.1：Tokenomics 升級 v21.7（data/tokenomics_snapshot_v21.7.json）、2026Q3 實績（data/alphabet_facts_2026q3.json）、評價日 2026-09-30。黃底＝判斷題（Andy 可改）"
 hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "說明"])
 ROWS = []
@@ -370,7 +370,7 @@ for k, lab in (("rev", "營收"), ("ebit", "營業利益"), ("eps", "EPS（GAAP�
         inp(f"c_{k}_{y}", f"共識 {lab} FY20{y}", "US$" if k == "eps" else "US$B", None, CONS[k][i], None, "Interested-party",
             "MarketScreener 共識（https://www.marketscreener.com/quote/stock/ALPHABET-INC-24203373/finances/，2026-10-26 頁面）" if i == 0 else "同上",
             "v0.2.2 時（2026-10-08）：營收 498.69／615.04／734.20" if (k == "rev" and i == 0) else "")
-inp("c_eps26_sa", "共識 FY2026 EPS（non-GAAP，排除權益證券利益）", "US$", 11.38, 11.89, 12.43, "Interested-party", "StockAnalysis 預測頁（2026-10-26；52 位分析師）")
+inp("c_eps26_sa", "共識 FY2026 EPS（non-GAAP，排除權益證券利益）", "US$", 11.38, 11.89, 12.43, "Interested-party", "StockAnalysis 預測頁（2026-10-26；52 位分析師）", "只作對照，不進模型（只被 Recon 共識對照引用）")
 
 # 寫入 In
 IN_ROW = {}
@@ -1326,15 +1326,62 @@ SENS_CASES = [
     ("waymo_stake", "Alphabet 持有 Waymo 比例", "lo", "hi", "60%／80%"),
     ("cip_lag", "資本支出延後一年折舊（修正二口徑）", None, "hi", "時間差 0 → 1 年"),
 ]
+# v0.3.3：敏感度覆蓋（個股模型原則第 9 節）——In 頁每個有低／高的鍵都要有案例；IF_HoldEcon 四世代同時一案（鍵 he_all）
+_INR = {row[0]: row for row in ROWS if row[0] != "sec"}
+def _fmt(k, v):
+    u = _INR[k][2]
+    if isinstance(v, str): return v
+    if u == "%": return f"{v * 100:.4g}%"
+    return f"{v:,.4g}"
+def _lohi(k):
+    _, _, _, lo, b, hi, *_ = _INR[k]
+    return (None if lo is None or lo == b else "lo"), (None if hi is None or hi == b else "hi"), f"{_fmt(k, b)} → {'／'.join(_fmt(k, x) for x in (lo, hi) if x is not None and x != b)}"
+SENS_CASES += [
+    ("he_all", "IF_HoldEcon 四世代同時取低／高（每 MW 年持有成本；k 的分母同步變動）", "lo", "hi",
+     f"Tokenomics 低成本／高成本欄（he_h、he_b2、he_b3、he_vr 同時；GB300 {_INR['he_b3'][4]:.2f} → {_INR['he_b3'][3]:.2f}／{_INR['he_b3'][5]:.2f}；pace 不重解）"),
+    ("tpu_hold", "Tokenomics IF_NonNV_Hold_TPU（tpu_f、tpu_cf 同時跟隨）", *_lohi("tpu_hold")[:2], _lohi("tpu_hold")[2] + "（pace 不重解）"),
+    ("tpu_out", "TPU 收入係數改用產出比低／高端（資本支出仍用持有比）", *_lohi("tpu_out")[:2], "收入 tpu_f 0.70 → IF_NonNV_Out_TPU " + _lohi("tpu_out")[2].split(" → ")[1]),
+    ("mw_q2", "AI 在役 IT MW（2026-06-30）", *_lohi("mw_q2")[:2], _lohi("mw_q2")[2] + " MW（pace 不重解）"),
+    ("long_sh", "長約占比", *_lohi("long_sh")),
+    ("selfb", "自建機房比例", *_lohi("selfb")),
+    ("life_fac", "機房折舊年限", *_lohi("life_fac")),
+    ("life_na", "非 AI 資本支出折舊年限", *_lohi("life_na")),
+    ("phi_0", "資本支出當期折舊比例", *_lohi("phi_0")),
+    ("cip_it", "在建工程與資本支出中 IT 占比", *_lohi("cip_it")),
+    ("gl_net", "Google Network 長期成長", *_lohi("gl_net")),
+    ("gl_subs", "Subscriptions, platforms, and devices 長期成長", *_lohi("gl_subs")),
+    ("dA", "情境 A 查詢分流幅度（只影響 A 情境）", *_lohi("dA")),
+    ("mA", "情境 A 每次查詢變現變動（只影響 A 情境）", *_lohi("mA")),
+    ("mC", "情境 C 每次查詢變現變動（只影響 C 情境）", *_lohi("mC")),
+    ("tpu_2h", "TPU 系統銷售 Q4 26", *_lohi("tpu_2h")),
+    ("tpu_yr", "TPU 系統銷售 FY2027 起每年", *_lohi("tpu_yr")),
+    ("tpu_m", "TPU 系統銷售 EBITDA 率", *_lohi("tpu_m")),
+    ("m_net", "Google Network EBITDA 率", *_lohi("m_net")),
+    ("m_subs", "Subscriptions, platforms, and devices EBITDA 率", *_lohi("m_subs")),
+    ("cx_svc", "非 AI 資本支出占營收：Google Services", *_lohi("cx_svc")),
+    ("cx_co", "非 AI 資本支出占營收：Cloud 其他", *_lohi("cx_co")),
+    ("tax", "有效稅率（預測期）", *_lohi("tax")),
+    ("dil", "股數年稀釋", *_lohi("dil")),
+    ("wc_k", "營運資金變動 ÷ 營收增量", *_lohi("wc_k")),
+    ("kd_sp", "AA 公司債利差（債務成本）", *_lohi("kd_sp")),
+    ("ant_stake", "Anthropic 持股比例", *_lohi("ant_stake")),
+    ("conv_sh", "強制轉換特別股轉換股數", *_lohi("conv_sh")),
+]
+SE_KEYCOL = {"c10_g": "c10_g capex_g", "tpu_f": "tpu_f tpu_cf"}   # 鍵欄：案例實際改動的 In 鍵
 SE["A1"] = "Sens — 一次改一個輸入（In 頁低／高值），整本活頁簿以 LibreOffice 重算後的加權目標價（Val 頁「目標價（DCF 與 Comparable 加權）」）；由 alphabet/make_v03.sh 產生，建置時寫入（數值）"
-SE["A2"] = "相對基準＝情境目標價 ÷ 基準加權目標價 − 1；龍捲風依絕對值排序（HTML）。基準與各案例的其他輸入相同"
+SE["A2"] = ("相對基準＝情境目標價 ÷ 基準加權目標價 − 1；龍捲風依絕對值排序（HTML）。基準與各案例的其他輸入相同。"
+            "v0.3.3 起依個股模型原則第 9 節：In 頁每個有低／高的鍵都有案例（F 欄「鍵」），IF_HoldEcon 四世代同時一案（he_all）；"
+            "c_eps26_sa（共識 EPS）只作對照，不進模型（只被 Recon 引用），故無案例。"
+            "svc_sh（自用 AI 增量成本歸 Google Services 的比例）不列：只在 Services 與 Alphabet 層級之間分配，合併損益與評價都用合計，重算變動為 0（40%／80%：258.2100／258.2100）。"
+            "m_yt（YouTube ads EBITDA 率）不列：只在 Search 與 YouTube 之間拆分 Services 分部利益（Search＝殘差），兩者同用廣告倍數，重算變動為 0（30%／50%：258.2100／258.2100）。"
+            "ob_oi（Other Bets 營業利益）不列：重算變動 ±0.0002%，小於 0.001%（−11／−7：258.2095／258.2105）")
 hdr(SE, 3, ["驅動", "設定", "方向", "加權目標價", "相對基準", "鍵", "說明", "收支關卡 B（五年）", "FY2027 資本支出（B）"])
 r = 4
 SE_ROWS = []
 for key, lab, lo, hi, note in SENS_CASES:
     for side, val in (("低", lo), ("高", hi)):
         if val is None: continue
-        SE.cell(r, 1, f"{lab}：{'低' if side == '低' else '高'}"); SE.cell(r, 2, note); SE.cell(r, 3, side); SE.cell(r, 6, key)
+        SE.cell(r, 1, f"{lab}：{'低' if side == '低' else '高'}"); SE.cell(r, 2, note); SE.cell(r, 3, side); SE.cell(r, 6, SE_KEYCOL.get(key, key))
         res = SENS.get(f"{key}|{side}")
         if res is not None:
             c = SE.cell(r, 4, res["tp"]); c.number_format = "#,##0.00"; c.font = BLUE

@@ -23,12 +23,15 @@ def build(name, sets):
 
 def recalc(raw):
     out = os.path.join(WD, "out"); os.makedirs(out, exist_ok=True)
-    prof = tempfile.mkdtemp(prefix="lo_googl_")
-    env = dict(os.environ); env["LC_ALL"] = "C.UTF-8"
-    subprocess.run(["soffice", f"-env:UserInstallation=file://{prof}", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML",
-                    "--outdir", out, raw], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env, timeout=600)
-    shutil.rmtree(prof, ignore_errors=True)
-    return os.path.join(out, os.path.basename(raw))
+    dst = os.path.join(out, os.path.basename(raw))
+    for _ in range(3):                                   # v0.3.3：LibreOffice 偶爾沒有輸出檔 → 重試
+        prof = tempfile.mkdtemp(prefix="lo_googl_")
+        env = dict(os.environ); env["LC_ALL"] = "C.UTF-8"
+        subprocess.run(["soffice", f"-env:UserInstallation=file://{prof}", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML",
+                        "--outdir", out, raw], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env, timeout=600)
+        shutil.rmtree(prof, ignore_errors=True)
+        if os.path.exists(dst): break
+    return dst
 
 
 def tp_of(xlsx, rowmap):
@@ -66,6 +69,12 @@ for key, side, val, _r in rm["SE_ROWS"]:
         continue
     if key == "tpu_fo":                                  # TPU 收入改按產出比（資本支出仍用持有比）
         jobs[f"{key}|{side}"] = [("tpu_f", IN.cell(row["tpu_out"], 5).value)]
+        continue
+    if key == "tpu_out":                                 # v0.3.3：收入改按產出比的低／高端（tpu_out 本身不進模型公式）
+        jobs[f"{key}|{side}"] = [("tpu_f", lohi("tpu_out", val))]
+        continue
+    if key == "he_all":                                  # v0.3.3：IF_HoldEcon 四世代同時取低／高（原則第 9 節）
+        jobs[f"{key}|{side}"] = [(k, lohi(k, val)) for k in ("he_h", "he_b2", "he_b3", "he_vr")]
         continue
     v = lohi(key, val) if val in ("lo", "hi") else val
     sets = [(key, v)]

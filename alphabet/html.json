@@ -1122,7 +1122,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準的變動（一次改一個輸入，整本重算）",
      "sheet": "Sens",
-     "rows": "4-58",
+     "rows": "4-113",
      "label_col": "A",
      "value_col": "E",
      "fmt": "sp1"
@@ -1140,7 +1140,7 @@
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "4-58",
+      "rows": "4-113",
       "cols": [
        "A",
        "B",
@@ -1161,12 +1161,12 @@
      "type": "kv",
      "items": [
       [
-       "@Sens!A60",
-       "@Sens!D60|n2"
+       "@Sens!A115",
+       "@Sens!D115|n2"
       ],
       [
-       "@Sens!A61",
-       "@Sens!D61|n2"
+       "@Sens!A116",
+       "@Sens!D116|n2"
       ]
      ]
     }
