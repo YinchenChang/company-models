@@ -13,6 +13,7 @@
 #   2. In 頁最後有一節，A 欄文字含「情境驅動對照」：下一列表頭 D／E／F＝情境 A／B／C；其下每列一個情境驅動，三欄並排，
 #      每格是 =E<列> 公式，引用 H 欄「引用 In 頁 k1／k2／k3；…」所列鍵的列。某情境無專屬輸入時可填常數 0：
 #      情境 B 不需說明；情境 A 或 C 填 0 時，H 欄須寫「情境 A 無專屬輸入列」或「情境 C 無專屬輸入列」（2026-10-30 放寬甲）。
+#      D／E／F 只能是 =E<列> 或數字常數；引用列若可判定情境字母（同族兄弟或標籤「情境 X」），須與所在欄（D＝A、E＝B、F＝C）一致。
 #   3. 上方所有情境專屬列都必須被這一節引用（不能漏列）；情境權重列鍵為 scn_w，合計＝1。
 #   4. 本節純展示：其他工作表與 In 頁上方的公式、定義名稱都不得引用本節。
 #   5.（警告，不判失敗）Sens、Recon、In 以外工作表的公式不應直接讀 In 頁 D／F 欄（敏感度低／高），含指向 D／F 的定義名稱（以實際指向判定，不看名稱字尾）：
@@ -26,6 +27,20 @@ import openpyxl
 EXEMPT = "非本模型情境驅動"
 LAB_PAT = re.compile(r"^情境 ?[ABC][：:]|^情境 ?[ABC]（[^）]*）[：:]|（情境 ?[ABC]）|情境權重 ?[ABC](?![A-Za-z])")
 KEY_OK = re.compile(r"^[A-Za-z0-9_]+$")
+
+
+def scn_letter(key, label, keys):
+    """情境專屬列所屬的情境字母（A／B／C）；判斷不出時回傳 None。先看鍵名同族兄弟，再看標籤「情境 X」。"""
+    if KEY_OK.match(key):
+        for i, ch in enumerate(key):
+            if ch not in "ABC":
+                continue
+            prev_ok = i == 0 or key[i - 1] == "_" or key[i - 1].islower() or key[i - 1].isdigit()
+            next_ok = i == len(key) - 1 or key[i + 1] == "_" or key[i + 1].isdigit()
+            if prev_ok and next_ok and any(key[:i] + o + key[i + 1:] in keys for o in "ABC" if o != ch):
+                return ch
+    m = re.search(r"情境 ?([ABC])", label) if LAB_PAT.search(label) else None
+    return m.group(1) if m else None
 
 
 def is_scn(key, label, keys, exempt=False):
@@ -111,6 +126,16 @@ def check(path):
         fs = [wf.cell(r, c).value for c in (4, 5, 6)]
         refs = [int(f[2:]) for f in fs if isinstance(f, str) and re.fullmatch(r"=E\d+", f)]
         consts = [j for j, f in enumerate(fs) if not isinstance(f, str)]
+        # 2026-10-30 補：只接受 =E<列> 或數字常數（=0 之類公式不放行）；引用列的情境字母須與所在欄一致
+        others = [j for j, f in enumerate(fs) if isinstance(f, str) and not re.fullmatch(r"=E\d+", f)]
+        if others:
+            fail.append(f"情境驅動 {k} 的 {'、'.join('DEF'[j] for j in others)} 欄只能是 =E<列> 或數字常數：{[fs[j] for j in others]}")
+        for j, f in enumerate(fs):
+            if isinstance(f, str) and re.fullmatch(r"=E\d+", f):
+                rr = int(f[2:])
+                lt = scn_letter(str(wf.cell(rr, 1).value or ""), str(ws.cell(rr, 2).value or ""), keyrow) if 4 <= rr < last else None
+                if lt and lt != "ABC"[j]:
+                    fail.append(f"情境驅動 {k} 的 {'DEF'[j]} 欄（情境 {'ABC'[j]}）引用了情境 {lt} 的列 {wf.cell(rr, 1).value}")
         def const_ok(j):
             if fs[j] != 0:
                 return False
