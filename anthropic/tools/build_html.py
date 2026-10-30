@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import html
+import json
 import math
 import re
 import shutil
@@ -608,11 +609,13 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
     src_date, src_n, src_pros = src_meta(model)
     chk_ids = sorted((k[1] for k in V.loc.rowid if k[0] == "Checks"), key=lambda s: int(s[1:]))
     report = f"docs/reports/{stamp}_v{ver}.md"
+    _chk = json.loads((REPO / "builder" / "id_registry.json").read_text(encoding="utf-8"))["CHK"]
+    chk_of = lambda k: _chk[k] + ":C"  # noqa: E731
 
     S = []
     # ── 標頭 ──
     S.append(f"""<header><h1>Anthropic 收支模型 v{ver}｜一頁摘要</h1>
-<div class="meta">{date_disp}｜Excel <code>{html.escape(model.name)}</code>｜Tokenomics {html.escape(str(tk_ver))}（<code>{html.escape(str(tk_sha))[:7]}</code>）｜單位 $B（十億美元），曆年制｜數字游標停留可見 Excel 位置；手機上圖表可左右滑動｜<b>2025–2026 財務多數來自未公開的招股書草稿（Reuters 等轉述），屬利害關係方說法</b></div></header>""")
+<div class="meta">{date_disp}｜Excel <code>{html.escape(model.name)}</code>｜Tokenomics {html.escape(str(tk_ver))}（<code>{html.escape(str(tk_sha))[:7]}</code>）｜單位 $B（十億美元），曆年制｜數字游標停留可見 Excel 位置；手機上圖表可左右滑動｜<b>v0.1.6 起 2026 上半年營收改用正式公開 S-1（2026-10-26）；其餘多數 2025–2026 財務仍為草擬招股書轉述，屬利害關係方說法（正式 S-1 數字見 ①之四）</b></div></header>""")
 
     # ── ① 命題與結論 ──
     S.append(f"""<section id="s1"><h2><span class="no">①</span>命題與一句話結論</h2>
@@ -805,6 +808,59 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 {V.src("ETA_Eta", "ETA_fP", "ETA_fU", "ETA_fW", "ETA_Resid", "COST_PropGap_VR", "Bridge!" + brow("供給 GW 合計").split("!")[1])}
 </section>""")
 
+    # ── ①之四 v0.1.6：正式公開 S-1 ──
+    krow = lambda p: _rid("Cost", p)  # noqa: E731
+    v16_cols = [("v0.1.5（草擬版 16.3）", "v015"), (f"v{ver}（正式 S-1 16.286）", "base")]
+    def v16row(lab, ref, yr, f, em=False):
+        return (f'<tr class="{"em" if em else ""}"><td>{lab}</td>' + "".join(f"<td>{n(ref, yr, f, sc)}</td>" for _l, sc in v16_cols) + "</tr>")
+    v16_rows = [v16row("2026 營收總額（報導口徑）$B", "REV_GrossCapped", 2026, "f3", True)]
+    v16_rows += [v16row(f"每 VR 等值 GW 營收淨額 {y}（$B/GW/年）", "COST_PropRev_VR", y, "f2") for y in (2026, 2027, 2028, 2029, 2030)]
+    v16_rows += [v16row(f"每 VR 等值 GW 差額 {y}（$B/GW/年）", "COST_PropGap_VR", y, "sf3", y == 2030) for y in (2026, 2027, 2028, 2029, 2030)]
+    v16_rows += [v16row(f"覆蓋率 {y}（倍）", "COST_Coverage", y, "f3") for y in (2026, 2027, 2028, 2029, 2030)]
+    v16_rows += [v16row("累計外部資金需求 2026–2030 $B", "FND_ExtNeedCum", Y, "f1", True), v16row("只靠已到位融資的現金谷底 $B", "FND_CashNoExtTrough", None, "f2")]
+    s1v = [("2026 上半年營收", "SRC_ANT_414", "SRC_ANT_380", "f3"), ("2026 Q2 營收", "SRC_ANT_420", "SRC_ANT_382", "f3"),
+           ("2025 上半年營收", "SRC_ANT_413", "SRC_ANT_381", "f3"), ("2025 全年營收（基準 2025 校準仍用草擬版）", "SRC_ANT_412", "SRC_ANT_001", "f3"),
+           ("2026 上半年算力與基礎設施費用", "SRC_ANT_426", "SRC_ANT_394", "f3"), ("2025 全年算力與基礎設施費用", "SRC_ANT_424", "SRC_ANT_252", "f3"),
+           ("Google Cloud 合約（至少）", "SRC_ANT_450", "SRC_ANT_397", "f1"), ("Amazon 合約（至少）", "SRC_ANT_451", "SRC_ANT_398", "f1"),
+           ("Microsoft Azure 合約（至少）", "SRC_ANT_452", "SRC_ANT_399", "f1"), ("SpaceXAI 合約（最高）", "SRC_ANT_453", "SRC_ANT_229_Hi", "f1"),
+           ("Broadcom 租賃", "SRC_ANT_454", "SRC_ANT_401", "f1")]
+    s1v_html = "".join(f"<tr><td>{lab}</td><td>{n(a, None, f)}</td><td>{n(b, None, f)}</td></tr>" for lab, a, b, f in s1v)
+    s1v_html += (f'<tr><td>Nscale／Lambda 合約</td><td>{n("SRC_ANT_455", None, "f1")}／{n("SRC_ANT_456", None, "f1")}</td><td>兩約合計最高 {n("SRC_ANT_400", None, "f0")}</td></tr>'
+                 f'<tr><td>2026-06-30 現金與短期投資</td><td>{n("SRC_ANT_444", None, "f1")}</td><td>轉述未提（v0.1.1 資料缺口 U8）</td></tr>'
+                 f'<tr><td>客戶集中</td><td>前五大 {n("SRC_ANT_459", None, "pct0")}（2026 前九個月）；最大揭露客戶 {n("SRC_ANT_461", None, "pct0")}（上半年）</td><td>兩家客戶約 {n("SRC_ANT_405", None, "pct0")}（上半年）</td></tr>'
+                 f'<tr><td>淨營收留存率（2026-09-30）</td><td>{n("SRC_ANT_463", None, "pct0")}</td><td>—</td></tr>')
+    pg_defs = [("Google Cloud", "合約總額（模型）：Google Cloud", "SRC_ANT_450", "Google Cloud（至少）"), ("Amazon", "合約總額（模型）：Amazon", "SRC_ANT_451", "Amazon（至少）"),
+               ("Microsoft Azure", "合約總額（模型）：Microsoft", "SRC_ANT_452", "Microsoft Azure（至少）"), ("SpaceXAI", "合約總額（模型）：SpaceX", "SRC_ANT_453", "SpaceXAI（最高）"),
+               ("Broadcom", "合約總額（模型）：Google／Broadcom", "SRC_ANT_454", "Broadcom 租賃"), ("Nscale", "合約總額（模型）：Nscale", "SRC_ANT_455", "Nscale（最高）"),
+               ("Lambda", "合約總額（模型）：Lambda", "SRC_ANT_456", "Lambda（約）"), ("AMD（不在承諾表內）", "合約總額（模型）：AMD", "SRC_ANT_457", "AMD（超過")]
+    pg_html = "".join(f"<tr><td>{lab}</td><td>{n(krow(m), 2025, 'f1')}</td><td>{n(src, None, 'f1')}</td><td>{n(krow('(d) 模型 ÷ 正式 S-1 − 1：' + g), 2025, 'pct0')}</td></tr>"
+                      for lab, m, src, g in pg_defs)
+    h_rows = "".join(f'<tr><td>{lab}</td>' + "".join(f"<td>{n(ref, y, f)}</td>" for y in (2026, 2027, 2028, 2029, 2030)) + "</tr>"
+                     for lab, ref, f in (("η（B 情境：2026 起＝η_2026H1）", krow("(c) B 情境 η 路徑"), "f3"), ("η（基準）", "CMP_Eta", "f3"),
+                                         ("容量上限係數（B 情境）", "CMP_CapFactor_EtaH1", "f2"), ("每 VR 等值 GW 營收淨額（B 情境）", "COST_PropRev_VR_EtaH1", "f2"),
+                                         ("每 VR 等值 GW 差額（B 情境）", "COST_PropGap_VR_EtaH1", "sf3"), ("差：B 情境 − 基準", krow("(c) 差：B 情境 − 基準（每 VR"), "sf3"),
+                                         ("覆蓋率（B 情境）", "COST_Coverage_EtaH1", "f3"), ("研發 GW（B 情境）", krow("(c) B 情境 研發 GW"), "f2"), ("研發 GW（基準）", "CMP_RDGW", "f2")))
+    S.append(f"""<section id="s1d"><h2><span class="no">①之四</span>v0.1.6 更新了什麼：正式公開 S-1（2026-10-26，SEC EDGAR）</h2>
+<p class="lead"><b>正式 S-1 沒有翻轉任何結論。</b>基準只改一處（工作單 W2）：2026 年半校準用的上半年實際營收，由草擬版轉述的 {n("SRC_ANT_380", None, "f1")} 改為正式 S-1 的 {n("SRC_ANT_414", None, "f3")}（差 {n("Checks!" + chk_of("f1_h1"), None, "f3")}，{n("Checks!" + chk_of("f1_h1pct"), None, "pct1")}；工作單 5% 門檻內），2026 營收 {n("REV_GrossCapped", 2026, "f2", "v015")} → {n("REV_GrossCapped", 2026, "f3")}；2026 每 VR 等值 GW 營收 {n("COST_PropRev_VR", 2026, "f2", "v015")} → {n("COST_PropRev_VR", 2026, "f2")}，差額 2026–2028 仍為負、2029 起轉正（2030 {n("COST_PropGap_VR", Y, "sf3", "v015")} → {n("COST_PropGap_VR", Y, "sf3")}），2030 覆蓋率 {n("COST_Coverage", Y, "pct0")}，累計外部資金需求仍為 {n("FND_ExtNeedCum", Y, "f0")}。正式 S-1 的其他數字（季度、營收成本、承諾、逐家金額、集中度、現金）只進對照列（Excel Cost 第二十四節），不回饋基準；η 改用 2026 上半年的值只作情境（見下），基準 η 不改。</p>
+<div class="tw"><table><thead><tr><th>輸出</th>{"".join(f"<th>{l}</th>" for l, _s in v16_cols)}</tr></thead><tbody>
+{"".join(v16_rows)}
+</tbody></table></div>
+<h3>正式 S-1 vs 草擬版轉述（$B；SRC_ANT_410–464，草擬版舊列值不改）</h3>
+<div class="tw"><table><thead><tr><th>項目</th><th>正式 S-1</th><th>草擬版轉述（v0.1.1–v0.1.5）</th></tr></thead><tbody>{s1v_html}</tbody></table></div>
+<p class="note">年度與上半年營收、算力與基礎設施費用、營業損益、6-30 現金與 NRR 直接讀自 S-1（Verified；期中數字未經查核）。季度數、營收成本（Note 8）、營業現金流、承諾三段、逐家金額與集中度：sec.gov 擋自動工具、可讀取的 S-1 文字只到風險因素，改取二手轉載（Kepler、sec-api.io、Tunguz、AlphaSense 等），標 Interested-party，列為待核對缺口。S-1 未揭露 2026 Q3 營收與承諾總額（留白），不填推論值。</p>
+<h3>(a) 算力與基礎設施費用 vs 模型 2026 算力成本</h3>
+<p class="note">S-1 上半年費用 {n(krow("(a) S-1：2026 上半年算力"), 2026, "f3")}；模型 2026 合約實付折半 {n(krow("(a) 模型：2026 合約實付"), 2026, "f2")}（模型 ÷ S-1 − 1＝{n("COST_S1fGapPayH1", None, "pct0")}），含自建資本支出折半 {n(krow("(a) 模型：2026 算力成本"), 2026, "f2")}（{n("COST_S1fGapCcH1", None, "pct0")}）。口徑不同：S-1 是損益費用（預付雲端款先列資產、融資租賃以折舊與利息入帳），模型是現金。S-1 上半年資本支出年化只有 {n(krow("(a) S-1：2026 上半年資本支出"), 2026, "f2")}，模型 2026 自建資本支出（Fluidstack $50B 三年均攤）是它的 {n(krow("(a) 模型：2026 自建資本支出"), 2026, "f1")} 倍——自建支出在 S-1 現金流中看不到，可能由 Fluidstack 出資後以租賃回租，或時點較晚（待 Andy 判斷，基準不改）。</p>
+<h3>(b) 營收成本 vs 模型 2025 推論算力</h3>
+<p class="note">S-1 2025 營收成本 {n(krow("(b) S-1：2025 年營收成本"), 2025, "f3")}，模型 2025 推論算力（說明書算力 − 訓練）{n(krow("(b) 模型：2025 推論算力成本"), 2025, "f2")}（S-1 ÷ 模型 − 1＝{n("COST_S1fGapCOR2025", None, "pct0")}）；營收成本占算力與基礎設施費用 2025 {n(krow("(b) 營收成本占算力"), 2025, "pct0")}、2026 上半年 {n(krow("(b) 營收成本占算力"), 2026, "pct0")}，模型推論占算力 2025 {n(krow("(b) 模型：推論算力占"), 2025, "pct0")}、2026 {n(krow("(b) 模型：推論算力占"), 2026, "pct0")}。</p>
+<h3>(c) η 診斷：2026 上半年 η 與「η＝2026H1」B 情境（只作情境）</h3>
+<p class="note">以 2026 上半年營收成本年化 {n(krow("(c) S-1：2026 上半年營收成本"), 2026, "f2")} ÷ 既有雲端加權合約價 {n(krow("(c) 既有雲端加權合約價"), 2026, "f2")}（與 2025 η 同法）得上半年推論 {n(krow("(c) 2026 上半年推論 GW（支出換算）"), 2026, "f3")} GW；模型 2026 token 換算 GW 依上半年營收占比 {n(krow("(c) 上半年占 2026 營收"), 2026, "pct0")} 折成上半年平均 {n(krow("(c) 2026 上半年推論 GW（token"), 2026, "f3")} GW → <b>η_2026H1＝{n("COST_Eta2026H1", None, "f3")}</b>，為基準 η（2025）{n("CMP_Eta2025", None, "f3")} 的 {n(krow("(c) η_2026H1 ÷ 基準"), 2026, "f2")} 倍（不折上半年的上緣 {n(krow("(c) 替代：全年 token"), 2026, "f3")}；若 2025 也改用 S-1 營收成本，η（2025）為 {n("COST_Eta2025COR", None, "f3")}）。η 較高表示每 GW 兌現的 token 較多；代入後有效推論 GW 變少、研發 GW 變多，已簽合約的供給並未被需求卡住（容量上限係數仍為 1），<b>所以每 VR 等值 GW 營收、差額、覆蓋率與基準完全相同</b>。</p>
+<div class="tw"><table><thead><tr><th>B 情境（η＝2026H1）</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th></tr></thead><tbody>{h_rows}</tbody></table></div>
+<h3>(d) S-1 承諾三段 vs 模型逐家合約總額（Cost 第十一、十二節口徑）</h3>
+<p class="note">S-1：6-30 尚未起租租賃 {n("SRC_ANT_445", None, "f1")}＋6-30 固定或最低採購承諾 {n("SRC_ANT_446", None, "f1")}＋6-30 後新簽與修訂 {n("SRC_ANT_447", None, "f0")}＝{n(krow("(d) S-1 三段合計"), 2025, "f1")}（不含已起租租賃與短期承諾；S-1 總額留白）。模型全部新合約 {n(krow("(d) 模型：全部新合約加總"), 2025, "f1")}（模型 ÷ S-1 − 1＝{n("COST_S1fCommitGap", None, "pct0")}）；七家具名合約 S-1 {n(krow("(d) S-1：七家具名合約合計"), 2025, "f1")} vs 模型 {n(krow("(d) 模型：同七家合約總額"), 2025, "f1")}（{n("COST_S1fNamedGap", None, "pct0")}）。模型只計已簽且已揭露金額的合約，6-30 後新簽的約 245 大多不在模型內；只對照，不改供給。</p>
+<div class="tw"><table><thead><tr><th>合約</th><th>模型合約總額</th><th>正式 S-1</th><th>模型 ÷ S-1 − 1</th></tr></thead><tbody>{pg_html}</tbody></table></div>
+{V.src("REV_GrossCapped", "COST_PropRev_VR", "COST_Eta2026H1", "COST_PropGap_VR_EtaH1", "COST_S1fCommitGap", "SRC_ANT_414")}
+</section>""")
+
     S.append(f"""<section id="s2"><h2><span class="no">②</span>每 VR 等值 GW：營收 vs 全成本（2025–2030）</h2>
 <div class="legend"><span><i style="background:var(--rev)"></i>營收淨額（截頂後；扣雲端平台抽成）</span><span><i style="background:var(--cost)"></i>全成本（算力＋非算力＋股權報酬，現金口徑）</span><span><b style="color:var(--gap)">紅</b>／<b style="color:var(--pos)">綠</b>字＝差額</span><span>2025 長條截斷，白字為實值</span></div>
 <div class="cw">{chart_gw(V)}</div>
@@ -973,6 +1029,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <div class="tw"><table><thead><tr><th>Anthropic／OpenAI</th>{"".join(f"<th>{y}</th>" for y in YEARS[1:])}</tr></thead><tbody>
 {"".join(pr)}
 </tbody></table></div>
+<p class="note"><b>每 GW 營收（v0.1.6 更新）</b>：2026 年每 VR 等值 GW 營收淨額 Anthropic {n("COST_PropRev_VR", 2026, "f1")}（v0.1.5 為 {n("COST_PropRev_VR", 2026, "f1", "v015")}；正式 S-1 只使它少約 0.01）對 OpenAI {n("OAI_COST_PropRev_VR", 2026, "f1")}（本頁並排快照 OpenAI v0.6），Anthropic 約為 {n("Checks!" + chk_of("f1_oai_rev26"), None, "f2")} 倍；OpenAI 現行版 v0.6.4（<code>openai/model/20261029_OpenAI_v0.6.4.xlsx</code>，未納入快照）的同一數字為 21.89，倍數約 1.9。</p>
 <p class="note">差距約一半來自每 GW 營收（Anthropic 以企業與 API 為主、免費用戶負擔小，2030 年每 VR 等值 GW 營收 {n("COST_PropRev_VR", Y)} 對 {n("OAI_COST_PropRev_VR", Y)}），另一半來自算力承諾規模（2030 算力成本 {n("COST_Compute", Y)} 對 {n("OAI_COST_Compute", Y)}；Anthropic 已簽合約 2029 年起遞減）。若 Anthropic 2029 年起比照 OpenAI 持續擴張算力，正差額會縮小或消失。兩家共用合約價 12，對 VR 世代偏低（Anthropic 雲端毛利率 2030 年 {n("COST_CloudGMPct", Y, "pct0")}）。OpenAI 數字取自 OAI_Link 快照（<code>{html.escape(str(oai_file))}</code>，SHA-256 <code>{html.escape(str(oai_sha))[:8]}…</code>），只作並排，不被任何計算頁引用。</p>
 {V.src("COST_PropRev_VR", "OAI_COST_PropRev_VR", "OAI_COST_PropFull_VR", "OAI_COST_PropGap_VR", "OAI_COST_Coverage", "OAI_FND_ExtNeedCum", "OAI_REV_NetCapped", "OAI_COST_Compute", "OAI_CMP_Supply_VReq", "OAI_FND_CashEnd", "COST_CloudGMPct")}
 </section>""")
@@ -982,7 +1039,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <ol>
 <li><b>只計已簽合約（規格未列的慣例，與 OpenAI 同）</b>：使 2029–2030 轉正（供給 GW 2030 年 {n("CMP_SupplyGW", Y, "f1")} 低於 2028 年）。新增合約機制需 Andy 決定；上限見 ⑥ 的餘裕數字。</li>
 <li><b>API 任務數成長（A2-13；與 OpenAI v0.6 同值）</b>：最大不確定；取低／高時 2030 差額 {n("COST_PropGap_VR", Y, "sf1", "api_task_lo")}／{n("COST_PropGap_VR", Y, "sf1", "api_task_hi")}、現金谷底 {n("FND_CashNoExtTrough", None, "f1", "api_task_lo")}／{n("FND_CashNoExtTrough", None, "f1", "api_task_hi")}。</li>
-<li><b>2026 非算力成本可能低估（A4-17／D22）</b>：報導 2026 Q2 隱含低估 {n("COST_D22Under", None, "f1")}（v0.1.1 以 Q3 簡報重算：{n("COST_D22UnderQ3", None, "f1")}，營收比例法 {n("COST_D22UnderQ3Ratio", None, "f1")}）；補足後 2026 差額 {n("COST_PropGap_VR_D22", 2026, "sf1")}、現金谷底 {n("Funding!F74", 2028, "f1")}，結論不變。待公開版 S-1 校準。</li>
+<li><b>2026 非算力成本可能低估（A4-17／D22）</b>：報導 2026 Q2 隱含低估 {n("COST_D22Under", None, "f1")}（v0.1.1 以 Q3 簡報重算：{n("COST_D22UnderQ3", None, "f1")}，營收比例法 {n("COST_D22UnderQ3Ratio", None, "f1")}）；補足後 2026 差額 {n("COST_PropGap_VR_D22", 2026, "sf1")}、現金谷底 {n("Funding!F74", 2028, "f1")}，結論不變。正式 S-1 已揭露季度營業損益（2026 Q2 GAAP 營業利益 {n("SRC_ANT_441", None, "f3")}），本版未用它校準（工作單：基準只改 W2）。</li>
 <li><b>每 GW 年合約價 12（D9）對 VR 世代偏低</b>：雲端毛利率 2027–2030 為 {n("COST_CloudGMPct", 2027, "pct0")} 至 {n("COST_CloudGMPct", Y, "pct0")}；取 20 時 2027 差額 {n("COST_PropGap_VR", 2027, "sf1", "price_hi")}、現金谷底 {n("FND_CashNoExtTrough", None, "f1", "price_hi")}。</li>
 <li><b>2026 已到位 $100B 的組成與避免重複（A4-2～6）、逐家錨定招股書（A4-15）</b>：Series G 不計時谷底約少 {n("Funding!F12", 2026, "f0")}；逐家錨定（S4）谷底 {n("Funding!F64", 2028, "f1")}，仍無缺口。</li>
 </ol>
@@ -1000,7 +1057,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <dt>檢查</dt><dd>CHK_Errors＝{n("CHK_Errors", None, "f0")}、CHK_Warnings＝{n("CHK_Warnings", None, "f0")}（C89 逐家合約對帳：AMD 等；C116 U4 含自建資本支出的 2026 算力成本偏高；兩者皆為預期的警示）；Checks {chk_ids[0]}–{chk_ids[-1]}</dd>
 <dt>期間與單位</dt><dd>FY2025–FY2030 曆年制，2025 為實際校準年；$B；GW＝IT 關鍵電力；VR 等值＝以 VR200 Sol 層級每 GW 產能換算</dd>
 </dl>
-<div class="must"><b>來源提醒</b>：2025–2026 的營收、算力支出、營業費用、現金與合約承諾多數取自<b>尚未公開的 IPO 招股書草稿</b>，經 Reuters、Fortune 等轉述（SRC_ANT 中 {src_pros} 列的來源或備註引用招股書／說明書），標記為 <span class="tag">Interested-party</span>（公司為上市募資有誘因呈現較佳數字）。公開版 S-1 上 EDGAR 後應改為 Verified 並覆核。</div>
+<div class="must"><b>來源提醒</b>：正式 S-1 已於 2026-10-26 公開（SRC_ANT_410–464；年度與上半年數字直接讀自 S-1 標 <span class="tag">Verified</span>，期中未經查核；季度、營收成本、承諾等經二手轉載標 <span class="tag">Interested-party</span>）。基準只把 2026 上半年營收改用正式 S-1；其餘 2025–2026 的營收、算力支出、營業費用與合約承諾仍多取自<b>草擬招股書</b>的 Reuters、WSJ 等轉述（SRC_ANT 中 {src_pros} 列的來源或備註引用招股書／說明書），標記為 <span class="tag">Interested-party</span>（公司為上市募資有誘因呈現較佳數字），改用正式值待 Andy 決定。</div>
 <p class="note"><span class="tag">Verified</span>已查核原文 <span class="tag">Interested-party</span>公司或利害關係方說法 <span class="tag">Analogy</span>類比推估（附區間） <span class="tag">Assumed</span>假設（附區間） <span class="tag">Derived</span>由其他數字推得 <span class="tag">Decision</span>建模決定。公司原始數據在 SRC_ANT、算力物理取自 Tokenomics（TK_Link）、假設在 Inputs、OpenAI 對照在 OAI_Link。</p>
 <p class="note">本頁所有數字皆讀自 LibreOffice 重算後的 Excel（具名範圍或頁＋列 ID），HTML 不含計算；敏感度情境定義見 <code>tools/html_scenarios.yaml</code>；完整報告 <code>{report}</code>。</p>
 </section>""")
