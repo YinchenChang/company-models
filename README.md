@@ -9,7 +9,7 @@
 | `openai/` | OpenAI（未上市） | `YinchenChang/openai-model` @ `13c16f0`（v0.6-P1；原 repo 停用，歷史留在原處） | 建置中（v0.6） |
 | `oracle/` | Oracle（ORCL） | `nebius/` @ `642d144`（CRWV v4.5＋Nebius v0.1b）；v0.4 起命題＋官方分部 | v0.4.1（成品 `oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx`／`.html`） |
 | `minimax/` | MiniMax（00100.HK） | 比照 `openai/` 結構（MW 主軸、P×Q 回本比值、TK v19.0 官方快照）；獨立的 Python→Excel 產生器 | v0.2 |
-| `zhipu/` | 智譜（智譜華章，02513.HK） | `openai/` v0.6（`claude/openai-s6-release` @ `e91df57`）的架構；骨架經 Anthropic A0 | v0.1（r2） |
+| `zhipu/` | 智譜（智譜華章，02513.HK） | `openai/` v0.6（`claude/openai-s6-release` @ `e91df57`）的架構；骨架經 Anthropic A0 | v0.1.2（官方分部對帳） |
 | `anthropic/` | Anthropic（未上市） | `openai/`（v0.6，`claude/openai-s6-release` @ `e91df57`）的架構與工具鏈 | v0.1.4（成品：`anthropic/dist/20261022_Anthropic收支模型_v0_1_4.html`／`.xlsx`） |
 | `whitefiber/` | WhiteFiber（WYFI） | `oracle/` @ `e4540c3`（Oracle v0.2 分支） | v0.1 |
 | `amazon/` | Amazon（AMZN） | `oracle/`（v0.2）→ MAG 共用引擎（Amazon v0.1b；共用文件見 `mag/`） | v0.2（Tokenomics v5.31） |

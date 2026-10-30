@@ -27,8 +27,8 @@ from engine import Engine, current_model_path  # noqa: E402
 MODEL = current_model_path()
 STAMP = MODEL.name.split("_")[0]
 VER = re.search(r"_v([\d.]+)\.xlsx$", MODEL.name).group(1).replace(".", "_")
-HTML = REPO / "dist" / f"{STAMP}_智譜收支模型_v{VER}.html"
-XLSX = REPO / "dist" / f"{STAMP}_智譜收支模型_v{VER}.xlsx"
+HTML = REPO / "dist" / f"{STAMP}_智譜個股模型_v{VER}.html"
+XLSX = REPO / "dist" / f"{STAMP}_智譜個股模型_v{VER}.xlsx"
 
 
 class _Collect(HTMLParser):
