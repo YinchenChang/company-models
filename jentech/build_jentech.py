@@ -804,7 +804,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "jentech")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
-apply_in_layout.apply(wb, "v0.1.3", "2026-10-30")  # v0.1.3：In 頁版面（個股模型原則第 8 節；數值不變）
+apply_in_layout.apply(wb, "v0.1.3", "2026-10-30", split=True, split_skip=[])  # v0.1.3：In 頁版面；v0.1.4（2026-10-31）：第 3 點情境專屬列拆分（數值不變）
 wb.save(sys.argv[1])
 if os.environ.get("JT_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

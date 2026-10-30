@@ -95,6 +95,10 @@ def groups(ws, base_map=None):
             if not cand:
                 raise LayoutError(f"{f[0]}?{f[1]} 缺情境 A 列，且找不到去掉情境字母的同名列")
             d["A"] = cand[0]
+        if "B" not in d:
+            cand = [c for c in (f[0] + f[1], f[0].rstrip("_"), (f[0] + f[1]).rstrip("_")) if c in keys and not is_scn(c, str(ws.cell(keys[c], 2).value or ""), keys)]
+            if cand:
+                d["B"] = cand[0]
         if "C" not in d:
             raise LayoutError(f"{f[0]}?{f[1]} 缺情境 C 列")
         ra = keys[d["A"]]  # noqa
@@ -125,11 +129,16 @@ def groups(ws, base_map=None):
     return out + wt
 
 
-def apply(wb, version, date, base_map=None):
-    """base_map：單一情境列 → 其他情境使用的基準列鍵（名稱不同名時由建置腳本指定，例 advantest shC_28 → sh_soc）"""
+def apply(wb, version, date, base_map=None, split=False, split_skip=()):
+    """base_map：單一情境列 → 其他情境使用的基準列鍵（名稱不同名時由建置腳本指定，例 advantest shC_28 → sh_soc）
+    split：先執行 split_scn_reads（第 3 點）；split_skip：保留讀敏感度欄的非情境用途工作表"""
     ws = wb["In"]
     if str(ws.cell(3, 5).value) != "基準":
         raise LayoutError("In!E3 不是「基準」")
+    if split and split_scn_reads(wb, split_skip):
+        rd = wb["README"]
+        rd.cell(rd.max_row + 2, 1, "2026-10-31：依個股模型原則第 8 節第 3 點，主模型的情境 A／C 改讀 In 頁「情境專屬列」一節（由原敏感度高／低欄拆出、數值不變）；敏感度低／高欄只留給 Sens 頁。"
+                + (f"保留讀敏感度欄的非情境用途：{'、'.join(split_skip)} 頁（區間展示）。" if split_skip else ""))
     g = groups(ws, base_map)
     ws.cell(3, 4).value, ws.cell(3, 6).value = "敏感度低", "敏感度高"
     a1 = str(ws["A1"].value or "")
@@ -157,3 +166,84 @@ def apply(wb, version, date, base_map=None):
     rr = rd.max_row + 2
     rd.cell(rr, 1, README_NOTE.format(v=version, d=date))
     return len(g)
+
+
+# ---------------------------------------------------------------------------------------------
+# 規格第 8 節第 3 點（2026-10-31）：主模型公式不得讀 In 頁敏感度低／高欄當情境值。
+# split_scn_reads(wb, skip_sheets)：找出 Sens／Recon／In 與 skip_sheets 以外、讀 In!D／F 的公式（直接位址或指向 D／F 的定義名稱），
+# 在 In 頁最後（情境驅動對照之前）新增情境專屬列：F 欄（敏感度高）→ <鍵>_A（情境 A），D 欄（敏感度低）→ <鍵>_C（情境 C），
+# 基準欄 E 照抄原格內容（數值不變），並建立同名定義名稱；只改主模型公式的引用，Sens 頁仍讀原名稱（一次動一個參數）。
+# skip_sheets：非情境用途的區間展示（例如公司指引區間、Sens 展示列），依規格保留，於模型 README 說明。
+from openpyxl.workbook.defined_name import DefinedName  # noqa: E402
+
+SPLIT_SKIP = {"In", "Sens", "Recon"}
+
+
+def split_scn_reads(wb, skip_sheets=()):
+    ws = wb["In"]
+    skip = SPLIT_SKIP | set(skip_sheets)
+    keyrow = {}
+    for r in range(4, ws.max_row + 1):
+        if ws.cell(r, 1).value:
+            keyrow.setdefault(str(ws.cell(r, 1).value), r)
+    rowkey = {r: k for k, r in keyrow.items()}
+    # 指向 In!D／F 的定義名稱
+    targets = {}
+    for n, dn in list(wb.defined_names.items()):
+        for t, ref in dn.destinations:
+            m = re.fullmatch(r"\$?([A-Z]{1,3})\$?(\d+)", ref)
+            if t == "In" and m and m.group(1) in ("D", "F") and int(m.group(2)) in rowkey:
+                targets[n] = (m.group(1), int(m.group(2)))
+    pat_n = re.compile(r"(?<![A-Za-z0-9_.!])(" + "|".join(sorted(map(re.escape, targets), key=len, reverse=True)) + r")(?![A-Za-z0-9_(])", re.I) if targets else None
+    pat_d = re.compile(r"In!\$?([DF])\$?(\d+)(?![\d:])")
+    used = {}   # (欄, 列) -> 新鍵
+    new_rows = []
+
+    def newkey(col, r):
+        if (col, r) not in used:
+            x = "A" if col == "F" else "C"
+            k = f"{rowkey[r]}_{x}"
+            while k in keyrow:
+                k += "s"
+            used[(col, r)] = k
+            keyrow[k] = None
+            new_rows.append((k, col, r, x))
+        return used[(col, r)]
+
+    plan = []
+    for sh in wb.worksheets:
+        if sh.title in skip:
+            continue
+        for row in sh.iter_rows():
+            for c in row:
+                f = c.value
+                if not (isinstance(f, str) and f.startswith("=")):
+                    continue
+                g = f
+                if pat_n:
+                    g = pat_n.sub(lambda m: newkey(*targets[next(k for k in targets if k.lower() == m.group(1).lower())]), g)
+                g = pat_d.sub(lambda m: newkey(m.group(1), int(m.group(2))) if int(m.group(2)) in rowkey else m.group(0), g)
+                if g != f:
+                    plan.append((c, g))
+    if not new_rows:
+        return []
+    r0 = ws.max_row + 2
+    ws.cell(r0, 1, "情境專屬列（由敏感度低／高欄拆出；個股模型原則第 8 節第 3 點）：主模型的情境 A／C 讀本節，敏感度低／高欄只留給 Sens 頁").font = BOLD
+    r = r0 + 1
+    for k, col, src, x in new_rows:
+        sc = ws[f"{col}{src}"]
+        ws.cell(r, 1, k)
+        ws.cell(r, 2, f"情境 {x}：{ws.cell(src, 2).value}")
+        ws.cell(r, 3, ws.cell(src, 3).value)
+        e = ws.cell(r, 5, sc.value)
+        e.number_format = sc.number_format
+        e.font = sc.font.copy()
+        ws.cell(r, 7, ws.cell(src, 7).value)
+        ws.cell(r, 8, f"＝原 {rowkey[src]} 的敏感度{'高' if col == 'F' else '低'}值（In!{col}{src}），數值不變；改情境值請改本列")
+        wb.defined_names[k] = DefinedName(k, attr_text=f"In!$E${r}")
+        keyrow[k] = r
+        used[(col, src)] = k
+        r += 1
+    for c, g in plan:
+        c.value = g
+    return [k for k, *_ in new_rows]
