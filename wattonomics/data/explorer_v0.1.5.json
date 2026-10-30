@@ -1,7 +1,7 @@
 {
 "source": {
 "file": "20261031_Wattonomics_v0.1.5.xlsx",
-"sha256": "bb1f1c1273a68d2864af82205167ac5ddfb03f2dd3b425916ec26bfa5f294f8d",
+"sha256": "374257bab6399ce695dce43d2c458734e25d6cf1543fcd6ace7aa72ee94cd5fc",
 "note": "Wattonomics（瓦帳）互動頁取數；扁平紀錄，kind 欄區分種類；單位 IT GW（＝TK GW）；下游取用 2027 年後數值前看 coverage",
 "wgov_errors": 0
 },
@@ -6649,9 +6649,9 @@
 "known_delay_m": null,
 "included": 1,
 "power_secured": 0,
-"tag": "Analogy",
+"tag": "Derived",
 "src": "SRC_GL_210",
-"note": "J#10（J 段複核：小誤（已更正））；Epoch 2027-10-01 1006; owner label \"Google #speculative\" on Epoch — check basis and whether Google ownership is supported；J 段更正：Epoch 1,006 隱含後期每棟約 200 MW，與減稅協議「每棟四個 25 MW 機房」不符 → 第 3–6 棟各約 103，合計約 618；W.media 2026-09-29 Crusoe 稱為 Google 新園區開發商",
+"note": "J#10（J 段複核：小誤（已更正））；Epoch 2027-10-01 1006; owner label \"Google #speculative\" on Epoch — check basis and whether Google ownership is supported；J 段更正：Epoch 1,006 隱含後期每棟約 200 MW，與減稅協議「每棟四個 25 MW 機房」不符 → 第 3–6 棟各約 103，合計約 618；W.media 2026-09-29 Crusoe 稱為 Google 新園區開發商（標記 Derived：412＝第 3–6 棟 × 約 103，由複核者依每棟 4×25 MW 推得，非 Epoch 原值）",
 "kind": "campus"
 },
 {
@@ -6821,7 +6821,7 @@
 "power_secured": 0,
 "tag": "Derived",
 "src": "SRC_GL_210",
-"note": "J#20（J 段複核：屬實）；DTE MPSC application 2025-10-31: load begins Jan 2027, max load by Dec 2027 (up to 12-month delay allowed); Oracle 2026-06-01: first of three buildings nearing completion; 461=1383/3. Existing cp_orcl_sal 1383 → 922",
+"note": "J#20（J 段複核：屬實）；DTE MPSC application 2025-10-31: load begins Jan 2027, max load by Dec 2027 (up to 12-month delay allowed); Oracle 2026-06-01: first of three buildings nearing completion; 461=1383/3. Existing cp_orcl_sal 1383 → 922（三棟等分為假設，來源只說三棟、第 1 棟即將完工）",
 "kind": "campus"
 },
 {

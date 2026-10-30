@@ -15,7 +15,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 GL = os.path.dirname(HERE)
 ROOT = os.path.dirname(GL)
 VERSION = "v0.1.5"
-DATE = "20261030"
+DATE = "20261031"
 TK_SNAPSHOT = os.path.join(ROOT, "siliconomics", "data", "tokenomics_snapshot_v21.7.json")
 SIL_DIR = os.path.join(ROOT, "siliconomics", "data")
 SEED = os.path.join(HERE, "seed", "seed_v0.1.json")
@@ -1631,7 +1631,7 @@ def main():
         ("v0.1.2：套用 H 段（API 旗標人工複核）更正——證據檔 79 筆、In 輸入 19 格（cp_msft_abl 改 336＋336 MW-IT、xfmr_gva 2.1／2.67／3.15、fac_gen_px 低 0.5），FundRaw F#31、F#199、F#222 改不採用（採購或投資存量，非融資）；"
          "園區候選（S 段 409 列，site_pipeline）經 API 回查與 I 段未參與代理開原文抽查後合併：新增 17 列（計入 13 列）、更正既有 20 列（Fairwater 拆分、Ports Pike 首批 800 MW 至 2031、Humain 1.7 GW 提前到 2027、Milam 308＋445、Jupiter 已知延遲刪除）、3 列改計入（Stargate UAE、Colossus 2、Mistral 96 MW）。Hyperion 5 GW、SoftBank 苫小牧依判斷題預設不入。", True),
         ("v0.1.3：第二輪美國以外園區候選（T 段 345 列，site_pipeline 分區 Batch）經 API 回查與 I2 段未參與代理開原文抽查後合併：新增 10 列（計入 5：Nebius Beit Shemesh、Google Kronstorf、DataVita DV1 擴建、Meta Sturgeon 250＋720 設施）；Humain 兩列加註風險（只有公司目標支持）；主權玩家名稱更新。", True),
-        ("v0.1.5：補 2027 覆蓋率（J 段）：Epoch 站點時間線逐頁、公司與電力公司文件、AI半導體 2026-10-30 送件，經未參與代理開原文複核（30 列可用、1 列無法核對）後合併——新增 T2 27 列（Google Fort Wayne、Cedar Rapids、Storey、Columbus、Lincoln、Goodnight；AWS New Albany、Ridgeland B5、Berwick、Black Pearl DH4；Meta Montgomery、Cheyenne、Bowling Green；Oracle Saline 第 1 棟、Red Oak；Nebius Mäntsälä；Nscale Sines、Lake Mariner；2028：Van Buren、Kozani），改既有 8 列（Shackelford 依 Epoch 時程前移、Saline 1,383→922、Lordstown 納入、Nebius PA 260／Lappeenranta 70 納入）。WIF_Coverage_2027 0.377→0.526；只動 2027 年以後的上線量，2026 年底不變。", True),
+        ("v0.1.5：補 2027 覆蓋率（J 段）：Epoch 站點時間線逐頁、公司與電力公司文件、AI半導體 2026-10-30 送件，經未參與代理開原文複核（30 列可用、1 列無法核對）後合併——新增 T2 27 列（Google Fort Wayne、Cedar Rapids、Storey、Columbus、Lincoln、Goodnight；AWS New Albany、Ridgeland B5、Berwick、Black Pearl DH4；Meta Montgomery、Cheyenne、Bowling Green；Oracle Saline 第 1 棟、Red Oak；Nebius Mäntsälä；Nscale Sines、Lake Mariner；2028：Van Buren、Kozani），改既有 6 列（Shackelford 依 Epoch 時程前移、Saline 1,383→922、Lordstown 納入、Nebius PA 260／Lappeenranta 70 納入）。WIF_Coverage_2027 0.377→0.526；只動 2027 年以後的上線量，2026 年底不變。", True),
         ("顏色：藍字＝輸入；黑字＝公式；綠字＝跨頁或外部鏡像；淡黃底＝關鍵輸出；亮黃底＝待證據或預設待決。", False),
         ("Excel 優先：要改輸入，直接改 In 頁藍字；builder 重建時讀回（--base）。公式頁不要手改。下游只讀 Interface 的 WIF_ 名稱（經快照）。", False),
         ("版本命名：YYYYMMDD_Wattonomics_vX.Y.xlsx；model/CURRENT 記錄現行檔名；data/CURRENT_SNAPSHOT 指向現行快照。", False),
