@@ -5308,67 +5308,67 @@
   }
  },
  "6857": {
-  "model": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx",
+  "model": "advantest/dist/20261031_Advantest個股模型_v0.6.xlsx",
   "v2": true,
   "tp": {
-   "value": 24506.9998824182,
+   "value": 27769.0002668995,
    "cell": "Val!B146",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.6.xlsx"
   },
   "tp_dcf": {
-   "value": 16923.6645261245,
+   "value": 19090.5132740301,
    "cell": "Val!B131",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.6.xlsx"
   },
   "tp_comp": {
-   "value": 30713.4117318693,
+   "value": 34883.6082413664,
    "cell": "Val!B147",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.6.xlsx"
   },
   "tp_cons": {
    "value": 42686,
    "cell": "Val!B148",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.6.xlsx"
   },
   "up": {
-   "value": -0.242207795843593,
+   "value": -0.14134198308907,
    "cell": "Val!B149",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.6.xlsx"
   },
   "up_comp": {
-   "value": -0.0502964832446103,
+   "value": 0.078652079201188,
    "cell": "Val!B150",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.6.xlsx"
   },
   "old_rule": {
-   "value": 25263.6536541836,
+   "value": 28914.4443962601,
    "cell": "Val!B102",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.6.xlsx"
   },
   "tier6": {
    "value": "0%～−25%",
    "cell": "Val!B157",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.6.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!B158",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.6.xlsx"
   },
   "dcf_A": {
-   "value": 23675.0370401684,
+   "value": 27055.7293608703,
    "cell": "Val!B130",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.6.xlsx"
   },
   "dcf_C": {
-   "value": 8002.1711268528,
+   "value": 8391.18793950007,
    "cell": "Val!D130",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.6.xlsx"
   },
   "model_px": {
    "value": 32340,
    "cell": "Val!B92",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx",
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.6.xlsx",
    "date": "2026-10-23"
   },
   "cash": {
@@ -5377,56 +5377,56 @@
    "values": [
     [
      "FY2026",
-     628.089381401813,
+     757.387048326616,
      "PL!D12"
     ],
     [
      "FY2027",
-     848.489669070716,
+     971.443020402668,
      "PL!E12"
     ],
     [
      "FY2028",
-     964.615228968398,
+     1103.86939434623,
      "PL!F12"
     ],
     [
      "FY2029",
-     1057.2422059744,
+     1209.1874601034,
      "PL!G12"
     ],
     [
      "FY2027",
-     812.120045935521,
+     929.371302430378,
      "PL!E23"
     ],
     [
      "FY2028",
-     825.355828909796,
+     942.635115100931,
      "PL!F23"
     ],
     [
      "FY2029",
-     931.847607268669,
+     1064.31848269604,
      "PL!G23"
     ],
     [
      "FY2027",
-     773.806693462892,
+     885.355855120655,
      "PL!E34"
     ],
     [
      "FY2028",
-     593.489576780702,
+     623.212652182134,
      "PL!F34"
     ],
     [
      "FY2029",
-     577.226226151972,
+     606.843925464113,
      "PL!G34"
     ]
    ],
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.6.xlsx"
   }
  },
  "6146": {
@@ -5681,84 +5681,84 @@
   }
  },
  "TER": {
-  "model": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx",
+  "model": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx",
   "v2": true,
   "tp": {
-   "value": 354.251953735619,
+   "value": 373.778613879716,
    "cell": "Val!B126",
-   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx"
   },
   "tp_dcf": {
-   "value": 218.286112877241,
+   "value": 229.559217346967,
    "cell": "Val!B111",
-   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx"
   },
   "tp_comp": {
-   "value": 402.559677807458,
+   "value": 425.372384430167,
    "cell": "Val!B127",
-   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx"
   },
   "tp_cons": {
    "value": 446.47,
    "cell": "Val!B128",
-   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx"
   },
   "up": {
-   "value": 0.147003249912964,
+   "value": 0.210227015961523,
    "cell": "Val!B129",
-   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx"
   },
   "up_comp": {
-   "value": 0.30341485448424,
+   "value": 0.377278240019968,
    "cell": "Val!B130",
-   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx"
   },
   "old_rule": {
-   "value": 385.982075792829,
+   "value": 397.809026598135,
    "cell": "Val!B82",
-   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx"
   },
   "tier6": {
    "value": "0%–25%",
    "cell": "Val!B137",
-   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!B138",
-   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx"
   },
   "dcf_A": {
-   "value": 284.747619501857,
+   "value": 296.28357774973,
    "cell": "Val!B110",
-   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx"
   },
   "dcf_C": {
-   "value": 153.311331405361,
+   "value": 172.348161850466,
    "cell": "Val!D110",
-   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx"
   },
   "model_px": {
    "value": 308.85,
    "cell": "Val!B73",
-   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx",
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
-    "value": 18.713102189636,
+    "value": 18.0814175009315,
     "cell": "Val!B77",
-    "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
+    "file": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx"
    },
    {
-    "value": 21.9788454652871,
+    "value": 21.1708175054888,
     "cell": "Val!C77",
-    "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
+    "file": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx"
    },
    {
-    "value": 25.2356483586665,
+    "value": 21.3371494784012,
     "cell": "Val!D77",
-    "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
+    "file": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx"
    }
   ],
   "cash": {
@@ -5767,56 +5767,56 @@
    "values": [
     [
      "FY2026",
-     1385.276,
+     1435.525,
      "PL!D12"
     ],
     [
      "FY2027",
-     2130.2544811385,
+     2193.33186716128,
      "PL!E12"
     ],
     [
      "FY2028",
-     2550.96146970961,
+     2636.73253963877,
      "PL!F12"
     ],
     [
      "FY2029",
-     2975.43004611933,
+     3083.90167457276,
      "PL!G12"
     ],
     [
      "FY2027",
-     2125.35609733791,
+     2187.6158439291,
      "PL!E23"
     ],
     [
      "FY2028",
-     2171.92494209461,
+     2251.96130830278,
      "PL!F23"
     ],
     [
      "FY2029",
-     2624.47611721122,
+     2723.66734268766,
      "PL!G23"
     ],
     [
      "FY2027",
-     2120.45771353732,
+     2181.89982069691,
      "PL!E34"
     ],
     [
      "FY2028",
-     1891.62576629842,
+     2234.40633134996,
      "PL!F34"
     ],
     [
      "FY2029",
-     2380.03607127163,
+     2765.81052140011,
      "PL!G34"
     ]
    ],
-   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.3.xlsx"
   }
  },
  "BESI": {

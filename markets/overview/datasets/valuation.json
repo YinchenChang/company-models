@@ -495,10 +495,10 @@
 "position": "情境 A：中段 → 中位數",
 "multiple": 22.8,
 "basis_label": "FY2027 EPS（A）",
-"basis": 1175.28,
-"implied_px": 26801.8,
-"vs_px": -0.171,
-"px_multiple": 27.52,
+"basis": 1345.58,
+"implied_px": 30685.6,
+"vs_px": -0.051,
+"px_multiple": 24.03,
 "fwd_pe": 37.7
 },
 {
@@ -517,10 +517,10 @@
 "position": "情境 B：中段 → 中位數",
 "multiple": 22.8,
 "basis_label": "FY2027 EPS（B）",
-"basis": 1124.9,
-"implied_px": 25653.0,
-"vs_px": -0.207,
-"px_multiple": 28.75,
+"basis": 1287.31,
+"implied_px": 29356.6,
+"vs_px": -0.092,
+"px_multiple": 25.12,
 "fwd_pe": 37.7
 },
 {
@@ -539,10 +539,10 @@
 "position": "情境 C：見頂年 → 25 分位",
 "multiple": 20.51,
 "basis_label": "FY2027 EPS（C）",
-"basis": 1071.83,
-"implied_px": 21983.2,
-"vs_px": -0.32,
-"px_multiple": 30.17,
+"basis": 1226.34,
+"implied_px": 25152.2,
+"vs_px": -0.222,
+"px_multiple": 26.37,
 "fwd_pe": 37.7
 },
 {

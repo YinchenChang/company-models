@@ -1,5 +1,12 @@
 # Siliconomics 變更紀錄
 
+## v0.9（2026-10-31；`model/20261031_Siliconomics_v0.9.xlsx`；Tokenomics v21.7）
+
+- 輸入值變更（次版）：`ts_mk_soc26`（CY2026 SoC 測試機市場）11.0 → 11.5（區間 11.0–12.0，US$B）。Advantest 2026-10-28 稱約 115 億美元（105–115 上緣）；Advantest 與泰瑞達 CY2026 SoC 營收（實績＋指引推估）合計約 113 億美元，已高於舊值。
+- 連動：每加權顆測試支出 450 → 484 美元；`SIF_TestSoCMkt_*` CY2027 16.23（原 15.41），CY2028 A／B／C 18.24／15.52／12.81，CY2029 20.31／17.99／14.12。讀者：Advantest（v0.6）、泰瑞達（v0.3）、markets/equipment。
+- 未改：非 AI SoC 市場 `ts_nonai26` 4.3（泰瑞達 3Q26 稱車用工業 +90%、行動 +60%，可能偏低；若為 5.0，CY2027 市場 16.2 → 15.8），列下一步查核。
+- 報告：`docs/reports/20261031_SoC測試機_兩家合併對帳.md`。決策 S29。
+
 ## v0.8.4（2026-10-29；`model/20261029_Siliconomics_v0.8.4.xlsx`；Tokenomics v21.7）
 
 - 來源複核（API，2026-10-28；結果在分支 `source-audit-results`）後的修補版：只改標記、來源文字與 2029 價格路徑的區間，輸入基準值全部不變。

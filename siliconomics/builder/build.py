@@ -1116,6 +1116,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.9：CY2026 SoC 測試機市場 ts_mk_soc26 由 11.0 改為 11.5（Advantest 2026-10-28 稱約 115 億美元；Advantest＋泰瑞達 CY2026 SoC 營收合計約 113 億美元已高於舊值）；每加權顆測試支出與 CY2027 起 SoC 市場隨之上升。決策 S29。", False),
         ("v0.8.4：來源複核後修正標記與來源文字：DRAM／NAND 情境季價路徑 2027–28 改標 Derived、2029 改標 Assumed（區間＝情境 A、B）；Advantest 測試機市場來源改為 2026-07-29 原文；輸入值不變。", False),
         ("v0.8.3：衝突登錄清理（CF02、CF05–08、CF16 結案；CF01 移到南電分部重建）；無新增輸入。", False),
         ("v0.8.2：新增 M26（共用匯率：新台幣 32.0、人民幣 6.72、韓元 1,420；台、陸、韓 21 個模型改讀；日圓為公司財測前提，不共用）。", False),
