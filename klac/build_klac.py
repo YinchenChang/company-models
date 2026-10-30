@@ -52,7 +52,7 @@ hdr(IN, 3, ["鍵", "項目", "單位", "低", "基準", "高", "標記", "來源
 rows = []; sec = lambda t: rows.append(("sec", t)); inp = lambda *a: rows.append(a)
 CALL = "KLA FQ4-26 法說（2026-07-28；MarketBeat 逐字稿）"
 sec("A. CY2026 錨點（上半年實績＋公司對下半年的說法）")
-inp("h2up", "CY2026 下半年營收較上半年增幅", "%", 0.15, 0.20, 0.25, "Interested-party", CALL + "：下半年約比上半年高 20%", "TIKR 2026-07-29 法說摘要（同）；FQ1-27 指引 US$4.0B±0.2B 與共識 FQ2-27 US$4.49B 合計 8.49B＝上半年 7.07B×1.20（Recon）；低／高為 Assumed 區間")
+inp("h2up", "CY2026 下半年營收較上半年增幅（FQ1-27 實績＋FQ2-27 營收指引）", "%", "=(Q!I4+g_q2_rev_lo)/(Q!E4+Q!F4)-1", "=(Q!I4+g_q2_rev)/(Q!E4+Q!F4)-1", "=(Q!I4+g_q2_rev_hi)/(Q!E4+Q!F4)-1", "Derived", "Q 頁：（FQ1-27 實績 4,136.0＋FQ2-27 指引 4,700±200）÷ 上半年實績 7,072.7 − 1；KLA FQ1-27 新聞稿（SEC 8-K，2026-10-28）", "v0.3 前為公司口述「下半年約比上半年高 20%」（FQ4-26 法說，Interested-party）；低／高＝FQ2-27 指引區間")
 inp("g_svc_h2", "CY2026 下半年服務營收較上半年增幅", "%", 0.03, 0.06, 0.09, "Assumed", "無：公司稱服務 2026 年成長在長期目標 13–15% 的下緣", "6%≈年增 13% 的半年版；只影響錨點中系統與服務的拆分")
 inp("g_oth26", "SPTS＋PCB 兩事業 CY2026 年增", "%", 0.15, 0.25, 0.30, "Interested-party", CALL + "：Orbotech 合計產品 CY2026 成長 25% 以上", "第二來源：未找到。CY2025 基期取 Q 頁四季合計")
 inp("ap26", "先進封裝製程控制營收 CY2026", "US$M", 1000, 1100, 1400, "Interested-party", CALL + "：約 US$1.1B，年增 70% 以上", "handsoff substack（2026-05-31，引公司 FQ3-26）：FY2026 1.3–1.4B（會計年度口徑，與 1.1B 的日曆年口徑不同，未解）；高＝1.4B")
@@ -84,12 +84,12 @@ for s, g in (("A", 0.08), ("B", 0.05), ("C", 0.02)):
 sec("F. 營業外、稅、股數")
 inp("oth_exp", "營業外淨額（利息與其他）每年", "US$M", -200, -100, 0, "Interested-party", CALL + "：其他收支約每季 US$25M 費用", "FY2026 實績 −54.9（利息 −284.4＋其他 +229.6）；低／高 Assumed")
 inp("tax", "有效稅率", "%", 0.13, 0.145, 0.17, "Interested-party", CALL + "：規劃稅率 14.5%", "FY2026 實績 13.8%（Q 頁）")
-inp("shares27", "稀釋股數 FY2027", "百萬股", None, 1312, None, "Interested-party", "KLA FQ4-26 新聞稿（SEC 8-K）：FQ1-27 指引稀釋股數 1,312M", "FY2026 稀釋 1,319.6M、FQ4-26 1,315.0M")
+inp("shares27", "稀釋股數 FY2027", "百萬股", None, 1311.1, None, "Verified", "KLA FQ1-27 新聞稿（SEC 8-K，2026-10-28）：FQ1-27 稀釋加權股數 1,311.1M", "FY2026 稀釋 1,319.6M、FQ4-26 1,315.0M；FQ1-27 回購 935.8")
 inp("bb", "稀釋股數年減（買回）FY2028–29", "%", 0.0, "=1-a26_sh/a25_sh", 0.025, "Derived", "FY2025→FY2026 稀釋股數變化（Q 頁）", "低／高 Assumed")
 sec("G. 公司指引、共識（只供 Recon）、股價、循環位置、目標價權重")
-inp("g_q1_rev", "FQ1-27 營收指引", "US$M", 3800, 4000, 4200, "Interested-party", "KLA FQ4-26 新聞稿（SEC 8-K，2026-07-28）", "TIKR 2026-07-29")
-inp("g_q1_gm", "FQ1-27 GAAP 毛利率指引", "%", 0.606, 0.616, 0.626, "Interested-party", "同上", "非 GAAP 62.5%")
-inp("g_q1_eps", "FQ1-27 GAAP 稀釋 EPS 指引", "US$", 1.04, 1.14, 1.24, "Interested-party", "同上", "非 GAAP 1.16±0.10")
+inp("g_q2_rev", "FQ2-27 營收指引", "US$M", 4500, 4700, 4900, "Interested-party", "KLA FQ1-27 新聞稿（SEC 8-K，2026-10-28）：US$4.7B±0.2B", "FQ1-27 實績 4,136.0（指引 4.0B±0.2B）")
+inp("g_q2_gm", "FQ2-27 GAAP 毛利率指引", "%", 0.608, 0.618, 0.628, "Interested-party", "同上", "非 GAAP 62.5%±1.0%")
+inp("g_q2_eps", "FQ2-27 GAAP 稀釋 EPS 指引", "US$", 1.30, 1.41, 1.52, "Interested-party", "同上", "非 GAAP 1.44±0.11")
 inp("cons_q2_rev", "共識 FQ2-27 營收", "US$M", None, 4490, None, "Interested-party", "Yahoo Finance（2026-10-25 讀取；21 位分析師）", "第二來源：未找到")
 inp("cons_rev27", "共識營收 FY2027", "US$M", None, 18140, None, "Interested-party", "Yahoo Finance（24 位）：18.14B", "stockanalysis（2026-10-20）：18.1B")
 inp("cons_eps27", "共識 EPS FY2027（非 GAAP）", "US$", None, 5.44, None, "Interested-party", "Yahoo Finance（25 位）：5.44", "stockanalysis（2026-10-20，24 位）：5.46")
@@ -123,52 +123,51 @@ IN.freeze_panes = "D4"
 # ---------------- Q：實績（百萬美元；EPS 為分割調整後美元） ----------------
 Q = wb.create_sheet("Q")
 Q["A1"] = "Q — 實績（百萬美元；EPS 為美元，2026-06-12 除權的 10 比 1 分割調整後）。會計年度 7–6 月：FY2026＝2025-07～2026-06。藍字＝輸入（SEC 8-K 新聞稿）；黑字＝公式（Derived）"
-Q["A2"] = "FY2027 第一季（2026-07～09）：預定 2026-10-28 盤後公布（tipranks 財報行事曆；KLA 去年同季為 10-29）；建置日 2026-10-25 尚未公布，故不納入，指引見下方。公布後更新本頁 I 欄"
-hdr(Q, 3, ["項目", "FQ3-25（2025-01～03）", "FQ4-25（2025-04～06）", "FY26 上半（2025-07～12，FQ1＋FQ2）", "FQ3-26（2026-01～03）", "FQ4-26（2026-04～06）", "FY2025 全年", "FY2026 全年", "FQ1-27（未公布）", "標記", "來源1（公司）", "來源2／說明"])
+Q["A2"] = "v0.3（2026-10-31）：I 欄滾入 FY2027 第一季（2026-07～09；KLA FQ1-27 新聞稿（SEC 8-K，2026-10-28））；下方指引改為 FQ2-27（2026-10～12）"
+hdr(Q, 3, ["項目", "FQ3-25（2025-01～03）", "FQ4-25（2025-04～06）", "FY26 上半（2025-07～12，FQ1＋FQ2）", "FQ3-26（2026-01～03）", "FQ4-26（2026-04～06）", "FY2025 全年", "FY2026 全年", "FQ1-27（2026-07～09）", "標記", "來源1（公司）", "來源2／說明"])
 S_Q326 = "FQ3-26 新聞稿（SEC 8-K，2026-04-29）"; S_Q426 = "FQ4-26 新聞稿（SEC 8-K，2026-07-28）"
 QR = {}
 def qrow(r, key, label, vals, tag, s1, s2, fmt="#,##0.0"):
     QR[key] = r
     Q.cell(r, 1, label)
-    for j, v in zip("BCDEFGH", vals):
+    for j, v in zip("BCDEFGHI", vals):
         if v is None: continue
         c = Q[f"{j}{r}"]; c.value = v; c.number_format = fmt
         if not (isinstance(v, str) and v.startswith("=")): c.font = BLUE
     Q.cell(r, 10, tag); Q.cell(r, 11, s1); Q.cell(r, 12, s2)
 H1 = lambda a, b: f"={a}-{b}"   # 九個月 − FQ3
-qrow(4, "rev", "營收", [3063.0, 3174.741, H1(9921.9, 3415.1), 3415.1, 3657.556, 12156.162, 13579.476], "Verified", "FQ3-25：" + S_Q326 + "前年同期欄；FQ4-25、全年：" + S_Q426 + "；上半＝九個月 9,921.9 − FQ3-26", "stockanalysis 年度：FY2025 12,156、FY2026 13,579；FQ2-26 單季 3,297（FQ3-26 新聞稿）")
-qrow(5, "prod", "產品營收", [2393.8, 2472.182, H1(7616.4, 2640.3), 2640.3, 2837.151, 9472.854, 10453.537], "Verified", "同上", "第二來源：未找到（年度服務占比 23%，10-K）")
-qrow(6, "svc", "服務營收", [669.2, 702.559, H1(2305.5, 774.8), 774.8, 820.405, 2683.308, 3125.939], "Verified", "同上", "FY2026 10-K：服務約占營收 23%（3,125.9÷13,579.5＝23.0%）")
-qrow(7, "spc", "  事業別：半導體製程控制（含服務）", [2738.8, 2877.647, H1(8988.0, 3083.9), 3083.9, 3256.781, 10947.359, 12244.733], "Verified", "同上（事業別表）", "—")
-qrow(8, "spts", "  事業別：特殊半導體製程（SPTS）", [156.5, 141.866, H1(424.4, 164.0), 164.0, 159.704, 587.107, 584.064], "Verified", "同上", "—")
-qrow(9, "pcb", "  事業別：PCB 與元件檢測", [168.6, 154.106, H1(509.3, 167.6), 167.6, 241.110, 621.721, 750.415], "Verified", "同上", "—")
-qrow(10, "fx", "  匯率影響等（營收 − 三事業，Derived）", [f"={c}4-{c}7-{c}8-{c}9" for c in "BCDEFGH"], "Derived", "—", "公司事業別表另列 FX；四捨五入差")
-qrow(11, "sys", "半導體製程控制系統（產品營收 − SPTS − PCB；Derived）", [f"={c}5-{c}8-{c}9" for c in "BCDEFGH"], "Derived", "產品營收扣兩事業全部營收（其服務部分未揭露，故系統略為低估、與服務合計不變）", "系統＋服務＋兩事業＝營收（恆等）")
-qrow(12, "oth", "SPTS＋PCB", [f"={c}8+{c}9" for c in "BCDEFGH"], "Derived", "—", "—")
-qrow(13, "cost", "營業成本", [1175.7, 1207.286, H1(3842.0, 1327.7), 1327.7, 1413.108, 4751.867, 5255.060], "Verified", "同上", "—")
-qrow(14, "gp", "毛利", [f"={c}4-{c}13" for c in "BCDEFGH"], "Derived", "—", "stockanalysis 年度毛利：FY2025 7,404、FY2026 8,324")
-qrow(15, "gmr", "毛利率（GAAP）", [f"={c}14/{c}4" for c in "BCDEFGH"], "Derived", "—", "公司非 GAAP：FQ4-26 62.4%", "0.0%")
-qrow(16, "rd", "研發費用", [338.0, 352.989, H1(1133.1, 388.8), 388.8, 399.023, 1360.334, 1532.118], "Verified", "同上", "—")
-qrow(17, "sga", "銷管費用", [248.9, 262.706, H1(840.0, 291.1), 291.1, 291.477, 1029.734, 1131.518], "Verified", "同上", "法說稱 FQ4-26 SG&A 283（非 GAAP）")
-qrow(18, "imp", "商譽與無形資產減損", [0, 0, 0, 0, 0, 239.1, 0], "Verified", "FY2025 減損 239.1（FQ3-26 新聞稿九個月欄、FQ4-26 新聞稿）", "—")
-qrow(19, "opx", "營業費用（研發＋銷管；不含減損）", [f"={c}16+{c}17" for c in "BCDEFGH"], "Derived", "—", "—")
-qrow(20, "oi", "營業利益（毛利 − 營業費用 − 減損）", [f"={c}14-{c}19-{c}18" for c in "BCDEFGH"], "Derived", "—", "stockanalysis 年度營業利益：FY2026 5,661（相符）；FY2025 5,014（不含減損）")
-qrow(21, "nonop", "營業外淨額（其他收入 − 利息）", [None, None, None, None, None, "=171.487-302.166", "=229.585-284.44"], "Verified", S_Q426 + "：利息 FY25 302.2／FY26 284.4；其他收入 171.5／229.6", "—")
-qrow(22, "taxv", "所得稅", [None, None, None, None, None, 582.805, 775.154], "Verified", "同上", "—")
-qrow(23, "taxr", "有效稅率", [None, None, None, None, None, "=G22/(G20+G21)", "=H22/(H20+H21)"], "Derived", "—", "—", "0.0%")
-qrow(24, "ni", "淨利（GAAP）", [1088.4, 1202.849, H1(3467.7, 1201.0), 1201.0, 1363.059, 4061.643, 4830.771], "Verified", "同上", "stockanalysis：FY2025 4,062、FY2026 4,831")
-qrow(25, "ck_ni", "檢查：稅前 − 稅 − 淨利（年度，應約 0）", [None, None, None, None, None, "=G20+G21-G22-G24", "=H20+H21-H22-H24"], "—", "—", "—", "0.0")
-qrow(26, "eps", "EPS（GAAP 稀釋，分割調整後）", [0.816, 0.91, "=(26.26-9.12)/10", 0.912, 1.04, 3.04, 3.66], "Verified／Derived", "FQ4-26 新聞稿（分割後）：FQ4-25 0.91、FY2025 3.04、FY2026 3.66、FQ4-26 1.04；FQ3-26 新聞稿（分割前 ÷10）：FQ3-25 8.16、FQ3-26 9.12、九個月 26.26", "SEC XBRL（10-K）：FY2025 3.04、FY2026 3.66；stockanalysis 同", "0.000")
-qrow(27, "sh", "稀釋加權股數（百萬股，分割調整後）", [1333.0, 1327.341, None, 1317.5, 1314.986, 1337.502, 1319.633], "Verified", S_Q426 + "；FQ3：分割前 133.30／131.75 ×10", "—", "#,##0.0")
+qrow(4, "rev", "營收", [3063.0, 3174.741, H1(9921.9, 3415.1), 3415.1, 3657.556, 12156.162, 13579.476, 4136.015], "Verified", "FQ3-25：" + S_Q326 + "前年同期欄；FQ4-25、全年：" + S_Q426 + "；上半＝九個月 9,921.9 − FQ3-26", "stockanalysis 年度：FY2025 12,156、FY2026 13,579；FQ2-26 單季 3,297（FQ3-26 新聞稿）")
+qrow(5, "prod", "產品營收", [2393.8, 2472.182, H1(7616.4, 2640.3), 2640.3, 2837.151, 9472.854, 10453.537, 3285.469], "Verified", "同上", "第二來源：未找到（年度服務占比 23%，10-K）")
+qrow(6, "svc", "服務營收", [669.2, 702.559, H1(2305.5, 774.8), 774.8, 820.405, 2683.308, 3125.939, 850.546], "Verified", "同上", "FY2026 10-K：服務約占營收 23%（3,125.9÷13,579.5＝23.0%）")
+qrow(7, "spc", "  事業別：半導體製程控制（含服務）", [2738.8, 2877.647, H1(8988.0, 3083.9), 3083.9, 3256.781, 10947.359, 12244.733, 3754.254], "Verified", "同上（事業別表）", "—")
+qrow(8, "spts", "  事業別：特殊半導體製程（SPTS）", [156.5, 141.866, H1(424.4, 164.0), 164.0, 159.704, 587.107, 584.064, 139.487], "Verified", "同上", "—")
+qrow(9, "pcb", "  事業別：PCB 與元件檢測", [168.6, 154.106, H1(509.3, 167.6), 167.6, 241.110, 621.721, 750.415, 242.151], "Verified", "同上", "—")
+qrow(10, "fx", "  匯率影響等（營收 − 三事業，Derived）", [f"={c}4-{c}7-{c}8-{c}9" for c in "BCDEFGHI"], "Derived", "—", "公司事業別表另列 FX；四捨五入差")
+qrow(11, "sys", "半導體製程控制系統（產品營收 − SPTS − PCB；Derived）", [f"={c}5-{c}8-{c}9" for c in "BCDEFGHI"], "Derived", "產品營收扣兩事業全部營收（其服務部分未揭露，故系統略為低估、與服務合計不變）", "系統＋服務＋兩事業＝營收（恆等）")
+qrow(12, "oth", "SPTS＋PCB", [f"={c}8+{c}9" for c in "BCDEFGHI"], "Derived", "—", "—")
+qrow(13, "cost", "營業成本", [1175.7, 1207.286, H1(3842.0, 1327.7), 1327.7, 1413.108, 4751.867, 5255.060, 1577.791], "Verified", "同上", "—")
+qrow(14, "gp", "毛利", [f"={c}4-{c}13" for c in "BCDEFGHI"], "Derived", "—", "stockanalysis 年度毛利：FY2025 7,404、FY2026 8,324")
+qrow(15, "gmr", "毛利率（GAAP）", [f"={c}14/{c}4" for c in "BCDEFGHI"], "Derived", "—", "公司非 GAAP：FQ4-26 62.4%", "0.0%")
+qrow(16, "rd", "研發費用", [338.0, 352.989, H1(1133.1, 388.8), 388.8, 399.023, 1360.334, 1532.118, 395.096], "Verified", "同上", "—")
+qrow(17, "sga", "銷管費用", [248.9, 262.706, H1(840.0, 291.1), 291.1, 291.477, 1029.734, 1131.518, 301.458], "Verified", "同上", "法說稱 FQ4-26 SG&A 283（非 GAAP）")
+qrow(18, "imp", "商譽與無形資產減損", [0, 0, 0, 0, 0, 239.1, 0, 0], "Verified", "FY2025 減損 239.1（FQ3-26 新聞稿九個月欄、FQ4-26 新聞稿）", "—")
+qrow(19, "opx", "營業費用（研發＋銷管；不含減損）", [f"={c}16+{c}17" for c in "BCDEFGHI"], "Derived", "—", "—")
+qrow(20, "oi", "營業利益（毛利 − 營業費用 − 減損）", [f"={c}14-{c}19-{c}18" for c in "BCDEFGHI"], "Derived", "—", "stockanalysis 年度營業利益：FY2026 5,661（相符）；FY2025 5,014（不含減損）")
+qrow(21, "nonop", "營業外淨額（其他收入 − 利息）", [None, None, None, None, None, "=171.487-302.166", "=229.585-284.44", "=30.339-67.927"], "Verified", S_Q426 + "：利息 FY25 302.2／FY26 284.4；其他收入 171.5／229.6", "—")
+qrow(22, "taxv", "所得稅", [None, None, None, None, None, 582.805, 775.154, 275.494], "Verified", "同上", "—")
+qrow(23, "taxr", "有效稅率", [None, None, None, None, None, "=G22/(G20+G21)", "=H22/(H20+H21)", "=I22/(I20+I21)"], "Derived", "—", "—", "0.0%")
+qrow(24, "ni", "淨利（GAAP）", [1088.4, 1202.849, H1(3467.7, 1201.0), 1201.0, 1363.059, 4061.643, 4830.771, 1548.588], "Verified", "同上", "stockanalysis：FY2025 4,062、FY2026 4,831")
+qrow(25, "ck_ni", "檢查：稅前 − 稅 − 淨利（年度，應約 0）", [None, None, None, None, None, "=G20+G21-G22-G24", "=H20+H21-H22-H24", "=I20+I21-I22-I24"], "—", "—", "—", "0.0")
+qrow(26, "eps", "EPS（GAAP 稀釋，分割調整後）", [0.816, 0.91, "=(26.26-9.12)/10", 0.912, 1.04, 3.04, 3.66, 1.18], "Verified／Derived", "FQ4-26 新聞稿（分割後）：FQ4-25 0.91、FY2025 3.04、FY2026 3.66、FQ4-26 1.04；FQ3-26 新聞稿（分割前 ÷10）：FQ3-25 8.16、FQ3-26 9.12、九個月 26.26", "SEC XBRL（10-K）：FY2025 3.04、FY2026 3.66；stockanalysis 同", "0.000")
+qrow(27, "sh", "稀釋加權股數（百萬股，分割調整後）", [1333.0, 1327.341, None, 1317.5, 1314.986, 1337.502, 1319.633, 1311.064], "Verified", S_Q426 + "；FQ3：分割前 133.30／131.75 ×10", "—", "#,##0.0")
 qrow(28, "ck", "檢查：FY2026 − (上半＋FQ3＋FQ4)（營收、產品、服務、淨利依序 B–E 欄）", ["=H4-D4-E4-F4", "=H5-D5-E5-F5", "=H6-D6-E6-F6", "=H24-D24-E24-F24"], "—", "九個月與單季皆取新聞稿四捨五入值，差額為 0.1 以內的捨入差", "—", "0.00")
-Q["I4"] = "預定 2026-10-28 盤後公布，尚未公布"
 for nm in ("rev", "prod", "svc", "spc", "spts", "pcb", "sys", "oth", "gp", "rd", "sga", "imp", "opx", "oi", "nonop", "taxv", "ni", "eps", "sh"):
     defname(f"a25_{nm}", f"Q!$G${QR[nm]}"); defname(f"a26_{nm}", f"Q!$H${QR[nm]}")
-Q.cell(30, 1, "FQ1-27 公司指引（2026-07-28）").font = BOLD
+Q.cell(30, 1, "FQ2-27 公司指引（2026-10-28）").font = BOLD
 hdr(Q, 31, ["項目", "指引", "低", "高", "", "", "", "", "", "標記", "來源1（公司）", "來源2／說明"])
-for i, (nm, k, f) in enumerate((("營收（US$M）", "g_q1_rev", "#,##0"), ("GAAP 毛利率", "g_q1_gm", "0.0%"), ("GAAP 稀釋 EPS（US$）", "g_q1_eps", "0.00")), 32):
+for i, (nm, k, f) in enumerate((("營收（US$M）", "g_q2_rev", "#,##0"), ("GAAP 毛利率", "g_q2_gm", "0.0%"), ("GAAP 稀釋 EPS（US$）", "g_q2_eps", "0.00")), 32):
     Q.cell(i, 1, nm); Q.cell(i, 2, f"={k}").number_format = f; Q.cell(i, 3, f"={k}_lo").number_format = f; Q.cell(i, 4, f"={k}_hi").number_format = f
-    Q.cell(i, 10, "Interested-party"); Q.cell(i, 11, S_Q426); Q.cell(i, 12, "非 GAAP：毛利率 62.5%、EPS 1.16；稀釋股數 1,312M")
+    Q.cell(i, 10, "Interested-party"); Q.cell(i, 11, "KLA FQ1-27 新聞稿（SEC 8-K，2026-10-28）"); Q.cell(i, 12, "非 GAAP：毛利率 62.5%±1.0%、EPS 1.44±0.11")
 Q.column_dimensions["A"].width = 56
 for c in "BCDEFGHI": Q.column_dimensions[c].width = 15
 Q.column_dimensions["J"].width = 18; Q.column_dimensions["K"].width = 80; Q.column_dimensions["L"].width = 60
@@ -402,7 +401,7 @@ SE["A1"] = "Sens — 一次動一個輸入（情境 A）：對 FY2027、FY2028 �
 hdr(SE, 3, ["案例", "設定", "FY2027 營收 US$M", "FY2027 EPS US$", "相對基準", "FY2028 營收 US$M", "FY2028 EPS US$", "相對基準"])
 cases = [("中國系統營收 −25%（CY2027 起）", "出口管制擴大（Assumed）", dict(cut="chn_cut_lo")), ("中國系統營收 −50%（CY2027 起）", "", dict(cut="chn_cut_hi")),
          ("製程控制強度不再提升", "pc_u＝0", dict(u="pc_u_lo")), ("製程控制強度提升加倍", "2030 較 2025 +300bp", dict(u="pc_u_hi")),
-         ("下半年增幅 15%", "CY2026 錨點較低", dict(h2="h2up_lo")), ("下半年增幅 25%", "", dict(h2="h2up_hi")),
+         ("FQ2-27 營收指引下緣 4.5B", "CY2026 錨點較低", dict(h2="h2up_lo")), ("FQ2-27 營收指引上緣 4.9B", "", dict(h2="h2up_hi")),
          ("記憶體相對強度 低（代工邏輯占 66%）", "", dict(m="m_mem_lo")), ("記憶體相對強度 高（代工邏輯占 60%）", "", dict(m="m_mem_hi")),
          ("先進封裝倍數 1.0x", "與封裝市場同速", dict(kap="k_ap_lo")), ("先進封裝倍數 2.5x", "", dict(kap="k_ap_hi")),
          ("先進封裝 CY2026 1.4B", "取 substack 會計年度口徑上緣", dict(ap26="ap26_hi")),
@@ -448,7 +447,7 @@ def rec(label, ref, getter, src, note="", fmt="#,##0.0", pt=False):
 pl = lambda key, y: (lambda s: f"=PL!{FYC[y]}{SUMR[(s, key)]}")
 eg = lambda key, col: (lambda s: f"=PL!{col}{PB[s][key]}")
 RC.cell(rr_, 1, "A. CY2026 下半錨點 vs 公司指引＋共識").font = BOLD; rr_ += 1
-rec("CY2026 下半營收（錨點 − 上半實績）vs FQ1-27 指引＋共識 FQ2-27", "=g_q1_rev+cons_q2_rev", lambda s: f"=PL!D{PB[s]['tot']}-h1_rev", "公司 8-K（FQ1 4.0B）＋Yahoo 共識（FQ2 4.49B）", "錨點用公司「下半約高 20%」，非共識")
+rec("CY2026 下半營收（錨點 − 上半實績）vs FQ1-27 實績＋共識 FQ2-27（財報前）", "=Q!I4+cons_q2_rev", lambda s: f"=PL!D{PB[s]['tot']}-h1_rev", "公司 8-K（FQ1 4,136.0）＋Yahoo 共識（FQ2 4.49B，2026-10-25）", "錨點用公司 FQ2-27 指引 4.7B，高於財報前共識")
 RC.cell(rr_, 1, "B. FY2027、FY2028 vs 共識（Yahoo Finance；共識 EPS 為非 GAAP，模型為 GAAP）").font = BOLD; rr_ += 1
 rec("FY2027 營收", "=cons_rev27", pl("rev", 2027), "Yahoo（18.14B）；stockanalysis 18.1B")
 rec("FY2027 EPS", "=cons_eps27", pl("eps", 2027), "Yahoo 5.44；stockanalysis 5.46", "GAAP 比非 GAAP 低約 2–3%（FY2026：3.66 vs 3.76）", fmt="0.00")
@@ -465,7 +464,7 @@ RC.cell(rr_, 1, "製程控制強度 CY2025（前段系統 ÷ 加權前段 WFE）
 RC.cell(rr_, 1, "製程控制強度 CY2026（校準）"); RC.cell(rr_, 3, f"=PL!D{PB['A']['ri']}").number_format = "0.00%"; rr_ += 1
 RC.cell(rr_, 1, "製程控制占前段 WFE CY2026（強度 ÷ KLA 市占 58%）"); RC.cell(rr_, 3, f"=PL!D{PB['A']['pcs']}").number_format = "0.0%"; RC.cell(rr_, 10, "業界常見說法約 11–13%（未找到可引用來源）"); rr_ += 1
 RC.cell(rr_, 1, "E. 其他資訊（非對帳）").font = BOLD; rr_ += 1
-RC.cell(rr_, 1, "FQ1-27 營收指引 ÷ 模型 FY2027（A）"); RC.cell(rr_, 3, f"=g_q1_rev/PL!E{SUMR[('A','rev')]}").number_format = "0.0%"; RC.cell(rr_, 10, "營收逐季上升，Q1 低於 25% 屬正常"); rr_ += 1
+RC.cell(rr_, 1, "FQ1-27 實績營收 ÷ 模型 FY2027（A）"); RC.cell(rr_, 3, f"=Q!I4/PL!E{SUMR[('A','rev')]}").number_format = "0.0%"; RC.cell(rr_, 10, "營收逐季上升，Q1 低於 25% 屬正常"); rr_ += 1
 RC.cell(rr_, 1, "模型 FY2027 中國營收（A；× FY2026 占比 30%）"); RC.cell(rr_, 3, f"=PL!E{PB['A']['chn']}").number_format = "#,##0"; rr_ += 1
 RC.column_dimensions["A"].width = 60
 for c in "BCDEFGH": RC.column_dimensions[c].width = 12
@@ -698,9 +697,9 @@ if os.environ.get("V2_ROWS"):
 # 新列一律放在 Val、README 工作表既有內容之後，不位移既有列；既有數值不變
 VER_PREV, VER_NOW = 'v0.2', 'v0.2.1'
 OBS = [
- "目標價 US$121（DCF 94、Comparable 149 各半），比現價 145.61（2026-10-23）低 16.6%，級距 0%～−25%；Comparable 單獨為 +2.1%。DCF 比現價低 35.4%，因情境 B、C 的 EPS 在 FY2029 後依收斂法下滑（C 的 FY2032 EPS 3.56 只有 FY2027 5.19 的 69%），不是 ROE（近三年 92.0%）。",
- "與共識目標價 232.38 的差距主要是倍數：共識隱含 34.5 倍，比同業前瞻 P/E 中位數 24.7 倍高 39.4%；EPS 因素為 −10.9%（本模型前瞻 EPS 6.01 為 GAAP、約晚四個月，共識 FY2028 非 GAAP EPS 6.74）。",
- "中國出口管制最敏感：中國系統營收 −50% 使 FY2028 EPS −14.9%，設備情境 C 使 −19.2%。下一個檢驗點是 FQ1-27 財報（2026-10-28 盤後）：CY2026 下半年增幅（15%～25% 時 FY2027 EPS ±4.6%）與中國占比。"
+ "目標價 US$119（DCF 95、Comparable 相對倍數調整後 143 各半），比現價 145.61（2026-10-23）低 18.3%，級距 0%～−25%，投資建議維持中立。v0.3 滾入 FQ1-27（營收 4,136.0、GAAP EPS 1.18，高於指引中點 4.0B／1.14）與 FQ2-27 指引（營收 4.7B±0.2B、GAAP EPS 1.41±0.11）；加權目標價 115.2 → 118.9（+3.2%）。",
+ "CY2026 下半年較上半年增幅由公司口述的 20% 改為實績＋指引推得的 24.9%（區間 22.1%～27.8%），FY2027 EPS A／B／C 5.24／5.19／5.12 → 5.48／5.43／5.36。DCF 仍比現價低 34.7%，主因情境 B、C 的 EPS 在 FY2029 後依收斂法下滑；Comparable 單獨 +3.0%。",
+ "中國出口管制仍是最敏感的變數（Sens 頁）。股價仍為 2026-10-23 收盤，財報後未更新。下一個檢驗點是 FQ2-27 財報（2027-01 下旬）：CY2027 上半年是否延續成長，以及公司對 2027 年 WFE 的看法。"
 ]   # 重點觀察（數字取自重算後的 Val／PL／Sens；與 README.md 相同文字）
 UPW_ROW = next(r_ for r_ in range(1, V.max_row + 1) if V.cell(r_, 1).value == "上檔空間：加權目標價")
 GRADE_ROW = V.max_row + 1; REC_ROW = GRADE_ROW + 1
@@ -732,7 +731,7 @@ for k_, o_ in enumerate(OBS, 1):
 import os as _os2, sys as _sys2
 _sys2.path.insert(0, _os2.path.join(_os2.path.dirname(_os2.path.dirname(_os2.path.abspath(__file__))), "tools", "segment_check"))
 from addrow import add_check
-add_check(Q, seg_rows=[7, 8, 9, 10], total_row=4, cols="BCDEFGH", rnd=3, note="分部原則第 3 條（2026-10-28 追加）：含第 10 列匯率影響等（營收 − 三事業，Derived）；分部宣告見 segments.json")
+add_check(Q, seg_rows=[7, 8, 9, 10], total_row=4, cols="BCDEFGHI", rnd=3, note="分部原則第 3 條（2026-10-28 追加）：含第 10 列匯率影響等（營收 − 三事業，Derived）；分部宣告見 segments.json")
 RD.cell(RD.max_row + 1, 1, "v0.2.2（2026-10-28）：分部原則重建（數值不變）。Q 頁最後追加核對列「檢查：分部合計 − 合併營收」；官方分部與子列宣告見 segments.json。")
 if isinstance(RD.cell(1, 1).value, str): RD.cell(1, 1).value = RD.cell(1, 1).value.replace("v0.2.1", "v0.2.2")
 
@@ -744,5 +743,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "klac")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
+RD.cell(RD.max_row + 2, 1, "v0.3（2026-10-31）：滾入 FY2027 第一季（2026-10-28：營收 4,136.0、產品 3,285.5、服務 850.5、淨利 1,548.6、GAAP EPS 1.18；Q 頁 I 欄）與 FQ2-27 指引（營收 4.7B±0.2B、GAAP 毛利率 61.8%、GAAP EPS 1.41）。CY2026 下半年增幅 h2up 改為 Derived（FQ1-27 實績＋FQ2-27 指引 ÷ 上半年 − 1＝24.9%；原公司口述 20%）；稀釋股數 1,311.1。FY2027 EPS（A）5.24 → 5.48；加權目標價 115.2 → 118.9，投資建議維持中立。")
 apply_in_layout.apply(wb, "v0.2.3", "2026-10-30")  # v0.2.3：In 頁版面（個股模型原則第 8 節；數值不變）
 wb.save(sys.argv[1])
