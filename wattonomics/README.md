@@ -15,6 +15,7 @@
 | 規劃書 | `docs/plan/20261028_全市場GW帳_規劃.md` |
 | 工作單 | `wattonomics/docs/workorders/` |
 | 證據（查證代理產出，chat 端複核後才入 In） | `wattonomics/evidence_raw/`；`tools/import_evidence.py` → `builder/seed/evidence_v0.1.json`（DB_Evidence，附 C 段判定）；`tools/import_funding.py` → `builder/seed/funding_v<版>.json`（FundRaw、Facility，附 G／H／Q 段判定與更正） |
+| 公開網頁（公司內可開） | https://yinchenchang.github.io/company-models/wattonomics/ （gh-pages 分支 `wattonomics/index.html`；由 `markets/invest_map/publish_pages.sh` 隨地圖一併發布，取 `model/CURRENT` 對應的 explorer）；私人版 claude.ai artifact 同內容 |
 | 互動頁取數 | `data/explorer_v*.json`（`tools/export_explorer.py`；扁平紀錄，含標記與來源 ID） |
 | AI半導體 次產業比例 | `markets/invest_map/data/segments_ai_semis_v0.2.3.csv`（SegIn 頁鏡像；Spend 拆分） |
 
