@@ -47,6 +47,31 @@ CASES = [
     ("非 AI 資本支出 ÷ 營收", "5%／12%", {"nonai_cx": 0.05}, {"nonai_cx": 0.12}),
     ("FY2027 資本支出（指引）", "90／95", {"capex_g27": 90}, {"capex_g27": 95}),
 ]
+# v0.4.2：敏感度覆蓋（個股模型原則第 9 節）——In 頁每個有低／高的鍵都要有案例；IF_HoldEcon 四世代同時一案（鍵 he_all）。
+# 第 5 欄（可省略）＝Sens 頁「鍵」欄文字；省略時取低／高覆寫的全部鍵。
+_TK21 = json.load(open(os.path.join(HERE, "data", "tokenomics_snapshot_v21.4.json"), encoding="utf-8"))["items"]["IF_HoldEcon"]["values"]
+HE = {g: (round(_TK21[n]["低成本"], 4), round(_TK21[n]["高成本"], 4)) for g, n in GN.items()}
+CASES += [
+    ("IF_HoldEcon 四世代同時（每 MW 年持有成本）", f"Tokenomics v21.4 低成本／高成本欄（四世代同時；GB300 → {HE['gb300'][0]}／{HE['gb300'][1]}；k_長約分母同步變動）",
+     {f"he_{g}": v[0] for g, v in HE.items()}, {f"he_{g}": v[1] for g, v in HE.items()}, "he_all"),
+    ("長約價格證據 p_long（k_長約隨之）", "8.9073／12.7247（基準 9.70；k_long＝p_long ÷ he_gb300）", {"p_long": 8.9073}, {"p_long": 12.7247}, "p_long k_long"),
+    ("隨需（現貨）占計費產能比例", "0%／20%", {"od_share": 0.0}, {"od_share": 0.20}),
+    ("Q1 末世代占比：H100（差額由 GB300 吸收，合計 100%）", "H100 10%／30%（GB300 35%／15%）", {"om_h100": 0.10, "om_gb300": 0.35}, {"om_h100": 0.30, "om_gb300": 0.15}),
+    ("Q1 末世代占比：GB200（差額由 GB300 吸收，合計 100%）", "GB200 45%／70%（GB300 35%／10%）", {"om_gb200": 0.45, "om_gb300": 0.35}, {"om_gb200": 0.70, "om_gb300": 0.10}),
+    ("Q1 末世代占比：GB300（差額由 GB200 吸收，合計 100%）", "GB300 10%／35%（GB200 70%／45%）", {"om_gb300": 0.10, "om_gb200": 0.70}, {"om_gb300": 0.35, "om_gb200": 0.45}),
+    ("FY2028 新增產能中 GB300 占比", "0%／100%（基準 50%）", {"nm28_gb300": 0.0}, {"nm28_gb300": 1.0}),
+    ("FY2029 起新增產能中 GB300 占比", "基準 0%／50%", {}, {"nm29_gb300": 0.5}),
+    ("OCI 其他（非 AI）FY2032 年增", "5%／12%", {"gnaLT": 0.05}, {"gnaLT": 0.12}),
+    ("Software license 長期年增", "−5%／0%", {"gLT_lic": -0.05}, {"gLT_lic": 0.0}),
+    ("Hardware 長期年增", "−3%／+3%", {"gLT_hw": -0.03}, {"gLT_hw": 0.03}),
+    ("Services 長期年增", "0%／5%", {"gLT_svc": 0.0}, {"gLT_svc": 0.05}),
+    ("預付認列年數", "3 年／基準 5 年", {"prepay_yrs": 3}, {}),
+    ("有效稅率", "12.6%／17%", {"etr": 0.126}, {"etr": 0.17}),
+    ("新增投資級債利率（kd＝r_new 隨之）", "5.0%／8.11%", {"r_new": 0.05}, {"r_new": 0.0811}),
+    ("投資級槓桿上限", "4.0x／5.0x", {"lev_max": 4.0}, {"lev_max": 5.0}),
+    ("其餘業務（軟體等）前瞻 EV/EBITDA", "10.8x／15.59x", {"mult_sw": 10.8}, {"mult_sw": 15.59}),
+]
+# mult_oci（OCI AI 同業倍數）不列：2026-10-30 重算 4.81x／7.88x 皆 73.2244（變動 0；只進 Val 對照列），豁免理由寫在 Sens 頁說明列。
 
 
 def run(ovr, tag, tmp):
@@ -55,8 +80,10 @@ def run(ovr, tag, tmp):
     env = dict(os.environ, SENS_OVR=json.dumps(ovr), ORCL_ROWMAP=rm)
     subprocess.run([sys.executable, BUILD, raw], check=True, env=env, cwd=os.path.dirname(HERE))
     prof = "file://" + os.path.join(d, "lo_profile")
-    subprocess.run(["soffice", f"-env:UserInstallation={prof}", "--headless", "--calc", "--convert-to", "xlsx", "--outdir", os.path.join(d, "out"), raw],
-                   check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=300)
+    for _ in range(3):                                    # v0.4.2：LibreOffice 偶爾沒有輸出檔 → 重試
+        subprocess.run(["soffice", f"-env:UserInstallation={prof}", "--headless", "--calc", "--convert-to", "xlsx", "--outdir", os.path.join(d, "out"), raw],
+                       check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=300)
+        if os.path.exists(os.path.join(d, "out", "raw.xlsx")): break
     R = json.load(open(rm, encoding="utf-8"))
     wb = openpyxl.load_workbook(os.path.join(d, "out", "raw.xlsx"), data_only=True)
     tp = wb["Val"][f"C{R['VAL']['CON']['tp']}"].value
@@ -71,13 +98,14 @@ def main():
     tmp = tempfile.mkdtemp(prefix="orcl_sens_")
     try:
         GRID = [(w, g) for w in (-0.01, 0.0, 0.01) for g in (0.02, 0.03, 0.04)]
-        tasks = [("base", {})] + [(f"c{i}_{side}", ov) for i, (_, _, lo, hi) in enumerate(CASES) for side, ov in (("lo", lo), ("hi", hi))] \
+        tasks = [("base", {})] + [(f"c{i}_{side}", ov) for i, (_, _, lo, hi, *_k) in enumerate(CASES) for side, ov in (("lo", lo), ("hi", hi))] \
             + [(f"g_{i}", {"wacc_adj": w, "tp_g": g}) for i, (w, g) in enumerate(GRID)]
         with ThreadPoolExecutor(jobs) as ex:
             res = dict(zip([t for t, _ in tasks], ex.map(lambda t: run(t[1], t[0], tmp), tasks)))
         out = {"date": datetime.date.today().isoformat(), "base": res["base"], "cases": []}
-        for i, (lab, setting, lo, hi) in enumerate(CASES):
-            out["cases"].append({"label": lab, "setting": setting, "lo": res[f"c{i}_lo"], "hi": res[f"c{i}_hi"], "lo_ovr": lo, "hi_ovr": hi})
+        for i, (lab, setting, lo, hi, *_k) in enumerate(CASES):
+            out["cases"].append({"label": lab, "setting": setting, "lo": res[f"c{i}_lo"], "hi": res[f"c{i}_hi"], "lo_ovr": lo, "hi_ovr": hi,
+                                 "key": CASES[i][4] if len(CASES[i]) > 4 else " ".join(dict.fromkeys(list(lo) + list(hi)))})
         out["grid"] = [{"wacc_adj": w, "tp_g": g, "tp": res[f"g_{i}"]["tp"]} for i, (w, g) in enumerate(GRID)]
         json.dump(out, open(os.path.join(HERE, "data", "sens_v04.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         print("base tp", res["base"]["tp"])

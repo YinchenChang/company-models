@@ -1,4 +1,6 @@
-# Oracle（ORCL）個股模型 v0.4.1（命題＋營收分部架構）
+# Oracle（ORCL）個股模型 v0.4.2（命題＋營收分部架構）
+
+**v0.4.2（2026-10-30，敏感度覆蓋，基準數值不變）：** 依個股模型原則第 9 節補齊 Sens 案例：Sens 頁加 L 欄「鍵」，In 頁 43 個有低／高區間的鍵全部有案例或合格豁免（`tools/sens_coverage/check_sens_coverage.py --require-keycol` 通過）。新增 17 個案例，含 **IF_HoldEcon 四世代同時（鍵 `he_all`）**：低 67.70（−7.5%，上檔 −46.3%，放空）、高 86.05（+17.5%，上檔 −31.7%，放空）；長約價格證據 `p_long` 高端 12.72 時 107.36（上檔 −14.8%，**跨到中立**）。世代占比 `om_*` 以「單一世代移到低／高、差額由相鄰世代吸收、合計 100%」設案例。豁免 1：`mult_oci`（只進 Val 對照列，重算變動 0）；`tp_v031` 寫「只作對照，不進模型」。新增 `make_v04.sh`（建置、核對、HTML 一次跑完）。與 v0.4.1 逐格比對只有 In 頁 A1（版本字串）、I178（tp_v031 說明）與 Sens 頁不同；加權目標價 73.22、放空不變；原 29 個案例與 WACC×g 格重算值逐一相同。報告 `docs/reports/20261030_MAG_Oracle_敏感度補齊.md`；v0.4.1 成品移 `dist/_待刪除/`。
 
 **v0.4.1（2026-10-29，呈現修正，數值不變）：** In 頁欄名改「敏感度低／高」、頁尾加「L. 情境驅動對照」（併網速度、合約容量上限、建設延誤、情境權重，A／B／C 三欄並排）；HTML 驅動因子一節新增情境驅動表。規格：個股模型原則第 8 節；核對 `tools/in_layout/check_in_layout.py`。與 v0.4 逐格比對只有 In 頁 A1、D3、F3 與新增一節不同；v0.4 成品移 `dist/_待刪除/`。
 
@@ -27,26 +29,21 @@
 | 檔案 | 內容 |
 |---|---|
 | `build_oracle.py` | 獨立 Python → Excel 產生器（openpyxl，全部活公式；藍字輸入、黑字公式） |
-| `dist/20261029_Oracle個股模型_v0.4.1.xlsx` | LibreOffice headless 重算後的成品（公式錯誤 0） |
-| `dist/20261029_Oracle個股模型_v0.4.1.html`、`html.json` | `tools/company_html/build_company_html.py oracle` 產生；`check_company_html.py` 通過 |
+| `dist/20261030_Oracle個股模型_v0.4.2.xlsx` | LibreOffice headless 重算後的成品（公式錯誤 0） |
+| `dist/20261030_Oracle個股模型_v0.4.2.html`、`html.json` | `tools/company_html/build_company_html.py oracle` 產生；`check_company_html.py` 通過 |
 | `segments.json` | 官方分部宣告；`tools/segment_check/check_segments.py oracle` 通過 |
-| `scripts/sens_v04.py` | 敏感度：一次動一個輸入，完整重算（寫 `data/sens_v04.json`，再建置時寫入 Sens 頁） |
+| `scripts/sens_v04.py` | 敏感度：一次動一個輸入，完整重算（寫 `data/sens_v04.json`，再建置時寫入 Sens 頁；v0.4.2 起涵蓋 In 頁全部有區間的鍵） |
+| `make_v04.sh` | 一次跑完：（`SENS=1` 時敏感度）→ 建置 → 重算 → 公式錯誤與 Sens 快照 → In 版面 → 敏感度覆蓋 → segment_check → HTML |
 | `scripts/make_html_json.py` | 由建置列號對照產生 `html.json` |
 | `data/` | 事實總帳（v0.1a SEC 一手、v0.3.1 增補）、共識、Tokenomics v21.4 快照（v19.0 保留） |
 | `legacy_v0.3/` | v0.3.1 舊引擎（CRWV 樣板：HTML＋Excel 雙引擎、company.json、驗證腳本），保留不刪 |
-| `dist/_待刪除/` | v0.4、v0.3.1 舊成品 |
+| `dist/_待刪除/` | v0.4.1、v0.4、v0.3.1 舊成品 |
 
 ## 建置
 
 ```
-python3 oracle/scripts/sens_v04.py --jobs 6          # 敏感度（有改公式或輸入時才需重跑）
-ORCL_ROWMAP=/tmp/rowmap.json python3 oracle/build_oracle.py /tmp/raw.xlsx
-soffice --headless --calc --convert-to xlsx --outdir /tmp/out /tmp/raw.xlsx
-cp /tmp/out/raw.xlsx oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx
-python3 tools/in_layout/check_in_layout.py oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx
-python3 oracle/scripts/make_html_json.py /tmp/rowmap.json
-python3 tools/company_html/build_company_html.py oracle && python3 tools/company_html/check_company_html.py oracle
-python3 tools/segment_check/check_segments.py oracle
+bash oracle/make_v04.sh                 # 沿用已提交的 data/sens_v04.json
+SENS=1 JOBS=6 bash oracle/make_v04.sh   # 有改公式或輸入時，先重跑敏感度
 ```
 
 ## 工作表與驅動 → 推導對照
