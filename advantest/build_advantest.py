@@ -101,7 +101,7 @@ for k, nm, tt, lo, hi, src in (
     ("oth", "其他 ASIC", 0.7, 0.5, 1.0, "中小型 ASIC；Assumed")):
     inp(f"tt_{k}", f"每顆測試時間係數（Blackwell＝1.0）：{nm}", "x", lo, tt, hi, "Assumed", "無實證：公司稱每顆測試時間隨複雜度與世代上升，未給倍數；" + src, "第二來源：未找到。校準在 2026 年進行，所以係數只決定世代間的相對權重")
 sec("C. 市占")
-inp("sh_soc", "Advantest SoC 測試機市占（CY2025 公司自估；FY 口徑沿用）", "%", 0.61, 0.66, 0.71, "Interested-party", "Advantest FY2025 簡報：CY2024 56%→CY2025 66%（二手轉述，X：jukan05）", "第二來源：未找到。低／高＝±5 個百分點（Assumed 區間）")
+inp("sh_soc", "Advantest SoC 測試機市占（CY2026：三季實績＋第四季指引推估 ÷ 匯率 ÷ CY2026 市場；FY 口徑沿用）", "%", "=sh_soc-0.05", "=(Q!E4+q1_soc+q2_soc+(g_soc-q1_soc-q2_soc)/2)/(fx*mk_soc26)", "=sh_soc+0.05", "Derived", "Q 頁 2026-01～09 三季 SoC 實績（237.2＋259.6＋353.3）＋10～12 月以 FY2026 下半年 SoC 指引（1,375.0 − 上半年 612.9）的一半估；÷ 匯率 ÷ Siliconomics CY2026 SoC 市場（v0.9：11.5）", "v0.6 前為公司自估 CY2025 66%（FY2025 簡報，二手轉述；改列 sh_soc25 只作對照）。泰瑞達 3Q26 法說：運算市場擴大、對手在運算強，稀釋其整體份額（同方向）。低／高＝±5 個百分點（Assumed）")
 inp("shC_28", "情境 C：FY2028 市占（Teradyne 搶回）", "%", 0.56, 0.61, 0.66, "Assumed", "無：假設 2 年內回到 CY2024 的 56%", "Analogy：CY2024 市占 56%（Advantest 簡報）")
 inp("shC_29", "情境 C：FY2029 市占", "%", 0.51, 0.56, 0.61, "Analogy", "CY2024 市占 56%", "區間 ±5 個百分點")
 inp("sh_mem", "Advantest 記憶體測試機市占（FY2025 實績 ÷ FY2025 市場，Derived）", "%", "=sh_mem-0.05", "=a25_mem/(fmk_mem25*fx)", "=sh_mem+0.05", "Derived", "FY2025 實績（Q 頁）÷（3/4×CY2025＋1/4×CY2026 市場）÷ 匯率", "公司稱 CY2025 記憶體市占略低於前一年（二手轉述）；±5 個百分點為 Assumed")
@@ -332,8 +332,8 @@ def engine(ws, r0, title, P0=None, **over):
     row("fsoc", "SoC 測試機市場 FY", "US$B", {"C": f"=fmk_soc25", **{fy(y): f"=0.75*{cyc(y)}{R['soc']}+0.25*{cyc(y+1)}{R['soc']}" for y in range(2026, 2030)}})
     row("fmem", "記憶體測試機市場 FY", "US$B", {"C": f"=fmk_mem25", **{fy(y): f"=0.75*{cyc(y)}{R['mem']}+0.25*{cyc(y+1)}{R['mem']}" for y in range(2026, 2030)}})
     shf = {2026: P["sh"], 2027: P["sh"], 2028: P["shC28"] if s == "C" else P["sh"], 2029: P["shC29"] if s == "C" else P["sh"]}
-    row("sh", "Advantest SoC 市占", "%", {"C": f"=a25_soc/(C{R['fsoc']}*{P['fx']})", **{fy(y): f"={shf[y]}" for y in range(2026, 2030)}}, fmt="0.0%", note="FY2025＝實績隱含（對照公司自估 66%）")
-    row("rsoc", "SoC 測試機營收", "¥B", {"C": "=a25_soc", **{fy(y): f"={fy(y)}{R['fsoc']}*{fy(y)}{R['sh']}*{P['fx']}" for y in range(2026, 2030)}}, fmt="#,##0.0", note="市場 × 市占 × 匯率")
+    row("sh", "Advantest SoC 市占", "%", {"C": f"=a25_soc/(C{R['fsoc']}*{P['fx']})", **{fy(y): f"={shf[y]}" for y in range(2026, 2030)}}, fmt="0.0%", note="FY2025＝實績隱含（對照公司自估 CY2025 66%）；FY2026 起＝sh_soc（CY2026 推得）")
+    row("rsoc", "SoC 測試機營收", "¥B", {"C": "=a25_soc", fy(2026): f"={cyc(2026)}{R['soc']}*{fy(2026)}{R['sh']}*{P['fx']}-Q!E4+0.25*{cyc(2027)}{R['soc']}*{fy(2027)}{R['sh']}*{P['fx']}", **{fy(y): f"={fy(y)}{R['fsoc']}*{fy(y)}{R['sh']}*{P['fx']}" for y in range(2027, 2030)}}, fmt="#,##0.0", note="市場 × 市占 × 匯率；FY2026＝CY2026 SoC 營收 − 2026-01～03 實績（Q!E4）＋1/4×CY2027（CY2026 逐季上升，不用 3/4 平均）")
     row("rmem", "記憶體測試機營收", "¥B", {"C": "=a25_mem", **{fy(y): f"={fy(y)}{R['fmem']}*{P['shm']}*{P['fx']}" for y in range(2026, 2030)}}, fmt="#,##0.0")
     g_o = {2026: "g_oth_26", **{y: f"g_oth_{s}" for y in (2027, 2028, 2029)}}; g_s = {2026: "g_svc_26", **{y: f"g_svc_{s}" for y in (2027, 2028, 2029)}}
     row("roth", "其他系統營收", "¥B", {"C": "=a25_oth", **{fy(y): f"={fy(y-1)}{r}*(1+{g_o[y]})" for y in range(2026, 2030)}}, fmt="#,##0.0")
@@ -497,7 +497,7 @@ V.column_dimensions["G"].width = 22; V.column_dimensions["K"].width = 80
 SE = wb.create_sheet("Sens")
 SE["A1"] = "Sens — 一次動一個輸入（情境 A）：對 FY2027、FY2028 營收與 EPS 的影響。每個案例是一個完整的推導區塊（本頁下方，與 PL 同一引擎）"
 hdr(SE, 3, ["案例", "設定", "FY2027 營收 ¥B", "FY2027 EPS ¥", "相對基準", "FY2028 營收 ¥B", "FY2028 EPS ¥", "相對基準"])
-cases = [("市占 −5 個百分點", "SoC 市占 61%", dict(sh="sh_soc_lo")), ("市占 +5 個百分點", "SoC 市占 71%", dict(sh="sh_soc_hi")),
+cases = [("市占 −5 個百分點", "SoC 市占 sh_soc − 5pt", dict(sh="sh_soc_lo")), ("市占 +5 個百分點", "SoC 市占 sh_soc ＋ 5pt", dict(sh="sh_soc_hi")),
          ("平行測試效率每年 −5%（Assumed）", "每加權顆測試支出每年 −5%（2027 起）", dict(eff="eff_par_lo")), ("平行測試效率每年 −10%（Assumed）", "每年 −10%", dict(eff="eff_par_hi")),
          ("每顆測試時間係數 低", "各平台 tt 取低值", dict(tt="_lo")), ("每顆測試時間係數 高", "各平台 tt 取高值", dict(tt="_hi")),
          ("營業費用變動比例 低（35%）", "FY2025 營業費用中變動部分 35%（固定 65%）", dict(F="(1-phi_lo)*opex25", v="phi_lo*opex25/a25_rev")),
@@ -563,7 +563,7 @@ RC.cell(rr_, 1, "C. 市場規模與市占").font = BOLD; rr_ += 1
 cy = lambda key, y: (lambda s: f"=PL!{cyc(y)}{PB[s][key]}")
 rec("SoC 測試機市場 CY2026（US$B）", "=mk_soc26", cy("soc", 2026), "公司：10.5–11.5（中點）", "校準恆等式：模型 CY2026 以公司中點為錨，差距必為 0，不是獨立檢驗", fmt="0.00")
 rec("記憶體測試機市場 CY2026（US$B）", "=mk_mem26", cy("mem", 2026), "公司：2.5–3.0（中點）", "同上，錨定", fmt="0.00")
-rec("Advantest FY2025 隱含 SoC 市占（FY2025 實績 ÷ 市場）", "=sh_soc", lambda s: f"=PL!C{PB[s]['sh']}", "公司自估 CY2025 66%", "獨立檢驗：實績與公司市場規模推得的 FY 口徑市占，對照公司自估的 CY 口徑", fmt="0.0%", pt=True)
+rec("Advantest FY2025 隱含 SoC 市占（FY2025 實績 ÷ 市場）", "=sh_soc25", lambda s: f"=PL!C{PB[s]['sh']}", "公司自估 CY2025 66%", "獨立檢驗：實績與公司市場規模推得的 FY 口徑市占，對照公司自估的 CY 口徑", fmt="0.0%", pt=True)
 RC.cell(rr_, 1, "D. 測試設備合計（SoC＋記憶體測試機）vs SEMI 測試設備（markets/equipment 的 Mkt 頁，SEMI 2026-07）").font = BOLD; rr_ += 1
 for y, nm in ((2026, "semi_test26"), (2027, "semi_test27"), (2028, "semi_test28")):
     rec(f"CY{y}：SoC＋記憶體測試機市場（US$B）", f"={nm}", (lambda yy: (lambda s: f"=PL!{cyc(yy)}{PB[s]['soc']}+PL!{cyc(yy)}{PB[s]['mem']}"))(y),
@@ -616,7 +616,7 @@ lines = [("Advantest（6857.T）收支與估值模型 v0.3.1（AI 半導體 Proj
  ("模型命題：Advantest 的盈餘由 AI 加速器的 SoC 測試需求決定。每顆晶片的測試時間隨複雜度上升，Advantest 握有約三分之二的市占。股價取決於加速器顆數的成長在 FY2027 之後放緩時，測試機的投資會不會跟著回落。", False), ("", False),
  ("會計年度：4 月到隔年 3 月（FY2026＝2026-04～2027-03）。金額以日圓（¥B）為主，另列美元；匯率基準 ¥150（公司第二季起的假設）放 In 頁。FY2026 第二季預定 2026-10-28 公布，建置日（2026-10-22）尚未公布，故不納入。", False), ("", False),
  ("驅動因子 → 推導量", True),
- ("SoC 測試機市場（日曆年）＝加速器顆數（markets/memory）× 每顆測試時間係數 × 每加權顆測試支出（以公司 CY2026 市場規模校準）＋非 AI SoC；日曆年轉會計年度：3/4、1/4 加權 → × Advantest 市占（基準 66%）× 匯率 → SoC 營收", False),
+ ("SoC 測試機市場（日曆年）＝加速器顆數（markets/memory）× 每顆測試時間係數 × 每加權顆測試支出（以公司 CY2026 市場規模校準）＋非 AI SoC；日曆年轉會計年度：3/4、1/4 加權 → × Advantest 市占（v0.6 起＝CY2026 三季實績＋第四季指引推得，約 71%）× 匯率 → SoC 營收", False),
  ("記憶體測試機：公司 CY2026 市場規模為錨 × [w × HBM 出貨位元指數（markets/memory）＋(1−w) × DRAM 設備支出指數（markets/equipment）] × 市占（FY2025 實績推得）", False),
  ("其他系統、服務與其他：前一年 × 成長率（Assumed）。毛利率＝截距＋斜率 × SoC 占比（FY2025 與 FY2026 指引兩點推導）；營業費用＝固定＋變動 × 營收（兩點推導）；不寫死利益率", False),
  ("情境 A／B／C：顆數係數讀台積電模型成品（2028 ×1.0／0.8／0.6，2029 ×1.0／0.85／0.6）；情境 C 另加 Teradyne 搶回市占（FY2028 61%、FY2029 56%）與價格壓力", False),
@@ -849,13 +849,14 @@ V.cell(_G + 1, 1, "投資建議")
 V[f"B{_G + 1}"] = f'=IF({_U}>0.5,"強力買進",IF({_U}>0.25,"買進",IF({_U}>=-0.25,"中立",IF({_U}>=-0.5,"放空","強力放空"))))'
 V[f"B{_G + 1}"].number_format = "@"
 V[f"E{_G + 1}"] = "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空"
-OBS = ["目標價 ¥24,507（DCF 16,924、Comparable 相對倍數調整後 32,090 各半），比現價 32,340（2026-10-23）低 24.2%，級距 0%～−25%，投資建議由放空轉為中立（v0.5 滾入 FY2026 Q2 與 10 月再上修指引；離放空門檻 −25% 只差 0.8 個百分點）。主因仍是 DCF：r 10%、g 4% 下 DCF 只有現價的 0.52 倍；Comparable（市場主流同業法）單獨為 −5.0%。",
-       "模型 FY2026 營收 1,687、EPS 870 日圓，比公司 10 月指引（1,863、1,027.08）低 9.4%／15.3%；上半年實績營收已 845.2，模型隱含下半年 842，低於公司下半年指引 1,017.8。差距來自市場規模 × 市占的推導（SoC 測試機 1,198 對指引 1,375，−12.9%）：CY2026 SoC 測試機市場仍用本庫 110 億美元，公司 10-28 已稱約 115 億美元（區間上緣）。FY2028 EPS A 1,336、B 1,143、C 822，DCF 情境價值 23,675／16,441／8,002。",
-       "待決定：FY2026 是否改以上半年實績＋公司下半年指引為錨（會明顯上修 FY2026 EPS 與 DCF），以及 Siliconomics 的 CY2026 SoC 測試機市場是否由 110 改為 115 億美元（影響 Advantest 與泰瑞達）。下一個檢驗事件是 FY2026 第三季財報（2027-01 下旬）。"]   # 重點觀察（與 advantest/README.md 相同文字）
+OBS = ["目標價 ¥27,769（DCF 19,091、Comparable 相對倍數調整後 36,447 各半），比現價 32,340（2026-10-23）低 14.1%，級距 0%～−25%，投資建議維持中立。v0.6 依 Advantest 與泰瑞達 SoC 測試機合併對帳修正兩個過時輸入（市場 11.0 → 11.5 億美元×10、市占 66% → 71.4%）與 FY2026 的日曆季對應，加權目標價 24,507 → 27,769（+13.3%）。主因仍是 DCF：r 10%、g 4% 下 DCF 為現價 0.59 倍；Comparable 單獨 +12.7%。",
+       "FY2026 模型 SoC 1,428、營收 1,917、EPS 1,049 日圓，比公司 10 月指引（1,375、1,863、1,027.08）高 3.9%／2.9%／2.1%（v0.5 為 −12.9%／−9.4%／−15.3%）。差距 177 拆解：市場規模 +37、市占 +69、日曆季對應 +71（2026-01～03 實績 237 低於全年平均，舊的 3/4 加權高估了它）；2027-01～03 一季模型 381 與指引隱含 381 相同，CY2027 推導未被否證。兩家合計：Advantest CY2026 SoC 約 82 億美元＋泰瑞達約 31 億美元＝113 億美元，占 115 億市場 98.1%。",
+       "待查：(1) 非 AI SoC 市場 4.3（泰瑞達 3Q26 稱車用工業 +90%、行動 +60%，可能偏高；若為 5.0，CY2027 市場 16.2 → 15.8）；(2) 市占 71.4% 延用到 FY2027 的前提，泰瑞達稱第一家雲端廠下一波量產在 2027 年中、第二家 2027 下半年（情境 C 已含 FY2028 61%、FY2029 56%）。下一個檢驗事件是 FY2026 第三季財報（2027-01 下旬）與泰瑞達 4Q26 法說（ATE 市場模型更新）。"]   # 重點觀察（與 advantest/README.md 相同文字）
 _R = RD.max_row + 1
 RD.cell(_R, 1, "v0.3.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁最後新增「上檔空間級距」「投資建議」兩列（依「上檔空間：加權目標價」固定規則）；README 頁最後新增投資建議與重點觀察三點。另依算力收支 2026-10-25 請求，PL 頁最後新增「自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）」一列（三情境、所有模型年度；折舊、資本支出＝營收 × FY2025 實績比率 2.2%、2.9%），In 頁最後新增 「折舊 ÷ 營收」（da_rev）與「資本支出 ÷ 營收」（cx_rev）兩列；既有列不移動、既有數值不變。")
 RD.cell(_R + 1, 1, f'="投資建議："&Val!B{_G + 1}&"（依上檔空間固定規則）"')
 for _i, _t in enumerate(OBS, 1): RD.cell(_R + 1 + _i, 1, f"重點觀察 {_i}：{_t}")
+RD.cell(RD.max_row + 2, 1, "v0.6（2026-10-31）：與泰瑞達合併對帳 SoC 測試機（Andy 2026-10-31：維持市場×市占推導，查出差距原因；模型或 Siliconomics 有誤即修正）。(1) Siliconomics v0.9：CY2026 SoC 測試機市場 11.0 → 11.5（US$B）；(2) sh_soc 改為 CY2026 三季實績＋第四季指引推得（71.4%；舊的公司自估 CY2025 66% 改列 sh_soc25 對照）；(3) FY2026 SoC 營收＝CY2026 營收 − 2026-01～03 實績＋1/4×CY2027（原 3/4×CY2026＋1/4×CY2027）。FY2026 SoC 1,198 → 1,428、EPS 870 → 1,049；加權目標價 24,507 → 27,769（+13.3%），投資建議維持中立。")
 RD.cell(RD.max_row + 2, 1, "v0.5（2026-10-31）：滾入 FY2026 第二季（2026-10-28：營收 477.7、SoC 353.3、記憶體 53.4、營業利益 266.8、淨利 193.3，Q 頁 H 欄）與 10 月再上修指引（營收 1,863.0、營業利益 967.0、淨利 741.5、EPS 1,027.08、SoC 1,375.0、記憶體 229.0、其他系統 110.5、服務與其他 148.5、毛利率約 68%）；其他系統與服務的 FY2026 成長改用指引（原 Q1 年化）。加權目標價 23,855 → 24,507（+2.7%），投資建議放空 → 中立。")
 if os.environ.get("G1_ROWS"): print("G1ROWS", "advantest", "grade", _G, "rec", _G + 1, "readme_obs", _R + 2, _R + 4)
 
@@ -875,6 +876,13 @@ for _k, _nm, _v, _s2 in (("g_oth", "指引其他系統 FY2026", 110.5, "7 月版
     IN.cell(_r, 1, _k); IN.cell(_r, 2, _nm); IN.cell(_r, 3, "¥B"); IN.cell(_r, 5, _v).font = BLUE
     IN.cell(_r, 7, "Interested-party"); IN.cell(_r, 8, "公司 Q2 FY26 簡報（JE_BIZ_261028_slide，2026-10-28）"); IN.cell(_r, 9, _s2)
     wb.defined_names[_k] = DefinedName(_k, attr_text=f"In!$E${_r}")
+# v0.6（2026-10-31）：舊的市占基準（公司自估 CY2025 66%）改列對照用，不進推導
+_r += 2
+IN.cell(_r, 1, "v0.6 追加：舊市占基準（只作 Recon 對照）").font = BOLD
+_r += 1
+IN.cell(_r, 1, "sh_soc25"); IN.cell(_r, 2, "Advantest SoC 測試機市占 CY2025（公司自估；v0.5 前的 sh_soc 基準）"); IN.cell(_r, 3, "%"); IN.cell(_r, 5, 0.66).font = BLUE; IN.cell(_r, 5).number_format = "0.0%"
+IN.cell(_r, 7, "Interested-party"); IN.cell(_r, 8, "Advantest FY2025 簡報：CY2024 56%→CY2025 66%（二手轉述，X：jukan05）"); IN.cell(_r, 9, "第二來源：未找到")
+wb.defined_names["sh_soc25"] = DefinedName("sh_soc25", attr_text=f"In!$E${_r}")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.4.1", "2026-10-31", base_map={"shC_28": "sh_soc", "shC_29": "sh_soc"})  # v0.4.1：In 頁版面（個股模型原則第 8 節；數值不變）
 wb.save(sys.argv[1])
