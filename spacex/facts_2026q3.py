@@ -387,22 +387,24 @@ FY = [("seg.total.rev.fy2025", "合併營收", 18674, [FOOL, YH, IMP], "Fool 表
       ("seg.conn.adjEbitda.fy2025", "Connectivity：分部調整後 EBITDA", 7168, [YH], "只見 Yahoo（chat 端所列 7,168 相同；單一來源）"),
       ("seg.si.rev.fy2025", "AI（現 SI）：營收", 3201, [FOOL, IMP], "Fool 表、Implicator 一致；Yahoo 未列"),
       ("seg.si.ebit.fy2025", "AI（現 SI）：營業損失", -6355, [FOOL, YH, IMP], "三家一致（Yahoo 未說明口徑，由合計反推為營業損失）"),
-      ("seg.space.capex.fy2025", "Space：資本支出", 3832, [BC, FOOL2], "Beancount 3.83B；Fool 3.8B。注意：與 9M2026 Space capex 3,832 完全相同，疑轉述混用，待原文"),
-      ("seg.conn.capex.fy2025", "Connectivity：資本支出", 4178, [BC, FOOL2], "Beancount 4.18B；Fool 寫 4.1B（不一致）"),
+      ("seg.conn.capex.fy2025", "Connectivity：資本支出", 4178, [BC, FOOL2], "Beancount 4.18B；Fool 寫 4.1B（不一致）。chat 端審查 2026-10-30：待核（424B4）"),
       ("seg.si.capex.fy2025", "AI（現 SI）：資本支出", 12727, [BC, FOOL2], "Beancount 12.73B；Fool 12.7B")]
 for iid, item, v, urls, note in FY:
     addw(iid, item + "（FY2025）", v, UNIT, "fy2025", "媒體轉述 SpaceX S-1／424B4（WebFetch 2026-10-30）", TAGS1, note=note, url="；".join(urls), docDate="2026-05",
          q="Data source: SpaceX S-1（Fool 表註）" if FOOL in urls else "")
 addw("seg.si.adjEbitda.fy2025", "AI（現 SI）：分部調整後 EBITDA（FY2025，衍生）", 6584 - 653 - 7168, UNIT, "fy2025", "合併 6,584 − Space 653 − Connectivity 7,168", "[Derived]",
      note="由二手轉述數字推得；假設分部調整後 EBITDA 合計＝合併（2026 各期成立）")
-addw("seg.total.capex.fy2025", "資本支出合計（FY2025，衍生）", 3832 + 4178 + 12727, UNIT, "fy2025", "三分部相加", "[Derived]", note="Beancount 合計 20.74B 一致")
+addw("seg.space.capex.fy2025", "Space：資本支出（FY2025）", None, UNIT, "fy2025", "未取得", "[未取得]", url="；".join([BC, FOOL2]),
+     note="chat 端審查 2026-10-30：媒體轉述 3,832（Beancount 3.83B、Fool 3.8B）與 9M2026 Space 資本支出 3,832 完全相同，判為媒體轉述混用，改「未取得」，待 424B4")
+addw("seg.total.capex.fy2025", "資本支出合計（FY2025，二手轉述）", 20737, UNIT, "fy2025", "Beancount 合計 20.74B（二手）", TAGS1, url=BC,
+     note="Space 未取得，三分部無法加總；合計只作參考，不做 FY2025 資本支出分部對帳")
 chk("Fool 表 2026Q1 合計 4,964 vs 分部加總 4,694（媒體筆誤）", 4964, V("seg.total.rev.2026q1"), "記錄用：預期不一致，不列入失敗", tol=1e9)
 
 # ============ 5. 分部對帳與恆等式（五期，差額須為 0） ============
 RECON = []
 for per in PER5 + ["2026q1", "2025q2", "1h2026", "1h2025", "fy2025"]:
     for key in ("rev", "ebit", "adjEbitda", "capex"):
-        if per == "fy2025" and key == "adjEbitda": continue      # AI 為衍生，恆等
+        if per == "fy2025" and key in ("adjEbitda", "capex"): continue      # AI 為衍生，恆等；Space 資本支出未取得
         s3 = sum(V(f"seg.{s}.{key}.{per}") for s in ("space", "conn", "si"))
         t = V(f"seg.total.{key}.{per}")
         RECON.append({"period": per, "line": key, "segSum": s3, "total": t, "diff": round(s3 - t, 6)})
@@ -638,7 +640,7 @@ mbs2 = re.search(r"related party of \$([\d,]+)", Q[kbs2])
 add("debt.failedSLB.cur.20260930", "失敗售後租回債務（CTC 與 Valor，三筆）：流動", float(m9.group(1).replace(",", "")), UNIT, "20260930", "Q", k9, "附註 9 Other Financings",
     second=float(m17.group(1).replace(",", "")), second_src=f"10-Q 第 {QP[k17]} 頁附註 17 Valor 段；資產負債表括號關係人 {mbs.group(1)}",
     q="CTC … has entered into various sale-leaseback transactions for its SI infrastructure assets … resulting in failed sale-leaseback transactions",
-    note="附註 9 稱 CTC 三筆失敗售後租回；附註 17 稱與 Valor（董事 Antonio Gracias 創辦）的設備租賃為失敗售後租回，金額相同 → 三筆均為 Valor 交易；列在 Other financings 12,979 之內")
+    note="10-Q 直接寫明為 Valor Transactions（附註 17，文字檔第 1782–1783 行；chat 端審查 2026-10-30 確認，非推論）：CTC 與 Valor（董事 Antonio Gracias 創辦）的設備租賃屬失敗售後租回，與附註 9 金額相同；列在 Other financings 12,979 之內")
 add("debt.failedSLB.lt.20260930", "失敗售後租回債務：非流動", float(m9.group(2).replace(",", "")), UNIT, "20260930", "Q", k9, "附註 9 Other Financings",
     second=float(m17.group(2).replace(",", "")), second_src=f"附註 17；資產負債表括號關係人 {mbs2.group(1)}", q="")
 chk("failedSLB 流動 vs 資產負債表關係人括號", V("debt.failedSLB.cur.20260930"), float(mbs.group(1).replace(",", "")), "資產負債表括號")

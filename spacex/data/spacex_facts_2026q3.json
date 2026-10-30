@@ -464,13 +464,6 @@
    "segSum": -2589,
    "total": -2589,
    "diff": 0
-  },
-  {
-   "period": "fy2025",
-   "line": "capex",
-   "segSum": 20737,
-   "total": 20737,
-   "diff": 0
   }
  ],
  "items": [
@@ -7651,19 +7644,6 @@
    "note": "三家一致（Yahoo 未說明口徑，由合計反推為營業損失）"
   },
   {
-   "id": "seg.space.capex.fy2025",
-   "item": "Space：資本支出（FY2025）",
-   "value": 3832,
-   "unit": "USD M",
-   "period": "fy2025",
-   "source": "媒體轉述 SpaceX S-1／424B4（WebFetch 2026-10-30）",
-   "quote": "",
-   "url": "https://beancount.io/blog/2026/07/12/spacex-fy2025-earnings-analysis；https://fool.com/investing/2026/05/29/spacex-invests-3x-more-on-ai-than-rockets-and-lost/",
-   "docDate": "2026-05",
-   "tag": "[二手轉述 S-1（待 424B4 原文核對）]",
-   "note": "Beancount 3.83B；Fool 3.8B。注意：與 9M2026 Space capex 3,832 完全相同，疑轉述混用，待原文"
-  },
-  {
    "id": "seg.conn.capex.fy2025",
    "item": "Connectivity：資本支出（FY2025）",
    "value": 4178,
@@ -7674,7 +7654,7 @@
    "url": "https://beancount.io/blog/2026/07/12/spacex-fy2025-earnings-analysis；https://fool.com/investing/2026/05/29/spacex-invests-3x-more-on-ai-than-rockets-and-lost/",
    "docDate": "2026-05",
    "tag": "[二手轉述 S-1（待 424B4 原文核對）]",
-   "note": "Beancount 4.18B；Fool 寫 4.1B（不一致）"
+   "note": "Beancount 4.18B；Fool 寫 4.1B（不一致）。chat 端審查 2026-10-30：待核（424B4）"
   },
   {
    "id": "seg.si.capex.fy2025",
@@ -7703,17 +7683,30 @@
    "note": "由二手轉述數字推得；假設分部調整後 EBITDA 合計＝合併（2026 各期成立）"
   },
   {
+   "id": "seg.space.capex.fy2025",
+   "item": "Space：資本支出（FY2025）",
+   "value": null,
+   "unit": "USD M",
+   "period": "fy2025",
+   "source": "未取得",
+   "quote": "",
+   "url": "https://beancount.io/blog/2026/07/12/spacex-fy2025-earnings-analysis；https://fool.com/investing/2026/05/29/spacex-invests-3x-more-on-ai-than-rockets-and-lost/",
+   "docDate": "",
+   "tag": "[未取得]",
+   "note": "chat 端審查 2026-10-30：媒體轉述 3,832（Beancount 3.83B、Fool 3.8B）與 9M2026 Space 資本支出 3,832 完全相同，判為媒體轉述混用，改「未取得」，待 424B4"
+  },
+  {
    "id": "seg.total.capex.fy2025",
-   "item": "資本支出合計（FY2025，衍生）",
+   "item": "資本支出合計（FY2025，二手轉述）",
    "value": 20737,
    "unit": "USD M",
    "period": "fy2025",
-   "source": "三分部相加",
+   "source": "Beancount 合計 20.74B（二手）",
    "quote": "",
-   "url": "",
+   "url": "https://beancount.io/blog/2026/07/12/spacex-fy2025-earnings-analysis",
    "docDate": "",
-   "tag": "[Derived]",
-   "note": "Beancount 合計 20.74B 一致"
+   "tag": "[二手轉述 S-1（待 424B4 原文核對）]",
+   "note": "Space 未取得，三分部無法加總；合計只作參考，不做 FY2025 資本支出分部對帳"
   },
   {
    "id": "is.rev.2026q3",
@@ -12411,7 +12404,7 @@
    "quote": "CTC … has entered into various sale-leaseback transactions for its SI infrastructure assets … resulting in failed sale-leaseback transactions",
    "docDate": "2026-10-22",
    "tag": "[Verified]",
-   "note": "附註 9 稱 CTC 三筆失敗售後租回；附註 17 稱與 Valor（董事 Antonio Gracias 創辦）的設備租賃為失敗售後租回，金額相同 → 三筆均為 Valor 交易；列在 Other financings 12,979 之內",
+   "note": "10-Q 直接寫明為 Valor Transactions（附註 17，文字檔第 1782–1783 行；chat 端審查 2026-10-30 確認，非推論）：CTC 與 Valor（董事 Antonio Gracias 創辦）的設備租賃屬失敗售後租回，與附註 9 金額相同；列在 Other financings 12,979 之內",
    "check": {
     "value": 2181.0,
     "source": "10-Q 第 35 頁附註 17 Valor 段；資產負債表括號關係人 2,181",
@@ -17400,13 +17393,6 @@
    "id": "recon.ebit.fy2025（三分部合計 − 合併）",
    "value": -2589,
    "second": -2589,
-   "source": "分部對帳",
-   "ok": true
-  },
-  {
-   "id": "recon.capex.fy2025（三分部合計 − 合併）",
-   "value": 20737,
-   "second": 20737,
    "source": "分部對帳",
    "ok": true
   },
