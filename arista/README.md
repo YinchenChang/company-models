@@ -1,5 +1,11 @@
 # arista/ — Arista Networks（ANET）收支與估值模型 v0.2.1
 
+## v0.3.1（2026-10-30）：In 頁「敏感度低／高」與「情境 A／B／C」分開（數值不變）
+
+- 依 `docs/plan/個股模型原則_命題加營收分部.md` 第 8 節（Andy 2026-10-29 同意、指示套用）：In 頁 D／F 欄名改「敏感度低」「敏感度高」，只用於 Sens 頁、不進目標價；In 頁最後新增「情境驅動對照」一節，把上方各情境專屬輸入三情境並排（每格只引用上方列，純展示）；HTML 驅動因子一節分「情境驅動」與「單一參數」兩張表。
+- 共用工具 `tools/in_layout/apply_in_layout.py`（建置腳本存檔前呼叫）；`tools/in_layout/check_in_layout.py` 通過。新舊成品逐格比較：數值格全部相同，差異只有 In 頁 A1、D3、F3、新增一節、README 頁版本說明與上游檔名文字。
+- 成品：`dist/20261030_Arista個股模型_v0.3.1.xlsx`。
+
 Arista 的 AI 營收＝AI 後端 scale-out 交換器市場（`markets/network`）× 乙太網路占比 × Arista 份額（含前端與 scale-across 附掛）；非 AI（雲端前端、企業、園區）另依成長率推。股價約 37 倍前瞻 EPS：在 NVIDIA（Spectrum-X）與白牌夾擊下，Arista 的份額路徑能否支撐這個倍數？
 
 **核心問題：2027–28 年 Arista 在 AI 乙太網路的份額每掉一截，EPS 少多少；現價隱含的份額路徑合不合理。**

@@ -1,5 +1,11 @@
 # crdo/ — Credo（CRDO）收支與估值模型 v0.2.2
 
+## v0.2.4（2026-10-30）：In 頁「敏感度低／高」與「情境 A／B／C」分開（數值不變）
+
+- 依 `docs/plan/個股模型原則_命題加營收分部.md` 第 8 節（Andy 2026-10-29 同意、指示套用）：In 頁 D／F 欄名改「敏感度低」「敏感度高」，只用於 Sens 頁、不進目標價；In 頁最後新增「情境驅動對照」一節，把上方各情境專屬輸入三情境並排（每格只引用上方列，純展示）；HTML 驅動因子一節分「情境驅動」與「單一參數」兩張表。
+- 共用工具 `tools/in_layout/apply_in_layout.py`（建置腳本存檔前呼叫）；`tools/in_layout/check_in_layout.py` 通過。新舊成品逐格比較：數值格全部相同，差異只有 In 頁 A1、D3、F3、新增一節、README 頁版本說明與上游檔名文字。
+- 成品：`dist/20261030_Credo個股模型_v0.2.4.xlsx`。
+
 Credo 的 AEC 營收＝AI 銅纜市場（`markets/network`：scale-up 背板與線纜＋scale-out DAC／AEC）× Credo 有效份額（AEC 滲透率 × Credo 占 AEC）；光學（光 DSP、矽光 PIC〔DustPhotonics〕、ZeroFlap 光學）＝可插拔光模組市場 × 光學份額；線卡 PHY、重定時器與 SerDes IP 另依成長率推。股價自 52 週高點跌約 52%、只約 15 倍共識 FY2028 EPS：市場定價像是 AEC 成長在 FY2028 前後見頂。
 
 **核心問題：市場隱含的 FY2028 EPS 是否低於模型——要成立，AEC 份額（競爭、主動光纜自我替代）、客戶集中（前四大終端客戶占 84%）、銅轉光（AI 銅纜市場）三條路徑各要不利到什麼程度？**
