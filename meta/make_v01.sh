@@ -1,7 +1,7 @@
 #!/bin/bash
 # Meta 個股模型 v0.1：一次跑完 事實總帳 → （敏感度）→ 建置 → LibreOffice 重算 → 核對 → In 頁版面 → 分部檢查 → HTML。
 #   bash meta/make_v01.sh            # 沿用已提交的敏感度結果 meta/data/sens_v01_20261030.json
-#   SENS=1 bash meta/make_v01.sh     # 重跑敏感度（約 70 次整本重算；JOBS＝平行數，預設 2）
+#   SENS=1 bash meta/make_v01.sh     # 重跑敏感度（約 80 次整本重算；JOBS＝平行數，預設 2）
 # 需要：python3＋openpyxl、LibreOffice（soffice）。
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"

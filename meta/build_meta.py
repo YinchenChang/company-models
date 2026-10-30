@@ -178,7 +178,7 @@ inp("selfb", "自建機房比例（租用部分不計機房資本支出）", "%"
 inp("am_26", "2026 新增中 GB300 錨占比（其餘 VR200 錨）", "%", None, 1.0, None, "Assumed", "同 Alphabet；MTIA 無揭露，全部按 GPU 世代（M4）")
 inp("am_27", "2027 新增中 GB300 錨占比（其餘 VR200 錨）", "%", None, 0.5, None, "Assumed", "同 Alphabet")
 inp("am_28", "2028 起新增中 VR200 錨占比（其餘 GB300 錨）", "%", None, 1.0, None, "Assumed", "同 Alphabet")
-inp("cip_0", "在建工程（2026-09-30）", "US$B", None, fv("ppe.cip.20260930") / 1000, None, "Verified", fs("ppe.cip.20260930"), "Q4 26 起轉入在役（同 Alphabet）")
+inp("cip_0", "在建工程（2026-09-30）", "US$B", None, fv("ppe.cip.20260930") / 1000, None, "Verified", fs("ppe.cip.20260930"), "Q4 26 起轉入在役：折舊同 Alphabet；MW 處理不同——本模型把在建工程對應 MW 計入增量在役 MW（有影子效益與營運成本），Alphabet 修正三不另增 MW（待判斷）")
 inp("cip_ai", "在建工程中 AI 占比", "%", 0.8, 0.9, 1.0, "Assumed", "判斷：與 2026 年 AI 占資本支出比例（約 9 成，見 Thesis）一致", "在建工程對應的 MW 在 Q4 26 轉入在役 → 自用增量（影子效益與營運成本）", judg=True)
 inp("cip_it", "在建工程中 IT（伺服器與網通）占比", "%", 0.5, 0.6, 0.7, "Assumed", "判斷：Meta 未揭露；Alphabet 2026Q2 約 60%", "IT 依 life_it、其餘依 life_fac 折舊")
 inp("life_it", "AI IT 折舊年限（年；汰換週期）", "年", 5, 6, 7, "Assumed", "Tokenomics IF_DeprLifeIT 6 年；Meta 自 2025 起伺服器耐用年限 5.5 年（公開資訊，未入事實總帳）", "整數年（汰換排程用）")
@@ -224,7 +224,10 @@ inp("ot_legal_q2", "一次性：2026Q2 法律費用", "US$B", None, fv("txt.lega
 inp("ot_sev_q2", "一次性：2026Q2 遣散費用", "US$B", None, fv("txt.severance.2026q2"), None, "Verified", fs("txt.severance.2026q2"), "未揭露分部；推定 FoA")
 inp("ot_legal_q3", "一次性：2026Q3 法律費用（多州檢察長協議）", "US$B", None, fv("txt.legal_charge.2026q3"), None, "Verified", fs("txt.legal_charge.2026q3"), "新聞稿未寫分部；FoA 營業利益跌幅顯示在 FoA（推論）")
 inp("ot_tax_q1", "一次性：2026Q1 CAMT 所得稅利益", "US$B", None, fv("txt.tax_benefit_camt.2026q1"), None, "Verified", fs("txt.tax_benefit_camt.2026q1"))
-inp("ot_legal_nd", "法律費用不可抵稅比例（排除一次性時的稅後影響）", "%", None, 1.0, None, "Assumed", "2026Q3 稅率 24%（法說；新聞稿 31.41 ÷ 130.01）高於指引 15–17% → 推定全部不可抵稅", "")
+inp("eps_x_q3", "2026Q3 排除法律費用後稀釋 EPS（公司揭露）", "US$", None, 7.40, None, "Interested-party",
+    "Q3 8-K 附件 99.1：「Diluted EPS of $3.83 would have increased by $3.57 to $7.40」；稅率 24% 排除後為 17%（2026-10-30 讀取；獨立核對同讀）", "公司自行計算的排除後數字")
+inp("ot_legal_at", "法律費用稅後保留比例（＝(7.40 − 3.83) × Q3 稀釋股數 ÷ 9.89）", "%", None, f"=(eps_x_q3-{fv('is.eps_d.2026q3')})*sh_dil_q3/ot_legal_q3", None, "Derived",
+    "Q3 稅後影響約 9.18、稅盾約 0.70（法說：「non-deductible portion」）", "Q2 法律 2.40 套同一比例（Assumed）；v0.1 初版假設全額不可抵稅，已更正")
 
 sec("F. 損益與現金流")
 inp("tax", "有效稅率（預測期）", "%", 0.13, 0.16, 0.19, "Interested-party", fs("txt.guid_tax_q4.2026q3"), "2026Q4 指引 15–17% 中點；延用到預測期")
@@ -239,7 +242,7 @@ inp("bb_t", "回購目標（FY2027 起每年，現金足夠時）", "US$B", 0, 0
 inp("min_cash", "最低現金", "US$B", None, 40, None, "Assumed", "判斷")
 inp("mat_27", "債務到期 FY2027（2026-09-30 一年內到期）", "US$B", None, fv("debt.current.20260930") / 1000, None, "Verified", fs("debt.current.20260930"), "其他年度到期即再融資（不影響淨現金），未逐年列")
 inp("ag_pay", "多州檢察長協議年付款（12.7B ÷ 10 年）", "US$B", None, round(fv("legal.agSettle.total") / 1000 / 10, 3), None, "Derived", fs("legal.agSettle.total"),
-    "chat 端審查第 3 條：留在現金流與 DCF；推定 FY2027–FY2036 每年等額（Assumed）；FY2033 以後 4 期以 WACC 折現列類債")
+    "chat 端審查第 3 條：留在現金流與 DCF；推定 FY2027–FY2036 每年等額（Assumed）；FY2033 以後 4 期以 WACC 折現列類債。資料缺口：流動法律應計 6.87 → 11.58（+4.7），第一年付款可能大於 1.27（前高後低），影響 FY2027 收支關卡、不影響目標價，待 10-Q 完整 PDF")
 inp("contg", "協議或有金額（尚未認列；只進 Sens）", "US$B", None, 0.0, fv("legal.agContingent") / 1000, "Verified", fs("legal.agContingent"), "chat 端審查第 3 條：列 Sens 一列，不進基準", judg=True)
 
 sec("H. 共識（Recon；MarketScreener 頁面報價日 2026-10-08，Q3 財報前）")
@@ -665,8 +668,8 @@ for s in "ABC":
     pput(s, "tx", "所得稅", "US$B", v, note="9M26 含 Q1 CAMT 稅務利益 −8.03")
     pput(s, "ni", "淨利（財報口徑）", "US$B", {p: f"={COL[p]}{P['pt']}-{COL[p]}{P['tx']}" for p in YK}, bold=True)
     pput(s, "chk5", "檢查：實績淨利 − Q 頁", "US$B", {p: f"={COL[p]}{P['ni']}-{QA('ni', p)}" for p in ("24", "25", "1H")}, "0.000")
-    pput(s, "ot_ni", "  一次性項目稅後（法律不可抵稅、遣散按 tax、稅務利益全額）", "US$B",
-         {"1H": "=-(ot_legal_q2+ot_legal_q3)*(1-(1-ot_legal_nd)*tax)-ot_sev_q2*(1-tax)+ot_tax_q1", **{p: 0 for p in FC}, "26": f"=E{r}+F{r}"})
+    pput(s, "ot_ni", "  一次性項目稅後（法律依 8-K 排除後 EPS 隱含稅盾、遣散按 tax、稅務利益全額）", "US$B",
+         {"1H": "=-(ot_legal_q2+ot_legal_q3)*ot_legal_at-ot_sev_q2*(1-tax)+ot_tax_q1", **{p: 0 for p in FC}, "26": f"=E{r}+F{r}"})
     pput(s, "pref", "特別股股利", "US$B", {"1H": 0, "2H": "=pref_2H", "26": f"=E{r}+F{r}", 27: "=pref_27", 28: "=pref_28", 29: "=pref_29", 30: 0, 31: 0, 32: 0})
     pput(s, "nic", "歸屬普通股淨利", "US$B", {p: f"={COL[p]}{P['ni']}-{COL[p]}{P['pref']}" for p in ["1H"] + FC + ["26"]})
     P["she"] = r; r += 1; P["sh"] = r; r += 1
@@ -1042,16 +1045,25 @@ SENS_CASES = [
     ("g0_q", "起始年增改用 2026Q3 單季", None, "hi", "近四季 → 2026Q3"),
     ("pA", "情境 A 價格提升幅度", "lo", "hi", "5%／15%（只影響 A）"),
     ("pC", "情境 C 價格消退幅度", "lo", "hi", "−15%／−5%（只影響 C）"),
-    ("inc_m", "價格差額增量 EBITDA 率", "lo", "hi", "75%／95%"),
     ("mb_q3", "FoA EBITDA 率改用 2026Q3 單季", None, "hi", "9M26 → 2026Q3（皆排除一次性）"),
     ("gl_other", "Other revenue 長期年增", "lo", "hi", "8%／25%"),
     ("rl_loss32", "FY2032 Reality Labs 虧損", "lo", "hi", "0／10"),
     ("rl_loss27", "2027 Reality Labs 虧損", "lo", "hi", "12／18"),
+    ("rl_loss26", "2026 Reality Labs 虧損", "lo", "hi", "18／19"),
+    ("rl_da_sh", "折舊中 RL 占比", "lo", "hi", "2%／8%"),
+    ("he_all", "IF_HoldEcon 四世代同時取低／高（讀法 2 影子效益的每 MW 值）", "lo", "hi", "Tokenomics 低成本／高成本欄（GB300 10.89 → 8.43／18.53）"),
     ("capex_g", "2026 資本支出指引取區間兩端", "lo", "hi", "135／145"),
     ("cx27_k", "M6：FY2027 資本支出係數", "lo", "hi", "2026 年增率 × 1/4／3/4"),
     ("a28", "FY2028 新增 MW ÷ FY2027", "lo", "hi", "0.8／1.2"),
     ("cx_na", "非 AI 資本支出占營收", "lo", "hi", "2%／7%"),
     ("cip_ai", "在建工程中 AI 占比", "lo", "hi", "80%／100%"),
+    ("cip_ai", "在建工程不另增 MW（cip_ai＝0；對齊 Alphabet 修正三的 MW 處理）", "zero", None, "90% → 0（在建工程仍照時程折舊）"),
+    ("cip_it", "在建工程中 IT 占比", "lo", "hi", "50%／70%"),
+    ("ai_23", "FY2023 AI 占資本支出", "lo", "hi", "50%／90%（只影響 2029 汰換）"),
+    ("phi_q4", "Q4 26 批次當期折舊比例", "lo", "hi", "0.0625／0.25（高＝Alphabet 口徑）"),
+    ("phi_0", "年度批次當期折舊比例", "lo", "hi", "0／0.5"),
+    ("life_fac", "機房折舊年限", "lo", "hi", "15／25 年"),
+    ("life_na", "非 AI 折舊年限", "lo", "hi", "8／15 年"),
     ("selfb", "自建機房比例", "lo", "hi", "75%／95%"),
     ("life_it", "AI IT 折舊年限", "lo", "hi", "5／7 年"),
     ("rent_l", "租用算力（尚未起租租賃＋第三方雲端；M4）", None, "hi", "0 → 17.8／年（FY2029 滿載）"),
@@ -1059,6 +1071,9 @@ SENS_CASES = [
     ("legal_oth", "其他法律應計不扣", "lo", None, "10.0 → 0"),
     ("fwd_on", "遠期出售不交割", "lo", None, "計入 → 不計"),
     ("tax", "有效稅率", "lo", "hi", "13%／19%"),
+    ("wc_k", "營運資金 ÷ 營收增量", "lo", "hi", "−2%／＋2%"),
+    ("conv_sh", "強制轉換特別股轉換股數", "lo", None, "20.0M → 17.0M 股"),
+    ("kd_sp", "公司債利差", "lo", "hi", "0.4%／1.0%"),
     ("dil", "股數年稀釋", "lo", "hi", "0%／2%"),
     ("bb_t", "回購目標", None, "hi", "0 → 26.2／年"),
     ("wacc_adj", "WACC", "lo", "hi", "−1pt／＋1pt"),
@@ -1071,7 +1086,7 @@ SENS_CASES = [
     ("sbc_add", "DCF 加回股權報酬", None, "hi", "不加回 → 加回（稅後）"),
 ]
 SE["A1"] = "Sens — 一次改一個輸入（In 頁敏感度低／高值），整本活頁簿以 LibreOffice 重算後的加權目標價（Val 頁）；由 meta/make_v01.sh（SENS=1）產生，建置時寫入（數值）"
-SE["A2"] = "相對基準＝案例目標價 ÷ 基準加權目標價 − 1；龍捲風依絕對值排序（HTML）。H、I 欄＝收支關卡 B（五年）與 FY2027 資本支出（B）"
+SE["A2"] = "相對基準＝案例目標價 ÷ 基準加權目標價 − 1；龍捲風依絕對值排序（HTML）。H、I 欄＝收支關卡 B（五年）與 FY2027 資本支出（B）。inc_m（價格情境差額的增量 EBITDA 率）不列：A、C 對稱且權重相同，對加權目標價結構上恆為 0，只影響情境間距。gl_rl（RL 營收長期年增）亦不列：RL 營業損益依指引路徑設定，營收只經非 AI 資本支出影響目標價，重算變動小於 0.001%（−5%／15%：843.94／843.95）"
 hdr(SE, 3, ["驅動", "設定", "方向", "加權目標價", "相對基準", "鍵", "說明", "收支關卡 B（五年）", "FY2027 資本支出（B）"])
 r = 4
 SE_ROWS = []

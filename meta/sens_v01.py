@@ -47,10 +47,10 @@ IN = openpyxl.load_workbook(base_raw)["In"]
 row = rm["IN_ROW"]
 jobs = {"base|base": []}
 for key, side, val, _r in rm["SE_ROWS"]:
-    if val == "hi1":
-        v = 1
-    else:
-        v = IN.cell(row[key], 4 if val == "lo" else 6).value
+    if key == "he_all":                                  # IF_HoldEcon 四世代同時取低／高
+        jobs[f"{key}|{side}|{val}"] = [(k, IN.cell(row[k], 4 if val == "lo" else 6).value) for k in ("he_h", "he_b2", "he_b3", "he_vr")]
+        continue
+    v = 1 if val == "hi1" else (0 if val == "zero" else IN.cell(row[key], 4 if val == "lo" else 6).value)
     jobs[f"{key}|{side}|{val}"] = [(key, v)]
 res = {}
 with ThreadPoolExecutor(max_workers=int(os.environ.get("JOBS", "2"))) as ex:
