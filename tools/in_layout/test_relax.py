@@ -18,7 +18,7 @@ def make(rows, sec):
     for k, d, e, f, h in sec:
         ws.cell(r, 1, k)
         for c, v in zip((4, 5, 6), (d, e, f)):
-            ws.cell(r, c, v if not isinstance(v, str) else "=E%d" % rows_at[v])
+            ws.cell(r, c, v if not isinstance(v, str) or v.startswith("=") else "=E%d" % rows_at[v])
         ws.cell(r, 8, h); r += 1
     p = tempfile.mktemp(suffix=".xlsx"); wb.save(p)
     return p
@@ -50,6 +50,17 @@ cases = [
      [W], False),
     ("同族兄弟不受豁免影響", base + [("g_A", "成長", "非本模型情境驅動"), ("g_C", "成長", "")],
      [W], False),
+]
+# 2026-10-30 補舊缺口：=0 公式不放行；情境字母須與所在欄一致
+cases += [
+    ("D 欄寫 =0 公式 → 失敗", base + [("gm_adj_C28", "情境 C：毛利率調整", "")],
+     [W, ("gm_adj", "=0", 0, "gm_adj_C28", "引用 In 頁 gm_adj_C28；情境 A 無專屬輸入列")], False),
+    ("情境 C 列放在 D 欄（情境 A）→ 失敗", base + [("gm_adj_C28", "情境 C：毛利率調整", "")],
+     [W, ("gm_adj", "gm_adj_C28", 0, 0, "引用 In 頁 gm_adj_C28；情境 C 無專屬輸入列")], False),
+    ("同族兄弟 A／C 對調欄位 → 失敗", base + [("g_A", "成長", ""), ("g_C", "成長", "")],
+     [W, ("g", "g_C", 0, "g_A", "引用 In 頁 g_C／g_A")], False),
+    ("同族兄弟正確欄位 → 通過", base + [("g_A", "成長", ""), ("g_C", "成長", "")],
+     [W, ("g", "g_A", 0, "g_C", "引用 In 頁 g_A／g_C")], True),
 ]
 ok = all(run(*c) for c in cases)
 sys.exit(0 if ok else 1)
