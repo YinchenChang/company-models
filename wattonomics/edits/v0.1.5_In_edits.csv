@@ -1,0 +1,22 @@
+key,col,old,new,source,reason
+cp_orcl_sal,J,1383,922,J_review_2027 J 段,拆出第 1 棟 461（cp_orcl_sal_b1，2027-12）
+cp_orcl_shk1,J,200,600,J_review_2027 J 段,"Epoch 2027 年底前 420／1,400 MW-IT＝30% × 2,000 設施"
+cp_orcl_shk1,L,8,11,J_review_2027 J 段,Epoch 2027-11-18 達 420 MW-IT
+cp_orcl_shk2,J,1800,1400,J_review_2027 J 段,"總量 2,000 設施不變，2027 部分移至 shk1"
+cpx_oai_lord,N,0,1,J_review_2027 J 段,Epoch 2027-03-01 214 MW-IT（J 段複核屬實）
+cpx_nbis_pa,J,1200,260,J_review_2027 J 段,只計 2027 首期；其餘無 2027 證據
+cpx_nbis_pa,L,12,10,J_review_2027 J 段,首期月份
+cpx_nbis_pa,C,未說明,設施,J_review_2027 J 段,口徑
+cpx_nbis_pa,N,0,1,J_review_2027 J 段,J 段複核後納入
+cpx_nbis_pa,G,,"J#23（J 段複核：屬實）；""260 MW available by October 2027""（v0.1.5 前：A#101（未抽查）；不入（只用 C 段屬實或已更正列））",J_review_2027 J 段,說明欄
+cpx_nbis_lpr,J,310,70,J_review_2027 J 段,只計 2027 首期；其餘無 2027 證據
+cpx_nbis_lpr,C,未說明,設施,J_review_2027 J 段,口徑
+cpx_nbis_lpr,E,Interested-party,Derived,J_review_2027 J 段,標記
+cpx_nbis_lpr,N,0,1,J_review_2027 J 段,J 段複核後納入
+cpx_nbis_lpr,G,,"J#24（J 段複核：屬實）；Caverion: 70 MW first-phase substation, spring 2027 (upper bound)（v0.1.5 前：A#99、S#81（I 段：310 為完工容量，2027 只有首期、量未揭露）；不入）",J_review_2027 J 段,說明欄
+cp_orcl_sal,G,,v0.1.5：第 1 棟 461 拆出為 cp_orcl_sal_b1（2027-12；J#20）；A#75（屬實，設施）,J_review_2027 J 段,說明欄
+cp_orcl_shk1,G,,v0.1.5：依 Epoch 2027 時程 200→600 設施、2027-11（J#26）；A#72（屬實，設施 2.0 GW）；C 段更正首棟 2027-08（B#10）；10 棟之 1 [Derived],J_review_2027 J 段,說明欄
+cp_orcl_shk2,G,,"v0.1.5：1,800→1,400（2027 部分移 shk1；J#26）；A#72；B#10 全站 2028-11（Epoch）",J_review_2027 J 段,說明欄
+cpx_oai_lord,G,,v0.1.5：Epoch 2027-03-01 214 MW-IT 複核屬實 → 納入（J#27）；B#15（未抽查）；不入（只用 C 段屬實或已更正列）,J_review_2027 J 段,說明欄
+cp_orcl_shk1,E,Analogy,Derived,J_review_2027 J 段,改依 Epoch 時程比例換算（Derived）
+cpx_oai_lord,E,Interested-party,Analogy,J_review_2027 J 段,納入依據為 Epoch 站點時間線（Analogy）
