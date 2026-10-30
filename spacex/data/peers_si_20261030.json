@@ -1,0 +1,60 @@
+{
+ "_readme": "SpaceX SI 分部同業（S9：CoreWeave、Oracle 雲、上市 AI 平台，依可得資料）。MarketScreener 估值頁 EV/EBITDA（各年 EV 為該站預估、EBITDA 為共識）；ORCL 自 alphabet/data/peers_cloud_20261008.json 複製（NTM 口徑，2026-10-07），未重抓。",
+ "asOf": "2026-10-23",
+ "retrieved": "2026-10-30",
+ "group": "si_ai_infra",
+ "label": "AI 基礎設施／雲",
+ "peers": [
+  {
+   "ticker": "CRWV",
+   "name": "CoreWeave",
+   "evEbitdaFy2026": 9.94,
+   "evEbitdaFy2027": 6.23,
+   "ev2026": {
+    "value": 75112,
+    "unit": "USD M"
+   },
+   "source": "MarketScreener 估值頁",
+   "url": "https://www.marketscreener.com/quote/stock/COREWEAVE-INC-185380761/valuation/",
+   "pageQuoteDate": "2026-10-23（收盤 54.24）",
+   "retrieved": "2026-10-30",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "ticker": "NBIS",
+   "name": "Nebius Group",
+   "evEbitdaFy2026": 41.5,
+   "evEbitdaFy2027": 11.9,
+   "ev2026": {
+    "value": 57170,
+    "unit": "USD M"
+   },
+   "source": "MarketScreener 估值頁",
+   "url": "https://in.marketscreener.com/quote/stock/NEBIUS-GROUP-8037501/valuation/",
+   "pageQuoteDate": "2026-10-23（收盤 158.74）",
+   "retrieved": "2026-10-30",
+   "tag": "[Derived]",
+   "note": "2026 EBITDA 剛轉正，FY2026 倍數偏高"
+  },
+  {
+   "ticker": "ORCL",
+   "name": "Oracle",
+   "ntmEvEbitda": 9.49,
+   "source": "複製 alphabet/data/peers_cloud_20261008.json",
+   "asOf": "2026-10-07",
+   "tag": "[Derived]",
+   "note": "財年 5 月；口徑為 NTM，與上兩家 FY 口徑不同"
+  }
+ ],
+ "median": {
+  "fy2027": {
+   "value": null,
+   "note": "只有 2 家有 FY2027（6.23、11.9），樣本不足，不計中位數；B 段以 Assumed 區間處理（S9）"
+  }
+ },
+ "gaps": [
+  "上市 AI 平台（模型商）無可比上市公司；未找到",
+  "Oracle 雲分部倍數無單獨市場數據"
+ ]
+}
