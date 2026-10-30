@@ -5,7 +5,7 @@ import openpyxl
 HERE = os.path.dirname(os.path.abspath(__file__))
 WD, OUT = sys.argv[1], sys.argv[2]
 os.makedirs(WD, exist_ok=True)
-G2C = os.path.join(HERE, "data", "g2cal_v02_20261030.json")
+G2C = os.path.join(HERE, "data", "g2cal_v021_20261030.json")   # v0.2.1 起（輸出路徑以參數為準）
 
 
 def run(k0, i):
