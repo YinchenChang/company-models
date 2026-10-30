@@ -1,6 +1,6 @@
-# Nebius 收支模型 v0.5 原始碼包
+# Nebius 個股模型 v0.5.2 原始碼包
 
-Nebius（NBIS）收支與評價模型；由 CRWV 模型 v4.5 模板（`YinchenChang/crwv-model` @ `01b13ad`）建立。下方「v3.5」至「v4.5」各節為模板沿革與技術說明（以 CoreWeave 為例），引擎與工具仍適用；Nebius 新增的結構（MW × 每 MW 收入主軸、首期營收校準、預付款、融資瀑布的可轉債步驟、可轉債八檔稀釋、其他事業與持股）、v0.3 的每 MW 收入 Tokenomics 錨定（見下方「v0.3」節）見交接檔 `docs/handoff/20261022_Nebius收支模型_交接檔_v0_5.md` 與 `company.json` 欄位說明。成品名稱＝`更新日_<meta.company>收支模型_v版本`（目前 `dist/20261022_Nebius收支模型_v0_5.html`／`.xlsx`）。主標題「預付款，能把 Backlog 變成現金嗎？」與副標題（佔位符由模型現值帶入）放 `company.json` → `texts.title`／`texts.subtitle`（v0.2）。
+Nebius（NBIS）個股模型（v0.5.2 起改稱；「收支模型」只指融資缺口與資金瀑布模組，依 repo `docs/plan/個股模型原則_命題加營收分部.md` 第 1 條）；由 CRWV 模型 v4.5 模板（`YinchenChang/crwv-model` @ `01b13ad`）建立。下方「v3.5」至「v4.5」各節為模板沿革與技術說明（以 CoreWeave 為例），引擎與工具仍適用；Nebius 新增的結構（MW × 每 MW 收入主軸、首期營收校準、預付款、融資瀑布的可轉債步驟、可轉債八檔稀釋、其他事業與持股）、v0.3 的每 MW 收入 Tokenomics 錨定（見下方「v0.3」節）見交接檔 `docs/handoff/20261030_Nebius個股模型_交接檔_v0_5_2.md` 與 `company.json` 欄位說明。成品名稱＝`更新日_<meta.company>個股模型_v版本`（v0.5.2 起；目前 `dist/20261030_Nebius個股模型_v0_5_2.html`／`.xlsx`；舊版移 `dist/_待刪除/`）。主標題「預付款，能把 Backlog 變成現金嗎？」與副標題（佔位符由模型現值帶入）放 `company.json` → `texts.title`／`texts.subtitle`（v0.2）。
 
 HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo 根目錄；建置產物寫到 `out/`（不納入版控），交付成品放 `dist/`。HTML 的函式庫模板為 `docs/template_v3_3.html`。
 
@@ -22,7 +22,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | app_pretty.js | 原 Oracle 模板的美化程式碼（取其中三段共用 UI） |
 | rm_andy.js | Andy 修改過的開關元件（說明改為浮動提示） |
 | build_html_portable.py | 組裝 HTML：`python3 build_html_portable.py 4.0 out/輸出.html 2026-09-24 [模板 HTML]`（模板省略時用 `docs/template_v3_3.html`；組裝順序：segA、模板段、segB、模板段、segC、模板段、segD、tail、segE） |
-| build_xlsx.py | 產生 Excel：`python3 build_xlsx.py [輸出.xlsx]`（預設 `out/<meta.updateDate>_<meta.company>收支模型_v<VLOG 最後一列>.xlsx`；版本號、更新日、市價日寫在導覽 A1（v4.3 起讀 vlog.py 與 company.json）；自同目錄讀取 vlog.py、rv_snap.json、company.json 與 `meta.consensusFile` 指定的共識資料檔；群組資訊寫到 `out/outline.json`） |
+| build_xlsx.py | 產生 Excel：`python3 build_xlsx.py [輸出.xlsx]`（預設 `out/<meta.updateDate>_<meta.company>個股模型_v<VLOG 最後一列>.xlsx`；版本號、更新日、市價日寫在導覽 A1（v4.3 起讀 vlog.py 與 company.json）；自同目錄讀取 vlog.py、rv_snap.json、company.json 與 `meta.consensusFile` 指定的共識資料檔；群組資訊寫到 `out/outline.json`） |
 | fix_outline.py | LibreOffice 重算後，補回 Excel 群組按鈕位置與收合狀態：`python3 fix_outline.py 檔案.xlsx [outline.json]`（預設讀 `out/outline.json`；v3.4 修正：outlinePr 依 schema 放在 tabColor 之後） |
 | fix_datatable.py | v4.1：LibreOffice 重算後，把模擬運算表（情境區間）由 `TABLE()` 一般公式還原為 Excel 的 `dataTable` 公式，保留算出的值：`python3 fix_datatable.py 檔案.xlsx` |
 | verify_ooxml.py | Excel 嚴格結構檢查（XML 格式、工作表與 sheetPr 子元素順序；v4.1 起另檢查模擬運算表存在且無殘留 `TABLE()`）；v3.4 新增 |
@@ -77,6 +77,13 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **C 方法並列**：A 現行（點位，評等依此）vs B（DCF 腿為 0 時權重全移至 EV/EBITDA，只作方法敏感度）。Excel：A 取「輸入與假設」H 區運算表的三情境值；B 為建置時快照（`scripts/tk_sens.js` 的 `evB`，附「快照已過期」檢查列）——LibreOffice 一個運算表只展開兩欄，再加一塊運算表會使重算殘留他情境值。
 - **D**：「錨定 × 倍數」表補 8.0x、9.0x。**E**：每 MW 收入說明句改為「Tokenomics 持有成本提供跨世代的正規化基準，市場合約價格證據決定倍數 k」。
 - **驗收**：`TOKENOMICS_DIR=<clone> DATE=2026-10-22 EXPECT=scripts/expect/v0_5_vs_v0_4.txt CRAWL_EXPECT=scripts/expect/v0_5_vs_v0_4_crawl.txt LEGACY=1 scripts/verify.sh --vs-dist`（以 v0.4 成品為 dist）。
+
+## v0.5.2 官方營運分部列、個股模型名稱、五級評等字樣（工作單 `docs/workorders/20261030_nebius_v0.5.2_官方分部列.md`）
+- **分部列**（原則第 2–3 條）：Excel「損益」頁最後新增三區——「營收分部｜全年口徑」（主列：Nebius AI cloud、Avride、TripleTen、分部間沖銷、分部合計、核對列）、「營收分部｜模型期」（Avride、TripleTen、沖銷＝`segments.runRate` 年化 × 模型期長度 [Assumed]；Nebius AI cloud＝總營收 − 其餘）、「營收分部｜歷史」（6-K 分部表揭露值 2025Q3、2025Q4〔只 AI cloud〕、2026Q1、2026Q2、年初至今；核對列＝0；年初至今合併營收對『輸入與假設』年初至今實際營收＝0）。只新增列、不位移既有列；總營收與目標價不變。資料在 `company.json` → `segments`（`segments.ytd` 列入 `asOf` 滾動檢查）。
+- **為何 AI cloud＝總營收 − 其餘**：模型的算力收入（MW × 每 MW 收入）以合併營收校準（`latestQuarter.revenue` × 4），輸出即合併營收；為維持總營收與目標價不變，非 AI cloud 分部自其中拆出。下一版（Q3 滾動）是否改以 AI cloud 分部營收校準可計費 MW、Avride／TripleTen 另給驅動，列為待判斷（會改目標價）。
+- **分部宣告檔**：`segments.json`（`model_sheet`＝「損益」）；`scripts/verify.sh` 步驟 5e 以 `tools/segment_check/check_segments.py` 的檢查函式核對本次建置的成品，並跑 `tools/in_layout/check_in_layout.py`（Nebius 為舊模板，無 In 頁三欄：不適用）。
+- **名稱與評等字樣**：成品檔名 `更新日_Nebius個股模型_v版本`；HTML 標題、簡報頁尾、Excel 導覽首列改稱「個股模型」。評等字樣依網站五級規則：模型的「賣出」→「放空」（門檻 −15% 與評等結果不變；本模型只有買進／中立／放空三級門檻，強力兩級未設）；共識評等分布「持有／賣出／強力賣出」→「中立／放空／強力放空」。版本紀錄的歷史列保留原字樣。
+- **驗收**：`DATE=2026-10-30 EXPECT=scripts/expect/v0_5_2_vs_v0_5_1.txt CRAWL_EXPECT=scripts/expect/v0_5_2_vs_v0_5_1_crawl.txt scripts/verify.sh --vs-dist`（以 v0.5.1 成品為 dist）：26 項全部通過；預期差異只有評等字樣、更新日與版本列。
 
 ## v0.5.1 Tokenomics v19.0 同步與收入上限第五列
 - **快照**：`model/CURRENT`＝`20261022_Tokenomics_v19.0.xlsx`（`1916a06`）；`data/tokenomics_snapshot_v19.0.json`（41 個名稱）。既有 38 個名稱數值與 v18.0 逐值相同，三情境目標價不變（保守 $29.5、基準 $21.4、積極 $19.4）。
@@ -176,7 +183,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - 「清單」依模型期順序填：FY26 下半年、FY27、FY28、FY29、FY30，共 5 格（除非另有說明）。
 - 文字中的來源標記沿用 [Verified]（已公開可查）、[Interested-party]（利害關係人說法）、[Derived]（由其他數字換算）、[Assumed]（判斷值）。
 - 「換公司」欄：**必改**＝公司特有的資料；**檢查**＝判斷值，要依新公司重新評估；**可沿用**＝口徑或方法，通常不必改。
-- 下表的「目前數值」是 Nebius v0.5.1 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
+- 下表的「目前數值」是 Nebius v0.5.2 的值（版本號讀 `vlog.py`、期間讀 `calendar_q.py`，由本檔自動帶入）；過長的文字只顯示開頭。表格由 `scripts/fields_doc.py` 產生，新增欄位時先在該檔補說明，再重新產生。
 
 ### `meta`：基本資料
 
@@ -184,7 +191,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 |---|---|---|---|---|
 | `meta.company` | 公司名稱 | 文字 | Nebius | 必改 |
 | `meta.ticker` | 股票代號 | 文字 | NBIS | 必改 |
-| `meta.updateDate` | 資料更新日 | 日期 | 2026-10-22 | 必改 |
+| `meta.updateDate` | 資料更新日 | 日期 | 2026-10-30 | 必改 |
 | `meta.priceDate` | 股價日期（現價的收盤日；畫面與 Excel 的現價日期都讀這格） | 日期 | 2026-10-06 | 必改 |
 | `meta.consensusFile` | 市場共識資料檔路徑（v4.3；只讀，由使用者查證後提供；建置時併入 HTML、Excel 讀同一檔） | 路徑 | data/consensus_nbis_202610… | 必改 |
 | `meta.sourceOrderNote` | 資料來源的先後與衝突時的取捨原則（畫面說明文字） | 文字 | 時序先 Q2 6-K 財報與股東信（8/12），再期… | 必改 |
@@ -204,7 +211,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 
 | 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
 |---|---|---|---|---|
-| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles、defaults.otherEbitda[0]、valuation.holdings、valuation.debtLike） | 必改 |
+| `asOf` | 滾動檢查：首期一次性金額與期初餘額所屬的已申報季度（鍵＝欄位路徑，清單定義在 calendar_q.py → ROLL_FIELDS）。每季 10-Q 後逐項更新數值，並把季度改為 calendar.latestQuarterFiled；缺漏或季度不符即建置失敗 | 物件（季度） | 物件（_note、defaults.capexFloorFY0、leases.onBalanceCash[0]、leases.operatingPayments[0]、leases.financePayments[0]、debt.amortization[0]、defaults.jvCommit[0]、scenarios.capexTemplate.div[0]、defaults.intCal、defaults.services[0]、defaults.atm、scenarios.leaseHighPath[0]、rpo.bucketWeights[0]、defaults.cash、debt.instruments、debt.convertible、valuation.netDebt、valuation.shares、defaults.ppeOpen、defaults.billableOpen、defaults.rpoOpen、defaults.rpoPendingAdd、defaults.eqCapShares、defaults.mwYearEnd、defaults.prepay.openBalance、debt.convertibles、defaults.otherEbitda[0]、valuation.holdings、valuation.debtLike、segments.ytd） | 必改 |
 
 ### `ytdActual`：年初至今實際數（10-Q；v4.5 前為 actual1H）
 
@@ -519,7 +526,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `defaults.m.util` | 利用率，各期 | % 清單 | 100、100、100、100、100 | 檢查 |
 | `defaults.m.revMW` | 每 MW 年收入，各期 | US$bn/MW 清單 | 0.00919255、0.00962184、0.0100189、0.0102641、0.0103953 | 必改 |
 | `defaults.m.aiShare` | AI 占比，各期（目前只做範圍檢查，未參與計算） | % 清單 | 100、100、100、100、100 | 可沿用 |
-| `defaults.m.fill` | 新產能簽約率：未被既有 RPO 占用的產能能賣出的比例 | % 清單 | 100、100、100、100、100 | 檢查 |
+| `defaults.m.fill` | 新產能簽約率：未被既有 RPO 占用的產能能售出的比例 | % 清單 | 100、100、100、100、100 | 檢查 |
 | `defaults.m.power` | 電價（overlay 開啟時才用） | $/MWh 清單 | 60、62、64、66、68 | 檢查 |
 | `defaults.m.pue` | 電力使用效率 PUE（overlay 用） | 倍 清單 | 1.2、1.2、1.2、1.2、1.2 | 檢查 |
 | `defaults.m.maint` | 維護成本（overlay 用） | US$m/MW 清單 | 0.15、0.15、0.16、0.16、0.17 | 檢查 |
@@ -568,10 +575,10 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `methodology.profitMarginTolPt` | 利潤類（調整後 EBITDA、調整後營業利益）須附差異原因的門檻：利潤率差超過此百分點（寫成比例，0.02＝2pt）；營收、CapEx、淨負債、MW 仍用 consensusGapTol 的比例門檻；不影響分歧判斷句（v4.4） | 比例 | 0.02 | 可沿用 |
 | `methodology.rating.buyUpsideMin` | 買進：空間（加權目標價 ÷ 現價 − 1）至少要達到的值 | 比例 | 0.25 | 可沿用 |
 | `methodology.rating.buyTvShareMax` | 買進：終值占企業價值須低於此值 | 比例 | 0.9 | 可沿用 |
-| `methodology.rating.sellUpsideMax` | 賣出：空間小於或等於此值即賣出；賣出門檻價＝現價 ×（1＋此值） | 比例（負數） | -0.15 | 可沿用 |
+| `methodology.rating.sellUpsideMax` | 放空：空間小於或等於此值即放空；放空門檻價＝現價 ×（1＋此值） | 比例（負數） | -0.15 | 可沿用 |
 | `methodology.rating.equityRaiseMaxMult` | 五期股權募資超過「現市值 × 此倍數」即禁止買進 | 倍 | 1.5 | 可沿用 |
-| `methodology.rating.sellUpsideMaxIfEquityOver` | 股權募資超標時，空間小於或等於此值即賣出 | 比例（負數） | -0.08 | 可沿用 |
-| `methodology.rating.sellMarginAlert` | 任一情境與賣出門檻的距離小於「現價 × 此值」時，判斷句另外揭露 | 比例 | 0.05 | 可沿用 |
+| `methodology.rating.sellUpsideMaxIfEquityOver` | 股權募資超標時，空間小於或等於此值即放空 | 比例（負數） | -0.08 | 可沿用 |
+| `methodology.rating.sellMarginAlert` | 任一情境與放空門檻的距離小於「現價 × 此值」時，判斷句另外揭露 | 比例 | 0.05 | 可沿用 |
 | `methodology.rating.tvShareWarn` | 終值占企業價值超過此值時提出警示（融資說明、檢查頁） | 比例 | 0.85 | 可沿用 |
 | `methodology.checks.capexPerMwBand` | 檢查頁：模型期 CapEx 強度（每 MW 百萬美元）的合理區間下端與上端（5a） | US$m/MW 清單 | 38、68 | 檢查 |
 | `methodology.checks.leaseVsCommitMin` | 檢查頁：表外租金路徑 ÷ 已承諾租約至少要達到的倍數（5a） | 倍 | 0.8 | 檢查 |
@@ -706,6 +713,18 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | `nebius.prepay` | Nebius 預付款與合約參數草稿（公司說法，只作對照或新欄位）；格式同上 | 物件 | 物件（shareOfDeals、capexCoverLo、capexCoverHi、recogYears、commitments） | 必改 |
 | `nebius.other` | Nebius 非核心事業與持股（Avride、TripleTen、ClickHouse、Toloka）草稿；格式同上 | 物件 | 物件（nonCoreEbitdaAnnual、clickhouseValuation、clickhouseStakeLo、clickhouseStakeHi、clickhouseBook、tolokaBook、avrideSafeLiab） | 必改 |
 | `nebius.perMw` | Nebius 每 MW 年收入三情境（Tokenomics 正向推導）、每 MW 資本支出、GPU 壽命、PUE 草稿；格式同上 | 物件 | 物件（revPerMWit、revPerMWfac、capexPerMWit、gpuLifeYears、pue、companyAcvCompare） | 必改 |
+
+### `segments`：官方營運分部（v0.5.2；個股模型原則第 2–3 條）
+
+| 欄位 | 意義 | 單位 | 目前數值 | 換公司 |
+|---|---|---|---|---|
+| `segments._note` | 營運分部區段的說明（v0.5.2；個股模型原則第 2–3 條；不進程式） | 文字 | 官方營運分部（v0.5.2；個股模型原則第 2–3 … | 可沿用 |
+| `segments.names` | 官方營運分部的列名稱（鍵 aiCloud／avride／tripleTen／elim；Excel『損益』分部列與 segments.json 的 label 使用同一名稱） | 物件（文字） | 物件（aiCloud、avride、tripleTen、elim） | 必改 |
+| `segments.latestPeriod` | 分部資料的最近一期（FYyyQn） | 文字 | FY26Q2 | 必改 |
+| `segments.hist` | 歷史各季分部營收（公司揭露值；periods、各分部、合併營收 total、來源 sources、標記、缺口說明 gapNote；null＝未揭露）；Excel『損益』「營收分部｜歷史」區與核對列讀此 | 物件（US$bn） | 物件（periods、aiCloud、avride、tripleTen、elim、total、sources、tag、gapNote） | 必改 |
+| `segments.ytd` | 年初至今各分部營收（所屬季度由 asOf → segments.ytd 檢查，滾動時須更新；分部合計＝total＝ytdActual.revenue，建置時檢查）；Excel 全年口徑分部列的首期實際部分 | 物件（US$bn） | 物件（aiCloud、avride、tripleTen、elim、total、source） | 必改 |
+| `segments.runRate` | 模型期非命題分部（Avride、TripleTen、分部間沖銷）的年化金額 base／lo／hi 與依據 [Assumed]；base 進 Excel（× 模型期長度），lo／hi 只列 | 物件（US$bn／年） | 物件（_note、avride、tripleTen、elim） | 檢查 |
+| `segments.shareLatest` | 最近一期各分部占合併營收比例（只作對照） | 物件（比例） | 物件（aiCloud、avride、tripleTen、elim、basis） | 必改 |
 
 ## v4.0 架構：公司資料單一來源
 - **company.json**：所有公司原始輸入（HTML 引擎與 Excel 共用）。換公司時先改這個檔；衍生值（情境 Billable 比率、Q3 新增 RPO 權重、債務合計與平均利率）留在 segA 開頭由程式推導。

@@ -54,7 +54,7 @@ assert D['billableOpen'] == int(CO['latestQuarter']['revenue'] * 4 / _REV0[_dsc]
 PCT_ = lambda xs: [x / 100 for x in xs]  # HTML 以百分點存、Excel 以比例存
   # 版本紀錄單一來源：vlog.py（HTML 端為 tail.js 的 VLOG）
 # -*- coding: utf-8 -*-
-"""把收支模型（CRWV 模板，現為 Nebius）轉成可重算的 Excel 活頁簿。
+"""把個股模型（CRWV 收支模型模板，現為 Nebius）轉成可重算的 Excel 活頁簿。
 所有計算格都是公式，輸入格為藍字，跨頁連結為綠字。"""
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
@@ -173,7 +173,7 @@ ws = wb.active
 ws.title = "導覽"
 ws.column_dimensions["A"].width = 118
 r = 1
-ws["A1"] = f"{CO['texts']['title']}｜{CO['meta']['company']} 收支與評價模型 — Excel 版 {VLOG_X[-1][0]}（更新 {CO['meta']['updateDate']}；與 HTML {VLOG_X[-1][0]} 同步；市價截至 {CO['meta']['priceDate']} 收盤）"  # v4.3：版本、日期改讀 vlog.py 與 company.json
+ws["A1"] = f"{CO['texts']['title']}｜{CO['meta']['company']} 個股模型 — Excel 版 {VLOG_X[-1][0]}（更新 {CO['meta']['updateDate']}；與 HTML {VLOG_X[-1][0]} 同步；市價截至 {CO['meta']['priceDate']} 收盤）"  # v4.3：版本、日期改讀 vlog.py 與 company.json
 ws["A1"].font = TITLE
 r = 3
 guide = [
@@ -559,7 +559,7 @@ for key, nm, fmt in [('periodEnd', "期末日", "@"), ('tEnd', "折現年數：�
     r = prow(r, nm, "" if key == 'periodEnd' else "年", CAL[key], fmt, "月數 ÷ 12", font=BLACK, key='cal_' + key)
     CAL_R[key] = IN['cal_' + key]
 assert len(PERIODS) == len(COLS), 'Excel 欄位固定為 5 期（首期＋4 個完整財年）'
-# v4.2：評等門檻（company.json → methodology.rating）；評價頁的評等代碼、賣出門檻價、判斷句與「檢查」頁都引用這裡
+# v4.2：評等門檻（company.json → methodology.rating）；評價頁的評等代碼、放空門檻價、判斷句與「檢查」頁都引用這裡
 RT = CO['methodology']['rating']
 RT_PCT = lambda x: (lambda v: f"{v:.0f}%" if v == int(v) else f"{v:.1f}%")(round(abs(x) * 100, 4))
 _MT = lambda x: f'IF({x}=INT({x}),TEXT({x},"0"),TEXT({x},"0.0"))'  # 倍數文字：整數不帶小數（與 HTML multTxt 同格式）
@@ -567,10 +567,10 @@ _PC = lambda x: _MT(f"ROUND(ABS({x})*100,4)") + '&"%"'  # 門檻百分比文字�
 r = section(ws, r, "評等門檻（空間＝加權目標價 ÷ 現價 − 1）", level=2)
 RT_BUY = gi(r, "買進：空間下限", "%", RT['buyUpsideMin'], "空間 ≥ 此值、終值占比 < 上限，且股權募資未超標 → 買進 [Assumed]", PCT); r += 1
 RT_TV = gi(r, "買進：終值占 EV 上限", "%", RT['buyTvShareMax'], "終值占比達此值以上不給買進 [Assumed]", PCT); r += 1
-RT_SELL = gi(r, "賣出：空間上限", "%", RT['sellUpsideMax'], "空間 ≤ 此值 → 賣出；賣出門檻價＝現價 ×（1 ＋ 此值） [Assumed]", PCT); r += 1
+RT_SELL = gi(r, "放空：空間上限", "%", RT['sellUpsideMax'], "空間 ≤ 此值 → 放空；放空門檻價＝現價 ×（1 ＋ 此值） [Assumed]", PCT); r += 1
 RT_EQ = gi(r, "股權募資上限（÷ 現市值）", "x", RT['equityRaiseMaxMult'], "五期股權募資超過現市值的此倍數：市場吸收能力存疑，禁止買進 [Assumed]", MULT); r += 1
-RT_SELL2 = gi(r, "股權募資超標時的賣出：空間上限", "%", RT['sellUpsideMaxIfEquityOver'], "股權募資超標且空間 ≤ 此值 → 賣出 [Assumed]", PCT); r += 1
-RT_MG = gi(r, "判斷句：距賣出門檻揭露（占現價）", "%", RT['sellMarginAlert'], "任一情境與賣出門檻的距離小於現價的此比例時，判斷句揭露該距離 [Assumed]", PCT); r += 1
+RT_SELL2 = gi(r, "股權募資超標時的放空：空間上限", "%", RT['sellUpsideMaxIfEquityOver'], "股權募資超標且空間 ≤ 此值 → 放空 [Assumed]", PCT); r += 1
+RT_MG = gi(r, "判斷句：距放空門檻揭露（占現價）", "%", RT['sellMarginAlert'], "任一情境與放空門檻的距離小於現價的此比例時，判斷句揭露該距離 [Assumed]", PCT); r += 1
 RT_TVW = gi(r, "終值占 EV 警示", "%", RT['tvShareWarn'], "超過此值表示結論由終值假設決定（「檢查」頁與 DCF 說明） [Assumed]", PCT); r += 1
 r += 1
 
@@ -1979,6 +1979,103 @@ vrow("全年 EPS（加回 SBC）", "US$",
                 else f"=({COLS[i]}{ni_v}+{SBCY}*{inref('模型期長度（年）', i)})/{COLS[i]}{shr_v}"),
      USD, BLACK, "＝(淨利＋SBC)÷股數；NOL 狀態無現金稅，SBC 全額加回")
 r += 1
+# ---------------------------------------------------------------------
+# v0.5.2：營收分部（官方營運分部；個股模型原則第 2–3 條，company.json → segments）。
+# 只新增列（接在本頁最後，不位移既有列）；總營收與目標價不變。模型期：Avride、TripleTen、沖銷＝年化金額 × 模型期長度 [Assumed]，
+# Nebius AI cloud＝總營收 − 三者（命題模組 MW × 每 MW 收入對應此分部）；全年口徑首期＝年初至今實際＋模型期。
+SG = CO.get('segments')
+if SG:
+    SGN = SG['names']; SKEYS = ['aiCloud', 'avride', 'tripleTen', 'elim']
+    assert abs(sum(SG['ytd'][k] for k in SKEYS) - SG['ytd']['total']) < 1e-6 and abs(SG['ytd']['total'] - YA['revenue']) < 1e-6, "segments.ytd 分部合計須＝total＝ytdActual.revenue"
+    for j, per in enumerate(SG['hist']['periods']):
+        _v = [SG['hist'][k][j] for k in SKEYS]
+        if None not in _v:
+            assert abs(sum(_v) - SG['hist']['total'][j]) < 1e-6, f"segments.hist {per}：分部合計 ≠ 合併營收"
+    RR = SG['runRate']
+
+    def _rr_note(k):
+        x = RR[k]
+        return f"[Assumed] 基準 {_n(x['base'])}（{x['basis']}）；區間 {_n(x['lo'])}–{_n(x['hi'])}（只列，不進目標價）"
+
+    # 區段一：全年口徑（主列；列名＝官方分部名稱）
+    r = section(ws, r, "營收分部｜全年口徑（官方營運分部；«FY0»）")
+    r = period_header(ws, r)
+    n_fy = r; n_md = n_fy + 7  # 全年區 6 列＋空列；模型期區：區段標題、表頭、3 列年化假設、4 列分部、核對
+    md_rows = {k: n_md + 2 + 3 + i for i, k in enumerate(SKEYS)}  # 模型期分部列列號
+    for i, k in enumerate(SKEYS):
+        vrow(SGN[k], "US$bn", (lambda k: lambda c: (f"={_n(SG['ytd'][k])}+{COLS[c]}{md_rows[k]}" if c == 0 else f"={COLS[c]}{md_rows[k]}"))(k), NUM, BLACK,
+             "«P0»＝«YTD» 實際（6-K 分部表）＋模型期；" + ("命題模組（MW × 每 MW 收入）對應本分部" if k == 'aiCloud' else "模型期為年化假設 × 期間長度（見下方模型期區）"))
+    seg_fy = [VR[SGN[k]] for k in SKEYS]
+    vrow("分部合計（含沖銷）", "US$bn", lambda c: "=" + "+".join(f"{COLS[c]}{x}" for x in seg_fy), NUM, BLACK, bold=True)
+    vrow("檢查：分部合計 − 合併營收（全年）", "US$bn", lambda c: f"=ROUND({COLS[c]}{VR['分部合計（含沖銷）']}-{COLS[c]}{fy_rev},6)", '0.000000', BLACK,
+         "應為 0；合併營收＝上方「全年總營收」")
+    assert r == n_fy + 6, (r, n_fy)
+    r += 1
+    # 區段二：模型期（«P0» 欄只含«STUBW»）
+    r = section(ws, r, "營收分部｜模型期（«P0» 欄只含«STUBW»；Nebius AI cloud＝總營收 − 其餘分部）")
+    r = period_header(ws, r)
+    rr_rows = {}
+    for k in ['avride', 'tripleTen', 'elim']:
+        nm = f"分部假設｜{SGN[k]} 年化營收"
+        ws.cell(row=r, column=1, value=nm).font = BLACK
+        ws.cell(row=r, column=2, value="US$bn／年").font = SMALL
+        c = ws.cell(row=r, column=3, value=RR[k]['base']); c.font = BLUE; c.number_format = '0.0000'; c.border = BOX
+        ws.cell(row=r, column=9, value=_rr_note(k)).font = SMALL
+        rr_rows[k] = r; r += 1
+    for k in ['aiCloud', 'avride', 'tripleTen', 'elim']:
+        assert r == md_rows[k], (k, r, md_rows[k])
+        if k == 'aiCloud':
+            vrow(SGN[k], "US$bn", lambda c: f"={COLS[c]}{rev_v}-" + "-".join(f"{COLS[c]}{md_rows[x]}" for x in ['avride', 'tripleTen', 'elim']), NUM, BLACK,
+                 "＝總營收（算力收入＋非算力服務）− Avride − TripleTen − 沖銷；算力收入以合併營收校準，故其餘分部自其中拆出")
+        else:
+            vrow(SGN[k], "US$bn", (lambda k: lambda c: f"=$C${rr_rows[k]}*{inref('模型期長度（年）', c)}")(k), NUM, BLACK, "＝年化假設 × 模型期長度")
+    vrow("檢查：分部合計 − 合併營收（模型期）", "US$bn",
+         lambda c: f"=ROUND(" + "+".join(f"{COLS[c]}{md_rows[x]}" for x in SKEYS) + f"-{COLS[c]}{rev_v},6)", '0.000000', BLACK, "應為 0；合併營收＝上方「總營收」")
+    r += 1
+    # 區段三：歷史（公司揭露值）
+    H = SG['hist']; hp = H['periods'] + [f"«YTDL»"]
+    r = section(ws, r, f"營收分部｜歷史（公司揭露值；6-K 分部表）")
+    r = period_header(ws, r, cols=hp)
+    hist_rows = {}
+    def _hv(k, j):
+        if j < len(H['periods']):
+            return H[k][j]
+        return SG['ytd'][k]
+    for k in SKEYS + ['total']:
+        nm = "合併營收（公司揭露）" if k == 'total' else SGN[k]
+        ws.cell(row=r, column=1, value=nm).font = BOLD if k == 'total' else BLACK
+        ws.cell(row=r, column=2, value="US$bn").font = SMALL
+        for j in range(len(hp)):
+            v = _hv(k, j)
+            if v is None:
+                continue
+            c = ws.cell(row=r, column=3 + j, value=v); c.font = BLUE; c.number_format = '0.0000'; c.border = BOX
+        if k == 'aiCloud':
+            ws.cell(row=r, column=9, value=f"{H['tag']}；2025Q3 分部名稱為「Nebius（core AI infrastructure）」").font = SMALL
+        if k == 'total':
+            ws.cell(row=r, column=9, value="«YTDL» 欄＝『輸入與假設』年初至今實際營收（見下方核對）").font = SMALL
+        hist_rows[k] = r; r += 1
+    ws.cell(row=r, column=1, value="檢查：分部合計 − 合併營收（歷史）").font = BLACK
+    ws.cell(row=r, column=2, value="US$bn").font = SMALL
+    for j in range(len(hp)):
+        if all(_hv(k, j) is not None for k in SKEYS):
+            c = ws.cell(row=r, column=3 + j, value=f"=ROUND(" + "+".join(f"{COLS[j]}{hist_rows[k]}" for k in SKEYS) + f"-{COLS[j]}{hist_rows['total']},6)")
+            c.number_format = '0.000000'; c.border = BOX; c.font = BLACK
+    _gap = [H['periods'][j] for j in range(len(H['periods'])) if any(H[k][j] is None for k in SKEYS)]
+    ws.cell(row=r, column=9, value="應為 0（公司揭露值）" + (f"；{'、'.join(_gap)} 未揭露 Avride、TripleTen、沖銷金額，不核對（見下方「資料缺口」）" if _gap else "")).font = SMALL
+    r += 1
+    ws.cell(row=r, column=1, value="核對：«YTDL» 揭露合併營收 − 模型年初至今實際營收").font = BLACK
+    ws.cell(row=r, column=2, value="US$bn").font = SMALL
+    c = ws.cell(row=r, column=3 + len(H['periods']), value=f"=ROUND({COLS[len(H['periods'])]}{hist_rows['total']}-{H_REV},6)"); c.number_format = '0.000000'; c.border = BOX; c.font = BLACK
+    ws.cell(row=r, column=9, value="應為 0").font = SMALL
+    r += 1
+    ws.cell(row=r, column=1, value="資料缺口").font = SMALL
+    ws.cell(row=r, column=9, value=H['gapNote']).font = SMALL
+    r += 1
+    ws.cell(row=r, column=1, value="來源").font = SMALL
+    ws.cell(row=r, column=9, value="；".join(f"{p}：{x}" for p, x in zip(H['periods'], H['sources']))).font = SMALL
+    r += 1
+r += 1
 PL = "'損益'!"
 ws = wb.create_sheet("評價_DCF與目標價")
 ws.column_dimensions["A"].width = 42
@@ -2200,24 +2297,24 @@ DT_NM = {k: CO['scenarios']['labels'][k] for k in DT_SC}
 DT_SHORT = {k: DT_NM[k].split(" ")[0] for k in DT_SC}
 _IW = "'輸入與假設'!"
 ws.cell(row=r, column=9, value=(f'="評等規則不變：空間 ≥"&{_PC(RT_BUY)}&" 且終值占比 <"&{_PC(RT_TV)}&"、股權募資 ≤"&{_MT(RT_EQ)}&" 倍現市值 → 買進；'
-                                f'空間 ≤−"&{_PC(RT_SELL)}&"，或股權募資 >"&{_MT(RT_EQ)}&" 倍且空間 ≤−"&{_PC(RT_SELL2)}&" → 賣出；其餘中立"')).font = SMALL
+                                f'空間 ≤−"&{_PC(RT_SELL)}&"，或股權募資 >"&{_MT(RT_EQ)}&" 倍且空間 ≤−"&{_PC(RT_SELL2)}&" → 放空；其餘中立"')).font = SMALL
 R0 = r
-def _code(px):  # 評等代碼：1＝買進、0＝中立、−1＝賣出（與 HTML rateCall 同規則；門檻引用『輸入與假設』F 區評等門檻）
+def _code(px):  # 評等代碼：1＝買進、0＝中立、−1＝放空（與 HTML rateCall 同規則；門檻引用『輸入與假設』F 區評等門檻）
     c = f"({px}/MAX({PX},0.01)-1)"
     return (f"IF(AND({c}>={RT_BUY},$C${R0+1}<{RT_TV},$C${R0+2}<={RT_EQ}),1,"
             f"IF(OR({c}<={RT_SELL},AND($C${R0+2}>{RT_EQ},{c}<={RT_SELL2})),-1,0))")
-_CALL = lambda cell: f'CHOOSE({cell}+2,"賣出","中立","買進")'
+_CALL = lambda cell: f'CHOOSE({cell}+2,"放空","中立","買進")'
 _T1 = lambda x: f'TEXT({x},"0.0")'
 _EVM = lambda m: (f"{DCF_T}*IF({DCF_BAD}=1,0,{WDCF})+MAX(0,(C{m0+1}*{m}-C{m0+3})/C{m0+4})*C{m0+5}*IF({DCF_BAD}=1,1,1-{WDCF})")
 rows_rg = [
     ("目標價區間｜點位（目前輸入的加權目標價）", [f"={TGT}"], USD),
     ("目標價區間｜終值占 EV（評等用）", [f"=C{d0+3}/MAX(ABS(C{d0+4}),1)*IF(C{d0+4}=0,1,SIGN(C{d0+4}))"], PCT),
     ("目標價區間｜股權募資 ÷ 現市值（評等用）", [f"=SUM('各期收支'!C{FRR['eq']}:G{FRR['eq']})/({PX}*{SH})"], MULT),
-    ("目標價區間｜點位評等代碼（1＝買進、0＝中立、−1＝賣出）", [f"={_code(TGT)}", f"={_CALL(f'C{R0+3}')}"], NUM0),
-    (f"目標價區間｜賣出門檻價（現價 × (1 − {RT_PCT(RT['sellUpsideMax'])})）", [f"={PX}*(1+{RT_SELL})"], USD),
+    ("目標價區間｜點位評等代碼（1＝買進、0＝中立、−1＝放空）", [f"={_code(TGT)}", f"={_CALL(f'C{R0+3}')}"], NUM0),
+    (f"目標價區間｜放空門檻價（現價 × (1 − {RT_PCT(RT['sellUpsideMax'])})）", [f"={PX}*(1+{RT_SELL})"], USD),
 ]
 for j, k in enumerate(DT_SC):
-    rows_rg.append((f"目標價區間｜{DT_NM[k]}（加權目標價／評等代碼／距賣出門檻）",
+    rows_rg.append((f"目標價區間｜{DT_NM[k]}（加權目標價／評等代碼／距放空門檻）",
                     [f"={_IW}D{DT_H+1+j}", f"={_IW}E{DT_H+1+j}", f"=C{R0+5+j}-$C${R0+4}"], USD))
 rows_rg += [
     ("目標價區間｜情境區間（下緣／上緣）", [f"=MIN(C{R0+5},C{R0+7})", f"=MAX(C{R0+5},C{R0+7})"], USD),
@@ -2239,7 +2336,7 @@ ws.cell(row=R0 + 5, column=9, value="引用『輸入與假設』底部模擬運�
 ws.cell(row=R0 + 10, column=9, value="＝DCF 採用值 × 有效權重 ＋ EV/EBITDA 腿（倍數換成兩端）× 有效權重").font = SMALL
 _A0, _A1, _B0, _B1 = f"C{R0+8}", f"D{R0+8}", f"C{R0+10}", f"D{R0+10}"
 _TH = f"$C${R0+4}"
-_mg = lambda j, k: (f'IF(ABS(E{R0+5+j})<{RT_MG}*{PX},"{DT_SHORT[k]}情境 $"&{_T1(f"C{R0+5+j}")}&"，"&IF(E{R0+5+j}<0,"距賣出門檻","高於賣出門檻")'
+_mg = lambda j, k: (f'IF(ABS(E{R0+5+j})<{RT_MG}*{PX},"{DT_SHORT[k]}情境 $"&{_T1(f"C{R0+5+j}")}&"，"&IF(E{R0+5+j}<0,"距放空門檻","高於放空門檻")'
                     f'&" $"&{_T1(_TH)}&" 僅 $"&{_T1(f"ABS(E{R0+5+j})")}&"。","")')
 _ns = '&" "&'.join(f'IF(D{R0+5+j}<>-1,"{DT_SHORT[k]}","")' for j, k in enumerate(DT_SC))
 _nsc = "+".join(f"(D{R0+5+j}<>-1)" for j in range(3))
@@ -2251,8 +2348,8 @@ text_rg = [
                         f'"目前點位"&IF(AND({EVEBITDA}>C{R0+9},{EVEBITDA}<D{R0+9}),"位於方法區間內",IF({EVEBITDA}>D{R0+9},"高於方法區間上緣","低於方法區間下緣"))'
                         f'&"（目前倍數 "&{_MT(EVEBITDA)}&"x）"))')),
     ("目標價區間｜判斷句", (f'=IF({_A1}<{PX},"情境區間上緣 $"&{_T1(_A1)}&" 低於現價 $"&TEXT({PX},"0.00")'
-                       f'&IF({_nsc}>0,"，但"&SUBSTITUTE(TRIM({_ns})," ","、")&"情境未達賣出門檻 $"&{_T1(_TH)},"：賣出在三個擴張情境下都成立"),'
-                       f'"情境區間上緣 $"&{_T1(_A1)}&" 不低於現價 $"&TEXT({PX},"0.00")&"：賣出並非在三個擴張情境下都成立")&"。"'
+                       f'&IF({_nsc}>0,"，但"&SUBSTITUTE(TRIM({_ns})," ","、")&"情境未達放空門檻 $"&{_T1(_TH)},"：放空在三個擴張情境下都成立"),'
+                       f'"情境區間上緣 $"&{_T1(_A1)}&" 不低於現價 $"&TEXT({PX},"0.00")&"：放空並非在三個擴張情境下都成立")&"。"'
                        + "".join("&" + _mg(j, k) for j, k in enumerate(DT_SC)))),
 ]
 TRROW = {}  # v4.3：文字列的列號（「摘要」頁引用）
@@ -2284,7 +2381,7 @@ for key, nm, fs, fmt, nt in [
     ('A', "方法並列｜A 現行加權目標價（DCF／EV/EBITDA 按權重；評等依此）", [f"={_IW}D{DT_H+1+j}" for j in range(3)], USD, "點位；三情境來自模擬運算表（保留其餘手動輸入）"),
     ('B', "方法並列｜B DCF 腿為 0 時權重全移至 EV/EBITDA（只作方法敏感度）", [_TSB['pair'][k] for k in DT_SC], USD, "DCF 腿（0 截斷）為 0 或 DCF 失效時＝100% EV/EBITDA 目標價；DCF 腿 > 0 時與 A 相同。B 只作方法敏感度；評等仍依 A。快照（scripts/tk_sens.js，HTML 引擎；下方檢查列以目前情境即時值核對）"),
     ('D', "方法並列｜B − A", None, USD, "DCF 腿為 0 時，A 把 45% 權重放在 0 上，所以 B 高於 A；差額就是『權重配置』的價值"),
-    ('G', "方法並列｜B 距賣出門檻", None, USD, "B 減賣出門檻價；負值＝仍低於賣出門檻"),
+    ('G', "方法並列｜B 距放空門檻", None, USD, "B 減放空門檻價；負值＝仍低於放空門檻"),
 ]:
     MP[key] = r
     ws.cell(row=r, column=1, value=nm).font = BLACK
@@ -2303,8 +2400,8 @@ ws.cell(row=r, column=9, value="改了任何輸入後快照不會自動更新；
 r += 1
 MP['txt'] = r
 ws.cell(row=r, column=1, value="方法並列｜結論").font = BOLD
-ws.cell(row=r, column=3, value=(f'=IF(MAX(C{MP["B"]}:E{MP["B"]})<$C${R0+4},"B 讀法三情境最高 $"&{_T1(f"MAX(C{MP["B"]}:E{MP["B"]})")}&"，仍低於賣出門檻 $"&{_T1(f"$C${R0+4}")}&"：評等結論不變（評等仍依 A）。",'
-                                    f'"B 讀法最高 $"&{_T1(f"MAX(C{MP["B"]}:E{MP["B"]})")}&" 不低於賣出門檻 $"&{_T1(f"$C${R0+4}")}&"：評等仍依 A，B 只作方法敏感度。")')).font = BLACK
+ws.cell(row=r, column=3, value=(f'=IF(MAX(C{MP["B"]}:E{MP["B"]})<$C${R0+4},"B 讀法三情境最高 $"&{_T1(f"MAX(C{MP["B"]}:E{MP["B"]})")}&"，仍低於放空門檻 $"&{_T1(f"$C${R0+4}")}&"：評等結論不變（評等仍依 A）。",'
+                                    f'"B 讀法最高 $"&{_T1(f"MAX(C{MP["B"]}:E{MP["B"]})")}&" 不低於放空門檻 $"&{_T1(f"$C${R0+4}")}&"：評等仍依 A，B 只作方法敏感度。")')).font = BLACK
 r += 2
 # v0.5a B：新產能簽約率敏感度（RPO 覆蓋以外；未簽約部分照建、CapEx 不變，只按簽約率產生收入）。值取自『每MW收入_錨定』G2 快照（建置後段填入）
 r = section(ws, r, "簽約率敏感度（v0.5a B）：RPO 覆蓋以外的新產能簽約率 100%／75%／50%（加權目標價；快照）")
@@ -2840,7 +2937,7 @@ def cons_items():
         add(S1, f"目標價｜{nm} 對照平均", [XC['mean']], "US$", XM, note=XC.get('note', ''))
         if num(XC.get('analysts')): add(S1, f"目標價｜{nm} 對照家數", [XC['analysts']], "家", XM)
         if XC.get('consensusRating'): add(S1, f"目標價｜{nm} 對照評等", [], "", XM, text=XC['consensusRating'])
-    for a, k in [("強力買進", 'strongBuy'), ("買進", 'buy'), ("持有", 'hold'), ("賣出", 'sell'), ("強力賣出", 'strongSell'), ("合計", 'total')]:
+    for a, k in [("強力買進", 'strongBuy'), ("買進", 'buy'), ("中立", 'hold'), ("放空", 'sell'), ("強力放空", 'strongSell'), ("合計", 'total')]:
         add(f"評等分布（{RA['month']}）", f"評等分布｜{a}", [RA[k]], "家", RA)
     SA, YR = "年度共識（FY26／FY27／FY28）", ["FY26", "FY27", "FY28"]
     for a, k, u in [("營收", 'revenue', "US$bn"), ("調整後 EBITDA", 'ebitda', "US$bn"), ("EBITDA 率", 'ebitdaMargin', "%"), ("EBIT", 'ebit', "US$bn"),
@@ -3485,20 +3582,20 @@ def srow(name, unit, vals, fmt=NUM, note=None, bold=False):
 _G = lambda x, pt=False: f'IF({x}<0,"−","+")&TEXT(ABS({x})*100,"0.0")&"{"pt" if pt else "%"}"'  # 與 HTML gapTxtQ 同格式
 r = 4
 r = section(ws, r, "1｜結論")
-srow("結論｜評等代碼（1＝買進、0＝中立、−1＝賣出）", "", [f"={VQ}{RG_PT_CODE}"], NUM0)
-srow("結論｜評等", "", [f"=CHOOSE(C{SM['結論｜評等代碼（1＝買進、0＝中立、−1＝賣出）']}+2,\"賣出\",\"中立\",\"買進\")"])
+srow("結論｜評等代碼（1＝買進、0＝中立、−1＝放空）", "", [f"={VQ}{RG_PT_CODE}"], NUM0)
+srow("結論｜評等", "", [f"=CHOOSE(C{SM['結論｜評等代碼（1＝買進、0＝中立、−1＝放空）']}+2,\"放空\",\"中立\",\"買進\")"])
 srow("結論｜點位（加權目標價）", "US$", [f"={VQ}{TGT}"], USD, bold=True)
 srow("結論｜現價", "US$", [f"={PX}"], USD)
 srow("結論｜空間", "%", [f"=C{r-2}/C{r-1}-1"], PCT)
 srow("結論｜情境區間（下緣／上緣）", "US$", [f"={VQ}{_A0}", f"={VQ}{_A1}"], USD)
 srow("結論｜方法區間（下緣／上緣）", "US$", [f"={VQ}{_B0}", f"={VQ}{_B1}"], USD)
-srow("結論｜賣出門檻價", "US$", [f"={VQ}{_TH}"], USD)
-srow("結論｜點位 − 賣出門檻", "US$", [f"=C{SM['結論｜點位（加權目標價）']}-C{r-1}"], USD)
+srow("結論｜放空門檻價", "US$", [f"={VQ}{_TH}"], USD)
+srow("結論｜點位 − 放空門檻", "US$", [f"=C{SM['結論｜點位（加權目標價）']}-C{r-1}"], USD)
 _s = lambda k: SM["結論｜" + k]
 srow("結論｜結論句", "", [(f'=C{_s("評等")}&"：點位 $"&TEXT(C{_s("點位（加權目標價）")},"0.0")&"，較現價 $"&TEXT(C{_s("現價")},"0.00")&" "'
                          f'&IF(C{_s("空間")}>=0,"高","低")&" "&TEXT(ABS(C{_s("空間")})*100,"0")&"%；情境區間 $"&TEXT(C{_s("情境區間（下緣／上緣）")},"0.0")&"–$"&TEXT(D{_s("情境區間（下緣／上緣）")},"0.0")'
                          f'&"，方法區間 $"&TEXT(C{_s("方法區間（下緣／上緣）")},"0.0")&"–$"&TEXT(D{_s("方法區間（下緣／上緣）")},"0.0")'
-                         f'&"；點位"&IF(C{_s("點位 − 賣出門檻")}<0,"低於","高於")&"賣出門檻 $"&TEXT(C{_s("賣出門檻價")},"0.0")&" 達 $"&TEXT(ABS(C{_s("點位 − 賣出門檻")}),"0.0")&"。"')],
+                         f'&"；點位"&IF(C{_s("點位 − 放空門檻")}<0,"低於","高於")&"放空門檻 $"&TEXT(C{_s("放空門檻價")},"0.0")&" 達 $"&TEXT(ABS(C{_s("點位 − 放空門檻")}),"0.0")&"。"')],
      bold=True)
 srow("結論｜情境判斷句", "", [f"={VQ}C{TRROW['目標價區間｜判斷句']}"])
 srow("結論｜方法並列句", "", [(f'="方法並列：A 現行 "&' + '&"／"&'.join(f'"$"&TEXT({VQ}{c}{MP["A"]},"0.0")' for c in "CDE") + f'&"（保守／基準／積極）；B（DCF 腿為 0 時權重全移 EV/EBITDA）"&' + '&"／"&'.join(f'"$"&TEXT({VQ}{c}{MP["B"]},"0.0")' for c in "CDE") + '&"，只作方法敏感度，評等仍依 A。"')])
@@ -3608,7 +3705,7 @@ if QC:  # v4.4：驗證點改為引用「季度追蹤」焦點季（company.json
         srow(f"驗證｜{_m['label']}（模型／共識／指引低／指引高／實際）", _m['unit'], [f"={_QTS}{c}{_fr}" for c in "CDFGI"],
              PCT if _m['unit'] == "%" else NUM, "共識、指引為 Interested-party")
         srow(f"驗證｜{_m['label']}｜句", "", [f"=INDEX({_QTS}$C${LINE[_k]}:${QCL[-1]}${LINE[_k]},{FOCUS})"], bold=True)
-srow("驗證｜評等分布（強力買進／買進／持有／賣出／強力賣出）", "家", [f"={CIR('評等分布｜' + a)}" for a in ("強力買進", "買進", "持有", "賣出", "強力賣出")], NUM0,
+srow("驗證｜評等分布（強力買進／買進／中立／放空／強力放空）", "家", [f"={CIR('評等分布｜' + a)}" for a in ("強力買進", "買進", "中立", "放空", "強力放空")], NUM0,
      f"{CONS['ratings']['month']}，合計 {CONS['ratings']['total']} 家 [Interested-party]")
 srow("驗證｜目標價（平均／中位數／最低／最高）", "US$", [f"={CIR('目標價｜' + a)}" for a in ("平均", "中位數", "最低", "最高")], USD,
      f"{CONS['priceTarget']['analysts']} 家；{CONS['priceTarget']['source']}，擷取 {CONS['priceTarget']['retrieved']} [Interested-party]")
@@ -3773,7 +3870,7 @@ import json as _json
 # 輸出位置相對於 repo 根目錄：預設 out/；可用第 1 個參數指定 xlsx 路徑（outline.json 一律寫在 out/）
 _OUT_DIR = _osrv.path.join(_osrv.path.dirname(_osrv.path.abspath(__file__)), "out")
 _osrv.makedirs(_OUT_DIR, exist_ok=True)
-_xlsx = _sysv.argv[1] if len(_sysv.argv) > 1 else _osrv.path.join(_OUT_DIR, f"{CO['meta']['updateDate'].replace('-', '')}_{CO['meta']['company']}收支模型_v{VLOG_X[-1][0][1:].replace('.', '_')}.xlsx")
+_xlsx = _sysv.argv[1] if len(_sysv.argv) > 1 else _osrv.path.join(_OUT_DIR, f"{CO['meta']['updateDate'].replace('-', '')}_{CO['meta']['company']}個股模型_v{VLOG_X[-1][0][1:].replace('.', '_')}.xlsx")
 _json.dump({k: v for k, v in OUTLINE.items()}, open(_osrv.path.join(_OUT_DIR, "outline.json"), "w"), ensure_ascii=False)
 # v4.5（5a-1）：說明文字中的期間佔位符（«YTD»、«VMD»…）換成目前日曆的字樣（calendar_q.tokens；目前日曆下與 v4.4 文字相同）
 for _ws in wb:

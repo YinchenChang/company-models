@@ -259,7 +259,7 @@ function zM() {
               className: `text-xs text-muted`,
               children: e
             }), (0, $.jsx)(`div`, {
-              className: Vj(`mt-1 font-display text-xl font-semibold tabular-nums`, n === 2 && (d.totals.operatingGap >= 0 ? `text-ok` : `text-bad`), n === 4 && (g ? `text-ok` : `text-bad`), n === 5 && (f.call.call === `買進` ? `text-ok` : f.call.call === `賣出` ? `text-bad` : `text-watch`)),
+              className: Vj(`mt-1 font-display text-xl font-semibold tabular-nums`, n === 2 && (d.totals.operatingGap >= 0 ? `text-ok` : `text-bad`), n === 4 && (g ? `text-ok` : `text-bad`), n === 5 && (f.call.call === `買進` ? `text-ok` : f.call.call === `放空` ? `text-bad` : `text-watch`)),
               children: t
             })]
           }, e))

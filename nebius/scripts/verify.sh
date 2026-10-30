@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 一次跑完建置與核對：季度層檢查 → Tokenomics 快照 --check（v0.2a）→ 建 HTML → 建 Excel → 重算 → fix_outline → fix_datatable → verify_ooxml → 快照值＝Excel 分頁值（v0.2a）→ 離線開啟檢查 → 三情境 xlx＋cmp31 → FY27 錨定 cmp31 → 季度層測試（v4.4）→ 期間滾動測試 → 目標價變動拆解工具測試。
+# 一次跑完建置與核對：季度層檢查 → Tokenomics 快照 --check（v0.2a）→ 建 HTML → 建 Excel → 重算 → fix_outline → fix_datatable → verify_ooxml → 快照值＝Excel 分頁值（v0.2a）→ 分部核對與 In 頁版面（v0.5.2）→ 離線開啟檢查 → 三情境 xlx＋cmp31 → FY27 錨定 cmp31 → 季度層測試（v4.4）→ 期間滾動測試 → 目標價變動拆解工具測試。
 # 任何一項失敗即以非零代碼結束。產物放在 repo 根目錄的 out/（不納入版控）。
 # 用法：[LEGACY=1] scripts/verify.sh [--vs-dist]（LEGACY=1：另跑 scripts/verify_legacy.sh，舊方法須重現 v0.2 成品；v0.2a）
 #   --vs-dist  另與 dist/ 內現行成品比對：crawl.py 畫面文字與 xl_diff.py --by-label（值與公式）皆須 0 差異（純結構修改的驗收）。
@@ -22,8 +22,8 @@ DIST_HTML="$(ls dist/*_v*.html | head -1)"
 DIST_XLSX="$(ls dist/*_v*.xlsx | head -1)"
 DATE_TAG="$(basename "$DIST_HTML" | cut -d_ -f1)"           # 20260924
 DATE="${DATE:-${DATE_TAG:0:4}-${DATE_TAG:4:2}-${DATE_TAG:6:2}}"  # 2026-09-24
-COMPANY="$(python3 -c "import json; print(json.load(open('company.json', encoding='utf-8'))['meta']['company'])")"  # 成品名稱＝更新日_公司收支模型_v版本（v0.1c：公司名讀 company.json → meta.company）
-NAME="${DATE//-/}_${COMPANY}收支模型_v${VER//./_}"
+COMPANY="$(python3 -c "import json; print(json.load(open('company.json', encoding='utf-8'))['meta']['company'])")"  # 成品名稱＝更新日_公司個股模型_v版本（v0.5.2 起；原為收支模型；v0.1c：公司名讀 company.json → meta.company）
+NAME="${DATE//-/}_${COMPANY}個股模型_v${VER//./_}"
 HTML="$OUT/$NAME.html"
 XLSX="$OUT/$NAME.xlsx"
 
@@ -103,6 +103,19 @@ step "5d. 快照值＝Excel「Tokenomics_取數」分頁值（scripts/check_toke
 if [[ -n "$TK_SNAP" ]]; then
   if r=$(python3 scripts/check_tokenomics_tab.py "$XLSX"); then echo "$r"; ok "$r"; else echo "$r"; bad "快照值＝Excel 分頁值"; fi
 else ok "Tokenomics_取數：不適用（無 tokenomics 區段）"; fi
+
+step "5e. 營收分部核對與 In 頁版面（個股模型原則第 3、8 條；tools/segment_check、tools/in_layout；v0.5.2）"
+if r=$(python3 - "$ROOT" "$XLSX" <<'PYEOF'
+import sys, os
+root, x = sys.argv[1], sys.argv[2]
+sys.path.insert(0, os.path.join(root, '..', 'tools', 'segment_check'))
+import check_segments as c
+c.latest_xlsx = lambda folder: x   # 核對本次建置的成品（工具預設讀 dist/ 最新檔）
+st, m = c.check(root)
+print(f'[{st}] ' + '；'.join(m)); sys.exit(0 if st == '符合' else 1)
+PYEOF
+); then echo "$r"; ok "分部核對：$r"; else echo "$r"; bad "分部核對（segments.json）"; fi
+if r=$(python3 "$ROOT/../tools/in_layout/check_in_layout.py" "$XLSX"); then echo "$r"; ok "In 頁版面：$r"; else echo "$r"; bad "In 頁版面"; fi
 
 step "5c. 離線開啟檢查（已決定事項 11：單一檔案、無網路請求、console 無錯誤、關鍵數字正常顯示）"
 if python3 scripts/check_offline.py "$HTML" "$XLSX"; then ok "離線開啟：新建 HTML"; else bad "離線開啟：新建 HTML"; fi

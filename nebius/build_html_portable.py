@@ -1,5 +1,5 @@
 # 用法：python3 build_html_portable.py <版本> <輸出路徑> <日期> [模板 HTML]（模板省略時用 repo 內的 docs/template_v3_3.html；相對路徑以目前目錄為準）
-# 模板可用任一版已發布的 HTML（例如 CRWV 時期的 20260923_CoreWeave收支模型_v3_3.html；成品名稱見 verify.sh：更新日_公司收支模型_v版本），只取其中的 React／Recharts 函式庫部分。
+# 模板可用任一版已發布的 HTML（例如 CRWV 時期的 20260923_CoreWeave收支模型_v3_3.html；成品名稱見 verify.sh：更新日_公司個股模型_v版本（v0.5.2 起；舊名收支模型）），只取其中的 React／Recharts 函式庫部分。
 import sys, os
 H = os.path.dirname(os.path.abspath(__file__))
 ver, out, date = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -37,8 +37,8 @@ j = s.find('</script>', i)
 html = s[:i] + app + s[j:]
 import re
 _nm, _th = _co['meta']['company'], _co['texts'].get('title') or _co['texts']['thesis']  # v0.1b：公司名稱與命題讀 company.json；v0.2：改用主標題 texts.title
-html = re.sub(r'<!-- .*?-->', f'<!-- {_th} · {_nm} 收支模型 v{ver}（更新 {date}）· 雙擊以 Chrome / Edge 開啟，不需安裝或連網 -->', html, count=1)
-html = re.sub(r'<title>.*?</title>', f'<title>{_th} · {_nm} 收支模型 v{ver} · {date} · 離線版</title>', html, count=1)
+html = re.sub(r'<!-- .*?-->', f'<!-- {_th} · {_nm} 個股模型 v{ver}（更新 {date}）· 雙擊以 Chrome / Edge 開啟，不需安裝或連網 -->', html, count=1)
+html = re.sub(r'<title>.*?</title>', f'<title>{_th} · {_nm} 個股模型 v{ver} · {date} · 離線版</title>', html, count=1)
 tag = ver.replace('.', '')
 html = html.replace('`v`, `1.0`', f'`v`, `{ver}`').replace('crwv_annual_v10', f'crwv_annual_v{tag}').replace('crwv_sites_v10', f'crwv_sites_v{tag}').replace('crwv_model_v10', f'crwv_model_v{tag}')
 open(out, 'w', encoding='utf-8').write(html)

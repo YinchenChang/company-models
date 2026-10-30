@@ -48,7 +48,7 @@ def keys(ws, new=False):
             if any(ws.cell(r, j).value is not None for j in range(2, ws.max_column + 1)):
                 errs.append(f'{ws.title} 第 {r} 列：A 欄空白但有內容，無法以列名稱配對')
             continue
-        lab = str(lab); lab = lab if re.fullmatch(r'v\d+\.\d+', lab) else norm(lab)  # 句中的版本號正規化（版本紀錄頁的列名稱本身就是版本號，不動）
+        lab = str(lab); lab = lab if re.fullmatch(r'v\d+\.\d+(?:\.\d+)?', lab) else norm(lab)  # v0.5.2：含三段版本號（v0.5.1）；句中的版本號正規化（版本紀錄頁的列名稱本身就是版本號，不動）
         if c.fill is not None and c.fill.fgColor is not None and c.fill.fgColor.rgb == SEC:
             sec = SEC_RENAME.get(lab, lab) if new else lab; k = ('§', sec)  # v4.5：區段標題列另立鍵，不與區段內同名的資料列（例如「加權目標價」）重複
         else:

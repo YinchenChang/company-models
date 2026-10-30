@@ -196,7 +196,7 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
       elQ(`span`, { key: `u`, style: { fontSize: 15, color: `var(--color-muted)` } }, `現價 $${Y(o.price, 2)} · 空間 ${cv.up >= 0 ? `+` : `−`}${hA(Math.abs(cv.up) * 100, 0)}`)
     ]),
     elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `repeat(3, 1fr)`, gap: 8, marginTop: 6 } }, [
-      [`情境區間`, `$${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}`], [TR.bLabel.replace(`（目前情境，`, `（`), `$${Y(TR.B[0], 1)}–$${Y(TR.B[1], 1)}`], [`賣出門檻（現價 −${pctQ(SELL_TH)}）`, `$${Y(TR.th, 1)}`]
+      [`情境區間`, `$${Y(TR.A[0], 1)}–$${Y(TR.A[1], 1)}`], [TR.bLabel.replace(`（目前情境，`, `（`), `$${Y(TR.B[0], 1)}–$${Y(TR.B[1], 1)}`], [`放空門檻（現價 −${pctQ(SELL_TH)}）`, `$${Y(TR.th, 1)}`]
     ].map(([a, b]) => elQ(`div`, { key: a, style: { background: `var(--color-card)`, borderRadius: 8, padding: `6px 10px` } }, [
       elQ(`div`, { key: `a`, style: { fontSize: 12, color: `var(--color-muted)` } }, a),
       elQ(`div`, { key: `b`, style: { fontSize: 18, fontWeight: 700, fontVariantNumeric: `tabular-nums` } }, b)]))),
@@ -229,7 +229,7 @@ function onePageQ({ cv, qv, TR, f, o, e, rv, scLabel, callTone }) {
       : `反向 DCF：計算中或無解。`),
     elQ(`p`, { key: `n`, style: { ...sm, margin: `3px 0 0`, fontSize: 11 } }, `隱含倍數＝（價格 × 股數＋共識 FY28 淨負債）÷ 共識 FY28 調整後 EBITDA。`)
   ]);
-  let RL = [[`強力買進`, RA.strongBuy], [`買進`, RA.buy], [`持有`, RA.hold], [`賣出`, RA.sell], [`強力賣出`, RA.strongSell]];
+  let RL = [[`強力買進`, RA.strongBuy], [`買進`, RA.buy], [`中立`, RA.hold], [`放空`, RA.sell], [`強力放空`, RA.strongSell]];
   let b4 = box(`b4`, `4｜驗證點與市場看法`, [
     ...(qv ? [elQ(`div`, { key: `q`, style: { fontSize: 13, fontWeight: 600 } }, [`${qv.focus.label} 財報${qv.focus.reportNote ? `（${qv.focus.reportNote}）` : ``}：模型｜共識｜指引`, QE ? elQ(TagQ, { key: `t`, t: QE.tag }) : null]),
       ...qv.keyLines.map((t, i) => elQ(`div`, { key: `k${i}`, style: { fontSize: 12, lineHeight: 1.35, marginTop: 2 } }, t))] : []),
@@ -407,8 +407,8 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
   let y = d.years, T = d.totals, b = rpoBridge(d), P = o.price, tgt = f.call.blended, up = f.call.upside;
   let scLabel = e.scenario === `custom` ? `自訂情境` : SCENARIOS[e.scenario]?.label;
   let ver = VLOG[VLOG.length - 1][0];
-  let foot = `${COMPANY_DATA.texts.title} · ${COMPANY_DATA.meta.company} 收支模型 ${ver}（${UPDATE_DATE}）· ${scLabel} · 現價 $${Y(P, 2)}（${COMPANY_DATA.meta.priceDate} 收盤）· 研究框架，不是投資建議`;
-  let callTone = f.call.call === `買進` ? `var(--color-ok)` : f.call.call === `賣出` ? `var(--color-bad)` : `var(--color-watch)`;
+  let foot = `${COMPANY_DATA.texts.title} · ${COMPANY_DATA.meta.company} 個股模型 ${ver}（${UPDATE_DATE}）· ${scLabel} · 現價 $${Y(P, 2)}（${COMPANY_DATA.meta.priceDate} 收盤）· 研究框架，不是投資建議`;
+  let callTone = f.call.call === `買進` ? `var(--color-ok)` : f.call.call === `放空` ? `var(--color-bad)` : `var(--color-watch)`;
 
   // 單位經濟（與頁首摘要同一公式）
   let rev30 = d.m.revMW[4] * (e.revScale ?? 1) * 1e3, util30 = d.m.util[4] / 100, eb30 = y[4].ebM;
@@ -427,19 +427,19 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
   let S = (kicker, title, body, tsize) => slides.push({ kicker: `附錄｜${kicker}`, title, body, tsize });
   let sumY = k => y.reduce((a, t) => a + (t[k] || 0), 0), money = (x, n) => `$${Y(x, n ?? 1)}bn`;
   let preIn = sumY(`prepayIn`), cover = prepayCoverQ(d), gap0 = Math.max(0, -T.preFinEnd), shM = x => `${Y(x * 1e3, 0)}m`;
-  let callCol = c => c === `買進` ? `var(--color-ok)` : c === `賣出` ? `var(--color-bad)` : `var(--color-watch)`;
+  let callCol = c => c === `買進` ? `var(--color-ok)` : c === `放空` ? `var(--color-bad)` : `var(--color-watch)`;
   let curSc = e.scenario === `custom` ? null : e.scenario;
 
   // 1｜封面兼結論：主標題＋一句答案＋三情境目標價 vs 現價
   {
     let hi = Math.max(P, ...scen.map(s => s.tgt), TR.th) * 1.08, X = x => `${Math.max(0, Math.min(100, x / hi * 100))}%`;
-    M(`${COMPANY_DATA.meta.company}（${COMPANY_DATA.meta.ticker}）收支模型 · ${ver} · ${UPDATE_DATE}`, COMPANY_DATA.texts.title, [
+    M(`${COMPANY_DATA.meta.company}（${COMPANY_DATA.meta.ticker}）個股模型 · ${ver} · ${UPDATE_DATE}`, COMPANY_DATA.texts.title, [
       elQ(`p`, { key: `a`, className: `sumQ-a sumQ-a2`, style: { fontSize: 25, lineHeight: 1.45, margin: 0, fontWeight: 600, color: `var(--color-accent)`, maxWidth: 1120 } }, headlineQ(d, rv, e)),
       elQ(`div`, { key: `g`, style: { display: `grid`, gridTemplateColumns: `1.05fr 1fr 1fr 1fr`, gap: 18, marginTop: 26 } }, [
         elQ(`div`, { key: `p`, className: `sumQ-a sumQ-a2`, style: { padding: `16px 20px`, borderRadius: 12, background: `var(--color-ink)`, color: `var(--color-accent-fg)` } }, [
           elQ(`div`, { key: `l`, style: { fontSize: 19, opacity: .8, fontWeight: 600 } }, `現價（${COMPANY_DATA.meta.priceDate}）`),
           elQ(`div`, { key: `v`, style: { fontSize: 60, fontWeight: 800, lineHeight: 1.1, fontVariantNumeric: `tabular-nums` } }, `$${Y(P, 2)}`),
-          elQ(`div`, { key: `s`, style: { fontSize: 18, opacity: .8, marginTop: 4 } }, `賣出門檻 $${Y(TR.th, 1)}`)
+          elQ(`div`, { key: `s`, style: { fontSize: 18, opacity: .8, marginTop: 4 } }, `放空門檻 $${Y(TR.th, 1)}`)
         ]),
         ...scen.map((s, i) => elQ(`div`, { key: s.sc, className: `sumQ-a sumQ-a3`, style: { padding: `16px 20px`, borderRadius: 12, background: `var(--color-surface)`, border: s.sc === curSc ? `2px solid var(--color-accent)` : `2px solid transparent` } }, [
           elQ(`div`, { key: `l`, style: { fontSize: 19, color: `var(--color-muted)`, fontWeight: 600, whiteSpace: `nowrap`, overflow: `hidden`, textOverflow: `ellipsis` } }, s.label),
@@ -447,11 +447,11 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
           elQ(`div`, { key: `s`, style: { fontSize: 18, color: `var(--color-muted)`, marginTop: 4 } }, `${s.call} · 較現價 ${s.tgt >= P ? `+` : `−`}${hA(Math.abs(s.tgt / P - 1) * 100, 0)}`)
         ]))
       ]),
-      // 價格刻度：三情境目標價、賣出門檻、現價
+      // 價格刻度：三情境目標價、放空門檻、現價
       elQ(`div`, { key: `r`, className: `sumQ-a sumQ-a3`, style: { position: `relative`, height: 100, margin: `34px 40px 0` } }, [
         elQ(`div`, { key: `ax`, style: { position: `absolute`, left: 0, right: 0, top: 32, height: 10, borderRadius: 5, background: `linear-gradient(90deg, var(--color-bad) 0%, var(--color-bad) ${X(TR.th)}, var(--color-surface) ${X(TR.th)})`, opacity: .35 } }),
         elQ(`div`, { key: `t`, style: { position: `absolute`, left: X(TR.th), top: 18, height: 38, width: 2, background: `var(--color-bad)` } }),
-        elQ(`div`, { key: `tl`, style: { position: `absolute`, left: X(TR.th), top: 60, transform: `translateX(-50%)`, fontSize: 18, color: `var(--color-bad)`, whiteSpace: `nowrap` } }, `賣出門檻 $${Y(TR.th, 1)}`),
+        elQ(`div`, { key: `tl`, style: { position: `absolute`, left: X(TR.th), top: 60, transform: `translateX(-50%)`, fontSize: 18, color: `var(--color-bad)`, whiteSpace: `nowrap` } }, `放空門檻 $${Y(TR.th, 1)}`),
         // 標籤相近時（距離 < 刻度 7%）改放在軸下方，避免重疊
         ...scen.map((s, i) => { let lv = (() => { let L = []; scen.forEach((q, j) => { let c = [0, 1, 2].find(l => !scen.some((w, k) => k < j && L[k] === l && Math.abs(w.tgt - q.tgt) < hi * .07)); L.push(c ?? 2) }); return L })()[i], low = lv > 0; // v0.2a：三個標籤相近時分三層（上、下、下二），避免重疊
           return elQ(`div`, { key: s.sc, style: { position: `absolute`, left: X(s.tgt), top: low ? 28 : 0, transform: `translateX(-50%)`, textAlign: `center`, display: `flex`, flexDirection: low ? `column-reverse` : `column`, alignItems: `center` } }, [
@@ -463,7 +463,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
           elQ(`div`, { key: `d`, style: { width: 0, height: 0, margin: `6px auto 0`, borderLeft: `11px solid transparent`, borderRight: `11px solid transparent`, borderTop: `18px solid var(--color-ink)` } })
         ])
       ]),
-      elQ(NoteQ, { key: `n` }, `三個擴張情境的目標價${scen.every(s => s.tgt < TR.th) ? `全部低於賣出門檻` : `並非全部低於賣出門檻`}：結論「${f.call.call}」（點位＝${scLabel}）。`)
+      elQ(NoteQ, { key: `n` }, `三個擴張情境的目標價${scen.every(s => s.tgt < TR.th) ? `全部低於放空門檻` : `並非全部低於放空門檻`}：結論「${f.call.call}」（點位＝${scLabel}）。`)
     ], 56);
   }
 
@@ -646,7 +646,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
           elQ(`div`, { key: `b`, style: { fontSize: 18, color: `var(--color-muted)` } }, `k_長約 ${Y(AM.long[px], 2)}`)])),
         ...K3.flatMap(sc => [elQ(`div`, { key: `r` + sc, className: `sumQ-a sumQ-a2`, style: { fontSize: 20, fontWeight: 700 } }, SCENARIOS[sc].label), ...K3.map(px => cell(sc, px))])
       ]),
-      elQ(`div`, { key: `l`, className: `sumQ-a sumQ-a3`, style: { marginTop: 14 } }, elQ(LegQ, { items: [[`低於賣出門檻 $${Y(TR.th, 1)}`, COLQ.real], [`門檻與現價之間`, COLQ.conv], [`高於現價 $${Y(P, 1)}`, `var(--color-ok)`]] })),
+      elQ(`div`, { key: `l`, className: `sumQ-a sumQ-a3`, style: { marginTop: 14 } }, elQ(LegQ, { items: [[`低於放空門檻 $${Y(TR.th, 1)}`, COLQ.real], [`門檻與現價之間`, COLQ.conv], [`高於現價 $${Y(P, 1)}`, `var(--color-ok)`]] })),
       elQ(NoteQ, { key: `n` }, `每 MW 年收入＝錨 × k（Tokenomics 持有成本提供正規化基準，市場合約價格證據決定 k）；三個容量情境的價格基準欄目標價 $${Y(cLo, 1)}–$${Y(cHi, 1)}。粗框＝目前情境。新股＝五期股權募資。`)
     ]);
   }
@@ -775,7 +775,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
         ...scen.map(s => elQ(`th`, { key: s.sc, style: { textAlign: `right`, padding: `6px 12px`, borderBottom: `2px solid var(--color-ink)`, color: s.sc === e.scenario ? `var(--color-accent)` : `var(--color-fg)` } }, s.label))])),
       elQ(`tbody`, { key: `b` }, rowsQ.map(([lab, fn], i) => elQ(`tr`, { key: lab, style: { background: i >= 7 ? `var(--color-surface)` : `transparent`, fontWeight: i === 7 ? 700 : 400 } }, [
         elQ(`td`, { key: `l`, style: { padding: `6px 12px`, borderBottom: `1px solid var(--color-border)` } }, lab),
-        ...scen.map(s => elQ(`td`, { key: s.sc, style: { padding: `6px 12px`, textAlign: `right`, borderBottom: `1px solid var(--color-border)`, color: i === 9 ? (s.call === `賣出` ? `var(--color-bad)` : s.call === `買進` ? `var(--color-ok)` : `var(--color-watch)`) : `inherit` } }, fn(s)))
+        ...scen.map(s => elQ(`td`, { key: s.sc, style: { padding: `6px 12px`, textAlign: `right`, borderBottom: `1px solid var(--color-border)`, color: i === 9 ? (s.call === `放空` ? `var(--color-bad)` : s.call === `買進` ? `var(--color-ok)` : `var(--color-watch)`) : `inherit` } }, fn(s)))
       ])))
     ]),
     elQ(`p`, { key: `j`, style: { fontSize: 16, lineHeight: 1.5, margin: `16px 0 0` } },
@@ -820,7 +820,7 @@ function SumQ({ d, f, e, o, m, tr: TR, active, rv }) {
     S(`評價方法`, `結論方向不變，但幅度取決於錨定年度與倍數：${Number.isFinite(l29) ? `FY29 × 6x 時 EV/EBITDA 腿為 $${Y(l29, 1)}，${l29 >= .95 * P ? `約等於` : l29 > P ? `高於` : `低於`}現價` : `見下表`}`, [
       elQ(EvGridQ, { key: `g`, st: e, o: o, g: eg, big: !0 }),
       elQ(`div`, { key: `n`, style: { marginTop: 22, fontSize: 17, lineHeight: 1.6 } }, [
-        elQ(`div`, { key: 1 }, `• 矩陣內加權目標價最高 $${Y(tmax, 1)}，${tmax < P ? `仍低於現價，賣出方向在所有組合下成立` : `部分組合高於現價，結論對方法選擇敏感`}。`),
+        elQ(`div`, { key: 1 }, `• 矩陣內加權目標價最高 $${Y(tmax, 1)}，${tmax < P ? `仍低於現價，放空方向在所有組合下成立` : `部分組合高於現價，結論對方法選擇敏感`}。`),
         elQ(`div`, { key: 2 }, hits.length ? `• 但 EV/EBITDA 腿單獨達到現價 95% 以上的組合：${hits.join('、')}——市場大致以穩態倍數上緣定價 FY28 以後的 EBITDA。` : `• EV/EBITDA 腿在所有組合下都低於現價的 95%。`),
         elQ(`div`, { key: 3 }, `• 因此結論實際依賴：(a) DCF 腿（權重 ${hA(eg.wd * 100, 0)} 取 $${Y(eg.dcf, 1)}）；(b) 倍數 ${Y(o.evEbitda, 1)}x 沿用模板的穩態上緣（未另估 ${COMPANY_DATA.meta.company}）。`)
       ]),

@@ -1,0 +1,22 @@
+{
+ "company": "Nebius",
+ "ticker": "NBIS",
+ "model_sheet": "損益",
+ "note": "官方營運分部（6-K 附件 99.1「Operating and Financial Review and Prospects」的 Revenues by operating segment；最近一期 Q2 2026，2026-08-12）：Nebius AI cloud、Avride、TripleTen，另列分部間沖銷（Eliminations）；分部合計＋沖銷＝合併營收。命題模組（MW × 每 MW 收入）對應 Nebius AI cloud；模型的算力收入以合併營收校準，模型期 Avride、TripleTen、沖銷為年化假設 [Assumed]，AI cloud＝合併營收 − 其餘（company.json → segments）。最近完整年度 FY2025 的 Avride、TripleTen、沖銷金額本輪未取得（Q4 股東信未揭露；20-F 附註頁面擷取截斷），FY2025 AI cloud＝9M 266.2＋Q4 214.2＝480.4（US$M，[Derived]）；下表 value 取最近一期年初至今（1H26，與模型年初至今實際營收一致）。金額 US$B。",
+ "official_segments": [
+  {"name": "Nebius AI cloud", "label": "Nebius AI cloud", "period": "1H26", "value": 0.9646, "unit": "US$B",
+   "source": "6-K 2026-08-12 附件 99.1（six months ended June 30, 2026）；company.json segments.ytd.aiCloud"},
+  {"name": "Avride", "label": "Avride", "period": "1H26", "value": 0.0019, "unit": "US$B",
+   "source": "同上；segments.ytd.avride"},
+  {"name": "TripleTen", "label": "TripleTen", "period": "1H26", "value": 0.0216, "unit": "US$B",
+   "source": "同上；segments.ytd.tripleTen"},
+  {"name": "Eliminations（分部間沖銷，非應報導分部，列在分部對帳）", "label": "分部間沖銷", "period": "1H26", "value": -0.0068, "unit": "US$B",
+   "source": "同上；segments.ytd.elim（合併營收 0.9813＝三分部＋沖銷）"}
+ ],
+ "sublines": [],
+ "check_labels": [
+  "檢查：分部合計 − 合併營收（全年）",
+  "檢查：分部合計 − 合併營收（模型期）",
+  "檢查：分部合計 − 合併營收（歷史）"
+ ]
+}
