@@ -62,8 +62,8 @@ scenarios:
     description: 折扣與免費額度 0.25→0.6，超出高端 0.4（C06 應轉 ERR）；有效單價下降、倒推 token 上升
     inputs: {"INP_031": 0.6}
   - id: k_rev_api_2025
-    description: 校準：FY2025 開放平台及 API 實際營收 1.9038→2.5（SRC_ZP_112）、營收總額同步 7.2433→7.8395（SRC_ZP_120）；按量計費倒推 token 上升，校準差距仍為 0
-    inputs: {"SRC_ZP_112": 2.5, "SRC_ZP_120": 7.8395}
+    description: 校準：FY2025 開放平台及 API 實際營收 1.9038→2.5（SRC_ZP_112）、營收總額同步 7.2433→7.8395（SRC_ZP_120）、官方雲端部署分部同步 1.9038→2.5（SRC_ZP_122；v0.1.2 起分部對帳 C101 需一致）；按量計費倒推 token 上升，校準差距仍為 0
+    inputs: {"SRC_ZP_112": 2.5, "SRC_ZP_120": 7.8395, "SRC_ZP_122": 2.5}
   - id: k2_rev_total_mismatch
     description: 只改 FY2025 開放平台及 API 實際營收（SRC_ZP_112 1.9038→2.5）、不改總額：分部合計≠年報總額（C17 應轉 ERR）
     inputs: {"SRC_ZP_112": 2.5}
