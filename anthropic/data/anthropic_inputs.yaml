@@ -205,3 +205,6 @@ rows:
 - {key: exp_mon_none, name: 持續擴張情境：變現比例（無需求）, index: —, unit: 比例, value: 0, lo: 0, hi: 0, tag: Decision, basis: 工作單 20261022 A 段步驟 4：變現比例 3 檔之 0（新增算力沒有對應營收）, range_why: 定義值, note: 新增 GW 的營收 ＝ 變現比例 × 當年基準每 VR 等值 GW 營收淨額}
 - {key: exp_mon_half, name: 持續擴張情境：變現比例（部分變現）, index: —, unit: 比例, value: 0.5, lo: 0.25, hi: 0.75, tag: Assumed, basis: 工作單 20261022 A 段步驟 4：變現比例 3 檔之 0.5；無實證依據, range_why: 中間檔 ±0.25, note: 同上}
 - {key: exp_mon_full, name: 持續擴張情境：變現比例（完全變現）, index: —, unit: 比例, value: 1, lo: 1, hi: 1, tag: Decision, basis: 工作單 20261022 A 段步驟 4：變現比例 3 檔之 1（新增 GW 的每 GW 營收 ＝ 當年基準每 VR 等值 GW 營收淨額）, range_why: 定義值, note: 同上}
+# ── 12. v0.1.6：正式 S-1（工作單 20261031）
+- {key: s1f_switch, name: W2 2026 上半年實際營收來源（1＝正式 S-1 16.286〔SRC_ANT_414〕；0＝草擬版轉述 16.3〔SRC_ANT_380，v0.1.1–v0.1.5〕）, index: 2026, unit: 開關, value: 1, lo: 0, hi: 1, tag: Decision, basis: 工作單 20261031 W2：2026 半校準基準的上半年實際改讀正式 S-1；其餘照 v0.1.1 U1 規則（Q3 實際＋Q4＝Q3 持平）, range_why: 開關, note: 設 0 可逐位元重現 v0.1.5 的基準（回歸；HTML 情境 v015）；u1_switch＝0 時本開關無作用}
+- {key: s1f_warn_threshold, name: 正式 S-1 與草擬版差距的 WARN 門檻（2026 上半年營收）, index: —, unit: 比例, value: 0.05, lo: 0.05, hi: 0.05, tag: Decision, basis: 工作單 20261031 停止條件：正式 S-1 與草擬版差異超過 5% 且會影響基準時先報告、不改基準, range_why: 門檻, note: Checks}
