@@ -1,6 +1,6 @@
-# Nebius 收支模型 v0.5 原始碼包
+# Nebius 個股模型 v0.5.2 原始碼包
 
-Nebius（NBIS）收支與評價模型；由 CRWV 模型 v4.5 模板（`YinchenChang/crwv-model` @ `01b13ad`）建立。下方「v3.5」至「v4.5」各節為模板沿革與技術說明（以 CoreWeave 為例），引擎與工具仍適用；Nebius 新增的結構（MW × 每 MW 收入主軸、首期營收校準、預付款、融資瀑布的可轉債步驟、可轉債八檔稀釋、其他事業與持股）、v0.3 的每 MW 收入 Tokenomics 錨定（見下方「v0.3」節）見交接檔 `docs/handoff/20261022_Nebius收支模型_交接檔_v0_5.md` 與 `company.json` 欄位說明。成品名稱＝`更新日_<meta.company>收支模型_v版本`（目前 `dist/20261022_Nebius收支模型_v0_5.html`／`.xlsx`）。主標題「預付款，能把 Backlog 變成現金嗎？」與副標題（佔位符由模型現值帶入）放 `company.json` → `texts.title`／`texts.subtitle`（v0.2）。
+Nebius（NBIS）個股模型（v0.5.2 起改稱；「收支模型」只指融資缺口與資金瀑布模組，依 repo `docs/plan/個股模型原則_命題加營收分部.md` 第 1 條）；由 CRWV 模型 v4.5 模板（`YinchenChang/crwv-model` @ `01b13ad`）建立。下方「v3.5」至「v4.5」各節為模板沿革與技術說明（以 CoreWeave 為例），引擎與工具仍適用；Nebius 新增的結構（MW × 每 MW 收入主軸、首期營收校準、預付款、融資瀑布的可轉債步驟、可轉債八檔稀釋、其他事業與持股）、v0.3 的每 MW 收入 Tokenomics 錨定（見下方「v0.3」節）見交接檔 `docs/handoff/20261030_Nebius個股模型_交接檔_v0_5_2.md` 與 `company.json` 欄位說明。成品名稱＝`更新日_<meta.company>個股模型_v版本`（v0.5.2 起；目前 `dist/20261030_Nebius個股模型_v0_5_2.html`／`.xlsx`；舊版移 `dist/_待刪除/`）。主標題「預付款，能把 Backlog 變成現金嗎？」與副標題（佔位符由模型現值帶入）放 `company.json` → `texts.title`／`texts.subtitle`（v0.2）。
 
 HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo 根目錄；建置產物寫到 `out/`（不納入版控），交付成品放 `dist/`。HTML 的函式庫模板為 `docs/template_v3_3.html`。
 
@@ -22,7 +22,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 | app_pretty.js | 原 Oracle 模板的美化程式碼（取其中三段共用 UI） |
 | rm_andy.js | Andy 修改過的開關元件（說明改為浮動提示） |
 | build_html_portable.py | 組裝 HTML：`python3 build_html_portable.py 4.0 out/輸出.html 2026-09-24 [模板 HTML]`（模板省略時用 `docs/template_v3_3.html`；組裝順序：segA、模板段、segB、模板段、segC、模板段、segD、tail、segE） |
-| build_xlsx.py | 產生 Excel：`python3 build_xlsx.py [輸出.xlsx]`（預設 `out/<meta.updateDate>_<meta.company>收支模型_v<VLOG 最後一列>.xlsx`；版本號、更新日、市價日寫在導覽 A1（v4.3 起讀 vlog.py 與 company.json）；自同目錄讀取 vlog.py、rv_snap.json、company.json 與 `meta.consensusFile` 指定的共識資料檔；群組資訊寫到 `out/outline.json`） |
+| build_xlsx.py | 產生 Excel：`python3 build_xlsx.py [輸出.xlsx]`（預設 `out/<meta.updateDate>_<meta.company>個股模型_v<VLOG 最後一列>.xlsx`；版本號、更新日、市價日寫在導覽 A1（v4.3 起讀 vlog.py 與 company.json）；自同目錄讀取 vlog.py、rv_snap.json、company.json 與 `meta.consensusFile` 指定的共識資料檔；群組資訊寫到 `out/outline.json`） |
 | fix_outline.py | LibreOffice 重算後，補回 Excel 群組按鈕位置與收合狀態：`python3 fix_outline.py 檔案.xlsx [outline.json]`（預設讀 `out/outline.json`；v3.4 修正：outlinePr 依 schema 放在 tabColor 之後） |
 | fix_datatable.py | v4.1：LibreOffice 重算後，把模擬運算表（情境區間）由 `TABLE()` 一般公式還原為 Excel 的 `dataTable` 公式，保留算出的值：`python3 fix_datatable.py 檔案.xlsx` |
 | verify_ooxml.py | Excel 嚴格結構檢查（XML 格式、工作表與 sheetPr 子元素順序；v4.1 起另檢查模擬運算表存在且無殘留 `TABLE()`）；v3.4 新增 |
@@ -77,6 +77,13 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **C 方法並列**：A 現行（點位，評等依此）vs B（DCF 腿為 0 時權重全移至 EV/EBITDA，只作方法敏感度）。Excel：A 取「輸入與假設」H 區運算表的三情境值；B 為建置時快照（`scripts/tk_sens.js` 的 `evB`，附「快照已過期」檢查列）——LibreOffice 一個運算表只展開兩欄，再加一塊運算表會使重算殘留他情境值。
 - **D**：「錨定 × 倍數」表補 8.0x、9.0x。**E**：每 MW 收入說明句改為「Tokenomics 持有成本提供跨世代的正規化基準，市場合約價格證據決定倍數 k」。
 - **驗收**：`TOKENOMICS_DIR=<clone> DATE=2026-10-22 EXPECT=scripts/expect/v0_5_vs_v0_4.txt CRAWL_EXPECT=scripts/expect/v0_5_vs_v0_4_crawl.txt LEGACY=1 scripts/verify.sh --vs-dist`（以 v0.4 成品為 dist）。
+
+## v0.5.2 官方營運分部列、個股模型名稱、五級評等字樣（工作單 `docs/workorders/20261030_nebius_v0.5.2_官方分部列.md`）
+- **分部列**（原則第 2–3 條）：Excel「損益」頁最後新增三區——「營收分部｜全年口徑」（主列：Nebius AI cloud、Avride、TripleTen、分部間沖銷、分部合計、核對列）、「營收分部｜模型期」（Avride、TripleTen、沖銷＝`segments.runRate` 年化 × 模型期長度 [Assumed]；Nebius AI cloud＝總營收 − 其餘）、「營收分部｜歷史」（6-K 分部表揭露值 2025Q3、2025Q4〔只 AI cloud〕、2026Q1、2026Q2、年初至今；核對列＝0；年初至今合併營收對『輸入與假設』年初至今實際營收＝0）。只新增列、不位移既有列；總營收與目標價不變。資料在 `company.json` → `segments`（`segments.ytd` 列入 `asOf` 滾動檢查）。
+- **為何 AI cloud＝總營收 − 其餘**：模型的算力收入（MW × 每 MW 收入）以合併營收校準（`latestQuarter.revenue` × 4），輸出即合併營收；為維持總營收與目標價不變，非 AI cloud 分部自其中拆出。下一版（Q3 滾動）是否改以 AI cloud 分部營收校準可計費 MW、Avride／TripleTen 另給驅動，列為待判斷（會改目標價）。
+- **分部宣告檔**：`segments.json`（`model_sheet`＝「損益」）；`scripts/verify.sh` 步驟 5e 以 `tools/segment_check/check_segments.py` 的檢查函式核對本次建置的成品，並跑 `tools/in_layout/check_in_layout.py`（Nebius 為舊模板，無 In 頁三欄：不適用）。
+- **名稱與評等字樣**：成品檔名 `更新日_Nebius個股模型_v版本`；HTML 標題、簡報頁尾、Excel 導覽首列改稱「個股模型」。評等字樣依網站五級規則：模型的「賣出」→「放空」（門檻 −15% 與評等結果不變；本模型只有買進／中立／放空三級門檻，強力兩級未設）；共識評等分布「持有／賣出／強力賣出」→「中立／放空／強力放空」。版本紀錄的歷史列保留原字樣。
+- **驗收**：`DATE=2026-10-30 EXPECT=scripts/expect/v0_5_2_vs_v0_5_1.txt CRAWL_EXPECT=scripts/expect/v0_5_2_vs_v0_5_1_crawl.txt scripts/verify.sh --vs-dist`（以 v0.5.1 成品為 dist）：25 項全部通過；預期差異只有評等字樣、更新日與版本列。
 
 ## v0.5.1 Tokenomics v19.0 同步與收入上限第五列
 - **快照**：`model/CURRENT`＝`20261022_Tokenomics_v19.0.xlsx`（`1916a06`）；`data/tokenomics_snapshot_v19.0.json`（41 個名稱）。既有 38 個名稱數值與 v18.0 逐值相同，三情境目標價不變（保守 $29.5、基準 $21.4、積極 $19.4）。

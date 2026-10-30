@@ -1,4 +1,4 @@
-# Nebius 收支模型 — Claude Code 工作守則
+# Nebius 個股模型 — Claude Code 工作守則（v0.5.2 起改稱；「收支模型」只指融資瀑布模組）
 
 （本檔不寫版本號；目前版本見 `docs/handoff/` 內交接檔檔名與 `vlog.py`。）
 
@@ -26,7 +26,7 @@ Nebius（NBIS）資金與評價模型，核心命題「預付款是否讓 backlo
 - 先讀交接檔與 README，再動手；純結構修改的驗收標準是「數字與畫面與前一版完全相同」。
 - 每次修改後必跑 `scripts/verify.sh`，全數通過才可提交。
 - 交付的 HTML 必須是「單一檔案、離線、本機雙擊即可開啟」（已決定事項 11）：所有 JS、CSS、字型、圖片、資料在建置時內嵌；不得有任何網路請求（CDN、Google Fonts、外部圖片、fetch／XHR、外部 import），也不得讀取旁邊的檔案。`verify.sh` 的「離線開啟檢查」（`scripts/check_offline.py`）必須通過。改到數字的修改，要在回報中列出受影響的關鍵數字（三情境目標價等）前後對照。
-- 版本號：**只有 `dist/` 成品（HTML 或 Excel）改變時才升版**；純工具修改（建置／核對腳本、文件、setup script 等，`dist/` 不變）不升版、不新增 VLOG。升版時 `vlog.py`（Excel 唯一來源）與 `tail.js` 的 VLOG（HTML）**兩處都要**新增一列；成品命名 `更新日_<company.json → meta.company>收支模型_v版本號`（目前 `20261022_Nebius收支模型_v0_5_1`），放 `dist/`，並移除舊版成品；交接檔同樣以新版取代舊版（`docs/handoff/` 只留一個檔）。
+- 版本號：**只有 `dist/` 成品（HTML 或 Excel）改變時才升版**；純工具修改（建置／核對腳本、文件、setup script 等，`dist/` 不變）不升版、不新增 VLOG。升版時 `vlog.py`（Excel 唯一來源）與 `tail.js` 的 VLOG（HTML）**兩處都要**新增一列；成品命名 `更新日_<company.json → meta.company>個股模型_v版本號`（v0.5.2 起；目前 `20261030_Nebius個股模型_v0_5_2`），放 `dist/`，舊版成品移到 `dist/_待刪除/`（Project 規則 4）；交接檔同樣以新版取代舊版（`docs/handoff/` 只留一個檔）。
 - 同時更新交接檔（`docs/handoff/`，只保留最新版）與 README。
 - 一個任務一個分支、一個 PR；PR 說明寫：改了什麼、驗收結果、需 Andy 決定的事項（任務完成時與報告檔「目前狀態」同步更新）。
 - 任務回報：依下節「每輪回報規則」。報告檔另須保存 `scripts/verify.sh` 完整輸出、關鍵數字前後對照（三情境目標價等；未改數字時註明「無變動」並列出現值）。
@@ -58,7 +58,8 @@ Andy 不熟程式，他透過 Claude 聊天端（讀 Gmail 裡的 GitHub 通知�
 6. Excel 情境區間是模擬運算表（「輸入與假設」H 區）：Excel 規定輸入格（情境選擇）與運算表須在同一工作表；LibreOffice 重算後會改寫成 `TABLE()`，必須接著執行 `fix_datatable.py`（`verify_ooxml.py` 會檢查）。
 
 7. Excel 同一工作表、同一區段內的 A 欄列名稱不可重複：`xl_diff.py --by-label`（`verify.sh --vs-dist` 使用）以「區段＋列名稱」配對新增列造成的位移，重複時直接報錯、不自行配對。
-8. 同業 Comps 與評等門檻只放在 `company.json`（`peers`、`methodology.rating`）；segB／segC／build_xlsx 不再寫任何同業數字或門檻數字。含門檻的畫面文字以門檻值組字（HTML `pctQ`／`multTxt`，Excel `_PC`／`_MT`），cmp31 以標籤為鍵的列（例如「賣出門檻價（現價 × (1 − 15%)）」）標籤也由門檻值產生。
+8. 同業 Comps 與評等門檻只放在 `company.json`（`peers`、`methodology.rating`）；segB／segC／build_xlsx 不再寫任何同業數字或門檻數字。含門檻的畫面文字以門檻值組字（HTML `pctQ`／`multTxt`，Excel `_PC`／`_MT`），cmp31 以標籤為鍵的列（例如「放空門檻價（現價 × (1 − 15%)）」；v0.5.2 前為「賣出門檻價」）標籤也由門檻值產生。
+9. 營收分部（v0.5.2）：Excel「損益」頁最後三區（全年、模型期、歷史）只能接在最後、不可插到既有列中間；官方分部名稱讀 `company.json` → `segments.names`，與 `segments.json` 的 label 一致；`verify.sh` 步驟 5e 須通過。評等字樣只用五級（強力買進、買進、中立、放空、強力放空），不用「賣出」；版本紀錄歷史列保留原字樣。
 
 ## 待辦（Nebius；依序，每項一張工作單、一個 PR）
 CRWV 時期的待辦（環境移植、區間、設定集中、季度層、期間滾動已完成；5a 精簡、5b 只讀檢視器、折舊修正、短名稱改名未做）不在 Nebius 範圍內：依 repo 根目錄 README，CRWV 未完成的待辦（5a 精簡、5b 只讀檢視器、折舊修正、機率加權目標價、GPU 批次與續約價格衰退）Nebius 也先不做。
