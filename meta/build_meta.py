@@ -104,7 +104,8 @@ inp("fin_lease", "融資租賃負債（類債）", "US$B", None, 0.0, None, "Ass
 inp("legal_oth", "其他法律相關應計（類債）＝法律應計 19.881 − 協議費用前三季合計 11.89", "US$B", 0.0, round(fv("legal.accrual.20260930") / 1000 - fv("legal.agCharge.ytd9m2026"), 3), None, "Derived",
     fs("legal.accrual.20260930") + "；協議費用 " + fs("legal.agCharge.ytd9m2026"),
     "比照 Alphabet 應計罰款（類債）；低＝0（不扣）。v0.1.1 更正：v0.1 只扣 Q3 的 9.89（得 9.991），完整 10-Q 載協議費用前三季合計 11.89（Q3 以前已認列約 2.00），協議應計已由 ag_y1／ag_rest 現金付款計入", judg=True)
-inp("mcps", "6.50% 強制轉換特別股募得現金（2026-10-29 交割，評價日後）", "US$B", None, fv("eq.mcps.gross") / 1000, None, "Verified", fs("eq.mcps.gross"), "FWP 淨額與毛額相同（疑未扣承銷費，A 段待下載 424B5）")
+inp("mcps", "6.50% 強制轉換特別股募得現金淨額（2026-10-29 交割，評價日後；毛額 12.5 − 承銷折扣 0.0416）", "US$B", None, fv("eq.mcps.net") / 1000, None, "Verified", fs("eq.mcps.net") + "；" + fs("eq.mcps.uwDisc"),
+    "v0.1.1：改用淨額（v0.1 用毛額 12.5）；發行費用未揭露、不扣；超額配售（約 1.8）未知是否行使，不計")
 inp("conv_sh", "強制轉換特別股 2029-08 轉換股數（上限）", "十億股", 0.017025, 0.020, 0.020, "Derived",
     "FWP：每股特別股（1,000 美元）轉 1.3620–1.6000 股 Class A；12.5B ÷ 1,000 × 1.6＝20.0M 股（上限）", "取稀釋最大（保守）；轉換前股利照付")
 for p, v in (("2H", 0.0), (27, 0.8125), (28, 0.8125), (29, 0.609)):
@@ -872,7 +873,7 @@ vput("ev2", "企業價值 EV（讀法 2：自用 AI 價值中性）", S3(lambda 
 vput("ev", "企業價值 EV（主值，依 internal_ai_reading）", S3(lambda s: f"=IF(internal_ai_reading=2,{X3(s)}{VR_['ev2']},{X3(s)}{VR_['ev1']})"), bold=True)
 vput("tvsh", "  其中：終值占 EV（主值）", S3(lambda s: f"=({X3(s)}{VR_['pvtv']}+(internal_ai_reading=2)*{X3(s)}{VR_['pvstv']})/{X3(s)}{VR_['ev']}"), "0.0%")
 vput("nc0", "＋淨現金（評價日：現金 − 票據面額 − 融資租賃）", ["=cash_0-debt_0-fin_lease"] * 3)
-vput("post", "＋評價日後股權融資（強制轉換特別股 12.5＋遠期出售 × fwd_on）", ["=mcps+fwd_cash*fwd_on"] * 3, note="遠期出售以初始遠期價計（未折現）")
+vput("post", "＋評價日後股權融資（強制轉換特別股淨額 12.46＋遠期出售 × fwd_on）", ["=mcps+fwd_cash*fwd_on"] * 3, note="遠期出售以初始遠期價計（未折現）")
 _tt = DC["A"]["t"]
 vput("agtv", "− 協議付款 FY2033–FY2036（4 期，以 WACC 折現到評價日）", ["=ag_pay*((1+wacc)^-6.75+(1+wacc)^-7.75+(1+wacc)^-8.75+(1+wacc)^-9.75)"] * 3, note="FY2027–FY2032 已在無槓桿自由現金流內")
 vput("dl", "− 類債（其他法律應計＋或有金額 contg）", ["=legal_oth+contg"] * 3)
