@@ -1,0 +1,27 @@
+{
+ "company": "SpaceX",
+ "ticker": "SPCX",
+ "model_sheet": "PL",
+ "note": "官方報告分部（10-Q 2026Q3 附註 18 Segments；經查核）：Space、Connectivity、SI（Super Intelligence；2026Q2 以前稱 AI，Q3 新聞稿註 2 更名，口徑不變）。三分部合計＝合併營收，無公司層級調節項。子列＝10-Q 附註 3 收入依類型與分部拆分（與新聞稿分部頁一致）。SI 含 SI 基礎設施（對外雲端服務）、Grok、Cursor（2026-08-14 起）、X；對外雲端服務未單獨揭露（命題子列於 B 段以 Assumed 拆分）。金額 US$B，期間 2026Q3（單季）。",
+ "official_segments": [
+  {"name": "Space", "label": "Space", "period": "2026Q3", "value": 1.767, "unit": "US$B",
+   "source": "10-Q 2026Q3 附註 18；data/spacex_facts_2026q3.json seg.space.rev.2026q3（新聞稿 Highlights 表互核）"},
+  {"name": "Connectivity", "label": "Connectivity", "period": "2026Q3", "value": 5.248, "unit": "US$B",
+   "source": "同上；seg.conn.rev.2026q3"},
+  {"name": "SI", "label": "SI (Super Intelligence; formerly AI)", "period": "2026Q3", "value": 7.560, "unit": "US$B",
+   "source": "同上；seg.si.rev.2026q3（合併營收 14.575＝三分部合計）"}
+ ],
+ "sublines": [
+  {"parent": "Space", "labels": ["Launch Services", "Launch & Development"]},
+  {"parent": "Connectivity", "labels": ["Consumer", "Enterprise & Government"]},
+  {"parent": "SI", "labels": ["Advertising", "SI Solutions & Infrastructure"]},
+  {"parent": "SI", "labels": ["SI 對外雲端服務（命題子列）", "Grok／Cursor／X 訂閱、資料授權與 API（命題子列）", "Advertising"], "thesis": true}
+ ],
+ "check_labels": [
+  "檢查：Space 子列合計 − Space",
+  "檢查：Connectivity 子列合計 − Connectivity",
+  "檢查：SI 子列合計 − SI",
+  "檢查：分部合計 − 合併營收",
+  "檢查：分部營業利益合計 − 合併營業利益"
+ ]
+}

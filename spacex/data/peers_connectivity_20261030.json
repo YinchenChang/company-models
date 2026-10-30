@@ -1,0 +1,92 @@
+{
+ "_readme": "SpaceX Connectivity 分部同業（S9：衛星與電信）。MarketScreener 產業估值表（Iridium 頁，2026-10-08 收盤）EV/EBITDA (Y)＝當年度（FY2026）口徑；TMUS 另有估值頁 FY2026 6.57x、FY2027 6.13x（2026-10-13）可交叉。",
+ "asOf": "2026-10-08",
+ "retrieved": "2026-10-30",
+ "group": "connectivity",
+ "label": "衛星與電信",
+ "peers": [
+  {
+   "ticker": "IRDM",
+   "name": "Iridium Communications",
+   "evEbitdaFy2026": 13.39,
+   "capUsdB": 5.04,
+   "source": "MarketScreener 產業估值表",
+   "url": "https://it.marketscreener.com/quotazioni/azione/IRIDIUM-COMMUNICATIONS-IN-5602836/settore-valutazione/",
+   "pageQuoteDate": "2026-10-08",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "ticker": "TMUS",
+   "name": "T-Mobile US",
+   "evEbitdaFy2026": 7.13,
+   "capUsdB": 184,
+   "source": "MarketScreener 產業估值表",
+   "url": "https://it.marketscreener.com/quotazioni/azione/IRIDIUM-COMMUNICATIONS-IN-5602836/settore-valutazione/",
+   "pageQuoteDate": "2026-10-08",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "ticker": "T",
+   "name": "AT&T",
+   "evEbitdaFy2026": 6.57,
+   "capUsdB": 170,
+   "source": "MarketScreener 產業估值表",
+   "url": "https://it.marketscreener.com/quotazioni/azione/IRIDIUM-COMMUNICATIONS-IN-5602836/settore-valutazione/",
+   "pageQuoteDate": "2026-10-08",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "ticker": "CMCSA",
+   "name": "Comcast",
+   "evEbitdaFy2026": 4.71,
+   "capUsdB": 75.27,
+   "source": "MarketScreener 產業估值表",
+   "url": "https://it.marketscreener.com/quotazioni/azione/IRIDIUM-COMMUNICATIONS-IN-5602836/settore-valutazione/",
+   "pageQuoteDate": "2026-10-08",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "ticker": "SATS",
+   "name": "EchoStar",
+   "evEbitdaFy2026": 16.66,
+   "capUsdB": 27.15,
+   "source": "MarketScreener 產業估值表",
+   "url": "https://it.marketscreener.com/quotazioni/azione/IRIDIUM-COMMUNICATIONS-IN-5602836/settore-valutazione/",
+   "pageQuoteDate": "2026-10-08",
+   "tag": "[Derived]",
+   "note": "EchoStar 正處分頻譜（含售予 SpaceX），倍數受交易影響"
+  },
+  {
+   "ticker": "ASTS",
+   "name": "AST SpaceMobile",
+   "evEbitdaFy2026": null,
+   "capUsdB": 17.07,
+   "source": "MarketScreener 產業估值表",
+   "url": "https://it.marketscreener.com/quotazioni/azione/IRIDIUM-COMMUNICATIONS-IN-5602836/settore-valutazione/",
+   "pageQuoteDate": "2026-10-08",
+   "tag": "[Derived]",
+   "note": "EBITDA 為負，NM，不計入"
+  }
+ ],
+ "crossCheck": {
+  "TMUS": {
+   "fy2026": 6.57,
+   "fy2027": 6.13,
+   "url": "https://www.marketscreener.com/quote/stock/T-MOBILE-US-INC-24717887/valuation/",
+   "pageQuoteDate": "2026-10-13"
+  }
+ },
+ "median": {
+  "value": 7.13,
+  "n": 5,
+  "tag": "[Derived]",
+  "note": "IRDM、TMUS、T、CMCSA、SATS 五家中位數；ASTS 為 NM 排除"
+ },
+ "gaps": [
+  "Viasat、Verizon 未見於該表；未另抓"
+ ]
+}

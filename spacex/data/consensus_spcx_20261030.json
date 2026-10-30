@@ -1,0 +1,165 @@
+{
+ "_readme": "SPCX 市場共識資料檔（SpaceX v0.1 工作單 A 段第 3 項）。WebSearch／WebFetch 於 2026-10-30 取得；逐筆附來源與頁面日期。單位：金額 US$M（每股為 US$）。chat 端審查後方可供模型使用；模型端只讀。",
+ "company": "SpaceX",
+ "ticker": "SPCX",
+ "asOf": "2026-10-30",
+ "retrieved": "2026-10-30",
+ "tagLegend": {
+  "Verified": "可公開查證的事實（公司公布數字、收盤價）",
+  "Interested-party": "賣方分析師預估或整理商彙整，屬意見"
+ },
+ "priceTarget": {
+  "mean": 244.97,
+  "high": 800.0,
+  "low": 75.0,
+  "nRatings": 46,
+  "breakdown": {
+   "strongBuy": 4,
+   "buy": 30,
+   "hold": 9,
+   "sell": 3
+  },
+  "rating": "Moderate Buy",
+  "source": "MarketBeat 預測頁",
+  "url": "https://www.marketbeat.com/stocks/NASDAQ/SPCX/forecast/",
+  "pageDate": "含 2026-10-26 Bernstein 動作，頁面約 2026-10-27～29",
+  "tag": "[Interested-party]",
+  "recentActions": [
+   {
+    "date": "2026-10-26",
+    "firm": "Bernstein",
+    "pt": 267
+   },
+   {
+    "date": "2026-10-22",
+    "firm": "BofA",
+    "pt": 275,
+    "prev": 235
+   },
+   {
+    "date": "2026-10-21",
+    "firm": "JPMorgan",
+    "pt": 500,
+    "prev": 240
+   },
+   {
+    "date": "2026-10-21",
+    "firm": "Barclays",
+    "pt": 300,
+    "prev": 254
+   },
+   {
+    "date": "2026-10-21",
+    "firm": "UBS",
+    "pt": 300
+   },
+   {
+    "date": "2026-10-21",
+    "firm": "Pivotal",
+    "pt": 260,
+    "prev": 230
+   },
+   {
+    "date": "2026-10-21",
+    "firm": "Goldman Sachs",
+    "pt": 245
+   },
+   {
+    "date": "2026-10-21",
+    "firm": "Citigroup",
+    "pt": 240,
+    "prev": 200
+   },
+   {
+    "date": "2026-10-21",
+    "firm": "Mizuho",
+    "pt": 205
+   }
+  ],
+  "secondSource": {
+   "mean": 236.71,
+   "nAnalysts": 34,
+   "rating": "Buy",
+   "source": "StockAnalysis 個股頁",
+   "url": "https://stockanalysis.com/stocks/SPCX/",
+   "pageDate": "頁面停在 2026-07-31 收盤（快取過舊，不作交叉）"
+  }
+ },
+ "quarter2026q3": {
+  "revenueConsensus": 12590,
+  "epsConsensus": 0.11,
+  "epsWhisper": 0.18,
+  "actualRevenue": 14575,
+  "actualEpsDil": 0.35,
+  "source": "Shacknews 2026-10-20（未註明共識來源）",
+  "url": "https://shacknews.com/article/151074/spacex-spcxq3-2026-earnings-results",
+  "tag": "[Interested-party]",
+  "note": "同文：法說前一交易日（2026-10-19）收盤 147.79、盤後高 151.70"
+ },
+ "annual": {
+  "status": "未找到（Q3 後更新版）",
+  "stale": {
+   "source": "Simply Wall St 預測頁（5 位分析師；頁面更新 2026-06-22，IPO 後首週，已過期，只作參考）",
+   "url": "https://www.simplywall.st/stocks/us/telecom/nasdaq-spcx/space-exploration-technologies/future",
+   "FY2026": {
+    "revenue": 36850,
+    "earnings": -6912,
+    "fcf": -28749,
+    "cfo": 14690
+   },
+   "FY2027": {
+    "revenue": 68255,
+    "earnings": 3350,
+    "fcf": -28378,
+    "cfo": 31133
+   },
+   "FY2028": {
+    "revenue": 97508,
+    "earnings": 7646,
+    "fcf": -14581,
+    "cfo": 53051
+   }
+  },
+  "searched": [
+   "MarketBeat 預測頁（無營收／EPS 年度共識）",
+   "StockAnalysis 個股頁（快取停在 7-31）",
+   "S&P Global MI 研究摘要 2026-08-14（Visible Alpha，正文未取得）",
+   "Chartmill（抓取失敗）",
+   "Simply Wall St（6-22 過期）"
+  ]
+ },
+ "mktEvEbitda": {
+  "value": 96.65,
+  "basis": "MarketScreener 產業估值表 EV/EBITDA (Y)，2026-10-08",
+  "url": "https://it.marketscreener.com/quotazioni/azione/IRIDIUM-COMMUNICATIONS-IN-5602836/settore-valutazione/",
+  "tag": "[Interested-party]"
+ },
+ "price": {
+  "close20261029": null,
+  "status": "未取得可信的 2026-10-29 收盤（兩來源核對未完成）",
+  "candidates": [
+   {
+    "value": 140.4,
+    "source": "Robinhood 個股頁",
+    "url": "https://www.robinhood.com/us/en/stocks/SPCX",
+    "note": "標示 currently priced 2026-10-29，未說明是否收盤"
+   },
+   {
+    "value": 143.89,
+    "source": "MarketBeat 預測頁",
+    "url": "https://www.marketbeat.com/stocks/NASDAQ/SPCX/forecast/",
+    "note": "4:00 PM 收盤，未標日期；盤後 139.94"
+   },
+   {
+    "value": 146.9,
+    "source": "MarketChameleon",
+    "url": "https://marketchameleon.com/Overview/SPCX/",
+    "note": "2026-10-26 收盤"
+   }
+  ],
+  "blocked": [
+   "https://stockanalysis.com/stocks/spcx/history/（WebFetch 權限逾時）"
+  ],
+  "note": "S10 屬 B 段；建議 chat 端以可信行情源補 10-29 收盤。市值：Robinhood 1.95T；MarketChameleon 1.99T（10-26）"
+ }
+}
