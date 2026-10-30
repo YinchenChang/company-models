@@ -83,7 +83,7 @@ HTML 與 Excel 都由這裡的原始碼產生。所有路徑皆相對於 repo �
 - **為何 AI cloud＝總營收 − 其餘**：模型的算力收入（MW × 每 MW 收入）以合併營收校準（`latestQuarter.revenue` × 4），輸出即合併營收；為維持總營收與目標價不變，非 AI cloud 分部自其中拆出。下一版（Q3 滾動）是否改以 AI cloud 分部營收校準可計費 MW、Avride／TripleTen 另給驅動，列為待判斷（會改目標價）。
 - **分部宣告檔**：`segments.json`（`model_sheet`＝「損益」）；`scripts/verify.sh` 步驟 5e 以 `tools/segment_check/check_segments.py` 的檢查函式核對本次建置的成品，並跑 `tools/in_layout/check_in_layout.py`（Nebius 為舊模板，無 In 頁三欄：不適用）。
 - **名稱與評等字樣**：成品檔名 `更新日_Nebius個股模型_v版本`；HTML 標題、簡報頁尾、Excel 導覽首列改稱「個股模型」。評等字樣依網站五級規則：模型的「賣出」→「放空」（門檻 −15% 與評等結果不變；本模型只有買進／中立／放空三級門檻，強力兩級未設）；共識評等分布「持有／賣出／強力賣出」→「中立／放空／強力放空」。版本紀錄的歷史列保留原字樣。
-- **驗收**：`DATE=2026-10-30 EXPECT=scripts/expect/v0_5_2_vs_v0_5_1.txt CRAWL_EXPECT=scripts/expect/v0_5_2_vs_v0_5_1_crawl.txt scripts/verify.sh --vs-dist`（以 v0.5.1 成品為 dist）：25 項全部通過；預期差異只有評等字樣、更新日與版本列。
+- **驗收**：`DATE=2026-10-30 EXPECT=scripts/expect/v0_5_2_vs_v0_5_1.txt CRAWL_EXPECT=scripts/expect/v0_5_2_vs_v0_5_1_crawl.txt scripts/verify.sh --vs-dist`（以 v0.5.1 成品為 dist）：26 項全部通過；預期差異只有評等字樣、更新日與版本列。
 
 ## v0.5.1 Tokenomics v19.0 同步與收入上限第五列
 - **快照**：`model/CURRENT`＝`20261022_Tokenomics_v19.0.xlsx`（`1916a06`）；`data/tokenomics_snapshot_v19.0.json`（41 個名稱）。既有 38 個名稱數值與 v18.0 逐值相同，三情境目標價不變（保守 $29.5、基準 $21.4、積極 $19.4）。

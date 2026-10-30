@@ -55,6 +55,12 @@ OOXML OK
 快照值＝Excel 分頁值：41 個名稱（missing 0）、420 個值、140 個具名範圍一致；其他工作表 52 格公式引用 34 個 TK_ 名稱（v19.0）
 [PASS] 快照值＝Excel 分頁值：41 個名稱（missing 0）、420 個值、140 個具名範圍一致；其他工作表 52 格公式引用 34 個 TK_ 名稱（v19.0）
 
+=== 5e. 營收分部核對與 In 頁版面（個股模型原則第 3、8 條；tools/segment_check、tools/in_layout；v0.5.2）
+[符合] 4 個官方分部、0 條子列、3 個核對列皆通過（20261030_Nebius個股模型_v0_5_2.xlsx）
+[PASS] 分部核對：[符合] 4 個官方分部、0 條子列、3 個核對列皆通過（20261030_Nebius個股模型_v0_5_2.xlsx）
+In 頁版面核對：不適用（無 In 頁三欄或無情境專屬輸入列）
+[PASS] In 頁版面：In 頁版面核對：不適用（無 In 頁三欄或無情境專屬輸入列）
+
 === 5c. 離線開啟檢查（已決定事項 11：單一檔案、無網路請求、console 無錯誤、關鍵數字正常顯示）
 (a) 網路請求：0 個
 (b) console 錯誤與例外：0 個
@@ -88,7 +94,7 @@ test_quarterly：全部通過（測試 A 假設實際數、測試 B 可移植性
 === 8b. 期間滾動測試（暫存副本：日曆推算 6 種情況、滾動後第一屏無過期日期與期間字樣；v4.5）
 [PASS] test_rolling：日曆推算與滾動後第一屏
 C 滾動檢查：只滾日曆、未更新 asOf → 建置失敗並列出 29 項（清單 29 項）
-A 滾動 FY26Q3（評價日 2026-06-30 → 2026-09-30）：過期字樣 ['2026-06-30', 'Q2 2026', '6/30', '2H26', '1H26', '上半年', '下半年', '1H', '2H', 'H1']；第一屏命中 0 行
+A 滾動 FY26Q3（評價日 2026-06-30 → 2026-09-30）：過期字樣 ['2026-06-30', 'Q2 2026', '6/30', '1H26', '2H26', '上半年', '下半年', '2H', '1H', 'H1']；第一屏命中 0 行
 期間滾動測試：通過
 
 === 8c. 目標價變動拆解工具測試（scripts/attrib.py：(a)＝(1＋WACC)^(月數÷12)，WACC 讀 Excel、月數讀 calendar_q；四項相加＝總變動）
@@ -247,6 +253,8 @@ PASS  fix_outline
 PASS  fix_datatable
 PASS  verify_ooxml：OOXML OK
 PASS  快照值＝Excel 分頁值：41 個名稱（missing 0）、420 個值、140 個具名範圍一致；其他工作表 52 格公式引用 34 個 TK_ 名稱（v19.0）
+PASS  分部核對：[符合] 4 個官方分部、0 條子列、3 個核對列皆通過（20261030_Nebius個股模型_v0_5_2.xlsx）
+PASS  In 頁版面：In 頁版面核對：不適用（無 In 頁三欄或無情境專屬輸入列）
 PASS  離線開啟：新建 HTML
 PASS  離線開啟：dist/ 成品
 PASS  cmp31 low：443 項全部 OK
@@ -259,4 +267,35 @@ PASS  test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%�
 PASS  crawl 畫面文字 0 差異（預期差異清單除外）
 PASS  xl_diff --values --by-label 0 差異
 PASS  xl_diff 公式 --by-label 0 差異
-verify.sh：全部通過（24 項）
+verify.sh：全部通過（26 項）
+
+
+================ 另：對 v0.5.2 自身 dist 成品（重建可重現）================
+================ 結果 ================
+PASS  check_quarterly：季度加總＝年度、差異原因齊全
+PASS  README 欄位說明與 company.json 一致
+PASS  Tokenomics 快照 --check：找不到 Tokenomics clone，略過（警告）
+PASS  建 HTML
+PASS  tk_sens 快照：low 24.61／29.53／46.57；base 17.24／21.38／38.98；high 13.09／19.43／41.56（無變動）
+PASS  建 Excel
+PASS  重算：0 公式錯誤
+PASS  反向 DCF：Excel 求解，rv_snap.json 與 Excel 一致
+PASS  fix_outline
+PASS  fix_datatable
+PASS  verify_ooxml：OOXML OK
+PASS  快照值＝Excel 分頁值：41 個名稱（missing 0）、420 個值、140 個具名範圍一致；其他工作表 52 格公式引用 34 個 TK_ 名稱（v19.0）
+PASS  分部核對：[符合] 4 個官方分部、0 條子列、3 個核對列皆通過（20261030_Nebius個股模型_v0_5_2.xlsx）
+PASS  In 頁版面：In 頁版面核對：不適用（無 In 頁三欄或無情境專屬輸入列）
+PASS  離線開啟：新建 HTML
+PASS  離線開啟：dist/ 成品
+PASS  cmp31 low：443 項全部 OK
+PASS  cmp31 base：443 項全部 OK
+PASS  cmp31 high：443 項全部 OK
+PASS  cmp31 base_FY27：418 項全部 OK
+PASS  test_quarterly：假設實際數與可移植性測試通過
+PASS  test_rolling：日曆推算與滾動後第一屏
+PASS  test_attrib：拆解工具（月數、同版 0、滾動一季與 WACC 12%）
+PASS  crawl 畫面文字 0 差異
+PASS  xl_diff --values --by-label 0 差異
+PASS  xl_diff 公式 --by-label 0 差異
+verify.sh：全部通過（26 項）
