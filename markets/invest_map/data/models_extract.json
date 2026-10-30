@@ -2468,84 +2468,84 @@
   }
  },
  "300502": {
-  "model": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx",
+  "model": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx",
   "v2": true,
   "tp": {
    "value": 705.63470328104,
    "cell": "Val!B39",
-   "file": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx"
+   "file": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx"
   },
   "tp_dcf": {
    "value": 510.231336053505,
    "cell": "Val!B24",
-   "file": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx"
+   "file": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx"
   },
   "tp_comp": {
    "value": 1068.96862427801,
    "cell": "Val!B40",
-   "file": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx"
+   "file": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx"
   },
   "tp_cons": {
    "value": 460.89,
    "cell": "Val!B41",
-   "file": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx"
+   "file": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx"
   },
   "up": {
    "value": 1.70358123862468,
    "cell": "Val!B42",
-   "file": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx"
+   "file": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx"
   },
   "up_comp": {
    "value": 3.09566522711881,
    "cell": "Val!B43",
-   "file": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx"
+   "file": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx"
   },
   "old_rule": {
    "value": 1145.94570088063,
    "cell": "Val!B53",
-   "file": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx"
+   "file": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx"
   },
   "tier6": {
    "value": "大於 50%",
    "cell": "Val!B49",
-   "file": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx"
+   "file": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx"
   },
   "rec": {
    "value": "強力買進",
    "cell": "Val!B50",
-   "file": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx"
+   "file": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx"
   },
   "dcf_A": {
    "value": 634.84249136434,
    "cell": "Val!B23",
-   "file": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx"
+   "file": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx"
   },
   "dcf_C": {
    "value": 306.597966415317,
    "cell": "Val!D23",
-   "file": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx"
+   "file": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx"
   },
   "model_px": {
    "value": 261,
    "cell": "Val!B63",
-   "file": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx",
+   "file": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 9.3070216272813,
     "cell": "Val!B66",
-    "file": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx"
+    "file": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx"
    },
    {
     "value": 11.3724958588777,
     "cell": "Val!C66",
-    "file": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx"
+    "file": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx"
    },
    {
     "value": 15.4292113213745,
     "cell": "Val!D66",
-    "file": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx"
+    "file": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx"
    }
   ],
   "cash": {
@@ -2648,7 +2648,7 @@
      "PL!J36"
     ]
    ],
-   "file": "eoptolink/dist/20261028_新易盛個股模型_v0.2.3.xlsx"
+   "file": "eoptolink/dist/20261031_新易盛個股模型_v0.2.4.xlsx"
   }
  },
  "2345": {
@@ -4911,84 +4911,84 @@
   }
  },
  "AMAT": {
-  "model": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx",
+  "model": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx",
   "v2": true,
   "tp": {
    "value": 307.901982299436,
    "cell": "Val!B136",
-   "file": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx"
+   "file": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx"
   },
   "tp_dcf": {
    "value": 247.848391154966,
    "cell": "Val!B122",
-   "file": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx"
+   "file": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx"
   },
   "tp_comp": {
    "value": 440.837858668109,
    "cell": "Val!B137",
-   "file": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx"
+   "file": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx"
   },
   "tp_cons": {
    "value": 627.83,
    "cell": "Val!B138",
-   "file": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx"
+   "file": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx"
   },
   "up": {
    "value": -0.18380346119331,
    "cell": "Val!B139",
-   "file": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx"
+   "file": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx"
   },
   "up_comp": {
    "value": 0.168587261870715,
    "cell": "Val!B140",
-   "file": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx"
+   "file": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx"
   },
   "old_rule": {
    "value": 303.775381503787,
    "cell": "Val!B47",
-   "file": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx"
+   "file": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx"
   },
   "tier6": {
    "value": "0%～−25%",
    "cell": "Val!B146",
-   "file": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx"
+   "file": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!B147",
-   "file": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx"
+   "file": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx"
   },
   "dcf_A": {
    "value": 347.747624392386,
    "cell": "Val!B121",
-   "file": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx"
+   "file": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx"
   },
   "dcf_C": {
    "value": 157.851750497325,
    "cell": "Val!D121",
-   "file": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx"
+   "file": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx"
   },
   "model_px": {
    "value": 377.24,
    "cell": "In!E139",
-   "file": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx",
+   "file": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 19.4368130704194,
     "cell": "Val!B98",
-    "file": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx"
+    "file": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx"
    },
    {
     "value": 21.9060416692838,
     "cell": "Val!C98",
-    "file": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx"
+    "file": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx"
    },
    {
     "value": 27.7016480664121,
     "cell": "Val!D98",
-    "file": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx"
+    "file": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx"
    }
   ],
   "cash": {
@@ -5046,88 +5046,88 @@
      "PL!G31"
     ]
    ],
-   "file": "amat/dist/20261028_應用材料個股模型_v0.3.xlsx"
+   "file": "amat/dist/20261031_應用材料個股模型_v0.3.1.xlsx"
   }
  },
  "LRCX": {
-  "model": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx",
+  "model": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx",
   "v2": true,
   "tp": {
    "value": 190.787682307904,
    "cell": "Val!B128",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+   "file": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx"
   },
   "tp_dcf": {
    "value": 143.842880264599,
    "cell": "Val!B114",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+   "file": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx"
   },
   "tp_comp": {
    "value": 252.826312855546,
    "cell": "Val!B129",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+   "file": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx"
   },
   "tp_cons": {
    "value": 364.03,
    "cell": "Val!B130",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+   "file": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx"
   },
   "up": {
    "value": -0.170848838296812,
    "cell": "Val!B131",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+   "file": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx"
   },
   "up_comp": {
    "value": 0.0987671136703436,
    "cell": "Val!B132",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+   "file": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx"
   },
   "old_rule": {
    "value": 152.365701845981,
    "cell": "Val!B6",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+   "file": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx"
   },
   "tier6": {
    "value": "0%～−25%",
    "cell": "Val!B138",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+   "file": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!B139",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+   "file": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx"
   },
   "dcf_A": {
    "value": 200.17587024547,
    "cell": "Val!B113",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+   "file": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx"
   },
   "dcf_C": {
    "value": 84.2738802564408,
    "cell": "Val!D113",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+   "file": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx"
   },
   "model_px": {
    "value": 230.1,
    "cell": "In!E124",
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx",
+   "file": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 22.0556283049562,
     "cell": "Val!B90",
-    "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+    "file": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx"
    },
    {
     "value": 23.5095057363079,
     "cell": "Val!C90",
-    "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+    "file": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx"
    },
    {
     "value": 26.9429771924657,
     "cell": "Val!D90",
-    "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+    "file": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx"
    }
   ],
   "cash": {
@@ -5170,7 +5170,7 @@
      "PL!G31"
     ]
    ],
-   "file": "lrcx/dist/20261025_科林研發模型_v0.2.1.xlsx"
+   "file": "lrcx/dist/20261031_科林研發模型_v0.2.2.xlsx"
   }
  },
  "KLAC": {
@@ -5308,67 +5308,67 @@
   }
  },
  "6857": {
-  "model": "advantest/dist/20261028_Advantest個股模型_v0.4.xlsx",
+  "model": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx",
   "v2": true,
   "tp": {
    "value": 23855.0679808832,
    "cell": "Val!B146",
-   "file": "advantest/dist/20261028_Advantest個股模型_v0.4.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
   },
   "tp_dcf": {
    "value": 16514.9379226864,
    "cell": "Val!B131",
-   "file": "advantest/dist/20261028_Advantest個股模型_v0.4.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
   },
   "tp_comp": {
    "value": 29856.6828393757,
    "cell": "Val!B147",
-   "file": "advantest/dist/20261028_Advantest個股模型_v0.4.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
   },
   "tp_cons": {
    "value": 42686,
    "cell": "Val!B148",
-   "file": "advantest/dist/20261028_Advantest個股模型_v0.4.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
   },
   "up": {
    "value": -0.26236648172903,
    "cell": "Val!B149",
-   "file": "advantest/dist/20261028_Advantest個股模型_v0.4.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
   },
   "up_comp": {
    "value": -0.0767877909902376,
    "cell": "Val!B150",
-   "file": "advantest/dist/20261028_Advantest個股模型_v0.4.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
   },
   "old_rule": {
    "value": 24455.302282651,
    "cell": "Val!B102",
-   "file": "advantest/dist/20261028_Advantest個股模型_v0.4.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
   },
   "tier6": {
    "value": "−25%～−50%",
    "cell": "Val!B157",
-   "file": "advantest/dist/20261028_Advantest個股模型_v0.4.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
   },
   "rec": {
    "value": "放空",
    "cell": "Val!B158",
-   "file": "advantest/dist/20261028_Advantest個股模型_v0.4.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
   },
   "dcf_A": {
    "value": 22999.6030353682,
    "cell": "Val!B130",
-   "file": "advantest/dist/20261028_Advantest個股模型_v0.4.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
   },
   "dcf_C": {
    "value": 7869.22693168907,
    "cell": "Val!D130",
-   "file": "advantest/dist/20261028_Advantest個股模型_v0.4.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
   },
   "model_px": {
    "value": 32340,
    "cell": "Val!B92",
-   "file": "advantest/dist/20261028_Advantest個股模型_v0.4.xlsx",
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx",
    "date": "2026-10-23"
   },
   "cash": {
@@ -5426,71 +5426,71 @@
      "PL!G34"
     ]
    ],
-   "file": "advantest/dist/20261028_Advantest個股模型_v0.4.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
   }
  },
  "6146": {
-  "model": "disco/dist/20261025_Disco模型_v0.2.2.xlsx",
+  "model": "disco/dist/20261031_Disco模型_v0.2.3.xlsx",
   "v2": true,
   "tp": {
    "value": 48039.9712227065,
    "cell": "Val!B107",
-   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
+   "file": "disco/dist/20261031_Disco模型_v0.2.3.xlsx"
   },
   "tp_dcf": {
    "value": 22991.0306364256,
    "cell": "Val!B92",
-   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
+   "file": "disco/dist/20261031_Disco模型_v0.2.3.xlsx"
   },
   "tp_comp": {
    "value": 57758.6300699703,
    "cell": "Val!B108",
-   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
+   "file": "disco/dist/20261031_Disco模型_v0.2.3.xlsx"
   },
   "tp_cons": {
    "value": 81575,
    "cell": "Val!B109",
-   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
+   "file": "disco/dist/20261031_Disco模型_v0.2.3.xlsx"
   },
   "up": {
    "value": -0.025360697449656,
    "cell": "Val!B110",
-   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
+   "file": "disco/dist/20261031_Disco模型_v0.2.3.xlsx"
   },
   "up_comp": {
    "value": 0.171812336578826,
    "cell": "Val!B111",
-   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
+   "file": "disco/dist/20261031_Disco模型_v0.2.3.xlsx"
   },
   "old_rule": {
    "value": 45104.6418701108,
    "cell": "Val!B63",
-   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
+   "file": "disco/dist/20261031_Disco模型_v0.2.3.xlsx"
   },
   "tier6": {
    "value": "0%～−25%",
    "cell": "Val!B118",
-   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
+   "file": "disco/dist/20261031_Disco模型_v0.2.3.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!B119",
-   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
+   "file": "disco/dist/20261031_Disco模型_v0.2.3.xlsx"
   },
   "dcf_A": {
    "value": 27699.2516922566,
    "cell": "Val!B91",
-   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
+   "file": "disco/dist/20261031_Disco模型_v0.2.3.xlsx"
   },
   "dcf_C": {
    "value": 16343.6091101662,
    "cell": "Val!D91",
-   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
+   "file": "disco/dist/20261031_Disco模型_v0.2.3.xlsx"
   },
   "model_px": {
    "value": 49290,
    "cell": "Val!B53",
-   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx",
+   "file": "disco/dist/20261031_Disco模型_v0.2.3.xlsx",
    "date": "2026-10-23"
   },
   "cash": {
@@ -5548,88 +5548,88 @@
      "PL!G52"
     ]
    ],
-   "file": "disco/dist/20261025_Disco模型_v0.2.2.xlsx"
+   "file": "disco/dist/20261031_Disco模型_v0.2.3.xlsx"
   }
  },
  "042700": {
-  "model": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx",
+  "model": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx",
   "v2": true,
   "tp": {
    "value": 36848.0931174305,
    "cell": "Val!B111",
-   "file": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx"
+   "file": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx"
   },
   "tp_dcf": {
    "value": 27779.9388446329,
    "cell": "Val!B97",
-   "file": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx"
+   "file": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx"
   },
   "tp_comp": {
    "value": 68978.7154136744,
    "cell": "Val!B112",
-   "file": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx"
+   "file": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx"
   },
   "tp_cons": {
    "value": 271429,
    "cell": "Val!B113",
-   "file": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx"
+   "file": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx"
   },
   "up": {
    "value": -0.804519399907531,
    "cell": "Val!B114",
-   "file": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx"
+   "file": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx"
   },
   "up_comp": {
    "value": -0.634065170219234,
    "cell": "Val!B115",
-   "file": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx"
+   "file": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx"
   },
   "old_rule": {
    "value": 64078.0210298826,
    "cell": "Val!B6",
-   "file": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx"
+   "file": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx"
   },
   "tier6": {
    "value": "小於 −50%",
    "cell": "Val!B122",
-   "file": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx"
+   "file": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx"
   },
   "rec": {
    "value": "強力放空",
    "cell": "Val!B123",
-   "file": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx"
+   "file": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx"
   },
   "dcf_A": {
    "value": 36052.3054077951,
    "cell": "Val!B96",
-   "file": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx"
+   "file": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx"
   },
   "dcf_C": {
    "value": 16072.8325490973,
    "cell": "Val!D96",
-   "file": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx"
+   "file": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx"
   },
   "model_px": {
    "value": 188500,
    "cell": "In!E95",
-   "file": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx",
+   "file": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 79.7853869215432,
     "cell": "Val!B71",
-    "file": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx"
+    "file": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx"
    },
    {
     "value": 64.4297654842555,
     "cell": "Val!C71",
-    "file": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx"
+    "file": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx"
    },
    {
     "value": 93.5634177544364,
     "cell": "Val!D71",
-    "file": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx"
+    "file": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx"
    }
   ],
   "cash": {
@@ -5677,88 +5677,88 @@
      "PL!G31"
     ]
    ],
-   "file": "hanmi/dist/20261028_韓美半導體個股模型_v0.2.3.xlsx"
+   "file": "hanmi/dist/20261031_韓美半導體個股模型_v0.2.4.xlsx"
   }
  },
  "TER": {
-  "model": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx",
+  "model": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 354.251953735619,
    "cell": "Val!B126",
-   "file": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 218.286112877241,
    "cell": "Val!B111",
-   "file": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 402.559677807458,
    "cell": "Val!B127",
-   "file": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 446.47,
    "cell": "Val!B128",
-   "file": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
   },
   "up": {
    "value": 0.147003249912964,
    "cell": "Val!B129",
-   "file": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": 0.30341485448424,
    "cell": "Val!B130",
-   "file": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
   },
   "old_rule": {
    "value": 385.982075792829,
    "cell": "Val!B82",
-   "file": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
   },
   "tier6": {
    "value": "0%–25%",
    "cell": "Val!B137",
-   "file": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!B138",
-   "file": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 284.747619501857,
    "cell": "Val!B110",
-   "file": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 153.311331405361,
    "cell": "Val!D110",
-   "file": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 308.85,
    "cell": "Val!B73",
-   "file": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx",
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 18.713102189636,
     "cell": "Val!B77",
-    "file": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx"
+    "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
    },
    {
     "value": 21.9788454652871,
     "cell": "Val!C77",
-    "file": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx"
+    "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
    },
    {
     "value": 25.2356483586665,
     "cell": "Val!D77",
-    "file": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx"
+    "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -5816,88 +5816,88 @@
      "PL!G34"
     ]
    ],
-   "file": "ter/dist/20261028_泰瑞達個股模型_v0.2.xlsx"
+   "file": "ter/dist/20261031_泰瑞達個股模型_v0.2.1.xlsx"
   }
  },
  "BESI": {
-  "model": "besi/dist/20261025_BESI模型_v0.1.1.xlsx",
+  "model": "besi/dist/20261031_BESI模型_v0.1.2.xlsx",
   "v2": true,
   "tp": {
    "value": 157.284742099862,
    "cell": "Val!B112",
-   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+   "file": "besi/dist/20261031_BESI模型_v0.1.2.xlsx"
   },
   "tp_dcf": {
    "value": 96.2266486628942,
    "cell": "Val!B97",
-   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+   "file": "besi/dist/20261031_BESI模型_v0.1.2.xlsx"
   },
   "tp_comp": {
    "value": 166.780348724557,
    "cell": "Val!B113",
-   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+   "file": "besi/dist/20261031_BESI模型_v0.1.2.xlsx"
   },
   "tp_cons": {
    "value": 270.57,
    "cell": "Val!B114",
-   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+   "file": "besi/dist/20261031_BESI模型_v0.1.2.xlsx"
   },
   "up": {
    "value": 0.083974790488369,
    "cell": "Val!B115",
-   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+   "file": "besi/dist/20261031_BESI模型_v0.1.2.xlsx"
   },
   "up_comp": {
    "value": 0.149416600444914,
    "cell": "Val!B116",
-   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+   "file": "besi/dist/20261031_BESI模型_v0.1.2.xlsx"
   },
   "old_rule": {
    "value": 184.838050297798,
    "cell": "Val!B6",
-   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+   "file": "besi/dist/20261031_BESI模型_v0.1.2.xlsx"
   },
   "tier6": {
    "value": "0%–25%",
    "cell": "Val!B123",
-   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+   "file": "besi/dist/20261031_BESI模型_v0.1.2.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!B124",
-   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+   "file": "besi/dist/20261031_BESI模型_v0.1.2.xlsx"
   },
   "dcf_A": {
    "value": 156.329377987481,
    "cell": "Val!B96",
-   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+   "file": "besi/dist/20261031_BESI模型_v0.1.2.xlsx"
   },
   "dcf_C": {
    "value": 43.9240158537741,
    "cell": "Val!D96",
-   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+   "file": "besi/dist/20261031_BESI模型_v0.1.2.xlsx"
   },
   "model_px": {
    "value": 145.1,
    "cell": "In!E117",
-   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx",
+   "file": "besi/dist/20261031_BESI模型_v0.1.2.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 15.6958467045965,
     "cell": "Val!B71",
-    "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+    "file": "besi/dist/20261031_BESI模型_v0.1.2.xlsx"
    },
    {
     "value": 22.4159190281728,
     "cell": "Val!C71",
-    "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+    "file": "besi/dist/20261031_BESI模型_v0.1.2.xlsx"
    },
    {
     "value": 45.7806171426769,
     "cell": "Val!D71",
-    "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+    "file": "besi/dist/20261031_BESI模型_v0.1.2.xlsx"
    }
   ],
   "cash": {
@@ -5955,7 +5955,7 @@
      "PL!G31"
     ]
    ],
-   "file": "besi/dist/20261025_BESI模型_v0.1.1.xlsx"
+   "file": "besi/dist/20261031_BESI模型_v0.1.2.xlsx"
   }
  },
  "6315": {
@@ -6098,84 +6098,84 @@
   }
  },
  "7729": {
-  "model": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx",
+  "model": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx",
   "v2": true,
   "tp": {
    "value": 13008.3632132389,
    "cell": "Val!B40",
-   "file": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx"
+   "file": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx"
   },
   "tp_dcf": {
    "value": 10179.867022387,
    "cell": "Val!B24",
-   "file": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx"
+   "file": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx"
   },
   "tp_comp": {
    "value": 28838.0776950064,
    "cell": "Val!B41",
-   "file": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx"
+   "file": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx"
   },
   "tp_cons": {
    "value": 20900,
    "cell": "Val!B42",
-   "file": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx"
+   "file": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx"
   },
   "up": {
    "value": -0.161832267188213,
    "cell": "Val!B43",
-   "file": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx"
+   "file": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx"
   },
   "up_comp": {
    "value": 0.858123562822575,
    "cell": "Val!B44",
-   "file": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx"
+   "file": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx"
   },
   "old_rule": {
    "value": 11621.0367392957,
    "cell": "Val!B111",
-   "file": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx"
+   "file": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx"
   },
   "tier6": {
    "value": "0%～−25%",
    "cell": "Val!B115",
-   "file": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx"
+   "file": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!B116",
-   "file": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx"
+   "file": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx"
   },
   "dcf_A": {
    "value": 15085.2941612847,
    "cell": "Val!B23",
-   "file": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx"
+   "file": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx"
   },
   "dcf_C": {
    "value": 6131.42686806188,
    "cell": "Val!D23",
-   "file": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx"
+   "file": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx"
   },
   "model_px": {
    "value": 15520,
    "cell": "Val!B53",
-   "file": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx",
+   "file": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx",
    "date": "2026-10-23"
   },
   "pe_fy28": [
    {
     "value": 14.4211441784155,
     "cell": "Val!B56",
-    "file": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx"
+    "file": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx"
    },
    {
     "value": 18.7054788932357,
     "cell": "Val!C56",
-    "file": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx"
+    "file": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx"
    },
    {
     "value": 27.6632112304143,
     "cell": "Val!D56",
-    "file": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx"
+    "file": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx"
    }
   ],
   "cash": {
@@ -6233,7 +6233,7 @@
      "PL!G34"
     ]
    ],
-   "file": "accretech/dist/20261028_東京精密個股模型_v0.1.2.xlsx"
+   "file": "accretech/dist/20261031_東京精密個股模型_v0.1.3.xlsx"
   }
  },
  "2317": {
@@ -7429,79 +7429,79 @@
   }
  },
  "2301": {
-  "model": "liteon/dist/20261028_光寶個股模型_v0.2.xlsx",
+  "model": "liteon/dist/20261031_光寶個股模型_v0.2.1.xlsx",
   "v2": true,
   "tp": {
    "value": 319.137160914582,
    "cell": "Val!B40",
-   "file": "liteon/dist/20261028_光寶個股模型_v0.2.xlsx"
+   "file": "liteon/dist/20261031_光寶個股模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
    "value": 318.422933774332,
    "cell": "Val!B24",
-   "file": "liteon/dist/20261028_光寶個股模型_v0.2.xlsx"
+   "file": "liteon/dist/20261031_光寶個股模型_v0.2.1.xlsx"
   },
   "tp_comp": {
    "value": 528.680227061729,
    "cell": "Val!B41",
-   "file": "liteon/dist/20261028_光寶個股模型_v0.2.xlsx"
+   "file": "liteon/dist/20261031_光寶個股模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 314.25,
    "cell": "Val!B42",
-   "file": "liteon/dist/20261028_光寶個股模型_v0.2.xlsx"
+   "file": "liteon/dist/20261031_光寶個股模型_v0.2.1.xlsx"
   },
   "up": {
    "value": 0.249069122953353,
    "cell": "Val!B43",
-   "file": "liteon/dist/20261028_光寶個股模型_v0.2.xlsx"
+   "file": "liteon/dist/20261031_光寶個股模型_v0.2.1.xlsx"
   },
   "up_comp": {
    "value": 1.06919854035902,
    "cell": "Val!B44",
-   "file": "liteon/dist/20261028_光寶個股模型_v0.2.xlsx"
+   "file": "liteon/dist/20261031_光寶個股模型_v0.2.1.xlsx"
   },
   "tier6": {
    "value": "0%–25%",
    "cell": "Val!B118",
-   "file": "liteon/dist/20261028_光寶個股模型_v0.2.xlsx"
+   "file": "liteon/dist/20261031_光寶個股模型_v0.2.1.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!B119",
-   "file": "liteon/dist/20261028_光寶個股模型_v0.2.xlsx"
+   "file": "liteon/dist/20261031_光寶個股模型_v0.2.1.xlsx"
   },
   "dcf_A": {
    "value": 530.38809994636,
    "cell": "Val!B23",
-   "file": "liteon/dist/20261028_光寶個股模型_v0.2.xlsx"
+   "file": "liteon/dist/20261031_光寶個股模型_v0.2.1.xlsx"
   },
   "dcf_C": {
    "value": 120.655384312938,
    "cell": "Val!D23",
-   "file": "liteon/dist/20261028_光寶個股模型_v0.2.xlsx"
+   "file": "liteon/dist/20261031_光寶個股模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 255.5,
    "cell": "Val!B53",
-   "file": "liteon/dist/20261028_光寶個股模型_v0.2.xlsx",
+   "file": "liteon/dist/20261031_光寶個股模型_v0.2.1.xlsx",
    "date": "2026-10-22"
   },
   "pe_fy28": [
    {
     "value": 8.45683280404353,
     "cell": "Val!B56",
-    "file": "liteon/dist/20261028_光寶個股模型_v0.2.xlsx"
+    "file": "liteon/dist/20261031_光寶個股模型_v0.2.1.xlsx"
    },
    {
     "value": 12.1751171507741,
     "cell": "Val!C56",
-    "file": "liteon/dist/20261028_光寶個股模型_v0.2.xlsx"
+    "file": "liteon/dist/20261031_光寶個股模型_v0.2.1.xlsx"
    },
    {
     "value": 18.6854332952176,
     "cell": "Val!D56",
-    "file": "liteon/dist/20261028_光寶個股模型_v0.2.xlsx"
+    "file": "liteon/dist/20261031_光寶個股模型_v0.2.1.xlsx"
    }
   ],
   "cash": {
@@ -7604,7 +7604,7 @@
      "PL!J50"
     ]
    ],
-   "file": "liteon/dist/20261028_光寶個股模型_v0.2.xlsx"
+   "file": "liteon/dist/20261031_光寶個股模型_v0.2.1.xlsx"
   }
  },
  "3324": {
@@ -8303,73 +8303,73 @@
   }
  },
  "SPCX": {
-  "model": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx",
+  "model": "spacex/dist/20261030_SpaceX個股模型_v0.2.1.xlsx",
   "v2": true,
   "seg_model": true,
   "tp": {
-   "value": 34.8251633063131,
+   "value": 34.7863881219001,
    "cell": "Val!B8",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.1.xlsx"
   },
   "tp_dcf": {
-   "value": 23.367739552796,
+   "value": 23.3429778345002,
    "cell": "Val!B6",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.1.xlsx"
   },
   "tp_comp": {
-   "value": 46.2825870598302,
+   "value": 46.2297984093001,
    "cell": "Val!B7",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.1.xlsx"
   },
   "tp_cons": {
    "value": 244.97,
    "cell": "Val!B10",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.1.xlsx"
   },
   "up": {
-   "value": -0.757973706954527,
+   "value": -0.758243184919729,
    "cell": "Val!B11",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.1.xlsx"
   },
   "up_comp": {
-   "value": -0.67834743860011,
+   "value": -0.678714306697477,
    "cell": "Val!B12",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.1.xlsx"
   },
   "tier6": {
    "value": "小於 −50%",
    "cell": "Val!B13",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.1.xlsx"
   },
   "rec": {
    "value": "強力放空",
    "cell": "Val!B14",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.1.xlsx"
   },
   "dcf_A": {
-   "value": 41.5816290182842,
+   "value": 41.5068111378624,
    "cell": "Val!B132",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.1.xlsx"
   },
   "dcf_C": {
-   "value": 7.79637899149342,
+   "value": 7.81397248730432,
    "cell": "Val!D132",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx"
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.1.xlsx"
   },
   "model_px": {
    "value": 143.89,
    "cell": "Val!B9",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx",
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.1.xlsx",
    "date": "2026-10-29"
   },
   "cash": {
    "basis": "現金流",
-   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.xlsx",
-   "label": "自由現金流五年合計（收支關卡口徑）（基準情境 B；A -177.6、C -302.2）",
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.2.1.xlsx",
+   "label": "自由現金流五年合計（收支關卡口徑）（基準情境 B；A -176.6、C -300.9）",
    "values": [
     [
      "情境 B 五年合計",
-     -249.692961761454,
+     -248.521527458859,
      "CF!C6"
     ]
    ]
