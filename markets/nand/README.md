@@ -1,15 +1,20 @@
-# markets/nand — NAND 市場層 v0.1（2026-10-25）
+# markets/nand — NAND 市場層 v0.2（2026-10-31）
 
 樣板：`markets/memory/`（DRAM／HBM 市場層）。NAND 合約價路徑、加速器顆數 `UNITS` 與情境顆數係數 `SCEN_UNITS` 一律讀 `markets/memory/market.py`（單一來源；本檔只抄錄並標示來源，不自訂行業路徑）。下游：`sndk/`、`kioxia/` 讀本檔成品的 Mkt 頁。
 
 | 檔案 | 內容 |
 |---|---|
 | `build_nand.py` | 產生器 |
-| `dist/20261025_NAND市場模型_v0.1.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261031_NAND市場模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 
 建置：`python3 markets/nand/build_nand.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir <dir> raw.xlsx`；重建一致以 `tools/xlsx_diff.py --tol 1e-9` 檢查。本層無 HTML（樣板 `markets/memory` 亦無）。
 
 **命題：** NAND 營收由 AI 推論帶動的企業級 SSD 位元需求與合約價循環決定；2026–27 供給受限、價格在高檔，2028 起各情境依加速器顆數係數與價格路徑分歧。
+
+## v0.2（2026-10-31）：2026Q3 份額改由實績推得
+
+- `sd_g`：SanDisk FQ1 FY27 營收指引 10.55 → 實績 11.031（$B）；`kx_g`、`kx_fxg`：Kioxia 第二季指引 ¥2,390.0B／162 → 實績 ¥2,480.0B／161。兩家 2026Q3 營收份額由實績推得，2026Q4 起仍＝市場路徑 × 份額。
+- 對照（未用於推導）：SanDisk FQ2 FY27 指引 12.2–12.6、Kioxia 第三季指引 ¥2,500B（157 日圓），兩家 2026Q4 美元營收季增約 +12%／+3%；本層 2026Q4 市場季增（季價 +17.5%＋位元）使兩家模型高於指引一至兩成，待查。
 
 ## 結構（工作表）
 
