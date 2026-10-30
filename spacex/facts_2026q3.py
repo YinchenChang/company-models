@@ -313,31 +313,106 @@ for per, j in (("2026q3", 0), ("2025q3", 1), ("9m2026", 2), ("9m2025", 3)):
     add(f"seg.space.kpi.falcon.{per}", "Space：Falcon 發射次數", fal[j], "次", per, "Q", fi, "MD&A Launches 表", tag="[Interested-party]",
         second=V(f"seg.space.kpi.launchTot.{per}") - stp[j], second_src="新聞稿發射合計 − 10-Q Starship 次數")
 
-# ---- 衍生：2026Q1 分部（9M − Q2 − Q3），供 B 段歷史欄
-for sg in SEG:
-    for key in ("rev", "ebit", "adjEbitda", "capex"):
-        v = V(f"seg.{sg}.{key}.9m2026") - V(f"seg.{sg}.{key}.2026q2") - V(f"seg.{sg}.{key}.2026q3")
-        it = add(f"seg.{sg}.{key}.2026q1", f"{SEGN[sg]}：{({'rev': '營收', 'ebit': '營業利益（損失）', 'adjEbitda': '分部調整後 EBITDA', 'capex': '資本支出'})[key]}（衍生）",
-                 v, UNIT, "2026q1", "P", PH[(key, sg)][1], "Highlights 表 9M 欄 − Q2 欄 − Q3 欄", tag="[Derived]", q="",
-                 note="2026Q1 未見原文；以 9M2026 − 2026Q2 − 2026Q3 推得。xAI 自 2026-02-02 併入，但共同控制合併採合併後主體呈現（見報告第 3 節），Q1 含 xAI 全季")
-for sg in ("space", "conn", "si"):
-    for key in [s[0] for s in SUB[sg]]:
-        add(f"seg.{sg}.{key}.2026q1", f"{SEGN[sg]}：{key}（衍生）", V(f"seg.{sg}.{key}.9m2026") - V(f"seg.{sg}.{key}.2026q2") - V(f"seg.{sg}.{key}.2026q3"),
-            UNIT, "2026q1", "P", PS[(sg, key)][1], "分部頁 9M − Q2 − Q3", tag="[Derived]", q="")
+# ============ 4b. 官方 Q2 財報新聞稿（公司 IR PDF；chat 端 10-30 補充，Andy 授權抓取） ============
+# 本環境 curl 連 q4cdn 被代理擋（403），PDF 未入庫；數字以 WebFetch 讀取（2026-10-30，分三次讀表），故每筆以
+# (a) Q3 新聞稿 June 30, 2026 欄、(b) 9M − Q2 − Q3 推得之 2026Q1、(c) 1H＋Q3 ＝ 9M（10-Q）三種方式交叉核對。Q2 新聞稿分部名稱為「AI」，Q3 起改稱「SI」（Q3 新聞稿註 2）。
+Q2URL = "https://s21.q4cdn.com/184289198/files/doc_financials/2026/q2/SpaceX-Reports-Second-Quarter-2026-Results.pdf"
+Q2SRC = "SpaceX 2026Q2 財報新聞稿（公司 IR PDF，" + Q2URL + "；WebFetch 2026-10-30 讀取，PDF 未入庫）"
+Q2COL = ["2026q2", "2026q1", "2025q2", "1h2026", "1h2025"]
+Q2T = {  # Financial Highlights 表（USD M）
+    ("rev", "space"): [962, 619, 746, 1581, 1611], ("rev", "conn"): [4291, 3257, 2588, 7548, 5062], ("rev", "si"): [2561, 818, 737, 3379, 1465], ("rev", "total"): [7814, 4694, 4071, 12508, 8138],
+    ("ebit", "space"): [-542, -662, -369, -1204, -439], ("ebit", "conn"): [1656, 1188, 923, 2844, 1956], ("ebit", "si"): [-1257, -2469, -1524, -3726, -2460], ("ebit", "total"): [-143, -1943, -970, -2086, -943],
+    ("adjEbitda", "space"): [-205, -351, -93, -556, 131], ("adjEbitda", "conn"): [2597, 2087, 1583, 4684, 3200], ("adjEbitda", "si"): [1146, -609, -276, 537, -387], ("adjEbitda", "total"): [3538, 1127, 1214, 4665, 2944],
+    ("capex", "space"): [1174, 1052, 946, 2226, 1705], ("capex", "conn"): [1367, 1332, 1130, 2699, 1944], ("capex", "si"): [15828, 7723, 749, 23551, 3316], ("capex", "total"): [18369, 10107, 2825, 28476, 6965],
+    # 分部頁
+    ("launchSvc", "space"): [648, 330, 490, 978, 1056], ("launchDev", "space"): [314, 289, 256, 603, 555],
+    ("consumer", "conn"): [2485, 2148, 1721, 4633, 3213], ("entGov", "conn"): [1806, 1109, 867, 2915, 1849],
+    ("ads", "si"): [367, 343, 426, 710, 870], ("siSI", "si"): [2194, 475, 311, 2669, 595],
+    ("da", "space"): [158, 166, 146, 324, 308], ("da", "conn"): [805, 783, 569, 1588, 1078], ("da", "si"): [1885, 1493, 811, 3378, 1584],
+    ("sbc", "space"): [179, 145, 125, 324, 233], ("sbc", "conn"): [136, 116, 91, 252, 166], ("sbc", "si"): [516, 378, 247, 894, 295],
+    ("kpi.launchCust", "space"): [10, 7, 9, 17, 21], ("kpi.launchInt", "space"): [28, 33, 37, 61, 63], ("kpi.launchTot", "space"): [38, 40, 46, 78, 84],
+    ("kpi.massCust", "space"): [87, 45, 88, 132, 163], ("kpi.massInt", "space"): [397, 511, 563, 908, 938], ("kpi.massTot", "space"): [485, 556, 652, 1041, 1102],
+    ("kpi.subs", "conn"): [12.0, 10.3, 6.0, 12.0, 6.0], ("kpi.arpu", "conn"): [66, 66, 85, 66, 85], ("kpi.gw", "si"): [1.4, 1.0, 0.4, 1.4, 0.4]}
+ITEMN = {"rev": "營收", "ebit": "營業利益（損失）", "adjEbitda": "分部調整後 EBITDA", "capex": "資本支出", "launchSvc": "發射服務收入", "launchDev": "發射與開發收入",
+         "consumer": "消費收入", "entGov": "企業與政府收入", "ads": "廣告收入", "siSI": "SI（Q2 稱 AI）解決方案與基礎設施收入", "da": "折舊與攤銷", "sbc": "股權報酬（不含收購相關）",
+         "kpi.launchCust": "客戶發射次數", "kpi.launchInt": "內部發射次數", "kpi.launchTot": "發射次數合計", "kpi.massCust": "客戶酬載質量", "kpi.massInt": "內部酬載質量",
+         "kpi.massTot": "入軌質量合計", "kpi.subs": "Starlink 訂戶（期末；Q2 稱 Starlink Subscribers）", "kpi.arpu": "Starlink ARPU（每月）", "kpi.gw": "名目算力（期末）"}
+KUNIT = {"kpi.launchCust": "次", "kpi.launchInt": "次", "kpi.launchTot": "次", "kpi.massCust": "公噸", "kpi.massInt": "公噸", "kpi.massTot": "公噸",
+         "kpi.subs": "百萬戶", "kpi.arpu": "USD/月", "kpi.gw": "GW"}
+
+
+def addw(iid, item, value, unit, period, source, tag, note="", second=None, second_src="", tol=0.5, q="", url="", docDate=""):
+    it = {"id": iid, "item": item, "value": value, "unit": unit, "period": period, "source": source, "quote": q, "url": url, "docDate": docDate, "tag": tag, "note": note}
+    if second is not None:
+        ok = abs(second - value) <= tol + 1e-9 * abs(value)
+        it["check"] = {"value": second, "source": second_src, "ok": ok}
+        CHK.append({"id": iid, "value": value, "second": second, "source": second_src, "ok": ok})
+    if iid in IDX: raise SystemExit("重複鍵：" + iid)
+    IDX[iid] = it; ITEMS.append(it)
+    return it
+
+
+for (key, sg), vals in Q2T.items():
+    for k, per in enumerate(Q2COL):
+        iid = f"seg.{sg}.{key}.{per}"
+        if per == "2026q2":     # 與 Q3 新聞稿 June 30, 2026 欄互核（不另立鍵）
+            if iid in IDX:
+                chk(f"{iid}（Q2 新聞稿 vs Q3 新聞稿比較欄）", vals[k], V(iid), "Q2 新聞稿 Highlights／分部頁", tol=0.05 if key == "kpi.gw" else 0.5)
+            continue
+        if key in ("kpi.subs", "kpi.gw") and per.startswith("1h"): continue
+        sv, ss, tol = None, "", (0.05 if key == "kpi.gw" else 0.5)
+        if per == "2026q1" and f"seg.{sg}.{key}.9m2026" in IDX and f"seg.{sg}.{key}.2026q2" in IDX and key not in ("kpi.subs", "kpi.gw", "kpi.arpu"):
+            sv = V(f"seg.{sg}.{key}.9m2026") - V(f"seg.{sg}.{key}.2026q2") - V(f"seg.{sg}.{key}.2026q3"); ss = "Q3 新聞稿 9M − Q2 − Q3（衍生）"
+        if per == "1h2025" and f"seg.{sg}.{key}.9m2025" in IDX and key not in ("kpi.subs", "kpi.gw", "kpi.arpu"):
+            sv = V(f"seg.{sg}.{key}.9m2025") - V(f"seg.{sg}.{key}.2025q3"); ss = "10-Q 9M2025 − 2025Q3（容差 2.5：Q2 新聞稿 1H2025 欄與 Q3 10-Q 2025 比較數有 1–2 百萬差，兩次 WebFetch 讀數相同，判為前後期微調或四捨五入，見報告）"; tol = 2.5
+        if per == "1h2026" and key not in ("kpi.subs", "kpi.gw", "kpi.arpu"):
+            sv = vals[0] + vals[1]; ss = "同稿 Q2 欄＋Q1 欄"
+        addw(iid, f"{SEGN[sg]}：{ITEMN[key]}", vals[k], KUNIT.get(key, UNIT), per, Q2SRC + (" Financial Highlights 表" if key in ("rev", "ebit", "adjEbitda", "capex") else " 分部營運與財務資料表"),
+             "[Verified]" if not key.startswith("kpi") and key not in ("adjEbitda",) else "[Interested-party]",
+             note="公司 IR 官方新聞稿；WebFetch 讀取（PDF 未入庫，待下載後以 pdftotext 重讀）", second=sv, second_src=ss, tol=tol, url=Q2URL, docDate="2026-07")
+
+# ============ 4c. FY2025（424B4／S-1）— 二手轉述，待原文核對 ============
+TAGS1 = "[二手轉述 S-1（待 424B4 原文核對）]"
+FOOL = "https://www.fool.com/investing/2026/05/24/spacex-is-going-public-1-and-half-trillion/"
+YH = "https://finance.yahoo.com/markets/article/spacex-files-ipo-prospectus-offering-a-peek-into-its-finances-205406189.html"
+IMP = "https://www.implicator.ai/spacex-targets-135-ipo-price-for-75-billion-nasdaq-listing/"
+FOOL2 = "https://fool.com/investing/2026/05/29/spacex-invests-3x-more-on-ai-than-rockets-and-lost/"
+BC = "https://beancount.io/blog/2026/07/12/spacex-fy2025-earnings-analysis"
+FY = [("seg.total.rev.fy2025", "合併營收", 18674, [FOOL, YH, IMP], "Fool 表 18,674；Yahoo 18.674B；Implicator 18.674B"),
+      ("seg.total.ebit.fy2025", "合併營業損失", -2589, [FOOL, YH, IMP], "三家一致（2,589）"),
+      ("seg.total.adjEbitda.fy2025", "合併調整後 EBITDA", 6584, [YH, IMP], "Yahoo、Implicator 6.584B"),
+      ("seg.space.rev.fy2025", "Space：營收", 4086, [FOOL, YH, IMP], "三家一致"), ("seg.space.ebit.fy2025", "Space：營業損失", -657, [FOOL, YH, IMP], "三家一致"),
+      ("seg.space.adjEbitda.fy2025", "Space：分部調整後 EBITDA", 653, [YH], "只見 Yahoo（單一來源）"),
+      ("seg.conn.rev.fy2025", "Connectivity：營收", 11387, [FOOL, YH, IMP], "三家一致"), ("seg.conn.ebit.fy2025", "Connectivity：營業利益", 4423, [FOOL, YH, IMP], "三家一致"),
+      ("seg.conn.adjEbitda.fy2025", "Connectivity：分部調整後 EBITDA", 7168, [YH], "只見 Yahoo（chat 端所列 7,168 相同；單一來源）"),
+      ("seg.si.rev.fy2025", "AI（現 SI）：營收", 3201, [FOOL, IMP], "Fool 表、Implicator 一致；Yahoo 未列"),
+      ("seg.si.ebit.fy2025", "AI（現 SI）：營業損失", -6355, [FOOL, YH, IMP], "三家一致（Yahoo 未說明口徑，由合計反推為營業損失）"),
+      ("seg.space.capex.fy2025", "Space：資本支出", 3832, [BC, FOOL2], "Beancount 3.83B；Fool 3.8B。注意：與 9M2026 Space capex 3,832 完全相同，疑轉述混用，待原文"),
+      ("seg.conn.capex.fy2025", "Connectivity：資本支出", 4178, [BC, FOOL2], "Beancount 4.18B；Fool 寫 4.1B（不一致）"),
+      ("seg.si.capex.fy2025", "AI（現 SI）：資本支出", 12727, [BC, FOOL2], "Beancount 12.73B；Fool 12.7B")]
+for iid, item, v, urls, note in FY:
+    addw(iid, item + "（FY2025）", v, UNIT, "fy2025", "媒體轉述 SpaceX S-1／424B4（WebFetch 2026-10-30）", TAGS1, note=note, url="；".join(urls), docDate="2026-05",
+         q="Data source: SpaceX S-1（Fool 表註）" if FOOL in urls else "")
+addw("seg.si.adjEbitda.fy2025", "AI（現 SI）：分部調整後 EBITDA（FY2025，衍生）", 6584 - 653 - 7168, UNIT, "fy2025", "合併 6,584 − Space 653 − Connectivity 7,168", "[Derived]",
+     note="由二手轉述數字推得；假設分部調整後 EBITDA 合計＝合併（2026 各期成立）")
+addw("seg.total.capex.fy2025", "資本支出合計（FY2025，衍生）", 3832 + 4178 + 12727, UNIT, "fy2025", "三分部相加", "[Derived]", note="Beancount 合計 20.74B 一致")
+chk("Fool 表 2026Q1 合計 4,964 vs 分部加總 4,694（媒體筆誤）", 4964, V("seg.total.rev.2026q1"), "記錄用：預期不一致，不列入失敗", tol=1e9)
 
 # ============ 5. 分部對帳與恆等式（五期，差額須為 0） ============
 RECON = []
-for per in PER5 + ["2026q1"]:
+for per in PER5 + ["2026q1", "2025q2", "1h2026", "1h2025", "fy2025"]:
     for key in ("rev", "ebit", "adjEbitda", "capex"):
+        if per == "fy2025" and key == "adjEbitda": continue      # AI 為衍生，恆等
         s3 = sum(V(f"seg.{s}.{key}.{per}") for s in ("space", "conn", "si"))
         t = V(f"seg.total.{key}.{per}")
         RECON.append({"period": per, "line": key, "segSum": s3, "total": t, "diff": round(s3 - t, 6)})
         chk(f"recon.{key}.{per}（三分部合計 − 合併）", s3, t, "分部對帳")
     for sg, subs in SUB.items():
+        if per == "fy2025": continue
         s2 = sum(V(f"seg.{sg}.{k}.{per}") for k, _ in subs)
         RECON.append({"period": per, "line": f"{sg}.sublines", "segSum": s2, "total": V(f"seg.{sg}.rev.{per}"), "diff": round(s2 - V(f"seg.{sg}.rev.{per}"), 6)})
         chk(f"recon.{sg}.子列.{per}（子列合計 − 母分部）", s2, V(f"seg.{sg}.rev.{per}"), "子列對帳")
-    if per == "2026q1": continue
+    if per not in PER5: continue
     for sg in ("space", "conn", "si"):
         g = lambda k: IDX.get(f"seg.{sg}.{k}.{per}", {"value": 0})["value"]
         ebit = g("rev") - g("cogs") - g("rd") - g("sga") - g("restr") - g("impair")
@@ -766,6 +841,27 @@ k = find(Q, lambda l: "our board of directors has formed a special committee to 
 add("tesla.combination", "董事會成立特別委員會評估與 Tesla 合併（尚無決定）", None, "—", "2026-10-20", "Q", k, "MD&A Evaluation of Potential Combination with Tesla", tag="[Interested-party]",
     q=re.sub(r"\s+", " ", " ".join(x.strip() for x in Q[k - 1:k + 2]))[:260], note="S7：不進模型，Thesis 頁列事件風險")
 
+# ---- Q2 新聞稿合併層數字（需 10-Q 讀完後互核）
+Q2X = [("is.rev.2026q2", "合併營收", 7814, "2026q2"), ("is.ebit.2026q2", "合併營業損失", -143, "2026q2"), ("is.ni.2026q2", "合併淨損", -541, "2026q2"),
+       ("is.ni.1h2026", "合併淨損（1H）", -4817, "1h2026"), ("is.epsDil.2026q2", "稀釋 EPS", -0.09, "2026q2"), ("is.shDil.2026q2", "稀釋加權股數（M）", 5864, "2026q2"),
+       ("cons.adjEbitda.2026q2", "調整後 EBITDA", 3538, "2026q2"), ("cf.cfo.1h2026", "營業現金流（1H）", 3466, "1h2026"),
+       ("bs.cash.20260630", "現金及約當現金", 93522, "20260630"), ("bs.mktSec.20260630", "有價證券", 6487, "20260630"),
+       ("bs.debtCur.20260630", "債務與融資租賃（流動）", 2525, "20260630"), ("bs.debtLt.20260630", "債務與融資租賃（非流動）", 36839, "20260630"),
+       ("backlog.total.20260630", "Backlog", 47500, "20260630"), ("si.cloud.contracted.2026q2", "2026Q2 簽訂雲端服務合約之合約銷售額（Cloud Services Agreements）", 14100, "2026q2")]
+for iid, item, v, per in Q2X:
+    sv, ss = None, ""
+    if iid == "is.ni.1h2026": sv, ss = V("is.ni.9m2026") - V("is.ni.2026q3"), "10-Q 9M2026 淨損 − Q3 淨利"
+    if iid == "is.rev.2026q2": sv, ss = V("seg.total.rev.2026q2"), "Q3 新聞稿 June 30, 2026 欄"
+    if iid == "is.ebit.2026q2": sv, ss = V("seg.total.ebit.2026q2"), "Q3 新聞稿 June 30, 2026 欄"
+    if iid == "cons.adjEbitda.2026q2": sv, ss = V("seg.total.adjEbitda.2026q2"), "Q3 新聞稿 June 30, 2026 欄"
+    addw(iid, item, v, ("USD" if "eps" in iid else "M 股" if "shDil" in iid else UNIT), per, Q2SRC,
+         "[Interested-party]" if iid.startswith(("cons.", "backlog", "si.cloud")) else "[Verified]",
+         note=("Q2 新聞稿原句：『$47.5 billion in backlog』；Q3 為 62,959（季增 15.5B）" if iid.startswith("backlog") else
+               "原句：『Cloud Services Agreements totaling $14.1 billion in contracted sales』；總額、期間、客戶未揭露" if iid.startswith("si.cloud") else
+               "WebFetch 讀取，單一讀取；待 PDF 入庫重讀" if sv is None else ""),
+         second=sv, second_src=ss, url=Q2URL, docDate="2026-07", tol=0.5)
+chk("bs.cash＋mktSec 2026-06-30（Q2 新聞稿『約 100B』）", V("bs.cash.20260630") + V("bs.mktSec.20260630"), 100000, "Q2 新聞稿文字 $100 billion（四捨五入）", tol=500)
+
 # ============ 輸出 ============
 OUT = {"_readme": "SpaceX 2026Q3 事實總帳（SpaceX v0.1 工作單 A 段）。由 spacex/facts_2026q3.py 自 10-Q（2026-10-22）與 8-K 財報新聞稿（2026-10-20）讀取；"
                   "金額 USD M（除另註）；期間鍵：2026q3、2026q2、2025q3、9m2026、9m2025、2026q1（衍生）、20260930／20251231（時點）。"
@@ -779,6 +875,6 @@ bad = [c for c in CHK if not c["ok"]]
 n2 = sum(1 for it in ITEMS if "check" in it)
 print(f"事實 {len(ITEMS)} 筆（其中 {n2} 筆有第二讀）；核對 {len(CHK)} 項，一致 {len(CHK) - len(bad)}，不一致 {len(bad)}")
 rb = [r for r in RECON if abs(r["diff"]) > 1e-9]
-print("分部對帳（2025Q3、2026Q2、2026Q3、9M2025、9M2026＋衍生 2026Q1）：", "全部差額 0" if not rb else rb)
+print("分部對帳（2025Q2、2025Q3、2026Q1、2026Q2、2026Q3、1H2025、1H2026、9M2025、9M2026、FY2025）：", "全部差額 0" if not rb else rb)
 for c in bad: print("  不一致：", c)
 sys.exit(1 if bad or rb else 0)
