@@ -14,7 +14,7 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 GL = os.path.dirname(HERE)
 ROOT = os.path.dirname(GL)
-VERSION = "v0.1.5"
+VERSION = "v0.1.6"
 DATE = "20261031"
 TK_SNAPSHOT = os.path.join(ROOT, "siliconomics", "data", "tokenomics_snapshot_v21.7.json")
 SIL_DIR = os.path.join(ROOT, "siliconomics", "data")
@@ -238,7 +238,7 @@ def main():
         r += 1
     AL1 = r - 1
     r += 1
-    sec("T2. 園區管線（H 營運者鍵、I 使用者鍵、J MW、K 公告上線年、L 公告上線月、M 已知延遲〔月〕、N 納入〔1＝計入〕、O 已確保電力〔1＝是；D2 不適用〕）")
+    sec("T2. 園區管線（H 營運者鍵、I 使用者鍵、J MW、K 公告上線年、L 公告上線月、M 已知延遲〔月〕、N 納入〔1＝計入；2＝只進電力證據路徑，不入 Players／Pipeline〕、O 已確保電力〔1＝是；D2 不適用〕）")
     hdr(IN, r, ["鍵", "園區", "口徑", "單位", "標記", "來源 ID", "說明", "營運者", "使用者", "MW", "上線年", "上線月", "已知延遲月", "納入", "已確保電力"]); r += 1
     CAMP = []
     for cp in seed["campus"]:
@@ -621,7 +621,8 @@ def main():
                          ("runi", "均勻型殘差合計", lambda c: f"=SUM({c}{RUNI[PK[0]]}:{c}{RUNI[PK[-1]]})"),
                          ("camp", "園區（D0 上線年）合計", None),
                          ("stk", "新納入存量（Players）", lambda c: f"=Players!{c}{TOT['stk']}"),
-                         ("addchk", "殘差＋園區（須＝Players 年新增）", None)):
+                         ("addchk", "殘差＋園區（須＝Players 年新增）", None),
+                         ("pwr", "電力證據路徑：T2 納入＝2 的供電合約列 D0 上線（IT GW；不入 Players，只用於 WIF_Coverage_Power）", None)):
         PP.cell(r, 1, lab).font = BOLD
         for y in YEARS:
             c = YC[y]
@@ -629,6 +630,8 @@ def main():
                 f = f'=SUMIFS({rng("L")},{rng("Q")},1,{rng("P")},{y})'
             elif key == "addchk":
                 f = f"={c}{AGG['res']}+{c}{AGG['camp']}"
+            elif key == "pwr":
+                f = f'=SUMIFS({rng("L")},{rng("G")},2,{rng("P")},{y})'
             elif y == 2023 and key in ("res", "robs", "runi"):
                 f = 0
             else:
@@ -848,7 +851,12 @@ def main():
     for y in YEARS:
         c = YC[y]
         DP.cell(r, YEARS.index(y) + 4, f'=IF({y}<=2026,1,IF({c}{DR["naAD0"]}<=0,1,MIN(1,MAX(0,{c}{DR["naAD0_SO"]})/{c}{DR["naAD0"]})))').number_format = "0.00"
-    DR["cov"] = r; r += 2
+    DR["cov"] = r; r += 1
+    DP.cell(r, 1, "覆蓋率（含電力證據路徑：SiteOnly 年新增＋T2 納入＝2 的已核准供電合約列；A、D0；MIN 1）").font = BOLD
+    for y in YEARS:
+        c = YC[y]
+        DP.cell(r, YEARS.index(y) + 4, f'=IF({y}<=2026,1,IF({c}{DR["naAD0"]}<=0,1,MIN(1,MAX(0,{c}{DR["naAD0_SO"]}+Pipeline!{c}{AGG["pwr"]})/{c}{DR["naAD0"]})))').number_format = "0.00"
+    DR["covp"] = r; r += 2
     DP.cell(r, 1, "對外發布：A-D0、B-D1、C-D2 三條與基準 A-D1（規劃書第 4 節）；Interface 主路徑與 SiteOnly 各 9 組皆輸出").font = BOLD
     DP_LAST = r + 1
     DP.column_dimensions["A"].width = 46
@@ -1343,6 +1351,11 @@ def main():
         c = IF.cell(r, 4 + j, f"=Deploy!{YC[y]}{DR['cov']}"); c.font = GREEN; c.number_format = "0.00"
         name(wb, f"WIF_Coverage_{y}", f"Interface!${get_column_letter(4 + j)}${r}"); GIF.append(f"WIF_Coverage_{y}")
     IF.cell(r, 13, f"Deploy!{YC[2024]}{DR['cov']}:{YC[2032]}{DR['cov']}"); IFCOV = r; r += 1
+    IF.cell(r, 1, "WIF_Coverage_Power"); IF.cell(r, 2, "覆蓋率（含電力證據路徑；只作參考，Checks 不以此判定）"); IF.cell(r, 3, "比")
+    for j, y in enumerate(OUTY):
+        c = IF.cell(r, 4 + j, f"=Deploy!{YC[y]}{DR['covp']}"); c.font = GREEN; c.number_format = "0.00"
+        name(wb, f"WIF_Coverage_Power_{y}", f"Interface!${get_column_letter(4 + j)}${r}"); GIF.append(f"WIF_Coverage_Power_{y}")
+    IF.cell(r, 13, f"Deploy!{YC[2024]}{DR['covp']}:{YC[2032]}{DR['covp']}"); r += 1
     for sfx, nsfx, vlab in (("", "", "主路徑"), ("_SO", "_SiteOnly", "SiteOnly：只有 甲")):
         IF.cell(r, 1, f"A{nsfx}. 市場總 GW（{vlab}；需求情景 × 延遲）").font = BOLD; r += 1
         for s in SCEN:
@@ -1631,7 +1644,9 @@ def main():
         ("v0.1.2：套用 H 段（API 旗標人工複核）更正——證據檔 79 筆、In 輸入 19 格（cp_msft_abl 改 336＋336 MW-IT、xfmr_gva 2.1／2.67／3.15、fac_gen_px 低 0.5），FundRaw F#31、F#199、F#222 改不採用（採購或投資存量，非融資）；"
          "園區候選（S 段 409 列，site_pipeline）經 API 回查與 I 段未參與代理開原文抽查後合併：新增 17 列（計入 13 列）、更正既有 20 列（Fairwater 拆分、Ports Pike 首批 800 MW 至 2031、Humain 1.7 GW 提前到 2027、Milam 308＋445、Jupiter 已知延遲刪除）、3 列改計入（Stargate UAE、Colossus 2、Mistral 96 MW）。Hyperion 5 GW、SoftBank 苫小牧依判斷題預設不入。", True),
         ("v0.1.3：第二輪美國以外園區候選（T 段 345 列，site_pipeline 分區 Batch）經 API 回查與 I2 段未參與代理開原文抽查後合併：新增 10 列（計入 5：Nebius Beit Shemesh、Google Kronstorf、DataVita DV1 擴建、Meta Sturgeon 250＋720 設施）；Humain 兩列加註風險（只有公司目標支持）；主權玩家名稱更新。", True),
+        ("v0.1.4：Q3 財報 F#255–257（AWS backlog、Amazon 2027 資本支出未量化指引、Meta 9-30 債務與現金）。", True),
         ("v0.1.5：補 2027 覆蓋率（J 段）：Epoch 站點時間線逐頁、公司與電力公司文件、AI半導體 2026-10-30 送件，經未參與代理開原文複核（30 列可用、1 列無法核對）後合併——新增 T2 27 列（Google Fort Wayne、Cedar Rapids、Storey、Columbus、Lincoln、Goodnight；AWS New Albany、Ridgeland B5、Berwick、Black Pearl DH4；Meta Montgomery、Cheyenne、Bowling Green；Oracle Saline 第 1 棟、Red Oak；Nebius Mäntsälä；Nscale Sines、Lake Mariner；2028：Van Buren、Kozani），改既有 6 列（Shackelford 依 Epoch 時程前移、Saline 1,383→922、Lordstown 納入、Nebius PA 260／Lappeenranta 70 納入）。WIF_Coverage_2027 0.377→0.526；只動 2027 年以後的上線量，2026 年底不變。", True),
+        ("v0.1.6：K 段 2028H2–2032 證據（未參與代理複核：屬實 26、小誤 9）——新增 T2 33 列：站點 10 列（Microsoft Pecos 2,000、Catawba 720 IT、Rome 422、Aragón 150；Google Visakhapatnam 1,000；CoreWeave Helios III 132）、電力證據路徑 10 列（納入＝2：NIPSCO–Amazon 確定 1,200、Georgia Power–OpenAI 確定 2,200；只進 WIF_Coverage_Power，不入 Players）、未核准合約 13 列（納入＝0）。新名稱 WIF_Coverage_Power_<yyyy>。2026 年以前 0 變動，2027 年主路徑與 SiteOnly 不變。", True),
         ("顏色：藍字＝輸入；黑字＝公式；綠字＝跨頁或外部鏡像；淡黃底＝關鍵輸出；亮黃底＝待證據或預設待決。", False),
         ("Excel 優先：要改輸入，直接改 In 頁藍字；builder 重建時讀回（--base）。公式頁不要手改。下游只讀 Interface 的 WIF_ 名稱（經快照）。", False),
         ("版本命名：YYYYMMDD_Wattonomics_vX.Y.xlsx；model/CURRENT 記錄現行檔名；data/CURRENT_SNAPSHOT 指向現行快照。", False),
