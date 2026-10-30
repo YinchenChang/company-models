@@ -1,5 +1,11 @@
 # alab/ — Astera Labs（ALAB）收支與估值模型 v0.1.1
 
+## v0.1.3（2026-10-30）：In 頁「敏感度低／高」與「情境 A／B／C」分開（數值不變）
+
+- 依 `docs/plan/個股模型原則_命題加營收分部.md` 第 8 節（Andy 2026-10-29 同意、指示套用）：In 頁 D／F 欄名改「敏感度低」「敏感度高」，只用於 Sens 頁、不進目標價；In 頁最後新增「情境驅動對照」一節，把上方各情境專屬輸入三情境並排（每格只引用上方列，純展示）；HTML 驅動因子一節分「情境驅動」與「單一參數」兩張表。
+- 共用工具 `tools/in_layout/apply_in_layout.py`（建置腳本存檔前呼叫）；`tools/in_layout/check_in_layout.py` 通過。新舊成品逐格比較：數值格全部相同，差異只有 In 頁 A1、D3、F3、新增一節、README 頁版本說明與上游檔名文字。
+- 成品：`dist/20261030_Astera Labs個股模型_v0.1.3.xlsx`。
+
 Astera Labs 的 Scorpio X 營收＝非 NVIDIA scale-up 交換晶片市場（`markets/network`：AMD、Trainium、其他 ASIC 顆數 × 每顆 scale-up 交換晶片內容）× Astera 有效份額；PCIe 與訊號調節（Aries 重定時器、Scorpio P PCIe 交換晶片、Taurus AEC 模組、Leo CXL）＝AI 加速器顆數 × 每顆內容 × 份額。3Q26 指引季增約 40%、Scorpio 成為最大產品線：成長重心正由重定時器轉到 scale-up 交換晶片。現價約 64 倍共識 FY2026 EPS、40 倍 FY2027。
 
 **核心問題：現價隱含的 FY2028 EPS 需要 Scorpio X 在非 NVIDIA scale-up 交換晶片維持多少份額、PCIe 等業務流失多少才成立？非 NVIDIA 加速器顆數與 NVLink Fusion 的競爭是主要不確定性。**
