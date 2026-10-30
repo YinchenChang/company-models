@@ -33,7 +33,8 @@ def tp_of(xlsx, rowmap):
     wb = openpyxl.load_workbook(xlsx, data_only=True)
     return {"tp": wb["Val"].cell(rm["VR"]["tp"], 2).value, "gateB": wb["CF"].cell(rm["GATE"], 3).value,
             "s2B": wb["Seg"][f"I{rm['SR']['B']['s2']}"].value, "plug27B": wb["CF"][f"H{rm['CR']['B']['plug']}"].value,
-            "rec": wb["Val"].cell(rm["VR"]["rec"], 2).value}
+            "rec": wb["Val"].cell(rm["VR"]["rec"], 2).value, "q4revB": wb["PL"][f"F{rm['PR']['B']['rev']}"].value,
+            "q1revB": wb["Recon"].cell(rm["RCR"]["q1_m"], 3).value, "k0": wb["Thesis"].cell(rm["T"]["k0"], 3).value}
 
 
 def run(name, sets):

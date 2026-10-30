@@ -1,5 +1,6 @@
 # v0.1 → v0.2 目標價歸因瀑布：以 SPCX_STAGE＝0…6 逐項套用改動（0＝v0.1 公式與輸入、在 v0.2 事實檔上重建），每一階段整本 LibreOffice 重算，
 # 記錄加權目標價、評等、收支關卡 B、FY2028 S2 比值 B、讀法 1 目標價；相鄰兩階段之差即該項貢獻（合計＝v0.2 − v0.1）。
+# 第 0 階段另以 SPCX_NO_G2CAL 不影響（G2 校準只在 Sens）。
 # 用法：python3 spacex/waterfall_v02.py <工作資料夾> <輸出 json>（JOBS＝平行數，預設 2）
 import json, os, subprocess, sys, shutil, tempfile
 from concurrent.futures import ThreadPoolExecutor
@@ -14,7 +15,8 @@ STAGES = [(0, "v0.1（重建；應等於 v0.1 成品 28.76）"),
           (3, "G5：424B4 原文（2024 年底名目算力 0.15 → 0.3、2025 年底 0.8 不變；其餘 FY2025 原文只影響實績欄）"),
           (4, "G1：Q4 26 合併資本支出 37.5（SI＝37.5 − Space − Connectivity；取代 Q3 季速）"),
           (5, "G1：2026 年底名目算力 2.75 GW（Q4 新增 1.05；取代 pace × 0.25 推得的 2.11）"),
-          (6, "G3：FY2027–28 pace＝37.5 × 4 × SI 占比 83.2%（＋以融資取得 PP&E）÷ 每 GW 投資")]
+          (6, "G3（一修）：FY2027–28 pace＝(37.5 × 9M26 SI 占比 83.2%＋以融資取得 PP&E 1.307) × 4 ÷ 每 GW 投資＝2.98"),
+          (7, "G3 一致性（二修）：pace 改用與 Q4 相同拆法＝(37.5 − Space − Connectivity 3.437＋1.307) × 4 ÷ 43.64＝3.24")]
 
 
 def run(stage):

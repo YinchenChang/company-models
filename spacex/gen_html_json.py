@@ -37,7 +37,9 @@ r1 = find("Recon", "1. 合併層"); r2 = find("Recon", "2. 逐分部"); r3 = fin
 r5_end = max(r for r in range(r5, wb["Recon"].max_row + 1) if wb["Recon"].cell(r, 1).value)
 se_end = max(x[3] for x in rm["SE_ROWS"])
 _se = wb["Sens"]
-tor_rows = ",".join(str(x[3]) for x in rm["SE_ROWS"] if isinstance(_se.cell(x[3], 5).value, (int, float)) and abs(_se.cell(x[3], 5).value) >= 0.0005)
+_tv = [abs(_se.cell(x[3], 5).value) for x in rm["SE_ROWS"] if isinstance(_se.cell(x[3], 5).value, (int, float))]
+_thr = max(0.0005, max(_tv) / 5000)   # 長條寬度＝變動 ÷ 最大 × 50%，以兩位小數輸出；太小的案例畫不出寬度，只列在全表
+tor_rows = ",".join(str(x[3]) for x in rm["SE_ROWS"] if isinstance(_se.cell(x[3], 5).value, (int, float)) and abs(_se.cell(x[3], 5).value) >= _thr)
 thh = rm["TH_HDR"]
 th_keys = ("end", "avg_ext", "avg_int", "he_fl", "si_inv", "si_cash", "si_fin", "da_ai", "da_b", "int_opex", "shadow", "int_cost")
 th_rows = ",".join(str(T[k]) for k in th_keys)
