@@ -23,7 +23,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.6.5"
+VERSION = "v0.6.6"
 DATE = "20261030"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
@@ -137,6 +137,9 @@ POSITION = {
     "MSFT": ("AI 雲端平台", 1, 2, "Azure 第二大公有雲；OpenAI 主要算力夥伴", "[判斷]"),
     "GOOGL": ("AI 雲端平台", 1, 2, "TPU＋Gemini 垂直整合；雲端第三", "[判斷]"),
     "ORCL": ("AI 雲端平台", 2, 3, "OCI 規模較小；Stargate 主要承建方，客戶集中", "[判斷]"),
+    # v0.6.6（2026-10-30）：算力收支 Meta、SpaceX 模型接入；POSITION 依其建議，地圖無「AI 應用與平台」，Meta 改歸「AI 模型商」
+    "SPCX": ("AI 雲端平台", 2, 3, "SI 分部（原 xAI）：自建名目算力 1.7 GW（2026-09-30）、對外算力出租＋Grok／Cursor／X；Starlink 現金流支撐（算力收支建議）", "[判斷]"),
+    "META": ("AI 模型商", 1, 3, "自建算力最大的廣告平台之一（Llama、自研 MTIA）；2026 資本支出指引 135–145B（含融資租賃本金）。地圖無「AI 應用與平台」，歸模型商（算力收支建議次產業不在地圖）", "[判斷]"),
     "CRWV": ("Neocloud（GPU 租賃）", 2, 1, "最大 neocloud；客戶集中於 Microsoft、OpenAI", "[判斷]"),
     "NBIS": ("Neocloud（GPU 租賃）", 2, 2, "歐洲為主的 neocloud；Microsoft 長約", "[判斷]"),
     "WYFI": ("Neocloud（GPU 租賃）", 3, 4, "小型 neocloud＋託管", "[判斷]"),
@@ -157,6 +160,7 @@ COMPANY_META = {
     "6146": ("Disco", "日", "JPY", "disco"),
     "MSFT": ("Microsoft", "美", "USD", "microsoft"), "AMZN": ("Amazon", "美", "USD", "amazon"),
     "GOOGL": ("Alphabet", "美", "USD", "alphabet"), "ORCL": ("Oracle", "美", "USD", "oracle"),
+    "META": ("Meta", "美", "USD", "meta"), "SPCX": ("SpaceX", "美", "USD", "spacex"),
     "CRWV": ("CoreWeave", "美", "USD", "coreweave"), "NBIS": ("Nebius", "美", "USD", "nebius"),
     "WYFI": ("WhiteFiber", "美", "USD", "whitefiber"),
     "00100": ("MiniMax", "港", "HKD", "minimax"), "02513": ("智譜", "港", "HKD", "zhipu"),
@@ -190,7 +194,7 @@ _add_semis()
 MAP_EXTRA = []  # OpenAI、Anthropic 已納入 POSITION（2026-10-25 Andy：未上市也放，可投資性寫「未上市」）
 
 PARAMS = [
-    ("gate_tol", 50, "收支關卡容忍帶（US$B，只用於 MSFT／GOOGL／AMZN／ORCL）：五年合計在 −gate_tol～0 視為 0、不變號（2026-10-29 MAG 串建議預設，待 Andy 決定）"),
+    ("gate_tol", 50, "收支關卡容忍帶（US$B，只用於 MSFT／GOOGL／AMZN／ORCL／META）：五年合計在 −gate_tol～0 視為 0、不變號（2026-10-29 MAG 串建議預設，待 Andy 決定）"),
     ("w_irr", 0.40, "地位分數權重：不可替代性"),
     ("w_pos", 0.35, "地位分數權重：市場位置"),
     ("w_vc", 0.25, "地位分數權重：價值鏈分量"),
@@ -526,7 +530,7 @@ def main():
         we.cell(i, 31, sum(vals)).font = BLUE
         we.cell(i, 32, min(vals)).font = BLUE
         we.cell(i, 33, f"[Derived] {cash['file']} {cells[0]}…{cells[-1]}")
-        if tk in ("MSFT", "GOOGL", "AMZN", "ORCL"):   # 容忍帶（2026-10-29，待 Andy）：|B| < gate_tol 不變號
+        if tk in ("MSFT", "GOOGL", "AMZN", "ORCL", "META"):   # 容忍帶（2026-10-29，待 Andy）：|B| < gate_tol 不變號
             we.cell(i, 34, f'=IF(AE{i}<-gate_tol,"不通過",IF(AE{i}<0,"通過（容忍帶內，接近 0）","通過（現金流）"))')
         else:
             we.cell(i, 34, f'=IF(AB{i}="淨利",IF(AF{i}>0,"通過（淨利）","不通過"),IF(AE{i}<0,"不通過","通過（現金流）"))')

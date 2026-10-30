@@ -1,11 +1,11 @@
 {
  "meta": {
-  "version": "v0.6.5",
-  "book": "20261030_AI投資地圖_資料_v0.6.5.xlsx",
+  "version": "v0.6.6",
+  "book": "20261030_AI投資地圖_資料_v0.6.6.xlsx",
   "tk_file": "20261024_Tokenomics_v21.4.xlsx",
   "tk_version": "v21.4",
   "tk_commit": "3ac70ac",
-  "cm_commit": "f734408",
+  "cm_commit": "15a1f76",
   "built": "2026-10-27",
   "price_date": "半導體：各模型現價（2026-10-22／23）；Microsoft、Alphabet、Amazon、Oracle：模型現價（2026-10-26 收盤）；其餘雲端與模型商：2026-10-23 收盤",
   "pages": "https://yinchenchang.github.io/company-models/",
@@ -406,7 +406,7 @@
    "pos_s": 75,
    "vc_s": 25,
    "score": 58.5,
-   "rank": 39
+   "rank": 41
   },
   {
    "tk": "6857",
@@ -496,7 +496,37 @@
    "pos_s": 50,
    "vc_s": 100,
    "score": 66.5,
-   "rank": 30
+   "rank": 31
+  },
+  {
+   "tk": "SPCX",
+   "name": "SpaceX",
+   "layer": "L4 算力平台",
+   "seg": "AI 雲端平台",
+   "imp": 2,
+   "posn": 3,
+   "basis": "SI 分部（原 xAI）：自建名目算力 1.7 GW（2026-09-30）、對外算力出租＋Grok／Cursor／X；Starlink 現金流支撐（算力收支建議）",
+   "tag": "[判斷]",
+   "irr_s": 60,
+   "pos_s": 50,
+   "vc_s": 100,
+   "score": 66.5,
+   "rank": 31
+  },
+  {
+   "tk": "META",
+   "name": "Meta",
+   "layer": "L5 模型商",
+   "seg": "AI 模型商",
+   "imp": 1,
+   "posn": 3,
+   "basis": "自建算力最大的廣告平台之一（Llama、自研 MTIA）；2026 資本支出指引 135–145B（含融資租賃本金）。地圖無「AI 應用與平台」，歸模型商（算力收支建議次產業不在地圖）",
+   "tag": "[判斷]",
+   "irr_s": 80,
+   "pos_s": 50,
+   "vc_s": 75,
+   "score": 68.25,
+   "rank": 27
   },
   {
    "tk": "CRWV",
@@ -511,7 +541,7 @@
    "pos_s": 100,
    "vc_s": 50,
    "score": 65.5,
-   "rank": 32
+   "rank": 34
   },
   {
    "tk": "NBIS",
@@ -526,7 +556,7 @@
    "pos_s": 75,
    "vc_s": 50,
    "score": 56.75,
-   "rank": 40
+   "rank": 42
   },
   {
    "tk": "WYFI",
@@ -541,7 +571,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 33.25,
-   "rank": 61
+   "rank": 63
   },
   {
    "tk": "OpenAI",
@@ -586,7 +616,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 54.25,
-   "rank": 42
+   "rank": 44
   },
   {
    "tk": "02513",
@@ -601,7 +631,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 54.25,
-   "rank": 42
+   "rank": 44
   },
   {
    "tk": "AMD",
@@ -661,7 +691,7 @@
    "pos_s": 25,
    "vc_s": 100,
    "score": 65.75,
-   "rank": 31
+   "rank": 33
   },
   {
    "tk": "3443",
@@ -676,7 +706,7 @@
    "pos_s": 25,
    "vc_s": 100,
    "score": 59.75,
-   "rank": 38
+   "rank": 40
   },
   {
    "tk": "285A",
@@ -721,7 +751,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 60.25,
-   "rank": 35
+   "rank": 37
   },
   {
    "tk": "LITE",
@@ -736,7 +766,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 60.25,
-   "rank": 35
+   "rank": 37
   },
   {
    "tk": "300502",
@@ -751,7 +781,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 60.25,
-   "rank": 35
+   "rank": 37
   },
   {
    "tk": "2345",
@@ -766,7 +796,7 @@
    "pos_s": 25,
    "vc_s": 75,
    "score": 51.5,
-   "rank": 46
+   "rank": 48
   },
   {
    "tk": "FN",
@@ -781,7 +811,7 @@
    "pos_s": 25,
    "vc_s": 75,
    "score": 51.5,
-   "rank": 46
+   "rank": 48
   },
   {
    "tk": "CRDO",
@@ -796,7 +826,7 @@
    "pos_s": 25,
    "vc_s": 75,
    "score": 51.5,
-   "rank": 46
+   "rank": 48
   },
   {
    "tk": "ALAB",
@@ -811,7 +841,7 @@
    "pos_s": 25,
    "vc_s": 75,
    "score": 45.5,
-   "rank": 56
+   "rank": 58
   },
   {
    "tk": "2449",
@@ -856,7 +886,7 @@
    "pos_s": 75,
    "vc_s": 25,
    "score": 64.5,
-   "rank": 33
+   "rank": 35
   },
   {
    "tk": "3037",
@@ -871,7 +901,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 55.75,
-   "rank": 41
+   "rank": 43
   },
   {
    "tk": "8046",
@@ -886,7 +916,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 47.75,
-   "rank": 50
+   "rank": 52
   },
   {
    "tk": "2368",
@@ -901,7 +931,7 @@
    "pos_s": 25,
    "vc_s": 25,
    "score": 39,
-   "rank": 59
+   "rank": 61
   },
   {
    "tk": "300476",
@@ -916,7 +946,7 @@
    "pos_s": 25,
    "vc_s": 25,
    "score": 39,
-   "rank": 59
+   "rank": 61
   },
   {
    "tk": "ASML",
@@ -991,7 +1021,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 53.25,
-   "rank": 44
+   "rank": 46
   },
   {
    "tk": "TER",
@@ -1006,7 +1036,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 53.25,
-   "rank": 44
+   "rank": 46
   },
   {
    "tk": "BESI",
@@ -1021,7 +1051,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 47.25,
-   "rank": 53
+   "rank": 55
   },
   {
    "tk": "6315",
@@ -1036,7 +1066,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 47.25,
-   "rank": 53
+   "rank": 55
   },
   {
    "tk": "7729",
@@ -1051,7 +1081,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 47.25,
-   "rank": 53
+   "rank": 55
   },
   {
    "tk": "2317",
@@ -1066,7 +1096,7 @@
    "pos_s": 100,
    "vc_s": 25,
    "score": 67.25,
-   "rank": 29
+   "rank": 30
   },
   {
    "tk": "3231",
@@ -1081,7 +1111,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 49.75,
-   "rank": 49
+   "rank": 51
   },
   {
    "tk": "6669",
@@ -1096,7 +1126,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 41.75,
-   "rank": 57
+   "rank": 59
   },
   {
    "tk": "DELL",
@@ -1111,7 +1141,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 41.75,
-   "rank": 57
+   "rank": 59
   },
   {
    "tk": "SMCI",
@@ -1126,7 +1156,7 @@
    "pos_s": 25,
    "vc_s": 25,
    "score": 27,
-   "rank": 63
+   "rank": 65
   },
   {
    "tk": "3017",
@@ -1141,7 +1171,7 @@
    "pos_s": 75,
    "vc_s": 25,
    "score": 64.5,
-   "rank": 33
+   "rank": 35
   },
   {
    "tk": "2301",
@@ -1156,7 +1186,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 47.75,
-   "rank": 50
+   "rank": 52
   },
   {
    "tk": "3324",
@@ -1171,7 +1201,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 47.75,
-   "rank": 50
+   "rank": 52
   },
   {
    "tk": "3653",
@@ -1186,7 +1216,7 @@
    "pos_s": 25,
    "vc_s": 25,
    "score": 33,
-   "rank": 62
+   "rank": 64
   }
  ],
  "valuation": [
@@ -1745,24 +1775,24 @@
    "tier": "放空",
    "vtier": "放空",
    "mfolder": "microsoft",
-   "mfile": "20261029_Microsoft個股模型_v0.3.2.html",
+   "mfile": "20261030_Microsoft個股模型_v0.3.3.html",
    "gate": "通過（現金流）",
    "gbasis": "現金流",
    "glabel": "自由現金流扣股利五年合計（基準情境 B；A 363.2、C 137.9）",
    "gseries": "情境 B 五年合計 259.6",
    "gsum": 259.640219939081,
    "gmin": 259.640219939081,
-   "gsrc": "[Derived] microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx CF!C5…CF!C5",
+   "gsrc": "[Derived] microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx CF!C5…CF!C5",
    "alt": null,
    "altlbl": "",
    "pe28": "21.4 ／ 22.6 ／ 24.0",
    "note": "DCF 目標價 324.4（Val!B14）；Comparable 目標價 443.8（Val!B31）；市場共識目標價 605.1（Val!B38，外部、僅供對照）；價格帶 C～A 情境 DCF 280.7～364.2",
-   "c1src": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx Val!B36",
+   "c1src": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx Val!B36",
    "c2src": "",
-   "b1src": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx Val!D13",
+   "b1src": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx Val!D13",
    "b2src": "",
    "tier6": "−50%～−25%",
-   "recsrc": "上檔空間 microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx Val!B40；投資建議 microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx Val!B43；級距 microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx Val!B42"
+   "recsrc": "上檔空間 microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx Val!B40；投資建議 microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx Val!B43；級距 microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx Val!B42"
   },
   {
    "tk": "AMZN",
@@ -1827,24 +1857,24 @@
    "tier": "中立",
    "vtier": "中立",
    "mfolder": "alphabet",
-   "mfile": "20261029_Alphabet個股模型_v0.3.2.html",
+   "mfile": "20261030_Alphabet個股模型_v0.3.3.html",
    "gate": "通過（容忍帶內，接近 0）",
    "gbasis": "現金流",
    "glabel": "自由現金流扣股利五年合計（基準情境 B；A 77.7、C -145.8）",
    "gseries": "情境 B 五年合計 -0.6",
    "gsum": -0.648225979925059,
    "gmin": -0.648225979925059,
-   "gsrc": "[Derived] alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx CF!C6…CF!C6",
+   "gsrc": "[Derived] alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx CF!C6…CF!C6",
    "alt": null,
    "altlbl": "",
    "pe28": "",
    "note": "DCF 目標價 189.1（Val!B6）；Comparable 目標價 327.3（Val!B7）；市場共識目標價 429.1（Val!B10，外部、僅供對照）；價格帶 C～A 情境 DCF 149.3～218.8",
-   "c1src": "alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx Val!B8",
+   "c1src": "alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx Val!B8",
    "c2src": "",
-   "b1src": "alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx Val!D109",
+   "b1src": "alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx Val!D109",
    "b2src": "",
    "tier6": "0%～−25%",
-   "recsrc": "上檔空間 alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx Val!B11；投資建議 alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx Val!B14；級距 alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx Val!B13"
+   "recsrc": "上檔空間 alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx Val!B11；投資建議 alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx Val!B14；級距 alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx Val!B13"
   },
   {
    "tk": "ORCL",
@@ -1868,24 +1898,106 @@
    "tier": "放空",
    "vtier": "放空",
    "mfolder": "oracle",
-   "mfile": "20261029_Oracle個股模型_v0.4.1.html",
+   "mfile": "20261030_Oracle個股模型_v0.4.2.html",
    "gate": "通過（現金流）",
    "gbasis": "現金流",
    "glabel": "自由現金流扣股利五年合計（基準情境 B；A 111.1、C 8.4）",
    "gseries": "情境 B 五年合計 72.8",
    "gsum": 72.7635612856036,
    "gmin": 72.7635612856036,
-   "gsrc": "[Derived] oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx CF!D4…CF!D4",
+   "gsrc": "[Derived] oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx CF!D4…CF!D4",
    "alt": null,
    "altlbl": "",
    "pe28": "",
    "note": "DCF 目標價 41.7（Val!C72）；Comparable 目標價 104.7（Val!C73）；市場共識目標價 237.4（Val!C76，外部、僅供對照）；價格帶 C～A 情境 DCF 17.2～57.1",
-   "c1src": "oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx Val!C74",
+   "c1src": "oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx Val!C74",
    "c2src": "",
-   "b1src": "oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx Val!E30",
+   "b1src": "oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx Val!E30",
    "b2src": "",
    "tier6": "−25%～−50%",
-   "recsrc": "上檔空間 oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx Val!C77；投資建議 oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx Val!C80；級距 oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx Val!C79"
+   "recsrc": "上檔空間 oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx Val!C77；投資建議 oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx Val!C80；級距 oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx Val!C79"
+  },
+  {
+   "tk": "META",
+   "name": "Meta",
+   "layer": "L5 模型商",
+   "seg": "AI 模型商",
+   "method": "加權目標價（DCF 50%＋分部加總 50%）",
+   "ccy": "USD",
+   "price": 612.49,
+   "price_date": "2026-10-28",
+   "price_src": "",
+   "price_n": "",
+   "model_px": 612.49,
+   "model_date": "2026-10-28",
+   "move": 0,
+   "flag": "",
+   "center": 843.946489596816,
+   "bear": 671.011519138904,
+   "cu": 0.377894315983634,
+   "bu": 0.095546897318983,
+   "tier": "買進",
+   "vtier": "買進",
+   "mfolder": "meta",
+   "mfile": "20261030_Meta個股模型_v0.1.html",
+   "gate": "通過（現金流）",
+   "gbasis": "現金流",
+   "glabel": "自由現金流扣股利五年合計（基準情境 B；A -19.6、C 49.0）",
+   "gseries": "情境 B 五年合計 15.0",
+   "gsum": 14.9862600188112,
+   "gmin": 14.9862600188112,
+   "gsrc": "[Derived] meta/dist/20261030_Meta個股模型_v0.1.xlsx CF!C6…CF!C6",
+   "alt": null,
+   "altlbl": "",
+   "pe28": "",
+   "note": "DCF 目標價 792.5（Val!B6）；Comparable 目標價 895.4（Val!B7）；市場共識目標價 833.1（Val!B10，外部、僅供對照）；價格帶 C～A 情境 DCF 671.0～914.1",
+   "c1src": "meta/dist/20261030_Meta個股模型_v0.1.xlsx Val!B8",
+   "c2src": "",
+   "b1src": "meta/dist/20261030_Meta個股模型_v0.1.xlsx Val!D106",
+   "b2src": "",
+   "tier6": "25%–50%",
+   "recsrc": "上檔空間 meta/dist/20261030_Meta個股模型_v0.1.xlsx Val!B11；投資建議 meta/dist/20261030_Meta個股模型_v0.1.xlsx Val!B14；級距 meta/dist/20261030_Meta個股模型_v0.1.xlsx Val!B13"
+  },
+  {
+   "tk": "SPCX",
+   "name": "SpaceX",
+   "layer": "L4 算力平台",
+   "seg": "AI 雲端平台",
+   "method": "加權目標價（DCF 50%＋分部加總 50%）",
+   "ccy": "USD",
+   "price": 143.89,
+   "price_date": "2026-10-29",
+   "price_src": "",
+   "price_n": "",
+   "model_px": 143.89,
+   "model_date": "2026-10-29",
+   "move": 0,
+   "flag": "",
+   "center": 28.7577743745996,
+   "bear": 9.79778196704681,
+   "cu": -0.800140563106542,
+   "bu": -0.931907832600967,
+   "tier": "強力放空",
+   "vtier": "強力放空",
+   "mfolder": "spacex",
+   "mfile": "20261030_SpaceX個股模型_v0.1.html",
+   "gate": "不通過",
+   "gbasis": "現金流",
+   "glabel": "自由現金流五年合計（收支關卡口徑）（基準情境 B；A -42.7、C -114.6）",
+   "gseries": "情境 B 五年合計 -84.1",
+   "gsum": -84.1312698258872,
+   "gmin": -84.1312698258872,
+   "gsrc": "[Derived] spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx CF!C6…CF!C6",
+   "alt": null,
+   "altlbl": "",
+   "pe28": "",
+   "note": "DCF 目標價 18.8（Val!B6）；Comparable 目標價 38.7（Val!B7）；市場共識目標價 245.0（Val!B10，外部、僅供對照）；價格帶 C～A 情境 DCF 9.8～29.3",
+   "c1src": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx Val!B8",
+   "c2src": "",
+   "b1src": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx Val!D132",
+   "b2src": "",
+   "tier6": "小於 −50%",
+   "recsrc": "上檔空間 spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx Val!B11；投資建議 spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx Val!B14；級距 spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx Val!B13"
   },
   {
    "tk": "CRWV",
@@ -1950,24 +2062,24 @@
    "tier": "強力放空",
    "vtier": "強力放空",
    "mfolder": "nebius",
-   "mfile": "20261022_Nebius收支模型_v0_5_1.html",
+   "mfile": "20261030_Nebius個股模型_v0_5_2.html",
    "gate": "不通過",
    "gbasis": "現金流",
    "glabel": "營運缺口（不含融資、不含還本；無股利與回購）",
    "gseries": "FY26 -15.1、FY27 -17.9、FY28 -18.2、FY29 -17.2、FY30 -25.5",
    "gsum": -94.001644749039,
    "gmin": -25.5402170366338,
-   "gsrc": "[Derived] nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx 各期收支!C45…各期收支!G45",
+   "gsrc": "[Derived] nebius/dist/20261030_Nebius個股模型_v0_5_2.xlsx 各期收支!C45…各期收支!G45",
    "alt": null,
    "altlbl": "",
    "pe28": "",
    "note": "模型點位 $21.4（模型日現價 $249.87）；情境區間 $19.4–$29.5，方法區間 $12.5–$21.4",
-   "c1src": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx 摘要!C7",
+   "c1src": "nebius/dist/20261030_Nebius個股模型_v0_5_2.xlsx 摘要!C7",
    "c2src": "",
-   "b1src": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx 摘要!C7",
-   "b2src": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx 摘要!C10",
+   "b1src": "nebius/dist/20261030_Nebius個股模型_v0_5_2.xlsx 摘要!C7",
+   "b2src": "nebius/dist/20261030_Nebius個股模型_v0_5_2.xlsx 摘要!C10",
    "tier6": "小於 −50%",
-   "recsrc": "上檔空間＝模型加權目標價 nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx 摘要!C7 ÷ 外部收盤價 − 1，依本地圖五級規則自算（模型自身評等以模型日價計、級距不同，不採用；原值見模型摘要頁）"
+   "recsrc": "上檔空間＝模型加權目標價 nebius/dist/20261030_Nebius個股模型_v0_5_2.xlsx 摘要!C7 ÷ 外部收盤價 − 1，依本地圖五級規則自算（模型自身評等以模型日價計、級距不同，不採用；原值見模型摘要頁）"
   },
   {
    "tk": "WYFI",
@@ -2073,18 +2185,18 @@
    "tier": "收支不足",
    "vtier": "未估值",
    "mfolder": "zhipu",
-   "mfile": "20261022_智譜收支模型_v0_1_1.html",
+   "mfile": "20261030_智譜個股模型_v0_1_2.html",
    "gate": "不通過",
    "gbasis": "現金流",
    "glabel": "F09 自由現金流",
    "gseries": "2026 -41.3、2027 -40.9、2028 -40.5、2029 -59.4、2030 -99.1",
    "gsum": -281.188184190984,
    "gmin": -99.0538108419448,
-   "gsrc": "[Derived] zhipu/dist/20261022_智譜收支模型_v0_1_1.xlsx Funding!E16…Funding!I16",
+   "gsrc": "[Derived] zhipu/dist/20261030_智譜個股模型_v0_1_2.xlsx Funding!E16…Funding!I16",
    "alt": null,
    "altlbl": "",
    "pe28": "",
-   "note": "模型未出隱含價；2028 年共識營收需為正向推估的 2.47 倍（最低共識 1.91 倍；zhipu/dist/20261022_智譜收支模型_v0_1_1.xlsx Reverse!G30）",
+   "note": "模型未出隱含價；2028 年共識營收需為正向推估的 2.47 倍（最低共識 1.91 倍；zhipu/dist/20261030_智譜個股模型_v0_1_2.xlsx Reverse!G30）",
    "c1src": "",
    "c2src": "",
    "b1src": "",
@@ -4540,6 +4652,30 @@
    "role": "",
    "imp": 2,
    "pos": "OCI 規模較小；Stargate 主要承建方，客戶集中",
+   "tag": "[判斷]",
+   "status": "有模型"
+  },
+  {
+   "seg": "AI 雲端平台",
+   "order": null,
+   "name": "SpaceX",
+   "tk": "SPCX",
+   "listing": "美",
+   "role": "",
+   "imp": 2,
+   "pos": "SI 分部（原 xAI）：自建名目算力 1.7 GW（2026-09-30）、對外算力出租＋Grok／Cursor／X；Starlink 現金流支撐（算力收支建議）",
+   "tag": "[判斷]",
+   "status": "有模型"
+  },
+  {
+   "seg": "AI 模型商",
+   "order": null,
+   "name": "Meta",
+   "tk": "META",
+   "listing": "美",
+   "role": "",
+   "imp": 1,
+   "pos": "自建算力最大的廣告平台之一（Llama、自研 MTIA）；2026 資本支出指引 135–145B（含融資租賃本金）。地圖無「AI 應用與平台」，歸模型商（算力收支建議次產業不在地圖）",
    "tag": "[判斷]",
    "status": "有模型"
   },
@@ -10488,11 +10624,11 @@
   },
   "MSFT": {
    "folder": "microsoft",
-   "file": "20261029_Microsoft個股模型_v0.3.2.html",
+   "file": "20261030_Microsoft個股模型_v0.3.3.html",
    "title": "Microsoft個股模型",
-   "date": "2026-10-29",
-   "ver": "v0.3.2",
-   "xlsx": "20261029_Microsoft個股模型_v0.3.2.xlsx"
+   "date": "2026-10-30",
+   "ver": "v0.3.3",
+   "xlsx": "20261030_Microsoft個股模型_v0.3.3.xlsx"
   },
   "AMZN": {
    "folder": "amazon",
@@ -10504,19 +10640,35 @@
   },
   "GOOGL": {
    "folder": "alphabet",
-   "file": "20261029_Alphabet個股模型_v0.3.2.html",
+   "file": "20261030_Alphabet個股模型_v0.3.3.html",
    "title": "Alphabet個股模型",
-   "date": "2026-10-29",
-   "ver": "v0.3.2",
-   "xlsx": "20261029_Alphabet個股模型_v0.3.2.xlsx"
+   "date": "2026-10-30",
+   "ver": "v0.3.3",
+   "xlsx": "20261030_Alphabet個股模型_v0.3.3.xlsx"
   },
   "ORCL": {
    "folder": "oracle",
-   "file": "20261029_Oracle個股模型_v0.4.1.html",
+   "file": "20261030_Oracle個股模型_v0.4.2.html",
    "title": "Oracle個股模型",
-   "date": "2026-10-29",
-   "ver": "v0.4.1",
-   "xlsx": "20261029_Oracle個股模型_v0.4.1.xlsx"
+   "date": "2026-10-30",
+   "ver": "v0.4.2",
+   "xlsx": "20261030_Oracle個股模型_v0.4.2.xlsx"
+  },
+  "META": {
+   "folder": "meta",
+   "file": "20261030_Meta個股模型_v0.1.html",
+   "title": "Meta個股模型",
+   "date": "2026-10-30",
+   "ver": "v0.1",
+   "xlsx": "20261030_Meta個股模型_v0.1.xlsx"
+  },
+  "SPCX": {
+   "folder": "spacex",
+   "file": "20261030_SpaceX個股模型_v0.1.html",
+   "title": "SpaceX個股模型",
+   "date": "2026-10-30",
+   "ver": "v0.1",
+   "xlsx": "20261030_SpaceX個股模型_v0.1.xlsx"
   },
   "CRWV": {
    "folder": "coreweave",
@@ -10528,11 +10680,11 @@
   },
   "NBIS": {
    "folder": "nebius",
-   "file": "20261022_Nebius收支模型_v0_5_1.html",
-   "title": "Nebius收支模型",
-   "date": "2026-10-22",
-   "ver": "v0.5.1",
-   "xlsx": "20261022_Nebius收支模型_v0_5_1.xlsx"
+   "file": "20261030_Nebius個股模型_v0_5_2.html",
+   "title": "Nebius個股模型",
+   "date": "2026-10-30",
+   "ver": "v0.5.2",
+   "xlsx": "20261030_Nebius個股模型_v0_5_2.xlsx"
   },
   "WYFI": {
    "folder": "whitefiber",
@@ -10552,11 +10704,11 @@
   },
   "02513": {
    "folder": "zhipu",
-   "file": "20261022_智譜收支模型_v0_1_1.html",
-   "title": "智譜收支模型",
-   "date": "2026-10-22",
-   "ver": "v0.1.1",
-   "xlsx": "20261022_智譜收支模型_v0_1_1.xlsx"
+   "file": "20261030_智譜個股模型_v0_1_2.html",
+   "title": "智譜個股模型",
+   "date": "2026-10-30",
+   "ver": "v0.1.2",
+   "xlsx": "20261030_智譜個股模型_v0_1_2.xlsx"
   },
   "OpenAI": {
    "folder": "openai",

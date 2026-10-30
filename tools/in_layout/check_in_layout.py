@@ -6,10 +6,13 @@
 #       且把該字母換成另一個情境字母後的鍵也存在（同族兄弟，例如 tp_wA／tp_wB、cqA_x／cqB_x、dA／dC、pace_A／pace_C）；或
 #   (b) 項目文字以「情境 A：」或「情境 A（…）：」開頭，或含「（情境 A）」「情境權重 A」（只有單一情境的列，例如 gm_adj_C28）。
 #   只在其他文字中提到情境（例如「收斂法情境 B 的 FY2032 營收年增」「台達電模型，情境 A」）不算。
+#   (b) 的例外（2026-10-30 放寬甲，AI半導體 請求）：該列 B 欄以後任一格含「非本模型情境驅動」（例如上游模型情境 A 的參考值），
+#   不算情境專屬。(a) 同族兄弟不受此例外影響。
 # 規格：
 #   1. In!D3／F3 欄名為「敏感度低」「敏感度高」（只用於 Sens 頁，不進目標價）。
 #   2. In 頁最後有一節，A 欄文字含「情境驅動對照」：下一列表頭 D／E／F＝情境 A／B／C；其下每列一個情境驅動，三欄並排，
-#      每格是 =E<列> 公式，引用 H 欄「引用 In 頁 k1／k2／k3；…」所列鍵的列（情境 B 無專屬輸入時可填常數 0）。
+#      每格是 =E<列> 公式，引用 H 欄「引用 In 頁 k1／k2／k3；…」所列鍵的列。某情境無專屬輸入時可填常數 0：
+#      情境 B 不需說明；情境 A 或 C 填 0 時，H 欄須寫「情境 A 無專屬輸入列」或「情境 C 無專屬輸入列」（2026-10-30 放寬甲）。
 #   3. 上方所有情境專屬列都必須被這一節引用（不能漏列）；情境權重列鍵為 scn_w，合計＝1。
 #   4. 本節純展示：其他工作表與 In 頁上方的公式、定義名稱都不得引用本節。
 #   5.（警告，不判失敗）Sens、Recon、In 以外工作表的公式不應直接讀 In 頁 D／F 欄（敏感度低／高），含指向 D／F 的定義名稱（以實際指向判定，不看名稱字尾）：
@@ -20,11 +23,12 @@
 import glob, os, re, sys
 import openpyxl
 
+EXEMPT = "非本模型情境驅動"
 LAB_PAT = re.compile(r"^情境 ?[ABC][：:]|^情境 ?[ABC]（[^）]*）[：:]|（情境 ?[ABC]）|情境權重 ?[ABC](?![A-Za-z])")
 KEY_OK = re.compile(r"^[A-Za-z0-9_]+$")
 
 
-def is_scn(key, label, keys):
+def is_scn(key, label, keys, exempt=False):
     if KEY_OK.match(key):
         for i, ch in enumerate(key):
             if ch not in "ABC":
@@ -33,7 +37,7 @@ def is_scn(key, label, keys):
             next_ok = i == len(key) - 1 or key[i + 1] == "_" or key[i + 1].isdigit()
             if prev_ok and next_ok and any(key[:i] + o + key[i + 1:] in keys for o in "ABC" if o != ch):
                 return True
-    return bool(LAB_PAT.search(label))
+    return bool(LAB_PAT.search(label)) and not exempt
 
 
 WARN_SKIP = {"In", "Sens", "Recon"}
@@ -77,7 +81,9 @@ def check(path):
     sec = [r for r in range(4, ws.max_row + 1) if "情境驅動對照" in str(ws.cell(r, 1).value or "")]
     last = (sec[0] if sec else ws.max_row + 1)
     keyrow = {str(wf.cell(r, 1).value): r for r in range(4, last) if wf.cell(r, 1).value}
-    scn_rows = {r for r in range(4, last) if wf.cell(r, 1).value and is_scn(str(wf.cell(r, 1).value), str(ws.cell(r, 2).value or ""), keyrow)}
+    def exempt(r):
+        return any(EXEMPT in str(wf.cell(r, c).value or "") for c in range(2, min(wf.max_column, 12) + 1))
+    scn_rows = {r for r in range(4, last) if wf.cell(r, 1).value and is_scn(str(wf.cell(r, 1).value), str(ws.cell(r, 2).value or ""), keyrow, exempt(r))}
     if not scn_rows:
         return False, [], 0, []
     fail = []
@@ -99,12 +105,17 @@ def check(path):
         rows[k] = v
         if not all(isinstance(x, (int, float)) for x in v):
             fail.append(f"情境驅動 {k} 三欄應皆為數值：{v}")
-        m = re.match(r"引用 In 頁 ([^；]+)", str(wf.cell(r, 8).value or ""))
+        hnote = str(wf.cell(r, 8).value or "")
+        m = re.match(r"引用 In 頁 ([^；]+)", hnote)
         keys = m.group(1).split("／") if m else []
         fs = [wf.cell(r, c).value for c in (4, 5, 6)]
         refs = [int(f[2:]) for f in fs if isinstance(f, str) and re.fullmatch(r"=E\d+", f)]
         consts = [j for j, f in enumerate(fs) if not isinstance(f, str)]
-        if [keyrow.get(x) for x in keys] != refs or any(j != 1 or fs[j] != 0 for j in consts):
+        def const_ok(j):
+            if fs[j] != 0:
+                return False
+            return j == 1 or f"情境 {'ABC'[j]} 無專屬輸入列" in hnote
+        if [keyrow.get(x) for x in keys] != refs or not all(const_ok(j) for j in consts):
             fail.append(f"情境驅動 {k} 的公式 {fs} 與 H 欄所列鍵 {keys} 不符")
         refd.update(refs)
         r += 1
