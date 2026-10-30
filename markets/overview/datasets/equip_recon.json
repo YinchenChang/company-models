@@ -5,9 +5,9 @@
 "year": 2026,
 "source": "SEMI 2026-07",
 "value": 165.9,
-"model_a": 178.2,
-"gap_a": 0.074,
-"model_c": 178.2
+"model_a": 182.0,
+"gap_a": 0.097,
+"model_c": 182.0
 },
 {
 "key": "晶圓前段 2026 SEMI 2026-07",
@@ -15,9 +15,9 @@
 "year": 2026,
 "source": "SEMI 2026-07",
 "value": 143.9,
-"model_a": 156.2,
-"gap_a": 0.085,
-"model_c": 156.2
+"model_a": 160.0,
+"gap_a": 0.112,
+"model_c": 160.0
 },
 {
 "key": "代工與邏輯 2026 SEMI 2026-07",
@@ -35,9 +35,9 @@
 "year": 2026,
 "source": "SEMI 2026-07",
 "value": 38.8,
-"model_a": 39.4,
-"gap_a": 0.015,
-"model_c": 39.4
+"model_a": 41.9,
+"gap_a": 0.079,
+"model_c": 41.9
 },
 {
 "key": "NAND 2026 SEMI 2026-07",
@@ -45,9 +45,9 @@
 "year": 2026,
 "source": "SEMI 2026-07",
 "value": 13.9,
-"model_a": 17.5,
-"gap_a": 0.259,
-"model_c": 17.5
+"model_a": 18.5,
+"gap_a": 0.328,
+"model_c": 18.5
 },
 {
 "key": "晶圓前段年增 2027 SEMI 2026-07（+21.8%）",
@@ -56,7 +56,7 @@
 "source": "SEMI 2026-07（+21.8%）",
 "value": 0.218,
 "model_a": 0.2,
-"gap_a": 0.017,
+"gap_a": -0.013,
 "model_c": 0.2
 },
 {
@@ -95,9 +95,9 @@
 "year": 2026,
 "source": "Lam Research（低 150B）",
 "value": 150,
-"model_a": 156.2,
-"gap_a": 0.041,
-"model_c": 156.2
+"model_a": 160.0,
+"gap_a": 0.067,
+"model_c": 160.0
 },
 {
 "key": "晶圓前段 2026 KLA（低 150B；含先進封裝）",
@@ -105,9 +105,9 @@
 "year": 2026,
 "source": "KLA（低 150B；含先進封裝）",
 "value": 150,
-"model_a": 156.2,
-"gap_a": 0.041,
-"model_c": 156.2
+"model_a": 160.0,
+"gap_a": 0.067,
+"model_c": 160.0
 },
 {
 "key": "晶圓前段 2027 KLA 規劃（約 190B）",
@@ -155,9 +155,9 @@
 "year": 2026,
 "source": "Goldman Sachs",
 "value": 150,
-"model_a": 156.2,
-"gap_a": 0.041,
-"model_c": 156.2
+"model_a": 160.0,
+"gap_a": 0.067,
+"model_c": 160.0
 },
 {
 "key": "晶圓前段 2027 Goldman Sachs",
