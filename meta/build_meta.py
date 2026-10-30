@@ -925,8 +925,10 @@ vput("sebt", "  分部 NTM EBITDA 合計（主值）", S3(lambda s: f"=SUM({X3(s
 vput("snc", "＋淨現金（FY2027 年底，CF 頁；減融資租賃）", S3(lambda s: f"=CF!H{CR[s]['nc']}-fin_lease"), note="已含強制轉換特別股、遠期出售（fwd_on）與 FY2027 協議付款")
 vput("sag", "− 協議付款 FY2028–FY2036（9 期，以 WACC 折現到 FY2027 年底）", ["=ag_pay*(1-(1+wacc)^-9)/wacc"] * 3)
 vput("sdl", "− 類債（其他法律應計＋或有金額）", [f"=B{VR_['dl']}"] * 3)
+vput("spref", "− 特別股股利 FY2028–FY2029（轉換前，以 ke 折現到 FY2027 年底，期中）", ["=pref_28/(1+ke)^0.5+pref_29/(1+ke)^1.5"] * 3,
+     note="v0.1.1 補：股數已含轉換股 conv_sh，轉換前的股利須扣；FY2026–FY2027 股利已在 FY2027 年底淨現金內")
 vput("ssh", "股數（FY2027 年底稀釋＋強制轉換特別股）", S3(lambda s: f"=PL!H{PR_[s]['she']}+conv_sh"), "0.000")
-SB2 = lambda ev: (lambda s: "=MAX(0,({0}{1}+{0}{2}-{0}{3}-{0}{4})/{0}{5})".format(X3(s), VR_[ev], VR_["snc"], VR_["sag"], VR_["sdl"], VR_["ssh"]))
+SB2 = lambda ev: (lambda s: "=MAX(0,({0}{1}+{0}{2}-{0}{3}-{0}{4}-{0}{5})/{0}{6})".format(X3(s), VR_[ev], VR_["snc"], VR_["sag"], VR_["sdl"], VR_["spref"], VR_["ssh"]))
 vput("sotp1", "分部加總每股價值（讀法 1）", S3(SB2("sev1")))
 vput("sotp2", "分部加總每股價值（讀法 2）", S3(SB2("sev2")))
 vput("sotp", "分部加總每股價值（主值；目標時點）", S3(lambda s: f"=IF(internal_ai_reading=2,{X3(s)}{VR_['sotp2']},{X3(s)}{VR_['sotp1']})"), bold=True, fill=KEY)
