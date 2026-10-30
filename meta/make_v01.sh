@@ -17,7 +17,7 @@ LC_ALL=C.UTF-8 soffice -env:UserInstallation=file://$WD/lo --headless --calc --c
 cp "$WD/out/raw.xlsx" "meta/dist/$OUTNAME"
 python3 meta/check_v01.py "meta/dist/$OUTNAME"
 python3 tools/in_layout/check_in_layout.py "meta/dist/$OUTNAME"
-python3 tools/sens_coverage/check_sens_coverage.py "meta/dist/$OUTNAME"  # 敏感度覆蓋（原則第 9 節）
+python3 tools/sens_coverage/check_sens_coverage.py "meta/dist/$OUTNAME" --require-keycol  # 敏感度覆蓋（原則第 9 節）
 python3 tools/segment_check/check_segments.py meta
 python3 meta/gen_html_json.py "meta/dist/$OUTNAME" "$WD/rowmap.json" meta/html.json
 python3 tools/company_html/build_company_html.py meta

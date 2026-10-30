@@ -19,7 +19,7 @@ LC_ALL=C.UTF-8 soffice -env:UserInstallation=file://$WD/lo --headless --calc --c
 cp "$WD/out/raw.xlsx" "spacex/dist/$OUTNAME"
 python3 spacex/check_v01.py "spacex/dist/$OUTNAME"
 python3 tools/in_layout/check_in_layout.py "spacex/dist/$OUTNAME"
-python3 tools/sens_coverage/check_sens_coverage.py "spacex/dist/$OUTNAME"  # 敏感度覆蓋（原則第 9 節）
+python3 tools/sens_coverage/check_sens_coverage.py "spacex/dist/$OUTNAME" --require-keycol  # 敏感度覆蓋（原則第 9 節）
 python3 tools/segment_check/check_segments.py spacex
 python3 spacex/gen_html_json.py "spacex/dist/$OUTNAME" "$WD/rowmap.json" spacex/html.json
 python3 tools/company_html/build_company_html.py spacex
