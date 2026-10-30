@@ -7921,85 +7921,85 @@
   }
  },
  "MSFT": {
-  "model": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx",
+  "model": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx",
   "v2": true,
   "seg_model": true,
   "tp": {
    "value": 384.104559856734,
    "cell": "Val!B36",
-   "file": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx"
+   "file": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx"
   },
   "tp_dcf": {
    "value": 324.371547209883,
    "cell": "Val!B14",
-   "file": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx"
+   "file": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx"
   },
   "tp_comp": {
    "value": 443.837572503585,
    "cell": "Val!B31",
-   "file": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx"
+   "file": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx"
   },
   "tp_cons": {
    "value": 605.12,
    "cell": "Val!B38",
-   "file": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx"
+   "file": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx"
   },
   "up": {
    "value": -0.276652869330645,
    "cell": "Val!B40",
-   "file": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx"
+   "file": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx"
   },
   "up_comp": {
    "value": -0.164163438534895,
    "cell": "Val!B41",
-   "file": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx"
+   "file": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx"
   },
   "tier6": {
    "value": "−50%～−25%",
    "cell": "Val!B42",
-   "file": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx"
+   "file": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx"
   },
   "rec": {
    "value": "放空",
    "cell": "Val!B43",
-   "file": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx"
+   "file": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx"
   },
   "dcf_A": {
    "value": 364.206443208347,
    "cell": "Val!B13",
-   "file": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx"
+   "file": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx"
   },
   "dcf_C": {
    "value": 280.67266317972,
    "cell": "Val!D13",
-   "file": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx"
+   "file": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx"
   },
   "model_px": {
    "value": 531.01,
    "cell": "Val!B39",
-   "file": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx",
+   "file": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx",
    "date": "2026-10-28"
   },
   "pe_fy28": [
    {
     "value": 21.4252686760932,
     "cell": "Val!B52",
-    "file": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx"
+    "file": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx"
    },
    {
     "value": 22.551840774017,
     "cell": "Val!C52",
-    "file": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx"
+    "file": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx"
    },
    {
     "value": 24.0430902150154,
     "cell": "Val!D52",
-    "file": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx"
+    "file": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx"
    }
   ],
   "cash": {
    "basis": "現金流",
-   "file": "microsoft/dist/20261029_Microsoft個股模型_v0.3.2.xlsx",
+   "file": "microsoft/dist/20261030_Microsoft個股模型_v0.3.3.xlsx",
    "label": "自由現金流扣股利五年合計（基準情境 B；A 363.2、C 137.9）",
    "values": [
     [
@@ -8084,68 +8084,68 @@
   }
  },
  "GOOGL": {
-  "model": "alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx",
+  "model": "alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx",
   "v2": true,
   "seg_model": true,
   "tp": {
    "value": 258.21002602627,
    "cell": "Val!B8",
-   "file": "alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx"
+   "file": "alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx"
   },
   "tp_dcf": {
    "value": 189.104344023161,
    "cell": "Val!B6",
-   "file": "alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx"
+   "file": "alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx"
   },
   "tp_comp": {
    "value": 327.315708029379,
    "cell": "Val!B7",
-   "file": "alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx"
+   "file": "alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx"
   },
   "tp_cons": {
    "value": 429.12,
    "cell": "Val!B10",
-   "file": "alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx"
+   "file": "alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx"
   },
   "up": {
    "value": -0.205238616066146,
    "cell": "Val!B11",
-   "file": "alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx"
+   "file": "alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx"
   },
   "up_comp": {
    "value": 0.00746624404992069,
    "cell": "Val!B12",
-   "file": "alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx"
+   "file": "alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx"
   },
   "tier6": {
    "value": "0%～−25%",
    "cell": "Val!B13",
-   "file": "alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx"
+   "file": "alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!B14",
-   "file": "alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx"
+   "file": "alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx"
   },
   "dcf_A": {
    "value": 218.809807147016,
    "cell": "Val!B109",
-   "file": "alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx"
+   "file": "alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx"
   },
   "dcf_C": {
    "value": 149.346874196369,
    "cell": "Val!D109",
-   "file": "alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx"
+   "file": "alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx"
   },
   "model_px": {
    "value": 324.89,
    "cell": "Val!B9",
-   "file": "alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx",
+   "file": "alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx",
    "date": "2026-10-28"
   },
   "cash": {
    "basis": "現金流",
-   "file": "alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx",
+   "file": "alphabet/dist/20261030_Alphabet個股模型_v0.3.3.xlsx",
    "label": "自由現金流扣股利五年合計（基準情境 B；A 77.7、C -145.8）",
    "values": [
     [
@@ -8157,74 +8157,220 @@
   }
  },
  "ORCL": {
-  "model": "oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx",
+  "model": "oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx",
   "v2": true,
   "seg_model": true,
   "tp": {
    "value": 73.2244042213954,
    "cell": "Val!C74",
-   "file": "oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx"
+   "file": "oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx"
   },
   "tp_dcf": {
    "value": 41.7110850813839,
    "cell": "Val!C72",
-   "file": "oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx"
+   "file": "oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx"
   },
   "tp_comp": {
    "value": 104.737723361407,
    "cell": "Val!C73",
-   "file": "oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx"
+   "file": "oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx"
   },
   "tp_cons": {
    "value": 237.36,
    "cell": "Val!C76",
-   "file": "oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx"
+   "file": "oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx"
   },
   "up": {
    "value": -0.419130539255946,
    "cell": "Val!C77",
-   "file": "oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx"
+   "file": "oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx"
   },
   "up_comp": {
    "value": -0.169143873065153,
    "cell": "Val!C78",
-   "file": "oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx"
+   "file": "oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx"
   },
   "tier6": {
    "value": "−25%～−50%",
    "cell": "Val!C79",
-   "file": "oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx"
+   "file": "oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx"
   },
   "rec": {
    "value": "放空",
    "cell": "Val!C80",
-   "file": "oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx"
+   "file": "oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx"
   },
   "dcf_A": {
    "value": 57.0556956298768,
    "cell": "Val!C30",
-   "file": "oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx"
+   "file": "oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx"
   },
   "dcf_C": {
    "value": 17.1600249327927,
    "cell": "Val!E30",
-   "file": "oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx"
+   "file": "oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx"
   },
   "model_px": {
    "value": 126.06,
    "cell": "Val!C4",
-   "file": "oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx",
+   "file": "oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx",
    "date": "2026-10-26"
   },
   "cash": {
    "basis": "現金流",
-   "file": "oracle/dist/20261029_Oracle個股模型_v0.4.1.xlsx",
+   "file": "oracle/dist/20261030_Oracle個股模型_v0.4.2.xlsx",
    "label": "自由現金流扣股利五年合計（基準情境 B；A 111.1、C 8.4）",
    "values": [
     [
      "情境 B 五年合計",
      72.7635612856036,
      "CF!D4"
+    ]
+   ]
+  }
+ },
+ "META": {
+  "model": "meta/dist/20261030_Meta個股模型_v0.1.xlsx",
+  "v2": true,
+  "seg_model": true,
+  "tp": {
+   "value": 843.946489596816,
+   "cell": "Val!B8",
+   "file": "meta/dist/20261030_Meta個股模型_v0.1.xlsx"
+  },
+  "tp_dcf": {
+   "value": 792.535467191416,
+   "cell": "Val!B6",
+   "file": "meta/dist/20261030_Meta個股模型_v0.1.xlsx"
+  },
+  "tp_comp": {
+   "value": 895.357512002215,
+   "cell": "Val!B7",
+   "file": "meta/dist/20261030_Meta個股模型_v0.1.xlsx"
+  },
+  "tp_cons": {
+   "value": 833.12,
+   "cell": "Val!B10",
+   "file": "meta/dist/20261030_Meta個股模型_v0.1.xlsx"
+  },
+  "up": {
+   "value": 0.377894315983634,
+   "cell": "Val!B11",
+   "file": "meta/dist/20261030_Meta個股模型_v0.1.xlsx"
+  },
+  "up_comp": {
+   "value": 0.461832049506466,
+   "cell": "Val!B12",
+   "file": "meta/dist/20261030_Meta個股模型_v0.1.xlsx"
+  },
+  "tier6": {
+   "value": "25%–50%",
+   "cell": "Val!B13",
+   "file": "meta/dist/20261030_Meta個股模型_v0.1.xlsx"
+  },
+  "rec": {
+   "value": "買進",
+   "cell": "Val!B14",
+   "file": "meta/dist/20261030_Meta個股模型_v0.1.xlsx"
+  },
+  "dcf_A": {
+   "value": 914.059415243929,
+   "cell": "Val!B106",
+   "file": "meta/dist/20261030_Meta個股模型_v0.1.xlsx"
+  },
+  "dcf_C": {
+   "value": 671.011519138904,
+   "cell": "Val!D106",
+   "file": "meta/dist/20261030_Meta個股模型_v0.1.xlsx"
+  },
+  "model_px": {
+   "value": 612.49,
+   "cell": "Val!B9",
+   "file": "meta/dist/20261030_Meta個股模型_v0.1.xlsx",
+   "date": "2026-10-28"
+  },
+  "cash": {
+   "basis": "現金流",
+   "file": "meta/dist/20261030_Meta個股模型_v0.1.xlsx",
+   "label": "自由現金流扣股利五年合計（基準情境 B；A -19.6、C 49.0）",
+   "values": [
+    [
+     "情境 B 五年合計",
+     14.9862600188112,
+     "CF!C6"
+    ]
+   ]
+  }
+ },
+ "SPCX": {
+  "model": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx",
+  "v2": true,
+  "seg_model": true,
+  "tp": {
+   "value": 28.7577743745996,
+   "cell": "Val!B8",
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+  },
+  "tp_dcf": {
+   "value": 18.8053057016316,
+   "cell": "Val!B6",
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+  },
+  "tp_comp": {
+   "value": 38.7102430475677,
+   "cell": "Val!B7",
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+  },
+  "tp_cons": {
+   "value": 244.97,
+   "cell": "Val!B10",
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+  },
+  "up": {
+   "value": -0.800140563106542,
+   "cell": "Val!B11",
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+  },
+  "up_comp": {
+   "value": -0.73097336126508,
+   "cell": "Val!B12",
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+  },
+  "tier6": {
+   "value": "小於 −50%",
+   "cell": "Val!B13",
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+  },
+  "rec": {
+   "value": "強力放空",
+   "cell": "Val!B14",
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+  },
+  "dcf_A": {
+   "value": 29.261933462817,
+   "cell": "Val!B132",
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+  },
+  "dcf_C": {
+   "value": 9.79778196704681,
+   "cell": "Val!D132",
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx"
+  },
+  "model_px": {
+   "value": 143.89,
+   "cell": "Val!B9",
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx",
+   "date": "2026-10-29"
+  },
+  "cash": {
+   "basis": "現金流",
+   "file": "spacex/dist/20261030_SpaceX個股模型_v0.1.xlsx",
+   "label": "自由現金流五年合計（收支關卡口徑）（基準情境 B；A -42.7、C -114.6）",
+   "values": [
+    [
+     "情境 B 五年合計",
+     -84.1312698258872,
+     "CF!C6"
     ]
    ]
   }
@@ -8301,41 +8447,41 @@
   }
  },
  "NBIS": {
-  "model": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx",
+  "model": "nebius/dist/20261030_Nebius個股模型_v0_5_2.xlsx",
   "rating": {
-   "value": "賣出",
+   "value": "放空",
    "cell": "摘要",
-   "file": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx"
+   "file": "nebius/dist/20261030_Nebius個股模型_v0_5_2.xlsx"
   },
   "target": {
    "value": 21.3792054477074,
    "cell": "摘要!C7",
-   "file": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx"
+   "file": "nebius/dist/20261030_Nebius個股模型_v0_5_2.xlsx"
   },
   "price": {
    "value": 249.87,
    "cell": "摘要!C8",
-   "file": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx"
+   "file": "nebius/dist/20261030_Nebius個股模型_v0_5_2.xlsx"
   },
   "scen_lo": {
    "value": 19.431647062533,
    "cell": "摘要!C10",
-   "file": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx"
+   "file": "nebius/dist/20261030_Nebius個股模型_v0_5_2.xlsx"
   },
   "scen_hi": {
    "value": 29.5289933777526,
    "cell": "摘要!D10",
-   "file": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx"
+   "file": "nebius/dist/20261030_Nebius個股模型_v0_5_2.xlsx"
   },
   "sentence": {
-   "value": "賣出：點位 $21.4，較現價 $249.87 低 91%；情境區間 $19.4–$29.5，方法區間 $12.5–$21.4；點位低於賣出門檻 $212.4 達 $191.0。",
+   "value": "放空：點位 $21.4，較現價 $249.87 低 91%；情境區間 $19.4–$29.5，方法區間 $12.5–$21.4；點位低於放空門檻 $212.4 達 $191.0。",
    "cell": "摘要",
-   "file": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx"
+   "file": "nebius/dist/20261030_Nebius個股模型_v0_5_2.xlsx"
   },
   "model_px": {
    "value": 249.87,
    "cell": "輸入與假設!C125",
-   "file": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx",
+   "file": "nebius/dist/20261030_Nebius個股模型_v0_5_2.xlsx",
    "date": "2026-10-06"
   },
   "cash": {
@@ -8368,7 +8514,7 @@
      "各期收支!G45"
     ]
    ],
-   "file": "nebius/dist/20261022_Nebius收支模型_v0_5_1.xlsx"
+   "file": "nebius/dist/20261030_Nebius個股模型_v0_5_2.xlsx"
   }
  },
  "WYFI": {
@@ -8489,16 +8635,16 @@
   }
  },
  "02513": {
-  "model": "zhipu/dist/20261022_智譜收支模型_v0_1_1.xlsx",
+  "model": "zhipu/dist/20261030_智譜個股模型_v0_1_2.xlsx",
   "need_ratio_2028": {
    "value": 2.46959527523438,
    "cell": "Reverse!G30",
-   "file": "zhipu/dist/20261022_智譜收支模型_v0_1_1.xlsx"
+   "file": "zhipu/dist/20261030_智譜個股模型_v0_1_2.xlsx"
   },
   "need_ratio_2028_lo": {
    "value": 1.90924562859496,
    "cell": "Reverse!G31",
-   "file": "zhipu/dist/20261022_智譜收支模型_v0_1_1.xlsx"
+   "file": "zhipu/dist/20261030_智譜個股模型_v0_1_2.xlsx"
   },
   "cash": {
    "basis": "現金流",
@@ -8530,7 +8676,7 @@
      "Funding!I16"
     ]
    ],
-   "file": "zhipu/dist/20261022_智譜收支模型_v0_1_1.xlsx"
+   "file": "zhipu/dist/20261030_智譜個股模型_v0_1_2.xlsx"
   }
  },
  "OpenAI": {
