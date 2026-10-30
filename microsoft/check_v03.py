@@ -1,5 +1,5 @@
-# Microsoft v0.3.1／v0.3.2 成品核對：公式錯誤 0、Q／Seg／PL／CF／Val／Recon 頁「檢查：」列全為 0、C10 對帳落差（基準情境）≈ 0、固定列標籤存在、
-# 變動拆解 JSON 的最後一步＝本檔加權目標價。用法：python3 microsoft/check_v03.py <重算後的 xlsx>；失敗時非零結束。
+# Microsoft v0.3.1–v0.3.3 成品核對：公式錯誤 0、Q／Seg／PL／CF／Val／Recon 頁「檢查：」列全為 0、C10 對帳落差（基準情境）≈ 0、固定列標籤存在、
+# 變動拆解 JSON 的最後一步＝本檔加權目標價、Sens 整本重算案例未過期（v0.3.3）。用法：python3 microsoft/check_v03.py <重算後的 xlsx>；失敗時非零結束。
 import json
 import os
 import sys
@@ -66,6 +66,10 @@ if os.path.exists(AJ):
         fail.append(f"變動拆解 JSON 已過期：最後一步 {last:.4f} ≠ 本檔 {tp:.4f}（重跑 SENS=1 bash microsoft/make_v03.sh）")
 else:
     fail.append("缺 microsoft/data/attrib_v031_20261029.json")
+SE = wb["Sens"]                                           # v0.3.3：整本重算的敏感度案例須未過期
+st = [r for r in range(1, 200) if str(SE.cell(r, 1).value or "").startswith("敏感度重算時的基準加權目標價")]
+if not st or not isinstance(SE.cell(st[0], 4).value, (int, float)) or abs(SE.cell(st[0], 4).value) > 1e-6:
+    fail.append(f"Sens 整本重算案例已過期或缺（基準差 {SE.cell(st[0], 4).value if st else '無此列'}；重跑 SENS=1 bash microsoft/make_v03.sh）")
 print(f"加權目標價 {tp:.2f}；上檔空間 {up:+.1%}；投資建議 {rec}")
 if fail:
     print("失敗：")
