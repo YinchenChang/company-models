@@ -163,3 +163,5 @@ items:
 - {key: eta_base, name: η 基準值（P1：信任 Tokenomics 物理；校準期殘差不足時才上調）, index: 2025、1H26, unit: 倍, value: 1, lo: 1, hi: 1, tag: Decision, basis: 工作單 P1：η 基準＝1（Decision）；若研發殘差 < 訓練最低占比 × 供給，η 校準為使殘差＝最低占比的值並 WARN（Checks）, range: 定義}
 - {key: eta_old_sw, name: η 校準方法開關（0＝P1：基準 1、殘差觸及訓練最低占比時上調；1＝舊法 D8r：token GW ÷ API 銷售成本換算 GW）, index: 2025、1H26, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 工作單 P1：舊法（API 營業成本＝推論支出）保留為對照；開關＝1 只供情境與 parity, range: 開關}
 - {key: eta_lift_warn, name: η 上調期數 WARN 門檻（P1）, index: —, unit: 期, value: 0, lo: 0, hi: 0, tag: Decision, basis: 工作單 P1：η 被上調（殘差觸及訓練最低占比）時 WARN, range: 定義}
+# ── v0.1.2 官方分部（部署方式）對帳
+- {key: seg_recon_tol, name: 分部對帳容差（官方分部 vs 模型／子項加總；絕對差 ≤ 本值為 OK）, index: 全期, unit: RMB 億, value: 0.001, lo: 0.001, hi: 0.001, tag: Decision, basis: 工作單 v0.1.2：財報以千元四捨五入至億元四位小數，年報本地化部署 5.3396 與四捨五入後子項 5.3395 差 0.0001；容差 0.001 為定義常數（Decision，低＝高＝值）, range: 定義}

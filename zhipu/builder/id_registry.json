@@ -1194,7 +1194,8 @@
 "rd_fee_share": "INP_137",
 "eta_base": "INP_138",
 "eta_old_sw": "INP_139",
-"eta_lift_warn": "INP_140"
+"eta_lift_warn": "INP_140",
+"seg_recon_tol": "INP_141"
 },
 "retired_INP": [
 "INP_072"
@@ -1296,7 +1297,11 @@
 "TK_Link 具名名稱數（v0.1.1：原 63 名＋智譜新增 11 名＋RNG_ 3 名）": "C96",
 "v0.1.1 對照：TK IF_AllocRDGW 區間下限（RNG_IF_AllocRDGW_Lo，GW·年）": "C97",
 "v0.1.1 對照：TK IF_AllocRDGW 區間上限（RNG_IF_AllocRDGW_Hi，GW·年）": "C98",
-"v0.1.1：Tokenomics 區間時效旗標 RNG_StaleFlag＝『一致』": "C99"
+"v0.1.1：Tokenomics 區間時效旗標 RNG_StaleFlag＝『一致』": "C99",
+"v0.1.2 分部對帳：FY2025 本地化部署（模型 − 年報）絕對差 ≤ 容差": "C100",
+"v0.1.2 分部對帳：FY2025 雲端部署（模型 − 年報）絕對差 ≤ 容差": "C101",
+"v0.1.2 分部對帳：1H2026 本地化部署（②＋③＋④ − 中期公告）絕對差 ≤ 容差": "C102",
+"v0.1.2 分部對帳：1H2026 雲端部署（① − 中期公告）絕對差 ≤ 容差": "C103"
 },
 "retired_CHK": [
 "C42",

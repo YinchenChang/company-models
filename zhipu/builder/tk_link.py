@@ -81,11 +81,12 @@ def _split(attr: str):
     return sheet, m.group(3), int(m.group(4)), m.group(5), (int(m.group(6)) if m.group(6) else None)
 
 
-def read_snapshot(tk_dir: Path):
+def read_snapshot(tk_dir: Path, sha_override: str = ""):
     tk_dir = Path(tk_dir)
     current = (tk_dir / "model" / "CURRENT").read_text(encoding="utf-8").strip()
     path = tk_dir / "model" / current
     sha = subprocess.run(["git", "-C", str(tk_dir), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    sha = sha_override or sha
     m = re.search(r"_v(\d+(?:\.\d+)?)\.xlsx$", current)
     wb = openpyxl.load_workbook(path, data_only=True)
     names = {k: v.attr_text for k, v in wb.defined_names.items()}

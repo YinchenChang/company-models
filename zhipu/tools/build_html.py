@@ -475,8 +475,8 @@ def build(outdir: Path) -> tuple[Path, Path, Values]:
 
     stamp = model.name.split("_")[0]
     ver = re.search(r"_v([\d.]+)\.xlsx$", model.name).group(1)
-    html_path = outdir / f"{stamp}_智譜收支模型_v{ver.replace('.', '_')}.html"
-    xlsx_path = outdir / f"{stamp}_智譜收支模型_v{ver.replace('.', '_')}.xlsx"
+    html_path = outdir / f"{stamp}_智譜個股模型_v{ver.replace('.', '_')}.html"
+    xlsx_path = outdir / f"{stamp}_智譜個股模型_v{ver.replace('.', '_')}.xlsx"
     page = render(V, model, ver, stamp, cfg)
     outdir.mkdir(parents=True, exist_ok=True)
     html_path.write_text(page, encoding="utf-8")
@@ -515,7 +515,7 @@ def render(V: Values, model: Path, ver: str, stamp: str, cfg: dict) -> str:
 
     S = []
     # ── 標頭 ──
-    S.append(f"""<header><h1>智譜收支模型 v{ver}｜一頁摘要</h1>
+    S.append(f"""<header><h1>智譜個股模型 v{ver}｜一頁摘要</h1>
 <div class="meta">{date_disp}｜Excel <code>{html.escape(model.name)}</code>｜Tokenomics {html.escape(str(tk_ver))}（<code>{html.escape(str(tk_sha))[:7]}</code>）｜OpenAI v0.6.2 對照（OAI_Link）｜單位 RMB 億（人民幣億元）、與 OpenAI 並排時 $B，曆年制｜數字游標停留可見 Excel 位置；手機上圖表可左右滑動</div></header>""")
 
     # ── ① 命題與結論 ──
@@ -716,13 +716,13 @@ Coding Plan 額度使用率與 Coding Plan 輸出占比不列為翻轉點：它�
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>智譜收支模型 v{ver}</title>
+<title>智譜個股模型 v{ver}</title>
 <style>{CSS}</style>
 </head>
 <body>
 <main>
 {body}
-<footer>智譜收支模型 v{ver}｜產生器 tools/build_html.py｜{date_disp}</footer>
+<footer>智譜個股模型 v{ver}｜產生器 tools/build_html.py｜{date_disp}</footer>
 </main>
 </body>
 </html>
