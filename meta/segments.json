@@ -1,0 +1,68 @@
+{
+ "company": "Meta Platforms",
+ "ticker": "META",
+ "model_sheet": "PL",
+ "note": "官方報告分部：Family of Apps（FoA：Facebook、Instagram、Messenger、Threads、WhatsApp 等）與 Reality Labs（RL）。來源＝財報新聞稿 Segment Information 表（FY2025：8-K 2026-01-28 附件 99.1，兩讀一致；10-K FY2025 附註未由本代理讀取，列待 Andy 下載核對）。FoA 之下子列＝Advertising、Other revenue（新聞稿固定揭露）。命題模組（M4）：Advertising＝廣告曝光數年增 × 每則廣告平均價格年增（公司每季揭露兩者年增率）；不另拆 AI／非 AI。RL 營業損益為負。金額 US$B。",
+ "official_segments": [
+  {
+   "name": "Family of Apps",
+   "label": "Family of Apps",
+   "period": "FY2025",
+   "value": 198.759,
+   "unit": "US$B",
+   "source": "Meta Q4/FY2025 財報新聞稿 Segment Information（8-K 附件 99.1，2026-01-28）；meta/data/meta_facts_2026q3.json seg.foa.fy2025",
+   "url": "https://www.sec.gov/Archives/edgar/data/1326801/000162828026003832/meta-12312025xexhibit991.htm",
+   "operatingIncome": 102.469,
+   "ttm2026q3": 239.375,
+   "ttmOperatingIncome": 98.177
+  },
+  {
+   "name": "Reality Labs",
+   "label": "Reality Labs",
+   "period": "FY2025",
+   "value": 2.207,
+   "unit": "US$B",
+   "source": "同上；seg.rl.fy2025",
+   "url": "https://www.sec.gov/Archives/edgar/data/1326801/000162828026003832/meta-12312025xexhibit991.htm",
+   "operatingIncome": -19.193,
+   "ttm2026q3": 2.231,
+   "ttmOperatingIncome": -18.797
+  }
+ ],
+ "consolidated": {
+  "period": "FY2025",
+  "revenue": 200.966,
+  "operatingIncome": 83.276,
+  "ttm2026q3Revenue": 241.606,
+  "ttm2026q3OperatingIncome": 79.38,
+  "check": "FoA＋RL－合併：FY2025 營收差 0、營業利益差 0；近四季（2025Q4–2026Q3）營收差 0、營業利益差 0（USD M）"
+ },
+ "sublines": [
+  {
+   "parent": "Family of Apps",
+   "labels": [
+    "Advertising",
+    "Other revenue"
+   ],
+   "values": {
+    "FY2025": {
+     "Advertising": 196.175,
+     "Other revenue": 2.584
+    },
+    "TTM2026Q3": {
+     "Advertising": 235.585,
+     "Other revenue": 3.79
+    }
+   },
+   "drivers": {
+    "Advertising": "廣告曝光數年增 × 每則廣告平均價格年增（命題模組 M4；公司揭露 2026Q1–Q3：曝光 +19%／+14%／+10%，價格 +12%／+12%／+14%）",
+    "Other revenue": "WhatsApp 付費訊息與訂閱（法說），近四季年增收斂"
+   }
+  }
+ ],
+ "check_labels": [
+  "檢查：Advertising＋Other revenue－Family of Apps",
+  "檢查：分部合計－合併營收",
+  "檢查：分部營業利益合計－合併營業利益"
+ ]
+}
