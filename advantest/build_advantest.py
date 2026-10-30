@@ -117,13 +117,13 @@ inp("semi_test26", "SEMI 測試設備 2026", "US$B", None, TEST[0][1], None, "In
 inp("semi_test27", "SEMI 測試設備 2027（equipment 內插）", "US$B", None, TEST[0][2], None, "Derived", TEST[1], "2026、2028 為新聞稿值，2027 幾何內插")
 inp("semi_test28", "SEMI 測試設備 2028", "US$B", None, TEST[0][3], None, "Interested-party", TEST[1], "同上")
 sec("E. 其他系統與服務（前一年 × 成長率）")
-inp("g_oth_26", "其他系統 FY2026 成長（Q1 FY26 年化 ÷ FY2025 − 1）", "%", 0.10, "=q1_oth*4/a25_oth-1", 0.35, "Derived", "Q 頁：Q1 FY26 其他系統 26.0×4÷80.5", "低／高 Assumed；Q1 年化僅一季")
-inp("g_svc_26", "服務與其他 FY2026 成長（Q1 FY26 年化 ÷ FY2025 − 1）", "%", 0.10, "=q1_svc*4/a25_svc-1", 0.30, "Derived", "Q 頁：Q1 FY26 服務與其他 33.9×4÷109.2", "低／高 Assumed")
+inp("g_oth_26", "其他系統 FY2026 成長（公司 10 月指引 ÷ FY2025 − 1）", "%", 0.10, "=g_oth/a25_oth-1", 0.45, "Derived", "公司 FY2026 指引其他系統 110.5 ÷ FY2025 80.5（v0.4.1 為 Q1 年化）", "低／高 Assumed；Q1 年化僅一季")
+inp("g_svc_26", "服務與其他 FY2026 成長（公司 10 月指引 ÷ FY2025 − 1）", "%", 0.10, "=g_svcg/a25_svc-1", 0.40, "Derived", "公司 FY2026 指引服務與其他 148.5 ÷ FY2025 109.2（v0.4.1 為 Q1 年化）", "低／高 Assumed")
 for s, o, v in (("A", 0.15, 0.12), ("B", 0.10, 0.10), ("C", 0.00, 0.06)):
     inp(f"g_oth_{s}", f"其他系統 FY2027–29 年成長（{s}）", "%", o - 0.05, o, o + 0.05, "Assumed", "無：FY2025 其他系統無前年可比（公司僅揭露合計）", "—")
     inp(f"g_svc_{s}", f"服務與其他 FY2027–29 年成長（{s}）", "%", v - 0.04, v, v + 0.04, "Assumed", "FY2025 +12.7%（公司：裝機量成長）", "—")
 sec("F. 毛利與營業費用（兩點推導：FY2025 實績與 FY2026 指引；不寫死利益率）")
-inp("gm_g", "FY2026 指引毛利率（66–67% 中點）", "%", 0.66, 0.665, 0.67, "Interested-party", "Advantest Q1 FY26 法說（2026-07-29）：全年毛利率 66–67%（Investing.com 逐字稿摘要）", "第二來源：未找到")
+inp("gm_g", "FY2026 指引毛利率（約 68%）", "%", 0.675, 0.68, 0.685, "Interested-party", "Advantest FY2026 Q2 決算說明（2026-10-28，JE_BIZ_261028_note）：全年毛利率約 68%（7 月版 66–67%）", "低／高 Assumed（±0.5 個百分點）")
 inp("gm_a", "毛利率截距（＝FY2025 毛利率 − 斜率 × FY2025 SoC 占比）", "%", None, "=a25_gp/a25_rev-gm_b*a25_soc/a25_rev", None, "Derived", "兩點：FY2025（64.3%，SoC 占 68.0%）、FY2026 指引（66.5%，SoC 占 72.6%）", "毛利率隨 SoC 占比上升（公司：產品組合改善）；只有兩點，等同線性外推")
 inp("gm_b", "毛利率斜率（每增加 1 個百分點 SoC 占比的毛利率變化）", "x", None, "=(gm_g-a25_gp/a25_rev)/(g_soc/g_rev-a25_soc/a25_rev)", None, "Derived", "同上", "—")
 inp("gm_adj_C28", "情境 C：FY2028 毛利率額外調整（價格競爭）", "pt", -0.04, -0.01, 0.0, "Assumed", "無", "Teradyne 搶回份額的價格壓力")
@@ -135,15 +135,15 @@ inp("opex_fix", "營業費用固定部分", "¥B", None, "=opex25-opex_var*a25_r
 inp("phi", "營業費用中變動部分占比（FY2025；Sens 用）", "%", 0.35, "=opex_var*a25_rev/opex25", 0.75, "Derived", "基準＝兩點推導值；低／高 Assumed", "—")
 sec("G. 淨利、股數、匯率")
 inp("nioi", "淨利 ÷ 營業利益", "x", 0.72, "=a25_ni/a25_oi", "=g_ni/g_oi", "Derived", "基準＝FY2025 實績 0.752；高＝FY2026 指引隱含 0.780（含戰略投資評價益，屬一次性，不當基準，只在 Sens 列示；處理方式同台積電模型的一次性利益）；低 Assumed（稅率正常化）", "FY2025 Q4 含選擇權評價益約 ¥17.3B")
-inp("shares", "股數（指引淨利 ÷ 指引 EPS）", "百萬股", None, "=g_ni/g_eps*1000", None, "Derived", "660.0B÷911.64＝約 724.0M", "FY2025 加權平均約 728.6M（淨利 375.4B÷515.15）")
+inp("shares", "股數（指引淨利 ÷ 指引 EPS）", "百萬股", None, "=g_ni/g_eps*1000", None, "Derived", "741.5B÷1,027.08＝約 721.9M（10 月指引；10-29 起買回上限 280B／11 百萬股未計）", "FY2025 加權平均約 728.6M（淨利 375.4B÷515.15）")
 inp("fx", "匯率", "¥/US$", 140, 150, 160, "Interested-party", "公司 FY2026 假設：第二季起 ¥150（Q1 FY26 法說；公司原文未開啟）", "第二來源：未找到。FY2025 實績不換匯；只用於把美元市場換成日圓營收")
-sec("H. 公司指引（FY2026；2026-07-29 上修）與對帳來源")
-inp("g_rev", "指引營收 FY2026", "¥B", None, 1714.0, None, "Interested-party", "Advantest 2027年3月期 第1四半期決算短信（2026-07-29，J_FR_FY2026_1Q.pdf）", "Investing.com Q1 FY26；kabutan（4 月版 1,420.0）")
-inp("g_oi", "指引營業利益 FY2026", "¥B", None, 846.0, None, "Interested-party", "同上", "kabutan／gyokaidigest（4 月版 627.5）")
-inp("g_ni", "指引淨利 FY2026（歸屬母公司）", "¥B", None, 660.0, None, "Interested-party", "同上", "kabutan／gyokaidigest（4 月版 465.5）")
-inp("g_soc", "指引 SoC 測試機 FY2026", "¥B", None, 1243.5, None, "Interested-party", "公司 Q1 FY26 簡報；Investing.com：由 999.5 上修", "—")
-inp("g_mem", "指引記憶體測試機 FY2026", "¥B", None, 227.0, None, "Interested-party", "公司 Q1 FY26 指引（原文未開啟）；4 月版 201.0（+17%，日經摘錄）", "第二來源：未找到")
-inp("g_eps", "指引 EPS FY2026（基本）", "¥", None, 911.64, None, "Interested-party", "公司決算短信（Yahoo Japan 摘要）", "kabutan 記 913.83（差 0.2%，未解）")
+sec("H. 公司指引（FY2026；2026-10-28 再上修）與對帳來源")
+inp("g_rev", "指引營收 FY2026", "¥B", None, 1863.0, None, "Interested-party", "Advantest FY2026 Q2 決算短信（2026-10-28，E_FR_FY2026_2Q.pdf）", "7 月版 1,714.0、4 月版 1,420.0")
+inp("g_oi", "指引營業利益 FY2026", "¥B", None, 967.0, None, "Interested-party", "同上", "7 月版 846.0、4 月版 627.5")
+inp("g_ni", "指引淨利 FY2026（歸屬母公司）", "¥B", None, 741.5, None, "Interested-party", "同上", "7 月版 660.0、4 月版 465.5")
+inp("g_soc", "指引 SoC 測試機 FY2026", "¥B", None, 1375.0, None, "Interested-party", "公司 Q2 FY26 簡報（JE_BIZ_261028_slide）", "7 月版 1,243.5、4 月版 999.5")
+inp("g_mem", "指引記憶體測試機 FY2026", "¥B", None, 229.0, None, "Interested-party", "公司 Q2 FY26 簡報（JE_BIZ_261028_slide）", "7 月版 227.0、4 月版 201.0")
+inp("g_eps", "指引 EPS FY2026（基本）", "¥", None, 1027.08, None, "Interested-party", "公司 FY2026 Q2 決算短信（2026-10-28）", "7 月版 911.64（來源複核建議值）")
 inp("cons_rev26", "共識營收 FY2026", "¥B", None, 1760.0, None, "Interested-party", "stockanalysis.com 2026-10-07：¥1.76T", "第二來源：未找到")
 inp("cons_oi26", "共識營業利益 FY2026", "¥B", None, 886.4, None, "Interested-party", "stockanalysis.com 2026-10-07", "第二來源：未找到")
 for s in SC:
@@ -180,8 +180,8 @@ def defname(name, ref):
 # ---------------- Q：實績（FY2025 四季、FY2026 第一季） ----------------
 Q = wb.create_sheet("Q")
 Q["A1"] = "Q — 實績（十億日圓；EPS 為日圓）。會計年度 4–3 月：FY2025＝2025-04～2026-03。藍字＝輸入；黑字＝公式（Derived）。公司原文（決算短信、Q 別簡報）在建置環境無法開啟，數字取自搜尋引擎對公司文件的摘錄，並與第二來源交叉"
-Q["A2"] = "FY2026 第二季（2026-07～09）：預定 2026-10-28 15:30 JST 公布（公司 IR 行事曆）；建置日 2026-10-22 尚未公布，故不納入，指引維持 2026-07-29 上修版。公布後更新本頁 H 欄與 In 頁指引"
-hdr(Q, 3, ["項目", "FY25 Q1（4–6月）", "FY25 Q2（7–9月）", "FY25 Q3（10–12月）", "FY25 Q4（1–3月）", "FY2025 全年", "FY26 Q1（4–6月）", "FY26 Q2（未公布）", "標記", "來源1（公司）", "來源2／說明"])
+Q["A2"] = "v0.5（2026-10-31）：H 欄滾入 FY2026 第二季（2026-07～09，2026-10-28 公布：公司 Q2 簡報與 Investor Note），In 頁指引改為 2026-10-28 再上修版"
+hdr(Q, 3, ["項目", "FY25 Q1（4–6月）", "FY25 Q2（7–9月）", "FY25 Q3（10–12月）", "FY25 Q4（1–3月）", "FY2025 全年", "FY26 Q1（4–6月）", "FY26 Q2（7–9月）", "標記", "來源1（公司）", "來源2／說明"])
 QR = {}
 def qrow(r, key, label, vals, tag, s1, s2, fmt="#,##0.0"):
     QR[key] = r
@@ -207,16 +207,23 @@ qrow(15, "opx", "營業費用（毛利 − 營業利益）", [f"={c}12-{c}13" fo
 qrow(16, "ni", "淨利（歸屬母公司）", ["=169.8-C16", 79.6, 78.7, 126.9, 375.4, 174.8], "Q1 Derived／其餘 Verified", "公司：上半 169.8、FY 375.4（+132.9%）；FY26 Q1 174.8（+93.8%，含戰略投資評價益）", "Investing.com；Q2 79.6 單一二手")
 qrow(17, "eps", "EPS（基本，日圓）", [123.14, "=232.19-B17", "=F17-232.19-E17", 174.06, 515.15, 241.27], "Verified／Derived", "公司決算短信：Q1 123.14、上半 232.19、FY 515.15、Q4 174.06、FY26 Q1 241.27", "松井證券決算一覽（FY 515.15、Q4 174.06）；Q2、Q3 為差額（Derived）")
 qrow(18, "ck2", "檢查：四季合計 − 全年（SoC、記憶體、營收、營業利益、淨利、EPS 依序在 B–G 欄）", [f"=SUM(B4:E4)-F4", f"=SUM(B5:E5)-F5", f"=SUM(B9:E9)-F9", f"=SUM(B13:E13)-F13", f"=SUM(B16:E16)-F16", f"=SUM(B17:E17)-F17"], "—", "—", "—", "0.00")
-Q["H4"] = "預定 2026-10-28 15:30 JST，尚未公布"
+Q2V = {4: 353.3, 5: 53.4, 6: 29.9, 7: 41.1, 9: 477.7, 11: 0.711, 13: 266.8, 16: 193.3}
+for _r, _v in Q2V.items():
+    Q[f"H{_r}"] = _v; Q[f"H{_r}"].font = BLUE; Q[f"H{_r}"].number_format = "0.0%" if _r == 11 else "#,##0.0"
+for _r, _f in ((8, "=H6+H7"), (10, "=H4+H5+H8-H9"), (12, "=H9*H11"), (14, "=H13/H9"), (15, "=H12-H13")):
+    Q[f"H{_r}"] = _f; Q[f"H{_r}"].number_format = "0.0%" if _r == 14 else "#,##0.0"
+Q["L4"] = "FY26 Q2（H 欄）：公司 Q2 FY26 簡報（JE_BIZ_261028_slide）與 Investor Note：SoC 353.3、記憶體 53.4、其他系統 29.9、服務與其他 41.1、營收 477.7、毛利率 71.1%、營業利益 266.8、淨利 193.3 [Interested-party／Verified]"
 for nm, rr in (("soc", 4), ("mem", 5), ("oth", 6), ("svc", 7), ("rev", 9), ("gp", 12), ("oi", 13), ("ni", 16), ("eps", 17)):
     defname(f"a25_{nm}", f"Q!$F${rr}")
 for nm, rr in (("soc", 4), ("mem", 5), ("oth", 6), ("svc", 7), ("rev", 9), ("oi", 13), ("ni", 16), ("eps", 17)):
     defname(f"q1_{nm}", f"Q!$G${rr}")
-Q.cell(21, 1, "FY2026 公司指引（2026-07-29 上修；4 月版供對照）").font = BOLD
-hdr(Q, 22, ["項目", "4 月版", "7 月版（上修）", "上修幅度", "FY2025 實績", "7 月版年增", "", "", "標記", "來源1（公司）", "來源2／說明"])
-G = [("營收", 1420.0, "=g_rev", "=a25_rev"), ("SoC 測試機", 999.5, "=g_soc", "=a25_soc"), ("記憶體測試機", 201.0, "=g_mem", "=a25_mem"),
-     ("其他系統＋服務與其他（營收 − SoC − 記憶體，Derived）", "=B23-B24-B25", "=C23-C24-C25", "=a25_oth+a25_svc"), ("營業利益", 627.5, "=g_oi", "=a25_oi"),
-     ("淨利", 465.5, "=g_ni", "=a25_ni"), ("EPS（基本，日圓）", None, "=g_eps", "=a25_eps")]
+for nm, rr in (("soc", 4), ("mem", 5), ("oth", 6), ("svc", 7), ("rev", 9), ("oi", 13), ("ni", 16)):
+    defname(f"q2_{nm}", f"Q!$H${rr}")
+Q.cell(21, 1, "FY2026 公司指引（2026-10-28 再上修；7 月版供對照）").font = BOLD
+hdr(Q, 22, ["項目", "7 月版", "10 月版（再上修）", "上修幅度", "FY2025 實績", "10 月版年增", "", "", "標記", "來源1（公司）", "來源2／說明"])
+G = [("營收", 1714.0, "=g_rev", "=a25_rev"), ("SoC 測試機", 1243.5, "=g_soc", "=a25_soc"), ("記憶體測試機", 227.0, "=g_mem", "=a25_mem"),
+     ("其他系統＋服務與其他（營收 − SoC − 記憶體，Derived）", "=B23-B24-B25", "=C23-C24-C25", "=a25_oth+a25_svc"), ("營業利益", 846.0, "=g_oi", "=a25_oi"),
+     ("淨利", 660.0, "=g_ni", "=a25_ni"), ("EPS（基本，日圓）", None, "=g_eps", "=a25_eps")]
 for i, (nm, a, b, c_) in enumerate(G, 23):
     Q.cell(i, 1, nm)
     if a is not None:
@@ -224,9 +231,9 @@ for i, (nm, a, b, c_) in enumerate(G, 23):
         if not isinstance(a, str): Q.cell(i, 2).font = BLUE
         Q.cell(i, 4, f"=C{i}/B{i}-1").number_format = "0.0%"
     Q.cell(i, 3, b).number_format = "#,##0.0"; Q.cell(i, 5, c_).number_format = "#,##0.0"; Q.cell(i, 6, f"=C{i}/E{i}-1").number_format = "0.0%"
-    Q.cell(i, 9, "Interested-party"); Q.cell(i, 10, "4 月版：公司 FY2025 決算（2026-04-27）；7 月版：Q1 FY26 決算短信（2026-07-29）"); Q.cell(i, 11, "kabutan、gyokaidigest、Investing.com；7 月 EPS 公司 911.64、kabutan 913.83")
+    Q.cell(i, 9, "Interested-party"); Q.cell(i, 10, "7 月版：Q1 FY26 決算短信（2026-07-29）；10 月版：Q2 FY26 決算短信與簡報（2026-10-28）"); Q.cell(i, 11, "kabutan、gyokaidigest、Investing.com；7 月 EPS 公司 911.64、kabutan 913.83")
 Q.cell(30, 1, "營業利益率（指引）"); Q.cell(30, 2, "=B27/B23").number_format = "0.0%"; Q.cell(30, 3, "=C27/C23").number_format = "0.0%"; Q.cell(30, 5, "=a25_oi/a25_rev").number_format = "0.0%"
-Q.cell(30, 11, "公司：49.4%（FY2025 44.2%）")
+Q.cell(30, 11, "公司：10 月版 51.9%（7 月版 49.4%；FY2025 44.2%）")
 Q.cell(32, 1, "FY2025 四項合計與營收差約 ¥44B 的查明").font = BOLD
 Q.cell(33, 1, "SoC＋記憶體＋其他系統＋服務（65.0，二手說法）"); Q.cell(33, 2, "=a25_soc+a25_mem+a25_oth+65").number_format = "#,##0.0"
 Q.cell(34, 1, "營收 − 上列"); Q.cell(34, 2, "=a25_rev-B33").number_format = "#,##0.0"
@@ -577,6 +584,8 @@ srcs = [("公司：FY2025 決算（英文，2026-04-27）", "https://www.advante
  ("公司：FY2025 Q2 Investor Note（2025-10-28）", "https://www.advantest.com/document/en/investors/ir-library/result/E_BIZ_251028_note.pdf"),
  ("公司：FY2025 Q1 Investor Note（2025-07-29）", "https://www.advantest.com/document/en/investors/ir-library/result/E_BIZ_250729_note.pdf"),
  ("公司：FY2026 Q1 Investor Note（2026-07-29）", "https://www.advantest.com/document/en/investors/ir-library/result/JE_BIZ_260729_note.pdf"),
+ ("公司：FY2026 Q2 決算短信（英文，2026-10-28）", "https://www.advantest.com/en/news/2026/mpd9kn0000000gii-att/E_FR_FY2026_2Q.pdf"),
+ ("公司：FY2026 Q2 簡報與 Investor Note（2026-10-28）", "https://www.advantest.com/document/ja/investors/ir-library/result/JE_BIZ_261028_slide.pdf"),
  ("公司：FY2026 Q1 決算短信（日文，2026-07-29）", "https://www.advantest.com/ja/news/2026/qnpuno0000000cnr-att/J_FR_FY2026_1Q.pdf"),
  ("公司：FY2025 Q2 決算短信（日文）", "https://www.advantest.com/ja/news/2025/g2l53r0000000oc1-att/J_FR_FY2025_2Q.pdf"),
  ("公司：IR 行事曆（FY2026 Q2 預定 2026-10-28 15:30 JST）", "https://www.advantest.com/en/investors/ir-calendar/"),
@@ -840,13 +849,14 @@ V.cell(_G + 1, 1, "投資建議")
 V[f"B{_G + 1}"] = f'=IF({_U}>0.5,"強力買進",IF({_U}>0.25,"買進",IF({_U}>=-0.25,"中立",IF({_U}>=-0.5,"放空","強力放空"))))'
 V[f"B{_G + 1}"].number_format = "@"
 V[f"E{_G + 1}"] = "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空"
-OBS = ["目標價 ¥23,222（DCF 16,539、Comparable 29,904 各半），比現價 32,340（2026-10-23）低 28.2%，級距 −25%～−50%；Comparable 單獨為 −7.5%。主因是 DCF：DCF 目標價比現價低 48.9%（A 情境 23,028 也只有現價的 0.71 倍），r 10%、g 4% 下 FY2027 EPS 1,139 只值約 20 倍，而現價隱含 29.3 倍 12 個月後前瞻 EPS（1,104）；ROE 35.9% 高於折現率，DCF 偏低不是 ROE 造成。EPS 也不是主因：本模型前瞻 EPS 比共識 913.5 高 20.8%（共識期間早約一年半）；同業前瞻 P/E 中位數 27.1 倍，共識目標價 42,686 隱含 46.7 倍（比同業高 72%）。",
-       "情境 C 是最大下行：FY2028 EPS A 1,298、B 1,117、C 811（C 含 Teradyne 搶回市占與價格壓力），DCF 情境價值 23,028／16,105／7,893。FY2027 EPS 對 SoC 市占（±5pt → ±7.4%）與匯率（¥140／¥160 → −6.9%／+6.9%）最敏感，平行測試效率每年 −10% 則 −8.8%。",
-       "下一個檢驗事件是 FY2026 第二季財報（2026-10-28）：SoC 測試機訂單、CY2026 SoC 測試機市場規模（模型錨點 110 億美元，±5 億美元 → FY2027 EPS ±5.2%）與全年指引是否上修。"]   # 重點觀察（與 advantest/README.md 相同文字）
+OBS = ["目標價 ¥24,507（DCF 16,924、Comparable 相對倍數調整後 32,090 各半），比現價 32,340（2026-10-23）低 24.2%，級距 0%～−25%，投資建議由放空轉為中立（v0.5 滾入 FY2026 Q2 與 10 月再上修指引；離放空門檻 −25% 只差 0.8 個百分點）。主因仍是 DCF：r 10%、g 4% 下 DCF 只有現價的 0.52 倍；Comparable（市場主流同業法）單獨為 −5.0%。",
+       "模型 FY2026 營收 1,687、EPS 870 日圓，比公司 10 月指引（1,863、1,027.08）低 9.4%／15.3%；上半年實績營收已 845.2，模型隱含下半年 842，低於公司下半年指引 1,017.8。差距來自市場規模 × 市占的推導（SoC 測試機 1,198 對指引 1,375，−12.9%）：CY2026 SoC 測試機市場仍用本庫 110 億美元，公司 10-28 已稱約 115 億美元（區間上緣）。FY2028 EPS A 1,336、B 1,143、C 822，DCF 情境價值 23,675／16,441／8,002。",
+       "待決定：FY2026 是否改以上半年實績＋公司下半年指引為錨（會明顯上修 FY2026 EPS 與 DCF），以及 Siliconomics 的 CY2026 SoC 測試機市場是否由 110 改為 115 億美元（影響 Advantest 與泰瑞達）。下一個檢驗事件是 FY2026 第三季財報（2027-01 下旬）。"]   # 重點觀察（與 advantest/README.md 相同文字）
 _R = RD.max_row + 1
 RD.cell(_R, 1, "v0.3.1（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁最後新增「上檔空間級距」「投資建議」兩列（依「上檔空間：加權目標價」固定規則）；README 頁最後新增投資建議與重點觀察三點。另依算力收支 2026-10-25 請求，PL 頁最後新增「自由現金流（淨利＋折舊 − 資本支出；不含營運資金變動）」一列（三情境、所有模型年度；折舊、資本支出＝營收 × FY2025 實績比率 2.2%、2.9%），In 頁最後新增 「折舊 ÷ 營收」（da_rev）與「資本支出 ÷ 營收」（cx_rev）兩列；既有列不移動、既有數值不變。")
 RD.cell(_R + 1, 1, f'="投資建議："&Val!B{_G + 1}&"（依上檔空間固定規則）"')
 for _i, _t in enumerate(OBS, 1): RD.cell(_R + 1 + _i, 1, f"重點觀察 {_i}：{_t}")
+RD.cell(RD.max_row + 2, 1, "v0.5（2026-10-31）：滾入 FY2026 第二季（2026-10-28：營收 477.7、SoC 353.3、記憶體 53.4、營業利益 266.8、淨利 193.3，Q 頁 H 欄）與 10 月再上修指引（營收 1,863.0、營業利益 967.0、淨利 741.5、EPS 1,027.08、SoC 1,375.0、記憶體 229.0、其他系統 110.5、服務與其他 148.5、毛利率約 68%）；其他系統與服務的 FY2026 成長改用指引（原 Q1 年化）。加權目標價 23,855 → 24,507（+2.7%），投資建議放空 → 中立。")
 if os.environ.get("G1_ROWS"): print("G1ROWS", "advantest", "grade", _G, "rec", _G + 1, "readme_obs", _R + 2, _R + 4)
 
 wb.move_sheet("In", offset=0)
@@ -857,6 +867,14 @@ import os, sys  # noqa: E401
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
 import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "advantest")
+# v0.5（2026-10-31）：FY2026 10 月指引的其他系統、服務與其他（加在 In 頁最後，不位移既有列）
+_r = IN.max_row + 2
+IN.cell(_r, 1, "v0.5 追加：FY2026 公司 10 月指引分項").font = BOLD
+for _k, _nm, _v, _s2 in (("g_oth", "指引其他系統 FY2026", 110.5, "7 月版 104.5"), ("g_svcg", "指引服務與其他 FY2026", 148.5, "7 月版 139.0")):
+    _r += 1
+    IN.cell(_r, 1, _k); IN.cell(_r, 2, _nm); IN.cell(_r, 3, "¥B"); IN.cell(_r, 5, _v).font = BLUE
+    IN.cell(_r, 7, "Interested-party"); IN.cell(_r, 8, "公司 Q2 FY26 簡報（JE_BIZ_261028_slide，2026-10-28）"); IN.cell(_r, 9, _s2)
+    wb.defined_names[_k] = DefinedName(_k, attr_text=f"In!$E${_r}")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.4.1", "2026-10-31", base_map={"shC_28": "sh_soc", "shC_29": "sh_soc"})  # v0.4.1：In 頁版面（個股模型原則第 8 節；數值不變）
 wb.save(sys.argv[1])

@@ -5308,67 +5308,67 @@
   }
  },
  "6857": {
-  "model": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx",
+  "model": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx",
   "v2": true,
   "tp": {
-   "value": 23855.0679808832,
+   "value": 24506.9998824182,
    "cell": "Val!B146",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
   },
   "tp_dcf": {
-   "value": 16514.9379226864,
+   "value": 16923.6645261245,
    "cell": "Val!B131",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
   },
   "tp_comp": {
-   "value": 29856.6828393757,
+   "value": 30713.4117318693,
    "cell": "Val!B147",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
   },
   "tp_cons": {
    "value": 42686,
    "cell": "Val!B148",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
   },
   "up": {
-   "value": -0.26236648172903,
+   "value": -0.242207795843593,
    "cell": "Val!B149",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
   },
   "up_comp": {
-   "value": -0.0767877909902376,
+   "value": -0.0502964832446103,
    "cell": "Val!B150",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
   },
   "old_rule": {
-   "value": 24455.302282651,
+   "value": 25263.6536541836,
    "cell": "Val!B102",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
   },
   "tier6": {
-   "value": "−25%～−50%",
+   "value": "0%～−25%",
    "cell": "Val!B157",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
   },
   "rec": {
-   "value": "放空",
+   "value": "中立",
    "cell": "Val!B158",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
   },
   "dcf_A": {
-   "value": 22999.6030353682,
+   "value": 23675.0370401684,
    "cell": "Val!B130",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
   },
   "dcf_C": {
-   "value": 7869.22693168907,
+   "value": 8002.1711268528,
    "cell": "Val!D130",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
   },
   "model_px": {
    "value": 32340,
    "cell": "Val!B92",
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx",
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx",
    "date": "2026-10-23"
   },
   "cash": {
@@ -5377,56 +5377,56 @@
    "values": [
     [
      "FY2026",
-     612.931333396771,
+     628.089381401813,
      "PL!D12"
     ],
     [
      "FY2027",
-     822.971059500879,
+     848.489669070716,
      "PL!E12"
     ],
     [
      "FY2028",
-     938.141408406609,
+     964.615228968398,
      "PL!F12"
     ],
     [
      "FY2029",
-     1030.49777901301,
+     1057.2422059744,
      "PL!G12"
     ],
     [
      "FY2027",
-     788.751899310775,
+     812.120045935521,
      "PL!E23"
     ],
     [
      "FY2028",
-     807.760442004273,
+     825.355828909796,
      "PL!F23"
     ],
     [
      "FY2029",
-     911.518677067735,
+     931.847607268669,
      "PL!G23"
     ],
     [
      "FY2027",
-     751.099431551582,
+     773.806693462892,
      "PL!E34"
     ],
     [
      "FY2028",
-     585.862995896094,
+     593.489576780702,
      "PL!F34"
     ],
     [
      "FY2029",
-     573.473170367163,
+     577.226226151972,
      "PL!G34"
     ]
    ],
-   "file": "advantest/dist/20261031_Advantest個股模型_v0.4.1.xlsx"
+   "file": "advantest/dist/20261031_Advantest個股模型_v0.5.xlsx"
   }
  },
  "6146": {
