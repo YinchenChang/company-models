@@ -210,3 +210,45 @@ def test_bridge_ties_to_calc_sheets(eng):
     assert all(abs(a - b) < 1e-9 for a, b in zip(gap_row[3:9], gap))
     sup_row = next(r for r in byid.values() if r[1] == "供給 GW 合計")
     assert all(abs(a - b) < 1e-9 for a, b in zip(sup_row[3:9], eng.get_name("CMP_SupplyGW")))
+
+
+def _s1f_rows(wb):
+    """Cost 第二十四節（v0.1.6 正式 S-1 對照）的列號範圍：節標題至頁尾。"""
+    ws = wb["Cost"]
+    start = next(r for r in range(1, ws.max_row + 1) if str(ws.cell(r, 1).value or "").startswith("二十四、"))
+    return ws, set(range(start, ws.max_row + 1))
+
+
+def test_s1f_section_not_fed_back(wb):
+    """v0.1.6 W3：Cost 第二十四節只對照（不回饋基準）——除本節與 Checks 外，任何公式不得引用本節儲存格或本節具名範圍。"""
+    ws, rows = _s1f_rows(wb)
+    names = [n for n, v in wb.defined_names.items() if v.attr_text.startswith("Cost!")
+             and int(re.search(r"\$(\d+)", v.attr_text).group(1)) in rows]
+    assert "COST_Eta2026H1" in names and "COST_PropGap_VR_EtaH1" in names
+    for sh in wb.worksheets:
+        if sh.title == "Checks":
+            continue
+        for row in sh.iter_rows():
+            for c in row:
+                v = c.value
+                if not (isinstance(v, str) and v.startswith("=")) or (sh.title == "Cost" and c.row in rows):
+                    continue
+                refs = [int(x) for x in re.findall(r"Cost!\$?[A-Z]{1,3}\$?(\d+)", v)]
+                if sh.title == "Cost":
+                    refs += [int(x) for x in re.findall(r"(?<![A-Za-z!_$])\$?[D-I]\$?(\d+)\b", re.sub(r"[A-Za-z_]+![$A-Z0-9:]+", "", v))]
+                assert not [r for r in refs if r in rows], f"{sh.title}!{c.coordinate} 引用第二十四節：{v}"
+                assert not [n for n in names if re.search(rf"\b{n}\b", v)], f"{sh.title}!{c.coordinate} 引用第二十四節具名範圍：{v}"
+
+
+def test_s1f_w2_and_eta_unchanged(eng):
+    """v0.1.6 W2：2026 營收基準＝正式 S-1 上半年＋Q3＋Q4（Q3 持平）；基準 η 不因 W3 改變；B 情境 2025 欄＝基準。"""
+    s = {r["key"]: r["id"] for r in SRC}
+    i = {r["key"]: REG["INP"][r["key"]] for r in INP}
+    assert eng.get_name(i["s1f_switch"]) == 1 and eng.get_name(i["u1_switch"]) == 1
+    tgt = eng.get_name(s["rev_s1f_2026h1"]) + eng.get_name(s["rev_2026_q3"]) * (2 + eng.get_name(i["q4_growth"]))
+    assert abs(eng.get_name("REV_Target")[1] - tgt) < 1e-9
+    assert abs(eng.get_name("CMP_Eta2025") - 0.525427732668394) < 1e-9
+    assert eng.get_name("COST_Eta2026H1") > 0
+    for a, b in ((eng.get_name("COST_PropGap_VR_EtaH1")[0], eng.get_name("COST_PropGap_VR")[0]),
+                 (eng.get_name("COST_Coverage_EtaH1")[0], eng.get_name("COST_Coverage")[0])):
+        assert abs(a - b) < 1e-9
