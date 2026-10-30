@@ -112,10 +112,10 @@ for i, (q, v, lo, hi, tag, src) in enumerate(((ACT[0], 0.93, 0.90, 0.95, "Assume
 inp("rev24", "2024 NAND 市場營收", "$B", None, 67.4, None, "Interested-party", "TrendForce（TelecomLead 轉載）：2024 NAND 營收 $67.4B（+77%）", "第二來源：未找到；只用於 CY2024 欄")
 
 sec("N6. 各廠份額（2026Q3 起；Kioxia、SanDisk 由公司 2026Q3 指引推得，其餘沿用 1H26 實績，其他＝餘額）")
-inp("sd_g", "SanDisk FQ1 FY27（2026-07～09）營收指引中值", "$B", 10.3, 10.55, 10.8, "Interested-party", "SanDisk FQ4 FY26 新聞稿（2026-08-05）：$10.3–10.8B https://www.sec.gov/Archives/edgar/data/0002023554/000162828026053346/sndkq4-26ex991xpressrelease.htm", "公司指引（立場：公司）")
+inp("sd_g", "SanDisk FQ1 FY27（2026-07～09）營收實績", "$B", None, 11.031, None, "Verified", "SanDisk FQ1 FY27 新聞稿與法說（2026-10-29；Benzinga／Motley Fool 逐字稿、Investing.com 簡報摘要）：$11.031B", "v0.3 前為公司指引 $10.3–10.8B")
 inp("sd_k", "SanDisk 公司營收 ÷ TrendForce 口徑（2Q26）", "x", None, "=8.965/rv_sd_5", None, "Derived", "FQ4 FY26 營收 8.965 ÷ TrendForce 2Q26 8.97", "")
-inp("kx_g", "Kioxia FY2026 第二季（2026-07～09）營收指引", "¥B", None, 2390.0, None, "Interested-party", "Kioxia FY2026 第一季財報（2026-07-31，SGX 轉載 Earnings Release FY2026 1Q）：第二季營收 ¥2,390.0B、營業利益 ¥1,890.0B，假設 1 美元＝162 日圓", "公司指引（立場：公司）")
-inp("kx_fxg", "Kioxia 第二季指引匯率", "¥／$", None, 162, None, "Interested-party", "同上", "")
+inp("kx_g", "Kioxia FY2026 第二季（2026-07～09）營收實績", "¥B", None, 2480.0, None, "Verified", "Kioxia FY2026 第二季財報（2026-10-30；404K Research 法說整理、FourWeekMBA 轉載）：營收 ¥2,480.0B、營業利益 ¥1,994.7B；第三季指引 ¥2,500.0B（假設 157 日圓）", "v0.3 前為公司指引 ¥2,390.0B")
+inp("kx_fxg", "Kioxia 第二季平均匯率", "¥／$", None, 161, None, "Verified", "同上：第二季 161 日圓（第一季 160）", "")
 inp("kx_k", "Kioxia 公司營收 ÷ TrendForce 口徑（2Q26）", "x", None, "=1767.1/160/rv_kx_5", None, "Derived", "第一季營收 ¥1,767.1B ÷ 平均匯率 160 ÷ TrendForce 2Q26 10.72（公司含其他營收 ¥66.7B）", "")
 for k, (lo, b, hi), src in (("ss", (-1.0, -0.5, 0.0), "三星：2026 晶圓投片減少、投資轉向 HBM（Blocks & Files 2026-01-20 轉載）；2Q26 市占小降（TrendForce）"),
                             ("sk", (-0.5, 0.0, 0.5), "SK 海力士＋Solidigm：投片 −10%，但 QLC 企業級 SSD 接單強（TrendForce 2026-08-18）"),

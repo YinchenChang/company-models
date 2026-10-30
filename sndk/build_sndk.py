@@ -112,11 +112,11 @@ inp("a26_gm", "FY2026 GAAP 毛利率", "%", None, 0.715, None, "Verified", Q4, "
 inp("a25_rev", "FY2025 營收", U, None, 7.355, None, "Verified", Q4 + "（前期欄）", "MarketScreener 7,355")
 inp("a25_ni", "FY2025 GAAP 淨利", U, None, -1.641, None, "Verified", Q4 + "（含商譽減損）", "MarketScreener −1,641")
 inp("a25_eps", "FY2025 GAAP 稀釋 EPS", PXU, None, -11.32, None, "Verified", Q4, "")
-inp("g_rev", "公司指引：FQ1 FY27（2026-07～09）營收中值", U, 10.3, 10.55, 10.8, "Interested-party", Q4 + "：$10.3–10.8B", "公司指引（立場：公司）；市場層 markets/nand 以此推 SanDisk 2026Q3 份額，因此本模型 FQ1 FY27 營收＝指引（恆等式）")
-inp("g_gm", "公司指引：FQ1 FY27 GAAP 毛利率中值", "%", 0.83, 0.84, 0.849, "Interested-party", Q4 + "：GAAP 83.0–84.9%（non-GAAP 83.0–85.0%）", "用來校準單位成本（FQ1 FY27 為基準季）")
-inp("g_ox", "公司指引：FQ1 FY27 GAAP 營業費用中值", U, 0.574, 0.594, 0.614, "Interested-party", Q4 + "：GAAP $574–614M（non-GAAP $520–540M）", "")
-inp("g_eps", "公司指引：FQ1 FY27 non-GAAP 稀釋 EPS 中值", PXU, 44, 45, 46, "Interested-party", Q4 + "：$44.00–46.00；稀釋股數約 155 百萬股、non-GAAP 稅率 15%", "")
-inp("g_sh", "公司指引：FQ1 FY27 稀釋股數", "百萬股", None, 155, None, "Interested-party", Q4, "")
+inp("g_rev", "FQ1 FY27（2026-07～09）營收實績", U, None, 11.031, None, "Verified", "SanDisk FQ1 FY27 新聞稿與法說（2026-10-29；Benzinga／Motley Fool 逐字稿、Investing.com 簡報摘要）：$11.031B（資料中心 4.802、邊緣 5.832、消費 0.397）", "v0.3 前為公司指引 $10.3–10.8B；市場層 markets/nand 以此推 SanDisk 2026Q3 份額")
+inp("g_gm", "FQ1 FY27 GAAP 毛利率實績（校準單位成本）", "%", 0.845, 0.8503, 0.855, "Verified", "SanDisk FQ1 FY27 新聞稿與法說（2026-10-29；Benzinga／Motley Fool 逐字稿、Investing.com 簡報摘要）：GAAP 毛利 $9.38B ÷ 營收 11.031＝85.0%（non-GAAP 85.1%）", "低／高 ±0.5pt 只供 Sens；FQ2 FY27 指引 GAAP 84.4–85.4%")
+inp("g_ox", "FQ1 FY27 GAAP 營業費用（推估；校準固定費用）", U, 0.57, 0.582, 0.60, "Derived", "non-GAAP 營業費用＝（毛利率 85.1% − 營業利益率 80.4%）× 11.031＝0.518；加股份報酬約 0.064（FQ1 指引附註 54–74M 中點）", "公司 GAAP 營業費用原文未取得（新聞稿頁面未能開啟）")
+inp("g_eps", "FQ1 FY27 non-GAAP 稀釋 EPS 實績（分割前）", PXU, None, 49.51, None, "Verified", "SanDisk FQ1 FY27 新聞稿與法說（2026-10-29；Benzinga／Motley Fool 逐字稿、Investing.com 簡報摘要）：non-GAAP 49.51、GAAP 52.60", "FQ2 FY27 指引 non-GAAP 55–57（分割前）")
+inp("g_sh", "稀釋股數（FQ2 FY27 指引，分割前）", "百萬股", None, 151, None, "Interested-party", "SanDisk FQ1 FY27 新聞稿與法說（2026-10-29；Benzinga／Motley Fool 逐字稿、Investing.com 簡報摘要）：FQ2 FY27 指引假設完全稀釋 151 百萬股", "FQ1 FY27 回購約 3.2 百萬股（$5.0B）")
 
 sec("B. 成本、費用、稅（公司特有；隨情境者 A 最有利、C 最不利）")
 for s, (lo, b, hi), src in zip(SC, ((0.10, 0.14, 0.18), (0.08, 0.12, 0.16), (0.06, 0.10, 0.14)),
@@ -228,7 +228,7 @@ IN[f"E{IN_ROW['sd_k']}"] = f"=a26_rev/SUM(Units!{UCOL['2025Q3']}{UR[('rev', 'A')
 # ---------------- Q：季度實績 ----------------
 Q = wb.create_sheet("Q")
 Q["A1"] = "Q — 季度實績（$B；EPS 美元）與公司指引。會計年度約 6 月底結束；FQ1＝7–9 月"
-hdr(Q, 3, ["項目", "FQ1 FY26", "FQ2 FY26", "FQ3 FY26", "FQ4 FY26", "FY2026", "FQ1 FY27 指引", "標記", "來源"])
+hdr(Q, 3, ["項目", "FQ1 FY26", "FQ2 FY26", "FQ3 FY26", "FQ4 FY26", "FY2026", "FQ1 FY27 實績", "標記", "來源"])
 for i, (lab, key, fm) in enumerate((("營收", "rev", "#,##0.000"), ("GAAP 毛利率", "gm", "0.0%"), ("GAAP 營業利益", "op", "#,##0.000"), ("GAAP 淨利", "ni", "#,##0.000"), ("GAAP 稀釋 EPS", "eps", EF)), 4):
     Q.cell(i, 1, lab)
     for k in range(1, 5): Q.cell(i, 1 + k, f"=q{k}_{key}").number_format = fm
@@ -239,7 +239,7 @@ for c, f in (("F4", "#,##0.000"), ("F5", "0.0%"), ("F6", "#,##0.000"), ("F7", "#
 Q["G4"] = "=g_rev"; Q["G5"] = "=g_gm"; Q["G8"] = "=g_eps"; Q["G4"].number_format = "#,##0.000"; Q["G5"].number_format = "0.0%"; Q["G8"].number_format = EF
 Q.cell(9, 1, "檢查：四季營收、淨利合計 − FY2026（應約為 0）"); Q["B9"] = "=F4-a26_rev"; Q["C9"] = "=F7-a26_ni"
 Q.cell(10, 1, "季增：營收"); [Q.cell(10, 1 + k, f"={GL(1 + k)}4/{GL(k)}4-1").__setattr__("number_format", "0.0%") for k in range(2, 5)]
-Q.cell(12, 1, "FQ1 FY27（2026-07～09）財報 2026-10-29 盤後公布（公司 2026-09-29 公告）；本版 FY2027 第一季＝市場層推導（營收等於公司指引中值，為恆等式）")
+Q.cell(12, 1, "v0.3（2026-10-31）：FQ1 FY27（2026-07～09）實績已滾入（2026-10-29 公布：營收 11.031、資料中心 4.802、邊緣 5.832、消費 0.397；GAAP 毛利率 85.0%）；FY2027 第一季＝市場層推導（營收等於實績，為恆等式）。FQ2 FY27 指引：營收 12.2–12.6、non-GAAP 毛利率 84.5–85.5%、non-GAAP EPS 55–57（分割前）、稀釋股數 151。董事會核准一股分八股（2026-11-20 起分割後交易），本版 EPS 與股價仍為分割前")
 Q.column_dimensions["A"].width = 44
 for c in "BCDEFG": Q.column_dimensions[c].width = 13
 Q.column_dimensions["I"].width = 70
@@ -273,13 +273,13 @@ def engine(ws, r0, title, s, **over):
     row("cs", "消費", U, {**{QC[q]: f"=q{q[1]}_cs" for q in QT}, **{QC[q]: f"={QC[q]}{R['rev']}*cssh_{fyc(q)}" for q in DQ}}, note="官方分部")
     row("ed", "邊緣", U, {**{QC[q]: f"=q{q[1]}_ed" for q in QT}, **{QC[q]: f"={QC[q]}{R['rev']}-{QC[q]}{R['dc']}-{QC[q]}{R['cs']}" for q in DQ}}, note="官方分部；預測季＝營收 − 資料中心 − 消費")
     row("qchk", "檢查：分部合計 − 營收（季）", U, {QC[q]: f"={QC[q]}{R['dc']}+{QC[q]}{R['ed']}+{QC[q]}{R['cs']}-{QC[q]}{R['rev']}" for q in QL}, fmt="0.000")
-    row("uc", "每 EB 營業成本（FQ1 FY27 以指引毛利率校準，之後每年 × (1 − 成本年降)）", "$B/EB", {**{QC[q]: f"={QC[q]}{rr[0] + 1}/{QC[q]}{R['bit']}" for q in QT},
+    row("uc", "每 EB 營業成本（FQ1 FY27 以實績毛利率校準，之後每年 × (1 − 成本年降)）", "$B/EB", {**{QC[q]: f"={QC[q]}{rr[0] + 1}/{QC[q]}{R['bit']}" for q in QT},
         ref: f"=(1-{p['gm']})*g_rev*sd_k/sd_k/{ref}{R['bit']}" if False else f"=(1-{p['gm']})*{ref}{R['rev']}/{ref}{R['bit']}",
         **{QC[q]: f"=${ref}{rr[0]}*(1-{cd})^({nq(q)}/4)" for q in DQ if nq(q) > 0}}, fmt="0.0000")
     row("cogs", "營業成本", U, {**{QC[q]: f"=q{q[1]}_rev*(1-q{q[1]}_gm)" for q in QT}, **{QC[q]: f"={QC[q]}{R['bit']}*{QC[q]}{R['uc']}" for q in DQ}})
     row("gm", "毛利率", "%", {QC[q]: f"=1-{QC[q]}{R['cogs']}/{QC[q]}{R['rev']}" for q in QL}, fmt="0.0%")
     row("ox", "營業費用", U, {**{QC[q]: f"=q{q[1]}_rev-q{q[1]}_rev*(1-q{q[1]}_gm)-q{q[1]}_op" for q in QT},
-                             **{QC[q]: f"=(g_ox-{p['oxv']}*g_rev)*(1+{p['oxg']})^({nq(q)}/4)+{p['oxv']}*{QC[q]}{R['rev']}" for q in DQ}}, note="固定部分以 FQ1 FY27 指引營業費用校準（Derived）")
+                             **{QC[q]: f"=(g_ox-{p['oxv']}*g_rev)*(1+{p['oxg']})^({nq(q)}/4)+{p['oxv']}*{QC[q]}{R['rev']}" for q in DQ}}, note="固定部分以 FQ1 FY27 營業費用（實績推估）校準（Derived）")
     row("op", "營業利益", U, {QC[q]: f"={QC[q]}{R['rev']}-{QC[q]}{R['cogs']}-{QC[q]}{R['ox']}" for q in QL})
     yr_rows = rr[0]; rr[0] += 1
     row("ni", "淨利", U, {**{QC[q]: f"=q{q[1]}_ni" for q in QT}, **{QC[q]: f"=({QC[q]}{R['op']}+rf*${FYC[q[0] - 1]}{{NC}}/4)*(1-{p['tax']})" for q in DQ}}, note="（營業利益＋上一年底淨現金 × 收益率 ÷ 4）×（1 − 稅率）")
@@ -527,7 +527,7 @@ hdr(SE, 3, ["案例", "設定", "FY2027 營收 $B", "FY2027 EPS", "相對基準"
 CASES = [("市場層營收 −20%（價格；FQ2 FY27 起）", "價格係數 0.8", dict(pxm="0.8")), ("市場層營收 +20%（價格）", "價格係數 1.2", dict(pxm="1.2")),
          ("份額 ×0.9（營收與位元）", "份額係數 0.9", dict(shm="0.9")), ("份額 ×1.1", "份額係數 1.1", dict(shm="1.1")),
          ("每位元成本年降 10%（C 的值）", "cd_C", dict(cd="cd_C")), ("每位元成本年降 18%", "cd_A 高", dict(cd="cd_A_hi")),
-         ("指引毛利率 83.0%（校準）", "g_gm 低", dict(gm="g_gm_lo")), ("指引毛利率 84.9%", "g_gm 高", dict(gm="g_gm_hi")),
+         ("校準毛利率 84.5%", "g_gm 低", dict(gm="g_gm_lo")), ("校準毛利率 85.5%", "g_gm 高", dict(gm="g_gm_hi")),
          ("營業費用變動率 2%", "ox_var 高", dict(oxv="ox_var_hi")), ("稅率 20%", "tax 高", dict(tax="tax_hi")), ("稅率 12%", "tax 低", dict(tax="tax_lo")),
          ("買回 ÷ FCF 80%", "payout 高", dict(pay="payout_hi")), ("買回 ÷ FCF 30%", "payout 低", dict(pay="payout_lo"))]
 def put(i, nm, st, R, pre=""):
@@ -583,9 +583,9 @@ def rec(label, ref, getter, src, note="", fmt="#,##0.00", pt=False):
     RC.cell(rcr, 9, src); RC.cell(rcr, 10, note); rcr += 1
 RC.cell(rcr, 1, "A. 實績與公司指引").font = BOLD; rcr += 1
 rec("FY2026 營收（實績重現）", "=a26_rev", lambda s: f"=PL!D{SUMR[(s, 'yrev')]}", Q4, "恆等式")
-rec("FQ1 FY27 營收 vs 公司指引中值", "=g_rev", lambda s: f"=PL!{QC[(2027, 1)]}{PB[s]['rev']}", Q4, "恆等式（市場層份額由指引推得）")
-rec("FQ1 FY27 毛利率 vs 指引中值（百分點）", "=g_gm", lambda s: f"=PL!{QC[(2027, 1)]}{PB[s]['gm']}", Q4, "恆等式（單位成本以此校準）", "0.0%", True)
-rec("FQ1 FY27 EPS vs 指引中值（non-GAAP）", "=g_eps", lambda s: f"=PL!{QC[(2027, 1)]}{PB[s]['epsq']}", Q4, "本模型為 GAAP 營業費用＋15% 稅率，近似 non-GAAP（差約 SBC）")
+rec("FQ1 FY27 營收 vs 公司實績", "=g_rev", lambda s: f"=PL!{QC[(2027, 1)]}{PB[s]['rev']}", Q4, "恆等式（市場層份額由指引推得）")
+rec("FQ1 FY27 毛利率 vs 實績（百分點）", "=g_gm", lambda s: f"=PL!{QC[(2027, 1)]}{PB[s]['gm']}", Q4, "恆等式（單位成本以此校準）", "0.0%", True)
+rec("FQ1 FY27 EPS vs 實績（non-GAAP 49.51）", "=g_eps", lambda s: f"=PL!{QC[(2027, 1)]}{PB[s]['epsq']}", Q4, "本模型為 GAAP 營業費用＋15% 稅率，近似 non-GAAP（差約 SBC）")
 RC.cell(rcr, 1, "B. 共識（MarketScreener 2026-10-23；只作參考）").font = BOLD; rcr += 1
 rec("FY2027 營收 vs 共識", "=cons_rev27", lambda s: f"=PL!E{SUMR[(s, 'yrev')]}", MS)
 rec("FY2028 營收 vs 共識", "=cons_rev28", lambda s: f"=PL!F{SUMR[(s, 'yrev')]}", MS)
@@ -623,7 +623,7 @@ RD = wb.create_sheet("README", 0)
 VA = lambda k, c="B": f"Val!{c}{T[k]}"
 OBS = [
  f'="1. 加權目標價 "&TEXT({VA("tpw")},"#,##0")&" 美元，相對現價 "&TEXT(px,"#,##0.00")&"（2026-10-23 收盤）"&TEXT({VA("upw")},"+0.0%;−0.0%")&"，主因是 Comparable 偏低：同業前瞻 P/B 中位數 "&TEXT({VA("pmed")},"0.00")&"x，而共識目標價隱含約 "&TEXT(cons_tp/((cons_bv28+cons_bv29)/2),"0.00")&"x（倍數因素 "&TEXT({VA("gmul")},"+0%;−0%")&"）；DCF 目標價 "&TEXT({VA("dcftp")},"#,##0")&" 高於 Comparable "&TEXT({VA("comptp")},"#,##0")&"。"',
- f'="2. 本模型 FY2027 EPS（A）"&TEXT(PL!E{SUMR[("A", "eps")]},"0")&" 美元，比共識 217.4 "&TEXT(PL!E{SUMR[("A", "eps")]}/cons_eps27-1,"+0%;−0%")&"；B、C 到 FY2028 才分歧（"&TEXT(PL!F{SUMR[("B", "eps")]},"0")&"／"&TEXT(PL!F{SUMR[("C", "eps")]},"0")&"），因為 2026Q3–2027Q2 的價格與位元三情境幾乎相同（markets/nand）。追蹤：2026-10-29 FQ1 FY27 財報與 FQ2 指引。"',
+ f'="2. 本模型 FY2027 EPS（A）"&TEXT(PL!E{SUMR[("A", "eps")]},"0")&" 美元，比共識 217.4 "&TEXT(PL!E{SUMR[("A", "eps")]}/cons_eps27-1,"+0%;−0%")&"；B、C 到 FY2028 才分歧（"&TEXT(PL!F{SUMR[("B", "eps")]},"0")&"／"&TEXT(PL!F{SUMR[("C", "eps")]},"0")&"），因為 2026Q3–2027Q2 的價格與位元三情境幾乎相同（markets/nand）。v0.3 已滾入 FQ1 FY27 實績（營收 11.031）；模型 FQ2 FY27 營收比公司指引 12.2–12.6 高約一成（市場層 2026Q4 NAND 季價 +17.5%），差距原因待查。"',
  f'="3. 最敏感的是價格而非成本：2027 起季價 ±20% 使 FY2028 EPS（A）變動 "&TEXT(Sens!H5,"+0%;−0%")&"／"&TEXT(Sens!H6,"+0%;−0%")&"，成本年降 ±4pt 只有約 ±1%；情境 C 的 FY2029 毛利率降到 "&TEXT(PL!G{SUMR[("C", "ygm")]},"0%")&"（CY2028 NAND 價格跌回約 2025 年水準）。追蹤：TrendForce 每季初的 NAND 合約價與 Kioxia 2026-10-30 財報（合資群位元與價格）。"']
 PROP = ("SanDisk 是純 NAND 公司，盈餘由 NAND 合約價循環與 AI 推論帶動的企業級 SSD 位元決定，產能與 Kioxia 合資（Flash Ventures 49.9%）；"
         "問題是 2026 年的高價能維持多久（FY2028 起三情境分歧），以及現價隱含的倍數是否已反映循環見頂。")
@@ -633,7 +633,7 @@ lines = [(f"{NAME}（{TICKER} US）收支與估值模型 v0.1（AI 半導體 Pro
          (f'="投資建議："&{VA("rec")}&"（依上檔空間固定規則；上檔空間："&TEXT({VA("upw")},"+0.0%;−0.0%")&"，級距："&{VA("tier")}&"）"', True), ("", False),
          ("驅動因子 → 推導量（因果方向：左邊決定右邊）", True),
          ("Units｜markets/nand 成品：SanDisk 季度營收（市場營收 × 份額；同字母情境）與位元（季度出貨 × 份額）", False),
-         ("PL 區塊｜營收＝市場層 × 公司口徑係數；營業成本＝位元 × 每 EB 成本（FQ1 FY27 以指引毛利率校準，之後每年 × (1 − 成本年降)）；營業費用＝固定（指引校準）＋變動", False),
+         ("PL 區塊｜營收＝市場層 × 公司口徑係數；營業成本＝位元 × 每 EB 成本（FQ1 FY27 以實績毛利率校準，之後每年 × (1 − 成本年降)）；營業費用＝固定（FQ1 FY27 實績校準）＋變動", False),
          ("PL 區塊｜淨利＝（營業利益＋淨現金收益）×（1 − 稅率）；自由現金流＝淨利＋折舊 − 資本支出（含合資群分攤）；買回＝回饋比例 × FCF → 股數 → EPS、每股淨值", False),
          ("Val｜第 0 節目標價＝DCF（FY2027–FY2032＋永續）與 Comparable（同業前瞻 P/B × 約 2028 年底每股淨值）各半；第 5–6 節目前倍數、十年倍數規則值（美光 Analogy）", False), ("", False),
          ("會計年度：約 6 月底結束（FY2027＝2026-07～2027-06 ≈ CY2026Q3–CY2027Q2）。前瞻 EPS 依月份調整：12 個月後（約 2027-10）的未來 12 月＝8／12 FY2028＋4／12 FY2029。", False),

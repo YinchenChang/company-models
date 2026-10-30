@@ -107,10 +107,10 @@ inp("q1_gp", "FY2026 第一季毛利", U, None, 1380.1, None, "Interested-party"
 inp("q1_op", "FY2026 第一季營業利益", U, None, 1270.0, None, "Verified", ER, "含訴訟損失準備 36.6、股份報酬 19.4（non-GAAP 加回）")
 inp("q1_ni", "FY2026 第一季淨利（歸屬母公司）", U, None, 842.2, None, "Verified", ER, "")
 inp("q1_eps", "FY2026 第一季基本 EPS（分割後）", PXU, None, "=1539.91/3", None, "Derived", ER + "：基本 EPS ¥1,539.91（分割前）÷ 3", "2026-10-01 一股分三股（2026-07-31 董事會）")
-inp("g2_rev", "公司指引：FY2026 第二季（2026-07～09）營收", U, None, 2390.0, None, "Interested-party", ER + "：¥2,390.0B（假設 1 美元＝162 日圓）", "公司不提供全年計畫（立場：公司）")
-inp("g2_op", "公司指引：FY2026 第二季營業利益", U, None, 1890.0, None, "Interested-party", ER + "：¥1,890.0B（non-GAAP 1,900.0）", "")
-inp("g2_ni", "公司指引：FY2026 第二季淨利", U, None, 1270.0, None, "Interested-party", ER + "：¥1,270.0B；基本 EPS ¥2,317.46（分割前）", "")
-inp("g2_ox", "FY2026 第二季營業費用（推估；校準用）", U, 55, 70, 90, "Assumed", "第一季毛利 − 營業利益＝110.1（含一次性 56.0）；第二季 GAAP 與 non-GAAP 營業利益差 10", "第二季營業成本＝營收 − 營業利益 − 本值（Derived），用於校準每 EB 成本")
+inp("g2_rev", "FY2026 第二季（2026-07～09）營收實績", U, None, 2480.0, None, "Verified", "Kioxia FY2026 第二季財報（2026-10-30；404K Research 法說整理、PANews／TechFlow 轉載）：¥2,480.0B（指引 2,390.0；平均匯率 161）", "v0.3 前為公司指引")
+inp("g2_op", "FY2026 第二季營業利益實績", U, None, 1994.7, None, "Verified", "Kioxia FY2026 第二季財報（2026-10-30；404K Research 法說整理、PANews／TechFlow 轉載）：¥1,994.7B（non-GAAP 1,988.3；指引 1,890.0）", "")
+inp("g2_ni", "FY2026 第二季淨利實績", U, None, 1360.0, None, "Verified", "Kioxia FY2026 第二季財報（2026-10-30；404K Research 法說整理、PANews／TechFlow 轉載）：約 ¥1.36T（non-GAAP 1,348.6；指引 1,270.0）", "第二來源：TechFlow 2026-10-30（1.36 兆）")
+inp("g2_ox", "FY2026 第二季營業費用（推估；校準用）", U, 50, 59, 70, "Derived", "毛利率約 82.8%（404K Research 依損益表推算）× 2,480.0 − 營業利益 1,994.7 ≈ 59", "第二季營業成本＝營收 − 營業利益 − 本值；公司損益表原文未取得")
 inp("a25_rev", "FY2025 營收（2025-04～2026-03）", U, None, "=p1_rev+p2_rev+p3_rev+p4_rev", None, "Derived", "四季合計", "公司 2,337.6（storagenewsletter 轉載 FY25 決算，+37%）")
 inp("a25_ni", "FY2025 淨利", U, None, "=p1_ni+p2_ni+p3_ni+p4_ni", None, "Derived", "四季合計", "公司 554.0（storagenewsletter）、MarketScreener 554.5")
 inp("a25_eps", "FY2025 EPS（分割後）", PXU, None, 341.4, None, "Interested-party", MS + "：341.4", "≈ 554.5 ÷ 平均約 1,624 百萬股（分割後，Derived）")
@@ -230,7 +230,7 @@ aiw = lambda fy, s: f"(0.75*Units!{AICOL[fy]}{AIR[s]}+0.25*Units!{AICOL[fy + 1]}
 # ---------------- Q：季度實績 ----------------
 Q = wb.create_sheet("Q")
 Q["A1"] = "Q — 季度實績（¥B）與公司指引。會計年度 4–3 月；第一季＝4–6 月"
-hdr(Q, 3, ["項目", "FY2025 第一季", "FY2025 第二季", "FY2025 第三季", "FY2025 第四季", "FY2025", "FY2026 第一季", "FY2026 第二季（指引）", "標記", "來源"])
+hdr(Q, 3, ["項目", "FY2025 第一季", "FY2025 第二季", "FY2025 第三季", "FY2025 第四季", "FY2025", "FY2026 第一季", "FY2026 第二季", "標記", "來源"])
 for i, (lab, key) in enumerate((("營收", "rev"), ("毛利", "gp"), ("營業利益", "op"), ("淨利", "ni")), 4):
     Q.cell(i, 1, lab)
     for k in range(1, 5): Q.cell(i, 1 + k, f"=p{k}_{key}").number_format = "#,##0.0"
@@ -242,7 +242,7 @@ Q.cell(8, 1, "毛利率"); [Q.cell(8, j, f"={GL(j)}5/{GL(j)}4").__setattr__("num
 Q.cell(9, 1, "營業利益率"); [Q.cell(9, j, f"={GL(j)}6/{GL(j)}4").__setattr__("number_format", "0.0%") for j in range(2, 9)]
 Q.cell(10, 1, "季增：營收"); [Q.cell(10, j, f"={GL(j)}4/{GL(j - 1)}4-1").__setattr__("number_format", "0.0%") for j in (3, 4, 5)]
 Q["G10"] = "=G4/E4-1"; Q["H10"] = "=H4/G4-1"; Q["G10"].number_format = Q["H10"].number_format = "0.0%"
-Q.cell(12, 1, "FY2026 第二季（2026-07～09）財報 2026-10-30 公布（公司公告）；本版 FY2026 第二季＝公司指引（固定），第三季起＝市場層推導")
+Q.cell(12, 1, "v0.3（2026-10-31）：FY2026 第二季（2026-07～09）實績已滾入（2026-10-30：營收 2,480.0、營業利益 1,994.7、淨利 1,360；平均匯率 161）；第三季起＝市場層推導。第三季指引：營收 2,500.0、營業利益約 2,000（假設 157 日圓）")
 Q.column_dimensions["A"].width = 30
 for c in "BCDEFGH": Q.column_dimensions[c].width = 14
 Q.column_dimensions["J"].width = 60
@@ -269,7 +269,7 @@ def engine(ws, r0, title, s, **over):
     A1, G2 = QC[(2026, 1)], QC[(2026, 2)]
     row("um", "市場層營收（TrendForce 口徑，美元，同字母情境）", "$B", {QC[q]: f"=Units!{uc(q)}{UR[('rev', s)]}*{p['shm']}" + (f"*{p['pxm']}" if nq(q) > 0 else "") for q in QL}, fmt="#,##0.000", note="markets/nand；Sens 可乘份額係數、價格係數（第三季起）")
     row("bit", "位元（市場層；同字母）", "EB", {QC[q]: f"=Units!{uc(q)}{UR[('bit', s)]}*{p['shm']}" for q in QL}, fmt="#,##0.000")
-    row("rev", "營收", U, {A1: "=q1_rev", G2: "=g2_rev", **{QC[q]: f"={QC[q]}{R['um']}*kx_k*{p['fx']}" for q in DQ}}, note="第一季實績、第二季公司指引；之後＝市場層 × 公司口徑係數 × 匯率")
+    row("rev", "營收", U, {A1: "=q1_rev", G2: "=g2_rev", **{QC[q]: f"={QC[q]}{R['um']}*kx_k*{p['fx']}" for q in DQ}}, note="第一、二季實績；之後＝市場層 × 公司口徑係數 × 匯率")
     fyc = lambda q: q[0] % 100
     row("ss", "SSD 與儲存", U, {A1: "=q1_ss", **{QC[q]: f"={QC[q]}{R['rev']}*sssh_{fyc(q)}" for q in QL if q != (2026, 1)}}, note="官方分部；第一季實績，之後＝營收 × 占比（In）")
     row("ai", "  SSD 與儲存：AI 相關（＝SSD 與儲存 × AI 企業級 SSD 占比）", U, {QC[q]: f"={QC[q]}{R['ss']}*{aiw(q[0], s)}" for q in QL}, note="命題子列（Derived）：會計年度（4 月起）≈ 0.75 × 當年＋0.25 × 次年；假設公司 SSD 組合與產業（企業級＋PC）相同")
@@ -278,9 +278,9 @@ def engine(ws, r0, title, s, **over):
     row("sd", "智慧裝置", U, {A1: "=q1_sd", **{QC[q]: f"={QC[q]}{R['rev']}-{QC[q]}{R['ss']}-{QC[q]}{R['ot']}" for q in QL if q != (2026, 1)}}, note="官方分部；預測季＝營收 − SSD 與儲存 − 其他")
     row("qchk", "檢查：分部合計 − 營收（季）", U, {QC[q]: f"={QC[q]}{R['ss']}+{QC[q]}{R['sd']}+{QC[q]}{R['ot']}-{QC[q]}{R['rev']}" for q in QL}, fmt="0.000")
     rcogs = rr[0] + 1
-    row("uc", "每 EB 營業成本（第二季以指引校準，之後每年 × (1 − 成本年降)）", "¥B/EB", {A1: f"={A1}{rcogs}/{A1}{R['bit']}", G2: f"={G2}{rcogs}/{G2}{R['bit']}",
+    row("uc", "每 EB 營業成本（第二季以實績校準，之後每年 × (1 − 成本年降)）", "¥B/EB", {A1: f"={A1}{rcogs}/{A1}{R['bit']}", G2: f"={G2}{rcogs}/{G2}{R['bit']}",
         **{QC[q]: f"=${ref}{rr[0]}*(1-{cd})^({nq(q)}/4)" for q in DQ}}, fmt="0.00")
-    row("cogs", "營業成本", U, {A1: "=q1_rev-q1_gp", G2: f"=g2_rev-g2_op-{p['gox']}", **{QC[q]: f"={QC[q]}{R['bit']}*{QC[q]}{R['uc']}" for q in DQ}}, note="第二季＝指引營收 − 指引營業利益 − 推估營業費用")
+    row("cogs", "營業成本", U, {A1: "=q1_rev-q1_gp", G2: f"=g2_rev-g2_op-{p['gox']}", **{QC[q]: f"={QC[q]}{R['bit']}*{QC[q]}{R['uc']}" for q in DQ}}, note="第二季＝實績營收 − 實績營業利益 − 推估營業費用")
     row("gm", "毛利率", "%", {QC[q]: f"=1-{QC[q]}{R['cogs']}/{QC[q]}{R['rev']}" for q in QL}, fmt="0.0%")
     row("ox", "營業費用", U, {A1: "=q1_gp-q1_op", G2: f"={p['gox']}", **{QC[q]: f"=({p['gox']}-{p['oxv']}*g2_rev)*(1+{p['oxg']})^({nq(q)}/4)+{p['oxv']}*{QC[q]}{R['rev']}" for q in DQ}}, note="固定部分以第二季校準（Derived）")
     row("op", "營業利益", U, {QC[q]: f"={QC[q]}{R['rev']}-{QC[q]}{R['cogs']}-{QC[q]}{R['ox']}" for q in QL})
@@ -292,7 +292,7 @@ def engine(ws, r0, title, s, **over):
     hdr(ws, rr[0], ["B. 年度（會計年度）", "單位", "FY2025A", "FY2026", "FY2027", "FY2028", "FY2029", "", "", "", "", "", "", "", "", "", "", "", "", "說明"]); rr[0] += 1
     qs = lambda fy, key: f"=SUM({QC[(fy, 1)]}{R[key]}:{QC[(fy, 4)]}{R[key]})"
     F3 = (2027, 2028, 2029)
-    row("yrev", "營收", U, {"C": "=a25_rev", **{FYC[y]: qs(y, "rev") for y in FYS}}, note="FY2026＝第一季實績＋第二季指引＋第三、四季推導")
+    row("yrev", "營收", U, {"C": "=a25_rev", **{FYC[y]: qs(y, "rev") for y in FYS}}, note="FY2026＝第一、二季實績＋第三、四季推導")
     row("yss", "營收：SSD 與儲存", U, {"C": "=p1_ss+p2_ss+p3_ss+p4_ss", **{FYC[y]: qs(y, "ss") for y in FYS}})
     row("yai", "  SSD 與儲存：AI 相關", U, {"C": f"=C{rr[0] - 1}*{aiw(2025, s)}", **{FYC[y]: qs(y, "ai") for y in FYS}})
     row("ysd", "營收：智慧裝置", U, {"C": "=p1_sd+p2_sd+p3_sd+p4_sd", **{FYC[y]: qs(y, "sd") for y in FYS}})
@@ -324,7 +324,7 @@ def engine(ws, r0, title, s, **over):
     return R
 
 PL = wb.create_sheet("PL")
-PL["A1"] = f"PL — {NAME} 損益（¥B；FY2025 實績；FY2026＝第一季實績＋第二季指引＋第三、四季推導；FY2027–FY2029 由市場層 markets/nand 驅動；FY2030–FY2032 收斂法見底部）"
+PL["A1"] = f"PL — {NAME} 損益（¥B；FY2025 實績；FY2026＝第一、二季實績＋第三、四季推導；FY2027–FY2029 由市場層 markets/nand 驅動；FY2030–FY2032 收斂法見底部）"
 TITLES = {s: f"情境 {s}（{SCN[s]}）：markets/nand 情境 {s}（價格路徑 {s}、2028–29 顆數係數 {s}、合資群份額 {s}）；每位元成本年降 cd_{s}" for s in SC}
 PB = {}; r0 = 56; TITLER = {}
 for s in SC:
@@ -528,7 +528,7 @@ CASES = [("市場層營收 −20%（價格；第三季起）", "價格係數 0.8
          ("份額 ×0.9（營收與位元）", "份額係數 0.9", dict(shm="0.9")), ("份額 ×1.1", "份額係數 1.1", dict(shm="1.1")),
          ("匯率 145 日圓", "fx 低", dict(fx="fx_lo")), ("匯率 170 日圓", "fx 高", dict(fx="fx_hi")),
          ("每位元成本年降 10%（C 的值）", "cd_C", dict(cd="cd_C")), ("每位元成本年降 18%", "cd_A 高", dict(cd="cd_A_hi")),
-         ("第二季營業費用 55（校準）", "g2_ox 低", dict(gox="g2_ox_lo")), ("第二季營業費用 90", "g2_ox 高", dict(gox="g2_ox_hi")),
+         ("第二季營業費用 50（校準）", "g2_ox 低", dict(gox="g2_ox_lo")), ("第二季營業費用 70", "g2_ox 高", dict(gox="g2_ox_hi")),
          ("營業費用變動率 2%", "ox_var 高", dict(oxv="ox_var_hi")), ("稅率 35%", "tax 高", dict(tax="tax_hi")), ("稅率 28%", "tax 低", dict(tax="tax_lo")),
          ("股東回饋 ÷ FCF 50%", "payout 高", dict(pay="payout_hi")), ("股東回饋 0", "payout 低", dict(pay="payout_lo"))]
 def put(i, nm, st, R, pre=""):
@@ -585,7 +585,7 @@ def rec(label, ref, getter, src, note="", fmt="#,##0", pt=False):
 RC.cell(rcr, 1, "A. 實績與公司指引").font = BOLD; rcr += 1
 rec("FY2025 營收（四季合計）vs 公司 2,337.6", 2337.6, lambda s: f"=PL!C{SUMR[(s, 'yrev')]}", "storagenewsletter 轉載 FY25 決算；MarketScreener", "")
 rec("FY2026 上半營收 vs 公司指引 4,157.1", 4157.1, lambda s: f"=PL!{QC[(2026, 1)]}{PB[s]['rev']}+PL!{QC[(2026, 2)]}{PB[s]['rev']}", "Kioxia FY2026 第一季財報（2026-07-31）", "恆等式")
-rec("FY2026 第三季營收（推導）vs 第二季指引（季增）", "=g2_rev", lambda s: f"=PL!{QC[(2026, 3)]}{PB[s]['rev']}", "公司第二季指引", "市場層 2026Q4 季價 +17.5%（markets/memory）")
+rec("FY2026 第三季營收（推導）vs 第三季指引 2,500（假設 157 日圓）", "=g3_rev", lambda s: f"=PL!{QC[(2026, 3)]}{PB[s]['rev']}", "Kioxia 第二季財報（2026-10-30）第三季指引", "市場層 2026Q4 季價 +17.5%（markets/memory）")
 rec("FY2026 第二季毛利率（校準值）vs 第一季（百分點）", "=q1_gp/q1_rev", lambda s: f"=PL!{QC[(2026, 2)]}{PB[s]['gm']}", "Kioxia FY2026 第一季財報（2026-07-31）", "第二季營業費用為 Assumed（g2_ox）", "0.0%", True)
 RC.cell(rcr, 1, "B. 共識（MarketScreener 2026-10-25 擷取；只作參考）").font = BOLD; rcr += 1
 rec("FY2026 營收 vs 共識", "=cons_rev26", lambda s: f"=PL!D{SUMR[(s, 'yrev')]}", MS)
@@ -627,7 +627,7 @@ RD = wb.create_sheet("README", 0)
 VA = lambda k, c="B": f"Val!{c}{T[k]}"
 OBS = [
  f'="1. 加權目標價 ¥"&TEXT({VA("tpw")},"#,##0")&"，相對現價 ¥"&TEXT(px,"#,##0")&"（2026-10-23 收盤）"&TEXT({VA("upw")},"+0.0%;−0.0%")&"。主因是現價的倍數低於同業：Kioxia 現價 ÷ 2028-03 共識每股淨值 1.63x，同業中位數 "&TEXT({VA("pmed")},"0.00")&"x（SanDisk 2.86x、美光 3.35x），Comparable ¥"&TEXT({VA("comptp")},"#,##0")&"（"&TEXT({VA("upc")},"+0%;−0%")&"）；DCF ¥"&TEXT({VA("dcftp")},"#,##0")&" 也高於現價，因現價只有 FY2027 EPS（A）的 "&TEXT(Val!B{CUR["pe27"]},"0.0")&" 倍。股價 10-09 至 10-23 已跌 27%（17,505 → 12,755）。"',
- f'="2. 本模型 FY2026 EPS（A）¥"&TEXT(PL!D{SUMR[("A", "eps")]},"#,##0")&"，比共識 ¥3,486 "&TEXT(PL!D{SUMR[("A", "eps")]}/cons_eps26-1,"+0%;−0%")&"；上半年已由第一季實績與第二季指引鎖定（淨利 ¥2,112B）。追蹤：2026-10-30 第二季財報（實績 vs 指引 ¥2,390B／¥1,890B）與第三季指引。"',
+ f'="2. 本模型 FY2026 EPS（A）¥"&TEXT(PL!D{SUMR[("A", "eps")]},"#,##0")&"，比共識 ¥3,486 "&TEXT(PL!D{SUMR[("A", "eps")]}/cons_eps26-1,"+0%;−0%")&"；上半年已由兩季實績鎖定（淨利 ¥2,202B）。v0.3 滾入第二季（營收 ¥2,480.0B、營業利益 ¥1,994.7B，皆高於指引）。模型第三季營收比公司指引 ¥2,500B 高約兩成（市場層 2026Q4 NAND 季價 +17.5%；公司稱匯率不利、與第二季大致持平），差距原因待查。"',
  f'="3. 營收以美元計、成本以日圓計：匯率 145／170 日圓使 FY2028 EPS（A）變動 "&TEXT(Sens!H9,"+0%;−0%")&"／"&TEXT(Sens!H10,"+0%;−0%")&"；2027 起季價 ±20% 為 "&TEXT(Sens!H5,"+0%;−0%")&"／"&TEXT(Sens!H6,"+0%;−0%")&"。情境 C 的 FY2029 毛利率降到 "&TEXT(PL!G{SUMR[("C", "ygm")]},"0%")&"。追蹤：TrendForce 每季初的 NAND 合約價、日圓匯率、SanDisk 2026-10-29 財報（合資群位元）。"']
 PROP = ("Kioxia 是全球第三、四大 NAND 廠（2Q26 營收市占 13.6%），與 SanDisk 共用四日市、北上合資產能；盈餘由 NAND 合約價循環、AI 推論帶動的企業級 SSD 位元與日圓匯率決定。"
         "問題是 2026 年的高價能維持多久（FY2027 起三情境分歧），以及現價約 2.6 倍前瞻 P/E 是否已反映循環見頂。")
@@ -637,7 +637,7 @@ lines = [(f"{NAME}（{TICKER} JP）收支與估值模型 v0.1（AI 半導體 Pro
          (f'="投資建議："&{VA("rec")}&"（依上檔空間固定規則；上檔空間："&TEXT({VA("upw")},"+0.0%;−0.0%")&"，級距："&{VA("tier")}&"）"', True), ("", False),
          ("驅動因子 → 推導量（因果方向：左邊決定右邊）", True),
          ("Units｜markets/nand 成品：Kioxia 季度營收（市場營收 × 份額，美元；同字母情境）與位元（季度出貨 × 份額）", False),
-         ("PL 區塊｜營收＝市場層 × 公司口徑係數 × 匯率；營業成本＝位元 × 每 EB 成本（日圓；第二季以指引校準，之後每年 × (1 − 成本年降)）；營業費用＝固定＋變動", False),
+         ("PL 區塊｜營收＝市場層 × 公司口徑係數 × 匯率；營業成本＝位元 × 每 EB 成本（日圓；第二季以實績校準，之後每年 × (1 − 成本年降)）；營業費用＝固定＋變動", False),
          ("PL 區塊｜淨利＝（營業利益＋業外＋淨現金收益）×（1 − 稅率）；自由現金流＝淨利＋折舊 − 資本支出（¥470B／年）；股東回饋＝20% × FCF（以買回計）→ 股數 → EPS、每股淨值", False),
          ("Val｜第 0 節目標價＝DCF（FY2027–FY2032＋永續）與 Comparable（同業前瞻 P/B × 約 2028 年底每股淨值）各半；第 5–6 節目前倍數、十年倍數規則值（美光 Analogy）", False), ("", False),
          ("會計年度：4 月到隔年 3 月（FY2026＝2026-04～2027-03 ≈ CY2026Q2–CY2027Q1）。前瞻 EPS 依月份調整：12 個月後（約 2027-10）的未來 12 月＝5／12 FY2027＋7／12 FY2028。每股數字為 2026-10-01 一股分三股後。", False),
@@ -656,6 +656,12 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "kioxia")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
+_r = IN.max_row + 2
+IN.cell(_r, 1, "v0.3 追加：FY2026 第三季公司指引（只作 Recon 對照）").font = BOLD
+_r += 1
+IN.cell(_r, 1, "g3_rev"); IN.cell(_r, 2, "公司指引：FY2026 第三季（2026-10～12）營收"); IN.cell(_r, 3, U); IN.cell(_r, 5, 2500.0).font = Font(color="0000FF")
+IN.cell(_r, 7, "Interested-party"); IN.cell(_r, 8, "Kioxia FY2026 第二季財報（2026-10-30；404K Research 法說整理、PANews／TechFlow 轉載）：¥2,500.0B、營業利益約 ¥2,000B（假設 1 美元＝157 日圓）"); IN.cell(_r, 9, "公司：匯率不利，第三季營收與獲利與第二季大致持平")
+wb.defined_names["g3_rev"] = DefinedName("g3_rev", attr_text=f"In!$E${_r}")
 apply_in_layout.apply(wb, "v0.2.1", "2026-10-30")  # v0.2.1：In 頁版面（個股模型原則第 8 節；數值不變）
 wb.save(sys.argv[1])
 RULER = [i for i in range(nr, tr) if isinstance(V.cell(i, 1).value, str) and V.cell(i, 1).value.startswith("規則值：")]
