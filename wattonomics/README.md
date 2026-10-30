@@ -45,6 +45,7 @@ python3 wattonomics/tools/check.py wattonomics/model/<檔名>.xlsx wattonomics/d
 - 證據：只用 `evidence_raw/C_review.md` 判「屬實」或已更正的列；「錯誤」「無法核對」「未抽查」的站點列在 In T2 但納入＝0。
 - 站點時程補證據（J 段，v0.1.5 起）：Epoch 站點時間線的增量只取 2027 年以後的點（相對該站 2026 年底最後一點；2026 年底仍＝觀測＋T2），每點須經未參與代理逐頁重開核對（`evidence_raw/J_review_2027.md`）；發電容量、供電合約、晶片／算力合約不算站點容量；公司層級目標只作對照。覆蓋率報告同時列「七家逐家以主路徑為上限」的覆蓋率（`docs/verify/20261031_v0.1.5_coverage.md` 第 1 節）。
 - 電力證據路徑（K 段，v0.1.6 起）：T2「納入」＝2 的列為監理機關已核准、指定單一園區的供電合約（只計確定 MW），不入 Players／Pipeline，只進 `WIF_Coverage_Power_<yyyy>`（參考用，Checks 不以此判定）；未核准合約列納入＝0。注意：Deploy 2030–2032 年的年新增（主路徑與 SiteOnly）＝前一年年底 × g，2030–2032 的站點證據只反映在 Players，不進市場覆蓋率（判斷題 K4，v0.2 決定）。
+- 資金缺口（Gap 頁，規劃 `docs/plan/20261031_主要玩家資金缺口_規劃.md`；Andy 2026-10-31 規格）：成本＝AI 資料中心資本支出，每 GW 只在擁有者計一次，大玩家之間的租賃不重複計算；資金來源＝全公司營業現金流（本業＋AI）；輸出自籌比、缺口與所需融資（股權、債務、租賃與表外合資），並與已觀測融資對比；判讀「OpenAI 型」（持續需要大規模融資）或「Anthropic 型」（數年後轉正）。
 - TK 或 Siliconomics 權威的量需要改值 → 停，寫進 Requests 頁。
 - 下游只讀 Interface 的 `WIF_` 名稱（經快照）。
 - 本 repo 為公開 repo：不放 Andy 的個人情境或先驗。
