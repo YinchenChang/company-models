@@ -1172,7 +1172,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準：輸入取低值",
      "sheet": "Sens",
-     "rows": "4-32",
+     "rows": "4-49",
      "label_col": "A",
      "value_col": "D",
      "fmt": "sp1"
@@ -1181,7 +1181,7 @@
      "type": "tornado",
      "title": "加權目標價相對基準：輸入取高值",
      "sheet": "Sens",
-     "rows": "4-32",
+     "rows": "4-49",
      "label_col": "A",
      "value_col": "F",
      "fmt": "sp1"
@@ -1205,7 +1205,7 @@
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "4-32",
+      "rows": "4-49",
       "cols": [
        "A",
        "B",
@@ -1234,17 +1234,17 @@
     },
     {
      "type": "table",
-     "caption": "@Sens!A38",
+     "caption": "@Sens!A55",
      "grid": true,
      "head": [
-      "@Sens!A39",
-      "@Sens!C39",
-      "@Sens!D39",
-      "@Sens!E39"
+      "@Sens!A56",
+      "@Sens!C56",
+      "@Sens!D56",
+      "@Sens!E56"
      ],
      "rowgen": {
       "sheet": "Sens",
-      "rows": "40-42",
+      "rows": "57-59",
       "cols": [
        "A",
        "C",

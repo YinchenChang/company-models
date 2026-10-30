@@ -23,6 +23,7 @@ AP.add_argument("--set", action="append", default=[])
 AP.add_argument("--legacy-q1", action="store_true")
 AP.add_argument("--snap", default="v21.7")
 AP.add_argument("--no-html", action="store_true")
+AP.add_argument("--sens", default=None, help="v0.3.3：整本重算的敏感度結果 JSON（microsoft/sens_v033.py 產生）；省略時讀預設檔，--set 變體不讀")
 ARGS = AP.parse_args()
 Q1ON = not ARGS.legacy_q1                     # v0.3.1：FY2027＝Q1 實績＋Q2–Q4 模型；評價日 2026-09-30
 SETS = {}
@@ -99,7 +100,7 @@ YHDR = ["項目", "單位"] + [f"FY{y}" + ("A" if y <= 2026 else "") for y in YR
 # In：輸入（一列一鍵；E＝基準、D＝低、F＝高）
 # =====================================================================================
 IN = WS["In"]
-IN["A1"] = "In — 輸入（v0.3.1：FY27Q1 實績滾入；v0.3.2：加「情境驅動對照」、欄名改敏感度低／高，數值不變）（藍字＝輸入、黑字＝由其他輸入推得）。基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」；金額十億美元（US$B），MW＝IT 關鍵電力。標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy、Assumed 一律給區間"
+IN["A1"] = "In — 輸入（v0.3.1：FY27Q1 實績滾入；v0.3.2：加「情境驅動對照」、欄名改敏感度低／高；v0.3.3：IF_HoldEcon 四列補低／高、Sens 頁補鍵欄與案例；數值不變）（藍字＝輸入、黑字＝由其他輸入推得）。基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」；金額十億美元（US$B），MW＝IT 關鍵電力。標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy、Assumed 一律給區間"
 IN["A2"] = "「沿用 v0.2.2」＝MAG v0.2.2（2026-10-25，PR #105）已核准的參數與證據，原出處見來源欄；SEC 一手數字取自 microsoft/data/microsoft_facts_20261008.json（v0.1a 起的事實總帳）；FY27Q1 取自 microsoft/data/microsoft_facts_FY27Q1_20261029.json（財報新聞稿與 IR 財務報表兩次讀取核對）"
 hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源1", "來源2／說明"])
 ROWS = []
@@ -205,8 +206,10 @@ for k, lab, v, note in (("al_m365", "Microsoft 365 cloud", 0.60, "舊 PBP 分部
     inp(k, f"產品線營業利益率分配：{lab}（SOTP 用）", "%", v - 0.1, v, v + 0.1, "Assumed", FX + "｜alloc.oiMargin（公司不揭露產品線利潤）；" + V22, note + "；Azure 其他、XBOX＋Windows 為分部殘差")
 
 sec(f"C. Tokenomics {TKV} 快照（{SNAP_F}；基準成本欄；每 GW＝IT 關鍵電力；v0.3.1 由 v21.4 升級，契約名稱值逐一比對無差異）")
-for g in ("h100", "gb200", "gb300", "vr200"):
-    inp(f"tk_hold_{g}", f"IF_HoldEcon｜{GEN[g]}（每 MW 年持有成本，WACC 10% 打平）", "US$M/MW-年", None, tk("IF_HoldEcon", g), None, "Derived", TKN, "基準成本欄")
+for g in ("h100", "gb200", "gb300", "vr200"):                # v0.3.3：D／F 補 Tokenomics 低成本／高成本欄（原則第 9 節；基準不變）
+    _hv = SNAP["items"]["IF_HoldEcon"]["values"][GEN[g]]; _hc = SNAP["items"]["IF_HoldEcon"].get("cells", {}).get(GEN[g], {})
+    inp(f"tk_hold_{g}", f"IF_HoldEcon｜{GEN[g]}（每 MW 年持有成本，WACC 10% 打平）", "US$M/MW-年", _hv.get("低成本"), tk("IF_HoldEcon", g), _hv.get("高成本"), "Derived", TKN,
+        f"基準成本欄；低／高＝同一快照的低成本／高成本欄（{_hc.get('低成本', '')}／{_hc.get('高成本', '')}，v0.3.3 補區間，只用於 Sens 頁 he_all 案例）")
 for g in ("h100", "gb200", "gb300", "vr200"):
     inp(f"tk_cxit_{g}", f"IF_CapexIT｜{GEN[g]}（每 MW IT 資本支出）", "US$M/MW", None, tk("IF_CapexIT", g), None, "Derived", TKN, "—")
 for g in ("h100", "gb200", "gb300", "vr200"):
@@ -344,6 +347,8 @@ inp("old_ev", "v0.2.2 EV／EBITDA 每股（融資後）", "US$", None, 387.64, N
 inp("old_w", "v0.2.2 DCF 權重", "%", None, 0.45, None, "Derived", "v0.2.2（DCF 45%＋分部 EV/EBITDA 55%）", "—")
 
 IR = {}
+REF_ONLY = {"cons_tp", "cons_tp_mb", "cons_rev27", "cons_eps27", "g_q1_rev", "g_q1_ai", "g_q1_dc", "g_q1_az", "g_q2_rev", "g_q2_ai", "g_q2_dc", "g_q2_az", "old_tp"}
+INR = {x[0]: x for x in ROWS if x[0] != "sec"}
 r = 4
 for srow in ROWS:
     if srow[0] == "sec":
@@ -363,6 +368,8 @@ for srow in ROWS:
                 IN.cell(r, j).number_format = "0.000"
             elif unit == "日期":
                 IN.cell(r, j).number_format = "yyyy-mm-dd"
+    if key in REF_ONLY:                                   # v0.3.3：只作對照的列（原則第 9 節）
+        s2 = "只作對照，不進模型（只被 Recon／README 引用）" + ("" if s2 in ("—", "") else "；" + s2)
     IN.cell(r, 7, tag); IN.cell(r, 8, s1); IN.cell(r, 9, s2)
     defname(key, f"In!$E${r}")
     if lo is not None:
@@ -1107,8 +1114,13 @@ VW.column_dimensions["E"].width = 70
 # Sens：龍捲風（加權目標價變動）＋判斷預設替代；下方為各案例的完整引擎區塊
 # =====================================================================================
 SW = WS["Sens"]
-SW["A1"] = "Sens — 一次動一個驅動，三情境全部重算後的加權目標價（DCF 50%＋SOTP 50%、情境 25／50／25；主值讀法 2）；下方列 80 起為各案例的完整引擎區塊（與主模型同一個函式）"
-hdr(SW, 3, ["案例", "驅動", "加權目標價", "相對基準", "相對基準 %", "說明"])
+SENS_BLK0 = 200                                           # v0.3.3：案例增加，完整引擎區塊由列 80 移到列 200（數值不變）
+SW["A1"] = f"Sens — 一次動一個驅動，三情境全部重算後的加權目標價（DCF 50%＋SOTP 50%、情境 25／50／25；主值讀法 2）；下方列 {SENS_BLK0} 起為各案例的完整引擎區塊（與主模型同一個函式）。「整本重算」列為 microsoft/sens_v033.py 以 LibreOffice 重算整本活頁簿的數值（v0.3.3，原則第 9 節：In 頁每個有低／高的鍵都有案例，G 欄「鍵」）"
+SW["A2"] = ("豁免（原則第 9 節；2026-10-30 整本重算）："
+            "ai_net_open（期初 AI PP&E 淨額 ÷ 毛額）不列：只進 AI 增量 ROIC 的期初投入資本，不進目標價，重算變動為 0（65%／90%：384.1046／384.1046）。"
+            "m_ai（Azure AI 倍數）不列：修正一起分部加總的 AI 腿以 AI 模組自身 DCF 計，本倍數只進對照列，重算變動為 0（4x／10x：384.1046／384.1046）。"
+            "bb_g（回購價格年增）不列：只影響回購股數，重算變動 +0.0005%／−0.0003%，小於 0.001%（0%／12%：384.1067／384.1036）")
+hdr(SW, 3, ["案例", "驅動", "加權目標價", "相對基準", "相對基準 %", "說明", "鍵"])
 TP_BASE = f"Val!$B${VR_['tp']}"
 CASES = [
     ("讀法 1（自用 AI 只計成本）", "命題：自用 AI 讀法", dict(reading="1"), {}, "F1：自用 AI MW 不計影子效益（v0.3 初版口徑）"),
@@ -1161,7 +1173,48 @@ ALT = [
     ("OpenAI 持股 27%（重組時比例）", {s: ({}, dict(oai="(oai_stake_hi*oai_val*(1-liq_disc))")) for s in SC}, None),
     ("OpenAI 持股 27%、無流動性折價", {s: ({}, dict(oai="(oai_stake_hi*oai_val)")) for s in SC}, None),
 ]
-CUR["Sens"] = 80
+# v0.3.3：鍵欄（案例實際改動的 In 鍵；k、SOTP 倍數等不是 In 鍵者寫引擎參數名）
+CASE_KEY = {"讀法 1（自用 AI 只計成本）": "internal_ai_reading", "k −15%": "kmult", "k +15%": "kmult", "對外比例 50%": "ext_sh", "對外比例 75%": "ext_sh",
+            "MW 速度：Epoch 可辨識站點": "pace pace_epoch cap_epoch", "MW 速度 +20%": "pace", "AI IT 折舊 5 年": "life_it", "AI IT 折舊 7 年": "life_it",
+            "Maia 產出比 0.25（IF_NonNV_Out_Maia 低）": "nv_out_mai", "Maia 產出比 0.75（IF_NonNV_Out_Maia 高）": "nv_out_mai",
+            "Copilot 座席淨增 −50%": "cop_add_A cop_add_B cop_add_C", "Copilot 座席淨增 +50%": "cop_add_A cop_add_B cop_add_C",
+            "Copilot 月費 18 美元": "cop_px", "Copilot 月費 30 美元": "cop_px", "Azure 其他長期年增 5%": "glt_azo", "Azure 其他長期年增 12%": "glt_azo",
+            "搜尋與廣告長期年增 4%": "glt_srch", "搜尋與廣告長期年增 10%": "glt_srch", "XBOX 長期年增 −2%": "glt_xbox", "XBOX 長期年增 5%": "glt_xbox",
+            "分部利益率 −2pt": "dm_seg", "分部利益率 +2pt": "dm_seg", "WACC −1pt": "wacc", "WACC +1pt": "wacc", "g 2%": "g_tv", "g 4%": "g_tv",
+            "ERP 4.5%": "erp", "ERP 6%": "erp", "永續期新投資報酬 WACC＋5pt": "ronic_prem", "SOTP 倍數 −20%": "m_sw m_cloud m_ads m_game m_pc", "SOTP 倍數 +20%": "m_sw m_cloud m_ads m_game m_pc"}
+ALT_KEY = ["pace_epoch cap_epoch", "k_long_lo p_long_lo", "tv_alt", "m_own", "internal_ai_reading pace_epoch", "shadow_base", "floor", "floor", "g_q2_win",
+           "nonnv pace_nv0", "nonnv", "tgt_alt", "oai_stake26", "oai_stake", "oai_stake liq_disc", "w_dcf", "w_dcf", "w_A w_B w_C", "w_B"]
+# v0.3.3：整本重算案例（In 頁低／高；microsoft/sens_v033.py 產生 microsoft/data/sens_v033_20261030.json）
+def _f(k, v):
+    u = INR[k][2]
+    return f"{v * 100:.4g}%" if u in ("%", "pt") else f"{v:,.4g}"
+def _rc(k, lab, grp, extra=""):
+    lo, b, hi = INR[k][3], INR[k][4], INR[k][5]
+    sides = [(sd, v) for sd, v in (("低", lo), ("高", hi)) if v is not None and not (isinstance(b, (int, float)) and abs(v - b) < 1e-12)]
+    bt = _f(k, b) if isinstance(b, (int, float)) else "公式值"
+    return [(k, sd, lab, grp, [(k, v)], f"{bt} → {_f(k, v)}{extra}") for sd, v in sides]
+HE4 = ("tk_hold_h100", "tk_hold_gb200", "tk_hold_gb300", "tk_hold_vr200")
+RCASES = [(f"he_all", sd, "IF_HoldEcon 四世代同時（每 MW 年持有成本）", "命題：每 MW 持有成本（Tokenomics）", [(k, INR[k][j]) for k in HE4],
+           f"Tokenomics {TKV} 低成本／高成本欄（四世代同時；GB300 {INR['tk_hold_gb300'][4]:.2f} → {INR['tk_hold_gb300'][j]:.2f}；k_長約分母同步變動；pace 不重解）")
+          for sd, j in (("低", 3), ("高", 5)) if INR["tk_hold_gb300"][j] is not None]
+for k, lab, grp, ex in (("mw_ext_26", "FY2026 年底在役對外 AI MW", "命題：AI MW", "（pace 不重解）"), ("self_build", "機房自建比例", "命題：機房", ""),
+                        ("a_mai", "新增 MW 中 Maia 200 占比", "命題：NonNV（Maia）", ""), ("nv_hold_mai", "IF_NonNV_Hold_Maia", "命題：NonNV（Maia）", ""),
+                        ("p_spot", "現貨證據價格（高＝Azure 隨需牌價）", "命題：每 MW 價格 k", ""), ("chip_f", "自研晶片係數", "命題：每 MW 價格 k", ""),
+("capex_floor27", "FY2027 資本支出推估（C10 對帳目標）", "命題：資本支出", "（pace 不重解）"),
+                        ("glt_m365b", "M365 cloud 基礎長期年增", "業務：M365 cloud", ""), ("glt_lic", "授權長期年增", "業務：授權", ""),
+                        ("glt_ind", "Industry solutions 長期年增", "業務：Industry", ""), ("glt_fro", "Frontier and support 長期年增", "業務：Frontier", ""),
+                        ("glt_win", "Windows OEM and devices 長期年增", "業務：Windows", ""), ("oie_f", "業外收支（每年）", "損益：業外", ""),
+                        ("tax_f", "有效稅率", "損益：稅率", ""), ("life_nonai", "非 AI 資產折舊年限", "損益：折舊", ""),
+                        ("min_cash", "最低現金", "現金：資本配置", ""), ("sh_iss", "員工股票發行", "現金：股數", ""),
+                        ("dps_g", "每股股利年增", "現金：股利", ""), ("beta", "β", "評價：β", ""), ("kd_spread", "公司債利差", "評價：債務成本", ""),
+                        ("liq_disc", "OpenAI 持股流動性折價", "評價：OpenAI 持股", ""),
+                        ("al_m365", "SOTP 利益率分配：M365 cloud", "評價：SOTP 分配", ""), ("al_lic", "SOTP 利益率分配：授權", "評價：SOTP 分配", ""),
+                        ("al_ind", "SOTP 利益率分配：Industry", "評價：SOTP 分配", ""), ("al_fro", "SOTP 利益率分配：Frontier", "評價：SOTP 分配", ""),
+                        ("al_srch", "SOTP 利益率分配：Search and advertising", "評價：SOTP 分配", "")):
+    RCASES += _rc(k, lab, grp, ex)
+_SP = ARGS.sens or os.path.join(HERE, "data", "sens_v033_20261030.json")
+SENSJ = json.load(open(_SP, encoding="utf-8")) if (os.path.exists(_SP) and not ARGS.set) else {}
+CUR["Sens"] = SENS_BLK0
 srow = 4
 CASE_ROWS = []
 TPF = lambda blks: "=w_dcf*(" + "+".join(f"w_{s}*{blks[s].ref('dcf12')}" for s in SC) + ")+(1-w_dcf)*(" + "+".join(f"w_{s}*{blks[s].ref('sotp')}" for s in SC) + ")"
@@ -1178,13 +1231,25 @@ for lab, drv, P, Vv, note in CASES:
     SW.cell(srow, 3, TPF(blks)).number_format = "#,##0.00"
     SW.cell(srow, 4, f"=C{srow}-{TP_BASE}").number_format = "+#,##0.00;-#,##0.00"
     SW.cell(srow, 5, f"=C{srow}/{TP_BASE}-1").number_format = "+0.0%;-0.0%"
-    SW.cell(srow, 6, note)
+    SW.cell(srow, 6, note); SW.cell(srow, 7, CASE_KEY[lab])
+    CASE_ROWS.append(srow); srow += 1
+TOR_SKIP = []                                             # v0.3.3：龍捲風圖（HTML）略過變動 < 0.01% 的整本重算案例（長條寬度會是 0）；Sens 頁與 HTML 展開表照列
+for k, sd, lab, grp, sets, note in RCASES:                   # v0.3.3：整本重算案例（數值）
+    SW.cell(srow, 1, f"{lab}：{sd}"); SW.cell(srow, 2, grp + "（整本重算）")
+    res = SENSJ.get(f"{k}|{sd}")
+    if res is not None and "base|base" in SENSJ and abs(res["tp"] / SENSJ["base|base"]["tp"] - 1) < 1e-4:
+        TOR_SKIP.append(srow)
+    if res is not None:
+        c = SW.cell(srow, 3, res["tp"]); c.number_format = "#,##0.00"; c.font = BLUE
+        SW.cell(srow, 4, f"=C{srow}-{TP_BASE}").number_format = "+#,##0.00;-#,##0.00"
+        SW.cell(srow, 5, f"=C{srow}/{TP_BASE}-1").number_format = "+0.0%;-0.0%"
+    SW.cell(srow, 6, note); SW.cell(srow, 7, k)
     CASE_ROWS.append(srow); srow += 1
 SENS_LAST = srow - 1
 CR = {c_[0]: r_ for c_, r_ in zip(CASES, CASE_ROWS)}
 srow += 1
 SW.cell(srow, 1, "判斷預設的替代（報告第 5 節）：每列只改一項，其餘同基準").font = BOLD; srow += 1
-hdr(SW, srow, ["替代", "影響範圍", "加權目標價", "相對基準", "相對基準 %", "說明"]); srow += 1
+hdr(SW, srow, ["替代", "影響範圍", "加權目標價", "相對基準", "相對基準 %", "說明", "鍵"]); srow += 1
 ALT_ROWS = []
 for lab, mp, kind in ALT:
     blks = {}
@@ -1201,7 +1266,7 @@ for lab, mp, kind in ALT:
                     WS[sh_].cell(r_, 3, f"={BL[s].ref('fcf_val', 2032)}*(1+g_tv)")
         else:
             blks[s] = BL[s]
-    SW.cell(srow, 1, lab); SW.cell(srow, 2, "、".join(mp.keys()) if len(mp) < 3 else "三情境")
+    SW.cell(srow, 1, lab); SW.cell(srow, 2, "、".join(mp.keys()) if len(mp) < 3 else "三情境"); SW.cell(srow, 7, ALT_KEY[len(ALT_ROWS)])
     SW.cell(srow, 3, TPF(blks)).number_format = "#,##0.00"
     SW.cell(srow, 4, f"=C{srow}-{TP_BASE}").number_format = "+#,##0.00;-#,##0.00"
     SW.cell(srow, 5, f"=C{srow}/{TP_BASE}-1").number_format = "+0.0%;-0.0%"
@@ -1210,13 +1275,17 @@ VD, VC = VR_["dcf12"], VR_["sotp"]
 for lab, f in (("DCF／SOTP 權重改 30／70", f"=0.3*Val!{B3('dcftp')}+0.7*Val!{B3('comp')}"), ("DCF／SOTP 權重改 70／30", f"=0.7*Val!{B3('dcftp')}+0.3*Val!{B3('comp')}"),
                ("情境權重改 30／50／20", f"=w_dcf*(0.3*Val!$B${VD}+0.5*Val!$C${VD}+0.2*Val!$D${VD})+(1-w_dcf)*(0.3*Val!$B${VC}+0.5*Val!$C${VC}+0.2*Val!$D${VC})"),
                ("只用基準情境 B", f"=Val!$C${VR_['tps']}")):
-    SW.cell(srow, 1, lab); SW.cell(srow, 2, "評價權重"); SW.cell(srow, 3, f).number_format = "#,##0.00"
+    SW.cell(srow, 1, lab); SW.cell(srow, 2, "評價權重"); SW.cell(srow, 3, f).number_format = "#,##0.00"; SW.cell(srow, 7, ALT_KEY[len(ALT_ROWS)])
     SW.cell(srow, 4, f"=C{srow}-{TP_BASE}").number_format = "+#,##0.00;-#,##0.00"
     SW.cell(srow, 5, f"=C{srow}/{TP_BASE}-1").number_format = "+0.0%;-0.0%"
     ALT_ROWS.append(srow); srow += 1
 SW.cell(srow + 1, 1, "讀法：龍捲風以加權目標價的變動排序；命題驅動（自用 AI 讀法、k、對外比例、MW 速度、AI 折舊年限、Copilot）與業務驅動、評價參數並列。判斷預設的替代見上表").font = BOLD
 SENS_NOTE = srow + 1
-assert SENS_NOTE < 80, SENS_NOTE
+SW.cell(SENS_NOTE + 1, 1, "敏感度重算時的基準加權目標價 − Val 頁現值（整本重算案例用；應為 0，不為 0＝重跑 microsoft/sens_v033.py）")
+if "base|base" in SENSJ:
+    SW.cell(SENS_NOTE + 1, 4, f"={SENSJ['base|base']['tp']}-{TP_BASE}").number_format = "0.000000"
+SENS_STALE = SENS_NOTE + 1
+assert SENS_STALE < SENS_BLK0, SENS_STALE
 SW.column_dimensions["A"].width = 52; SW.column_dimensions["B"].width = 24
 for c_ in "CDE": SW.column_dimensions[c_].width = 14
 SW.column_dimensions["F"].width = 50
@@ -1529,7 +1598,8 @@ HJ = {
             {"type": "table", "caption": "官方分部對帳（Q 頁核對列，實績應為零）", "head": ["@Q!A3", "@Q!J3", "@Q!K3", "@Q!L3", "@Q!M3"],
              "rows": [[f"@Q!A{QR[k]}", f"@Q!J{QR[k]}|n3", f"@Q!K{QR[k]}|n3", f"@Q!L{QR[k]}|n3", f"@Q!M{QR[k]}|n3"] for k in ("ai", "azure", "m365", "lic", "ind", "fro", "dc", "srch", "xbox", "win", "rev", "chk_rev", "chk_oi", "chk_y")]}]},
         {"id": "sens", "title": "敏感度", "intro": "@Sens!A1", "blocks": [
-            {"type": "tornado", "title": "加權目標價相對基準的變動（一次動一個驅動；三情境全部重算）", "sheet": "Sens", "rows": f"4-{SENS_LAST}", "label_col": "A", "value_col": "E", "fmt": "sp1"},
+            {"type": "tornado", "title": "加權目標價相對基準的變動（一次動一個驅動；三情境全部重算）" + ("；變動極小的案例只列在展開表" if TOR_SKIP else ""), "sheet": "Sens",
+             "rows": ",".join(str(r_) for r_ in range(4, SENS_LAST + 1) if r_ not in TOR_SKIP), "label_col": "A", "value_col": "E", "fmt": "sp1"},
             {"type": "table", "collapse": True, "summary": "展開：全部案例的加權目標價", "head": ["@Sens!A3", "@Sens!B3", "@Sens!C3", "@Sens!D3", "@Sens!E3", "@Sens!F3"],
              "rowgen": {"sheet": "Sens", "rows": f"4-{SENS_LAST}", "cols": ["A", "B", "C", "D", "E", "F"], "fmts": ["", "", "n2", "n2", "sp1", ""]}},
             {"type": "table", "caption": f"@Sens!A{ALT_ROWS[0] - 2}", "head": [f"@Sens!A{ALT_ROWS[0] - 1}", f"@Sens!B{ALT_ROWS[0] - 1}", f"@Sens!C{ALT_ROWS[0] - 1}", f"@Sens!D{ALT_ROWS[0] - 1}", f"@Sens!E{ALT_ROWS[0] - 1}"],
@@ -1566,5 +1636,5 @@ RM = os.environ.get("ROWMAP")
 if RM:
     json.dump({"tp": VR_["tp"], "tp_r1": VR_["tp_r1"], "up": VR_["up"], "rec": VR_["rec"], "gap27": BL["B"].R["gap27"][1], "gapA": BL["A"].R["gap27"][1], "gapC": BL["C"].R["gap27"][1],
                "segB": {k: BL["B"].R[k][1] for k in ("ai_seg", "azure", "m365", "lic", "ind", "fro", "dc", "srch", "xbox", "win", "tot", "ai_oi", "dc_oi", "oi")},
-               "cxB": BL["B"].R["capex"][1]}, open(RM, "w"), indent=1)
+               "cxB": BL["B"].R["capex"][1], "RCASES": [[k, sd, sets] for k, sd, _l, _g, sets, _n in RCASES], "SENS_STALE": SENS_STALE}, open(RM, "w"), indent=1)
 print("寫出", out, "與 microsoft/html.json")

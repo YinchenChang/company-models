@@ -1,4 +1,4 @@
-# Oracle（ORCL）個股模型 v0.4.1（v0.4.1＝v0.4＋In 頁情境驅動對照，數值不變；命題＋營收分部架構；docs/plan/個股模型原則_命題加營收分部.md）
+# Oracle（ORCL）個股模型 v0.4.2（v0.4.1＝v0.4＋In 頁情境驅動對照；v0.4.2＝Sens 敏感度覆蓋（原則第 9 節）；兩者數值不變；命題＋營收分部架構；docs/plan/個股模型原則_命題加營收分部.md）
 # 用法：python3 oracle/build_oracle.py raw.xlsx ；再以 LibreOffice headless 重算：
 #   soffice --headless --calc --convert-to xlsx --outdir oracle/dist raw.xlsx
 # 會計年度 FY(t)＝t−1 年 6 月～t 年 5 月（FY2027＝2026-06～2027-05）。金額：十億美元（US$B），MW 為 IT 口徑（MW-IT）。
@@ -47,7 +47,7 @@ def tkv(name, g):
 # In
 # =====================================================================================
 IN = wb.active; IN.title = "In"
-IN["A1"] = "In — 輸入（藍字＝輸入；黑字＝公式；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」〔v0.4.1〕）。金額：十億美元（US$B）；MW＝IT 口徑（MW-IT）；每 MW 金額：百萬美元／MW·年（＝US$B／GW·年）"
+IN["A1"] = "In — 輸入（藍字＝輸入；黑字＝公式；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」〔v0.4.2〕）。金額：十億美元（US$B）；MW＝IT 口徑（MW-IT）；每 MW 金額：百萬美元／MW·年（＝US$B／GW·年）"
 IN["A2"] = "標記：Verified／Interested-party／Analogy／Assumed／Derived；Analogy、Assumed 給低／高區間。SemiAnalysis 未使用。「沿用 v0.3.1」＝沿用 oracle/legacy_v0.3 舊引擎 company.json 已核准的參數（原出處見來源欄）"
 hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源1", "來源2／說明"])
 rows = []; sec = lambda t: rows.append(("sec", t)); inp = lambda *a: rows.append(a)
@@ -222,7 +222,7 @@ inp("g_rev27", "公司 FY2027 營收指引（下限）", "US$B", None, 90, None,
 inp("rpo_1336", "RPO 中 13–36 個月認列的比例", "%", None, 0.37, None, "Interested-party", Q10 + "（" + FACTS + " rpo.split.fy27q1）", "12 個月內 13%、37–60 個月 34%、其後 16%")
 inp("rpo", "剩餘履約義務 RPO（FY27Q1 末）", "US$B", None, 664, None, "Interested-party", Q10 + "：12 個月內 13%、13–36 個月 37%、37–60 個月 34%、其後 16%", "OpenAI 約占一半（二手，Moody's 判斷）")
 inp("oai_annual", "Oracle–OpenAI 合約年額（約 $300bn ÷ 5 年）", "US$B／年", None, 60, None, "Interested-party", "WSJ 轉述（The Register 2025-09-11），未經當事方證實", "只作對照")
-inp("tp_v031", "v0.3.1 基準目標價（加權）", "US$", 77.4, 84.2, 91.9, "Derived", "oracle/legacy_v0.3 交接檔 v0.3.1：保守 77.4／基準 84.2／積極 91.9（賣出）", "Recon v0.4 vs v0.3.1")
+inp("tp_v031", "v0.3.1 基準目標價（加權）", "US$", 77.4, 84.2, 91.9, "Derived", "oracle/legacy_v0.3 交接檔 v0.3.1：保守 77.4／基準 84.2／積極 91.9（賣出）", "只作對照，不進模型（只被 Recon 引用）；Recon v0.4 vs v0.3.1")
 
 base_vals = {}
 IR_O = {}
@@ -1046,7 +1046,7 @@ RC.column_dimensions["I"].width = 36; RC.column_dimensions["J"].width = 80
 SE = wb.create_sheet("Sens")
 SE["A1"] = "Sens — 一次動一個輸入（低／高），以完整模型重算加權目標價與 FY2029 指標（scripts/sens_v04.py 建置時以 LibreOffice 重算整本活頁簿；數值寫入此頁）"
 SE["A2"] = "未重算（data/sens_v04.json 不存在）" if SENS is None else f"重算日期 {SENS['date']}；基準加權目標價 {SENS['base']['tp']:.4f}（應等於 Val 頁加權目標價，見下方檢查列）"
-hdr(SE, 3, ["輸入", "低／高設定", "低：加權目標價", "低：相對基準", "高：加權目標價", "高：相對基準", "最大絕對變動", "低：FY2029 OCI AI 營業利益率（B）", "高：FY2029 OCI AI 營業利益率（B）", "低：收支關卡（B）", "高：收支關卡（B）"])
+hdr(SE, 3, ["輸入", "低／高設定", "低：加權目標價", "低：相對基準", "高：加權目標價", "高：相對基準", "最大絕對變動", "低：FY2029 OCI AI 營業利益率（B）", "高：FY2029 OCI AI 營業利益率（B）", "低：收支關卡（B）", "高：收支關卡（B）", "鍵"])
 SENS_ROWS = (4, 4); SENS_GRID = None
 if SENS:
     rr = 4
@@ -1057,6 +1057,7 @@ if SENS:
         SE.cell(rr, 7, f"=MAX(ABS(D{rr}),ABS(F{rr}))").number_format = "0.0%"
         SE.cell(rr, 8, case["lo"]["om29"]).number_format = "0.0%"; SE.cell(rr, 9, case["hi"]["om29"]).number_format = "0.0%"
         SE.cell(rr, 10, case["lo"]["gate"]).number_format = "#,##0.0"; SE.cell(rr, 11, case["hi"]["gate"]).number_format = "#,##0.0"
+        SE.cell(rr, 12, case.get("key") or " ".join(dict.fromkeys(list(case["lo_ovr"]) + list(case["hi_ovr"]))))   # v0.4.2：鍵欄（原則第 9 節）
         for c in (3, 5, 8, 9, 10, 11): SE.cell(rr, c).font = BLUE
         rr += 1
     SENS_ROWS = (4, rr - 1)
@@ -1072,9 +1073,12 @@ if SENS:
                 v = [x["tp"] for x in SENS["grid"] if abs(x["wacc_adj"] - w) < 1e-9 and abs(x["tp_g"] - g) < 1e-9][0]
                 c = SE.cell(g0 + 2 + i, 3 + j, v); c.number_format = "#,##0.00"; c.font = BLUE
         SENS_GRID = (g0, g0 + 4)
-    SE.cell(rr + 3, 1, "說明：tornado 以「低：相對基準」「高：相對基準」兩欄；情境結構（A／B／C）不變，只動一個輸入。容量情境本身的差異見 Val 頁情境目標價")
+    SE.cell(rr + 3, 1, "說明：tornado 以「低：相對基準」「高：相對基準」兩欄；情境結構（A／B／C）不變，只動一個輸入。容量情境本身的差異見 Val 頁情境目標價。"
+                       "v0.4.2 起依個股模型原則第 9 節：In 頁每個有低／高的鍵都有案例（L 欄「鍵」），IF_HoldEcon 四世代同時一案（he_all）；tp_v031（v0.3.1 目標價）只作對照，不進模型。"
+                       "mult_oci（OCI AI 同業倍數）不列：修正一起分部加總的 OCI AI 以 AI 模組自身 DCF 計，本倍數只進 Val 對照列，重算變動為 0（4.81x／7.88x：73.2244／73.2244）")
 SE.column_dimensions["A"].width = 46; SE.column_dimensions["B"].width = 40
 for c in "CDEFGHIJK": SE.column_dimensions[c].width = 14
+SE.column_dimensions["L"].width = 30
 
 
 # =====================================================================================
