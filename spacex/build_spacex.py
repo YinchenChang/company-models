@@ -177,8 +177,11 @@ inp("mult_cn_adj", "Connectivity 倍數＝同業中位數 × 本係數（Sens：
     "data/peers_connectivity_20261030.json：五家 FY2026 EV/EBITDA 區間 4.71（CMCSA）–16.66（SATS），中位數 7.13", "10-30 補 Sens：低／高＝區間下緣／上緣 ÷ 中位數")
 inp("mult_cn_pm", "Connectivity 倍數 ±30%（Starlink 成長型對照倍數無依據時的替代）", "x", 0.7, 1.0, 1.3, "Assumed",
     "10-30 chat 端指示：Starlink 成長型對照倍數無可比上市公司依據（ASTS EBITDA 為負、NM）→ ±30%", "Sens 用")
-inp("mult_si_adj", "SI 其他（Grok／Cursor／X 與廣告）倍數＝SI 同業中位數 × 本係數", "x", 0.7, 1.0, 1.4, "Assumed",
-    "審查第 6 條：同業樣本小（3 家、口徑不一），以中位數為基準、±30–40% 為區間", "上市 AI 平台（模型商）無可比公司（未找到）", judg=True)
+inp("mult_si_adj", "自用 AI 增量營運成本加回的倍數＝SI 同業中位數 × 本係數（讀法 2；與 SI 其他估值拆開）", "x", 0.7, 1.0, 1.4, "Assumed",
+    "審查第 6 條：同業樣本小（3 家、口徑不一），以中位數為基準、±30–40% 為區間；10-30 核對後只用於讀法 2 的自用營運成本加回", "", judg=True)
+inp("evs_si", "SI 其他（Grok／Cursor／X 訂閱、資料授權、API 與廣告）EV／NTM 營收", "x", 5.0, 5.0, 8.0, "Assumed",
+    "10-30 chat 端定（獨立核對建議）：殘差 EBITDA 率 16.9% 吸收 xAI 模型研發與自用機隊營運，不是業務經濟利潤率 → 改用 EV／NTM 營收，基準 5 倍、區間 5–8 倍",
+    "對照：Cursor 收購對價 42.474（GAAP）約為其年化營收的 9 倍（Recon）；上市 AI 平台無可比公司（未找到）", judg=True)
 inp("evs_space", "Space EV／NTM 營收", "x", 2.0, 3.0, 6.0, "Assumed",
     "工作單 S9：Space 無直接上市同業；Space 分部調整後 EBITDA 9M26 為負（Starship 開發），EBITDA 倍數不適用，改用 EV／營收（判斷）",
     "對照：Rocket Lab 等小型發射商 EV／營收約 10× 以上，但規模與獲利不可比（本次未重新查核）", judg=True)
@@ -232,7 +235,8 @@ inp("k30_B", "情境 B：FY2030 每 GW 年營收 ÷ Tokenomics 持有成本（k�
     "判斷：MAG 長約與現貨證據混合 k 約 1.2（Alphabet v0.3.2 Thesis k_blend）；合約到期後重新議價向持有成本收斂", "", judg=True)
 inp("k30_C", "情境 C：FY2030 每 GW 年營收 ÷ Tokenomics 持有成本（k）", "x", None, 1.0, None, "Assumed",
     "判斷：算力供給追上後租金收斂到打平持有成本（報酬＝Tokenomics WACC 10%）", "", judg=True)
-inp("conv_k", "k 收斂年數（Q4 26 校準值 → FY2030）", "年", None, 4, None, "Assumed", "同成長率收斂（FY2030 到位）")
+inp("conv_k", "k 收斂年數（Q4 26 校準值 → 情境值）", "年", 2, 4, 6, "Assumed", "同成長率收斂（FY2030 到位）",
+    "Sens：2／6 年；另列「k 不收斂」一案（conv_k 極大，k 維持 k0）。注意：k0 隨 Tokenomics 持有成本重新校準、FY2030 k 為固定值，故持有成本同時推動營收")
 
 sec("F. SI 其他收入（Grok／Cursor／X 訂閱、資料授權、API；X 廣告）")
 inp("cur_pf", "Cursor 備考補足（2026Q3 備考營收 − 實際營收）", "US$B/季", None, round((fv("cursor.proforma.rev.2026q3") - fv("is.rev.2026q3")) / 1000, 3), None, "Interested-party",
@@ -279,7 +283,8 @@ inp("spec_27", "EchoStar 頻譜：FY2027 現金（清償指定債務最多 8.5�
     "10-Q MD&A：清償 EchoStar 指定債務最多 8.5（不足以現金補）、2027 年付款 0.828；預計 2027-11-30 交割", "股權部分（約 261.8M 股）列 Sens（dil_echo）；800 MHz 交易金額未揭露（未找到）")
 
 sec("I. 損益與現金流")
-inp("tax", "有效稅率（預測期）", "%", 0.05, 0.12, 0.21, "Assumed", "判斷：累積虧損與淨營業虧損抵減；2026Q3 認列稅務利益（含評價備抵迴轉 0.449）", "", judg=True)
+inp("tax", "有效稅率（明確期 Q4 26–FY2032）", "%", 0.05, 0.12, 0.21, "Assumed", "判斷：累積虧損與淨營業虧損抵減；2026Q3 認列稅務利益（含評價備抵迴轉 0.449）", "", judg=True)
+inp("tax_tv", "終值期稅率（FY2033 起）", "%", 0.12, 0.21, None, "Assumed", "10-30 chat 端定：淨營業虧損用完後回到美國聯邦法定 21%", "Sens 低＝12% 永續（舊口徑）", judg=True)
 inp("r_cash", "現金收益率", "%", None, round(fb("is.intInc.2026q3") * 4 / ((fb("bs.cash.20260630") + fb("bs.mktSec.20260630") + fb("bs.cash.20260930") + fb("bs.mktSec.20260930")) / 2), 4), None, "Derived",
     "2026Q3 利息收入 0.873 × 4 ÷ 平均現金與有價證券（6-30 100.0、9-30 89.9）")
 inp("r_debt", "債務利率（含失敗售後租回）", "%", None, round(-fb("is.intExp.2026q3") * 4 / fb("debt.totalDebt.principal.20260930"), 4), None, "Derived", "2026Q3 利息費用 0.675 × 4 ÷ 債務本金 38.0")
@@ -732,7 +737,7 @@ for s in "ABC":
     sput(s, "chk5", "檢查：分部合計 − 合併營收", "US$B", {p: f"={COL[p]}{R['space']}+{COL[p]}{R['conn']}+{COL[p]}{R['si']}-{COL[p]}{R['rev']}" for p in YK}, "0.000")
     sput(s, "chk6", "檢查：實績欄合併營收 − Q 頁", "US$B", {p: f"={COL[p]}{R['rev']}-{QA('rev', p)}" for p in HIST}, "0.000")
     sput(s, "s2", "S2 核心問題：SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（＝k）", "x", {p: f"={COL[p]}{R['k']}" for p in FC}, "0.00",
-         note="工作單 S2：與 OpenAI PxQ 頁同口徑；FY2028 欄為核心問題比值（> 1＝租金高於打平持有成本）")
+         note="工作單 S2：與 OpenAI PxQ 頁同口徑；FY2028 欄＝k 假設路徑（k0 → 情境值，conv_k 年）的內插值，不是模型產出（> 1＝租金高於打平持有成本）")
     # 非 AI 資本支出與折舊
     sput(s, "cxp_sp", "  Space 資本支出占營收", "%", {**{"2H": "=cx_sp0"}, **{p: f"=cx_sp0+(cx_spl-cx_sp0)*MIN(1,({PY[p]}-2026)/conv_n)" for p in ANN}}, "0.0%")
     sput(s, "cx_sp", "資本支出：Space", "US$B", {**{p: f"={COL[p]}{R['space']}*{COL[p]}{R['cxp_sp']}" for p in FC}, "26": f"=F{r}"})
@@ -1025,6 +1030,9 @@ for s in "ABC":
     drow("wc", "＋營運資金變動", lambda p: f"=CF!{COL[p]}{C['wc']}")
     drow("ufcf", "無槓桿自由現金流（財報口徑）", lambda p: f"={VC[p]}{D['nopat']}+{VC[p]}{D['da']}-{VC[p]}{D['cx']}+{VC[p]}{D['wc']}")
     drow("shd", "自用 AI 影子效益（稅後；讀法 2 加入）", lambda p: f"=PL!{COL[p]}{P['shadow']}*(1-tax)")
+    drow("tvn", "終值用 NOPAT（終值期稅率 tax_tv）", lambda p: f"=({VC[p]}{D['ebit']}+sbc_add*PL!{COL[p]}{P['sbc']})*(1-tax_tv)")
+    drow("tvf", "終值用無槓桿自由現金流（tax_tv；tv_alt＝1 時用）", lambda p: f"={VC[p]}{D['tvn']}+{VC[p]}{D['da']}-{VC[p]}{D['cx']}+{VC[p]}{D['wc']}")
+    drow("shdt", "終值用影子效益（tax_tv）", lambda p: f"=PL!{COL[p]}{P['shadow']}*(1-tax_tv)")
     drow("t", "折現年數（評價日 2026-09-30 起，期中）", lambda p: "=t_q4" if p == "2H" else f"={PY[p]}+mid-t_val", "0.00")
     drow("df", "折現因子 1 ÷ (1＋WACC)^年數", lambda p: f"=1/(1+wacc)^{VC[p]}{D['t']}", "0.0000")
     drow("pv", "現值（財報口徑）", lambda p: f"={VC[p]}{D['ufcf']}*{VC[p]}{D['df']}")
@@ -1032,6 +1040,7 @@ for s in "ABC":
     drow("r_e", "0.15 SI 對外出租 EBITDA", lambda p: f"=PL!{COL[p]}{P['e_rent']}")
     drow("r_d", "0.15 對外新增 AI 折舊", lambda p: f"=Thesis!{COL[p]}{T['da_ext']}")
     drow("r_np", "0.15 對外出租 NOPAT", lambda p: f"=({VC[p]}{D['r_e']}-{VC[p]}{D['r_d']})*(1-tax)")
+    drow("r_npt", "0.15 對外出租終值用 NOPAT（tax_tv）", lambda p: f"=({VC[p]}{D['r_e']}-{VC[p]}{D['r_d']})*(1-tax_tv)")
     drow("r_cx", "0.15 對外出租投資（SI 投資 × ext_sh）", lambda p: f"=Thesis!{COL[p]}{T['si_inv']}*ext_sh")
     drow("r_f", "0.15 對外出租自由現金流", lambda p: f"={VC[p]}{D['r_np']}+{VC[p]}{D['r_d']}-{VC[p]}{D['r_cx']}")
     drow("r_pv", "0.15 現值", lambda p: f"={VC[p]}{D['r_f']}*{VC[p]}{D['df']}")
@@ -1040,12 +1049,12 @@ V.cell(r, 1, "DCF 彙總").font = BOLD; r += 1
 hdr(V, r, ["項目", "情境 A", "情境 B", "情境 C", "說明"]); r += 1
 TV_T = lambda s: f"($M${DC[s]['t']}+mid)"
 vput("pvx", "明確期現值合計（財報口徑）", S3(lambda s: f"=SUM(F{DC[s]['pv']}:M{DC[s]['pv']})"))
-vput("tvv", "終值（FY2032 年底，財報口徑）", S3(lambda s: f"=IF(tv_alt=1,M{DC[s]['ufcf']}*(1+g_tv)/(wacc-g_tv),M{DC[s]['nopat']}*(1+g_tv)*(1-g_tv/ronic)/(wacc-g_tv))"),
-     note="價值驅動：NOPAT(FY2033) ×(1 − g ÷ RONIC) ÷ (WACC − g)")
+vput("tvv", "終值（FY2032 年底，財報口徑）", S3(lambda s: f"=IF(tv_alt=1,M{DC[s]['tvf']}*(1+g_tv)/(wacc-g_tv),M{DC[s]['tvn']}*(1+g_tv)*(1-g_tv/ronic)/(wacc-g_tv))"),
+     note="價值驅動：NOPAT(FY2033，終值期稅率 21%) ×(1 − g ÷ RONIC) ÷ (WACC − g)")
 vput("pvtv", "終值現值", S3(lambda s: f"={X3(s)}{VR_['tvv']}/(1+wacc)^{TV_T(s)}"))
 vput("ev1", "企業價值 EV（讀法 1：自用 AI 只計成本）", S3(lambda s: f"={X3(s)}{VR_['pvx']}+{X3(s)}{VR_['pvtv']}"))
 vput("pvsx", "＋自用 AI 影子效益現值：明確期", S3(lambda s: f"=SUM(F{DC[s]['pvs']}:M{DC[s]['pvs']})"))
-vput("pvstv", "＋自用 AI 影子效益現值：終值", S3(lambda s: f"=IF(tv_alt=1,M{DC[s]['shd']}*(1+g_tv)/(wacc-g_tv),M{DC[s]['shd']}*(1+g_tv)*(1-g_tv/ronic)/(wacc-g_tv))/(1+wacc)^{TV_T(s)}"))
+vput("pvstv", "＋自用 AI 影子效益現值：終值", S3(lambda s: f"=IF(tv_alt=1,M{DC[s]['shdt']}*(1+g_tv)/(wacc-g_tv),M{DC[s]['shdt']}*(1+g_tv)*(1-g_tv/ronic)/(wacc-g_tv))/(1+wacc)^{TV_T(s)}"))
 vput("ev2", "企業價值 EV（讀法 2：自用 AI 價值中性）", S3(lambda s: f"={X3(s)}{VR_['ev1']}+{X3(s)}{VR_['pvsx']}+{X3(s)}{VR_['pvstv']}"))
 vput("ev", "企業價值 EV（主值，依 internal_ai_reading）", S3(lambda s: f"=IF(internal_ai_reading=2,{X3(s)}{VR_['ev2']},{X3(s)}{VR_['ev1']})"), bold=True)
 vput("tvsh", "  其中：終值占 EV（主值）", S3(lambda s: f"=({X3(s)}{VR_['pvtv']}+(internal_ai_reading=2)*{X3(s)}{VR_['pvstv']})/{X3(s)}{VR_['ev']}"), "0.0%")
@@ -1054,11 +1063,11 @@ vput("hold", "＋數位資產（比特幣帳面）", ["=btc"] * 3)
 vput("dl", "− 類債（訴訟準備）", ["=legal"] * 3, note="EchoStar 頻譜：未來付款與取得的頻譜按成本相抵（價值中性），DCF 兩邊都不計")
 vput("shv", "股數（評價日 A＋B；dil_x＝1 時加潛在稀釋）", ["=sh_out+dil_x*(dil_perf+dil_opt+dil_rsu+dil_echo)"] * 3, "0.000")
 BR = lambda ev: (lambda s: "=MAX(0,({0}{1}+{0}{2}+{0}{3}-{0}{4})/{0}{5}*(1+ke)^t_tgt)".format(X3(s), VR_[ev], VR_["nc0"], VR_["hold"], VR_["dl"], VR_["shv"]))
-vput("dcf1", "DCF 每股價值推到目標時點（讀法 1）", S3(BR("ev1")), note="(EV＋淨現金＋數位資產 − 類債) ÷ 股數 ×(1＋ke)^t_tgt；不配息")
+vput("dcf1", "DCF 每股價值推到目標時點（讀法 1）", S3(BR("ev1")), note="(EV＋淨現金＋數位資產 − 類債) ÷ 股數 ×(1＋ke)^t_tgt；不配息。情境 C 權益為負，被 MAX(0) 截為 0；讀法 1 情境 B 的 EV 低於 Connectivity 分部加總 EV → DCF 隱含 SI 整體價值為負")
 vput("dcf2", "DCF 每股價值推到目標時點（讀法 2）", S3(BR("ev2")))
 vput("dcf12", "DCF 情境價值推到 12 個月後（主值）", S3(lambda s: f"=IF(internal_ai_reading=2,{X3(s)}{VR_['dcf2']},{X3(s)}{VR_['dcf1']})"), bold=True, fill=KEY)
 vput("r_pv", "0.15 SI 對外出租明確期現值（FY2028–FY2032）", S3(lambda s: f"=SUM(I{DC[s]['r_pv']}:M{DC[s]['r_pv']})"), note="Q4 26–FY2027 已反映在 FY2027 年底淨現金")
-vput("r_tv", "0.15 SI 對外出租終值現值", S3(lambda s: f"=M{DC[s]['r_np']}*(1+g_tv)*(1-g_tv/ronic)/(wacc-g_tv)/(1+wacc)^{TV_T(s)}"))
+vput("r_tv", "0.15 SI 對外出租終值現值", S3(lambda s: f"=M{DC[s]['r_npt']}*(1+g_tv)*(1-g_tv/ronic)/(wacc-g_tv)/(1+wacc)^{TV_T(s)}"))
 vput("r_v", "0.15 SI 對外出租價值（FY2027 年底，與分部加總淨現金同時點）", S3(lambda s: f"=({X3(s)}{VR_['r_pv']}+{X3(s)}{VR_['r_tv']})*(1+wacc)^($H${DC[s]['t']}+mid)"), bold=True,
      note="評價日對外機隊的資本已投入（不再扣），其 EBITDA 計入；之後新增與汰換的對外投資全數扣除")
 r += 1
@@ -1068,7 +1077,7 @@ ck = [f"pm_conn_{p_['ticker'].lower()}" for p_ in PCN["peers"] if p_.get("evEbit
 sk = [f"pm_si_{p_['ticker'].lower()}" for p_ in PSI["peers"]]
 vput("mult_conn", "Connectivity：衛星與電信同業 EV/EBITDA FY2026 中位數 × mult_cn_adj × mult_cn_pm", ["=MEDIAN(" + ",".join(ck) + ")*mult_cn_adj*mult_cn_pm", len(ck)], ["0.00", "0"], note="data/peers_connectivity_20261030.json（2026-10-08）：" + "、".join(k.split("_")[-1].upper() for k in ck))
 dn("mult_conn", f"Val!$B${VR_['mult_conn']}")
-vput("mult_si", "SI 其他：AI 基礎設施／雲同業中位數 × mult_si_adj", ["=MEDIAN(" + ",".join(sk) + ")*mult_si_adj", len(sk)], ["0.00", "0"],
+vput("mult_si", "自用 AI 營運成本加回倍數：AI 基礎設施／雲同業中位數 × mult_si_adj", ["=MEDIAN(" + ",".join(sk) + ")*mult_si_adj", len(sk)], ["0.00", "0"],
      note="data/peers_si_20261030.json：CRWV、NBIS FY2027、ORCL NTM（口徑不一、樣本小；README 註明）")
 dn("mult_si", f"Val!$B${VR_['mult_si']}")
 r += 1
@@ -1076,7 +1085,7 @@ hdr(V, r, ["分部（NTM 分部調整後 EBITDA；Space 為營收）", "情境 A
 NT = lambda s, k: f"(w_ntm27*PL!H{PR_[s][k]}+(1-w_ntm27)*PL!I{PR_[s][k]})"
 NTT = lambda k: f"(w_ntm27*Thesis!H{T[k]}+(1-w_ntm27)*Thesis!I{T[k]})"
 LINES = [("cn", "Connectivity（分部調整後 EBITDA）", lambda s: f"={NT(s, 'e_cn')}", "mult_conn", "衛星與電信"),
-         ("so", "SI 其他：Grok／Cursor／X 與廣告（SI 其他 EBITDA）", lambda s: f"={NT(s, 'e_oth')}", "mult_si", "AI 基礎設施／雲 × 調整"),
+         ("so", "SI 其他：Grok／Cursor／X 與廣告（NTM 營收 × EV／營收）", lambda s: f"={NT(s, 'nr')}+{NT(s, 'ads')}", "evs_si", "EV／營收（判斷）"),
          ("sp", "Space（NTM 營收 × EV／營收）", lambda s: f"={NT(s, 'space')}", "evs_space", "EV／營收（判斷）")]
 SOTP0 = r
 for key, lab, f, mult, mlab in LINES:
@@ -1143,7 +1152,7 @@ vput("tp_r1", "讀法 1（自用 AI 只計成本）：目標價／上檔空間�
 vput("tp_dcf12", "讀法 1／2 的 DCF 目標價（情境加權）", [f"={W3(VR_['dcf1'])}", f"={W3(VR_['dcf2'])}"], "#,##0.00")
 vput("tp_sotp12", "讀法 1／2 的分部加總目標價（情境加權）", [f"={W3(VR_['sotp1'])}", f"={W3(VR_['sotp2'])}"], "#,##0.00")
 vput("s2", "S2 核心問題：FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（A／B／C）", S3(lambda s: f"=Seg!I{SR[s]['s2']}"), "0.00",
-     note='="2026Q3 校準 k0＝"&TEXT(k0,"0.00")&"；FY2028 情境 B 每 GW 年營收 "&TEXT(Seg!I' + str(SR["B"]["rev_gw"]) + ',"0.0")&"、持有成本 "&TEXT(Thesis!I' + str(T["he_fl"]) + ',"0.0")&"（US$B/GW-年）"')
+     note='="假設路徑內插、非模型產出；2026Q3 校準 k0＝"&TEXT(k0,"0.00")&"；FY2028 情境 B 每 GW 年營收 "&TEXT(Seg!I' + str(SR["B"]["rev_gw"]) + ',"0.0")&"、持有成本 "&TEXT(Thesis!I' + str(T["he_fl"]) + ',"0.0")&"（US$B/GW-年）"')
 vput("gate", "收支關卡：FY2026–FY2030 自由現金流（收支關卡口徑；A／B／C）", S3(lambda s: f"=CF!{X3(s)}{GATE}"), "#,##0.0", note="CF 頁；公司口徑對照見 CF 頁")
 vput("meth", "目標價方法", ["DCF（無槓桿 FCF、WACC、RONIC＝WACC）50%＋分部加總（Connectivity、SI 其他同業倍數；SI 對外出租自身 DCF；Space EV／營收）50%；情境 25／50／25；自用 AI 讀法 2"], "@")
 vput("wsum", "檢查：情境權重合計（應為 1）", ["=ROUND(tp_wA+tp_wB+tp_wC,6)"], "0.000")
@@ -1194,7 +1203,9 @@ RC.cell(r, 3, f"=PL!H{PB['rev']}").number_format = "#,##0.0"; RC.cell(r, 7, "Bac
 RC.cell(r, 1, "2026Q2 新簽雲端合約 14.1（三年固定月費）年化 vs 本模型 FY2027 對外雲端服務（B）"); RC.cell(r, 2, "=cloud_q2/3").number_format = "#,##0.0"
 RC.cell(r, 3, f"=PL!H{PB['rent']}").number_format = "#,##0.0"; RC.cell(r, 7, "合約年化只是新簽部分；Q3 另有新簽、未給金額"); r += 1
 RC.cell(r, 1, "不可取消承諾 FY2027（含 SI 基礎設施、第三方雲、頻譜）vs 本模型 FY2027 SI 投資（B）"); RC.cell(r, 2, "=commit_27").number_format = "#,##0.0"
-RC.cell(r, 3, f"=Thesis!H{T['si_inv']}").number_format = "#,##0.0"; RC.cell(r, 7, "承諾未拆分；第三方雲容量不在名目算力內（S6）→ 可能低估 SI 算力成本"); r += 2
+RC.cell(r, 3, f"=Thesis!H{T['si_inv']}").number_format = "#,##0.0"; RC.cell(r, 7, "承諾未拆分；第三方雲容量不在名目算力內（S6）→ 可能低估 SI 算力成本"); r += 1
+RC.cell(r, 1, "Cursor 收購對價（GAAP，2026-08-14）vs 本模型 SI 其他 EV（情境 B；EV／NTM 營收法）"); RC.cell(r, 2, fb("cursor.consideration")).number_format = "#,##0.0"
+RC.cell(r, 3, f"=Val!G{VR_['s_so']}").number_format = "#,##0.0"; RC.cell(r, 7, "Cursor 對價 271M 股 × 141.29＋替代獎酬 4.181（事實總帳 cursor.consideration）；SI 其他另含 Grok、X 訂閱與廣告"); r += 2
 RC.cell(r, 1, "3. S2 核心問題比值的讀法（審查第 3、4 條；S6）").font = BOLD; r += 1
 hdr(RC, r, ["項目", "情境 A", "情境 B", "情境 C", "說明"]); r += 1
 RC.cell(r, 1, "FY2028 對外每 GW 年營收（IT 口徑 GW）")
@@ -1251,12 +1262,39 @@ SENS_CASES = [
     ("ronic_sp", "RONIC＝WACC＋5pt", None, "hi", "RONIC＝WACC → WACC＋5pt"),
     ("mult_cn_adj", "Connectivity 倍數：同業區間下緣／上緣", "lo", "hi", "7.13× → 4.71×（CMCSA）／16.66×（SATS）"),
     ("mult_cn_pm", "Connectivity 倍數 ±30%（成長型對照無依據）", "lo", "hi", "7.13× → 4.99×／9.27×"),
-    ("mult_si_adj", "SI 其他倍數", "lo", "hi", "中位數 × 0.7／× 1.4"),
+    ("evs_si", "SI 其他 EV／NTM 營收（區間上緣；下緣 5×＝基準）", None, "hi", "5× → 8×"),
+    ("mult_si_adj", "自用 AI 營運成本加回倍數（讀法 2）", "lo", "hi", "中位數 × 0.7／× 1.4"),
+    ("he_all", "Tokenomics IF_HoldEcon 四世代同時", "lo", "hi", "低成本／高成本（k0 隨之重新校準、FY2030 k 固定 → 持有成本同時推動營收）"),
+    ("tk_all", "Tokenomics 一致低／高成本（持有成本、營運費用、IT 與機房資本支出、IT 折舊同動）", "lo", "hi", "Tokenomics 低成本／高成本欄"),
+    ("conv_k", "k 收斂年數", "lo", "hi", "4 → 2／6 年"),
+    ("k_flat", "k 不收斂（三情境 k 維持 2026Q3 校準值 k0）", None, "hi", "conv_k 極大"),
+    ("tax_tv", "終值期稅率 12% 永續（舊口徑）", "lo", None, "21% → 12%"),
+    ("tv_alt", "終值改用 FY2032 自由現金流", None, "hi", "價值驅動 → UFCF ×(1＋g)"),
+    ("gw_ye25", "2025 年底名目算力（汰換時點）", "lo", "hi", "0.8 → 0.7／0.9 GW"),
+    ("gw_ye24", "2024 年底名目算力（汰換時點）", "lo", "hi", "0.15 → 0.1／0.25 GW"),
+    ("life_fac", "機房折舊年限", "lo", "hi", "20 → 15／25 年"),
+    ("phi_0", "資本支出當期折舊比例", "lo", "hi", "0.25 → 0／0.5"),
+    ("gl_ads", "X 廣告長期成長", "lo", "hi", "3% → −3%／8%"),
+    ("g_nl", "客戶發射次數年增", "lo", "hi", "5% → 0／10%"),
+    ("g_rpl", "每次客戶發射收入年增", "lo", "hi", "3% → 0／6%"),
+    ("gl_ld", "發射與開發長期成長", "lo", "hi", "8% → 0／15%"),
+    ("dil", "股數年稀釋", "lo", "hi", "1% → 0／2%"),
+    ("wc_k", "營運資金 ÷ 營收增量", "lo", "hi", "2.8% → 0／10%"),
     ("evs_space", "Space EV／營收", "lo", "hi", "3× → 2×／6×"),
     ("w_dcf", "DCF 權重", "lo", "hi", "50% → 30%／70%"),
     ("dil_x", "評價股數加入潛在稀釋（績效獎酬、選擇權、RSU、EchoStar）", None, "hi", "13.58 → 15.82 十億股"),
     ("sbc_add", "DCF 加回股權報酬", None, "hi", "不加回 → 加回（稅後）"),
 ]
+def _tkset(case):
+    out = []
+    for code, nm in (("H100", "h"), ("GB200", "b2"), ("GB300", "b3"), ("VR200", "vr")):
+        out += [(f"he_{nm}", tk("IF_HoldEcon", code, case)), (f"opx_{nm}", tk("IF_OpexGW", code, case))]
+    out += [("cit_b3", tk("IF_CapexIT", "GB300", case)), ("cit_vr", tk("IF_CapexIT", "VR200", case)), ("cfac", tk("IF_CapexFacility", "VR200", case))]
+    out += [(f"dpi_{nm}", tk("IF_DeprIT", code, case)) for code, nm in (("H100", "h"), ("GB200", "b2"), ("GB300", "b3"))]
+    return out
+SE_SPECIAL = {"he_all|低": [(f"he_{nm}", tk("IF_HoldEcon", code, "低成本")) for code, nm in (("H100", "h"), ("GB200", "b2"), ("GB300", "b3"), ("VR200", "vr"))],
+              "he_all|高": [(f"he_{nm}", tk("IF_HoldEcon", code, "高成本")) for code, nm in (("H100", "h"), ("GB200", "b2"), ("GB300", "b3"), ("VR200", "vr"))],
+              "tk_all|低": _tkset("低成本"), "tk_all|高": _tkset("高成本"), "k_flat|高": [("conv_k", 1000000)]}
 SE["A1"] = "Sens — 一次改一個輸入（In 頁敏感度低／高值），整本活頁簿以 LibreOffice 重算後的加權目標價（Val 頁「目標價（DCF 與 Comparable 加權）」）；由 spacex/make_v01.sh 產生，建置時寫入（數值）"
 SE["A2"] = "相對基準＝情境目標價 ÷ 基準加權目標價 − 1；龍捲風依絕對值排序（HTML）。基準與各案例的其他輸入相同"
 hdr(SE, 3, ["驅動", "設定", "方向", "加權目標價", "相對基準", "鍵", "說明", "收支關卡 B（五年）", "FY2028 S2 比值（B）"])
@@ -1355,7 +1393,7 @@ for rr in range(3, 9): RD.cell(rr, 1).alignment = Alignment(wrap_text=True, vert
 
 if os.environ.get("ROWMAP"):
     json.dump({"T": T, "SR": SR, "PR": PR_, "CR": CR, "VR": VR_, "DC": DC, "GATE": GATE, "SUMROW": SUMROW, "SE_ROWS": SE_ROWS, "SE_BASE": SE_BASE,
-               "SE_STALE": SE_STALE, "IN_ROW": IN_ROW, "RCR": RCR, "QR": QR, "TH_HDR": TH_HDR},
+               "SE_STALE": SE_STALE, "SE_SPECIAL": SE_SPECIAL, "IN_ROW": IN_ROW, "RCR": RCR, "QR": QR, "TH_HDR": TH_HDR},
               open(os.environ["ROWMAP"], "w", encoding="utf-8"), ensure_ascii=False, indent=0)
 wb.save(A.out)
 print("saved", A.out)

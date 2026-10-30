@@ -35,6 +35,8 @@ rf_t = {str(VR["ssh"]): {"B": "n3", "C": "n3", "D": "n3"}, str(VR["simp"]): {"B"
 gate = rm["GATE"]
 r1 = find("Recon", "1. 合併層"); r2 = find("Recon", "2. 逐分部"); r3 = find("Recon", "3. S2"); r4 = find("Recon", "4. 每 GW")
 se_end = max(x[3] for x in rm["SE_ROWS"])
+_se = wb["Sens"]
+tor_rows = ",".join(str(x[3]) for x in rm["SE_ROWS"] if isinstance(_se.cell(x[3], 5).value, (int, float)) and abs(_se.cell(x[3], 5).value) >= 0.0005)
 thh = rm["TH_HDR"]
 th_keys = ("end", "avg_ext", "avg_int", "he_fl", "si_inv", "si_cash", "si_fin", "da_ai", "da_b", "int_opex", "shadow", "int_cost")
 th_rows = ",".join(str(T[k]) for k in th_keys)
@@ -121,7 +123,7 @@ cfg = {
     {"type": "table", "caption": "@Recon!A" + str(r4), "head": ["項目", "數值", "說明"],
      "rowgen": {"sheet": "Recon", "rows": f"{r4 + 1}-{r4 + 3}", "cols": ["A", "B", "E"], "fmts": ["", "n1", ""]}}]},
   {"id": "sens", "title": "敏感度", "intro": "@Sens!A1", "blocks": [
-    {"type": "tornado", "title": "加權目標價相對基準的變動（一次改一個輸入，整本重算）", "sheet": "Sens", "rows": f"4-{se_end}", "label_col": "A", "value_col": "E", "fmt": "sp1"},
+    {"type": "tornado", "title": "加權目標價相對基準的變動（一次改一個輸入，整本重算；變動極小的案例只列在下方全表）", "sheet": "Sens", "rows": tor_rows, "label_col": "A", "value_col": "E", "fmt": "sp1"},
     {"type": "table", "collapse": True, "summary": "展開：全部案例", "head": ["驅動", "設定", "方向", "加權目標價", "相對基準"],
      "rowgen": {"sheet": "Sens", "rows": f"4-{se_end}", "cols": ["A", "B", "C", "D", "E"], "fmts": ["", "", "", "n2", "sp1"]}},
     {"type": "kv", "items": [["@Sens!A" + str(rm["SE_BASE"]), "@Sens!D" + str(rm["SE_BASE"]) + "|n2"], ["@Sens!A" + str(rm["SE_STALE"]), "@Sens!D" + str(rm["SE_STALE"]) + "|n2"]]}]},

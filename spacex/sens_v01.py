@@ -46,6 +46,9 @@ IN = openpyxl.load_workbook(base_raw)["In"]
 row = rm["IN_ROW"]
 jobs = {"base|base": []}
 for key, side, val, _r in rm["SE_ROWS"]:
+    if f"{key}|{side}" in rm["SE_SPECIAL"]:
+        jobs[f"{key}|{side}"] = [tuple(x) for x in rm["SE_SPECIAL"][f"{key}|{side}"]]
+        continue
     v = IN.cell(row[key], 4 if val == "lo" else 6).value if val in ("lo", "hi") else val
     jobs[f"{key}|{side}"] = [(key, v)]
 res = {}
