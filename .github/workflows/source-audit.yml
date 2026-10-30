@@ -8,6 +8,7 @@ on:
       max_usd: {description: "累計花費上限（美元，含先前各次）", default: "40"}
       max_groups: {description: "本次最多幾組（0 = 不限）", default: "0"}
       recover_since: {description: "先取回此時間（UTC ISO）之後未寫入的批次結果；空白＝不取回", default: ""}
+      order: {description: "公司順序：空白＝各公司輪流；upside＝|加權上檔空間| 大者優先", default: ""}
   push:
     branches: [claude/source-audit]
     paths: ["tools/source_audit/audit.py", "tools/source_audit/push_config.json", ".github/workflows/source-audit.yml"]
@@ -38,6 +39,7 @@ jobs:
           MAX_GROUPS: ${{ github.event.inputs.max_groups || '10' }}
           WAVE: "150"
           RECOVER_SINCE: ${{ github.event.inputs.recover_since || '' }}
+          ORDER: ${{ github.event.inputs.order || '' }}
         run: python3 tools/source_audit/audit.py
       - name: Commit results
         if: always()
