@@ -210,8 +210,11 @@ def test_cx3b2_he_all_with_negation_not_group_case():
 
 def test_cx3c_three_ranged_generations_three_keys_pass():
     ins = BASE_IN[:3] + HE[:3] + [("he_vr", "IF_HoldEcon｜VR200", 12.2, 12.2, 12.2)]
-    s = NO_HE + [("三世代：低", "", "he_h、he_b2、he_b3 同取低")]  # 反例原樣：成員鍵寫在說明欄
+    s = NO_HE + [("三世代：低", "he_h、he_b2、he_b3", "同取低")]
     assert not C.check(make(tmp("c3c.xlsx"), ins, s))["missing"]
+    # 第二輪必修：成員鍵只寫在說明欄不算（第一輪反例 3c 原樣改判失敗）
+    s2 = NO_HE + [("三世代：低", "", "he_h、he_b2、he_b3 同取低")]
+    assert miss(C.check(make(tmp("c3c2.xlsx"), ins, s2))) == {"he_h", "he_b2", "he_b3"}
 
 
 def test_cx3d_four_ranged_three_keys_fail():
@@ -316,6 +319,134 @@ def test_require_keycol():
     assert r["keycol"] is False and not r["missing"]
     assert C.main([p]) == 0 and C.main([p, "--require-keycol"]) == 1
     assert C.main([make(tmp("rk2.xlsx"), BASE_IN, BASE_SENS), "--require-keycol"]) == 0
+
+# ---- 2026-10-30 第二輪獨立核對反例（/home/claude/senscov_scripts/cx2.py、cx3.py、noterows.py；PR #255 留言 6514066741）----
+HE4 = {"he_h", "he_b2", "he_b3", "he_vr"}
+
+
+def test_r2_A_members_in_note_with_bugai():
+    s = NO_HE + [("GB300 持有成本：低", "he_b3", "不改 he_h、he_b2、he_vr")]
+    assert miss(C.check(make(tmp("d1.xlsx"), BASE_IN, s))) == HE4
+
+
+def test_r2_B_members_in_note_weichi():
+    s = NO_HE + [("GB300 持有成本：低", "he_b3", "he_h、he_b2、he_vr 維持基準")]
+    assert miss(C.check(make(tmp("d2.xlsx"), BASE_IN, s))) == HE4
+
+
+def test_r2_C_members_in_note_lingjian():
+    s = NO_HE + [("GB300：低", "he_b3", "he_h／he_b2／he_vr 另見第 40 列")]
+    assert miss(C.check(make(tmp("d3.xlsx"), BASE_IN, s))) == HE4
+
+
+def test_r2_A2_members_in_A_col_with_stay_clause():
+    # A 欄寫成員鍵但在「不改」子句裡也不算
+    s = NO_HE + [("GB300 持有成本 he_b3：低（不改 he_h、he_b2、he_vr）", "", "")]
+    assert miss(C.check(make(tmp("d1b.xlsx"), BASE_IN, s))) == HE4
+
+
+def test_r2_D_stay_clause_in_A_not_covering():
+    r = C.check(make(tmp("d4.xlsx"), INS_B, BASE_SENS + [("WACC +1pt（beta 不變）", "wacc", "")]))
+    assert miss(r) == {"beta"}
+
+
+def test_r2_D2_same_change_clause_still_counts():
+    # Alphabet 第 14 列寫法：「（同時改 tpu_cf；pace 不重解）」→ tpu_cf 算涵蓋、pace 不算
+    ins = BASE_IN + [("tpu_cf", "TPU 係數", 0.65, 0.7, 1.0), ("pace", "速度", 1, 2, 3)]
+    s = BASE_SENS + [("TPU 係數：低", "tpu_f", "x")]
+    p = make(tmp("d4b.xlsx"), ins, s)
+    wb = openpyxl.load_workbook(p); wb["Sens"].cell(wb["Sens"].max_row, 2).value = "0.70 → 0.65（同時改 tpu_cf；pace 不重解）"; wb.save(p)
+    assert miss(C.check(p)) == {"pace"}
+
+
+def test_r2_E_weilai_not_negation():
+    s = NO_HE + [("IF_HoldEcon 四世代同時：低", "he_all", "FY2030 以後未來 k 固定")]
+    assert not C.check(make(tmp("d5.xlsx"), BASE_IN, s))["missing"]
+
+
+def test_r2_F_quekou_not_negation():
+    r = C.check(make(tmp("d6.xlsx"), INS_B, BASE_SENS, a2="beta 不列：對目標價影響小於 0.001%，無資金缺口"))
+    assert not r["missing"] and r["exempt"][0][0] == "beta"
+
+
+def test_r2_G_short_reason_ok():
+    assert not C.check(make(tmp("d7.xlsx"), INS_B, BASE_SENS, a2="beta 不列：見後說明"))["missing"]
+
+
+def test_r2_neg_words_still_block():
+    for i, t in enumerate(("beta 不列：尚未重算", "beta 不列：缺少資料，待下版", "beta 不列：未定")):
+        assert miss(C.check(make(tmp(f"d8{i}.xlsx"), INS_B, BASE_SENS, a2=t))) == {"beta"}, t
+
+
+def test_r2_note_row_needs_colon():
+    # Microsoft 第 4 列「讀法 1（自用 AI 只計成本）」是真案例；「讀法：…」才是註記
+    r = C.check(make(tmp("n1.xlsx"), INS_B, BASE_SENS + [("讀法 1（beta 取低）", "", "")]))
+    assert not r["missing"]
+    r = C.check(make(tmp("n2.xlsx"), INS_B, BASE_SENS + [("讀法：beta 取低", "", "")]))
+    assert miss(r) == {"beta"}
+
+
+from openpyxl.workbook.defined_name import DefinedName  # noqa: E402
+
+
+def _nm(name, val=None, other=None, dn=True):
+    p = make(tmp(name + ".xlsx"), BASE_IN + [CONS], BASE_SENS)
+    row = _cons_row(p)
+    wb = openpyxl.load_workbook(p)
+    if dn:
+        d = DefinedName("cons_tp", attr_text=f"In!$E${row}")
+        try:
+            wb.defined_names["cons_tp"] = d
+        except TypeError:
+            wb.defined_names.append(d)
+    if val is not None:
+        v = wb.create_sheet("Val")
+        for k, f in val.items():
+            v[k] = f
+    for sh, cells in (other or {}).items():
+        ws = wb.create_sheet(sh) if sh not in wb.sheetnames else wb[sh]
+        for k, f in cells.items():
+            ws[k] = f.replace("{ROW}", str(row))
+    wb.save(p)
+    return C.check(p)
+
+
+def test_r2_v0_val_display_excluded():
+    r = _nm("v0", {"B10": "=cons_tp"})
+    assert r["not_model"] == ["cons_tp"] and not r["missing"]
+
+
+def test_r2_v_cases_fail():
+    cases = {
+        "v1b": ({"B10": "=cons_tp", "B8": "=1", "B14": "=SUM(B8:B12)"}, None, True),
+        "v1": ({"B10": "=cons_tp", "B8": "=1", "B12": "=SUM(B8:B10)"}, None, True),
+        "v2": ({"B10": "=cons_tp"}, {"PL": {"C5": "='Val'!B10*2"}}, True),
+        "v3": ({"B10": "=cons_tp"}, {"PL": {"C5": "=AVERAGE(Val!B9:B11)"}}, True),
+        "v4": ({"B10": "=cons_tp"}, {"PL": {"C5": "=Val!$B$10+1"}}, True),
+        "v5": ({}, {"PL": {"C5": "='In'!E{ROW}*2"}}, False),
+        "v6": ({}, {"PL": {"C5": "=SUM(In!E4:E{ROW})"}}, False),
+        "v7": ({}, {"PL": {"C5": "=INDEX(In!E:E,{ROW})"}}, False),
+        "v7b": ({}, {"PL": {"C5": "=INDIRECT(\"In!E1\")"}}, False),
+        "v8": ({"B10": "=cons_tp", "B11": "=B10"}, {"PL": {"C5": "=Val!B11"}}, True),
+    }
+    for name, (val, other, dn) in cases.items():
+        r = _nm(name, val, other, dn)
+        assert miss(r) == {"cons_tp"} and not r["not_model"], name
+
+
+def test_r2_recon_chain():
+    # Recon!C14＝cons_tp、Recon!E14＝D14/C14−1（仍在 Recon）→ 可排除（SpaceX 現況）
+    r = _nm("rc_ok", None, {"Recon": {"C14": "=cons_tp", "D14": "=1", "E14": "=D14/C14-1"}})
+    assert r["not_model"] == ["cons_tp"]
+    # Recon 格再被模型頁引用 → 失敗
+    r = _nm("rc_bad", None, {"Recon": {"C14": "=cons_tp"}, "PL": {"B2": "=Recon!C14*2"}})
+    assert miss(r) == {"cons_tp"} and "PL!B2" in r["missing"][0][5]
+
+
+def test_r2_range_not_containing_target_ok():
+    r = _nm("rng_ok", None, {"PL": {"C5": "=COUNTA(In!G4:G{ROW})+In!E1+In!E{ROW}0"}}, dn=False)
+    assert r["not_model"] == ["cons_tp"]
+
 
 if __name__ == "__main__":
     fs = [v for k, v in sorted(globals().items()) if k.startswith("test_")]

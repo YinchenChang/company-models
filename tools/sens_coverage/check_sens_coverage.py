@@ -6,19 +6,21 @@
 # 規則：
 #   1. 待涵蓋的鍵＝In 頁（「情境驅動對照」一節以上）A 欄有鍵、且 D（敏感度低）或 F（敏感度高）有數值並與 E（基準）不同者。
 #   2. Sens 頁表頭＝前 40 列中第一個至少三格非空、且有「…目標價」欄名（20 字以內）的列（找不到＝失敗）；「鍵」欄＝表頭文字以「鍵」開頭的欄。
-#      案例列＝表頭以下（到「敏感度「…」」逐案明細區為止）在任一「…目標價」欄有數值、且 A 欄不以「讀法／註／說明／備註／檢查」開頭的列；
+#      案例列＝表頭以下（到「敏感度「…」」逐案明細區為止）在任一「…目標價」欄有數值、且 A 欄不是「讀法：」「註：」「說明：」「備註：」「檢查：」（開頭字後接冒號）的列；
 #      其他列（讀法、註記、空白）只當註記。
 #   3. 涵蓋＝某案例列的「鍵」欄含該鍵，或該列 A、B 欄（驅動、設定）以獨立識別字寫出該鍵（例如「cip_ai＝0」「同時改 tpu_cf」）。
+#      A、B 欄以「，；。（）」與換行切子句，含「不變／不改／維持／另見／不重解」的子句裡的鍵不算（例如「WACC +1pt（beta 不變）」）。
 #      說明欄等其他欄提到的鍵不算涵蓋（例如 WACC 案說明「beta 維持基準不變」）。
 #   4. 群組：IF_HoldEcon（鍵 he_h／he_b2／he_b3／he_vr，亦認 he_h100 等、tk_hold_*，及項目文字含「IF_HoldEcon｜」）須有一個案例列
-#      「鍵」欄寫 he_all，或同一案例列（任一欄）寫出全部有區間的成員鍵；該列不得含否定字（待補／未／不得／缺）。本群組不得豁免，缺案例一律失敗。
+#      「鍵」欄寫 he_all，或同一案例列的鍵欄／A、B 欄（同第 3 條子句排除）寫出全部有區間的成員鍵；說明欄不算；該列不得含否定字。本群組不得豁免，缺案例一律失敗。
 #      其他群組可用 --groups 規則檔（JSON）增加，格式見 GROUPS_DEFAULT。
 #   5. 豁免：Sens 頁註記（表頭以上各列，及案例區內的非案例列）或案例列文字中，有一句（以「。」「；」或換行分句）同時含
-#      (a) 該鍵、(b)「不列／豁免／免列／不另列」之一、(c) 該字之後的「：」後至少 4 個字的理由，且 (d) 不含否定字（待補／未／不得／缺）。
+#      (a) 該鍵、(b)「不列／豁免／免列／不另列」之一、(c) 該字之後的「：」後至少 4 個字的理由，且 (d) 不含否定字（待補／尚未／未定／未做／未列／不得／缺少／缺案例；「未來」「缺口」不算）。
 #      含鍵與豁免字但不符 (c)(d) 者列為「豁免不合格」，仍判未涵蓋。
 #   6. 不進模型：In 頁該列「說明欄」（G 欄以後最後一個文字格）含完整片語「只作對照，不進模型」者不列入待涵蓋，
-#      但其 In 格（D／E／F）或同名定義名稱只可被 Recon、README，或 Val 頁的「顯示用」格（本身沒有被任何公式或定義名稱引用）引用；
-#      其他引用＝失敗（「寫不進模型但被 X 引用」）。
+#      但須追引用鏈：引用 In 格（D／E／F）的公式（含加引號工作表名、包住目標格的範圍、整欄／整列參照、指向它們的定義名稱與同名定義名稱）
+#      只可在 Recon、README、Sens（其下游也須全在這三頁），或 Val 頁的「顯示用」格（本身沒有被任何公式或定義名稱引用）；
+#      INDIRECT／OFFSET 一律視為引用；其他引用＝失敗（「寫不進模型但被 X 引用」）。
 #   7. 警告（不判失敗）：In 頁 IF_HoldEcon 列（同第 4 條成員）有基準值但 D、F 都空白——該有區間卻沒填，本規則無法觸發。
 #   8. --require-keycol：Sens 頁沒有「鍵」欄即失敗（新模型的建置腳本加此旗標）。
 # 適用：In 頁 E3＝「基準」、D3 含「低」、F3 含「高」者（舊模板如 Nebius、CoreWeave、WhiteFiber、OpenAI 無 In 頁三欄＝不適用）。
@@ -35,14 +37,15 @@ GROUPS_DEFAULT = [
      "aliases": ["he_all"], "strict": True},
 ]
 EXEMPT_WORDS = ("不列", "豁免", "免列", "不另列")
-NEG_WORDS = ("待補", "未", "不得", "缺")
+NEG_WORDS = ("待補", "尚未", "未定", "未做", "未列", "不得", "缺少", "缺案例")
+STAY_WORDS = ("不變", "不改", "維持", "另見", "不重解")
 NOT_MODEL_RE = re.compile(r"只作對照，不進模型")
-NOT_MODEL_OK_SHEETS = {"Recon", "README"}
+NOT_MODEL_OK_SHEETS = {"Recon", "README", "Sens"}  # 對照頁：可再往下引用，但整條鏈都須留在這些頁（Val 另論）
 REF_HINT = re.compile(r"^(cons_|c_|g_q\d|old_tp|tp_v\d)")
 REF_LABEL = re.compile(r"共識|v\d+\.\d[\d.]*\s*基準目標價")
 IDENT = r"(?<![A-Za-z0-9_]){}(?![A-Za-z0-9_])"
 HDR_ROWS = 40
-NOTE_ROW = re.compile(r"^\s*(讀法|註|說明|備註|檢查)")
+NOTE_ROW = re.compile(r"^\s*(讀法|註|說明|備註|檢查)\s*[：:]")
 
 
 def num(x):
@@ -85,6 +88,12 @@ def ranged(x):
     return lo or hi
 
 
+def active_clauses(text):
+    """以「，；。（）」與換行切子句，去掉含「不變／不改／維持／另見／不重解」的子句（這些子句提到的鍵沒有被動到）"""
+    parts = re.split(r"[，,；;。（）()\n]", text)
+    return " ".join(p for p in parts if not any(w in p for w in STAY_WORDS))
+
+
 def sens_region(ws):
     """回傳 dict(hdr, keycol, notes[文字], cases[(列號, 鍵欄文字, 全列文字, A／B 欄（驅動、設定）文字)])；找不到表頭時 hdr＝None"""
     maxc = min(ws.max_column, 30)
@@ -108,7 +117,7 @@ def sens_region(ws):
         txt = " ".join(str(v) for v in vals if isinstance(v, str))
         if any(num(ws.cell(r, c).value) for c in tpcols) and not NOTE_ROW.match(str(vals[0] or "")):
             kt = str(ws.cell(r, keycol).value or "") if keycol else ""
-            ab = " ".join(str(ws.cell(r, c).value) for c in (1, 2) if isinstance(ws.cell(r, c).value, str))
+            ab = " ".join(active_clauses(str(ws.cell(r, c).value)) for c in (1, 2) if isinstance(ws.cell(r, c).value, str))
             cases.append((r, kt, txt, ab))
         elif txt:
             notes.append(txt)
@@ -122,20 +131,60 @@ def load_groups(path):
     return g
 
 
-def ref_cells(wbf, sheet_title, rows_cols):
-    """回傳引用 In 某列（D／E／F）或定義名稱的公式格 [(工作表, 座標)]。rows_cols＝(In 列號, 定義名稱或 None)"""
-    r, name = rows_cols
-    pats = [re.compile(r"In!\$?[DEF]\$?%d(?!\d)" % r)]
-    names = set()
+REF_RE = re.compile(
+    r"(?<![A-Za-z0-9_.$'!:])(?:(?:'(?P<qs>[^']+)'|(?P<s>[A-Za-z_][A-Za-z0-9_.]*))!)?"
+    r"(?:\$?(?P<c1>[A-Z]{1,3})\$?(?P<r1>\d+)(?::\$?(?P<c2>[A-Z]{1,3})\$?(?P<r2>\d+))?(?![A-Za-z0-9_(])"
+    r"|\$?(?P<fc1>[A-Z]{1,3}):\$?(?P<fc2>[A-Z]{1,3})(?![A-Za-z0-9_(])"
+    r"|\$?(?P<fr1>\d+):\$?(?P<fr2>\d+)(?![\d]))")
+DYN_RE = re.compile(r"\b(INDIRECT|OFFSET)\s*\(", re.I)
+
+
+def col_idx(c):
+    n = 0
+    for ch in c:
+        n = n * 26 + ord(ch) - 64
+    return n
+
+
+def formula_hits(f, cur, targets):
+    """公式 f（位於工作表 cur）是否引用 targets＝{(工作表, 欄號, 列號)} 中任一格。
+    支援加引號的工作表名、範圍（含目標格即算）、整欄／整列參照；INDIRECT、OFFSET 一律視為引用（保守）。"""
+    f2 = re.sub(r'"[^"]*"', "", f)
+    if DYN_RE.search(f2):
+        return True
+    for m in REF_RE.finditer(f2):
+        st = m.group("qs") or m.group("s") or cur
+        for ts, tc, tr in targets:
+            if st != ts:
+                continue
+            if m.group("fc1"):
+                if col_idx(m.group("fc1")) <= tc <= col_idx(m.group("fc2")):
+                    return True
+            elif m.group("fr1"):
+                if int(m.group("fr1")) <= tr <= int(m.group("fr2")):
+                    return True
+            else:
+                c1, r1 = col_idx(m.group("c1")), int(m.group("r1"))
+                c2, r2 = (col_idx(m.group("c2")), int(m.group("r2"))) if m.group("c2") else (c1, r1)
+                if min(c1, c2) <= tc <= max(c1, c2) and min(r1, r2) <= tr <= max(r1, r2):
+                    return True
+    return False
+
+
+def names_on(wbf, targets):
+    """指向 targets 中任一格（含範圍包住）的定義名稱"""
+    out = set()
     for n, dn in wbf.defined_names.items():
         for t, ref in dn.destinations:
-            m = re.fullmatch(r"\$?([A-Z]{1,3})\$?(\d+)", ref)
-            if t == "In" and m and m.group(1) in "DEF" and int(m.group(2)) == r:
-                names.add(n)
-    if name:
-        names.add(name)
-    for n in names:
-        pats.append(re.compile(IDENT.format(re.escape(n)), re.I))
+            if formula_hits("=" + ref, t, targets):
+                out.add(n)
+    return out
+
+
+def referencing_cells(wbf, targets, extra_names=()):
+    """回傳引用 targets（直接、範圍、或經指向它們的定義名稱）的公式格 [(工作表, 座標)]"""
+    names = names_on(wbf, targets) | set(extra_names)
+    pats = [re.compile(IDENT.format(re.escape(n)), re.I) for n in names]
     hits = []
     for sh in wbf.worksheets:
         for row in sh.iter_rows():
@@ -143,30 +192,38 @@ def ref_cells(wbf, sheet_title, rows_cols):
                 v = c.value
                 if not (isinstance(v, str) and v.startswith("=")):
                     continue
+                if (sh.title, c.column, c.row) in targets:
+                    continue
                 v2 = re.sub(r'"[^"]*"', "", v)
-                same = sh.title == "In" and re.search(r"(?<![A-Za-z!_$])\$?[DEF]\$?%d(?![\d(])" % r, v2)
-                if any(p.search(v2) for p in pats) or same:
-                    hits.append((sh.title, c.coordinate))
+                if formula_hits(v, sh.title, targets) or any(p.search(v2) for p in pats):
+                    hits.append((sh.title, c.coordinate, c.column, c.row))
     return hits
 
 
-def cell_is_referenced(wbf, sheet, coord):
-    col, rw = re.match(r"([A-Z]+)(\d+)", coord).groups()
-    pat_ext = re.compile(r"%s!\$?%s\$?%s(?!\d)" % (re.escape(sheet), col, rw))
-    pat_in = re.compile(r"(?<![A-Za-z!_$])\$?%s\$?%s(?![\d(])" % (col, rw))
-    for sh in wbf.worksheets:
-        for row in sh.iter_rows():
-            for c in row:
-                v = c.value
-                if isinstance(v, str) and v.startswith("="):
-                    v2 = re.sub(r'"[^"]*"', "", v)
-                    if pat_ext.search(v2) or (sh.title == sheet and pat_in.search(v2)):
-                        return True
-    for n, dn in wbf.defined_names.items():
-        for t, ref in dn.destinations:
-            if t == sheet and ref.replace("$", "") == coord:
-                return True
-    return False
+def trace_not_model(wbf, targets, key):
+    """追「不進模型」列的引用鏈，回傳違規格清單。
+    Recon／README／Sens 的引用格可再被引用，但下游整條鏈都須留在這三頁；
+    Val 的引用格須是顯示用（本身沒有被任何公式或定義名稱引用）；其他工作表（含 In 本身）一律違規。"""
+    bad, seen, frontier, first = [], set(), set(targets), True
+    for _ in range(50):
+        if not frontier:
+            break
+        nxt = set()
+        for sh, co, cc, rr in referencing_cells(wbf, frontier, [key] if first else []):
+            if (sh, cc, rr) in seen:
+                continue
+            seen.add((sh, cc, rr))
+            if sh in NOT_MODEL_OK_SHEETS:
+                nxt.add((sh, cc, rr))
+            elif sh == "Val":
+                if referencing_cells(wbf, {(sh, cc, rr)}):
+                    bad.append(f"{sh}!{co}（Val 格另被引用，非顯示用）")
+            else:
+                bad.append(f"{sh}!{co}")
+        frontier, first = nxt, False
+    else:
+        bad.append("引用鏈超過 50 層（未追完）")
+    return bad
 
 
 def check(path, groups=None, require_keycol=False):
@@ -195,13 +252,7 @@ def check(path, groups=None, require_keycol=False):
     for x in ks:
         if NOT_MODEL_RE.search(x["note"]):
             wbf = wbf or openpyxl.load_workbook(path, data_only=False)
-            bad = []
-            for sh, co in ref_cells(wbf, "In", (x["row"], x["key"])):
-                if sh in NOT_MODEL_OK_SHEETS or sh == "Sens":
-                    continue
-                if sh == "Val" and not cell_is_referenced(wbf, "Val", co):
-                    continue
-                bad.append(f"{sh}!{co}")
+            bad = trace_not_model(wbf, {("In", c, x["row"]) for c in (4, 5, 6)}, x["key"])
             if bad:
                 res["missing"].append((x["key"], x["label"], x["d"], x["e"], x["f"],
                                        "寫「只作對照，不進模型」但被計算鏈引用：" + "、".join(bad[:5]), ""))
@@ -261,7 +312,7 @@ def check(path, groups=None, require_keycol=False):
         for r, kt, txt, ab in cases:
             if has_neg(kt + " " + txt):
                 continue
-            if any(a in row_keys(kt) for a in g.get("aliases", [])) or all(has_tok(kt + " " + txt, m) for m in mem):
+            if any(a in row_keys(kt) for a in g.get("aliases", [])) or all(m in row_keys(kt) or has_tok(ab, m) for m in mem):
                 res["group_cov"][g["name"]] = r
                 break
     for x in ks:
