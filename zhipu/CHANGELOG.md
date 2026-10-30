@@ -73,3 +73,13 @@
 - 結果：命題 1 結論不變（每年差額為負；2030 −2,394 → −1,804 RMB 億；覆蓋率 0.708 → 0.734；η 2025 1.126 → 1.000、1H26 3.908 → 3.137）；累計外部資金需求 2030 43.6 → 7.5 RMB 億（首次缺口年仍 2030）。歸因：①IF_TokGW_*（VR 等值係數）②IF_HoldEcon／IF_OpexGW（租價下限）③IF_Cost*（η）；IF_AllocRDGW 對輸出貢獻 0。反證：全部名稱改回 v5.26 與 v0.1 七頁 10,322 格逐格相同。
 - 工具：`tools/tk_attribution.py`、`tools/make_v011_report.py`；`build_html.py` 檢查編號範圍讀 Excel；`engine/core.py` 檔名規則允許三段版號；敏感度與翻轉點重算（`docs/reports/20261022_v0.1.1_敏感度.json`）。
 - 成品：`dist/20261022_智譜收支模型_v0_1_1.html／.xlsx`（舊版移 `dist/_待刪除/`）。報告 `docs/reports/20261022_v0.1.1_TK同步.md`＋`_對照.xlsx`。
+
+## v0.1.2（2026-10-30，建置代理；官方分部對帳）— Excel `model/20261030_Zhipu_v0.1.2.xlsx`（v0.1.1 移 `model/archive/20261022_Zhipu_v0.1.1.xlsx`）
+- 工作單 `docs/workorders/20261030_zhipu_v0.1.2_分部對帳.md`；分支 `claude/zhipu-v0.1.2`，PR #250。commit：7577104（builder）、9e14f2f（Excel、parity 情境）、8949c6f（segments.json）、本節 commit（README、CHANGELOG、dist）、報告 commit。
+- 修補版：**所有既有數值不變**（與 v0.1.1 逐格比對，差異只在新增列、Checks、版本字串）；Tokenomics 快照仍 v19.0（`1916a06`），OAI_Link 仍 OpenAI v0.6.2。
+- Revenue 第七節「官方分部對帳（部署方式）」R84–R99：FY2025 本地化部署 年報 5.3396 vs 模型 5.3395（差 −0.0001，四捨五入，OK）、雲端部署 1.9038 vs 1.9038；1H2026 本地化部署 中期公告 1.2872 vs ②＋③＋④ 子項 1.2872、雲端部署 8.2518 vs ① 8.2518；具名 `REV_SegGap_*` 4 名。
+- Inputs ＋1：INP_141 `seg_recon_tol` 分部對帳容差 0.001 RMB 億（Decision）。Checks ＋4：C100–C103（容差取 Inputs）；CHK_Errors 涵蓋。公式格 6,218 → 6,244；具名範圍 1,562 → 1,567。
+- parity 情境＋1：`at_seg_recon_1h26_onprem`（SRC_ZP_178 1.2872→1.5；期望 C102 ERR）。
+- `segments.json`（官方分部：本地化部署、雲端部署；子列 ①–④；核對列＝第七節四列對帳差額）；`check_segments.py zhipu`＝符合。
+- builder：`--tk-sha`（TK 快照檔非 git checkout 時記錄提交）；Checks 判定種類 `tolinp`。
+- 成品改名「個股模型」：`dist/20261030_智譜個股模型_v0_1_2.html／.xlsx`（`tools/build_html.py`、`tests/test_html.py` 檔名與標題）；v0.1.1 成品移 `dist/_待刪除/`。報告 `docs/reports/20261030_v0.1.2.md`。
