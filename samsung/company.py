@@ -189,3 +189,6 @@ CONFIG["segments"] = {
            "記憶體（第 4 列「記憶體營收」）屬 DS；DS 其餘為晶圓代工與 System LSI。推估季不拆分部：非記憶體事業以 In 頁 nm_rev／nm_op 整體輸入。"],
 }
 CONFIG["readme_extra"] = CONFIG["readme_extra"] + ["v0.3.2（2026-10-28）：分部原則重建。Q 頁第 20 列起新增官方報告分部 DX／DS／SDC／Harman、內部抵銷（差額）與合併營收（2025Q1～2026Q2 實績），核對列「分部合計 − 合併營收」；記憶體營收屬 DS。損益、EPS、目標價與 v0.3.1 相同。"]
+
+# v0.3.3（2026-10-30）：In 頁版面（個股模型原則第 8 節；數值不變）
+CONFIG["version"] = "v0.3.3"

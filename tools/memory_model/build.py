@@ -555,5 +555,7 @@ import os, sys  # noqa: E401
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "tools"))
 import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, os.path.basename(os.path.dirname(os.path.abspath(sys.argv[1]))))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "in_layout")); import apply_in_layout  # noqa: E402
+apply_in_layout.apply(wb, C["version"], "2026-10-30")  # In 頁版面（個股模型原則第 8 節；數值不變）
 wb.save(sys.argv[2])
 print("saved", sys.argv[2])
