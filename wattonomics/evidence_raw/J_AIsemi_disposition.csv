@@ -1,0 +1,68 @@
+row,player,site_or_scope,metric,value,expected_online,處理
+1,googl,Alphabet 全公司 2026 資本支出（Q3 2026 法說會）,資本支出指引,200,2026,對照：資本支出指引（Y2 cap_* 既有；不入站點）
+2,googl,Alphabet 全公司 2027 資本支出（Q3 2026 法說會）,資本支出指引,,2027,對照：資本支出指引（Y2 cap_* 既有；不入站點）
+3,googl,Google Michigan 園區（Van Buren Twp，Project Cannoli）,規劃,1000,2028-12,"採用 v0.1.5：cp_googl_vanburen 1,000 設施 2028-12（MPSC 2026-10-01 已核准）"
+4,googl,"Google Cheyenne, WY（Project Tembo）— Black Hills 併網供電",供電合約,590,2030,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+5,googl,Google Oklahoma 三座資料中心（Muskogee、Stillwater；OG&E 供電）,規劃,1000,2031,排 v0.1.6：2031 年列
+6,googl,Google Oklahoma（Muskogee/Payne）— 2036 尖峰,規劃,200,2036,排 v0.1.6：2036 年列（超出 2032）
+7,googl,Google 東南 Nebraska 園區（Tenaska 配套燃氣電廠）,規劃,1000,2029,排 v0.1.6：2029 年列（Interested-party，取下限）
+8,googl,"Google Pine Island, MN（Xcel 供電）",規劃,780,,未採用：無上線日期
+9,googl,"Google New Florence, MO（Montgomery County，150 億美元）",規劃,1200,,未採用：無上線日期
+10,googl,"Google Monrovia, IN（Morgan County；AES Indiana 供電）",規劃,390,,未採用：無上線日期
+11,googl,Google Kansas City 第二園區（Project Mica，Northland）,在建,500,,未採用：無上線日期
+12,googl,Google Visakhapatnam AI Hub（與 AdaniConneX、Airtel）,規劃,1000,2030,排 v0.1.6：2030 年列（Derived）
+13,googl,Anthropic 下一代 TPU 容量（Google/Broadcom）,規劃,3500,2027,不入站點：晶片／算力合約（S4 對照）
+14,googl,Duane Arnold 核電廠重啟（Iowa，NextEra）,供電合約,615,2029,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+15,googl,Constellation 核電增容（PJM 11 座反應爐/6 廠）,供電合約,890,2028–2032,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+16,googl,"Broadwing Energy 燃氣+CCS 電廠（Decatur, IL）",供電合約,400,2029,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+17,googl,Kairos Hermes 2 先進核能（Oak Ridge，TVA 電網）,供電合約,50,2030,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+18,googl,"CFS ARC 核融合電廠（Chesterfield County, VA）",供電合約,200,2032,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+19,googl,Elementl Power 三個先進核能場址,供電合約,1800,,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+20,amzn,Amazon 全公司 2026 現金資本支出,資本支出指引,220,2026,對照：資本支出指引（Y2 cap_* 既有；不入站點）
+21,amzn,Amazon 全公司 2027 資本支出方向,資本支出指引,220,2027,對照：資本支出指引（Y2 cap_* 既有；不入站點）
+22,amzn,Amazon Q3 2026 法說：2027–2029 容量預訂,總量目標,,2027-2029,對照：公司層級目標（不入站點）
+23,amzn,AWS 全公司電力容量（2027 年底為 2025 年的兩倍）,總量目標,2,2027-12,對照：AWS 2027 年底電力容量 2 倍（無 2025 絕對值，無法換算 GW）
+24,amzn,AWS 全公司過去 12 個月新增電力,營運,3900,2025,對照：AWS 12 個月新增 3.9 GW（口徑未說明）
+25,amzn,"Anthropic–AWS 擴大協議（Trainium2–4，十年 >1,000 億美元）",總量目標,5000,未說明（十年承諾期內）,不入站點：算力合約上限（S4 ctr_amzn_ant）
+26,amzn,"OpenAI–AWS 擴大協議（Trainium3/4，8 年 1,000 億美元）",總量目標,2000,2027 起（8 年期）,不入站點：算力合約（S4 已有 ctr_oai_90d）
+27,amzn,AWS 北印第安納 $15B 園區群（Hobart 等）,規劃,2400,2032-12,排 v0.1.6：2.4 GW 到 2032 年底，各年 MW 在保密附件；與 28 同源，評估電力證據路徑
+28,amzn,NIPSCO–Amazon Data Services 特別合約（印第安納）,供電合約,2400,2032-12,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+29,amzn,Constellation Calvert Cliffs（馬里蘭）增容段,供電合約,190,2030-2032,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+30,amzn,Constellation Calvert Cliffs（馬里蘭）既有機組段,供電合約,500,未說明,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+31,amzn,Energy Northwest Cascade Advanced Energy Facility（華盛頓 Richland，X-energy Xe-100）,供電合約,320,2030s,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+32,amzn,Amazon–X-energy 全美 Xe-100 選擇權目標,供電合約,5000,2039-12,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+33,amzn,PPC–AWS 西馬其頓 Kozani 資料中心 第一期,規劃,300,2028-12,採用 v0.1.5：cp_amzn_kozani1 300 未說明 2028-12（風險：MoU）
+34,amzn,AWS × HUMAIN 沙烏地 AI Zone,規劃,50,2028,排 v0.1.6：上線年 2028
+35,amzn,AWS PIT100（Homer City 周邊，39 棟／六基地）,規劃,,2030-04 起分批；2036-06 全部完工,未採用：無 MW（分批上線時程已補，排 v0.1.6 若取得 MW）
+36,Microsoft,Microsoft La Porte 園區（Indiana，NIPSCO 供電；17 棟、489 英畝）,規劃,788,2031,排 v0.1.6：2031 年列（NiSource 10-Q 原句待重開）
+37,Microsoft,Microsoft Pecos 園區（West Texas，表後燃氣供電）,規劃,2000,2032,排 v0.1.6：2032 年列
+38,Microsoft,Microsoft Aragón 區域第一期（La Muela／Villamayor de Gállego／Zaragoza 各 50MW）,規劃,150,2031,排 v0.1.6：2031 年列
+39,Microsoft,Microsoft Catawba County 三園區（Lyle Creek／Boyd Farm／Stover North，NC，15 棟）,在建,720,2032,排 v0.1.6：2032 年列
+40,Microsoft,NIPSCO–Microsoft 電力服務合約（La Porte）,供電合約,788,2031,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+41,Microsoft,Chevron Project Kilby（Pecos 表後燃氣電廠）,供電合約,2670,2028,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+42,Microsoft,We Energies（WEC）— Microsoft 東南威州負載（Milwaukee–Chicago 走廊）,供電合約,2600,2030,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+43,Microsoft,Constellation Crane Clean Energy Center（前 TMI-1）重啟 PPA,供電合約,835,2027,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+44,Microsoft,"Helion Orion 核融合電廠（Malaga, WA）PPA",供電合約,50,2028,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+45,Microsoft,Brookfield 再生能源框架協議（美國＋歐洲）,供電合約,10500,2030,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+46,Microsoft,Microsoft 全公司資料中心容量（Nadella，FY26 Q4 法說）,總量目標,2,2028,對照：Nadella 兩年容量翻倍
+47,Microsoft,Microsoft 全公司資料中心容量 2028（推算）,總量目標,24000,2028,對照：推算 24 GW（Derived）
+48,Microsoft,Microsoft 全公司資料中心容量 2032（Bloomberg 消息）,總量目標,38000,2032,對照：Bloomberg 2032 約 38 GW（S4 tgt_msft_32 已有；口徑未明）
+49,Microsoft,CY2026 資本支出（含融資租賃）,資本支出指引,170,2026,對照：資本支出指引（Y2 cap_* 既有；不入站點）
+50,Microsoft,FY2027 Q2 及下半年資本支出,資本支出指引,50,2027,對照：資本支出指引（Y2 cap_* 既有；不入站點）
+51,Microsoft,尚未起租之資料中心租賃承諾（FY2027–FY2034 起租）,資本支出指引,364.6,2027–2034,對照：資本支出指引（Y2 cap_* 既有；不入站點）
+52,Meta Platforms,"Hyperion（Richland Parish, LA）2 GW→5 GW 擴建增量（第二資料中心／Evest LLC）",規劃,3000,2036-12,不入主路徑：Hyperion 2→5 GW 已有 cpx_meta_hyp5（H1 判斷題，預設不入）
+53,Meta Platforms,Hyperion 第二資料中心配套：Entergy Louisiana 7 座 CCCT（Richland Parish 1-4、Pointe Coupee 1-3）,供電合約,5278,2030–2031,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+54,Meta Platforms,Hyperion 一期配套：Entergy Louisiana 3 座 CCCT（Richland Parish 2 座＋Waterford 1 座）,供電合約,2260,2028-12（2 座）／2029-12（Waterford 1 座）,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+55,Meta Platforms,"Lebanon, Indiana（LEAP 園區）",在建,1000,2027-12～2028-03（首期）,未採用：首期「late 2027 or early 2028」有日期無 MW；排 v0.1.6 再查
+56,Meta Platforms,"Oklo Aurora 核電園區（Pike County, Ohio）",供電合約,1200,2030（首期）～2034（全量）,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+57,Meta Platforms,TerraPower Natrium 首兩座（站址未定）,供電合約,690,2032,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+58,Meta Platforms,Vistra 核電增容（Perry、Davis-Besse、Beaver Valley uprates）,供電合約,433,2030–2034（分階段）[Derived：取 early 2030s 至 2034],不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+59,Meta Platforms,Constellation Clinton 核電廠（Illinois）,供電合約,1121,2027-06,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+60,Meta Platforms,El Paso 園區配套：El Paso Electric McCloud 燃氣機組,供電合約,366,2027,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+61,Meta Platforms,Sturgeon County（Alberta）配套：Capital Power 長約,供電合約,250,2028-07～2028-12（2H2028）,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+62,Meta Platforms,Sturgeon County（Alberta）鄰接：Greenlight Electricity Centre,供電合約,932,2030-07～2030-12（2H2030）,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+63,Meta Platforms,"Prometheus（New Albany, OH）配套：Williams STY＋Neo 表後燃氣",供電合約,982,2028（mid／late 2028）,不入站點：供電合約／發電容量（v0.1.6 評估「電力證據路徑」）
+64,Meta Platforms,"Maysville／Mason County, Kentucky 園區首期",規劃,400,未說明,未採用：無上線日期
+65,Meta Platforms,全公司 AI 基礎設施（Meta Compute）,總量目標,10000,2030-12（this decade）,對照：Meta 本十年數十 GW（Derived 10 GW）
+66,Meta Platforms,2026 全年資本支出（含融資租賃本金）,資本支出指引,140,2026,對照：資本支出指引（Y2 cap_* 既有；不入站點）
+67,Meta Platforms,2027 資本支出,資本支出指引,,2027,對照：資本支出指引（Y2 cap_* 既有；不入站點）
