@@ -2,14 +2,14 @@
 
 **命題（一句話）：** SI 分部的算力投入（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW）能否由 SI 營收（對外算力出租＋Grok／Cursor／X）回本；Connectivity（Starlink）現金流與 IPO 資金能支撐多久。
 
-**核心問題（S2）：** FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金、Valor 失敗售後租回本金、以其他融資取得之 PP&E；公司口徑 FCF 並列）。
+**核心問題（S2）：** FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以其他融資取得之 PP&E；Valor 失敗售後租回本金列融資、不扣〔審查第 2 條 10-30 更正〕；公司口徑 FCF 並列）。
 
 **投資建議：強力放空**（v0.1；加權目標價 US$27.52，比現價 143.89〔2026-10-29 收盤，MarketBeat、Equibles 兩來源一致〕低 80.9%）。主值＝自用 AI 讀法 2；讀法 1 目標價 20.21（−86.0%）。市場共識目標價 244.97（MarketBeat 46 位）。
 
 ## 重點觀察（數字取自成品 Excel）
 1. 目標價 27.52＝DCF 20.66 與分部加總 34.37 各半；情境 A／B／C 為 39.11／26.69／17.57。現價隱含 NTM EV／調整後 EBITDA 約 26.5 倍，本模型分部加總隱含 6.4 倍（情境 B）——差距主要在評價口徑（Connectivity 用電信同業 7.13 倍、SI 對外出租用 Tokenomics 持有成本錨定的自身 DCF），不在營收：本模型 FY2027 營收 86.2，比 6 月的過期共識 68.3 高 26%。
 2. S2 比值：2026Q3 校準 k0＝1.87（Q3 年化 SI S&I 28.1 ÷ 平均在役 1.55 GW＝18.1 US$B/GW-年，÷ 機隊持有成本 9.71）；FY2028 A／B／C＝1.73／1.56／1.43（情境 B 每 GW 年營收 17.0、持有成本 10.9）。名目算力 2026 年底 2.11 GW（公司稱逾 2 GW）、FY2028 年底 5.36 GW；SI 投資 FY2027 75.4、FY2028 79.7。
-3. 收支關卡（收支關卡口徑）A／B／C＝−55.5／−96.9／−127.4；公司口徑 FCF −12.2／−53.7／−84.1。IPO 後現金 89.9 撐到 FY2028，情境 B 需新債 13.1。
+3. 收支關卡（收支關卡口徑，10-30 更正後）A／B／C＝−42.7／−84.1／−114.6；公司口徑 FCF −12.2／−53.7／−84.1。IPO 後現金 89.9 撐到 FY2028，情境 B 需新債 13.1。
 
 ## 結構（三層）
 | 層 | 內容 | 頁 |
@@ -18,7 +18,7 @@
 | 營收分部 | **Space**（Launch Services＝客戶發射 × 每次收入；Launch & Development）、**Connectivity**（Consumer＝平均訂戶 × ARPU × uplift 1.178；Enterprise & Government）、**SI**（Advertising；SI Solutions & Infrastructure＝SI 對外雲端服務＋Grok／Cursor／X 訂閱、資料授權與 API 兩條命題子列）。**情境軸＝SI 的 k（A 1.6／B 1.25／C 1.0）與 Starlink FY2027 淨增（7.0／5.5／4.0 百萬）** | Seg |
 | 損益表 | 分部調整後 EBITDA（Space 利益率 −5.9% → 20%；Connectivity 63.9%；SI＝對外出租營收 − Tokenomics 營運費用＋SI 其他 × 16.9% − 自用增量營運費用）− 折舊 − 股權報酬（含 Cursor 收購後服務期 22.2，直線到 2029-06）→ 分部營業利益 → 合併 → 利息、稅 12% → EPS | PL |
 
-之後：CF（收支關卡口徑與公司口徑；EchoStar 頻譜按成本、價值中性）、Val（DCF 50%＋分部加總 50%；情境 25／50／25；SOTP：Connectivity 電信同業 7.13×、SI 其他 AI 基礎設施中位數 9.49×、SI 對外出租自身 DCF、Space EV／營收 3×）、Recon、Sens（55 案整本重算）、Sources。
+之後：CF（收支關卡口徑與公司口徑；Valor 失敗售後租回本金列融資；EchoStar 頻譜按成本、價值中性）、Val（DCF 50%＋分部加總 50%；情境 25／50／25；SOTP：Connectivity 電信同業 7.13×、SI 其他 AI 基礎設施中位數 9.49×、SI 對外出租自身 DCF、Space EV／營收 3×）、Recon、Sens（58 案整本重算；含 Connectivity 倍數同業區間與 ±30%）、Sources。
 
 ## 驅動 → 推導對照表
 | 頁 | 輸入（In 頁鍵） | 推導量 | 因果方向 |

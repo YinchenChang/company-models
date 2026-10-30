@@ -173,6 +173,10 @@ for p_ in PSI["peers"]:
     lab = "EV/EBITDA FY2027" if "evEbitdaFy2027" in p_ else "NTM EV/EBITDA"
     inp(f"pm_si_{p_['ticker'].lower()}", f"SI 同業（AI 基礎設施／雲）：{p_['name']}（{p_['ticker']}）{lab}", "x", None, x, None, "Derived",
         f"{p_['source']}（{p_.get('pageQuoteDate', p_.get('asOf', ''))}；data/peers_si_20261030.json）", p_.get("note", ""))
+inp("mult_cn_adj", "Connectivity 倍數＝同業中位數 × 本係數（Sens：同業區間下緣／上緣）", "x", 0.6606, 1.0, 2.3366, "Derived",
+    "data/peers_connectivity_20261030.json：五家 FY2026 EV/EBITDA 區間 4.71（CMCSA）–16.66（SATS），中位數 7.13", "10-30 補 Sens：低／高＝區間下緣／上緣 ÷ 中位數")
+inp("mult_cn_pm", "Connectivity 倍數 ±30%（Starlink 成長型對照倍數無依據時的替代）", "x", 0.7, 1.0, 1.3, "Assumed",
+    "10-30 chat 端指示：Starlink 成長型對照倍數無可比上市公司依據（ASTS EBITDA 為負、NM）→ ±30%", "Sens 用")
 inp("mult_si_adj", "SI 其他（Grok／Cursor／X 與廣告）倍數＝SI 同業中位數 × 本係數", "x", 0.7, 1.0, 1.4, "Assumed",
     "審查第 6 條：同業樣本小（3 家、口徑不一），以中位數為基準、±30–40% 為區間", "上市 AI 平台（模型商）無可比公司（未找到）", judg=True)
 inp("evs_space", "Space EV／NTM 營收", "x", 2.0, 3.0, 6.0, "Assumed",
@@ -880,9 +884,9 @@ for i, (k, lab) in enumerate(CHKS):
 # =====================================================================================================
 # CF：營運現金 − 資本支出 → 自由現金流（兩種口徑）；融資；收支關卡
 CF["A1"] = ("CF — 現金流（US$B）。營運現金＝淨利＋折舊＋股權報酬＋營運資金；資本支出＝Space＋Connectivity（Seg）＋SI 現金資本支出（Thesis）。"
-            "收支關卡口徑（審查第 2 條，預設）＝營運現金 − 資本支出 − 融資租賃本金 − Valor 失敗售後租回本金償還 − 以其他融資取得之 PP&E；公司口徑 FCF＝營運現金 − 資本支出（並列）")
+            "收支關卡口徑（審查第 2 條，10-30 更正）＝營運現金 − 資本支出 − 融資租賃本金 − 以其他融資取得之 PP&E（Valor 失敗售後租回本金不扣，列融資來源）；公司口徑 FCF＝營運現金 − 資本支出（並列）")
 CF["A2"] = ("2026 年 9M：IPO 淨額 85.7、IPO 前發行 8.3、發債 51.8／償還 39.8（過橋與 xAI 舊債清償）。預測期不配息、不買回；EchoStar 頻譜現金（2026Q4 0.385、FY2027 9.328）列投資活動（按成本、價值中性）；"
-            "現金低於最低現金 30 時以新債補足。失敗售後租回本金與資本支出可能重複扣（資產購置計入資本支出、售後租回現金列融資流入）——列為判斷題")
+            "現金低於最低現金 30 時以新債補足。Valor 失敗售後租回的新增借款與本金償還（債務到期表）列在融資，與其他債務同處理（10-30 更正）")
 CR = {s: {} for s in "ABC"}
 r = 4
 CF.cell(r, 1, "收支關卡（地圖讀這兩列；FY2026–FY2030，FY2026 含 9M 實績）").font = BOLD; r += 1
@@ -912,11 +916,11 @@ for s in "ABC":
     cput(s, "chk", "檢查：9M26 資本支出 − 10-Q 購置不動產與設備", "US$B", {"1H": f"=E{C['cx']}-capex_9m"}, "0.000")
     cput(s, "fin", "以其他融資取得 PP&E（非現金；SI）", "US$B", {p: f"=Thesis!{COL[p]}{T['si_fin']}" for p in P3})
     cput(s, "lease", "融資租賃本金", "US$B", {"1H": "=lease_1H", **{p: f"=lease_{p}" for p in FC}, "26": f"=E{r}+F{r}"})
-    cput(s, "slb", "Valor 失敗售後租回與設備融資本金償還（債務到期表）", "US$B", {"1H": "=slb_1H", **{p: f"=mat_{p}" for p in FC}, "26": f"=E{r}+F{r}"},
-         note="9M26 未單獨揭露（資料缺口，0）；預測期＝10-Q 到期表（SpaceX Notes 2031 前無重大本金 → 推定主要為失敗售後租回）")
+    cput(s, "slb", "債務到期償還（含 Valor 失敗售後租回本金；融資活動，不扣 FCF）", "US$B", {"1H": "=slb_1H", **{p: f"=mat_{p}" for p in FC}, "26": f"=E{r}+F{r}"},
+         note="10-30 更正：Valor 失敗售後租回資產原以現金購置、已在資本支出內，付款以債務入帳 → 本金償還列融資來源（與其他債務同處理），不扣 FCF。9M26 未單獨揭露（0）；預測期＝10-Q 到期表")
     cput(s, "fcf_co", "公司口徑 FCF（營運現金 − 資本支出）", "US$B", {p: f"={COL[p]}{C['cfo']}-{COL[p]}{C['cx']}" for p in P3})
-    cput(s, "fcf", "自由現金流（收支關卡口徑：− 融資租賃本金 − 失敗售後租回本金 − 以其他融資取得 PP&E）", "US$B",
-         {p: f"={COL[p]}{C['fcf_co']}-{COL[p]}{C['lease']}-{COL[p]}{C['slb']}-{COL[p]}{C['fin']}" for p in P3}, bold=True, fill=SUB)
+    cput(s, "fcf", "自由現金流（收支關卡口徑：− 融資租賃本金 − 以其他融資取得 PP&E）", "US$B",
+         {p: f"={COL[p]}{C['fcf_co']}-{COL[p]}{C['lease']}-{COL[p]}{C['fin']}" for p in P3}, bold=True, fill=SUB)
     cput(s, "spec", "EchoStar 頻譜（投資活動；按成本）", "US$B", {"1H": 0, "2H": "=spec_2h", 27: "=spec_27", **{p: 0 for p in ANN[1:]}, "26": f"=E{r}+F{r}"})
     cput(s, "dnet", "9M26 債務淨流入／預測期已知新債", "US$B", {"1H": "=debt_1H", **{p: 0 for p in FC}, "26": f"=E{r}+F{r}"})
     cput(s, "eq", "股權淨流入（9M26 IPO 等）", "US$B", {"1H": "=eq_1H", **{p: 0 for p in FC}, "26": f"=E{r}+F{r}"})
@@ -948,8 +952,8 @@ for j, s in enumerate("ABC"):
     for k_ in range(4): CF[f"{c}{GATE + k_}"].number_format = "#,##0.0"
     CF[f"{c}{GATE + 4}"] = f'=IF({c}{GATE + 2}>0.001,"需要舉債","不需舉債（IPO 現金足以支應）")'
     CF[f"{c}{GATE + 5}"] = f"={c}{GATE}-(G{C['fcf']}+H{C['fcf']}+I{C['fcf']}+J{C['fcf']}+K{C['fcf']})"; CF[f"{c}{GATE + 5}"].number_format = "0.000"
-CF.cell(GATE, 5, "審查第 2 條預設口徑；負值＝入不敷出（由 IPO 現金與舉債支應）")
-CF.cell(GATE + 1, 5, "公司口徑（不扣融資租賃、失敗售後租回、以融資取得 PP&E）")
+CF.cell(GATE, 5, "審查第 2 條口徑（10-30 更正：不扣 Valor 本金）；負值＝入不敷出（由 IPO 現金與舉債支應）")
+CF.cell(GATE + 1, 5, "公司口徑（不扣融資租賃本金、以融資取得 PP&E）")
 for s in "ABC":
     P = PR_[s]; C = CR[s]
     put(PL, P["ii"], "利息收入（期初現金 × r_cash）", "US$B", {**{p: f"=r_cash*CF!{COL[p]}{C['copen']}*{LEN[p]}" for p in FC}, "26": f"=F{P['ii']}"})
@@ -1062,7 +1066,7 @@ V.cell(r, 1, "0.2 分部加總（SOTP；目標時點 NTM 分部調整後 EBITDA 
 hdr(V, r, ["同業組／倍數", "倍數", "家數", "", "說明"]); r += 1
 ck = [f"pm_conn_{p_['ticker'].lower()}" for p_ in PCN["peers"] if p_.get("evEbitdaFy2026") is not None]
 sk = [f"pm_si_{p_['ticker'].lower()}" for p_ in PSI["peers"]]
-vput("mult_conn", "Connectivity：衛星與電信同業 EV/EBITDA FY2026 中位數", ["=MEDIAN(" + ",".join(ck) + ")", len(ck)], ["0.00", "0"], note="data/peers_connectivity_20261030.json（2026-10-08）：" + "、".join(k.split("_")[-1].upper() for k in ck))
+vput("mult_conn", "Connectivity：衛星與電信同業 EV/EBITDA FY2026 中位數 × mult_cn_adj × mult_cn_pm", ["=MEDIAN(" + ",".join(ck) + ")*mult_cn_adj*mult_cn_pm", len(ck)], ["0.00", "0"], note="data/peers_connectivity_20261030.json（2026-10-08）：" + "、".join(k.split("_")[-1].upper() for k in ck))
 dn("mult_conn", f"Val!$B${VR_['mult_conn']}")
 vput("mult_si", "SI 其他：AI 基礎設施／雲同業中位數 × mult_si_adj", ["=MEDIAN(" + ",".join(sk) + ")*mult_si_adj", len(sk)], ["0.00", "0"],
      note="data/peers_si_20261030.json：CRWV、NBIS FY2027、ORCL NTM（口徑不一、樣本小；README 註明）")
@@ -1245,6 +1249,8 @@ SENS_CASES = [
     ("erp", "股權風險溢酬", "lo", "hi", "4%／6%"),
     ("g_tv", "永續成長 g", "lo", "hi", "2%／4%"),
     ("ronic_sp", "RONIC＝WACC＋5pt", None, "hi", "RONIC＝WACC → WACC＋5pt"),
+    ("mult_cn_adj", "Connectivity 倍數：同業區間下緣／上緣", "lo", "hi", "7.13× → 4.71×（CMCSA）／16.66×（SATS）"),
+    ("mult_cn_pm", "Connectivity 倍數 ±30%（成長型對照無依據）", "lo", "hi", "7.13× → 4.99×／9.27×"),
     ("mult_si_adj", "SI 其他倍數", "lo", "hi", "中位數 × 0.7／× 1.4"),
     ("evs_space", "Space EV／營收", "lo", "hi", "3× → 2×／6×"),
     ("w_dcf", "DCF 權重", "lo", "hi", "50% → 30%／70%"),
@@ -1309,7 +1315,7 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 RD["A1"] = "SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.1（2026-10-30；2026Q3）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = ("命題：SI 分部的算力投入（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW）能否由 SI 營收（對外算力出租＋Grok／Cursor／X）回本；"
             "Connectivity（Starlink）現金流與 IPO 資金能支撐多久；加計 AI 折舊與 Cursor 收購獎酬後的每股價值是否高於現價。")
-RD["A4"] = "核心問題：FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃、失敗售後租回本金與以融資取得 PP&E）。"
+RD["A4"] = "核心問題：FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以融資取得 PP&E；Valor 失敗售後租回本金列融資，不扣）。"
 VB = lambda k, c="B": f"Val!{c}{VR_[k]}"
 PB_ = PR_["B"]
 RD["A5"] = f'="投資建議："&{VB("rec")}&"（加權目標價 US$"&TEXT({VB("tp")},"0.00")&"，上檔空間 "&TEXT({VB("up")},"+0.0%;-0.0%")&"；現價 "&TEXT(px,"0.00")&"，2026-10-29 收盤）"'
@@ -1337,7 +1343,7 @@ r += 1
 RD.cell(r, 1, "本版要點（v0.1：首版）").font = BOLD; r += 1
 for t in ("官方分部 Space、Connectivity、SI；子列＝10-Q 附註 3 收入拆分；SI S&I 之下以 Customer B 衍生 72% 拆「對外雲端服務」與「Grok／Cursor／X」命題子列（審查第 4 條）。",
           "SI 名目算力以實際值為錨（2025Q2 0.4 → 2026Q3 1.7 GW，IT 口徑），未來路徑由 SI 投資季速（含以融資取得 PP&E）÷ Tokenomics 每 GW 投資推算（審查第 3 條）。",
-          "收支關卡口徑扣融資租賃本金、Valor 失敗售後租回本金與以融資取得 PP&E，並列公司口徑 FCF（審查第 2 條）。",
+          "收支關卡口徑扣融資租賃本金與以融資取得 PP&E；Valor 失敗售後租回本金列融資、不扣（審查第 2 條 10-30 更正），並列公司口徑 FCF。",
           "歷史欄：Q 頁 2025Q2–2026Q3 與 9M；FY2025* 為二手轉述 S-1（Space 資本支出未取得）。Cursor 2026-08-14 併入，預測以備考全季為起點（審查第 8 條）。",
           "Tesla 合併評估（董事會特別委員會）不建模，列事件風險；EchoStar 頻譜按成本（價值中性），交割發行股數列 Sens。"):
     RD.cell(r, 1, t); r += 1
