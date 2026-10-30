@@ -312,7 +312,7 @@ def test_holdecon_without_range_warns():
 
 def test_require_keycol():
     # 無鍵欄、案例靠 A 欄文字寫鍵：一般模式通過；--require-keycol 失敗
-    sens = [("有效稅率 tax：低", "", ""), ("only_hi：高", "", ""), ("四世代 he_h he_b2 he_b3 he_vr：低", "", "")]
+    sens = [("有效稅率 tax：低", "", ""), ("only_hi：高", "", ""), ("IF_HoldEcon 四世代同時（he_all）：低", "", "")]
     p = make(tmp("rk.xlsx"), BASE_IN, sens)
     wb = openpyxl.load_workbook(p); wb["Sens"]["F3"] = "代號"; wb.save(p)
     r = C.check(p)
@@ -446,6 +446,77 @@ def test_r2_recon_chain():
 def test_r2_range_not_containing_target_ok():
     r = _nm("rng_ok", None, {"PL": {"C5": "=COUNTA(In!G4:G{ROW})+In!E1+In!E{ROW}0"}}, dn=False)
     assert r["not_model"] == ["cons_tp"]
+
+
+# ---- 2026-10-30 第三輪獨立核對反例（/home/claude/senscov_scripts/cx5.py、cx6.py；PR #255 留言 6514167846）----
+# IF_HoldEcon「整組同時」只認鍵欄（he_all 或全部成員鍵）；A、B 欄文字一律不算；無鍵欄的舊 Sens 頁只認 A、B 欄明寫 he_all。
+def _grp(name, a, b=None, k="he_b3"):
+    p = make(tmp(name + ".xlsx"), BASE_IN, NO_HE + [(a, k, "")])
+    if b is not None:
+        wb = openpyxl.load_workbook(p); ws = wb["Sens"]; ws.cell(ws.max_row, 2).value = b; wb.save(p)
+    return C.check(p)
+
+
+def test_r3_s1_to_s6_single_generation_fail():
+    cases = {
+        "s1": ("GB300：低（其餘 he_h、he_b2、he_vr 照舊）", None),
+        "s2": ("GB300：低；he_h、he_b2、he_vr 沿用基準", None),
+        "s3": ("GB300：低；he_h、he_b2、he_vr 保持基準值", None),
+        "s4": ("GB300：低；he_h、he_b2、he_vr 固定", None),
+        "s5": ("GB300：低", "僅動 he_b3，he_h／he_b2／he_vr 取基準"),
+        "s6": ("GB300：低；he_h／he_b2／he_vr 不動", None),
+    }
+    for n, (a, b) in cases.items():
+        r = _grp(n, a, b)
+        assert miss(r) == HE4 and "IF_HoldEcon" not in r["group_cov"], n
+
+
+def test_r3_t1_true_four_generations_keycol_passes():
+    # 真四世代同動：鍵欄寫四個成員鍵，A 欄「…取低、k 不變」不影響（不再靠詞庫）
+    r = _grp("t1", "IF_HoldEcon 四世代：he_h、he_b2、he_b3、he_vr 取低、k 不變", k="he_h he_b2 he_b3 he_vr")
+    assert not r["missing"] and r["group_cov"]["IF_HoldEcon"]
+    # cx5 原樣（鍵欄空白、四鍵只寫在 A 欄）：依「只認鍵欄」判失敗
+    assert miss(_grp("t1o", "IF_HoldEcon 四世代：he_h、he_b2、he_b3、he_vr 取低、k 不變", k="")) == HE4
+
+
+def test_r3_t2_keycol_four_keys():
+    assert not _grp("t2", "IF_HoldEcon 四世代：低", k="he_h he_b2 he_b3 he_vr")["missing"]
+
+
+def test_r3_no_keycol_old_sens_only_he_all_token():
+    def nokey(name, a):
+        p = make(tmp(name + ".xlsx"), BASE_IN, [("有效稅率 tax：低", "", ""), ("only_hi：高", "", ""), (a, "", "")])
+        wb = openpyxl.load_workbook(p); wb["Sens"]["F3"] = "代號"; wb.save(p)
+        return C.check(p)
+    assert not nokey("nk1", "IF_HoldEcon 四世代同時（he_all）：低")["missing"]
+    assert miss(nokey("nk2", "四世代 he_h he_b2 he_b3 he_vr：低")) == HE4
+
+
+def test_r3_range_with_sheet_on_both_ends():
+    assert C.formula_hits("=In!E39:In!E41", "PL", {("In", 5, 40)})
+    assert not C.formula_hits("=SUM(In!E39,In!E41)", "PL", {("In", 5, 40)})
+
+
+def test_r3_expression_name_conservative():
+    from openpyxl.workbook.defined_name import DefinedName as DN
+    p = make(tmp("n1.xlsx"), BASE_IN + [CONS], BASE_SENS)
+    row = _cons_row(p)
+    wb = openpyxl.load_workbook(p)
+    for k, v in {"CTX": f"In!$E${row}*1", "CT_B": "CTX*1"}.items():
+        try:
+            wb.defined_names[k] = DN(k, attr_text=v)
+        except TypeError:
+            wb.defined_names.append(DN(k, attr_text=v))
+    wb.create_sheet("PL")["C5"] = "=CT_B+1"
+    wb.save(p)
+    assert miss(C.check(p)) == {"cons_tp"}
+
+
+def test_r3_recon_long_chain_into_model_fails():
+    for n in (10, 60):
+        cells = {"A1": "=cons_tp", **{f"A{i}": f"=A{i-1}" for i in range(2, n + 1)}}
+        r = _nm(f"chain{n}", None, {"Recon": cells, "PL": {"C5": f"=Recon!A{n}"}})
+        assert miss(r) == {"cons_tp"}, n
 
 
 if __name__ == "__main__":

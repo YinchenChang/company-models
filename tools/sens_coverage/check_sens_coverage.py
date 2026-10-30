@@ -12,7 +12,8 @@
 #      A、B 欄以「，；。（）」與換行切子句，含「不變／不改／維持／另見／不重解」的子句裡的鍵不算（例如「WACC +1pt（beta 不變）」）。
 #      說明欄等其他欄提到的鍵不算涵蓋（例如 WACC 案說明「beta 維持基準不變」）。
 #   4. 群組：IF_HoldEcon（鍵 he_h／he_b2／he_b3／he_vr，亦認 he_h100 等、tk_hold_*，及項目文字含「IF_HoldEcon｜」）須有一個案例列
-#      「鍵」欄寫 he_all，或同一案例列的鍵欄／A、B 欄（同第 3 條子句排除）寫出全部有區間的成員鍵；說明欄不算；該列不得含否定字。本群組不得豁免，缺案例一律失敗。
+#      「鍵」欄寫 he_all 或寫出全部有區間的成員鍵（只認鍵欄；A、B 欄與說明欄文字一律不算）；
+#      沒有鍵欄的舊 Sens 頁，只認 A、B 欄明寫識別字 he_all。該列不得含否定字。本群組不得豁免，缺案例一律失敗。
 #      其他群組可用 --groups 規則檔（JSON）增加，格式見 GROUPS_DEFAULT。
 #   5. 豁免：Sens 頁註記（表頭以上各列，及案例區內的非案例列）或案例列文字中，有一句（以「。」「；」或換行分句）同時含
 #      (a) 該鍵、(b)「不列／豁免／免列／不另列」之一、(c) 該字之後的「：」後至少 4 個字的理由，且 (d) 不含否定字（待補／尚未／未定／未做／未列／不得／缺少／缺案例；「未來」「缺口」不算）。
@@ -133,7 +134,7 @@ def load_groups(path):
 
 REF_RE = re.compile(
     r"(?<![A-Za-z0-9_.$'!:])(?:(?:'(?P<qs>[^']+)'|(?P<s>[A-Za-z_][A-Za-z0-9_.]*))!)?"
-    r"(?:\$?(?P<c1>[A-Z]{1,3})\$?(?P<r1>\d+)(?::\$?(?P<c2>[A-Z]{1,3})\$?(?P<r2>\d+))?(?![A-Za-z0-9_(])"
+    r"(?:\$?(?P<c1>[A-Z]{1,3})\$?(?P<r1>\d+)(?::(?:(?:'[^']+'|[A-Za-z_][A-Za-z0-9_.]*)!)?\$?(?P<c2>[A-Z]{1,3})\$?(?P<r2>\d+))?(?![A-Za-z0-9_(])"
     r"|\$?(?P<fc1>[A-Z]{1,3}):\$?(?P<fc2>[A-Z]{1,3})(?![A-Za-z0-9_(])"
     r"|\$?(?P<fr1>\d+):\$?(?P<fr2>\d+)(?![\d]))")
 DYN_RE = re.compile(r"\b(INDIRECT|OFFSET)\s*\(", re.I)
@@ -175,7 +176,17 @@ def names_on(wbf, targets):
     """指向 targets 中任一格（含範圍包住）的定義名稱"""
     out = set()
     for n, dn in wbf.defined_names.items():
-        for t, ref in dn.destinations:
+        try:
+            dests = list(dn.destinations)
+        except Exception:  # 名稱是運算式或引用其他名稱，openpyxl 無法解析：保守視為引用
+            out.add(n)
+            continue
+        txt = str(dn.attr_text or "")
+        if not dests and txt:  # 運算式名稱（例：In!$E$40*1）：以文字判斷，無法判斷的保守視為引用
+            if formula_hits("=" + txt, "", targets) or not re.search(r"![$A-Z]", txt):
+                out.add(n)
+            continue
+        for t, ref in dests:
             if formula_hits("=" + ref, t, targets):
                 out.add(n)
     return out
@@ -312,7 +323,9 @@ def check(path, groups=None, require_keycol=False):
         for r, kt, txt, ab in cases:
             if has_neg(kt + " " + txt):
                 continue
-            if any(a in row_keys(kt) for a in g.get("aliases", [])) or all(m in row_keys(kt) or has_tok(ab, m) for m in mem):
+            ks_ = row_keys(kt)
+            if any(a in ks_ for a in g.get("aliases", [])) or all(m in ks_ for m in mem) \
+                    or (not sr["keycol"] and any(has_tok(ab, a) for a in g.get("aliases", []))):
                 res["group_cov"][g["name"]] = r
                 break
     for x in ks:
@@ -327,7 +340,7 @@ def check(path, groups=None, require_keycol=False):
                     res["exempt"].append((k, ex[1][:160]))
                     continue
             single = [r for r, kt, txt, ab in cases if k in row_keys(kt) or has_tok(ab, k)]
-            why = f"{g['name']} 群組缺「整組同時」案例（鍵欄 he_all 或同列寫出全部成員鍵、且無否定字）" + \
+            why = f"{g['name']} 群組缺「整組同時」案例（鍵欄寫 he_all 或全部成員鍵、且無否定字；A、B 欄文字不算）" + \
                   ("；只有單一成員案例：第 " + "、".join(map(str, single)) + " 列" if single else "") + ("；群組不得豁免" if g.get("strict") else "")
             res["missing"].append((k, x["label"], x["d"], x["e"], x["f"], why, ""))
             continue
