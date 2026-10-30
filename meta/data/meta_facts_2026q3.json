@@ -8970,7 +8970,7 @@
    "retrieved": "2026-10-30",
    "tag": "[Verified]",
    "quote": "payable to participating states in annual installments over a 10-year period",
-   "note": "chat 端 2026-10-30 審查讀取 10-Q（工作單「A 段審查結果」第 2 條）；v0.1.1 以完整 10-Q 核對（PDF 第 26、51 頁），原文未載各年金額。模型假設每年等額約 1.27B、FY2027 起付（H3）；v0.1 推論「9.89B≈12.7B 以約 4.9% 折現」已撤回：協議費用前三季合計 11.89B（legal.agCharge.ytd9m2026）",
+   "note": "chat 端 2026-10-30 審查讀取 10-Q（工作單「A 段審查結果」第 2 條）；v0.1.1 以完整 10-Q 核對（PDF 第 26、51、58 頁），原文未載各年金額。模型假設每年等額約 1.27B、FY2027 起付（H3）；v0.1 推論「9.89B≈12.7B 以約 4.9% 折現」已撤回：協議費用前三季合計 11.89B（legal.agCharge.ytd9m2026）",
    "fullTenQ": {
     "page": 26,
     "value": 12700.0,

@@ -185,7 +185,7 @@ inp("cip_0", "在建工程（2026-09-30）", "US$B", None, fv("ppe.cip.20260930"
 inp("cip_ai", "在建工程中 AI 占比", "%", 0.8, 0.9, 1.0, "Assumed", "判斷：與 2026 年 AI 占資本支出比例（約 9 成，見 Thesis）一致", "在建工程對應的 MW 在 Q4 26 轉入在役 → 自用增量（影子效益與營運成本）", judg=True)
 inp("cip_it", "在建工程中 IT（伺服器與網通）占比", "%", 0.5, 0.6, 0.7, "Assumed", "判斷：Meta 未揭露；Alphabet 2026Q2 約 60%", "IT 依 life_it、其餘依 life_fac 折舊")
 inp("life_it", "AI IT 折舊年限（年；汰換週期）", "年", 5, 6, 7, "Assumed", "Tokenomics IF_DeprLifeIT 6 年；Meta 自 2025 起伺服器耐用年限 5.5 年（公開資訊，未入事實總帳）",
-    "整數年（汰換排程用）。完整 10-Q 未載耐用年限（只寫會計政策與 10-K 相比無重大變動，PDF 第 13 頁）→ 不改；10-Q 隱含：Q3 伺服器折舊 5.34 × 4 ÷ 伺服器毛額 133.6 ≈ 6.3 年（含未滿一年資產，粗估）")
+    "整數年（汰換排程用）。完整 10-Q 未載耐用年限（只寫會計政策與 10-K 相比無重大變動，PDF 第 12 頁）→ 不改；10-Q 隱含：Q3 伺服器折舊 5.34 × 4 ÷ 伺服器毛額 133.6 ≈ 6.3 年（含未滿一年資產，粗估）")
 inp("life_fac", "機房折舊年限", "年", 15, 20, 25, "Derived", "Tokenomics IF_CapexFacility 12.67 ÷ IF_DeprFac 0.634＝20 年")
 inp("life_na", "非 AI 資本支出折舊年限", "年", 8, 10, 15, "Assumed", "同 Alphabet")
 inp("phi_0", "資本支出當期折舊比例（年度批次）", "x", 0.0, 0.25, 0.5, "Assumed", "同 Alphabet")
@@ -246,7 +246,7 @@ inp("bb_t", "回購目標（FY2027 起每年，現金足夠時）", "US$B", 0, 0
 inp("min_cash", "最低現金", "US$B", None, 40, None, "Assumed", "判斷")
 inp("mat_27", "債務到期 FY2027（2026-09-30 一年內到期）", "US$B", None, fv("debt.current.20260930") / 1000, None, "Verified", fs("debt.current.20260930"), "其他年度到期即再融資（不影響淨現金），未逐年列")
 inp("ag_pay", "多州檢察長協議年付款（12.7B ÷ 10 年；等額時每年）", "US$B", None, round(fv("legal.agSettle.total") / 1000 / 10, 3), None, "Derived", fs("legal.agSettle.total"),
-    "chat 端審查第 3 條：留在現金流與 DCF。完整 10-Q 原文只寫「annual installments over a 10-year period」（PDF 第 26、51 頁），未載各年金額 → 依工作單 H3 維持等額")
+    "chat 端審查第 3 條：留在現金流與 DCF。完整 10-Q 原文只寫「annual installments over a 10-year period」（PDF 第 26、51、58 頁），未載各年金額 → 依工作單 H3 維持等額")
 inp("ag_y1", "多州檢察長協議第一年（FY2027）付款", "US$B", None, "=ag_pay", round(fv("legal.agCharge.ytd9m2026") - (fv("legal.accrualNonCur.20260930") - fv("legal.accrualNonCur.20251231")) / 1000, 3), "Derived",
     "基準＝等額（H3）；高＝推論：協議前三季應計 11.89 −（非流動法律應計增加 8.304 − 0.450＝7.854，假設全屬協議）＝約 4.04 在一年內到期",
     "流動法律應計 6.867 → 11.577（+4.71），含協議一年內到期部分與其他案件（如新墨西哥判決約 0.94，已上訴暫緩）；原文無第一年金額，只進 Sens。FY2028 起每年＝(12.7 − 本值) ÷ 9（ag_rest）；只改時程、總額不變", judg=True)
