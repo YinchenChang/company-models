@@ -873,8 +873,9 @@ vput("ev2", "企業價值 EV（讀法 2：自用 AI 價值中性）", S3(lambda 
 vput("ev", "企業價值 EV（主值，依 internal_ai_reading）", S3(lambda s: f"=IF(internal_ai_reading=2,{X3(s)}{VR_['ev2']},{X3(s)}{VR_['ev1']})"), bold=True)
 vput("tvsh", "  其中：終值占 EV（主值）", S3(lambda s: f"=({X3(s)}{VR_['pvtv']}+(internal_ai_reading=2)*{X3(s)}{VR_['pvstv']})/{X3(s)}{VR_['ev']}"), "0.0%")
 vput("nc0", "＋淨現金（評價日：現金 − 票據面額 − 融資租賃）", ["=cash_0-debt_0-fin_lease"] * 3)
-vput("post", "＋評價日後股權融資（強制轉換特別股淨額 12.46＋遠期出售 × fwd_on）", ["=mcps+fwd_cash*fwd_on"] * 3, note="遠期出售以初始遠期價計（未折現）")
 _tt = DC["A"]["t"]
+vput("post", "＋評價日後股權融資（強制轉換特別股淨額 12.46＋遠期出售 × fwd_on，以 ke 自 FY2027 期中折現）", [f"=mcps+fwd_cash*fwd_on/(1+ke)^$H${_tt}"] * 3,
+     note="v0.1.1：遠期出售現金於 FY2027 交割（期中，距評價日 0.75 年），以 ke 折現到評價日（同特別股股利）；遠期價每日按隔夜利率減利差增值、按股利調降，未計（保守）")
 vput("agtv", "− 協議付款 FY2033–FY2036（4 期，以 WACC 折現到評價日）", ["=ag_pay*((1+wacc)^-6.75+(1+wacc)^-7.75+(1+wacc)^-8.75+(1+wacc)^-9.75)"] * 3, note="FY2027–FY2032 已在無槓桿自由現金流內")
 vput("dl", "− 類債（其他法律應計＋或有金額 contg）", ["=legal_oth+contg"] * 3)
 vput("ppref", "− 特別股股利現值（轉換前，以 ke 折現）", [f"=pref_2H/(1+ke)^$F${_tt}+pref_27/(1+ke)^$H${_tt}+pref_28/(1+ke)^$I${_tt}+pref_29/(1+ke)^$J${_tt}"] * 3)
