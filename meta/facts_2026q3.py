@@ -9,10 +9,17 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 RD = os.path.join(HERE, "data", "reads")
 A = json.load(open(os.path.join(RD, "read_A_sec8k.json"), encoding="utf-8"))["docs"]
 B = json.load(open(os.path.join(RD, "read_B_irpdf.json"), encoding="utf-8"))["docs"]
-TR = "/tmp/claude-0/meta_src/Transcript_META_3Q26.txt"
+TR = os.environ.get("META_TR", "/tmp/claude-0/meta_src/Transcript_META_3Q26.txt")
 if "--transcript" in sys.argv: TR = sys.argv[sys.argv.index("--transcript") + 1]
-TRL = [l.strip() for l in open(TR, encoding="utf-8").read().splitlines() if l.strip()] if os.path.exists(TR) else None
-TRF = "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）"
+TR2 = os.environ.get("META_TR2", "/tmp/claude-0/meta_src/Transcript_follow up call_META_3Q26.txt")   # v0.1.1：follow-up call 逐字稿（不入庫）
+def _lines(path): return [l.strip() for l in open(path, encoding="utf-8").read().splitlines() if l.strip()] if os.path.exists(path) else None
+TRL, TRL2 = _lines(TR), _lines(TR2)
+TRF = "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）"
+TRF2 = "Transcript_follow up call_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_follow up call_META_3Q26.pdf 轉純文字；不入庫）"
+# v0.1.1：完整 10-Q（106 頁，SEC 公開，可入庫）：PDF 與 pdftotext -layout 純文字（換頁符 \f 分頁）
+Q10TXT = os.path.join(HERE, "..", "mag", "extract", "docs", "2026Q3", "text", "meta_2026Q3_10-Q.txt")
+Q10PDF = "mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf"
+Q10PAGES = open(Q10TXT, encoding="utf-8").read().split("\f")
 RET = "2026-10-30"
 
 LAB = {"ads": "營收：FoA 廣告", "other": "營收：FoA 其他營收", "foa": "營收：Family of Apps（分部）", "rl": "營收：Reality Labs（分部）",
@@ -209,7 +216,7 @@ add("eq.classC.trading", "新設無表決權股（股票股利 1:1）預計開�
 
 # ---- 6. 法說逐字稿：公司說的數字（Interested-party）；對照新聞稿
 CALL = [
-    ("call.foaRev", "法說：FoA 營收（B）", 64.2, "USD B", "family of apps revenue was $64.2 billion", gs("foa", "2026Q3") / 1000, 0.05),
+    ("call.foaRev", "法說：FoA 營收（B）", 64.2, "USD B", "Family of Apps revenue was $64.2 billion", gs("foa", "2026Q3") / 1000, 0.05),
     ("call.ads", "法說：FoA 廣告營收（B）", 63.1, "USD B", "ad revenue was $63.1 billion", gs("ads", "2026Q3") / 1000, 0.05),
     ("call.impr", "法說：廣告曝光數年增", 10, "%", "ad impressions served across our services increased 10%", 10, 0),
     ("call.price", "法說：每則廣告平均價格年增", 14, "%", "average price per ad increased 14%", 14, 0),
@@ -217,7 +224,7 @@ CALL = [
     ("call.rl", "法說：RL 營收（M）", 443, "USD M", "Q3 revenue was $443 million, down 6%", gs("rl", "2026Q3"), 0),
     ("call.expense", "法說：總費用（B）", 51.6, "USD B", "Q3 total expenses were $51.6 billion", gs("costs", "2026Q3") / 1000, 0.05),
     ("call.legal", "法說：法律一次性費用（B）", 9.9, "USD B", "included a $9.9 billion charge", 9.89, 0.05),
-    ("call.ebit", "法說：GAAP 營業利益（B）", 13, "USD B", "GAAP operating income was $13 billion", gs("ebit", "2026Q3") / 1000, 0.05),
+    ("call.ebit", "法說：GAAP 營業利益（B）", 13, "USD B", "GAAP operating income was $13.0 billion", gs("ebit", "2026Q3") / 1000, 0.05),
     ("call.ni", "法說：淨利（B）", 9.9, "USD B", "Net income was $9.9 billion", gs("ni", "2026Q3") / 1000, 0.05),
     ("call.eps", "法說：稀釋 EPS", 3.83, "USD", "or $3.83 per share", gs("eps_d", "2026Q3"), 0),
     ("call.taxrate", "法說：Q3 稅率", 24, "%", "Our tax rate for the quarter was 24%", round(100 * gs("tax", "2026Q3") / gs("pretax", "2026Q3")), 0.5),
@@ -227,10 +234,10 @@ CALL = [
     ("call.debt", "法說：債務（B）", 83.7, "USD B", "$83.7 billion in debt", 83.669, 0.05),
     ("call.emp", "法說：員工人數（超過）", 66000, "人", "over 66,000 employees", 66775, 1000),
     ("call.dap", "法說：每日使用人數（十億）", 3.64, "十億人", "used by 3.64 billion people each day", 3.64, 0),
-    ("call.q4rev", "法說：2026Q4 營收指引下緣（B）", 73, "USD B", "in the range of $73 billion-$76 billion", 73, 0),
-    ("call.exp2026", "法說：2026 總費用指引下緣（B）", 175, "USD B", "range of $175 billion-$179 billion", 175, 0),
-    ("call.rlLoss2026", "法說：2026 RL 虧損指引下緣（B）", 18, "USD B", "a range of $18 billion-$19 billion", 18, 0),
-    ("call.capex2026", "法說：2026 資本支出指引下緣（B）", 135, "USD B", "in the range of $135 billion-$145 billion", 135, 0),
+    ("call.q4rev", "法說：2026Q4 營收指引下緣（B）", 73, "USD B", "in the range of $73-76 billion", 73, 0),
+    ("call.exp2026", "法說：2026 總費用指引下緣（B）", 175, "USD B", "range of $175-179 billion", 175, 0),
+    ("call.rlLoss2026", "法說：2026 RL 虧損指引下緣（B）", 18, "USD B", "a range of $18-19 billion", 18, 0),
+    ("call.capex2026", "法說：2026 資本支出指引下緣（B）", 135, "USD B", "the range of $135-145 billion", 135, 0),
     ("call.rlLoss2027", "法說：2027 RL 虧損（約，B）", 15, "USD B", "around $15 billion", 15, 0),
 ]
 CALLX = [  # 只有逐字稿、新聞稿沒有者（無第二讀）
@@ -238,25 +245,27 @@ CALLX = [  # 只有逐字稿、新聞稿沒有者（無第二讀）
     ("call.capex2027b", "法說：2027 預算與容量計畫仍在制定、將持續積極投資", None, "—", "continue investing aggressively"),
     ("call.rev2027", "法說：2027 不給營收展望，但稱整體營收可維持強勁成長", None, "—", "sustain strong overall revenue growth"),
     ("call.nonvoting", "法說：新設無表決權股，股票股利 1:1，實質一拆二，2027-01 下旬交易", None, "—", "late January 2027"),
-    ("call.noFinPlan", "法說：目前無具體融資計畫（通話時）", None, "—", "do not have any specific financing plans"),
+    ("call.noFinPlan", "法說：目前無具體融資計畫（通話時）", None, "—", "don't have any specific financing plans"),
     ("call.muse", "法說：Muse 個人代理設定人數（美加）", 10, "M 人", "more than 10 million people"),
     ("call.museEff", "法說：Muse 運算成本效率一年內提升（倍）", 10, "倍", "more than 10x in the next year"),
-    ("call.partnerAds", "法說：合作廣告年化營收（超過，B）", 15, "USD B", "surpassed $15 billion in annual revenue run rate"),
+    ("call.partnerAds", "法說：合作廣告年化營收（超過，B）", 15, "USD B", "surpassed $15 billion in annual revenue run-rate"),
     ("call.metaOne", "法說：Meta One 訂閱與試用累計（超過，M）", 15, "M", "surpassed 15 million subscriptions"),
-    ("call.museCapacity", "法說：運算建置目標可服務人數（超過，十億人，未來幾年）", 1, "十億人", "capacity to serve more than 1 billion people"),
+    ("call.museCapacity", "法說：運算建置目標可服務人數（超過，十億人，未來幾年）", 1, "十億人", "capacity to serve more than a billion people"),
 ]
 
 
-def tr_find(phrase):
-    if TRL is None: return None
-    flat = " ".join(TRL)
-    pos = flat.find(phrase)
-    if pos < 0: return False
-    # 回推行號（非空白行，0 起算）
+def _norm(t): return re.sub(r"\s+", " ", t.replace("’", "'").replace("‘", "'")).lower()
+
+
+def tr_find(phrase, lines=None):
+    """短句在逐字稿中的位置（非空白行，0 起算）；比對時不分大小寫、空白合併、彎引號視同直引號（v0.1.1：逐字稿改用 PDF 轉文字版）。"""
+    lines = TRL if lines is None else lines
+    if lines is None: return None
+    ph = _norm(phrase)
     acc = 0
-    for i, l in enumerate(TRL):
-        if acc + len(l) + 1 > pos: return i
-        acc += len(l) + 1
+    for i, l in enumerate(lines):
+        # 從第 i 行開始接上後續 3 行比對（短句可能跨行）
+        if ph in _norm(" ".join(lines[i:i + 4])) and ph not in _norm(" ".join(lines[i + 1:i + 4])): return i
     return False
 
 
@@ -272,6 +281,109 @@ for iid, item, val, unit, phrase in CALLX:
     loc = "（逐字稿不在本機，未核對原文位置）" if ln is None else (f"非空白行第 {ln} 行" if ln is not False else "原文未找到此短句")
     if ln is not None: chk(iid + "（原文短句）", 1, 1 if ln is not False else 0, "逐字稿 grep")
     add(iid, item, val, unit, "2026Q3", TRF + "；" + loc, "", "2026-10-21", "[Interested-party]", quote=phrase, note="公司說法，無第二讀")
+
+# ---- 8. v0.1.1：完整 10-Q 原文（repo 內純文字；第二讀＝程式從原文錨點後擷取數字，與轉錄值比對；頁碼＝PDF 頁）
+def q10_find(anchor, nth=0):
+    """回傳 (PDF 頁碼, 錨點後的文字)；錨點為正規表示式，比對時空白合併。"""
+    hits = []
+    for pi, pg in enumerate(Q10PAGES, 1):
+        flat = re.sub(r"\s+", " ", pg)
+        for m in re.finditer(anchor, flat): hits.append((pi, flat[m.end():m.end() + 160], m.group(0)))
+    return hits[nth] if len(hits) > nth else (None, "", "")
+
+
+def q10_num(after, k=0):
+    ns = re.findall(r"\(?\$?\s*([0-9][0-9,]*(?:\.[0-9]+)?)\)?", after)
+    return float(ns[k].replace(",", "")) if len(ns) > k else None
+
+
+Q10F = [  # 鍵、項目、轉錄值、單位、期間、錨點（regex）、取錨點後第 k 個數字、標記、說明
+    ("legal.accrualCur.20251231", "法律相關應計：流動（2025-12-31）", 6867, "USD M", "2025-12-31", r"Legal-related accruals, current \(?1?\)?", 1, "[Verified]", "2026-09-30 為 11,577（+4,710）"),
+    ("legal.accrualNonCur.20251231", "法律相關應計：非流動（2025-12-31）", 450, "USD M", "2025-12-31", r"Legal-related accruals, non-current \(?1?\)?", 1, "[Verified]", "2026-09-30 為 8,304（+7,854）"),
+    ("legal.agCharge.ytd9m2026", "多州檢察長協議費用：2026 年前三季合計（Q3 9.89）", 11.89, "USD B", "9M2026", r"attorneys general agreement of \$9\.89 billion in the three months ended September 30, 2026 and", 0, "[Verified]",
+     "v0.1 以 9.89 當作協議全部應計；10-Q：前三季合計 11.89（即 Q3 以前已認列約 2.00）→ 其他法律應計＝19.881 − 11.89＝7.991"),
+    ("legal.agCommittee", "多州檢察長協議：另付各州委員會調查與訴訟費用", 75, "USD M", "2026-09-30", r"An additional", 0, "[Verified]", "未入模型（金額小）"),
+    ("legal.agPrivacy", "協議總付款含隱私案約 500M（49 州）", 500, "USD M", "2026-09-30", r"we agreed to payments of approximately", 0, "[Verified]",
+     "12.7（70%）＋5.3（30%）＋0.075＋約 0.5 ≈ 18.59 上限；0.5 是否已含在 12.7 內原文未明"),
+    ("legal.agPct", "12.7B 占青少年案總付款比例", 70, "%", "2026-09-30", r"Approximately \$12\.7 billion, representing approximately", 0, "[Verified]", "原文「annual installments over a 10-year period」，未載各年金額"),
+    ("fl.rou.20260930", "融資租賃使用權資產（不動產與設備內）", 11704, "USD M", "2026-09-30", r"Finance lease right-of-use assets", 0, "[Verified]", "10-Q 未單獨揭露融資租賃負債（資產負債表無此科目；附註 8 其他流動／非流動負債未拆）"),
+    ("fl.rou.20251231", "融資租賃使用權資產（2025-12-31）", 8187, "USD M", "2025-12-31", r"Finance lease right-of-use assets", 1, "[Verified]", ""),
+    ("fl.principal.ytd9m2026.q10", "融資租賃本金支付（10-Q 現金流量表，前三季）", 2769, "USD M", "9M2026", r"Principal payments on finance leases", 0, "[Verified]", "與新聞稿 cf.fl_principal.ytd9m2026 相同"),
+    ("bb.remaining.20260930", "買回授權剩餘額度（2025-12-31 與 2026-09-30 皆同）", 25.03, "USD B", "2026-09-30", r"2025 and September 30, 2026,", 0, "[Verified]", "2026 年前三季未買回"),
+    ("ppe.dep.2026q3", "不動產與設備折舊費用（2026Q3）", 6.81, "USD B", "2026Q3", r"Depreciation expense on property and equipment was", 0, "[Verified]", "前三季 18.49"),
+    ("ppe.depServers.2026q3", "其中伺服器與網路設備折舊（2026Q3）", 5.34, "USD B", "2026Q3", r"servers and network assets depreciation expense was", 0, "[Verified]", "前三季 14.34；2025Q3 3.60"),
+    ("ppe.depServers.ytd9m2026", "伺服器與網路設備折舊（前三季）", 14.34, "USD B", "9M2026", r"servers and network assets depreciation expense was \$5\.34 billion and \$3\.60 billion for the three months ended September 30, 2026 and 2025, respectively, and", 0, "[Verified]", ""),
+    ("ppe.servers.20251231", "伺服器與網路設備（毛額，2025-12-31）", 98040, "USD M", "2025-12-31", r"Servers and network assets", 1, "[Verified]", ""),
+    ("cash.restricted.20260930", "受限約當現金（不含在現金＋有價證券 82.45 內）", 12826, "USD M", "2026-09-30", r"Restricted cash equivalents", 0, "[Verified]", "其中 10.80B 為基礎設施採購合約之保證金，預計 2028–2030 釋出"),
+    ("cash.escrow.20260930", "基礎設施採購合約保證金（貨幣市場基金轉受限）", 10.80, "USD B", "2026-09-30", r"multi-year infrastructure purchase agreements,", 0, "[Verified]", "只列 Recon；不計入現金"),
+    ("commit.cloudContingent", "或有雲端算力採購義務（五年，最多）", 14.72, "USD B", "2026-09-30", r"contingent obligations to purchase up to", 0, "[Verified]", "雲端供應商轉售他人則可減少"),
+    ("commit.due2026", "不可取消合約承諾：2026 剩餘到期", 45.85, "USD B", "2026-09-30", r"respectively\. In addition|with approximately", 0, "[Verified]", "2027 到期 121.41"),
+    ("debt.mat2027", "票據本金到期：2027", 2750, "USD M", "2026-09-30", r"Remainder of 2026 \$ — 2027", 0, "[Verified]", "2028 1,500；2029 1,000；2030 5,000；其後 73,750"),
+    ("debt.interestFuture", "未來利息支付義務：一年內（之後 84.51B）", 4.40, "USD B", "2026-09-30", r"future interest payments obligations as of September 30, 2026 were", 0, "[Verified]", ""),
+    ("hfs.20260930", "待出售資產淨額（預付及其他流動資產內）", 2.60, "USD B", "2026-09-30", r"total held-for-sale assets, net, were", 0, "[Verified]", "資料中心資產，預計一年內投入合資"),
+    ("sh.classC.effective", "Class C 生效日（重述章程）", 2027, "年", "2026-10", r"with an effective date of January 19,", 0, "[Verified]", "2027-01-19；股票股利 1:1、會計上視同股票分割"),
+]
+Q10CHK = []
+for iid, item, val, unit, period, anc, k, tag, note in Q10F:
+    pg, after, hit = q10_find(anc)
+    v2 = q10_num(after, k) if pg else None
+    if iid == "debt.mat2027": pg, after, hit = q10_find(r"2027 2,750"); v2 = 2750.0 if pg else None
+    if iid == "commit.due2026": pg, after, hit = q10_find(r"with approximately \$45\.85 billion and"); v2 = 45.85 if pg else None
+    if iid == "sh.classC.effective": v2 = q10_num(after, 0)
+    ok = chk(iid + "（完整 10-Q 原文）", val, v2, f"轉錄值 vs 程式自 {Q10PDF} 純文字擷取", tol=1e-6)
+    add(iid, item, val, unit, period, f"Meta 10-Q 2026Q3（完整 PDF 第 {pg} 頁；{Q10PDF}）", Q10, "2026-10-29", tag,
+        quote=" ".join(hit.split()[:12]), note=note, second={"value": v2, "source": f"完整 10-Q 純文字第 {pg} 頁（程式擷取）", "ok": ok})
+    Q10CHK.append((iid, pg))
+# v0.1 的 10-Q 事實（WebFetch 單讀）以完整 10-Q 再核對一次（工作單第 0 節第 6 項）
+for iid, anc, k, scale in (("debt.face.20260930", r"Total face value of long-term debt", 0, 1), ("debt.current.20260930", r"Less: Long-term debt, current", 0, 1),
+                           ("debt.fairValue.20260930", r"total estimated fair value of our outstanding Notes was", 0, 1000),
+                           ("ppe.cip.20260930", r"Construction in progress \(1\)", 0, 1), ("ppe.servers.20260930", r"Servers and network assets", 0, 1),
+                           ("ppe.accDep.20260930", r"Less: Accumulated depreciation", 0, 1), ("lease.notCommenced.20260930", r"These lease obligations were approximately", 0, 1000),
+                           ("commit.noncancel.20260930", r"we had \$", 0, 1000), ("legal.accrualCur.20260930", r"Legal-related accruals, current \(?1?\)?", 0, 1),
+                           ("legal.accrualNonCur.20260930", r"Legal-related accruals, non-current \(?1?\)?", 0, 1),
+                           ("legal.agSettle.total", r"Approximately \$", 0, 1000), ("legal.agContingent", r"The remaining approximately \$", 0, 1000),
+                           ("sh.outA.20261016", r"Class A Common Stock \$0\.000006 par value", 0, 1e-6), ("sh.outB.20261016", r"Class B Common Stock \$0\.000006 par value", 0, 1e-6)):
+    it = [x for x in ITEMS if x["id"] == iid][0]
+    pg, after, hit = q10_find(anc)
+    v2 = q10_num(after, k)
+    v2 = None if v2 is None else round(v2 * scale, 6)
+    ok = chk(iid + "（v0.1 事實 vs 完整 10-Q）", it["value"], v2, "v0.1 WebFetch 讀值 vs 完整 10-Q 純文字", tol=1e-6)
+    it["fullTenQ"] = {"page": pg, "value": v2, "ok": ok, "source": Q10PDF}
+
+# ---- 8b. v0.1.1：424B5（強制轉換特別股）承銷折扣 → 淨額（WebFetch 單讀；算術核對）
+B5 = "https://www.sec.gov/Archives/edgar/data/0001326801/000119312526436405/d133631d424b5.htm"
+add("eq.mcps.uwDisc", "強制轉換特別股承銷折扣（每存託股 0.1665；250M 股）", 41.625, "USD M", "2026-10-27", "Meta 424B5（Series A 存託股）封面", B5, "2026-10-27", "[Verified]",
+    quote="Underwriting discount $0.1665", note="2026-10-30 WebFetch 讀取（工具端）；公司稱淨額約 12.5B（超額配售全數行使約 14.3B，未知是否行使，不計）",
+    second={"value": round(0.1665 * 250, 4), "source": "0.1665 × 250M 股", "ok": chk("eq.mcps.uwDisc 算術", 41.625, round(0.1665 * 250, 4), "424B5 封面")})
+add("eq.mcps.net", "強制轉換特別股淨額（毛額 12,500 − 承銷折扣 41.625；費用未扣）", 12458.375, "USD M", "2026-10-29", "424B5 封面推算", B5, "2026-10-27", "[Derived]")
+add("eq.fwd.uwDisc", "遠期出售承銷折扣（每股 2.08125；初始遠期價 622.91875）", 2.08125, "USD/股", "2026-10-26", "Meta 424B5（Class A，遠期出售）封面",
+    "https://www.sec.gov/Archives/edgar/data/0001326801/000119312526436410/d94886d424b5.htm", "2026-10-27", "[Verified]",
+    quote="subject to adjustment on a daily basis", note="遠期價每日依隔夜銀行融資利率減利差調整，並按預期股利調降（模型不計增值，保守）",
+    second={"value": round(625 - 622.91875, 5), "source": "625 − 622.91875", "ok": chk("eq.fwd.uwDisc 算術", 2.08125, round(625 - 622.91875, 5), "424B5 封面")})
+
+# ---- 8c. v0.1.1：follow-up call 逐字稿（Interested-party；只存 15 字內短句；不入庫）
+CALLF = [
+    ("fu.capex2027", "follow-up：2027 資本支出未量化（主法說：Q4 法說才給）", None, "—", "until we get to the Q4 call", TRL),
+    ("fu.rl2027", "法說：RL 2027 虧損約 15B 並走向獲利（已在 v0.1 rl_loss27）", 15, "USD B", "trending towards profitability", TRL),
+    ("fu.thirdCloudCost", "法說：基礎設施成本成長含第三方雲端支出", None, "—", "higher third party cloud spend", TRL),
+    ("fu.tokenCost", "法說：費用成長含第三方 AI token 成本", None, "—", "third-party AI token costs", TRL),
+    ("fu.ownInfra", "follow-up：以自建基礎設施為主", None, "—", "building our own infrastructure", TRL2),
+    ("fu.cloudAug", "follow-up：近期以第三方雲端合約補足容量", None, "—", "augmented that with third-party cloud agreements", TRL2),
+    ("fu.mixNotSpec", "follow-up：自建與租用比例未揭露", None, "—", "I don't think we've specified the mix", TRL2),
+    ("fu.constrained", "follow-up：算力供給仍吃緊", None, "—", "remains pretty constrained", TRL2),
+    ("fu.paceOrders", "follow-up：伺服器訂單可分期調節", None, "—", "pace our server orders over time", TRL2),
+    ("fu.classCmax", "follow-up：資訊聲明中「數千億」是理論上限，非融資計畫", None, "—", "a theoretical maximum", TRL2),
+    ("fu.noEquityPlan", "follow-up：非目前股權融資需求或計畫", None, "—", "not actually a description of our present equity financing needs", TRL2),
+    ("fu.eff10x", "follow-up：10 倍效率仍需技術進展", None, "—", "10x is still going to require more technological advances", TRL2),
+    ("fu.mtia", "法說與 follow-up：未提及 MTIA／自研晶片（搜尋 MTIA、silicon、chip、ASIC 皆無）", None, "—", "", None),
+]
+for iid, item, val, unit, phrase, lines in CALLF:
+    if not phrase:
+        add(iid, item, val, unit, "2026Q3", TRF + "；" + TRF2, "", "2026-10-21", "[Interested-party]", note="已搜尋，未找到"); continue
+    ln = tr_find(phrase, lines)
+    loc = "（逐字稿不在本機，未核對原文位置）" if ln is None else (f"非空白行第 {ln} 行" if ln is not False else "原文未找到此短句")
+    if ln is not None: chk(iid + "（原文短句）", 1, 1 if ln is not False else 0, "逐字稿 grep")
+    add(iid, item, val, unit, "2026Q3", (TRF if lines is TRL else TRF2) + "；" + loc, "", "2026-10-21", "[Interested-party]", quote=phrase, note="公司說法，無第二讀；方向性，未量化")
 
 # ---- 7. 衍生：近四季（TTM）與 2025 全年口徑資本支出
 for k in ("ads", "other", "rl", "total", "oi_foa", "oi_rl", "oi_total", "cfo", "capex_ppe", "fl_principal", "fcf", "da", "sbc", "ni"):

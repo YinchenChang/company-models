@@ -8743,6 +8743,12 @@
     "value": 84000,
     "source": "流動 2,747＋非流動 80,922＋未攤銷折價與發行成本 331",
     "ok": true
+   },
+   "fullTenQ": {
+    "page": 20,
+    "value": 84000.0,
+    "ok": true,
+    "source": "mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf"
    }
   },
   {
@@ -8755,7 +8761,13 @@
    "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
    "docDate": "2026-10-29",
    "retrieved": "2026-10-30",
-   "tag": "[Verified]"
+   "tag": "[Verified]",
+   "fullTenQ": {
+    "page": 20,
+    "value": 2747.0,
+    "ok": true,
+    "source": "mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf"
+   }
   },
   {
    "id": "debt.carrying.20260930",
@@ -8780,7 +8792,13 @@
    "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
    "docDate": "2026-10-29",
    "retrieved": "2026-10-30",
-   "tag": "[Verified]"
+   "tag": "[Verified]",
+   "fullTenQ": {
+    "page": 21,
+    "value": 73310.0,
+    "ok": true,
+    "source": "mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf"
+   }
   },
   {
    "id": "ppe.cip.20260930",
@@ -8792,7 +8810,13 @@
    "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
    "docDate": "2026-10-29",
    "retrieved": "2026-10-30",
-   "tag": "[Verified]"
+   "tag": "[Verified]",
+   "fullTenQ": {
+    "page": 19,
+    "value": 89499.0,
+    "ok": true,
+    "source": "mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf"
+   }
   },
   {
    "id": "ppe.servers.20260930",
@@ -8804,7 +8828,13 @@
    "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
    "docDate": "2026-10-29",
    "retrieved": "2026-10-30",
-   "tag": "[Verified]"
+   "tag": "[Verified]",
+   "fullTenQ": {
+    "page": 19,
+    "value": 133626.0,
+    "ok": true,
+    "source": "mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf"
+   }
   },
   {
    "id": "ppe.accDep.20260930",
@@ -8816,7 +8846,13 @@
    "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
    "docDate": "2026-10-29",
    "retrieved": "2026-10-30",
-   "tag": "[Verified]"
+   "tag": "[Verified]",
+   "fullTenQ": {
+    "page": 19,
+    "value": 73267.0,
+    "ok": true,
+    "source": "mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf"
+   }
   },
   {
    "id": "lease.opLiab.20260930",
@@ -8841,7 +8877,13 @@
    "docDate": "2026-10-29",
    "retrieved": "2026-10-30",
    "tag": "[Verified]",
-   "quote": "approximately $355.73 billion"
+   "quote": "approximately $355.73 billion",
+   "fullTenQ": {
+    "page": 21,
+    "value": 355730.0,
+    "ok": true,
+    "source": "mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf"
+   }
   },
   {
    "id": "commit.noncancel.20260930",
@@ -8853,7 +8895,13 @@
    "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
    "docDate": "2026-10-29",
    "retrieved": "2026-10-30",
-   "tag": "[Verified]"
+   "tag": "[Verified]",
+   "fullTenQ": {
+    "page": 21,
+    "value": 454520.0,
+    "ok": true,
+    "source": "mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf"
+   }
   },
   {
    "id": "legal.accrual.20260930",
@@ -8878,7 +8926,13 @@
    "docDate": "2026-10-29",
    "retrieved": "2026-10-30",
    "tag": "[Verified]",
-   "note": "附註 8 註腳：含 2026 年 8 月多州檢察長協議與其他罰款、判決、和解之估計"
+   "note": "附註 8 註腳：含 2026 年 8 月多州檢察長協議與其他罰款、判決、和解之估計",
+   "fullTenQ": {
+    "page": 20,
+    "value": 11577.0,
+    "ok": true,
+    "source": "mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf"
+   }
   },
   {
    "id": "legal.accrualNonCur.20260930",
@@ -8896,6 +8950,12 @@
     "value": 19881,
     "source": "流動＋非流動＝legal.accrual.20260930 19,881",
     "ok": true
+   },
+   "fullTenQ": {
+    "page": 20,
+    "value": 8304.0,
+    "ok": true,
+    "source": "mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf"
    }
   },
   {
@@ -8909,7 +8969,13 @@
    "docDate": "2026-10-29",
    "retrieved": "2026-10-30",
    "tag": "[Verified]",
-   "note": "chat 端 2026-10-30 審查讀取 10-Q（工作單「A 段審查結果」第 2 條）；B 段代理 WebFetch 重讀兩段（0–100k、100k 以後）未回傳此段原文，未能另存短句。假設每年等額約 1.27B、FY2027 起付（Assumed）；9.89B 費用≈12.7B 十年年金以約 4.9% 折現的現值（推論，未證實）"
+   "note": "chat 端 2026-10-30 審查讀取 10-Q（工作單「A 段審查結果」第 2 條）；B 段代理 WebFetch 重讀兩段（0–100k、100k 以後）未回傳此段原文，未能另存短句。假設每年等額約 1.27B、FY2027 起付（Assumed）；9.89B 費用≈12.7B 十年年金以約 4.9% 折現的現值（推論，未證實）",
+   "fullTenQ": {
+    "page": 26,
+    "value": 12700.0,
+    "ok": true,
+    "source": "mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf"
+   }
   },
   {
    "id": "legal.agContingent",
@@ -8922,7 +8988,13 @@
    "docDate": "2026-10-29",
    "retrieved": "2026-10-30",
    "tag": "[Verified]",
-   "note": "同上（chat 端審查讀取）；12.7＋5.3＝18.0，與新聞稿付款上限約 18.59 相近（差額未拆解）；模型只列 Sens，不進基準"
+   "note": "同上（chat 端審查讀取）；12.7＋5.3＝18.0，與新聞稿付款上限約 18.59 相近（差額未拆解）；模型只列 Sens，不進基準",
+   "fullTenQ": {
+    "page": 26,
+    "value": 5300.0,
+    "ok": true,
+    "source": "mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf"
+   }
   },
   {
    "id": "sh.outA.20261016",
@@ -8934,7 +9006,13 @@
    "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
    "docDate": "2026-10-29",
    "retrieved": "2026-10-30",
-   "tag": "[Verified]"
+   "tag": "[Verified]",
+   "fullTenQ": {
+    "page": 1,
+    "value": 2214.472367,
+    "ok": true,
+    "source": "mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf"
+   }
   },
   {
    "id": "sh.outB.20261016",
@@ -8946,7 +9024,13 @@
    "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
    "docDate": "2026-10-29",
    "retrieved": "2026-10-30",
-   "tag": "[Verified]"
+   "tag": "[Verified]",
+   "fullTenQ": {
+    "page": 1,
+    "value": 341.768886,
+    "ok": true,
+    "source": "mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf"
+   }
   },
   {
    "id": "sh.out.20261016",
@@ -9026,12 +9110,12 @@
    "value": 64.2,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 224 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 157 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
    "tag": "[Interested-party]",
-   "quote": "family of apps revenue was $64.2 billion",
+   "quote": "Family of Apps revenue was $64.2 billion",
    "check": {
     "value": 64.158,
     "source": "財報新聞稿（讀取 A）",
@@ -9044,7 +9128,7 @@
    "value": 63.1,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 225 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 158 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9062,7 +9146,7 @@
    "value": 10,
    "unit": "%",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 226 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 160 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9080,7 +9164,7 @@
    "value": 14,
    "unit": "%",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 229 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 163 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9098,7 +9182,7 @@
    "value": 1.1,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 233 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 167 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9116,7 +9200,7 @@
    "value": 443,
    "unit": "USD M",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 236 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 169 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9134,7 +9218,7 @@
    "value": 51.6,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 240 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 173 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9152,7 +9236,7 @@
    "value": 9.9,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 241 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 173 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9170,12 +9254,12 @@
    "value": 13,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 248 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 181 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
    "tag": "[Interested-party]",
-   "quote": "GAAP operating income was $13 billion",
+   "quote": "GAAP operating income was $13.0 billion",
    "check": {
     "value": 12.988,
     "source": "財報新聞稿（讀取 A）",
@@ -9188,7 +9272,7 @@
    "value": 9.9,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 255 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 186 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9206,7 +9290,7 @@
    "value": 3.83,
    "unit": "USD",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 255 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 186 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9224,7 +9308,7 @@
    "value": 24,
    "unit": "%",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 253 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 184 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9242,7 +9326,7 @@
    "value": 34.9,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 256 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 187 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9260,7 +9344,7 @@
    "value": -2.1,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 258 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 189 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9278,7 +9362,7 @@
    "value": 82.4,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 259 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 189 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9296,7 +9380,7 @@
    "value": 83.7,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 259 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 190 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9314,7 +9398,7 @@
    "value": 66000,
    "unit": "人",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 246 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 179 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9332,7 +9416,7 @@
    "value": 3.64,
    "unit": "十億人",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 37 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 18 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9350,12 +9434,12 @@
    "value": 73,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 400 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 303 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
    "tag": "[Interested-party]",
-   "quote": "in the range of $73 billion-$76 billion",
+   "quote": "in the range of $73-76 billion",
    "check": {
     "value": 73,
     "source": "財報新聞稿（讀取 A）",
@@ -9368,12 +9452,12 @@
    "value": 175,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 406 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 308 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
    "tag": "[Interested-party]",
-   "quote": "range of $175 billion-$179 billion",
+   "quote": "range of $175-179 billion",
    "check": {
     "value": 175,
     "source": "財報新聞稿（讀取 A）",
@@ -9386,12 +9470,12 @@
    "value": 18,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 411 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 312 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
    "tag": "[Interested-party]",
-   "quote": "a range of $18 billion-$19 billion",
+   "quote": "a range of $18-19 billion",
    "check": {
     "value": 18,
     "source": "財報新聞稿（讀取 A）",
@@ -9404,12 +9488,12 @@
    "value": 135,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 413 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 316 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
    "tag": "[Interested-party]",
-   "quote": "in the range of $135 billion-$145 billion",
+   "quote": "the range of $135-145 billion",
    "check": {
     "value": 135,
     "source": "財報新聞稿（讀取 A）",
@@ -9422,7 +9506,7 @@
    "value": 15,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 198 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 340 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9440,7 +9524,7 @@
    "value": null,
    "unit": "—",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 723 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 578 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9454,7 +9538,7 @@
    "value": null,
    "unit": "—",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 424 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 324 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9468,7 +9552,7 @@
    "value": null,
    "unit": "—",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 442 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 337 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9482,7 +9566,7 @@
    "value": null,
    "unit": "—",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 452 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 345 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9496,12 +9580,12 @@
    "value": null,
    "unit": "—",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 664 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 524 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
    "tag": "[Interested-party]",
-   "quote": "do not have any specific financing plans",
+   "quote": "don't have any specific financing plans",
    "note": "公司說法，無第二讀"
   },
   {
@@ -9510,7 +9594,7 @@
    "value": 10,
    "unit": "M 人",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 59 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 34 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9524,7 +9608,7 @@
    "value": 10,
    "unit": "倍",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 124 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 84 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9538,12 +9622,12 @@
    "value": 15,
    "unit": "USD B",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 355 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 266 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
    "tag": "[Interested-party]",
-   "quote": "surpassed $15 billion in annual revenue run rate",
+   "quote": "surpassed $15 billion in annual revenue run-rate",
    "note": "公司說法，無第二讀"
   },
   {
@@ -9552,7 +9636,7 @@
    "value": 15,
    "unit": "M",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 369 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 278 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
@@ -9566,13 +9650,658 @@
    "value": 1,
    "unit": "十億人",
    "period": "2026Q3",
-   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.docx 轉純文字；不入庫）；非空白行第 120 行",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 82 行",
    "url": "",
    "docDate": "2026-10-21",
    "retrieved": "2026-10-30",
    "tag": "[Interested-party]",
-   "quote": "capacity to serve more than 1 billion people",
+   "quote": "capacity to serve more than a billion people",
    "note": "公司說法，無第二讀"
+  },
+  {
+   "id": "legal.accrualCur.20251231",
+   "item": "法律相關應計：流動（2025-12-31）",
+   "value": 6867,
+   "unit": "USD M",
+   "period": "2025-12-31",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 20 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "Legal-related accruals, current",
+   "note": "2026-09-30 為 11,577（+4,710）",
+   "check": {
+    "value": 6867.0,
+    "source": "完整 10-Q 純文字第 20 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "legal.accrualNonCur.20251231",
+   "item": "法律相關應計：非流動（2025-12-31）",
+   "value": 450,
+   "unit": "USD M",
+   "period": "2025-12-31",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 20 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "Legal-related accruals, non-current",
+   "note": "2026-09-30 為 8,304（+7,854）",
+   "check": {
+    "value": 450.0,
+    "source": "完整 10-Q 純文字第 20 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "legal.agCharge.ytd9m2026",
+   "item": "多州檢察長協議費用：2026 年前三季合計（Q3 9.89）",
+   "value": 11.89,
+   "unit": "USD B",
+   "period": "9M2026",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 47 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "attorneys general agreement of $9.89 billion in the three months ended September",
+   "note": "v0.1 以 9.89 當作協議全部應計；10-Q：前三季合計 11.89（即 Q3 以前已認列約 2.00）→ 其他法律應計＝19.881 − 11.89＝7.991",
+   "check": {
+    "value": 11.89,
+    "source": "完整 10-Q 純文字第 47 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "legal.agCommittee",
+   "item": "多州檢察長協議：另付各州委員會調查與訴訟費用",
+   "value": 75,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 26 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "An additional",
+   "note": "未入模型（金額小）",
+   "check": {
+    "value": 75.0,
+    "source": "完整 10-Q 純文字第 26 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "legal.agPrivacy",
+   "item": "協議總付款含隱私案約 500M（49 州）",
+   "value": 500,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 22 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "we agreed to payments of approximately",
+   "note": "12.7（70%）＋5.3（30%）＋0.075＋約 0.5 ≈ 18.59 上限；0.5 是否已含在 12.7 內原文未明",
+   "check": {
+    "value": 500.0,
+    "source": "完整 10-Q 純文字第 22 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "legal.agPct",
+   "item": "12.7B 占青少年案總付款比例",
+   "value": 70,
+   "unit": "%",
+   "period": "2026-09-30",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 26 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "Approximately $12.7 billion, representing approximately",
+   "note": "原文「annual installments over a 10-year period」，未載各年金額",
+   "check": {
+    "value": 70.0,
+    "source": "完整 10-Q 純文字第 26 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "fl.rou.20260930",
+   "item": "融資租賃使用權資產（不動產與設備內）",
+   "value": 11704,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 19 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "Finance lease right-of-use assets",
+   "note": "10-Q 未單獨揭露融資租賃負債（資產負債表無此科目；附註 8 其他流動／非流動負債未拆）",
+   "check": {
+    "value": 11704.0,
+    "source": "完整 10-Q 純文字第 19 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "fl.rou.20251231",
+   "item": "融資租賃使用權資產（2025-12-31）",
+   "value": 8187,
+   "unit": "USD M",
+   "period": "2025-12-31",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 19 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "Finance lease right-of-use assets",
+   "check": {
+    "value": 8187.0,
+    "source": "完整 10-Q 純文字第 19 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "fl.principal.ytd9m2026.q10",
+   "item": "融資租賃本金支付（10-Q 現金流量表，前三季）",
+   "value": 2769,
+   "unit": "USD M",
+   "period": "9M2026",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 10 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "Principal payments on finance leases",
+   "note": "與新聞稿 cf.fl_principal.ytd9m2026 相同",
+   "check": {
+    "value": 2769.0,
+    "source": "完整 10-Q 純文字第 10 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "bb.remaining.20260930",
+   "item": "買回授權剩餘額度（2025-12-31 與 2026-09-30 皆同）",
+   "value": 25.03,
+   "unit": "USD B",
+   "period": "2026-09-30",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 29 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "2025 and September 30, 2026,",
+   "note": "2026 年前三季未買回",
+   "check": {
+    "value": 25.03,
+    "source": "完整 10-Q 純文字第 29 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "ppe.dep.2026q3",
+   "item": "不動產與設備折舊費用（2026Q3）",
+   "value": 6.81,
+   "unit": "USD B",
+   "period": "2026Q3",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 19 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "Depreciation expense on property and equipment was",
+   "note": "前三季 18.49",
+   "check": {
+    "value": 6.81,
+    "source": "完整 10-Q 純文字第 19 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "ppe.depServers.2026q3",
+   "item": "其中伺服器與網路設備折舊（2026Q3）",
+   "value": 5.34,
+   "unit": "USD B",
+   "period": "2026Q3",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 19 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "servers and network assets depreciation expense was",
+   "note": "前三季 14.34；2025Q3 3.60",
+   "check": {
+    "value": 5.34,
+    "source": "完整 10-Q 純文字第 19 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "ppe.depServers.ytd9m2026",
+   "item": "伺服器與網路設備折舊（前三季）",
+   "value": 14.34,
+   "unit": "USD B",
+   "period": "9M2026",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 19 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "servers and network assets depreciation expense was $5.34 billion and $3.60 billion",
+   "check": {
+    "value": 14.34,
+    "source": "完整 10-Q 純文字第 19 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "ppe.servers.20251231",
+   "item": "伺服器與網路設備（毛額，2025-12-31）",
+   "value": 98040,
+   "unit": "USD M",
+   "period": "2025-12-31",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 19 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "Servers and network assets",
+   "check": {
+    "value": 98040.0,
+    "source": "完整 10-Q 純文字第 19 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "cash.restricted.20260930",
+   "item": "受限約當現金（不含在現金＋有價證券 82.45 內）",
+   "value": 12826,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 15 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "Restricted cash equivalents",
+   "note": "其中 10.80B 為基礎設施採購合約之保證金，預計 2028–2030 釋出",
+   "check": {
+    "value": 12826.0,
+    "source": "完整 10-Q 純文字第 15 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "cash.escrow.20260930",
+   "item": "基礎設施採購合約保證金（貨幣市場基金轉受限）",
+   "value": 10.8,
+   "unit": "USD B",
+   "period": "2026-09-30",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 21 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "multi-year infrastructure purchase agreements,",
+   "note": "只列 Recon；不計入現金",
+   "check": {
+    "value": 10.8,
+    "source": "完整 10-Q 純文字第 21 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "commit.cloudContingent",
+   "item": "或有雲端算力採購義務（五年，最多）",
+   "value": 14.72,
+   "unit": "USD B",
+   "period": "2026-09-30",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 21 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "contingent obligations to purchase up to",
+   "note": "雲端供應商轉售他人則可減少",
+   "check": {
+    "value": 14.72,
+    "source": "完整 10-Q 純文字第 21 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "commit.due2026",
+   "item": "不可取消合約承諾：2026 剩餘到期",
+   "value": 45.85,
+   "unit": "USD B",
+   "period": "2026-09-30",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 21 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "with approximately $45.85 billion and",
+   "note": "2027 到期 121.41",
+   "check": {
+    "value": 45.85,
+    "source": "完整 10-Q 純文字第 21 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "debt.mat2027",
+   "item": "票據本金到期：2027",
+   "value": 2750,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 21 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "2027 2,750",
+   "note": "2028 1,500；2029 1,000；2030 5,000；其後 73,750",
+   "check": {
+    "value": 2750.0,
+    "source": "完整 10-Q 純文字第 21 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "debt.interestFuture",
+   "item": "未來利息支付義務：一年內（之後 84.51B）",
+   "value": 4.4,
+   "unit": "USD B",
+   "period": "2026-09-30",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 50 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "future interest payments obligations as of September 30, 2026 were",
+   "check": {
+    "value": 4.4,
+    "source": "完整 10-Q 純文字第 50 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "hfs.20260930",
+   "item": "待出售資產淨額（預付及其他流動資產內）",
+   "value": 2.6,
+   "unit": "USD B",
+   "period": "2026-09-30",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 19 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "total held-for-sale assets, net, were",
+   "note": "資料中心資產，預計一年內投入合資",
+   "check": {
+    "value": 2.6,
+    "source": "完整 10-Q 純文字第 19 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "sh.classC.effective",
+   "item": "Class C 生效日（重述章程）",
+   "value": 2027,
+   "unit": "年",
+   "period": "2026-10",
+   "source": "Meta 10-Q 2026Q3（完整 PDF 第 33 頁；mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf）",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "with an effective date of January 19,",
+   "note": "2027-01-19；股票股利 1:1、會計上視同股票分割",
+   "check": {
+    "value": 2027.0,
+    "source": "完整 10-Q 純文字第 33 頁（程式擷取）",
+    "ok": true
+   }
+  },
+  {
+   "id": "eq.mcps.uwDisc",
+   "item": "強制轉換特別股承銷折扣（每存託股 0.1665；250M 股）",
+   "value": 41.625,
+   "unit": "USD M",
+   "period": "2026-10-27",
+   "source": "Meta 424B5（Series A 存託股）封面",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000119312526436405/d133631d424b5.htm",
+   "docDate": "2026-10-27",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "Underwriting discount $0.1665",
+   "note": "2026-10-30 WebFetch 讀取（工具端）；公司稱淨額約 12.5B（超額配售全數行使約 14.3B，未知是否行使，不計）",
+   "check": {
+    "value": 41.625,
+    "source": "0.1665 × 250M 股",
+    "ok": true
+   }
+  },
+  {
+   "id": "eq.mcps.net",
+   "item": "強制轉換特別股淨額（毛額 12,500 − 承銷折扣 41.625；費用未扣）",
+   "value": 12458.375,
+   "unit": "USD M",
+   "period": "2026-10-29",
+   "source": "424B5 封面推算",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000119312526436405/d133631d424b5.htm",
+   "docDate": "2026-10-27",
+   "retrieved": "2026-10-30",
+   "tag": "[Derived]"
+  },
+  {
+   "id": "eq.fwd.uwDisc",
+   "item": "遠期出售承銷折扣（每股 2.08125；初始遠期價 622.91875）",
+   "value": 2.08125,
+   "unit": "USD/股",
+   "period": "2026-10-26",
+   "source": "Meta 424B5（Class A，遠期出售）封面",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000119312526436410/d94886d424b5.htm",
+   "docDate": "2026-10-27",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "quote": "subject to adjustment on a daily basis",
+   "note": "遠期價每日依隔夜銀行融資利率減利差調整，並按預期股利調降（模型不計增值，保守）",
+   "check": {
+    "value": 2.08125,
+    "source": "625 − 622.91875",
+    "ok": true
+   }
+  },
+  {
+   "id": "fu.capex2027",
+   "item": "follow-up：2027 資本支出未量化（主法說：Q4 法說才給）",
+   "value": null,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 578 行",
+   "url": "",
+   "docDate": "2026-10-21",
+   "retrieved": "2026-10-30",
+   "tag": "[Interested-party]",
+   "quote": "until we get to the Q4 call",
+   "note": "公司說法，無第二讀；方向性，未量化"
+  },
+  {
+   "id": "fu.rl2027",
+   "item": "法說：RL 2027 虧損約 15B 並走向獲利（已在 v0.1 rl_loss27）",
+   "value": 15,
+   "unit": "USD B",
+   "period": "2026Q3",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 138 行",
+   "url": "",
+   "docDate": "2026-10-21",
+   "retrieved": "2026-10-30",
+   "tag": "[Interested-party]",
+   "quote": "trending towards profitability",
+   "note": "公司說法，無第二讀；方向性，未量化"
+  },
+  {
+   "id": "fu.thirdCloudCost",
+   "item": "法說：基礎設施成本成長含第三方雲端支出",
+   "value": null,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 177 行",
+   "url": "",
+   "docDate": "2026-10-21",
+   "retrieved": "2026-10-30",
+   "tag": "[Interested-party]",
+   "quote": "higher third party cloud spend",
+   "note": "公司說法，無第二讀；方向性，未量化"
+  },
+  {
+   "id": "fu.tokenCost",
+   "item": "法說：費用成長含第三方 AI token 成本",
+   "value": null,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 175 行",
+   "url": "",
+   "docDate": "2026-10-21",
+   "retrieved": "2026-10-30",
+   "tag": "[Interested-party]",
+   "quote": "third-party AI token costs",
+   "note": "公司說法，無第二讀；方向性，未量化"
+  },
+  {
+   "id": "fu.ownInfra",
+   "item": "follow-up：以自建基礎設施為主",
+   "value": null,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "Transcript_follow up call_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_follow up call_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 109 行",
+   "url": "",
+   "docDate": "2026-10-21",
+   "retrieved": "2026-10-30",
+   "tag": "[Interested-party]",
+   "quote": "building our own infrastructure",
+   "note": "公司說法，無第二讀；方向性，未量化"
+  },
+  {
+   "id": "fu.cloudAug",
+   "item": "follow-up：近期以第三方雲端合約補足容量",
+   "value": null,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "Transcript_follow up call_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_follow up call_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 113 行",
+   "url": "",
+   "docDate": "2026-10-21",
+   "retrieved": "2026-10-30",
+   "tag": "[Interested-party]",
+   "quote": "augmented that with third-party cloud agreements",
+   "note": "公司說法，無第二讀；方向性，未量化"
+  },
+  {
+   "id": "fu.mixNotSpec",
+   "item": "follow-up：自建與租用比例未揭露",
+   "value": null,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "Transcript_follow up call_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_follow up call_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 115 行",
+   "url": "",
+   "docDate": "2026-10-21",
+   "retrieved": "2026-10-30",
+   "tag": "[Interested-party]",
+   "quote": "I don't think we've specified the mix",
+   "note": "公司說法，無第二讀；方向性，未量化"
+  },
+  {
+   "id": "fu.constrained",
+   "item": "follow-up：算力供給仍吃緊",
+   "value": null,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "Transcript_follow up call_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_follow up call_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 103 行",
+   "url": "",
+   "docDate": "2026-10-21",
+   "retrieved": "2026-10-30",
+   "tag": "[Interested-party]",
+   "quote": "remains pretty constrained",
+   "note": "公司說法，無第二讀；方向性，未量化"
+  },
+  {
+   "id": "fu.paceOrders",
+   "item": "follow-up：伺服器訂單可分期調節",
+   "value": null,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "Transcript_follow up call_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_follow up call_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 124 行",
+   "url": "",
+   "docDate": "2026-10-21",
+   "retrieved": "2026-10-30",
+   "tag": "[Interested-party]",
+   "quote": "pace our server orders over time",
+   "note": "公司說法，無第二讀；方向性，未量化"
+  },
+  {
+   "id": "fu.classCmax",
+   "item": "follow-up：資訊聲明中「數千億」是理論上限，非融資計畫",
+   "value": null,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "Transcript_follow up call_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_follow up call_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 85 行",
+   "url": "",
+   "docDate": "2026-10-21",
+   "retrieved": "2026-10-30",
+   "tag": "[Interested-party]",
+   "quote": "a theoretical maximum",
+   "note": "公司說法，無第二讀；方向性，未量化"
+  },
+  {
+   "id": "fu.noEquityPlan",
+   "item": "follow-up：非目前股權融資需求或計畫",
+   "value": null,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "Transcript_follow up call_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_follow up call_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 87 行",
+   "url": "",
+   "docDate": "2026-10-21",
+   "retrieved": "2026-10-30",
+   "tag": "[Interested-party]",
+   "quote": "not actually a description of our present equity financing needs",
+   "note": "公司說法，無第二讀；方向性，未量化"
+  },
+  {
+   "id": "fu.eff10x",
+   "item": "follow-up：10 倍效率仍需技術進展",
+   "value": null,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "Transcript_follow up call_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_follow up call_META_3Q26.pdf 轉純文字；不入庫）；非空白行第 234 行",
+   "url": "",
+   "docDate": "2026-10-21",
+   "retrieved": "2026-10-30",
+   "tag": "[Interested-party]",
+   "quote": "10x is still going to require more technological advances",
+   "note": "公司說法，無第二讀；方向性，未量化"
+  },
+  {
+   "id": "fu.mtia",
+   "item": "法說與 follow-up：未提及 MTIA／自研晶片（搜尋 MTIA、silicon、chip、ASIC 皆無）",
+   "value": null,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "Transcript_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_META_3Q26.pdf 轉純文字；不入庫）；Transcript_follow up call_META_3Q26.txt（Andy 提供；Drive 02-算力收支/MAG財報下載/Transcript_follow up call_META_3Q26.pdf 轉純文字；不入庫）",
+   "url": "",
+   "docDate": "2026-10-21",
+   "retrieved": "2026-10-30",
+   "tag": "[Interested-party]",
+   "note": "已搜尋，未找到"
   },
   {
    "id": "ttm.ads.2026q3",
@@ -15282,6 +16011,406 @@
   },
   {
    "id": "call.museCapacity（原文短句）",
+   "value": 1,
+   "second": 1,
+   "source": "逐字稿 grep",
+   "tol": 0.0,
+   "ok": true
+  },
+  {
+   "id": "legal.accrualCur.20251231（完整 10-Q 原文）",
+   "value": 6867,
+   "second": 6867.0,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "legal.accrualNonCur.20251231（完整 10-Q 原文）",
+   "value": 450,
+   "second": 450.0,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "legal.agCharge.ytd9m2026（完整 10-Q 原文）",
+   "value": 11.89,
+   "second": 11.89,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "legal.agCommittee（完整 10-Q 原文）",
+   "value": 75,
+   "second": 75.0,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "legal.agPrivacy（完整 10-Q 原文）",
+   "value": 500,
+   "second": 500.0,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "legal.agPct（完整 10-Q 原文）",
+   "value": 70,
+   "second": 70.0,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "fl.rou.20260930（完整 10-Q 原文）",
+   "value": 11704,
+   "second": 11704.0,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "fl.rou.20251231（完整 10-Q 原文）",
+   "value": 8187,
+   "second": 8187.0,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "fl.principal.ytd9m2026.q10（完整 10-Q 原文）",
+   "value": 2769,
+   "second": 2769.0,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "bb.remaining.20260930（完整 10-Q 原文）",
+   "value": 25.03,
+   "second": 25.03,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "ppe.dep.2026q3（完整 10-Q 原文）",
+   "value": 6.81,
+   "second": 6.81,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "ppe.depServers.2026q3（完整 10-Q 原文）",
+   "value": 5.34,
+   "second": 5.34,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "ppe.depServers.ytd9m2026（完整 10-Q 原文）",
+   "value": 14.34,
+   "second": 14.34,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "ppe.servers.20251231（完整 10-Q 原文）",
+   "value": 98040,
+   "second": 98040.0,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "cash.restricted.20260930（完整 10-Q 原文）",
+   "value": 12826,
+   "second": 12826.0,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "cash.escrow.20260930（完整 10-Q 原文）",
+   "value": 10.8,
+   "second": 10.8,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "commit.cloudContingent（完整 10-Q 原文）",
+   "value": 14.72,
+   "second": 14.72,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "commit.due2026（完整 10-Q 原文）",
+   "value": 45.85,
+   "second": 45.85,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "debt.mat2027（完整 10-Q 原文）",
+   "value": 2750,
+   "second": 2750.0,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "debt.interestFuture（完整 10-Q 原文）",
+   "value": 4.4,
+   "second": 4.4,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "hfs.20260930（完整 10-Q 原文）",
+   "value": 2.6,
+   "second": 2.6,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "sh.classC.effective（完整 10-Q 原文）",
+   "value": 2027,
+   "second": 2027.0,
+   "source": "轉錄值 vs 程式自 mag/extract/docs/2026Q3/meta_2026Q3_10-Q.pdf 純文字擷取",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "debt.face.20260930（v0.1 事實 vs 完整 10-Q）",
+   "value": 84000,
+   "second": 84000.0,
+   "source": "v0.1 WebFetch 讀值 vs 完整 10-Q 純文字",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "debt.current.20260930（v0.1 事實 vs 完整 10-Q）",
+   "value": 2747,
+   "second": 2747.0,
+   "source": "v0.1 WebFetch 讀值 vs 完整 10-Q 純文字",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "debt.fairValue.20260930（v0.1 事實 vs 完整 10-Q）",
+   "value": 73310,
+   "second": 73310.0,
+   "source": "v0.1 WebFetch 讀值 vs 完整 10-Q 純文字",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "ppe.cip.20260930（v0.1 事實 vs 完整 10-Q）",
+   "value": 89499,
+   "second": 89499.0,
+   "source": "v0.1 WebFetch 讀值 vs 完整 10-Q 純文字",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "ppe.servers.20260930（v0.1 事實 vs 完整 10-Q）",
+   "value": 133626,
+   "second": 133626.0,
+   "source": "v0.1 WebFetch 讀值 vs 完整 10-Q 純文字",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "ppe.accDep.20260930（v0.1 事實 vs 完整 10-Q）",
+   "value": 73267,
+   "second": 73267.0,
+   "source": "v0.1 WebFetch 讀值 vs 完整 10-Q 純文字",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "lease.notCommenced.20260930（v0.1 事實 vs 完整 10-Q）",
+   "value": 355730,
+   "second": 355730.0,
+   "source": "v0.1 WebFetch 讀值 vs 完整 10-Q 純文字",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "commit.noncancel.20260930（v0.1 事實 vs 完整 10-Q）",
+   "value": 454520,
+   "second": 454520.0,
+   "source": "v0.1 WebFetch 讀值 vs 完整 10-Q 純文字",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "legal.accrualCur.20260930（v0.1 事實 vs 完整 10-Q）",
+   "value": 11577,
+   "second": 11577.0,
+   "source": "v0.1 WebFetch 讀值 vs 完整 10-Q 純文字",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "legal.accrualNonCur.20260930（v0.1 事實 vs 完整 10-Q）",
+   "value": 8304,
+   "second": 8304.0,
+   "source": "v0.1 WebFetch 讀值 vs 完整 10-Q 純文字",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "legal.agSettle.total（v0.1 事實 vs 完整 10-Q）",
+   "value": 12700,
+   "second": 12700.0,
+   "source": "v0.1 WebFetch 讀值 vs 完整 10-Q 純文字",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "legal.agContingent（v0.1 事實 vs 完整 10-Q）",
+   "value": 5300,
+   "second": 5300.0,
+   "source": "v0.1 WebFetch 讀值 vs 完整 10-Q 純文字",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "sh.outA.20261016（v0.1 事實 vs 完整 10-Q）",
+   "value": 2214.472367,
+   "second": 2214.472367,
+   "source": "v0.1 WebFetch 讀值 vs 完整 10-Q 純文字",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "sh.outB.20261016（v0.1 事實 vs 完整 10-Q）",
+   "value": 341.768886,
+   "second": 341.768886,
+   "source": "v0.1 WebFetch 讀值 vs 完整 10-Q 純文字",
+   "tol": 1e-06,
+   "ok": true
+  },
+  {
+   "id": "eq.mcps.uwDisc 算術",
+   "value": 41.625,
+   "second": 41.625,
+   "source": "424B5 封面",
+   "tol": 0.0,
+   "ok": true
+  },
+  {
+   "id": "eq.fwd.uwDisc 算術",
+   "value": 2.08125,
+   "second": 2.08125,
+   "source": "424B5 封面",
+   "tol": 0.0,
+   "ok": true
+  },
+  {
+   "id": "fu.capex2027（原文短句）",
+   "value": 1,
+   "second": 1,
+   "source": "逐字稿 grep",
+   "tol": 0.0,
+   "ok": true
+  },
+  {
+   "id": "fu.rl2027（原文短句）",
+   "value": 1,
+   "second": 1,
+   "source": "逐字稿 grep",
+   "tol": 0.0,
+   "ok": true
+  },
+  {
+   "id": "fu.thirdCloudCost（原文短句）",
+   "value": 1,
+   "second": 1,
+   "source": "逐字稿 grep",
+   "tol": 0.0,
+   "ok": true
+  },
+  {
+   "id": "fu.tokenCost（原文短句）",
+   "value": 1,
+   "second": 1,
+   "source": "逐字稿 grep",
+   "tol": 0.0,
+   "ok": true
+  },
+  {
+   "id": "fu.ownInfra（原文短句）",
+   "value": 1,
+   "second": 1,
+   "source": "逐字稿 grep",
+   "tol": 0.0,
+   "ok": true
+  },
+  {
+   "id": "fu.cloudAug（原文短句）",
+   "value": 1,
+   "second": 1,
+   "source": "逐字稿 grep",
+   "tol": 0.0,
+   "ok": true
+  },
+  {
+   "id": "fu.mixNotSpec（原文短句）",
+   "value": 1,
+   "second": 1,
+   "source": "逐字稿 grep",
+   "tol": 0.0,
+   "ok": true
+  },
+  {
+   "id": "fu.constrained（原文短句）",
+   "value": 1,
+   "second": 1,
+   "source": "逐字稿 grep",
+   "tol": 0.0,
+   "ok": true
+  },
+  {
+   "id": "fu.paceOrders（原文短句）",
+   "value": 1,
+   "second": 1,
+   "source": "逐字稿 grep",
+   "tol": 0.0,
+   "ok": true
+  },
+  {
+   "id": "fu.classCmax（原文短句）",
+   "value": 1,
+   "second": 1,
+   "source": "逐字稿 grep",
+   "tol": 0.0,
+   "ok": true
+  },
+  {
+   "id": "fu.noEquityPlan（原文短句）",
+   "value": 1,
+   "second": 1,
+   "source": "逐字稿 grep",
+   "tol": 0.0,
+   "ok": true
+  },
+  {
+   "id": "fu.eff10x（原文短句）",
    "value": 1,
    "second": 1,
    "source": "逐字稿 grep",
