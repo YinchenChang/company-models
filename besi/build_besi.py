@@ -722,6 +722,8 @@ import os, sys  # noqa: E401
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
 import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "besi")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
+apply_in_layout.apply(wb, "v0.1.2", "2026-10-31")  # v0.1.2：In 頁版面（個股模型原則第 8 節；數值不變）
 wb.save(sys.argv[1])
 print("PB", {s: PB[s] for s in SC}); print("SUMR", SUMR); print("VAL", VAL, "PXROW", PXROW, "fwd rows to", fr, "SENS_LAST", SENS_LAST, "Recon last", rr_)
 print("UR", UR)
