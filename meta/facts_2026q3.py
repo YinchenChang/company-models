@@ -197,8 +197,9 @@ add("legal.accrualNonCur.20260930", "法律相關應計：非流動（2025-12-31
     note="非流動部分由 450 增至 8,304，與協議款分年支付相符", second={"value": 11577 + 8304, "source": "流動＋非流動＝legal.accrual.20260930 19,881",
                                                                   "ok": chk("legal.accrual 流動＋非流動", 11577 + 8304, 19881, "10-Q 附註 8")})
 add("legal.agSettle.total", "多州檢察長協議：約 12.7B 分 10 年、每年攤付給參與州", 12700, "USD M", "2026-09-30", "Meta 10-Q 2026Q3 MD&A「Loss Contingencies」", Q10, "2026-10-29", "[Verified]",
-    note="chat 端 2026-10-30 審查讀取 10-Q（工作單「A 段審查結果」第 2 條）；B 段代理 WebFetch 重讀兩段（0–100k、100k 以後）未回傳此段原文，未能另存短句。"
-         "假設每年等額約 1.27B、FY2027 起付（Assumed）；9.89B 費用≈12.7B 十年年金以約 4.9% 折現的現值（推論，未證實）")
+    quote="payable to participating states in annual installments over a 10-year period",
+    note="chat 端 2026-10-30 審查讀取 10-Q（工作單「A 段審查結果」第 2 條）；v0.1.1 以完整 10-Q 核對（PDF 第 26、51 頁），原文未載各年金額。"
+         "模型假設每年等額約 1.27B、FY2027 起付（H3）；v0.1 推論「9.89B≈12.7B 以約 4.9% 折現」已撤回：協議費用前三季合計 11.89B（legal.agCharge.ytd9m2026）")
 add("legal.agContingent", "多州檢察長協議：5.3B 或有金額，尚未認列為負債", 5300, "USD M", "2026-09-30", "Meta 10-Q 2026Q3 MD&A「Loss Contingencies」", Q10, "2026-10-29", "[Verified]",
     note="同上（chat 端審查讀取）；12.7＋5.3＝18.0，與新聞稿付款上限約 18.59 相近（差額未拆解）；模型只列 Sens，不進基準")
 add("sh.outA.20261016", "Class A 流通股數（2026-10-16）", 2214.472367, "M 股", "2026-10-16", "Meta 10-Q 2026Q3 封面", Q10, "2026-10-29", "[Verified]")

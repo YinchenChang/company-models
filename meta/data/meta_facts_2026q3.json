@@ -8969,7 +8969,8 @@
    "docDate": "2026-10-29",
    "retrieved": "2026-10-30",
    "tag": "[Verified]",
-   "note": "chat 端 2026-10-30 審查讀取 10-Q（工作單「A 段審查結果」第 2 條）；B 段代理 WebFetch 重讀兩段（0–100k、100k 以後）未回傳此段原文，未能另存短句。假設每年等額約 1.27B、FY2027 起付（Assumed）；9.89B 費用≈12.7B 十年年金以約 4.9% 折現的現值（推論，未證實）",
+   "quote": "payable to participating states in annual installments over a 10-year period",
+   "note": "chat 端 2026-10-30 審查讀取 10-Q（工作單「A 段審查結果」第 2 條）；v0.1.1 以完整 10-Q 核對（PDF 第 26、51 頁），原文未載各年金額。模型假設每年等額約 1.27B、FY2027 起付（H3）；v0.1 推論「9.89B≈12.7B 以約 4.9% 折現」已撤回：協議費用前三季合計 11.89B（legal.agCharge.ytd9m2026）",
    "fullTenQ": {
     "page": 26,
     "value": 12700.0,

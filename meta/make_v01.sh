@@ -1,14 +1,15 @@
 #!/bin/bash
-# Meta 個股模型 v0.1：一次跑完 事實總帳 → （敏感度）→ 建置 → LibreOffice 重算 → 核對 → In 頁版面 → 敏感度覆蓋 → 分部檢查 → HTML。
-#   bash meta/make_v01.sh            # 沿用已提交的敏感度結果 meta/data/sens_v01_20261030.json
+# Meta 個股模型 v0.1.1（腳本沿用 v0.1 名稱；VER 可指定版號）：一次跑完 事實總帳 → （敏感度）→ 建置 → LibreOffice 重算 → 核對 → In 頁版面 → 敏感度覆蓋 → 分部檢查 → HTML。
+#   bash meta/make_v01.sh            # 沿用已提交的敏感度結果 meta/data/sens_v011_20261030.json
 #   SENS=1 bash meta/make_v01.sh     # 重跑敏感度（約 80 次整本重算；JOBS＝平行數，預設 2）
 # 需要：python3＋openpyxl、LibreOffice（soffice）。
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 WD="${WD:-$(mktemp -d)}"; mkdir -p "$WD"
-OUTNAME="20261030_Meta個股模型_v0.1.xlsx"
-SJ="meta/data/sens_v01_20261030.json"
+VER="${VER:-0.1.1}"; VDATE="${VDATE:-20261030}"
+OUTNAME="${VDATE}_Meta個股模型_v${VER}.xlsx"
+SJ="meta/data/sens_v${VER//./}_${VDATE}.json"
 python3 meta/facts_2026q3.py                           # 事實總帳（兩讀核對；不一致即失敗；逐字稿不在本機時短句標「未核對」）
 if [ "${SENS:-0}" = "1" ]; then python3 meta/sens_v01.py "$WD/sens" "$SJ"; fi
 ROWMAP="$WD/rowmap.json" python3 meta/build_meta.py "$WD/raw.xlsx" --sens "$SJ"
