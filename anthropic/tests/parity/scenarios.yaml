@@ -168,12 +168,12 @@ scenarios:
     description: W2 開關 s1f_switch 1 → 0（INP_195；2026 上半年回到草擬版 16.3）：2026 基準、API 倒推與其後各年改變（＝v0.1.5 逐格重現）
     inputs: {"INP_195": 0}
   - id: ib_s1f_h1_far
-    description: 正式 S-1 上半年營收 16.286 → 17.5（SRC_ANT_414；對草擬版 +7.4% > 5%）：f1_h1pct WARN（工作單停止條件的警示有牙齒；不 ERR）
-    inputs: {"SRC_ANT_414": 17.5}
+    description: 草擬版上半年營收 16.3 → 15.0（SRC_ANT_380；正式 S-1 對草擬版 +8.6% > 5%）：f1_h1pct WARN（工作單停止條件的警示有牙齒；不 ERR；改正式值會同時讓季度加總核對 C162 ERR，故改草擬值）
+    inputs: {"SRC_ANT_380": 15.0}
     expect_warn: true
   - id: ic_s1f_cor_high
     description: 2026 上半年營收成本 2.38 → 4.5（SRC_ANT_423）：η_2026H1 由 0.60 降到約 0.32（低於基準 η），B 情境的有效推論 GW、研發 GW 改變；基準不變（W3 只對照）
     inputs: {"SRC_ANT_423": 4.5}
   - id: id_s1f_msft_low
     description: 正式 S-1 Microsoft 最低金額 44.9 → 31（SRC_ANT_452；回到草擬版）：W3(d) 逐家與七家合計對照改變，基準不變
-    inputs: {"SRC_ANT_452": 31}
+    inputs: {"SRC_ANT_452": 31, "SRC_ANT_452_Lo": 31}
