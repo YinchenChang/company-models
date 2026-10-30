@@ -8868,6 +8868,63 @@
    "tag": "[Derived]"
   },
   {
+   "id": "legal.accrualCur.20260930",
+   "item": "法律相關應計：流動（2025-12-31 為 6,867）",
+   "value": 11577,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Meta 10-Q 2026Q3 附註 8 應計負債表",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "note": "附註 8 註腳：含 2026 年 8 月多州檢察長協議與其他罰款、判決、和解之估計"
+  },
+  {
+   "id": "legal.accrualNonCur.20260930",
+   "item": "法律相關應計：非流動（2025-12-31 為 450）",
+   "value": 8304,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Meta 10-Q 2026Q3 附註 8 應計負債表",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "note": "非流動部分由 450 增至 8,304，與協議款分年支付相符",
+   "check": {
+    "value": 19881,
+    "source": "流動＋非流動＝legal.accrual.20260930 19,881",
+    "ok": true
+   }
+  },
+  {
+   "id": "legal.agSettle.total",
+   "item": "多州檢察長協議：約 12.7B 分 10 年、每年攤付給參與州",
+   "value": 12700,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Meta 10-Q 2026Q3 MD&A「Loss Contingencies」",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "note": "chat 端 2026-10-30 審查讀取 10-Q（工作單「A 段審查結果」第 2 條）；B 段代理 WebFetch 重讀兩段（0–100k、100k 以後）未回傳此段原文，未能另存短句。假設每年等額約 1.27B、FY2027 起付（Assumed）；9.89B 費用≈12.7B 十年年金以約 4.9% 折現的現值（推論，未證實）"
+  },
+  {
+   "id": "legal.agContingent",
+   "item": "多州檢察長協議：5.3B 或有金額，尚未認列為負債",
+   "value": 5300,
+   "unit": "USD M",
+   "period": "2026-09-30",
+   "source": "Meta 10-Q 2026Q3 MD&A「Loss Contingencies」",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026066773/meta-20260930.htm",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-30",
+   "tag": "[Verified]",
+   "note": "同上（chat 端審查讀取）；12.7＋5.3＝18.0，與新聞稿付款上限約 18.59 相近（差額未拆解）；模型只列 Sens，不進基準"
+  },
+  {
    "id": "sh.outA.20261016",
    "item": "Class A 流通股數（2026-10-16）",
    "value": 2214.472367,
@@ -14764,6 +14821,14 @@
    "value": 84000,
    "second": 84000,
    "source": "10-Q 附註",
+   "tol": 0.0,
+   "ok": true
+  },
+  {
+   "id": "legal.accrual 流動＋非流動",
+   "value": 19881,
+   "second": 19881,
+   "source": "10-Q 附註 8",
    "tol": 0.0,
    "ok": true
   },
