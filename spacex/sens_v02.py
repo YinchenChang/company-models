@@ -1,5 +1,5 @@
 # 敏感度：一次改一個 In 頁輸入（敏感度低／高值），整本以 LibreOffice 重算，讀 Val 頁加權目標價，寫成 JSON 供 build_spacex.py --sens 使用。
-# 用法：python3 spacex/sens_v01.py <工作資料夾> <輸出 sens.json>（環境變數 JOBS＝平行數，預設 2）
+# 用法：python3 spacex/sens_v02.py <工作資料夾> <輸出 sens.json>（環境變數 JOBS＝平行數，預設 2）
 import json, os, subprocess, sys, shutil, tempfile
 from concurrent.futures import ThreadPoolExecutor
 import openpyxl
@@ -20,7 +20,7 @@ def build(name, sets):
 
 def recalc(raw):
     out = os.path.join(WD, "out"); os.makedirs(out, exist_ok=True)
-    prof = tempfile.mkdtemp(prefix="lo_spcx_")
+    prof = tempfile.mkdtemp(prefix="lo_spcx_", dir=WD)
     env = dict(os.environ); env["LC_ALL"] = "C.UTF-8"
     subprocess.run(["soffice", f"-env:UserInstallation=file://{prof}", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML",
                     "--outdir", out, raw], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env, timeout=900)
@@ -32,7 +32,8 @@ def tp_of(xlsx, rowmap):
     rm = json.load(open(rowmap, encoding="utf-8"))
     wb = openpyxl.load_workbook(xlsx, data_only=True)
     return {"tp": wb["Val"].cell(rm["VR"]["tp"], 2).value, "gateB": wb["CF"].cell(rm["GATE"], 3).value,
-            "s2B": wb["Seg"][f"I{rm['SR']['B']['s2']}"].value}
+            "s2B": wb["Seg"][f"I{rm['SR']['B']['s2']}"].value, "plug27B": wb["CF"][f"H{rm['CR']['B']['plug']}"].value,
+            "rec": wb["Val"].cell(rm["VR"]["rec"], 2).value}
 
 
 def run(name, sets):

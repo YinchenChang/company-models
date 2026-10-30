@@ -1,5 +1,5 @@
-# SpaceX 個股模型 v0.1 成品核對：公式錯誤 0、Q／Seg／PL／CF／Val 核對列 0（含分部對帳、子列合計、命題子列合計）、敏感度未過期、固定列標籤存在。
-# 用法：python3 spacex/check_v01.py <重算後的 xlsx>；失敗時非零結束。
+# SpaceX 個股模型 v0.2 成品核對：公式錯誤 0、Q／Seg／PL／CF／Val 核對列 0（含分部對帳、子列合計、命題子列合計）、敏感度未過期、固定列標籤存在。
+# 用法：python3 spacex/check_v02.py <重算後的 xlsx>；失敗時非零結束。
 import sys
 import openpyxl
 
