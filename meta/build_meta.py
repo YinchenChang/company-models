@@ -101,8 +101,9 @@ inp("debt_0", "票據面額（2026-09-30）", "US$B", None, fv("debt.face.202609
 inp("debt_ye25", "長期債務帳面（2025-12-31，非流動）", "US$B", None, fv("bs.ltd.20251231") / 1000, None, "Verified", fs("bs.ltd.20251231"), "只作 CF 頁期初顯示；9M26 期末直接取 debt_0")
 inp("fin_lease", "融資租賃負債（類債）", "US$B", None, 0.0, None, "Assumed", "未找到：10-Q 讀取未回傳融資租賃負債（A 段報告「已搜尋，未找到」）",
     "暫以 0 計；預測期資本支出含融資租賃本金（公司口徑），已付本金在現金流內。資料缺口：請 Andy 下載 10-Q 完整 PDF", judg=True)
-inp("legal_oth", "其他法律相關應計（類債）＝法律應計 19.881 − 協議費用 9.89", "US$B", 0.0, round(fv("legal.accrual.20260930") / 1000 - fv("txt.legal_charge.2026q3"), 3), None, "Derived",
-    fs("legal.accrual.20260930") + "；協議費用 " + fs("txt.legal_charge.2026q3"), "比照 Alphabet 應計罰款（類債）；低＝0（不扣）", judg=True)
+inp("legal_oth", "其他法律相關應計（類債）＝法律應計 19.881 − 協議費用前三季合計 11.89", "US$B", 0.0, round(fv("legal.accrual.20260930") / 1000 - fv("legal.agCharge.ytd9m2026"), 3), None, "Derived",
+    fs("legal.accrual.20260930") + "；協議費用 " + fs("legal.agCharge.ytd9m2026"),
+    "比照 Alphabet 應計罰款（類債）；低＝0（不扣）。v0.1.1 更正：v0.1 只扣 Q3 的 9.89（得 9.991），完整 10-Q 載協議費用前三季合計 11.89（Q3 以前已認列約 2.00），協議應計已由 ag_y1／ag_rest 現金付款計入", judg=True)
 inp("mcps", "6.50% 強制轉換特別股募得現金（2026-10-29 交割，評價日後）", "US$B", None, fv("eq.mcps.gross") / 1000, None, "Verified", fs("eq.mcps.gross"), "FWP 淨額與毛額相同（疑未扣承銷費，A 段待下載 424B5）")
 inp("conv_sh", "強制轉換特別股 2029-08 轉換股數（上限）", "十億股", 0.017025, 0.020, 0.020, "Derived",
     "FWP：每股特別股（1,000 美元）轉 1.3620–1.6000 股 Class A；12.5B ÷ 1,000 × 1.6＝20.0M 股（上限）", "取稀釋最大（保守）；轉換前股利照付")
