@@ -1,0 +1,15 @@
+{
+ "company": "MPI Corporation",
+ "ticker": "6223.TWO",
+ "model_sheet": "Q",
+ "official_segments": [
+  {"name": "探針卡", "label": "探針卡", "period": "FY2025A", "value": 9.8722, "unit": "NT$B", "source": "公司 2026-03 法說事業別占比 73.8% × 營收 13.377（富果摘要）"},
+  {"name": "設備", "label": "設備", "period": "FY2025A", "value": 3.2907, "unit": "NT$B", "source": "同上 24.6%"},
+  {"name": "其他", "label": "其他", "period": "FY2025A", "value": 0.2140, "unit": "NT$B", "source": "營收 − 探針卡 − 設備（Derived）"}
+ ],
+ "sublines": [
+  {"parent": "探針卡", "labels": ["AI／HPC 探針卡（VPC、MEMS；命題子列）", "其他探針卡（CPC 等）"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收", "檢查：AI＋其他探針卡 − 探針卡（命題子列合計）"],
+ "note": "事業別為公司法說揭露的營收占比（探針卡、設備、其他）× 營收；年報 IFRS 營運部門未逐項核對（未找到）。AI／HPC 探針卡占比為 Assumed（FY2025 55%、FY2026 60%）。"
+}
