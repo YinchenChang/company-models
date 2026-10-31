@@ -1,0 +1,15 @@
+{
+ "company": "ASE Technology Holding",
+ "ticker": "3711.TW",
+ "model_sheet": "Q",
+ "official_segments": [
+  {"name": "封裝測試及材料（ATM）", "label": "封測（ATM；分部表）", "period": "FY2025A", "value": 389.228, "unit": "NT$B", "source": "公司 4Q25 新聞稿與簡報（SEC 6-K 2026-02-05）分部表"},
+  {"name": "電子代工服務（EMS）", "label": "EMS（環旭；分部表）", "period": "FY2025A", "value": 259.079, "unit": "NT$B", "source": "同上"},
+  {"name": "沖銷及其他", "label": "沖銷及其他（合併 − 分部合計）", "period": "FY2025A", "value": -2.919, "unit": "NT$B", "source": "合併營收 645.388 − 分部合計（Derived）"}
+ ],
+ "sublines": [
+  {"parent": "封裝測試及材料（ATM）", "labels": ["LEAP 先進封裝（命題子列）", "主流封測（ATM − LEAP）"]}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收", "檢查：LEAP＋主流 − 封測（命題子列合計）"],
+ "note": "分部營收取公司分部表（含部門間交易），沖銷及其他為合併與分部合計的差額；LEAP 為公司說法（FY2025 US$1.6B、FY2026 逾 US$4B），季度拆分用 BofA 占比。"
+}
