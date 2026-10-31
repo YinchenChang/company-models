@@ -112,6 +112,18 @@ footer{display:grid;gap:6px;font-size:.78rem;color:var(--muted);border-top:1px s
   <section class="bus gapsec" aria-labelledby="hgap" id="gapSec">
     <div class="head"><div class="eyebrow">資金缺口（v0.1.7）</div><h2 id="hgap">整個市場當一間公司：要蓋這麼多資料中心，錢夠嗎？</h2></div>
     <div class="verdict" id="gapVerdict" aria-live="polite"></div>
+    <div class="twocol" id="gapWho">
+      <div class="card">
+        <div class="eyebrow">「11 家主要玩家」是哪 11 家</div>
+        <p class="note" style="margin-top:6px"><b>雲端與大型科技（7）：</b>Microsoft、Alphabet（Google）、Amazon（AWS）、Meta、Oracle、CoreWeave、Nebius<br><b>其他（4）：</b>WhiteFiber、SpaceX／xAI、OpenAI、Anthropic</p>
+        <p class="note">這 11 家的<b>營業現金流</b>都算進「錢從哪來」；<b>AI 資料中心資本支出</b>只算各家自己擁有的容量（每 GW 只在擁有者算一次）。OpenAI、Anthropic 的算力多半向別人租用（Microsoft、Oracle、CoreWeave、Google、AWS 等），或由 Stargate SPV 擁有，所以它們自己的 AI 資本支出接近 0；它們付的租金已含在自己的營業現金流（負數）裡。<br>智譜（中國）只在下方玩家表列出，<b>不計入</b> 11 家合計。</p>
+      </div>
+      <div class="card">
+        <div class="eyebrow">「市場其餘」是誰（資金來源未知）</div>
+        <p class="note" style="margin-top:6px">市場其餘＝全市場新增 GW 的建置成本 − 11 家自有部分。包含：<b>中國</b>（全部）、<b>其他新雲</b>（IREN、TeraWulf、Lambda、Nscale、Crusoe 雲等）、<b>主權 AI</b>（中國以外：Humain、Stargate UAE、Mistral 等）、<b>OpenAI／Stargate 自建</b>（SoftBank、SB Energy 等 SPV 擁有）、<b>其他</b>（企業、學研），以及全市場總量與已列玩家加總的<b>差額</b>。這些沒有現金流資料，所以只算「需要」、不算「來源」。</p>
+        <div class="tbl" id="gapRestTbl"></div>
+      </div>
+    </div>
     <div class="twocol">
       <div class="card">
         <div class="legend" id="gapLegend1"></div>
@@ -128,7 +140,7 @@ footer{display:grid;gap:6px;font-size:.78rem;color:var(--muted);border-top:1px s
     <p class="note" id="gapNotes"></p>
     <details class="more card"><summary>逐年數字（所選情景）</summary><div class="tbl" id="gapTable"></div></details>
     <details class="more card"><summary>每 IT GW 建置成本拆項（所選年份）</summary><div class="tbl" id="gapPerGW"></div></details>
-    <details class="more card"><summary>主要玩家（所選年份；營業現金流、AI 資本支出、缺口）</summary><div class="tbl" id="gapPlayers"></div></details>
+    <details class="more card"><summary>11 家主要玩家逐家（所選年份；營業現金流、AI 資本支出、缺口；智譜只列、不計入合計）</summary><div class="tbl" id="gapPlayers"></div></details>
   </section>
   <div class="gtip" id="gtip" role="tooltip"></div>
 
@@ -143,7 +155,8 @@ footer{display:grid;gap:6px;font-size:.78rem;color:var(--muted);border-top:1px s
   </section>
 
   <section class="bus" aria-labelledby="h2s">
-    <div class="head"><div class="eyebrow">母線 2</div><h2 id="h2s">主要玩家：GW、資本支出、資金來源</h2></div>
+    <div class="head"><div class="eyebrow">母線 2</div><h2 id="h2s">各玩家：GW、資本支出、資金來源</h2></div>
+    <p class="note">本表列出全市場所有追蹤對象：上面資金缺口的 11 家主要玩家，加上屬於「市場其餘」的其他新雲合計、主權 AI、中國合計、其他，以及 OpenAI／Stargate 自建（SPV 擁有）、Anthropic 自建。</p>
     <div class="twocol">
       <div class="card tbl">
         <table id="ptab"><thead><tr>
@@ -367,6 +380,15 @@ function gap(){
  document.getElementById("gapTable").innerHTML=`<table><thead><tr><th>US$B</th>${GY.map(y=>`<th>${y}</th>`).join("")}</tr></thead><tbody>`+rows.map(([k,l])=>`<tr><td>${l}</td>${GY.map(y=>`<td class="num">${fmt((m[y]||{})[k],k==="mkt_add"?2:0)}</td>`).join("")}</tr>`).join("")+`</tbody></table>`;
  const yy=GY.includes(S.year)?S.year:"2030";
  document.getElementById("gapPerGW").innerHTML=`<p class="note">${yy} 年，US$B／IT GW；IT 依 AI半導體 次產業比例、廠房依 Facility 拆分比例（Tokenomics IF_CapexTotal）。</p><table><thead><tr><th>項目</th><th>${yy}</th></tr></thead><tbody>`+Object.keys(GITEM).filter(k=>G.pergw[k]).map(k=>`<tr><td>${GITEM[k]}</td><td class="num">${fmt(G.pergw[k][yy],2)}</td></tr>`).join("")+`</tbody></table>`;
+ (function(){const yy=S.year, pg=D.pgw.main, ye=(k,y)=>{const v=(pg[k]||{})[y];return v==null?null:+v};
+  const add=k=>{const a=ye(k,yy),b=ye(k,yy-1);return a==null?null:a-(b==null?0:b)};
+  const comp=[["cn","中國合計"],["neo","其他新雲合計（IREN、TeraWulf、Lambda、Nscale、Crusoe 雲等）"],["sov","主權 AI（中國以外）"],["oai","OpenAI／Stargate 自建（SPV 擁有）"],["oth","其他（企業、學研）"]];
+  const all=Object.keys(pg); const sumYE=y=>all.reduce((t,k)=>t+(ye(k,y)||0),0);
+  const m=mk("main"), mAdd=(m[yy]!=null&&m[yy-1]!=null)?m[yy]-m[yy-1]:null, resid=(m[yy]!=null)?(m[yy]-sumYE(yy))-((m[yy-1]!=null)?(m[yy-1]-sumYE(yy-1)):0):null;
+  let h=`<p class="note">${yy} 年各項年新增 IT GW（年底差；主路徑；差額＝全市場 ${S.scen}・${S.delay} 減全部已列玩家）。金額＝GW × 當年每 GW 成本，見逐年數字表。</p><table><thead><tr><th>市場其餘的組成</th><th>年新增 IT GW</th></tr></thead><tbody>`;
+  comp.forEach(([k,l])=>{h+=`<tr><td>${l}</td><td>${fmt(add(k),2)}</td></tr>`});
+  h+=`<tr><td>差額（全市場總量 − 已列玩家加總）</td><td>${fmt(resid,2)}</td></tr><tr><td><b>全市場年新增（參考）</b></td><td><b>${fmt(mAdd,2)}</b></td></tr></tbody></table><p class="note">各列合計＝市場其餘的年新增 GW（＝全市場 − 11 家自有）。各玩家用公告／資本支出路徑、不隨延遲情景變，所以選 D1、D2 時全市場上線較少，差額會是負數。</p>`;
+  document.getElementById("gapRestTbl").innerHTML=h;})();
  document.getElementById("gapPlayers").innerHTML=`<p class="note">${yy} 年，US$B；AI 資本支出＝玩家新增 GW × 每 GW（擁有者口徑；OpenAI／Stargate 自建由 SPV 擁有，歸市場其餘）；缺口＝（AI＋非 AI）− 營業現金流；空白＝無模型值。</p><table><thead><tr><th>玩家</th><th>營業現金流</th><th>AI 資本支出</th><th>非 AI</th><th>缺口</th><th>自籌比</th><th>模型 AI 資本支出（對照）</th><th>並列讀法</th><th>判讀（2026–30）</th></tr></thead><tbody>`+
   Object.keys(GPN).filter(p=>G.player[p]).map(p=>{const r=G.player[p][yy]||{},mm=G.pmeta[p]||{};return `<tr><td>${GPN[p]}</td><td class="num">${fmt(r.OCF,0)}</td><td class="num">${fmt(r.CapexAI,0)}</td><td class="num">${fmt(r.CapexNonAI,0)}</td><td class="num">${fmt(r.Gap,0)}</td><td class="num">${fmt(r.SelfFund,2)}</td><td class="num">${fmt(r.CapexAIModel,0)}</td><td class="num">${fmt(r.CapexAIMC,0)}</td><td>${mm.verdict||"—"}</td></tr>`}).join("")+`</tbody></table>`;
 }
