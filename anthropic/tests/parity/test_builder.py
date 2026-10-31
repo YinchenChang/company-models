@@ -127,7 +127,7 @@ def test_named_outputs_for_a4(eng):
     cap = eng.get_name("CMP_CapFactor")
     assert cap[0] == 1 and cap[1] == 1
     assert eng.get_name("REV_CapFactor") == cap
-    assert abs(eng.get_name("COST_Gap2025")) < 1e-9                     # 2025 算力成本＝說明書 7.33
+    assert abs(eng.get_name("COST_Gap2025")) < 1e-9                     # 2025 算力成本＝說明書（v0.1.7 起正式 S-1 7.326）
 
 
 def test_reverse_not_fed_back(wb):
@@ -175,9 +175,10 @@ def test_bridge_not_fed_back(wb):
 
 
 def test_eta_decomposition_does_not_change_eta(eng):
-    """η 拆解只作診斷：η 等於 Compute 的值（v0.1.4 起隨 TK v19.1 為 0.525427732668394；v0.1.3 為 0.52729641508883，差異全來自 TK IF_TokGW_Luna）；乘積 × 殘差 ＝ η；殘差為正。"""
+    """η 拆解只作診斷：η 等於 Compute 的值（v0.1.7 起為 0.46763641507486053：W3 2025 校準改正式 S-1、W5 TK v21.7 的 TPU／Trainium 持有比下降使既有雲端加權合約價下降；
+    v0.1.4–v0.1.6 為 0.525427732668394；v0.1.3 為 0.52729641508883，差異全來自 TK IF_TokGW_Luna）；乘積 × 殘差 ＝ η；殘差為正。"""
     eta = eng.get_name("CMP_Eta2025")
-    assert abs(eta - 0.525427732668394) < 1e-9
+    assert abs(eta - 0.46763641507486053) < 1e-9
     assert abs(eng.get_name("ETA_Eta") - eta) < 1e-12
     prod = eng.get_name("ETA_fP") * eng.get_name("ETA_fU") * eng.get_name("ETA_fW")
     assert abs(prod - eng.get_name("ETA_Prod")) < 1e-12
@@ -213,10 +214,11 @@ def test_bridge_ties_to_calc_sheets(eng):
 
 
 def _s1f_rows(wb):
-    """Cost 第二十四節（v0.1.6 正式 S-1 對照）的列號範圍：節標題至頁尾。"""
+    """Cost 第二十四節（v0.1.6 正式 S-1 對照）的列號範圍：節標題至下一節（v0.1.7 第二十五節）之前；無下一節時至頁尾。"""
     ws = wb["Cost"]
     start = next(r for r in range(1, ws.max_row + 1) if str(ws.cell(r, 1).value or "").startswith("二十四、"))
-    return ws, set(range(start, ws.max_row + 1))
+    end = next((r for r in range(start + 1, ws.max_row + 1) if str(ws.cell(r, 1).value or "").startswith("二十五、")), ws.max_row + 1)
+    return ws, set(range(start, end))
 
 
 def test_s1f_section_not_fed_back(wb):
@@ -241,14 +243,90 @@ def test_s1f_section_not_fed_back(wb):
 
 
 def test_s1f_w2_and_eta_unchanged(eng):
-    """v0.1.6 W2：2026 營收基準＝正式 S-1 上半年＋Q3＋Q4（Q3 持平）；基準 η 不因 W3 改變；B 情境 2025 欄＝基準。"""
+    """v0.1.6 W2：2026 營收基準＝正式 S-1 上半年＋Q3＋Q4（Q3 持平）；基準 η 不因 v0.1.6 W3 改變（v0.1.7 起值見 test_eta_decomposition_does_not_change_eta）；B 情境 2025 欄＝基準。"""
     s = {r["key"]: r["id"] for r in SRC}
     i = {r["key"]: REG["INP"][r["key"]] for r in INP}
     assert eng.get_name(i["s1f_switch"]) == 1 and eng.get_name(i["u1_switch"]) == 1
     tgt = eng.get_name(s["rev_s1f_2026h1"]) + eng.get_name(s["rev_2026_q3"]) * (2 + eng.get_name(i["q4_growth"]))
     assert abs(eng.get_name("REV_Target")[1] - tgt) < 1e-9
-    assert abs(eng.get_name("CMP_Eta2025") - 0.525427732668394) < 1e-9
+    assert abs(eng.get_name("CMP_Eta2025") - 0.46763641507486053) < 1e-9
     assert eng.get_name("COST_Eta2026H1") > 0
     for a, b in ((eng.get_name("COST_PropGap_VR_EtaH1")[0], eng.get_name("COST_PropGap_VR")[0]),
                  (eng.get_name("COST_Coverage_EtaH1")[0], eng.get_name("COST_Coverage")[0])):
         assert abs(a - b) < 1e-9
+
+
+# ═════════════ v0.1.7（工作單 20261031 v0.1.7） ═════════════
+def _ids():
+    return {r["key"]: r["id"] for r in SRC}, {r["key"]: REG["INP"][r["key"]] for r in INP}
+
+
+def test_v017_w1_unallocated_balance(eng):
+    """W1(b)：未歸屬餘額＝S-1 三段合計 − 模型逐家合約總額（不含 AMD），付款期間內平均；供給 GW＝付款 ÷ VR200 合約價；承諾開關 0 時為 0。"""
+    s, i = _ids()
+    seg = sum(eng.get_name(s[k]) for k in ("cmt_s1f_leases_nc_0630", "cmt_s1f_purchase_0630", "cmt_s1f_post0630"))
+    assert abs(seg - eng.get_name("COST_S1fCommit3")) < 1e-9
+    bal = eng.get_name("COST_S1Unalloc")
+    assert abs(bal - max(0.0, seg - eng.get_name("COST_S1fCommitModel"))) < 1e-9 and bal > 0
+    pay = eng.get_name("COST_Pay_S1Unalloc")
+    y0, y1 = eng.get_name(i["s1u_start"]), eng.get_name(i["s1u_end"])
+    for y, v in zip(range(2025, 2031), pay):
+        assert abs(v - (bal / (y1 - y0 + 1) if y0 <= y <= y1 else 0)) < 1e-9
+    price = eng.get_name("CMP_Price_VR200")
+    assert all(abs(g - p / pp) < 1e-9 for g, p, pp in zip(eng.get_name("CMP_Supply_S1Unalloc"), pay, price))
+    assert eng.get_name("COST_GoogleAddl") == 0 and eng.get_name("COST_S1fSpaceXFactor") == 1     # 工作單預設：Google 額外 TPU 不進基準；SpaceXAI 沿用月費
+
+
+def test_v017_w2_own_capex_gw_method(eng):
+    """W2：自建 GW（Wattonomics v0.1.7：各年 0）× TK 每 GW 建置成本 → 自建資本支出與自建 GW 為 0；Fluidstack $50B 不另計。"""
+    _s, i = _ids()
+    assert eng.get_name(i["own_capex_method"]) == 1
+    assert all(eng.get_name(i[f"own_gw_add_{y}"]) == 0 for y in range(2025, 2031))
+    assert all(v == 0 for v in eng.get_name("COST_OwnedCapex")) and all(v == 0 for v in eng.get_name("CMP_Supply_Owned"))
+
+
+def test_v017_w4_noncompute_calibration(eng):
+    """W4：2026 非算力成本（不含股權報酬）＝正式 S-1 回推值（上半年＋Q2 × 2 − 平台抽成 − 股權報酬）。"""
+    s, _i = _ids()
+    g = lambda k: eng.get_name(s[k])  # noqa: E731
+    fy = g("rev_s1f_2026h1") - g("ci_s1f_2026h1") - g("oi_s1f_2026h1") + 2 * (g("rev_s1f_2026q2") - g("ci_s1f_2026q2") - g("oi_s1f_2026q2"))
+    want = fy - eng.get_name("REV_PartnerShare")[1] - eng.get_name("COST_SBC")[1]
+    assert abs(eng.get_name("COST_S1fNonComp2026") - want) < 1e-9
+    assert abs(eng.get_name("COST_NonCompExSBC")[1] - want) < 1e-9
+
+
+def test_v017_switches_off_reproduce_v016(eng):
+    """各項開關設 0、TK 快照回到 v21.2（值取自 model/archive 的 v0.1.6）時，命題輸出與 v0.1.6 逐位相同（回歸）。"""
+    old = REPO / "model" / "archive" / "20261031_Anthropic_v0.1.6.xlsx"
+    wo = openpyxl.load_workbook(old)
+    wv = openpyxl.load_workbook(old, data_only=True)
+    _s, i = _ids()
+    ov = {i[k]: 0 for k in ("s1f_commit_switch", "own_capex_method", "s1f_cal25_switch", "s1f_d22_switch")}
+    for n, d in wo.defined_names.items():
+        if not n.startswith("TK_") or n in ("TK_File", "TK_Version", "TK_Commit", "TK_ReadDate", "TK_HdrGen", "TK_HdrCost") or n not in eng.names:
+            continue
+        sh, ref = d.attr_text.split("!")
+        cells = wo[sh][ref.replace("$", "")]
+        if isinstance(cells, tuple):
+            ov.update({f"{n}[{k + 1}]": c.value for k, c in enumerate(x for row in cells for x in row)})
+        else:
+            ov[n] = cells.value
+    from engine import resolve_key
+    orig = {k: eng.get(*resolve_key(eng.names, k)) for k in ov}
+    try:
+        for k, v in ov.items():
+            eng.set_key(k, v)
+        for n in ("COST_PropGap_VR", "COST_Coverage", "FND_ExtNeedCum", "FND_CashNoExt", "CMP_Eta2025", "COST_Compute", "CMP_SupplyGW", "REV_Gross", "COST_NonCompExSBC"):
+            sh, ref = wo.defined_names[n].attr_text.split("!")
+            cells = wv[sh][ref.replace("$", "")]
+            want = [c.value for row in cells for c in row] if isinstance(cells, tuple) else [cells.value]
+            got = eng.get_name(n)
+            got = got if isinstance(got, list) else [got]
+            for a, b in zip(got, want):
+                if isinstance(b, (int, float)):
+                    assert abs(a - b) <= 1e-9 * max(1, abs(b)), (n, a, b)
+                else:
+                    assert a in (None, "") and b in (None, ""), (n, a, b)
+    finally:
+        for k, v in orig.items():
+            eng.set_key(k, v)

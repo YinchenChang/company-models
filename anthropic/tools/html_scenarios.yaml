@@ -37,6 +37,17 @@ groups:
   tk14_back: {label: "TK 快照回到 v19.1：10 個 DIFF 名稱全部", set: {TK_L1_TokLedger_2026Q2: prev14, TK_L1_GapSpendBasis: prev14, TK_L1_GapSpendBasis_Lo: prev14, TK_L1_GapSpendBasis_Hi: prev14, TK_L1_GapProduct: prev14, TK_L1_GapProduct_Lo: prev14, TK_L1_GapProduct_Hi: prev14, TK_L1_GapUnexplained: prev14, TK_L1_GapUnexplained_Lo: prev14, TK_L1_GapUnexplained_Hi: prev14}}
   # v0.1.6：W2 開關 s1f_switch（INP_195）＝0：2026 上半年回到草擬版 16.3（＝v0.1.5 的輸出）；歷史情境一併加上，使數字等於當時版本
   s1f_off: {label: "W2 關閉（2026 上半年實際回到草擬 S-1 轉述 16.3）", set: {INP_195: 0}}
+  # v0.1.7：各項開關（0＝v0.1.6 口徑）與 TK 快照回到 v21.2（spec＝prev16：值取自 model/archive 的 v0.1.6 Excel；v21.7 變動的 17 個具名範圍＋NonNV 12 格）
+  c_off: {label: "W1 關閉（正式 S-1 承諾不進基準＝v0.1.6 合約口徑）", set: {INP_197: 0}}
+  own_old: {label: "W2 關閉（自建資本支出回到 Fluidstack $50B 三年均攤）", set: {INP_204: 0}}
+  cal25_off: {label: "W3 關閉（2025 校準回到草擬版 4.6／7.33）", set: {INP_212: 0}}
+  d22_off: {label: "W4 關閉（2026 非算力成本回到 2025 每人成本 × 年變動率）", set: {INP_213: 0}}
+  tk16_back: {label: "TK 快照回到 v21.2：v21.7 變動的 29 個值", set: {TK_IF_HoldEcon: prev16, TK_IF_FullCost_Astra: prev16, TK_IF_FullCost_Luna: prev16, TK_IF_FullCost_Sol: prev16, TK_IF_PriceCached_Sol: prev16, TK_IF_PriceRef_Sol: prev16, TK_IF_FrontRef_Sol: prev16, TK_IF_TrainCost_Astra: prev16, TK_IF_TrainCost_Luna: prev16, TK_IF_TrainCost_Sol: prev16, TK_IF_RevGW_Sol: prev16, TK_IF_FullCostDefault_Astra: prev16, TK_IF_FullCostDefault_Luna: prev16, TK_IF_FullCostDefault_Sol: prev16, TK_IF_CapexTotal: prev16, TK_L1_RevGW_PQ_VR200_Life_Lo: prev16, TK_L1_M: prev16, TK_NNV_MI455X_Hold: prev16, TK_NNV_MI455X_HoldLo: prev16, TK_NNV_MI455X_HoldHi: prev16, TK_NNV_MI455X_Out: prev16, TK_NNV_MI455X_OutLo: prev16, TK_NNV_MI455X_OutHi: prev16, TK_NNV_TPUv7_Hold: prev16, TK_NNV_TPUv7_HoldLo: prev16, TK_NNV_TPUv7_HoldHi: prev16, TK_NNV_Trn3_Hold: prev16, TK_NNV_Trn3_HoldLo: prev16, TK_NNV_Trn3_HoldHi: prev16}}
+  s1u_fast: {label: "未歸屬餘額付款期快讀法（2027–2031）", set: {INP_198: lo, INP_199: lo}}
+  s1u_slow: {label: "未歸屬餘額付款期慢讀法（2028–2036）", set: {INP_198: hi, INP_199: hi}}
+  spx_cap: {label: "SpaceXAI 以正式 S-1 上限 120.5 計（月費路徑等比例放大）", set: {INP_200: 1}}
+  gaddl_on: {label: "Google 額外 TPU 125–150（中點，2028–2031）計入", set: {INP_201: 1}}
+  bcm_2026: {label: "Broadcom 起始年改正式 S-1 期間起點 2026", set: {INP_131: lo}}
   tk19_luna_back: {label: "TK 快照回到 v19.0：只有 IF_TokGW_Luna", set: {TK_IF_TokGW_Luna: prev19}}
   tk19_rest_back: {label: "TK 快照回到 v19.0：其餘 38 個 DIFF 名稱（IF_TokGW_Luna 維持 v19.1）", set: {TK_IF_FullCost_Astra: prev19, TK_IF_FullCost_Luna: prev19, TK_IF_FullCost_Sol: prev19, TK_IF_ProgGWyr_Luna: prev19, TK_IF_AllocQ1: prev19, TK_IF_AllocQ1_R2: prev19, TK_IF_AllocQ2: prev19, TK_IF_AllocRDGW: prev19, TK_IF_AllocImpliedNk: prev19, TK_IF_TrainCost_Luna: prev19, TK_IF_RevGW_Luna: prev19, TK_IF_FullCostDefault_Astra: prev19, TK_IF_FullCostDefault_Luna: prev19, TK_IF_FullCostDefault_Sol: prev19, TK_L1_Ans3: prev19, TK_L1_Ans3_Lo: prev19, TK_L1_Ans3_Hi: prev19, TK_L1_RevGW_PQ_VR200: prev19, TK_L1_RevGW_PQ_VR200_Lo: prev19, TK_L1_RevGW_PQ_VR200_Hi: prev19, TK_L1_RevGW_PQ_VR200_FY: prev19, TK_L1_RevGW_PQ_VR200_FY_Lo: prev19, TK_L1_RevGW_PQ_VR200_FY_Hi: prev19, TK_L1_RevGW_PQ_VR200_Life: prev19, TK_L1_RevGW_PQ_VR200_Life_Lo: prev19, TK_L1_RevGW_PQ_VR200_Life_Hi: prev19, TK_L1_TokGW_PaidPQ_VR200: prev19, TK_L1_TokGW_PaidPQ_VR200_Lo: prev19, TK_L1_TokGW_PaidPQ_VR200_Hi: prev19, TK_L1_TokLedger_2026Q2: prev19, TK_L1_TokGW_PaidCap_VR200: prev19, TK_L1_GapPrompt: prev19, TK_L1_GapPrompt_Hi: prev19, TK_L1_GapProduct: prev19, TK_L1_GapProduct_Hi: prev19, TK_L1_GapUnexplained: prev19, TK_L1_GapUnexplained_Lo: prev19, TK_L1_GapUnexplained_Hi: prev19}}
 
@@ -62,21 +73,35 @@ scenarios:
   combo3: [elast_weak, price_hi, ramp_lo]
   combo4: [api_task_lo, elast_weak, price_hi, ramp_lo]
   # v0.1 → v0.1.1 的分解（v0.1.2 起同時把 TK 快照回到 v5.26，使數字等於 v0.1／v0.1.1 當時的輸出）
-  v010: [s1f_off, tk19_back, u1_off, u2_off, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
-  only_u1: [s1f_off, tk19_back, u2_off, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
-  only_u2: [s1f_off, tk19_back, u1_off, u2_method_old, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
+  v010: [c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u1_off, u2_off, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
+  only_u1: [c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u2_off, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
+  only_u2: [c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u1_off, u2_method_old, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
   # v0.1.1 → v0.1.2 的分解（TK v5.26 → v18.0）
-  v011: [s1f_off, tk19_back, u2_method_old, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
+  v011: [c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u2_method_old, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
   # v0.1.3：v0.1.2 的輸出（TK v18.0 與 v19.0 值相同，故只需關閉 U2 新法）
-  v012: [s1f_off, tk19_back, u2_method_old]
-  only_tokgw: [s1f_off, tk19_back, u2_method_old, tk_prev_hold, tk_prev_rest]
-  only_hold: [s1f_off, tk19_back, u2_method_old, tk_prev_tokgw, tk_prev_rest]
+  v012: [c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u2_method_old]
+  only_tokgw: [c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u2_method_old, tk_prev_hold, tk_prev_rest]
+  only_hold: [c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u2_method_old, tk_prev_tokgw, tk_prev_rest]
   # v0.1.4：v0.1.3 的輸出（TK v19.0）與逐群拆解
-  v013: [s1f_off, tk19_back]
-  v14_only_luna: [s1f_off, tk19_rest_back]
-  v14_only_rest: [s1f_off, tk19_luna_back]
+  v013: [c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back]
+  v14_only_luna: [c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_rest_back]
+  v14_only_rest: [c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_luna_back]
   # v0.1.5：v0.1.4 的輸出（TK v19.1）
-  v014: [s1f_off, tk14_back]
+  v014: [c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk14_back]
   # v0.1.6：v0.1.5 的輸出（2026 上半年＝草擬版 16.3）
-  v015: [s1f_off]
+  v015: [c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off]
   combo5: [api_task_lo, elast_weak, price_hi, ramp_lo, tok_lo, hc_hi, fee_hi]
+  # v0.1.7：v0.1.6 的輸出（各項開關 0、TK v21.2）與 W1–W5 逐項加入的瀑布（W6 不改數值）；「不進基準」讀法；已套用預設的替代讀法
+  v016: [c_off, own_old, cal25_off, d22_off, tk16_back]
+  wf_w1: [own_old, cal25_off, d22_off, tk16_back]
+  wf_w2: [cal25_off, d22_off, tk16_back]
+  wf_w3: [d22_off, tk16_back]
+  wf_w4: [tk16_back]
+  commit_off: [c_off]
+  s1u_fast: [s1u_fast]
+  s1u_slow: [s1u_slow]
+  spx_cap: [spx_cap]
+  gaddl_on: [gaddl_on]
+  bcm_2026: [bcm_2026]
+  only_w2_off: [own_old]
+  only_w4_off: [d22_off]

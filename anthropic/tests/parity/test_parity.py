@@ -171,7 +171,7 @@ def test_scenario_expected_results(model):
         eng = new_engine(model, fresh=True)
         for k, v in sc["inputs"].items():
             eng.set_key(k, v)
-        errs = {eng.get("Checks", f"A{r}") for r in range(5, 200) if eng.get("Checks", f"E{r}") == "ERR"}
+        errs = {eng.get("Checks", f"A{r}") for r in range(5, 400) if eng.get("Checks", f"E{r}") == "ERR"}
         for key in sc.get("expect_err", []):
             assert CHK_IDS[key] in errs, (sc["id"], key, errs)
         if not sc.get("expect_err"):

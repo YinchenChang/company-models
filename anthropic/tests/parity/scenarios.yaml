@@ -3,13 +3,13 @@
 # expect_err：該情境必須讓這些檢查轉 ERR（保證檢查有牙齒）；expect_warn：CHK_Warnings ≥ 1。
 workbook_expectations:            # 版本升級時必須有意識地更新（CLAUDE.md 第 4 節）
   sheets: [README, SRC_ANT, TK_Link, OAI_Link, Inputs, Demand, Revenue, Compute, Cost, Bridge, EtaDiag, Funding, Reverse, Checks, _Defaults]
-  formula_cells: 7609             # v0.1.6：＋Revenue h1act 改式（格數不變）＋Cost 第二十四節（正式 S-1 對照、η_2026H1 與 B 情境）＋Checks C157–C181；v0.1.4：＋EtaDiag 第七節與 Checks C153–C156（25 格）；v0.1.3 B 7,231：＋Bridge 頁與 EtaDiag 頁（唯讀）＋Checks C143–C152；v0.1.2：v0.1.1 的 5,834 ＋ Cost 第二十一節 16 列（TK L1_RevGW_PQ_VR200 對照）＋ Checks 3 列＋Cost／Checks 欄位格；v0.1.1：v0.1 的 5,491 ＋ 回歸開關與 U3–U7 新列（Revenue h1act、Compute U2 對照與 _old 列、Cost 第十六–十九節、Funding U7 與 S8）＋ Checks C106–C123
-  defined_names: 1358              # v0.1.6：＋SRC_ANT 55 列的名稱 68（值 52、_Lo 6、_Hi 4、_Date 6）＋Inputs 2＋COST_／CMP_ 新名 12（1276 → 1358）；v0.1.4：＋TK_IF_ProdDerate 與 ETA_fU_Prod／Prod2／Resid2（1272 → 1276）；v0.1.3 B：＋TK_ 對照名稱 23（IF_UtilActual、L1_TokGW_PaidCap_VR200、B4_MixPaid、L1_Gap*；其中 22 個前綴為 TK_IF_／TK_L1_）＋ETA_ 6（Eta、fP、fU、fW、Prod、Resid）；v0.1.2：＋TK_ 對照名稱 14（L1_RevGW_PQ_VR200 系列、L1_TokGW_PaidPQ_VR200 系列、L1_TokLedger_2026Q2、L1_M）＋COST_TKPQ、COST_TKPQRatio、COST_TKTokLedger；v0.1.1：＋SRC_ANT 30 列的名稱（值／下限／上限）、Inputs 7、COST_* 與 CMP_* 與 FND_* 新名
+  formula_cells: 7774             # v0.1.7：＋Compute 第十六節、Cost 第二十五節、Funding 第十二節、Checks C182–C192（7,609 → 7,774）；v0.1.6：＋Revenue h1act 改式（格數不變）＋Cost 第二十四節（正式 S-1 對照、η_2026H1 與 B 情境）＋Checks C157–C181；v0.1.4：＋EtaDiag 第七節與 Checks C153–C156（25 格）；v0.1.3 B 7,231：＋Bridge 頁與 EtaDiag 頁（唯讀）＋Checks C143–C152；v0.1.2：v0.1.1 的 5,834 ＋ Cost 第二十一節 16 列（TK L1_RevGW_PQ_VR200 對照）＋ Checks 3 列＋Cost／Checks 欄位格；v0.1.1：v0.1 的 5,491 ＋ 回歸開關與 U3–U7 新列（Revenue h1act、Compute U2 對照與 _old 列、Cost 第十六–十九節、Funding U7 與 S8）＋ Checks C106–C123
+  defined_names: 1394              # v0.1.7：＋Inputs 18（INP_197–214）＋TK_IF_CapexIT、TK_IF_CapexFacility＋CMP_／COST_／FND_ 新名 16（1358 → 1394）；v0.1.6：＋SRC_ANT 55 列的名稱 68（值 52、_Lo 6、_Hi 4、_Date 6）＋Inputs 2＋COST_／CMP_ 新名 12（1276 → 1358）；v0.1.4：＋TK_IF_ProdDerate 與 ETA_fU_Prod／Prod2／Resid2（1272 → 1276）；v0.1.3 B：＋TK_ 對照名稱 23（IF_UtilActual、L1_TokGW_PaidCap_VR200、B4_MixPaid、L1_Gap*；其中 22 個前綴為 TK_IF_／TK_L1_）＋ETA_ 6（Eta、fP、fU、fW、Prod、Resid）；v0.1.2：＋TK_ 對照名稱 14（L1_RevGW_PQ_VR200 系列、L1_TokGW_PaidPQ_VR200 系列、L1_TokLedger_2026Q2、L1_M）＋COST_TKPQ、COST_TKPQRatio、COST_TKTokLedger；v0.1.1：＋SRC_ANT 30 列的名稱（值／下限／上限）、Inputs 7、COST_* 與 CMP_* 與 FND_* 新名
   src_rows: 464                   # A1 376＋A2 新增 3（SRC_ANT_377–379）＋v0.1.1 新增 30（SRC_ANT_380–409）＋v0.1.6 新增 55（SRC_ANT_410–464，正式 S-1）
   src_named: 410                  # 有值欄的列才有 SRC_ANT_nnn 名稱（另有 _Lo／_Hi／_Date）；v0.1.1 新增 28 列有值（2 列定性）；v0.1.6 新增 52 列有值（3 列無點值：S-1 留白、Google 額外 TPU 區間、單一客戶上限）
-  inp_rows: 192                   # INP_001–196；INP_016（A2 容量上限佔位）、INP_067–069 退役；v0.1.1 新增 INP_180–186；v0.1.6 新增 INP_195–196
-  base_warnings: 2                # v0.1.1：C89 逐家合約總額對招股書（AMD ×3.9）＋C116 U4 模型算力成本（含自建資本支出）對報導外推全年 +47%（U4 口徑未明）
-  tk_values: 105                  # v0.1.4：＋1（IF_ProdDerate）；v0.1.3 B：＋22（η 診斷對照名稱）；OpenAI v0.6 同一組 63 名＋A2 新增 5 名（IF_HdrTask、IF_TaskLen、IF_TaskTokFresh／Cached／Dec）＋v0.1.2 新增 14 名（Tokenomics v18.0 對照名稱，只對照）
+  inp_rows: 210                   # v0.1.7 新增 INP_197–214；INP_001–196；INP_016（A2 容量上限佔位）、INP_067–069 退役；v0.1.1 新增 INP_180–186；v0.1.6 新增 INP_195–196
+  base_warnings: 4                # v0.1.7：C54 η（2025）0.468 低於合理範圍下緣 0.5、C69／C70 2025／2026 年底 GW 對報導 +33%／+37%（皆因 TK v21.7 的 TPU／Trainium 持有比下降使既有雲端加權合約價下降、同額付款換得較多 GW）、C89 逐家合約（AMD）；C116 消失（自建資本支出改 GW 法後為 0）；v0.1.1：C89 逐家合約總額對招股書（AMD ×3.9）＋C116 U4 模型算力成本（含自建資本支出）對報導外推全年 +47%（U4 口徑未明）
+  tk_values: 107                  # v0.1.7：＋2（IF_CapexIT、IF_CapexFacility）；v0.1.4：＋1（IF_ProdDerate）；v0.1.3 B：＋22（η 診斷對照名稱）；OpenAI v0.6 同一組 63 名＋A2 新增 5 名（IF_HdrTask、IF_TaskLen、IF_TaskTokFresh／Cached／Dec）＋v0.1.2 新增 14 名（Tokenomics v18.0 對照名稱，只對照）
   tk_nonnv: 18                    # TK_NNV_*（TPU v7、Trainium3、MI455X × 6；讀表，非具名）
   oai_names: 21                   # OAI_ 17 個逐年名稱＋4 個中繼資料
   tk_pending: 0
@@ -175,5 +175,33 @@ scenarios:
     description: 2026 上半年營收成本 2.38 → 4.5（SRC_ANT_423）：η_2026H1 由 0.60 降到約 0.32（低於基準 η），B 情境的有效推論 GW、研發 GW 改變；基準不變（W3 只對照）
     inputs: {"SRC_ANT_423": 4.5}
   - id: id_s1f_msft_low
-    description: 正式 S-1 Microsoft 最低金額 44.9 → 31（SRC_ANT_452；回到草擬版）：W3(d) 逐家與七家合計對照改變，基準不變
+    description: 正式 S-1 Microsoft 最低金額 44.9 → 31（SRC_ANT_452；回到草擬版）：W3(d) 逐家與七家合計對照改變；v0.1.7 起 Microsoft 合約總額讀正式 S-1，基準供給、付款與未歸屬餘額同步改變
     inputs: {"SRC_ANT_452": 31, "SRC_ANT_452_Lo": 31}
+  # ── v0.1.7（工作單 20261031 v0.1.7）
+  - id: je_s1f_commit_off
+    description: W1 承諾開關 1 → 0（INP_197；逐家合約回到 v0.1.6 口徑、未歸屬餘額＝0）：合約總額、付款、供給 GW、命題差額與資金改變（「不進基準」讀法）
+    inputs: {"INP_197": 0}
+  - id: jf_s1u_fast
+    description: 未歸屬餘額付款結束年 2033 → 2031（INP_199；快讀法 2027–2031）：年付款與供給 GW 增加、2030 年後應付減少
+    inputs: {"INP_199": 2031}
+  - id: jg_spacex_cap
+    description: SpaceXAI 上限讀法開關 0 → 1（INP_200；月費路徑按正式 S-1 上限 120.5 等比例放大）：SpaceX 付款與 GW 增加、未歸屬餘額減少
+    inputs: {"INP_200": 1}
+  - id: jh_google_addl
+    description: Google 額外 TPU 開關 0 → 1（INP_201；125–150 中點 2028–2031 平均）：TPU v7 供給與付款增加（情境）
+    inputs: {"INP_201": 1}
+  - id: ji_own_old
+    description: 自建資本支出算法 1 → 0（INP_204；回到 Fluidstack $50B 三年均攤）：2026–2028 自建資本支出與自建 GW 恢復
+    inputs: {"INP_204": 0}
+  - id: jj_own_gw_2028
+    description: 自建 IT GW 2028 年新增 0 → 0.5（INP_208）：GW 法資本支出（2028 IT＋廠房依 lag 18 個月提前至 2026、2027 各半）與自建 GW 改變
+    inputs: {"INP_208": 0.5}
+  - id: jk_cal25_off
+    description: W3 2025 校準開關 1 → 0（INP_212；營收 4.6、算力 7.33）：2025 校準、η 與其後各年改變
+    inputs: {"INP_212": 0}
+  - id: jl_d22_off
+    description: W4 非算力成本校準開關 1 → 0（INP_213；2026 每人成本回到 2025 × 年變動率）：2026 起非算力成本、最低現金與資金改變
+    inputs: {"INP_213": 0}
+  - id: jm_broadcom_2026
+    description: Broadcom 起始年 2027 → 2026（INP_131；正式 S-1 期間起點）：Broadcom 付款與供給提前一年
+    inputs: {"INP_131": 2026}

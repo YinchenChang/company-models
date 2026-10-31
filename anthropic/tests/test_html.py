@@ -149,28 +149,34 @@ def test_dist_xlsx_is_current_model():
 
 
 def test_narrative_claims(engine):
-    """HTML 文字中的定性主張（①②④⑤⑥⑦）。"""
+    """HTML 文字中的定性主張（①②④⑤⑥⑦；v0.1.7 起：2026 為正、2027–2029 為負、2030 轉正；累計外部資金需求 0；現金谷底在 2029）。"""
     gap = dict(zip(YEARS, engine.get_name("COST_PropGap_VR")))
-    assert all(gap[y] < 0 for y in (2026, 2027, 2028)), "『2026–2028 差額為負』不成立"
-    assert all(gap[y] > 0 for y in (2029, 2030)), "『2029 起轉正』不成立"
+    assert gap[2026] > 0, "『2026 年可覆蓋全成本』不成立"
+    assert all(gap[y] < 0 for y in (2027, 2028, 2029)), "『2027–2029 差額為負』不成立"
+    assert gap[2030] > 0, "『2030 年轉正』不成立"
     for nm in ("COST_PropGapEcon_VR", "COST_PropGap_GW"):
         g = dict(zip(YEARS, engine.get_name(nm)))
-        assert g[2028] < 0 < g[2029], f"『三種口徑轉正年同為 2029』不成立：{nm}"
+        assert g[2026] > 0 and g[2029] < 0 < g[2030], f"『三種口徑正負一致』不成立：{nm}"
+    assert all(math.isclose(a, b, rel_tol=1e-9, abs_tol=1e-9) for a, b in zip(engine.get_name("COST_PropGapEcon_VR"), engine.get_name("COST_PropGap_VR"))), "『自建 0 → 現金與經濟口徑相同』不成立"
     assert all(v in (None, "", 0) for v in engine.get_name("FND_ExtNeedCum")), "『累計外部資金需求 0』不成立"
+    fcf = dict(zip(YEARS, engine.get_name("FND_FCF")))
+    assert fcf[2026] > 0 and all(fcf[y] < 0 for y in (2027, 2028, 2029)) and fcf[2030] > 0, "『營運自由現金流 2026 正、2027–2029 負、2030 正』不成立"
     cash = dict(zip(YEARS, engine.get_name("FND_CashNoExt")))
-    assert min((cash[y], y) for y in YEARS[1:])[1] == 2028, "『現金谷底在 2028 年』不成立"
-    assert cash[2028] == engine.get_name("FND_CashNoExtTrough")
+    assert cash[2029] == engine.get_name("FND_CashNoExtTrough")
     sup = dict(zip(YEARS, engine.get_name("CMP_SupplyGW")))
     assert sup[2030] < sup[2028], "『供給 2028 年後遞減』不成立"
     assert all(g < 0 for g in engine.get_name("OAI_COST_PropGap_VR")), "『OpenAI 每年差額皆為負』不成立"
+    assert engine.get_name("COST_S1fNonCompDiff") > engine.get_name("INP_214"), "『W4 推得值超過 30% 門檻』不成立"
     assert engine.get_name("CHK_Errors") == 0
 
 
-def test_single_driver_never_needs_external_funding(engine, loc):
-    """⑥『任何單一驅動在區間內都不會產生外部資金需求』；組合 combo1 會。"""
+def test_single_driver_claims(engine, loc):
+    """⑥ 的單一驅動清單由 Excel 值產生（HTML 只取值）；v0.1.7 起至少一個單一驅動會產生外部資金需求、組合 combo1 也會；歷史情境 v016 不會。"""
     single = [k for k, g in load_scenarios()["scenarios"].items() if len(g) == 1]
-    for sc in single:
+    need = {sc: _scenario_values(engine, loc, sc, [("FND_ExtNeedCum", 2030)])[("FND_ExtNeedCum", 2030)] for sc in single}
+    assert any(v and v > 0 for v in need.values())
+    for sc in ("api_task_lo", "elast_weak", "price_hi", "s1u_fast"):          # ① 備註所列
+        assert need[sc] > 0, sc
+    for sc in ("combo1", "v016"):
         v = _scenario_values(engine, loc, sc, [("FND_ExtNeedCum", 2030)])[("FND_ExtNeedCum", 2030)]
-        assert v == 0, f"單一驅動 {sc} 產生外部資金需求 {v}"
-    v = _scenario_values(engine, loc, "combo1", [("FND_ExtNeedCum", 2030)])[("FND_ExtNeedCum", 2030)]
-    assert v > 0
+        assert (v > 0) if sc == "combo1" else (v in (None, "", 0)), (sc, v)
