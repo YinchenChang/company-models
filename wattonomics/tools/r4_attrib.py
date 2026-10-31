@@ -143,18 +143,27 @@ for p, fye, base in P7:
         cr = ws_row(WIN, "cap_msft", 1)
         inp("cap2_msft_2025", "Microsoft 資本支出 FY2025（In Y2；Y9 無 FY2025，曆年換算補用）", "$B", None, v(WIN, cr, 10), None, "Verified",
             f"{wt_f} In!J{cr}（10-K 現金 PP&E 增添，不含融資租賃；與 Y9 口徑不同，標 Derived 混合）")
+    nr = ws_row(PL, f"{p}_nnv")
+    for y in YRS:
+        inp(f"nnv_{p}_{y}", f"{PNAME[p]} 新增 GW 非 NVIDIA 占比 {y}", "%", None, v(PL, nr, WCOL[y]), None, "Derived", f"{wt_f} Players!{CL(WCOL[y])}{nr}")
+    if p == "nbis":
+        cr = ws_row(WIN, "cap_nbis", 1)
+        inp("cap2_nbis_2025", "Nebius 資本支出 FY2025（In Y2；Y9 無 FY2025，補用）", "$B", None, v(WIN, cr, 10), None, "Verified", f"{wt_f} In!J{cr}")
     if p == "orcl":
         cr = ws_row(WIN, "cap_orcl", 1)
         inp("cap2_orcl_2025", "Oracle 資本支出 FY2025（In Y2；Y9 無 FY2025，曆年換算補用）", "$B", None, v(WIN, cr, 10), None, "Verified",
             f"{wt_f} In!J{cr}")
 
 # D. 非七家（11 家中有個股模型資本支出者）
-sec("D. 非七家：xAI、OpenAI 自建、Anthropic 自建（In Y9 AI 資本支出；Players 站點年新增）；每 IT GW 用 NVIDIA 世代加權")
+sec("D. 非七家：xAI、Anthropic 自建（In Y9 AI 資本支出；Players 站點年新增）；每 IT GW 用 NVIDIA 世代加權。OpenAI／Stargate 自建不在此：依 Decisions GL01-31 其站點屬 SPV 擁有，與 OpenAI 自身資本支出不是同一筆")
 for y in YRS:
     inp(f"pitN_{y}", f"NVIDIA 每 IT GW IT capex（世代加權）{y}", "$B/GW", None, v(CG, 7, WCOL[y]), None, "Derived", f"{wt_f} CapexGW!{CL(WCOL[y])}7")
     inp(f"pfacN_{y}", f"NVIDIA 每 IT GW 廠房 capex {y}", "$B/GW", None, v(CG, 8, WCOL[y]), None, "Derived", f"{wt_f} CapexGW!{CL(WCOL[y])}8")
-for p in ["xai", "oai", "ant"]:
+for p in ["xai", "ant"]:
     ar = ws_row(PL, f"{p}_add")
+    nr = ws_row(PL, f"{p}_nnv")
+    for y in YRS:
+        inp(f"nnv_{p}_{y}", f"{PNAME[p]} 新增 GW 非 NVIDIA 占比 {y}", "%", None, v(PL, nr, WCOL[y]), None, "Derived", f"{wt_f} Players!{CL(WCOL[y])}{nr}")
     for y in YRS:
         inp(f"site_{p}_{y}", f"{PNAME[p]} 甲（站點）年新增 IT GW {y}", "GW", None, v(PL, ar, WCOL[y]), None, "Derived", f"{wt_f} Players!{CL(WCOL[y])}{ar}")
     gr = ws_row(WIN, f"gcapai_{p}", 1)
@@ -222,6 +231,8 @@ def cy_y9(p, y, ai):
         return f"({m}/12*{a}+{12-m}/12*{b})*{share}"
     k = f"gcap_{p}_{y}"
     if IN[names[k].split('!')[1].replace('$', '')].value is None:
+        if f"cap2_{p}_{y}" in names:
+            return f"cap2_{p}_{y}*{share}"
         return None
     return f"{k}*{share}"
 
@@ -229,10 +240,10 @@ def cy_y9(p, y, ai):
 for ck, cl, kw in CASES:
     ai = kw.get("ai", ""); wb_ = kw.get("wb", ""); lag = kw.get("lag", "lag"); inv = kw.get("inv", "inv_k")
     CA.cell(cr, 1, f"■ 情況：{cl}").font = BOLD; cr += 1
-    for j, h in enumerate(["鍵", "項目"] + [str(y) for y in YRS], 1):
+    for j, h in enumerate(["鍵", "項目", ""] + [str(y) for y in YRS], 1):
         c = CA.cell(cr, j, h); c.font = BOLD; c.fill = HDR
     cr += 1
-    rows = {"x2": [], "on2": [], "x9": [], "on9": [], "site": [], "xn": [], "onn": [], "siten": []}
+    rows = {"x2": [], "on2": [], "x9": [], "on9": [], "site": [], "main": [], "nv9": [], "xn": [], "onn": [], "siten": [], "nvn": []}
     for p, fye, base in P7:
         for src in ("2", "9"):
             if src == "2":
@@ -260,8 +271,12 @@ for ck, cl, kw in CASES:
                 return f"=(1-{lag})*{cur}+{lag}*{prv}-{inv}*({cur}-{prv})"
             ro = put(f"{PNAME[p]} 甲2 年新增 IT GW（上線年）", f"{ck}_on{src}_{p}", onf)
             rows["x" + src].append(rx); rows["on" + src].append(ro)
+            if src == "9":
+                rows["nv9"].append(put(f"{PNAME[p]} 甲2 上線年（Y9）× NVIDIA 占比", f"{ck}_nv9_{p}",
+                                       lambda y, p=p, ro=ro: None if y == YRS[0] else f"={C(y)}{ro}*(1-nnv_{p}_{y})"))
         rows["site"].append(put(f"{PNAME[p]} 甲（站點）年新增", f"{ck}_site_{p}", lambda y, p=p: f"=site_{p}_{y}"))
-    for p in ["xai", "oai", "ant"]:
+        rows["main"].append(put(f"{PNAME[p]} v0.1.7 主路徑年新增（2027 起甲2；CapexGW 空白者仍為站點）", f"{ck}_main_{p}", lambda y, p=p: f"=main_{p}_{y}"))
+    for p in ["xai", "ant"]:
         ra = put(f"{PNAME[p]} AI 資本支出（個股模型，曆年＝財年）", f"{ck}_ain_{p}",
                  lambda y, p=p: f"=IF(ISNUMBER(gai_{p}_{y}),gai_{p}_{y},\"\")")
         def gwn(y, p=p, ra=ra):
@@ -278,11 +293,14 @@ for ck, cl, kw in CASES:
                 return None
             cur = f"{C(y)}{rx}"; prv = f"{CL(CC[y]-1)}{rx}"
             return f"=IF(ISNUMBER(gai_{p}_{y-1}),(1-{lag})*{cur}+{lag}*{prv}-{inv}*({cur}-{prv}),{cur})"
-        ro = put(f"{PNAME[p]} 模型資本支出推得年新增 IT GW（上線年；前一年無模型值則不平移）", f"{ck}_onn_{p}", onn)
+        ro = put(f"{PNAME[p]} 模型資本支出推得年新增 IT GW（上線年；前一年無模型值時假設持平、不平移）", f"{ck}_onn_{p}", onn)
         rows["xn"].append(rx); rows["onn"].append(ro)
+        rows["nvn"].append(put(f"{PNAME[p]} 上線年 × NVIDIA 占比", f"{ck}_nvn_{p}",
+                               lambda y, p=p, ro=ro: None if y == YRS[0] else f"={C(y)}{ro}*(1-nnv_{p}_{y})"))
         rows["siten"].append(put(f"{PNAME[p]} 甲（站點）年新增", f"{ck}_siten_{p}", lambda y, p=p: f"=site_{p}_{y}"))
     for kind, lab in [("x2", "七家 甲2 付款年（In Y2）"), ("on2", "七家 甲2 上線年（In Y2）"), ("x9", "七家 甲2 付款年（Y9）"),
-                      ("on9", "七家 甲2 上線年（Y9）"), ("site", "七家 甲（站點）"), ("xn", "非七家 模型推得 付款年"),
+                      ("on9", "七家 甲2 上線年（Y9）"), ("site", "七家 甲（站點）"), ("main", "七家 v0.1.7 主路徑"),
+                      ("nv9", "七家 甲2 上線年（Y9）NVIDIA 部分"), ("nvn", "非七家 模型推得 上線年 NVIDIA 部分"), ("xn", "非七家 模型推得 付款年"),
                       ("onn", "非七家 模型推得 上線年"), ("siten", "非七家 甲（站點）")]:
         rr_ = put(f"合計：{lab}", f"{ck}_S_{kind}", lambda y, kind=kind: "=" + "+".join(f"{C(y)}{x}" for x in rows[kind]), True)
         for y in YRS:
@@ -334,16 +352,16 @@ brow("w0", "Wattonomics 主路徑年新增 IT GW（v0.1.7，A、D0）", "Deploy 
 brow("r0", "殘差 r1（Siliconomics 側交來）", "s8 − w0", lambda y: f"={ref('s8', y)}-{ref('w0', y)}", "", True)
 br += 1
 B.cell(br, 1, "二、Wattonomics 側逐項（Compare 第 1–4 點＋覆蓋）").font = BOLD; br += 1
-brow("d1", "【覆蓋】2026 七家改甲2（付款年，In Y2 讀法）＝AI半導體 10-31 觀察 2 的量",
-     "Σ七家 甲2（付款年）− Σ七家 站點；2027 起主路徑已是甲2 → 0",
-     lambda y: f"={S_('x2', y)}-{S_('site', y)}" if y == 2026 else "=0", "Derived")
-brow("d2", "【第 1 點 出貨年 vs 上線年】七家甲2 付款年 → 上線年（Wattonomics 自己的口徑修正）",
-     "甲2 的 IT 資本支出以付款年當上線年；以 Siliconomics ②③ 同參數平移：Σ上線年 − Σ付款年（In Y2）",
+brow("d1", "【覆蓋】七家主路徑一律改甲2（付款年，In Y2 讀法）：2026 全部七家＝AI半導體 10-31 觀察 2 的量；2027 Meta、CoreWeave",
+     "Σ七家 甲2（付款年；缺值以站點代入）− Σ七家 v0.1.7 主路徑（2027 起 CapexGW 空白者仍為站點）",
+     lambda y: f"={S_('x2', y)}-{S_('main', y)}", "Derived")
+brow("d2", "【第 1 點 出貨年 vs 上線年】七家甲2 付款年 → 上線年",
+     "GL01-08 預設：甲2 的 IT 資本支出以付款年當上線年；以 Siliconomics ②③ 同參數平移：Σ上線年 − Σ付款年（In Y2）",
      lambda y: f"={S_('on2', y)}-{S_('x2', y)}", "Derived／Assumed")
 brow("d3", "【覆蓋】七家資本支出改讀個股模型 v0.3（v0.1.8 規劃）",
      "Σ上線年（Y9）− Σ上線年（In Y2）", lambda y: f"={S_('on9', y)}-{S_('on2', y)}", "Derived")
-brow("d4", "【覆蓋】非七家：xAI、OpenAI 自建、Anthropic 自建改讀個股模型資本支出",
-     "Σ模型推得（上線年）− Σ站點；每 GW 用 NVIDIA 世代加權成本（OpenAI 含客製晶片 → 偏低估 GW）",
+brow("d4", "【覆蓋】非七家：xAI、Anthropic 自建改讀個股模型資本支出（OpenAI／Stargate 不換，GL01-31）",
+     "Σ模型推得（上線年；2025 無模型值時假設持平、不平移）− Σ站點；每 GW 用 NVIDIA 世代加權成本",
      lambda y: f"={S_('onn', y)}-{S_('siten', y)}", "Derived")
 brow("d5", "【覆蓋】「其他（企業、學研）」2026 起持平 → 改隨市場成長",
      "其他_t−1 ×（主路徑年底 t ÷ 年底 t−1 − 1），逐年累積", lambda y: None, "Analogy")
@@ -373,7 +391,7 @@ brow("km", "七家上線 GW 需放大倍數（其餘不變，使殘差歸零）"
      lambda y: f"=({ref('sg', y)}-({ref('wadj', y)}-{S_('on9', y)}))/{S_('on9', y)}", "Derived", False, "0.00")
 br += 1
 B.cell(br, 1, "五、敏感度（一次動一個輸入；殘差＝sg − wadj）").font = BOLD; br += 1
-for j, h in enumerate(["情況", "", ""] + [str(y) for y in OUT], 1):
+for j, h in enumerate(["情況", "", ""] + [str(y) for y in OUT] + ["", f"比值 {OUT[0]}", f"比值 {OUT[1]}", f"比值 {OUT[2]}", f"比值 {OUT[3]}"], 1):
     c = B.cell(br, j, h); c.font = BOLD; c.fill = HDR
 br += 1
 for ck, cl, kw in CASES:
@@ -387,10 +405,11 @@ for ck, cl, kw in CASES:
             sg = f"(s_b8_{y}-s_b4_{y}-s_b5_{y}-({lagn}+{invn})*{dship}-s_b6_{y})"
         else:
             sg = f"{ref('sg', y)}"
-        d1 = f"({S_('x2', y, ck)}-{S_('site', y, ck)})" if y == 2026 else "0"
+        d1 = f"({S_('x2', y, ck)}-{S_('main', y, ck)})"
         wadj = (f"(wt_new_{y}+{d1}+({S_('on2', y, ck)}-{S_('x2', y, ck)})+({S_('on9', y, ck)}-{S_('on2', y, ck)})"
                 f"+({S_('onn', y, ck)}-{S_('siten', y, ck)})+{ref('d5', y)})")
         c = B.cell(br, BC[y], f"={sg}-{wadj}"); c.number_format = "0.00"
+        c = B.cell(br, BC[y] + 5, f"={wadj}/{sg}"); c.number_format = "0.000"
     br += 1
 for lab, fm in [("只做 d1（不平移、不改讀 v0.3、不補非七家）", lambda y: f"={ref('sg', y)}-({ref('w0', y)}+{ref('d1', y)})"),
                 ("d1＋d2（改甲2 並平移；仍讀 In Y2）", lambda y: f"={ref('sg', y)}-({ref('w0', y)}+{ref('d1', y)}+{ref('d2', y)})"),
@@ -417,7 +436,9 @@ one("n0", "NVIDIA 出貨 GW 2025（以 GB300 內容換算；2025 多 GB200／Hop
 one("n2", "NVIDIA 推得上線 GW 2026（同 ②③ 參數）", "(1−lag)·n1 + lag·n0 − inv_k·(n1 − n0)",
     f"=(1-lag)*D{R['n1']}+lag*D{R['n0']}-inv_k*(D{R['n1']}-D{R['n0']})", "Derived")
 one("n3", "Wattonomics v0.1.7 2026 NVIDIA 上線 GW", "w0 ×（1 − nnv_mkt）", f"=D{R['w0']}*(1-nnv_mkt_2026)", "Derived")
-one("n4", "Wattonomics 調整後 2026 NVIDIA 上線 GW（以市場 NonNV 占比近似）", "wadj ×（1 − nnv_mkt）", f"=D{R['wadj']}*(1-nnv_mkt_2026)", "Derived")
+one("n4", "Wattonomics 調整後 2026 NVIDIA 上線 GW（七家、非七家用逐家 NonNV 占比，其餘用市場占比）",
+    "(w0 − Σ七家主路徑 − Σ非七家站點 + d5)×(1 − nnv_mkt) + Σ七家上線（Y9）×(1 − nnv_玩家) + Σ非七家上線×(1 − nnv_玩家)",
+    f"=(D{R['w0']}-{S_('main', 2026)}-{S_('siten', 2026)}+D{R['d5']})*(1-nnv_mkt_2026)+{S_('nv9', 2026)}+{S_('nvn', 2026)}", "Derived")
 one("n5", "比值 v0.1.7 ÷ NVIDIA 推得", "n3 ÷ n2", f"=D{R['n3']}/D{R['n2']}", "", "0.000")
 one("n6", "比值 調整後 ÷ NVIDIA 推得", "n4 ÷ n2", f"=D{R['n4']}/D{R['n2']}", "", "0.000")
 br += 1
