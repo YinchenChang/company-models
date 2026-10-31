@@ -36,6 +36,12 @@ on:
       - 'avc/**'
       - 'amat/**'
       - 'emc/**'
+      - 'tuc/**'
+      - 'umc/**'
+      - 'vis/**'
+      - 'ase/**'
+      - 'mpi/**'
+      - 'arm/**'
       - 'asml/**'
       - 'accton/**'
       - 'lrcx/**'
@@ -106,6 +112,12 @@ on:
       - 'avc/**'
       - 'amat/**'
       - 'emc/**'
+      - 'tuc/**'
+      - 'umc/**'
+      - 'vis/**'
+      - 'ase/**'
+      - 'mpi/**'
+      - 'arm/**'
       - 'asml/**'
       - 'accton/**'
       - 'lrcx/**'
@@ -152,7 +164,7 @@ permissions:
 jobs:
   rebuild-and-compare:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     env:
       PYTHONDONTWRITEBYTECODE: '1'   # markets/memory/__pycache__ 已被追蹤，避免重建時改動工作樹
     steps:
@@ -228,6 +240,12 @@ jobs:
             "amat|python3 amat/build_amat.py|amat/dist"
             "avc|python3 avc/build_avc.py|avc/dist"
             "foxconn|python3 foxconn/build_foxconn.py|foxconn/dist"
+            "umc|python3 umc/build_umc.py|umc/dist"
+            "vis|python3 vis/build_vis.py|vis/dist"
+            "ase|python3 ase/build_ase.py|ase/dist"
+            "mpi|python3 mpi/build_mpi.py|mpi/dist"
+            "tuc|python3 tuc/build_tuc.py|tuc/dist"
+            "arm|python3 arm/build_arm.py|arm/dist"
           )
           failed=0
           for t in "${targets[@]}"; do
