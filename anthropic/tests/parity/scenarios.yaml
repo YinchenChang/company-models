@@ -94,9 +94,8 @@ scenarios:
     description: Google／Broadcom 容量改採公司自述 5 GW（開關 0 → 1），爬坡年數 2 → 3
     inputs: {"INP_128": 1, "INP_122": 3}
   - id: z_training_low_cap
-    description: 2025 訓練支出 4.1 → 1.0：推論支出換算 GW 上升、η 降至約 0.3（η WARN），2027 起有效推論超過可用 GW → 容量上限 < 1、營收截頂
+    description: 2025 訓練支出 4.1 → 1.0：推論支出換算 GW 上升、η 降至約 0.3，2027 起有效推論超過可用 GW → 容量上限 < 1、營收截頂（v0.1.7 起基準 η 0.468 已在 WARN〔C54〕，本情境不再增加 WARN 數，故不設 expect_warn；只驗 parity 與無 ERR）
     inputs: {"SRC_ANT_253": 1.0}
-    expect_warn: true
   - id: za_legacy_mix_broken
     description: 既有雲端組合 Trainium2 0.4 → 0.8、Hopper 0.1 → 0.3（TPU v6e 餘額 < 0；組合檢查與 Inputs 區間應 ERR）
     inputs: {"INP_125": 0.8, "INP_126": 0.3}
@@ -194,8 +193,8 @@ scenarios:
     description: 自建資本支出算法 1 → 0（INP_204；回到 Fluidstack $50B 三年均攤）：2026–2028 自建資本支出與自建 GW 恢復
     inputs: {"INP_204": 0}
   - id: jj_own_gw_2028
-    description: 自建 IT GW 2028 年新增 0 → 0.5（INP_208）：GW 法資本支出（2028 IT＋廠房依 lag 18 個月提前至 2026、2027 各半）與自建 GW 改變
-    inputs: {"INP_208": 0.5}
+    description: 自建 IT GW 2028 年新增 0 → 0.5（INP_208；同時把該列高欄改 0.5，避免區間順序檢查 C07 轉 ERR）：GW 法資本支出（2028 IT＋廠房依 lag 18 個月提前至 2026、2027 各半）與自建 GW 改變
+    inputs: {"INP_208": 0.5, "Inputs!G208": 0.5}
   - id: jk_cal25_off
     description: W3 2025 校準開關 1 → 0（INP_212；營收 4.6、算力 7.33）：2025 校準、η 與其後各年改變
     inputs: {"INP_212": 0}
