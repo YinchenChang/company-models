@@ -168,3 +168,89 @@
 - 第 257 列：item `net_debt_change` → `debt_level`（存量；不進 Funding 淨負債變化加總），detail 依建議改寫（表中 item 為更正前狀態）。
 - 第 255 列：引文補第 61 段。
 - 判定統計「無法核對 0」指列判定；第 257 列「含短期」一處屬 detail 內未能由逐字稿核對的說法，已在 detail 改為「差 2.8 的組成待 10-Q 核對」。
+
+## 五、第四批：Amazon、Meta 2026Q3 10-Q（F_funding 第 258–275 列；獨立核對）
+
+- 核對者：獨立核對代理（未參與製作）；日期：2026-10-31
+- 原文：Andy 下載的 `10Q_AMZN_3Q26.pdf`（386 頁）、`10Q_META_3Q26.pdf`（106 頁）及其文字檔。先以 `pdftotext -layout -f N -l N` 逐頁開原文核對數字，之後才讀製作方說明 `Q_add_2026q3_10q.md`。頁碼＝PDF 頁序（與製作方相同）；Amazon 第 1–54 頁與 Meta 第 6、20 頁的 PDF 頁序與印刷頁碼一致。單位：原文百萬美元，CSV 十億美元（÷1,000）。
+- 簽署日：Amazon "Dated: October 29, 2026"（本文簽署頁）；Meta "on this 21st day of October 2026"（PDF 第 102 頁）。新列 doc_date（Amazon 10-29、Meta 10-21）相符。EDGAR 受理日本次未上網核對。
+- 標記規則（與第三節第 248 列同一標準）：10-Q 單一數字直接列示者 [Verified]（同 Meta 10-Q 列 F#92、93、96），由兩個以上數字相加者 [Derived]（同 F#94、95、100、250）。製作方說明自己也寫明此規則。
+
+| 列號 | 項目 | CSV 值 | 文件所載（≤25 字引文與頁碼） | 判定 | 備註 |
+|---|---|---|---|---|---|
+| 258 | Amazon 2026-09-30 lease_not_commenced | 164.922 | "Leases not yet commenced 2,590 12,448 11,477 12,193 11,385 114,829 164,922"（附註 4，p15） | 屬實 | 存量、未折現，期末值正確。detail 的 2026Q4 2.590、2027 12.448、Thereafter 114.829 相符；9M 增 164.922 − 96.4 = 68.522、Q3 增 164.922 − 137.214 = 27.708 算術正確（96.4、137.214 取自既有列，不在本 10-Q）。10-Q 只有 9-30 一欄，無 2025-12-31 數，也無起租年度文字說明。與 F#77 同 item、同落 Amazon 2026 桶，見下「Q_SUPERSEDED」。 |
+| 259 | Amazon 9M2026 debt_detail | 97.273 | "March 2026 Notes issuance of $37.0 billion"…"Sterling-denominated Notes issuance of £4.3 billion … 5,637"（附註 5 債務表，p18） | 屬實 | 重算 37.000＋16.427＋3.375＋9.834＋25.000＋5.637＝97.273；H1 票據 66.636、Q3 票據 30.637 相符。這是面額（外幣以 9-30 匯率），不是現金收入；detail 已寫明。item 不在 FITEMS，不加總，與 F#253 無重複。 |
+| 260 | Amazon 2026-09 debt_detail | 17.5 | "In June 2026, we entered into a $17.5 billion unsecured delayed single draw term loan … drew on in September 2026"（附註 5，p19） | 屬實 | 2029-09 到期、SOFR＋0.625%–0.875%、無擔保都相符。Q3 長期借款收入 48.102（現金流量表 p3）vs 25.000＋5.637＋17.500＝48.137，差 −0.035（折價、費用與匯率），「≈」用法正確。不在 FITEMS。 |
+| 261 | Amazon 2026-09-30 debt_level | 179.952 | "Total face value of long-term debt 68,836 180,887"；"current portion … (2,748) (6,827)"（附註 5，p18） | 屬實 | 重算 173.125＋6.827＝179.952＝180.887 − 0.935。面額組成：票據 162.523（原文 "$162.5 billion of unsecured senior notes"）＋定期貸款 17.500＋其他 0.864＝180.887。短期信用額度 0.380（列 Accrued expenses）、商業本票 0、循環額度 0 都相符（p19）。帳面口徑，標 [Derived] 正確。 |
+| 262 | Amazon 2025-12-31 debt_level | 68.396 | "Long-term debt $ 65,648 $ 173,125"；current portion (2,748)（附註 5，p18） | 屬實 | 65.648＋2.748＝68.396＝68.836 − 0.440。短期信用額度 0.455 相符。 |
+| 263 | Amazon 9M2026 net_debt_change | 112.051 | "Total face value of long-term debt 68,836 180,887"（附註 5，p18） | 屬實 | 180.887 − 68.836＝112.051（**面額口徑**）；帳面口徑為 179.952 − 68.396＝111.556。面額口徑與 Amazon 既有 F#76（「票面借款 68.836 → 132.995」）及 Alphabet F#50（票面）一致，採用面額正確。現金流量表 9M 長債收入 115.100 − 還款 2.759＝112.341，差 −0.290；detail 寫「＋匯率等」方向易誤讀，建議改「＋匯率、折價等（−0.290）」（非承重，不列小誤）。還款 2.759 中 2.750 為 2021 年票據（15,000 → 12,250）相符。 |
+| 264 | Amazon 2026-09-30 fin_lease_liab | 14.495 | "Present value of lease liabilities 100,288 14,495 114,783"（附註 3，p14） | 屬實 | 流動 1.866、長期 12.629、未折現 17.955、2025 年底 12.286 都相符。 |
+| 265 | Amazon 2026-09-30 fin_obligation | 9.726 | "$7.8 billion and $9.3 billion are recorded within 'Other long-term liabilities'"（附註 4 註 (1)，p15） | 屬實 | 0.426＋9.3＝9.726；2025 年底 0.358＋7.8＝8.158；含息 11.565、14.5 年、3.4% 都相符。長期部分原文只給到 0.1B（9.3），第三位小數為假精度，detail 已寫「約 9.3」，可接受。 |
+| 266 | Amazon 2026-09-30 op_lease | 100.288 | "Present value of lease liabilities 100,288 14,495 114,783"（附註 3，p14） | 屬實 | 流動 14.093、長期 86.195、未折現 121.492、2025 年底 89.252 相符。op_lease 不在 FITEMS。 |
+| 267 | Amazon 2026-09-30 supplier_fin_facility | 80.0 | "secured loan facility … from Q1 2027 through Q3 2028 … up to approximately $80.0 billion"（附註 5，p19） | 屬實 | 浮動利率、每筆 5 年、動用後列 Long-term debt、還款列 Repayments of long-term debt 都相符；延後付款最長一年、列應付帳款（附註 4 註 (2)，p15）相符。刻意不用 vendor_financing（FITEMS）是正確的：這是額度、尚未動用，且方向是 Amazon 借入，不是 Amazon 對外投資。 |
+| 268 | Amazon 9M2026 capex_unpaid_change | 21.473 | "Increase (decrease) in property and equipment acquired but not yet paid … 21,473"（附註 1，p7） | 屬實 | Q3 0.853、TTM 26.779 相符。不在 FITEMS。 |
+| 269 | Amazon 2026-09-30 commitments | 159.640 | "Property and equipment (2) … 159,640"；"Total commitments … 883,581"（附註 4，p15） | 屬實 | 2026Q4 13.955、2027 63.900、無條件採購 94.759、長債本息 294.254 都相符。與 F#258 為承諾表不同列，無重複。 |
+| 270 | Amazon 2026-09-30 cash_level | 114.226 | "balances, which, at fair value, were $123.0 billion and $114.2 billion"（MD&A 流動性，p28） | 小誤（更正標記，值不變） | 55.783＋58.443＝114.226（資產負債表 p6）；外幣 16.5、受限 2.9 相符（p28）。值是兩數相加，依規則應標 [Derived]（同第 248 列），CSV 標 [Verified]。 |
+| 271 | Amazon 2025-12-31 cash_level | 123.029 | 同上（p28）；"Cash and cash equivalents $ 86,810"、"Marketable securities 36,219"（p6） | 小誤（更正標記，值不變） | 86.810＋36.219＝123.029。同 270，應標 [Derived]。 |
+| 272 | Meta 2026-09-30 debt_level | 83.669 | "Total face value of long-term debt 84,000"；"Less: Long-term debt, current (2,747)"（附註 9，p20） | 屬實 | 80.922＋2.747＝83.669＝84.000 − 0.331。一年內到期列 Accrued expenses and other current liabilities（附註 8，p20）；"of which $2.75 billion matures in August 2027"（MD&A Long-term Debt）相符。淨負債 83.669 − 82.449＝1.220 正確。與 F#257 都是 debt_level（不在 FITEMS），並存不重複。 |
+| 273 | Meta 2025-12-31 debt_level | 58.744 | "Long-term debt 80,922 58,744"（資產負債表 p6）；"Long-term debt, current 2,747 —"（附註 8，p20） | 屬實 | 一年內到期 0、面額 59.0 相符。單一數字，[Verified] 正確。 |
+| 274 | Meta 2026-09-30 cash_level | 82.449 | "Cash, cash equivalents, and marketable securities were $82.45 billion … increase of $857 million"（MD&A 流動性，p49） | 小誤（更正標記，值不變） | 11.222＋71.227＝82.449，較期初增 0.857 相符。受限現金 0.597＋12.535＝13.132（現金流量表調節）、10.80 貨幣基金因多年期基礎設施採購託管改列受限、預計 2028–2030 釋出（附註 4、附註 10）相符。值為相加，應標 [Derived]。 |
+| 275 | Meta 2025-12-31 cash_level | 81.592 | "Cash and cash equivalents 11,222 35,873"；"Marketable securities 71,227 45,719"（p6） | 小誤（更正標記，值不變） | 35.873＋45.719＝81.592。同 274，應標 [Derived]。 |
+
+### 指定重算
+
+| 項目 | 重算 | 結果 |
+|---|---|---|
+| Amazon Q3 長期借款收入 48.102 | 現金流量表 Q3 欄 48,102（p3）；7 月 USD 25.000＋9 月 GBP 5.637（9-30 帳面）＋定期貸款 17.500＝48.137 | 差 −0.035，屬折價、費用與英鎊匯率差，分解成立 |
+| Amazon H1 66.998 | 9M 115,100 − Q3 48,102＝66,998；3 月 USD 37.000＋EUR 16.427＋5 月 CHF 3.375＋6 月 CAD 9.834＝66.636 | 差 +0.362：外幣票據以 9-30 匯率列帳低於發行時收入（美元走強）抵銷折價後的淨額；方向合理，分解成立。H1 沒有定期貸款（9 月才動用） |
+| Amazon 債務 179.952 | 173.125＋6.827；或 180.887 − 0.935 | 一致 |
+| Amazon 9M 淨債變化 112.051 | 面額 180.887 − 68.836 | 面額口徑；帳面口徑 111.556。F#76、F#50 用面額，所以 112.051 與既有 net_debt_change 列一致 |
+| Meta 83.669 | 80.922＋2.747；84.000 − 0.331 | 一致 |
+| Meta 10-Q 簽署日 | PDF 第 102 頁 "on this 21st day of October 2026"；各證明書 "Date: October 21, 2026" | 2026-10-21 |
+| Meta 期後事項（附註 14，p33） | 2026 年 10 月提交 Restated Charter，新設無表決權 Class C，生效日 2027-01-19；董事會宣告每股 Class A／B 配 1 股 Class C 股利（待 Charter 生效後發放，登記與發放日另定），會計上視為股票分割，對股東權益總額無影響 | 製作方描述相符。10-Q 全文沒有 forward sale、強制轉換特別股或 10-26 募資（"preferred stock" 只出現在風險因素「未指定特別股」） |
+
+### 既有列更正建議的判定
+
+| 既有列 | 製作方建議 | 判定 | 理由與建議文字 |
+|---|---|---|---|
+| F#75（Amazon 2026-07-08 bond_issue 25.0） | detail 補 10-Q 條件，刪去／否定「公司稱 2026 不再發債」 | 同意（措辭微調） | 10-Q 附註 5 載 "July 2026 Notes issuance of $25.0 billion"、4.20%–6.25%、註 (4) 含 2029 浮動 0.75，相符；其後 9 月英鎊債 £4.3B 與 9 月動用定期貸款 17.5 都在表內；MD&A（p29）"We expect to undertake additional financing activities in 2026"。原 TNW 網址本次讀取未獲許可，無法確認原句。建議不要把原說法整句刪掉，改成有歸屬的寫法：「8 檔、2029–2066、4.20%–6.25%（含 2029 浮動 0.75；10-Q 附註 5）；7 月報導稱公司表示 2026 年不再發債（原句待回 TNW／Bloomberg 確認範圍，可能只指美元債），但 10-Q 顯示其後 9 月仍發英鎊債 £4.3B（帳面 5.637）並動用定期貸款 17.5，MD&A 稱 2026 年將再融資；已含於 F#253」。值不變，Q_SUPERSEDED 維持。 |
+| F#74 | detail 補 10-Q 組成 | 同意 | 37.000＋EUR 14.5（9-30 帳面 16.427）與附註 5 相符。 |
+| F#253（Amazon 9M2026 bond_issue 115.1） | detail 改寫為票據 97.3＋定期貸款 17.5 | 同意（一處改字） | 各幣別金額相符。但 97.273＋17.500＝114.773，不等於 115.1（差 0.327 為外幣以 9-30 帳面 vs 發行時收入與折價），建議「115.1＝票據 97.3…＋定期貸款 17.5」的「＝」改「≈」，並加註「差 0.3 為外幣匯率與折價」。拆成 bond_issue 97.6＋term_loan 17.5 屬判斷題，同意交 Andy；若只新增 term_loan 列而不改 F#253，Funding「公司債」＋「定期貸款」兩欄會重複 17.5（兩欄都進債合計），製作方的警告正確。 |
+| F#252 | 補 10-Q 第二來源；標記改 [Verified] | 同意 | 附註 6（p19）"There were no repurchases of our common stock during the nine months ended September 30, 2025 or 2026"；現金流量表融資段無股利列（p3）。 |
+| F#256 | 補 10-Q 第二來源 | 同意 | MD&A（p28）"We expect cash capital expenditures to meaningfully increase in 2027"。值維持空白。 |
+| F#100（Meta 9M2026 net_debt_change 22.178） | 值改 24.925（帳面總額口徑），detail 改寫 | 同意更正，**口徑建議改面額 25.000**（判斷題，請 Andy 決定） | 22.178 只取非流動部分，9-30 有 2.747 重分類到流動負債，造成假性減少，且使淨現金／淨負債正負號相反，確屬錯誤。但製作方對 Amazon（F#263）用面額、對 Meta 用帳面，兩列不一致。既有 net_debt_change 列 Amazon F#76、Alphabet F#50 用面額，Microsoft F#23、CoreWeave F#146 用帳面；MAG 中多數用面額。建議值改 25.000，detail：「債務面額 59.0 → 84.0（10-Q 附註 9；5 月發債 25.0，淨收入 24.910）；帳面 58.744 → 83.669（非流動 80.922＋一年內到期 2.747，後者列應計費用及其他流動負債），帳面口徑增加 24.925；現金與有價證券 81.592 → 82.449 → 9-30 淨負債約 1.2（原寫『淨現金約 0』漏計一年內到期 2.747）」。若 Andy 偏好帳面口徑則用 24.925，兩者差 0.075 不承重，但 detail 必須寫明口徑。注意 detail 不可出現「水位」二字，否則 `import_funding.py` 會把 item 改成 net_debt_level。F#100 在 F_TRUE（use＝1），改值須同步 CSV 或 FIX。 |
+| F#257（Meta debt_level 83.7） | detail 三處改寫；doc_date 留空 | 同意 | 「差 2.8 待 10-Q 核對」已可由 10-Q 解答：83.669 − 80.922＝2.747，即 2027-08 到期的一年內到期部分（不是短期借款；Meta 無商業本票或短期借款）。法說日推定：10-Q 於 10-21 簽署且附註 14 已載新設 Class C，逐字稿稱 "today we announced plans to create a new class"，故宣布不晚於 10-21，法說推定不晚於 10-21，推論成立（仍屬推定，doc_date 留空正確）。值不變，不列 Q_SUPERSEDED。 |
+| Meta 10-Q 各列 doc_date 10-29 → 10-21（F#92–96、99、100、103–105） | 改 10-21 | 同意 | 簽署頁與各證明書都是 2026-10-21；10-Q 內最晚的日期事件也是 10-21（墨西哥法院命令、西班牙開庭）。附帶提醒：F#99 period 2026-04-30，10-Q 寫 "In May 2026, we issued"（可能是 4 月底定價、5 月交割），可在 detail 註明，不影響值。 |
+| F#104（Meta lease_not_commenced 355.73） | 只改 doc_date | 同意 | 附註 10（p21）"These lease obligations were approximately $355.73 billion" 相符。 |
+| F#96 | 只改 doc_date | 同意 | 現金流量表買回「—」、股利 (4,060)；附註 11（p29）"did not repurchase any shares of Class A common stock during the nine months ended September 30, 2026"。 |
+| F#80（Amazon 對 OpenAI 50.0） | 「期後 21.3」改「Q3 21.3」 | 同意 | 附註（p12）"In Q3 2026, we invested the remaining $21.3 billion Commitment Amount"；MD&A（p29）"including $21.3 billion invested in Q3 2026"。21.3 在 9M2026 內，已在 2026 桶，值不變。附帶觀察（非本批範圍）：F#81（Anthropic 18.0，use＝1、vendor_financing、2026 桶）含 2023–2025 年的可轉債 8.0；10-Q 載 2026 年實際投入 10.0（Q2 Series G 5.0＋Series H 5.0），2026 桶的「供應商融資／策略投資」欄因此多計 8.0，建議另案檢討。 |
+
+### Q_SUPERSEDED 與 FITEMS 檢查
+
+- `builder/build.py` 第 1090 行 FITEMS 含 `("ndc", …, ["net_debt_change"])` 與 `("lnc", …, ["lease_not_commenced"])`；欄值由 `fsum()` 以 SUMIFS 依「玩家×桶×item×採用＝1」加總（同桶多列會相加）。ndc、lnc 只是顯示欄，不進支付順序與總額口徑的分子，但欄值本身會錯。
+- 桶：`import_funding.py` 的 Amazon 2026 桶為 9M2026（2026-01～2026-09）；"2026-06-30"、"2026-09-30"、"9M2026" 都落 2026 桶。
+- 新列中只有 F#258（lease_not_commenced）與 F#263（net_debt_change）在 FITEMS，皆為刻意；其餘 item（debt_detail、debt_level、fin_lease_liab、fin_obligation、op_lease、supplier_fin_facility、capex_unpaid_change、commitments、cash_level）都不在 FITEMS，沒有誤入。F#263 detail 不含「水位」，不會被改成 net_debt_level。
+
+| 既有列 | 現況 | 若不列入 Q_SUPERSEDED | 判定 |
+|---|---|---|---|
+| F#77 → F#258 | 在 F_TRUE，use＝1 | Amazon 2026 桶 lnc＝137.214＋164.922＝302.136（重複） | **必要**。建議值 "9-30 尚未起租 164.922（F#258）" |
+| F#76 → F#263 | 未抽查，use＝0 | 目前不會重複（F#76 不採用） | 非必要，但建議列入（標示被取代，避免日後誤加入 F_TRUE 時重複）。建議值 "9M2026 面額變化 112.051（F#263）" |
+| F#78 → F#266 | 未抽查，use＝0；op_lease 不在 FITEMS | 不會重複 | 非必要，可列入以免讀者看到兩個期末值 |
+| F#74、F#75 | 已列 | — | 維持 |
+| F#257 | 不取代 | debt_level 不在 FITEMS | 同意不取代 |
+
+### 「已搜尋未找到」抽查
+
+| 項目 | 本核對者搜尋 | 結果 |
+|---|---|---|
+| Meta 融資租賃負債 | META 全文 "finance lease liabilit"、"lease" 全部出現處 | 屬實：資產負債表只有營業租賃負債（2.522、28.651）；融資租賃只見使用權資產 11.704（p19）與本金償還 2.769，無負債金額 |
+| Meta 短期借款、商業本票 | "commercial paper"、"short-term borrow" | 屬實：無；債務只有票據 84.0 |
+| Meta 法說／新聞稿日期 | "conference call"、"press release"、"Form 8-K" | 屬實：無 |
+| Meta 10-26 募資 | "forward sale"、"preferred stock" | 屬實：forward sale 無；preferred stock 只在風險因素 |
+| Amazon 供應商融資方案餘額 | "supplier finance program"（0 筆）、"supplier financ"（1 筆，p19 80.0 額度）、"vendor financ"（只在附件信用合約定義 "Vendor Financing Indebtedness"）、"extended payment"（p15 註 (2)，無金額） | 屬實：未揭露餘額 |
+| Amazon 2025-12-31 尚未起租 | "not yet commenced"、"commence" | 屬實：本文只有 p15 承諾表 9-30 一處；其餘 "commence" 都在附件信用合約 |
+| Amazon「2026 不再發債」 | "additional financing" | 屬實：未找到；反而 p29 "We expect to undertake additional financing activities in 2026" |
+
+### 判定統計
+
+共 18 列：屬實 14、小誤 4（第 270、271、274、275 列：cash_level 為兩數相加，標記 [Verified] 應改 [Derived]，值不變）、錯誤 0、無法核對 0。標記更正後 18 列都可列入 Q_TRUE；同時必須把 F#77 列入 Q_SUPERSEDED（建議一併列 F#76、F#78）。既有列更正：F#74、F#252、F#256、F#257、F#80、F#96、F#104、Meta doc_date 同意；F#75、F#253 同意但改措辭；F#100 同意更正，口徑建議面額 25.000（帳面 24.925 亦可，交 Andy 決定）。
