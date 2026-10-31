@@ -106,5 +106,5 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 
 ## 版本紀錄（摘要；完整見活頁簿 README 頁）
 
-- v0.1.7（2026-10-31）：新增 Gap 頁（資金缺口）與互動頁「整個市場當一間公司」區塊（需求、延遲選擇器正下方）；In 新節 Y9（12 家個股模型基準值，`tools/import_gap_models.py`）；`WIF_Gap_*` 2,191 個新名稱；Checks G-K1–G-K10；既有 `WIF_` 名稱 0 變動。報告 `docs/verify/20261031_v0.1.7_gap.md`。
+- v0.1.7（2026-10-31）：新增 Gap 頁（資金缺口）與互動頁「整個市場當一間公司」區塊（需求、延遲選擇器正下方）；In 新節 Y9（12 家個股模型基準值，`tools/import_gap_models.py`）；`WIF_Gap_*` 2,191 個新名稱；Checks G-K1–G-K10；Gap 未改動任何既有 `WIF_` 名稱。另合併 Amazon、Meta 2026Q3 10-Q 證據（F#258–275，Q_review 第五節；F#77 由 F#258 取代），因此既有名稱只有 `WIF_Funding_amzn_2026_lnc` 變動（137.214 → 164.922）。報告 `docs/verify/20261031_v0.1.7_gap.md`。
 - v0.1.6（2026-10-31）：K 段 2028H2–2032 證據、`WIF_Coverage_Power_<yyyy>`。
