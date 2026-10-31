@@ -12,15 +12,17 @@
 - 規格 `docs/plan/20261008_Anthropic_v0.1_規格.md`（r1）；共同規則與 A1–A5 工作單 `docs/workorders/20261008_anthropic_*`。
 - 成品：`dist/`；Drive `02-算力收支/Anthropic/`（chat 端放置）。
 
-## 3. 模型狀態：**v0.1.5**（2026-10-24；TK v21.2 同步，分支 `claude/anthropic-v0.1.5`，不合併，待 chat 端審查；以下 v0.1.4 起為前版：v0.1.3 A＋B 段＋v0.1.4 同在 PR #69，待 chat 端審查合併；v0.1 於 2026-10-08 完成，A0–A5；v0.1.2 見下方摘要）
+## 3. 模型狀態：**v0.1.6**（2026-10-31；正式公開 S-1 納入，分支 `claude/anthropic-v0.1.6`，不合併，待 chat 端審查；v0.1.5 為 2026-10-24 TK v21.2 同步；以下 v0.1.4 起為前版：v0.1.3 A＋B 段＋v0.1.4 同在 PR #69，待 chat 端審查合併；v0.1 於 2026-10-08 完成，A0–A5；v0.1.2 見下方摘要）
 | 項目 | 現況 |
 |---|---|
-| Excel | `model/20261024_Anthropic_v0.1.5.xlsx`（`model/CURRENT`）；v0.1–v0.1.4 在 `model/archive/`；成品副本 `dist/20261024_Anthropic收支模型_v0_1_5.xlsx`（位元組相同，測試檢查）；`dist/_待刪除/` 已於 v0.1.4 刪除（Drive 仍有副本） |
-| HTML 一頁摘要 | `dist/20261024_Anthropic收支模型_v0_1_5.html`（產生器 `tools/build_html.py`；情境 `tools/html_scenarios.yaml`；測試 `tests/test_html.py`；畫面檢查 `tools/read_html_screen.py`）；「①之三」＝v0.1.3 更新了什麼（U2 新法、資金三層、持續擴張、η 拆解、Bridge 逐層對照） |
-| 報告 | `docs/reports/20261024_v0.1.5.md`、`20261024_v0.1.5_對照.xlsx`（v0.1.5）；`docs/reports/20261022_v0.1.4.md`、`20261022_v0.1.4_對照.xlsx`（v0.1.4）；`20261022_v0.1.3.md`、`_對照.xlsx`（B 段，含全版本摘要）；`20261022_v0.1.3-A.md`；v0.1.2、v0.1.1、v0.1 報告仍有效 |
+| Excel | `model/20261031_Anthropic_v0.1.6.xlsx`（`model/CURRENT`）；v0.1–v0.1.5 在 `model/archive/`；成品副本 `dist/20261031_Anthropic收支模型_v0_1_6.xlsx`（位元組相同，測試檢查）；`dist/_待刪除/` 已於 v0.1.4 刪除（Drive 仍有副本） |
+| HTML 一頁摘要 | `dist/20261031_Anthropic收支模型_v0_1_6.html`（「①之四」＝v0.1.6 正式 S-1）（產生器 `tools/build_html.py`；情境 `tools/html_scenarios.yaml`；測試 `tests/test_html.py`；畫面檢查 `tools/read_html_screen.py`）；「①之三」＝v0.1.3 更新了什麼（U2 新法、資金三層、持續擴張、η 拆解、Bridge 逐層對照） |
+| 報告 | `docs/reports/20261031_v0.1.6.md`、`20261031_v0.1.6_對照.xlsx`（v0.1.6）；`docs/reports/20261024_v0.1.5.md`、`20261024_v0.1.5_對照.xlsx`（v0.1.5）；`docs/reports/20261022_v0.1.4.md`、`20261022_v0.1.4_對照.xlsx`（v0.1.4）；`20261022_v0.1.3.md`、`_對照.xlsx`（B 段，含全版本摘要）；`20261022_v0.1.3-A.md`；v0.1.2、v0.1.1、v0.1 報告仍有效 |
 | Tokenomics | **v21.2**，master `45ce1ca`（`20261023_Tokenomics_v21.2.xlsx`；計價倍數 0.85 → 1.8，127 值中 10 個變動，只進對照列）。前版 v19.1 `c2ecb71`（`20261022_Tokenomics_v19.1.xlsx`；Luna CSA top-k 1024 → 512；v19.0 為 `1916a06`）；106 名（含 14 個 v18.0 對照名稱、23 個 B 段 η 診斷對照名稱）＋NonNV 18 格＋PUE 3 格。OpenAI v0.6 仍用 v5.26，並排時 TK 版本不同 |
 | OpenAI 對照 | `OAI_Link`：`20261008_OpenAI_v0.6.xlsx`（SHA-256 `34fc34a7…`，`e91df57`），17 名 |
 | 規模 | 15 頁（新增 Bridge、EtaDiag，皆唯讀）；SRC_ANT 409；Inputs 190；具名範圍 1,276；公式格 7,256；Checks C01–C156（CHK_Errors＝0、CHK_Warnings＝2：C89 逐家對帳、C116 U4 含自建的 2026 算力成本 +47%）；parity 情境 44 |
+
+**v0.1.6 變動摘要**：正式 S-1（2026-10-26）新增 SRC_ANT_410–464；基準只改 2026 上半年營收 16.3 → 16.286（Inputs s1f_switch）：2026 營收 49.886、差額 2026–2030 −5.377／−4.915／−2.702／＋5.373／＋11.595、覆蓋率 2030 1.804、累計外部資金需求 0；Cost 第二十四節只對照：η_2026H1 0.604（B 情境影響 0）、S-1 承諾三段 832 vs 模型新合約 598（−28%）、自建資本支出為 S-1 資本支出 17 倍（待判斷）。規模：SRC_ANT 464、Inputs 192、公式格 7,609、具名範圍 1,358、Checks C01–C181。待決：二手轉載列以瀏覽器核對後改 Verified；6-30 後新簽 245 是否進基準；OAI_Link 改 v0.6.4；TK 同步 v21.7（DIFF 29）。
 
 **v0.1.5 變動摘要**：TK v19.1 → v21.2；10 個名稱（L1_TokLedger_2026Q2、L1_GapSpendBasis／Product／Unexplained 各含低高）只進對照列；token 帳未閉合倍數 6.39 → 3.02；本模型命題輸出、η、資金、擴張與 v0.1.4 逐位相同。
 

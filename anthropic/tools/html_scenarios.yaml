@@ -35,6 +35,8 @@ groups:
   tk19_back: {label: "TK 快照回到 v19.0：39 個 DIFF 名稱全部", set: {TK_IF_TokGW_Luna: prev19, TK_IF_FullCost_Astra: prev19, TK_IF_FullCost_Luna: prev19, TK_IF_FullCost_Sol: prev19, TK_IF_ProgGWyr_Luna: prev19, TK_IF_AllocQ1: prev19, TK_IF_AllocQ1_R2: prev19, TK_IF_AllocQ2: prev19, TK_IF_AllocRDGW: prev19, TK_IF_AllocImpliedNk: prev19, TK_IF_TrainCost_Luna: prev19, TK_IF_RevGW_Luna: prev19, TK_IF_FullCostDefault_Astra: prev19, TK_IF_FullCostDefault_Luna: prev19, TK_IF_FullCostDefault_Sol: prev19, TK_L1_Ans3: prev19, TK_L1_Ans3_Lo: prev19, TK_L1_Ans3_Hi: prev19, TK_L1_RevGW_PQ_VR200: prev19, TK_L1_RevGW_PQ_VR200_Lo: prev19, TK_L1_RevGW_PQ_VR200_Hi: prev19, TK_L1_RevGW_PQ_VR200_FY: prev19, TK_L1_RevGW_PQ_VR200_FY_Lo: prev19, TK_L1_RevGW_PQ_VR200_FY_Hi: prev19, TK_L1_RevGW_PQ_VR200_Life: prev19, TK_L1_RevGW_PQ_VR200_Life_Lo: prev19, TK_L1_RevGW_PQ_VR200_Life_Hi: prev19, TK_L1_TokGW_PaidPQ_VR200: prev19, TK_L1_TokGW_PaidPQ_VR200_Lo: prev19, TK_L1_TokGW_PaidPQ_VR200_Hi: prev19, TK_L1_TokLedger_2026Q2: prev19, TK_L1_TokGW_PaidCap_VR200: prev19, TK_L1_GapPrompt: prev19, TK_L1_GapPrompt_Hi: prev19, TK_L1_GapProduct: prev19, TK_L1_GapProduct_Hi: prev19, TK_L1_GapUnexplained: prev19, TK_L1_GapUnexplained_Lo: prev19, TK_L1_GapUnexplained_Hi: prev19}}
   # v0.1.5：Tokenomics 快照回到 v19.1（值取自 model/archive 的 v0.1.4 Excel；spec＝prev14）；v21.2 只改這 10 個名稱
   tk14_back: {label: "TK 快照回到 v19.1：10 個 DIFF 名稱全部", set: {TK_L1_TokLedger_2026Q2: prev14, TK_L1_GapSpendBasis: prev14, TK_L1_GapSpendBasis_Lo: prev14, TK_L1_GapSpendBasis_Hi: prev14, TK_L1_GapProduct: prev14, TK_L1_GapProduct_Lo: prev14, TK_L1_GapProduct_Hi: prev14, TK_L1_GapUnexplained: prev14, TK_L1_GapUnexplained_Lo: prev14, TK_L1_GapUnexplained_Hi: prev14}}
+  # v0.1.6：W2 開關 s1f_switch（INP_195）＝0：2026 上半年回到草擬版 16.3（＝v0.1.5 的輸出）；歷史情境一併加上，使數字等於當時版本
+  s1f_off: {label: "W2 關閉（2026 上半年實際回到草擬 S-1 轉述 16.3）", set: {INP_195: 0}}
   tk19_luna_back: {label: "TK 快照回到 v19.0：只有 IF_TokGW_Luna", set: {TK_IF_TokGW_Luna: prev19}}
   tk19_rest_back: {label: "TK 快照回到 v19.0：其餘 38 個 DIFF 名稱（IF_TokGW_Luna 維持 v19.1）", set: {TK_IF_FullCost_Astra: prev19, TK_IF_FullCost_Luna: prev19, TK_IF_FullCost_Sol: prev19, TK_IF_ProgGWyr_Luna: prev19, TK_IF_AllocQ1: prev19, TK_IF_AllocQ1_R2: prev19, TK_IF_AllocQ2: prev19, TK_IF_AllocRDGW: prev19, TK_IF_AllocImpliedNk: prev19, TK_IF_TrainCost_Luna: prev19, TK_IF_RevGW_Luna: prev19, TK_IF_FullCostDefault_Astra: prev19, TK_IF_FullCostDefault_Luna: prev19, TK_IF_FullCostDefault_Sol: prev19, TK_L1_Ans3: prev19, TK_L1_Ans3_Lo: prev19, TK_L1_Ans3_Hi: prev19, TK_L1_RevGW_PQ_VR200: prev19, TK_L1_RevGW_PQ_VR200_Lo: prev19, TK_L1_RevGW_PQ_VR200_Hi: prev19, TK_L1_RevGW_PQ_VR200_FY: prev19, TK_L1_RevGW_PQ_VR200_FY_Lo: prev19, TK_L1_RevGW_PQ_VR200_FY_Hi: prev19, TK_L1_RevGW_PQ_VR200_Life: prev19, TK_L1_RevGW_PQ_VR200_Life_Lo: prev19, TK_L1_RevGW_PQ_VR200_Life_Hi: prev19, TK_L1_TokGW_PaidPQ_VR200: prev19, TK_L1_TokGW_PaidPQ_VR200_Lo: prev19, TK_L1_TokGW_PaidPQ_VR200_Hi: prev19, TK_L1_TokLedger_2026Q2: prev19, TK_L1_TokGW_PaidCap_VR200: prev19, TK_L1_GapPrompt: prev19, TK_L1_GapPrompt_Hi: prev19, TK_L1_GapProduct: prev19, TK_L1_GapProduct_Hi: prev19, TK_L1_GapUnexplained: prev19, TK_L1_GapUnexplained_Lo: prev19, TK_L1_GapUnexplained_Hi: prev19}}
 
@@ -60,19 +62,21 @@ scenarios:
   combo3: [elast_weak, price_hi, ramp_lo]
   combo4: [api_task_lo, elast_weak, price_hi, ramp_lo]
   # v0.1 → v0.1.1 的分解（v0.1.2 起同時把 TK 快照回到 v5.26，使數字等於 v0.1／v0.1.1 當時的輸出）
-  v010: [tk19_back, u1_off, u2_off, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
-  only_u1: [tk19_back, u2_off, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
-  only_u2: [tk19_back, u1_off, u2_method_old, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
+  v010: [s1f_off, tk19_back, u1_off, u2_off, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
+  only_u1: [s1f_off, tk19_back, u2_off, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
+  only_u2: [s1f_off, tk19_back, u1_off, u2_method_old, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
   # v0.1.1 → v0.1.2 的分解（TK v5.26 → v18.0）
-  v011: [tk19_back, u2_method_old, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
+  v011: [s1f_off, tk19_back, u2_method_old, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
   # v0.1.3：v0.1.2 的輸出（TK v18.0 與 v19.0 值相同，故只需關閉 U2 新法）
-  v012: [tk19_back, u2_method_old]
-  only_tokgw: [tk19_back, u2_method_old, tk_prev_hold, tk_prev_rest]
-  only_hold: [tk19_back, u2_method_old, tk_prev_tokgw, tk_prev_rest]
+  v012: [s1f_off, tk19_back, u2_method_old]
+  only_tokgw: [s1f_off, tk19_back, u2_method_old, tk_prev_hold, tk_prev_rest]
+  only_hold: [s1f_off, tk19_back, u2_method_old, tk_prev_tokgw, tk_prev_rest]
   # v0.1.4：v0.1.3 的輸出（TK v19.0）與逐群拆解
-  v013: [tk19_back]
-  v14_only_luna: [tk19_rest_back]
-  v14_only_rest: [tk19_luna_back]
+  v013: [s1f_off, tk19_back]
+  v14_only_luna: [s1f_off, tk19_rest_back]
+  v14_only_rest: [s1f_off, tk19_luna_back]
   # v0.1.5：v0.1.4 的輸出（TK v19.1）
-  v014: [tk14_back]
+  v014: [s1f_off, tk14_back]
+  # v0.1.6：v0.1.5 的輸出（2026 上半年＝草擬版 16.3）
+  v015: [s1f_off]
   combo5: [api_task_lo, elast_weak, price_hi, ramp_lo, tok_lo, hc_hi, fee_hi]
