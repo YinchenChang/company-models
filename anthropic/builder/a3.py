@@ -41,17 +41,17 @@ LEGACY = (("trn2", "legacy_share_trn2"), ("hopper", "legacy_share_hopper"), ("tp
 #   amt：金額型（T 總額、s 起、e 迄）；both：雙揭露型（另 G 揭露 GW 公式）；gw：GW 型（G、s、term、upto）；monthly：月費（SpaceX）
 CONTRACTS = [
     ("google", "Google Cloud TPU（2025-10；招股書 Google ≥$111.1B，2026-04～2033-07）", "tpu7", "amt",
-     dict(T="{SRC:cmp_prospectus_google}_Lo", s="{INP:google_start}", e="{INP:google_end}"), "Google",
+     dict(T="({INP:s1f_commit_switch}*{SRC:cmt_s1f_google}+(1-{INP:s1f_commit_switch})*{SRC:cmp_prospectus_google}_Lo)", s="{INP:google_start}", e="{INP:google_end}"), "Google",
      "金額型：招股書 Google 承諾；揭露的「2026 年上線遠超過 1 GW」與「最多 100 萬顆 TPU」只作對照（以承諾金額為準）"),
     ("broadcom", "Google／Broadcom 次世代 TPU（2026-04；8-K 約 3.5 GW；五年 TPU 租賃 $125.2B）", "tpu7", "both",
-     dict(T="{SRC:cmp_broadcom_tpu_lease_125b}", s="{INP:broadcom_start}", e="{INP:broadcom_end}",
+     dict(T="({INP:s1f_commit_switch}*{SRC:cmt_s1f_broadcom}+(1-{INP:s1f_commit_switch})*{SRC:cmp_broadcom_tpu_lease_125b})", s="{INP:broadcom_start}", e="{INP:broadcom_end}",
           G="({SRC:cmp_google_broadcom_2026_gw_b}+{INP:broadcom_gw_switch}*({SRC:cmp_google_broadcom_2026_gw_c}-{SRC:cmp_google_broadcom_2026_gw_b}))"), "Broadcom",
      "雙揭露型：供給＝3.5 GW（Broadcom 8-K，Verified；公司自述 5 GW 為區間）；付款＝五年 TPU 租賃 $125.2B 時程（招股書 Broadcom 設備租賃 $161.2B 的其餘 $36B 未計，見報告）"),
     ("aws", "Amazon 擴大協議（2026-04；招股書 $110B，2026-05～2036-04；最多 5 GW）", "trn3", "amt",
-     dict(T="{SRC:cmp_prospectus_amazon}", s="{INP:aws_start}", e="{INP:aws_end}"), "Amazon",
+     dict(T="({INP:s1f_commit_switch}*{SRC:cmt_s1f_amazon}+(1-{INP:s1f_commit_switch})*{SRC:cmp_prospectus_amazon})", s="{INP:aws_start}", e="{INP:aws_end}"), "Amazon",
      "金額型：「最多 5 GW」為上限、只作對照；晶片 Trainium2–4，本模型歸 Trainium3（Decision）"),
     ("azure", "Microsoft Azure＋NVIDIA（2025-11；招股書 $31.4B，2026-11～2033-05；最多 1 GW）", "gb300", "amt",
-     dict(T="{SRC:cmp_msft_azure_prospectus}", s="{INP:azure_start}", e="{INP:azure_end}"), "Microsoft",
+     dict(T="({INP:s1f_commit_switch}*{SRC:cmt_s1f_msft}+(1-{INP:s1f_commit_switch})*{SRC:cmp_msft_azure_prospectus})", s="{INP:azure_start}", e="{INP:azure_end}"), "Microsoft",
      "金額型：Grace Blackwell 與 Vera Rubin，本模型歸 GB300（Decision）；「最多 1 GW」只作對照"),
     ("amd", "AMD MI455X（2026-07；最多 2 GW；招股書 >$20B）", "mi455", "gw",
      dict(G="{SRC:cmp_amd_gw}_Hi*{INP:upto_share}", s="{INP:amd_start}", term="{INP:amd_term}"), "AMD",
@@ -168,18 +168,21 @@ def build(ctx):
 
     C.section("五、自建（Fluidstack $50B；D11：自有資本支出自投產年起計入供給與命題分母）")
     fs_, fy = I("fluid_start"), I("fluid_years")
-    C.add("own_capex", "自有資本支出（Fluidstack；均攤）", "$B", lambda i, c: f"={S('cmp_fluidstack_50b')}/{fy}*({c}$6>={fs_})*({c}$6<{fs_}+{fy})",
-          "SRC_ANT_212 $50B ÷ 均攤年數（Inputs 3 年，2–5）；起始 2026", name="CMP_OwnedCapex")
+    om = I("own_capex_method")
+    C.add("own_capex", "自有資本支出（v0.1.7 起＝自建 GW 增量 × TK 每 GW 建置成本〔第十六節〕；own_capex_method＝0＝舊法 Fluidstack $50B 均攤）", "$B",
+          lambda i, c: f"={om}*«own_gwcapex»+(1-{om})*{S('cmp_fluidstack_50b')}/{fy}*({c}$6>={fs_})*({c}$6<{fs_}+{fy})",
+          "v0.1.7 W2（Andy 10-31 10:22）：基準＝自建 GW 增量（Wattonomics v0.1.7 權威；目前各年 0）× TK IF_CapexTotal（廠房依 lag 提前）；Fluidstack 站點視為 Fluidstack 擁有、經承諾租回（已在 S-1 承諾內），不另計。舊法：SRC_ANT_212 $50B ÷ 均攤年數（Inputs 3 年，2–5）；起始 2026", name="CMP_OwnedCapex")
     C.add("own_cum", "累計自有資本支出（至 年 − 投產落後年數）", "$B",
           lambda i, c: f"=SUMPRODUCT(($D$6:$I$6<={c}$6-{I('own_lag')})*(«own_capex@R»))", "落後 1 年（Inputs，同 OpenAI v0.6 INP_262）")
     C.add("own_cpg", "每 GW 資本支出（VR200 基準；TK IF_CapexTotal）", "$B/GW", lambda i, c: "=SUMIFS(TK_IF_CapexTotal,TK_HdrGen,«lab_vr200@$»,TK_HdrCost,«lab_cost@$»)",
           "同 OpenAI v0.6（IT 設備＋廠房）；第三方指 Fluidstack 站點用 Google TPU → 族＝TPU v7")
-    C.add("sup_own", "供給 GW：自建（Fluidstack）", "GW", lambda i, c: "=«own_cum»/«own_cpg»", "累計資本支出 ÷ 每 GW 資本支出", name="CMP_Supply_Owned")
+    C.add("sup_own", "供給 GW：自建（v0.1.7 起＝自建 GW 累計〔第十六節〕；舊法＝Fluidstack 累計資本支出 ÷ 每 GW 資本支出）", "GW",
+          lambda i, c: f"={om}*«own_gwcum»+(1-{om})*«own_cum»/«own_cpg»", "own_capex_method＝1：Wattonomics 自建 GW 累計（上線年）；0：舊法", name="CMP_Supply_Owned")
 
     C.section("六、供給 GW 合計與加速器組合（D7：由逐合約供給 GW 加權，時變）")
     ckeys = [c[0] for c in CONTRACTS]
     C.add("sup_con", "合約供給 GW（既有雲端＋新合約；不含自建）", "GW",
-          lambda i, c: "=«sup_legacy»+" + "+".join(f"«sup_{k}»" for k in ckeys), "供應商持有成本的 GW", name="CMP_SupplyContractGW")
+          lambda i, c: "=«sup_legacy»+" + "+".join(f"«sup_{k}»" for k in ckeys) + "+«sup_s1u»+«sup_gadd»", "供應商持有成本的 GW（v0.1.7 起含 S-1 承諾未歸屬餘額與 Google 額外 TPU 情境，第十六節）", name="CMP_SupplyContractGW")
     C.add("sup", "供給 GW 合計（合約＋自建）", "GW", lambda i, c: "=«sup_con»+«sup_own»", "命題分母的實體 GW（不自動假設新增合約）", name="CMP_SupplyGW")
     for f, fz, *_r in FAMS:
         terms = [f"«sup_{k}»" for k in ckeys if CT[k][2] == f]
@@ -187,6 +190,9 @@ def build(ctx):
             terms.append(f"«sup_legacy»*«lsh_{f}»")
         if f == "tpu7":
             terms.append("«sup_own»")
+            terms.append("«sup_gadd»")          # v0.1.7 W1(c)：Google 額外 TPU（情境；基準 0）
+        if f == "vr200":
+            terms.append("«sup_s1u»")           # v0.1.7 W1(b)：S-1 承諾未歸屬餘額（通用合約價 → VR200 族）
         assert terms, f
         C.add(f"gw_{f}", f"GW：{fz.split('（')[0]}", "GW", lambda i, c, terms=terms: "=" + "+".join(terms),
               "Σ 該族合約 GW（既有雲端依組合拆分；自建歸 TPU v7）", name=f"CMP_GW_{FAM[f][4]}")
@@ -221,8 +227,10 @@ def build(ctx):
     C.add("gw_tok", "推論 GW（token 換算）：合計", "GW", lambda i, c: "=«gw_tpaid»+«gw_tfree»", "", name="CMP_TokGW")
 
     C.section("十、η 有效產出係數（D8：2025 推論支出校準）與有效推論 GW")
-    C.add("e_spend", "2025 推論等非訓練算力支出（SRC，Derived＝說明書算力 7.33 − 訓練 4.1）", "$B", only25(f"={S('cmp_spend_2025_derived_inference')}"),
-          "SRC_ANT_255（公式）；訓練 4.1 為 2025 年底預測（Interested-party），推論＝餘額（Derived）")
+    sw25 = I("s1f_cal25_switch")
+    C.add("e_spend", "2025 推論等非訓練算力支出（v0.1.7 起＝正式 S-1 算力與基礎設施費用 7.326 − 訓練 4.1；s1f_cal25_switch＝0＝草擬版 7.33 − 4.1）", "$B",
+          only25(f"={sw25}*({S('ci_s1f_fy2025')}-{S('cmp_spend_2025_training_proj')})+(1-{sw25})*{S('cmp_spend_2025_derived_inference')}"),
+          "v0.1.7 W3：SRC_ANT_424（Verified）− SRC_ANT_253；舊：SRC_ANT_255（公式）；訓練 4.1 為 2025 年底預測（Interested-party），推論＝餘額（Derived）")
     C.add("e_spendgw", "2025 推論 GW（支出換算）＝推論支出 ÷ 既有雲端加權合約價", "GW", only25("=«e_spend»/«lprice»"), "", name="CMP_SpendGW2025", name_cols="D")
     C.add("eta25", "η（2025）＝token 換算 GW ÷ 支出換算 GW", "倍", only25("=«gw_tok»/«e_spendgw»"), "模型產能實際兌現的比例（Derived；D8）",
           name="CMP_Eta2025", name_cols="D")
@@ -341,7 +349,9 @@ def build(ctx):
     K.section("二、算力成本（現金口徑）＝逐合約實付＋自建資本支出（D10、D11）")
     ramp_s = lambda s, e: f"((({e}-{s}+1)+({e}-{s}+1)-{r_}+1)/{k2})"  # noqa: E731  Σ 權重＝（2n − r ＋ 1）÷ 2
     others = [k for k in ckeys]
-    K.add("act25", "2025 實際算力與基礎設施支出（說明書，SRC）", "$B", only25(f"={S('cmp_spend_2025_actual_prospectus')}"), "SRC_ANT_252（Interested-party）")
+    sw25k = I("s1f_cal25_switch")
+    K.add("act25", "2025 實際算力與基礎設施支出（v0.1.7 起＝正式 S-1 7.326；s1f_cal25_switch＝0＝草擬版 7.33）", "$B",
+          only25(f"={sw25k}*{S('ci_s1f_fy2025')}+(1-{sw25k})*{S('cmp_spend_2025_actual_prospectus')}"), "v0.1.7 W3：SRC_ANT_424（Verified）；舊：SRC_ANT_252（Interested-party）")
     K.add("pay_legacy", "合約實付：既有雲端（2025 前簽：AWS、Google、NVIDIA）", "$B",
           lambda i, c: ("=«act25»-(" + "+".join(f"«pay_{k}»" for k in others) + "+«C:own_capex»)") if i == 0
           else f"=«pay_legacy@D»*{I('legacy_carry_2026')}*({c}$6={I('year_2026')})",
@@ -355,8 +365,8 @@ def build(ctx):
             nt = "總額 ÷ Σ 爬坡權重 × 當年權重（期間內；權重＝MIN(r, k)÷r）"
         elif kind == "monthly":
             fs = lambda i, c, P=P: (f"={P['F']}*(({c}$6={P['s']})*{P['m1']}+({c}$6={P['e']})*{P['m2']}"  # noqa: E731
-                                    f"+({c}$6>{P['s']})*({c}$6<{P['e']})*{I('months_per_year')})")
-            nt = "月費 × 當年計費月數"
+                                    f"+({c}$6>{P['s']})*({c}$6<{P['e']})*{I('months_per_year')})*«s1_spx_fac@$»")
+            nt = "月費 × 當年計費月數 × v0.1.7 上限讀法係數（Cost 第二十五節；基準 1＝沿用月費，SpaceXAI ≤120.5 只作區間）"
         else:
             fs = lambda i, c, key=key, fam=fam: f"=«C:sup_{key}»*«C:price_{fam}»"  # noqa: E731
             nt = "GW × 合約價 × 持有比"
@@ -369,7 +379,8 @@ def build(ctx):
             nt = ("U2：u2_switch＝1＝『最高 86』按 MW 比例分攤、÷ Σ 爬坡權重 × 當年權重（Cost 第二十二節；v0.1.1／v0.1.2 的付款路徑，新法 u2_method 不改付款，只改供給 GW）；"
                   f"u2_switch＝0＝v0.1：{nt}")
         K.add(f"pay_{key}", f"合約實付：{zh.split('（')[0]}", "$B", fs, nt, name=f"COST_Pay_{key.capitalize()}")
-    K.add("pay", "合約實付合計", "$B", lambda i, c: "=«pay_legacy»+" + "+".join(f"«pay_{k}»" for k in ckeys), "", name="COST_ContractPay")
+    K.add("pay", "合約實付合計", "$B", lambda i, c: "=«pay_legacy»+" + "+".join(f"«pay_{k}»" for k in ckeys) + "+«pay_s1u»+«pay_gadd»",
+          "v0.1.7 起含 S-1 承諾未歸屬餘額與 Google 額外 TPU 情境（Cost 第二十五節）", name="COST_ContractPay")
     K.add("pay_gwtype", "其中：GW 型合約付款（與合約價成正比；敏感度 A）", "$B",
           lambda i, c: "=" + "+".join((f"(1-{u2})*«pay_{k}»" if k in U2 else f"«pay_{k}»") for k in ckeys if CT[k][3] == "gw"),
           "AMD；Lambda 僅在 U2 開關 0（v0.1 口徑，GW 型）時計入")
@@ -413,8 +424,10 @@ def build(ctx):
     K.add("sbc", "股權報酬（單列）", "$B", lambda i, c: f"=«hc»*«sbc_pp»/{m2b}", "人數 × 每人股權報酬", name="COST_SBC")
     K.add("ncx", "非算力營運費用（不含股權報酬）", "$B", lambda i, c: "=«nc25x»-«sbc»" if i == 0 else f"=«hc»*«pp»/{m2b}",
           "2025＝說明書（扣抽成）− 股權報酬；2026 起＝人數 × 每人年成本", name="COST_NonCompExSBC")
-    K.add("pp", "每人年成本（不含股權報酬）", "$M/人/年", lambda i, c: f"=«ncx@D»*{m2b}/«hc@D»" if i == 0 else f"=«pp@p»*(1+{I('pp_cost_g')})",
-          "2025＝Derived；2026 起 Inputs 年變動率")
+    swd = I("s1f_d22_switch")
+    K.add("pp", "每人年成本（不含股權報酬）", "$M/人/年",
+          lambda i, c: f"=«ncx@D»*{m2b}/«hc@D»" if i == 0 else (f"={swd}*«s1n_ncx@E»*{m2b}/«hc»+(1-{swd})*«pp@p»*(1+{I('pp_cost_g')})" if i == 1 else f"=«pp@p»*(1+{I('pp_cost_g')})"),
+          "2025＝Derived；2026＝v0.1.7 W4 以正式 S-1 季度營業損益回推的 2026 非算力成本（不含股權報酬）÷ 人數（Cost 第二十五節；s1f_d22_switch＝0＝2025 × 年變動率）；2027 起 Inputs 年變動率")
     K.add("nci", "非算力成本（含股權報酬）", "$B", lambda i, c: "=«ncx»+«sbc»", "", name="COST_NonCompInclSBC")
     K.add("nc_rev", "非算力成本（含股權報酬）÷ 營收總額", "比例", lambda i, c: "=«nci»/«R:gross»", "")
     K.add("hc_ref", "對照：報導人數（2026Q1 Revelio 3,950；2026-06 公司口述約 3,500）", "人", [None, f"={S('hc_revelio_2026q1')}"] + [None] * 4, "SRC_ANT_286、295")
@@ -471,10 +484,12 @@ def build(ctx):
           [None, f"={S('proj_opinc_2026q2_wsj')}/{S('proj_rev_2026q2_wsj')}"] + [None] * 4, "SRC_ANT_348、347、350（Interested-party）", name="COST_AdjOIMRep2026Q2", name_cols="E")
 
     K.section("十、檢查列（各年應為 0；Checks 取最大絕對值）")
-    K.add("ck_pay", "逐合約實付加總 − 合約實付合計", "$B", lambda i, c: "=«pay_legacy»+" + "+".join(f"«pay_{k}»" for k in ckeys) + "-«pay»", "")
+    K.add("ck_pay", "逐合約實付加總 − 合約實付合計", "$B", lambda i, c: "=«pay_legacy»+" + "+".join(f"«pay_{k}»" for k in ckeys) + "+«pay_s1u»+«pay_gadd»-«pay»", "")
     K.add("ck_amt", "金額型合約：|GW × 合約價 − 實付| 合計", "$B",
           lambda i, c: "=" + "+".join(f"ABS(«C:sup_{k}»*«C:price_{CT[k][2]}»-«pay_{k}»)" for k in var) + "+ABS(«C:sup_legacy»*«C:lprice»-«pay_legacy»)"
-          + f"+{u2}*(1-{u2m})*(" + "+".join(f"ABS(«C:sup_{k}»*«C:price_{CT[k][2]}»-«pay_{k}»)" for k in U2) + ")", "D10：GW＝金額 ÷ 合約價（Nscale、Lambda 僅在 v0.1.1 口徑計入；新法 GW＝揭露容量，由 ck_u2 檢查）")
+          + f"+{u2}*(1-{u2m})*(" + "+".join(f"ABS(«C:sup_{k}»*«C:price_{CT[k][2]}»-«pay_{k}»)" for k in U2) + ")"
+          + "+ABS(«C:sup_s1u»*«C:price_vr200»-«pay_s1u»)+ABS(«C:sup_gadd»*«C:price_tpu7»-«pay_gadd»)",
+          "D10：GW＝金額 ÷ 合約價（Nscale、Lambda 僅在 v0.1.1 口徑計入；新法 GW＝揭露容量，由 ck_u2 檢查）；v0.1.7 起含 S-1 未歸屬餘額與 Google 額外 TPU")
     K.add("ck_cc", "算力成本（現金）−（合約實付＋自建資本支出）", "$B", lambda i, c: "=«cc»-«pay»-«own»", "")
     K.add("ck_nc", "全成本 −（算力＋非算力（不含股權報酬）＋股權報酬）", "$B", lambda i, c: "=«full»-«cc»-«ncx»-«sbc»", "")
 
@@ -485,8 +500,8 @@ def build(ctx):
             f = f"={P['T']}"
             nt = "揭露總額"
         elif kind == "monthly":
-            f = f"={P['F']}*({P['m1']}+{P['m2']}+({P['e']}-({P['s']}+1))*{I('months_per_year')})"
-            nt = "月費 × 總月數（S-1 期間）"
+            f = f"={P['F']}*({P['m1']}+{P['m2']}+({P['e']}-({P['s']}+1))*{I('months_per_year')})*«s1_spx_fac@$»"
+            nt = "月費 × 總月數（S-1 期間）× v0.1.7 上限讀法係數（基準 1）"
         else:
             f = f"=«C:gw_unit_{key}@$»*«C:price_{fam}@D»*(({P['term']})+({P['term']})-{r_}+1)/{k2}"
             nt = "滿載年付款 × Σ 爬坡權重（期間 Inputs）"
@@ -529,6 +544,36 @@ def build(ctx):
         C.add(f"sup_{key}_disc", f"供給 GW（U2 新法）：{zh_}＝揭露 MW ÷ 1000 × IT 換算 × 爬坡 × 期間", "GW",
               lambda i, c, q=q: f"={fill(q['mw'])}/{mw}*«itconv»*{ramp(c, fill(q['s']))}*{act(c, fill(q['s']), fill(q['e']))}",
               "揭露容量（SRC_ANT 的 MW，Verified／Interested-party）；期間＝Inputs 起始年至結束年（U2）；u2_method＝1 時進入供給", name=f"CMP_Supply_{key.capitalize()}_Disc")
+
+    # ── v0.1.7（工作單 20261031 v0.1.7）：放在 Compute 最末，使既有列編號不變
+    C.section("十六、v0.1.7 自建資本支出 GW 法（W2；與 Wattonomics Gap 頁同一套：新增 IT GW × TK 每 GW 建置成本，廠房依 lag 提前入帳）與 S-1 承諾未歸屬餘額、Google 額外 TPU 的供給 GW（W1）")
+    mpy, uz = I("months_per_year"), "«vr_unit@$»"
+    lagm = I("own_lag_bldg")
+    C.add("own_gwadd", "自建 IT GW 年新增（上線年；Wattonomics v0.1.7 權威：WIF_Gap_Player_ant_<yyyy>_CapexAIGW 各年 0＝無 Anthropic 自有 GW 證據）", "GW",
+          lambda i, c: f"={I(f'own_gw_add_{YEARS[i]}')}", "Inputs（Decision）；找到自有站點 GW 證據時只進對照並轉交 Wattonomics（工作單 W2）")
+    C.add("own_w0", "參數：廠房提前入帳權重 w0（當年）＝MAX(0, 1 − lag ÷ 12)", "比例", only25(f"=MAX({uz}-{uz},(1-{lagm}/{mpy}))"), "同 Wattonomics CapexGW（lag_bldg）")
+    C.add("own_w1", "參數：廠房提前入帳權重 w1（前一年）＝MAX(0, MIN(lag ÷ 12, 2 − lag ÷ 12))", "比例",
+          only25(f"=MAX({uz}-{uz},MIN({lagm}/{mpy},{k2}-{lagm}/{mpy}))"), "")
+    C.add("own_w2", "參數：廠房提前入帳權重 w2（前兩年）＝MAX(0, MIN(1, lag ÷ 12 − 1))", "比例", only25(f"=MAX({uz}-{uz},MIN({uz},{lagm}/{mpy}-{uz}))"), "")
+    C.add("own_pit", "參數：每 IT GW IT 設備資本支出（TK IF_CapexIT，VR200 基準）", "$B/GW",
+          only25("=SUMIFS(TK_IF_CapexIT,TK_HdrGen,«lab_vr200@$»,TK_HdrCost,«lab_cost@$»)"), "與舊法 own_cpg（IF_CapexTotal）同世代、同成本情境")
+    C.add("own_pfac", "參數：每 IT GW 廠房資本支出（TK IF_CapexFacility，VR200 基準）", "$B/GW",
+          only25("=SUMIFS(TK_IF_CapexFacility,TK_HdrGen,«lab_vr200@$»,TK_HdrCost,«lab_cost@$»)"), "IT＋廠房＝IF_CapexTotal（下列檢查）")
+    C.add("own_cpgchk", "檢查：IT＋廠房 − IF_CapexTotal（應為 0）", "$B/GW", only25("=«own_pit@$»+«own_pfac@$»-«own_cpg»"), "")
+
+    def _gwcapex(i, c):
+        t = [f"«own_gwadd»*(«own_pit@$»+«own_w0@$»*«own_pfac@$»)"]
+        for k_, w_ in ((1, "own_w1"), (2, "own_w2")):
+            if i + k_ < 6:
+                t.append(f"«{w_}@$»*«own_gwadd@{YC[i + k_]}»*«own_pfac@$»")
+        return "=" + "+".join(t)
+    C.add("own_gwcapex", "自建資本支出（GW 法）＝當年新增 ×（IT＋w0 × 廠房）＋ w1 × 次年新增 × 廠房 ＋ w2 × 後年新增 × 廠房", "$B", _gwcapex,
+          "2029、2030 的廠房提前只含模型期間內的新增（2031 年後未知，不計）", name="CMP_OwnedCapexGW")
+    C.add("own_gwcum", "自建 GW 累計（上線年）", "GW", lambda i, c: "=«own_gwadd»" if i == 0 else "=«own_gwcum@p»+«own_gwadd»", "", name="CMP_OwnedGWCum")
+    C.add("sup_s1u", "供給 GW：S-1 承諾未歸屬餘額（W1(b)；付款 ÷ 通用合約價，VR200 族）", "GW", lambda i, c: "=«K:pay_s1u»/«price_vr200»",
+          "Cost 第二十五節；s1f_commit_switch＝0 時為 0", name="CMP_Supply_S1Unalloc")
+    C.add("sup_gadd", "供給 GW：Google 額外 TPU（W1(c)；只作情境，基準 0；付款 ÷ TPU v7 合約價）", "GW", lambda i, c: "=«K:pay_gadd»/«price_tpu7»",
+          "Cost 第二十五節；Inputs s1f_gaddl_switch＝0（基準）", name="CMP_Supply_GoogleAddl")
 
     # ── 解析與 Revenue 容量上限列（Cost 的解析延到 a4 末，因 a4 新增列被 a3 公式引用）
     C.resolve()

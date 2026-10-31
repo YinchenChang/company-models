@@ -39,6 +39,8 @@ V19B_NAMES = ["IF_UtilActual", "IF_UtilActual_Lo", "IF_UtilActual_Hi", "L1_TokGW
              [f"L1_Gap{g}{b}" for g in ("Prompt", "SpendBasis", "ISL", "Util", "Product", "Unexplained") for b in ("", "_Lo", "_Hi")]
 # v0.1.4（η 診斷補充；只對照，不回饋計算）：TK 生產折減（Interface 具名範圍；v19.0 起）。列在 V19B 之後（新列加在尾端）
 V19B_NAMES += ["IF_ProdDerate"]
+# v0.1.7（工作單 W2：自建資本支出 GW 法，廠房依 lag 提前入帳，與 Wattonomics Gap 頁同一套）：每 GW 資本支出拆 IT 與廠房（Interface 具名範圍）；列在最後（新列加在尾端）
+V17_NAMES = ["IF_CapexIT", "IF_CapexFacility"]
 PENDING_NOTE = "待 Tokenomics 提供"
 
 
@@ -70,6 +72,7 @@ def read_snapshot(tk_dir: Path):
     chosen += [n for n in A2_NAMES if n in names]
     chosen += [n for n in V18_NAMES if n in names]
     chosen += [n for n in V19B_NAMES if n in names]
+    chosen += [n for n in V17_NAMES if n in names]
     rows, seen = [], set()
     for n in chosen:
         if n in seen:
@@ -95,7 +98,7 @@ def read_snapshot(tk_dir: Path):
         rows.append(dict(name=n, kind=n.split("_")[0], label=label, unit=unit, values=vals, status="OK"))
     present = {r["name"] for r in rows}
     # 工作單要求、但 Tokenomics 現行版沒有者：逐名列入、值留空（E1）
-    wanted = SRC_DEM + BLOCK6 + EXTRA_NAMES + S4_NAMES + A2_NAMES + V18_NAMES + V19B_NAMES
+    wanted = SRC_DEM + BLOCK6 + EXTRA_NAMES + S4_NAMES + A2_NAMES + V18_NAMES + V19B_NAMES + V17_NAMES
     pending = [dict(name=n, kind=n.split("_")[0], label="", unit="", values=[], status=PENDING_NOTE) for n in wanted if n not in present]
     hdr_gen = [wb["Interface"].cell(4, k).value for k in range(3, 18)]
     hdr_cost = [wb["Interface"].cell(5, k).value for k in range(3, 18)]
