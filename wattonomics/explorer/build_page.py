@@ -30,7 +30,7 @@ for r in R:
     if r["kind"] != "gap": continue
     pt = r["part"]
     if pt == "market": g["mk"][f"{r['scen']}|{r['delay']}"][r["year"]] = {k: (v if isinstance(v, str) else f(v)) for k, v in r["values"].items()}
-    elif pt == "verdict": g["verdict"][f"{r['scen']}|{r['delay']}"] = [r["verdict"], r["verdict12"]]
+    elif pt == "verdict": g["verdict"][f"{r['scen']}|{r['delay']}"] = [r["verdict"], r["verdict12"], r.get("verdict_mc"), r.get("verdict12_mc")]
     elif pt == "pergw": g["pergw"][r["item"]][r["year"]] = f(r["value"])
     elif pt == "player": g["player"][r["player"]][r["year"]] = {k: f(v) for k, v in r["values"].items()}
     elif pt == "player_meta": g["pmeta"][r["player"]] = {"cash": f(r["open_cash"]), "committed": f(r["committed"]), "verdict": r["verdict"]}

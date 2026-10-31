@@ -7,7 +7,7 @@ import openpyxl
 VARIANTS = [("基準", {}), ("lag_bldg 低", {"lag_bldg": "lo"}), ("lag_bldg 高", {"lag_bldg": "hi"}),
             ("ai_sh 低（含 ai_amzn）", {"ai_sh": "lo", "ai_amzn": "lo"}), ("ai_sh 高（含 ai_amzn）", {"ai_sh": "hi", "ai_amzn": "hi"})]
 SCENS = [("A", "D0"), ("A", "D1"), ("B", "D1"), ("C", "D2")]
-OUT = ("CumNeed", "CumNeedInclRest", "CumShort", "CumShortInclRest", "CumShortCashOnly", "CumShortCashOnlyInclRest")
+OUT = ("CumNeed", "CumNeedInclRest", "CumUnarranged", "CumUnarrangedInclRest", "CumNeed_ModelCapex", "CumNeedInclRest_ModelCapex")
 
 
 def read(x):
@@ -20,6 +20,7 @@ def read(x):
         k = f"{s}_{d}"
         res[k] = {o: {y: v(f"WIF_Gap_{o}_{k}_{y}") for y in range(2027, 2031)} for o in OUT}
         res[k]["Verdict"] = v(f"WIF_Gap_Verdict_{k}"); res[k]["Verdict12"] = v(f"WIF_Gap_Verdict12_{k}")
+        res[k]["VerdictMC"] = v(f"WIF_Gap_Verdict_ModelCapex_{k}"); res[k]["Verdict12MC"] = v(f"WIF_Gap_Verdict12_ModelCapex_{k}")
     return res
 
 
@@ -45,8 +46,8 @@ def main():
     for lab, r in allres.items():
         print(lab)
         for k, d in r.items():
-            print(f"  {k}: 累計尚需 2030 不含／含其餘 {d['CumNeed'][2030]:.0f}／{d['CumNeedInclRest'][2030]:.0f}；仍未安排 {d['CumShort'][2030]:.0f}／{d['CumShortInclRest'][2030]:.0f}；"
-                  f"只扣現金 {d['CumShortCashOnly'][2030]:.0f}／{d['CumShortCashOnlyInclRest'][2030]:.0f}；判讀 {d['Verdict']}｜{d['Verdict12']}")
+            print(f"  {k}: 累計尚需 2030 不含／含其餘 {d['CumNeed'][2030]:.0f}／{d['CumNeedInclRest'][2030]:.0f}；仍未安排 {d['CumUnarranged'][2030]:.0f}／{d['CumUnarrangedInclRest'][2030]:.0f}；"
+                  f"並列讀法累計 {d['CumNeed_ModelCapex'][2030]:.0f}／{d['CumNeedInclRest_ModelCapex'][2030]:.0f}；判讀 {d['Verdict']}｜{d['Verdict12']}；並列 {d['VerdictMC']}｜{d['Verdict12MC']}")
     if out:
         json.dump(allres, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 

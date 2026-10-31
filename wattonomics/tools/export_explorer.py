@@ -106,19 +106,24 @@ def main():
                     src="Spend／Facility（SRC_GL_301、SRC_GL_303）", name=nm)
     # 7) 資金缺口（v0.1.7；kind＝gap，part 區分：market／verdict／pergw／player／total）。只讀 WIF_Gap_* 名稱
     GY = list(range(2024, 2031))
-    MF = (("need", "Need"), ("need_own", "NeedOwn"), ("need_rest", "NeedRest"), ("mkt_add", "MktAdd"), ("short", "Short"), ("short_incl_rest", "ShortInclRest"),
-          ("cum_need", "CumNeed"), ("cum_need_incl_rest", "CumNeedInclRest"), ("cum_short", "CumShort"), ("cum_short_incl_rest", "CumShortInclRest"),
-          ("cum_cash_only", "CumShortCashOnly"), ("cum_cash_only_incl_rest", "CumShortCashOnlyInclRest"))
+    MF = [("need_rest", "NeedRest"), ("mkt_add", "MktAdd")]
+    for vx, nx in (("", ""), ("_mc", "_ModelCapex")):
+        MF += [("need" + vx, "Need" + nx), ("need_own" + vx, "NeedOwn" + nx), ("short" + vx, "Short" + nx), ("short_incl_rest" + vx, "ShortInclRest" + nx),
+               ("cum_need" + vx, "CumNeed" + nx), ("cum_need_incl_rest" + vx, "CumNeedInclRest" + nx),
+               ("cum_unarranged" + vx, "CumUnarranged" + nx), ("cum_unarranged_incl_rest" + vx, "CumUnarrangedInclRest" + nx),
+               ("cum_memo_incl_committed" + vx, f"CumUnarranged{nx}_MemoInclCommitted"), ("cum_memo_incl_committed_incl_rest" + vx, f"CumUnarrangedInclRest{nx}_MemoInclCommitted")]
     if any(n.startswith("WIF_Gap_") for n in names):
         for s in "ABC":
             for d in ("D0", "D1", "D2"):
                 for y in GY:
                     v = {k: (val(f"WIF_Gap_{nm}_{s}_{d}_{y}") if f"WIF_Gap_{nm}_{s}_{d}_{y}" in names else None) for k, nm in MF}
                     v.update(nonai=val(f"WIF_Gap_NonAI_{y}"), ocf=val(f"WIF_Gap_OCF_{y}"), buyback=val(f"WIF_Gap_Buyback_{y}"),
+                             fallback=val(f"WIF_Gap_Fallback_{y}"), fallback_cells=val(f"WIF_Gap_FallbackCells_{y}"),
                              ext_obs=(val(f"WIF_Gap_ExtObs_{y}") if f"WIF_Gap_ExtObs_{y}" in names else None))
                     add("gap", part="market", scen=s, delay=d, year=y, values=v, unit="US$B", tag="Derived", src="Gap",
                         name=f"WIF_Gap_*_{s}_{d}_{y}", note="需要＝11 家 AI 資料中心＋市場其餘（資金來源未知）＋11 家非 AI；來源＝11 家營業現金流（個股模型基準，不隨情景變）＋已觀測外部融資（2024–2025）")
-                add("gap", part="verdict", scen=s, delay=d, verdict=val(f"WIF_Gap_Verdict_{s}_{d}"), verdict12=val(f"WIF_Gap_Verdict12_{s}_{d}"), tag="Derived", src="Gap",
+                add("gap", part="verdict", scen=s, delay=d, verdict=val(f"WIF_Gap_Verdict_{s}_{d}"), verdict12=val(f"WIF_Gap_Verdict12_{s}_{d}"),
+                    verdict_mc=val(f"WIF_Gap_Verdict_ModelCapex_{s}_{d}"), verdict12_mc=val(f"WIF_Gap_Verdict12_ModelCapex_{s}_{d}"), tag="Derived", src="Gap",
                     note="G3：2030 自由現金流 < 0 或缺口占資本支出 > 30% 連 3 年＝OpenAI 型；否則 Anthropic 型")
         for nm in names:
             if nm.startswith("WIF_Gap_PerGW_") or nm.startswith("WIF_Gap_Item_"):
@@ -128,14 +133,14 @@ def main():
         GPS = sorted({nm.split("_")[3] for nm in names if nm.startswith("WIF_Gap_Player_")})
         for p in GPS:
             for y in GY:
-                v = {k: val(f"WIF_Gap_Player_{p}_{y}_{k}") for k in ("OCF", "CapexAI", "CapexNonAI", "Gap", "SelfFund", "Buyback", "CapexAIModel") if f"WIF_Gap_Player_{p}_{y}_{k}" in names}
+                v = {k: val(f"WIF_Gap_Player_{p}_{y}_{k}") for k in ("OCF", "CapexAI", "CapexNonAI", "Gap", "SelfFund", "Buyback", "CapexAIModel", "CapexAIGW", "CapexAIMC") if f"WIF_Gap_Player_{p}_{y}_{k}" in names}
                 add("gap", part="player", player=p, year=y, values=v, unit="US$B（SelfFund 為倍數）", tag="Derived", src="Gap", name=f"WIF_Gap_Player_{p}_{y}_*")
             add("gap", part="player_meta", player=p, open_cash=val(f"WIF_Gap_PlayerCash_{p}"),
                 committed=(val(f"WIF_Gap_PlayerCommitted_{p}") if f"WIF_Gap_PlayerCommitted_{p}" in names else None),
                 verdict=val(f"WIF_Gap_PlayerVerdict_{p}"), tag="Derived", src="Gap")
         add("gap", part="total", open_cash=val("WIF_Gap_OpenCash"), committed=val("WIF_Gap_Committed"), ext2026_memo=val("WIF_Gap_ExtObs2026Memo"),
             buffer_cum=val("WIF_Gap_BufferCum"), ocf_missing={y: val(f"WIF_Gap_OCFMissing_{y}") for y in GY}, coverage={y: val(f"WIF_Coverage_{y}") for y in GY},
-            tag="Derived", src="Gap", note="期初現金與承諾只進累計（G4）；2026 年已觀測融資只列備忘；買回股利不扣（Andy 2026-10-31 04:20）")
+            tag="Derived", src="Gap", note="期初現金只進累計；已簽未起租與表外合資承諾是市場內移轉，只列備忘（G4 更正）；2026 年已觀測融資只列備忘；買回股利不扣（Andy 2026-10-31 04:20）")
     snap = dict(source=dict(file=os.path.basename(x), sha256=hashlib.sha256(open(x, "rb").read()).hexdigest(),
                             note="Wattonomics（瓦帳）互動頁取數；扁平紀錄，kind 欄區分種類；單位 IT GW（＝TK GW）；下游取用 2027 年後數值前看 coverage",
                             wgov_errors=val("WGOV_Errors")),
