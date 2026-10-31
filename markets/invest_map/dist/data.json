@@ -1,11 +1,11 @@
 {
  "meta": {
-  "version": "v0.6.17",
-  "book": "20261031_AI投資地圖_資料_v0.6.17.xlsx",
+  "version": "v0.6.18",
+  "book": "20261031_AI投資地圖_資料_v0.6.18.xlsx",
   "tk_file": "20261024_Tokenomics_v21.4.xlsx",
   "tk_version": "v21.4",
   "tk_commit": "3ac70ac",
-  "cm_commit": "f9f424c",
+  "cm_commit": "85c663b9",
   "built": "2026-10-27",
   "price_date": "半導體：各模型現價（2026-10-22／23）；Microsoft、Alphabet、Amazon、Oracle：模型現價（2026-10-26 收盤）；其餘雲端與模型商：2026-10-23 收盤",
   "pages": "https://yinchenchang.github.io/company-models/",
@@ -316,7 +316,7 @@
    "pos_s": 50,
    "vc_s": 100,
    "score": 82.5,
-   "rank": 13
+   "rank": 14
   },
   {
    "tk": "ANET",
@@ -331,7 +331,7 @@
    "pos_s": 75,
    "vc_s": 75,
    "score": 77,
-   "rank": 16
+   "rank": 17
   },
   {
    "tk": "300308",
@@ -376,7 +376,7 @@
    "pos_s": 100,
    "vc_s": 25,
    "score": 73.25,
-   "rank": 21
+   "rank": 22
   },
   {
    "tk": "2308",
@@ -391,7 +391,7 @@
    "pos_s": 100,
    "vc_s": 25,
    "score": 73.25,
-   "rank": 21
+   "rank": 22
   },
   {
    "tk": "2382",
@@ -406,7 +406,7 @@
    "pos_s": 75,
    "vc_s": 25,
    "score": 58.5,
-   "rank": 41
+   "rank": 43
   },
   {
    "tk": "6857",
@@ -436,7 +436,7 @@
    "pos_s": 100,
    "vc_s": 50,
    "score": 79.5,
-   "rank": 14
+   "rank": 15
   },
   {
    "tk": "AMZN",
@@ -466,7 +466,7 @@
    "pos_s": 75,
    "vc_s": 100,
    "score": 83.25,
-   "rank": 11
+   "rank": 12
   },
   {
    "tk": "GOOGL",
@@ -481,7 +481,7 @@
    "pos_s": 75,
    "vc_s": 100,
    "score": 83.25,
-   "rank": 11
+   "rank": 12
   },
   {
    "tk": "ORCL",
@@ -496,7 +496,7 @@
    "pos_s": 50,
    "vc_s": 100,
    "score": 66.5,
-   "rank": 31
+   "rank": 32
   },
   {
    "tk": "SPCX",
@@ -511,7 +511,7 @@
    "pos_s": 50,
    "vc_s": 100,
    "score": 66.5,
-   "rank": 31
+   "rank": 32
   },
   {
    "tk": "META",
@@ -526,7 +526,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 68.25,
-   "rank": 27
+   "rank": 28
   },
   {
    "tk": "CRWV",
@@ -541,7 +541,7 @@
    "pos_s": 100,
    "vc_s": 50,
    "score": 65.5,
-   "rank": 34
+   "rank": 36
   },
   {
    "tk": "NBIS",
@@ -556,7 +556,7 @@
    "pos_s": 75,
    "vc_s": 50,
    "score": 56.75,
-   "rank": 42
+   "rank": 44
   },
   {
    "tk": "WYFI",
@@ -571,7 +571,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 33.25,
-   "rank": 63
+   "rank": 69
   },
   {
    "tk": "OpenAI",
@@ -601,7 +601,7 @@
    "pos_s": 75,
    "vc_s": 75,
    "score": 77,
-   "rank": 16
+   "rank": 17
   },
   {
    "tk": "00100",
@@ -616,7 +616,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 54.25,
-   "rank": 44
+   "rank": 46
   },
   {
    "tk": "02513",
@@ -631,7 +631,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 54.25,
-   "rank": 44
+   "rank": 46
   },
   {
    "tk": "AMD",
@@ -646,7 +646,7 @@
    "pos_s": 50,
    "vc_s": 100,
    "score": 74.5,
-   "rank": 18
+   "rank": 19
   },
   {
    "tk": "2454",
@@ -661,7 +661,7 @@
    "pos_s": 50,
    "vc_s": 100,
    "score": 74.5,
-   "rank": 18
+   "rank": 19
   },
   {
    "tk": "MRVL",
@@ -676,7 +676,7 @@
    "pos_s": 50,
    "vc_s": 100,
    "score": 74.5,
-   "rank": 18
+   "rank": 19
   },
   {
    "tk": "3661",
@@ -691,7 +691,7 @@
    "pos_s": 25,
    "vc_s": 100,
    "score": 65.75,
-   "rank": 33
+   "rank": 34
   },
   {
    "tk": "3443",
@@ -706,7 +706,7 @@
    "pos_s": 25,
    "vc_s": 100,
    "score": 59.75,
-   "rank": 40
+   "rank": 42
   },
   {
    "tk": "285A",
@@ -721,7 +721,7 @@
    "pos_s": 50,
    "vc_s": 100,
    "score": 68.5,
-   "rank": 25
+   "rank": 26
   },
   {
    "tk": "SNDK",
@@ -736,7 +736,7 @@
    "pos_s": 50,
    "vc_s": 100,
    "score": 68.5,
-   "rank": 25
+   "rank": 26
   },
   {
    "tk": "COHR",
@@ -751,7 +751,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 60.25,
-   "rank": 37
+   "rank": 39
   },
   {
    "tk": "LITE",
@@ -766,7 +766,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 60.25,
-   "rank": 37
+   "rank": 39
   },
   {
    "tk": "300502",
@@ -781,7 +781,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 60.25,
-   "rank": 37
+   "rank": 39
   },
   {
    "tk": "2345",
@@ -796,7 +796,7 @@
    "pos_s": 25,
    "vc_s": 75,
    "score": 51.5,
-   "rank": 48
+   "rank": 53
   },
   {
    "tk": "FN",
@@ -811,7 +811,7 @@
    "pos_s": 25,
    "vc_s": 75,
    "score": 51.5,
-   "rank": 48
+   "rank": 53
   },
   {
    "tk": "CRDO",
@@ -826,7 +826,7 @@
    "pos_s": 25,
    "vc_s": 75,
    "score": 51.5,
-   "rank": 48
+   "rank": 53
   },
   {
    "tk": "ALAB",
@@ -841,7 +841,7 @@
    "pos_s": 25,
    "vc_s": 75,
    "score": 45.5,
-   "rank": 58
+   "rank": 63
   },
   {
    "tk": "2449",
@@ -856,7 +856,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 68.25,
-   "rank": 27
+   "rank": 28
   },
   {
    "tk": "AMKR",
@@ -871,7 +871,7 @@
    "pos_s": 50,
    "vc_s": 75,
    "score": 68.25,
-   "rank": 27
+   "rank": 28
   },
   {
    "tk": "2383",
@@ -886,7 +886,7 @@
    "pos_s": 75,
    "vc_s": 25,
    "score": 64.5,
-   "rank": 35
+   "rank": 37
   },
   {
    "tk": "3037",
@@ -901,7 +901,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 55.75,
-   "rank": 43
+   "rank": 45
   },
   {
    "tk": "8046",
@@ -916,7 +916,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 47.75,
-   "rank": 52
+   "rank": 57
   },
   {
    "tk": "2368",
@@ -931,7 +931,7 @@
    "pos_s": 25,
    "vc_s": 25,
    "score": 39,
-   "rank": 61
+   "rank": 66
   },
   {
    "tk": "300476",
@@ -946,7 +946,7 @@
    "pos_s": 25,
    "vc_s": 25,
    "score": 39,
-   "rank": 61
+   "rank": 66
   },
   {
    "tk": "ASML",
@@ -976,7 +976,7 @@
    "pos_s": 75,
    "vc_s": 50,
    "score": 78.75,
-   "rank": 15
+   "rank": 16
   },
   {
    "tk": "LRCX",
@@ -991,7 +991,7 @@
    "pos_s": 50,
    "vc_s": 50,
    "score": 70,
-   "rank": 23
+   "rank": 24
   },
   {
    "tk": "KLAC",
@@ -1006,7 +1006,7 @@
    "pos_s": 50,
    "vc_s": 50,
    "score": 70,
-   "rank": 23
+   "rank": 24
   },
   {
    "tk": "042700",
@@ -1021,7 +1021,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 53.25,
-   "rank": 46
+   "rank": 50
   },
   {
    "tk": "TER",
@@ -1036,7 +1036,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 53.25,
-   "rank": 46
+   "rank": 50
   },
   {
    "tk": "BESI",
@@ -1051,7 +1051,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 47.25,
-   "rank": 55
+   "rank": 60
   },
   {
    "tk": "6315",
@@ -1066,7 +1066,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 47.25,
-   "rank": 55
+   "rank": 60
   },
   {
    "tk": "7729",
@@ -1081,7 +1081,7 @@
    "pos_s": 25,
    "vc_s": 50,
    "score": 47.25,
-   "rank": 55
+   "rank": 60
   },
   {
    "tk": "2317",
@@ -1096,7 +1096,7 @@
    "pos_s": 100,
    "vc_s": 25,
    "score": 67.25,
-   "rank": 30
+   "rank": 31
   },
   {
    "tk": "3231",
@@ -1111,7 +1111,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 49.75,
-   "rank": 51
+   "rank": 56
   },
   {
    "tk": "6669",
@@ -1126,7 +1126,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 41.75,
-   "rank": 59
+   "rank": 64
   },
   {
    "tk": "DELL",
@@ -1141,7 +1141,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 41.75,
-   "rank": 59
+   "rank": 64
   },
   {
    "tk": "SMCI",
@@ -1156,7 +1156,7 @@
    "pos_s": 25,
    "vc_s": 25,
    "score": 27,
-   "rank": 65
+   "rank": 71
   },
   {
    "tk": "3017",
@@ -1171,7 +1171,7 @@
    "pos_s": 75,
    "vc_s": 25,
    "score": 64.5,
-   "rank": 35
+   "rank": 37
   },
   {
    "tk": "2301",
@@ -1186,7 +1186,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 47.75,
-   "rank": 52
+   "rank": 57
   },
   {
    "tk": "3324",
@@ -1201,7 +1201,7 @@
    "pos_s": 50,
    "vc_s": 25,
    "score": 47.75,
-   "rank": 52
+   "rank": 57
   },
   {
    "tk": "3653",
@@ -1216,7 +1216,97 @@
    "pos_s": 25,
    "vc_s": 25,
    "score": 33,
-   "rank": 64
+   "rank": 70
+  },
+  {
+   "tk": "ARM",
+   "name": "Arm",
+   "layer": "L3 IT 設備",
+   "seg": "運算",
+   "imp": 2,
+   "posn": 4,
+   "basis": "手機 CPU 架構接近獨占；資料中心 CPU 份額上升中（公司說法）（AI半導體 候選母體 v0.2.2；市場位置由次產業內優先序 8 換算）",
+   "tag": "[判斷]",
+   "irr_s": 80,
+   "pos_s": 25,
+   "vc_s": 100,
+   "score": 65.75,
+   "rank": 34
+  },
+  {
+   "tk": "3711",
+   "name": "日月光",
+   "layer": "L3 IT 設備",
+   "seg": "代工與封測",
+   "imp": 1,
+   "posn": 2,
+   "basis": "全球最大封測廠（AI半導體 候選母體 v0.2.2；市場位置由次產業內優先序 2 換算）",
+   "tag": "[判斷]",
+   "irr_s": 100,
+   "pos_s": 75,
+   "vc_s": 75,
+   "score": 85,
+   "rank": 11
+  },
+  {
+   "tk": "2303",
+   "name": "聯電",
+   "layer": "L3 IT 設備",
+   "seg": "代工與封測",
+   "imp": 3,
+   "posn": 4,
+   "basis": "全球成熟製程代工前段班（AI半導體 候選母體 v0.2.2；市場位置由次產業內優先序 7 換算）",
+   "tag": "[判斷]",
+   "irr_s": 65,
+   "pos_s": 25,
+   "vc_s": 75,
+   "score": 53.5,
+   "rank": 48
+  },
+  {
+   "tk": "5347",
+   "name": "世界先進",
+   "layer": "L3 IT 設備",
+   "seg": "代工與封測",
+   "imp": 3,
+   "posn": 4,
+   "basis": "8 吋代工主要廠之一（AI半導體 候選母體 v0.2.2；市場位置由次產業內優先序 8 換算）",
+   "tag": "[判斷]",
+   "irr_s": 65,
+   "pos_s": 25,
+   "vc_s": 75,
+   "score": 53.5,
+   "rank": 48
+  },
+  {
+   "tk": "6274",
+   "name": "台燿",
+   "layer": "L3 IT 設備",
+   "seg": "載板與 PCB",
+   "imp": 2,
+   "posn": 4,
+   "basis": "AI 伺服器與交換器高速 CCL 第二大供應者（本專案判斷）（AI半導體 候選母體 v0.2.2；市場位置由次產業內優先序 9 換算）",
+   "tag": "[判斷]",
+   "irr_s": 60,
+   "pos_s": 25,
+   "vc_s": 25,
+   "score": 39,
+   "rank": 66
+  },
+  {
+   "tk": "6223",
+   "name": "旺矽",
+   "layer": "L2 半導體製造與設備",
+   "seg": "設備與材料",
+   "imp": 2,
+   "posn": 4,
+   "basis": "AI 加速器垂直探針卡主要供應者之一（媒體）（AI半導體 候選母體 v0.2.2；市場位置由次產業內優先序 13 換算）",
+   "tag": "[判斷]",
+   "irr_s": 80,
+   "pos_s": 25,
+   "vc_s": 50,
+   "score": 53.25,
+   "rank": 50
   }
  ],
  "valuation": [
@@ -3884,6 +3974,252 @@
    "b2src": "",
    "tier6": "0%～−25%",
    "recsrc": "上檔空間 jentech/dist/20261031_健策個股模型_v0.1.4.xlsx Val!B43；投資建議 jentech/dist/20261031_健策個股模型_v0.1.4.xlsx Val!B46；級距 jentech/dist/20261031_健策個股模型_v0.1.4.xlsx Val!B45"
+  },
+  {
+   "tk": "ARM",
+   "name": "Arm",
+   "layer": "L3 IT 設備",
+   "seg": "運算",
+   "method": "加權目標價（DCF 50%＋Comparable 50%）",
+   "ccy": "USD",
+   "price": 228.88,
+   "price_date": "2026-10-30",
+   "price_src": "",
+   "price_n": "",
+   "model_px": 228.88,
+   "model_date": "2026-10-30",
+   "move": 0,
+   "flag": "",
+   "center": 53.5170569820702,
+   "bear": 21.0110835515655,
+   "cu": -0.766178534681623,
+   "bu": -0.908200438869427,
+   "tier": "強力放空",
+   "vtier": "強力放空",
+   "mfolder": "arm",
+   "mfile": "20261031_Arm個股模型_v0.1.html",
+   "gate": "通過（淨利）",
+   "gbasis": "淨利",
+   "glabel": "PL 頁各情境模型年度淨利（不含實績）",
+   "gseries": "7 個情境年度淨利（不含實績），全部為正",
+   "gsum": 20.7327210845487,
+   "gmin": 2.2927479525,
+   "gsrc": "[Derived] arm/dist/20261031_Arm個股模型_v0.1.xlsx PL!E13…PL!G39",
+   "alt": null,
+   "altlbl": "",
+   "pe28": "81.6 ／ 88.0 ／ 97.2",
+   "note": "DCF 目標價 34.6（Val!B24）；Comparable 目標價 72.5（Val!B41）；市場共識目標價 290.7（Val!B42，外部、僅供對照）；價格帶 C～A 情境 DCF 21.0～46.5",
+   "c1src": "arm/dist/20261031_Arm個股模型_v0.1.xlsx Val!B40",
+   "c2src": "",
+   "b1src": "arm/dist/20261031_Arm個股模型_v0.1.xlsx Val!D23",
+   "b2src": "",
+   "tier6": "小於 −50%",
+   "recsrc": "上檔空間 arm/dist/20261031_Arm個股模型_v0.1.xlsx Val!B43；投資建議 arm/dist/20261031_Arm個股模型_v0.1.xlsx Val!B46；級距 arm/dist/20261031_Arm個股模型_v0.1.xlsx Val!B45"
+  },
+  {
+   "tk": "3711",
+   "name": "日月光",
+   "layer": "L3 IT 設備",
+   "seg": "代工與封測",
+   "method": "加權目標價（DCF 50%＋Comparable 50%）",
+   "ccy": "TWD",
+   "price": 668,
+   "price_date": "2026-10-30",
+   "price_src": "",
+   "price_n": "",
+   "model_px": 668,
+   "model_date": "2026-10-30",
+   "move": 0,
+   "flag": "",
+   "center": 503.844828424598,
+   "bear": 176.841514953342,
+   "cu": -0.245741274813476,
+   "bu": -0.73526719318362,
+   "tier": "中立",
+   "vtier": "中立",
+   "mfolder": "ase",
+   "mfile": "20261031_日月光投控個股模型_v0.1.html",
+   "gate": "通過（淨利）",
+   "gbasis": "淨利",
+   "glabel": "PL 頁各情境模型年度淨利（不含實績）",
+   "gseries": "19 個情境年度淨利（不含實績），全部為正",
+   "gsum": 2614.42334047959,
+   "gmin": 78.0459212528757,
+   "gsrc": "[Derived] ase/dist/20261031_日月光投控個股模型_v0.1.xlsx PL!D15…PL!J47",
+   "alt": null,
+   "altlbl": "",
+   "pe28": "19.2 ／ 26.1 ／ 38.0",
+   "note": "DCF 目標價 336.5（Val!B24）；Comparable 目標價 600.2（Val!B40）；市場共識目標價 900.0（Val!B41，外部、僅供對照）；價格帶 C～A 情境 DCF 176.8～474.2",
+   "c1src": "ase/dist/20261031_日月光投控個股模型_v0.1.xlsx Val!B39",
+   "c2src": "",
+   "b1src": "ase/dist/20261031_日月光投控個股模型_v0.1.xlsx Val!D23",
+   "b2src": "",
+   "tier6": "0%～−25%",
+   "recsrc": "上檔空間 ase/dist/20261031_日月光投控個股模型_v0.1.xlsx Val!B42；投資建議 ase/dist/20261031_日月光投控個股模型_v0.1.xlsx Val!B50；級距 ase/dist/20261031_日月光投控個股模型_v0.1.xlsx Val!B49"
+  },
+  {
+   "tk": "2303",
+   "name": "聯電",
+   "layer": "L3 IT 設備",
+   "seg": "代工與封測",
+   "method": "加權目標價（DCF 50%＋Comparable 50%）",
+   "ccy": "TWD",
+   "price": 125.5,
+   "price_date": "2026-10-22",
+   "price_src": "",
+   "price_n": "",
+   "model_px": 125.5,
+   "model_date": "2026-10-22",
+   "move": 0,
+   "flag": "",
+   "center": 76.4037327995575,
+   "bear": 24.0742724867845,
+   "cu": -0.391205316338188,
+   "bu": -0.808173127595343,
+   "tier": "放空",
+   "vtier": "放空",
+   "mfolder": "umc",
+   "mfile": "20261031_聯電個股模型_v0.1.html",
+   "gate": "通過（淨利）",
+   "gbasis": "淨利",
+   "glabel": "PL 頁各情境模型年度淨利（不含實績）",
+   "gseries": "19 個情境年度淨利（不含實績），全部為正",
+   "gsum": 1536.60881849417,
+   "gmin": 25.0388738642401,
+   "gsrc": "[Derived] umc/dist/20261031_聯電個股模型_v0.1.xlsx PL!D14…PL!J44",
+   "alt": null,
+   "altlbl": "",
+   "pe28": "14.3 ／ 21.5 ／ 58.0",
+   "note": "DCF 目標價 82.5（Val!B24）；Comparable 目標價 140.7（Val!B40）；市場共識目標價 140.7（Val!B41，外部、僅供對照）；價格帶 C～A 情境 DCF 24.1～130.7",
+   "c1src": "umc/dist/20261031_聯電個股模型_v0.1.xlsx Val!B39",
+   "c2src": "",
+   "b1src": "umc/dist/20261031_聯電個股模型_v0.1.xlsx Val!D23",
+   "b2src": "",
+   "tier6": "−25%～−50%",
+   "recsrc": "上檔空間 umc/dist/20261031_聯電個股模型_v0.1.xlsx Val!B42；投資建議 umc/dist/20261031_聯電個股模型_v0.1.xlsx Val!B135；級距 umc/dist/20261031_聯電個股模型_v0.1.xlsx Val!B134"
+  },
+  {
+   "tk": "5347",
+   "name": "世界先進",
+   "layer": "L3 IT 設備",
+   "seg": "代工與封測",
+   "method": "加權目標價（DCF 50%＋Comparable 50%）",
+   "ccy": "TWD",
+   "price": 161,
+   "price_date": "2026-10-22",
+   "price_src": "",
+   "price_n": "",
+   "model_px": 161,
+   "model_date": "2026-10-22",
+   "move": 0,
+   "flag": "",
+   "center": 126.586227542494,
+   "bear": 19.2617538550996,
+   "cu": -0.213750139487614,
+   "bu": -0.880361777297518,
+   "tier": "中立",
+   "vtier": "中立",
+   "mfolder": "vis",
+   "mfile": "20261031_世界先進個股模型_v0.1.html",
+   "gate": "通過（淨利）",
+   "gbasis": "淨利",
+   "glabel": "PL 頁各情境模型年度淨利（不含實績）",
+   "gseries": "19 個情境年度淨利（不含實績），全部為正",
+   "gsum": 230.077864014518,
+   "gmin": 3.0748291970742,
+   "gsrc": "[Derived] vis/dist/20261031_世界先進個股模型_v0.1.xlsx PL!D14…PL!J44",
+   "alt": null,
+   "altlbl": "",
+   "pe28": "17.5 ／ 25.3 ／ 84.7",
+   "note": "DCF 目標價 77.5（Val!B24）；Comparable 目標價 175.7（Val!B40）；市場共識目標價 183.2（Val!B41，外部、僅供對照）；價格帶 C～A 情境 DCF 19.3～120.1",
+   "c1src": "vis/dist/20261031_世界先進個股模型_v0.1.xlsx Val!B39",
+   "c2src": "",
+   "b1src": "vis/dist/20261031_世界先進個股模型_v0.1.xlsx Val!D23",
+   "b2src": "",
+   "tier6": "0%～−25%",
+   "recsrc": "上檔空間 vis/dist/20261031_世界先進個股模型_v0.1.xlsx Val!B42；投資建議 vis/dist/20261031_世界先進個股模型_v0.1.xlsx Val!B135；級距 vis/dist/20261031_世界先進個股模型_v0.1.xlsx Val!B134"
+  },
+  {
+   "tk": "6274",
+   "name": "台燿",
+   "layer": "L3 IT 設備",
+   "seg": "載板與 PCB",
+   "method": "加權目標價（DCF 50%＋Comparable 50%）",
+   "ccy": "TWD",
+   "price": 1265,
+   "price_date": "2026-10-30",
+   "price_src": "",
+   "price_n": "",
+   "model_px": 1265,
+   "model_date": "2026-10-30",
+   "move": 0,
+   "flag": "",
+   "center": 1827.74408193815,
+   "bear": 866.580427635554,
+   "cu": 0.444856981769287,
+   "bu": -0.314956183687309,
+   "tier": "買進",
+   "vtier": "買進",
+   "mfolder": "tuc",
+   "mfile": "20261031_台燿個股模型_v0.1.html",
+   "gate": "通過（淨利）",
+   "gbasis": "淨利",
+   "glabel": "PL 頁各情境模型年度淨利（不含實績）",
+   "gseries": "8 個情境年度淨利（不含實績），全部為正",
+   "gsum": 211.318770466302,
+   "gmin": 11.38050420145,
+   "gsrc": "[Derived] tuc/dist/20261031_台燿個股模型_v0.1.xlsx PL!D12…PL!G36",
+   "alt": null,
+   "altlbl": "",
+   "pe28": "12.1 ／ 13.4 ／ 16.7",
+   "note": "DCF 目標價 1,343.4（Val!B24）；Comparable 目標價 2,486.1（Val!B38）；市場共識目標價 2,213.0（Val!B39，外部、僅供對照）；價格帶 C～A 情境 DCF 866.6～1,712.8",
+   "c1src": "tuc/dist/20261031_台燿個股模型_v0.1.xlsx Val!B37",
+   "c2src": "",
+   "b1src": "tuc/dist/20261031_台燿個股模型_v0.1.xlsx Val!D23",
+   "b2src": "",
+   "tier6": "25%–50%",
+   "recsrc": "上檔空間 tuc/dist/20261031_台燿個股模型_v0.1.xlsx Val!B40；投資建議 tuc/dist/20261031_台燿個股模型_v0.1.xlsx Val!B43；級距 tuc/dist/20261031_台燿個股模型_v0.1.xlsx Val!B42"
+  },
+  {
+   "tk": "6223",
+   "name": "旺矽",
+   "layer": "L2 半導體製造與設備",
+   "seg": "設備與材料",
+   "method": "加權目標價（DCF 50%＋Comparable 50%）",
+   "ccy": "TWD",
+   "price": 4610,
+   "price_date": "2026-10-30",
+   "price_src": "",
+   "price_n": "",
+   "model_px": 4610,
+   "model_date": "2026-10-30",
+   "move": 0,
+   "flag": "",
+   "center": 2641.36548794991,
+   "bear": 1084.86824320067,
+   "cu": -0.427035685911081,
+   "bu": -0.764670663080115,
+   "tier": "放空",
+   "vtier": "放空",
+   "mfolder": "mpi",
+   "mfile": "20261031_旺矽個股模型_v0.1.html",
+   "gate": "通過（淨利）",
+   "gbasis": "淨利",
+   "glabel": "PL 頁各情境模型年度淨利（不含實績）",
+   "gseries": "19 個情境年度淨利（不含實績），全部為正",
+   "gsum": 237.802020930888,
+   "gmin": 6.7316248085628,
+   "gsrc": "[Derived] mpi/dist/20261031_旺矽個股模型_v0.1.xlsx PL!D14…PL!J44",
+   "alt": null,
+   "altlbl": "",
+   "pe28": "32.3 ／ 43.7 ／ 66.0",
+   "note": "DCF 目標價 1,994.8（Val!B24）；Comparable 目標價 3,287.9（Val!B40）；市場共識目標價 10,000.0（Val!B41，外部、僅供對照）；價格帶 C～A 情境 DCF 1,084.9～2,843.7",
+   "c1src": "mpi/dist/20261031_旺矽個股模型_v0.1.xlsx Val!B39",
+   "c2src": "",
+   "b1src": "mpi/dist/20261031_旺矽個股模型_v0.1.xlsx Val!D23",
+   "b2src": "",
+   "tier6": "−25%～−50%",
+   "recsrc": "上檔空間 mpi/dist/20261031_旺矽個股模型_v0.1.xlsx Val!B42；投資建議 mpi/dist/20261031_旺矽個股模型_v0.1.xlsx Val!B50；級距 mpi/dist/20261031_旺矽個股模型_v0.1.xlsx Val!B49"
   }
  ],
  "nodes": [
@@ -4161,7 +4497,7 @@
    "imp": "1",
    "pos": "全球最大封測廠",
    "tag": "[判斷]",
-   "status": "封測樣板（第 3 順位）"
+   "status": "有模型"
   },
   {
    "seg": "代工與封測",
@@ -4606,6 +4942,66 @@
    "pos": "機房／電網層級；與「電力與機房」另案的邊界待定",
    "tag": "[判斷]",
    "status": "待建（邊界待定）"
+  },
+  {
+   "seg": "運算",
+   "order": "8",
+   "name": "Arm",
+   "tk": "ARM",
+   "listing": "美",
+   "role": "CPU 架構授權與權利金（Neoverse：Grace／Vera、Graviton、Axion、Cobalt）",
+   "imp": "2",
+   "pos": "手機 CPU 架構接近獨占；資料中心 CPU 份額上升中（公司說法）",
+   "tag": "[判斷]",
+   "status": "有模型"
+  },
+  {
+   "seg": "代工與封測",
+   "order": "7",
+   "name": "聯電",
+   "tk": "2303",
+   "listing": "台",
+   "role": "成熟製程晶圓代工（中介層、電源管理、驅動 IC）",
+   "imp": "3",
+   "pos": "全球成熟製程代工前段班",
+   "tag": "[判斷]",
+   "status": "有模型"
+  },
+  {
+   "seg": "代工與封測",
+   "order": "8",
+   "name": "世界先進",
+   "tk": "5347",
+   "listing": "台",
+   "role": "8 吋與 12 吋（VSMC）成熟製程代工（電源管理 IC）",
+   "imp": "3",
+   "pos": "8 吋代工主要廠之一",
+   "tag": "[判斷]",
+   "status": "有模型"
+  },
+  {
+   "seg": "載板與 PCB",
+   "order": "9",
+   "name": "台燿",
+   "tk": "6274",
+   "listing": "台",
+   "role": "高速 CCL（銅箔基板）",
+   "imp": "2",
+   "pos": "AI 伺服器與交換器高速 CCL 第二大供應者（本專案判斷）",
+   "tag": "[判斷]",
+   "status": "有模型"
+  },
+  {
+   "seg": "設備與材料",
+   "order": "13",
+   "name": "旺矽",
+   "tk": "6223",
+   "listing": "台",
+   "role": "探針卡（垂直、MEMS）與測試設備",
+   "imp": "2",
+   "pos": "AI 加速器垂直探針卡主要供應者之一（媒體）",
+   "tag": "[IP]",
+   "status": "有模型"
   },
   {
    "seg": "AI 雲端平台",
@@ -5326,6 +5722,90 @@
      "本專案：liteon/README.md 驅動因子；光寶模型_v0.1.xlsx In!E44、E45",
      "本專案：liteon/README.md 結果",
      "本專案：liteon/README.md 最大限制"
+    ]
+   },
+   "missing": []
+  },
+  "2303": {
+   "meta": {
+    "ticker": "2303",
+    "name": "聯電",
+    "name_full": "聯華電子股份有限公司（UMC）",
+    "listing": "臺灣證券交易所｜2303；NYSE ADR｜UMC",
+    "hq": "台灣新竹<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>",
+    "founded": "1980<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>",
+    "employees": "本專案未建立",
+    "fiscal_year_end": "12 月底",
+    "asof": "2026-10-31"
+   },
+   "oneliner": "成熟製程（<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：umc/README.md 模型命題\">22</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：umc/README.md 模型命題\">28</span> 奈米以上）晶圓代工廠：替 IC 設計公司代工驅動 IC、電源管理、Wi-Fi、車用等晶片，獲利由稼動率與售價循環決定；AI 相關（先進封裝矽中介層、矽光子）與 Intel <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：umc/README.md 模型命題\">12</span> 奈米合作是增量。",
+   "sections": {
+    "公司在做什麼": "<ul><li>晶圓代工：只替客戶製造晶片，不賣自有品牌；聯電不做最先進製程，主力是 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\">22</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\">28</span> 奈米以上的成熟製程。</li><li><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!C37:F37、I37\">22</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!C37:F37、I37\">28</span> 奈米是營收最大的製程，近四季占營收 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!C37:F37、I37\">34%</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!C37:F37、I37\">37%</span>。</li><li>AI 相關業務：先進封裝用的矽中介層（把 GPU 與記憶體並排連接的矽片）與矽光子（用光傳輸資料的晶片），2026 年約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx In!E41、In!E84\">3 億</span>美元，公司目標 2029 年約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx In!E41、In!E84\">10 億</span>美元。</li><li>與 Intel 合作 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx In!H49\">12</span> 奈米製程，處於驗證階段，2027 年試產；營收分配方式本專案未找到。</li></ul>",
+    "主要產品與營收占比": "<div class=\"ptbl\"><table><thead><tr><th>產品／部門</th><th>內容（白話）</th><th>營收占比</th><th>期間</th></tr></thead><tbody><tr><td>晶圓代工（單一主要部門）</td><td>成熟製程晶圓代工</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!G36\">100%</span>（NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!G36\">265.8B</span>）</td><td>4Q25–3Q26 四季</td></tr><tr><td>22／28 奈米</td><td>OLED 驅動 IC、Wi-Fi 7、車用雷達等</td><td>約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!G37；Derived\">36%</span>（NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!G37；Derived\">94.4B</span>）</td><td>同上</td></tr><tr><td>其他製程（14 奈米與 40 奈米以上）</td><td>各類成熟製程</td><td>約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!G38；Derived\">64%</span>（NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!G38；Derived\">171.4B</span>）</td><td>同上</td></tr><tr><td>其中：AI 相關</td><td>先進封裝矽中介層、矽光子</td><td>約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx PL!D8、PL!D5；Derived\">3.4%</span></td><td>FY2026（錨點）</td></tr></tbody></table></div><ul><li>應用別、地區別營收：本專案未建立。</li><li>毛利率：FY2025 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!B10、Q!E10、Q!G10\">29.0%</span>、3Q26 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!B10、Q!E10、Q!G10\">34.0%</span>；FY2026（含 4Q26 指引）<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!B10、Q!E10、Q!G10\">32.6%</span>。</li><li>3Q26 稼動率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!C6:E6\">92%</span>（1Q26 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!C6:E6\">79%</span>、2Q26 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!C6:E6\">85%</span>）。</li></ul>",
+    "市場定位與產業位置": "<ul><li>晶圓代工市占：本專案未建立。</li><li>本專案的同業前瞻 P/E 表：台積電、格芯、中芯（港股）、高塔、世界先進，中位數 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Val!A28:C32、Val!B33\">23.4 倍</span>。</li><li>聯電 10 年 Bloomberg 前瞻 P/E 中位數 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Val!B148、Val!B150\">15.2 倍</span>，長期低於台積電與中芯（兩者中位數的中位數 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Val!B148、Val!B150\">32.3 倍</span>）。</li><li>中國成熟製程擴產是本專案情境 C 的主因之一（稼動率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：umc/README.md 情境對照表\">76%</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：umc/README.md 情境對照表\">82%</span>、售價下跌）。</li><li>客戶集中度：本專案未建立。</li></ul>",
+    "管理層與經營風格": "<div class=\"ptbl\"><table><thead><tr><th>職位</th><th>姓名</th><th>任職起</th><th>背景</th></tr></thead><tbody><tr><td>董事長</td><td>洪嘉聰</td><td>本專案未建立</td><td>本專案未建立<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>共同總經理</td><td>王石</td><td>本專案未建立</td><td>3Q26 法說代表公司說明營運<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>共同總經理</td><td>簡山傑</td><td>本專案未建立</td><td>本專案未建立<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>資深副總經理暨財務長</td><td>劉啟東</td><td>本專案未建立</td><td>本專案未建立<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div><ul><li>資本配置：2026 年資本支出 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx In!H14、Sources!A3\">20 億</span>美元；董事會核准新加坡 P4 與台南新廠擴產預算約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx In!H14、Sources!A3\">1,487 億</span>元與 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx In!H14、Sources!A3\">1,028 億</span>元。</li><li>海外可轉債約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx In!I67\">18 億</span>美元，轉換稀釋本專案未建模。</li><li>其他經營風格與治理：本專案尚未研究。</li></ul>",
+    "同業與競爭態勢": "<div class=\"ptbl\"><table><thead><tr><th>同業</th><th>重疊領域</th><th>市占或規模</th></tr></thead><tbody><tr><td>台積電（2330）</td><td>28 奈米以上成熟製程</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Val!C28\">16.8 倍</span></td></tr><tr><td>格芯（GFS）</td><td>成熟製程、特殊製程</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Val!C29\">20.0 倍</span></td></tr><tr><td>中芯國際（0981.HK）</td><td>中國成熟製程</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Val!C30\">37.1 倍</span></td></tr><tr><td>世界先進（5347）</td><td>8 吋成熟製程、驅動 IC、電源管理</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Val!C32\">23.4 倍</span></td></tr></tbody></table></div><ul><li>本專案假設 2027 年平均售價：情境 A +<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx In!E30:E32\">10%</span>（公司說法）、B +<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx In!E30:E32\">5%</span>、C 持平。</li><li>中國業者擴產的規模與價格：本專案未建立。</li></ul>",
+    "主要客戶": "<ul><li>財報揭露的客戶集中度：未找到（本次查過公司 6-K 季報新聞稿與法說轉述，未見客戶集中度）<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：公司 6-K，2026-10-28\" aria-label=\"出處\">ⓘ</sup></li></ul><div class=\"ptbl\"><table><thead><tr><th>客戶</th><th>關係</th><th>依據</th></tr></thead><tbody><tr><td>Intel</td><td>12 奈米製程合作夥伴（驗證中）</td><td>法人與媒體轉述<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：旺得富，2026-10-17\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div>",
+    "前十大股東": "<div class=\"ptbl\"><table><thead><tr><th>排名</th><th>股東</th><th>持股比例</th></tr></thead><tbody><tr><td>—</td><td>未找到</td><td>—<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：本次未取得年報股東名冊或持股資料庫，2026-10-31\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div><ul><li>口徑：未找到（查過：媒體搜尋「聯電 前十大股東」，無可用結果）。</li></ul>",
+    "近期重大事件": "<ul><li>2026-10-28｜3Q26 財報：營收 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!E4、Q!E10、Q!E21、In!H70:H73\">742.4 億</span>元、毛利率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!E4、Q!E10、Q!E21、In!H70:H73\">34.0%</span>、EPS <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!E4、Q!E10、Q!E21、In!H70:H73\">1.32</span>；4Q26 指引出貨低個位數成長、售價持穩、毛利率與上季相當、稼動率低 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!E4、Q!E10、Q!E21、In!H70:H73\">90%</span> 區間</li><li>2026-10-28｜董事會核准約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Sources!A2\">1,028 億</span>元資本預算（新加坡、台南擴產）</li><li>2026-10-17｜發行海外可轉債約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部新聞：旺得富\">18 億</span>美元後股價回落</li><li>2026-10-06｜摩根士丹利上調目標價至 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Sources!A9\">188 元</span>，稱 AI 相關 2026 年約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Sources!A9\">3 億</span>美元、2029 年 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Sources!A9\">10 億</span>美元</li><li>2026-07-29｜2Q26 EPS <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!D21、Q!J13、Sources!A3\">3.39 元</span>，含投資與股利收益約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!D21、Q!J13、Sources!A3\">302 億</span>元；2026 年資本支出上調為 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Q!D21、Q!J13、Sources!A3\">20 億</span>美元</li></ul>",
+    "需要觀察的事項": "<ul><li>2027 年平均售價｜售價 ±<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：umc/README.md 最敏感的變數\">3%</span> 使加權目標價 ±<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：umc/README.md 最敏感的變數\">10.2%</span>，是公司變數中最敏感的一項｜4Q26 法說（約 2027-01 下旬）</li><li>稼動率｜情境 A／B／C 的 FY2028 稼動率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx In!E21:E23\">94%</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx In!E21:E23\">87%</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx In!E21:E23\">76%</span>｜每月營收、每季法說</li><li>折舊與擴產｜折舊年增 ±5pt 使加權目標價 −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：umc/README.md 最敏感的變數\">8.4%</span>／+<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：umc/README.md 最敏感的變數\">7.8%</span>｜P4、台南新廠時程</li><li>相對倍數調整｜係數 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Val!B154、README!A24\">0.5</span> 使 Comparable 減半；不調整時加權上檔空間約 −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx Val!B154、README!A24\">11%</span>｜Bloomberg 前瞻倍數更新</li><li>AI 相關與 Intel <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx PL!G71、umc/README.md 核心問題\">12</span> 奈米｜合計 FY2029 情境 A 約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_聯電個股模型_v0.1.xlsx PL!G71、umc/README.md 核心問題\">15 億</span>美元，不到營收一成｜2027 年 Intel 12 奈米試產</li></ul>",
+    "來源": "<ol><li>本專案：`umc/README.md`（v0.1，2026-10-31）；`umc/dist/20261031_聯電個股模型_v0.1.xlsx`（In、Q、PL、Val、Sources 頁）</li><li><a href=\"https://www.sec.gov/Archives/edgar/data/0001033767/000119312526434992/umc-ex99.htm\" target=\"_blank\" rel=\"noopener\">聯電 6-K 3Q26 財報</a>（2026-10-28）</li><li><a href=\"https://wantrich.chinatimes.com/news/20261017900003-420101\" target=\"_blank\" rel=\"noopener\">旺得富：聯電法人目標價與可轉債</a>（2026-10-17）</li><li><a href=\"https://uanalyze.com.tw/articles/9109557881\" target=\"_blank\" rel=\"noopener\">優分析：聯電 3Q26 法說</a>（2026-10-28）</li></ol>"
+   },
+   "notes": {
+    "基本資料": [
+     "外部・未經本專案檢核",
+     "本專案：umc/README.md 模型命題"
+    ],
+    "公司在做什麼": [
+     "外部・未經本專案檢核",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Q!C37:F37、I37",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx In!E41、In!E84",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx In!H49"
+    ],
+    "主要產品與營收占比": [
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Q!G36",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Q!G37；Derived",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Q!G38；Derived",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx PL!D8、PL!D5；Derived",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Q!B10、Q!E10、Q!G10",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Q!C6:E6"
+    ],
+    "市場定位與產業位置": [
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Val!A28:C32、Val!B33",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Val!B148、Val!B150",
+     "本專案：umc/README.md 情境對照表"
+    ],
+    "管理層與經營風格": [
+     "外部・未經本專案檢核",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx In!H14、Sources!A3",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx In!I67"
+    ],
+    "同業與競爭態勢": [
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Val!C28",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Val!C29",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Val!C30",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Val!C32",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx In!E30:E32"
+    ],
+    "主要客戶": [
+     "外部・未經本專案檢核：公司 6-K，2026-10-28",
+     "外部・未經本專案檢核：旺得富，2026-10-17"
+    ],
+    "前十大股東": [
+     "外部・未經本專案檢核：本次未取得年報股東名冊或持股資料庫，2026-10-31"
+    ],
+    "近期重大事件": [
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Q!E4、Q!E10、Q!E21、In!H70:H73",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Sources!A2",
+     "外部新聞：旺得富",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Sources!A9",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Q!D21、Q!J13、Sources!A3"
+    ],
+    "需要觀察的事項": [
+     "本專案：umc/README.md 最敏感的變數",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx In!E21:E23",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx Val!B154、README!A24",
+     "本專案：20261031_聯電個股模型_v0.1.xlsx PL!G71、umc/README.md 核心問題"
     ]
    },
    "missing": []
@@ -7127,6 +7607,93 @@
    },
    "missing": []
   },
+  "3711": {
+   "meta": {
+    "ticker": "3711",
+    "name": "日月光投控",
+    "name_full": "日月光投資控股股份有限公司（ASE Technology Holding Co., Ltd.）",
+    "listing": "臺灣證券交易所｜3711；NYSE｜ASX（ADR，1 ADS＝2 股）",
+    "hq": "臺灣高雄市<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>",
+    "founded": "2018（日月光半導體與矽品合併成立控股公司）<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>",
+    "employees": "本專案未建立",
+    "fiscal_year_end": "12 月底",
+    "asof": "2026-10-31"
+   },
+   "oneliner": "全球最大的封測代工廠（OSAT）：替晶片設計公司與晶圓廠封裝、測試晶片，另有電子代工（EMS，環旭電子）；AI 方面承接 LEAP 先進封裝（2.5D 的基板上封裝與測試、CoWoS 全流程、CPO），公司稱 2026 年逾 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：ase/README.md 開頭\">4B</span>、2027 年翻倍。",
+   "sections": {
+    "公司在做什麼": "<ul><li>封測（ATM）：封裝把晶粒裝上基板、接線、包覆；測試確認每顆晶片功能正常，兩者是晶片出貨前的最後兩道工序<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>。</li><li>LEAP 先進封裝：把 GPU 或 ASIC 與 HBM 並排放在中介層上的 2.5D 封裝與測試；本專案把這部分算成「AI 加速器顆數 × 委外與份額相對值 × 每顆內容＋全流程＋CPO」<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：ase/README.md 模型命題\" aria-label=\"出處\">ⓘ</sup>。</li><li>全流程（full process）：連前段的晶片堆疊（CoW）一起做，公司稱 2026 年約 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!E38、H39\">0.3B</span>、2027 年逾 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!E38、H39\">1B</span>。</li><li>EMS（環旭電子）：系統級封裝與電子組裝，以通訊、消費為主，HPC 新案在 2026 年下半年放量<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!H58\" aria-label=\"出處\">ⓘ</sup>。</li><li>資本密集：2026 年資本支出 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!E63、Q!G28\">11.5B</span>，約占營收 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!E63、Q!G28\">42%</span>。</li></ul>",
+    "主要產品與營收占比": "<div class=\"ptbl\"><table><thead><tr><th>產品／部門</th><th>內容（白話）</th><th>營收占比</th><th>期間</th></tr></thead><tbody><tr><td>封測（ATM）</td><td>封裝、測試、材料</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!B5、B4；Derived\">60.3%</span>（NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!B5、B4；Derived\">389.2B</span> ÷ <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!B5、B4；Derived\">645.4B</span>）</td><td>FY2025</td></tr><tr><td>其中：LEAP 先進封裝</td><td>2.5D、全流程、CPO</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!B6、In!E33；Derived\">7.7%</span>（NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!B6、In!E33；Derived\">49.6B</span>；公司稱 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!B6、In!E33；Derived\">1.6B</span>）</td><td>FY2025</td></tr><tr><td>EMS（環旭）</td><td>電子代工</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!B8；Derived\">40.1%</span>（NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!B8；Derived\">259.1B</span>）</td><td>FY2025</td></tr><tr><td>沖銷及其他</td><td>部門間交易</td><td>−<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!B9；Derived\">0.5%</span></td><td>FY2025</td></tr><tr><td>合計</td><td>營收 NT$645.4B</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!B4\">100%</span></td><td>FY2025</td></tr></tbody></table></div><ul><li>2026 年第三季：營收 NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!E4、E5、E11、E8\">244.2B</span>，封測 NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!E4、E5、E11、E8\">151.5B</span>（毛利率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!E4、E5、E11、E8\">30.6%</span>）、EMS NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!E4、E5、E11、E8\">93.5B</span>（毛利率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!E4、E5、E11、E8\">8.3%</span>）。</li><li>FY2026 錨點（含第四季依公司指引）：營收 NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!G4、Q!G29\">871.2B</span>，LEAP 占封測營收 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!G4、Q!G29\">22.8%</span>。</li><li>毛利率：FY2025 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!B15、G15、B11、G11\">17.7%</span>、FY2026 錨點 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!B15、G15、B11、G11\">21.9%</span>；封測 FY2025 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!B15、G15、B11、G11\">23.5%</span> → FY2026 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!B15、G15、B11、G11\">29.4%</span>。</li></ul>",
+    "市場定位與產業位置": "<ul><li>OSAT 排名：2024 年前十大 OSAT 營收中日月光約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：AMKR.md 市場定位，引用先驗比對_日月光_20261024.md\">45%</span> 居首、Amkor 約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：AMKR.md 市場定位，引用先驗比對_日月光_20261024.md\">15%</span> 第二（TrendForce）。</li><li>台積電 CoWoS 產能吃緊，委外給 OSAT 的後段與全流程擴大；本專案以「委外與份額相對值」表示，情境 B 為 2027 年 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!E47、E49、H44\">1.05</span>、2029 年 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!E47、E49、H44\">1.10</span>。</li><li>直接專案：除台積電委外外，也承接晶片公司的直接專案（券商舉 AMD Venice）<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!H44\" aria-label=\"出處\">ⓘ</sup>。</li><li>定價：公司稱 LEAP 與一般市場都處於有利於漲價的環境；主流封測 2026 年成長逾 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!H55、Q!B34\">20%</span>（公司）。</li></ul>",
+    "管理層與經營風格": "<div class=\"ptbl\"><table><thead><tr><th>職位</th><th>姓名</th><th>任職起</th><th>背景</th></tr></thead><tbody><tr><td>董事長兼執行長</td><td>張虔生</td><td>本專案未建立</td><td>日月光創辦人之一<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>營運長</td><td>吳田玉</td><td>本專案未建立</td><td>法說會主講人之一<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>財務長</td><td>董宏思（Joseph Tung）</td><td>本專案未建立</td><td>法說會主講人<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div><ul><li>資本配置：2026 年資本支出三度上調到 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!H63、H64、H71\">11.5B</span>，2027 年「更大」，公司預期 2027 年現金流為負、以多種來源（含客戶的貿易融資）支應；淨負債 ÷ 權益 2026 年第三季 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!H63、H64、H71\">66%</span>。</li><li>其他經營風格與治理：本專案尚未研究。</li></ul>",
+    "同業與競爭態勢": "<div class=\"ptbl\"><table><thead><tr><th>同業</th><th>重疊領域</th><th>市占或規模</th></tr></thead><tbody><tr><td>Amkor（艾克爾）</td><td>封裝、測試、2.5D 後段</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Val!A28、C28\">14.0x</span>（2026-10-23）</td></tr><tr><td>京元電（2449）</td><td>AI 晶片測試</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Val!A30、C30\">26.1x</span>（2026-10-06）</td></tr><tr><td>力成、矽格、南茂</td><td>封裝、測試</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Val!C29、C31、C32\">20.6x</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Val!C29、C31、C32\">23.3x</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Val!C29、C31、C32\">22.1x</span></td></tr><tr><td>台積電</td><td>CoWoS 自製（前段與部分後段）</td><td>本專案未建立<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：ase/README.md 驅動因子\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div><ul><li>同業前瞻 P/E 中位數 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Val!B33、B145、B147\">22.1x</span>；日月光十年前瞻 P/E 中位數 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Val!B33、B145、B147\">12.58x</span>，略高於台美封測同業的 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Val!B33、B145、B147\">11.25x</span>（Bloomberg）。</li><li>情境 C 假設台積電自製與 Amkor 分食，委外與份額相對值 2029 年降到 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!E52、I44\">0.92</span>。</li></ul>",
+    "主要客戶": "<ul><li>年報「占營收 10% 以上客戶」：未找到（年報未取得）。<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></li><li>公開已知的客戶：台積電（CoWoS 後段與全流程委外）、AMD（Venice CPU 直接專案；券商說法，二手）。<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：BofA 報告摘要，科技新報 2026-10-14\" aria-label=\"出處\">ⓘ</sup></li></ul>",
+    "前十大股東": "<div class=\"ptbl\"><table><thead><tr><th>排名</th><th>股東</th><th>持股比例</th></tr></thead><tbody><tr><td>—</td><td>未找到</td><td>—<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：查過網路搜尋「年報前十大股東」、Yahoo 奇摩股市公司資料頁，2026-10-31\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div><ul><li>口徑：年報前十名股東名冊未取得。<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></li></ul>",
+    "近期重大事件": "<ul><li>2026-10-30｜收盤 NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!E96\">668.00</span></li><li>2026-10-29｜第三季財報：營收 NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!E4、E15、E22、E25、In!H76\">244.2B</span>、毛利率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!E4、E15、E22、E25、In!H76\">22.1%</span>、淨利 NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!E4、E15、E22、E25、In!H76\">27.0B</span>、基本 EPS <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!E4、E15、E22、E25、In!H76\">6.13</span>；第四季指引合併營收季增 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!E4、E15、E22、E25、In!H76\">6</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!E4、E15、E22、E25、In!H76\">8%</span>、封測季增 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!E4、E15、E22、E25、In!H76\">11</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!E4、E15、E22、E25、In!H76\">13%</span>、封測毛利率 +<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx Q!E4、E15、E22、E25、In!H76\">1</span>–2pt</li><li>2026-10-29｜LEAP 2026 年上調到逾 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!H35、H39、H43、H63\">4B</span>、2027 年翻倍；全流程 2027 年逾 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!H35、H39、H43、H63\">1B</span>；CPO 2027 年逾 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!H35、H39、H43、H63\">0.5B</span>；資本支出上調到 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!H35、H39、H43、H63\">11.5B</span></li><li>2026-10-14｜BofA 目標價 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!H100\">800</span> → <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!H100\">900</span>（<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：日月光投控個股模型_v0.1.xlsx In!H100\">20 倍</span>目標 P/E）</li><li>2026-07-30｜第二季財報；資本支出二度上調到 US$<span class=\"sv\" tabindex=\"0\" data-src=\"外部新聞：科技新報\">10.5B</span>，買下友達與乖乖廠房擴產</li></ul>",
+    "需要觀察的事項": "<ul><li>封測現金流通率｜<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：ase/README.md 最敏感\">40%</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：ase/README.md 最敏感\">60%</span> 使加權目標價 −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：ase/README.md 最敏感\">12%</span>／+<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：ase/README.md 最敏感\">12%</span>，是最敏感的公司變數｜每季封測毛利率</li><li>資本支出與折舊｜折舊 FY2028 比 FY2026 高 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：ase/README.md 重點觀察\">71%</span>，營業利益增量 ÷ 累計資本支出 FY2028 情境 B 只有 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：ase/README.md 重點觀察\">8.4%</span>｜2027 年資本支出指引</li><li>主流封測成長｜FY2027 +<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：ase/README.md 最敏感\">5%</span>／+<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：ase/README.md 最敏感\">22%</span> 使加權目標價 −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：ase/README.md 最敏感\">11%</span>／+<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：ase/README.md 最敏感\">8%</span>｜每月營收</li><li>LEAP 占封測營收｜FY2027 情境 B <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：ase/README.md 重點觀察\">33.9%</span>，倍數是否停在 2026 窗口 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：ase/README.md 重點觀察\">24.1x</span>｜4Q26 財報（2027-02 上旬）</li><li>上檔空間 −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：ase/README.md 重點觀察\">24.6%</span> 距放空門檻 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：ase/README.md 重點觀察\">0.4</span> 個百分點｜下次重算</li></ul>",
+    "來源": "<ol><li>本專案：`ase/README.md`（v0.1，2026-10-31）；`ase/dist/20261031_日月光投控個股模型_v0.1.xlsx`（In、Q、PL、Val、Sources 頁）</li><li><a href=\"https://www.sec.gov/Archives/edgar/data/0001122411/000095010326016323/dp255782_6k.htm\" target=\"_blank\" rel=\"noopener\">日月光投控 3Q26 新聞稿與簡報（SEC 6-K）</a>（2026-10-29）</li><li><a href=\"https://www.fool.com/earnings/call-transcripts/2026/10/29/ase-asx-q3-2026-earnings-call-transcript/\" target=\"_blank\" rel=\"noopener\">日月光投控 3Q26 法說逐字稿（Motley Fool）</a>（2026-10-29）</li><li><a href=\"https://finance.technews.tw/2026/07/31/ase-buy-new-plants/\" target=\"_blank\" rel=\"noopener\">科技新報：日月光擴產買下友達與乖乖廠房</a>（2026-07-31）</li></ol>"
+   },
+   "notes": {
+    "基本資料": [
+     "外部・未經本專案檢核",
+     "本專案：ase/README.md 開頭"
+    ],
+    "公司在做什麼": [
+     "外部・未經本專案檢核",
+     "本專案：ase/README.md 模型命題",
+     "本專案：日月光投控個股模型_v0.1.xlsx In!E38、H39",
+     "本專案：日月光投控個股模型_v0.1.xlsx In!H58",
+     "本專案：日月光投控個股模型_v0.1.xlsx In!E63、Q!G28"
+    ],
+    "主要產品與營收占比": [
+     "本專案：日月光投控個股模型_v0.1.xlsx Q!B5、B4；Derived",
+     "本專案：日月光投控個股模型_v0.1.xlsx Q!B6、In!E33；Derived",
+     "本專案：日月光投控個股模型_v0.1.xlsx Q!B8；Derived",
+     "本專案：日月光投控個股模型_v0.1.xlsx Q!B9；Derived",
+     "本專案：日月光投控個股模型_v0.1.xlsx Q!B4",
+     "本專案：日月光投控個股模型_v0.1.xlsx Q!E4、E5、E11、E8",
+     "本專案：日月光投控個股模型_v0.1.xlsx Q!G4、Q!G29",
+     "本專案：日月光投控個股模型_v0.1.xlsx Q!B15、G15、B11、G11"
+    ],
+    "市場定位與產業位置": [
+     "本專案：AMKR.md 市場定位，引用先驗比對_日月光_20261024.md",
+     "本專案：日月光投控個股模型_v0.1.xlsx In!E47、E49、H44",
+     "本專案：日月光投控個股模型_v0.1.xlsx In!H44",
+     "本專案：日月光投控個股模型_v0.1.xlsx In!H55、Q!B34"
+    ],
+    "管理層與經營風格": [
+     "外部・未經本專案檢核",
+     "本專案：日月光投控個股模型_v0.1.xlsx In!H63、H64、H71"
+    ],
+    "同業與競爭態勢": [
+     "本專案：日月光投控個股模型_v0.1.xlsx Val!A28、C28",
+     "本專案：日月光投控個股模型_v0.1.xlsx Val!A30、C30",
+     "本專案：日月光投控個股模型_v0.1.xlsx Val!C29、C31、C32",
+     "本專案：ase/README.md 驅動因子",
+     "本專案：日月光投控個股模型_v0.1.xlsx Val!B33、B145、B147",
+     "本專案：日月光投控個股模型_v0.1.xlsx In!E52、I44"
+    ],
+    "主要客戶": [
+     "外部・未經本專案檢核",
+     "外部・未經本專案檢核：BofA 報告摘要，科技新報 2026-10-14"
+    ],
+    "前十大股東": [
+     "外部・未經本專案檢核：查過網路搜尋「年報前十大股東」、Yahoo 奇摩股市公司資料頁，2026-10-31",
+     "外部・未經本專案檢核"
+    ],
+    "近期重大事件": [
+     "本專案：日月光投控個股模型_v0.1.xlsx In!E96",
+     "本專案：日月光投控個股模型_v0.1.xlsx Q!E4、E15、E22、E25、In!H76",
+     "本專案：日月光投控個股模型_v0.1.xlsx In!H35、H39、H43、H63",
+     "本專案：日月光投控個股模型_v0.1.xlsx In!H100",
+     "外部新聞：科技新報"
+    ],
+    "需要觀察的事項": [
+     "本專案：ase/README.md 最敏感",
+     "本專案：ase/README.md 重點觀察"
+    ]
+   },
+   "missing": []
+  },
   "4062": {
    "meta": {
     "ticker": "4062",
@@ -7216,6 +7783,90 @@
    },
    "missing": []
   },
+  "5347": {
+   "meta": {
+    "ticker": "5347",
+    "name": "世界先進",
+    "name_full": "世界先進積體電路股份有限公司（VIS）",
+    "listing": "證券櫃檯買賣中心｜5347",
+    "hq": "台灣新竹<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>",
+    "founded": "1994<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>",
+    "employees": "本專案未建立",
+    "fiscal_year_end": "12 月底",
+    "asof": "2026-10-31"
+   },
+   "oneliner": "<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：vis/README.md 模型命題\">8</span> 吋成熟與特殊製程晶圓代工廠：主力是電源管理 IC 與面板驅動 IC，AI 伺服器電源帶動稼動率回升；新加坡 VSMC <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：vis/README.md 模型命題\">12</span> 吋廠（與 NXP 合資）2027 年第一季量產。",
+   "sections": {
+    "公司在做什麼": "<ul><li>晶圓代工：替 IC 設計公司與整合元件廠製造晶片，以 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\">8</span> 吋晶圓、成熟製程為主。</li><li>電源管理 IC（控制電壓與電流的晶片）是最大產品，2Q26 占營收 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!F37、I37\">77%</span>；AI 伺服器電源需要更多電源管理 IC 與分離式元件。</li><li>2026 年 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!G7、In!H7\">8</span> 吋產能約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!G7、In!H7\">330.6 萬</span>片，粗線寬淘汰並升級為細線寬，產能年減約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!G7、In!H7\">4%</span>。</li><li>VSMC：新加坡 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!H52、In!H37\">12</span> 吋廠，世界先進持股 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!H52、In!H37\">60%</span>、NXP <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!H52、In!H37\">40%</span>，2029 年滿載月產能約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!H52、In!H37\">4.4 萬</span>片。</li></ul>",
+    "主要產品與營收占比": "<div class=\"ptbl\"><table><thead><tr><th>產品／部門</th><th>內容（白話）</th><th>營收占比</th><th>期間</th></tr></thead><tbody><tr><td>晶圓代工（單一營運部門）</td><td>8 吋成熟與特殊製程</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!F36\">100%</span>（NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!F36\">14.2B</span>）</td><td>2Q26</td></tr><tr><td>電源管理 IC</td><td>電源轉換、AI 伺服器電源</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!F37、I37\">77%</span></td><td>2Q26</td></tr><tr><td>大尺寸面板驅動 IC</td><td>電視、顯示器面板</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!F38、I38\">12%</span></td><td>2Q26</td></tr><tr><td>中小尺寸面板驅動 IC</td><td>手機、筆電面板</td><td>約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!F39、I39\">7%</span></td><td>2Q26</td></tr><tr><td>其他（含分離式元件）</td><td>分離式元件等</td><td>約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!F40；Derived\">4%</span></td><td>2Q26</td></tr></tbody></table></div><ul><li>2Q26 以外各季的產品別比重：本專案未建立。</li><li>AI 相關占營收：上半年個位數、下半年雙位數，模型 FY2026 取 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!E53、H53\">10%</span>。</li><li>毛利率：FY2025 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!B10、Q!D10、Q!G10\">28.1%</span>、2Q26 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!B10、Q!D10、Q!G10\">32.3%</span>；FY2026（含 3Q26 指引與 4Q26 假設）<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!B10、Q!D10、Q!G10\">32.4%</span>。</li></ul>",
+    "市場定位與產業位置": "<ul><li>晶圓代工市占：本專案未建立。</li><li>本專案的同業前瞻 P/E 表：聯電、格芯、中芯（港股）、高塔，中位數 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Val!A28:C31、Val!B33\">27.4 倍</span>。</li><li>世界先進本身的 Bloomberg 前瞻倍數本專案尚未取得，相對倍數調整係數取 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Val!B153\">1.0</span>。</li><li>中國成熟製程擴產是本專案情境 C 的主因之一（<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：vis/README.md 情境對照表\">8</span> 吋稼動率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：vis/README.md 情境對照表\">74%</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：vis/README.md 情境對照表\">80%</span>、售價下跌）。</li><li>客戶集中度：本專案未建立。</li></ul>",
+    "管理層與經營風格": "<div class=\"ptbl\"><table><thead><tr><th>職位</th><th>姓名</th><th>任職起</th><th>背景</th></tr></thead><tbody><tr><td>董事長</td><td>方略</td><td>本專案未建立</td><td>本專案未建立<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>總經理</td><td>尉濟時</td><td>本專案未建立</td><td>本專案未建立<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div><ul><li>資本配置：2026 年資本支出約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Sources!A6、vis/README.md 估值\">600</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Sources!A6、vis/README.md 估值\">700 億</span>元，約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Sources!A6、vis/README.md 估值\">85%</span> 用於 VSMC。</li><li>其他經營風格與治理：本專案尚未研究。</li></ul>",
+    "同業與競爭態勢": "<div class=\"ptbl\"><table><thead><tr><th>同業</th><th>重疊領域</th><th>市占或規模</th></tr></thead><tbody><tr><td>聯電（2303）</td><td>成熟製程、驅動 IC</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Val!C28\">20.2 倍</span></td></tr><tr><td>格芯（GFS）</td><td>特殊製程、電源</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Val!C29\">20.0 倍</span></td></tr><tr><td>中芯國際（0981.HK）</td><td>中國成熟製程</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Val!C30\">37.1 倍</span></td></tr><tr><td>高塔半導體（TSEM）</td><td>類比、電源、特殊製程</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Val!C31\">34.6 倍</span></td></tr></tbody></table></div><ul><li>本專案假設 2027 年 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!E24:E26\">8</span> 吋售價：情境 A +<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!E24:E26\">6%</span>、B +<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!E24:E26\">3%</span>、C −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!E24:E26\">3%</span>。</li><li>中國業者擴產的規模與價格：本專案未建立。</li></ul>",
+    "主要客戶": "<ul><li>財報揭露的客戶集中度：未找到（本次查過法說轉述與媒體報導，未見客戶集中度）<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：優分析，2026-08-04\" aria-label=\"出處\">ⓘ</sup></li></ul><div class=\"ptbl\"><table><thead><tr><th>客戶</th><th>關係</th><th>依據</th></tr></thead><tbody><tr><td>NXP</td><td>VSMC 合資夥伴（持股 40%）</td><td>公司公告（媒體轉述）<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：科技新報，2026-05-05\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div>",
+    "前十大股東": "<div class=\"ptbl\"><table><thead><tr><th>排名</th><th>股東</th><th>持股比例</th></tr></thead><tbody><tr><td>1</td><td>台積電</td><td>約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：自由時報，2026-05（公告日依同期報導推定）\">19%</span>（出售約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：自由時報，2026-05（公告日依同期報導推定）\">8.1%</span> 後）</td></tr></tbody></table></div><ul><li>口徑：媒體報導的大股東持股；其餘前十大股東未找到（本次未取得年報股東名冊）。</li></ul>",
+    "近期重大事件": "<ul><li>2026-11-05（預定）｜3Q26 財報與法說；3Q26 營收 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!E4、Q!B25\">157.0 億</span>元、季增 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!E4、Q!B25\">10.2%</span>（月營收）</li><li>2026-10-08｜9 月營收 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Sources!A7\">59.04 億</span>元、前 9 月 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Sources!A7\">424.79 億</span>元</li><li>2026-08-06｜多家法人上調目標價，最高 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!E89:E90、Sources!A8\">220 元</span>；研究機構估 2027 年 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!E89:E90、Sources!A8\">12</span> 吋占營收 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!E89:E90、Sources!A8\">12%</span>、毛利率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!E89:E90、Sources!A8\">35%</span></li><li>2026-08-04｜2Q26 營收 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!D4、Q!D10、Q!D21、In!H73\">142.5 億</span>元、毛利率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!D4、Q!D10、Q!D21、In!H73\">32.3%</span>、EPS <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!D4、Q!D10、Q!D21、In!H73\">1.56</span>；3Q26 指引毛利率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!D4、Q!D10、Q!D21、In!H73\">32.5</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!D4、Q!D10、Q!D21、In!H73\">34.5%</span>、稼動率約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!D4、Q!D10、Q!D21、In!H73\">90%</span></li></ul>",
+    "需要觀察的事項": "<ul><li><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：vis/README.md 最敏感的變數\">8</span> 吋售價｜售價 ±<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：vis/README.md 最敏感的變數\">3%</span> 使加權目標價 ±<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：vis/README.md 最敏感的變數\">11.9%</span>，是公司變數中最敏感的一項｜2026-11-05 法說</li><li><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!E15:E17\">8</span> 吋稼動率｜情境 A／B／C 的 FY2028 稼動率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!E15:E17\">94%</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!E15:E17\">86%</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!E15:E17\">74%</span>｜每月營收、每季法說</li><li>VSMC 量產與毛利率｜FY2027 情境 B 毛利率 −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!E44、PL!E76\">5%</span>（含折舊），<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!E44、PL!E76\">12</span> 吋占營收約一成（情境 A <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx In!E44、PL!E76\">9.8%</span>）｜2027 年第一季量產</li><li>估值方法｜DCF <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Val!B24、Val!B35、vis/README.md 最敏感的變數\">77.5</span> 與 Comparable <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Val!B24、Val!B35、vis/README.md 最敏感的變數\">175.7</span> 差距大，DCF 權重 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Val!B24、Val!B35、vis/README.md 最敏感的變數\">0.3</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Val!B24、Val!B35、vis/README.md 最敏感的變數\">0.7</span> 使加權目標價 ±<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Val!B24、Val!B35、vis/README.md 最敏感的變數\">15.5%</span>｜Bloomberg 前瞻倍數取得後</li><li>3Q26 實績取代指引｜FY2026 錨點 EPS <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：20261031_世界先進個股模型_v0.1.xlsx Q!G20、In!E73\">6.42</span> 含 3Q26 毛利率指引中點與 4Q26 假設｜2026-11-05</li></ul>",
+    "來源": "<ol><li>本專案：`vis/README.md`（v0.1，2026-10-31）；`vis/dist/20261031_世界先進個股模型_v0.1.xlsx`（In、Q、PL、Val、Sources 頁）</li><li><a href=\"https://uanalyze.com.tw/articles/8378052767\" target=\"_blank\" rel=\"noopener\">優分析：世界先進 2Q26 法說</a>（2026-08-04）</li><li><a href=\"https://finance.technews.tw/2026/05/05/vis-2026-q1-financial-report/\" target=\"_blank\" rel=\"noopener\">科技新報：世界先進 1Q26 財報</a>（2026-05-05）</li><li><a href=\"https://www.ctee.com.tw/news/20260806700216-430201\" target=\"_blank\" rel=\"noopener\">工商時報：世界先進法人目標價</a>（2026-08-06）</li><li><a href=\"https://ec.ltn.com.tw/article/breakingnews/5438074\" target=\"_blank\" rel=\"noopener\">自由時報：台積電出售世界先進持股</a>（2026-05）</li></ol>"
+   },
+   "notes": {
+    "基本資料": [
+     "外部・未經本專案檢核",
+     "本專案：vis/README.md 模型命題"
+    ],
+    "公司在做什麼": [
+     "外部・未經本專案檢核",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Q!F37、I37",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Q!G7、In!H7",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx In!H52、In!H37"
+    ],
+    "主要產品與營收占比": [
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Q!F36",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Q!F37、I37",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Q!F38、I38",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Q!F39、I39",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Q!F40；Derived",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx In!E53、H53",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Q!B10、Q!D10、Q!G10"
+    ],
+    "市場定位與產業位置": [
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Val!A28:C31、Val!B33",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Val!B153",
+     "本專案：vis/README.md 情境對照表"
+    ],
+    "管理層與經營風格": [
+     "外部・未經本專案檢核",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Sources!A6、vis/README.md 估值"
+    ],
+    "同業與競爭態勢": [
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Val!C28",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Val!C29",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Val!C30",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Val!C31",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx In!E24:E26"
+    ],
+    "主要客戶": [
+     "外部・未經本專案檢核：優分析，2026-08-04",
+     "外部・未經本專案檢核：科技新報，2026-05-05"
+    ],
+    "前十大股東": [
+     "外部・未經本專案檢核：自由時報，2026-05（公告日依同期報導推定）"
+    ],
+    "近期重大事件": [
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Q!E4、Q!B25",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Sources!A7",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx In!E89:E90、Sources!A8",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Q!D4、Q!D10、Q!D21、In!H73"
+    ],
+    "需要觀察的事項": [
+     "本專案：vis/README.md 最敏感的變數",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx In!E15:E17",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx In!E44、PL!E76",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Val!B24、Val!B35、vis/README.md 最敏感的變數",
+     "本專案：20261031_世界先進個股模型_v0.1.xlsx Q!G20、In!E73"
+    ]
+   },
+   "missing": []
+  },
   "6146": {
    "meta": {
     "ticker": "6146",
@@ -7296,6 +7947,178 @@
      "本專案：Disco模型_v0.1.3.xlsx In!E114",
      "本專案：disco/README.md 敏感度",
      "本專案：disco/README.md 估值"
+    ]
+   },
+   "missing": []
+  },
+  "6223": {
+   "meta": {
+    "ticker": "6223",
+    "name": "旺矽",
+    "name_full": "旺矽科技股份有限公司（MPI Corporation）",
+    "listing": "櫃買中心｜6223",
+    "hq": "臺灣新竹縣竹北市<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>",
+    "founded": "1995<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>",
+    "employees": "本專案未建立",
+    "fiscal_year_end": "12 月底",
+    "asof": "2026-10-31"
+   },
+   "oneliner": "晶圓測試用探針卡與測試設備廠：探針卡約占營收七成五，AI 加速器（GPU、ASIC）晶圓測試用的垂直（VPC）與 MEMS 探針卡是成長來源；本專案把 AI 探針卡算成「晶圓測試量 × 每顆內容 × 份額與價格」<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：mpi/README.md 開頭\" aria-label=\"出處\">ⓘ</sup>。",
+   "sections": {
+    "公司在做什麼": "<ul><li>探針卡：晶片還在晶圓上時，測試機透過探針卡上的細針接觸每顆晶粒的接點、量測功能是否正常；探針卡屬耗材，會隨測試次數磨耗更換<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>。</li><li>三種探針卡：懸臂式（CPC，傳統、成本低）、垂直式（VPC，針數多、適合大晶片）、MEMS（微機電製程做針，密度最高）；公司稱 VPC 需求主要來自 AI／HPC<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx In!H45\" aria-label=\"出處\">ⓘ</sup>。</li><li>設備：先進半導體測試（AST）、溫控測試、光電／CPO 測試機台；CPO 測試設備被視為 2027 年設備事業的主要成長動能<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx In!H59\" aria-label=\"出處\">ⓘ</sup>。</li><li>產能：2026 年底 VPC 月產能 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx In!I56；mpi/README.md 估值\">200 萬</span>針、MEMS <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx In!I56；mpi/README.md 估值\">350 萬</span>針；2026 年資本支出約 NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx In!I56；mpi/README.md 估值\">2.7B</span>。</li></ul>",
+    "主要產品與營收占比": "<div class=\"ptbl\"><table><thead><tr><th>產品／部門</th><th>內容（白話）</th><th>營收占比</th><th>期間</th></tr></thead><tbody><tr><td>探針卡</td><td>CPC、VPC、MEMS</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!B5、J5\">73.8%</span>（NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!B5、J5\">9.87B</span>）</td><td>FY2025</td></tr><tr><td>其中：AI／HPC 探針卡</td><td>VPC、MEMS（AI 加速器）</td><td>約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!B6、In!E45；Assumed\">40.6%</span>（本專案假設占探針卡 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!B6、In!E45；Assumed\">55%</span>）</td><td>FY2025</td></tr><tr><td>設備</td><td>AST、溫控、光電／CPO 測試</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!B8、J8\">24.6%</span>（NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!B8、J8\">3.29B</span>）</td><td>FY2025</td></tr><tr><td>其他</td><td>—</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!B9；Derived\">1.6%</span></td><td>FY2025</td></tr><tr><td>合計</td><td>營收 NT$13.38B</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!B4\">100%</span></td><td>FY2025</td></tr></tbody></table></div><ul><li>2026 年第二季：營收 NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!D4、J5、D11、D18\">5.23B</span>、探針卡 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!D4、J5、D11、D18\">74.7%</span>、毛利率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!D4、J5、D11、D18\">58.4%</span>、EPS <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!D4、J5、D11、D18\">15.55</span>。</li><li>2026 年第三季營收 NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!E4、B22\">5.90B</span>（季增 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!E4、B22\">12.8%</span>，高於公司 8 月指引 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!E4、B22\">0</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!E4、B22\">5%</span>）；損益約 11 月中公布。</li><li>FY2026 錨點：營收 NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!G4、G11、G17\">21.41B</span>、毛利率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!G4、G11、G17\">59.3%</span>、EPS <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!G4、G11、G17\">68.70</span>。</li></ul>",
+    "市場定位與產業位置": "<ul><li>媒體傳聞旺矽為多數雲端業者委外 AI ASIC 探針卡的主要供應商、平均份額逾六成（未經公司證實）<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx In!I16\" aria-label=\"出處\">ⓘ</sup>。</li><li>本專案假設旺矽對 NVIDIA 加速器的曝險只有 ASIC 的 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx In!E23、I23\">0.4 倍</span>：NVIDIA 探針卡主力為 FormFactor、Technoprobe。</li><li>價格：AI／HPC 客戶的垂直 MEMS 探針卡單價可比平均高五成以上（券商轉述）<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx In!H47\" aria-label=\"出處\">ⓘ</sup>。</li><li>MEMS 探針卡全球排名 2025 年第 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：富果 2026-05 法說摘要\">7</span>（2023 年第 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：富果 2026-05 法說摘要\">11</span>）。</li></ul>",
+    "管理層與經營風格": "<div class=\"ptbl\"><table><thead><tr><th>職位</th><th>姓名</th><th>任職起</th><th>背景</th></tr></thead><tbody><tr><td>董事長</td><td>葛長林</td><td>本專案未建立</td><td>本專案未建立<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>總經理</td><td>郭遠明</td><td>本專案未建立</td><td>本專案未建立<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div><ul><li>資本配置：2026 年資本支出由 NT$<span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：富果 2026-05 法說摘要；財訊 2026-10-12\">1.6</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：富果 2026-05 法說摘要；財訊 2026-10-12\">2.0B</span> 上調到 NT$<span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：富果 2026-05 法說摘要；財訊 2026-10-12\">2.7B</span>（土地與廠房）；與客戶洽談預付款以保留產能。</li><li>其他經營風格與治理：本專案尚未研究。</li></ul>",
+    "同業與競爭態勢": "<div class=\"ptbl\"><table><thead><tr><th>同業</th><th>重疊領域</th><th>市占或規模</th></tr></thead><tbody><tr><td>FormFactor</td><td>探針卡（MEMS）</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Val!A28、C28\">28.2x</span>（2026-10-23）</td></tr><tr><td>Technoprobe</td><td>探針卡（MEMS）</td><td>本專案未建立<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Val!E33\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>Advantest、泰瑞達</td><td>測試機</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Val!C29、C30\">37.7x</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Val!C29、C30\">32.5x</span></td></tr><tr><td>京元電（2449）</td><td>測試代工（探針卡的客戶之一）</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Val!C31\">26.1x</span></td></tr></tbody></table></div><ul><li>同業前瞻 P/E 中位數 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Val!B33、B55:D55\">30.3x</span>；現價 ÷ FY2027 EPS <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Val!B33、B55:D55\">42</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Val!B33、B55:D55\">50x</span>。</li><li>Technoprobe、FormFactor 計畫兩年內針產能倍增；本專案情境 C 以份額與價格相對值 2029 年 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx In!I47、E55\">0.85</span> 表示。</li></ul>",
+    "主要客戶": "<ul><li>年報「占營收 10% 以上客戶」：未找到（年報未取得）。<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></li><li>媒體點名的客戶：Broadcom、Marvell、NVIDIA；另稱有十多家歐美與中國晶片客戶（GPU、網通、FPGA、手機 AP）。<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：財訊，2026-10-12\" aria-label=\"出處\">ⓘ</sup></li></ul>",
+    "前十大股東": "<div class=\"ptbl\"><table><thead><tr><th>排名</th><th>股東</th><th>持股比例</th></tr></thead><tbody><tr><td>—</td><td>未找到</td><td>—<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：查過網路搜尋與玩股網公司資料頁，2026-10-31\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div><ul><li>口徑：年報前十名股東名冊未取得。<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></li></ul>",
+    "近期重大事件": "<ul><li>2026-10-30｜收盤 NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx In!E88\">4,610.00</span></li><li>2026-10-08｜9 月營收 NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Sources!A5、Q!J4\">2.05B</span>（年增 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Sources!A5、Q!J4\">82%</span>）；前三季 NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Sources!A5、Q!J4\">15.07B</span>（年增 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Sources!A5、Q!J4\">58%</span>）</li><li>2026-08-20｜法人稱 Insertion <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Sources!A7\">3</span>（CPO 晶粒級前段測試）工程機 4Q26 出貨、2027 上半年可能量產</li><li>2026-08 中｜第二季財報：營收 NT$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!D4、D18、In!H77\">5.23B</span>、EPS <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!D4、D18、In!H77\">15.55</span>（單季新高）；指引第三季季增 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!D4、D18、In!H77\">0</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!D4、D18、In!H77\">5%</span>、第四季 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!D4、D18、In!H77\">5</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Q!D4、D18、In!H77\">10%</span></li></ul>",
+    "需要觀察的事項": "<ul><li>AI 部署（加速器顆數）｜±<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：mpi/README.md 最敏感\">20%</span> 使加權目標價 ±<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：mpi/README.md 最敏感\">12.4%</span>｜NVIDIA、台積電財報</li><li>產能｜情境 A FY2027 AI 探針卡 +<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Recon!C17\">85%</span>，高於公司約五成的擴產計畫｜2027 年資本支出（2026 年底公布）</li><li>毛利率｜3Q26 是否回到 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx In!E75\">59.4%</span>｜3Q26 財報（約 11 月中）</li><li>每顆探針卡內容與份額｜內容成長 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：mpi/README.md 最敏感\">0%</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：mpi/README.md 最敏感\">10%</span> 使加權目標價 −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：mpi/README.md 最敏感\">7.1%</span>／+<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：mpi/README.md 最敏感\">7.8%</span>｜同業擴產與報價</li><li>與券商 EPS 的差距｜FY2027 本模型 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Recon!E8、B8、B9\">102.3</span>（情境 B）vs 法人 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Recon!E8、B8、B9\">128.95</span>、ALETHEIA <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：旺矽個股模型_v0.1.xlsx Recon!E8、B8、B9\">186.5</span>｜券商報告更新</li></ul>",
+    "來源": "<ol><li>本專案：`mpi/README.md`（v0.1，2026-10-31）；`mpi/dist/20261031_旺矽個股模型_v0.1.xlsx`（In、Q、PL、Val、Recon、Sources 頁）</li><li><a href=\"https://blog.fugle.tw/post/earnings-call-6223-2026-05-15\" target=\"_blank\" rel=\"noopener\">富果：旺矽 2026-05 法說摘要</a>（2026-05-15）</li><li><a href=\"https://www.pocket.tw/school/articles/6433/\" target=\"_blank\" rel=\"noopener\">口袋學堂：旺矽 2Q26 EPS 15.55</a>（2026-09-08）</li><li><a href=\"https://www.moneyweekly.com.tw/_Article?AID=254951\" target=\"_blank\" rel=\"noopener\">財訊：旺矽</a>（2026-10-12）</li><li><a href=\"https://www.wantgoo.com/stock/6223/company-profile\" target=\"_blank\" rel=\"noopener\">玩股網：旺矽公司資料</a>（查閱 2026-10-31）</li></ol>"
+   },
+   "notes": {
+    "基本資料": [
+     "外部・未經本專案檢核",
+     "本專案：mpi/README.md 開頭"
+    ],
+    "公司在做什麼": [
+     "外部・未經本專案檢核",
+     "本專案：旺矽個股模型_v0.1.xlsx In!H45",
+     "本專案：旺矽個股模型_v0.1.xlsx In!H59",
+     "本專案：旺矽個股模型_v0.1.xlsx In!I56；mpi/README.md 估值"
+    ],
+    "主要產品與營收占比": [
+     "本專案：旺矽個股模型_v0.1.xlsx Q!B5、J5",
+     "本專案：旺矽個股模型_v0.1.xlsx Q!B6、In!E45；Assumed",
+     "本專案：旺矽個股模型_v0.1.xlsx Q!B8、J8",
+     "本專案：旺矽個股模型_v0.1.xlsx Q!B9；Derived",
+     "本專案：旺矽個股模型_v0.1.xlsx Q!B4",
+     "本專案：旺矽個股模型_v0.1.xlsx Q!D4、J5、D11、D18",
+     "本專案：旺矽個股模型_v0.1.xlsx Q!E4、B22",
+     "本專案：旺矽個股模型_v0.1.xlsx Q!G4、G11、G17"
+    ],
+    "市場定位與產業位置": [
+     "本專案：旺矽個股模型_v0.1.xlsx In!I16",
+     "本專案：旺矽個股模型_v0.1.xlsx In!E23、I23",
+     "本專案：旺矽個股模型_v0.1.xlsx In!H47",
+     "外部・未經本專案檢核：富果 2026-05 法說摘要"
+    ],
+    "管理層與經營風格": [
+     "外部・未經本專案檢核",
+     "外部・未經本專案檢核：富果 2026-05 法說摘要；財訊 2026-10-12"
+    ],
+    "同業與競爭態勢": [
+     "本專案：旺矽個股模型_v0.1.xlsx Val!A28、C28",
+     "本專案：旺矽個股模型_v0.1.xlsx Val!E33",
+     "本專案：旺矽個股模型_v0.1.xlsx Val!C29、C30",
+     "本專案：旺矽個股模型_v0.1.xlsx Val!C31",
+     "本專案：旺矽個股模型_v0.1.xlsx Val!B33、B55:D55",
+     "本專案：旺矽個股模型_v0.1.xlsx In!I47、E55"
+    ],
+    "主要客戶": [
+     "外部・未經本專案檢核",
+     "外部・未經本專案檢核：財訊，2026-10-12"
+    ],
+    "前十大股東": [
+     "外部・未經本專案檢核：查過網路搜尋與玩股網公司資料頁，2026-10-31",
+     "外部・未經本專案檢核"
+    ],
+    "近期重大事件": [
+     "本專案：旺矽個股模型_v0.1.xlsx In!E88",
+     "本專案：旺矽個股模型_v0.1.xlsx Sources!A5、Q!J4",
+     "本專案：旺矽個股模型_v0.1.xlsx Sources!A7",
+     "本專案：旺矽個股模型_v0.1.xlsx Q!D4、D18、In!H77"
+    ],
+    "需要觀察的事項": [
+     "本專案：mpi/README.md 最敏感",
+     "本專案：旺矽個股模型_v0.1.xlsx Recon!C17",
+     "本專案：旺矽個股模型_v0.1.xlsx In!E75",
+     "本專案：旺矽個股模型_v0.1.xlsx Recon!E8、B8、B9"
+    ]
+   },
+   "missing": []
+  },
+  "6274": {
+   "meta": {
+    "ticker": "6274",
+    "name": "台燿",
+    "name_full": "台燿科技股份有限公司（Taiwan Union Technology Corporation）",
+    "listing": "證券櫃檯買賣中心｜6274",
+    "hq": "本專案未建立",
+    "founded": "1974（鉅亨網基本資料：成立 1974-05-22；上櫃 2002-12-23）<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>",
+    "employees": "本專案未建立",
+    "fiscal_year_end": "12 月底",
+    "asof": "2026-10-31"
+   },
+   "oneliner": "AI 伺服器與交換器電路板的上游材料廠：賣高速銅箔基板（CCL），高階（M7 以上）營收跟著每 GW 部署用多少 CCL 與自己的份額走，2027 年的上限是月產能<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：tuc/README.md 開頭、核心問題\" aria-label=\"出處\">ⓘ</sup>。",
+   "sections": {
+    "公司在做什麼": "<ul><li>主力產品是 CCL（銅箔基板）與膠片：把銅箔壓在玻纖布與樹脂上做成的板材，是印刷電路板（PCB）的原料；PCB 廠買去加工成伺服器主板、加速器板、交換器板<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>。</li><li>公司依「損耗等級」揭露產品組合：ELL／SLL（M7、M8，用於 AI 伺服器與高速交換器）、VLL／LL（M4、M6）、非低損耗、特殊應用（厚銅、電源）<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：tuc/dist/20261031_台燿個股模型_v0.1.xlsx In!H30、H36\" aria-label=\"出處\">ⓘ</sup>。</li><li>AI ASIC 專案自 2026 年 4 月起逐月放量，使用 Low Dk2 玻纖布與 HVLP4 銅箔<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：同檔 In!I30，Interested-party\" aria-label=\"出處\">ⓘ</sup>。</li><li>全產全銷：模型把營收上限設為「平均月產能 × 每張營收」，FY2027 需求面是產能上限的 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Units!D14\">117%</span>。</li></ul>",
+    "主要產品與營收占比": "<div class=\"ptbl\"><table><thead><tr><th>產品／部門</th><th>內容（白話）</th><th>營收占比</th><th>期間</th></tr></thead><tbody><tr><td>高速材料（ELL／SLL，M7、M8）</td><td>AI 伺服器、800G 交換器、AI ASIC 用低損耗材料</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：tuc/dist/20261031_台燿個股模型_v0.1.xlsx In!H30，Interested-party\">39%</span></td><td>2Q26（公司說法）</td></tr><tr><td>同上（模型基準）</td><td>同上</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E35、D35、F35\">42%</span>（區間 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E35、D35、F35\">38</span>–<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E35、D35、F35\">48%</span>）</td><td>FY2026</td></tr><tr><td>VLL／LL（M4、M6）</td><td>一般伺服器、400G 以下網通</td><td>本專案未建立</td><td>—</td></tr><tr><td>非低損耗、特殊應用</td><td>一般板材、厚銅與電源</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!I36、H36，Interested-party\">16%</span>、<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!I36、H36，Interested-party\">14%</span></td><td>2Q26（公司說法）</td></tr></tbody></table></div><ul><li>營收 FY2025 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!B4、F4、B6、F6、D6\">303.4 億</span> → FY2026（錨點）<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!B4、F4、B6、F6、D6\">611.5 億</span>；毛利率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!B4、F4、B6、F6、D6\">22.7%</span> → <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!B4、F4、B6、F6、D6\">33.0%</span>；3Q26 單季毛利率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!B4、F4、B6、F6、D6\">36.9%</span>。</li><li>EPS FY2025 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!B16、F15、D16\">12.13</span> → FY2026（錨點）<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!B16、F15、D16\">38.01</span>；3Q26 單季 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!B16、F15、D16\">12.88</span>。</li></ul>",
+    "市場定位與產業位置": "<ul><li>本專案以公司 M7 以上占比反推，台燿 FY2026 在 AI 高速 CCL 市場的有效份額 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Units!C7、C15、C17、C19，Derived\">9.8%</span>；同期台光電 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Units!C7、C15、C17、C19，Derived\">45.9%</span>，兩家合計 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Units!C7、C15、C17、C19，Derived\">55.7%</span>，其餘為斗山、生益、松下、聯茂等。</li><li>每部署 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Units!C11、D11；emc/README.md\">1 GW</span>，台燿高速材料營收 2026 年約 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Units!C11、D11；emc/README.md\">34M</span>、2027 年約 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Units!C11、D11；emc/README.md\">47M</span>（台光電 2026 年約 US$<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Units!C11、D11；emc/README.md\">161M</span>）。</li><li>產能：集團月產能逾 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!H26、H27、H28，Interested-party\">220 萬</span>張；常熟、泰國各 +<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!H26、H27、H28，Interested-party\">60 萬</span>張於 2027Q3 開出；2028–29 年中山 +<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!H26、H27、H28，Interested-party\">120 萬</span>、泰國二期 +<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!H26、H27、H28，Interested-party\">75 萬</span>。</li><li>客戶集中度：本專案未建立。</li></ul>",
+    "管理層與經營風格": "<div class=\"ptbl\"><table><thead><tr><th>職位</th><th>姓名</th><th>任職起</th><th>背景</th></tr></thead><tbody><tr><td>董事長</td><td>辛忠衡</td><td>本專案未建立</td><td><sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：鉅亨網基本資料，2026-10-31 查閱\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>總經理</td><td>陳正益</td><td>本專案未建立</td><td><sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：同上\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>發言人</td><td>黃文旭</td><td>本專案未建立</td><td><sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：同上\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div><ul><li>經營風格：本專案尚未研究。</li><li>本專案模型可見的事實：董事會通過可轉債面額上限 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!H52、E52\">100 億</span>元、轉換價不低於 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!H52、E52\">110%</span>，模型股數年增 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!H52、E52\">1%</span>。</li></ul>",
+    "同業與競爭態勢": "<div class=\"ptbl\"><table><thead><tr><th>同業</th><th>重疊領域</th><th>市占或規模</th></tr></thead><tbody><tr><td>台光電</td><td>高速 CCL（M8、M9）</td><td>FY2026 有效份額 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Units!C15（讀 emc 成品）\">45.9%</span></td></tr><tr><td>聯茂</td><td>高速 CCL</td><td>本專案未建立<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：同檔 Val!A29\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>金像電</td><td>下游 AI 伺服器 PCB</td><td>本專案未建立<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：同檔 Val!A30\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>生益科技、斗山、松下</td><td>高速 CCL</td><td>本專案未建立<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：同檔 Val!E31\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div><ul><li>本專案假設台燿份額相對 2026 年上升：2027／2028／2029＝<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E19:E21、I19\">1.10</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E19:E21、I19\">1.15</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E19:E21、I19\">1.15</span>（新產能開出，Assumed）；台光電同期 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E19:E21、I19\">0.95</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E19:E21、I19\">0.90</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E19:E21、I19\">0.85</span>。</li><li>同業前瞻 P/E：台光電 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Val!C28:C31，Interested-party\">32.2x</span>、聯茂 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Val!C28:C31，Interested-party\">27.5x</span>、金像電 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Val!C28:C31，Interested-party\">19.6x</span>，中位數 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Val!C28:C31，Interested-party\">27.5x</span>。</li></ul>",
+    "主要客戶": "<ul><li>財報揭露的客戶集中度：未找到（查過鉅亨網基本資料、富果法說摘要、理財周刊 2026-09-10）。<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></li></ul><div class=\"ptbl\"><table><thead><tr><th>客戶</th><th>關係</th><th>依據</th></tr></thead><tbody><tr><td>美系雲端業者（未具名）</td><td>泰國廠主要服務對象</td><td>理財周刊 2026-09-10<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：理財周刊，2026-09-10\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>AI ASIC 專案客戶（未具名）</td><td>2026 年貢獻營收 5–6%</td><td>日系外資報告（旺得富轉述）<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：旺得富，2026-06-30\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div>",
+    "前十大股東": "<div class=\"ptbl\"><table><thead><tr><th>排名</th><th>股東</th><th>持股比例</th></tr></thead><tbody><tr><td>—</td><td>未找到</td><td>—<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：查過鉅亨網基本資料、stockanalysis，2026-10-31\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div><ul><li>口徑：未取得年報前十大股東表。</li></ul>",
+    "近期重大事件": "<ul><li>2026-10-30｜收盤 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E64、H64；外部新聞：HiStock、nstock\">1,265 元</span>、單日 −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E64、H64；外部新聞：HiStock、nstock\">8.99%</span></li><li>2026-10 底｜3Q26 財報：營收 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!D4、D6、D9、D16；外部新聞：nstock\">179.49 億</span>、毛利率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!D4、D6、D9、D16；外部新聞：nstock\">36.93%</span>、營益率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!D4、D6、D9、D16；外部新聞：nstock\">31.02%</span>、EPS <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!D4、D6、D9、D16；外部新聞：nstock\">12.88</span>，皆單季新高</li><li>2026-10｜9 月營收 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!H42\">61.26 億</span>，單月新高</li><li>2026-07-30｜2Q26 法說：泰國廠 7 月量產、4Q 滿載；董事會通過 2028–29 年擴產 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!H28、H52\">195 萬</span>張與可轉債 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!H28、H52\">100 億</span>元</li><li>2026-07-20｜美系券商預估 2026–28 年 EPS <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E60:E62，Interested-party\">38.8</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E60:E62，Interested-party\">93.5</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E60:E62，Interested-party\">168.7 元</span></li></ul>",
+    "需要觀察的事項": "<ul><li>10 月營收與 4Q 毛利率｜模型 4Q26 季增 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E42、E43\">5%</span>、毛利率 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E42、E43\">36%</span> 是假設｜約 2026-11-10</li><li>常熟、泰國 2027Q3 新產能｜FY2027 產能受限，月產能決定營收<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：同檔 Units!D12、D14\" aria-label=\"出處\">ⓘ</sup>｜每季法說</li><li>CCL 售價｜2029 年售價指數 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：tuc/README.md 重點觀察 2\">0.85</span> 使加權目標價 −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：tuc/README.md 重點觀察 2\">10.5%</span>｜原料（銅箔、玻纖布）與漲價消息</li><li>份額相對值｜2029 年 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同上\">0.90</span> 使加權目標價 −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同上\">10.0%</span>｜AI ASIC 與交換器認證進度</li><li>AI 部署規模｜市場係數 ×<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同上\">0.8</span> 使加權目標價 −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同上\">13.9%</span>｜雲端業者資本支出</li></ul>",
+    "來源": "<ol><li>本專案：`tuc/README.md`（v0.1，2026-10-31）；`tuc/dist/20261031_台燿個股模型_v0.1.xlsx`（In、Q、Units、Val 頁）</li><li>本專案：`emc/README.md`（台光電份額與每 GW 營收）</li><li><a href=\"https://www.cnyes.com/twstock/profile/6274.htm\" target=\"_blank\" rel=\"noopener\">鉅亨網：台燿基本資料</a>（查閱 2026-10-31）</li><li><a href=\"https://www.nstock.tw/6274?status=6\" target=\"_blank\" rel=\"noopener\">nstock：台燿</a>（查閱 2026-10-31）</li><li><a href=\"https://blog.fugle.tw/post/earnings-call-6274-2026-07-30\" target=\"_blank\" rel=\"noopener\">富果：台燿 2Q26 法說</a>（2026-07-30）</li><li><a href=\"https://www.moneyweekly.com.tw/_Article?AID=247880\" target=\"_blank\" rel=\"noopener\">理財周刊：台燿全年獲利進入跳升期</a>（2026-09-10）</li></ol>"
+   },
+   "notes": {
+    "基本資料": [
+     "外部・未經本專案檢核",
+     "本專案：tuc/README.md 開頭、核心問題"
+    ],
+    "公司在做什麼": [
+     "外部・未經本專案檢核",
+     "本專案：tuc/dist/20261031_台燿個股模型_v0.1.xlsx In!H30、H36",
+     "本專案：同檔 In!I30，Interested-party",
+     "本專案：同檔 Units!D14"
+    ],
+    "主要產品與營收占比": [
+     "本專案：tuc/dist/20261031_台燿個股模型_v0.1.xlsx In!H30，Interested-party",
+     "本專案：同檔 In!E35、D35、F35",
+     "本專案：同檔 In!I36、H36，Interested-party",
+     "本專案：同檔 Q!B4、F4、B6、F6、D6",
+     "本專案：同檔 Q!B16、F15、D16"
+    ],
+    "市場定位與產業位置": [
+     "本專案：同檔 Units!C7、C15、C17、C19，Derived",
+     "本專案：同檔 Units!C11、D11；emc/README.md",
+     "本專案：同檔 In!H26、H27、H28，Interested-party"
+    ],
+    "管理層與經營風格": [
+     "外部・未經本專案檢核：鉅亨網基本資料，2026-10-31 查閱",
+     "外部・未經本專案檢核：同上",
+     "本專案：同檔 In!H52、E52"
+    ],
+    "同業與競爭態勢": [
+     "本專案：同檔 Units!C15（讀 emc 成品）",
+     "本專案：同檔 Val!A29",
+     "本專案：同檔 Val!A30",
+     "本專案：同檔 Val!E31",
+     "本專案：同檔 In!E19:E21、I19",
+     "本專案：同檔 Val!C28:C31，Interested-party"
+    ],
+    "主要客戶": [
+     "外部・未經本專案檢核",
+     "外部・未經本專案檢核：理財周刊，2026-09-10",
+     "外部・未經本專案檢核：旺得富，2026-06-30"
+    ],
+    "前十大股東": [
+     "外部・未經本專案檢核：查過鉅亨網基本資料、stockanalysis，2026-10-31"
+    ],
+    "近期重大事件": [
+     "本專案：同檔 In!E64、H64；外部新聞：HiStock、nstock",
+     "本專案：同檔 Q!D4、D6、D9、D16；外部新聞：nstock",
+     "本專案：同檔 In!H42",
+     "本專案：同檔 In!H28、H52",
+     "本專案：同檔 In!E60:E62，Interested-party"
+    ],
+    "需要觀察的事項": [
+     "本專案：同檔 In!E42、E43",
+     "本專案：同檔 Units!D12、D14",
+     "本專案：tuc/README.md 重點觀察 2",
+     "本專案：同上"
     ]
    },
    "missing": []
@@ -8283,6 +9106,95 @@
      "本專案：arista/README.md 結果",
      "本專案：arista/README.md 估值",
      "本專案：arista/README.md 驅動因子（In 頁 D 節）"
+    ]
+   },
+   "missing": []
+  },
+  "ARM": {
+   "meta": {
+    "ticker": "ARM",
+    "name": "Arm",
+    "name_full": "Arm Holdings plc",
+    "listing": "Nasdaq｜ARM",
+    "hq": "英國劍橋<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>",
+    "founded": "1990<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>",
+    "employees": "本專案未建立",
+    "fiscal_year_end": "3 月底",
+    "asof": "2026-10-31"
+   },
+   "oneliner": "CPU 架構的「設計圖」供應商：把指令集與處理器核心授權給晶片公司，再對每顆出貨的晶片收權利金；資料中心（Neoverse）與自研 AGI CPU 晶片是新的成長來源<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：arm/README.md 開頭\" aria-label=\"出處\">ⓘ</sup>。",
+   "sections": {
+    "公司在做什麼": "<ul><li>Arm 不自己大量生產晶片，而是賣「架構」與「核心設計」（IP，矽智財）：客戶先付授權費取得設計，晶片出貨後再按顆付權利金<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>。</li><li>官方營收分兩類：授權及其他、權利金；FY2026 分別 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：arm/dist/20261031_Arm個股模型_v0.1.xlsx Q!C4、C5\">23.07</span>、<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：arm/dist/20261031_Arm個股模型_v0.1.xlsx Q!C4、C5\">26.13 億</span>美元。</li><li>新世代架構（v9）與 CSS（Compute Subsystems，整套預先驗證的運算子系統）讓每顆晶片的權利金率提高<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：同檔 In!H28，Interested-party\" aria-label=\"出處\">ⓘ</sup>。</li><li>2026 年 3 月推出自研的 Arm AGI CPU 晶片，公司稱 FY2027–<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!H16，Interested-party\">28</span> 客戶需求逾 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!H16，Interested-party\">20 億</span>美元。</li></ul>",
+    "主要產品與營收占比": "<div class=\"ptbl\"><table><thead><tr><th>產品／部門</th><th>內容（白話）</th><th>營收占比</th><th>期間</th></tr></thead><tbody><tr><td>權利金</td><td>每顆 Arm 架構晶片出貨收的費用</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：arm/dist/20261031_Arm個股模型_v0.1.xlsx Q!C5、C6，Derived\">53%</span>（<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：arm/dist/20261031_Arm個股模型_v0.1.xlsx Q!C5、C6，Derived\">26.13</span> ÷ <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：arm/dist/20261031_Arm個股模型_v0.1.xlsx Q!C5、C6，Derived\">49.20 億</span>美元）</td><td>FY2026</td></tr><tr><td>其中智慧型手機</td><td>手機應用處理器</td><td>權利金的 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E18、H18，Verified\">43%</span></td><td>FY2026</td></tr><tr><td>其中資料中心</td><td>Neoverse 伺服器 CPU（Grace、Vera、Graviton、Axion、Cobalt 等）</td><td>權利金的 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E19，Interested-party\">14%</span>（模型假設）</td><td>FY2026</td></tr><tr><td>授權及其他</td><td>授權費、SoftBank 協議、自研晶片（暫列）</td><td><span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!C4、C6，Derived\">47%</span></td><td>FY2026</td></tr></tbody></table></div><ul><li>non-GAAP EPS FY2026 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!C16、C17\">1.77</span>；GAAP EPS <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!C16、C17\">0.85</span>（差額主要是股票薪酬）。</li><li>1Q27 營收 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!D6、D16、In!H5\">12.89 億</span>美元、non-GAAP EPS <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!D6、D16、In!H5\">0.45</span>；2Q27 指引營收 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!D6、D16、In!H5\">13.8 億</span>美元。</li></ul>",
+    "市場定位與產業位置": "<ul><li>手機應用處理器幾乎都用 Arm 架構；資料中心是成長最快的權利金來源，1Q27 資料中心權利金年增逾一倍<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：同檔 In!H23，Interested-party\" aria-label=\"出處\">ⓘ</sup>。</li><li>本專案推估資料中心占權利金由 FY2026 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Units!C15、F15，Derived\">14%</span> 升到 FY2029 情境 B <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Units!C15、F15，Derived\">24.9%</span>；NVIDIA Grace／Vera 的顆數讀 Siliconomics 加速器顆數<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：同檔 Units!A4\" aria-label=\"出處\">ⓘ</sup>。</li><li>上下游依賴：Arm China 與 SoftBank 為關係人客戶；自研晶片委外製造，產能是限制<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：同檔 In!I59，Interested-party\" aria-label=\"出處\">ⓘ</sup>。</li></ul>",
+    "管理層與經營風格": "<div class=\"ptbl\"><table><thead><tr><th>職位</th><th>姓名</th><th>任職起</th><th>背景</th></tr></thead><tbody><tr><td>執行長</td><td>Rene Haas</td><td>2022</td><td>2026-04 起兼任 SoftBank Group International 執行長（20-F）<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>財務長</td><td>Jason Child</td><td>本專案未建立</td><td><sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>董事長</td><td>孫正義（Masayoshi Son）</td><td>本專案未建立</td><td>SoftBank 集團創辦人<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div><ul><li>經營風格：本專案尚未研究。</li><li>本專案模型可見的事實：SoftBank 持股約九成，流通股約一成<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：同檔 In!E77、H77，Interested-party\" aria-label=\"出處\">ⓘ</sup>；稀釋股數 FY2026 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!C14、D14\">10.68 億</span>股、1Q27 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!C14、D14\">10.78 億</span>股。</li></ul>",
+    "同業與競爭態勢": "<div class=\"ptbl\"><table><thead><tr><th>同業</th><th>重疊領域</th><th>市占或規模</th></tr></thead><tbody><tr><td>高通</td><td>手機與 PC 晶片客戶；自研 Oryon 核心（架構授權）</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Val!C28，Interested-party\">19.5x</span></td></tr><tr><td>博通、邁威爾</td><td>客製 ASIC 與資料中心晶片</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Val!C29、C30\">18.5x</span>、<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Val!C29、C30\">43.0x</span></td></tr><tr><td>Rambus、新思、益華</td><td>半導體 IP 與 EDA</td><td>前瞻 P/E <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Val!C31:C33\">24.2x</span>、<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Val!C31:C33\">25.7x</span>、<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Val!C31:C33\">36.0x</span></td></tr><tr><td>RISC-V 陣營</td><td>開放指令集</td><td>本專案未建立<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div><ul><li>同業前瞻 P/E 中位數 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Val!B34、B67\">25.0x</span>，Arm 現價約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Val!B34、B67\">94.7 倍</span>共識前瞻 EPS。</li><li>自研 AGI CPU 使 Arm 與部分授權客戶在資料中心 CPU 上直接競爭<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核\" aria-label=\"出處\">ⓘ</sup>。</li></ul>",
+    "主要客戶": "<ul><li>財報揭露：前五大客戶（含 Arm China 與 SoftBank 集團）占營收約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：Arm 20-F，FY2026\">57%</span>（FY2026）、<span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：Arm 20-F，FY2026\">56%</span>（FY2025）；Arm China 約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：Arm 20-F，FY2026\">16%</span>；中國營收約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：Arm 20-F，FY2026\">18%</span>。</li></ul><div class=\"ptbl\"><table><thead><tr><th>客戶</th><th>關係</th><th>依據</th></tr></thead><tbody><tr><td>Arm China</td><td>中國市場授權與權利金的經銷關係人</td><td>20-F<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：Arm 20-F，FY2026\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>SoftBank 集團</td><td>控股股東；授權協議</td><td>20-F；3Q26 法說<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：Arm 20-F、3Q26 法說逐字稿\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>Meta</td><td>AGI CPU 共同開發夥伴</td><td>4Q26 股東信<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：Arm 4Q26 股東信，2026-05-06\" aria-label=\"出處\">ⓘ</sup></td></tr><tr><td>Microsoft、NVIDIA</td><td>Cobalt 200、RTX Spark 採用 Neoverse／CSS</td><td>1Q27 新聞稿<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：Arm 新聞室，2026-07-29\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div>",
+    "前十大股東": "<div class=\"ptbl\"><table><thead><tr><th>排名</th><th>股東</th><th>持股比例</th></tr></thead><tbody><tr><td>1</td><td>SoftBank 集團</td><td>約 <span class=\"sv\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：20-F 稱控股股東；比例取自 whoistheownerof，查閱 2026-10-31\">90%</span></td></tr><tr><td>2–10</td><td>未找到</td><td>—<sup class=\"sm\" tabindex=\"0\" data-src=\"外部・未經本專案檢核：查過 20-F 摘錄、stockanalysis，2026-10-31\" aria-label=\"出處\">ⓘ</sup></td></tr></tbody></table></div><ul><li>口徑：20-F 控股股東說明；其餘機構持股（13F）未取得。</li></ul>",
+    "近期重大事件": "<ul><li>2026-10-30｜收盤 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E76；外部新聞：InvestSmart、marketscreener\">228.88 美元</span>；10 月初約 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E76；外部新聞：InvestSmart、marketscreener\">300 美元</span></li><li>2026-10-13｜Qualcomm 訴訟：陪審團判 Arm 違反架構授權並干擾 Qualcomm 與 Meta 的關係；法官審理部分待判<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：同檔 In!H31；外部新聞：Paul Weiss\" aria-label=\"出處\">ⓘ</sup></li><li>2026-07-29｜1Q27 財報：營收 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!D4、D5、D6、In!H16\">12.89 億</span>美元（+<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!D4、D5、D6、In!H16\">22%</span>）、權利金 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!D4、D5、D6、In!H16\">7.15 億</span>、授權 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!D4、D5、D6、In!H16\">5.74 億</span>；AGI CPU 客戶需求逾 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!D4、D5、D6、In!H16\">20 億</span>美元</li><li>2026-05-06｜4Q26 財報：FY2026 營收 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!C6、C16\">49.20 億</span>美元、non-GAAP EPS <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Q!C6、C16\">1.77</span></li><li>2026-04｜執行長 Rene Haas 兼任 SoftBank Group International 執行長<sup class=\"sm\" tabindex=\"0\" data-src=\"外部新聞：Arm 20-F\" aria-label=\"出處\">ⓘ</sup></li></ul>",
+    "需要觀察的事項": "<ul><li>2Q27 財報｜FY2027 錨點用 2Q27 指引與下半年假設<sup class=\"sm\" tabindex=\"0\" data-src=\"本專案：arm/README.md 待 FQ2 財報\" aria-label=\"出處\">ⓘ</sup>｜2026-11-04（美東盤後）</li><li>授權成長與營業費用｜授權成長 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：arm/README.md 重點觀察 2\">2%</span> 使加權目標價 −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：arm/README.md 重點觀察 2\">10.3%</span>、營業費用年增 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：arm/README.md 重點觀察 2\">18%</span> −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：arm/README.md 重點觀察 2\">7.7%</span>｜每季 ACV 與營業費用指引</li><li>AGI CPU 晶片營收｜情境 A／B／C FY2028 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E59:E61\">14</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E59:E61\">10</span>／<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E59:E61\">5 億</span>美元｜產能取得與客戶公告</li><li>資料中心權利金｜FY2029 情境 B 占權利金 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 Units!F15\">24.9%</span>｜雲端自研 CPU 與 NVIDIA Vera 出貨</li><li>Qualcomm 判決｜情境 C 手機費率年增 <span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E30、D31\">7%</span>、qc_adj 下緣 −<span class=\"sv\" tabindex=\"0\" data-src=\"本專案：同檔 In!E30、D31\">6%</span>｜法官判決與上訴</li></ul>",
+    "來源": "<ol><li>本專案：`arm/README.md`（v0.1，2026-10-31）；`arm/dist/20261031_Arm個股模型_v0.1.xlsx`（In、Q、Units、Val 頁）</li><li><a href=\"https://www.sec.gov/Archives/edgar/data/0001973239/000197323926000113/exhibit992fye27q130-junx26.htm\" target=\"_blank\" rel=\"noopener\">Arm 1Q27 股東信（SEC 6-K）</a>（2026-07-29）</li><li><a href=\"https://www.sec.gov/Archives/edgar/data/0001973239/000197323926000097/arm-20260331.htm\" target=\"_blank\" rel=\"noopener\">Arm 20-F（FY2026）</a></li><li><a href=\"https://www.paulweiss.com/insights/client-news/qualcomm-wins-jury-verdict-in-breach-of-contract-and-interference-trial-against-arm\" target=\"_blank\" rel=\"noopener\">Paul Weiss：Qualcomm 對 Arm 陪審團判決</a>（2026-10-13）</li><li><a href=\"https://newsroom.arm.com/news/arm-announces-earnings-release-date-for-second-quarter-fiscal-year-ending-2027\" target=\"_blank\" rel=\"noopener\">Arm 2Q27 財報日公告</a></li></ol>"
+   },
+   "notes": {
+    "基本資料": [
+     "外部・未經本專案檢核",
+     "本專案：arm/README.md 開頭"
+    ],
+    "公司在做什麼": [
+     "外部・未經本專案檢核",
+     "本專案：arm/dist/20261031_Arm個股模型_v0.1.xlsx Q!C4、C5",
+     "本專案：同檔 In!H28，Interested-party",
+     "本專案：同檔 In!H16，Interested-party"
+    ],
+    "主要產品與營收占比": [
+     "本專案：arm/dist/20261031_Arm個股模型_v0.1.xlsx Q!C5、C6，Derived",
+     "本專案：同檔 In!E18、H18，Verified",
+     "本專案：同檔 In!E19，Interested-party",
+     "本專案：同檔 Q!C4、C6，Derived",
+     "本專案：同檔 Q!C16、C17",
+     "本專案：同檔 Q!D6、D16、In!H5"
+    ],
+    "市場定位與產業位置": [
+     "本專案：同檔 In!H23，Interested-party",
+     "本專案：同檔 Units!C15、F15，Derived",
+     "本專案：同檔 Units!A4",
+     "本專案：同檔 In!I59，Interested-party"
+    ],
+    "管理層與經營風格": [
+     "外部・未經本專案檢核",
+     "本專案：同檔 In!E77、H77，Interested-party",
+     "本專案：同檔 Q!C14、D14"
+    ],
+    "同業與競爭態勢": [
+     "本專案：同檔 Val!C28，Interested-party",
+     "本專案：同檔 Val!C29、C30",
+     "本專案：同檔 Val!C31:C33",
+     "外部・未經本專案檢核",
+     "本專案：同檔 Val!B34、B67"
+    ],
+    "主要客戶": [
+     "外部・未經本專案檢核：Arm 20-F，FY2026",
+     "外部・未經本專案檢核：Arm 20-F、3Q26 法說逐字稿",
+     "外部・未經本專案檢核：Arm 4Q26 股東信，2026-05-06",
+     "外部・未經本專案檢核：Arm 新聞室，2026-07-29"
+    ],
+    "前十大股東": [
+     "外部・未經本專案檢核：20-F 稱控股股東；比例取自 whoistheownerof，查閱 2026-10-31",
+     "外部・未經本專案檢核：查過 20-F 摘錄、stockanalysis，2026-10-31"
+    ],
+    "近期重大事件": [
+     "本專案：同檔 In!E76；外部新聞：InvestSmart、marketscreener",
+     "本專案：同檔 In!H31；外部新聞：Paul Weiss",
+     "本專案：同檔 Q!D4、D5、D6、In!H16",
+     "本專案：同檔 Q!C6、C16",
+     "外部新聞：Arm 20-F"
+    ],
+    "需要觀察的事項": [
+     "本專案：arm/README.md 待 FQ2 財報",
+     "本專案：arm/README.md 重點觀察 2",
+     "本專案：同檔 In!E59:E61",
+     "本專案：同檔 Units!F15",
+     "本專案：同檔 In!E30、D31"
     ]
    },
    "missing": []
@@ -11037,6 +11949,54 @@
    "date": "2026-10-31",
    "ver": "v0.1.4",
    "xlsx": "20261031_健策個股模型_v0.1.4.xlsx"
+  },
+  "ARM": {
+   "folder": "arm",
+   "file": "20261031_Arm個股模型_v0.1.html",
+   "title": "Arm個股模型",
+   "date": "2026-10-31",
+   "ver": "v0.1",
+   "xlsx": "20261031_Arm個股模型_v0.1.xlsx"
+  },
+  "3711": {
+   "folder": "ase",
+   "file": "20261031_日月光投控個股模型_v0.1.html",
+   "title": "日月光投控個股模型",
+   "date": "2026-10-31",
+   "ver": "v0.1",
+   "xlsx": "20261031_日月光投控個股模型_v0.1.xlsx"
+  },
+  "2303": {
+   "folder": "umc",
+   "file": "20261031_聯電個股模型_v0.1.html",
+   "title": "聯電個股模型",
+   "date": "2026-10-31",
+   "ver": "v0.1",
+   "xlsx": "20261031_聯電個股模型_v0.1.xlsx"
+  },
+  "5347": {
+   "folder": "vis",
+   "file": "20261031_世界先進個股模型_v0.1.html",
+   "title": "世界先進個股模型",
+   "date": "2026-10-31",
+   "ver": "v0.1",
+   "xlsx": "20261031_世界先進個股模型_v0.1.xlsx"
+  },
+  "6274": {
+   "folder": "tuc",
+   "file": "20261031_台燿個股模型_v0.1.html",
+   "title": "台燿個股模型",
+   "date": "2026-10-31",
+   "ver": "v0.1",
+   "xlsx": "20261031_台燿個股模型_v0.1.xlsx"
+  },
+  "6223": {
+   "folder": "mpi",
+   "file": "20261031_旺矽個股模型_v0.1.html",
+   "title": "旺矽個股模型",
+   "date": "2026-10-31",
+   "ver": "v0.1",
+   "xlsx": "20261031_旺矽個股模型_v0.1.xlsx"
   }
  }
 }
