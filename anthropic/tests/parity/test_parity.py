@@ -3,6 +3,7 @@
 - 情境：改輸入 → LibreOffice 重算作基準 → 與 engine 比對全部公式格；任何情境不得出現錯誤值（檢查頁 ERR 是字串，不是錯誤值）；
 - 效能：增量與全簿重算各 < 2 秒；快取等價。
 環境變數 ANTHROPIC_ENGINE_CACHE：pycel 序列化快取（CI 的 engine-cache job 產生）。"""
+import gc
 import json
 import os
 import time
@@ -113,6 +114,8 @@ def test_scenario_parity(sc, model, base_engine, tmp_path, results_store):
         "n_mismatch": len(res["mismatches"]), "eval_all_seconds_after_change": round(elapsed, 2), "changed_cells": len(changed)}
     assert elapsed < INCREMENTAL_LIMIT_S
     assert res["error_value_cells"] == 0, f"[{sc['id']}] 錯誤值 {res['error_value_cells']} 格"
+    del eng
+    gc.collect()
     if sc["id"] != "base":
         assert changed, f"[{sc['id']}] 未改變任何公式格（測試空轉）"
     assert not res["mismatches"], f"[{sc['id']}] " + format_mismatches(res["mismatches"])
@@ -146,6 +149,8 @@ def test_cache_matches_fresh(sc, model, cache_path, results_store):
     got_cells = eng.evaluate_all()
     bad_cells = [k for k in want_cells if want_cells[k] != got_cells[k] or type(want_cells[k]) is not type(got_cells[k])]
     bad_names = [n for n in want_names if want_names[n] != eng.get_name(n)]
+    del eng
+    gc.collect()
     results_store.setdefault("_cache_equiv", {})[sc["id"]] = {
         "cells": len(want_cells), "names": len(want_names), "cell_mismatch": len(bad_cells),
         "name_mismatch": len(bad_names), "load_seconds": round(load_s, 1)}
@@ -160,6 +165,8 @@ def test_scenarios_actually_change_outputs(model, base_engine):
             eng.set_key(key, v)
         cur = eng.evaluate_all()
         assert [k for k in base if base[k] != cur[k]], f"{sc['id']} 未改變任何公式格"
+        del eng, cur
+        gc.collect()          # v0.1.7：情境 57 個，逐一釋放 engine，避免記憶體超過容器上限（不改斷言）
 
 
 def test_scenario_expected_results(model):
@@ -179,6 +186,8 @@ def test_scenario_expected_results(model):
         if sc.get("expect_warn"):
             assert eng.get_name("CHK_Warnings") > EXPECT["base_warnings"], sc["id"]
         assert eng.get_name("CHK_Errors") == len(errs)
+        del eng
+        gc.collect()          # v0.1.7：同上
 
 
 def test_incremental_recalc_matches_fresh_and_is_fast(model):

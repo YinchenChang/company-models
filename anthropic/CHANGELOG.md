@@ -86,3 +86,13 @@
 
 ## v0.1.6 HTML 版面（2026-10-31；Excel 不變 `model/20261031_Anthropic_v0.1.6.xlsx`）
 - 依 Andy 10-31 指示：一頁摘要 ① 命題與一句話結論之後直接接 ② 圖；①之二～①之四（各版更新紀錄）移到頁尾（⑨ 之後），前加一行說明。只改 `tools/build_html.py` 段落順序；重建後各段 HTML 與前版逐字相同（只有順序與新增說明行不同），`tests/test_html.py` 6 項通過。
+
+## v0.1.7 正式 S-1 全面套用＋自建資本支出改 GW 法＋快照同步（2026-10-31；Excel `model/20261031_Anthropic_v0.1.7.xlsx`；v0.1.6 移至 `model/archive/`；分支 `claude/anthropic-v0.1.7`）
+- 工作單 `docs/workorders/20261031_anthropic_v0.1.7_S1全面套用.md`。commit 見 git log「anthropic v0.1.7 步驟 1–3」。每項都有 Inputs 開關（0＝v0.1.6 口徑）；四個開關設 0 且 TK 回 v21.2 時 Demand～Reverse 與 v0.1.6 逐格相同（`test_v017_switches_off_reproduce_v016`）。
+- W1（INP_197 `s1f_commit_switch`）：Google 114.5、Amazon 110.0、Microsoft 44.9、Broadcom 161.2（容量維持 3.5 GW）、Nscale 44.6、Lambda 41.3 改讀正式 S-1；SpaceX 沿用月費（上限 120.5 只作區間，INP_200 可切換）；AMD 維持 GW 型。S-1 三段 832 − 模型逐家 573.3（不含 AMD）＝未歸屬餘額 258.7，以通用合約價（VR200 族）換 GW、2027–2033 平均（INP_198–199；快 2027–2031／慢 2028–2036）。Google 額外 TPU 125–150 只作情境（INP_201–203）。
+- W2（INP_204 `own_capex_method`）：自建資本支出＝自建 GW 增量（Wattonomics v0.1.7：各年 0；INP_205–210）× TK IF_CapexIT＋IF_CapexFacility（廠房 lag 18 個月，INP_211）；Fluidstack $50B 不另計。TK_Link 新增 IF_CapexIT、IF_CapexFacility。
+- W3（INP_212）：2025 校準 4.585／7.326（SRC_ANT_412、424）；η 重校。W4（INP_213–214）：2026 非算力成本＝S-1（上半年＋Q2 × 2）的營收 − 算力與基礎設施 − 營業損益，扣平台抽成與股權報酬＝10.79（v0.1.6 算法 5.94，+82%）。W5：TK v21.7（master `90f7deb`；29 值變動，TPU v7／Trainium3 持有比下降使 η 0.5254→0.4676）、OAI_Link 改 OpenAI v0.6.4。W6：Amazon 2026 流入 10.0 與 10-Q 一致，不改（Funding 第十二節）。
+- 結果（$B/GW/年）：每 VR 等值 GW 差額 2026–2030 +4.708／−6.938／−5.504／−1.300／+3.092（v0.1.6：−5.377／−4.915／−2.702／+5.373／+11.595）；覆蓋率 2030 1.195；累計外部資金需求 0；現金谷底 17.57（2029）。不進基準（W1 關閉）：+4.978／−2.545／−1.411／+4.495／+10.845、谷底 116.35。
+- 新列：Compute 第十六節、Cost 第二十五節、Funding 第十二節、Checks C182–C192、Inputs INP_197–214；Cost 合約總額、U2 錨定、每人年成本 2026、Revenue 2025 校準等改式。builder：`a7.py`；列鍵記號延後解析（a2）＋build.py 終檢。規模：公式格 7,774、具名範圍 1,394、Inputs 210；CHK_Errors 0、CHK_Warnings 4（C54、C69、C70、C89）。
+- 測試：parity 情境 +9（je–jm）；test_builder +4；test_html 敘述主張改寫。HTML：新增「①之五」（頁尾紀錄區最前；瀑布、兩讀、逐家、W2–W6、替代讀法）、①～⑨ 依新結果改寫，①之二～①之四以 v0.1.6 當時輸出呈現（情境 v016）；`tools/html_scenarios.yaml` 新增 v0.1.7 開關群組與 `tk16_back`（prev16），歷史情境加上這些群組。dist 改 v0_1_7（v0.1.6 dist git rm）。
+- 報告 `docs/reports/20261031_v0.1.7.md`＋`_對照.xlsx`（`tools/make_report_v017.py`）。
