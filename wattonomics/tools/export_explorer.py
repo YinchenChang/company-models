@@ -106,12 +106,10 @@ def main():
                     src="Spend／Facility（SRC_GL_301、SRC_GL_303）", name=nm)
     # 7) 資金缺口（v0.1.7；kind＝gap，part 區分：market／verdict／pergw／player／total）。只讀 WIF_Gap_* 名稱
     GY = list(range(2024, 2031))
-    MF = [("need_rest", "NeedRest"), ("mkt_add", "MktAdd")]
+    MF = [("mkt_add", "MktAdd"), ("ratio", "Ratio"), ("share11", "Share11")]
     for vx, nx in (("", ""), ("_mc", "_ModelCapex")):
-        MF += [("need" + vx, "Need" + nx), ("need_own" + vx, "NeedOwn" + nx), ("short" + vx, "Short" + nx), ("short_incl_rest" + vx, "ShortInclRest" + nx),
-               ("cum_need" + vx, "CumNeed" + nx), ("cum_need_incl_rest" + vx, "CumNeedInclRest" + nx),
-               ("cum_unarranged" + vx, "CumUnarranged" + nx), ("cum_unarranged_incl_rest" + vx, "CumUnarrangedInclRest" + nx),
-               ("cum_memo_incl_committed" + vx, f"CumUnarranged{nx}_MemoInclCommitted"), ("cum_memo_incl_committed_incl_rest" + vx, f"CumUnarrangedInclRest{nx}_MemoInclCommitted")]
+        MF += [("need" + vx, "Need" + nx), ("need_own" + vx, "NeedOwn" + nx), ("short" + vx, "Short" + nx), ("cum_need" + vx, "CumNeed" + nx),
+               ("cum_unarranged" + vx, "CumUnarranged" + nx), ("cum_memo_incl_committed" + vx, f"CumUnarranged{nx}_MemoInclCommitted")]
     if any(n.startswith("WIF_Gap_") for n in names):
         for s in "ABC":
             for d in ("D0", "D1", "D2"):
@@ -121,16 +119,15 @@ def main():
                              fallback=val(f"WIF_Gap_Fallback_{y}"), fallback_cells=val(f"WIF_Gap_FallbackCells_{y}"),
                              ext_obs=(val(f"WIF_Gap_ExtObs_{y}") if f"WIF_Gap_ExtObs_{y}" in names else None))
                     add("gap", part="market", scen=s, delay=d, year=y, values=v, unit="US$B", tag="Derived", src="Gap",
-                        name=f"WIF_Gap_*_{s}_{d}_{y}", note="需要＝11 家 AI 資料中心＋市場其餘（資金來源未知）＋11 家非 AI；來源＝11 家營業現金流（個股模型基準，不隨情景變）＋已觀測外部融資（2024–2025）")
-                add("gap", part="verdict", scen=s, delay=d, verdict=val(f"WIF_Gap_Verdict_{s}_{d}"), verdict12=val(f"WIF_Gap_Verdict12_{s}_{d}"),
-                    verdict_mc=val(f"WIF_Gap_Verdict_ModelCapex_{s}_{d}"), verdict12_mc=val(f"WIF_Gap_Verdict12_ModelCapex_{s}_{d}"), tag="Derived", src="Gap",
+                        name=f"WIF_Gap_*_{s}_{d}_{y}", note="11 家代表玩家（不含中國）：需要＝AI 資料中心（× 情景比例 r）＋非 AI；來源＝營業現金流（個股模型基準，不隨情景變）＋已觀測外部融資（2024–2025）")
+                add("gap", part="verdict", scen=s, delay=d, verdict=val(f"WIF_Gap_Verdict_{s}_{d}"), verdict_mc=val(f"WIF_Gap_Verdict_ModelCapex_{s}_{d}"), tag="Derived", src="Gap",
                     note="G3：2030 自由現金流 < 0 或缺口占資本支出 > 30% 連 3 年＝OpenAI 型；否則 Anthropic 型")
         for nm in names:
             if nm.startswith("WIF_Gap_PerGW_") or nm.startswith("WIF_Gap_Item_"):
                 base, y = nm.rsplit("_", 1)
                 item = "total" if nm.startswith("WIF_Gap_PerGW_") else base[len("WIF_Gap_Item_"):]
                 add("gap", part="pergw", item=item, year=int(y), value=val(nm), unit="$B/IT GW", tag="Derived", src="Gap（TK IF_CapexTotal）", name=nm)
-        GPS = sorted({nm.split("_")[3] for nm in names if nm.startswith("WIF_Gap_Player_")})
+        GPS = sorted({nm.split("_")[3] for nm in names if nm.startswith("WIF_Gap_Player_") and not nm.startswith(("WIF_Gap_PlayerCash", "WIF_Gap_PlayerVerdict", "WIF_Gap_PlayerCommitted"))})
         for p in GPS:
             for y in GY:
                 v = {k: val(f"WIF_Gap_Player_{p}_{y}_{k}") for k in ("OCF", "CapexAI", "CapexNonAI", "Gap", "SelfFund", "Buyback", "CapexAIModel", "CapexAIGW", "CapexAIMC") if f"WIF_Gap_Player_{p}_{y}_{k}" in names}

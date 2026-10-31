@@ -1,4 +1,4 @@
-# Wattonomics v0.1.7 資金缺口（Gap 頁）取數：讀各個股模型的基準情境年度值，寫 builder/seed/gap_models_v0.1.7.json。
+# Wattonomics v0.1.7 資金缺口（Gap 頁；11 家代表玩家，不含中國，Andy 2026-10-31 12:58）取數：讀各個股模型的基準情境年度值，寫 builder/seed/gap_models_v0.1.7.json。
 # 用法：python3 wattonomics/tools/import_gap_models.py [--out wattonomics/builder/seed/gap_models_v0.1.7.json]
 #
 # 原則（工作單 §2e）：
@@ -151,17 +151,6 @@ CONF = {
                 ),
                 cash=dict(cell="D42", label="年底現金", asof="2025-12-31"),
                 missing=dict(nai="模型無非 AI 資本支出", bb="未上市；模型無股利、回購")),
-    "zhipu": dict(ticker="02513", family="AI 實驗室型（Funding 頁）", fye=12, unit="RMB 億", scale=1, sheet="Funding",
-                  tag="Derived（智譜個股模型；2025 為財報；RMB 億）",
-                  block=("A1", "Funding"), header=(5, {"D": "2025", "E": "2026", "I": "2030"}),
-                  rows=dict(
-                      ocf=dict(cells=[(16, "F09")], cols=LAB, note="自由現金流 F09（未扣非算力資本支出；自有算力資本支出基準 0，所以＝營業現金流）"),
-                      nai=dict(cells=[(18, "F10")], cols=LAB, note="非算力資本支出"),
-                      cap=dict(cells=[(18, "F10")], cols=LAB, note="自有算力資本支出基準 0（D11r），合計＝非算力資本支出"),
-                  ),
-                  cash=dict(cell="D39", label="期末現金", asof="2025-12-31"),
-                  fx=dict(sheet="Inputs", cell="F27", lo_cell="G27", hi_cell="H27", label_cell="C27", label="匯率：USD/CNY", asof="2026-09-28"),
-                  missing=dict(capai="自有算力資本支出基準 0（D11r）；智譜不是 Wattonomics 營運者（容量在中國合計）", bb="模型無股利、回購")),
 }
 ITEMS = ("ocf", "capai", "nai", "cap", "bb")
 ITEM_NAME = {"ocf": "營業現金流", "capai": "AI 資本支出（模型）", "nai": "非 AI 資本支出", "cap": "資本支出合計（模型）", "bb": "買回＋股利"}

@@ -26,11 +26,11 @@ CAMPUS_ADD = sorted(__import__("glob").glob(os.path.join(HERE, "seed", "campus_v
 SEG = os.path.join(ROOT, "markets", "invest_map", "data", "segments_ai_semis_v0.2.3.csv")   # AI半導體 次產業比例（最新版）
 SEG_COMMIT = "5dea5c8"
 GAPSEED = os.path.join(HERE, "seed", "gap_models_v0.1.7.json")   # tools/import_gap_models.py：Gap 頁個股模型基準值（只用於 In Y9 首建）
-GP = ["msft", "googl", "amzn", "meta", "orcl", "crwv", "nbis", "wyfi", "xai", "oai", "ant", "zhipu"]   # Gap 頁玩家（智譜只列，不進合計）
+GP = ["msft", "googl", "amzn", "meta", "orcl", "crwv", "nbis", "wyfi", "xai", "oai", "ant"]   # Gap 頁：11 家代表玩家（本專案覆蓋，不含中國；Andy 2026-10-31 12:58）
 GPN = {"msft": "Microsoft", "googl": "Alphabet", "amzn": "Amazon", "meta": "Meta", "orcl": "Oracle", "crwv": "CoreWeave", "nbis": "Nebius",
-       "wyfi": "WhiteFiber", "xai": "SpaceX／xAI", "oai": "OpenAI", "ant": "Anthropic", "zhipu": "智譜"}
+       "wyfi": "WhiteFiber", "xai": "SpaceX／xAI", "oai": "OpenAI", "ant": "Anthropic"}
 GSRC = {p: f"SRC_GL_{310 + i}" for i, p in enumerate(GP)}
-GFB_EXCL = {"oai": "OpenAI／Stargate 自建 GW 由 SPV 擁有，已在市場其餘", "ant": "Anthropic 容量在其他新雲（TeraWulf、Fluidstack 等，Players neo）與 Amazon，已在市場其餘或 11 家"}
+GFB_EXCL = {"oai": "OpenAI／Stargate 自建 GW 由 SPV 擁有（不在 11 家擁有容量內）", "ant": "Anthropic 容量在其他新雲（TeraWulf、Fluidstack 等，Players neo）與 Amazon，由出租方擁有"}
 
 BLUE = Font(color="0000FF"); GREEN = Font(color="008000"); BOLD = Font(bold=True)
 HDR = PatternFill("solid", fgColor="DDEBF7"); KEY = PatternFill("solid", fgColor="FFF2CC")
@@ -250,9 +250,6 @@ def main():
         c_ = g.get("cash", {})
         scalar(dict(key=f"gcash_{p}", label=f"{GPN[p]} 期初現金（{c_.get('asof', '')}）", unit=g.get("unit", "US$B"), base=c_.get("value"),
                     tag=g.get("tag", "Derived"), src=GSRC[p], note=f"{src_} {c_.get('cell', '')}「{c_.get('label', '')}」；{c_.get('asof', '')}"))
-    fx_ = GSEED["players"].get("zhipu", {}).get("fx", {})
-    scalar(dict(key="gfx_cny", label="智譜換算匯率 USD/CNY（元／美元；RMB 億 ÷ 10 ÷ 匯率＝US$B）", unit="元／美元", lo=fx_.get("lo"), base=fx_.get("value"), hi=fx_.get("hi"),
-                tag="Verified", src=GSRC["zhipu"], note=f"智譜個股模型 {fx_.get('cell', '')}「{fx_.get('label', '')}」（{fx_.get('asof', '')}；中國外匯交易中心）；低／高＝模型 ±5%"))
     Y_LAST = r - 1
 
     UK = [u["key"] for u in U]
@@ -1360,12 +1357,11 @@ def main():
     SP.column_dimensions["A"].width = 44
 
     # ================= Gap：資金缺口（v0.1.7；規劃 docs/plan/20261031_主要玩家資金缺口_規劃.md、工作單 20261031_Wattonomics_v0.1.7_資金缺口.md） =================
-    GA["A1"] = ("Gap — 資金缺口：需要的錢＝新增 IT GW × 每 IT GW 建置成本（TK IF_CapexTotal＝IT＋廠房，與 CapexGW／C1／Spend 同一組儲存格；廠房依 lag_bldg 提前入帳），"
-                "每 GW 只在擁有者計一次；錢從哪來＝主要玩家全公司營業現金流（本業＋AI；不扣買回與股利，Andy 2026-10-31 04:20）＋已觀測外部融資（2024–2025，Funding 總額口徑）。"
-                "2026 起已到位資金只算期初現金，只進累計；已簽未起租租賃與表外合資承諾是市場內移轉，只列備忘（G4，chat 端更正）。無 GW 證據的玩家年份用個股模型 AI 資本支出替代（GL01-34）。US$B；曆年")
-    GA["A2"] = ("主要玩家＝11 家合計（Microsoft、Alphabet、Amazon、Meta、Oracle、CoreWeave、Nebius、WhiteFiber、SpaceX／xAI、OpenAI、Anthropic）＋智譜只列。"
-                "營業現金流固定為個股模型基準情境，不隨需求 A／B／C 變（G5）；覆蓋率 < 0.35 的年份屬情景（G6；本版為 2029–2030，見第 33 列附近『年份性質』）；個股模型沒有的年份標『無模型值』、不外推。"
-                "OpenAI／Stargate 自建 GW 由 SoftBank、SB Energy 等 SPV 擁有，依規劃書 §3.3 歸『市場其餘』，不計 OpenAI 資本支出（Decisions GL01-31）")
+    GA["A1"] = ("Gap — 資金缺口（11 家代表玩家，本專案覆蓋，不含中國；Andy 2026-10-31 12:58：收支只算 11 家，中國與其他只留需求與下游）。"
+                "需要＝11 家 AI 資料中心資本支出（新增 IT GW × 每 IT GW 建置成本；TK IF_CapexTotal；廠房依 lag_bldg 提前；每 GW 只在擁有者計一次；無 GW 證據的年份用個股模型值）＋11 家非 AI 資本支出；"
+                "錢從哪來＝11 家全公司營業現金流（不扣買回與股利，Andy 04:20）＋已觀測外部融資（2024–2025）；累計仍未安排＝累計尚需 − 期初現金。US$B；曆年")
+    GA["A2"] = ("11 家代表玩家：Microsoft、Alphabet、Amazon、Meta、Oracle、CoreWeave、Nebius、WhiteFiber、SpaceX／xAI、OpenAI、Anthropic。中國與其他廠商（其他新雲、主權 AI、OpenAI／Stargate SPV、企業學研）"
+                "的需求保留在 Deploy、Spend 與下游（Siliconomics、個股），不納入本頁收支；本頁只留一列參考。情景：11 家年新增 GW 依市場年新增比例縮放 [Assumed]（GL01-38）；營業現金流固定為個股模型基準（G5）；覆蓋率 < 0.35 的年份屬情景")
     hdr(GA, 3, ["項目", "鍵", "單位"] + [str(y) for y in YEARS] + ["說明"])
     OUTG = list(range(2024, 2031))
     GROW = {}
@@ -1419,7 +1415,7 @@ def main():
     GA.cell(r, 4, "待 TK：Tokenomics 快照 v21.7 未含年化持有成本名稱（Requests R6）；本版不列數值，不自行估算"); GROW["hold"] = r; r += 1
 
     # ---- B. 玩家層 ----
-    gsec("B. 玩家層（11 家＋智譜只列；曆年；US$B）。AI 資本支出＝玩家年新增 IT GW（主路徑：七家 2027 起甲2，其餘甲）× 玩家每 GW（CapexGW／C1 同式），廠房提前 lag_bldg")
+    gsec("B. 玩家層（11 家代表玩家；曆年；US$B；A／D0 基準）。AI 資本支出＝玩家年新增 IT GW（主路徑：七家 2027 起甲2，其餘甲）× 玩家每 GW（CapexGW／C1 同式），廠房提前 lag_bldg")
     CAPP7 = set(XR)
     FULL = {}
     for (pk, b), fr in FDR.items():
@@ -1484,7 +1480,19 @@ def main():
                 for k_, w_ in ((1, GW1), (2, GW2)):
                     if y + k_ in YC: t.append(f"{w_}*{YC[y + k_]}{rows['add']}*{YC[y + k_]}{rows['pfac']}")
                 return "=" + "+".join(t)
-            pl("ai_gw", "AI 資料中心資本支出（新增 GW × 每 GW；廠房提前）", "US$B", aif, years=OUTG)
+            def comp(y, k_, pit, pfac, w):
+                if y + k_ not in YC: return "=0"
+                c, cn = YC[y], YC[y + k_]
+                if k_ == 0: return f"={c}{rows['add']}*({pit(y)}+{GW0}*{pfac(y)})"
+                return f"={w}*{cn}{rows['add']}*{pfac(y + k_)}"
+            OWN_PIT = lambda y: f"{YC[y]}{rows['pit']}"; OWN_PFA = lambda y: f"{YC[y]}{rows['pfac']}"
+            MK_PIT = lambda y: f"Gap!{YC[y]}${GROW['pit']}"; MK_PFA = lambda y: f"Gap!{YC[y]}${GROW['pfac']}"
+            for k_, w_ in ((0, None), (1, GW1), (2, GW2)):
+                pl(f"c{k_}", f"　AI 資本支出組成：{['當年 IT＋當年廠房 w0', '次年上線 GW 的廠房 w1（提前入帳）', '後年上線 GW 的廠房 w2（提前入帳）'][k_]}", "US$B",
+                   lambda y, k_=k_, w_=w_: comp(y, k_, OWN_PIT, OWN_PFA, w_), years=OUTG)
+            pl("ai_gw", "AI 資料中心資本支出（新增 GW × 每 GW；廠房提前）＝組成合計", "US$B", lambda y: f"={YC[y]}{rows['c0']}+{YC[y]}{rows['c1']}+{YC[y]}{rows['c2']}", years=OUTG)
+            for k_, w_ in ((0, None), (1, GW1), (2, GW2)):
+                pl(f"m{k_}", f"　敏感度 M1（每 GW 改用市場平均）組成 {k_}", "US$B", lambda y, k_=k_, w_=w_: comp(y, k_, MK_PIT, MK_PFA, w_), years=OUTG)
         else:
             pl("ai_gw", "AI 資料中心資本支出", "US$B", lambda y: "=0", years=OUTG, note="智譜不是 Wattonomics 營運者（容量在『中國合計』）；自有算力資本支出基準 0（模型 D11r）")
         # 非 AI、模型資本支出、營業現金流、買回股利（財年 → 曆年）
@@ -1510,9 +1518,9 @@ def main():
         pl("ocf_fy", "營業現金流（財年；模型，缺則 Funding 全年觀測）", "US$B", lambda y: "=" + fyexpr(p, f"gocf_{p}", y, ocol, zs))
         pl("ocf_src", "　營業現金流來源（財年）", "—", lambda y: (f'=IF(In!{IC[y]}{INROW["gocf_" + p]}<>"","模型",IF({YC[y]}{rows["ocf_fy"]}<>"","Funding 觀測","無模型值"))'), fmt="General")
         pl("ocf", "營業現金流（曆年；全公司；空白＝無模型值）", "US$B", lambda y: cyexpr("ocf_fy", y, fye), years=OUTG, fill=KEY)
-        if p in GFB_EXCL or p == "zhipu":
+        if p in GFB_EXCL:
             pl("ai_fb", "模型值替代（無 GW 證據）", "—", lambda y: '=""', years=OUTG, fmt="General",
-               note=GFB_EXCL.get(p, "智譜只列") + "：不替代（避免與市場其餘重複）")
+               note=GFB_EXCL[p] + "：不替代（避免與市場以外的容量重複）")
         else:
             pl("ai_fb", "模型值替代（無 GW 證據）", "—", lambda y: (f'=IF(AND(ABS({YC[y]}{rows["ai_gw"]})<1E-9,{YC[y]}{rows["ocf"]}<>"",ISNUMBER({YC[y]}{rows["cai"]})),'
                                                                   f'IF(N({YC[y]}{rows["cai"]})>0,"模型值替代（無 GW 證據）",""),"")'), years=OUTG, fmt="General",
@@ -1584,7 +1592,7 @@ def main():
             turn = f'IF(AND({",".join(F[z] + ">=0" for z in range(y, 2031))}),"{y}",{turn})'
         return (f'=IF({miss_expr}>0,"未定（資料不足）",IF(OR({F[2030]}<0,{consec}),"OpenAI 型",'
                 f'IF(MIN({F[2026]}:{F[2030]})>=0,"Anthropic 型（2026–2030 皆為正）","Anthropic 型（"&{turn}&" 起轉正）")))')
-    GPL = [p for p in GP if p != "zhipu"]
+    GPL = list(GP)
     GA.cell(r, 1, "玩家判讀（2026–2030；G3 門檻：2030 自由現金流 < 0，或缺口占資本支出 > 30% 連 3 年＝OpenAI 型；否則 Anthropic 型；營業現金流有缺＝未定）").font = BOLD; r += 1
     for p in GP:
         rows = GPR[p]
@@ -1593,7 +1601,7 @@ def main():
         rows["verdict"] = r; r += 1
 
     # ---- C. 11 家合計 ----
-    gsec("C. 主要玩家合計（11 家；智譜不含）")
+    gsec("C. 11 家代表玩家（本專案覆蓋，不含中國）合計；A／D0 基準（各情景另依市場年新增比例縮放，見 D 節）")
     SUM11 = lambda k, y: "=" + "+".join(f"N({YC[y]}{GPR[p][k]})" for p in GPL)
     gline("t_ai", "11 家 AI 資料中心資本支出（擁有者口徑；含模型值替代）", "US$B", lambda y: SUM11("ai", y), years=OUTG, fill=KEY)
     gline("t_ai_gw", "　其中 GW 推算部分", "US$B", lambda y: SUM11("ai_gw", y), years=OUTG)
@@ -1616,53 +1624,111 @@ def main():
     gline("t_bbcum", "備忘：2026–2030 累計可削減緩衝", "US$B", lambda y: f"=SUM({YC[2026]}{GROW['t_bb']}:{YC[2030]}{GROW['t_bb']})", years=[2026])
     gline("t_ocfmiss2630", "營業現金流無模型值格數（11 家 × 2026–2030；判讀用）", "格", lambda y: f"=SUM({YC[2026]}{GROW['t_ocfmiss']}:{YC[2030]}{GROW['t_ocfmiss']})", years=[2026], fmt="0")
 
-    # ---- D. 整個市場當一間公司（每個需求 × 延遲情景） ----
-    gsec("D. 整個市場當一間公司（需求 A／B／C × 延遲 D0／D1／D2；互動頁資料源）。市場其餘＝市場合計 − 11 家（11 家 GW 不隨情景變）；市場其餘沒有資金來源資料（『資金來源未知』）")
+    # 情景縮放用的 11 家組成合計（模型值替代格：c0＝模型值、c1＝c2＝0）
+    SEVEN = set(XR)
+    def tsum(k, grp):
+        ps = [p for p in GPL if (grp == "all") or ((p in SEVEN) == (grp == "7"))]
+        def f(y):
+            t = []
+            for p in ps:
+                rw = GPR[p]
+                if f"c{k}" not in rw: continue
+                fb = f'{YC[y]}{rw["ai_fb"]}<>""'
+                t.append(f'IF({fb},{YC[y]}{rw["cai"]},{YC[y]}{rw["c0"]})' if k == 0 else f'IF({fb},0,{YC[y]}{rw["c" + str(k)]})')
+            return "=" + ("+".join(t) if t else "0")
+        return f
+    for grp in ("7", "o"):
+        for k in (0, 1, 2):
+            gline(f"t_c{k}_{grp}", f"　組成 {k}（{'七家' if grp == '7' else '其他四家'}；模型值替代計入組成 0）", "US$B", tsum(k, grp), years=OUTG)
+    gline("t_mc7", "　並列讀法：七家 AI 資本支出（2027–2030 個股模型；其前＝主讀法）", "US$B", lambda y: "=" + "+".join(f"N({YC[y]}{GPR[p]['ai_mc']})" for p in GPL if p in SEVEN), years=OUTG)
+    gline("t_m1", "敏感度 M1：11 家 AI 資本支出（每 GW 改用市場平均；模型值替代不變）", "US$B",
+          lambda y: "=" + "+".join(f'IF({YC[y]}{GPR[p]["ai_fb"]}<>"",{YC[y]}{GPR[p]["cai"]},{YC[y]}{GPR[p]["m0"]}+{YC[y]}{GPR[p]["m1"]}+{YC[y]}{GPR[p]["m2"]})' for p in GPL if "m0" in GPR[p]), years=OUTG)
+    gline("t_aichk", "　檢查：組成合計 − 11 家 AI 資本支出（須＝0）", "US$B",
+          lambda y: f"=" + "+".join(f"{YC[y]}{GROW[f't_c{k}_{g}']}" for k in (0, 1, 2) for g in ("7", "o")) + f"-{G('t_ai', y)}", years=OUTG, fmt="0.000000")
+
+    # ---- D. 11 家代表玩家：需求 × 延遲情景（Andy 2026-10-31 12:58：收支只算 11 家；中國與其他只留需求與下游） ----
+    gsec("D. 11 家代表玩家（本專案覆蓋，不含中國）× 需求 A／B／C × 延遲 D0／D1／D2（互動頁資料源）。11 家年新增 GW 依市場年新增比例 r＝市場（情景）÷ 市場（A／D0）縮放 [Assumed]；營業現金流、非 AI 不變")
+    GA.cell(r, 1, "市場其餘 AI 資本支出（參考；不納入收支，只供需求與下游）：A／D0＝市場 GW × 每 GW − 11 家 GW 推算部分")
+    MREST = r; r += 1
     GMK = {}
     for s in SCEN:
         for D in DLY:
             GA.cell(r, 1, f"情景 {s}／{D}").font = BOLD; r += 1
             k0 = f"{s}{D}"
             GMK[k0] = {}
+            M = GMK[k0]
             def ml(k, lab, unit, fy, years=OUTG, fmt="0.0", fill=None):
-                GMK[k0][k] = gline(f"m{k0}_{k}", "　" + lab, unit, fy, years=years, fmt=fmt, fill=fill)
-            ml("add", "市場年新增 IT GW（Deploy 主路徑，淨）", "GW", lambda y: f"=Deploy!{YC[y]}{DR['na' + s + D]}", years=YEARS, fmt="0.000")
-            def mkt(y, k0=k0):
-                c = YC[y]; t = [f"{c}{GMK[k0]['add']}*({G('pit', y)}+{GW0}*{G('pfac', y)})"]
+                M[k] = gline(f"m{k0}_{k}", "　" + lab, unit, fy, years=years, fmt=fmt, fill=fill)
+            ml("add", "市場年新增 IT GW（Deploy 主路徑，淨；參考）", "GW", lambda y: f"=Deploy!{YC[y]}{DR['na' + s + D]}", years=YEARS, fmt="0.000")
+            ml("r", "情景比例 r＝市場年新增（本情景）÷ 市場年新增（A／D0）；A／D0 ≤ 0 時取 1 [Assumed]", "x",
+               lambda y: f"=IF(Deploy!{YC[y]}{DR['naAD0']}<=0,1,Deploy!{YC[y]}{DR['na' + s + D]}/Deploy!{YC[y]}{DR['naAD0']})", years=YEARS, fmt="0.000")
+            ml("rflag", "　r 保護旗標（A／D0 市場年新增 ≤ 0）", "—", lambda y: f'=IF(Deploy!{YC[y]}{DR["naAD0"]}<=0,"r＝1（A／D0 年新增 ≤ 0）","")', years=OUTG, fmt="General")
+            def mkt(y):
+                c = YC[y]; t = [f"{c}{M['add']}*({G('pit', y)}+{GW0}*{G('pfac', y)})"]
                 for k_, w_ in ((1, GW1), (2, GW2)):
-                    if y + k_ in YC: t.append(f"{w_}*{YC[y + k_]}{GMK[k0]['add']}*{G('pfac', y + k_)}")
+                    if y + k_ in YC: t.append(f"{w_}*{YC[y + k_]}{M['add']}*{G('pfac', y + k_)}")
                 return "=" + "+".join(t)
-            ml("mkt", "市場 AI 資料中心資本支出（IT＋廠房提前）", "US$B", mkt)
-            ml("own_gw", "11 家 AI 資料中心（GW 推算部分；不含模型值替代）", "US$B", lambda y: f"={G('t_ai_gw', y)}")
-            ml("rest", "需要②：市場其餘 AI 資料中心資本支出（資金來源未知）＝市場 − 11 家 GW 推算部分", "US$B", lambda y, k0=k0: f"={YC[y]}{GMK[k0]['mkt']}-{YC[y]}{GMK[k0]['own_gw']}")
-            ml("nai", "需要③：11 家非 AI 資本支出", "US$B", lambda y: f"={G('t_nai', y)}")
-            ml("ocf", "來源①：11 家營業現金流（不扣買回股利）", "US$B", lambda y: f"={G('t_ocf', y)}")
+            ml("mkt", "參考：全市場 AI 資料中心建置成本（不納入收支）", "US$B", mkt)
+            RR = lambda y, k=0: f"{YC[y + k]}{M['r']}"
+            def own(y, mc=False):
+                f7 = (f"{RR(y)}*{G('t_mc7', y)}" if (mc and y >= 2027) else
+                      f"({RR(y)}*{G('t_c0_7', y)}+{RR(y, 1)}*{G('t_c1_7', y)}+{RR(y, 2)}*{G('t_c2_7', y)})")
+                fo = f"({RR(y)}*{G('t_c0_o', y)}+{RR(y, 1)}*{G('t_c1_o', y)}+{RR(y, 2)}*{G('t_c2_o', y)})"
+                return f"={f7}+{fo}"
+            ml("nai", "需要②：11 家非 AI 資本支出（不隨情景）", "US$B", lambda y: f"={G('t_nai', y)}")
+            ml("ocf", "來源①：11 家營業現金流（不扣買回股利；不隨情景）", "US$B", lambda y: f"={G('t_ocf', y)}")
             ml("ext", "來源②：已觀測外部融資（只 2024–2025）", "US$B", lambda y: (f"={G('t_ext', y)}" if y <= 2025 else "=0"))
             miss = G("t_ocfmiss2630", 2026)
             c26 = YC[2026]
-            for vx, vlab, ownkey in (("", "主讀法：GW × 每 GW", "t_ai"), ("_mc", "並列讀法：七家 AI 資本支出依個股模型基準（2027–2030）", "t_ai_mc")):
+            for vx, vlab in (("", "主讀法：GW × 每 GW"), ("_mc", "並列讀法：七家 AI 資本支出依個股模型基準（2027–2030，× r）")):
                 GA.cell(r, 1, f"　【{vlab}】").font = BOLD; r += 1
-                M = GMK[k0]; X = lambda k, vx=vx: M[k + vx]
-                ml("own" + vx, "需要①：11 家 AI 資料中心資本支出（含模型值替代）", "US$B", lambda y, ownkey=ownkey: f"={G(ownkey, y)}", fill=KEY)
-                ml("need" + vx, "需要合計（①＋②＋③）", "US$B", lambda y, vx=vx: f"={YC[y]}{M['own' + vx]}+{YC[y]}{M['rest']}+{YC[y]}{M['nai']}")
-                ml("need12" + vx, "需要（不含市場其餘：①＋③）", "US$B", lambda y, vx=vx: f"={YC[y]}{M['own' + vx]}+{YC[y]}{M['nai']}")
-                ml("short" + vx, "尚需新融資（不含市場其餘）＝①＋③ − 來源", "US$B", lambda y, vx=vx: f"={YC[y]}{M['need12' + vx]}-{YC[y]}{M['ocf']}-{YC[y]}{M['ext']}", fill=KEY)
-                ml("shortR" + vx, "尚需新融資（含市場其餘）", "US$B", lambda y, vx=vx: f"={YC[y]}{M['short' + vx]}+{YC[y]}{M['rest']}", fill=KEY)
-                ml("cum" + vx, "累計尚需新融資（2026 起；不含市場其餘）", "US$B", lambda y, vx=vx: f"=SUM(${c26}{M['short' + vx]}:{YC[y]}{M['short' + vx]})", years=range(2026, 2031))
-                ml("cumR" + vx, "累計尚需新融資（2026 起；含市場其餘）", "US$B", lambda y, vx=vx: f"=SUM(${c26}{M['shortR' + vx]}:{YC[y]}{M['shortR' + vx]})", years=range(2026, 2031))
-                ml("cumun" + vx, "累計仍未安排（不含市場其餘）＝累計尚需 − 期初現金", "US$B", lambda y, vx=vx: f"={YC[y]}{M['cum' + vx]}-{G('t_cash', 2026)}", years=range(2026, 2031), fill=KEY)
-                ml("cumunR" + vx, "累計仍未安排（含市場其餘）＝累計尚需 − 期初現金", "US$B", lambda y, vx=vx: f"={YC[y]}{M['cumR' + vx]}-{G('t_cash', 2026)}", years=range(2026, 2031), fill=KEY)
-                ml("cummemo" + vx, "備忘：再扣已簽未起租租賃與表外合資承諾（不含市場其餘；承諾是市場內移轉，不作來源）", "US$B",
+                ml("own" + vx, "需要①：11 家 AI 資料中心資本支出（含模型值替代；× r）", "US$B", lambda y, vx=vx: own(y, mc=bool(vx)), fill=KEY)
+                ml("need" + vx, "需要合計（①＋②）", "US$B", lambda y, vx=vx: f"={YC[y]}{M['own' + vx]}+{YC[y]}{M['nai']}")
+                ml("short" + vx, "尚需新融資＝需要 − 來源", "US$B", lambda y, vx=vx: f"={YC[y]}{M['need' + vx]}-{YC[y]}{M['ocf']}-{YC[y]}{M['ext']}", fill=KEY)
+                ml("cum" + vx, "累計尚需新融資（2026 起）", "US$B", lambda y, vx=vx: f"=SUM(${c26}{M['short' + vx]}:{YC[y]}{M['short' + vx]})", years=range(2026, 2031))
+                ml("cumun" + vx, "累計仍未安排＝累計尚需 − 期初現金", "US$B", lambda y, vx=vx: f"={YC[y]}{M['cum' + vx]}-{G('t_cash', 2026)}", years=range(2026, 2031), fill=KEY)
+                ml("cummemo" + vx, "備忘：再扣已簽未起租租賃與表外合資承諾（承諾是市場內移轉，不作來源）", "US$B",
                    lambda y, vx=vx: f"={YC[y]}{M['cumun' + vx]}-{G('t_comm', 2026)}", years=range(2026, 2031))
-                ml("cummemoR" + vx, "備忘：再扣承諾（含市場其餘）", "US$B", lambda y, vx=vx: f"={YC[y]}{M['cumunR' + vx]}-{G('t_comm', 2026)}", years=range(2026, 2031))
-                ml("fcf12" + vx, "自由現金流（只看 11 家）＝營業現金流 −（①＋③）", "US$B", lambda y, vx=vx: f"={YC[y]}{M['ocf']}-{YC[y]}{M['need12' + vx]}")
-                ml("gr12" + vx, "缺口占資本支出（只看 11 家）", "%", lambda y, vx=vx: f'=IF({YC[y]}{M["need12" + vx]}<=0,"",({YC[y]}{M["need12" + vx]}-{YC[y]}{M["ocf"]})/{YC[y]}{M["need12" + vx]})', fmt="0%")
-                ml("fcfR" + vx, "自由現金流（含市場其餘）＝營業現金流 − 需要合計", "US$B", lambda y, vx=vx: f"={YC[y]}{M['ocf']}-{YC[y]}{M['need' + vx]}")
-                ml("grR" + vx, "缺口占資本支出（含市場其餘）", "%", lambda y, vx=vx: f'=IF({YC[y]}{M["need" + vx]}<=0,"",({YC[y]}{M["need" + vx]}-{YC[y]}{M["ocf"]})/{YC[y]}{M["need" + vx]})', fmt="0%")
-                for k_, fr_, gr_, lab_ in (("vR", "fcfR", "grR", "判讀（含市場其餘）"), ("v12", "fcf12", "gr12", "判讀（只看 11 家）")):
-                    GA.cell(r, 1, "　" + lab_ + ("（並列讀法）" if vx else "")); GA.cell(r, 2, f"m{k0}_{k_}{vx}")
-                    GA.cell(r, 4, verdict(M[fr_ + vx], M[gr_ + vx], miss)); M[k_ + vx] = r; GROW[f"m{k0}_{k_}{vx}"] = r; r += 1
+                ml("fcf" + vx, "自由現金流＝營業現金流 − 需要", "US$B", lambda y, vx=vx: f"={YC[y]}{M['ocf']}-{YC[y]}{M['need' + vx]}")
+                ml("gr" + vx, "缺口占資本支出", "%", lambda y, vx=vx: f'=IF({YC[y]}{M["need" + vx]}<=0,"",({YC[y]}{M["need" + vx]}-{YC[y]}{M["ocf"]})/{YC[y]}{M["need" + vx]})', fmt="0%")
+                GA.cell(r, 1, "　判讀（11 家）" + ("（並列讀法）" if vx else "")); GA.cell(r, 2, f"m{k0}_v{vx}")
+                GA.cell(r, 4, verdict(M["fcf" + vx], M["gr" + vx], miss)); M["v" + vx] = r; GROW[f"m{k0}_v{vx}"] = r; r += 1
+            ml("share", "參考：11 家 GW 推算部分占全市場 AI 資料中心建置成本（不含模型值替代）", "%",
+               lambda y: f'=IF({YC[y]}{M["mkt"]}<=0,"",({YC[y]}{M["own"]}-{RR(y)}*{G("t_fb", y)})/{YC[y]}{M["mkt"]})', fmt="0%")
             r += 1
+    for y in OUTG:
+        GA.cell(MREST, YEARS.index(y) + 4, f"={YC[y]}{GMK['AD0']['mkt']}-{G('t_ai_gw', y)}").number_format = "0.0"
+    # A／D1 分配：各玩家 2026–2030 累計缺口（× r(A,D1)；Andy 13:04 要求看出 11 家合計的融資需求落在哪幾家）
+    gsec("F. A／D1 分配：各玩家 AI 資料中心資本支出（× r(A,D1)）＋非 AI − 營業現金流；2026–2030 累計（正＝需外部資金）")
+    MA = GMK["AD1"]; GDIST = {}
+    for p in GPL:
+        rw = GPR[p]
+        def pown(y, rw=rw):
+            RRa = lambda k=0: f"{YC[y + k]}{MA['r']}"
+            if "c0" not in rw: return "=0"
+            return (f'=IF({YC[y]}{rw["ai_fb"]}<>"",{RRa()}*{YC[y]}{rw["cai"]},'
+                    f'{RRa()}*{YC[y]}{rw["c0"]}+{RRa(1)}*{YC[y]}{rw["c1"]}+{RRa(2)}*{YC[y]}{rw["c2"]})')
+        a_ = gline(f"d_{p}_ai", f"{GPN[p]}：AI 資料中心資本支出（A／D1）", "US$B", pown, years=OUTG)
+        g_ = gline(f"d_{p}_gap", f"　{GPN[p]}：缺口＝AI＋非 AI − 營業現金流（A／D1）", "US$B",
+                   lambda y, p=p, a_=a_: f"={YC[y]}{a_}+N({YC[y]}{GPR[p]['nai']})-N({YC[y]}{GPR[p]['ocf']})", years=OUTG)
+        c_ = gline(f"d_{p}_cum", f"　{GPN[p]}：2026–2030 累計缺口（A／D1）", "US$B", lambda y, g_=g_: f"=SUM({YC[2026]}{g_}:{YC[2030]}{g_})", years=[2026], fill=KEY)
+        GDIST[p] = (a_, g_, c_)
+    gline("d_chk", "　檢查：各玩家 AI（A／D1）合計 − 11 家 AI 需要（A／D1）（須＝0）", "US$B",
+          lambda y: "=" + "+".join(f"{YC[y]}{GDIST[p][0]}" for p in GPL) + f"-{YC[y]}{MA['own']}", years=OUTG, fmt="0.000000")
+    # 敏感度 M1（每 GW 改用市場平均；A／D0、B／D1、C／D2）
+    gsec("E. 敏感度 M1：11 家每 GW 成本改用市場平均（主讀法用玩家自有每 GW）；情景縮放同 D 節")
+    for k0 in ("AD0", "AD1", "AD2", "BD1", "CD2"):
+        M = GMK[k0]
+        def ml1(k, lab, fy, years=OUTG, fmt="0.0"):
+            M[k] = gline(f"m{k0}_{k}", f"　{k0[0]}／{k0[1:]}：" + lab, "US$B", fy, years=years, fmt=fmt)
+        # 以 M1 與主讀法的差額（A／D0 基準）× r 近似：差額不拆組成（M1 列已含廠房提前）
+        ml1("own_m1", "11 家 AI 資本支出（M1）", lambda y, M=M: f"={YC[y]}{M['own']}+{YC[y]}{M['r']}*({G('t_m1', y)}-{G('t_ai', y)})")
+        ml1("short_m1", "尚需新融資（M1）", lambda y, M=M: f"={YC[y]}{M['own_m1']}+{YC[y]}{M['nai']}-{YC[y]}{M['ocf']}-{YC[y]}{M['ext']}")
+        ml1("cumun_m1", "累計仍未安排（M1）", lambda y, M=M: f"=SUM(${YC[2026]}{M['short_m1']}:{YC[y]}{M['short_m1']})-{G('t_cash', 2026)}", years=range(2026, 2031))
+        ml1("fcf_m1", "自由現金流（M1）", lambda y, M=M: f"=-{YC[y]}{M['short_m1']}-{YC[y]}{M['ext']}")
+        ml1("gr_m1", "缺口占資本支出（M1）", lambda y, M=M: f'=IF(({YC[y]}{M["own_m1"]}+{YC[y]}{M["nai"]})<=0,"",({YC[y]}{M["own_m1"]}+{YC[y]}{M["nai"]}-{YC[y]}{M["ocf"]})/({YC[y]}{M["own_m1"]}+{YC[y]}{M["nai"]}))', fmt="0%")
+        GA.cell(r, 1, f"　{k0[0]}／{k0[1:]}：判讀（M1）"); GA.cell(r, 2, f"m{k0}_v_m1")
+        GA.cell(r, 4, verdict(M["fcf_m1"], M["gr_m1"], G("t_ocfmiss2630", 2026))); M["v_m1"] = r; r += 1
     GA_LAST = r
     GA.column_dimensions["A"].width = 58; GA.column_dimensions["B"].width = 14; GA.column_dimensions["N"].width = 60
     for y in YEARS: GA.column_dimensions[YC[y]].width = 10
@@ -1785,21 +1851,24 @@ def main():
     for s in SCEN:
         for D in DLY:
             k0 = f"{s}{D}"; M = GMK[k0]
-            grow_if(f"WIF_Gap_NeedRest_{s}_{D}", f"需要②：市場其餘（資金來源未知；{s}／{D}）", M["rest"])
-            grow_if(f"WIF_Gap_MktAdd_{s}_{D}", f"市場年新增 IT GW（{s}／{D}）", M["add"], "GW", fmt="0.000")
+            grow_if(f"WIF_Gap_MktAdd_{s}_{D}", f"市場年新增 IT GW（參考；{s}／{D}）", M["add"], "GW", fmt="0.000")
+            grow_if(f"WIF_Gap_Ratio_{s}_{D}", f"情景比例 r（11 家年新增 GW 縮放；{s}／{D}）", M["r"], "x", fmt="0.000")
+            grow_if(f"WIF_Gap_Share11_{s}_{D}", f"參考：11 家 GW 推算部分占全市場 AI 資料中心建置成本（{s}／{D}）", M["share"], "比", fmt="0.000")
             for vx, nx, vl in (("", "", "主讀法"), ("_mc", "_ModelCapex", "七家依個股模型資本支出")):
-                grow_if(f"WIF_Gap_Need{nx}_{s}_{D}", f"需要合計（{vl}；{s}／{D}）", M["need" + vx])
+                grow_if(f"WIF_Gap_Need{nx}_{s}_{D}", f"需要合計（11 家；{vl}；{s}／{D}）", M["need" + vx])
                 grow_if(f"WIF_Gap_NeedOwn{nx}_{s}_{D}", f"需要①：11 家 AI 資料中心（{vl}；{s}／{D}）", M["own" + vx])
-                grow_if(f"WIF_Gap_Short{nx}_{s}_{D}", f"尚需新融資（不含市場其餘；{vl}；{s}／{D}）", M["short" + vx])
-                grow_if(f"WIF_Gap_ShortInclRest{nx}_{s}_{D}", f"尚需新融資（含市場其餘；{vl}；{s}／{D}）", M["shortR" + vx])
-                grow_if(f"WIF_Gap_CumNeed{nx}_{s}_{D}", f"累計尚需新融資（2026 起；不含市場其餘；{vl}；{s}／{D}）", M["cum" + vx], years=list(range(2026, 2031)))
-                grow_if(f"WIF_Gap_CumNeedInclRest{nx}_{s}_{D}", f"累計尚需新融資（含市場其餘；{vl}；{s}／{D}）", M["cumR" + vx], years=list(range(2026, 2031)))
-                grow_if(f"WIF_Gap_CumUnarranged{nx}_{s}_{D}", f"累計仍未安排＝累計尚需 − 期初現金（不含市場其餘；{vl}；{s}／{D}）", M["cumun" + vx], years=list(range(2026, 2031)))
-                grow_if(f"WIF_Gap_CumUnarrangedInclRest{nx}_{s}_{D}", f"累計仍未安排（含市場其餘；{vl}；{s}／{D}）", M["cumunR" + vx], years=list(range(2026, 2031)))
-                grow_if(f"WIF_Gap_CumUnarranged{nx}_MemoInclCommitted_{s}_{D}", f"備忘：再扣承諾（不含市場其餘；{vl}；{s}／{D}）", M["cummemo" + vx], years=list(range(2026, 2031)))
-                grow_if(f"WIF_Gap_CumUnarrangedInclRest{nx}_MemoInclCommitted_{s}_{D}", f"備忘：再扣承諾（含市場其餘；{vl}；{s}／{D}）", M["cummemoR" + vx], years=list(range(2026, 2031)))
-                gscalar_if(f"WIF_Gap_Verdict{nx}_{s}_{D}", f"判讀（含市場其餘；{vl}；{s}／{D}）", f"Gap!D{M['vR' + vx]}", "文字", fmt="General")
-                gscalar_if(f"WIF_Gap_Verdict12{nx}_{s}_{D}", f"判讀（只看 11 家；{vl}；{s}／{D}）", f"Gap!D{M['v12' + vx]}", "文字", fmt="General")
+                grow_if(f"WIF_Gap_Short{nx}_{s}_{D}", f"尚需新融資（{vl}；{s}／{D}）", M["short" + vx])
+                grow_if(f"WIF_Gap_CumNeed{nx}_{s}_{D}", f"累計尚需新融資（2026 起；{vl}；{s}／{D}）", M["cum" + vx], years=list(range(2026, 2031)))
+                grow_if(f"WIF_Gap_CumUnarranged{nx}_{s}_{D}", f"累計仍未安排＝累計尚需 − 期初現金（{vl}；{s}／{D}）", M["cumun" + vx], years=list(range(2026, 2031)))
+                grow_if(f"WIF_Gap_CumUnarranged{nx}_MemoInclCommitted_{s}_{D}", f"備忘：再扣承諾（{vl}；{s}／{D}）", M["cummemo" + vx], years=list(range(2026, 2031)))
+                gscalar_if(f"WIF_Gap_Verdict{nx}_{s}_{D}", f"判讀（11 家代表玩家；{vl}；{s}／{D}）", f"Gap!D{M['v' + vx]}", "文字", fmt="General")
+    grow_if("WIF_Gap_MktRestMemo", "參考：市場其餘 AI 資本支出（A／D0；不納入收支，只供需求與下游）", MREST)
+    for p in GPL:
+        gscalar_if(f"WIF_Gap_PlayerCumGap_A_D1_{p}", f"{GPN[p]} 2026–2030 累計缺口（A／D1；正＝需外部資金）", f"Gap!{YC[2026]}{GDIST[p][2]}")
+    for k0 in ("AD0", "AD1", "AD2", "BD1", "CD2"):
+        M = GMK[k0]; s_, D_ = k0[0], k0[1:]
+        grow_if(f"WIF_Gap_CumUnarranged_M1_{s_}_{D_}", f"敏感度 M1：累計仍未安排（每 GW 用市場平均；{s_}／{D_}）", M["cumun_m1"], years=list(range(2026, 2031)))
+        gscalar_if(f"WIF_Gap_Verdict_M1_{s_}_{D_}", f"敏感度 M1：判讀（{s_}／{D_}）", f"Gap!D{M['v_m1']}", "文字", fmt="General")
     for p in GP:
         rows = GPR[p]
         for k, lab, unit, fmt in (("OCF", "營業現金流", "US$B", "0.0"), ("CapexAI", "AI 資料中心資本支出", "US$B", "0.0"), ("CapexNonAI", "非 AI 資本支出（無模型值以 0 計）", "US$B", "0.0"),
@@ -1967,9 +2036,14 @@ def main():
     CK.cell(r, 1, "G-K2"); CK.cell(r, 2, "同源一致：CapexGW 當年上線 GW 的資金 ÷ 每 GW 成本＝甲2 年新增 GW；Gap 玩家年新增與每 GW＝CapexGW（七家、2027 起）")
     CK.cell(r, 3, "=" + "+".join(k2)); CK.cell(r, 6, f'=IF(C{r}<1E-6,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap）"); r += 1
     M0 = GMK["AD0"]
-    CK.cell(r, 1, "G-K3"); CK.cell(r, 2, "市場層 A／D0：11 家 GW 推算部分＋市場其餘＝市場合計；11 家擁有＝玩家層加總；需要合計＝市場合計＋模型值替代＋非 AI（2024–2030）")
-    CK.cell(r, 3, "=" + "+".join(f"ABS(Gap!{YC[y]}{M0['own_gw']}+Gap!{YC[y]}{M0['rest']}-Gap!{YC[y]}{M0['mkt']})+ABS(Gap!{YC[y]}{M0['own']}-(" + "+".join(f"Gap!{YC[y]}{GPR[p]['ai']}" for p in GPL) + "))"
-                                 f"+ABS(Gap!{YC[y]}{M0['need']}-Gap!{YC[y]}{M0['mkt']}-Gap!{YC[y]}{GROW['t_fb']}-Gap!{YC[y]}{M0['nai']})" for y in OUTG))
+    CK.cell(r, 1, "G-K3"); CK.cell(r, 2, "A／D0：情景比例 r＝1（2024–2032）；11 家 AI 需要（× r）＝玩家層加總（未縮放）；組成合計＝11 家 AI 資本支出")
+    CK.cell(r, 3, "=" + "+".join(f"ABS(Gap!{YC[y]}{M0['r']}-1)" for y in YEARS) + "+" +
+            "+".join(f"ABS(Gap!{YC[y]}{M0['own']}-(" + "+".join(f"Gap!{YC[y]}{GPR[p]['ai']}" for p in GPL) + f"))+ABS(Gap!{YC[y]}{GROW['t_aichk']})" for y in OUTG))
+    CK.cell(r, 6, f'=IF(C{r}<1E-9,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap）"); r += 1
+    CK.cell(r, 1, "G-K3c"); CK.cell(r, 2, "A／D1 分配：各玩家 AI 合計＝11 家 AI 需要（A／D1）")
+    CK.cell(r, 3, "=" + "+".join(f"ABS(Gap!{YC[y]}{GROW['d_chk']})" for y in OUTG)); CK.cell(r, 6, f'=IF(C{r}<1E-6,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap）"); r += 1
+    CK.cell(r, 1, "G-K3b"); CK.cell(r, 2, "A／D0 並列讀法：11 家 AI 需要＝玩家層並列讀法加總（未縮放）")
+    CK.cell(r, 3, "=" + "+".join(f"ABS(Gap!{YC[y]}{M0['own_mc']}-(" + "+".join(f"Gap!{YC[y]}{GPR[p]['ai_mc']}" for p in GPL) + "))" for y in OUTG))
     CK.cell(r, 6, f'=IF(C{r}<1E-6,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap）"); r += 1
     k4 = []
     for k0, M in GMK.items():
@@ -1977,12 +2051,10 @@ def main():
             for y in OUTG:
                 c = YC[y]
                 k4.append(f"ABS(Gap!{c}{M['short' + vx]}-(Gap!{c}{M['own' + vx]}+Gap!{c}{M['nai']}-Gap!{c}{M['ocf']}-Gap!{c}{M['ext']}))")
-                k4.append(f"ABS(Gap!{c}{M['shortR' + vx]}-(Gap!{c}{M['need' + vx]}-Gap!{c}{M['ocf']}-Gap!{c}{M['ext']}))")
             for y in range(2026, 2031):
-                c = YC[y]; cs = "+".join(f"Gap!{YC[z]}{M['short' + vx]}" for z in range(2026, y + 1)); csr = "+".join(f"Gap!{YC[z]}{M['shortR' + vx]}" for z in range(2026, y + 1))
+                c = YC[y]; cs = "+".join(f"Gap!{YC[z]}{M['short' + vx]}" for z in range(2026, y + 1))
                 k4.append(f"ABS(Gap!{c}{M['cumun' + vx]}-({cs}-Gap!{YC[2026]}{GROW['t_cash']}))")
-                k4.append(f"ABS(Gap!{c}{M['cumunR' + vx]}-({csr}-Gap!{YC[2026]}{GROW['t_cash']}))")
-    CK.cell(r, 1, "G-K4"); CK.cell(r, 2, "每情景、兩讀法：尚需新融資＝需要 − 來源；累計仍未安排＝逐年加總 − 期初現金（承諾不作來源）")
+    CK.cell(r, 1, "G-K4"); CK.cell(r, 2, "每情景、兩讀法：尚需新融資＝11 家需要 − 來源；累計仍未安排＝逐年加總 − 期初現金（承諾不作來源）")
     CK.cell(r, 3, "=" + "+".join(k4)); CK.cell(r, 6, f'=IF(C{r}<1E-6,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap）"); r += 1
     CK.cell(r, 1, "G-K4b"); CK.cell(r, 2, "承諾（已簽未起租＋表外合資）不進任何尚需、仍未安排、判讀公式（只在備忘列；建置時公式文字檢查）")
     nbad4 = 0
@@ -2002,12 +2074,12 @@ def main():
                 if refs & {rbb, rbbf}: nbad5 += 1
     for k0, M in GMK.items():
         for y in OUTG:
-            f = str(GA.cell(M["short"], YEARS.index(y) + 4).value) + str(GA.cell(M["shortR"], YEARS.index(y) + 4).value)
+            f = str(GA.cell(M["short"], YEARS.index(y) + 4).value) + str(GA.cell(M["short_mc"], YEARS.index(y) + 4).value)
             if str(GROW["t_bb"]) in {x for x in _re3.findall(r"(?<![A-Za-z!])[A-M]\$?(\d+)", f)}: nbad5 += 1
     CK.cell(r, 1, "G-K5"); CK.cell(r, 2, "缺口、自籌比、尚需新融資的公式不引用買回＋股利列（建置時公式文字檢查；Andy 2026-10-31 04:20：不扣買回與股利）")
     CK.cell(r, 3, nbad5); CK.cell(r, 6, f'=IF(C{r}=0,"OK","ERROR")'); CK.cell(r, 7, "規格（Gap）"); r += 1
-    CK.cell(r, 1, "G-K6a"); CK.cell(r, 2, "市場其餘 AI 資本支出 < 0 的情景 × 年數（11 家 > 市場；2024–2030）")
-    CK.cell(r, 3, "=" + "+".join(f'COUNTIF(Gap!{YC[2024]}{M["rest"]}:{YC[2030]}{M["rest"]},"<-1E-9")' for M in GMK.values()))
+    CK.cell(r, 1, "G-K6a"); CK.cell(r, 2, "情景比例 r 保護旗標格數（A／D0 市場年新增 ≤ 0 時 r＝1）")
+    CK.cell(r, 3, "=" + "+".join(f'COUNTIF(Gap!{YC[2024]}{M["rflag"]}:{YC[2030]}{M["rflag"]},"r＝1*")' for M in GMK.values()))
     CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "驗證（Gap）"); r += 1
     CK.cell(r, 1, "G-K6b"); CK.cell(r, 2, "11 家營業現金流『無模型值』的公司 × 年數（2024–2030）")
     CK.cell(r, 3, f"=SUM(Gap!{YC[2024]}{GROW['t_ocfmiss']}:{YC[2030]}{GROW['t_ocfmiss']})")
@@ -2020,7 +2092,7 @@ def main():
     CK.cell(r, 1, "G-K7"); CK.cell(r, 2, "Gap 七家 AI 資本支出（新增 GW × 每 GW）÷ CapexGW 曆年 AI 資本支出（In Y2 × AI 占比）超出 tolband 的家 × 年數（2024–2026；只警告）")
     CK.cell(r, 3, "=" + "+".join(f"({x})" for x in k7)); CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "驗證（Gap）")
     CK.cell(r, 8, "2024–2025 年新增多為『新納入存量』（不計資本支出），推算值偏低；見報告"); r += 1
-    CK.cell(r, 1, "G-K9"); CK.cell(r, 2, "模型值替代格數（11 家 × 2024–2030：營業現金流有計、GW 推算 AI 資本支出為 0，改用個股模型 AI 資本支出；OpenAI、Anthropic 容量已在市場其餘，不替代）")
+    CK.cell(r, 1, "G-K9"); CK.cell(r, 2, "模型值替代格數（11 家 × 2024–2030：營業現金流有計、GW 推算 AI 資本支出為 0，改用個股模型 AI 資本支出；OpenAI、Anthropic 容量由他方擁有，不替代）")
     CK.cell(r, 3, f"=SUM(Gap!{YC[2024]}{GROW['t_fbn']}:{YC[2030]}{GROW['t_fbn']})"); CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "驗證（Gap）"); r += 1
     CK.cell(r, 1, "G-K10"); CK.cell(r, 2, "非 AI 資本支出以 In Y2 × (1−AI 占比) 替代的格數（七家 × 2024–2030；模型無拆分）")
     CK.cell(r, 3, f"=SUM(Gap!{YC[2024]}{GROW['t_naifbn']}:{YC[2030]}{GROW['t_naifbn']})"); CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "驗證（Gap）")
@@ -2069,10 +2141,12 @@ def main():
         {"id": "GL01-29", "cat": "判斷", "item": "G5 營業現金流不隨需求情景", "decision": "是；來源固定為個股模型基準情境（B）", "date": "2026-10-31", "quote": "工作單 §1 G5", "status": "預設、可撤回"},
         {"id": "GL01-30", "cat": "判斷", "item": "G6 年份", "decision": "2024–2030；覆蓋率 < 0.35 的年份標『情景』（以公式判斷；工作單寫 2028 起，但 v0.1.6 覆蓋率 2028＝0.71，實際為 2029–2030）；個股模型沒有的年份標無模型值、不外推；2024–2025 營業現金流模型沒有時改用 Funding 全年觀測（期間標籤 CY／FY），仍沒有則無模型值", "date": "2026-10-31", "quote": "規劃書 §2、§4、§6", "status": "預設、可撤回"},
         {"id": "GL01-31", "cat": "工程", "item": "OpenAI／Stargate 自建 GW 的擁有者", "decision": "Players 的 oai（Stargate 自建，SoftBank、SB Energy 營運）依規劃書 §3.3 視為 SPV 擁有，歸『市場其餘』，不計 OpenAI 資本支出；OpenAI 營業現金流＝模型自由現金流＋模型自有資本支出（算力現金成本內含）", "date": "2026-10-31", "quote": "規劃書 §3.3（表外合資與 SPV）", "status": "預設、可撤回"},
-        {"id": "GL01-32", "cat": "工程", "item": "無 CFO 列的模型", "decision": "CoreWeave、Nebius、WhiteFiber：營業現金流＝營運缺口＋CapEx＋JV 出資＋overlay（WhiteFiber 另加回股利）＝營運來源 − 租金 − 利息（− 現金稅）；Anthropic：F07＋F03；OpenAI：F06＋Cost 自有資本支出；智譜：F09（RMB 億 ÷ 10 ÷ gfx_cny）", "date": "2026-10-31", "quote": "工作單 §2e（逐家人工確認列位）", "status": "預設、可撤回"},
+        {"id": "GL01-32", "cat": "工程", "item": "無 CFO 列的模型", "decision": "CoreWeave、Nebius、WhiteFiber：營業現金流＝營運缺口＋CapEx＋JV 出資＋overlay（WhiteFiber 另加回股利）＝營運來源 − 租金 − 利息（− 現金稅）；Anthropic：F07＋F03；OpenAI：F06＋Cost 自有資本支出", "date": "2026-10-31", "quote": "工作單 §2e（逐家人工確認列位）", "status": "預設、可撤回"},
         {"id": "GL01-34", "cat": "工程", "item": "無 GW 證據時的模型值替代", "decision": "11 家中營業現金流有計、但 GW 推算 AI 資本支出為 0 的年份（本版：SpaceX／xAI 2028–2030、WhiteFiber 2028–2030），改用個股模型 AI 資本支出並計為擁有者需要，市場合計同額加上（不從市場其餘扣）；OpenAI（SPV 容量在市場其餘）、Anthropic（容量在其他新雲與 Amazon）不替代；Checks G-K9 WARN 計格數", "date": "2026-10-31", "quote": "chat 端 2026-10-31 決定", "status": "預設、可撤回"},
         {"id": "GL01-35", "cat": "工程", "item": "並列讀法：七家依個股模型資本支出", "decision": "主讀法維持 GW × 每 GW（Andy 規格）；另列七家 2027–2030 AI 資本支出改用個股模型基準情境 B 的 AI 資本支出（市場其餘不變），重算 9 情景尚需、累計與判讀（名稱 *_ModelCapex）。In Y2 本版不改（v0.1.8 處理）", "date": "2026-10-31", "quote": "chat 端 2026-10-31 決定", "status": "預設、可撤回"},
         {"id": "GL01-36", "cat": "工程", "item": "非 AI 資本支出缺值替代", "decision": "七家（CapexGW 玩家）模型無非 AI 拆分的年份，改用 CapexGW 曆年資本支出（In Y2，財年按月數換曆年）×（1 − 該家 AI 占比），標『以 Y2 × (1−AI 占比) 替代（模型無拆分）』；無 Y2 資本支出者仍以 0 計並列出；Checks G-K10 WARN", "date": "2026-10-31", "quote": "chat 端 2026-10-31 決定（對稱性）", "status": "預設、可撤回"},
+        {"id": "GL01-37", "cat": "判斷", "item": "收支範圍：11 家代表玩家", "decision": "收支（需要、來源、尚需、累計、判讀）只算 11 家代表玩家（本專案覆蓋，不含中國）；中國與其他廠商的需求保留在全市場 GW、Spend 與下游（Siliconomics、個股），不納入收支，Gap 頁只留一列參考；智譜移出 Gap", "date": "2026-10-31", "quote": "Andy 12:58「主要玩家其實就是不要放…中國公司」「就拿我們那十一家當做代表來計算就好了」「還是要保留中國還有其他廠商，因為他們的需求會影響到我們下游」", "status": "已定（Andy）"},
+        {"id": "GL01-38", "cat": "判斷", "item": "11 家需要量隨情景變動", "decision": "11 家各年新增 GW（含廠房提前年份、模型值替代格）× r(s,D,y)＝市場年新增（情景）÷ 市場年新增（A／D0）；A／D0 市場年新增 ≤ 0 時 r＝1；營業現金流與非 AI 不變；並列讀法七家模型 AI 資本支出同樣 × r。[Assumed]", "date": "2026-10-31", "quote": "chat 端預設（Andy 可撤回）", "status": "預設、可撤回"},
         {"id": "GL01-33", "cat": "工程", "item": "Gap 每 GW 成本", "decision": "市場：IT＝Spend 頁同式（市場 NonNV × spend_nnv_hold）；廠房＝CapexGW 同式套市場 NonNV（NVIDIA 世代加權 IF_CapexFacility 與 VR200 × spend_nnv_hold），項目依 Facility 拆分比例。玩家：CapexGW（七家）或 C1 同式（其餘）。市場其餘＝市場合計 − 11 家（含每 GW 成本差）", "date": "2026-10-31", "quote": "工作單 §2a", "status": "預設、可撤回"},
     ]
     r = 4
