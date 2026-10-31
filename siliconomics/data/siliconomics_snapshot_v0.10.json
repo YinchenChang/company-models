@@ -1,8 +1,8 @@
 {
  "source": {
-  "file": "20261031_Siliconomics_v0.9.xlsx",
-  "version": "v0.9",
-  "sha256": "3bb1380d24169f49dfe3711795ac96253579bbbb6611418b7796ccb26b06a81d",
+  "file": "20261031_Siliconomics_v0.10.xlsx",
+  "version": "v0.10",
+  "sha256": "6a0406b07fd0f9387751b6a9db57d7310084d06214d8eabb4b9726df0eb24e08",
   "note": "Siliconomics 快照；下游只讀本檔。SGOV_Errors 須為 0"
  },
  "scen": [
@@ -602,21 +602,21 @@
    "label": "NAND 合約價季增 2026Q3",
    "unit": "%",
    "lo": null,
-   "base": 0.15,
+   "base": 0.25,
    "hi": null,
-   "tag": "Interested-party",
-   "src": "同上",
+   "tag": "Verified",
+   "src": "2026Q3 改用公司實現平均售價（2026-10-31 NAND 第四季對帳）：Kioxia 第二季（7–9 月）NAND 平均售價季增 mid-20%（Investing.com、Bloomberg 2026-10-30）、SK 海力士 3Q26 NAND 平均售價季增 mid-20%（法說 2026-10-28）；TrendForce 合約價 +10~15%（MS 約 +20%）只作對照",
    "src2": ""
   },
   {
    "id": "nq_7",
    "label": "NAND 合約價季增 2026Q4",
    "unit": "%",
-   "lo": null,
-   "base": 0.175,
-   "hi": null,
-   "tag": "Interested-party",
-   "src": "同上",
+   "lo": 0.032,
+   "base": 0.081,
+   "hi": 0.175,
+   "tag": "Derived",
+   "src": "保留 TrendForce 合約價兩季累計（3Q26 +15%、4Q26 +17.5%）＝1.351，扣除 2026Q3 實現 +25% 後的餘額＝+8.1%（實現價提前一季）；對照：SanDisk FQ2 FY27 指引隱含約 +7%（位元同市場時）、Kioxia 第三季指引平均售價季增低個位數（產品組合轉差）。低＝Kioxia 實現兩季累計 1.25×1.032（2027 起價格水準約 −4.5%）；高＝TrendForce 4Q26 合約價 +17.5%",
    "src2": ""
   },
   {
@@ -8851,8 +8851,10 @@
   "SIF_nq_3": 0.3,
   "SIF_nq_4": 0.875,
   "SIF_nq_5": 0.725,
-  "SIF_nq_6": 0.15,
-  "SIF_nq_7": 0.175,
+  "SIF_nq_6": 0.25,
+  "SIF_nq_7": 0.081,
+  "SIF_nq_7_hi": 0.175,
+  "SIF_nq_7_lo": 0.032,
   "SIF_nv_content": 42.8,
   "SIF_nv_content_hi": 48,
   "SIF_nv_content_lo": 38,

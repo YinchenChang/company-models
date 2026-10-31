@@ -1,15 +1,23 @@
-# markets/nand — NAND 市場層 v0.2（2026-10-31）
+# markets/nand — NAND 市場層 v0.3（2026-10-31）
 
 樣板：`markets/memory/`（DRAM／HBM 市場層）。NAND 合約價路徑、加速器顆數 `UNITS` 與情境顆數係數 `SCEN_UNITS` 一律讀 `markets/memory/market.py`（單一來源；本檔只抄錄並標示來源，不自訂行業路徑）。下游：`sndk/`、`kioxia/` 讀本檔成品的 Mkt 頁。
 
 | 檔案 | 內容 |
 |---|---|
 | `build_nand.py` | 產生器 |
-| `dist/20261031_NAND市場模型_v0.2.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
+| `dist/20261031_NAND市場模型_v0.3.xlsx` | 成品（LibreOffice 重算，錯誤 0 格） |
 
 建置：`python3 markets/nand/build_nand.py raw.xlsx`，再 `soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir <dir> raw.xlsx`；重建一致以 `tools/xlsx_diff.py --tol 1e-9` 檢查。本層無 HTML（樣板 `markets/memory` 亦無）。
 
 **命題：** NAND 營收由 AI 推論帶動的企業級 SSD 位元需求與合約價循環決定；2026–27 供給受限、價格在高檔，2028 起各情境依加速器顆數係數與價格路徑分歧。
+
+## v0.3（2026-10-31）：季價改為實現售價口徑（NAND 第四季對帳）
+
+- 上游 Siliconomics v0.10：`nq_6`（2026Q3）0.15 → 0.25（Verified：Kioxia、SK 海力士實現平均售價季增 mid-20%）；`nq_7`（2026Q4）0.175 → 0.081（Derived：TrendForce 合約價兩季累計 1.15 × 1.175＝1.351 不變，扣除 2026Q3 實現後的餘額）。2026Q4 起價格指數水準不變，2027 年以後各情境不受影響。
+- 2026Q3 市場營收 94.9 → 103.2；2026Q3 份額 SanDisk 11.6% → 10.7%、Kioxia 15.8% → 14.5%（仍＝實績）。三星、SK 海力士、美光沿用 1H26 份額（2026Q3 營收隨市場上升）。
+- 份額季別修正（本層）：Kioxia 稱 7–9 月有提前出貨、部分長交期產品遞延到 1–3 月，第三季（10–12 月）位元持平，單一季的份額會失真。2026Q4 起兩家份額改為「2026Q3 實績份額與 2026Q4 指引份額的平均」（新增 `sd_g4` 12.4、`kx_g4` ¥2,500B、`kx_fxg4` 157；三星、SK 海力士、美光本來就用 1H26 兩季平均）：Kioxia 13.9%、SanDisk 10.65%；其他（餘額）13.4%。
+- 新增 Recon 兩列：2026Q4 SanDisk 對指引 +0.4%（原 +9.6%）；Kioxia（TrendForce 美元口徑）+4.8%（原 +19.2%）。Kioxia 餘差＝份額平均只平滑一半的季別移動與產品組合（同一會計年度內）。
+- 區間（Siliconomics In 頁 `nq_7` 低／高）：低 +3.2%＝Kioxia 實現兩季累計 1.25 × 1.032（2027 起價格水準約 −4.5%）；高 +17.5%＝合約價。報告：`docs/reports/20261031_NAND第四季_差距拆解.md`。
 
 ## v0.2（2026-10-31）：2026Q3 份額改由實績推得
 

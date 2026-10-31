@@ -14,10 +14,10 @@
 "position": "見頂年 → 25 分位",
 "multiple": 1.33,
 "basis_label": "2027 年底每股淨值（A）",
-"basis": 930303.3,
-"implied_px": 1237303.4,
-"vs_px": -0.031,
-"px_multiple": 1.37
+"basis": 927177.78,
+"implied_px": 1233146.4,
+"vs_px": -0.034,
+"px_multiple": 1.38
 },
 {
 "company": "SK 海力士",
@@ -34,10 +34,10 @@
 "position": "中段 → 中位數",
 "multiple": 1.48,
 "basis_label": "2027 年底每股淨值（A）",
-"basis": 930303.3,
-"implied_px": 1376848.9,
-"vs_px": 0.078,
-"px_multiple": 1.37
+"basis": 927177.78,
+"implied_px": 1372223.1,
+"vs_px": 0.075,
+"px_multiple": 1.38
 },
 {
 "company": "SK 海力士",
@@ -54,9 +54,9 @@
 "position": "谷底 → 75 分位",
 "multiple": 1.61,
 "basis_label": "2028 年底每股淨值（C）",
-"basis": 1102356.97,
-"implied_px": 1774794.7,
-"vs_px": 0.39,
+"basis": 1097630.33,
+"implied_px": 1767184.8,
+"vs_px": 0.384,
 "px_multiple": 1.16
 },
 {
@@ -74,10 +74,10 @@
 "position": "見頂年 → 25 分位",
 "multiple": 1.1,
 "basis_label": "2027 年底每股淨值（A）",
-"basis": 179507.19,
-"implied_px": 197457.9,
-"vs_px": -0.084,
-"px_multiple": 1.2
+"basis": 178816.9,
+"implied_px": 196698.6,
+"vs_px": -0.087,
+"px_multiple": 1.21
 },
 {
 "company": "三星電子",
@@ -94,10 +94,10 @@
 "position": "中段 → 中位數",
 "multiple": 1.42,
 "basis_label": "2027 年底每股淨值（A）",
-"basis": 179507.19,
-"implied_px": 254900.2,
-"vs_px": 0.183,
-"px_multiple": 1.2
+"basis": 178816.9,
+"implied_px": 253920.0,
+"vs_px": 0.178,
+"px_multiple": 1.21
 },
 {
 "company": "三星電子",
@@ -114,10 +114,10 @@
 "position": "谷底 → 75 分位",
 "multiple": 1.7,
 "basis_label": "2028 年底每股淨值（C）",
-"basis": 208385.24,
-"implied_px": 354254.9,
-"vs_px": 0.644,
-"px_multiple": 1.03
+"basis": 207328.4,
+"implied_px": 352458.3,
+"vs_px": 0.636,
+"px_multiple": 1.04
 },
 {
 "company": "美光",
@@ -134,10 +134,10 @@
 "position": "見頂年 → 25 分位",
 "multiple": 1.3,
 "basis_label": "FY2027 年底每股淨值（A）",
-"basis": 207.01,
-"implied_px": 269.1,
-"vs_px": -0.693,
-"px_multiple": 4.24
+"basis": 206.39,
+"implied_px": 268.3,
+"vs_px": -0.694,
+"px_multiple": 4.25
 },
 {
 "company": "美光",
@@ -154,10 +154,10 @@
 "position": "中段 → 中位數",
 "multiple": 1.75,
 "basis_label": "FY2027 年底每股淨值（A）",
-"basis": 207.01,
-"implied_px": 362.3,
-"vs_px": -0.587,
-"px_multiple": 4.24
+"basis": 206.39,
+"implied_px": 361.2,
+"vs_px": -0.588,
+"px_multiple": 4.25
 },
 {
 "company": "美光",
@@ -174,10 +174,10 @@
 "position": "谷底 → 75 分位",
 "multiple": 1.82,
 "basis_label": "FY2028 年底每股淨值（C）",
-"basis": 268.73,
-"implied_px": 489.1,
-"vs_px": -0.443,
-"px_multiple": 3.27
+"basis": 267.59,
+"implied_px": 487.0,
+"vs_px": -0.445,
+"px_multiple": 3.28
 },
 {
 "company": "台積電",
@@ -254,10 +254,10 @@
 "position": "見頂年 → 25 分位",
 "multiple": 6.88,
 "basis_label": "FY2027 EPS（A）",
-"basis": 190.73,
-"implied_px": 1312.2,
-"vs_px": 0.495,
-"px_multiple": 4.6
+"basis": 188.73,
+"implied_px": 1298.5,
+"vs_px": 0.48,
+"px_multiple": 4.65
 },
 {
 "company": "美光（P/E）",
@@ -274,10 +274,10 @@
 "position": "中段 → 中位數",
 "multiple": 10.64,
 "basis_label": "FY2027 EPS（A）",
-"basis": 190.73,
-"implied_px": 2029.4,
-"vs_px": 1.313,
-"px_multiple": 4.6
+"basis": 188.73,
+"implied_px": 2008.1,
+"vs_px": 1.288,
+"px_multiple": 4.65
 },
 {
 "company": "美光（P/E）",
@@ -294,10 +294,10 @@
 "position": "谷底 → 75 分位",
 "multiple": 16.31,
 "basis_label": "FY2028 EPS（C）",
-"basis": 100.81,
-"implied_px": 1644.2,
-"vs_px": 0.874,
-"px_multiple": 8.7
+"basis": 99.58,
+"implied_px": 1624.1,
+"vs_px": 0.851,
+"px_multiple": 8.81
 },
 {
 "company": "美光（買回加回 P/B）",
@@ -314,10 +314,10 @@
 "position": "見頂年 → 25 分位",
 "multiple": 1.2,
 "basis_label": "FY2027 年底調整每股淨值（A）",
-"basis": 333.69,
-"implied_px": 400.4,
-"vs_px": -0.544,
-"px_multiple": 2.63
+"basis": 331.51,
+"implied_px": 397.8,
+"vs_px": -0.547,
+"px_multiple": 2.65
 },
 {
 "company": "美光（買回加回 P/B）",
@@ -334,10 +334,10 @@
 "position": "中段 → 中位數",
 "multiple": 1.56,
 "basis_label": "FY2027 年底調整每股淨值（A）",
-"basis": 333.69,
-"implied_px": 520.6,
-"vs_px": -0.407,
-"px_multiple": 2.63
+"basis": 331.51,
+"implied_px": 517.2,
+"vs_px": -0.411,
+"px_multiple": 2.65
 },
 {
 "company": "美光（買回加回 P/B）",
@@ -354,10 +354,10 @@
 "position": "谷底 → 75 分位",
 "multiple": 1.77,
 "basis_label": "FY2028 年底調整每股淨值（C）",
-"basis": 451.05,
-"implied_px": 798.4,
-"vs_px": -0.09,
-"px_multiple": 1.95
+"basis": 447.23,
+"implied_px": 791.6,
+"vs_px": -0.098,
+"px_multiple": 1.96
 },
 {
 "company": "SK 海力士（P/E）",
@@ -374,10 +374,10 @@
 "position": "見頂年 → 25 分位",
 "multiple": 5.99,
 "basis_label": "2027 EPS（A）",
-"basis": 617759.34,
-"implied_px": 3700378.4,
-"vs_px": 1.898,
-"px_multiple": 2.07
+"basis": 612972.34,
+"implied_px": 3671704.3,
+"vs_px": 1.875,
+"px_multiple": 2.08
 },
 {
 "company": "SK 海力士（P/E）",
@@ -394,10 +394,10 @@
 "position": "中段 → 中位數",
 "multiple": 9.57,
 "basis_label": "2027 EPS（A）",
-"basis": 617759.34,
-"implied_px": 5911956.9,
-"vs_px": 3.63,
-"px_multiple": 2.07
+"basis": 612972.34,
+"implied_px": 5866145.3,
+"vs_px": 3.594,
+"px_multiple": 2.08
 },
 {
 "company": "SK 海力士（P/E）",
@@ -414,10 +414,10 @@
 "position": "谷底 → 75 分位",
 "multiple": 16.2,
 "basis_label": "2028 EPS（C）",
-"basis": 222213.49,
-"implied_px": 3599858.5,
-"vs_px": 1.819,
-"px_multiple": 5.75
+"basis": 220189.81,
+"implied_px": 3567074.9,
+"vs_px": 1.793,
+"px_multiple": 5.8
 },
 {
 "company": "三星電子（P/E）",
@@ -434,10 +434,10 @@
 "position": "見頂年 → 25 分位",
 "multiple": 7.5,
 "basis_label": "2027 EPS（A）",
-"basis": 98694.74,
-"implied_px": 740210.6,
-"vs_px": 2.435,
-"px_multiple": 2.18
+"basis": 97721.17,
+"implied_px": 732908.8,
+"vs_px": 2.401,
+"px_multiple": 2.21
 },
 {
 "company": "三星電子（P/E）",
@@ -454,10 +454,10 @@
 "position": "中段 → 中位數",
 "multiple": 11.55,
 "basis_label": "2027 EPS（A）",
-"basis": 98694.74,
-"implied_px": 1139924.2,
-"vs_px": 4.29,
-"px_multiple": 2.18
+"basis": 97721.17,
+"implied_px": 1128679.5,
+"vs_px": 4.237,
+"px_multiple": 2.21
 },
 {
 "company": "三星電子（P/E）",
@@ -474,10 +474,10 @@
 "position": "谷底 → 75 分位",
 "multiple": 17.48,
 "basis_label": "2028 EPS（C）",
-"basis": 37229.8,
-"implied_px": 650776.9,
-"vs_px": 2.02,
-"px_multiple": 5.79
+"basis": 36810.39,
+"implied_px": 643445.6,
+"vs_px": 1.986,
+"px_multiple": 5.85
 },
 {
 "company": "Advantest",
