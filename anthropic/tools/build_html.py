@@ -633,6 +633,9 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <p class="note">翻轉結論需要兩個需求驅動同時落在下緣：API 任務數成長取低＋價格彈性取弱端，2030 差額 {n("COST_PropGap_VR", Y, "sf1", "combo1")}、累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "combo1")}（見 ⑥）。用管理層較舊的營收目標、同一支出，反向累計外部資金需求 {n("RVS_ExtNeedCum", Y, "f1")}（只作對照）。</p>
 </section>""")
 
+    # ①之二～①之四（各版更新紀錄）移到頁尾（Andy 2026-10-31：① 之後直接接 ② 的圖，較直觀）；
+    # 此處照常產生，記下起點，產生完後整段移到 ⑨ 之後。
+    _hist_start = len(S)
     # ── ①之二 v0.1.1 更新了什麼 ──
     cols = [("v0.1（更新前）", "v010"), ("只加 U1（2026 營收）", "only_u1"), ("只加 U2（Nscale＋Lambda）", "only_u2"), ("v0.1.1（更新後）", "v011")]
     def upd(lab, ref, yr, f, em=False):
@@ -861,6 +864,9 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 {V.src("REV_GrossCapped", "COST_PropRev_VR", "COST_Eta2026H1", "COST_PropGap_VR_EtaH1", "COST_S1fCommitGap", "SRC_ANT_414")}
 </section>""")
 
+    _hist = S[_hist_start:]
+    del S[_hist_start:]
+
     S.append(f"""<section id="s2"><h2><span class="no">②</span>每 VR 等值 GW：營收 vs 全成本（2025–2030）</h2>
 <div class="legend"><span><i style="background:var(--rev)"></i>營收淨額（截頂後；扣雲端平台抽成）</span><span><i style="background:var(--cost)"></i>全成本（算力＋非算力＋股權報酬，現金口徑）</span><span><b style="color:var(--gap)">紅</b>／<b style="color:var(--pos)">綠</b>字＝差額</span><span>2025 長條截斷，白字為實值</span></div>
 <div class="cw">{chart_gw(V)}</div>
@@ -1061,6 +1067,10 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <p class="note"><span class="tag">Verified</span>已查核原文 <span class="tag">Interested-party</span>公司或利害關係方說法 <span class="tag">Analogy</span>類比推估（附區間） <span class="tag">Assumed</span>假設（附區間） <span class="tag">Derived</span>由其他數字推得 <span class="tag">Decision</span>建模決定。公司原始數據在 SRC_ANT、算力物理取自 Tokenomics（TK_Link）、假設在 Inputs、OpenAI 對照在 OAI_Link。</p>
 <p class="note">本頁所有數字皆讀自 LibreOffice 重算後的 Excel（具名範圍或頁＋列 ID），HTML 不含計算；敏感度情境定義見 <code>tools/html_scenarios.yaml</code>；完整報告 <code>{report}</code>。</p>
 </section>""")
+
+    # ── 頁尾：各版更新紀錄（①之二～①之四，原在 ① 與 ② 之間） ──
+    S.append('<p class="note" id="hist">以下為各版更新紀錄（①之二～①之四；原接在 ① 之後，2026-10-31 起移到頁尾，內容不變）。</p>')
+    S.extend(_hist)
 
     body = "\n".join(S)
     return f"""<!DOCTYPE html>
