@@ -1,0 +1,17 @@
+{
+ "company": "Arm",
+ "ticker": "ARM",
+ "model_sheet": "PL",
+ "official_segments": [
+  {"name": "授權及其他（License and other）", "label": "授權及其他營收（License and other）", "period": "FY2026A", "value": 2.307, "unit": "US$B",
+   "source": "Arm 4Q26 股東信（6-K Exhibit 99.2，2026-05-06）；公司為單一營運部門，營收依類型揭露兩類"},
+  {"name": "權利金（Royalty）", "label": "權利金營收（Royalty）", "period": "FY2026A", "value": 2.613, "unit": "US$B", "source": "同上"}
+ ],
+ "sublines": [
+  {"parent": "權利金（Royalty）", "labels": ["權利金：智慧型手機（行動應用處理器）", "權利金：資料中心（Neoverse；Grace、Vera、Graviton、Axion、Cobalt 等）", "權利金：車用", "權利金：物聯網與其他（含 PC、消費電子、嵌入式；FY2027 前為殘差）"],
+   "source": "20-F（FY2026）：行動應用處理器約占權利金 43%；其餘市場比例為 Assumed（管理層法說口頭說法）"},
+  {"parent": "授權及其他（License and other）", "labels": ["授權及其他：授權（不含晶片；含 SoftBank 協議）", "授權及其他：Arm AGI CPU 晶片營收（公司未揭露所在列，暫列於此）"],
+   "source": "晶片營收所在列公司未揭露：未找到；暫列授權及其他之下（Assumed）"}
+ ],
+ "check_labels": ["檢查：分部合計 − 合併營收", "核對：營收 − 財報（FY2025、FY2026）／錨點（FY2027）"]
+}
