@@ -1490,7 +1490,16 @@ def main():
         # 非 AI、模型資本支出、營業現金流、買回股利（財年 → 曆年）
         pl("nai_fy", "非 AI 資本支出（財年；模型）", "US$B", lambda y: "=" + fyexpr(p, f"gnai_{p}", y, None, zs))
         pl("nai_cy", "非 AI 資本支出（曆年；空白＝無模型值）", "US$B", lambda y: cyexpr("nai_fy", y, fye), years=OUTG)
-        pl("nai", "非 AI 資本支出（曆年；無模型值以 0 計，G2）", "US$B", lambda y: f"=N({YC[y]}{rows['nai_cy']})", years=OUTG)
+        if p in CAPP7:
+            aik_ = f"ai_{p}" if f"ai_{p}" in INROW else "ai_sh"
+            pl("nai_fb", "非 AI 資本支出替代旗標", "—", lambda y: (f'=IF({YC[y]}{rows["nai_cy"]}<>"","",IF(CapexGW!{YC[y]}{XR[p]["cy"]}<>"",'
+                                                              f'"以 Y2 × (1−AI 占比) 替代（模型無拆分）","無模型值（以 0 計）"))'), years=OUTG, fmt="General",
+               note=f"[Derived] 模型無非 AI 拆分的年份：CapexGW 曆年資本支出（In Y2，財年按月數換曆年；同 CapexGW）×（1 − {aik_}）")
+            pl("nai", "非 AI 資本支出（曆年；模型優先，缺則 Y2 × (1−AI 占比)，仍缺以 0 計）", "US$B",
+               lambda y: f'=IF({YC[y]}{rows["nai_cy"]}<>"",{YC[y]}{rows["nai_cy"]},IF(CapexGW!{YC[y]}{XR[p]["cy"]}<>"",CapexGW!{YC[y]}{XR[p]["cy"]}*(1-{aik_}),0))', years=OUTG)
+        else:
+            pl("nai_fb", "非 AI 資本支出替代旗標", "—", lambda y: f'=IF({YC[y]}{rows["nai_cy"]}<>"","","無模型值（以 0 計；無 Y2 資本支出）")', years=OUTG, fmt="General")
+            pl("nai", "非 AI 資本支出（曆年；無模型值以 0 計，G2）", "US$B", lambda y: f"=N({YC[y]}{rows['nai_cy']})", years=OUTG)
         pl("cap_fy", "資本支出合計（財年；模型；對照）", "US$B", lambda y: "=" + fyexpr(p, f"gcap_{p}", y, None, zs))
         pl("cap", "資本支出合計（曆年；模型；對照）", "US$B", lambda y: cyexpr("cap_fy", y, fye), years=OUTG)
         pl("cai_fy", "AI 資本支出（財年；模型；對照）", "US$B", lambda y: "=" + fyexpr(p, f"gcapai_{p}", y, None, zs))
@@ -1593,6 +1602,8 @@ def main():
     gline("t_ai_mc", "並列讀法：11 家 AI 資本支出（七家 2027–2030 依個股模型基準）", "US$B", lambda y: SUM11("ai_mc", y), years=OUTG)
     gline("t_add", "11 家年新增 IT GW（擁有者口徑）", "GW", lambda y: SUM11("add", y), years=OUTG, fmt="0.000")
     gline("t_nai", "11 家非 AI 資本支出", "US$B", lambda y: SUM11("nai", y), years=OUTG)
+    gline("t_naifbn", "　非 AI 以 Y2 × (1−AI 占比) 替代的格數（七家）", "格", lambda y: "=" + "+".join(f'({YC[y]}{GPR[p]["nai_fb"]}="以 Y2 × (1−AI 占比) 替代（模型無拆分）")' for p in GPL), years=OUTG, fmt="0")
+    gline("t_nai0n", "　非 AI 無模型值、以 0 計的格數", "格", lambda y: "=" + "+".join(f'(LEFT({YC[y]}{GPR[p]["nai_fb"]},5)="無模型值（")' for p in GPL), years=OUTG, fmt="0")
     gline("t_ocf", "11 家營業現金流（不扣買回股利）", "US$B", lambda y: SUM11("ocf", y), years=OUTG, fill=KEY)
     gline("t_ocfmiss", "　營業現金流無模型值的家數", "家", lambda y: "=" + "+".join(f'({YC[y]}{GPR[p]["ocf"]}="")' for p in GPL), years=OUTG, fmt="0")
     gline("t_ext", "已觀測外部融資（2024–2025）", "US$B", lambda y: "=" + "+".join(f"N({YC[y]}{GPR[p]['ext']})" for p in GPL if "ext" in GPR[p]), years=[2024, 2025])
@@ -1764,6 +1775,8 @@ def main():
     grow_if("WIF_Gap_Buyback", "備忘：11 家買回＋股利（可削減緩衝）", GROW["t_bb"])
     grow_if("WIF_Gap_OCFMissing", "11 家營業現金流無模型值家數", GROW["t_ocfmiss"], "家", fmt="0")
     gscalar_if("WIF_Gap_OpenCash", "期初現金（11 家；只進累計）", f"Gap!{YC[2026]}{GROW['t_cash']}")
+    grow_if("WIF_Gap_NonAIFallbackCells", "非 AI 以 Y2 × (1−AI 占比) 替代格數", GROW["t_naifbn"], "格", fmt="0")
+    grow_if("WIF_Gap_NonAIZeroCells", "非 AI 無模型值以 0 計格數", GROW["t_nai0n"], "格", fmt="0")
     grow_if("WIF_Gap_FallbackCells", "模型值替代格數（無 GW 證據）", GROW["t_fbn"], "格", fmt="0")
     grow_if("WIF_Gap_Fallback", "模型值替代金額（無 GW 證據；11 家）", GROW["t_fb"])
     gscalar_if("WIF_Gap_Committed", "備忘：已簽未起租租賃＋表外合資承諾（存量；市場內移轉，不作來源）", f"Gap!{YC[2026]}{GROW['t_comm']}")
@@ -2009,6 +2022,9 @@ def main():
     CK.cell(r, 8, "2024–2025 年新增多為『新納入存量』（不計資本支出），推算值偏低；見報告"); r += 1
     CK.cell(r, 1, "G-K9"); CK.cell(r, 2, "模型值替代格數（11 家 × 2024–2030：營業現金流有計、GW 推算 AI 資本支出為 0，改用個股模型 AI 資本支出；OpenAI、Anthropic 容量已在市場其餘，不替代）")
     CK.cell(r, 3, f"=SUM(Gap!{YC[2024]}{GROW['t_fbn']}:{YC[2030]}{GROW['t_fbn']})"); CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "驗證（Gap）"); r += 1
+    CK.cell(r, 1, "G-K10"); CK.cell(r, 2, "非 AI 資本支出以 In Y2 × (1−AI 占比) 替代的格數（七家 × 2024–2030；模型無拆分）")
+    CK.cell(r, 3, f"=SUM(Gap!{YC[2024]}{GROW['t_naifbn']}:{YC[2030]}{GROW['t_naifbn']})"); CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "驗證（Gap）")
+    CK.cell(r, 8, "另：非 AI 無模型值、以 0 計的格數見 Gap 頁 t_nai0n"); r += 1
     CK.cell(r, 1, "G-K8"); CK.cell(r, 2, "市場層 A／D0 IT 部分（年新增 × 每 GW IT）＝Spend IT 設備小計（2024–2032；同一組儲存格）")
     CK.cell(r, 3, "=" + "+".join(f"ABS(MAX(0,Gap!{YC[y]}{M0['add']})*Gap!{YC[y]}{GROW['pit']}-Spend!{YC[y]}{SPR['it_sum']})" for y in OUTY))
     CK.cell(r, 6, f'=IF(C{r}<1E-6,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap）"); r += 1
@@ -2056,6 +2072,7 @@ def main():
         {"id": "GL01-32", "cat": "工程", "item": "無 CFO 列的模型", "decision": "CoreWeave、Nebius、WhiteFiber：營業現金流＝營運缺口＋CapEx＋JV 出資＋overlay（WhiteFiber 另加回股利）＝營運來源 − 租金 − 利息（− 現金稅）；Anthropic：F07＋F03；OpenAI：F06＋Cost 自有資本支出；智譜：F09（RMB 億 ÷ 10 ÷ gfx_cny）", "date": "2026-10-31", "quote": "工作單 §2e（逐家人工確認列位）", "status": "預設、可撤回"},
         {"id": "GL01-34", "cat": "工程", "item": "無 GW 證據時的模型值替代", "decision": "11 家中營業現金流有計、但 GW 推算 AI 資本支出為 0 的年份（本版：SpaceX／xAI 2028–2030、WhiteFiber 2028–2030），改用個股模型 AI 資本支出並計為擁有者需要，市場合計同額加上（不從市場其餘扣）；OpenAI（SPV 容量在市場其餘）、Anthropic（容量在其他新雲與 Amazon）不替代；Checks G-K9 WARN 計格數", "date": "2026-10-31", "quote": "chat 端 2026-10-31 決定", "status": "預設、可撤回"},
         {"id": "GL01-35", "cat": "工程", "item": "並列讀法：七家依個股模型資本支出", "decision": "主讀法維持 GW × 每 GW（Andy 規格）；另列七家 2027–2030 AI 資本支出改用個股模型基準情境 B 的 AI 資本支出（市場其餘不變），重算 9 情景尚需、累計與判讀（名稱 *_ModelCapex）。In Y2 本版不改（v0.1.8 處理）", "date": "2026-10-31", "quote": "chat 端 2026-10-31 決定", "status": "預設、可撤回"},
+        {"id": "GL01-36", "cat": "工程", "item": "非 AI 資本支出缺值替代", "decision": "七家（CapexGW 玩家）模型無非 AI 拆分的年份，改用 CapexGW 曆年資本支出（In Y2，財年按月數換曆年）×（1 − 該家 AI 占比），標『以 Y2 × (1−AI 占比) 替代（模型無拆分）』；無 Y2 資本支出者仍以 0 計並列出；Checks G-K10 WARN", "date": "2026-10-31", "quote": "chat 端 2026-10-31 決定（對稱性）", "status": "預設、可撤回"},
         {"id": "GL01-33", "cat": "工程", "item": "Gap 每 GW 成本", "decision": "市場：IT＝Spend 頁同式（市場 NonNV × spend_nnv_hold）；廠房＝CapexGW 同式套市場 NonNV（NVIDIA 世代加權 IF_CapexFacility 與 VR200 × spend_nnv_hold），項目依 Facility 拆分比例。玩家：CapexGW（七家）或 C1 同式（其餘）。市場其餘＝市場合計 − 11 家（含每 GW 成本差）", "date": "2026-10-31", "quote": "工作單 §2a", "status": "預設、可撤回"},
     ]
     r = 4
