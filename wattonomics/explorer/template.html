@@ -80,6 +80,13 @@ th{font:500 .72rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;c
 .grp{font:600 1rem var(--f-display);margin-top:10px;color:var(--muted);letter-spacing:.04em}
 @media (max-width:520px){.srow{grid-template-columns:minmax(0,1fr) 80px}.srow .track{grid-column:1/3;order:3}.srow .tick{grid-column:1/3}}
 .note{font-size:.8rem;color:var(--muted);max-width:90ch}
+.gapsec{border-left-color:var(--teal)}
+.verdict{font-size:.95rem;display:flex;flex-wrap:wrap;gap:6px 18px}
+.verdict b{font-family:var(--f-display);font-size:1.15rem;font-weight:600}
+.legend .sw{display:inline-block;width:12px;height:12px;vertical-align:-1px;margin-right:6px;border-radius:2px}
+.gtip{position:fixed;pointer-events:none;z-index:20;background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:8px 10px;font-size:.78rem;box-shadow:0 2px 8px rgba(0,0,0,.12);display:none;min-width:220px}
+.gtip .r{display:flex;justify-content:space-between;gap:14px}
+details.more{font-size:.85rem} details.more td:first-child{min-width:10em} details.more summary{cursor:pointer;color:var(--muted);font-weight:500}
 footer{display:grid;gap:6px;font-size:.78rem;color:var(--muted);border-top:1px solid var(--rule);padding-top:14px}
 @media (prefers-reduced-motion:no-preference){.fill{transition:width .35s ease}}
 </style>
@@ -100,6 +107,28 @@ footer{display:grid;gap:6px;font-size:.78rem;color:var(--muted);border-top:1px s
       <select id="selYear"></select></div>
     <span id="covChip" class="chip"></span>
   </div>
+
+  <section class="bus gapsec" aria-labelledby="hgap" id="gapSec">
+    <div class="head"><div class="eyebrow">資金缺口（v0.1.7）</div><h2 id="hgap">整個市場當一間公司：要蓋這麼多資料中心，錢夠嗎？</h2></div>
+    <div class="verdict" id="gapVerdict" aria-live="polite"></div>
+    <div class="twocol">
+      <div class="card">
+        <div class="legend" id="gapLegend1"></div>
+        <div class="chart" id="gapChart1"></div>
+        <p class="note">每年左柱＝需要多少錢（新增 GW × 每 GW 建置成本，廠房提前入帳）；右柱＝錢從哪來。折線＝尚需新融資（需要 − 來源；正值＝要向外找錢）。</p>
+      </div>
+      <div class="card">
+        <div class="legend" id="gapLegend2"></div>
+        <div class="chart" id="gapChart2"></div>
+        <p class="note">2026 年起累計。「仍未安排」＝累計尚需新融資 − 2025 年底現金 − 已簽未起租租賃與表外合資承諾（判斷題 G4）。</p>
+      </div>
+    </div>
+    <p class="note" id="gapNotes"></p>
+    <details class="more card"><summary>逐年數字（所選情景）</summary><div class="tbl" id="gapTable"></div></details>
+    <details class="more card"><summary>每 IT GW 建置成本拆項（所選年份）</summary><div class="tbl" id="gapPerGW"></div></details>
+    <details class="more card"><summary>主要玩家（所選年份；營業現金流、AI 資本支出、缺口）</summary><div class="tbl" id="gapPlayers"></div></details>
+  </section>
+  <div class="gtip" id="gtip" role="tooltip"></div>
 
   <section class="bus" aria-labelledby="h1s">
     <div class="head"><div class="eyebrow">母線 1</div><h2 id="h1s">市場上線 GW</h2></div>
@@ -188,7 +217,7 @@ function render(){
  const cov=D.cov[S.year]; const chip=document.getElementById("covChip");
  chip.className="chip "+(cov!=null&&cov<0.5?"warn":"ok");
  chip.textContent=`${S.year} 覆蓋率 ${cov==null?"—":cov.toFixed(2)}${cov!=null&&cov<0.5?"・多為推算":""}`;
- stats(); chart(); table(); detail(); spend();
+ gap(); stats(); chart(); table(); detail(); spend();
  document.getElementById("srcline").textContent=`資料：${D.src}（sha256 ${D.sha}…）・需求情景 A／B／C 僅影響 2028 年起的顆數係數`;
 }
 function stats(){
@@ -266,6 +295,75 @@ function spend(){
   items.forEach(([k,l,t])=>{const v=(D.spend[k]||{})[y]; if(v==null)return;
    const r=el("div",{class:"srow "+cls},`<span>${l}</span><span class="track"><span class="fill" style="display:block;width:${max?100*v/max:0}%"></span></span><span class="num" style="text-align:right">${fmt(v,1)}<span class="note"> ${tot?pct(v/tot):""}</span></span>`+(t.length?`<span class="tick">${t.map(s=>`<span class="tk">${s}</span>`).join("")}</span>`:""));
    box.append(r)})});
+}
+const GY=["2024","2025","2026","2027","2028","2029","2030"];
+const GPN={msft:"Microsoft",googl:"Alphabet",amzn:"Amazon",meta:"Meta",orcl:"Oracle",crwv:"CoreWeave",nbis:"Nebius",wyfi:"WhiteFiber",xai:"SpaceX／xAI",oai:"OpenAI",ant:"Anthropic",zhipu:"智譜（只列）"};
+const GITEM={total:"合計",it_compute:"IT：運算晶片",it_memory:"IT：記憶體",it_network:"IT：網通與光模組",it_foundry:"IT：代工封測",it_substrate:"IT：載板與 PCB",it_power_thermal:"IT：機架內電源散熱",it_server:"IT：伺服器組裝",it_storage:"IT：儲存與管理",
+ fac_dist:"廠房：配電",fac_gen:"廠房：備援發電機",fac_ups:"廠房：UPS 與電池",fac_cool:"廠房：冷卻",fac_bldg:"廠房：建築",fac_labor:"廠房：施工人工與設計",fac_prof:"廠房：其他專業服務",fac_net:"廠房：網路、消防、安防",fac_land:"廠房：土地",fac_resid:"廠房：其他／未拆"};
+function gtipShow(e,h){const t=document.getElementById("gtip");t.innerHTML=h;t.style.display="block";const w=t.offsetWidth,hh=t.offsetHeight;
+ let x=e.clientX+14,y=e.clientY+14;if(x+w>innerWidth-8)x=e.clientX-w-14;if(y+hh>innerHeight-8)y=e.clientY-hh-14;t.style.left=x+"px";t.style.top=y+"px"}
+function gtipHide(){document.getElementById("gtip").style.display="none"}
+function gap(){
+ const sec=document.getElementById("gapSec"); if(!D.gap){sec.style.display="none";return}
+ const G=D.gap, key=`${S.scen}|${S.delay}`, m=G.mk[key]||{}, v=G.verdict[key]||["—","—"], T=G.total||{};
+ document.getElementById("gapVerdict").innerHTML=`<span>含市場其餘：<b>${v[0]}</b></span><span>只看 11 家主要玩家：<b>${v[1]}</b></span><span class="note">（情景 ${S.scen}・${S.delay}；判讀門檻：2030 年自由現金流 &lt; 0，或缺口占資本支出 &gt; 30% 連 3 年＝OpenAI 型）</span>`;
+ const ink=css("--ink"),mut=css("--muted"),teal=css("--teal"),amb=css("--amber"),warn=css("--warn"),rule=css("--rule"),panel=css("--panel");
+ // 圖 1：年度需要 vs 來源
+ const W=760,H=320,L=56,R=12,Tp=14,B=30, n=GY.length, slot=(W-L-R)/n, bw=Math.min(28,slot*0.32);
+ let hi=0,lo=0;
+ GY.forEach(y=>{const r=m[y]||{};const up=Math.max(0,r.need_own||0)+Math.max(0,r.need_rest||0)+Math.max(0,r.nonai||0);const src=(r.ocf||0)+(r.ext_obs||0);
+  hi=Math.max(hi,up,src,r.short||0,r.short_incl_rest||0); lo=Math.min(lo,r.need_rest||0,r.short||0,r.short_incl_rest||0)});
+ const step=hi>1500?500:250; hi=Math.ceil(hi/step)*step; lo=Math.floor(lo/step)*step;
+ const yv=x=>Tp+(H-Tp-B)*(hi-x)/(hi-lo);
+ let g=`<defs><pattern id="hatchRest" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="${css('--teal-soft')}"/><line x1="0" y1="0" x2="0" y2="6" stroke="${teal}" stroke-width="2"/></pattern></defs>`;
+ for(let t=lo;t<=hi;t+=step) g+=`<line x1="${L}" x2="${W-R}" y1="${yv(t)}" y2="${yv(t)}" stroke="${rule}" stroke-width="${t===0?1.5:1}"/><text x="${L-6}" y="${yv(t)+4}" text-anchor="end" font-size="11" fill="${mut}" font-family="IBM Plex Mono,monospace">${t.toLocaleString("en-US")}</text>`;
+ const seg=(x,from,val,fill,stroke)=>{if(!val)return "";const a=yv(from),b=yv(from+val);const y0=Math.min(a,b),h=Math.max(0.5,Math.abs(a-b)-2);return `<rect x="${x}" y="${y0+(val>0?2:0)}" width="${bw}" height="${h}" fill="${fill}" ${stroke?`stroke="${stroke}"`:""} rx="2"/>`};
+ const pS=[],pR=[];
+ GY.forEach((y,i)=>{const r=m[y]||{}, cx=L+slot*i+slot/2, xn=cx-bw-2, xs=cx+2; const cv=(T.coverage||{})[y];
+  if(cv!=null&&cv<0.35) g+=`<rect x="${L+slot*i}" y="${Tp}" width="${slot}" height="${H-Tp-B}" fill="${css('--amber-soft')}" opacity=".45"/>`;
+  let acc=0; g+=seg(xn,acc,r.need_own,teal); acc+=Math.max(0,r.need_own||0);
+  if((r.need_rest||0)>=0){g+=seg(xn,acc,r.need_rest,"url(#hatchRest)",teal); acc+=r.need_rest||0} else g+=seg(xn,0,r.need_rest,"url(#hatchRest)",warn);
+  g+=seg(xn,acc,r.nonai,amb);
+  g+=seg(xs,0,r.ocf,ink); g+=seg(xs,(r.ocf||0),r.ext_obs,mut);
+  if(r.short!=null)pS.push([cx,yv(r.short)]); if(r.short_incl_rest!=null)pR.push([cx,yv(r.short_incl_rest)]);
+  g+=`<text x="${cx}" y="${H-10}" text-anchor="middle" font-size="11" fill="${y===S.year?ink:mut}" font-weight="${y===S.year?600:400}" font-family="IBM Plex Mono,monospace">${y}</text>`;
+  g+=`<rect class="hit" data-y="${y}" x="${L+slot*i}" y="${Tp}" width="${slot}" height="${H-Tp-B}" fill="transparent"/>`});
+ g+=`<polyline fill="none" stroke="${warn}" stroke-width="2" points="${pS.map(q=>q.join(",")).join(" ")}"/>`+pS.map(q=>`<rect x="${q[0]-4.5}" y="${q[1]-4.5}" width="9" height="9" transform="rotate(45 ${q[0]} ${q[1]})" fill="${warn}" stroke="${panel}" stroke-width="2"/>`).join("");
+ g+=`<polyline fill="none" stroke="${warn}" stroke-width="2" stroke-dasharray="5 4" points="${pR.map(q=>q.join(",")).join(" ")}"/>`+pR.map(q=>`<circle cx="${q[0]}" cy="${q[1]}" r="4.5" fill="${panel}" stroke="${warn}" stroke-width="2"/>`).join("");
+ const c1=document.getElementById("gapChart1");
+ c1.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="整個市場當一間公司：2024 至 2030 年每年需要的錢與錢的來源（十億美元）">${g}</svg>`;
+ c1.querySelectorAll(".hit").forEach(h=>{const y=h.dataset.y,r=m[y]||{};
+  const row=(k,val)=>`<div class="r"><span>${k}</span><span class="num">${fmt(val,0)}</span></div>`;
+  h.onmousemove=e=>gtipShow(e,`<b>${y}</b>（${S.scen}・${S.delay}；US$B）`+row("需要：11 家 AI 資料中心",r.need_own)+row("需要：市場其餘（資金來源未知）",r.need_rest)+row("需要：11 家非 AI",r.nonai)
+   +row("來源：11 家營業現金流",r.ocf)+row("來源：已觀測外部融資",r.ext_obs)+row("尚需新融資（不含其餘）",r.short)+row("尚需新融資（含其餘）",r.short_incl_rest));
+  h.onmouseleave=gtipHide; h.onclick=()=>{S.year=y;save();render()}});
+ document.getElementById("gapLegend1").innerHTML=`<span><i class="sw" style="background:${teal}"></i>11 家 AI 資料中心</span><span><i class="sw" style="background-image:repeating-linear-gradient(45deg,${teal} 0 2px,${css('--teal-soft')} 2px 5px)"></i>市場其餘（資金來源未知）</span><span><i class="sw" style="background:${amb}"></i>11 家非 AI 資本支出</span><span><i class="sw" style="background:${ink}"></i>營業現金流</span><span><i class="sw" style="background:${mut}"></i>已觀測外部融資（2024–2025）</span><span><i style="border-color:${warn}"></i>尚需新融資（不含其餘）</span><span><i style="border-color:${warn};border-top-style:dashed"></i>尚需新融資（含其餘）</span>`;
+ // 圖 2：累計
+ const CY=["2026","2027","2028","2029","2030"], ser=[["cum_need",ink,"","累計尚需（不含其餘）"],["cum_need_incl_rest",ink,"5 4","累計尚需（含其餘）"],["cum_short",warn,"","仍未安排（不含其餘）"],["cum_short_incl_rest",warn,"5 4","仍未安排（含其餘）"]];
+ let h2=0,l2=0; CY.forEach(y=>ser.forEach(([k])=>{const x=(m[y]||{})[k];if(x!=null){h2=Math.max(h2,x);l2=Math.min(l2,x)}}));
+ const st2=500; h2=Math.ceil(h2/st2)*st2||st2; l2=Math.floor(l2/st2)*st2;
+ const W2=560,H2=320,L2=60,R2=16; const x2=i=>L2+i*(W2-L2-R2)/(CY.length-1), y2=v=>Tp+(H2-Tp-B)*(h2-v)/(h2-l2);
+ let q=""; for(let t=l2;t<=h2;t+=st2) q+=`<line x1="${L2}" x2="${W2-R2}" y1="${y2(t)}" y2="${y2(t)}" stroke="${rule}" stroke-width="${t===0?1.5:1}"/><text x="${L2-6}" y="${y2(t)+4}" text-anchor="end" font-size="11" fill="${mut}" font-family="IBM Plex Mono,monospace">${t.toLocaleString("en-US")}</text>`;
+ CY.forEach((y,i)=>{q+=`<text x="${x2(i)}" y="${H2-10}" text-anchor="middle" font-size="11" fill="${mut}" font-family="IBM Plex Mono,monospace">${y}</text>`});
+ ser.forEach(([k,c,d])=>{const pts=CY.map((y,i)=>(m[y]||{})[k]==null?null:[x2(i),y2(m[y][k])]).filter(Boolean);
+  q+=`<polyline fill="none" stroke="${c}" stroke-width="2" ${d?`stroke-dasharray="${d}"`:""} points="${pts.map(p=>p.join(",")).join(" ")}"/>`+pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="${d?panel:c}" stroke="${c}" stroke-width="2"/>`).join("");
+  const last=pts[pts.length-1]; if(last) q+=`<text x="${last[0]-6}" y="${last[1]-8}" text-anchor="end" font-size="11" fill="${ink}" font-family="IBM Plex Mono,monospace">${fmt(m["2030"][k],0)}</text>`});
+ CY.forEach((y,i)=>{q+=`<rect class="hit2" data-y="${y}" x="${x2(i)-(W2-L2-R2)/8}" y="${Tp}" width="${(W2-L2-R2)/4}" height="${H2-Tp-B}" fill="transparent"/>`});
+ const c2=document.getElementById("gapChart2");
+ c2.innerHTML=`<svg style="min-width:0" viewBox="0 0 ${W2} ${H2}" role="img" aria-label="2026 至 2030 年累計尚需新融資與仍未安排的金額（十億美元）">${q}</svg>`;
+ c2.querySelectorAll(".hit2").forEach(h=>{const y=h.dataset.y,r=m[y]||{};
+  h.onmousemove=e=>gtipShow(e,`<b>2026–${y} 累計</b>（US$B）`+ser.map(([k,,,l])=>`<div class="r"><span>${l}</span><span class="num">${fmt(r[k],0)}</span></div>`).join("")+`<div class="r"><span>只扣期初現金（不含其餘）</span><span class="num">${fmt(r.cum_cash_only,0)}</span></div><div class="r"><span>只扣期初現金（含其餘）</span><span class="num">${fmt(r.cum_cash_only_incl_rest,0)}</span></div>`);
+  h.onmouseleave=gtipHide});
+ document.getElementById("gapLegend2").innerHTML=ser.map(([k,c,d,l])=>`<span><i style="border-color:${c};${d?"border-top-style:dashed":""}"></i>${l}</span>`).join("");
+ document.getElementById("gapNotes").innerHTML=`來源固定為個股模型基準情境，不隨需求 A／B／C 變；11 家的 GW 路徑也不隨情景變，所以 B、C 情景的「市場其餘」可能為負（以紅框斜線畫在零軸下方）。覆蓋率 &lt; 0.35 的年份屬情景（淡黃底；本版為 2029–2030，2027 為 0.53、2028 為 0.71）。不扣買回與股利（備忘：2026–2030 累計可削減緩衝 ${fmt(T.buffer_cum,0)}）。期初現金 ${fmt(T.open_cash,0)}、已簽未起租租賃與表外合資承諾 ${fmt(T.committed,0)}（承諾是多年期租金總額，扣除後偏樂觀；只扣期初現金的讀法見游標提示與下表）。2026 年已觀測外部融資 ${fmt(T.ext2026_memo,0)} 只列備忘、不計入來源。單位：十億美元。`;
+ // 表：逐年
+ const rows=[["need_own","需要：11 家 AI 資料中心"],["need_rest","需要：市場其餘（資金來源未知）"],["nonai","需要：11 家非 AI"],["ocf","來源：11 家營業現金流"],["ext_obs","來源：已觀測外部融資"],["short","尚需新融資（不含其餘）"],["short_incl_rest","尚需新融資（含其餘）"],
+  ["cum_need","累計尚需（不含其餘）"],["cum_short","仍未安排（不含其餘）"],["cum_cash_only","仍未安排（只扣期初現金；不含其餘）"],["cum_need_incl_rest","累計尚需（含其餘）"],["cum_short_incl_rest","仍未安排（含其餘）"],["cum_cash_only_incl_rest","仍未安排（只扣期初現金；含其餘）"],["mkt_add","市場年新增 IT GW"]];
+ document.getElementById("gapTable").innerHTML=`<table><thead><tr><th>US$B</th>${GY.map(y=>`<th>${y}</th>`).join("")}</tr></thead><tbody>`+rows.map(([k,l])=>`<tr><td>${l}</td>${GY.map(y=>`<td class="num">${fmt((m[y]||{})[k],k==="mkt_add"?2:0)}</td>`).join("")}</tr>`).join("")+`</tbody></table>`;
+ const yy=GY.includes(S.year)?S.year:"2030";
+ document.getElementById("gapPerGW").innerHTML=`<p class="note">${yy} 年，US$B／IT GW；IT 依 AI半導體 次產業比例、廠房依 Facility 拆分比例（Tokenomics IF_CapexTotal）。</p><table><thead><tr><th>項目</th><th>${yy}</th></tr></thead><tbody>`+Object.keys(GITEM).filter(k=>G.pergw[k]).map(k=>`<tr><td>${GITEM[k]}</td><td class="num">${fmt(G.pergw[k][yy],2)}</td></tr>`).join("")+`</tbody></table>`;
+ document.getElementById("gapPlayers").innerHTML=`<p class="note">${yy} 年，US$B；AI 資本支出＝玩家新增 GW × 每 GW（擁有者口徑；OpenAI／Stargate 自建由 SPV 擁有，歸市場其餘）；缺口＝（AI＋非 AI）− 營業現金流；空白＝無模型值。</p><table><thead><tr><th>玩家</th><th>營業現金流</th><th>AI 資本支出</th><th>非 AI</th><th>缺口</th><th>自籌比</th><th>模型 AI 資本支出（對照）</th><th>判讀（2026–30）</th></tr></thead><tbody>`+
+  Object.keys(GPN).filter(p=>G.player[p]).map(p=>{const r=G.player[p][yy]||{},mm=G.pmeta[p]||{};return `<tr><td>${GPN[p]}</td><td class="num">${fmt(r.OCF,0)}</td><td class="num">${fmt(r.CapexAI,0)}</td><td class="num">${fmt(r.CapexNonAI,0)}</td><td class="num">${fmt(r.Gap,0)}</td><td class="num">${fmt(r.SelfFund,2)}</td><td class="num">${fmt(r.CapexAIModel,0)}</td><td>${mm.verdict||"—"}</td></tr>`}).join("")+`</tbody></table>`;
 }
 render();
 </script>

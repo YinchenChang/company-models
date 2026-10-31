@@ -1363,7 +1363,7 @@ def main():
                 "每 GW 只在擁有者計一次；錢從哪來＝主要玩家全公司營業現金流（本業＋AI；不扣買回與股利，Andy 2026-10-31 04:20）＋已觀測外部融資（2024–2025，Funding 總額口徑）。"
                 "2026 起已到位資金只算 2025 年底現金與尚未起租租賃、表外合資存量，只進累計（判斷題 G4）。US$B；曆年")
     GA["A2"] = ("主要玩家＝11 家合計（Microsoft、Alphabet、Amazon、Meta、Oracle、CoreWeave、Nebius、WhiteFiber、SpaceX／xAI、OpenAI、Anthropic）＋智譜只列。"
-                "營業現金流固定為個股模型基準情境，不隨需求 A／B／C 變（G5）；2028 起覆蓋率 < 0.35 屬情景（G6）；個股模型沒有的年份標『無模型值』、不外推。"
+                "營業現金流固定為個股模型基準情境，不隨需求 A／B／C 變（G5）；覆蓋率 < 0.35 的年份屬情景（G6；本版為 2029–2030，見第 33 列附近『年份性質』）；個股模型沒有的年份標『無模型值』、不外推。"
                 "OpenAI／Stargate 自建 GW 由 SoftBank、SB Energy 等 SPV 擁有，依規劃書 §3.3 歸『市場其餘』，不計 OpenAI 資本支出（Decisions GL01-31）")
     hdr(GA, 3, ["項目", "鍵", "單位"] + [str(y) for y in YEARS] + ["說明"])
     OUTG = list(range(2024, 2031))
@@ -1536,7 +1536,17 @@ def main():
             pl("jvx", "表外合資承諾（最大損失曝險存量；Funding）", "US$B", lambda y: f"={latest(FCOL['jvx'])}", years=[2026], note="G4：只進累計")
             pl("ext26", "備忘：2026 年已觀測外部融資（Funding 2026 期間，總額口徑；G4 不計入來源）", "US$B",
                lambda y: (f"=N(Funding!{RC['g_ext']}{FDR[(p, '2026')]})" if (p, "2026") in FDR else "=0"), years=[2026])
-        pl("cash", "期初現金（In Y9；一次性，只進累計）", "US$B", lambda y: f"=N(gcash_{p}){zs}", years=[2026], note=str(IN.cell(INROW[f"gcash_{p}"], 2).value))
+        if p in dict(FPL):
+            cq = (f'FundRaw!$C${FR0}:$C${FR1},"{p}",FundRaw!$F${FR0}:$F${FR1},"cash_level",FundRaw!$D${FR0}:$D${FR1},"2025-12-31",FundRaw!$O${FR0}:$O${FR1},1')
+            pl("cash_obs", "期初現金（Funding 觀測：FundRaw cash_level，2025-12-31，採用＝1）", "US$B",
+               lambda y: f'=IF(COUNTIFS({cq})=0,"未取得",SUMIFS(FundRaw!$G${FR0}:$G${FR1},{cq}))', years=[2026], fmt="0.0",
+               note="證據列進 F_funding.csv（item＝cash_level、period＝2025-12-31）並經 G／Q 段判定採用後，重建即自動帶入")
+            pl("cash", "期初現金（採用：Funding 觀測優先，未取得時用 In Y9 個股模型值；一次性，只進累計）", "US$B",
+               lambda y: f'=IF(ISNUMBER({YC[y]}{rows["cash_obs"]}),{YC[y]}{rows["cash_obs"]},N(gcash_{p}){zs})', years=[2026],
+               note="模型值：" + str(IN.cell(INROW[f"gcash_{p}"], 2).value))
+            pl("cash_src", "　期初現金來源", "—", lambda y: f'=IF(ISNUMBER({YC[y]}{rows["cash_obs"]}),"Funding 觀測","個股模型（In Y9）")', years=[2026], fmt="General")
+        else:
+            pl("cash", "期初現金（In Y9 個股模型值；Funding 無此玩家；一次性，只進累計）", "US$B", lambda y: f"=N(gcash_{p}){zs}", years=[2026], note=str(IN.cell(INROW[f"gcash_{p}"], 2).value))
         pl("fcf", "自由現金流＝營業現金流 −（AI＋非 AI）", "US$B", lambda y: f'=IF({YC[y]}{rows["ocf"]}="","",{YC[y]}{rows["ocf"]}-{YC[y]}{rows["need"]})', years=OUTG)
         pl("gr", "缺口占資本支出", "%", lambda y: f'=IF(OR({YC[y]}{rows["gap"]}="",{YC[y]}{rows["need"]}<=0),"",{YC[y]}{rows["gap"]}/{YC[y]}{rows["need"]})', years=OUTG, fmt="0%")
         r += 1
@@ -1706,7 +1716,7 @@ def main():
             IF.cell(r, 13, f"Funding!{cl or FCOL['bond']}{fr}")
             name(wb, nm_, f"Interface!$D${r}"); GIF.append(nm_); FUNDN.append(nm_); r += 1
     # ---- G. Gap：資金缺口（v0.1.7；年份 2024–2030；欄 D–J） ----
-    IF.cell(r, 1, "G. Gap：資金缺口（US$B；曆年 2024–2030 置於 D–J 欄；名稱 <前綴>_<yyyy>；營業現金流固定為個股模型基準，不隨需求情景變；2028 起覆蓋率 < 0.35 屬情景）").font = BOLD; r += 1
+    IF.cell(r, 1, "G. Gap：資金缺口（US$B；曆年 2024–2030 置於 D–J 欄；名稱 <前綴>_<yyyy>；營業現金流固定為個股模型基準，不隨需求情景變；覆蓋率 < 0.35 的年份屬情景）").font = BOLD; r += 1
     hdr(IF, r, ["名稱前綴", "項目", "單位"] + [str(y) for y in OUTG] + ["", "", "來源位置"]); r += 1
     GAPN = []
 
@@ -2005,7 +2015,7 @@ def main():
         {"id": "GL01-27", "cat": "判斷", "item": "G3 判讀門檻", "decision": "2026–2030：2030 年自由現金流 < 0，或缺口占資本支出 > 30% 連 3 年＝OpenAI 型；否則 Anthropic 型（標轉正年）；營業現金流有缺＝未定（資料不足）。市場層出兩讀：含市場其餘／只看 11 家", "date": "2026-10-31", "quote": "規劃書 §5 Q4；工作單 §1 G3", "status": "預設、可撤回"},
         {"id": "GL01-28", "cat": "判斷", "item": "G4 前瞻年份已到位資金", "decision": "2024–2025 用 Funding 已觀測外部融資（總額口徑；Microsoft、Oracle 財年按月數換曆年）；2026 起年度來源只有營業現金流；期初現金（模型 2025 年底，Microsoft 2026-06、Oracle 2026-08 為模型最早餘額）與尚未起租租賃＋表外合資最大損失曝險（Funding 最近一期存量）只進累計。2026 年已觀測融資只列備忘", "date": "2026-10-31", "quote": "工作單 §1 G4", "status": "預設、可撤回"},
         {"id": "GL01-29", "cat": "判斷", "item": "G5 營業現金流不隨需求情景", "decision": "是；來源固定為個股模型基準情境（B）", "date": "2026-10-31", "quote": "工作單 §1 G5", "status": "預設、可撤回"},
-        {"id": "GL01-30", "cat": "判斷", "item": "G6 年份", "decision": "2024–2030；2028 起標『情景（覆蓋率 < 0.35）』；個股模型沒有的年份標無模型值、不外推；2024–2025 營業現金流模型沒有時改用 Funding 全年觀測（期間標籤 CY／FY），仍沒有則無模型值", "date": "2026-10-31", "quote": "規劃書 §2、§4、§6", "status": "預設、可撤回"},
+        {"id": "GL01-30", "cat": "判斷", "item": "G6 年份", "decision": "2024–2030；覆蓋率 < 0.35 的年份標『情景』（以公式判斷；工作單寫 2028 起，但 v0.1.6 覆蓋率 2028＝0.71，實際為 2029–2030）；個股模型沒有的年份標無模型值、不外推；2024–2025 營業現金流模型沒有時改用 Funding 全年觀測（期間標籤 CY／FY），仍沒有則無模型值", "date": "2026-10-31", "quote": "規劃書 §2、§4、§6", "status": "預設、可撤回"},
         {"id": "GL01-31", "cat": "工程", "item": "OpenAI／Stargate 自建 GW 的擁有者", "decision": "Players 的 oai（Stargate 自建，SoftBank、SB Energy 營運）依規劃書 §3.3 視為 SPV 擁有，歸『市場其餘』，不計 OpenAI 資本支出；OpenAI 營業現金流＝模型自由現金流＋模型自有資本支出（算力現金成本內含）", "date": "2026-10-31", "quote": "規劃書 §3.3（表外合資與 SPV）", "status": "預設、可撤回"},
         {"id": "GL01-32", "cat": "工程", "item": "無 CFO 列的模型", "decision": "CoreWeave、Nebius、WhiteFiber：營業現金流＝營運缺口＋CapEx＋JV 出資＋overlay（WhiteFiber 另加回股利）＝營運來源 − 租金 − 利息（− 現金稅）；Anthropic：F07＋F03；OpenAI：F06＋Cost 自有資本支出；智譜：F09（RMB 億 ÷ 10 ÷ gfx_cny）", "date": "2026-10-31", "quote": "工作單 §2e（逐家人工確認列位）", "status": "預設、可撤回"},
         {"id": "GL01-33", "cat": "工程", "item": "Gap 每 GW 成本", "decision": "市場：IT＝Spend 頁同式（市場 NonNV × spend_nnv_hold）；廠房＝CapexGW 同式套市場 NonNV（NVIDIA 世代加權 IF_CapexFacility 與 VR200 × spend_nnv_hold），項目依 Facility 拆分比例。玩家：CapexGW（七家）或 C1 同式（其餘）。市場其餘＝市場合計 − 11 家（含每 GW 成本差）", "date": "2026-10-31", "quote": "工作單 §2a", "status": "預設、可撤回"},
