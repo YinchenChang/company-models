@@ -24,5 +24,17 @@ for r in R:
     if r["kind"] == "spend": sp[r["item"]][r["year"]] = f(r["value"])
 o["spend"] = sp
 o["fund"] = [{"player": r["player"], "name": r["player_name"], "year": r["year"], "period": r["period"], "values": r["values"], "gross": r.get("gross"), "po": r.get("payment_order")} for r in R if r["kind"] == "funding"]
+# 資金缺口（v0.1.7；kind＝gap）
+g = {"mk": collections.defaultdict(dict), "verdict": {}, "pergw": collections.defaultdict(dict), "player": collections.defaultdict(dict), "pmeta": {}, "total": {}}
+for r in R:
+    if r["kind"] != "gap": continue
+    pt = r["part"]
+    if pt == "market": g["mk"][f"{r['scen']}|{r['delay']}"][r["year"]] = {k: (v if isinstance(v, str) else f(v)) for k, v in r["values"].items()}
+    elif pt == "verdict": g["verdict"][f"{r['scen']}|{r['delay']}"] = [r["verdict"], r.get("verdict_mc")]
+    elif pt == "pergw": g["pergw"][r["item"]][r["year"]] = f(r["value"])
+    elif pt == "player": g["player"][r["player"]][r["year"]] = {k: f(v) for k, v in r["values"].items()}
+    elif pt == "player_meta": g["pmeta"][r["player"]] = {"cash": f(r["open_cash"]), "committed": f(r["committed"]), "verdict": r["verdict"]}
+    elif pt == "total": g["total"] = {k: r[k] for k in ("open_cash", "committed", "ext2026_memo", "buffer_cum", "ocf_missing", "coverage")}
+o["gap"] = g if g["mk"] else None
 tpl = (pathlib.Path(__file__).parent / "template.html").read_text(encoding="utf-8")
 pathlib.Path(out).write_text(tpl.replace("__DATA__", json.dumps(o, ensure_ascii=False, default=str)), encoding="utf-8")

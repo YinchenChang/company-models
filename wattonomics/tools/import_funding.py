@@ -43,7 +43,7 @@ FIX = {
     51: dict(note="G 段更正：刪除『美國史上最大股權發行』（8-K Ex.99.2、Bloomberg Law 皆無）"),
     199: dict(note="H 段更正（10-28，取代 G 段）：這是 Anthropic 付給 SpaceX 的算力採購，不是融資 → 不採用；『至 2029-05』原文有（Reuters 經 Yahoo），撤回 G 段刪除；年化 15 為 [Derived] 上限（爬坡期減免）",
               detail="付 SpaceX（xAI Colossus、Colossus II）每月 1.25 至 2029-05，年化 15 為上限；90 天可終止（SRC_ANT_227）"),
-    99: dict(note="G 段更正：定價 4/30、交割 2026-05（10-Q）"),
+    99: dict(note="G 段更正：定價 4/30、交割 2026-05（10-Q）；Q 段第五節：10-Q『In May 2026, we issued』→ 期間改 2026-05（同落 9M2026 桶）", period="2026-05"),
     102: dict(note="G 段更正：債 12.5（非 12.3）；評等 A+／AA- 不在主來源"),
     170: dict(note="G 段更正：20–25 依 Zacks 2026-09-11；『約 60% 內部』是 2026-02 針對 16–20 的說法，套到 20–25 須註明"),
     180: dict(note="G 段更正：『a portion of the value』（非完工價值）；記者轉述、尚未簽約"),
@@ -55,6 +55,39 @@ NB_6K = dict(source_title="Nebius 6-K 2026-08-12 附件 99.1／99.2（Q2 2026 �
 for n in range(162, 170):
     FIX[n] = dict(NB_6K)
 
+# Q 段第五節（2026-10-31，Amazon、Meta 2026Q3 10-Q 獨立核對；evidence_raw/Q_review_2026q3.md 第五節、Q_add_2026q3_10q.md）：既有列更正與新列標記更正
+# 值的更正（value）與期間更正（period）沿用 FIX 機制（v0.1.7 起 FIX 支援 value、period 兩鍵）；doc_date 只存在 CSV，Meta 10-Q 各列 10-29 → 10-21 直接改 CSV
+Q5 = "Q 段第五節更正（10-Q）"
+FIX.update({
+    74: dict(note=Q5, detail="USD 37＋EUR 14.5，19 檔；史上最大公司債；10-Q 附註 5：March 2026 Notes 37.0＋Euro Notes €14.5B（9-30 帳面 16.427）"),
+    75: dict(note=Q5 + "：保留 7 月報導的歸屬，並註明與 10-Q 不符",
+             detail="8 檔、2029–2066、4.20%–6.25%（含 2029 浮動 0.75；10-Q 附註 5）；7 月報導稱公司表示 2026 年不再發債（原句待回 TNW／Bloomberg 確認範圍，可能只指美元債），"
+                    "但 10-Q 顯示其後 9 月仍發英鎊債 £4.3B（帳面 5.637）並動用定期貸款 17.5，MD&A 稱 2026 年將再融資（We expect to undertake additional financing activities in 2026）；已含於 F#253"),
+    80: dict(note=Q5, detail="對 OpenAI 累計 50（Q1 15＋Q2 13.7＋Q3 21.3；10-Q MD&A：including $21.3 billion invested in Q3 2026）；OpenAI 承諾 AWS 38＋100"),
+    81: dict(note=Q5 + "（附帶發現）：原 18.0 含 2023–2025 年可轉債 8.0，不屬 2026 年；10-Q 載 2026 年實際投入 10.0 → 值改 10.0", value=10.0,
+             detail="對 Anthropic 2026 年投入 10.0（Series G 5＋Series H 5；10-Q）；累計 18 另含 2023–2025 年可轉債 8（不屬 2026，不計）；剩餘額度 15 依算力交付里程碑；可轉債公允價值 97.9"),
+    100: dict(note=Q5 + "：原 22.178 只取非流動部分（9-30 有 2.747 重分類至流動），值改面額口徑 25.000（chat 端決定；與 F#263、Alphabet F#50 一致）", value=25.0,
+              detail="面額口徑：債務面額 59.0 → 84.0，增加 25.000（10-Q 附註 9；5 月發債 25.0，淨收入 24.910）；帳面 58.744 → 83.669（非流動 80.922＋一年內到期 2.747，後者列應計費用及其他流動負債），"
+                     "帳面口徑增加 24.925；現金與有價證券 81.592 → 82.449 → 9-30 淨負債約 1.2（原寫『淨現金約 0』漏計一年內到期 2.747）"),
+    252: dict(note=Q5 + "：補 10-Q 第二來源，標記改 [Verified]", tag="[Verified]",
+              detail="現金流量表無買回、股利列（2026 未買回、無股利）；10-Q 附註 6：There were no repurchases of our common stock during the nine months ended September 30, 2025 or 2026"),
+    253: dict(note=Q5 + "：detail 改寫（『＝』改『≈』）",
+              detail="長期借款收入 115.1 ≈ 票據 97.3（3 月 USD 37.0、EUR 14.5≈16.4；5 月 CHF 2.8≈3.4；6 月 CAD 14.0≈9.8；7 月 USD 25.0；9 月 GBP 4.3≈5.6；外幣以 9-30 帳面，F#259）＋9 月動用定期貸款 17.5（F#260）；"
+                     "差 0.3 為外幣匯率與折價；Q3 單季 48.102；還款 2.759（2021 年票據到期）；短期借款收入 20.693、還款 19.609（另列不計）；9-30 長期借款帳面 173.125（另一年內到期 6.827）"),
+    256: dict(note=Q5 + "：補 10-Q 第二來源",
+              detail="指引：2027 現金資本支出將 meaningfully more（較 2026 約 220 明顯增加，未給數字；> 220 為推論下限，不入數值）；10-Q MD&A：We expect cash capital expenditures to meaningfully increase in 2027；"
+                     "另稱 AWS 2027、2028 各年營收成長可望 40% 以上；對 2027、2028 及部分 2029 的大塊容量（數百 MW，有時達 1 GW）能見度很好"),
+    257: dict(note=Q5 + "：detail 三處改寫；doc_date 留空",
+              detail="9-30 債務總額（存量）83.7（CFO 口徑；10-Q 帳面 83.669＝非流動 80.922＋一年內到期 2.747（2027-08 到期 2.75，列應計費用及其他流動負債），見 F#272）；"
+                     "現金與有價證券 82.4 → 淨負債約 1.3（10-Q：83.669 − 82.449＝1.220；F#100 原『淨現金約 1.1』漏計一年內到期部分，已更正）；Q3 單季含融資租賃本金資本支出 34.9、FCF −2.1；"
+                     "宣布新設無表決權股（股票股利 1:1，預計 2027-01 下旬交易），用途含募資、員工薪酬、併購；通話當時稱「目前無具體融資計畫」，其後 10-26 FWP 即定價 37.5（F#106、F#107）；"
+                     "通話日期逐字稿與 10-Q 都未載；10-Q 於 2026-10-21 簽署，附註 14 期後事項已載 10 月提交 Restated Charter 新設 Class C 並宣告 1:1 股票股利（生效日 2027-01-19），且未提 10-26 的遠期出售與特別股 → 新股類別宣布不晚於 10-21，法說推定不晚於 10-21；2027 資本支出指引待 Q4 法說"),
+    270: dict(note=Q5 + "：值為兩數相加 → [Derived]", tag="[Derived]"),
+    271: dict(note=Q5 + "：值為兩數相加 → [Derived]", tag="[Derived]"),
+    274: dict(note=Q5 + "：值為兩數相加 → [Derived]", tag="[Derived]"),
+    275: dict(note=Q5 + "：值為兩數相加 → [Derived]", tag="[Derived]"),
+})
+
 # H 段（10-28 API 旗標人工複核，evidence_raw/H_review_api_flags.md）：採購／投資存量不是融資 → 不採用
 H_DROP = {
     31: "H 段更正：Microsoft 租用 neocloud 算力是採購承諾（Microsoft 為付款方），不是資金來源 → 不採用",
@@ -64,14 +97,16 @@ H_DROP = {
 H_ITEM = {222: "investment_stock_nonmkt"}
 
 # Q 段（v0.1.3–v0.1.4，2026Q3／FY27Q1 財報）：F#228–246 由 Andy 下載的（F#247–254 Amazon 由公司新聞稿） 10-Q、新聞稿、法說逐字稿取數，經未參與代理核對（evidence_raw/Q_review_2026q3.md）
-Q_TRUE = rng("228–246 247–254 255–257")   # 247–254：Amazon 2026Q3 新聞稿（Q_review 第三節：屬實 7、小誤 1 已改 tag）；255–257：Amazon、Meta 逐字稿（第四節：屬實 1、小誤 2 已改）
+Q_TRUE = rng("228–246 247–254 255–257 258–275")   # 258–275：Amazon、Meta 2026Q3 10-Q（Q_review 第五節：屬實 14、小誤 4 已改 tag）   # 247–254：Amazon 2026Q3 新聞稿（Q_review 第三節：屬實 7、小誤 1 已改 tag）；255–257：Amazon、Meta 逐字稿（第四節：屬實 1、小誤 2 已改）
 # 被 Q 段取代（同期間較新或實收口徑）：Alphabet 2026H1 各列與 8 月發債（併入 9M2026 現金流量表）、F#51 股權公告 84.75（含未動用 ATM，改用實收 61.933）、
 # F#55 2026 指引（Q2 法說，Q3 重申另列）；Microsoft F#29 曆年 175（改 170）、F#30 FY27Q1 指引（已有實績）
 Q_SUPERSEDED = {44: "9M2026", 45: "9M2026", 46: "9M2026", 47: "9M2026", 48: "9M2026", 49: "9M2026（8 月發債已在 9M 現金流量表內）",
                 51: "9M2026 實收 61.933（F#244）", 55: "Q3 法說重申（F#245）", 29: "Q1 法說 170（F#237）", 30: "FY27Q1 實績（F#228–234）",
                 # Amazon（Q_review 第三節）：H1 各列併入 9M2026；3 月、7 月發債已在 9M 長期借款收入 115.1（F#253）內，保留作事件紀錄不計入；指引改 Q3 重申
                 69: "9M2026（F#247）", 70: "9M2026（F#248）", 71: "9M2026（F#249）", 72: "9M2026（F#251）",
-                74: "9M2026 長期借款收入 115.1 已含（F#253）", 75: "9M2026 長期借款收入 115.1 已含（F#253）", 79: "Q3 新聞稿重申（F#254）"}
+                74: "9M2026 長期借款收入 115.1 已含（F#253）", 75: "9M2026 長期借款收入 115.1 已含（F#253）", 79: "Q3 新聞稿重申（F#254）",
+                # Q_review 第五節：Amazon 10-Q 9-30 期末存量取代 6-30（F#77 必要：lnc 同桶會加總）
+                77: "F#258（9-30）", 76: "F#263", 78: "F#266"}
 
 
 def h_notes():
@@ -176,8 +211,10 @@ def main():
             gnote = (gnote + "；" if gnote else "") + "H 段更正（10-28）：" + "；".join(HN[n])
         try: val = float(d["value"])
         except ValueError: val = None
+        if "value" in fx: val = fx["value"]          # v0.1.7：Q 段第五節值的更正（F#81、F#100）
+        period = fx.get("period", d["period"])       # v0.1.7：期間更正（F#99）
         player = d["player"]
-        rows.append(dict(id=f"F#{n}", player=player, pkey=PKEY.get(player, ""), period=d["period"], bucket=str(bucket(player, d["period"])),
+        rows.append(dict(id=f"F#{n}", player=player, pkey=PKEY.get(player, ""), period=period, bucket=str(bucket(player, period)),
                          item=item, value=val, unit=d["unit"], detail=fx.get("detail", d["detail"]), tag=fx.get("tag", d["tag"]),
                          source=fx.get("source_title", d["source_title"]), url=fx.get("url", d["url"]), verdict=v, gnote=gnote, use=use))
     # xAI 2025：S-1 新增債務 16（F#205 detail；G 段 F205 屬實）建成 GPU 債項目，標記照原列
