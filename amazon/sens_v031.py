@@ -73,3 +73,14 @@ with ThreadPoolExecutor(max_workers=int(os.environ.get("JOBS", "2"))) as ex:
         res[k] = {**o, "set": [[a, b] for a, b in jobs[k]]}
         print(k, round(o["tp"], 4), o["rec"], round(o["gateB"], 1), flush=True)
 json.dump(res, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+# 變動拆解鏈的中間值（報告第 2 節；amazon/data/bridge_v031.json）
+if all(f"chain|{k}" in res for k in ("S1", "S2", "S3", "S4")):
+    v03 = 215.578882385843
+    ch = [("v0.3", v03)] + [(k, res[f"chain|{k}"]["tp"]) for k in ("S1", "S2", "S3", "S4")] + [("v0.3.1", res["base|base"]["tp"])]
+    labs = ["(a) 時間推移與期間結構", "(b) 新季實績", "(c) 公司指引與 C10", "(d) Tokenomics v21.4 → v21.7（Trainium 改讀 IF_NonNV_Hold_Trn）", "(f) 其他（rf、WACC 權重股價、Q4 其他營運項目 C14）"]
+    steps = [{"item": labs[i], "from": ch[i][0], "to": ch[i + 1][0], "tp_from": ch[i][1], "tp_to": ch[i + 1][1], "delta": ch[i + 1][1] - ch[i][1]} for i in range(5)]
+    steps.insert(4, {"item": "(e) 現價與共識（只影響上檔空間與評等）", "delta": 0.0})
+    bo = {"_readme": "Amazon v0.3 → v0.3.1 加權目標價變動拆解（逐步重建鏈；amazon/sens_v031.py chain|S1–S4 的整本重算值）。S1＝(a) 後、S2＝(b) 後、S3＝(c) 後、S4＝(d) 後；(f)＝本版 − S4。",
+          "chain": dict(ch), "chain_sets": {k: res[f"chain|{k}"]["set"] for k in ("S1", "S2", "S3", "S4")}, "steps": steps,
+          "total": ch[-1][1] - v03, "sum_check": sum(x["delta"] for x in steps) - (ch[-1][1] - v03)}
+    json.dump(bo, open(os.path.join(HERE, "data", "bridge_v031.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)

@@ -12,7 +12,7 @@
 | `zhipu/` | 智譜（智譜華章，02513.HK） | `openai/` v0.6（`claude/openai-s6-release` @ `e91df57`）的架構；骨架經 Anthropic A0 | v0.1.2（官方分部對帳） |
 | `anthropic/` | Anthropic（未上市） | `openai/`（v0.6，`claude/openai-s6-release` @ `e91df57`）的架構與工具鏈 | v0.1.4（成品：`anthropic/dist/20261022_Anthropic收支模型_v0_1_4.html`／`.xlsx`） |
 | `whitefiber/` | WhiteFiber（WYFI） | `oracle/` @ `e4540c3`（Oracle v0.2 分支） | v0.1 |
-| `amazon/` | Amazon（AMZN） | `oracle/`（v0.2）→ MAG 共用引擎（Amazon v0.1b；共用文件見 `mag/`） | v0.2（Tokenomics v5.31） |
+| `amazon/` | Amazon（AMZN） | 個股模型（命題＋官方分部 → 損益表；獨立 Python→Excel 產生器 `amazon/build_amazon.py`；v0.2.2 舊引擎在 `amazon/legacy_v0.2/`） | v0.3.1（2026Q3 季度滾動；Tokenomics v21.7；In 頁情境驅動對照與敏感度覆蓋；成品 `amazon/dist/20261031_Amazon個股模型_v0.3.1.xlsx`／`.html`） |
 | `alphabet/` | Alphabet（GOOGL） | 個股模型（命題＋官方分部 → 損益表；獨立 Python→Excel 產生器 `alphabet/build_alphabet.py`；v0.2.2 舊引擎在 `alphabet/legacy_v0.2/`） | v0.3.2（2026Q3 季度滾動；Tokenomics v21.7；v0.3.2 只加 In 頁情境驅動對照；成品 `alphabet/dist/20261029_Alphabet個股模型_v0.3.2.xlsx`／`.html`） |
 | `microsoft/` | Microsoft（MSFT） | v0.3 起：命題＋官方營收分部架構的獨立 Python→Excel 產生器（`microsoft/build_microsoft.py`；舊 MAG 共用引擎在 `microsoft/legacy_v0.2/`） | v0.3.2（FY27Q1 滾入；v0.3.2 只加 In 頁情境驅動對照；成品：`microsoft/dist/20261029_Microsoft個股模型_v0.3.2.html`／`.xlsx`；Tokenomics v21.7） |
 | `siliconomics/` | **AI 半導體產業基準庫 Siliconomics**（比照 Tokenomics）：行業變數唯一值（加速器顆數、HBM、記憶體價格路徑；其餘子產業分段併入）、Tokenomics 鏡像、跨模型衝突登錄；下游經 `siliconomics/data/` 快照取數（`markets/memory/market.py` 已改讀）；見 `siliconomics/README.md` | 新建（AI 半導體 Project） | v0.1 |
