@@ -117,6 +117,9 @@ inp("sd_k", "SanDisk 公司營收 ÷ TrendForce 口徑（2Q26）", "x", None, "=
 inp("kx_g", "Kioxia FY2026 第二季（2026-07～09）營收實績", "¥B", None, 2480.0, None, "Verified", "Kioxia FY2026 第二季財報（2026-10-30；404K Research 法說整理、FourWeekMBA 轉載）：營收 ¥2,480.0B、營業利益 ¥1,994.7B；第三季指引 ¥2,500.0B（假設 157 日圓）", "v0.3 前為公司指引 ¥2,390.0B")
 inp("kx_fxg", "Kioxia 第二季平均匯率", "¥／$", None, 161, None, "Verified", "同上：第二季 161 日圓（第一季 160）", "")
 inp("kx_k", "Kioxia 公司營收 ÷ TrendForce 口徑（2Q26）", "x", None, "=1767.1/160/rv_kx_5", None, "Derived", "第一季營收 ¥1,767.1B ÷ 平均匯率 160 ÷ TrendForce 2Q26 10.72（公司含其他營收 ¥66.7B）", "")
+inp("sd_g4", "SanDisk FQ2 FY27（2026-10～12）營收指引中點", "$B", 12.2, 12.4, 12.6, "Interested-party", "SanDisk FQ1 FY27 法說（2026-10-29）：FQ2 FY27 營收 12.2–12.6（立場：公司）", "v0.3：與 2026Q3 實績平均，推 2026Q4 起份額（平滑公司出貨季別移動；三星、SK 海力士、美光同樣用兩季平均）")
+inp("kx_g4", "Kioxia FY2026 第三季（2026-10～12）營收指引", "¥B", None, 2500.0, None, "Interested-party", "Kioxia 第二季財報（2026-10-30；Investing.com）：¥2,500B；位元持平（7–9 月提前出貨、部分長交期產品遞延到 1–3 月）、平均售價季增低個位數（產品組合轉差）", "同上")
+inp("kx_fxg4", "Kioxia 第三季指引的匯率假設", "¥／$", None, 157, None, "Interested-party", "同上：157 日圓", "")
 for k, (lo, b, hi), src in (("ss", (-1.0, -0.5, 0.0), "三星：2026 晶圓投片減少、投資轉向 HBM（Blocks & Files 2026-01-20 轉載）；2Q26 市占小降（TrendForce）"),
                             ("sk", (-0.5, 0.0, 0.5), "SK 海力士＋Solidigm：投片 −10%，但 QLC 企業級 SSD 接單強（TrendForce 2026-08-18）"),
                             ("mu", (-0.3, 0.2, 0.6), "美光：2Q26 季增最高（+99.2%）；位元成長低於產業（美光 FQ4 FY26）")):
@@ -228,8 +231,9 @@ def engine(ws, r0, title, s, **over):
                 i = ACT.index(q)
                 return f"=rv_{k}_{i}/{QCOL[q]}{R['mq']}" if k != "ot" else f"=1-t5_{i}"
             y = qy(q)
-            if k == "kx": b0 = f"kx_g/kx_fxg/kx_k/${q3}{R['mq']}"
-            elif k == "sd": b0 = f"sd_g/sd_k/${q3}{R['mq']}"
+            q4 = QCOL["2026Q4"]
+            if k == "kx": b0 = f"kx_g/kx_fxg/kx_k/${q3}{R['mq']}" if q == "2026Q3" else f"(kx_g/kx_fxg/kx_k/${q3}{R['mq']}+kx_g4/kx_fxg4/kx_k/${q4}{R['mq']})/2"
+            elif k == "sd": b0 = f"sd_g/sd_k/${q3}{R['mq']}" if q == "2026Q3" else f"(sd_g/sd_k/${q3}{R['mq']}+sd_g4/sd_k/${q4}{R['mq']})/2"
             elif k == "ot": return f"=1-" + "-".join(f"{QCOL[q]}{R['sh_' + kk]}" for kk in TOP5)
             else: b0 = f"(rv_{k}_4+rv_{k}_5)/(${QCOL['2026Q1']}{R['mq']}+${a6}{R['mq']})"
             if y == 2026: return "=" + b0
@@ -239,7 +243,7 @@ def engine(ws, r0, title, s, **over):
             return f"={b0}+{jv}/100*{y - 2026}*{frac}"
         R["sh_" + k] = rr[0]
         row("sh_" + k, f"份額：{nm}", "%", {QCOL[q]: shq(q) for q in QS}, fmt="0.0%",
-            note={"kx": "2026Q3＝公司第二季指引 ÷ 匯率 ÷ 公司口徑係數 ÷ 市場；2027 起＋合資群年變動 × Kioxia 比重", "sd": "2026Q3＝公司 FQ1 FY27 指引 ÷ 口徑係數 ÷ 市場；2027 起＋合資群年變動 × SanDisk 比重",
+            note={"kx": "2026Q3＝公司第二季實績 ÷ 匯率 ÷ 公司口徑係數 ÷ 市場；2026Q4 起＝2026Q3 實績份額與 2026Q4 指引份額的平均（平滑出貨季別移動）；2027 起＋合資群年變動 × Kioxia 比重", "sd": "2026Q3＝公司 FQ1 FY27 實績 ÷ 口徑係數 ÷ 市場；2026Q4 起＝2026Q3 實績份額與 FQ2 FY27 指引份額的平均；2027 起＋合資群年變動 × SanDisk 比重",
                   "ot": "餘額（長江存儲等）"}.get(k, "2026Q3–Q4＝1H26 實績份額；2027 起每年＋年變動"))
     for k, nm in VEN:
         row("rv_" + k, f"{nm} 營收（情境 {s}）", "$B", {QCOL[q]: f"={QCOL[q]}{R['mq']}*{QCOL[q]}{R['sh_' + k]}" for q in QS}, fmt="#,##0.00")
@@ -340,7 +344,7 @@ def rec(label, ref, getter, src, note="", fmt="#,##0.0", pt=False):
     RC.cell(rcr, 7, src); RC.cell(rcr, 8, note); rcr += 1
 rec("2Q26 SanDisk 營收（實績重現）", "=rv_sd_5", lambda s: f"=Mkt!{QCOL['2026Q2']}{MB[s]['rv_sd']}", TF0818, "恆等式", "#,##0.00")
 rec("2026Q3 SanDisk 營收 vs 公司指引（TrendForce 口徑）", "=sd_g/sd_k", lambda s: f"=Mkt!{QCOL['2026Q3']}{MB[s]['rv_sd']}", "SanDisk 指引 $10.3–10.8B", "恆等式（份額由指引推得）", "#,##0.00")
-rec("2026Q3 市場營收 vs 2Q26 ×（1＋季價 15%）", "=Mkt!" + QCOL["2026Q2"] + str(MB["A"]["mq"]) + "*1.15", lambda s: f"=Mkt!{QCOL['2026Q3']}{MB[s]['mq']}", "TrendForce 3Q26 合約價 +10~15%（markets/memory）", "差額＝位元季增")
+rec("2026Q3 市場營收 vs 2Q26 ×（1＋季價 25%）", "=Mkt!" + QCOL["2026Q2"] + str(MB["A"]["mq"]) + "*1.25", lambda s: f"=Mkt!{QCOL['2026Q3']}{MB[s]['mq']}", "Siliconomics v0.10 nq_6：2026Q3 實現平均售價 +25%（Kioxia、SK 海力士 mid-20%；TrendForce 合約價 +10~15% 只作對照）", "差額＝位元季增")
 rec("CY2026 位元出貨年增 vs 美光「低 20% 段」（百分點）", 0.21, lambda s: f"=Mkt!{YC[2026]}{MB[s]['bg']}", "美光 FQ4 FY26（Guru3D 2026-10-01）", "供給受限時＝gs_26", "0.0%", True)
 rec("CY2027 位元出貨年增 vs 美光「約中 20% 段」（百分點）", 0.25, lambda s: f"=Mkt!{YC[2027]}{MB[s]['bg']}", "同上", "", "0.0%", True)
 rec("CY2028 位元出貨年增 vs 美光「約中 20% 段」（百分點）", 0.25, lambda s: f"=Mkt!{YC[2028]}{MB[s]['bg']}", "同上", "B、C 需求低於供給，出貨＝需求", "0.0%", True)
@@ -349,6 +353,8 @@ rec("CY2026 企業級 SSD 占需求 vs Counterpoint 2Q26 48%（百分點）", 0.
 rec("CY2025 市場營收（實績）vs 前五大合計 ÷ 0.9", "=(" + "+".join(f"rv_{k}_{i}" for k in TOP5 for i in range(4)) + ")/0.9", lambda s: f"=Mkt!{YC[2025]}{MB[s]['rev']}", "TrendForce 季度合計", "")
 rec("CY2027 Kioxia＋SanDisk 營收 vs 共識（會計年度依月份拼成日曆年：Kioxia ¼ FY2026＋¾ FY2027；SanDisk ½ FY2027＋½ FY2028）", "=10071/160/kx_k*0.25+13477/160/kx_k*0.75+49.1/sd_k*0.5+58.4/sd_k*0.5",
     lambda s: f"=Ann!{YC[2027]}{AR[(s, 'kxr')]}+Ann!{YC[2027]}{AR[(s, 'sdr')]}", "MarketScreener 2026-10-23 擷取：Kioxia FY2027（2027-03）營收 ¥10.07 兆、FY2028 ¥13.48 兆；SanDisk FY2027 $49.1B、FY2028 $58.4B", "會計年度依月份拼成日曆年（Derived）；共識只作對照")
+rec("2026Q4 SanDisk 營收 vs FQ2 FY27 指引中點 12.4（TrendForce 口徑）", "=12.4/sd_k", lambda s: f"=Mkt!{QCOL['2026Q4']}{MB[s]['rv_sd']}", "SanDisk FQ1 FY27 法說（2026-10-29）：FQ2 FY27 營收指引 12.2–12.6", "v0.3：2026Q4 季價 +8.1%＋份額取兩季平均（v0.2 差距 +9.6%）；公司稱價量皆貢獻、同品項價格溫和上升", "#,##0.00")
+rec("2026Q4 Kioxia 營收 vs 第三季指引 ¥2,500B ÷ 157 日圓（TrendForce 口徑）", "=2500/157/kx_k", lambda s: f"=Mkt!{QCOL['2026Q4']}{MB[s]['rv_kx']}", "Kioxia 第二季財報（2026-10-30）：第三季營收指引 ¥2,500B（157 日圓）；位元持平、平均售價季增低個位數", "v0.3：季價 +8.1%＋份額取兩季平均（v0.2 差距 +19.2%）。餘差＝份額平均只平滑一半的出貨季別移動（7–9 月提前、部分遞延到 1–3 月，同一會計年度內）與產品組合", "#,##0.00")
 RC_LAST = rcr - 1
 RC.column_dimensions["A"].width = 70; RC.column_dimensions["G"].width = 60; RC.column_dimensions["H"].width = 40
 for c in "BCDEF": RC.column_dimensions[c].width = 11
@@ -413,7 +419,8 @@ lines = [("NAND 市場層 v0.1（AI 半導體 Project；樣板 markets/memory）
  ("Ann｜年度摘要：需求、供給、出貨、平均售價、營收、各廠份額；Kioxia＋SanDisk 合資群份額＝兩家相加（下游公司模型讀同一組列）", False), ("", False),
  ("情境：A＝順利、B＝平平、C＝不如預期；價格讀 markets/memory NAND_S 同字母，顆數讀 SCEN_UNITS 同字母（2028–29；CY2030 沿用 2029），不自訂行業路徑。CY2030 價格為收斂法（十年平均年變動 p10，三情境相同）。", False),
  ("單位：$B、EB、$/GB、百萬顆。2026Q2 以前為 TrendForce 實績；季度位元為年度依年增平滑（近似）。", False),
- ("已知限制：全產業 EB 基期與各應用占比為 Assumed（只影響 AI 與非 AI 需求的相對大小與 EB 絕對值）；各廠晶圓產能未找到（Sup 頁）；各廠平均售價假設等於市場平均。", False)]
+ ("已知限制：全產業 EB 基期與各應用占比為 Assumed（只影響 AI 與非 AI 需求的相對大小與 EB 絕對值）；各廠晶圓產能未找到（Sup 頁）；各廠平均售價假設等於市場平均。", False), ("", False),
+ ("v0.3（2026-10-31）：季價指數的口徑改為「實現平均售價」。Siliconomics v0.10：2026Q3 +25%（Kioxia、SK 海力士實績 mid-20%；原合約價 +15%）、2026Q4 +8.1%（兩季累計 1.15 × 1.175 不變；原 +17.5%）；2027 起價格水準不變。SanDisk、Kioxia 的 2026Q3 份額因此由 11.6%／15.8% 降為 10.7%／14.5%。另：兩家 2026Q4 起的份額改為「2026Q3 實績份額與 2026Q4 公司指引份額的平均」（新增輸入 sd_g4、kx_g4、kx_fxg4；三星、SK 海力士、美光本來就用 1H26 兩季平均），以平滑 Kioxia 公司揭露的出貨季別移動：Kioxia 13.9%、SanDisk 10.65%；其他廠（餘額）13.4%。2026Q4 對公司指引：SanDisk +0.4%（原 +9.6%）、Kioxia（美元、TrendForce 口徑）+4.8%（原 +19.2%；日圓口徑另含匯率假設 160 對 157 的 +1.9%；見 Recon）。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 180
 order = ["README", "In", "Ann", "Path", "Mkt", "Sup", "Recon", "Sens", "Sources"]

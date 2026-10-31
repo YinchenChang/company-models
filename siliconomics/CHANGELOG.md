@@ -1,5 +1,11 @@
 # Siliconomics 變更紀錄
 
+## v0.10（2026-10-31；`model/20261031_Siliconomics_v0.10.xlsx`；Tokenomics v21.7）
+
+- 輸入值變更（次版）：NAND 季價 `nq_6`（2026Q3）0.15 → 0.25（Verified：Kioxia、SK 海力士實現平均售價季增 mid-20%）；`nq_7`（2026Q4）0.175 → `=(1+0.15)*(1+0.175)/(1+0.25)-1`＝0.081（Derived；低 0.032／高 0.175）。2026Q4 起價格指數水準不變。
+- 原因：SanDisk、Kioxia 2026Q4 模型營收比公司指引高 9.6%／21.5%；拆解為市場層把合約價當實現價（見 `docs/reports/20261031_NAND第四季_差距拆解.md`）。
+- 連動：markets/nand v0.3、SanDisk v0.4、Kioxia v0.4；SK 海力士、三星、美光的 NAND 年均價（CY2026 年均價上升）隨之改變，目標價 −0.7%～−0.9%，投資建議不變。其他下游兩輪 SAME。決策 S30。
+
 ## v0.9（2026-10-31；`model/20261031_Siliconomics_v0.9.xlsx`；Tokenomics v21.7）
 
 - 輸入值變更（次版）：`ts_mk_soc26`（CY2026 SoC 測試機市場）11.0 → 11.5（區間 11.0–12.0，US$B）。Advantest 2026-10-28 稱約 115 億美元（105–115 上緣）；Advantest 與泰瑞達 CY2026 SoC 營收（實績＋指引推估）合計約 113 億美元，已高於舊值。
