@@ -83,3 +83,6 @@
 - 規模：公式格 7,609、具名範圍 1,358、SRC_ANT 464、Inputs 192；CHK_Errors 0、CHK_Warnings 2。parity 情境 +4（ia–id）；test_builder +2。
 - HTML：新增「①之四 v0.1.6 更新了什麼」；⑦ OpenAI 並排加 2026 每 GW 營收（42.58 vs OAI_Link v0.6 23.66；OpenAI v0.6.4 為 21.89，文字並列）；`tools/html_scenarios.yaml` 加 `s1f_off` 群組與 `v015`，歷史情境加 `s1f_off`。dist 改 `20261031_Anthropic收支模型_v0_1_6.html／.xlsx`（v0.1.5 dist git rm）。
 - 報告 `docs/reports/20261031_v0.1.6.md`＋`_對照.xlsx`（`tools/make_report_v016.py`）。
+
+## v0.1.6 HTML 版面（2026-10-31；Excel 不變 `model/20261031_Anthropic_v0.1.6.xlsx`）
+- 依 Andy 10-31 指示：一頁摘要 ① 命題與一句話結論之後直接接 ② 圖；①之二～①之四（各版更新紀錄）移到頁尾（⑨ 之後），前加一行說明。只改 `tools/build_html.py` 段落順序；重建後各段 HTML 與前版逐字相同（只有順序與新增說明行不同），`tests/test_html.py` 6 項通過。
