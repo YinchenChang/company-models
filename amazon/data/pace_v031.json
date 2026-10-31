@@ -1,0 +1,15 @@
+{
+ "pace": 3788.9,
+ "pace_gap": 0.0005,
+ "pace_trn1": 3227.6,
+ "pace_trn1_gap": 0.0005,
+ "pace_q4": 2539.2,
+ "pace_q4_gap": 0.0004,
+ "pace_fy": 3179.4,
+ "pace_fy_gap": -0.0004,
+ "pace_g210": 3343.7,
+ "pace_g210_gap": -0.0003,
+ "pace_g230": 4234.2,
+ "pace_g230_gap": 0.0002,
+ "note": "C10 v0.3.1：情境 B 的 Q4 26 公式資本支出（AI＋非 AI）＝（2026 指引 − 上半年實績）÷ 2（下半年視窗）；pace_q4＝只校準 Q4（指引 − 9M 實績）；pace_fy＝指引 ÷ 4；pace_g210／g230＝指引 210／230；pace_trn1＝舊 Trainium 口徑 1.0。*_gap＝四捨五入到 0.1 MW／年後的落差（US$bn）"
+}

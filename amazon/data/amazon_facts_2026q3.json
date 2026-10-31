@@ -1,0 +1,2602 @@
+{
+ "_readme": "Amazon 2026Q3 事實總帳（MAG v0.3.1 工作單第 1 節第 1 項）。由 amazon/facts_2026q3.py 自財報新聞稿逐列轉錄讀取；10-Q 未取得（雲端擋 SEC）：債務明細、租賃、在建工程、分部折舊、RPO 附註沿用 2026Q2 或推導（見 build_amazon.py 與報告資料缺口）。金額 USD M（費用與流出以正值記）；checks＝第二次獨立讀取。",
+ "asOf": "2026-09-30",
+ "items": [
+  {
+   "id": "is.NA.rev.2026q3",
+   "item": "North America 分部營收",
+   "value": 112852.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節 Segment Information（三個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.NA.rev.2026m9",
+   "item": "North America 分部營收（9M26）",
+   "value": 333172.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.NA.rev.2025m9",
+   "item": "North America 分部營收（9M25）",
+   "value": 299222.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.NA.oi.2026q3",
+   "item": "North America 分部營業利益",
+   "value": 8723.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節 Segment Information（三個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.NA.oi.2026m9",
+   "item": "North America 分部營業利益（9M26）",
+   "value": 26113.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.NA.oi.2025m9",
+   "item": "North America 分部營業利益（9M25）",
+   "value": 18147.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.INTL.rev.2026q3",
+   "item": "International 分部營收",
+   "value": 43108.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節 Segment Information（三個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.INTL.rev.2026m9",
+   "item": "International 分部營收（9M26）",
+   "value": 125094.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.INTL.rev.2025m9",
+   "item": "International 分部營收（9M25）",
+   "value": 111170.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.INTL.oi.2026q3",
+   "item": "International 分部營業利益",
+   "value": 1580.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節 Segment Information（三個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.INTL.oi.2026m9",
+   "item": "International 分部營業利益（9M26）",
+   "value": 4721.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.INTL.oi.2025m9",
+   "item": "International 分部營業利益（9M25）",
+   "value": 3710.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.AWS.rev.2026q3",
+   "item": "AWS 分部營收",
+   "value": 45984.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節 Segment Information（三個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.AWS.rev.2026m9",
+   "item": "AWS 分部營收（9M26）",
+   "value": 125803.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.AWS.rev.2025m9",
+   "item": "AWS 分部營收（9M25）",
+   "value": 93146.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.AWS.oi.2026q3",
+   "item": "AWS 分部營業利益",
+   "value": 17773.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節 Segment Information（三個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.AWS.oi.2026m9",
+   "item": "AWS 分部營業利益（9M26）",
+   "value": 48555.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.AWS.oi.2025m9",
+   "item": "AWS 分部營業利益（9M25）",
+   "value": 33141.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.TOT.rev.2026q3",
+   "item": "合併營收",
+   "value": 201944.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節損益表（三個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.TOT.oi.2026q3",
+   "item": "合併營業利益",
+   "value": 28076.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節損益表",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.TOT.rev.2026m9",
+   "item": "合併營收（9M26）",
+   "value": 584069.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節（九個月欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.TOT.oi.2026m9",
+   "item": "合併營業利益（9M26）",
+   "value": 79389.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節（九個月欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.cat.online.2026q3",
+   "item": "營收線：Online stores",
+   "value": 68470.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第八節 8.4 Net Sales（Q3 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.cat.physical.2026q3",
+   "item": "營收線：Physical stores",
+   "value": 5710.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第八節 8.4 Net Sales（Q3 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.cat.seller3p.2026q3",
+   "item": "營收線：Third-party seller services",
+   "value": 46492.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第八節 8.4 Net Sales（Q3 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.cat.ads.2026q3",
+   "item": "營收線：Advertising services",
+   "value": 19637.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第八節 8.4 Net Sales（Q3 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.cat.subs.2026q3",
+   "item": "營收線：Subscription services",
+   "value": 14006.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第八節 8.4 Net Sales（Q3 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.cat.other.2026q3",
+   "item": "營收線：Other",
+   "value": 1645.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第八節 8.4 Net Sales（Q3 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.intExp.2026q3",
+   "item": "利息費用",
+   "value": 1691.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節損益表（三個月 2026 欄；費用以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.intExp.2026m9",
+   "item": "利息費用（9M26）",
+   "value": 3805.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節（九個月欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.intInc.2026q3",
+   "item": "利息收入",
+   "value": 1187.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節損益表（三個月 2026 欄；費用以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.intInc.2026m9",
+   "item": "利息收入（9M26）",
+   "value": 3617.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節（九個月欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.otherInc.2026q3",
+   "item": "其他業外收益",
+   "value": -703.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節損益表（三個月 2026 欄；費用以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.otherInc.2026m9",
+   "item": "其他業外收益（9M26）",
+   "value": 68359.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節（九個月欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.pretax.2026q3",
+   "item": "稅前淨利",
+   "value": 26869.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節損益表（三個月 2026 欄；費用以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.pretax.2026m9",
+   "item": "稅前淨利（9M26）",
+   "value": 147560.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節（九個月欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.tax.2026q3",
+   "item": "所得稅",
+   "value": 6180.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節損益表（三個月 2026 欄；費用以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.tax.2026m9",
+   "item": "所得稅（9M26）",
+   "value": 33939.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節（九個月欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.ni.2026q3",
+   "item": "淨利",
+   "value": 20685.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節損益表（三個月 2026 欄；費用以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.ni.2026m9",
+   "item": "淨利（9M26）",
+   "value": 113587.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節（九個月欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.eqMethod.2026q3",
+   "item": "權益法投資損益（稅後）",
+   "value": -4.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節損益表（三個月 2026 欄；費用以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "is.eqMethod.2026m9",
+   "item": "權益法投資損益（稅後）（9M26）",
+   "value": -34.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節（九個月欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "sh.wDiluted.2026q3",
+   "item": "稀釋加權股數（三個月）",
+   "value": 10929.0,
+   "unit": "M 股",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節損益表",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "sh.wDiluted.2026m9",
+   "item": "稀釋加權股數（九個月）",
+   "value": 10903.0,
+   "unit": "M 股",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節損益表",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "sh.wDiluted.2025m9",
+   "item": "稀釋加權股數（2025 年九個月）",
+   "value": 10815.0,
+   "unit": "M 股",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第四節損益表",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.cfo.2026q3",
+   "item": "營運現金流",
+   "value": 42422.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表（三個月 2026 欄；流出以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.cfo.2026m9",
+   "item": "營運現金流（9M26）",
+   "value": 113841.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.cfo.2025m9",
+   "item": "營運現金流（9M25）",
+   "value": 85055.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.cfo.ttm2026q3",
+   "item": "營運現金流（TTM 至 2026-09-30）",
+   "value": 168300.0,
+   "unit": "USD M",
+   "period": "TTM",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（十二個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.capexGross.2026q3",
+   "item": "購置不動產及設備（總額）",
+   "value": 77259.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表（三個月 2026 欄；流出以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.capexGross.2026m9",
+   "item": "購置不動產及設備（總額）（9M26）",
+   "value": 175670.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.capexGross.2025m9",
+   "item": "購置不動產及設備（總額）（9M25）",
+   "value": 92297.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.capexGross.ttm2026q3",
+   "item": "購置不動產及設備（總額）（TTM 至 2026-09-30）",
+   "value": 215192.0,
+   "unit": "USD M",
+   "period": "TTM",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（十二個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.ppeProceeds.2026q3",
+   "item": "不動產及設備出售與獎勵收入",
+   "value": 1381.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表（三個月 2026 欄；流出以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.ppeProceeds.2026m9",
+   "item": "不動產及設備出售與獎勵收入（9M26）",
+   "value": 3482.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.ppeProceeds.2025m9",
+   "item": "不動產及設備出售與獎勵收入（9M25）",
+   "value": 2446.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.ppeProceeds.ttm2026q3",
+   "item": "不動產及設備出售與獎勵收入（TTM 至 2026-09-30）",
+   "value": 4535.0,
+   "unit": "USD M",
+   "period": "TTM",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（十二個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.da.2026q3",
+   "item": "折舊攤銷（現金流量表口徑）",
+   "value": 20949.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表（三個月 2026 欄；流出以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.da.2026m9",
+   "item": "折舊攤銷（現金流量表口徑）（9M26）",
+   "value": 59882.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.da.2025m9",
+   "item": "折舊攤銷（現金流量表口徑）（9M25）",
+   "value": 46285.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.da.ttm2026q3",
+   "item": "折舊攤銷（現金流量表口徑）（TTM 至 2026-09-30）",
+   "value": 79353.0,
+   "unit": "USD M",
+   "period": "TTM",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（十二個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.sbc.2026q3",
+   "item": "股份基礎給付",
+   "value": 5406.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表（三個月 2026 欄；流出以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.sbc.2026m9",
+   "item": "股份基礎給付（9M26）",
+   "value": 15476.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.sbc.2025m9",
+   "item": "股份基礎給付（9M25）",
+   "value": 15070.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.sbc.ttm2026q3",
+   "item": "股份基礎給付（TTM 至 2026-09-30）",
+   "value": 19873.0,
+   "unit": "USD M",
+   "period": "TTM",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（十二個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.finLeasePrin.2026q3",
+   "item": "融資租賃本金償還",
+   "value": 433.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表（三個月 2026 欄；流出以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.finLeasePrin.2026m9",
+   "item": "融資租賃本金償還（9M26）",
+   "value": 1296.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.finLeasePrin.2025m9",
+   "item": "融資租賃本金償還（9M25）",
+   "value": 1172.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.finLeasePrin.ttm2026q3",
+   "item": "融資租賃本金償還（TTM 至 2026-09-30）",
+   "value": 1681.0,
+   "unit": "USD M",
+   "period": "TTM",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（十二個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.finOblPrin.2026q3",
+   "item": "融資義務本金償還",
+   "value": 107.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表（三個月 2026 欄；流出以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.finOblPrin.2026m9",
+   "item": "融資義務本金償還（9M26）",
+   "value": 281.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.finOblPrin.2025m9",
+   "item": "融資義務本金償還（9M25）",
+   "value": 276.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.finOblPrin.ttm2026q3",
+   "item": "融資義務本金償還（TTM 至 2026-09-30）",
+   "value": 333.0,
+   "unit": "USD M",
+   "period": "TTM",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（十二個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.acqInvest.2026q3",
+   "item": "收購與非上市投資淨額",
+   "value": 23986.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表（三個月 2026 欄；流出以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.acqInvest.2026m9",
+   "item": "收購與非上市投資淨額（9M26）",
+   "value": 63753.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.acqInvest.2025m9",
+   "item": "收購與非上市投資淨額（9M25）",
+   "value": 2438.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.acqInvest.ttm2026q3",
+   "item": "收購與非上市投資淨額（TTM 至 2026-09-30）",
+   "value": 65156.0,
+   "unit": "USD M",
+   "period": "TTM",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（十二個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.ltdProceeds.2026q3",
+   "item": "長期借款收入",
+   "value": 48102.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表（三個月 2026 欄；流出以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.ltdProceeds.2026m9",
+   "item": "長期借款收入（9M26）",
+   "value": 115100.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.ltdProceeds.2025m9",
+   "item": "長期借款收入（9M25）",
+   "value": 746.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.ltdProceeds.ttm2026q3",
+   "item": "長期借款收入（TTM 至 2026-09-30）",
+   "value": 130027.0,
+   "unit": "USD M",
+   "period": "TTM",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（十二個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.ltdRepay.2026q3",
+   "item": "長期借款償還",
+   "value": 7.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表（三個月 2026 欄；流出以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.ltdRepay.2026m9",
+   "item": "長期借款償還（9M26）",
+   "value": 2759.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.ltdRepay.2025m9",
+   "item": "長期借款償還（9M25）",
+   "value": 3759.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.ltdRepay.ttm2026q3",
+   "item": "長期借款償還（TTM 至 2026-09-30）",
+   "value": 4021.0,
+   "unit": "USD M",
+   "period": "TTM",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（十二個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.stdProceeds.2026q3",
+   "item": "短期借款收入",
+   "value": 5307.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表（三個月 2026 欄；流出以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.stdProceeds.2026m9",
+   "item": "短期借款收入（9M26）",
+   "value": 20693.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.stdProceeds.2025m9",
+   "item": "短期借款收入（9M25）",
+   "value": 7131.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.stdProceeds.ttm2026q3",
+   "item": "短期借款收入（TTM 至 2026-09-30）",
+   "value": 22882.0,
+   "unit": "USD M",
+   "period": "TTM",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（十二個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.stdRepay.2026q3",
+   "item": "短期借款償還",
+   "value": 3927.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表（三個月 2026 欄；流出以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.stdRepay.2026m9",
+   "item": "短期借款償還（9M26）",
+   "value": 19609.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.stdRepay.2025m9",
+   "item": "短期借款償還（9M25）",
+   "value": 5300.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.stdRepay.ttm2026q3",
+   "item": "短期借款償還（TTM 至 2026-09-30）",
+   "value": 22735.0,
+   "unit": "USD M",
+   "period": "TTM",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（十二個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.finLeasePPE.2026q3",
+   "item": "融資租賃取得之不動產及設備",
+   "value": 1472.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表（三個月 2026 欄；流出以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.finLeasePPE.2026m9",
+   "item": "融資租賃取得之不動產及設備（9M26）",
+   "value": 3600.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.finLeasePPE.2025m9",
+   "item": "融資租賃取得之不動產及設備（9M25）",
+   "value": 1968.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.finLeasePPE.ttm2026q3",
+   "item": "融資租賃取得之不動產及設備（TTM 至 2026-09-30）",
+   "value": 4543.0,
+   "unit": "USD M",
+   "period": "TTM",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（十二個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.ppeUnpaid.2026q3",
+   "item": "已取得未付款之不動產及設備增加",
+   "value": 853.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表（三個月 2026 欄；流出以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.ppeUnpaid.2026m9",
+   "item": "已取得未付款之不動產及設備增加（9M26）",
+   "value": 21473.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.ppeUnpaid.2025m9",
+   "item": "已取得未付款之不動產及設備增加（9M25）",
+   "value": 4849.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.ppeUnpaid.ttm2026q3",
+   "item": "已取得未付款之不動產及設備增加（TTM 至 2026-09-30）",
+   "value": 26779.0,
+   "unit": "USD M",
+   "period": "TTM",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（十二個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.nonop.2026q3",
+   "item": "業外（收益）費用淨額調整",
+   "value": 694.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表（三個月 2026 欄；流出以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.nonop.2026m9",
+   "item": "業外（收益）費用淨額調整（9M26）",
+   "value": -68319.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.nonop.2025m9",
+   "item": "業外（收益）費用淨額調整（9M25）",
+   "value": -14187.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.nonop.ttm2026q3",
+   "item": "業外（收益）費用淨額調整（TTM 至 2026-09-30）",
+   "value": -69012.0,
+   "unit": "USD M",
+   "period": "TTM",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（十二個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.defTax.2026q3",
+   "item": "遞延所得稅",
+   "value": 5033.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表（三個月 2026 欄；流出以正值記）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.defTax.2026m9",
+   "item": "遞延所得稅（9M26）",
+   "value": 35522.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.defTax.2025m9",
+   "item": "遞延所得稅（9M25）",
+   "value": 10648.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（九個月 2025 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.defTax.ttm2026q3",
+   "item": "遞延所得稅（TTM 至 2026-09-30）",
+   "value": 36344.0,
+   "unit": "USD M",
+   "period": "TTM",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節（十二個月 2026 欄）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "cf.capexNet.2026q3",
+   "item": "資本支出淨額（購置 − 出售及獎勵；公司「cash CapEx」）",
+   "value": 75878.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "由同表兩列換算",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "cf.capexNet.2026m9",
+   "item": "資本支出淨額（9M26）",
+   "value": 172188.0,
+   "unit": "USD M",
+   "period": "9M26",
+   "source": "由同表兩列換算",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "cf.capexNet.2025m9",
+   "item": "資本支出淨額（9M25）",
+   "value": 89851.0,
+   "unit": "USD M",
+   "period": "9M25",
+   "source": "由同表兩列換算",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "cf.fcf.2026q3",
+   "item": "自由現金流（公司口徑＝營運現金流 − 資本支出淨額）",
+   "value": -33456.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "換算",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "bs.cash.2026q3",
+   "item": "現金及約當現金（2026-09-30）",
+   "value": 55783.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第七節資產負債表",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "bs.mktSec.2026q3",
+   "item": "有價證券（2026-09-30）",
+   "value": 58443.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第七節資產負債表",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "bs.ltd.2026q3",
+   "item": "長期債務（帳面，不含流動部分）（2026-09-30）",
+   "value": 173125.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第七節資產負債表",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "bs.ppe.2026q3",
+   "item": "不動產及設備淨額（2026-09-30）",
+   "value": 508862.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第七節資產負債表",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "bs.ltLease.2026q3",
+   "item": "長期租賃負債（2026-09-30）",
+   "value": 98824.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第七節資產負債表",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "bs.equity.2026q3",
+   "item": "股東權益（2026-09-30）",
+   "value": 613601.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第七節資產負債表",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "bs.otherAssets.2026q3",
+   "item": "其他資產（含 Anthropic 等投資）（2026-09-30）",
+   "value": 358775.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第七節資產負債表",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "bs.totalAssets.2026q3",
+   "item": "總資產（2026-09-30）",
+   "value": 1243390.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第七節資產負債表",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "bs.cashMs.2026q3",
+   "item": "現金、約當現金與有價證券（2026-09-30）",
+   "value": 114226.0,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "資產負債表兩列相加",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Derived]",
+   "note": ""
+  },
+  {
+   "id": "sh.out.20260930",
+   "item": "流通股數（2026-09-30）",
+   "value": 10811.0,
+   "unit": "M 股",
+   "period": "20260930",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第七節資產負債表股本說明",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": "10-Q 封面股數未取得（10-Q 缺）"
+  },
+  {
+   "id": "sh.awards.2026q3",
+   "item": "未歸屬股份獎勵（2026-09-30）",
+   "value": 223.0,
+   "unit": "M 股",
+   "period": "2026Q3",
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 8.1",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "debt.face.20260930",
+   "item": "債務面額（2026-09-30，推導）",
+   "value": 181090.0,
+   "unit": "USD M",
+   "period": "20260930",
+   "source": "2026-06-30 債務面額 132,995（10-Q 2026Q2 附註 5）＋Q3 長期借款收入 − 償還",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Derived]",
+   "note": "10-Q 附註未取得：收入為扣除折價後的淨額，外幣債未重估；帳面法（6/30 面額＋長期債帳面變動）為 177,226，差額主要是 2027 年到期票據轉入流動部分（10-Q 待補）"
+  },
+  {
+   "id": "guide.2026q4.rev",
+   "item": "公司指引 2026Q4 營收（240.0–247.0；年增 12%–16%；匯率約 −60bp）",
+   "value": {
+    "low": 240000,
+    "high": 247000
+   },
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "新聞稿 Financial Guidance（PDF 與 IR 網頁一致）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "guide.2026q4.oi",
+   "item": "公司指引 2026Q4 營業利益（28.5–33.5；2025Q4 為 25.0）",
+   "value": {
+    "low": 28500,
+    "high": 33500
+   },
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "同上；Leo 成本 Q4 仍多數費用化（法說）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "guide.2026.capex",
+   "item": "2026 現金資本支出指引「approximately $220 billion」（維持）",
+   "value": 220000,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "新聞稿 Financial Guidance；法說「still expect 2026 cash CapEx of approximately $220 billion」",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "guide.2027.capex",
+   "item": "2027 資本支出方向：「spend meaningfully more in 2027」（無數字）",
+   "value": null,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "法說逐字稿（Jassy）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "aws.backlog.2026q3",
+   "item": "AWS backlog（2026-09-30）：「$578 billion, growing triple digits」",
+   "value": 578000,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "法說逐字稿（Jassy）；Wattonomics Q_review_2026q3 已登錄 578",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "aws.runRate.2026q3",
+   "item": "AWS 年化營收 run-rate",
+   "value": 184000,
+   "unit": "USD M",
+   "period": "2026Q3",
+   "source": "新聞稿副標題與法說（184B）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "aws.growthView.2027_2028",
+   "item": "公司說法：AWS 2027、2028 年各成長 40% 以上（只作驗證列）",
+   "value": 0.4,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "新聞稿 CEO 引述；法說",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "aws.aiGrowth.2026q3",
+   "item": "AWS AI 營收年增三位數（未給金額；推論過半為 inference）",
+   "value": null,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "法說（CFO）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "trn.external.2027",
+   "item": "Trainium 對外銷售晶片：2027 年底開始",
+   "value": null,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "法說（Jassy）",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  },
+  {
+   "id": "ads.guide.2026q4",
+   "item": "廣告營收 2026Q4 年增「high teens」",
+   "value": null,
+   "unit": "—",
+   "period": "2026Q3",
+   "source": "新聞稿",
+   "url": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q3/earnings-result/AMZN-Q3-2026-Earnings-Release.pdf",
+   "docDate": "2026-10-29",
+   "retrieved": "2026-10-31",
+   "tag": "[Interested-party]",
+   "note": ""
+  }
+ ],
+ "checks": [
+  {
+   "id": "is.NA.rev.2026q3（分部表 vs Supplemental）",
+   "value": 112852.0,
+   "second": 112852.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第八節 Supplemental（Q3 2026 欄）",
+   "ok": true
+  },
+  {
+   "id": "is.NA.rev.2026q3（9M26 − 事實總帳 Q1＋Q2）",
+   "value": 112852.0,
+   "second": 112852.0,
+   "source": "分部表九個月欄 − amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.NA.rev.2025q3（Supplemental vs 既有總帳）",
+   "value": 106267.0,
+   "second": 106267,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.NA.rev.2025q4（Supplemental vs 既有總帳）",
+   "value": 127083.0,
+   "second": 127083,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.NA.rev.2026q1（Supplemental vs 既有總帳）",
+   "value": 104143.0,
+   "second": 104143,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.NA.rev.2026q2（Supplemental vs 既有總帳）",
+   "value": 116177.0,
+   "second": 116177,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.NA.oi.2026q3（分部表 vs Supplemental）",
+   "value": 8723.0,
+   "second": 8723.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第八節 Supplemental（Q3 2026 欄）",
+   "ok": true
+  },
+  {
+   "id": "is.NA.oi.2026q3（9M26 − 事實總帳 Q1＋Q2）",
+   "value": 8723.0,
+   "second": 8723.0,
+   "source": "分部表九個月欄 − amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.NA.oi.2025q3（Supplemental vs 既有總帳）",
+   "value": 4789.0,
+   "second": 4789,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.NA.oi.2025q4（Supplemental vs 既有總帳）",
+   "value": 11472.0,
+   "second": 11472,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.NA.oi.2026q1（Supplemental vs 既有總帳）",
+   "value": 8267.0,
+   "second": 8267,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.NA.oi.2026q2（Supplemental vs 既有總帳）",
+   "value": 9123.0,
+   "second": 9123,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.rev.2026q3（分部表 vs Supplemental）",
+   "value": 43108.0,
+   "second": 43108.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第八節 Supplemental（Q3 2026 欄）",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.rev.2026q3（9M26 − 事實總帳 Q1＋Q2）",
+   "value": 43108.0,
+   "second": 43108.0,
+   "source": "分部表九個月欄 − amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.rev.2025q3（Supplemental vs 既有總帳）",
+   "value": 40896.0,
+   "second": 40896,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.rev.2025q4（Supplemental vs 既有總帳）",
+   "value": 50724.0,
+   "second": 50724,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.rev.2026q1（Supplemental vs 既有總帳）",
+   "value": 39789.0,
+   "second": 39789,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.rev.2026q2（Supplemental vs 既有總帳）",
+   "value": 42197.0,
+   "second": 42197,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.oi.2026q3（分部表 vs Supplemental）",
+   "value": 1580.0,
+   "second": 1580.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第八節 Supplemental（Q3 2026 欄）",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.oi.2026q3（9M26 − 事實總帳 Q1＋Q2）",
+   "value": 1580.0,
+   "second": 1580.0,
+   "source": "分部表九個月欄 − amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.oi.2025q3（Supplemental vs 既有總帳）",
+   "value": 1199.0,
+   "second": 1199,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.oi.2025q4（Supplemental vs 既有總帳）",
+   "value": 1040.0,
+   "second": 1040,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.oi.2026q1（Supplemental vs 既有總帳）",
+   "value": 1424.0,
+   "second": 1424,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.oi.2026q2（Supplemental vs 既有總帳）",
+   "value": 1717.0,
+   "second": 1717,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.rev.2026q3（分部表 vs Supplemental）",
+   "value": 45984.0,
+   "second": 45984.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第八節 Supplemental（Q3 2026 欄）",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.rev.2026q3（9M26 − 事實總帳 Q1＋Q2）",
+   "value": 45984.0,
+   "second": 45984.0,
+   "source": "分部表九個月欄 − amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.rev.2025q3（Supplemental vs 既有總帳）",
+   "value": 33006.0,
+   "second": 33006,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.rev.2025q4（Supplemental vs 既有總帳）",
+   "value": 35579.0,
+   "second": 35579,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.rev.2026q1（Supplemental vs 既有總帳）",
+   "value": 37587.0,
+   "second": 37587,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.rev.2026q2（Supplemental vs 既有總帳）",
+   "value": 42232.0,
+   "second": 42232,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.oi.2026q3（分部表 vs Supplemental）",
+   "value": 17773.0,
+   "second": 17773.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第八節 Supplemental（Q3 2026 欄）",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.oi.2026q3（9M26 − 事實總帳 Q1＋Q2）",
+   "value": 17773.0,
+   "second": 17773.0,
+   "source": "分部表九個月欄 − amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.oi.2025q3（Supplemental vs 既有總帳）",
+   "value": 11434.0,
+   "second": 11434,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.oi.2025q4（Supplemental vs 既有總帳）",
+   "value": 12465.0,
+   "second": 12465,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.oi.2026q1（Supplemental vs 既有總帳）",
+   "value": 14161.0,
+   "second": 14161,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.oi.2026q2（Supplemental vs 既有總帳）",
+   "value": 16621.0,
+   "second": 16621,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.TOT.rev.2026q3（損益表 vs Supplemental 8.2）",
+   "value": 201944.0,
+   "second": 201944.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第八節 Supplemental（Q3 2026 欄）",
+   "ok": true
+  },
+  {
+   "id": "is.TOT.rev.2026q3（損益表 vs 分部表合併）",
+   "value": 201944.0,
+   "second": 201944.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節 Segment Information（三個月 2026 欄）",
+   "ok": true
+  },
+  {
+   "id": "is.TOT.oi.2026q3（損益表 vs Supplemental 8.2）",
+   "value": 28076.0,
+   "second": 28076.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第八節 Supplemental（Q3 2026 欄）",
+   "ok": true
+  },
+  {
+   "id": "is.TOT.rev.2026q3（三分部合計）",
+   "value": 201944.0,
+   "second": 201944.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節 Segment Information（三個月 2026 欄）",
+   "ok": true
+  },
+  {
+   "id": "is.TOT.oi.2026q3（三分部合計）",
+   "value": 28076.0,
+   "second": 28076.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節 Segment Information（三個月 2026 欄）",
+   "ok": true
+  },
+  {
+   "id": "is.TOT.rev.2025q3（Supplemental vs 既有總帳）",
+   "value": 180169.0,
+   "second": 180169,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.TOT.rev.2025q4（Supplemental vs 既有總帳）",
+   "value": 213386.0,
+   "second": 213386,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.TOT.rev.2026q1（Supplemental vs 既有總帳）",
+   "value": 181519.0,
+   "second": 181519,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.TOT.rev.2026q2（Supplemental vs 既有總帳）",
+   "value": 200606.0,
+   "second": 200606,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.online.2025q3（Supplemental vs 既有總帳）",
+   "value": 67407.0,
+   "second": 67407,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.online.2025q4（Supplemental vs 既有總帳）",
+   "value": 82988.0,
+   "second": 82988,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.online.2026q1（Supplemental vs 既有總帳）",
+   "value": 64254.0,
+   "second": 64254,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.online.2026q2（Supplemental vs 既有總帳）",
+   "value": 70432.0,
+   "second": 70432,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.physical.2025q3（Supplemental vs 既有總帳）",
+   "value": 5578.0,
+   "second": 5578,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.physical.2025q4（Supplemental vs 既有總帳）",
+   "value": 5855.0,
+   "second": 5855,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.physical.2026q1（Supplemental vs 既有總帳）",
+   "value": 5785.0,
+   "second": 5785,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.physical.2026q2（Supplemental vs 既有總帳）",
+   "value": 5794.0,
+   "second": 5794,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.seller3p.2025q3（Supplemental vs 既有總帳）",
+   "value": 42486.0,
+   "second": 42486,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.seller3p.2025q4（Supplemental vs 既有總帳）",
+   "value": 52816.0,
+   "second": 52816,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.seller3p.2026q1（Supplemental vs 既有總帳）",
+   "value": 41578.0,
+   "second": 41578,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.seller3p.2026q2（Supplemental vs 既有總帳）",
+   "value": 46780.0,
+   "second": 46780,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.ads.2025q3（Supplemental vs 既有總帳）",
+   "value": 17703.0,
+   "second": 17703,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.ads.2025q4（Supplemental vs 既有總帳）",
+   "value": 21317.0,
+   "second": 21317,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.ads.2026q1（Supplemental vs 既有總帳）",
+   "value": 17243.0,
+   "second": 17243,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.ads.2026q2（Supplemental vs 既有總帳）",
+   "value": 19809.0,
+   "second": 19809,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.subs.2025q3（Supplemental vs 既有總帳）",
+   "value": 12574.0,
+   "second": 12574,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.subs.2025q4（Supplemental vs 既有總帳）",
+   "value": 13122.0,
+   "second": 13122,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.subs.2026q1（Supplemental vs 既有總帳）",
+   "value": 13427.0,
+   "second": 13427,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.subs.2026q2（Supplemental vs 既有總帳）",
+   "value": 13730.0,
+   "second": 13730,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.other.2025q3（Supplemental vs 既有總帳）",
+   "value": 1415.0,
+   "second": 1415,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.other.2025q4（Supplemental vs 既有總帳）",
+   "value": 1709.0,
+   "second": 1709,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.other.2026q1（Supplemental vs 既有總帳）",
+   "value": 1645.0,
+   "second": 1645,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.cat.other.2026q2（Supplemental vs 既有總帳）",
+   "value": 1829.0,
+   "second": 1829,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "營收線合計（含 AWS）＝合併營收（2026Q3）",
+   "value": 201944.0,
+   "second": 201944.0,
+   "source": "8.4 各線加總 vs 損益表",
+   "ok": true
+  },
+  {
+   "id": "營收線：AWS（8.4）＝AWS 分部（2026Q3）",
+   "value": 45984.0,
+   "second": 45984.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第六節 Segment Information（三個月 2026 欄）",
+   "ok": true
+  },
+  {
+   "id": "is.intExp.2026q3（9M26 − 事實總帳 Q1＋Q2）",
+   "value": 1691.0,
+   "second": 1691.0,
+   "source": "損益表九個月欄 − amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.pretax.2026q3（9M26 − 事實總帳 Q1＋Q2）",
+   "value": 26869.0,
+   "second": 26869.0,
+   "source": "損益表九個月欄 − amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.tax.2026q3（9M26 − 事實總帳 Q1＋Q2）",
+   "value": 6180.0,
+   "second": 6180.0,
+   "source": "損益表九個月欄 − amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.ni.2026q3（9M26 − 事實總帳 Q1＋Q2）",
+   "value": 20685.0,
+   "second": 20685.0,
+   "source": "損益表九個月欄 − amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.ni.2026q3（損益表 vs 現金流量表）",
+   "value": 20685.0,
+   "second": 20685.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第三節現金流量表",
+   "ok": true
+  },
+  {
+   "id": "is.ni.2026q3（損益表 vs Supplemental 8.2）",
+   "value": 20685.0,
+   "second": 20685.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 第八節 Supplemental（Q3 2026 欄）",
+   "ok": true
+  },
+  {
+   "id": "is.ni.2026q3（稅前 − 稅＋權益法）",
+   "value": 20685.0,
+   "second": 20685.0,
+   "source": "損益表三列",
+   "ok": true
+  },
+  {
+   "id": "is.eps.2026q3（淨利 ÷ 稀釋股數 vs 公司 1.89）",
+   "value": 1.89,
+   "second": 1.89,
+   "source": "損益表 EPS 列",
+   "ok": true
+  },
+  {
+   "id": "cf.cfo.2026q3（9M26 − 事實總帳 Q1＋Q2）",
+   "value": 42422.0,
+   "second": 42422.0,
+   "source": "現金流量表九個月欄 − amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "cf.capexGross.2026q3（9M26 − 事實總帳 Q1＋Q2）",
+   "value": 77259.0,
+   "second": 77259.0,
+   "source": "現金流量表九個月欄 − amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "cf.ppeProceeds.2026q3（9M26 − 事實總帳 Q1＋Q2）",
+   "value": 1381.0,
+   "second": 1381.0,
+   "source": "現金流量表九個月欄 − amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "cf.da.2026q3（9M26 − 事實總帳 Q1＋Q2）",
+   "value": 20949.0,
+   "second": 20949.0,
+   "source": "現金流量表九個月欄 − amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "cf.sbc.2026q3（9M26 − 事實總帳 Q1＋Q2）",
+   "value": 5406.0,
+   "second": 5406.0,
+   "source": "現金流量表九個月欄 − amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "cf.finLeasePPE.2026q3（9M26 − 事實總帳 Q1＋Q2）",
+   "value": 1472.0,
+   "second": 1472.0,
+   "source": "現金流量表九個月欄 − amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "cf.capexNet.2026q3（換算 vs 法說「cash CapEx $75.9B」）",
+   "value": 75900,
+   "second": 75900,
+   "source": "法說逐字稿（不入 repo；只引數字）",
+   "ok": true
+  },
+  {
+   "id": "cf.capexNet.ttm2026q3（換算 vs Supplemental 8.1）",
+   "value": 210657.0,
+   "second": 210657.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 8.1",
+   "ok": true
+  },
+  {
+   "id": "cf.fcf.ttm2026q3（OCF − 資本支出淨額 vs Supplemental FCF TTM）",
+   "value": -42357.0,
+   "second": -42357.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 8.1",
+   "ok": true
+  },
+  {
+   "id": "cf.cfo.ttm2026q3（現金流量表 vs Supplemental 8.1）",
+   "value": 168300.0,
+   "second": 168300.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 8.1",
+   "ok": true
+  },
+  {
+   "id": "cf.sbc.2026q3（現金流量表 vs Supplemental 8.5）",
+   "value": 5406.0,
+   "second": 5406.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 8.5",
+   "ok": true
+  },
+  {
+   "id": "bs.cash.fy2025（Q3 新聞稿比較欄 vs 既有總帳）",
+   "value": 86810.0,
+   "second": 86810,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "bs.mktSec.fy2025（Q3 新聞稿比較欄 vs 既有總帳）",
+   "value": 36219.0,
+   "second": 36219,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "bs.ltd.fy2025（Q3 新聞稿比較欄 vs 既有總帳）",
+   "value": 65648.0,
+   "second": 65648,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "bs.ltLease.fy2025（Q3 新聞稿比較欄 vs 既有總帳）",
+   "value": 87339.0,
+   "second": 87339,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "bs.equity.fy2025（Q3 新聞稿比較欄 vs 既有總帳）",
+   "value": 411065.0,
+   "second": 411065,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "bs.otherAssets.fy2025（Q3 新聞稿比較欄 vs 既有總帳）",
+   "value": 122607.0,
+   "second": 122607,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "bs.totalAssets.fy2025（Q3 新聞稿比較欄 vs 既有總帳）",
+   "value": 818042.0,
+   "second": 818042,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "bs.totalAssets（資產各列加總）",
+   "value": 1243390.0,
+   "second": 1243390.0,
+   "source": "資產負債表",
+   "ok": true
+  },
+  {
+   "id": "sh.out.20260930（資產負債表 vs Supplemental 8.1）",
+   "value": 10811.0,
+   "second": 10811.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_新聞稿.md 8.1",
+   "ok": true
+  },
+  {
+   "id": "sh.awards.2026q2（Supplemental vs 既有總帳）",
+   "value": 244.0,
+   "second": 244,
+   "source": "amazon_facts_20261008.json",
+   "ok": true
+  },
+  {
+   "id": "is.TOT.rev.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 201944.0,
+   "second": 201944.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "is.TOT.oi.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 28076.0,
+   "second": 28076.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "is.ni.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 20685.0,
+   "second": 20685.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "is.eps.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 1.89,
+   "second": 1.89,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "is.NA.rev.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 112852.0,
+   "second": 112852.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "is.NA.oi.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 8723.0,
+   "second": 8723.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.rev.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 43108.0,
+   "second": 43108.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "is.INTL.oi.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 1580.0,
+   "second": 1580.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.rev.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 45984.0,
+   "second": 45984.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "is.AWS.oi.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 17773.0,
+   "second": 17773.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "cf.cfo.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 42422.0,
+   "second": 42422.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "cf.capexGross.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 77259.0,
+   "second": 77259.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "cf.ppeProceeds.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 1381.0,
+   "second": 1381.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "cf.finLeasePPE.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 1472.0,
+   "second": 1472.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "cf.fcf.ttm2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": -42357.0,
+   "second": -42357.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "bs.cash.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 55783.0,
+   "second": 55783.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "bs.ltd.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 173125.0,
+   "second": 173125.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "is.cat.ads.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 19637.0,
+   "second": 19637.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  },
+  {
+   "id": "is.cat.aws.2026q3（PDF 轉錄 vs IR 網頁第二讀）",
+   "value": 45984.0,
+   "second": 45984.0,
+   "source": "mag/extract/docs/2026Q3/amazon_2026Q3_核對_新聞稿PDF對IR網頁.md",
+   "ok": true
+  }
+ ]
+}
