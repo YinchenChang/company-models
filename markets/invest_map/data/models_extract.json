@@ -8011,73 +8011,73 @@
   }
  },
  "AMZN": {
-  "model": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx",
+  "model": "amazon/dist/20261031_Amazon個股模型_v0.3.1.xlsx",
   "v2": true,
   "seg_model": true,
   "tp": {
-   "value": 215.578882385843,
+   "value": 217.650781868569,
    "cell": "Val!B19",
-   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
+   "file": "amazon/dist/20261031_Amazon個股模型_v0.3.1.xlsx"
   },
   "tp_dcf": {
-   "value": 149.602058726717,
+   "value": 147.301573294529,
    "cell": "Val!B17",
-   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
+   "file": "amazon/dist/20261031_Amazon個股模型_v0.3.1.xlsx"
   },
   "tp_comp": {
-   "value": 281.55570604497,
+   "value": 287.999990442609,
    "cell": "Val!B18",
-   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
+   "file": "amazon/dist/20261031_Amazon個股模型_v0.3.1.xlsx"
   },
   "tp_cons": {
-   "value": 332.24,
+   "value": 332.41,
    "cell": "Val!B25",
-   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
+   "file": "amazon/dist/20261031_Amazon個股模型_v0.3.1.xlsx"
   },
   "up": {
-   "value": -0.134534174853092,
+   "value": -0.0944423471247405,
    "cell": "Val!B21",
-   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
+   "file": "amazon/dist/20261031_Amazon個股模型_v0.3.1.xlsx"
   },
   "up_comp": {
-   "value": 0.130337251776344,
+   "value": 0.19825250860249,
    "cell": "Val!B22",
-   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
+   "file": "amazon/dist/20261031_Amazon個股模型_v0.3.1.xlsx"
   },
   "tier6": {
    "value": "0%～−25%",
    "cell": "Val!B23",
-   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
+   "file": "amazon/dist/20261031_Amazon個股模型_v0.3.1.xlsx"
   },
   "rec": {
    "value": "中立",
    "cell": "Val!B24",
-   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
+   "file": "amazon/dist/20261031_Amazon個股模型_v0.3.1.xlsx"
   },
   "dcf_A": {
-   "value": 205.037948524346,
+   "value": 193.170402673649,
    "cell": "Val!B5",
-   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
+   "file": "amazon/dist/20261031_Amazon個股模型_v0.3.1.xlsx"
   },
   "dcf_C": {
-   "value": 117.352344636521,
+   "value": 120.190250466792,
    "cell": "Val!D5",
-   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx"
+   "file": "amazon/dist/20261031_Amazon個股模型_v0.3.1.xlsx"
   },
   "model_px": {
-   "value": 249.09,
+   "value": 240.35,
    "cell": "Val!B20",
-   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx",
-   "date": "2026-10-26"
+   "file": "amazon/dist/20261031_Amazon個股模型_v0.3.1.xlsx",
+   "date": "2026-10-30"
   },
   "cash": {
    "basis": "現金流",
-   "file": "amazon/dist/20261027_Amazon個股模型_v0.3.xlsx",
-   "label": "自由現金流扣股利五年合計（基準情境 B；A 205.5、C -43.2）",
+   "file": "amazon/dist/20261031_Amazon個股模型_v0.3.1.xlsx",
+   "label": "自由現金流扣股利五年合計（基準情境 B；A 258.3、C 37.7）",
    "values": [
     [
      "情境 B 五年合計",
-     19.0072988716234,
+     89.6117652783997,
      "CF!C6"
     ]
    ]
@@ -8716,7 +8716,7 @@
   }
  },
  "Anthropic": {
-  "model": "anthropic/dist/20261024_Anthropic收支模型_v0_1_5.xlsx",
+  "model": "anthropic/dist/20261031_Anthropic收支模型_v0_1_6.xlsx",
   "unlisted": true,
   "cash": {
    "basis": "現金流",
@@ -8724,31 +8724,31 @@
    "values": [
     [
      "2026",
-     -2.58841935855733,
+     -2.60114491645207,
      "Funding!E14"
     ],
     [
      "2027",
-     -18.5037194506051,
+     -18.5249393183946,
      "Funding!F14"
     ],
     [
      "2028",
-     -14.9597931224653,
+     -14.991877562563,
      "Funding!G14"
     ],
     [
      "2029",
-     47.5986733614907,
+     47.5545572563564,
      "Funding!H14"
     ],
     [
      "2030",
-     96.1314598161702,
+     96.0742853439161,
      "Funding!I14"
     ]
    ],
-   "file": "anthropic/dist/20261024_Anthropic收支模型_v0_1_5.xlsx"
+   "file": "anthropic/dist/20261031_Anthropic收支模型_v0_1_6.xlsx"
   }
  }
 }
