@@ -22,6 +22,19 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 
 
+# v0.6.19：頁首日期改在此集中維護（原本寫死在 data 組裝處，換版時漏改）
+BUILT = "2026-11-01"
+PRICE_NOTE = ("分級用價：估值 v2 模型（半導體、MAG、Oracle、Meta、SpaceX）用各模型現價（模型日）；"
+              "CoreWeave、Nebius、WhiteFiber、MiniMax、智譜用 2026-10-30 收盤。偏離檢查：全部以 2026-10-30 收盤對模型價")
+LAST_CLOSE = "2026-10-30"
+# 模型狀態註記（data/model_status.csv：代號, 狀態）——偏離旗標旁顯示：最近／下次財報與模型更新計畫
+STATUS = {}
+_sf = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "model_status.csv")
+if os.path.exists(_sf):
+    import csv as _csv
+    with open(_sf, encoding="utf-8") as _f:
+        STATUS = {r["ticker"]: r["status"] for r in _csv.DictReader(_f)}
+
 def recalc(path):
     tmp = tempfile.mkdtemp()
     subprocess.run(["soffice", "--headless", "--convert-to", "xlsx", "--outdir", tmp, path],
@@ -99,10 +112,12 @@ def main():
         p = prices[tk]
         valuation.append({
             "tk": tk, "name": d["公司"], "layer": d["層級"], "seg": d["次產業"], "method": d["方法"],
-            "ccy": p["幣別"], "price": num(d["採用價"]), "price_date": (p["模型價日期"] if tk in SEG_MODELS and p["模型價日期"] else sources.get(tk, {}).get("date", p["模型價日期"])),
+            "ccy": p["幣別"], "price": num(d["採用價"]), "price_date": (p["模型價日期"] if (tk in SEG_MODELS or mx.get(tk, {}).get("v2")) and p["模型價日期"] else sources.get(tk, {}).get("date", p["模型價日期"])),  # v0.6.19：採用模型價者一律顯示模型價日期
             "price_src": sources.get(tk, {}).get("source", ""), "price_n": sources.get(tk, {}).get("sources_count", ""),
             "model_px": num(p["模型內現價"]), "model_date": p["模型價日期"], "move": num(d["模型價日以來漲跌"]),
             "flag": d["價格變動旗標"] or "",
+            "last": num(p["最新外部收盤"]), "last_date": sources.get(tk, {}).get("date", ""),
+            "status": STATUS.get(tk, ""),
             "center": num(d["中心價"]), "bear": num(d["悲觀情境價"]), "cu": num(d["中心空間"]), "bu": num(d["悲觀情境空間"]),
             "tier": d["最終分級"], "vtier": d["分級"],
             "mfolder": MFOLDER.get(tk), "mfile": MFILE.get(tk, ""),
@@ -124,8 +139,8 @@ def main():
     data = {
         "meta": {"version": os.path.basename(src).split("_")[-1].replace(".xlsx", ""),
                  "book": os.path.basename(src), "tk_file": snap["file"], "tk_version": snap["version"],
-                 "tk_commit": snap["commit"][:7], "cm_commit": cm, "built": "2026-10-27",
-                 "price_date": "半導體：各模型現價（2026-10-22／23）；Microsoft、Alphabet、Amazon、Oracle：模型現價（2026-10-26 收盤）；其餘雲端與模型商：2026-10-23 收盤",
+                 "tk_commit": snap["commit"][:7], "cm_commit": cm, "built": BUILT,
+                 "price_date": PRICE_NOTE, "last_close_date": LAST_CLOSE,
                  "pages": "https://yinchenchang.github.io/company-models/",
                  "private_models": {k: os.path.basename(glob.glob(os.path.join(ROOT, k, "dist", "*.html"))[0])
                                     for k in ("openai", "anthropic") if glob.glob(os.path.join(ROOT, k, "dist", "*.html"))}},

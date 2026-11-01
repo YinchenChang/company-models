@@ -443,7 +443,9 @@ function renderInvest(){
   <div class="callouts">
    <div class="callout"><b>收支關卡：入不敷出 ${D.valuation.filter(v=>v.gate==="不通過"&&v.tier!=="未上市").length} 家</b>${D.valuation.filter(v=>v.gate==="不通過"&&v.tier!=="未上市").map(v=>esc(v.name)+"（"+esc(v.tier)+"）").join("、")}。評價買進以上者改列收支不足；放空、強力放空、中立維持原評價（現金流缺口加重放空理由）。口徑：Microsoft、Alphabet、Amazon、Oracle 讀個股模型的「自由現金流扣股利（五年合計）」基準情境；CoreWeave、Nebius、WhiteFiber 仍用「營運缺口＋股東回饋」（股利、回購可停，不算入不敷出；租金、利息、稅、資本支出照扣）。其中 ${D.valuation.filter(v=>v.tier==="收支不足"&&["強力買進","買進"].includes(v.vtier)).map(v=>esc(v.name)).join("、")||"無"} 評價上屬買進以上，因入不敷出而不列買進。半導體模型多只到淨利，以「各情境淨利皆為正」通過，現金流本專案未建立。</div>
    <div class="callout"><b>個股數字引用模型（v0.5）</b>半導體 ${D.valuation.filter(v=>v.method&&v.method.startsWith("加權目標價")).length} 家：目標價、上檔空間、現價皆直接取自 AI半導體 個股模型；投資建議由模型 Val 頁直接引用 ${D.valuation.filter(v=>v.recsrc&&v.recsrc.includes("投資建議 ")&&!v.recsrc.includes("尚未補列")).length} 家，其餘模型尚未補列、依同一固定規則以模型上檔空間自算（AI半導體 補列合併後改為直接引用）。逐家依據見下表「依據與來源」。</div>
-   <div class="callout"><b>價格已大幅偏離模型日</b>${D.valuation.filter(v=>v.flag).map(v=>`${esc(v.name)} ${pct(v.move)}`).join("、")}。模型尚未反映期間的消息；分級依新價格計算，判讀前應先更新模型。</div>
+   ${(()=>{const fl=D.valuation.filter(v=>v.flag),a=fl.filter(v=>v.flag==="模型尚未反映期間變化"),b=fl.filter(v=>v.flag!=="模型尚未反映期間變化"),
+     nm=v=>`${esc(v.name)} ${pct(v.move)}${v.status?`（${esc(v.status)}）`:""}`;
+     return fl.length?`<div class="callout"><b>最新收盤已偏離模型價超過 20%：${fl.length} 家</b>${a.length?`<b>分級已用最新收盤</b>${a.map(nm).join("、")}。`:""}${b.length?`<b>分級仍用模型價</b>${b.map(nm).join("、")}。`:""}模型尚未反映模型日之後的財報與消息，判讀前應先更新模型。偏離以 ${esc(D.meta.last_close_date||"")} 收盤對模型現價計算。</div>`:""})()}
   </div>
   <div class="panel"><div class="ph"><h3>地位 × 可投資性</h3><span class="note">右上：產業位置強、現價仍低於模型隱含價。超出 +150% 以三角形標在上緣。</span></div><div class="pb chart">${scatter()}</div></div>
   <div class="panel"><div class="ph"><h3>收支 → 評價 · ${Object.keys(order).filter(t=>cnt(t)).map(t=>`${t} ${cnt(t)}`).join(" · ")}</h3>
@@ -457,7 +459,7 @@ function renderInvest(){
    <td class="n">${v.center==null?"—":(CCY[v.ccy]||"")+px(v.center,v.ccy)}</td>
    <td class="n ${cls(v.cu)}">${pct(v.cu)}</td><td class="n ${cls(v.bu)}">${pct(v.bu)}</td>
    <td>${rangeBar(v)}</td>
-   <td style="min-width:240px">${esc(v.method)}${v.flag?`<span class="flag">${esc(v.flag)}：模型價 ${CCY[v.ccy]||""}${px(v.model_px,v.ccy)}（${esc(v.model_date)}），其後 ${pct(v.move)}</span>`:""}
+   <td style="min-width:240px">${esc(v.method)}${v.flag?`<span class="flag">${esc(v.flag)}：模型價 ${CCY[v.ccy]||""}${px(v.model_px,v.ccy)}（${esc(v.model_date)}），${v.last!=null?`${esc(v.last_date)} 收盤 ${CCY[v.ccy]||""}${px(v.last,v.ccy)}，`:""}其後 ${pct(v.move)}${v.status?`；${esc(v.status)}`:""}</span>`:(v.status?`<span class="flag">${esc(v.status)}</span>`:"")}
     <details><summary>依據與來源</summary><div class="det">
      ${v.recsrc?`<div><b>分級依據</b>：${v.tier6?esc(v.tier6)+"｜":""}${esc(v.recsrc)}</div>`:""}
      ${v.note?`<div>${esc(v.note)}</div>`:""}

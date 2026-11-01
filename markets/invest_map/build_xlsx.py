@@ -23,8 +23,8 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.6.18"
-DATE = "20261031"
+VERSION = "v0.6.19"
+DATE = "20261101"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
 YELLOW = PatternFill("solid", fgColor="FFF2CC")
@@ -368,7 +368,7 @@ def main():
 
     # ============ 價格
     wpz = wb.create_sheet("價格")
-    hdr(wpz, ["代號", "幣別", "模型內現價", "模型價日期", "模型價來源", "外部收盤（非半導體模型）", "收盤來源", "採用價"],
+    hdr(wpz, ["代號", "幣別", "模型內現價", "模型價日期", "模型價來源", "最新外部收盤", "收盤來源", "採用價"],
         [9, 7, 12, 12, 52, 12, 52, 12])
     prices = {}
     pfile = os.path.join(HERE, "data", "prices.csv")
@@ -515,8 +515,12 @@ def main():
         if pe:
             we.cell(i, 22, " ／ ".join(f"{x['value']:.1f}" for x in pe))
         we.cell(i, 23, note).alignment = WRAP
-        we.cell(i, 26, f'=IF(ISNUMBER(價格!C{prow}),價格!H{prow}/價格!C{prow}-1,"")')
-        we.cell(i, 27, f'=IF(Z{i}="","",IF(ABS(Z{i})>0.2,"模型尚未反映期間變化",""))')
+        # v0.6.19（2026-11-01 Andy「近期很多個股公布財報、股價反應很大」）：偏離檢查一律用最新外部收盤（價格!F）對模型價；
+        # 採用價（分級分母）規則不變——估值 v2 模型仍用模型現價（Andy 2026-10-25 18:14），其旗標文字註明「分級仍用模型價」。
+        we.cell(i, 26, f'=IF(AND(ISNUMBER(價格!C{prow}),ISNUMBER(價格!F{prow})),價格!F{prow}/價格!C{prow}-1,'
+                       f'IF(ISNUMBER(價格!C{prow}),價格!H{prow}/價格!C{prow}-1,""))')
+        tag = "模型價過時（分級仍用模型價）" if m.get("v2") else "模型尚未反映期間變化"
+        we.cell(i, 27, f'=IF(Z{i}="","",IF(ABS(Z{i})>0.2,"{tag}",""))')
         # 收支關卡（Andy 2026-10-25 10:48）：入不敷出（模型期間現金收支合計為負）者不得列為可投資
         cash = m["cash"]
         vals = [v for _, v, _ in cash["values"]]
