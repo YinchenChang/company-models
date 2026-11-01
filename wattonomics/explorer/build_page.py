@@ -4,6 +4,11 @@ src, out = sys.argv[1], sys.argv[2]
 d = json.load(open(src, encoding="utf-8")); R = d["records"]
 f = lambda x: None if x in (None, "None", "") else round(float(x), 3)
 o = {"src": d["source"]["file"], "sha": d["source"]["sha256"][:12]}
+import re, datetime
+_m = re.match(r"(\d{4})(\d{2})(\d{2})_Wattonomics_(v\d+(?:\.\d+)*)", o["src"])
+o["ver"] = _m.group(4) if _m else None
+o["date"] = f"{_m.group(1)}-{_m.group(2)}-{_m.group(3)}" if _m else None
+o["built"] = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y-%m-%d %H:%M（台北）")
 mk = collections.defaultdict(dict)
 for r in R:
     if r["kind"] == "market_gw": mk[f"{r['path']}|{r['scen']}|{r['delay']}"][r["year"]] = f(r["value"])
