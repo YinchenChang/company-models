@@ -37,12 +37,14 @@ a{color:inherit}
 
 /* masthead */
 .mast{background:var(--navy);color:var(--navy-ink)}
-.mast .wrap{padding-block:28px 22px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end}
+/* 標題說明在上、版本資訊在下（2026-11-01：原右欄過寬把標題與說明擠窄） */
+.mast .wrap{padding-block:28px 22px}
 .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy-muted);display:flex;gap:10px;align-items:center}
 .eyebrow::before{content:"";width:18px;height:2px;background:var(--brass)}
 .mast h1{font-size:34px;letter-spacing:.02em;margin-top:8px}
 .mast p{margin:8px 0 0;color:var(--navy-muted);max-width:62ch}
-.meta{display:grid;grid-template-columns:auto auto;gap:3px 14px;font-size:12px;color:var(--navy-muted);border-left:1px solid #ffffff2e;padding-left:18px}
+.meta{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 14px;font-size:12px;color:var(--navy-muted);border-top:1px solid #ffffff2e;margin-top:16px;padding-top:12px}
+.meta b{overflow-wrap:anywhere}
 .meta b{color:var(--navy-ink);font-weight:500;font-family:var(--f-mono)}
 
 /* kpis */
@@ -237,8 +239,6 @@ details.srcs ol{margin:0;padding-left:1.6em;display:grid;gap:2px;font-family:var
 footer{border-top:1px solid var(--rule);padding-block:18px 28px;color:var(--faint);font-size:12px}
 
 @media (max-width:900px){
-  .mast .wrap{grid-template-columns:1fr}
-  .meta{border-left:0;padding-left:0}
   .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
   .kpi:nth-child(2){border-right:0} .kpi:nth-child(-n+2){border-bottom:1px solid var(--rule)}
   .flow{grid-template-columns:repeat(2,minmax(0,1fr))}
