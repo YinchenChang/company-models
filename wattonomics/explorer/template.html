@@ -107,6 +107,7 @@ footer{display:grid;gap:6px;font-size:.78rem;color:var(--muted);border-top:1px s
     <div class="ctl"><label for="selYear">年份</label>
       <select id="selYear"></select></div>
     <span id="covChip" class="chip"></span>
+    <div class="note" style="flex-basis:100%;font-size:.75rem;color:var(--muted)">基建延遲：D0 公司公告時程照做（偏樂觀）；D1 依 2025 實測校準（排定容量 26% 延遲）；D2 壓力情境（瓶頸證據屬實，延後比例為假設）</div>
   </div>
 
   <section class="bus gapsec" aria-labelledby="hgap" id="gapSec">
@@ -183,7 +184,7 @@ footer{display:grid;gap:6px;font-size:.78rem;color:var(--muted);border-top:1px s
 const D = __DATA__;
 const YEARS = ["2024","2025","2026","2027","2028","2029","2030","2031","2032"];
 const SCEN = [["A","樂觀"],["B","基準"],["C","保守"]];
-const DELAY = [["D0","準時"],["D1","基準延遲"],["D2","嚴重延遲"]];
+const DELAY = [["D0","準時"],["D1","基準延遲"],["D2","壓力情境"]];
 const FAC = 1.2; // TK IF_FacilityGW 基準
 const ORDER = ["googl","msft","amzn","meta","orcl","xai","crwv","oai","nbis","neo","wyfi","ant","sov","cn","oth"];
 const SHORT = {googl:"Google",msft:"Microsoft",amzn:"Amazon",meta:"Meta",orcl:"Oracle",xai:"SpaceX／xAI",crwv:"CoreWeave",oai:"OpenAI／Stargate 自建",nbis:"Nebius",neo:"其他新雲",wyfi:"WhiteFiber",ant:"Anthropic 自建",sov:"主權 AI",cn:"中國",oth:"其他"};
