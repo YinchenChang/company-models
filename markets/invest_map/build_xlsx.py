@@ -23,7 +23,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.6.19"
+VERSION = "v0.6.20"
 DATE = "20261101"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
@@ -397,9 +397,9 @@ def main():
             wpz.cell(i, 7, f"{prices[tk]['date']}｜{prices[tk]['source']}")
         if m.get("unlisted"):
             wpz.cell(i, 8, "未上市")
-        elif m.get("v2"):   # v0.5（Andy 18:14：數字引用個股模型）：半導體用模型現價，即模型上檔空間的分母
-            wpz.cell(i, 8, f"=C{i}")
         else:
+            # v0.6.20（Andy 2026-11-01 11:35）：一律用最新收盤（像研究報告發布後股價變動，上檔空間＝最新一份報告的目標價 ÷ 最新價 − 1）；
+            # 取不到最新收盤者退回模型現價。取代 v0.5（10-25 18:14）「半導體用模型現價」。
             wpz.cell(i, 8, f"=IF(ISNUMBER(F{i}),F{i},C{i})")
 
     # ============ 估值
@@ -482,17 +482,16 @@ def main():
             we.cell(i, 16, f"=MIN(J{i},L{i})")
             we.cell(i, 18, f"=P{i}/N{i}-1")          # 悲觀情境空間（v0.5.1 前稱「下檔空間」）：模型無此欄，自算（C 情境 DCF ÷ 模型現價 − 1）
             if m.get("v2"):
-                # v0.5（Andy 18:14）：模型有的數字直接引用——上檔空間、投資建議、級距；模型尚未補列者依同一固定規則自算
-                we.cell(i, 17, m["up"]["value"]).font = BLUE
-                basis = [f"上檔空間 {src(m['up'])}"]
-                for col, key, f in ((19, "rec", REC), (36, "tier6", TIER6)):
-                    if key in m:
-                        we.cell(i, col, m[key]["value"]).font = BLUE
-                        basis.append(f"{'投資建議' if key == 'rec' else '級距'} {src(m[key])}")
-                    else:
-                        we.cell(i, col, "=" + f.format(i=i))
-                        basis.append(f"{'投資建議' if key == 'rec' else '級距'}：模型尚未補列，依 AI半導體 固定規則自算")
-                we.cell(i, 37, "；".join(basis)).alignment = WRAP
+                # v0.6.20（Andy 2026-11-01 11:35）：目標價引用模型；上檔空間、投資建議、級距一律以最新收盤重算（同一五級規則）。
+                # 模型日的上檔空間與投資建議只留在依據欄供對照。
+                we.cell(i, 17, f"=O{i}/N{i}-1")
+                we.cell(i, 19, "=" + REC.format(i=i))
+                we.cell(i, 36, "=" + TIER6.format(i=i))
+                ref = [f"模型日上檔空間 {m['up']['value']:+.1%}（{src(m['up'])}）"]
+                if "rec" in m:
+                    ref.append(f"模型日投資建議 {m['rec']['value']}（{src(m['rec'])}）")
+                we.cell(i, 37, f"上檔空間＝模型加權目標價 {src(m['tp'])} ÷ 最新收盤 − 1，依五級規則自算；對照："
+                               + "、".join(ref)).alignment = WRAP
             elif "rating" in m:                       # 雲端、neocloud、MAG
                 # v0.5.1（Andy 2026-10-26）：「賣出」與放空易混，取消；模型未更新前，以模型加權目標價 ÷ 最近收盤價自算上檔空間，
                 # 依本地圖五級規則評等。模型自身評等（以模型日價計）只留在依據欄供對照，網站不顯示。
@@ -519,8 +518,7 @@ def main():
         # 採用價（分級分母）規則不變——估值 v2 模型仍用模型現價（Andy 2026-10-25 18:14），其旗標文字註明「分級仍用模型價」。
         we.cell(i, 26, f'=IF(AND(ISNUMBER(價格!C{prow}),ISNUMBER(價格!F{prow})),價格!F{prow}/價格!C{prow}-1,'
                        f'IF(ISNUMBER(價格!C{prow}),價格!H{prow}/價格!C{prow}-1,""))')
-        tag = "模型價過時（分級仍用模型價）" if m.get("v2") else "模型尚未反映期間變化"
-        we.cell(i, 27, f'=IF(Z{i}="","",IF(ABS(Z{i})>0.2,"{tag}",""))')
+        we.cell(i, 27, f'=IF(Z{i}="","",IF(ABS(Z{i})>0.2,"模型尚未反映期間變化",""))')
         # 收支關卡（Andy 2026-10-25 10:48）：入不敷出（模型期間現金收支合計為負）者不得列為可投資
         cash = m["cash"]
         vals = [v for _, v, _ in cash["values"]]
