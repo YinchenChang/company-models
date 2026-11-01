@@ -136,6 +136,7 @@ tr:hover td{background:var(--sunken)}
 .gate{font-size:11.5px;white-space:nowrap} .gate.ok{color:var(--pos)} .gate.no{color:var(--gap);font-weight:600}
 .up{color:var(--pos)} .dn{color:var(--neg)}
 .flag{font-size:11px;color:var(--watch);display:block}
+.stnote{font-size:11px;color:var(--muted);display:block}
 .filters{display:flex;flex-wrap:wrap;gap:6px}
 .fbtn{appearance:none;font:inherit;font-size:12px;padding:4px 10px;border:1px solid var(--rule-strong);background:var(--surface);color:var(--muted);border-radius:2px;cursor:pointer}
 .fbtn[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
@@ -459,7 +460,7 @@ function renderInvest(){
    <td class="n">${v.center==null?"—":(CCY[v.ccy]||"")+px(v.center,v.ccy)}</td>
    <td class="n ${cls(v.cu)}">${pct(v.cu)}</td><td class="n ${cls(v.bu)}">${pct(v.bu)}</td>
    <td>${rangeBar(v)}</td>
-   <td style="min-width:240px">${esc(v.method)}${v.flag?`<span class="flag">${esc(v.flag)}：模型價 ${CCY[v.ccy]||""}${px(v.model_px,v.ccy)}（${esc(v.model_date)}），${v.last!=null?`${esc(v.last_date)} 收盤 ${CCY[v.ccy]||""}${px(v.last,v.ccy)}，`:""}其後 ${pct(v.move)}${v.status?`；${esc(v.status)}`:""}</span>`:(v.status?`<span class="flag">${esc(v.status)}</span>`:"")}
+   <td style="min-width:240px">${esc(v.method)}${v.flag?`<span class="flag">${esc(v.flag)}：模型價 ${CCY[v.ccy]||""}${px(v.model_px,v.ccy)}（${esc(v.model_date)}），${v.last!=null?`${esc(v.last_date)} 收盤 ${CCY[v.ccy]||""}${px(v.last,v.ccy)}，`:""}其後 ${pct(v.move)}${v.status?`；${esc(v.status)}`:""}</span>`:(v.status?`<span class="stnote">${esc(v.status)}</span>`:"")}
     <details><summary>依據與來源</summary><div class="det">
      ${v.recsrc?`<div><b>分級依據</b>：${v.tier6?esc(v.tier6)+"｜":""}${esc(v.recsrc)}</div>`:""}
      ${v.note?`<div>${esc(v.note)}</div>`:""}
@@ -468,7 +469,7 @@ function renderInvest(){
      ${v.pe28?`<div><b>現價 ÷ 模型 FY2028 EPS（A／B／C）</b>：${esc(v.pe28)}x（模型日價格）</div>`:""}
      ${v.c1src?`<div><b>中心</b>：${esc(v.c1src)}${v.c2src?`；取低：${esc(v.c2src)}`:""}</div>`:""}
      ${v.b1src?`<div><b>悲觀情境</b>：${esc(v.b1src)}${v.b2src?`；取低：${esc(v.b2src)}`:""}</div>`:""}
-     <div><b>股價</b>：${esc(v.price_src)}（${esc(v.price_n)} 個來源）</div></div></details></td></tr>`).join("")}</tbody></table></div></div>`;
+     <div><b>${v.last!=null&&v.price!==v.last?`最新收盤 ${esc(v.last_date)}（偏離檢查用；分級用模型現價）`:"股價"}</b>：${esc(v.price_src)}（${esc(v.price_n)} 個來源）</div></div></details></td></tr>`).join("")}</tbody></table></div></div>`;
 }
 
 /* ---------- 04 profiles ---------- */
