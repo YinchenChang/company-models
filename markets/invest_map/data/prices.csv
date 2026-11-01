@@ -1,10 +1,69 @@
 ticker,close,currency,date,source,sources_count
-CRWV,54.23,USD,2026-10-23,stockscan；digrin,2
-NBIS,158.74,USD,2026-10-23,stockscan（digrin 158.64）,1
-ORCL,126.16,USD,2026-10-23,stockanalysis；stockscan,2
-WYFI,9.98,USD,2026-10-23,stockscan；digrin,2
-MSFT,524.51,USD,2026-10-23,stockscan；bullfincher,2
-AMZN,248.00,USD,2026-10-23,stockanalysis；stockscan,2
-GOOGL,320.21,USD,2026-10-23,stockscan；bullfincher,2
-00100,187.60,HKD,2026-10-23,etnet；老虎,2
-02513,499.00,HKD,2026-10-23,老虎,1
+CRWV,54.87,USD,2026-10-30,stockscan；massive,2
+NBIS,154.14,USD,2026-10-30,stockscan；massive,2
+WYFI,10.36,USD,2026-10-30,stockscan（massive 盤中 10.35、序列 10.37）,1
+ORCL,130.67,USD,2026-10-30,stockanalysis；stockscan,2
+MSFT,521.91,USD,2026-10-30,stockanalysis；stockscan,2
+AMZN,240.35,USD,2026-10-30,stockanalysis；stockscan,2
+GOOGL,279.84,USD,2026-10-30,stockanalysis；stockscan,2
+META,614.99,USD,2026-10-30,stockanalysis；stockscan,2
+SPCX,134.72,USD,2026-10-30,coinglass；stockscan,2
+00100,161.30,HKD,2026-10-30,etnet；futunn,2
+02513,483.60,HKD,2026-10-30,futunn；etnet,2
+NVDA,204.64,USD,2026-10-30,stockanalysis；digrin,2
+AVGO,326.08,USD,2026-10-30,stockanalysis；digrin,2
+MU,884.74,USD,2026-10-30,stockanalysis；digrin,2
+AMD,504.80,USD,2026-10-30,stockanalysis；digrin,2
+MRVL,196.40,USD,2026-10-30,stockanalysis；digrin,2
+ANET,168.86,USD,2026-10-30,stockscan；digrin,2
+SNDK,1150.89,USD,2026-10-30,stockscan；MarketBeat（digrin 1151.43）,2
+COHR,210.32,USD,2026-10-30,stockscan；equibles,2
+LITE,840.70,USD,2026-10-30,stockscan；digrin,2
+2330,2370,TWD,2026-10-30,Focus Taiwan；Taiwan News,2
+2454,3915,TWD,2026-10-30,Focus Taiwan；Taiwan News,2
+2308,1335,TWD,2026-10-30,Taiwan News；cnyes,2
+2382,318,TWD,2026-10-30,Focus Taiwan；財報狗,2
+3661,3425,TWD,2026-10-30,Focus Taiwan；CMoney,2
+3443,7635,TWD,2026-10-30,cnyes,1
+4062,8359,JPY,2026-10-30,松井證券；Fisco／Investing.jp（停板）,2
+6857,34860,JPY,2026-10-30,松井證券；FourWeekMBA（漲跌幅）,2
+6146,49540,JPY,2026-10-30,松井證券,1
+285A,13470,JPY,2026-10-30,stockanalysis；松井證券,2
+2345,1615,TWD,2026-10-30,cnyes；histock,2
+FN,327.29,USD,2026-10-30,stockanalysis；digrin,2
+CRDO,150.99,USD,2026-10-30,massive；digrin,2
+ALAB,258.70,USD,2026-10-30,stockanalysis；stockscan,2
+2449,253.5,TWD,2026-10-30,cnyes；histock,2
+AMKR,39.50,USD,2026-10-30,stockscan；digrin,2
+2383,4675,TWD,2026-10-30,cnyes；histock,2
+3037,989,TWD,2026-10-30,cnyes；histock,2
+8046,1190,TWD,2026-10-30,cnyes；histock,2
+2368,1020,TWD,2026-10-30,cnyes；histock,2
+ASML,1412.80,EUR,2026-10-30,beursgenoten；eulerpool,2
+AMAT,390.09,USD,2026-10-30,stockscan；digrin,2
+LRCX,239.11,USD,2026-10-30,stockscan,1
+KLAC,157.91,USD,2026-10-30,stockanalysis；digrin,2
+TER,274.37,USD,2026-10-30,stockscan；digrin,2
+BESI,154.00,EUR,2026-10-30,beursgenoten,1
+2317,245.5,TWD,2026-10-30,cnyes；histock,2
+3231,183.5,TWD,2026-10-30,cnyes；財報狗,2
+6669,1810,TWD,2026-10-30,cnyes；財報狗,2
+DELL,424.30,USD,2026-10-30,stockscan；coinglass,2
+SMCI,32.95,USD,2026-10-30,coinglass,1
+3017,3095,TWD,2026-10-30,cnyes；財報狗,2
+2301,240.5,TWD,2026-10-30,cnyes；財報狗,2
+3324,1330,TWD,2026-10-30,cnyes；財報狗,2
+3653,6315,TWD,2026-10-30,cnyes；財報狗,2
+ARM,205.97,USD,2026-10-30,coinglass；trendspider（205.99）,2
+3711,668,TWD,2026-10-30,cnyes；財報狗,2
+2303,111.5,TWD,2026-10-30,cnyes；財報狗,2
+5347,144,TWD,2026-10-30,cnyes；財報狗,2
+6274,1265,TWD,2026-10-30,cnyes；財報狗,2
+6223,4610,TWD,2026-10-30,cnyes；財報狗,2
+000660,1418000,KRW,2026-10-30,stockanalysis（漲跌幅與他源一致）,1
+005930,225000,KRW,2026-10-30,stockanalysis（漲跌幅與他源一致）,1
+300308,553.00,CNY,2026-10-30,futunn；stockanalysis（同花順日線一致）,2
+300502,196.00,CNY,2026-10-30,同花順；stockanalysis,2
+300476,139.04,CNY,2026-10-30,futunn；stockanalysis,2
+6315,2088,JPY,2026-10-30,松井證券；futunn,2
+7729,15190,JPY,2026-10-30,futunn；stockanalysis（traders.co.jp 一致）,2
