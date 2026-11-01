@@ -463,7 +463,14 @@
 "cust_s1f_custc_2026h1": "SRC_ANT_461",
 "cust_s1f_marketplace_2026h1": "SRC_ANT_462",
 "nrr_s1f_2026_09_30": "SRC_ANT_463",
-"cust_s1f_100k_2026_09_30": "SRC_ANT_464"
+"cust_s1f_100k_2026_09_30": "SRC_ANT_464",
+"adjoi_s1f_2026h1": "SRC_ANT_465",
+"adjoim_s1f_2026q2": "SRC_ANT_466",
+"sbc_s1f_2026h1": "SRC_ANT_467",
+"sbc_s1f_fy2025": "SRC_ANT_468",
+"sbc_s1f_2025h1": "SRC_ANT_469",
+"adjoi_s1f_fy2025": "SRC_ANT_470",
+"adjoi_s1f_2025h1": "SRC_ANT_471"
 },
 "INP": {
 "year_2025": "INP_001",
@@ -675,7 +682,10 @@
 "own_lag_bldg": "INP_211",
 "s1f_cal25_switch": "INP_212",
 "s1f_d22_switch": "INP_213",
-"s1f_d22_warn": "INP_214"
+"s1f_d22_warn": "INP_214",
+"s1f_amd_switch": "INP_215",
+"s1f_d22_q3_switch": "INP_216",
+"s1f_sbc_proxy_switch": "INP_217"
 },
 "CHK": {
 "src_rows": "C01",
@@ -868,7 +878,12 @@
 "g4_nc": "C189",
 "g4_diff": "C190",
 "g4_25": "C191",
-"g6_amzn": "C192"
+"g6_amzn": "C192",
+"g1_amd": "C193",
+"g4_sbc": "C194",
+"g5_sus": "C195",
+"g5_fcf": "C196",
+"g7_cash": "C197"
 },
 "retired_INP": [
 "INP_067",

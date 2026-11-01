@@ -286,13 +286,20 @@ def test_v017_w2_own_capex_gw_method(eng):
 
 
 def test_v017_w4_noncompute_calibration(eng):
-    """W4：2026 非算力成本（不含股權報酬）＝正式 S-1 回推值（上半年＋Q2 × 2 − 平台抽成 − 股權報酬）。"""
-    s, _i = _ids()
+    """W4（核對後）：2026 非算力成本（不含股權報酬）＝上半年（營收 − 算力 − 營業損益 − 股權報酬代理）＋下半年 Q3 隱含 × 2 − 平台抽成；股權報酬＝S-1 調整數代理。"""
+    s, i = _ids()
     g = lambda k: eng.get_name(s[k])  # noqa: E731
-    fy = g("rev_s1f_2026h1") - g("ci_s1f_2026h1") - g("oi_s1f_2026h1") + 2 * (g("rev_s1f_2026q2") - g("ci_s1f_2026q2") - g("oi_s1f_2026q2"))
-    want = fy - eng.get_name("REV_PartnerShare")[1] - eng.get_name("COST_SBC")[1]
+    assert eng.get_name(i["s1f_d22_q3_switch"]) == 1 and eng.get_name(i["s1f_sbc_proxy_switch"]) == 1
+    sbc_h1 = g("adjoi_s1f_2026h1") - g("oi_s1f_2026h1")
+    sbc_q2 = g("adjoim_s1f_2026q2") * g("rev_s1f_2026q2") - g("oi_s1f_2026q2")
+    assert abs(eng.get_name("COST_S1fSBCProxy2026") - (sbc_h1 + 2 * sbc_q2)) < 1e-9
+    assert abs(eng.get_name("COST_SBC")[1] - (sbc_h1 + 2 * sbc_q2)) < 1e-9
+    q3 = g("rev_2026_q3") * (1 - g("cmp_s1_spend_2026_q3_derived") / g("rev_2026_q3") - g("adj_opmargin_2026_q3"))
+    h1 = g("rev_s1f_2026h1") - g("ci_s1f_2026h1") - g("oi_s1f_2026h1") - sbc_h1
+    want = h1 + 2 * q3 - eng.get_name("REV_PartnerShare")[1]
     assert abs(eng.get_name("COST_S1fNonComp2026") - want) < 1e-9
     assert abs(eng.get_name("COST_NonCompExSBC")[1] - want) < 1e-9
+    assert eng.get_name("COST_S1fAMDFactor") == 1                       # 基準：AMD 維持模型 GW 型
 
 
 def test_v017_switches_off_reproduce_v016(eng):
@@ -301,7 +308,7 @@ def test_v017_switches_off_reproduce_v016(eng):
     wo = openpyxl.load_workbook(old)
     wv = openpyxl.load_workbook(old, data_only=True)
     _s, i = _ids()
-    ov = {i[k]: 0 for k in ("s1f_commit_switch", "own_capex_method", "s1f_cal25_switch", "s1f_d22_switch")}
+    ov = {i[k]: 0 for k in ("s1f_commit_switch", "own_capex_method", "s1f_cal25_switch", "s1f_d22_switch", "s1f_d22_q3_switch", "s1f_sbc_proxy_switch")}
     for n, d in wo.defined_names.items():
         if not n.startswith("TK_") or n in ("TK_File", "TK_Version", "TK_Commit", "TK_ReadDate", "TK_HdrGen", "TK_HdrCost") or n not in eng.names:
             continue

@@ -157,6 +157,8 @@ def build(ctx):
             fs = lambda i, c, P=P: f"={P['G']}*«itconv»*{ramp(c, P['s'])}*{act(c, P['s'], P['e'])}"  # noqa: E731
         else:   # gw
             fs = lambda i, c, P=P: f"={P['G']}*«itconv»*{ramp(c, P['s'])}*({c}$6>={P['s']})*({c}$6<{P['s']}+{P['term']})"  # noqa: E731
+            if key == "amd":     # v0.1.7：AMD 改讀正式 S-1 下限的係數（Cost 第二十五節；基準 1）
+                fs = lambda i, c, P=P: f"={P['G']}*«itconv»*{ramp(c, P['s'])}*({c}$6>={P['s']})*({c}$6<{P['s']}+{P['term']})*«K:s1_amd_fac@$»"  # noqa: E731
         if key in U2:       # v0.1.1 U2：開關 1＝金額型（GW＝付款 ÷ 合約價）；0＝v0.1 口徑（揭露 GW 型）
             U2_OLD[key] = (zh, fs, note)          # _old 列延到 Compute 最末節新增（保持既有列編號不變）
             fs = lambda i, c, key=key, fam=fam: f"={u2}*({u2m}*«sup_{key}_disc»+(1-{u2m})*«K:pay_{key}»/«price_{fam}»)+(1-{u2})*«sup_{key}_old»"  # noqa: E731
@@ -420,7 +422,10 @@ def build(ctx):
     K.add("nc25x", "2025 非算力營業費用（扣平台抽成；含股權報酬）", "$B", only25("=«nc25»-«fee25»"), "避免與 REV_Net 重複扣除")
     K.add("hc", "員工人數（年均）", "人", lambda i, c: f"=AVERAGE({S('hc_revelio_2024q4')},{S('hc_revelio_2025q4')})" if i == 0 else f"=«hc@p»*(1+{I(f'hc_g_{YEARS[i]}')})",
           "2025＝2024Q4 與 2025Q4 平均（Revelio，Analogy）；2026 起 ×（1＋年增率，Inputs）", name="COST_Headcount")
-    K.add("sbc_pp", "每人股權報酬", "$M/人/年", lambda i, c: f"={I('sbc_pp_2025')}" if i == 0 else f"=«sbc_pp@p»*(1+{I('sbc_pp_g')})", "Inputs（Assumed；未揭露）")
+    sws = I("s1f_sbc_proxy_switch")
+    K.add("sbc_pp", "每人股權報酬", "$M/人/年",
+          lambda i, c: f"={I('sbc_pp_2025')}" if i == 0 else (f"={sws}*«s1s_fy@E»*{m2b}/«hc»+(1-{sws})*«sbc_pp@p»*(1+{I('sbc_pp_g')})" if i == 1 else f"=«sbc_pp@p»*(1+{I('sbc_pp_g')})"),
+          "Inputs（Assumed）；v0.1.7：2026 欄＝正式 S-1 股權報酬代理（調整後 − GAAP 營業損益，年化照營收同法；Cost 第二十五節）÷ 人數（s1f_sbc_proxy_switch＝0＝2025 × 年變動率）")
     K.add("sbc", "股權報酬（單列）", "$B", lambda i, c: f"=«hc»*«sbc_pp»/{m2b}", "人數 × 每人股權報酬", name="COST_SBC")
     K.add("ncx", "非算力營運費用（不含股權報酬）", "$B", lambda i, c: "=«nc25x»-«sbc»" if i == 0 else f"=«hc»*«pp»/{m2b}",
           "2025＝說明書（扣抽成）− 股權報酬；2026 起＝人數 × 每人年成本", name="COST_NonCompExSBC")
@@ -505,6 +510,9 @@ def build(ctx):
         else:
             f = f"=«C:gw_unit_{key}@$»*«C:price_{fam}@D»*(({P['term']})+({P['term']})-{r_}+1)/{k2}"
             nt = "滿載年付款 × Σ 爬坡權重（期間 Inputs）"
+            if key == "amd":
+                f += "*«s1_amd_fac@$»"
+                nt += " × v0.1.7 AMD 讀法係數（基準 1）"
         if key in U2:
             tk_ = "u2_T_n" if key == "nscale" else "u2_T_l"
             f = f"={u2}*«{tk_}@$»+(1-{u2})*(" + f[1:] + ")"

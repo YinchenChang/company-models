@@ -41,7 +41,10 @@ groups:
   c_off: {label: "W1 關閉（正式 S-1 承諾不進基準＝v0.1.6 合約口徑）", set: {INP_197: 0}}
   own_old: {label: "W2 關閉（自建資本支出回到 Fluidstack $50B 三年均攤）", set: {INP_204: 0}}
   cal25_off: {label: "W3 關閉（2025 校準回到草擬版 4.6／7.33）", set: {INP_212: 0}}
-  d22_off: {label: "W4 關閉（2026 非算力成本回到 2025 每人成本 × 年變動率）", set: {INP_213: 0}}
+  d22_off: {label: "W4 關閉（2026 非算力成本回到 2025 每人成本 × 年變動率；含下半年 Q3 口徑與股權報酬代理一併關閉）", set: {INP_213: 0, INP_216: 0, INP_217: 0}}
+  q3_off: {label: "W4 下半年改回 Q2 持平（不與營收同期）", set: {INP_216: 0}}
+  sbc_off: {label: "2026 股權報酬改回模型人數 × 每人 0.8", set: {INP_217: 0}}
+  amd_s1: {label: "AMD 改讀正式 S-1 下限 20", set: {INP_215: 1}}
   tk16_back: {label: "TK 快照回到 v21.2：v21.7 變動的 29 個值", set: {TK_IF_HoldEcon: prev16, TK_IF_FullCost_Astra: prev16, TK_IF_FullCost_Luna: prev16, TK_IF_FullCost_Sol: prev16, TK_IF_PriceCached_Sol: prev16, TK_IF_PriceRef_Sol: prev16, TK_IF_FrontRef_Sol: prev16, TK_IF_TrainCost_Astra: prev16, TK_IF_TrainCost_Luna: prev16, TK_IF_TrainCost_Sol: prev16, TK_IF_RevGW_Sol: prev16, TK_IF_FullCostDefault_Astra: prev16, TK_IF_FullCostDefault_Luna: prev16, TK_IF_FullCostDefault_Sol: prev16, TK_IF_CapexTotal: prev16, TK_L1_RevGW_PQ_VR200_Life_Lo: prev16, TK_L1_M: prev16, TK_NNV_MI455X_Hold: prev16, TK_NNV_MI455X_HoldLo: prev16, TK_NNV_MI455X_HoldHi: prev16, TK_NNV_MI455X_Out: prev16, TK_NNV_MI455X_OutLo: prev16, TK_NNV_MI455X_OutHi: prev16, TK_NNV_TPUv7_Hold: prev16, TK_NNV_TPUv7_HoldLo: prev16, TK_NNV_TPUv7_HoldHi: prev16, TK_NNV_Trn3_Hold: prev16, TK_NNV_Trn3_HoldLo: prev16, TK_NNV_Trn3_HoldHi: prev16}}
   s1u_fast: {label: "未歸屬餘額付款期快讀法（2027–2031）", set: {INP_198: lo, INP_199: lo}}
   s1u_slow: {label: "未歸屬餘額付款期慢讀法（2028–2036）", set: {INP_198: hi, INP_199: hi}}
@@ -97,7 +100,8 @@ scenarios:
   wf_w2: [cal25_off, d22_off, tk16_back]
   wf_w3: [d22_off, tk16_back]
   wf_w4: [tk16_back]
-  commit_off: [c_off]
+  commit_off: [c_off, own_old]
+  commit_off_w1only: [c_off]
   s1u_fast: [s1u_fast]
   s1u_slow: [s1u_slow]
   spx_cap: [spx_cap]
@@ -105,3 +109,7 @@ scenarios:
   bcm_2026: [bcm_2026]
   only_w2_off: [own_old]
   only_w4_off: [d22_off]
+  amd_s1: [amd_s1]
+  w4_neither: [q3_off, sbc_off]
+  w4_q3only: [sbc_off]
+  w4_sbconly: [q3_off]
