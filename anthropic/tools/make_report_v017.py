@@ -36,20 +36,22 @@ STEPS = [("v0.1.6", "v016"), ("＋W1 承諾進基準", "wf_w1"), ("＋W2 自建�
          ("＋W5 快照同步（＝v0.1.7；W6 不改數值）", "base")]
 ITEMS = [("W1 承諾進基準", "c_off"), ("W2 自建改 GW 法", "own_old"), ("W3 2025 校準", "cal25_off"), ("W4 非算力校準", "d22_off"), ("W5 TK v21.7", "tk16_back")]
 ALTS = [("未歸屬餘額付款期 快 2027–2031", "s1u_fast"), ("未歸屬餘額付款期 慢 2028–2036", "s1u_slow"), ("SpaceXAI 以 S-1 上限 120.5 計", "spx_cap"),
-        ("Google 額外 TPU 計入（中點）", "gaddl_on"), ("Broadcom 起始年 2026（S-1 期間起點）", "bcm_2026")]
+        ("Google 額外 TPU 計入（中點）", "gaddl_on"), ("Broadcom 起始年 2026（S-1 期間起點）", "bcm_2026"), ("AMD＝S-1 下限 20", "amd_s1"),
+        ("W4 兩項皆不用（v0.1.7 首版基準）", "w4_neither"), ("W4 只動 Q3 口徑", "w4_q3only"), ("W4 只動股權報酬", "w4_sbconly"),
+        ("只關 W1（說明列；Fluidstack 不計任何成本）", "commit_off_w1only")]
 DEFAULTS = [
     ("未歸屬餘額付款期", "2027–2033 平均（Assumed；Inputs s1u_start／s1u_end）", "快 2027–2031／慢 2028–2036（Sens：兩列同取低欄／高欄）", "s1u_fast", "s1u_slow"),
     ("上限型合約（SpaceXAI ≤120.5、Nscale ≤44.6）", "沿用既有規則：SpaceX＝月費 × 月數（45；上限只作區間，差額落入未歸屬餘額）；Nscale＝U2 上限全數計入（44.6）", "SpaceXAI 以上限 120.5 計（Inputs s1f_spacex_cap_switch＝1）", "spx_cap", None),
     ("Google 額外 TPU 125–150", "不進基準（Inputs s1f_gaddl_switch＝0）", "計入中點 137.5，2028–2031 平均", "gaddl_on", None),
     ("自建 GW 無證據", "0（Wattonomics v0.1.7 各年 0；未找到≠不存在，列為缺口）", "舊法 Fluidstack $50B 三年均攤（own_capex_method＝0）", "only_w2_off", None),
+    ("AMD 合約（S-1：若全數購買初始容量 >20、不在承諾表內）", "維持模型 GW 型 73.4（下限 >20 與 73.4 不矛盾）；W1(a) 此項未改讀（部分完成）", "AMD＝20（Inputs s1f_amd_switch＝1）", "amd_s1", None),
+    ("W4 下半年口徑", "與營收同期：Q3＝Q3 報導隱含非算力（每季 5.07）、Q4＝Q3（s1f_d22_q3_switch＝1）", "Q2 持平（v0.1.7 首版）", "w4_sbconly", None),
+    ("2026 股權報酬", "S-1「調整後 − GAAP 營業損益」代理：上半年 2.311＋Q2 1.221 × 2＝4.754（s1f_sbc_proxy_switch＝1）", "模型人數 × 每人 0.8（3.18）", "w4_q3only", None),
     ("仍為二手轉載的 S-1 列", "維持 Interested-party；不改值", "以瀏覽器核對後改 Verified", None, None),
-    ("非算力成本推得值與現值差 >30%", "照推得值入基準（+82%），報告首節說明並列舊值", "維持 v0.1.6 算法（s1f_d22_switch＝0）", "only_w4_off", None),
+    ("非算力成本推得值與現值差 >30%", "照推得值入基準（11.75，+98%），報告首節說明並列舊值", "維持 v0.1.6 算法（s1f_d22_switch＝0）", "only_w4_off", None),
     ("未歸屬餘額扣除範圍", "S-1 三段合計 − 模型逐家（不含 AMD：S-1 寫明 AMD「不在承諾表內」）", "連 AMD 一起扣（未歸屬餘額少 73.4）", None, None),
     ("Broadcom 付款與容量期間", "S-1 期間 2026–2031 的 2026 視為簽約年；首個爬坡年沿用 8-K 的 2027（同 Microsoft 2026-11 → 2027 的整數化）；付款改 161.2、容量維持 3.5 GW", "起始年 2026（Inputs broadcom_start 低欄）", "bcm_2026", None),
-    ("AMD 合約型別", "維持 GW 型（S-1 仍只給下限 >20、無期間；既有規則）", "改金額型 20", None, None),
     ("未歸屬餘額的晶片族", "通用合約價 12 × 持有比 1＝NVIDIA VR200 族（VR 等值係數 1）", "TPU／Trainium（持有比較低 → GW 較多）", None, None),
-    ("W4 下半年非算力費用", "Q2 持平（同 U1 的 Q4＝Q3 慣例；S-1 無 Q3 費用）", "上半年 × 2（16.07，較低）", None, None),
-    ("W4 扣除項", "扣模型 2026 雲端平台抽成（模型自營收扣除，避免重複）與模型股權報酬（S-1 上半年股權報酬未取得）", "不扣股權報酬（非算力更高）", None, None),
     ("W2 廠房提前入帳", "lag 18 個月（同 Wattonomics lag_bldg；權重 0／0.5／0.5）；2031 年後新增不計", "12 或 24 個月", None, None),
     ("W3 2025 非算力費用", "SRC_ANT_277（草擬版 12.65 − 7.33＝5.32）不改；S-1 同法 5.319，差 0.001", "改用 S-1 推得值", None, None),
     ("W5 OpenAI 並排", "OAI_Link 改 OpenAI v0.6.4（其 TK 亦 v21.7）", "維持 v0.6", None, None),
@@ -156,10 +158,10 @@ def main():
     # ② 關鍵輸出
     ws = sheet("②關鍵輸出", ["輸出", "讀法"] + [str(y) for y in YEARS])
     for n, lab in KEY:
-        for rl, sc in (("v0.1.6", "v016"), ("v0.1.7（承諾進基準）", "base"), ("不進基準（W1 關閉）", "commit_off")):
+        for rl, sc in (("v0.1.6", "v016"), ("v0.1.7（承諾進基準）", "base"), ("不進基準（W1、W2 皆關）", "commit_off"), ("說明列：只關 W1", "commit_off_w1only")):
             ws.append([lab, rl] + R[sc][n])
     for n, lab in SCAL:
-        for rl, sc in (("v0.1.6", "v016"), ("v0.1.7（承諾進基準）", "base"), ("不進基準（W1 關閉）", "commit_off")):
+        for rl, sc in (("v0.1.6", "v016"), ("v0.1.7（承諾進基準）", "base"), ("不進基準（W1、W2 皆關）", "commit_off"), ("說明列：只關 W1", "commit_off_w1only")):
             ws.append([lab, rl, R[sc][n]])
 
     # ③ 瀑布
@@ -204,7 +206,7 @@ def main():
     for old, new, aff in REPL:
         o, nv = sv.get(old), sv.get(new)
         diff = (nv - o) / o if isinstance(o, (int, float)) and isinstance(nv, (int, float)) and o else None
-        ws.append([old, o, new, nv, diff, aff, summ, "部分：命題 1 轉正年 2029→2030（2029 由正轉負）；命題 2 仍為 0、覆蓋率仍跨過 1（2030）"])
+        ws.append([old, o, new, nv, diff, aff, summ, "是：命題 1 持續轉正年 2029→2030（2029 由正轉負）；命題 2 由 0 變為需要 1.19（首次 2029）；覆蓋率 2030 仍跨過 1"])
 
     # ⑥ TK 名稱變動
     ws = sheet("⑥TK名稱變動", ["名稱", "格數", "v21.2（v0.1.6）", "v21.7（v0.1.7）", "是否進計算"])

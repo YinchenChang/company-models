@@ -96,3 +96,4 @@
 - 新列：Compute 第十六節、Cost 第二十五節、Funding 第十二節、Checks C182–C192、Inputs INP_197–214；Cost 合約總額、U2 錨定、每人年成本 2026、Revenue 2025 校準等改式。builder：`a7.py`；列鍵記號延後解析（a2）＋build.py 終檢。規模：公式格 7,774、具名範圍 1,394、Inputs 210；CHK_Errors 0、CHK_Warnings 4（C54、C69、C70、C89）。
 - 測試：parity 情境 +9（je–jm）；test_builder +4；test_html 敘述主張改寫。HTML：新增「①之五」（頁尾紀錄區最前；瀑布、兩讀、逐家、W2–W6、替代讀法）、①～⑨ 依新結果改寫，①之二～①之四以 v0.1.6 當時輸出呈現（情境 v016）；`tools/html_scenarios.yaml` 新增 v0.1.7 開關群組與 `tk16_back`（prev16），歷史情境加上這些群組。dist 改 v0_1_7（v0.1.6 dist git rm）。
 - 報告 `docs/reports/20261031_v0.1.7.md`＋`_對照.xlsx`（`tools/make_report_v017.py`）。
+- **核對後修正（2026-11-01；獨立核對「有條件通過」）**：「不進基準」讀法改 W1、W2 皆關（只關 W1 保留為說明列）；AMD 未改讀 S-1（表 1 改部分完成），新增 INP_215 AMD＝20 情境；W4 下半年改與營收同期（INP_216，Q3 隱含、Q4＝Q3）、股權報酬以 S-1「調整後 − GAAP 營業損益」代理（INP_217；SRC_ANT_465–471）；新增 `COST_GapPosSustainYear`、`FND_FCFPosSustainYear`、6-30 現金對照 `FND_Cash0630Gap`。結果：差額 2026–2030 +2.66／−7.36／−5.89／−1.74／+2.60、覆蓋率 2030 1.159、**累計外部資金需求 1.19（首次 2029）**、谷底 11.86。parity 情境 +3（jn–jp）。
