@@ -151,10 +151,10 @@ inp("sh_g", "股數年變動（可轉債轉換、員工酬勞）", "%", 0.0, 0.0
 
 sec("F. FY2026 錨點（1H26 實績＋3Q26 營收實績＋假設）")
 inp("q3_rev", "3Q26 營收（月營收實績加總）", "NT$B", None, 52.65, None, "Verified", TN9 + "：前 9 月 1,329.86 億 − 1H26 803.36 億", SETN + "：3Q26 526.5 億（季增 22.8%）")
-inp("q3_gm", "3Q26 毛利率", "%", 0.255, 0.27, 0.285, "Assumed", "公司：3Q 毛利率可望優於 2Q 的 24.8%（2Q26 法說，Interested-party）", SETN + "：法人估 27.2%")
+inp("q3_gm", "3Q26 毛利率", "%", 0.2885, 0.2885, 0.2885, "Verified", "優分析／鉅亨 2026-10-27：3Q26 毛利率 28.85%（季增 4.05pt）；v0.3 前為假設 27%", SETN + "：法人估 27.2%")
 inp("q3_opx", "3Q26 營業費用", "NT$B", 4.0, 4.3, 4.6, "Assumed", "1Q26 3.97、2Q26 3.99（Q 頁推得）", "—")
 inp("q4_g", "4Q26 營收季增", "%", 0.0, 0.05, 0.10, "Assumed", SETN + "：法人估 4Q26 579.2 億（季增 10%）", "公司未給指引")
-inp("q4_gm", "4Q26 毛利率", "%", 0.265, 0.285, 0.305, "Assumed", SETN + "：法人估 30.5%", "—")
+inp("q4_gm", "4Q26 毛利率", "%", 0.28, 0.295, 0.31, "Assumed", SETN + "：法人估 30.5%", "—")
 inp("q4_opx", "4Q26 營業費用", "NT$B", 4.1, 4.4, 4.8, "Assumed", "同上", "—")
 inp("q_nonop", "3Q、4Q26 營業外淨額（每季）", "NT$B", 0.0, 1.0, 3.0, "Assumed", "1Q26 3.54、2Q26 8.92（含一次性評價利益）", "3Q26 財報 2026-10-29 前後公布（stockanalysis 估計）")
 inp("q_sh", "3Q、4Q26 加權股數（GDR 後）", "十億股", None, 1.64, None, "Interested-party", SA + "：流通股數 1.64B（2026-10-22）", UA_GDR2 + "：5,000 萬單位（每單位 1 股，以每單位 US$27 ÷ 台股約 NT$880 推得）")
@@ -168,7 +168,7 @@ inp("cons_rev28", "共識營收 FY2028（FactSet 平均，2026-06）", "NT$B", 2
 inp("bk_eps27", "券商 EPS FY2027（2026-10 兩家平均：美系 37、本土 41.10）", "NT$", 37.0, 39.05, 41.10, "Interested-party", UDN10, SETN)
 
 sec("H. 價格與市場資料")
-inp("px", "股價（2026-10-22 收盤；10-23 收盤未取得）", "NT$", None, 1085, None, "Interested-party", SA + "：10-22 收盤 1,085、10-21 1,100", "HiStock 2026-10-25 頁面：1,085")
+inp("px", "股價（2026-10-30 收盤）", "NT$", None, 989, None, "Interested-party", "cnyes、histock（markets/invest_map/data/prices.csv）：989", "v0.2.1 為 10-22 收盤 1,085")
 inp("fpe", "前瞻 P/E（stockanalysis，10-22）", "x", None, 42.28, None, "Interested-party", SA, "口徑：頁面未明示（約未來 12 月）")
 inp("pe_ttm", "近 12 月 P/E（stockanalysis，10-22）", "x", None, 70.74, None, "Interested-party", SA, "HiStock 72.24")
 inp("cons_feps", "共識前瞻 12 月 EPS（現價 ÷ 前瞻 P/E）", "NT$", None, "=px/fpe", None, "Derived", SA, "直接數字：未找到")
@@ -223,7 +223,7 @@ def defname(name, ref):
 Q = wb.create_sheet("Q")
 Q["A1"] = "Q — FY2025 實績、1H26 實績、3Q26 營收實績與 FY2026 錨點（十億新台幣；EPS 新台幣、基本；股數十億股）。藍字＝輸入；黑字＝公式"
 Q["A2"] = "FY2026 錨點＝1Q、2Q26 財報實績＋3Q26 營收實績（月營收）與 3Q26 毛利率、費用假設＋4Q26 假設。3Q26 財報約 2026-10-29 公布，屆時以實績取代 E 欄（毛利率、費用、業外、淨利）"
-hdr(Q, 3, ["項目", "FY2025A", "1Q26（實績）", "2Q26（實績）", "3Q26（營收實績）", "4Q26（模型）", "FY2026 錨點", "標記", "來源1（公司）", "來源2／說明"])
+hdr(Q, 3, ["項目", "FY2025A", "1Q26（實績）", "2Q26（實績）", "3Q26（實績）", "4Q26（模型）", "FY2026 錨點", "標記", "來源1（公司）", "來源2／說明"])
 S1 = "FY2025：stockanalysis 損益表（公司財報）；1H26、2Q26：工商時報 2026-07-29（公司財報）"
 def qrow(r, label, vals, fmt="#,##0.000", tag="Verified", s1=S1, s2="—", ann=None):
     Q.cell(r, 1, label)
@@ -238,9 +238,9 @@ qrow(5, "毛利", {"B": 18.292, "C": "=C4*0.1796", "D": "=D4*0.248", "E": "=E4*q
 qrow(6, "毛利率", {c: f"={c}5/{c}4" for c in "BCDEFG"}, fmt="0.00%", ann="", tag="Derived", s1="—", s2="FY2025 13.94%")
 qrow(7, "營業費用", {c: f"={c}5-{c}8" for c in "BCD"} | {"E": "=q3_opx", "F": "=q4_opx"}, tag="Derived／Assumed", s1="毛利 − 營業利益")
 qrow(8, "營業利益", {"B": 6.674, "C": "=9.408-D8", "D": 6.651, "E": "=E5-E7", "F": "=F5-F7"}, tag="Verified／Derived", s2="1H26 94.08 億（口袋學堂；工商時報 94.07）")
-qrow(9, "營業外淨額（FY2025＝淨利 − 營業利益，近似）", {"B": "=B11-B8", "C": "=12.466-D9", "D": 8.924, "E": "=q_nonop", "F": "=q_nonop"}, tag="Verified／Assumed", s2="2Q26 含金融資產評價利益 92.1 億、湖口廠處分利益 5.6 億、欣興同泰減損 13.7 億（口袋學堂）")
+qrow(9, "營業外淨額（FY2025＝淨利 − 營業利益，近似）", {"B": "=B11-B8", "C": "=12.466-D9", "D": 8.924, "E": "=E11/(1-tax)-E8", "F": "=q_nonop"}, tag="Verified／Assumed", s2="2Q26 含金融資產評價利益 92.1 億、湖口廠處分利益 5.6 億、欣興同泰減損 13.7 億（口袋學堂）")
 qrow(10, "稅前利益", {c: f"={c}8+{c}9" for c in "CDEF"}, tag="Derived", s1="—", s2="1H26 公布 218.75 億（核對見第 24 列）")
-qrow(11, "歸屬母公司淨利", {"B": 6.673, "C": "=18.157-D11", "D": 13.114, "E": "=E10*(1-tax)", "F": "=F10*(1-tax)"}, tag="Verified／Derived", s2="1Q26 50.43 億（永豐）；FY2025 業外與稅後淨利接近營業利益")
+qrow(11, "歸屬母公司淨利", {"B": 6.673, "C": "=18.157-D11", "D": 13.114, "E": "=q3_ni", "F": "=F10*(1-tax)"}, tag="Verified／Derived", s2="1Q26 50.43 億（永豐）；FY2025 業外與稅後淨利接近營業利益")
 qrow(12, "所得稅與少數股權", {c: f"={c}10-{c}11" for c in "CDEF"}, tag="Derived", s1="—")
 qrow(13, "加權股數（十億股）", {"B": "=B11/B14", "C": "=C11/C14", "D": "=D11/D14", "E": "=q_sh", "F": "=q_sh"}, ann="=AVERAGE(C13:F13)", tag="Derived", s1="淨利 ÷ EPS；3Q 起含 GDR")
 qrow(14, "EPS（基本）", {"B": 4.38, "C": 3.28, "D": 8.45, "E": "=E11/E13", "F": "=F11/F13"}, fmt="0.00", ann="=G11/G13", tag="Verified／Derived", s2="1H26 11.70（工商時報）")
@@ -468,7 +468,7 @@ V["A2"] = "循環位置：欣興不是設備股，不套設備市場見頂年；
 O = 51
 V.cell(O, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, O + 1, ["項目", "A", "B", "C", "說明"])
-V.cell(O + 2, 1, "現價（2026-10-22 收盤）"); V[f"B{O + 2}"] = "=px"; V[f"B{O + 2}"].number_format = "#,##0"
+V.cell(O + 2, 1, "現價（2026-10-30 收盤）"); V[f"B{O + 2}"] = "=px"; V[f"B{O + 2}"].number_format = "#,##0"
 for k, y, lab in ((3, 2026, "現價 ÷ FY2026 EPS（錨點）"), (4, 2027, "現價 ÷ FY2027 EPS（模型）"), (5, 2028, "現價 ÷ FY2028 EPS（模型）"), (6, 2029, "現價 ÷ FY2029 EPS（模型）")):
     V.cell(O + k, 1, lab)
     for j, s in enumerate(SC):
@@ -599,7 +599,7 @@ hdr(V, 38, ["項目", "數值", "", "", "說明"])
 tset(39, "tpw", "目標價（DCF 與 Comparable 加權）", ["=tp_w_dcf*B24+(1-tp_w_dcf)*B35", None, None], "0.00", "tp_w_dcf × DCF＋（1 − tp_w_dcf）× Comparable；tp_w_dcf 見 In 頁（0.5）")
 tset(40, "comp2", "Comparable 目標價（市場主流同業法）", ["=B35", None, None], "0.00")
 tset(41, "cons", "市場共識目標價", ["=cons_tp", None, None], "0.00", "stockanalysis：19 位分析師平均 1,317.37（2026-10-22 擷取）；本土法人 1,500（2026-10-19）")
-tset(42, "upw", "上檔空間：加權目標價", ["=B39/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-10-22 收盤）")
+tset(42, "upw", "上檔空間：加權目標價", ["=B39/px-1", None, None], "0.0%", "現價＝In 頁 px（2026-10-30 收盤）")
 tset(43, "upc", "上檔空間：Comparable 目標價", ["=B40/px-1", None, None], "0.0%")
 tset(44, "geps", "與市場共識目標價的差距：EPS 因素", ["=B34/cons_feps-1", None, None], "0.0%", "本模型前瞻 EPS ÷ 共識前瞻 EPS − 1；共識前瞻 EPS＝現價 ÷ 前瞻 P/E（In 頁 cons_feps）")
 tset(45, "gmul", "與市場共識目標價的差距：倍數因素", ["=(cons_tp/cons_feps)/B33-1", None, None], "0.0%")
@@ -775,11 +775,7 @@ RD.column_dimensions["A"].width = 170
 # ---------------- v0.1.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00／14:17）----------------
 # 新列一律放在 Val、README 工作表既有內容之後，不位移既有列；既有數值不變
 VER_PREV, VER_NOW = 'v0.1', 'v0.1.1'
-OBS = [
- "目標價 NT$727（DCF 389、Comparable 1,065 各半），比現價 1,085（2026-10-22）低 33.0%，級距 −25%～−50%；Comparable 單獨為 −1.8%。主因是 DCF 不是 EPS：本模型前瞻 EPS 24.54 只比共識前瞻 EPS 25.66 低 4.4%，同業前瞻 P/E 中位數 43.4 倍與現價 ÷ 共識前瞻 EPS 42.3 倍相近；DCF 用每股（淨利＋折舊 − 資本支出），擴產期 FY2027 情境 A 每股現金流 9.16 只有 EPS 27.51 的 33%，DCF 比現價低 64.2%（改用 EPS ×（1 − g／ROE）只有 249，因 ROE 8.6% 低於折現率 10%）。",
- "ABF 漲價路徑最敏感：ABF 溢價取 Ibiden 低值（2028 年 0.85）時 FY2028 EPS −24.1%、取高值 +24.1%；漲價年度化 0%（基準 5%）時 FY2027 EPS −11.1%，AI 部署 ×0.8 時 −19.4%。",
- "情境分歧從 FY2028 開始：FY2027 EPS 三情境同為 27.51（比 2026-06 FactSet 共識 30.37 低 9.4%），FY2028 為 30.44／23.21／16.05。下一個檢驗點是 3Q26 財報與法說（約 2026-10-29）：ABF 報價與 2027 年資本支出。"
-]   # 重點觀察（數字取自重算後的 Val／PL／Sens；與 README.md 相同文字）
+OBS = ["目標價 NT$685（DCF 399、Comparable 相對倍數調整後 972 各半），比現價 989（2026-10-30）低 30.7%，級距 −25%～−50%，投資建議維持放空。v0.3 滾入 3Q26：營收 526.5 億（新高）、毛利率 28.85%（原假設 27%）、歸屬母公司淨利 100.52 億、EPS 6.15；加權目標價 664 → 685（+3.2%）。上檔空間由 −38.8% 收斂到 −30.7%，約一半來自股價下跌 8.8%。", "FY2026 EPS 23.39 → 24.36（+4.2%）、FY2027 EPS（A）27.51 → 28.27（+2.8%）。差距仍主要在 DCF：擴產折舊與 2027–28 年載板份額相對值（Ibiden、景碩分食）使 FY2028 情境 B、C 的 EPS 回落到 23.9、16.8；公司 AI 產品占比下半年上看 70%、ABF 漲價剛起步（券商說法），若 FY2027 毛利率高於模型，評等有上修空間。", "4Q26 假設：季增 5%、毛利率 29.5%；3Q 營業費用沿用假設 43 億，業外與稅以淨利倒推（季報細項未取得）。下一個檢驗點是 3Q26 法說的 ABF 價格與產能利用率說法、4Q26 月營收，以及 Siliconomics ABF 供需表的缺口路徑（CF20 景碩份額待複核）。"]   # 重點觀察（數字取自重算後的 Val／PL／Sens；與 README.md 相同文字）
 UPW_ROW = next(r_ for r_ in range(1, V.max_row + 1) if V.cell(r_, 1).value == "上檔空間：加權目標價")
 GRADE_ROW = V.max_row + 1; REC_ROW = GRADE_ROW + 1
 _u = f"B{UPW_ROW}"
@@ -812,8 +808,16 @@ import os, sys  # noqa: E401
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
 import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "unimicron")
+# ---------------- v0.3（2026-11-02）：3Q26 實績（In 頁最後追加；Q 頁改讀） ----------------
+_ri = IN.max_row + 2
+IN.cell(_ri, 1, "v0.3：3Q26 季報實績（Q 頁 3Q 欄）").font = BOLD; _ri += 1
+for _k, _lab, _u, _v, _tag, _src, _src2 in [('q3_ni', '3Q26 歸屬母公司淨利', 'NT$B', 10.052, 'Verified', '優分析／鉅亨 2026-10-27：稅後純益 100.52 億元（季減 23.36%）、EPS 6.15', '前三季 282.1 億、EPS 17.85；2Q26 含一次性評價與處分利益')]:
+    IN.cell(_ri, 1, _k); IN.cell(_ri, 2, _lab); IN.cell(_ri, 3, _u)
+    IN.cell(_ri, 5, _v).font = BLUE; IN.cell(_ri, 7, _tag); IN.cell(_ri, 8, _src); IN.cell(_ri, 10, _src2)
+    wb.defined_names[_k] = DefinedName(_k, attr_text=f"In!$E${_ri}"); _ri += 1
+RD.cell(RD.max_row + 1, 1, 'v0.3（2026-11-02）：滾入 3Q26 實績（營收 526.5 億、毛利率 28.85%、歸屬母公司淨利 100.52 億、EPS 6.15；營業費用沿用假設 43 億，業外與稅倒推）；4Q26 毛利率 29.5%；股價改 2026-10-30 收盤 989。')
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
-apply_in_layout.apply(wb, "v0.2.1", "2026-10-30")  # v0.2.1：In 頁版面（個股模型原則第 8 節；數值不變）
+apply_in_layout.apply(wb, "v0.3", "2026-11-02")  # v0.2.1：In 頁版面（個股模型原則第 8 節；數值不變）
 wb.save(sys.argv[1])
 if os.environ.get("UNIMICRON_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
