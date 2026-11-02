@@ -710,7 +710,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <p class="note">正式 S-1：Google 2026 NPA 於 2026-06-30 剩餘可發行 {n("SRC_ANT_482", None, "f0")}；另有 IPO 同時以發行價認購最多 {n("SRC_ANT_483_Hi", None, "f0")} 的選擇權，若行使，NPA 額度等額減少，兩者不相加。Amazon 2026 NPA 剩餘 {n("SRC_ANT_484", None, "f0")}（每達算力里程碑 5.0）。條件式一律不計入基準。</p>
 <h3>2026-06-30 現金對照（只對照，不校準）</h3>
 <div class="tw"><table><thead><tr><th>項目</th><th>v0.1.7</th><th>v{ver}</th></tr></thead><tbody>{c630_html}</tbody></table></div>
-<p class="note">V2 後模型近似比 S-1 多 {n("FND_Cash0630Gap", None, "f2")}（負號），差額幾乎全部來自 Broadcom 租約保證金 {n("SRC_ANT_487", None, "f1")}（2026-04 存入的受限現金，不在 S-1「現金、約當現金與短期投資」內，之後抵付租金；預設不另計）與上半年自由現金流的時點；股權收入已與 S-1 一致。</p>
+<p class="note">V2 後「S-1 − 模型近似」為 {n("FND_Cash0630Gap", None, "sf2")}（模型較多），差額幾乎全部來自 Broadcom 租約保證金 {n("SRC_ANT_487", None, "f1")}（2026-04 存入的受限現金，不在 S-1「現金、約當現金與短期投資」內，之後抵付租金；預設不另計）與上半年自由現金流的時點；股權收入已與 S-1 一致。</p>
 <p class="note"><b>V1 來源等級</b>：原為二手轉載的 46 列（季度損益、營收成本、承諾三段、逐家承諾、營業現金流與資本支出、集中度、non-GAAP 調節）改 Verified，網址改 SEC 原文、備註加原文位置；SRC_ANT_421 為轉載者捨入（原文表內 11,555、正文 11.6），只對照、標記不改；SRC_ANT_427–431 改原文精度（只對照列）。<b>V5 文字更正</b>：v0.1.7 報告與交接所寫「上半年股權報酬未單獨揭露」「約 0.111 未說明」改為：調整後 − GAAP 營業損益 2.311＝股權報酬 2.185（Q1 924＋Q2 1,261）＋非現金捐贈配對 0.126（2026Q1），兩者皆非現金，股權報酬代理口徑成立、數值不變。</p>
 {V.src("FND_Committed", "FND_CommittedS1Gap", "FND_ExtNeedCum", "FND_CashNoExtTrough", "FND_MinCash", "FND_Cash0630Gap", "FND_Cash0630Resid", "FND_MinCashOverCovenant", "FND_ExtNeedCumCond")}
 </section>""")
