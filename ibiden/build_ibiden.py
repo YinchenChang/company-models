@@ -101,17 +101,17 @@ inp("ni_oi", "淨利 ÷ 營業利益（稅、非營業、少數股權）", "x", 
 inp("sh_g", "股數年變動（2031 年到期 CB 轉換）", "%", 0.00, 0.00, 0.03, "Assumed", "CB 轉換價 ¥2,243.1（分割後；" + STD + "），遠低於現價", "CB 發行額：未找到；FY2025 稀釋 EPS 比基本低 5.8%（214.91 ÷ 228.16）")
 inp("fx", "匯率（美元換算用）", "¥／US$", None, 152, None, "Interested-party", SUPQ1 + "：FY2026 前提 ¥152", "—")
 
-sec("E. FY2026 錨點（公司 2026-08-04 上修後預測；Q2 決算後更新）")
+sec("E. FY2026 錨點（公司 2026-10-29 中間決算再上修後預測；營收與部門預測未取得者沿用 08-04 值）")
 inp("f_rev", "FY2026 營收預測", "¥B", None, 550.0, None, "Interested-party", SUPQ1, LIMO + "：5,500 億（+32.1%）")
 inp("f_e", "FY2026 電子事業營收預測", "¥B", None, 375.0, None, "Interested-party", SUPQ1, "Q1 實績 77.5（年增 37.7%；" + STD + "）")
-inp("f_eoi", "FY2026 電子事業營業利益預測", "¥B", None, 110.0, None, "Interested-party", SUPQ1, "Q1 實績 21.4（營益率 27.6%）")
+inp("f_eoi", "FY2026 電子事業營業利益預測（10-29 上修 60 億全數歸電子，Assumed）", "¥B", None, 116.0, None, "Interested-party", "路透 2026-10-29（Newsweek Japan 轉載）：通期營業利益 1,270 → 1,330 億、淨利 840 → 890 億（中間期電子事業營收與營業利益皆高於前次預測）；部門別修正值未取得，以 08-04 的 1,100 億＋全公司上修 60 億", "Q1 實績 21.4（營益率 27.6%）")
 inp("f_cer", "FY2026 陶瓷事業營收預測", "¥B", None, 84.0, None, "Interested-party", SUPQ1, "—")
 inp("f_ceroi", "FY2026 陶瓷事業營業利益預測", "¥B", None, 6.5, None, "Interested-party", SUPQ1, "—")
 inp("f_oth", "FY2026 其他事業營收預測", "¥B", None, 91.0, None, "Interested-party", SUPQ1, "—")
 inp("f_othoi", "FY2026 其他事業營業利益預測", "¥B", None, 10.5, None, "Interested-party", SUPQ1, "—")
-inp("f_oi", "FY2026 營業利益預測", "¥B", None, 127.0, None, "Interested-party", SUPQ1, STD + "：900 → 1,270 億")
-inp("f_ni", "FY2026 淨利預測（歸屬母公司）", "¥B", None, 84.0, None, "Interested-party", SUPQ1, STD + "：580 → 840 億")
-inp("f_eps", "FY2026 EPS 預測（分割後）", "¥", None, 149.68, None, "Interested-party", STD + "：反映 2026-10-01 一拆二", "—")
+inp("f_oi", "FY2026 營業利益預測", "¥B", None, 133.0, None, "Interested-party", "路透 2026-10-29（Newsweek Japan 轉載）：通期營業利益 1,270 → 1,330 億、淨利 840 → 890 億（中間期電子事業營收與營業利益皆高於前次預測）", STD + "：08-04 900 → 1,270 億")
+inp("f_ni", "FY2026 淨利預測（歸屬母公司）", "¥B", None, 89.0, None, "Interested-party", "路透 2026-10-29（Newsweek Japan 轉載）：通期營業利益 1,270 → 1,330 億、淨利 840 → 890 億（中間期電子事業營收與營業利益皆高於前次預測）；IBES 17 家平均 877 億", STD + "：08-04 580 → 840 億")
+inp("f_eps", "FY2026 EPS 預測（分割後）", "¥", None, "=149.68*89/84", None, "Derived", "08-04 預測 149.68 × 淨利上修比例 890 ÷ 840（10-29 公司 EPS 預測未取得）", STD + "：反映 2026-10-01 一拆二")
 
 sec("F. FY2025 實績（2026 年 3 月期）")
 for k, lab, v in (("a_rev", "營收", 416.201), ("a_e", "電子事業營收", 243.316), ("a_eoi", "電子事業營業利益", 45.248), ("a_cer", "陶瓷事業營收", 82.554), ("a_ceroi", "陶瓷事業營業利益", 7.646),
@@ -120,7 +120,7 @@ for k, lab, v in (("a_rev", "營收", 416.201), ("a_e", "電子事業營收", 24
 inp("a_eps", "FY2025 基本 EPS（分割後換算＝228.16 ÷ 2）", "¥", None, "=228.16/2", None, "Derived", TAN25 + "：228.16（2026-01 一拆二後、2026-10 一拆二前）", "2026-10-01 再一拆二")
 
 sec("G. 價格與市場資料（只作 Val、Recon 對照）")
-inp("px", "股價（2026-10-23 收盤，分割後）", "¥", None, 8512, None, "Interested-party", "markets/invest_map/data/prices.csv：株探、松井證券（兩來源核對；v0.2 更新）", "v0.1.1 為 10-16 收盤 9,764（stockanalysis）；前瞻 P/E 隱含 EPS 仍以 9,764 計（In 頁 cons_feps）")
+inp("px", "股價（2026-10-30 收盤，分割後）", "¥", None, 8359, None, "Interested-party", "markets/invest_map/data/prices.csv：松井證券、Fisco／Investing.jp（停板）", "v0.3.1 為 10-23 收盤 8,512")
 inp("pe_fwd_sa", "前瞻 P/E（stockanalysis）", "x", None, 53.97, None, "Interested-party", "stockanalysis 2026-10-16 取值（股價 9,764；口徑：未來 12 個月共識，頁面未明示；隨股價每日變動）", "第二來源：未找到")
 inp("pe_ttm", "近 12 月 P/E", "x", None, 83.85, None, "Interested-party", "stockanalysis", "—")
 inp("pe_fair_andy", "Andy 先驗：合理 P/E", "x", None, 25, None, "Assumed", "先驗_Andy_Ibiden_20261024 I10b（Drive；不在本 repo）", "只作對照")
@@ -154,7 +154,7 @@ V2 = {'name': 'Ibiden',
  'fwd_note': '會計年度 4 月至隔年 3 月：約 2027-10 時的未來 12 月（2027-10～2028-09）≈ 6／12 × FY2027＋6／12 × FY2028',
  'pe10': ([(2016, 44.1), (2017, None), (2018, 35.3), (2019, 137.0), (2020, 55.2), (2021, 53.1), (2022, 40.7), (2023, 26.8), (2024, 57.2), (2025, 33.6)],
           'companiesmarketcap 日曆年年底 P/E，Interested-party；2017 年虧損不計'),
- 'px_note': '現價＝In 頁 px（2026-10-23 收盤 8,512，分割後）',
+ 'px_note': '現價＝In 頁 px（2026-10-30 收盤 8,359，分割後）',
  'method': 'DCF：股東現金流＝EPS ×（1 − g／ROE），r＝10%、g＝4%、ROE＝近三年平均約 8.6%（再投資率約 46%），FY2027–29 驅動因子、FY2030–32 收斂法＋永續；基準日 2026 年底（FY2027 實際於 2028-03 結束，未做半年調整）。Ibiden 資本密集（FY2026 設備投資 2,100 '
            '億），但模型無折舊與資本支出明細，未改用淨利＋折舊－資本支出，現金流偏高估。Comparable：欣興、南電、景碩、三星電機、AT&S 前瞻 P/E 中位數；台系載板股含 AI 題材溢價（約 34–45x），部分價格為 8–9 月，偏高估。情境對應：A＝順利、B＝平平、C＝不如預期（原顆數情境）。',
  'readme_val': '估值：Val 第 0 節目標價＝0.5 × DCF 目標價（股東現金流＝EPS ×（1 − tp_g ÷ tp_roe），FY2027–FY2032 明確期＋永續，r 10%、g 4%，三情境權重 0.3／0.5／0.2，推到 12 個月後）＋0.5 × Comparable 目標價（欣興、南電、景碩、三星電機、AT&S 前瞻 P/E 中位數 × 12 '
@@ -357,7 +357,7 @@ V["A1"] = "Val — P/E 估值（日圓）。結論用「現價 ÷ FY2026–FY202
 V["A2"] = "循環位置：Ibiden 不套設備股見頂年；以本模型營收最高的會計年度為見頂年（比照 NVIDIA、Arista）。營收到 FY2029 仍在增加時，見頂年未知，判為中段"
 V.cell(4, 1, "1. 價格與市場隱含倍數").font = BOLD
 hdr(V, 5, ["項目", "A", "B", "C", "說明"])
-V.cell(6, 1, "現價（2026-10-23 收盤，分割後）"); V["B6"] = "=px"; V["B6"].number_format = "#,##0"
+V.cell(6, 1, "現價（2026-10-30 收盤，分割後）"); V["B6"] = "=px"; V["B6"].number_format = "#,##0"
 V.cell(7, 1, "現價 ÷ FY2026 EPS（錨點）"); V.cell(8, 1, "現價 ÷ FY2027 EPS（模型）"); V.cell(9, 1, "現價 ÷ FY2028 EPS（模型）"); V.cell(10, 1, "現價 ÷ FY2029 EPS（模型）")
 for j, s in enumerate(SC):
     c = "BCD"[j]
@@ -550,7 +550,7 @@ add_target_price(V, {s: f"=$B${PE_MED_ROW}*PL!E{SUMR[(s, 'eps')]}" for s in SC},
     "P/E：十年（2016–2025 日曆年年底）P/E 中位數（companiesmarketcap 單一來源，第 0a 節；2017 年虧損不計，9 年）× 各情境 FY2027 EPS（FY2027＝2027-04～2028-03）。"
     "本模型無規則值（十年 P/E 待 Bloomberg），依工作單改用此備案；倍數為日曆年年底口徑，與 3 月制會計年度不完全對齊。十年倍數多為 AI 載板需求前的時期（2019 年獲利低谷約 137x 為極值，中位數受影響小），偏誤方向不明確；"
     "FY2027 三情境 EPS 相同（情境差從 FY2028 起），故三情境隱含價相同；隱含價約為 FY2027 年底（2028-03）的價格、未折現，當作 12 個月目標價時偏高。",
-    "現價＝In 頁 px（2026-10-23 收盤，分割後）", t0=TP0)
+    "現價＝In 頁 px（2026-10-30 收盤，分割後）", t0=TP0)
 
 V2["old_row"] = TP0
 # ================= v0.2（2026-10-25）：PL 延伸到 FY2032、Val 第 0 節目標價（DCF 與 Comparable 加權）、Sens 目標價參數 =================
@@ -722,11 +722,7 @@ if os.environ.get("V2_ROWMAP"):
 # ---------------- v0.2.1（2026-10-25）：上檔空間級距、投資建議、重點觀察（Andy 2026-10-25 14:00／14:17）----------------
 # 新列一律放在 Val、README 工作表既有內容之後，不位移既有列；既有數值不變
 VER_PREV, VER_NOW = 'v0.2', 'v0.2.1'
-OBS = [
- "目標價 ¥5,236（DCF 1,931、Comparable 8,541 各半），比現價 8,512（2026-10-23）低 38.5%，級距 −25%～−50%；Comparable 單獨為 +0.3%。主因是 DCF 不是 EPS：本模型 12 個月後前瞻 EPS 202.0 比共識前瞻 EPS 180.9 高 11.7%，但 ROE 近三年平均 8.6% 低於折現率 10%，再投資率 46% 使成長不創造價值，DCF 比現價低 77.3%；Comparable 端同業前瞻 P/E 中位數 42.3 倍、現價 ÷ 共識前瞻 EPS 47.0 倍、共識目標價 12,432 隱含 68.7 倍。ROE 用的是 AI 載板放量前的年度，DCF 對 ABF 漲價路徑的反映有限，待 Andy 判斷。",
- "短缺溢價是最敏感的變數：溢價快速回落（2028 年指數 0.85）時 FY2028 EPS −24.6%、電子事業營益率由 29.1% 降到 23.0%，溢價延續則 +24.6%；份額流失（2028 年相對值 0.75）−11.7%；顆數情境 C −31.6%。",
- "自由現金流（v0.2.1 新增；淨利＋折舊 − 資本支出，不含營運資金變動；折舊、資本支出各取營收的 15%、25%）情境 B 的 FY2027 為 ¥50.4B、FY2028 為 ¥36.2B；若 FY2026 照公司計畫（設備投資 2,100 億、折舊 810 億）則約 −¥45B，固定比率會攤平擴產前段的負值。下一個檢驗點是 FY2026 上半年決算（預計 2026-10 底或 11 月初）：全年預測與設備投資 2,100 億是否調整。"
-]   # 重點觀察（數字取自重算後的 Val／PL／Sens；與 README.md 相同文字）
+OBS = ["目標價 ¥6,870（DCF 2,064、Comparable 相對倍數調整後 11,676 各半），比現價 8,359（2026-10-30）低 17.8%，級距 0%～−25%，投資建議維持中立。v0.4 改用 10-29 中間決算再上修的公司預測（營業利益 1,270 → 1,330 億、淨利 840 → 890 億）；加權目標價 6,499 → 6,870（+5.7%），上檔空間 −23.7% → −17.8%（股價同期 −1.8%）。", "FY2026 EPS 149.68 → 158.59（+6.0%，以淨利上修比例推得）、FY2027 EPS（A）216.13 → 227.52（+5.3%）。DCF 與 Comparable 差距極大（2,064 對 11,676）：DCF 反映 2027 年後擴產折舊與份額相對值下滑（Siliconomics M13：0.95／0.88／0.85），Comparable 反映市場給 AI 載板的高倍數；情境 C FY2028 EPS 157.86，比情境 A 232.26 低 32.0%。", "待補：10-29 的營收與部門別修正值未取得，上修 60 億全數歸電子事業（Assumed）。NVIDIA 預付數十億美元支援大野事業場產能三倍、2028 年起分段開出（路透），另新投資約 1,510 億（2029 年度起稼動）——若份額相對值因此不降，FY2028 起 EPS 與 DCF 會上修。下一個檢驗點是 2027-01 第三季決算。"]   # 重點觀察（數字取自重算後的 Val／PL／Sens；與 README.md 相同文字）
 UPW_ROW = next(r_ for r_ in range(1, V.max_row + 1) if V.cell(r_, 1).value == "上檔空間：加權目標價")
 GRADE_ROW = V.max_row + 1; REC_ROW = GRADE_ROW + 1
 _u = f"B{UPW_ROW}"
@@ -799,7 +795,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "ibiden")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
-apply_in_layout.apply(wb, "v0.3.1", "2026-10-30")  # v0.3.1：In 頁版面（個股模型原則第 8 節；數值不變）
+RD.cell(RD.max_row + 1, 1, "v0.4（2026-11-02）：FY2026 錨點改用 2026-10-29 中間決算再上修的公司預測（營業利益 1,330 億、淨利 890 億；上修 60 億全數歸電子事業，Assumed）；營收與其他部門預測未取得，沿用 08-04 值；股價改 2026-10-30 收盤 8,359。")
+apply_in_layout.apply(wb, "v0.4", "2026-11-02")  # v0.3.1：In 頁版面（個股模型原則第 8 節；數值不變）
 wb.save(sys.argv[1])
 if os.environ.get("IBIDEN_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
