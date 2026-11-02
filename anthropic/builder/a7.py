@@ -106,7 +106,7 @@ def build(ctx):
     K.add("s1n_q2nc", "W4 2026 Q2 非算力營業費用＝Q2 營收 − Q2 算力與基礎設施 − Q2 營業損益（含抽成與股權報酬）", "$B",
           only26(f"={S('rev_s1f_2026q2')}-{S('ci_s1f_2026q2')}-{S('oi_s1f_2026q2')}"), "SRC_ANT_420、432、441（二手轉載；Q2 營業利益 +0.974）")
     K.add("s1s_h1", "股權報酬代理：2026 上半年＝S-1 調整後營業損益 − GAAP 營業損益", "$B", only26(f"={S('adjoi_s1f_2026h1')}-{S('oi_s1f_2026h1')}"),
-          "SRC_ANT_465 − 435＝2.311（含約 0.11 其他調整項；人事附註股權報酬 2.2〔SRC_ANT_467〕只對照）")
+          "SRC_ANT_465 − 435＝2.311＝股權報酬 2.185＋非現金捐贈配對 0.126（2026Q1；S-1 第 161 頁，v0.1.7.1 更正 v0.1.7「約 0.11 其他調整項」）；兩者皆非現金，代理口徑成立；SRC_ANT_467（2.2）只對照")
     K.add("s1s_q2", "股權報酬代理：2026 Q2＝Q2 調整後營業利益率 × Q2 營收 − Q2 GAAP 營業損益", "$B",
           only26(f"={S('adjoim_s1f_2026q2')}*{S('rev_s1f_2026q2')}-{S('oi_s1f_2026q2')}"), "SRC_ANT_466（約 19%）、420、441")
     K.add("s1s_fy", "股權報酬代理：2026 全年＝上半年 ＋ Q2 × 下半年季數（照營收同法：Q3＝Q2、Q4＝Q3）", "$B", only26(f"=«s1s_h1»+«s1s_q2»*{hq}"),
@@ -143,7 +143,7 @@ def build(ctx):
     F.section("十二、v0.1.7 W6：Amazon 2026 實際投入（Amazon 2026Q3 10-Q：Series G 5.0＋Series H 5.0＝10.0；Wattonomics 證據 F#81 附帶觀察）vs 模型已到位融資中的 Amazon 部分（只對照）")
     F.add("w6_10q", "Amazon 10-Q：2026 年對 Anthropic 實際投入（Series G 特別股＋Series H 特別股）", "$B",
           lambda i, c: f"=({S('strat_amzn_2026_series_g')}+{S('strat_amzn_2026_series_h')})*({c}$6={Y26})", "SRC_ANT_319、320（Amazon 10-Q，Verified）")
-    F.add("w6_model", "模型：2026 已到位融資中的 Amazon 部分（Amazon Series G 5〔開關〕＋Series H 65 內含的 Amazon 5）", "$B",
+    F.add("w6_model", "模型：2026 已到位融資中的 Amazon 部分（Amazon Series G-2 5〔開關〕＋Series H 內含的 Amazon 5）", "$B",
           lambda i, c: f"=«in_amzg»+{S('strat_amzn_2026_series_h')}*({c}$6={Y26})", "Series H $65B 含 $15B 先前承諾的雲端業者投資（其中 Amazon $5B，SRC_ANT_300、320）")
     F.add("w6_diff", "差：模型 − 10-Q（應為 0）", "$B", lambda i, c: "=«w6_model»-«w6_10q»", "", name="FND_AmznCheck2026")
     F.add("w6_cum", "對照：Amazon 累計投入 18.0（可轉債 8＋G 5＋H 5；SRC_ANT_323）只用於回流對照（第七節 D 欄），不進 2026 流入", "$B",

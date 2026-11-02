@@ -470,7 +470,23 @@
 "sbc_s1f_fy2025": "SRC_ANT_468",
 "sbc_s1f_2025h1": "SRC_ANT_469",
 "adjoi_s1f_fy2025": "SRC_ANT_470",
-"adjoi_s1f_2025h1": "SRC_ANT_471"
+"adjoi_s1f_2025h1": "SRC_ANT_471",
+"fund_s1f_pref_2026h1": "SRC_ANT_472",
+"fund_s1f_series_g_q1": "SRC_ANT_473",
+"fund_s1f_series_g2_q2": "SRC_ANT_474",
+"fund_s1f_g2_googl_shares": "SRC_ANT_475",
+"fund_s1f_g2_amzn_shares": "SRC_ANT_476",
+"fund_s1f_g_price": "SRC_ANT_477",
+"fund_s1f_series_h_q2": "SRC_ANT_478",
+"fund_s1f_h_price": "SRC_ANT_479",
+"fund_s1f_googl_series_h": "SRC_ANT_480",
+"fund_s1f_amzn_series_h": "SRC_ANT_481",
+"fund_s1f_googl_npa_rem": "SRC_ANT_482",
+"fund_s1f_googl_ipo_option": "SRC_ANT_483",
+"fund_s1f_amzn_npa_rem": "SRC_ANT_484",
+"debt_s1f_revolver": "SRC_ANT_485",
+"debt_s1f_min_liquidity": "SRC_ANT_486",
+"cash_s1f_broadcom_deposit": "SRC_ANT_487"
 },
 "INP": {
 "year_2025": "INP_001",
@@ -685,7 +701,10 @@
 "s1f_d22_warn": "INP_214",
 "s1f_amd_switch": "INP_215",
 "s1f_d22_q3_switch": "INP_216",
-"s1f_sbc_proxy_switch": "INP_217"
+"s1f_sbc_proxy_switch": "INP_217",
+"s1f_round_switch": "INP_218",
+"s1f_cond_switch": "INP_219",
+"s1f_cmt_tol": "INP_220"
 },
 "CHK": {
 "src_rows": "C01",
@@ -883,7 +902,12 @@
 "g4_sbc": "C194",
 "g5_sus": "C195",
 "g5_fcf": "C196",
-"g7_cash": "C197"
+"g7_cash": "C197",
+"h2_cmt": "C198",
+"h2_round": "C199",
+"h2_g2": "C200",
+"h2_c630": "C201",
+"h4_liq": "C202"
 },
 "retired_INP": [
 "INP_067",
