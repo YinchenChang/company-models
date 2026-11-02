@@ -1,6 +1,7 @@
 # Anthropic v0.1 分段建置進度（接手用；A1–A5 共用）
 
 ## 目前狀態（每次 push 前覆寫）
+- **v0.1.7 完成**（2026-10-31；工作單 `docs/workorders/20261031_anthropic_v0.1.7_S1全面套用.md`；分支 `claude/anthropic-v0.1.7`；**不合併、未開 PR**）。步驟 1 模型（W1–W6）、2 測試／HTML／dist、3 報告與文件完成；報告 `docs/reports/20261031_v0.1.7.md`。**下一步**：chat 端審查；未參與代理獨立核對瀑布與首節數字；Andy 決定未歸屬餘額付款期等替代讀法。**未解問題**：S-1 付款時程留白（未歸屬餘額付款期為 Assumed）；η 0.468 低於 WARN 下緣；sec.gov 一手章節仍未直讀。
 - **v0.1.6 完成**（2026-10-31；工作單 `docs/workorders/20261031_anthropic_v0.1.6_S1正式版.md`；分支 `claude/anthropic-v0.1.6`；**不合併**）。步驟 1 模型（W1–W3）、2 測試、3 HTML／dist／對照 Excel、4 報告與文件完成；報告 `docs/reports/20261031_v0.1.6.md`。**下一步**：chat 端審查 PR；以瀏覽器核對 S-1 二手列；決定 6-30 後新簽合約是否進基準、OAI_Link 與 TK 是否同步。**未解問題**：sec.gov 一手章節（季度、Note 8、承諾）未能直讀。
 - **v0.1.5 完成**（2026-10-24；工作單 `docs/workorders/20261024_anthropic_v0.1.5_TK21.2.md`；分支 `claude/anthropic-v0.1.5`；**不合併**）。步驟 1–5 全部完成，報告 `docs/reports/20261024_v0.1.5.md`；pytest 117 項全過（builder 14、parity 97、html 6）；主要輸出與 v0.1.4 逐位相同。**下一步**：chat 端審查 PR（v0.1.5）；待決僅 U2 付款分攤比例（A 段遺留）。**未解問題**：無新增。
 - **v0.1.4 完成**（2026-10-22；工作單 `docs/workorders/20261022_anthropic_v0.1.4_TK19.1.md`；同分支 `claude/anthropic-v0.1.3`、PR #69，標題「Anthropic v0.1.3＋v0.1.4」；**不合併**）。步驟 1–6 全部完成，報告 `docs/reports/20261022_v0.1.4.md`；pytest 117 項全過；命題輸出與 v0.1.3 逐位相同。**下一步**：chat 端審查 PR #69；待決僅 U2 付款分攤比例（A 段遺留）。**未解問題**：無新增。
@@ -113,3 +114,13 @@ Tokenomics：master `c2ecb71`，CURRENT `20261022_Tokenomics_v19.1.xlsx`（Luna 
 | 4 重算與測試 | 完成 | 見 git log「v0.1.4 步驟 4–5」 | LO 錯誤 0、CHK_Errors＝0、Warnings＝2；pytest 依檔分開：test_builder 14、test_html 6、test_parity 97（分 7 片），共 117 項全過；預期值：formula_cells 7,256、defined_names 1,276、tk_values 105 |
 | 5 HTML 與 dist | 完成 | 同上 | dist v0.1.4；HTML 1,232 個數字；Playwright 12 節 × 桌機／手機 0 不符、無水平捲動、外部請求 0 |
 | 6 報告、CHANGELOG、交接檔、PR 留言 | 完成 | 見 git log「v0.1.4 步驟 6」 | `docs/reports/20261022_v0.1.4.md`＋`_對照.xlsx`；PR #69 留言 `[Anthropic 回報] v0.1.4｜完成｜2026-10-22` |
+
+
+## v0.1.7 正式 S-1 全面套用（2026-10-31）
+| 步驟 | 狀態 | commit | 備註 |
+|---|---|---|---|
+| 1 模型（W1 承諾進基準、W2 自建 GW 法、W3 2025 校準、W4 非算力校準、W5 TK v21.7／OpenAI v0.6.4、W6 Amazon 核對） | 完成 | `c1cf693` | builder/a7.py；INP_197–214；開關 0＋TK v21.2 → 與 v0.1.6 逐格相同 |
+| 2 測試、HTML「①之五」、dist、html 情境、報告產生器 | 完成 | `2fe88cc` | parity +9 情境；test_builder +4；test_html 敘述主張改寫 |
+| 3 報告、對照 Excel、CHANGELOG、交接檔、進度檔 | 完成 | 見 git log「步驟 3」 | |
+
+已套用的預設（v0.1.7）：全表見報告 ⑤ 與對照 Excel ④（未歸屬餘額 2027–2033、上限型沿用既有規則、Google 額外 TPU 不進基準、自建 GW 0、二手列維持 Interested-party、W4 照推得值入基準、AMD 不扣、Broadcom 首個爬坡年 2027 等）。

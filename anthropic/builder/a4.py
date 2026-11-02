@@ -122,8 +122,12 @@ def build(ctx):
     K.add("u2_share_n", "U2：Nscale 占兩約合計的比例＝Nscale MW ÷（Nscale MW ＋ Lambda MW）", "比例", only25(f"={mwn}/({mwn}+{mwl})"),
           "依兩約既有揭露 MW 比例分攤『最高 86』（工作單 U2）；MW 為 SRC 觀測值（460、350）")
     K.add("u2_share_l", "U2：Lambda 占兩約合計的比例", "比例", only25("=(1-«u2_share_n@$»)"), "")
-    K.add("u2_T_n", "U2：Nscale 錨定總額＝86 × 比例", "$B", only25(f"={D.fill(U2_TOTAL)}*«u2_share_n@$»"), "SRC：Nscale＋Lambda 合計最高 $86B（草擬 S-1，WSJ 轉述）")
-    K.add("u2_T_l", "U2：Lambda 錨定總額＝86 × 比例", "$B", only25(f"={D.fill(U2_TOTAL)}*«u2_share_l@$»"), "")
+    s1c = I("s1f_commit_switch")
+    K.add("u2_T_n", "U2：Nscale 錨定總額（v0.1.7 起＝正式 S-1 最高 44.6；s1f_commit_switch＝0＝86 × 比例）", "$B",
+          only25(f"={s1c}*{S('cmt_s1f_nscale')}+(1-{s1c})*{D.fill(U2_TOTAL)}*«u2_share_n@$»"),
+          "v0.1.7 W1(a)：SRC_ANT_455（正式 S-1；上限型沿用 U2 既有規則＝上限全數計入）；舊：Nscale＋Lambda 合計最高 $86B（草擬 S-1，WSJ 轉述）按 MW 比例")
+    K.add("u2_T_l", "U2：Lambda 錨定總額（v0.1.7 起＝正式 S-1 約 41.3；s1f_commit_switch＝0＝86 × 比例）", "$B",
+          only25(f"={s1c}*{S('cmt_s1f_lambda')}+(1-{s1c})*{D.fill(U2_TOTAL)}*«u2_share_l@$»"), "v0.1.7 W1(a)：SRC_ANT_456")
     for zh, ck, ex in PARTNER_X:
         e = D.fill(ex)
         K.add(f"pg_{ck}", f"模型 ÷ S-1 草稿 − 1：{zh}（模型＝第十一節合約總額）", "比例", only25(f"=(«tot_{ck}@$»-({e}))/({e})"), "逐家對帳補列（U3）")
@@ -363,8 +367,8 @@ def build(ctx):
     from a3 import CONTRACTS  # noqa: E402
     ckeys = [k[0] for k in CONTRACTS]
     F.add("after", "合約剩餘承諾（2030 年後應付）＝各新合約總額 − 2025–2030 實付", "$B",
-          only25("=(" + "+".join(f"«K:tot_{k}@$»" for k in ckeys) + ")-(" + "+".join(f"SUM(«K:pay_{k}@R»)" for k in ckeys) + ")"),
-          "Cost 第十一節總額（模型）；只列示", name="FND_CommitAfter2030", name_cols="D")
+          only25("=(" + "+".join(f"«K:tot_{k}@$»" for k in ckeys) + "+«K:s1u_tot@$»+«K:gadd_tot@$»)-(" + "+".join(f"SUM(«K:pay_{k}@R»)" for k in ckeys) + "+SUM(«K:pay_s1u@R»)+SUM(«K:pay_gadd@R»))"),
+          "Cost 第十一節總額（模型）；v0.1.7 起含 S-1 承諾未歸屬餘額與 Google 額外 TPU 情境（第二十五節）；只列示", name="FND_CommitAfter2030", name_cols="D")
     F.add("noncancel", "對照：招股書承諾中不可取消比例（約）", "比例", only25(f"={S('cmp_prospectus_noncancel_share')}"), "SRC_ANT_246；xAI 部分可 90 天取消")
 
     F.section("七、回流對照（D18；只列對照、不沖銷）：欄位不是年度——D 已到位投資、E 條件式／最高可達（未到位）、F 算力合約總額（招股書）、G 模型 2026–2030 付款、H 已到位 ÷ 模型付款、I（已到位＋條件式）÷ 合約總額")
@@ -447,7 +451,7 @@ def build(ctx):
               "目標＝各年最新一版公司預測（Interested-party；The Information 2025-11、2026-01 轉述）；2030 無公開目標 → 取正向值（倍數＝1）。本頁只被 Checks 引用（共同規則第 4 節；test_reverse_not_fed_back）。",
               "注意：這些目標都早於 2026 年的實際成長（2026 上半年實際已超過 2026-01 版全年目標），所以多數年度目標低於本模型正向值——倍數 < 1 代表「管理層舊目標比模型保守」。")
     X.section("一、管理層營收目標（只驅動本頁）")
-    tg = [f"={S('rev_2025_recognized')}", f"={S('proj_rev_2026_2026_01')}", f"={S('proj_rev_2027_2026_01')}", f"={S('proj_rev_2028_2025_11')}",
+    tg = [f"={I('s1f_cal25_switch')}*{S('rev_s1f_fy2025')}+(1-{I('s1f_cal25_switch')})*{S('rev_2025_recognized')}", f"={S('proj_rev_2026_2026_01')}", f"={S('proj_rev_2027_2026_01')}", f"={S('proj_rev_2028_2025_11')}",
           f"={S('proj_rev_2029_2026_01')}", "=«fwd»"]
     X.add("tgt", "管理層營收目標（總額口徑）", "$B", tg,
           "2025＝實際（SRC_ANT_001）；2026＝18（2026-01，SRC_ANT_368）；2027＝55（2026-01 樂觀，369）；2028＝最高 70（2025-11，362）；2029＝最高 148（2026-01，370）；2030＝無目標，取正向值",
@@ -537,9 +541,10 @@ def checks(ctx):
         ("b1_u1_q12", "U1 對照：Q1＋Q2 實際（4.73＋11.6）− 草擬 S-1 上半年 16.3（$B；四捨五入差）",
          f"={S('rev_2026_q1')}+{S('rev_2026_q2_actual')}-{S('rev_2026_h1_s1')}", None, "info", "兩份來源互相核對：差 0.03 屬進位"),
         ("b1_u1_q2diff", "U1 對照：Q2 實際 11.6（Implicator）− Euronews 11.5（$B）", f"={S('rev_2026_q2_actual')}-{S('rev_2026_q2_euronews')}", None, "info", "兩個報導值並列登錄，校準採 11.6"),
-        ("b1_u2_sum", "U2：Nscale＋Lambda 模型合約總額 − 草擬 S-1『最高 86』（開關 1 時應為 0；$B）",
-         f"={I('u2_switch')}*(Cost!$D${K.rows['tot_nscale']}+Cost!$D${K.rows['tot_lambda']}-{S('cmp_s1_nscale_lambda_86')})",
-         0, "tol", "工作單 U2：兩約合計錨定 86"),
+        ("b1_u2_sum", "U2：Nscale＋Lambda 模型合約總額 − 錨定總額（草擬 S-1『最高 86』；v0.1.7 承諾開關 1 時＝正式 S-1 44.6＋41.3）（開關 1 時應為 0；$B）",
+         f"={I('u2_switch')}*(Cost!$D${K.rows['tot_nscale']}+Cost!$D${K.rows['tot_lambda']}-({I('s1f_commit_switch')}*({S('cmt_s1f_nscale')}+{S('cmt_s1f_lambda')})"
+         f"+(1-{I('s1f_commit_switch')})*{S('cmp_s1_nscale_lambda_86')}))",
+         0, "tol", "工作單 U2：兩約合計錨定 86；v0.1.7 W1(a)：改讀正式 S-1 逐家"),
         ("b1_u2_gwn", "U2：Nscale 模型峰值 GW ÷ 揭露 460 MW", "=CMP_U2GWRatio_Nscale", None, "info", "D10：GW 由金額回推並與揭露對照（不校準）"),
         ("b1_u2_gwl", "U2：Lambda 模型峰值 GW ÷ 揭露 350 MW", "=CMP_U2GWRatio_Lambda", None, "info", ""),
         ("b1_u3_cloud", "U3：模型 ÷ 報導 − 1：雲端付款義務口徑（約 450；|差距| > 25% → WARN）", "=COST_CommitGapCloud", I("commit_warn_threshold"), "warn", "模型＝全部新合約 − Broadcom 租賃"),

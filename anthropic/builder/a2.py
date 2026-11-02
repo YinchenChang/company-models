@@ -88,7 +88,9 @@ def _resolve(f, me, col, i, extra):
         sh, key, at = m.group(1), m.group(2), m.group(3)
         if key in extra:
             return extra[key](col)
-        tgt = Sheet.all[sh] if sh else me
+        tgt = Sheet.all.get(sh) if sh else me
+        if tgt is None or key not in tgt.rows:         # v0.1.7：尚未建立的列（後段模組附加在頁尾）先保留記號，最後一次解析（build.py 終檢不得殘留）
+            return m.group(0)
         if at == "p" and i == 0:
             raise ValueError(f"«{key}@p» 用在 2025 欄：{f}")
         if at == "$":                                  # 只在 D 欄有值的參數列：絕對位址
@@ -171,12 +173,15 @@ def build(ctx):
     R.add("p_seat_w", "企業席位加權月費", "$/月", lambda i, c: "=" + "+".join(f"«D:smix_{p}»*«p_{p}»" for p, _, _ in SEATS), "Σ 席位占比（Demand）× 月費")
 
     R.section("五、校準基準（2025 實際：D14；2026 半校準：D15 r2〔v0.1.1；v0.1 為 r1〕）")
-    R.add("cal_cons", "2025 個人訂閱營收＝消費者訂閱占營收（SRC，Analogy）× 2025 營收", "$B", [f"={S('rev_mix_consumer_share_2025_jaipuria')}*{S('rev_2025_recognized')}"] + [None] * 5,
+    # v0.1.7 W3：2025 校準營收改讀正式 S-1（SRC_ANT_412 4.585；Inputs s1f_cal25_switch＝0 回到草擬版 SRC_ANT_001 4.6）
+    sw25 = I("s1f_cal25_switch")
+    rev25 = f"({sw25}*{S('rev_s1f_fy2025')}+(1-{sw25})*{S('rev_2025_recognized')})"
+    R.add("cal_cons", "2025 個人訂閱營收＝消費者訂閱占營收（SRC，Analogy）× 2025 營收", "$B", [f"={S('rev_mix_consumer_share_2025_jaipuria')}*{rev25}"] + [None] * 5,
           "SRC_ANT 分析師估計 15%（10–20%）；個人付費人數由此倒推（工作單預設）")
     R.add("cal_seat", "2025 企業席位訂閱營收＝SRC 訂閱營收 − 個人訂閱", "$B", [f"={S('rev_mix_2025_subscription')}-«cal_cons»"] + [None] * 5, "企業席位數由此倒推")
     u1 = I("u1_switch")
     R.add("target", "營收總額基準（2025＝SRC 認列營收；2026＝上半年實際＋Q3 實際＋Q4〔Q3 ×（1＋成長）〕；開關 0＝v0.1：Q1＋Q2＋2026-07 年化 × 下半年月數 ÷ 12）", "$B",
-          [f"={S('rev_2025_recognized')}",
+          [f"={rev25}",
            f"=«h1act»+{u1}*({S('rev_2026_q3')}+{S('rev_2026_q3')}*(1+{I('q4_growth')}))+(1-{u1})*{S('rev_runrate_2026_07')}*{h2}/{months}"] + [None] * 4,
           "D14；D15 r2（U1）：2026 已有上半年與 Q3 實際，Q4＝Q3 持平（Inputs 成長 0，保守；Decision）；D15 r1 的『下半年＝2026-07 年化 ÷ 2』僅在開關 0 時使用",
           name="REV_Target", name_cols="DE")
@@ -199,14 +204,14 @@ def build(ctx):
 
     R.section("八、其他與廣告")
     R.add("other", "其他營收（政府、授權等；2025＝認列營收 − 訂閱 − 用量計價）", "$B",
-          grow("other", f"={S('rev_2025_recognized')}-{S('rev_mix_2025_subscription')}-{S('rev_mix_2025_consumption')}", lambda i: I("g_other")),
+          grow("other", f"={rev25}-{S('rev_mix_2025_subscription')}-{S('rev_mix_2025_consumption')}", lambda i: I("g_other")),
           "2025 殘差（含四捨五入）；2026 起 ×（1＋年增率）", name="REV_Other")
     R.add("ads", "廣告營收（D3：不放廣告）", "$B", lambda i, c: f"={I('ads_revenue')}", "Decision＝0", name="REV_Ads")
 
     R.section("九、總額、雲端平台抽成（D5 r1）、淨額；個人 vs 企業")
     R.add("gross", "營收總額（報導口徑：雲端市集以總額認列）", "$B", lambda i, c: "=«sub»+«api»+«other»+«ads»", "", name="REV_Gross")
     R.add("ch_share", "雲端通路（AWS Bedrock、Google Vertex 等）占 API 營收比例", "比例",
-          lambda i, c: f"={S('rev_2025_recognized')}*{S('rev_mix_2025_cloud_partner_share')}/{S('rev_mix_2025_consumption')}" if i == 0 else f"=«ch_share@D»+{I('channel_delta')}",
+          lambda i, c: f"={rev25}*{S('rev_mix_2025_cloud_partner_share')}/{S('rev_mix_2025_consumption')}" if i == 0 else f"=«ch_share@D»+{I('channel_delta')}",
           "2025＝認列營收 × 雲端通路占比 47%（SRC）÷ 用量計價營收（通路營收全歸 API）；2026 起＝2025 ＋ Inputs 變動")
     R.add("ch_rev", "雲端通路營收", "$B", lambda i, c: "=«api»*«ch_share»", "", name="REV_Channel")
     R.add("fee_rate", "平台抽成率（每 $1 通路營收）", "比例", lambda i, c: f"={S('rev_partner_fee_2025')}/«ch_rev»" if i == 0 else f"={I('partner_fee_rate')}",
@@ -229,7 +234,7 @@ def build(ctx):
     R.add("net_c", "營收淨額（截頂後）", "$B", lambda i, c: "=«gross_c»-«pshare_c»", "", name="REV_NetCapped")
 
     R.section("十一、對照與差距（只列差距，不校準；D14、D15 r1、D23）")
-    R.add("gap25", "2025：模型總額 − SRC 認列營收（校準，應為 0）", "$B", ["=«gross»-" + S("rev_2025_recognized")] + [None] * 5, "", name="REV_Gap2025", name_cols="D")
+    R.add("gap25", "2025：模型總額 − SRC 認列營收（校準，應為 0）", "$B", ["=«gross»-" + rev25] + [None] * 5, "", name="REV_Gap2025", name_cols="D")
     R.add("gap26", "2026：模型總額 − 半校準基準（應為 0）", "$B", [None, "=«gross»-«target»"] + [None] * 4, "", name="REV_Gap2026", name_cols="E")
     R.add("unc_cons", "2025 未校準個人訂閱＝月活（SRC，Analogy）× 付費轉換率（Inputs）× 加權月費 × 12", "$B",
           [f"={S('users_mau_web_2025')}*{I('paid_conv_2025')}*«p_cons_w»*{months}/{m2b}"] + [None] * 5, "自下而上口徑")

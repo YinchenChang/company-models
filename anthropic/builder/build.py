@@ -33,14 +33,14 @@ import preserve  # noqa: E402
 import source_rules  # noqa: E402
 from common import F_BOLD, F_CALC, F_IN, F_NOTE, e6_violations, header, lo_recalc, nm, put, title  # noqa: E402
 from oai_link import read_oai  # noqa: E402
-from tk_link import NONNV_STATUS, PENDING_NOTE, V19B_NAMES, read_nonnv, read_snapshot  # noqa: E402
+from tk_link import NONNV_STATUS, PENDING_NOTE, V17_NAMES, V19B_NAMES, read_nonnv, read_snapshot  # noqa: E402
 
-VERSION = "v0.1.6"
-STAGE = "v0.1.6"
+VERSION = "v0.1.7"
+STAGE = "v0.1.7"
 REGISTRY_PATH = HERE / "id_registry.json"
 SRC_YAML = ROOT / "data" / "anthropic_src.yaml"
 INP_YAML = ROOT / "data" / "anthropic_inputs.yaml"
-STAGE_MODULES = ("a2", "a3", "a4", "a5", "a6")
+STAGE_MODULES = ("a2", "a3", "a4", "a5", "a6", "a7")
 CALC_SHEETS = ("Demand", "Revenue", "Compute", "Cost", "Funding", "Reverse")      # E6 掃描與 OAI_Link 隔離的對象
 SRC_COLS = ["SRC_ID", "key", "分組", "項目", "值", "低", "高", "單位", "期間", "日期（序列值）", "口徑", "來源", "網址", "文件日期", "擷取日", "標記",
             "利害方與誘因", "來源等級", "立場", "立場說明", "一手／二手", "處理狀態", "備註",
@@ -201,13 +201,16 @@ def sheet_readme(ctx, summary):
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有，重建時保留已改過的值）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構（data/*.yaml → SRC_ANT／Inputs；Tokenomics → TK_Link；OpenAI → OAI_Link）。"),
         ("SRC_ANT", f"{summary['src']} 列：公司財務原始數據（A1 蒐集 376 列＋A2 新增 3 列供 Derived 列公式化＋v0.1.1 新增 30 列〔草擬 S-1 經 WSJ 轉述、Q3 投資人簡報〕＋v0.1.6 新增 55 列〔正式公開 S-1〕）。標記 Derived 的 14 列：13 列改為公式、1 列（Reuters 自行計算後公布的通路費）保留報導值。"),
         ("TK_Link", f"Tokenomics {sn['version']}（{sn['file']}），master 提交 {sn['sha'][:7]}；{summary['tk_ok']} 個具名範圍（OpenAI v0.6 同一組 63 名＋A2 新增任務 token 5 名＋v0.1.2 新增 v18.0 對照名稱 14 個，只對照）＋ 讀表（非具名）{summary['tk_nnv']} 格：NonNV 18 格（規格 D6）與 PUE 3 格（A3；Tokenomics Inputs 頁）。"),
-        ("OAI_Link", f"OpenAI v0.6 命題輸出快照（{oa['file']}；SHA-256 {oa['sha256'][:12]}…）；只被 Checks 引用（規格 D20）。"),
+        ("OAI_Link", f"OpenAI 命題輸出快照（{oa['file']}；SHA-256 {oa['sha256'][:12]}…；v0.1.7 起為 OpenAI v0.6.4，v0.1.6 以前為 v0.6）；只被 Checks 引用（規格 D20）。"),
         ("Inputs", f"{summary['inp']} 列：假設（值、低、高、標記、依據、區間理由）；定義常數（年度、天數、單位換算）也在此（E6：公式不含常數）。"),
         ("Demand", "個人方案（Free／Pro／Max 5x／Max 20x）人數、企業席位（Team 標準／Premium、Enterprise）、任務類別（對話、程式代理、其他代理）× 每任務 token × 層級組合；API：2025 由 API 營收 ÷ 有效單價倒推、2026 由半校準總額倒推、2027 起任務成長 × 每任務 token 成長 × 價格彈性；輸出 DEM_Tok_*（層級 × 付費／免費）。"),
         ("Revenue", "API 牌價（價格事件依公告日天數加權）、有效單價（快取、批次、議價折扣）、訂閱方案別、API 層級別、其他、廣告（＝0，D3）、總額、雲端通路平台抽成（D5 r1）、淨額、個人 vs 企業；2025 校準（D14）、2026 半校準（D15 r2，v0.1.1）、容量上限係數（＝Compute CMP_CapFactor；2025、2026 固定 1）。"),
         ("Checks", "C01 起；ERR 格數＝CHK_Errors（必須 0）；WARN 格數＝CHK_Warnings（只提示）。"),
         ("v0.1.6 更新", "正式公開 S-1（2026-10-26，SEC EDGAR）納入：SRC_ANT_410–464（55 列；年度與上半年直接讀自 S-1 標 Verified、期中註明未經查核；季度、Note 8 營收成本、承諾三段、逐家金額、集中度經二手轉載標 Interested-party）；"
                         "W2 2026 半校準的上半年實際改讀正式 S-1 16.286（Inputs s1f_switch；0＝草擬版 16.3）；W3 Cost 第二十四節：算力與基礎設施費用、營收成本、η_2026H1 診斷與 B 情境、承諾三段對照（只對照，不回饋基準；Checks f1_iso）。草擬版舊列值不改，只在備註註明對應的正式列。"),
+        ("v0.1.7 更新", "正式 S-1 全面套用（工作單 20261031 v0.1.7；每項皆有 Inputs 開關，0＝v0.1.6 口徑）：W1 逐家合約改讀正式 S-1，S-1 承諾三段（321.4＋265.6＋245＝832）扣除模型逐家合約總額的未歸屬餘額以通用合約價換 GW、2027–2033 平均攤提（s1f_commit_switch）；"
+                        "W2 自建資本支出改 GW 法＝自建 GW 增量（Wattonomics v0.1.7：0）× TK 每 GW 建置成本，Fluidstack $50B 不再另計（own_capex_method）；W3 2025 校準改正式 4.585／7.326，η 重校（s1f_cal25_switch）；"
+                        "W4 2026 非算力成本以正式 S-1 季度營業損益回推（s1f_d22_switch）；W5 TK_Link 改 Tokenomics v21.7、OAI_Link 改 OpenAI v0.6.4；W6 Amazon 2026 實際投入 10.0 核對（Funding 第十二節）。新列：Compute 第十六節、Cost 第二十五節、Funding 第十二節。"),
         ("層級對應", "Haiku→低層（Tokenomics Luna）、Sonnet→中層（Sol）、Opus→頂層（Astra）；具名範圍沿用 OpenAI 的 Top／Mid／Low。"),
         ("標記", "Verified／Interested-party／Analogy／Assumed／Derived／Decision（Analogy、Assumed 一律附區間）。"),
         ("分層", "公司財務原始數據→SRC_ANT；AI 技術與算力→TK_Link（取自 Tokenomics）；假設→Inputs；OpenAI 對照→OAI_Link（不進計算）。"),
@@ -286,8 +289,9 @@ def sheet_tk(ctx):
     nm(wb, "TK_HdrCost", "TK_Link!$J$8:$X$8")
     header(ws, 9, ["Tokenomics 名稱", "本模型名稱", "說明", "單位", "欄數", "狀態", "Tokenomics 版本", "提交 SHA", "讀取日期"] + [f"值{k + 1}" for k in range(15)])
     r = TK_FIRST
-    main_rows = [x for x in snap["rows"] if x["name"] not in V19B_NAMES]
-    tail_rows = [x for x in snap["rows"] if x["name"] in V19B_NAMES]        # v0.1.3 B 新增名稱放在 NonNV 之後（新列一律加在尾端）
+    tail_names = V19B_NAMES + V17_NAMES                                     # v0.1.3 B、v0.1.7 新增名稱放在 NonNV 之後（新列一律加在尾端）
+    main_rows = [x for x in snap["rows"] if x["name"] not in tail_names]
+    tail_rows = sorted((x for x in snap["rows"] if x["name"] in tail_names), key=lambda x: tail_names.index(x["name"]))
     for row in main_rows + snap.get("nonnv", []) + tail_rows:
         n = len(row["values"])
         our = row.get("our", "TK_" + row["name"])
@@ -312,9 +316,11 @@ def sheet_tk(ctx):
 def sheet_oai(ctx):
     wb, oa = ctx.wb, ctx.oai
     ws = wb.create_sheet("OAI_Link")
-    title(ws, "OAI_Link — OpenAI v0.6 命題輸出快照（規格 D20；只作並排對照）",
-          "值由 builder 從 OpenAI v0.6 活頁簿的快取值讀出寫入（藍字）。本頁只被 Checks（與 A5 的 HTML）引用，任何計算頁不得引用（Checks 列 builder 掃描結果；tests 每次重驗）。",
-          "OpenAI 的 2025 為其實際校準年。注意：OpenAI v0.6 用 Tokenomics v5.26 快照，本模型自 v0.1.2 起用 v18.0（見 TK_Link）；兩家的 η、供給 GW 與每 GW 產能口徑因此不同，並排對照時差異有一部分來自 Tokenomics 版本，而非公司本身。")
+    ov = re.search(r"_(v[\d.]+)\.xlsx$", oa["file"])
+    ov = ov.group(1) if ov else "v0.6"
+    title(ws, f"OAI_Link — OpenAI {ov} 命題輸出快照（規格 D20；只作並排對照）",
+          f"值由 builder 從 OpenAI {ov} 活頁簿的快取值讀出寫入（藍字）。本頁只被 Checks（與 A5 的 HTML）引用，任何計算頁不得引用（Checks 列 builder 掃描結果；tests 每次重驗）。",
+          "OpenAI 的 2025 為其實際校準年。v0.1.7 起快照改 OpenAI v0.6.4（其 TK_Link 為 Tokenomics v21.7，與本模型同一版）；v0.1.6 以前為 OpenAI v0.6（Tokenomics v5.26），並排時差異有一部分來自 Tokenomics 版本。")
     meta = [("OpenAI 檔案", oa["file"], "OAI_File"), ("檔案 SHA-256", oa["sha256"], "OAI_SHA256"), ("git 提交（建置時）", oa["commit"], "OAI_Commit"),
             ("讀取日期", ctx.date, "OAI_ReadDate")]
     for i, (lab, v, name) in enumerate(meta):
@@ -515,6 +521,10 @@ def main():
     mods = [importlib.import_module(m) for m in STAGE_MODULES if (HERE / f"{m}.py").exists()]
     for m in mods:
         m.build(ctx)
+    left = [f"{ws.title}!{c.coordinate}" for ws in wb.worksheets for row in ws.iter_rows() for c in row
+            if isinstance(c.value, str) and c.value.startswith("=") and "«" in c.value]
+    if left:
+        sys.exit(f"未解析的列鍵記號（«…»）{len(left)} 格：{left[:10]}")
     ctx.scan = scan(wb)
     rows = base_checks(ctx, len(D.src_rows), len(D.inp_rows))
     for m in mods:

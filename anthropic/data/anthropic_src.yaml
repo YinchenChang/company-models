@@ -7890,6 +7890,125 @@ rows:
   party: Anthropic（正式 S-1；公司為 IPO 募資有誘因呈現較佳數字）
   basis: —
   note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。出處：S-1〈Prospectus Summary — Enterprise Adoption of Claude〉。期中數字，未經查核。「more than 11,900」（≥$1M 者 >1,900、≥$10M 者約 250）；只登下限。
+- id: SRC_ANT_465
+  key: adjoi_s1f_2026h1
+  group: F
+  metric: 2026 上半年調整後營業損益（non-GAAP；正式 S-1）
+  value: 1.618
+  lo: null
+  hi: null
+  unit: $B/半年
+  period: 2026-H1
+  source: Luminix；Allocations（轉載正式 S-1 第 24 頁 non-GAAP 表）
+  url: https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0
+  doc_date: '2026-10-26'
+  retrieved: '2026-10-31'
+  tag: Interested-party
+  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具，該節原文本代理未能直接讀到
+  basis: non-GAAP
+  note: v0.1.7 新增（獨立核對建議；W4 股權報酬代理）。$1,618M（Allocations：10% margin；Luminix：比 GAAP 營業損益 −693 好 2,311）。調整後排除股權報酬等；Luminix 稱約 111 的調整項目在其讀到的頁面未說明。期中，未經查核
+- id: SRC_ANT_466
+  key: adjoim_s1f_2026q2
+  group: F
+  metric: 2026 Q2 調整後營業利益率（non-GAAP；正式 S-1，約值）
+  value: 0.19
+  lo: null
+  hi: null
+  unit: 比例
+  period: 2026-Q2
+  source: Kepler（轉載正式 S-1 季度表；見 SRC_ANT_441 備註）
+  url: https://kepler.ai/research/financial/s1-anthropic/
+  doc_date: '2026-10-26'
+  retrieved: '2026-10-31'
+  tag: Interested-party
+  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具，該節原文本代理未能直接讀到
+  basis: non-GAAP
+  note: v0.1.7 新增。SRC_ANT_441 備註「調整後約 19%」（Kepler）；約值。用於 Q2 的 GAAP 與調整後營業損益之差（股權報酬代理）
+- id: SRC_ANT_467
+  key: sbc_s1f_2026h1
+  group: F
+  metric: 2026 上半年股權報酬（正式 S-1，人事費用附註）
+  value: 2.2
+  lo: null
+  hi: null
+  unit: $B/半年
+  period: 2026-H1
+  source: Luminix（轉載正式 S-1 人事費用附註）
+  url: https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0
+  doc_date: '2026-10-26'
+  retrieved: '2026-10-31'
+  tag: Interested-party
+  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具，該節原文本代理未能直接讀到
+  basis: GAAP
+  note: v0.1.7 新增。原文轉述：personnel includes stock-based compensation of … $286 million and $2.2 billion in the first halves of 2025 and 2026；與調整數 2.311 差約 0.111（其他調整項）。只對照；基準代理用 2.311（chat 端指示）
+- id: SRC_ANT_468
+  key: sbc_s1f_fy2025
+  group: F
+  metric: 2025 年股權報酬（正式 S-1，人事費用附註）
+  value: 1.2
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025
+  source: Luminix（轉載正式 S-1 人事費用附註）
+  url: https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0
+  doc_date: '2026-10-26'
+  retrieved: '2026-10-31'
+  tag: Interested-party
+  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具，該節原文本代理未能直接讀到
+  basis: GAAP
+  note: v0.1.7 新增。$1.2 billion（2023 $29M、2024 $192M）；模型 2025 股權報酬（人數 × 每人 0.8）約 1.77，只對照、不改 2025
+- id: SRC_ANT_469
+  key: sbc_s1f_2025h1
+  group: F
+  metric: 2025 上半年股權報酬（正式 S-1，人事費用附註）
+  value: 0.286
+  lo: null
+  hi: null
+  unit: $B/半年
+  period: 2025-H1
+  source: Luminix（轉載正式 S-1 人事費用附註）
+  url: https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0
+  doc_date: '2026-10-26'
+  retrieved: '2026-10-31'
+  tag: Interested-party
+  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具，該節原文本代理未能直接讀到
+  basis: GAAP
+  note: v0.1.7 新增。$286 million；只對照
+- id: SRC_ANT_470
+  key: adjoi_s1f_fy2025
+  group: F
+  metric: 2025 年調整後營業損益（non-GAAP；正式 S-1）
+  value: -4.854
+  lo: null
+  hi: null
+  unit: $B/年
+  period: 2025
+  source: Luminix（轉載正式 S-1 第 24 頁 non-GAAP 表）
+  url: https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0
+  doc_date: '2026-10-26'
+  retrieved: '2026-10-31'
+  tag: Interested-party
+  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具，該節原文本代理未能直接讀到
+  basis: non-GAAP
+  note: v0.1.7 新增。$(4,854)M；GAAP −8,060；只對照
+- id: SRC_ANT_471
+  key: adjoi_s1f_2025h1
+  group: F
+  metric: 2025 上半年調整後營業損益（non-GAAP；正式 S-1）
+  value: -1.849
+  lo: null
+  hi: null
+  unit: $B/半年
+  period: 2025-H1
+  source: Luminix（轉載正式 S-1 第 24 頁 non-GAAP 表）
+  url: https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0
+  doc_date: '2026-10-26'
+  retrieved: '2026-10-31'
+  tag: Interested-party
+  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具，該節原文本代理未能直接讀到
+  basis: non-GAAP
+  note: v0.1.7 新增。$(1,849)M；GAAP −2,135；只對照
 not_found:
 - item: 2024 年認列營收（直接揭露值）
   tried: Reuters／Fortune／PYMNTS／Khaleej Times 招股書報導；查詢 "Anthropic 2024 revenue prospectus"
@@ -8097,5 +8216,5 @@ not_found:
 - item: 正式 S-1 的 2026 上半年股權報酬金額
   tried: Kepler、sec-api.io、Tunguz、Daloopa、thevccorner
   verdict: 找不到
-  note: v0.1.6：本版未取得；D13 股權報酬仍為 Inputs 假設
+  note: v0.1.6：本版未取得；D13 股權報酬仍為 Inputs 假設［v0.1.7：已由二手轉載取得 2.2（SRC_ANT_467）與調整數 2.311（SRC_ANT_465 − 435）；一手原文仍未直讀］
   _file: v0.1.6
