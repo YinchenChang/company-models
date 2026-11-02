@@ -93,25 +93,22 @@ footer{display:grid;gap:6px;font-size:.78rem;color:var(--muted);border-top:1px s
 
 <div class="wrap">
   <header class="top">
-    <div class="eyebrow">算力收支 · 全市場 GW 唯一基準事實 · 單位 IT GW（＝Tokenomics GW）</div>
+    <div class="eyebrow">算力收支 · 全市場 GW 唯一基準事實 · 基準版 · 單位 IT GW（＝Tokenomics GW）</div>
     <h1>Wattonomics 瓦帳</h1>
     <div class="eyebrow" id="verline" style="text-transform:none"></div>
-    <p class="lede">誰在蓋多少 AI 算力、何時上線、花了多少錢、錢從哪裡來、最後流到哪些零件與機組。資料來自 Wattonomics Excel 的匯出檔；每個數字都可在 Excel 追到輸入與來源標記。</p>
+    <p class="lede">誰在蓋多少 AI 算力、何時上線、花了多少錢、錢從哪裡來、最後流到哪些零件與機組。資料來自 Wattonomics Excel 的匯出檔；每個數字都可在 Excel 追到輸入與來源標記。本頁只列<b>基準</b>：需求 A、上線時點＝公司公告＋已確認延遲；情境分析留給下游個股模型。</p>
   </header>
 
   <div class="bar" role="toolbar" aria-label="情境與年份">
-    <div class="ctl">需求
-      <div class="seg" id="segScen"></div></div>
-    <div class="ctl">基建延遲
-      <div class="seg" id="segDelay"></div></div>
+    <span class="chip ok">基準：需求 A・公告時程＋已確認延遲</span>
     <div class="ctl"><label for="selYear">年份</label>
       <select id="selYear"></select></div>
     <span id="covChip" class="chip"></span>
-    <div class="note" style="flex-basis:100%;font-size:.75rem;color:var(--muted)">基建延遲：D0 公司公告時程照做（偏樂觀）；D1 依 2025 實測校準（排定容量 26% 延遲）；D2 壓力情境（瓶頸證據屬實，延後比例為假設）</div>
+    <div class="note" style="flex-basis:100%;font-size:.75rem;color:var(--muted)">三層（Tokenomics、Wattonomics、Siliconomics）只提供基準數據；已確認延遲＝公司本身揭露，或兩家以上獨立可信媒體報導且公司未否認，並經未參與代理開原文核對。逐站延遲見下方「延遲逐站追蹤」。</div>
   </div>
 
   <section class="bus gapsec" aria-labelledby="hgap" id="gapSec">
-    <div class="head"><div class="eyebrow">資金缺口（v0.1.7）</div><h2 id="hgap">11 家代表玩家當一間公司：要蓋這麼多資料中心，錢夠嗎？</h2></div>
+    <div class="head"><div class="eyebrow">資金缺口（基準・<span id="gapVer"></span>）</div><h2 id="hgap">11 家代表玩家當一間公司：要蓋這麼多資料中心，錢夠嗎？</h2></div>
     <div class="verdict" id="gapVerdict" aria-live="polite"></div>
     <div class="twocol" id="gapWho">
       <div class="card">
@@ -138,9 +135,9 @@ footer{display:grid;gap:6px;font-size:.78rem;color:var(--muted);border-top:1px s
       </div>
     </div>
     <p class="note" id="gapNotes"></p>
-    <details class="more card"><summary>逐年數字（所選情景）</summary><div class="tbl" id="gapTable"></div></details>
+    <details class="more card"><summary>逐年數字（基準）</summary><div class="tbl" id="gapTable"></div></details>
     <details class="more card"><summary>每 IT GW 建置成本拆項（所選年份）</summary><div class="tbl" id="gapPerGW"></div></details>
-    <details class="more card"><summary>11 家主要玩家逐家（所選年份；營業現金流、AI 資本支出、缺口）</summary><div class="tbl" id="gapPlayers"></div></details>
+    <details class="more card"><summary>11 家主要玩家逐家（所選年份；營業現金流、新增 GW、AI 資本支出、缺口；合計＝逐年數字）</summary><div class="tbl" id="gapPlayers"></div></details>
   </section>
   <div class="gtip" id="gtip" role="tooltip"></div>
 
@@ -150,7 +147,12 @@ footer{display:grid;gap:6px;font-size:.78rem;color:var(--muted);border-top:1px s
     <div class="card">
       <div class="legend" id="legend"></div>
       <div class="chart" id="mktChart"></div>
-      <p class="note">實線＝主路徑（2027 起大廠以資本支出推得 GW）；虛線＝只算有具體園區與上線日的部分。覆蓋率低於 0.5 的年份，數字多半來自推算而非已公告的園區。</p>
+      <p class="note">實線＝主路徑基準（2026 起七家大廠以資本支出推得、付款年轉上線年；xAI 以 SpaceX 模型資本支出推得；「其他」隨市場成長）；虛線＝只算有具體園區與上線日的部分。覆蓋率低於 0.5 的年份，數字多半來自推算而非已公告的園區。年新增為毛額，未扣汰換。</p>
+    </div>
+    <div class="card">
+      <div class="eyebrow">延遲逐站追蹤（基準只計已確認延遲）</div>
+      <div class="tbl" id="delayTable"></div>
+      <div id="delayTrack" class="note"></div>
     </div>
   </section>
 
@@ -213,9 +215,10 @@ const SPEND = [
  ["自建發電（不在廠房內）","gen",[
   ["self_gen","燃機、往復機、燃料電池",["GEV","Siemens Energy","MHI","CAT","BE"]]]]
 ];
-const S = {scen:"B",delay:"D1",year:"2026",player:"googl",gapMode:"main"};
-try{const s=JSON.parse(localStorage.getItem("wx_state_v2")||"null"); if(s) Object.assign(S,s);}catch(e){}
-const save=()=>{try{localStorage.setItem("wx_state_v2",JSON.stringify(S))}catch(e){}};
+const S = {scen:"A",delay:"D0",year:"2026",player:"googl",gapMode:"main"};
+try{const s=JSON.parse(localStorage.getItem("wx_state_v3")||"null"); if(s) Object.assign(S,s);}catch(e){}
+S.scen="A"; S.delay="D0";   // v0.1.8：只給基準（Andy 2026-11-02）
+const save=()=>{try{localStorage.setItem("wx_state_v3",JSON.stringify(S))}catch(e){}};
 const fmt=(v,d=1)=>v==null||isNaN(v)?"—":Number(v).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
 const pct=v=>v==null||isNaN(v)?"—":Math.round(v*100)+"%";
 const el=(t,a={},h="")=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);if(h)e.innerHTML=h;return e};
@@ -226,15 +229,15 @@ function seg(id,opts,key){const box=document.getElementById(id);box.innerHTML=""
 function mk(path){return D.mkt[`${path}|${S.scen}|${S.delay}`]||{}}
 
 function render(){
- seg("segScen",SCEN,"scen"); seg("segDelay",DELAY,"delay");
  const sel=document.getElementById("selYear"); if(!sel.options.length){YEARS.forEach(y=>sel.append(el("option",{value:y},y)));sel.onchange=()=>{S.year=sel.value;save();render()}}
  sel.value=S.year;
  const cov=D.cov[S.year]; const chip=document.getElementById("covChip");
  chip.className="chip "+(cov!=null&&cov<0.5?"warn":"ok");
  chip.textContent=`${S.year} 覆蓋率 ${cov==null?"—":cov.toFixed(2)}${cov!=null&&cov<0.5?"・多為推算":""}`;
- document.getElementById("verline").textContent=`版本 ${D.ver||"—"}・資料日期 ${D.date||"—"}・頁面產生 ${D.built||"—"}`;
- gap(); stats(); chart(); table(); detail(); spend();
- document.getElementById("srcline").textContent=`資料：${D.src}（sha256 ${D.sha}…）・需求情景 A 樂觀／B 基準／C 保守（定義權威在 Siliconomics）只影響 2028 年起的顆數係數`;
+ document.getElementById("verline").textContent=`基準版・版本 ${D.ver||"—"}・資料日期 ${D.date||"—"}・頁面產生 ${D.built||"—"}`;
+ const gv=document.getElementById("gapVer"); if(gv) gv.textContent=D.ver||"";
+ gap(); stats(); chart(); table(); detail(); spend(); delays();
+ document.getElementById("srcline").textContent=`資料：${D.src}（sha256 ${D.sha}…）・基準＝需求 A（Siliconomics 顆數係數 1）× 公告時程＋已確認延遲`;
 }
 function stats(){
  const m=mk("main"), y=S.year, py=String(+y-1);
@@ -242,17 +245,17 @@ function stats(){
  const d0=D.mkt[`main|${S.scen}|D0`][y];
  const sp=D.spend.total?D.spend.total[y]:null;
  const items=[
-  [fmt(gw),`${y} 年底上線 IT GW（${S.scen}・${S.delay}）`],
+  [fmt(gw),`${y} 年底上線 IT GW（基準）`],
   [fmt(gw==null?null:gw*FAC),"換算設施電力 GW（×1.2）"],
   [fmt(add),`${y} 年底較前一年增加 IT GW${y==="2025"?"（含新納入統計的存量 10.1）":""}`],
-  [fmt(d0!=null&&gw!=null?d0-gw:null),"相對準時，尚未上線的 GW（晶片等電）"],
-  [fmt(sp,0),`${y} 年花費 $B（樂觀 A・準時口徑）`]];
+  [fmt(((D.delay||{}).Mkt||{}).DelayedGW,2),"已確認延遲的園區 IT GW（公告 2026 起）"],
+  [fmt(sp,0),`${y} 年花費 $B（基準）`]];
  const box=document.getElementById("stats");box.innerHTML="";
  items.forEach(([v,k])=>box.append(el("div",{class:"stat"},`<span class="v">${v}</span><span class="k">${k}</span>`)));
 }
 function chart(){
  const W=760,H=300,L=48,R=16,T=14,B=30;
- const series=[["main","D0","--d0",""],["main","D1","--d1",""],["main","D2","--d2",""],["site_only",S.delay,"--muted","5 4"]];
+ const series=[["main","D0","--d0",""],["site_only","D0","--muted","5 4"]];
  let max=0; series.forEach(([p,d])=>{const s=D.mkt[`${p}|${S.scen}|${d}`];YEARS.forEach(y=>{if(s&&s[y]>max)max=s[y]})});
  max=Math.ceil(max/25)*25||25;
  const x=i=>L+i*(W-L-R)/(YEARS.length-1), yv=v=>T+(H-T-B)*(1-v/max);
@@ -267,8 +270,8 @@ function chart(){
   const w=(p==="main"&&d===S.delay)?3:1.6;
   g+=`<polyline fill="none" stroke="${css(c)}" stroke-width="${w}" ${dash?`stroke-dasharray="${dash}"`:""} points="${pts.map(q=>q.join(",")).join(" ")}"/>`;
   if(p==="main"&&d===S.delay){const i=YEARS.indexOf(S.year);if(s[S.year]!=null)g+=`<circle cx="${x(i)}" cy="${yv(s[S.year])}" r="4.5" fill="${css(c)}"/><text x="${x(i)+8}" y="${yv(s[S.year])-8}" font-size="12" fill="${css('--ink')}" font-family="IBM Plex Mono,monospace">${fmt(s[S.year])}</text>`}});
- document.getElementById("mktChart").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="市場上線 IT GW，2024 至 2032 年，三種延遲情景">${g}</svg>`;
- document.getElementById("legend").innerHTML=DELAY.map(([d,l],k)=>`<span><i style="border-color:var(--${d.toLowerCase()})"></i>${d} ${l}</span>`).join("")+`<span><i style="border-color:var(--muted);border-top-style:dashed"></i>只算有日期的園區（${S.delay}）</span><span><i style="border-top:10px solid var(--amber-soft);width:12px"></i>覆蓋率 &lt; 0.5</span>`;
+ document.getElementById("mktChart").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="市場上線 IT GW，2024 至 2032 年，基準">${g}</svg>`;
+ document.getElementById("legend").innerHTML=`<span><i style="border-color:var(--d0)"></i>主路徑（基準）</span><span><i style="border-color:var(--muted);border-top-style:dashed"></i>只算有日期的園區</span><span><i style="border-top:10px solid var(--amber-soft);width:12px"></i>覆蓋率 &lt; 0.5</span>`;
 }
 function latestFund(p){const f=D.fund.filter(r=>r.player===p&&r.gross&&r.gross.external_pct!=null).sort((a,b)=>b.year-a.year);return f[0]}
 function table(){
@@ -293,7 +296,7 @@ function detail(){
  h+=`<dt>2029 年底（主路徑／只算園區）</dt><dd class="num">${fmt(pg["2029"],2)}／${fmt(so["2029"],2)}</dd>`;
  h+=`<dt>已列園區合計</dt><dd class="num">${fmt(tot/1000,2)} GW${last?`，最後一期 ${last.online_year}-${String(last.online_month).padStart(2,"0")}`:""}</dd></dl>`;
  if(cps.length){h+=`<div><div class="eyebrow">園區與上線時點</div><div class="campus">`+cps.map(c=>{const u=c.user&&c.user!=="None"?`使用者 ${USERN[c.user]||c.user}`:"自用";
-   const dl=c.known_delay_m&&c.known_delay_m!=="None"&&+c.known_delay_m>0?`<span class="delay">已延 ${c.known_delay_m} 月</span>`:"";
+   const dl=(c.known_delay_m&&c.known_delay_m!=="None"&&+c.known_delay_m>0?`<span class="delay">已確認延 ${c.known_delay_m} 月</span>`:"")+(c.delay_evidence&&c.delay_evidence!=="None"?` <span class="tag" title="${c.delay_grade||""}">延遲追蹤 ${c.delay_evidence}</span>`:"");
    return `<div class="row"><span>${c.name_} <span class="tag">${c.tag}</span> ${dl}<br><span class="note">${u}${Number(c.power_secured)===1?"・電力已確保":""}${Number(c.included)!==1?"・未計入":""}</span></span><span class="num">${fmt(+c.mw,0)} MW</span><span class="num">${c.online_year}-${String(c.online_month).padStart(2,"0")}</span></div>`}).join("")+`</div></div>`}
  else h+=`<p class="note">本專案尚未列入此玩家的個別園區；GW 來自晶片擁有量換算或資本支出推算。</p>`;
  if(f){const v=f.values,keys=["營業現金流","含融資租賃資本支出","自由現金流","公司債","定期貸款","GPU 擔保債","新增融資租賃","表外合資曝險（當期出資／債）","股權募資","尚未起租租賃承諾（期末存量）","合資最大損失曝險（存量）","買回＋股利"];
@@ -304,7 +307,7 @@ function detail(){
 function spend(){
  const y=S.year, box=document.getElementById("spend"); box.innerHTML="";
  const tot=D.spend.total?D.spend.total[y]:null;
- document.getElementById("spendNote").textContent=`${y} 年合計 ${fmt(tot,0)} $B・需求樂觀（A）、準時（D0）、以上線年計`;
+ document.getElementById("spendNote").textContent=`${y} 年合計 ${fmt(tot,0)} $B・基準（需求 A、公告＋已確認延遲）、以上線年計`;
  let max=0; SPEND.forEach(([,,it])=>it.forEach(([k])=>{const v=(D.spend[k]||{})[y];if(v>max)max=v}));
  SPEND.forEach(([g,cls,items])=>{const sub=items.reduce((s,[k])=>s+((D.spend[k]||{})[y]||0),0);
   box.append(el("div",{class:"grp"},`${g}　<span class="num">${fmt(sub,0)} $B</span>`));
@@ -323,11 +326,11 @@ function gap(){
  const sec=document.getElementById("gapSec"); if(!D.gap){sec.style.display="none";return}
  seg("segGapMode",[["main","GW × 每 GW（主）"],["model","依個股模型資本支出"]],"gapMode");
  const MC=S.gapMode==="model", sx=MC?"_mc":"";
- const GS="B", G=D.gap, key=`${GS}|${S.delay}`, m0=G.mk[key]||{}, vv=G.verdict[key]||["—","—"], T=G.total||{};
+ const G=D.gap, key="A|D0", m0=G.mk[key]||{}, vv=G.verdict[key]||["—","—"], T=G.total||{};
  const m={}; Object.keys(m0).forEach(y=>{const r=m0[y],o=Object.assign({},r);["need","need_own","short","cum_need","cum_unarranged","cum_memo_incl_committed"].forEach(k=>{o[k]=r[k+sx]});m[y]=o});
- document.getElementById("gapVerdict").innerHTML=`<span>11 家代表玩家：<b>${MC?vv[1]:vv[0]}</b></span>${(G.verdict[`A|${S.delay}`]&&G.verdict[`A|${S.delay}`][MC?1:0]!==(MC?vv[1]:vv[0]))?`<span class="note">對照：需求樂觀（A）時為 ${G.verdict[`A|${S.delay}`][MC?1:0]}</span>`:""}<span class="chip ok">需求：基準（B）・延遲 ${S.delay}</span><span class="note">（${MC?"並列讀法：七家 2027–2030 依個股模型 AI 資本支出":"主讀法：新增 GW × 每 GW"}；情景 B・${S.delay}；判讀門檻：2030 年自由現金流 &lt; 0，或缺口占資本支出 &gt; 30% 連 3 年＝OpenAI 型）</span>`;
+ document.getElementById("gapVerdict").innerHTML=`<span>11 家代表玩家：<b>${MC?vv[1]:vv[0]}</b></span><span class="chip ok">基準</span><span class="note">（${MC?"並列讀法：七家 2027–2030 依個股模型 AI 資本支出":"主讀法：新增 GW × 每 GW"}；判讀門檻：2030 年自由現金流 &lt; 0，或缺口占資本支出 &gt; 30% 連 3 年＝OpenAI 型）</span>`;
  const yy=GY.includes(S.year)?S.year:"2030", sh=(m[yy]||{}).share11;
- document.getElementById("gapRestNote").innerHTML=`中國與其他廠商（其他新雲、主權 AI、OpenAI／Stargate SPV、企業學研）的需求保留在上方全市場 GW 與下游（Siliconomics、個股），但不納入本收支計算；11 家約占全市場 AI 資料中心建置成本的 <b>${sh==null?"—":Math.round(sh*100)+"%"}</b>（${yy} 年，B・${S.delay}）。`;
+ document.getElementById("gapRestNote").innerHTML=`中國與其他廠商（其他新雲、主權 AI、OpenAI／Stargate SPV、企業學研）的需求保留在上方全市場 GW 與下游（Siliconomics、個股），但不納入本收支計算；11 家約占全市場 AI 資料中心建置成本的 <b>${sh==null?"—":Math.round(sh*100)+"%"}</b>（${yy} 年，基準）。`;
  const ink=css("--ink"),mut=css("--muted"),teal=css("--teal"),amb=css("--amber"),warn=css("--warn"),rule=css("--rule"),panel=css("--panel");
  // 圖 1：年度需要 vs 來源
  const W=760,H=320,L=56,R=12,Tp=14,B=30, n=GY.length, slot=(W-L-R)/n, bw=Math.min(28,slot*0.32);
@@ -352,10 +355,10 @@ function gap(){
  c1.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="11 家代表玩家：2024 至 2030 年每年需要的錢與錢的來源（十億美元）">${g}</svg>`;
  c1.querySelectorAll(".hit").forEach(h=>{const y=h.dataset.y,r=m[y]||{};
   const row=(k,val,d=0)=>`<div class="r"><span>${k}</span><span class="num">${fmt(val,d)}</span></div>`;
-  h.onmousemove=e=>gtipShow(e,`<b>${y}</b>（B・${S.delay}；US$B）`+row("需要：11 家 AI 資料中心",r.need_own)+(r.fallback?row("　其中模型值替代（樂觀 A・D0 基準）",r.fallback):"")+row("需要：11 家非 AI",r.nonai)
-   +row("來源：營業現金流",r.ocf)+row("來源：已觀測外部融資",r.ext_obs)+row("尚需新融資",r.short)+row("情景比例 r（11 家年新增 GW）",r.ratio,2));
+  h.onmousemove=e=>gtipShow(e,`<b>${y}</b>（基準；US$B）`+row("11 家年新增 IT GW（GW）",r.add11,2)+row("AI 資本支出（11 家）",r.need_own)+(r.fallback?row("　其中模型值替代",r.fallback):"")+row("非 AI 資本支出（11 家）",r.nonai)
+   +row("來源：營業現金流",r.ocf)+row("來源：已觀測外部融資",r.ext_obs)+row("尚需新融資",r.short));
   h.onmouseleave=gtipHide; h.onclick=()=>{S.year=y;save();render()}});
- document.getElementById("gapLegend1").innerHTML=`<span><i class="sw" style="background:${teal}"></i>11 家 AI 資料中心</span><span><i class="sw" style="background:${amb}"></i>11 家非 AI 資本支出</span><span><i class="sw" style="background:${ink}"></i>營業現金流</span><span><i class="sw" style="background:${mut}"></i>已觀測外部融資（2024–2025）</span><span><i style="border-color:${warn}"></i>尚需新融資</span>`;
+ document.getElementById("gapLegend1").innerHTML=`<span><i class="sw" style="background:${teal}"></i>AI 資本支出（11 家）</span><span><i class="sw" style="background:${amb}"></i>11 家非 AI 資本支出</span><span><i class="sw" style="background:${ink}"></i>營業現金流</span><span><i class="sw" style="background:${mut}"></i>已觀測外部融資（2024–2025）</span><span><i style="border-color:${warn}"></i>尚需新融資</span>`;
  // 圖 2：累計
  const CY=["2026","2027","2028","2029","2030"], ser=[["cum_need",ink,"累計尚需"],["cum_unarranged",warn,"仍未安排（扣期初現金）"]];
  let h2=0,l2=0; CY.forEach(y=>ser.forEach(([k])=>{const x=(m[y]||{})[k];if(x!=null){h2=Math.max(h2,x);l2=Math.min(l2,x)}}));
@@ -373,14 +376,28 @@ function gap(){
   h.onmousemove=e=>gtipShow(e,`<b>2026–${y} 累計</b>（US$B）`+ser.map(([k,,l])=>`<div class="r"><span>${l}</span><span class="num">${fmt(r[k],0)}</span></div>`).join("")+`<div class="r"><span>備忘：再扣承諾（不作來源）</span><span class="num">${fmt(r.cum_memo_incl_committed,0)}</span></div>`);
   h.onmouseleave=gtipHide});
  document.getElementById("gapLegend2").innerHTML=ser.map(([k,c,l])=>`<span><i style="border-color:${c}"></i>${l}</span>`).join("");
- document.getElementById("gapNotes").innerHTML=`本區塊固定用基準需求（B），不隨上方需求選擇改變；只跟著延遲 D0／D1／D2 變：11 家的年新增 GW 依全市場年新增比例 r＝（B・所選延遲）÷（A・D0）縮放（[Assumed]）；營業現金流固定為個股模型基準情境，不隨情景變。覆蓋率 &lt; 0.35 的年份屬情景（淡黃底）。不扣買回與股利（備忘：2026–2030 累計可削減緩衝 ${fmt(T.buffer_cum,0)}）。期初現金 ${fmt(T.open_cash,0)}；已簽未起租租賃與表外合資承諾 ${fmt(T.committed,0)} 只列備忘、不作來源。SpaceX／xAI、WhiteFiber 2028–2030 沒有 GW 證據，改用個股模型 AI 資本支出（模型值替代）。「依個股模型資本支出」讀法把七家 2027–2030 的 AI 需要換成各自個股模型的基準值（同樣乘情景比例）。2026 年已觀測外部融資 ${fmt(T.ext2026_memo,0)} 只列備忘。單位：十億美元。`;
- const rows=[["need_own","需要：11 家 AI 資料中心"],["nonai","需要：11 家非 AI"],["ocf","來源：營業現金流"],["ext_obs","來源：已觀測外部融資"],["short","尚需新融資"],
-  ["cum_need","累計尚需"],["cum_unarranged","仍未安排＝累計 − 期初現金"],["cum_memo_incl_committed","備忘：再扣承諾"],["ratio","情景比例 r"],["share11","11 家占全市場建置成本"],["mkt_add","參考：市場年新增 IT GW"]];
- const cell=(k,v)=>k==="share11"?(v==null?"—":Math.round(v*100)+"%"):fmt(v,(k==="mkt_add"||k==="ratio")?2:0);
- document.getElementById("gapTable").innerHTML=`<table><thead><tr><th>US$B</th>${GY.map(y=>`<th>${y}</th>`).join("")}</tr></thead><tbody>`+rows.map(([k,l])=>`<tr><td>${l}</td>${GY.map(y=>`<td class="num">${cell(k,(m[y]||{})[k])}</td>`).join("")}</tr>`).join("")+`</tbody></table>`;
+ document.getElementById("gapNotes").innerHTML=`本區塊只用基準（需求 A、公告時程＋已確認延遲）：AI 資本支出＝11 家各自擁有的年新增 IT GW × 每 GW 建置成本（廠房提前入帳）；營業現金流為個股模型基準情境。覆蓋率 &lt; 0.35 的年份屬情景（淡黃底）。不扣買回與股利（備忘：2026–2030 累計可削減緩衝 ${fmt(T.buffer_cum,0)}）。期初現金 ${fmt(T.open_cash,0)}；已簽未起租租賃與表外合資承諾 ${fmt(T.committed,0)} 只列備忘、不作來源。沒有 GW 證據的年份（例如 WhiteFiber 2028–2030）改用個股模型 AI 資本支出（模型值替代）。「依個股模型資本支出」讀法把七家 2027–2030 的 AI 需要換成各自個股模型的基準值。2026 年已觀測外部融資 ${fmt(T.ext2026_memo,0)} 只列備忘。單位：十億美元。`;
+ const rows=[["add11","11 家年新增 IT GW（GW）"],["need_own","AI 資本支出（11 家；新增 GW × 每 GW）"],["nonai","非 AI 資本支出（11 家）"],["ocf","來源：營業現金流"],["ext_obs","來源：已觀測外部融資"],["short","尚需新融資"],
+  ["cum_need","累計尚需"],["cum_unarranged","仍未安排＝累計 − 期初現金"],["cum_memo_incl_committed","備忘：再扣承諾"],["share11","11 家占全市場建置成本"],["mkt_add","參考：市場年新增 IT GW（GW）"]];
+ const cell=(k,v)=>k==="share11"?(v==null?"—":Math.round(v*100)+"%"):fmt(v,(k==="mkt_add"||k==="add11")?2:0);
+ document.getElementById("gapTable").innerHTML=`<table><thead><tr><th>US$B（GW 列除外）</th>${GY.map(y=>`<th>${y}</th>`).join("")}</tr></thead><tbody>`+rows.map(([k,l])=>`<tr><td>${l}</td>${GY.map(y=>`<td class="num">${cell(k,(m[y]||{})[k])}</td>`).join("")}</tr>`).join("")+`</tbody></table>`;
  document.getElementById("gapPerGW").innerHTML=`<p class="note">${yy} 年，US$B／IT GW；IT 依 AI半導體 次產業比例、廠房依 Facility 拆分比例（Tokenomics IF_CapexTotal）。</p><table><thead><tr><th>項目</th><th>${yy}</th></tr></thead><tbody>`+Object.keys(GITEM).filter(k=>G.pergw[k]).map(k=>`<tr><td>${GITEM[k]}</td><td class="num">${fmt(G.pergw[k][yy],2)}</td></tr>`).join("")+`</tbody></table>`;
- document.getElementById("gapPlayers").innerHTML=`<p class="note">${yy} 年，US$B；樂觀 A・D0（未依情景縮放；2026–2027 年三情景相同）；AI 資本支出＝玩家新增 GW × 每 GW（擁有者口徑）；缺口＝（AI＋非 AI）− 營業現金流；空白＝無模型值。</p><table><thead><tr><th>玩家</th><th>營業現金流</th><th>AI 資本支出</th><th>非 AI</th><th>缺口</th><th>自籌比</th><th>模型 AI 資本支出（對照）</th><th>並列讀法</th><th>判讀（2026–30）</th></tr></thead><tbody>`+
-  Object.keys(GPN).filter(p=>G.player[p]).map(p=>{const r=G.player[p][yy]||{},mm=G.pmeta[p]||{};return `<tr><td>${GPN[p]}</td><td class="num">${fmt(r.OCF,0)}</td><td class="num">${fmt(r.CapexAI,0)}</td><td class="num">${fmt(r.CapexNonAI,0)}</td><td class="num">${fmt(r.Gap,0)}</td><td class="num">${fmt(r.SelfFund,2)}</td><td class="num">${fmt(r.CapexAIModel,0)}</td><td class="num">${fmt(r.CapexAIMC,0)}</td><td>${mm.verdict||"—"}</td></tr>`}).join("")+`</tbody></table>`;
+ const PL=Object.keys(GPN).filter(p=>G.player[p]);
+ const sum=k=>PL.reduce((a,p)=>a+(((G.player[p][yy]||{})[k])||0),0);
+ document.getElementById("gapPlayers").innerHTML=`<p class="note">${yy} 年，基準；新增 GW＝擁有者口徑年新增 IT GW（Gap 計 AI 資本支出所用）；AI 資本支出＝新增 GW × 每 GW（擁有者口徑，廠房提前入帳）；缺口＝（AI＋非 AI）− 營業現金流；空白＝無模型值。合計列的新增 GW 與 AI 資本支出＝上方逐年數字同一年。</p><table><thead><tr><th>玩家</th><th>新增 GW</th><th>營業現金流</th><th>AI 資本支出</th><th>非 AI</th><th>缺口</th><th>自籌比</th><th>模型 AI 資本支出（對照）</th><th>並列讀法</th><th>判讀（2026–30）</th></tr></thead><tbody>`+
+  PL.map(p=>{const r=G.player[p][yy]||{},mm=G.pmeta[p]||{};return `<tr><td>${GPN[p]}</td><td class="num">${fmt(r.AddGW,2)}</td><td class="num">${fmt(r.OCF,0)}</td><td class="num">${fmt(r.CapexAI,0)}</td><td class="num">${fmt(r.CapexNonAI,0)}</td><td class="num">${fmt(r.Gap,0)}</td><td class="num">${fmt(r.SelfFund,2)}</td><td class="num">${fmt(r.CapexAIModel,0)}</td><td class="num">${fmt(r.CapexAIMC,0)}</td><td>${mm.verdict||"—"}</td></tr>`}).join("")+
+  `<tr><td><b>合計（11 家）</b></td><td class="num"><b>${fmt(sum("AddGW"),2)}</b></td><td class="num">${fmt(sum("OCF"),0)}</td><td class="num"><b>${fmt(sum("CapexAI"),0)}</b></td><td class="num">${fmt(sum("CapexNonAI"),0)}</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td></td></tr>`+
+  `<tr><td class="note">逐年數字（同年）</td><td class="num note">${fmt((m[yy]||{}).add11,2)}</td><td class="num note">${fmt((m[yy]||{}).ocf,0)}</td><td class="num note">${fmt((m[yy]||{}).need_own,0)}</td><td class="num note">${fmt((m[yy]||{}).nonai,0)}</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>`;
+}
+function delays(){
+ const box=document.getElementById("delayTable"); if(!box) return;
+ const DD=D.delay||{}, keys=[...Object.keys(GPN),"Rest","Mkt"].filter(k=>DD[k]);
+ const nm=k=>k==="Rest"?"其餘（其他新雲、主權 AI、中國、其他）":k==="Mkt"?"全市場":(k==="oai"?"OpenAI／Stargate 自建":GPN[k]);
+ box.innerHTML=`<table><thead><tr><th>玩家（營運者）</th><th>公告上線 GW（2026 起）</th><th>已確認延遲 GW</th><th>平均延遲月</th><th>延遲占比</th></tr></thead><tbody>`+
+  keys.map(k=>{const v=DD[k];return `<tr><td>${k==="Mkt"?"<b>全市場</b>":nm(k)}</td><td class="num">${fmt(v.AnnGW,2)}</td><td class="num">${fmt(v.DelayedGW,2)}</td><td class="num">${fmt(v.AvgMo,1)}</td><td class="num">${pct(v.Share)}</td></tr>`}).join("")+`</tbody></table>`;
+ const tr=(D.campus||[]).filter(c=>c.delay_evidence&&c.delay_evidence!=="None").map(c=>`<li>${c.delay_evidence}｜${c.name_}（${fmt(+c.mw,0)} MW，公告 ${c.online_year}-${String(c.online_month).padStart(2,"0")}）：${c.delay_grade||""}</li>`)
+  .concat((D.delay_track||[]).map(t=>`<li>${t.id}｜${t.scope}：${t.content}（${t.status}）</li>`));
+ document.getElementById("delayTrack").innerHTML=`<p>只有達「已確認延遲」門檻、且經未參與代理開原文核對的延遲才進基準（Excel In T2 M 欄）。追蹤中的候選：</p><ul>${tr.join("")||"<li>無</li>"}</ul>`;
 }
 render();
 </script>

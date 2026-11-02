@@ -1,0 +1,5 @@
+key,col,old,new,source,reason
+cpx_sov_uae,P,,D#21,evidence_raw/D_review_20261102.md,延遲候選追蹤（工作單 20261102 E13）
+cpx_sov_uae,Q,,追蹤：官方未改期（Mubadala 目標 Q3 2026、Khazna 與 G42 稱如期），未達 E12；未經未參與代理核對；M＝0,evidence_raw/D_review_20261102.md,E12 門檻：官方未改期不視為延遲
+cp_msft_wi1,P,,D#24,evidence_raw/D_review_20261102.md,延遲候選追蹤（工作單 20261102 E13）
+cp_msft_wi1,Q,,待未參與代理開原文核對（候選：4 月稱上線、5 月對地方報紙稱尚未上線，0–2 個月）；M＝0,evidence_raw/D_review_20261102.md,E13：未經未參與代理核對不寫入 M
