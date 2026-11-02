@@ -29,6 +29,17 @@ def _sil_r1_on():
 
 
 SIL_R1_ON = _sil_r1_on()
+# 獨立核對 R2：markets/chip_bridge 的分世代 NVIDIA 內容（只作備忘）
+CB_FILE = os.path.join(ROOT, "markets", "chip_bridge", "dist", "20261027_晶片內容橋接表_v0.2.2.xlsx")
+
+
+def _cb_nvc():
+    ws = openpyxl.load_workbook(CB_FILE, data_only=True)["Bridge"]
+    assert str(ws["A44"].value).startswith("NVIDIA 合計 ÷ IT capex") and "IT 設備" in str(ws["A7"].value)
+    return {c: ws[f"{c}44"].value * ws[f"{c}7"].value for c in "BCD"}
+
+
+CB_NVC = _cb_nvc()
 DATE = "20261102"
 TK_SNAPSHOT = os.path.join(ROOT, "siliconomics", "data", "tokenomics_snapshot_v21.7.json")
 SIL_DIR = os.path.join(ROOT, "siliconomics", "data")
@@ -338,6 +349,10 @@ def main():
                 note="NVIDIA FY27 Q2 法說（2026-08-26）CFO：FY2028 營收預期年增約 70%，供給受限下的預估（公司指引；二手摘要，原文待人工複核，見 nvidia/README.md）。DB_Evidence N#1：只作對帳點，不入基準"))
     scalar(dict(key="nv_dc_sh", label="NVIDIA 資料中心占總營收比（FY27 Q2 實績）", unit="%", base=0.925, tag="Verified", src="SRC_GL_333",
                 note="FY27 Q2 資料中心 89.0 ÷ 總營收（AI半導體 11-02 送件，資料中心占比 92.5%）；CY2027 資料中心營收＝nv_fy27_tot ×（1＋nv_fy28_g）× 本值（Derived；低／基準／高 ≈ 622.7／633.7／644.7）"))
+    for k_, lab_, col_ in (("nvc_cb_gb", "chip_bridge：每 IT GW NVIDIA 內容 GB300", "B"), ("nvc_cb_vr26", "chip_bridge：每 IT GW NVIDIA 內容 VR200（2026 HBM 價）", "C"),
+                           ("nvc_cb_vr27", "chip_bridge：每 IT GW NVIDIA 內容 VR200（2027 HBM 價，NVIDIA 吸收）", "D")):
+        scalar(dict(key=k_, label=lab_ + "（備忘）", unit="US$B/GW", base=CB_NVC[col_], tag="Derived", src="SRC_GL_334",
+                    note=f"markets/chip_bridge/dist/{os.path.basename(CB_FILE)} Bridge!{col_}44（NVIDIA 合計 ÷ IT capex）× Bridge!{col_}7（IT 設備 $B/GW）；AI半導體產品、非 TK 權威，只作備忘（獨立核對 R2）"))
     hdr(IN, r, ["鍵", "項目", "口徑", "單位", "標記", "來源 ID", "說明"] + [str(y) for y in YEARS]); r += 1
     yrow("sil_r1_on", "Siliconomics R4 橋接 r1：推得淨新增上線 IT GW（b8；情境 A）", "IT", "GW", "Derived", "SRC_GL_331",
          f"{os.path.basename(SIL_R4_R1)} Bridge 頁 b8（Siliconomics v0.9 × Wattonomics v0.1.6；淨額＝已扣汰換 2%）；只作並列（工作單 F4）。r2（毛額，2026–2029＝20.81／36.17／52.63／62.70）不另列",
@@ -1252,13 +1267,13 @@ def main():
         elif g in ("H100", "GB200"):
             f, note = f"=TK_RacksPerGW_{g}*TK_RackPrice_{g}*$D${NVR['nv_sh']}/1000", "Analogy：TK IF_RacksPerGW × IF_RackPrice × GB300 的 NVIDIA 占比（假設 NVIDIA 占機架價比與 GB300 相同）"
         else:
-            f, note = f"=$D${NVR['nvc_GB300']}", "〔VR200 未拆分〕TK 快照無 NVIDIA 占比、Siliconomics nv_content 只有 GB300 → 用 GB300 值（工作單 F5）；Requests R7 請 Tokenomics 提供分世代每 IT GW NVIDIA 內容"
+            f, note = f"=$D${NVR['nvc_GB300']}", "Assumed〔VR200 未拆分：TK 無權威分世代值〕→ 用 GB300 值（工作單 F5）。markets/chip_bridge v0.2.2 Bridge 第 44 列已有 VR200 拆分 23.47（2026 HBM 價）／21.85（2027 HBM 價、NVIDIA 吸收），屬 AI半導體產品、非 TK，只列備忘（下方備忘列）；Requests R7 請 Tokenomics 採用權威分世代值"
         nrow(f"nvc_{g}", f"每 IT GW NVIDIA 內容：{GEN_NAME[g]}", "$B/GW", {"s": f}, note)
     for g in ("VR200", "RU"):
         nrow(f"nvcm_{g}", f"（備忘）{GEN_NAME[g]} 若沿用 GB300 的 NVIDIA 占比", "$B/GW", {"s": f"=TK_RacksPerGW_{g}*TK_RackPrice_{g}*$D${NVR['nv_sh']}/1000"},
              "只作備忘，不進 (5)：VR200 機架價含約 $1M NAND 等非 NVIDIA 內容（markets/chip_bridge），占比不能直接沿用")
 
-    for px, title in (("w", "F2. Wattonomics 基準（A／D0）"), ("s", "F3. Siliconomics R4 橋接 r1（同口徑並列；只作參考）")):
+    for px, title in (("w", "F2. Wattonomics 基準（A／D0）"), ("s", "F3. Siliconomics R4 橋接 r1（Siliconomics r1 淨額（已扣汰換）；Wattonomics 毛額；只作參考）")):
         CP.cell(r, 1, title).font = BOLD; r += 1
         if px == "w":
             nrow("w1", "(1) Wattonomics 上線年新增 IT GW（基準；毛額）", "GW", {y: f"=Deploy!{YC[y]}{DR['naAD0']}" for y in (2025, 2026, 2027, 2028)},
@@ -1273,7 +1288,7 @@ def main():
         nrow(px + "2", "(2) 出貨年 GW（上線年反推）", "GW",
              {y: f"=(1-lag_on/12-inv_on)*{YC[y]}{o}+(lag_on/12+inv_on)*{YC[y + 1]}{o}" for y in ys},
              "出貨_t＝(1−L)·上線_t＋L·上線_t+1＋inv·(上線_t+1 − 上線_t)，L＝lag_on ÷ 12、inv＝inv_on（甲2 平移 上線_t＝(1−L)·付款_t＋L·付款_t−1 − inv·(付款_t − 付款_t−1) 的同參數鏡像；非遞迴近似，與 Siliconomics 改讀設計同式）")
-        nrow(px + "3", "(3) 非 NVIDIA 占比（市場新增 GW；出貨年）", "%", {y: f"=Players!{YC[y]}{NNVR}" for y in ys}, "Players nnv_mkt（Derived：Siliconomics Units × 每顆 IT capex）；取出貨年 t", "0.0%")
+        nrow(px + "3", "(3) 非 NVIDIA 占比（市場新增 GW；出貨年）", "%", {y: f"=Players!{YC[y]}{NNVR}" for y in ys}, "Players nnv_mkt（Derived：Siliconomics Units × 每顆 IT capex）；取出貨年 t；2025 沿用 2026 值（Players 規則：2023–25 無來源，沿用 2026）", "0.0%")
         nrow(px + "4", "(4) NVIDIA 出貨 GW＝(2)×(1−(3))", "GW", {y: f"={YC[y]}{NVR[px + '2']}*(1-{YC[y]}{NVR[px + '3']})" for y in ys})
         nrow(px + "5", "(5) 每 IT GW NVIDIA 內容（世代加權）", "$B/GW",
              {y: "=" + "+".join(f"Players!{YC[y]}{MIXR[g]}*$D${NVR['nvc_' + g]}" for g in GENS) for y in ys},
@@ -1297,6 +1312,12 @@ def main():
         nrow(px + "5m", "（備忘）(5) 若 VR200、Rubin Ultra 沿用 GB300 NVIDIA 占比", "$B/GW",
              {y: "=" + "+".join(f"Players!{YC[y]}{MIXR[g]}*$D${NVR[('nvcm_' if g in ('VR200', 'RU') else 'nvc_') + g]}" for g in GENS) for y in ys}, "只作備忘")
         nrow(px + "8m", "（備忘）比值（用上列內容）", "x", {y: f"={YC[y]}{NVR[px + '4']}*{YC[y]}{NVR[px + '5m']}/{YC[y]}{NVR[px + '7']}" for y in ys}, "只作備忘", "0.000")
+        for tg, nm_cb, lab_cb in (("cb26", "nvc_cb_vr26", "2026 HBM 價"), ("cb27", "nvc_cb_vr27", "2027 HBM 價、NVIDIA 吸收")):
+            nrow(px + "5" + tg, f"（備忘）(5) VR200、Rubin Ultra 用 chip_bridge VR200（{lab_cb}）", "$B/GW",
+                 {y: "=" + "+".join(f"Players!{YC[y]}{MIXR[g]}*" + (nm_cb if g in ("VR200", "RU") else f"$D${NVR['nvc_' + g]}") for g in GENS) for y in ys},
+                 f"Derived：markets/chip_bridge v0.2.2 Bridge 第 44 列 × 第 7 列（In {nm_cb}）；Rubin Ultra 無 chip_bridge 值，用 VR200 值；只作備忘，不進基準", "0.00")
+            nrow(px + "8" + tg, f"（備忘）比值（chip_bridge {lab_cb}）", "x", {y: f"={YC[y]}{NVR[px + '4']}*{YC[y]}{NVR[px + '5' + tg]}/{YC[y]}{NVR[px + '7']}" for y in ys}, "只作備忘", "0.000")
+            nrow(px + "9" + tg, f"（備忘）所需內容 (9) ÷ chip_bridge 內容（{lab_cb}）", "x", {y: f"={YC[y]}{NVR[px + '9']}/{YC[y]}{NVR[px + '5' + tg]}" for y in ys}, "＞1＝即使用 chip_bridge 內容仍不足", "0.000")
     CP_LAST = r
     CP.column_dimensions["A"].width = 40; CP.column_dimensions["N"].width = 60
 
@@ -2178,6 +2199,16 @@ def main():
             c = IF.cell(r, 4 + j, f"=Compare!{YC[y]}{NVR[key]}"); c.font = GREEN; c.number_format = fmt
             nm_ = f"WIF_Recon_NV_{k}_{y}"; name(wb, nm_, f"Interface!${get_column_letter(4 + j)}${r}"); GIF.append(nm_); RECN.append(nm_)
         IF.cell(r, 13, f"Compare!{YC[2025]}{NVR[key]}:{YC[2027]}{NVR[key]}"); r += 1
+    for k, key, lab, unit, fmt in (("ContentMemoCB26", "w5cb26", "（備忘）每 IT GW NVIDIA 內容：VR200 用 chip_bridge（2026 HBM 價）", "US$B/GW", "0.00"),
+                                   ("RatioMemoCB26", "w8cb26", "（備忘）比值：chip_bridge VR200（2026 HBM 價）", "比", "0.000"),
+                                   ("ContentMemoCB27", "w5cb27", "（備忘）每 IT GW NVIDIA 內容：VR200 用 chip_bridge（2027 HBM 價、NVIDIA 吸收）", "US$B/GW", "0.00"),
+                                   ("RatioMemoCB27", "w8cb27", "（備忘）比值：chip_bridge VR200（2027 HBM 價、NVIDIA 吸收）", "比", "0.000")):
+        IF.cell(r, 1, f"WIF_Recon_NV_{k}_<yyyy>"); IF.cell(r, 2, lab + "（獨立核對 R2；只作備忘）"); IF.cell(r, 3, unit)
+        for y in RY:
+            j = OUTY.index(y)
+            c = IF.cell(r, 4 + j, f"=Compare!{YC[y]}{NVR[key]}"); c.font = GREEN; c.number_format = fmt
+            nm_ = f"WIF_Recon_NV_{k}_{y}"; name(wb, nm_, f"Interface!${get_column_letter(4 + j)}${r}"); GIF.append(nm_); RECN.append(nm_)
+        IF.cell(r, 13, f"Compare!{YC[2025]}{NVR[key]}:{YC[2027]}{NVR[key]}"); r += 1
     IF_LAST = r
     IF.column_dimensions["A"].width = 30; IF.column_dimensions["B"].width = 44; IF.column_dimensions["M"].width = 22
 
@@ -2489,8 +2520,8 @@ def main():
     WO19 = "工作單 20261102 v0.1.9"
     Q1622 = "Andy 11-02 16:22「若對帳時差很大……則先用自己的數字，在較上游趕快更新後彼此對帳。」"
     decisions += [
-        {"id": "GL01-55", "cat": "工程", "item": "NVIDIA 資料中心營收對帳點（F4）", "decision": "Compare 新節 F：2025–2027 逐年 (1) 上線年新增 → (2) 出貨年 → (3) 非 NVIDIA 占比 → (4) NVIDIA 出貨 GW → (5) 每 GW NVIDIA 內容 → (6) 隱含營收 → (7) 實績／指引 → (8) 比值與 tolband 判定 → (9) 反解所需每 GW 內容；另列 Siliconomics R4 橋接 r1 同口徑欄。只並列、不校準，基準數值不動；帶外標『待診斷』，各層先用自己的數字", "date": "2026-11-02", "quote": Q1622 + "；" + WO19 + " F4", "status": "執行"},
-        {"id": "GL01-56", "cat": "工程", "item": "每 IT GW NVIDIA 內容（F5）", "decision": "追 Siliconomics R4 橋接 nvc_gb_tk 20.84：＝TK IF_GPUsPerGW GB300 487,008 × Siliconomics nv_content 42.8 千美元（每顆 NVIDIA 內容，GB300；markets/chip_bridge v0.2 由 TK v19.0 GB300 機架 $4.3M 推得），不是工作單預期的『TK 機架數 × 機架價 × TK NVIDIA 占比』——TK 快照沒有 NVIDIA 占比。改寫成機架價 × 占比（占比＝72 × nv_content ÷ GB300 機架價＝0.717）。GB300＝20.84（同 Siliconomics）；H100、GB200 以同占比 × TK 各自機架價（Analogy）；VR200、Rubin Ultra 無法拆出 NVIDIA 占比 → 用 GB300 值並標〔VR200 未拆分〕，Requests R7 請 Tokenomics 提供；沿用占比的 VR200 值（24.39）只列備忘", "date": "2026-11-02", "quote": WO19 + " F5", "status": "預設、可撤回"},
+        {"id": "GL01-55", "cat": "工程", "item": "NVIDIA 資料中心營收對帳點（F4）", "decision": "Compare 新節 F：2025–2027 逐年 (1) 上線年新增 → (2) 出貨年 → (3) 非 NVIDIA 占比 → (4) NVIDIA 出貨 GW → (5) 每 GW NVIDIA 內容 → (6) 隱含營收 → (7) 實績／指引 → (8) 比值與 tolband 判定 → (9) 反解所需每 GW 內容；另列 Siliconomics R4 橋接 r1 欄（Siliconomics r1 淨額（已扣汰換）；Wattonomics 毛額）。只並列、不校準，基準數值不動；帶外標『待診斷』，各層先用自己的數字", "date": "2026-11-02", "quote": Q1622 + "；" + WO19 + " F4", "status": "執行"},
+        {"id": "GL01-56", "cat": "工程", "item": "每 IT GW NVIDIA 內容（F5）", "decision": "追 Siliconomics R4 橋接 nvc_gb_tk 20.84：＝TK IF_GPUsPerGW GB300 487,008 × Siliconomics nv_content 42.8 千美元（每顆 NVIDIA 內容，GB300；markets/chip_bridge v0.2 由 TK v19.0 GB300 機架 $4.3M 推得），不是工作單預期的『TK 機架數 × 機架價 × TK NVIDIA 占比』——TK 快照沒有 NVIDIA 占比。改寫成機架價 × 占比（占比＝72 × nv_content ÷ GB300 機架價＝0.717）。GB300＝20.84（同 Siliconomics）；H100、GB200 以同占比 × TK 各自機架價（Analogy）；VR200、Rubin Ultra 用 GB300 值〔Assumed；VR200 未拆分：TK 無權威分世代值〕；markets/chip_bridge v0.2.2 Bridge 第 44 列（AI半導體產品，非 TK）已有 VR200 拆分 23.47（2026 HBM 價）／21.85（2027 HBM 價、NVIDIA 吸收），GB300 20.85≈20.84，列為備忘（Compare F 備忘列、WIF_Recon_NV_*Memo*；2026-11-02 依獨立核對 R2 修訂），Requests R7 請 Tokenomics 採用權威分世代值；沿用占比的 VR200 值（24.39）只列備忘", "date": "2026-11-02", "quote": WO19 + " F5", "status": "預設、可撤回"},
         {"id": "GL01-57", "cat": "工程", "item": "出貨年反推公式", "decision": "出貨_t＝(1−L)·上線_t＋L·上線_t+1＋inv·(上線_t+1 − 上線_t)（L＝lag_on ÷ 12、inv＝inv_on）：甲2 平移的同參數鏡像，非遞迴近似（精確反函數為遞迴、係數 −0.905 交錯，對起始值敏感），與 Siliconomics 改讀設計同式。非 NVIDIA 占比取出貨年 t（Siliconomics Units 為出貨年）；世代組合沿用 Players 年 t 新增 GW 占比（近似）", "date": "2026-11-02", "quote": WO19 + " F4(2)（建置端工程決定）", "status": "預設、可撤回"},
         {"id": "GL01-58", "cat": "工程", "item": "對帳點名稱與 Checks（F6）", "decision": "新增 WIF_Recon_NV_<ShipGW|NVGW|ContentPerGW|ImpliedRev|ActualRev|Ratio|ReqContent>_<2025–2027>（21 名）；Checks N-K1（INFO，不計入 ERROR／WARN）：2026 比值是否在 ±tolband 內", "date": "2026-11-02", "quote": WO19 + " F6", "status": "執行"},
         {"id": "GL01-59", "cat": "判斷", "item": "NVIDIA FY2028 指引的用途（F7）", "decision": "AI半導體 11-02 送件（NVIDIA FY27 Q2 法說 2026-08-26，CFO 指引 FY2028 年增約 70%）登錄為 SRC_GL_333、DB_Evidence N#1，標 Interested-party；判定『只作對帳點，不入基準』。CY2027 資料中心營收＝FY2027 共識 396／403／410 ×（1＋70%）× 資料中心占比 92.5%＝約 623／634／645", "date": "2026-11-02", "quote": Q1622 + "；" + WO19 + " F7", "status": "執行"},
@@ -2563,6 +2594,8 @@ def main():
              "Siliconomics 側 R4 橋接 r1：推得淨新增上線 IT GW 與 NVIDIA 每 GW 內容推導（nvc_gb_tk＝TK IF_GPUsPerGW GB300 × nv_content）"),
             ("SRC_GL_332", "nvidia/build_nvidia.py（Q 頁，8-K 季報）；nvidia/README.md（FY2027 錨點：Q1、Q2 實績＋Q3 指引中點＋Q4 假設）",
              "NVIDIA 資料中心營收 CY2025（FY26 四季實績）與 CY2026 錨點 375.46"),
+            ("SRC_GL_334", "markets/chip_bridge/dist/20261027_晶片內容橋接表_v0.2.2.xlsx（Bridge 第 7、44 列）",
+             "AI半導體 晶片內容橋接表 v0.2.2：NVIDIA 合計 ÷ IT capex × IT capex＝每 IT GW NVIDIA 內容（GB300 20.85、VR200 23.47／21.85）；只作備忘（獨立核對 R2）"),
             ("SRC_GL_333", "交流 已處理/20261102_AI半導體-to-算力收支_回執_R4歸因與2027證據送件.md 第 3 節；siliconomics/docs/reports/r4_bridge/20261102_R4對帳橋接_Siliconomics側_r2.md「2027 年新證據」",
              "AI半導體 11-02 證據送件：NVIDIA FY27 Q2 法說（2026-08-26）CFO 指引 FY2028 營收年增約 70%；FY2027 共識 3,960–4,100 億美元；資料中心占比 92.5%（Interested-party；只作對帳點）")):
         SR.cell(r, 1, sid); SR.cell(r, 2, path_); SR.cell(r, 3, desc); r += 1
@@ -2575,8 +2608,8 @@ def main():
             ("R4", "瓦帳 v0.2（C2）", "晶片合約對帳：OpenAI–AMD 6 GW（晶片功耗）、Broadcom 10 GW、NVIDIA Vera Rubin 5 GW；Anthropic–AMD 2 GW、Google／Broadcom TPU 3.5（Anthropic 稱 5）GW", "B_summary 第 0 節第 2 點：晶片合約與機房合約是同一批容量的兩面，不入 C0", "v0.2"),
             ("R5", "Tokenomics", "快照（tokenomics_snapshot）加入 IF_FacilityGW", "v21.7 快照未含；瓦帳暫直接讀活頁簿 Interface!C8:Q8（commit 730b6a5）", "待 TK"),
             ("R6", "Tokenomics", "快照加入年化持有成本（AL_HoldGen 或 IF_HoldGen，世代別）", "v0.1.7 Gap 頁 G1 對照列需要（年化持有成本 × 年平均 GW）；v21.7 快照未含，本版不列數值", "待 TK"),
-            ("R7", "Tokenomics", "快照加入「每 IT GW NVIDIA 內容（分世代：H100、GB200、GB300、VR200、Rubin Ultra）」或各世代 NVIDIA 占機架價比",
-             "v0.1.9 NVIDIA 對帳點（Compare F）：v21.7 快照無 NVIDIA 占比，Siliconomics nv_content 只有 GB300（20.84 $B/GW），VR200、Rubin Ultra 暫用 GB300 值〔VR200 未拆分〕；"
+            ("R7", "Tokenomics", "採用權威的「每 IT GW NVIDIA 內容（分世代：H100、GB200、GB300、VR200、Rubin Ultra）」並放入快照（可參考 markets/chip_bridge v0.2.2 Bridge 第 44 列：GB300 20.85、VR200 23.47／21.85）",
+             "v0.1.9 NVIDIA 對帳點（Compare F）：v21.7 快照無 NVIDIA 占比；chip_bridge 有 VR200 拆分但屬 AI半導體產品、非 TK 權威，Wattonomics 不自行採用，VR200、Rubin Ultra 暫用 GB300 值〔Assumed〕；"
              "2027 年要對上 NVIDIA 指引所需的每 GW 內容約 31.4–32.5 $B（基準 31.9；Compare F2 (9)），TK GB300 為 20.84，內容與 GW 何者偏低需 TK 先更新（Andy 11-02 16:22：上游先更新再對帳）", "待 TK")]
     r = 4
     for q in reqs:
@@ -2607,8 +2640,8 @@ def main():
          "主路徑 2026 起七家一律甲2，改讀 In Y9（個股模型基準；缺年 Y2 代入），付款年經 lag_on、inv_on 轉上線年，t−1、t−2 缺值代入；xAI 2026 起以 SpaceX 模型 AI 資本支出推得；『其他（企業、學研）』2026 起隨市場成長；"
          "Y9 重取（Anthropic v0.1.7 自建＝0）；新頁 Delay（延遲逐站追蹤，WIF_Delay_*）；新名稱 WIF_Gap_Player_<p>_<yyyy>_AddGW、WIF_Gap_Add11_<yyyy>；年新增標『毛額，未扣汰換』。"
          "Decisions GL01-39 至 GL01-54；GL01-08 部分撤回、GL01-19 改、GL01-23 撤回。報告 docs/verify/20261102_v0.1.8_build.md。", True),
-        ("v0.1.9（2026-11-02）：NVIDIA 資料中心營收對帳點與小修（工作單 20261102_Wattonomics_v0.1.9_NVIDIA對帳點與小修.md）——Compare 新節 F（2025–2027：上線年 → 出貨年 → NVIDIA 出貨 GW × 每 GW NVIDIA 內容＝隱含營收，對 NVIDIA 實績／指引；另列 Siliconomics R4 橋接 r1 同口徑欄；只並列、不校準）；"
-         "In 頁尾新節 S8（NVIDIA 營收與指引、Siliconomics r1 上線值）；SIL_In 加 nv_content；新名稱 WIF_Recon_NV_*（21 名）；Checks N-K1（INFO）；Requests R7（每 IT GW NVIDIA 內容分世代）；"
+        ("v0.1.9（2026-11-02）：NVIDIA 資料中心營收對帳點與小修（工作單 20261102_Wattonomics_v0.1.9_NVIDIA對帳點與小修.md）——Compare 新節 F（2025–2027：上線年 → 出貨年 → NVIDIA 出貨 GW × 每 GW NVIDIA 內容＝隱含營收，對 NVIDIA 實績／指引；另列 Siliconomics R4 橋接 r1 欄（r1 淨額、Wattonomics 毛額）；只並列、不校準）；"
+         "In 頁尾新節 S8（NVIDIA 營收與指引、Siliconomics r1 上線值）；SIL_In 加 nv_content；新名稱 WIF_Recon_NV_*（21 名＋備忘 12 名）；Checks N-K1（INFO）；Requests R7（每 IT GW NVIDIA 內容分世代）；"
          "核對意見 D1–D3 修正（GL01-19 文字、匯出說明、Pipeline 停用標題）。基準數值不變（既有 WIF_ 變動 0）。Decisions GL01-55 至 GL01-61。報告 docs/verify/20261102_v0.1.9_build.md。", True),
         ("顏色：藍字＝輸入；黑字＝公式；綠字＝跨頁或外部鏡像；淡黃底＝關鍵輸出；亮黃底＝待證據或預設待決。", False),
         ("Excel 優先：要改輸入，直接改 In 頁藍字；builder 重建時讀回（--base）。公式頁不要手改。下游只讀 Interface 的 WIF_ 名稱（經快照）。", False),
