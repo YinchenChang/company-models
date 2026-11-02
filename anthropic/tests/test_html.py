@@ -149,7 +149,7 @@ def test_dist_xlsx_is_current_model():
 
 
 def test_narrative_claims(engine):
-    """HTML 文字中的定性主張（①②④⑤⑥⑦；v0.1.7 起：2026 為正、2027–2029 為負、2030 轉正；累計外部資金需求 0；現金谷底在 2029）。"""
+    """HTML 文字中的定性主張（①②④⑤⑥⑦；v0.1.7 起：2026 為正、2027–2029 為負、2030 轉正；v0.1.7.1：累計外部資金需求 0、首次缺口「無」；現金谷底在 2029）。"""
     gap = dict(zip(YEARS, engine.get_name("COST_PropGap_VR")))
     assert gap[2026] > 0, "『2026 年可覆蓋全成本』不成立"
     assert all(gap[y] < 0 for y in (2027, 2028, 2029)), "『2027–2029 差額為負』不成立"
@@ -159,7 +159,9 @@ def test_narrative_claims(engine):
         assert g[2026] > 0 and g[2029] < 0 < g[2030], f"『三種口徑正負一致』不成立：{nm}"
     assert all(math.isclose(a, b, rel_tol=1e-9, abs_tol=1e-9) for a, b in zip(engine.get_name("COST_PropGapEcon_VR"), engine.get_name("COST_PropGap_VR"))), "『自建 0 → 現金與經濟口徑相同』不成立"
     cum = engine.get_name("FND_ExtNeedCum")[-1]
-    assert cum > 0 and engine.get_name("FND_FirstGapYear") == 2029, "『出現少量外部資金需求、首次 2029』不成立"
+    assert cum in (None, "", 0) and engine.get_name("FND_FirstGapYear") == "無", "『v0.1.7.1：2026–2030 不出現最低現金缺口』不成立"
+    com = engine.get_name("FND_Committed")[1]
+    assert abs(engine.get_name("FND_CommittedS1Gap")) <= engine.get_name("INP_220") and com > 110, "『已到位融資 110.4、與 S-1 特別股收入一致』不成立"
     assert engine.get_name("COST_GapPosSustainYear") == 2030 and engine.get_name("FND_FCFPosSustainYear") == 2030, "『2030 持續轉正』不成立"
     fcf = dict(zip(YEARS, engine.get_name("FND_FCF")))
     assert fcf[2026] > 0 and all(fcf[y] < 0 for y in (2027, 2028, 2029)) and fcf[2030] > 0, "『營運自由現金流 2026 正、2027–2029 負、2030 正』不成立"
@@ -173,13 +175,15 @@ def test_narrative_claims(engine):
 
 
 def test_single_driver_claims(engine, loc):
-    """⑥ 的單一驅動清單由 Excel 值產生（HTML 只取值）；① 備註所列驅動的外部資金需求高於基準；W4 只動 Q3 口徑時翻轉；歷史情境 v016 不需要。"""
+    """⑥ 的單一驅動清單由 Excel 值產生（HTML 只取值）；① 備註所列驅動的外部資金需求高於基準；①之五（v0.1.7 當時）W4 只動 Q3 口徑時翻轉；歷史情境 v016 不需要；
+    v0.1.7.1 ①、①之六：v0.1.7（V2 前）需要少量、最低現金 12 個月需要、3 個月不需要。"""
     single = [k for k, g in load_scenarios()["scenarios"].items() if len(g) == 1]
     need = {sc: _scenario_values(engine, loc, sc, [("FND_ExtNeedCum", 2030)])[("FND_ExtNeedCum", 2030)] for sc in single}
     base = engine.get_name("FND_ExtNeedCum")[-1]
     for sc in ("api_task_lo", "elast_weak", "price_hi", "s1u_fast"):          # ① 備註所列
         assert need[sc] > base, sc
-    assert need["w4_q3only"] > 0 and need["w4_sbconly"] in (None, "", 0)
-    for sc in ("combo1", "v016"):
+    assert need["mc_hi"] > 0 and need["mc_lo"] in (None, "", 0)
+    for sc, pos in (("combo1", True), ("v016", False), ("v017", True), ("v0171_v2only_off", True), ("v017_w4_q3only", True), ("v017_w4_sbconly", False),
+                    ("v017_mc_hi", True), ("v017_mc_lo", False)):
         v = _scenario_values(engine, loc, sc, [("FND_ExtNeedCum", 2030)])[("FND_ExtNeedCum", 2030)]
-        assert (v > 0) if sc == "combo1" else (v in (None, "", 0)), (sc, v)
+        assert (v > 0) if pos else (v in (None, "", 0)), (sc, v)
