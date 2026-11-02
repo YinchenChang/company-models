@@ -738,6 +738,100 @@ def main():
         EQ.column_dimensions["A"].width = 52; EQ.column_dimensions["H"].width = 60
         for col in "BCDEFG": EQ.column_dimensions[col].width = 10
 
+    # ---------------- Recon：由下往上對帳（v0.11；個股基準情境 → 本庫市場；R4 部署 GW → Wattonomics） ----------------
+    RC = None; RCROW = {}
+    rc_ptr = os.path.join(SIL, "data", "CURRENT_RECON")
+    if "rc_tol" in INROW and os.path.exists(rc_ptr):
+        rc_file = open(rc_ptr).read().strip()
+        rsnap = json.load(open(os.path.join(SIL, "data", rc_file), encoding="utf-8"))
+        evf = sorted(glob.glob(os.path.join(HERE, "seed", "recon_evidence_v*.json")), key=_vkey)
+        rev = json.load(open(evf[-1], encoding="utf-8")) if evf else {"r4": {}, "soc": {}}
+        RC = wb.create_sheet("Recon")
+        RC["A1"] = ("Recon — 由下往上對帳（工作方式 v1.7 第 8 節；決策 S32）：覆蓋個股的基準情境（情境 " + rsnap.get("base_scen", "B") + "）加總 → 本庫市場；"
+                    "本庫推得上線 GW → Wattonomics 主路徑。個股值與 R4 值為版本固定快照（tools/recon.py → data/" + rc_file + "），綠字＝外部快照；"
+                    "狀態：|比值 − 1| ≤ 容差 rc_tol＝一致；超出且有已寄出的證據送件＝時差；其餘＝待診斷")
+        hdr(RC, 3, ["項目", "說明", "2025", "2026", "2027", "2028", "2029", "來源／證據送件"])
+        RYC = "CDEFG"
+        r = 4
+        soc = rsnap["markets"]["soc"]
+        RC.cell(r, 1, "A. SoC 測試機（份額口徑；分母＝本庫 Equip 頁 SoC 測試機市場，兩家模型同讀）").font = BOLD; r += 1
+        r_first = r
+        for row in soc["rows"]:
+            RC.cell(r, 1, row["who"] + " SoC 份額"); RC.cell(r, 2, row["note"])
+            for j, v in enumerate(row["vals"]):
+                c = RC.cell(r, 3 + j, v); c.font = GREEN; c.number_format = "0.0%"
+            RC.cell(r, 8, row["ref"]); r += 1
+        RC.cell(r, 1, "覆蓋個股合計").font = BOLD
+        for j in range(5):
+            c = RC.cell(r, 3 + j, f"=SUM({RYC[j]}{r_first}:{RYC[j]}{r-1})"); c.number_format = "0.0%"; c.fill = KEY
+        RCROW["soc_sum"] = r; r += 1
+        RC.cell(r, 1, "其他廠（1 − 合計）")
+        for j in range(5): RC.cell(r, 3 + j, f"=1-{RYC[j]}{r-1}").number_format = "0.0%"
+        r += 1
+        RC.cell(r, 1, "預期合計（1 − rc_soc_oth）"); RC.cell(r, 2, "In 頁 M27")
+        for j in range(5): RC.cell(r, 3 + j, "=1-rc_soc_oth").number_format = "0.0%"
+        RCROW["soc_exp"] = r; r += 1
+        RC.cell(r, 1, "比值（合計 ÷ 預期）")
+        for j in range(5): RC.cell(r, 3 + j, f"={RYC[j]}{RCROW['soc_sum']}/{RYC[j]}{RCROW['soc_exp']}").number_format = "0.000"
+        RCROW["soc_ratio"] = r; r += 1
+        RC.cell(r, 1, "證據送件")
+        for j, y in enumerate(soc["years"]):
+            v = rev.get("soc", {}).get(str(y), "")
+            if v: RC.cell(r, 3 + j, v)
+        RCROW["soc_ev"] = r; r += 1
+        RC.cell(r, 1, "狀態").font = BOLD
+        for j in range(5):
+            col = RYC[j]
+            c = RC.cell(r, 3 + j, f'=IF(ABS({col}{RCROW["soc_ratio"]}-1)<=rc_tol,"一致",IF(LEN({col}{RCROW["soc_ev"]})>0,"時差","待診斷"))'); c.fill = KEY
+        RCROW["soc_st"] = r; r += 2
+        r4 = rsnap["markets"]["r4"]
+        RC.cell(r, 1, "B. R4 部署 GW（本庫推得淨新增上線 IT GW vs Wattonomics 主路徑；情境 A、D0，與 R4 橋接 r1 可比）").font = BOLD; r += 1
+        RC.cell(r, 1, "本庫推得淨新增上線 IT GW"); RC.cell(r, 2, "r4_bridge b8（出貨年→上線年、庫存、汰換、ASIC 實體換算後）")
+        for j, v in enumerate(r4["sil_online"]):
+            c = RC.cell(r, 4 + j, v); c.font = GREEN; c.number_format = "0.00"
+        RC.cell(r, 8, r4["ref"]); RCROW["r4_s"] = r; r += 1
+        RC.cell(r, 1, "Wattonomics 年新增 IT GW（主路徑）"); RC.cell(r, 2, "r4_bridge b9")
+        for j, v in enumerate(r4["wt_main"]):
+            c = RC.cell(r, 4 + j, v); c.font = GREEN; c.number_format = "0.00"
+        RC.cell(r, 8, r4["ref"]); RCROW["r4_w"] = r; r += 1
+        RC.cell(r, 1, "比值（Wattonomics ÷ 本庫）")
+        for j in range(4): RC.cell(r, 4 + j, f"={'DEFG'[j]}{RCROW['r4_w']}/{'DEFG'[j]}{RCROW['r4_s']}").number_format = "0.000"
+        RCROW["r4_ratio"] = r; r += 1
+        adj = rev.get("r4_wt_adj")
+        if adj:
+            RC.cell(r, 1, "對照：Wattonomics 側歸因調整後比值（尚未進入 Wattonomics 路徑）"); RC.cell(r, 8, adj["src"])
+            for j, v in enumerate(adj["vals"]):
+                c = RC.cell(r, 4 + j, v); c.font = GREEN; c.number_format = "0.000"
+            r += 1
+        RC.cell(r, 1, "證據送件")
+        for j, y in enumerate(r4["years"]):
+            v = rev.get("r4", {}).get(str(y), "")
+            if v: RC.cell(r, 4 + j, v)
+        RCROW["r4_ev"] = r; r += 1
+        RC.cell(r, 1, "狀態").font = BOLD
+        for j in range(4):
+            col = "DEFG"[j]
+            c = RC.cell(r, 4 + j, f'=IF(ABS({col}{RCROW["r4_ratio"]}-1)<=rc_tol,"一致",IF(LEN({col}{RCROW["r4_ev"]})>0,"時差","待診斷"))'); c.fill = KEY
+        RCROW["r4_st"] = r; r += 2
+        RC.cell(r, 1, "C. 結構一致的市場（覆蓋個股直接讀本庫份額 × 本庫市場，比值恆等於份額合計；由 Checks K6 約束 ≤ 100%）").font = BOLD; r += 1
+        for mk, k6 in (("ASIC 設計服務（TPU、Trainium、其他 ASIC）", "K6-tpu／oth／trn"), ("CPO 光學", "K6-cpo"), ("加速器 ABF 載板", "K6-abfnv／abfot"),
+                       ("AI 電源", "K6-pwr"), ("AI 液冷", "K6-lc"), ("AI 伺服器組裝", "K6-asm"), ("HBM", "K6-hbm")):
+            RC.cell(r, 1, mk); RC.cell(r, 2, "結構一致（份額由本庫擁有）"); RC.cell(r, 8, "Checks " + k6); r += 1
+        r += 1
+        RC.cell(r, 1, "D. 尚未建立對帳的市場（v0.12 起依序補：份額或營收 ÷ 市場）").font = BOLD; r += 1
+        for mk in ("GPU／ASIC 晶片金額（NVIDIA、AMD、Broadcom、Marvell、聯發科、創意、世芯）", "CoWoS（台積電；Amkor、日月光委外）",
+                   "晶圓前段設備（應用材料、Lam、KLA、ASML；TEL 未建模）", "AI 高速 PCB／CCL（勝宏、金像電、台光電）", "光學模組總量（中際旭創、新易盛、Lumentum、Coherent）"):
+            RC.cell(r, 1, mk); RC.cell(r, 2, "未建"); r += 1
+        r += 1
+        RC.cell(r, 1, "E. 狀態彙總（A、B 節）").font = BOLD; r += 1
+        st_cells = f"C{RCROW['soc_st']}:G{RCROW['soc_st']},D{RCROW['r4_st']}:G{RCROW['r4_st']}"
+        for lab in ("一致", "時差", "待診斷"):
+            RC.cell(r, 1, lab)
+            RC.cell(r, 3, f'=COUNTIF(C{RCROW["soc_st"]}:G{RCROW["soc_st"]},"{lab}")+COUNTIF(D{RCROW["r4_st"]}:G{RCROW["r4_st"]},"{lab}")')
+            RCROW["n_" + lab] = r; r += 1
+        RC.column_dimensions["A"].width = 46; RC.column_dimensions["B"].width = 44; RC.column_dimensions["H"].width = 80
+        for col in "CDEFG": RC.column_dimensions[col].width = 11
+
     # ---------------- Conflicts：跨模型同一變數不同值的登錄 ----------------
     CF = wb.create_sheet("Conflicts")
     CF["A1"] = ("Conflicts — 跨模型衝突登錄：同一個行業變數在兩個以上公司模型有不同值。本庫的任務是讓每個變數只有一個值；"
@@ -1058,6 +1152,14 @@ def main():
             CK.cell(r, 1, f"K8-{y}"); CK.cell(r, 2, f"{y} SoC 測試機市場（A）÷ SEMI WFE 在泰瑞達長期區間內（7–9%；CF15）")
             CK.cell(r, 3, f"=Equip!{col}{EQROW['r_soc']}"); CK.cell(r, 4, '=TEXT(ts_tw_lo,"0%")&"–"&TEXT(ts_tw_hi,"0%")')
             CK.cell(r, 6, f'=IF(AND(C{r}>=ts_tw_lo,C{r}<=ts_tw_hi),"OK","WARN")'); CK.cell(r, 7, "驗證（量級；口徑不同，只列 WARN）"); r += 1
+    if RC is not None:
+        for j, y in enumerate((2025, 2026, 2027, 2028, 2029)):
+            CK.cell(r, 1, f"K6-soc{y}"); CK.cell(r, 2, f"SoC 測試機 {y} Advantest＋泰瑞達份額合計 ≤ 100%（個股基準情境；Recon 頁 A 節）")
+            CK.cell(r, 3, f"=Recon!{'CDEFG'[j]}{RCROW['soc_sum']}"); CK.cell(r, 4, 1)
+            CK.cell(r, 6, f'=IF(C{r}<=1+1E-9,"OK","ERROR")'); CK.cell(r, 7, "驗證（加總受限）"); r += 1
+        CK.cell(r, 1, "K9"); CK.cell(r, 2, "Recon 頁狀態為『待診斷』的格數（沒有證據送件的落差；規則：兩邊都更新後仍有落差須診斷錯在哪一方）")
+        CK.cell(r, 3, f"=Recon!C{RCROW['n_待診斷']}"); CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "治理（對帳）")
+        CK.cell(r, 8, "WARN＝仍有待診斷的落差；明細見 Recon 頁"); r += 1
     if RK is not None:
         CK.cell(r, 1, "K7"); CK.cell(r, 2, "Rack 頁：商用 GPU 系統市場 2026 ≤ AI IT 資本支出 2026（系統售價不應超過全部 IT 資本支出）")
         CK.cell(r, 3, f"=Rack!C{RKROW['sysA']}"); CK.cell(r, 4, f"=Deploy!C{DROW['itcA']}")
@@ -1116,6 +1218,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.11：新增 Recon 頁（由下往上對帳：覆蓋個股基準情境 → 本庫市場；本庫推得上線 GW → Wattonomics；狀態 一致／時差／待診斷，決策 S32、S33）與 M27 對帳參數（容差 rc_tol、SoC 其他廠份額 rc_soc_oth）、Checks K6-soc、K9；標記更正：hbm_hbp_27 高值改 0、u_rb_28 與 u_bw_28 改標 Assumed 並給區間、nd_sh_essd25 改標 Derived、混合鍵合列名改「HBM 工序比例」（決策 S34）。", False),
         ("v0.10：NAND 季價 2026Q3 改用公司實現平均售價 +25%（原合約價 +15%；Kioxia、SK 海力士實績 mid-20%），2026Q4 改為兩季累計不變的餘額 +8.1%（原 +17.5%）；2027 起價格水準不變。決策 S30。", False),
         ("v0.9：CY2026 SoC 測試機市場 ts_mk_soc26 由 11.0 改為 11.5（Advantest 2026-10-28 稱約 115 億美元；Advantest＋泰瑞達 CY2026 SoC 營收合計約 113 億美元已高於舊值）；每加權顆測試支出與 CY2027 起 SoC 市場隨之上升。決策 S29。", False),
         ("v0.8.4：來源複核後修正標記與來源文字：DRAM／NAND 情境季價路徑 2027–28 改標 Derived、2029 改標 Assumed（區間＝情境 A、B）；Advantest 測試機市場來源改為 2026-07-29 原文；輸入值不變。", False),

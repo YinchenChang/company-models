@@ -1,0 +1,29 @@
+[
+ {
+  "id": "S32",
+  "cat": "結構",
+  "item": "v0.11：新增 Recon 頁（由下往上對帳）與 M27 對帳參數；Checks K6-soc、K9",
+  "decision": "依 Andy 2026-10-31 12:43（對帳原則擴及全部市場）與 2026-11-02 15:58／16:22（三層只給基準、對帳由下往上：覆蓋個股 → Siliconomics → Wattonomics → Tokenomics）。工程做法：Recon 頁的個股值與 R4 值來自版本固定快照（tools/recon.py → data/recon_snapshot_v*.json），不即時連結個股成品，避免反向依賴與 CI 漂移；狀態以公式判定：比值偏離 1 在容差內＝一致；超出且有已寄出證據送件＝時差；否則＝待診斷。v0.11 範圍：SoC 測試機（Advantest＋泰瑞達份額，K6-soc）、R4 部署 GW；已由本庫份額表約束的市場（ASIC 設計服務、CPO、ABF、AI 電源、液冷、組裝、HBM）列為結構一致；GPU／ASIC 晶片金額、CoWoS、設備、PCB／CCL、光學總量列為未建（v0.12 起）。",
+  "date": "2026-11-02",
+  "quote": "Andy 2026-11-02 16:22「3-nomics與個股的地位鏈應該是Tokenomics->Wattonomics->Siliconomics->覆蓋個股；對帳的時候則反過來: 覆蓋個股->Siliconomics->Wattonomics->Tokenomics」",
+  "status": "工程決定"
+ },
+ {
+  "id": "S33",
+  "cat": "判斷",
+  "item": "Recon 讀個股的『基準情境』取情境 B（平平）；Siliconomics v0.12 只留基準時同樣取 B",
+  "decision": "工作方式 v1.7：三層只給基準、情境在個股。Andy 10-25 的三情境為「順利／平平／不如預期」，各個股模型的 B 標為平平；Wattonomics 與地圖也以 B 為基準。v0.11 的 SoC 對帳 A、B 份額相同，結果不受此選擇影響；R4 仍用情境 A 部署 GW（與 r1 可比），v0.12 改基準後重跑。",
+  "date": "2026-11-02",
+  "quote": "Andy 2026-11-02 15:58「Siliconomics對帳的時候，只對個股的基準情境加總」",
+  "status": "預設、可撤回（待 Andy）"
+ },
+ {
+  "id": "S34",
+  "cat": "輸入",
+  "item": "v0.11：標記與區間更正（hbm_hbp_27 高值 0.05 → 0；u_rb_28、u_bw_28 改標 Assumed 並給區間；nd_sh_essd25 改標 Derived；混合鍵合列名「研削」改「HBM 工序比例」）",
+  "decision": "hbm_hbp_27：Equip 頁 D 節與韓美、Interface 自 2028 才分歧，2027 高值 5% 與此不一致（PR 自動核對 10-28 發現，屬實）→ 高值改 0；BESI 情境 A 2027 讀高值者隨之改變（次版）。u_rb_28（7.0）、u_bw_28（0.5）原文寫「2028 Assumed」卻標 Interested-party → 改標 Assumed，區間 Rubin 5.0–9.0（±2 百萬顆：Rubin Ultra 提前或延後）、Blackwell 0–1.0；基準不變。nd_sh_essd25：基準 30% 是 Counterpoint 2Q25 26% 與 2Q26 48% 之間的年度化推估 → Derived。",
+  "date": "2026-11-02",
+  "quote": "",
+  "status": "工程決定"
+ }
+]

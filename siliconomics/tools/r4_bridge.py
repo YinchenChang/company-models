@@ -134,10 +134,16 @@ DPL = W["Deploy"]
 
 
 def wt_row(ws, label, scen, delay):
-    for rr in ws.iter_rows(values_only=True):
-        if rr[0] == label and rr[1] == scen and rr[2] == delay:
+    """先找（列名、需求情景、延遲）；Wattonomics 停用情境後（工作方式 v1.7）改找同列名的基準列（情境欄空白或『基準』）。"""
+    rows = [rr for rr in ws.iter_rows(values_only=True) if rr[0] == label]
+    for rr in rows:
+        if rr[1] == scen and rr[2] == delay:
             return rr
-    raise KeyError(label)
+    for rr in rows:
+        if rr[1] in (None, "", "基準", "Base") and rr[2] in (None, "", "基準", "Base", delay):
+            print(f"注意：Wattonomics「{label}」找不到 {scen}／{delay}，改讀基準列", file=sys.stderr)
+            return rr
+    raise KeyError(f"Wattonomics 找不到列「{label}」（{scen}／{delay} 或基準）；請確認 Wattonomics 是否改列名")
 
 
 new = wt_row(DPL, "年新增 IT GW（淨，不含新納入存量）", "A", "D0")
