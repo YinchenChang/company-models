@@ -29,7 +29,7 @@ for r in R:
     if r["kind"] == "spend": sp[r["item"]][r["year"]] = f(r["value"])
 o["spend"] = sp
 o["fund"] = [{"player": r["player"], "name": r["player_name"], "year": r["year"], "period": r["period"], "values": r["values"], "gross": r.get("gross"), "po": r.get("payment_order")} for r in R if r["kind"] == "funding"]
-# 資金缺口（v0.1.7；kind＝gap）
+# 資金缺口（v0.1.7 起；v0.1.8 加 add11、player_s；kind＝gap）
 g = {"add11": {}, "ps": collections.defaultdict(dict), "mk": collections.defaultdict(dict), "verdict": {}, "pergw": collections.defaultdict(dict), "player": collections.defaultdict(dict), "pmeta": {}, "total": {}}
 for r in R:
     if r["kind"] != "gap": continue

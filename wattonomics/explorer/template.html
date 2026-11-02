@@ -111,7 +111,7 @@ footer{display:grid;gap:6px;font-size:.78rem;color:var(--muted);border-top:1px s
   </div>
 
   <section class="bus gapsec" aria-labelledby="hgap" id="gapSec">
-    <div class="head"><div class="eyebrow">資金缺口（v0.1.7）</div><h2 id="hgap">11 家代表玩家當一間公司：要蓋這麼多資料中心，錢夠嗎？</h2></div>
+    <div class="head"><div class="eyebrow">資金缺口（<span id="gapVer"></span>）</div><h2 id="hgap">11 家代表玩家當一間公司：要蓋這麼多資料中心，錢夠嗎？</h2></div>
     <div class="verdict" id="gapVerdict" aria-live="polite"></div>
     <div class="twocol" id="gapWho">
       <div class="card">
@@ -138,7 +138,7 @@ footer{display:grid;gap:6px;font-size:.78rem;color:var(--muted);border-top:1px s
       </div>
     </div>
     <p class="note" id="gapNotes"></p>
-    <details class="more card"><summary>逐年數字（所選情景）</summary><div class="tbl" id="gapTable"></div></details>
+    <details class="more card"><summary>逐年數字（需求固定 B，所選延遲）</summary><div class="tbl" id="gapTable"></div></details>
     <details class="more card"><summary>每 IT GW 建置成本拆項（所選年份）</summary><div class="tbl" id="gapPerGW"></div></details>
     <details class="more card"><summary>11 家主要玩家逐家（所選年份；營業現金流、新增 GW、AI 資本支出、缺口）</summary><div class="tbl" id="gapPlayers"></div></details>
   </section>
@@ -232,6 +232,7 @@ function render(){
  const cov=D.cov[S.year]; const chip=document.getElementById("covChip");
  chip.className="chip "+(cov!=null&&cov<0.5?"warn":"ok");
  chip.textContent=`${S.year} 覆蓋率 ${cov==null?"—":cov.toFixed(2)}${cov!=null&&cov<0.5?"・多為推算":""}`;
+ document.getElementById("gapVer").textContent=D.ver||"";
  document.getElementById("verline").textContent=`版本 ${D.ver||"—"}・資料日期 ${D.date||"—"}・頁面產生 ${D.built||"—"}`;
  gap(); stats(); chart(); table(); detail(); spend();
  document.getElementById("srcline").textContent=`資料：${D.src}（sha256 ${D.sha}…）・需求情景 A 樂觀／B 基準／C 保守（定義權威在 Siliconomics）只影響 2028 年起的顆數係數`;
@@ -352,7 +353,7 @@ function gap(){
  c1.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="11 家代表玩家：2024 至 2030 年每年需要的錢與錢的來源（十億美元）">${g}</svg>`;
  c1.querySelectorAll(".hit").forEach(h=>{const y=h.dataset.y,r=m[y]||{};
   const row=(k,val,d=0)=>`<div class="r"><span>${k}</span><span class="num">${fmt(val,d)}</span></div>`;
-  h.onmousemove=e=>gtipShow(e,`<b>${y}</b>（B・${S.delay}；US$B）`+row("AI 資本支出（11 家）",r.need_own)+(r.fallback?row("　其中模型值替代（樂觀 A・D0 基準）",r.fallback):"")+row("需要：11 家非 AI",r.nonai)
+  h.onmousemove=e=>gtipShow(e,`<b>${y}</b>（B・${S.delay}；US$B）`+row("AI 資本支出（11 家）",r.need_own)+(r.fallback?row("　備忘：模型值替代（樂觀 A・D0，未乘 r）",r.fallback):"")+row("需要：11 家非 AI",r.nonai)
    +row("來源：營業現金流",r.ocf)+row("來源：已觀測外部融資",r.ext_obs)+row("尚需新融資",r.short)+row("情景比例 r（11 家年新增 GW）",r.ratio,2));
   h.onmouseleave=gtipHide; h.onclick=()=>{S.year=y;save();render()}});
  document.getElementById("gapLegend1").innerHTML=`<span><i class="sw" style="background:${teal}"></i>11 家 AI 資料中心</span><span><i class="sw" style="background:${amb}"></i>11 家非 AI 資本支出</span><span><i class="sw" style="background:${ink}"></i>營業現金流</span><span><i class="sw" style="background:${mut}"></i>已觀測外部融資（2024–2025）</span><span><i style="border-color:${warn}"></i>尚需新融資</span>`;
@@ -383,7 +384,7 @@ function gap(){
  const PS=(G.ps||{})[key]||{}; let tA=0,tC=0;
  const prow=Object.keys(GPN).filter(p=>G.player[p]).map(p=>{const r=G.player[p][yy]||{},q=(PS[p]||{})[yy]||{},mm=G.pmeta[p]||{};tA+=q.AddGW||0;tC+=q.CapexAI||0;
   return `<tr><td>${GPN[p]}</td><td class="num">${fmt(r.OCF,0)}</td><td class="num">${fmt(q.AddGW,2)}</td><td class="num">${fmt(q.CapexAI,0)}</td><td class="num">${fmt(r.CapexNonAI,0)}</td><td class="num">${fmt(q.Gap,0)}</td><td class="num">${fmt(q.SelfFund,2)}</td><td class="num">${fmt(r.CapexAIModel,0)}</td><td>${mm.verdict||"—"}</td></tr>`}).join("");
- document.getElementById("gapPlayers").innerHTML=`<p class="note">${yy} 年；情景 B・${S.delay}（與上方逐年數字同一情景）；新增 GW（IT GW）與 AI 資本支出都已乘情景比例 r，合計＝逐年數字的「11 家年新增 IT GW」與「AI 資本支出（11 家）」；AI 資本支出＝新增 GW × 每 GW（擁有者口徑，廠房提前一、兩年入帳，所以當年 AI 資本支出也含之後年份上線 GW 的廠房）；缺口＝（AI＋非 AI）− 營業現金流；US$B；空白＝無模型值。「模型 AI 資本支出」為個股模型值，只作對照、不隨情景；「判讀」為樂觀 A・D0 口徑。</p><table><thead><tr><th>玩家</th><th>營業現金流</th><th>新增 GW</th><th>AI 資本支出</th><th>非 AI</th><th>缺口</th><th>自籌比</th><th>模型 AI 資本支出（對照）</th><th>判讀（2026–30）</th></tr></thead><tbody>`+prow+
+ document.getElementById("gapPlayers").innerHTML=`<p class="note">${yy} 年；情景 B・${S.delay}（與上方逐年數字同一情景）；新增 GW（IT GW）與 AI 資本支出都已乘情景比例 r，合計＝逐年數字的「11 家年新增 IT GW」與「AI 資本支出（11 家）」；AI 資本支出＝新增 GW × 每 GW（擁有者口徑，廠房提前一、兩年入帳，所以當年 AI 資本支出也含之後年份上線 GW 的廠房）；缺口＝（AI＋非 AI）− 營業現金流；US$B；空白＝無模型值。無 GW 證據的玩家年份（SpaceX／xAI、WhiteFiber 2028–2030）用個股模型 AI 資本支出 × r。切到「依個股模型資本支出」讀法時，本表仍是主讀法。「模型 AI 資本支出」為個股模型值，只作對照、不隨情景；「判讀」為樂觀 A・D0 口徑。</p><table><thead><tr><th>玩家</th><th>營業現金流</th><th>新增 GW</th><th>AI 資本支出</th><th>非 AI</th><th>缺口</th><th>自籌比</th><th>模型 AI 資本支出（對照）</th><th>判讀（2026–30）</th></tr></thead><tbody>`+prow+
   `<tr><td><b>合計</b></td><td></td><td class="num"><b>${fmt(tA,2)}</b></td><td class="num"><b>${fmt(tC,0)}</b></td><td colspan="5" class="note">核對：逐年數字 ${fmt(A11[yy],2)} GW、${fmt((m0[yy]||{}).need_own,0)}（主讀法）</td></tr></tbody></table>`;
 }
 render();
