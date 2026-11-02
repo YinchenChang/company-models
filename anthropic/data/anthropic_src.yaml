@@ -7277,7 +7277,7 @@ rows:
   tag: "Verified"
   party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 費用（GAAP，性質別）
-  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。sec-api、xenospectrum 1.39；Q1＋Q2＝2.33 ≈ 上半年 2.334。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：sec-api.io；xenospectrum；Kepler（177%）（轉載正式 S-1）（https://sec-api.io/insights/anthropic-ant-s-1-ipo-sec-filing-analysis）；值由 1.39 改原文精度 1.39（只對照列）］"
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。sec-api、xenospectrum 1.39；Q1＋Q2＝2.33 ≈ 上半年 2.334。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：sec-api.io；xenospectrum；Kepler（177%）（轉載正式 S-1）（https://sec-api.io/insights/anthropic-ant-s-1-ipo-sec-filing-analysis）；值不變（原文 1,390）］"
 - id: SRC_ANT_429
   key: ci_s1f_2025q3
   group: D
