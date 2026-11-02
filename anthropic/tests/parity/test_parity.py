@@ -157,9 +157,18 @@ def test_cache_matches_fresh(sc, model, cache_path, results_store):
     assert not bad_cells and not bad_names
 
 
+def _loop_shard(scs):
+    """v0.1.7：PARITY_LOOP_SHARD="i/N" 時，迴圈型測試只跑第 i 片情境（記憶體上限；斷言不變；N 片全跑＝全套）。"""
+    spec = os.environ.get("PARITY_LOOP_SHARD")
+    if not spec:
+        return scs
+    i, n = (int(x) for x in spec.split("/"))
+    return [sc for j, sc in enumerate(scs) if j % n == i]
+
+
 def test_scenarios_actually_change_outputs(model, base_engine):
     base = base_engine[1]
-    for sc in SCENARIOS[1:]:
+    for sc in _loop_shard(SCENARIOS[1:]):
         eng = new_engine(model)
         for key, v in sc["inputs"].items():
             eng.set_key(key, v)
@@ -174,7 +183,7 @@ def test_scenario_expected_results(model):
     eng0 = new_engine(model, fresh=True)
     assert eng0.get_name("CHK_Errors") == 0
     assert eng0.get_name("CHK_Warnings") == EXPECT["base_warnings"]
-    for sc in SCENARIOS[1:]:
+    for sc in _loop_shard(SCENARIOS[1:]):
         eng = new_engine(model, fresh=True)
         for k, v in sc["inputs"].items():
             eng.set_key(k, v)
