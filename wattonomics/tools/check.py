@@ -5,7 +5,7 @@ import json, os, sys
 import openpyxl
 
 ERRS = ("#REF!", "#VALUE!", "#DIV/0!", "#NAME?", "#N/A", "#NUM!", "#NULL!", "Err:")
-REQUIRED = ["README", "In", "Players", "CapexGW", "Funding", "Gap", "FundRaw", "Facility", "SegIn", "Spend", "Matrix", "Pipeline", "Deploy", "C0", "C1", "Compare", "TK_In", "SIL_In", "Interface", "Checks",
+REQUIRED = ["README", "In", "Players", "CapexGW", "Delay", "Funding", "Gap", "FundRaw", "Facility", "SegIn", "Spend", "Matrix", "Pipeline", "Deploy", "C0", "C1", "Compare", "TK_In", "SIL_In", "Interface", "Checks",
             "Decisions", "DB_Evidence", "Sources"]
 TAGS = ("Verified", "Interested-party", "Analogy", "Assumed", "Derived", "待證據")
 
@@ -79,7 +79,9 @@ def main():
     txt = open(rd, encoding="utf-8").read() if os.path.exists(rd) else ""
     for kw in ("### 對帳鏈", "### 基建延遲情景", "| C0 |", "| C7 |", "D0 準時", "D1 基準延遲", "D2 嚴重延遲", "IT 關鍵電力", "IF_FacilityGW", "k_chip2it", "下游取用 2027 年後數值前看覆蓋率", "Wattonomics（瓦帳）＝全市場 GW 唯一基準事實", "舊名 GW 帳／gwledger",
                # 資金缺口固定規格（Andy 2026-10-31 04:13、04:20、10:22）
-               "資金缺口（Gap 頁", "新增 GW × 每 GW 建置成本", "不扣股票買回與股利", "整個市場當一間公司"):
+               "資金缺口（Gap 頁", "新增 GW × 每 GW 建置成本", "不扣股票買回與股利", "整個市場當一間公司",
+               # v0.1.8 固定規格（Andy 2026-11-02 15:58、16:22；工作單 20261102 E12）
+               "### 三層只給基準", "### 地位鏈與對帳方向", "### 已確認延遲門檻", "公司本身揭露，或兩家以上獨立可信媒體報導且公司未否認", "〔停用，v0.2 刪〕"):
         if kw not in txt: bad.append(f"wattonomics/README.md 缺固定規格：{kw}")
     print(f"{os.path.basename(x)}：頁面 {len(wb.sheetnames)}、具名範圍 {len(names)}（WIF_ {len(gif)}）、Checks {len(rows)} 項（OK {nok}／WARN {len(cw)}／ERROR {len(ce)}）、"
           f"In 輸入列 {nrow}（待證據 {pend}）、錯誤格 {nerr}")

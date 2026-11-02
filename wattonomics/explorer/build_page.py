@@ -18,7 +18,10 @@ for r in R:
     if r["kind"] == "player_gw": pg[r["path"]][r["player"]][r["year"]] = f(r["value"]); names[r["player"]] = r["player_name"]
 o["pgw"] = pg; o["pname"] = names
 o["cov"] = {r["year"]: f(r["value"]) for r in R if r["kind"] == "coverage"}
-o["campus"] = [{k: r[k] for k in ("key","name_","operator","user","mw","basis","online_year","online_month","known_delay_m","power_secured","tag","included")} for r in R if r["kind"] == "campus"]
+o["campus"] = [{k: r.get(k) for k in ("key","name_","operator","user","mw","basis","online_year","online_month","known_delay_m","power_secured","tag","included","delay_evidence","delay_grade")} for r in R if r["kind"] == "campus"]
+# 延遲逐站追蹤（v0.1.8；kind＝delay、delay_track）
+o["delay"] = {r["player"]: {k: f(v) for k, v in r["values"].items()} for r in R if r["kind"] == "delay"}
+o["delay_track"] = [{k: r.get(k) for k in ("id", "scope", "content", "status")} for r in R if r["kind"] == "delay_track"]
 for k in ("capex_calendar", "capex_ai", "capex_gw"):
     t = collections.defaultdict(dict)
     for r in R:
@@ -29,7 +32,7 @@ for r in R:
     if r["kind"] == "spend": sp[r["item"]][r["year"]] = f(r["value"])
 o["spend"] = sp
 o["fund"] = [{"player": r["player"], "name": r["player_name"], "year": r["year"], "period": r["period"], "values": r["values"], "gross": r.get("gross"), "po": r.get("payment_order")} for r in R if r["kind"] == "funding"]
-# 資金缺口（v0.1.7；kind＝gap）
+# 資金缺口（v0.1.7 起；v0.1.8 只用基準 A／D0，market 值含 add11；kind＝gap）
 g = {"mk": collections.defaultdict(dict), "verdict": {}, "pergw": collections.defaultdict(dict), "player": collections.defaultdict(dict), "pmeta": {}, "total": {}}
 for r in R:
     if r["kind"] != "gap": continue

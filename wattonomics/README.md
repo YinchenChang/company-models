@@ -2,7 +2,9 @@
 
 **Wattonomics（瓦帳）＝全市場 GW 唯一基準事實，與 Tokenomics（token）、Siliconomics（矽）成系列；舊名 GW 帳／gwledger。**
 
-> **下游取用 2027 年後數值前看覆蓋率**（`WIF_Coverage_<yyyy>`＝有證據支撐的新增 GW ÷ 主路徑新增 GW；< 0.5 時 Checks WARN）。2027 起主路徑七家（MSFT、GOOGL、AMZN、META、ORCL、CRWV、NBIS）由資本支出推得（甲2），純站點證據版另出 `_SiteOnly`。
+> **基準版（v0.1.8 起）**：三層只給基準（Andy 2026-11-02 15:58）。基準＝需求 A × 上線時點「公司公告＋已確認延遲」；`*_A_D0_*` 名稱即基準名稱，其餘情景名稱照算但標〔停用，v0.2 刪〕。
+>
+> **下游取用 2027 年後數值前看覆蓋率**（`WIF_Coverage_<yyyy>`＝有證據支撐的新增 GW ÷ 主路徑新增 GW；< 0.5 時 Checks WARN）。2026 起主路徑七家（MSFT、GOOGL、AMZN、META、ORCL、CRWV、NBIS）由資本支出推得（甲2，讀 In Y9 個股模型基準，付款年轉上線年），xAI 由 SpaceX 個股模型 AI 資本支出推得，「其他（企業、學研）」隨市場成長；純站點證據版另出 `_SiteOnly`。
 
 算力收支 R4「產業部署路徑」的實作：市場總 GW、各玩家 GW（營運者／使用者）、部署管線與基建延遲情景的**唯一事實** Excel。每 GW 係數只讀 Tokenomics（TK）快照（快照未含的 `IF_FacilityGW` 直接讀 TK 活頁簿 Interface 第 8 列，`builder/seed/tk_extra_v21.7.json`）、加速器顆數與情景係數只讀 Siliconomics 快照，不重估兩者權威的量。
 
@@ -23,9 +25,11 @@
 
 ```bash
 # 0) 證據有更新時：python3 wattonomics/tools/import_evidence.py; python3 wattonomics/tools/import_funding.py
-# 0b) 個股模型更新且 In Y9 要重取時（v0.1.7 起；平常 In 為權威）：python3 wattonomics/tools/import_gap_models.py（逐家列位寫死並核對標籤，不符即停）
+# 0b) 個股模型更新且 In Y9 要重取時（v0.1.7 起；平常 In 為權威）：python3 wattonomics/tools/import_gap_models.py（逐家列位寫死並核對標籤，不符即停；models_extract.json 未更新的個股在工具內 MODEL_OVERRIDE 覆寫路徑），
+#     之後 build.py 加 --refresh-y9（In Y9 改讀 builder/seed/gap_models_v<版>.json，其餘 In 仍讀 --base）
+# 0c) In 頁輸入更正（例如 T2 已確認延遲 M 欄、延遲證據 P／Q 欄）：python3 wattonomics/tools/apply_in_edits.py <現行.xlsx> wattonomics/edits/v<版>_In_edits.csv <base.xlsx>，再以該檔作 --base
 # 1) 產生（之後各版加 --base wattonomics/model/<現行>.xlsx，In 頁藍字讀回現行 Excel）
-python3 wattonomics/builder/build.py --out build/raw/<YYYYMMDD>_Wattonomics_vX.Y.xlsx
+python3 wattonomics/builder/build.py --base <base.xlsx> --version vX.Y --date <YYYYMMDD> --out build/raw/<YYYYMMDD>_Wattonomics_vX.Y.xlsx   # --version 一律明寫
 # 2) LibreOffice headless 重算存檔（錯誤格須為 0）
 soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir wattonomics/model build/raw/<檔名>.xlsx
 # 3) 匯出快照並指向它
@@ -48,7 +52,7 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 - 證據：只用 `evidence_raw/C_review.md` 判「屬實」或已更正的列；「錯誤」「無法核對」「未抽查」的站點列在 In T2 但納入＝0。
 - 站點時程補證據（J 段，v0.1.5 起）：Epoch 站點時間線的增量只取 2027 年以後的點（相對該站 2026 年底最後一點；2026 年底仍＝觀測＋T2），每點須經未參與代理逐頁重開核對（`evidence_raw/J_review_2027.md`）；發電容量、供電合約、晶片／算力合約不算站點容量；公司層級目標只作對照。覆蓋率報告同時列「七家逐家以主路徑為上限」的覆蓋率（`docs/verify/20261031_v0.1.5_coverage.md` 第 1 節）。
 - 電力證據路徑（K 段，v0.1.6 起）：T2「納入」＝2 的列為監理機關已核准、指定單一園區的供電合約（只計確定 MW），不入 Players／Pipeline，只進 `WIF_Coverage_Power_<yyyy>`（參考用，Checks 不以此判定）；未核准合約列納入＝0。注意：Deploy 2030–2032 年的年新增（主路徑與 SiteOnly）＝前一年年底 × g，2030–2032 的站點證據只反映在 Players，不進市場覆蓋率（判斷題 K4，v0.2 決定）。
-- 資金缺口（Gap 頁，規劃 `docs/plan/20261031_主要玩家資金缺口_規劃.md`；Andy 2026-10-31 規格）：成本＝AI 資料中心資本支出＝新增 GW × 每 GW 建置成本（土地、廠房、設備；TK `IF_CapexTotal`，與 Spend 頁供應商營收同一套；Andy 2026-10-31 10:22），每 GW 只在擁有者計一次，大玩家之間的租賃不重複計算；資金來源＝全公司營業現金流（本業＋AI）；不扣股票買回與股利（Andy 2026-10-31 04:20：資金不夠時可能減少，寬容處理；另列備忘）；輸出自籌比、缺口與所需融資（股權、債務、租賃與表外合資），並與已觀測融資對比；判讀「OpenAI 型」（持續需要大規模融資）或「Anthropic 型」（數年後轉正）。互動頁在需求與延遲選擇器下方，以「整個市場當一間公司」畫逐年「需要多少錢 vs 錢從哪來」與尚需新融資（10:22）。
+- 資金缺口（Gap 頁，規劃 `docs/plan/20261031_主要玩家資金缺口_規劃.md`；Andy 2026-10-31 規格）：成本＝AI 資料中心資本支出＝新增 GW × 每 GW 建置成本（土地、廠房、設備；TK `IF_CapexTotal`，與 Spend 頁供應商營收同一套；Andy 2026-10-31 10:22），每 GW 只在擁有者計一次，大玩家之間的租賃不重複計算；資金來源＝全公司營業現金流（本業＋AI）；不扣股票買回與股利（Andy 2026-10-31 04:20：資金不夠時可能減少，寬容處理；另列備忘）；輸出自籌比、缺口與所需融資（股權、債務、租賃與表外合資），並與已觀測融資對比；判讀「OpenAI 型」（持續需要大規模融資）或「Anthropic 型」（數年後轉正）。互動頁以「整個市場當一間公司」畫逐年「需要多少錢 vs 錢從哪來」與尚需新融資（10:22）；v0.1.8 起只用基準（A／D0），逐家表含「新增 GW」欄，合計＝逐年數字（Andy 11-02 15:13）。
   - Andy 原話（2026-10-31）：04:13「他們大玩家之間的租賃什麼的，就不要重複計算到了」「營收賺的不只是 AI 帶來的營收，還有…他們的本業」；04:20「那個股票買回跟股利就先不要算好了，寬容一點。畢竟如果他們真的資金不夠的時候，有可能會減少股票買回跟股利」；10:22「依照我們…追蹤到這個市場總共要蓋幾 G 瓦的 data center，然後每座 data center 要花多少錢來判斷」「以建設 data center 所需要的土地、廠房、設備，所需要花的錢作為依據，這樣才可以跟對得上那些供應商的營收」「把整個市場當做一間公司，他要蓋那麼多的 data center，需要多少錢？然後目前錢準備夠了嗎？」
   - chat 端定案（v0.1.7）：(a) 已簽未起租租賃與表外合資承諾屬市場內部移轉，只列備忘，不作資金來源；主讀法「累計仍未安排」＝累計尚需 − 期初現金。(b) 玩家有營業現金流、但無 GW 證據致 AI 資本支出為 0 的年份，改用個股模型 AI 資本支出並標示。(c) 並列讀法 `*_ModelCapex`：七家 2027–2030 改用個股模型 AI 資本支出。(d) 模型無非 AI 拆分時，非 AI＝In Y2 資本支出（曆年化）×（1 − AI 占比），使七家需要量合計等於其資本支出。(e) 不扣買回與股利。(f) 玩家以自己的世代與晶片組合計每 GW 成本（與 CapexGW 由資本支出換算 GW 同一組成本，避免換算來回不一致）；r5（Andy 12:58）起市場其餘不進收支，只留參考列。
 - 資金缺口的範圍（Andy 2026-10-31 12:58）：「我們的那個主要玩家其實就是不要放…中國公司」「就拿我們那十一家當做代表來計算就好了，這樣是比較單純一點」「但是呢，我們還是要保留中國還有其他廠商，因為他們的需求會影響到我們下游，例如 Siliconomics…還有更下面的個股的營收」「不然上面需求有寫那個其他，可是算現金流的時候又沒有，那其實也是很奇怪」。規則：Gap 收支只算 **11 家代表玩家（本專案覆蓋，不含中國）**——Microsoft、Alphabet、Amazon、Meta、Oracle、CoreWeave、Nebius、WhiteFiber、SpaceX／xAI、OpenAI、Anthropic；中國與其他廠商（其他新雲、主權 AI、OpenAI／Stargate SPV、企業學研）的需求保留在全市場 GW、Deploy、Spend 與 Gap 參考列（`WIF_Gap_MktRestMemo_<yyyy>`），供 Siliconomics 與個股讀取，不納入收支；11 家年新增 GW 依市場年新增比例 r(s,D)＝市場（s,D）÷ 市場（A,D0）縮放 [Assumed]。互動頁（13:04）：Gap 區塊固定基準需求 A，只隨延遲 D0／D1／D2 變；區塊內只留一行 11 家占全市場比例。
@@ -57,7 +61,23 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 - 下游只讀 Interface 的 `WIF_` 名稱（經快照）。
 - 本 repo 為公開 repo：不放 Andy 的個人情境或先驗。
 
-## 固定規格（Andy 2026-10-28；規劃書第 3、4 節）
+## 固定規格（Andy 2026-10-28；規劃書第 3、4 節；2026-11-02 增訂）
+
+### 三層只給基準（Andy 2026-11-02）
+
+- 原話（11-02 15:58）：「Tokenomics(1GW單位基準)，Wattonomics(tokoenomics的全市場版)及Siliconomics(Wattonomics的零部件版)都只要提供基準版的數據就好。情境只留在下游取用的個股。個股才根據自身狀況作情境分析與預估。Siliconomics對帳的時候，只對個股的基準情境加總。Tokenomics及Wattonomics也是照這個原則處理。」
+- Wattonomics 基準＝需求 A × 延遲「D0＋已確認延遲」（Pipeline 基準時點＝公告上線年月＋In T2 M 欄已確認延遲月）。`*_A_D0_*` 名稱即基準名稱，不另加 `_Base_` 別名。需求 B、C 與延遲 D1、D2 的公式、名稱（含 `WIF_ShippedNotOnline_*`、Gap 頁非 A／D0 衍生名稱）保留照算，標〔停用，v0.2 刪〕，不進任何收支或頁面。
+- 資金缺口（Gap）、互動頁、判讀、累計只讀基準。
+
+### 地位鏈與對帳方向（Andy 2026-11-02）
+
+- 原話（11-02 16:22）：「3-nomics與個股的地位鏈應該是Tokenomics->Wattonomics->Siliconomics->覆蓋個股；對帳的時候則反過來: 覆蓋個股->Siliconomics->Wattonomics->Tokenomics。若對帳時差很大……則先用自己的數字，在較上游趕快更新後彼此對帳。」
+- 地位鏈：Tokenomics → Wattonomics → Siliconomics → 覆蓋個股；對帳方向：覆蓋個股 → Siliconomics → Wattonomics → Tokenomics，只對基準情境加總。落差很大時各層先用自己的數字，較上游儘快更新後再對帳。
+
+### 已確認延遲門檻（工作單 20261102 E12；判斷題，交 Andy，預設如下）
+
+- 寫入基準（In T2 M 欄）的條件：**公司本身揭露，或兩家以上獨立可信媒體報導且公司未否認**；每筆須由未參與代理開原文核對（`evidence_raw/D_review_<日期>.md`），判「屬實」才寫入，並在 T2 P 欄填證據 ID、Q 欄填確認等級（Checks D-K2）。公司否認者（例：D#16 Oracle，Bloomberg 報導、Oracle 否認）只列 Delay 頁追蹤「報導、公司否認」，M＝0。公司公告時程本身屬 Interested-party。
+- 逐站追蹤：Delay 頁與 `WIF_Delay_<玩家|Rest|Mkt>_<AnnGW|DelayedGW|AvgMo|Share>`；互動頁「延遲逐站追蹤」區塊。
 
 ### 對帳鏈（每一環都是一列「左值、右值、比、容許帶、狀態」）
 
@@ -77,12 +97,16 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 - 容許帶預設 ±15%（[Assumed]，In `tolband`）；雙方皆 [Verified] 才判「對得上／偏差」，否則標「證據不足」（附帶內／帶外）。超出容許帶時列出可能原因，不自動調參數。
 - 推導方向：公司公告 GW 屬 [Interested-party]。瓦帳同時算兩條：(甲) 公告路徑；(乙) 實體可支撐路徑＝MIN（CoWoS→顆數→GW、HBM、併網、發電機組、變壓器）。主輸出是兩者差距與最先綁定的瓶頸，不以公告值反推參數。v0.1 只有 (甲)。
 
-### 需求情景名稱（Andy 2026-11-02）
+### 需求情景名稱（Andy 2026-11-02）〔停用，v0.2 刪〕
+
+- v0.1.8 起三層只給基準（上節），本節與下節只保留作 v0.2 刪除前的定義紀錄；互動頁已拿掉需求與延遲按鈕。
 
 - 需求情景 **A 樂觀、B 基準、C 保守**（定義與係數權威在 Siliconomics：A＝顆數係數 1、B 2028–29 為 0.8／0.85、C 為 0.6；Siliconomics 原名順利／平平／不如預期，2026–2027 年三者相同）。互動頁預設與資金缺口區塊的「基準需求」＝**B**（Andy 10-31 13:04「直接用一個基準需求」）；Spend 頁與 `WIF_Gap_Player_*` 仍為 A／D0（Excel 只算一組），頁面標「樂觀 A」。
 - 互動頁標頭顯示版本、資料日期（取自 Excel 檔名）與頁面產生時間（`explorer/build_page.py`）。
 
-### 基建延遲情景（供給側、與需求情景 A／B／C 正交的第二軸）
+### 基建延遲情景（供給側、與需求情景 A／B／C 正交的第二軸）〔停用，v0.2 刪〕
+
+- v0.1.8 起基準＝D0＋已確認延遲（見「已確認延遲門檻」）；D1、D2 公式保留、不進收支或頁面。下表為停用前的定義。
 
 - 互動頁名稱（Andy 2026-11-02）：D0 準時（公司公告時程，偏樂觀）、D1 基準延遲（依 2025 實測校準：Sightline 排定容量 26% 延遲）、**D2 壓力情境**（瓶頸證據屬實，但再延比例 40% 與 12 個月無實測，為假設）。Excel 標籤於 v0.1.8 一併改。
 
@@ -99,23 +123,25 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 | 頁 | 內容 |
 |---|---|
 | README | 命題、驅動 → 推導圖、頁面、版本 |
-| In | S 純量（單位換算、容許帶、lag_bldg、g_lt、延遲 D1／D2、玩家最新觀測、合約與租賃、NonNV 覆寫、財年月）；Y 年度（玩家年底 MW、個股資本支出、非 AI 資本支出、使用者總量、第三方總量、世代組合）；T1 營運者→使用者分攤；T2 園區管線 |
+| In | S 純量（單位換算、容許帶、lag_bldg、g_lt、延遲 D1／D2、玩家最新觀測、合約與租賃、NonNV 覆寫、財年月）；Y 年度（玩家年底 MW、個股資本支出、非 AI 資本支出、使用者總量、第三方總量、世代組合）；T1 營運者→使用者分攤；T2 園區管線；v0.1.8：S7 Wattonomics 自有參數 `lag_on`（4.5 月；3–6）、`inv_on`（0.10；0.05–0.20）、`oth_gmult`（1；0–1.5）；T2 M 欄改稱「已確認延遲月」（進基準），新增 P 欄（延遲證據 ID）、Q 欄（確認等級／追蹤狀態） |
 | TK_In、SIL_In | 鏡像（綠字） |
 | Players | 玩家 × 年 IT GW（甲：公告路徑；輸入→晶片換算→觀測→內插→園區延伸），低／高、年平均、年新增、新納入存量、設施 GW；規則見 Decisions GL01-03 |
 | Matrix | 營運者 × 使用者（2025–2027 年底；In T1 逐筆分配），無揭露者在未分配欄 |
-| Pipeline | 園區＋未分園區殘差 × D0／D1／D2 |
-| CapexGW | 甲2：七家資本支出（個股模型 annualEstimates／指引）× AI 占比（`ai_sh` 0.75／0.85／0.95，Amazon 0.68）÷ TK `IF_CapexTotal`（世代加權，NonNV × 持有比；建物提前 `lag_bldg`）＝年新增 IT GW；敏感度列 |
-| Deploy | 需求 A／B／C × 延遲 D0／D1／D2；2030–32 年底 GW 年增率由 2029 線性收斂到 `g_lt`（0.10，0.05–0.15）|
-| C0、C1、Compare | 對帳與並列；C1 七家 2027 起標「同源（不對帳）」，C1b 廣義口徑（資本支出含融資租賃＋尚未起租變化；Microsoft 改列營業租賃問題）；Compare 含 xAI 宣稱（不入主路徑）、AI 占比、lag 敏感度 |
+| Pipeline | 園區＋未分園區殘差 × 延遲；v0.1.8 起 D0 欄＝基準（公告＋已確認延遲，In T2 M 欄），D1／D2〔停用，v0.2 刪〕 |
+| Delay（v0.1.8） | 延遲逐站追蹤：逐家（11 家＋其餘＋全市場）公告上線 GW（T2 有效納入、公告上線年 ≥ 2026）、已確認延遲 GW、平均延遲月（IT GW 加權）、延遲占比；明細（T2 有延遲證據或 M＞0 的園區）；無 T2 列的候選追蹤表（D#16、D#19）；`WIF_Delay_*` |
+| CapexGW | 甲2：七家資本支出（個股模型 annualEstimates／指引）× AI 占比（`ai_sh` 0.75／0.85／0.95，Amazon 0.68）÷ TK `IF_CapexTotal`（世代加權，NonNV × 持有比；建物提前 `lag_bldg`）＝年新增 IT GW；敏感度列；v0.1.8：七家改讀 In Y9（缺年用 Y2，標代入），t−1、t−2 缺值代入（缺 t−2 用 t−1、兩者皆缺用當年），付款年經 `lag_on`、`inv_on` 轉上線年，2026 起進主路徑；另列 xAI（SpaceX 模型 AI 資本支出 ÷ Gap 同式每 GW；E8）與其他（隨市場成長；E9），主路徑調整 2026–2029 |
+| Deploy | 需求 A／B／C × 延遲 D0／D1／D2；2030–32 年底 GW 年增率由 2029 線性收斂到 `g_lt`（0.10，0.05–0.15）；v0.1.8：基準＝A／D0（公告＋已確認延遲），B、C、D1、D2〔停用，v0.2 刪〕；年新增標「毛額，未扣汰換（汰換列 v0.2）」；覆蓋率自 2026 起計算 |
+| C0、C1、Compare | 對帳與並列；C1 七家 2027 起標「同源（不對帳）」，C1b 廣義口徑（資本支出含融資租賃＋尚未起租變化；Microsoft 改列營業租賃問題）；Compare 含 xAI 宣稱（不入主路徑）、AI 占比、lag 敏感度；v0.1.8 起「同源」自 2026 起（含 xAI） |
 | Funding、FundRaw | 玩家 × 期間（2024、2025、2026 最新）營業現金流、資本支出（現金／含融資租賃）、自由現金流、債（公司債、定期貸款、GPU 擔保債、私募信貸）、淨負債變化、新增融資租賃、尚未起租、表外合資、股權、供應商融資、買回＋股利；資金來源比例兩種口徑：【支付順序】內部→租賃→股權→債→其餘（外部資金排在營業現金流之後，營業現金流足以支付時外部比例為 0）；【總額】期間外部資金全額（發債＋定期貸款＋GPU 債＋私募信貸＋新增融資租賃＋表外合資＋股權）÷ 資本支出，與營業現金流 ÷ 資本支出並列（可合計 > 100%）；互動頁預設總額口徑；循環融資 17 條。只用 G 段判屬實或已更正列 |
 | Gap（v0.1.7） | 資金缺口：每 IT GW 建置成本（IT＝Spend 同式、廠房＝CapexGW 同式；土地、建築、配電、冷卻、發電機、IT 等項目展開）；玩家層 11 家代表玩家（本專案覆蓋，不含中國）× 2024–2030：AI 資料中心資本支出（新增 GW × 每 GW，擁有者口徑，廠房提前 `lag_bldg`）、非 AI 資本支出、營業現金流（個股模型基準，In Y9）、自籌比、缺口、買回＋股利備忘、已觀測融資與推算尚需、判讀；「11 家代表玩家當一間公司」× 需求 A／B／C × 延遲 D0／D1／D2（11 家年新增 GW × r）：需要兩層（11 家 AI、11 家非 AI）、來源兩層（營業現金流、已觀測外部融資 2024–2025）、尚需新融資、累計尚需與累計仍未安排（扣期初現金；承諾只列備忘）；市場其餘只留一列參考；無 GW 證據的玩家年份改用個股模型 AI 資本支出；並列讀法「七家依個股模型資本支出」、判讀（每情景一個）；A／D1 各玩家累計缺口分配；敏感度 M1（每 GW 用市場平均）。判斷題 G1–G6 見 Decisions GL01-25 至 GL01-38 |
 | Facility | 每 IT GW 廠房 12.67（TK）拆分：配電、備援發電機（1.6 × 1.0）、UPS、冷卻、建築、人工設計、其他專業服務、網路消防、土地、殘差；自建發電另列（1.44 GW × 1.6 $M/MW，× 自建比例 0.10／0.20／0.35）；主變 2.0 GVA 為判斷值；市場層＝主路徑年新增 × 每 GW |
 | SegIn、Spend | AI半導體 次產業「GB300 對照 ÷ IT」比例鏡像；年 × 項目市場金額（IT 8 項＋廠房＋自建發電） |
-| Interface | `WIF_Coverage_<yyyy>`；`WIF_Spend_<項目>_<yyyy>`、`WIF_Facility_<項目>_<yyyy>`、`WIF_Funding_<玩家>_<期間>_<項目>`；`WIF_MktGW_YE／Avg／Add_<A|B|C>_<D0|D1|D2>_<yyyy>`、`WIF_ShippedNotOnline_<A|B|C>_<D1|D2>_<yyyy>`、`WIF_PlayerGW_YE_<player>_<yyyy>`（主路徑），同名加 `_SiteOnly` 後綴＝只有 甲；2024–2032；v0.1.7 起 `WIF_Gap_*`（2024–2030）：`WIF_Gap_PerGW_<yyyy>`、`WIF_Gap_Item_<項目>_<yyyy>`、`WIF_Gap_Need／NeedOwn／Short／MktAdd／Ratio／Share11_<A|B|C>_<D0|D1|D2>_<yyyy>`、`WIF_Gap_CumNeed／CumUnarranged_<s>_<D>_<yyyy>`（2026–2030；仍未安排＝累計尚需 − 期初現金）、`*_MemoInclCommitted`（再扣承諾，只作備忘）、並列讀法 `*_ModelCapex_*`（七家 2027–2030 依個股模型 AI 資本支出）、`WIF_Gap_Fallback(Cells)_<yyyy>`（無 GW 證據的模型值替代）、`WIF_Gap_NonAI／OCF／Buyback／OCFMissing_<yyyy>`、`WIF_Gap_ExtObs_<yyyy>`（2024–2025）、`WIF_Gap_OpenCash`、`WIF_Gap_Committed`、`WIF_Gap_ExtObs2026Memo`、`WIF_Gap_BufferCum`、`WIF_Gap_Verdict(_ModelCapex)_<s>_<D>`（文字）、`WIF_Gap_MktRestMemo_<yyyy>`、`WIF_Gap_PlayerCumGap_A_D1_<player>`、`WIF_Gap_CumUnarranged_M1_<s>_<D>_<yyyy>`、`WIF_Gap_Player_<player>_<yyyy>_<OCF|CapexAI|CapexNonAI|Gap|SelfFund|Buyback|CapexAIModel|CapexAIGW|CapexAIMC>`、`WIF_Gap_PlayerCash／PlayerCommitted／PlayerVerdict_<player>` |
-| Checks | 錯誤格 0、Matrix 列和＝欄和＝總量、Pipeline D0＝Players（0.01 GW）、殘差恆等、延遲單調、In 標記與來源、`WGOV_Errors`＝0 |
+| Interface | `WIF_Coverage_<yyyy>`；`WIF_Spend_<項目>_<yyyy>`、`WIF_Facility_<項目>_<yyyy>`、`WIF_Funding_<玩家>_<期間>_<項目>`；`WIF_MktGW_YE／Avg／Add_<A|B|C>_<D0|D1|D2>_<yyyy>`、`WIF_ShippedNotOnline_<A|B|C>_<D1|D2>_<yyyy>`、`WIF_PlayerGW_YE_<player>_<yyyy>`（主路徑），同名加 `_SiteOnly` 後綴＝只有 甲；2024–2032；v0.1.7 起 `WIF_Gap_*`（2024–2030）：`WIF_Gap_PerGW_<yyyy>`、`WIF_Gap_Item_<項目>_<yyyy>`、`WIF_Gap_Need／NeedOwn／Short／MktAdd／Ratio／Share11_<A|B|C>_<D0|D1|D2>_<yyyy>`、`WIF_Gap_CumNeed／CumUnarranged_<s>_<D>_<yyyy>`（2026–2030；仍未安排＝累計尚需 − 期初現金）、`*_MemoInclCommitted`（再扣承諾，只作備忘）、並列讀法 `*_ModelCapex_*`（七家 2027–2030 依個股模型 AI 資本支出）、`WIF_Gap_Fallback(Cells)_<yyyy>`（無 GW 證據的模型值替代）、`WIF_Gap_NonAI／OCF／Buyback／OCFMissing_<yyyy>`、`WIF_Gap_ExtObs_<yyyy>`（2024–2025）、`WIF_Gap_OpenCash`、`WIF_Gap_Committed`、`WIF_Gap_ExtObs2026Memo`、`WIF_Gap_BufferCum`、`WIF_Gap_Verdict(_ModelCapex)_<s>_<D>`（文字）、`WIF_Gap_MktRestMemo_<yyyy>`、`WIF_Gap_PlayerCumGap_A_D1_<player>`、`WIF_Gap_CumUnarranged_M1_<s>_<D>_<yyyy>`、`WIF_Gap_Player_<player>_<yyyy>_<OCF|CapexAI|CapexNonAI|Gap|SelfFund|Buyback|CapexAIModel|CapexAIGW|CapexAIMC>`、`WIF_Gap_PlayerCash／PlayerCommitted／PlayerVerdict_<player>`；v0.1.8：`WIF_Gap_Player_<player>_<yyyy>_AddGW`、`WIF_Gap_Add11_<yyyy>`（＝Σ逐家）、`WIF_Delay_<玩家|Rest|Mkt>_<AnnGW|DelayedGW|AvgMo|Share>`；非基準名稱說明欄標〔停用，v0.2 刪〕 |
+| Checks | 錯誤格 0、Matrix 列和＝欄和＝總量、Pipeline D0＝Players（0.01 GW）、殘差恆等、延遲單調、In 標記與來源、`WGOV_Errors`＝0；v0.1.8：K17b（主路徑上線年新增 < 0，WARN）、G-K2 改（2026 起、含 xAI）、G-K11（Σ逐家 AddGW＝Add11）、D-K1–D-K3（Delay 恆等、M＞0 須有屬實證據、基準時點） |
 | Decisions、DB_Evidence、Sources、Requests | 決策（GL01-01 起）、證據、來源 ID、對 TK／Siliconomics 的請求 |
 
 ## 版本紀錄（摘要；完整見活頁簿 README 頁）
 
+- v0.1.8（2026-11-02）：基準化與上游更新（工作單 `20261102_Wattonomics_v0.1.8_基準化與上游更新.md`）——三層只給基準：基準＝需求 A × 延遲「D0＋已確認延遲」，B、C、D1、D2 標〔停用，v0.2 刪〕；主路徑 2026 起七家一律甲2（讀 In Y9，缺年 Y2 代入；付款年經 `lag_on`、`inv_on` 轉上線年；t−1、t−2 缺值代入），xAI 2026 起以 SpaceX 模型 AI 資本支出推得，「其他（企業、學研）」2026 起隨市場成長；Y9 重取（Anthropic v0.1.7 自建＝0）；新頁 Delay 與 `WIF_Delay_*`；新名稱 `WIF_Gap_Player_<p>_<yyyy>_AddGW`、`WIF_Gap_Add11_<yyyy>`；已確認延遲本版 0 筆（待未參與代理核對）。基準年新增 2026–2030＝19.06／25.67／29.13／27.73／27.88 GW（v0.1.7：12.52／23.96／26.92／27.66／28.07）。既有 `WIF_` 1,613 名變動、新增 136 名。報告 `docs/verify/20261102_v0.1.8_build.md`；R4 r2 `docs/verify/20261102_R4_Wattonomics側歸因_r2.md`。
 - v0.1.7（2026-10-31）：新增 Gap 頁（資金缺口）與互動頁「整個市場當一間公司」區塊（需求、延遲選擇器正下方）；In 新節 Y9（12 家個股模型基準值，`tools/import_gap_models.py`）；`WIF_Gap_*` 1,823 個新名稱（r5：11 家代表玩家）；Checks G-K1–G-K10；Gap 未改動任何既有 `WIF_` 名稱。另合併 Amazon、Meta 2026Q3 10-Q 證據（F#258–275，Q_review 第五節；F#77 由 F#258 取代），因此既有名稱只有 `WIF_Funding_amzn_2026_lnc` 變動（137.214 → 164.922）。報告 `docs/verify/20261031_v0.1.7_gap.md`。
 - v0.1.6（2026-10-31）：K 段 2028H2–2032 證據、`WIF_Coverage_Power_<yyyy>`。
