@@ -49,7 +49,9 @@ def main():
                 nm = f"WIF_PlayerGW_YE_{p}{sfx}_{y}"
                 if nm in names:
                     add("player_gw", player=p, player_name=m["label"].replace(" 年底上線 MW", ""), path=path, year=y, value=val(nm), unit="IT GW",
-                        tag=("Derived（甲2）" if path == "main" and y >= 2027 and p in ("msft", "googl", "amzn", "meta", "orcl", "crwv", "nbis") else m["tag"]),
+                        tag=("Derived（甲2）" if path == "main" and y >= 2026 and p in ("msft", "googl", "amzn", "meta", "orcl", "crwv", "nbis") else
+                             "Derived（模型資本支出推得）" if path == "main" and y >= 2026 and p == "xai" else
+                             "Analogy（隨市場成長）" if path == "main" and y >= 2026 and p == "oth" else m["tag"]),
                         src=m["src"], name=nm)
     # 3) 目標 GW 與時點（園區管線 T2）
     for k, m in meta.items():
@@ -57,7 +59,7 @@ def main():
         r = m["row"]
         g = lambda c: IN.cell(r, c).value
         add("campus", key=k, name_=m["label"], operator=g(8), user=g(9), mw=g(10), basis=m["basis"], online_year=g(11), online_month=g(12),
-            known_delay_m=g(13), included=g(14), power_secured=g(15), tag=m["tag"], src=m["src"], note=m["note"])
+            known_delay_m=g(13), included=g(14), power_secured=g(15), delay_evidence=g(16), delay_grade=g(17), tag=m["tag"], src=m["src"], note=m["note"])
     # 4) 資本支出：In Y2（個股模型，財年）與 CapexGW 甲2
     for k, m in meta.items():
         if not k.startswith("cap_"): continue
@@ -116,6 +118,7 @@ def main():
                 for y in GY:
                     v = {k: (val(f"WIF_Gap_{nm}_{s}_{d}_{y}") if f"WIF_Gap_{nm}_{s}_{d}_{y}" in names else None) for k, nm in MF}
                     v.update(nonai=val(f"WIF_Gap_NonAI_{y}"), ocf=val(f"WIF_Gap_OCF_{y}"), buyback=val(f"WIF_Gap_Buyback_{y}"),
+                             add11=(val(f"WIF_Gap_Add11_{y}") if (s, d) == ("A", "D0") and f"WIF_Gap_Add11_{y}" in names else None),
                              fallback=val(f"WIF_Gap_Fallback_{y}"), fallback_cells=val(f"WIF_Gap_FallbackCells_{y}"),
                              ext_obs=(val(f"WIF_Gap_ExtObs_{y}") if f"WIF_Gap_ExtObs_{y}" in names else None))
                     add("gap", part="market", scen=s, delay=d, year=y, values=v, unit="US$B", tag="Derived", src="Gap",
@@ -130,7 +133,7 @@ def main():
         GPS = sorted({nm.split("_")[3] for nm in names if nm.startswith("WIF_Gap_Player_") and not nm.startswith(("WIF_Gap_PlayerCash", "WIF_Gap_PlayerVerdict", "WIF_Gap_PlayerCommitted"))})
         for p in GPS:
             for y in GY:
-                v = {k: val(f"WIF_Gap_Player_{p}_{y}_{k}") for k in ("OCF", "CapexAI", "CapexNonAI", "Gap", "SelfFund", "Buyback", "CapexAIModel", "CapexAIGW", "CapexAIMC") if f"WIF_Gap_Player_{p}_{y}_{k}" in names}
+                v = {k: val(f"WIF_Gap_Player_{p}_{y}_{k}") for k in ("OCF", "CapexAI", "CapexNonAI", "Gap", "SelfFund", "Buyback", "CapexAIModel", "CapexAIGW", "CapexAIMC", "AddGW") if f"WIF_Gap_Player_{p}_{y}_{k}" in names}
                 add("gap", part="player", player=p, year=y, values=v, unit="US$B（SelfFund 為倍數）", tag="Derived", src="Gap", name=f"WIF_Gap_Player_{p}_{y}_*")
             add("gap", part="player_meta", player=p, open_cash=val(f"WIF_Gap_PlayerCash_{p}"),
                 committed=(val(f"WIF_Gap_PlayerCommitted_{p}") if f"WIF_Gap_PlayerCommitted_{p}" in names else None),
@@ -138,6 +141,17 @@ def main():
         add("gap", part="total", open_cash=val("WIF_Gap_OpenCash"), committed=val("WIF_Gap_Committed"), ext2026_memo=val("WIF_Gap_ExtObs2026Memo"),
             buffer_cum=val("WIF_Gap_BufferCum"), ocf_missing={y: val(f"WIF_Gap_OCFMissing_{y}") for y in GY}, coverage={y: val(f"WIF_Coverage_{y}") for y in GY},
             tag="Derived", src="Gap", note="期初現金只進累計；已簽未起租與表外合資承諾是市場內移轉，只列備忘（G4 更正）；2026 年已觀測融資只列備忘；買回股利不扣（Andy 2026-10-31 04:20）")
+    # 8) 延遲逐站追蹤（v0.1.8；kind＝delay）：逐家 WIF_Delay_*，明細見 campus 的 known_delay_m、delay_evidence、delay_grade
+    DK = sorted({nm.split("_")[2] for nm in names if nm.startswith("WIF_Delay_")})
+    for p in DK:
+        add("delay", player=p, values={k: val(f"WIF_Delay_{p}_{k}") for k in ("AnnGW", "DelayedGW", "AvgMo", "Share") if f"WIF_Delay_{p}_{k}" in names},
+            unit="IT GW（AvgMo＝月；Share＝比）", tag="Derived", src="Delay", note="基準＝公告＋已確認延遲（T2 M 欄；E12 門檻）")
+    if "Delay" in wb.sheetnames:
+        DLs = wb["Delay"]
+        for r in range(1, DLs.max_row + 1):
+            a_ = DLs.cell(r, 1).value
+            if isinstance(a_, str) and a_.startswith("D#"):
+                add("delay_track", id=a_, scope=DLs.cell(r, 2).value, content=DLs.cell(r, 3).value, status=DLs.cell(r, 4).value, tag="Interested-party／報導", src="Delay")
     snap = dict(source=dict(file=os.path.basename(x), sha256=hashlib.sha256(open(x, "rb").read()).hexdigest(),
                             note="Wattonomics（瓦帳）互動頁取數；扁平紀錄，kind 欄區分種類；單位 IT GW（＝TK GW）；下游取用 2027 年後數值前看 coverage",
                             wgov_errors=val("WGOV_Errors")),
