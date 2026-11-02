@@ -39,6 +39,7 @@ def main():
     rows = [(ck.cell(r, 1).value, ck.cell(r, 2).value, ck.cell(r, 6).value) for r in range(4, ck.max_row + 1) if ck.cell(r, 1).value]
     ce = [x_ for x_ in rows if x_[2] == "ERROR"]; cw = [x_ for x_ in rows if x_[2] == "WARN"]
     nok = sum(1 for x_ in rows if x_[2] == "OK")
+    ninfo = sum(1 for x_ in rows if x_[2] == "INFO")   # v0.1.9：INFO 類（對帳點），不計入 ERROR／WARN
     for i, l, s in ce: print(f"  Checks ERROR {i}：{l}")
     for i, l, s in cw: print(f"  Checks WARN  {i}：{l}")
     names = {}
@@ -81,9 +82,11 @@ def main():
                # 資金缺口固定規格（Andy 2026-10-31 04:13、04:20、10:22）
                "資金缺口（Gap 頁", "新增 GW × 每 GW 建置成本", "不扣股票買回與股利", "整個市場當一間公司",
                # v0.1.8 固定規格（Andy 2026-11-02 15:58、16:22；工作單 20261102 E12）
-               "### 三層只給基準", "### 地位鏈與對帳方向", "### 已確認延遲門檻", "公司本身揭露，或兩家以上獨立可信媒體報導且公司未否認", "〔停用，v0.2 刪〕"):
+               "### 三層只給基準", "### 地位鏈與對帳方向", "### 已確認延遲門檻", "公司本身揭露，或兩家以上獨立可信媒體報導且公司未否認", "〔停用，v0.2 刪〕",
+               # v0.1.9（工作單 20261102 F4–F8）：NVIDIA 對帳點只並列、不校準
+               "### NVIDIA 資料中心營收對帳點", "只並列、不校準"):
         if kw not in txt: bad.append(f"wattonomics/README.md 缺固定規格：{kw}")
-    print(f"{os.path.basename(x)}：頁面 {len(wb.sheetnames)}、具名範圍 {len(names)}（WIF_ {len(gif)}）、Checks {len(rows)} 項（OK {nok}／WARN {len(cw)}／ERROR {len(ce)}）、"
+    print(f"{os.path.basename(x)}：頁面 {len(wb.sheetnames)}、具名範圍 {len(names)}（WIF_ {len(gif)}）、Checks {len(rows)} 項（OK {nok}／WARN {len(cw)}／ERROR {len(ce)}／INFO {ninfo}）、"
           f"In 輸入列 {nrow}（待證據 {pend}）、錯誤格 {nerr}")
     if bad:
         print("不通過：", "；".join(bad)); sys.exit(1)

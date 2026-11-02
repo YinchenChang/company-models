@@ -62,7 +62,7 @@ def main():
             known_delay_m=g(13), included=g(14), power_secured=g(15), delay_evidence=g(16), delay_grade=g(17), tag=m["tag"], src=m["src"], note=m["note"])
     # 4) 資本支出：In Y2（個股模型，財年）與 CapexGW 甲2
     for k, m in meta.items():
-        if not k.startswith("cap_"): continue
+        if not k.startswith("cap_") or k == "cap_g_ext": continue   # v0.1.9：cap_g_ext 是純量（低／基準／高），不是玩家資本支出
         r = m["row"]
         for j, y in enumerate(range(2023, 2033)):
             v = IN.cell(r, 8 + j).value
@@ -76,8 +76,10 @@ def main():
             for j, y in enumerate(range(2023, 2033)):
                 v = CX.cell(r, 4 + j).value
                 if isinstance(v, (int, float)):
+                    # v0.1.9 F2（核對意見 D2）：v0.1.8 起 In Y9 優先、缺年 In Y2；capex_gw 為付款年（<p>_gw 列），上線年見 CapexGW 主路徑列
+                    extra = {"basis": "付款年"} if f == "gw" else {}
                     add({"gw": "capex_gw", "cy": "capex_calendar", "ai": "capex_ai"}[f], player=p, year=y, value=v,
-                        unit="IT GW" if f == "gw" else "US$B", tag="Derived", src="CapexGW", note="輸入為 Interested-party／共識（In Y2）")
+                        unit="IT GW" if f == "gw" else "US$B", tag="Derived", src="CapexGW", note="輸入為 Interested-party／共識（In Y9 優先、缺年 In Y2）", **extra)
     # 5) 資金來源（Funding 頁每列）
     FD = wb["Funding"]
     hdr = [FD.cell(4, c).value for c in range(1, FD.max_column + 1)]
