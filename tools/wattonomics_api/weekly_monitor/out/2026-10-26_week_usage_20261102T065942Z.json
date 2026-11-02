@@ -1,0 +1,17 @@
+{
+  "tool": "weekly_monitor",
+  "run": "2026-10-26_week",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 928090,
+  "output_tokens": 17103,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "web_search_requests": 66,
+  "requests_batch": 11,
+  "requests_standard": 0,
+  "est_usd": 1.6736,
+  "started_utc": "2026-11-02T06:59:42Z",
+  "finished_utc": "2026-11-02T07:02:16Z",
+  "status": "done",
+  "items": 10
+}
