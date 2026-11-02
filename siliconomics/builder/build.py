@@ -785,8 +785,8 @@ def main():
             c = RC.cell(r, 3 + j, f'=IF(ABS({col}{RCROW["soc_ratio"]}-1)<=rc_tol,"一致",IF(LEN({col}{RCROW["soc_ev"]})>0,"時差","待診斷"))'); c.fill = KEY
         RCROW["soc_st"] = r; r += 2
         r4 = rsnap["markets"]["r4"]
-        RC.cell(r, 1, "B. R4 部署 GW（本庫推得淨新增上線 IT GW vs Wattonomics 主路徑；情境 A、D0，與 R4 橋接 r1 可比）").font = BOLD; r += 1
-        RC.cell(r, 1, "本庫推得淨新增上線 IT GW"); RC.cell(r, 2, "r4_bridge b8（出貨年→上線年、庫存、汰換、ASIC 實體換算後）")
+        RC.cell(r, 1, "B. R4 部署 GW（本庫推得新增上線 IT GW vs Wattonomics 主路徑；口徑同對方主路徑〔v0.1.8 起毛額〕；本庫情境 A，與算力收支 R4 歸因 r2 可比）").font = BOLD; r += 1
+        RC.cell(r, 1, "本庫推得新增上線 IT GW"); RC.cell(r, 2, "r4_bridge b8（ASIC 實體換算、出貨年→上線年、庫存；Wattonomics 為毛額時不扣汰換）")
         for j, v in enumerate(r4["sil_online"]):
             c = RC.cell(r, 4 + j, v); c.font = GREEN; c.number_format = "0.00"
         RC.cell(r, 8, r4["ref"]); RCROW["r4_s"] = r; r += 1
