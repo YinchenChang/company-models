@@ -1,5 +1,16 @@
 # Siliconomics 變更紀錄
 
+## v0.11（2026-11-02；`model/20261102_Siliconomics_v0.11.xlsx`；Tokenomics v21.7）
+
+- **新增 Recon 頁（由下往上對帳）**：依工作方式 v1.7 第 8 節（Andy 11-02：三層只給基準、對帳方向 覆蓋個股 → Siliconomics → Wattonomics → Tokenomics）。個股值與 R4 值來自版本固定快照 `data/recon_snapshot_v0.11.json`（`tools/recon.py` 產生；`data/CURRENT_RECON` 指向），不即時連結個股成品，避免反向依賴與 CI 漂移。狀態以公式判定：|比值 − 1| ≤ `rc_tol`＝一致；超出且有已寄出的 `交流/` 證據送件（`builder/seed/recon_evidence_v0.11.json`）＝時差；其餘＝待診斷。
+  - A 節 SoC 測試機：Advantest＋泰瑞達基準情境份額 2025 90.9%、2026–29 98.1%，對預期 96%（1 − 其他廠 4%）全部「一致」；Checks K6-soc。
+  - B 節 R4 部署 GW（讀 Wattonomics v0.1.8 基準，毛額）：比值 0.916／0.710／0.553／0.442（2026–29）；2026「一致」、2027「時差」（11-02 已送 NVIDIA 指引證據）、2028、2029「待診斷」；Checks K9（待診斷格數，WARN）。
+  - C 節列出已由本庫份額表約束的市場（結構一致）；D 節列出未建對帳的市場（GPU／ASIC 晶片金額、CoWoS、設備、PCB／CCL、光學總量，v0.12 起）。
+- 新增 In 頁 M27：`rc_tol` 0.15（0.10–0.20，Assumed，判斷類預設）、`rc_soc_oth` 0.04（0.02–0.07，Analogy）。決策 S32、S33（個股基準情境取 B，待 Andy）。
+- 標記與區間更正（決策 S34）：`hbm_hbp_27` 高值 0.05 → 0（2027 不分歧，與 Equip 頁 D 節、韓美、Interface 一致）；`u_rb_28`、`u_bw_28` 原文為 Assumed 卻標 Interested-party → 改標 Assumed，區間 5.0–9.0、0–1.0（基準不變）；`nd_sh_essd25` 改標 Derived；混合鍵合列名「研削工序」改「HBM 工序比例」；`u_rb_27` 第二來源欄補 NVIDIA 營收指引交叉檢驗。
+- `tools/r4_bridge.py`：Wattonomics 停用情境後改讀基準列（找不到 A／D0 時）；每次升版都跑，Wattonomics v0.1.8 主路徑改為毛額時 ④ 汰換不扣（旗標 `wt_gross`）；本版報告 `docs/reports/r4_bridge/20261102_R4對帳橋接_Siliconomics側_r2.{md,xlsx}`，與算力收支 R4 歸因 r2 逐值相同。
+- 下游（cascade 兩輪，第二輪全部 SAME）：**BESI** 情境 A 2027 混合鍵合由讀高值 5% 改為 0，FY2027 EPS（A）6.96 → 7.10，加權目標價 €157.28 → €157.42（+0.09%），上檔空間 +8.4% → +8.5%，中立不變；**Disco** 只有 Sens 頁（混合鍵合高值案例）；**韓美** In 頁一格（高值）；SK 海力士、美光、三星、NAND 市場層與 UMC、世界、日月光、旺矽、台燿、Arm 只有上游版本或標記文字。其餘目標逐格相同。
+
 ## v0.10（2026-10-31；`model/20261031_Siliconomics_v0.10.xlsx`；Tokenomics v21.7）
 
 - 輸入值變更（次版）：NAND 季價 `nq_6`（2026Q3）0.15 → 0.25（Verified：Kioxia、SK 海力士實現平均售價季增 mid-20%）；`nq_7`（2026Q4）0.175 → `=(1+0.15)*(1+0.175)/(1+0.25)-1`＝0.081（Derived；低 0.032／高 0.175）。2026Q4 起價格指數水準不變。

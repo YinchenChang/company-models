@@ -21,8 +21,15 @@ soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir si
 # 3) 匯出快照並指向它
 python3 siliconomics/tools/export_snapshot.py siliconomics/model/<檔名>.xlsx siliconomics/data/siliconomics_snapshot_vX.Y.json
 echo siliconomics_snapshot_vX.Y.json > siliconomics/data/CURRENT_SNAPSHOT
-# 4) 下游全部重建（CI ai-semis-build）：數值變動須全部落在本版預期範圍內
+# 4) 對帳（v0.11 起每次升版都跑）：R4 橋接 → Recon 快照 → 以快照重建本版（Recon 頁）
+python3 siliconomics/tools/r4_bridge.py build/r4_raw.xlsx && soffice --headless --calc --convert-to xlsx:"Calc MS Excel 2007 XML" --outdir build build/r4_raw.xlsx
+cp build/r4_raw.xlsx siliconomics/docs/reports/r4_bridge/<YYYYMMDD>_R4對帳橋接_Siliconomics側_r<N>.xlsx
+python3 siliconomics/tools/recon.py siliconomics/docs/reports/r4_bridge/<該檔> siliconomics/data/recon_snapshot_vX.Y.json
+echo recon_snapshot_vX.Y.json > siliconomics/data/CURRENT_RECON   # 之後回到步驟 1 以 --base 重建一次
+# 5) 下游全部重建（CI ai-semis-build）：數值變動須全部落在本版預期範圍內
 ```
+
+對帳狀態（Recon 頁）：|比值 − 1| ≤ 容差＝一致；超出且有已寄出的 `交流/` 證據送件（登錄在 `builder/seed/recon_evidence_v*.json`）＝時差；其餘＝待診斷（Checks K9）。只加總覆蓋個股的**基準情境**（工作方式 v1.7）。
 
 ## 原則（比照 Tokenomics CLAUDE.md）
 

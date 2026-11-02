@@ -134,16 +134,28 @@ DPL = W["Deploy"]
 
 
 def wt_row(ws, label, scen, delay):
-    for rr in ws.iter_rows(values_only=True):
-        if rr[0] == label and rr[1] == scen and rr[2] == delay:
+    """先找（列名、需求情景、延遲）；Wattonomics 停用情境後（工作方式 v1.7）改找同列名的基準列（情境欄空白或『基準』）。"""
+    rows = [rr for rr in ws.iter_rows(values_only=True) if rr[0] == label]
+    for rr in rows:
+        if rr[1] == scen and rr[2] == delay:
             return rr
-    raise KeyError(label)
+    for rr in rows:
+        if rr[1] in (None, "", "基準", "Base") and rr[2] in (None, "", "基準", "Base", delay):
+            print(f"注意：Wattonomics「{label}」找不到 {scen}／{delay}，改讀基準列", file=sys.stderr)
+            return rr
+    raise KeyError(f"Wattonomics 找不到列「{label}」（{scen}／{delay} 或基準）；請確認 Wattonomics 是否改列名")
 
 
-new = wt_row(DPL, "年新增 IT GW（淨，不含新納入存量）", "A", "D0")
+# Wattonomics v0.1.8 起主路徑列改為毛額（未扣汰換）：比較改用毛額，④ 汰換不扣（wt_gross＝1）
+try:
+    new = wt_row(DPL, "年新增 IT GW（淨，不含新納入存量）", "A", "D0"); wt_gross = 0
+except KeyError:
+    new = wt_row(DPL, "年新增 IT GW（毛額，未扣汰換〔汰換列 v0.2〕；不含新納入存量）", "A", "D0"); wt_gross = 1
 ye = wt_row(DPL, "年底上線 IT GW", "A", "D0")
 site = wt_row(CMP, "瓦帳 年新增 IT GW（淨；SiteOnly）", "A", "D0")
 WTY = {2023: 3, 2024: 4, 2025: 5, 2026: 6, 2027: 7, 2028: 8, 2029: 9}
+inp("wt_gross", "Wattonomics 主路徑為毛額（1）或淨額（0）", "旗標", None, wt_gross, None, "Derived",
+    f"{wt_f} Deploy 列名；毛額時 ④ 汰換不扣，兩邊都以毛額比較（Wattonomics 汰換列排 v0.2）")
 for y in YRS:
     inp(f"wt_new_{y}", f"Wattonomics 年新增 IT GW（主路徑）{y}", "GW", None, new[WTY[y]], None, "Derived", f"{wt_f} Deploy（A、D0）")
     inp(f"wt_site_{y}", f"Wattonomics 年新增 IT GW（SiteOnly）{y}", "GW", None, site[WTY[y]], None, "Derived", f"{wt_f} Compare（A、D0）")
@@ -195,13 +207,13 @@ brow("b4", "② 出貨年 → 上線年", "−lag ×（當年實體出貨 − �
      lambda y: None if y == 2025 else f"=-lag*({C(y)}{R['b3']}-{CL(YC[y]-1)}{R['b3']})")
 brow("b5", "③ 已出貨未上線庫存增加", "−inv_k ×（當年實體出貨 − 前一年）",
      lambda y: None if y == 2025 else f"=-inv_k*({C(y)}{R['b3']}-{CL(YC[y]-1)}{R['b3']})")
-brow("b6", "④ 汰換（毛 → 淨）", "−汰換率 × Wattonomics 前一年年底在役 GW",
-     lambda y: None if y == 2025 else f"=-retire*wt_ye_{y-1}")
+brow("b6", "④ 汰換（毛 → 淨）", "−汰換率 × Wattonomics 前一年年底在役 GW；Wattonomics 主路徑為毛額時不扣（wt_gross）",
+     lambda y: None if y == 2025 else f"=-retire*wt_ye_{y-1}*(1-wt_gross)")
 brow("b7", "⑤ 中國", "兩邊都含中國（Siliconomics：H200 等出貨；Wattonomics：Rystad 容量 × AI 占比），不調整；見 b7m",
      lambda y: None if y == 2025 else 0)
 brow("b7m", "　（揭露）Siliconomics 中國 H200 成本等值 GW", "hp capex ÷ 每 GW；昇騰在『其他 ASIC』內未拆",
      lambda y: None if y == 2025 else f"=cap_hp_{y}/pgw_{y}")
-brow("b8", "Siliconomics 推得 淨新增上線 IT GW", "b3 + ② + ③ + ④ + ⑤",
+brow("b8", "Siliconomics 推得 新增上線 IT GW（口徑同 Wattonomics 主路徑：淨或毛額）", "b3 + ② + ③ + ④ + ⑤",
      lambda y: None if y == 2025 else f"={C(y)}{R['b3']}+{C(y)}{R['b4']}+{C(y)}{R['b5']}+{C(y)}{R['b6']}+{C(y)}{R['b7']}", True)
 brow("b9", "Wattonomics 年新增 IT GW（主路徑，A、D0）", "", lambda y: f"=wt_new_{y}", True)
 brow("b9s", "　Wattonomics SiteOnly", "只有站點證據", lambda y: f"=wt_site_{y}")
@@ -230,7 +242,7 @@ def derived(y, lag="lag", inv="inv_k", ret="retire", hold=None, non25="nonnv_25"
         if yy == 2025:
             return f"((dep_2026-{b2a(2026)})*{nvs}*(nv_dc_25/nv_dc_26)*(pgw_2026/pgw_25)+{b2b(2026)}*{non25})"
         return f"((dep_{yy}-{b2a(yy)})*{nvs}+{b2b(yy)})"
-    return f"{b3(y)}-({lag}+{inv})*({b3(y)}-{b3(y-1)})-{ret}*wt_ye_{y-1}"
+    return f"{b3(y)}-({lag}+{inv})*({b3(y)}-{b3(y-1)})-{ret}*wt_ye_{y-1}*(1-wt_gross)"
 
 
 cases = [("基準", {}), ("延遲 低（3 個月）", dict(lag="lag_lo")), ("延遲 高（6 個月）", dict(lag="lag_hi")),

@@ -1,0 +1,30 @@
+[
+ {
+  "after_section_end": "M26.",
+  "section": "M27. 對帳參數（Recon 頁；工作方式 v1.7 第 8 節：覆蓋個股基準情境加總 → Siliconomics → Wattonomics）",
+  "rows": [
+   {
+    "id": "rc_tol",
+    "label": "對帳容差（比值偏離 1 的上限；一致／時差／待診斷判定用）",
+    "unit": "%",
+    "lo": 0.10,
+    "base": 0.15,
+    "hi": 0.20,
+    "tag": "Assumed",
+    "src": "判斷類預設（決策 S30 細則：容差暫定 ±15%，Andy 可改）；與 Wattonomics In tolband 0.15 一致",
+    "src2": "低／高＝±5 個百分點，只作敏感度"
+   },
+   {
+    "id": "rc_soc_oth",
+    "label": "SoC 測試機：Advantest、泰瑞達以外廠商的份額（預期合計＝1 − 本值）",
+    "unit": "%",
+    "lo": 0.02,
+    "base": 0.04,
+    "hi": 0.07,
+    "tag": "Analogy",
+    "src": "CY2025：1 − Advantest 自估 66% − 泰瑞達 27.4%（實績 ÷ 市場）＝6.6%（泰瑞達 v0.3 Recon）；CY2026：兩家推得合計 98.1%，其他約 1.9%（v0.9 SoC 合併對帳）；基準取兩點之間",
+    "src2": "其他廠為致茂、Cohu 等；口徑差（Advantest 會計年度 4–3 月）也落在此項"
+   }
+  ]
+ }
+]

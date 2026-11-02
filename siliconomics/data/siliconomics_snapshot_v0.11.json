@@ -1,8 +1,8 @@
 {
  "source": {
-  "file": "20261031_Siliconomics_v0.10.xlsx",
-  "version": "v0.10",
-  "sha256": "6a0406b07fd0f9387751b6a9db57d7310084d06214d8eabb4b9726df0eb24e08",
+  "file": "20261102_Siliconomics_v0.11.xlsx",
+  "version": "v0.11",
+  "sha256": "f2463f04f9a6eec8a61ebd4e282f29faed275b63e35762e261682904cdbf6462",
   "note": "Siliconomics 快照；下游只讀本檔。SGOV_Errors 須為 0"
  },
  "scen": [
@@ -1044,11 +1044,11 @@
    "id": "u_bw_28",
    "label": "NVIDIA Blackwell（B200／B300） 顆數 2028",
    "unit": "百萬顆",
-   "lo": null,
+   "lo": 0,
    "base": 0.5,
-   "hi": null,
-   "tag": "Interested-party",
-   "src": "同上",
+   "hi": 1,
+   "tag": "Assumed",
+   "src": "2028 無外部顆數預測：Blackwell 尾量 0.5M（Assumed）；區間 0–1.0（v0.11）",
    "src2": ""
   },
   {
@@ -1104,17 +1104,17 @@
    "hi": null,
    "tag": "Interested-party",
    "src": "同上",
-   "src2": ""
+   "src2": "交叉檢驗（v0.11，Derived）：2026 每顆平均 NVIDIA 資料中心營收約 4.92 萬美元；2027 Blackwell 2.4＋Rubin 7.0＋Rubin Ultra 0.3 百萬顆、Rubin 世代每顆溢價 1.2–1.5 倍〔Assumed〕→ 約 5,500–6,600 億美元，對 NVIDIA FY2028 營收約 +70% 指引（2026-08-26 法說）推得資料中心 6,200–6,450 億，比值 0.85–1.06"
   },
   {
    "id": "u_rb_28",
    "label": "NVIDIA Rubin 顆數 2028",
    "unit": "百萬顆",
-   "lo": null,
+   "lo": 5,
    "base": 7,
-   "hi": null,
-   "tag": "Interested-party",
-   "src": "同上",
+   "hi": 9,
+   "tag": "Assumed",
+   "src": "2028 無外部顆數預測：沿用 2027 Morgan Stanley 約 7.0M 持平（Assumed）。區間 ±2 百萬顆：Rubin Ultra 提前或延後一年的替代效果（v0.11）",
    "src2": ""
   },
   {
@@ -6000,7 +6000,7 @@
   },
   {
    "id": "hbm_hbp_25",
-   "label": "混合鍵合占 HBM 研削工序比例 2025",
+   "label": "混合鍵合占 HBM 工序比例 2025",
    "unit": "%",
    "lo": 0,
    "base": 0,
@@ -6011,7 +6011,7 @@
   },
   {
    "id": "hbm_hbp_26",
-   "label": "混合鍵合占 HBM 研削工序比例 2026",
+   "label": "混合鍵合占 HBM 工序比例 2026",
    "unit": "%",
    "lo": 0,
    "base": 0,
@@ -6022,18 +6022,18 @@
   },
   {
    "id": "hbm_hbp_27",
-   "label": "混合鍵合占 HBM 研削工序比例 2027",
+   "label": "混合鍵合占 HBM 工序比例 2027",
    "unit": "%",
    "lo": 0,
    "base": 0,
-   "hi": 0.05,
+   "hi": 0,
    "tag": "Assumed",
    "src": "同上",
    "src2": ""
   },
   {
    "id": "hbm_hbp_28",
-   "label": "混合鍵合占 HBM 研削工序比例 2028",
+   "label": "混合鍵合占 HBM 工序比例 2028",
    "unit": "%",
    "lo": 0,
    "base": 0.05,
@@ -6044,7 +6044,7 @@
   },
   {
    "id": "hbm_hbp_29",
-   "label": "混合鍵合占 HBM 研削工序比例 2029",
+   "label": "混合鍵合占 HBM 工序比例 2029",
    "unit": "%",
    "lo": 0.05,
    "base": 0.15,
@@ -6055,7 +6055,7 @@
   },
   {
    "id": "hbm_hbp_30",
-   "label": "混合鍵合占 HBM 研削工序比例 2030",
+   "label": "混合鍵合占 HBM 工序比例 2030",
    "unit": "%",
    "lo": 0.1,
    "base": 0.25,
@@ -6162,7 +6162,7 @@
    "lo": 0.26,
    "base": 0.3,
    "hi": 0.34,
-   "tag": "Interested-party",
+   "tag": "Derived",
    "src": "Counterpoint 2Q25 企業級 SSD 占 NAND 出貨位元 26%、2Q26 48%（capitalandcompute 2026-08 轉載 Counterpoint Q2 2026 Memory & Storage Tracker）",
    "src2": "全年平均取 30%（下半年 AI 伺服器拉貨，Derived／Assumed）"
   },
@@ -7131,11 +7131,36 @@
    "tag": "Derived",
    "src": "SK 海力士 Q2 2026 營收 79.32 兆韓元 ≈ US$55.2B → 約 1,437",
    "src2": "原在 skhynix company.py；三星、韓美、markets/equipment 同值"
+  },
+  {
+   "sec": "M27. 對帳參數（Recon 頁；工作方式 v1.7 第 8 節：覆蓋個股基準情境加總 → Siliconomics → Wattonomics）"
+  },
+  {
+   "id": "rc_tol",
+   "label": "對帳容差（比值偏離 1 的上限；一致／時差／待診斷判定用）",
+   "unit": "%",
+   "lo": 0.1,
+   "base": 0.15,
+   "hi": 0.2,
+   "tag": "Assumed",
+   "src": "判斷類預設（決策 S30 細則：容差暫定 ±15%，Andy 可改）；與 Wattonomics In tolband 0.15 一致",
+   "src2": "低／高＝±5 個百分點，只作敏感度"
+  },
+  {
+   "id": "rc_soc_oth",
+   "label": "SoC 測試機：Advantest、泰瑞達以外廠商的份額（預期合計＝1 − 本值）",
+   "unit": "%",
+   "lo": 0.02,
+   "base": 0.04,
+   "hi": 0.07,
+   "tag": "Analogy",
+   "src": "CY2025：1 − Advantest 自估 66% − 泰瑞達 27.4%（實績 ÷ 市場）＝6.6%（泰瑞達 v0.3 Recon）；CY2026：兩家推得合計 98.1%，其他約 1.9%（v0.9 SoC 合併對帳）；基準取兩點之間",
+   "src2": "其他廠為致茂、Cohu 等；口徑差（Advantest 會計年度 4–3 月）也落在此項"
   }
  ],
  "names": {
   "SGOV_Errors": 0,
-  "SGOV_Warn": 3,
+  "SGOV_Warn": 4,
   "SIF_abfcap_ib_27": 1.25,
   "SIF_abfcap_ib_27_hi": 1.4,
   "SIF_abfcap_ib_27_lo": 1.1,
@@ -8332,7 +8357,7 @@
   "SIF_hbm_hbp_26_hi": 0,
   "SIF_hbm_hbp_26_lo": 0,
   "SIF_hbm_hbp_27": 0,
-  "SIF_hbm_hbp_27_hi": 0.05,
+  "SIF_hbm_hbp_27_hi": 0,
   "SIF_hbm_hbp_27_lo": 0,
   "SIF_hbm_hbp_28": 0.05,
   "SIF_hbm_hbp_28_hi": 0.15,
@@ -9019,6 +9044,12 @@
   "SIF_pwr_pkw_29_lo": 550,
   "SIF_pwr_ubs_26": 17.7,
   "SIF_pwr_ubs_27": 38.2,
+  "SIF_rc_soc_oth": 0.04,
+  "SIF_rc_soc_oth_hi": 0.07,
+  "SIF_rc_soc_oth_lo": 0.02,
+  "SIF_rc_tol": 0.15,
+  "SIF_rc_tol_hi": 0.2,
+  "SIF_rc_tol_lo": 0.1,
   "SIF_SEMI_DRAM": [
    27.9136690647482,
    38.8,
@@ -9507,6 +9538,8 @@
   "SIF_u_bw_26": 5.4,
   "SIF_u_bw_27": 2.4,
   "SIF_u_bw_28": 0.5,
+  "SIF_u_bw_28_hi": 1,
+  "SIF_u_bw_28_lo": 0,
   "SIF_u_hp_26": 0.5,
   "SIF_u_hp_27": 0,
   "SIF_u_hp_28": 0,
@@ -9522,6 +9555,8 @@
   "SIF_u_rb_26": 1.7,
   "SIF_u_rb_27": 7,
   "SIF_u_rb_28": 7,
+  "SIF_u_rb_28_hi": 9,
+  "SIF_u_rb_28_lo": 5,
   "SIF_u_ru_26": 0,
   "SIF_u_ru_26_hi": 0,
   "SIF_u_ru_26_lo": 0,
