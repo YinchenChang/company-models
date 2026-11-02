@@ -14,7 +14,7 @@ from openpyxl.workbook.defined_name import DefinedName
 HERE = os.path.dirname(os.path.abspath(__file__))
 GL = os.path.dirname(HERE)
 ROOT = os.path.dirname(GL)
-VERSION = "v0.1.7"
+VERSION = "v0.1.8"
 DATE = "20261031"
 TK_SNAPSHOT = os.path.join(ROOT, "siliconomics", "data", "tokenomics_snapshot_v21.7.json")
 SIL_DIR = os.path.join(ROOT, "siliconomics", "data")
@@ -41,6 +41,8 @@ YC = {y: get_column_letter(4 + i) for i, y in enumerate(YEARS)}   # 計算頁：
 IC = {y: get_column_letter(8 + i) for i, y in enumerate(YEARS)}   # In 頁：H..Q
 SCEN = ["A", "B", "C"]
 DLY = ["D0", "D1", "D2"]
+SCN_NAME = {"A": "樂觀", "B": "基準", "C": "保守"}   # Andy 2026-11-02（定義權威在 Siliconomics）
+DLY_NAME = {"D0": "準時", "D1": "基準延遲", "D2": "壓力情境"}   # Andy 2026-11-02
 GENS = ["H100", "GB200", "GB300", "VR200", "RU"]
 GEN_NAME = {"H100": "Hopper H100", "GB200": "GB200 NVL72", "GB300": "GB300 NVL72", "VR200": "VR200 NVL72", "RU": "Rubin Ultra"}
 
@@ -844,7 +846,7 @@ def main():
     for sfx, vlab, use_adj in VAR:
         DP.cell(r, 1, f"■ {vlab}").font = Font(bold=True, size=12); r += 1
         for s in SCEN:
-            DP.cell(r, 1, f"需求情景 {s}（{vlab}）").font = BOLD; r += 1
+            DP.cell(r, 1, f"需求情景 {s} {SCN_NAME[s]}（{vlab}）").font = BOLD; r += 1
             ra_, rg_, rd_ = r, r + 1, r + 2
             def yeprev(y):
                 return f"(Pipeline!{YC[y - 1]}{PA['yeD0']}+SUM($E${rd_}:{YC[y - 1]}{rd_}))"
@@ -1653,7 +1655,7 @@ def main():
     GMK = {}
     for s in SCEN:
         for D in DLY:
-            GA.cell(r, 1, f"情景 {s}／{D}").font = BOLD; r += 1
+            GA.cell(r, 1, f"情景 {s} {SCN_NAME[s]}／{D} {DLY_NAME[D]}").font = BOLD; r += 1
             k0 = f"{s}{D}"
             GMK[k0] = {}
             M = GMK[k0]
@@ -1662,6 +1664,7 @@ def main():
             ml("add", "市場年新增 IT GW（Deploy 主路徑，淨；參考）", "GW", lambda y: f"=Deploy!{YC[y]}{DR['na' + s + D]}", years=YEARS, fmt="0.000")
             ml("r", "情景比例 r＝市場年新增（本情景）÷ 市場年新增（A／D0）；A／D0 ≤ 0 時取 1 [Assumed]", "x",
                lambda y: f"=IF(Deploy!{YC[y]}{DR['naAD0']}<=0,1,Deploy!{YC[y]}{DR['na' + s + D]}/Deploy!{YC[y]}{DR['naAD0']})", years=YEARS, fmt="0.000")
+            ml("add11", "11 家年新增 IT GW（擁有者口徑；× r）", "GW", lambda y: f"={YC[y]}{M['r']}*{G('t_add', y)}", years=OUTG, fmt="0.000")
             ml("rflag", "　r 保護旗標（A／D0 市場年新增 ≤ 0）", "—", lambda y: f'=IF(Deploy!{YC[y]}{DR["naAD0"]}<=0,"r＝1（A／D0 年新增 ≤ 0）","")', years=OUTG, fmt="General")
             def mkt(y):
                 c = YC[y]; t = [f"{c}{M['add']}*({G('pit', y)}+{GW0}*{G('pfac', y)})"]
@@ -1682,7 +1685,7 @@ def main():
             c26 = YC[2026]
             for vx, vlab in (("", "主讀法：GW × 每 GW"), ("_mc", "並列讀法：七家 AI 資本支出依個股模型基準（2027–2030，× r）")):
                 GA.cell(r, 1, f"　【{vlab}】").font = BOLD; r += 1
-                ml("own" + vx, "需要①：11 家 AI 資料中心資本支出（含模型值替代；× r）", "US$B", lambda y, vx=vx: own(y, mc=bool(vx)), fill=KEY)
+                ml("own" + vx, "需要①：11 家 AI 資本支出（新增 GW × 每 GW；含模型值替代；× r）", "US$B", lambda y, vx=vx: own(y, mc=bool(vx)), fill=KEY)
                 ml("need" + vx, "需要合計（①＋②）", "US$B", lambda y, vx=vx: f"={YC[y]}{M['own' + vx]}+{YC[y]}{M['nai']}")
                 ml("short" + vx, "尚需新融資＝需要 − 來源", "US$B", lambda y, vx=vx: f"={YC[y]}{M['need' + vx]}-{YC[y]}{M['ocf']}-{YC[y]}{M['ext']}", fill=KEY)
                 ml("cum" + vx, "累計尚需新融資（2026 起）", "US$B", lambda y, vx=vx: f"=SUM(${c26}{M['short' + vx]}:{YC[y]}{M['short' + vx]})", years=range(2026, 2031))
@@ -1729,6 +1732,33 @@ def main():
         ml1("gr_m1", "缺口占資本支出（M1）", lambda y, M=M: f'=IF(({YC[y]}{M["own_m1"]}+{YC[y]}{M["nai"]})<=0,"",({YC[y]}{M["own_m1"]}+{YC[y]}{M["nai"]}-{YC[y]}{M["ocf"]})/({YC[y]}{M["own_m1"]}+{YC[y]}{M["nai"]}))', fmt="0%")
         GA.cell(r, 1, f"　{k0[0]}／{k0[1:]}：判讀（M1）"); GA.cell(r, 2, f"m{k0}_v_m1")
         GA.cell(r, 4, verdict(M["fcf_m1"], M["gr_m1"], G("t_ocfmiss2630", 2026))); M["v_m1"] = r; r += 1
+    # ---- G. 逐家 × 情景（v0.1.8；Andy 2026-11-02：逐家表要跟所選情景一致，且加總＝逐年數字） ----
+    gsec("G. 逐家 × 需求 × 延遲（v0.1.8；互動頁逐家表資料源）：新增 GW＝玩家年新增 × r；AI 資本支出＝組成 0 × r(t)＋組成 1 × r(t+1)＋組成 2 × r(t+2)（模型值替代格＝模型值 × r）；非 AI、營業現金流不隨情景")
+    GPS_ = {}
+    for s in SCEN:
+        for D in DLY:
+            k0 = f"{s}{D}"; M = GMK[k0]; GPS_[k0] = {}
+            GA.cell(r, 1, f"情景 {s} {SCN_NAME[s]}／{D} {DLY_NAME[D]}").font = BOLD; r += 1
+            for p in GPL:
+                rw = GPR[p]
+                def padd(y, rw=rw, M=M):
+                    return f"={YC[y]}{M['r']}*N({YC[y]}{rw['add']})" if "add" in rw else "=0"
+                def pai(y, rw=rw, M=M):
+                    RRs = lambda k=0: f"{YC[y + k]}{M['r']}"
+                    if "c0" not in rw: return "=0"
+                    return (f'=IF({YC[y]}{rw["ai_fb"]}<>"",{RRs()}*{YC[y]}{rw["cai"]},'
+                            f'{RRs()}*{YC[y]}{rw["c0"]}+{RRs(1)}*{YC[y]}{rw["c1"]}+{RRs(2)}*{YC[y]}{rw["c2"]})')
+                a_ = gline(f"s{k0}_{p}_add", f"　{GPN[p]}：新增 IT GW（{s}／{D}）", "GW", padd, years=OUTG, fmt="0.000")
+                b_ = gline(f"s{k0}_{p}_ai", f"　{GPN[p]}：AI 資本支出（{s}／{D}）", "US$B", pai, years=OUTG)
+                g_ = gline(f"s{k0}_{p}_gap", f"　{GPN[p]}：缺口＝AI＋非 AI − 營業現金流（{s}／{D}；營業現金流無模型值時空白）", "US$B",
+                           lambda y, p=p, b_=b_: f'=IF({YC[y]}{GPR[p]["ocf"]}="","",{YC[y]}{b_}+N({YC[y]}{GPR[p]["nai"]})-{YC[y]}{GPR[p]["ocf"]})', years=OUTG)
+                f_ = gline(f"s{k0}_{p}_self", f"　{GPN[p]}：自籌比（{s}／{D}）", "x",
+                           lambda y, p=p, b_=b_: f'=IF(OR({YC[y]}{GPR[p]["ocf"]}="",({YC[y]}{b_}+N({YC[y]}{GPR[p]["nai"]}))<=0),"",{YC[y]}{GPR[p]["ocf"]}/({YC[y]}{b_}+N({YC[y]}{GPR[p]["nai"]})))', years=OUTG, fmt="0.00")
+                GPS_[k0][p] = (a_, b_, g_, f_)
+            M["chk_add"] = gline(f"s{k0}_chk_add", f"　檢查：逐家新增 GW 合計 − 11 家年新增（{s}／{D}）（須＝0）", "GW",
+                                 lambda y, k0=k0, M=M: "=" + "+".join(f"{YC[y]}{GPS_[k0][p][0]}" for p in GPL) + f"-{YC[y]}{M['add11']}", years=OUTG, fmt="0.000000")
+            M["chk_ai"] = gline(f"s{k0}_chk_ai", f"　檢查：逐家 AI 資本支出合計 − 11 家 AI 資本支出（{s}／{D}）（須＝0）", "US$B",
+                                lambda y, k0=k0, M=M: "=" + "+".join(f"{YC[y]}{GPS_[k0][p][1]}" for p in GPL) + f"-{YC[y]}{M['own']}", years=OUTG, fmt="0.000000")
     GA_LAST = r
     GA.column_dimensions["A"].width = 58; GA.column_dimensions["B"].width = 14; GA.column_dimensions["N"].width = 60
     for y in YEARS: GA.column_dimensions[YC[y]].width = 10
@@ -1862,6 +1892,13 @@ def main():
                 grow_if(f"WIF_Gap_CumUnarranged{nx}_{s}_{D}", f"累計仍未安排＝累計尚需 − 期初現金（{vl}；{s}／{D}）", M["cumun" + vx], years=list(range(2026, 2031)))
                 grow_if(f"WIF_Gap_CumUnarranged{nx}_MemoInclCommitted_{s}_{D}", f"備忘：再扣承諾（{vl}；{s}／{D}）", M["cummemo" + vx], years=list(range(2026, 2031)))
                 gscalar_if(f"WIF_Gap_Verdict{nx}_{s}_{D}", f"判讀（11 家代表玩家；{vl}；{s}／{D}）", f"Gap!D{M['v' + vx]}", "文字", fmt="General")
+    for s in SCEN:
+        for D in DLY:
+            k0 = f"{s}{D}"
+            grow_if(f"WIF_Gap_Add11_{s}_{D}", f"11 家年新增 IT GW（× r；{s}／{D}）", GMK[k0]["add11"], "GW", fmt="0.000")
+            for p in GPL:
+                for k, i_, unit, fmt in (("AddGW", 0, "GW", "0.000"), ("CapexAI", 1, "US$B", "0.0"), ("Gap", 2, "US$B", "0.0"), ("SelfFund", 3, "x", "0.00")):
+                    grow_if(f"WIF_Gap_PlayerS_{p}_{s}_{D}_{k}", f"{GPN[p]} {k}（{s}／{D}）", GPS_[k0][p][i_], unit, fmt=fmt)
     grow_if("WIF_Gap_MktRestMemo", "參考：市場其餘 AI 資本支出（A／D0；不納入收支，只供需求與下游）", MREST)
     for p in GPL:
         gscalar_if(f"WIF_Gap_PlayerCumGap_A_D1_{p}", f"{GPN[p]} 2026–2030 累計缺口（A／D1；正＝需外部資金）", f"Gap!{YC[2026]}{GDIST[p][2]}")
@@ -2042,6 +2079,9 @@ def main():
     CK.cell(r, 6, f'=IF(C{r}<1E-9,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap）"); r += 1
     CK.cell(r, 1, "G-K3c"); CK.cell(r, 2, "A／D1 分配：各玩家 AI 合計＝11 家 AI 需要（A／D1）")
     CK.cell(r, 3, "=" + "+".join(f"ABS(Gap!{YC[y]}{GROW['d_chk']})" for y in OUTG)); CK.cell(r, 6, f'=IF(C{r}<1E-6,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap）"); r += 1
+    CK.cell(r, 1, "G-K3d"); CK.cell(r, 2, "逐家 × 情景（v0.1.8）：逐家新增 GW 合計＝11 家年新增、逐家 AI 資本支出合計＝11 家 AI 資本支出（9 情景 × 2024–2030）")
+    CK.cell(r, 3, "=" + "+".join(f"SUMPRODUCT(ABS(Gap!{YC[2024]}{M_['chk_add']}:{YC[2030]}{M_['chk_add']}))+SUMPRODUCT(ABS(Gap!{YC[2024]}{M_['chk_ai']}:{YC[2030]}{M_['chk_ai']}))" for M_ in GMK.values()))
+    CK.cell(r, 6, f'=IF(C{r}<1E-6,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap）"); r += 1
     CK.cell(r, 1, "G-K3b"); CK.cell(r, 2, "A／D0 並列讀法：11 家 AI 需要＝玩家層並列讀法加總（未縮放）")
     CK.cell(r, 3, "=" + "+".join(f"ABS(Gap!{YC[y]}{M0['own_mc']}-(" + "+".join(f"Gap!{YC[y]}{GPR[p]['ai_mc']}" for p in GPL) + "))" for y in OUTG))
     CK.cell(r, 6, f'=IF(C{r}<1E-6,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap）"); r += 1
@@ -2146,6 +2186,7 @@ def main():
         {"id": "GL01-35", "cat": "工程", "item": "並列讀法：七家依個股模型資本支出", "decision": "主讀法維持 GW × 每 GW（Andy 規格）；另列七家 2027–2030 AI 資本支出改用個股模型基準情境 B 的 AI 資本支出（市場其餘不變），重算 9 情景尚需、累計與判讀（名稱 *_ModelCapex）。In Y2 本版不改（v0.1.8 處理）", "date": "2026-10-31", "quote": "chat 端 2026-10-31 決定", "status": "預設、可撤回"},
         {"id": "GL01-36", "cat": "工程", "item": "非 AI 資本支出缺值替代", "decision": "七家（CapexGW 玩家）模型無非 AI 拆分的年份，改用 CapexGW 曆年資本支出（In Y2，財年按月數換曆年）×（1 − 該家 AI 占比），標『以 Y2 × (1−AI 占比) 替代（模型無拆分）』；無 Y2 資本支出者仍以 0 計並列出；Checks G-K10 WARN", "date": "2026-10-31", "quote": "chat 端 2026-10-31 決定（對稱性）", "status": "預設、可撤回"},
         {"id": "GL01-37", "cat": "判斷", "item": "收支範圍：11 家代表玩家", "decision": "收支（需要、來源、尚需、累計、判讀）只算 11 家代表玩家（本專案覆蓋，不含中國）；中國與其他廠商的需求保留在全市場 GW、Spend 與下游（Siliconomics、個股），不納入收支，Gap 頁只留一列參考；智譜移出 Gap", "date": "2026-10-31", "quote": "Andy 12:58「主要玩家其實就是不要放…中國公司」「就拿我們那十一家當做代表來計算就好了」「還是要保留中國還有其他廠商，因為他們的需求會影響到我們下游」", "status": "已定（Andy）"},
+        {"id": "GL01-39", "cat": "工程", "item": "逐家 × 情景（v0.1.8）", "decision": "Gap G 節：逐家新增 GW＝玩家年新增 × r，逐家 AI 資本支出＝組成 × r（與 D 節同式），缺口、自籌比隨之；Checks G-K3d 確認逐家合計＝11 家合計（9 情景）；互動頁逐家表改讀所選情景。情景名稱 A 樂觀／B 基準／C 保守、D2 壓力情境（Andy 2026-11-02）", "date": "2026-11-02", "quote": "Andy 11-02：「請確認這個表11家的新增GW加總與逐年數字所對應年份的新增GW數字相同」", "status": "執行"},
         {"id": "GL01-38", "cat": "判斷", "item": "11 家需要量隨情景變動", "decision": "11 家各年新增 GW（含廠房提前年份、模型值替代格）× r(s,D,y)＝市場年新增（情景）÷ 市場年新增（A／D0）；A／D0 市場年新增 ≤ 0 時 r＝1；營業現金流與非 AI 不變；並列讀法七家模型 AI 資本支出同樣 × r。[Assumed]", "date": "2026-10-31", "quote": "chat 端預設（Andy 可撤回）", "status": "預設、可撤回"},
         {"id": "GL01-33", "cat": "工程", "item": "Gap 每 GW 成本", "decision": "市場：IT＝Spend 頁同式（市場 NonNV × spend_nnv_hold）；廠房＝CapexGW 同式套市場 NonNV（NVIDIA 世代加權 IF_CapexFacility 與 VR200 × spend_nnv_hold），項目依 Facility 拆分比例。玩家：CapexGW（七家）或 C1 同式（其餘）。市場其餘＝市場合計 − 11 家（含每 GW 成本差）", "date": "2026-10-31", "quote": "工作單 §2a", "status": "預設、可撤回"},
     ]
@@ -2222,6 +2263,7 @@ def main():
         ("v0.1.4：Q3 財報 F#255–257（AWS backlog、Amazon 2027 資本支出未量化指引、Meta 9-30 債務與現金）。", True),
         ("v0.1.5：補 2027 覆蓋率（J 段）：Epoch 站點時間線逐頁、公司與電力公司文件、AI半導體 2026-10-30 送件，經未參與代理開原文複核（30 列可用、1 列無法核對）後合併——新增 T2 27 列（Google Fort Wayne、Cedar Rapids、Storey、Columbus、Lincoln、Goodnight；AWS New Albany、Ridgeland B5、Berwick、Black Pearl DH4；Meta Montgomery、Cheyenne、Bowling Green；Oracle Saline 第 1 棟、Red Oak；Nebius Mäntsälä；Nscale Sines、Lake Mariner；2028：Van Buren、Kozani），改既有 6 列（Shackelford 依 Epoch 時程前移、Saline 1,383→922、Lordstown 納入、Nebius PA 260／Lappeenranta 70 納入）。WIF_Coverage_2027 0.377→0.526；只動 2027 年以後的上線量，2026 年底不變。", True),
         ("v0.1.6：K 段 2028H2–2032 證據（未參與代理複核：屬實 26、小誤 9）——新增 T2 33 列：站點 10 列（Microsoft Pecos 2,000、Catawba 720 IT、Rome 422、Aragón 150；Google Visakhapatnam 1,000；CoreWeave Helios III 132）、電力證據路徑 10 列（納入＝2：NIPSCO–Amazon 確定 1,200、Georgia Power–OpenAI 確定 2,200；只進 WIF_Coverage_Power，不入 Players）、未核准合約 13 列（納入＝0）。新名稱 WIF_Coverage_Power_<yyyy>。2026 年以前 0 變動，2027 年主路徑與 SiteOnly 不變。", True),
+        ("v0.1.8（2026-11-02）：Gap 頁新增 G 節（逐家 × 需求 × 延遲：新增 GW、AI 資本支出、缺口、自籌比；與 11 家合計逐情景相等，Checks G-K3d）與 D 節「11 家年新增 IT GW（× r）」；情景名稱 A 樂觀／B 基準／C 保守、D2 壓力情境（Andy 2026-11-02）；「需要①：11 家 AI 資料中心」改名「11 家 AI 資本支出」。新增 WIF_Gap_Add11_*、WIF_Gap_PlayerS_*；既有 WIF_ 名稱數值 0 變動。", True),
         ("v0.1.7：新增 Gap 頁（資金缺口；Andy 2026-10-31 規格）：需要的錢＝新增 IT GW × 每 IT GW 建置成本（TK IF_CapexTotal；IT 與 Spend 同式、廠房與 CapexGW 同式；廠房提前 lag_bldg），每 GW 只在擁有者計一次；"
          "錢從哪來＝11 家全公司營業現金流（個股模型基準情境，不扣買回股利）＋已觀測外部融資（2024–2025）；『整個市場當一間公司』逐情景列需要三層（11 家 AI、市場其餘、11 家非 AI）、來源兩層、尚需新融資與累計仍未安排；In 新節 Y9（個股模型基準值）；"
          "Interface 新增 WIF_Gap_*；既有 WIF_ 名稱 0 變動。判斷題 G1–G6 見 Decisions GL01-25 至 GL01-33。", True),

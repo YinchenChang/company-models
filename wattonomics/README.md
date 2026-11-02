@@ -79,7 +79,7 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 
 ### 需求情景名稱（Andy 2026-11-02）
 
-- 需求情景 **A 樂觀、B 基準、C 保守**（定義與係數權威在 Siliconomics：A＝顆數係數 1、B 2028–29 為 0.8／0.85、C 為 0.6；Siliconomics 原名順利／平平／不如預期，2026–2027 年三者相同）。互動頁預設與資金缺口區塊的「基準需求」＝**B**（Andy 10-31 13:04「直接用一個基準需求」）；Spend 頁與 `WIF_Gap_Player_*` 仍為 A／D0（Excel 只算一組），頁面標「樂觀 A」。
+- 需求情景 **A 樂觀、B 基準、C 保守**（定義與係數權威在 Siliconomics：A＝顆數係數 1、B 2028–29 為 0.8／0.85、C 為 0.6；Siliconomics 原名順利／平平／不如預期，2026–2027 年三者相同）。互動頁預設與資金缺口區塊的「基準需求」＝**B**（Andy 10-31 13:04「直接用一個基準需求」）；Spend 頁與 `WIF_Gap_Player_*` 仍為 A／D0（Excel 只算一組），頁面標「樂觀 A」；v0.1.8 起逐家表改讀 `WIF_Gap_PlayerS_<玩家>_<s>_<D>_<AddGW|CapexAI|Gap|SelfFund>_<yyyy>`（Gap G 節），與逐年數字同一情景，合計相等（Checks G-K3d）。
 - 互動頁標頭顯示版本、資料日期（取自 Excel 檔名）與頁面產生時間（`explorer/build_page.py`）。
 
 ### 基建延遲情景（供給側、與需求情景 A／B／C 正交的第二軸）
@@ -116,6 +116,8 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 | Decisions、DB_Evidence、Sources、Requests | 決策（GL01-01 起）、證據、來源 ID、對 TK／Siliconomics 的請求 |
 
 ## 版本紀錄（摘要；完整見活頁簿 README 頁）
+
+- v0.1.8（2026-11-02）：Andy 11-02 review——Gap 頁新增 G 節「逐家 × 需求 × 延遲」（新增 GW、AI 資本支出、缺口、自籌比；逐家合計＝11 家合計，9 情景皆核，Checks G-K3d）與 D 節「11 家年新增 IT GW（× r）」；互動頁逐家表加「新增 GW」欄、改讀所選情景（B・所選延遲）並列合計核對列，逐年表加「11 家年新增 IT GW」列，「需要：11 家 AI 資料中心」改名「AI 資本支出（11 家）」；Excel 情景名稱 A 樂觀／B 基準／C 保守、D2 壓力情境。新增 `WIF_Gap_Add11_*`、`WIF_Gap_PlayerS_*`（2,835 個）；既有 WIF_ 名稱數值 0 變動。R4 歸因排入的主路徑改動順延為 v0.1.9。
 
 - v0.1.7（2026-10-31）：新增 Gap 頁（資金缺口）與互動頁「整個市場當一間公司」區塊（需求、延遲選擇器正下方）；In 新節 Y9（12 家個股模型基準值，`tools/import_gap_models.py`）；`WIF_Gap_*` 1,823 個新名稱（r5：11 家代表玩家）；Checks G-K1–G-K10；Gap 未改動任何既有 `WIF_` 名稱。另合併 Amazon、Meta 2026Q3 10-Q 證據（F#258–275，Q_review 第五節；F#77 由 F#258 取代），因此既有名稱只有 `WIF_Funding_amzn_2026_lnc` 變動（137.214 → 164.922）。報告 `docs/verify/20261031_v0.1.7_gap.md`。
 - v0.1.6（2026-10-31）：K 段 2028H2–2032 證據、`WIF_Coverage_Power_<yyyy>`。

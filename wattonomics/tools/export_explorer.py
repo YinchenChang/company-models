@@ -135,6 +135,17 @@ def main():
             add("gap", part="player_meta", player=p, open_cash=val(f"WIF_Gap_PlayerCash_{p}"),
                 committed=(val(f"WIF_Gap_PlayerCommitted_{p}") if f"WIF_Gap_PlayerCommitted_{p}" in names else None),
                 verdict=val(f"WIF_Gap_PlayerVerdict_{p}"), tag="Derived", src="Gap")
+        # v0.1.8：逐家 × 情景（WIF_Gap_PlayerS_<p>_<s>_<D>_<k>_<yyyy>）與 11 家年新增（WIF_Gap_Add11_<s>_<D>_<yyyy>）
+        for s in "ABC":
+            for d in ("D0", "D1", "D2"):
+                if f"WIF_Gap_Add11_{s}_{d}_2026" in names:
+                    add("gap", part="add11", scen=s, delay=d, values={y: val(f"WIF_Gap_Add11_{s}_{d}_{y}") for y in GY}, unit="GW", tag="Derived", src="Gap")
+                for p in GPS:
+                    if f"WIF_Gap_PlayerS_{p}_{s}_{d}_CapexAI_2026" not in names: continue
+                    for y in GY:
+                        v = {k: val(f"WIF_Gap_PlayerS_{p}_{s}_{d}_{k}_{y}") for k in ("AddGW", "CapexAI", "Gap", "SelfFund")}
+                        add("gap", part="player_s", player=p, scen=s, delay=d, year=y, values=v, unit="GW／US$B（SelfFund 為倍數）", tag="Derived", src="Gap G 節",
+                            name=f"WIF_Gap_PlayerS_{p}_{s}_{d}_*_{y}")
         add("gap", part="total", open_cash=val("WIF_Gap_OpenCash"), committed=val("WIF_Gap_Committed"), ext2026_memo=val("WIF_Gap_ExtObs2026Memo"),
             buffer_cum=val("WIF_Gap_BufferCum"), ocf_missing={y: val(f"WIF_Gap_OCFMissing_{y}") for y in GY}, coverage={y: val(f"WIF_Coverage_{y}") for y in GY},
             tag="Derived", src="Gap", note="期初現金只進累計；已簽未起租與表外合資承諾是市場內移轉，只列備忘（G4 更正）；2026 年已觀測融資只列備忘；買回股利不扣（Andy 2026-10-31 04:20）")

@@ -30,7 +30,7 @@ for r in R:
 o["spend"] = sp
 o["fund"] = [{"player": r["player"], "name": r["player_name"], "year": r["year"], "period": r["period"], "values": r["values"], "gross": r.get("gross"), "po": r.get("payment_order")} for r in R if r["kind"] == "funding"]
 # 資金缺口（v0.1.7；kind＝gap）
-g = {"mk": collections.defaultdict(dict), "verdict": {}, "pergw": collections.defaultdict(dict), "player": collections.defaultdict(dict), "pmeta": {}, "total": {}}
+g = {"add11": {}, "ps": collections.defaultdict(dict), "mk": collections.defaultdict(dict), "verdict": {}, "pergw": collections.defaultdict(dict), "player": collections.defaultdict(dict), "pmeta": {}, "total": {}}
 for r in R:
     if r["kind"] != "gap": continue
     pt = r["part"]
@@ -39,6 +39,8 @@ for r in R:
     elif pt == "pergw": g["pergw"][r["item"]][r["year"]] = f(r["value"])
     elif pt == "player": g["player"][r["player"]][r["year"]] = {k: f(v) for k, v in r["values"].items()}
     elif pt == "player_meta": g["pmeta"][r["player"]] = {"cash": f(r["open_cash"]), "committed": f(r["committed"]), "verdict": r["verdict"]}
+    elif pt == "add11": g["add11"][f"{r['scen']}|{r['delay']}"] = {str(k): f(v) for k, v in r["values"].items()}
+    elif pt == "player_s": g["ps"][f"{r['scen']}|{r['delay']}"].setdefault(r["player"], {})[str(r["year"])] = {k: f(v) for k, v in r["values"].items()}
     elif pt == "total": g["total"] = {k: r[k] for k in ("open_cash", "committed", "ext2026_memo", "buffer_cum", "ocf_missing", "coverage")}
 o["gap"] = g if g["mk"] else None
 tpl = (pathlib.Path(__file__).parent / "template.html").read_text(encoding="utf-8")
