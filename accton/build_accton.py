@@ -84,7 +84,7 @@ SINO = "https://aiinvest.sinotrade.com.tw/Stock/Content/TW/2345"
 FS = "https://news.cnyes.com/news/id/6629903"
 UDN_SEO = "https://udn.com/news/story/7252/9832440"
 
-sec("A. AI 交換器市場（讀 markets/network 成品；情境 A 基準，B／C 依顆數係數縮放）")
+sec("A. AI 交換器市場（讀 markets/network 成品；情境 A（原始顆數），B／C 依顆數係數縮放）")
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"mkt_{y}", f"AI 後端 scale-out 交換器市場 20{y}", "US$B", None, NETR["scale-out 交換器"][0][j], None, "Derived", NETR["scale-out 交換器"][1],
         "加速器顆數 × 每顆 scale-out 交換器內容（不分乙太網路與 InfiniBand）；800G → 1.6T 的單價上升已含在每顆內容（VR200 約為 GB300 的 2 倍）" if y == 26 else "同上")
@@ -96,8 +96,8 @@ for j, y in enumerate((26, 27, 28, 29)):
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"itc_{y}", f"AI IT 資本支出 20{y}", "US$B", None, NETR["AI IT 資本支出（加速器 × 每顆 IT capex）"][0][j], None, "Derived", NETR["AI IT 資本支出（加速器 × 每顆 IT capex）"][1], "Recon 用：智邦 AI 營收 ÷ AI IT 資本支出" if y == 26 else "同上")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、Arista、廣達模型相同）")
-    inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", 29.0, SIL.base("fx_twd"), 33.0, "Assumed", "與 quanta/ 模型相同 32.0", "份額在 FY2026 以同一匯率校準，匯率只在 FY2027 起變動時才影響結果")
 
 sec("B. 乙太網路占比、白牌占比與智邦份額（本專案為權威：白牌交換器廠份額，規則第 13 條）")

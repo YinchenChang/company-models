@@ -41,3 +41,25 @@ def vals(k):
     """(低, 基準, 高)：只取數值、保留呼叫端自己的標籤與說明時用"""
     r = V[k]
     return (r["lo"], r["base"], r["hi"])
+
+
+# ---- v0.12：個股自訂情境（決策 S35、S36；工作方式 v1.7「三層只給基準、情境在個股」） ----
+# 本庫基準＝原始顆數 × 基準係數（SIF_um28_Base、SIF_um29_Base）；個股情境係數（÷ 原始顆數）由個股自訂，
+# 說明欄須寫明「相對本庫基準的倍數」與「產業 GW 相對 Wattonomics 基準 ±%」（本庫基準相對 Wattonomics 見 SIF_GWvsWT_Base）。
+def _pct(x):
+    return f"{x:+.0%}".replace("+-", "−").replace("-", "−")
+
+
+def scen_note(s, yy, val):
+    """個股情境係數列（um28_s／um29_s）的說明文字。s＝情境字母；yy＝28 或 29；val＝本模型該列的值（÷ 原始顆數）。"""
+    bc = NAMES.get(f"SIF_um{yy}_Base")
+    gv = NAMES.get("SIF_GWvsWT_Base")
+    if bc is None or gv is None:
+        return "個股自訂情境（Siliconomics 快照未提供基準係數）"
+    rel = val / bc
+    yi = {28: 2, 29: 3}[yy]
+    gw = (1 + gv[yi]) * rel - 1
+    who = "＝Siliconomics 基準" if abs(rel - 1) < 1e-9 else f"＝Siliconomics 基準 ×{rel:.3f}"
+    tail = ("；2026–27 三情境相同，產業 GW 相對 Wattonomics 基準 " + "、".join(f"20{26+i} {_pct(gv[i])}" for i in (0, 1))) if yy == 28 else ""
+    return (f"個股自訂情境 {s}（{VERSION} 起；預設沿用 v0.11 行業情境值，判斷類可改）：{who}（基準係數 {bc}）；"
+            f"20{yy} 產業 GW 相對 Wattonomics 基準 {_pct(gw)}（本庫基準 {_pct(gv[yi])}）{tail}")

@@ -112,7 +112,7 @@ for k in XP:
 for s in SC:
     for y in (28, 29):
         inp(f"um{y}_{s}", f"情境 {s}：CY20{y} 顆數 ÷ 基準", "x", None, TS[f"um{y}_{s}"][0], None, "Assumed", TS[f"um{y}_{s}"][1],
-            "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、Broadcom、Marvell、聯發科模型相同；markets/memory SCEN_UNITS，建置時檢查）" if (s == "A" and y == 28) else "同上")
+            "A＝原始顆數；B＝AI 資本支出消化；C＝明顯下修（與台積電、Broadcom、Marvell、聯發科模型相同；markets/memory SCEN_UNITS，建置時檢查）" if (s == "A" and y == 28) else "同上")
 
 sec("B. Google 自研 Arm CPU（Axion）量產：CPU 顆數＝TPU 顆數 × CPU 對 TPU 配比 × 創意份額（CPU 不占 TPU 加速器份額）")
 inp("att26", "CY2026 CPU 對 TPU 配比（CPU 顆數 ÷ TPU 顆數；校準年）", "x", 0.25, 0.325, 0.40, "Interested-party",

@@ -80,7 +80,7 @@ RUM = "https://finance.sina.com.cn/wm/2026-07-21/doc-iniiqvau9153021.shtml"
 WK = "https://waikanstore.com/victory-giant-300476-company-research-2026-10/"
 FXS = "https://cj.sina.com.cn/articles/view/1663612603/6328b6bb0200248kg"
 
-sec("A. AI 部署規模（讀 markets/network、markets/chip_bridge、tsmc 成品；情境 A 基準，B／C 依顆數係數縮放）")
+sec("A. AI 部署規模（讀 markets/network、markets/chip_bridge、tsmc 成品；情境 A（原始顆數），B／C 依顆數係數縮放）")
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"itc_{y}", f"AI IT 資本支出 20{y}", "US$B", None, ITC[0][j], None, "Derived", ITC[1],
         "加速器顆數 × 每顆 IT capex（含 ASIC）；本模型以此除以每 GW IT 資本支出得到部署 GW（與台光電、台達電模型相同）" if y == 26 else "同上")
@@ -90,8 +90,8 @@ inp("vr26", "2026 年部署中 Rubin 世代占比（混合每 GW IT 資本支出
 inp("racks_gb", "每 GW 機架數（GB300）", "架", None, BR["racks"][0], None, "Derived", BR["racks"][2], "Recon 用：每架 PCB 金額換算")
 inp("racks_vr", "每 GW 機架數（VR200）", "架", None, BR["racks"][1], None, "Derived", BR["racks"][2], "同上")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝順利（基準）；B＝平平（AI 資本支出消化）；C＝不如預期（明顯下修）；與台積電、台光電模型相同")
-    inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 inp("fx", "匯率（人民幣 ÷ 美元）", "RMB/US$", *SIL.vals("fx_rmb"), "Verified", "中國經濟網 2026-10-16：中間價 6.7220（網址見 Sources 頁）", "10-09 中間價 6.7330（中國經濟網）；10-23 中間價：未找到")
 
 sec("B. 每 GW AI 高速 PCB 金額與勝宏份額（本專案權威：每 GW PCB 金額、勝宏份額，規則第 13 條；與台光電的每 GW CCL 金額口徑分開）")
@@ -578,7 +578,7 @@ V.cell(48, 1, "目標價方法")
 V["B48"] = ("DCF：股東現金流＝歸母 EPS ×（1 − g／ROE），r＝10%、g＝4%、ROE 為近三年加權平均約 20%（再投資率約 20%），FY2027–32 明確期＋永續；"
             "勝宏 2026 年固定資產投資最高 180 億元（約營收的六成），但本模型未建資本支出與折舊，未改用淨利＋折舊－資本支出，擴產期現金流偏高估。"
             "Comparable：沪电、深南、生益电子、鹏鼎前瞻 P/E 中位數（只用 A 股同業；A 股倍數含結構性溢價，且部分價格為 9 月），偏高估。"
-            "情境對應：A＝順利（顆數基準）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6）")
+            "情境對應：A＝順利（原始顆數）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6）")
 for r_ in (24, 35, 39):
     V[f"B{r_}"].fill = KEY
 V.column_dimensions["A"].width = 58

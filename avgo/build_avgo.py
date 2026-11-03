@@ -93,8 +93,8 @@ for k, nm, u_, gb, tag, src in MEM.UNITS:
         inp(f"u_{k}_{y}", f"{nm} 顆數 20{y}", "百萬顆", None, u_[i], None, tag, "markets/memory/market.py UNITS：" + src if i == 0 else "同上", f"台積電模型 {TS[f'u_{k}_{y}'][1]}（值相同，建置時檢查）" if i == 0 else "同上")
     inp(f"g29_{k}", f"{nm} 2029 顆數成長", "%", None, TS[f"g29_{k}"][0], None, "Assumed", TS[f"g29_{k}"][1], "markets/memory 無 2029；沿用台積電模型")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、NVIDIA 模型相同）")
-    inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 for k in XP:
     gb = [g for kk, nm, u_, g, t, sr in MEM.UNITS if kk == k][0]
     for i, y in enumerate((26, 27, 28)):
@@ -111,7 +111,7 @@ for s in SC:
     for j, y in enumerate((26, 27, 28, 29)):
         inp(f"hbm_{s}_{y}", f"HBM 混合單價 20{y}（{s}）", "US$/GB", None, HBMP[s][0][j + 1], None, "Derived", HBMP[s][1], "markets/memory：2026 BofA $14.6/GB；2027 +80% 三情境相同；2028–29 依情境" if (s == "A" and y == 26) else "同上")
 
-sec("D. AI 網通（讀 markets/network 成品；情境 A 基準，B／C 依顆數係數縮放）")
+sec("D. AI 網通（讀 markets/network 成品；情境 A（原始顆數），B／C 依顆數係數縮放）")
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"net_{y}", f"Broadcom 網通（本模型歸屬）20{y}", "US$B", None, NETB[0][j], None, "Derived", NETB[1], "廠商歸屬比例為 Assumed（markets/network In 頁 avgo_su、avgo_so、avgo_nic、avgo_opt）；2026 較實際推估低約 28%（見 Recon）" if y == 26 else "同上")
 inp("rep_avgo26", "Broadcom AI 網通營收 FY2026（實際＋推估）", "US$B", REPB[0][0], REPB[0][1], REPB[0][2], "Derived", REPB[1], "Q3 FY26：XPU 占 AI 營收 73%（法說，二手）→ 網通約 4.5；FY2026 AI 57.6 × 約 30%")
@@ -347,7 +347,7 @@ def engine(ws, r0, title, **over):
 PL = wb.create_sheet("PL")
 PL["A1"] = "PL — Broadcom 損益（US$B；non-GAAP）。FY2025A 實績、FY2026 錨點（Q1–Q3 實績＋Q4 指引），FY2027 起為由下而上。FY(t)＝CY(t)。三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2026–FY2027 三情境相同（顆數係數從 CY2028 開始；HBM 價格 2027 三情境相同）"
 PB = {}; r0 = 70
-SCN_T = {"A": "情境 A：基準（顆數係數 1.0）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85", "C": "情境 C：CY2028–29 顆數 ×0.6"}
+SCN_T = {"A": "情境 A：原始顆數（顆數係數 1.0；v0.12 起本庫基準＝情境 B）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85", "C": "情境 C：CY2028–29 顆數 ×0.6"}
 for s in SC:
     PB[s] = engine(PL, r0, SCN_T[s], scn=s)
     r0 = PB[s]["end"] + 2

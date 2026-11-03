@@ -234,7 +234,7 @@ for s in (SC if C.get("use_um", True) else ()):
     for y in (28, 29):
         k = f"um{y}_{s}"
         inp(k, f"情境 {s}：CY20{y} AI 加速器顆數 ÷ 基準", "x", None, SIL.base(k), None, SIL.V[k]["tag"], f"{SILV}｜{k}",
-            "AI 相關營收 CY2028–29 依同字母顆數係數縮放（行業情境；A＝基準）" if (s == "A" and y == 28) else "同上")
+            "AI 相關營收 CY2028–29 依同字母顆數係數縮放（行業情境；A＝原始顆數）" if (s == "A" and y == 28) else "同上")
 
 sec(f"B. 產能與稼動率（{C['wafer_unit']}；公司層級，{TBD}：Siliconomics 尚無成熟製程稼動率）")
 inp("cap_26", f"FY2026 產能（{C['wafer_unit']}，千片／年）", "千片", None, "=Q!G7", None, "Derived", C["cap26_src"], C["cap26_note"])

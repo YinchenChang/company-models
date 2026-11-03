@@ -877,9 +877,9 @@ def main():
     IF.cell(r, 1, "B. 推導（日曆年；欄 D–H＝2025–2029）").font = BOLD; r += 1
     hdr(IF, r, ["名稱", "項目", "單位", "2025", "2026", "2027", "2028", "2029", "來源位置"]); r += 1
     M = wb["Mkt"]
-    derived = [("SIF_HBM_DemandEB", "dem", "HBM 需求（加速器裝載，情境 A 基準）", "EB"),
-               ("SIF_HBM_DemandGrossEB", "demg", "HBM 需求 × 出貨係數（情境 A 基準）", "EB"),
-               ("SIF_Units_Total", "units", "加速器顆數合計（情境 A 基準）", "百萬顆"),
+    derived = [("SIF_HBM_DemandEB", "dem", "HBM 需求（加速器裝載，情境 A（原始顆數））", "EB"),
+               ("SIF_HBM_DemandGrossEB", "demg", "HBM 需求 × 出貨係數（情境 A（原始顆數））", "EB"),
+               ("SIF_Units_Total", "units", "加速器顆數合計（情境 A（原始顆數））", "百萬顆"),
                ("SIF_HBM_GBperUnit", "gbavg", "每顆平均 HBM", "GB"),
                ("SIF_HBM_SupplyEB", "sup", "HBM 位元供給（三情境相同）", "EB")]
     for s in seed["scen"]:

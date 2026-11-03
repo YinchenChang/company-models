@@ -97,7 +97,7 @@ WR0810 = "https://wantrich.chinatimes.com/news/20260810900002-420101"
 CTEE0805 = "https://www.ctee.com.tw/news/20260805700302-430203"
 CM2024 = "https://www.cmoney.tw/notes/note-detail.aspx?nid=851483"
 
-sec("A. AI 部署規模與加速器顆數（讀 markets/network、markets/chip_bridge、tsmc 成品；情境 A 基準，B／C 依顆數係數縮放）")
+sec("A. AI 部署規模與加速器顆數（讀 markets/network、markets/chip_bridge、tsmc 成品；情境 A（原始顆數），B／C 依顆數係數縮放）")
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"itc_{y}", f"AI IT 資本支出 20{y}", "US$B", None, ITC[0][j], None, "Derived", ITC[1],
         "加速器顆數 × 每顆 IT capex（含 ASIC）；除以每 GW IT 資本支出得到部署 GW（與廣達、鴻海模型同口徑）" if y == 26 else "同上")
@@ -107,10 +107,10 @@ inp("vr26", "2026 年部署中 Rubin 世代占比（混合用；廣達模型）"
 inp("racks_gb", "每 GW 機架數（GB300）", "架", None, BR["racks"][0], None, "Derived", BR["racks"][2], "Tokenomics IF_RacksPerGW（經橋接表）")
 inp("racks_vr", "每 GW 機架數（VR200）", "架", None, BR["racks"][1], None, "Derived", BR["racks"][2], "同上")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um28_{s}'][1]}", "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、廣達、鴻海模型相同）")
-    inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um29_{s}'][1]}", "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um28_{s}'][1]}", SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um29_{s}'][1]}", SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 for y in (26, 27, 28, 29):
-    inp(f"gu_{y}", f"GPU 顆數 20{y}（NVIDIA＋AMD，情境 A 基準）", "百萬顆", None, round(GU[y], 6), None, "Derived", GU_SRC if y == 26 else "同上",
+    inp(f"gu_{y}", f"GPU 顆數 20{y}（NVIDIA＋AMD，情境 A（原始顆數））", "百萬顆", None, round(GU[y], 6), None, "Derived", GU_SRC if y == 26 else "同上",
         "GPU 基板（HGX）與運算板（Bianca／Strata）只對應 GPU；Google TPU、Trainium 等 ASIC 不計" if y == 26 else "同上")
 inp("fx", "匯率（新台幣 ÷ 美元；廣達模型）", "NT$/US$", QU["fx"][0], QU["fx"][1], QU["fx"][2], "Derived", QU["fx"][3], "與廣達、鴻海、台達電模型相同")
 
@@ -660,7 +660,7 @@ V.cell(48, 1, "目標價方法")
 V["B48"] = ("DCF：股東現金流＝歸屬母公司 EPS ×（1 − g／ROE），r＝10%、g＝4%、ROE 為近三年平均約 20%（再投資率約 20%），FY2027–32 明確期＋永續；"
             "組裝廠資本支出相對淨利不高，未改用淨利＋折舊－資本支出。FY2027–28 的 EPS 高於法人說法，DCF 偏高估。"
             "Comparable：廣達、鴻海、英業達、緯穎、美超微前瞻 P/E 中位數（不含 A 股）；英業達價格日期為 8 月、緯穎為子公司，同業倍數低（伺服器組裝的低利潤率）。"
-            "情境對應：A＝順利（顆數基準）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6）")
+            "情境對應：A＝順利（原始顆數）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6）")
 for r_ in (24, 35, 39):
     V[f"B{r_}"].fill = KEY
 V.column_dimensions["A"].width = 58

@@ -103,7 +103,7 @@ URLNAME = {TAN25: "公司：2026 年 3 月期決算短信（2026-05-07）", TANQ
            SAI: "stockanalysis.com（損益）", SAH: "stockanalysis.com（歷史股價）", CMC: "companiesmarketcap", MAT: "松井證券", YJ: "Yahoo!ファイナンス", SWS: "Simply Wall St",
            STO: "Stockopedia", KY: "株予報"}
 
-sec("A. AI 加速器顆數（讀 tsmc 成品；CY2026–CY2028 為輸入、CY2029＝CY2028 ×（1＋各類成長）；情境 A 基準，B／C 依同字母顆數係數縮放）")
+sec("A. AI 加速器顆數（讀 tsmc 成品；CY2026–CY2028 為輸入、CY2029＝CY2028 ×（1＋各類成長）；情境 A（原始顆數），B／C 依同字母顆數係數縮放）")
 for y in (26, 27, 28, 29):
     inp(f"unv_{y}", f"NVIDIA 加速器顆數 CY20{y}（Blackwell＋Rubin＋Rubin Ultra＋Hopper）", "百萬顆", None, round(UNV[y], 6), None, "Derived", U_SRC if y == 26 else "同上",
         "唯讀上游；與台積電、Ibiden、欣興模型同一份顆數" if y == 26 else "同上")
@@ -111,8 +111,8 @@ for y in (26, 27, 28, 29):
     inp(f"uot_{y}", f"非 NVIDIA 加速器顆數 CY20{y}（AMD、TPU、Trainium、其他 ASIC）", "百萬顆", None, round(UOT[y], 6), None, "Derived", U_SRC if y == 26 else "同上",
         "ABF 由全部載板廠採用（市占逾九成），所以非 NVIDIA 加速器全數計入，不乘 Ibiden 份額權重" if y == 26 else "同上")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：CY2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um28_{s}'][1]}", "A＝順利（基準）；B＝平平；C＝不如預期；與台積電、Ibiden、欣興模型同字母")
-    inp(f"um29_{s}", f"情境 {s}：CY2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um29_{s}'][1]}", "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：CY2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um28_{s}'][1]}", SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：CY2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um29_{s}'][1]}", SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 inp("v_ot", "非 NVIDIA 加速器每顆載板面積（金額）÷ NVIDIA（欣興模型）", "x", UM[0], UM[1], UM[2], "Assumed", UM[3], "TPU、Trainium、MI 系列封裝面積接近 GPU、層數不同；量化：未找到（欣興模型同值）")
 inp("g_asp", "每顆載板面積 × 層數年增（Ibiden 模型的每顆載板金額年增）", "%", IB["g_asp"][0], IB["g_asp"][1], IB["g_asp"][2], "Analogy", IB["g_asp"][3],
     "ABF 用量與載板面積 × 增層數成正比：Palliser（Interested-party）Rubin Ultra 155×75 mm、18 層，為 PC CPU 的 13.3 倍面積；EdgeX：每顆 AI 加速器 8–16 層")
@@ -558,7 +558,7 @@ V.cell(51, 1, "目標價方法")
 V["B51"] = ("DCF：股東現金流＝EPS ×（1 − g／ROE），r＝10%、g＝4%、ROE＝近三年平均約 13.0%（再投資率約 31%），FY2027–29 驅動因子、FY2030–32 收斂法＋永續；基準日 2026 年底。"
             "Comparable：龜甲萬、日清食品、明治、Kewpie、McCormick、Nestlé 前瞻 P/E 中位數（食品同業，不含 A 股）× 2027-11～2028-10 的 EPS（5/12 × FY2027＋7/12 × FY2028）。"
             "偏誤：食品同業倍數未反映 ABF 的獨占與成長（Comparable 偏低）；ROE 低於折現率加上收斂法使 DCF 只支撐約 16 倍（偏低）；本業與 ABF 風險不同，未分開折現。"
-            "情境對應：A＝順利（顆數基準）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6），ABF 價格乘數 1.0／0.95／0.88")
+            "情境對應：A＝順利（原始顆數）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6），ABF 價格乘數 1.0／0.95／0.88")
 for r_ in (24, 36, 40):
     V[f"B{r_}"].fill = KEY
 V.cell(O, 1, "1. 價格與市場隱含倍數").font = BOLD

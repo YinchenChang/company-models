@@ -92,8 +92,8 @@ for s in SC:
         inp(f"as_{s}_{y}", f"Advantest SoC 市占 FY{y}（{s}；Advantest 會計年度 4–3 月）", "%", None, ADV["sh"][s][0][j], None, "Interested-party", ADV["sh"][s][1] if j == 0 else "同上",
             "Advantest 自估 CY2025 66%；情境 C 假設泰瑞達搶回（FY2028 61%、FY2029 56%）。本模型以同年度日曆年對照（FY(t) 有 3/4 落在 CY(t)）" if (s, j) == ("A", 0) else "同上")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：2028 加速器顆數 ÷ 基準（說明用）", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "Advantest 模型讀同一組係數（建置時核對相同）；本模型只經由 Advantest 的市場間接使用")
-    inp(f"um29_{s}", f"情境 {s}：2029 加速器顆數 ÷ 基準（說明用）", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：2028 加速器顆數 ÷ 原始顆數（說明用）", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：2029 加速器顆數 ÷ 原始顆數（說明用）", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 for s in SC:
     for j, y in enumerate((2025, 2026, 2027, 2028, 2029)):
         inp(f"wfe_{s}_{y}", f"晶圓前段設備（WFE）CY{y}（{s}）", "US$B", None, WFE[s][0][j], None, "Derived", WFE[s][1] if j == 0 else "同上", "markets/equipment Mkt 頁（只用於 Recon 的測試對 WFE 比）" if (s, j) == ("A", 0) else "同上")

@@ -96,7 +96,7 @@ URLNAME = {PR4Q: "公司 FY2026 第四季新聞稿（2026-08-11）", PREP: "公�
            YF: "Yahoo Finance 分析頁", TICK: "tickflow 預測頁", SWS: "Simply Wall St", MT: "Macrotrends P/E", MTNI: "Macrotrends 淨利", MTREV: "Macrotrends 營收",
            FR: "fullratio P/E", P_DELL: "stockanalysis（Dell）", P_HPE: "stockanalysis（HPE）", P_WY: "stockanalysis（緯穎）", P_QC: "stockanalysis（廣達）", P_WS: "stockanalysis（緯創）"}
 
-sec("A. 商用 GPU 顆數與每顆系統價值（讀 tsmc、markets/chip_bridge 成品；情境 A 基準，B／C 依顆數係數縮放）")
+sec("A. 商用 GPU 顆數與每顆系統價值（讀 tsmc、markets/chip_bridge 成品；情境 A（原始顆數），B／C 依顆數係數縮放）")
 for y in (26, 27, 28, 29):
     inp(f"uo_{y}", f"GB300 世代商用 GPU 顆數 CY20{y}（Blackwell＋Hopper" + ("＋AMD MI355）" if y == 26 else "）"), "百萬顆", None, round(OLD[y], 6), None, "Derived",
         U_SRC if y == 26 else "同上", "台積電模型八類加速器中 NVIDIA Blackwell、Hopper（2026 另含 AMD）；2029＝2028 × (1＋各類成長)" if y == 26 else "同上")
@@ -112,8 +112,8 @@ inp("v_vr", "每顆系統價值：Rubin 世代（VR200 整櫃買方價 ÷ 每架
 inp("vpg_28", "每顆系統價值 2028 ÷ 2027（Rubin 世代）", "x", 0.85, 1.0, 1.2, "Assumed", "Rubin Ultra（Kyber）整櫃價格：未找到", "與廣達、緯穎模型的每 GW 價值變動同區間")
 inp("vpg_29", "每顆系統價值 2029 ÷ 2027（Rubin 世代）", "x", 0.85, 1.0, 1.2, "Assumed", "同上", "—")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um28_{s}'][1]}", "A＝順利（基準）；B＝平平（AI 資本支出消化）；C＝不如預期（明顯下修）；與台積電、廣達、緯穎模型相同")
-    inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um29_{s}'][1]}", "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um28_{s}'][1]}", SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um29_{s}'][1]}", SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 inp("mf", "AI 部署係數（Sens 用；CY2027 起）", "x", 0.8, 1.0, 1.2, "Assumed", "台積電模型 CY2027 商用 GPU 顆數約 1.4 倍（8.35 → 11.2 百萬顆）", "±20%")
 
 sec("B. 營收結構、份額（FY2027 以公司指引校準）")
@@ -567,7 +567,7 @@ V["B48"] = ("DCF：股東現金流＝GAAP 稀釋 EPS ×（1 − g／ROE），r�
             "組裝與品牌商資本支出低（FY2026 1.62 億美元），未改用淨利＋折舊－資本支出；但營運資金占用大（FY2026 營業現金流 −68 億美元、以增資與特別股 56 億補足），以 EPS 推現金流會高估股東實拿的現金，偏誤向上。"
             "Comparable：Dell、HPE、緯穎、廣達、緯創前瞻 P/E 中位數（不含 A 股）；同業倍數未反映美超微的治理與會計折價（自身前瞻 P/E 約 7x），偏誤向上。"
             "FY2030 起為收斂法；FY2030 股數加特別股轉換股數。治理風險不改折現率，以 Sens 案例呈現。"
-            "情境對應：A＝順利（顆數基準）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6）")
+            "情境對應：A＝順利（原始顆數）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6）")
 for r_ in (24, 35, 39):
     V[f"B{r_}"].fill = KEY
 V.column_dimensions["A"].width = 58

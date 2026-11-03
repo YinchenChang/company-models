@@ -77,12 +77,12 @@ SA = "https://stockanalysis.com/stocks/amkr/"
 
 sec("A. AI 加速器顆數、封裝面積與部署規模（讀 tsmc、markets/network、markets/chip_bridge 成品；唯讀，不自行重估）")
 for y in (26, 27, 28, 29):
-    inp(f"units_{y}", f"AI 加速器顆數 20{y}（情境 A 基準）", "百萬顆", None, round(UNITS[y], 6), None, "Derived", U_SRC if y == 26 else "同上",
+    inp(f"units_{y}", f"AI 加速器顆數 20{y}（情境 A（原始顆數））", "百萬顆", None, round(UNITS[y], 6), None, "Derived", U_SRC if y == 26 else "同上",
         "NVIDIA、AMD、Google TPU、AWS Trainium、其他 ASIC 合計；台積電模型讀 markets/memory 的同一份顆數" if y == 26 else "同上")
 for s in SC:
     for y in (28, 29):
         inp(f"um{y}_{s}", f"情境 {s}：20{y} 顆數 ÷ 基準", "x", None, TS[f"um{y}_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um{y}_{s}'][1]}",
-            "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、廣達、NVIDIA 模型相同）" if (s == "A" and y == 28) else "同上")
+            "A＝原始顆數；B＝AI 資本支出消化；C＝明顯下修（與台積電、廣達、NVIDIA 模型相同）" if (s == "A" and y == 28) else "同上")
 for y in (26, 27, 28, 29):
     inp(f"ar_{y}", f"封裝面積指數 20{y}（加速器用 CoWoS 片數 ÷ 顆數，2026＝1）", "x", None, round(AREA[y], 6), None, "Derived",
         f"{CW['需求合計'][1]} 減 {CW['其他 CoWoS 用途'][1]}，除以顆數" if y == 26 else "同上",
@@ -601,7 +601,7 @@ V.cell(48, 1, "目標價方法")
 V["B48"] = ("DCF：股東現金流＝GAAP 稀釋 EPS ×（1 − g／ROE），r＝10%、g＝4%、ROE 為近三年平均約 9%（再投資率約 45%），FY2027–32 明確期＋永續；"
             "Amkor 資本密集，但 FY2030 起只有收斂法、亞利桑那第二期支出未建，未改用淨利＋折舊－資本支出，現金流偏高估。"
             "Comparable：台美封測同業（日月光、力成、京元電、矽格、南茂）前瞻 P/E 中位數；不放 A 股（長電、通富約 35–50x，結構性溢價）；京元電以 AI 測試為主、倍數較高，部分價格為 10 月上旬。"
-            "情境對應：A＝順利（顆數基準）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6、通訊下滑）")
+            "情境對應：A＝順利（原始顆數）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6、通訊下滑）")
 for r_ in (24, 35, 39):
     V[f"B{r_}"].fill = KEY
 V.column_dimensions["A"].width = 58

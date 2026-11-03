@@ -404,7 +404,7 @@ SE["A1"] = "Sens — 一次動一個輸入（情境 A）：對 FY2027、FY2028 �
 hdr(SE, 3, ["案例", "設定", "FY2027 營收 €B", "FY2027 EPS €", "相對基準", "FY2028 營收 €B", "FY2028 EPS €", "相對基準"])
 cases = [("微影強度與價格 0%／年", "g_int＝0", dict(gi="g_int_lo")), ("微影強度與價格 +6%／年", "g_int＝6%", dict(gi="g_int_hi")),
          ("中國占 FY2026 系統 17%", "非中國基期較大", dict(cn="cn_sh26_lo")), ("中國占 FY2026 系統 23%", "非中國基期較小", dict(cn="cn_sh26_hi")),
-         ("中國年成長 −10%", "情境 A 基準 0%", dict(gcn="g_cn_A_lo")), ("中國年成長 +10%", "", dict(gcn="g_cn_A_hi")),
+         ("中國年成長 −10%", "情境 A（原始顆數） 0%", dict(gcn="g_cn_A_lo")), ("中國年成長 +10%", "", dict(gcn="g_cn_A_hi")),
          ("IBM 年成長 +8%", "基準 +12%", dict(gibm="g_ibm_A_lo")), ("IBM 年成長 +16%", "", dict(gibm="g_ibm_A_hi")),
          ("毛利率斜率 ×0.5", "營收規模帶動毛利率的效果減半", dict(gmb="gm_b_lo")), ("毛利率斜率 ×1.5", "", dict(gmb="gm_b_hi")),
          ("營業費用全固定（phi＝0）", "", dict(phi="phi_lo")), ("營業費用變動比例 40%", "營業費用隨營收成長較多", dict(phi="phi_hi")),
