@@ -1,4 +1,4 @@
-# alphabet/ — Alphabet（GOOGL）個股模型 v0.3.3（命題＋營收分部；2026Q3 季度滾動；v0.3.2 呈現修正、v0.3.3 敏感度覆蓋，數值同 v0.3.1）
+# alphabet/ — Alphabet（GOOGL）個股模型 v0.3.4（命題＋營收分部；2026Q3 季度滾動；v0.3.2 呈現修正、v0.3.3 敏感度覆蓋、v0.3.4 Tokenomics 快照 v21.9，基準數值同 v0.3.1）
 
 **命題（一句話）：** AI 改變搜尋之後，Google Search 的變現能否守住，同時 Google Cloud（含 TPU）能否把翻倍的資本支出變成營收；加計 AI 折舊與 2026 年股權發行後，每股價值是否高於現價。
 
@@ -38,6 +38,12 @@
 - 融資瀑布、站點、租賃承諾、RPO 等 CRWV 頁面移除；舊引擎保留在 `legacy_v0.2/`（未刪），舊成品在 `dist/_待刪除/`。
 - 目標價：v0.2.2 讀法 1 加權 147.54 → v0.3 初版 135.28 → 修正一 251.68 → 修正二 253.30 → 修正三 258.70（讀法 1 → 2 +64.3；見報告「修正三」）。
 
+## v0.3.4（2026-11-04，Tokenomics 快照 v21.7 → v21.9，基準數值不變）
+- 快照 `data/tokenomics_snapshot_v21.9.json`（`20261103_Tokenomics_v21.9.xlsx`，master 7276259；同一名稱清單 `data/tokenomics_names.txt`，42 個名稱）；v21.7 快照、v0.3.3 成品與 `sens_v033_20261030.json` 移 `_待刪除/`。
+- 契約名稱值的變動只在高成本欄（v21.8：IT 折舊年限 4 → 5 年）與 `IF_NonNV_Out_TPU`（v21.9 Q1 定案：各晶片最高原生精度，0.6／0.8／1.1 → 0.25／0.35／0.40）；基準欄不變。
+- 與 v0.3.3 逐格比對：In 頁 D95:F95（tpu_out，只用於 Sens）、F102:F105（he_* 敏感度高）與來源說明文字、Thesis A2、Sources 第 12 列、Sens 第 16、59–60、63–64 列不同；其餘各頁全部相同（加權目標價 258.21、評等中立不變）。
+- Sens 變動：`he_all` 高 294.85 → 284.87；`tpu_fo` 高 264.65 → 235.87；`tpu_out` 低／高 251.79／284.15 → 229.55／239.04（三案上檔 −27.4%／−29.3%／−26.4%，跨到放空）。Sens 標籤的產出比改由快照取值，並註明「Q1 已定案」。敏感度結果 `data/sens_v034_20261104.json`（其餘案例逐一相同）。報告 `docs/reports/20261104_alphabet_v0.3.4_TK快照v21.9.md`。
+
 ## v0.3.3（2026-10-30，敏感度覆蓋，基準數值不變）
 - 依個股模型原則第 9 節補齊 Sens 案例：In 頁 66 個有低／高區間的鍵全部有案例或合格豁免（`tools/sens_coverage/check_sens_coverage.py --require-keycol` 通過，`make_v03.sh` 每次執行）。新增 28 個案例（55 列；`capex_g` 另由 `c10_g` 列的鍵欄涵蓋），含 **IF_HoldEcon 四世代同時取低／高（鍵 `he_all`）**：低 244.36（−5.4%，上檔 −24.8%，仍為中立、離放空門檻 243.67 只差 0.69）、高 294.85（+14.2%，中立）。
 - 鍵欄：`c10_g` 列加 `capex_g`（該案同時改指引與速度）、`tpu_f` 列加 `tpu_cf`；`tpu_out` 以「收入係數改用產出比低／高端」一案涵蓋（`tpu_out` 本身不進公式）。
@@ -63,13 +69,13 @@
 | `facts_2026q3.py` | 2026Q3 新聞稿與簡報 → `data/alphabet_facts_2026q3.json`（兩讀核對，不一致即失敗） |
 | `calib_pace_v031.py` | C10：解 AI MW 速度使 FY2026 資本支出＝指引中點 → `data/pace_v031.json` |
 | `q3cf_v03.py` | 變動拆解用：v0.3 對 2026Q3 的模型值與隱含輸入 → `data/q3cf_v03_2026q3.json` |
-| `sens_v03.py` | 敏感度與拆解鏈：一次改一個 In 頁輸入、整本 LibreOffice 重算，結果寫 `data/sens_v033_20261030.json`（v0.3.3 起含 he_all 等全部有區間的鍵） |
+| `sens_v03.py` | 敏感度與拆解鏈：一次改一個 In 頁輸入、整本 LibreOffice 重算，結果寫 `data/sens_v034_20261104.json`（v0.3.3 起含 he_all 等全部有區間的鍵） |
 | `check_v03.py` | 成品核對：公式錯誤 0、Q／Seg／PL／CF／Val 核對列 0、敏感度未過期、固定列標籤存在 |
 | `gen_html_json.py` | 由列號對照產生 `html.json`（勿手改 html.json） |
 | `make_v03.sh` | 一次跑完：事實總帳 → （C10）→（敏感度）→ 建置 → 重算 → 核對 → segment_check → HTML |
 | `segments.json` | 官方分部宣告（`tools/segment_check/check_segments.py alphabet` 通過） |
-| `dist/20261030_Alphabet個股模型_v0.3.3.xlsx`／`.html` | 成品（LibreOffice 重算，公式錯誤 0；HTML 檢核通過） |
-| `data/` | 事實總帳（SEC 一手＋2026Q3 新聞稿）、Tokenomics v21.7 快照、k 證據、共識、同業倍數、C10 解、敏感度結果；舊版在 `data/_待刪除/` |
+| `dist/20261104_Alphabet個股模型_v0.3.4.xlsx`／`.html` | 成品（LibreOffice 重算，公式錯誤 0；HTML 檢核通過） |
+| `data/` | 事實總帳（SEC 一手＋2026Q3 新聞稿）、Tokenomics v21.9 快照、k 證據、共識、同業倍數、C10 解、敏感度結果；舊版在 `data/_待刪除/` |
 | `docs/reports/20261029_alphabet_v0.3.1_季度滾動.md` | 本版報告（結論、變動拆解、新季 vs 模型、指引與 C10、Tokenomics、收支關卡、預設、資料缺口、待決） |
 | `legacy_v0.2/` | v0.2.2 MAG 共用引擎（保留不刪） |
 

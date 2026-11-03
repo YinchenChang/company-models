@@ -33,7 +33,8 @@ if A.q3cf:                                                          # 變動拆�
     _cf = json.load(open(A.q3cf, encoding="utf-8")); _cf = _cf.get("facts", _cf)
     for k, v in _cf.items():
         F[k] = dict(F.get(k, {"id": k}), value=v)
-TKV = "v21.7"
+TKV = "v21.9"   # v0.3.4：Tokenomics 快照 v21.7 → v21.9（基準數值不變）
+Q1NOTE = "Q1 已定案：各晶片最高原生精度（Tokenomics v21.9，Andy 2026-11-03）"
 TK = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 GEN = {x["code"]: x["name"] for x in TK["source"]["generations"]}
 def tk(name, code=None):
@@ -89,8 +90,8 @@ SE = wb.create_sheet("Sens"); SO = wb.create_sheet("Sources")
 
 # =====================================================================================================
 # In：輸入（一列一鍵；E＝基準，D＝低，F＝高）
-IN["A1"] = "In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」〔v0.3.3〕）。金額 US$B；每股 US$；股數十億股；MW＝IT MW。標記：Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律給低／高區間）"
-IN["A2"] = "「沿用 v0.2.2」＝MAG v0.2.2 已核准的參數（原出處：alphabet/legacy_v0.2/company.json、kspec.py、data/kevidence_alphabet_20261008.json；對照表 r1 C1–C23）。v0.3.1：Tokenomics 升級 v21.7（data/tokenomics_snapshot_v21.7.json）、2026Q3 實績（data/alphabet_facts_2026q3.json）、評價日 2026-09-30。黃底＝判斷題（Andy 可改）"
+IN["A1"] = "In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」〔v0.3.4〕）。金額 US$B；每股 US$；股數十億股；MW＝IT MW。標記：Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律給低／高區間）"
+IN["A2"] = "「沿用 v0.2.2」＝MAG v0.2.2 已核准的參數（原出處：alphabet/legacy_v0.2/company.json、kspec.py、data/kevidence_alphabet_20261008.json；對照表 r1 C1–C23）。v0.3.1：Tokenomics 升級 v21.7、2026Q3 實績（data/alphabet_facts_2026q3.json）、評價日 2026-09-30；v0.3.4：Tokenomics 快照換 " + TKV + "（data/tokenomics_snapshot_" + TKV + ".json，基準數值不變）。黃底＝判斷題（Andy 可改）"
 hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "說明"])
 ROWS = []
 def sec(t): ROWS.append(("sec", t))
@@ -231,7 +232,7 @@ _hold = TK["items"]["IF_NonNV_Hold_TPU"]["values"]; _out = TK["items"]["IF_NonNV
 inp("tpu_hold", "Tokenomics IF_NonNV_Hold_TPU（TPU v7 每 GW 持有成本 ÷ VR200）", "x", _hold[0], _hold[1], _hold[2], "Assumed",
     f"data/tokenomics_snapshot_{TKV}.json（{TK['source']['file']}，{TK['items']['IF_NonNV_Hold_TPU']['ref']}；Tokenomics 標 Assumed，v21.6 起依每 kW 設備價推導）", "權威在 Tokenomics（規則第 13 條；契約第 6 條）")
 inp("tpu_out", "Tokenomics IF_NonNV_Out_TPU（TPU v7 每 GW 產出 ÷ VR200）", "x", _out[0], _out[1], _out[2], "Assumed",
-    f"data/tokenomics_snapshot_{TKV}.json（{TK['items']['IF_NonNV_Out_TPU']['ref']}；Tokenomics 標 Assumed、慣例值，PR #172 Q1 未決）", "只作敏感度（收入改按產出比）")
+    f"data/tokenomics_snapshot_{TKV}.json（{TK['items']['IF_NonNV_Out_TPU']['ref']}；Tokenomics 標 Assumed；{Q1NOTE}）", "只作敏感度（收入改按產出比）")
 inp("tpu_f", "TPU 每 MW 收入錨係數（＝Tokenomics TPU 持有成本比）", "x", 0.65, "=tpu_hold", 1.0, "Derived",
     "v0.3.1（工作單第 1 節第 3 項預設：改讀 Tokenomics）：TPU MW 的每 MW 收入＝k × TPU 持有成本＝k × IF_NonNV_Hold_TPU × 錨世代 IF_HoldEcon（持有成本比套用到各錨世代，近似）",
     "高＝1.0 為舊 C2 口徑（同期 NVIDIA 世代 × 1.0，v0.3）；低＝Tokenomics 低端 0.65")
@@ -547,7 +548,7 @@ if os.environ.get("STAGE") == "1":
 # =====================================================================================================
 # Thesis：命題模組（Cloud AI：MW × 每 MW 收入 × k；AI 資本支出 → 折舊 → 分部營業利益）
 TH["A1"] = "Thesis — 命題模組：AI 容量（MW）× 每 MW 收入（Tokenomics 持有成本 × k）→ Google Cloud 的 Cloud AI 子列；同一套 MW 推出 AI 資本支出、AI 折舊與營運成本，接到分部營業利益（對外 → Google Cloud；自用 → Google Services／Alphabet 層級）"
-TH["A2"] = "三情境共用（本版的情境軸是 Search，見 Seg 頁）；MW 速度、對外比例、k 的區間在 Sens 頁。沿用 v0.2.2：k 規格（kspec.py）、對外比例 30%；v0.3.1：Tokenomics v21.7 快照、TPU 係數改讀 IF_NonNV_Hold_TPU、C10 速度依 2026 指引重解。不以 Cloud 營收、RPO 反推 k 或每 MW 價格（工作單第 4 節）"
+TH["A2"] = "三情境共用（本版的情境軸是 Search，見 Seg 頁）；MW 速度、對外比例、k 的區間在 Sens 頁。沿用 v0.2.2：k 規格（kspec.py）、對外比例 30%；v0.3.1：Tokenomics v21.7 快照（v0.3.4 換 v21.9，基準不變）、TPU 係數改讀 IF_NonNV_Hold_TPU、C10 速度依 2026 指引重解。不以 Cloud 營收、RPO 反推 k 或每 MW 價格（工作單第 4 節）"
 T = {}
 r = 4
 TH.cell(r, 1, "A. 價格與起始值（單一數值，C 欄）").font = BOLD; r += 1
@@ -1299,7 +1300,7 @@ SENS_CASES = [
     ("kl_px", "k：長約價格（低＝判斷倍數 0.60）", "lo", None, "長約 0.75 → 0.60"),
     ("ks_px", "k：現貨價格（高＝GCP 牌價）", None, "hi", "2.82 → 4.858 US$/GPU-hr"),
     ("tpu_f", "TPU 係數（收入與資本支出雙邊；Tokenomics 低端／舊 C2 口徑）", "lo", "hi", "0.70 → 0.65／1.0（同時改 tpu_cf；pace 不重解）"),
-    ("tpu_fo", "TPU 收入係數改用產出比（資本支出仍用持有比）", None, "hi", "收入 0.70 → IF_NonNV_Out_TPU 0.80"),
+    ("tpu_fo", "TPU 收入係數改用產出比（資本支出仍用持有比）", None, "hi", f"收入 {_hold[1]:.2f} → IF_NonNV_Out_TPU {_out[1]:.2f}（{Q1NOTE}）"),
     ("cip_0", "評價日在建工程推估", "lo", "hi", "142.6 → 122.8（6/30 值）／160"),
     ("abc_rate", "Alphabet 層級未分攤費用率", "lo", "hi", "6.0% → 4.83%（2026Q2）／6.5%"),
     ("life_it", "AI IT 折舊年限", "lo", "hi", "5／7 年"),
@@ -1340,7 +1341,7 @@ SENS_CASES += [
     ("he_all", "IF_HoldEcon 四世代同時取低／高（每 MW 年持有成本；k 的分母同步變動）", "lo", "hi",
      f"Tokenomics 低成本／高成本欄（he_h、he_b2、he_b3、he_vr 同時；GB300 {_INR['he_b3'][4]:.2f} → {_INR['he_b3'][3]:.2f}／{_INR['he_b3'][5]:.2f}；pace 不重解）"),
     ("tpu_hold", "Tokenomics IF_NonNV_Hold_TPU（tpu_f、tpu_cf 同時跟隨）", *_lohi("tpu_hold")[:2], _lohi("tpu_hold")[2] + "（pace 不重解）"),
-    ("tpu_out", "TPU 收入係數改用產出比低／高端（資本支出仍用持有比）", *_lohi("tpu_out")[:2], "收入 tpu_f 0.70 → IF_NonNV_Out_TPU " + _lohi("tpu_out")[2].split(" → ")[1]),
+    ("tpu_out", "TPU 收入係數改用產出比低／高端（資本支出仍用持有比）", *_lohi("tpu_out")[:2], f"收入 tpu_f {_hold[1]:.2f} → IF_NonNV_Out_TPU " + _lohi("tpu_out")[2].split(" → ")[1] + f"（{Q1NOTE}）"),
     ("mw_q2", "AI 在役 IT MW（2026-06-30）", *_lohi("mw_q2")[:2], _lohi("mw_q2")[2] + " MW（pace 不重解）"),
     ("long_sh", "長約占比", *_lohi("long_sh")),
     ("selfb", "自建機房比例", *_lohi("selfb")),
@@ -1441,7 +1442,7 @@ SRCS = [
     ("Alphabet 2026Q2 10-Q", "2026-07-23", "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=1652044&type=10-Q", "Interested-party", "資產負債、在建工程、租賃、債務、股數"),
     ("Alphabet 2026Q2 法說逐字稿（Benzinga 轉錄，二手）", "2026-07-22", "https://www.benzinga.com/news/26/09/61834150", "Interested-party", "2026 資本支出指引 195–205、TPU 營收時點、供不應求"),
     ("事實總帳 alphabet/data/alphabet_facts_20261008.json（MAG v0.1a）", "2026-10-08", "repo 內", "各筆標記", "Q 頁全部實績與多數輸入"),
-    ("Tokenomics 快照 alphabet/data/tokenomics_snapshot_v21.7.json（20261025_Tokenomics_v21.7.xlsx，master 6621bc5）", "2026-10-29", "repo 內（YinchenChang/Tokenomics）", "Derived", "IF_HoldEcon、IF_GPUhrEcon、IF_OpexGW、IF_CapexIT／Facility、IF_NonNV_Hold_TPU／Out_TPU、上限檢查"),
+    (f"Tokenomics 快照 alphabet/data/tokenomics_snapshot_{TKV}.json（{TK['source']['file']}，master {TK['source']['commit'][:7]}）", TK["source"]["extractedAt"], "repo 內（YinchenChang/Tokenomics）", "Derived", "IF_HoldEcon、IF_GPUhrEcon、IF_OpexGW、IF_CapexIT／Facility、IF_NonNV_Hold_TPU／Out_TPU、上限檢查"),
     ("k 證據 alphabet/data/kevidence_alphabet_20261008.json；legacy_v0.2/kspec.py", "2026-10-22", "repo 內", "Verified／Assumed", "k_長約、k_現貨"),
     ("Epoch AI〈AI Chip Owners〉cumulative by designer", "2026-05-12", "https://epoch.ai/data/ai_chip_owners_cumulative_by_designer.csv", "Derived", "AI 在役 MW（期初、歷史）"),
     ("Silicon Data H100 Index", "2026-10-06", "https://www.silicondata.com/products/silicon-index/h100", "Verified", "k_現貨"),
