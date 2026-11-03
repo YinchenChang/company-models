@@ -35,12 +35,12 @@ from common import F_BOLD, F_CALC, F_IN, F_NOTE, e6_violations, header, lo_recal
 from oai_link import read_oai  # noqa: E402
 from tk_link import NONNV_STATUS, PENDING_NOTE, V17_NAMES, V19B_NAMES, read_nonnv, read_snapshot  # noqa: E402
 
-VERSION = "v0.1.7.1"
-STAGE = "v0.1.7.1"
+VERSION = "v0.1.8"
+STAGE = "v0.1.8"
 REGISTRY_PATH = HERE / "id_registry.json"
 SRC_YAML = ROOT / "data" / "anthropic_src.yaml"
 INP_YAML = ROOT / "data" / "anthropic_inputs.yaml"
-STAGE_MODULES = ("a2", "a3", "a4", "a5", "a6", "a7", "a8")
+STAGE_MODULES = ("a2", "a3", "a4", "a5", "a6", "a7", "a8", "a9")
 CALC_SHEETS = ("Demand", "Revenue", "Compute", "Cost", "Funding", "Reverse")      # E6 掃描與 OAI_Link 隔離的對象
 SRC_COLS = ["SRC_ID", "key", "分組", "項目", "值", "低", "高", "單位", "期間", "日期（序列值）", "口徑", "來源", "網址", "文件日期", "擷取日", "標記",
             "利害方與誘因", "來源等級", "立場", "立場說明", "一手／二手", "處理狀態", "備註",
@@ -199,7 +199,7 @@ def sheet_readme(ctx, summary):
                     "條件式（Amazon 15、Google 20〔v0.1.7.1 起依正式 S-1；v0.1.7 為 30〕、NVIDIA 10、AMD 5）與 IPO 約 100 只列情境；或有負債只列示；情境 S1–S7（IPO、條件式、逐家錨定招股書、機房租金、D22、合併）；回流對照（D18）。"),
         ("Reverse", "管理層營收目標（2026 18、2027 55、2028 70、2029 148；2030 無目標取正向）→ 只靠 API／只靠訂閱／兩線等比例的所需倍數 → 反向資金（同一支出）；只被 Checks 引用（D19）。"),
         ("Excel 為唯一計算引擎", "藍字＝輸入（Excel 擁有，重建時保留已改過的值）；黑字＝公式；綠字＝跨頁連結。builder 只產生結構（data/*.yaml → SRC_ANT／Inputs；Tokenomics → TK_Link；OpenAI → OAI_Link）。"),
-        ("SRC_ANT", f"{summary['src']} 列：公司財務原始數據（A1 蒐集 376 列＋A2 新增 3 列供 Derived 列公式化＋v0.1.1 新增 30 列〔草擬 S-1 經 WSJ 轉述、Q3 投資人簡報〕＋v0.1.6 新增 55 列〔正式公開 S-1〕＋v0.1.7 新增 7 列＋v0.1.7.1 新增 16 列〔SRC_ANT_472–487，正式 S-1 原文：各輪融資、條件式額度、信用額度條款、受限現金〕；v0.1.7.1 起 S-1 二手轉載 46 列經 chat 端瀏覽器核對原文改 Verified）。標記 Derived 的 14 列：13 列改為公式、1 列（Reuters 自行計算後公布的通路費）保留報導值。"),
+        ("SRC_ANT", f"{summary['src']} 列：公司財務原始數據（A1 蒐集 376 列＋A2 新增 3 列供 Derived 列公式化＋v0.1.1 新增 30 列〔草擬 S-1 經 WSJ 轉述、Q3 投資人簡報〕＋v0.1.6 新增 55 列〔正式公開 S-1〕＋v0.1.7 新增 7 列＋v0.1.7.1 新增 16 列〔SRC_ANT_472–487，正式 S-1 原文：各輪融資、條件式額度、信用額度條款、受限現金〕＋v0.1.8 新增 34 列〔SRC_ANT_488–521，S-1/A 第 1 號修訂：Q3 實績、承諾總額與付款表、9-30 現金〕；v0.1.7.1 起 S-1 二手轉載 46 列經 chat 端瀏覽器核對原文改 Verified）。標記 Derived 的 14 列：13 列改為公式、1 列（Reuters 自行計算後公布的通路費）保留報導值。"),
         ("TK_Link", f"Tokenomics {sn['version']}（{sn['file']}），master 提交 {sn['sha'][:7]}；{summary['tk_ok']} 個具名範圍（OpenAI v0.6 同一組 63 名＋A2 新增任務 token 5 名＋v0.1.2 新增 v18.0 對照名稱 14 個，只對照）＋ 讀表（非具名）{summary['tk_nnv']} 格：NonNV 18 格（規格 D6）與 PUE 3 格（A3；Tokenomics Inputs 頁）。"),
         ("OAI_Link", f"OpenAI 命題輸出快照（{oa['file']}；SHA-256 {oa['sha256'][:12]}…；v0.1.7 起為 OpenAI v0.6.4，v0.1.6 以前為 v0.6）；只被 Checks 引用（規格 D20）。"),
         ("Inputs", f"{summary['inp']} 列：假設（值、低、高、標記、依據、區間理由）；定義常數（年度、天數、單位換算）也在此（E6：公式不含常數）。"),
@@ -214,6 +214,11 @@ def sheet_readme(ctx, summary):
         ("v0.1.7.1 更新", "正式 S-1 原文落地（工作單 20261102 v0.1.7.1；chat 端 2026-11-02 以瀏覽器核對 SEC 原文）：V1 46 列二手轉載改 Verified（SRC_ANT_427–431 改原文精度；只對照）；"
                           "V2 已到位融資更正：Google 2026 Q2 Series G-2 約 10.0 與 Series H 分開（Note 4、9、10），googl_upfront_switch 0→1；Series G／H 改原文 30.2／65.2（s1f_round_switch）→ 2026 已到位 100 → 110.4（對 S-1 特別股發行收入 110.432）；"
                           "V3 條件式 Google 30 → 20（s1f_cond_switch；只動情境）；V4 A&R 循環額度 15.0 與最低流動性 5.0（只對照）。新列：SRC_ANT_472–487、Inputs 尾端 3 列、Funding 第十三節尾 1 列與第十四節。"),
+        ("v0.1.8 更新", "S-1/A 第 1 號修訂（2026-11-02 申報，accession 0001628280-26-068676；工作單 20261102 v0.1.8；chat 端 2026-11-03 以瀏覽器直讀原文）：每項皆有 Inputs 開關，全關＝v0.1.7.1。"
+                        "R5a 2026 Q3 實績（營收 16.956、算力 9.863、營業損益 −0.567、股權報酬 1.070、非現金捐贈 1.960）：營收基準 Q3 改實績、W4 下半年非算力改 Q3 實際 4.630／季、股權報酬代理下半年改 Q3 實際（s1a_q3_switch）；"
+                        "R5b 承諾：W1(b) 三段 832 → 871.4（表內 320.0＋未起租 451.2＋9-30 後 100.2）、Google 114.5 → 121.3（s1a_commit_switch）；R5c 未歸屬餘額付款期改依 S-1/A 結構合成（s1a_unalloc_switch）；"
+                        "R5d 附條件 213.8 基準計入、扣除讀法並列（s1a_cond_deduct_switch）；R4 SpaceXAI S-1 路徑並列（s1f_spacex_fee_switch，基準 0）；R5e 9-30 現金對照；R5f Q3 無新股權。"
+                        "新列：SRC_ANT_488–521、Inputs 尾端 11 列、Cost 第二十六節、Funding 第十五節。"),
         ("層級對應", "Haiku→低層（Tokenomics Luna）、Sonnet→中層（Sol）、Opus→頂層（Astra）；具名範圍沿用 OpenAI 的 Top／Mid／Low。"),
         ("標記", "Verified／Interested-party／Analogy／Assumed／Derived／Decision（Analogy、Assumed 一律附區間）。"),
         ("分層", "公司財務原始數據→SRC_ANT；AI 技術與算力→TK_Link（取自 Tokenomics）；假設→Inputs；OpenAI 對照→OAI_Link（不進計算）。"),
@@ -376,7 +381,7 @@ def base_checks(ctx, n_src, n_inp):
     fams = sorted({x.split("_")[2] for x in nnv})
     order = "+".join(f"(TK_NNV_{f}_{a}Lo>TK_NNV_{f}_{a})+(TK_NNV_{f}_{a}>TK_NNV_{f}_{a}Hi)" for f in fams for a in ("Out", "Hold"))
     rows = [
-        ("src_rows", "SRC_ANT 列數", "=SUMPRODUCT(--(LEN(SRC_ANT!$A$5:$A$600)>0))", n_src, "eq", "A1 376 列＋A2 新增 3 列（SRC_ANT_377–379）＋v0.1.1 新增 30 列（SRC_ANT_380–409）＋v0.1.6 新增 55 列（SRC_ANT_410–464，正式 S-1）＋v0.1.7 新增 7 列（465–471）＋v0.1.7.1 新增 16 列（472–487）"),
+        ("src_rows", "SRC_ANT 列數", "=SUMPRODUCT(--(LEN(SRC_ANT!$A$5:$A$600)>0))", n_src, "eq", "A1 376 列＋A2 新增 3 列（SRC_ANT_377–379）＋v0.1.1 新增 30 列（SRC_ANT_380–409）＋v0.1.6 新增 55 列（SRC_ANT_410–464，正式 S-1）＋v0.1.7 新增 7 列（465–471）＋v0.1.7.1 新增 16 列（472–487）＋v0.1.8 新增 34 列（488–521，S-1/A）"),
         ("src_missing", "SRC_ANT 缺值列數", "=SUM(SRC_ANT!$X$5:$X$600)", 0, "eq", "值、低、高皆空且非定性／文字／日期列"),
         ("src_nosource", "SRC_ANT 缺出處或網址列數", "=SUM(SRC_ANT!$Y$5:$Y$600)", 0, "eq", ""),
         ("src_order", "SRC_ANT 區間順序異常列數", "=SUM(SRC_ANT!$Z$5:$Z$600)", 0, "eq", "低 ≤ 值 ≤ 高"),

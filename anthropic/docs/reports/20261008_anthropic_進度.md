@@ -1,6 +1,7 @@
 # Anthropic v0.1 分段建置進度（接手用；A1–A5 共用）
 
 ## 目前狀態（每次 push 前覆寫）
+- **v0.1.8 完成**（2026-11-03；工作單 `docs/workorders/20261102_anthropic_v0.1.8_S1A滾動.md`；分支 `claude/anthropic-v0.1.8`；PR #306、**不合併**）。步驟 1 模型（R4、R5a–R5f）、2 HTML／dist／測試／工具、3 報告與文件完成；報告 `docs/reports/20261103_v0.1.8.md`。命題 2 不變（累計外部資金 0、谷底 22.26 → 40.23）；命題 1 2026 單年 +2.66 → −0.94。**下一步**：chat 端審查；未參與代理逐列核對 SRC_ANT_488–521 與瀑布；Andy 決定 SpaceXAI 讀法（R4 單獨翻轉命題 2）與捐贈 Q4 處理；通知 Wattonomics 串（MODEL_OVERRIDE 改指 v0_1_8 dist）與地圖串重抽。
 - **v0.1.7.1 完成**（2026-11-02；工作單 `docs/workorders/20261102_anthropic_v0.1.7.1_S1原文落地.md`；分支 `claude/anthropic-v0.1.7.1`；PR 已開、**不合併**）。步驟 1 模型（V1–V4）、2 HTML／dist／測試／工具、3 報告與文件完成；報告 `docs/reports/20261102_v0.1.7.1.md`。命題 2：累計外部資金需求 1.19 → 0、谷底 11.86 → 22.26（2029）。下一步：未參與代理獨立核對 V2 數字（SRC_ANT_472–481 對 S-1 原文）與命題輸出；v0.1.8（S-1/A）以本版為底。未解：最低現金口徑（6 個月 vs 12 個月時 3.83）。
 - **v0.1.7 完成**（2026-10-31；工作單 `docs/workorders/20261031_anthropic_v0.1.7_S1全面套用.md`；分支 `claude/anthropic-v0.1.7`；**不合併、未開 PR**）。步驟 1 模型（W1–W6）、2 測試／HTML／dist、3 報告與文件完成；報告 `docs/reports/20261031_v0.1.7.md`。**下一步**：chat 端審查；未參與代理獨立核對瀑布與首節數字；Andy 決定未歸屬餘額付款期等替代讀法。**未解問題**：S-1 付款時程留白（未歸屬餘額付款期為 Assumed）；η 0.468 低於 WARN 下緣；sec.gov 一手章節仍未直讀。
 - **v0.1.6 完成**（2026-10-31；工作單 `docs/workorders/20261031_anthropic_v0.1.6_S1正式版.md`；分支 `claude/anthropic-v0.1.6`；**不合併**）。步驟 1 模型（W1–W3）、2 測試、3 HTML／dist／對照 Excel、4 報告與文件完成；報告 `docs/reports/20261031_v0.1.6.md`。**下一步**：chat 端審查 PR；以瀏覽器核對 S-1 二手列；決定 6-30 後新簽合約是否進基準、OAI_Link 與 TK 是否同步。**未解問題**：sec.gov 一手章節（季度、Note 8、承諾）未能直讀。

@@ -247,7 +247,8 @@ def test_s1f_w2_and_eta_unchanged(eng):
     s = {r["key"]: r["id"] for r in SRC}
     i = {r["key"]: REG["INP"][r["key"]] for r in INP}
     assert eng.get_name(i["s1f_switch"]) == 1 and eng.get_name(i["u1_switch"]) == 1
-    tgt = eng.get_name(s["rev_s1f_2026h1"]) + eng.get_name(s["rev_2026_q3"]) * (2 + eng.get_name(i["q4_growth"]))
+    q3 = eng.get_name(s["rev_s1a_2026q3"]) if eng.get_name(i["s1a_q3_switch"]) == 1 else eng.get_name(s["rev_2026_q3"])     # v0.1.8 R5a：Q3 改 S-1/A 實績
+    tgt = eng.get_name(s["rev_s1f_2026h1"]) + q3 * (2 + eng.get_name(i["q4_growth"]))
     assert abs(eng.get_name("REV_Target")[1] - tgt) < 1e-9
     assert abs(eng.get_name("CMP_Eta2025") - 0.46763641507486053) < 1e-9
     assert eng.get_name("COST_Eta2026H1") > 0
@@ -262,16 +263,16 @@ def _ids():
 
 
 def test_v017_w1_unallocated_balance(eng):
-    """W1(b)：未歸屬餘額＝S-1 三段合計 − 模型逐家合約總額（不含 AMD），付款期間內平均；供給 GW＝付款 ÷ VR200 合約價；承諾開關 0 時為 0。"""
+    """W1(b)：未歸屬餘額＝S-1 三段合計 − 模型逐家合約總額（不含 AMD）；供給 GW＝付款 ÷ VR200 合約價。
+    v0.1.8：三段改 S-1/A 9-30 口徑（R5b：表內＋未起租＋9-30 後），付款＝餘額 × S-1/A 結構合成年度比例（R5c）；附條件扣除額基準 0（R5d）。"""
     s, i = _ids()
-    seg = sum(eng.get_name(s[k]) for k in ("cmt_s1f_leases_nc_0630", "cmt_s1f_purchase_0630", "cmt_s1f_post0630"))
-    assert abs(seg - eng.get_name("COST_S1fCommit3")) < 1e-9
+    assert eng.get_name(i["s1a_commit_switch"]) == 1 and eng.get_name(i["s1a_unalloc_switch"]) == 1 and eng.get_name(i["s1a_cond_deduct_switch"]) == 0
+    seg = sum(eng.get_name(s[k]) for k in ("cmt_s1a_table", "cmt_s1a_leases_nc", "cmt_s1a_post0930"))
+    assert abs(seg - eng.get_name("COST_S1fCommit3")) < 1e-9 and abs(seg - eng.get_name("COST_S1aCommit3")) < 1e-9
     bal = eng.get_name("COST_S1Unalloc")
     assert abs(bal - max(0.0, seg - eng.get_name("COST_S1fCommitModel"))) < 1e-9 and bal > 0
-    pay = eng.get_name("COST_Pay_S1Unalloc")
-    y0, y1 = eng.get_name(i["s1u_start"]), eng.get_name(i["s1u_end"])
-    for y, v in zip(range(2025, 2031), pay):
-        assert abs(v - (bal / (y1 - y0 + 1) if y0 <= y <= y1 else 0)) < 1e-9
+    pay, sh = eng.get_name("COST_Pay_S1Unalloc"), eng.get_name("COST_S1aUnallocShare")
+    assert all(abs(v - bal * w) < 1e-9 for v, w in zip(pay, sh))
     price = eng.get_name("CMP_Price_VR200")
     assert all(abs(g - p / pp) < 1e-9 for g, p, pp in zip(eng.get_name("CMP_Supply_S1Unalloc"), pay, price))
     assert eng.get_name("COST_GoogleAddl") == 0 and eng.get_name("COST_S1fSpaceXFactor") == 1     # 工作單預設：Google 額外 TPU 不進基準；SpaceXAI 沿用月費
@@ -286,20 +287,23 @@ def test_v017_w2_own_capex_gw_method(eng):
 
 
 def test_v017_w4_noncompute_calibration(eng):
-    """W4（核對後）：2026 非算力成本（不含股權報酬）＝上半年（營收 − 算力 − 營業損益 − 股權報酬代理）＋下半年 Q3 隱含 × 2 − 平台抽成；股權報酬＝S-1 調整數代理。"""
+    """W4（核對後）：2026 非算力成本（不含股權報酬）＝上半年（營收 − 算力 − 營業損益 − 股權報酬代理）＋下半年 Q3 × 2 − 平台抽成；股權報酬＝S-1 調整數代理。
+    v0.1.8 R5a：Q3＝S-1/A 實際（營收 − 算力 − 營業損益 − 股權報酬 − 非現金捐贈）；股權報酬代理下半年＝Q3 實際（股權報酬＋非現金捐贈）× 2。"""
     s, i = _ids()
     g = lambda k: eng.get_name(s[k])  # noqa: E731
-    assert eng.get_name(i["s1f_d22_q3_switch"]) == 1 and eng.get_name(i["s1f_sbc_proxy_switch"]) == 1
+    assert eng.get_name(i["s1f_d22_q3_switch"]) == 1 and eng.get_name(i["s1f_sbc_proxy_switch"]) == 1 and eng.get_name(i["s1a_q3_switch"]) == 1
     sbc_h1 = g("adjoi_s1f_2026h1") - g("oi_s1f_2026h1")
-    sbc_q2 = g("adjoim_s1f_2026q2") * g("rev_s1f_2026q2") - g("oi_s1f_2026q2")
-    assert abs(eng.get_name("COST_S1fSBCProxy2026") - (sbc_h1 + 2 * sbc_q2)) < 1e-9
-    assert abs(eng.get_name("COST_SBC")[1] - (sbc_h1 + 2 * sbc_q2)) < 1e-9
-    q3 = g("rev_2026_q3") * (1 - g("cmp_s1_spend_2026_q3_derived") / g("rev_2026_q3") - g("adj_opmargin_2026_q3"))
+    sbc_q3 = g("sbc_s1a_2026q3") + g("charity_s1a_2026q3")
+    assert abs(eng.get_name("COST_S1fSBCProxy2026") - (sbc_h1 + 2 * sbc_q3)) < 1e-9
+    assert abs(eng.get_name("COST_SBC")[1] - (sbc_h1 + 2 * sbc_q3)) < 1e-9
+    q3 = g("rev_s1a_2026q3") - g("ci_s1a_2026q3") - g("oi_s1a_2026q3") - g("sbc_s1a_2026q3") - g("charity_s1a_2026q3")
+    assert abs(eng.get_name("COST_S1aQ3NonComp") - q3) < 1e-9
     h1 = g("rev_s1f_2026h1") - g("ci_s1f_2026h1") - g("oi_s1f_2026h1") - sbc_h1
     want = h1 + 2 * q3 - eng.get_name("REV_PartnerShare")[1]
     assert abs(eng.get_name("COST_S1fNonComp2026") - want) < 1e-9
     assert abs(eng.get_name("COST_NonCompExSBC")[1] - want) < 1e-9
     assert eng.get_name("COST_S1fAMDFactor") == 1                       # 基準：AMD 維持模型 GW 型
+    assert abs(eng.get_name("REV_Target")[1] - (g("rev_s1f_2026h1") + 2 * g("rev_s1a_2026q3"))) < 1e-9     # R5a：營收基準 Q3 實績、Q4＝Q3
 
 
 def test_v017_switches_off_reproduce_v016(eng):
@@ -309,7 +313,8 @@ def test_v017_switches_off_reproduce_v016(eng):
     wv = openpyxl.load_workbook(old, data_only=True)
     _s, i = _ids()
     ov = {i[k]: 0 for k in ("s1f_commit_switch", "own_capex_method", "s1f_cal25_switch", "s1f_d22_switch", "s1f_d22_q3_switch", "s1f_sbc_proxy_switch",
-                            "googl_upfront_switch", "s1f_round_switch", "s1f_cond_switch")}      # v0.1.7.1：V2、V3 開關一併關閉
+                            "googl_upfront_switch", "s1f_round_switch", "s1f_cond_switch",          # v0.1.7.1：V2、V3 開關一併關閉
+                            "s1a_q3_switch", "s1a_commit_switch", "s1a_unalloc_switch")}             # v0.1.8：R5a–R5c 開關一併關閉（R4、R5d 基準已為 0）
     for n, d in wo.defined_names.items():
         if not n.startswith("TK_") or n in ("TK_File", "TK_Version", "TK_Commit", "TK_ReadDate", "TK_HdrGen", "TK_HdrCost") or n not in eng.names:
             continue
@@ -359,7 +364,7 @@ def test_v0171_switches_off_reproduce_v017(eng):
     wo = openpyxl.load_workbook(old)
     wv = openpyxl.load_workbook(old, data_only=True)
     _s, i = _ids()
-    ov = {i[k]: 0 for k in ("googl_upfront_switch", "s1f_round_switch", "s1f_cond_switch")}
+    ov = {i[k]: 0 for k in ("googl_upfront_switch", "s1f_round_switch", "s1f_cond_switch", "s1a_q3_switch", "s1a_commit_switch", "s1a_unalloc_switch")}  # v0.1.8 開關一併關閉
     from engine import resolve_key
     orig = {k: eng.get(*resolve_key(eng.names, k)) for k in ov}
     n_cmp = 0
@@ -385,3 +390,94 @@ def test_v0171_switches_off_reproduce_v017(eng):
         for k, v in orig.items():
             eng.set_key(k, v)
     assert n_cmp > 1500          # v0.1.7.1：1,696 個值
+
+
+def _reproduce(eng, old, ov, prefixes=("DEM_", "REV_", "CMP_", "COST_", "FND_", "RVS_")):
+    wo = openpyxl.load_workbook(old)
+    wv = openpyxl.load_workbook(old, data_only=True)
+    from engine import resolve_key
+    orig = {k: eng.get(*resolve_key(eng.names, k)) for k in ov}
+    n_cmp = 0
+    try:
+        for k, v in ov.items():
+            eng.set_key(k, v)
+        for n, d in wo.defined_names.items():
+            if not n.startswith(prefixes):
+                continue
+            sh, ref = d.attr_text.split("!")
+            cells = wv[sh][ref.replace("$", "")]
+            want = [c.value for row in cells for c in row] if isinstance(cells, tuple) else [cells.value]
+            got = eng.get_name(n)
+            got = got if isinstance(got, list) else [got]
+            assert len(got) == len(want), n
+            for a, b in zip(got, want):
+                n_cmp += 1
+                if isinstance(b, (int, float)) and not isinstance(b, bool):
+                    assert abs(a - b) <= 1e-9 * max(1, abs(b)), (n, a, b)
+                else:
+                    assert (a in (None, "") and b in (None, "")) or a == b, (n, a, b)
+    finally:
+        for k, v in orig.items():
+            eng.set_key(k, v)
+    return n_cmp
+
+
+def test_v018_switches_off_reproduce_v0171(eng):
+    """v0.1.8 的 R5a、R5b、R5c 開關設 0（R4、R5d 基準已為 0）時，v0.1.7.1 的全部計算具名範圍（DEM_／REV_／CMP_／COST_／FND_／RVS_）逐位相同（範圍外變動 0 的回歸）。"""
+    _s, i = _ids()
+    assert eng.get_name(i["s1f_spacex_fee_switch"]) == 0 and eng.get_name(i["s1a_cond_deduct_switch"]) == 0
+    ov = {i[k]: 0 for k in ("s1a_q3_switch", "s1a_commit_switch", "s1a_unalloc_switch")}
+    n_cmp = _reproduce(eng, REPO / "model" / "archive" / "20261102_Anthropic_v0.1.7.1.xlsx", ov)
+    assert n_cmp > 1700          # v0.1.7.1 的計算具名範圍值
+
+
+def test_v018_r5c_shares_and_r4_path(eng):
+    """R5c：年度比例＝（表內逐年＋未起租與 9-30 後〔起租年起、加權租期〕）÷ 三段合計，全期合計 1；R4：S-1 路徑合計＝上限 120.5，開關 1 時進 SpaceX 付款與合約總額。"""
+    s, i = _ids()
+    g = lambda k: eng.get_name(s[k])  # noqa: E731
+    seg = g("cmt_s1a_table") + g("cmt_s1a_leases_nc") + g("cmt_s1a_post0930")
+    tb = [0.0] + [g(k) for k in ("cmt_s1a_tbl_2026q4", "cmt_s1a_tbl_2027", "cmt_s1a_tbl_2028", "cmt_s1a_tbl_2029", "cmt_s1a_tbl_2030")]
+    ls, wt = eng.get_name(i["s1a_lease_start"]), g("cmt_s1a_lease_wterm")
+    lpy = (g("cmt_s1a_leases_nc") + g("cmt_s1a_post0930")) / wt
+    for y, t, w in zip(range(2025, 2031), tb, eng.get_name("COST_S1aUnallocShare")):
+        assert abs(w - (t + (lpy if ls <= y < ls + wt else 0)) / seg) < 1e-12
+    assert abs((sum(tb) + g("cmt_s1a_tbl_after") + lpy * wt) / seg - 1) < 1e-9
+    path = eng.get_name("COST_S1aSpaceXPath")
+    assert abs(sum(path) - g("cmt_s1f_spacex")) < 1e-9 and abs(eng.get_name("COST_S1aSpaceXTot") - g("cmt_s1f_spacex")) < 1e-9
+    from engine import resolve_key
+    k = i["s1f_spacex_fee_switch"]
+    orig = eng.get(*resolve_key(eng.names, k))
+    try:
+        eng.set_key(k, 1)
+        assert all(abs(a - b) < 1e-9 for a, b in zip(eng.get_name("COST_Pay_Spacex"), path))
+    finally:
+        eng.set_key(k, orig)
+
+
+def test_v018_committed_unchanged_by_q3(eng):
+    """R5f：Q3 無新股權——2026 已到位融資對 S-1/A 前九月特別股收入 110.432 差 ≤ 0.5；R5e 9-30 現金差額拆解四項相加＝差。"""
+    s, i = _ids()
+    com = eng.get_name("FND_Committed")[1]
+    assert abs(com - eng.get_name(s["fund_s1a_pref_2026_9m"])) <= eng.get_name(i["s1f_cmt_tol"])
+    assert abs(eng.get_name("FND_CommittedS1aGap") - (com - eng.get_name(s["fund_s1a_pref_2026_9m"]))) < 1e-9
+
+
+def test_v018_charity_not_in_per_person_base(eng):
+    """v0.1.8 核對後：S-1/A 下半年非現金捐贈（1.960 × 2）不進 2026 每人股權報酬基準（不沿用到 2027–2030）；2026 全成本另計（判斷題 s1a_chr_q4_switch：1＝Q4 也計，0＝只計 Q3）。"""
+    s, i = _ids()
+    g = lambda k: eng.get_name(s[k])  # noqa: E731
+    chr_ = g("charity_s1a_2026q3")
+    sbc, chc, proxy = eng.get_name("COST_SBC"), eng.get_name("COST_S1aCharityInCost"), eng.get_name("COST_S1fSBCProxy2026")
+    assert abs(chc[1] - 2 * chr_) < 1e-9 and all(v == 0 for k, v in enumerate(chc) if k != 1)
+    assert abs((sbc[1] - chc[1]) - (proxy - 2 * chr_)) < 1e-9          # 每人基準 × 人數＝代理 − 捐贈
+    assert abs(sbc[1] - proxy) < 1e-9                                   # 基準（Q4 亦計）2026 當年仍含捐贈
+    from engine import resolve_key
+    k = i["s1a_chr_q4_switch"]
+    orig = eng.get(*resolve_key(eng.names, k))
+    later = sbc[2:]
+    try:
+        eng.set_key(k, 0)
+        s2 = eng.get_name("COST_SBC")
+        assert abs(s2[1] - (proxy - chr_)) < 1e-9 and all(abs(a - b) < 1e-12 for a, b in zip(s2[2:], later))
+    finally:
+        eng.set_key(k, orig)
