@@ -32,8 +32,8 @@ F.update({it["id"]: it for it in FD2["items"]})
 STAGE = int(os.environ.get("SPCX_STAGE", "99"))   # 歸因瀑布：1 讀法 2 加回小修、2 融資租賃重扣小修、3 G5 原文、4 G1 Q4 資本支出、5 G1 年底 GW、6 G3 pace（9M 占比）、7 pace 改用 Q4 拆法（二修）、8 v0.2.1 pace 季速改 ÷(1 − fin_sh)、9 v0.2.1 pace 分母改 FY2027 世代組合（預設全部）
 G2C = os.path.join(HERE, "data", "g2cal_v021_20261030.json")   # v0.2.1 重解（pace 改變 FY2027 營收）
 G2CAL = json.load(open(G2C, encoding="utf-8")) if (os.path.exists(G2C) and not os.environ.get("SPCX_NO_G2CAL")) else None   # G2 校準 k0（g2cal_v02.py 解出；只用於 Sens）
-VER = "v0.2.1"
-TKV = "v21.7"
+VER = "v0.2.2"
+TKV = "v21.9"   # v0.2.2：Tokenomics 快照 v21.7 → v21.9（基準數值不變）
 TK = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 GEN = {x["code"]: x["name"] for x in TK["source"]["generations"]}
 PSI = json.load(open(os.path.join(HERE, "data", "peers_si_20261030.json"), encoding="utf-8"))
@@ -107,7 +107,7 @@ IN["A1"] = ("In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感�
             "金額 US$B；每股 US$；股數十億股；GW＝IT 口徑名目算力（不乘 PUE）。標記：Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律給低／高區間）")
 IN["A2"] = ("事實來源：spacex/data/spacex_facts_2026q3.json（10-Q 2026Q3 與 Q3／Q2 財報新聞稿兩讀核對）＋spacex/data/spacex_facts_v02.json（v0.2：424B4 FY2025／FY2024 原文、2026Q2 10-Q 附註、"
             "2026Q2／Q3 法說指引〔逐字稿未入庫，只存數字與短句〕）；"
-            "Tokenomics v21.7 快照 spacex/data/tokenomics_snapshot_v21.7.json。黃底＝判斷題（Andy 可改；報告「待 Project 判斷」逐條列出預設）")
+            f"Tokenomics {TKV} 快照 spacex/data/tokenomics_snapshot_{TKV}.json（v0.2.2 由 v21.7 換入，基準數值不變）。黃底＝判斷題（Andy 可改；報告「待 Project 判斷」逐條列出預設）")
 hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "說明"])
 ROWS = []
 def sec(t): ROWS.append(("sec", t))
@@ -1537,7 +1537,7 @@ SRCS = [
     ("SpaceX 10-Q 2026Q2（150 頁；mag/extract/docs/2026Q3/spacex_2026Q2_10-Q.pdf）", "2026-07", "https://ir.spacex.com", "Verified", "v0.2：Q2 分部（與新聞稿互核）、債務與 Valor、承諾、客戶 B、名目算力、股權報酬"),
     ("SpaceX 2026Q3 法說逐字稿（2026-10-20）與 2026Q2 法說逐字稿（Andy 提供；公開 repo 不入庫，只存數字與 ≤10 字短句）", "2026-10-20／2026-07", "—", "Interested-party",
      "G1 Q4 資本支出 35–40、年底 2.5–3 GW；G2 ARR 1,000 億、2027Q1 營收 33–37；G3 2027 年底 13 GW；G6 Cursor；G7 backlog"),
-    ("Tokenomics 快照 spacex/data/tokenomics_snapshot_v21.7.json（自 alphabet/data/ 複製；20261025_Tokenomics_v21.7.xlsx）", "2026-10-29", "repo 內（YinchenChang/Tokenomics）", "Derived",
+    (f"Tokenomics 快照 spacex/data/tokenomics_snapshot_{TKV}.json（{TK['source']['file']}，master {TK['source']['commit'][:7]}；與 alphabet/data/ 同一名稱清單）", TK["source"]["extractedAt"], "repo 內（YinchenChang/Tokenomics）", "Derived",
      "IF_HoldEcon、IF_OpexGW、IF_CapexIT／Facility、IF_DeprIT、IF_FacilityGW"),
     ("MarketBeat SPCX 預測頁", "2026-10-29", "https://www.marketbeat.com/stocks/NASDAQ/SPCX/forecast/", "Interested-party／Verified", "現價 143.89（4:00 PM 收盤）、共識目標價 244.97（46 位）"),
     ("Equibles SPCX 摘要", "2026-10-29", "https://equibles.com/stocks/spcx/summary", "Verified", "10-29 收盤 143.89（第二來源）"),
@@ -1553,7 +1553,7 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = "SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.1（2026-10-30；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = "SpaceX（Nasdaq: SPCX，含 xAI）個股模型 v0.2.2（2026-11-04；v0.2.1 之上換 Tokenomics 快照 v21.9，基準數值不變；2026Q3＋424B4 原文＋2026Q3 法說指引）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = ("命題：SI 分部的算力投入（9M26 SI 資本支出約 400 億美元、名目算力 1.7 GW）能否由 SI 營收（對外算力出租＋Grok／Cursor／X）回本；"
             "Connectivity（Starlink）現金流與 IPO 資金能支撐多久；加計 AI 折舊與 Cursor 收購獎酬後的每股價值是否高於現價。")
 RD["A4"] = "核心問題：FY2028 SI 每 GW 年營收 ÷ Tokenomics 每 GW 年持有成本（與 OpenAI PxQ 頁同口徑）；收支關卡＝FY2026–FY2030 自由現金流合計（扣融資租賃本金與以融資取得 PP&E；Valor 失敗售後租回本金列融資，不扣）。"
