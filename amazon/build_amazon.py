@@ -52,7 +52,9 @@ if ARGS.q3v03:
         FACTS.setdefault(k, {"id": k})
         FACTS[k] = dict(FACTS[k], value=v)
 CONS = json.load(open(os.path.join(HERE, "data", "consensus_amzn_20261008.json"), encoding="utf-8"))
-SNAP = json.load(open(os.path.join(HERE, "data", "tokenomics_snapshot_v21.7.json"), encoding="utf-8"))
+TKV = "v21.9"   # v0.3.2：Tokenomics 快照 v21.7 → v21.9（基準數值不變）
+Q1NOTE = "Q1 已定案：各晶片最高原生精度（Tokenomics v21.9，Andy 2026-11-03）"
+SNAP = json.load(open(os.path.join(HERE, "data", f"tokenomics_snapshot_{TKV}.json"), encoding="utf-8"))
 GEN = {g["code"]: g["name"] for g in SNAP["source"]["generations"]}
 _PJ = os.path.join(HERE, "data", "pace_v031.json")
 PACE = json.load(open(_PJ, encoding="utf-8")) if os.path.exists(_PJ) else {}
@@ -120,7 +122,7 @@ S_FC = src("BigGo Finance（Koyfin 彙整：60 位平均目標價 332.41、區�
 S_MB = src("MarketBeat 預估頁（60 位共識目標價 325.12；最近更新 2026-10-29 收盤後）", "2026-10-29", "https://www.marketbeat.com/stocks/NASDAQ/AMZN/Forecast/", "Interested-party")
 S_SP = src("StockAnalysis 預估頁（S&P Global：營收與調整後 EPS 共識；財報前）", "2026-10-26", "https://stockanalysis.com/stocks/amzn/forecast/", "Interested-party")
 S_MS = src("MarketScreener 年度共識（S&P Capital IQ 系；EBITDA、EBIT、淨利、GAAP EPS、資本支出、FCF；財報前，本輪未能更新）", "2026-10-08", "https://www.marketscreener.com/quote/stock/AMAZON-COM-INC-12864605/finances/", "Interested-party")
-S_TK = src("Tokenomics v21.7 快照（amazon/data/tokenomics_snapshot_v21.7.json；model/CURRENT＝20261025_Tokenomics_v21.7.xlsx，master 90f7deb）", "2026-10-31", "amazon/data/tokenomics_snapshot_v21.7.json", "Derived")
+S_TK = src(f"Tokenomics {TKV} 快照（amazon/data/tokenomics_snapshot_{TKV}.json；model/CURRENT＝{SNAP['source']['current']}，master {SNAP['source']['commit'][:7]}）", SNAP["source"]["extractedAt"], f"amazon/data/tokenomics_snapshot_{TKV}.json", "Derived")
 S_V03 = src("Amazon v0.3 成品與報告（加權目標價 215.58；拆解起點）", "2026-10-27", "amazon/dist/_待刪除/20261027_Amazon個股模型_v0.3.xlsx；amazon/docs/reports/20261027_amazon_v0.3_分部架構.md", "Derived")
 S_KEV = src("k 證據（amazon/data/kevidence_amazon_20261008.json；Silicon Data H100 指數、AWS p5 牌價）", "2026-10-08", "amazon/data/kevidence_amazon_20261008.json", "Verified")
 S_EPOCH = src("Epoch AI 資料中心目錄（New Carlisle、Ridgeland、Madison）", "2026-10-05", "https://epoch.ai/data/ai-data-centers/directory/", "Analogy")
@@ -140,7 +142,7 @@ S_MSTAN = src("Morgan Stanley（Brian Nowak）：AWS 2026 新增 6 GW、2027 新
 # In
 # =====================================================================================
 IN = wb.active; IN.title = "In"
-IN["A1"] = ("In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁〔一次動一個參數〕、不進目標價；情境 A／B／C 的驅動見本頁最後一節「J. 情境驅動對照」〔v0.3.1〕）。"
+IN["A1"] = ("In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁〔一次動一個參數〕、不進目標價；情境 A／B／C 的驅動見本頁最後一節「J. 情境驅動對照」〔v0.3.2〕）。"
             "金額 US$bn、每股 US$、MW＝IT 關鍵電力 MW。每列一個鍵（定義名稱＝鍵）；Analogy、Assumed 一律給低／高區間")
 IN["A2"] = ("標記：Verified／Interested-party／Analogy／Assumed／Derived。「沿用 v0.2.2」＝v0.2.2 已核准的參數與證據（k 規格 kspec.py、對外比例），出處見 legacy_v0.2/ 與 docs/handoff。"
             "不以公司 AWS 營收、backlog、run-rate 反推 k 或每 MW 價格（共同規則第 4 節）；公司說法只作 Recon 驗證列。SemiAnalysis 未使用。資料截至 2026-09-30（2026Q3 新聞稿；10-Q 未取得）")
@@ -235,7 +237,7 @@ inp("na_vr26", "NVIDIA 新增中 VR200 比例（2026；其餘 GB300）", "%", No
 inp("na_vr27", "NVIDIA 新增中 VR200 比例（2027）", "%", None, 0.5, None, "Assumed", "沿用 v0.2.2", "")
 inp("na_vr28", "NVIDIA 新增中 VR200 比例（2028 起）", "%", None, 1.0, None, "Assumed", "沿用 v0.2.2", "")
 inp("trn_hold", "Tokenomics IF_NonNV_Hold_Trn（Trainium3 每 GW 持有成本 ÷ VR200；低／基準／高）", "x", TRN[0], TRN[1], TRN[2], "Assumed", S_TK, "Tokenomics 內為 Assumed；v21.4 為 0.6／0.7／0.9")
-inp("trn_out", "Tokenomics IF_NonNV_Out_Trn（Trainium3 每 GW 產出 ÷ VR200；只用於 Sens：收入改按產出比）", "x", TRO[0], TRO[1], TRO[2], "Assumed", S_TK, "Tokenomics PR #172 Q1（收入口徑）未決")
+inp("trn_out", "Tokenomics IF_NonNV_Out_Trn（Trainium3 每 GW 產出 ÷ VR200；只用於 Sens：收入改按產出比）", "x", TRO[0], TRO[1], TRO[2], "Assumed", S_TK, Q1NOTE)
 inp("cf_chip", "自研晶片每 MW 收入係數（v0.3.1：改讀 IF_NonNV_Hold_Trn；舊 C2 口徑＝同期 NVIDIA 世代 × 1.0）", "x", None, "=trn_hold", 1.0, "Derived", f"{S_TK}；工作單第 1 節第 3 項（權威在 Tokenomics）", "高＝舊 C2 口徑 1.0（Sens，與 cf_cx 同改）；比照 Alphabet TPU")
 inp("cf_cx", "自研晶片每 MW IT 資本支出係數（v0.3.1：改讀 IF_NonNV_Hold_Trn）", "x", None, "=trn_hold", 1.0, "Derived", S_TK, "持有成本比同時作資本支出比（近似：Tokenomics 比值相對 VR200，模型套到 GB300 錨）")
 inp("colo_sh", "機房租用比例（第三方託管）", "%", 0.1, 0.2, 0.3, "Interested-party", S_BLOOM, "自建比例＝1 − 本列；租用部分不計機房資本支出")
@@ -635,7 +637,7 @@ def engine(eid, s, sheets, over=None, tag=""):
     addT.update({VC[2023]: f"=mw_ye23/{P('ext_sh')}", VC[2024]: f"={t('addT', 'C')}", VC[2025]: f"={t('addT', 'D')}", VC[2026]: f"={t('addT', 'G')}",
                  **{VC[y]: f"={t('addT', c)}" for y, c in FUT}})
     T.row("addT", "新增 AI 總 MW（含自用＝對外 ÷ 對外比例）", "MW", addT, "#,##0", note="R–AA 欄：依年份（折舊與汰換用）")
-    T.sec("2. 新增產能的世代與單位經濟（Tokenomics v21.7 基準成本；自研晶片＝GB300 錨 × IF_NonNV_Hold_Trn，v0.3.1）")
+    T.sec(f"2. 新增產能的世代與單位經濟（Tokenomics {TKV} 基準成本；自研晶片＝GB300 錨 × IF_NonNV_Hold_Trn，v0.3.1）")
     T.row("vr", "NVIDIA 新增中 VR200 比例", "%", {"F": "=na_vr26", "G": "=na_vr26", "H": "=na_vr27", **{c: "=na_vr28" for c in "IJKLM"}}, "0%")
     mix = lambda pre, fac: {c: f"=cust_sh*{pre}gb300{fac}+(1-cust_sh)*((1-{t('vr', c)})*{pre}gb300+{t('vr', c)}*{pre}vr200)" for c in ["F", "G"] + FC}
     T.row("he_add", "新增 MW 加權 IF_HoldEcon（含自研晶片係數）", "US$m/MW-年", mix("tk_he_", f"*{P('cf_chip')}"), "0.000")
@@ -986,7 +988,7 @@ E_ = {s: {k: b.id for k, b in ENG[s].items()} for s in SC}
 tk_ = lambda s, blk, key, col: f"«{E_[s][blk]}.{key}.{col}»"
 
 # ---------------- Thesis／Seg 頁首說明 ----------------
-SH["Thesis"]["A1"] = ("Thesis — 命題模組：AWS AI＝對外 AI 在役 MW × 每 MW 年收入（Tokenomics v21.7 IF_HoldEcon × k；新增 Trainium＝GB300 錨 × IF_NonNV_Hold_Trn 0.61，v0.3.1）。"
+SH["Thesis"]["A1"] = (f"Thesis — 命題模組：AWS AI＝對外 AI 在役 MW × 每 MW 年收入（Tokenomics {TKV} IF_HoldEcon × k；新增 Trainium＝GB300 錨 × IF_NonNV_Hold_Trn 0.61，v0.3.1）。"
                       "AI 資本支出（含自用）→ IT 6 年／機房 20 年折舊（次年起提列）→ 對外部分進 AWS 營業利益、自用部分進北美／國際營業利益。三情境 A／B／C 依序排列")
 SH["Thesis"]["A2"] = "情境差異集中在命題驅動（In 頁 J 節）：A＝公司容量目標速度＋新產能 k 價格軸高；B＝資本支出指引隱含速度（C10，下半年視窗）＋基準 k；C＝與 B 同速度（資本支出照指引）＋新產能 k 價格軸低。非 AI 業務三情境相同"
 SH["Seg"]["A1"] = ("Seg — 營收分部層：官方分部 North America、International、AWS；10-K 營收線 Online stores、Physical stores、Third-party seller services、Advertising services、"
@@ -1140,7 +1142,7 @@ case("he_all", "IF_HoldEcon 四世代同時取低／高（每 MW 年持有成本
      keycol="he_all", sets={"低": [(k, _INR[k][3]) for k in HE], "高": [(k, _INR[k][5]) for k in HE]})
 case("trn_hold", "Tokenomics IF_NonNV_Hold_Trn（cf_chip、cf_cx 同時跟隨）", _desc("trn_hold") + "（MW 速度沿用基準）")
 case("cf_chip", "自研晶片係數改回舊 C2 口徑 1.0（收入與資本支出）", "0.61 → 1.0（同時改 cf_cx；MW 速度沿用基準）", keycol="cf_chip cf_cx", sets={"高": [("cf_chip", 1.0), ("cf_cx", 1.0)]})
-case("trn_out", "Trainium 收入係數改用產出比 IF_NonNV_Out_Trn（資本支出仍用持有比）", "收入 0.61 → 0.5（基準產出比）／" + "／".join(f"{x:g}" for x in (TRO[0], TRO[2])),
+case("trn_out", "Trainium 收入係數改用產出比 IF_NonNV_Out_Trn（資本支出仍用持有比）", f"收入 {TRN[1]:g} → {TRO[1]:g}（基準產出比）／" + "／".join(f"{x:g}" for x in (TRO[0], TRO[2])) + f"（{Q1NOTE}）",
      keycol="trn_out cf_chip", sets={"基準": [("cf_chip", TRO[1])], "低": [("cf_chip", TRO[0])], "高": [("cf_chip", TRO[2])]})
 case("c10_win", "C10 校準視窗（基準＝下半年：Q4 公式＝（指引 − 上半年）÷ 2）", f"低＝只校準 Q4（速度 {PACE.get('pace_q4', 0):,.1f}）；高＝全年平均（指引 ÷ 4；速度 {PACE.get('pace_fy', 0):,.1f}）",
      keycol="pace_B", sets={"低": [("pace_B", PACE.get("pace_q4", 0))], "高": [("pace_B", PACE.get("pace_fy", 0))]})
@@ -1295,7 +1297,7 @@ rec("要對上公司說法：所需 k（MW 不變）", None, lambda s: "=ai_rr*1
 rec("要對上公司說法：所需對外 MW（k 不變）", None, lambda s: "=ai_rr*1000/rpm_open", "", "對照期初 2,080 MW", fmt="#,##0", gap=False)
 _rr = SE_ROW_OF.get("rpm_open|高")
 rec("替代：期初 k 對上公司 run-rate 時的加權目標價變動（每股）", None, lambda s: f"=Sens!D{_rr}-Val!B19", "Sens 頁案例", "不作主值（共同規則第 4 節：不以公司說法反推 k）", fmt="0.00", gap=False)
-rec("上限檢查：FY2028 每 MW 年收入 ÷ Tokenomics P×Q（VR200）", None, lambda s: f"={tk_(s, 'T', 'pq_chk', 'I')}", "Tokenomics v21.7", "上限，不得作預測", fmt="0.0%", gap=False)
+rec("上限檢查：FY2028 每 MW 年收入 ÷ Tokenomics P×Q（VR200）", None, lambda s: f"={tk_(s, 'T', 'pq_chk', 'I')}", f"Tokenomics {TKV}", "上限，不得作預測", fmt="0.0%", gap=False)
 rsec("D. v0.3 → v0.3.1：加權目標價變動拆解（(a)–(d) 為整本重算快照：Sens 頁基準差＝0 時有效；(e) 不影響目標價；(f) 為活公式）")
 CHAIN = [("S1", "(a) 時間推移與期間結構：評價日 2026-06-30 → 09-30（FY2026 改 9M 實績＋Q4 模型）、目標日 2027-10-27 → 10-31；2026Q3 用 v0.3 自己的模型值", "v03"),
          ("S2", "(b) 新季實績：2026Q3 實績取代 v0.3 的模型值（分部營收與利益、營收線、利息、稅、淨利、現金流、資本支出、現金、債務、股數、策略投資）", "S1"),
@@ -1346,8 +1348,8 @@ SO.column_dimensions["A"].width = 8; SO.column_dimensions["B"].width = 90; SO.co
 RD = wb.create_sheet("README", 0)
 B_ = lambda blk, key, col: tk_("B", blk, key, col)
 lines = [
-    ("Amazon（AMZN）個股模型 v0.3.1（命題模組＋官方營收分部 → 損益表；2026Q3 季度滾動）　2026-10-31", True),
-    ("版本：v0.3.1（2026Q3 財報 2026-10-29 滾入；v0.3 為 2026-10-27）。資料截至 2026-09-30（2026Q3 新聞稿；10-Q 未取得，附註數字沿用 2026Q2）；FY2026＝9M 實績＋Q4 模型；Tokenomics v21.7（Trainium 改讀 IF_NonNV_Hold_Trn）。", False),
+    ("Amazon（AMZN）個股模型 v0.3.2（命題模組＋官方營收分部 → 損益表；2026Q3 季度滾動；v0.3.2 Tokenomics 快照 v21.9）　2026-11-04", True),
+    ("版本：v0.3.1（2026Q3 財報 2026-10-29 滾入；v0.3 為 2026-10-27）。資料截至 2026-09-30（2026Q3 新聞稿；10-Q 未取得，附註數字沿用 2026Q2）；FY2026＝9M 實績＋Q4 模型；Tokenomics v21.7（Trainium 改讀 IF_NonNV_Hold_Trn）。v0.3.2（2026-11-04）：Tokenomics 快照換 " + TKV + "（基準數值不變；只有高成本欄與 IF_NonNV_Out_Trn 改變，影響 Sens 頁）。", False),
     ("命題：AWS 的 AI 容量（Trainium＋NVIDIA）能否以高於資金成本的報酬變現，零售與廣告的現金流能否支應資本支出。", True),
     ("核心問題：FY2028 AWS 營業利益率與自由現金流（扣股利後）是否轉正並維持。", True),
     ('="投資建議："&Val!B24&"（加權目標價 US$"&TEXT(Val!B19,"0.00")&"，現價 US$"&TEXT(px,"0.00")&"〔2026-10-30〕，上檔空間 "&TEXT(Val!B21,"+0.0%;-0.0%")&"；依五級固定規則）"', True),
