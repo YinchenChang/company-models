@@ -20,3 +20,9 @@ L1_LReqFleet_Full
 L1_LReqFleet_Full_Lo
 L1_LReqFleet_Full_Hi
 L1_M
+L1_PayRatio25
+L1_PayRatio25_Lo
+L1_PayRatio25_Hi
+L1_RevPerGW25
+L1_RevPerGW25_Lo
+L1_RevPerGW25_Hi

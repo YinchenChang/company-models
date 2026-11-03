@@ -1,18 +1,18 @@
 {
  "meta": {
-  "version": "v0.6.20",
-  "book": "20261101_AI投資地圖_資料_v0.6.20.xlsx",
-  "tk_file": "20261024_Tokenomics_v21.4.xlsx",
-  "tk_version": "v21.4",
-  "tk_commit": "3ac70ac",
-  "cm_commit": "a41b20bd",
-  "built": "2026-11-01",
+  "version": "v0.6.21",
+  "book": "20261103_AI投資地圖_資料_v0.6.21.xlsx",
+  "tk_file": "20261102_Tokenomics_v21.8.xlsx",
+  "tk_version": "v21.8",
+  "tk_commit": "91db9ac",
+  "cm_commit": "30eaac0f",
+  "built": "2026-11-03",
   "price_date": "全部用 2026-10-30 收盤（上檔空間＝模型目標價 ÷ 最新收盤 − 1）；韓美半導體未取得收盤，暫用模型現價（10-23）",
   "last_close_date": "2026-10-30",
   "pages": "https://yinchenchang.github.io/company-models/",
   "private_models": {
    "openai": "20261029_OpenAI收支模型_v0_6_4.html",
-   "anthropic": "20261031_Anthropic收支模型_v0_1_6.html"
+   "anthropic": "20261031_Anthropic收支模型_v0_1_7.html"
   }
  },
  "pergw": {
@@ -67,7 +67,7 @@
   "每 GW 年經濟持有成本｜GB300": {
    "lo": 8.42889912085495,
    "base": 10.8864110021101,
-   "hi": 18.5346455040469,
+   "hi": 16.6891556141369,
    "unit": "$B/GW/年",
    "name": "IF_HoldEcon",
    "cell": "Interface!J13"
@@ -75,7 +75,7 @@
   "每 GW 年經濟持有成本｜VR200": {
    "lo": 9.21907146281596,
    "base": 12.2254710045841,
-   "hi": 19.7506269894487,
+   "hi": 17.7475212596345,
    "unit": "$B/GW/年",
    "name": "IF_HoldEcon",
    "cell": "Interface!M13"
@@ -112,13 +112,37 @@
    "name": "L1_LReqFleet_Full",
    "cell": "L1!D140"
   },
-  "回本比值（實際 L ÷ 所需 L）｜機隊": {
+  "每上線 GW 年營收（2025 機隊，實收）｜機隊": {
+   "lo": 10.456,
+   "base": 11.5888624576113,
+   "hi": 13.07,
+   "unit": "$B/GW/年",
+   "name": "L1_RevPerGW25",
+   "cell": "L1!D139"
+  },
+  "每 GW 年營收 ÷ 年持有成本（2025 機隊）｜機隊": {
+   "lo": 1.11791590049691,
+   "base": 1.2390372618626,
+   "hi": 1.39739487562114,
+   "unit": "倍",
+   "name": "L1_PayRatio25",
+   "cell": "L1!D138"
+  },
+  "每 GW 年持有成本（2025 機隊）｜機隊": {
+   "lo": 9.35311859805585,
+   "base": 9.35311859805587,
+   "hi": 9.35311859805583,
+   "unit": "$B/GW/年",
+   "name": "[Derived]",
+   "cell": "＝年營收 ÷ 比值（Tokenomics 2025 機隊每 GW 持有成本 9.353）"
+  },
+  "回本比值（壽命期）：年營收 ÷ 年成本 × 實際 L｜機隊": {
    "lo": null,
    "base": 0.93993040480335,
    "hi": null,
    "unit": "倍",
    "name": "[Derived]",
-   "cell": "Tokenomics 交接：0.940，「未定」"
+   "cell": "＝實際 L ÷ 所需 L；等於上方比值 × 實際 L（I 欄對帳差額應為 0）；Tokenomics 判讀「未定」"
   }
  },
  "segments": [
@@ -130,7 +154,7 @@
    "usd": null,
    "irr": 2,
    "vc": 75,
-   "basis": "收入池最上游：每 GW 第一年 P×Q 營收高於持有成本，但回本比值約 0.94，未定 [Derived]；分量分為判斷"
+   "basis": "收入池最上游：2025 機隊每 GW 年營收 ÷ 年持有成本約 1.24；計入壽命期價格下跌 L 後約 0.94，未定 [Derived]；分量分為判斷"
   },
   {
    "layer": "L4 算力平台",
@@ -1660,7 +1684,7 @@
    "tier": "強力買進",
    "vtier": "強力買進",
    "mfolder": "innolight",
-   "mfile": "20261030_中際旭創個股模型_v0.2.4.html",
+   "mfile": "20261102_中際旭創個股模型_v0.3.html",
    "gate": "通過（淨利）",
    "gbasis": "淨利",
    "glabel": "PL 頁各情境模型年度淨利（不含實績）",
@@ -1706,7 +1730,7 @@
    "tier": "中立",
    "vtier": "中立",
    "mfolder": "delta",
-   "mfile": "20261030_台達電個股模型_v0.3.1.html",
+   "mfile": "20261102_台達電個股模型_v0.4.html",
    "gate": "通過（淨利）",
    "gbasis": "淨利",
    "glabel": "PL 頁各情境模型年度淨利（不含實績）",
@@ -1798,7 +1822,7 @@
    "tier": "中立",
    "vtier": "中立",
    "mfolder": "ibiden",
-   "mfile": "20261030_Ibiden個股模型_v0.3.1.html",
+   "mfile": "20261102_Ibiden個股模型_v0.4.html",
    "gate": "通過（淨利）",
    "gbasis": "淨利",
    "glabel": "PL 頁各情境模型年度淨利（不含實績）",
@@ -2488,7 +2512,7 @@
    "tier": "未上市",
    "vtier": "未上市",
    "mfolder": "anthropic",
-   "mfile": "20261031_Anthropic收支模型_v0_1_6.html",
+   "mfile": "20261031_Anthropic收支模型_v0_1_7.html",
    "gate": "通過（現金流）",
    "gbasis": "現金流",
    "glabel": "F07 自由現金流",
@@ -2580,7 +2604,7 @@
    "tier": "強力放空",
    "vtier": "強力放空",
    "mfolder": "mediatek",
-   "mfile": "20261030_聯發科個股模型_v0.1.3.html",
+   "mfile": "20261102_聯發科個股模型_v0.2.html",
    "gate": "通過（淨利）",
    "gbasis": "淨利",
    "glabel": "PL 頁各情境模型年度淨利（不含實績）",
@@ -2948,7 +2972,7 @@
    "tier": "強力買進",
    "vtier": "強力買進",
    "mfolder": "eoptolink",
-   "mfile": "20261031_新易盛個股模型_v0.2.4.html",
+   "mfile": "20261102_新易盛個股模型_v0.3.html",
    "gate": "通過（淨利）",
    "gbasis": "淨利",
    "glabel": "PL 頁各情境模型年度淨利（不含實績）",
@@ -3270,7 +3294,7 @@
    "tier": "中立",
    "vtier": "中立",
    "mfolder": "emc",
-   "mfile": "20261030_台光電個股模型_v0.3.1.html",
+   "mfile": "20261102_台光電個股模型_v0.4.html",
    "gate": "通過（淨利）",
    "gbasis": "淨利",
    "glabel": "PL 頁各情境模型年度淨利（不含實績）",
@@ -3316,7 +3340,7 @@
    "tier": "放空",
    "vtier": "放空",
    "mfolder": "unimicron",
-   "mfile": "20261030_欣興個股模型_v0.2.1.html",
+   "mfile": "20261102_欣興個股模型_v0.3.html",
    "gate": "通過（淨利）",
    "gbasis": "淨利",
    "glabel": "PL 頁各情境模型年度淨利（不含實績）",
@@ -3454,7 +3478,7 @@
    "tier": "強力買進",
    "vtier": "強力買進",
    "mfolder": "victory_giant",
-   "mfile": "20261031_勝宏科技個股模型_v0.2.html",
+   "mfile": "20261102_勝宏科技個股模型_v0.3.html",
    "gate": "通過（淨利）",
    "gbasis": "淨利",
    "glabel": "PL 頁各情境模型年度淨利（不含實績）",
@@ -11842,22 +11866,6 @@
    "ver": "v0.3.1",
    "xlsx": "20261030_Arista個股模型_v0.3.1.xlsx"
   },
-  "300308": {
-   "folder": "innolight",
-   "file": "20261030_中際旭創個股模型_v0.2.4.html",
-   "title": "中際旭創個股模型",
-   "date": "2026-10-30",
-   "ver": "v0.2.4",
-   "xlsx": "20261030_中際旭創個股模型_v0.2.4.xlsx"
-  },
-  "2308": {
-   "folder": "delta",
-   "file": "20261030_台達電個股模型_v0.3.1.html",
-   "title": "台達電個股模型",
-   "date": "2026-10-30",
-   "ver": "v0.3.1",
-   "xlsx": "20261030_台達電個股模型_v0.3.1.xlsx"
-  },
   "2382": {
    "folder": "quanta",
    "file": "20261030_廣達個股模型_v0.3.1.html",
@@ -11865,14 +11873,6 @@
    "date": "2026-10-30",
    "ver": "v0.3.1",
    "xlsx": "20261030_廣達個股模型_v0.3.1.xlsx"
-  },
-  "4062": {
-   "folder": "ibiden",
-   "file": "20261030_Ibiden個股模型_v0.3.1.html",
-   "title": "Ibiden個股模型",
-   "date": "2026-10-30",
-   "ver": "v0.3.1",
-   "xlsx": "20261030_Ibiden個股模型_v0.3.1.xlsx"
   },
   "6857": {
    "folder": "advantest",
@@ -11986,14 +11986,6 @@
    "ver": "v0.6.4",
    "xlsx": "20261029_OpenAI收支模型_v0_6_4.xlsx"
   },
-  "Anthropic": {
-   "folder": "anthropic",
-   "file": "20261031_Anthropic收支模型_v0_1_6.html",
-   "title": "Anthropic收支模型",
-   "date": "2026-10-31",
-   "ver": "v0.1.6",
-   "xlsx": "20261031_Anthropic收支模型_v0_1_6.xlsx"
-  },
   "AMD": {
    "folder": "amd",
    "file": "20261030_AMD模型_v0.2.3.html",
@@ -12001,14 +11993,6 @@
    "date": "2026-10-30",
    "ver": "v0.2.3",
    "xlsx": "20261030_AMD模型_v0.2.3.xlsx"
-  },
-  "2454": {
-   "folder": "mediatek",
-   "file": "20261030_聯發科個股模型_v0.1.3.html",
-   "title": "聯發科個股模型",
-   "date": "2026-10-30",
-   "ver": "v0.1.3",
-   "xlsx": "20261030_聯發科個股模型_v0.1.3.xlsx"
   },
   "MRVL": {
    "folder": "mrvl",
@@ -12066,14 +12050,6 @@
    "ver": "v0.3.1",
    "xlsx": "20261030_Lumentum個股模型_v0.3.1.xlsx"
   },
-  "300502": {
-   "folder": "eoptolink",
-   "file": "20261031_新易盛個股模型_v0.2.4.html",
-   "title": "新易盛個股模型",
-   "date": "2026-10-31",
-   "ver": "v0.2.4",
-   "xlsx": "20261031_新易盛個股模型_v0.2.4.xlsx"
-  },
   "2345": {
    "folder": "accton",
    "file": "20261030_智邦個股模型_v0.3.1.html",
@@ -12122,22 +12098,6 @@
    "ver": "v0.3",
    "xlsx": "20261031_艾克爾個股模型_v0.3.xlsx"
   },
-  "2383": {
-   "folder": "emc",
-   "file": "20261030_台光電個股模型_v0.3.1.html",
-   "title": "台光電個股模型",
-   "date": "2026-10-30",
-   "ver": "v0.3.1",
-   "xlsx": "20261030_台光電個股模型_v0.3.1.xlsx"
-  },
-  "3037": {
-   "folder": "unimicron",
-   "file": "20261030_欣興個股模型_v0.2.1.html",
-   "title": "欣興個股模型",
-   "date": "2026-10-30",
-   "ver": "v0.2.1",
-   "xlsx": "20261030_欣興個股模型_v0.2.1.xlsx"
-  },
   "8046": {
    "folder": "nanya_pcb",
    "file": "20261030_南電個股模型_v0.2.1.html",
@@ -12153,14 +12113,6 @@
    "date": "2026-10-31",
    "ver": "v0.2.3",
    "xlsx": "20261031_金像電個股模型_v0.2.3.xlsx"
-  },
-  "300476": {
-   "folder": "victory_giant",
-   "file": "20261031_勝宏科技個股模型_v0.2.html",
-   "title": "勝宏科技個股模型",
-   "date": "2026-10-31",
-   "ver": "v0.2",
-   "xlsx": "20261031_勝宏科技個股模型_v0.2.xlsx"
   },
   "ASML": {
    "folder": "asml",
