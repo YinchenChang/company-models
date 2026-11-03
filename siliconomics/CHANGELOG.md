@@ -1,5 +1,14 @@
 # Siliconomics 變更紀錄
 
+## v0.12（2026-11-03；`model/20261103_Siliconomics_v0.12.xlsx`；Tokenomics v21.7）
+
+- **只留基準**（工作方式 v1.7「三層只給基準、情境在個股」；決策 S33 基準＝原情境 B〔Andy 11-03 開場：未另行指示就照預設〕、S35）：Interface 新增 D 節 57 組 `*_Base` 名稱（等同原 B 列；例 `SIF_DeployGW_Base`、`SIF_UnitsPlat_Total_Base`、`SIF_um28_Base`、`SIF_cpo_Base_27`、`SIF_cqBase_8`、`SIF_ASICShareSum_trnBase`）；A／B／C 名稱項目欄標「停用過渡」，v0.13 刪除。Scen、Units 頁改標（原始顆數＝舊情境 A；本庫基準＝原始顆數 × 基準係數 0.8／0.85）；`um28_*`、`um29_*` 列名改「÷ 原始顆數」。
+- **Recon 頁**：B 節改讀 R4 r3（基準），新增「本庫基準 ÷ Wattonomics 基準 − 1」列與 Interface `SIF_GWvsWT_Base`：+9.1%／+40.9%／+59.7%／+87.2%（2026–29）。狀態：2026 一致、2027 時差、2028–29 待診斷（比值 0.916／0.710／0.626／0.534；r2 情境 A 為 0.553／0.442）。
+- **`tools/r4_bridge.py` r3**：平台別資本支出乘基準係數、部署 GW 讀 `SIF_DeployGW_Base`；新增 NVIDIA 資料中心營收對帳點（出貨年 NVIDIA GW × chip_bridge 每 GW 內容 vs 公司營收）：2026 1.017、2027 1.044（回應算力收支 11-02 的 2026 年 1.16：該值來自上線年往返換算）。報告 `docs/reports/r4_bridge/20261103_R4對帳橋接_Siliconomics側_r3.{md,xlsx}`。
+- **個股自訂情境**（決策 S36）：35 個公司模型與 tsmc 的情境係數列改標「個股自訂」，說明欄由 `reader.scen_note()` 產生（相對本庫基準倍數；產業 GW 相對 Wattonomics 基準：A +100%／+120%、B +60%／+87%、C +20%／+32%，2028／2029）。預設沿用 v0.11 值，**數值不變**；其餘「情境 A 基準」等文字改「原始顆數」。
+- 下游：cascade 第一輪 55 個 CHANGED（全部為文字：版本、標籤、說明；無數值差異），第二輪 64 個全部 SAME；HTML 展示層全部重建並通過檢核。
+- 未做（v0.13）：記憶體價格路徑（cq／nq）、HBM 單價、世芯份額、液冷滲透率、CPO、設備係數等情境列移到個股或市場層自訂；刪除 A／B／C 名稱；Wattonomics 改讀 `*_Base`（已通知算力收支）。
+
 ## v0.11（2026-11-02；`model/20261102_Siliconomics_v0.11.xlsx`；Tokenomics v21.7）
 
 - **新增 Recon 頁（由下往上對帳）**：依工作方式 v1.7 第 8 節（Andy 11-02：三層只給基準、對帳方向 覆蓋個股 → Siliconomics → Wattonomics → Tokenomics）。個股值與 R4 值來自版本固定快照 `data/recon_snapshot_v0.11.json`（`tools/recon.py` 產生；`data/CURRENT_RECON` 指向），不即時連結個股成品，避免反向依賴與 CI 漂移。狀態以公式判定：|比值 − 1| ≤ `rc_tol`＝一致；超出且有已寄出的 `交流/` 證據送件（`builder/seed/recon_evidence_v0.11.json`）＝時差；其餘＝待診斷。
