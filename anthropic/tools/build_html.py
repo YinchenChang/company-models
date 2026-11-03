@@ -623,7 +623,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
     S = []
     # ── 標頭 ──
     S.append(f"""<header><h1>Anthropic 收支模型 v{ver}｜一頁摘要</h1>
-<div class="meta">{date_disp}｜Excel <code>{html.escape(model.name)}</code>｜Tokenomics {html.escape(str(tk_ver))}（<code>{html.escape(str(tk_sha))[:7]}</code>）｜單位 $B（十億美元），曆年制｜數字游標停留可見 Excel 位置；手機上圖表可左右滑動｜<b>v0.1.7 起正式公開 S-1（2026-10-26）套用於基準：2025 校準、2026 上半年營收、逐家承諾與承諾三段、季度營業損益（非算力成本）。v0.1.7.1：原先二手轉載的 46 列經 chat 端 2026-11-02 以瀏覽器核對 SEC 原文、全部一致，改 Verified；2026 已到位融資依原文更正為 110.4（Google Series G-2 約 10 與 Series H 分開，v0.1.7 少算）。例外：AMD 維持模型 GW 型（S-1 只給下限 >20，另列情境）；股權報酬用 S-1「調整後 − GAAP 營業損益」代理（＝股權報酬 2.185＋非現金捐贈 0.126）；6-30 現金只對照。見 ①之六、①之五</b></div></header>""")
+<div class="meta">{date_disp}｜Excel <code>{html.escape(model.name)}</code>｜Tokenomics {html.escape(str(tk_ver))}（<code>{html.escape(str(tk_sha))[:7]}</code>）｜單位 $B（十億美元），曆年制｜數字游標停留可見 Excel 位置；手機上圖表可左右滑動｜<b>v0.1.7 起正式公開 S-1（2026-10-26）套用於基準：2025 校準、2026 上半年營收、逐家承諾與承諾三段、季度營業損益（非算力成本）。v0.1.7.1：原先二手轉載的 46 列經 chat 端 2026-11-02 以瀏覽器核對 SEC 原文、全部一致，改 Verified；2026 已到位融資依原文更正為 110.4（Google Series G-2 約 10 與 Series H 分開，v0.1.7 少算）。例外：AMD 維持模型 GW 型（S-1 只給下限 >20，另列情境）；股權報酬用 S-1「調整後 − GAAP 營業損益」代理（＝股權報酬 2.185＋非現金捐贈 0.126）；6-30 現金只對照。v0.1.8：S-1/A 第 1 號修訂（2026-11-02）的 2026Q3 實績、承諾總額 895.4 與逐年付款表套用於基準（三段 871.4、未歸屬餘額付款期依 S-1/A 結構）；附條件 213.8 照計、SpaceXAI S-1 路徑並列。見 ①之七、①之六、①之五</b></div></header>""")
 
     # ── ① 命題與結論 ──
     # 只做取值與排序（找谷底年、列出會產生外部資金需求的單一驅動），不做模型計算
@@ -633,28 +633,135 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
         p2_txt = (f'按目前已到位融資與基準支出路徑，<b>2026–2030 出現最低現金缺口</b>：累計外部資金需求 ${n("FND_ExtNeedCum", Y, "f1")}B（首次 {n("FND_FirstGapYear", None, "yt")} 年）；'
                   f'只靠已到位融資的現金谷底 {n("FND_CashNoExtTrough", None, "f1")}（{ty} 年），低於當年最低現金 {n("FND_MinCash", ty, "f1")}。金額小，但 v0.1.6 時谷底有 {n("FND_CashNoExtTrough", None, "f1", "v016")}——第 2 個結論已由「不需要」翻成「需要少量」。')
     else:
-        p2_txt = (f'按目前已到位融資（正式 S-1 原文 ${n("FND_Committed", 2026, "f1")}B）與基準支出路徑、<b>最低現金＝次年非算力成本 {n("INP_165", None, "f0")} 個月（Assumed 3–12）的假設下，2026–2030 不出現最低現金缺口</b>（累計外部資金需求 ${n("FND_ExtNeedCum", Y, "f0")}B），但餘裕不厚：'
-                  f'只靠已到位融資的現金谷底 {n("FND_CashNoExtTrough", None, "f1")}（{ty} 年；當年最低現金 {n("FND_MinCash", ty, "f1")}）。最低現金改 12 個月 → 累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "mc_hi")}（首次 {n("FND_FirstGapYear", None, "yt", "mc_hi")}）；3 個月 → {n("FND_ExtNeedCum", Y, "f1", "mc_lo")}。'
-                  f'v0.1.7 少算 Google Series G-2 約 10 時為「需要少量」（{n("FND_ExtNeedCum", Y, "f2", "v017")}，谷底 {n("FND_CashNoExtTrough", None, "f1", "v017")}）——第 2 個結論由「需要少量」翻回「不需要」，但幅度小、對最低現金假設敏感（見 ①之六）。')
+        p2_txt = (f'按目前已到位融資（正式 S-1 原文 ${n("FND_Committed", 2026, "f1")}B；S-1/A：Q3 無新股權）與基準支出路徑、<b>最低現金＝次年非算力成本 {n("INP_165", None, "f0")} 個月（Assumed 3–12）的假設下，2026–2030 不出現最低現金缺口</b>（累計外部資金需求 ${n("FND_ExtNeedCum", Y, "f0")}B）：'
+                  f'只靠已到位融資的現金谷底 {n("FND_CashNoExtTrough", None, "f1")}（{ty} 年；當年最低現金 {n("FND_MinCash", ty, "f1")}，餘裕 {n("FND_Headroom", ty, "f1")}）。v0.1.8 起最低現金改 12 個月也不需要（{n("FND_ExtNeedCum", Y, "f1", "mc_hi")}；v0.1.7.1 時為 {n("FND_ExtNeedCum", Y, "f2", "v0171_mc_hi")}）。'
+                  f'但 SpaceXAI 改走 S-1 路徑（爬升後每月 3.1、上限 120.5）→ 累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "r4_on")}（首次 {n("FND_FirstGapYear", None, "yt", "r4_on")}）；未歸屬餘額回到 2027–2031 快付 → {n("FND_ExtNeedCum", Y, "f1", "s1u_fast")}——第 2 個結論在 S-1/A 結構下不變、餘裕變厚，但仍取決於 SpaceXAI 與承諾付款的時點（見 ①之七）。')
     S.append(f"""<section id="s1"><h2><span class="no">①</span>命題與一句話結論</h2>
 <p class="note">命題（與 OpenAI 同一句）：Anthropic 每 VR 等值 GW 的年營收，能否覆蓋每 GW 年全成本？若不能，缺口要多少外部資金、由誰補？</p>
-<p class="lead">在目前需求成長、價格彈性、正式 S-1 揭露的算力承諾（含 6-30 後新簽；未歸屬餘額 ${n("COST_S1Unalloc", None, "f0")}B 依 2027–2033 平均付款）與 2026 年已到位融資（${n("FND_Committed", 2026, "f0")}B）的假設下：2026 年每 VR 等值 GW 營收可覆蓋全成本（差額 {n("COST_PropGap_VR", 2026, "sf1")} $B/GW/年；自建資本支出改 GW 法後為 0，且多數新合約 2027 年才付款），<b>2027–2029 年不能覆蓋</b>（{n("COST_PropGap_VR", 2027)}／{n("COST_PropGap_VR", 2028)}／{n("COST_PropGap_VR", 2029)}），<b>{n("COST_GapPosSustainYear", None, "yt")} 年才持續轉正</b>（{n("COST_PropGap_VR", Y, "sf1")}，覆蓋率 {n("COST_Coverage", Y, "pct0")}）；
+<p class="lead">在目前需求成長、價格彈性、S-1/A 揭露的算力承諾（表內 320.0＋未起租 451.2＋9-30 後新簽 100.2＝${n("COST_S1fCommit3", None, "f0")}B；扣除模型逐家合約後的未歸屬餘額 ${n("COST_S1Unalloc", None, "f0")}B 依 S-1/A 付款表結構付款）與 2026 年已到位融資（${n("FND_Committed", 2026, "f0")}B）的假設下：<b>2026–2029 年每 VR 等值 GW 營收都不能覆蓋全成本</b>（{n("COST_PropGap_VR", 2026, "sf2")}／{n("COST_PropGap_VR", 2027)}／{n("COST_PropGap_VR", 2028)}／{n("COST_PropGap_VR", 2029)} $B/GW/年；2026 年由 v0.1.7.1 的 {n("COST_PropGap_VR", 2026, "sf2", "v0171")} 轉負：S-1/A 的 Q3 股權報酬 1.070 與非現金捐贈 1.960 依 Q4＝Q3 慣例計入全成本（R5a；皆非現金，不影響現金與命題 2），加上未歸屬餘額依 S-1/A 付款表自 2026Q4 開始付款（R5c）；見 ①之七），<b>{n("COST_GapPosSustainYear", None, "yt")} 年才持續轉正</b>（{n("COST_PropGap_VR", Y, "sf1")}，覆蓋率 {n("COST_Coverage", Y, "pct0")}）；
 {p2_txt}
 營運自由現金流 2026 年為正（{n("FND_FCF", 2026, "sf1")}）、2027–2029 年為負，{n("FND_FCFPosSustainYear", None, "yt")} 年才持續為正；若不靠任何融資（第 1 層），2026–2030 累計需外部提供 ${n("FND_L1_ExtTotal", None, "f0")}B；已到位股權（第 2 層）補上全部缺口（第 2 層累計外部資金需求 ${n("FND_L2_ExtTotal", None, "f0")}B，見 ⑤）。
-<b>此結論要成立必須</b>：2029 年後不再大量新增算力合約（基準只計已簽合約與 S-1 承諾）、未歸屬餘額付款不早於 2027–2033 平均，且 API 需求成長、價格反應與合約價都不落在區間下緣——任一項單獨落在下緣，外部資金需求就會大幅增加（見 ⑥）。</p>
+<b>此結論要成立必須</b>：2029 年後不再大量新增算力合約（基準只計已簽合約與 S-1/A 承諾）、SpaceXAI 不按 S-1 路徑付滿上限、未歸屬餘額付款不早於 S-1/A 付款表結構，且 API 需求成長、價格反應都不落在區間下緣——任一項單獨落在下緣，外部資金需求就會大幅增加（見 ⑥）。</p>
 <div class="kpis">
 <div class="kpi"><div class="k">2030 每 VR 等值 GW：營收 vs 全成本</div><div class="v">{n("COST_PropRev_VR", Y)} <span class="note">vs</span> {n("COST_PropFull_VR", Y)}</div><div class="s">$B/GW/年；差額 <b class="pos">{n("COST_PropGap_VR", Y, "sf1")}</b></div></div>
 <div class="kpi"><div class="k">覆蓋率（營收淨額 ÷ 全成本）</div><div class="v">{n("COST_Coverage", Y, "pct0")}</div><div class="s">2030；2026–2029 為 {n("COST_Coverage", 2026, "pct0")}／{n("COST_Coverage", 2027, "pct0")}／{n("COST_Coverage", 2028, "pct0")}／{n("COST_Coverage", 2029, "pct0")}；全成本含股權報酬、現金口徑</div></div>
 <div class="kpi"><div class="k">累計外部資金需求 2026–2030</div><div class="v">{n("FND_ExtNeedCum", Y, "f0")}</div><div class="s">$B；OpenAI v0.6.4 同期 <b class="neg">{n("OAI_FND_ExtNeedCum", Y, "f1")}</b></div></div>
-<div class="kpi"><div class="k">只靠已到位融資的現金谷底</div><div class="v">{n("FND_CashNoExtTrough", None, "f1")}</div><div class="s">$B，{ty} 年；當年最低現金 {n("FND_MinCash", ty, "f1")}（v0.1.7 為 {n("FND_CashNoExtTrough", None, "f1", "v017")}、v0.1.6 為 {n("FND_CashNoExtTrough", None, "f1", "v016")}）</div></div>
+<div class="kpi"><div class="k">只靠已到位融資的現金谷底</div><div class="v">{n("FND_CashNoExtTrough", None, "f1")}</div><div class="s">$B，{ty} 年；當年最低現金 {n("FND_MinCash", ty, "f1")}（v0.1.7.1 為 {n("FND_CashNoExtTrough", None, "f1", "v0171")}、v0.1.7 為 {n("FND_CashNoExtTrough", None, "f1", "v017")}）</div></div>
 </div>
-<p class="note">單一驅動落在區間下緣，外部資金需求就會大幅擴大：API 任務數成長取低 → 累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "api_task_lo")}（首次缺口 {n("FND_FirstGapYear", None, "yt", "api_task_lo")}）；價格彈性取弱端 → {n("FND_ExtNeedCum", Y, "f1", "elast_weak")}；每 GW 合約價 20 → {n("FND_ExtNeedCum", Y, "f1", "price_hi")}；未歸屬餘額快付（2027–2031）→ {n("FND_ExtNeedCum", Y, "f1", "s1u_fast")}（見 ⑥、①之五）。正式 S-1 承諾若不進基準（v0.1.6 合約口徑：W1、W2 皆關，自建回到 Fluidstack $50B），2030 差額 {n("COST_PropGap_VR", Y, "sf1", "commit_off")}、累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "commit_off")}、現金谷底 {n("FND_CashNoExtTrough", None, "f1", "commit_off")}。AMD 改讀 S-1 下限 20 → 累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "amd_s1")}、谷底 {n("FND_CashNoExtTrough", None, "f1", "amd_s1")}。用管理層較舊的營收目標、同一支出，反向累計外部資金需求 {n("RVS_ExtNeedCum", Y, "f1")}（只作對照）。</p>
+<p class="note">單一驅動落在區間下緣，外部資金需求就會大幅擴大：API 任務數成長取低 → 累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "api_task_lo")}（首次缺口 {n("FND_FirstGapYear", None, "yt", "api_task_lo")}）；價格彈性取弱端 → {n("FND_ExtNeedCum", Y, "f1", "elast_weak")}；SpaceXAI 走 S-1 路徑 → {n("FND_ExtNeedCum", Y, "f1", "r4_on")}；未歸屬餘額回到平均攤提且快付（2027–2031）→ {n("FND_ExtNeedCum", Y, "f1", "s1u_fast")}（見 ⑥、①之七）；每 GW 合約價 20 時仍不需要（{n("FND_ExtNeedCum", Y, "f1", "price_hi")}），但谷底降到 {n("FND_CashNoExtTrough", None, "f1", "price_hi")}。附條件或可終止的 213.8 若扣除（R5d 讀法），未歸屬餘額 {n("COST_S1Unalloc", None, "f0", "r5d_on")}、現金谷底 {n("FND_CashNoExtTrough", None, "f1", "r5d_on")}、命題 1 {n("COST_GapPosSustainYear", None, "yt", "r5d_on")} 年持續轉正。正式承諾若不進基準（v0.1.6 合約口徑：W1、W2 皆關），2030 差額 {n("COST_PropGap_VR", Y, "sf1", "commit_off")}、累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "commit_off")}、現金谷底 {n("FND_CashNoExtTrough", None, "f1", "commit_off")}。用管理層較舊的營收目標、同一支出，反向累計外部資金需求 {n("RVS_ExtNeedCum", Y, "f1")}（只作對照）。</p>
 </section>""")
 
     # ①之二～①之四（各版更新紀錄）移到頁尾（Andy 2026-10-31：① 之後直接接 ② 的圖，較直觀）；
     # 此處照常產生，記下起點，產生完後整段移到 ⑨ 之後。
     _hist_start = len(S)
-    # ── ①之六 v0.1.7.1 更新了什麼（頁尾紀錄區最前） ──
+    # ── ①之七 v0.1.8 更新了什麼（頁尾紀錄區最前；現行基準） ──
+    def _r7(sheet, prefix):
+        ws = V.loc.wb[sheet]
+        for r in range(1, ws.max_row + 1):
+            b = ws.cell(r, 2).value
+            if isinstance(b, str) and b.startswith(prefix):
+                return f"{sheet}!{ws.cell(r, 1).value}"
+        raise KeyError(f"{sheet} 找不到列：{prefix}")
+    def g7(lab, ref, yr, f, cols, em=False):
+        return (f'<tr class="{"em" if em else ""}"><td>{lab}</td>' + "".join(f"<td>{n(ref, yr, f, sc)}</td>" for _l, sc in cols) + "</tr>")
+    def outrows(cols):
+        rr = [g7(f"每 VR 等值 GW 差額 {y}（$B/GW/年）", "COST_PropGap_VR", y, "sf2", cols, y == 2026) for y in (2026, 2027, 2028, 2029, 2030)]
+        rr += [g7("覆蓋率 2026（倍）", "COST_Coverage", 2026, "f3", cols), g7("覆蓋率 2030（倍）", "COST_Coverage", 2030, "f3", cols),
+               g7("命題 1 持續轉正年", "COST_GapPosSustainYear", None, "yt", cols),
+               g7("累計外部資金需求 2026–2030 $B", "FND_ExtNeedCum", 2030, "f2", cols, True), g7("首次缺口年", "FND_FirstGapYear", None, "yt", cols),
+               g7("只靠已到位融資的現金谷底 $B", "FND_CashNoExtTrough", None, "f2", cols, True), g7("2029 最低現金 $B", "FND_MinCash", 2029, "f2", cols),
+               g7("營運自由現金流持續轉正年", "FND_FCFPosSustainYear", None, "yt", cols)]
+        return rr
+    wf7_cols = [("v0.1.7.1", "v0171"), ("＋R5a Q3 實績", "wf8_a"), ("＋R5b 承諾 871.4", "wf8_ab"), ("＋R5c 付款期＝v0.1.8", "base")]
+    wf7_rows = [g7("2026 營收總額 $B", "REV_Gross", 2026, "f2", wf7_cols), g7("2026 非算力成本（不含股權報酬）$B", "COST_NonCompExSBC", 2026, "f2", wf7_cols),
+                g7("2026 股權報酬（含非現金捐贈）$B", "COST_SBC", 2026, "f2", wf7_cols), g7("S-1 承諾三段合計 $B", "COST_S1fCommit3", None, "f1", wf7_cols),
+                g7("未歸屬餘額 $B", "COST_S1Unalloc", None, "f1", wf7_cols), g7("未歸屬餘額付款 2026 $B", "COST_Pay_S1Unalloc", 2026, "f2", wf7_cols),
+                g7("未歸屬餘額付款 2028 $B", "COST_Pay_S1Unalloc", 2028, "f2", wf7_cols), g7("算力成本 2028 $B", "COST_Compute", 2028, "f1", wf7_cols)]
+    wf7_rows += outrows(wf7_cols)
+    one_cols = [("v0.1.7.1", "v0171"), ("只動 R5a", "wf8_a"), ("只動 R5b", "wf8_b"), ("只動 R5c", "wf8_c"), (f"v{ver}（三項）", "base"),
+                ("v0.1.8＋R4", "r4_on"), ("v0.1.8＋R5d", "r5d_on")]
+    one_rows = outrows(one_cols)
+    off_cols = [(f"v{ver} 基準", "base"), ("只關 R5a", "v018_no_r5a"), ("只關 R5b", "v018_no_r5b"), ("只關 R5c", "wf8_ab"), ("全關＝v0.1.7.1", "v0171")]
+    off_rows = outrows(off_cols)
+    mc7 = [("3 個月（區間下緣）", "v0171_mc_lo", "mc_lo", None), ("6 個月（基準）", "v0171", "base", "r4_on"), ("12 個月（區間上緣）", "v0171_mc_hi", "mc_hi", "r4_mc_hi")]
+    mc7_html = "".join(
+        f'<tr class="{"em" if b == "base" else ""}"><td>{lab}</td><td>{n("FND_MinCash", 2029, "f2", b)}</td>'
+        f'<td>{n("FND_ExtNeedCum", 2030, "f2", a)}</td><td>{n("FND_FirstGapYear", None, "yt", a)}</td>'
+        f'<td>{n("FND_ExtNeedCum", 2030, "f2", b)}</td><td>{n("FND_FirstGapYear", None, "yt", b)}</td><td>{n("FND_CashNoExtTrough", None, "f2", b)}</td>'
+        + (f'<td>{n("FND_ExtNeedCum", 2030, "f2", c)}</td><td>{n("FND_FirstGapYear", None, "yt", c)}</td>' if c else "<td>—</td><td>—</td>") + "</tr>"
+        for lab, a, b, c in mc7)
+    alt7 = [(f"基準（v{ver}：S-1/A 結構，未起租與 9-30 後 2027 起 10 年）", "base"), ("舊讀法：2027–2033 平均（R5c 關閉）", "wf8_ab"),
+            ("舊讀法 快：2027–2031 平均", "s1u_fast"), ("舊讀法 慢：2028–2036 平均", "s1u_slow"), ("舊讀法 慢：2028–2037 平均", "s1u_slow37"),
+            ("S-1/A 結構，未起租起租年 2026", "lease_lo"), ("S-1/A 結構，未起租起租年 2028", "lease_hi"), ("扣除附條件 213.8（R5d）", "r5d_on"),
+            ("SpaceXAI S-1 路徑（R4）", "r4_on"), ("R4＋R5d", "r4_r5d")]
+    alt7_html = "".join(f'<tr class="{"em" if sc == "base" else ""}"><td>{lab}</td><td>{n("COST_Pay_S1Unalloc", 2027, "f1", sc)}</td><td>{n("COST_Pay_S1Unalloc", 2028, "f1", sc)}</td>'
+                        f'<td>{n("FND_ExtNeedCum", 2030, "f2", sc)}</td><td>{n("FND_FirstGapYear", None, "yt", sc)}</td><td>{n("FND_CashNoExtTrough", None, "f2", sc)}</td>'
+                        f'<td>{n("COST_PropGap_VR", 2030, "sf2", sc)}</td><td>{n("COST_GapPosSustainYear", None, "yt", sc)}</td></tr>' for lab, sc in alt7)
+    alt8 = [(f"基準（v{ver}）", "base"), ("SpaceXAI 以上限 120.5 等比例放大月費（v0.1.7 W1(a)）", "spx_cap"), ("Google 額外 TPU 125–150 計入（中點）", "gaddl_on"),
+            ("Broadcom 起始年改 S-1 期間起點 2026", "bcm_2026"), ("AMD 改讀正式 S-1 下限 20", "amd_s1"), ("只關閉 W2（自建回到 Fluidstack $50B 三年均攤）", "only_w2_off"),
+            ("只關閉 W4（非算力成本回到 v0.1.6 算法）", "only_w4_off"), ("W4 兩者皆不用（下半年 Q2 持平、股權報酬模型值）", "w4_neither"), ("W4 只動 Q3 口徑（股權報酬回模型值）", "w4_q3only"),
+            ("W4 只動股權報酬（下半年回 Q2 持平）", "w4_sbconly"), ("承諾不進基準（W1、W2 皆關）", "commit_off"), ("說明列：只關 W1", "commit_off_w1only")]
+    alt8_html = "".join(f'<tr class="{"em" if sc == "base" else ""}"><td>{lab}</td><td>{n("FND_ExtNeedCum", 2030, "f2", sc)}</td><td>{n("FND_FirstGapYear", None, "yt", sc)}</td>'
+                        f'<td>{n("FND_CashNoExtTrough", None, "f2", sc)}</td><td>{n("COST_PropGap_VR", 2026, "sf2", sc)}</td><td>{n("COST_PropGap_VR", 2030, "sf2", sc)}</td></tr>' for lab, sc in alt8)
+    shr = [("S-1/A 表內義務逐年", _r7("Cost", "R5c S-1/A 表內義務逐年"), "f2"), ("未起租＋9-30 後新簽逐年", _r7("Cost", "R5c 未起租＋9-30 後新簽逐年"), "f2"),
+           ("合成年度比例（v0.1.8）", "COST_S1aUnallocShare", "pct1"), ("舊：2027–2033 平均", _r7("Cost", "R5c 對照：v0.1.7 平均攤提"), "pct1"),
+           ("未歸屬餘額付款（v0.1.8）", "COST_Pay_S1Unalloc", "f2")]
+    shr_html = "".join(f"<tr><td>{lab}</td>" + "".join(f"<td>{n(ref, y, f)}</td>" for y in YEARS) + "</tr>" for lab, ref, f in shr)
+    q3 = [("營收", "SRC_ANT_488", "SRC_ANT_384"), ("算力與基礎設施費用", "SRC_ANT_489", _r7("Cost", "R5a 對照：模型 Q3 隱含算力")),
+          ("營業損益", "SRC_ANT_490", None), ("股權報酬", "SRC_ANT_491", None), ("非現金捐贈配對", "SRC_ANT_492", None), ("調整後營業損益", "SRC_ANT_493", None),
+          ("非算力費用（不含股權報酬與捐贈）", "COST_S1aQ3NonComp", _r7("Cost", "R5a 對照：v0.1.7.1 的 Q3 隱含非算力")),
+          ("股權報酬代理每季（股權報酬＋捐贈）", _r7("Cost", "R5a 股權報酬代理每季：Q3"), _r7("Cost", "R5a 對照：v0.1.7.1 每季代理"))]
+    q3_html = "".join(f"<tr><td>{lab}</td><td>{n(a, 2026 if '!' in a else None, 'f3')}</td><td>{n(b, 2026 if '!' in b else None, 'f3') if b else '—'}</td></tr>"
+                      for lab, a, b in q3)
+    cm = [("表內義務（營運租賃＋融資租賃＋採購承諾）", "SRC_ANT_496", "進基準"), ("已簽未起租租賃（2026–2028 起租，加權約 10 年）", "SRC_ANT_504", "進基準"),
+          ("9-30 後新簽或修訂", "SRC_ANT_506", "進基準"), ("短期承諾（一年內可無罰取消）", "SRC_ANT_503", "不進（N2）"), ("9-30 後短期", "SRC_ANT_507", "不進（N2）"),
+          ("承諾總額（原文）", "SRC_ANT_495", "—"), ("其中附條件或可終止", "SRC_ANT_508", "基準計入；R5d 扣除讀法並列"),
+          ("未來 12 個月預計支付（其中附條件 4.3）", "SRC_ANT_509", "只對照")]
+    cm_html = "".join(f"<tr><td>{lab}</td><td>{n(r, None, 'f1')}</td><td>{t}</td></tr>" for lab, r, t in cm)
+    spx = [("S-1 路徑年付款（R4）", "COST_S1aSpaceXPath"), ("現行基準 SpaceX 付款（月費 1.25 × 36）", "COST_Pay_Spacex")]
+    spx_html = "".join(f"<tr><td>{lab}</td>" + "".join(f"<td>{n(ref, y, 'f2')}</td>" for y in YEARS) + "</tr>" for lab, ref in spx)
+    c930 = [("S-1/A 9-30 現金及約當現金＋短期投資", "SRC_ANT_516", None, "f2"), ("模型近似（2025 年底＋已到位＋2026 自由現金流 × 9/12）", _r7("Funding", "模型 2026-09-30 近似"), 2026, "f2"),
+            ("差（S-1/A − 模型）", "FND_Cash0930Gap", None, "sf2"), ("①股權收入：S-1/A 前九月特別股收入 − 模型已到位", _r7("Funding", "差額拆解 ①股權收入：S-1/A"), 2026, "sf3"),
+            ("②前九月自由現金流時點（含租賃資產預付 1.955）", _r7("Funding", "差額拆解 ②前九月"), 2026, "sf2"), ("③受限現金 2.6", _r7("Funding", "差額拆解 ③受限現金：S-1/A"), 2026, "sf2"),
+            ("④其餘", "FND_Cash0930Resid", None, "sf3")]
+    c930_html = "".join(f"<tr><td>{lab}</td><td>{n(ref, yr, f)}</td></tr>" for lab, ref, yr, f in c930)
+    S.append(f"""<section id="s1g"><h2><span class="no">①之七</span>v{ver} 更新了什麼：S-1/A 第 1 號修訂（2026-11-02；Q3 實績、承諾總額 895.4 與逐年付款表）</h2>
+<p class="lead"><b>命題 2 不翻轉、餘裕變厚；命題 1 的 2026 單年由正轉負，持續轉正年不變。</b>累計外部資金需求 2026–2030 維持 {n("FND_ExtNeedCum", 2030, "f0")}（v0.1.7.1 亦 {n("FND_ExtNeedCum", 2030, "f0", "v0171")}），只靠已到位融資的現金谷底 {n("FND_CashNoExtTrough", None, "f2", "v0171")} → <b>{n("FND_CashNoExtTrough", None, "f2")}</b>（2029 年；當年最低現金 {n("FND_MinCash", 2029, "f2")}），最低現金改 12 個月也不需要外部資金（v0.1.7.1 時需 {n("FND_ExtNeedCum", 2030, "f2", "v0171_mc_hi")}）。每 VR 等值 GW 差額 2026–2030 {n("COST_PropGap_VR", 2026, "sf2")}／{n("COST_PropGap_VR", 2027, "sf2")}／{n("COST_PropGap_VR", 2028, "sf2")}／{n("COST_PropGap_VR", 2029, "sf2")}／{n("COST_PropGap_VR", 2030, "sf2")}（v0.1.7.1：{n("COST_PropGap_VR", 2026, "sf2", "v0171")}／{n("COST_PropGap_VR", 2027, "sf2", "v0171")}／{n("COST_PropGap_VR", 2028, "sf2", "v0171")}／{n("COST_PropGap_VR", 2029, "sf2", "v0171")}／{n("COST_PropGap_VR", 2030, "sf2", "v0171")}），2030 覆蓋率 {n("COST_Coverage", 2030, "f3", "v0171")} → {n("COST_Coverage", 2030, "f3")}，持續轉正年 {n("COST_GapPosSustainYear", None, "yt")}。三項方向不同：R5a（Q3 實績）讓 2026 全成本上升（股權報酬＋非現金捐贈每季 {n(_r7("Cost", "R5a 股權報酬代理每季：Q3"), 2026, "f2")}，皆非現金）但非算力現金成本下降；R5b（三段 832 → {n("COST_S1fCommit3", None, "f1")}、Google 114.5 → 121.3）單獨會使現金谷底降到 {n("FND_CashNoExtTrough", None, "f2", "wf8_b")}、需要 {n("FND_ExtNeedCum", 2030, "f2", "wf8_b")}；R5c（付款期改依 S-1/A 付款表：表內義務 2030 年後仍有 148.4、未起租 451.2 自 2027 起 10 年）把未歸屬餘額在 2026–2030 的付款比例由 {n(_r7("Cost", "R5c 對照：v0.1.7 平均攤提"), 2028, "pct1")}／年降到約 {n("COST_S1aUnallocShare", 2028, "pct1")}／年，抵銷 R5b 而有餘。<b>條件</b>：SpaceXAI 若照 S-1 路徑付滿 120.5（R4）→ 累計外部資金需求 {n("FND_ExtNeedCum", 2030, "f2", "r4_on")}（{n("FND_FirstGapYear", None, "yt", "r4_on")} 年），命題 2 翻為「需要」；附條件 213.8 若扣除（R5d）→ 谷底 {n("FND_CashNoExtTrough", None, "f2", "r5d_on")}、命題 1 {n("COST_GapPosSustainYear", None, "yt", "r5d_on")} 年持續轉正。</p>
+<h3>瀑布：從 v0.1.7.1 逐項加入（R4、R5d 基準不動，只並列）</h3>
+<div class="tw"><table><thead><tr><th>輸出</th>{"".join(f"<th>{l}</th>" for l, _s in wf7_cols)}</tr></thead><tbody>{"".join(wf7_rows)}</tbody></table></div>
+<h3>只動該項的前後值（R5a、R5b、R5c 各自從 v0.1.7.1 加入；R4、R5d 從 v{ver} 基準加入）</h3>
+<div class="tw"><table><thead><tr><th>輸出</th>{"".join(f"<th>{l}</th>" for l, _s in one_cols)}</tr></thead><tbody>{"".join(one_rows)}</tbody></table></div>
+<h3>反向檢查：從 v{ver} 基準只關該項</h3>
+<div class="tw"><table><thead><tr><th>輸出</th>{"".join(f"<th>{l}</th>" for l, _s in off_cols)}</tr></thead><tbody>{"".join(off_rows)}</tbody></table></div>
+<p class="note">開關（Inputs）：R4 s1f_spacex_fee_switch（基準 0）、R5a s1a_q3_switch、R5b s1a_commit_switch、R5c s1a_unalloc_switch（基準 1）、R5d s1a_cond_deduct_switch（基準 0）。R5a、R5b、R5c 全設 0 時，v0.1.7.1 的全部計算具名範圍逐位重現（engine 回歸測試）；逐格比對方法與格數見報告。</p>
+<h3>最低現金月數 3／6／12（D17：基準 6 個月，Andy 未決；Assumed 3–12）</h3>
+<div class="tw"><table><thead><tr><th>最低現金</th><th>2029 最低現金</th><th>v0.1.7.1 累計外部資金</th><th>v0.1.7.1 首次缺口</th><th>v{ver} 累計外部資金</th><th>v{ver} 首次缺口</th><th>v{ver} 谷底</th><th>v{ver}＋R4 累計外部資金</th><th>＋R4 首次缺口</th></tr></thead><tbody>{mc7_html}</tbody></table></div>
+<h3>R5c 未歸屬餘額付款期：依 S-1/A 結構合成（判斷題「未歸屬餘額付款期」結案）</h3>
+<div class="tw"><table><thead><tr><th>$B／比例</th>{"".join(f"<th>{y}</th>" for y in YEARS)}</tr></thead><tbody>{shr_html}</tbody></table></div>
+<p class="note">做法：三段合計 {n("COST_S1fCommit3", None, "f1")} 的逐年付款＝表內義務逐年（2026Q4 {n("SRC_ANT_497", None, "f2")}、2027–2030 依原文表、之後 {n("SRC_ANT_502", None, "f1")} 依 2031–2036 平均〔Assumed〕）＋未起租 {n("SRC_ANT_504", None, "f1")} 與 9-30 後 {n("SRC_ANT_506", None, "f1")} 依「起租 2027、加權租期 {n("SRC_ANT_505", None, "f0")} 年」平均〔Assumed〕；除以三段合計得年度比例，套到未歸屬餘額 {n("COST_S1Unalloc", None, "f1")}。2025–2030 比例合計 {n(_r7("Cost", "R5c 2025–2030 比例合計"), None, "pct0")}（舊讀法 4／7＝57%）。新增 Checks：模型 2027–2030 合約實付（不含 AMD）對 S-1/A 表內＋租約推算 {n(_r7("Cost", "R5c 新 Checks：S-1/A 推算"), None, "f1")} 為 {n("COST_S1aPay2730Gap", None, "pct0")}——模型逐家合約的付款比 S-1/A 付款表早（逐家合約以合約期平均與爬坡攤提），只對照。</p>
+<div class="tw"><table><thead><tr><th>讀法</th><th>未歸屬餘額付款 2027</th><th>2028</th><th>累計外部資金</th><th>首次缺口年</th><th>現金谷底</th><th>2030 差額</th><th>命題 1 持續轉正年</th></tr></thead><tbody>{alt7_html}</tbody></table></div>
+<h3>既有預設的替代讀法，在 v{ver} 基準下（每項只改一處；v0.1.7.1 當時的同一張表見 ①之六）</h3>
+<div class="tw"><table><thead><tr><th>讀法</th><th>累計外部資金</th><th>首次缺口年</th><th>現金谷底</th><th>2026 差額</th><th>2030 差額</th></tr></thead><tbody>{alt8_html}</tbody></table></div>
+<h3>R5a 2026 Q3 實績（S-1/A 季度損益；$B）</h3>
+<div class="tw"><table><thead><tr><th>項目</th><th>S-1/A 實際</th><th>v0.1.7.1 用的報導或隱含值</th></tr></thead><tbody>{q3_html}</tbody></table></div>
+<p class="note">W4 下半年非算力（含通路平台費、不含股權報酬與捐贈）改用 Q3 實際，Q4＝Q3 慣例不變；股權報酬代理下半年改（1.070＋1.960）× 2。非現金捐贈 1.960 為一次性（10 月以 Class N 股份結清），依 Q4＝Q3 慣例 Q4 也計一次，屬保守（只影響含股權報酬的全成本，不影響現金）。Q3 算力 9.863 與模型 Q3 隱含（報導營收 ÷ 1.70）差 {n("COST_S1aQ3ComputeGap", None, "sf3")}，只對照。調整後營業利益率原文 15%（取代報導 11%）。</p>
+<h3>R5b 承諾總額（S-1/A 第 173–174 頁；$B）</h3>
+<div class="tw"><table><thead><tr><th>項目</th><th>金額</th><th>基準處理</th></tr></thead><tbody>{cm_html}</tbody></table></div>
+<p class="note">W1(b) 三段：S-1 的 6-30 口徑 {n(_r7("Cost", "R5b 對照：v0.1.7.1 三段"), None, "f1")} → S-1/A 的 9-30 口徑 {n("COST_S1fCommit3", None, "f1")}；逐家 Google 114.5 → {n("SRC_ANT_513", None, "f1")}（5–10 月修訂）、Microsoft 期間到 2033-06（金額不變；年度模型不受影響）。未歸屬餘額 {n("COST_S1Unalloc", None, "f1", "v0171")} → {n("COST_S1Unalloc", None, "f1")}。不在總額內、維持不進基準：無固定金額的其他算力安排 150–175（含 Google 額外 TPU 125–150 與 AMD >20）、可再發行可轉債最多 {n("SRC_ANT_512", None, "f0")}（Broadcom 42＋Google 20＋Amazon 15；N3）。</p>
+<h3>R4 SpaceXAI：S-1 路徑（並列；基準維持月費 1.25 × 36＝45）</h3>
+<div class="tw"><table><thead><tr><th>$B</th>{"".join(f"<th>{y}</th>" for y in YEARS)}</tr></thead><tbody>{spx_html}</tbody></table></div>
+<p class="note">S-1 路徑：2026-05～11 交付期間線性爬升（第 k 月＝3.1 × k ÷ 8〔Assumed〕）、2026-12 起每月 {n("SRC_ANT_515", None, "f1")}、累計以上限 {n("SRC_ANT_453", None, "f1")} 截頂（2029 年部分月份）。SpaceX 合約總額 45 → 120.5，未歸屬餘額相應減少 {n("COST_S1Unalloc", None, "f1")} → {n("COST_S1Unalloc", None, "f1", "r4_on")}（總承諾不變，只是付款提前到 2026–2029）。2027-01／03 後可 90 天通知取消，未模型化。</p>
+<h3>R5e 2026-09-30 現金對照（只對照，不校準）；R5f Q3 無新股權</h3>
+<div class="tw"><table><thead><tr><th>項目</th><th>v{ver}</th></tr></thead><tbody>{c930_html}</tbody></table></div>
+<p class="note">S-1/A 前九月特別股發行收入 {n("SRC_ANT_521", None, "f3")} 與上半年相同（Q3 無新股權；評估至 11-02 亦無），模型已到位融資 {n("FND_Committed", 2026, "f2")} 不變，差 {n("FND_CommittedS1aGap", None, "sf3")}。前九月營業現金流 {n("SRC_ANT_518", None, "f3")}（Q3 約 {n(_r7("Funding", "對照：S-1/A Q3 營業現金流"), 2026, "f2")}）、資本支出 {n("SRC_ANT_519", None, "f3")}、租賃資產預付 {n("SRC_ANT_520", None, "f3")}（新科目）。9-30 差額 {n("FND_Cash0930Gap", None, "sf2")} 主要是受限現金 2.6 與自由現金流時點；其餘 {n("FND_Cash0930Resid", None, "sf2")}。Google 額外 TPU 125–150、AMD >20 仍不進基準；TK 快照維持 v21.7（Tokenomics v21.9 尚未合併）。</p>
+{V.src("COST_PropGap_VR", "COST_Coverage", "FND_ExtNeedCum", "FND_CashNoExtTrough", "COST_S1fCommit3", "COST_S1Unalloc", "COST_Pay_S1Unalloc", "COST_S1aUnallocShare", "COST_S1aQ3NonComp", "COST_S1aSpaceXPath", "COST_S1aPay2730Gap", "FND_Cash0930Gap", "FND_CommittedS1aGap")}
+</section>""")
+    # ── ①之六 v0.1.7.1 更新了什麼（v0.1.8 起以 v0.1.7.1 當時的輸出呈現：基準＝v0171〔R5a–R5c 皆關〕，替代讀法與最低現金＝v0171_ 版本；內容與前版相同） ──
+    ver6 = "0.1.7.1"
+    V.default_sc = "v0171"
+    _m6 = {"base": "v0171", **{k: "v0171_" + k for k in ['s1u_fast', 's1u_slow', 'spx_cap', 'gaddl_on', 'bcm_2026', 'amd_s1', 'only_w2_off', 'only_w4_off', 'w4_neither', 'w4_q3only', 'w4_sbconly', 'commit_off', 'commit_off_w1only', 'mc_lo', 'mc_hi']}}
+    n_cur6 = n
+    n = lambda ref, year=None, f="f1", sc=None, cls="": n_cur6(ref, year, f, _m6.get(sc, sc), cls)  # noqa: E731
     def _r6(sheet, prefix):
         ws = V.loc.wb[sheet]
         for r in range(1, ws.max_row + 1):
@@ -663,7 +770,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
                 return f"{sheet}!{ws.cell(r, 1).value}"
         raise KeyError(f"{sheet} 找不到列：{prefix}")
     v6_cols = [("v0.1.7", "v017"), ("V2 前（V1、V3、V4 已套用）", "v0171_v2only_off"), ("＋各輪改原文 30.2／65.2", "v0171_round_only"),
-               (f"＋Google Series G-2 計入＝v{ver}", "base"), ("說明：只計入 Google G-2（各輪仍 30／65）", "v0171_googl_only")]
+               (f"＋Google Series G-2 計入＝v{ver6}", "base"), ("說明：只計入 Google G-2（各輪仍 30／65）", "v0171_googl_only")]
     def v6row(lab, ref, yr, f, em=False, cols=v6_cols):
         return (f'<tr class="{"em" if em else ""}"><td>{lab}</td>' + "".join(f"<td>{n(ref, yr, f, sc)}</td>" for _l, sc in cols) + "</tr>")
     v6_rows = [v6row("2026 已到位融資 $B", "FND_Committed", 2026, "f2", True)]
@@ -683,37 +790,39 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
             ("②上半年自由現金流時點", _r6("Funding", "差額拆解 ②"), 2026, "sf2"), ("③受限現金（Broadcom 租約保證金）", _r6("Funding", "差額拆解 ③"), 2026, "sf2"),
             ("④其餘", "FND_Cash0630Resid", None, "sf3")]
     c630_html = "".join(f"<tr><td>{lab}</td><td>{n(ref, yr, f, 'v017')}</td><td>{n(ref, yr, f)}</td></tr>" for lab, ref, yr, f in c630)
-    alt6 = [(f"基準（v{ver}）", "base"), ("未歸屬餘額付款期 快：2027–2031", "s1u_fast"), ("未歸屬餘額付款期 慢：2028–2036", "s1u_slow"),
+    alt6 = [(f"基準（v{ver6}）", "base"), ("未歸屬餘額付款期 快：2027–2031", "s1u_fast"), ("未歸屬餘額付款期 慢：2028–2036", "s1u_slow"),
             ("SpaceXAI 以正式 S-1 上限 120.5 計", "spx_cap"), ("Google 額外 TPU 125–150 計入（中點）", "gaddl_on"), ("Broadcom 起始年改 S-1 期間起點 2026", "bcm_2026"),
             ("AMD 改讀正式 S-1 下限 20", "amd_s1"), ("只關閉 W2（自建回到 Fluidstack $50B 三年均攤）", "only_w2_off"), ("只關閉 W4（非算力成本回到 v0.1.6 算法）", "only_w4_off"),
             ("W4 兩者皆不用（下半年 Q2 持平、股權報酬模型值）", "w4_neither"), ("W4 只動 Q3 口徑", "w4_q3only"), ("W4 只動股權報酬", "w4_sbconly"),
             ("承諾不進基準（W1、W2 皆關）", "commit_off"), ("說明列：只關 W1", "commit_off_w1only")]
     alt6_html = "".join(f'<tr class="{"em" if sc == "base" else ""}"><td>{lab}</td><td>{n("FND_ExtNeedCum", 2030, "f2", sc)}</td><td>{n("FND_FirstGapYear", None, "yt", sc)}</td>'
                         f'<td>{n("FND_CashNoExtTrough", None, "f2", sc)}</td><td>{n("COST_PropGap_VR", 2030, "sf2", sc)}</td></tr>' for lab, sc in alt6)
-    S.append(f"""<section id="s1f"><h2><span class="no">①之六</span>v{ver} 更新了什麼：正式 S-1 原文落地、已到位融資更正（Google Series G-2 約 10 另計）</h2>
-<p class="lead"><b>命題 2 由「需要少量」翻回「不需要」（條件式）。</b>2026–2030 累計外部資金需求 {n("FND_ExtNeedCum", 2030, "f2", "v017")}（首次 {n("FND_FirstGapYear", None, "yt", "v017")} 年）→ {n("FND_ExtNeedCum", 2030, "f2")}；只靠已到位融資的現金谷底 {n("FND_CashNoExtTrough", None, "f2", "v017")} → {n("FND_CashNoExtTrough", None, "f2")}（2029 年；當年最低現金 {n("FND_MinCash", 2029, "f2")}，餘裕 {n("FND_Headroom", 2029, "f2")}）。原因只有 V2 一項（Google G-2 +10.0，另各輪改原文值 +0.4）：正式 S-1 合併現金流量表的 2026 上半年特別股發行收入為 {n("SRC_ANT_472", None, "f3")}，v0.1.7 的已到位融資只算 {n("FND_Committed", 2026, "f1", "v017")}——Google 2026 Q2 認購的 Series G-2（{n("SRC_ANT_475", None, "f1")} 百萬股 × 每股 {n("SRC_ANT_477", None, "f4")}≈{n("Funding!F17", 2026, "f2")}）與 2026-05 Google 投入 Series H 的 {n("SRC_ANT_480", None, "f1")} 是兩筆（Note 4、9、10），v0.1.7 誤當同一筆；Series G／H 另依原文改 {n("SRC_ANT_473", None, "f1")}／{n("SRC_ANT_478", None, "f1")}（＋0.4）。v{ver} 已到位融資 {n("FND_Committed", 2026, "f2")}，與 S-1 差 {n("FND_CommittedS1Gap", None, "sf3")}。<b>命題 1 不變</b>（差額、覆蓋率、持續轉正年 {n("COST_GapPosSustainYear", None, "yt")} 全同）。這個翻轉幅度小、取決於最低現金假設：最低現金改 12 個月仍需 {n("FND_ExtNeedCum", 2030, "f2", "mc_hi")}（{n("FND_FirstGapYear", None, "yt", "mc_hi")} 年）。</p>
+    S.append(f"""<section id="s1f"><h2><span class="no">①之六</span>v{ver6} 更新了什麼：正式 S-1 原文落地、已到位融資更正（Google Series G-2 約 10 另計）</h2>
+<p class="lead"><b>命題 2 由「需要少量」翻回「不需要」（條件式）。</b>2026–2030 累計外部資金需求 {n("FND_ExtNeedCum", 2030, "f2", "v017")}（首次 {n("FND_FirstGapYear", None, "yt", "v017")} 年）→ {n("FND_ExtNeedCum", 2030, "f2")}；只靠已到位融資的現金谷底 {n("FND_CashNoExtTrough", None, "f2", "v017")} → {n("FND_CashNoExtTrough", None, "f2")}（2029 年；當年最低現金 {n("FND_MinCash", 2029, "f2")}，餘裕 {n("FND_Headroom", 2029, "f2")}）。原因只有 V2 一項（Google G-2 +10.0，另各輪改原文值 +0.4）：正式 S-1 合併現金流量表的 2026 上半年特別股發行收入為 {n("SRC_ANT_472", None, "f3")}，v0.1.7 的已到位融資只算 {n("FND_Committed", 2026, "f1", "v017")}——Google 2026 Q2 認購的 Series G-2（{n("SRC_ANT_475", None, "f1")} 百萬股 × 每股 {n("SRC_ANT_477", None, "f4")}≈{n("Funding!F17", 2026, "f2")}）與 2026-05 Google 投入 Series H 的 {n("SRC_ANT_480", None, "f1")} 是兩筆（Note 4、9、10），v0.1.7 誤當同一筆；Series G／H 另依原文改 {n("SRC_ANT_473", None, "f1")}／{n("SRC_ANT_478", None, "f1")}（＋0.4）。v{ver6} 已到位融資 {n("FND_Committed", 2026, "f2")}，與 S-1 差 {n("FND_CommittedS1Gap", None, "sf3")}。<b>命題 1 不變</b>（差額、覆蓋率、持續轉正年 {n("COST_GapPosSustainYear", None, "yt")} 全同）。這個翻轉幅度小、取決於最低現金假設：最低現金改 12 個月仍需 {n("FND_ExtNeedCum", 2030, "f2", "mc_hi")}（{n("FND_FirstGapYear", None, "yt", "mc_hi")} 年）。</p>
 <h3>V2 瀑布：只動已到位融資（V1、V3、V4、V5 不改基準輸出）</h3>
 <div class="tw"><table><thead><tr><th>輸出</th>{"".join(f"<th>{l}</th>" for l, _s in v6_cols)}</tr></thead><tbody>{"".join(v6_rows)}</tbody></table></div>
 <p class="note">「V2 前」＝本版活頁簿只把 V2 的兩個開關（googl_upfront_switch、s1f_round_switch）設 0，數字與 v0.1.7 逐格相同：V1（46 列改 Verified、SRC_ANT_427–431 改原文精度）、V3（條件式額度）、V4（信用額度條款）、V5（文字）都不改基準輸出。逐格比對方法與格數見報告 ④。</p>
 <h3>最低現金月數 3／6／12（D17：基準 6 個月，Assumed 3–12；V4）</h3>
-<div class="tw"><table><thead><tr><th>最低現金</th><th>2029 最低現金</th><th>v0.1.7 累計外部資金</th><th>v0.1.7 首次缺口</th><th>v0.1.7 谷底</th><th>v{ver} 累計外部資金</th><th>v{ver} 首次缺口</th><th>v{ver} 谷底</th></tr></thead><tbody>{mc_html}</tbody></table></div>
+<div class="tw"><table><thead><tr><th>最低現金</th><th>2029 最低現金</th><th>v0.1.7 累計外部資金</th><th>v0.1.7 首次缺口</th><th>v0.1.7 谷底</th><th>v{ver6} 累計外部資金</th><th>v{ver6} 首次缺口</th><th>v{ver6} 谷底</th></tr></thead><tbody>{mc_html}</tbody></table></div>
 <p class="note">S-1 揭露的契約下限：A&R 循環信用額度（2026-09 擴為 {n("SRC_ANT_485", None, "f0")}，2031-09 到期）附最低流動性條款 {n("SRC_ANT_486", None, "f0")}（自 2026-12-31 季末起）。模型最低現金（次年非算力成本 × 6 個月）2026–2030 為 {n("FND_MinCash", 2026, "f1")}–{n("FND_MinCash", 2030, "f1")}，比契約下限高至少 {n("Checks!" + chk_of("h4_liq"), None, "f1")}；循環額度照 D16 只列或有，不作資金來源。</p>
-<h3>v0.1.7 已套用預設的替代讀法，在 v{ver} 基準下（每項只改一處）</h3>
+<h3>v0.1.7 已套用預設的替代讀法，在 v{ver6} 基準下（每項只改一處）</h3>
 <div class="tw"><table><thead><tr><th>讀法</th><th>累計外部資金</th><th>首次缺口年</th><th>現金谷底</th><th>2030 差額</th></tr></thead><tbody>{alt6_html}</tbody></table></div>
 <p class="note">已到位融資多 10.4 後，「W4 只動 Q3 口徑」不再產生外部資金需求（v0.1.7 時為 6.29）；未歸屬餘額快付、SpaceXAI 上限、Google 額外 TPU、Broadcom 2026 起付、自建回到 Fluidstack 舊法等讀法仍會產生，只是各少約 10.4（v0.1.7 當時的同一張表見 ①之五）。</p>
 <h3>V3 條件式額度（只動情境，基準不變）</h3>
-<div class="tw"><table><thead><tr><th>輸出</th><th>V3 前（Google 30）</th><th>v{ver}（Google 20）</th></tr></thead><tbody>
+<div class="tw"><table><thead><tr><th>輸出</th><th>V3 前（Google 30）</th><th>v{ver6}（Google 20）</th></tr></thead><tbody>
 <tr><td>Google 條件式額度（2027 到位）</td><td>{n("Funding!F23", 2027, "f0", "v0171_v3_off")}</td><td>{n("Funding!F23", 2027, "f0")}</td></tr>
 <tr><td>S2 ＋條件式：累計外部資金需求</td><td>{n("FND_ExtNeedCumCond", 2030, "f1", "v0171_v3_off")}</td><td>{n("FND_ExtNeedCumCond", 2030, "f1")}</td></tr>
 <tr><td>S3 ＋IPO＋條件式：2030 年底現金</td><td>{n("FND_CashEndAll", 2030, "f1", "v0171_v3_off")}</td><td>{n("FND_CashEndAll", 2030, "f1")}</td></tr>
 </tbody></table></div>
 <p class="note">正式 S-1：Google 2026 NPA 於 2026-06-30 剩餘可發行 {n("SRC_ANT_482", None, "f0")}；另有 IPO 同時以發行價認購最多 {n("SRC_ANT_483_Hi", None, "f0")} 的選擇權，若行使，NPA 額度等額減少，兩者不相加。Amazon 2026 NPA 剩餘 {n("SRC_ANT_484", None, "f0")}（每達算力里程碑 5.0）。條件式一律不計入基準。</p>
 <h3>2026-06-30 現金對照（只對照，不校準）</h3>
-<div class="tw"><table><thead><tr><th>項目</th><th>v0.1.7</th><th>v{ver}</th></tr></thead><tbody>{c630_html}</tbody></table></div>
+<div class="tw"><table><thead><tr><th>項目</th><th>v0.1.7</th><th>v{ver6}</th></tr></thead><tbody>{c630_html}</tbody></table></div>
 <p class="note">V2 後「S-1 − 模型近似」為 {n("FND_Cash0630Gap", None, "sf2")}（模型較多），差額幾乎全部來自 Broadcom 租約保證金 {n("SRC_ANT_487", None, "f1")}（2026-04 存入的受限現金，不在 S-1「現金、約當現金與短期投資」內，之後抵付租金；預設不另計）與上半年自由現金流的時點；股權收入已與 S-1 一致。</p>
 <p class="note"><b>V1 來源等級</b>：原為二手轉載的 46 列（季度損益、營收成本、承諾三段、逐家承諾、營業現金流與資本支出、集中度、non-GAAP 調節）改 Verified，網址改 SEC 原文、備註加原文位置；SRC_ANT_421 為轉載者捨入（原文表內 11,555、正文 11.6），只對照、標記不改；SRC_ANT_427–431 改原文精度（只對照列）。<b>V5 文字更正</b>：v0.1.7 報告與交接所寫「上半年股權報酬未單獨揭露」「約 0.111 未說明」改為：調整後 − GAAP 營業損益 2.311＝股權報酬 2.185（Q1 924＋Q2 1,261）＋非現金捐贈配對 0.126（2026Q1），兩者皆非現金，股權報酬代理口徑成立、數值不變。</p>
 {V.src("FND_Committed", "FND_CommittedS1Gap", "FND_ExtNeedCum", "FND_CashNoExtTrough", "FND_MinCash", "FND_Cash0630Gap", "FND_Cash0630Resid", "FND_MinCashOverCovenant", "FND_ExtNeedCumCond")}
 </section>""")
+    n = n_cur6
+
     # ── ①之五 v0.1.7 更新了什麼（v0.1.7.1 起以 v0.1.7 當時的輸出呈現：基準＝v017〔V2、V3 皆關〕，替代讀法＝v017_ 版本；內容與前版相同） ──
     V.default_sc = "v017"
     _m5 = {"base": "v017", **{k: "v017_" + k for k in ['commit_off', 'commit_off_w1only', 's1u_fast', 's1u_slow', 'spx_cap', 'gaddl_on', 'bcm_2026', 'amd_s1', 'only_w2_off', 'only_w4_off', 'w4_neither', 'w4_q3only', 'w4_sbconly']}}
@@ -1026,7 +1135,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
                 ("覆蓋率", "COST_Coverage", "pct0", ""), ("分母：供給 VR 等值 GW", "CMP_Supply_VReq", "f2", ""),
                 ("對照：經濟口徑差額（自建改以持有成本年化）", "COST_PropGapEcon_VR", "sf1", "sep"), ("對照：每實體 GW 差額", "COST_PropGap_GW", "sf1", ""),
                 ("分母：供給實體 GW", "CMP_SupplyGW", "f2", ""), ("差額總額（$B）", "COST_GapCash", "sf1", "")], head="$B/GW/年")}
-<p class="note">2025 分母只有 {n("CMP_Supply_VReq", 2025, "f2")} VR 等值 GW（2025 機隊為 Trainium2、TPU v6e、Hopper，換成 VR200 等值只有實體 {n("CMP_SupplyGW", 2025, "f2")} GW 的 6%），每 GW 數字因此偏大，請看每實體 GW 列（{n("COST_PropGap_GW", 2025, "sf1")}）。三種口徑的正負一致：2026 為正、2027–2029 為負、2030 轉正；v0.1.7 起自建資本支出為 0（W2），現金口徑與經濟口徑相同。2027 年起的成本跳升主要來自正式 S-1 承諾（含未歸屬餘額每年 {n("COST_Pay_S1Unalloc", 2028, "f1")}）與 2026 年起以 S-1 校準的非算力成本。</p>
+<p class="note">2025 分母只有 {n("CMP_Supply_VReq", 2025, "f2")} VR 等值 GW（2025 機隊為 Trainium2、TPU v6e、Hopper，換成 VR200 等值只有實體 {n("CMP_SupplyGW", 2025, "f2")} GW 的 6%），每 GW 數字因此偏大，請看每實體 GW 列（{n("COST_PropGap_GW", 2025, "sf1")}）。三種口徑的正負一致：2026–2029 為負（2026 年 v0.1.8 起因 S-1/A Q3 股權報酬與非現金捐贈計入全成本、未歸屬餘額 2026Q4 起付而轉負）、2030 轉正；v0.1.7 起自建資本支出為 0（W2），現金口徑與經濟口徑相同。2027 年起的成本跳升主要來自 S-1/A 承諾（含未歸屬餘額 2028 年 {n("COST_Pay_S1Unalloc", 2028, "f1")}，依 S-1/A 付款表結構）與 2026 年起以 S-1／S-1/A 校準的非算力成本。</p>
 {V.src("COST_PropRev_VR", "COST_PropCompute_VR", "COST_PropNonComp_VR", "COST_PropSBC_VR", "COST_PropFull_VR", "COST_PropGap_VR", "COST_Coverage", "CMP_Supply_VReq", "COST_PropGapEcon_VR", "COST_PropGap_GW", "CMP_SupplyGW", "COST_GapCash")}
 </section>""")
 
@@ -1054,7 +1163,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 </tbody></table></div>
 <details><summary class="note">年化營收里程碑明細（SRC_ANT；公司新聞稿與媒體轉述，多為利害關係方說法，含第三方雲端通路總額）</summary>
 <div class="tw"><table><thead><tr><th>月份</th><th>年化營收 $B</th><th>來源列</th></tr></thead><tbody>{"".join(rr_rows)}</tbody></table></div></details>
-<p class="note">2025 模型以認列營收 {n("SRC_ANT_001", None, "f2")} 校準，高於 run-rate 推估 {n("Revenue!R73", 2025, "pct0")}；2026 模型（v0.1.1 U1）為「上半年實際 {n("SRC_ANT!SRC_ANT_380:E", None, "f1")}＋Q3 實際 {n("SRC_ANT!SRC_ANT_384:E", None, "f1")}＋Q4 持平於 Q3」＝{n("REV_GrossCapped", 2026)}，低於里程碑推估 {n("REV_RRGap2026", None, "pct0")}（若年底真到 100–120，2026 會被低估；年底年化的報導互相矛盾：分析師 110、Euronews「低於 100」）。OpenAI 內部備忘錄估 Anthropic 2026-04 年化以淨額計只有 {n("SRC_ANT!SRC_ANT_035:E", None, "f0")}（對公司說的 {n("SRC_ANT!SRC_ANT_021:E", None, "f0")}），差在雲端總額認列。</p>
+<p class="note">2025 模型以認列營收 {n("SRC_ANT_001", None, "f2")} 校準，高於 run-rate 推估 {n("Revenue!R73", 2025, "pct0")}；2026 模型（v0.1.1 U1；v0.1.6 起上半年改正式 S-1、v0.1.8 起 Q3 改 S-1/A 實績）為「上半年實際 {n("SRC_ANT_414", None, "f3")}＋Q3 實際 {n("SRC_ANT_488", None, "f3")}＋Q4 持平於 Q3」＝{n("REV_GrossCapped", 2026)}，低於里程碑推估 {n("REV_RRGap2026", None, "pct0")}（若年底真到 100–120，2026 會被低估；年底年化的報導互相矛盾：分析師 110、Euronews「低於 100」）。OpenAI 內部備忘錄估 Anthropic 2026-04 年化以淨額計只有 {n("SRC_ANT!SRC_ANT_035:E", None, "f0")}（對公司說的 {n("SRC_ANT!SRC_ANT_021:E", None, "f0")}），差在雲端總額認列。</p>
 {V.src("REV_SubConsumer", "REV_SubSeats", "REV_API", "REV_Other", "REV_GrossCapped", "REV_PartnerShareCapped", "REV_NetCapped", "Revenue!R60", "REV_Channel", "RVS_Target", "RVS_Gap", "Revenue!R55", "Revenue!R72", "Revenue!R73", "REV_RREst2026", "REV_RRGap2026", "SRC_ANT_001")}
 </section>""")
 
@@ -1078,7 +1187,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
         crow.append(f"<tr><td>{lab}</td><td>{cell(V, g, 2027, 'f2')}</td><td>{cell(V, g, 2030, 'f2')}</td><td>{cell(V, p, 2028)}</td><td>{cell(V, p, 2030)}</td>"
                     f"<td>{cell(V, tot)}</td><td>{cell(V, pros) if pros else '—'}</td><td{warn}>{cell(V, gap, None, 'pct0') if gap else '—'}</td></tr>")
     crow.append(f"<tr><td>既有雲端（2025 前簽）</td><td>{cell(V, 'CMP_Supply_Legacy', 2027, 'f2')}</td><td>{cell(V, 'CMP_Supply_Legacy', 2030, 'f2')}</td><td>{cell(V, 'COST_Pay_Legacy', 2028)}</td><td>{cell(V, 'COST_Pay_Legacy', 2030)}</td><td>—</td><td>—</td><td>—</td></tr>")
-    crow.append(f"<tr><td>S-1 承諾未歸屬餘額（v0.1.7；通用合約價 → VR200 族）</td><td>{cell(V, 'CMP_Supply_S1Unalloc', 2027, 'f2')}</td><td>{cell(V, 'CMP_Supply_S1Unalloc', 2030, 'f2')}</td><td>{cell(V, 'COST_Pay_S1Unalloc', 2028)}</td><td>{cell(V, 'COST_Pay_S1Unalloc', 2030)}</td><td>{cell(V, 'COST_S1Unalloc')}</td><td>—</td><td>—</td></tr>")
+    crow.append(f"<tr><td>S-1/A 承諾未歸屬餘額（v0.1.7；v0.1.8 起三段 871.4、付款依 S-1/A 結構；通用合約價 → VR200 族）</td><td>{cell(V, 'CMP_Supply_S1Unalloc', 2027, 'f2')}</td><td>{cell(V, 'CMP_Supply_S1Unalloc', 2030, 'f2')}</td><td>{cell(V, 'COST_Pay_S1Unalloc', 2028)}</td><td>{cell(V, 'COST_Pay_S1Unalloc', 2030)}</td><td>{cell(V, 'COST_S1Unalloc')}</td><td>—</td><td>—</td></tr>")
     crow.append(f"<tr><td>自建（v0.1.7 起 GW 法；Wattonomics 自建 GW 0）</td><td>{cell(V, 'CMP_Supply_Owned', 2027, 'f2')}</td><td>{cell(V, 'CMP_Supply_Owned', 2030, 'f2')}</td><td>{cell(V, 'COST_OwnedCapex', 2028)}</td><td>{cell(V, 'COST_OwnedCapex', 2030)}</td><td>—</td><td>—</td><td>—</td></tr>")
     crow.append(f"<tr class=\"em\"><td>合計</td><td>{cell(V, 'CMP_SupplyGW', 2027, 'f2')}</td><td>{cell(V, 'CMP_SupplyGW', 2030, 'f2')}</td><td>{cell(V, 'COST_Compute', 2028)}</td><td>{cell(V, 'COST_Compute', 2030)}</td>"
                 f"<td>{cell(V, 'COST_CommitAllS1')}</td><td>—</td><td>—</td></tr>")
@@ -1088,7 +1197,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 {year_table(V, [("有效推論 GW", "CMP_InfGW_Eff", "f2", ""), ("研發 GW（殘差）", "CMP_RDGW", "f2", ""), ("總需求 GW", "CMP_DemandGW", "f2", "em"),
                 ("合約供給 GW", "CMP_SupplyContractGW", "f2", ""), ("自建供給 GW", "CMP_Supply_Owned", "f2", ""), ("供給 GW 合計", "CMP_SupplyGW", "f2", "em"),
                 ("供給 VR 等值 GW（命題分母）", "CMP_Supply_VReq", "f2", ""), ("推論可用 GW（容量上限）", "CMP_InfAvailGW", "f2", "")], head="GW")}
-<p><b>供給 2028 年後遞減</b>：模型只計已簽合約與正式 S-1 承諾（未歸屬餘額 2027–2033 每年 {n("CMP_Supply_S1Unalloc", 2028, "f2")} GW），SpaceX 月費 2029-05 到期；v0.1.7 起自建（Fluidstack）不另計。供給 GW 由 2028 年 {n("CMP_SupplyGW", 2028, "f1")} 降到 2030 年 {n("CMP_SupplyGW", Y, "f1")}；這是 2030 年轉正的主因之一。研發 GW 是殘差（供給扣閒置後減推論），2027 年 {n("CMP_RDGW", 2027, "f1")} GW，比 Tokenomics 研發錨點高兩個數量級（Tokenomics 缺口）。</p>
+<p><b>供給 2028 年後遞減</b>：模型只計已簽合約與 S-1/A 承諾（未歸屬餘額依 S-1/A 付款表結構，2028 年 {n("CMP_Supply_S1Unalloc", 2028, "f2")} GW），SpaceX 月費 2029-05 到期；v0.1.7 起自建（Fluidstack）不另計。供給 GW 由 2028 年 {n("CMP_SupplyGW", 2028, "f1")} 降到 2030 年 {n("CMP_SupplyGW", Y, "f1")}；這是 2030 年轉正的主因之一。研發 GW 是殘差（供給扣閒置後減推論），2027 年 {n("CMP_RDGW", 2027, "f1")} GW，比 Tokenomics 研發錨點高兩個數量級（Tokenomics 缺口）。</p>
 <h3>逐家合約與草擬 S-1 對帳（U3；v0.1.7 起模型合約總額改讀正式 S-1，對照欄仍為草擬版轉述，正式 S-1 對照見 ①之五）</h3>
 <div class="tw"><table><thead><tr><th>合作方</th><th>GW 2027</th><th>GW 2030</th><th>實付 2028</th><th>實付 2030</th><th>模型合約總額</th><th>S-1 草稿金額</th><th>模型 ÷ S-1 − 1</th></tr></thead><tbody>
 {"".join(crow)}
@@ -1098,7 +1207,7 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 </section>""")
 
     # ── ⑤ 現金與融資 ──
-    scen_rows = [("基準（已到位 $100B）", "FND_CashEnd", "FND_ExtNeedCum"), ("S1 ＋IPO 約 $100B（2026-11）", "Funding!F49", "Funding!F50"),
+    scen_rows = [("基準（已到位 110.4）", "FND_CashEnd", "FND_ExtNeedCum"), ("S1 ＋IPO 約 $100B（2026-11）", "Funding!F49", "Funding!F50"),
                  ("S2 ＋條件式（Amazon、Google、NVIDIA、AMD）", "Funding!F54", "Funding!F55"), ("S3 ＋IPO＋條件式", "Funding!F59", "Funding!F60"),
                  ("S4 逐家錨定招股書金額", "Funding!F64", "Funding!F65"), ("S5 加計機房租約租金", "Funding!F69", "Funding!F70"),
                  ("S6 D22 舊法低估再補足（v0.1.7 基準已以 S-1 校準，本列為再加碼）", "Funding!F74", "Funding!F75"), ("S7 S4＋S5＋S6 合併", "Funding!F79", "Funding!F80")]
@@ -1169,8 +1278,8 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 </tbody></table></div>
 <div class="must"><b>「按目前已到位融資與基準支出路徑，不出現最低現金缺口」要成立，必須：</b>
 <ol><li><b>2029 年前不再有額外支出、2029 年後新增算力的支出不超過餘裕</b>（最大的前提；模型只計已簽合約與正式 S-1 承諾，未建「新簽合約」機制）。現金餘裕（年底現金 − 最低現金）2028 年 {n("FND_Headroom", 2028, "f1")}、2029 年只剩 {n("FND_Headroom", 2029, "f1")}、2030 年 {n("FND_Headroom", Y, "f1")}；2029 年（含）以前任何超過該年餘裕的額外支出都會產生外部資金需求。2030 年新增算力支出超過 {n("COST_GapCash", Y, "f1")}（＝當年差額）差額就轉負。對照：供給 GW 2028 → 2030 由 {n("CMP_SupplyGW", 2028, "f1")} 降到 {n("CMP_SupplyGW", Y, "f1")}，營收淨額卻由 {n("REV_NetCapped", 2028, "f1")} 增到 {n("REV_NetCapped", Y, "f1")}。</li>
-<li><b>API 需求成長、價格彈性、合約價與正式 S-1 未歸屬餘額的付款時點都不落在下緣</b>：單獨落在下緣即需外部資金（上表）；API 任務數與價格彈性同時取下緣 → 2030 差額 {n("COST_PropGap_VR", Y, "sf1", "combo1")}、累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "combo1")}；再加合約價 20、爬坡 1 年 → {n("FND_ExtNeedCum", Y, "f1", "combo4")}（首次缺口 {n("FND_FirstGapYear", None, "yt", "combo4")}）。未歸屬餘額快付（2027–2031）→ {n("FND_ExtNeedCum", Y, "f1", "s1u_fast")}；SpaceXAI 以上限 120.5 計 → {n("FND_ExtNeedCum", Y, "f1", "spx_cap")}；Google 額外 TPU 計入 → {n("FND_ExtNeedCum", Y, "f1", "gaddl_on")}。</li>
-<li><b>2026 年的 ${n("FND_Committed", 2026, "f1")}B 已交割</b>（v0.1.7.1 起以正式 S-1 Note 4、9、10 的各輪金額計，對現金流量表特別股發行收入 {n("SRC_ANT_472", None, "f3")}，差 {n("FND_CommittedS1Gap", None, "sf2")}），且最低現金假設不高於次年非算力成本 {n("INP_165", None, "f0")} 個月（12 個月 → 累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "mc_hi")}）。</li></ol></div>
+<li><b>API 需求成長、價格彈性與 S-1/A 承諾的付款時點都不落在下緣</b>：單獨落在下緣即需外部資金（上表）；API 任務數與價格彈性同時取下緣 → 2030 差額 {n("COST_PropGap_VR", Y, "sf1", "combo1")}、累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "combo1")}；再加合約價 20、爬坡 1 年 → {n("FND_ExtNeedCum", Y, "f1", "combo4")}（首次缺口 {n("FND_FirstGapYear", None, "yt", "combo4")}）。SpaceXAI 照 S-1 路徑付滿上限（R4）→ {n("FND_ExtNeedCum", Y, "f1", "r4_on")}；未歸屬餘額回到平均攤提且快付（2027–2031）→ {n("FND_ExtNeedCum", Y, "f1", "s1u_fast")}；Google 額外 TPU 計入 → {n("FND_ExtNeedCum", Y, "f1", "gaddl_on")}。</li>
+<li><b>2026 年的 ${n("FND_Committed", 2026, "f1")}B 已交割</b>（以正式 S-1 Note 4、9、10 的各輪金額計，對現金流量表特別股發行收入 {n("SRC_ANT_472", None, "f3")}，差 {n("FND_CommittedS1Gap", None, "sf2")}；S-1/A：Q3 無新股權）。v0.1.8 起最低現金改 12 個月也不需要外部資金（{n("FND_ExtNeedCum", Y, "f1", "mc_hi")}），但與 R4 同時 → {n("FND_ExtNeedCum", Y, "f1", "r4_mc_hi")}。</li></ol></div>
 {V.src("REV_NetCapped", "COST_PropGap_VR", "COST_Coverage", "FND_ExtNeedCum", "FND_FirstGapYear", "FND_CashNoExtTrough", "COST_GapCash", "FND_Headroom", "CMP_SupplyGW")}
 </section>""")
 
@@ -1198,11 +1307,11 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
     # ── ⑧ Andy 最該審的 5 項預設 ──
     S.append(f"""<section id="s8"><h2><span class="no">⑧</span>最該審的 5 項預設（取自 v{ver} 完成報告 ☆）</h2>
 <ol>
-<li><b>正式 S-1 未歸屬餘額 {n("COST_S1Unalloc", None, "f0")} 的付款期（2027–2033 平均；Assumed）與只計已簽合約</b>：快讀法（2027–2031）累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "s1u_fast")}、慢讀法（2028–2036）{n("FND_ExtNeedCum", Y, "f1", "s1u_slow")}；只計已簽合約與 S-1 承諾使 2030 轉正（供給 GW 2030 年 {n("CMP_SupplyGW", Y, "f1")} 低於 2028 年），新增合約機制需 Andy 決定。</li>
+<li><b>S-1/A 未歸屬餘額 {n("COST_S1Unalloc", None, "f0")} 的付款期（v0.1.8 起依 S-1/A 付款表結構；未起租 451.2 與 9-30 後 100.2 的起租年 2027、10 年為 Assumed）與只計已簽合約</b>：回到 2027–2033 平均 → 谷底 {n("FND_CashNoExtTrough", None, "f1", "wf8_ab")}；平均且快付（2027–2031）→ 累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "s1u_fast")}；起租年 2026 → 谷底 {n("FND_CashNoExtTrough", None, "f1", "lease_lo")}。附條件或可終止 213.8 基準照計（扣除 → 谷底 {n("FND_CashNoExtTrough", None, "f1", "r5d_on")}）。只計已簽合約使 2030 轉正（供給 GW 2030 年 {n("CMP_SupplyGW", Y, "f1")} 低於 2028 年），新增合約機制需 Andy 決定。</li>
+<li><b>SpaceXAI 讀法（N1）</b>：基準維持月費 1.25 × 36＝45；S-1 路徑（爬升後每月 3.1、上限 120.5，R4）→ 累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "r4_on")}（首次 {n("FND_FirstGapYear", None, "yt", "r4_on")}）、谷底 {n("FND_CashNoExtTrough", None, "f1", "r4_on")}——本版唯一單獨就能翻轉命題 2 的 S-1/A 讀法。</li>
 <li><b>API 任務數成長（A2-13；與 OpenAI v0.6 同值）</b>：最大不確定；取低／高時 2030 差額 {n("COST_PropGap_VR", Y, "sf1", "api_task_lo")}／{n("COST_PropGap_VR", Y, "sf1", "api_task_hi")}、現金谷底 {n("FND_CashNoExtTrough", None, "f1", "api_task_lo")}／{n("FND_CashNoExtTrough", None, "f1", "api_task_hi")}。</li>
-<li><b>2026 非算力成本以正式 S-1 季度營業損益校準（W4；下半年與營收同期、股權報酬用 S-1 調整數代理）</b>：推得 {n("COST_S1fNonComp2026", None, "f1")}，比 v0.1.6 算法高 {n("COST_S1fNonCompDiff", None, "pct0")}；只動 Q3 口徑 → 累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "w4_q3only")}、只動股權報酬 → {n("FND_ExtNeedCum", Y, "f1", "w4_sbconly")}；整個 W4 關閉 → {n("FND_ExtNeedCum", Y, "f1", "only_w4_off")}、谷底 {n("FND_CashNoExtTrough", None, "f1", "only_w4_off")}。</li>
-<li><b>每 GW 年合約價 12（D9）對 VR 世代偏低；SpaceXAI 上限型沿用月費</b>：雲端毛利率 2027–2030 為 {n("COST_CloudGMPct", 2027, "pct0")} 至 {n("COST_CloudGMPct", Y, "pct0")}；取 20 時 2027 差額 {n("COST_PropGap_VR", 2027, "sf1", "price_hi")}、累計外部資金需求 {n("FND_ExtNeedCum", Y, "f1", "price_hi")}。SpaceXAI 改以正式 S-1 上限 120.5 計 → {n("FND_ExtNeedCum", Y, "f1", "spx_cap")}。</li>
-<li><b>2026 已到位 ${n("FND_Committed", 2026, "f1")}B 的組成與最低現金月數（A4-2～6、D17）</b>：v0.1.7.1 依正式 S-1 計入 Google Series G-2 約 10（不計 → 累計外部資金需求 {n("FND_ExtNeedCum", Y, "f2", "v0171_v2only_off")}、谷底 {n("FND_CashNoExtTrough", None, "f1", "v0171_v2only_off")}）；谷底 {n("FND_CashNoExtTrough", None, "f1")} 對最低現金 {n("FND_MinCash", 2029, "f1")} 的餘裕只有 {n("FND_Headroom", 2029, "f1")}，最低現金 12 個月 → {n("FND_ExtNeedCum", Y, "f1", "mc_hi")}；Amazon 2026 實際投入與 10-Q 一致（W6）。</li>
+<li><b>2026 非算力成本與股權報酬（W4；v0.1.8 起下半年＝S-1/A Q3 實際，Q4＝Q3）</b>：非算力（不含股權報酬）{n("COST_S1fNonComp2026", None, "f1")}；股權報酬代理 {n("COST_S1fSBCProxy2026", None, "f2")}（含 Q3 非現金捐贈 1.960，Q4 亦計一次——保守，只影響命題 1 的 2026 全成本）；整個 W4 關閉 → 2026 差額 {n("COST_PropGap_VR", 2026, "sf1", "only_w4_off")}、谷底 {n("FND_CashNoExtTrough", None, "f1", "only_w4_off")}。</li>
+<li><b>最低現金月數（D17；Andy 未決）與每 GW 年合約價 12（D9）</b>：最低現金 3／6／12 個月在 v0.1.8 基準下皆不需外部資金（谷底 {n("FND_CashNoExtTrough", None, "f1")} 對 12 個月的 2029 最低現金 {n("FND_MinCash", 2029, "f1", "mc_hi")}）；合約價 20 → 谷底 {n("FND_CashNoExtTrough", None, "f1", "price_hi")}、2027 差額 {n("COST_PropGap_VR", 2027, "sf1", "price_hi")}。</li>
 </ol>
 <p class="note">A1–A4 共 75 項建置預設與規格 D1–D23 的全表：<code>docs/reports/20261008_v0.1.md</code> 第 ④ 節、<code>docs/reports/20261008_v0.1_對照.xlsx</code> 第 ④ 頁；v0.1.1 新增預設（U1–U8）見 <code>docs/reports/20261021_v0.1.1.md</code>；v0.1.2（Tokenomics v18.0）的語意核對與待 Andy 事項見 <code>{report}</code>。</p>
 {V.src("COST_D22Under", "COST_PropGap_VR_D22", "COST_CloudGMPct")}
@@ -1218,13 +1327,13 @@ def render(V: Values, model: Path, ver: str, stamp: str) -> str:
 <dt>檢查</dt><dd>CHK_Errors＝{n("CHK_Errors", None, "f0")}、CHK_Warnings＝{n("CHK_Warnings", None, "f0")}（C54 η（2025）低於合理下緣 0.5、C69／C70 2025／2026 年底 GW 對報導偏高——皆因 TK v21.7 持有比下降；C89 逐家合約對帳：AMD；皆為預期的警示；v0.1.6 的 C116 因自建資本支出改 GW 法而消失）；Checks {chk_ids[0]}–{chk_ids[-1]}</dd>
 <dt>期間與單位</dt><dd>FY2025–FY2030 曆年制，2025 為實際校準年；$B；GW＝IT 關鍵電力；VR 等值＝以 VR200 Sol 層級每 GW 產能換算</dd>
 </dl>
-<div class="must"><b>來源提醒</b>：正式 S-1 已於 2026-10-26 公開（SRC_ANT_410–464；年度與上半年數字直接讀自 S-1 標 <span class="tag">Verified</span>，期中未經查核；季度、營收成本、承諾等經二手轉載標 <span class="tag">Interested-party</span>）。v0.1.7 起正式 S-1 套用於基準：2025 校準（營收、算力與基礎設施費用）、2026 上半年營收、逐家承諾與承諾三段、季度營業損益（非算力成本）、股權報酬代理（調整後 − GAAP 營業損益）。例外：AMD 維持模型 GW 型（另列 AMD＝20 情境）、6-30 現金只對照（S-1 131.65 比模型近似多 {n("FND_Cash0630Gap", None, "f1")}）。v0.1.7.1：季度數、營收成本、承諾三段、逐家金額、資本支出、集中度與 non-GAAP 調節等原為二手轉載的 46 列，經 chat 端 2026-11-02 以瀏覽器核對 SEC 原文全部一致，改 <span class="tag">Verified</span>（SRC_ANT_421 為轉載者捨入，維持 <span class="tag">Interested-party</span>、只對照）；新增 SRC_ANT_472–487（各輪融資、條件式額度、信用額度條款、受限現金）；草擬招股書的 Reuters、WSJ 轉述列（SRC_ANT 中 {src_pros} 列的來源或備註引用招股書／說明書）保留作對照，值不改。</div>
+<div class="must"><b>來源提醒</b>：正式 S-1 已於 2026-10-26 公開（SRC_ANT_410–464；年度與上半年數字直接讀自 S-1 標 <span class="tag">Verified</span>，期中未經查核；季度、營收成本、承諾等經二手轉載標 <span class="tag">Interested-party</span>）。v0.1.7 起正式 S-1 套用於基準：2025 校準（營收、算力與基礎設施費用）、2026 上半年營收、逐家承諾與承諾三段、季度營業損益（非算力成本）、股權報酬代理（調整後 − GAAP 營業損益）。例外：AMD 維持模型 GW 型（另列 AMD＝20 情境）、6-30 現金只對照（S-1 131.65 比模型近似多 {n("FND_Cash0630Gap", None, "f1")}）。v0.1.7.1：季度數、營收成本、承諾三段、逐家金額、資本支出、集中度與 non-GAAP 調節等原為二手轉載的 46 列，經 chat 端 2026-11-02 以瀏覽器核對 SEC 原文全部一致，改 <span class="tag">Verified</span>（SRC_ANT_421 為轉載者捨入，維持 <span class="tag">Interested-party</span>、只對照）；新增 SRC_ANT_472–487（各輪融資、條件式額度、信用額度條款、受限現金）；v0.1.8：新增 SRC_ANT_488–521（S-1/A 第 1 號修訂，2026-11-02 申報：2026Q3 季度損益、承諾總額與逐年付款表、9-30 現金；chat 端 2026-11-03 以瀏覽器直讀原文，<span class="tag">Verified</span>）；SRC_ANT_384、385、445–447、450 標「已被取代」，值不改。草擬招股書的 Reuters、WSJ 轉述列（SRC_ANT 中 {src_pros} 列的來源或備註引用招股書／說明書）保留作對照，值不改。</div>
 <p class="note"><span class="tag">Verified</span>已查核原文 <span class="tag">Interested-party</span>公司或利害關係方說法 <span class="tag">Analogy</span>類比推估（附區間） <span class="tag">Assumed</span>假設（附區間） <span class="tag">Derived</span>由其他數字推得 <span class="tag">Decision</span>建模決定。公司原始數據在 SRC_ANT、算力物理取自 Tokenomics（TK_Link）、假設在 Inputs、OpenAI 對照在 OAI_Link。</p>
 <p class="note">本頁所有數字皆讀自 LibreOffice 重算後的 Excel（具名範圍或頁＋列 ID），HTML 不含計算；敏感度情境定義見 <code>tools/html_scenarios.yaml</code>；完整報告 <code>{report}</code>。</p>
 </section>""")
 
     # ── 頁尾：各版更新紀錄（①之二～①之四，原在 ① 與 ② 之間） ──
-    S.append('<p class="note" id="hist">以下為各版更新紀錄（①之六＝v0.1.7.1 在最前、①之五＝v0.1.7；①之二～①之四原接在 ① 之後，2026-10-31 起移到頁尾，內容不變，數字為各版當時的輸出）。</p>')
+    S.append('<p class="note" id="hist">以下為各版更新紀錄（①之七＝v0.1.8 在最前、①之六＝v0.1.7.1、①之五＝v0.1.7；①之二～①之四原接在 ① 之後，2026-10-31 起移到頁尾，內容不變，數字為各版當時的輸出）。</p>')
     S.extend(_hist)
 
     body = "\n".join(S)

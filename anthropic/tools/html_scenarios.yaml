@@ -46,8 +46,8 @@ groups:
   sbc_off: {label: "2026 股權報酬改回模型人數 × 每人 0.8", set: {INP_217: 0}}
   amd_s1: {label: "AMD 改讀正式 S-1 下限 20", set: {INP_215: 1}}
   tk16_back: {label: "TK 快照回到 v21.2：v21.7 變動的 29 個值", set: {TK_IF_HoldEcon: prev16, TK_IF_FullCost_Astra: prev16, TK_IF_FullCost_Luna: prev16, TK_IF_FullCost_Sol: prev16, TK_IF_PriceCached_Sol: prev16, TK_IF_PriceRef_Sol: prev16, TK_IF_FrontRef_Sol: prev16, TK_IF_TrainCost_Astra: prev16, TK_IF_TrainCost_Luna: prev16, TK_IF_TrainCost_Sol: prev16, TK_IF_RevGW_Sol: prev16, TK_IF_FullCostDefault_Astra: prev16, TK_IF_FullCostDefault_Luna: prev16, TK_IF_FullCostDefault_Sol: prev16, TK_IF_CapexTotal: prev16, TK_L1_RevGW_PQ_VR200_Life_Lo: prev16, TK_L1_M: prev16, TK_NNV_MI455X_Hold: prev16, TK_NNV_MI455X_HoldLo: prev16, TK_NNV_MI455X_HoldHi: prev16, TK_NNV_MI455X_Out: prev16, TK_NNV_MI455X_OutLo: prev16, TK_NNV_MI455X_OutHi: prev16, TK_NNV_TPUv7_Hold: prev16, TK_NNV_TPUv7_HoldLo: prev16, TK_NNV_TPUv7_HoldHi: prev16, TK_NNV_Trn3_Hold: prev16, TK_NNV_Trn3_HoldLo: prev16, TK_NNV_Trn3_HoldHi: prev16}}
-  s1u_fast: {label: "未歸屬餘額付款期快讀法（2027–2031）", set: {INP_198: lo, INP_199: lo}}
-  s1u_slow: {label: "未歸屬餘額付款期慢讀法（2028–2036）", set: {INP_198: hi, INP_199: hi}}
+  s1u_fast: {label: "未歸屬餘額付款期快讀法（2027–2031 平均；v0.1.8 起同時關 R5c＝回到平均攤提讀法）", set: {INP_226: 0, INP_198: lo, INP_199: lo}}
+  s1u_slow: {label: "未歸屬餘額付款期慢讀法（2028–2036 平均；v0.1.8 起同時關 R5c）", set: {INP_226: 0, INP_198: hi, INP_199: hi}}
   spx_cap: {label: "SpaceXAI 以正式 S-1 上限 120.5 計（月費路徑等比例放大）", set: {INP_200: 1}}
   gaddl_on: {label: "Google 額外 TPU 125–150（中點，2028–2031）計入", set: {INP_201: 1}}
   bcm_2026: {label: "Broadcom 起始年改正式 S-1 期間起點 2026", set: {INP_131: lo}}
@@ -56,6 +56,17 @@ groups:
   v3_off: {label: "V3 關閉（條件式 Google 回到報導 30）", set: {INP_219: 0}}
   g2_off: {label: "V2 只關 Google Series G-2（各輪仍為原文 30.2／65.2）", set: {INP_168: 0}}
   round_off: {label: "V2 只關各輪原文（Series G／H 回到 30／65；Google G-2 10 仍計入）", set: {INP_218: 0}}
+  # v0.1.8：S-1/A No.1 滾動（INP_224 s1a_q3_switch〔R5a〕、INP_225 s1a_commit_switch〔R5b〕、INP_226 s1a_unalloc_switch〔R5c〕；0＝v0.1.7.1）；R4（INP_221）、R5d（INP_230）基準 0，只並列。
+  # 歷史情境一律加上 v018_off，使數字等於當時版本
+  v018_off: {label: "v0.1.8 各項關閉（R5a、R5b、R5c；＝v0.1.7.1）", set: {INP_224: 0, INP_225: 0, INP_226: 0}}
+  r5a_off: {label: "R5a 關閉（Q3 回到報導 16.8、Q3 隱含非算力、Q2 股權報酬代理）", set: {INP_224: 0}}
+  r5b_off: {label: "R5b 關閉（三段回到 S-1 6-30 的 832、Google 114.5）", set: {INP_225: 0}}
+  r5c_off: {label: "R5c 關閉（未歸屬餘額付款回到 2027–2033 平均）", set: {INP_226: 0}}
+  r4_on: {label: "R4 SpaceXAI S-1 路徑（爬升後每月 3.1、上限 120.5）", set: {INP_221: 1}}
+  r5d_on: {label: "R5d 扣除附條件或可終止承諾 213.8", set: {INP_230: 1}}
+  s1u_slow37: {label: "未歸屬餘額付款期慢讀法（2028–2037 平均；同時關 R5c）", set: {INP_226: 0, INP_198: hi, INP_199: 2037}}
+  lease_lo: {label: "R5c 未起租與 9-30 後新簽起租年取低欄（2026）", set: {INP_227: lo}}
+  lease_hi: {label: "R5c 未起租與 9-30 後新簽起租年取高欄（2028）", set: {INP_227: hi}}
   mc_lo: {label: "最低現金月數取低欄（3 個月）", set: {INP_165: lo}}
   mc_hi: {label: "最低現金月數取高欄（12 個月）", set: {INP_165: hi}}
   tk19_luna_back: {label: "TK 快照回到 v19.0：只有 IF_TokGW_Luna", set: {TK_IF_TokGW_Luna: prev19}}
@@ -83,30 +94,30 @@ scenarios:
   combo3: [elast_weak, price_hi, ramp_lo]
   combo4: [api_task_lo, elast_weak, price_hi, ramp_lo]
   # v0.1 → v0.1.1 的分解（v0.1.2 起同時把 TK 快照回到 v5.26，使數字等於 v0.1／v0.1.1 當時的輸出）
-  v010: [v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u1_off, u2_off, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
-  only_u1: [v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u2_off, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
-  only_u2: [v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u1_off, u2_method_old, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
+  v010: [v018_off, v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u1_off, u2_off, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
+  only_u1: [v018_off, v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u2_off, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
+  only_u2: [v018_off, v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u1_off, u2_method_old, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
   # v0.1.1 → v0.1.2 的分解（TK v5.26 → v18.0）
-  v011: [v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u2_method_old, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
+  v011: [v018_off, v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u2_method_old, tk_prev_tokgw, tk_prev_hold, tk_prev_rest]
   # v0.1.3：v0.1.2 的輸出（TK v18.0 與 v19.0 值相同，故只需關閉 U2 新法）
-  v012: [v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u2_method_old]
-  only_tokgw: [v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u2_method_old, tk_prev_hold, tk_prev_rest]
-  only_hold: [v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u2_method_old, tk_prev_tokgw, tk_prev_rest]
+  v012: [v018_off, v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u2_method_old]
+  only_tokgw: [v018_off, v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u2_method_old, tk_prev_hold, tk_prev_rest]
+  only_hold: [v018_off, v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back, u2_method_old, tk_prev_tokgw, tk_prev_rest]
   # v0.1.4：v0.1.3 的輸出（TK v19.0）與逐群拆解
-  v013: [v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back]
-  v14_only_luna: [v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_rest_back]
-  v14_only_rest: [v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_luna_back]
+  v013: [v018_off, v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_back]
+  v14_only_luna: [v018_off, v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_rest_back]
+  v14_only_rest: [v018_off, v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk19_luna_back]
   # v0.1.5：v0.1.4 的輸出（TK v19.1）
-  v014: [v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk14_back]
+  v014: [v018_off, v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off, tk14_back]
   # v0.1.6：v0.1.5 的輸出（2026 上半年＝草擬版 16.3）
-  v015: [v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off]
+  v015: [v018_off, v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back, s1f_off]
   combo5: [api_task_lo, elast_weak, price_hi, ramp_lo, tok_lo, hc_hi, fee_hi]
   # v0.1.7：v0.1.6 的輸出（各項開關 0、TK v21.2）與 W1–W5 逐項加入的瀑布（W6 不改數值）；「不進基準」讀法；已套用預設的替代讀法
-  v016: [v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back]
-  wf_w1: [v2_off, v3_off, own_old, cal25_off, d22_off, tk16_back]
-  wf_w2: [v2_off, v3_off, cal25_off, d22_off, tk16_back]
-  wf_w3: [v2_off, v3_off, d22_off, tk16_back]
-  wf_w4: [v2_off, v3_off, tk16_back]
+  v016: [v018_off, v2_off, v3_off, c_off, own_old, cal25_off, d22_off, tk16_back]
+  wf_w1: [v018_off, v2_off, v3_off, own_old, cal25_off, d22_off, tk16_back]
+  wf_w2: [v018_off, v2_off, v3_off, cal25_off, d22_off, tk16_back]
+  wf_w3: [v018_off, v2_off, v3_off, d22_off, tk16_back]
+  wf_w4: [v018_off, v2_off, v3_off, tk16_back]
   commit_off: [c_off, own_old]
   commit_off_w1only: [c_off]
   s1u_fast: [s1u_fast]
@@ -121,25 +132,55 @@ scenarios:
   w4_q3only: [sbc_off]
   w4_sbconly: [q3_off]
   # v0.1.7.1：v0.1.7 的輸出（V2、V3 皆關）；①之五 以 v0.1.7 當時的輸出呈現所需的 v017_ 版本；V2 瀑布；最低現金 3／6／12 個月
-  v017: [v2_off, v3_off]
-  v017_commit_off: [v2_off, v3_off, c_off, own_old]
-  v017_commit_off_w1only: [v2_off, v3_off, c_off]
-  v017_s1u_fast: [v2_off, v3_off, s1u_fast]
-  v017_s1u_slow: [v2_off, v3_off, s1u_slow]
-  v017_spx_cap: [v2_off, v3_off, spx_cap]
-  v017_gaddl_on: [v2_off, v3_off, gaddl_on]
-  v017_bcm_2026: [v2_off, v3_off, bcm_2026]
-  v017_amd_s1: [v2_off, v3_off, amd_s1]
-  v017_only_w2_off: [v2_off, v3_off, own_old]
-  v017_only_w4_off: [v2_off, v3_off, d22_off]
-  v017_w4_neither: [v2_off, v3_off, q3_off, sbc_off]
-  v017_w4_q3only: [v2_off, v3_off, sbc_off]
-  v017_w4_sbconly: [v2_off, v3_off, q3_off]
-  v0171_v2only_off: [v2_off]
-  v0171_round_only: [g2_off]
-  v0171_googl_only: [round_off]
-  v0171_v3_off: [v3_off]
+  v017: [v018_off, v2_off, v3_off]
+  v017_commit_off: [v018_off, v2_off, v3_off, c_off, own_old]
+  v017_commit_off_w1only: [v018_off, v2_off, v3_off, c_off]
+  v017_s1u_fast: [v018_off, v2_off, v3_off, s1u_fast]
+  v017_s1u_slow: [v018_off, v2_off, v3_off, s1u_slow]
+  v017_spx_cap: [v018_off, v2_off, v3_off, spx_cap]
+  v017_gaddl_on: [v018_off, v2_off, v3_off, gaddl_on]
+  v017_bcm_2026: [v018_off, v2_off, v3_off, bcm_2026]
+  v017_amd_s1: [v018_off, v2_off, v3_off, amd_s1]
+  v017_only_w2_off: [v018_off, v2_off, v3_off, own_old]
+  v017_only_w4_off: [v018_off, v2_off, v3_off, d22_off]
+  v017_w4_neither: [v018_off, v2_off, v3_off, q3_off, sbc_off]
+  v017_w4_q3only: [v018_off, v2_off, v3_off, sbc_off]
+  v017_w4_sbconly: [v018_off, v2_off, v3_off, q3_off]
+  v0171_v2only_off: [v018_off, v2_off]
+  v0171_round_only: [v018_off, g2_off]
+  v0171_googl_only: [v018_off, round_off]
+  v0171_v3_off: [v018_off, v3_off]
   mc_lo: [mc_lo]
   mc_hi: [mc_hi]
-  v017_mc_lo: [v2_off, v3_off, mc_lo]
-  v017_mc_hi: [v2_off, v3_off, mc_hi]
+  v017_mc_lo: [v018_off, v2_off, v3_off, mc_lo]
+  v017_mc_hi: [v018_off, v2_off, v3_off, mc_hi]
+  # v0.1.8：v0.1.7.1 的輸出（R5a–R5c 皆關）；①之六 以 v0.1.7.1 當時的輸出呈現所需的 v0171_ 版本；R4／R5a–R5d 瀑布；新讀法
+  v0171: [v018_off]
+  v0171_s1u_fast: [v018_off, s1u_fast]
+  v0171_s1u_slow: [v018_off, s1u_slow]
+  v0171_spx_cap: [v018_off, spx_cap]
+  v0171_gaddl_on: [v018_off, gaddl_on]
+  v0171_bcm_2026: [v018_off, bcm_2026]
+  v0171_amd_s1: [v018_off, amd_s1]
+  v0171_only_w2_off: [v018_off, own_old]
+  v0171_only_w4_off: [v018_off, d22_off]
+  v0171_w4_neither: [v018_off, q3_off, sbc_off]
+  v0171_w4_q3only: [v018_off, sbc_off]
+  v0171_w4_sbconly: [v018_off, q3_off]
+  v0171_commit_off: [v018_off, c_off, own_old]
+  v0171_commit_off_w1only: [v018_off, c_off]
+  v0171_mc_lo: [v018_off, mc_lo]
+  v0171_mc_hi: [v018_off, mc_hi]
+  wf8_a: [r5b_off, r5c_off]
+  wf8_b: [r5a_off, r5c_off]
+  wf8_c: [r5a_off, r5b_off]
+  wf8_ab: [r5c_off]
+  v018_no_r5a: [r5a_off]
+  v018_no_r5b: [r5b_off]
+  r4_on: [r4_on]
+  r5d_on: [r5d_on]
+  r4_r5d: [r4_on, r5d_on]
+  s1u_slow37: [s1u_slow37]
+  lease_lo: [lease_lo]
+  lease_hi: [lease_hi]
+  r4_mc_hi: [r4_on, mc_hi]
