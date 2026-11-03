@@ -328,6 +328,23 @@ def main():
         out[tk] = {"model": b.rel, "unlisted": True,
                    "cash": dict(basis="現金流", **cash_rows(b, "Funding", [rowid]))}
         out[tk]["cash"]["label"] = ("F06 " if rowid == r"^F06$" else "F07 ") + "自由現金流"
+    # --- v0.6.22：2027 VR200 每 GW 營收校準用（Andy 2026-11-03「該校準，就去校準」）---
+    # OpenAI 模型 PxQ 頁口徑一（2026 Q2 年化營收 ÷ Q2 平均上線 GW）：營收、GW（低／基準／高）、
+    # 機隊每 GW 付費產能（世代加權、含生產折減）、VR200 每 GW 付費產能與生產折減。
+    b = Book(dist_xlsx("openai"))
+    pq = {}
+    pq["gw"] = [b.num("PxQ", [(0, r"^X11$")], k) for k in (2, 3, 4)]      # 口徑一 低／基準／高
+    pq["rev"] = b.num("PxQ", [(0, r"^X26$")], 3)                         # 口徑一 基準（三欄相同）
+    pq["cap_fleet"] = b.num("PxQ", [(0, r"^X21$")], 3)
+    pq["cap_vr200"] = b.num("PxQ", [(0, r"^X08$")], 1)
+    pq["derate_vr200"] = b.num("PxQ", [(0, r"^X08$")], 4)                # 折減（採用）
+    pq["year"] = b.num("PxQ", [(0, r"^X01$")], 3)
+    pq["rev_c3"] = b.num("PxQ", [(0, r"^X26$")], 9)                      # 敏感度：口徑三（9 月底 run-rate）基準
+    pq["gw_c3"] = b.num("PxQ", [(0, r"^X11$")], 9)
+    pq["cap_fleet_handoff"] = b.num("PxQ", [(0, r"^X46$")], 3)           # 敏感度：交接檔世代組合（4.1 節）
+    pq["cap_gb300"] = b.num("PxQ", [(0, r"^X07$")], 1)                   # 敏感度：VR200 產能只等於 GB300
+    pq["derate_gb300"] = b.num("PxQ", [(0, r"^X07$")], 4)
+    out["OpenAI"]["pxq"] = pq
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)

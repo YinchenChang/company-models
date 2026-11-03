@@ -23,7 +23,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.6.21"
+VERSION = "v0.6.22"
 DATE = "20261103"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
@@ -66,7 +66,7 @@ def tkr(name, side):
 SEGMENTS = [
     # key, 層級, 次產業, 占 IT capex 文字, 中值(比例), 不可替代性, 價值鏈分量分, 依據
     ("model", "L5 模型商", "AI 模型商", "營收端（P×Q）", None, 2, 75,
-     "收入池最上游：2025 機隊每 GW 年營收 ÷ 年持有成本約 1.24；計入壽命期價格下跌 L 後約 0.94，未定 [Derived]；分量分為判斷"),
+     "收入池最上游：2027 VR200 每 GW 年營收（以 OpenAI 2026 Q2 實收校準）÷ 年持有成本約 1.95 [Derived]；分量分為判斷"),
     ("cloud", "L4 算力平台", "AI 雲端平台", "持有算力資產", None, 2, 100,
      "持有並出租算力；年持有成本由此層支付，是上游資本支出的付款方 [判斷]"),
     ("neocloud", "L4 算力平台", "Neocloud（GPU 租賃）", "持有算力資產", None, 3, 50,
@@ -195,6 +195,10 @@ MAP_EXTRA = []  # OpenAI、Anthropic 已納入 POSITION（2026-10-25 Andy：未�
 
 PARAMS = [
     ("gate_tol", 50, "收支關卡容忍帶（US$B，只用於 MSFT／GOOGL／AMZN／ORCL／META）：五年合計在 −gate_tol～0 視為 0、不變號（2026-10-29 MAG 串建議預設，待 Andy 決定）"),
+    ("px_g", -0.09, "token 牌價年變化率 g 基準（抄錄 Tokenomics v21.8 Cap_In!C226，Derived；非契約名稱）——2026 Q2 校準點推到 2027 用"),
+    ("px_g_lo", -0.20, "g 低端（Tokenomics Cap_In!D226）"),
+    ("px_g_hi", 0.05, "g 高端（Tokenomics Cap_In!E226）"),
+    ("px_dt", 1.125, "校準點到 2027 的年數：2026 Q2 中點（2026.375）→ 2027 年中（2027.5）[判斷]"),
     ("w_irr", 0.40, "地位分數權重：不可替代性"),
     ("w_pos", 0.35, "地位分數權重：市場位置"),
     ("w_vc", 0.25, "地位分數權重：價值鏈分量"),
@@ -299,56 +303,100 @@ def main():
             wt.cell(r, 6, it["unit"] if name != "IF_HoldEcon" else "$B/GW/年")
             wt.cell(r, 7, name)
             wt.cell(r, 8, it["cells"][gen]["基準"])
+            if name == "IF_HoldEcon" and gen.startswith("VR200"):
+                r_hold = r
             r += 1
-    for name, label in (("L1_RevGW_PQ_VR200", "VR200 每 GW 營收 P×Q：第一年（m＝2026 Q2）"),
-                        ("L1_RevGW_PQ_VR200_Life", "VR200 每 GW 營收 P×Q：壽命期平均（含 L）"),
-                        ("L1_LTotalFleetVDisc", "實際 L（機隊、折現）"),
-                        ("L1_LReqFleet_Full", "回本所需 L（全部算力持有成本口徑）")):
-        v, cell = tkv(name)
-        lo, _ = tkr(name, "低")
-        hi, _ = tkr(name, "高")
-        wt.cell(r, 1, label)
-        wt.cell(r, 2, "VR200" if "VR200" in name else "機隊")
-        for j, x in enumerate((lo, v, hi), 3):
-            wt.cell(r, j, x).font = BLUE
-        wt.cell(r, 6, TK["items"][name]["unit"])
-        wt.cell(r, 7, name)
-        wt.cell(r, 8, cell)
-        r += 1
-    r_lact, r_lreq = r - 2, r - 1
-    # v0.6.21（Andy 2026-11-03：回本比值應以「1 GW 年營收 ÷ 1 GW 年成本」表示）：
-    # 先列 2025 機隊每 GW 年營收、年持有成本與兩者比值，再列計入壽命期價格下跌 L 的回本比值。
-    # 恆等式：所需 L ＝ 年成本 ÷ 年營收（L1_LReqFleet_Full）→ 實際 L ÷ 所需 L ＝（年營收 ÷ 年成本）× 實際 L。
-    for name, label in (("L1_RevPerGW25", "每上線 GW 年營收（2025 機隊，實收）"),
-                        ("L1_PayRatio25", "每 GW 年營收 ÷ 年持有成本（2025 機隊）")):
-        v, cell = tkv(name)
-        lo, _ = tkr(name, "低")
-        hi, _ = tkr(name, "高")
-        wt.cell(r, 1, label)
-        wt.cell(r, 2, "機隊")
-        for j, x in enumerate((lo, v, hi), 3):
-            wt.cell(r, j, x).font = BLUE
-        wt.cell(r, 6, "$B/GW/年" if name == "L1_RevPerGW25" else "倍")
-        wt.cell(r, 7, name)
-        wt.cell(r, 8, cell)
-        r += 1
-    r_rev, r_pay = r - 2, r - 1
-    wt.cell(r, 1, "每 GW 年持有成本（2025 機隊）")
-    wt.cell(r, 2, "機隊")
-    for col in "CDE":
-        wt.cell(r, " CDE".index(col) + 2, f"={col}{r_rev}/{col}{r_pay}")
-    wt.cell(r, 6, "$B/GW/年")
-    wt.cell(r, 7, "[Derived]")
-    wt.cell(r, 8, "＝年營收 ÷ 比值（Tokenomics 2025 機隊每 GW 持有成本 9.353）")
-    r += 1
-    wt.cell(r, 1, "回本比值（壽命期）：年營收 ÷ 年成本 × 實際 L")
-    wt.cell(r, 2, "機隊")
-    wt.cell(r, 4, f"=D{r_lact}/D{r_lreq}")
-    wt.cell(r, 6, "倍")
-    wt.cell(r, 7, "[Derived]")
-    wt.cell(r, 8, "＝實際 L ÷ 所需 L；等於上方比值 × 實際 L（I 欄對帳差額應為 0）；Tokenomics 判讀「未定」")
-    wt.cell(r, 9, f"=D{r_pay}*D{r_lact}-D{r}")
-    wt.cell(r, 10, "對帳差額（應為 0）")
+    # v0.6.22（Andy 2026-11-03）：回本比值＝2027 VR200 每 GW 年營收 ÷ 年持有成本；營收以 OpenAI 2026 Q2 實收校準。
+    # 不再列 2025 機隊比值與「實際 L ÷ 所需 L」（讀者不知道 L 的定義；2025 已過時）。
+    # 校準：模型 P×Q 用 TK 推出的 token 量，約為實收對應量的 1.87 倍（token 帳 GW 路線）→ 改以實收營收 ÷ 上線 GW
+    #       乘上 VR200 相對機隊的每 GW 付費產能倍數；再以牌價年變化率 g 推到 2027。
+    OX = MX["OpenAI"]["pxq"]
+    def put(label, gen, vals, unit, name, src, fmt=None):
+        nonlocal_r = put.r
+        wt.cell(nonlocal_r, 1, label)
+        wt.cell(nonlocal_r, 2, gen)
+        for j, x in zip((3, 4, 5), vals):
+            if x is None:
+                continue
+            c = wt.cell(nonlocal_r, j, x)
+            if not (isinstance(x, str) and x.startswith("=")):
+                c.font = BLUE
+        wt.cell(nonlocal_r, 6, unit)
+        wt.cell(nonlocal_r, 7, name)
+        wt.cell(nonlocal_r, 8, src)
+        put.r += 1
+        return nonlocal_r
+    put.r = r
+    v, cell = tkv("L1_RevGW_PQ_VR200")
+    r_pq = put("VR200 每 GW 營收 P×Q：模型值（校準前；m＝2026 Q2、2026 牌價）", "VR200",
+               (tkr("L1_RevGW_PQ_VR200", "低")[0], v, tkr("L1_RevGW_PQ_VR200", "高")[0]), "$B/GW/年",
+               "L1_RevGW_PQ_VR200", cell + "（低／高＝利用率 0.30／0.65）")
+    r_rev = put("OpenAI 2026 Q2 年化營收", "機隊", (None, OX["rev"]["value"], None), "$B",
+                "OpenAI 模型", f'{OX["rev"]["file"]} {OX["rev"]["cell"]}')
+    g = OX["gw"]
+    r_gw = put("OpenAI 2026 Q2 平均上線 GW（低／基準／高）", "機隊", tuple(x["value"] for x in g), "GW",
+               "OpenAI 模型", f'{g[0]["file"]} {g[0]["cell"]}／{g[1]["cell"]}／{g[2]["cell"]}（Fairwater 分配 0.4／0.65／0.9）')
+    r_rgw = put("實收每上線 GW 年營收", "機隊", tuple(f"=$D${r_rev}/{c}{r_gw}" for c in "CDE"), "$B/GW/年",
+                "[Derived]", "＝年化營收 ÷ 平均上線 GW（C 欄 GW 低 → 每 GW 營收高）")
+    r_cf = put("機隊每 GW 付費產能（世代加權、含生產折減）", "機隊", (None, OX["cap_fleet"]["value"], None), "M tok/GW/年",
+               "OpenAI 模型", f'{OX["cap_fleet"]["file"]} {OX["cap_fleet"]["cell"]}（世代組合 V1：Hopper 35%、GB200 27.5%、GB300 27.5%、VR200 5%、其他 5%）')
+    r_cv = put("VR200 每 GW 付費產能", "VR200", (None, OX["cap_vr200"]["value"], None), "M tok/GW/年",
+               "OpenAI 模型（TK 快照）", f'{OX["cap_vr200"]["file"]} {OX["cap_vr200"]["cell"]}')
+    r_dv = put("VR200 生產折減（採用）", "VR200", (None, OX["derate_vr200"]["value"], None), "倍",
+               "OpenAI 模型", f'{OX["derate_vr200"]["file"]} {OX["derate_vr200"]["cell"]}')
+    r_mult = put("VR200 ÷ 機隊 每 GW 有效產能倍數", "VR200", (None, f"=D{r_cv}*D{r_dv}/D{r_cf}", None), "倍",
+                 "[Derived]", "VR200 產能 × 折減 ÷ 機隊加權產能")
+    r_cal26 = put("VR200 每 GW 營收：2026 Q2 實收校準", "VR200", tuple(f"={c}{r_rgw}*$D${r_mult}" for c in "CDE"), "$B/GW/年",
+                  "[Derived]", "＝實收每上線 GW 年營收 × 產能倍數（假設每 token 實收單價各世代相同）")
+    r_k = put("校準係數：模型值 ÷ 實收校準值", "VR200", (None, f"=D{r_pq}/D{r_cal26}", None), "倍",
+              "[Derived]", "即 token 帳 GW 路線（OpenAI 模型基準欄 1.870）：模型 token 量約為實收對應量的倍數")
+    r_px = put("牌價係數：2026 Q2 → 2027（(1+g)^年數）", "—",
+               ("=(1+px_g_lo)^px_dt", "=(1+px_g)^px_dt", "=(1+px_g_hi)^px_dt"), "倍",
+               "參數 px_g／px_g_lo／px_g_hi／px_dt", "g 抄錄 Tokenomics v21.8 Cap_In!C226:E226（−9%／−20%／+5%）")
+    r_rev27 = put("VR200 每 GW 年營收：2027 預估（校準後）", "VR200",
+                  (f"=$D${r_cal26}*C{r_px}", f"=$D${r_cal26}*D{r_px}", f"=$D${r_cal26}*E{r_px}"), "$B/GW/年",
+                  "[Derived]", "＝2026 Q2 校準值 × 牌價係數（低／高只動 g）")
+    r_ratio = put("每 GW 年營收 ÷ 年持有成本：2027 VR200", "VR200",
+                  (f"=C{r_rev27}/$D${r_hold}", f"=D{r_rev27}/$D${r_hold}", f"=E{r_rev27}/$D${r_hold}"), "倍",
+                  "[Derived]", "持有成本＝IF_HoldEcon VR200 基準（年金化，WACC 10%）；低／高只動 g")
+    v, cell = tkv("L1_LTotalDisc")
+    r_l = put("壽命期價格係數（折現；6 年）", "—",
+              (tkr("L1_LTotalDisc", "低")[0], v, tkr("L1_LTotalDisc", "高")[0]), "倍", "L1_LTotalDisc", cell)
+    r_life = put("每 GW 年營收 ÷ 年持有成本：VR200 6 年壽命期平均", "VR200",
+                 (None, f"=D{r_rev27}*D{r_l}/D{r_hold}", None), "倍",
+                 "[Derived]", "＝2027 預估 × 壽命期價格係數 ÷ 持有成本（以 2027 為第一年，與頁首口徑一致；TK L1_RevGW_PQ_VR200_Life 同算法、起點為 2026 牌價）")
+    # 單因子敏感度（敏感度先於基準：Andy 分析規範第 6 條）
+    rs = put.r + 1
+    wt.cell(rs, 1, "單因子敏感度：2027 VR200 每 GW 年營收 ÷ 年持有成本（一次只動一個輸入）").font = openpyxl.styles.Font(bold=True)
+    wt.cell(rs, 3, "低端")
+    wt.cell(rs, 4, "基準")
+    wt.cell(rs, 5, "高端")
+    put.r = rs + 1
+    sens = []
+    sens.append(put("牌價年變化率 g（−20%／−9%／+5%）", "敏感度", (f"=C{r_ratio}", f"=D{r_ratio}", f"=E{r_ratio}"), "倍", "[Derived]", "Tokenomics Cap_In!C226:E226"))
+    lo_h = TK["items"]["IF_HoldEcon"]["values"]["VR200 NVL72"]["高成本"]
+    hi_h = TK["items"]["IF_HoldEcon"]["values"]["VR200 NVL72"]["低成本"]
+    sens.append(put("VR200 持有成本（高成本／基準／低成本）", "敏感度",
+                    (f"=D{r_rev27}/{lo_h}", f"=D{r_ratio}", f"=D{r_rev27}/{hi_h}"), "倍", "IF_HoldEcon VR200",
+                    f"高成本 {lo_h:.2f}／低成本 {hi_h:.2f}（$B/GW/年）"))
+    sens.append(put("OpenAI 2026 Q2 平均上線 GW（2.35／2.26／2.17）", "敏感度",
+                    (f"=E{r_cal26}*D{r_px}/$D${r_hold}", f"=D{r_ratio}", f"=C{r_cal26}*D{r_px}/$D${r_hold}"), "倍",
+                    "OpenAI 模型 PxQ!F46:H46", "GW 高 → 每 GW 實收營收低"))
+    cg, dg = OX["cap_gb300"], OX["derate_gb300"]
+    sens.append(put("VR200 每 GW 產能（只等於 GB300／TK 規格）", "敏感度",
+                    (f"=$D${r_rgw}*{cg['value']}*{dg['value']}/$D${r_cf}*D{r_px}/$D${r_hold}", f"=D{r_ratio}", None), "倍",
+                    "OpenAI 模型（TK 快照）", f"{cg['file']} {cg['cell']}、{dg['cell']}：GB300 產能 × 折減；VR200 產能來自 TK 規格（NVIDIA 公布值推得，出貨前未經實測）"))
+    rc, gc, ch = OX["rev_c3"], OX["gw_c3"], OX["cap_fleet_handoff"]
+    sens.append(put("校準營收改用 9 月底 run-rate（口徑三：50 ÷ 4.6 GW）", "敏感度",
+                    (f"={rc['value']}/{gc['value']}*$D${r_mult}*D{r_px}/$D${r_hold}", f"=D{r_ratio}", None), "倍",
+                    "OpenAI 模型", f"{rc['file']} {rc['cell']}、{gc['cell']}（Assumed 年底 GW）"))
+    sens.append(put("機隊世代組合改用交接檔（Hopper 25%、GB200 45%、GB300 25%、VR200 5%）", "敏感度",
+                    (f"=$D${r_rgw}*D{r_cv}*D{r_dv}/{ch['value']}*D{r_px}/$D${r_hold}", f"=D{r_ratio}", None), "倍",
+                    "OpenAI 模型 4.1 節", f"{ch['file']} {ch['cell']}"))
+    r_sens_min = put("敏感度區間（上列各情境的最小／最大）", "敏感度",
+                     (f"=MIN(C{sens[0]}:E{sens[-1]})", f"=D{r_ratio}", f"=MAX(C{sens[0]}:E{sens[-1]})"), "倍",
+                     "[Derived]", "頁面顯示的區間")
+    r = put.r
     TK_ROWS = r
 
     # ============ 價值鏈

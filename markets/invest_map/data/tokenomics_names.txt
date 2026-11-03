@@ -26,3 +26,6 @@ L1_PayRatio25_Hi
 L1_RevPerGW25
 L1_RevPerGW25_Lo
 L1_RevPerGW25_Hi
+L1_LTotalDisc
+L1_LTotalDisc_Lo
+L1_LTotalDisc_Hi

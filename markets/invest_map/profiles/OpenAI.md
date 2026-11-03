@@ -34,7 +34,7 @@ AI 模型公司（位於 AI 金流的最上游）：自研 GPT 系列大模型�
 
 ## 市場定位與產業位置
 - 在 AI 金流最上游：用戶付給 OpenAI 的錢，大部分轉付給雲端與晶片供應鏈。模型 2026 算力成本（現金）53.2bn，高於營收淨額 27.4bn [本專案：OpenAI收支模型_v0_6_3.xlsx Cost!E27；Revenue!E41]。
-- P×Q 回本比值（＝營收 ÷ 機隊持有成本）：2025 為 1.24 [本專案：OpenAI收支模型_v0_6_3.xlsx PxQ!D12]；2026 主口徑（Q2 年化營收 26.3bn ÷ Q2 平均 2.34 GW）為 1.15，是 2025 的 0.93 倍 [本專案：OpenAI收支模型_v0_6_3.xlsx PxQ!E9、H9、J9、E15]。換算每 GW 年營收約 11.2bn，對照 Tokenomics 每 GW 年持有成本 9.80bn [本專案：OpenAI收支模型_v0_6_3.xlsx PxQ!G54]（[Derived]：26.3 ÷ 2.34）。比值 >1 只代表實收能覆蓋機隊持有成本，還沒算人事與研發。
+- P×Q 回本比值（＝營收 ÷ 機隊持有成本）：2026 Q2 主口徑（Q2 年化營收 26.3bn ÷ Q2 平均 2.26 GW）為 1.19，GW 取 2.17–2.35 時為 1.24–1.14 [本專案：OpenAI收支模型_v0_6_4.xlsx PxQ!F64、G64、H64]。換算每 GW 年營收約 11.6bn，對照 Tokenomics 機隊每 GW 年持有成本 9.80bn [本專案：OpenAI收支模型_v0_6_4.xlsx PxQ!G54]（[Derived]：26.3 ÷ 2.26）。比值 >1 只代表實收能覆蓋機隊持有成本，還沒算人事與研發。
 - 算力合約（模型逐家計入）：Microsoft Azure 增購 250bn、Oracle 300bn（2027–2031、約 4.5 GW；SRC_OAI!C61–C62）、AWS Nvidia 晶片 38bn、AWS Trainium 100bn（2 GW）、CoreWeave 22.4bn、Cerebras 20bn（0.75 GW）[本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C59–C60、C63–C64、C67、C70–C71、C74、C76]。意向或條款書層級（未計入模型付款）：Nvidia 10 GW／100bn、Broadcom 自研晶片 10 GW、AMD 6 GW [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C103–C106]。
 - 模型合約供給 GW：2026 年 2.83 GW，2030 年 16.09 GW（含自建）[本專案：OpenAI收支模型_v0_6_3.xlsx Compute!E87、I87]；2027 年 Oracle 合約起跑，年付款 60bn，使算力成本由 53.2 跳到 141.7bn [本專案：OpenAI收支模型_v0_6_3.xlsx Cost!F18、E27、F27]。
 - 對供應鏈的意義：OpenAI 是 Oracle、CoreWeave、Microsoft、AWS 的大客戶，其付款能力取決於外部融資是否持續 [判斷]。
@@ -102,7 +102,7 @@ AI 模型公司（位於 AI 金流的最上游）：自研 GPT 系列大模型�
 
 ## 需要觀察的事項
 - 收支結果｜本專案模型 2026–2030 自由現金流全部為負：−39.4、−116.0、−134.9、−137.6、−131.9bn [本專案：OpenAI收支模型_v0_6_3.xlsx Funding!E13–I13]；五年合計約 −560bn（[Derived]），比管理層 −278bn 更深 [本專案：OpenAI收支模型_v0_6_3.xlsx SRC_OAI!C56]；2027 年起每年需外部資金，至 2030 累計 442.8bn [本專案：OpenAI收支模型_v0_6_3.xlsx Funding!F33、I31]｜下一輪融資或 IPO 申報
-- 回本比值與上線 GW｜2026 主口徑比值 1.15，若 Q2 平均 GW 高於 2.17 GW，比值就低於 2025 [本專案：OpenAI收支模型_v0_6_3.xlsx PxQ!E9、E21]；官方未公布 2026 上線 GW [本專案：OpenAI收支模型_v0_6_3.xlsx PxQ!P34]｜下一次算力規模揭露
+- 回本比值與上線 GW｜2026 Q2 主口徑比值 1.19；平均上線 GW 每多 0.1 GW，比值約降 0.05 [本專案：OpenAI收支模型_v0_6_4.xlsx PxQ!F64、H64]；官方未公布 2026 上線 GW [本專案：OpenAI收支模型_v0_6_4.xlsx PxQ!P34]｜下一次算力規模揭露
 - 營收與管理層目標的差距｜模型 2030 營收 126.4bn 對目標 350bn；只靠 API 補足需 API 營收 4.0 倍 [本專案：OpenAI收支模型_v0_6_3.xlsx Revenue!I38；Reverse!I21]；年底 run-rate 能否到 70bn 是第一個驗證點｜2027 年初年度營收報導
 - 每 GW 合約價｜模型唯一合約價 12bn／GW／年（區間 8–20），未揭露 GW 的 Azure、AWS、CoreWeave 供給與它成反比 [本專案：OpenAI收支模型_v0_6_3.xlsx Compute!D54、Q86]｜新合約條款揭露
 - 2027 Oracle 起跑｜年付款 60bn 讓算力成本一年增加約 88bn [本專案：OpenAI收支模型_v0_6_3.xlsx Cost!F18、E27、F27]（[Derived]）；Broadcom 自研晶片融資能否落地影響自建比例｜2026 年底前 Broadcom 融資結案
