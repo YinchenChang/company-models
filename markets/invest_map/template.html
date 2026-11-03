@@ -42,7 +42,8 @@ a{color:inherit}
 .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy-muted);display:flex;gap:10px;align-items:center}
 .eyebrow::before{content:"";width:18px;height:2px;background:var(--brass)}
 .mast h1{font-size:34px;letter-spacing:.02em;margin-top:8px}
-.mast p{margin:8px 0 0;color:var(--navy-muted);max-width:62ch}
+/* v0.6.21（Andy 11-03）：說明文字延伸到頁面內容寬度，減少行數 */
+.mast p{margin:8px 0 0;color:var(--navy-muted)}
 .meta{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 14px;font-size:12px;color:var(--navy-muted);border-top:1px solid #ffffff2e;margin-top:16px;padding-top:12px}
 .meta b{overflow-wrap:anywhere}
 .meta b{color:var(--navy-ink);font-weight:500;font-family:var(--f-mono)}
@@ -66,7 +67,7 @@ a{color:inherit}
 main{padding-block:26px 56px}
 .view{display:grid;gap:22px;grid-template-columns:minmax(0,1fr)}
 .view>*{min-width:0}
-.head{display:grid;gap:6px;max-width:80ch}
+.head{display:grid;gap:6px}
 .head h2{font-size:22px}
 .head p{margin:0;color:var(--muted)}
 .label{font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
@@ -304,12 +305,13 @@ const G=k=>D.pergw[k];
 $("#meta").innerHTML=[["資料建置",D.meta.built],["股價日",D.meta.price_date],["Tokenomics",D.meta.tk_version+" · "+D.meta.tk_commit],
  ["資料活頁簿",D.meta.version],["company-models",D.meta.cm_commit]].map(([k,v])=>`<span>${k}</span><b>${esc(v)}</b>`).join("");
 const tiers=t=>D.valuation.filter(v=>v.tier===t);
-const ratio=G("回本比值（實際 L ÷ 所需 L）｜機隊").base;
+const ratio=G("回本比值（壽命期）：年營收 ÷ 年成本 × 實際 L｜機隊").base;
+const pay=G("每 GW 年營收 ÷ 年持有成本（2025 機隊）｜機隊"), rev25=G("每上線 GW 年營收（2025 機隊，實收）｜機隊").base, cost25=G("每 GW 年持有成本（2025 機隊）｜機隊").base, lact=G("實際 L（機隊、折現）｜機隊").base;
 $("#kpis").innerHTML=[
  ["研究覆蓋公司",D.valuation.length,`上市 ${D.valuation.filter(v=>v.tier!=="未上市").length} 家；未上市 ${D.valuation.filter(v=>v.tier==="未上市").map(v=>v.name).join("、")}`],
  ["買進以上",tiers("強力買進").length+tiers("買進").length,`強力買進 ${tiers("強力買進").length}、買進 ${tiers("買進").length}（依個股模型投資建議）`],
  ["放空以下／收支不足",(tiers("放空").length+tiers("強力放空").length)+" / "+tiers("收支不足").length,"收支不足＝評價買進以上、但模型期間入不敷出，不列買進"],
- ["機隊回本比值",ratio.toFixed(2),"實際 L ÷ 所需 L；Tokenomics 判讀「未定」"]
+ ["每 GW 年營收 ÷ 年成本",pay.base.toFixed(2),`2025 OpenAI 機隊：$${rev25.toFixed(1)}B ÷ $${cost25.toFixed(1)}B；計入壽命期價格下跌 L ${lact.toFixed(2)} 後 ${ratio.toFixed(2)}（未定）`]
 ].map(([k,v,s])=>`<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${esc(s)}</div></div>`).join("");
 
 /* ---------- 01 map ---------- */
@@ -343,8 +345,8 @@ function renderMap(){
   <div class="flow">
     <div class="st"><div class="t">資本支出（建一座 1 GW）</div><div class="v">$${cx.base.toFixed(1)}B <small>GB300</small></div><div class="r">VR200 $${cxv.base.toFixed(1)}B · IT ${it.base.toFixed(1)}＋設施 ${fac.base.toFixed(1)}</div></div>
     <div class="st"><div class="t">年持有成本（每 GW · 年）</div><div class="v">$${hold.base.toFixed(1)}B <small>VR200</small></div><div class="r">區間 ${hold.lo.toFixed(1)}–${hold.hi.toFixed(1)} · 年金化 WACC 10%</div></div>
-    <div class="st"><div class="t">模型商營收 P×Q（每 GW · 年）</div><div class="v">$${rev.base.toFixed(1)}B <small>第一年</small></div><div class="r">壽命期平均 ${life.base.toFixed(1)}（${life.lo.toFixed(1)}–${life.hi.toFixed(1)}）</div></div>
-    <div class="st"><div class="t">機隊回本比值</div><div class="v">${ratio.toFixed(2)} <small>未定</small></div><div class="r">實際 L ÷ 所需 L；&lt;1 代表價格下跌快於回本所需</div></div>
+    <div class="st"><div class="t">模型商營收 P×Q（每 GW · 年）</div><div class="v">$${rev.base.toFixed(1)}B <small>第一年</small></div><div class="r">壽命期平均 ${life.base.toFixed(1)}（${life.lo.toFixed(1)}–${life.hi.toFixed(1)}）；用模型 token 量、尚未依 token 帳校準，不直接除以持有成本作比值</div></div>
+    <div class="st"><div class="t">每 GW 年營收 ÷ 年成本（2025 OpenAI 機隊）</div><div class="v">${pay.base.toFixed(2)} <small>${pay.lo.toFixed(2)}–${pay.hi.toFixed(2)}</small></div><div class="r">$${rev25.toFixed(1)}B ÷ $${cost25.toFixed(1)}B；× 壽命期價格係數 L ${lact.toFixed(2)} ＝ ${ratio.toFixed(2)}（未定；&lt;1 代表價格下跌快於回本所需）</div></div>
   </div>
   <div class="legend"><span><span class="chip r" style="pointer-events:none">公司名</span>深色實框＝有模型，點選開公司檔案</span>
    <span><span class="chip" style="pointer-events:none">公司名</span>淺色框＝候選母體、尚未建模</span>

@@ -23,8 +23,8 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VERSION = "v0.6.20"
-DATE = "20261101"
+VERSION = "v0.6.21"
+DATE = "20261103"
 OUT = os.path.join(HERE, "dist", f"{DATE}_AI投資地圖_資料_{VERSION}.xlsx")
 
 YELLOW = PatternFill("solid", fgColor="FFF2CC")
@@ -66,7 +66,7 @@ def tkr(name, side):
 SEGMENTS = [
     # key, 層級, 次產業, 占 IT capex 文字, 中值(比例), 不可替代性, 價值鏈分量分, 依據
     ("model", "L5 模型商", "AI 模型商", "營收端（P×Q）", None, 2, 75,
-     "收入池最上游：每 GW 第一年 P×Q 營收高於持有成本，但回本比值約 0.94，未定 [Derived]；分量分為判斷"),
+     "收入池最上游：2025 機隊每 GW 年營收 ÷ 年持有成本約 1.24；計入壽命期價格下跌 L 後約 0.94，未定 [Derived]；分量分為判斷"),
     ("cloud", "L4 算力平台", "AI 雲端平台", "持有算力資產", None, 2, 100,
      "持有並出租算力；年持有成本由此層支付，是上游資本支出的付款方 [判斷]"),
     ("neocloud", "L4 算力平台", "Neocloud（GPU 租賃）", "持有算力資產", None, 3, 50,
@@ -315,12 +315,40 @@ def main():
         wt.cell(r, 7, name)
         wt.cell(r, 8, cell)
         r += 1
-    wt.cell(r, 1, "回本比值（實際 L ÷ 所需 L）")
+    r_lact, r_lreq = r - 2, r - 1
+    # v0.6.21（Andy 2026-11-03：回本比值應以「1 GW 年營收 ÷ 1 GW 年成本」表示）：
+    # 先列 2025 機隊每 GW 年營收、年持有成本與兩者比值，再列計入壽命期價格下跌 L 的回本比值。
+    # 恆等式：所需 L ＝ 年成本 ÷ 年營收（L1_LReqFleet_Full）→ 實際 L ÷ 所需 L ＝（年營收 ÷ 年成本）× 實際 L。
+    for name, label in (("L1_RevPerGW25", "每上線 GW 年營收（2025 機隊，實收）"),
+                        ("L1_PayRatio25", "每 GW 年營收 ÷ 年持有成本（2025 機隊）")):
+        v, cell = tkv(name)
+        lo, _ = tkr(name, "低")
+        hi, _ = tkr(name, "高")
+        wt.cell(r, 1, label)
+        wt.cell(r, 2, "機隊")
+        for j, x in enumerate((lo, v, hi), 3):
+            wt.cell(r, j, x).font = BLUE
+        wt.cell(r, 6, "$B/GW/年" if name == "L1_RevPerGW25" else "倍")
+        wt.cell(r, 7, name)
+        wt.cell(r, 8, cell)
+        r += 1
+    r_rev, r_pay = r - 2, r - 1
+    wt.cell(r, 1, "每 GW 年持有成本（2025 機隊）")
     wt.cell(r, 2, "機隊")
-    wt.cell(r, 4, f"=D{r-2}/D{r-1}")
+    for col in "CDE":
+        wt.cell(r, " CDE".index(col) + 2, f"={col}{r_rev}/{col}{r_pay}")
+    wt.cell(r, 6, "$B/GW/年")
+    wt.cell(r, 7, "[Derived]")
+    wt.cell(r, 8, "＝年營收 ÷ 比值（Tokenomics 2025 機隊每 GW 持有成本 9.353）")
+    r += 1
+    wt.cell(r, 1, "回本比值（壽命期）：年營收 ÷ 年成本 × 實際 L")
+    wt.cell(r, 2, "機隊")
+    wt.cell(r, 4, f"=D{r_lact}/D{r_lreq}")
     wt.cell(r, 6, "倍")
     wt.cell(r, 7, "[Derived]")
-    wt.cell(r, 8, "Tokenomics 交接：0.940，「未定」")
+    wt.cell(r, 8, "＝實際 L ÷ 所需 L；等於上方比值 × 實際 L（I 欄對帳差額應為 0）；Tokenomics 判讀「未定」")
+    wt.cell(r, 9, f"=D{r_pay}*D{r_lact}-D{r}")
+    wt.cell(r, 10, "對帳差額（應為 0）")
     TK_ROWS = r
 
     # ============ 價值鏈
