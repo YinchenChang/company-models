@@ -305,13 +305,13 @@ const G=k=>D.pergw[k];
 $("#meta").innerHTML=[["資料建置",D.meta.built],["股價日",D.meta.price_date],["Tokenomics",D.meta.tk_version+" · "+D.meta.tk_commit],
  ["資料活頁簿",D.meta.version],["company-models",D.meta.cm_commit]].map(([k,v])=>`<span>${k}</span><b>${esc(v)}</b>`).join("");
 const tiers=t=>D.valuation.filter(v=>v.tier===t);
-const ratio=G("回本比值（壽命期）：年營收 ÷ 年成本 × 實際 L｜機隊").base;
-const pay=G("每 GW 年營收 ÷ 年持有成本（2025 機隊）｜機隊"), rev25=G("每上線 GW 年營收（2025 機隊，實收）｜機隊").base, cost25=G("每 GW 年持有成本（2025 機隊）｜機隊").base, lact=G("實際 L（機隊、折現）｜機隊").base;
+const R27=G("每 GW 年營收 ÷ 年持有成本：2027 VR200｜VR200"), RS=G("敏感度區間（上列各情境的最小／最大）｜敏感度"), RL=G("每 GW 年營收 ÷ 年持有成本：VR200 6 年壽命期平均｜VR200").base, REV27=G("VR200 每 GW 年營收：2027 預估（校準後）｜VR200").base, KCAL=G("校準係數：模型值 ÷ 實收校準值｜VR200").base, PQ=G("VR200 每 GW 營收 P×Q：模型值（校準前；m＝2026 Q2、2026 牌價）｜VR200").base;
+
 $("#kpis").innerHTML=[
  ["研究覆蓋公司",D.valuation.length,`上市 ${D.valuation.filter(v=>v.tier!=="未上市").length} 家；未上市 ${D.valuation.filter(v=>v.tier==="未上市").map(v=>v.name).join("、")}`],
  ["買進以上",tiers("強力買進").length+tiers("買進").length,`強力買進 ${tiers("強力買進").length}、買進 ${tiers("買進").length}（依個股模型投資建議）`],
  ["放空以下／收支不足",(tiers("放空").length+tiers("強力放空").length)+" / "+tiers("收支不足").length,"收支不足＝評價買進以上、但模型期間入不敷出，不列買進"],
- ["每 GW 年營收 ÷ 年成本",pay.base.toFixed(2),`2025 OpenAI 機隊：$${rev25.toFixed(1)}B ÷ $${cost25.toFixed(1)}B；計入壽命期價格下跌 L ${lact.toFixed(2)} 後 ${ratio.toFixed(2)}（未定）`]
+ ["每 GW 年營收 ÷ 年成本（2027 VR200 預估）",R27.base.toFixed(2),`$${REV27.toFixed(1)}B ÷ $${G("每 GW 年經濟持有成本｜VR200").base.toFixed(1)}B；營收以 OpenAI 2026 Q2 實收校準；6 年壽命期平均 ${RL.toFixed(2)}`]
 ].map(([k,v,s])=>`<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${esc(s)}</div></div>`).join("");
 
 /* ---------- 01 map ---------- */
@@ -329,7 +329,7 @@ function segCard(s){
 function renderMap(){
   const cx=G("每 GW 資本支出：合計｜GB300"), cxv=G("每 GW 資本支出：合計｜VR200"), it=G("每 GW 資本支出：IT 設備｜GB300"),
         fac=G("每 GW 資本支出：設施（電力、機房、冷卻）｜GB300"), hold=G("每 GW 年經濟持有成本｜VR200"),
-        rev=G("VR200 每 GW 營收 P×Q：第一年（m＝2026 Q2）｜VR200"), life=G("VR200 每 GW 營收 P×Q：壽命期平均（含 L）｜VR200");
+        rev=G("VR200 每 GW 年營收：2027 預估（校準後）｜VR200");
   const segs=n=>D.segments.filter(s=>s.layer===n);
   const layer=(code,title,fig,cap,inner,extra="")=>`<div class="layer"><div class="rail"><span class="code">${code}</span><h3>${title}</h3><div class="fig">${fig}</div><div class="cap">${cap}</div></div><div>${inner}${extra}</div></div>`;
   const grid=list=>`<div class="segs">${list.map(segCard).join("")}</div>`;
@@ -345,8 +345,8 @@ function renderMap(){
   <div class="flow">
     <div class="st"><div class="t">資本支出（建一座 1 GW）</div><div class="v">$${cx.base.toFixed(1)}B <small>GB300</small></div><div class="r">VR200 $${cxv.base.toFixed(1)}B · IT ${it.base.toFixed(1)}＋設施 ${fac.base.toFixed(1)}</div></div>
     <div class="st"><div class="t">年持有成本（每 GW · 年）</div><div class="v">$${hold.base.toFixed(1)}B <small>VR200</small></div><div class="r">區間 ${hold.lo.toFixed(1)}–${hold.hi.toFixed(1)} · 年金化 WACC 10%</div></div>
-    <div class="st"><div class="t">模型商營收 P×Q（每 GW · 年）</div><div class="v">$${rev.base.toFixed(1)}B <small>第一年</small></div><div class="r">壽命期平均 ${life.base.toFixed(1)}（${life.lo.toFixed(1)}–${life.hi.toFixed(1)}）；用模型 token 量、尚未依 token 帳校準，不直接除以持有成本作比值</div></div>
-    <div class="st"><div class="t">每 GW 年營收 ÷ 年成本（2025 OpenAI 機隊）</div><div class="v">${pay.base.toFixed(2)} <small>${pay.lo.toFixed(2)}–${pay.hi.toFixed(2)}</small></div><div class="r">$${rev25.toFixed(1)}B ÷ $${cost25.toFixed(1)}B；× 壽命期價格係數 L ${lact.toFixed(2)} ＝ ${ratio.toFixed(2)}（未定；&lt;1 代表價格下跌快於回本所需）</div></div>
+    <div class="st"><div class="t">模型商營收（每 GW · 年）</div><div class="v">$${rev.base.toFixed(1)}B <small>2027 VR200</small></div><div class="r">以 OpenAI 2026 Q2 實收校準；校準前模型值 ${PQ.toFixed(1)}（模型 token 量約為實收的 ${KCAL.toFixed(2)} 倍）</div></div>
+    <div class="st"><div class="t">每 GW 年營收 ÷ 年成本（2027 VR200）</div><div class="v">${R27.base.toFixed(2)} <small>${RS.lo.toFixed(2)}–${RS.hi.toFixed(2)}</small></div><div class="r">區間＝單因子敏感度（價格趨勢、持有成本、校準 GW、VR200 產能）；6 年壽命期平均 ${RL.toFixed(2)}（價格逐年下跌）；&gt;1 代表營收可負擔持有成本</div></div>
   </div>
   <div class="legend"><span><span class="chip r" style="pointer-events:none">公司名</span>深色實框＝有模型，點選開公司檔案</span>
    <span><span class="chip" style="pointer-events:none">公司名</span>淺色框＝候選母體、尚未建模</span>
@@ -358,7 +358,7 @@ function renderMap(){
    <span><span class="d 未上市" style="width:8px;height:8px;border-radius:50%;display:inline-block"></span>未上市</span>
    <span>不可替代 ●●● 高 → ●○○ 低</span></div>
   <div>
-  ${layer("L5","AI 模型商",`$${rev.base.toFixed(1)}B <small>/GW·年 營收</small>`,"P×Q：牌價 × m × L ×（1 − 折扣）× 服務算力產出。收入池的源頭。",grid(segs("L5 模型商")),extraModel)}
+  ${layer("L5","AI 模型商",`$${rev.base.toFixed(1)}B <small>/GW·年 營收</small>`,"每 GW 產出的付費 token × 實收單價（2027 VR200；以 OpenAI 2026 Q2 實收校準）。收入池的源頭。",grid(segs("L5 模型商")),extraModel)}
   ${layer("L4","算力平台",`$${hold.base.toFixed(1)}B <small>/GW·年 持有成本</small>`,"持有並出租 GPU。上游資本支出的付款方，回本比值的承擔者。",grid(segs("L4 算力平台")))}
   ${layer("L3","AI 資料中心建置",`$${cx.base.toFixed(1)}B <small>/GW 資本支出</small>`,`＝IT 設備 $${it.base.toFixed(1)}B＋廠房 $${(cx.base-it.base).toFixed(1)}B。下列比例皆占 IT 設備（GB300、2026 年價格；AI半導體 次產業排序 v0.2.3），運算、記憶體、網通、代工與封測、載板、電源與散熱、伺服器組裝、儲存與管理八塊互斥、合計 100%（＝IT 設備）。運算只含 NVIDIA 晶片毛利＋CPU，台積電另列代工與封測。VR200 加 2027 HBM 價時記憶體升到約 23%、運算降到約 33%。只含 NVIDIA 平台（ASIC 未入）。`,grid(segs("L3 IT 設備"))+l3sum(),
     `<div class="facility"><b>設施：電力、機房、冷卻</b> · <span class="num">$${fac.base.toFixed(1)}B/GW</span>（${fac.lo.toFixed(1)}–${fac.hi.toFixed(1)}） · 尚無研究專案覆蓋（電力基建另案待開）</div>`)}
@@ -560,7 +560,7 @@ function renderMethod(){
   <div class="head"><span class="label">附錄</span><h2>方法與來源</h2><p>網站只呈現資料活頁簿重算後的值，不做任何計算。修改判斷（地位分項、分級門檻、權重）請改活頁簿黃底欄，重建後網站同步。</p></div>
   <dl class="def">
    ${row("資料活頁簿",`<code>company-models/markets/invest_map/dist/${esc(D.meta.book)}</code>：參數、每GW、價值鏈、地位、價格、估值、地圖節點七頁。`)}
-   ${row("Tokenomics",`<code>${esc(D.meta.tk_file)}</code>（commit ${esc(D.meta.tk_commit)}），經官方取數工具快照：IF_CapexIT／IF_CapexFacility／IF_CapexTotal／IF_HoldEcon／L1_RevGW_PQ_VR200／L1_LTotalFleetVDisc／L1_LReqFleet_Full 等。每 GW＝IT 關鍵電力。`)}
+   ${row("Tokenomics",`<code>${esc(D.meta.tk_file)}</code>（commit ${esc(D.meta.tk_commit)}），經官方取數工具快照：IF_CapexIT／IF_CapexFacility／IF_CapexTotal／IF_HoldEcon／L1_RevGW_PQ_VR200／L1_LTotalDisc 等。每 GW＝IT 關鍵電力。2027 VR200 每 GW 營收以 OpenAI 個股模型 PxQ 頁的 2026 Q2 年化營收 ÷ 平均上線 GW 校準（乘 VR200 相對機隊的每 GW 產能倍數），再依 Tokenomics 牌價年變化率推到 2027。`)}
    ${row("公司模型","company-models 各公司 <code>dist/*.xlsx</code> 的重算值，抽數程式記錄每個值的工作表與儲存格。")}
    ${row("候選母體","AI半導體 候選母體 v0.2.2（2026-10-24）：60 家、8 個次產業、次產業排序與公司重要性。權威在 AI半導體 Project。")}
    ${row("收支關卡（第一關）","Andy 2026-10-25：入不敷出、有資金缺口者不買進，不論評價多低；2026-10-26 修訂：只壓過買進以上，放空、強力放空、中立維持原評價（缺口加重放空理由）。判定：模型期間現金收支合計 &lt; 0 且評價買進以上（或未估值）→ 收支不足。口徑依模型：Microsoft、Alphabet、Amazon、Oracle 用個股模型「自由現金流扣股利（五年合計）」基準情境（2026-10-27 起）；CoreWeave、Nebius、WhiteFiber 模板用「營運缺口＋股東回饋（股利、回購）」；記憶體與模型商用自由現金流（MiniMax 為經調整淨利＋算力預付）；只有損益的半導體模型以各情境淨利皆為正判定。")}

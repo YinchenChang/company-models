@@ -24,8 +24,8 @@ ROOT = os.path.dirname(os.path.dirname(HERE))
 
 # v0.6.19：頁首日期改在此集中維護（原本寫死在 data 組裝處，換版時漏改）
 BUILT = "2026-11-03"
-PRICE_NOTE = ("全部用 2026-10-30 收盤（上檔空間＝模型目標價 ÷ 最新收盤 − 1）；韓美半導體未取得收盤，暫用模型現價（10-23）")
-LAST_CLOSE = "2026-10-30"
+PRICE_NOTE = ("全部用 2026-11-02 收盤（上檔空間＝模型目標價 ÷ 最新收盤 − 1）；Micron、Coherent 未取得 11-02 收盤，沿用 10-30")
+LAST_CLOSE = "2026-11-02"
 # 模型狀態註記（data/model_status.csv：代號, 狀態）——偏離旗標旁顯示：最近／下次財報與模型更新計畫
 STATUS = {}
 _sf = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "model_status.csv")
