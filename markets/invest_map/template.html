@@ -346,7 +346,7 @@ function renderMap(){
     <div class="st"><div class="t">資本支出（建一座 1 GW）</div><div class="v">$${cx.base.toFixed(1)}B <small>GB300</small></div><div class="r">VR200 $${cxv.base.toFixed(1)}B · IT ${it.base.toFixed(1)}＋設施 ${fac.base.toFixed(1)}</div></div>
     <div class="st"><div class="t">年持有成本（每 GW · 年）</div><div class="v">$${hold.base.toFixed(1)}B <small>VR200</small></div><div class="r">區間 ${hold.lo.toFixed(1)}–${hold.hi.toFixed(1)} · 年金化 WACC 10%</div></div>
     <div class="st"><div class="t">模型商營收（每 GW · 年）</div><div class="v">$${rev.base.toFixed(1)}B <small>2027 VR200</small></div><div class="r">以 OpenAI 2026 Q2 實收校準；校準前模型值 ${PQ.toFixed(1)}（模型 token 量約為實收的 ${KCAL.toFixed(2)} 倍）</div></div>
-    <div class="st"><div class="t">每 GW 年營收 ÷ 年成本（2027 VR200）</div><div class="v">${R27.base.toFixed(2)} <small>${RS.lo.toFixed(2)}–${RS.hi.toFixed(2)}</small></div><div class="r">區間＝單因子敏感度（價格趨勢、持有成本、校準 GW、VR200 產能）；6 年壽命期平均 ${RL.toFixed(2)}（價格逐年下跌）；&gt;1 代表營收可負擔持有成本</div></div>
+    <div class="st"><div class="t">每 GW 年營收 ÷ 年成本（2027 VR200）</div><div class="v">${R27.base.toFixed(2)} <small>${RS.lo.toFixed(2)}–${RS.hi.toFixed(2)}</small></div><div class="r">區間＝單因子敏感度（價格趨勢、持有成本、校準營收與 GW、機隊組合、VR200 產能）；6 年壽命期平均 ${RL.toFixed(2)}（價格逐年下跌）；&gt;1 代表營收可負擔持有成本</div></div>
   </div>
   <div class="legend"><span><span class="chip r" style="pointer-events:none">公司名</span>深色實框＝有模型，點選開公司檔案</span>
    <span><span class="chip" style="pointer-events:none">公司名</span>淺色框＝候選母體、尚未建模</span>

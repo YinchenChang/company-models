@@ -339,6 +339,9 @@ def main():
     pq["cap_vr200"] = b.num("PxQ", [(0, r"^X08$")], 1)
     pq["derate_vr200"] = b.num("PxQ", [(0, r"^X08$")], 4)                # 折減（採用）
     pq["year"] = b.num("PxQ", [(0, r"^X01$")], 3)
+    pq["rev_c3"] = b.num("PxQ", [(0, r"^X26$")], 9)                      # 敏感度：口徑三（9 月底 run-rate）基準
+    pq["gw_c3"] = b.num("PxQ", [(0, r"^X11$")], 9)
+    pq["cap_fleet_handoff"] = b.num("PxQ", [(0, r"^X46$")], 3)           # 敏感度：交接檔世代組合（4.1 節）
     pq["cap_gb300"] = b.num("PxQ", [(0, r"^X07$")], 1)                   # 敏感度：VR200 產能只等於 GB300
     pq["derate_gb300"] = b.num("PxQ", [(0, r"^X07$")], 4)
     out["OpenAI"]["pxq"] = pq

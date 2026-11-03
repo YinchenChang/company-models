@@ -363,8 +363,8 @@ def main():
     r_l = put("壽命期價格係數（折現；6 年）", "—",
               (tkr("L1_LTotalDisc", "低")[0], v, tkr("L1_LTotalDisc", "高")[0]), "倍", "L1_LTotalDisc", cell)
     r_life = put("每 GW 年營收 ÷ 年持有成本：VR200 6 年壽命期平均", "VR200",
-                 (None, f"=D{r_cal26}*D{r_l}/D{r_hold}", None), "倍",
-                 "[Derived]", "＝2026 Q2 校準值 × 壽命期價格係數 ÷ 持有成本（同 TK L1_RevGW_PQ_VR200_Life 的算法，換成校準值）")
+                 (None, f"=D{r_rev27}*D{r_l}/D{r_hold}", None), "倍",
+                 "[Derived]", "＝2027 預估 × 壽命期價格係數 ÷ 持有成本（以 2027 為第一年，與頁首口徑一致；TK L1_RevGW_PQ_VR200_Life 同算法、起點為 2026 牌價）")
     # 單因子敏感度（敏感度先於基準：Andy 分析規範第 6 條）
     rs = put.r + 1
     wt.cell(rs, 1, "單因子敏感度：2027 VR200 每 GW 年營收 ÷ 年持有成本（一次只動一個輸入）").font = openpyxl.styles.Font(bold=True)
@@ -386,6 +386,13 @@ def main():
     sens.append(put("VR200 每 GW 產能（只等於 GB300／TK 規格）", "敏感度",
                     (f"=$D${r_rgw}*{cg['value']}*{dg['value']}/$D${r_cf}*D{r_px}/$D${r_hold}", f"=D{r_ratio}", None), "倍",
                     "OpenAI 模型（TK 快照）", f"{cg['file']} {cg['cell']}、{dg['cell']}：GB300 產能 × 折減；VR200 產能來自 TK 規格（NVIDIA 公布值推得，出貨前未經實測）"))
+    rc, gc, ch = OX["rev_c3"], OX["gw_c3"], OX["cap_fleet_handoff"]
+    sens.append(put("校準營收改用 9 月底 run-rate（口徑三：50 ÷ 4.6 GW）", "敏感度",
+                    (f"={rc['value']}/{gc['value']}*$D${r_mult}*D{r_px}/$D${r_hold}", f"=D{r_ratio}", None), "倍",
+                    "OpenAI 模型", f"{rc['file']} {rc['cell']}、{gc['cell']}（Assumed 年底 GW）"))
+    sens.append(put("機隊世代組合改用交接檔（Hopper 25%、GB200 45%、GB300 25%、VR200 5%）", "敏感度",
+                    (f"=$D${r_rgw}*D{r_cv}*D{r_dv}/{ch['value']}*D{r_px}/$D${r_hold}", f"=D{r_ratio}", None), "倍",
+                    "OpenAI 模型 4.1 節", f"{ch['file']} {ch['cell']}"))
     r_sens_min = put("敏感度區間（上列各情境的最小／最大）", "敏感度",
                      (f"=MIN(C{sens[0]}:E{sens[-1]})", f"=D{r_ratio}", f"=MAX(C{sens[0]}:E{sens[-1]})"), "倍",
                      "[Derived]", "頁面顯示的區間")

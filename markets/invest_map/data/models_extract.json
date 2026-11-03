@@ -9716,6 +9716,21 @@
     "cell": "PxQ!G32",
     "file": "openai/dist/20261029_OpenAI收支模型_v0_6_4.xlsx"
    },
+   "rev_c3": {
+    "value": 50,
+    "cell": "PxQ!M61",
+    "file": "openai/dist/20261029_OpenAI收支模型_v0_6_4.xlsx"
+   },
+   "gw_c3": {
+    "value": 4.6,
+    "cell": "PxQ!M46",
+    "file": "openai/dist/20261029_OpenAI收支模型_v0_6_4.xlsx"
+   },
+   "cap_fleet_handoff": {
+    "value": 98571305410.4417,
+    "cell": "PxQ!G83",
+    "file": "openai/dist/20261029_OpenAI收支模型_v0_6_4.xlsx"
+   },
    "cap_gb300": {
     "value": 156016123358.035,
     "cell": "PxQ!E41",
