@@ -311,7 +311,7 @@ $("#kpis").innerHTML=[
  ["研究覆蓋公司",D.valuation.length,`上市 ${D.valuation.filter(v=>v.tier!=="未上市").length} 家；未上市 ${D.valuation.filter(v=>v.tier==="未上市").map(v=>v.name).join("、")}`],
  ["買進以上",tiers("強力買進").length+tiers("買進").length,`強力買進 ${tiers("強力買進").length}、買進 ${tiers("買進").length}（依個股模型投資建議）`],
  ["放空以下／收支不足",(tiers("放空").length+tiers("強力放空").length)+" / "+tiers("收支不足").length,"收支不足＝評價買進以上、但模型期間入不敷出，不列買進"],
- ["每 GW 年營收 ÷ 年成本",pay.base.toFixed(2),`2025 機隊：$${rev25.toFixed(1)}B ÷ $${cost25.toFixed(1)}B；計入壽命期價格下跌 L ${lact.toFixed(2)} 後 ${ratio.toFixed(2)}（未定）`]
+ ["每 GW 年營收 ÷ 年成本",pay.base.toFixed(2),`2025 OpenAI 機隊：$${rev25.toFixed(1)}B ÷ $${cost25.toFixed(1)}B；計入壽命期價格下跌 L ${lact.toFixed(2)} 後 ${ratio.toFixed(2)}（未定）`]
 ].map(([k,v,s])=>`<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${esc(s)}</div></div>`).join("");
 
 /* ---------- 01 map ---------- */
@@ -345,8 +345,8 @@ function renderMap(){
   <div class="flow">
     <div class="st"><div class="t">資本支出（建一座 1 GW）</div><div class="v">$${cx.base.toFixed(1)}B <small>GB300</small></div><div class="r">VR200 $${cxv.base.toFixed(1)}B · IT ${it.base.toFixed(1)}＋設施 ${fac.base.toFixed(1)}</div></div>
     <div class="st"><div class="t">年持有成本（每 GW · 年）</div><div class="v">$${hold.base.toFixed(1)}B <small>VR200</small></div><div class="r">區間 ${hold.lo.toFixed(1)}–${hold.hi.toFixed(1)} · 年金化 WACC 10%</div></div>
-    <div class="st"><div class="t">模型商營收 P×Q（每 GW · 年）</div><div class="v">$${rev.base.toFixed(1)}B <small>第一年</small></div><div class="r">壽命期平均 ${life.base.toFixed(1)}（${life.lo.toFixed(1)}–${life.hi.toFixed(1)}）；用模型 token 量、尚未依 token 帳校準，不與右欄比值相除</div></div>
-    <div class="st"><div class="t">每 GW 年營收 ÷ 年成本（2025 機隊）</div><div class="v">${pay.base.toFixed(2)} <small>${pay.lo.toFixed(2)}–${pay.hi.toFixed(2)}</small></div><div class="r">$${rev25.toFixed(1)}B ÷ $${cost25.toFixed(1)}B；× 壽命期價格係數 L ${lact.toFixed(2)} ＝ ${ratio.toFixed(2)}（未定；&lt;1 代表價格下跌快於回本所需）</div></div>
+    <div class="st"><div class="t">模型商營收 P×Q（每 GW · 年）</div><div class="v">$${rev.base.toFixed(1)}B <small>第一年</small></div><div class="r">壽命期平均 ${life.base.toFixed(1)}（${life.lo.toFixed(1)}–${life.hi.toFixed(1)}）；用模型 token 量、尚未依 token 帳校準，不直接除以持有成本作比值</div></div>
+    <div class="st"><div class="t">每 GW 年營收 ÷ 年成本（2025 OpenAI 機隊）</div><div class="v">${pay.base.toFixed(2)} <small>${pay.lo.toFixed(2)}–${pay.hi.toFixed(2)}</small></div><div class="r">$${rev25.toFixed(1)}B ÷ $${cost25.toFixed(1)}B；× 壽命期價格係數 L ${lact.toFixed(2)} ＝ ${ratio.toFixed(2)}（未定；&lt;1 代表價格下跌快於回本所需）</div></div>
   </div>
   <div class="legend"><span><span class="chip r" style="pointer-events:none">公司名</span>深色實框＝有模型，點選開公司檔案</span>
    <span><span class="chip" style="pointer-events:none">公司名</span>淺色框＝候選母體、尚未建模</span>
