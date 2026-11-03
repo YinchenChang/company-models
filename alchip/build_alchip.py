@@ -92,7 +92,7 @@ inp("g29_trn", "AWS Trainium CY2029 顆數成長", "%", None, TS["g29_trn"][0], 
 for s in SC:
     for y in (28, 29):
         inp(f"um{y}_{s}", f"情境 {s}：CY20{y} 顆數 ÷ 基準", "x", None, TS[f"um{y}_{s}"][0], None, "Assumed", TS[f"um{y}_{s}"][1],
-            "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、Broadcom、Marvell 模型相同；markets/memory SCEN_UNITS，建置時檢查）" if (s == "A" and y == 28) else "同上")
+            "A＝原始顆數；B＝AI 資本支出消化；C＝明顯下修（與台積電、Broadcom、Marvell 模型相同；markets/memory SCEN_UNITS，建置時檢查）" if (s == "A" and y == 28) else "同上")
 for i, y in enumerate((26, 27, 28)):
     inp(f"gb_trn_{y}", f"AWS Trainium 每顆 HBM CY20{y}", "GB", None, GBT[i], None, "Derived／Assumed", "markets/memory/market.py UNITS", "CY2029 沿用 CY2028；Marvell 模型同值" if i == 0 else "同上")
 

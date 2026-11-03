@@ -44,8 +44,8 @@ for k, nm, u, gb, tag, src in MEM.UNITS:
     inp(f"g29_{k}", f"{nm} 2029 顆數成長", "%", MEM.G29[k]["lo"], MEM.G29[k]["base"], MEM.G29[k]["hi"], MEM.G29[k]["tag"],
         f"Siliconomics SIF_g29_{k}（單一來源；2029 無平台別顆數預測，區間 ±10pt）" if k == MEM.UNITS[0][0] else "同上")
 for s, (v28, v29) in zip(SC, [MEM.SCEN_UNITS[s_] for s_ in SC]):   # 單一來源：markets/memory/market.py（HBM 需求位元用同一組）
-    inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, v28, None, "Assumed", "A＝基準；B＝AI 資本支出消化；C＝明顯下修" if s == "A" else "")
-    inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, v29, None, "Assumed", "")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：2028 顆數 ÷ 原始顆數", "x", None, v28, None, "Assumed", SIL.scen_note(s, 28, v28))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：2029 顆數 ÷ 原始顆數", "x", None, v29, None, "Assumed", SIL.scen_note(s, 29, v29))
 sec("B. 每片 CoWoS 晶圓封裝數、每顆台積電內容")
 for p, (pp, ct, tag, src) in PP.items():
     inp(f"pp_{p}", *SIL.row8(f"cw_pp_{p}")[1:])
@@ -583,7 +583,7 @@ V.cell(r_, 1, "目標價方法"); T["meth"] = r_
 V[f"B{r_}"] = ("DCF：股東現金流＝EPS ×（1 − g／ROE），r 10%、g 4%、ROE 為 2023–2025 平均約 31%（再投資率約 13%），FY2027–FY2032 明確期＋永續；"
                "本模型無折舊推導，未改用淨利＋折舊－資本支出（2027–2029 資本支出 77–95 十億美元，現金流偏高估）；2030 起收斂法，情境 A 維持 2029 淨利率，偏高估。"
                "Comparable：聯電、格芯、英特爾、中芯（港股）、三星前瞻 P/E 中位數（聯電）× 12 個月後前瞻 EPS；同業成長與技術地位低於台積電，偏低估。"
-               "情境對應：A＝順利（顆數基準）、B＝平平（2028 顆數 ×0.8、毛利率 58%）、C＝不如預期（顆數 ×0.6、毛利率 54%）；2027 三情境 EPS 相同，DCF 情境差來自 2028 起。")
+               "情境對應：A＝順利（原始顆數）、B＝平平（2028 顆數 ×0.8、毛利率 58%）、C＝不如預期（顆數 ×0.6、毛利率 54%）；2027 三情境 EPS 相同，DCF 情境差來自 2028 起。")
 r_ += 2
 for k_ in ("dcftp", "comptp", "tpw"): V[f"B{T[k_]}"].fill = KEYF
 

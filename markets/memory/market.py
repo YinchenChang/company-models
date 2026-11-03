@@ -32,7 +32,7 @@ def _b(k):
     return _V[k]["base"]
 
 
-# 加速器顆數的情境係數（2028、2029 年 ÷ 情境 A 基準）：tsmc、advantest 等同一套，由 Siliconomics 單一來源提供
+# 加速器顆數的情境係數（2028、2029 年 ÷ 情境 A（原始顆數））：tsmc、advantest 等同一套，由 Siliconomics 單一來源提供
 SCEN_UNITS = {s: (_b(f"um28_{s}"), _b(f"um29_{s}")) for s in SCEN}
 SCEN_UNITS_RNG = {s: ((_V[f"um28_{s}"]["lo"], _V[f"um28_{s}"]["hi"]), (_V[f"um29_{s}"]["lo"], _V[f"um29_{s}"]["hi"]))
                   for s in SCEN if _V[f"um28_{s}"]["lo"] is not None}
@@ -133,7 +133,7 @@ def write(wb, hdr, Font):
     put("需求合計（裝載）", "EB", [None] + [f"=SUM({YC[y]}{a}:{YC[y]}{b})/1000" for y in (26, 27, 28)], key="dem")
     M.cell(MK["dem"], 7, f"=F{MK['dem']}*(1+hbm_dem29)").number_format = "0.00"
     put("需求 × 出貨係數（基準＝情境 A）", "EB", [None] + [f"={YC[y]}{MK['dem']}*hbm_gross" for y in (26, 27, 28, 29)], key="demg")
-    put("加速器顆數合計", "百萬顆", [None] + ["=" + "+".join(f"u_{k}_{y}" for k, *_ in UNITS) for y in (26, 27, 28)], key="units", fmt="0.0", note="JPMorgan 2027：GPU 10.9M、ASIC 12.5M；情境 A 基準")
+    put("加速器顆數合計", "百萬顆", [None] + ["=" + "+".join(f"u_{k}_{y}" for k, *_ in UNITS) for y in (26, 27, 28)], key="units", fmt="0.0", note="JPMorgan 2027：GPU 10.9M、ASIC 12.5M；情境 A（原始顆數）")
     put("每顆平均 HBM", "GB", [None] + [f"={YC[y]}{MK['dem']}*1000/{YC[y]}{MK['units']}" for y in (26, 27, 28)], key="gbavg", fmt="0")
     put("供給（三情境相同）", "EB", [None] * 5, key="sup", note="2026 供給＝需求出貨（年中已成交）；供給不隨需求情境變（產能 2027 前已訂定）")
     rr = MK["sup"]

@@ -86,7 +86,7 @@ CMC = "https://companiesmarketcap.com/fabrinet/pe-ratio/"
 MT = "https://www.macrotrends.net/stocks/charts/FN/fabrinet/pe-ratio"
 MTM = "https://www.macrotrends.net/stocks/charts/FN/fabrinet/net-profit-margin"
 
-sec("A. AI 光模組市場（讀 markets/network 成品；日曆年；情境 A 基準，B／C 依同字母顆數係數縮放）")
+sec("A. AI 光模組市場（讀 markets/network 成品；日曆年；情境 A（原始顆數），B／C 依同字母顆數係數縮放）")
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"mpl_{y}", f"AI 可插拔光模組市場 CY20{y}", "US$B", None, NETR["其中可插拔"][0][j], None, "Derived", NETR["其中可插拔"][1],
         "加速器顆數 × 每顆光學內容（scale-out 為主；2029 含 scale-up 光學）− CPO" if y == 26 else "同上")
@@ -98,8 +98,8 @@ for j, y in enumerate((26, 27, 28, 29)):
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"inl_{y}", f"中際旭創可插拔有效份額 CY20{y}（份額口徑一致；加總檢查用）", "%", None, INL[0][j], None, "Derived", INL[1], "中際旭創模型為光模組份額權威；本模型 Fabrinet 份額與它相加不得超過 100%（Units 頁）" if y == 26 else "同上")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝順利（基準）；B＝平平；C＝不如預期；與台積電、中際旭創、Coherent 模型相同（＝markets/memory SCEN_UNITS，建置時核對）")
-    inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 
 sec("B. Fabrinet 光模組份額與單價（光模組有效份額＝資料中心光模組與其他營收 ÷ 可插拔市場；代工營收含客供以外的料件；低＝情境 C、基準＝B、高＝A）")
 inp("rel_27", "光模組有效份額 CY2027 ÷ CY2026（相對值）", "x", 0.80, 1.00, 1.15, "Assumed", WB4 + "：數個新光模組專案最快 FY2027 Q1 起量，一個商用（merchant）專案 12 月季開始、其他 CY2027 初（公司，Interested-party）",

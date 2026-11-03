@@ -5,6 +5,7 @@ import sys, os, glob
 import openpyxl
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "siliconomics")); import reader as SIL  # v0.12 個股自訂情境說明
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "markets", "memory"))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
@@ -79,8 +80,8 @@ for k, nm, u_, gb, tag, src in MEM.UNITS:
         inp(f"u_{k}_{y}", f"{nm} 顆數 20{y}", "百萬顆", None, u_[i], None, tag, "markets/memory/market.py UNITS：" + src if i == 0 else "同上", f"台積電模型 {TS[f'u_{k}_{y}'][1]}（值相同，建置時檢查）" if i == 0 else "同上")
     inp(f"g29_{k}", f"{nm} 2029 顆數成長", "%", None, TS[f"g29_{k}"][0], None, "Assumed", TS[f"g29_{k}"][1], "markets/memory 無 2029；沿用台積電模型")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、NVIDIA 模型相同）")
-    inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 for i, y in enumerate((26, 27, 28)):
     inp(f"gb_amd_{y}", f"AMD Instinct 每顆 HBM 20{y}", "GB", None, GB_AMD[i], None, "Interested-party", "markets/memory/market.py UNITS（MI355X 288；MI450 432）" if i == 0 else "同上", "世代售價係數的 Analogy 區間以容量比計（見 D 節）" if i == 0 else "同上")
 
@@ -374,7 +375,7 @@ def engine(ws, r0, title, **over):
 PL = wb.create_sheet("PL")
 PL["A1"] = "PL — AMD 損益（US$B；non-GAAP；FY2025A 實績、FY2026 錨點，FY2027 起為模型）。會計年度＝日曆年。三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2026、FY2027 三情境相同（情境係數從 CY2028 才開始）"
 PB = {}; r0 = 70
-SCT = {"A": "情境 A：基準（顆數係數 1.0）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85", "C": "情境 C：CY2028–29 顆數 ×0.6"}
+SCT = {"A": "情境 A：原始顆數（顆數係數 1.0；v0.12 起本庫基準＝情境 B）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85", "C": "情境 C：CY2028–29 顆數 ×0.6"}
 for s in SC:
     PB[s] = engine(PL, r0, SCT[s], scn=s)
     r0 = PB[s]["end"] + 2

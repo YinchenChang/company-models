@@ -89,8 +89,8 @@ for g in NV + OT:
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"itc_{y}", f"AI IT 資本支出 20{y}", "US$B", None, ITC[0][j], None, "Derived", ITC[1], "其他 AI 載板（交換器、CPU、網通）的成長依據；Recon 每 GW 換算" if y == 26 else "同上")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝順利（基準）；B＝平平（AI 資本支出消化）；C＝不如預期（明顯下修）；與台積電、Ibiden 模型相同" if s == "A" else "同上")
-    inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 
 sec("B. 每顆加速器載板金額與份額（口徑與 Ibiden 一致；Ibiden 數字唯讀取自 ibiden/dist）")
 inp("v26", "FY2026 每顆 NVIDIA 加速器載板金額（全市場；Ibiden 模型校準）", "US$", None, round(IB_V26[0], 6), None, "Derived", IB_V26[1], "Ibiden 模型：Ibiden 每顆營收 ÷ 份額 70%（BofA：Ibiden 占 GPU 載板 70–80%，Interested-party）")
@@ -611,7 +611,7 @@ V.cell(48, 1, "目標價方法")
 V["B48"] = ("DCF：股東現金流＝每股（淨利＋折舊－資本支出），r＝10%、g＝4%，FY2027–32 明確期＋永續；欣興 2026–28 年資本支出 400–550 億，"
             "明確期現金流被擴產壓低，且未計客戶預付款（光復二廠、楊梅二廠全額預付），DCF 偏低估。"
             "Comparable：Ibiden、景碩、南電、三星電機、AT&S 前瞻 P/E 中位數（無 A 股）；同業同處 ABF 短缺溢價期，倍數偏高、部分價格為 8–9 月。"
-            "情境對應：A＝順利（顆數基準）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6）")
+            "情境對應：A＝順利（原始顆數）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6）")
 for r_ in (24, 35, 39):
     V[f"B{r_}"].fill = KEY
 V.column_dimensions["A"].width = 60

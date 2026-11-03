@@ -15,7 +15,7 @@
 1. 只取 `SIF_` 具名範圍（Interface 頁）；`SGOV_Errors` 須為 0 的版本才可匯出快照。不得連結 In、Path、Mkt、Checks 等內部頁。
 2. 經快照取數：`data/CURRENT_SNAPSHOT` 指向的 JSON（`tools/export_snapshot.py` 產生，記錄 xlsx 檔名、版本、sha256）。公司模型在來源欄寫明快照版本。
 3. 低／高（`SIF_<鍵>_lo`、`_hi`）只作敏感度；主值一律取基準。
-4. 情境：公司模型的 A／B／C 一律讀本庫同字母（Andy 2026-10-25 13:13）。行業變數不得在公司模型內另訂一套。
+4. 情境（v0.12 起；工作方式 v1.7，Andy 2026-11-02 15:58）：本庫只給基準（＝原情境 B），下游基準讀 `*_Base` 名稱；公司模型的 A／C 由公司自訂，並在情境係數列說明欄寫明相對本庫基準的倍數與產業 GW 相對 Wattonomics 基準 ±%（`reader.scen_note()`、`SIF_GWvsWT_Base`）。A／B／C 名稱 v0.12 停用過渡、v0.13 刪除。原規則「A／B／C 一律讀本庫同字母」（2026-10-25）已取代。行業變數的基準值仍不得在公司模型內另訂一套。
 5. Tokenomics 的量：經本庫 `SIF_TK_*` 取（值＝Tokenomics 現行快照，版本見 Interface 第 2 列），或直接讀 Tokenomics 快照；兩者不得混用不同版本。
 6. 公司模型發現行業變數需要修正：改本庫 In 頁（同一 repo 的 PR），不在公司模型覆寫。
 
@@ -40,3 +40,4 @@
 | v0.8.2 | 2026-10-28 | 新增輸入 `SIF_fx_twd`、`SIF_fx_rmb`、`SIF_fx_krw` | 新台幣：quanta、delta、avc、emc、kyec、jentech、gce 以 `vals` 讀，accton、tsmc、mediatek、guc、alchip 只讀 `base`（保留自己的區間），unimicron、nanya_pcb、kinsus 讀 `base`（32.5 → 32.0）；人民幣：victory_giant、innolight、eoptolink 以 `vals` 讀（7.1 → 6.72）；韓元：skhynix、samsung、hanmi 以 `vals` 讀。日圓不共用 |
 
 版本號：只改證據、標記、文字為修補版（v0.1.x）；輸入值或公式改變為次版（v0.x）；Interface 名稱刪除或定義改變為主版（v1.0 前只新增名稱以次版處理）。
+| v0.12 | 2026-11-03 | 新增 `*_Base`（57 組，等同原 B 名稱，例 `SIF_DeployGW_Base`、`SIF_um28_Base`、`SIF_cpo_Base_27`、`SIF_cqBase_8`）、`SIF_GWvsWT_Base`（2026–2029）；A／B／C 名稱標停用過渡（v0.13 刪） | 35 個公司模型與 tsmc 的情境係數列改標「個股自訂」，說明欄由 `reader.scen_note()` 產生；數值不變（cascade 第二輪 64 個全部 SAME） |

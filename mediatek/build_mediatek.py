@@ -86,7 +86,7 @@ for k in XP:
 for s in SC:
     for y in (28, 29):
         inp(f"um{y}_{s}", f"情境 {s}：CY20{y} 顆數 ÷ 基準", "x", None, TS[f"um{y}_{s}"][0], None, "Assumed", TS[f"um{y}_{s}"][1],
-            "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、Broadcom、Marvell 模型相同）" if (s == "A" and y == 28) else "同上")
+            "A＝原始顆數；B＝AI 資本支出消化；C＝明顯下修（與台積電、Broadcom、Marvell 模型相同）" if (s == "A" and y == 28) else "同上")
 
 sec("B. ASIC 每顆規格（權威在 Broadcom 模型 In 頁，唯讀；本模型只加聯發科份額）與份額")
 for k, lab in (("core_tpu", "TPU 每顆核心售價（不含 HBM）"), ("core_oth", "其他 ASIC 每顆核心售價（不含 HBM）")):
@@ -609,7 +609,7 @@ V["B48"] = ("DCF：股東現金流＝EPS ×（1 − g／ROE），r＝10%、g＝4
             "FY2030 起為收斂法，ASIC 第二、第三顆的成長未在明確期展開，DCF 偏低估的方向。"
             "Comparable：高通、博通、邁威爾、世芯、創意前瞻 P/E 中位數（高通 19x、博通 18.5x 落在中間；創意 103x 為極端值，中位數不受影響）。"
             "主要偏誤：ASIC 營收受市場層 TPU 顆數與 Broadcom 份額限制，遠低於賣方（Recon 第 B 節），本模型 EPS 與目標價都偏向低估賣方路徑。"
-            "情境對應：A＝順利（顆數基準）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6、手機下滑）")
+            "情境對應：A＝順利（原始顆數）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6、手機下滑）")
 for r_ in (24, 35, 39):
     V[f"B{r_}"].fill = KEY
 V.column_dimensions["A"].width = 58

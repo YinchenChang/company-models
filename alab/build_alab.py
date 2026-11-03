@@ -7,6 +7,7 @@ import sys, os, glob
 import openpyxl
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "siliconomics")); import reader as SIL  # v0.12 個股自訂情境說明
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import cycle_position as CP
@@ -86,7 +87,7 @@ CMC = "https://companiesmarketcap.com/astera-labs/pe-ratio/"
 MSC = "https://uk.marketscreener.com/quote/stock/ASTERA-LABS-INC-167508773/finances/"
 TF = "https://www.tickflow.io/stock/ALAB/forecast"
 
-sec("A. 市場（讀 markets/network 成品；日曆年 CY2026–CY2029＝會計年度；情境 A 基準，B／C 依顆數係數縮放）")
+sec("A. 市場（讀 markets/network 成品；日曆年 CY2026–CY2029＝會計年度；情境 A（原始顆數），B／C 依顆數係數縮放）")
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"msx_{y}", f"非 NVIDIA scale-up 交換晶片市場 CY20{y}（AMD、Trainium、其他 ASIC；不含 TPU）", "US$B", None, MSX[j], None, "Derived", MSX_SRC if y == 26 else "同上",
         "顆數 × 每顆 scale-up 交換晶片內容（網通模型 In 頁 c_*_su_sw）；NVIDIA 平台用自家 NVLink 交換晶片、TPU 用 ICI／光學電路交換，不列入 Scorpio X 可服務市場" if y == 26 else "同上")
@@ -100,8 +101,8 @@ for j, y in enumerate((26, 27, 28, 29)):
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"itc_{y}", f"AI IT 資本支出 CY20{y}", "US$B", None, NETR["itc"][0][j], None, "Derived", NETR["itc"][1], "Recon 用：Astera 營收 ÷ AI IT 資本支出" if y == 26 else "同上")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：CY2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、NVIDIA、Credo、Arista 模型相同）")
-    inp(f"um29_{s}", f"情境 {s}：CY2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：CY2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：CY2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 
 sec("B. Scorpio X（scale-up 交換晶片；本專案為權威：Astera 在非 NVIDIA scale-up 交換晶片的份額，規則第 13 條）")
 inp("x_25", "FY2025 Scorpio X 營收", "US$B", 0.0, 0.0, 0.02, "Assumed", TKB + "：Scorpio X 在 FY2025「not meaningful」（Interested-party）", FOOL + "：Scorpio X 初期量產於 1Q26 開始出貨（公司）")

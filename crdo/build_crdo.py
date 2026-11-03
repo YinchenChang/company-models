@@ -8,6 +8,7 @@ import sys, os, glob
 import openpyxl
 from openpyxl.styles import Font, PatternFill
 from openpyxl.workbook.defined_name import DefinedName
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "siliconomics")); import reader as SIL  # v0.12 個股自訂情境說明
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import cycle_position as CP
@@ -72,7 +73,7 @@ SAF = "https://stockanalysis.com/stocks/crdo/forecast/"
 TK = "https://www.tikr.com/blog/credo-stock-fell-22-last-week-as-it-launched-a-new-optical-cable-heres-where-it-could-go-by-2031"
 CMC = "https://companiesmarketcap.com/credo-technology/pe-ratio/"
 
-sec("A. AI 銅纜與光模組市場（讀 markets/network 成品；日曆年 CY2026–CY2029；情境 A 基準，B／C 依顆數係數縮放）")
+sec("A. AI 銅纜與光模組市場（讀 markets/network 成品；日曆年 CY2026–CY2029；情境 A（原始顆數），B／C 依顆數係數縮放）")
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"mcu_{y}", f"AI 銅纜市場 CY20{y}（scale-up 背板與線纜＋scale-out DAC／AEC）", "US$B", None, NETR["cu"][0][j], None, "Derived", NETR["cu"][1],
         "加速器顆數 × 每顆銅內容；scale-up 銅＝互連 × 銅占比、2029 年 scale-up 光學占 20%（網通模型）" if y == 26 else "同上")
@@ -83,8 +84,8 @@ for j, y in enumerate((26, 27, 28, 29)):
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"itc_{y}", f"AI IT 資本支出 CY20{y}", "US$B", None, NETR["itc"][0][j], None, "Derived", NETR["itc"][1], "Recon 用：Credo 營收 ÷ AI IT 資本支出" if y == 26 else "同上")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：CY2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、NVIDIA、Arista、中際旭創模型相同）")
-    inp(f"um29_{s}", f"情境 {s}：CY2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：CY2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：CY2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 inp("w8", "FY(t) 落在日曆年 t−1 的比重（5–12 月）", "x", None, "=8/12", None, "Derived", K10 + "：FY2026 截至 2026-05-02、FY2025 截至 2025-05-03（52／53 週）", "FY(t) 市場＝w8 × CY(t−1)＋（1 − w8）× CY(t)")
 
 sec("B. AEC 份額（本專案為權威：Credo 在 AI 銅纜的份額，規則第 13 條）與客戶集中")
@@ -326,7 +327,7 @@ def engine(ws, r0, title, **over):
 PL = wb.create_sheet("PL")
 PL["A1"] = "PL — Credo 損益（US$B；non-GAAP）。FY2025A、FY2026A 實績、FY2027 錨點（1Q27 實績＋2Q27 指引＋2H27 依全年指引），FY2028 起為模型。FY(t) 截至 t 年 4 月底／5 月初。三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2027 三情境相同；FY2028 起光學可插拔市場讀同字母網通 CPO 情境，FY2028 只有 4/12 落在 CY2028，顆數情境 B、C 的差異主要在 FY2029"
 PB = {}; r0 = 60
-SCN_T = {"A": "情境 A：基準（顆數係數 1.0）；網通 CPO 情境 A（替代快）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85；網通 CPO 情境 B", "C": "情境 C：CY2028–29 顆數 ×0.6；網通 CPO 情境 C（替代慢）"}
+SCN_T = {"A": "情境 A：原始顆數（顆數係數 1.0；v0.12 起本庫基準＝情境 B）；網通 CPO 情境 A（替代快）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85；網通 CPO 情境 B", "C": "情境 C：CY2028–29 顆數 ×0.6；網通 CPO 情境 C（替代慢）"}
 for s in SC:
     PB[s] = engine(PL, r0, SCN_T[s], scn=s)
     r0 = PB[s]["end"] + 2

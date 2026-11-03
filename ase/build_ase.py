@@ -61,12 +61,12 @@ PR3 = "公司 3Q26 新聞稿與簡報（SEC 6-K，2026-10-29）"
 
 sec(f"A. AI 加速器顆數、情境係數與封裝面積（讀 {SILV}；唯讀，不自行重估）")
 for y in (26, 27, 28, 29):
-    inp(f"units_{y}", f"AI 加速器顆數 20{y}（情境 A 基準）", "百萬顆", None, UNITS[y], None, "Derived",
+    inp(f"units_{y}", f"AI 加速器顆數 20{y}（情境 A（原始顆數））", "百萬顆", None, UNITS[y], None, "Derived",
         "Siliconomics SIF_UnitsPlat_Total_A（八類加速器合計）" if y == 26 else "同上", "NVIDIA、AMD、Google TPU、AWS Trainium、其他 ASIC 合計；與台積電、Amkor、京元電模型同一份" if y == 26 else "同上")
 for s in SC:
     for y in (28, 29):
         inp(f"um{y}_{s}", SIL.V[f"um{y}_{s}"]["label"], "x", None, SIL.base(f"um{y}_{s}"), None, "Assumed", f"Siliconomics {f'um{y}_{s}'}（同字母行業情境）",
-            "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、Amkor、NVIDIA 模型相同）" if (s == "A" and y == 28) else "同上")
+            "A＝原始顆數；B＝AI 資本支出消化；C＝明顯下修（與台積電、Amkor、NVIDIA 模型相同）" if (s == "A" and y == 28) else "同上")
 for y in (26, 27, 28, 29):
     inp(f"ar_{y}", f"封裝面積指數 20{y}（加速器用 CoWoS 片數 ÷ 顆數，2026＝1）", "x", None, round(AREA[y], 6), None, "Derived",
         "Siliconomics 平台別顆數 SIF_UnitsPlat_* ÷ 每片封裝數 cw_pp_*（Blackwell→GB、Rubin→VR、Rubin Ultra→RU、AMD 2026 MI3xx→AMD8／之後→AMDR、TPU 2026→TPU7／之後→TPU8）" if y == 26 else "同上",
@@ -555,7 +555,7 @@ V.cell(48, 1, "目標價方法")
 V["B48"] = ("DCF：股東現金流＝基本 EPS ×（1 − g／ROE），r＝10%、g＝4%、ROE 為 FY2023–25 平均約 10.5%（再投資率約 38%），FY2027–32 明確期＋永續；"
             "日月光資本支出約占營收四成，FY2026–27 股東自由現金流為負（PL 頁參考列），本式未扣資本支出高峰，現金流偏高估；但 ROE 用 2023–25 低谷年，FY2026 起 ROE 明顯上升，再投資率偏高（偏低估）。"
             "Comparable：台美封測同業（Amkor、力成、京元電、矽格、南茂）前瞻 P/E 中位數，再乘相對倍數調整係數（Bloomberg 十年前瞻 P/E，日月光相對同業）；不放 A 股。"
-            "情境對應：A＝順利（顆數基準）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6）")
+            "情境對應：A＝順利（原始顆數）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6）")
 for r_ in (24, 35, 39):
     V[f"B{r_}"].fill = KEY
 V.column_dimensions["A"].width = 58

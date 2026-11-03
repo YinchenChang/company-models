@@ -93,7 +93,7 @@ MSV = "https://www.marketscreener.com/quote/stock/GOLD-CIRCUIT-ELECTRONICS--6496
 WEARN = "https://stock.wearn.com/financial.asp?kind=2368"
 DIGRIN = "https://www.digrin.com/stocks/detail/2368.TW/price"
 
-sec("A. AI 部署規模（讀 markets/network、markets/chip_bridge、tsmc 成品；情境 A 基準，B／C 依同字母顆數係數縮放）")
+sec("A. AI 部署規模（讀 markets/network、markets/chip_bridge、tsmc 成品；情境 A（原始顆數），B／C 依同字母顆數係數縮放）")
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"itc_{y}", f"AI IT 資本支出 20{y}", "US$B", None, ITC[0][j], None, "Derived", ITC[1],
         "加速器顆數 × 每顆 IT capex（含 ASIC）；本模型以此除以每 GW IT 資本支出得到部署 GW（與勝宏、台光電模型相同）" if y == 26 else "同上")
@@ -103,8 +103,8 @@ inp("vr26", "2026 年部署中 Rubin 世代占比（混合每 GW IT 資本支出
 inp("racks_gb", "每 GW 機架數（GB300）", "架", None, BR["racks"][0], None, "Derived", BR["racks"][2], "Recon 用")
 inp("racks_vr", "每 GW 機架數（VR200）", "架", None, BR["racks"][1], None, "Derived", BR["racks"][2], "Units 頁每架等值金額用")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝順利（基準）；B＝平平；C＝不如預期；與台積電、勝宏模型相同（＝markets/memory SCEN_UNITS，建置時核對）")
-    inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", *SIL.vals("fx_twd"), "Derived", "與台光電、台達電、廣達模型相同（emc/dist In 頁 fx＝32.0）", "10-23 收盤：未找到")
 
 sec("B. 每 GW AI 高速 PCB 金額（口徑與勝宏一致：唯讀 victory_giant/dist Units 頁）與金像電份額")

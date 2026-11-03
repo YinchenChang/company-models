@@ -97,7 +97,7 @@ URLNAME = {K4: "Dell 8-K 4Q FY26（2026-02-26）", K1: "Dell 8-K 1Q FY27（2026-
            SNL: "StorageNewsletter 2026-09-03", ZK: "Zacks 2026-09", SA: "stockanalysis.com（統計）", SAF: "stockanalysis.com（預估）", MS: "MarketScreener",
            ALP: "Alpha Spread", INV: "Investing.com", CMC: "companiesmarketcap", MT: "Macrotrends"}
 
-sec("A. 加速器顆數與每顆系統價值（讀 tsmc、markets/chip_bridge 成品；情境 A 基準，B／C 依同字母顆數係數縮放）")
+sec("A. 加速器顆數與每顆系統價值（讀 tsmc、markets/chip_bridge 成品；情境 A（原始顆數），B／C 依同字母顆數係數縮放）")
 for y in (26, 27, 28, 29):
     inp(f"ug_{y}", f"GB300 級商用 GPU 顆數 CY20{y}（Blackwell＋Hopper" + ("＋AMD MI355）" if y == 26 else "）"), "百萬顆", None, round(UG[y], 6), None, "Derived", U_SRC if y == 26 else "同上",
         "tsmc 成品 u_bw、u_hp（2026 另含 u_amd）；CY2029＝CY2028 × (1＋各類成長)；世代分組與 Siliconomics Rack 頁、美超微模型相同（CF10）" if y == 26 else "同上")
@@ -105,8 +105,8 @@ for y in (26, 27, 28, 29):
     inp(f"uv_{y}", f"VR200 級商用 GPU 顆數 CY20{y}（Rubin＋Rubin Ultra" + ("）" if y == 26 else "＋AMD MI450）"), "百萬顆", None, round(UV[y], 6), None, "Derived", U_SRC if y == 26 else "同上",
         "tsmc 成品 u_rb、u_ru、u_amd；Google TPU、Trainium 與其他 ASIC 不含（雲端自建，Dell 不是主要供應商）" if y == 26 else "同上")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：CY2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um28_{s}'][1]}", "A＝順利（基準）；B＝平平；C＝不如預期；與台積電、廣達、緯穎模型同字母")
-    inp(f"um29_{s}", f"情境 {s}：CY2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um29_{s}'][1]}", "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：CY2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um28_{s}'][1]}", SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：CY2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um29_{s}'][1]}", SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 inp("v_gb", "每顆系統價值（GB300 NVL72 機架價 ÷ 72）", "US$K/顆", pu(0), pu(1), pu(2), "Derived", BR_SRC, "Tokenomics v20.1 機架單價（經橋接表；唯讀）；Dell 為 OEM，營收含整櫃（含 GPU）")
 inp("v_vr", "每顆系統價值（VR200 NVL72 機架價 ÷ 72；AMD Helios 假設相同）", "US$K/顆", pu(3), pu(4), pu(5), "Derived", BR_SRC, "同上；AMD MI450／Rubin Ultra 每顆價值未另訂（Assumed：同 VR200）")
 inp("mf", "AI 部署係數（Sens 用；FY2028 起）", "x", 0.8, 1.0, 1.2, "Assumed", "無", "±20%")
@@ -566,7 +566,7 @@ V["B50"] = ("DCF：股東現金流＝non-GAAP EPS ×（1 − g／ROE），r＝10
             "基準日 2026 年底，FY2027 只計 2027-01 一個月，之後逐年折現。組裝型 OEM 資本支出低，未改用淨利＋折舊－資本支出。"
             "Comparable：HPE、Supermicro、Lenovo、HP Inc.、NetApp 前瞻 P/E 中位數（不含 A 股）× 2027-11～2028-10 的 EPS（3/12 × FY2028＋9/12 × FY2029）。"
             "偏誤：non-GAAP EPS 排除攤銷與股票薪酬（偏高）；同業多為成長較低的 PC／伺服器公司，未給 Dell 的 AI 份額溢價（Comparable 偏低）；淨負債高、股東權益為負未反映在折現率。"
-            "情境對應：A＝順利（顆數基準）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6）")
+            "情境對應：A＝順利（原始顆數）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6）")
 for r_ in (24, 35, 39):
     V[f"B{r_}"].fill = KEY
 V.column_dimensions["A"].width = 58

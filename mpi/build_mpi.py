@@ -56,12 +56,12 @@ WG = "https://www.wantgoo.com/stock/6223/enterprise-value/price-to-earning-river
 
 sec(f"A. AI 加速器顆數、情境係數與晶圓測試量（讀 {SILV}；唯讀，不自行重估）")
 for y in (26, 27, 28, 29):
-    inp(f"units_{y}", f"AI 加速器顆數 20{y}（情境 A 基準）", "百萬顆", None, UNITS[y], None, "Derived",
+    inp(f"units_{y}", f"AI 加速器顆數 20{y}（情境 A（原始顆數））", "百萬顆", None, UNITS[y], None, "Derived",
         "Siliconomics SIF_UnitsPlat_Total_A（八類加速器合計）" if y == 26 else "同上", "與台積電、日月光、京元電模型同一份" if y == 26 else "同上")
 for s in SC:
     for y in (28, 29):
         inp(f"um{y}_{s}", SIL.V[f"um{y}_{s}"]["label"], "x", None, SIL.base(f"um{y}_{s}"), None, "Assumed", f"Siliconomics um{y}_{s}（同字母行業情境）",
-            "A＝基準；B＝AI 資本支出消化；C＝明顯下修" if (s == "A" and y == 28) else "同上")
+            "A＝原始顆數；B＝AI 資本支出消化；C＝明顯下修" if (s == "A" and y == 28) else "同上")
 for y in (26, 27, 28, 29):
     inp(f"nvtt_{y}", f"NVIDIA 加速器的測試時間加權顆數 ÷ 總顆數 20{y}", "x", None, round(NVTT[y], 6), None, "Derived",
         "Siliconomics 平台顆數 SIF_UnitsPlat_bw／rb／ru／hp × 每顆測試時間係數 ts_tt_*（Blackwell＝1）" if y == 26 else "同上", "晶圓測試量的代理：測試時間越長、探針卡耗用越多（Analogy：京元電、Advantest 模型同係數）" if y == 26 else "同上")
@@ -508,7 +508,7 @@ tset(47, "pr", "歷史倍數檢查：現價隱含 P/E 的十年分位（A／B／
 V.cell(48, 1, "目標價方法")
 V["B48"] = ("DCF：股東現金流＝EPS ×（1 − g／ROE），r＝10%、g＝4%、ROE 為 FY2024–25 平均約 26%（再投資率約 15%），FY2027–32 明確期＋永續；旺矽資本支出小（2026 年約 27 億元），本式適用。"
             "Comparable：測試介面與測試同業（FormFactor、Advantest、泰瑞達、京元電）前瞻 P/E 中位數；旺矽本身沒有 Bloomberg 前瞻倍數，相對倍數調整係數＝1（不調整）。"
-            "情境對應：A＝順利（顆數基準）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6）；設備分部讀 Siliconomics 設備情境係數")
+            "情境對應：A＝順利（原始顆數）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6）；設備分部讀 Siliconomics 設備情境係數")
 for r_ in (24, 35, 39):
     V[f"B{r_}"].fill = KEY
 V.column_dimensions["A"].width = 58

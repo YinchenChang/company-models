@@ -56,12 +56,12 @@ inp("p10", "CY2030 NAND 平均售價年變動（收斂法：十年平均；三�
 sec("N2. 加速器顆數（markets/memory UNITS 合計；2028–29 情境係數 SCEN_UNITS，同字母）")
 for i, y in enumerate((26, 27, 28)):
     tot = sum(u[2][i] for u in MEM.UNITS)
-    inp(f"u_{y}", f"加速器顆數合計 20{y}（情境 A 基準）", "百萬顆", None, round(tot, 6), None, "Derived", f"{MEMSRC} UNITS 各列 20{y} 合計（NVIDIA、AMD、TPU、Trainium、其他 ASIC）", "與 HBM 需求、台積電 CoWoS、Advantest 同一套顆數" if i == 0 else "同上")
+    inp(f"u_{y}", f"加速器顆數合計 20{y}（情境 A（原始顆數））", "百萬顆", None, round(tot, 6), None, "Derived", f"{MEMSRC} UNITS 各列 20{y} 合計（NVIDIA、AMD、TPU、Trainium、其他 ASIC）", "與 HBM 需求、台積電 CoWoS、Advantest 同一套顆數" if i == 0 else "同上")
 for s in SC:
     for n, y in enumerate((28, 29)):
         inp(f"um{y}_{s}", f"情境 {s}：20{y} 顆數 ÷ 基準", "x", None, MEM.SCEN_UNITS[s][n], None, "Derived", f"{MEMSRC} SCEN_UNITS['{s}'][{n}]", "A＝1.0；B、C 為 Assumed（markets/memory）；CY2030 沿用 2029 係數" if (s == "A" and y == 28) else "同上")
-inp("g_u29", "2029 加速器顆數年增（情境 A 基準；B、C 再乘 um29）", "%", 0.0, MEM.G_U29, 0.25, "Derived", "Siliconomics SIF_UnitsGrowth29：平台別 2029 成長率（M5 節）加權，與台積電、網通模型同一路徑（v0.2 起；原 Assumed 10%）；低／高沿用原區間供敏感度", "三情境同一基準，情境差異只來自 um29（不自訂行業路徑）")
-inp("g_u30", "2030 加速器顆數年增（情境 A 基準；B、C 再乘 um29）", "%", -0.05, 0.05, 0.15, "Assumed", "上游只到 2029；收斂到低個位數成長", "同上")
+inp("g_u29", "2029 加速器顆數年增（情境 A（原始顆數）；B、C 再乘 um29）", "%", 0.0, MEM.G_U29, 0.25, "Derived", "Siliconomics SIF_UnitsGrowth29：平台別 2029 成長率（M5 節）加權，與台積電、網通模型同一路徑（v0.2 起；原 Assumed 10%）；低／高沿用原區間供敏感度", "三情境同一基準，情境差異只來自 um29（不自訂行業路徑）")
+inp("g_u30", "2030 加速器顆數年增（情境 A（原始顆數）；B、C 再乘 um29）", "%", -0.05, 0.05, 0.15, "Assumed", "上游只到 2029；收斂到低個位數成長", "同上")
 for y, (lo, b, hi) in zip((26, 27, 28, 29, 30), ((24, 30, 36), (27, 34, 41), (32, 40, 48), (37, 46, 55), (42, 52, 62))):
     inp(f"tb_{y}", f"每顆加速器帶動的企業級 SSD 容量 20{y}", "TB／顆", lo, b, hi, "Assumed",
         "AI 推論的 KV 快取卸載、RAG 向量庫、檢查點與資料湖（伺服器內建＋外接儲存）。2026 值使 2026 企業級 SSD 約占位元需求四成（TrendForce 2026-07：伺服器約 40%；Counterpoint 2Q26：企業級 SSD 占出貨位元 48%）" if y == 26 else "每年約 +13–18%：單顆加速器記憶體與脈絡長度增加（Assumed）",

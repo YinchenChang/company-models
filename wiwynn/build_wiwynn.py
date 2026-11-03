@@ -102,7 +102,7 @@ URLNAME = {KGI: "凱基 2026-07-28 報告", UAN2Q: "優分析 2026-08-07（2Q26 
            UDN0921: "經濟日報 2026-09-21（高盛）", CNY0615: "鉅亨 2026-06-15（FactSet）", SWS: "Simply Wall St", INV: "Investing.com",
            AKT: "aktien.guide", WEARN: "聚財網（wearn）日線", SA: "stockanalysis.com", CMC: "companiesmarketcap", GI: "Goodinfo 經營績效", YEPS: "Yahoo 股市 EPS 頁"}
 
-sec("A. AI 部署規模（讀 markets/network、markets/chip_bridge、tsmc 成品；情境 A 基準，B／C 依顆數係數縮放）")
+sec("A. AI 部署規模（讀 markets/network、markets/chip_bridge、tsmc 成品；情境 A（原始顆數），B／C 依顆數係數縮放）")
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"itc_{y}", f"AI IT 資本支出 20{y}", "US$B", None, ITC[0][j], None, "Derived", ITC[1],
         "加速器顆數 × 每顆 IT capex（含 ASIC）；除以每 GW IT 資本支出得到部署 GW（與廣達、鴻海模型同口徑）" if y == 26 else "同上")
@@ -112,8 +112,8 @@ inp("vr26", "2026 年部署中 Rubin 世代占比（混合用）", "%", QU["vr26
 inp("racks_gb", "每 GW 機架數（GB300）", "架", None, BR["racks"][0], None, "Derived", BR["racks"][2], "Tokenomics IF_RacksPerGW（經橋接表）")
 inp("racks_vr", "每 GW 機架數（VR200）", "架", None, BR["racks"][1], None, "Derived", BR["racks"][2], "同上")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um28_{s}'][1]}", "A＝順利（基準）；B＝平平（AI 資本支出消化）；C＝不如預期（明顯下修）；與台積電、廣達、鴻海模型相同")
-    inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um29_{s}'][1]}", "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um28_{s}'][1]}", SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", f"{rel(TSMC_F)}｜In!E{TS[f'um29_{s}'][1]}", SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", QU["fx"][0], QU["fx"][1], QU["fx"][2], "Derived", QU["fx"][3], "與廣達、鴻海模型相同")
 for y in (26, 27, 28, 29):
     inp(f"ua_{y}", f"緯穎客戶 ASIC 顆數 20{y}（AWS Trainium＋其他 ASIC）", "百萬顆", None, round(UASIC[y], 6), None, "Derived", U_SRC if y == 26 else "同上",
@@ -579,7 +579,7 @@ V["B48"] = ("DCF：股東現金流＝除權還原 EPS ×（1 − g／ROE），r�
             "Comparable：廣達、緯創、鴻海、Supermicro、Celestica 前瞻 P/E 中位數（不含 A 股；英業達的 stockanalysis 價格停在 08-07，未列入）；"
             "Supermicro 倍數低（會計與毛利率疑慮）、Celestica 高（ASIC 與網通），中位數為廣達。"
             "偏誤：FY2030 起只有收斂法，淨利率高於十年平均時 DCF 偏高估；客戶集中（前三大約 96%）未在折現率反映。"
-            "情境對應：A＝順利（顆數基準）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6）")
+            "情境對應：A＝順利（原始顆數）、B＝平平（顆數 ×0.8／0.85）、C＝不如預期（顆數 ×0.6）")
 for r_ in (24, 35, 39):
     V[f"B{r_}"].fill = KEY
 V.column_dimensions["A"].width = 58

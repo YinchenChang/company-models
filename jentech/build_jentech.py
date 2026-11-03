@@ -2,7 +2,7 @@
 # 用法：python3 jentech/build_jentech.py raw.xlsx ；再以 LibreOffice headless 重算
 # 會計年度＝日曆年，FY(t)＝CY(t)，不平移。金額：十億新台幣（NT$B）；每顆均熱片金額與液冷市場以美元計、以匯率 fx 換算；EPS：新台幣。
 # 口徑：歸屬母公司淨利（IFRS）。樣板：avc/（奇鋐：散熱同次產業）；Val 第 0 節結構同 gce/（新版 v0.1 寫法：目標價在 Val 最前面）。
-# 均熱片：加速器顆數（markets/network Units 頁，情境 A 基準）× tsmc 同字母情境顆數係數 × 每顆均熱片金額（Assumed）× 健策份額（FY2026 校準）。
+# 均熱片：加速器顆數（markets/network Units 頁，情境 A（原始顆數））× tsmc 同字母情境顆數係數 × 每顆均熱片金額（Assumed）× 健策份額（FY2026 校準）。
 # 液冷冷板元件：讀 avc/dist PL 頁同字母情境的「AI 液冷市場（奇鋐可做部分）」× 健策份額（Assumed）；奇鋐份額同頁讀入，只作份額合計檢查。
 # 情境與行業一致（Andy 2026-10-25 13:13）：A／B／C 讀 tsmc 同字母顆數係數（＝markets/memory SCEN_UNITS）與 avc 同字母液冷市場；
 # 可拆式上蓋（TR lid）滲透屬技術替代，與份額、液冷份額同方向：A 取高值、B 基準、C 取低值。
@@ -35,7 +35,7 @@ def only(pattern):
     return fs[0]
 NET_F = only("markets/network/dist/*.xlsx"); TSMC_F = only("tsmc/dist/*.xlsx"); AVC_F = only("avc/dist/*.xlsx")
 rel = lambda f: os.path.relpath(f, ROOT)
-# 加速器顆數（百萬顆；情境 A 基準）
+# 加速器顆數（百萬顆；情境 A（原始顆數））
 UNITS = {}
 GRP = (("bw", "NVIDIA Blackwell（B200／B300）"), ("rb", "NVIDIA Rubin"), ("ru", "NVIDIA Rubin Ultra"), ("hp", "NVIDIA Hopper（H200 等）"),
        ("amd", "AMD Instinct"), ("tpu", "Google TPU"), ("trn", "AWS Trainium"), ("oth", "其他 ASIC（MTIA、Maia、Ascend 等）"))
@@ -91,14 +91,14 @@ GI = "https://goodinfo.tw/tw/StockBzPerformance.asp?STOCK_ID=3653"
 WEARN = "https://stock.wearn.com/financial.asp?kind=3653"
 SD = "https://statementdog.com/analysis/3653"
 
-sec("A. AI 加速器顆數（讀 markets/network Units 頁，情境 A 基準；B／C 依 tsmc 同字母顆數係數縮放）")
+sec("A. AI 加速器顆數（讀 markets/network Units 頁，情境 A（原始顆數）；B／C 依 tsmc 同字母顆數係數縮放）")
 for k, lab in GRP:
     for j, y in enumerate((26, 27, 28, 29)):
         inp(f"u_{k}{y}", f"{lab} 顆數 20{y}（網通模型）", "百萬顆", None, UNITS[k][0][j], None, "Derived", UNITS[k][1],
             "唯讀 markets/network（顆數取自 markets/memory；2029 為成長率）" if j == 0 else "同上")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝順利（基準）；B＝平平；C＝不如預期；與台積電、奇鋐模型相同（＝markets/memory SCEN_UNITS，建置時核對）")
-    inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", *SIL.vals("fx_twd"), "Derived", "與奇鋐、台達電、金像電模型相同（avc/dist In 頁 fx＝32.0）", "鉅亨 2026-05-22 頁面 32.508（只作參考）")
 
 sec("B. 每顆加速器均熱片／上蓋／加強環金額（美元；可拆式上蓋滲透為技術替代：A 取高值＝快、C 取低值＝慢）")

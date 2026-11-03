@@ -104,8 +104,8 @@ for k in XP:
             TS[f"u_{k}_{y}"][1], "markets/memory/market.py UNITS（值相同，建置時檢查）" if i == 0 else "同上")
     inp(f"g29_{k}", f"{PNAME[k]} CY2029 顆數成長", "%", None, TS[f"g29_{k}"][0], None, "Assumed", TS[f"g29_{k}"][1], "markets/memory 無 2029；沿用台積電模型")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：CY2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、NVIDIA、Broadcom 模型相同）")
-    inp(f"um29_{s}", f"情境 {s}：CY2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：CY2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：CY2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 for k in XP:
     for i, y in enumerate((26, 27, 28)):
         inp(f"gb_{k}_{y}", f"{PNAME[k]} 每顆 HBM CY20{y}", "GB", None, GBT[k][i], None, "Derived／Assumed", "markets/memory/market.py UNITS", "CY2029 沿用 CY2028" if i == 0 else "同上")
@@ -138,7 +138,7 @@ for s in SC:
     for y in (26, 27, 28, 29):
         inp(f"hbm_{s}_{y}", f"HBM 混合單價 CY20{y}（{s}）", "US$/GB", None, AV[f"hbm_{s}_{y}"][0][1], None, "Derived", AV[f"hbm_{s}_{y}"][1], "markets/memory：2026 BofA $14.6/GB；2027 +80%" if (s == "A" and y == 26) else "同上")
 
-sec("D. 光互連：AI 後端可插拔光模組（讀 markets/network 成品；情境 A 基準，B／C 依顆數係數縮放）× 每模組晶片組金額 × Marvell 份額")
+sec("D. 光互連：AI 後端可插拔光模組（讀 markets/network 成品；情境 A（原始顆數），B／C 依顆數係數縮放）× 每模組晶片組金額 × Marvell 份額")
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"plug_{y}", f"AI 後端可插拔光模組市場 CY20{y}", "US$B", None, NET["  其中可插拔"][0][j], None, "Derived", NET["  其中可插拔"][1], "markets/network：scale-out 光模組扣 CPO；2026 較 LightCounting 26（含 scale-up）高約 16%" if y == 26 else "同上")
 inp("rep_opt26", "AI 叢集光學市場 2026（LightCounting；對照）", "US$B", None, NET["rep_opt26"][0], None, "Interested-party", NET["rep_opt26"][1], "—")
@@ -411,7 +411,7 @@ def engine(ws, r0, title, **over):
 PL = wb.create_sheet("PL")
 PL["A1"] = "PL — Marvell 損益（US$B；non-GAAP）。FY2026A 實績、FY2027 錨點（Q1、Q2 實績＋Q3 指引＋Q4 由全年展望推得），FY2028 起為由下而上。FY(t)≈CY(t−1)。三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2027 三情境相同；FY2028（≈CY2027）只差在網通 CPO 情境（A 替代快、C 慢）；顆數係數從 CY2028＝FY2029 開始；HBM 價格 2027 三情境相同"
 PB = {}; r0 = 70
-SCN_T = {"A": "情境 A：基準（顆數係數 1.0）；網通 CPO 情境 A（替代快）", "B": "情境 B：CY2028（FY2029）顆數 ×0.8、CY2029 ×0.85；網通 CPO 情境 B", "C": "情境 C：CY2028–29（FY2029–30）顆數 ×0.6；網通 CPO 情境 C（替代慢）"}
+SCN_T = {"A": "情境 A：原始顆數（顆數係數 1.0；v0.12 起本庫基準＝情境 B）；網通 CPO 情境 A（替代快）", "B": "情境 B：CY2028（FY2029）顆數 ×0.8、CY2029 ×0.85；網通 CPO 情境 B", "C": "情境 C：CY2028–29（FY2029–30）顆數 ×0.6；網通 CPO 情境 C（替代慢）"}
 for s in SC:
     PB[s] = engine(PL, r0, SCN_T[s], scn=s)
     r0 = PB[s]["end"] + 2

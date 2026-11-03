@@ -95,7 +95,7 @@ SAR = "https://stockanalysis.com/quote/tpex/3324/financials/ratios/"
 GI = "https://goodinfo.tw/tw/StockBzPerformance.asp?STOCK_ID=3324"
 YH = "https://tw.stock.yahoo.com/quote/3324.TWO"
 
-sec("A. AI 部署規模（讀 markets/network、markets/chip_bridge、tsmc 成品；情境 A 基準，B／C 依同字母顆數係數縮放；與奇鋐模型相同上游）")
+sec("A. AI 部署規模（讀 markets/network、markets/chip_bridge、tsmc 成品；情境 A（原始顆數），B／C 依同字母顆數係數縮放；與奇鋐模型相同上游）")
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"itc_{y}", f"AI IT 資本支出 20{y}", "US$B", None, ITC[0][j], None, "Derived", ITC[1],
         "加速器顆數 × 每顆 IT capex（含 ASIC）；本模型以此除以每 GW IT 資本支出得到部署 GW" if y == 26 else "同上")
@@ -107,8 +107,8 @@ inp("racks_vr", "每 GW 機架數（VR200）", "架", None, BR["racks"][1], None
 inp("cool_gb", "GB300 每架機架內液冷（運算匣＋交換匣，橋接表）", "US$K", None, BR["cool"][0], None, "Interested-party", BR["cool"][2], "Morgan Stanley（經 Tom's Hardware 2025-11-05）：GB300 NVL72 冷卻 BOM；不含 CDU、分歧管")
 inp("cool_vr", "VR200 每架機架內液冷（橋接表）", "US$K", None, BR["cool"][1], None, "Interested-party", BR["cool"][2], "同上：VR NVL144")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝順利（基準）；B＝平平；C＝不如預期；與台積電、奇鋐模型相同（＝markets/memory SCEN_UNITS，建置時核對）")
-    inp(f"um29_{s}", f"情境 {s}：2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 inp("fx", "匯率（新台幣 ÷ 美元）", "NT$/US$", AV["fx"][0], AV["fx"][1], AV["fx"][2], "Derived", AV["fx"][3], "與奇鋐、台達電模型相同")
 
 sec("B. 液冷內容、滲透率（讀奇鋐模型 In 頁：兩家用同一液冷市場口徑）與雙鴻份額相對值")

@@ -79,7 +79,7 @@ VCP = "https://www.vcpscanner.com/valuation/lite/estimates"
 IVS = "https://www.investsmart.com.au/security/nasdaq/lite/lumentum-holdings/share-price"
 AJ = "https://pdf.dfcfw.com/pdf/H3_AP202610121830372080_1.pdf"
 
-sec("A. AI 光學市場與 TPU 顆數（讀 markets/network 成品；日曆年；情境 A 基準，B／C 依顆數係數縮放）")
+sec("A. AI 光學市場與 TPU 顆數（讀 markets/network 成品；日曆年；情境 A（原始顆數），B／C 依顆數係數縮放）")
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"mpl_{y}", f"AI 可插拔光模組市場 CY20{y}", "US$B", None, NETR["其中可插拔"][0][j], None, "Derived", NETR["其中可插拔"][1],
         "加速器顆數 × 每顆光學內容 − CPO（網通模型；日曆年）" if y == 26 else "同上")
@@ -90,8 +90,8 @@ for j, y in enumerate((26, 27, 28, 29)):
 for j, y in enumerate((26, 27, 28, 29)):
     inp(f"itc_{y}", f"AI IT 資本支出 CY20{y}", "US$B", None, NETR["AI IT 資本支出（加速器 × 每顆 IT capex）"][0][j], None, "Derived", NETR["AI IT 資本支出（加速器 × 每顆 IT capex）"][1], "Recon 用：Lumentum AI 營收 ÷ AI IT 資本支出" if y == 26 else "同上")
 for s in SC:
-    inp(f"um28_{s}", f"情境 {s}：CY2028 顆數 ÷ 基準", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], "A＝基準；B＝AI 資本支出消化；C＝明顯下修（與台積電、NVIDIA、中際旭創模型相同）")
-    inp(f"um29_{s}", f"情境 {s}：CY2029 顆數 ÷ 基準", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], "同上")
+    inp(f"um28_{s}", f"情境 {s}（個股自訂）：CY2028 顆數 ÷ 原始顆數", "x", None, TS[f"um28_{s}"][0], None, "Assumed", TS[f"um28_{s}"][1], SIL.scen_note(s, 28, TS[f"um28_{s}"][0]))
+    inp(f"um29_{s}", f"情境 {s}（個股自訂）：CY2029 顆數 ÷ 原始顆數", "x", None, TS[f"um29_{s}"][0], None, "Assumed", TS[f"um29_{s}"][1], SIL.scen_note(s, 29, TS[f"um29_{s}"][0]))
 
 sec("B. 雷射晶片（EML／CW）：高速光模組數量 × 每模組雷射數 × 雷射單價 × Lumentum 份額（上游元件口徑，不可與光模組廠份額相加）")
 for y, lo, b, hi in ((26, 420, 500, 600), (27, 440, 520, 640), (28, 450, 540, 680), (29, 450, 560, 720)):
@@ -354,7 +354,7 @@ def engine(ws, r0, title, **over):
 PL = wb.create_sheet("PL")
 PL["A1"] = "PL — Lumentum 損益（US$B；non-GAAP）。FY2025A、FY2026A 實績，FY2027 起為模型（會計年度 6 月底結束；FY2027＝2026-07～2027-06）。三情境各一個完整推導區塊（本頁下方），頂端為摘要。FY2027 三情境只差在網通 CPO 情境（A 替代快、C 慢），顆數係數從 CY2028 開始"
 PB = {}; r0 = 60
-SCN_T = {"A": "情境 A：基準（顆數係數 1.0）；網通 CPO 情境 A（替代快）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85；網通 CPO 情境 B", "C": "情境 C：CY2028–29 顆數 ×0.6；網通 CPO 情境 C（替代慢）"}
+SCN_T = {"A": "情境 A：原始顆數（顆數係數 1.0；v0.12 起本庫基準＝情境 B）；網通 CPO 情境 A（替代快）", "B": "情境 B：CY2028 顆數 ×0.8、CY2029 ×0.85；網通 CPO 情境 B", "C": "情境 C：CY2028–29 顆數 ×0.6；網通 CPO 情境 C（替代慢）"}
 for s in SC:
     PB[s] = engine(PL, r0, SCN_T[s], scn=s)
     r0 = PB[s]["end"] + 2
