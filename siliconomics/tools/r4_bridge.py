@@ -64,23 +64,35 @@ def inp(key, label, unit, lo, base, hi, tag, src):
     r += 1
 
 
-# A. Siliconomics 平台別 AI IT 資本支出（$B；情境 A＝基準）
+def nvr(wb, name):
+    """讀具名範圍（多格）為串列。"""
+    d = wb.defined_names[name]
+    sh, ref = list(d.destinations)[0]
+    return [c.value for row in wb[sh][ref.replace("$", "")] for c in row]
+
+
+# v0.12 起（r3）：本庫只給基準＝原情境 B（決策 S33、S35）；原始顆數 × 基準係數（SIF_UnitsCoef_B：2028 0.8、2029 0.85）
+_cf = nvr(S, "SIF_UnitsCoef_B")           # 2025–2029
+COEF = {y: (_cf[i] if _cf[i] not in (None, "") else 1) for i, y in enumerate(YRS)}
+_gw = nvr(S, "SIF_DeployGW_Base") if "SIF_DeployGW_Base" in S.defined_names else nvr(S, "SIF_DeployGW_B")   # 2026–2029
+
+# A. Siliconomics 平台別 AI IT 資本支出（$B；本庫基準＝原始顆數 × 基準係數）
 DEP = S["Deploy"]
 UN = S["Units"]
 it = {k: nv(S, n) for k, n in [("GB", "it_GB"), ("VR", "it_VR"), ("RU", "it_RU"), ("HP", "it_HP"), ("AMD8", "it_AMD8"),
                                 ("AMDR", "it_AMDR"), ("TPU", "it_TPU"), ("TRN", "it_TRN"), ("ASIC", "it_ASIC")]}
-IN.cell(r, 1, "A. Siliconomics 平台別 AI IT 資本支出（百萬顆 × 每顆 IT capex 千美元 ＝ $B；情境 A，未乘情境係數）").font = BOLD; r += 1
+IN.cell(r, 1, "A. Siliconomics 平台別 AI IT 資本支出（百萬顆 × 基準係數 × 每顆 IT capex 千美元 ＝ $B；本庫基準＝原情境 B，r3 起）").font = BOLD; r += 1
 plat = [("bw", 4, lambda y: it["GB"]), ("rb", 5, lambda y: it["VR"]), ("ru", 6, lambda y: it["RU"]), ("hp", 7, lambda y: it["HP"]),
         ("amd", 8, lambda y: it["AMD8"] if y == 2026 else it["AMDR"]), ("tpu", 9, lambda y: it["TPU"]),
         ("trn", 10, lambda y: it["TRN"]), ("oth", 11, lambda y: it["ASIC"])]
 for k, row, fit in plat:
     for y in (2026, 2027, 2028, 2029):
         u = UN.cell(row, YC[y] - 2).value  # Units 頁 C..F＝2026..2029
-        inp(f"cap_{k}_{y}", f"{UN.cell(row, 1).value} AI IT capex {y}", "$B", None, u * fit(y), None, "Derived",
-            f"{sil_f} Units!{CL(YC[y]-2)}{row}（{u} 百萬顆）× 每顆 IT capex {fit(y):.2f} 千美元（In 頁 M9）")
+        inp(f"cap_{k}_{y}", f"{UN.cell(row, 1).value} AI IT capex {y}（基準）", "$B", None, u * COEF[y] * fit(y), None, "Derived",
+            f"{sil_f} Units!{CL(YC[y]-2)}{row}（{u} 百萬顆）× 基準係數 {COEF[y]}（SIF_UnitsCoef_B）× 每顆 IT capex {fit(y):.2f} 千美元（In 頁 M9）")
 for y in (2026, 2027, 2028, 2029):
-    inp(f"dep_{y}", f"Siliconomics 部署 GW（成本等值，情境 A）{y}", "GW", None, DEP.cell(9, YC[y] - 2).value, None, "Derived",
-        f"{sil_f} Deploy!{CL(YC[y]-2)}9＝AI IT capex ÷ 每 GW IT capex")
+    inp(f"dep_{y}", f"Siliconomics 部署 GW（成本等值，基準）{y}", "GW", None, _gw[y - 2026], None, "Derived",
+        f"{sil_f} Interface SIF_DeployGW_Base（＝原情境 B）＝AI IT capex × 基準係數 ÷ 每 GW IT capex")
     inp(f"pgw_{y}", f"Siliconomics 每 GW IT capex {y}（成本等值的分母）", "$B/GW", None, DEP.cell(8, YC[y] - 2).value, None, "Derived",
         f"{sil_f} Deploy!{CL(YC[y]-2)}8（2026 依 vr26 混合 GB300／VR200；2027 起 VR200）")
 
@@ -127,8 +139,24 @@ inp("nvc_vr_jh", "黃仁勳說法：NVIDIA 每 GW 內容（Vera Rubin）", "$B/G
 inp("gerst_27", "Gerstner 說法：2027 年新增 GW", "GW", None, 43, None, "Interested-party",
     "TIKR 轉述 Bg2 Pod 2026-10-15；同集 Tang：已宣布晶片約 50 GW、土地電力廠房 35–40 GW")
 
+# G. NVIDIA 資料中心營收對帳點（算力收支 11-02 更正訊息第 3 節請本專案檢查 2026 年 1.16；只作診斷，不入狀態）
+import glob as _glob
+_cb = sorted(_glob.glob(os.path.join(ROOT, "markets", "chip_bridge", "dist", "*.xlsx")))[-1]
+_CB = openpyxl.load_workbook(_cb, data_only=True)["Bridge"]
+def _cbv(row, col): return _CB.cell(row, col).value
+IN.cell(r, 1, "G. NVIDIA 資料中心營收對帳點（出貨年 NVIDIA 成本等值 GW × 每 GW NVIDIA 內容 vs 公司營收；只作診斷）").font = BOLD; r += 1
+_cbn = os.path.basename(_cb)
+inp("nvc_gb", "每 IT GW NVIDIA 內容（GB300）", "$B/GW", None, round(_cbv(44, 2) * _cbv(7, 2), 3), None, "Derived",
+    f"markets/chip_bridge/dist/{_cbn} Bridge!B44（NVIDIA 合計 ÷ IT capex）× B7（IT 設備 $B/GW）")
+inp("nvc_vr26", "每 IT GW NVIDIA 內容（VR200，2026 HBM 價）", "$B/GW", None, round(_cbv(44, 3) * _cbv(7, 3), 3), None, "Derived", f"同上 C44 × C7")
+inp("nvc_vr27", "每 IT GW NVIDIA 內容（VR200，2027 HBM 價、NVIDIA 吸收）", "$B/GW", round(_cbv(44, 4) * _cbv(7, 4), 3) * 0.9, round(_cbv(44, 4) * _cbv(7, 4), 3),
+    round(_cbv(44, 5) * _cbv(7, 5), 3), "Derived", "同上 D44 × D7；高值＝E 欄（HBM 漲價轉嫁）；低值 −10%（Assumed：ASP 折讓）")
+inp("vr26_mix", "2026 部署中 Rubin 世代占比（混合每 GW 內容用）", "%", None, nv(S, "vr26"), None, "Interested-party", f"{sil_f} In vr26（TrendForce 2026 組合）")
+inp("nv_dc_27", "NVIDIA 資料中心營收 FY2028（約 CY2027）", "$B", 623, 633.7, 645, "Derived",
+    "NVIDIA FY27 Q2 法說（2026-08-26）FY2028 營收約 +70%（Interested-party）× 資料中心占比 92.5% → 623–645（11-02 證據送件）")
+
 # F. Wattonomics 對照
-IN.cell(r, 1, "F. Wattonomics 對照（主路徑、需求情景 A、D0）").font = BOLD; r += 1
+IN.cell(r, 1, "F. Wattonomics 對照（主路徑基準；舊版為需求情景 A、D0）").font = BOLD; r += 1
 CMP = W["Compare"]
 DPL = W["Deploy"]
 
@@ -170,7 +198,7 @@ for k, ref in names.items():
 # ---------------- Bridge 頁 ----------------
 B = wb.create_sheet("Bridge")
 B["A1"] = ("Bridge — Siliconomics 部署 GW（成本等值、出貨年）→ Siliconomics 推得的淨新增上線 IT GW，與 Wattonomics 主路徑並列。"
-           "殘差＝Wattonomics 側尚未解釋的部分（覆蓋率；算力收支補量化）。情境 A；B、C 的比值與 A 相同，因 Wattonomics 2028–29 目前讀 SIF_UnitsCoef")
+           "殘差＝Wattonomics 側尚未解釋的部分（覆蓋率；算力收支補量化）。r3 起兩邊都只用基準（本庫＝原情境 B；Wattonomics＝主路徑基準）")
 B["A1"].font = BOLD
 for j, h in enumerate(["列", "項目", "說明"] + [str(y) for y in YRS], 1):
     c = B.cell(3, j, h); c.font = BOLD; c.fill = HDR
@@ -215,13 +243,21 @@ brow("b7m", "　（揭露）Siliconomics 中國 H200 成本等值 GW", "hp capex
      lambda y: None if y == 2025 else f"=cap_hp_{y}/pgw_{y}")
 brow("b8", "Siliconomics 推得 新增上線 IT GW（口徑同 Wattonomics 主路徑：淨或毛額）", "b3 + ② + ③ + ④ + ⑤",
      lambda y: None if y == 2025 else f"={C(y)}{R['b3']}+{C(y)}{R['b4']}+{C(y)}{R['b5']}+{C(y)}{R['b6']}+{C(y)}{R['b7']}", True)
-brow("b9", "Wattonomics 年新增 IT GW（主路徑，A、D0）", "", lambda y: f"=wt_new_{y}", True)
+brow("b9", "Wattonomics 年新增 IT GW（主路徑基準）", "", lambda y: f"=wt_new_{y}", True)
 brow("b9s", "　Wattonomics SiteOnly", "只有站點證據", lambda y: f"=wt_site_{y}")
 brow("b10", "⑥ 殘差（Wattonomics 側未解釋；歸覆蓋率）", "b8 − b9；由算力收支以 Wattonomics lag 與 C0 園區列量化（11-07）",
      lambda y: None if y == 2025 else f"={C(y)}{R['b8']}-{C(y)}{R['b9']}", True)
 brow("b11", "比值：Wattonomics ÷ Siliconomics 部署 GW（原始）", "Compare 頁同值", lambda y: None if y == 2025 else f"={C(y)}{R['b9']}/{C(y)}{R['b1']}")
 brow("b12", "比值：Wattonomics ÷ Siliconomics 推得上線 GW（橋接後）", "", lambda y: None if y == 2025 else f"={C(y)}{R['b9']}/{C(y)}{R['b8']}", True)
 brow("b13", "殘差占 Siliconomics 部署 GW", "", lambda y: None if y == 2025 else f"={C(y)}{R['b10']}/{C(y)}{R['b1']}")
+br += 1
+B.cell(br, 1, "NVIDIA 資料中心營收對帳點（只作診斷；2026＝FY2027 錨點、2027＝FY2028 指引推得）").font = BOLD; br += 1
+brow("n1", "NVIDIA 成本等值 GW（出貨年；基準）", "b1 − 非 NVIDIA 成本等值 GW（b2a）", lambda y: None if y in (2025, 2028, 2029) else f"={C(y)}{R['b1']}-{C(y)}{R['b2a']}")
+brow("n2", "每 IT GW NVIDIA 內容", "2026＝GB300 與 VR200 依 vr26 混合；2027＝VR200（2027 HBM 價）；chip_bridge", lambda y: {2026: "=nvc_gb*(1-vr26_mix)+nvc_vr26*vr26_mix", 2027: "=nvc_vr27"}.get(y))
+brow("n3", "隱含 NVIDIA 資料中心營收（$B）", "n1 × n2", lambda y: None if y not in (2026, 2027) else f"={C(y)}{R['n1']}*{C(y)}{R['n2']}")
+brow("n4", "NVIDIA 資料中心營收（公司；$B）", "2026 錨點 nv_dc_26；2027 指引推得 nv_dc_27", lambda y: {2026: "=nv_dc_26", 2027: "=nv_dc_27"}.get(y))
+brow("n5", "比值（隱含 ÷ 公司）", "1 附近＝顆數與每 GW 內容一致；> 1 本庫 NVIDIA 出貨 GW 偏多或內容偏高", lambda y: None if y not in (2026, 2027) else f"={C(y)}{R['n3']}/{C(y)}{R['n4']}", True)
+brow("n6", "所需每 GW 內容（公司營收 ÷ n1）", "與 n2 比較", lambda y: None if y not in (2026, 2027) else f"={C(y)}{R['n4']}/{C(y)}{R['n1']}")
 br += 1
 B.cell(br, 1, "敏感度（2026、2027 推得上線 GW；一次動一個輸入，其餘取基準）").font = BOLD; br += 1
 for j, h in enumerate(["列", "情況", "說明", "2026 推得上線", "2027 推得上線", "2026 殘差", "2027 殘差"], 1):
