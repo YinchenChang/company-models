@@ -460,3 +460,24 @@ def test_v018_committed_unchanged_by_q3(eng):
     com = eng.get_name("FND_Committed")[1]
     assert abs(com - eng.get_name(s["fund_s1a_pref_2026_9m"])) <= eng.get_name(i["s1f_cmt_tol"])
     assert abs(eng.get_name("FND_CommittedS1aGap") - (com - eng.get_name(s["fund_s1a_pref_2026_9m"]))) < 1e-9
+
+
+def test_v018_charity_not_in_per_person_base(eng):
+    """v0.1.8 核對後：S-1/A 下半年非現金捐贈（1.960 × 2）不進 2026 每人股權報酬基準（不沿用到 2027–2030）；2026 全成本另計（判斷題 s1a_chr_q4_switch：1＝Q4 也計，0＝只計 Q3）。"""
+    s, i = _ids()
+    g = lambda k: eng.get_name(s[k])  # noqa: E731
+    chr_ = g("charity_s1a_2026q3")
+    sbc, chc, proxy = eng.get_name("COST_SBC"), eng.get_name("COST_S1aCharityInCost"), eng.get_name("COST_S1fSBCProxy2026")
+    assert abs(chc[1] - 2 * chr_) < 1e-9 and all(v == 0 for k, v in enumerate(chc) if k != 1)
+    assert abs((sbc[1] - chc[1]) - (proxy - 2 * chr_)) < 1e-9          # 每人基準 × 人數＝代理 − 捐贈
+    assert abs(sbc[1] - proxy) < 1e-9                                   # 基準（Q4 亦計）2026 當年仍含捐贈
+    from engine import resolve_key
+    k = i["s1a_chr_q4_switch"]
+    orig = eng.get(*resolve_key(eng.names, k))
+    later = sbc[2:]
+    try:
+        eng.set_key(k, 0)
+        s2 = eng.get_name("COST_SBC")
+        assert abs(s2[1] - (proxy - chr_)) < 1e-9 and all(abs(a - b) < 1e-12 for a, b in zip(s2[2:], later))
+    finally:
+        eng.set_key(k, orig)

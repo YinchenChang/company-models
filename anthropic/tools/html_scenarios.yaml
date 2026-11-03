@@ -67,6 +67,8 @@ groups:
   s1u_slow37: {label: "未歸屬餘額付款期慢讀法（2028–2037 平均；同時關 R5c）", set: {INP_226: 0, INP_198: hi, INP_199: 2037}}
   lease_lo: {label: "R5c 未起租與 9-30 後新簽起租年取低欄（2026）", set: {INP_227: lo}}
   lease_hi: {label: "R5c 未起租與 9-30 後新簽起租年取高欄（2028）", set: {INP_227: hi}}
+  resid_on: {label: "R5c 並列：未歸屬餘額時程＝S-1/A 結構 − 逐家合約時程（殘差法）", set: {INP_233: 1}}
+  chr_once: {label: "R5a 判斷題：Q3 非現金捐贈只計 Q3 一次（Q4 不再計）", set: {INP_232: 0}}
   mc_lo: {label: "最低現金月數取低欄（3 個月）", set: {INP_165: lo}}
   mc_hi: {label: "最低現金月數取高欄（12 個月）", set: {INP_165: hi}}
   tk19_luna_back: {label: "TK 快照回到 v19.0：只有 IF_TokGW_Luna", set: {TK_IF_TokGW_Luna: prev19}}
@@ -184,3 +186,7 @@ scenarios:
   lease_lo: [lease_lo]
   lease_hi: [lease_hi]
   r4_mc_hi: [r4_on, mc_hi]
+  r4_mc_lo: [r4_on, mc_lo]
+  resid_on: [resid_on]
+  chr_once: [chr_once]
+  r4_resid: [r4_on, resid_on]

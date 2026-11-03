@@ -8680,7 +8680,7 @@ rows:
   lo: 150
   hi: 175
   unit: "$B"
-  period: "2028–2031"
+  period: "未揭露（Google 額外 TPU 2028–2031；AMD 2027 起）"
   source: "Anthropic, PBC Form S-1/A（Amendment No. 1；SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-068676）"
   url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm
   doc_date: '2026-11-02'

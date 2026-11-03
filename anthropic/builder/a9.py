@@ -45,6 +45,16 @@ def build(ctx):
     K.add("s1a_sbcq", "R5a 股權報酬代理每季：Q3 實際（股權報酬＋非現金捐贈）", "$B", only26("=«s1a_sbc»+«s1a_chr»"), "s1a_q3_switch＝1 時 × 下半年季數進第二十五節 s1s_fy")
     K.add("s1a_sbcqo", "R5a 對照：v0.1.7.1 每季代理（Q2 調整後營業利益率 × Q2 營收 − Q2 營業損益）", "$B", only26("=«s1s_q2»"), "")
 
+    # ── 獨立核對後（2026-11-03）：下半年非現金捐贈不進每人股權報酬基準；2026 全成本另計（判斷題）
+    sws = I("s1f_sbc_proxy_switch")
+    hq = f"{I('quarters_per_year')}*{I('h2_months')}/{months}"
+    sq3a, chq = I("s1a_q3_switch"), S("charity_s1a_2026q3")
+    K.add("s1s_chx", "v0.1.8 核對後：2026 下半年非現金捐贈（S-1/A Q3 1.960 × 下半年季數；一次性）——自每人股權報酬基準扣除，不沿用到 2027 起", "$B",
+          lambda i, c: f"={sq3a}*{chq}*{hq}" if i == 1 else f"={zero}", "SRC_ANT_492；s1a_q3_switch＝0 時為 0")
+    K.add("s1s_chc", "v0.1.8 核對後：2026 全成本另計的非現金捐贈（判斷題：Q4＝Q3 也計一次〔s1a_chr_q4_switch＝1，保守〕；0＝只計 Q3 一次）", "$B",
+          lambda i, c: (f"={sws}*{sq3a}*{chq}*({one}+{I('s1a_chr_q4_switch')}*({hq}-{one}))" if i == 1 else f"={zero}"),
+          "加在股權報酬（單列）2026；2027 起 0", name="COST_S1aCharityInCost")
+
     # ── R4 SpaceXAI S-1 路徑
     fF, cap = S("cmt_s1a_spacex_monthly"), S("cmt_s1f_spacex")
     ss, se = I("spacex_start"), I("spacex_end")
@@ -99,6 +109,14 @@ def build(ctx):
     K.add("s1a_shs", "R5c 2025–2030 比例合計（其餘在 2031 年後）", "比例", only25("=SUM(«s1a_sh@R»)"), "")
     K.add("s1a_shc", "R5c 檢查：全期比例合計 − 1（表內逐年＋之後＋租約 10 年）", "比例",
           only25(f"=(SUM(«s1a_tby@R»)+«s1a_aft@$»+«s1a_lpy@$»*{wt})/«s1a_seg@$»-{one}"), "應約為 0（表內原文捨入）")
+    # 並列讀法（獨立核對建議；基準 0）：殘差法——未歸屬餘額逐年＝MAX(0, S-1/A 三段逐年 − 模型逐家〔承諾表內〕合約逐年付款)，累計以餘額為上限
+    from a7 import IN_TABLE
+    K.add("s1a_rm", "R5c 並列：模型逐家合約（S-1/A 承諾表內，不含 AMD、既有雲端、未歸屬餘額）逐年付款", "$B", lambda i, c: "=" + "+".join(f"«pay_{k}»" for k in IN_TABLE), "")
+    K.add("s1a_rr", "R5c 並列：殘差＝MAX(0, 三段逐年 − 逐家逐年)", "$B", lambda i, c: f"=MAX({zero},«s1a_segy»-«s1a_rm»)", "")
+    K.add("s1a_rc", "R5c 並列：殘差累計", "$B", lambda i, c: "=«s1a_rr»" if i == 0 else "=«s1a_rc@p»+«s1a_rr»", "")
+    K.add("s1a_rs", "R5c 並列：殘差法未歸屬餘額付款（累計以未歸屬餘額為上限；s1a_resid_switch＝1 時進第二十五節）", "$B",
+          lambda i, c: "=MIN(«s1a_rc»,«s1u_tot@$»)" if i == 0 else "=MIN(«s1a_rc»,«s1u_tot@$»)-MIN(«s1a_rc@p»,«s1u_tot@$»)",
+          "基準不用：上限型合約（SpaceXAI、Nscale）模型付款可能超過最低承諾，殘差會低估未歸屬付款", name="COST_S1aUnallocResid")
     s_, e_ = I("s1u_start"), I("s1u_end")
     K.add("s1a_sho", "R5c 對照：v0.1.7 平均攤提的年度比例（s1u_start–s1u_end）", "比例", lambda i, c: f"=({c}$6>={s_})*({c}$6<={e_})/«s1u_ny@$»", "")
     K.add("s1a_pm", "R5c 新 Checks：模型 2027–2030 合約實付合計（不含 AMD，不在 S-1/A 承諾表內）", "$B", only25("=SUM(«pay@F»:«pay@I»)-SUM(«pay_amd@F»:«pay_amd@I»)"), "")
@@ -150,5 +168,7 @@ def checks(ctx):
         ("i1_cond", "v0.1.8 R5d：自三段扣除的附條件額（$B；基準 0）", "=COST_S1aCondDeduct", None, "info", "扣除讀法見報告"),
         ("i1_c930", "v0.1.8 R5e：S-1/A 9-30 現金 − 模型近似（$B）", "=FND_Cash0930Gap", None, "info", "只對照"),
         ("i1_c930r", "v0.1.8 R5e：9-30 差額拆解的其餘項（$B）", "=FND_Cash0930Resid", None, "info", "只對照"),
+        ("i1_sbcx", "v0.1.8 核對後：2026 每人股權報酬基準 × 人數 −（股權報酬代理 − 下半年非現金捐贈）（$B；應為 0＝捐贈不沿用到 2027 起）",
+         f"={I('s1f_sbc_proxy_switch')}*({K.name}!$E${K.rows['sbc']}-{K.name}!$E${K.rows['s1s_chc']}-({K.name}!$E${K.rows['s1s_fy']}-{K.name}!$E${K.rows['s1s_chx']}))", 0, "tol", "只在股權報酬代理開關 1 時成立；Checks"),
         ("i1_eq", "v0.1.8 R5f：2026 已到位融資 − S-1/A 前九月特別股收入 110.432（$B）", "=FND_CommittedS1aGap", I("s1f_cmt_tol"), "warn", "Q3 無新股權；|差| ≤ 0.5 為 OK"),
     ]

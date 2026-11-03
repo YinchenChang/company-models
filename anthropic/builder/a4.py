@@ -155,9 +155,9 @@ def build(ctx):
     K.section("十八、U4 2026 算力支出對照（報導 vs 模型；不校準）：上半年實際近 9、Q3 隱含＝Q3 營收 ÷ 1.70；差距 > 門檻 → WARN")
     K.add("u4_h1", "報導：2026 上半年算力與基礎設施支出（近 9）", "$B", only26(f"={S('cmp_s1_spend_2026_h1')}"), "SRC（Interested-party；口徑未明）")
     K.add("u4_q3", "報導隱含：2026 Q3＝Q3 營收 ÷ 每 $1 算力支出的營收", "$B", only26(f"={S('cmp_s1_spend_2026_q3_derived')}"), "SRC Derived（公式）")
-    K.add("u4_q4", "外推：2026 Q4＝Q3 營收 ×（1＋Q4 成長，Inputs，U1 同一假設）÷ 同一比率", "$B",
+    K.add("u4_q4", "外推：2026 Q4＝Q3 營收 ×（1＋Q4 成長，Inputs，U1 同一假設）÷ 同一比率（舊對照：Q3 報導值已被 S-1/A 取代——營收 SRC_ANT_488、算力 489、調整後利益率 494；本列只作 v0.1.1 舊對照）", "$B",
           only26(f"={S('rev_2026_q3')}*(1+{I('q4_growth')})/{S('rev_per_compute_2026_q3')}"), "假設算力占營收比持平")
-    K.add("u4_fy", "報導口徑外推：2026 全年算力與基礎設施支出＝上半年＋Q3＋Q4", "$B", only26("=«u4_h1»+«u4_q3»+«u4_q4»"), "")
+    K.add("u4_fy", "報導口徑外推：2026 全年算力與基礎設施支出＝上半年＋Q3＋Q4（舊對照：Q3 報導值已被 S-1/A 取代——營收 SRC_ANT_488、算力 489、調整後利益率 494；本列只作 v0.1.1 舊對照）", "$B", only26("=«u4_h1»+«u4_q3»+«u4_q4»"), "")
     K.add("u4_pay", "模型：2026 合約實付", "$B", only26("=«pay»"), "COST_ContractPay")
     K.add("u4_cc", "模型：2026 算力成本（含自建資本支出）", "$B", only26("=«cc»"), "COST_Compute")
     K.add("u4_own", "　其中自建資本支出（Fluidstack 均攤）", "$B", only26("=«own»"),
@@ -168,9 +168,9 @@ def build(ctx):
           "年內爬坡，上半年應低於全年一半（同第二節 h1_26m）")
 
     K.section("十九、U5 D22 對照加 Q3：調整後營業利益率 11%；隱含非算力成本（承 v0.1 A4-17 的 Q2 版）")
-    K.add("u5_q3m", "報導：2026 Q3 調整後營業利益率", "比例", only26(f"={S('adj_opmargin_2026_q3')}"), "SRC（Interested-party；第二個獲利季）", name="COST_AdjOIMRep2026Q3", name_cols="E")
+    K.add("u5_q3m", "報導：2026 Q3 調整後營業利益率 11%（舊對照：Q3 報導值已被 S-1/A 取代——營收 SRC_ANT_488、算力 489、調整後利益率 494；本列只作 v0.1.1 舊對照）", "比例", only26(f"={S('adj_opmargin_2026_q3')}"), "SRC（Interested-party；第二個獲利季）", name="COST_AdjOIMRep2026Q3", name_cols="E")
     K.add("u5_q2m", "報導：2026 Q2（預測 0.559 ÷ 10.9；v0.1 對照）", "比例", only26("=«adj_rep»"), "")
-    K.add("u5_gapm", "模型 2026 全年調整後營業利益率 − Q3 報導（百分點）", "比例", only26("=«adj_oim»-«u5_q3m»"), "全年 vs 單季；只對照、不校準", name="COST_AdjOIMGapQ3", name_cols="E")
+    K.add("u5_gapm", "模型 2026 全年調整後營業利益率 − Q3 報導（百分點）（舊對照：Q3 報導值已被 S-1/A 取代——營收 SRC_ANT_488、算力 489、調整後利益率 494；本列只作 v0.1.1 舊對照）", "比例", only26("=«adj_oim»-«u5_q3m»"), "全年 vs 單季；只對照、不校準", name="COST_AdjOIMGapQ3", name_cols="E")
     K.add("u5_comp", "報導隱含：Q3 算力占營收＝Q3 隱含算力支出 ÷ Q3 營收", "比例", only26(f"={S('cmp_s1_spend_2026_q3_derived')}/{S('rev_2026_q3')}"), "＝1 ÷ 1.70")
     K.add("u5_nc", "報導隱含：Q3 非算力費用（含平台抽成，不含股權報酬）＝Q3 營收 ×（1 − 算力占比 − 調整後營業利益率）", "$B",
           only26(f"={S('rev_2026_q3')}*(1-«u5_comp»-«u5_q3m»)"), "")
@@ -566,7 +566,7 @@ def checks(ctx):
         ("b1_u3_cloud", "U3：模型 ÷ 報導 − 1：雲端付款義務口徑（約 450；|差距| > 25% → WARN）", "=COST_CommitGapCloud", I("commit_warn_threshold"), "warn", "模型＝全部新合約 − Broadcom 租賃"),
         ("b1_u3_locked", "U3：模型 ÷ 報導 − 1：已鎖定口徑（>600；WARN）", "=COST_CommitGapLocked", I("commit_warn_threshold"), "warn", "模型＝全部新合約（含 Broadcom）"),
         ("b1_u3_all", "U3：模型 ÷ 報導 − 1：含談判中口徑（約 750；WARN）", "=COST_CommitGapAll", I("commit_warn_threshold"), "warn", "模型＝已鎖定口徑 ＋ 談判中 150"),
-        ("b1_u4_pay", "U4：2026 模型合約實付 ÷ 報導外推全年算力支出 − 1（|差距| > 25% → WARN；不校準）", "=COST_SpendGap2026Pay", I("spend_warn_threshold"), "warn",
+        ("b1_u4_pay", "U4：2026 模型合約實付 ÷ 報導外推全年算力支出 − 1（|差距| > 25% → WARN；不校準；舊對照：Q3 報導已被 S-1/A 實績取代，SRC_ANT_488／489）", "=COST_SpendGap2026Pay", I("spend_warn_threshold"), "warn",
          "報導：上半年近 9＋Q3 隱含（營收 ÷ 1.70）＋Q4 同 Q3"),
         ("b1_u4_cc", "U4：2026 模型算力成本（含自建資本支出）÷ 報導外推全年 − 1（WARN）", "=COST_SpendGap2026Cc", I("spend_warn_threshold"), "warn",
          "自建資本支出 16.7 是現金資本支出，與報導『算力與基礎設施支出』是否同口徑未明"),

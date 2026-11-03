@@ -44,10 +44,10 @@ STEPS = [("v0.1.7.1", "v0171"), ("＋R5a Q3 實績", "wf8_a"), ("＋R5b 承諾 8
 ONLY = [("v0.1.7.1", "v0171"), ("只動 R5a", "wf8_a"), ("只動 R5b", "wf8_b"), ("只動 R5c", "wf8_c"), ("v0.1.8（三項）", None),
         ("v0.1.8＋R4", "r4_on"), ("v0.1.8＋R5d", "r5d_on"), ("v0.1.8＋R4＋R5d", "r4_r5d"),
         ("v0.1.8 只關 R5a", "v018_no_r5a"), ("v0.1.8 只關 R5b", "v018_no_r5b"), ("v0.1.8 只關 R5c", "wf8_ab")]
-MC = [("3 個月", "v0171_mc_lo", "mc_lo", None), ("6 個月（基準）", "v0171", None, "r4_on"), ("12 個月", "v0171_mc_hi", "mc_hi", "r4_mc_hi")]
+MC = [("3 個月", "v0171_mc_lo", "mc_lo", "r4_mc_lo"), ("6 個月（基準）", "v0171", None, "r4_on"), ("12 個月", "v0171_mc_hi", "mc_hi", "r4_mc_hi")]
 ALTS = [("R5c 舊讀法 2027–2033 平均", "wf8_ab"), ("舊讀法 快 2027–2031", "s1u_fast"), ("舊讀法 慢 2028–2036", "s1u_slow"), ("舊讀法 慢 2028–2037", "s1u_slow37"),
         ("S-1/A 結構，未起租起租年 2026", "lease_lo"), ("S-1/A 結構，未起租起租年 2028", "lease_hi"), ("R4 SpaceXAI S-1 路徑", "r4_on"), ("R5d 扣除附條件 213.8", "r5d_on"),
-        ("R4＋R5d", "r4_r5d"), ("SpaceXAI 以上限 120.5 等比例放大月費（v0.1.7 W1(a)）", "spx_cap"), ("Google 額外 TPU 計入（中點）", "gaddl_on"),
+        ("R4＋R5d", "r4_r5d"), ("並列：殘差法（S-1/A 結構 − 逐家合約時程）", "resid_on"), ("殘差法＋R4", "r4_resid"), ("捐贈只計 Q3 一次", "chr_once"), ("SpaceXAI 以上限 120.5 等比例放大月費（v0.1.7 W1(a)）", "spx_cap"), ("Google 額外 TPU 計入（中點）", "gaddl_on"),
         ("Broadcom 起始年 2026", "bcm_2026"), ("AMD＝S-1 下限 20", "amd_s1"), ("只關 W2（Fluidstack 舊法）", "only_w2_off"), ("只關 W4", "only_w4_off"),
         ("W4 只動 Q3 口徑", "w4_q3only"), ("W4 只動股權報酬", "w4_sbconly"), ("W4 兩項皆不用", "w4_neither"), ("承諾不進基準（W1、W2 皆關）", "commit_off"),
         ("API 任務數成長取低", "api_task_lo"), ("價格彈性取弱端", "elast_weak"), ("每 GW 合約價 20", "price_hi"), ("任務數低＋彈性弱", "combo1")]
@@ -55,7 +55,8 @@ DEFAULTS = [
     ("N1 SpaceXAI（R4）", "基準維持既有月費 1.25 × 36＝45（s1f_spacex_fee_switch＝0）；S-1 路徑並列", "S-1 路徑：2026-05～11 線性爬升、12 月起每月 3.1、上限 120.5 至 2029", "r4_on"),
     ("R4 爬升形狀", "第 k 月＝滿載 × k ÷（爬升月數＋1），2026 年合計＝3.1 × 7 ÷ 2 ＋ 3.1（Assumed，線性；12 月為首個滿載月）", "k ÷ 爬升月數（11 月即滿載）：2026 多 3.1、上限更早觸及；總額同為 120.5", None),
     ("R5a Q3 實績", "營收、W4 下半年非算力、股權報酬代理皆改 S-1/A Q3 實際（Q4＝Q3）", "回到 v0.1.7.1（報導 16.8、Q3 隱含、Q2 代理）", "v018_no_r5a"),
-    ("R5a 非現金捐贈 1.960 的 Q4 處理", "依工作單併入股權報酬代理，並照 Q4＝Q3 慣例 Q4 也計一次（保守；只影響含股權報酬的全成本）", "只計 Q3 一次（股權報酬代理 2026 少 1.96；命題 1 2026 差額改善，現金不變）", None),
+    ("R5a 非現金捐贈 1.960 的 Q4 處理（判斷題 s1a_chr_q4_switch）", "2026 全成本照 Q4＝Q3 慣例 Q4 也計一次（保守）；捐贈不進每人股權報酬基準（核對後修正）", "只計 Q3 一次（2026 股權報酬 −1.96；現金不變）", "chr_once"),
+    ("R5c 殘差法（並列；s1a_resid_switch）", "不採用（上限型合約 SpaceXAI、Nscale 的模型付款可能超過最低承諾，殘差會低估未歸屬付款；基準取保守）", "未歸屬餘額逐年＝S-1/A 三段逐年 − 模型逐家逐年", "resid_on"),
     ("R5b 三段口徑", "表內 320.0（原文 319.993）＋未起租 451.2＋9-30 後 100.2＝871.4；短期 17.4、期後短期 6.6 照 N2 不進基準", "回到 S-1 6-30 三段 832", "v018_no_r5b"),
     ("R5b Google 合約", "S-1/A ≥121.3（取代 114.5）", "114.5", None),
     ("R5c 未歸屬餘額付款期", "依 S-1/A 結構合成：表內逐年（之後 148.4 依 2031–2036 平均）＋未起租與 9-30 後依起租 2027、10 年平均，以三段金額加權", "舊 2027–2033 平均", "wf8_ab"),
@@ -109,12 +110,6 @@ def main():
     loc, cfg, eng = Locator(model), load_scenarios(), Engine(model)
     scs = ({s for _l, s in READS + STEPS + ONLY + ALTS} | {x for _l, p, q, r in MC for x in (p, q, r)} | {d[3] for d in DEFAULTS if d[3]})
     R = {(s or "base"): run(eng, loc, cfg, s) for s in scs}
-    # 說明用：非現金捐贈只計 Q3 一次——只改股權報酬代理（全成本），不改現金；以模型輸出換算（Δ差額＝捐贈 ÷ 2026 供給 VR 等值 GW），不另改輸入
-    g = R["base"]
-    chr_q = eng.get(*resolve_key(loc.names, "SRC_ANT_492"))
-    vr26 = g["CMP_Supply_VReq"][1]
-    R["chr_once_note"] = dict(sbc26=g["COST_SBC"][1] - chr_q, gap26=g["COST_PropGap_VR"][1] + chr_q / vr26,
-                              cov26=g["REV_NetCapped"][1] / (g["REV_NetCapped"][1] / g["COST_Coverage"][1] - chr_q), vr26=vr26)
     wb = openpyxl.Workbook()
     B = Font(bold=True)
 
@@ -204,10 +199,6 @@ def main():
         if sc:
             o = R[sc]
             row += [o["FND_ExtNeedCum"][5], o["FND_CashNoExtTrough"], o["FND_FirstGapYear"], o["COST_PropGap_VR"][1], o["COST_PropGap_VR"][5], o["COST_GapPosSustainYear"]]
-        elif "捐贈" in q2:
-            c = R["chr_once_note"]
-            row += [g["FND_ExtNeedCum"][5], g["FND_CashNoExtTrough"], g["FND_FirstGapYear"], c["gap26"], g["COST_PropGap_VR"][5], g["COST_GapPosSustainYear"],
-                    f"換算：2026 股權報酬 {c['sbc26']:.3f}、2026 覆蓋率 {c['cov26']:.3f}（現金與命題 2 不變）"]
         ws.append(row)
     ws = sheet("⑤b替代讀法", ["讀法", "累計外部資金", "首次缺口年", "現金谷底", "2026 差額", "2030 差額", "持續轉正年", "未歸屬餘額付款 2028"])
     for lab, sc in ALTS:
@@ -235,6 +226,14 @@ def main():
         ws.append([o_, o, n_, nv, diff, aff, summ, flip.get(o_, "否（單獨不翻轉；見瀑布）")])
 
     # ⑦ 範圍外變動核對
+    # ⑥b 核對後修正 A 的前後（每人股權報酬基準不含捐贈）
+    pre = Path("/tmp/ant18/prefix_report.json")
+    ws = sheet("⑥b核對後修正A", ["輸出", "修正前（同一活頁簿版本，捐贈帶進每人基準）", "修正後（現行）"])
+    if pre.exists():
+        P = json.loads(pre.read_text(encoding="utf-8"))
+        for n_, lab in (("COST_SBC", "股權報酬"), ("COST_PropGap_VR", "每 VR 等值 GW 差額"), ("COST_Coverage", "覆蓋率")):
+            for k, y in enumerate(YEARS):
+                ws.append([f"{lab} {y}", P[n_][k], R["base"][n_][k]])
     ws = sheet("⑦範圍外變動核對", ["比對", "比對格數", "其中數值格", "B 新增格", "不同格數", "不同格（頁!格：A → B）"])
     for p in a.diff_json:
         d = json.loads(Path(p).read_text(encoding="utf-8"))

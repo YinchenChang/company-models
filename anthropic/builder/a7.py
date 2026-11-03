@@ -52,7 +52,7 @@ def build(ctx):
     K.add("s1u_ny", "W1(b) 付款年數＝結束 − 起始 ＋ 1", "年", only25(f"=({e_}-{s_}+1)"), "Inputs s1u_start／s1u_end（預設 2027–2033；快 2027–2031、慢 2028–2036）")
     usw = I("s1a_unalloc_switch")
     K.add("pay_s1u", "合約實付：S-1 承諾未歸屬餘額（W1(b)；v0.1.8 R5c 起＝餘額 × S-1/A 結構合成年度比例；開關 0＝期間內平均）", "$B",
-          lambda i, c: f"=(1-{usw})*«s1u_tot@$»/«s1u_ny@$»*({c}$6>={s_})*({c}$6<={e_})+{usw}*«s1u_tot@$»*«K:s1a_sh»",
+          lambda i, c: f"=(1-{usw})*«s1u_tot@$»/«s1u_ny@$»*({c}$6>={s_})*({c}$6<={e_})+{usw}*((1-{I('s1a_resid_switch')})*«s1u_tot@$»*«K:s1a_sh»+{I('s1a_resid_switch')}*«K:s1a_rs»)",
           "GW＝付款 ÷ 通用合約價（Compute 第十六節，VR200 族）；年度比例見 Cost 第二十六節（s1a_unalloc_switch）", name="COST_Pay_S1Unalloc")
     K.add("s1u_after", "W1(b) 未歸屬餘額中 2030 年後應付", "$B", only25("=«s1u_tot@$»-SUM(«pay_s1u@R»)"), "")
     K.add("s1u_all", "W1 模型合約總額合計（全部新合約〔含 AMD〕＋未歸屬餘額）", "$B", only25("=«tot_all@$»+«s1u_tot@$»"), "對照 S-1 三段合計＋AMD", name="COST_CommitAllS1", name_cols="D")
@@ -120,7 +120,7 @@ def build(ctx):
     K.add("s1s_h1u", "W4 扣：上半年股權報酬（代理開關 1＝上半年代理；0＝舊值 × 上半年月數 ÷ 12）", "$B",
           only26(f"={sws}*«s1s_h1»+(1-{sws})*«s1s_old»*{h2}/{months}"), "")
     K.add("s1s_qu", "W4 扣：每季股權報酬（代理開關 1＝Q2 代理；0＝舊值 ÷ 4）", "$B", only26(f"={sws}*«s1s_q2»+(1-{sws})*«s1s_old»/{qpy}"), "")
-    K.add("s1n_h2", "W4 2026 下半年非算力費用（含抽成、不含股權報酬）：Q3 口徑開關 1＝Q3 報導隱含（第十九節）× 下半年季數；0＝（Q2 − 每季股權報酬）× 下半年季數", "$B",
+    K.add("s1n_h2", "W4 2026 下半年非算力費用（含抽成、不含股權報酬）：Q3 口徑開關 1＝Q3（v0.1.8 起 S-1/A 實際 4.630；s1a_q3_switch＝0 為報導隱含，第十九節）× 下半年季數；0＝（Q2 − 每季股權報酬）× 下半年季數", "$B",
           only26(f"={swq}*({I('s1a_q3_switch')}*«s1a_q3nc»+(1-{I('s1a_q3_switch')})*«u5_nc»)*{hq}+(1-{swq})*(«s1n_q2nc»-«s1s_qu»)*{hq}"),
           "v0.1.8 R5a：Q3＝S-1/A 實際（營收 − 算力 − 營業損益 − 股權報酬 − 非現金捐贈＝4.630，Cost 第二十六節；s1a_q3_switch＝0 回到 Q3 隱含＝Q3 營收 16.8 ×（1 − 算力占比 − 調整後營業利益率 11%））；與營收下半年（Q3 實際、Q4＝Q3）同期")
     K.add("s1n_fy", "W4 2026 全年非算力費用（含抽成、不含股權報酬）＝上半年 − 上半年股權報酬 ＋ 下半年", "$B", only26("=«s1n_h1nc»-«s1s_h1u»+«s1n_h2»"), "")
@@ -180,7 +180,7 @@ def checks(ctx):
     d = lambda sh, key, col="D": f"{sh.name}!${col}${sh.rows[key]}"  # noqa: E731
     mx = lambda sh, key: f"=MAX(MAX({sh.name}!$D${sh.rows[key]}:$I${sh.rows[key]}),-MIN({sh.name}!$D${sh.rows[key]}:$I${sh.rows[key]}))"  # noqa: E731
     return [
-        ("g1_s1u", "v0.1.7 W1(b)：S-1 承諾未歸屬餘額（$B；進基準）", "=COST_S1Unalloc", None, "info", "S-1 三段 832 − 模型逐家合約總額（不含 AMD）"),
+        ("g1_s1u", "v0.1.7 W1(b)：S-1 承諾未歸屬餘額（$B；進基準）", "=COST_S1Unalloc", None, "info", "v0.1.8 起 S-1/A 三段 871.4（v0.1.7.1：S-1 三段 832）− 模型逐家合約總額（不含 AMD）"),
         ("g1_raw", "v0.1.7 W1(b)：S-1 三段 − 模型逐家（$B；負＝模型已超過）", f"={d(K, 's1u_raw')}", None, "info", ""),
         ("g1_gap", "v0.1.7 W1：模型（逐家＋未歸屬餘額）÷ S-1 三段 − 1", "=COST_S1fCommitGapAfter", None, "info", "承諾開關 1 時為 0"),
         ("g1_spx", "v0.1.7 W1(a)：SpaceXAI 上限讀法係數（基準 1）", "=COST_S1fSpaceXFactor", None, "info", ""),
@@ -188,7 +188,7 @@ def checks(ctx):
         ("g2_own26", "v0.1.7 W2：模型 2026 自建資本支出（$B）vs S-1 上半年年化", f"={d(K, 's2_model', 'E')}", None, "info", "S-1 年化見 Cost 第二十五節"),
         ("g3_eta", "v0.1.7 W3：η（2025）", "=CMP_Eta2025", None, "info", "2025 校準改正式 S-1 後重校"),
         ("g1_amd", "v0.1.7 W1(a)：AMD 讀法係數（基準 1；1＝維持模型 GW 型）", "=COST_S1fAMDFactor", None, "info", "S-1 >20 為下限、不在承諾表內"),
-        ("g4_sbc", "v0.1.7：2026 股權報酬代理（S-1 調整後 − GAAP；$B）", "=COST_S1fSBCProxy2026", None, "info", "上半年 2.311＋Q2 差額 × 2"),
+        ("g4_sbc", "v0.1.7：2026 股權報酬代理（S-1 調整後 − GAAP；$B）", "=COST_S1fSBCProxy2026", None, "info", "上半年 2.311＋Q3 實際（1.070＋1.960）× 2（v0.1.8 R5a；v0.1.7.1：＋Q2 差額 × 2）；每人基準扣除下半年捐贈"),
         ("g5_sus", "v0.1.7：命題 1 持續轉正年", "=COST_GapPosSustainYear", None, "info", ""),
         ("g5_fcf", "v0.1.7：營運自由現金流持續轉正年", "=FND_FCFPosSustainYear", None, "info", "FND_FCFFirstPos 為首次轉正"),
         ("g7_cash", "v0.1.7：S-1 2026-06-30 現金 − 模型近似（$B）", "=FND_Cash0630Gap", None, "info", "只對照"),

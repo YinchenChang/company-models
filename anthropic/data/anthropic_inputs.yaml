@@ -247,3 +247,6 @@ rows:
 - {key: s1a_after_end, name: R5c 表內義務「2030 年之後」148.4 的攤提結束年, index: —, unit: 年, value: 2036, lo: 2033, hi: 2036, tag: Assumed, basis: 工作單 v0.1.8 R5c 預設 2031–2036 平均；Google 合約至 2033-07、Amazon 至 2036-04, range_why: 低＝Google 合約迄年、高＝Amazon 合約迄年, note: 只影響 2031 年後（模型期間外）與年度比例的分母}
 - {key: s1a_cond_deduct_switch, name: R5d 附條件或可終止承諾 213.8 的讀法（0＝計入，基準：S-1/A 列入總額；1＝自 W1(b) 三段合計扣除 213.8〔SRC_ANT_508〕）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 工作單 v0.1.8 R5d 預設「計入基準；扣除讀法並列」, range_why: 開關, note: 扣除後未歸屬餘額＝MAX(0, 三段 − 213.8 − 模型逐家合約總額)}
 - {key: m_9m, name: 前九月月數（定義常數）, index: —, unit: 月, value: 9, lo: 9, hi: 9, tag: Decision, basis: 定義常數（2026-01～09）, range_why: 不適用, note: Funding 第十五節 9-30 現金對照}
+# ── 17. v0.1.8 獨立核對後（2026-11-03 chat 端轉核對結論）
+- {key: s1a_chr_q4_switch, name: R5a 判斷題：S-1/A Q3 非現金捐贈 1.960（一次性）在 2026 全成本的處理（1＝Q4＝Q3 也計一次，保守；0＝只計 Q3 一次）, index: 2026, unit: 開關, value: 1, lo: 0, hi: 1, tag: Decision, basis: 獨立核對：捐贈不進每人股權報酬基準（不沿用到 2027 起）；2026 當年照 Q4＝Q3 慣例保守計入，列為判斷題, range_why: 開關, note: 只影響 2026 股權報酬（命題 1 全成本）；不影響現金}
+- {key: s1a_resid_switch, name: R5c 並列讀法：未歸屬餘額時程＝S-1/A 結構逐年 − 模型逐家合約逐年付款（殘差法；1＝套用，0＝基準：餘額 × S-1/A 結構年度比例）, index: —, unit: 開關, value: 0, lo: 0, hi: 1, tag: Decision, basis: 獨立核對建議並列；基準維持工作單 R5c——上限型合約（SpaceXAI、Nscale）的模型付款可能超過最低承諾，殘差法會低估未歸屬付款，故基準取保守, range_why: 開關, note: 只在 s1a_unalloc_switch＝1 時有作用；累計付款以未歸屬餘額為上限}

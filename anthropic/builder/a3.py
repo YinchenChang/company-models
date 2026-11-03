@@ -40,7 +40,7 @@ LEGACY = (("trn2", "legacy_share_trn2"), ("hopper", "legacy_share_hopper"), ("tp
 # 逐合約（D10 r1）：key、名稱、族、型、參數、招股書六家合作方（$518B 對帳）、說明
 #   amt：金額型（T 總額、s 起、e 迄）；both：雙揭露型（另 G 揭露 GW 公式）；gw：GW 型（G、s、term、upto）；monthly：月費（SpaceX）
 CONTRACTS = [
-    ("google", "Google Cloud TPU（2025-10；招股書 Google ≥$111.1B，2026-04～2033-07）", "tpu7", "amt",
+    ("google", "Google Cloud TPU（2025-10；S-1/A Google ≥$121.3B〔S-1 114.5、草稿 111.1〕，2026-04～2033-07）", "tpu7", "amt",
      dict(T="({INP:s1f_commit_switch}*({INP:s1a_commit_switch}*{SRC:cmt_s1a_google}+(1-{INP:s1a_commit_switch})*{SRC:cmt_s1f_google})+(1-{INP:s1f_commit_switch})*{SRC:cmp_prospectus_google}_Lo)", s="{INP:google_start}", e="{INP:google_end}"), "Google",
      "金額型：招股書 Google 承諾；揭露的「2026 年上線遠超過 1 GW」與「最多 100 萬顆 TPU」只作對照（以承諾金額為準）"),
     ("broadcom", "Google／Broadcom 次世代 TPU（2026-04；8-K 約 3.5 GW；五年 TPU 租賃 $125.2B）", "tpu7", "both",
@@ -426,9 +426,9 @@ def build(ctx):
           "2025＝2024Q4 與 2025Q4 平均（Revelio，Analogy）；2026 起 ×（1＋年增率，Inputs）", name="COST_Headcount")
     sws = I("s1f_sbc_proxy_switch")
     K.add("sbc_pp", "每人股權報酬", "$M/人/年",
-          lambda i, c: f"={I('sbc_pp_2025')}" if i == 0 else (f"={sws}*«s1s_fy@E»*{m2b}/«hc»+(1-{sws})*«sbc_pp@p»*(1+{I('sbc_pp_g')})" if i == 1 else f"=«sbc_pp@p»*(1+{I('sbc_pp_g')})"),
+          lambda i, c: f"={I('sbc_pp_2025')}" if i == 0 else (f"={sws}*(«s1s_fy@E»-«s1s_chx@E»)*{m2b}/«hc»+(1-{sws})*«sbc_pp@p»*(1+{I('sbc_pp_g')})" if i == 1 else f"=«sbc_pp@p»*(1+{I('sbc_pp_g')})"),
           "Inputs（Assumed）；v0.1.7：2026 欄＝正式 S-1 股權報酬代理（調整後 − GAAP 營業損益，年化照營收同法；Cost 第二十五節）÷ 人數（s1f_sbc_proxy_switch＝0＝2025 × 年變動率）")
-    K.add("sbc", "股權報酬（單列）", "$B", lambda i, c: f"=«hc»*«sbc_pp»/{m2b}", "人數 × 每人股權報酬", name="COST_SBC")
+    K.add("sbc", "股權報酬（單列）", "$B", lambda i, c: f"=«hc»*«sbc_pp»/{m2b}+«s1s_chc»", "人數 × 每人股權報酬；v0.1.8：2026 另加 S-1/A 下半年非現金捐贈（一次性，不進每人基準；Cost 第二十五節）", name="COST_SBC")
     K.add("ncx", "非算力營運費用（不含股權報酬）", "$B", lambda i, c: "=«nc25x»-«sbc»" if i == 0 else f"=«hc»*«pp»/{m2b}",
           "2025＝說明書（扣抽成）− 股權報酬；2026 起＝人數 × 每人年成本", name="COST_NonCompExSBC")
     swd = I("s1f_d22_switch")

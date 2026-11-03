@@ -749,7 +749,9 @@
 "s1a_after_start": "INP_228",
 "s1a_after_end": "INP_229",
 "s1a_cond_deduct_switch": "INP_230",
-"m_9m": "INP_231"
+"m_9m": "INP_231",
+"s1a_chr_q4_switch": "INP_232",
+"s1a_resid_switch": "INP_233"
 },
 "CHK": {
 "src_rows": "C01",
@@ -966,7 +968,8 @@
 "i1_cond": "C213",
 "i1_c930": "C214",
 "i1_c930r": "C215",
-"i1_eq": "C216"
+"i1_eq": "C216",
+"i1_sbcx": "C217"
 },
 "retired_INP": [
 "INP_067",
