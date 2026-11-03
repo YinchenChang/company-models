@@ -5067,7 +5067,7 @@ rows:
   tag: Interested-party
   party: Anthropic（募資誘因）
   basis: 總額
-  note: 原文：raised $65 billion in Series H funding led by Altimeter Capital, Dragoneer, Greenoaks, and Sequoia。含 $15B 先前承諾的雲端業者投資
+  note: "原文：raised $65 billion in Series H funding led by Altimeter Capital, Dragoneer, Greenoaks, and Sequoia。含 $15B 先前承諾的雲端業者投資［已被 SRC_ANT_478 取代（2026-11-02；正式 S-1 Note 10：Series H-1／H-2 65.2，含 Google 10.0、Amazon 5.0）；本列值不改］"
 - id: SRC_ANT_299
   key: fund_series_h_post_val
   group: F
@@ -5101,7 +5101,7 @@ rows:
   tag: Interested-party
   party: Anthropic（募資誘因）
   basis: 總額
-  note: 原文：includes $15 billion of previously committed investments from hyperscalers, including $5 billion from Amazon。新現金約 $50B（Derived）
+  note: "原文：includes $15 billion of previously committed investments from hyperscalers, including $5 billion from Amazon。新現金約 $50B（Derived）［v0.1.7.1：正式 S-1 Note 9：雲端業者部分＝Google 10.0（SRC_ANT_480）＋Amazon 5.0（SRC_ANT_481）；本列值不改］"
 - id: SRC_ANT_301
   key: fund_series_h_coleads
   group: F
@@ -5135,7 +5135,7 @@ rows:
   tag: Interested-party
   party: Anthropic（募資誘因；律所為公司代表）
   basis: 總額
-  note: 標題：Anthropic Raises $30B Series G at $380B Post-Money Valuation
+  note: "標題：Anthropic Raises $30B Series G at $380B Post-Money Valuation［已被 SRC_ANT_473 取代（2026-11-02；正式 S-1 Note 10：Q1 Series G-1／G-2 30.2）；本列值不改］"
 - id: SRC_ANT_303
   key: fund_series_g_post_val
   group: F
@@ -5203,7 +5203,7 @@ rows:
   tag: Interested-party
   party: Anthropic（IPO 招股書草稿）
   basis: 總額
-  note: 原文：It also has a $15 billion credit facility；另一來源稱 concurrently finalizing（尚在定案）
+  note: "原文：It also has a $15 billion credit facility；另一來源稱 concurrently finalizing（尚在定案）［已被 SRC_ANT_485 取代（2026-11-02；正式 S-1：A&R 循環信用額度 15.0，2031-09 到期）；本列值不改］"
 - id: SRC_ANT_307
   key: debt_spv_tpu_financing
   group: F
@@ -5475,7 +5475,7 @@ rows:
   tag: Verified
   party: null
   basis: 總額
-  note: 原文：reduced the amount available under the facility to $15.0 billion（條件式，非已到位）
+  note: "原文：reduced the amount available under the facility to $15.0 billion（條件式，非已到位）［已被 SRC_ANT_484 取代（2026-11-02；正式 S-1 同值 15.0）；本列值不改］"
 - id: SRC_ANT_323
   key: strat_amzn_funded_cum_2026h1
   group: F
@@ -5577,7 +5577,7 @@ rows:
   tag: Interested-party
   party: Google／Anthropic（雲端業務宣傳、募資誘因）
   basis: 總額
-  note: 原文：committing to invest $10 billion now, at a $350 billion valuation；是否即 Series H 中 $15B 雲端業者部分之剩餘 $10B 未證實
+  note: "原文：committing to invest $10 billion now, at a $350 billion valuation；是否即 Series H 中 $15B 雲端業者部分之剩餘 $10B 未證實［已由 SRC_ANT_474、475 證實為另一筆（2026-11-02）：Google 2026 NPA 的 Q2 Series G-2 38.6 百萬股 × 259.1364 ≈ 10.0，與 Series H 中 Google 的 10.0（SRC_ANT_480）分開；本列值不改］"
 - id: SRC_ANT_329
   key: strat_googl_2026_04_conditional
   group: F
@@ -5594,7 +5594,7 @@ rows:
   tag: Interested-party
   party: Google／Anthropic（雲端業務宣傳、募資誘因）
   basis: 總額
-  note: 原文：another $30 billion to follow if Anthropic hits certain performance targets
+  note: "原文：another $30 billion to follow if Anthropic hits certain performance targets［已被 SRC_ANT_482 取代（2026-11-02；正式 S-1：2026-06-30 剩餘可發行 20.0；另有 IPO 認購選擇權最多 10.0，行使則等額減少，不相加）；本列值不改］"
 - id: SRC_ANT_330
   key: strat_msft_nvda_announce
   group: F
@@ -7049,14 +7049,14 @@ rows:
   hi: null
   unit: $B/季
   period: 2025-Q1
-  source: Kepler〈Anthropic S-1 Breakdown〉；sec-api.io〈Anthropic (ANT) S-1 IPO SEC Filing Analysis〉；Tomasz Tunguz〈Anthropic S-1 Analysis〉（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 總額
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$376M（Kepler、sec-api、Tunguz 同值）。四季合計＝FY2025 4.585（Checks 核對）。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$376M（Kepler、sec-api、Tunguz 同值）。四季合計＝FY2025 4.585（Checks 核對）。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：Kepler〈Anthropic S-1 Breakdown〉；sec-api.io〈Anthropic (ANT) S-1 IPO SEC Filing Analysis〉；Tomasz Tunguz〈Anthropic S-1 Analysis〉（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_416
   key: rev_s1f_2025q2
   group: A
@@ -7066,14 +7066,14 @@ rows:
   hi: null
   unit: $B/季
   period: 2025-Q2
-  source: Kepler〈Anthropic S-1 Breakdown〉；sec-api.io（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 總額
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$787M；與草擬版 SRC_ANT_006（0.787）相同。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$787M；與草擬版 SRC_ANT_006（0.787）相同。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：Kepler〈Anthropic S-1 Breakdown〉；sec-api.io（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_417
   key: rev_s1f_2025q3
   group: A
@@ -7083,14 +7083,14 @@ rows:
   hi: null
   unit: $B/季
   period: 2025-Q3
-  source: Kepler〈Anthropic S-1 Breakdown〉；sec-api.io（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 總額
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$1,382M（sec-api 1.38）。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$1,382M（sec-api 1.38）。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：Kepler〈Anthropic S-1 Breakdown〉；sec-api.io（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_418
   key: rev_s1f_2025q4
   group: A
@@ -7100,14 +7100,14 @@ rows:
   hi: null
   unit: $B/季
   period: 2025-Q4
-  source: Kepler〈Anthropic S-1 Breakdown〉；sec-api.io；Daloopa（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 總額
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$2,040M（sec-api 2.04、Daloopa 2.0）。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$2,040M（sec-api 2.04、Daloopa 2.0）。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：Kepler〈Anthropic S-1 Breakdown〉；sec-api.io；Daloopa（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_419
   key: rev_s1f_2026q1
   group: A
@@ -7117,14 +7117,14 @@ rows:
   hi: null
   unit: $B/季
   period: 2026-Q1
-  source: Kepler〈Anthropic S-1 Breakdown〉；sec-api.io；Tunguz（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 總額
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$4,731M（sec-api 4.73）；Q1＋Q2（Kepler）＝上半年 16.286。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$4,731M（sec-api 4.73）；Q1＋Q2（Kepler）＝上半年 16.286。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：Kepler〈Anthropic S-1 Breakdown〉；sec-api.io；Tunguz（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_420
   key: rev_s1f_2026q2
   group: A
@@ -7134,14 +7134,14 @@ rows:
   hi: null
   unit: $B/季
   period: 2026-Q2
-  source: Kepler〈Anthropic S-1 Breakdown〉；sec-api.io（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 總額
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$11,555M；sec-api 表列 11.56、正文 $11.6bn。與 thevccorner 的 $11,560M（SRC 下一列）差 0.005，疑為進位；兩者並列（共同規則第 4 節），工作單引 11.56。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$11,555M；sec-api 表列 11.56、正文 $11.6bn。與 thevccorner 的 $11,560M（SRC 下一列）差 0.005，疑為進位；兩者並列（共同規則第 4 節），工作單引 11.56。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：Kepler〈Anthropic S-1 Breakdown〉；sec-api.io（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_421
   key: rev_s1f_2026q2_b
   group: A
@@ -7158,7 +7158,7 @@ rows:
   tag: Interested-party
   party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
   basis: 總額
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 第 158 頁（thevccorner 標示）。$11,560M；與 Kepler $11,555M 並列；本列只對照（Checks），不進基準。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 第 158 頁（thevccorner 標示）。$11,560M；與 Kepler $11,555M 並列；本列只對照（Checks），不進基準。期中，未經查核。［v0.1.7.1：原文表內 11,555、正文 11.6；本列為轉載者捨入，只對照（2026-11-02 chat 端瀏覽器核對；tag 不改）］"
 - id: SRC_ANT_422
   key: cor_s1f_fy2025
   group: D
@@ -7168,14 +7168,14 @@ rows:
   hi: null
   unit: $B/年
   period: 2025
-  source: Tomasz Tunguz〈Anthropic S-1 Analysis〉；sec-api.io（Table 2.8 Functional split from Note 8）；AlphaSense 公司簡介（轉載正式 S-1）
-  url: https://tomtunguz.com/anthropics-s1-grew-eleven-fold/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 費用（GAAP，功能別）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 合併財報附註 Note 8（功能別費用；S-1 損益表本身以性質別列示，無營收成本一行）。$2,773M（Tunguz、AlphaSense 同值；sec-api 2.77）。年度、經審計附註；但本代理未直接讀到。W3(b)、W3(c) 使用。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 合併財報附註 Note 8（功能別費用；S-1 損益表本身以性質別列示，無營收成本一行）。$2,773M（Tunguz、AlphaSense 同值；sec-api 2.77）。年度、經審計附註；但本代理未直接讀到。W3(b)、W3(c) 使用。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：合併財報附註「Supplemental Operating Expense Information」功能別費用表，F-40（年度報表附註，經查核）；原登錄時的二手來源：Tomasz Tunguz〈Anthropic S-1 Analysis〉；sec-api.io（Table 2.8 Functional split from Note 8）；AlphaSense 公司簡介（轉載正式 S-1）（https://tomtunguz.com/anthropics-s1-grew-eleven-fold/）］"
 - id: SRC_ANT_423
   key: cor_s1f_2026h1
   group: D
@@ -7185,14 +7185,14 @@ rows:
   hi: null
   unit: $B/半年
   period: 2026-H1
-  source: Tomasz Tunguz；sec-api.io（Table 2.8）；xenospectrum；AlphaSense；Daloopa（約 2.4）（轉載正式 S-1）
-  url: https://tomtunguz.com/anthropics-s1-grew-eleven-fold/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 費用（GAAP，功能別）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 Note 8（功能別費用）。$2,380M（Tunguz、AlphaSense 同值；sec-api 2.38、xenospectrum 2.38、Daloopa 約 2.4）。期中，未經查核。W3(c) η_2026H1 使用。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 Note 8（功能別費用）。$2,380M（Tunguz、AlphaSense 同值；sec-api 2.38、xenospectrum 2.38、Daloopa 約 2.4）。期中，未經查核。W3(c) η_2026H1 使用。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：附註「Supplemental Operating Expense Information」功能別費用表，F-40（同上表之期中欄）；原登錄時的二手來源：Tomasz Tunguz；sec-api.io（Table 2.8）；xenospectrum；AlphaSense；Daloopa（約 2.4）（轉載正式 S-1）（https://tomtunguz.com/anthropics-s1-grew-eleven-fold/）］"
 - id: SRC_ANT_424
   key: ci_s1f_fy2025
   group: D
@@ -7248,19 +7248,19 @@ rows:
   key: ci_s1f_2025q1
   group: D
   metric: 2025 Q1 算力與基礎設施費用（正式 S-1）
-  value: 0.94
+  value: 0.944
   lo: null
   hi: null
   unit: $B/季
   period: 2025-Q1
-  source: sec-api.io（Table 1.1）；Kepler（占營收 251%）（轉載正式 S-1）
-  url: https://sec-api.io/insights/anthropic-ant-s-1-ipo-sec-filing-analysis
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 費用（GAAP，性質別）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉（Kepler 標第 158 頁，只給占營收比例）。sec-api 0.94（兩位小數）；Kepler 251% × 0.376 ≈ 0.944。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉（Kepler 標第 158 頁，只給占營收比例）。sec-api 0.94（兩位小數）；Kepler 251% × 0.376 ≈ 0.944。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：sec-api.io（Table 1.1）；Kepler（占營收 251%）（轉載正式 S-1）（https://sec-api.io/insights/anthropic-ant-s-1-ipo-sec-filing-analysis）；值由 0.94 改原文精度 0.944（只對照列）］"
 - id: SRC_ANT_428
   key: ci_s1f_2025q2
   group: D
@@ -7270,65 +7270,65 @@ rows:
   hi: null
   unit: $B/季
   period: 2025-Q2
-  source: sec-api.io；xenospectrum；Kepler（177%）（轉載正式 S-1）
-  url: https://sec-api.io/insights/anthropic-ant-s-1-ipo-sec-filing-analysis
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 費用（GAAP，性質別）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。sec-api、xenospectrum 1.39；Q1＋Q2＝2.33 ≈ 上半年 2.334。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。sec-api、xenospectrum 1.39；Q1＋Q2＝2.33 ≈ 上半年 2.334。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：sec-api.io；xenospectrum；Kepler（177%）（轉載正式 S-1）（https://sec-api.io/insights/anthropic-ant-s-1-ipo-sec-filing-analysis）；值不變（原文 1,390）］"
 - id: SRC_ANT_429
   key: ci_s1f_2025q3
   group: D
   metric: 2025 Q3 算力與基礎設施費用（正式 S-1）
-  value: 2.05
+  value: 2.047
   lo: null
   hi: null
   unit: $B/季
   period: 2025-Q3
-  source: sec-api.io；Kepler（148%）（轉載正式 S-1）
-  url: https://sec-api.io/insights/anthropic-ant-s-1-ipo-sec-filing-analysis
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 費用（GAAP，性質別）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。sec-api 2.05；Kepler 148% × 1.382 ≈ 2.045。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。sec-api 2.05；Kepler 148% × 1.382 ≈ 2.045。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：sec-api.io；Kepler（148%）（轉載正式 S-1）（https://sec-api.io/insights/anthropic-ant-s-1-ipo-sec-filing-analysis）；值由 2.05 改原文精度 2.047（只對照列）］"
 - id: SRC_ANT_430
   key: ci_s1f_2025q4
   group: D
   metric: 2025 Q4 算力與基礎設施費用（正式 S-1）
-  value: 2.95
+  value: 2.945
   lo: null
   hi: null
   unit: $B/季
   period: 2025-Q4
-  source: sec-api.io；Daloopa（2.9，144%）；Kepler（144%）（轉載正式 S-1）
-  url: https://sec-api.io/insights/anthropic-ant-s-1-ipo-sec-filing-analysis
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 費用（GAAP，性質別）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。sec-api 2.95；四季合計 7.33 ≈ FY2025 7.326。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。sec-api 2.95；四季合計 7.33 ≈ FY2025 7.326。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：sec-api.io；Daloopa（2.9，144%）；Kepler（144%）（轉載正式 S-1）（https://sec-api.io/insights/anthropic-ant-s-1-ipo-sec-filing-analysis）；值由 2.95 改原文精度 2.945（只對照列）］"
 - id: SRC_ANT_431
   key: ci_s1f_2026q1
   group: D
   metric: 2026 Q1 算力與基礎設施費用（正式 S-1）
-  value: 3.39
+  value: 3.387
   lo: null
   hi: null
   unit: $B/季
   period: 2026-Q1
-  source: sec-api.io；Kepler（72%）（轉載正式 S-1）
-  url: https://sec-api.io/insights/anthropic-ant-s-1-ipo-sec-filing-analysis
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 費用（GAAP，性質別）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。sec-api 3.39；上半年 8.945 − Q2 5.558 ＝ 3.387。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。sec-api 3.39；上半年 8.945 − Q2 5.558 ＝ 3.387。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：sec-api.io；Kepler（72%）（轉載正式 S-1）（https://sec-api.io/insights/anthropic-ant-s-1-ipo-sec-filing-analysis）；值由 3.39 改原文精度 3.387（只對照列）］"
 - id: SRC_ANT_432
   key: ci_s1f_2026q2
   group: D
@@ -7338,14 +7338,14 @@ rows:
   hi: null
   unit: $B/季
   period: 2026-Q2
-  source: xenospectrum；AlphaSense（Canalyst 模型值 $5,558M）；sec-api.io（5.56）；Daloopa（5.6，48%）（轉載正式 S-1）
-  url: https://xenospectrum.com/en/anthropic-s1-compute-margin/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 費用（GAAP，性質別）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$5.558B（xenospectrum；AlphaSense 註明為 Canalyst 整理值）。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$5.558B（xenospectrum；AlphaSense 註明為 Canalyst 整理值）。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：xenospectrum；AlphaSense（Canalyst 模型值 $5,558M）；sec-api.io（5.56）；Daloopa（5.6，48%）（轉載正式 S-1）（https://xenospectrum.com/en/anthropic-s1-compute-margin/）］"
 - id: SRC_ANT_433
   key: oi_s1f_fy2025
   group: F
@@ -7406,14 +7406,14 @@ rows:
   hi: null
   unit: $B/季
   period: 2025-Q1
-  source: Kepler〈Anthropic S-1 Breakdown〉；sec-api.io（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: GAAP
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$(935)M。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$(935)M。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：Kepler〈Anthropic S-1 Breakdown〉；sec-api.io（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_437
   key: oi_s1f_2025q2
   group: F
@@ -7423,14 +7423,14 @@ rows:
   hi: null
   unit: $B/季
   period: 2025-Q2
-  source: Kepler；sec-api.io（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: GAAP
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$(1,200)M。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$(1,200)M。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：Kepler；sec-api.io（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_438
   key: oi_s1f_2025q3
   group: F
@@ -7440,14 +7440,14 @@ rows:
   hi: null
   unit: $B/季
   period: 2025-Q3
-  source: Kepler；sec-api.io（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: GAAP
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$(3,089)M。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$(3,089)M。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：Kepler；sec-api.io（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_439
   key: oi_s1f_2025q4
   group: F
@@ -7457,14 +7457,14 @@ rows:
   hi: null
   unit: $B/季
   period: 2025-Q4
-  source: Kepler；sec-api.io（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: GAAP
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$(2,836)M；四季合計＝FY2025 −8.060（Checks 核對）。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$(2,836)M；四季合計＝FY2025 −8.060（Checks 核對）。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：Kepler；sec-api.io（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_440
   key: oi_s1f_2026q1
   group: F
@@ -7474,14 +7474,14 @@ rows:
   hi: null
   unit: $B/季
   period: 2026-Q1
-  source: Kepler；sec-api.io（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: GAAP
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$(1,667)M。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$(1,667)M。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：Kepler；sec-api.io（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_441
   key: oi_s1f_2026q2
   group: F
@@ -7491,14 +7491,14 @@ rows:
   hi: null
   unit: $B/季
   period: 2026-Q2
-  source: Kepler；sec-api.io；Tunguz；Daloopa；thevccorner（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: GAAP
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$974M（GAAP 營業利益率約 8.4%；調整後約 19%）。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1〈MD&A — Quarterly Results of Operations（Kepler 標第 157 頁；thevccorner 標第 158 頁）〉。$974M（GAAP 營業利益率約 8.4%；調整後約 19%）。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 季度損益表，第 158 頁（原文 $M）；原登錄時的二手來源：Kepler；sec-api.io；Tunguz；Daloopa；thevccorner（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_442
   key: ocf_s1f_2026h1
   group: F
@@ -7508,14 +7508,14 @@ rows:
   hi: null
   unit: $B/半年
   period: 2026-H1
-  source: Kepler（第 168 頁）；Daloopa；AlphaSense；sec-api.io（3.9）（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 現金（GAAP）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A — Liquidity and Capital Resources／Cash Flows（Kepler 標第 168 頁）。$3,929M（含約 $1.2B 營運資金效益，Daloopa）；2025 上半年 $(1,513)M。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A — Liquidity and Capital Resources／Cash Flows（Kepler 標第 168 頁）。$3,929M（含約 $1.2B 營運資金效益，Daloopa）；2025 上半年 $(1,513)M。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 現金流量摘要，第 169 頁；原登錄時的二手來源：Kepler（第 168 頁）；Daloopa；AlphaSense；sec-api.io（3.9）（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_443
   key: capex_s1f_2026h1
   group: F
@@ -7525,14 +7525,14 @@ rows:
   hi: null
   unit: $B/半年
   period: 2026-H1
-  source: sec-api.io；AlphaSense（轉載正式 S-1）
-  url: https://sec-api.io/insights/anthropic-ant-s-1-ipo-sec-filing-analysis
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 現金（GAAP）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 合併現金流量表（sec-api：Capex 6M 2026 0.482；AlphaSense 同值）。W3(a) 用於對照模型 2026 自建資本支出。期中，未經查核。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 合併現金流量表（sec-api：Capex 6M 2026 0.482；AlphaSense 同值）。W3(a) 用於對照模型 2026 自建資本支出。期中，未經查核。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：合併現金流量表（購置不動產及設備 (482)）；原登錄時的二手來源：sec-api.io；AlphaSense（轉載正式 S-1）（https://sec-api.io/insights/anthropic-ant-s-1-ipo-sec-filing-analysis）］"
 - id: SRC_ANT_444
   key: cash_s1f_2026_06_30
   group: F
@@ -7559,14 +7559,14 @@ rows:
   hi: null
   unit: $B
   period: '2026-06-30'
-  source: Kepler（Table 2.10）；AlphaSense；xenospectrum（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 承諾（未折現）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 合併財報附註（租賃）與 MD&A — Contractual Obligations（第 170–171 頁附近）。約 $321.4B；預計 2026–2028 起租（AlphaSense、xenospectrum）；2025-12-31 為約 $50.2B（xenospectrum）。W3(d) 三段之一。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 合併財報附註（租賃）與 Note 7（F-36）「Leases Not Yet Commenced」。約 $321.4B；預計 2026–2028 起租（AlphaSense、xenospectrum）；2025-12-31 為約 $50.2B（xenospectrum）。W3(d) 三段之一。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：Note 7「Leases Not Yet Commenced」，F-36（2025-12-31 約 50.2、2026-06-30 約 321.4；2026–2028 起租，租期不到 1 年至 20 年）；原登錄時的二手來源：Kepler（Table 2.10）；AlphaSense；xenospectrum（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）；v0.1.6 備註出處「MD&A 第 170–171 頁附近」更正為 Note 7（F-36）］"
 - id: SRC_ANT_446
   key: cmt_s1f_purchase_0630
   group: D
@@ -7576,14 +7576,14 @@ rows:
   hi: null
   unit: $B
   period: '2026-06-30'
-  source: Kepler（Table 2.10）；Tunguz；AlphaSense（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 承諾（固定或最低）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 附註（承諾與或有事項，Note 16）與 MD&A — Contractual Obligations。約 $265.6B，期間 1–20 年（AlphaSense）；2025-12-31 不可取消採購承諾 $54.6B（AlphaSense）。W3(d) 三段之一。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 附註（承諾與或有事項，Note 13，F-59）與 MD&A — Contractual Obligations。約 $265.6B，期間 1–20 年（AlphaSense）；2025-12-31 不可取消採購承諾 $54.6B（AlphaSense）。W3(d) 三段之一。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：Note 13，F-59（2026-06-30 約 265.6，期間 1–20 年；2025-12-31 逐年表合計 54.559）；原登錄時的二手來源：Kepler（Table 2.10）；Tunguz；AlphaSense（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）；v0.1.6 備註寫「Note 16」為誤植，正確為 Note 13（F-59）］"
 - id: SRC_ANT_447
   key: cmt_s1f_post0630
   group: D
@@ -7593,14 +7593,14 @@ rows:
   hi: null
   unit: $B
   period: 2026-07–2026-09
-  source: Kepler（MD&A）；Tunguz（further executed since）（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 承諾（未來最低付款）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A — Liquidity and Capital Resources（期後事項）。約 $245B；S-1 稱另加已起租租賃與短期承諾得出承諾總額，但總額留白（見 cmt_s1f_total_blank）。短期承諾金額 S-1 未單獨揭露。W3(d) 三段之一。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A — Liquidity and Capital Resources（期後事項）。約 $245B；S-1 稱另加已起租租賃與短期承諾得出承諾總額，但總額留白（見 cmt_s1f_total_blank）。短期承諾金額 S-1 未單獨揭露。W3(d) 三段之一。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：Note 17（期中報表期後事項；約 245，2026–2036 起算）；原登錄時的二手來源：Kepler（MD&A）；Tunguz（further executed since）（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_448
   key: cmt_s1f_since_dec2025
   group: D
@@ -7610,14 +7610,14 @@ rows:
   hi: null
   unit: $B
   period: 2026-01–2026-09
-  source: AlphaSense；Kepler（Note 16，Table 7.1）；DCD 標題「417bn in compute commitments」（轉載正式 S-1）
-  url: https://www.alpha-sense.com/api/html-embed/file-4c88b5685d7120f5cdcdc99545773cca679d25fd-html/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 承諾（未來最低付款）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 Note 16（承諾）。約 $417B；起算日為 2025-12-31，與 6-30 三段口徑不同、互有重疊，不可相加。只對照。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 Note 16（承諾）。約 $417B；起算日為 2025-12-31，與 6-30 三段口徑不同、互有重疊，不可相加。只對照。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：Note 16（年度報表期後事項，經查核；約 417，2026–2027 起算；與 445–447 重疊，不相加）；原登錄時的二手來源：AlphaSense；Kepler（Note 16，Table 7.1）；DCD 標題「417bn in compute commitments」（轉載正式 S-1）（https://www.alpha-sense.com/api/html-embed/file-4c88b5685d7120f5cdcdc99545773cca679d25fd-html/）］"
 - id: SRC_ANT_449
   key: cmt_s1f_total_blank
   group: D
@@ -7644,14 +7644,14 @@ rows:
   hi: null
   unit: $B
   period: 2026-04–2033-07
-  source: Kepler（第 170 頁）；Tunguz；xenospectrum（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 承諾（最低）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A — Contractual Obligations（Kepler 標第 170 頁）。「至少約 $114.5B」；草擬版轉述 111（SRC_ANT_397）。另 2028–2031 TPU 額外容量估 $125–150B 不在承諾表內（cmt_s1f_google_addl）。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A — Contractual Obligations（Kepler 標第 170 頁）。「至少約 $114.5B」；草擬版轉述 111（SRC_ANT_397）。另 2028–2031 TPU 額外容量估 $125–150B 不在承諾表內（cmt_s1f_google_addl）。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 承諾章節，第 171 頁（約 114.5，2026-04～2033-07，不足額須補差）；原登錄時的二手來源：Kepler（第 170 頁）；Tunguz；xenospectrum（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_451
   key: cmt_s1f_amazon
   group: D
@@ -7661,14 +7661,14 @@ rows:
   hi: null
   unit: $B
   period: 2026-05–2036-04
-  source: Kepler（第 171 頁）；Tunguz（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 承諾（最低）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A（Kepler 標第 171 頁）。「至少 $110.0B」；與草擬版轉述 110（SRC_ANT_398）相同。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A（Kepler 標第 171 頁）。「至少 $110.0B」；與草擬版轉述 110（SRC_ANT_398）相同。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 承諾章節，第 172 頁（110.0，2026-05～2036-04）；原登錄時的二手來源：Kepler（第 171 頁）；Tunguz（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_452
   key: cmt_s1f_msft
   group: D
@@ -7678,14 +7678,14 @@ rows:
   hi: null
   unit: $B
   period: 2026-11–2033-05
-  source: Kepler（第 170 頁）；Tunguz；xenospectrum（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 承諾（最低）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A（Kepler 標第 170 頁）。「至少 $44.9B」；草擬版轉述 31（SRC_ANT_399）、招股書草稿 31.4（SRC_ANT_211）→ 正式版較草擬版高 +45%（只進對照，W3(d)）。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A（Kepler 標第 170 頁）。「至少 $44.9B」；草擬版轉述 31（SRC_ANT_399）、招股書草稿 31.4（SRC_ANT_211）→ 正式版較草擬版高 +45%（只進對照，W3(d)）。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 承諾章節，第 171 頁（44.9，2026-11～2033-05）；原登錄時的二手來源：Kepler（第 170 頁）；Tunguz；xenospectrum（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_453
   key: cmt_s1f_spacex
   group: D
@@ -7695,14 +7695,14 @@ rows:
   hi: 120.5
   unit: $B
   period: 2026–2029
-  source: Kepler（第 171 頁）；Tunguz；sec-api.io（短期每月約 3.1）（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 承諾（上限）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A（Kepler 標第 171 頁）。「最高 $120.5B」；草擬版招股書列 84.5（SRC_ANT_229 上限）。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A（Kepler 標第 171 頁）。「最高 $120.5B」；草擬版招股書列 84.5（SRC_ANT_229 上限）。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 承諾章節，第 172 頁（最高 120.5，至 2029；全部容量交付後約每月 3.1，初始不可取消期到 2027-01／2027-03，之後 90 天通知可取消）；原登錄時的二手來源：Kepler（第 171 頁）；Tunguz；sec-api.io（短期每月約 3.1）（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_454
   key: cmt_s1f_broadcom
   group: D
@@ -7712,14 +7712,14 @@ rows:
   hi: null
   unit: $B
   period: 2026–2031
-  source: Kepler（第 171 頁）；Tunguz；xenospectrum（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 承諾（租賃）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A（Kepler 標第 171 頁）。約 $161.2B（其中約 $125.2B 屬 2026 Broadcom Lease Arrangement，Kepler）；與招股書草稿列 161.2（SRC_ANT_249）相同。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A（Kepler 標第 171 頁）。約 $161.2B（其中約 $125.2B 屬 2026 Broadcom Lease Arrangement，Kepler）；與招股書草稿列 161.2（SRC_ANT_249）相同。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 承諾章節，第 172 頁（約 161.2，不含利息，按季付；其中 2026 租約 125.2 見風險因素）；原登錄時的二手來源：Kepler（第 171 頁）；Tunguz；xenospectrum（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_455
   key: cmt_s1f_nscale
   group: D
@@ -7729,14 +7729,14 @@ rows:
   hi: 44.6
   unit: $B
   period: 至 2033
-  source: Kepler（第 171 頁）；Tunguz（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 承諾（上限）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A（Kepler 標第 171 頁）。「最高約 $44.6B」；草擬版 Nscale＋Lambda 合計最高 86（SRC_ANT_400）→ 正式版合計 85.9。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A（Kepler 標第 171 頁）。「最高約 $44.6B」；草擬版 Nscale＋Lambda 合計最高 86（SRC_ANT_400）→ 正式版合計 85.9。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 承諾章節（最高約 44.6，至 2033）；原登錄時的二手來源：Kepler（第 171 頁）；Tunguz（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_456
   key: cmt_s1f_lambda
   group: D
@@ -7746,14 +7746,14 @@ rows:
   hi: null
   unit: $B
   period: 至 2034
-  source: Kepler（第 171 頁）；Tunguz（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 承諾（約）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A（Kepler 標第 171 頁）。約 $41.3B。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A（Kepler 標第 171 頁）。約 $41.3B。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 承諾章節（約 41.3，至 2034；其中 34.9 若 Lambda 未取得機房租約可終止）；原登錄時的二手來源：Kepler（第 171 頁）；Tunguz（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_457
   key: cmt_s1f_amd
   group: D
@@ -7763,14 +7763,14 @@ rows:
   hi: null
   unit: $B
   period: 2027–
-  source: Kepler（第 171 頁）；xenospectrum（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 承諾（下限；不在承諾表內）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A（Kepler 標第 171 頁）。「若購買全部初始容量，超過 $20B」；不在承諾表內（金額未固定）。與招股書草稿列 >20（SRC_ANT_232）相同。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A（Kepler 標第 171 頁）。「若購買全部初始容量，超過 $20B」；不在承諾表內（金額未固定）。與招股書草稿列 >20（SRC_ANT_232）相同。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 承諾章節，第 172 頁（初始容量全數採購時「超過 20.0」，未列入承諾表）；原登錄時的二手來源：Kepler（第 171 頁）；xenospectrum（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_458
   key: cmt_s1f_google_addl
   group: D
@@ -7780,14 +7780,14 @@ rows:
   hi: 150
   unit: $B
   period: 2028–2031
-  source: Kepler（第 170 頁）；sec-api.io；xenospectrum（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 估計（不在承諾表）
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A（Kepler 標第 170 頁）。估計 $125–150B，金額未固定、不在承諾表；不填點值。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A（Kepler 標第 170 頁）。估計 $125–150B，金額未固定、不在承諾表；不填點值。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A 承諾章節，第 171 頁（125.0–150.0，2028–2031 交付，未列入承諾表；Note 16 同）；原登錄時的二手來源：Kepler（第 170 頁）；sec-api.io；xenospectrum（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_459
   key: cust_s1f_top5_9m2026
   group: A
@@ -7797,14 +7797,14 @@ rows:
   hi: null
   unit: 比例
   period: 2026-01–2026-09
-  source: Kepler（第 56 頁）；Tunguz；AlphaSense；sec-api.io（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 總額
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 Risk Factors（客戶集中；Kepler 標第 56 頁）。約 25%；Q3 約 79% 營收來自前五大以外（Daloopa、AlphaSense）。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 Risk Factors（客戶集中；原文第 57 頁）。約 25%；Q3 約 79% 營收來自前五大以外（Daloopa、AlphaSense）。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：風險因素（客戶集中），第 57 頁（約 25%）；原登錄時的二手來源：Kepler（第 56 頁）；Tunguz；AlphaSense；sec-api.io（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）；v0.1.6 來源標「第 56 頁」更正為第 57 頁］"
 - id: SRC_ANT_460
   key: cust_s1f_max_9m2026
   group: A
@@ -7814,14 +7814,14 @@ rows:
   hi: 0.1
   unit: 比例
   period: 2026-01–2026-09
-  source: Kepler（第 143 頁）；Tunguz；AlphaSense（轉載正式 S-1）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 總額
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A／附註（客戶集中；Kepler 標第 143 頁）。「無單一客戶超過 10%」→ 只登上限 0.10，不填點值。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 MD&A／附註（客戶集中；Kepler 標第 143 頁）。「無單一客戶超過 10%」→ 只登上限 0.10，不填點值。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：風險因素（客戶集中；前三季無單一客戶 >10%）；原登錄時的二手來源：Kepler（第 143 頁）；Tunguz；AlphaSense（轉載正式 S-1）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_461
   key: cust_s1f_custc_2026h1
   group: A
@@ -7831,14 +7831,14 @@ rows:
   hi: null
   unit: 比例
   period: 2026-H1
-  source: AlphaSense；Daloopa（轉載正式 S-1）
-  url: https://www.alpha-sense.com/api/html-embed/file-4c88b5685d7120f5cdcdc99545773cca679d25fd-html/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 總額
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 合併財報附註（集中度；客戶未具名）。11%；草擬版轉述「兩家客戶約 20%」（SRC_ANT_405）。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 合併財報附註（集中度；客戶未具名）。11%；草擬版轉述「兩家客戶約 20%」（SRC_ANT_405）。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：附註（集中度），F-16（Customer C 11%）；原登錄時的二手來源：AlphaSense；Daloopa（轉載正式 S-1）（https://www.alpha-sense.com/api/html-embed/file-4c88b5685d7120f5cdcdc99545773cca679d25fd-html/）］"
 - id: SRC_ANT_462
   key: cust_s1f_marketplace_2026h1
   group: A
@@ -7848,14 +7848,14 @@ rows:
   hi: null
   unit: 比例
   period: 2026-H1
-  source: sec-api.io（轉載正式 S-1）
-  url: https://sec-api.io/insights/anthropic-ant-s-1-ipo-sec-filing-analysis
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具、WebFetch 只讀到 S-1 前約 13 萬字（至風險因素），該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: 總額
-  note: v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 附註（集中度；雲端市集亦占 6-30 應收帳款淨額 58%）。48%；單一二手來源（sec-api），只對照；本模型 2025 雲端通路占比用 SRC_ANT 既有列，不改。
+  note: "v0.1.6 新增（工作單 20261031 W1；正式 S-1）。二手轉載正式 S-1（workorder 預設：sec.gov 無法直接讀到時改用二手整理，標 Interested-party，報告列為缺口）。出處：S-1 附註（集中度；雲端市集亦占 6-30 應收帳款淨額 58%）。48%；單一二手來源（sec-api），只對照；本模型 2025 雲端通路占比用 SRC_ANT 既有列，不改。［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：附註（集中度；約 48%）；原登錄時的二手來源：sec-api.io（轉載正式 S-1）（https://sec-api.io/insights/anthropic-ant-s-1-ipo-sec-filing-analysis）］"
 - id: SRC_ANT_463
   key: nrr_s1f_2026_09_30
   group: A
@@ -7899,14 +7899,14 @@ rows:
   hi: null
   unit: $B/半年
   period: 2026-H1
-  source: Luminix；Allocations（轉載正式 S-1 第 24 頁 non-GAAP 表）
-  url: https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具，該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: non-GAAP
-  note: v0.1.7 新增（獨立核對建議；W4 股權報酬代理）。$1,618M（Allocations：10% margin；Luminix：比 GAAP 營業損益 −693 好 2,311）。調整後排除股權報酬等；Luminix 稱約 111 的調整項目在其讀到的頁面未說明。期中，未經查核
+  note: "v0.1.7 新增（獨立核對建議；W4 股權報酬代理）。$1,618M（Allocations：10% margin；Luminix：比 GAAP 營業損益 −693 好 2,311）。調整後排除股權報酬等；Luminix 稱約 111 的調整項目在其讀到的頁面未說明。期中，未經查核［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A non-GAAP 調節表，第 161 頁（(617)＋2,235＝1,618）；原登錄時的二手來源：Luminix；Allocations（轉載正式 S-1 第 24 頁 non-GAAP 表）（https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0）；調整後 − GAAP 營業損益 2.311＝股權報酬 2.185＋非現金捐贈配對 0.126（2026Q1），兩者皆非現金（原文第 161 頁），v0.1.7「約 0.111 未說明」更正］"
 - id: SRC_ANT_466
   key: adjoim_s1f_2026q2
   group: F
@@ -7916,14 +7916,14 @@ rows:
   hi: null
   unit: 比例
   period: 2026-Q2
-  source: Kepler（轉載正式 S-1 季度表；見 SRC_ANT_441 備註）
-  url: https://kepler.ai/research/financial/s1-anthropic/
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具，該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: non-GAAP
-  note: v0.1.7 新增。SRC_ANT_441 備註「調整後約 19%」（Kepler）；約值。用於 Q2 的 GAAP 與調整後營業損益之差（股權報酬代理）
+  note: "v0.1.7 新增。SRC_ANT_441 備註「調整後約 19%」（Kepler）；約值。用於 Q2 的 GAAP 與調整後營業損益之差（股權報酬代理）［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A non-GAAP 調節表，第 161 頁（19%）；原登錄時的二手來源：Kepler（轉載正式 S-1 季度表；見 SRC_ANT_441 備註）（https://kepler.ai/research/financial/s1-anthropic/）］"
 - id: SRC_ANT_467
   key: sbc_s1f_2026h1
   group: F
@@ -7933,14 +7933,14 @@ rows:
   hi: null
   unit: $B/半年
   period: 2026-H1
-  source: Luminix（轉載正式 S-1 人事費用附註）
-  url: https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具，該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: GAAP
-  note: v0.1.7 新增。原文轉述：personnel includes stock-based compensation of … $286 million and $2.2 billion in the first halves of 2025 and 2026；與調整數 2.311 差約 0.111（其他調整項）。只對照；基準代理用 2.311（chat 端指示）
+  note: "v0.1.7 新增。原文轉述：personnel includes stock-based compensation of … $286 million and $2.2 billion in the first halves of 2025 and 2026；與調整數 2.311 差約 0.111（其他調整項）。只對照；基準代理用 2.311（chat 端指示）［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A non-GAAP 調節表，第 161 頁（股權報酬 924＋1,261＝2,185；原文精確值 2.185，本列 2.2 不改值）；原登錄時的二手來源：Luminix（轉載正式 S-1 人事費用附註）（https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0）；與調整數 2.311 的差 0.126＝2026Q1 非現金捐贈配對（v0.1.7「約 0.111 其他調整項」更正）］"
 - id: SRC_ANT_468
   key: sbc_s1f_fy2025
   group: F
@@ -7950,14 +7950,14 @@ rows:
   hi: null
   unit: $B/年
   period: 2025
-  source: Luminix（轉載正式 S-1 人事費用附註）
-  url: https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具，該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: GAAP
-  note: v0.1.7 新增。$1.2 billion（2023 $29M、2024 $192M）；模型 2025 股權報酬（人數 × 每人 0.8）約 1.77，只對照、不改 2025
+  note: "v0.1.7 新增。$1.2 billion（2023 $29M、2024 $192M）；模型 2025 股權報酬（人數 × 每人 0.8）約 1.77，只對照、不改 2025［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A non-GAAP 調節表，第 161 頁（105＋181＋305＋574＝1,165）；原登錄時的二手來源：Luminix（轉載正式 S-1 人事費用附註）（https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0）］"
 - id: SRC_ANT_469
   key: sbc_s1f_2025h1
   group: F
@@ -7967,14 +7967,14 @@ rows:
   hi: null
   unit: $B/半年
   period: 2025-H1
-  source: Luminix（轉載正式 S-1 人事費用附註）
-  url: https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具，該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: GAAP
-  note: v0.1.7 新增。$286 million；只對照
+  note: "v0.1.7 新增。$286 million；只對照［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A non-GAAP 調節表，第 161 頁（105＋181＝286）；原登錄時的二手來源：Luminix（轉載正式 S-1 人事費用附註）（https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0）］"
 - id: SRC_ANT_470
   key: adjoi_s1f_fy2025
   group: F
@@ -7984,14 +7984,14 @@ rows:
   hi: null
   unit: $B/年
   period: 2025
-  source: Luminix（轉載正式 S-1 第 24 頁 non-GAAP 表）
-  url: https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具，該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: non-GAAP
-  note: v0.1.7 新增。$(4,854)M；GAAP −8,060；只對照
+  note: "v0.1.7 新增。$(4,854)M；GAAP −8,060；只對照［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A non-GAAP 調節表，第 161 頁（(830)＋(1,019)＋(1,284)＋(1,721)＝(4,854)）；原登錄時的二手來源：Luminix（轉載正式 S-1 第 24 頁 non-GAAP 表）（https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0）］"
 - id: SRC_ANT_471
   key: adjoi_s1f_2025h1
   group: F
@@ -8001,14 +8001,286 @@ rows:
   hi: null
   unit: $B/半年
   period: 2025-H1
-  source: Luminix（轉載正式 S-1 第 24 頁 non-GAAP 表）
-  url: https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
   doc_date: '2026-10-26'
-  retrieved: '2026-10-31'
-  tag: Interested-party
-  party: Anthropic（正式 S-1；IPO 募資誘因）；本列經二手轉載取得：sec.gov 擋未宣告的自動工具，該節原文本代理未能直接讀到
+  retrieved: "2026-11-02"
+  tag: "Verified"
+  party: "Anthropic（正式 S-1；期中未經查核）"
   basis: non-GAAP
-  note: v0.1.7 新增。$(1,849)M；GAAP −2,135；只對照
+  note: "v0.1.7 新增。$(1,849)M；GAAP −2,135；只對照［v0.1.7.1：2026-11-02 chat 端瀏覽器核對 SEC 原文，與原文一致（docs/reports/20261102_S1原文核對.md 第 1 節）；原文位置：MD&A non-GAAP 調節表，第 161 頁（(830)＋(1,019)＝(1,849)）；原登錄時的二手來源：Luminix（轉載正式 S-1 第 24 頁 non-GAAP 表）（https://www.useluminix.com/reports/company-overviews/anthropic-s1-what-the-filing-shows/source/0）］"
+- id: SRC_ANT_472
+  key: fund_s1f_pref_2026h1
+  group: F
+  metric: "2026 上半年特別股發行收入（淨額；合併現金流量表）"
+  value: 110.432
+  lo: null
+  hi: null
+  unit: "$B/半年"
+  period: "2026-H1"
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  doc_date: '2026-10-26'
+  retrieved: '2026-11-02'
+  tag: Verified
+  party: "Anthropic（正式 S-1；期中未經查核）"
+  basis: "現金流量（融資活動）"
+  note: "v0.1.7.1 V2(a)。原文：合併現金流量表（F-13）特別股發行收入（淨額）110,432 百萬。＝Q1 Series G 30.2＋Q2 Series G-2 15.0＋Q2 Series H 65.2（各輪見 SRC_ANT_473、474、478）。Checks 對 FND_Committed 2026。2026-11-02 chat 端瀏覽器核對 SEC 原文（工作單 20261102 v0.1.7.1 轉錄；建置代理未直讀原文：sec.gov 擋自動工具）"
+- id: SRC_ANT_473
+  key: fund_s1f_series_g_q1
+  group: F
+  metric: "2026 Q1 Series G-1／G-2 發行（每股 259.1364）"
+  value: 30.2
+  lo: null
+  hi: null
+  unit: "$B"
+  period: "2026-Q1"
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  doc_date: '2026-10-26'
+  retrieved: '2026-11-02'
+  tag: Verified
+  party: "Anthropic（正式 S-1；期中未經查核）"
+  basis: "總額"
+  note: "v0.1.7.1 V2(b)。原文：Note 10（特別股）Q1 發行 Series G-1／G-2 共 30.2。取代 SRC_ANT_302（新聞稿 30）作為 Funding Series G 的引用（開關 s1f_round_switch）。2026-11-02 chat 端瀏覽器核對 SEC 原文（工作單 20261102 v0.1.7.1 轉錄；建置代理未直讀原文：sec.gov 擋自動工具）"
+- id: SRC_ANT_474
+  key: fund_s1f_series_g2_q2
+  group: F
+  metric: "2026 Q2 Series G-2 發行（Google 38.6 百萬股＋Amazon 19.3 百萬股，每股 259.1364）"
+  value: 15.0
+  lo: null
+  hi: null
+  unit: "$B"
+  period: "2026-Q2"
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  doc_date: '2026-10-26'
+  retrieved: '2026-11-02'
+  tag: Verified
+  party: "Anthropic（正式 S-1；期中未經查核）"
+  basis: "總額"
+  note: "v0.1.7.1 V2(c)。原文：Note 10、Note 4。Google 部分為 2026-03 Google 2026 NPA 承諾（約 10.0），Amazon 部分為 2026-04 Amazon 2026 NPA 承諾（約 5.0，即 Amazon 10-Q 的 Series G 5.0，SRC_ANT_319）；與 Series H 分開。2026-11-02 chat 端瀏覽器核對 SEC 原文（工作單 20261102 v0.1.7.1 轉錄；建置代理未直讀原文：sec.gov 擋自動工具）"
+- id: SRC_ANT_475
+  key: fund_s1f_g2_googl_shares
+  group: F
+  metric: "2026 Q2 Series G-2：Google 認購股數"
+  value: 38.6
+  lo: null
+  hi: null
+  unit: "百萬股"
+  period: "2026-Q2"
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  doc_date: '2026-10-26'
+  retrieved: '2026-11-02'
+  tag: Verified
+  party: "Anthropic（正式 S-1；期中未經查核）"
+  basis: "股數"
+  note: "v0.1.7.1 V2(c)。原文：Note 10、Note 4（Google 38.6 百萬股）。× 每股 259.1364 ÷ 1000＝10.003（$B），Funding 已到位融資 Google G-2 列（開關 googl_upfront_switch）。2026-11-02 chat 端瀏覽器核對 SEC 原文（工作單 20261102 v0.1.7.1 轉錄；建置代理未直讀原文：sec.gov 擋自動工具）"
+- id: SRC_ANT_476
+  key: fund_s1f_g2_amzn_shares
+  group: F
+  metric: "2026 Q2 Series G-2：Amazon 認購股數"
+  value: 19.3
+  lo: null
+  hi: null
+  unit: "百萬股"
+  period: "2026-Q2"
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  doc_date: '2026-10-26'
+  retrieved: '2026-11-02'
+  tag: Verified
+  party: "Anthropic（正式 S-1；期中未經查核）"
+  basis: "股數"
+  note: "v0.1.7.1 V2(c)。原文：Note 10、Note 4（Amazon 19.3 百萬股）。× 每股 259.1364 ÷ 1000＝5.001（$B）；模型 Amazon G 列仍引用 Amazon 10-Q 5.0（SRC_ANT_319，Verified），本列只對照。2026-11-02 chat 端瀏覽器核對 SEC 原文（工作單 20261102 v0.1.7.1 轉錄；建置代理未直讀原文：sec.gov 擋自動工具）"
+- id: SRC_ANT_477
+  key: fund_s1f_g_price
+  group: F
+  metric: "Series G-1／G-2 每股價格"
+  value: 259.1364
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: "2026"
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  doc_date: '2026-10-26'
+  retrieved: '2026-11-02'
+  tag: Verified
+  party: "Anthropic（正式 S-1；期中未經查核）"
+  basis: "價格"
+  note: "v0.1.7.1 V2(b)(c)。原文：Note 10。2026-11-02 chat 端瀏覽器核對 SEC 原文（工作單 20261102 v0.1.7.1 轉錄；建置代理未直讀原文：sec.gov 擋自動工具）"
+- id: SRC_ANT_478
+  key: fund_s1f_series_h_q2
+  group: F
+  metric: "2026 Q2 Series H-1／H-2 發行（每股 589.0095）"
+  value: 65.2
+  lo: null
+  hi: null
+  unit: "$B"
+  period: "2026-Q2"
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  doc_date: '2026-10-26'
+  retrieved: '2026-11-02'
+  tag: Verified
+  party: "Anthropic（正式 S-1；期中未經查核）"
+  basis: "總額"
+  note: "v0.1.7.1 V2(d)。原文：Note 10。含 Google 10.0、Amazon 5.0（Note 9，SRC_ANT_480、481）。取代 SRC_ANT_298（新聞稿 65）作為 Funding Series H 的引用（開關 s1f_round_switch）。2026-11-02 chat 端瀏覽器核對 SEC 原文（工作單 20261102 v0.1.7.1 轉錄；建置代理未直讀原文：sec.gov 擋自動工具）"
+- id: SRC_ANT_479
+  key: fund_s1f_h_price
+  group: F
+  metric: "Series H-1／H-2 每股價格"
+  value: 589.0095
+  lo: null
+  hi: null
+  unit: "$/股"
+  period: "2026"
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  doc_date: '2026-10-26'
+  retrieved: '2026-11-02'
+  tag: Verified
+  party: "Anthropic（正式 S-1；期中未經查核）"
+  basis: "價格"
+  note: "v0.1.7.1 V2(d)。原文：Note 10。只對照。2026-11-02 chat 端瀏覽器核對 SEC 原文（工作單 20261102 v0.1.7.1 轉錄；建置代理未直讀原文：sec.gov 擋自動工具）"
+- id: SRC_ANT_480
+  key: fund_s1f_googl_series_h
+  group: F
+  metric: "Google 2026-05 投資 Series H"
+  value: 10.0
+  lo: null
+  hi: null
+  unit: "$B"
+  period: "2026-05"
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  doc_date: '2026-10-26'
+  retrieved: '2026-11-02'
+  tag: Verified
+  party: "Anthropic（正式 S-1；期中未經查核）"
+  basis: "總額"
+  note: "v0.1.7.1 V2(e)。原文：Note 9（關係人）：2026-05 Google 另投 10.0 於 Series H，使 Google 2026 NPA 剩餘額度降為 20.0。已含於 Series H 65.2。2026-11-02 chat 端瀏覽器核對 SEC 原文（工作單 20261102 v0.1.7.1 轉錄；建置代理未直讀原文：sec.gov 擋自動工具）"
+- id: SRC_ANT_481
+  key: fund_s1f_amzn_series_h
+  group: F
+  metric: "Amazon 2026-05 投資 Series H"
+  value: 5.0
+  lo: null
+  hi: null
+  unit: "$B"
+  period: "2026-05"
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  doc_date: '2026-10-26'
+  retrieved: '2026-11-02'
+  tag: Verified
+  party: "Anthropic（正式 S-1；期中未經查核）"
+  basis: "總額"
+  note: "v0.1.7.1 V2(e)。原文：Note 9：2026-05 Amazon 另投 5.0 於 Series H，使 Amazon 2026 NPA 剩餘額度降為 15.0（與 Amazon 10-Q SRC_ANT_320 一致）。已含於 Series H 65.2。2026-11-02 chat 端瀏覽器核對 SEC 原文（工作單 20261102 v0.1.7.1 轉錄；建置代理未直讀原文：sec.gov 擋自動工具）"
+- id: SRC_ANT_482
+  key: fund_s1f_googl_npa_rem
+  group: F
+  metric: "Google 2026 NPA 剩餘可發行額度（2026-06-30；IPO 時可發行，至 2030）"
+  value: 20.0
+  lo: null
+  hi: null
+  unit: "$B"
+  period: "2026-06-30"
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  doc_date: '2026-10-26'
+  retrieved: '2026-11-02'
+  tag: Verified
+  party: "Anthropic（正式 S-1；期中未經查核）"
+  basis: "總額（條件式）"
+  note: "v0.1.7.1 V3。原文：MD&A（流動性）：2026-06-30 剩餘可發行 20.0；另有 IPO 同時以發行價認購最多 10.0 的選擇權（SRC_ANT_483），若行使，NPA 額度等額減少，兩者不相加；Note 16 簽約時寫最多 30.0。取代 SRC_ANT_329（報導 30）作為 Funding 條件式 Google 的引用（開關 s1f_cond_switch）。2026-11-02 chat 端瀏覽器核對 SEC 原文（工作單 20261102 v0.1.7.1 轉錄；建置代理未直讀原文：sec.gov 擋自動工具）"
+- id: SRC_ANT_483
+  key: fund_s1f_googl_ipo_option
+  group: F
+  metric: "Google IPO 同時認購選擇權（以發行價，最多）"
+  value: null
+  lo: null
+  hi: 10.0
+  unit: "$B"
+  period: "IPO"
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  doc_date: '2026-10-26'
+  retrieved: '2026-11-02'
+  tag: Verified
+  party: "Anthropic（正式 S-1；期中未經查核）"
+  basis: "總額（條件式上限）"
+  note: "v0.1.7.1 V3。原文：MD&A。行使則 Google 2026 NPA 剩餘額度等額減少（與 SRC_ANT_482 不相加）；只對照，不進任何情境。2026-11-02 chat 端瀏覽器核對 SEC 原文（工作單 20261102 v0.1.7.1 轉錄；建置代理未直讀原文：sec.gov 擋自動工具）"
+- id: SRC_ANT_484
+  key: fund_s1f_amzn_npa_rem
+  group: F
+  metric: "Amazon 2026 NPA 剩餘額度（2026-06-30；每達算力里程碑 5.0，IPO 後 30 個月內）"
+  value: 15.0
+  lo: null
+  hi: null
+  unit: "$B"
+  period: "2026-06-30"
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  doc_date: '2026-10-26'
+  retrieved: '2026-11-02'
+  tag: Verified
+  party: "Anthropic（正式 S-1；期中未經查核）"
+  basis: "總額（條件式）"
+  note: "v0.1.7.1 V3。原文：MD&A（流動性）15.0；Note 16 簽約時寫最多 20.0（含已購 5.0 股權）。與 Amazon 10-Q（SRC_ANT_322）同值；取代其作為 Funding 條件式 Amazon 的引用（開關 s1f_cond_switch）。2026-11-02 chat 端瀏覽器核對 SEC 原文（工作單 20261102 v0.1.7.1 轉錄；建置代理未直讀原文：sec.gov 擋自動工具）"
+- id: SRC_ANT_485
+  key: debt_s1f_revolver
+  group: F
+  metric: "A&R 循環信用額度（2026-09 由 3.25 擴為 15.0；2031-09 到期）"
+  value: 15.0
+  lo: null
+  hi: null
+  unit: "$B"
+  period: "2026-09"
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  doc_date: '2026-10-26'
+  retrieved: '2026-11-02'
+  tag: Verified
+  party: "Anthropic（正式 S-1；期中未經查核）"
+  basis: "總額（或有）"
+  note: "v0.1.7.1 V4。原文：MD&A 第 163–164 頁；Note 17（期後事項）。照規格 D16 只列或有，不作資金來源。取代 SRC_ANT_306（招股書草稿 15）作為 Funding 第六節循環信貸的引用（同值）。2026-11-02 chat 端瀏覽器核對 SEC 原文（工作單 20261102 v0.1.7.1 轉錄；建置代理未直讀原文：sec.gov 擋自動工具）"
+- id: SRC_ANT_486
+  key: debt_s1f_min_liquidity
+  group: F
+  metric: "循環信用額度最低流動性條款（自 2026-12-31 季末起）"
+  value: 5.0
+  lo: null
+  hi: null
+  unit: "$B"
+  period: "2026-12-31"
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  doc_date: '2026-10-26'
+  retrieved: '2026-11-02'
+  tag: Verified
+  party: "Anthropic（正式 S-1；期中未經查核）"
+  basis: "契約下限"
+  note: "v0.1.7.1 V4。原文：MD&A 第 163–164 頁；Note 17。只對照：模型最低現金（Funding 第四節，次年非算力成本 × 6 個月，Assumed 3–12）高於本下限。2026-11-02 chat 端瀏覽器核對 SEC 原文（工作單 20261102 v0.1.7.1 轉錄；建置代理未直讀原文：sec.gov 擋自動工具）"
+- id: SRC_ANT_487
+  key: cash_s1f_broadcom_deposit
+  group: F
+  metric: "Broadcom 租約保證金（受限現金；2026-04 存入）"
+  value: 2.5
+  lo: null
+  hi: null
+  unit: "$B"
+  period: "2026-04"
+  source: "Anthropic, PBC Form S-1（SEC EDGAR 公開提交，CIK 0002130357，accession 0001628280-26-067168）"
+  url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  doc_date: '2026-10-26'
+  retrieved: '2026-11-02'
+  tag: Verified
+  party: "Anthropic（正式 S-1；期中未經查核）"
+  basis: "受限現金"
+  note: "v0.1.7.1 V2（6-30 現金對照）。原文：Note 16（約 2.5）。之後抵付租金；不在「現金、約當現金與短期投資」131.651（SRC_ANT_444）內。預設不另計，只對照。2026-11-02 chat 端瀏覽器核對 SEC 原文（工作單 20261102 v0.1.7.1 轉錄；建置代理未直讀原文：sec.gov 擋自動工具）"
 not_found:
 - item: 2024 年認列營收（直接揭露值）
   tried: Reuters／Fortune／PYMNTS／Khaleej Times 招股書報導；查詢 "Anthropic 2024 revenue prospectus"
@@ -8211,10 +8483,10 @@ not_found:
 - item: 正式 S-1 季度、Note 8、承諾章節原文（一手直讀）
   tried: sec.gov 直連（403：未宣告的自動工具；不得在請求中使用使用者 email，故未改 User-Agent）；WebFetch 同一網址（只讀到前約 13 萬字，止於 Risk Factors）；搜尋 EDGAR 索引與 R 頁（無結果）
   verdict: 找不到
-  note: v0.1.6：季度數、Note 8 營收成本、營業現金流、承諾三段、逐家金額、集中度改取二手轉載（Kepler、sec-api.io、Tunguz、AlphaSense、xenospectrum、Daloopa、thevccorner），標 Interested-party（二手），報告列為缺口；待 chat 端以瀏覽器核對 S-1 第 157–171 頁與 Note 8、Note 16
+  note: v0.1.6：季度數、Note 8 營收成本、營業現金流、承諾三段、逐家金額、集中度改取二手轉載（Kepler、sec-api.io、Tunguz、AlphaSense、xenospectrum、Daloopa、thevccorner），標 Interested-party（二手），報告列為缺口；待 chat 端以瀏覽器核對 S-1 第 157–171 頁與 Note 8、Note 16［v0.1.7.1：chat 端 2026-11-02 以瀏覽器核對原文，46 列一致、改 Verified；SRC_ANT_421 為轉載者捨入，只對照（docs/reports/20261102_S1原文核對.md）］
   _file: v0.1.6
 - item: 正式 S-1 的 2026 上半年股權報酬金額
   tried: Kepler、sec-api.io、Tunguz、Daloopa、thevccorner
   verdict: 找不到
-  note: v0.1.6：本版未取得；D13 股權報酬仍為 Inputs 假設［v0.1.7：已由二手轉載取得 2.2（SRC_ANT_467）與調整數 2.311（SRC_ANT_465 − 435）；一手原文仍未直讀］
+  note: v0.1.6：本版未取得；D13 股權報酬仍為 Inputs 假設［v0.1.7：已由二手轉載取得 2.2（SRC_ANT_467）與調整數 2.311（SRC_ANT_465 − 435）；一手原文仍未直讀；v0.1.7.1：chat 端 2026-11-02 瀏覽器核對原文第 161 頁：2026Q1 924＋Q2 1,261＝2.185，調整後 − GAAP 的 2.311＝股權報酬 2.185＋非現金捐贈配對 0.126（2026Q1）］
   _file: v0.1.6

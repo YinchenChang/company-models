@@ -303,12 +303,13 @@ def test_v017_w4_noncompute_calibration(eng):
 
 
 def test_v017_switches_off_reproduce_v016(eng):
-    """各項開關設 0、TK 快照回到 v21.2（值取自 model/archive 的 v0.1.6）時，命題輸出與 v0.1.6 逐位相同（回歸）。"""
+    """各項開關設 0（含 v0.1.7.1 的 V2、V3 開關）、TK 快照回到 v21.2（值取自 model/archive 的 v0.1.6）時，命題輸出與 v0.1.6 逐位相同（回歸）。"""
     old = REPO / "model" / "archive" / "20261031_Anthropic_v0.1.6.xlsx"
     wo = openpyxl.load_workbook(old)
     wv = openpyxl.load_workbook(old, data_only=True)
     _s, i = _ids()
-    ov = {i[k]: 0 for k in ("s1f_commit_switch", "own_capex_method", "s1f_cal25_switch", "s1f_d22_switch", "s1f_d22_q3_switch", "s1f_sbc_proxy_switch")}
+    ov = {i[k]: 0 for k in ("s1f_commit_switch", "own_capex_method", "s1f_cal25_switch", "s1f_d22_switch", "s1f_d22_q3_switch", "s1f_sbc_proxy_switch",
+                            "googl_upfront_switch", "s1f_round_switch", "s1f_cond_switch")}      # v0.1.7.1：V2、V3 開關一併關閉
     for n, d in wo.defined_names.items():
         if not n.startswith("TK_") or n in ("TK_File", "TK_Version", "TK_Commit", "TK_ReadDate", "TK_HdrGen", "TK_HdrCost") or n not in eng.names:
             continue
@@ -337,3 +338,50 @@ def test_v017_switches_off_reproduce_v016(eng):
     finally:
         for k, v in orig.items():
             eng.set_key(k, v)
+
+
+def test_v0171_v2_committed_matches_s1(eng):
+    """v0.1.7.1 V2：2026 已到位融資＝Series G 30.2＋Amazon G-2 5＋Series H 65.2＋Google G-2（38.6 百萬股 × 259.1364 ÷ 1000），對 S-1 特別股發行收入 110.432 差 ≤ 0.5。"""
+    s, i = _ids()
+    g = lambda k: eng.get_name(s[k])  # noqa: E731
+    assert eng.get_name(i["googl_upfront_switch"]) == 1 and eng.get_name(i["s1f_round_switch"]) == 1
+    want = g("fund_s1f_series_g_q1") + g("strat_amzn_2026_series_g") + g("fund_s1f_series_h_q2") + g("fund_s1f_g2_googl_shares") * g("fund_s1f_g_price") / eng.get_name(i["m_to_b"])
+    com = eng.get_name("FND_Committed")
+    assert abs(com[1] - want) < 1e-9 and all(v == 0 for k, v in enumerate(com) if k != 1)
+    assert abs(com[1] - g("fund_s1f_pref_2026h1")) <= eng.get_name(i["s1f_cmt_tol"])
+    assert abs(eng.get_name("FND_CommittedS1Gap") - (com[1] - g("fund_s1f_pref_2026h1"))) < 1e-9
+
+
+def test_v0171_switches_off_reproduce_v017(eng):
+    """v0.1.7.1 的 V2、V3 開關設 0 時，v0.1.7 的全部計算具名範圍（DEM_／REV_／CMP_／COST_／FND_／RVS_）與 v0.1.7 逐位相同（範圍外變動 0 的回歸）。
+    V1（SRC_ANT_427–431 原文精度）只影響對照列（Cost 第二十五節 W4 交叉核對、Checks），不在這些名稱內；Checks 另由報告逐格比對。"""
+    old = REPO / "model" / "archive" / "20261031_Anthropic_v0.1.7.xlsx"
+    wo = openpyxl.load_workbook(old)
+    wv = openpyxl.load_workbook(old, data_only=True)
+    _s, i = _ids()
+    ov = {i[k]: 0 for k in ("googl_upfront_switch", "s1f_round_switch", "s1f_cond_switch")}
+    from engine import resolve_key
+    orig = {k: eng.get(*resolve_key(eng.names, k)) for k in ov}
+    n_cmp = 0
+    try:
+        for k, v in ov.items():
+            eng.set_key(k, v)
+        for n, d in wo.defined_names.items():
+            if not n.startswith(("DEM_", "REV_", "CMP_", "COST_", "FND_", "RVS_")):
+                continue
+            sh, ref = d.attr_text.split("!")
+            cells = wv[sh][ref.replace("$", "")]
+            want = [c.value for row in cells for c in row] if isinstance(cells, tuple) else [cells.value]
+            got = eng.get_name(n)
+            got = got if isinstance(got, list) else [got]
+            assert len(got) == len(want), n
+            for a, b in zip(got, want):
+                n_cmp += 1
+                if isinstance(b, (int, float)) and not isinstance(b, bool):
+                    assert abs(a - b) <= 1e-9 * max(1, abs(b)), (n, a, b)
+                else:
+                    assert (a in (None, "") and b in (None, "")) or a == b, (n, a, b)
+    finally:
+        for k, v in orig.items():
+            eng.set_key(k, v)
+    assert n_cmp > 1500          # v0.1.7.1：1,696 個值
