@@ -254,6 +254,7 @@ Q.freeze_panes = "B4"
 FYS = (2025, 2026, 2027, 2028, 2029); FC = {2025: "C", 2026: "D", 2027: "E", 2028: "F", 2029: "G"}
 BU = (2026, 2027, 2028, 2029)
 umx = lambda y, s: {2026: "1", 2027: "1", 2028: f"um28_{s}", 2029: f"um29_{s}"}[y]
+_mfy = lambda m, y: m[y] if isinstance(m, dict) else m   # Siliconomics v0.13：mf 可為年別 dict（Sens「Wattonomics 錨定」案例）；預設字串不變
 DEFP = dict(scn="A", rel="rel", cs="cs", keep="keep", vpg="vpg", mf="1", gn="g_nai", d="d_ai", vrd="vrd", opxa="0", nio="nio_f")
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
@@ -271,7 +272,7 @@ def engine(ws, r0, title, **over):
         ws.cell(r, 1, t).font = BOLD; r += 1
     c_ = lambda y: FC[y]
     sec_("A. AI 部署與整櫃組裝市場（D 欄＝FY2026 校準年；E–G＝FY2027–FY2029）")
-    row("itc", "AI IT 資本支出 × 情境顆數係數", "US$B", {c_(y): f"=itc_{y % 100}*{umx(y, s)}" + ("" if y == 2026 else f"*{P['mf']}") for y in BU})
+    row("itc", "AI IT 資本支出 × 情境顆數係數", "US$B", {c_(y): f"=itc_{y % 100}*{umx(y, s)}" + ("" if y == 2026 else f"*{_mfy(P['mf'], y)}") for y in BU})
     row("itpg", "每 GW IT 資本支出", "US$B", {"D": "=itpg_gb*(1-vr26)+itpg_vr*vr26", **{c_(y): "=itpg_vr" for y in BU[1:]}})
     row("gw", "部署 GW（IT 電力）", "GW", {c_(y): f"={c_(y)}{R['itc']}/{c_(y)}{R['itpg']}" for y in BU}, fmt="0.0")
     row("vpg", "每 GW ODM 整櫃價值", "US$B/GW", {"D": "=(racks_gb*odm_gb*(1-vr26)+racks_vr*odm_vr*vr26)/1000", "E": "=racks_vr*odm_vr/1000",
@@ -831,6 +832,51 @@ import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "quanta")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.3.1", "2026-10-30")  # v0.3.1：In 頁版面（個股模型原則第 8 節；數值不變）
+# ---------------- Siliconomics v0.13（2026-11-04；決策 S37）：Sens「Wattonomics 錨定」案例 ----------------
+# In 頁最後追加 Z 節（wta_27／28／29，數值取 SIL.WTA）；Sens 頁既有內容最下方另起小表與案例區塊。既有儲存格不位移、數值不變。
+WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
+def _wta_in():
+    r = IN.max_row + 2
+    IN.cell(r, 1, "Z. Wattonomics 錨定係數（敏感度用；Siliconomics v0.13）").font = BOLD; r += 1
+    def w(k, lab, unit, lo, b, hi, tag, s1, s2):
+        nonlocal r
+        for j, v in enumerate((k, lab, unit, lo, b, hi, tag, s1, s2), 1):
+            if v is not None: IN.cell(r, j, v)
+        IN.cell(r, 5).font = BLUE; IN.cell(r, 5).number_format = "0.000"
+        wb.defined_names[k] = DefinedName(k, attr_text=f"In!$E${r}"); r += 1
+    SIL.wta_rows(w)
+def _wta_sens(mf, setting, how):
+    r0 = SE.max_row + 3
+    SE.cell(r0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+    SE.cell(r0 + 1, 1, WTA_NOTE)
+    SE.cell(r0 + 2, 1, how)
+    ncol = max(j for j in range(1, 30) if SE.cell(3, j).value is not None)
+    H = [SE.cell(3, j).value for j in range(1, ncol + 1)]
+    hdr(SE, r0 + 3, H)
+    base_b = "情境 B" in str(SE.cell(4, 1).value)
+    rb, rB = r0 + 4, r0 + 5
+    rw = rB + (0 if base_b else 1)
+    rd = rw + 1
+    WR = engine(SE, rd + 4, "案例區塊：Wattonomics 錨定（情境 B × wta）", scn="B", mf=mf)
+    SE.cell(rb, 1, "基準（主表第 4 列）"); SE.cell(rb, 2, SE.cell(4, 1).value)
+    for j in range(3, ncol + 1):
+        L = SE.cell(4, j).column_letter
+        SE[f"{L}{rb}"] = f"={L}4"; SE[f"{L}{rb}"].number_format = SE[f"{L}4"].number_format
+    if not base_b:
+        put_case(rB, "情境 B（PL 區塊 B）", "Siliconomics 基準係數（未乘 wta）", PB["B"], "PL!")
+    put_case(rw, "Wattonomics 錨定", setting, WR, "")
+    for k, (rr, lab) in enumerate(((rb, "錨定 − 基準（主表第 4 列）"), (rB, "錨定 − 情境 B")) if not base_b else ((rb, "錨定 − 基準（主表第 4 列）＝情境 B"),)):
+        ri = rd + k
+        SE.cell(ri, 1, lab); SE.cell(ri, 2, "差異%（毛利率、營益率等百分比欄為百分點差）")
+        for j in range(3, ncol + 1):
+            if "相對基準" in str(H[j - 1]): continue
+            L = SE.cell(4, j).column_letter
+            pct = "%" in SE[f"{L}4"].number_format
+            SE[f"{L}{ri}"] = f"={L}{rw}-{L}{rr}" if pct else f"={L}{rw}/{L}{rr}-1"
+            SE[f"{L}{ri}"].number_format = "0.0%"
+    return dict(r0=r0, base=rb, case=rw, diff=rd, block=WR)
+_wta_in()
+WTA_SENS = _wta_sens({2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}, '情境 B；AI IT 資本支出（→ 整櫃組裝市場） CY2027 起 × wta_27／28／29', '做法：引擎的 AI 部署係數 mf（原只乘在 AI IT 資本支出列、FY2027 起）改為年別 dict（wta_27／28／29）；FY2026 不乘。FY2030 以後無延伸表（Sens 引擎只到 FY2029）。目標價：Sens 目標價表只有 DCF 參數案例，本案例不重算目標價。')
 wb.save(sys.argv[1])
 if os.environ.get("QUANTA_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
