@@ -11,6 +11,9 @@ TAGS = ("Verified", "Interested-party", "Analogy", "Assumed", "Derived", "待證
 
 
 def main():
+    same = None
+    if "--same-gross" in sys.argv:   # v0.2.1 W2：給前一版快照時，驗證年新增毛額、年底與 R4 用的基準名稱不變
+        i_ = sys.argv.index("--same-gross"); same = sys.argv[i_ + 1]; del sys.argv[i_:i_ + 2]
     x = sys.argv[1]
     wb = openpyxl.load_workbook(x, data_only=True)
     wf = openpyxl.load_workbook(x, data_only=False)
@@ -100,8 +103,34 @@ def main():
                 nmiss += 1; print(f"  edits 未生效：{e['key']} {e['col']}：xlsx {cur!r} ≠ {e['new']!r}")
         if nmiss: bad.append(f"{os.path.basename(ef)} 有 {nmiss} 列未在 xlsx 生效")
         else: print(f"  {os.path.basename(ef)}：全部列已生效")
-    for cid in ("C-K1", "R-K1"):
+    # v0.2.1 獨立核對第 3 項：上市年＋壽命以前不得出現該世代的汰換（上市年＝Players 世代占比首個 > 0 的年份；H100 視為 2023 前已上市）
+    if "Players" in wb.sheetnames and "Deploy" in wb.sheetnames:
+        PLs, DPs = wb["Players"], wb["Deploy"]
+        yrs = {c_: int(DPs.cell(3, c_).value) for c_ in range(4, 14) if str(DPs.cell(3, c_).value).isdigit()}
+        life = round(val("life_ret")) if "life_ret" in names else 6
+        mixrow = {str(PLs.cell(r_, 1).value).replace("世代占比：", ""): r_ for r_ in range(4, 15) if str(PLs.cell(r_, 1).value).startswith("世代占比：")}
+        nbadg = 0
+        for r_ in range(4, DPs.max_row + 1):
+            lab = str(DPs.cell(r_, 1).value or "")
+            if not lab.startswith("　其中 NVIDIA "): continue
+            gname = lab.replace("　其中 NVIDIA ", "")
+            if gname not in mixrow: continue
+            launch = next((y_ for c_, y_ in yrs.items() if (PLs.cell(mixrow[gname], c_).value or 0) > 0), 9999)
+            if gname.startswith("Hopper"): launch = min(launch, 2023) - life   # 最舊世代：早於 2023 的存量歸此
+            for c_, y_ in yrs.items():
+                v_ = DPs.cell(r_, c_).value or 0
+                if y_ < launch + life and abs(v_) > 1e-9:
+                    nbadg += 1; print(f"  世代汰換早於上市年＋壽命：{gname} {y_} 年 {v_:.3f}（上市 {launch}）")
+        if nbadg: bad.append(f"世代汰換早於上市年＋{life} 年：{nbadg} 格")
+        else: print(f"  世代汰換：無早於上市年＋{life} 年者")
+    for cid in ("C-K1", "R-K1", "R-K2", "W1-K1", "W1-K2"):
         if cid not in [x_[0] for x_ in rows]: bad.append(f"Checks 缺 {cid}（v0.2）")
+    if same:
+        ps = json.load(open(same, encoding="utf-8"))["names"]
+        keys = [k for k in ps if k.startswith(("WIF_MktGW_Add_A_D0_", "WIF_MktGW_YE_A_D0_", "WIF_MktGW_Add_2", "WIF_MktGW_YE_2")) and "SiteOnly" not in k]   # 主路徑（R4 讀主路徑毛額）；SiteOnly 隨站點證據可變
+        dg = [k for k in keys if k in names and abs((val(k) or 0) - (ps[k] or 0)) > 1e-9]
+        if dg: bad.append(f"年新增毛額或年底與前一版不同：{dg[:5]}")
+        else: print(f"  毛額不變：{len(keys)} 名與 {os.path.basename(same)} 相同")
     # 6) 快照一致
     if len(sys.argv) > 2:
         snap = json.load(open(sys.argv[2], encoding="utf-8"))
@@ -119,7 +148,9 @@ def main():
                # v0.1.9（工作單 20261102 F4–F8）：NVIDIA 對帳點只並列、不校準
                "### NVIDIA 資料中心營收對帳點", "只並列、不校準",
                # v0.2（工作單 20261104）：承租玩家、融資租賃、刪停用情境、K4 乙、汰換
-               "### 承租玩家只算 IT", "融資租賃走資本支出線", "出租方", "### 汰換", "K4 乙", "WIF_MktGW_<YE|Avg|Add>_<yyyy>", "A_D0 為舊名"):
+               "### 承租玩家只算 IT", "融資租賃走資本支出線", "出租方", "### 汰換", "K4 乙", "WIF_MktGW_<YE|Avg|Add>_<yyyy>", "A_D0 為舊名",
+               # v0.2.1
+               "殘差法", "攤到認列年"):
         if kw not in txt: bad.append(f"wattonomics/README.md 缺固定規格：{kw}")
     print(f"{os.path.basename(x)}：頁面 {len(wb.sheetnames)}、具名範圍 {len(names)}（WIF_ {len(gif)}）、Checks {len(rows)} 項（OK {nok}／WARN {len(cw)}／ERROR {len(ce)}／INFO {ninfo}）、"
           f"In 輸入列 {nrow}（待證據 {pend}）、錯誤格 {nerr}")
