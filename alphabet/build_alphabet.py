@@ -1,4 +1,4 @@
-# Alphabet（GOOGL）個股模型 v0.3.1：命題模組＋官方營收分部 → 損益表（docs/plan/個股模型原則_命題加營收分部.md）
+# Alphabet（GOOGL）個股模型 v0.3.4（v0.3.1 季度滾動＋v0.3.4 2026Q3 10-Q 補入）：命題模組＋官方營收分部 → 損益表（docs/plan/個股模型原則_命題加營收分部.md）
 # 工作單：mag/docs/workorders/20261027_MAG_v0.3_個股模型重建_分部架構.md；v0.3.1 季度滾動：mag/docs/workorders/20261029_MAG_v0.3.1_季度滾動_2026Q3.md
 # 用法：python3 alphabet/build_alphabet.py raw.xlsx [--sens sens.json]
 #       再以 LibreOffice headless 重算（alphabet/make_v03.sh 一次跑完：建置 → 敏感度重算 → 成品 → 檢查）。
@@ -90,7 +90,7 @@ SE = wb.create_sheet("Sens"); SO = wb.create_sheet("Sources")
 # =====================================================================================================
 # In：輸入（一列一鍵；E＝基準，D＝低，F＝高）
 IN["A1"] = "In — 輸入（藍字；基準欄 E 進主模型；D／F＝敏感度低／高，只用於 Sens 頁、不進目標價；情境 A／B／C 的驅動見本頁最後一節「情境驅動對照」〔v0.3.3〕）。金額 US$B；每股 US$；股數十億股；MW＝IT MW。標記：Verified／Interested-party／Analogy／Assumed／Derived（Analogy、Assumed 一律給低／高區間）"
-IN["A2"] = "「沿用 v0.2.2」＝MAG v0.2.2 已核准的參數（原出處：alphabet/legacy_v0.2/company.json、kspec.py、data/kevidence_alphabet_20261008.json；對照表 r1 C1–C23）。v0.3.1：Tokenomics 升級 v21.7（data/tokenomics_snapshot_v21.7.json）、2026Q3 實績（data/alphabet_facts_2026q3.json）、評價日 2026-09-30。黃底＝判斷題（Andy 可改）"
+IN["A2"] = "「沿用 v0.2.2」＝MAG v0.2.2 已核准的參數（原出處：alphabet/legacy_v0.2/company.json、kspec.py、data/kevidence_alphabet_20261008.json；對照表 r1 C1–C23）。v0.3.1：Tokenomics 升級 v21.7（data/tokenomics_snapshot_v21.7.json）、2026Q3 實績（data/alphabet_facts_2026q3.json）、評價日 2026-09-30。v0.3.4：10-Q 2026Q3 原文取代推導／沿用值（說明欄「原（v0.3.3）：」為舊值）。黃底＝判斷題（Andy 可改）"
 hdr(IN, 3, ["鍵", "項目", "單位", "敏感度低", "基準", "敏感度高", "標記", "來源", "說明"])
 ROWS = []
 def sec(t): ROWS.append(("sec", t))
@@ -105,36 +105,40 @@ def fv(i): return F[_fid(i)]["value"]
 def fs(i): i = _fid(i); it = F[i]; return f"{it['source']}（{it['docDate']}；事實總帳 {i}）"
 
 V22 = "沿用 v0.2.2（legacy_v0.2/company.json）"
-sec("A. 現價、股數與資產負債（評價日 2026-09-30；2026Q3 財報新聞稿，10-Q 尚未提供）")
+sec("A. 現價、股數與資產負債（評價日 2026-09-30；2026Q3 財報新聞稿＋10-Q〔v0.3.4〕）")
 inp("px", "現價（2026-10-28 收盤）", "US$", None, 324.89, None, "Verified",
     "BigGo Finance https://finance.biggo.com/news/747b8ed4-8d02-4fc5-84ac-f68ab61a7d20（10-28 收盤 324.89、盤後 294.20）；Investing.com GOOGL 報價 324.89（+1.34%）https://www.investing.com/news/company-news/alphabet-q3-2026-slides-128b-revenue-overshadowed-by-profit-miss-93CH-4981067（2026-10-29 讀取）",
     "只影響上檔空間與評等（v0.3.1 起與 WACC、回購價脫鉤，見 px_val）。財報後盤後約 288–294（−9%～−11%）；10-29 收盤尚未產生。v0.3 現價 316.80（2026-10-26）")
 inp("px_val", "評價日股價（2026-09-30 收盤；WACC 權益權重與回購價用）", "US$", None, 344.08, None, "Verified",
     "FinancialContent GOOGL 歷史股價 https://www.financialcontent.com/quote/NQ%3AGOOGL/historical（2026-10-29 讀取：9/30 收盤 344.08；同頁 10/07 350.50、10/23 320.21 與 StockAnalysis 相同）",
     "v0.3.1 新增：評價日市值權重（與評價日一致）；v0.3 以現價代用")
-inp("sh_out", "流通股數（2026-09-30，資產負債表股本說明）", "十億股", None, fv("sh.out.20260930") / 1000, None, "Interested-party", fs("sh.out.20260930"), "10-Q 封面股數尚未提供；Class A 5,888＋B 828＋C 5,578 百萬股")
+inp("sh_out", "流通股數（2026-09-30，資產負債表股本說明）", "十億股", None, fv("sh.out.20260930") / 1000, None, "Verified", fs("sh.out.20260930"),
+    "v0.3.4：10-Q 封面（2026-10-21）A 5,888＋B 827＋C 5,579＝12,294 百萬股，與資產負債表相同（事實總帳 sh.cover.20261021）")
 inp("sh_dil_q2", "2026Q3 稀釋加權股數", "十億股", None, fv("sh.dilW.2026q3") / 1000, None, "Interested-party", fs("sh.dilW.2026q3"))
 inp("sh_basic_q2", "2026Q3 基本加權股數", "十億股", None, fv("sh.basicW.2026q3") / 1000, None, "Interested-party", fs("sh.basicW.2026q3"),
     "Q3 ATM 發行 36M 股（在季內加權）；期末稀釋股數＝Q3 稀釋加權＋(9/30 流通股 − Q3 基本加權)")
 inp("conv_sh", "強制轉換特別股 2029-05-15 轉換股數（上限）", "十億股", 0.0436, 0.0546, 0.0546, "Interested-party",
     "8-K 2026-06-05：A 系列每股轉 2.2520–2.8160 股、B 系列 2.2740–2.8420 股 → 43.6–54.6M 股；" + V22 + " debt.convertibles", "取稀釋最大（保守）；評價時直接加入股數，特別股股利照付至轉換")
-inp("cash_0", "現金＋債權類有價證券（2026-09-30）", "US$B", None, round((fv("bs.cashTotal.2026q3") - fv("mkt.eqsec.2026q3")) / 1000, 3), None, "Derived",
-    "新聞稿資產負債表：現金 56.334＋有價證券 208.764＝265.098 − 其中權益證券 90.4（法說；事實總帳 bs.cashTotal.2026q3、mkt.eqsec.2026q3）",
-    "10-Q 附註 3 尚未提供：權益證券以法說 90.4 代用（資料缺口）；2026-06-30 為 155.411")
+inp("cash_0", "現金＋債權類有價證券（2026-09-30）", "US$B", None, round((fv("bs.cashTotal.2026q3") - fv("eqsec.mkt.10q.2026q3")) / 1000, 3), None, "Derived",
+    "新聞稿資產負債表：現金 56.334＋有價證券 208.764＝265.098 − 其中可交易權益證券 90.384（10-Q 2026Q3 p.15；事實總帳 bs.cashTotal.2026q3、eqsec.mkt.10q.2026q3）",
+    "原（v0.3.3）：174.698（權益證券用法說 90.4）；2026-06-30 為 155.411")
 inp("cash_ye25", "現金＋債權類有價證券（2025-12-31）", "US$B", None, 120.53, None, "Derived", "10-K 2025：30.708＋96.135 − 6.313（" + V22 + " ytdActual.cash1231）")
-inp("debt_0", "債務面額（2026-09-30）", "US$B", None, round((fv("debt.face.2026q2") + fv("cf.debtIss.2026q3") + fv("cf.debtRep.2026q3")) / 1000, 3), None, "Derived",
-    "2026-06-30 面額 101.085（10-Q 附註 6）＋Q3 發債淨額 28.996 − Q3 償還 3.626（新聞稿現金流量表）",
-    "10-Q 附註 6 尚未提供（資料缺口）；對照：資產負債表長期債務帳面 125.102（不含一年內到期）")
-inp("fines", "應計罰款與和解（類債）", "US$B", None, 12.156, None, "Derived", "2026-06-30 餘額 17.356（10-Q 2026Q2）− Q3 已付歐盟罰款 5.2（法說）", "10-Q 尚未提供；v0.3 以 6/30 餘額扣除（付款在 Q3）")
-inp("nci", "非控制權益（類債）", "US$B", None, 7.1, None, "Interested-party", "10-Q 2026Q2（事實總帳 bs.nci；Waymo 等少數股權）", "沿用 2026Q2（10-Q 尚未提供）")
+inp("debt_0", "債務面額（2026-09-30）", "US$B", None, fv("debt.face.2026q3") / 1000, None, "Verified", fs("debt.face.2026q3"),
+    "原（v0.3.3）：推導 126.455（6/30 面額 101.085＋Q3 發債淨額 28.996 − Q3 償還 3.626）；帳面長期債務 125.102＋一年內到期 1.016＋折價 1.110＋避險 0.257")
+inp("fines", "應計罰款與和解（類債；2026-09-30）", "US$B", None, fv("bs.fines.2026q3") / 1000, None, "Verified", fs("bs.fines.2026q3"),
+    "原（v0.3.3）：推導 12.156（6/30 17.356 − Q3 已付歐盟罰款 5.2）；10-Q Note 10：2026-07 支付 5.2（含利息）")
+inp("nci", "非控制權益（2026-09-30；不進目標價，見 Val 頁類債說明）", "US$B", None, fv("bs.nci.2026q3") / 1000, None, "Verified", fs("bs.nci.2026q3"), "原（v0.3.3）：沿用 2026Q2 7.1")
 
 sec("B. 持股（分部加總與 DCF 皆加入；非上市 × (1 − 流動性折價)；上市不折價）")
 inp("ant_val", "Anthropic 最近一輪投後估值（Series H）", "US$B", None, 965.0, None, "Interested-party", fs("rp.anthropic.val.seriesH"))
-inp("ant_stake", "Anthropic 持股比例", "%", 0.11, 0.125, 0.14, "Assumed", "一手不存在：2025 法院文件約 14%；非上市證券帳面 124.3B ÷ 965B 隱含上限 12.9%（" + V22 + " valuation.holdings）")
+inp("ant_stake", "Anthropic 持股比例", "%", 0.11, 0.125, 0.14, "Assumed", "一手不存在：2025 法院文件約 14%；非上市證券帳面 124.3B ÷ 965B 隱含上限 12.9%（" + V22 + " valuation.holdings）",
+    "v0.3.4 對照：10-Q 2026Q3 非上市權益證券帳面 128.2（事實總帳 eqsec.nonMkt.2026q3；含其他非上市持股）÷ 965 ＝ 13.3%；本值不改（判斷題）")
 inp("illiq", "非上市持股流動性折價", "%", 0.0, 0.2, 0.4, "Assumed", "工作單第 2 節 Val 0.2（1 − 流動性折價 20%）；對照表 r1 第 5 節第 9 條", judg=True)
-inp("spacex", "SpaceX 持股公允價值（上市、限售；2026-09-30）", "US$B", None, round(94.1 + fv("is.eqGain.2026q3") / 1000, 3), None, "Derived",
-    "2026-06-30 94.1（10-Q 附註 3：短期 80.0＋長期限售 14.1）＋Q3 權益證券淨損益 −8.664（新聞稿第 8 頁；法說：主要為 SpaceX 未實現損失）", "假設 Q3 權益證券損失全數來自 SpaceX；10-Q 附註 3 尚未提供（資料缺口）")
-inp("oth_eq", "其他有價權益證券", "US$B", None, 7.089, None, "Derived", "有價權益證券 87.063＋14.126 − SpaceX 94.1（" + V22 + "）")
+inp("spacex", "SpaceX 持股公允價值（上市、限售；2026-09-30）", "US$B", None, fv("eqsec.spacex.2026q3") / 1000, None, "Verified", fs("eqsec.spacex.2026q3"),
+    "原（v0.3.3）：推導 85.436（6/30 94.1＋Q3 權益證券損益 −8.664，假設全數來自 SpaceX）")
+inp("oth_eq", "其他可交易權益證券（2026-09-30）", "US$B", None, round((fv("eqsec.mkt.10q.2026q3") - fv("eqsec.spacex.2026q3")) / 1000, 3), None, "Derived",
+    "10-Q 2026Q3 p.15：可交易權益證券 90.384 − 其中 SpaceX 75.2（事實總帳 eqsec.mkt.10q.2026q3、eqsec.spacex.2026q3）",
+    "原（v0.3.3）：7.089（6/30：87.063＋14.126 − SpaceX 94.1）；v0.3.4 判斷：與 SpaceX 同步改用 10-Q，使持股合計＝10-Q 可交易權益證券（cash_0 已扣同一數字）")
 
 sec("C. 折現率與目標價規則")
 inp("rf", "無風險利率（10 年美債，2026-10-27）", "%", None, 0.0499, None, "Verified",
@@ -148,7 +152,8 @@ inp("beta", "β（Blume 調整後兩個獨立來源的中位數）", "x", 1.1407
 inp("erp", "股權風險溢酬", "%", 0.04, 0.05, 0.06, "Assumed", V22 + "（val.erp）")
 inp("kd_sp", "約 10 年期 AA 公司債利差（相對 10 年美債）", "%", 0.004, 0.006, 0.009, "Assumed", "判斷：Aa2／AA+（事實總帳 debt.rating）10 年期利差約 50–90bp；2066 長債發行利差 T＋130bp 為 40 年期，不採（修正一 F4）")
 inp("kd", "稅前債務成本（約 10 年期）＝rf＋利差", "%", None, "=rf+kd_sp", None, "Derived", "修正一 F4：kd＝約 10 年期公司債殖利率", "v0.3 修正前用 2066 票據 6.527%（" + fs("val.kd.2066") + "）")
-inp("fin_lease", "融資租賃負債（2026-06-30）", "US$B", None, 2.59, None, "Interested-party", "10-Q 2026Q2 附註 4（事實總帳 lease.finLiab）", "計入 WACC 負債與 DCF、分部加總的淨負債（修正一 F6）")
+inp("fin_lease", "融資租賃負債（2026-09-30）", "US$B", None, fv("lease.finLiab.2026q3") / 1000, None, "Verified", fs("lease.finLiab.2026q3"),
+    "計入 WACC 負債與 DCF、分部加總的淨負債（修正一 F6）；原（v0.3.3）：沿用 2026-06-30 2.59")
 inp("wacc_adj", "WACC 調整（Sens 格：±1pt）", "%", -0.01, 0.0, 0.01, "Assumed", "修正一 F4：WACC ±1 個百分點的目標價格")
 inp("tax_w", "WACC 用稅率（2025 有效稅率）", "%", None, 0.168, None, "Derived", "10-K 2025：所得稅 26.656 ÷ 稅前 158.826", V22)
 inp("g_tv", "永續成長率（FY2032 後）", "%", 0.02, 0.03, 0.04, "Assumed", "工作單第 2 節 Val 0.1（g 3%）", judg=True)
@@ -265,9 +270,8 @@ inp("life_na", "非 AI 資本支出折舊年限", "年", 8, 10, 15, "Assumed", V
 inp("phi_0", "資本支出當期折舊比例（在役時點與半年慣例）", "x", 0.0, 0.25, 0.5, "Assumed", "判斷：支出平均於期中、約半年後上線 → 當期 25%；最後一年補足 75%", "AI 折舊進損益的時點（工作單第 2 節 Thesis）")
 inp("da_base", "評價日在役資產年折舊（2026Q2 × 4）", "US$B/年", None, 28.416, None, "Derived", "現金流量表折舊 2026Q2 7.104 × 4（" + V22 + " capexModel.segDaRunRate）",
     "在役淨額 ≈ PP&E 321.2 − 在建 122.8＝198.4，÷ 28.4＝7.0 年 → 模型期內以直線法每年 28.4")
-inp("cip_0", "在建工程（尚未在役，2026-09-30 推估）", "US$B", 122.814, round(fv("bs.ppe.notInService.2026q2") * fv("bs.ppe.2026q3") / fv("bs.ppe.2026q2") / 1000, 3), 160.0, "Derived",
-    "2026-06-30 在建 122.814（10-Q 附註 7）×（9/30 不動產與設備淨額 372.827 ÷ 6/30 321.212）：假設在建占淨額比例（38.2%）不變",
-    "10-Q 附註 7 尚未提供（資料缺口）；Q4 26 起轉入在役；依 AI 資本支出結構分 IT／機房")
+inp("cip_0", "在建工程（尚未啟用資產，2026-09-30）", "US$B", 122.814, fv("bs.ppe.notInService.2026q3") / 1000, 160.0, "Verified", fs("bs.ppe.notInService.2026q3"),
+    "原（v0.3.3）：推導 142.549（6/30 在建 122.814 × 淨額比例）；Q4 26 起轉入在役；依 AI 資本支出結構分 IT／機房；敏感度低／高沿用（6/30 值／160）")
 inp("cip_it", "在建工程與資本支出中 IT（伺服器與網通）占比", "%", 0.55, 0.65, 0.7, "Interested-party", fs("capex.mix.2026q3"), "2026Q2 為約 60%（事實總帳 capex.mix.2026q2）")
 inp("capex_g", "2026 資本支出指引中點", "US$B", 195, 200, 205, "Interested-party", fs("guid.capex.2026.oct"), "2026-10-28 法說維持 195–205（7 月上修後）；C10：FY2026＝9M 實績＋Q4 公式＝本值")
 inp("capex_1h", "2026 年 9M 資本支出（購置不動產與設備）", "US$B", None, -fv("cf.capex.ytd2026") / 1000, None, "Interested-party", "財報新聞稿現金流量表年初至今欄（Q1 35.674＋Q2 44.924＋Q3 51.355）")
@@ -343,7 +347,8 @@ for p, v in (("2H", 0.301), (27, 1.203), (28, 1.203), (29, 0.602)):
     inp(f"pref_{p}", f"強制轉換特別股股利 {YH[p]}", "US$B", None, v, None, "Derived", "6.25% × 19.25B，每季 2/15、5/15、8/15、11/15 至 2029-05-15（" + V22 + " defaults.dividend.preferred）" if p == "2H" else "")
 
 sec("G2. 2026 年 9M 實績（CF 頁；2026Q3 新聞稿現金流量表年初至今欄）")
-inp("lease_1H", "9M26 融資租賃本金", "US$B", None, 0.943, None, "Derived", "1H26 0.840（10-Q 附註 4）＋Q3 推估 0.103（2H26 到期 0.206 的一半）", "10-Q 2026Q3 尚未提供（資料缺口）")
+inp("lease_1H", "9M26 融資租賃本金", "US$B", None, fv("lease.finPrin.ytd2026") / 1000, None, "Verified", fs("lease.finPrin.ytd2026"),
+    "原（v0.3.3）：推導 0.943（1H26 0.840＋Q3 推估 0.103）；Q3 單季 1.110")
 inp("anth_1H", "9M26 策略投資（非上市證券 − 出售＋收購＋其他投資）", "US$B", None,
     round((-fv("cf.buyNonMkt.ytd2026") - fv("cf.sellNonMkt.ytd2026") - fv("cf.acq.ytd2026") - fv("cf.invOth.ytd2026")) / 1000, 3), None, "Derived",
     "新聞稿年初至今：購買非上市證券 24.160 − 出售 1.875＋收購 34.103＋其他投資 0.879", "v0.3 1H26 55.44")
@@ -354,8 +359,9 @@ inp("eq_1H", "9M26 股權發行淨額（普通股 42.870＋強制轉換特別股
 inp("pref_paid_1H", "9M26 已付特別股股利（含在新聞稿股利支付列）", "US$B", None, 0.301, None, "Derived", "2026-08-15 首次付息：19.25B × 6.25% ÷ 4；損益表 9M 特別股股利 0.384（應計）")
 inp("pref_1H", "9M26 特別股股利（損益表，應計）", "US$B", None, fv("is.prefDiv.ytd2026") / 1000, None, "Interested-party", fs("is.prefDiv.ytd2026"))
 inp("debt_ye25", "債務面額（2025-12-31）", "US$B", None, 49.085, None, "Verified", fs("debt.face.fy2025"))
-inp("rpo_cloud", "Google Cloud 積壓（backlog，2026-09-30）", "US$B", None, fv("rpo.cloud.2026q3") / 1000, None, "Interested-party", fs("rpo.cloud.2026q3"), "2026-06-30 為 513.9；10-Q RPO 附註尚未提供")
-inp("rpo_24m", "積壓 24 個月內認列比例", "%", None, fv("rpo.share24m.2026q3"), None, "Interested-party", fs("rpo.share24m.2026q3"), "2026Q2 約 50%")
+inp("rpo_cloud", "Google Cloud 剩餘履約義務（RPO，2026-09-30）", "US$B", None, fv("rpo.cloud.10q.2026q3") / 1000, None, "Verified", fs("rpo.cloud.10q.2026q3"),
+    "全公司 RPO 567.7；2026-06-30 Cloud 513.9；原（v0.3.3）：法說 backlog 561")
+inp("rpo_24m", "RPO 24 個月內認列比例（「略多於 55%」）", "%", None, fv("rpo.share24m.10q.2026q3"), None, "Verified", fs("rpo.share24m.10q.2026q3"), "全公司口徑；2026Q2 略多於 50%")
 
 sec("H. 對照（Recon）")
 inp("tp_v03", "v0.3 加權目標價（修正三，讀法 2）", "US$", None, 258.700923, None, "Derived", "docs/reports/20261027_alphabet_v0.3_分部架構.md 修正三（dist/_待刪除/20261027_Alphabet個股模型_v0.3.xlsx Val 頁 258.7009）", "變動拆解的起點")
@@ -945,7 +951,7 @@ for s in "ABC":
     for p in FC: v[p] = f"={COL[p]}{C['cx_ai']}+{COL[p]}{C['cx_na']}"
     v["26"] = f"=E{r}+F{r}"
     cput(s, "cx", "資本支出合計", "US$B", v, bold=True)
-    cput(s, "lease", "融資租賃本金", "US$B", {"1H": "=lease_1H", **{p: f"=lease_{p}" for p in FC}, "26": f"=E{r}+F{r}"}, note="9M26：1H 0.840（10-Q 附註 4）＋Q3 推估 0.103 [Derived]；FY2024–25 未列（公司 FCF 定義不扣）")
+    cput(s, "lease", "融資租賃本金", "US$B", {"1H": "=lease_1H", **{p: f"=lease_{p}" for p in FC}, "26": f"=E{r}+F{r}"}, note="9M26：10-Q 2026Q3 租賃附註 1.950 [Verified]（v0.3.3 推導 0.943）；Q4 26 起沿用 2026Q2 到期表；FY2024–25 未列（公司 FCF 定義不扣）")
     cput(s, "fcf", "自由現金流（營運現金 − 資本支出 − 融資租賃本金）", "US$B", {p: f"={COL[p]}{C['cfo']}-{COL[p]}{C['cx']}-N({COL[p]}{C['lease']})" for p in YK}, bold=True, fill=SUB)
     v = {p: "=" + QA("div", p) for p in ("24", "25")}
     v["1H"] = f"={QA('div', '1H')}-pref_paid_1H"
@@ -974,7 +980,7 @@ for s in "ABC":
         {"1H": f"=cash_0-(E{C['copen']}+E{C['fcf']}-E{C['div']}-E{C['pref']}-E{C['anth']}-E{C['mat']}+E{C['newd']}+E{C['eq']})", **{p: 0 for p in FC}})
     cput(s, "chk", "檢查：9M26 期末現金 − 2026-09-30（新聞稿推導；應為 0）", "US$B", {"1H": f"=E{C['cend']}-cash_0"}, "0.000")
     cput(s, "dopen", "期初債務", "US$B", {"1H": "=debt_ye25", **{p: f"={COL[prevp(p)]}{r + 1}" for p in FC}}, note="2025-12-31 面額 49.085（事實總帳 debt.face.fy2025）")
-    cput(s, "dend", "期末債務", "US$B", {"1H": "=debt_0", **{p: f"={COL[p]}{C['dopen']}-{COL[p]}{C['mat']}+{COL[p]}{C['newd']}+{COL[p]}{C['plug']}" for p in FC}}, note="9M26＝6/30 面額＋Q3 發債 − Q3 償還（推導；10-Q 尚未提供）")
+    cput(s, "dend", "期末債務", "US$B", {"1H": "=debt_0", **{p: f"={COL[p]}{C['dopen']}-{COL[p]}{C['mat']}+{COL[p]}{C['newd']}+{COL[p]}{C['plug']}" for p in FC}}, note="9M26＝10-Q 2026Q3 Note 6 面額 127.485 [Verified]")
     cput(s, "nc", "淨現金（現金 − 債務）", "US$B", {p: f"={COL[p]}{C['cend']}-{COL[p]}{C['dend']}" for p in ["1H"] + FC})
     cput(s, "bpx", "回購均價（評價日股價 × (1＋ke)^年數）", "US$", {**{p: f"=px_val*(1+ke)^({PY[p]}+mid-t_val)" for p in ANN}, "2H": "=px_val"}, "0.00")
     r += 1
@@ -1097,7 +1103,7 @@ vput("ev", "企業價值 EV（主值，依 internal_ai_reading）", S3(lambda s:
 vput("tvsh", "  其中：終值占 EV（主值）", S3(lambda s: f"=({X3(s)}{VR_['pvtv']}+(internal_ai_reading=2)*{X3(s)}{VR_['pvstv']})/{X3(s)}{VR_['ev']}"), "0.0%")
 vput("nc0", "＋淨現金（評價日：現金 − 債務 − 融資租賃）", ["=cash_0-debt_0-fin_lease"] * 3)
 vput("hold", "＋持股（Anthropic × 比例 ×(1 − 折價)＋SpaceX＋其他上市權益證券）", ["=ant_val*ant_stake*(1-illiq)+spacex+oth_eq"] * 3)
-vput("dl", "− 類債（應計罰款）", ["=fines"] * 3, note="修正三：非控制權益 7.1（主要為 Waymo 少數股東）不再扣除——Waymo 已以 Alphabet 持股 × 投後估值計（投後估值含 Waymo 自身現金）")
+vput("dl", "− 類債（應計罰款）", ["=fines"] * 3, note="修正三：非控制權益（10-Q 2026Q3 6.9；主要為 Waymo 少數股東）不再扣除——Waymo 已以 Alphabet 持股 × 投後估值計（投後估值含 Waymo 自身現金）")
 vput("obv", "＋Other Bets（Waymo 估值 × 持股 ×(1 − 折價)）", ["=ob_val"] * 3, note="DCF 現金流排除全部 Other Bets；非 Waymo 的 Other Bets 以價值 0、虧損 0 計")
 _tt = DC["A"]["t"]
 vput("ppref", "− 特別股股利現值（轉換前，以 ke 折現）", [f"=pref_2H/(1+ke)^$F${_tt}+pref_27/(1+ke)^$H${_tt}+pref_28/(1+ke)^$I${_tt}+pref_29/(1+ke)^$J${_tt}"] * 3,
@@ -1261,18 +1267,33 @@ for key, lab in (("search", "Google Search & other"), ("yt", "YouTube ads"), ("n
     RC.cell(r, 1, lab)
     for j, p in enumerate(("26", 27, 28)): RC.cell(r, 2 + j, f"=PL!{COL[p]}{PB[key]}").number_format = "#,##0.00"
     RC.cell(r, 5, "未找到")
-    RC.cell(r, 6, {"tpu": "Q3 已認列一部分、Q4 擴大、2027 更明顯；不揭露金額（2026Q3 法說）", "cloud": "供不應求；積壓 561（2026Q3 法說）；無營收指引",
+    RC.cell(r, 6, {"tpu": "Q3 已認列一部分、Q4 擴大、2027 更明顯；不揭露金額（2026Q3 法說）", "cloud": "供不應求；RPO 560.8（10-Q 2026Q3；法說 backlog 561）；無營收指引",
                    "search": "Q4 將面對約 2–3 個百分點的高基期（2026Q3 法說）"}.get(key, "無（公司不給營收指引）"))
     RC.cell(r, 7, "StockAnalysis、MarketScreener 免費頁只有合併層；分部共識需付費資料（資料缺口：未找到）" if key == "search" else "")
     r += 1
-RC.cell(r, 1, "Google Cloud 積壓（backlog）約 55% 在 24 個月內認列 → 2026Q4–2028Q3 至少可認列"); RC.cell(r, 2, "=rpo_cloud*rpo_24m").number_format = "#,##0.0"
-RC.cell(r, 7, "2026Q3 法說：Cloud backlog 561、略高於 55% 於 24 個月內（事實總帳 rpo.cloud.2026q3、rpo.share24m.2026q3）[Interested-party]；只作驗證列，不反推 k 或 MW"); r += 1
+RC.cell(r, 1, "Google Cloud 剩餘履約義務（RPO）略多於 55% 在 24 個月內認列 → 2026Q4–2028Q3 至少可認列"); RC.cell(r, 2, "=rpo_cloud*rpo_24m").number_format = "#,##0.0"
+RC.cell(r, 7, "10-Q 2026Q3 營收附註：RPO 567.7、其中 Cloud 560.8，略多於 55% 於 24 個月內（全公司口徑；事實總帳 rpo.cloud.10q.2026q3）[Verified]；只作驗證列，不反推 k 或 MW"); r += 1
 RC.cell(r, 1, "本模型 Google Cloud 營收 2026Q4–2028Q3（情境 B）"); RC.cell(r, 2, f"=PL!F{PB['cloud']}+PL!H{PB['cloud']}+0.75*PL!I{PB['cloud']}").number_format = "#,##0.0"
 RC.cell(r, 3, f"=B{r}/B{r - 1}").number_format = "0.00"; RC.cell(r, 7, "C 欄＝本模型 ÷ 積壓可認列（> 1 表示模型營收高於積壓可支撐的下限，差額需新簽約）"); r += 1
 RC.cell(r, 1, "FY2026 資本支出：本模型 vs 公司指引 195–205（2026-10-28 維持）"); RC.cell(r, 2, f"=CF!G{CR['B']['cx']}").number_format = "#,##0.0"; RC.cell(r, 3, "=capex_g").number_format = "#,##0.0"
 RC.cell(r, 7, "C10：pace 重解使 9M 實績＋Q4 公式＝指引中點；Thesis 頁指引下限補足 ≈ 0"); r += 1
 RC.cell(r, 1, "FY2027 資本支出：本模型 vs 公司「顯著增加」（Q4 法說給數字）vs 共識"); RC.cell(r, 2, f"=CF!H{CR['B']['cx']}").number_format = "#,##0.0"; RC.cell(r, 3, "=c_capex_27").number_format = "#,##0.0"
-RC.cell(r, 7, "本模型 FY2027 由 MW 路徑推導（C10 重解速度延續）；共識為財報前（MarketScreener 2026-10-26）"); r += 2
+RC.cell(r, 7, "本模型 FY2027 由 MW 路徑推導（C10 重解速度延續）；共識為財報前（MarketScreener 2026-10-26）"); r += 1
+# v0.3.4：10-Q 2026Q3 承諾與保證（只作驗證列；不進目標價、不反推 k 或每 MW 價格）
+_ai_cx = f"(CF!F{CR['B']['cx_ai']}+CF!H{CR['B']['cx_ai']}+CF!I{CR['B']['cx_ai']}+CF!J{CR['B']['cx_ai']}+CF!K{CR['B']['cx_ai']})"
+for lab, fid, f2, note in (
+        ("已簽未起租租賃（主要資料中心與能源基礎設施，2026–2031 起租）", "lease.uncommenced.2026q3", None, "10-Q 2026Q3 租賃附註；6/30 為 85.2；未入資產負債表與本模型 fin_lease（起租時才入帳）"),
+        ("合約承諾合計（主要為長期供應協議：技術基礎設施與存貨零件產能，至 2032）", "commit.total.2026q3", "=" + _ai_cx,
+         "10-Q 2026Q3 Note 10（6/30 為 811.0）；C 欄＝本模型情境 B Q4 26–FY2030 AI 資本支出合計（對照：承諾以合約上限計，含非 AI 與存貨零件）"),
+        ("TPU 回購保證（特定合約；指定條件下回購已售 TPU 硬體；最大潛在付款）", "guar.tpuRepurchase.2026q3", "=tpu_2h+tpu_yr*4",
+         "10-Q 2026Q3 Note 10：公允價值不重大、公司認為對手方無經濟誘因行使；C 欄＝本模型 Q4 26–FY2030 TPU 系統銷售合計（保證上限 ÷ 累計銷售見 D 欄）"),
+        ("財務保證：對手方長交期能源設備採購（最大潛在付款，至 2049-01）", "guar.energy.2026q3", None, "10-Q 2026Q3 Note 10；未入本模型類債（或有負債）"),
+        ("期後：Waymo 優先有擔保定期貸款（2026-10；Alphabet 不保證）", "debt.waymo.loan.202610", None, "10-Q 2026Q3 Note 6 期後事項；評價日後、Waymo 層級債務；Other Bets 以 Waymo 股權估值計，不另扣")):
+    RC.cell(r, 1, lab); c = RC.cell(r, 2, fv(fid) / 1000); c.number_format = "#,##0.0"; c.font = BLUE
+    if f2:
+        RC.cell(r, 3, f2).number_format = "#,##0.0"; RC.cell(r, 4, f"=B{r}/C{r}").number_format = "0.00"
+    RC.cell(r, 7, note + "［Verified；事實總帳 " + fid + "］"); r += 1
+r += 1
 RC.cell(r, 1, "3. v0.3 → v0.3.1：目標價變動拆解（依序重算 (a)–(f)；各項加總＝總變動）").font = BOLD; r += 1
 hdr(RC, r, ["項目", "數值", "說明"]); r += 1
 RCV = {}
@@ -1280,10 +1301,15 @@ def rcv(key, lab, f, fmt="#,##0.00", note=""):
     global r
     RC.cell(r, 1, lab); RC.cell(r, 2, f).number_format = fmt; RC.cell(r, 3, note); RCV[key] = r; r += 1
 rcv("v22", "v0.3 加權目標價（修正三，2026-10-27）", "=tp_v03", note="v0.2.2 為 147.54（讀法 1）；v0.3 檔案移至 dist/_待刪除/")
-rcv("v03", "v0.3.1 加權目標價", f"=Val!B{VR_['tp']}")
+Q10 = json.load(open(os.path.join(HERE, "data", "q10_v034_old.json"), encoding="utf-8"))["steps"]
+rcv("v03", "v0.3.1 加權目標價（＝v0.3.2、v0.3.3；10-Q 補入前，重算快照 q10|Q0）", "")   # 值在 Sens 頁建好後寫入（需 SE_STALE）
 rcv("dif", "差額", f"=B{r - 1}-B{r - 2}")
 RC_ATT = r          # 拆解列（sens_v03.py 的變動拆解鏈重算後寫入）
 r += 10
+RC.cell(r, 1, "4. v0.3.3 → v0.3.4：2026Q3 10-Q 補入的目標價變動拆解（依序把推導／沿用值換成 10-Q 值，每步整本重算；各項加總＝總變動）").font = BOLD; r += 1
+hdr(RC, r, ["項目", "數值", "說明"]); r += 1
+RC_Q10 = r
+r += len(Q10) + 5
 RC.column_dimensions["A"].width = 70
 for c in "BCDEFG": RC.column_dimensions[c].width = 13
 RC.column_dimensions["H"].width = 70
@@ -1300,7 +1326,7 @@ SENS_CASES = [
     ("ks_px", "k：現貨價格（高＝GCP 牌價）", None, "hi", "2.82 → 4.858 US$/GPU-hr"),
     ("tpu_f", "TPU 係數（收入與資本支出雙邊；Tokenomics 低端／舊 C2 口徑）", "lo", "hi", "0.70 → 0.65／1.0（同時改 tpu_cf；pace 不重解）"),
     ("tpu_fo", "TPU 收入係數改用產出比（資本支出仍用持有比）", None, "hi", "收入 0.70 → IF_NonNV_Out_TPU 0.80"),
-    ("cip_0", "評價日在建工程推估", "lo", "hi", "142.6 → 122.8（6/30 值）／160"),
+    ("cip_0", "評價日在建工程", "lo", "hi", "145.3 → 122.8（6/30 值）／160"),
     ("abc_rate", "Alphabet 層級未分攤費用率", "lo", "hi", "6.0% → 4.83%（2026Q2）／6.5%"),
     ("life_it", "AI IT 折舊年限", "lo", "hi", "5／7 年"),
     ("dC", "Search 情境 C 分流幅度", "lo", "hi", "10%／30%（只影響 C 情境）"),
@@ -1372,9 +1398,9 @@ SE["A1"] = "Sens — 一次改一個輸入（In 頁低／高值），整本活�
 SE["A2"] = ("相對基準＝情境目標價 ÷ 基準加權目標價 − 1；龍捲風依絕對值排序（HTML）。基準與各案例的其他輸入相同。"
             "v0.3.3 起依個股模型原則第 9 節：In 頁每個有低／高的鍵都有案例（F 欄「鍵」），IF_HoldEcon 四世代同時一案（he_all）；"
             "c_eps26_sa（共識 EPS）只作對照，不進模型（只被 Recon 引用），故無案例。"
-            "svc_sh（自用 AI 增量成本歸 Google Services 的比例）不列：只在 Services 與 Alphabet 層級之間分配，合併損益與評價都用合計，重算變動為 0（40%／80%：258.2100／258.2100）。"
-            "m_yt（YouTube ads EBITDA 率）不列：只在 Search 與 YouTube 之間拆分 Services 分部利益（Search＝殘差），兩者同用廣告倍數，重算變動為 0（30%／50%：258.2100／258.2100）。"
-            "ob_oi（Other Bets 營業利益）不列：重算變動 ±0.0002%，小於 0.001%（−11／−7：258.2095／258.2105）")
+            "svc_sh（自用 AI 增量成本歸 Google Services 的比例）不列：只在 Services 與 Alphabet 層級之間分配，合併損益與評價都用合計，重算變動為 0（40%／80%：257.7559／257.7559；v0.3.4 重算）。"
+            "m_yt（YouTube ads EBITDA 率）不列：只在 Search 與 YouTube 之間拆分 Services 分部利益（Search＝殘差），兩者同用廣告倍數，重算變動為 0（30%／50%：257.7559／257.7559；v0.3.4 重算）。"
+            "ob_oi（Other Bets 營業利益）不列：重算變動 ±0.0002%，小於 0.001%（−11／−7：257.7554／257.7565；v0.3.4 重算）")
 hdr(SE, 3, ["驅動", "設定", "方向", "加權目標價", "相對基準", "鍵", "說明", "收支關卡 B（五年）", "FY2027 資本支出（B）"])
 r = 4
 SE_ROWS = []
@@ -1422,11 +1448,34 @@ RC.cell(rr, 2, 0).number_format = "#,##0.00"
 RC.cell(rr, 3, f'="上檔空間 v0.3 −18.3% → v0.3.1 "&TEXT(Val!B{VR_["up"]},"+0.0%;-0.0%")&"；評等 中立 → "&Val!B{VR_["rec"]}'); rr += 1
 RC.cell(rr, 1, "(f) 其他：無風險利率 5.00% → 4.99%、WACC 權益權重改用評價日股價 344.08（v0.3 用現價 316.80）")
 s4 = SENS.get("chain|S4", {}).get("tp")
-RC.cell(rr, 2, f"=Val!B{VR_['tp']}-{s4}" if s4 is not None else "").number_format = "#,##0.00"
-RC.cell(rr, 3, "活公式：本版目標價 − S4 快照"); rr += 1
+RC.cell(rr, 2, f"=B{RCV['v03']}-{s4}" if s4 is not None else "").number_format = "#,##0.00"
+RC.cell(rr, 3, "v0.3.1 目標價（q10|Q0 快照）− S4 快照；v0.3.4 起 S1–S4 皆先套回 10-Q 前的值（第 4 節），使本節不受 10-Q 補入影響"); rr += 1
 RC.cell(rr, 1, "檢查：(a)＋…＋(f) − 差額（應為 0）")
 RC.cell(rr, 2, f"=SUM(B{RC_ATT + 1}:B{rr - 1})-B{RCV['dif']}").number_format = "0.000"
 RC_ATT_END = rr
+_q0 = SENS.get("q10|Q0", {}).get("tp")
+if _q0 is not None:
+    RC.cell(RCV["v03"], 2, f"=IF(ABS(Sens!E{SE_STALE})<0.000001,{_q0},\"快照過期\")").number_format = "#,##0.00"
+# 第 4 節：v0.3.3 → v0.3.4（sens_v03.py 的 q10|Q0…Q{n-1}；Q0＝全部 10-Q 前的值；第 k 步＝Q(k) − Q(k−1)；最後一步＝本版目標價 − Q(n−1)，活公式）
+rr = RC_Q10
+RC.cell(rr, 1, "v0.3.3 加權目標價（2026-10-30；重算快照 q10|Q0）"); RC.cell(rr, 2, f"=B{RCV['v03']}").number_format = "#,##0.00"; Q10_V0 = rr; rr += 1
+RC.cell(rr, 1, "v0.3.4 加權目標價（本版）"); RC.cell(rr, 2, f"=Val!B{VR_['tp']}").number_format = "#,##0.00"; Q10_V1 = rr; rr += 1
+RC.cell(rr, 1, "差額"); RC.cell(rr, 2, f"=B{Q10_V1}-B{Q10_V0}").number_format = "#,##0.00"; Q10_D = rr; rr += 1
+_q10a = rr
+for i, st in enumerate(Q10):
+    RC.cell(rr, 1, f"({i + 1}) " + st["label"])
+    cur = SENS.get(f"q10|Q{i + 1}", {}).get("tp") if i + 1 < len(Q10) else None
+    prv = SENS.get(f"q10|Q{i}", {}).get("tp")
+    if i + 1 < len(Q10):
+        if cur is not None and prv is not None:
+            RC.cell(rr, 2, f"=IF(ABS(Sens!E{SE_STALE})<0.000001,{cur}-{prv},\"快照過期\")").number_format = "#,##0.00"
+        RC.cell(rr, 3, f"重算快照 q10|Q{i + 1} − q10|Q{i}（{st['key']}：{st['old']} → 本版 In 頁值）")
+    else:
+        if prv is not None: RC.cell(rr, 2, f"=Val!B{VR_['tp']}-{prv}").number_format = "#,##0.00"
+        RC.cell(rr, 3, f"活公式：本版目標價 − 重算快照 q10|Q{i}（{st['key']}：{st['old']} → 本版 In 頁值）")
+    rr += 1
+RC.cell(rr, 1, "檢查：10-Q 補入各項合計 − 差額（應為 0）"); RC.cell(rr, 2, f"=SUM(B{_q10a}:B{rr - 1})-B{Q10_D}").number_format = "0.000"; rr += 1
+assert rr <= RC_Q10 + len(Q10) + 5
 
 # =====================================================================================================
 # Sources
@@ -1438,6 +1487,8 @@ SRCS = [
     ("Alphabet 2026Q2 財報新聞稿（8-K 附件 99.1）", "2026-07-22", "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000066/googexhibit991q22026.htm", "Interested-party", "2026Q2 與比較季"),
     ("Alphabet 2026Q1 財報新聞稿（8-K 附件 99.1）", "2026-04", "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000043/googexhibit991q12026.htm", "Interested-party", "2026Q1"),
     ("Alphabet 2025Q3 財報新聞稿（8-K 附件 99.1）", "2025-10-29", "https://www.sec.gov/Archives/edgar/data/1652044/000165204425000087/googexhibit991q32025.htm", "Interested-party", "2024Q3 比較季"),
+    ("Alphabet 2026Q3 10-Q（季末 2026-09-30；chat 端自 SEC 原文擷取，摘錄 alphabet/docs/reports/20261104_10Q_2026Q3_原文摘錄.md）", "2026-11-04 擷取", "https://www.sec.gov/Archives/edgar/data/0001652044/000165204426000084/goog-20260930.htm", "Verified",
+     "債務面額、在建工程、租賃、權益證券（SpaceX）、非控制權益、應計罰款、RPO、承諾與保證、封面股數（v0.3.4）"),
     ("Alphabet 2026Q2 10-Q", "2026-07-23", "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=1652044&type=10-Q", "Interested-party", "資產負債、在建工程、租賃、債務、股數"),
     ("Alphabet 2026Q2 法說逐字稿（Benzinga 轉錄，二手）", "2026-07-22", "https://www.benzinga.com/news/26/09/61834150", "Interested-party", "2026 資本支出指引 195–205、TPU 營收時點、供不應求"),
     ("事實總帳 alphabet/data/alphabet_facts_20261008.json（MAG v0.1a）", "2026-10-08", "repo 內", "各筆標記", "Q 頁全部實績與多數輸入"),
@@ -1463,7 +1514,7 @@ for col, w in zip("ABCDEF", [6, 80, 12, 70, 18, 60]): SO.column_dimensions[col].
 
 # =====================================================================================================
 # README
-RD["A1"] = "Alphabet（GOOGL）個股模型 v0.3.1（2026-10-29；2026Q3 季度滾動）— 命題模組＋官方營收分部 → 損益表"
+RD["A1"] = "Alphabet（GOOGL）個股模型 v0.3.4（2026-11-04；2026Q3 季度滾動＋10-Q 補入）— 命題模組＋官方營收分部 → 損益表"
 RD["A3"] = "命題：AI 改變搜尋之後，Google Search 的變現能否守住，同時 Google Cloud（含 TPU）能否把翻倍的資本支出變成營收；資本支出與 2026 年股權發行後的每股價值是否高於現價。"
 RD["A4"] = "核心問題：Search & other 在 C 情境（AI 助理分流、每次查詢變現下降）下 FY2028 營收與利益率會掉多少，Cloud 的 AI 營收能否抵銷；加計 AI 折舊與股權發行後的每股價值。"
 VB = lambda k, c="B": f"Val!{c}{VR_[k]}"
@@ -1491,12 +1542,12 @@ for row in DRV:
     for j, v in enumerate(row, 1): RD.cell(r, j, v)
     r += 1
 r += 1
-RD.cell(r, 1, "與 v0.3 的差異（v0.3.1：2026Q3 季度滾動）").font = BOLD; r += 1
-for t in ("Q 頁加入 2026Q3（保留 2024Q4–2026Q3 八季）；FY2026＝9M 實績＋Q4 模型；評價日 2026-06-30 → 2026-09-30，目標日 2027-10-29（約 12 個月後）。",
-          "Tokenomics v21.4 → v21.7（快照重取；契約名稱只有 IF_NonNV_Hold_TPU 改變）；TPU 係數由「同期 NVIDIA 世代 × 1.0」改讀 IF_NonNV_Hold_TPU（0.70），舊口徑列 Sens。",
-          "C10：2026 資本支出指引維持 195–205 → AI MW 速度以 9M 實績 131.95＋Q4 公式＝200 重解。",
-          "WACC 權益權重與回購價改用評價日股價（2026-09-30 收盤 344.08），現價只影響上檔空間與評等。",
-          "架構與 v0.3 相同（命題＋官方分部 → 損益表；讀法 2 主值）；v0.2.2 → v0.3 的差異見 dist/_待刪除/ 的 v0.3 成品與 docs/reports/20261027_alphabet_v0.3_分部架構.md。"):
+RD.cell(r, 1, "與上一版的差異（v0.3.4：2026Q3 10-Q 補入；v0.3.1 季度滾動見 docs/reports/20261029_alphabet_v0.3.1_季度滾動.md）").font = BOLD; r += 1
+for t in ("v0.3.4 只把 v0.3.1 暫用的推導值與沿用 2026Q2 的值換成 2026Q3 10-Q 原文（docs/reports/20261104_10Q_2026Q3_原文摘錄.md；事實總帳標 [Verified]）；公式、架構、評價日、現價、共識、Tokenomics v21.7 快照、情境與權重都不動。",
+          "資產負債：債務面額 126.455 → 127.485、融資租賃負債 2.59 → 3.705、應計罰款 12.156 → 13.807、非控制權益 7.1 → 6.9（不進目標價）、權益證券 90.4 → 90.384（現金＋債權類證券隨之調整）。",
+          "持股：SpaceX 85.436 → 75.2（10-Q 附註）；其他可交易權益證券 7.089 → 15.184（＝10-Q 合計 90.384 − SpaceX，與 SpaceX 同步改，持股合計對得上 10-Q）。",
+          "在建工程 142.549 → 145.27（Q4 26 起轉入折舊）；9M26 融資租賃本金 0.943 → 1.950（只影響 FY2026 自由現金流與收支關卡）；Cloud RPO 561 → 560.8（驗證列）。",
+          "Recon 頁第 4 節為 v0.3.3 → v0.3.4 逐項拆解（每步整本重算）；10-Q 承諾 802.1、已簽未起租租賃 130.5、TPU 回購保證 6.6、能源保證 16.2、Waymo 期後貸款 5.0 列在 Recon 第 2 節後的驗證列。"):
     RD.cell(r, 1, t); r += 1
 r += 1
 RD.cell(r, 1, "工作表：README → In → Q → Thesis → Seg → PL → CF → Val → Recon → Sens → Sources。藍字＝輸入、黑字＝公式；黃底＝判斷題。建置：bash alphabet/make_v03.sh").font = BOLD; r += 1

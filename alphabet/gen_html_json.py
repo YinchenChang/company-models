@@ -32,6 +32,7 @@ rf_s = {str(VR["tvsh"]): {"B": "p1", "C": "p1", "D": "p1"}, str(VR["shv"]): {"B"
 rf_t = {str(VR["ssh"]): {"B": "n3", "C": "n3", "D": "n3"}, str(VR["simp"]): {"B": "x1", "C": "x1", "D": "x1"}}
 gate = rm["GATE"]
 r1 = find("Recon", "1. 合併層"); r2 = find("Recon", "2. 逐分部"); r3 = find("Recon", "3. v0.3"); rend = find("Recon", "檢查：(a)")
+r4 = find("Recon", "4. v0.3.3"); rend4 = find("Recon", "檢查：10-Q")
 se_end = max(x[3] for x in rm["SE_ROWS"])
 thh = T["adds"] - 1
 th_rows = ",".join(str(T[k]) for k in ("end_ext", "avg_ext", "ai_rev", "permw", "ai_ebitda", "ai_em", "capchk", "cx_ai", "cx_rev", "da_ai", "da_ext", "da_int", "int_cost"))
@@ -52,8 +53,8 @@ cfg = {
  "sections": [
   {"id": "thesis", "title": "命題與核心問題", "blocks": [
     {"type": "kv", "items": [["投資建議", "@README!A5"], ["重點觀察一", "@README!A6"], ["重點觀察二", "@README!A7"], ["重點觀察三", "@README!A8"]]},
-    {"type": "h3", "text": "與上一版的差異（季度滾動）"},
-    {"type": "list", "items": [f"@README!A{r}" for r in range(find("README", "與 v0.3 的差異") + 1, find("README", "與 v0.3 的差異") + 6)]}]},
+    {"type": "h3", "text": "與上一版的差異"},
+    {"type": "list", "items": [f"@README!A{r}" for r in range(find("README", "與上一版的差異") + 1, find("README", "與上一版的差異") + 6)]}]},
   {"id": "drivers", "title": "驅動因子 → 推導量", "intro": "@Thesis!A1", "blocks": [
     {"type": "table", "caption": "驅動 → 推導對照表", "head": ["頁", "輸入", "推導量", "因果方向"],
      "rowgen": {"sheet": "README", "rows": f"{find('README', '頁') + 1}-{find('README', 'Sens', 1, find('README', '頁'))}", "cols": ["A", "B", "C", "D"]}},
@@ -106,7 +107,9 @@ cfg = {
     {"type": "table", "caption": "@Recon!A" + str(r2), "head": ["分部／產品線", "FY2026E", "FY2027E", "FY2028E", "共識", "公司指引", "說明"],
      "rowgen": {"sheet": "Recon", "rows": f"{r2 + 2}-{r3 - 2}", "cols": ["A", "B", "C", "D", "E", "F", "G"], "fmts": ["", "n1", "n1", "n1", "", "", ""]}},
     {"type": "table", "caption": "@Recon!A" + str(r3), "head": ["項目", "數值", "說明"],
-     "rowgen": {"sheet": "Recon", "rows": f"{r3 + 2}-{rend}", "cols": ["A", "B", "C"], "fmts": ["", "n2", ""]}}]},
+     "rowgen": {"sheet": "Recon", "rows": f"{r3 + 2}-{rend}", "cols": ["A", "B", "C"], "fmts": ["", "n2", ""]}},
+    {"type": "table", "caption": "@Recon!A" + str(r4), "head": ["項目", "數值", "說明"],
+     "rowgen": {"sheet": "Recon", "rows": f"{r4 + 2}-{rend4}", "cols": ["A", "B", "C"], "fmts": ["", "n2", ""]}}]},
   {"id": "sens", "title": "敏感度", "intro": "@Sens!A1", "blocks": [
     {"type": "tornado", "title": "加權目標價相對基準的變動（一次改一個輸入，整本重算）", "sheet": "Sens", "rows": f"4-{se_end}", "label_col": "A", "value_col": "E", "fmt": "sp1"},
     {"type": "table", "collapse": True, "summary": "展開：全部案例", "head": ["驅動", "設定", "方向", "加權目標價", "相對基準"],

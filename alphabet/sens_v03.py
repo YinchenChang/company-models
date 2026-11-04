@@ -1,5 +1,5 @@
 # 敏感度與拆解：一次改一個 In 頁輸入（低／高值），整本以 LibreOffice 重算，讀 Val 頁加權目標價，寫成 JSON 供 build_alphabet.py --sens 使用。
-# 用法：python3 alphabet/sens_v03.py <工作資料夾> <輸出 sens.json>（環境變數 JOBS＝平行數，預設 4）
+# 用法：python3 alphabet/sens_v03.py <工作資料夾> <輸出 sens.json>（環境變數 JOBS＝平行數，預設 4；記憶體小時用 JOBS=1）
 import json, os, subprocess, sys, shutil, tempfile
 from concurrent.futures import ThreadPoolExecutor
 import openpyxl
@@ -85,7 +85,13 @@ for key, side, val, _r in rm["SE_ROWS"]:
 # S2＝S3 再改回 v0.3 的 pace 與伺服器占比；S1＝S2 再以 v0.3 的 2026Q3 模型值取代實績（q3cf_v03.py）
 PACE = json.load(open(os.path.join(HERE, "data", "pace_v031.json"), encoding="utf-8"))
 CF3 = json.load(open(Q3CF, encoding="utf-8"))
-S4 = [("rf", 0.05), ("px_val", 316.80)]
+# v0.3.4：10-Q 補入前的值（data/q10_v034_old.json）。S1–S4 先套這些舊值，使 v0.3 → v0.3.1 拆解不受 10-Q 補入影響；
+# q10|Qk＝前 k 項換成本版值、其餘仍為舊值（Q0＝v0.3.3），Recon 第 4 節逐項相減
+Q10 = json.load(open(os.path.join(HERE, "data", "q10_v034_old.json"), encoding="utf-8"))["steps"]
+OLD10 = [(x["key"], x["old"]) for x in Q10]
+for k in range(len(Q10)):
+    jobs[f"q10|Q{k}"] = OLD10[k:]
+S4 = OLD10 + [("rf", 0.05), ("px_val", 316.80)]
 S3 = S4 + [("tpu_f", 1), ("tpu_cf", 1), ("pace", PACE["pace_tpu1"])]
 S2 = S4 + [("tpu_f", 1), ("tpu_cf", 1), ("pace", 4159.67), ("cip_it", 0.6)]
 S1 = S2 + [("__q3cf", 1)] + [tuple(x) for x in CF3["sets"]]
