@@ -182,6 +182,12 @@ except KeyError:
 ye = wt_row(DPL, "年底上線 IT GW", "A", "D0")
 site = wt_row(CMP, "瓦帳 年新增 IT GW（淨；SiteOnly）", "A", "D0")
 WTY = {2023: 3, 2024: 4, 2025: 5, 2026: 6, 2027: 7, 2028: 8, 2029: 9}
+# v0.13.1：列名比對依列序（Deploy 頁主路徑與 SiteOnly 兩段 B 欄都標「基準」）；改以 Wattonomics 具名範圍交叉核對（算力收支 11-04 建議）
+for _y in range(2024, 2030):
+    for _nm, _row in ((f"WIF_MktGW_Add_{_y}", new), (f"WIF_MktGW_YE_{_y}", ye)):
+        if _nm in W.defined_names:
+            _v = nv(W, _nm)
+            assert abs((_row[WTY[_y]] or 0) - _v) < 1e-9, f"r4_bridge 讀到的 Wattonomics 列與 {_nm} 不符（{_row[WTY[_y]]} vs {_v}）：列序可能改變"
 inp("wt_gross", "Wattonomics 主路徑為毛額（1）或淨額（0）", "旗標", None, wt_gross, None, "Derived",
     f"{wt_f} Deploy 列名；毛額時 ④ 汰換不扣，兩邊都以毛額比較（Wattonomics 汰換列排 v0.2）")
 for y in YRS:

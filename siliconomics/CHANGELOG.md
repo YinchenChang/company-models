@@ -1,5 +1,12 @@
 # Siliconomics 變更紀錄
 
+## v0.13.1（2026-11-04；`model/20261104_Siliconomics_v0.13.1.xlsx`；Tokenomics v21.7）
+
+- **分世代每 IT GW NVIDIA 內容**（算力收支 Wattonomics Requests R7，期限 11-12；決策 S38）：In 頁新增 M28（NVIDIA 合計 ÷ IT capex：GB300 0.647、VR200 2026 0.624、VR200 2027 0.581〔高值 0.599＝HBM 漲價轉嫁〕取自晶片內容橋接表；Hopper、GB200 以 GB300、Rubin Ultra 以 VR200 2027 代入〔Analogy〕）；Interface `SIF_NVContentGW_<H100|GB200|GB300|VR200_26|VR200|RU>`（$B／IT GW）：17.80／15.54／20.85／23.47／21.85／29.11（含 _lo／_hi）。
+- **Wattonomics 可比口徑的供給上限** `SIF_CapOnlineGW_Base`（可支撐新增上線 IT GW，毛額）：20.81／29.89／46.50／51.91（2026–29），供 Wattonomics v0.3「部署 GW 不得超過晶片產能」檢查。
+- `tools/r4_bridge.py`：以 Wattonomics 具名範圍 `WIF_MktGW_Add_*`、`WIF_MktGW_YE_*` 交叉核對讀到的列（列序改變時報錯）。
+- 輸入值不變；下游只有版本文字（cascade 第二輪全部 SAME）。
+
 ## v0.13（2026-11-04；`model/20261104_Siliconomics_v0.13.xlsx`；Tokenomics v21.7）
 
 - **三層校準原則落地**（Andy 2026-11-04 08:26、12:45；決策 S37）：
