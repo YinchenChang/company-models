@@ -67,6 +67,12 @@ def main():
         "wt_main": bridge_row(r4x, "b9"),
         "ref": os.path.basename(r4x) + " Bridge 第 b8、b9 列",
     }
+    # 3. 季度實績驗證（v0.13）：NVIDIA 資料中心營收對帳點（r4_bridge n3、n4）
+    try:
+        snap["markets"]["nv_dc"] = {"years": [2026, 2027, 2028, 2029], "implied": bridge_row(r4x, "n3"), "company": bridge_row(r4x, "n4"),
+                                    "ref": os.path.basename(r4x) + " Bridge 第 n3、n4 列"}
+    except KeyError:
+        pass
     json.dump(snap, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("寫出", out)
     for k, m in snap["markets"].items():
