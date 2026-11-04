@@ -8,8 +8,8 @@ AMZN,250.69,USD,2026-11-03,massive；marketbeat,2
 GOOGL,280.03,USD,2026-11-03,massive；marketbeat,2
 META,621.03,USD,2026-11-03,massive；marketbeat,2
 SPCX,141.31,USD,2026-11-03,massive；marketbeat,2
-00100,155.40,HKD,2026-11-03,stockanalysis（etnet 推算昨收 155.70，未決）,1
-02513,441.80,HKD,2026-11-03,stockanalysis,1
+00100,167.30,HKD,2026-11-04,stockanalysis 報價頁（Nov 4 4:08 PM HKT 收市競價後；該頁前收 155.70，與前版 155.40 不同）,1
+02513,484.20,HKD,2026-11-04,stockanalysis 報價頁（Nov 4 4:08 PM HKT 收市競價後；該頁前收 442.00，與前版 441.80 不同）,1
 NVDA,206.69,USD,2026-11-03,massive（marketbeat 206.65）,1
 AVGO,332.13,USD,2026-11-03,massive；marketbeat,2
 MU,855.10,USD,2026-11-03,twelvedata；marketbeat,2
@@ -19,52 +19,52 @@ ANET,169.91,USD,2026-11-03,massive（正規盤；盤後財報 186.83 未用）,1
 SNDK,1126.52,USD,2026-11-03,marketbeat,1
 COHR,207.49,USD,2026-11-03,massive（marketbeat 206.90）,1
 LITE,680.16,USD,2026-11-03,massive；marketbeat,2
-2330,2295,TWD,2026-11-03,stockanalysis；cnyes(11/04頁昨收),2
-2454,3675,TWD,2026-11-03,stockanalysis；cnyes,2
-2308,1270,TWD,2026-11-03,stockanalysis；cnyes,2
-2382,311.5,TWD,2026-11-03,stockanalysis；cnyes,2
-3661,3140,TWD,2026-11-03,stockanalysis；cnyes,2
-3443,6795,TWD,2026-11-03,stockanalysis；cnyes(11/04頁昨收),2
-4062,8045,JPY,2026-11-02,stockanalysis；松井證券,2
-6857,35770,JPY,2026-11-02,Yahoo Japan 歷史；松井證券,2
-6146,50240,JPY,2026-11-02,松井證券,1
-285A,11345,JPY,2026-11-02,stockanalysis；松井證券,2
-2345,1495,TWD,2026-11-03,stockanalysis；cnyes(11/04頁昨收),2
+2330,2260,TWD,2026-11-04,cnyes；Yahoo 奇摩股市（收盤 2026/11/04 13:30）,2
+2454,3715,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
+2308,1220,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
+2382,302.5,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
+3661,3180,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
+3443,7115,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
+4062,8037,JPY,2026-11-04,stockanalysis 報價頁（Nov 4 3:30 PM JST；前收與前版相符）,1
+6857,34570,JPY,2026-11-04,stockanalysis 報價頁（Nov 4 3:30 PM JST；前收與前版相符）,1
+6146,47370,JPY,2026-11-04,stockanalysis 報價頁（Nov 4 3:30 PM JST；前收與前版相符）,1
+285A,10735,JPY,2026-11-04,stockanalysis 報價頁（Nov 4 3:30 PM JST；前收與前版相符）,1
+2345,1480,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
 FN,363.33,USD,2026-11-03,massive（marketbeat 362.48）,1
 CRDO,150.91,USD,2026-11-03,marketbeat,1
 ALAB,233.62,USD,2026-11-03,massive；marketbeat,2
-2449,253.5,TWD,2026-11-03,stockanalysis；cnyes,2
+2449,248.5,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
 AMKR,37.62,USD,2026-11-03,marketbeat；twelvedata,2
-2383,4395,TWD,2026-11-03,stockanalysis；cnyes,2
-3037,902,TWD,2026-11-03,stockanalysis；cnyes,2
-8046,1070,TWD,2026-11-03,stockanalysis；cnyes(11/04頁昨收),2
-2368,970,TWD,2026-11-03,stockanalysis；cnyes,2
+2383,4555,TWD,2026-11-04,cnyes；Yahoo 奇摩股市（收盤 2026/11/04 13:30）,2
+3037,888,TWD,2026-11-04,cnyes；Yahoo 奇摩股市（收盤 2026/11/04 13:30）,2
+8046,1080,TWD,2026-11-04,cnyes；Yahoo 奇摩股市（收盤 2026/11/04 13:30）,2
+2368,964,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
 ASML,1385.00,EUR,2026-11-03,debelegger；welingelichtekringen(% 換算),1
 AMAT,381.92,USD,2026-11-03,massive；marketbeat,2
 LRCX,230.72,USD,2026-11-03,marketbeat；twelvedata,2
 KLAC,156.20,USD,2026-11-03,massive（marketbeat 156.05）,1
 TER,269.35,USD,2026-11-03,massive；marketbeat,2
 BESI,156.10,EUR,2026-11-03,debelegger；welingelichtekringen(% 換算),1
-2317,245.5,TWD,2026-11-03,stockanalysis；cnyes,2
-3231,176.5,TWD,2026-11-03,stockanalysis；cnyes,2
-6669,1770,TWD,2026-11-03,stockanalysis；cnyes,2
+2317,240,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
+3231,176,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
+6669,1785,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
 DELL,408.40,USD,2026-11-03,massive（marketbeat 408.18）,1
 SMCI,31.39,USD,2026-11-03,massive；marketbeat,2
-3017,2935,TWD,2026-11-03,stockanalysis；cnyes,2
-2301,228,TWD,2026-11-03,stockanalysis；cnyes(11/04頁昨收),2
-3324,1320,TWD,2026-11-03,stockanalysis；cnyes(未標時間，漲跌換算一致),2
-3653,6035,TWD,2026-11-03,stockanalysis；cnyes,2
+3017,2820,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
+2301,226,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
+3324,1300,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
+3653,6450,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
 ARM,202.49,USD,2026-11-03,massive；marketbeat,2
-3711,616,TWD,2026-11-03,stockanalysis；cnyes,2
-2303,103,TWD,2026-11-03,stockanalysis；cnyes,2
-5347,134,TWD,2026-11-03,stockanalysis；cnyes,2
-6274,1090,TWD,2026-11-03,stockanalysis；cnyes,2
-6223,4190,TWD,2026-11-03,stockanalysis；cnyes,2
-000660,1398000,KRW,2026-11-03,newspim；slist,2
-005930,219500,KRW,2026-11-03,newspim；slist,2
-300308,480.20,CNY,2026-11-03,新浪,1
-300502,173.36,CNY,2026-11-03,每經網,1
-300476,122.71,CNY,2026-11-03,stockanalysis,1
-6315,2133,JPY,2026-11-02,stockanalysis；松井證券,2
-7729,15420,JPY,2026-11-02,stockanalysis；松井證券,2
-042700,180000,KRW,2026-11-03,job-post（KRX 正規盤）,1
+3711,627,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
+2303,105.5,TWD,2026-11-04,cnyes；Yahoo 奇摩股市（收盤 2026/11/04 13:30）,2
+5347,137,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
+6274,1115,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
+6223,4135,TWD,2026-11-04,cnyes（市場收盤 11/04 13:30；昨收與前版 11-03 值相符）,1
+000660,1396000,KRW,2026-11-04,stockanalysis 報價頁（Nov 4 3:30 PM KST；前收與前版相符）,1
+005930,218000,KRW,2026-11-04,stockanalysis 報價頁（Nov 4 3:30 PM KST；前收與前版相符）,1
+300308,533.38,CNY,2026-11-04,stockanalysis 報價頁（Nov 4 3:04 PM CST，收盤後；前收與前版相符）,1
+300502,196.50,CNY,2026-11-04,stockanalysis 報價頁（Nov 4 3:04 PM CST，收盤後；前收與前版相符）,1
+300476,135.24,CNY,2026-11-04,stockanalysis 報價頁（Nov 4 3:04 PM CST，收盤後；前收與前版相符）,1
+6315,2097,JPY,2026-11-04,stockanalysis 報價頁（Nov 4 3:30 PM JST；前收與前版相符）,1
+7729,14920,JPY,2026-11-04,stockanalysis 報價頁（Nov 4 3:30 PM JST；前收與前版相符）,1
+042700,186100,KRW,2026-11-04,stockanalysis 報價頁（Nov 4 3:30 PM KST；前收與前版相符）,1
