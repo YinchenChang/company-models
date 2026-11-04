@@ -4,6 +4,8 @@
 
 - **分世代每 IT GW NVIDIA 內容**（算力收支 Wattonomics Requests R7，期限 11-12；決策 S38）：In 頁新增 M28（NVIDIA 合計 ÷ IT capex：GB300 0.647、VR200 2026 0.624、VR200 2027 0.581〔高值 0.599＝HBM 漲價轉嫁〕取自晶片內容橋接表；Hopper、GB200 以 GB300、Rubin Ultra 以 VR200 2027 代入〔Analogy〕）；Interface `SIF_NVContentGW_<H100|GB200|GB300|VR200_26|VR200|RU>`（$B／IT GW）：17.80／15.54／20.85／23.47／21.85／29.11（含 _lo／_hi）。
 - **Wattonomics 可比口徑的供給上限** `SIF_CapOnlineGW_Base`（可支撐新增上線 IT GW，毛額）：20.81／29.89／46.50／51.91（2026–29），供 Wattonomics v0.3「部署 GW 不得超過晶片產能」檢查。
+- **逐買方 NVIDIA 份額**（算力收支 11-04 Wattonomics v0.2／v0.2.1 訊息第 3 節，期限 11-14）：In 頁新增 M29，31 列 `nvsh_<買方>_<yy>`（Google、Amazon、Microsoft、Meta、Oracle、xAI、OpenAI 直接、新雲、中國、主權＋其他、Anthropic 直接 TPU；2025–2027；低／基準／高），Interface `SIF_nvsh_*`。研究報告 `docs/reports/20261104_逐買方NVIDIA份額_研究.md`（公司未揭露金額拆分；Google、AWS、中國為 Derived，其餘 Assumed／Interested-party）。全市場檢查：由上而下 NVIDIA 約 80%（2026），各買方以資本支出加權約 67%，差 13pt 主因為資本支出 ≠ 加速器支出。
+- R4 r5（讀 Wattonomics v0.2.2）：與 r4 逐值相同。
 - `tools/r4_bridge.py`：以 Wattonomics 具名範圍 `WIF_MktGW_Add_*`、`WIF_MktGW_YE_*` 交叉核對讀到的列（列序改變時報錯）。
 - 輸入值不變；下游只有版本文字（cascade 第二輪全部 SAME）。
 
