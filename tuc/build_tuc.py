@@ -25,6 +25,8 @@ SC = ("A", "B", "C")
 OVR = {}
 for kv in filter(None, os.environ.get("TUC_OVERRIDE", "").split(";")):
     k, v = kv.split("="); OVR[k] = float(v)
+WTA_ON = os.environ.get("TUC_WTA") == "1"   # v0.13：sens_tuc.py 產生 Wattonomics 錨定案例時，三情境市場自 FY2027 起 × wta（正式建置不設）
+WTA_MF = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
 wb = openpyxl.Workbook()
 def hdr(ws, row, labels):
     for j, h in enumerate(labels, 1):
@@ -227,7 +229,8 @@ Q.freeze_panes = "B4"
 FYS = (2025, 2026, 2027, 2028, 2029); FC = {2025: "C", 2026: "D", 2027: "E", 2028: "F", 2029: "G"}
 BU = (2026, 2027, 2028, 2029)
 gwk = lambda y, s: {2026: "gw_26", 2027: "gw_27", 2028: f"gw28_{s}", 2029: f"gw29_{s}"}[y]
-def engine(ws, r0, title, s):
+def engine(ws, r0, title, s, wm=None):
+    wm = wm or (WTA_MF if WTA_ON else None)   # v0.13：wm＝Wattonomics 錨定年別乘數（預設 None＝不乘）
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
     hdr(ws, r, ["項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "說明"]); r += 1
@@ -244,7 +247,7 @@ def engine(ws, r0, title, s):
     sec_("A. AI 高速 CCL 市場（Siliconomics）與台燿份額（需求面；D 欄＝FY2026 校準年）")
     row("gw", "部署 GW（IT 電力）", "GW", {c_(y): f"={gwk(y, s)}" for y in BU}, fmt="0.0", note=f"Siliconomics SIF_DeployGW_{s}")
     row("pgw", "每 GW 高速 CCL 金額（不含價格指數）", "US$M/GW", {c_(y): f"=pgw_{y % 100}" for y in BU}, fmt="#,##0", note="Siliconomics SIF_CCLperGW")
-    row("mku", "AI 高速 CCL 市場（美元；不含價格指數）", "US$B", {c_(y): f"={c_(y)}{R['gw']}*{c_(y)}{R['pgw']}/1000" + ("" if y == 2026 else "*mf") for y in BU},
+    row("mku", "AI 高速 CCL 市場（美元；不含價格指數）", "US$B", {c_(y): f"={c_(y)}{R['gw']}*{c_(y)}{R['pgw']}/1000" + ("" if y == 2026 else "*mf" + (f"*{wm[y]}" if wm else "")) for y in BU},
         note=f"＝ Siliconomics SIF_CCLMkt_{s}（Recon 核對）；FY2027 起 × mf（Sens 用，基準 1）")
     row("mkn", "AI 高速 CCL 市場（新台幣）", "NT$B", {c_(y): f"={c_(y)}{R['mku']}*fx" for y in BU}, fmt="#,##0.0")
     row("pp", "台燿年均售價指數（FY2026＝1）", "x", {"D": "=1", **{c_(y): f"=pp_{y % 100}" for y in BU[1:]}}, fmt="0.00")
@@ -637,6 +640,45 @@ for row_ in RD.iter_rows():
             c_.value = "相對倍數調整：加權目標價中的 Comparable 用相對倍數調整後的值（Val 第 0.5 節：同業前瞻倍數中位數 × 本公司 10 年相對同業的倍數比，Bloomberg 前瞻倍數；tools/relative_multiple.py）。「Comparable 目標價（市場主流同業法）」不調整。"
         elif isinstance(c_.value, str) and c_.value.startswith(f"{VER}（{DATE}）：依個股模型原則第 8 節"):
             c_.value = "In 頁版面（個股模型原則第 8 節）：D／F 欄＝敏感度低／高，只用於 Sens 頁、不進目標價；In 頁最後一節「情境驅動對照」把情境專屬輸入三情境並排（只引用上方各列，純展示）。"
+# ---------------- v0.13（2026-11-04）：Sens「Wattonomics 錨定」案例（三層校準原則；決策 S37）。In 頁最後三列、Sens 頁最下方小表與案例區塊；既有格不動 ----------------
+WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
+def wta_in_rows():
+    r = IN.max_row + 2
+    IN.cell(r, 1, f"Z. Wattonomics 錨定係數（敏感度用；Siliconomics {SIL.VERSION}）").font = BOLD; r += 1
+    def _inp(key, item, unit, lo, base, hi, tag, s1, s2):
+        nonlocal r
+        for j, v in enumerate((key, item, unit, lo, base, hi, tag, s1, s2), 1):
+            if v is not None: IN.cell(r, j, v)
+        IN.cell(r, 5).number_format = "0.000"
+        wb.defined_names[key] = DefinedName(key, attr_text=f"In!$E${r}")
+        r += 1
+    SIL.wta_rows(_inp)
+def wta_sens():
+    t0 = SE.max_row + 3; b0 = t0 + 10
+    RW = engine(SE, b0, "案例區塊：Wattonomics 錨定（情境 B；FY2027 起 AI 高速 CCL 市場 × wta_27／wta_28／wta_29）", "B", wm=WTA_MF)
+    SE.cell(t0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+    hdr(SE, t0 + 1, ["驅動", "設定", "方向", "加權目標價", "相對基準", "鍵", "FY2028 EPS（情境 A）", "FY2028 EPS 相對基準", "說明",
+                     "FY2027 EPS（情境 B）", "FY2027 EPS（B）相對基準", "FY2028 EPS（情境 B）", "FY2028 EPS（B）相對基準"])
+    b, w = t0 + 2, t0 + 3
+    SE.cell(b, 1, "基準（同第 4 列；EPS 另列情境 B）"); SE.cell(b, 2, "In 頁基準欄"); SE.cell(b, 3, "—"); SE.cell(b, 9, "本活頁簿重算值")
+    SE[f"D{b}"] = "=D4"; SE[f"G{b}"] = "=G4"; SE[f"J{b}"] = f"=PL!E{SUMR[('B', 'eps')]}"; SE[f"L{b}"] = f"=PL!F{SUMR[('B', 'eps')]}"
+    SE.cell(w, 1, "Wattonomics 錨定"); SE.cell(w, 2, "FY2027 起市場 × wta_27／wta_28／wta_29"); SE.cell(w, 3, "—"); SE.cell(w, 6, "wta_27／wta_28／wta_29")
+    SE[f"J{w}"] = f"=E{RW['eps']}"; SE[f"L{w}"] = f"=F{RW['eps']}"
+    if SJ and "_wta" in SJ:
+        SE.cell(w, 4, SJ["_wta"]["tp"]); SE.cell(w, 7, SJ["_wta"]["epsA28"])
+        SE.cell(w, 9, "目標價與情境 A EPS：sens_tuc.py 整本重算（三情境市場皆 × wta、權重不變）；情境 B EPS：下方案例區塊（公式）")
+    else:
+        SE.cell(w, 9, "目標價未產生（請先執行 sens_tuc.py）")
+    for c, f in (("E", "D"), ("H", "G"), ("K", "J"), ("M", "L")):
+        for rr in (b, w):
+            SE[f"{c}{rr}"] = f'=IFERROR({f}{rr}/{f}${b}-1,"")'; SE[f"{c}{rr}"].number_format = "0.0%"
+    for rr in (b, w):
+        SE[f"D{rr}"].number_format = "#,##0"
+        for c in "GJL": SE[f"{c}{rr}"].number_format = "0.00"
+    SE.cell(t0 + 5, 1, WTA_NOTE)
+    SE.cell(t0 + 6, 1, "FY2030–FY2032 沿用本模型收斂法（由 FY2029 收斂），不另乘係數；產能受限年度，市場下修先被產能上限吸收。加權目標價為三情境市場皆 × wta 的整本重算值（情境權重不變），不是只換情境 B。")
+    return RW
+wta_in_rows(); WTA_R = wta_sens()   # v0.13：放在 In 版面套用之後，確保在 In 頁最後
 rn = RD.max_row + 2; OBSROW = rn
 RD.cell(rn, 1, f'="投資建議："&Val!B{T["rec"]}&"（依上檔空間固定規則；加權目標價上檔空間 "&TEXT(Val!B{T["upw"]},"+0.0%;−0.0%")&"）"'); rn += 1
 for k_, o_ in enumerate(OBS, 1):

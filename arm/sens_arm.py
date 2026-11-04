@@ -20,6 +20,10 @@ for r in range(4, ws.max_row + 1):
 for k, (lo, hi) in jobs.items():
     for side, v in (("lo", lo), ("hi", hi)):
         subprocess.run([sys.executable, BUILD, os.path.join(TMP, "raw", f"{k}__{side}.xlsx")], check=True, env={**env0, "ARM_OVERRIDE": f"{k}={v}"})
+# Wattonomics 錨定（決策 S37）：情境 B 單一路徑（權重 0／1／0）與「＋ 情境 B 顆數 CY2027 起 × wta」兩次整本重建
+WJOBS = {"_wtaB": "tp_wA=0;tp_wB=1;tp_wC=0", "_wtaW": "tp_wA=0;tp_wB=1;tp_wC=0;_wta=1"}
+for nm, ov in WJOBS.items():
+    subprocess.run([sys.executable, BUILD, os.path.join(TMP, "raw", f"{nm}.xlsx")], check=True, env={**env0, "ARM_OVERRIDE": ov})
 files = sorted(glob.glob(os.path.join(TMP, "raw", "*.xlsx")))
 subprocess.run(["soffice", "--headless", "--calc", "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", os.path.join(TMP, "rc")] + files,
                check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -33,7 +37,12 @@ out = {}
 b = read(os.path.join(TMP, "rc", "base.xlsx"))
 for k in jobs:
     out[k] = {"低": read(os.path.join(TMP, "rc", f"{k}__lo.xlsx")), "高": read(os.path.join(TMP, "rc", f"{k}__hi.xlsx"))}
+def read_w(f):   # Sens 頁 Wattonomics 小表的基準列（本活頁簿公式）：FY2027／FY2028／FY2029 EPS（情境 B）、加權目標價
+    ws_ = openpyxl.load_workbook(f, data_only=True)["Sens"]
+    r_ = next(r for r in range(1, ws_.max_row + 1) if str(ws_.cell(r, 1).value or "").startswith("基準（情境 B EPS＝Sens 主表 G4 口徑"))
+    return [ws_.cell(r_, c).value for c in (2, 5, 8, 11)]
+out["_wta"] = {"B": read_w(os.path.join(TMP, "rc", "_wtaB.xlsx")), "W": read_w(os.path.join(TMP, "rc", "_wtaW.xlsx"))}
 json.dump(out, open(os.path.join(HERE, "sens.json"), "w"), ensure_ascii=False, indent=1)
-print("基準", b, "；案例", len(out))
-for k, v in sorted(out.items(), key=lambda kv: -max(abs(kv[1]["低"][0] / b[0] - 1), abs(kv[1]["高"][0] / b[0] - 1))):
+print("基準", b, "；案例", len(out) - 1, "；Wattonomics 錨定", out["_wta"])
+for k, v in sorted(((k, v) for k, v in out.items() if k != "_wta"), key=lambda kv: -max(abs(kv[1]["低"][0] / b[0] - 1), abs(kv[1]["高"][0] / b[0] - 1))):
     print(f"{k:10s} 低 {v['低'][0] / b[0] - 1:+.1%}  高 {v['高'][0] / b[0] - 1:+.1%}")

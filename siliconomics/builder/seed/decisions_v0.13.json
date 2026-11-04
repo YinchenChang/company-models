@@ -1,0 +1,11 @@
+[
+ {
+  "id": "S37",
+  "cat": "結構",
+  "item": "v0.13：三層校準原則落地——Cap 頁（供給上限）、Recon F 節（季度實績驗證）、SIF_WTAnchor_Base（個股敏感度 Wattonomics 錨定案例）",
+  "decision": "依 Andy 2026-11-04 08:26 與 12:45：(1) 實績雙向校正：Recon F 節以出貨年 NVIDIA GW × 每 GW 內容對照公司資料中心營收（只作診斷，不計入狀態彙總）；(2) 供給是上限：Cap 頁以基準顆數算 CoWoS 與 HBM 需求、對照產能，得可支撐部署 GW；Checks K10（本庫基準 ≤ 上限）、K10w（Wattonomics 錨定 ≤ 上限）為 WARN；(3) 個股基準暫不改，敏感度新增「Wattonomics 錨定」案例，產業量自 CY2027 起乘 SIF_WTAnchor_Base（＝R4 比值），FY2026 維持錨點（實績）。電力、晶圓前段產能未建，列為上限的已知缺口。輸入值不變。",
+  "date": "2026-11-04",
+  "quote": "Andy 2026-11-04 12:45「算力收支那个专案，还有 AI 半导体这个专案，以后做这个 Tokenomics、Autonomics 还有这个 Siliconomics，都用这样的一个原则去校准」",
+  "status": "工程決定"
+ }
+]

@@ -295,11 +295,11 @@ FYS = (2025, 2026, 2027, 2028, 2029); FC = {2025: "C", 2026: "D", 2027: "E", 202
 FADE = (2030, 2031, 2032); FADEFILL = PatternFill("solid", fgColor="E7E6E6")
 BU = (2026, 2027, 2028, 2029); F3 = (2027, 2028, 2029)
 DEFP = dict(scn="A", aish="ai_sh", ga="g_asp", vot="v_ot", rel="rel_{y}", cap="cap_{y}", pp="pp_{y}", cg="c_g", gnai="g_nai",
-            gsf="g_sf", msf="m_sf", gff="g_ff", mff="m_ff", gho="g_ho", mho="m_ho", gcc="g_cc", nibp="ni_bp", shg="sh_g")
+            gsf="g_sf", msf="m_sf", gff="g_ff", mff="m_ff", gho="g_ho", mho="m_ho", gcc="g_cc", nibp="ni_bp", shg="sh_g", wm=None)
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
     p = lambda k, y=None: P[k].format(y=(y % 100 if y else ""))
-    um = lambda y: {2026: "", 2027: "", 2028: f"*um28_{s}", 2029: f"*um29_{s}"}[y]
+    um = lambda y: {2026: "", 2027: "", 2028: f"*um28_{s}", 2029: f"*um29_{s}"}[y] + (f"*{P['wm'][y]}" if P["wm"] and y >= 2027 else "")   # v0.13：wm＝Wattonomics 錨定年別乘數（預設 None＝不乘）
     spx = lambda y: "" if y < 2028 else f"*sp_{s}"
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -839,6 +839,37 @@ import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "ajinomoto")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.2.1", "2026-10-30")  # v0.2.1：In 頁版面（個股模型原則第 8 節；數值不變）
+# ---------------- v0.13（2026-11-04）：Sens「Wattonomics 錨定」案例（三層校準原則；決策 S37）。In 頁最後三列、Sens 頁最下方小表與案例區塊；既有格不動 ----------------
+WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
+WTA_MF = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
+def wta_in_rows():
+    r = IN.max_row + 2
+    IN.cell(r, 1, f"Z. Wattonomics 錨定係數（敏感度用；Siliconomics {SIL.VERSION}）").font = BOLD; r += 1
+    def _inp(key, item, unit, lo, base, hi, tag, s1, s2):
+        nonlocal r
+        for j, v in enumerate((key, item, unit, lo, base, hi, tag, s1, s2), 1):
+            if v is not None: IN.cell(r, j, v)
+        IN.cell(r, 5).number_format = "0.000"
+        wb.defined_names[key] = DefinedName(key, attr_text=f"In!$E${r}")
+        r += 1
+    SIL.wta_rows(_inp)
+def wta_sens():
+    t0 = SE.max_row + 3; b0 = t0 + 11
+    RW = engine(SE, b0, "案例區塊：Wattonomics 錨定（情境 B；FY2027 起顆數 × wta_27／wta_28／wta_29）", scn="B", wm=WTA_MF)
+    SE.cell(t0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+    for c in range(1, 10 + 1): SE.cell(t0 + 1, c, SE.cell(3, c).value).font = BOLD
+    put_case(t0 + 2, "基準（情境 A；同第 4 列）", "PL 區塊 A", PB["A"], "PL!")
+    put_case(t0 + 3, "情境 B（本案例的底）", "CY2028 顆數 ×0.8、CY2029 ×0.85；ABF 價格 ×0.95", PB["B"], "PL!")
+    put_case(t0 + 4, "Wattonomics 錨定", "情境 B；FY2027 起 NVIDIA 與非 NVIDIA 顆數 × wta_27／wta_28／wta_29（FY(t) 對照 CY(t) 顆數）", RW, "")
+    SE.cell(t0 + 5, 1, "差異%：Wattonomics 錨定 ÷ 基準 − 1"); SE.cell(t0 + 6, 1, "差異%：Wattonomics 錨定 ÷ 情境 B − 1")
+    for c in "CDEGHI":
+        for rr, rb in ((t0 + 5, t0 + 2), (t0 + 6, t0 + 3)):
+            SE[f"{c}{rr}"] = f"=IFERROR({c}{t0 + 4}/{c}{rb}-1,\"\")"; SE[f"{c}{rr}"].number_format = "0.0%"
+    SE.cell(t0 + 7, 1, WTA_NOTE)
+    SE.cell(t0 + 8, 1, "FY2030–FY2032 收斂欄沿用本模型延伸表收斂法（由 FY2029 收斂），不另乘係數；需求高於產能上限時，量的下修先被產能吸收。")
+    SE.cell(t0 + 9, 1, "目標價：Sens 頁目標價參數表只動 DCF 參數（r、g、權重），不逐案例重算 DCF，本案例不列目標價。")
+    return RW
+wta_in_rows(); WTA_R = wta_sens()   # v0.13：放在 In 版面套用之後，確保在 In 頁最後
 wb.save(sys.argv[1])
 if os.environ.get("AJI_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     _json.dump({"PB": PB, "SUMR": {f"{k[0]}|{k[1]}": v for k, v in SUMR.items()}, "UR": UR, "CHK": CHK, "VAL": VAL, "INROW": INROW, "QR": QR, "Q_NOTE": Q_NOTE,

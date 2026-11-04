@@ -230,7 +230,8 @@ Q.freeze_panes = "B4"
 COL = {y: chr(ord("C") + y - 2025) for y in range(2025, 2031)}   # C＝2025 … H＝2030
 HB = {"A": "hbp_{y}_hi", "B": "hbp_{y}", "C": "hbp_{y}_lo"}
 DEFP = dict(scn="A", den="", stk="", beta="beta", dlt="dlt", gt="g_tail", hb=None, att=None, thr="thr", asp="asp", shm=None, shl=None,
-            hbsh="hb_sh26", el="el", prem="gm_prem", gmadj=True, F="opex_fix", v="opex_var", fin="fin", tax="tax", rev26="rev26", gp26="gp26", opx26="opx26", ni26="ni26", eps26="eps26")
+            hbsh="hb_sh26", el="el", prem="gm_prem", gmadj=True, F="opex_fix", v="opex_var", fin="fin", tax="tax", rev26="rev26", gp26="gp26", opx26="opx26", ni26="ni26", eps26="eps26",
+            hsx=None, cwm=None)   # v0.13：Wattonomics 錨定案例用（hsx＝HBM 位元替換、cwm＝CoWoS 片數乘數）；預設不變
 
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
@@ -247,7 +248,7 @@ def engine(ws, r0, title, **over):
             ws[f"{COL[y]}{r}"] = f; ws[f"{COL[y]}{r}"].number_format = fmt
         ws.cell(r, 9, note); R[key] = r; r += 1
     ws.cell(r, 1, "A. HBM 混合鍵合（日曆年；與韓美同一晶粒口徑）").font = BOLD; r += 1
-    row("ship", "HBM 出貨位元", "EB", {**{y: f"=hs{s}_{y % 100}" for y in YRS}, 2030: f"=G{r}*(1+{P['gt']})"}, fmt="0.00", note="markets/memory 同字母情境；2030＝2029 ×（1＋g_tail）")
+    row("ship", "HBM 出貨位元", "EB", {**{y: (f"={P['hsx'][y]}" if P['hsx'] else f"=hs{s}_{y % 100}") for y in YRS}, 2030: f"=G{r}*(1+{P['gt']})"}, fmt="0.00", note="markets/memory 同字母情境；2030＝2029 ×（1＋g_tail）")
     row("den", "DRAM 晶粒容量", "Gb", {y: f"=den_{y % 100}{P['den']}" for y in range(2025, 2031)}, fmt="0.0")
     row("dies", "核心晶粒數＝位元 × 8000 ÷ 容量", "百萬顆", {y: f"={COL[y]}{R['ship']}*8000/{COL[y]}{R['den']}" for y in range(2025, 2031)}, fmt="#,##0", note="1 EB＝8×10⁹ Gb；每顆核心晶粒鍵合一次")
     row("stk", "平均堆疊層數", "層", {y: f"=stk_{y % 100}{P['stk']}" for y in range(2025, 2031)}, fmt="0.0")
@@ -258,7 +259,7 @@ def engine(ws, r0, title, **over):
     row("newt", "新機需求＝MAX(0, 下一年 − 本年)＋汰換 × 本年", "台", {y: f"=MAX(0,{COL[y+1]}{R['tools']}-{COL[y]}{R['tools']})+{P['dlt']}*{COL[y]}{R['tools']}" for y in YRS}, fmt="#,##0", note="機台在產能需要前一年購入")
     ws.cell(r, 1, "B. 邏輯混合鍵合（SoIC 類；日曆年）").font = BOLD; r += 1
     um = lambda y: "1" if y < 2028 else f"um{y % 100}_{s}"
-    row("cow", "AI 先進封裝晶圓需求＝台積電 CoWoS 需求 × 情境顆數係數", "千片", {**{y: f"=cow_{y % 100}*{um(y)}" for y in (2026, 2027, 2028, 2029)}, 2030: f"=G{r}*(1+{P['gt']})"}, fmt="#,##0", note="2030＝2029 ×（1＋g_tail）")
+    row("cow", "AI 先進封裝晶圓需求＝台積電 CoWoS 需求 × 情境顆數係數", "千片", {**{y: f"=cow_{y % 100}*{um(y)}" + (f"*{P['cwm'][y]}" if P['cwm'] and y in P['cwm'] else "") for y in (2026, 2027, 2028, 2029)}, 2030: f"=G{r}*(1+{P['gt']})"}, fmt="#,##0", note="2030＝2029 ×（1＋g_tail）")
     row("att", "混合鍵合占 AI 先進封裝晶圓比例", "%", {y: "=" + att.format(y=y % 100) for y in range(2026, 2031)}, fmt="0.0%")
     row("idx", "混合鍵合邏輯晶圓（需求指數）", "千片當量", {y: f"={COL[y]}{R['cow']}*{COL[y]}{R['att']}" for y in range(2026, 2031)}, fmt="#,##0.0")
     row("newl", "新機需求指數＝MAX(0, 下一年 − 本年)＋汰換 × 本年", "千片當量", {y: f"=MAX(0,{COL[y+1]}{R['idx']}-{COL[y]}{R['idx']})+{P['dlt']}*{COL[y]}{R['idx']}" for y in range(2026, 2030)}, fmt="#,##0.0")
@@ -721,6 +722,63 @@ wb._sheets = [wb[n] for n in order]
 import os, sys  # noqa: E401
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
 import relative_multiple as RMX  # noqa: E402
+
+# ---------------- Wattonomics 錨定（三層校準原則；Siliconomics v0.13，決策 S37）----------------
+# In：三列 wta_27／28／29 接在模型輸入最後（apply_in_layout 的「情境驅動對照」展示節接在其後）；Sens：案例區塊放在既有內容最下方，摘要列接在案例清單之後
+sys.path.insert(0, os.path.join(ROOT, "siliconomics")); import reader as SIL  # noqa: E402
+from openpyxl.workbook.defined_name import DefinedName as _DN  # noqa: E402
+from openpyxl.styles import Font as _F  # noqa: E402
+def _wta_in(wb):
+    ws = wb["In"]; r = ws.max_row + 1
+    ws.cell(r, 1, f"Z. Wattonomics 錨定係數（敏感度用；Siliconomics {SIL.VERSION}）").font = _F(bold=True); r += 1
+    rows_ = []; SIL.wta_rows(lambda *a: rows_.append(a))
+    for a in rows_:
+        for j, v in enumerate(a, 1):
+            if v is not None: ws.cell(r, j, v)
+        ws.cell(r, 5).font = _F(color="0000FF")
+        wb.defined_names[a[0]] = _DN(a[0], attr_text=f"In!$E${r}")
+        r += 1
+_wta_in(wb)
+WTA_READ = "讀法：Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
+
+def _wta_hbm(SE, w0, CM, desc, pa=False):
+    # pa＝True：另列情境 A 路徑 × 係數的 CY2028 出貨位元（模型 CY2027 購機讀情境 A 的 CY2028 共同前提時用），回傳其列號 ha
+    _wm = openpyxl.load_workbook(SKH_F, data_only=True)["Mkt"]
+    want = ["需求 × 出貨係數（B）", "供給（三情境相同）"] + (["需求 × 出貨係數（A）"] if pa else [])
+    _HB = {}
+    for _r in _wm.iter_rows():
+        _l = str(_r[0].value or "")
+        if _l in want and _l not in _HB: _HB[_l] = ([_r[2 + j].value for j in range(5)], _r[0].row)
+    assert len(_HB) == len(want), _HB
+    SE.cell(w0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+    SE.cell(w0 + 1, 1, WTA_READ)
+    SE.cell(w0 + 2, 1, desc)
+    hdr(SE, w0 + 3, ["日曆年", "單位"] + [f"CY{y}" for y in range(2025, 2030)] + ["", "來源"])
+    fr = w0 + 4
+    SE.cell(fr, 1, "Wattonomics 錨定係數（In 頁 wta_27／28／29）"); SE.cell(fr, 2, "x")
+    for y, f in zip(range(2025, 2030), (1, 1, "=wta_27", "=wta_28", "=wta_29")): SE[f"{CM[y]}{fr}"] = f; SE[f"{CM[y]}{fr}"].number_format = "0.000"
+    names = {"需求 × 出貨係數（B）": "HBM 需求 × 出貨係數（情境 B）", "供給（三情境相同）": "HBM 供給（三情境相同）", "需求 × 出貨係數（A）": "HBM 需求 × 出貨係數（情境 A；CY2027 購機共同前提用）"}
+    for i, lab in enumerate(want, 1):
+        vals, srow = _HB[lab]; SE.cell(fr + i, 1, names[lab]); SE.cell(fr + i, 2, "EB"); SE.cell(fr + i, 9, f"{rel(SKH_F)}｜Mkt!C{srow}:G{srow}（唯讀抄錄）")
+        for j, y in enumerate(range(2025, 2030)):
+            if vals[j] is not None: c_ = SE[f"{CM[y]}{fr + i}"]; c_.value = float(vals[j]); c_.font = BLUE; c_.number_format = "0.00"
+    hr = fr + len(want) + 1
+    SE.cell(hr, 1, "HBM 出貨位元（錨定）＝MIN(需求 × 係數, 供給)；CY2025–26＝情境 B"); SE.cell(hr, 2, "EB")
+    for y in range(2025, 2030):
+        SE[f"{CM[y]}{hr}"] = f"=hsB_{y % 100}" if y < 2027 else f"=MIN({CM[y]}{fr + 1}*{CM[y]}{fr},{CM[y]}{fr + 2})"; SE[f"{CM[y]}{hr}"].number_format = "0.00"
+    ha = None
+    if pa:
+        ha = hr + 1
+        SE.cell(ha, 1, "HBM 出貨位元（情境 A 路徑 × 係數）＝MIN(需求 A × 係數, 供給)：CY2027 購機看的 CY2028 共同前提，同樣乘係數"); SE.cell(ha, 2, "EB")
+        SE[f"{CM[2028]}{ha}"] = f"=MIN({CM[2028]}{fr + 3}*{CM[2028]}{fr},{CM[2028]}{fr + 2})"; SE[f"{CM[2028]}{ha}"].number_format = "0.00"
+    return fr, hr, ha, (ha or hr) + 3
+
+fr, hr, _ha, nr = _wta_hbm(SE, SE.max_row + 3, COL, "產業量＝HBM 需求位元（加速器顆數 × 每顆 GB × 情境 B 顆數係數；skhynix Mkt 頁）與台積電 CoWoS 晶圓需求：CY2027 起 × wta；HBM 出貨＝MIN(需求 × wta, 供給)（同記憶體模型）；"
+    "CoWoS × wta。2030 依 g_tail 由 2029 外推。主流業務（隨設備總額年增）、混合鍵合占比、份額、毛利率照情境 B。")
+RW = engine(SE, nr, "案例區塊：Wattonomics 錨定（情境 B 為底；HBM 位元與 CoWoS 晶圓 CY2027 起 × wta）", scn="B",
+            hsx={y: f"${COL[y]}${hr}" for y in YRS}, cwm={y: f"${COL[y]}${fr}" for y in (2027, 2028, 2029)})
+put_case(nn + 2, "Wattonomics 錨定（情境 B 為底）", "HBM 位元、CoWoS 晶圓 CY2027 起 × wta；相對欄對情境 B 列", RW)
+for a_, b_ in (("E", "D"), ("H", "G")): SE[f"{a_}{nn + 2}"] = f"={b_}{nn + 2}/{b_}{nn}-1"
 RMX.apply(wb, "besi")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.1.2", "2026-10-31", split=True, split_skip=[])  # v0.1.2：In 頁版面；v0.1.3（2026-10-31）：第 3 點情境專屬列拆分（數值不變）

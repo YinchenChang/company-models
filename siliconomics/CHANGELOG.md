@@ -1,5 +1,16 @@
 # Siliconomics 變更紀錄
 
+## v0.13（2026-11-04；`model/20261104_Siliconomics_v0.13.xlsx`；Tokenomics v21.7）
+
+- **三層校準原則落地**（Andy 2026-11-04 08:26、12:45；決策 S37）：
+  - 新增 **Cap 頁**（供給上限）：基準顆數的 CoWoS 與 HBM 需求 vs 產能 → 可支撐部署 GW；Checks K10（本庫基準 ≤ 上限）、K10w（Wattonomics 錨定 ≤ 上限）。結果：**2027 HBM 需求 ÷ 供給 121%，可支撐 34.4 GW，低於基準 41.6（K10-2027 WARN）**；其餘年度未觸頂；錨點全部在上限內。報告 `docs/reports/20261104_v0.13_供給上限與錨定案例.md`。
+  - Recon **F 節季度實績驗證**：NVIDIA 資料中心營收（隱含 ÷ 公司）2026 1.017、2027 1.044。
+  - Interface 新增 `SIF_WTAnchor_Base`（R4 比值）、`SIF_CapGW_Base`、`SIF_CapHead_Base`、`SIF_CoWoSUtil_Base`、`SIF_HBMUtil_Base`；`reader.py` 新增 `WTA`、`wta_rows()`。
+- **R4 r4**（讀 Wattonomics v0.2.1）：0.946／0.735／0.640／0.539（一致／時差／待診斷／待診斷）。
+- **個股敏感度「Wattonomics 錨定」案例**（60 檔；世界先進不適用）：以情境 B 為底，產業量 CY2027 起 × wta，FY2026 維持錨點；Sens 頁最下方新增小表與案例區塊，In 頁加 wta_27／28／29。既有數值不變（In、Sens 以外 0 差異）。
+- `tools/in_layout/check_in_layout.py`：「Z. Wattonomics 錨定係數」節不屬情境驅動對照展示區。
+- 輸入值不變。
+
 ## v0.12（2026-11-03；`model/20261103_Siliconomics_v0.12.xlsx`；Tokenomics v21.7）
 
 - **只留基準**（工作方式 v1.7「三層只給基準、情境在個股」；決策 S33 基準＝原情境 B〔Andy 11-03 開場：未另行指示就照預設〕、S35）：Interface 新增 D 節 57 組 `*_Base` 名稱（等同原 B 列；例 `SIF_DeployGW_Base`、`SIF_UnitsPlat_Total_Base`、`SIF_um28_Base`、`SIF_cpo_Base_27`、`SIF_cqBase_8`、`SIF_ASICShareSum_trnBase`）；A／B／C 名稱項目欄標「停用過渡」，v0.13 刪除。Scen、Units 頁改標（原始顆數＝舊情境 A；本庫基準＝原始顆數 × 基準係數 0.8／0.85）；`um28_*`、`um29_*` 列名改「÷ 原始顆數」。

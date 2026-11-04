@@ -214,6 +214,12 @@ Q.freeze_panes = "B4"
 FYS = (2025, 2026, 2027, 2028, 2029); FC = {2025: "C", 2026: "D", 2027: "E", 2028: "F", 2029: "G"}
 cyu = lambda y, s: f"(nvbw_{y}+nvrb_{y}+nvru_{y})" + (f"*uc{y}_{s}" if y in (28, 29) else "")   # CY 顆數（情境 s）
 cyc = lambda y, s: (f"uc{y}_{s}" if y in (28, 29) else "1")
+# Wattonomics 錨定（決策 S37）：只在 sens_arm.py 的案例重建（ARM_OVERRIDE 含 _wta=1）時，情境 B 的 CY2027 起顆數再乘 wta_27／28／29；
+# 只用於 FY2028 起的欄（F、G）；FY2027 錨點欄（E，指數分母）不乘。正式建置不設，結果逐格不變。
+WTA_ON = OVR.get("_wta") == 1
+_wx = lambda y, s: (f"*wta_{y}" if WTA_ON and s == "B" and y >= 27 else "")
+cyuw = lambda y, s: f"({cyu(y, s)}{_wx(y, s)})" if _wx(y, s) else cyu(y, s)
+cycw = lambda y, s: f"({cyc(y, s)}{_wx(y, s)})" if _wx(y, s) else cyc(y, s)
 def engine(ws, r0, title, s):
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -229,10 +235,10 @@ def engine(ws, r0, title, s):
         ws.cell(r, 1, t).font = BOLD; r += 1
     sec_("A. 資料中心 CPU 顆數指數（NVIDIA Grace／Vera 讀 Siliconomics；雲端自研 CPU Assumed × 同字母係數）")
     row("nvcy", "NVIDIA 資料中心 GPU 顆數（會計年度＝9/12 × CY(t−1)＋3/12 × CY(t)）", "百萬顆",
-        {"D": f"=0.75*nv_cy25+0.25*{cyu(26, s)}", "E": f"=0.75*{cyu(26, s)}+0.25*{cyu(27, s)}", "F": f"=0.75*{cyu(27, s)}+0.25*{cyu(28, s)}", "G": f"=0.75*{cyu(28, s)}+0.25*{cyu(29, s)}"},
+        {"D": f"=0.75*nv_cy25+0.25*{cyu(26, s)}", "E": f"=0.75*{cyu(26, s)}+0.25*{cyu(27, s)}", "F": f"=0.75*{cyuw(27, s)}+0.25*{cyuw(28, s)}", "G": f"=0.75*{cyuw(28, s)}+0.25*{cyuw(29, s)}"},
         fmt="0.00", note=f"Siliconomics SIF_UnitsPlat_bw＋rb＋ru × SIF_UnitsCoef_{s}；CY2025 為 In 頁 nv_cy25（待併入 Siliconomics）")
     row("nvcpu", "NVIDIA Grace／Vera CPU 顆數 ＝ GPU × 每顆 GPU 搭配 CPU", "百萬顆", {c: f"={c}{R['nvcy']}*cpu_gpu" for c in "DEFG"}, fmt="0.00")
-    row("hcx", "雲端自研 Arm CPU 顆數指數（FY2027＝1）", "x", {"E": "=1", "F": f"=E{r}*(1+g_hc)*(0.75*{cyc(27, s)}+0.25*{cyc(28, s)})", "G": f"=F{r}*(1+g_hc)*(0.75*{cyc(28, s)}+0.25*{cyc(29, s)})/(0.75*{cyc(27, s)}+0.25*{cyc(28, s)})"},
+    row("hcx", "雲端自研 Arm CPU 顆數指數（FY2027＝1）", "x", {"E": "=1", "F": f"=E{r}*(1+g_hc)*(0.75*{cycw(27, s)}+0.25*{cycw(28, s)})", "G": f"=F{r}*(1+g_hc)*(0.75*{cycw(28, s)}+0.25*{cycw(29, s)})/(0.75*{cycw(27, s)}+0.25*{cycw(28, s)})"},
         fmt="0.00", note="年增 g_hc × 同字母顆數係數（行業情境）；Siliconomics 無 CPU 顆數：待併入 Siliconomics")
     row("dcx", "資料中心 CPU 顆數指數（FY2027＝1）＝ w_nv × NVIDIA 指數＋（1 − w_nv）× 雲端自研指數", "x",
         {"E": "=1", **{c: f"=w_nv*{c}{R['nvcpu']}/$E${R['nvcpu']}+(1-w_nv)*{c}{R['hcx']}" for c in "FG"}}, fmt="0.00")
@@ -518,6 +524,34 @@ for k in SENS_KEYS:
 SENS_LAST = srow - 1
 SE.cell(srow + 1, 1, "讀法：DCF 與 Comparable 目標價都遠低於現價，DCF 權重是最大的單一變數（Comparable 約為 DCF 的兩倍）；其次是影響 FY2028–29 EPS 的授權成長、營業費用與晶片毛利率。手機與資料中心的拆分比例只改變權利金的組成，對目標價影響小。")
 SENS_NOTE = srow + 1
+# Wattonomics 錨定（決策 S37）：小表放在 Sens 頁既有內容最下方；數值由 sens_arm.py 兩次整本重建取得（sens.json 的 _wta）：
+#   情境 B 單一路徑＝tp_wA／wB／wC 改 0／1／0；Wattonomics 錨定＝同上＋情境 B 顆數 CY2027 起 × wta。基準列為本活頁簿公式（sens_arm.py 也讀這一列）。
+WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
+W0 = SENS_NOTE + 3
+SE.cell(W0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+SE.cell(W0 + 1, 1, WTA_NOTE)
+SE.cell(W0 + 2, 1, "做法：Arm 會計年度 FY(t)＝9/12 × CY(t−1)＋3/12 × CY(t)（模型既有換算）；情境 B 的 NVIDIA GPU 顆數（→ Grace／Vera CPU）與雲端自研 CPU 顆數指數，在 FY2028 起的欄位裡 CY2027 起各年 × wta；FY2027 為錨點不變。"
+        "資料中心權利金＝FY2027 × CPU 顆數指數 × 權利金率指數，其餘市場、授權與晶片不乘。目標價＝單一路徑（情境權重改 0／1／0；DCF 與 Comparable 同 Val 第 0 節，含 PL 收斂法），由 arm/sens_arm.py 整本重建、LibreOffice 重算後寫入（數值）。")
+_WH = ["案例", "FY2027 EPS", "相對基準", "相對情境 B", "FY2028 EPS", "相對基準", "相對情境 B", "FY2029 EPS", "相對基準", "相對情境 B", "目標價", "相對基準", "相對情境 B"]
+hdr(SE, W0 + 3, _WH)
+WROW = W0 + 4
+SE.cell(WROW, 1, "基準（情境 B EPS＝Sens 主表 G4 口徑；目標價＝情境加權）")
+for _c, _f in (("B", f"=PL!E{SUMR[('B', 'eps')]}"), ("E", f"=PL!F{SUMR[('B', 'eps')]}"), ("H", f"=PL!G{SUMR[('B', 'eps')]}"), ("K", "=tp_final")): SE[f"{_c}{WROW}"] = _f
+_wj = (SJ or {}).get("_wta")
+for _i, (_nm, _k) in enumerate((("情境 B（案例底；單一路徑目標價）", "B"), ("Wattonomics 錨定（情境 B × wta；單一路徑目標價）", "W")), 1):
+    SE.cell(WROW + _i, 1, _nm)
+    if _wj:
+        for _c, _v in zip("BEHK", _wj[_k]): SE[f"{_c}{WROW + _i}"] = _v
+    else:
+        SE.cell(WROW + _i, 14, "未產生（請先執行 sens_arm.py）")
+for _i in range(3):
+    _r = WROW + _i
+    for _v, _d1, _d2 in (("B", "C", "D"), ("E", "F", "G"), ("H", "I", "J"), ("K", "L", "M")):
+        SE[f"{_v}{_r}"].number_format = PXF if _v == "K" else "0.00"
+        if _i == 0 or _wj:
+            SE[f"{_d1}{_r}"] = f"={_v}{_r}/{_v}${WROW}-1"; SE[f"{_d2}{_r}"] = f"={_v}{_r}/{_v}${WROW + 1}-1" if _wj else None
+        for _d in (_d1, _d2): SE[f"{_d}{_r}"].number_format = "0.0%"
+SE.cell(WROW + 3, 1, "註：基準列的 EPS 為情境 B（Arm Sens 主表以情境 B FY2028 EPS 為基準）；FY2027 為錨點，三列相同。")
 SE.column_dimensions["A"].width = 60; SE.column_dimensions["B"].width = 18; SE.column_dimensions["I"].width = 30
 for c in "CDEFGH": SE.column_dimensions[c].width = 14
 
@@ -597,6 +631,15 @@ order = ["README", "In", "Q", "Units", "PL", "Val", "Recon", "Sens", "Sources"]
 wb._sheets = [wb[n] for n in order]
 RMX.apply(wb, "arm")
 apply_in_layout.apply(wb, VER, DATE)
+# Wattonomics 錨定係數：In 頁最後三列（情境驅動對照之後；數值取 SIL.WTA）
+_wr = IN.max_row + 2
+IN.cell(_wr, 1, "Z. Wattonomics 錨定係數（敏感度用；Siliconomics v0.13）").font = BOLD; _wr += 1
+_wrows = []; SIL.wta_rows(lambda *a_: _wrows.append(a_))
+for _a in _wrows:
+    for _j, _v in enumerate(_a, 1):
+        if _v is not None: IN.cell(_wr, _j, _v)
+    IN.cell(_wr, 5).font = BLUE
+    defname(_a[0], f"In!$E${_wr}"); _wr += 1
 for row_ in RD.iter_rows():
     for c_ in row_:
         if isinstance(c_.value, str) and c_.value.startswith("2026-10-29：加權目標價中的 Comparable"):

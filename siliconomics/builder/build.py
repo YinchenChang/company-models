@@ -828,6 +828,26 @@ def main():
                    "晶圓前段設備（應用材料、Lam、KLA、ASML；TEL 未建模）", "AI 高速 PCB／CCL（勝宏、金像電、台光電）", "光學模組總量（中際旭創、新易盛、Lumentum、Coherent）"):
             RC.cell(r, 1, mk); RC.cell(r, 2, "未建"); r += 1
         r += 1
+        nvq = rsnap["markets"].get("nv_dc")
+        if nvq:
+            RC.cell(r, 1, "F. 季度實績驗證（v0.13；三層校準原則：實績雙向校正）：NVIDIA 資料中心營收（出貨年 NVIDIA GW × 每 GW 內容 vs 公司實績／指引；只作診斷，不計入狀態彙總）").font = BOLD; r += 1
+            for lab, key, fm in (("隱含 NVIDIA 資料中心營收（$B）", "implied", "0.0"), ("公司（2026 錨點；2027 指引推得）（$B）", "company", "0.0")):
+                RC.cell(r, 1, lab)
+                for j, v in enumerate(nvq[key]):
+                    if v is not None:
+                        c = RC.cell(r, 4 + j, v); c.font = GREEN; c.number_format = fm
+                RC.cell(r, 8, nvq["ref"]); RCROW["nv_" + key] = r; r += 1
+            RC.cell(r, 1, "比值（隱含 ÷ 公司）")
+            for j in range(len(nvq["implied"])):
+                if nvq["implied"][j] is not None:
+                    RC.cell(r, 4 + j, f"={'DEFG'[j]}{RCROW['nv_implied']}/{'DEFG'[j]}{RCROW['nv_company']}").number_format = "0.000"
+            RCROW["nv_ratio"] = r; r += 1
+            RC.cell(r, 1, "狀態")
+            for j in range(len(nvq["implied"])):
+                if nvq["implied"][j] is not None:
+                    col = "DEFG"[j]
+                    RC.cell(r, 4 + j, f'=IF(ABS({col}{RCROW["nv_ratio"]}-1)<=rc_tol,"一致","待診斷")')
+            r += 2
         RC.cell(r, 1, "E. 狀態彙總（A、B 節）").font = BOLD; r += 1
         st_cells = f"C{RCROW['soc_st']}:G{RCROW['soc_st']},D{RCROW['r4_st']}:G{RCROW['r4_st']}"
         for lab in ("一致", "時差", "待診斷"):
@@ -836,6 +856,83 @@ def main():
             RCROW["n_" + lab] = r; r += 1
         RC.column_dimensions["A"].width = 46; RC.column_dimensions["B"].width = 44; RC.column_dimensions["H"].width = 80
         for col in "CDEFG": RC.column_dimensions[col].width = 11
+
+    # ---------------- Cap：供給上限（v0.13；三層校準原則 Andy 2026-11-04：基準 GW＝需求側錨點，但不得超過供給產能） ----------------
+    CP = None; CPROW = {}
+    if UN is not None and DP is not None and "cw_capend29" in INROW:
+        CP = wb.create_sheet("Cap")
+        CP["A1"] = ("Cap — 供給上限（v0.13；三層校準原則〔Andy 2026-11-04〕：實績雙向校正、供給是上限、錨點可信度分時段看）。"
+                    "以本庫基準顆數（原始顆數 × 基準係數）算 CoWoS 與 HBM 需求，對照產能；可支撐部署 GW＝本庫基準部署 GW × MIN(1, 產能 ÷ 需求)。"
+                    "Wattonomics 錨定部署 GW（本庫口徑）＝本庫基準 × R4 比值（Recon B 節）；兩者都不得超過可支撐部署 GW（Checks K10）")
+        hdr(CP, 3, ["項目", "單位", "2026", "2027", "2028", "2029", "說明"])
+        CC = {2026: "C", 2027: "D", 2028: "E", 2029: "F"}
+        PPK = {"bw": "GB", "rb": "VR", "ru": "RU", "hp": "HP", "trn": "TRN", "oth": "ASIC"}
+        def ppk(k, y):
+            if k == "amd": return "AMD8" if y == 2026 else "AMDR"
+            if k == "tpu": return "TPU7" if y == 2026 else "TPU8"
+            return PPK[k]
+        coef = lambda y: {2026: "1", 2027: "1", 2028: "um28_B", 2029: "um29_B"}[y]
+        r = 4
+        CP.cell(r, 1, "A. CoWoS（千片）").font = BOLD; r += 1
+        r_first = r
+        for g in seed["unit_groups"]:
+            k = g["key"]
+            CP.cell(r, 1, "  " + g["name"]); CP.cell(r, 2, "千片")
+            for y, col in CC.items():
+                CP.cell(r, list(CC).index(y) + 3, f"=Units!{col}{UROW[k]}*{coef(y)}/cw_pp_{ppk(k, y)}*1000").number_format = "#,##0"
+            CP.cell(r, 7, "基準顆數 ÷ 每片封裝數（In M14）"); r += 1
+        CP.cell(r, 1, "  其他 CoWoS 用途"); CP.cell(r, 2, "千片")
+        CP.cell(r, 3, "=cw_oth26").number_format = "#,##0"
+        for y in (2027, 2028, 2029):
+            CP.cell(r, list(CC).index(y) + 3, f"={CC[y-1]}{r}*(1+cw_oth_g)").number_format = "#,##0"
+        r += 1
+        CP.cell(r, 1, "CoWoS 需求合計（基準）").font = BOLD
+        for y, col in CC.items(): CP.cell(r, list(CC).index(y) + 3, f"=SUM({col}{r_first}:{col}{r-1})").number_format = "#,##0"
+        CPROW["cw_dem"] = r; r += 1
+        CP.cell(r, 1, "CoWoS 可用產能（台積電月產能年均 × 12 ×（1＋委外））"); CP.cell(r, 2, "千片")
+        for y, col in CC.items():
+            CP.cell(r, list(CC).index(y) + 3, f"=(cw_capend{y % 100 - 1}+cw_capend{y % 100})/2*12*(1+cw_osat)").number_format = "#,##0"
+        CP.cell(r, 7, "產能年底值為 Interested-party（2029 Assumed）；委外 cw_osat")
+        CPROW["cw_cap"] = r; r += 1
+        CP.cell(r, 1, "CoWoS 需求 ÷ 產能"); CP.cell(r, 2, "%")
+        for y, col in CC.items(): CP.cell(r, list(CC).index(y) + 3, f"={col}{CPROW['cw_dem']}/{col}{CPROW['cw_cap']}").number_format = "0%"
+        CP.cell(r, 7, "> 100%＝CoWoS 為瓶頸"); CPROW["cw_util"] = r; r += 2
+        CP.cell(r, 1, "B. HBM（EB；Mkt 頁，基準＝情境 B）").font = BOLD; r += 1
+        MC = {2026: "D", 2027: "E", 2028: "F", 2029: "G"}
+        CP.cell(r, 1, "HBM 需求（毛額，基準）"); CP.cell(r, 2, "EB")
+        for y in CC: CP.cell(r, list(CC).index(y) + 3, f"=Mkt!{MC[y]}{MK['shipB']}+MAX(0,Mkt!{MC[y]}{MK['gapB']})").number_format = "0.00"
+        CPROW["hb_dem"] = r; r += 1
+        CP.cell(r, 1, "HBM 位元供給"); CP.cell(r, 2, "EB")
+        for y in CC: CP.cell(r, list(CC).index(y) + 3, f"=Mkt!{MC[y]}{MK['sup']}").number_format = "0.00"
+        CPROW["hb_sup"] = r; r += 1
+        CP.cell(r, 1, "HBM 需求 ÷ 供給"); CP.cell(r, 2, "%")
+        for y, col in CC.items(): CP.cell(r, list(CC).index(y) + 3, f"={col}{CPROW['hb_dem']}/{col}{CPROW['hb_sup']}").number_format = "0%"
+        CP.cell(r, 7, "> 100%＝HBM 為瓶頸（本庫 HBM 出貨已取 MIN(需求, 供給)）"); CPROW["hb_util"] = r; r += 2
+        CP.cell(r, 1, "C. 部署 GW 上限（本庫口徑：成本等值、出貨年）").font = BOLD; r += 1
+        CP.cell(r, 1, "本庫基準部署 GW"); CP.cell(r, 2, "GW")
+        for y, col in CC.items(): CP.cell(r, list(CC).index(y) + 3, f"=Deploy!{col}{DROW['gwB']}").number_format = "0.0"
+        CPROW["gw_b"] = r; r += 1
+        CP.cell(r, 1, "可支撐部署 GW（供給上限）").font = BOLD; CP.cell(r, 2, "GW")
+        for y, col in CC.items():
+            c = CP.cell(r, list(CC).index(y) + 3, f"={col}{CPROW['gw_b']}*MIN(1,1/{col}{CPROW['cw_util']},1/{col}{CPROW['hb_util']})"); c.number_format = "0.0"; c.fill = KEY
+        CP.cell(r, 7, "＝基準 × MIN(1, 產能 ÷ 需求)；兩項皆未達瓶頸時＝基準。只算 CoWoS、HBM；電力、晶圓前段未建")
+        CPROW["gw_cap"] = r; r += 1
+        CP.cell(r, 1, "上限留餘（產能可支撐 ÷ 基準需求 − 1）"); CP.cell(r, 2, "%")
+        for y, col in CC.items():
+            CP.cell(r, list(CC).index(y) + 3, f"=1/MAX({col}{CPROW['cw_util']},{col}{CPROW['hb_util']})-1").number_format = "+0%;-0%"
+        CPROW["head"] = r; r += 1
+        if RC is not None and "r4_ratio" in RCROW:
+            CP.cell(r, 1, "Wattonomics 錨定部署 GW（本庫口徑）"); CP.cell(r, 2, "GW")
+            for y, col in CC.items():
+                CP.cell(r, list(CC).index(y) + 3, f"={col}{CPROW['gw_b']}*Recon!{'DEFG'[list(CC).index(y)]}{RCROW['r4_ratio']}").number_format = "0.0"
+            CP.cell(r, 7, "＝本庫基準 × R4 比值（Wattonomics ÷ 本庫推得上線 GW）；近似換算，只作上限檢查")
+            CPROW["gw_wt"] = r; r += 1
+        CP.cell(r, 1, "狀態（本庫基準 ≤ 上限）").font = BOLD
+        for y, col in CC.items():
+            CP.cell(r, list(CC).index(y) + 3, f'=IF({col}{CPROW["gw_b"]}<={col}{CPROW["gw_cap"]}*1.000001,"未觸頂","超過上限")').fill = KEY
+        CPROW["st"] = r; r += 1
+        CP.column_dimensions["A"].width = 48; CP.column_dimensions["G"].width = 70
+        for col in "BCDEF": CP.column_dimensions[col].width = 11
 
     # ---------------- Conflicts：跨模型同一變數不同值的登錄 ----------------
     CF = wb.create_sheet("Conflicts")
@@ -1109,6 +1206,21 @@ def main():
             c = IF.cell(r, 5 + j, f"=Recon!{'DEFG'[j]}{RCROW['r4_vs']}"); c.font = GREEN; c.number_format = "+0.0%;-0.0%"
         IF.cell(r, 9, f"Recon!D{RCROW['r4_vs']}:G{RCROW['r4_vs']}")
         name(wb, "SIF_GWvsWT_Base", f"Interface!$E${r}:$H${r}"); IFNAMES.append("SIF_GWvsWT_Base"); r += 1
+        IF.cell(r, 1, "SIF_WTAnchor_Base"); IF.cell(r, 2, "Wattonomics 錨定係數（＝R4 比值 Wattonomics ÷ 本庫；個股敏感度「Wattonomics 錨定」案例：產業量自 CY2027 起 × 本係數）"); IF.cell(r, 3, "x")
+        for j in range(4):
+            c = IF.cell(r, 5 + j, f"=Recon!{'DEFG'[j]}{RCROW['r4_ratio']}"); c.font = GREEN; c.number_format = "0.000"
+        IF.cell(r, 9, f"Recon!D{RCROW['r4_ratio']}:G{RCROW['r4_ratio']}")
+        name(wb, "SIF_WTAnchor_Base", f"Interface!$E${r}:$H${r}"); IFNAMES.append("SIF_WTAnchor_Base"); r += 1
+    if CP is not None:
+        for nm_, key, lab, fm in (("SIF_CapGW_Base", "gw_cap", "可支撐部署 GW（CoWoS／HBM 供給上限；本庫口徑）", "0.0"),
+                                  ("SIF_CapHead_Base", "head", "供給上限留餘（產能可支撐 ÷ 基準需求 − 1）", "+0%;-0%"),
+                                  ("SIF_CoWoSUtil_Base", "cw_util", "CoWoS 需求 ÷ 產能（基準）", "0%"),
+                                  ("SIF_HBMUtil_Base", "hb_util", "HBM 需求 ÷ 供給（基準）", "0%")):
+            IF.cell(r, 1, nm_); IF.cell(r, 2, lab); IF.cell(r, 3, "GW" if nm_ == "SIF_CapGW_Base" else "%")
+            for j in range(4):
+                c = IF.cell(r, 5 + j, f"=Cap!{'CDEF'[j]}{CPROW[key]}"); c.font = GREEN; c.number_format = fm
+            IF.cell(r, 9, f"Cap!C{CPROW[key]}:F{CPROW[key]}")
+            name(wb, nm_, f"Interface!$E${r}:$H${r}"); IFNAMES.append(nm_); r += 1
     for col, w in zip("ABCDEFGHI", (30, 50, 9, 10, 10, 10, 10, 14, 16)):
         IF.column_dimensions[col].width = w
 
@@ -1212,6 +1324,20 @@ def main():
         CK.cell(r, 1, "K9"); CK.cell(r, 2, "Recon 頁狀態為『待診斷』的格數（沒有證據送件的落差；規則：兩邊都更新後仍有落差須診斷錯在哪一方）")
         CK.cell(r, 3, f"=Recon!C{RCROW['n_待診斷']}"); CK.cell(r, 6, f'=IF(C{r}=0,"OK","WARN")'); CK.cell(r, 7, "治理（對帳）")
         CK.cell(r, 8, "WARN＝仍有待診斷的落差；明細見 Recon 頁"); r += 1
+    if CP is not None:
+        for j, y in enumerate((2026, 2027, 2028, 2029)):
+            col = "CDEF"[j]
+            CK.cell(r, 1, f"K10-{y}"); CK.cell(r, 2, f"供給上限 {y}：本庫基準部署 GW ≤ CoWoS／HBM 可支撐部署 GW（Cap 頁；三層校準原則：供給是上限）")
+            CK.cell(r, 3, f"=Cap!{col}{CPROW['gw_b']}"); CK.cell(r, 4, f"=Cap!{col}{CPROW['gw_cap']}"); CK.cell(r, 5, f"=C{r}-D{r}")
+            CK.cell(r, 6, f'=IF(C{r}<=D{r}*1.000001,"OK","WARN")'); CK.cell(r, 7, "驗證（供給上限）")
+            CK.cell(r, 8, "WARN＝本庫基準需求超過產能，基準須改以上限計（或產能證據過時）"); r += 1
+        if "gw_wt" in CPROW:
+            for j, y in enumerate((2026, 2027, 2028, 2029)):
+                col = "CDEF"[j]
+                CK.cell(r, 1, f"K10w-{y}"); CK.cell(r, 2, f"供給上限 {y}：Wattonomics 錨定部署 GW（本庫口徑）≤ 可支撐部署 GW")
+                CK.cell(r, 3, f"=Cap!{col}{CPROW['gw_wt']}"); CK.cell(r, 4, f"=Cap!{col}{CPROW['gw_cap']}"); CK.cell(r, 5, f"=C{r}-D{r}")
+                CK.cell(r, 6, f'=IF(C{r}<=D{r}*1.000001,"OK","WARN")'); CK.cell(r, 7, "驗證（供給上限）")
+                CK.cell(r, 8, "WARN＝錨點超過供給產能，錨點須以上限計；寄交流給算力收支"); r += 1
     if RK is not None:
         CK.cell(r, 1, "K7"); CK.cell(r, 2, "Rack 頁：商用 GPU 系統市場 2026 ≤ AI IT 資本支出 2026（系統售價不應超過全部 IT 資本支出）")
         CK.cell(r, 3, f"=Rack!C{RKROW['sysA']}"); CK.cell(r, 4, f"=Deploy!C{DROW['itcA']}")
@@ -1270,6 +1396,7 @@ def main():
         ("v0.1 範圍：(1) Tokenomics v21.7 鏡像（22 個名稱）與下游舊快照差異；(2) 加速器顆數層、記憶體價格路徑、HBM 市場（由 markets/memory/market.py 逐字搬入，數值不變）；(3) 跨模型衝突登錄；(4) Interface、Checks、Decisions。網通、CoWoS、載板、組裝電源散熱、設備依規劃書分段併入。", False),
         ("v0.2：In 頁 Assumed 列全部補上區間、缺來源列補來源；新增 M5 節 2029 平台別顆數成長（單一來源，取代台積電、網通模型的寫死值與 NAND 模型的合計年增）與 Units 頁；Interface 新增 SIF_UnitsPlat_*、SIF_UnitsGrowth29。", False),
         ("v0.3：新增 M6 節（加速器每顆售價、ASIC 核心價、HBM 代購比例；原在 nvidia、avgo 模型）與 M7 節（ASIC 設計服務份額；原在 avgo、mrvl、mediatek、alchip 模型）、ShareTbl 頁（同一平台份額加總 ≤ 100%）；In 頁新增 J 欄第二來源。", False),
+        ("v0.13：三層校準原則（Andy 2026-11-04：實績雙向校正、供給是上限、錨點可信度分時段看）落地：新增 Cap 頁（基準顆數的 CoWoS、HBM 需求 vs 產能 → 可支撐部署 GW；Checks K10、K10w）、Recon F 節季度實績驗證（NVIDIA 資料中心營收）、Interface SIF_WTAnchor_Base（個股敏感度「Wattonomics 錨定」案例用）、SIF_CapGW_Base、SIF_CapHead_Base、SIF_CoWoSUtil_Base、SIF_HBMUtil_Base。決策 S37。", False),
         ("v0.12：本庫只留基準（工作方式 v1.7；基準＝原情境 B，決策 S33、S35）：Interface 新增 D 節 *_Base 名稱（57 組，等同原 B 列）與 SIF_GWvsWT_Base（本庫基準推得上線 GW 相對 Wattonomics 基準）；A／B／C 名稱標停用過渡、v0.13 刪除；Scen、Units 頁改標；R4 對帳以基準重跑（r3，讀 Wattonomics v0.1.9），新增 NVIDIA 資料中心營收對帳點；個股情境改為個股自訂（決策 S36）。輸入值不變。", False),
         ("v0.11：新增 Recon 頁（由下往上對帳：覆蓋個股基準情境 → 本庫市場；本庫推得上線 GW → Wattonomics；狀態 一致／時差／待診斷，決策 S32、S33）與 M27 對帳參數（容差 rc_tol、SoC 其他廠份額 rc_soc_oth）、Checks K6-soc、K9；標記更正：hbm_hbp_27 高值改 0、u_rb_28 與 u_bw_28 改標 Assumed 並給區間、nd_sh_essd25 改標 Derived、混合鍵合列名改「HBM 工序比例」（決策 S34）。", False),
         ("v0.10：NAND 季價 2026Q3 改用公司實現平均售價 +25%（原合約價 +15%；Kioxia、SK 海力士實績 mid-20%），2026Q4 改為兩季累計不變的餘額 +8.1%（原 +17.5%）；2027 起價格水準不變。決策 S30。", False),

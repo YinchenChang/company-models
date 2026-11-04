@@ -43,6 +43,11 @@ for r in ws_.iter_rows(min_row=40):
         else:           # CY2026..CY2029 在 C..F
             ADV[k][s] = ([r[2 + j].value for j in range(4)], f"{rel(ADV_F)}｜PL!C{r[0].row}:F{r[0].row}")
 assert all(n_[k] == 3 for k in n_), n_
+ADVAI = {}   # v0.13：Advantest 模型 AI SoC 測試機市場（CY；Wattonomics 錨定案例只對 AI 部分乘係數）
+for r in ws_.iter_rows(min_row=40):
+    if r[0].value == "AI SoC 測試機市場" and len(ADVAI) < 3:
+        ADVAI[SC[len(ADVAI)]] = ([r[2 + j].value for j in range(4)], f"{rel(ADV_F)}｜PL!C{r[0].row}:F{r[0].row}")
+assert len(ADVAI) == 3, ADVAI
 # CF15：SoC 測試機市場只有一個值（Siliconomics Equip 頁）；Advantest 成品三情境 CY2026–29 必須與本庫相同
 for _s in SC:
     assert all(abs(a - b) < 1e-6 for a, b in zip(ADV["soc"][_s][0], SIL.NAMES[f"SIF_TestSoCMkt_{_s}"][1:])), ("SoC 測試機市場與 Siliconomics 不一致", _s, ADV["soc"][_s][0], SIL.NAMES[f"SIF_TestSoCMkt_{_s}"])
@@ -296,7 +301,7 @@ for c in "CDEFG": UN.column_dimensions[c].width = 12
 
 # ---------------- 引擎：一個情境的完整推導（PL 與 Sens 共用） ----------------
 FYC = {y: chr(ord("C") + y - 2025) for y in range(2025, 2030)}   # FY2025＝C … FY2029＝G
-DEFP = dict(sh="s_soc", shm="s_mem", msoc="m_soc", gpt=None, grob="g_rob", rm="", inc="t_inc", fix="t_fix", etr="etr", bb="bb", scn="A")
+DEFP = dict(sh="s_soc", shm="s_mem", msoc="m_soc", gpt=None, grob="g_rob", rm="", inc="t_inc", fix="t_fix", etr="etr", bb="bb", scn="A", wm=None)
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
     gpt = P["gpt"] or f"g_pt_{s}"
@@ -311,7 +316,7 @@ def engine(ws, r0, title, **over):
         ws.cell(r, 8, note); R[key] = r; r += 1
     fy = lambda y: FYC[y]
     F = (2027, 2028, 2029)
-    row("msoc", "SoC 測試機市場 CY（Advantest 模型）", "US$B", {"C": "=mk_soc25", "D": f"=ms_{s}_2026", **{fy(y): f"=ms_{s}_{y}*{P['msoc']}" for y in F}}, fmt="0.00")
+    row("msoc", "SoC 測試機市場 CY（Advantest 模型）", "US$B", {"C": "=mk_soc25", "D": f"=ms_{s}_2026", **{fy(y): f"=ms_{s}_{y}*{P['msoc']}" + (f"+({P['wm'][y]}-1)*adv_ai{s}_{y % 100}" if P["wm"] else "") for y in F}}, fmt="0.00")   # v0.13：wm＝Wattonomics 錨定（只對 AI SoC 部分乘係數；預設 None＝公式不變）
     row("mmem", "記憶體測試機市場 CY（Advantest 模型）", "US$B", {"C": "=mk_mem25", "D": f"=mm_{s}_2026", **{fy(y): f"=mm_{s}_{y}" for y in F}}, fmt="0.00")
     row("sh", "泰瑞達 SoC 市占", "%", {"C": f"=a25_soc/(C{R['msoc']}*1000)", "D": f"=f26_soc/(D{R['msoc']}*1000)", **{fy(y): "=" + tshare(s, y, P["sh"]) for y in F}}, fmt="0.0%",
         note="FY2025、FY2026＝實績／錨點隱含；C 情境與 Advantest 互補" if s == "C" else "FY2025、FY2026＝實績／錨點隱含；之後維持")
@@ -791,4 +796,37 @@ import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "ter")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.2.1", "2026-10-31")  # v0.2.1：In 頁版面（個股模型原則第 8 節；數值不變）
+# ---------------- v0.13（2026-11-04）：Sens「Wattonomics 錨定」案例（三層校準原則；決策 S37）。In 頁最後三列、Sens 頁最下方小表與案例區塊；既有格不動 ----------------
+WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
+WTA_MF = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
+def wta_in_rows():
+    r = IN.max_row + 2
+    IN.cell(r, 1, f"Z. Wattonomics 錨定係數（敏感度用；Siliconomics {SIL.VERSION}）").font = BOLD; r += 1
+    def _inp(key, item, unit, lo, base, hi, tag, s1, s2):
+        nonlocal r
+        for j, v in enumerate((key, item, unit, lo, base, hi, tag, s1, s2), 1):
+            if v is not None: IN.cell(r, j, v)
+        IN.cell(r, 5).number_format = "0.000"
+        wb.defined_names[key] = DefinedName(key, attr_text=f"In!$E${r}")
+        r += 1
+    SIL.wta_rows(_inp)
+    for j, y in enumerate((2027, 2028, 2029), 1):   # Advantest 模型情境 B 的 AI SoC 測試機市場（CY；唯讀）
+        _inp(f"adv_aiB_{y % 100}", f"Advantest 模型 AI SoC 測試機市場 CY{y}（B；Wattonomics 錨定案例用）", "US$B", None, ADVAI["B"][0][j], None, "Derived", ADVAI["B"][1] if j == 1 else "同上", "只用於 Sens 頁 Wattonomics 錨定案例")
+def wta_sens():
+    t0 = SE.max_row + 3; b0 = t0 + 11
+    RW = engine(SE, b0, "案例區塊：Wattonomics 錨定（情境 B；FY2027 起 AI SoC 測試機市場 × wta_27／wta_28／wta_29）", scn="B", wm=WTA_MF)
+    SE.cell(t0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+    for c in range(1, 8 + 1): SE.cell(t0 + 1, c, SE.cell(3, c).value).font = BOLD
+    put_case(t0 + 2, "基準（情境 A；同第 4 列）", "PL 區塊 A", PB["A"], "PL!")
+    put_case(t0 + 3, "情境 B（本案例的底）", "Advantest 模型的 B 市場；Product Test 成長 B", PB["B"], "PL!")
+    put_case(t0 + 4, "Wattonomics 錨定", "情境 B；FY2027 起 SoC 測試機市場中的 AI 部分 × wta_27／wta_28／wta_29（非 AI 部分不變）", RW)
+    SE.cell(t0 + 5, 1, "差異%：Wattonomics 錨定 ÷ 基準 − 1"); SE.cell(t0 + 6, 1, "差異%：Wattonomics 錨定 ÷ 情境 B − 1")
+    for c in "CDFG":
+        for rr, rb in ((t0 + 5, t0 + 2), (t0 + 6, t0 + 3)):
+            SE[f"{c}{rr}"] = f"=IFERROR({c}{t0 + 4}/{c}{rb}-1,\"\")"; SE[f"{c}{rr}"].number_format = "0.0%"
+    SE.cell(t0 + 7, 1, WTA_NOTE)
+    SE.cell(t0 + 8, 1, "SoC 測試機市場＝Advantest 模型（含 AI 與非 AI）；本案例只把 AI 部分（Advantest 模型 AI SoC 測試機市場，In 頁 adv_aiB_*）× wta：市場＋（wta−1）× AI 部分。FY(t)＝CY(t)；記憶體測試機市場不乘（HBM 出貨受供給限制）。")
+    SE.cell(t0 + 9, 1, "目標價：本模型 Sens 目標價參數表只動 DCF 參數，不逐案例重算 DCF，本案例不列目標價。")
+    return RW
+wta_in_rows(); WTA_R = wta_sens()   # v0.13：放在 In 版面套用之後，確保在 In 頁最後
 wb.save(sys.argv[1])

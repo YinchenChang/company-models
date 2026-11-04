@@ -63,3 +63,17 @@ def scen_note(s, yy, val):
     tail = ("；2026–27 三情境相同，產業 GW 相對 Wattonomics 基準 " + "、".join(f"20{26+i} {_pct(gv[i])}" for i in (0, 1))) if yy == 28 else ""
     return (f"個股自訂情境 {s}（{VERSION} 起；預設沿用 v0.11 行業情境值，判斷類可改）：{who}（基準係數 {bc}）；"
             f"20{yy} 產業 GW 相對 Wattonomics 基準 {_pct(gw)}（本庫基準 {_pct(gv[yi])}）{tail}")
+
+
+# ---- v0.13：Wattonomics 錨定係數（三層校準原則，Andy 2026-11-04；決策 S37） ----
+# 個股敏感度「Wattonomics 錨定」案例：以個股情境 B（＝Siliconomics 基準）為底，產業量（顆數、部署 GW、市場）自 CY2027 起 × WTA[年]；
+# FY2026 維持錨點（實績＋指引），不乘。WTA＝R4 比值（Wattonomics 基準 ÷ 本庫推得上線 GW）。
+WTA = dict(zip((2026, 2027, 2028, 2029), NAMES.get("SIF_WTAnchor_Base") or (1, 1, 1, 1)))
+WTA_SRC = f"Siliconomics {VERSION} SIF_WTAnchor_Base（R4 比值 Wattonomics ÷ 本庫；Recon B 節）"
+
+
+def wta_rows(inp, pre="wta"):
+    """在 In 頁加三列 wta_27／wta_28／wta_29（Derived）。inp＝建檔程式的 9 欄 inp 函式。"""
+    for y in (2027, 2028, 2029):
+        inp(f"{pre}_{y % 100}", f"Wattonomics 錨定係數 CY{y}（敏感度案例用；產業量 × 本係數）", "x", None, WTA[y], None, "Derived", WTA_SRC,
+            "三層校準原則（Andy 2026-11-04）：Wattonomics 為部署水位錨點；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定" if y == 2027 else "同上")
