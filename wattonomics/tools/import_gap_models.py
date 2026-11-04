@@ -17,7 +17,7 @@ ROOT = os.path.dirname(GL)
 EXTRACT = os.path.join(ROOT, "markets", "invest_map", "data", "models_extract.json")
 # v0.1.8：models_extract.json 尚未更新的個股（Wattonomics 不改 markets/ 檔案），在此逐家覆寫為 main 上的現行版；
 # 覆寫只換檔案路徑，列位核對規則不變（工作單 20261102 E7：Anthropic v0.1.7 已合併 #289，dist 只剩 v0_1_7）
-MODEL_OVERRIDE = {"Anthropic": "anthropic/dist/20261031_Anthropic收支模型_v0_1_7.xlsx"}
+MODEL_OVERRIDE = {"Anthropic": "anthropic/dist/20261103_Anthropic收支模型_v0_1_8.xlsx"}   # v0.2.1 W4：Anthropic v0.1.8
 
 # 欄位 → 財年。MAG 型：C=FY2024A、D=FY2025A、E=9M26A、F=Q4 26E、G=FY2026E、H..M=FY2027E..FY2032E（Amazon、Alphabet、Meta）
 MAG7 = {"C": 2024, "D": 2025, "G": 2026, "H": 2027, "I": 2028, "J": 2029, "K": 2030, "L": 2031, "M": 2032}
@@ -169,12 +169,19 @@ def commit_of(path):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=os.path.join(GL, "builder", "seed", "gap_models_v0.1.8.json"))
+    ap.add_argument("--only", help="v0.2.1：只重取指定玩家（逗號分隔鍵，例如 ant），其餘沿用 --from 種子")
+    ap.add_argument("--from", dest="src", default=os.path.join(GL, "builder", "seed", "gap_models_v0.1.8.json"))
     a = ap.parse_args()
     ex = json.load(open(EXTRACT, encoding="utf-8"))
+    only = set(a.only.split(",")) if a.only else None
     out = {"_doc": "Wattonomics v0.1.8 Gap 頁取數（tools/import_gap_models.py）；值為財年；null＝無模型值（不外推）。build.py 只在 In 頁 Y9 首建時讀本檔，之後 In 為權威",
            "players": {}}
     bad = []
+    if only:
+        out = json.load(open(a.src, encoding="utf-8"))
+        out["_doc"] += f"；v0.2.1：{'、'.join(sorted(only))} 以 --only 重取（其餘沿用 {os.path.basename(a.src)}）"
     for p, c in CONF.items():
+        if only and p not in only: continue
         rel = MODEL_OVERRIDE.get(c["ticker"], ex[c["ticker"]]["model"])
         path = os.path.join(ROOT, rel)
         wb = openpyxl.load_workbook(path, data_only=True, read_only=True)
@@ -250,6 +257,7 @@ def main():
     json.dump(out, open(a.out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"寫出 {a.out}")
     for p, rec in out["players"].items():
+        if only and p not in only: continue
         miss = [f"{ITEM_NAME[i]}" for i in ITEMS if not any(x is not None for x in rec["items"][i]["values"].values())]
         print(f"  {p:6s} {rec['file']}（{rec['commit']}）OCF {rec['items']['ocf']['values']}  現金 {rec['cash']['value']}  整列無模型值：{miss}")
 

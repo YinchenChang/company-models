@@ -86,7 +86,7 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 - **只並列、不校準**：基準數值不因對帳點改變；帶外標「待診斷」，各層先用自己的數字，上游（Tokenomics 每 GW 內容）先更新再對帳（Andy 11-02 16:22）。NVIDIA 公司指引（FY2028 年增約 70%）屬 Interested-party，只作對帳點，不入基準。
 - (5) 的推導：Siliconomics `nvc_gb_tk`（20.84）＝TK `IF_GPUsPerGW` GB300 × Siliconomics `nv_content`（每顆 NVIDIA 內容，GB300）；H100、GB200 以同一 NVIDIA 占機架價比 × TK 各自機架價（Analogy）；VR200、Rubin Ultra 用 GB300 值〔Assumed；TK 無權威分世代值〕；markets/chip_bridge v0.2.2 Bridge 第 44 列（AI半導體產品，非 TK）的 VR200 拆分 23.47（2026 HBM 價）／21.85（2027 HBM 價、NVIDIA 吸收）只列備忘（`WIF_Recon_NV_*Memo*`）；Requests R7 請 Tokenomics 採用權威分世代值。
 - 名稱 `WIF_Recon_NV_<ShipGW|NVGW|ContentPerGW|ImpliedRev|ActualRev|Ratio|ReqContent>_<2025–2027>`；Checks N-K1（INFO，不計入 ERROR／WARN）。互動頁不加此節。
-- v0.2 方法修正（工作單 20261104 V4；2027 時差來源診斷「現在可做」）：(2) 七家與 xAI 直接用付款年 GW（CapexGW），其餘玩家逐家以上線年鏡像式反推；(3)(4) NVIDIA GW 逐家（各家非 NVIDIA 占比），中國 NVIDIA 占比 0（2025–2027 一致）；新增 2026 校準係數 λ、所需內容成長（2027÷2026）、模型內容成長、校準後比值，**判定以成長比較**（`WIF_Recon_NV_<Calib_2026|ReqGrowth_2027|ContentGrowth_2027|CalibRatio_2027>`）；營收口徑內容（GB300 24.88、VR200 26.13，不含 scale-out）與黃仁勳每 GW（**晶片口徑，Andy 11-04**；÷ `k_chip2it` 換成每 IT GW）只列備忘。Requests R7 收件人改 AI半導體。
+- v0.2 方法修正（工作單 20261104 V4；2027 時差來源診斷「現在可做」）：(2) 七家與 xAI 直接用付款年 GW（CapexGW），其餘玩家逐家以上線年鏡像式反推；(3)(4) NVIDIA GW 逐家（各家非 NVIDIA 占比），中國 NVIDIA 占比 0（2025–2027 一致）；v0.2.1 W1：非 NVIDIA 占比改殘差法——逐家值（In S5 覆寫、中國 1）維持，其餘玩家共用殘差＝（市場 GW 占比 × Σ 出貨 − 逐家值玩家非 NVIDIA 出貨）÷ 其餘出貨，市場 $ 占比先換 GW 占比，殘差 < 0 設 0 並 WARN；只用於對帳點，AI半導體 提供逐買方份額後改讀；新增 2026 校準係數 λ、所需內容成長（2027÷2026）、模型內容成長、校準後比值，**判定以成長比較**（`WIF_Recon_NV_<Calib_2026|ReqGrowth_2027|ContentGrowth_2027|CalibRatio_2027>`）；營收口徑內容（GB300 24.88、VR200 26.13，不含 scale-out）與黃仁勳每 GW（**晶片口徑，Andy 11-04**；÷ `k_chip2it` 換成每 IT GW）只列備忘。Requests R7 收件人改 AI半導體。
 
 ### 對帳鏈（每一環都是一列「左值、右值、比、容許帶、狀態」）
 
@@ -114,7 +114,7 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 
 ### 汰換（v0.2；工作單 20261104 V7）
 
-- Deploy 主路徑汰換 IT GW＝t − `life_ret` 年的裝機量（年新增毛額＋新納入存量；2023 年底存量視為 2023 年裝機）；壽命 6 年〔TK 折舊年限〕，Assumed 5–7；世代別依該年 Players 世代組合與非 NVIDIA 占比。淨新增＝毛額 − 汰換（`WIF_MktGW_Retire_<yyyy>`、`WIF_MktGW_AddNet_<yyyy>`）。既有毛額列不改值、列名不變；R4 比較讀淨額或毛額由 AI半導體 決定。
+- Deploy 主路徑汰換 IT GW＝t − `life_ret` 年的裝機量（年新增毛額）＋新納入存量攤提（v0.2.1 W2：2023 年底存量與 2024–2025 新納入存量平均攤到認列年與前 5 年共 6 個年份，即攤到認列年前後到期；站點或 In 有年份資料者以資料為準）；壽命 6 年〔TK 折舊年限〕，Assumed 5–7；世代別依該年 Players 世代組合與非 NVIDIA 占比。淨新增＝毛額 − 汰換（`WIF_MktGW_Retire_<yyyy>`、`WIF_MktGW_AddNet_<yyyy>`）。既有毛額列不改值、列名不變；R4 比較讀淨額或毛額由 AI半導體 決定。
 
 ### 已刪的情境（v0.2）
 
@@ -143,6 +143,8 @@ Gap 頁敏感度（lag_bldg、ai_sh 低／高；只在暫存目錄改輸入格�
 | Decisions、DB_Evidence、Sources、Requests | 決策（GL01-01 起）、證據、來源 ID、對 TK／Siliconomics 的請求；v0.1.9：GL01-55 至 GL01-61、DB_Evidence N#1、SRC_GL_331–333、Requests R7 |
 
 ## 版本紀錄（摘要；完整見活頁簿 README 頁）
+
+- v0.2.1（2026-11-04）：W1 對帳點非 NVIDIA 殘差法、W2 新納入存量汰換攤提、W3 Oracle 三園區 Epoch IT 容量、W4 Anthropic v0.1.8；基準 GW 不變。工作單 `docs/workorders/20261104_Wattonomics_v0.2.1.md`；報告 `docs/verify/20261104_v0.2.1_build.md`；R4 r4。
 
 - v0.2（2026-11-04）：承租玩家只算 IT＋融資租賃走資本支出線（V1、V1b）、Oracle AI 占比讀個股模型拆分（V2）、Oracle 2028 園區分期與 Shackelford 1,400 MW IT（V3）、NVIDIA 對帳點方法修正（V4）、刪停用情境（V5）、K4 乙（V6）、汰換列（V7）、Tokenomics 快照 v21.9（V8）。工作單 `docs/workorders/20261104_Wattonomics_v0.2.md`；報告 `docs/verify/20261104_v0.2_build.md`；R4 r3 `docs/verify/20261104_R4_Wattonomics側歸因_r3.md`。
 
