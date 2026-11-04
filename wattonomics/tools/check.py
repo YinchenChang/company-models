@@ -123,7 +123,13 @@ def main():
                     nbadg += 1; print(f"  世代汰換早於上市年＋壽命：{gname} {y_} 年 {v_:.3f}（上市 {launch}）")
         if nbadg: bad.append(f"世代汰換早於上市年＋{life} 年：{nbadg} 格")
         else: print(f"  世代汰換：無早於上市年＋{life} 年者")
-    for cid in ("C-K1", "R-K1", "R-K2", "W1-K1", "W1-K2"):
+    # v0.2.2 X1：SIL_In 頁不得讀 Siliconomics 情境名稱 A／B／C（只讀 *_Base）
+    import re as _re2
+    if "SIL_In" in wf.sheetnames:
+        abc = [str(c.value) for row in wf["SIL_In"].iter_rows(min_col=1, max_col=2) for c in row if isinstance(c.value, str) and _re2.search(r"^(SIF|SIL)_\w*_(A|B|C)$", c.value)]
+        if abc: bad.append(f"SIL_In 頁仍讀 A／B／C 名稱：{abc[:5]}")
+        else: print("  SIL_In：無 A／B／C 名稱")
+    for cid in ("C-K1", "R-K1", "R-K2", "W1-K1", "W1-K2", "X4-K1"):
         if cid not in [x_[0] for x_ in rows]: bad.append(f"Checks 缺 {cid}（v0.2）")
     if same:
         ps = json.load(open(same, encoding="utf-8"))["names"]
@@ -150,7 +156,9 @@ def main():
                # v0.2（工作單 20261104）：承租玩家、融資租賃、刪停用情境、K4 乙、汰換
                "### 承租玩家只算 IT", "融資租賃走資本支出線", "出租方", "### 汰換", "K4 乙", "WIF_MktGW_<YE|Avg|Add>_<yyyy>", "A_D0 為舊名",
                # v0.2.1
-               "殘差法", "攤到認列年"):
+               "殘差法", "攤到認列年",
+               # v0.2.2
+               "SIF_DeployGW_Base", "SIF_CapGW_Base"):
         if kw not in txt: bad.append(f"wattonomics/README.md 缺固定規格：{kw}")
     print(f"{os.path.basename(x)}：頁面 {len(wb.sheetnames)}、具名範圍 {len(names)}（WIF_ {len(gif)}）、Checks {len(rows)} 項（OK {nok}／WARN {len(cw)}／ERROR {len(ce)}／INFO {ninfo}）、"
           f"In 輸入列 {nrow}（待證據 {pend}）、錯誤格 {nerr}")
