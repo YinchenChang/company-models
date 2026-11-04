@@ -46,8 +46,8 @@ def ref(key, col="D"):
 scal("ai_sh", "Wattonomics 資本支出 AI 占比", "%", 0.85, 0.75, 0.95, "Assumed", "Wattonomics In 第 13 列 ai_sh")
 scal("lag_on", "Wattonomics 付款到上線延遲", "月", 4.5, 3, 6, "Assumed", "Wattonomics In 第 101 列")
 scal("inv_on", "Wattonomics 未上線庫存 ÷ 年出貨", "%", 0.10, 0.05, 0.20, "Assumed", "Wattonomics In 第 102 列")
-scal("w1", "廠房提前入帳權重 w1（前一年）", "—", 0.5, None, None, "Assumed", "Wattonomics CapexGW!E4（w0＝0、w2＝0.5）")
-scal("w2", "廠房提前入帳權重 w2（前兩年）", "—", 0.5, None, None, "Assumed", "Wattonomics CapexGW!F4")
+scal("w1", "廠房提前入帳權重 w1（前一年）", "—", 0.5, 1.0, 0.0, "Assumed", "Wattonomics CapexGW!E4（w0＝0、w2＝0.5）；低／高＝lag_bldg_lo（0,1,0）／lag_bldg_hi（0,0,1），CapexGW 第 5、6 列")
+scal("w2", "廠房提前入帳權重 w2（前兩年）", "—", 0.5, 0.0, 1.0, "Assumed", "Wattonomics CapexGW!F4；低／高同上")
 scal("fye", "Oracle 財年結束月", "月", 5, None, None, "Verified", "Wattonomics In 第 95 列 fye_orcl")
 scal("ye2025", "Oracle 2025 年底 IT GW（晶片換算）", "GW", 1.203, None, None, "Derived", "Wattonomics Players!F106（In chip_orcl 650.2 MW × 1.85）")
 scal("obs", "Oracle 已連網 IT GW（2026-08-31）", "GW", 2.543, None, None, "Derived", "Wattonomics In 第 35 列 obs_orcl：FY26 末 1,835＋Q1 交付 850 ÷ 1.2（Oracle 自述 MW，Interested-party）")
@@ -56,7 +56,7 @@ scal("cip", "在建工程（FY27Q1 末）", "US$B", 48.546, None, None, "Interes
 scal("ltm_cx", "近四季資本支出（FY26Q2–FY27Q1）", "US$B", 75.66, None, None, "Derived", "同上 cf.capex.ltm_fy27q1（12.033＋18.635＋16.493＋28.499）")
 scal("lag_O", "資本支出到上線時差（在建工程 ÷ 近四季資本支出 × 12）", "月", None, 6, 9, "Derived", "公式＝cip ÷ ltm_cx × 12；低／高為判斷區間（在建工程含尚未裝機的設備與少量自有建物）")
 wi.cell(R["lag_O"], 4, f"={ref('cip')}/{ref('ltm_cx')}*12")
-scal("L", "承租園區比例（廠房由房東出資，Oracle 只付 IT）", "%", 1.0, 0.8, 1.0, "Interested-party／Analogy", "Oracle 財務長 Kehring（2025-12-10 法說，經 The Stack、Fortune 轉述）：資本支出絕大部分為設備，土地、建物、電力以租賃取得；2028 五站開發商皆為第三方（E#7–E#9、E#12–E#14）；Kehring 引文 E#5、E#6")
+scal("L", "承租園區比例（廠房由房東出資，Oracle 只付 IT）", "%", 1.0, 0.8, 1.0, "Interested-party／Analogy", "Oracle 財務長 Kehring（2025-12-10 法說，經 The Stack、Fortune 轉述）：資本支出絕大部分為設備，土地、建物、電力以租賃取得；九站開發商皆為第三方（E#7–E#9、E#12–E#14）；Kehring 引文 E#5（E#6 為同一發言的另一篇報導，單一來源）")
 scal("byoh", "客戶自帶硬體／供應商融資使 Oracle 每 GW 資本支出下降比例", "%", 0.0, 0.0, 0.10, "Assumed", "Oracle Investor Day 2026-10-28：供應商融資、客戶自帶硬體、預付降低前期現金需求（E#3）；客戶自帶晶片 E#16；預付與客戶自帶硬體合約部分 750 億（E#19）；金額未揭露，基準 0")
 scal("R", "園區分期上線期間（完工日前均勻上線）", "月", 18, 12, 24, "Analogy", "Abilene 8 棟約 2025 中至 2026Q4（約 18 個月）；Frontier 首棟 2026 下半年、全站 2028Q4（約 27 個月；E#7）")
 scal("s_shk", "Shackelford 容量縮放（Vantage 1.4 GW vs T2 2.0 GW 設施）", "x", 1.4/(2000/1200), 1.0, 1.4/2.0, "Analogy（Vantage，Interested-party）", "DCD：Frontier 全站 1.4 GW（口徑未說明）。基準＝視為 IT；低＝不調整；高＝視為設施")
@@ -64,7 +64,16 @@ scal("iff", "IF_FacilityGW（設施 ÷ IT）", "x", 1.2, 1.1, 1.3, "Derived（TK
 scal("tgt_gw", "Oracle 目標：FY2028 年底資料中心容量（口徑未說明）", "GW", 10, None, None, "Interested-party", "Investor Day 2026-10-28 Maxson：兩年增約 7 GW、FY28 年底逾 10 GW（E#1、E#2）；只作交叉驗證")
 scal("tgt_add", "Oracle 目標：兩年新增容量", "GW", 7, None, None, "Interested-party", "同上")
 scal("lease_unc", "尚未起租租賃承諾（未折現）", "US$B", 288, None, None, "Interested-party", "Oracle FY27 Q1 10-Q 附註 6（repo 事實總帳）；FY27Q2–FY2029 起租、15–19 年（E#10、E#11）；只作備忘")
-scal("ai_inserv", "Oracle 在役 AI 設備毛額（FY27Q1；Q1 AI 折舊年率 × 6）", "US$B", 58.026, None, None, "Derived", "Oracle 個股模型 v0.4.2 Thesis!C36（Q1 折舊 3.2 − 非 AI 0.782）× 4 × 6")
+scal("ai_dep", "Oracle Q1 FY27 在役 AI 設備折舊年率", "US$B／年", 9.671, None, None, "Derived", "Oracle 個股模型 Thesis!C26（Q1 折舊 3.2 − 非 AI 0.782）× 4")
+scal("life_ai", "AI 設備折舊年限（推回在役毛額用）", "年", 6, 5, 6, "Derived／Assumed", "Oracle 10-K 伺服器耐用年限 6 年；個股模型 In life_ai 低 5")
+scal("ai_inserv", "Oracle 在役 AI 設備毛額（FY27Q1＝折舊年率 × 年限）", "US$B", None, None, None, "Derived（含 Assumed 年限）", "公式；個股模型 Thesis!C36＝58.026；低＝年限 5")
+wi.cell(R["ai_inserv"], 4, f"={ref('ai_dep')}*{ref('life_ai')}")
+wi.cell(R["ai_inserv"], 5, f"={ref('ai_dep')}*{ref('life_ai','E')}")
+wi.cell(R["ai_inserv"], 6, f"={ref('ai_dep')}*{ref('life_ai','F')}")
+scal("sh_m25", "sh_m FY2025 區間（年度表 D 欄）", "%", None, 0.75, 0.95, "Assumed", "個股模型 FY25 無 AI 拆分；基準＝ai_sh")
+scal("sh_m26", "sh_m FY2026 區間（年度表 E 欄）", "%", None, 0.85, 0.95, "Assumed", "個股模型 FY26 無 AI 拆分；基準＝FY27 值")
+scal("itm2526", "itm FY2025–26 區間（年度表 D、E 欄）", "US$B／GW", None, 24.0152, 32.2372, "Assumed", "GB200 與 GB300 平均；低＝全 GB200、高＝全 GB300")
+scal("mw_fy26", "Oracle 已連網 AI MW-IT（FY2026 年底 2026-05）", "GW", 1.835, None, None, "Derived", "Oracle 個股模型 In mw_fy26（FY26 交付 1.2 GW ÷ 1.2 等）")
 # year table
 wi.append([]); wi.append(["年度表", "", "", 2025, 2026, 2027, 2028, 2029, "標記", "來源／說明"])
 yr_hdr = wi.max_row
@@ -96,6 +105,7 @@ yrow("pfac", "Wattonomics 每 IT GW 廠房資本支出（曆年）", {2025: 12.2
      "Derived（TK IF_CapexFacility）", "Wattonomics CapexGW 第 129 列")
 yrow("itm", "Oracle 個股模型每 MW IT 資本支出（財年新增產能組合；US$B／GW）", {2025: (24.0152+32.2372)/2, 2026: (24.0152+32.2372)/2, 2027: 32.2372, 2028: 0.5*32.2372+0.5*37.5864, 2029: 37.5864},
      "Derived（TK v21.4）／Assumed（FY25–26）", "Oracle 個股模型 In 第 38–40 列（GB200 24.02、GB300 32.24、VR200 37.59）× In 第 26–28 列新增組合；FY25–26 取 GB200／GB300 平均 [Assumed]")
+wi.cell(R["sh_m25"], 4, f"={yref('sh_m',2025)}"); wi.cell(R["sh_m26"], 4, f"={yref('sh_m',2026)}"); wi.cell(R["itm2526"], 4, f"={yref('itm',2025)}")
 yrow("chk_on", "Wattonomics 甲2 上線年新增（核對用）", {2025: 0.465, 2026: 1.086, 2027: 1.348, 2028: 1.237}, "Derived", "Wattonomics CapexGW!F136–I136")
 yrow("chk_ye", "Wattonomics 主路徑年底 IT GW（核對用）", {2025: 1.203, 2026: 2.289, 2027: 3.637, 2028: 4.873}, "Derived", "Wattonomics CapexGW!F139–I139")
 yrow("chk_site", "Wattonomics 園區年底 IT GW（核對用）", {2025: 1.203, 2026: 2.749, 2027: 3.693, 2028: 8.605}, "Derived", "Wattonomics Players!F106–I106")
@@ -127,7 +137,7 @@ for col, w in zip("ABCDEFGHIJ", (16, 46, 10, 10, 14, 12, 10, 34, 18, 60)):
 
 # ---------------- Site ----------------
 wsS = wb.create_sheet("Site")
-wsS["A1"] = "Site — 園區 IT GW 與分期上線（每變體三欄：到 2027.0、2028.0、2029.0 已上線 IT GW）。分期＝完工日前 R 個月均勻上線，不早於觀測時點。"
+wsS["A1"] = "Site — 園區 IT GW 與分期上線（每變體四欄：到 2027.0、2028.0、2029.0、2028-05 底已上線 IT GW）。分期＝完工日前 R 個月均勻上線，不早於觀測時點。"
 site_vars = [  # name, R expr, s_shk expr, iff expr
  ("S0 重現（R＝0、不縮放、1.2）", "0", "1", "1.2"),
  ("S1 Shackelford 縮放（R＝0）", "0", ref("s_shk"), ref("iff")),
@@ -143,7 +153,7 @@ site_vars = [  # name, R expr, s_shk expr, iff expr
 wsS.append([])
 hdr = ["園區鍵", "名稱"]
 for v in site_vars:
-    hdr += [v[0] + "｜IT GW", "到 2027.0", "到 2028.0", "到 2029.0"]
+    hdr += [v[0] + "｜IT GW", "到 2027.0", "到 2028.0", "到 2029.0", "到 2028-05 底"]
 wsS.append(hdr)
 for c in wsS[3]: c.font = BOLD; c.fill = HDR; c.alignment = WRAP
 S0 = 4
@@ -151,29 +161,30 @@ for i, p in enumerate(parks):
     r = S0 + i; ir = PK0 + i
     wsS.cell(r, 1, f"=In!A{ir}"); wsS.cell(r, 2, f"=In!B{ir}")
     for j, (nm, Rx, sx, fx) in enumerate(site_vars):
-        c0 = 3 + j * 4
+        c0 = 3 + j * 5
         g = f"In!D{ir}/1000/IF(In!C{ir}=\"設施\",{fx},1)*IF(In!F{ir}=1,{sx},1)"
         wsS.cell(r, c0, f"={g}")
         gcell = f"{CL(c0)}{r}"
         te = f"In!E{ir}"
         ts = f"MAX({te}-({Rx})/12,{ref('obs_t')})"
-        for k, t in enumerate((2027.0, 2028.0, 2029.0)):
+        for k, t in enumerate((2027.0, 2028.0, 2029.0, 2028 + 5/12)):
             f = f"=IF({t}>={te}-1E-9,{gcell},IF(AND(({Rx})>0,{t}>{ts}),{gcell}*({t}-{ts})/MAX({te}-{ts},1E-9),0))"
             wsS.cell(r, c0 + 1 + k, f)
 SE = S0 + len(parks) - 1
 # summary rows
 sr = SE + 2
-wsS.cell(sr, 1, "變體"); wsS.cell(sr, 2, "年底 2026"); wsS.cell(sr, 3, "年底 2027"); wsS.cell(sr, 4, "年底 2028"); wsS.cell(sr, 5, "2028 年新增"); wsS.cell(sr, 6, "2027 年新增")
+wsS.cell(sr, 1, "變體"); wsS.cell(sr, 2, "年底 2026"); wsS.cell(sr, 3, "年底 2027"); wsS.cell(sr, 4, "年底 2028"); wsS.cell(sr, 5, "2028 年新增"); wsS.cell(sr, 6, "2027 年新增"); wsS.cell(sr, 7, "2028-05 底")
 for c in wsS[sr]: c.font = BOLD; c.fill = HDR
 SITE = {}
 for j, v in enumerate(site_vars):
     r = sr + 1 + j
-    c0 = 3 + j * 4
+    c0 = 3 + j * 5
     wsS.cell(r, 1, v[0])
     for k in range(3):
         col = CL(c0 + 1 + k)
         wsS.cell(r, 2 + k, f"={ref('obs')}+SUM({col}{S0}:{col}{SE})")
     wsS.cell(r, 5, f"=D{r}-C{r}"); wsS.cell(r, 6, f"=C{r}-B{r}")
+    col = CL(c0 + 4); wsS.cell(r, 7, f"={ref('obs')}+SUM({col}{S0}:{col}{SE})")
     SITE[j] = r
 wsS.column_dimensions["A"].width = 34; wsS.column_dimensions["B"].width = 30
 
@@ -286,7 +297,7 @@ def S(j, col):  # site summary cell
     return f"Site!${col}${SITE[j]}"
 brow("site", "園區（Wattonomics 甲；T2 公告完工日）", "起點", f"={S(0,'E')}", None, None, f"={S(0,'D')}", None, None, "重現 Players!I112（4.912）、I106（8.605）")
 brow("c1", "(C1) Shackelford 容量口徑（Vantage 1.4 GW）", "其他：口徑", f"={S(1,'E')}-{S(0,'E')}", f"={S(5,'E')}-{S(0,'E')}", f"={S(6,'E')}-{S(0,'E')}",
-     f"={S(1,'D')}-{S(0,'D')}", f"={S(5,'D')}-{S(0,'D')}", f"={S(6,'D')}-{S(0,'D')}", "T2 用 Epoch 2.0 GW 設施；開發商稱 1.4 GW")
+     f"={S(1,'D')}-{S(0,'D')}", f"={S(5,'D')}-{S(0,'D')}", f"={S(6,'D')}-{S(0,'D')}", "T2 用 Epoch 2.0 GW 設施；開發商稱 1.4 GW。園區端 C1 與 B1 依序計算（先 C1 後 B1）；若先分期，C1 年新增為 −0.11（見交叉驗證）")
 brow("c2", "(C2) 重複計算（Oracle 園區另入 OpenAI／SPV）", "其他：重複", "=0", "=0", "=0", "=0", "=0", "=0", "已查：Oracle 九站只在 orcl；oai 列為 Milam、Lordstown（SoftBank）；4.5 GW 合約只在 S4 對照（GL01-13）")
 brow("b1", "(B1) 園區清單把整站放在完工月（分期上線）", "期間錯配：園區時點", f"={S(2,'E')}-{S(1,'E')}", f"={S(4,'E')}-{S(1,'E')}", f"={S(3,'E')}-{S(1,'E')}",
      f"={S(2,'D')}-{S(1,'D')}", f"={S(2,'D')}-{S(1,'D')}", f"={S(2,'D')}-{S(1,'D')}", "2028 年 4.85 GW 落在 11–12 月；R＝12／18／24 個月。年底存量不受影響")
@@ -339,22 +350,42 @@ for nm, keys, inc in cats:
 r += 1
 wbB.cell(r, 1, "三、交叉驗證（獨立於 Wattonomics 公式）").font = BOLD; r += 1
 xc = [
- ("Oracle 目標隱含每 IT GW 資本支出：FY27＋FY28 Y9 ÷（7 GW ÷ IF_FacilityGW）", f"=({yref('fy9',2027)}+{yref('fy9',2028)})/({ref('tgt_add')}/{ref('iff')})", "US$B／IT GW", "Derived；目標口徑未說明，若為 IT 則再 ÷ 1.2"),
+ ("Oracle 目標隱含每 IT GW 資本支出：FY27＋FY28 Y9 ÷（7 GW ÷ IF_FacilityGW）", f"=({yref('fy9',2027)}+{yref('fy9',2028)})/({ref('tgt_add')}/{ref('iff')})", "US$B／IT GW", "Derived；偏誤：(a) 分子為全部資本支出；(b) 資本支出與上線有時差（部分容量用 FY26 的錢、部分錢 FY29 才上線）；(c) 7 GW 可能含客戶自帶硬體；7 GW 口徑未說明、只有二手轉述"),
+ ("同上，分子改用 AI 資本支出（個股模型 FY27＋FY28）", f"=({yref('fyai',2027)}+{yref('fyai',2028)})/({ref('tgt_add')}/{ref('iff')})", "US$B／IT GW", "Derived；偏誤 (a) 修正後"),
+ ("對照：未分期園區清單 FY27–FY28（2026-06 至 2028-05）新增 IT GW", f"=Site!$G${SITE[0]}-{ref('mw_fy26')}", "GW", "Derived；遠低於 7 ÷ 1.2＝5.8，只有接受分期（B1）才大致相容"),
+ ("對照：分期後園區（R 18）FY27–FY28 新增 IT GW", f"=Site!$G${SITE[2]}-{ref('mw_fy26')}", "GW", "Derived"),
  ("同上，若 7 GW 為 IT 口徑", f"=({yref('fy9',2027)}+{yref('fy9',2028)})/{ref('tgt_add')}", "US$B／IT GW", "Derived"),
  ("對照：Wattonomics 全額（IT＋廠房）2028", f"={yref('pit',2028)}+{yref('pfac',2028)}", "US$B／IT GW", "CapexGW!I128＋I129"),
  ("對照：Wattonomics 只 IT 2028", f"={yref('pit',2028)}", "US$B／IT GW", "CapexGW!I128"),
  ("Oracle 在役 AI 設備毛額 ÷ 已連網 IT GW（FY27Q1）", f"={ref('ai_inserv')}/{ref('obs')}", "US$B／IT GW", "Derived；低於 TK 只 IT 成本 → 不含廠房，且可能含客戶自帶硬體或舊世代"),
- ("Oracle 個股模型 2028 年底 IT GW（FY29 內依速度 2,833／年至上限）", f"=MIN(In!$H${R['mdl_ye']},In!$G${R['mdl_ye']}+2.833*7/12)", "GW", "Derived；同一筆 Y9 資本支出在個股模型（只 IT）對應的容量"),
+ ("Oracle 個股模型 2028 年底 IT GW（FY29 內依速度 2,833／年至上限）", f"=MIN(In!$H${R['mdl_ye']},In!$G${R['mdl_ye']}+2.833*7/12)", "GW", "Derived；個股模型 MW＝MIN(cap_B 已簽站點上限, mw_q1＋pace_B × 期間)（Thesis!D41–G41；build_oracle.py:258），由交付速度與已簽站點決定，不是由資本支出推得 → 與園區 8.61 一致近於循環，不是獨立檢查"),
+ ("差距：Oracle 一致資本支出推得 2028 年底 − 個股模型", f"={blocks[ALL]['ye']}-MIN(In!$H${R['mdl_ye']},In!$G${R['mdl_ye']}+2.833*7/12)", "GW", "未調和；可能原因：客戶自帶硬體、供應商融資、個股模型的在建工程起點、交付速度假設"),
  ("Oracle 個股模型 2027 年底 IT GW（FY28 內線性）", f"=In!$F${R['mdl_ye']}+(In!$G${R['mdl_ye']}-In!$F${R['mdl_ye']})*7/12", "GW", "Derived"),
- ("Oracle 目標 FY28 年底（2028-05）IT GW（10 GW ÷ 1.2）", f"={ref('tgt_gw')}/{ref('iff')}", "GW", "Interested-party；含非 AI 舊區域，口徑未說明"),
+ ("Oracle 目標 FY28 年底（2028-05）IT GW（10 GW ÷ 1.2）", f"={ref('tgt_gw')}/{ref('iff')}", "GW", "Interested-party；口徑未說明，可能含非 AI 舊區域；二手"),
+ ("分期後園區 2028-05 底（R 基準）", f"=Site!$G${SITE[2]}", "GW", "Derived"),
+ ("差距：Oracle 目標 − 分期後園區（2028-05）", f"={ref('tgt_gw')}/{ref('iff')}-Site!$G${SITE[2]}", "GW", "未調和；可能原因：10 GW 含非 AI 舊區域或設施口徑不同、清單漏列站點、目標偏樂觀"),
  ("分期後園區 2027 年底（R 基準）", f"={S(2,'C')}", "GW", "對照 Wattonomics 園區 3.693"),
  ("Oracle 一致資本支出推得 2027 年底", f"={blocks[ALL]['ye27']}", "GW", "對照 甲2 3.637"),
+ ("個股模型 2027 年底（FY28 內線性）− Oracle 一致資本支出推得", f"=In!$F${R['mdl_ye']}+(In!$G${R['mdl_ye']}-In!$F${R['mdl_ye']})*7/12-{blocks[ALL]['ye27']}", "GW", "未調和（個股模型 6.32 vs 5.24）"),
  ("未起租租賃承諾 ÷ 平均期限 17 年（年租金量級）", f"={ref('lease_unc')}/17", "US$B／年", "備忘：房東出資的廠房以租金回收，不在 Oracle 資本支出"),
 ]
+xc.append(("順序：先分期再縮放 Shackelford 時 C1 的年新增", f"={S(2,'E')}-{S(9,'E')}", "GW", "Derived；C1 依順序 −0.11 至 −0.19，B1 相應變動"))
 XC = {}
 for nm, f, u, note in xc:
     wbB.cell(r, 1, nm); wbB.cell(r, 3, f); wbB.cell(r, 4, u); wbB.cell(r, 9, note)
     XC[nm] = r; r += 1
+r += 1
+wbB.cell(r, 1, "四、單獨套用效果（給建議用；與 Shapley 分攤值不同）").font = BOLD; r += 1
+for i, h in enumerate(["做法", "", "2028 年新增", "", "", "年底 2028", "", "", "說明"]):
+    c = wbB.cell(r, i + 1, h); c.font = BOLD; c.fill = HDR
+r += 1
+SA = {}
+for nm, key, note in [("只套 A（Oracle 只除 IT 成本）", "V_A", "建議 1 單獨執行"), ("只套 S（AI 占比改用個股模型）", "V_S", "建議 2 單獨執行"),
+                      ("A＋S 同時", "V_AS", "建議 1＋2；甲2 年底"), ]:
+    wbB.cell(r, 1, nm)
+    wbB.cell(r, 3, f"={blocks[key]['add']}-{blocks['V_base']['add']}"); wbB.cell(r, 6, f"={blocks[key]['ye']}-{blocks['V_base']['ye']}")
+    wbB.cell(r, 9, note); SA[key] = r; r += 1
+wbB.cell(r, 1, "A＋S 同時：甲2 年底值"); wbB.cell(r, 6, f"={blocks['V_AS']['ye']}"); r += 1
 for col, w in zip("ABCDEFGHI", (58, 26, 14, 10, 10, 14, 10, 10, 70)):
     wbB.column_dimensions[col].width = w
 
