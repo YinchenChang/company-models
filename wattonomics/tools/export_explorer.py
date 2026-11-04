@@ -1,7 +1,7 @@
 # Wattonomics 互動頁取數：由重算後活頁簿匯出扁平 JSON（每筆一列，含標記與來源 ID）。
 # 用法：python3 wattonomics/tools/export_explorer.py <重算後的 Wattonomics xlsx> <輸出 explorer.json>
 # 內容：玩家 GW 年底（主路徑、SiteOnly）、目標 GW 與時點（In T2 園區管線）、資本支出（In Y2、CapexGW 甲2）、資金來源（Funding）、
-#       Spend 拆分、Facility 每 GW 拆分、覆蓋率、市場總 GW（A×D0／D1／D2）。數值只讀 Interface 的 WIF_ 名稱或其來源頁（不重算）。
+#       Spend 拆分、Facility 每 GW 拆分、覆蓋率、市場總 GW（基準）。數值只讀 Interface 的 WIF_ 名稱或其來源頁（不重算）。
 import hashlib, json, os, sys
 import openpyxl
 
@@ -31,12 +31,16 @@ def main():
 
     # 1) 市場總 GW 與覆蓋率
     for path, sfx in (("main", ""), ("site_only", "_SiteOnly")):
-        for s in "ABC":
-            for d in ("D0", "D1", "D2"):
+        for s in "A":   # v0.2 V5：只有基準（舊名 *_A_D0_*）
+            for d in ("D0",):
                 for y in years:
                     nm = f"WIF_MktGW_YE_{s}_{d}{sfx}_{y}"
                     if nm in names:
                         add("market_gw", path=path, scen=s, delay=d, year=y, value=val(nm), unit="IT GW", tag="Derived", src="Deploy", name=nm)
+    for y in years:   # v0.2 V7：汰換與淨新增（主路徑）
+        if f"WIF_MktGW_Retire_{y}" in names:
+            add("market_retire", year=y, retire=val(f"WIF_MktGW_Retire_{y}"), add_net=val(f"WIF_MktGW_AddNet_{y}"), add_gross=val(f"WIF_MktGW_Add_{y}"),
+                unit="IT GW", tag="Derived（壽命 life_ret，Assumed 5–7）", src="Deploy", name=f"WIF_MktGW_Retire_{y}")
     for y in years:
         add("coverage", year=y, value=val(f"WIF_Coverage_{y}"), unit="比", tag="Derived", src="Deploy", name=f"WIF_Coverage_{y}",
             note="有證據支撐的年新增 ÷ 主路徑年新增；下游取用 2027 年後數值前看此值")
@@ -115,14 +119,16 @@ def main():
         MF += [("need" + vx, "Need" + nx), ("need_own" + vx, "NeedOwn" + nx), ("short" + vx, "Short" + nx), ("cum_need" + vx, "CumNeed" + nx),
                ("cum_unarranged" + vx, "CumUnarranged" + nx), ("cum_memo_incl_committed" + vx, f"CumUnarranged{nx}_MemoInclCommitted")]
     if any(n.startswith("WIF_Gap_") for n in names):
-        for s in "ABC":
-            for d in ("D0", "D1", "D2"):
+        for s in "A":   # v0.2 V5：只有基準
+            for d in ("D0",):
                 for y in GY:
                     v = {k: (val(f"WIF_Gap_{nm}_{s}_{d}_{y}") if f"WIF_Gap_{nm}_{s}_{d}_{y}" in names else None) for k, nm in MF}
                     v.update(nonai=val(f"WIF_Gap_NonAI_{y}"), ocf=val(f"WIF_Gap_OCF_{y}"), buyback=val(f"WIF_Gap_Buyback_{y}"),
                              add11=(val(f"WIF_Gap_Add11_{y}") if (s, d) == ("A", "D0") and f"WIF_Gap_Add11_{y}" in names else None),
                              fallback=val(f"WIF_Gap_Fallback_{y}"), fallback_cells=val(f"WIF_Gap_FallbackCells_{y}"),
-                             ext_obs=(val(f"WIF_Gap_ExtObs_{y}") if f"WIF_Gap_ExtObs_{y}" in names else None))
+                             ext_obs=(val(f"WIF_Gap_ExtObs_{y}") if f"WIF_Gap_ExtObs_{y}" in names else None),
+                             finlease_src=(val(f"WIF_Gap_FinLeaseSrc_{y}") if f"WIF_Gap_FinLeaseSrc_{y}" in names else None),
+                             lessor_facility=(val(f"WIF_Gap_LessorFacility_{y}") if f"WIF_Gap_LessorFacility_{y}" in names else None))
                     add("gap", part="market", scen=s, delay=d, year=y, values=v, unit="US$B", tag="Derived", src="Gap",
                         name=f"WIF_Gap_*_{s}_{d}_{y}", note="11 家代表玩家（不含中國）：需要＝AI 資料中心（× 情景比例 r）＋非 AI；來源＝營業現金流（個股模型基準，不隨情景變）＋已觀測外部融資（2024–2025）")
                 add("gap", part="verdict", scen=s, delay=d, verdict=val(f"WIF_Gap_Verdict_{s}_{d}"), verdict_mc=val(f"WIF_Gap_Verdict_ModelCapex_{s}_{d}"), tag="Derived", src="Gap",
