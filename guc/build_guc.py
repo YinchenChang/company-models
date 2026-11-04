@@ -326,9 +326,10 @@ FADE = (2030, 2031, 2032); FADEFILL = PatternFill("solid", fgColor="E7E6E6")
 BU = (2026, 2027, 2028, 2029); F3 = (2027, 2028, 2029)
 DEFP = dict(scn="A", uf="1", att="att_{s}", atp="0", gsh="gsh28_{s}", pfc="pfc_{s}", pc="pc_cpu", gos="", gop="0", co="core_oth", mt="m_tk", gta="gta_{s}",
             ma="m_auto", am27="am27_{s}", am28="am28_{s}", ag29="ag29_{s}", fx="fx", go27="g_o27_{s}", goL="g_oL_{s}", gma="0", phi="phi", opxa="0",
-            nonop="nonop_f", tax="tax", fg="fade_g{s}", fm="fade_m{s}")
+            nonop="nonop_f", tax="tax", fg="fade_g{s}", fm="fade_m{s}", wta=None)
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    _wx = lambda y: (f"*{P['wta'][y]}" if P["wta"] and y in P["wta"] else "")   # Wattonomics 錨定（Sens 案例；預設 None＝不乘）
     p = lambda k: P[k].format(s=s)
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
@@ -350,7 +351,7 @@ def engine(ws, r0, title, **over):
     row("u_tpu", "Google TPU 市場顆數（含情境係數）", "百萬顆", {FC[y]: "=" + uexp("tpu", y) for y in BU}, "0.000")
     row("att", "CPU 對 TPU 配比", "x", {FC[y]: ("=att26" if y == 2026 else f"=MAX(0,{p('att')}+{P['atp']})") for y in BU}, "0.000")
     row("gsh", "創意占 Google 自研 CPU", "%", {FC[y]: ("=gsh26" if y <= 2027 else f"=MIN(1,{p('gsh')})") for y in BU}, "0.0%")
-    row("cu", "創意 CPU 顆數", "百萬顆", {FC[y]: f"={FC[y]}{R['u_tpu']}*{FC[y]}{R['att']}*{FC[y]}{R['gsh']}" + ("" if y == 2026 else f"*{P['uf']}") for y in BU}, "0.000")
+    row("cu", "創意 CPU 顆數", "百萬顆", {FC[y]: f"={FC[y]}{R['u_tpu']}*{FC[y]}{R['att']}*{FC[y]}{R['gsh']}" + ("" if y == 2026 else f"*{P['uf']}") + _wx(y) for y in BU}, "0.000")
     row("cpx", "每顆 CPU 營收（未校準；CY2028 起 × 下一代係數）", "US$K", {FC[y]: f"={P['pc']}" + (f"*{p('pfc')}" if y >= 2028 else "") for y in BU})
     row("craw", "CPU 營收（未校準）", "US$B", {FC[y]: f"={FC[y]}{R['cu']}*{FC[y]}{R['cpx']}" for y in BU})
     row("kc", "CPU 校準係數 k_c ＝ FY2026 CPU 營收（錨點）÷ 未校準", "x", {"D": f"=a26_cpu/fx26/D{R['craw']}"}, "0.000",
@@ -362,7 +363,7 @@ def engine(ws, r0, title, **over):
     sec_("B. AI ASIC 量產（其他 ASIC：Maia 等；由下而上）")
     row("u_oth", "其他 ASIC 市場顆數（含情境係數）", "百萬顆", {FC[y]: "=" + uexp("oth", y) for y in BU}, "0.000")
     row("osh", "創意份額：其他 ASIC", "%", {FC[y]: ("=guc_oth_26" if y == 2026 else f"=MIN(1,MAX(0,go{min(y, 2028) % 100}_{s}{P['gos']}+{P['gop']}))") for y in BU}, "0.0%")
-    row("ou", "創意 AI ASIC 顆數", "百萬顆", {FC[y]: f"={FC[y]}{R['u_oth']}*{FC[y]}{R['osh']}" + ("" if y == 2026 else f"*{P['uf']}") for y in BU}, "0.000")
+    row("ou", "創意 AI ASIC 顆數", "百萬顆", {FC[y]: f"={FC[y]}{R['u_oth']}*{FC[y]}{R['osh']}" + ("" if y == 2026 else f"*{P['uf']}") + _wx(y) for y in BU}, "0.000")
     row("oraw", "AI ASIC 營收（未校準）＝ 顆數 × 每顆核心售價（Broadcom 模型）", "US$B", {FC[y]: f"={FC[y]}{R['ou']}*{P['co']}" for y in BU})
     row("ko", "AI ASIC 校準係數 k_o ＝ FY2026 AI ASIC（錨點）÷ 未校準", "x", {"D": f"=a26_asic/fx26/D{R['oraw']}"}, "0.000",
         note="Derived：k_o < 1＝創意 turnkey 只含晶圓與封裝轉售，低於 Broadcom 的核心售價")
@@ -849,6 +850,78 @@ RMX.apply(wb, "guc")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 RD.cell(RD.max_row + 2, 1, "v0.2（2026-10-31）：滾入 3Q26 實績（2026-10-29 財報：前三季營收 440.99 億、毛利 99.68 億、營業利益 60.52 億、淨利 54.73 億、EPS 40.84；3Q26＝前三季 − 上半年：營收 187.5 億、毛利率 20.58%、營業利益 25.54 億、EPS 16.95）；FY2026 EPS 60.7 → 62.2，加權目標價 3,911 → 3,968，投資建議維持放空。")
 apply_in_layout.apply(wb, "v0.1.3", "2026-10-30")  # v0.1.3：In 頁版面（個股模型原則第 8 節；數值不變）
+
+# ---------------- Wattonomics 錨定（決策 S37；Siliconomics v0.13）：In 頁最後三列（wta_27／28／29，數值取 SIL.WTA）＋Sens 頁新案例；既有儲存格不變 ----------------
+WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
+def _wta_in(wb):
+    from openpyxl.styles import Font as _F
+    from openpyxl.workbook.defined_name import DefinedName as _DN
+    ws = wb["In"]; r = ws.max_row + 2
+    ws.cell(r, 1, "Z. Wattonomics 錨定係數（敏感度用；Siliconomics v0.13）").font = _F(bold=True); r += 1
+    rows = []; SIL.wta_rows(lambda *a: rows.append(a))
+    for a in rows:
+        for j, v in enumerate(a, 1):
+            if v is not None: ws.cell(r, j, v)
+        ws.cell(r, 5).font = _F(color="0000FF")
+        wb.defined_names[a[0]] = _DN(a[0], attr_text=f"In!$E${r}"); r += 1
+_wta_in(wb)
+def _wta_tp_t(SE, r0, ew, eb, T, fwd, fmt, dcf12="dcf12", feps="feps", tpw="tpw", yrs=range(2027, 2033), floor=False):
+    """Wattonomics 錨定案例的單一路徑目標價（Sens 頁）：DCF 與 Val 第 0 節同式（股東現金流＝EPS ×（1 − MIN(tp_g ÷ tp_roe, 0.8)），
+    FY2027–FY2032 明確期＋永續，×(1＋tp_r) 推到 12 個月後），Comparable＝tp_comp_adj × 本路徑前瞻 EPS ÷ 情境加權前瞻 EPS。
+    ew／eb：年 → 儲存格（案例／情境 B）。回傳 {鍵: 儲存格}。"""
+    from openpyxl.styles import Font as _F
+    ys = list(yrs)
+    def dcf(e):
+        cf = lambda y: f"{e(y)}*(1-MIN(tp_g/tp_roe,0.8))"
+        pv = "+".join(f"{cf(y)}/(1+tp_r)^{t}" for t, y in enumerate(ys, 1))
+        v = f"{pv}+{cf(ys[-1])}*(1+tp_g)/(tp_r-tp_g)/(1+tp_r)^{len(ys)}"
+        return (f"MAX(0,{v})" if floor else f"({v})") + "*(1+tp_r)"
+    for j, lab in enumerate(["目標價（單一路徑）", "Wattonomics 錨定", "情境 B", "基準（情境加權，Val 第 0 節）"]): SE.cell(r0, 1 + j, lab).font = _F(bold=True)
+    R = {"dcf": r0 + 1, "fwd": r0 + 2, "comp": r0 + 3, "tp": r0 + 4, "chk": r0 + 5}
+    SE.cell(R["dcf"], 1, "DCF 價值推到 12 個月後（×(1＋tp_r)）"); SE.cell(R["dcf"], 2, "=" + dcf(ew)); SE.cell(R["dcf"], 3, "=" + dcf(eb)); SE.cell(R["dcf"], 4, f"=Val!B{T['dcftp']}")
+    SE.cell(R["fwd"], 1, "12 個月後前瞻 EPS（權重同 Val 第 0 節）")
+    SE.cell(R["fwd"], 2, "=" + "+".join(f"{w}*{ew(y)}" for y, w in fwd)); SE.cell(R["fwd"], 3, "=" + "+".join(f"{w}*{eb(y)}" for y, w in fwd)); SE.cell(R["fwd"], 4, f"=Val!B{T[feps]}")
+    SE.cell(R["comp"], 1, "Comparable（相對倍數調整後；tp_comp_adj × 本路徑前瞻 EPS ÷ 情境加權前瞻 EPS）")
+    for c in "BC": SE[f"{c}{R['comp']}"] = f"=tp_comp_adj*{c}{R['fwd']}/Val!B{T[feps]}"
+    SE[f"D{R['comp']}"] = "=tp_comp_adj"
+    SE.cell(R["tp"], 1, "目標價（tp_w_dcf × DCF＋（1 − tp_w_dcf）× Comparable）")
+    for c in "BC": SE[f"{c}{R['tp']}"] = f"=tp_w_dcf*{c}{R['dcf']}+(1-tp_w_dcf)*{c}{R['comp']}"
+    SE[f"D{R['tp']}"] = f"=Val!B{T[tpw]}"
+    for k in ("dcf", "fwd", "comp", "tp"):
+        for c in "BCD": SE[f"{c}{R[k]}"].number_format = "#,##0.00" if k == "fwd" else fmt
+    SE.cell(R["chk"], 1, "核對：情境 B 欄 DCF − Val 第 0 節情境 B（應為 0）"); SE.cell(R["chk"], 3, f"=C{R['dcf']}-Val!C{T[dcf12]}").number_format = "0.000000"
+    return {"tp_w": f"B{R['tp']}", "tp_b": f"C{R['tp']}", "tp_base": f"D{R['tp']}", "end": R["chk"]}
+def _wta_table(SE, r0, cols, rows):
+    """小表：cols＝[(欄名, fmt)]；rows＝[(名稱, [儲存格…])]，第一列＝基準、第二列＝情境 B；每個指標後接「相對基準」「相對情境 B」。"""
+    from openpyxl.styles import Font as _F
+    from openpyxl.utils import get_column_letter as _gl
+    SE.cell(r0, 1, "案例").font = _F(bold=True)
+    for j, (nm, fmt) in enumerate(cols):
+        for k, t in enumerate((nm, "相對基準", "相對情境 B")): SE.cell(r0, 2 + 3 * j + k, t).font = _F(bold=True)
+    for i, (nm, cells) in enumerate(rows):
+        r = r0 + 1 + i; SE.cell(r, 1, nm)
+        for j, (cell, (cn, fmt)) in enumerate(zip(cells, cols)):
+            v, d1, d2 = (_gl(2 + 3 * j + k) for k in range(3))
+            SE[f"{v}{r}"] = f"={cell}"; SE[f"{v}{r}"].number_format = fmt
+            SE[f"{d1}{r}"] = f"={v}{r}/{v}${r0 + 1}-1"; SE[f"{d2}{r}"] = f"={v}{r}/{v}${r0 + 2}-1"
+            SE[f"{d1}{r}"].number_format = SE[f"{d2}{r}"].number_format = "0.0%"
+    return r0 + len(rows)
+WTA_D = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
+_w0 = SE.max_row + 3
+SE.cell(_w0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+SE.cell(_w0 + 1, 1, WTA_NOTE)
+SE.cell(_w0 + 2, 1, '做法：FY(t)＝CY(t)。FY2027 起創意 Google CPU 顆數（TPU 顆數 × 配比 × 份額）與 AI ASIC 顆數（其他 ASIC 顆數 × 份額）再乘 wta（FY2027＝wta_27 … FY2029＝wta_29）；k_c、k_o 由 FY2026 校準不受影響；車用、其他營收不乘。FY2030–FY2032 沿用 PL 收斂法（營收年增收斂到 fade_gB；淨利率收斂目標＝本案例 FY2029 淨利率 × 0.9，與 PL 情境 B 的 fade_mB 同規則）。')
+_t0 = _w0 + 4
+SB_W = engine(SE, _t0 + 6, "案例區塊：Wattonomics 錨定（情境 B × wta）", scn="B", wta=WTA_D)
+for _y in FADE:   # 淨利率收斂目標：情境 B 規則（FY2029 淨利率 × 0.9）套用在本案例自己的 FY2029
+    _c = SE[f"{FC[_y]}{SB_W['nim']}"]; assert "fade_mB" in _c.value; _c.value = _c.value.replace("fade_mB", f"($G{SB_W['nim']}*0.9)")
+_ew = lambda y: f"{FC[y]}{SB_W['eps']}"; _eb = lambda y: f"PL!{FC[y]}{SUMR[('B', 'eps')]}"
+_W = _wta_tp_t(SE, SB_W["end"] + 1, _ew, _eb, T, [(2027, "2/12"), (2028, "10/12")], '#,##0.00')
+_e = lambda s_, y: f"PL!{FC[y]}{SUMR[(s_, 'eps')]}"
+_wta_table(SE, _t0, [("FY2027 EPS", "#,##0.00"), ("FY2028 EPS", "#,##0.00"), ("目標價", '#,##0.00')],
+           [("基準（Sens 主表基準＝情境 A；目標價＝情境加權）", [_e("A", 2027), _e("A", 2028), _W["tp_base"]]),
+            ("情境 B（案例底）", [_e("B", 2027), _e("B", 2028), _W["tp_b"]]),
+            ("Wattonomics 錨定（情境 B × wta）", [_ew(2027), _ew(2028), _W["tp_w"]])])
 wb.save(sys.argv[1])
 if os.environ.get("GUC_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

@@ -255,7 +255,7 @@ def engine(ws, r0, title, **over):
         nonlocal r
         ws.cell(r, 1, t).font = BOLD; r += 1
     c_ = lambda y: FC[y]
-    mfx = lambda y, m: "" if y == 2026 else f"*{m}"
+    mfx = lambda y, m: "" if y == 2026 else f"*{(m[y] if isinstance(m, dict) else m)}"   # m 可為年別 dict（Wattonomics 錨定案例）
     sec_("A. 營收拆分（FY2025 依公司揭露比例；FY2026 校準：網路應用產品比例 Assumed，非 AI 依成長率，AI 交換器為殘差）")
     row("nap0", "網路應用產品（AI 加速卡等）", "NT$B", {"C": f"=a25_rev*nap25s", "D": f"=a26_rev*{P['ns']}"})
     row("nai0", "非 AI（企業、電信、前端交換器、接取）", "NT$B", {"C": f"=a25_rev*(1-nap25s-sw25s*{P['af']})"})
@@ -651,6 +651,102 @@ import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "accton")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.3.1", "2026-10-30")  # v0.3.1：In 頁版面（個股模型原則第 8 節；數值不變）
+
+# ---------------- Wattonomics 錨定（決策 S37；Siliconomics v0.13）：In 頁最後三列（wta_27／28／29，數值取 SIL.WTA）＋Sens 頁新案例；既有儲存格不變 ----------------
+WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
+def _wta_in(wb):
+    from openpyxl.styles import Font as _F
+    from openpyxl.workbook.defined_name import DefinedName as _DN
+    ws = wb["In"]; r = ws.max_row + 2
+    ws.cell(r, 1, "Z. Wattonomics 錨定係數（敏感度用；Siliconomics v0.13）").font = _F(bold=True); r += 1
+    rows = []; SIL.wta_rows(lambda *a: rows.append(a))
+    for a in rows:
+        for j, v in enumerate(a, 1):
+            if v is not None: ws.cell(r, j, v)
+        ws.cell(r, 5).font = _F(color="0000FF")
+        wb.defined_names[a[0]] = _DN(a[0], attr_text=f"In!$E${r}"); r += 1
+_wta_in(wb)
+def _wta_tp(SE, r0, Rw, years, last_up, keys, L, XC, XR, fwd, m10, fmt, unit, mTf=None):
+    """Wattonomics 錨定案例的單一路徑目標價（Sens 頁）：延伸到 FY2032 的收斂法與 PL 延伸表情境 B 同式（tp_v2.extend_pl），
+    DCF 與 Val 第 0 節同式（折現年數、期內占比取 Val F／G 欄），Comparable＝tp_comp_adj × 本路徑前瞻 EPS ÷ 情境加權前瞻 EPS。
+    同時以 PL 延伸表情境 B 列算情境 B 單一路徑目標價供對照。回傳 {鍵: 儲存格}。"""
+    from openpyxl.styles import Font as _F
+    allys = list(years) + list(range(last_up + 1, 2033)); conv = [y for y in allys if y > last_up]; N = len(conv)
+    SE.cell(r0, 1, "Wattonomics 錨定：延伸到 FY2032（收斂法同 PL 延伸表情境 B）與單一路徑目標價").font = _F(bold=True)
+    SE.cell(r0 + 1, 1, "項目"); SE.cell(r0 + 1, 2, "單位")
+    for y in allys: SE[f"{XC[y]}{r0 + 1}"] = f"FY{y}"
+    rr = {k: r0 + 2 + i for i, k in enumerate(("rev", "g", "nm", "ni", "sh", "eps"))}
+    for k, lab in (("rev", "營收"), ("g", "  營收年增"), ("nm", "淨利率"), ("ni", "淨利"), ("sh", "稀釋股數"), ("eps", f"EPS（{unit}）")): SE.cell(rr[k], 1, lab)
+    lc = XC[last_up]
+    M10 = "nm10" if m10 == "nm10" else f"${lc}${rr['nm']}*nm10_k"
+    mT = mTf(f"${lc}${rr['nm']}") if mTf else f"(${lc}${rr['nm']}+{M10})/2"
+    for y in allys:
+        c = XC[y]; p = XC.get(y - 1)
+        if y <= last_up:
+            for k in ("rev", "ni", "sh", "eps"): SE[f"{c}{rr[k]}"] = f"={c}{Rw[keys[k]]}"
+            if p: SE[f"{c}{rr['g']}"] = f"={c}{rr['rev']}/{p}{rr['rev']}-1"
+            SE[f"{c}{rr['nm']}"] = f"={c}{rr['ni']}/{c}{rr['rev']}"
+        else:
+            k_ = y - last_up
+            SE[f"{c}{rr['g']}"] = f"=${lc}${rr['g']}+(tp_g-${lc}${rr['g']})*{k_}/{N}"
+            SE[f"{c}{rr['rev']}"] = f"={p}{rr['rev']}*(1+{c}{rr['g']})"
+            SE[f"{c}{rr['nm']}"] = f"=${lc}${rr['nm']}+({mT}-${lc}${rr['nm']})*{k_}/{N}"
+            SE[f"{c}{rr['ni']}"] = f"={c}{rr['rev']}*{c}{rr['nm']}"
+            SE[f"{c}{rr['sh']}"] = f"={p}{rr['sh']}*(1+${lc}${rr['sh']}/${XC[last_up - 1]}${rr['sh']}-1)"
+            SE[f"{c}{rr['eps']}"] = f"={c}{rr['ni']}/{c}{rr['sh']}"
+        for k, f_ in (("rev", "#,##0.0"), ("g", "0.0%"), ("nm", "0.0%"), ("ni", "#,##0.0"), ("sh", "0.000"), ("eps", "#,##0.00")): SE[f"{c}{rr[k]}"].number_format = f_
+    t = lambda k: f"Val!$F${L[f'eps{k}']}"; fr = lambda k: f"Val!$G${L[f'eps{k}']}"
+    po = "(1-MIN(0.8,tp_g/tp_roe))"
+    def dcf(e):
+        s = "+".join(f"{e(2027 + k)}*{fr(k)}*{po}/(1+tp_r)^{t(k)}" for k in range(6))
+        return f"MAX(0,{s}+{e(2032)}*{po}*(1+tp_g)/(tp_r-tp_g)/(1+tp_r)^{t(5)})*(1+tp_r)"
+    ew = lambda y: f"{XC[y]}{rr['eps']}"; eb = lambda y: f"PL!{XC[y]}{XR[('B', 'eps')]}"
+    h = rr["eps"] + 2
+    for j, lab in enumerate(["目標價（單一路徑）", "Wattonomics 錨定", "情境 B（PL 延伸表）", "基準（情境加權，Val 第 0 節）"]): SE.cell(h, 1 + j, lab).font = _F(bold=True)
+    T = {"dcf": h + 1, "fwd": h + 2, "comp": h + 3, "tp": h + 4, "chk": h + 5}
+    SE.cell(T["dcf"], 1, "DCF 價值推到 12 個月後（×(1＋tp_r)）"); SE.cell(T["dcf"], 2, "=" + dcf(ew)); SE.cell(T["dcf"], 3, "=" + dcf(eb)); SE.cell(T["dcf"], 4, f"=Val!B{L['dcf']}")
+    SE.cell(T["fwd"], 1, "12 個月後前瞻 EPS（權重同 Val 第 0 節）")
+    SE.cell(T["fwd"], 2, "=" + "+".join(f"{w}*{ew(y)}" for y, w in fwd)); SE.cell(T["fwd"], 3, "=" + "+".join(f"{w}*{eb(y)}" for y, w in fwd)); SE.cell(T["fwd"], 4, f"=Val!B{L['fwd']}")
+    SE.cell(T["comp"], 1, "Comparable（相對倍數調整後；tp_comp_adj × 本路徑前瞻 EPS ÷ 情境加權前瞻 EPS）")
+    for c in "BC": SE[f"{c}{T['comp']}"] = f"=tp_comp_adj*{c}{T['fwd']}/Val!B{L['fwd']}"
+    SE[f"D{T['comp']}"] = "=tp_comp_adj"
+    SE.cell(T["tp"], 1, "目標價（tp_w_dcf × DCF＋（1 − tp_w_dcf）× Comparable）")
+    for c in "BC": SE[f"{c}{T['tp']}"] = f"=tp_w_dcf*{c}{T['dcf']}+(1-tp_w_dcf)*{c}{T['comp']}"
+    SE[f"D{T['tp']}"] = f"=Val!B{L['tp']}"
+    for k in ("dcf", "fwd", "comp", "tp"):
+        for c in "BCD": SE[f"{c}{T[k]}"].number_format = "#,##0.00" if k == "fwd" else fmt
+    SE.cell(T["chk"], 1, "核對：情境 B 欄 DCF − Val 第 0 節情境 B 價值 ×(1＋tp_r)（應為 0）"); SE.cell(T["chk"], 3, f"=C{T['dcf']}-Val!C{L['dcfv']}*(1+tp_r)").number_format = "0.000000"
+    return {"tp_w": f"B{T['tp']}", "tp_b": f"C{T['tp']}", "tp_base": f"D{T['tp']}", "eps": ew, "end": T["chk"]}
+
+
+def _wta_table(SE, r0, cols, rows):
+    """小表：cols＝[(欄名, fmt)]；rows＝[(名稱, [儲存格…])]，第一列＝基準、第二列＝情境 B；每個指標後接「相對基準」「相對情境 B」。"""
+    from openpyxl.styles import Font as _F
+    from openpyxl.utils import get_column_letter as _gl
+    SE.cell(r0, 1, "案例").font = _F(bold=True)
+    for j, (nm, fmt) in enumerate(cols):
+        for k, t in enumerate((nm, "相對基準", "相對情境 B")): SE.cell(r0, 2 + 3 * j + k, t).font = _F(bold=True)
+    for i, (nm, cells) in enumerate(rows):
+        r = r0 + 1 + i; SE.cell(r, 1, nm)
+        for j, (cell, (cn, fmt)) in enumerate(zip(cells, cols)):
+            v, d1, d2 = (_gl(2 + 3 * j + k) for k in range(3))
+            SE[f"{v}{r}"] = f"={cell}"; SE[f"{v}{r}"].number_format = fmt
+            SE[f"{d1}{r}"] = f"={v}{r}/{v}${r0 + 1}-1"; SE[f"{d2}{r}"] = f"={v}{r}/{v}${r0 + 2}-1"
+            SE[f"{d1}{r}"].number_format = SE[f"{d2}{r}"].number_format = "0.0%"
+    return r0 + len(rows)
+WTA_D = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
+_w0 = SE.max_row + 3
+SE.cell(_w0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+SE.cell(_w0 + 1, 1, WTA_NOTE)
+SE.cell(_w0 + 2, 1, '做法：FY(t)＝CY(t)。AI 交換器市場係數 mf（scale-out 交換器、非 NVIDIA scale-up 乙太網路交換匣）與 Trainium 顆數係數 tf 改為年別（FY2027＝wta_27 … FY2029＝wta_29）；有效份額與每顆營收由 FY2026 校準不受影響；非 AI 不乘。FY2030 起沿用 PL 延伸表情境 B 的收斂法。')
+_t0 = _w0 + 4
+SB_W = engine(SE, _t0 + 6, "案例區塊：Wattonomics 錨定（情境 B × wta）", scn="B", mf=WTA_D, tf=WTA_D)
+_W = _wta_tp(SE, SB_W["end"] + 1, SB_W, FYS, 2029, {'rev': 'rev', 'ni': 'ni', 'sh': 'sh_', 'eps': 'eps'}, TPL, XC, XR, [(2027, '2/12'), (2028, '10/12')], 'nm10_k', '#,##0', 'NT$', mTf=None)
+_e = lambda s_, y: f"PL!{XC[y]}{XR[(s_, 'eps')]}"
+_wta_table(SE, _t0, [("FY2027 EPS", "0.00"), ("FY2028 EPS", "0.00"), ("目標價", '#,##0')],
+           [("基準（Sens 主表基準＝情境 A；目標價＝情境加權）", [_e("A", 2027), _e("A", 2028), _W["tp_base"]]),
+            ("情境 B（案例底）", [_e("B", 2027), _e("B", 2028), _W["tp_b"]]),
+            ("Wattonomics 錨定（情境 B × wta）", [_W["eps"](2027), _W["eps"](2028), _W["tp_w"]])])
 wb.save(sys.argv[1])
 if os.environ.get("ACCTON_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json

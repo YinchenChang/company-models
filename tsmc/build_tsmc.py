@@ -686,4 +686,86 @@ import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "tsmc")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
 apply_in_layout.apply(wb, "v0.4.1", "2026-10-30")  # v0.4.1：In 頁版面（個股模型原則第 8 節；數值不變）
+
+# ---------------- Wattonomics 錨定（決策 S37；Siliconomics v0.13）：In 頁最後三列＋Sens 頁最下方小表與案例區塊；既有儲存格不變 ----------------
+WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
+_wr = IN.max_row + 2
+IN.cell(_wr, 1, "Z. Wattonomics 錨定係數（敏感度用；Siliconomics v0.13）").font = BOLD; _wr += 1
+_wrows = []; SIL.wta_rows(lambda *a: _wrows.append(a))
+for _a in _wrows:
+    for _j, _v in enumerate(_a, 1):
+        if _v is not None: IN.cell(_wr, _j, _v)
+    IN.cell(_wr, 5).font = BLUE
+    wb.defined_names[_a[0]] = DefinedName(_a[0], attr_text=f"In!$E${_wr}"); _wr += 1
+# Sens：AI 加速器內容與「其他 AI」皆與顆數成正比（PL：AI 相關＝Σ 顆數 × 內容 × 價格 ×（1＋ai_oth）），非 AI 不受顆數影響；故案例營收＝AI 相關（情境 B）× wta＋非 AI（情境 B）
+W0 = SE.max_row + 3
+SE.cell(W0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+SE.cell(W0 + 1, 1, WTA_NOTE)
+SE.cell(W0 + 2, 1, "2030–2032：沿用 PL 頁延伸表收斂法（營收年增由案例 2029 年增線性收斂到 fade_gB、淨利率收斂目標＝（本案例 2029 淨利率＋nim10）÷ 2，與 In 頁 fade_mB 同規則；2032 達到）。目標價＝單一路徑（不做情境加權）：tp_w_dcf × DCF（Val 第 0 節同式）＋（1 − tp_w_dcf）× Comparable（tp_comp_adj × 本路徑前瞻 EPS ÷ 加權前瞻 EPS）")
+hdr(SE, W0 + 3, ["案例", "2027 EPS", "相對基準", "相對情境 B", "2028 EPS", "相對基準", "相對情境 B", "目標價", "相對基準", "相對情境 B"])
+WB0 = W0 + 9   # 案例區塊
+WC = dict(zip((27, 28, 29, 30, 31, 32), "BCDEFG"))
+SE.cell(WB0, 1, "案例區塊：Wattonomics 錨定（情境 B × wta；十億美元，EPS 新台幣）").font = BOLD
+hdr(SE, WB0 + 1, ["項目", "2027", "2028", "2029", "2030 收斂", "2031 收斂", "2032 收斂", "說明"])
+WR = {k: WB0 + 2 + i for i, k in enumerate(["wta", "ai_b", "ai", "nai", "rev", "gm", "ni", "g", "nim", "eps", "eps_b", "cf", "cf_b"])}
+WLAB = {"wta": "Wattonomics 錨定係數", "ai_b": "AI 相關營收（情境 B，PL 頁）", "ai": "AI 相關營收 × wta", "nai": "非 AI 營收（情境 B，不變）", "rev": "營收",
+        "gm": "毛利率（情境 B）", "ni": "淨利", "g": "營收年增", "nim": "淨利率", "eps": "EPS（新台幣）", "eps_b": "對照：情境 B EPS（PL 頁）",
+        "cf": "股東現金流＝EPS ×（1 − 再投資率）", "cf_b": "對照：情境 B 股東現金流"}
+for k, rr in WR.items(): SE.cell(rr, 1, WLAB[k])
+for y in (27, 28, 29):
+    c, pc = WC[y], COLOF[("B", y)]
+    SE[f"{c}{WR['wta']}"] = f"=wta_{y}"
+    SE[f"{c}{WR['ai_b']}"] = f"=PL!{pc}{PR['ai']}"
+    SE[f"{c}{WR['ai']}"] = f"={c}{WR['ai_b']}*{c}{WR['wta']}"
+    SE[f"{c}{WR['nai']}"] = f"=PL!{pc}{PR['nonai']}"
+    SE[f"{c}{WR['rev']}"] = f"={c}{WR['ai']}+{c}{WR['nai']}"
+    SE[f"{c}{WR['gm']}"] = f"=gm{y}_B"
+    SE[f"{c}{WR['ni']}"] = f"={c}{WR['rev']}*({c}{WR['gm']}-opex)*ni_op"
+    SE[f"{c}{WR['g']}"] = f"={c}{WR['rev']}/" + ("PL!B" + str(PR['rev']) if y == 27 else f"{WC[y - 1]}{WR['rev']}") + "-1"
+    SE[f"{c}{WR['nim']}"] = f"={c}{WR['ni']}/{c}{WR['rev']}"
+for k_, y in enumerate((30, 31, 32), 1):
+    c, p = WC[y], WC[y - 1]
+    SE[f"{c}{WR['g']}"] = f"=$D{WR['g']}+(fade_gB-$D{WR['g']})*{k_}/3"
+    SE[f"{c}{WR['rev']}"] = f"={p}{WR['rev']}*(1+{c}{WR['g']})"
+    SE[f"{c}{WR['nim']}"] = f"=$D{WR['nim']}+(($D{WR['nim']}+nim10)/2-$D{WR['nim']})*{k_}/3"
+    SE[f"{c}{WR['ni']}"] = f"={c}{WR['rev']}*{c}{WR['nim']}"
+for y in YRS6:
+    c = WC[y]
+    SE[f"{c}{WR['eps']}"] = f"={c}{WR['ni']}*fx/shares"
+    SE[f"{c}{WR['eps_b']}"] = f"=PL!{plc('B', y)}{PR['eps']}"
+    SE[f"{c}{WR['cf']}"] = f"={c}{WR['eps']}*(1-MIN(tp_g/tp_roe,0.8))"
+    SE[f"{c}{WR['cf_b']}"] = f"={c}{WR['eps_b']}*(1-MIN(tp_g/tp_roe,0.8))"
+for k, rr in WR.items():
+    for c in "BCDEFG":
+        if SE[f"{c}{rr}"].value is not None: SE[f"{c}{rr}"].number_format = "0.0%" if k in ("gm", "g", "nim") else ("0.000" if k == "wta" else "0.0")
+SE.cell(WR["eps"], 8, "2027–2029：營收 ×（毛利率 − opex）× ni_op × fx ÷ shares（PL 頁同式）；2030–2032：淨利 × fx ÷ shares（PL 頁收斂欄同式）")
+def _wdcf(rr):
+    pv = "+".join(f"{WC[y]}{rr}/(1+tp_r)^{t}" for t, y in enumerate(YRS6, 1))
+    return f"({pv}+G{rr}*(1+tp_g)/(tp_r-tp_g)/(1+tp_r)^6)*(1+tp_r)"
+WT = WR["cf_b"] + 2
+SE.cell(WT - 1, 1, "目標價（單一路徑）").font = BOLD
+hdr(SE, WT, ["項目", "Wattonomics 錨定", "情境 B", "基準（情境加權，Val 第 0 節）", "", "", "", "說明"])
+WTR = {"dcf": WT + 1, "feps": WT + 2, "comp": WT + 3, "tp": WT + 4}
+SE.cell(WTR["dcf"], 1, "DCF 價值推到 12 個月後"); SE[f"B{WTR['dcf']}"] = "=" + _wdcf(WR["cf"]); SE[f"C{WTR['dcf']}"] = "=" + _wdcf(WR["cf_b"]); SE[f"D{WTR['dcf']}"] = f"=Val!B{T['dcftp']}"
+SE.cell(WTR["feps"], 1, "12 個月後前瞻 EPS（2／12 × FY2027＋10／12 × FY2028）")
+SE[f"B{WTR['feps']}"] = f"=2/12*B{WR['eps']}+10/12*C{WR['eps']}"; SE[f"C{WTR['feps']}"] = f"=2/12*B{WR['eps_b']}+10/12*C{WR['eps_b']}"; SE[f"D{WTR['feps']}"] = f"=Val!B{T['feps']}"
+SE.cell(WTR["comp"], 1, "Comparable（相對倍數調整後）")
+for c in "BC": SE[f"{c}{WTR['comp']}"] = f"=tp_comp_adj*{c}{WTR['feps']}/Val!B{T['feps']}"
+SE[f"D{WTR['comp']}"] = "=tp_comp_adj"
+SE.cell(WTR["tp"], 1, "目標價（tp_w_dcf × DCF＋（1 − tp_w_dcf）× Comparable）")
+for c in "BC": SE[f"{c}{WTR['tp']}"] = f"=tp_w_dcf*{c}{WTR['dcf']}+(1-tp_w_dcf)*{c}{WTR['comp']}"
+SE[f"D{WTR['tp']}"] = f"=Val!B{T['tpw']}"
+for rr in WTR.values():
+    for c in "BCD": SE[f"{c}{rr}"].number_format = "0.00" if rr == WTR["feps"] else "#,##0"
+SE.cell(WTR["tp"] + 1, 1, "核對：情境 B 欄 DCF − Val 第 0 節情境 B（應為 0）"); SE[f"C{WTR['tp'] + 1}"] = f"=C{WTR['dcf']}-Val!C{T['dcf12']}"; SE[f"C{WTR['tp'] + 1}"].number_format = "0.000000"
+# 小表三列
+for i, (nm, e27, e28, tp) in enumerate([("基準（Sens 主表基準＝情境 A；目標價＝情境加權）", "B4", f"PL!D{PR['eps']}", f"D{WTR['tp']}"),
+                                        ("情境 B（案例底）", f"PL!F{PR['eps']}", f"PL!G{PR['eps']}", f"C{WTR['tp']}"),
+                                        ("Wattonomics 錨定（情境 B × wta）", f"B{WR['eps']}", f"C{WR['eps']}", f"B{WTR['tp']}")]):
+    rr = W0 + 4 + i; b, bb = W0 + 4, W0 + 5
+    SE.cell(rr, 1, nm); SE[f"B{rr}"] = f"={e27}"; SE[f"E{rr}"] = f"={e28}"; SE[f"H{rr}"] = f"={tp}"
+    for v, d1, d2 in (("B", "C", "D"), ("E", "F", "G"), ("H", "I", "J")):
+        SE[f"{d1}{rr}"] = f"={v}{rr}/{v}${b}-1"; SE[f"{d2}{rr}"] = f"={v}{rr}/{v}${bb}-1"
+        SE[f"{v}{rr}"].number_format = "#,##0" if v == "H" else "0.0"
+        for d in (d1, d2): SE[f"{d}{rr}"].number_format = "0.0%"
 wb.save(sys.argv[1]); print("saved")
