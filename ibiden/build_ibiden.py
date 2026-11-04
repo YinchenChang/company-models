@@ -239,9 +239,10 @@ BU = (2026, 2027, 2028, 2029)
 umx = lambda y, s: {2026: "1", 2027: "1", 2028: f"um28_{s}", 2029: f"um29_{s}"}[y]
 def units_f(g, y):
     return f"u_{g}_{y % 100}" if y <= 2028 else f"u_{g}_28*(1+g29_{g})"
-DEFP = dict(scn="A", w="w_ot", aie="ai_e", ga="g_asp", rel="rel", pp="pp", mne="m_ne", gne="g_ne", gcer="g_cer", goth="g_oth", nioi="ni_oi", shg="sh_g")
+DEFP = dict(scn="A", w="w_ot", aie="ai_e", ga="g_asp", rel="rel", pp="pp", mne="m_ne", gne="g_ne", gcer="g_cer", goth="g_oth", nioi="ni_oi", shg="sh_g", wm=None)
 def engine(ws, r0, title, **over):
     P = dict(DEFP); P.update(over); s = P["scn"]
+    wmf = lambda y: f"*{P['wm'][y]}" if P["wm"] and y >= 2027 else ""   # v0.13：Wattonomics 錨定（年別乘數 dict；預設 None＝不乘）
     ws.cell(r0, 1, title).font = BOLD
     R = {}; r = r0 + 1
     hdr(ws, r, ["項目", "單位", "FY2025A", "FY2026（錨點）", "FY2027", "FY2028", "FY2029", "說明"]); r += 1
@@ -256,8 +257,8 @@ def engine(ws, r0, title, **over):
         ws.cell(r, 1, t).font = BOLD; r += 1
     c_ = lambda y: FC[y]
     sec_("A. AI 伺服器載板（D 欄＝FY2026 校準年；FY(t) 對照 CY(t) 顆數）")
-    row("unv", "NVIDIA 加速器顆數 × 情境係數", "百萬顆", {c_(y): "=(" + "+".join(units_f(g, y) for g in NV) + f")*{umx(y, s)}" for y in BU}, note="markets/network In：Blackwell、Rubin、Rubin Ultra、Hopper")
-    row("uot", "非 NVIDIA 加速器顆數 × 情境係數", "百萬顆", {c_(y): "=(" + "+".join(units_f(g, y) for g in OT) + f")*{umx(y, s)}" for y in BU}, note="AMD、TPU、Trainium、其他 ASIC")
+    row("unv", "NVIDIA 加速器顆數 × 情境係數", "百萬顆", {c_(y): "=(" + "+".join(units_f(g, y) for g in NV) + f")*{umx(y, s)}" + wmf(y) for y in BU}, note="markets/network In：Blackwell、Rubin、Rubin Ultra、Hopper")
+    row("uot", "非 NVIDIA 加速器顆數 × 情境係數", "百萬顆", {c_(y): "=(" + "+".join(units_f(g, y) for g in OT) + f")*{umx(y, s)}" + wmf(y) for y in BU}, note="AMD、TPU、Trainium、其他 ASIC")
     row("ueff", "有效顆數 ＝ NVIDIA ＋ 權重 × 非 NVIDIA", "百萬顆", {c_(y): f"={c_(y)}{R['unv']}+{P['w']}*{c_(y)}{R['uot']}" for y in BU})
     row("ai0", "FY2026 AI 載板營收（錨點電子事業 × AI 占比）", "¥B", {"D": f"=q26_e*{P['aie']}"}, note="Assumed 切分；公司未揭露")
     row("k", "每顆有效金額（Ibiden 份額 × 載板金額；FY2026 校準）", "千日圓／顆", {"D": f"=D{R['ai0']}/D{R['ueff']}"}, fmt="#,##0.0",
@@ -795,8 +796,38 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 import relative_multiple as RMX  # noqa: E402
 RMX.apply(wb, "ibiden")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "in_layout")); import apply_in_layout  # noqa: E402
+# ---------------- v0.13（2026-11-04）：Sens「Wattonomics 錨定」案例（三層校準原則；決策 S37）。In 頁最後三列、Sens 頁最下方小表與案例區塊；既有格不動 ----------------
+WTA_NOTE = "Wattonomics 錨定：以情境 B 為底，產業量 CY2027 起 × wta（Siliconomics SIF_WTAnchor_Base＝R4 比值）；FY2026 維持錨點。三層校準原則（Andy 2026-11-04）；個股基準暫不改，2027-01～02 雲端資本支出指引後再決定。"
+WTA_MF = {2027: "wta_27", 2028: "wta_28", 2029: "wta_29"}
+def wta_in_rows():
+    r = IN.max_row + 2
+    IN.cell(r, 1, f"Z. Wattonomics 錨定係數（敏感度用；Siliconomics {SIL.VERSION}）").font = BOLD; r += 1
+    def _inp(key, item, unit, lo, base, hi, tag, s1, s2):
+        nonlocal r
+        for j, v in enumerate((key, item, unit, lo, base, hi, tag, s1, s2), 1):
+            if v is not None: IN.cell(r, j, v)
+        IN.cell(r, 5).number_format = "0.000"
+        wb.defined_names[key] = DefinedName(key, attr_text=f"In!$E${r}")
+        r += 1
+    SIL.wta_rows(_inp)
+def wta_sens():
+    t0 = SE.max_row + 3; b0 = t0 + 10
+    RW = engine(SE, b0, "案例區塊：Wattonomics 錨定（情境 B；FY2027 起顆數 × wta_27／wta_28／wta_29）", scn="B", wm=WTA_MF)
+    SE.cell(t0, 1, "Wattonomics 錨定（三層校準原則）").font = BOLD
+    for c in range(1, 13): SE.cell(t0 + 1, c, SE.cell(3, c).value).font = BOLD
+    put_case(t0 + 2, "基準（情境 A；同第 4 列）", "PL 區塊 A", PB["A"], "PL!")
+    put_case(t0 + 3, "顆數情境 B（本案例的底）", "CY2028 ×0.8、CY2029 ×0.85", PB["B"], "PL!")
+    put_case(t0 + 4, "Wattonomics 錨定", "情境 B；FY2027 起 NVIDIA 與非 NVIDIA 顆數 × wta_27／wta_28／wta_29（FY(t) 對照 CY(t) 顆數）", RW, "")
+    SE.cell(t0 + 5, 1, "差異%：Wattonomics 錨定 ÷ 基準 − 1"); SE.cell(t0 + 6, 1, "差異%：Wattonomics 錨定 ÷ 情境 B − 1")
+    for c in "CDEFHIJK":
+        for rr, rb in ((t0 + 5, t0 + 2), (t0 + 6, t0 + 3)):
+            SE[f"{c}{rr}"] = f"={c}{t0 + 4}/{c}{rb}-1"; SE[f"{c}{rr}"].number_format = "0.0%"
+    SE.cell(t0 + 7, 1, WTA_NOTE)
+    SE.cell(t0 + 8, 1, "目標價：Sens 頁目標價參數表只動 DCF 參數（r、g、權重），不逐案例重算 DCF，本案例不列目標價。")
+    return RW
 RD.cell(RD.max_row + 1, 1, "v0.4（2026-11-02）：FY2026 錨點改用 2026-10-29 中間決算再上修的公司預測（營業利益 1,330 億、淨利 890 億；上修 60 億全數歸電子事業，Assumed）；營收與其他部門預測未取得，沿用 08-04 值；股價改 2026-10-30 收盤 8,359。")
 apply_in_layout.apply(wb, "v0.4", "2026-11-02")  # v0.3.1：In 頁版面（個股模型原則第 8 節；數值不變）
+wta_in_rows(); wta_sens()   # v0.13：放在 In 版面套用之後，確保在 In 頁最後
 wb.save(sys.argv[1])
 if os.environ.get("IBIDEN_ROWMAP"):   # 除錯用：輸出列號對照（供撰寫 html.json）；CI 不設此變數
     import json
