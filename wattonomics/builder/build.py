@@ -40,6 +40,24 @@ def _cb_nvc():
 
 
 CB_NVC = _cb_nvc()
+# v0.2 V1、V1b（工作單 20261104）：承租玩家輸入（首建讀此，之後以 In 為準）
+LEASE_IN = [
+    ("lease_orcl", "Oracle 承租比例（廠房、土地、電力由房東出資的占比）", 0.8, 1.0, 1.0, "Interested-party（Oracle 管理層）／Analogy", "SRC_GL_335",
+     "E#5：Oracle 2025-12-10 法說稱資本支出『not for land, buildings, or power』，以租賃取得（單一管理層來源；E#6 同一發言）；2028 年 T2 九站開發商皆第三方（E#8、E#12–E#14）。低 0.8＝在建工程可能含少量自有建物（Oracle 診斷反證 1）"),
+    ("lease_crwv", "CoreWeave 承租比例", 0.75, 0.85, 1.0, "Derived（個股模型）／Assumed 區間", "SRC_GL_336",
+     "coreweave/company.json leases.facts.share 0.85（第三方租賃占機房取得比例；CoreWeave 收支模型 v4_12）；DCD 2026：現有逾 1 GW 全部為長約租賃、首座自建站年內上線（高 1.0）；個股模型站點表承租 1,516 MW ÷（承租＋自建 1,916）＝0.79（低端參考 0.75）"),
+    ("lease_nbis", "Nebius 承租比例", 0.10, 0.25, 0.30, "Derived（個股模型）／Interested-party（Nebius）", "SRC_GL_336",
+     "nebius/company.json leases.facts.share 0.25（第三方租賃占機房取得比例；Nebius 個股模型 v0_5_2）；Nebius 稱逾 75% 已簽電力來自自有基礎設施（convergedigest；低端 0.10）；New Jersey Vineland 為 build-to-suit 承租"),
+    ("finl_orcl", "Oracle 承租廠房中融資租賃占比", 0.0, 0.21, 0.40, "Derived／Assumed 區間", "SRC_GL_335",
+     "FY27Q1 帳上融資租賃負債 9.185 ÷（營業租賃負債 34.621＋9.185）＝0.21（chat 端 11-04 依 10-Q 數值提供）；2,880 億未起租租約的分類未揭露 → 區間 0–0.40 [Assumed]"),
+    ("finl_crwv", "CoreWeave 承租廠房中融資租賃占比", 0.0, 0.0134, 0.10, "Derived／Assumed 區間", "SRC_GL_336",
+     "coreweave/company.json finLeaseLiab 0.221 ÷（opLeaseLiab 16.319＋0.221）＝0.013（2026Q2 10-Q）；未來租約分類未揭露 → 高 0.10 [Assumed]"),
+    ("finl_nbis", "Nebius 承租廠房中融資租賃占比", 0.0, 0.0, 0.10, "Derived／Assumed 區間", "SRC_GL_336",
+     "nebius/company.json finLeaseLiab 0、financePayments 全 0（最新 6-K／20-F 數值，個股模型）；高 0.10 [Assumed]"),
+    ("lease_term", "融資租賃本金攤還年限（營業現金流加回本金用）", 15, 15, 20, "Assumed", "SRC_GL_335",
+     "Oracle 未起租租約 15–19 年（E#10）；本金加回＝累計融資租賃廠房（上線年）÷ 本值（直線法，Assumed；等額付款早期本金較少，直線為上限讀法）"),
+]
+
 DATE = "20261102"
 TK_SNAPSHOT = os.path.join(ROOT, "siliconomics", "data", "tokenomics_snapshot_v21.7.json")
 SIL_DIR = os.path.join(ROOT, "siliconomics", "data")
@@ -67,8 +85,15 @@ IC = {y: get_column_letter(8 + i) for i, y in enumerate(YEARS)}   # In 頁：H..
 SCEN = ["A"]   # v0.2 V5：需求 B、C 與延遲 D1、D2 已刪（Andy 2026-11-02 15:58 三層只給基準）；內部鍵仍用 A／D0（*_A_D0_* 名稱下游在讀）
 DLY = ["D0"]
 BASE_LAB = "基準（公告時程＋已確認延遲）"
-SO_SITE = False   # V6
-RETIRE = False    # V7
+# v0.2 各項改動開關（影響表逐項量測用；正式建置全部為 1；環境變數 WO_OFF＝逗號分隔的項目可關閉，例如 WO_OFF=V1b）
+_OFF = set(os.environ.get("WO_OFF", "").split(","))
+SO_SITE = "V6" not in _OFF
+RETIRE = "V7" not in _OFF
+LEASE_ON = "V1" not in _OFF
+FINL_ON = "V1b" not in _OFF
+ORCL_SPLIT = "V2" not in _OFF
+NV_V4 = "V4" not in _OFF
+LEASEP = ("orcl", "crwv", "nbis")   # v0.2 V1：承租玩家（廠房多由房東出資）
 GENS = ["H100", "GB200", "GB300", "VR200", "RU"]
 GEN_NAME = {"H100": "Hopper H100", "GB200": "GB200 NVL72", "GB300": "GB300 NVL72", "VR200": "VR200 NVL72", "RU": "Rubin Ultra"}
 
@@ -361,6 +386,12 @@ def main():
     yrow("sil_r1_on", "Siliconomics R4 橋接 r1：推得淨新增上線 IT GW（b8；情境 A）", "IT", "GW", "Derived", "SRC_GL_331",
          f"{os.path.basename(SIL_R4_R1)} Bridge 頁 b8（Siliconomics v0.9 × Wattonomics v0.1.6；淨額＝已扣汰換 2%）；只作並列（工作單 F4）。r2（毛額，2026–2029＝20.81／36.17／52.63／62.70）不另列",
          SIL_R1_ON, fmt="0.000")
+    # ---- S9（v0.2 V1、V1b；工作單 20261104）：承租玩家只算 IT＋融資租賃廠房。放在頁尾，既有列位不動 ----
+    r += 1
+    sec("S9. v0.2 承租玩家（Oracle、CoreWeave、Nebius）：承租比例、融資租賃占比（V1、V1b；Andy 2026-11-04 08:06、08:21）；純量 H／I／J＝低／基準／高")
+    hdr(IN, r, ["鍵", "項目", "口徑", "單位", "標記", "來源 ID", "說明", "低", "基準", "高"]); r += 1
+    for k_, lab_, lo_, b_, hi_, tag_, src_, note_ in LEASE_IN:
+        scalar(dict(key=k_, label=lab_, unit=("年" if k_ == "lease_term" else "%"), lo=lo_, base=b_, hi=hi_, tag=tag_, src=src_, note=note_))
     IN_LAST = r - 1
     for col, w in zip("ABCDEFGHIJKLMNOPQRS", (16, 50, 8, 7, 18, 12, 70) + (9,) * 11 + (5,)):
         IN.column_dimensions[col].width = w
@@ -848,7 +879,8 @@ def main():
         for k, lab, unit in (("in9", "財年資本支出（In Y9 個股模型基準；v0.1.8 起採用）", "US$B"), ("in2", "財年資本支出（In Y2；C1／Compare 對照，Y9 缺年代入）", "US$B"),
                              ("in", "財年資本支出（採用：Y9 優先，缺年用 Y2）", "US$B"), ("insrc", "　採用來源", "—"),
                              ("cnt", "　已知值累計個數", "—"), ("N", "　下一已知值", "US$B"), ("fy", "財年資本支出（補值）", "US$B"),
-                             ("cy", "曆年資本支出", "US$B"), ("ai", "曆年 AI 資本支出", "US$B"), ("pit", "每 IT GW IT capex", "US$B"), ("pfac", "每 IT GW 廠房 capex", "US$B"),
+                             ("cy", "曆年資本支出", "US$B"), ("ai", "曆年 AI 資本支出", "US$B"), ("pit", "每 IT GW IT capex", "US$B"), ("pfac", "每 IT GW 廠房 capex（全額）", "US$B"),
+                             ("own", "　廠房自付比＝1 − 承租比例 ×（1 − 融資租賃占比）（v0.2 V1、V1b；非承租玩家＝1）", "x"), ("pfo", "每 IT GW 廠房 capex（承租方帳上：自有＋融資租賃）", "US$B"),
                              ("a1", "　廠房提前：t−1 AI 資本支出（缺值以當年代入）", "US$B"), ("a2", "　廠房提前：t−2 AI 資本支出（缺值以 t−1 代入）", "US$B"), ("sub", "　代入標記（GL01-23 改）", "—"),
                              ("fund", "當年上線 GW 的資金（廠房提前入帳）", "US$B"), ("gw", "甲2 年新增 IT GW（付款年）", "GW"),
                              ("x", "甲2 付款年（缺值以 甲 代入）", "GW"), ("on", "甲2 年新增 IT GW（上線年；lag_on、inv_on）", "GW"),
@@ -877,7 +909,12 @@ def main():
             nnv = f"Players!{c}{PR[p]['nnv']}"
             CX.cell(rows["pit"], col, f"=(1-{nnv})*{c}${XIT}+{nnv}*TK_NonNV_Hold_{PLAT[p]}*TK_CapexIT_VR200").number_format = "0.00"
             CX.cell(rows["pfac"], col, f"=(1-{nnv})*{c}${XFAC}+{nnv}*TK_NonNV_Hold_{PLAT[p]}*TK_CapexFacility_VR200").number_format = "0.00"
-            PIT, PFA = f"{c}{rows['pit']}", f"{c}{rows['pfac']}"
+            if p in LEASEP and LEASE_ON:
+                CX.cell(rows["own"], col, f"=1-lease_{p}*(1-{('finl_' + p) if FINL_ON else '0'})").number_format = "0.000"
+            else:
+                CX.cell(rows["own"], col, 1)
+            CX.cell(rows["pfo"], col, f"={c}{rows['own']}*{c}{rows['pfac']}").number_format = "0.00"
+            PIT, PFA = f"{c}{rows['pit']}", f"{c}{rows['pfo']}"
             A1, A2 = capex_chain(rows, y, col, c, rows["ai"], PIT, PFA)
             G_ = f"{c}{rows['gw']}"
             CX.cell(rows["s_ailo"], col, f'=IF({G_}="","",{G_}*{aik}_lo/{aik})').number_format = "0.000"
@@ -1132,7 +1169,8 @@ def main():
         C1.cell(r, 1, "　廠房資本支出（按上線年）"); C1.cell(r, 3, "US$B")
         for y in YEARS:
             c = YC[y]
-            C1.cell(r, YEARS.index(y) + 4, f"=Players!{c}{rows['add']}*((1-Players!{c}{rows['nnv']})*{c}${NVFAC}+Players!{c}{rows['nnv']}*TK_NonNV_Hold_{plat}*TK_CapexFacility_VR200)").number_format = "0.0"
+            own_ = f"*CapexGW!{c}{XR[p]['own']}" if p in LEASEP and p in XR else ""   # v0.2 V1：承租玩家只計自付廠房
+            C1.cell(r, YEARS.index(y) + 4, f"=Players!{c}{rows['add']}*((1-Players!{c}{rows['nnv']})*{c}${NVFAC}+Players!{c}{rows['nnv']}*TK_NonNV_Hold_{plat}*TK_CapexFacility_VR200){own_}").number_format = "0.0"
         r += 1; rc = r
         C1.cell(r, 1, "　廠房資本支出（入帳曆年，提前 lag_bldg）"); C1.cell(r, 3, "US$B")
         for y in YEARS:
@@ -1564,6 +1602,8 @@ def main():
     SP.cell(r, 1, "對照：Siliconomics AI IT 資本支出（情境 A；出貨年）"); SP.cell(r, 3, "US$B")
     for y in (2026, 2027, 2028, 2029): SP.cell(r, YEARS.index(y) + 4, f"={sv('SIF_AIITCapex_A', y)}").number_format = "0.0"
     SPR["sil"] = r; r += 1
+    SP.cell(r, 1, "備忘：其中出租方廠房資本支出（Oracle、CoreWeave、Nebius 承租廠房的營業租賃部分；資本支出入帳年；已含在上方廠房小計，不另加；Gap 同列）"); SP.cell(r, 2, "fac_lessor_memo"); SP.cell(r, 3, "US$B")
+    SPR["fac_lessor_memo"] = r; SP_LESSOR = r; r += 1
     SP_LAST = r
     SP.column_dimensions["A"].width = 44
 
@@ -1673,7 +1713,8 @@ def main():
             if p in CAPP7:
                 pl("add", "年新增 IT GW（主路徑；擁有者；＝WIF_Gap_Player_<p>_<yyyy>_AddGW）", "GW", lambda y: f"=CapexGW!{YC[y]}{XR[p]['main']}", fmt="0.000", note="CapexGW 主路徑（2026 起＝甲2 上線年；v0.1.8）")
                 pl("pit", "每 IT GW IT capex（CapexGW）", "$B/IT GW", lambda y: f"=CapexGW!{YC[y]}{XR[p]['pit']}", fmt="0.00")
-                pl("pfac", "每 IT GW 廠房 capex（CapexGW）", "$B/IT GW", lambda y: f"=CapexGW!{YC[y]}{XR[p]['pfac']}", fmt="0.00")
+                pl("pfac", "每 IT GW 廠房 capex（CapexGW；承租方帳上：自有＋融資租賃，v0.2 V1、V1b）", "$B/IT GW", lambda y: f"=CapexGW!{YC[y]}{XR[p]['pfo']}", fmt="0.00")
+                pl("pfacf", "每 IT GW 廠房 capex（CapexGW；全額，出租方列用）", "$B/IT GW", lambda y: f"=CapexGW!{YC[y]}{XR[p]['pfac']}", fmt="0.00")
             else:
                 if p == "oai":
                     pl("spv", "備忘：OpenAI／Stargate 自建 年新增 IT GW（SPV 擁有，歸市場其餘）", "GW", lambda y: f"=Players!{YC[y]}{PR[p]['add']}", fmt="0.000",
@@ -1700,7 +1741,8 @@ def main():
                 if k_ == 0: return f"={c}{rows['add']}*({pit(y)}+{GW0}*{pfac(y)})"
                 return f"={w}*{cn}{rows['add']}*{pfac(y + k_)}"
             OWN_PIT = lambda y: f"{YC[y]}{rows['pit']}"; OWN_PFA = lambda y: f"{YC[y]}{rows['pfac']}"
-            MK_PIT = lambda y: f"Gap!{YC[y]}${GROW['pit']}"; MK_PFA = lambda y: f"Gap!{YC[y]}${GROW['pfac']}"
+            MK_PIT = lambda y: f"Gap!{YC[y]}${GROW['pit']}"
+            MK_PFA = (lambda y, p=p: f"Gap!{YC[y]}${GROW['pfac']}*CapexGW!{YC[y]}{XR[p]['own']}") if p in CAPP7 else (lambda y: f"Gap!{YC[y]}${GROW['pfac']}")
             for k_, w_ in ((0, None), (1, GW1), (2, GW2)):
                 pl(f"c{k_}", f"　AI 資本支出組成：{['當年 IT＋當年廠房 w0', '次年上線 GW 的廠房 w1（提前入帳）', '後年上線 GW 的廠房 w2（提前入帳）'][k_]}", "US$B",
                    lambda y, k_=k_, w_=w_: comp(y, k_, OWN_PIT, OWN_PFA, w_), years=OUTG)
@@ -1731,7 +1773,29 @@ def main():
         ocol = FCOL["ocf"] if p in dict(FPL) else None
         pl("ocf_fy", "營業現金流（財年；模型，缺則 Funding 全年觀測）", "US$B", lambda y: "=" + fyexpr(p, f"gocf_{p}", y, ocol, zs))
         pl("ocf_src", "　營業現金流來源（財年）", "—", lambda y: (f'=IF(In!{IC[y]}{INROW["gocf_" + p]}<>"","模型",IF({YC[y]}{rows["ocf_fy"]}<>"","Funding 觀測","無模型值"))'), fmt="General")
-        pl("ocf", "營業現金流（曆年；全公司；空白＝無模型值）", "US$B", lambda y: cyexpr("ocf_fy", y, fye), years=OUTG, fill=KEY)
+        if p in LEASEP and p in CAPP7 and "c0" in rows:
+            # v0.2 V1、V1b：出租方列（營業租賃廠房）、融資租賃廠房（資金來源）與營業現金流本金加回（Andy 11-04 08:06、08:21）
+            def fullfac(y):
+                t = [f"{GW0}*{YC[y]}{rows['add']}*{YC[y]}{rows['pfacf']}"]
+                for k_, w_ in ((1, GW1), (2, GW2)):
+                    if y + k_ in YC: t.append(f"{w_}*{YC[y + k_]}{rows['add']}*{YC[y + k_]}{rows['pfacf']}")
+                return "(" + "+".join(t) + ")"
+            FLF = f"finl_{p}" if FINL_ON else "0"
+            LSF = f"lease_{p}" if LEASE_ON else "0"
+            pl("lessor", "出租方廠房資本支出（承租 GW 的營業租賃部分 × 全額廠房；廠房提前 lag_bldg；不入 11 家收支，歸市場其餘）", "US$B",
+               lambda y: f"={LSF}*(1-{FLF})*{fullfac(y)}", years=OUTG)
+            pl("fl_cap", "融資租賃廠房資本支出（承租方帳上；已含在 AI 資本支出；資金來源＝融資租賃，同 Funding「新增融資租賃」類）", "US$B",
+               lambda y: f"={LSF}*{FLF}*{fullfac(y)}", years=OUTG)
+            pl("fl_on", "　融資租賃廠房（上線年金額＝年新增 GW × 全額廠房 × 承租 × 融資占比）", "US$B",
+               lambda y: f"={LSF}*{FLF}*{YC[y]}{rows['add']}*{YC[y]}{rows['pfacf']}", years=OUTG)
+            pl("fl_pr", "　營業現金流本金加回＝Σ（2026 起融資租賃廠房上線年金額）÷ lease_term（直線法；個股模型把租金全列營業，利息部分留在營業現金流）", "US$B",
+               lambda y: (f"=SUM({YC[2026]}{rows['fl_on']}:{YC[y]}{rows['fl_on']})/lease_term" if y >= 2026 else "=0"), years=OUTG)
+            pl("ocf_m", "營業現金流（曆年；個股模型，租金後）", "US$B", lambda y: cyexpr("ocf_fy", y, fye), years=OUTG)
+            pl("ocf", "營業現金流（曆年；全公司；個股模型＋融資租賃本金加回；空白＝無模型值）", "US$B",
+               lambda y: f'=IF({YC[y]}{rows["ocf_m"]}="","",{YC[y]}{rows["ocf_m"]}+{YC[y]}{rows["fl_pr"]})', years=OUTG, fill=KEY,
+               note="營業租賃部分的租金已在個股模型營業現金流內（Oracle v0.4.2 Thesis 第 57 列 → CF!55），不另扣；融資租賃本金償還屬籌資活動、不在營業現金流（若改用財報實際營業現金流，須另扣融資租賃本金）")
+        else:
+            pl("ocf", "營業現金流（曆年；全公司；空白＝無模型值）", "US$B", lambda y: cyexpr("ocf_fy", y, fye), years=OUTG, fill=KEY)
         if p in GFB_EXCL:
             pl("ai_fb", "模型值替代（無 GW 證據）", "—", lambda y: '=""', years=OUTG, fmt="General",
                note=GFB_EXCL[p] + "：不替代（避免與市場以外的容量重複）")
@@ -1826,7 +1890,12 @@ def main():
     gline("t_nai", "11 家非 AI 資本支出", "US$B", lambda y: SUM11("nai", y), years=OUTG)
     gline("t_naifbn", "　非 AI 以 Y2 × (1−AI 占比) 替代的格數（七家）", "格", lambda y: "=" + "+".join(f'({YC[y]}{GPR[p]["nai_fb"]}="以 CapexGW 資本支出 × (1−AI 占比) 替代（模型無拆分）")' for p in GPL), years=OUTG, fmt="0")
     gline("t_nai0n", "　非 AI 無模型值、以 0 計的格數", "格", lambda y: "=" + "+".join(f'(LEFT({YC[y]}{GPR[p]["nai_fb"]},5)="無模型值（")' for p in GPL), years=OUTG, fmt="0")
-    gline("t_ocf", "11 家營業現金流（不扣買回股利）", "US$B", lambda y: SUM11("ocf", y), years=OUTG, fill=KEY)
+    gline("t_ocf", "11 家營業現金流（不扣買回股利；承租玩家含融資租賃本金加回）", "US$B", lambda y: SUM11("ocf", y), years=OUTG, fill=KEY)
+    LPS = [p for p in GPL if "lessor" in GPR[p]]
+    gline("t_lessor", "出租方廠房資本支出（Oracle、CoreWeave、Nebius 營業租賃部分；不入 11 家收支；含在市場其餘參考列）", "US$B",
+          lambda y: "=" + ("+".join(f"{YC[y]}{GPR[p]['lessor']}" for p in LPS) or "0"), years=OUTG)
+    gline("t_flcap", "融資租賃廠房資本支出（11 家；已含在 AI 資本支出；來源③）", "US$B", lambda y: "=" + ("+".join(f"{YC[y]}{GPR[p]['fl_cap']}" for p in LPS) or "0"), years=OUTG)
+    gline("t_flpr", "　其中營業現金流本金加回（11 家）", "US$B", lambda y: "=" + ("+".join(f"{YC[y]}{GPR[p]['fl_pr']}" for p in LPS) or "0"), years=OUTG)
     gline("t_ocfmiss", "　營業現金流無模型值的家數", "家", lambda y: "=" + "+".join(f'({YC[y]}{GPR[p]["ocf"]}="")' for p in GPL), years=OUTG, fmt="0")
     gline("t_ext", "已觀測外部融資（2024–2025）", "US$B", lambda y: "=" + "+".join(f"N({YC[y]}{GPR[p]['ext']})" for p in GPL if "ext" in GPR[p]), years=[2024, 2025])
     gline("t_bb", "備忘：可削減緩衝（買回＋股利）", "US$B", lambda y: SUM11("bb", y), years=OUTG)
@@ -1892,13 +1961,14 @@ def main():
             ml("nai", "需要②：11 家非 AI 資本支出（不隨情景）", "US$B", lambda y: f"={G('t_nai', y)}")
             ml("ocf", "來源①：11 家營業現金流（不扣買回股利；不隨情景）", "US$B", lambda y: f"={G('t_ocf', y)}")
             ml("ext", "來源②：已觀測外部融資（只 2024–2025）", "US$B", lambda y: (f"={G('t_ext', y)}" if y <= 2025 else "=0"))
+            ml("finl", "來源③：推得融資租賃（承租方融資租賃廠房；2026 起；2024–2025 已含在來源②）", "US$B", lambda y: (f"={G('t_flcap', y)}" if y >= 2026 else "=0"))
             miss = G("t_ocfmiss2630", 2026)
             c26 = YC[2026]
             for vx, vlab in (("", "主讀法：GW × 每 GW"), ("_mc", "並列讀法：七家 AI 資本支出依個股模型基準（2027–2030，× r）")):
                 GA.cell(r, 1, f"　【{vlab}】").font = BOLD; r += 1
                 ml("own" + vx, "需要①：11 家 AI 資料中心資本支出（含模型值替代；× r）", "US$B", lambda y, vx=vx: own(y, mc=bool(vx)), fill=KEY)
                 ml("need" + vx, "需要合計（①＋②）", "US$B", lambda y, vx=vx: f"={YC[y]}{M['own' + vx]}+{YC[y]}{M['nai']}")
-                ml("short" + vx, "尚需新融資＝需要 − 來源", "US$B", lambda y, vx=vx: f"={YC[y]}{M['need' + vx]}-{YC[y]}{M['ocf']}-{YC[y]}{M['ext']}", fill=KEY)
+                ml("short" + vx, "尚需新融資＝需要 − 來源", "US$B", lambda y, vx=vx: f"={YC[y]}{M['need' + vx]}-{YC[y]}{M['ocf']}-{YC[y]}{M['ext']}-{YC[y]}{M['finl']}", fill=KEY)
                 ml("cum" + vx, "累計尚需新融資（2026 起）", "US$B", lambda y, vx=vx: f"=SUM(${c26}{M['short' + vx]}:{YC[y]}{M['short' + vx]})", years=range(2026, 2031))
                 ml("cumun" + vx, "累計仍未安排＝累計尚需 − 期初現金", "US$B", lambda y, vx=vx: f"={YC[y]}{M['cum' + vx]}-{G('t_cash', 2026)}", years=range(2026, 2031), fill=KEY)
                 ml("cummemo" + vx, "備忘：再扣已簽未起租租賃與表外合資承諾（承諾是市場內移轉，不作來源）", "US$B",
@@ -1912,6 +1982,7 @@ def main():
             r += 1
     for y in OUTG:
         GA.cell(MREST, YEARS.index(y) + 4, f"={YC[y]}{GMK['AD0']['mkt']}-{G('t_ai_gw', y)}").number_format = "0.0"
+        SP.cell(SP_LESSOR, YEARS.index(y) + 4, f"=Gap!{YC[y]}{GROW['t_lessor']}").number_format = "0.0"
     # 敏感度 M1（每 GW 改用市場平均；A／D0、B／D1、C／D2）
     gsec("E. 敏感度 M1：11 家每 GW 成本改用市場平均（主讀法用玩家自有每 GW；基準）")
     for k0 in ("AD0",):
@@ -1920,9 +1991,9 @@ def main():
             M[k] = gline(f"m{k0}_{k}", "　" + lab, "US$B", fy, years=years, fmt=fmt)
         # 以 M1 與主讀法的差額（A／D0 基準）× r 近似：差額不拆組成（M1 列已含廠房提前）
         ml1("own_m1", "11 家 AI 資本支出（M1）", lambda y, M=M: f"={YC[y]}{M['own']}+{YC[y]}{M['r']}*({G('t_m1', y)}-{G('t_ai', y)})")
-        ml1("short_m1", "尚需新融資（M1）", lambda y, M=M: f"={YC[y]}{M['own_m1']}+{YC[y]}{M['nai']}-{YC[y]}{M['ocf']}-{YC[y]}{M['ext']}")
+        ml1("short_m1", "尚需新融資（M1）", lambda y, M=M: f"={YC[y]}{M['own_m1']}+{YC[y]}{M['nai']}-{YC[y]}{M['ocf']}-{YC[y]}{M['ext']}-{YC[y]}{M['finl']}")
         ml1("cumun_m1", "累計仍未安排（M1）", lambda y, M=M: f"=SUM(${YC[2026]}{M['short_m1']}:{YC[y]}{M['short_m1']})-{G('t_cash', 2026)}", years=range(2026, 2031))
-        ml1("fcf_m1", "自由現金流（M1）", lambda y, M=M: f"=-{YC[y]}{M['short_m1']}-{YC[y]}{M['ext']}")
+        ml1("fcf_m1", "自由現金流（M1）", lambda y, M=M: f"=-{YC[y]}{M['short_m1']}-{YC[y]}{M['ext']}-{YC[y]}{M['finl']}")
         ml1("gr_m1", "缺口占資本支出（M1）", lambda y, M=M: f'=IF(({YC[y]}{M["own_m1"]}+{YC[y]}{M["nai"]})<=0,"",({YC[y]}{M["own_m1"]}+{YC[y]}{M["nai"]}-{YC[y]}{M["ocf"]})/({YC[y]}{M["own_m1"]}+{YC[y]}{M["nai"]}))', fmt="0%")
         GA.cell(r, 1, "　判讀（M1）"); GA.cell(r, 2, f"m{k0}_v_m1")
         GA.cell(r, 4, verdict(M["fcf_m1"], M["gr_m1"], G("t_ocfmiss2630", 2026))); M["v_m1"] = r; r += 1
@@ -2101,7 +2172,10 @@ def main():
                 grow_if(f"WIF_Gap_CumUnarranged{nx}_{s}_{D}", f"累計仍未安排＝累計尚需 − 期初現金（{vl}；{s}／{D}）" + BSg, M["cumun" + vx], years=list(range(2026, 2031)))
                 grow_if(f"WIF_Gap_CumUnarranged{nx}_MemoInclCommitted_{s}_{D}", f"備忘：再扣承諾（{vl}；{s}／{D}）" + BSg, M["cummemo" + vx], years=list(range(2026, 2031)))
                 gscalar_if(f"WIF_Gap_Verdict{nx}_{s}_{D}", f"判讀（11 家代表玩家；{vl}；{s}／{D}）" + BSg, f"Gap!D{M['v' + vx]}", "文字", fmt="General")
-    grow_if("WIF_Gap_MktRestMemo", "參考：市場其餘 AI 資本支出（基準；不納入收支，只供需求與下游）", MREST)
+    grow_if("WIF_Gap_MktRestMemo", "參考：市場其餘 AI 資本支出（基準；不納入收支，只供需求與下游；含出租方廠房）", MREST)
+    grow_if("WIF_Gap_LessorFacility", "出租方廠房資本支出（Oracle、CoreWeave、Nebius 營業租賃部分；v0.2 V1、V1b；不入 11 家收支）", GROW["t_lessor"])
+    grow_if("WIF_Gap_FinLeaseSrc", "來源③：推得融資租賃（承租方融資租賃廠房；2026 起；v0.2 V1b）", GMK["AD0"]["finl"])
+    grow_if("WIF_Gap_FinLeasePrincipalAddback", "營業現金流本金加回（融資租賃；直線 ÷ lease_term；v0.2 V1b）", GROW["t_flpr"])
     grow_if("WIF_Gap_Add11", "11 家年新增 IT GW（擁有者口徑；基準；＝Σ逐家 AddGW；v0.1.8）", GROW["t_add"], "GW", fmt="0.000")
     for k0 in ("AD0",):
         M = GMK[k0]; s_, D_ = k0[0], k0[1:]
@@ -2286,8 +2360,8 @@ def main():
         R_ = XR.get(p) or XRX[p]
         for y in [y for y in YEARS if y >= 2026]:
             c = YC[y]; g_ = f"CapexGW!{c}{R_['gw']}"
-            k2.append(f'IF({g_}="",0,ABS(CapexGW!{c}{R_["fund"]}/(CapexGW!{c}{R_["pit"]}+CapexGW!{c}{R_["pfac"]})-{g_}))'
-                      f'+ABS(Gap!{c}{GPR[p]["add"]}-CapexGW!{c}{R_["main"]})+ABS(Gap!{c}{GPR[p]["pit"]}+Gap!{c}{GPR[p]["pfac"]}-CapexGW!{c}{R_["pit"]}-CapexGW!{c}{R_["pfac"]})')
+            k2.append(f'IF({g_}="",0,ABS(CapexGW!{c}{R_["fund"]}/(CapexGW!{c}{R_["pit"]}+CapexGW!{c}{R_.get("pfo", R_["pfac"])})-{g_}))'
+                      f'+ABS(Gap!{c}{GPR[p]["add"]}-CapexGW!{c}{R_["main"]})+ABS(Gap!{c}{GPR[p]["pit"]}+Gap!{c}{GPR[p]["pfac"]}-CapexGW!{c}{R_["pit"]}-CapexGW!{c}{R_.get("pfo", R_["pfac"])})')
     CK.cell(r, 1, "G-K2"); CK.cell(r, 2, "同源一致：CapexGW 資金 ÷ 每 GW 成本＝甲2 付款年 GW；Gap 玩家年新增＝CapexGW 主路徑（上線年）、每 GW＝CapexGW（七家與 xAI、2026 起；v0.1.8）")
     CK.cell(r, 3, "=" + "+".join(k2)); CK.cell(r, 6, f'=IF(C{r}<1E-6,"OK","ERROR")'); CK.cell(r, 7, "恆等式（Gap）"); r += 1
     M0 = GMK["AD0"]
@@ -2303,7 +2377,7 @@ def main():
         for vx in ("", "_mc"):
             for y in OUTG:
                 c = YC[y]
-                k4.append(f"ABS(Gap!{c}{M['short' + vx]}-(Gap!{c}{M['own' + vx]}+Gap!{c}{M['nai']}-Gap!{c}{M['ocf']}-Gap!{c}{M['ext']}))")
+                k4.append(f"ABS(Gap!{c}{M['short' + vx]}-(Gap!{c}{M['own' + vx]}+Gap!{c}{M['nai']}-Gap!{c}{M['ocf']}-Gap!{c}{M['ext']}-Gap!{c}{M['finl']}))")
             for y in range(2026, 2031):
                 c = YC[y]; cs = "+".join(f"Gap!{YC[z]}{M['short' + vx]}" for z in range(2026, y + 1))
                 k4.append(f"ABS(Gap!{c}{M['cumun' + vx]}-({cs}-Gap!{YC[2026]}{GROW['t_cash']}))")
