@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>智譜個股模型 v0.1.2</title>
+<title>智譜個股模型 v0.1.3</title>
 <style>
 :root{--bg:#fbfaf7;--fg:#1d2329;--muted:#5d6670;--line:#d9dde1;--card:#ffffff;--accent:#0d5c63;
 --rev:#2563a8;--cost:#c2410c;--gap:#b42318;--sub:#2563a8;--api:#5aa0d8;--ads:#a3c9ea;--net:#1d2329;--tgt:#7a3e9d;
@@ -74,8 +74,8 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:20px}
 </head>
 <body>
 <main>
-<header><h1>智譜個股模型 v0.1.2｜一頁摘要</h1>
-<div class="meta">2026-10-30｜Excel <code>20261030_Zhipu_v0.1.2.xlsx</code>｜Tokenomics v19.0（<code>1916a06</code>）｜OpenAI v0.6.2 對照（OAI_Link）｜單位 RMB 億（人民幣億元）、與 OpenAI 並排時 $B，曆年制｜數字游標停留可見 Excel 位置；手機上圖表可左右滑動</div></header>
+<header><h1>智譜個股模型 v0.1.3｜一頁摘要</h1>
+<div class="meta">2026-11-04｜Excel <code>20261104_Zhipu_v0.1.3.xlsx</code>｜Tokenomics v19.0（<code>1916a06</code>）｜OpenAI v0.6.2 對照（OAI_Link）｜單位 RMB 億（人民幣億元）、與 OpenAI 並排時 $B，曆年制｜數字游標停留可見 Excel 位置；手機上圖表可左右滑動</div></header>
 <section id="s1"><h2><span class="no">①</span>命題與一句話結論（兩種讀法）</h2>
 <p class="note">命題：智譜（02513.HK）每 VR 等值 GW 的年營收，能否覆蓋每 GW 年全成本？若不能，缺口要多少外部資金、由誰補？</p>
 <p class="lead">不能，而且 2028 年後不再收斂。依招股章程更正算力費口徑（r2 P1）並設每 GW 算力租價下限（供應商不長期賠本出租）後，基準 2030 年每 VR 等值 GW 差額 <span class="n" data-ref="COST_PropGap_VR" data-y="2030" data-sc="base" data-fmt="f0" data-v="-1803.60780200926" title="Cost K48｜I60｜COST_PropGap_VR｜2030">−1,804</span> RMB 億（<span class="n" data-ref="COST_PropGap_VR_USD" data-y="2030" data-sc="base" data-fmt="f1" data-v="-26.7601567086939" title="Cost K57｜I70｜COST_PropGap_VR_USD｜2030">−26.8</span> $B），覆蓋率 <span class="n" data-ref="COST_Coverage" data-y="2030" data-sc="base" data-fmt="pct0" data-v="0.733961488105431" title="Cost K51｜I63｜COST_Coverage｜2030">73%</span>；2028–2030 差額 <span class="n" data-ref="COST_PropGap_VR" data-y="2028" data-sc="base" data-fmt="f0" data-v="-1821.84783820811" title="Cost K48｜G60｜COST_PropGap_VR｜2028">−1,822</span>／<span class="n" data-ref="COST_PropGap_VR" data-y="2029" data-sc="base" data-fmt="f0" data-v="-1689.50058491036" title="Cost K48｜H60｜COST_PropGap_VR｜2029">−1,690</span>／<span class="n" data-ref="COST_PropGap_VR" data-y="2030" data-sc="base" data-fmt="f0" data-v="-1803.60780200926" title="Cost K48｜I60｜COST_PropGap_VR｜2030">−1,804</span>。資金面，模型基準 2030 前累計外部資金需求只有 <span class="n" data-ref="FND_ExtNeedCum" data-y="2030" data-sc="base" data-fmt="f1" data-v="7.48590430610167" title="Funding F30｜I40｜FND_ExtNeedCum｜2030">7.5</span> 億（<span class="n" data-ref="FND_FirstGapYear" data-sc="base" data-fmt="yrt" data-v="2030" title="Funding F36｜D46｜FND_FirstGapYear">2030</span> 年補足最低現金），但這個結論可信度低（見下）。</p>
@@ -459,17 +459,17 @@ Coding Plan 額度使用率與 Coding Plan 輸出占比不列為翻轉點：它�
 </section>
 <section id="s11"><h2><span class="no">⑪</span>資料與版本</h2>
 <dl>
-<dt>Excel</dt><dd><code>20261030_Zhipu_v0.1.2.xlsx</code>（v0.1.2；唯一計算引擎；本頁同資料夾附 xlsx）</dd>
+<dt>Excel</dt><dd><code>20261104_Zhipu_v0.1.3.xlsx</code>（v0.1.3；唯一計算引擎；本頁同資料夾附 xlsx）</dd>
 <dt>Tokenomics</dt><dd>v19.0（<code>20261022_Tokenomics_v19.0.xlsx</code>），master <code>1916a06465bb0c7efed21383075f2ae098508e24</code>，讀取日 2026-10-22</dd>
 <dt>OpenAI 對照</dt><dd><code>20261022_OpenAI_v0.6.2.xlsx</code>（main@f645e19；SHA-256 <code>7f023c084f2f…</code>）</dd>
-<dt>資料日期</dt><dd>SRC_ZP 最新文件日期 2026-10-08（含招股章程 2025-12-30 擷取 SRC_ZP_611–1054）；股價 2026-10-07；匯率 2026-09-28 中間價；模型日期 2026-10-30</dd>
+<dt>資料日期</dt><dd>SRC_ZP 最新文件日期 2026-10-08（含招股章程 2025-12-30 擷取 SRC_ZP_611–1054）；股價 2026-10-07；匯率 2026-09-28 中間價；模型日期 2026-11-04</dd>
 <dt>檢查</dt><dd>CHK_Errors＝<span class="n" data-ref="CHK_Errors" data-sc="base" data-fmt="f0" data-v="0" title="Checks｜C107｜CHK_Errors">0</span>（Checks C01–C103；WARN：ARR 差距兩項、η 範圍一項（1H26）、η 上調一項）</dd>
 <dt>期間與單位</dt><dd>FY2025–FY2030 曆年制，2025 為實際校準年、1H26 為第二個實際點；RMB 億；GW＝IT 關鍵電力；VR 等值＝以 VR200 Sol 層級每 GW 產能換算</dd>
 </dl>
 <p class="note"><span class="tag">Verified</span>已查核原文 <span class="tag">Interested-party</span>公司或利害關係方說法 <span class="tag">Analogy</span>類比推估（附區間） <span class="tag">Assumed</span>假設（附區間） <span class="tag">Derived</span>由其他數字推得 <span class="tag">Decision</span>建模決定。公司原始數據在 SRC_ZP、算力物理取自 Tokenomics（TK_Link）、假設在 Inputs、OpenAI 對照在 OAI_Link。</p>
 <p class="note">本頁所有數字皆讀自 LibreOffice 重算後的 Excel（具名範圍或頁＋列 ID），HTML 不含計算；敏感度情境定義見 <code>tools/html_scenarios.yaml</code>。</p>
 </section>
-<footer>智譜個股模型 v0.1.2｜產生器 tools/build_html.py｜2026-10-30</footer>
+<footer>智譜個股模型 v0.1.3｜產生器 tools/build_html.py｜2026-11-04</footer>
 </main>
 </body>
 </html>
