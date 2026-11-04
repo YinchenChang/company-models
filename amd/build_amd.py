@@ -73,6 +73,7 @@ rows = []; sec = lambda t: rows.append(("sec", t)); inp = lambda *a: rows.append
 E8K = "https://www.sec.gov/Archives/edgar/data/2488/"
 Q226 = E8K + "000000248826000121/q22026991.htm"; Q226S = E8K + "000000248826000121/amdq22026earningsslidesf.htm"
 Q126 = E8K + "000000248826000072/q12026991.htm"; Q425 = E8K + "000000248826000014/q42025991.htm"
+Q326 = E8K + "000000248826000188/q32026991.htm"; Q326S = E8K + "000000248826000188/amdq32026earningsslidesf.htm"   # v0.3：Q3 2026 8-K（2026-11-03）
 
 sec("A. 加速器顆數（markets/memory 與 HBM、台積電、網通、NVIDIA 模型同一份；情境係數讀台積電模型成品，不另訂）")
 for k, nm, u_, gb, tag, src in MEM.UNITS:
@@ -115,23 +116,23 @@ inp("g_cli", "Client（PC 處理器）年增（FY2027 起）", "%", -0.05, 0.03,
 inp("g_gam", "Gaming（主機半客製＋顯示卡）年增（FY2027 起）", "%", -0.25, -0.10, 0.10, "Assumed", "公司：2026 半客製營收大幅雙位數下滑（Q4 2025 法說，二手）；Q2 2026 Gaming 年減 31%（公司）", "下一代主機時程：未找到")
 inp("g_emb", "Embedded 年增（FY2027 起）", "%", 0.0, 0.10, 0.15, "Assumed", "公司：Q2 2026 年增 19%、Q3 強勁雙位數季增；今年設計案逾 $18B（二手）", "—")
 
-sec("F. FY2026 錨點假設（Q1、Q2 實績＋Q3 指引＋Q4 假設）")
-inp("q3_rev", "Q3 2026 營收指引（±$0.3B）", "US$B", 12.7, 13.0, 13.3, "Interested-party", Q226 + "：約 $13B ±$300M", "MarketBeat、platformaeronaut 摘要（二手）")
-inp("q3_gm", "Q3 2026 non-GAAP 毛利率指引", "%", None, 0.56, None, "Interested-party", Q226 + "：約 56%", "Q2 2026 簡報（同一公司文件）")
-inp("q3_opx", "Q3 2026 non-GAAP 營業費用指引", "US$B", None, 3.65, None, "Interested-party", Q226S + "：約 $3.65B", "platformaeronaut 摘要（二手）")
-inp("q3_oth", "Q3 2026 non-GAAP 其他收益（扣利息費用）指引", "US$B", None, 0.055, None, "Interested-party", Q226S + "：約 $55M", "—")
-inp("tx_26", "FY2026 non-GAAP 有效稅率", "%", None, 0.13, None, "Interested-party", Q226S + "：13%", "Q1–Q2 實績推得約 13.0%（Q 頁）")
-inp("q3_sh", "Q3 2026 稀釋股數指引", "十億股", None, 1.661, None, "Interested-party", Q226S + "：約 1,661M", "—")
-inp("q3_cli", "Q3 2026 Client 季增（假設）", "%", 0.0, 0.02, 0.05, "Assumed", "公司：Client 與 Gaming 合計小幅季減；Client 略增、Gaming 強勁雙位數下滑（法說摘要，二手）", "—")
-inp("q3_gam", "Q3 2026 Gaming 季增（假設）", "%", -0.30, -0.20, -0.10, "Assumed", "同上", "—")
-inp("q3_emb", "Q3 2026 Embedded 季增（假設）", "%", 0.08, 0.12, 0.16, "Assumed", "公司：強勁雙位數季增（二手）", "—")
-inp("q4_dc", "Q4 2026 資料中心季增（假設）", "%", 0.10, 0.25, 0.40, "Assumed", "公司：Helios 第三季底開始出貨、第四季放量（Q2 2026 法說摘要，二手）；MI450 第四季有顯著量（Q4 2025 法說）", "共識 FY2026 營收 $51.0B 隱含 Q4 約 $16.2B（只作對照，不校準）")
-inp("q4_cli", "Q4 2026 Client 季增（假設）", "%", -0.10, -0.05, 0.02, "Assumed", "公司：下半年季節性低於上半年（二手）", "—")
-inp("q4_gam", "Q4 2026 Gaming 季增（假設）", "%", -0.20, -0.10, 0.10, "Assumed", "無", "—")
-inp("q4_emb", "Q4 2026 Embedded 季增（假設）", "%", 0.0, 0.03, 0.08, "Assumed", "無", "—")
-inp("q4_gm", "Q4 2026 non-GAAP 毛利率（假設）", "%", 0.54, 0.555, 0.57, "Assumed", "公司：資料中心 AI 毛利率低於平均，MI450 放量季組合偏低（二手）", "高＝Q3 指引附近")
-inp("q4_opx_g", "Q4 2026 營業費用季增（假設）", "%", 0.02, 0.05, 0.08, "Assumed", "Q1→Q2 +7.9%、Q2→Q3 指引 +7.5%（公司）；下半年費用成長落後營收（公司，二手）", "—")
-inp("q4_sh", "Q4 2026 稀釋股數季變動", "%", 0.0, 0.002, 0.01, "Assumed", "Q1→Q2 +0.5%（公司）", "認股權證的稀釋另計（G 節）")
+sec("F. FY2026 錨點假設（v0.3：Q1–Q3 實績＋Q4 指引＋Q4 分部假設；Q3 舊指引與舊假設保留只作實績對照，不進模型）")
+inp("q3_rev", "Q3 2026 營收指引（±$0.3B；舊，只作實績對照：實績 13.377）", "US$B", 12.7, 13.0, 13.3, "Interested-party", Q226 + "：約 $13B ±$300M", "MarketBeat、platformaeronaut 摘要（二手）")
+inp("q3_gm", "Q3 2026 non-GAAP 毛利率指引（舊，只作對照：實績 55.9%）", "%", None, 0.56, None, "Interested-party", Q226 + "：約 56%", "Q2 2026 簡報（同一公司文件）")
+inp("q3_opx", "Q3 2026 non-GAAP 營業費用指引（舊，只作對照：實績 3.560）", "US$B", None, 3.65, None, "Interested-party", Q226S + "：約 $3.65B", "platformaeronaut 摘要（二手）")
+inp("q4_oth", "Q4 2026 non-GAAP 其他收益（扣利息費用）指引", "US$B", None, 0.004, None, "Interested-party", Q326S + "（第 17 頁）：約 $4M", "v0.3 起本列由 Q3 指引（q3_oth $55M；實績 non-GAAP 0.066）改為 Q4 指引；Q3 起利息費用增加（8 月發行 $4.75B 公司債，公司）")
+inp("tx_26", "FY2026 non-GAAP 有效稅率", "%", None, 0.13, None, "Interested-party", Q326S + "（第 17 頁）：Q4 13%；Q2 2026 簡報同", "Q1–Q3 實績推得約 13.0%（Q 頁）")
+inp("q3_sh", "Q3 2026 稀釋股數指引（舊，只作對照：實績 1.661）", "十億股", None, 1.661, None, "Interested-party", Q226S + "：約 1,661M", "—")
+inp("q3_cli", "Q3 2026 Client 季增（v0.2 原假設，只作對照：實績 −3.7%）", "%", 0.0, 0.02, 0.05, "Assumed", "公司：Client 與 Gaming 合計小幅季減；Client 略增、Gaming 強勁雙位數下滑（法說摘要，二手）", "—")
+inp("q3_gam", "Q3 2026 Gaming 季增（v0.2 原假設，只作對照：實績 −0.8%）", "%", -0.30, -0.20, -0.10, "Assumed", "同上", "—")
+inp("q3_emb", "Q3 2026 Embedded 季增（v0.2 原假設，只作對照：實績 +13.5%）", "%", 0.08, 0.12, 0.16, "Assumed", "公司：強勁雙位數季增（二手）", "—")
+inp("q4_rev", "Q4 2026 營收指引（約 $17B ±3%）", "US$B", 16.49, 17.0, 17.51, "Interested-party", Q326 + "：約 $17B ±3%（中點年增約 66%、季增約 27%）", Q326S + "（第 17 頁）同；v0.2 本列為 Q4 資料中心季增假設 25%（Assumed），v0.3 改為公司指引，資料中心＝指引 − 其他分部")
+inp("q4_cli", "Q4 2026 Client 季增（假設）", "%", -0.10, -0.05, 0.02, "Assumed", "公司：下半年季節性低於上半年（二手）；Q3 實績季減 3.7%（公司）", "Q4 分部指引：公司未給（新聞稿：第四季成長由資料中心帶動）")
+inp("q4_gam", "Q4 2026 Gaming 季增（假設）", "%", -0.20, -0.10, 0.10, "Assumed", "Q3 實績年減 40%（半客製與顯示卡下滑，公司）", "Q4 分部指引：公司未給")
+inp("q4_emb", "Q4 2026 Embedded 季增（假設）", "%", 0.0, 0.03, 0.08, "Assumed", "Q3 實績季增 13.5%、年增 29%（公司）", "Q4 分部指引：公司未給")
+inp("q4_gm", "Q4 2026 non-GAAP 毛利率指引", "%", None, 0.55, None, "Interested-party", Q326 + "：約 55%", "v0.2 為 Assumed 55.5%；Q3 實績 55.9%（MI450 放量季組合偏低）")
+inp("q4_opx", "Q4 2026 non-GAAP 營業費用指引", "US$B", None, 3.75, None, "Interested-party", Q326S + "（第 17 頁）：約 $3.75B", "v0.2 為季增 5% 假設（Assumed）；Q3 實績 3.560")
+inp("q4_sh", "Q4 2026 稀釋股數指引", "十億股", None, 1.67, None, "Interested-party", Q326S + "（第 17 頁）：約 1.67B", "v0.2 為季增 0.2% 假設；Q3 實績 1.661。認股權證的稀釋另計（G 節）")
 
 sec("G. 營業費用、稅、股數、認股權證（FY2027 起）")
 inp("phi", "營業費用成長對營收成長的彈性", "x", 0.5, "=Q!B36", 0.9, "Derived", "FY2026 錨點營業費用年增 ÷ 營收年增（Q 頁）", "低／高 Assumed；公司：費用成長低於營收成長（二手）")
@@ -208,11 +209,11 @@ def defname(name, ref):
 # ---------------- Q：實績與 FY2026 錨點 ----------------
 Q = wb.create_sheet("Q")
 Q["A1"] = "Q — 實績（十億美元；EPS 為美元；股數為十億股；non-GAAP 公司口徑）。會計年度＝日曆年。藍字＝輸入；黑字＝公式。實績取自 AMD 8-K 新聞稿（sec.gov）；第二來源＝後續季度新聞稿的比較欄（同一公司不同文件）與 10-Q"
-Q["A2"] = "FY2026 錨點＝Q1、Q2 實績＋Q3 指引中點＋Q4 假設（I、J 欄，假設見 In 頁 F 節）。資料中心 GPU／非 GPU 拆分公司不揭露，為 Assumed（In 頁 D 節）。EPS 口徑：non-GAAP（排除股票薪酬、併購無形資產攤銷、投資損益等；公司口徑），共識亦為此口徑"
-hdr(Q, 3, ["項目", "Q1 2025", "Q2 2025", "Q3 2025", "Q4 2025", "FY2025 全年", "Q1 2026", "Q2 2026", "Q3 2026（指引中點）", "Q4 2026（假設）", "FY2026 錨點", "標記", "來源1（公司）", "來源2／說明"])
-S1 = "AMD 8-K 新聞稿：Q1 2026 " + Q126 + "；Q2 2026 " + Q226 + "；Q4 2025（含 Q3 2025、全年）" + Q425
+Q["A2"] = "FY2026 錨點（v0.3）＝Q1–Q3 實績＋Q4 指引中點（營收、毛利率、營業費用、其他收益、稅率、股數）；Q4 分部為假設、資料中心＝指引 − 其他分部（J 欄，見 In 頁 F 節）。資料中心 GPU／非 GPU 拆分公司不揭露，為 Assumed（In 頁 D 節）。EPS 口徑：non-GAAP（排除股票薪酬、併購無形資產攤銷、投資損益等；公司口徑），共識亦為此口徑"
+hdr(Q, 3, ["項目", "Q1 2025", "Q2 2025", "Q3 2025", "Q4 2025", "FY2025 全年", "Q1 2026", "Q2 2026", "Q3 2026", "Q4 2026（指引中點＋分部假設）", "FY2026 錨點", "標記", "來源1（公司）", "來源2／說明"])
+S1 = "AMD 8-K 新聞稿：Q3 2026 " + Q326 + "；Q1 2026 " + Q126 + "；Q2 2026 " + Q226 + "；Q4 2025（含 Q3 2025、全年）" + Q425
 S2 = "Q1、Q2 2025 見 Q1、Q2 2026 稿比較欄；Q2 2025 毛利、利息、其他收益為全年 − 其餘三季（Derived）"
-ACT = "BCDEGH"
+ACT = "BCDEGHI"   # v0.3：I＝Q3 2026 實績
 def qrow(r, label, vals, fmt="#,##0.000", tag="Verified", s1=S1, s2=S2, ann=None, ann26=None):
     Q.cell(r, 1, label)
     for col, v in vals.items():
@@ -225,31 +226,31 @@ def qrow(r, label, vals, fmt="#,##0.000", tag="Verified", s1=S1, s2=S2, ann=None
         Q[f"K{r}"] = ann26 or f"=SUM(G{r}:J{r})"; Q[f"K{r}"].number_format = fmt
     Q.cell(r, 12, tag); Q.cell(r, 13, s1); Q.cell(r, 14, s2)
 def act(vs): return dict(zip(ACT, vs))
-qrow(4, "營收", {**act([7.438, 7.685, 9.246, 10.270, 10.253, 11.536]), "I": "=q3_rev", "J": "=J5+J8+J9+J10"}, tag="Verified／Interested-party（Q3 指引）／Derived（Q4＝各段合計）")
-qrow(5, "Data Center", {**act([3.674, 3.240, 4.341, 5.380, 5.775, 6.718]), "I": "=I4-I8-I9-I10", "J": "=I5*(1+q4_dc)"}, tag="Verified／Derived（Q3＝指引 − 其他段）／Assumed（Q4）", s2=S2 + "；FY2025 合計 16.635＝公司全年值")
-qrow(6, "  其中：資料中心 GPU（Instinct；Assumed 拆分）", {"G": "=G5*gs_q1", "H": "=H5*gs_q2", "I": "=I5-I7", "J": "=J5-J7"}, ann="=gpu25", tag="Assumed／Derived", s1="公司不揭露 GPU 與 CPU 拆分；FY2025 為全年估計（In 頁 gpu25），各季：未找到", s2="Q3、Q4＝資料中心 − 非 GPU")
+qrow(4, "營收", {**act([7.438, 7.685, 9.246, 10.270, 10.253, 11.536, 13.377]), "J": "=q4_rev"}, tag="Verified／Interested-party（Q4 指引中點）")
+qrow(5, "Data Center", {**act([3.674, 3.240, 4.341, 5.380, 5.775, 6.718, 8.546]), "J": "=J4-J8-J9-J10"}, tag="Verified／Derived（Q4＝指引 − 其他段）", s2=S2 + "；FY2025 合計 16.635＝公司全年值")
+qrow(6, "  其中：資料中心 GPU（Instinct；Assumed 拆分）", {"G": "=G5*gs_q1", "H": "=H5*gs_q2", "I": "=I5-I7", "J": "=J5-J7"}, ann="=gpu25", tag="Assumed／Derived（Q3 實績資料中心 8.546 的拆分仍為 Assumed）", s1="公司不揭露 GPU 與 CPU 拆分；FY2025 為全年估計（In 頁 gpu25），各季：未找到", s2="Q3、Q4＝資料中心 − 非 GPU")
 qrow(7, "  其中：資料中心非 GPU（EPYC CPU、DPU、FPGA 等）", {"G": "=G5-G6", "H": "=H5-H6", "I": "=H7*(1+ng_q3)", "J": "=I7*(1+ng_q4)"}, ann="=F5-F6", tag="Derived／Assumed（Q3、Q4 季增）", s1="資料中心 − GPU", s2="—")
-qrow(8, "Client", {**act([2.294, 2.499, 2.750, 3.097, 2.885, 3.062]), "I": "=H8*(1+q3_cli)", "J": "=I8*(1+q4_cli)"}, tag="Verified／Assumed（I、J）")
-qrow(9, "Gaming", {**act([0.647, 1.122, 1.298, 0.843, 0.720, 0.779]), "I": "=H9*(1+q3_gam)", "J": "=I9*(1+q4_gam)"}, tag="Verified／Assumed（I、J）")
-qrow(10, "Embedded", {**act([0.823, 0.824, 0.857, 0.950, 0.873, 0.977]), "I": "=H10*(1+q3_emb)", "J": "=I10*(1+q4_emb)"}, tag="Verified／Assumed（I、J）")
+qrow(8, "Client", {**act([2.294, 2.499, 2.750, 3.097, 2.885, 3.062, 2.949]), "J": "=I8*(1+q4_cli)"}, tag="Verified／Assumed（J）")
+qrow(9, "Gaming", {**act([0.647, 1.122, 1.298, 0.843, 0.720, 0.779, 0.773]), "J": "=I9*(1+q4_gam)"}, tag="Verified／Assumed（J）")
+qrow(10, "Embedded", {**act([0.823, 0.824, 0.857, 0.950, 0.873, 0.977, 1.109]), "J": "=I10*(1+q4_emb)"}, tag="Verified／Assumed（J）")
 qrow(11, "檢查：營收 − 各段合計（應為 0）", {c: f"={c}4-{c}5-{c}8-{c}9-{c}10" for c in "BCDEFGHIJK"}, fmt="0.000", ann="", ann26="", tag="—", s1="—", s2="—")
-qrow(12, "毛利（non-GAAP）", {**act([3.992, 3.326, 4.992, 5.855, 5.685, 6.488]), "I": "=I4*q3_gm", "J": "=J4*q4_gm"}, tag="Verified（Q2 2025 Derived；Q2 2026＝營業利益＋營業費用）／Interested-party（I）／Assumed（J）", s2="FY2025 合計 18.165＝公司全年值")
+qrow(12, "毛利（non-GAAP）", {**act([3.992, 3.326, 4.992, 5.855, 5.685, 6.488, 7.483]), "J": "=J4*q4_gm"}, tag="Verified（Q2 2025 Derived；Q2 2026＝營業利益＋營業費用）／Interested-party（J：Q4 指引）", s2="FY2025 合計 18.165＝公司全年值")
 qrow(13, "毛利率（non-GAAP）", {c: f"={c}12/{c}4" for c in "BCDEFGHIJK"}, fmt="0.0%", ann="", ann26="", tag="Derived", s1="—", s2="公司：Q2 2025 43%（含 MI308 費用 $0.8B）、FY2025 52%、Q2 2026 56%")
-qrow(14, "營業費用（non-GAAP）", {**act([2.213, 2.429, 2.754, 3.001, 3.145, 3.394]), "I": "=q3_opx", "J": "=I14*(1+q4_opx_g)"}, tag="Verified／Interested-party（I）／Assumed（J）")
-qrow(15, "營業利益（non-GAAP）", {**act([1.779, 0.897, 2.238, 2.854, 2.540, 3.094]), "I": "=I12-I14", "J": "=J12-J14"}, tag="Verified／Derived（I、J）")
-qrow(16, "檢查：毛利 − 營業費用 − 營業利益（實績應為 0）", {c: f"={c}12-{c}14-{c}15" for c in "BCDEGH"}, fmt="0.000", ann="", ann26="", tag="—", s1="—", s2="—")
-qrow(17, "利息費用", act([-0.020, -0.038, -0.037, -0.036, -0.037, -0.037]), ann26="", tag="Verified（Q2 2025 Derived）")
-qrow(18, "其他收益淨額（GAAP）", act([0.039, 0.098, 0.082, 0.358, 0.165, 0.598]), ann26="", tag="Verified（Q2 2025 Derived）")
-qrow(19, "  長期投資（利得）損失（non-GAAP 調節，排除）", act([0.002, -0.061, -0.026, -0.280, -0.066, -0.483]), ann26="", tag="Verified（Q2 2025 Derived）", s2="non-GAAP 調節表「(Gains) losses on long-term investments, net」")
-qrow(20, "非營業淨額（non-GAAP）＝利息＋其他收益＋調節", {**{c: f"={c}17+{c}18+{c}19" for c in "BCDEGH"}, "I": "=q3_oth", "J": "=q3_oth"}, tag="Derived／Interested-party（I）／Assumed（J＝Q3 指引）")
+qrow(14, "營業費用（non-GAAP）", {**act([2.213, 2.429, 2.754, 3.001, 3.145, 3.394, 3.560]), "J": "=q4_opx"}, tag="Verified／Interested-party（J：Q4 指引）")
+qrow(15, "營業利益（non-GAAP）", {**act([1.779, 0.897, 2.238, 2.854, 2.540, 3.094, 3.923]), "J": "=J12-J14"}, tag="Verified／Derived（J）")
+qrow(16, "檢查：毛利 − 營業費用 − 營業利益（實績應為 0）", {c: f"={c}12-{c}14-{c}15" for c in "BCDEGHI"}, fmt="0.000", ann="", ann26="", tag="—", s1="—", s2="—")
+qrow(17, "利息費用", act([-0.020, -0.038, -0.037, -0.036, -0.037, -0.037, -0.062]), ann26="", tag="Verified（Q2 2025 Derived）")
+qrow(18, "其他收益淨額（GAAP）", act([0.039, 0.098, 0.082, 0.358, 0.165, 0.598, -0.902]), ann26="", tag="Verified（Q2 2025 Derived）")
+qrow(19, "  長期投資（利得）損失＋認股權證負債公允價值變動（non-GAAP 調節，排除）", act([0.002, -0.061, -0.026, -0.280, -0.066, -0.483, 1.030]), ann26="", tag="Verified（Q2 2025 Derived）", s2="non-GAAP 調節表「(Gains) losses on long-term investments, net」；Q3 2026＝長期投資利得 −0.067＋客戶認股權證負債公允價值變動 1.097（公司首次列為調節項）")
+qrow(20, "非營業淨額（non-GAAP）＝利息＋其他收益＋調節", {**{c: f"={c}17+{c}18+{c}19" for c in "BCDEGHI"}, "J": "=q4_oth"}, tag="Derived／Interested-party（J：Q4 指引）")
 qrow(21, "稅前利益（non-GAAP）", {c: f"={c}15+{c}20" for c in "BCDEGHIJ"}, tag="Derived")
-qrow(22, "淨利（non-GAAP）", {**act([1.566, 0.781, 1.965, 2.519, 2.265, 2.760]), "I": "=I21*(1-tx_26)", "J": "=J21*(1-tx_26)"}, tag="Verified／Derived（I、J）", s2=S2 + "；FY2025 合計 6.831＝公司全年值")
-qrow(23, "有效稅率（non-GAAP；1 − 淨利 ÷ 稅前）", {**{c: f"=1-{c}22/{c}21" for c in "BCDEGH"}, "I": "=tx_26", "J": "=tx_26", "F": "=1-F22/F21", "K": "=1-K22/K21"}, fmt="0.0%", ann="", ann26="", tag="Derived／Interested-party（13%）", s1="—", s2="公司 FY2026 non-GAAP 稅率 13%（Q2 2026 簡報）")
-qrow(24, "稀釋股數（十億股）", {**act([1.626, 1.630, 1.641, 1.649, 1.650, 1.659]), "I": "=q3_sh", "J": "=I24*(1+q4_sh)"}, ann=1.636, ann26="=AVERAGE(G24:J24)", tag="Verified／Interested-party（I）／Assumed（J）", s2="Q2 2025 1.630 見 Q2 2026 10-Q；FY2025 1.636（公司全年值）")
-qrow(25, "EPS（non-GAAP，模型算）＝淨利 ÷ 股數", {**{c: f"={c}22/{c}24" for c in "BCDEGHIJ"}, "F": "=F22/F24", "K": "=K22/K24"}, fmt="0.000", ann="", ann26="", tag="Derived", s1="—", s2="FY2026 Q3、Q4 為指引與假設推得")
-qrow(26, "EPS（non-GAAP 稀釋，公司）", act([0.96, 0.48, 1.20, 1.53, 1.37, 1.66]), fmt="0.00", ann=4.17, ann26="", tag="Verified")
-qrow(27, "檢查：模型算 EPS − 公司 EPS（四捨五入差）", {c: f"={c}25-{c}26" for c in "BCDEFGH"}, fmt="0.000", ann="", ann26="", tag="—", s1="—", s2="—")
-qrow(28, "EPS（GAAP 稀釋，公司；參考）", act([0.44, 0.54, 0.75, 0.92, 0.84, 1.38]), fmt="0.00", ann=2.65, ann26="", tag="Verified", s2="GAAP 含併購無形資產攤銷（FY2025 $2.25B）、股票薪酬（$1.64B）")
+qrow(22, "淨利（non-GAAP）", {**act([1.566, 0.781, 1.965, 2.519, 2.265, 2.760, 3.471]), "J": "=J21*(1-tx_26)"}, tag="Verified／Derived（J）", s2=S2 + "；FY2025 合計 6.831＝公司全年值")
+qrow(23, "有效稅率（non-GAAP；1 − 淨利 ÷ 稅前）", {**{c: f"=1-{c}22/{c}21" for c in "BCDEGHI"}, "J": "=tx_26", "F": "=1-F22/F21", "K": "=1-K22/K21"}, fmt="0.0%", ann="", ann26="", tag="Derived／Interested-party（13%）", s1="—", s2="公司 FY2026 non-GAAP 稅率 13%（Q2 2026 簡報）")
+qrow(24, "稀釋股數（十億股）", {**act([1.626, 1.630, 1.641, 1.649, 1.650, 1.659, 1.661]), "J": "=q4_sh"}, ann=1.636, ann26="=AVERAGE(G24:J24)", tag="Verified／Interested-party（J：Q4 指引）", s2="Q2 2025 1.630 見 Q2 2026 10-Q；FY2025 1.636（公司全年值）")
+qrow(25, "EPS（non-GAAP，模型算）＝淨利 ÷ 股數", {**{c: f"={c}22/{c}24" for c in "BCDEGHIJ"}, "F": "=F22/F24", "K": "=K22/K24"}, fmt="0.000", ann="", ann26="", tag="Derived", s1="—", s2="FY2026 Q4 為指引與假設推得；Q3 起為實績")
+qrow(26, "EPS（non-GAAP 稀釋，公司）", act([0.96, 0.48, 1.20, 1.53, 1.37, 1.66, 2.09]), fmt="0.00", ann=4.17, ann26="", tag="Verified")
+qrow(27, "檢查：模型算 EPS − 公司 EPS（四捨五入差）", {c: f"={c}25-{c}26" for c in "BCDEFGHI"}, fmt="0.000", ann="", ann26="", tag="—", s1="—", s2="—")
+qrow(28, "EPS（GAAP 稀釋，公司；參考）", act([0.44, 0.54, 0.75, 0.92, 0.84, 1.38, 1.46]), fmt="0.00", ann=2.65, ann26="", tag="Verified", s2="GAAP 含併購無形資產攤銷（FY2025 $2.25B）、股票薪酬（$1.64B）")
 qrow(29, "檢查：FY2025 四季合計 − 公司全年值（營收 34.639、營業利益 7.768、淨利 6.831，應為 0）", {"F": "=(F4-34.639)+(F15-7.768)+(F22-6.831)"}, fmt="0.000", ann="", ann26="", tag="—", s1="—", s2="—")
 for nm, rr in (("rev", 4), ("dc", 5), ("gpu", 6), ("dcx", 7), ("cli", 8), ("gam", 9), ("emb", 10), ("gp", 12), ("opx", 14), ("oi", 15), ("oth", 20), ("ni", 22), ("etr", 23), ("sh", 24), ("eps", 25)):
     defname(f"a25_{nm}", f"Q!$F${rr}"); defname(f"a26_{nm}", f"Q!$K${rr}")
@@ -606,7 +607,7 @@ srcs = [("公司：Q2 2026 新聞稿（2026-08-04）", Q226), ("公司：Q2 2026
         ("公司：Meta 6 GW 合作新聞稿（2026-02-24，8-K EX-99.1）", E8K + "000000248826000045/pressreleasedatedfebruary2.htm"),
         ("Oracle：5 萬顆 MI450 新聞稿（2025-10-14）", "https://oracle.com/news/announcement/ai-world-oracle-and-amd-expand-partnership-to-help-customers-achieve-next-generation-ai-scale-2025-10-14"),
         ("公司：歷年第四季新聞稿（EPS 歷史）", E8K + "000000248824000009/q42023991final.htm；000000248822000014/q421991amd.htm；000000248818000014/q417991.htm；000000248820000006/amdq4andfy2019earningsslides.pdf"),
-        ("公司：Q3 2026 財報日（2026-11-03 盤後）", "https://finviz.com/news/399552/amd-to-report-fiscal-third-quarter-2026-financial-results"),
+        ("公司：Q3 2026 新聞稿與簡報（2026-11-03；v0.3 滾入實績與 Q4 指引）", Q326 + "；" + Q326S),
         ("二手：MarketBeat Q2 2026 法說摘要", "https://www.marketbeat.com/instant-alerts/advanced-micro-devices-q2-earnings-call-highlights-2026-08-04/"),
         ("二手：platformaeronaut Q2 2026 摘要", "https://transcripts.platformaeronaut.com/summaries/AMD-2Q26-AI-Summary"),
         ("二手：Motley Fool Q4 2025 逐字稿（分析師日目標重述）", "https://www.fool.com/earnings/call-transcripts/2026/02/03/amd-amd-q4-2025-earnings-call-transcript/"),
@@ -623,11 +624,11 @@ SO.column_dimensions["A"].width = 80; SO.column_dimensions["B"].width = 140
 
 # ---------------- README ----------------
 RD = wb.create_sheet("README", 0)
-lines = [("AMD（AMD）收支與估值模型 v0.2.2（AI 半導體 Project：運算層，GPU 側非 NVIDIA 份額）　2026-10-25", True),
+lines = [("AMD（AMD）收支與估值模型 v0.3（AI 半導體 Project：運算層，GPU 側非 NVIDIA 份額）　2026-11-04", True),
  ("本版：運算層第三個模型，複製 nvidia/ 的結構，匯入 nvidia/accel_share.py 的份額函式（AMD 為 GPU 側非 NVIDIA 份額）；Val 頁第 0 節為情境加權目標價。", False),
  ("模型命題：AMD 的資料中心 GPU 營收＝加速器市場（本專案加速器數量層 × 各平台每顆價）× AMD 金額份額；OpenAI、Meta 各 6 GW 與 Anthropic、Oracle 大單在 2026 下半年起放量，但每 GW 附帶認股權證稀釋，HBM 漲價又壓 GPU 毛利率。股價約為 FY2027 共識 EPS 的 33 倍：要多少大單如期放量、毛利率守住多少，才撐得住現價。", False),
  ("核心問題：以市場層顆數推得的 AMD 資料中心 GPU 營收與 EPS，能否支撐現價與公司「2027 年資料中心逾一倍、EPS 逾 $20」的說法；差距來自顆數、售價還是毛利率。", False), ("", False),
- ("會計年度：AMD 會計年度約在 12 月最後一個週六結束，等於日曆年（FY2026＝CY2026），上游市場層直接對照，不平移。預測期 FY2027–FY2029；FY2026 為錨點（Q1、Q2 實績＋Q3 指引＋Q4 假設）。", False), ("", False),
+ ("會計年度：AMD 會計年度約在 12 月最後一個週六結束，等於日曆年（FY2026＝CY2026），上游市場層直接對照，不平移。預測期 FY2027–FY2029；FY2026 為錨點（v0.3：Q1–Q3 實績＋Q4 指引；Q4 分部為假設）。", False), ("", False),
  ("驅動因子 → 推導量（全部唯讀上游，不修改）", True),
  ("資料中心 GPU：加速器市場金額（Units 頁，markets/memory UNITS × 情境係數 × NVIDIA 模型同一套每顆價）× AMD 金額份額 × k_rec（FY2026 校準）× 世代售價係數（基準 1.0）；HBM 漲價依吸收比例轉嫁或壓毛利率。資料中心非 GPU（EPYC CPU 等）、Client、Gaming、Embedded：FY2026 錨點 × 簡化成長率（Assumed）。", False),
  ("毛利率：GPU 毛利率（Assumed 50%）＋非 GPU 毛利率（FY2026 校準到錨點，Derived）；FY2027 起變化來自 GPU 占比上升與 HBM 價格（markets/memory 2027 +80%）。營業費用彈性（FY2026 推得）、稅率 13%（公司）、股數＋OpenAI／Meta 認股權證（各 160M 股，依 GW 線性歸屬，Assumed）。", False),
@@ -635,7 +636,7 @@ lines = [("AMD（AMD）收支與估值模型 v0.2.2（AI 半導體 Project：運
  ("校準：k_rec＝FY2026 錨點 GPU 營收 ÷（AMD 市場層 CY2026 顆數 × pa_amd）；錨點 GPU 本身含 Assumed 拆分（公司不揭露）。不用共識、不用公司對 2027 的說法；後者只在 Recon 對帳。", False),
  ("估值：目標價＝十年 non-GAAP P/E 中位數 × FY2027 EPS（各情境），權重 A 0.3／B 0.5／C 0.2（Andy 可改）；依循環位置取分位的規則值不適用（落後倍數含高成長期溢價，比照 NVIDIA），保留計算。循環位置（共用規則，不平移）：見頂年度 " + "、".join(f"{s_} {PEAK[s_]}" for s_ in SC) + " → FY2027：" + "、".join(f"{s_} {CP.classify(2027, PEAK[s_])}" for s_ in SC) + "。本版未做先驗，無 Andy 合理 P/E 對照。", False), ("", False),
  ("標記：Verified、Interested-party、Analogy、Assumed、Derived。SemiAnalysis 未使用。公司原文＝8-K 新聞稿、簡報與 10-Q（sec.gov，已抓取）；法說逐字稿只經摘要（標二手）。", False),
- ("已知限制：(1) 公司不拆分 GPU 與 CPU，FY2026 錨點的 GPU 營收（約 15）為 Assumed 拆分，k_rec 隨之變動。(2) k_rec 是顆數層與售價層的合併係數；FY2027 起沿用（世代售價係數 1.0）可能低估 MI450 的售價提升，Sens 列「隨 HBM 容量」與「每顆＝市場層價」兩個上界。(3) HBM 吸收比例、GPU 毛利率、各業務成長率為 Assumed。(4) 認股權證的會計處理（是否抵減營收）與各批股數未找到；本模型只計股數稀釋。(5) 情境 B、C 只影響加速器顆數與 HBM 價格，CPU 等業務三情境相同。(6) 共識兩來源差距大（FY2027 EPS 15.76 vs 11.23）。(7) 十年 P/E 為落後倍數，含高成長期溢價（目標價方法已註明偏誤方向）。", False)]
+ ("已知限制：(1) 公司不拆分 GPU 與 CPU，FY2026 錨點的 GPU 營收（v0.3 約 17.7）為 Assumed 拆分，k_rec 隨之變動。(2) k_rec 是顆數層與售價層的合併係數；FY2027 起沿用（世代售價係數 1.0）可能低估 MI450 的售價提升，Sens 列「隨 HBM 容量」與「每顆＝市場層價」兩個上界。(3) HBM 吸收比例、GPU 毛利率、各業務成長率為 Assumed。(4) 認股權證的會計處理（是否抵減營收）與各批股數未找到；本模型只計股數稀釋。(5) 情境 B、C 只影響加速器顆數與 HBM 價格，CPU 等業務三情境相同。(6) 共識兩來源差距大（FY2027 EPS 15.76 vs 11.23）。(7) 十年 P/E 為落後倍數，含高成長期溢價（目標價方法已註明偏誤方向）。", False)]
 for i, (t, b) in enumerate(lines, 1): RD.cell(i, 1, t).font = Font(bold=b)
 RD.column_dimensions["A"].width = 170
 
@@ -694,11 +695,16 @@ V.cell(GRADE_ROW, 5, f"以「上檔空間：加權目標價」（B{_up}）分六
 V.cell(REC_ROW, 1, "投資建議")
 V.cell(REC_ROW, 2, f'=IF(B{_up}>0.5,"強力買進",IF(B{_up}>0.25,"買進",IF(B{_up}>=-0.25,"中立",IF(B{_up}>=-0.5,"放空","強力放空"))))')
 V.cell(REC_ROW, 5, "依上檔空間固定規則（Andy 2026-10-25 14:17）：大於 +50% 強力買進、+25%～+50% 買進、−25%～+25% 中立、−50%～−25% 放空、小於 −50% 強力放空")
-OBS = ['目標價 US$177（DCF 152、Comparable 202 各半），比現價 516.79（2026-10-23）低 65.7%，級距 小於 −50%；Comparable 單獨為 −60.9%。EPS 與倍數兩個因素都在：本模型 12 個月後前瞻 EPS 10.65 比共識前瞻 EPS 19.29 低 44.8%；同業（NVIDIA、Broadcom、Intel、Qualcomm、Marvell）前瞻 P/E 中位數 19.0 倍，現價隱含 26.8 倍共識 EPS（48.5 倍本模型 EPS），共識目標價 637.61 隱含 33.0 倍（比同業高 74.1%）。', 'EPS 缺口從 FY2027 就出現：本模型 FY2027 EPS 9.14（三情境相同）比共識 15.76 低 42.0%，FY2028 B 情境 11.11 約為共識（約 20，二手）的 56%；單一變數補不了缺口——Sens 頁 AMD 顆數 ×1.2 只讓 FY2027 EPS +5.8%、世代售價隨 HBM 容量上調 +7.2%，賣方路徑隱含大客戶訂單全面放量。', 'HBM 漲價吸收比例是最大單一變數（全額轉嫁時 FY2027 EPS +10.9%、全額吸收時 −10.9%），其次是營業費用率 ±2pt（∓8.5%）（Sens 頁）。下一個檢驗點是 Q3 2026 財報（2026-11-03 盤後）的資料中心營收與 MI450 出貨時程。']   # 重點觀察（與 README.md 相同文字；數字取自重算後的 Val／PL／Sens 頁）
+OBS = ['目標價 US$335（DCF 185、Comparable 經相對倍數調整後 485 各半），比現價 516.79（2026-10-23，沿用）低 35.2%，級距 −25%～−50%，投資建議維持放空；上一版 278（−46.2%）。上調來自 Q3 實績與 Q4 指引：FY2026 錨點營收 49.6 → 52.2、EPS 7.31 → 8.06，k_rec 由 0.673 升到 0.787（隱含每顆認列售價 20.2K → 23.6K），FY2027 起的 GPU 營收隨之上調。', 'Q3 實績營收 13.38（模型原用指引中點 13.0，+2.9%）、non-GAAP EPS 2.09（模型原估 1.93，+8.3%）；Q4 指引營收約 17.0（模型原假設 14.85，+14.4%）、毛利率約 55%、營業費用約 3.75。FY2027 EPS 9.14 → 11.02（三情境相同），仍比共識 15.76 低 30.1%；12 個月後前瞻 EPS 12.76 比共識 19.29 低 33.8%，缺口縮小但仍在。', 'Q4 資料中心＝指引 − 其他分部，推得 12.36（季增 45%）；GPU／CPU 拆分仍為 Assumed，Q4 GPU 推得約 8.0（季增約 81%），k_rec 對這個拆分最敏感。下一個檢驗點：Q4 2026 財報（2027-02 初）的資料中心營收與 2027 年資料中心「逾一倍」說法是否維持；另 Q3 起 GAAP 出現客戶認股權證公允價值變動（1.10，non-GAAP 排除）。']   # 重點觀察（與 README.md 相同文字；數字取自重算後的 Val／PL／Sens 頁）
 _rr = RD.max_row + 1
 RD.cell(_rr, 1, 'v0.2.2（2026-10-25）：補上檔空間級距、投資建議、重點觀察（數值不變）。Val 頁末新增「上檔空間級距」「投資建議」兩列（Andy 2026-10-25 14:00、14:17 固定規則），README 頁末新增投資建議與重點觀察三點；既有儲存格位置與數值不變。')
 RD.cell(_rr + 1, 1, f'="投資建議："&Val!B{REC_ROW}&"（依上檔空間固定規則）"').font = Font(bold=True)
 for _j, _t in enumerate(OBS, 1): RD.cell(_rr + 1 + _j, 1, f"重點觀察 {_j}：" + _t)
+# v0.3（2026-11-04）：滾入 Q3 2026 實績與 Q4 2026 指引；README 頁只在最後一列之後追加
+_r3 = RD.max_row + 1
+RD.cell(_r3, 1, 'v0.3（2026-11-04）：滾入 Q3 2026 實績（8-K 2026-11-03：營收 13.377、資料中心 8.546、Client 2.949、Gaming 0.773、Embedded 1.109、non-GAAP 毛利 7.483、營業費用 3.560、營業利益 3.923、淨利 3.471、稀釋股數 1.661、EPS 2.09）與 Q4 2026 指引（營收約 17.0 ±3%、毛利率約 55%、營業費用約 3.75、其他收益約 0.004、稅率 13%、股數約 1.67）。Q4 資料中心＝指引 − 其他分部（分部假設不變）。方法、情境結構、估值規則不變；現價沿用 2026-10-23。')
+RD.cell(_r3 + 1, 1, '模型原估 vs 實績（Q3 2026）：營收 13.000（指引中點）vs 13.377（+2.9%）；毛利率 56.0% vs 55.9%；營業費用 3.650 vs 3.560；EPS 1.93 vs 2.09（+8.3%）。Q4 2026：模型原假設營收 14.85、EPS 2.33 → 公司指引營收 17.0、模型推得 EPS 2.92。FY2026 錨點：營收 49.64 → 52.17、EPS 7.31 → 8.06。')
+
 if os.environ.get("RATING_ROWMAP"):   # 除錯用：輸出新增列號（供撰寫 html.json）；CI 不設此變數
     print("ROWMAP", GRADE_ROW, REC_ROW, _rr, _rr + 1, _rr + 2)
 
