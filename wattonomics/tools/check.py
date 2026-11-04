@@ -107,7 +107,7 @@ def main():
         if cid not in [x_[0] for x_ in rows]: bad.append(f"Checks 缺 {cid}（v0.2）")
     if same:
         ps = json.load(open(same, encoding="utf-8"))["names"]
-        keys = [k for k in ps if k.startswith(("WIF_MktGW_Add_A_D0_", "WIF_MktGW_YE_A_D0_", "WIF_MktGW_Add_2", "WIF_MktGW_YE_2"))]
+        keys = [k for k in ps if k.startswith(("WIF_MktGW_Add_A_D0_", "WIF_MktGW_YE_A_D0_", "WIF_MktGW_Add_2", "WIF_MktGW_YE_2")) and "SiteOnly" not in k]   # 主路徑（R4 讀主路徑毛額）；SiteOnly 隨站點證據可變
         dg = [k for k in keys if k in names and abs((val(k) or 0) - (ps[k] or 0)) > 1e-9]
         if dg: bad.append(f"年新增毛額或年底與前一版不同：{dg[:5]}")
         else: print(f"  毛額不變：{len(keys)} 名與 {os.path.basename(same)} 相同")
